@@ -8,6 +8,10 @@
 - Automate recursive task planning and execution — your current manual LLM workflow
 - Cache and inspect prompt chains
 - Use ZeroMQ to allow other languages to integrate
+- Allow for highly configurable project objectives using Markdown
+- Model agent workflows in a kanban board
+- Use zeroMQ for kanban board actions so that applications can easily be created to modify and monitor boards and task as agents work through them
+- Human-in-the-loop model, agents move task to blocked when user input is needed for clarification, to review major changes, etc...
 - Rebuild your Golang fluency while building something genuinely useful
 
 ## ✅ Core Requirements by Category
@@ -89,9 +93,14 @@ Support interchangeable LLM backends:
 
 ### 🔄 I/O & Communication
 
-- Use ZeroMQ for cross-language task/agent message passing
-- Optional CLI + stdin fallback for standalone usage
-- CLI dashboard for real-time guild status
+- ZeroMQ as the primary internal communication bus:
+  - Task creation and task board updates are sent over ZeroMQ
+  - Agent-to-agent, agent-to-manager, and system notifications all use ZeroMQ
+- Optional CLI + stdin fallback for standalone dev/test mode
+- CLI dashboard displays:
+  - Guild status
+  - Per-agent Kanban board
+  - Real-time task creation and updates (via subscribed ZeroMQ events)
 
 ## 🧪 Examples
 
@@ -99,3 +108,50 @@ Support interchangeable LLM backends:
 - **Frontend/Backend/Reviewer guild** — build a Go + HTMX consulting website
 - **Decentralized marketplace guild** — luxury items: blockchain backends, smart contracts, managers, overseer
 - Use cases combining LLMs, tool execution, and ZeroMQ communication
+
+---
+
+## 🧠 User Workflow Statement
+
+> ⚙️ **Overview**  
+> The Guild Framework automates project execution using configurable AI agents and a Kanban-style task board.
+
+---
+
+### 📝 Step 1: Define the Project Spec
+
+- 🧾 Write a **detailed markdown spec** describing the desired outcome, scope, constraints, and key context.
+
+---
+
+### 🧩 Step 2: Configure Agents
+
+- 🧠 Assign **role-specific agents** (e.g., Frontend Dev, Planner, Reviewer).
+- 🧰 Attach tools and APIs (email, codegen, web search, etc.).
+- 🤖 Specify model backends like `OpenAI`, `Claude`, `Ollama`, or local models.
+
+---
+
+### 🗂️ Step 3: Generate the Kanban Board
+
+- 🧱 The system **decomposes the spec** into structured tasks.
+- 📌 Tasks are organized into a **Kanban board** (`To Do`, `In Progress`, `Blocked`, `Done`).
+- 🧑‍💻 Agents **autonomously pick up tasks** aligned with their configuration.
+
+---
+
+### 🚧 Step 4: Human-in-the-Loop Interaction
+
+- 🛑 Tasks that need clarification or input are marked **Blocked**.
+- 👤 The user reviews blocked tasks, answers agent queries, or updates task specs.
+
+---
+
+### 📈 Step 5: Real-Time Monitoring & Adjustment
+
+- 🖥️ Track task status and agent output in real time.
+- 🧹 Adjust agents, tools, and the board dynamically as the project evolves.
+
+---
+
+> ✅ **Result**: AI agents collaborate under tight constraints, optimizing for quality and cost, while keeping the user in control of high-leverage decisions.
