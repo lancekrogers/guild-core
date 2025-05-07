@@ -1,4 +1,4 @@
-🌿 Agent Git Workflow & Concurrency Model
+## 🌿 Agent Git Workflow & Concurrency Model
 
 This spec describes how Guild agents can operate concurrently using Git branches as isolated sandboxes, while collaborating through shared interfaces and automated merges. The system is designed to support concurrent development with minimal merge conflicts and tight coordination via Kanban state tracking.
 
@@ -13,7 +13,7 @@ This spec describes how Guild agents can operate concurrently using Git branches
 
 ⸻
 
-🌱 Git Workflow per Agent
+## 🌱 Git Workflow per Agent
 
 Initialization: 1. Manager creates a repo and initializes a default main branch 2. Each agent creates or is assigned its own working branch: agent/<name> 3. Manager checks out each branch before assigning tasks
 
@@ -33,7 +33,7 @@ Manager Behavior:
 
 ⸻
 
-🧰 Agent Sandboxing
+## 🧰 Agent Sandboxing
 
 Per-Agent Environment:
 • Each agent executes in its own:
@@ -45,7 +45,7 @@ Per-Agent Environment:
 
 ⸻
 
-🤝 Interface Blocking Mechanism
+## 🤝 Interface Blocking Mechanism
 
 Interfaces — such as APIs, protobuf schemas, or shared models — are special.
 
@@ -63,7 +63,7 @@ Example:
 
 ⸻
 
-🔄 Continuous Merge Awareness
+## 🔄 Continuous Merge Awareness
 
 Agents working in parallel can periodically merge the latest main into their branch:
 
@@ -78,7 +78,7 @@ Agents are encouraged to:
 
 ⸻
 
-✅ Summary
+## ✅ Summary
 
 This workflow enables:
 • Safe concurrent agent execution
@@ -86,7 +86,8 @@ This workflow enables:
 • Interface-first development planning
 • Clean human-in-the-loop merge control
 
-Next Steps:
+## Next Steps
+
 • Implement per-agent branch creation in runtime
 • Add Kanban tagging for interface + dependency resolution
 • Extend ZeroMQ spec to carry merge + interface events
