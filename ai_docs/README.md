@@ -35,8 +35,8 @@ This index helps Claude Code navigate the Guild project documentation to efficie
 
 ### Go Patterns
 
-| Pattern                     | Description                                        | Location                                                                   |
-| --------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------- |
+| Pattern                     | Description                                        | Location                                                                   | [48;76;141;2736;2538t |
+| --------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------- | --------------------- |
 | Go Concurrency              | Goroutines, channels, and synchronization patterns | [ai_docs/patterns/go_concurrency.md](patterns/go_concurrency.md)           |
 | Interface-First Development | Designing with interfaces before implementation    | [ai_docs/patterns/interface_first.md](patterns/interface_first.md)         |
 | Prompt Chain Memory         | Managing and storing prompt chains                 | [ai_docs/patterns/prompt_chain_memory.md](patterns/prompt_chain_memory.md) |

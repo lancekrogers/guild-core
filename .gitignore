@@ -24,6 +24,8 @@ go.work.sum
 # env file
 .env
 
-# Planning and code creation scripts
-project_planning_and_tools/*
+# Ignore potential sensitive claude data
+.claude/history/
+.claude/config.json
+.claude/auth.json
 
