@@ -39,27 +39,51 @@ type LLMClient interface {
 
 	// GetMaxTokens returns the maximum tokens supported by the current model
 	GetMaxTokens() int
+
+	// --- Embedding methods ---
+
+	// CreateEmbedding creates an embedding for the given text
+	CreateEmbedding(ctx context.Context, req *EmbeddingRequest) (*EmbeddingResponse, error)
+
+	// CreateEmbeddings creates embeddings for multiple texts
+	CreateEmbeddings(ctx context.Context, req *EmbeddingRequest) (*EmbeddingResponse, error)
+
+	// GetEmbeddingDimension returns the dimension of embeddings from this provider
+	GetEmbeddingDimension(model string) int
 }
 
 // EmbeddingRequest represents a request to create embeddings
 type EmbeddingRequest struct {
-	Text       string `json:"text"`
-	Model      string `json:"model,omitempty"`
-	Dimensions int    `json:"dimensions,omitempty"`
+	// Text is the text to embed (for single text requests)
+	Text string `json:"text,omitempty"`
+
+	// Texts is an array of texts to embed (for batch requests)
+	Texts []string `json:"texts,omitempty"`
+
+	// Model is the embedding model to use
+	Model string `json:"model,omitempty"`
+
+	// Dimensions is the desired embedding dimensions (if supported)
+	Dimensions int `json:"dimensions,omitempty"`
 }
 
 // EmbeddingResponse represents a response from an embedding request
 type EmbeddingResponse struct {
-	Embedding  []float32 `json:"embedding"`
-	Dimensions int       `json:"dimensions"`
-	Model      string    `json:"model"`
+	// Embedding is the vector for a single text
+	Embedding []float32 `json:"embedding,omitempty"`
+
+	// Embeddings is an array of vectors for multiple texts
+	Embeddings [][]float32 `json:"embeddings,omitempty"`
+
+	// Dimensions is the size of each embedding vector
+	Dimensions int `json:"dimensions"`
+
+	// Model is the model used to create the embedding
+	Model string `json:"model"`
+
+	// TokensUsed is the total number of tokens used
+	TokensUsed int `json:"tokens_used,omitempty"`
 }
 
-// EmbeddingClient defines the interface for creating embeddings
-type EmbeddingClient interface {
-	// CreateEmbedding creates an embedding for the given text
-	CreateEmbedding(ctx context.Context, req *EmbeddingRequest) (*EmbeddingResponse, error)
-
-	// BatchCreateEmbeddings creates embeddings for multiple texts
-	BatchCreateEmbeddings(ctx context.Context, texts []string) ([]*EmbeddingResponse, error)
-}
+// NOTE: EmbeddingClient has been merged into LLMClient
+// Most modern LLMs provide both text completion and embedding capabilities

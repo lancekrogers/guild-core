@@ -7,15 +7,19 @@ import (
 	"sync"
 	"time"
 
+	"github.com/blockhead-consulting/guild/pkg/comms"
+	"github.com/blockhead-consulting/guild/pkg/comms/transport/zeromq"
 	"github.com/blockhead-consulting/guild/pkg/memory"
 )
 
 // Manager manages multiple kanban boards
 type Manager struct {
-	store       memory.Store
-	boards      map[string]*Board
-	eventStream chan BoardEvent
-	mu          sync.RWMutex
+	store        memory.Store
+	boards       map[string]*Board
+	eventStream  chan BoardEvent
+	eventManager *EventManager
+	pubsub       comms.PubSub
+	mu           sync.RWMutex
 }
 
 // EventHandler is a function that handles board events
@@ -23,17 +27,51 @@ type EventHandler func(event BoardEvent)
 
 // NewManager creates a new kanban manager
 func NewManager(store memory.Store) (*Manager, error) {
+	return NewManagerWithConfig(store, map[string]interface{}{
+		"pub_endpoint": "tcp://127.0.0.1:5556",
+		"sub_endpoint": "tcp://127.0.0.1:5556",
+		"identity":     "kanban-manager",
+	})
+}
+
+// NewManagerWithConfig creates a new kanban manager with custom ZeroMQ config
+func NewManagerWithConfig(store memory.Store, zmqConfig map[string]interface{}) (*Manager, error) {
 	if store == nil {
 		return nil, fmt.Errorf("store cannot be nil")
 	}
 
-	manager := &Manager{
-		store:       store,
-		boards:      make(map[string]*Board),
-		eventStream: make(chan BoardEvent, 100), // Buffer up to 100 events
+	// Initialize ZeroMQ
+	transport := zeromq.NewTransport()
+	pubsub, err := transport.NewPubSub(context.Background(), zmqConfig)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create ZeroMQ pubsub: %w", err)
 	}
 
-	// Start event processor
+	// Create event manager
+	eventManager := NewEventManager(pubsub, "kanban.")
+
+	// Create manager
+	manager := &Manager{
+		store:        store,
+		boards:       make(map[string]*Board),
+		eventStream:  make(chan BoardEvent, 100), // Buffer up to 100 events
+		eventManager: eventManager,
+		pubsub:       pubsub,
+		mu:           sync.RWMutex{},
+	}
+
+	// Subscribe to important events for internal processing
+	eventManager.SubscribeAll(func(event *BoardEvent) error {
+		// Forward to channel for backward compatibility
+		select {
+		case manager.eventStream <- *event:
+		default:
+			// Channel full, just drop the event
+		}
+		return nil
+	})
+
+	// Start event processor for backward compatibility
 	go manager.processEvents()
 
 	return manager, nil
@@ -44,6 +82,11 @@ func (m *Manager) CreateBoard(ctx context.Context, name, description string) (*B
 	board, err := NewBoard(m.store, name, description)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create board: %w", err)
+	}
+
+	// Set the event manager on the new board
+	if m.eventManager != nil {
+		board.SetEventManager(m.eventManager)
 	}
 
 	m.mu.Lock()
@@ -67,6 +110,11 @@ func (m *Manager) GetBoard(ctx context.Context, boardID string) (*Board, error) 
 	board, err := LoadBoard(m.store, boardID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load board: %w", err)
+	}
+
+	// Set the event manager on the loaded board
+	if m.eventManager != nil {
+		board.SetEventManager(m.eventManager)
 	}
 
 	m.mu.Lock()
@@ -340,7 +388,19 @@ func sortEvents(events []BoardEvent) {
 
 // Close closes the manager and releases resources
 func (m *Manager) Close() error {
+	// Close the event manager
+	if m.eventManager != nil {
+		m.eventManager.Close()
+	}
+
+	// Close the pubsub
+	if m.pubsub != nil {
+		m.pubsub.Close()
+	}
+
+	// Close the event stream
 	close(m.eventStream)
+
 	return nil
 }
 

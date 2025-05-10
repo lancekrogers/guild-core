@@ -57,38 +57,38 @@ Think strategically and plan tasks effectively to achieve the objective.
 `
 )
 
-// ManagerAgent implements a manager agent that coordinates worker agents
-type ManagerAgent struct {
-	*BaseAgent
+// GuildMaster implements a master artisan that coordinates other craftsmen
+type GuildMaster struct {
+	*GuildMember
 	kanbanManager *kanban.Manager
-	workerAgents  map[string]Agent // Map of worker agent IDs to agents
+	workerAgents  map[string]GuildArtisan // Map of craftsman IDs to artisans
 }
 
-// NewManagerAgent creates a new manager agent
-func NewManagerAgent(
+// NewGuildMaster creates a new guild master artisan
+func NewGuildMaster(
 	config *AgentConfig,
 	llmClient providers.LLMClient,
 	memoryManager memory.ChainManager,
 	toolRegistry *tools.ToolRegistry,
 	objectiveMgr *objective.Manager,
 	kanbanManager *kanban.Manager,
-) *ManagerAgent {
-	baseAgent := NewBaseAgent(config, llmClient, memoryManager, toolRegistry, objectiveMgr)
-	
-	return &ManagerAgent{
-		BaseAgent:     baseAgent,
+) *GuildMaster {
+	member := NewGuildMember(config, llmClient, memoryManager, toolRegistry, objectiveMgr)
+
+	return &GuildMaster{
+		GuildMember:   member,
 		kanbanManager: kanbanManager,
-		workerAgents:  make(map[string]Agent),
+		workerAgents:  make(map[string]GuildArtisan),
 	}
 }
 
-// RegisterWorkerAgent registers a worker agent with the manager
-func (a *ManagerAgent) RegisterWorkerAgent(agent Agent) {
-	a.workerAgents[agent.ID()] = agent
+// RegisterCraftsman registers a craftsman artisan with the guild master
+func (a *GuildMaster) RegisterCraftsman(artisan GuildArtisan) {
+	a.workerAgents[artisan.ID()] = artisan
 }
 
-// Execute runs the manager agent's execution cycle
-func (a *ManagerAgent) Execute(ctx context.Context) error {
+// CraftSolution runs the guild master's execution cycle
+func (a *GuildMaster) CraftSolution(ctx context.Context) error {
 	// Check if the agent has a task
 	if a.currentTask == nil {
 		return fmt.Errorf("no task assigned")
@@ -569,8 +569,8 @@ func (a *ManagerAgent) completeObjective(ctx context.Context, objectiveID, summa
 	a.SaveState(ctx)
 }
 
-// Stop stops the agent's execution
-func (a *ManagerAgent) Stop(ctx context.Context) error {
+// Stop stops the guild master's execution
+func (a *GuildMaster) Stop(ctx context.Context) error {
 	// Implementation depends on execution model
 	// For simplicity, just update the state
 	a.state.Status = StatusPaused

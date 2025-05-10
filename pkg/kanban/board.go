@@ -14,13 +14,14 @@ import (
 
 // Board represents a kanban board that manages tasks
 type Board struct {
-	ID          string            `json:"id"`
-	Name        string            `json:"name"`
-	Description string            `json:"description"`
-	CreatedAt   time.Time         `json:"created_at"`
-	UpdatedAt   time.Time         `json:"updated_at"`
-	Metadata    map[string]string `json:"metadata,omitempty"`
-	store       memory.Store
+	ID           string            `json:"id"`
+	Name         string            `json:"name"`
+	Description  string            `json:"description"`
+	CreatedAt    time.Time         `json:"created_at"`
+	UpdatedAt    time.Time         `json:"updated_at"`
+	Metadata     map[string]string `json:"metadata,omitempty"`
+	store        memory.Store
+	eventManager *EventManager
 }
 
 // EventType represents the type of event that occurred
@@ -63,7 +64,7 @@ func NewBoard(store memory.Store, name, description string) (*Board, error) {
 	if store == nil {
 		return nil, fmt.Errorf("store cannot be nil")
 	}
-	
+
 	board := &Board{
 		ID:          uuid.New().String(),
 		Name:        name,
@@ -72,14 +73,20 @@ func NewBoard(store memory.Store, name, description string) (*Board, error) {
 		UpdatedAt:   time.Now().UTC(),
 		Metadata:    make(map[string]string),
 		store:       store,
+		eventManager: nil, // Will be set by SetEventManager
 	}
-	
+
 	// Save the board
 	if err := board.Save(context.Background()); err != nil {
 		return nil, err
 	}
-	
+
 	return board, nil
+}
+
+// SetEventManager sets the event manager for this board
+func (b *Board) SetEventManager(em *EventManager) {
+	b.eventManager = em
 }
 
 // LoadBoard loads a board from the store
@@ -619,21 +626,34 @@ func (b *Board) RemoveTaskBlocker(ctx context.Context, taskID, blockerID, change
 	return nil
 }
 
-// emitEvent saves an event to the event store
+// emitEvent saves and publishes an event
 func (b *Board) emitEvent(ctx context.Context, event BoardEvent) error {
 	if b.store == nil {
 		return fmt.Errorf("board not connected to a store")
 	}
-	
+
 	// Generate a unique ID for the event
 	eventID := uuid.New().String()
-	
+
 	// Marshal event to JSON
 	eventData, err := json.Marshal(event)
 	if err != nil {
 		return fmt.Errorf("failed to marshal event: %w", err)
 	}
-	
-	// Save event
-	return b.store.Put(ctx, "board_events", eventID, eventData)
+
+	// Save event to local storage
+	err = b.store.Put(ctx, "board_events", eventID, eventData)
+	if err != nil {
+		return fmt.Errorf("failed to save event: %w", err)
+	}
+
+	// If event manager is available, publish the event
+	if b.eventManager != nil {
+		if pubErr := b.eventManager.PublishEvent(&event); pubErr != nil {
+			// Log but don't fail the operation if publishing fails
+			fmt.Printf("warning: failed to publish event: %v\n", pubErr)
+		}
+	}
+
+	return nil
 }

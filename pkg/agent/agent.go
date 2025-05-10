@@ -2,6 +2,7 @@ package agent
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/blockhead-consulting/Guild/pkg/kanban"
@@ -53,8 +54,8 @@ type AgentState struct {
 	Memory      []string    `json:"memory,omitempty"` // Memory chain IDs
 }
 
-// Agent defines the interface for autonomous agents in the Guild system
-type Agent interface {
+// GuildArtisan defines the interface for autonomous agents in the Guild system
+type GuildArtisan interface {
 	// ID returns the agent's unique identifier
 	ID() string
 
@@ -67,19 +68,19 @@ type Agent interface {
 	// Status returns the agent's current status
 	Status() AgentStatus
 
-	// AssignTask assigns a task to the agent
-	AssignTask(ctx context.Context, task *kanban.Task) error
+	// CommissionWork assigns a task to the artisan
+	CommissionWork(ctx context.Context, task *kanban.Task) error
 
-	// Execute runs the agent's execution cycle
-	Execute(ctx context.Context) error
+	// CraftSolution runs the artisan's execution cycle
+	CraftSolution(ctx context.Context) error
 
 	// Stop gracefully stops the agent's execution
 	Stop(ctx context.Context) error
 
-	// Reset resets the agent to its initial state
-	Reset(ctx context.Context) error
+	// CleanSlate resets the artisan to its initial state
+	CleanSlate(ctx context.Context) error
 
-	// SaveState saves the agent's current state
+	// SaveState saves the artisan's current state
 	SaveState(ctx context.Context) error
 
 	// GetAvailableTools returns the list of tools available to the agent
@@ -95,8 +96,8 @@ type Agent interface {
 	GetMemoryManager() memory.ChainManager
 }
 
-// BaseAgent provides a common implementation for all agents
-type BaseAgent struct {
+// GuildMember provides a common implementation for all guild artisans
+type GuildMember struct {
 	config        *AgentConfig
 	state         *AgentState
 	llmClient     providers.LLMClient
@@ -104,53 +105,71 @@ type BaseAgent struct {
 	toolRegistry  *tools.ToolRegistry
 	currentTask   *kanban.Task
 	objectiveMgr  *objective.Manager
+	costManager   *CostManager
 }
 
-// NewBaseAgent creates a new base agent with the given configuration
-func NewBaseAgent(
+// NewGuildMember creates a new guild member with the given configuration
+func NewGuildMember(
 	config *AgentConfig,
 	llmClient providers.LLMClient,
 	memoryManager memory.ChainManager,
 	toolRegistry *tools.ToolRegistry,
 	objectiveMgr *objective.Manager,
-) *BaseAgent {
+) *GuildMember {
 	state := &AgentState{
 		Status:    StatusIdle,
 		UpdatedAt: time.Now().UTC(),
 	}
 
-	return &BaseAgent{
+	// Initialize cost manager
+	costManager := NewCostManager(CostUnitUSD)
+
+	// Set default model costs if model is specified
+	if config.Model != "" {
+		// Set cost based on model type - simplified estimate
+		switch {
+		case strings.Contains(config.Model, "gpt-4") || strings.Contains(config.Model, "claude-3-opus"):
+			costManager.SetModelCost(config.Model, 0.00003) // $0.03 per 1000 tokens
+		case strings.Contains(config.Model, "gpt-3.5") || strings.Contains(config.Model, "claude-3-sonnet"):
+			costManager.SetModelCost(config.Model, 0.000002) // $0.002 per 1000 tokens
+		default:
+			costManager.SetModelCost(config.Model, 0.000001) // Default cost
+		}
+	}
+
+	return &GuildMember{
 		config:        config,
 		state:         state,
 		llmClient:     llmClient,
 		memoryManager: memoryManager,
 		toolRegistry:  toolRegistry,
 		objectiveMgr:  objectiveMgr,
+		costManager:   costManager,
 	}
 }
 
 // ID returns the agent's unique identifier
-func (a *BaseAgent) ID() string {
+func (a *GuildMember) ID() string {
 	return a.config.ID
 }
 
 // Name returns the agent's human-readable name
-func (a *BaseAgent) Name() string {
+func (a *GuildMember) Name() string {
 	return a.config.Name
 }
 
 // Type returns the agent's type
-func (a *BaseAgent) Type() string {
+func (a *GuildMember) Type() string {
 	return a.config.Type
 }
 
 // Status returns the agent's current status
-func (a *BaseAgent) Status() AgentStatus {
+func (a *GuildMember) Status() AgentStatus {
 	return a.state.Status
 }
 
-// AssignTask assigns a task to the agent
-func (a *BaseAgent) AssignTask(ctx context.Context, task *kanban.Task) error {
+// CommissionWork assigns a task to the guild member
+func (a *GuildMember) CommissionWork(ctx context.Context, task *kanban.Task) error {
 	if a.state.Status == StatusWorking {
 		return ErrAgentBusy
 	}
@@ -164,8 +183,8 @@ func (a *BaseAgent) AssignTask(ctx context.Context, task *kanban.Task) error {
 	return a.SaveState(ctx)
 }
 
-// GetAvailableTools returns the list of tools available to the agent
-func (a *BaseAgent) GetAvailableTools() []tools.Tool {
+// GetAvailableTools returns the list of tools available to the guild member
+func (a *GuildMember) GetAvailableTools() []tools.Tool {
 	var availableTools []tools.Tool
 
 	// Get all tools from the registry
@@ -189,24 +208,24 @@ func (a *BaseAgent) GetAvailableTools() []tools.Tool {
 	return availableTools
 }
 
-// GetConfig returns the agent's configuration
-func (a *BaseAgent) GetConfig() *AgentConfig {
+// GetConfig returns the guild member's configuration
+func (a *GuildMember) GetConfig() *AgentConfig {
 	return a.config
 }
 
-// GetState returns the agent's current state
-func (a *BaseAgent) GetState() *AgentState {
+// GetState returns the guild member's current state
+func (a *GuildMember) GetState() *AgentState {
 	return a.state
 }
 
-// GetMemoryManager returns the agent's memory manager
-func (a *BaseAgent) GetMemoryManager() memory.ChainManager {
+// GetMemoryManager returns the guild member's memory manager
+func (a *GuildMember) GetMemoryManager() memory.ChainManager {
 	return a.memoryManager
 }
 
-// SaveState saves the agent's current state
-// This method should be implemented by concrete agent types
-func (a *BaseAgent) SaveState(ctx context.Context) error {
+// InscribeState saves the guild member's current state
+// This method should be implemented by concrete member types
+func (a *GuildMember) SaveState(ctx context.Context) error {
 	// Update timestamp
 	a.state.UpdatedAt = time.Now().UTC()
 	
@@ -214,8 +233,8 @@ func (a *BaseAgent) SaveState(ctx context.Context) error {
 	return nil
 }
 
-// Reset resets the agent to its initial state
-func (a *BaseAgent) Reset(ctx context.Context) error {
+// CleanSlate resets the guild member to its initial state
+func (a *GuildMember) CleanSlate(ctx context.Context) error {
 	a.state = &AgentState{
 		Status:    StatusIdle,
 		UpdatedAt: time.Now().UTC(),

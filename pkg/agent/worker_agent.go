@@ -56,9 +56,9 @@ Think step-by-step and break down complex tasks. Always provide thorough thought
 `
 )
 
-// WorkerAgent implements a worker agent that executes specific tasks
-type WorkerAgent struct {
-	*BaseAgent
+// Craftsman implements a worker artisan that executes specific tasks
+type Craftsman struct {
+	*GuildMember
 	maxConsecutiveErrors int
 	errorCount           int
 }
@@ -77,37 +77,37 @@ type AgentAction struct {
 	Input map[string]interface{} `json:"input"`
 }
 
-// NewWorkerAgent creates a new worker agent
-func NewWorkerAgent(
+// NewCraftsman creates a new craftsman artisan
+func NewCraftsman(
 	config *AgentConfig,
 	llmClient providers.LLMClient,
 	memoryManager memory.ChainManager,
 	toolRegistry *tools.ToolRegistry,
 	objectiveMgr *objective.Manager,
-) *WorkerAgent {
-	baseAgent := NewBaseAgent(config, llmClient, memoryManager, toolRegistry, objectiveMgr)
-	
-	return &WorkerAgent{
-		BaseAgent:            baseAgent,
+) *Craftsman {
+	member := NewGuildMember(config, llmClient, memoryManager, toolRegistry, objectiveMgr)
+
+	return &Craftsman{
+		GuildMember:          member,
 		maxConsecutiveErrors: 3, // Default max errors before giving up
 	}
 }
 
-// Execute runs the worker agent's execution cycle
-func (a *WorkerAgent) Execute(ctx context.Context) error {
+// CraftSolution runs the craftsman's execution cycle
+func (a *Craftsman) CraftSolution(ctx context.Context) error {
 	// Check if the agent has a task
 	if a.currentTask == nil {
 		return fmt.Errorf("no task assigned")
 	}
-	
+
 	// Update status
 	a.state.Status = StatusWorking
 	a.state.UpdatedAt = time.Now().UTC()
-	
+
 	// Create a memory chain for this execution if needed
 	var chainID string
 	var err error
-	
+
 	if len(a.state.Memory) == 0 {
 		// No existing memory chain, create one
 		chainID, err = a.memoryManager.CreateChain(ctx, a.config.ID, a.currentTask.ID)
@@ -119,22 +119,52 @@ func (a *WorkerAgent) Execute(ctx context.Context) error {
 		// Use the last memory chain
 		chainID = a.state.Memory[len(a.state.Memory)-1]
 	}
-	
+
 	// Prepare context for the prompt
 	promptContext, err := a.buildPromptContext(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to build prompt context: %w", err)
 	}
-	
+
 	// Add task history to prompt context if available
 	taskHistory, err := a.getTaskHistory(ctx)
 	if err == nil && taskHistory != "" {
 		promptContext += "\n\nTask History:\n" + taskHistory
 	}
-	
+
+	// Add cost-awareness if budget is limited
+	llmBudget := a.costManager.GetBudget(CostTypeLLM)
+	toolBudget := a.costManager.GetBudget(CostTypeTool)
+	if llmBudget > 0 || toolBudget > 0 {
+		costContext := "\n\n## Cost Awareness\n"
+		costContext += "You must optimize for cost efficiency while completing this task.\n"
+
+		if llmBudget > 0 {
+			llmCost := a.costManager.GetTotalCost(CostTypeLLM)
+			costContext += fmt.Sprintf("LLM Budget: $%.4f (Used: $%.4f, Remaining: $%.4f)\n",
+				llmBudget, llmCost, llmBudget - llmCost)
+		}
+
+		if toolBudget > 0 {
+			toolCost := a.costManager.GetTotalCost(CostTypeTool)
+			costContext += fmt.Sprintf("Tool Budget: $%.4f (Used: $%.4f, Remaining: $%.4f)\n",
+				toolBudget, toolCost, toolBudget - toolCost)
+		}
+
+		costContext += "\nCost-saving strategies:\n"
+		costContext += "1. Break complex tasks into smaller steps to avoid long completions\n"
+		costContext += "2. Use tools and memory efficiently to avoid redundant LLM calls\n"
+		costContext += "3. Be concise in your reasoning to minimize token usage\n"
+
+		promptContext += costContext
+	}
+
 	// Build the prompt
 	prompt := a.buildPrompt(promptContext)
-	
+
+	// Estimate prompt tokens for cost tracking
+	promptTokens := estimateTokens(prompt)
+
 	// Add the prompt to the memory chain
 	err = a.memoryManager.AddMessage(ctx, chainID, memory.Message{
 		Role:      "system",
@@ -144,13 +174,13 @@ func (a *WorkerAgent) Execute(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("failed to add prompt to memory: %w", err)
 	}
-	
+
 	// Execute the agent loop
-	return a.executeLoop(ctx, chainID)
+	return a.executeLoop(ctx, chainID, promptTokens)
 }
 
 // buildPrompt builds the agent's prompt
-func (a *WorkerAgent) buildPrompt(context string) string {
+func (a *Craftsman) buildPrompt(context string) string {
 	// In a real implementation, you would use a proper template engine
 	// For simplicity, we'll do simple replacements
 	prompt := workerAgentPrompt
@@ -172,7 +202,7 @@ func (a *WorkerAgent) buildPrompt(context string) string {
 }
 
 // buildPromptContext builds the context for the agent's prompt
-func (a *WorkerAgent) buildPromptContext(ctx context.Context) (string, error) {
+func (a *Craftsman) buildPromptContext(ctx context.Context) (string, error) {
 	var contextBuilder strings.Builder
 	
 	// Add relevant metadata from the task
@@ -214,8 +244,15 @@ func (a *WorkerAgent) getTaskHistory(ctx context.Context) (string, error) {
 	return "", nil
 }
 
+// estimateTokens provides a simple estimation of token count from text length
+// This is a very rough approximation - in a real system, you'd use a proper tokenizer
+func estimateTokens(text string) int {
+	// Rough approximation: 1 token ≈ 4 characters for English text
+	return len(text) / 4
+}
+
 // executeLoop executes the agent's main loop
-func (a *WorkerAgent) executeLoop(ctx context.Context, chainID string) error {
+func (a *Craftsman) executeLoop(ctx context.Context, chainID string, promptTokens int) error {
 	for {
 		// Check if the context is cancelled
 		select {
@@ -367,8 +404,8 @@ func (a *WorkerAgent) completeTask(ctx context.Context, summary string) {
 	a.SaveState(ctx)
 }
 
-// Stop stops the agent's execution
-func (a *WorkerAgent) Stop(ctx context.Context) error {
+// Stop stops the craftsman's execution
+func (a *Craftsman) Stop(ctx context.Context) error {
 	// Implementation depends on execution model
 	// For simplicity, just update the state
 	a.state.Status = StatusPaused
