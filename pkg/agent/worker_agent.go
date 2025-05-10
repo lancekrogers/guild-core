@@ -231,7 +231,7 @@ func (a *Craftsman) buildPromptContext(ctx context.Context) (string, error) {
 }
 
 // getTaskHistory retrieves the task's history
-func (a *WorkerAgent) getTaskHistory(ctx context.Context) (string, error) {
+func (a *Craftsman) getTaskHistory(ctx context.Context) (string, error) {
 	if a.currentTask == nil {
 		return "", fmt.Errorf("no task assigned")
 	}
@@ -261,20 +261,43 @@ func (a *Craftsman) executeLoop(ctx context.Context, chainID string, promptToken
 		default:
 			// Continue execution
 		}
-		
+
 		// Get the most recent messages as context
 		messages, err := a.memoryManager.BuildContext(ctx, a.config.ID, a.currentTask.ID, a.config.MaxTokens/2)
 		if err != nil {
 			return fmt.Errorf("failed to build context: %w", err)
 		}
-		
+
 		// Create a completion request
 		req := &providers.CompletionRequest{
 			Prompt:      buildPromptFromMessages(messages),
 			MaxTokens:   a.config.MaxTokens,
 			Temperature: a.config.Temperature,
 		}
-		
+
+		// Estimate LLM cost before making the API call
+		estimatedPromptTokens := estimateTokens(req.Prompt)
+		estimatedMaxCost := a.costManager.EstimateLLMCost(a.config.Model, estimatedPromptTokens, a.config.MaxTokens)
+
+		// Check if we're within budget before making the API call
+		if !a.costManager.CanAfford(CostTypeLLM, estimatedMaxCost) {
+			// Add budget warning to memory
+			budgetMsg := "LLM budget exceeded. The agent will attempt to complete the task with reduced API calls."
+			a.memoryManager.AddMessage(ctx, chainID, memory.Message{
+				Role:      "system",
+				Content:   budgetMsg,
+				Timestamp: time.Now().UTC(),
+			})
+
+			// If we're completely out of budget, stop execution
+			if a.costManager.GetTotalCost(CostTypeLLM) >= a.costManager.GetBudget(CostTypeLLM) * 1.1 { // Allow 10% overage
+				a.state.Status = StatusError
+				a.state.LastError = "LLM budget exhausted"
+				a.SaveState(ctx)
+				return fmt.Errorf("LLM budget exhausted")
+			}
+		}
+
 		// Call the LLM
 		resp, err := a.llmClient.Complete(ctx, req)
 		if err != nil {
@@ -285,16 +308,24 @@ func (a *Craftsman) executeLoop(ctx context.Context, chainID string, promptToken
 				a.SaveState(ctx)
 				return fmt.Errorf("too many consecutive errors: %w", err)
 			}
-			
+
 			// Log error and continue
 			a.state.LastError = err.Error()
 			a.SaveState(ctx)
 			continue
 		}
-		
+
 		// Reset error count
 		a.errorCount = 0
-		
+
+		// Record LLM cost
+		metadata := map[string]string{
+			"agent_id": a.config.ID,
+			"task_id":  a.currentTask.ID,
+			"chain_id": chainID,
+		}
+		a.costManager.RecordLLMCost(a.config.Model, promptTokens, resp.TokensUsed, metadata)
+
 		// Add the response to memory
 		err = a.memoryManager.AddMessage(ctx, chainID, memory.Message{
 			Role:       "assistant",
@@ -305,7 +336,7 @@ func (a *Craftsman) executeLoop(ctx context.Context, chainID string, promptToken
 		if err != nil {
 			return fmt.Errorf("failed to add response to memory: %w", err)
 		}
-		
+
 		// Parse the response
 		agentResp, err := parseAgentResponse(resp.Text)
 		if err != nil {
@@ -318,14 +349,14 @@ func (a *Craftsman) executeLoop(ctx context.Context, chainID string, promptToken
 			})
 			continue
 		}
-		
+
 		// Check if the agent has a final answer
 		if agentResp.FinalAnswer != "" {
 			// Task completed
 			a.completeTask(ctx, agentResp.FinalAnswer)
 			return nil
 		}
-		
+
 		// Check if the agent has a question
 		if agentResp.Question != "" {
 			// Add the question to memory
@@ -336,9 +367,23 @@ func (a *Craftsman) executeLoop(ctx context.Context, chainID string, promptToken
 			})
 			continue
 		}
-		
+
 		// Check if the agent wants to use a tool
 		if agentResp.Action != nil {
+			// Check if we can afford the tool usage
+			toolName := agentResp.Action.Tool
+			toolCost := a.costManager.GetToolCost(toolName)
+			if !a.costManager.CanAfford(CostTypeTool, toolCost) {
+				// Add budget warning to memory
+				budgetMsg := fmt.Sprintf("Tool budget exceeded for %s. Trying to proceed without this tool.", toolName)
+				a.memoryManager.AddMessage(ctx, chainID, memory.Message{
+					Role:      "system",
+					Content:   budgetMsg,
+					Timestamp: time.Now().UTC(),
+				})
+				continue
+			}
+
 			toolResult, err := a.executeTool(ctx, agentResp.Action)
 			if err != nil {
 				// Add error message to memory
@@ -350,7 +395,15 @@ func (a *Craftsman) executeLoop(ctx context.Context, chainID string, promptToken
 				})
 				continue
 			}
-			
+
+			// Record tool cost
+			metadata := map[string]string{
+				"agent_id": a.config.ID,
+				"task_id":  a.currentTask.ID,
+				"chain_id": chainID,
+			}
+			a.costManager.RecordToolCost(toolName, metadata)
+
 			// Add tool result to memory
 			a.memoryManager.AddMessage(ctx, chainID, memory.Message{
 				Role:      "tool",
@@ -363,43 +416,75 @@ func (a *Craftsman) executeLoop(ctx context.Context, chainID string, promptToken
 }
 
 // executeTool executes a tool and returns the result
-func (a *WorkerAgent) executeTool(ctx context.Context, action *AgentAction) (string, error) {
+func (a *Craftsman) executeTool(ctx context.Context, action *AgentAction) (string, error) {
 	if action.Tool == "" {
 		return "", fmt.Errorf("tool name is required")
 	}
-	
+
+	// Check if we're tracking tool costs
+	toolBudget := a.costManager.GetBudget(CostTypeTool)
+	if toolBudget > 0 {
+		// Check if we're within budget before executing the tool
+		toolCost := a.costManager.GetToolCost(action.Tool)
+		if !a.costManager.CanAfford(CostTypeTool, toolCost) {
+			return "", fmt.Errorf("tool budget exceeded for %s", action.Tool)
+		}
+	}
+
 	// Execute the tool
 	result, err := a.toolRegistry.ExecuteToolWithParams(ctx, action.Tool, action.Input)
 	if err != nil {
 		return "", fmt.Errorf("failed to execute tool %s: %w", action.Tool, err)
 	}
-	
+
 	if !result.Success {
 		return "", fmt.Errorf("tool execution failed: %s", result.Error)
 	}
-	
+
 	return result.Output, nil
 }
 
 // completeTask marks the task as complete
-func (a *WorkerAgent) completeTask(ctx context.Context, summary string) {
+func (a *Craftsman) completeTask(ctx context.Context, summary string) {
 	// Update the task status
 	a.currentTask.Status = "done"
 	a.currentTask.UpdatedAt = time.Now().UTC()
 	now := time.Now().UTC()
 	a.currentTask.CompletedAt = &now
-	
+
 	// Add the summary to the task metadata
 	if a.currentTask.Metadata == nil {
 		a.currentTask.Metadata = make(map[string]string)
 	}
 	a.currentTask.Metadata["completion_summary"] = summary
-	
+
+	// Add cost information to the task metadata
+	costReport := a.costManager.GetCostReport()
+
+	// Add LLM cost if available
+	if llmCost, ok := costReport["total_costs"].(map[string]float64)[string(CostTypeLLM)]; ok {
+		a.currentTask.Metadata["llm_cost"] = fmt.Sprintf("%.6f", llmCost)
+	}
+
+	// Add tool cost if available
+	if toolCost, ok := costReport["total_costs"].(map[string]float64)[string(CostTypeTool)]; ok {
+		a.currentTask.Metadata["tool_cost"] = fmt.Sprintf("%.6f", toolCost)
+	}
+
+	// Add total cost
+	totalCost := 0.0
+	if costs, ok := costReport["total_costs"].(map[string]float64); ok {
+		for _, cost := range costs {
+			totalCost += cost
+		}
+	}
+	a.currentTask.Metadata["total_cost"] = fmt.Sprintf("%.6f", totalCost)
+
 	// Update agent state
 	a.state.Status = StatusIdle
 	a.state.CurrentTask = ""
 	a.state.UpdatedAt = time.Now().UTC()
-	
+
 	// Save agent state
 	a.SaveState(ctx)
 }

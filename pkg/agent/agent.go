@@ -94,6 +94,12 @@ type GuildArtisan interface {
 
 	// GetMemoryManager returns the agent's memory manager
 	GetMemoryManager() memory.ChainManager
+
+	// SetCostBudget sets the budget for a specific cost type
+	SetCostBudget(costType CostType, amount float64)
+
+	// GetCostReport returns a report of all costs incurred by the agent
+	GetCostReport() map[string]interface{}
 }
 
 // GuildMember provides a common implementation for all guild artisans
@@ -240,8 +246,18 @@ func (a *GuildMember) CleanSlate(ctx context.Context) error {
 		UpdatedAt: time.Now().UTC(),
 	}
 	a.currentTask = nil
-	
+
 	return a.SaveState(ctx)
+}
+
+// SetCostBudget sets the budget for a specific cost type
+func (a *GuildMember) SetCostBudget(costType CostType, amount float64) {
+	a.costManager.SetBudget(costType, amount)
+}
+
+// GetCostReport returns a report of all costs incurred by the agent
+func (a *GuildMember) GetCostReport() map[string]interface{} {
+	return a.costManager.GetCostReport()
 }
 
 // ErrAgentBusy is returned when trying to assign a task to a busy agent

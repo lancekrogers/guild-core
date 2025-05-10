@@ -87,6 +87,26 @@ func (a *GuildMaster) RegisterCraftsman(artisan GuildArtisan) {
 	a.workerAgents[artisan.ID()] = artisan
 }
 
+// SetCraftsmanCostBudgets sets cost budgets for a craftsman agent
+func (a *GuildMaster) SetCraftsmanCostBudgets(agentID string, llmBudget, toolBudget float64) error {
+	artisan, exists := a.workerAgents[agentID]
+	if !exists {
+		return fmt.Errorf("craftsman not found: %s", agentID)
+	}
+
+	// Set LLM budget
+	if llmBudget > 0 {
+		artisan.SetCostBudget(CostTypeLLM, llmBudget)
+	}
+
+	// Set tool budget
+	if toolBudget > 0 {
+		artisan.SetCostBudget(CostTypeTool, toolBudget)
+	}
+
+	return nil
+}
+
 // CraftSolution runs the guild master's execution cycle
 func (a *GuildMaster) CraftSolution(ctx context.Context) error {
 	// Check if the agent has a task
@@ -163,7 +183,7 @@ func (a *GuildMaster) CraftSolution(ctx context.Context) error {
 }
 
 // getBoardStatus gets the current status of the kanban board
-func (a *ManagerAgent) getBoardStatus(ctx context.Context) (string, error) {
+func (a *GuildMaster) getBoardStatus(ctx context.Context) (string, error) {
 	var statusBuilder strings.Builder
 	
 	// Get all tasks by status
@@ -197,7 +217,7 @@ func (a *ManagerAgent) getBoardStatus(ctx context.Context) (string, error) {
 }
 
 // getWorkerAgentInfo gets information about available worker agents
-func (a *ManagerAgent) getWorkerAgentInfo() string {
+func (a *GuildMaster) getWorkerAgentInfo() string {
 	var infoBuilder strings.Builder
 	
 	for id, agent := range a.workerAgents {
@@ -228,7 +248,7 @@ type ManagerAction struct {
 }
 
 // executeLoop executes the manager agent's main loop
-func (a *ManagerAgent) executeLoop(ctx context.Context, chainID, objectiveID string) error {
+func (a *GuildMaster) executeLoop(ctx context.Context, chainID, objectiveID string) error {
 	for {
 		// Check if the context is cancelled
 		select {
@@ -319,7 +339,7 @@ func (a *ManagerAgent) executeLoop(ctx context.Context, chainID, objectiveID str
 }
 
 // handleManagerAction handles a manager action
-func (a *ManagerAgent) handleManagerAction(ctx context.Context, action *ManagerAction, objectiveID string) (string, error) {
+func (a *GuildMaster) handleManagerAction(ctx context.Context, action *ManagerAction, objectiveID string) (string, error) {
 	switch action.Type {
 	case "create_task":
 		return a.handleCreateTask(ctx, action.Parameters, objectiveID)
@@ -335,7 +355,7 @@ func (a *ManagerAgent) handleManagerAction(ctx context.Context, action *ManagerA
 }
 
 // handleCreateTask handles the create_task action
-func (a *ManagerAgent) handleCreateTask(ctx context.Context, params map[string]interface{}, objectiveID string) (string, error) {
+func (a *GuildMaster) handleCreateTask(ctx context.Context, params map[string]interface{}, objectiveID string) (string, error) {
 	// Extract parameters
 	title, ok := params["title"].(string)
 	if !ok || title == "" {
@@ -389,50 +409,72 @@ func (a *ManagerAgent) handleCreateTask(ctx context.Context, params map[string]i
 }
 
 // handleAssignTask handles the assign_task action
-func (a *ManagerAgent) handleAssignTask(ctx context.Context, params map[string]interface{}) (string, error) {
+func (a *GuildMaster) handleAssignTask(ctx context.Context, params map[string]interface{}) (string, error) {
 	// Extract parameters
 	taskID, ok := params["task_id"].(string)
 	if !ok || taskID == "" {
 		return "", fmt.Errorf("task ID is required")
 	}
-	
+
 	agentID, ok := params["agent_id"].(string)
 	if !ok || agentID == "" {
 		return "", fmt.Errorf("agent ID is required")
 	}
-	
+
+	// Extract optional budget parameters
+	var llmBudget, toolBudget float64
+	if budget, ok := params["llm_budget"].(float64); ok {
+		llmBudget = budget
+	}
+	if budget, ok := params["tool_budget"].(float64); ok {
+		toolBudget = budget
+	}
+
 	// Check if the agent exists
 	agent, exists := a.workerAgents[agentID]
 	if !exists {
 		return "", fmt.Errorf("agent not found: %s", agentID)
 	}
-	
+
 	// Check if the agent is available
 	if agent.Status() != StatusIdle {
 		return "", fmt.Errorf("agent %s is not available (status: %s)", agentID, agent.Status())
 	}
-	
+
 	// Get the task
 	task, err := a.kanbanManager.GetTask(ctx, taskID)
 	if err != nil {
 		return "", fmt.Errorf("task not found: %w", err)
 	}
-	
+
+	// Set cost budgets if provided
+	if llmBudget > 0 || toolBudget > 0 {
+		agent.SetCostBudget(CostTypeLLM, llmBudget)
+		agent.SetCostBudget(CostTypeTool, toolBudget)
+	}
+
 	// Assign the task to the agent
 	if err := a.kanbanManager.AssignTask(ctx, taskID, agentID, a.ID(), "Assigned by manager agent"); err != nil {
 		return "", fmt.Errorf("failed to assign task: %w", err)
 	}
-	
+
 	// Assign the task to the agent
-	if err := agent.AssignTask(ctx, task); err != nil {
+	if err := agent.CommissionWork(ctx, task); err != nil {
 		return "", fmt.Errorf("failed to assign task to agent: %w", err)
 	}
-	
-	return fmt.Sprintf("Task '%s' assigned to agent '%s'", task.Title, agent.Name()), nil
+
+	result := fmt.Sprintf("Task '%s' assigned to agent '%s'", task.Title, agent.Name())
+
+	// Add budget information to the result if set
+	if llmBudget > 0 || toolBudget > 0 {
+		result += fmt.Sprintf(" with budgets (LLM: $%.4f, Tool: $%.4f)", llmBudget, toolBudget)
+	}
+
+	return result, nil
 }
 
 // handleCheckStatus handles the check_status action
-func (a *ManagerAgent) handleCheckStatus(ctx context.Context, params map[string]interface{}) (string, error) {
+func (a *GuildMaster) handleCheckStatus(ctx context.Context, params map[string]interface{}) (string, error) {
 	// Check if we're checking status of a specific task
 	if taskID, ok := params["task_id"].(string); ok && taskID != "" {
 		task, err := a.kanbanManager.GetTask(ctx, taskID)
@@ -461,10 +503,10 @@ func (a *ManagerAgent) handleCheckStatus(ctx context.Context, params map[string]
 		if !exists {
 			return "", fmt.Errorf("agent not found: %s", agentID)
 		}
-		
+
 		state := agent.GetState()
 		status := fmt.Sprintf("Agent: %s\nStatus: %s\n", agent.Name(), agent.Status())
-		
+
 		if state.CurrentTask != "" {
 			task, err := a.kanbanManager.GetTask(ctx, state.CurrentTask)
 			if err == nil {
@@ -473,7 +515,42 @@ func (a *ManagerAgent) handleCheckStatus(ctx context.Context, params map[string]
 				status += fmt.Sprintf("Working on task ID: %s\n", state.CurrentTask)
 			}
 		}
-		
+
+		// Add cost information if available
+		costReport := agent.GetCostReport()
+		if costReport != nil {
+			status += "\nCost Information:\n"
+
+			// Add LLM costs
+			if costs, ok := costReport["total_costs"].(map[string]float64); ok {
+				if llmCost, ok := costs[string(CostTypeLLM)]; ok {
+					status += fmt.Sprintf("LLM Cost: $%.6f\n", llmCost)
+				}
+
+				if toolCost, ok := costs[string(CostTypeTool)]; ok {
+					status += fmt.Sprintf("Tool Cost: $%.6f\n", toolCost)
+				}
+
+				// Calculate total cost
+				totalCost := 0.0
+				for _, cost := range costs {
+					totalCost += cost
+				}
+				status += fmt.Sprintf("Total Cost: $%.6f\n", totalCost)
+			}
+
+			// Add budget information
+			if budgets, ok := costReport["budgets"].(map[string]float64); ok {
+				if llmBudget, ok := budgets[string(CostTypeLLM)]; ok && llmBudget > 0 {
+					status += fmt.Sprintf("LLM Budget: $%.6f\n", llmBudget)
+				}
+
+				if toolBudget, ok := budgets[string(CostTypeTool)]; ok && toolBudget > 0 {
+					status += fmt.Sprintf("Tool Budget: $%.6f\n", toolBudget)
+				}
+			}
+		}
+
 		return status, nil
 	}
 	
@@ -487,7 +564,7 @@ func (a *ManagerAgent) handleCheckStatus(ctx context.Context, params map[string]
 }
 
 // handleProvideFeedback handles the provide_feedback action
-func (a *ManagerAgent) handleProvideFeedback(ctx context.Context, params map[string]interface{}) (string, error) {
+func (a *GuildMaster) handleProvideFeedback(ctx context.Context, params map[string]interface{}) (string, error) {
 	// Extract parameters
 	agentID, ok := params["agent_id"].(string)
 	if !ok || agentID == "" {
@@ -534,7 +611,7 @@ func (a *ManagerAgent) handleProvideFeedback(ctx context.Context, params map[str
 }
 
 // completeObjective marks the objective as complete
-func (a *ManagerAgent) completeObjective(ctx context.Context, objectiveID, summary string) {
+func (a *GuildMaster) completeObjective(ctx context.Context, objectiveID, summary string) {
 	if objectiveID == "" {
 		return
 	}
