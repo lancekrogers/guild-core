@@ -372,6 +372,1023 @@ tasks:
       - "{{.BIN_DIR}}/{{.MAIN_BIN}} objective ui"
     interactive: true
 
+  ui:dev:setup:
+    desc: Setup development environment for the Guild Hall UI (Bubble Tea)
+    cmds:
+      - |
+        echo "🏰 Setting up the Guild Hall UI development environment..."
+
+        # Check if required dependencies are installed
+        if ! go list -m github.com/charmbracelet/bubbletea &>/dev/null; then
+          echo "Installing Bubble Tea (Guild Hall TUI framework)..."
+          go get github.com/charmbracelet/bubbletea@latest
+        fi
+
+        if ! go list -m github.com/charmbracelet/bubbles &>/dev/null; then
+          echo "Installing Bubbles (Guild Hall UI components)..."
+          go get github.com/charmbracelet/bubbles@latest
+        fi
+
+        # Already have lipgloss but check version
+        if go list -m github.com/charmbracelet/lipgloss &>/dev/null; then
+          echo "Lipgloss already installed (Guild Hall styling library)"
+        else
+          echo "Installing Lipgloss (Guild Hall styling library)..."
+          go get github.com/charmbracelet/lipgloss@latest
+        fi
+
+        echo "✅ Guild Hall UI dependencies are ready!"
+
+  ui:dev:run:
+    desc: Run the Guild Hall UI in development mode with hot reloading
+    cmds:
+      - |
+        echo "🏰 Launching Guild Hall UI in Craftsman's Workshop (dev mode)..."
+
+        # Check if air is installed (for hot reloading)
+        if ! command -v air &>/dev/null; then
+          echo "Installing air for hot reloading..."
+          go install github.com/cosmtrek/air@latest
+        fi
+
+        # Create temporary air config if it doesn't exist
+        if [ ! -f .air.toml ]; then
+          cat > .air.toml << EOF
+        root = "."
+        tmp_dir = "tmp"
+
+        [build]
+        cmd = "go build -o ./tmp/guild_hall ./cmd/guild"
+        bin = "./tmp/guild_hall"
+        full_bin = "./tmp/guild_hall objective ui"
+        include_ext = ["go"]
+        exclude_dir = ["tmp", "vendor", "test_data"]
+        delay = 1000
+
+        [screen]
+        clear_on_rebuild = true
+        keep_scroll = true
+        EOF
+        fi
+
+        # Run with air
+        air
+    interactive: true
+
+  ui:test:
+    desc: Test the Guild Hall UI components
+    cmds:
+      - |
+        echo "⚔️ Testing the Guild Hall UI components..."
+
+        # Setup specific environment variables for UI testing
+        UI_TEST_MODE=1 go test ./pkg/ui/... -v
+
+        echo "Testing medieval theme consistency in UI code..."
+        LORE_TERMS=(
+          "Guild" "Hall" "Chamber" "Workshop" "Craftsman" "Artisan"
+          "Master" "Journeyman" "Apprentice" "Ledger" "Craft"
+        )
+
+        UI_FILES=$(find ./pkg/ui -name "*.go" | grep -v "_test.go")
+        TERM_COUNT=0
+
+        echo "Checking UI components for Guild lore terminology..."
+        for term in "${LORE_TERMS[@]}"; do
+          COUNT=$(grep -c "$term" $UI_FILES || echo 0)
+          TERM_COUNT=$((TERM_COUNT + COUNT))
+          echo "- $term: $COUNT occurrences"
+        done
+
+        echo "Total lore terminology in UI: $TERM_COUNT occurrences"
+
+        # Suggest improvements if needed
+        if [ $TERM_COUNT -lt 10 ]; then
+          echo "⚠️ The Guild Hall UI could use more themed terminology!"
+          echo "Suggestion: Consider renaming UI components to use Guild lore-inspired names."
+        else
+          echo "✅ The Guild Hall UI embraces the Guild lore!"
+        fi
+
+  ui:docs:generate:
+    desc: Generate documentation for the Guild Hall UI (with lore)
+    cmds:
+      - |
+        echo "📜 Generating Guild Hall UI documentation..."
+        mkdir -p ./docs/ui
+
+        # Generate component documentation
+        cat > ./docs/ui/guild_hall.md << EOF
+        # Guild Hall Interface 🏰
+
+        The Guild Hall is the central gathering place where Guild Masters oversee objectives,
+        Journeymen track progress, and Apprentices learn the craft of collaboration.
+
+        ## UI Structure and Metaphor
+
+        Our terminal user interface follows medieval guild architecture:
+
+        | UI Section | Guild Metaphor | Purpose |
+        |------------|---------------|---------|
+        | Header | Guild Banner | Shows title and status |
+        | Navigation | Hall Corridors | Move between sections |
+        | Objective List | Guild Ledger | Records all objectives |
+        | Task Board | Workshop Wall | Displays Kanban tasks |
+        | Command Bar | Master's Orders | Available commands |
+        | Status Line | Town Crier | Important messages |
+
+        ## Components
+
+        - **Hall Entrance**: Main view and navigation
+        - **Guild Ledger**: Objective listing and management
+        - **Craftsman's Board**: Task assignment and tracking
+        - **Master's Chambers**: Configuration and settings
+        - **Apprentice's Corner**: Help and documentation
+
+        ## Theme
+
+        The UI uses a carefully crafted color palette inspired by medieval manuscripts and guild halls:
+
+        - Primary: Deep burgundy (#8B0000) - The color of the Guild Master's robes
+        - Secondary: Aged parchment (#F5F5DC) - The color of guild records
+        - Accent: Metallic gold (#D4AF37) - The guild's official seal
+        - Background: Dark oak (#3E2723) - The wooden panels of the guild hall
+        - Text: Ivory (#FFFFF0) - The quill-written text on parchments
+
+        ## Keyboard Commands
+
+        | Key | Guild Action | Effect |
+        |-----|-------------|--------|
+        | h,j,k,l | Journeyman's Steps | Navigate within views |
+        | q | Leave the Hall | Exit the interface |
+        | ? | Consult the Master | Show help |
+        | c | Create a Record | New objective/task |
+        | e | Amend a Record | Edit selected item |
+        | Space | Master's Approval | Select/confirm action |
+
+        EOF
+
+        echo "✅ Guild Hall UI documentation generated at ./docs/ui/guild_hall.md"
+
+  ui:scaffold:
+    desc: Generate a Guild-themed Bubble Tea UI component scaffold
+    cmds:
+      - |
+        if [ -z "{{.COMPONENT}}" ]; then
+          echo "Error: COMPONENT parameter is required"
+          echo "Usage: task ui:scaffold COMPONENT=component_name TYPE=chamber|hall|workshop|ledger"
+          echo "Example: task ui:scaffold COMPONENT=task_list TYPE=ledger"
+          exit 1
+        fi
+
+        # Default type is chamber if not specified
+        COMPONENT_TYPE="{{.TYPE}}"
+        if [ -z "$COMPONENT_TYPE" ]; then
+          COMPONENT_TYPE="chamber"
+        fi
+
+        # Validate component type
+        if [[ ! "$COMPONENT_TYPE" =~ ^(chamber|hall|workshop|ledger)$ ]]; then
+          echo "Error: TYPE must be one of: chamber, hall, workshop, ledger"
+          exit 1
+        fi
+
+        # Convert component name to snake_case
+        COMPONENT_NAME="{{.COMPONENT}}"
+        COMPONENT_SNAKE=$(echo "$COMPONENT_NAME" | tr '[:upper:]' '[:lower:]' | tr ' ' '_')
+
+        # Convert component name to CamelCase for Go
+        COMPONENT_CAMEL=$(echo "$COMPONENT_NAME" | awk -F'_' '{for(i=1;i<=NF;i++){$i=toupper(substr($i,1,1)) substr($i,2)}}1' | tr -d ' ')
+
+        echo "🏰 Generating Guild UI component: $COMPONENT_CAMEL ($COMPONENT_TYPE)"
+
+        # Create component directory if it doesn't exist
+        mkdir -p "./pkg/ui/components/$COMPONENT_SNAKE"
+
+        # Generate model file
+        cat > "./pkg/ui/components/$COMPONENT_SNAKE/model.go" << EOF
+        package ${COMPONENT_SNAKE}
+
+        import (
+        	"github.com/charmbracelet/bubbles/key"
+        	"github.com/charmbracelet/bubbles/viewport"
+        	tea "github.com/charmbracelet/bubbletea"
+        	"github.com/charmbracelet/lipgloss"
+        )
+
+        // ${COMPONENT_CAMEL} represents a $COMPONENT_TYPE in the Guild Hall.
+        // It manages the state and rendering of the ${COMPONENT_NAME} component.
+        type ${COMPONENT_CAMEL} struct {
+        	viewport    viewport.Model
+        	keys        ${COMPONENT_CAMEL}KeyMap
+        	styles      ${COMPONENT_CAMEL}Styles
+        	title       string
+        	description string
+        	focused     bool
+        	height      int
+        	width       int
+        }
+
+        // ${COMPONENT_CAMEL}KeyMap defines the key bindings for the ${COMPONENT_CAMEL} component.
+        type ${COMPONENT_CAMEL}KeyMap struct {
+        	Up    key.Binding
+        	Down  key.Binding
+        	Enter key.Binding
+        	Back  key.Binding
+        }
+
+        // DefaultKeys returns the default key bindings for the ${COMPONENT_CAMEL}.
+        func DefaultKeys() ${COMPONENT_CAMEL}KeyMap {
+        	return ${COMPONENT_CAMEL}KeyMap{
+        		Up: key.NewBinding(
+        			key.WithKeys("up", "k"),
+        			key.WithHelp("↑/k", "move up"),
+        		),
+        		Down: key.NewBinding(
+        			key.WithKeys("down", "j"),
+        			key.WithHelp("↓/j", "move down"),
+        		),
+        		Enter: key.NewBinding(
+        			key.WithKeys("enter"),
+        			key.WithHelp("enter", "select"),
+        		),
+        		Back: key.NewBinding(
+        			key.WithKeys("esc"),
+        			key.WithHelp("esc", "back"),
+        		),
+        	}
+        }
+
+        // ${COMPONENT_CAMEL}Styles defines the visual styles for the ${COMPONENT_CAMEL} component.
+        type ${COMPONENT_CAMEL}Styles struct {
+        	Base      lipgloss.Style
+        	Title     lipgloss.Style
+        	Normal    lipgloss.Style
+        	Focused   lipgloss.Style
+        	Highlight lipgloss.Style
+        }
+
+        // DefaultStyles returns the default styles for the ${COMPONENT_CAMEL}.
+        func DefaultStyles() ${COMPONENT_CAMEL}Styles {
+        	// Colors inspired by medieval guild themes
+        	var (
+        		burgundy    = lipgloss.Color("#8B0000") // Guild Master's robes
+        		parchment   = lipgloss.Color("#F5F5DC") // Guild records
+        		gold        = lipgloss.Color("#D4AF37") // Guild seal
+        		darkOak     = lipgloss.Color("#3E2723") // Guild hall panels
+        		ivory       = lipgloss.Color("#FFFFF0") // Parchment text
+        	)
+
+        	return ${COMPONENT_CAMEL}Styles{
+        		Base: lipgloss.NewStyle().
+        			BorderStyle(lipgloss.RoundedBorder()).
+        			BorderForeground(burgundy).
+        			Padding(1, 2),
+        		Title: lipgloss.NewStyle().
+        			Foreground(gold).
+        			Bold(true),
+        		Normal: lipgloss.NewStyle().
+        			Foreground(ivory).
+        			Background(darkOak),
+        		Focused: lipgloss.NewStyle().
+        			Foreground(darkOak).
+        			Background(parchment).
+        			Bold(true),
+        		Highlight: lipgloss.NewStyle().
+        			Foreground(parchment).
+        			Background(burgundy),
+        	}
+        }
+
+        // New${COMPONENT_CAMEL} creates a new ${COMPONENT_CAMEL} component.
+        func New${COMPONENT_CAMEL}() ${COMPONENT_CAMEL} {
+        	return ${COMPONENT_CAMEL}{
+        		viewport: viewport.New(0, 0),
+        		keys:     DefaultKeys(),
+        		styles:   DefaultStyles(),
+        		title:    "${COMPONENT_TYPE} of $COMPONENT_NAME",
+        		focused:  false,
+        	}
+        }
+
+        // SetSize sets the size of the ${COMPONENT_CAMEL} component.
+        func (m *${COMPONENT_CAMEL}) SetSize(width, height int) {
+        	m.width = width
+        	m.height = height
+        	m.viewport.Width = width - m.styles.Base.GetHorizontalFrameSize()
+        	m.viewport.Height = height - m.styles.Base.GetVerticalFrameSize()
+        }
+
+        // Focus focuses the ${COMPONENT_CAMEL} component.
+        func (m *${COMPONENT_CAMEL}) Focus() {
+        	m.focused = true
+        }
+
+        // Blur blurs the ${COMPONENT_CAMEL} component.
+        func (m *${COMPONENT_CAMEL}) Blur() {
+        	m.focused = false
+        }
+
+        // Init initializes the ${COMPONENT_CAMEL} component.
+        func (m ${COMPONENT_CAMEL}) Init() tea.Cmd {
+        	// Return any initial commands for this component
+        	return nil
+        }
+
+        // Update handles messages and user input for the ${COMPONENT_CAMEL} component.
+        func (m ${COMPONENT_CAMEL}) Update(msg tea.Msg) (${COMPONENT_CAMEL}, tea.Cmd) {
+        	var (
+        		cmd  tea.Cmd
+        		cmds []tea.Cmd
+        	)
+
+        	switch msg := msg.(type) {
+        	case tea.KeyMsg:
+        		// Handle keys only when focused
+        		if !m.focused {
+        			break
+        		}
+
+        		switch {
+        		case key.Matches(msg, m.keys.Up):
+        			m.viewport, cmd = m.viewport.Update(msg)
+        			cmds = append(cmds, cmd)
+
+        		case key.Matches(msg, m.keys.Down):
+        			m.viewport, cmd = m.viewport.Update(msg)
+        			cmds = append(cmds, cmd)
+
+        		case key.Matches(msg, m.keys.Enter):
+        			// Handle selection
+        			// Add your enter key logic here
+
+        		case key.Matches(msg, m.keys.Back):
+        			// Handle back
+        			// Add your back logic here
+        		}
+
+        	case tea.WindowSizeMsg:
+        		m.SetSize(msg.Width, msg.Height)
+        	}
+
+        	// Always update the viewport
+        	m.viewport, cmd = m.viewport.Update(msg)
+        	cmds = append(cmds, cmd)
+
+        	return m, tea.Batch(cmds...)
+        }
+
+        // View renders the ${COMPONENT_CAMEL} component.
+        func (m ${COMPONENT_CAMEL}) View() string {
+        	baseStyle := m.styles.Base
+        	if m.focused {
+        		baseStyle = baseStyle.BorderForeground(m.styles.Highlight.GetBackground())
+        	}
+
+        	return baseStyle.Render(
+        		lipgloss.JoinVertical(
+        			lipgloss.Left,
+        			m.styles.Title.Render(m.title),
+        			m.viewport.View(),
+        		),
+        	)
+        }
+        EOF
+
+        # Generate test file
+        cat > "./pkg/ui/components/$COMPONENT_SNAKE/${COMPONENT_SNAKE}_test.go" << EOF
+        package ${COMPONENT_SNAKE}
+
+        import (
+        	"testing"
+
+        	tea "github.com/charmbracelet/bubbletea"
+        )
+
+        // TestCraft${COMPONENT_CAMEL} tests the creation of the ${COMPONENT_CAMEL} component.
+        func TestCraft${COMPONENT_CAMEL}(t *testing.T) {
+        	model := New${COMPONENT_CAMEL}()
+
+        	if model.title == "" {
+        		t.Errorf("Expected title to be set, got empty string")
+        	}
+
+        	if model.viewport.Width != 0 || model.viewport.Height != 0 {
+        		t.Errorf("Expected viewport size to be (0,0), got (%d,%d)",
+        			model.viewport.Width, model.viewport.Height)
+        	}
+        }
+
+        // TestGuild${COMPONENT_CAMEL}Sizing tests the sizing behavior of the ${COMPONENT_CAMEL} component.
+        func TestGuild${COMPONENT_CAMEL}Sizing(t *testing.T) {
+        	model := New${COMPONENT_CAMEL}()
+
+        	model.SetSize(80, 24)
+
+        	expectedViewportWidth := 80 - model.styles.Base.GetHorizontalFrameSize()
+        	expectedViewportHeight := 24 - model.styles.Base.GetVerticalFrameSize()
+
+        	if model.viewport.Width != expectedViewportWidth ||
+        	   model.viewport.Height != expectedViewportHeight {
+        		t.Errorf("Expected viewport size to be (%d,%d), got (%d,%d)",
+        			expectedViewportWidth, expectedViewportHeight,
+        			model.viewport.Width, model.viewport.Height)
+        	}
+        }
+
+        // TestJourneyman${COMPONENT_CAMEL}Focus tests focus management of the ${COMPONENT_CAMEL} component.
+        func TestJourneyman${COMPONENT_CAMEL}Focus(t *testing.T) {
+        	model := New${COMPONENT_CAMEL}()
+
+        	// Should start unfocused
+        	if model.focused {
+        		t.Errorf("Expected component to start unfocused")
+        	}
+
+        	// Focus the component
+        	model.Focus()
+        	if !model.focused {
+        		t.Errorf("Expected component to be focused after Focus()")
+        	}
+
+        	// Blur the component
+        	model.Blur()
+        	if model.focused {
+        		t.Errorf("Expected component to be unfocused after Blur()")
+        	}
+        }
+
+        // TestApprentice${COMPONENT_CAMEL}InvalidInput tests handling of invalid input.
+        func TestApprentice${COMPONENT_CAMEL}InvalidInput(t *testing.T) {
+        	model := New${COMPONENT_CAMEL}()
+
+        	// Test with nil message (should not panic)
+        	_, _ = model.Update(nil)
+
+        	// Test with unexpected message type (should not panic)
+        	_, _ = model.Update("unexpected string message")
+        }
+        EOF
+
+        echo "✅ Generated Guild Hall UI component: ${COMPONENT_CAMEL}"
+        echo "   Files created:"
+        echo "   - pkg/ui/components/$COMPONENT_SNAKE/model.go"
+        echo "   - pkg/ui/components/$COMPONENT_SNAKE/${COMPONENT_SNAKE}_test.go"
+        echo ""
+        echo "   This component represents a $COMPONENT_TYPE in the Guild Hall."
+        echo "   Use 'task ui:dev:run' to see it in action once integrated."
+
+  ui:styleguide:
+    desc: Generate a Guild Hall UI style guide with medieval themes
+    cmds:
+      - |
+        echo "📜 Generating Guild Hall UI Style Guide..."
+        mkdir -p ./docs/ui
+
+        # Generate style guide file with Guild lore styling
+        cat > ./docs/ui/styleguide.md << EOF
+        # Guild Hall UI Style Guide 🏰
+
+        This document defines the visual language and interaction patterns for the Guild Terminal User Interface.
+        All UI components should adhere to these guidelines to maintain a cohesive medieval guild aesthetic.
+
+        ## Design Principles
+
+        1. **Craft Excellence**: Every UI element should be crafted with care and attention to detail
+        2. **Guild Heritage**: UI metaphors should reflect medieval guild structures and practices
+        3. **Master's Wisdom**: Interface should be intuitive while revealing depth with experience
+        4. **Apprentice Accessibility**: Core functions must be understandable to newcomers
+        5. **Journeyman's Efficiency**: Advanced workflows should be optimized for speed
+
+        ## Color Palette
+
+        Our Guild Hall palette draws from authentic medieval colors and materials:
+
+        ### Primary Colors
+
+        \`\`\`go
+        // Primary colors (to be used in lipgloss styles)
+        burgundy := lipgloss.Color("#8B0000") // Guild Master's robes
+        parchment := lipgloss.Color("#F5F5DC") // Guild records
+        gold := lipgloss.Color("#D4AF37") // Guild seal
+        darkOak := lipgloss.Color("#3E2723") // Guild hall panels
+        ivory := lipgloss.Color("#FFFFF0") // Parchment text
+        \`\`\`
+
+        ### Supporting Colors
+
+        \`\`\`go
+        // Supporting colors for specific states
+        emerald := lipgloss.Color("#2E8B57") // Success/completion
+        sapphire := lipgloss.Color("#0067A5") // Information/links
+        ruby := lipgloss.Color("#9B111E") // Errors/warnings
+        amethyst := lipgloss.Color("#5D3954") // Special/magic actions
+        \`\`\`
+
+        ## Typography
+
+        Guild interfaces use a consistent typography system:
+
+        - **Titles**: Bold, gold text for main headers
+        - **Subtitles**: Bold, ivory text for section headers
+        - **Body**: Regular ivory text for content
+        - **Annotations**: Italicized or dimmed text for additional information
+        - **Highlights**: Bold, contrasting text for important elements
+
+        ## Standard Component Styles
+
+        ### Borders and Containers
+
+        All containers in the Guild Hall should use consistent border styles:
+
+        \`\`\`go
+        // Hall (primary container)
+        hallStyle := lipgloss.NewStyle().
+            BorderStyle(lipgloss.DoubleBorder()).
+            BorderForeground(burgundy).
+            Padding(1, 2)
+
+        // Chamber (secondary container)
+        chamberStyle := lipgloss.NewStyle().
+            BorderStyle(lipgloss.RoundedBorder()).
+            BorderForeground(gold).
+            Padding(1, 2)
+
+        // Workshop (content container)
+        workshopStyle := lipgloss.NewStyle().
+            BorderStyle(lipgloss.NormalBorder()).
+            BorderForeground(darkOak).
+            Padding(0, 1)
+
+        // Scroll (list/text container)
+        scrollStyle := lipgloss.NewStyle().
+            BorderStyle(lipgloss.HiddenBorder()).
+            Padding(0, 1)
+        \`\`\`
+
+        ### Interactive Elements
+
+        Interactive elements follow a consistent visual language:
+
+        \`\`\`go
+        // Button (interactive element)
+        buttonStyle := lipgloss.NewStyle().
+            Border(lipgloss.NormalBorder()).
+            BorderForeground(gold).
+            Foreground(ivory).
+            Background(burgundy).
+            Padding(0, 3)
+
+        // Selected item
+        selectedStyle := lipgloss.NewStyle().
+            Foreground(darkOak).
+            Background(parchment).
+            Bold(true)
+
+        // Inactive/disabled item
+        inactiveStyle := lipgloss.NewStyle().
+            Foreground(lipgloss.Color("#727272")).
+            Italic(true)
+        \`\`\`
+
+        ## Component Guide
+
+        Each component should be named following Guild metaphors:
+
+        | Component Type | Guild Metaphor | Example |
+        |----------------|---------------|---------|
+        | Main View | Hall | \`GuildHall\`, \`TreasuryHall\` |
+        | Section | Chamber | \`PlanningChamber\`, \`ArchiveChamber\` |
+        | Interactive Area | Workshop | \`TaskWorkshop\`, \`CodeWorkshop\` |
+        | Data Display | Ledger | \`ObjectiveLedger\`, \`CostLedger\` |
+        | Controls | Tools | \`NavigationTools\`, \`FilteringTools\` |
+
+        ## Animation and Interaction
+
+        Animations should be subtle and reflect medieval craftsmanship:
+
+        - Use wipes and fades rather than modern transitions
+        - Progress indicators should resemble hourglasses or similar period-appropriate concepts
+        - Loading spinners should evoke spinning wheels or other craft tools
+
+        ## Voice and Tone
+
+        UI text should maintain medieval guild terminology:
+
+        | Modern Term | Guild Term |
+        |-------------|------------|
+        | Create | Craft |
+        | View | Examine |
+        | Edit | Amend |
+        | Delete | Discard |
+        | Settings | Master's Orders |
+        | Help | Apprentice's Guide |
+        | Filter | Separate |
+        | Sort | Arrange |
+
+        ## Implementation Example
+
+        Here's an example of a compliant UI component implementation:
+
+        \`\`\`go
+        // GuildLedger represents a list of records in the guild system
+        type GuildLedger struct {
+            title     string
+            list      list.Model
+            styles    LedgerStyles
+            focused   bool
+        }
+
+        // LedgerStyles contains the styles for the GuildLedger component
+        type LedgerStyles struct {
+            Base      lipgloss.Style
+            Title     lipgloss.Style
+            Item      lipgloss.Style
+            Selected  lipgloss.Style
+            Empty     lipgloss.Style
+        }
+
+        // DefaultLedgerStyles returns Guild-themed styles for the ledger
+        func DefaultLedgerStyles() LedgerStyles {
+            return LedgerStyles{
+                Base: lipgloss.NewStyle().
+                    BorderStyle(lipgloss.RoundedBorder()).
+                    BorderForeground(lipgloss.Color("#8B0000")).
+                    Padding(1, 2),
+                Title: lipgloss.NewStyle().
+                    Foreground(lipgloss.Color("#D4AF37")).
+                    Bold(true),
+                Item: lipgloss.NewStyle().
+                    Foreground(lipgloss.Color("#FFFFF0")),
+                Selected: lipgloss.NewStyle().
+                    Foreground(lipgloss.Color("#3E2723")).
+                    Background(lipgloss.Color("#F5F5DC")).
+                    Bold(true),
+                Empty: lipgloss.NewStyle().
+                    Foreground(lipgloss.Color("#727272")).
+                    Italic(true),
+            }
+        }
+        \`\`\`
+
+        ## Accessibility
+
+        While maintaining medieval aesthetics, ensure:
+
+        - Color combinations meet minimum contrast requirements
+        - All interactions are keyboard accessible
+        - Status information is clearly communicated
+        - Critical actions have confirmation steps
+
+        ## TUI Testing
+
+        All Guild Hall UI components should be tested using the \`ui:test\` task, which verifies:
+
+        - Proper Guild terminology is used consistently
+        - Components render as expected
+        - Keyboard interactions work correctly
+        - Focus management functions properly
+        - Components handle error states gracefully
+
+        Remember that a well-crafted Guild Hall interface embodies the spirit of medieval craftspeople while providing modern functionality.
+        EOF
+
+        echo "✅ Guild Hall UI Style Guide generated at ./docs/ui/styleguide.md"
+
+  ui:demo:
+    desc: Generate and run a demo of the Guild Hall UI
+    cmds:
+      - |
+        echo "🏰 Creating Guild Hall UI demo..."
+
+        # Create a demo directory if it doesn't exist
+        mkdir -p ./cmd/demos/guild_hall
+
+        # Generate a simple standalone demo
+        cat > ./cmd/demos/guild_hall/main.go << EOF
+        package main
+
+        import (
+            "fmt"
+            "os"
+
+            "github.com/charmbracelet/bubbles/list"
+            "github.com/charmbracelet/bubbles/viewport"
+            tea "github.com/charmbracelet/bubbletea"
+            "github.com/charmbracelet/lipgloss"
+        )
+
+        // Colors inspired by medieval guild themes
+        var (
+            burgundy  = lipgloss.Color("#8B0000") // Guild Master's robes
+            parchment = lipgloss.Color("#F5F5DC") // Guild records
+            gold      = lipgloss.Color("#D4AF37") // Guild seal
+            darkOak   = lipgloss.Color("#3E2723") // Guild hall panels
+            ivory     = lipgloss.Color("#FFFFF0") // Parchment text
+            emerald   = lipgloss.Color("#2E8B57") // Success states
+            ruby      = lipgloss.Color("#9B111E") // Error states
+        )
+
+        // UI Styles for the Guild Hall demo
+        var (
+            // Main container style (Guild Hall)
+            hallStyle = lipgloss.NewStyle().
+                BorderStyle(lipgloss.DoubleBorder()).
+                BorderForeground(burgundy).
+                Padding(1, 2)
+
+            // Section container style (Guild Chamber)
+            chamberStyle = lipgloss.NewStyle().
+                BorderStyle(lipgloss.RoundedBorder()).
+                BorderForeground(gold).
+                Padding(1, 2)
+
+            // Title style
+            titleStyle = lipgloss.NewStyle().
+                Foreground(gold).
+                Bold(true).
+                Padding(0, 1)
+
+            // Normal text style
+            textStyle = lipgloss.NewStyle().
+                Foreground(ivory)
+
+            // Selected text style
+            selectedStyle = lipgloss.NewStyle().
+                Foreground(darkOak).
+                Background(parchment).
+                Bold(true)
+
+            // Status style
+            statusStyle = lipgloss.NewStyle().
+                Foreground(parchment).
+                Background(burgundy).
+                Padding(0, 1)
+        )
+
+        // Item represents an item in our demo list
+        type item struct {
+            title       string
+            description string
+            status      string
+        }
+
+        // FilterValue implements the list.Item interface
+        func (i item) FilterValue() string { return i.title }
+
+        // Title returns the item's title
+        func (i item) Title() string { return i.title }
+
+        // Description returns the item's description
+        func (i item) Description() string { return i.description }
+
+        // GuildHall is our main UI model
+        type GuildHall struct {
+            objectives list.Model
+            details    viewport.Model
+            selected   string
+            width      int
+            height     int
+        }
+
+        // createDemoItems creates some demo items with Guild theme
+        func createDemoItems() []list.Item {
+            return []list.Item{
+                item{
+                    title:       "Guild Charter: Framework Development",
+                    description: "Establish the core framework for Guild operations",
+                    status:      "in_progress",
+                },
+                item{
+                    title:       "Guild Treasury: Cost Management",
+                    description: "Implement token tracking and optimization",
+                    status:      "pending",
+                },
+                item{
+                    title:       "Craftsmen Workshop: Vector Store",
+                    description: "Develop the vector storage system for Guild memory",
+                    status:      "in_progress",
+                },
+                item{
+                    title:       "Master's Directive: CLI Tools",
+                    description: "Create CLI tools for Guild interaction",
+                    status:      "completed",
+                },
+                item{
+                    title:       "Journeyman's Task: Documentation",
+                    description: "Write comprehensive documentation for Guild users",
+                    status:      "pending",
+                },
+            }
+        }
+
+        // Initialize creates our initial model
+        func Initialize() *GuildHall {
+            // Create the list of objectives
+            items := createDemoItems()
+            l := list.New(items, list.NewDefaultDelegate(), 0, 0)
+            l.Title = "Guild Objectives Ledger"
+            l.SetShowStatusBar(false)
+            l.SetFilteringEnabled(false)
+            l.Styles.Title = titleStyle
+            l.Styles.TitleBar = titleStyle
+
+            // Create the details viewport
+            d := viewport.New(0, 0)
+            d.Style = textStyle
+
+            return &GuildHall{
+                objectives: l,
+                details:    d,
+                selected:   "",
+            }
+        }
+
+        // Init initializes the model
+        func (m GuildHall) Init() tea.Cmd {
+            return nil
+        }
+
+        // Update handles UI messages
+        func (m GuildHall) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+            var (
+                cmd  tea.Cmd
+                cmds []tea.Cmd
+            )
+
+            switch msg := msg.(type) {
+            case tea.WindowSizeMsg:
+                m.width = msg.Width
+                m.height = msg.Height
+
+                // Reserve room for the status bar
+                statusHeight := 1
+                mainHeight := m.height - statusHeight
+
+                // Left panel gets 40% of the width
+                leftWidth := m.width * 40 / 100
+                rightWidth := m.width - leftWidth - 5 // 5 for padding/border
+
+                m.objectives.SetWidth(leftWidth)
+                m.objectives.SetHeight(mainHeight)
+
+                m.details.Width = rightWidth
+                m.details.Height = mainHeight
+
+                // If we have selection, update viewport content
+                if i, ok := m.objectives.SelectedItem().(item); ok {
+                    m.selected = i.title
+                    m.updateDetailsContent(i)
+                }
+
+            case tea.KeyMsg:
+                switch msg.String() {
+                case "q", "ctrl+c":
+                    return m, tea.Quit
+                }
+
+                // Handle list key presses
+                if m.objectives.FilterState() != list.Filtering {
+                    prevSelection := ""
+                    if i, ok := m.objectives.SelectedItem().(item); ok {
+                        prevSelection = i.title
+                    }
+
+                    // Let the list handle the key press
+                    m.objectives, cmd = m.objectives.Update(msg)
+                    cmds = append(cmds, cmd)
+
+                    // If selection changed, update details
+                    if i, ok := m.objectives.SelectedItem().(item); ok && i.title != prevSelection {
+                        m.selected = i.title
+                        m.updateDetailsContent(i)
+                    }
+                }
+
+                // Let the details viewport handle scrolling
+                m.details, cmd = m.details.Update(msg)
+                cmds = append(cmds, cmd)
+            }
+
+            return m, tea.Batch(cmds...)
+        }
+
+        // updateDetailsContent updates the content in the details panel
+        func (m *GuildHall) updateDetailsContent(i item) {
+            // Simulate a detailed objective content
+            content := fmt.Sprintf(
+                "%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n",
+                titleStyle.Render("📜 "+i.title),
+                textStyle.Render("Description:"),
+                textStyle.Render("  "+i.description),
+                textStyle.Render("Status:"),
+                getStatusStyle(i.status).Render("  "+i.status),
+                textStyle.Render("Guild Master:"),
+                textStyle.Render("  Master Craftsman Claude"),
+                textStyle.Render("This objective seeks to advance the Guild's capabilities through diligent craft and dedicated artisanship. The work shall be conducted according to the ancient traditions of guild practice, with attention to detail and commitment to excellence."),
+            )
+            m.details.SetContent(content)
+        }
+
+        // getStatusStyle returns a style based on status
+        func getStatusStyle(status string) lipgloss.Style {
+            switch status {
+            case "completed":
+                return lipgloss.NewStyle().
+                    Foreground(emerald).
+                    Bold(true)
+            case "in_progress":
+                return lipgloss.NewStyle().
+                    Foreground(gold).
+                    Bold(true)
+            case "pending":
+                return lipgloss.NewStyle().
+                    Foreground(ivory)
+            default:
+                return textStyle
+            }
+        }
+
+        // View renders the UI
+        func (m GuildHall) View() string {
+            if m.width == 0 {
+                return "Initializing..."
+            }
+
+            // Render the left panel (Objectives list)
+            leftPanel := chamberStyle.Copy().
+                Width(m.objectives.Width()).
+                Height(m.objectives.Height()).
+                Render(m.objectives.View())
+
+            // Render the right panel (Details panel)
+            detailsTitle := titleStyle.Render("Objective Details")
+            detailsContent := m.details.View()
+            rightPanel := chamberStyle.Copy().
+                Width(m.details.Width).
+                Height(m.details.Height).
+                Render(lipgloss.JoinVertical(
+                    lipgloss.Left,
+                    detailsTitle,
+                    detailsContent,
+                ))
+
+            // Combine panels
+            mainContent := lipgloss.JoinHorizontal(
+                lipgloss.Top,
+                leftPanel,
+                rightPanel,
+            )
+
+            // Add status bar
+            statusBar := statusStyle.Copy().
+                Width(m.width).
+                Render("Press q to exit • arrow keys to navigate • enter to select")
+
+            // Wrap everything in the main hall style
+            return hallStyle.Copy().
+                Width(m.width - hallStyle.GetHorizontalFrameSize()).
+                Height(m.height - hallStyle.GetVerticalFrameSize()).
+                Render(lipgloss.JoinVertical(
+                    lipgloss.Left,
+                    lipgloss.NewStyle().Bold(true).Foreground(gold).Render("🏰 Guild Hall - Objective Management Chamber"),
+                    mainContent,
+                    statusBar,
+                ))
+        }
+
+        func main() {
+            // Initialize our model
+            hall := Initialize()
+
+            // Start the Bubble Tea program
+            p := tea.NewProgram(hall, tea.WithAltScreen())
+            if _, err := p.Run(); err != nil {
+                fmt.Printf("Error running program: %v", err)
+                os.Exit(1)
+            }
+        }
+        EOF
+
+        # Update go.mod if needed
+        if ! grep -q "github.com/charmbracelet/bubbletea" go.mod; then
+          go get github.com/charmbracelet/bubbletea@latest
+        fi
+
+        if ! grep -q "github.com/charmbracelet/bubbles" go.mod; then
+          go get github.com/charmbracelet/bubbles@latest
+        fi
+
+        echo "Building Guild Hall demo..."
+        go build -o bin/guild_hall_demo ./cmd/demos/guild_hall
+
+        echo "✅ Guild Hall demo created and built!"
+        echo "Running demo..."
+
+        # Run the demo with Alt Screen
+        bin/guild_hall_demo
+    interactive: true
+
   test:analyze:lore:
     desc: Analyze test adherence to Guild's lore and naming conventions
     cmds:

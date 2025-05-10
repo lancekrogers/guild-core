@@ -87,6 +87,20 @@ Tasks are managed on a Kanban board with different columns representing task sta
 - **Task Model**: `pkg/kanban/taskmodel.go`
 - **Manager**: `pkg/kanban/manager.go`
 
+### Guild Hall UI
+
+The Guild Hall is our TUI (Terminal User Interface) built with Bubble Tea and styled according to medieval guild themes.
+
+- **Components**: `pkg/ui/components/`
+- **Objective UI**: `pkg/ui/objective/`
+- **Style Guide**: `docs/ui/styleguide.md`
+
+The UI follows Guild's lore and naming conventions:
+- **Hall**: Main application views
+- **Chamber**: Section/panel components
+- **Workshop**: Interactive components
+- **Ledger**: Data display components
+
 ### LLM Providers
 
 Guild supports multiple LLM providers through a common interface.
@@ -236,6 +250,78 @@ Guild uses themed test names according to the following conventions:
 - Create mock implementations for interfaces in `mocks/` subdirectories
 - Test both success and error cases
 - Add thorough test comments explaining what each test verifies
+
+## UI Development
+
+The Guild Hall UI is built using [Bubble Tea](https://github.com/charmbracelet/bubbletea), a Go framework for building terminal user interfaces. All UI components follow Guild's medieval theme and lore.
+
+### Setting Up UI Environment
+
+```bash
+# Install UI dependencies (Bubble Tea, Bubbles, and Lipgloss)
+task ui:dev:setup
+```
+
+### Creating New UI Components
+
+Guild UI components follow a metaphor-based naming convention:
+
+- **Hall**: Main views that contain multiple components
+- **Chamber**: Panels or sections within a Hall
+- **Workshop**: Interactive areas where users perform actions
+- **Ledger**: Components that display structured data
+
+To scaffold a new component:
+
+```bash
+# Generate a new UI component
+task ui:scaffold COMPONENT=task_list TYPE=ledger
+
+# This will create:
+# - pkg/ui/components/task_list/model.go
+# - pkg/ui/components/task_list/task_list_test.go
+```
+
+Generated components follow Guild's naming and styling conventions automatically.
+
+### UI Development Workflow
+
+1. Use `task ui:scaffold` to create new components
+2. Run the UI in development mode with hot reloading:
+   ```bash
+   task ui:dev:run
+   ```
+3. Test the UI components with Guild lore verification:
+   ```bash
+   task ui:test
+   ```
+4. Check your component against the style guide:
+   ```bash
+   task ui:styleguide
+   ```
+
+### UI Documentation and Style Guide
+
+The UI style guide defines the visual language and interaction patterns:
+
+```bash
+# Generate or update the UI style guide
+task ui:styleguide
+
+# Generate Guild Hall UI documentation
+task ui:docs:generate
+```
+
+The generated documentation can be found in the `docs/ui/` directory.
+
+### UI Testing Conventions
+
+UI tests should follow Guild's test naming conventions:
+
+- `TestCraft<Component>`: Tests for component creation
+- `TestGuild<Component>`: Tests for component integration
+- `TestJourneyman<Component>`: Tests for mock interactions
+- `TestApprentice<Component>`: Tests for error handling
 
 ## Building and Running
 

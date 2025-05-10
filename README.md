@@ -148,14 +148,15 @@ guild task unblock task-123 --input "Focus more on practical examples"
 
 ## 🏗️ Architecture
 
-Guild is built on a component-based architecture:
+Guild is built on a component-based architecture inspired by medieval guild structures:
 
-- **Agents**: LLM-powered workers that execute tasks
-- **Guilds**: Coordinators that manage multiple agents
-- **Kanban**: Task tracking system with state management
-- **Memory**: Persistence layer with vector search capabilities
-- **Tools**: External capabilities that agents can use
-- **Objectives**: Structured goals defined in markdown
+- **Agents** (Artisans): LLM-powered workers that execute specialized tasks
+- **Guilds** (Master Craftsmen): Coordinators that manage multiple agents
+- **Kanban** (Workshop Board): Task tracking system with state management
+- **Memory** (Archives): Persistence layer with vector search capabilities
+- **Tools** (Implements): External capabilities that agents can use
+- **Objectives** (Commissions): Structured goals defined in markdown
+- **Guild Hall UI**: Medieval-themed terminal UI for objective management
 
 ## 📚 Documentation
 
@@ -236,10 +237,19 @@ task version
 task objective:create CLI_ARGS="My new objective"
 task objective:list
 task objective:view CLI_ARGS="objective-id"
-task objective:ui      # Launch the UI
+task objective:ui      # Launch the Guild Hall UI
 
 # Agent commands
 task agent CLI_ARGS="start agent-id"
+
+# Guild Hall UI Development
+task ui:dev:setup           # Install Guild Hall UI dependencies (Bubble Tea)
+task ui:dev:run             # Run Guild Hall in craftsman's workshop mode (hot reloading)
+task ui:scaffold COMPONENT=task_list TYPE=ledger  # Craft a new Guild Hall component
+task ui:test                # Verify Guild Hall components for lore compliance
+task ui:styleguide          # Generate Guild Hall style manuscript
+task ui:docs:generate       # Scribe Guild Hall documentation
+task ui:demo                # Visit the Guild Hall demonstration
 ```
 
 ### Project Structure

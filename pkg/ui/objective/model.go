@@ -1,0 +1,199 @@
+package objective_ui
+
+import (
+	"github.com/charmbracelet/bubbles/help"
+	"github.com/charmbracelet/bubbles/key"
+	"github.com/charmbracelet/bubbles/list"
+	"github.com/charmbracelet/bubbles/textarea"
+	"github.com/charmbracelet/bubbles/textinput"
+	"github.com/charmbracelet/bubbles/viewport"
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/blockhead-consulting/guild/pkg/objective"
+	"github.com/blockhead-consulting/guild/pkg/generator/objective"
+)
+
+// Define UI states
+const (
+	stateViewing   = "viewing"   // Viewing objective details
+	stateEditing   = "editing"   // Editing objective content
+	stateCreating  = "creating"  // Creating a new objective
+	stateContext   = "context"   // Adding context
+	statePreview   = "preview"   // Previewing generated docs
+	stateCommands  = "commands"  // Command input mode
+	stateDashboard = "dashboard" // Objectives dashboard
+)
+
+// Define key mappings using Guild lore-inspired names
+type GuildHallKeyMap struct {
+	// Navigation
+	NavigateUp    key.Binding
+	NavigateDown  key.Binding
+	NavigateLeft  key.Binding
+	NavigateRight key.Binding
+	
+	// Actions
+	Craft         key.Binding // Add context (create)
+	Refine        key.Binding // Regenerate (refine)
+	ConsultMaster key.Binding // Suggest improvements
+	ApproveWork   key.Binding // Mark as ready
+	ExamineDocs   key.Binding // Preview docs
+	
+	// UI Controls
+	EnterHall     key.Binding // Enter command mode
+	LeaveHall     key.Binding // Exit
+	SeekGuidance  key.Binding // Help
+	ToggleView    key.Binding // Toggle between views
+}
+
+// Define UI state using Guild metaphors
+type ObjectiveChamber struct {
+	// Session state
+	objectiveManager *objective.Manager      // Manages objectives
+	planner          *objective.Planner      // Plans objectives
+	currentObjective *objective.Objective    // Current objective
+	generator        generator.ObjectiveGenerator // LLM generator for objectives
+	objectivePath    string                  // Path to current objective file
+
+	// UI components
+	scribe          textarea.Model     // Text input for longer content (medieval scribe)
+	parchment       textinput.Model    // Text input for commands (writing on parchment)
+	viewport        viewport.Model     // Content viewing area (viewing the scroll)
+	ledger          list.Model         // Objectives list (guild ledger)
+	helpScroll      help.Model         // Help display (instruction scroll)
+	keymap          GuildHallKeyMap    // Key bindings
+
+	// UI state
+	hallWidth, hallHeight int    // Terminal dimensions (hall dimensions)
+	chamberState          string // Current UI state (which chamber we're in)
+	readyForMaster        bool   // Whether objective is ready (ready for guildmaster)
+	proclamation          string // Status message (town crier's proclamation)
+	guildError            error  // Error state
+
+	// Content
+	aiDocsPreview   string   // Preview of generated ai_docs
+	specsPreview    string   // Preview of generated specs
+	objectivePreview string  // Preview of current objective
+	contextHistory   []string // History of added context
+}
+
+// DefaultKeyMap returns the default key mappings with Guild-themed help text
+func DefaultKeyMap() GuildHallKeyMap {
+	return GuildHallKeyMap{
+		NavigateUp: key.NewBinding(
+			key.WithKeys("up", "k"),
+			key.WithHelp("↑/k", "move northward"),
+		),
+		NavigateDown: key.NewBinding(
+			key.WithKeys("down", "j"),
+			key.WithHelp("↓/j", "move southward"),
+		),
+		NavigateLeft: key.NewBinding(
+			key.WithKeys("left", "h"),
+			key.WithHelp("←/h", "move westward"),
+		),
+		NavigateRight: key.NewBinding(
+			key.WithKeys("right", "l"),
+			key.WithHelp("→/l", "move eastward"),
+		),
+		Craft: key.NewBinding(
+			key.WithKeys("a", "c"),
+			key.WithHelp("a/c", "craft context"),
+		),
+		Refine: key.NewBinding(
+			key.WithKeys("r"),
+			key.WithHelp("r", "refine documents"),
+		),
+		ConsultMaster: key.NewBinding(
+			key.WithKeys("s"),
+			key.WithHelp("s", "seek master's counsel"),
+		),
+		ApproveWork: key.NewBinding(
+			key.WithKeys("m"),
+			key.WithHelp("m", "mark work as masterful"),
+		),
+		ExamineDocs: key.NewBinding(
+			key.WithKeys("p"),
+			key.WithHelp("p", "peruse documents"),
+		),
+		EnterHall: key.NewBinding(
+			key.WithKeys(":"),
+			key.WithHelp(":", "enter the command hall"),
+		),
+		LeaveHall: key.NewBinding(
+			key.WithKeys("q", "ctrl+c"),
+			key.WithHelp("q", "leave the guild hall"),
+		),
+		SeekGuidance: key.NewBinding(
+			key.WithKeys("?"),
+			key.WithHelp("?", "seek apprentice guidance"),
+		),
+		ToggleView: key.NewBinding(
+			key.WithKeys("tab"),
+			key.WithHelp("tab", "change chamber view"),
+		),
+	}
+}
+
+// NewModel creates a new Guild Hall model for objective planning
+func NewModel(objectivePath string) *ObjectiveChamber {
+	// Initialize textarea for context input
+	scribe := textarea.New()
+	scribe.Placeholder = "Enter context or reference documents (e.g., @spec/path/to/file.md)"
+	scribe.Focus()
+	scribe.SetHeight(10)
+	scribe.ShowLineNumbers = false
+	
+	// Initialize command input
+	parchment := textinput.New()
+	parchment.Placeholder = "Enter command or : to begin"
+	parchment.CharLimit = 250
+	
+	// Initialize viewport for displaying content
+	viewport := viewport.New(80, 20)
+	viewport.SetContent("Welcome to the Guild Hall Objective Chamber")
+	
+	// Initialize objectives list
+	ledger := list.New([]list.Item{}, list.NewDefaultDelegate(), 0, 0)
+	ledger.Title = "Guild Objectives Ledger"
+	ledger.SetShowStatusBar(false)
+	ledger.SetFilteringEnabled(false)
+	
+	// Initialize help
+	helpScroll := help.New()
+	
+	// Create the model with Guild-themed names
+	chamber := &ObjectiveChamber{
+		objectivePath:  objectivePath,
+		scribe:         scribe,
+		parchment:      parchment,
+		viewport:       viewport,
+		ledger:         ledger,
+		helpScroll:     helpScroll,
+		keymap:         DefaultKeyMap(),
+		chamberState:   stateViewing,
+		proclamation:   "Welcome to the Guild Objective Chamber. How may we assist your planning?",
+		contextHistory: []string{},
+	}
+	
+	// If objective path is provided, load that objective
+	if objectivePath != "" {
+		// TODO: Load objective from the provided path
+		// This would be implemented using the objective.Manager
+		chamber.proclamation = "Examining the objective scroll: " + objectivePath
+	} else {
+		// No objective, offer to create one
+		chamber.chamberState = stateCreating
+		chamber.proclamation = "A blank parchment awaits. Describe your objective to begin crafting."
+	}
+	
+	return chamber
+}
+
+// Init implements tea.Model
+func (m ObjectiveChamber) Init() tea.Cmd {
+	// Start with multiple initialization commands
+	return tea.Batch(
+		textarea.Blink,
+		textinput.Blink,
+	)
+}
