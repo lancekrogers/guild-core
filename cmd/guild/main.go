@@ -34,9 +34,100 @@ var versionCmd = &cobra.Command{
 	},
 }
 
+// objectiveCmd represents the objective command
+var objectiveCmd = &cobra.Command{
+	Use:   "objective",
+	Short: "Manage objectives",
+	Long:  `Create, list, view, and manage objectives for your Guild agents.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		cmd.Help()
+	},
+}
+
+// objectiveCreateCmd represents the objective create command
+var objectiveCreateCmd = &cobra.Command{
+	Use:   "create",
+	Short: "Create a new objective",
+	Long:  `Create a new objective for Guild agents to work on.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Creating new objective...")
+		fmt.Println("This feature is not yet implemented.")
+	},
+}
+
+// objectiveListCmd represents the objective list command
+var objectiveListCmd = &cobra.Command{
+	Use:   "list",
+	Short: "List all objectives",
+	Long:  `List all available objectives.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Listing objectives...")
+		fmt.Println("This feature is not yet implemented.")
+	},
+}
+
+// objectiveViewCmd represents the objective view command
+var objectiveViewCmd = &cobra.Command{
+	Use:   "view [id]",
+	Short: "View a specific objective",
+	Long:  `View details of a specific objective by ID.`,
+	Args:  cobra.MinimumNArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Printf("Viewing objective %s...\n", args[0])
+		fmt.Println("This feature is not yet implemented.")
+	},
+}
+
+// objectiveUICmd represents the objective UI command
+var objectiveUICmd = &cobra.Command{
+	Use:   "ui",
+	Short: "Launch the objective UI",
+	Long:  `Launch the interactive terminal user interface for managing objectives.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Launching objective UI...")
+		fmt.Println("This feature is not yet implemented.")
+	},
+}
+
+// agentCmd represents the agent command
+var agentCmd = &cobra.Command{
+	Use:   "agent",
+	Short: "Manage agents",
+	Long:  `Create, list, start, and stop agents in your Guild.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		cmd.Help()
+	},
+}
+
+// agentStartCmd represents the agent start command
+var agentStartCmd = &cobra.Command{
+	Use:   "start [agent-id]",
+	Short: "Start an agent",
+	Long:  `Start a specific agent or all agents if no ID is provided.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) > 0 {
+			fmt.Printf("Starting agent %s...\n", args[0])
+		} else {
+			fmt.Println("Starting all agents...")
+		}
+		fmt.Println("This feature is not yet implemented.")
+	},
+}
+
 func init() {
 	// Register commands
 	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(objectiveCmd)
+	rootCmd.AddCommand(agentCmd)
+
+	// Register objective subcommands
+	objectiveCmd.AddCommand(objectiveCreateCmd)
+	objectiveCmd.AddCommand(objectiveListCmd)
+	objectiveCmd.AddCommand(objectiveViewCmd)
+	objectiveCmd.AddCommand(objectiveUICmd)
+
+	// Register agent subcommands
+	agentCmd.AddCommand(agentStartCmd)
 }
 
 // Execute summons the Guild and its artisans (standard: launches the CLI application)

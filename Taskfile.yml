@@ -1,0 +1,124 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  BIN_DIR: ./bin
+  CMD_DIR: ./cmd/guild
+  MAIN_BIN: guild
+  GO_FLAGS: -v
+  LDFLAGS: -w -s
+
+tasks:
+  default:
+    cmds:
+      - task: build
+
+  build:
+    desc: Build the Guild binary
+    cmds:
+      - mkdir -p {{.BIN_DIR}}
+      - go build {{.GO_FLAGS}} -ldflags "{{.LDFLAGS}}" -o {{.BIN_DIR}}/{{.MAIN_BIN}} {{.CMD_DIR}}
+    sources:
+      - '**/*.go'
+      - 'go.mod'
+      - 'go.sum'
+    generates:
+      - '{{.BIN_DIR}}/{{.MAIN_BIN}}'
+
+  run:
+    desc: Build and run the Guild CLI with arguments
+    deps: [build]
+    cmds:
+      - |
+        if [ -n "{{.CLI_ARGS}}" ]; then
+          {{.BIN_DIR}}/{{.MAIN_BIN}} {{.CLI_ARGS}}
+        else
+          {{.BIN_DIR}}/{{.MAIN_BIN}}
+        fi
+    interactive: true
+
+  test:
+    desc: Run all tests
+    cmds:
+      - go test ./...
+
+  test:unit:
+    desc: Run unit tests only
+    cmds:
+      - go test -short ./...
+
+  test:packages:
+    desc: Run tests for specific packages
+    cmds:
+      - go test {{.GO_FLAGS}} {{.PACKAGE}}
+
+  lint:
+    desc: Run linters
+    cmds:
+      - go vet ./...
+      - |
+        if command -v golangci-lint >/dev/null 2>&1; then
+          golangci-lint run
+        else
+          echo "golangci-lint not found, skipping advanced linting"
+        fi
+
+  clean:
+    desc: Remove build artifacts
+    cmds:
+      - rm -rf {{.BIN_DIR}}
+
+  version:
+    desc: Display Guild version
+    cmds:
+      - '{{.BIN_DIR}}/{{.MAIN_BIN}} version'
+    deps: [build]
+
+  deps:install:
+    desc: Install required dependencies
+    cmds:
+      - |
+        echo "Installing build dependencies..."
+        # ZeroMQ dependency (used for communication)
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+          brew install zeromq
+        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+          sudo apt-get update && sudo apt-get install -y libzmq3-dev
+        else
+          echo "Please install ZeroMQ manually for your platform"
+        fi
+        go mod download
+
+  agent:start:
+    desc: Start a specific agent or all agents
+    deps: [build]
+    cmds:
+      - '{{.BIN_DIR}}/{{.MAIN_BIN}} agent start{{if .CLI_ARGS}} {{.CLI_ARGS}}{{end}}'
+    interactive: true
+
+  objective:create:
+    desc: Create a new objective
+    deps: [build]
+    cmds:
+      - '{{.BIN_DIR}}/{{.MAIN_BIN}} objective create {{.CLI_ARGS}}'
+    interactive: true
+
+  objective:list:
+    desc: List all objectives
+    deps: [build]
+    cmds:
+      - '{{.BIN_DIR}}/{{.MAIN_BIN}} objective list'
+
+  objective:view:
+    desc: View an objective
+    deps: [build]
+    cmds:
+      - '{{.BIN_DIR}}/{{.MAIN_BIN}} objective view {{.CLI_ARGS}}'
+
+  objective:ui:
+    desc: Launch the objective UI
+    deps: [build]
+    cmds:
+      - '{{.BIN_DIR}}/{{.MAIN_BIN}} objective ui'
+    interactive: true

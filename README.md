@@ -185,11 +185,49 @@ Guild includes several example projects:
 git clone https://github.com/yourusername/guild.git
 cd guild
 
-# Run tests
-go test ./...
+# Using Taskfile (recommended)
+# Install Task if you don't have it: https://taskfile.dev/installation/
+task build      # Build the CLI
+task test       # Run tests
+task version    # Display version
 
-# Build the CLI
+# Manual build
 go build -o bin/guild cmd/guild/main.go
+```
+
+### Using Taskfile
+
+Guild uses [Taskfile](https://taskfile.dev/) to simplify common development tasks:
+
+```bash
+# Install dependencies (including ZeroMQ)
+task deps:install
+
+# Build the project
+task build
+
+# Run the application
+task run CLI_ARGS="--help"
+
+# Run tests
+task test              # Run all tests
+task test:unit         # Run unit tests only
+task test:packages     # Run tests for specific packages
+
+# Clean build artifacts
+task clean
+
+# Show version
+task version
+
+# Objective commands
+task objective:create CLI_ARGS="My new objective"
+task objective:list
+task objective:view CLI_ARGS="objective-id"
+task objective:ui      # Launch the UI
+
+# Agent commands
+task agent CLI_ARGS="start agent-id"
 ```
 
 ### Project Structure
