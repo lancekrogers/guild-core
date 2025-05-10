@@ -2,11 +2,18 @@
 package objective_ui
 
 import (
+	"context"
 	"fmt"
+	"os"
+	"os/exec"
 	"strings"
-	
+	"time"
+
 	"github.com/charmbracelet/bubbles/key"
+	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
+
+	"github.com/blockhead-consulting/guild/pkg/ui/objective/components"
 )
 
 // Custom message types with Guild-themed names
@@ -15,6 +22,9 @@ type ContextCraftedMsg struct {
 	Success bool
 	Error   error
 }
+
+// Reference to availableCommands from model.go
+var availableCommands string
 
 type DocumentRefiningMsg struct {
 	Success bool
@@ -677,29 +687,137 @@ func executeCommandCmd(m ObjectiveChamber, command string) tea.Cmd {
 		if len(parts) == 0 {
 			return nil
 		}
-		
+
 		cmd := parts[0]
 		args := parts[1:]
-		
+
+		// Handle built-in UI commands
 		switch cmd {
 		case "add-context", "craft":
 			if len(args) > 0 {
 				context := strings.Join(args, " ")
 				return addContextCmd(m, context)()
 			}
-			
+
 		case "regenerate", "refine":
 			return generateDocumentsCmd(m)()
-			
+
 		case "suggest":
 			return requestSuggestionsCmd(m)()
-			
+
 		case "ready":
 			return markObjectiveReadyCmd(m)()
-			
-		// Add other commands as needed
+
+		case "list":
+			// Switch to dashboard view which shows the objective list
+			m.chamberState = stateDashboard
+			return loadObjectivesCmd(m)()
+
+		case "create":
+			// If arguments provided, create objective from them
+			if len(args) > 0 {
+				description := strings.Join(args, " ")
+				return createObjectiveCmd(m, description)()
+			}
+			// Otherwise switch to create view
+			m.chamberState = stateCreating
+			m.scribe.Focus()
+			m.proclamation = "Describe your new objective..."
+			return nil
+
+		case "help":
+			// Show help view and command reference
+			m.helpScroll.ShowAll = true
+
+			// Also show command reference in viewport
+			m.viewport.SetContent(availableCommands)
+			m.chamberState = statePreview
+			return nil
+
+		case "view":
+			// If path provided, attempt to load objective
+			if len(args) > 0 && m.objectiveManager != nil {
+				path := args[0]
+				ctx := context.Background()
+
+				// Try to load the objective
+				obj, err := m.objectiveManager.LoadObjectiveFromFile(ctx, path)
+				if err != nil {
+					return ObjectiveLoadedMsg{
+						Objective: "",
+						Success:   false,
+						Error:     err,
+					}
+				}
+
+				// If planner exists, set up the planning session
+				if m.planner != nil {
+					err := m.planner.SetObjective(ctx, obj.ID)
+					if err != nil {
+						return ObjectiveLoadedMsg{
+							Objective: "",
+							Success:   false,
+							Error:     err,
+						}
+					}
+				}
+
+				m.currentObjective = obj
+				content := ""
+				if obj.Content != "" {
+					content = obj.Content
+				} else {
+					content = formatObjectiveContent(obj)
+				}
+
+				return ObjectiveLoadedMsg{
+					Objective: content,
+					Success:   true,
+					Error:     nil,
+				}
+			}
+			return nil
+
+		// Guild CLI passthrough commands - these will run the actual CLI commands as processes
+		case "exec":
+			// Format: exec <subcommand> [args...]
+			if len(args) > 0 {
+				return executeExternalCommandCmd(strings.Join(args, " "))()
+			}
+
+		// Direct subcommand passthrough
+		case "list-all", "create-obj", "view-obj", "agent":
+			// These are direct passthroughs to guild CLI commands
+			// Construct the command based on the UI command
+			var cliCmd string
+			switch cmd {
+			case "list-all":
+				cliCmd = "objective list"
+			case "create-obj":
+				if len(args) > 0 {
+					cliCmd = "objective create " + strings.Join(args, " ")
+				} else {
+					cliCmd = "objective create"
+				}
+			case "view-obj":
+				if len(args) > 0 {
+					cliCmd = "objective view " + strings.Join(args, " ")
+				} else {
+					cliCmd = "objective view"
+				}
+			case "agent":
+				if len(args) > 0 {
+					cliCmd = "agent " + strings.Join(args, " ")
+				} else {
+					cliCmd = "agent"
+				}
+			}
+
+			if cliCmd != "" {
+				return executeExternalCommandCmd(cliCmd)()
+			}
 		}
-		
+
 		return nil
 	}
 }
@@ -731,3 +849,56 @@ Tags: %s
 	strings.Join(obj.Tags, ", "),
 	)
 }
+// init initializes variables needed by this package
+func init() {
+	// Initialize command reference
+	availableCommands = `
+Guild Hall Command Reference:
+
+UI Commands:
+  help                   - Show this guidance
+  create [description]   - Create a new objective
+  view [path]            - View an objective by path
+  list                   - List all objectives
+  add-context [text]     - Add context to current objective
+  regenerate             - Regenerate documents
+  suggest                - Get improvement suggestions
+  ready                  - Mark objective as ready
+
+CLI Passthrough:
+  exec [command]         - Execute any guild command
+  list-all               - List all objectives (CLI)
+  create-obj [desc]      - Create objective (CLI)
+  view-obj [id]          - View objective (CLI)
+  agent [subcommand]     - Run agent commands
+
+Use ctrl+enter to submit in text areas.
+`
+}
+
+// executeExternalCommandCmd creates a command to execute an external Guild CLI command
+func executeExternalCommandCmd(cmdStr string) tea.Cmd {
+	return func() tea.Msg {
+		// Execute the external command
+		result := components.ExecuteExternalCommand(cmdStr)
+		
+		// Format the output for display
+		outputMsg := fmt.Sprintf("Command: guild %s\n\n", cmdStr)
+		if result.Success {
+			outputMsg += fmt.Sprintf("Success\! Output:\n%s", result.Output)
+		} else {
+			outputMsg += fmt.Sprintf("Error (code %d):\n%s\n\nOutput:\n%s", 
+				result.ExitCode,
+				result.Error.Error(),
+				result.Output)
+		}
+		
+		// Return a message that will display this output in the viewport
+		return ObjectiveLoadedMsg{
+			Objective: outputMsg,
+			Success:   true,
+			Error:     nil,
+		}
+	}
+}
+EOF < /dev/null

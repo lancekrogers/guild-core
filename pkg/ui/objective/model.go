@@ -136,6 +136,7 @@ func DefaultKeyMap() GuildHallKeyMap {
 	}
 }
 
+
 // NewModel creates a new Guild Hall model for objective planning
 func NewModel(objectivePath string, manager *objective.Manager, planner *objective.Planner, generator objective.ObjectiveGenerator) *ObjectiveChamber {
 	// Initialize textarea for context input

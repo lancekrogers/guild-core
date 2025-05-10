@@ -36,11 +36,17 @@ var versionCmd = &cobra.Command{
 
 // objectiveCmd represents the objective command
 var objectiveCmd = &cobra.Command{
-	Use:   "objective",
-	Short: "Manage objectives",
-	Long:  `Create, list, view, and manage objectives for your Guild agents.`,
+	Use:   "objective [subcommand]",
+	Short: "Manage objectives through UI or subcommands",
+	Long:  `Create, list, view, and manage objectives for your Guild agents.
+
+When run without subcommands, launches the interactive UI for objective management.
+Subcommands are available for command-line operations without the UI.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+		// Launch the objective UI by default when just "guild objective" is run
+		if err := runObjectiveUI(""); err != nil {
+			fmt.Printf("Error running objective UI: %v\n", err)
+		}
 	},
 }
 

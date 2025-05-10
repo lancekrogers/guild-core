@@ -16,11 +16,12 @@ import (
 	objective_ui "github.com/blockhead-consulting/guild/pkg/ui/objective"
 )
 
-// objectiveUICmd represents the command that launches the Objective UI
+// objectiveUICmd represents the command that explicitly launches the Objective UI
 var objectiveUICmd = &cobra.Command{
 	Use:   "ui [objectivePath]",
 	Short: "Launch the Guild Hall Objective UI",
 	Long: `Launch the Guild Hall interactive terminal UI for objective management.
+This is the same UI that opens when you run 'guild objective' with no subcommand.
 With no arguments, it allows you to create a new objective.
 With an objective path, it opens that specific objective for editing.`,
 	Run: func(cmd *cobra.Command, args []string) {
