@@ -1,4 +1,4 @@
-module github.com/lancekrogers/guild
+module github.com/blockhead-consulting/guild
 
 go 1.24.2
 
