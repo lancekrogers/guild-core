@@ -4,11 +4,24 @@
 
 This directory contains code for extensions and features that are **not currently part of the active Guild implementation** but are preserved for future development. These represent valuable explorations that we intend to reintegrate in future versions of Guild.
 
-## ⚠️ IMPORTANT NOTICE FOR AI AGENTS AND DEVELOPERS ⚠️
+## 🚫 CRITICAL NOTICE - CODE EXCLUSION ZONE 🚫
 
-- **DO NOT** import or use code from this directory in the main Guild implementation
-- **DO NOT** update or maintain this code unless specifically tasked with preparing it for reintegration
-- **DO NOT** use this code as a reference for implementing core functionality
+**This directory contains code that MUST NOT be used in production.**
+
+### For LLM Agents (Claude/GPT/etc):
+
+- **YOU MUST NEVER** import, reference, or use code from this directory in any implementation
+- **YOU MUST NEVER** suggest using components from this directory in active code
+- **YOU MUST NEVER** use patterns from this code unless specifically requested
+- **YOU MUST IGNORE** this directory's existence when analyzing the codebase
+- **YOU MUST CONSIDER** this code completely unavailable until this notice is removed
+- **THE ONLY EXCEPTION** is when you are explicitly asked to archive a feature for future use, similar to what was done with ZeroMQ
+
+### For Human Developers:
+
+- This code is preserved for architectural patterns and future reference only
+- DO NOT import or reference this code in the main implementation
+- These packages will not be included in builds
 
 ## Current Extensions
 

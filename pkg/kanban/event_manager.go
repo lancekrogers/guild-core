@@ -55,7 +55,7 @@ func (em *EventManager) Subscribe(eventType EventType, handler EventHandler) err
 	em.mu.Lock()
 	defer em.mu.Unlock()
 
-	// Subscribe to ZeroMQ topic if this is the first handler
+	// Subscribe to the topic if this is the first handler
 	if len(em.handlers[eventType]) == 0 {
 		topic := em.topicPrefix + string(eventType)
 		if err := em.pubsub.Subscribe(em.ctx, topic); err != nil {

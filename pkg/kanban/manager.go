@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/blockhead-consulting/guild/pkg/comms"
-	"github.com/blockhead-consulting/guild/pkg/comms/transport/zeromq"
+	"github.com/blockhead-consulting/guild/pkg/comms/channel"
 	"github.com/blockhead-consulting/guild/pkg/memory"
 )
 
@@ -34,17 +34,17 @@ func NewManager(store memory.Store) (*Manager, error) {
 	})
 }
 
-// NewManagerWithConfig creates a new kanban manager with custom ZeroMQ config
-func NewManagerWithConfig(store memory.Store, zmqConfig map[string]interface{}) (*Manager, error) {
+// NewManagerWithConfig creates a new kanban manager with custom channel config
+func NewManagerWithConfig(store memory.Store, channelConfig map[string]interface{}) (*Manager, error) {
 	if store == nil {
 		return nil, fmt.Errorf("store cannot be nil")
 	}
 
-	// Initialize ZeroMQ
-	transport := zeromq.NewTransport()
-	pubsub, err := transport.NewPubSub(context.Background(), zmqConfig)
+	// Initialize channel-based messaging
+	transport := channel.NewTransport()
+	pubsub, err := transport.NewPubSub(context.Background(), channelConfig)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create ZeroMQ pubsub: %w", err)
+		return nil, fmt.Errorf("failed to create channel pubsub: %w", err)
 	}
 
 	// Create event manager

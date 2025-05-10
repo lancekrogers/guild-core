@@ -1,12 +1,39 @@
-# ZeroMQ Integration
+# ZeroMQ Support - Deferred
 
-This document explains how to use ZeroMQ for messaging in Guild.
+> ⚠️ **NOTICE**: ZeroMQ integration has been deferred to a future version of Guild. This document is maintained for reference only.
 
-## Overview
+ZeroMQ support has been moved to the "horizon features" category. See `/specs/horizon/zeromq_integration.md` for details.
 
-ZeroMQ (also known as ØMQ) is a high-performance asynchronous messaging library that Guild uses for internal event communication. It enables efficient communication between agents, the CLI, and other system components.
+## Current Implementation
 
-## Installation
+Guild currently uses a Go-native channel-based messaging system for inter-component communication. This approach:
+
+1. Requires no external dependencies
+2. Uses standard Go concurrency patterns
+3. Is simpler to set up and use
+4. Works perfectly for single-process deployments
+
+The channel-based implementation is located in `pkg/comms/channel/` and implements the same interfaces previously intended for ZeroMQ.
+
+## Future Plans
+
+ZeroMQ integration will be revisited when:
+
+1. Cross-language agent support is implemented
+2. Distributed deployment across multiple machines is needed
+3. The core functionality of Guild is stable and well-tested
+
+The existing ZeroMQ code has been preserved in `pkg/extensions/zeromq/` for future reference.
+
+## Original Documentation (For Reference Only)
+
+The following is the original documentation and is kept for reference purposes only.
+
+### Overview
+
+ZeroMQ (also known as ØMQ) is a high-performance asynchronous messaging library that can enable efficient communication between agents, the CLI, and other system components.
+
+### Installation
 
 ### Dependencies
 

@@ -1,6 +1,6 @@
 # 🧠 Goal
 
-Design a task management system for Guild based on Kanban principles to coordinate multi-agent workflows, track task states, and support dynamic updates via ZeroMQ and BoltDB.
+Design a task management system for Guild based on Kanban principles to coordinate multi-agent workflows, track task states, and support dynamic updates via Go channels and BoltDB.
 
 ---
 
@@ -78,9 +78,9 @@ Some tasks (e.g., interface definitions) **block dependent tasks** until marked 
 
 ---
 
-# 📡 ZeroMQ Events
+# 📡 Event System
 
-Used as the internal message bus for live updates and distributed coordination.
+Uses Go channels for the internal message bus with a pub/sub pattern for live updates and coordination.
 
 ### 📤 Emitted Events
 
@@ -106,11 +106,13 @@ Used as the internal message bus for live updates and distributed coordination.
 }
 ```
 
-Messages can be sent over `PUB/SUB` or `REQ/REP` sockets to support:
+Events are published and consumed through the channel-based pub/sub system to support:
 
 - Live dashboards
-- Distributed CLI tools
+- CLI tools
 - Replay + auditing
+
+> **Future Extension**: For distributed deployment across multiple machines, ZeroMQ integration is planned for a future version. See `/specs/horizon/zeromq_integration.md` for details.
 
 ---
 

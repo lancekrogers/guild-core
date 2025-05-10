@@ -13,4 +13,6 @@ Guild is a multi-agent orchestration framework written in Go for autonomous deve
 
 - CLI (via `cmd/guild`)
 - Internal task engine
-- ZeroMQ + BoltDB backend
+- Go channels + BoltDB backend
+
+> **Note**: ZeroMQ integration has been deferred to future versions and replaced with Go native channels for communication. See `/specs/horizon/zeromq_integration.md` for details on planned future extension.

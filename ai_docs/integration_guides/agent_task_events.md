@@ -40,7 +40,7 @@ Events use a standardized JSON structure:
 
 ## Publishing Events
 
-Events are published using the ZeroMQ publisher:
+Events are published using Guild's channel-based Pub/Sub system:
 
 ```go
 // pkg/orchestrator/eventbus.go
@@ -52,7 +52,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/your-username/guild/pkg/comms/transport/zeromq"
+	"github.com/blockhead-consulting/guild/pkg/comms"
+	"github.com/blockhead-consulting/guild/pkg/comms/channel"
 )
 
 // Event represents a system event
@@ -66,28 +67,26 @@ type Event struct {
 
 // EventBus manages event publishing and subscription
 type EventBus struct {
-	publisher  *zeromq.Publisher
-	subscriber *zeromq.Subscriber
-	callbacks  map[string][]func(Event)
+	pubsub    comms.PubSub
+	callbacks map[string][]func(Event)
 }
 
 // NewEventBus creates a new event bus
-func NewEventBus(publishAddress, subscribeAddress string) (*EventBus, error) {
-	publisher, err := zeromq.NewPublisher(publishAddress)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create publisher: %w", err)
-	}
+func NewEventBus() (*EventBus, error) {
+	// Create a new channel-based transport
+	transport := channel.NewTransport()
 
-	subscriber, err := zeromq.NewSubscriber(subscribeAddress, []string{"events"})
+	// Create a PubSub with a buffer size of 100
+	pubsub, err := transport.NewPubSub(context.Background(), map[string]interface{}{
+		"buffer_size": 100,
+	})
 	if err != nil {
-		publisher.Close()
-		return nil, fmt.Errorf("failed to create subscriber: %w", err)
+		return nil, fmt.Errorf("failed to create pubsub: %w", err)
 	}
 
 	bus := &EventBus{
-		publisher:  publisher,
-		subscriber: subscriber,
-		callbacks:  make(map[string][]func(Event)),
+		pubsub:    pubsub,
+		callbacks: make(map[string][]func(Event)),
 	}
 
 	// Start listening for events
@@ -103,20 +102,40 @@ func (b *EventBus) Publish(ctx context.Context, event Event) error {
 		event.Timestamp = time.Now().Format(time.RFC3339)
 	}
 
-	return b.publisher.Publish(ctx, "events", event)
+	// Marshal the event to JSON
+	data, err := json.Marshal(event)
+	if err != nil {
+		return fmt.Errorf("failed to marshal event: %w", err)
+	}
+
+	// Publish to the topic corresponding to the event type
+	return b.pubsub.Publish(ctx, "events."+event.Type, data)
 }
 
 // listen receives events and triggers callbacks
 func (b *EventBus) listen() {
+	ctx := context.Background()
+
+	// Subscribe to all event types
+	if err := b.pubsub.Subscribe(ctx, "events."); err != nil {
+		// Log error but continue
+		fmt.Printf("Error subscribing to events: %v\n", err)
+	}
+
+	// Process events
 	for {
-		ctx := context.Background()
-		_, data, err := b.subscriber.Receive(ctx)
+		// Wait for next message
+		msg, err := b.pubsub.Receive(ctx)
 		if err != nil {
+			// Log error but continue
+			fmt.Printf("Error receiving message: %v\n", err)
 			continue
 		}
 
+		// Unmarshal the event
 		var event Event
-		if err := json.Unmarshal(data, &event); err != nil {
+		if err := json.Unmarshal(msg.Payload, &event); err != nil {
+			fmt.Printf("Error unmarshaling event: %v\n", err)
 			continue
 		}
 
@@ -154,9 +173,7 @@ func (b *EventBus) Unsubscribe(subscriptionID string) error {
 
 // Close closes the event bus
 func (b *EventBus) Close() error {
-	b.publisher.Close()
-	b.subscriber.Close()
-	return nil
+	return b.pubsub.Close()
 }
 ```
 
@@ -316,5 +333,5 @@ task_blocked│       │task_completed
 
 ## Related Documentation
 
-- [../api_docs/zeromq.md](../api_docs/zeromq.md)
 - [../patterns/go_concurrency.md](../patterns/go_concurrency.md)
+- [../api_docs/zeromq.md](../api_docs/zeromq.md) (Historical - ZeroMQ has been deferred to future versions)
