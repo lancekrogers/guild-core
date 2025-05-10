@@ -31,6 +31,21 @@ type QueryResult struct {
 	Score float32
 }
 
+// SearchResult represents a low-level search result with ID and similarity score
+type SearchResult struct {
+	// ID is the unique identifier for the vector
+	ID string
+
+	// Vector is the vector data
+	Vector Vector
+
+	// Score is the similarity score (higher is more similar)
+	Score float32
+
+	// Metadata contains additional information about the vector
+	Metadata map[string]string
+}
+
 // VectorStore is the interface for vector storage and retrieval
 type VectorStore interface {
 	// Store stores a document with its embedding

@@ -210,9 +210,21 @@ task build
 task run CLI_ARGS="--help"
 
 # Run tests
-task test              # Run all tests
-task test:unit         # Run unit tests only
-task test:packages     # Run tests for specific packages
+task test                     # Run all tests
+task test:unit                # Run unit tests only
+task test:packages            # Run tests for specific packages
+
+# Test Analysis & Quality
+task test:coverage            # Generate basic coverage report
+task test:coverage:working    # Coverage for working packages only
+task test:coverage:detailed   # Detailed coverage by package
+task test:coverage:badge      # Generate coverage badge
+task test:verify              # Identify untested functions
+task test:verify:all          # Verify all working packages
+task test:analyze             # Analyze test patterns and quality
+task test:analyze:lore        # Check adherence to Guild naming conventions
+task test:lint:naming         # Lint tests for naming compliance
+task test:report              # Generate comprehensive test quality report
 
 # Clean build artifacts
 task clean

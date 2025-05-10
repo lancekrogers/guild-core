@@ -1,6 +1,6 @@
 # https://taskfile.dev
 
-version: '3'
+version: "3"
 
 vars:
   BIN_DIR: ./bin
@@ -20,11 +20,11 @@ tasks:
       - mkdir -p {{.BIN_DIR}}
       - go build {{.GO_FLAGS}} -ldflags "{{.LDFLAGS}}" -o {{.BIN_DIR}}/{{.MAIN_BIN}} {{.CMD_DIR}}
     sources:
-      - '**/*.go'
-      - 'go.mod'
-      - 'go.sum'
+      - "**/*.go"
+      - "go.mod"
+      - "go.sum"
     generates:
-      - '{{.BIN_DIR}}/{{.MAIN_BIN}}'
+      - "{{.BIN_DIR}}/{{.MAIN_BIN}}"
 
   run:
     desc: Build and run the Guild CLI with arguments
@@ -52,6 +52,254 @@ tasks:
     desc: Run tests for specific packages
     cmds:
       - go test {{.GO_FLAGS}} {{.PACKAGE}}
+      
+  test:coverage:
+    desc: Run tests with coverage analysis
+    cmds:
+      - mkdir -p ./coverage
+      - go test ./... -coverprofile=./coverage/coverage.out
+      - go tool cover -html=./coverage/coverage.out -o ./coverage/coverage.html
+      - |
+        echo "Coverage report generated at ./coverage/coverage.html"
+        COVERAGE=$(go tool cover -func=./coverage/coverage.out | grep total | awk '{print $3}')
+        echo "Total test coverage: $COVERAGE"
+
+  test:coverage:working:
+    desc: Run tests with coverage analysis on packages that build successfully
+    cmds:
+      - mkdir -p ./coverage
+      - |
+        echo "Running coverage analysis on working packages only..."
+        
+        # Initialize the coverage file with mode: set
+        echo "mode: set" > ./coverage/working.out
+        
+        # Manually specify the packages we know are working
+        WORKING_PACKAGES=(
+          "github.com/blockhead-consulting/guild/pkg/providers"
+          "github.com/blockhead-consulting/guild/pkg/providers/openai"
+          "github.com/blockhead-consulting/guild/tools"
+        )
+        
+        for pkg in "${WORKING_PACKAGES[@]}"; do
+          echo "Testing $pkg"
+          # Run test with coverage
+          if go test -coverprofile=./coverage/temp.out "$pkg"; then
+            echo "✅ $pkg"
+            # Append to coverage file, skipping the mode line
+            tail -n +2 ./coverage/temp.out >> ./coverage/working.out
+          else
+            echo "❌ $pkg failed"
+          fi
+        done
+        
+        # Generate coverage report
+        go tool cover -html=./coverage/working.out -o ./coverage/working.html
+        COVERAGE=$(go tool cover -func=./coverage/working.out | grep total | awk '{print $3}')
+        echo "Coverage report for working packages generated at ./coverage/working.html"
+        echo "Total test coverage for working packages: $COVERAGE"
+        rm -f ./coverage/temp.out
+      
+  test:coverage:detailed:
+    desc: Run tests with detailed coverage analysis by package
+    cmds:
+      - mkdir -p ./coverage
+      - |
+        echo "Running tests with coverage by package..."
+        echo "Package Coverage" > ./coverage/package_coverage.txt
+        echo "---------------" >> ./coverage/package_coverage.txt
+        for pkg in $(go list ./...); do
+          echo "Testing $pkg"
+          go test -coverprofile=./coverage/cover.out $pkg
+          if [ -f ./coverage/cover.out ]; then
+            coverage=$(go tool cover -func=./coverage/cover.out | grep total | awk '{print $3}')
+            echo "$pkg $coverage" >> ./coverage/package_coverage.txt
+          else
+            echo "$pkg 0.0%" >> ./coverage/package_coverage.txt
+          fi
+        done
+        echo "Detailed coverage by package saved to ./coverage/package_coverage.txt"
+        cat ./coverage/package_coverage.txt
+        
+  test:verify:
+    desc: Verify test coverage for specific packages or files
+    cmds:
+      - |
+        if [ -z "{{.PACKAGE}}" ]; then
+          echo "Error: PACKAGE parameter is required"
+          echo "Usage: task test:verify PACKAGE=./pkg/your/package"
+          exit 1
+        fi
+        
+        echo "Verifying test coverage for {{.PACKAGE}}..."
+        
+        # Check for exported functions without tests
+        mkdir -p ./coverage
+        PACKAGE_PATH={{.PACKAGE}}
+        
+        # Get all exported functions from the package
+        echo "Exported functions in {{.PACKAGE}}:"
+        EXPORTED_FUNCS=$(grep -r "^func [A-Z]" "$PACKAGE_PATH" --include="*.go" | grep -v "_test.go" | sed -E 's/.*func ([A-Z][a-zA-Z0-9]*).*/\1/' | sort | uniq)
+        echo "$EXPORTED_FUNCS"
+        
+        # Get all test functions for the package
+        echo -e "\nTest functions in {{.PACKAGE}}:"
+        TEST_FUNCS=$(grep -r "^func Test" "$PACKAGE_PATH" --include="*_test.go" | sed -E 's/.*func (Test[a-zA-Z0-9_]*).*/\1/' | sort | uniq)
+        echo "$TEST_FUNCS"
+        
+        # Check for exported functions without tests
+        echo -e "\nPotentially untested functions:"
+        for func in $EXPORTED_FUNCS; do
+          if ! echo "$TEST_FUNCS" | grep -q "Test$func"; then
+            echo "- $func"
+          fi
+        done
+        
+        # Run test with coverage
+        echo -e "\nRunning tests with coverage for {{.PACKAGE}}..."
+        go test {{.PACKAGE}} -coverprofile=./coverage/verify.out
+        go tool cover -func=./coverage/verify.out
+        
+        # Generate coverage report
+        go tool cover -html=./coverage/verify.out -o ./coverage/verify.html
+        echo "Coverage report generated at ./coverage/verify.html"
+  
+  test:verify:all:
+    desc: Verify test coverage for all working packages
+    cmds:
+      - mkdir -p ./coverage
+      - |
+        # Run for each working package
+        WORKING_PACKAGES=(
+          "./pkg/providers"
+          "./pkg/providers/openai"
+          "./tools"
+        )
+        
+        for pkg in "${WORKING_PACKAGES[@]}"; do
+          echo "=== Verifying $pkg ==="
+          task test:verify PACKAGE="$pkg"
+          echo ""
+        done
+  
+  test:analyze:
+    desc: Analyze test patterns and identify potential test quality issues
+    cmds:
+      - |
+        echo "Analyzing test patterns for quality issues..."
+
+        # Check for missing error cases in tests
+        echo "Checking for missing error tests..."
+        ERROR_HANDLERS=$(grep -r "if err != nil" --include="*.go" . | grep -v "_test.go" | wc -l)
+        ERROR_TESTS=$(grep -r "if err != nil" --include="*_test.go" . | wc -l)
+        ERROR_FORCED=$(grep -r "return .*, fmt.Errorf" --include="*.go" . | grep -v "_test.go" | wc -l)
+        ERROR_TESTED=$(grep -r "return .* error" --include="*_test.go" . | wc -l)
+
+        echo "Error handlers in code: $ERROR_HANDLERS"
+        echo "Error checks in tests: $ERROR_TESTS"
+        echo "Error returns in code: $ERROR_FORCED"
+        echo "Error tests: $ERROR_TESTED"
+        echo ""
+
+        # Check for context cancellation tests
+        echo "Checking for context cancellation tests..."
+        CTX_USES=$(grep -r "ctx context.Context" --include="*.go" . | grep -v "_test.go" | wc -l)
+        CTX_TESTS=$(grep -r "context.WithCancel\|context.WithTimeout\|context.WithDeadline" --include="*_test.go" . | wc -l)
+
+        echo "Context params in code: $CTX_USES"
+        echo "Context cancellation tests: $CTX_TESTS"
+        echo ""
+
+        # Check for mocking usage
+        echo "Checking for mocking usage..."
+        INTERFACES=$(grep -r "type [A-Z].*interface" --include="*.go" . | grep -v "_test.go" | wc -l)
+        MOCKS=$(grep -r "mock\|Mock" --include="*_test.go" . | wc -l)
+
+        echo "Interfaces defined: $INTERFACES"
+        echo "Mock usage in tests: $MOCKS"
+        echo ""
+
+        echo "Analyzing test quality for working packages..."
+        # Check for specific testing practices in working packages
+        WORKING_PACKAGES=(
+          "./pkg/providers"
+          "./pkg/providers/openai"
+          "./tools"
+        )
+
+        for pkg in "${WORKING_PACKAGES[@]}"; do
+          echo "=== Test quality for $pkg ==="
+          # Check for table-driven tests
+          TABLE_TESTS=$(grep -r "range.*cases\|range.*tests\|for _, tc := range\|for _, tt :=" --include="*_test.go" "$pkg" | wc -l)
+          echo "Table-driven tests: $TABLE_TESTS"
+
+          # Check for assertions
+          ASSERTIONS=$(grep -r "assert\|t.Error\|t.Fatal\|t.Log" --include="*_test.go" "$pkg" | wc -l)
+          echo "Test assertions: $ASSERTIONS"
+
+          # Check for setup/teardown
+          SETUP=$(grep -r "func setup\|func teardown\|BeforeEach\|AfterEach" --include="*_test.go" "$pkg" | wc -l)
+          echo "Setup/teardown: $SETUP"
+          echo ""
+        done
+  
+  test:coverage:badge:
+    desc: Generate a test coverage badge SVG for working packages
+    cmds:
+      - mkdir -p ./coverage
+      - |
+        # Initialize the coverage file with mode: set
+        echo "mode: set" > ./coverage/working.out
+        
+        # Manually specify the packages we know are working
+        WORKING_PACKAGES=(
+          "github.com/blockhead-consulting/guild/pkg/providers"
+          "github.com/blockhead-consulting/guild/pkg/providers/openai"
+          "github.com/blockhead-consulting/guild/tools"
+        )
+        
+        for pkg in "${WORKING_PACKAGES[@]}"; do
+          echo "Testing $pkg"
+          # Run test with coverage
+          if go test -coverprofile=./coverage/temp.out "$pkg"; then
+            echo "✅ $pkg"
+            # Append to coverage file, skipping the mode line
+            tail -n +2 ./coverage/temp.out >> ./coverage/working.out
+          else
+            echo "❌ $pkg failed"
+          fi
+        done
+        
+        # Calculate coverage
+        COVERAGE=$(go tool cover -func=./coverage/working.out | grep total | awk '{print $3}' | tr -d '%')
+        
+        # Determine color based on coverage percentage
+        if (( $(echo "$COVERAGE >= 80" | bc -l) )); then
+            COLOR="brightgreen"
+        elif (( $(echo "$COVERAGE >= 70" | bc -l) )); then
+            COLOR="green"
+        elif (( $(echo "$COVERAGE >= 60" | bc -l) )); then
+            COLOR="yellowgreen"
+        elif (( $(echo "$COVERAGE >= 50" | bc -l) )); then
+            COLOR="yellow"
+        elif (( $(echo "$COVERAGE >= 40" | bc -l) )); then
+            COLOR="orange"
+        else
+            COLOR="red"
+        fi
+        
+        # Create badge URL
+        BADGE_URL="https://img.shields.io/badge/coverage-$COVERAGE%25-$COLOR"
+        
+        # Download the badge SVG
+        curl -s "$BADGE_URL" > ./coverage/coverage-badge.svg
+        
+        echo "Coverage badge generated at ./coverage/coverage-badge.svg"
+        echo "Add this to your README.md:"
+        echo "[![Test Coverage](./coverage/coverage-badge.svg)](./coverage/working.html)"
+        
+        # Cleanup
+        rm -f ./coverage/temp.out
 
   lint:
     desc: Run linters
@@ -68,11 +316,12 @@ tasks:
     desc: Remove build artifacts
     cmds:
       - rm -rf {{.BIN_DIR}}
+      - rm -rf ./coverage
 
   version:
     desc: Display Guild version
     cmds:
-      - '{{.BIN_DIR}}/{{.MAIN_BIN}} version'
+      - "{{.BIN_DIR}}/{{.MAIN_BIN}} version"
     deps: [build]
 
   deps:install:
@@ -94,31 +343,548 @@ tasks:
     desc: Start a specific agent or all agents
     deps: [build]
     cmds:
-      - '{{.BIN_DIR}}/{{.MAIN_BIN}} agent start{{if .CLI_ARGS}} {{.CLI_ARGS}}{{end}}'
+      - "{{.BIN_DIR}}/{{.MAIN_BIN}} agent start{{if .CLI_ARGS}} {{.CLI_ARGS}}{{end}}"
     interactive: true
 
   objective:create:
     desc: Create a new objective
     deps: [build]
     cmds:
-      - '{{.BIN_DIR}}/{{.MAIN_BIN}} objective create {{.CLI_ARGS}}'
+      - "{{.BIN_DIR}}/{{.MAIN_BIN}} objective create {{.CLI_ARGS}}"
     interactive: true
 
   objective:list:
     desc: List all objectives
     deps: [build]
     cmds:
-      - '{{.BIN_DIR}}/{{.MAIN_BIN}} objective list'
+      - "{{.BIN_DIR}}/{{.MAIN_BIN}} objective list"
 
   objective:view:
     desc: View an objective
     deps: [build]
     cmds:
-      - '{{.BIN_DIR}}/{{.MAIN_BIN}} objective view {{.CLI_ARGS}}'
+      - "{{.BIN_DIR}}/{{.MAIN_BIN}} objective view {{.CLI_ARGS}}"
 
   objective:ui:
     desc: Launch the objective UI
     deps: [build]
     cmds:
-      - '{{.BIN_DIR}}/{{.MAIN_BIN}} objective ui'
+      - "{{.BIN_DIR}}/{{.MAIN_BIN}} objective ui"
     interactive: true
+
+  test:analyze:lore:
+    desc: Analyze test adherence to Guild's lore and naming conventions
+    cmds:
+      - |
+        echo "🏛️ Analyzing test adherence to Guild lore and naming conventions..."
+
+        # Define Guild lore terminology patterns to search for
+        GUILD_TERMS=(
+          "Guild" "Agent" "Artisan" "Manager" "Apprentice"
+          "Craft" "Workshop" "Journeyman" "Master"
+          "Hall" "Chamber" "Archive" "Ledger"
+        )
+
+        # Check for Guild lore terms usage in test files
+        echo "📜 Checking for Guild lore terminology in tests..."
+        echo "Term Count"
+        echo "---- -----"
+
+        TOTAL_LORE_USAGES=0
+        for term in "${GUILD_TERMS[@]}"; do
+          COUNT=$(grep -r "$term" --include="*_test.go" . | wc -l)
+          printf "%-20s %d\n" "$term" "$COUNT"
+          TOTAL_LORE_USAGES=$((TOTAL_LORE_USAGES + COUNT))
+        done
+
+        # Check for medieval-themed test function names
+        echo -e "\n⚔️ Checking for medieval-themed test function names..."
+        THEMED_TEST_FUNCS=$(grep -r "func Test.*Craft\|func Test.*Master\|func Test.*Guild\|func Test.*Artisan\|func Test.*Workshop" --include="*_test.go" . | wc -l)
+        echo "Medieval-themed test function names: $THEMED_TEST_FUNCS"
+
+        # Calculate lore adherence percentage for test files
+        TOTAL_TEST_FILES=$(find . -name "*_test.go" | wc -l)
+        TOTAL_TEST_FUNCS=$(grep -r "^func Test" --include="*_test.go" . | wc -l)
+
+        echo -e "\n📊 Guild Lore Adherence Metrics:"
+        echo "Total test files: $TOTAL_TEST_FILES"
+        echo "Total test functions: $TOTAL_TEST_FUNCS"
+        echo "Total lore terminology usages: $TOTAL_LORE_USAGES"
+        echo "Themed test function names: $THEMED_TEST_FUNCS"
+
+        # Calculate adherence percentage
+        if [ $TOTAL_TEST_FUNCS -gt 0 ]; then
+          THEME_ADHERENCE=$((THEMED_TEST_FUNCS * 100 / TOTAL_TEST_FUNCS))
+          echo "Theme adherence percentage: $THEME_ADHERENCE%"
+
+          # Provide recommendations based on adherence
+          echo -e "\n📋 Lore Adherence Recommendations:"
+          if [ $THEME_ADHERENCE -lt 20 ]; then
+            echo "⚠️ Low lore adherence. Consider renaming test functions to follow Guild terminology."
+            echo "Suggested terms: GuildMaster, Craftsman, Workshop, Apprentice, Hall, Chamber, Archive"
+          elif [ $THEME_ADHERENCE -lt 50 ]; then
+            echo "🔄 Moderate lore adherence. Continue improving test names and descriptions."
+          else
+            echo "✅ Good lore adherence. Maintain consistency with Guild terminology."
+          fi
+        else
+          echo "No test functions found to analyze."
+        fi
+
+        # Check naming convention adherence for interface tests
+        echo -e "\n🛡️ Checking interface test naming conventions..."
+        INTERFACES=$(grep -r "type [A-Z].*interface" --include="*.go" . | grep -v "_test.go" | sed -E 's/.*type ([A-Z][a-zA-Z0-9]*).*/\1/' | sort | uniq)
+
+        if [ -n "$INTERFACES" ]; then
+          echo "Interface test coverage:"
+          for interface in $INTERFACES; do
+            INTERFACE_TESTS=$(grep -r "func Test.*$interface" --include="*_test.go" . | wc -l)
+            if [ $INTERFACE_TESTS -gt 0 ]; then
+              echo "✅ $interface: $INTERFACE_TESTS tests"
+            else
+              echo "❌ $interface: No tests found"
+            fi
+          done
+        else
+          echo "No interfaces found to analyze."
+        fi
+
+        # Check for test comments that use Guild lore
+        echo -e "\n📝 Checking for test comments using Guild lore..."
+        LORE_COMMENTS=$(grep -r "// .\\+\\(Guild\\|Artisan\\|Craft\\|Master\\|Workshop\\)" --include="*_test.go" . | wc -l)
+        echo "Test comments using Guild lore: $LORE_COMMENTS"
+
+        # Analyze test descriptions for lore adherence
+        echo -e "\n📚 Analyzing test descriptions for Guild terminology..."
+        TEST_DESCRIPTIONS=$(grep -r "// Test[A-Z][a-zA-Z0-9]\\+ " --include="*_test.go" . | wc -l)
+        LORE_DESCRIPTIONS=$(grep -r "// Test[A-Z][a-zA-Z0-9]\\+ .\\+\\(Guild\\|Artisan\\|Craft\\|Master\\|Workshop\\)" --include="*_test.go" . | wc -l)
+
+        if [ $TEST_DESCRIPTIONS -gt 0 ]; then
+          DESCRIPTION_ADHERENCE=$((LORE_DESCRIPTIONS * 100 / TEST_DESCRIPTIONS))
+          echo "Test descriptions: $TEST_DESCRIPTIONS"
+          echo "Descriptions using Guild terminology: $LORE_DESCRIPTIONS"
+          echo "Description lore adherence: $DESCRIPTION_ADHERENCE%"
+        else
+          echo "No test descriptions found to analyze."
+        fi
+
+  test:lint:naming:
+    desc: Lint test functions for naming convention compliance
+    cmds:
+      - |
+        echo "🔍 Linting test functions for Guild naming convention compliance..."
+        mkdir -p ./coverage
+
+        # Define expected prefixes for different test types
+        declare -A PREFIXES
+        PREFIXES=(
+          ["test_unit"]="TestCraft"
+          ["test_integration"]="TestGuild"
+          ["test_mock"]="TestJourneyman"
+          ["test_error"]="TestApprentice"
+          ["test_benchmark"]="BenchmarkMaster"
+        )
+
+        # File to store report
+        REPORT_FILE="./coverage/naming_convention_report.txt"
+        echo "Guild Test Naming Convention Report" > $REPORT_FILE
+        echo "=================================" >> $REPORT_FILE
+        echo "Generated on $(date)" >> $REPORT_FILE
+        echo "" >> $REPORT_FILE
+
+        # Check all test files
+        echo "Scanning test files for naming convention compliance..."
+
+        # Find all test files and count compliant vs non-compliant names
+        TEST_FILES=$(find . -name "*_test.go")
+        TOTAL_TESTS=0
+        COMPLIANT_TESTS=0
+        NON_COMPLIANT_TESTS=0
+
+        echo "Non-compliant test function names:" >> $REPORT_FILE
+        echo "--------------------------------" >> $REPORT_FILE
+
+        for file in $TEST_FILES; do
+          # Get package name
+          PACKAGE=$(grep -m 1 "package" "$file" | cut -d ' ' -f 2)
+          echo -e "\nFile: $file (Package: $PACKAGE)" >> $REPORT_FILE
+
+          # Extract test functions
+          TEST_FUNCS=$(grep -E "^func (Test|Benchmark)[A-Z][a-zA-Z0-9_]*" "$file" | sed -E 's/func ([A-Za-z0-9_]+).*/\1/')
+
+          if [ -z "$TEST_FUNCS" ]; then
+            echo "  No test functions found" >> $REPORT_FILE
+            continue
+          fi
+
+          # Check each test function
+          while read -r func_name; do
+            TOTAL_TESTS=$((TOTAL_TESTS + 1))
+            IS_COMPLIANT=false
+
+            # Check if the function name follows any of the expected prefixes
+            for prefix in "${!PREFIXES[@]}"; do
+              if [[ "$func_name" == ${PREFIXES[$prefix]}* ]]; then
+                IS_COMPLIANT=true
+                break
+              fi
+            done
+
+            if $IS_COMPLIANT; then
+              COMPLIANT_TESTS=$((COMPLIANT_TESTS + 1))
+            else
+              NON_COMPLIANT_TESTS=$((NON_COMPLIANT_TESTS + 1))
+              echo "  ❌ $func_name" >> $REPORT_FILE
+
+              # Suggest better name based on function context
+              if [[ "$func_name" == *"Error"* ]] || [[ "$func_name" == *"Fail"* ]]; then
+                echo "    Suggestion: ${PREFIXES[test_error]}${func_name#Test}" >> $REPORT_FILE
+              elif [[ "$func_name" == *"Mock"* ]]; then
+                echo "    Suggestion: ${PREFIXES[test_mock]}${func_name#Test}" >> $REPORT_FILE
+              elif [[ "$func_name" == *"Benchmark"* ]]; then
+                echo "    Suggestion: ${PREFIXES[test_benchmark]}${func_name#Benchmark}" >> $REPORT_FILE
+              elif [[ "$func_name" == *"Integration"* ]]; then
+                echo "    Suggestion: ${PREFIXES[test_integration]}${func_name#Test}" >> $REPORT_FILE
+              else
+                echo "    Suggestion: ${PREFIXES[test_unit]}${func_name#Test}" >> $REPORT_FILE
+              fi
+            fi
+          done <<< "$TEST_FUNCS"
+        done
+
+        # Generate summary
+        echo -e "\nSummary:" >> $REPORT_FILE
+        echo "--------" >> $REPORT_FILE
+        echo "Total test functions: $TOTAL_TESTS" >> $REPORT_FILE
+        echo "Compliant functions: $COMPLIANT_TESTS" >> $REPORT_FILE
+        echo "Non-compliant functions: $NON_COMPLIANT_TESTS" >> $REPORT_FILE
+
+        if [ $TOTAL_TESTS -gt 0 ]; then
+          COMPLIANCE_PERCENTAGE=$((COMPLIANT_TESTS * 100 / TOTAL_TESTS))
+          echo "Naming convention compliance: $COMPLIANCE_PERCENTAGE%" >> $REPORT_FILE
+
+          # Add recommendations based on compliance level
+          echo -e "\nRecommendations:" >> $REPORT_FILE
+          echo "--------------" >> $REPORT_FILE
+          if [ $COMPLIANCE_PERCENTAGE -lt 30 ]; then
+            echo "⚠️ Low naming compliance. Consider updating test function names to follow Guild conventions:" >> $REPORT_FILE
+          elif [ $COMPLIANCE_PERCENTAGE -lt 70 ]; then
+            echo "🔄 Moderate naming compliance. Continue improving test function names:" >> $REPORT_FILE
+          else
+            echo "✅ Good naming compliance. Maintain consistency with these conventions:" >> $REPORT_FILE
+          fi
+
+          # Add naming convention guide
+          echo "- Unit tests: ${PREFIXES[test_unit]}YourFunction" >> $REPORT_FILE
+          echo "- Integration tests: ${PREFIXES[test_integration]}YourFeature" >> $REPORT_FILE
+          echo "- Mock tests: ${PREFIXES[test_mock]}YourMock" >> $REPORT_FILE
+          echo "- Error handling tests: ${PREFIXES[test_error]}ErrorCase" >> $REPORT_FILE
+          echo "- Benchmarks: ${PREFIXES[test_benchmark]}YourFunction" >> $REPORT_FILE
+        fi
+
+        echo "Naming convention lint report generated at $REPORT_FILE"
+        cat $REPORT_FILE
+
+  test:report:
+    desc: Generate a comprehensive test quality report with coverage, verification, and lore compliance
+    cmds:
+      - |
+        echo "🏰 Generating comprehensive Guild test quality report..."
+        mkdir -p ./coverage/report
+
+        # Set the report date and filename
+        REPORT_DATE=$(date "+%Y-%m-%d")
+        REPORT_FILE="./coverage/report/guild_test_report_${REPORT_DATE}.md"
+
+        # Initialize report with header
+        cat > $REPORT_FILE << EOF
+        # Guild Test Quality Report 📜
+
+        *Generated on: $(date "+%Y-%m-%d %H:%M:%S")*
+
+        This report provides a comprehensive analysis of the Guild codebase test quality,
+        including coverage metrics, naming convention compliance, and adherence to Guild lore.
+
+        ## 📊 Coverage Summary
+
+        EOF
+
+        # Run coverage analysis for working packages and append to report
+        echo "⚙️ Analyzing test coverage..."
+
+        # Initialize the coverage file with mode: set
+        echo "mode: set" > ./coverage/report_coverage.out
+
+        # Manually specify the packages we know are working
+        WORKING_PACKAGES=(
+          "github.com/blockhead-consulting/guild/pkg/providers"
+          "github.com/blockhead-consulting/guild/pkg/providers/openai"
+          "github.com/blockhead-consulting/guild/tools"
+        )
+
+        # Package coverage table header
+        echo "| Package | Coverage | Status |" >> $REPORT_FILE
+        echo "|---------|----------|--------|" >> $REPORT_FILE
+
+        for pkg in "${WORKING_PACKAGES[@]}"; do
+          echo "  Testing $pkg"
+          # Run test with coverage
+          if go test -coverprofile=./coverage/temp.out "$pkg" > /dev/null 2>&1; then
+            PACKAGE_COVERAGE=$(go tool cover -func=./coverage/temp.out | grep total | awk '{print $3}')
+
+            # Determine status based on coverage percentage
+            COVERAGE_NUM=$(echo $PACKAGE_COVERAGE | tr -d '%')
+            if (( $(echo "$COVERAGE_NUM >= 80" | bc -l) )); then
+              STATUS="✅ Excellent"
+            elif (( $(echo "$COVERAGE_NUM >= 60" | bc -l) )); then
+              STATUS="✓ Good"
+            elif (( $(echo "$COVERAGE_NUM >= 40" | bc -l) )); then
+              STATUS="⚠️ Needs Improvement"
+            else
+              STATUS="❌ Poor"
+            fi
+
+            # Add to report
+            echo "| \`$pkg\` | $PACKAGE_COVERAGE | $STATUS |" >> $REPORT_FILE
+
+            # Append to coverage file, skipping the mode line
+            tail -n +2 ./coverage/temp.out >> ./coverage/report_coverage.out
+          else
+            echo "| \`$pkg\` | 0.0% | ❌ Tests Failed |" >> $REPORT_FILE
+          fi
+        done
+
+        # Calculate total coverage
+        TOTAL_COVERAGE=$(go tool cover -func=./coverage/report_coverage.out | grep total | awk '{print $3}')
+        echo -e "\n**Total Coverage: $TOTAL_COVERAGE**" >> $REPORT_FILE
+
+        # Generate and link the coverage HTML
+        go tool cover -html=./coverage/report_coverage.out -o ./coverage/report/coverage.html
+        echo -e "\n[View Detailed Coverage Report](./coverage.html)" >> $REPORT_FILE
+
+        # Add lore adherence analysis to report
+        echo -e "\n## 🏛️ Guild Lore Adherence\n" >> $REPORT_FILE
+
+        # Define Guild lore terminology patterns to search for
+        GUILD_TERMS=(
+          "Guild" "Agent" "Artisan" "Manager" "Apprentice"
+          "Craft" "Workshop" "Journeyman" "Master"
+          "Hall" "Chamber" "Archive" "Ledger"
+        )
+
+        # Check for Guild lore terms usage in test files
+        echo "### Lore Term Usage in Tests" >> $REPORT_FILE
+        echo "" >> $REPORT_FILE
+        echo "| Term | Occurrences |" >> $REPORT_FILE
+        echo "|------|-------------|" >> $REPORT_FILE
+
+        TOTAL_LORE_USAGES=0
+        for term in "${GUILD_TERMS[@]}"; do
+          COUNT=$(grep -r "$term" --include="*_test.go" . | wc -l)
+          echo "| $term | $COUNT |" >> $REPORT_FILE
+          TOTAL_LORE_USAGES=$((TOTAL_LORE_USAGES + COUNT))
+        done
+
+        # Check for medieval-themed test function names
+        THEMED_TEST_FUNCS=$(grep -r "func Test.*Craft\|func Test.*Master\|func Test.*Guild\|func Test.*Artisan\|func Test.*Workshop" --include="*_test.go" . | wc -l)
+        TOTAL_TEST_FUNCS=$(grep -r "^func Test" --include="*_test.go" . | wc -l)
+
+        # Calculate adherence percentages
+        if [ $TOTAL_TEST_FUNCS -gt 0 ]; then
+          THEME_ADHERENCE=$((THEMED_TEST_FUNCS * 100 / TOTAL_TEST_FUNCS))
+          echo -e "\n### Lore Adherence Metrics\n" >> $REPORT_FILE
+          echo "- **Total test functions:** $TOTAL_TEST_FUNCS" >> $REPORT_FILE
+          echo "- **Themed function names:** $THEMED_TEST_FUNCS" >> $REPORT_FILE
+          echo "- **Theme adherence percentage:** $THEME_ADHERENCE%" >> $REPORT_FILE
+
+          # Add adherence rating
+          echo -e "\n### Lore Adherence Rating\n" >> $REPORT_FILE
+          if [ $THEME_ADHERENCE -lt 20 ]; then
+            echo "⚠️ **Low lore adherence**" >> $REPORT_FILE
+            echo "" >> $REPORT_FILE
+            echo "Recommendation: Consider renaming test functions to follow Guild terminology. Use terms like GuildMaster, Craftsman, Workshop, Apprentice, Hall, Chamber, Archive." >> $REPORT_FILE
+          elif [ $THEME_ADHERENCE -lt 50 ]; then
+            echo "🔄 **Moderate lore adherence**" >> $REPORT_FILE
+            echo "" >> $REPORT_FILE
+            echo "Recommendation: Continue improving test names and descriptions with Guild terminology." >> $REPORT_FILE
+          else
+            echo "✅ **Good lore adherence**" >> $REPORT_FILE
+            echo "" >> $REPORT_FILE
+            echo "Recommendation: Maintain consistency with Guild terminology." >> $REPORT_FILE
+          fi
+        else
+          echo -e "\n**No test functions found to analyze for lore adherence.**" >> $REPORT_FILE
+        fi
+
+        # Add naming convention compliance to report
+        echo -e "\n## 📝 Naming Convention Compliance\n" >> $REPORT_FILE
+
+        # Define expected prefixes for different test types
+        declare -A PREFIXES
+        PREFIXES=(
+          ["test_unit"]="TestCraft"
+          ["test_integration"]="TestGuild"
+          ["test_mock"]="TestJourneyman"
+          ["test_error"]="TestApprentice"
+          ["test_benchmark"]="BenchmarkMaster"
+        )
+
+        # Naming convention guide
+        echo "### Guild Test Naming Conventions\n" >> $REPORT_FILE
+        echo "| Test Type | Convention |" >> $REPORT_FILE
+        echo "|-----------|------------|" >> $REPORT_FILE
+        echo "| Unit tests | \`${PREFIXES[test_unit]}YourFunction\` |" >> $REPORT_FILE
+        echo "| Integration tests | \`${PREFIXES[test_integration]}YourFeature\` |" >> $REPORT_FILE
+        echo "| Mock tests | \`${PREFIXES[test_mock]}YourMock\` |" >> $REPORT_FILE
+        echo "| Error handling tests | \`${PREFIXES[test_error]}ErrorCase\` |" >> $REPORT_FILE
+        echo "| Benchmarks | \`${PREFIXES[test_benchmark]}YourFunction\` |" >> $REPORT_FILE
+
+        # Find all test files and count compliant vs non-compliant names
+        echo -e "\n### Naming Compliance Summary\n" >> $REPORT_FILE
+
+        TEST_FILES=$(find . -name "*_test.go")
+        TOTAL_TESTS=0
+        COMPLIANT_TESTS=0
+        NON_COMPLIANT_TESTS=0
+
+        for file in $TEST_FILES; do
+          # Extract test functions
+          TEST_FUNCS=$(grep -E "^func (Test|Benchmark)[A-Z][a-zA-Z0-9_]*" "$file" | sed -E 's/func ([A-Za-z0-9_]+).*/\1/')
+
+          if [ -z "$TEST_FUNCS" ]; then
+            continue
+          fi
+
+          # Check each test function
+          while read -r func_name; do
+            TOTAL_TESTS=$((TOTAL_TESTS + 1))
+            IS_COMPLIANT=false
+
+            # Check if the function name follows any of the expected prefixes
+            for prefix in "${!PREFIXES[@]}"; do
+              if [[ "$func_name" == ${PREFIXES[$prefix]}* ]]; then
+                IS_COMPLIANT=true
+                break
+              fi
+            done
+
+            if $IS_COMPLIANT; then
+              COMPLIANT_TESTS=$((COMPLIANT_TESTS + 1))
+            else
+              NON_COMPLIANT_TESTS=$((NON_COMPLIANT_TESTS + 1))
+            fi
+          done <<< "$TEST_FUNCS"
+        done
+
+        # Generate naming compliance summary
+        echo "- **Total test functions:** $TOTAL_TESTS" >> $REPORT_FILE
+        echo "- **Compliant function names:** $COMPLIANT_TESTS" >> $REPORT_FILE
+        echo "- **Non-compliant function names:** $NON_COMPLIANT_TESTS" >> $REPORT_FILE
+
+        if [ $TOTAL_TESTS -gt 0 ]; then
+          COMPLIANCE_PERCENTAGE=$((COMPLIANT_TESTS * 100 / TOTAL_TESTS))
+          echo "- **Naming convention compliance:** $COMPLIANCE_PERCENTAGE%" >> $REPORT_FILE
+
+          # Add compliance rating
+          echo -e "\n### Naming Convention Rating\n" >> $REPORT_FILE
+          if [ $COMPLIANCE_PERCENTAGE -lt 30 ]; then
+            echo "⚠️ **Low naming compliance**" >> $REPORT_FILE
+            echo "" >> $REPORT_FILE
+            echo "Recommendation: Consider updating test function names to follow Guild conventions." >> $REPORT_FILE
+          elif [ $COMPLIANCE_PERCENTAGE -lt 70 ]; then
+            echo "🔄 **Moderate naming compliance**" >> $REPORT_FILE
+            echo "" >> $REPORT_FILE
+            echo "Recommendation: Continue improving test function names to match Guild conventions." >> $REPORT_FILE
+          else
+            echo "✅ **Good naming compliance**" >> $REPORT_FILE
+            echo "" >> $REPORT_FILE
+            echo "Recommendation: Maintain consistency with Guild naming conventions." >> $REPORT_FILE
+          fi
+        fi
+
+        # Add test quality metrics to the report
+        echo -e "\n## ⚙️ Test Quality Metrics\n" >> $REPORT_FILE
+
+        # Check for error handling in tests
+        ERROR_HANDLERS=$(grep -r "if err != nil" --include="*.go" . | grep -v "_test.go" | wc -l)
+        ERROR_TESTS=$(grep -r "if err != nil" --include="*_test.go" . | wc -l)
+
+        # Check for context usage in tests
+        CTX_USES=$(grep -r "ctx context.Context" --include="*.go" . | grep -v "_test.go" | wc -l)
+        CTX_TESTS=$(grep -r "context.WithCancel\|context.WithTimeout\|context.WithDeadline" --include="*_test.go" . | wc -l)
+
+        # Check for interfaces and mocks
+        INTERFACES=$(grep -r "type [A-Z].*interface" --include="*.go" . | grep -v "_test.go" | wc -l)
+        MOCKS=$(grep -r "mock\|Mock" --include="*_test.go" . | wc -l)
+
+        # Add metrics to report
+        echo "| Metric | Value |" >> $REPORT_FILE
+        echo "|--------|-------|" >> $REPORT_FILE
+        echo "| Error handlers in code | $ERROR_HANDLERS |" >> $REPORT_FILE
+        echo "| Error checks in tests | $ERROR_TESTS |" >> $REPORT_FILE
+        echo "| Context params in code | $CTX_USES |" >> $REPORT_FILE
+        echo "| Context testing | $CTX_TESTS |" >> $REPORT_FILE
+        echo "| Interfaces defined | $INTERFACES |" >> $REPORT_FILE
+        echo "| Mock usage in tests | $MOCKS |" >> $REPORT_FILE
+
+        # Check for table-driven tests in working packages
+        echo -e "\n### Table-Driven Test Usage\n" >> $REPORT_FILE
+        echo "| Package | Table-Driven Tests | Test Assertions |" >> $REPORT_FILE
+        echo "|---------|-------------------|-----------------|" >> $REPORT_FILE
+
+        for pkg in "${WORKING_PACKAGES[@]}"; do
+          # Convert from module path to relative path
+          REL_PKG=$(echo "$pkg" | sed 's/github.com\/blockhead-consulting\/guild\//\.\//')
+
+          # Check for table-driven tests
+          TABLE_TESTS=$(grep -r "range.*cases\|range.*tests\|for _, tc := range\|for _, tt :=" --include="*_test.go" "$REL_PKG" 2>/dev/null | wc -l)
+
+          # Check for assertions
+          ASSERTIONS=$(grep -r "assert\|t.Error\|t.Fatal\|t.Log" --include="*_test.go" "$REL_PKG" 2>/dev/null | wc -l)
+
+          echo "| \`$pkg\` | $TABLE_TESTS | $ASSERTIONS |" >> $REPORT_FILE
+        done
+
+        # Add conclusion and recommendations
+        echo -e "\n## 🏹 Recommendations\n" >> $REPORT_FILE
+
+        # Coverage recommendations
+        COVERAGE_NUM=$(echo $TOTAL_COVERAGE | tr -d '%')
+        if (( $(echo "$COVERAGE_NUM < 60" | bc -l) )); then
+          echo "- **Increase test coverage:** Current coverage is $TOTAL_COVERAGE. Aim for at least 70% coverage." >> $REPORT_FILE
+        fi
+
+        # Lore adherence recommendations
+        if [ $TOTAL_TEST_FUNCS -gt 0 ] && [ $THEME_ADHERENCE -lt 40 ]; then
+          echo "- **Improve lore adherence:** Rename test functions to follow Guild terminology." >> $REPORT_FILE
+        fi
+
+        # Error testing recommendations
+        if [ $ERROR_HANDLERS -gt $ERROR_TESTS ]; then
+          echo "- **Add more error tests:** Error handling in code ($ERROR_HANDLERS) exceeds error testing ($ERROR_TESTS)." >> $REPORT_FILE
+        fi
+
+        # Context testing recommendations
+        if [ $CTX_USES -gt $CTX_TESTS ]; then
+          echo "- **Improve context testing:** Add tests for context cancellation and timeouts." >> $REPORT_FILE
+        fi
+
+        # Mock usage recommendations
+        if [ $INTERFACES -gt $MOCKS ]; then
+          echo "- **Increase mock usage:** Create mocks for all interfaces to improve test isolation." >> $REPORT_FILE
+        fi
+
+        # Add footer
+        echo -e "\n---\n" >> $REPORT_FILE
+        echo "*This report was generated by the Guild Test Analysis System.*" >> $REPORT_FILE
+
+        echo "Comprehensive Guild test report generated at $REPORT_FILE"
+
+        # Open the report if possible
+        if command -v open >/dev/null 2>&1; then
+          open "$REPORT_FILE"
+        elif command -v xdg-open >/dev/null 2>&1; then
+          xdg-open "$REPORT_FILE"
+        else
+          echo "Report is available at $REPORT_FILE"
+        fi

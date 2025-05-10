@@ -1,0 +1,756 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>providers: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/blockhead-consulting/guild/pkg/providers/factory.go (86.3%)</option>
+				
+				<option value="file1">github.com/blockhead-consulting/guild/pkg/providers/openai/client.go (79.2%)</option>
+				
+				<option value="file2">github.com/blockhead-consulting/guild/tools/tool.go (95.1%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package providers
+
+import (
+        "fmt"
+        "os"
+        "sync"
+
+        "github.com/blockhead-consulting/guild/pkg/providers/anthropic"
+        "github.com/blockhead-consulting/guild/pkg/providers/ollama"
+        "github.com/blockhead-consulting/guild/pkg/providers/openai"
+)
+
+// Using ProviderType from interfaces package
+
+// ProviderConfig holds configuration for a provider
+type ProviderConfig struct {
+        Type      ProviderType `json:"type"`
+        ApiKey    string       `json:"api_key,omitempty"`
+        Model     string       `json:"model,omitempty"`
+        ApiURL    string       `json:"api_url,omitempty"`
+        MaxTokens int          `json:"max_tokens,omitempty"`
+}
+
+// Factory is responsible for creating and managing LLM clients
+type Factory struct {
+        clients   map[ProviderType]LLMClient
+        configs   map[ProviderType]ProviderConfig
+        defaultProvider ProviderType
+        mu        sync.RWMutex
+}
+
+// NewFactory creates a new provider factory
+func NewFactory() *Factory <span class="cov8" title="1">{
+        return &amp;Factory{
+                clients: make(map[ProviderType]LLMClient),
+                configs: make(map[ProviderType]ProviderConfig),
+                defaultProvider: ProviderOpenAI, // Default to OpenAI
+        }
+}</span>
+
+// RegisterProvider registers a provider configuration
+func (f *Factory) RegisterProvider(config ProviderConfig) error <span class="cov8" title="1">{
+        f.mu.Lock()
+        defer f.mu.Unlock()
+        
+        f.configs[config.Type] = config
+        return nil
+}</span>
+
+// SetDefaultProvider sets the default provider type
+func (f *Factory) SetDefaultProvider(providerType ProviderType) <span class="cov8" title="1">{
+        f.mu.Lock()
+        defer f.mu.Unlock()
+        
+        f.defaultProvider = providerType
+}</span>
+
+// GetClient returns a client for the given provider type, initializing it if necessary
+func (f *Factory) GetClient(providerType ProviderType) (LLMClient, error) <span class="cov8" title="1">{
+        f.mu.RLock()
+        client, exists := f.clients[providerType]
+        f.mu.RUnlock()
+        
+        if exists </span><span class="cov8" title="1">{
+                return client, nil
+        }</span>
+        
+        // Client doesn't exist, create it
+        <span class="cov8" title="1">f.mu.Lock()
+        defer f.mu.Unlock()
+        
+        // Check again in case another goroutine created it while we were waiting for the lock
+        client, exists = f.clients[providerType]
+        if exists </span><span class="cov0" title="0">{
+                return client, nil
+        }</span>
+        
+        // Get config for this provider
+        <span class="cov8" title="1">config, exists := f.configs[providerType]
+        if !exists </span><span class="cov8" title="1">{
+                // Try to create with environment variables
+                var err error
+                client, err = f.createClientFromEnv(providerType)
+                if err != nil </span><span class="cov8" title="1">{
+                        return nil, fmt.Errorf("provider %s not registered and could not be created from environment: %w", providerType, err)
+                }</span>
+                <span class="cov8" title="1">f.clients[providerType] = client
+                return client, nil</span>
+        }
+        
+        // Create client from config
+        <span class="cov8" title="1">var err error
+        client, err = f.createClient(config)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        
+        <span class="cov8" title="1">f.clients[providerType] = client
+        return client, nil</span>
+}
+
+// GetDefaultClient returns the default LLM client
+func (f *Factory) GetDefaultClient() (LLMClient, error) <span class="cov8" title="1">{
+        return f.GetClient(f.defaultProvider)
+}</span>
+
+// createClient creates a client based on the provided configuration
+func (f *Factory) createClient(config ProviderConfig) (LLMClient, error) <span class="cov8" title="1">{
+        switch config.Type </span>{
+        case ProviderOpenAI:<span class="cov8" title="1">
+                apiKey := config.ApiKey
+                if apiKey == "" </span><span class="cov0" title="0">{
+                        apiKey = os.Getenv("OPENAI_API_KEY")
+                        if apiKey == "" </span><span class="cov0" title="0">{
+                                return nil, fmt.Errorf("OpenAI API key not provided and OPENAI_API_KEY environment variable not set")
+                        }</span>
+                }
+                
+                <span class="cov8" title="1">options := []openai.ClientOption{}
+                if config.Model != "" </span><span class="cov8" title="1">{
+                        options = append(options, openai.WithModel(config.Model))
+                }</span>
+                
+                <span class="cov8" title="1">return openai.NewClient(apiKey, options...)</span>
+                
+        case ProviderAnthropic:<span class="cov8" title="1">
+                apiKey := config.ApiKey
+                if apiKey == "" </span><span class="cov0" title="0">{
+                        apiKey = os.Getenv("ANTHROPIC_API_KEY")
+                        if apiKey == "" </span><span class="cov0" title="0">{
+                                return nil, fmt.Errorf("Anthropic API key not provided and ANTHROPIC_API_KEY environment variable not set")
+                        }</span>
+                }
+                
+                <span class="cov8" title="1">options := []anthropic.ClientOption{}
+                if config.Model != "" </span><span class="cov8" title="1">{
+                        options = append(options, anthropic.WithModel(config.Model))
+                }</span>
+                
+                <span class="cov8" title="1">return anthropic.NewClient(apiKey, options...)</span>
+                
+        case ProviderOllama:<span class="cov8" title="1">
+                options := []ollama.ClientOption{}
+                
+                if config.Model != "" </span><span class="cov8" title="1">{
+                        options = append(options, ollama.WithModel(config.Model))
+                }</span>
+                
+                <span class="cov8" title="1">if config.ApiURL != "" </span><span class="cov8" title="1">{
+                        options = append(options, ollama.WithEndpoint(config.ApiURL))
+                }</span>
+                
+                <span class="cov8" title="1">return ollama.NewClient(options...)</span>
+                
+        default:<span class="cov8" title="1">
+                return nil, fmt.Errorf("unknown provider type: %s", config.Type)</span>
+        }
+}
+
+// createClientFromEnv attempts to create a client using environment variables
+func (f *Factory) createClientFromEnv(providerType ProviderType) (LLMClient, error) <span class="cov8" title="1">{
+        switch providerType </span>{
+        case ProviderOpenAI:<span class="cov8" title="1">
+                apiKey := os.Getenv("OPENAI_API_KEY")
+                if apiKey == "" </span><span class="cov8" title="1">{
+                        return nil, fmt.Errorf("OPENAI_API_KEY environment variable not set")
+                }</span>
+                <span class="cov8" title="1">return openai.NewClient(apiKey)</span>
+                
+        case ProviderAnthropic:<span class="cov8" title="1">
+                apiKey := os.Getenv("ANTHROPIC_API_KEY")
+                if apiKey == "" </span><span class="cov0" title="0">{
+                        return nil, fmt.Errorf("ANTHROPIC_API_KEY environment variable not set")
+                }</span>
+                <span class="cov8" title="1">return anthropic.NewClient(apiKey)</span>
+                
+        case ProviderOllama:<span class="cov0" title="0">
+                // Ollama typically runs locally and doesn't need API key
+                return ollama.NewClient()</span>
+                
+        default:<span class="cov0" title="0">
+                return nil, fmt.Errorf("unknown provider type: %s", providerType)</span>
+        }
+}
+
+// CloseAll closes all clients
+func (f *Factory) CloseAll() <span class="cov8" title="1">{
+        f.mu.Lock()
+        defer f.mu.Unlock()
+        
+        // Clear the clients map
+        f.clients = make(map[ProviderType]LLMClient)
+}</pre>
+		
+		<pre class="file" id="file1" style="display: none">package openai
+
+import (
+        "bytes"
+        "context"
+        "encoding/json"
+        "fmt"
+        "io"
+        "net/http"
+        "strings"
+        "time"
+
+        "github.com/blockhead-consulting/guild/pkg/providers/interfaces"
+)
+
+const (
+        defaultAPI     = "https://api.openai.com/v1/chat/completions"
+        defaultModel   = "gpt-4-turbo"
+        defaultTimeout = 30 * time.Second
+)
+
+// Client implements the LLMClient interface for OpenAI's models
+type Client struct {
+        apiKey     string
+        apiURL     string
+        modelName  string
+        httpClient *http.Client
+        maxTokens  int
+}
+
+// OpenAI API request structure
+type openaiRequest struct {
+        Model       string          `json:"model"`
+        Messages    []openaiMessage `json:"messages"`
+        MaxTokens   int             `json:"max_tokens,omitempty"`
+        Temperature float64         `json:"temperature,omitempty"`
+        Stop        []string        `json:"stop,omitempty"`
+}
+
+type openaiMessage struct {
+        Role    string `json:"role"`
+        Content string `json:"content"`
+}
+
+// OpenAI API response structure
+type openaiResponse struct {
+        ID      string `json:"id"`
+        Object  string `json:"object"`
+        Created int64  `json:"created"`
+        Model   string `json:"model"`
+        Choices []struct {
+                Index        int           `json:"index"`
+                Message      openaiMessage `json:"message"`
+                FinishReason string        `json:"finish_reason"`
+        } `json:"choices"`
+        Usage struct {
+                PromptTokens     int `json:"prompt_tokens"`
+                CompletionTokens int `json:"completion_tokens"`
+                TotalTokens      int `json:"total_tokens"`
+        } `json:"usage"`
+}
+
+// NewClient creates a new OpenAI client
+func NewClient(apiKey string, opts ...ClientOption) (*Client, error) <span class="cov8" title="1">{
+        if apiKey == "" </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("apiKey cannot be empty")
+        }</span>
+
+        <span class="cov8" title="1">client := &amp;Client{
+                apiKey:     apiKey,
+                apiURL:     defaultAPI,
+                modelName:  defaultModel,
+                httpClient: &amp;http.Client{Timeout: defaultTimeout},
+                maxTokens:  8192, // Default for GPT-4
+        }
+
+        // Apply options
+        for _, opt := range opts </span><span class="cov8" title="1">{
+                opt(client)
+        }</span>
+
+        <span class="cov8" title="1">return client, nil</span>
+}
+
+// ClientOption defines a function that configures the OpenAI client
+type ClientOption func(*Client)
+
+// WithModel sets the model to use
+func WithModel(model string) ClientOption <span class="cov8" title="1">{
+        return func(c *Client) </span><span class="cov8" title="1">{
+                c.modelName = model
+
+                // Update max tokens based on model
+                switch model </span>{
+                case "gpt-4-turbo", "gpt-4-0125-preview":<span class="cov8" title="1">
+                        c.maxTokens = 128000</span>
+                case "gpt-4":<span class="cov8" title="1">
+                        c.maxTokens = 8192</span>
+                case "gpt-3.5-turbo":<span class="cov8" title="1">
+                        c.maxTokens = 16385</span>
+                }
+        }
+}
+
+// WithTimeout sets the HTTP client timeout
+func WithTimeout(timeout time.Duration) ClientOption <span class="cov8" title="1">{
+        return func(c *Client) </span><span class="cov8" title="1">{
+                c.httpClient.Timeout = timeout
+        }</span>
+}
+
+// WithEndpoint sets a custom API endpoint URL
+func WithEndpoint(url string) ClientOption <span class="cov8" title="1">{
+        return func(c *Client) </span><span class="cov8" title="1">{
+                c.apiURL = url
+        }</span>
+}
+
+// Complete implements the LLMClient interface
+func (c *Client) Complete(ctx context.Context, req *interfaces.CompletionRequest) (*interfaces.CompletionResponse, error) <span class="cov8" title="1">{
+        // Convert to OpenAI's format
+        messages := []openaiMessage{
+                {Role: "user", Content: req.Prompt},
+        }
+
+        // Add system message if provided
+        if systemPrompt, ok := req.Options["system"]; ok </span><span class="cov8" title="1">{
+                messages = append([]openaiMessage{{Role: "system", Content: systemPrompt}}, messages...)
+        }</span>
+
+        <span class="cov8" title="1">oaiReq := openaiRequest{
+                Model:       c.modelName,
+                Messages:    messages,
+                MaxTokens:   req.MaxTokens,
+                Temperature: req.Temperature,
+                Stop:        req.StopTokens,
+        }
+
+        // Marshal request to JSON
+        reqBody, err := json.Marshal(oaiReq)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error marshaling request: %w", err)
+        }</span>
+
+        // Create HTTP request
+        <span class="cov8" title="1">httpReq, err := http.NewRequestWithContext(
+                ctx,
+                "POST",
+                c.apiURL,
+                bytes.NewBuffer(reqBody),
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error creating request: %w", err)
+        }</span>
+
+        // Set headers
+        <span class="cov8" title="1">httpReq.Header.Set("Content-Type", "application/json")
+        httpReq.Header.Set("Authorization", "Bearer "+c.apiKey)
+
+        // Send request
+        resp, err := c.httpClient.Do(httpReq)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("error sending request: %w", err)
+        }</span>
+        <span class="cov8" title="1">defer resp.Body.Close()
+
+        // Read response body
+        body, err := io.ReadAll(resp.Body)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error reading response: %w", err)
+        }</span>
+
+        // Check for error status
+        <span class="cov8" title="1">if resp.StatusCode != http.StatusOK </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("API error (%d): %s", resp.StatusCode, string(body))
+        }</span>
+
+        // Parse response
+        <span class="cov8" title="1">var oaiResp openaiResponse
+        if err := json.Unmarshal(body, &amp;oaiResp); err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("error unmarshaling response: %w", err)
+        }</span>
+
+        // Check if we have any choices
+        <span class="cov8" title="1">if len(oaiResp.Choices) == 0 </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("no completion choices returned")
+        }</span>
+
+        // Convert to generic response
+        <span class="cov8" title="1">return &amp;interfaces.CompletionResponse{
+                Text:         oaiResp.Choices[0].Message.Content,
+                TokensInput:  oaiResp.Usage.PromptTokens,
+                TokensOutput: oaiResp.Usage.CompletionTokens,
+                TokensUsed:   oaiResp.Usage.TotalTokens,
+                FinishReason: oaiResp.Choices[0].FinishReason,
+                ModelUsed:    oaiResp.Model,
+        }, nil</span>
+}
+
+// GetName returns the provider name
+func (c *Client) GetName() string <span class="cov8" title="1">{
+        return "openai"
+}</span>
+
+// GetModelInfo returns information about the model
+func (c *Client) GetModelInfo() map[string]string <span class="cov8" title="1">{
+        return map[string]string{
+                "name":         c.modelName,
+                "provider":     "OpenAI",
+                "capabilities": "text generation, instruction following, chat",
+        }
+}</span>
+
+// GetModelList returns available models
+func (c *Client) GetModelList(ctx context.Context) ([]string, error) <span class="cov8" title="1">{
+        // Here you would typically call the OpenAI API to get available models
+        // For simplicity, we'll return a static list
+        return []string{
+                "gpt-4-turbo",
+                "gpt-4-0125-preview",
+                "gpt-4",
+                "gpt-3.5-turbo",
+                "gpt-3.5-turbo-instruct",
+        }, nil
+}</span>
+
+// GetMaxTokens returns the maximum context size for the model
+func (c *Client) GetMaxTokens() int <span class="cov8" title="1">{
+        return c.maxTokens
+}</span>
+
+// CreateEmbedding creates an embedding for the given text
+func (c *Client) CreateEmbedding(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) <span class="cov0" title="0">{
+        // Stub implementation
+        return &amp;interfaces.EmbeddingResponse{
+                Embedding:  make([]float32, 1536), // Default OpenAI embedding dimension
+                Dimensions: 1536,
+                Model:      "text-embedding-ada-002",
+                TokensUsed: len(req.Text) / 4, // Rough estimation
+        }, nil
+}</span>
+
+// CreateEmbeddings creates embeddings for multiple texts
+func (c *Client) CreateEmbeddings(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) <span class="cov0" title="0">{
+        // Stub implementation
+        embeddings := make([][]float32, len(req.Texts))
+        for i := range embeddings </span><span class="cov0" title="0">{
+                embeddings[i] = make([]float32, 1536)
+        }</span>
+
+        <span class="cov0" title="0">return &amp;interfaces.EmbeddingResponse{
+                Embeddings: embeddings,
+                Dimensions: 1536,
+                Model:      "text-embedding-ada-002",
+                TokensUsed: len(strings.Join(req.Texts, " ")) / 4, // Rough estimation
+        }, nil</span>
+}
+
+// GetEmbeddingDimension returns the dimension of embeddings from this provider
+func (c *Client) GetEmbeddingDimension(model string) int <span class="cov0" title="0">{
+        return 1536 // Default OpenAI embedding dimension
+}</span>
+
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package tools
+
+import (
+        "context"
+        "encoding/json"
+        "fmt"
+)
+
+// ToolResult represents the result of a tool execution
+type ToolResult struct {
+        Output    string                 `json:"output"`
+        Metadata  map[string]string      `json:"metadata,omitempty"`
+        Error     string                 `json:"error,omitempty"`
+        Success   bool                   `json:"success"`
+        ExtraData map[string]interface{} `json:"extra_data,omitempty"`
+}
+
+// Tool is an interface for tools that can be used by agents
+type Tool interface {
+        // Name returns the name of the tool
+        Name() string
+
+        // Description returns a description of what the tool does
+        Description() string
+
+        // Schema returns the JSON schema for the tool's input parameters
+        Schema() map[string]interface{}
+
+        // Execute runs the tool with the given input and returns the result
+        Execute(ctx context.Context, input string) (*ToolResult, error)
+
+        // Examples returns a list of example inputs for the tool
+        Examples() []string
+
+        // Category returns the category of the tool (e.g., "file", "web", "code")
+        Category() string
+
+        // RequiresAuth returns whether the tool requires authentication
+        RequiresAuth() bool
+}
+
+// BaseTool provides a base implementation of the Tool interface
+type BaseTool struct {
+        name        string
+        description string
+        schema      map[string]interface{}
+        category    string
+        needsAuth   bool
+        examples    []string
+}
+
+// NewBaseTool creates a new base tool
+func NewBaseTool(name, description string, schema map[string]interface{}, category string, needsAuth bool, examples []string) *BaseTool <span class="cov8" title="1">{
+        return &amp;BaseTool{
+                name:        name,
+                description: description,
+                schema:      schema,
+                category:    category,
+                needsAuth:   needsAuth,
+                examples:    examples,
+        }
+}</span>
+
+// Name returns the name of the tool
+func (t *BaseTool) Name() string <span class="cov8" title="1">{
+        return t.name
+}</span>
+
+// Description returns a description of what the tool does
+func (t *BaseTool) Description() string <span class="cov8" title="1">{
+        return t.description
+}</span>
+
+// Schema returns the JSON schema for the tool's input parameters
+func (t *BaseTool) Schema() map[string]interface{} <span class="cov8" title="1">{
+        return t.schema
+}</span>
+
+// Category returns the category of the tool
+func (t *BaseTool) Category() string <span class="cov8" title="1">{
+        return t.category
+}</span>
+
+// RequiresAuth returns whether the tool requires authentication
+func (t *BaseTool) RequiresAuth() bool <span class="cov8" title="1">{
+        return t.needsAuth
+}</span>
+
+// Examples returns a list of example inputs for the tool
+func (t *BaseTool) Examples() []string <span class="cov8" title="1">{
+        return t.examples
+}</span>
+
+// Execute implements the Tool interface but should be overridden by concrete tools
+func (t *BaseTool) Execute(ctx context.Context, input string) (*ToolResult, error) <span class="cov0" title="0">{
+        return nil, fmt.Errorf("Execute not implemented for BaseTool, must be implemented by concrete tool")
+}</span>
+
+// NewToolResult creates a new tool result
+func NewToolResult(output string, metadata map[string]string, err error, extraData map[string]interface{}) *ToolResult <span class="cov8" title="1">{
+        result := &amp;ToolResult{
+                Output:    output,
+                Metadata:  metadata,
+                Success:   err == nil,
+                ExtraData: extraData,
+        }
+
+        if err != nil </span><span class="cov8" title="1">{
+                result.Error = err.Error()
+        }</span>
+
+        <span class="cov8" title="1">return result</span>
+}
+
+// ToolRegistry manages available tools
+type ToolRegistry struct {
+        tools map[string]Tool
+}
+
+// NewToolRegistry creates a new tool registry
+func NewToolRegistry() *ToolRegistry <span class="cov8" title="1">{
+        return &amp;ToolRegistry{
+                tools: make(map[string]Tool),
+        }
+}</span>
+
+// RegisterTool registers a tool with the registry
+func (r *ToolRegistry) RegisterTool(tool Tool) error <span class="cov8" title="1">{
+        if tool == nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("tool cannot be nil")
+        }</span>
+
+        <span class="cov8" title="1">name := tool.Name()
+        if name == "" </span><span class="cov8" title="1">{
+                return fmt.Errorf("tool name cannot be empty")
+        }</span>
+
+        <span class="cov8" title="1">if _, exists := r.tools[name]; exists </span><span class="cov8" title="1">{
+                return fmt.Errorf("tool with name '%s' already registered", name)
+        }</span>
+
+        <span class="cov8" title="1">r.tools[name] = tool
+        return nil</span>
+}
+
+// GetTool gets a tool by name
+func (r *ToolRegistry) GetTool(name string) (Tool, bool) <span class="cov8" title="1">{
+        tool, exists := r.tools[name]
+        return tool, exists
+}</span>
+
+// ListTools returns a list of all registered tools
+func (r *ToolRegistry) ListTools() []Tool <span class="cov8" title="1">{
+        var tools []Tool
+        for _, tool := range r.tools </span><span class="cov8" title="1">{
+                tools = append(tools, tool)
+        }</span>
+        <span class="cov8" title="1">return tools</span>
+}
+
+// ListToolsByCategory returns a list of tools in a specific category
+func (r *ToolRegistry) ListToolsByCategory(category string) []Tool <span class="cov8" title="1">{
+        var tools []Tool
+        for _, tool := range r.tools </span><span class="cov8" title="1">{
+                if tool.Category() == category </span><span class="cov8" title="1">{
+                        tools = append(tools, tool)
+                }</span>
+        }
+        <span class="cov8" title="1">return tools</span>
+}
+
+// ExecuteTool executes a tool by name with the given input
+func (r *ToolRegistry) ExecuteTool(ctx context.Context, name string, input string) (*ToolResult, error) <span class="cov8" title="1">{
+        tool, exists := r.GetTool(name)
+        if !exists </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("tool '%s' not found", name)
+        }</span>
+
+        <span class="cov8" title="1">return tool.Execute(ctx, input)</span>
+}
+
+// ExecuteToolWithParams executes a tool by name with the given parameters as a JSON object
+func (r *ToolRegistry) ExecuteToolWithParams(ctx context.Context, name string, params map[string]interface{}) (*ToolResult, error) <span class="cov8" title="1">{
+        // Convert params to JSON
+        inputJSON, err := json.Marshal(params)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to marshal parameters: %w", err)
+        }</span>
+
+        <span class="cov8" title="1">return r.ExecuteTool(ctx, name, string(inputJSON))</span>
+}</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

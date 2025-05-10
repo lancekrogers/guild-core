@@ -31,3 +31,4 @@ go.work.sum
 
 
 **/.claude/settings.local.json
+*.wip

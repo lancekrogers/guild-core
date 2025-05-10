@@ -333,11 +333,7 @@ func (s *ChromaStore) Retrieve(ctx context.Context, id string) (*Document, error
 
 	// Extract embedding
 	if len(result.Embeddings) > 0 {
-		embedding := make(Vector, len(result.Embeddings[0]))
-		for i, v := range result.Embeddings[0] {
-			embedding[i] = v
-		}
-		doc.Embedding = embedding
+		doc.Embedding = Vector(result.Embeddings[0])
 	}
 
 	// Extract metadata
@@ -423,11 +419,10 @@ func (s *ChromaStore) Query(ctx context.Context, embedding Vector, limit int) ([
 
 		// Extract embedding
 		if len(result.Embeddings) > 0 && i < len(result.Embeddings[0]) {
-			embedding := make(Vector, len(result.Embeddings[0][i]))
-			for j, v := range result.Embeddings[0][i] {
-				embedding[j] = v
+			// Create a vector from the i-th embedding in the first batch
+			if i < len(result.Embeddings) && len(result.Embeddings[i]) > 0 {
+				doc.Embedding = Vector(result.Embeddings[i])
 			}
-			doc.Embedding = embedding
 		}
 
 		// Extract metadata

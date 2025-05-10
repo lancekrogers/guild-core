@@ -153,11 +153,89 @@ task run CLI_ARGS="--debug objective list"
   task test:packages PACKAGE="./pkg/objective"
   ```
 
+### Test Coverage
+
+Guild includes comprehensive test coverage tools:
+
+- Generate basic coverage report:
+  ```bash
+  task test:coverage
+  ```
+
+- Generate coverage for working packages only:
+  ```bash
+  task test:coverage:working
+  ```
+
+- Generate detailed coverage by package:
+  ```bash
+  task test:coverage:detailed
+  ```
+
+- Generate a coverage badge for your README:
+  ```bash
+  task test:coverage:badge
+  ```
+
+### Test Verification and Analysis
+
+Guild provides advanced test verification tools that help maintain code quality:
+
+- Identify untested functions in a package:
+  ```bash
+  task test:verify PACKAGE="./pkg/objective"
+  ```
+
+- Verify test coverage for all working packages:
+  ```bash
+  task test:verify:all
+  ```
+
+- Analyze test patterns and quality:
+  ```bash
+  task test:analyze
+  ```
+
+### Guild Lore and Naming Conventions
+
+Guild follows specific naming conventions based on medieval guild terminology. These tools help ensure tests adhere to these conventions:
+
+- Check adherence to Guild naming conventions:
+  ```bash
+  task test:analyze:lore
+  ```
+
+- Lint tests for naming compliance:
+  ```bash
+  task test:lint:naming
+  ```
+
+- Generate a comprehensive test quality report that includes coverage, verification, and lore compliance:
+  ```bash
+  task test:report
+  ```
+
+#### Test Naming Conventions
+
+Guild uses themed test names according to the following conventions:
+
+| Test Type | Convention | Description |
+|-----------|------------|-------------|
+| Unit tests | `TestCraft<FunctionName>` | Tests for individual functions |
+| Integration tests | `TestGuild<FeatureName>` | Tests for integrated components |
+| Mock tests | `TestJourneyman<MockName>` | Tests using mock objects |
+| Error tests | `TestApprentice<ErrorCase>` | Tests for error conditions |
+| Benchmarks | `BenchmarkMaster<FunctionName>` | Performance benchmarks |
+
 ### Writing Tests
 
 - Place test files in the same directory as the code being tested with a `_test.go` suffix
 - Use Go's standard testing package
+- Follow Guild naming conventions for test functions
+- Use table-driven tests where appropriate
 - Create mock implementations for interfaces in `mocks/` subdirectories
+- Test both success and error cases
+- Add thorough test comments explaining what each test verifies
 
 ## Building and Running
 
