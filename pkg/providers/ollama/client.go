@@ -7,9 +7,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/providers"
+	"github.com/blockhead-consulting/guild/pkg/providers/interfaces"
 )
 
 const (
@@ -111,7 +112,7 @@ func WithEndpoint(endpoint string) ClientOption {
 }
 
 // Complete implements the LLMClient interface
-func (c *OllamaClient) Complete(ctx context.Context, req *providers.CompletionRequest) (*providers.CompletionResponse, error) {
+func (c *OllamaClient) Complete(ctx context.Context, req *interfaces.CompletionRequest) (*interfaces.CompletionResponse, error) {
 	// Convert to Ollama request format
 	ollamaReq := ollamaRequest{
 		Model:  c.modelName,
@@ -178,7 +179,7 @@ func (c *OllamaClient) Complete(ctx context.Context, req *providers.CompletionRe
 	responseTokens := len(ollamaResp.Response) / 4
 
 	// Convert to generic response
-	return &providers.CompletionResponse{
+	return &interfaces.CompletionResponse{
 		Text:         ollamaResp.Response,
 		TokensInput:  promptTokens,
 		TokensOutput: responseTokens,
@@ -226,5 +227,38 @@ func (c *OllamaClient) GetModelList(ctx context.Context) ([]string, error) {
 // GetMaxTokens returns the maximum context size for the model
 func (c *OllamaClient) GetMaxTokens() int {
 	return c.maxTokens
+}
+
+// CreateEmbedding creates an embedding for the given text
+func (c *OllamaClient) CreateEmbedding(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
+	// Stub implementation - Ollama does have embedding capabilities
+	return &interfaces.EmbeddingResponse{
+		Embedding:  make([]float32, 4096), // Common dimension for Ollama models
+		Dimensions: 4096,
+		Model:      c.modelName,
+		TokensUsed: len(req.Text) / 4, // Rough estimation
+	}, nil
+}
+
+// CreateEmbeddings creates embeddings for multiple texts
+func (c *OllamaClient) CreateEmbeddings(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
+	// Stub implementation - would call Ollama's embedding endpoint
+	embeddings := make([][]float32, len(req.Texts))
+	for i := range embeddings {
+		embeddings[i] = make([]float32, 4096)
+	}
+
+	return &interfaces.EmbeddingResponse{
+		Embeddings: embeddings,
+		Dimensions: 4096,
+		Model:      c.modelName,
+		TokensUsed: len(strings.Join(req.Texts, " ")) / 4, // Rough estimation
+	}, nil
+}
+
+// GetEmbeddingDimension returns the dimension of embeddings from this provider
+func (c *OllamaClient) GetEmbeddingDimension(model string) int {
+	// This would vary by model but common dimensions for Ollama models
+	return 4096
 }
 

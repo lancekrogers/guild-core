@@ -3,25 +3,25 @@ package mocks
 import (
 	"sync"
 
-	"github.com/blockhead-consulting/Guild/pkg/orchestrator"
+	"github.com/blockhead-consulting/guild/pkg/orchestrator/interfaces"
 )
 
 // MockEventHandler is a mock implementation of the EventHandler function
 type MockEventHandler struct {
-	ReceivedEvents []orchestrator.Event
+	ReceivedEvents []interfaces.Event
 	mu             sync.Mutex
-	Handler        func(event orchestrator.Event)
+	Handler        func(event interfaces.Event)
 }
 
 // NewMockEventHandler creates a new mock event handler
 func NewMockEventHandler() *MockEventHandler {
 	return &MockEventHandler{
-		ReceivedEvents: make([]orchestrator.Event, 0),
+		ReceivedEvents: make([]interfaces.Event, 0),
 	}
 }
 
 // HandleEvent implements the EventHandler function
-func (m *MockEventHandler) HandleEvent(event orchestrator.Event) {
+func (m *MockEventHandler) HandleEvent(event interfaces.Event) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	
@@ -33,17 +33,17 @@ func (m *MockEventHandler) HandleEvent(event orchestrator.Event) {
 }
 
 // GetHandlerFunc returns the event handler function
-func (m *MockEventHandler) GetHandlerFunc() orchestrator.EventHandler {
+func (m *MockEventHandler) GetHandlerFunc() interfaces.EventHandler {
 	return m.HandleEvent
 }
 
 // GetEvents returns all received events
-func (m *MockEventHandler) GetEvents() []orchestrator.Event {
+func (m *MockEventHandler) GetEvents() []interfaces.Event {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	
 	// Create a copy to avoid race conditions
-	events := make([]orchestrator.Event, len(m.ReceivedEvents))
+	events := make([]interfaces.Event, len(m.ReceivedEvents))
 	copy(events, m.ReceivedEvents)
 	
 	return events
@@ -54,17 +54,17 @@ func (m *MockEventHandler) Reset() {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	
-	m.ReceivedEvents = make([]orchestrator.Event, 0)
+	m.ReceivedEvents = make([]interfaces.Event, 0)
 }
 
 // FilterEventsByType returns events of a specific type
-func (m *MockEventHandler) FilterEventsByType(eventType string) []orchestrator.Event {
+func (m *MockEventHandler) FilterEventsByType(eventType string) []interfaces.Event {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	
-	var filtered []orchestrator.Event
+	var filtered []interfaces.Event
 	for _, e := range m.ReceivedEvents {
-		if e.Type == eventType {
+		if string(e.Type) == eventType {
 			filtered = append(filtered, e)
 		}
 	}

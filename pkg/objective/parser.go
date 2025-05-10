@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -106,15 +105,34 @@ func (p *MarkdownParser) Parse(content, source string) (*Objective, error) {
 }
 
 // ParseFile parses an objective from a markdown file
-func (p *MarkdownParser) ParseFile(filepath string) (*Objective, error) {
+func (p *MarkdownParser) ParseFile(path string) (*Objective, error) {
 	// Read file content
-	content, err := os.ReadFile(filepath)
+	content, err := os.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read file: %w", err)
 	}
-	
+
 	// Parse the content
-	return p.Parse(string(content), filepath)
+	return p.Parse(string(content), path)
+}
+
+// ParseFile is a standalone function to parse a markdown file into an Objective
+func ParseFile(path string) (*Objective, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, fmt.Errorf("error opening file: %w", err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	content := &strings.Builder{}
+	for scanner.Scan() {
+		content.WriteString(scanner.Text())
+		content.WriteString("\n")
+	}
+
+	parser := NewMarkdownParser(ParseOptions{})
+	return parser.Parse(content.String(), path)
 }
 
 // extractSections extracts sections from markdown content

@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/providers"
-	"github.com/blockhead-consulting/Guild/pkg/providers/mocks"
+	"github.com/blockhead-consulting/guild/pkg/providers"
+	"github.com/blockhead-consulting/guild/pkg/providers/mocks"
 )
 
 // TestLLMClientImplementation tests that the mock client properly implements the LLMClient interface

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/blockhead-consulting/Guild/pkg/memory"
+	"github.com/blockhead-consulting/guild/pkg/memory"
 )
 
 // MockStore implements memory.Store interface for testing

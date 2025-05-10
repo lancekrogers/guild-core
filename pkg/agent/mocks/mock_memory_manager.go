@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/memory"
+	"github.com/blockhead-consulting/guild/pkg/memory"
 )
 
 // MockChainManager implements the memory.ChainManager interface for testing

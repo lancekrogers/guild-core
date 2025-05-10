@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/memory"
-	"github.com/blockhead-consulting/Guild/pkg/objective"
+	"github.com/blockhead-consulting/guild/pkg/memory"
+	"github.com/blockhead-consulting/guild/pkg/objective"
 )
 
 // MockObjectiveManager implements the objective.Manager interface for testing
@@ -125,14 +125,14 @@ func (m *MockObjectiveManager) LoadObjectiveFromFile(ctx context.Context, filePa
 }
 
 // AddTask implements objective.Manager.AddTask
-func (m *MockObjectiveManager) AddTask(ctx context.Context, objectiveID string, task objective.Task) error {
+func (m *MockObjectiveManager) AddTask(ctx context.Context, objectiveID string, task *objective.ObjectiveTask) error {
 	if m.error != nil {
 		return m.error
 	}
-	
+
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	obj, ok := m.objectives[objectiveID]
 	if !ok {
 		return memory.ErrNotFound

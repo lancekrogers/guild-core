@@ -7,13 +7,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/agent"
-	"github.com/blockhead-consulting/Guild/pkg/agent/mocks"
-	"github.com/blockhead-consulting/Guild/pkg/kanban"
-	"github.com/blockhead-consulting/Guild/pkg/memory"
-	"github.com/blockhead-consulting/Guild/pkg/objective"
-	"github.com/blockhead-consulting/Guild/pkg/providers"
-	"github.com/blockhead-consulting/Guild/tools"
+	"github.com/blockhead-consulting/guild/pkg/agent"
+	"github.com/blockhead-consulting/guild/pkg/agent/mocks"
+	"github.com/blockhead-consulting/guild/pkg/kanban"
+	"github.com/blockhead-consulting/guild/pkg/memory"
+	"github.com/blockhead-consulting/guild/pkg/objective"
+	"github.com/blockhead-consulting/guild/pkg/providers"
+	"github.com/blockhead-consulting/guild/tools"
 )
 
 // TestWorkerAgentImplementation tests that WorkerAgent implements the Agent interface

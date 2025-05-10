@@ -3,6 +3,7 @@ package objective
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -42,6 +43,56 @@ type Objective struct {
 	Priority    string            `json:"priority,omitempty"` // high, medium, low
 	Source      string            `json:"source,omitempty"`   // Path to the source file
 	Content     string            `json:"-"`                  // Original content, not stored in JSON
+	FilePath    string            `json:"-"`                  // Path to the file
+	FileName    string            `json:"-"`                  // Name of the file
+}
+
+// Format formats an objective as a markdown string
+func (o *Objective) Format() string {
+	var md strings.Builder
+
+	// Title
+	md.WriteString(fmt.Sprintf("# %s\n\n", o.Title))
+
+	// Description
+	md.WriteString(fmt.Sprintf("%s\n\n", o.Description))
+
+	// Metadata
+	md.WriteString("## Metadata\n\n")
+	md.WriteString(fmt.Sprintf("- Status: %s\n", o.Status))
+	md.WriteString(fmt.Sprintf("- Owner: %s\n", o.Owner))
+	if len(o.Assignees) > 0 {
+		md.WriteString(fmt.Sprintf("- Assignees: %s\n", strings.Join(o.Assignees, ", ")))
+	}
+	if o.Priority != "" {
+		md.WriteString(fmt.Sprintf("- Priority: %s\n", o.Priority))
+	}
+	if len(o.Tags) > 0 {
+		md.WriteString(fmt.Sprintf("- Tags: %s\n", strings.Join(o.Tags, ", ")))
+	}
+	md.WriteString("\n")
+
+	// Parts
+	for _, part := range o.Parts {
+		md.WriteString(fmt.Sprintf("## %s\n\n", part.Title))
+		md.WriteString(fmt.Sprintf("%s\n\n", part.Content))
+	}
+
+	// Tasks
+	if len(o.Tasks) > 0 {
+		md.WriteString("## Tasks\n\n")
+		for _, task := range o.Tasks {
+			status := ""
+			if task.Status == "done" {
+				status = "[x]"
+			} else {
+				status = "[ ]"
+			}
+			md.WriteString(fmt.Sprintf("- %s %s\n", status, task.Title))
+		}
+	}
+
+	return md.String()
 }
 
 // ObjectivePart represents a section of an objective

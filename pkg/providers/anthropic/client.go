@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancerogers/Guild/pkg/providers"
+	"github.com/blockhead-consulting/guild/pkg/providers/interfaces"
 )
 
 const (
@@ -98,7 +98,7 @@ func WithTimeout(timeout time.Duration) ClientOption {
 }
 
 // Complete implements the LLMClient interface
-func (c *AnthropicClient) Complete(ctx context.Context, req *providers.CompletionRequest) (*providers.CompletionResponse, error) {
+func (c *AnthropicClient) Complete(ctx context.Context, req *interfaces.CompletionRequest) (*interfaces.CompletionResponse, error) {
 	// Build Anthropic request
 	prompt := req.Prompt
 	
@@ -175,7 +175,7 @@ func (c *AnthropicClient) Complete(ctx context.Context, req *providers.Completio
 	}
 
 	// Convert to generic response
-	return &providers.CompletionResponse{
+	return &interfaces.CompletionResponse{
 		Text:         combinedText,
 		TokensInput:  aResp.Usage.InputTokens,
 		TokensOutput: aResp.Usage.OutputTokens,
@@ -216,4 +216,36 @@ func (c *AnthropicClient) GetModelList(ctx context.Context) ([]string, error) {
 // GetMaxTokens returns the maximum context size for the model
 func (c *AnthropicClient) GetMaxTokens() int {
 	return c.maxTokens
+}
+
+// CreateEmbedding creates an embedding for the given text
+func (c *AnthropicClient) CreateEmbedding(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
+	// Stub implementation - Anthropic doesn't have an embedding API yet
+	return &interfaces.EmbeddingResponse{
+		Embedding:  make([]float32, 1024), // Stub dimension
+		Dimensions: 1024,
+		Model:      c.modelName + "-embedding",
+		TokensUsed: len(req.Text) / 4, // Rough estimation
+	}, nil
+}
+
+// CreateEmbeddings creates embeddings for multiple texts
+func (c *AnthropicClient) CreateEmbeddings(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
+	// Stub implementation - Anthropic doesn't have an embedding API yet
+	embeddings := make([][]float32, len(req.Texts))
+	for i := range embeddings {
+		embeddings[i] = make([]float32, 1024)
+	}
+
+	return &interfaces.EmbeddingResponse{
+		Embeddings: embeddings,
+		Dimensions: 1024,
+		Model:      c.modelName + "-embedding",
+		TokensUsed: len(strings.Join(req.Texts, " ")) / 4, // Rough estimation
+	}, nil
+}
+
+// GetEmbeddingDimension returns the dimension of embeddings from this provider
+func (c *AnthropicClient) GetEmbeddingDimension(model string) int {
+	return 1024 // Stub dimension
 }

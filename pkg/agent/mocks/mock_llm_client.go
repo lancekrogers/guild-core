@@ -3,7 +3,7 @@ package mocks
 import (
 	"context"
 
-	"github.com/blockhead-consulting/Guild/pkg/providers"
+	"github.com/blockhead-consulting/guild/pkg/providers"
 )
 
 // MockLLMClient implements the providers.LLMClient interface for testing

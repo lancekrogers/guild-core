@@ -30,7 +30,8 @@ type Scraper struct {
 	Async     bool
 }
 
-var _ tools.Tool = Scraper{}
+// Making sure we implement the Tool interface
+var _ tools.Tool = &Scraper{}
 
 func NewScraper(options ...Options) (*Scraper, error) {
 	scraper := &Scraper{
@@ -56,18 +57,55 @@ func NewScraper(options ...Options) (*Scraper, error) {
 	return scraper, nil
 }
 
-func (s Scraper) Name() string {
+func (s *Scraper) Name() string {
 	return "web_scraper"
 }
 
-func (s Scraper) Description() string {
+func (s *Scraper) Description() string {
 	return `
 		Web Scraper will scan a url and return the content of the web page.
 		Input should be a working url.
 	`
 }
 
-func (s Scraper) Call(input string) (string, error) {
+func (s *Scraper) Schema() map[string]interface{} {
+	return map[string]interface{}{
+		"type": "object",
+		"properties": map[string]interface{}{
+			"url": map[string]interface{}{
+				"type":        "string",
+				"description": "The URL to scrape",
+			},
+		},
+		"required": []string{"url"},
+	}
+}
+
+func (s *Scraper) Examples() []string {
+	return []string{
+		`{"url": "https://example.com"}`,
+		`{"url": "https://news.ycombinator.com"}`,
+	}
+}
+
+func (s *Scraper) Category() string {
+	return "web"
+}
+
+func (s *Scraper) RequiresAuth() bool {
+	return false
+}
+
+func (s *Scraper) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
+	output, err := s.Call(input)
+	if err != nil {
+		return tools.NewToolResult("", nil, err, nil), err
+	}
+
+	return tools.NewToolResult(output, nil, nil, nil), nil
+}
+
+func (s *Scraper) Call(input string) (string, error) {
 	ctx := context.Background()
 	_, err := url.ParseRequestURI(input)
 	if err != nil {

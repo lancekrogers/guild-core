@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/blockhead-consulting/Guild/tools"
+	"github.com/blockhead-consulting/guild/tools"
 )
 
 // MockToolRegistry implements the tools.ToolRegistry interface for testing

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/orchestrator/mocks"
+	"github.com/blockhead-consulting/guild/pkg/orchestrator/mocks"
 )
 
 func TestEventBusSubscribeAndPublish(t *testing.T) {

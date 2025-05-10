@@ -91,6 +91,11 @@ func (t *BaseTool) Examples() []string {
 	return t.examples
 }
 
+// Execute implements the Tool interface but should be overridden by concrete tools
+func (t *BaseTool) Execute(ctx context.Context, input string) (*ToolResult, error) {
+	return nil, fmt.Errorf("Execute not implemented for BaseTool, must be implemented by concrete tool")
+}
+
 // NewToolResult creates a new tool result
 func NewToolResult(output string, metadata map[string]string, err error, extraData map[string]interface{}) *ToolResult {
 	result := &ToolResult{

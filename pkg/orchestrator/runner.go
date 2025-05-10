@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/agent"
-	"github.com/blockhead-consulting/Guild/pkg/objective"
+	"github.com/blockhead-consulting/guild/pkg/agent"
+	"github.com/blockhead-consulting/guild/pkg/objective"
 )
 
 // BaseOrchestrator implements the Orchestrator interface

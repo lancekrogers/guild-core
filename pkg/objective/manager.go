@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/memory"
+	"github.com/blockhead-consulting/guild/pkg/memory"
 )
 
 // Manager handles storage and retrieval of objectives

@@ -3,11 +3,12 @@ package memory_test
 import (
 	"context"
 	"errors"
+	"strconv"
 	"testing"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/memory"
-	"github.com/blockhead-consulting/Guild/pkg/memory/mocks"
+	"github.com/blockhead-consulting/guild/pkg/memory"
+	"github.com/blockhead-consulting/guild/pkg/memory/mocks"
 )
 
 // TestBoltChainManager_Implementation tests that BoltChainManager implements the ChainManager interface
@@ -255,7 +256,7 @@ func TestGetChainsByAgent(t *testing.T) {
 	numChains := 3
 
 	for i := 0; i < numChains; i++ {
-		taskID := "task-" + string(i)
+		taskID := "task-" + strconv.Itoa(i)
 		_, err := manager.CreateChain(ctx, agentID, taskID)
 		if err != nil {
 			t.Fatalf("Failed to create test chain %d: %v", i, err)
@@ -320,7 +321,7 @@ func TestGetChainsByTask(t *testing.T) {
 	numChains := 3
 
 	for i := 0; i < numChains; i++ {
-		agentID := "agent-" + string(i)
+		agentID := "agent-" + strconv.Itoa(i)
 		_, err := manager.CreateChain(ctx, agentID, taskID)
 		if err != nil {
 			t.Fatalf("Failed to create test chain %d: %v", i, err)

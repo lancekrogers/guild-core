@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/blockhead-consulting/Guild/pkg/providers"
+	"github.com/blockhead-consulting/guild/pkg/providers/interfaces"
 )
 
 // MockLLMClient implements the LLMClient interface for testing
@@ -23,16 +23,16 @@ type MockLLMClient struct {
 	MaxTokenLimit int
 
 	// Completion responses mapped by prompt prefixes
-	CompletionResponses map[string]providers.CompletionResponse
+	CompletionResponses map[string]interfaces.CompletionResponse
 
 	// Default response when no match is found
-	DefaultResponse providers.CompletionResponse
+	DefaultResponse interfaces.CompletionResponse
 
 	// Error to return (if not nil)
 	Error error
 
 	// Keep track of requests for verification
-	CompletionRequests []*providers.CompletionRequest
+	CompletionRequests []*interfaces.CompletionRequest
 }
 
 // NewMockLLMClient creates a new mock LLM client with default values
@@ -42,8 +42,8 @@ func NewMockLLMClient() *MockLLMClient {
 		ModelInfo:           map[string]string{"model": "mock-model", "version": "1.0"},
 		AvailableModels:     []string{"mock-model-small", "mock-model-medium", "mock-model-large"},
 		MaxTokenLimit:       4096,
-		CompletionResponses: make(map[string]providers.CompletionResponse),
-		DefaultResponse: providers.CompletionResponse{
+		CompletionResponses: make(map[string]interfaces.CompletionResponse),
+		DefaultResponse: interfaces.CompletionResponse{
 			Text:         "This is a mock response",
 			TokensUsed:   10,
 			TokensInput:  5,
@@ -51,7 +51,7 @@ func NewMockLLMClient() *MockLLMClient {
 			FinishReason: "stop",
 			ModelUsed:    "mock-model",
 		},
-		CompletionRequests: make([]*providers.CompletionRequest, 0),
+		CompletionRequests: make([]*interfaces.CompletionRequest, 0),
 	}
 }
 
@@ -80,19 +80,19 @@ func (m *MockLLMClient) WithMaxTokens(tokens int) *MockLLMClient {
 }
 
 // WithDefaultResponse sets the default response for the mock client
-func (m *MockLLMClient) WithDefaultResponse(resp providers.CompletionResponse) *MockLLMClient {
+func (m *MockLLMClient) WithDefaultResponse(resp interfaces.CompletionResponse) *MockLLMClient {
 	m.DefaultResponse = resp
 	return m
 }
 
 // AddResponse adds a response for a specific prompt prefix
-func (m *MockLLMClient) AddResponse(promptPrefix string, response providers.CompletionResponse) *MockLLMClient {
+func (m *MockLLMClient) AddResponse(promptPrefix string, response interfaces.CompletionResponse) *MockLLMClient {
 	m.CompletionResponses[promptPrefix] = response
 	return m
 }
 
 // Complete implements the LLMClient interface
-func (m *MockLLMClient) Complete(ctx context.Context, req *providers.CompletionRequest) (*providers.CompletionResponse, error) {
+func (m *MockLLMClient) Complete(ctx context.Context, req *interfaces.CompletionRequest) (*interfaces.CompletionResponse, error) {
 	// Store the request for later verification
 	m.CompletionRequests = append(m.CompletionRequests, req)
 
@@ -154,8 +154,66 @@ func (m *MockLLMClient) GetMaxTokens() int {
 	return m.MaxTokenLimit
 }
 
+// CreateEmbedding implements the LLMClient interface
+func (m *MockLLMClient) CreateEmbedding(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
+	// Check for context cancellation
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
+		// Continue with normal processing
+	}
+
+	// Return error if set
+	if m.Error != nil {
+		return nil, m.Error
+	}
+
+	// Return mock embedding
+	return &interfaces.EmbeddingResponse{
+		Embedding:  make([]float32, 1536), // Default dimension
+		Dimensions: 1536,
+		Model:      "mock-embedding-model",
+		TokensUsed: len(req.Text) / 4, // Rough estimation
+	}, nil
+}
+
+// CreateEmbeddings implements the LLMClient interface
+func (m *MockLLMClient) CreateEmbeddings(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
+	// Check for context cancellation
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
+		// Continue with normal processing
+	}
+
+	// Return error if set
+	if m.Error != nil {
+		return nil, m.Error
+	}
+
+	// Return mock embeddings
+	embeddings := make([][]float32, len(req.Texts))
+	for i := range embeddings {
+		embeddings[i] = make([]float32, 1536)
+	}
+
+	return &interfaces.EmbeddingResponse{
+		Embeddings: embeddings,
+		Dimensions: 1536,
+		Model:      "mock-embedding-model",
+		TokensUsed: len(strings.Join(req.Texts, " ")) / 4, // Rough estimation
+	}, nil
+}
+
+// GetEmbeddingDimension implements the LLMClient interface
+func (m *MockLLMClient) GetEmbeddingDimension(model string) int {
+	return 1536 // Default OpenAI embedding dimension
+}
+
 // GetLastRequest returns the last request received by the mock client
-func (m *MockLLMClient) GetLastRequest() (*providers.CompletionRequest, error) {
+func (m *MockLLMClient) GetLastRequest() (*interfaces.CompletionRequest, error) {
 	if len(m.CompletionRequests) == 0 {
 		return nil, fmt.Errorf("no requests received")
 	}
@@ -164,5 +222,5 @@ func (m *MockLLMClient) GetLastRequest() (*providers.CompletionRequest, error) {
 
 // ClearRequests clears the stored requests
 func (m *MockLLMClient) ClearRequests() {
-	m.CompletionRequests = make([]*providers.CompletionRequest, 0)
+	m.CompletionRequests = make([]*interfaces.CompletionRequest, 0)
 }

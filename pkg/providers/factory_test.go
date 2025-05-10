@@ -62,8 +62,8 @@ func TestRegisterProvider(t *testing.T) {
 
 	// Check model info
 	info := client.GetModelInfo()
-	if info["model"] != "test-model" {
-		t.Errorf("expected model 'test-model', got '%s'", info["model"])
+	if info["name"] != "test-model" {
+		t.Errorf("expected model 'test-model', got '%s'", info["name"])
 	}
 }
 
@@ -102,7 +102,7 @@ func TestSetDefaultProvider(t *testing.T) {
 	}
 
 	// Check that it's the right type
-	if _, ok := client.(*anthropic.Client); !ok {
+	if _, ok := client.(*anthropic.AnthropicClient); !ok {
 		t.Errorf("expected Anthropic client, got %T", client)
 	}
 }
@@ -129,14 +129,14 @@ func TestGetClient(t *testing.T) {
 	}
 
 	// Check that it's the right type
-	if _, ok := client.(*ollama.Client); !ok {
+	if _, ok := client.(*ollama.OllamaClient); !ok {
 		t.Errorf("expected Ollama client, got %T", client)
 	}
 
 	// Check model info
 	info := client.GetModelInfo()
-	if info["model"] != "llama2" {
-		t.Errorf("expected model 'llama2', got '%s'", info["model"])
+	if info["name"] != "llama2" {
+		t.Errorf("expected model 'llama2', got '%s'", info["name"])
 	}
 
 	// Request the same provider type again - should get the same client (cached)
@@ -186,7 +186,7 @@ func TestEnvironmentFallback(t *testing.T) {
 	}
 
 	// Check that it's the right type
-	if _, ok := client.(*anthropic.Client); !ok {
+	if _, ok := client.(*anthropic.AnthropicClient); !ok {
 		t.Errorf("expected Anthropic client, got %T", client)
 	}
 }

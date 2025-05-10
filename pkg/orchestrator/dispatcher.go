@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/agent"
-	"github.com/blockhead-consulting/Guild/pkg/kanban"
+	"github.com/blockhead-consulting/guild/pkg/agent"
+	"github.com/blockhead-consulting/guild/pkg/kanban"
 )
 
 // TaskDispatcher is responsible for assigning tasks to agents

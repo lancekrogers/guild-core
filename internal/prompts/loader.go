@@ -1,6 +1,7 @@
-package objective_prompts
+package prompts
 
 import (
+	"bytes"
 	"embed"
 	"fmt"
 	"io/fs"
@@ -12,8 +13,40 @@ import (
 //go:embed markdown/*.md
 var promptFS embed.FS
 
-// LoadPrompts loads all objective-related prompts as templates
-func LoadPrompts() (map[string]*template.Template, error) {
+// PromptManager handles loading and rendering prompt templates
+type PromptManager struct {
+	templates map[string]*template.Template
+}
+
+// NewPromptManager creates a new prompt manager
+func NewPromptManager() (*PromptManager, error) {
+	templates, err := loadPrompts()
+	if err != nil {
+		return nil, err
+	}
+
+	return &PromptManager{
+		templates: templates,
+	}, nil
+}
+
+// RenderPrompt renders a prompt template with the given data
+func (pm *PromptManager) RenderPrompt(name string, data interface{}) (string, error) {
+	tmpl, exists := pm.templates[name]
+	if !exists {
+		return "", fmt.Errorf("prompt template %s not found", name)
+	}
+
+	var buf bytes.Buffer
+	if err := tmpl.Execute(&buf, data); err != nil {
+		return "", fmt.Errorf("error executing template: %w", err)
+	}
+
+	return buf.String(), nil
+}
+
+// loadPrompts loads all objective-related prompts as templates
+func loadPrompts() (map[string]*template.Template, error) {
 	templates := make(map[string]*template.Template)
 
 	// Read all markdown files

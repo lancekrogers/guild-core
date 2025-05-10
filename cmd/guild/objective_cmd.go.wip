@@ -24,14 +24,14 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/blockhead-consulting/guild/pkg/generator/objective"
+	"github.com/blockhead-consulting/guild/pkg/memory"
+	"github.com/blockhead-consulting/guild/pkg/memory/boltdb"
+	"github.com/blockhead-consulting/guild/pkg/objective"
+	"github.com/blockhead-consulting/guild/pkg/providers"
+	objectiveui "github.com/blockhead-consulting/guild/pkg/ui/objective"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
-	"github.com/blockhead-consulting/Guild/pkg/memory"
-	"github.com/blockhead-consulting/Guild/pkg/memory/boltdb"
-	"github.com/blockhead-consulting/Guild/pkg/objective"
-	"github.com/blockhead-consulting/Guild/pkg/providers"
-	"github.com/blockhead-consulting/Guild/pkg/generator/objective"
-	objectiveui "github.com/blockhead-consulting/Guild/pkg/ui/objective"
 )
 
 var (
@@ -54,37 +54,37 @@ var objectiveCmd = &cobra.Command{
 	Long:  `Commission, refine, inspect, and oversee scroll-based charters for Guild projects`,
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
-		
+
 		// Prepare the Guild's resources (Setup components)
 		store, objManager := setupObjectiveStore()
 		llmClient, generator := setupGenerator()
-		
+
 		// Interpret the master's instructions (Process flags)
 		if listFlag {
 			listObjectives(ctx, objManager)
 			return
 		}
-		
+
 		if createFlag {
 			createObjective(ctx, cmd, args, objManager, generator)
 			return
 		}
-		
+
 		if generateFlag {
 			generateObjectiveContent(ctx, cmd, args, objManager, generator)
 			return
 		}
-		
+
 		if viewFlag && len(args) > 0 {
 			viewObjective(ctx, args[0], objManager)
 			return
 		}
-		
+
 		if editFlag && len(args) > 0 {
 			editObjective(ctx, args[0], objManager, generator)
 			return
 		}
-		
+
 		// Default behavior - interactive crafting session (interactive mode)
 		if len(args) > 0 {
 			// Summon workbench with existing scroll (Launch UI with existing objective)
@@ -98,7 +98,7 @@ var objectiveCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(objectiveCmd)
-	
+
 	// Add flags
 	// These flags use Guild terminology with comments explaining the standard software terms
 	objectiveCmd.Flags().BoolVarP(&createFlag, "commission", "c", false, "Commission a new scroll (create an objective)")
@@ -120,42 +120,42 @@ func setupObjectiveStore() (memory.Store, *objective.Manager) {
 		fmt.Printf("Error getting home directory: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	dataDir := filepath.Join(homeDir, ".guild")
 	dbPath := filepath.Join(dataDir, "guild.db")
 	objectivesDir := filepath.Join(dataDir, "objectives")
-	
+
 	// Establish archive chambers if they don't exist (Create directories)
 	if err := os.MkdirAll(dataDir, 0755); err != nil {
 		fmt.Printf("Error creating data directory: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	if err := os.MkdirAll(objectivesDir, 0755); err != nil {
 		fmt.Printf("Error creating objectives directory: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	// Establish the ledger system (Create the store)
 	store, err := boltdb.NewStore(dbPath)
 	if err != nil {
 		fmt.Printf("Error creating BoltDB store: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	// Appoint the Archive Master (Create the objective manager)
 	objManager, err := objective.NewManager(store, objectivesDir)
 	if err != nil {
 		fmt.Printf("Error creating objective manager: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	// Prepare the Archive Master for duty (Initialize the manager)
 	if err := objManager.Init(context.Background()); err != nil {
 		fmt.Printf("Error initializing objective manager: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	return store, objManager
 }
 
@@ -163,35 +163,35 @@ func setupObjectiveStore() (memory.Store, *objective.Manager) {
 func setupGenerator() (providers.LLMClient, *objective.Generator) {
 	// Establish the Great Hall for master craftsmen (Create provider factory)
 	factory := providers.NewFactory()
-	
+
 	// Determine which Hall of Knowledge to access (Get provider type based on flag)
 	provType := providers.ProviderType(providerFlag)
-	
+
 	// Prepare the summoning ritual specifications (Create config for the provider)
 	config := providers.ProviderConfig{
 		Type:  provType,
 		Model: modelFlag,
 	}
-	
+
 	// Register the Hall of Knowledge (Register the provider)
 	if err := factory.RegisterProvider(config); err != nil {
 		fmt.Printf("Error registering provider: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	// Designate as primary Hall of Knowledge (Set as default)
 	factory.SetDefaultProvider(provType)
-	
+
 	// Establish communion with the master craftsman (Get the LLM client)
 	llmClient, err := factory.GetDefaultClient()
 	if err != nil {
 		fmt.Printf("Error getting LLM client: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	// Initiate the crafting apparatus (Create the generator)
 	generator := objective.NewGenerator(llmClient)
-	
+
 	return llmClient, generator
 }
 
@@ -202,12 +202,12 @@ func listObjectives(ctx context.Context, objManager *objective.Manager) {
 		fmt.Printf("Error listing objectives: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	if len(objectives) == 0 {
 		fmt.Println("No scrolls found in the Guild archives")
 		return
 	}
-	
+
 	fmt.Println("Scrolls in the Guild Archives:")
 	for _, obj := range objectives {
 		fmt.Printf("- %s (%s) - %s\n", obj.Title, obj.ID, string(obj.Status))
@@ -217,34 +217,34 @@ func listObjectives(ctx context.Context, objManager *objective.Manager) {
 // commissionScroll creates a new scroll (standard: create objective)
 func createObjective(ctx context.Context, cmd *cobra.Command, args []string, objManager *objective.Manager, generator *objective.Generator) {
 	var description string
-	
+
 	if len(args) > 0 {
 		description = args[0]
 	} else {
 		fmt.Println("Enter a description for your scroll commission:")
 		fmt.Scanln(&description)
 	}
-	
+
 	if description == "" {
 		fmt.Println("Description cannot be empty")
 		os.Exit(1)
 	}
-	
+
 	// Generate the objective
 	obj, err := generator.GenerateObjective(description)
 	if err != nil {
 		fmt.Printf("Error crafting scroll: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	// Save the objective
 	if err := objManager.SaveObjective(ctx, obj); err != nil {
 		fmt.Printf("Error preserving scroll in the archives: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	fmt.Printf("Commissioned scroll '%s' (%s)\n", obj.Title, obj.ID)
-	
+
 	// Launch UI for editing
 	launchObjectiveUI(ctx, obj.ID, objManager, generator)
 }
@@ -255,13 +255,13 @@ func generateObjectiveContent(ctx context.Context, cmd *cobra.Command, args []st
 		fmt.Println("Please specify a scroll ID or path in the archives")
 		os.Exit(1)
 	}
-	
+
 	objectiveID := args[0]
-	
+
 	// Check if it's a file path or ID
 	var obj *objective.Objective
 	var err error
-	
+
 	if _, err := os.Stat(objectiveID); err == nil {
 		// It's a file path
 		obj, err = objManager.LoadObjectiveFromFile(ctx, objectiveID)
@@ -269,30 +269,30 @@ func generateObjectiveContent(ctx context.Context, cmd *cobra.Command, args []st
 		// It's an ID
 		obj, err = objManager.GetObjective(ctx, objectiveID)
 	}
-	
+
 	if err != nil {
 		fmt.Printf("Error retrieving scroll from the archives: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	// Generate tasks for the objective
 	tasks, err := generator.GenerateTasks(obj)
 	if err != nil {
 		fmt.Printf("Error generating tasks: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	// Add tasks to the objective
 	for _, task := range tasks {
 		obj.Tasks = append(obj.Tasks, task)
 	}
-	
+
 	// Save the objective
 	if err := objManager.SaveObjective(ctx, obj); err != nil {
 		fmt.Printf("Error preserving scroll in the archives: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	fmt.Printf("Crafted %d tasks for scroll '%s'\n", len(tasks), obj.Title)
 }
 
@@ -301,7 +301,7 @@ func viewObjective(ctx context.Context, objectiveID string, objManager *objectiv
 	// Check if it's a file path or ID
 	var obj *objective.Objective
 	var err error
-	
+
 	if _, err := os.Stat(objectiveID); err == nil {
 		// It's a file path
 		obj, err = objManager.LoadObjectiveFromFile(ctx, objectiveID)
@@ -309,23 +309,23 @@ func viewObjective(ctx context.Context, objectiveID string, objManager *objectiv
 		// It's an ID
 		obj, err = objManager.GetObjective(ctx, objectiveID)
 	}
-	
+
 	if err != nil {
 		fmt.Printf("Error retrieving scroll from the archives: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	// Print the objective
 	fmt.Printf("Title: %s\n", obj.Title)
 	fmt.Printf("Status: %s\n", obj.Status)
 	fmt.Printf("Priority: %s\n", obj.Priority)
 	fmt.Printf("Description: %s\n\n", obj.Description)
-	
+
 	// Print sections
 	for _, part := range obj.Parts {
 		fmt.Printf("## %s\n\n%s\n\n", part.Title, part.Content)
 	}
-	
+
 	// Print tasks
 	fmt.Println("## Tasks")
 	for _, task := range obj.Tasks {
@@ -348,7 +348,7 @@ func launchObjectiveUI(ctx context.Context, objectiveID string, objManager *obje
 	// Check if it's a file path or ID
 	var obj *objective.Objective
 	var err error
-	
+
 	if _, err := os.Stat(objectiveID); err == nil {
 		// It's a file path
 		obj, err = objManager.LoadObjectiveFromFile(ctx, objectiveID)
@@ -356,19 +356,19 @@ func launchObjectiveUI(ctx context.Context, objectiveID string, objManager *obje
 		// It's an ID
 		obj, err = objManager.GetObjective(ctx, objectiveID)
 	}
-	
+
 	if err != nil {
 		fmt.Printf("Error retrieving scroll from the archives: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	// Create planner
 	planner := objectiveui.NewPlanner(obj, generator, objManager)
-	
+
 	// Start UI
 	model := objectiveui.NewModel(planner)
 	p := tea.NewProgram(model, tea.WithAltScreen())
-	
+
 	if _, err := p.Run(); err != nil {
 		fmt.Printf("Error running UI: %v\n", err)
 		os.Exit(1)
@@ -379,16 +379,17 @@ func launchObjectiveUI(ctx context.Context, objectiveID string, objManager *obje
 func launchCreateUI(ctx context.Context, objManager *objective.Manager, generator *objective.Generator) {
 	// Create an empty scroll (standard: empty objective)
 	obj := objective.NewObjective("New Scroll", "Description of the commission goes here")
-	
+
 	// Create planner
 	planner := objectiveui.NewPlanner(obj, generator, objManager)
-	
+
 	// Start UI
 	model := objectiveui.NewModel(planner)
 	p := tea.NewProgram(model, tea.WithAltScreen())
-	
+
 	if _, err := p.Run(); err != nil {
 		fmt.Printf("Error running UI: %v\n", err)
 		os.Exit(1)
 	}
 }
+

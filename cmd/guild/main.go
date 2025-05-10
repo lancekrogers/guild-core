@@ -25,6 +25,20 @@ ledgers (kanban boards), and archives (memory systems).`,
 	},
 }
 
+// versionCmd shows the current version of Guild
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "Show the Guild version",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Guild v0.1.0 - Agent Framework")
+	},
+}
+
+func init() {
+	// Register commands
+	rootCmd.AddCommand(versionCmd)
+}
+
 // Execute summons the Guild and its artisans (standard: launches the CLI application)
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {

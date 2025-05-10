@@ -4,11 +4,13 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+	"strconv"
 	"testing"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/memory"
-	"github.com/blockhead-consulting/Guild/pkg/memory/boltdb"
+	"github.com/blockhead-consulting/guild/pkg/memory"
+	"github.com/blockhead-consulting/guild/pkg/memory/boltdb"
+	bolt "go.etcd.io/bbolt"
 )
 
 // setupTestStore creates a temporary BoltDB store for testing
@@ -22,8 +24,8 @@ func setupTestStore(t *testing.T) (*boltdb.Store, func()) {
 	// Create a path for the database file
 	dbPath := filepath.Join(tempDir, "test.db")
 
-	// Create the store
-	store, err := boltdb.NewStore(dbPath)
+	// Create the store with test bucket
+	store, err := boltdb.NewStore(dbPath, boltdb.WithCustomBuckets("test"))
 	if err != nil {
 		os.RemoveAll(tempDir)
 		t.Fatalf("Failed to create store: %v", err)
@@ -324,7 +326,7 @@ func TestStore_ConcurrentAccess(t *testing.T) {
 		go func(id int) {
 			for j := 0; j < numOperations; j++ {
 				// Perform a put
-				key := string(id) + "_" + string(j)
+				key := strconv.Itoa(id) + "_" + strconv.Itoa(j)
 				err := store.Put(ctx, "test", key, []byte("value_"+key))
 				if err != nil {
 					t.Errorf("Failed to put value in goroutine %d: %v", id, err)
@@ -399,7 +401,7 @@ func TestStore_Transaction(t *testing.T) {
 	defer cleanup()
 
 	// Test read-only transaction
-	err := store.Transaction(false, func(tx interface{}) error {
+	err := store.Transaction(false, func(tx *bolt.Tx) error {
 		// Transaction should not allow modifications
 		return nil
 	})
@@ -408,7 +410,7 @@ func TestStore_Transaction(t *testing.T) {
 	}
 
 	// Test writable transaction
-	err = store.Transaction(true, func(tx interface{}) error {
+	err = store.Transaction(true, func(tx *bolt.Tx) error {
 		// Transaction should allow modifications
 		return nil
 	})
@@ -418,7 +420,7 @@ func TestStore_Transaction(t *testing.T) {
 
 	// Test transaction that returns an error
 	testErr := memory.StoreError{Message: "test error"}
-	err = store.Transaction(true, func(tx interface{}) error {
+	err = store.Transaction(true, func(tx *bolt.Tx) error {
 		return testErr
 	})
 	if err != testErr {
@@ -452,7 +454,7 @@ func TestStore_Timeouts(t *testing.T) {
 	// Start a long-running transaction on store1
 	done := make(chan bool)
 	go func() {
-		err := store1.Transaction(true, func(tx interface{}) error {
+		err := store1.Transaction(true, func(tx *bolt.Tx) error {
 			// Hold the transaction for a while
 			time.Sleep(2 * time.Second)
 			return nil

@@ -9,8 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/providers"
-	"github.com/blockhead-consulting/Guild/pkg/providers/openai"
+	"github.com/blockhead-consulting/guild/pkg/providers"
+	"github.com/blockhead-consulting/guild/pkg/providers/interfaces"
+	"github.com/blockhead-consulting/guild/pkg/providers/openai"
 )
 
 // TestOpenAIClientImplementation tests that the OpenAI client implements the LLMClient interface
@@ -111,7 +112,7 @@ func TestComplete(t *testing.T) {
 	}
 
 	// Create completion request
-	req := &providers.CompletionRequest{
+	req := &interfaces.CompletionRequest{
 		Prompt:      "Test prompt",
 		MaxTokens:   100,
 		Temperature: 0.7,
@@ -285,7 +286,7 @@ func TestCompleteWithError(t *testing.T) {
 	}
 
 	// Call Complete
-	_, err = client.Complete(context.Background(), &providers.CompletionRequest{
+	_, err = client.Complete(context.Background(), &interfaces.CompletionRequest{
 		Prompt: "Test prompt",
 	})
 
@@ -321,7 +322,7 @@ func TestCompleteWithContextCancellation(t *testing.T) {
 	cancel()
 
 	// Call Complete with canceled context
-	_, err = client.Complete(ctx, &providers.CompletionRequest{
+	_, err = client.Complete(ctx, &interfaces.CompletionRequest{
 		Prompt: "Test prompt",
 	})
 

@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/kanban"
-	"github.com/blockhead-consulting/Guild/pkg/kanban/mocks"
+	"github.com/blockhead-consulting/guild/pkg/kanban"
+	"github.com/blockhead-consulting/guild/pkg/kanban/mocks"
 )
 
 // setupTestManager creates a manager for testing

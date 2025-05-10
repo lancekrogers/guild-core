@@ -3,7 +3,7 @@ package boltdb_test
 import (
 	"testing"
 
-	"github.com/blockhead-consulting/Guild/pkg/memory/boltdb"
+	"github.com/blockhead-consulting/guild/pkg/memory/boltdb"
 )
 
 // TestAllBuckets tests that AllBuckets returns all expected bucket names

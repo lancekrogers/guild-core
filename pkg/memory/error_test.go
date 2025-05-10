@@ -3,7 +3,7 @@ package memory_test
 import (
 	"testing"
 
-	"github.com/blockhead-consulting/Guild/pkg/memory"
+	"github.com/blockhead-consulting/guild/pkg/memory"
 )
 
 // TestStoreError tests the StoreError implementation

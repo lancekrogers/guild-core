@@ -4,22 +4,22 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/blockhead-consulting/Guild/tools"
+	"github.com/blockhead-consulting/guild/tools"
 )
 
 // MockTool is a mock implementation of the Tool interface for testing
 type MockTool struct {
-	NameValue        string
-	DescValue        string
-	SchemaValue      map[string]interface{}
-	CategoryValue    string
-	NeedsAuthValue   bool
-	ExamplesValue    []string
-	ResultValue      *tools.ToolResult
-	ErrorValue       error
-	ExecuteCount     int
-	LastInputValue   string
-	LastParamsValue  map[string]interface{}
+	NameValue       string
+	DescValue       string
+	SchemaValue     map[string]interface{}
+	CategoryValue   string
+	NeedsAuthValue  bool
+	ExamplesValue   []string
+	ResultValue     *tools.ToolResult
+	ErrorValue      error
+	ExecuteCount    int
+	LastInputValue  string
+	LastParamsValue map[string]interface{}
 }
 
 // NewMockTool creates a new mock tool
@@ -128,3 +128,4 @@ func (t *MockTool) Category() string {
 func (t *MockTool) RequiresAuth() bool {
 	return t.NeedsAuthValue
 }
+

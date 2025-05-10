@@ -23,7 +23,7 @@ Guild is a Go-based framework for orchestrating multiple AI agents that work tog
 - 💾 **Memory & RAG**: Store and retrieve context with BoltDB and vector search via Qdrant
 - 🔌 **Multiple LLM Providers**: Support for OpenAI, Anthropic, Ollama (local), and Ora
 - 🛠️ **Tool Integration**: Seamless integration with CLI tools and external services
-- 💰 **Cost Optimization**: Built-in cost tracking and optimization for both API and local models
+- 💰 **Treasury Management**: Built-in cost tracking, budgeting, and optimization for both API and local models
 - 🧩 **Human-in-the-Loop**: Block tasks for human input when needed
 
 ## 🚀 Installation

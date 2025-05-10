@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/blockhead-consulting/Guild/tools"
+	"github.com/blockhead-consulting/guild/tools"
 )
 
 // FileTool provides file system operations for agents

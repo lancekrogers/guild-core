@@ -4,7 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"sync"
+
+	"github.com/blockhead-consulting/guild/pkg/orchestrator/interfaces"
 )
+
+// Re-export event types
+type EventHandler = interfaces.EventHandler
+type Event = interfaces.Event
+type EventType = interfaces.EventType
 
 // EventBus handles publishing and subscribing to events
 type EventBus struct {
@@ -20,11 +27,11 @@ func NewEventBus() *EventBus {
 }
 
 // Subscribe registers a handler for a specific event type
-func (b *EventBus) Subscribe(eventType string, handler EventHandler) {
+func (b *EventBus) Subscribe(eventType EventType, handler EventHandler) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
-	b.subscribers[eventType] = append(b.subscribers[eventType], handler)
+	b.subscribers[string(eventType)] = append(b.subscribers[string(eventType)], handler)
 }
 
 // SubscribeAll registers a handler for all event types
@@ -36,11 +43,12 @@ func (b *EventBus) SubscribeAll(handler EventHandler) {
 }
 
 // Unsubscribe removes a handler for a specific event type
-func (b *EventBus) Unsubscribe(eventType string, handler EventHandler) {
+func (b *EventBus) Unsubscribe(eventType EventType, handler EventHandler) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
-	handlers, exists := b.subscribers[eventType]
+	typeStr := string(eventType)
+	handlers, exists := b.subscribers[typeStr]
 	if !exists {
 		return
 	}
@@ -53,7 +61,7 @@ func (b *EventBus) Unsubscribe(eventType string, handler EventHandler) {
 		}
 	}
 
-	b.subscribers[eventType] = newHandlers
+	b.subscribers[typeStr] = newHandlers
 }
 
 // Publish sends an event to all subscribers
@@ -62,7 +70,8 @@ func (b *EventBus) Publish(event Event) {
 	defer b.mu.RUnlock()
 
 	// Handle specific event type subscribers
-	if handlers, exists := b.subscribers[event.Type]; exists {
+	typeStr := string(event.Type)
+	if handlers, exists := b.subscribers[typeStr]; exists {
 		for _, handler := range handlers {
 			go handler(event)
 		}

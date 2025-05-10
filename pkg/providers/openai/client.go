@@ -7,9 +7,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/providers"
+	"github.com/blockhead-consulting/guild/pkg/providers/interfaces"
 )
 
 const (
@@ -116,7 +117,7 @@ func WithEndpoint(url string) ClientOption {
 }
 
 // Complete implements the LLMClient interface
-func (c *Client) Complete(ctx context.Context, req *providers.CompletionRequest) (*providers.CompletionResponse, error) {
+func (c *Client) Complete(ctx context.Context, req *interfaces.CompletionRequest) (*interfaces.CompletionResponse, error) {
 	// Convert to OpenAI's format
 	messages := []openaiMessage{
 		{Role: "user", Content: req.Prompt},
@@ -186,7 +187,7 @@ func (c *Client) Complete(ctx context.Context, req *providers.CompletionRequest)
 	}
 
 	// Convert to generic response
-	return &providers.CompletionResponse{
+	return &interfaces.CompletionResponse{
 		Text:         oaiResp.Choices[0].Message.Content,
 		TokensInput:  oaiResp.Usage.PromptTokens,
 		TokensOutput: oaiResp.Usage.CompletionTokens,
@@ -226,5 +227,37 @@ func (c *Client) GetModelList(ctx context.Context) ([]string, error) {
 // GetMaxTokens returns the maximum context size for the model
 func (c *Client) GetMaxTokens() int {
 	return c.maxTokens
+}
+
+// CreateEmbedding creates an embedding for the given text
+func (c *Client) CreateEmbedding(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
+	// Stub implementation
+	return &interfaces.EmbeddingResponse{
+		Embedding:  make([]float32, 1536), // Default OpenAI embedding dimension
+		Dimensions: 1536,
+		Model:      "text-embedding-ada-002",
+		TokensUsed: len(req.Text) / 4, // Rough estimation
+	}, nil
+}
+
+// CreateEmbeddings creates embeddings for multiple texts
+func (c *Client) CreateEmbeddings(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
+	// Stub implementation
+	embeddings := make([][]float32, len(req.Texts))
+	for i := range embeddings {
+		embeddings[i] = make([]float32, 1536)
+	}
+
+	return &interfaces.EmbeddingResponse{
+		Embeddings: embeddings,
+		Dimensions: 1536,
+		Model:      "text-embedding-ada-002",
+		TokensUsed: len(strings.Join(req.Texts, " ")) / 4, // Rough estimation
+	}, nil
+}
+
+// GetEmbeddingDimension returns the dimension of embeddings from this provider
+func (c *Client) GetEmbeddingDimension(model string) int {
+	return 1536 // Default OpenAI embedding dimension
 }
 

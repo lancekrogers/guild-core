@@ -5,24 +5,12 @@ import (
 	"os"
 	"sync"
 
-	"github.com/blockhead-consulting/Guild/pkg/providers/anthropic"
-	"github.com/blockhead-consulting/Guild/pkg/providers/ollama"
-	"github.com/blockhead-consulting/Guild/pkg/providers/openai"
+	"github.com/blockhead-consulting/guild/pkg/providers/anthropic"
+	"github.com/blockhead-consulting/guild/pkg/providers/ollama"
+	"github.com/blockhead-consulting/guild/pkg/providers/openai"
 )
 
-// ProviderType represents a type of LLM provider
-type ProviderType string
-
-const (
-	// ProviderOpenAI represents the OpenAI provider
-	ProviderOpenAI ProviderType = "openai"
-	
-	// ProviderAnthropic represents the Anthropic provider
-	ProviderAnthropic ProviderType = "anthropic"
-	
-	// ProviderOllama represents the Ollama provider
-	ProviderOllama ProviderType = "ollama"
-)
+// Using ProviderType from interfaces package
 
 // ProviderConfig holds configuration for a provider
 type ProviderConfig struct {

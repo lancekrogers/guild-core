@@ -4,8 +4,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/blockhead-consulting/Guild/pkg/agent"
-	"github.com/blockhead-consulting/Guild/pkg/kanban"
+	"github.com/blockhead-consulting/guild/pkg/agent"
+	"github.com/blockhead-consulting/guild/pkg/kanban"
 )
 
 // MockAgent is a mock implementation of the agent.Agent interface
