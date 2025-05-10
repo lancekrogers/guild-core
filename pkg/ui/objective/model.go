@@ -1,6 +1,8 @@
 package objective_ui
 
 import (
+	"context"
+
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
@@ -9,7 +11,7 @@ import (
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/blockhead-consulting/guild/pkg/objective"
-	"github.com/blockhead-consulting/guild/pkg/generator/objective"
+	generator "github.com/blockhead-consulting/guild/pkg/generator/objective"
 )
 
 // Define UI states
@@ -135,57 +137,74 @@ func DefaultKeyMap() GuildHallKeyMap {
 }
 
 // NewModel creates a new Guild Hall model for objective planning
-func NewModel(objectivePath string) *ObjectiveChamber {
+func NewModel(objectivePath string, manager *objective.Manager, planner *objective.Planner, generator objective.ObjectiveGenerator) *ObjectiveChamber {
 	// Initialize textarea for context input
 	scribe := textarea.New()
 	scribe.Placeholder = "Enter context or reference documents (e.g., @spec/path/to/file.md)"
 	scribe.Focus()
 	scribe.SetHeight(10)
 	scribe.ShowLineNumbers = false
-	
+
 	// Initialize command input
 	parchment := textinput.New()
 	parchment.Placeholder = "Enter command or : to begin"
 	parchment.CharLimit = 250
-	
+
 	// Initialize viewport for displaying content
 	viewport := viewport.New(80, 20)
 	viewport.SetContent("Welcome to the Guild Hall Objective Chamber")
-	
+
 	// Initialize objectives list
 	ledger := list.New([]list.Item{}, list.NewDefaultDelegate(), 0, 0)
 	ledger.Title = "Guild Objectives Ledger"
 	ledger.SetShowStatusBar(false)
 	ledger.SetFilteringEnabled(false)
-	
+
 	// Initialize help
 	helpScroll := help.New()
-	
+
 	// Create the model with Guild-themed names
 	chamber := &ObjectiveChamber{
-		objectivePath:  objectivePath,
-		scribe:         scribe,
-		parchment:      parchment,
-		viewport:       viewport,
-		ledger:         ledger,
-		helpScroll:     helpScroll,
-		keymap:         DefaultKeyMap(),
-		chamberState:   stateViewing,
-		proclamation:   "Welcome to the Guild Objective Chamber. How may we assist your planning?",
-		contextHistory: []string{},
+		objectivePath:    objectivePath,
+		objectiveManager: manager,
+		planner:          planner,
+		generator:        generator,
+		scribe:           scribe,
+		parchment:        parchment,
+		viewport:         viewport,
+		ledger:           ledger,
+		helpScroll:       helpScroll,
+		keymap:           DefaultKeyMap(),
+		chamberState:     stateViewing,
+		proclamation:     "Welcome to the Guild Objective Chamber. How may we assist your planning?",
+		contextHistory:   []string{},
 	}
-	
+
 	// If objective path is provided, load that objective
-	if objectivePath != "" {
-		// TODO: Load objective from the provided path
-		// This would be implemented using the objective.Manager
-		chamber.proclamation = "Examining the objective scroll: " + objectivePath
+	if objectivePath != "" && manager != nil {
+		// Load the objective using the manager
+		ctx := context.Background()
+		obj, err := manager.LoadObjectiveFromFile(ctx, objectivePath)
+		if err != nil {
+			chamber.proclamation = "Failed to load objective scroll: " + err.Error()
+		} else {
+			chamber.currentObjective = obj
+			chamber.proclamation = "Examining the objective scroll: " + obj.Title
+
+			// If planner exists, set up the planning session
+			if planner != nil {
+				err := planner.SetObjective(ctx, obj.ID)
+				if err != nil {
+					chamber.proclamation = "Failed to start planning session: " + err.Error()
+				}
+			}
+		}
 	} else {
-		// No objective, offer to create one
+		// No objective or no manager, offer to create one
 		chamber.chamberState = stateCreating
 		chamber.proclamation = "A blank parchment awaits. Describe your objective to begin crafting."
 	}
-	
+
 	return chamber
 }
 

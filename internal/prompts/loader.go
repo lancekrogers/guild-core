@@ -10,7 +10,7 @@ import (
 	"text/template"
 )
 
-//go:embed markdown/*.md
+//go:embed objective/markdown/*.md
 var promptFS embed.FS
 
 // PromptManager handles loading and rendering prompt templates
@@ -81,3 +81,4 @@ func loadPrompts() (map[string]*template.Template, error) {
 
 	return templates, nil
 }
+

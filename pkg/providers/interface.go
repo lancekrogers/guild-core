@@ -17,4 +17,5 @@ const (
 	ProviderOpenAI    = interfaces.ProviderOpenAI
 	ProviderAnthropic = interfaces.ProviderAnthropic
 	ProviderOllama    = interfaces.ProviderOllama
+	ProviderMock      = ProviderType("mock")
 )

@@ -1,11 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"os"
+	"path/filepath"
 	
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	
+	"github.com/blockhead-consulting/guild/pkg/memory/boltdb"
+	generator "github.com/blockhead-consulting/guild/pkg/generator/objective"
+	"github.com/blockhead-consulting/guild/pkg/objective"
+	"github.com/blockhead-consulting/guild/pkg/providers"
 	objective_ui "github.com/blockhead-consulting/guild/pkg/ui/objective"
 )
 
@@ -22,7 +29,7 @@ With an objective path, it opens that specific objective for editing.`,
 			objectivePath = args[0]
 		}
 		
-		if err := runObjectiveUI(objectivePath); err != nil {
+		if err := runObjectiveUI(objectivePath); err \!= nil {
 			fmt.Printf("Error running objective UI: %v\n", err)
 		}
 	},
@@ -30,9 +37,49 @@ With an objective path, it opens that specific objective for editing.`,
 
 // runObjectiveUI launches the Bubble Tea terminal UI for objectives
 func runObjectiveUI(objectivePath string) error {
-	model := objective_ui.NewModel(objectivePath)
+	// Initialize the memory store
+	ctx := context.Background()
+	dbPath := filepath.Join(os.TempDir(), "guild_objectives.db")
+	store, err := boltdb.NewStore(dbPath)
+	if err \!= nil {
+		return fmt.Errorf("failed to create memory store: %w", err)
+	}
+
+	// Initialize the objective manager
+	basePath, err := os.Getwd()
+	if err \!= nil {
+		return fmt.Errorf("failed to get working directory: %w", err)
+	}
+
+	objectivesPath := filepath.Join(basePath, "objectives")
+	if err := os.MkdirAll(objectivesPath, 0755); err \!= nil {
+		return fmt.Errorf("failed to create objectives directory: %w", err)
+	}
+
+	manager, err := objective.NewManager(store, objectivesPath)
+	if err \!= nil {
+		return fmt.Errorf("failed to create objective manager: %w", err)
+	}
+
+	// Initialize the lifecycle manager
+	lifecycleManager := objective.NewLifecycleManager(manager, basePath)
+
+	// Initialize the planner
+	planner := objective.NewPlanner(manager, lifecycleManager)
+
+	// Initialize the generator
+	// We'll use a mock LLM client for the generator
+	var gen *generator.Generator
+	factory := providers.NewFactory()
+	client, err := factory.GetClient(providers.ProviderMock)
+	if err == nil {
+		gen, _ = generator.NewGenerator(client)
+	}
+
+	// Create the model with dependencies
+	model := objective_ui.NewModel(objectivePath, manager, planner, gen)
 	p := tea.NewProgram(model, tea.WithAltScreen())
-	_, err := p.Run()
+	_, err = p.Run()
 	return err
 }
 

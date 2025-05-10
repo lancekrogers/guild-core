@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/blockhead-consulting/guild/pkg/providers/anthropic"
+	"github.com/blockhead-consulting/guild/pkg/providers/mocks"
 	"github.com/blockhead-consulting/guild/pkg/providers/ollama"
 	"github.com/blockhead-consulting/guild/pkg/providers/openai"
 )
@@ -166,18 +167,22 @@ func (f *Factory) createClientFromEnv(providerType ProviderType) (LLMClient, err
 			return nil, fmt.Errorf("OPENAI_API_KEY environment variable not set")
 		}
 		return openai.NewClient(apiKey)
-		
+
 	case ProviderAnthropic:
 		apiKey := os.Getenv("ANTHROPIC_API_KEY")
 		if apiKey == "" {
 			return nil, fmt.Errorf("ANTHROPIC_API_KEY environment variable not set")
 		}
 		return anthropic.NewClient(apiKey)
-		
+
 	case ProviderOllama:
 		// Ollama typically runs locally and doesn't need API key
 		return ollama.NewClient()
-		
+
+	case ProviderMock:
+		// Mock provider is always available
+		return mocks.NewMockLLMClient(), nil
+
 	default:
 		return nil, fmt.Errorf("unknown provider type: %s", providerType)
 	}

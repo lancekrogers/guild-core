@@ -332,11 +332,29 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // addContextCmd creates a command to add context to the objective
 func addContextCmd(m ObjectiveChamber, content string) tea.Cmd {
 	return func() tea.Msg {
-		// In a real implementation, this would call the objective planner
-		// to add context to the objective through the Manager
-		// err := m.planner.AddContext(content)
-		
-		// For now, we're just mocking the success
+		// If planner is available, use it
+		if m.planner != nil && m.planner.GetSession().Objective != nil {
+			// Create a context for the operation
+			ctx := context.Background()
+
+			// Add context to the objective
+			err := m.planner.AddContext(ctx, content)
+			if err != nil {
+				return ContextCraftedMsg{
+					Content: content,
+					Success: false,
+					Error:   err,
+				}
+			}
+
+			return ContextCraftedMsg{
+				Content: content,
+				Success: true,
+				Error:   nil,
+			}
+		}
+
+		// Fallback to mock behavior if planner not available
 		return ContextCraftedMsg{
 			Content: content,
 			Success: true,
@@ -348,11 +366,27 @@ func addContextCmd(m ObjectiveChamber, content string) tea.Cmd {
 // generateDocumentsCmd creates a command to regenerate documents
 func generateDocumentsCmd(m ObjectiveChamber) tea.Cmd {
 	return func() tea.Msg {
-		// In a real implementation, this would call the objective planner
-		// to regenerate the documents
-		// err := m.planner.Regenerate()
-		
-		// For now, we're just mocking the success
+		// If planner is available, use it
+		if m.planner != nil && m.planner.GetSession().Objective != nil {
+			// Create a context for the operation
+			ctx := context.Background()
+
+			// Regenerate documents
+			err := m.planner.Regenerate(ctx)
+			if err != nil {
+				return DocumentRefiningMsg{
+					Success: false,
+					Error:   err,
+				}
+			}
+
+			return DocumentRefiningMsg{
+				Success: true,
+				Error:   nil,
+			}
+		}
+
+		// Fallback to mock behavior if planner not available
 		return DocumentRefiningMsg{
 			Success: true,
 			Error:   nil,
@@ -363,10 +397,29 @@ func generateDocumentsCmd(m ObjectiveChamber) tea.Cmd {
 // requestSuggestionsCmd creates a command to get suggestions for the objective
 func requestSuggestionsCmd(m ObjectiveChamber) tea.Cmd {
 	return func() tea.Msg {
-		// In a real implementation, this would call the objective generator
-		// to get suggestions for improvement
-		
-		// Mock suggestion for now
+		// If planner is available, use it
+		if m.planner != nil && m.planner.GetSession().Objective != nil {
+			// Create a context for the operation
+			ctx := context.Background()
+
+			// Get suggestions
+			suggestions, err := m.planner.GetSuggestions(ctx)
+			if err != nil {
+				return MasterSuggestionMsg{
+					Suggestions: "",
+					Success:     false,
+					Error:       err,
+				}
+			}
+
+			return MasterSuggestionMsg{
+				Suggestions: suggestions,
+				Success:     true,
+				Error:       nil,
+			}
+		}
+
+		// Fallback to mock behavior if planner not available
 		sampleSuggestions := `Consider the following improvements to your objective:
 
 1. Add more specific success criteria to the Requirements section
@@ -385,10 +438,27 @@ func requestSuggestionsCmd(m ObjectiveChamber) tea.Cmd {
 // markObjectiveReadyCmd creates a command to mark the objective as ready
 func markObjectiveReadyCmd(m ObjectiveChamber) tea.Cmd {
 	return func() tea.Msg {
-		// In a real implementation, this would call the objective manager
-		// to mark the objective as ready
-		
-		// For now, we're just mocking the success
+		// If planner is available, use it
+		if m.planner != nil && m.planner.GetSession().Objective != nil {
+			// Create a context for the operation
+			ctx := context.Background()
+
+			// Mark objective as ready
+			err := m.planner.MarkReady(ctx)
+			if err != nil {
+				return ObjectiveReadyMsg{
+					Success: false,
+					Error:   err,
+				}
+			}
+
+			return ObjectiveReadyMsg{
+				Success: true,
+				Error:   nil,
+			}
+		}
+
+		// Fallback to mock behavior if planner not available
 		return ObjectiveReadyMsg{
 			Success: true,
 			Error:   nil,
@@ -399,11 +469,79 @@ func markObjectiveReadyCmd(m ObjectiveChamber) tea.Cmd {
 // loadObjectivesCmd creates a command to load all objectives for the dashboard
 func loadObjectivesCmd(m ObjectiveChamber) tea.Cmd {
 	return func() tea.Msg {
-		// In a real implementation, this would load all objectives
-		// and populate the ledger list
-		
-		// TODO: Implement with real objective loading
-		
+		// If objective manager is available, use it
+		if m.objectiveManager != nil {
+			// Create a context for the operation
+			ctx := context.Background()
+
+			// List all objectives
+			objectives, err := m.objectiveManager.ListObjectives(ctx)
+			if err != nil {
+				return nil // Handle error
+			}
+
+			// Convert objectives to list items
+			items := make([]list.Item, 0, len(objectives))
+			for _, obj := range objectives {
+				items = append(items, components.ObjectiveItem{
+					ID:          obj.ID,
+					Title:       obj.Title,
+					Status:      string(obj.Status),
+					Path:        obj.FilePath,
+					Iterations:  obj.Iterations,
+					CreatedAt:   obj.CreatedAt,
+					ModifiedAt:  obj.UpdatedAt,
+					Tags:        obj.Tags,
+					Completion:  obj.Completion,
+					Description: obj.Description,
+				})
+			}
+
+			// Update the list
+			m.ledger.SetItems(items)
+			return nil
+		}
+
+		// Fallback to mock data if manager not available
+		items := []list.Item{
+			components.ObjectiveItem{
+				ID:          "mock-1",
+				Title:       "Build a RESTful API service",
+				Status:      "in_progress",
+				Path:        "/objectives/api-service.md",
+				Iterations:  3,
+				CreatedAt:   time.Now().Add(-72 * time.Hour),
+				ModifiedAt:  time.Now().Add(-24 * time.Hour),
+				Tags:        []string{"api", "backend"},
+				Completion:  0.7,
+				Description: "Create a RESTful API service for the application",
+			},
+			components.ObjectiveItem{
+				ID:          "mock-2",
+				Title:       "Design user authentication system",
+				Status:      "draft",
+				Path:        "/objectives/auth-system.md",
+				Iterations:  1,
+				CreatedAt:   time.Now().Add(-48 * time.Hour),
+				ModifiedAt:  time.Now().Add(-48 * time.Hour),
+				Tags:        []string{"auth", "security"},
+				Completion:  0.3,
+				Description: "Design a secure user authentication system",
+			},
+			components.ObjectiveItem{
+				ID:          "mock-3",
+				Title:       "Implement database schema",
+				Status:      "completed",
+				Path:        "/objectives/db-schema.md",
+				Iterations:  5,
+				CreatedAt:   time.Now().Add(-96 * time.Hour),
+				ModifiedAt:  time.Now().Add(-12 * time.Hour),
+				Tags:        []string{"database", "schema"},
+				Completion:  1.0,
+				Description: "Design and implement the database schema",
+			},
+		}
+		m.ledger.SetItems(items)
 		return nil
 	}
 }
@@ -411,10 +549,41 @@ func loadObjectivesCmd(m ObjectiveChamber) tea.Cmd {
 // createObjectiveCmd creates a command to create a new objective
 func createObjectiveCmd(m ObjectiveChamber, description string) tea.Cmd {
 	return func() tea.Msg {
-		// In a real implementation, this would call the objective generator
-		// to create a new objective from the description
-		
-		// For demonstration, create a mock objective content
+		// If planner is available, use it
+		if m.planner != nil {
+			// Create a context for the operation
+			ctx := context.Background()
+
+			// Create objective
+			err := m.planner.CreateObjective(ctx, description)
+			if err != nil {
+				return ObjectiveLoadedMsg{
+					Objective: "",
+					Success:   false,
+					Error:     err,
+				}
+			}
+
+			// Get the objective content
+			session := m.planner.GetSession()
+			if session.Objective != nil {
+				objectiveContent := ""
+				if session.Objective.Content != "" {
+					objectiveContent = session.Objective.Content
+				} else {
+					// Format the content if it's not available
+					objectiveContent = formatObjectiveContent(session.Objective)
+				}
+
+				return ObjectiveLoadedMsg{
+					Objective: objectiveContent,
+					Success:   true,
+					Error:     nil,
+				}
+			}
+		}
+
+		// Fallback to mock behavior if planner not available
 		objectiveContent := fmt.Sprintf(`# 🧠 Goal
 
 %s
@@ -445,6 +614,58 @@ This objective was created in the Guild Hall.
 			Error:     nil,
 		}
 	}
+}
+
+// Helper function to format objective content
+func formatObjectiveContent(obj *objective.Objective) string {
+	if obj == nil {
+		return "No objective available"
+	}
+
+	content := fmt.Sprintf(`# 🧠 Goal
+
+%s
+
+# 📂 Context
+
+%s
+
+# 🔧 Requirements
+
+`, obj.Goal, obj.Description)
+
+	// Add requirements
+	if len(obj.Requirements) > 0 {
+		for _, req := range obj.Requirements {
+			content += fmt.Sprintf("- %s\n", req)
+		}
+	} else {
+		content += "- No requirements defined yet\n"
+	}
+
+	content += "\n# 📌 Tags\n\n"
+
+	// Add tags
+	if len(obj.Tags) > 0 {
+		for _, tag := range obj.Tags {
+			content += fmt.Sprintf("- %s\n", tag)
+		}
+	} else {
+		content += "- No tags defined yet\n"
+	}
+
+	content += "\n# 🔗 Related\n\n"
+
+	// Add related
+	if len(obj.Related) > 0 {
+		for _, rel := range obj.Related {
+			content += fmt.Sprintf("- %s\n", rel)
+		}
+	} else {
+		content += "- None yet\n"
+	}
+
+	return content
 }
 
 // executeCommandCmd creates a command to execute a command string
