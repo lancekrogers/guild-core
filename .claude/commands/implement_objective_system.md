@@ -1,6 +1,7 @@
 ## Implement Guild Objective System
 
 @context
+@lore_conventions
 
 This command will guide you through implementing the Guild objective system. First, check if components already exist to avoid duplication.
 

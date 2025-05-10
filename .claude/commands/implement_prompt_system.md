@@ -1,8 +1,7 @@
 ## Implement Prompt Management System
 
 @context
-
-@context
+@lore_conventions
 
 This guide focuses on implementing the internal prompt management system for Guild's objective features.
 
@@ -102,6 +101,7 @@ In `internal/prompts/objective/markdown/`:
    - Guidelines for the LLM
 
 3. Include placeholder markers using Go template syntax:
+
    ```markdown
    {{.VariableName}}
    ```

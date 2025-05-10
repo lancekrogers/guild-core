@@ -6,8 +6,8 @@ import (
 	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/yourusername/guild/pkg/objective"
-	"github.com/yourusername/guild/pkg/providers/generator"
+	"github.com/blockhead-consulting/guild/pkg/objective"
+	"github.com/blockhead-consulting/guild/pkg/providers/generator"
 )
 
 // Define key mappings

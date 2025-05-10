@@ -6,7 +6,7 @@ import (
 	"sync"
 	"text/template"
 
-	"github.com/yourusername/guild/internal/prompts/objective"
+	"github.com/blockhead-consulting/guild/internal/prompts/objective"
 )
 
 // PromptManager handles loading and rendering of system prompts

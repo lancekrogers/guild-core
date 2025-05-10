@@ -1,5 +1,7 @@
 ## Review Existing Code
 
+@context
+
 Use this command to review existing code before implementing new features. This helps avoid duplication and ensures consistency with the current architecture.
 
 ### Process

@@ -2,9 +2,9 @@
 
 Please review the following key resources:
 
-1. First, read the Specs Index at ai_docs/specs_index.md to understand project requirements
+1. First, read the Specs Index at ai_docs/specs_index.md to understand project structure and requirements
 2. Then, check the AI Docs Index at ai_docs/README.md for implementation guidance
-3. Review the Guild lore at specs/naming_conventions_and_lore/lore.md
+3. **IMPORTANT**: Study the Guild lore and naming conventions at ai_docs/project_context/lore.md
 4. Examine the objectives system documentation at specs/features/objectives/objectives.md and specs/features/objectives/objective_ui.md
 
 ## Existing Implementation Check

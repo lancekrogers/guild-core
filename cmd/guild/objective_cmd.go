@@ -7,9 +7,9 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
-	"github.com/yourusername/guild/pkg/objective"
-	"github.com/yourusername/guild/pkg/providers/generator"
-	"github.com/yourusername/guild/pkg/ui/objective"
+	"github.com/blockhead-consulting/guild/pkg/objective"
+	"github.com/blockhead-consulting/guild/pkg/providers/generator"
+	"github.com/blockhead-consulting/guild/pkg/ui/objective"
 )
 
 // Additional initialization to connect the UI

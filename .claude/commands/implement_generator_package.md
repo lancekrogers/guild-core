@@ -1,6 +1,7 @@
 ## Implement Generator Package
 
 @context
+@lore_conventions
 
 This guide focuses on implementing the generator package for Guild's objective features, which will handle LLM-based content generation using prompts.
 
