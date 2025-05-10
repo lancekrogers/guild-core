@@ -4,8 +4,8 @@ Please review the following key resources:
 
 1. First, read the Specs Index at ai_docs/specs_index.md to understand project structure and requirements
 2. Then, check the AI Docs Index at ai_docs/README.md for implementation guidance
-3. **IMPORTANT**: Study the Guild lore and naming conventions at ai_docs/project_context/lore.md
-4. Examine the objectives system documentation at specs/features/objectives/objectives.md and specs/features/objectives/objective_ui.md
+3. **IMPORTANT**: Study the Guild lore and naming conventions at ai_docs/project_context/
+4. Track progress by following the system described in the documents found in ai_docs/progress_tracking/
 
 ## Existing Implementation Check
 
@@ -14,7 +14,7 @@ Before implementing any new components, **ALWAYS** check for existing code:
 ```bash
 # Look for existing implementations related to the feature
 find . -type f -name "*.go" -exec grep -l "relevant_term" {} \;
-# For objective system, check:
+# For example, for the objective system, check:
 find . -type f -name "*.go" -exec grep -l "objective" {} \;
 ```
 
@@ -35,27 +35,15 @@ go list -m all
 - Follow standard Go project layout (cmd/, pkg/, internal/)
 - Place prompt files in `internal/prompts/[domain]/markdown/` as .md files
 
-## Objective System Implementation
+## Coding Guidelines
 
-For the objective system specifically:
-
-- Check existing code in `pkg/objective/` before writing new code
-- Prompt files should go in `internal/prompts/objective/markdown/`
-- Generator implementations should go in `pkg/generator/objective/`
-- UI implementations should use Bubble Tea and go in `pkg/ui/objective/`
+- Review the documents found in ai_docs/coding_guidelines
 
 ## Testing Requirements
 
 ⚠️ IMPORTANT: All code must include comprehensive unit tests. Reference these commands:
 
-- `@tdd` - Follow Test-Driven Development practices
-- `@go_testing` - Apply Go-specific testing best practices
-- `@ensure_tests` - Verify test coverage is complete
-
-When implementing the objective system, include specific test fixtures for:
-
-- Prompt templates in `internal/prompts/objective/testdata/`
-- Sample objectives in `pkg/objective/testdata/`
-- Mock LLM clients in `pkg/generator/objective/mocks/`
+- Follow the testing guidelines found in the documents in ai_docs/testing/
+- After writing a test verify that it is accurate and the code being tested is correctly
 
 I will not accept any implementation without corresponding tests.
