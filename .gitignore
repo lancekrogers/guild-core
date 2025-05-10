@@ -29,3 +29,5 @@ go.work.sum
 .claude/config.json
 .claude/auth.json
 
+
+**/.claude/settings.local.json
