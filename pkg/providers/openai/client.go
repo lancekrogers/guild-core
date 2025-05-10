@@ -18,8 +18,8 @@ const (
 	defaultTimeout = 30 * time.Second
 )
 
-// OpenAIClient implements the LLMClient interface for OpenAI's models
-type OpenAIClient struct {
+// Client implements the LLMClient interface for OpenAI's models
+type Client struct {
 	apiKey     string
 	apiURL     string
 	modelName  string
@@ -60,12 +60,12 @@ type openaiResponse struct {
 }
 
 // NewClient creates a new OpenAI client
-func NewClient(apiKey string, opts ...ClientOption) (*OpenAIClient, error) {
+func NewClient(apiKey string, opts ...ClientOption) (*Client, error) {
 	if apiKey == "" {
 		return nil, fmt.Errorf("apiKey cannot be empty")
 	}
 
-	client := &OpenAIClient{
+	client := &Client{
 		apiKey:     apiKey,
 		apiURL:     defaultAPI,
 		modelName:  defaultModel,
@@ -82,11 +82,11 @@ func NewClient(apiKey string, opts ...ClientOption) (*OpenAIClient, error) {
 }
 
 // ClientOption defines a function that configures the OpenAI client
-type ClientOption func(*OpenAIClient)
+type ClientOption func(*Client)
 
 // WithModel sets the model to use
 func WithModel(model string) ClientOption {
-	return func(c *OpenAIClient) {
+	return func(c *Client) {
 		c.modelName = model
 
 		// Update max tokens based on model
@@ -103,13 +103,20 @@ func WithModel(model string) ClientOption {
 
 // WithTimeout sets the HTTP client timeout
 func WithTimeout(timeout time.Duration) ClientOption {
-	return func(c *OpenAIClient) {
+	return func(c *Client) {
 		c.httpClient.Timeout = timeout
 	}
 }
 
+// WithEndpoint sets a custom API endpoint URL
+func WithEndpoint(url string) ClientOption {
+	return func(c *Client) {
+		c.apiURL = url
+	}
+}
+
 // Complete implements the LLMClient interface
-func (c *OpenAIClient) Complete(ctx context.Context, req *providers.CompletionRequest) (*providers.CompletionResponse, error) {
+func (c *Client) Complete(ctx context.Context, req *providers.CompletionRequest) (*providers.CompletionResponse, error) {
 	// Convert to OpenAI's format
 	messages := []openaiMessage{
 		{Role: "user", Content: req.Prompt},
@@ -190,12 +197,12 @@ func (c *OpenAIClient) Complete(ctx context.Context, req *providers.CompletionRe
 }
 
 // GetName returns the provider name
-func (c *OpenAIClient) GetName() string {
+func (c *Client) GetName() string {
 	return "openai"
 }
 
 // GetModelInfo returns information about the model
-func (c *OpenAIClient) GetModelInfo() map[string]string {
+func (c *Client) GetModelInfo() map[string]string {
 	return map[string]string{
 		"name":         c.modelName,
 		"provider":     "OpenAI",
@@ -204,7 +211,7 @@ func (c *OpenAIClient) GetModelInfo() map[string]string {
 }
 
 // GetModelList returns available models
-func (c *OpenAIClient) GetModelList(ctx context.Context) ([]string, error) {
+func (c *Client) GetModelList(ctx context.Context) ([]string, error) {
 	// Here you would typically call the OpenAI API to get available models
 	// For simplicity, we'll return a static list
 	return []string{
@@ -217,7 +224,7 @@ func (c *OpenAIClient) GetModelList(ctx context.Context) ([]string, error) {
 }
 
 // GetMaxTokens returns the maximum context size for the model
-func (c *OpenAIClient) GetMaxTokens() int {
+func (c *Client) GetMaxTokens() int {
 	return c.maxTokens
 }
 

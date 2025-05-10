@@ -5,9 +5,9 @@ import (
 	"os"
 	"sync"
 
-	"github.com/lancerogers/Guild/pkg/providers/anthropic"
-	"github.com/lancerogers/Guild/pkg/providers/ollama"
-	"github.com/lancerogers/Guild/pkg/providers/openai"
+	"github.com/blockhead-consulting/Guild/pkg/providers/anthropic"
+	"github.com/blockhead-consulting/Guild/pkg/providers/ollama"
+	"github.com/blockhead-consulting/Guild/pkg/providers/openai"
 )
 
 // ProviderType represents a type of LLM provider

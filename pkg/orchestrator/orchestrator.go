@@ -3,8 +3,8 @@ package orchestrator
 import (
 	"context"
 
-	"github.com/blockhead-consulting/Guild/pkg/agent"
-	"github.com/blockhead-consulting/Guild/pkg/objective"
+	"github.com/blockhead-consulting/guild/pkg/agent"
+	"github.com/blockhead-consulting/guild/pkg/objective"
 )
 
 // Status represents the status of the orchestrator
@@ -133,3 +133,4 @@ const (
 	// EventOrchestratorError is emitted when the orchestrator encounters an error
 	EventOrchestratorError = "orchestrator.error"
 )
+

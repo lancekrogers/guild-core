@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/blockhead-consulting/guild/tools"
 	"github.com/gocolly/colly"
-	"github.com/lancekrogers/guild/tools"
 )
 
 const (

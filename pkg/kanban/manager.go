@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/blockhead-consulting/Guild/pkg/memory"
+	"github.com/blockhead-consulting/guild/pkg/memory"
 )
 
 // Manager manages multiple kanban boards
@@ -343,3 +343,4 @@ func (m *Manager) Close() error {
 	close(m.eventStream)
 	return nil
 }
+
