@@ -10,17 +10,19 @@ import (
 // OpenAIEmbedder implements the Embedder interface using OpenAI
 type OpenAIEmbedder struct {
 	client *openai.Client
-	model  string
+	model  openai.EmbeddingModel
 }
 
 // NewOpenAIEmbedder creates a new OpenAI embedder
-func NewOpenAIEmbedder(apiKey string, model string) (*OpenAIEmbedder, error) {
+func NewOpenAIEmbedder(apiKey string, modelStr string) (*OpenAIEmbedder, error) {
 	if apiKey == "" {
 		return nil, fmt.Errorf("API key is required")
 	}
 
-	if model == "" {
-		model = openai.AdaEmbeddingV2
+	// Convert to EmbeddingModel
+	model := openai.AdaEmbeddingV2
+	if modelStr != "" {
+		model = openai.EmbeddingModel(modelStr)
 	}
 
 	client := openai.NewClient(apiKey)
@@ -46,4 +48,31 @@ func (e *OpenAIEmbedder) Embed(ctx context.Context, text string) ([]float32, err
 	}
 
 	return response.Data[0].Embedding, nil
+}
+
+// GetEmbedding is an alias for Embed
+func (e *OpenAIEmbedder) GetEmbedding(ctx context.Context, text string) ([]float32, error) {
+	return e.Embed(ctx, text)
+}
+
+// GetEmbeddings gets embeddings for multiple texts
+func (e *OpenAIEmbedder) GetEmbeddings(ctx context.Context, texts []string) ([][]float32, error) {
+	response, err := e.client.CreateEmbeddings(ctx, openai.EmbeddingRequest{
+		Input: texts,
+		Model: e.model,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to create embeddings: %w", err)
+	}
+
+	if len(response.Data) != len(texts) {
+		return nil, fmt.Errorf("expected %d embeddings, got %d", len(texts), len(response.Data))
+	}
+
+	embeddings := make([][]float32, len(response.Data))
+	for i, data := range response.Data {
+		embeddings[i] = data.Embedding
+	}
+
+	return embeddings, nil
 }

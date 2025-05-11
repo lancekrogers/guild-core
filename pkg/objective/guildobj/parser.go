@@ -1,8 +1,6 @@
 package guildobj
 
 import (
-	"strings"
-
 	"github.com/blockhead-consulting/guild/pkg/objective"
 )
 

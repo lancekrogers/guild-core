@@ -71,6 +71,10 @@ type Embedder interface {
 // EmbeddingProvider is a deprecated alias for Embedder, kept for backward compatibility
 type EmbeddingProvider interface {
 	Embed(ctx context.Context, text string) ([]float32, error)
+	// GetEmbedding is an alias for Embed for backward compatibility
+	GetEmbedding(ctx context.Context, text string) ([]float32, error)
+	// GetEmbeddings gets embeddings for multiple texts
+	GetEmbeddings(ctx context.Context, texts []string) ([][]float32, error)
 }
 
 // Document represents a document with its embedding
@@ -78,7 +82,7 @@ type Document struct {
 	ID        string                 `json:"id"`
 	Content   string                 `json:"content"`
 	Embedding []float32              `json:"embedding,omitempty"`
-	Metadata  map[string]interface{} `json:"metadata,omitempty"`
+	Metadata  interface{}            `json:"metadata,omitempty"`
 }
 
 // QueryResult represents a search result from the vector store

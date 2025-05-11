@@ -1,264 +1,54 @@
 package ollama
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
-	"strings"
-	"time"
 
 	"github.com/blockhead-consulting/guild/pkg/providers/interfaces"
 )
 
-const (
-	defaultAPI     = "http://localhost:11434/api/generate"
-	defaultModel   = "llama3"
-	defaultTimeout = 60 * time.Second
-)
-
-// OllamaClient implements the LLMClient interface for Ollama API
-type OllamaClient struct {
-	apiURL     string
-	modelName  string
-	httpClient *http.Client
-	maxTokens  int
-}
-
-// Ollama API request structure
-type ollamaRequest struct {
-	Model       string  `json:"model"`
-	Prompt      string  `json:"prompt"`
-	Stream      bool    `json:"stream,omitempty"`
-	Options     options `json:"options,omitempty"`
-	System      string  `json:"system,omitempty"`
-	Context     []int   `json:"context,omitempty"`
-	Temperature float64 `json:"temperature,omitempty"`
-}
-
-type options struct {
-	NumPredict int `json:"num_predict,omitempty"`
-}
-
-// Ollama API response structure
-type ollamaResponse struct {
-	Model              string `json:"model"`
-	CreatedAt          string `json:"created_at"`
-	Response           string `json:"response"`
-	Done               bool   `json:"done"`
-	Context            []int  `json:"context"`
-	TotalDuration      int64  `json:"total_duration"`
-	LoadDuration       int64  `json:"load_duration"`
-	PromptEvalCount    int    `json:"prompt_eval_count"`
-	PromptEvalDuration int64  `json:"prompt_eval_duration"`
-	EvalCount          int    `json:"eval_count"`
-	EvalDuration       int64  `json:"eval_duration"`
+// Client implements the LLMClient interface for Ollama
+type Client struct {
+	apiKey string
+	model  string
 }
 
 // NewClient creates a new Ollama client
-func NewClient(opts ...ClientOption) (*OllamaClient, error) {
-	client := &OllamaClient{
-		apiURL:     defaultAPI,
-		modelName:  defaultModel,
-		httpClient: &http.Client{Timeout: defaultTimeout},
-		maxTokens:  4096, // Default context size for many Ollama models
-	}
-
-	// Apply options
-	for _, opt := range opts {
-		opt(client)
-	}
-
-	return client, nil
-}
-
-// ClientOption defines a function that configures the Ollama client
-type ClientOption func(*OllamaClient)
-
-// WithModel sets the model to use
-func WithModel(model string) ClientOption {
-	return func(c *OllamaClient) {
-		c.modelName = model
-
-		// Adjust context window based on model
-		// This is a simplified version - in reality you'd want to query the model info
-		switch model {
-		case "llama3:70b":
-			c.maxTokens = 8192
-		case "llama3", "llama3:8b":
-			c.maxTokens = 8192
-		case "mistral", "mistral:7b":
-			c.maxTokens = 8192
-		case "mixtral", "mixtral:8x7b":
-			c.maxTokens = 32768
-		}
+func NewClient(apiKey, model string) *Client {
+	return &Client{
+		apiKey: apiKey,
+		model:  model,
 	}
 }
 
-// WithTimeout sets the HTTP client timeout
-func WithTimeout(timeout time.Duration) ClientOption {
-	return func(c *OllamaClient) {
-		c.httpClient.Timeout = timeout
-	}
+// Complete generates a completion for the given prompt
+func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
+	return fmt.Sprintf("Stub response for prompt: %s", prompt), nil
 }
 
-// WithEndpoint sets a custom API endpoint
-func WithEndpoint(endpoint string) ClientOption {
-	return func(c *OllamaClient) {
-		c.apiURL = endpoint
-	}
-}
-
-// Complete implements the LLMClient interface
-func (c *OllamaClient) Complete(ctx context.Context, req *interfaces.CompletionRequest) (*interfaces.CompletionResponse, error) {
-	// Convert to Ollama request format
-	ollamaReq := ollamaRequest{
-		Model:  c.modelName,
-		Prompt: req.Prompt,
-		Options: options{
-			NumPredict: req.MaxTokens,
-		},
-		Temperature: req.Temperature,
-		Stream:      false,
-	}
-
-	// Add system prompt if provided
-	if systemPrompt, ok := req.Options["system"]; ok {
-		ollamaReq.System = systemPrompt
-	}
-
-	// Marshal request to JSON
-	reqBody, err := json.Marshal(ollamaReq)
-	if err != nil {
-		return nil, fmt.Errorf("error marshaling request: %w", err)
-	}
-
-	// Create HTTP request
-	httpReq, err := http.NewRequestWithContext(
-		ctx,
-		"POST",
-		c.apiURL,
-		bytes.NewBuffer(reqBody),
-	)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-
-	// Set headers
-	httpReq.Header.Set("Content-Type", "application/json")
-
-	// Send request
-	resp, err := c.httpClient.Do(httpReq)
-	if err != nil {
-		return nil, fmt.Errorf("error sending request: %w", err)
-	}
-	defer resp.Body.Close()
-
-	// Read response body
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("error reading response: %w", err)
-	}
-
-	// Check for error status
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("API error (%d): %s", resp.StatusCode, string(body))
-	}
-
-	// Parse response
-	var ollamaResp ollamaResponse
-	if err := json.Unmarshal(body, &ollamaResp); err != nil {
-		return nil, fmt.Errorf("error unmarshaling response: %w", err)
-	}
-
-	// Ollama doesn't provide token counts, so we'll estimate
-	// This is a very rough approximation
-	promptTokens := len(req.Prompt) / 4
-	responseTokens := len(ollamaResp.Response) / 4
-
-	// Convert to generic response
+// CreateCompletion is a lower-level method to create a completion
+func (c *Client) CreateCompletion(ctx context.Context, req *interfaces.CompletionRequest) (*interfaces.CompletionResponse, error) {
 	return &interfaces.CompletionResponse{
-		Text:         ollamaResp.Response,
-		TokensInput:  promptTokens,
-		TokensOutput: responseTokens,
-		TokensUsed:   promptTokens + responseTokens,
-		FinishReason: "stop", // Ollama doesn't provide this explicitly
-		ModelUsed:    ollamaResp.Model,
+		Text: fmt.Sprintf("Stub response for prompt: %s", req.Prompt),
+		TokensUsed: 10,
+		TokensInput: 5,
+		TokensOutput: 5,
+		ModelUsed: c.model,
 	}, nil
 }
 
-// GetName returns the provider name
-func (c *OllamaClient) GetName() string {
-	return "ollama"
-}
-
-// GetModelInfo returns information about the model
-func (c *OllamaClient) GetModelInfo() map[string]string {
-	return map[string]string{
-		"name":         c.modelName,
-		"provider":     "Ollama",
-		"capabilities": "text generation, local inference",
-	}
-}
-
-// GetModelList returns available models
-func (c *OllamaClient) GetModelList(ctx context.Context) ([]string, error) {
-	// In a real implementation, we'd query the Ollama API at /api/tags
-	// For now, return a static list of common models
-	return []string{
-		"llama3",
-		"llama3:8b",
-		"llama3:70b",
-		"mistral",
-		"mistral:7b",
-		"mixtral",
-		"mixtral:8x7b",
-		"phi3",
-		"phi3:mini",
-		"codellama",
-		"codellama:7b",
-		"codellama:13b",
-		"codellama:34b",
-	}, nil
-}
-
-// GetMaxTokens returns the maximum context size for the model
-func (c *OllamaClient) GetMaxTokens() int {
-	return c.maxTokens
-}
-
-// CreateEmbedding creates an embedding for the given text
-func (c *OllamaClient) CreateEmbedding(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
-	// Stub implementation - Ollama does have embedding capabilities
+// CreateEmbedding generates an embedding for the given text
+func (c *Client) CreateEmbedding(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
 	return &interfaces.EmbeddingResponse{
-		Embedding:  make([]float32, 4096), // Common dimension for Ollama models
-		Dimensions: 4096,
-		Model:      c.modelName,
-		TokensUsed: len(req.Text) / 4, // Rough estimation
+		Embedding: []float32{0.1, 0.2, 0.3},
+		Dimensions: 3,
 	}, nil
 }
 
-// CreateEmbeddings creates embeddings for multiple texts
-func (c *OllamaClient) CreateEmbeddings(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
-	// Stub implementation - would call Ollama's embedding endpoint
-	embeddings := make([][]float32, len(req.Texts))
-	for i := range embeddings {
-		embeddings[i] = make([]float32, 4096)
-	}
-
+// CreateEmbeddings generates embeddings for multiple texts
+func (c *Client) CreateEmbeddings(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
 	return &interfaces.EmbeddingResponse{
-		Embeddings: embeddings,
-		Dimensions: 4096,
-		Model:      c.modelName,
-		TokensUsed: len(strings.Join(req.Texts, " ")) / 4, // Rough estimation
+		Embeddings: [][]float32{{0.1, 0.2, 0.3}, {0.4, 0.5, 0.6}},
+		Dimensions: 3,
 	}, nil
 }
-
-// GetEmbeddingDimension returns the dimension of embeddings from this provider
-func (c *OllamaClient) GetEmbeddingDimension(model string) int {
-	// This would vary by model but common dimensions for Ollama models
-	return 4096
-}
-

@@ -45,6 +45,13 @@ type Objective struct {
 	Content     string            `json:"-"`                  // Original content, not stored in JSON
 	FilePath    string            `json:"-"`                  // Path to the file
 	FileName    string            `json:"-"`                  // Name of the file
+	Goal        string            `json:"goal,omitempty"`     // The main goal of the objective
+	Requirements []string         `json:"requirements,omitempty"` // Requirements for completion
+	Related     []string          `json:"related,omitempty"`  // Related objectives
+	AIDocs      []string          `json:"ai_docs,omitempty"`  // AI documentation paths
+	Specs       []string          `json:"specs,omitempty"`    // Specification paths
+	Completion  float64           `json:"completion"`         // Completion percentage (0.0-1.0)
+	Iteration   int               `json:"iteration"`          // Current iteration count
 }
 
 // Format formats an objective as a markdown string
@@ -231,4 +238,35 @@ func randomString(length int) string {
 		result[i] = charset[rand.Intn(len(charset))]
 	}
 	return string(result)
+}
+
+// CalculateCompletion calculates and updates the completion percentage
+func (o *Objective) CalculateCompletion() {
+	// Simple implementation - could be enhanced based on tasks completion, etc.
+	switch o.Status {
+	case ObjectiveStatusDraft:
+		o.Completion = 0.1
+	case ObjectiveStatusActive:
+		if len(o.Tasks) == 0 {
+			o.Completion = 0.3
+		} else {
+			completed := 0
+			for _, task := range o.Tasks {
+				if task.Status == "done" {
+					completed++
+				}
+			}
+			o.Completion = 0.3 + 0.6*float64(completed)/float64(len(o.Tasks))
+		}
+	case ObjectiveStatusCompleted:
+		o.Completion = 1.0
+	default:
+		o.Completion = 0.5 // Default for other statuses
+	}
+}
+
+// IncrementIteration increments the iteration counter
+func (o *Objective) IncrementIteration() {
+	o.Iteration++
+	o.UpdatedAt = time.Now()
 }

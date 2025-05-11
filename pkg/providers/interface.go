@@ -1,21 +1,21 @@
 package providers
 
 import (
+	"context"
+	
 	"github.com/blockhead-consulting/guild/pkg/providers/interfaces"
 )
 
-// Re-export interfaces and types
-type CompletionRequest = interfaces.CompletionRequest
-type CompletionResponse = interfaces.CompletionResponse
-type EmbeddingRequest = interfaces.EmbeddingRequest
-type EmbeddingResponse = interfaces.EmbeddingResponse
-type LLMClient = interfaces.LLMClient
+// LLMClient defines the interface for LLM clients
+type LLMClient interface {
+	Complete(ctx context.Context, prompt string) (string, error)
+}
+
+// ProviderType is an alias for interfaces.ProviderType
 type ProviderType = interfaces.ProviderType
 
-// Re-export constants
 const (
 	ProviderOpenAI    = interfaces.ProviderOpenAI
 	ProviderAnthropic = interfaces.ProviderAnthropic
 	ProviderOllama    = interfaces.ProviderOllama
-	ProviderMock      = ProviderType("mock")
 )
