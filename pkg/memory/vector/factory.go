@@ -3,16 +3,17 @@ package vector
 import (
 	"context"
 	"fmt"
+	"os"
 
-	"github.com/blockhead-consulting/guild/pkg/providers"
+	"github.com/lancerogers/guild/pkg/providers"
 )
 
 // StoreType represents the type of vector store
 type StoreType string
 
 const (
-	// StoreTypeQdrant is a Qdrant vector store
-	StoreTypeQdrant StoreType = "qdrant"
+	// StoreTypeChromem is an embedded Chromem vector store
+	StoreTypeChromem StoreType = "chromem"
 
 	// StoreTypeChroma is a Chroma vector store
 	StoreTypeChroma StoreType = "chroma"
@@ -26,20 +27,26 @@ type StoreConfig struct {
 	// Type is the type of vector store
 	Type StoreType
 
-	// URL is the address of the vector store
-	URL string
-
-	// Collection is the collection/namespace to use
-	Collection string
-
 	// EmbeddingProvider is the provider to use for generating embeddings
 	EmbeddingProvider providers.LLMClient
 
 	// EmbeddingModel is the model to use for embeddings
 	EmbeddingModel string
 
-	// AdditionalConfig contains additional configuration specific to the vector store type
-	AdditionalConfig map[string]interface{}
+	// ChromemConfig contains Chromem-specific configuration
+	ChromemConfig ChromemConfig
+
+	// OpenAIApiKey is the API key for OpenAI (for embeddings)
+	OpenAIApiKey string
+}
+
+// ChromemConfig contains Chromem-specific configuration
+type ChromemConfig struct {
+	// PersistencePath is the path to persist embeddings to disk
+	PersistencePath string
+
+	// DefaultDimension is the default dimension for vectors
+	DefaultDimension int
 }
 
 // NewVectorStore creates a new vector store based on the provided configuration
@@ -48,20 +55,17 @@ func NewVectorStore(ctx context.Context, config *StoreConfig) (VectorStore, erro
 		return nil, fmt.Errorf("config cannot be nil")
 	}
 
-	if config.EmbeddingProvider == nil {
-		return nil, fmt.Errorf("embedding provider cannot be nil")
-	}
-
-	embeddingProvider := &providerAdapter{
-		provider:     config.EmbeddingProvider,
-		defaultModel: config.EmbeddingModel,
+	// Create embedder
+	embedder, err := createEmbedder(config)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create embedder: %w", err)
 	}
 
 	switch config.Type {
-	case StoreTypeQdrant:
-		return createQdrantStore(ctx, config, embeddingProvider)
+	case StoreTypeChromem:
+		return createChromemStore(ctx, config, embedder)
 	case StoreTypeChroma:
-		return createChromaStore(ctx, config, embeddingProvider)
+		return nil, fmt.Errorf("chroma vector store not implemented yet")
 	case StoreTypeMilvus:
 		return nil, fmt.Errorf("milvus vector store not implemented yet")
 	default:
@@ -69,92 +73,38 @@ func NewVectorStore(ctx context.Context, config *StoreConfig) (VectorStore, erro
 	}
 }
 
-// createQdrantStore creates a Qdrant vector store
-func createQdrantStore(ctx context.Context, config *StoreConfig, embeddingProvider EmbeddingProvider) (*QdrantStore, error) {
-	qdrantConfig := &QdrantConfig{
-		Address:           config.URL,
-		Collection:        config.Collection,
-		EmbeddingProvider: embeddingProvider,
+// createChromemStore creates a Chromem vector store
+func createChromemStore(ctx context.Context, config *StoreConfig, embedder Embedder) (VectorStore, error) {
+	chromemConfig := Config{
+		Embedder:        embedder,
+		PersistencePath: config.ChromemConfig.PersistencePath,
+		DefaultDimension: config.ChromemConfig.DefaultDimension,
 	}
 
-	// Set dimension from embedding provider if not specified
-	if dim := config.EmbeddingProvider.GetEmbeddingDimension(config.EmbeddingModel); dim > 0 {
-		qdrantConfig.Dimension = uint64(dim)
+	if chromemConfig.DefaultDimension == 0 {
+		chromemConfig.DefaultDimension = 1536 // Default for OpenAI embeddings
 	}
 
-	// Apply additional configuration
-	if config.AdditionalConfig != nil {
-		if val, ok := config.AdditionalConfig["dimension"].(int); ok && val > 0 {
-			qdrantConfig.Dimension = uint64(val)
-		}
-	}
-
-	return NewQdrantStore(ctx, qdrantConfig)
+	return NewChromemStore(chromemConfig)
 }
 
-// createChromaStore creates a Chroma vector store
-func createChromaStore(ctx context.Context, config *StoreConfig, embeddingProvider EmbeddingProvider) (*ChromaStore, error) {
-	chromaConfig := &ChromaConfig{
-		URL:                config.URL,
-		CollectionName:     config.Collection,
-		EmbeddingProvider:  embeddingProvider,
+// createEmbedder creates an embedder based on the configuration
+func createEmbedder(config *StoreConfig) (Embedder, error) {
+	// Try to get OpenAI API key
+	apiKey := config.OpenAIApiKey
+	if apiKey == "" {
+		apiKey = os.Getenv("OPENAI_API_KEY")
 	}
 
-	return NewChromaStore(ctx, chromaConfig)
-}
-
-// providerAdapter adapts an LLMClient to the EmbeddingProvider interface
-type providerAdapter struct {
-	provider     providers.LLMClient
-	defaultModel string
-}
-
-// GetEmbedding generates an embedding for the given text
-func (p *providerAdapter) GetEmbedding(ctx context.Context, text string) (Vector, error) {
-	req := &providers.EmbeddingRequest{
-		Text:  text,
-		Model: p.defaultModel,
+	if apiKey == "" {
+		return nil, fmt.Errorf("OpenAI API key is required for embeddings")
 	}
 
-	resp, err := p.provider.CreateEmbedding(ctx, req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create embedding: %w", err)
+	// Default to OpenAI's text-embedding-ada-002 model
+	model := "text-embedding-ada-002"
+	if config.EmbeddingModel != "" {
+		model = config.EmbeddingModel
 	}
 
-	// Convert to Vector
-	embedding := make(Vector, len(resp.Embedding))
-	for i, v := range resp.Embedding {
-		embedding[i] = v
-	}
-
-	return embedding, nil
-}
-
-// GetEmbeddings generates embeddings for multiple texts
-func (p *providerAdapter) GetEmbeddings(ctx context.Context, texts []string) ([]Vector, error) {
-	if len(texts) == 0 {
-		return []Vector{}, nil
-	}
-
-	req := &providers.EmbeddingRequest{
-		Texts: texts,
-		Model: p.defaultModel,
-	}
-
-	resp, err := p.provider.CreateEmbeddings(ctx, req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create embeddings: %w", err)
-	}
-
-	// Convert to Vectors
-	embeddings := make([]Vector, len(resp.Embeddings))
-	for i, e := range resp.Embeddings {
-		embedding := make(Vector, len(e))
-		for j, v := range e {
-			embedding[j] = v
-		}
-		embeddings[i] = embedding
-	}
-
-	return embeddings, nil
+	return NewOpenAIEmbedder(apiKey, model)
 }

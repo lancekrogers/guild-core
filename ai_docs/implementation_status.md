@@ -62,6 +62,19 @@ This document provides an overview of which Guild systems have been implemented 
   - Objective commands
   - Version information
 
+### 6. RAG System
+- **Status**: Complete
+- **Location**: `pkg/memory/rag/`
+- **Vector Store**: Chromem-go
+- **Components**:
+  - Vector store interface and Chromem-go implementation
+  - OpenAI embedder for vector generation
+  - Document chunking system with multiple strategies
+  - RAG retriever for context enhancement
+  - Agent wrapper for RAG capabilities
+  - Comprehensive test suite
+  - Integration with corpus system
+
 ## 🟡 Partially Implemented Systems
 
 ### 1. Agent System
@@ -157,17 +170,7 @@ This document provides an overview of which Guild systems have been implemented 
 
 ## 🔴 Unimplemented Systems
 
-### 1. RAG System
-- **Status**: Skeleton implementation only
-- **Location**: `pkg/memory/rag/`
-- **Required Components**:
-  - Full RAG pipeline
-  - Document chunking
-  - Vector integration
-  - Query processing
-  - Result formatting
-
-### 2. Cost Tracking System
+### 1. Cost Tracking System
 - **Status**: Basic interfaces only
 - **Required Components**:
   - Token tracking
@@ -198,14 +201,12 @@ This document provides an overview of which Guild systems have been implemented 
 
 Based on the implementation status and dependencies, the recommended order for implementing remaining systems is:
 
-1. **Complete RAG System** - Critical for knowledge retrieval
-2. **Complete Vector Store Integration** - Needed for RAG and integration with Corpus
-3. **Enhance Agent System** - Build on the existing foundation
-4. **Complete Orchestrator** - Needed for multi-agent coordination
-5. **Implement Cost Tracking** - Important for production usage
-6. **Enhance Prompt System** - Improve prompt management
-7. **Complete Configuration System** - For easier deployment
-8. **Improve Tools System** - Add additional capabilities
+1. **Enhance Agent System** - Build on the existing foundation
+2. **Complete Orchestrator** - Needed for multi-agent coordination
+3. **Implement Cost Tracking** - Important for production usage
+4. **Enhance Prompt System** - Improve prompt management
+5. **Complete Configuration System** - For easier deployment
+6. **Improve Tools System** - Add additional capabilities
 
 ## 📚 Documentation Status
 
