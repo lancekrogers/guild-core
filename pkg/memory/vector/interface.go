@@ -67,3 +67,33 @@ type Embedder interface {
 	// Embed generates an embedding from text
 	Embed(ctx context.Context, text string) ([]float32, error)
 }
+
+// EmbeddingProvider is a deprecated alias for Embedder, kept for backward compatibility
+type EmbeddingProvider interface {
+	Embed(ctx context.Context, text string) ([]float32, error)
+}
+
+// Document represents a document with its embedding
+type Document struct {
+	ID        string                 `json:"id"`
+	Content   string                 `json:"content"`
+	Embedding []float32              `json:"embedding,omitempty"`
+	Metadata  map[string]interface{} `json:"metadata,omitempty"`
+}
+
+// QueryResult represents a search result from the vector store
+type QueryResult struct {
+	ID       string                 `json:"id"`
+	Document *Document              `json:"document"`
+	Score    float32                `json:"score"`
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+}
+
+// SearchResult represents a search result (deprecated, use EmbeddingMatch instead)
+type SearchResult struct {
+	ID        string                 `json:"id"`
+	Content   string                 `json:"content"`
+	Score     float32                `json:"score"`
+	Embedding []float32              `json:"embedding,omitempty"`
+	Metadata  map[string]interface{} `json:"metadata,omitempty"`
+}

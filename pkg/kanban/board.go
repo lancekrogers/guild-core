@@ -30,22 +30,25 @@ type EventType string
 const (
 	// EventTaskCreated is emitted when a task is created
 	EventTaskCreated EventType = "task.created"
-	
+
+	// EventTaskMoved is emitted when a task is moved to a different column
+	EventTaskMoved EventType = "task.moved"
+
 	// EventTaskUpdated is emitted when a task is updated
 	EventTaskUpdated EventType = "task.updated"
-	
+
 	// EventTaskDeleted is emitted when a task is deleted
 	EventTaskDeleted EventType = "task.deleted"
-	
+
 	// EventTaskStatusChanged is emitted when a task's status changes
 	EventTaskStatusChanged EventType = "task.status_changed"
-	
+
 	// EventTaskAssigned is emitted when a task is assigned
 	EventTaskAssigned EventType = "task.assigned"
-	
+
 	// EventTaskBlocked is emitted when a task becomes blocked
 	EventTaskBlocked EventType = "task.blocked"
-	
+
 	// EventTaskUnblocked is emitted when a task is no longer blocked
 	EventTaskUnblocked EventType = "task.unblocked"
 )

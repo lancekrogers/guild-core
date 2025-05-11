@@ -22,8 +22,8 @@ type Manager struct {
 	mu           sync.RWMutex
 }
 
-// EventHandler is a function that handles board events
-type EventHandler func(event BoardEvent)
+// ManagerEventHandler is a function that handles board events for the manager
+type ManagerEventHandler func(event BoardEvent)
 
 // NewManager creates a new kanban manager
 func NewManager(store memory.Store) (*Manager, error) {
@@ -284,7 +284,7 @@ func (m *Manager) ListTasksByAgent(ctx context.Context, agentID string) ([]*Task
 }
 
 // AddEventListener adds an event listener for board events
-func (m *Manager) AddEventListener(handler EventHandler) chan<- bool {
+func (m *Manager) AddEventListener(handler ManagerEventHandler) chan<- bool {
 	stopCh := make(chan bool)
 	go func() {
 		events := m.GetEventChannel()

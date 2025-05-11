@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancerogers/guild/pkg/corpus"
-	"github.com/lancerogers/guild/pkg/memory/vector"
+	"github.com/blockhead-consulting/guild/pkg/corpus"
+	"github.com/blockhead-consulting/guild/pkg/memory/vector"
 )
 
 // RetrievalConfig defines configuration options for the retriever

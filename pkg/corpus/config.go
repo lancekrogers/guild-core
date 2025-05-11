@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/lancerogers/guild/pkg/config"
+	"github.com/blockhead-consulting/guild/pkg/config"
 	"gopkg.in/yaml.v3"
 )
 

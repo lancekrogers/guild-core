@@ -133,17 +133,17 @@ This document provides an overview of which Guild systems have been implemented 
   - Tool permissions and security
 
 ### 5. Vector Memory
-- **Status**: Partial (interfaces defined)
+- **Status**: Partial (core implementation with Chromem-go)
 - **Location**: `pkg/memory/vector/`
 - **Components Implemented**:
   - Interface definitions
-  - Naive implementations
+  - Chromem-go implementation
+  - OpenAI embedder
+  - Integration with RAG system
 - **Missing Components**:
-  - Full implementations for:
-    - Qdrant
+  - Full implementations for alternative stores:
     - Milvus
     - Chroma
-  - Integration with RAG system
 
 ### 6. Generator System
 - **Status**: Partial (base implementation)
@@ -178,7 +178,7 @@ This document provides an overview of which Guild systems have been implemented 
   - Budget enforcement
   - Usage reporting
 
-### 3. Configuration System
+### 2. Configuration System
 - **Status**: Basic loading only
 - **Location**: `pkg/config/`
 - **Required Components**:
@@ -187,7 +187,7 @@ This document provides an overview of which Guild systems have been implemented 
   - Dynamic reconfiguration
   - Secrets management
 
-### 4. Prompt System
+### 3. Prompt System
 - **Status**: Not started
 - **Expected Location**: `internal/prompts/`
 - **Required Components**:
