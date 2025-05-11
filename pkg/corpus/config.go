@@ -1,0 +1,154 @@
+package corpus
+
+import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"strconv"
+
+	"github.com/lancerogers/guild/pkg/config"
+	"gopkg.in/yaml.v3"
+)
+
+// ConfigKeys defines the environment variable keys for corpus configuration
+const (
+	EnvCorpusPath     = "GUILD_CORPUS_PATH"
+	EnvActivitiesPath = "GUILD_CORPUS_ACTIVITIES_PATH"
+	EnvMaxSizeBytes   = "GUILD_CORPUS_MAX_SIZE_BYTES"
+	EnvDefaultTags    = "GUILD_CORPUS_DEFAULT_TAGS"
+)
+
+// ConfigKey is a key for the corpus configuration
+type ConfigKey string
+
+// Configuration keys
+const (
+	KeyCorpusPath     ConfigKey = "corpusPath"
+	KeyActivitiesPath ConfigKey = "activitiesPath"
+	KeyMaxSizeBytes   ConfigKey = "maxSizeBytes"
+	KeyDefaultTags    ConfigKey = "defaultTags"
+)
+
+// DefaultConfig returns the default configuration for the corpus
+func DefaultConfig() Config {
+	// Get the current working directory
+	cwd, err := os.Getwd()
+	if err != nil {
+		cwd = "."
+	}
+
+	return Config{
+		CorpusPath:     filepath.Join(cwd, "corpus"),
+		ActivitiesPath: filepath.Join(cwd, "corpus", ".activities"),
+		MaxSizeBytes:   10 * 1024 * 1024, // 10MB default size limit
+		DefaultTags:    []string{},
+	}
+}
+
+// LoadConfig loads the corpus configuration from the config loader
+func LoadConfig(loader *config.ConfigLoader) (Config, error) {
+	// Start with default configuration
+	cfg := DefaultConfig()
+
+	// Try to load from config file
+	if loader != nil {
+		configData, err := loader.LoadConfig("corpus.yml")
+		if err == nil {
+			// Override with configuration from file
+			if corpusPath, ok := configData[string(KeyCorpusPath)].(string); ok && corpusPath != "" {
+				cfg.CorpusPath = corpusPath
+			}
+			if activitiesPath, ok := configData[string(KeyActivitiesPath)].(string); ok && activitiesPath != "" {
+				cfg.ActivitiesPath = activitiesPath
+			}
+			if maxSizeBytes, ok := configData[string(KeyMaxSizeBytes)].(int64); ok && maxSizeBytes > 0 {
+				cfg.MaxSizeBytes = maxSizeBytes
+			}
+			if defaultTags, ok := configData[string(KeyDefaultTags)].([]string); ok {
+				cfg.DefaultTags = defaultTags
+			}
+		}
+	}
+
+	// Override with environment variables
+	envVars := config.LoadFromEnv("GUILD_CORPUS")
+	
+	if path, ok := envVars[EnvCorpusPath]; ok && path != "" {
+		cfg.CorpusPath = path
+	}
+	
+	if path, ok := envVars[EnvActivitiesPath]; ok && path != "" {
+		cfg.ActivitiesPath = path
+	}
+	
+	if sizeStr, ok := envVars[EnvMaxSizeBytes]; ok && sizeStr != "" {
+		if size, err := strconv.ParseInt(sizeStr, 10, 64); err == nil && size > 0 {
+			cfg.MaxSizeBytes = size
+		}
+	}
+	
+	if tagsStr, ok := envVars[EnvDefaultTags]; ok && tagsStr != "" {
+		// Parse comma-separated tags
+		cfg.DefaultTags = filepath.SplitList(tagsStr)
+	}
+
+	// Ensure the corpus directory exists
+	if err := os.MkdirAll(cfg.CorpusPath, 0755); err != nil {
+		return cfg, fmt.Errorf("error creating corpus directory: %w", err)
+	}
+
+	// Ensure the activities directory exists
+	if err := os.MkdirAll(cfg.ActivitiesPath, 0755); err != nil {
+		return cfg, fmt.Errorf("error creating activities directory: %w", err)
+	}
+
+	return cfg, nil
+}
+
+// SaveConfig saves the corpus configuration to a YAML file
+func SaveConfig(cfg Config, path string) error {
+	// Create the configuration directory if it doesn't exist
+	configDir := filepath.Dir(path)
+	if err := os.MkdirAll(configDir, 0755); err != nil {
+		return fmt.Errorf("error creating config directory: %w", err)
+	}
+
+	// Marshal the configuration to YAML
+	data, err := yaml.Marshal(cfg)
+	if err != nil {
+		return fmt.Errorf("error marshaling config: %w", err)
+	}
+
+	// Write the configuration to the file
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf("error writing config file: %w", err)
+	}
+
+	return nil
+}
+
+// LoadConfigFromFile loads the corpus configuration from a YAML file
+func LoadConfigFromFile(path string) (Config, error) {
+	// Start with default configuration
+	cfg := DefaultConfig()
+
+	// Check if the file exists
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		// Return default configuration if the file doesn't exist
+		return cfg, nil
+	}
+
+	// Read the file
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return cfg, fmt.Errorf("error reading config file: %w", err)
+	}
+
+	// Unmarshal the YAML
+	err = yaml.Unmarshal(data, &cfg)
+	if err != nil {
+		return cfg, fmt.Errorf("error unmarshaling config: %w", err)
+	}
+
+	return cfg, nil
+}

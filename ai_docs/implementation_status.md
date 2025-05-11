@@ -17,7 +17,22 @@ This document provides an overview of which Guild systems have been implemented 
   - Command-line integration
   - Command input system with support for both UI and CLI commands
 
-### 2. Memory Store System
+### 2. Corpus System
+- **Status**: Complete
+- **Location**: `pkg/corpus/`
+- **UI**: `pkg/ui/corpus/`
+- **Tool**: `tools/corpus/`
+- **Components**:
+  - Document storage in markdown with YAML frontmatter
+  - Tag-based organization and search
+  - Document relationship graph with wikilinks
+  - Document activity tracking
+  - Command-line interface for management
+  - Interactive Bubble Tea Terminal UI for browsing
+  - Configuration and environment-based settings
+  - Agent tool for creating and retrieving documents
+
+### 3. Memory Store System
 - **Status**: Complete
 - **Location**: `pkg/memory/`
 - **Components**:
@@ -25,7 +40,7 @@ This document provides an overview of which Guild systems have been implemented 
   - Chain manager for prompt chains
   - Key-value storage abstractions
 
-### 3. Provider System
+### 4. Provider System
 - **Status**: Complete
 - **Location**: `pkg/providers/`
 - **Components**:
@@ -39,7 +54,7 @@ This document provides an overview of which Guild systems have been implemented 
     - Deepseek
     - Mock provider for testing
 
-### 4. Basic CLI Interface
+### 5. Basic CLI Interface
 - **Status**: Complete
 - **Location**: `cmd/guild/`
 - **Components**:
@@ -128,31 +143,21 @@ This document provides an overview of which Guild systems have been implemented 
   - Template management
   - Optimization features
 
-### 7. Communication System (ZeroMQ)
-- **Status**: Partial (basic transports)
-- **Location**: `pkg/comms/`
+### 7. Communication System
+- **Status**: Partial (basic transports with Go channels)
+- **Location**: `pkg/comms/` and `pkg/comms/channel/`
 - **Components Implemented**:
   - Transport interfaces
-  - ZeroMQ client
-  - Config handling
+  - Channel-based client
+  - Pub/sub patterns
 - **Missing Components**:
-  - Message routing
-  - Agent-to-agent communication patterns
-  - Complete pub/sub implementation
+  - Advanced message routing
+  - Cross-process communication
+  - Distributed deployment support
 
 ## 🔴 Unimplemented Systems
 
-### 1. Corpus System
-- **Status**: Not started
-- **Expected Location**: `pkg/corpus/`
-- **Required Components**:
-  - Document ingestion
-  - Content indexing
-  - Metadata management
-  - Search capabilities
-  - Integration with vector stores
-
-### 2. RAG System
+### 1. RAG System
 - **Status**: Skeleton implementation only
 - **Location**: `pkg/memory/rag/`
 - **Required Components**:
@@ -162,7 +167,7 @@ This document provides an overview of which Guild systems have been implemented 
   - Query processing
   - Result formatting
 
-### 3. Cost Tracking System
+### 2. Cost Tracking System
 - **Status**: Basic interfaces only
 - **Required Components**:
   - Token tracking
@@ -170,7 +175,7 @@ This document provides an overview of which Guild systems have been implemented 
   - Budget enforcement
   - Usage reporting
 
-### 4. Configuration System
+### 3. Configuration System
 - **Status**: Basic loading only
 - **Location**: `pkg/config/`
 - **Required Components**:
@@ -179,7 +184,7 @@ This document provides an overview of which Guild systems have been implemented 
   - Dynamic reconfiguration
   - Secrets management
 
-### 5. Prompt System
+### 4. Prompt System
 - **Status**: Not started
 - **Expected Location**: `internal/prompts/`
 - **Required Components**:
@@ -188,19 +193,19 @@ This document provides an overview of which Guild systems have been implemented 
   - Dynamic prompt generation
   - Prompt optimization
 
+
 ## 🔄 Next Steps Priority
 
 Based on the implementation status and dependencies, the recommended order for implementing remaining systems is:
 
 1. **Complete RAG System** - Critical for knowledge retrieval
-2. **Implement Corpus System** - Required for agent knowledge
-3. **Complete Vector Store Integration** - Needed for both RAG and Corpus
-4. **Enhance Agent System** - Build on the existing foundation
-5. **Complete Orchestrator** - Needed for multi-agent coordination
-6. **Implement Cost Tracking** - Important for production usage
-7. **Enhance Prompt System** - Improve prompt management
-8. **Complete Configuration System** - For easier deployment
-9. **Improve Tools System** - Add additional capabilities
+2. **Complete Vector Store Integration** - Needed for RAG and integration with Corpus
+3. **Enhance Agent System** - Build on the existing foundation
+4. **Complete Orchestrator** - Needed for multi-agent coordination
+5. **Implement Cost Tracking** - Important for production usage
+6. **Enhance Prompt System** - Improve prompt management
+7. **Complete Configuration System** - For easier deployment
+8. **Improve Tools System** - Add additional capabilities
 
 ## 📚 Documentation Status
 
@@ -216,3 +221,15 @@ Most implemented packages have corresponding test files, but test coverage could
 - Integration tests between systems
 - UI component tests
 - End-to-end workflow tests
+## 🌅 Horizon Features
+
+These are features that have been deferred to future versions of Guild, with their implementations preserved for reference:
+
+### 1. ZeroMQ Integration
+- **Status**: Deferred
+- **Location**: `pkg/extensions/zeromq/` (code) and `specs/horizon/` (documentation)
+- **Purpose**: Enable cross-language and distributed communication
+- **Why Deferred**: Adds complexity and external dependencies not needed for core functionality
+- **Replacement**: Go-native channel-based communication system
+
+EOF < /dev/null

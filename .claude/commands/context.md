@@ -18,6 +18,10 @@ find . -type f -name "*.go" -exec grep -l "relevant_term" {} \;
 find . -type f -name "*.go" -exec grep -l "objective" {} \;
 ```
 
+If existing code exists, be cautious witch making any changes. If your changes cause existing test to fail, examine the error and ensure it's what you were expecting to happen.
+
+Do not proceed through refactors if it will break working features. Review documents in the specs/ and ai_docs/ folders to ensure you have the proper context. If you believe a non-defined feature is needed add a document for the feature inside the specs directory with a detailed explanation about why it's needed and ask the user to review the document and make any changes before continuing.
+
 ## Commands to Run
 
 Run these commands to understand the project structure:
