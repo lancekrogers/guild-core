@@ -27,14 +27,18 @@ func TrackUserView(user, docPath string, cfg Config) error {
 		return fmt.Errorf("user and document path are required")
 	}
 
-	// Ensure the viewlog directory exists
-	viewLogDir := filepath.Join(cfg.Location, ViewLogDirName)
-	if err := os.MkdirAll(viewLogDir, 0755); err != nil {
-		return fmt.Errorf("failed to create view log directory: %w", err)
+	// Ensure the activities directory exists
+	activitiesDir := cfg.ActivitiesPath
+	if activitiesDir == "" {
+		activitiesDir = filepath.Join(cfg.CorpusPath, ViewLogDirName)
+	}
+
+	if err := os.MkdirAll(activitiesDir, 0755); err != nil {
+		return fmt.Errorf("failed to create activities directory: %w", err)
 	}
 
 	// Create or load the activity log
-	activityLogPath := filepath.Join(viewLogDir, "user_activity.json")
+	activityLogPath := filepath.Join(activitiesDir, "user_activity.json")
 	var activityLog *ActivityLog
 
 	// Check if file exists
@@ -86,6 +90,22 @@ func TrackUserView(user, docPath string, cfg Config) error {
 		return fmt.Errorf("failed to save activity log: %w", err)
 	}
 
+	// Also save user-specific log file for backward compatibility
+	userLogPath := filepath.Join(activitiesDir, user+".json")
+
+	// Get user logs from activity log
+	userLogs := activityLog.ViewLogs[user]
+
+	// Save user-specific log
+	userData, err := json.MarshalIndent(userLogs, "", "  ")
+	if err != nil {
+		return fmt.Errorf("failed to marshal user log: %w", err)
+	}
+
+	if err := os.WriteFile(userLogPath, userData, 0644); err != nil {
+		return fmt.Errorf("failed to save user log: %w", err)
+	}
+
 	return nil
 }
 
@@ -96,8 +116,11 @@ func GetUserActivity(user string, cfg Config) ([]ViewLog, error) {
 	}
 
 	// Check for the activity log file
-	viewLogDir := filepath.Join(cfg.Location, ViewLogDirName)
-	activityLogPath := filepath.Join(viewLogDir, "user_activity.json")
+	activitiesDir := cfg.ActivitiesPath
+	if activitiesDir == "" {
+		activitiesDir = filepath.Join(cfg.CorpusPath, ViewLogDirName)
+	}
+	activityLogPath := filepath.Join(activitiesDir, "user_activity.json")
 
 	if _, err := os.Stat(activityLogPath); os.IsNotExist(err) {
 		return []ViewLog{}, nil // No activity log yet
@@ -130,8 +153,11 @@ func GetMostViewedDocuments(cfg Config, limit int) (map[string]int, error) {
 	}
 
 	// Check for the activity log file
-	viewLogDir := filepath.Join(cfg.Location, ViewLogDirName)
-	activityLogPath := filepath.Join(viewLogDir, "user_activity.json")
+	activitiesDir := cfg.ActivitiesPath
+	if activitiesDir == "" {
+		activitiesDir = filepath.Join(cfg.CorpusPath, ViewLogDirName)
+	}
+	activityLogPath := filepath.Join(activitiesDir, "user_activity.json")
 
 	if _, err := os.Stat(activityLogPath); os.IsNotExist(err) {
 		return map[string]int{}, nil // No activity log yet
@@ -190,6 +216,16 @@ func GetMostViewedDocuments(cfg Config, limit int) (map[string]int, error) {
 	return result, nil
 }
 
+// GetUserActivities is an alias for GetUserActivity for backward compatibility
+func GetUserActivities(user string, cfg Config) ([]ViewLog, error) {
+	return GetUserActivity(user, cfg)
+}
+
+// GetPopularDocuments is an alias for GetMostViewedDocuments for backward compatibility
+func GetPopularDocuments(cfg Config) (map[string]int, error) {
+	return GetMostViewedDocuments(cfg, 10) // Use default limit of 10
+}
+
 // GetRecentActivity returns the most recent activity across all users
 func GetRecentActivity(cfg Config, limit int) ([]ViewLog, error) {
 	if limit <= 0 {
@@ -197,8 +233,11 @@ func GetRecentActivity(cfg Config, limit int) ([]ViewLog, error) {
 	}
 
 	// Check for the activity log file
-	viewLogDir := filepath.Join(cfg.Location, ViewLogDirName)
-	activityLogPath := filepath.Join(viewLogDir, "user_activity.json")
+	activitiesDir := cfg.ActivitiesPath
+	if activitiesDir == "" {
+		activitiesDir = filepath.Join(cfg.CorpusPath, ViewLogDirName)
+	}
+	activityLogPath := filepath.Join(activitiesDir, "user_activity.json")
 
 	if _, err := os.Stat(activityLogPath); os.IsNotExist(err) {
 		return []ViewLog{}, nil // No activity log yet

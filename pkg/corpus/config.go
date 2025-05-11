@@ -37,11 +37,16 @@ func DefaultConfig() Config {
 		cwd = "."
 	}
 
+	corpusPath := filepath.Join(cwd, "corpus")
+	maxSizeBytes := int64(10 * 1024 * 1024) // 10MB default size limit
 	return Config{
-		CorpusPath:     filepath.Join(cwd, "corpus"),
-		ActivitiesPath: filepath.Join(cwd, "corpus", ".activities"),
-		MaxSizeBytes:   10 * 1024 * 1024, // 10MB default size limit
-		DefaultTags:    []string{},
+		CorpusPath:      corpusPath,
+		ActivitiesPath:  filepath.Join(cwd, "corpus", ".activities"),
+		MaxSizeBytes:    maxSizeBytes,
+		DefaultTags:     []string{},
+		DefaultCategory: "general",
+		Location:        corpusPath, // Set Location as an alias to CorpusPath
+		MaxSizeMB:       maxSizeBytes / 1024 / 1024, // Convert bytes to MB
 	}
 }
 
@@ -102,6 +107,15 @@ func LoadConfig(loader *config.ConfigLoader) (Config, error) {
 		return cfg, fmt.Errorf("error creating activities directory: %w", err)
 	}
 
+	// Set backward compatibility fields
+	cfg.Location = cfg.CorpusPath
+	cfg.MaxSizeMB = cfg.MaxSizeBytes / 1024 / 1024
+
+	// Set default category if not specified
+	if cfg.DefaultCategory == "" {
+		cfg.DefaultCategory = "general"
+	}
+
 	return cfg, nil
 }
 
@@ -148,6 +162,15 @@ func LoadConfigFromFile(path string) (Config, error) {
 	err = yaml.Unmarshal(data, &cfg)
 	if err != nil {
 		return cfg, fmt.Errorf("error unmarshaling config: %w", err)
+	}
+
+	// Set backward compatibility fields
+	cfg.Location = cfg.CorpusPath
+	cfg.MaxSizeMB = cfg.MaxSizeBytes / 1024 / 1024
+
+	// Set default category if not specified
+	if cfg.DefaultCategory == "" {
+		cfg.DefaultCategory = "general"
 	}
 
 	return cfg, nil

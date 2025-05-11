@@ -2,7 +2,6 @@ package corpus
 
 import (
 	"testing"
-	"time"
 )
 
 func TestNewCorpusDoc(t *testing.T) {
@@ -58,7 +57,7 @@ func TestNewCorpusDoc(t *testing.T) {
 	}
 }
 
-func TestDefaultConfig(t *testing.T) {
+func TestDefaultConfigFields(t *testing.T) {
 	cfg := DefaultConfig()
 
 	if cfg.CorpusPath == "" {

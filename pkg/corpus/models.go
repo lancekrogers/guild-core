@@ -63,6 +63,17 @@ type Config struct {
 
 	// DefaultTags are automatically added to new documents when none are provided
 	DefaultTags []string `yaml:"default_tags" json:"default_tags"`
+
+	// DefaultCategory is the category to use when none is specified
+	DefaultCategory string `yaml:"default_category" json:"default_category"`
+
+	// Location is an alias for CorpusPath to maintain backward compatibility
+	// Deprecated: Use CorpusPath instead
+	Location string `yaml:"-" json:"-"`
+
+	// MaxSizeMB is an alias for MaxSizeBytes / 1024 / 1024
+	// Deprecated: Use MaxSizeBytes instead
+	MaxSizeMB int64 `yaml:"-" json:"-"`
 }
 
 // ViewLog represents a user's interaction with corpus documents

@@ -3,7 +3,6 @@ package corpus
 import (
 	"encoding/json"
 	"fmt"
-	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,12 +12,24 @@ import (
 type Graph struct {
 	// Nodes maps from document names to their outgoing links
 	Nodes map[string][]string `json:"nodes"`
-	
+
 	// Backlinks maps from document names to documents that link to them
 	Backlinks map[string][]string `json:"backlinks"`
-	
+
 	// Tags maps from tag names to documents that have that tag
 	Tags map[string][]string `json:"tags"`
+
+	// TagLinks maps from tags to other related tags
+	TagLinks map[string][]string `json:"tag_links"`
+
+	// Edges is a flat list of all connections for visualization
+	Edges []GraphEdge `json:"edges"`
+}
+
+// GraphEdge represents a directed edge in the graph
+type GraphEdge struct {
+	From string `json:"from"`
+	To   string `json:"to"`
 }
 
 // NewGraph creates a new empty graph
@@ -27,12 +38,24 @@ func NewGraph() *Graph {
 		Nodes:     make(map[string][]string),
 		Backlinks: make(map[string][]string),
 		Tags:      make(map[string][]string),
+		TagLinks:  make(map[string][]string),
+		Edges:     []GraphEdge{},
 	}
+}
+
+// GetBacklinks returns a list of documents that link to the specified document
+func (g *Graph) GetBacklinks(docName string) []string {
+	return g.Backlinks[docName]
+}
+
+// GetDocumentsWithTag returns a list of documents that have the specified tag
+func (g *Graph) GetDocumentsWithTag(tag string) []string {
+	return g.Tags[tag]
 }
 
 // BuildGraph creates a graph from corpus documents
 func BuildGraph(cfg Config) (*Graph, error) {
-	if cfg.Location == "" {
+	if cfg.CorpusPath == "" {
 		return nil, fmt.Errorf("corpus location not specified")
 	}
 
@@ -89,7 +112,7 @@ func SaveGraph(graph *Graph, cfg Config) error {
 	}
 
 	// Ensure the graph directory exists
-	graphDir := filepath.Join(cfg.Location, GraphDirName)
+	graphDir := filepath.Join(cfg.CorpusPath, GraphDirName)
 	if err := os.MkdirAll(graphDir, 0755); err != nil {
 		return fmt.Errorf("failed to create graph directory: %w", err)
 	}
@@ -112,7 +135,7 @@ func SaveGraph(graph *Graph, cfg Config) error {
 // LoadGraph loads a graph from JSON file
 func LoadGraph(cfg Config) (*Graph, error) {
 	// Check for graph file
-	graphPath := filepath.Join(cfg.Location, GraphDirName, "links.json")
+	graphPath := filepath.Join(cfg.CorpusPath, GraphDirName, "links.json")
 	data, err := os.ReadFile(graphPath)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -215,7 +238,7 @@ func ExportGraphDOT(graph *Graph, cfg Config) error {
 	sb.WriteString("}\n")
 
 	// Write to file
-	graphDir := filepath.Join(cfg.Location, GraphDirName)
+	graphDir := filepath.Join(cfg.CorpusPath, GraphDirName)
 	if err := os.MkdirAll(graphDir, 0755); err != nil {
 		return fmt.Errorf("failed to create graph directory: %w", err)
 	}

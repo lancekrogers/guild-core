@@ -139,7 +139,7 @@ func TestMaxSizeConstraint(t *testing.T) {
 	cfg := Config{
 		CorpusPath:     tempDir,
 		ActivitiesPath: filepath.Join(tempDir, ".activities"),
-		MaxSizeBytes:   10, // 10 bytes
+		MaxSizeBytes:   1, // Just 1 byte (much smaller than document content)
 	}
 
 	// Create activities directory

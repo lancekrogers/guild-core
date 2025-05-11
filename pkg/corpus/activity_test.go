@@ -131,11 +131,12 @@ func TestTrackUserView(t *testing.T) {
 		t.Fatalf("Expected 1 popular document, got %d", len(popular))
 	}
 
-	if popular[0].DocPath != doc.FilePath {
-		t.Errorf("Expected popular document path %s, got %s", doc.FilePath, popular[0].DocPath)
+	viewCount, ok := popular[doc.FilePath]
+	if !ok {
+		t.Errorf("Expected document path %s in popular documents", doc.FilePath)
 	}
 
-	if popular[0].ViewCount != 2 {
-		t.Errorf("Expected view count 2, got %d", popular[0].ViewCount)
+	if viewCount != 2 {
+		t.Errorf("Expected view count 2, got %d", viewCount)
 	}
 }
