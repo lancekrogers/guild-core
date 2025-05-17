@@ -46,6 +46,7 @@ type WorkerAgent struct {
 	MemoryManager  memory.ChainManager
 	ToolRegistry   *tools.ToolRegistry
 	ObjectiveManager *objective.Manager
+	CostManager    *CostManager
 }
 
 // NewWorkerAgent creates a new worker agent
@@ -61,6 +62,7 @@ func NewWorkerAgent(id, name string, llmClient interfaces.LLMClient,
 		MemoryManager:   memoryManager,
 		ToolRegistry:    toolRegistry,
 		ObjectiveManager: objectiveManager,
+		CostManager:     NewCostManager(),
 	}
 }
 
@@ -98,6 +100,16 @@ func (a *WorkerAgent) GetLLMClient() interfaces.LLMClient {
 // GetMemoryManager returns the memory manager
 func (a *WorkerAgent) GetMemoryManager() memory.ChainManager {
 	return a.MemoryManager
+}
+
+// SetCostBudget sets the budget for a specific cost type
+func (a *WorkerAgent) SetCostBudget(costType CostType, amount float64) {
+	a.CostManager.SetBudget(costType, amount)
+}
+
+// GetCostReport returns a report of all costs incurred by the agent
+func (a *WorkerAgent) GetCostReport() map[string]interface{} {
+	return a.CostManager.GetCostReport()
 }
 
 // ManagerAgent is a coordinator agent

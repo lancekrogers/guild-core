@@ -79,13 +79,11 @@ func (w *AgentWrapper) GetMemoryManager() memory.ChainManager {
 func (w *AgentWrapper) enhanceRequestWithRAG(ctx context.Context, request string) (string, error) {
 	// Define retrieval configuration
 	retrievalConfig := RetrievalConfig{
-		MaxResults: w.config.MaxResults,
-		MinScore:   0.7, // Default minimum score
-		ChunkSize:  w.config.ChunkSize,
-		ChunkOverlap: w.config.ChunkOverlap,
-		ChunkStrategy: ChunkByParagraph,
+		Query:           request,
+		MaxResults:      w.config.MaxResults,
+		MinScore:        0.7, // Default minimum score
 		IncludeMetadata: true,
-		IncludeCorpus: true,
+		UseCorpus:       true,
 	}
 	
 	// Retrieve relevant context
