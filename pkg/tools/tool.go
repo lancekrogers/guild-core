@@ -1,33 +1,81 @@
 package tools
 
-// ToolRegistry manages tools for agents
+import (
+	"context"
+	
+	"github.com/blockhead-consulting/guild/tools"
+)
+
+// Re-export the Tool interface from the tools package
+type Tool = tools.Tool
+
+// Re-export the ToolResult type from the tools package
+type ToolResult = tools.ToolResult
+
+// ToolRegistry manages tools for agents with cost tracking
 type ToolRegistry struct {
-	tools map[string]interface{}
+	// Embed the original tool registry
+	*tools.ToolRegistry
+	
+	// Tool costs (tool name -> cost per use)
+	toolCosts map[string]float64
 }
 
-// NewToolRegistry creates a new tool registry
+// NewToolRegistry creates a new tool registry with cost tracking
 func NewToolRegistry() *ToolRegistry {
 	return &ToolRegistry{
-		tools: make(map[string]interface{}),
+		ToolRegistry: tools.NewToolRegistry(),
+		toolCosts:    make(map[string]float64),
 	}
 }
 
 // RegisterTool registers a tool with the registry
-func (r *ToolRegistry) RegisterTool(name string, tool interface{}) {
-	r.tools[name] = tool
+func (r *ToolRegistry) RegisterTool(tool Tool) error {
+	return r.ToolRegistry.RegisterTool(tool)
 }
 
-// GetTool returns a tool by name
-func (r *ToolRegistry) GetTool(name string) (interface{}, bool) {
-	tool, ok := r.tools[name]
-	return tool, ok
-}
-
-// ListTools returns a list of registered tool names
-func (r *ToolRegistry) ListTools() []string {
-	var names []string
-	for name := range r.tools {
-		names = append(names, name)
+// RegisterToolWithCost registers a tool with a specific cost
+func (r *ToolRegistry) RegisterToolWithCost(tool Tool, costPerUse float64) error {
+	err := r.ToolRegistry.RegisterTool(tool)
+	if err != nil {
+		return err
 	}
-	return names
+	
+	r.toolCosts[tool.Name()] = costPerUse
+	return nil
+}
+
+// GetToolCost returns the cost for using a specific tool
+func (r *ToolRegistry) GetToolCost(toolName string) float64 {
+	if cost, ok := r.toolCosts[toolName]; ok {
+		return cost
+	}
+	// Default cost if not specified
+	return 0.01
+}
+
+// SetToolCost sets the cost for using a specific tool
+func (r *ToolRegistry) SetToolCost(toolName string, cost float64) {
+	r.toolCosts[toolName] = cost
+}
+
+// ExecuteToolWithCostTracking executes a tool and returns the result with cost information
+func (r *ToolRegistry) ExecuteToolWithCostTracking(ctx context.Context, name string, input string) (*ToolResult, float64, error) {
+	result, err := r.ExecuteTool(ctx, name, input)
+	cost := r.GetToolCost(name)
+	
+	return result, cost, err
+}
+
+// ExecuteToolWithParams executes a tool by name with the given parameters as a JSON object
+func (r *ToolRegistry) ExecuteToolWithParams(ctx context.Context, name string, params map[string]interface{}) (*ToolResult, error) {
+	return r.ToolRegistry.ExecuteToolWithParams(ctx, name, params)
+}
+
+// ExecuteToolWithParamsAndCostTracking executes a tool with params and returns the result with cost information
+func (r *ToolRegistry) ExecuteToolWithParamsAndCostTracking(ctx context.Context, name string, params map[string]interface{}) (*ToolResult, float64, error) {
+	result, err := r.ExecuteToolWithParams(ctx, name, params)
+	cost := r.GetToolCost(name)
+	
+	return result, cost, err
 }
