@@ -1,7 +1,7 @@
 package mocks
 
 import (
-	"github.com/blockhead-consulting/guild/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/objective"
 )
 
 // MockObjective creates a mock objective for testing

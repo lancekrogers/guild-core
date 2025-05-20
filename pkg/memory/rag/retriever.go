@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	
-	"github.com/blockhead-consulting/guild/pkg/memory/vector"
+	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 )
 
 // Retriever provides methods for retrieving relevant context

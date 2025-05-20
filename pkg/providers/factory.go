@@ -3,9 +3,9 @@ package providers
 import (
 	"fmt"
 	
-	"github.com/blockhead-consulting/guild/pkg/providers/anthropic"
-	"github.com/blockhead-consulting/guild/pkg/providers/ollama"
-	"github.com/blockhead-consulting/guild/pkg/providers/openai"
+	"github.com/guild-ventures/guild-core/pkg/providers/anthropic"
+	"github.com/guild-ventures/guild-core/pkg/providers/ollama"
+	"github.com/guild-ventures/guild-core/pkg/providers/openai"
 )
 
 // Factory creates LLM clients

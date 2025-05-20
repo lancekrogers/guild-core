@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/blockhead-consulting/guild/pkg/providers"
+	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
 // StoreType represents the type of vector store

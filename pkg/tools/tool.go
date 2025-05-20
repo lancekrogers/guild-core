@@ -3,7 +3,7 @@ package tools
 import (
 	"context"
 	
-	"github.com/blockhead-consulting/guild/tools"
+	"github.com/guild-ventures/guild-core/tools"
 )
 
 // Re-export the Tool interface from the tools package

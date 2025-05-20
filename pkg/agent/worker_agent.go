@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 	
-	"github.com/blockhead-consulting/guild/pkg/memory"
+	"github.com/guild-ventures/guild-core/pkg/memory"
 )
 
 // CostAwareExecute is an enhanced execution method that tracks costs

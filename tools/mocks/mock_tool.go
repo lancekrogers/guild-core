@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/blockhead-consulting/guild/tools"
+	"github.com/guild-ventures/guild-core/tools"
 )
 
 // MockTool is a mock implementation of the Tool interface for testing

@@ -13,7 +13,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/blockhead-consulting/guild/pkg/ui/objective/components"
+	"github.com/guild-ventures/guild-core/pkg/ui/objective/components"
 )
 
 // Custom message types with Guild-themed names

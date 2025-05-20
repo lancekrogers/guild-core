@@ -1,2 +1,2 @@
-// Package guild is the root package for the Guild Agent Framework project.
-package guild
+// Package guildcore is the root package for the Guild Agent Framework project.
+package guildcore

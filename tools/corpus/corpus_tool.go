@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/blockhead-consulting/guild/pkg/corpus"
-	"github.com/blockhead-consulting/guild/tools"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
+	"github.com/guild-ventures/guild-core/tools"
 )
 
 // CorpusTool provides functionality for agents to interact with the corpus system

@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/blockhead-consulting/guild/pkg/memory"
-	"github.com/blockhead-consulting/guild/pkg/memory/mocks"
+	"github.com/guild-ventures/guild-core/pkg/memory"
+	"github.com/guild-ventures/guild-core/pkg/memory/mocks"
 )
 
 // TestBoltChainManager_Implementation tests that BoltChainManager implements the ChainManager interface

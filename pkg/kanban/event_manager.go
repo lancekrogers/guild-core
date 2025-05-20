@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/blockhead-consulting/guild/pkg/comms"
+	"github.com/guild-ventures/guild-core/pkg/comms"
 )
 
 // EventManager handles kanban event publishing and subscription

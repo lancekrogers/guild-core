@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/blockhead-consulting/guild/pkg/providers/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
 // DeepSeekClient implements the LLMClient interface for DeepSeek models

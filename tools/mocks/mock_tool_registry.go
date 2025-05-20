@@ -3,7 +3,7 @@ package mocks
 import (
 	"context"
 
-	"github.com/blockhead-consulting/guild/tools"
+	"github.com/guild-ventures/guild-core/tools"
 	"github.com/stretchr/testify/mock"
 )
 

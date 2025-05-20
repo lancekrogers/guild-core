@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/blockhead-consulting/guild/pkg/providers"
-	"github.com/blockhead-consulting/guild/pkg/providers/interfaces"
-	"github.com/blockhead-consulting/guild/pkg/providers/openai"
+	"github.com/guild-ventures/guild-core/pkg/providers"
+	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/providers/openai"
 )
 
 // TestOpenAIClientImplementation tests that the OpenAI client implements the LLMClient interface

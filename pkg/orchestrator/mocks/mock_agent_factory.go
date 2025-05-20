@@ -3,7 +3,7 @@ package mocks
 import (
 	"sync"
 
-	"github.com/blockhead-consulting/guild/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/agent"
 )
 
 // MockAgentFactory is a mock implementation of the agent.Factory

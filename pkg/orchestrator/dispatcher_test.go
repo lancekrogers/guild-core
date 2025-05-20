@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/blockhead-consulting/guild/pkg/agent"
-	"github.com/blockhead-consulting/guild/pkg/kanban"
-	"github.com/blockhead-consulting/guild/pkg/orchestrator/mocks"
+	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/pkg/orchestrator/mocks"
 )
 
 func setupDispatcherTest() (*TaskDispatcher, *mocks.MockKanbanManager, *mocks.MockAgentFactory, *EventBus, *mocks.MockEventHandler) {

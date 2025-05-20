@@ -3,10 +3,10 @@ package mocks
 import (
 	"context"
 
-	"github.com/blockhead-consulting/guild/pkg/agent"
-	"github.com/blockhead-consulting/guild/pkg/kanban"
-	"github.com/blockhead-consulting/guild/pkg/memory"
-	"github.com/blockhead-consulting/guild/tools"
+	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/pkg/memory"
+	"github.com/guild-ventures/guild-core/tools"
 	"github.com/stretchr/testify/mock"
 )
 

@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/blockhead-consulting/guild/tools"
+	"github.com/guild-ventures/guild-core/tools"
 	"github.com/gocolly/colly"
 )
 

@@ -7,14 +7,14 @@ import (
 	"sync"
 	"time"
 	
-	"github.com/blockhead-consulting/guild/pkg/agent"
-	"github.com/blockhead-consulting/guild/pkg/kanban"
-	"github.com/blockhead-consulting/guild/pkg/memory"
-	"github.com/blockhead-consulting/guild/pkg/memory/rag"
-	"github.com/blockhead-consulting/guild/pkg/objective"
-	"github.com/blockhead-consulting/guild/pkg/orchestrator"
-	"github.com/blockhead-consulting/guild/pkg/providers/openai"
-	"github.com/blockhead-consulting/guild/pkg/tools"
+	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/pkg/memory"
+	"github.com/guild-ventures/guild-core/pkg/memory/rag"
+	"github.com/guild-ventures/guild-core/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/orchestrator"
+	"github.com/guild-ventures/guild-core/pkg/providers/openai"
+	"github.com/guild-ventures/guild-core/pkg/tools"
 )
 
 // ComplexOrchestrationExample demonstrates advanced multi-agent orchestration

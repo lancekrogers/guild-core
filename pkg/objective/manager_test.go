@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 	
-	"github.com/blockhead-consulting/guild/pkg/memory/boltdb"
+	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
 )
 
 func setupTestManager(t *testing.T) (*Manager, func()) {

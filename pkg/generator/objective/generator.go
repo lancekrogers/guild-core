@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/blockhead-consulting/guild/internal/prompts"
-	"github.com/blockhead-consulting/guild/pkg/objective"
-	"github.com/blockhead-consulting/guild/pkg/providers"
+	"github.com/guild-ventures/guild-core/internal/prompts"
+	"github.com/guild-ventures/guild-core/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
 // Generator handles LLM-based generation of objectives and related documents

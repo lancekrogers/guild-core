@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/blockhead-consulting/guild/pkg/memory"
-	"github.com/blockhead-consulting/guild/pkg/memory/boltdb"
+	"github.com/guild-ventures/guild-core/pkg/memory"
+	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
 	bolt "go.etcd.io/bbolt"
 )
 

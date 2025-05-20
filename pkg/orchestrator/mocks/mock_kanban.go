@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/blockhead-consulting/guild/pkg/kanban"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
 )
 
 // MockKanbanManager is a mock implementation of the kanban.Manager

@@ -1,4 +1,4 @@
-package corpus_ui
+package corpus
 
 import (
 	"fmt"

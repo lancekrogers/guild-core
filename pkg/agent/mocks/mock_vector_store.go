@@ -3,7 +3,7 @@ package mocks
 import (
 	"context"
 
-	"github.com/blockhead-consulting/guild/pkg/memory/vector"
+	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 	"github.com/stretchr/testify/mock"
 )
 

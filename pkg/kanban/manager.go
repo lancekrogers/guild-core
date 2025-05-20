@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/blockhead-consulting/guild/pkg/comms"
-	"github.com/blockhead-consulting/guild/pkg/comms/channel"
-	"github.com/blockhead-consulting/guild/pkg/memory"
+	"github.com/guild-ventures/guild-core/pkg/comms"
+	"github.com/guild-ventures/guild-core/pkg/comms/channel"
+	"github.com/guild-ventures/guild-core/pkg/memory"
 )
 
 // Manager manages multiple kanban boards

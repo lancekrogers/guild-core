@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancerogers/guild/pkg/corpus"
-	"github.com/lancerogers/guild/tools"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
+	"github.com/guild-ventures/guild-core/tools"
 )
 
 func TestCorpusTool(t *testing.T) {

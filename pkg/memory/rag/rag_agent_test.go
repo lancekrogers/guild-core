@@ -5,11 +5,11 @@ import (
 	"strings"
 	"testing"
 	
-	"github.com/blockhead-consulting/guild/pkg/agent"
-	"github.com/blockhead-consulting/guild/pkg/memory"
-	"github.com/blockhead-consulting/guild/pkg/objective"
-	"github.com/blockhead-consulting/guild/pkg/providers/interfaces"
-	"github.com/blockhead-consulting/guild/pkg/tools"
+	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/memory"
+	"github.com/guild-ventures/guild-core/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/tools"
 )
 
 // MockAgent implements the GuildArtisan interface for testing

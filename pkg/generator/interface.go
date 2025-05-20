@@ -3,7 +3,7 @@ package generator
 import (
 	"context"
 
-	"github.com/blockhead-consulting/guild/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/objective"
 )
 
 // ObjectiveGenerator defines the interface for objective-related content generation

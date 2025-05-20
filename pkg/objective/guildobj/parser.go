@@ -1,7 +1,7 @@
 package guildobj
 
 import (
-	"github.com/blockhead-consulting/guild/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/objective"
 )
 
 // GuildParser represents a specialized parser for guild-themed objectives

@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/blockhead-consulting/guild/tools"
-	"github.com/blockhead-consulting/guild/tools/mocks"
+	"github.com/guild-ventures/guild-core/tools"
+	"github.com/guild-ventures/guild-core/tools/mocks"
 )
 
 // TestBaseToolImplementation tests that BaseTool implements the Tool interface

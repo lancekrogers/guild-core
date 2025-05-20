@@ -7,7 +7,7 @@ import (
 	"time"
 
 	zmq "github.com/pebbe/zmq4"
-	"github.com/blockhead-consulting/guild/pkg/comms"
+	"github.com/guild-ventures/guild-core/pkg/comms"
 )
 
 // Publisher implements a ZeroMQ publisher

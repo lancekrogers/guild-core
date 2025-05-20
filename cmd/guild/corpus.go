@@ -11,8 +11,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 
-	"github.com/blockhead-consulting/guild/pkg/corpus"
-	corpus_ui "github.com/blockhead-consulting/guild/pkg/ui/corpus"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
+	corpus_ui "github.com/guild-ventures/guild-core/pkg/ui/corpus"
 )
 
 // corpusCmd represents the corpus command

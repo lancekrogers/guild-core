@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/blockhead-consulting/guild/pkg/memory/rag"
+	"github.com/guild-ventures/guild-core/pkg/memory/rag"
 )
 
 func main() {

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/blockhead-consulting/guild/tools"
+	"github.com/guild-ventures/guild-core/tools"
 )
 
 // ShellTool provides command-line execution capabilities for agents

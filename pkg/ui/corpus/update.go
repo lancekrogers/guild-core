@@ -9,7 +9,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/lancerogers/guild/pkg/corpus"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
 )
 
 // Update handles UI events and state transitions

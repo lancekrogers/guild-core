@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/blockhead-consulting/guild/pkg/agent"
-	"github.com/blockhead-consulting/guild/pkg/agent/mocks"
-	"github.com/blockhead-consulting/guild/pkg/kanban"
-	"github.com/blockhead-consulting/guild/tools"
+	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/agent/mocks"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/tools"
 )
 
 // TestBaseAgentImplementation tests that BaseAgent implements the Agent interface

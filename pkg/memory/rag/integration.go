@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 	
-	"github.com/blockhead-consulting/guild/pkg/corpus"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
 )
 
 // SearchCorpus searches the corpus for documents matching a query

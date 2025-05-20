@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/blockhead-consulting/guild/pkg/memory"
+	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/google/uuid"
 )
 

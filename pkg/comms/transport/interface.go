@@ -3,7 +3,7 @@ package transport
 import (
 	"context"
 
-	"github.com/blockhead-consulting/guild/pkg/comms"
+	"github.com/guild-ventures/guild-core/pkg/comms"
 )
 
 // Transport defines a communication transport mechanism

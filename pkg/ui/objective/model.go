@@ -10,8 +10,8 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/blockhead-consulting/guild/pkg/objective"
-	generator "github.com/blockhead-consulting/guild/pkg/generator/objective"
+	"github.com/guild-ventures/guild-core/pkg/objective"
+	generator "github.com/guild-ventures/guild-core/pkg/generator/objective"
 )
 
 // Define UI states

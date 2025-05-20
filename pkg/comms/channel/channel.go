@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/blockhead-consulting/guild/pkg/comms"
+	"github.com/guild-ventures/guild-core/pkg/comms"
 )
 
 // Transport implements transport.Transport using Go channels

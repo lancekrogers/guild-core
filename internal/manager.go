@@ -1,4 +1,4 @@
-package prompts
+package internal
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"sync"
 	"text/template"
 
-	"github.com/blockhead-consulting/guild/internal/prompts/objective"
+	"github.com/guild-ventures/guild-core/internal/prompts/objective"
 )
 
 // PromptManager handles loading and rendering of system prompts

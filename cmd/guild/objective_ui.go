@@ -9,11 +9,11 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	
-	"github.com/blockhead-consulting/guild/pkg/memory/boltdb"
-	generator "github.com/blockhead-consulting/guild/pkg/generator/objective"
-	"github.com/blockhead-consulting/guild/pkg/objective"
-	"github.com/blockhead-consulting/guild/pkg/providers"
-	objective_ui "github.com/blockhead-consulting/guild/pkg/ui/objective"
+	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
+	generator "github.com/guild-ventures/guild-core/pkg/generator/objective"
+	"github.com/guild-ventures/guild-core/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/providers"
+	objective_ui "github.com/guild-ventures/guild-core/pkg/ui/objective"
 )
 
 // objectiveUICmd represents the command that explicitly launches the Objective UI

@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 	
-	"github.com/blockhead-consulting/guild/pkg/agent"
-	"github.com/blockhead-consulting/guild/pkg/orchestrator"
+	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/orchestrator"
 )
 
 // OrchestrationPatterns demonstrates common orchestration patterns

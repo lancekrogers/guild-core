@@ -3,7 +3,7 @@ package providers
 import (
 	"context"
 	
-	"github.com/blockhead-consulting/guild/pkg/providers/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
 // LLMClient defines the interface for LLM clients

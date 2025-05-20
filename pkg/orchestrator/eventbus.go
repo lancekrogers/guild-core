@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/blockhead-consulting/guild/pkg/orchestrator/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/orchestrator/interfaces"
 )
 
 // Re-export event types

@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/blockhead-consulting/guild/pkg/memory"
-	"github.com/blockhead-consulting/guild/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/memory"
+	"github.com/guild-ventures/guild-core/pkg/objective"
 )
 
 // MockObjectiveManager implements the objective.Manager interface for testing

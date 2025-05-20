@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/blockhead-consulting/guild/pkg/comms"
+	"github.com/guild-ventures/guild-core/pkg/comms"
 )
 
 // Transport implements the transport.Transport interface for ZeroMQ

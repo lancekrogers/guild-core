@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/blockhead-consulting/guild/pkg/providers/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
 // Client implements the LLMClient interface for Ollama

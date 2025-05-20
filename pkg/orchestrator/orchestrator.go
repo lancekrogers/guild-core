@@ -3,8 +3,8 @@ package orchestrator
 import (
 	"context"
 
-	"github.com/blockhead-consulting/guild/pkg/agent"
-	"github.com/blockhead-consulting/guild/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/objective"
 )
 
 // Status represents the status of the orchestrator
