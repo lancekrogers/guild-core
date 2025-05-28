@@ -33,7 +33,7 @@ func (m *MockAgentFactory) CreateAgent(agentType, name string, options ...interf
 	id := name + "-" + agentType
 	
 	// Create a new mock agent
-	mockAgent := NewMockAgent(id, name, agentType)
+	mockAgent := NewMockAgent(id, name)
 	
 	// Store the agent
 	m.agents[id] = mockAgent
@@ -46,7 +46,7 @@ func (m *MockAgentFactory) RegisterAgent(mockAgent *MockAgent) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	
-	m.agents[mockAgent.ID()] = mockAgent
+	m.agents[mockAgent.GetID()] = mockAgent
 }
 
 // GetAgent returns a registered mock agent

@@ -31,6 +31,9 @@ const (
 )
 
 // AllBuckets returns all bucket names
+// Note: The "objectives" bucket is not included here as it's managed
+// separately by the objective package. Use WithCustomBuckets("objectives")
+// when creating a store for the objective manager.
 func AllBuckets() []string {
 	return []string{
 		BucketPromptChains,

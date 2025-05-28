@@ -24,16 +24,8 @@ const (
 	StatusError Status = "error"
 )
 
-// Event represents an event in the orchestrator system
-type Event struct {
-	Type     string      `json:"type"`
-	Source   string      `json:"source"`
-	Data     interface{} `json:"data"`
-	Metadata interface{} `json:"metadata,omitempty"`
-}
-
-// EventHandler is a function that handles orchestrator events
-type EventHandler func(event Event)
+// Use Event and EventHandler from interfaces package
+// These are re-exported in eventbus.go
 
 // Orchestrator coordinates multiple agents to complete objectives
 type Orchestrator interface {

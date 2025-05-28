@@ -53,9 +53,9 @@ func (o *BaseOrchestrator) Start(ctx context.Context) error {
 			
 			// Emit error event
 			o.eventBus.Publish(Event{
-				Type:   EventOrchestratorError,
+				Type:   EventType(EventOrchestratorError),
 				Source: "orchestrator",
-				Data:   fmt.Sprintf("Dispatcher error: %v", err),
+				Data:   map[string]interface{}{"error": err.Error()},
 			})
 		}
 	}()
@@ -65,9 +65,9 @@ func (o *BaseOrchestrator) Start(ctx context.Context) error {
 	
 	// Emit started event
 	o.eventBus.Publish(Event{
-		Type:   EventOrchestratorStarted,
+		Type:   EventType(EventOrchestratorStarted),
 		Source: "orchestrator",
-		Data:   o.config,
+		Data:   map[string]interface{}{"config": o.config},
 	})
 
 	return nil
@@ -93,9 +93,9 @@ func (o *BaseOrchestrator) Stop(ctx context.Context) error {
 	
 	// Emit stopped event
 	o.eventBus.Publish(Event{
-		Type:   EventOrchestratorStopped,
+		Type:   EventType(EventOrchestratorStopped),
 		Source: "orchestrator",
-		Data:   nil,
+		Data:   map[string]interface{}{},
 	})
 
 	return nil
@@ -115,9 +115,9 @@ func (o *BaseOrchestrator) Pause(ctx context.Context) error {
 	
 	// Emit paused event
 	o.eventBus.Publish(Event{
-		Type:   EventOrchestratorPaused,
+		Type:   EventType(EventOrchestratorPaused),
 		Source: "orchestrator",
-		Data:   nil,
+		Data:   map[string]interface{}{},
 	})
 
 	return nil
@@ -137,9 +137,9 @@ func (o *BaseOrchestrator) Resume(ctx context.Context) error {
 	
 	// Emit resumed event
 	o.eventBus.Publish(Event{
-		Type:   EventOrchestratorResumed,
+		Type:   EventType(EventOrchestratorResumed),
 		Source: "orchestrator",
-		Data:   nil,
+		Data:   map[string]interface{}{},
 	})
 
 	return nil
@@ -159,12 +159,12 @@ func (o *BaseOrchestrator) AddAgent(agent agent.Agent) error {
 	defer o.mu.Unlock()
 
 	// Check if agent already exists
-	if _, exists := o.agents[agent.ID()]; exists {
-		return fmt.Errorf("agent %s already exists", agent.ID())
+	if _, exists := o.agents[agent.GetID()]; exists {
+		return fmt.Errorf("agent %s already exists", agent.GetID())
 	}
 
 	// Add agent to the orchestrator
-	o.agents[agent.ID()] = agent
+	o.agents[agent.GetID()] = agent
 	
 	// Add agent to the dispatcher
 	o.dispatcher.RegisterAgent(agent)
@@ -209,9 +209,9 @@ func (o *BaseOrchestrator) SetObjective(objective *objective.Objective) error {
 	
 	// Emit objective set event
 	o.eventBus.Publish(Event{
-		Type:   EventObjectiveSet,
+		Type:   EventType(EventObjectiveSet),
 		Source: "orchestrator",
-		Data: map[string]string{
+		Data: map[string]interface{}{
 			"objective_id":    objective.ID,
 			"objective_title": objective.Title,
 		},

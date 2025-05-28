@@ -107,7 +107,8 @@ func (m *MockMemoryStore) List(ctx context.Context, bucket string) ([]string, er
 
 	bucketData, ok := m.data[bucket]
 	if !ok {
-		return nil, memory.StoreError{Message: "bucket not found"}
+		// Return empty list for non-existent bucket instead of error
+		return []string{}, nil
 	}
 
 	keys := make([]string, 0, len(bucketData))
@@ -131,7 +132,8 @@ func (m *MockMemoryStore) ListKeys(ctx context.Context, bucket, prefix string) (
 
 	bucketData, ok := m.data[bucket]
 	if !ok {
-		return nil, memory.StoreError{Message: "bucket not found"}
+		// Return empty list for non-existent bucket instead of error
+		return []string{}, nil
 	}
 
 	keys := make([]string, 0)

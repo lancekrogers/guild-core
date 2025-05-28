@@ -38,7 +38,7 @@ This is the goal section.
 Some notes about the objective.
 `,
 			expectedTitle: "Test Objective",
-			expectedParts: 3, // Context, Goal, Notes (Implementation becomes tasks)
+			expectedParts: 4, // Context, Goal, Implementation, Notes
 			expectedTasks: 3,
 		},
 		{
@@ -69,7 +69,7 @@ This feature is needed because...
 5. Document the feature
 `,
 			expectedTitle: "Feature Implementation",
-			expectedParts: 2, // Background, Acceptance Criteria
+			expectedParts: 3, // Background, Acceptance Criteria, Tasks
 			expectedTasks: 5,
 		},
 	}
@@ -89,6 +89,9 @@ This feature is needed because...
 			
 			if len(objective.Parts) != tc.expectedParts {
 				t.Errorf("Expected %d parts, got %d", tc.expectedParts, len(objective.Parts))
+				for i, part := range objective.Parts {
+					t.Logf("Part %d: Title=%s, Type=%s", i, part.Title, part.Type)
+				}
 			}
 			
 			if len(objective.Tasks) != tc.expectedTasks {

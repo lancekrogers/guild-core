@@ -5,7 +5,6 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
-	"time"
 	
 	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
 )
@@ -20,8 +19,8 @@ func setupTestManager(t *testing.T) (*Manager, func()) {
 	// Create a temporary database file
 	dbPath := filepath.Join(tempDir, "test.db")
 	
-	// Create a BoltDB store
-	store, err := boltdb.NewStore(dbPath)
+	// Create a BoltDB store with objectives bucket
+	store, err := boltdb.NewStore(dbPath, boltdb.WithCustomBuckets("objectives"))
 	if err != nil {
 		os.RemoveAll(tempDir)
 		t.Fatalf("Failed to create BoltDB store: %v", err)

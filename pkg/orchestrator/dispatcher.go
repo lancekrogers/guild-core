@@ -12,22 +12,24 @@ import (
 
 // TaskDispatcher is responsible for assigning tasks to agents
 type TaskDispatcher struct {
-	kanbanManager *kanban.Manager
-	agentFactory  *agent.Factory
+	kanbanManager KanbanManager
+	agentFactory  AgentFactory
 	agentPool     map[string]agent.Agent
 	activeAgents  map[string]agent.Agent
+	agentTasks    map[string]*kanban.Task // Maps agent ID to their current task
 	maxAgents     int
 	mu            sync.Mutex
 	eventBus      *EventBus
 }
 
 // NewTaskDispatcher creates a new task dispatcher
-func NewTaskDispatcher(kanbanManager *kanban.Manager, agentFactory *agent.Factory, eventBus *EventBus, maxAgents int) *TaskDispatcher {
+func NewTaskDispatcher(kanbanManager KanbanManager, agentFactory AgentFactory, eventBus *EventBus, maxAgents int) *TaskDispatcher {
 	return &TaskDispatcher{
 		kanbanManager: kanbanManager,
 		agentFactory:  agentFactory,
 		agentPool:     make(map[string]agent.Agent),
 		activeAgents:  make(map[string]agent.Agent),
+		agentTasks:    make(map[string]*kanban.Task),
 		maxAgents:     maxAgents,
 		eventBus:      eventBus,
 	}
@@ -38,16 +40,15 @@ func (d *TaskDispatcher) RegisterAgent(agent agent.Agent) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
-	d.agentPool[agent.ID()] = agent
+	d.agentPool[agent.GetID()] = agent
 	
 	// Emit agent added event
 	d.eventBus.Publish(Event{
-		Type:   EventAgentAdded,
+		Type:   EventType(EventAgentAdded),
 		Source: "dispatcher",
-		Data:   agent.ID(),
-		Metadata: map[string]string{
-			"agent_name": agent.Name(),
-			"agent_type": agent.Type(),
+		Data:   map[string]interface{}{
+			"agent_id":   agent.GetID(),
+			"agent_name": agent.GetName(),
 		},
 	})
 }
@@ -62,9 +63,9 @@ func (d *TaskDispatcher) UnregisterAgent(agentID string) {
 	
 	// Emit agent removed event
 	d.eventBus.Publish(Event{
-		Type:   EventAgentRemoved,
+		Type:   EventType(EventAgentRemoved),
 		Source: "dispatcher",
-		Data:   agentID,
+		Data:   map[string]interface{}{"agent_id": agentID},
 	})
 }
 
@@ -80,7 +81,8 @@ func (d *TaskDispatcher) DispatchTasks(ctx context.Context) error {
 	}
 
 	// Get todo tasks
-	tasks, err := d.kanbanManager.ListTasksByStatus(ctx, kanban.StatusTodo)
+	// TODO: The boardID should be configurable
+	tasks, err := d.kanbanManager.ListTasksByStatus(ctx, "default", kanban.StatusTodo)
 	if err != nil {
 		return fmt.Errorf("failed to list tasks: %w", err)
 	}
@@ -94,7 +96,7 @@ func (d *TaskDispatcher) DispatchTasks(ctx context.Context) error {
 	// Find available agents
 	var availableAgents []agent.Agent
 	for id, agent := range d.agentPool {
-		if _, active := d.activeAgents[id]; !active && agent.Status() == agent.StatusIdle {
+		if _, active := d.activeAgents[id]; !active {
 			availableAgents = append(availableAgents, agent)
 			if len(availableAgents) >= availableSlots {
 				break
@@ -110,28 +112,24 @@ func (d *TaskDispatcher) DispatchTasks(ctx context.Context) error {
 
 		agent := availableAgents[i]
 		
-		// Assign the task to the agent
-		if err := agent.AssignTask(ctx, task); err != nil {
-			// Log and continue with other tasks
-			fmt.Printf("Error assigning task %s to agent %s: %v\n", task.ID, agent.ID(), err)
-			continue
-		}
+		// Store task assignment
+		d.agentTasks[agent.GetID()] = task
 
 		// Mark the agent as active
-		d.activeAgents[agent.ID()] = agent
+		d.activeAgents[agent.GetID()] = agent
 		
 		// Update the task in the kanban board
-		if err := d.kanbanManager.UpdateTaskStatus(ctx, task.ID, kanban.StatusInProgress, agent.ID(), "Assigned to agent"); err != nil {
+		if err := d.kanbanManager.UpdateTaskStatus(ctx, task.ID, string(kanban.StatusInProgress), agent.GetID(), "Assigned to agent"); err != nil {
 			fmt.Printf("Error updating task status: %v\n", err)
 		}
 		
 		// Emit task assigned event
 		d.eventBus.Publish(Event{
-			Type:   EventTaskAssigned,
+			Type:   EventType(EventTaskAssigned),
 			Source: "dispatcher",
-			Data: map[string]string{
+			Data: map[string]interface{}{
 				"task_id":   task.ID,
-				"agent_id":  agent.ID(),
+				"agent_id":  agent.GetID(),
 				"task_title": task.Title,
 			},
 		})
@@ -158,35 +156,43 @@ func (d *TaskDispatcher) StartAgent(ctx context.Context, agentID string) error {
 		
 		// Emit agent started event
 		d.eventBus.Publish(Event{
-			Type:   EventAgentStarted,
+			Type:   EventType(EventAgentStarted),
 			Source: "dispatcher",
-			Data:   agentID,
+			Data:   map[string]interface{}{"agent_id": agentID},
 		})
 		
-		// Execute the agent
-		err := agent.Execute(execCtx)
+		// Get the task assigned to this agent
+		task, hasTask := d.agentTasks[agentID]
+		taskRequest := "Execute assigned task"
+		if hasTask && task != nil {
+			taskRequest = fmt.Sprintf("Task: %s\nDescription: %s", task.Title, task.Description)
+		}
+		
+		// Execute the agent with the task details
+		_, err := agent.Execute(execCtx, taskRequest)
 		
 		// Agent execution completed
 		d.mu.Lock()
 		delete(d.activeAgents, agentID)
+		delete(d.agentTasks, agentID)
 		d.mu.Unlock()
 		
 		if err != nil {
 			// Emit agent failed event
 			d.eventBus.Publish(Event{
-				Type:   EventAgentFailed,
+				Type:   EventType(EventAgentFailed),
 				Source: "dispatcher",
-				Data:   agentID,
-				Metadata: map[string]string{
-					"error": err.Error(),
+				Data: map[string]interface{}{
+					"agent_id": agentID,
+					"error":    err.Error(),
 				},
 			})
 		} else {
 			// Emit agent completed event
 			d.eventBus.Publish(Event{
-				Type:   EventAgentCompleted,
+				Type:   EventType(EventAgentCompleted),
 				Source: "dispatcher",
-				Data:   agentID,
+				Data:   map[string]interface{}{"agent_id": agentID},
 			})
 		}
 	}()
@@ -214,7 +220,7 @@ func (d *TaskDispatcher) GetAvailableAgents() []agent.Agent {
 	
 	var agents []agent.Agent
 	for id, agent := range d.agentPool {
-		if _, active := d.activeAgents[id]; !active && agent.Status() == agent.StatusIdle {
+		if _, active := d.activeAgents[id]; !active {
 			agents = append(agents, agent)
 		}
 	}
@@ -239,13 +245,9 @@ func (d *TaskDispatcher) Run(ctx context.Context, interval time.Duration) error 
 			
 			// Start any agents that are ready
 			for _, agent := range d.GetActiveAgents() {
-				if agent.Status() == agent.StatusWorking {
-					// This agent is already working, check if it has a task
-					// This might need refinement depending on how agent status is tracked
-					if state := agent.GetState(); state != nil && state.CurrentTask != "" && state.Status == agent.StatusWorking {
-						// Agent has a task but might not be executing yet
-						d.StartAgent(ctx, agent.ID())
-					}
+				if _, isActive := d.activeAgents[agent.GetID()]; isActive {
+					// Agent is active, start execution
+					d.StartAgent(ctx, agent.GetID())
 				}
 			}
 		}
