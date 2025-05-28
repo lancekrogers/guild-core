@@ -1,7 +1,8 @@
 package interfaces
 
-// EmbeddingRequest represents a request for text embeddings
-type EmbeddingRequest struct {
+// LegacyEmbeddingRequest represents a legacy request for text embeddings
+// Deprecated: Use EmbeddingRequest from ai_provider.go instead
+type LegacyEmbeddingRequest struct {
 	Input []string `json:"input"`
 	Text  string   `json:"text,omitempty"`   // Single text version
 	Texts []string `json:"texts,omitempty"`  // Multiple texts version
@@ -9,8 +10,9 @@ type EmbeddingRequest struct {
 	User  string   `json:"user,omitempty"`
 }
 
-// EmbeddingResponse represents a response from an embedding request
-type EmbeddingResponse struct {
+// LegacyEmbeddingResponse represents a legacy response from an embedding request
+// Deprecated: Use EmbeddingResponse from ai_provider.go instead
+type LegacyEmbeddingResponse struct {
 	Object    string            `json:"object"`
 	Data      []EmbeddingData   `json:"data"`
 	Model     string            `json:"model"`

@@ -1,134 +1,313 @@
 package anthropic
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
-// Latest Anthropic Claude models as of 2025
-var SupportedModels = map[string]ModelInfo{
-	// Claude 4 Series (Latest - Released May 2025)
-	"claude-4-opus":  {Name: "claude-4-opus", Type: "reasoning", MaxTokens: 200000, InputPrice: 15.0, OutputPrice: 75.0},
-	"claude-4-sonnet": {Name: "claude-4-sonnet", Type: "text", MaxTokens: 200000, InputPrice: 3.0, OutputPrice: 15.0},
+// Latest Anthropic Claude models as of May 2025
+const (
+	// Claude 4 Series
+	Claude4Opus   = "claude-4-opus"   // $15/$75 per million tokens, 200K context
+	Claude4Sonnet = "claude-4-sonnet" // $3/$15 per million tokens, 200K context
 
-	// Claude 3.7 Series (Hybrid Reasoning - Released February 2025)
-	"claude-3.7-sonnet": {Name: "claude-3.7-sonnet", Type: "hybrid-reasoning", MaxTokens: 200000, InputPrice: 3.0, OutputPrice: 15.0},
+	// Claude 3.5 Series
+	Claude35Haiku = "claude-3-haiku-20241022" // $1/$5 per million tokens, 200K context
+)
 
-	// Claude 3 Series (Previous Generation - Still Available)
-	"claude-3-5-sonnet-20241022": {Name: "claude-3-5-sonnet-20241022", Type: "text", MaxTokens: 200000, InputPrice: 3.0, OutputPrice: 15.0},
-	"claude-3-5-haiku-20241022":  {Name: "claude-3-5-haiku-20241022", Type: "text", MaxTokens: 200000, InputPrice: 0.8, OutputPrice: 4.0},
-	"claude-3-opus-20240229":     {Name: "claude-3-opus-20240229", Type: "text", MaxTokens: 200000, InputPrice: 15.0, OutputPrice: 75.0},
-}
-
-// ModelInfo contains information about a Claude model
-type ModelInfo struct {
-	Name        string  // Model name
-	Type        string  // Model type: text, reasoning, hybrid-reasoning
-	MaxTokens   int     // Maximum context length
-	InputPrice  float64 // Price per million input tokens
-	OutputPrice float64 // Price per million output tokens
-}
-
-// Client implements the LLMClient interface for Anthropic
+// Client implements the AIProvider interface for Anthropic
 type Client struct {
-	apiKey string
-	model  string
+	apiKey       string
+	baseURL      string
+	client       *http.Client
+	capabilities interfaces.ProviderCapabilities
 }
 
-// NewClient creates a new Anthropic client with model validation
-func NewClient(apiKey, model string) *Client {
-	// Use default model if none specified
-	if model == "" {
-		model = "claude-4-sonnet" // Latest default
+// NewClient creates a new Anthropic client
+func NewClient(apiKey string) *Client {
+	if apiKey == "" {
+		apiKey = os.Getenv("ANTHROPIC_API_KEY")
 	}
 
-	// Validate model exists
-	if _, exists := SupportedModels[model]; !exists {
-		// Use fallback model if invalid model specified
-		model = "claude-4-sonnet"
+	capabilities := interfaces.ProviderCapabilities{
+		MaxTokens:      200000,
+		ContextWindow:  200000,
+		SupportsVision: true,
+		SupportsTools:  true,
+		SupportsStream: true,
+		Models: []interfaces.ModelInfo{
+			{
+				ID:            Claude4Opus,
+				Name:          "Claude 4 Opus",
+				ContextWindow: 200000,
+				MaxOutput:     32768,
+				InputCost:     15.0,
+				OutputCost:    75.0,
+			},
+			{
+				ID:            Claude4Sonnet,
+				Name:          "Claude 4 Sonnet",
+				ContextWindow: 200000,
+				MaxOutput:     64000,
+				InputCost:     3.0,
+				OutputCost:    15.0,
+			},
+			{
+				ID:            Claude35Haiku,
+				Name:          "Claude 3.5 Haiku",
+				ContextWindow: 200000,
+				MaxOutput:     8192,
+				InputCost:     1.0,
+				OutputCost:    5.0,
+			},
+		},
 	}
 
 	return &Client{
-		apiKey: apiKey,
-		model:  model,
+		apiKey:       apiKey,
+		baseURL:      "https://api.anthropic.com/v1",
+		client:       &http.Client{Timeout: 2 * time.Minute},
+		capabilities: capabilities,
 	}
 }
 
-// Complete generates a completion for the given prompt
-func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
-	return fmt.Sprintf("Claude %s response for prompt: %s", c.model, prompt), nil
-}
+// ChatCompletion implements the AIProvider interface
+func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest) (*interfaces.ChatResponse, error) {
+	// Convert messages to Anthropic format
+	anthropicMessages := make([]map[string]interface{}, 0)
+	systemPrompt := ""
 
-// GetModel returns the current model being used
-func (c *Client) GetModel() string {
-	return c.model
-}
-
-// GetModelInfo returns information about the current model
-func (c *Client) GetModelInfo() (ModelInfo, bool) {
-	info, exists := SupportedModels[c.model]
-	return info, exists
-}
-
-// ListSupportedModels returns all supported Anthropic models
-func ListSupportedModels() map[string]ModelInfo {
-	return SupportedModels
-}
-
-// GetModelsByType returns models of a specific type
-func GetModelsByType(modelType string) map[string]ModelInfo {
-	filtered := make(map[string]ModelInfo)
-	for name, info := range SupportedModels {
-		if info.Type == modelType {
-			filtered[name] = info
+	for _, msg := range req.Messages {
+		if msg.Role == "system" {
+			// Anthropic uses a separate system parameter
+			systemPrompt = msg.Content
+		} else {
+			anthropicMessages = append(anthropicMessages, map[string]interface{}{
+				"role":    msg.Role,
+				"content": msg.Content,
+			})
 		}
 	}
-	return filtered
+
+	// Build Anthropic request
+	anthropicReq := map[string]interface{}{
+		"model":     req.Model,
+		"messages":  anthropicMessages,
+		"max_tokens": 4096, // Default if not specified
+	}
+
+	if systemPrompt != "" {
+		anthropicReq["system"] = systemPrompt
+	}
+
+	if req.MaxTokens > 0 {
+		anthropicReq["max_tokens"] = req.MaxTokens
+	}
+	if req.Temperature > 0 {
+		anthropicReq["temperature"] = req.Temperature
+	}
+	if req.TopP > 0 {
+		anthropicReq["top_p"] = req.TopP
+	}
+	if len(req.Stop) > 0 {
+		anthropicReq["stop_sequences"] = req.Stop
+	}
+
+	// Make request
+	respBody, err := c.makeRequest(ctx, "messages", anthropicReq)
+	if err != nil {
+		return nil, err
+	}
+
+	// Parse Anthropic response
+	var anthropicResp struct {
+		ID           string `json:"id"`
+		Type         string `json:"type"`
+		Role         string `json:"role"`
+		Model        string `json:"model"`
+		Content      []struct {
+			Type string `json:"type"`
+			Text string `json:"text"`
+		} `json:"content"`
+		StopReason   string `json:"stop_reason"`
+		StopSequence string `json:"stop_sequence"`
+		Usage        struct {
+			InputTokens  int `json:"input_tokens"`
+			OutputTokens int `json:"output_tokens"`
+		} `json:"usage"`
+	}
+
+	if err := json.Unmarshal(respBody, &anthropicResp); err != nil {
+		return nil, fmt.Errorf("failed to parse Anthropic response: %w", err)
+	}
+
+	// Convert to our format
+	content := ""
+	for _, c := range anthropicResp.Content {
+		if c.Type == "text" {
+			content += c.Text
+		}
+	}
+
+	return &interfaces.ChatResponse{
+		ID:    anthropicResp.ID,
+		Model: anthropicResp.Model,
+		Choices: []interfaces.ChatChoice{
+			{
+				Index: 0,
+				Message: interfaces.ChatMessage{
+					Role:    "assistant",
+					Content: content,
+				},
+				FinishReason: anthropicResp.StopReason,
+			},
+		},
+		Usage: interfaces.UsageInfo{
+			PromptTokens:     anthropicResp.Usage.InputTokens,
+			CompletionTokens: anthropicResp.Usage.OutputTokens,
+			TotalTokens:      anthropicResp.Usage.InputTokens + anthropicResp.Usage.OutputTokens,
+		},
+	}, nil
+}
+
+// StreamChatCompletion implements streaming for Anthropic
+func (c *Client) StreamChatCompletion(ctx context.Context, req interfaces.ChatRequest) (interfaces.ChatStream, error) {
+	// TODO: Implement Anthropic streaming (uses SSE format)
+	return nil, fmt.Errorf("streaming not yet implemented for Anthropic")
+}
+
+// CreateEmbedding implements the AIProvider interface
+func (c *Client) CreateEmbedding(ctx context.Context, req interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
+	// Note: Anthropic doesn't provide embeddings API
+	// You would need to use a different provider for embeddings
+	return nil, fmt.Errorf("Anthropic does not support embeddings - use OpenAI or another provider")
+}
+
+// GetCapabilities returns provider capabilities
+func (c *Client) GetCapabilities() interfaces.ProviderCapabilities {
+	return c.capabilities
+}
+
+// makeRequest makes an HTTP request to the Anthropic API
+func (c *Client) makeRequest(ctx context.Context, endpoint string, payload interface{}) ([]byte, error) {
+	data, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	url := fmt.Sprintf("%s/%s", c.baseURL, endpoint)
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err
+	}
+
+	// Anthropic uses different headers
+	req.Header.Set("x-api-key", c.apiKey)
+	req.Header.Set("anthropic-version", "2023-06-01")
+	req.Header.Set("content-type", "application/json")
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, c.parseError(resp.StatusCode, body)
+	}
+
+	return body, nil
+}
+
+// parseError parses Anthropic API error responses
+func (c *Client) parseError(statusCode int, body []byte) error {
+	err := &interfaces.ProviderError{
+		Provider:   "anthropic",
+		StatusCode: statusCode,
+	}
+
+	// Try to parse Anthropic error format
+	var errorResp struct {
+		Error struct {
+			Type    string `json:"type"`
+			Message string `json:"message"`
+		} `json:"error"`
+	}
+
+	if json.Unmarshal(body, &errorResp) == nil && errorResp.Error.Message != "" {
+		err.Message = errorResp.Error.Message
+		err.Type = errorResp.Error.Type
+	} else {
+		err.Message = string(body)
+	}
+
+	// Determine if retryable based on status code
+	switch statusCode {
+	case 401, 403:
+		err.Type = interfaces.ErrorTypeAuth
+		err.Retryable = false
+	case 429:
+		err.Type = interfaces.ErrorTypeRateLimit
+		err.Retryable = true
+	case 500, 502, 503, 504:
+		err.Type = interfaces.ErrorTypeServer
+		err.Retryable = true
+	default:
+		if err.Type == "" {
+			err.Type = interfaces.ErrorTypeUnknown
+		}
+		err.Retryable = false
+	}
+
+	return err
 }
 
 // GetRecommendedModel returns a recommended model for a given use case
 func GetRecommendedModel(useCase string) string {
 	switch useCase {
 	case "coding":
-		return "claude-4-opus" // Best for coding according to Anthropic
+		return Claude4Opus // Best for coding
 	case "reasoning":
-		return "claude-4-opus" // Latest reasoning model
-	case "hybrid-reasoning":
-		return "claude-3.7-sonnet" // Hybrid reasoning capabilities
+		return Claude4Opus // Best reasoning
 	case "cost-efficient":
-		return "claude-3-5-haiku-20241022" // Most cost-efficient
+		return Claude35Haiku // Most cost-efficient
 	case "general":
-		return "claude-4-sonnet" // Balanced performance
+		return Claude4Sonnet // Balanced
 	default:
-		return "claude-4-sonnet" // General purpose default
+		return Claude4Sonnet // Default
 	}
 }
 
-// CreateCompletion is a lower-level method to create a completion
-func (c *Client) CreateCompletion(ctx context.Context, req *interfaces.CompletionRequest) (*interfaces.CompletionResponse, error) {
-	return &interfaces.CompletionResponse{
-		Text: fmt.Sprintf("Stub response for prompt: %s", req.Prompt),
-		TokensUsed: 10,
-		TokensInput: 5,
-		TokensOutput: 5,
-		ModelUsed: c.model,
-	}, nil
-}
+// Legacy LLMClient interface support
+func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
+	req := interfaces.ChatRequest{
+		Model: Claude4Sonnet, // Default model
+		Messages: []interfaces.ChatMessage{
+			{Role: "user", Content: prompt},
+		},
+	}
 
-// CreateEmbedding generates an embedding for the given text
-func (c *Client) CreateEmbedding(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
-	return &interfaces.EmbeddingResponse{
-		Embedding: []float32{0.1, 0.2, 0.3},
-		Dimensions: 3,
-	}, nil
-}
+	resp, err := c.ChatCompletion(ctx, req)
+	if err != nil {
+		return "", err
+	}
 
-// CreateEmbeddings generates embeddings for multiple texts
-func (c *Client) CreateEmbeddings(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
-	return &interfaces.EmbeddingResponse{
-		Embeddings: [][]float32{{0.1, 0.2, 0.3}, {0.4, 0.5, 0.6}},
-		Dimensions: 3,
-	}, nil
+	if len(resp.Choices) > 0 {
+		return resp.Choices[0].Message.Content, nil
+	}
+
+	return "", nil
 }

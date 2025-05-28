@@ -2,141 +2,157 @@ package openai
 
 import (
 	"context"
-	"fmt"
+	"os"
 
+	"github.com/guild-ventures/guild-core/pkg/providers/base"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
-// Latest OpenAI models as of 2025
-var SupportedModels = map[string]ModelInfo{
-	// GPT-4.1 Series (Latest - Released April 2025)
-	"gpt-4.1":      {Name: "gpt-4.1", Type: "text", MaxTokens: 1000000, InputPrice: 2.0, OutputPrice: 8.0},
-	"gpt-4.1-mini": {Name: "gpt-4.1-mini", Type: "text", MaxTokens: 1000000, InputPrice: 0.4, OutputPrice: 1.6},
-	"gpt-4.1-nano": {Name: "gpt-4.1-nano", Type: "text", MaxTokens: 1000000, InputPrice: 0.1, OutputPrice: 0.4},
+// Latest OpenAI models as of May 2025
+const (
+	// GPT-4.1 Series (1M context)
+	GPT41     = "gpt-4.1"      // $10/$30 per million tokens
+	GPT41Mini = "gpt-4.1-mini" // $1/$4 per million tokens
+	GPT41Nano = "gpt-4.1-nano" // $0.25/$1 per million tokens
 
 	// GPT-4o Series (Multimodal)
-	"gpt-4o":      {Name: "gpt-4o", Type: "multimodal", MaxTokens: 128000, InputPrice: 2.5, OutputPrice: 10.0},
-	"gpt-4o-mini": {Name: "gpt-4o-mini", Type: "multimodal", MaxTokens: 128000, InputPrice: 0.15, OutputPrice: 0.6},
+	GPT4o     = "gpt-4o"      // 128K context, multimodal
+	GPT4oMini = "gpt-4o-mini" // 128K context, cost-efficient
 
-	// o1 Series (Reasoning Models)
-	"o1":      {Name: "o1", Type: "reasoning", MaxTokens: 200000, InputPrice: 15.0, OutputPrice: 60.0},
-	"o1-mini": {Name: "o1-mini", Type: "reasoning", MaxTokens: 65536, InputPrice: 3.0, OutputPrice: 12.0},
+	// O3 Series (Advanced Reasoning)
+	O3     = "o3"      // 200K context, $200/$800 per million tokens
+	O3Mini = "o3-mini" // 200K context, reasoning
 
-	// o3/o4 Series (Latest Reasoning)
-	"o3-mini": {Name: "o3-mini", Type: "reasoning", MaxTokens: 200000, InputPrice: 1.0, OutputPrice: 5.0},
-	"o4-mini": {Name: "o4-mini", Type: "reasoning", MaxTokens: 200000, InputPrice: 0.5, OutputPrice: 2.0},
+	// Embedding Models
+	TextEmbedding3Small = "text-embedding-3-small"
+	TextEmbedding3Large = "text-embedding-3-large"
+)
 
-	// Real-time Audio Models
-	"gpt-4o-mini-realtime-preview": {Name: "gpt-4o-mini-realtime-preview", Type: "audio", MaxTokens: 128000, InputPrice: 0.15, OutputPrice: 0.6},
-}
-
-// ModelInfo contains information about a model
-type ModelInfo struct {
-	Name        string  // Model name
-	Type        string  // Model type: text, multimodal, reasoning, audio
-	MaxTokens   int     // Maximum context length
-	InputPrice  float64 // Price per million input tokens
-	OutputPrice float64 // Price per million output tokens
-}
-
-// Client implements the LLMClient interface for OpenAI
+// Client implements the AIProvider interface for OpenAI
 type Client struct {
-	apiKey string
-	model  string
+	*base.OpenAICompatibleProvider
 }
 
-// NewClient creates a new OpenAI client with model validation
-func NewClient(apiKey, model string) *Client {
-	// Use default model if none specified
-	if model == "" {
-		model = "gpt-4.1" // Latest default
+// NewClient creates a new OpenAI client
+func NewClient(apiKey string) *Client {
+	if apiKey == "" {
+		apiKey = os.Getenv("OPENAI_API_KEY")
 	}
 
-	// Validate model exists
-	if _, exists := SupportedModels[model]; !exists {
-		// Use fallback model if invalid model specified
-		model = "gpt-4.1"
+	capabilities := interfaces.ProviderCapabilities{
+		MaxTokens:      1000000,
+		ContextWindow:  1000000,
+		SupportsVision: true,
+		SupportsTools:  true,
+		SupportsStream: true,
+		Models: []interfaces.ModelInfo{
+			{
+				ID:            GPT41,
+				Name:          "GPT-4.1",
+				ContextWindow: 1000000,
+				MaxOutput:     32768,
+				InputCost:     10.0,
+				OutputCost:    30.0,
+			},
+			{
+				ID:            GPT41Mini,
+				Name:          "GPT-4.1 Mini",
+				ContextWindow: 1000000,
+				MaxOutput:     32768,
+				InputCost:     1.0,
+				OutputCost:    4.0,
+			},
+			{
+				ID:            GPT41Nano,
+				Name:          "GPT-4.1 Nano",
+				ContextWindow: 1000000,
+				MaxOutput:     32768,
+				InputCost:     0.25,
+				OutputCost:    1.0,
+			},
+			{
+				ID:            GPT4o,
+				Name:          "GPT-4o",
+				ContextWindow: 128000,
+				MaxOutput:     16384,
+				InputCost:     2.5,
+				OutputCost:    10.0,
+			},
+			{
+				ID:            GPT4oMini,
+				Name:          "GPT-4o Mini",
+				ContextWindow: 128000,
+				MaxOutput:     16384,
+				InputCost:     0.15,
+				OutputCost:    0.6,
+			},
+			{
+				ID:            O3,
+				Name:          "O3",
+				ContextWindow: 200000,
+				MaxOutput:     32768,
+				InputCost:     200.0,
+				OutputCost:    800.0,
+			},
+			{
+				ID:            O3Mini,
+				Name:          "O3 Mini",
+				ContextWindow: 200000,
+				MaxOutput:     32768,
+				InputCost:     50.0,
+				OutputCost:    200.0,
+			},
+		},
 	}
+
+	provider := base.NewOpenAICompatibleProvider(
+		"openai",
+		apiKey,
+		"https://api.openai.com/v1",
+		nil, // No model mapping needed for OpenAI
+		capabilities,
+	)
 
 	return &Client{
-		apiKey: apiKey,
-		model:  model,
+		OpenAICompatibleProvider: provider,
 	}
-}
-
-// Complete generates a completion for the given prompt
-func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
-	return fmt.Sprintf("OpenAI %s response for prompt: %s", c.model, prompt), nil
-}
-
-// GetModel returns the current model being used
-func (c *Client) GetModel() string {
-	return c.model
-}
-
-// GetModelInfo returns information about the current model
-func (c *Client) GetModelInfo() (ModelInfo, bool) {
-	info, exists := SupportedModels[c.model]
-	return info, exists
-}
-
-// ListSupportedModels returns all supported OpenAI models
-func ListSupportedModels() map[string]ModelInfo {
-	return SupportedModels
-}
-
-// GetModelsByType returns models of a specific type
-func GetModelsByType(modelType string) map[string]ModelInfo {
-	filtered := make(map[string]ModelInfo)
-	for name, info := range SupportedModels {
-		if info.Type == modelType {
-			filtered[name] = info
-		}
-	}
-	return filtered
 }
 
 // GetRecommendedModel returns a recommended model for a given use case
 func GetRecommendedModel(useCase string) string {
 	switch useCase {
 	case "coding":
-		return "gpt-4.1" // Best for coding as of 2025
+		return GPT41 // Best for coding as of 2025
 	case "reasoning":
-		return "o3-mini" // Latest reasoning model
+		return O3Mini // Advanced reasoning
 	case "multimodal":
-		return "gpt-4o" // Best multimodal
+		return GPT4o // Best multimodal
 	case "cost-efficient":
-		return "gpt-4.1-nano" // Most cost-efficient
-	case "audio":
-		return "gpt-4o-mini-realtime-preview"
+		return GPT41Nano // Most cost-efficient
+	case "general":
+		return GPT41Mini // Balanced price/performance
 	default:
-		return "gpt-4.1" // General purpose default
+		return GPT41Mini // Default
 	}
 }
 
-// CreateCompletion is a lower-level method to create a completion
-func (c *Client) CreateCompletion(ctx context.Context, req *interfaces.CompletionRequest) (*interfaces.CompletionResponse, error) {
-	return &interfaces.CompletionResponse{
-		Text: fmt.Sprintf("Stub response for prompt: %s", req.Prompt),
-		TokensUsed: 10,
-		TokensInput: 5,
-		TokensOutput: 5,
-		ModelUsed: c.model,
-	}, nil
-}
+// Legacy LLMClient interface support
+func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
+	req := interfaces.ChatRequest{
+		Model: GPT41Mini, // Default model
+		Messages: []interfaces.ChatMessage{
+			{Role: "user", Content: prompt},
+		},
+	}
 
-// CreateEmbedding generates an embedding for the given text
-func (c *Client) CreateEmbedding(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
-	return &interfaces.EmbeddingResponse{
-		Embedding: []float32{0.1, 0.2, 0.3},
-		Dimensions: 3,
-	}, nil
-}
+	resp, err := c.ChatCompletion(ctx, req)
+	if err != nil {
+		return "", err
+	}
 
-// CreateEmbeddings generates embeddings for multiple texts
-func (c *Client) CreateEmbeddings(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
-	return &interfaces.EmbeddingResponse{
-		Embeddings: [][]float32{{0.1, 0.2, 0.3}, {0.4, 0.5, 0.6}},
-		Dimensions: 3,
-	}, nil
+	if len(resp.Choices) > 0 {
+		return resp.Choices[0].Message.Content, nil
+	}
+
+	return "", nil
 }

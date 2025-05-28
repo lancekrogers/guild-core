@@ -18,4 +18,13 @@ const (
 	
 	// ProviderClaudeCode represents the Claude Code provider
 	ProviderClaudeCode ProviderType = "claude-code"
+	
+	// ProviderDeepSeek represents the DeepSeek provider
+	ProviderDeepSeek ProviderType = "deepseek"
+	
+	// ProviderDeepInfra represents the DeepInfra provider
+	ProviderDeepInfra ProviderType = "deepinfra"
+	
+	// ProviderOra represents the Ora provider
+	ProviderOra ProviderType = "ora"
 )

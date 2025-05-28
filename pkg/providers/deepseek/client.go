@@ -2,92 +2,112 @@ package deepseek
 
 import (
 	"context"
-	"fmt"
+	"os"
 
+	"github.com/guild-ventures/guild-core/pkg/providers/base"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
-// DeepSeekClient implements the LLMClient interface for DeepSeek models
-type DeepSeekClient struct {
-	apiKey     string
-	apiURL     string
-	modelName  string
-	maxTokens  int
+// DeepSeek models
+const (
+	DeepSeekChat     = "deepseek-chat"     // V3, general purpose
+	DeepSeekReasoner = "deepseek-reasoner" // R1, chain-of-thought reasoning
+)
+
+// Client implements the AIProvider interface for DeepSeek
+type Client struct {
+	*base.OpenAICompatibleProvider
 }
 
 // NewClient creates a new DeepSeek client
-func NewClient(apiKey string) (*DeepSeekClient, error) {
+func NewClient(apiKey string) *Client {
 	if apiKey == "" {
-		return nil, fmt.Errorf("API key cannot be empty")
+		apiKey = os.Getenv("DEEPSEEK_API_KEY")
 	}
 
-	return &DeepSeekClient{
-		apiKey:     apiKey,
-		apiURL:     "https://api.deepseek.com/v1",
-		modelName:  "deepseek-chat",
-		maxTokens:  4096,
-	}, nil
-}
+	// Model mappings for OpenAI compatibility
+	modelMap := map[string]string{
+		"gpt-4":       DeepSeekChat,
+		"gpt-4-turbo": DeepSeekReasoner,
+		"gpt-3.5-turbo": DeepSeekChat,
+	}
 
-// Complete implements the LLMClient interface
-func (c *DeepSeekClient) Complete(ctx context.Context, req *interfaces.CompletionRequest) (*interfaces.CompletionResponse, error) {
-	// This is a placeholder implementation
-	return &interfaces.CompletionResponse{
-		Text:       "This is a placeholder response from DeepSeek",
-		TokensUsed: 10,
-		ModelUsed:  c.modelName,
-	}, nil
-}
+	capabilities := interfaces.ProviderCapabilities{
+		MaxTokens:      64000,
+		ContextWindow:  64000,
+		SupportsVision: false,
+		SupportsTools:  true,
+		SupportsStream: true,
+		Models: []interfaces.ModelInfo{
+			{
+				ID:            DeepSeekChat,
+				Name:          "DeepSeek Chat V3",
+				ContextWindow: 64000,
+				MaxOutput:     8192,
+				InputCost:     0.07,  // Cached price
+				OutputCost:    1.10,  // Per million tokens
+			},
+			{
+				ID:            DeepSeekReasoner,
+				Name:          "DeepSeek Reasoner R1",
+				ContextWindow: 64000,
+				MaxOutput:     8192,
+				InputCost:     0.55,
+				OutputCost:    2.19,
+			},
+		},
+	}
 
-// GetName returns the provider name
-func (c *DeepSeekClient) GetName() string {
-	return "deepseek"
-}
+	provider := base.NewOpenAICompatibleProvider(
+		"deepseek",
+		apiKey,
+		"https://api.deepseek.com/v1",
+		modelMap,
+		capabilities,
+	)
 
-// GetModelInfo returns information about the model
-func (c *DeepSeekClient) GetModelInfo() map[string]string {
-	return map[string]string{
-		"name":     c.modelName,
-		"provider": "DeepSeek",
+	return &Client{
+		OpenAICompatibleProvider: provider,
 	}
 }
 
-// GetModelList returns available models
-func (c *DeepSeekClient) GetModelList(ctx context.Context) ([]string, error) {
-	// Placeholder implementation
-	return []string{"deepseek-chat", "deepseek-coder"}, nil
-}
-
-// GetMaxTokens returns the maximum context size for the model
-func (c *DeepSeekClient) GetMaxTokens() int {
-	return c.maxTokens
-}
-
-// CreateEmbedding creates an embedding for the given text
-func (c *DeepSeekClient) CreateEmbedding(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
-	// Placeholder implementation
-	return &interfaces.EmbeddingResponse{
-		Embedding:  make([]float32, 1024),
-		Dimensions: 1024,
-		Model:      c.modelName + "-embedding",
-	}, nil
-}
-
-// CreateEmbeddings creates embeddings for multiple texts
-func (c *DeepSeekClient) CreateEmbeddings(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
-	// Placeholder implementation
-	embeddings := make([][]float32, len(req.Texts))
-	for i := range embeddings {
-		embeddings[i] = make([]float32, 1024)
+// GetRecommendedModel returns a recommended model for a given use case
+func GetRecommendedModel(useCase string) string {
+	switch useCase {
+	case "coding":
+		return DeepSeekChat // Good for coding tasks
+	case "reasoning":
+		return DeepSeekReasoner // Advanced reasoning
+	case "cost-efficient":
+		return DeepSeekChat // Very cost-efficient
+	default:
+		return DeepSeekChat // General purpose
 	}
-	return &interfaces.EmbeddingResponse{
-		Embeddings: embeddings,
-		Dimensions: 1024,
-		Model:      c.modelName + "-embedding",
-	}, nil
 }
 
-// GetEmbeddingDimension returns the dimension of embeddings from this provider
-func (c *DeepSeekClient) GetEmbeddingDimension(model string) int {
-	return 1024
+// Legacy LLMClient interface support
+func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
+	req := interfaces.ChatRequest{
+		Model: DeepSeekChat, // Default model
+		Messages: []interfaces.ChatMessage{
+			{Role: "user", Content: prompt},
+		},
+	}
+
+	resp, err := c.ChatCompletion(ctx, req)
+	if err != nil {
+		return "", err
+	}
+
+	if len(resp.Choices) > 0 {
+		return resp.Choices[0].Message.Content, nil
+	}
+
+	return "", nil
 }
+
+// Note: DeepSeek offers special pricing features:
+// - 50-75% off-peak discount (16:30-00:30 UTC)
+// - Cache hit pricing for repeated content
+// This implementation doesn't track these features automatically,
+// but they apply when using the API during off-peak hours.

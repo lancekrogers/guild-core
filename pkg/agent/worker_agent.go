@@ -54,7 +54,7 @@ func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (str
 	}
 	
 	// Execute the request with the LLM
-	response, err := a.LLMClient.Execute(ctx, request)
+	response, err := a.LLMClient.Complete(ctx, request)
 	if err != nil {
 		return "", fmt.Errorf("LLM execution failed: %w", err)
 	}
@@ -130,6 +130,7 @@ func (a *WorkerAgent) ExecuteWithTools(ctx context.Context, request string, allo
 			"agent_id": a.ID,
 			"input":    toolInput,
 			"output":   result.Output[:100], // Truncated for metadata
+			"cost":     fmt.Sprintf("%.4f", cost),
 		})
 		
 		// Incorporate tool result into response
