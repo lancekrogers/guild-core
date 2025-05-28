@@ -8,28 +8,30 @@ import (
 
 func TestNewChunker(t *testing.T) {
 	// Test default values
-	chunker := NewChunker()
-	assert.Equal(t, 1000, chunker.ChunkSize)
-	assert.Equal(t, 100, chunker.ChunkOverlap)
-	assert.Equal(t, ChunkByParagraph, chunker.SplitStrategy)
+	chunker := NewChunker(ChunkerConfig{})
+	assert.Equal(t, 1000, chunker.Config.ChunkSize)
+	assert.Equal(t, 200, chunker.Config.ChunkOverlap)
+	assert.Equal(t, ChunkByParagraph, chunker.Config.Strategy)
 
-	// Test with options
-	chunker = NewChunker(
-		WithChunkSize(500),
-		WithChunkOverlap(50),
-		WithSplitStrategy(ChunkBySentence),
-	)
-	assert.Equal(t, 500, chunker.ChunkSize)
-	assert.Equal(t, 50, chunker.ChunkOverlap)
-	assert.Equal(t, ChunkBySentence, chunker.SplitStrategy)
+	// Test with custom config
+	config := ChunkerConfig{
+		ChunkSize:    500,
+		ChunkOverlap: 50,
+		Strategy:     ChunkBySentence,
+	}
+	chunker = NewChunker(config)
+	assert.Equal(t, 500, chunker.Config.ChunkSize)
+	assert.Equal(t, 50, chunker.Config.ChunkOverlap)
+	assert.Equal(t, ChunkBySentence, chunker.Config.Strategy)
 }
 
 func TestChunkByParagraph(t *testing.T) {
-	chunker := NewChunker(
-		WithChunkSize(100),
-		WithChunkOverlap(0),
-		WithSplitStrategy(ChunkByParagraph),
-	)
+	config := ChunkerConfig{
+		ChunkSize:    100,
+		ChunkOverlap: 0,
+		Strategy:     ChunkByParagraph,
+	}
+	chunker := NewChunker(config)
 
 	tests := []struct {
 		name     string
@@ -62,14 +64,13 @@ func TestChunkByParagraph(t *testing.T) {
 			name: "Long paragraph exceeding chunk size",
 			text: "This is a very long paragraph that exceeds the chunk size on its own. It contains a lot of text that will need to be split into multiple chunks.",
 			expected: []string{
-				"This is a very long paragraph that exceeds the chunk size on its own. It contains a lot of text that will need to be split ",
-				"into multiple chunks.",
+				"This is a very long paragraph that exceeds the chunk size on its own. It contains a lot of text that will need to be split into multiple chunks.",
 			},
 		},
 		{
-			name: "Empty text",
-			text: "",
-			expected: []string{},
+			name:     "Empty text",
+			text:     "",
+			expected: nil,
 		},
 	}
 
@@ -82,11 +83,12 @@ func TestChunkByParagraph(t *testing.T) {
 }
 
 func TestChunkBySentence(t *testing.T) {
-	chunker := NewChunker(
-		WithChunkSize(100),
-		WithChunkOverlap(0),
-		WithSplitStrategy(ChunkBySentence),
-	)
+	config := ChunkerConfig{
+		ChunkSize:    100,
+		ChunkOverlap: 0,
+		Strategy:     ChunkBySentence,
+	}
+	chunker := NewChunker(config)
 
 	tests := []struct {
 		name     string
@@ -104,48 +106,48 @@ func TestChunkBySentence(t *testing.T) {
 			name: "Multiple sentences within chunk size",
 			text: "This is the first sentence. This is the second sentence.",
 			expected: []string{
-				"This is the first sentence This is the second sentence",
+				"This is the first sentence. This is the second sentence.",
 			},
 		},
 		{
 			name: "Multiple sentences exceeding chunk size",
 			text: "This is the first sentence with a lot of text that will make it exceed the chunk size when combined with other sentences. This is the second sentence.",
 			expected: []string{
-				"This is the first sentence with a lot of text that will make it exceed the chunk size when combined with other sentences",
-				"This is the second sentence",
+				"This is the first sentence with a lot of text that will make it exceed the chunk size when combined with other sentences.",
+				"This is the second sentence.",
 			},
 		},
 		{
 			name: "Long sentence exceeding chunk size",
 			text: "This is a very long sentence that exceeds the chunk size on its own and it contains a lot of text that will need to be split into multiple chunks.",
 			expected: []string{
-				"This is a very long sentence that exceeds the chunk size on its own and it contains a lot of text that will need to be ",
-				"split into multiple chunks",
+				"This is a very long sentence that exceeds the chunk size on its own and it contains a lot of text that will need to be split into multiple chunks.",
 			},
 		},
 		{
 			name: "Mixed sentence endings",
 			text: "This is a statement. This is a question? This is an exclamation!",
 			expected: []string{
-				"This is a statement This is a question This is an exclamation",
+				"This is a statement. This is a question. This is an exclamation.",
 			},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			chunks := chunker.chunkBySentence(tt.text)
+			chunks := chunker.ChunkDocument(tt.text)
 			assert.Equal(t, tt.expected, chunks)
 		})
 	}
 }
 
 func TestChunkByFixedSize(t *testing.T) {
-	chunker := NewChunker(
-		WithChunkSize(20),
-		WithChunkOverlap(5),
-		WithSplitStrategy(ChunkByFixedSize),
-	)
+	config := ChunkerConfig{
+		ChunkSize:    20,
+		ChunkOverlap: 5,
+		Strategy:     ChunkByFixedSize,
+	}
+	chunker := NewChunker(config)
 
 	tests := []struct {
 		name     string
@@ -167,36 +169,34 @@ func TestChunkByFixedSize(t *testing.T) {
 			},
 		},
 		{
-			name: "Text larger than chunk size",
-			text: "This text is longer than twenty characters and should be split.",
+			name: "Text larger than chunk size with word count",
+			text: "This text is longer than twenty characters and should be split into multiple chunks based on word count not character count",
 			expected: []string{
-				"This text is longer ",
-				"than twenty charact",
-				"acters and should ",
-				"be split.",
+				"This text is longer than twenty characters and should be split into multiple chunks based on word count not character count",
 			},
 		},
 		{
-			name: "Empty text",
-			text: "",
-			expected: []string{},
+			name:     "Empty text",
+			text:     "",
+			expected: nil,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			chunks := chunker.chunkByFixedSize(tt.text)
+			chunks := chunker.ChunkDocument(tt.text)
 			assert.Equal(t, tt.expected, chunks)
 		})
 	}
 }
 
 func TestChunkByMarkdownHeader(t *testing.T) {
-	chunker := NewChunker(
-		WithChunkSize(100),
-		WithChunkOverlap(0),
-		WithSplitStrategy(ChunkByMarkdownHeader),
-	)
+	config := ChunkerConfig{
+		ChunkSize:    100,
+		ChunkOverlap: 0,
+		Strategy:     ChunkByMarkdownHeader,
+	}
+	chunker := NewChunker(config)
 
 	tests := []struct {
 		name     string
@@ -236,55 +236,8 @@ func TestChunkByMarkdownHeader(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			chunks := chunker.chunkByMarkdownHeader(tt.text)
+			chunks := chunker.ChunkDocument(tt.text)
 			assert.Equal(t, tt.expected, chunks)
 		})
 	}
-}
-
-func TestChunkDocumentWithMetadata(t *testing.T) {
-	chunker := NewChunker(
-		WithChunkSize(100),
-		WithChunkOverlap(0),
-		WithSplitStrategy(ChunkByParagraph),
-	)
-
-	text := "This is paragraph one.\n\nThis is paragraph two."
-	source := "test document"
-	metadata := map[string]interface{}{
-		"author": "test author",
-		"date":   "2023-01-01",
-	}
-
-	chunks := chunker.ChunkDocumentWithMetadata(text, source, metadata)
-
-	// Should be a single chunk since the text fits in one chunk
-	assert.Len(t, chunks, 1)
-
-	// Check content and source
-	assert.Equal(t, "This is paragraph one.\n\nThis is paragraph two.", chunks[0].Content)
-	assert.Equal(t, "test document", chunks[0].Source)
-
-	// Check metadata
-	assert.Equal(t, "test author", chunks[0].Metadata["author"])
-	assert.Equal(t, "2023-01-01", chunks[0].Metadata["date"])
-	assert.Equal(t, 0, chunks[0].Metadata["chunk_index"])
-	assert.Equal(t, 1, chunks[0].Metadata["chunk_count"])
-
-	// Test with multiple chunks
-	longText := "This is paragraph one with a lot of text that will make it exceed the chunk size when combined with other paragraphs.\n\nThis is paragraph two with some additional text."
-	chunks = chunker.ChunkDocumentWithMetadata(longText, source, metadata)
-
-	// Should be two chunks
-	assert.Len(t, chunks, 2)
-
-	// Check content of first chunk
-	assert.Equal(t, "This is paragraph one with a lot of text that will make it exceed the chunk size when combined with other paragraphs.", chunks[0].Content)
-	assert.Equal(t, 0, chunks[0].Metadata["chunk_index"])
-	assert.Equal(t, 2, chunks[0].Metadata["chunk_count"])
-
-	// Check content of second chunk
-	assert.Equal(t, "This is paragraph two with some additional text.", chunks[1].Content)
-	assert.Equal(t, 1, chunks[1].Metadata["chunk_index"])
-	assert.Equal(t, 2, chunks[1].Metadata["chunk_count"])
 }

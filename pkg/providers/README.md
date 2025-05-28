@@ -13,9 +13,11 @@ This package provides a unified interface for interacting with multiple AI/LLM p
 - **Ora** - API support for DeepSeek models
 - **Mock** - Full-featured mock provider for testing
 
-⚠️ **Legacy/Pending Update:**
-- **Google** - Needs update to new AIProvider interface
-- **Claude Code** - MCP-based, different purpose
+✅ **Special Purpose Providers:**
+- **Claude Code** - CLI wrapper using claude-code-go SDK, supports MCP integration
+
+⚠️ **Not Yet Implemented:**
+- **Google** - Removed for now - needs AIProvider interface implementation (see README_GOOGLE_REMOVAL.md)
 
 ## Key Features
 

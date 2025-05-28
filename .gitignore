@@ -34,3 +34,7 @@ go.work.sum
 
 **/.claude/settings.local.json
 *.wip
+
+# Test artifacts
+.test-results.tmp
+.ci-test-results.json

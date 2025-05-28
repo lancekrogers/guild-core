@@ -19,8 +19,24 @@ func TestBoltChainManager_Implementation(t *testing.T) {
 // setupTestChainManager creates a test chain manager with a mock store
 func setupTestChainManager(t *testing.T) (*memory.BoltChainManager, *mocks.MockStore) {
 	mockStore := mocks.NewMockStore()
+	initBuckets(mockStore)
+	
 	manager := memory.NewBoltChainManager(mockStore)
 	return manager, mockStore
+}
+
+// initBuckets initializes the required buckets in the mock store
+func initBuckets(mockStore *mocks.MockStore) {
+	ctx := context.Background()
+	mockStore.Put(ctx, "prompt_chains", "_init", []byte{})
+	mockStore.Put(ctx, "prompt_chains_by_agent", "_init", []byte{})
+	mockStore.Put(ctx, "prompt_chains_by_task", "_init", []byte{})
+	
+	// Reset call counters after initialization
+	mockStore.PutCalls = 0
+	mockStore.GetCalls = 0
+	mockStore.DeleteCalls = 0
+	mockStore.ListCalls = 0
 }
 
 // TestCreateChain tests the CreateChain method
@@ -53,7 +69,7 @@ func TestCreateChain(t *testing.T) {
 	}
 
 	// Test with store error
-	mockStore.Reset()
+	mockStore.Reset(); initBuckets(mockStore)
 	mockStore.SetError("Put", errors.New("mock error"))
 
 	_, err = manager.CreateChain(ctx, agentID, taskID)
@@ -62,7 +78,7 @@ func TestCreateChain(t *testing.T) {
 	}
 
 	// Test with empty task ID (should still work, just not indexed by task)
-	mockStore.Reset()
+	mockStore.Reset(); initBuckets(mockStore)
 	chainID, err = manager.CreateChain(ctx, agentID, "")
 	if err != nil {
 		t.Fatalf("Failed to create chain with empty task ID: %v", err)
@@ -164,8 +180,11 @@ func TestAddMessage(t *testing.T) {
 		t.Fatalf("Failed to create test chain: %v", err)
 	}
 
-	// Reset mock store counters
-	mockStore.Reset()
+	// Reset mock store counters only, not the buckets
+	mockStore.PutCalls = 0
+	mockStore.GetCalls = 0
+	mockStore.DeleteCalls = 0
+	mockStore.ListCalls = 0
 
 	// Add a message
 	message := memory.Message{
@@ -207,7 +226,7 @@ func TestAddMessage(t *testing.T) {
 	}
 
 	// Test with non-existent chain ID
-	mockStore.Reset()
+	mockStore.Reset(); initBuckets(mockStore)
 	mockStore.SetError("Get", memory.ErrNotFound)
 	err = manager.AddMessage(ctx, "non-existent", message)
 	if err == nil {
@@ -215,7 +234,7 @@ func TestAddMessage(t *testing.T) {
 	}
 
 	// Test with message without timestamp (should auto-set)
-	mockStore.Reset()
+	mockStore.Reset(); initBuckets(mockStore)
 	messageNoTimestamp := memory.Message{
 		Role:    "user",
 		Content: "message without timestamp",
@@ -263,8 +282,11 @@ func TestGetChainsByAgent(t *testing.T) {
 		}
 	}
 
-	// Reset mock store counters
-	mockStore.Reset()
+	// Reset mock store counters only, not the buckets
+	mockStore.PutCalls = 0
+	mockStore.GetCalls = 0
+	mockStore.DeleteCalls = 0
+	mockStore.ListCalls = 0
 
 	// Get chains by agent
 	chains, err := manager.GetChainsByAgent(ctx, agentID)
@@ -290,7 +312,7 @@ func TestGetChainsByAgent(t *testing.T) {
 	}
 
 	// Test with non-existent agent ID
-	mockStore.Reset()
+	mockStore.Reset(); initBuckets(mockStore)
 	mockStore.SetError("ListKeys", nil) // No error, just empty result
 	chains, err = manager.GetChainsByAgent(ctx, "non-existent")
 	if err != nil {
@@ -328,8 +350,11 @@ func TestGetChainsByTask(t *testing.T) {
 		}
 	}
 
-	// Reset mock store counters
-	mockStore.Reset()
+	// Reset mock store counters only, not the buckets
+	mockStore.PutCalls = 0
+	mockStore.GetCalls = 0
+	mockStore.DeleteCalls = 0
+	mockStore.ListCalls = 0
 
 	// Get chains by task
 	chains, err := manager.GetChainsByTask(ctx, taskID)
@@ -355,7 +380,7 @@ func TestGetChainsByTask(t *testing.T) {
 	}
 
 	// Test with non-existent task ID
-	mockStore.Reset()
+	mockStore.Reset(); initBuckets(mockStore)
 	mockStore.SetError("ListKeys", nil) // No error, just empty result
 	chains, err = manager.GetChainsByTask(ctx, "non-existent")
 	if err != nil {
@@ -416,8 +441,11 @@ func TestBuildContext(t *testing.T) {
 		}
 	}
 
-	// Reset mock store counters
-	mockStore.Reset()
+	// Reset mock store counters only, not the buckets
+	mockStore.PutCalls = 0
+	mockStore.GetCalls = 0
+	mockStore.DeleteCalls = 0
+	mockStore.ListCalls = 0
 
 	// Build context with no token limit
 	contextMessages, err := manager.BuildContext(ctx, agentID, taskID, 0)
@@ -439,7 +467,7 @@ func TestBuildContext(t *testing.T) {
 
 	// Test with token limit (simulate limiting context to first 2 messages)
 	// In a real situation, this would depend on the content length
-	mockStore.Reset()
+	mockStore.Reset(); initBuckets(mockStore)
 	contextMessages, err = manager.BuildContext(ctx, agentID, taskID, 10)
 	if err != nil {
 		t.Fatalf("Failed to build context with token limit: %v", err)
@@ -456,7 +484,7 @@ func TestBuildContext(t *testing.T) {
 	}
 
 	// Test with non-existent agent and task
-	mockStore.Reset()
+	mockStore.Reset(); initBuckets(mockStore)
 	mockStore.SetError("ListKeys", nil) // No error, just empty result
 	contextMessages, err = manager.BuildContext(ctx, "non-existent", "non-existent", 0)
 	if err != nil {
@@ -491,8 +519,11 @@ func TestDeleteChain(t *testing.T) {
 		t.Fatalf("Failed to create test chain: %v", err)
 	}
 
-	// Reset mock store counters
-	mockStore.Reset()
+	// Reset mock store counters only, not the buckets
+	mockStore.PutCalls = 0
+	mockStore.GetCalls = 0
+	mockStore.DeleteCalls = 0
+	mockStore.ListCalls = 0
 
 	// Delete the chain
 	err = manager.DeleteChain(ctx, chainID)
@@ -508,7 +539,7 @@ func TestDeleteChain(t *testing.T) {
 	}
 
 	// Try to get the deleted chain
-	mockStore.Reset()
+	mockStore.Reset(); initBuckets(mockStore)
 	mockStore.SetError("Get", memory.ErrNotFound)
 	_, err = manager.GetChain(ctx, chainID)
 	if err == nil {
@@ -522,7 +553,7 @@ func TestDeleteChain(t *testing.T) {
 	}
 
 	// Test with non-existent chain ID
-	mockStore.Reset()
+	mockStore.Reset(); initBuckets(mockStore)
 	mockStore.SetError("Get", memory.ErrNotFound)
 	err = manager.DeleteChain(ctx, "non-existent")
 	if err == nil {

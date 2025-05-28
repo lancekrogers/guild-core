@@ -3,6 +3,8 @@ package vector
 import (
 	"context"
 	"fmt"
+	"sort"
+	"sync"
 
 	"github.com/google/uuid"
 	"github.com/philippgille/chromem-go"
@@ -12,6 +14,9 @@ import (
 type ChromemStore struct {
 	db       *chromem.DB
 	embedder Embedder
+	mu       sync.RWMutex
+	// Mock in-memory storage for testing
+	embeddings map[string]Embedding
 }
 
 // Config contains Chromem configuration
@@ -33,8 +38,9 @@ func NewChromemStore(config Config) (*ChromemStore, error) {
 	db := &chromem.DB{}
 	
 	return &ChromemStore{
-		db:       db,
-		embedder: config.Embedder,
+		db:         db,
+		embedder:   config.Embedder,
+		embeddings: make(map[string]Embedding),
 	}, nil
 }
 
@@ -53,28 +59,21 @@ func (s *ChromemStore) SaveEmbedding(ctx context.Context, embedding Embedding) e
 		if err != nil {
 			return fmt.Errorf("failed to generate embedding: %w", err)
 		}
+		embedding.Vector = vector
 	}
 
-	// Create collection if it doesn't exist
-	_ = "default"
-	if src, ok := embedding.Metadata["collection"]; ok {
-		if _, ok := src.(string); ok {
-			// This is a stub implementation
-		}
-	}
-
-	// Since the actual chromem library functions are different,
-	// we'll create a stub implementation
-	// The real implementation would use the appropriate chromem API
-	// s.db.UpsertDocument(collection, embedding.ID, vector, metadata)
+	// Store in memory
+	s.mu.Lock()
+	s.embeddings[embedding.ID] = embedding
+	s.mu.Unlock()
 	
 	return nil
 }
 
 // QueryEmbeddings performs a similarity search
 func (s *ChromemStore) QueryEmbeddings(ctx context.Context, query string, limit int) ([]EmbeddingMatch, error) {
-	// Generate query vector (stub implementation)
-	_, err := s.embedder.Embed(ctx, query)
+	// Generate query vector
+	queryVector, err := s.embedder.Embed(ctx, query)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate query embedding: %w", err)
 	}
@@ -84,14 +83,75 @@ func (s *ChromemStore) QueryEmbeddings(ctx context.Context, query string, limit 
 		limit = 10
 	}
 
-	// This is a stub implementation since we don't have the actual chromem API
-	// In a real implementation, we would use the chromem search functionality
-	
-	return []EmbeddingMatch{}, nil
+	// Calculate similarities
+	s.mu.RLock()
+	matches := make([]EmbeddingMatch, 0, len(s.embeddings))
+	for _, emb := range s.embeddings {
+		score := cosineSimilarity(queryVector, emb.Vector)
+		matches = append(matches, EmbeddingMatch{
+			ID:        emb.ID,
+			Text:      emb.Text,
+			Source:    emb.Source,
+			Score:     score,
+			Timestamp: emb.Timestamp,
+			Metadata:  emb.Metadata,
+		})
+	}
+	s.mu.RUnlock()
+
+	// Sort by score (highest first)
+	sort.Slice(matches, func(i, j int) bool {
+		return matches[i].Score > matches[j].Score
+	})
+
+	// Limit results
+	if len(matches) > limit {
+		matches = matches[:limit]
+	}
+
+	return matches, nil
 }
 
 // Close closes the database
 func (s *ChromemStore) Close() error {
 	// Stub implementation
 	return nil
+}
+
+// cosineSimilarity calculates the cosine similarity between two vectors
+func cosineSimilarity(a, b []float32) float32 {
+	if len(a) != len(b) {
+		return 0
+	}
+
+	var dotProduct, normA, normB float32
+	for i := range a {
+		dotProduct += a[i] * b[i]
+		normA += a[i] * a[i]
+		normB += b[i] * b[i]
+	}
+
+	if normA == 0 || normB == 0 {
+		return 0
+	}
+
+	// Use a simple approximation for square root
+	normA = sqrt(normA)
+	normB = sqrt(normB)
+
+	return dotProduct / (normA * normB)
+}
+
+// sqrt is a simple square root approximation
+func sqrt(x float32) float32 {
+	if x == 0 {
+		return 0
+	}
+	
+	// Newton's method for square root
+	guess := x
+	for i := 0; i < 10; i++ {
+		guess = (guess + x/guess) / 2
+	}
+	return guess
 }

@@ -5,7 +5,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/objective"
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 )
 
@@ -32,7 +32,7 @@ type GuildArtisan interface {
 	GetObjectiveManager() *objective.Manager
 	
 	// GetLLMClient returns the LLM client
-	GetLLMClient() interfaces.LLMClient
+	GetLLMClient() providers.LLMClient
 	
 	// GetMemoryManager returns the memory manager
 	GetMemoryManager() memory.ChainManager
@@ -42,7 +42,7 @@ type GuildArtisan interface {
 type WorkerAgent struct {
 	ID             string
 	Name           string
-	LLMClient      interfaces.LLMClient
+	LLMClient      providers.LLMClient
 	MemoryManager  memory.ChainManager
 	ToolRegistry   *tools.ToolRegistry
 	ObjectiveManager *objective.Manager
@@ -50,7 +50,7 @@ type WorkerAgent struct {
 }
 
 // NewWorkerAgent creates a new worker agent
-func NewWorkerAgent(id, name string, llmClient interfaces.LLMClient, 
+func NewWorkerAgent(id, name string, llmClient providers.LLMClient, 
 	memoryManager memory.ChainManager, 
 	toolRegistry *tools.ToolRegistry, 
 	objectiveManager *objective.Manager) *WorkerAgent {
@@ -93,7 +93,7 @@ func (a *WorkerAgent) GetObjectiveManager() *objective.Manager {
 }
 
 // GetLLMClient returns the LLM client
-func (a *WorkerAgent) GetLLMClient() interfaces.LLMClient {
+func (a *WorkerAgent) GetLLMClient() providers.LLMClient {
 	return a.LLMClient
 }
 
@@ -118,7 +118,7 @@ type ManagerAgent struct {
 }
 
 // NewManagerAgent creates a new manager agent
-func NewManagerAgent(id, name string, llmClient interfaces.LLMClient, 
+func NewManagerAgent(id, name string, llmClient providers.LLMClient, 
 	memoryManager memory.ChainManager, 
 	toolRegistry *tools.ToolRegistry, 
 	objectiveManager *objective.Manager) *ManagerAgent {

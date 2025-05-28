@@ -3,242 +3,314 @@ package agent_test
 import (
 	"context"
 	"testing"
-	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/agent/mocks"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
+	"github.com/guild-ventures/guild-core/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/tools"
+	toolmocks "github.com/guild-ventures/guild-core/tools/mocks"
 )
 
-// TestBaseAgentImplementation tests that BaseAgent implements the Agent interface
-func TestBaseAgentImplementation(t *testing.T) {
-	var _ agent.Agent = &agent.BaseAgent{}
+// TestWorkerAgentImplementsAgent tests that WorkerAgent implements the Agent interface
+func TestWorkerAgentImplementsAgent(t *testing.T) {
+	var _ agent.Agent = &agent.WorkerAgent{}
 }
 
-// setupBaseAgent creates a base agent for testing
-func setupBaseAgent(t *testing.T) (*agent.BaseAgent, *mocks.MockLLMClient, *mocks.MockChainManager, *mocks.MockToolRegistry, *mocks.MockObjectiveManager) {
-	llmClient := mocks.NewMockLLMClient()
-	chainManager := mocks.NewMockChainManager()
-	toolRegistry := mocks.NewMockToolRegistry()
-	objectiveManager := mocks.NewMockObjectiveManager()
-
-	// Add a tool to the registry
-	tool := mocks.NewMockTool("test-tool", "A tool for testing")
-	toolRegistry.WithTool(tool)
-
-	config := &agent.AgentConfig{
-		ID:          "test-agent",
-		Name:        "Test Agent",
-		Description: "An agent for testing",
-		Type:        "worker",
-		Provider:    "openai",
-		Model:       "gpt-4",
-		MaxTokens:   4096,
-		Temperature: 0.7,
-		Tools:       []string{"test-tool"},
-		Metadata:    map[string]string{"key": "value"},
-	}
-
-	baseAgent := agent.NewBaseAgent(config, llmClient, chainManager, toolRegistry, objectiveManager)
-
-	return baseAgent, llmClient, chainManager, toolRegistry, objectiveManager
+// TestWorkerAgentImplementsGuildArtisan tests that WorkerAgent implements the GuildArtisan interface
+func TestWorkerAgentImplementsGuildArtisan(t *testing.T) {
+	var _ agent.GuildArtisan = &agent.WorkerAgent{}
 }
 
-// TestNewBaseAgent tests creating a new base agent
-func TestNewBaseAgent(t *testing.T) {
-	baseAgent, _, _, _, _ := setupBaseAgent(t)
-
-	// Check agent properties
-	if baseAgent.ID() != "test-agent" {
-		t.Errorf("Expected agent ID 'test-agent', got '%s'", baseAgent.ID())
+// TestNewWorkerAgent tests creating a new worker agent
+func TestNewWorkerAgent(t *testing.T) {
+	// Create mock dependencies
+	llmClient := &mocks.MockLLMClient{}
+	memoryManager := mocks.NewMockChainManager()
+	toolRegistry := tools.NewToolRegistry()
+	
+	// Create temporary store for objective manager
+	tempDir := t.TempDir()
+	store, err := boltdb.NewStore(tempDir + "/test.db")
+	if err != nil {
+		t.Fatalf("Failed to create store: %v", err)
+	}
+	defer store.Close()
+	
+	objectiveManager, err := objective.NewManager(store, tempDir)
+	if err != nil {
+		t.Fatalf("Failed to create objective manager: %v", err)
 	}
 
-	if baseAgent.Name() != "Test Agent" {
-		t.Errorf("Expected agent name 'Test Agent', got '%s'", baseAgent.Name())
+	// Create worker agent
+	workerAgent := agent.NewWorkerAgent(
+		"test-agent-1",
+		"Test Agent",
+		llmClient,
+		memoryManager,
+		toolRegistry,
+		objectiveManager,
+	)
+
+	// Verify agent properties
+	if workerAgent.GetID() != "test-agent-1" {
+		t.Errorf("Expected agent ID 'test-agent-1', got '%s'", workerAgent.GetID())
 	}
 
-	if baseAgent.Type() != "worker" {
-		t.Errorf("Expected agent type 'worker', got '%s'", baseAgent.Type())
+	if workerAgent.GetName() != "Test Agent" {
+		t.Errorf("Expected agent name 'Test Agent', got '%s'", workerAgent.GetName())
 	}
 
-	if baseAgent.Status() != agent.StatusIdle {
-		t.Errorf("Expected agent status '%s', got '%s'", agent.StatusIdle, baseAgent.Status())
+	// Verify dependencies are properly set
+	if workerAgent.GetLLMClient() != llmClient {
+		t.Error("LLM client not properly set")
 	}
 
-	// Check config
-	config := baseAgent.GetConfig()
-	if config.ID != "test-agent" {
-		t.Errorf("Expected config ID 'test-agent', got '%s'", config.ID)
+	if workerAgent.GetMemoryManager() != memoryManager {
+		t.Error("Memory manager not properly set")
 	}
 
-	// Check state
-	state := baseAgent.GetState()
-	if state.Status != agent.StatusIdle {
-		t.Errorf("Expected state status '%s', got '%s'", agent.StatusIdle, state.Status)
+	if workerAgent.GetToolRegistry() != toolRegistry {
+		t.Error("Tool registry not properly set")
 	}
 
-	if state.UpdatedAt.IsZero() {
-		t.Error("Expected non-zero updated time")
+	if workerAgent.GetObjectiveManager() != objectiveManager {
+		t.Error("Objective manager not properly set")
+	}
+
+	// Verify cost manager is initialized
+	if workerAgent.CostManager == nil {
+		t.Error("Cost manager should be initialized")
 	}
 }
 
-// TestBaseAgentAssignTask tests assigning a task to the agent
-func TestBaseAgentAssignTask(t *testing.T) {
-	baseAgent, _, _, _, _ := setupBaseAgent(t)
+// TestWorkerAgentExecute tests the Execute method
+func TestWorkerAgentExecute(t *testing.T) {
+	// Create mock dependencies
+	llmClient := &mocks.MockLLMClient{}
+	memoryManager := mocks.NewMockChainManager()
+	toolRegistry := tools.NewToolRegistry()
+	
+	tempDir := t.TempDir()
+	store, err := boltdb.NewStore(tempDir + "/test.db")
+	if err != nil {
+		t.Fatalf("Failed to create store: %v", err)
+	}
+	defer store.Close()
+	
+	objectiveManager, err := objective.NewManager(store, tempDir)
+	if err != nil {
+		t.Fatalf("Failed to create objective manager: %v", err)
+	}
+
+	// Create worker agent
+	workerAgent := agent.NewWorkerAgent(
+		"test-agent-2",
+		"Test Worker",
+		llmClient,
+		memoryManager,
+		toolRegistry,
+		objectiveManager,
+	)
+
 	ctx := context.Background()
-
-	// Create a task
-	task := &kanban.Task{
-		ID:          "test-task",
-		Title:       "Test Task",
-		Description: "A task for testing",
-		Status:      kanban.StatusTodo,
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
-	}
-
-	// Assign the task
-	err := baseAgent.AssignTask(ctx, task)
+	
+	// Test Execute method (currently returns stub response)
+	response, err := workerAgent.Execute(ctx, "test request")
 	if err != nil {
-		t.Fatalf("Failed to assign task: %v", err)
+		t.Fatalf("Execute failed: %v", err)
 	}
 
-	// Check agent status
-	if baseAgent.Status() != agent.StatusWorking {
-		t.Errorf("Expected agent status '%s', got '%s'", agent.StatusWorking, baseAgent.Status())
-	}
-
-	// Check state
-	state := baseAgent.GetState()
-	if state.CurrentTask != "test-task" {
-		t.Errorf("Expected current task 'test-task', got '%s'", state.CurrentTask)
-	}
-
-	if state.StartedAt.IsZero() {
-		t.Error("Expected non-zero started time")
-	}
-
-	// Try to assign another task while the agent is busy
-	task2 := &kanban.Task{
-		ID:          "test-task-2",
-		Title:       "Test Task 2",
-		Description: "Another task for testing",
-		Status:      kanban.StatusTodo,
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
-	}
-
-	err = baseAgent.AssignTask(ctx, task2)
-	if err != agent.ErrAgentBusy {
-		t.Errorf("Expected error '%v', got '%v'", agent.ErrAgentBusy, err)
+	expectedResponse := "Executed: test request"
+	if response != expectedResponse {
+		t.Errorf("Expected response '%s', got '%s'", expectedResponse, response)
 	}
 }
 
-// TestBaseAgentGetAvailableTools tests getting available tools
-func TestBaseAgentGetAvailableTools(t *testing.T) {
-	baseAgent, _, _, toolRegistry, _ := setupBaseAgent(t)
+// TestWorkerAgentCostManagement tests cost budget and reporting
+func TestWorkerAgentCostManagement(t *testing.T) {
+	// Create worker agent with minimal dependencies
+	tempDir := t.TempDir()
+	store, err := boltdb.NewStore(tempDir + "/test.db")
+	if err != nil {
+		t.Fatalf("Failed to create store: %v", err)
+	}
+	defer store.Close()
+	
+	objectiveManager, err := objective.NewManager(store, tempDir)
+	if err != nil {
+		t.Fatalf("Failed to create objective manager: %v", err)
+	}
+	
+	workerAgent := agent.NewWorkerAgent(
+		"test-agent-3",
+		"Cost Test Agent",
+		&mocks.MockLLMClient{},
+		mocks.NewMockChainManager(),
+		tools.NewToolRegistry(),
+		objectiveManager,
+	)
 
-	// Add another tool to the registry
-	anotherTool := mocks.NewMockTool("another-tool", "Another tool for testing")
-	toolRegistry.WithTool(anotherTool)
+	// Set cost budget using the correct CostType constants
+	workerAgent.SetCostBudget(agent.CostTypeLLM, 1000.0)
+	workerAgent.SetCostBudget(agent.CostTypeTool, 50.0)
 
-	// Get available tools
-	tools := baseAgent.GetAvailableTools()
-
-	// Should only have the configured tool
-	if len(tools) != 1 {
-		t.Errorf("Expected 1 available tool, got %d", len(tools))
+	// Get cost report
+	report := workerAgent.GetCostReport()
+	if report == nil {
+		t.Fatal("Cost report should not be nil")
 	}
 
-	if len(tools) > 0 && tools[0].Name() != "test-tool" {
-		t.Errorf("Expected tool 'test-tool', got '%s'", tools[0].Name())
+	// Verify report contains budget info
+	if budgets, ok := report["budgets"].(map[string]float64); ok {
+		if budgets[string(agent.CostTypeLLM)] != 1000.0 {
+			t.Errorf("Expected LLM budget 1000.0, got %f", budgets[string(agent.CostTypeLLM)])
+		}
+		if budgets[string(agent.CostTypeTool)] != 50.0 {
+			t.Errorf("Expected Tool budget 50.0, got %f", budgets[string(agent.CostTypeTool)])
+		}
+	} else {
+		t.Error("Cost report should contain budgets")
+	}
+}
+
+// TestManagerAgentCreation tests creating a manager agent
+func TestManagerAgentCreation(t *testing.T) {
+	// Create mock dependencies
+	llmClient := &mocks.MockLLMClient{}
+	memoryManager := mocks.NewMockChainManager()
+	toolRegistry := tools.NewToolRegistry()
+	
+	tempDir := t.TempDir()
+	store, err := boltdb.NewStore(tempDir + "/test.db")
+	if err != nil {
+		t.Fatalf("Failed to create store: %v", err)
+	}
+	defer store.Close()
+	
+	objectiveManager, err := objective.NewManager(store, tempDir)
+	if err != nil {
+		t.Fatalf("Failed to create objective manager: %v", err)
 	}
 
-	// Create a new agent with no tools specified
-	config := &agent.AgentConfig{
-		ID:          "test-agent-2",
-		Name:        "Test Agent 2",
-		Description: "Another agent for testing",
-		Type:        "worker",
-		Provider:    "openai",
-		Model:       "gpt-4",
-		Tools:       []string{}, // Empty tools list
+	// Create manager agent
+	managerAgent := agent.NewManagerAgent(
+		"test-manager-1",
+		"Test Manager",
+		llmClient,
+		memoryManager,
+		toolRegistry,
+		objectiveManager,
+	)
+
+	// Verify it's a manager agent with worker capabilities
+	if managerAgent.GetID() != "test-manager-1" {
+		t.Errorf("Expected manager ID 'test-manager-1', got '%s'", managerAgent.GetID())
 	}
 
+	if managerAgent.GetName() != "Test Manager" {
+		t.Errorf("Expected manager name 'Test Manager', got '%s'", managerAgent.GetName())
+	}
+
+	// Verify it implements the Agent interface
+	var _ agent.Agent = managerAgent
+	
+	// Verify it implements the GuildArtisan interface
+	var _ agent.GuildArtisan = managerAgent
+}
+
+// TestWorkerAgentWithMockedLLMResponse tests agent with mocked LLM responses
+func TestWorkerAgentWithMockedLLMResponse(t *testing.T) {
+	// Create mock LLM client with predefined response
 	llmClient := mocks.NewMockLLMClient()
-	chainManager := mocks.NewMockChainManager()
-	objectiveManager := mocks.NewMockObjectiveManager()
+	llmClient.WithResponse("Test response from LLM")
 
-	baseAgent2 := agent.NewBaseAgent(config, llmClient, chainManager, toolRegistry, objectiveManager)
-
-	// Get available tools for agent with no tools specified
-	tools2 := baseAgent2.GetAvailableTools()
-
-	// Should have all tools in the registry
-	if len(tools2) != 2 {
-		t.Errorf("Expected 2 available tools, got %d", len(tools2))
+	// Create mock memory manager
+	memoryManager := mocks.NewMockChainManager()
+	
+	tempDir := t.TempDir()
+	store, err := boltdb.NewStore(tempDir + "/test.db")
+	if err != nil {
+		t.Fatalf("Failed to create store: %v", err)
 	}
-}
+	defer store.Close()
+	
+	objectiveManager, err := objective.NewManager(store, tempDir)
+	if err != nil {
+		t.Fatalf("Failed to create objective manager: %v", err)
+	}
 
-// TestBaseAgentReset tests resetting the agent
-func TestBaseAgentReset(t *testing.T) {
-	baseAgent, _, _, _, _ := setupBaseAgent(t)
+	// Create worker agent
+	workerAgent := agent.NewWorkerAgent(
+		"test-agent-4",
+		"LLM Test Agent",
+		llmClient,
+		memoryManager,
+		tools.NewToolRegistry(),
+		objectiveManager,
+	)
+
+	// Verify we can access the mocked dependencies
+	if workerAgent.GetLLMClient() != llmClient {
+		t.Error("LLM client not properly accessible")
+	}
+	
+	// Verify the LLM client works
 	ctx := context.Background()
-
-	// Create a task
-	task := &kanban.Task{
-		ID:          "test-task",
-		Title:       "Test Task",
-		Description: "A task for testing",
-		Status:      kanban.StatusTodo,
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
-	}
-
-	// Assign the task
-	err := baseAgent.AssignTask(ctx, task)
+	response, err := llmClient.Complete(ctx, "test prompt")
 	if err != nil {
-		t.Fatalf("Failed to assign task: %v", err)
+		t.Fatalf("LLM Complete failed: %v", err)
 	}
-
-	// Reset the agent
-	err = baseAgent.Reset(ctx)
-	if err != nil {
-		t.Fatalf("Failed to reset agent: %v", err)
-	}
-
-	// Check agent status
-	if baseAgent.Status() != agent.StatusIdle {
-		t.Errorf("Expected agent status '%s', got '%s'", agent.StatusIdle, baseAgent.Status())
-	}
-
-	// Check state
-	state := baseAgent.GetState()
-	if state.CurrentTask != "" {
-		t.Errorf("Expected empty current task, got '%s'", state.CurrentTask)
+	if response != "Test response from LLM" {
+		t.Errorf("Expected 'Test response from LLM', got '%s'", response)
 	}
 }
 
-// TestAgentError tests the AgentError type
-func TestAgentError(t *testing.T) {
-	err := agent.AgentError{Message: "test error"}
-	
-	if err.Error() != "test error" {
-		t.Errorf("Expected error message 'test error', got '%s'", err.Error())
+// TestWorkerAgentWithTools tests agent with tool registry
+func TestWorkerAgentWithTools(t *testing.T) {
+	// Create tool registry and add a mock tool
+	toolRegistry := tools.NewToolRegistry()
+	mockTool := toolmocks.NewMockTool("test-tool", "A test tool")
+	err := toolRegistry.RegisterTool(mockTool)
+	if err != nil {
+		t.Fatalf("Failed to register tool: %v", err)
 	}
 	
-	if agent.ErrAgentBusy.Error() != "agent is busy with another task" {
-		t.Errorf("Expected error message 'agent is busy with another task', got '%s'", agent.ErrAgentBusy.Error())
+	tempDir := t.TempDir()
+	store, err := boltdb.NewStore(tempDir + "/test.db")
+	if err != nil {
+		t.Fatalf("Failed to create store: %v", err)
 	}
-}
+	defer store.Close()
+	
+	objectiveManager, err := objective.NewManager(store, tempDir)
+	if err != nil {
+		t.Fatalf("Failed to create objective manager: %v", err)
+	}
 
-// TestBaseAgentGetMemoryManager tests getting the memory manager
-func TestBaseAgentGetMemoryManager(t *testing.T) {
-	baseAgent, _, chainManager, _, _ := setupBaseAgent(t)
-	
-	memoryManager := baseAgent.GetMemoryManager()
-	if memoryManager != chainManager {
-		t.Error("Expected memory manager to be the same as chain manager")
+	// Create worker agent
+	workerAgent := agent.NewWorkerAgent(
+		"test-agent-5",
+		"Tool Test Agent",
+		&mocks.MockLLMClient{},
+		mocks.NewMockChainManager(),
+		toolRegistry,
+		objectiveManager,
+	)
+
+	// Verify tool registry is accessible
+	registry := workerAgent.GetToolRegistry()
+	if registry == nil {
+		t.Fatal("Tool registry should not be nil")
+	}
+
+	// Verify the tool is in the registry (using the correct method name)
+	tool, exists := registry.GetTool("test-tool")
+	if !exists {
+		t.Fatal("Tool should exist in registry")
+	}
+
+	if tool.Name() != "test-tool" {
+		t.Errorf("Expected tool name 'test-tool', got '%s'", tool.Name())
 	}
 }

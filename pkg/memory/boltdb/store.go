@@ -44,15 +44,15 @@ func NewStore(dbPath string, options ...Option) (*Store, error) {
 		bucketList: AllBuckets(),
 	}
 
-	// Initialize buckets
-	if err := store.initBuckets(); err != nil {
-		db.Close()
-		return nil, err
-	}
-
 	// Apply options
 	for _, option := range options {
 		option(store)
+	}
+
+	// Initialize buckets after applying options
+	if err := store.initBuckets(); err != nil {
+		db.Close()
+		return nil, err
 	}
 
 	return store, nil

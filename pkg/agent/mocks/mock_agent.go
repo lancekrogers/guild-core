@@ -2,119 +2,85 @@ package mocks
 
 import (
 	"context"
-
-	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
+	
 	"github.com/guild-ventures/guild-core/pkg/memory"
-	"github.com/guild-ventures/guild-core/tools"
-	"github.com/stretchr/testify/mock"
+	"github.com/guild-ventures/guild-core/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/providers"
+	"github.com/guild-ventures/guild-core/pkg/tools"
 )
 
-// MockAgent is a mock implementation of the agent.GuildArtisan interface.
+// MockAgent implements the agent.Agent interface for testing
 type MockAgent struct {
-	mock.Mock
+	ID           string
+	Name         string
+	ExecuteFunc  func(ctx context.Context, request string) (string, error)
+	ExecuteCalls []string
 }
 
-// ID mocks the ID method.
-func (m *MockAgent) ID() string {
-	args := m.Called()
-	return args.String(0)
-}
-
-// Name mocks the Name method.
-func (m *MockAgent) Name() string {
-	args := m.Called()
-	return args.String(0)
-}
-
-// Type mocks the Type method.
-func (m *MockAgent) Type() string {
-	args := m.Called()
-	return args.String(0)
-}
-
-// Status mocks the Status method.
-func (m *MockAgent) Status() agent.AgentStatus {
-	args := m.Called()
-	return args.Get(0).(agent.AgentStatus)
-}
-
-// CommissionWork mocks the CommissionWork method.
-func (m *MockAgent) CommissionWork(ctx context.Context, task *kanban.Task) error {
-	args := m.Called(ctx, task)
-	return args.Error(0)
-}
-
-// CraftSolution mocks the CraftSolution method.
-func (m *MockAgent) CraftSolution(ctx context.Context) error {
-	args := m.Called(ctx)
-	return args.Error(0)
-}
-
-// Stop mocks the Stop method.
-func (m *MockAgent) Stop(ctx context.Context) error {
-	args := m.Called(ctx)
-	return args.Error(0)
-}
-
-// CleanSlate mocks the CleanSlate method.
-func (m *MockAgent) CleanSlate(ctx context.Context) error {
-	args := m.Called(ctx)
-	return args.Error(0)
-}
-
-// SaveState mocks the SaveState method.
-func (m *MockAgent) SaveState(ctx context.Context) error {
-	args := m.Called(ctx)
-	return args.Error(0)
-}
-
-// GetAvailableTools mocks the GetAvailableTools method.
-func (m *MockAgent) GetAvailableTools() []tools.Tool {
-	args := m.Called()
-	if args.Get(0) == nil {
-		return nil
+// NewMockAgent creates a new mock agent
+func NewMockAgent(id, name string) *MockAgent {
+	return &MockAgent{
+		ID:   id,
+		Name: name,
+		ExecuteFunc: func(ctx context.Context, request string) (string, error) {
+			return "mock response", nil
+		},
+		ExecuteCalls: make([]string, 0),
 	}
-	return args.Get(0).([]tools.Tool)
 }
 
-// GetConfig mocks the GetConfig method.
-func (m *MockAgent) GetConfig() *agent.AgentConfig {
-	args := m.Called()
-	if args.Get(0) == nil {
-		return nil
+// Execute implements the Agent interface
+func (m *MockAgent) Execute(ctx context.Context, request string) (string, error) {
+	m.ExecuteCalls = append(m.ExecuteCalls, request)
+	return m.ExecuteFunc(ctx, request)
+}
+
+// GetID implements the Agent interface
+func (m *MockAgent) GetID() string {
+	return m.ID
+}
+
+// GetName implements the Agent interface
+func (m *MockAgent) GetName() string {
+	return m.Name
+}
+
+// MockGuildArtisan implements the agent.GuildArtisan interface for testing
+type MockGuildArtisan struct {
+	MockAgent
+	ToolRegistry     *tools.ToolRegistry
+	ObjectiveManager *objective.Manager
+	LLMClient        providers.LLMClient
+	MemoryManager    memory.ChainManager
+}
+
+// NewMockGuildArtisan creates a new mock guild artisan
+func NewMockGuildArtisan(id, name string) *MockGuildArtisan {
+	return &MockGuildArtisan{
+		MockAgent:        *NewMockAgent(id, name),
+		ToolRegistry:     tools.NewToolRegistry(),
+		ObjectiveManager: nil, // Will be set by test if needed
+		LLMClient:        NewMockLLMClient(),
+		MemoryManager:    nil, // Will be set by test if needed
 	}
-	return args.Get(0).(*agent.AgentConfig)
 }
 
-// GetState mocks the GetState method.
-func (m *MockAgent) GetState() *agent.AgentState {
-	args := m.Called()
-	if args.Get(0) == nil {
-		return nil
-	}
-	return args.Get(0).(*agent.AgentState)
+// GetToolRegistry implements the GuildArtisan interface
+func (m *MockGuildArtisan) GetToolRegistry() *tools.ToolRegistry {
+	return m.ToolRegistry
 }
 
-// GetMemoryManager mocks the GetMemoryManager method.
-func (m *MockAgent) GetMemoryManager() memory.ChainManager {
-	args := m.Called()
-	if args.Get(0) == nil {
-		return nil
-	}
-	return args.Get(0).(memory.ChainManager)
+// GetObjectiveManager implements the GuildArtisan interface
+func (m *MockGuildArtisan) GetObjectiveManager() *objective.Manager {
+	return m.ObjectiveManager
 }
 
-// SetCostBudget mocks the SetCostBudget method.
-func (m *MockAgent) SetCostBudget(costType agent.CostType, amount float64) {
-	m.Called(costType, amount)
+// GetLLMClient implements the GuildArtisan interface
+func (m *MockGuildArtisan) GetLLMClient() providers.LLMClient {
+	return m.LLMClient
 }
 
-// GetCostReport mocks the GetCostReport method.
-func (m *MockAgent) GetCostReport() map[string]interface{} {
-	args := m.Called()
-	if args.Get(0) == nil {
-		return nil
-	}
-	return args.Get(0).(map[string]interface{})
+// GetMemoryManager implements the GuildArtisan interface
+func (m *MockGuildArtisan) GetMemoryManager() memory.ChainManager {
+	return m.MemoryManager
 }

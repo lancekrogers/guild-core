@@ -1,10 +1,9 @@
 package vector
 
 import (
-	"context"
-	"fmt"
 	"testing"
 
+	"github.com/sashabaranov/go-openai"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -23,7 +22,7 @@ func TestOpenAIEmbedder(t *testing.T) {
 		embedder, err := NewOpenAIEmbedder("dummy-api-key", "")
 		require.NoError(t, err)
 		assert.NotNil(t, embedder)
-		assert.Equal(t, "text-embedding-ada-002", embedder.model)
+		assert.Equal(t, openai.EmbeddingModel("text-embedding-ada-002"), embedder.model)
 	})
 
 	t.Run("NewOpenAIEmbedder_CustomModel", func(t *testing.T) {
@@ -32,7 +31,7 @@ func TestOpenAIEmbedder(t *testing.T) {
 		embedder, err := NewOpenAIEmbedder("dummy-api-key", customModel)
 		require.NoError(t, err)
 		assert.NotNil(t, embedder)
-		assert.Equal(t, customModel, embedder.model)
+		assert.Equal(t, openai.EmbeddingModel(customModel), embedder.model)
 	})
 }
 

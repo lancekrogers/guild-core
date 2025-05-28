@@ -8,7 +8,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/objective"
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 )
 
@@ -66,7 +66,7 @@ func (w *AgentWrapper) GetObjectiveManager() *objective.Manager {
 }
 
 // GetLLMClient returns the LLM client
-func (w *AgentWrapper) GetLLMClient() interfaces.LLMClient {
+func (w *AgentWrapper) GetLLMClient() providers.LLMClient {
 	return w.agent.GetLLMClient()
 }
 
@@ -77,6 +77,11 @@ func (w *AgentWrapper) GetMemoryManager() memory.ChainManager {
 
 // enhanceRequestWithRAG enhances a request with relevant context from the RAG system
 func (w *AgentWrapper) enhanceRequestWithRAG(ctx context.Context, request string) (string, error) {
+	// If no retriever, return the original request
+	if w.retriever == nil {
+		return request, nil
+	}
+	
 	// Define retrieval configuration
 	retrievalConfig := RetrievalConfig{
 		Query:           request,

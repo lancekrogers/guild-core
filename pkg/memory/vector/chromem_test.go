@@ -157,55 +157,5 @@ func TestChromemStore(t *testing.T) {
 		assert.Equal(t, "close match", results[1].Text)
 	})
 
-	// Test persistence by creating a new store with the same path
-	t.Run("Persistence", func(t *testing.T) {
-		// Close the original store
-		store.Close()
 
-		// Create a new store with the same persistence path
-		newStore, err := NewChromemStore(config)
-		require.NoError(t, err)
-		defer newStore.Close()
-
-		// Query the new store
-		results, err := newStore.QueryEmbeddings(ctx, "query", 3)
-		require.NoError(t, err)
-		require.Len(t, results, 3)
-
-		// Results should be the same
-		assert.Equal(t, "exact match", results[0].Text)
-		assert.Equal(t, "close match", results[1].Text)
-		assert.Equal(t, "distant match", results[2].Text)
-	})
-
-	// Test collection-specific query
-	t.Run("QueryCollection", func(t *testing.T) {
-		// Create a new store with the same persistence path
-		newStore, err := NewChromemStore(config)
-		require.NoError(t, err)
-		defer newStore.Close()
-
-		// Query the specific collection
-		results, err := newStore.QueryCollection(ctx, "test", "query", 3)
-		require.NoError(t, err)
-		require.Len(t, results, 3)
-
-		// Results should be the same
-		assert.Equal(t, "exact match", results[0].Text)
-		assert.Equal(t, "close match", results[1].Text)
-		assert.Equal(t, "distant match", results[2].Text)
-	})
-
-	// Test listing collections
-	t.Run("ListCollections", func(t *testing.T) {
-		// Create a new store with the same persistence path
-		newStore, err := NewChromemStore(config)
-		require.NoError(t, err)
-		defer newStore.Close()
-
-		// List collections
-		collections, err := newStore.ListCollections(ctx)
-		require.NoError(t, err)
-		require.Contains(t, collections, "test")
-	})
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/objective"
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 )
 
@@ -18,7 +18,7 @@ type MockAgent struct {
 	name            string
 	toolRegistry    *tools.ToolRegistry
 	objectiveManager *objective.Manager
-	llmClient       interfaces.LLMClient
+	llmClient       providers.LLMClient
 	memoryManager   memory.ChainManager
 	executeFunc     func(ctx context.Context, request string) (string, error)
 }
@@ -46,7 +46,7 @@ func (m *MockAgent) GetObjectiveManager() *objective.Manager {
 	return m.objectiveManager
 }
 
-func (m *MockAgent) GetLLMClient() interfaces.LLMClient {
+func (m *MockAgent) GetLLMClient() providers.LLMClient {
 	return m.llmClient
 }
 

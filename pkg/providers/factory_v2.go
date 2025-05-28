@@ -1,14 +1,14 @@
 package providers
 
 import (
+	"context"
 	"fmt"
 	"os"
 	
 	"github.com/guild-ventures/guild-core/pkg/providers/anthropic"
-	"github.com/guild-ventures/guild-core/pkg/providers/claudecode"
 	"github.com/guild-ventures/guild-core/pkg/providers/deepinfra"
 	"github.com/guild-ventures/guild-core/pkg/providers/deepseek"
-	"github.com/guild-ventures/guild-core/pkg/providers/google"
+	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 	"github.com/guild-ventures/guild-core/pkg/providers/ollama"
 	"github.com/guild-ventures/guild-core/pkg/providers/openai"
 	"github.com/guild-ventures/guild-core/pkg/providers/ora"
@@ -23,7 +23,7 @@ func NewFactoryV2() *FactoryV2 {
 }
 
 // CreateAIProvider creates a new AI provider based on the provider type
-func (f *FactoryV2) CreateAIProvider(providerType ProviderType, apiKey string) (AIProvider, error) {
+func (f *FactoryV2) CreateAIProvider(providerType ProviderType, apiKey string) (interfaces.AIProvider, error) {
 	switch providerType {
 	case ProviderOpenAI:
 		return openai.NewClient(apiKey), nil
@@ -50,7 +50,7 @@ func (f *FactoryV2) CreateAIProvider(providerType ProviderType, apiKey string) (
 }
 
 // CreateAIProviderFromConfig creates a provider from configuration map
-func (f *FactoryV2) CreateAIProviderFromConfig(providerType ProviderType, config map[string]interface{}) (AIProvider, error) {
+func (f *FactoryV2) CreateAIProviderFromConfig(providerType ProviderType, config map[string]interface{}) (interfaces.AIProvider, error) {
 	// Extract API key - try config first, then environment variable
 	var apiKey string
 	if key, exists := config["api_key"]; exists {
@@ -80,18 +80,18 @@ func (f *FactoryV2) CreateAIProviderFromConfig(providerType ProviderType, config
 	return f.CreateAIProvider(providerType, apiKey)
 }
 
-// CreateLegacyAdapter creates an adapter that implements the old LLMClient interface
-// using the new AIProvider interface
-func (f *FactoryV2) CreateLegacyAdapter(provider AIProvider) LLMClient {
-	return &legacyAdapter{provider: provider}
+// CreateLLMClientAdapter creates an adapter that implements the LLMClient interface
+// using the AIProvider interface for backward compatibility
+func (f *FactoryV2) CreateLLMClientAdapter(provider interfaces.AIProvider) LLMClient {
+	return &llmClientAdapter{provider: provider}
 }
 
-// legacyAdapter adapts AIProvider to LLMClient interface
-type legacyAdapter struct {
-	provider AIProvider
+// llmClientAdapter adapts AIProvider to LLMClient interface
+type llmClientAdapter struct {
+	provider interfaces.AIProvider
 }
 
-func (a *legacyAdapter) Complete(ctx context.Context, prompt string) (string, error) {
+func (a *llmClientAdapter) Complete(ctx context.Context, prompt string) (string, error) {
 	// Use the first available model from capabilities
 	capabilities := a.provider.GetCapabilities()
 	model := ""
@@ -99,9 +99,9 @@ func (a *legacyAdapter) Complete(ctx context.Context, prompt string) (string, er
 		model = capabilities.Models[0].ID
 	}
 
-	req := ChatRequest{
+	req := interfaces.ChatRequest{
 		Model: model,
-		Messages: []ChatMessage{
+		Messages: []interfaces.ChatMessage{
 			{Role: "user", Content: prompt},
 		},
 	}

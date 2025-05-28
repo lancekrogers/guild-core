@@ -6,7 +6,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/objective"
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 )
 
@@ -24,7 +24,7 @@ type Factory interface {
 
 // DefaultFactory is the default implementation of Factory
 type DefaultFactory struct {
-	LLMClient        interfaces.LLMClient
+	LLMClient        providers.LLMClient
 	MemoryManager    memory.ChainManager
 	ToolRegistry     *tools.ToolRegistry
 	ObjectiveManager *objective.Manager
@@ -32,7 +32,7 @@ type DefaultFactory struct {
 
 // NewFactory creates a new factory instance
 func NewFactory(
-	llmClient interfaces.LLMClient,
+	llmClient providers.LLMClient,
 	memoryManager memory.ChainManager,
 	toolRegistry *tools.ToolRegistry,
 	objectiveManager *objective.Manager,

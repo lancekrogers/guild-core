@@ -4,40 +4,37 @@ import (
 	"fmt"
 	"os"
 	
-	"github.com/guild-ventures/guild-core/pkg/providers/anthropic"
 	"github.com/guild-ventures/guild-core/pkg/providers/claudecode"
-	"github.com/guild-ventures/guild-core/pkg/providers/google"
-	"github.com/guild-ventures/guild-core/pkg/providers/ollama"
-	"github.com/guild-ventures/guild-core/pkg/providers/openai"
 )
 
 // Factory creates LLM clients
 type Factory struct {
-	// Configuration fields would go here
+	v2Factory *FactoryV2
 }
 
 // NewFactory creates a new factory
 func NewFactory() *Factory {
-	return &Factory{}
+	return &Factory{
+		v2Factory: NewFactoryV2(),
+	}
 }
 
 // CreateClient creates a new LLM client based on the provider type
 func (f *Factory) CreateClient(providerType ProviderType, apiKey string, model string) (LLMClient, error) {
-	switch providerType {
-	case ProviderOpenAI:
-		return openai.NewClient(apiKey, model), nil
-	case ProviderAnthropic:
-		return anthropic.NewClient(apiKey, model), nil
-	case ProviderOllama:
-		return ollama.NewClient(apiKey, model), nil
-	case ProviderGoogle:
-		return google.NewClient(apiKey, model), nil
-	case ProviderClaudeCode:
+	// Special case for Claude Code which doesn't use AIProvider
+	if providerType == ProviderClaudeCode {
 		// For Claude Code, apiKey is used as binary path, model is configuration type
 		return claudecode.NewClient(apiKey, model), nil
-	default:
-		return nil, fmt.Errorf("unsupported provider type: %s", providerType)
 	}
+	
+	// For all other providers, use the V2 factory to create AIProvider,
+	// then wrap it with the LLMClient adapter
+	aiProvider, err := f.v2Factory.CreateAIProvider(providerType, apiKey)
+	if err != nil {
+		return nil, err
+	}
+	
+	return f.v2Factory.CreateLLMClientAdapter(aiProvider), nil
 }
 
 // CreateClientFromConfig creates a client from configuration map
