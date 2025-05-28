@@ -12,4 +12,10 @@ const (
 	
 	// ProviderOllama represents the Ollama provider
 	ProviderOllama ProviderType = "ollama"
+	
+	// ProviderGoogle represents the Google Gemini provider
+	ProviderGoogle ProviderType = "google"
+	
+	// ProviderClaudeCode represents the Claude Code provider
+	ProviderClaudeCode ProviderType = "claude-code"
 )

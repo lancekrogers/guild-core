@@ -15,7 +15,9 @@ type LLMClient interface {
 type ProviderType = interfaces.ProviderType
 
 const (
-	ProviderOpenAI    = interfaces.ProviderOpenAI
-	ProviderAnthropic = interfaces.ProviderAnthropic
-	ProviderOllama    = interfaces.ProviderOllama
+	ProviderOpenAI     = interfaces.ProviderOpenAI
+	ProviderAnthropic  = interfaces.ProviderAnthropic
+	ProviderOllama     = interfaces.ProviderOllama
+	ProviderGoogle     = interfaces.ProviderGoogle
+	ProviderClaudeCode = interfaces.ProviderClaudeCode
 )

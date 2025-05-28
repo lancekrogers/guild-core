@@ -270,7 +270,7 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.guildError = msg.Error
 			m.proclamation = "The craftsmen failed to refine the documents: " + msg.Error.Error()
 		} else {
-			m.proclamation = "The documents have been skillfully refined by our master craftsmen."
+			m.proclamation = "The documents have been skillfully refined by our artisans."
 			// Update previews with new content
 			// This would update aiDocsPreview and specsPreview
 		}

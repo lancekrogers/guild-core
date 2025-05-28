@@ -1,0 +1,203 @@
+package providers
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"strings"
+
+	"github.com/guild-ventures/guild-core/pkg/providers/anthropic"
+	"github.com/guild-ventures/guild-core/pkg/providers/google"
+	"github.com/guild-ventures/guild-core/pkg/providers/ollama"
+	"github.com/guild-ventures/guild-core/pkg/providers/openai"
+)
+
+// Example2025Models demonstrates the latest model support across all providers
+func Example2025Models() {
+	ctx := context.Background()
+
+	log.Println("=== Guild Provider System - 2025 Models Demo ===")
+
+	// OpenAI - Latest GPT-4.1 series
+	log.Println("\n🤖 OpenAI Models (2025):")
+	openaiClient := openai.NewClient("sk-test", "gpt-4.1")
+	log.Printf("Default model: %s", openaiClient.GetModel())
+	
+	if info, exists := openaiClient.GetModelInfo(); exists {
+		log.Printf("Model info: %s (%s) - %d tokens, $%.2f/$%.2f per million tokens", 
+			info.Name, info.Type, info.MaxTokens, info.InputPrice, info.OutputPrice)
+	}
+	
+	response, _ := openaiClient.Complete(ctx, "What are the latest AI developments?")
+	log.Printf("Response: %s", response)
+
+	// Show latest OpenAI models
+	log.Println("\nLatest OpenAI models:")
+	for name, info := range openai.ListSupportedModels() {
+		log.Printf("  - %s (%s): %d tokens, $%.2f/$%.2f", 
+			name, info.Type, info.MaxTokens, info.InputPrice, info.OutputPrice)
+	}
+
+	// Anthropic - Latest Claude 4 series
+	log.Println("\n🧠 Anthropic Models (2025):")
+	anthropicClient := anthropic.NewClient("sk-ant-test", "claude-4-sonnet")
+	log.Printf("Default model: %s", anthropicClient.GetModel())
+	
+	if info, exists := anthropicClient.GetModelInfo(); exists {
+		log.Printf("Model info: %s (%s) - %d tokens, $%.2f/$%.2f per million tokens", 
+			info.Name, info.Type, info.MaxTokens, info.InputPrice, info.OutputPrice)
+	}
+	
+	response, _ = anthropicClient.Complete(ctx, "Explain reasoning capabilities in modern AI")
+	log.Printf("Response: %s", response)
+
+	// Show Claude 4 capabilities
+	log.Println("\nLatest Anthropic models:")
+	for name, info := range anthropic.ListSupportedModels() {
+		log.Printf("  - %s (%s): %d tokens, $%.2f/$%.2f", 
+			name, info.Type, info.MaxTokens, info.InputPrice, info.OutputPrice)
+	}
+
+	// Google - Latest Gemini 2.5 series
+	log.Println("\n🔍 Google Models (2025):")
+	googleClient := google.NewClient("test-key", "gemini-2.5-flash")
+	log.Printf("Default model: %s", googleClient.GetModel())
+	
+	if info, exists := googleClient.GetModelInfo(); exists {
+		log.Printf("Model info: %s (%s) - %d tokens, $%.2f/$%.2f per million tokens", 
+			info.Name, info.Type, info.MaxTokens, info.InputPrice, info.OutputPrice)
+	}
+	
+	response, _ = googleClient.Complete(ctx, "Compare multimodal AI capabilities")
+	log.Printf("Response: %s", response)
+
+	// Show Gemini 2.5 capabilities
+	log.Println("\nLatest Google models:")
+	for name, info := range google.ListSupportedModels() {
+		log.Printf("  - %s (%s): %d tokens, $%.2f/$%.2f", 
+			name, info.Type, info.MaxTokens, info.InputPrice, info.OutputPrice)
+	}
+
+	// Ollama - Latest open source models
+	log.Println("\n🦙 Ollama Models (2025):")
+	ollamaClient := ollama.NewClient("", "llama3.3:70b")
+	log.Printf("Using model: %s", ollamaClient.GetModel())
+	log.Printf("Server URL: %s", ollamaClient.GetBaseURL())
+	
+	if info, exists := ollamaClient.GetModelInfo(); exists {
+		log.Printf("Model info: %s (%s) - %s parameters, %dGB RAM required", 
+			info.Name, info.Type, info.Size, info.MinRAM)
+	}
+	
+	response, _ = ollamaClient.Complete(ctx, "Explain local AI deployment benefits")
+	log.Printf("Response: %s", response)
+
+	// Show RAM-based recommendations
+	log.Println("\nOllama models by available RAM:")
+	for _, ram := range []int{4, 8, 16, 32, 64} {
+		recommended := ollama.GetRecommendedModel("general", ram)
+		log.Printf("  %dGB RAM: %s", ram, recommended)
+	}
+
+	// Show specialized model recommendations
+	log.Println("\n🎯 Model Recommendations by Use Case:")
+	
+	log.Println("\nCoding:")
+	log.Printf("  OpenAI: %s", openai.GetRecommendedModel("coding"))
+	log.Printf("  Anthropic: %s", anthropic.GetRecommendedModel("coding"))
+	log.Printf("  Google: %s", google.GetRecommendedModel("coding"))
+	log.Printf("  Ollama: %s", ollama.GetRecommendedModel("coding", 8))
+
+	log.Println("\nReasoning:")
+	log.Printf("  OpenAI: %s", openai.GetRecommendedModel("reasoning"))
+	log.Printf("  Anthropic: %s", anthropic.GetRecommendedModel("reasoning"))
+	log.Printf("  Google: %s", google.GetRecommendedModel("reasoning"))
+	log.Printf("  Ollama: %s", ollama.GetRecommendedModel("reasoning", 32))
+
+	log.Println("\nCost-Efficient:")
+	log.Printf("  OpenAI: %s", openai.GetRecommendedModel("cost-efficient"))
+	log.Printf("  Anthropic: %s", anthropic.GetRecommendedModel("cost-efficient"))
+	log.Printf("  Google: %s", google.GetRecommendedModel("cost-efficient"))
+	log.Printf("  Ollama: %s", ollama.GetRecommendedModel("small", 4))
+
+	log.Println("\nMultimodal:")
+	log.Printf("  OpenAI: %s", openai.GetRecommendedModel("multimodal"))
+	log.Printf("  Google: %s", google.GetRecommendedModel("multimodal"))
+	log.Printf("  Ollama: %s", ollama.GetRecommendedModel("vision", 16))
+}
+
+// DemoFactoryWithLatestModels shows using the factory with 2025 models
+func DemoFactoryWithLatestModels() {
+	log.Println("\n=== Factory Demo with Latest Models ===")
+
+	factory := NewFactory()
+
+	// Create clients with latest models
+	models := map[ProviderType]string{
+		ProviderOpenAI:    "gpt-4.1",
+		ProviderAnthropic: "claude-4-sonnet",
+		ProviderGoogle:    "gemini-2.5-flash",
+		ProviderOllama:    "llama3.3:70b",
+	}
+
+	for providerType, model := range models {
+		client, err := factory.CreateClient(providerType, "test-key", model)
+		if err != nil {
+			log.Printf("Error creating %s client: %v", providerType, err)
+			continue
+		}
+
+		ctx := context.Background()
+		response, err := client.Complete(ctx, fmt.Sprintf("Hello from %s", model))
+		if err != nil {
+			log.Printf("Error with %s: %v", providerType, err)
+		} else {
+			log.Printf("%s (%s): %s", providerType, model, response)
+		}
+	}
+}
+
+// ModelComparisonTable shows a comparison of current models
+func ModelComparisonTable() {
+	log.Println("\n=== 2025 Model Comparison ===")
+	
+	type ModelComparison struct {
+		Provider string
+		Model    string
+		Type     string
+		Context  string
+		InputPrice  string
+		OutputPrice string
+		Strengths string
+	}
+
+	comparisons := []ModelComparison{
+		// Flagship models
+		{"OpenAI", "gpt-4.1", "text", "1M tokens", "$2.00", "$8.00", "Best coding, 1M context"},
+		{"Anthropic", "claude-4-opus", "reasoning", "200k tokens", "$15.00", "$75.00", "Best reasoning, complex tasks"},
+		{"Google", "gemini-2.5-pro", "multimodal", "2M tokens", "$3.50", "$10.50", "Multimodal, large context"},
+		{"Ollama", "llama3.3:70b", "text", "Local", "Free", "Free", "Local, no API costs"},
+		
+		// Efficient models
+		{"OpenAI", "gpt-4.1-nano", "text", "1M tokens", "$0.10", "$0.40", "Ultra cost-efficient"},
+		{"Anthropic", "claude-3.7-sonnet", "hybrid-reasoning", "200k tokens", "$3.00", "$15.00", "Hybrid reasoning"},
+		{"Google", "gemini-2.5-flash", "multimodal", "1M tokens", "$0.075", "$0.30", "Fast and cheap"},
+		{"Ollama", "phi4:14b", "text", "Local", "Free", "Free", "Good performance, 16GB RAM"},
+		
+		// Specialized models
+		{"OpenAI", "o3-mini", "reasoning", "200k tokens", "$1.00", "$5.00", "Latest reasoning"},
+		{"Google", "gemini-2.5-pro-deep", "reasoning", "1M tokens", "$7.00", "$21.00", "Deep thinking"},
+		{"Ollama", "qwen2-math:7b", "math", "Local", "Free", "Free", "Math specialized"},
+		{"Ollama", "codegemma:7b", "code", "Local", "Free", "Free", "Code specialized"},
+	}
+
+	log.Printf("%-10s %-20s %-12s %-10s %-8s %-8s %s", 
+		"Provider", "Model", "Type", "Context", "Input", "Output", "Strengths")
+	log.Println(strings.Repeat("-", 100))
+	
+	for _, comp := range comparisons {
+		log.Printf("%-10s %-20s %-12s %-10s %-8s %-8s %s", 
+			comp.Provider, comp.Model, comp.Type, comp.Context, 
+			comp.InputPrice, comp.OutputPrice, comp.Strengths)
+	}
+}

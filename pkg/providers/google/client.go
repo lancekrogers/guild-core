@@ -1,4 +1,4 @@
-package openai
+package google
 
 import (
 	"context"
@@ -7,55 +7,51 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
-// Latest OpenAI models as of 2025
+// Latest Google Gemini models as of 2025
 var SupportedModels = map[string]ModelInfo{
-	// GPT-4.1 Series (Latest - Released April 2025)
-	"gpt-4.1":      {Name: "gpt-4.1", Type: "text", MaxTokens: 1000000, InputPrice: 2.0, OutputPrice: 8.0},
-	"gpt-4.1-mini": {Name: "gpt-4.1-mini", Type: "text", MaxTokens: 1000000, InputPrice: 0.4, OutputPrice: 1.6},
-	"gpt-4.1-nano": {Name: "gpt-4.1-nano", Type: "text", MaxTokens: 1000000, InputPrice: 0.1, OutputPrice: 0.4},
+	// Gemini 2.5 Series (Latest - Released 2025)
+	"gemini-2.5-pro":        {Name: "gemini-2.5-pro", Type: "multimodal", MaxTokens: 2000000, InputPrice: 3.5, OutputPrice: 10.5},
+	"gemini-2.5-flash":      {Name: "gemini-2.5-flash", Type: "multimodal", MaxTokens: 1000000, InputPrice: 0.075, OutputPrice: 0.3},
+	"gemini-2.5-pro-deep":   {Name: "gemini-2.5-pro-deep", Type: "reasoning", MaxTokens: 1000000, InputPrice: 7.0, OutputPrice: 21.0},
 
-	// GPT-4o Series (Multimodal)
-	"gpt-4o":      {Name: "gpt-4o", Type: "multimodal", MaxTokens: 128000, InputPrice: 2.5, OutputPrice: 10.0},
-	"gpt-4o-mini": {Name: "gpt-4o-mini", Type: "multimodal", MaxTokens: 128000, InputPrice: 0.15, OutputPrice: 0.6},
+	// Gemini 2.0 Series
+	"gemini-2.0-flash":      {Name: "gemini-2.0-flash", Type: "multimodal", MaxTokens: 1000000, InputPrice: 0.075, OutputPrice: 0.3},
+	"gemini-2.0-flash-lite": {Name: "gemini-2.0-flash-lite", Type: "multimodal", MaxTokens: 1000000, InputPrice: 0.075, OutputPrice: 0.3},
 
-	// o1 Series (Reasoning Models)
-	"o1":      {Name: "o1", Type: "reasoning", MaxTokens: 200000, InputPrice: 15.0, OutputPrice: 60.0},
-	"o1-mini": {Name: "o1-mini", Type: "reasoning", MaxTokens: 65536, InputPrice: 3.0, OutputPrice: 12.0},
+	// Audio/Live Models
+	"gemini-2.5-flash-audio": {Name: "gemini-2.5-flash-audio", Type: "audio", MaxTokens: 1000000, InputPrice: 0.075, OutputPrice: 0.3},
 
-	// o3/o4 Series (Latest Reasoning)
-	"o3-mini": {Name: "o3-mini", Type: "reasoning", MaxTokens: 200000, InputPrice: 1.0, OutputPrice: 5.0},
-	"o4-mini": {Name: "o4-mini", Type: "reasoning", MaxTokens: 200000, InputPrice: 0.5, OutputPrice: 2.0},
-
-	// Real-time Audio Models
-	"gpt-4o-mini-realtime-preview": {Name: "gpt-4o-mini-realtime-preview", Type: "audio", MaxTokens: 128000, InputPrice: 0.15, OutputPrice: 0.6},
+	// Previous Generation (Still Available)
+	"gemini-1.5-pro":   {Name: "gemini-1.5-pro", Type: "multimodal", MaxTokens: 2000000, InputPrice: 3.5, OutputPrice: 10.5},
+	"gemini-1.5-flash": {Name: "gemini-1.5-flash", Type: "multimodal", MaxTokens: 1000000, InputPrice: 0.075, OutputPrice: 0.3},
 }
 
-// ModelInfo contains information about a model
+// ModelInfo contains information about a Gemini model
 type ModelInfo struct {
 	Name        string  // Model name
-	Type        string  // Model type: text, multimodal, reasoning, audio
+	Type        string  // Model type: multimodal, reasoning, audio
 	MaxTokens   int     // Maximum context length
 	InputPrice  float64 // Price per million input tokens
 	OutputPrice float64 // Price per million output tokens
 }
 
-// Client implements the LLMClient interface for OpenAI
+// Client implements the LLMClient interface for Google Gemini
 type Client struct {
 	apiKey string
 	model  string
 }
 
-// NewClient creates a new OpenAI client with model validation
+// NewClient creates a new Google Gemini client with model validation
 func NewClient(apiKey, model string) *Client {
 	// Use default model if none specified
 	if model == "" {
-		model = "gpt-4.1" // Latest default
+		model = "gemini-2.5-flash" // Good default balance of performance and cost
 	}
 
 	// Validate model exists
 	if _, exists := SupportedModels[model]; !exists {
 		// Use fallback model if invalid model specified
-		model = "gpt-4.1"
+		model = "gemini-2.5-flash"
 	}
 
 	return &Client{
@@ -66,7 +62,7 @@ func NewClient(apiKey, model string) *Client {
 
 // Complete generates a completion for the given prompt
 func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
-	return fmt.Sprintf("OpenAI %s response for prompt: %s", c.model, prompt), nil
+	return fmt.Sprintf("Google %s response for prompt: %s", c.model, prompt), nil
 }
 
 // GetModel returns the current model being used
@@ -80,7 +76,7 @@ func (c *Client) GetModelInfo() (ModelInfo, bool) {
 	return info, exists
 }
 
-// ListSupportedModels returns all supported OpenAI models
+// ListSupportedModels returns all supported Google Gemini models
 func ListSupportedModels() map[string]ModelInfo {
 	return SupportedModels
 }
@@ -100,24 +96,26 @@ func GetModelsByType(modelType string) map[string]ModelInfo {
 func GetRecommendedModel(useCase string) string {
 	switch useCase {
 	case "coding":
-		return "gpt-4.1" // Best for coding as of 2025
+		return "gemini-2.5-pro" // Best for complex coding tasks
 	case "reasoning":
-		return "o3-mini" // Latest reasoning model
+		return "gemini-2.5-pro-deep" // Deep thinking capabilities
 	case "multimodal":
-		return "gpt-4o" // Best multimodal
+		return "gemini-2.5-pro" // Best multimodal capabilities
 	case "cost-efficient":
-		return "gpt-4.1-nano" // Most cost-efficient
+		return "gemini-2.5-flash" // Most cost-efficient
 	case "audio":
-		return "gpt-4o-mini-realtime-preview"
+		return "gemini-2.5-flash-audio" // Audio capabilities
+	case "fast":
+		return "gemini-2.0-flash-lite" // Optimized for speed
 	default:
-		return "gpt-4.1" // General purpose default
+		return "gemini-2.5-flash" // General purpose default
 	}
 }
 
 // CreateCompletion is a lower-level method to create a completion
 func (c *Client) CreateCompletion(ctx context.Context, req *interfaces.CompletionRequest) (*interfaces.CompletionResponse, error) {
 	return &interfaces.CompletionResponse{
-		Text: fmt.Sprintf("Stub response for prompt: %s", req.Prompt),
+		Text: fmt.Sprintf("Google %s response for prompt: %s", c.model, req.Prompt),
 		TokensUsed: 10,
 		TokensInput: 5,
 		TokensOutput: 5,

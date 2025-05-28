@@ -151,7 +151,7 @@ guild task unblock task-123 --input "Focus more on practical examples"
 Guild is built on a component-based architecture inspired by medieval guild structures:
 
 - **Agents** (Artisans): LLM-powered workers that execute specialized tasks
-- **Guilds** (Master Craftsmen): Coordinators that manage multiple agents
+- **Guilds**: Teams of artisans working together on shared objectives
 - **Kanban** (Workshop Board): Task tracking system with state management
 - **Memory** (Archives): Persistence layer with vector search capabilities
 - **Tools** (Implements): External capabilities that agents can use
