@@ -14,7 +14,13 @@ This package provides a unified interface for interacting with multiple AI/LLM p
 - **Mock** - Full-featured mock provider for testing
 
 ✅ **Special Purpose Providers:**
-- **Claude Code** - CLI wrapper using claude-code-go SDK, supports MCP integration
+- **Claude Code** - CLI wrapper using claude-code-go SDK v0.1.1+
+  - **Included with Claude Max subscription** (Sign up: https://t.co/54ylwq0OPh)
+  - Supports MCP (Model Context Protocol) integration
+  - Model selection via `--model` flag (new in v0.1.1)
+  - Pre-configured prompts for coding, debugging, and review tasks
+  - **Higher usage limits** than direct API access
+  - No per-token billing with Max subscription
 
 ⚠️ **Not Yet Implemented:**
 - **Google** - Removed for now - needs AIProvider interface implementation (see README_GOOGLE_REMOVAL.md)
@@ -85,18 +91,62 @@ resp, err := mock.ChatCompletion(ctx, req)
 calls := mock.GetCalls()
 ```
 
+### Using Claude Code Provider
+
+**Setup Claude Max & Claude Code:**
+1. Sign up for Claude Max: https://t.co/54ylwq0OPh
+2. Install Claude Code CLI (included with Max subscription)
+3. Authenticate: 
+   ```bash
+   claude /logout  # Clear existing sessions
+   claude /login   # Authenticate with Claude Max account
+   ```
+4. Configure via Claude console as needed
+
+**Usage in Go:**
+```go
+// Create with Claude 4 models (Released May 2025)
+client := claudecode.NewClient("/usr/local/bin/claude", claudecode.ClaudeOpus4)  // Best coding model
+client := claudecode.NewClient("/usr/local/bin/claude", claudecode.ClaudeSonnet4) // Balanced performance
+
+// Or use older models
+client := claudecode.NewClient("/usr/local/bin/claude", "claude-3-5-sonnet-20241022")
+
+// Or use pre-configured modes
+client := claudecode.NewClient("claude", "coding-focused")
+
+// Complete a prompt (uses Claude Max limits, not API limits)
+response, err := client.Complete(ctx, "Write a hello world function")
+
+// Change model dynamically
+client.SetModel("claude-opus-4")  // Switch to Opus 4
+
+// Enable MCP tools
+client.EnableMCP("/path/to/mcp-config.json")
+client.SetAllowedTools([]string{"mcp__filesystem__read", "mcp__git__status"})
+```
+
+**Benefits over API:**
+- Higher usage limits with Max subscription
+- No per-token charges
+- Access to all models including Claude 4
+- Built-in MCP support
+- Local session management
+
 ## Provider Comparison
 
 | Provider | Context Window | Streaming | Vision | Tools | Cost (per M tokens) |
 |----------|---------------|-----------|--------|-------|---------------------|
 | OpenAI | 1M | ✅ | ✅ | ✅ | $1-$30 |
 | Anthropic | 200K | ✅ | ✅ | ✅ | $3-$75 |
+| Claude Code | 200K | ✅ | ✅ | ✅ (MCP) | Max subscription** |
 | DeepSeek | 64K | ✅ | ❌ | ✅ | $0.07-$2.19 |
 | DeepInfra | 131K | ✅ | ❌ | ✅ | $0.06-$0.79 |
 | Ollama | Varies | ✅ | ✅* | ❌ | Free (local) |
 | Ora | 64K | ✅ | ❌ | ✅ | $0.1-$2 |
 
 *Some Ollama models support vision
+**Claude Code included with Claude Max subscription (https://t.co/54ylwq0OPh) - no per-token charges
 
 ## Environment Variables
 

@@ -109,6 +109,9 @@ const (
 
 	// EventObjectiveCompleted is emitted when an objective is completed
 	EventObjectiveCompleted = "objective.completed"
+	
+	// EventObjectiveStatusChanged is emitted when an objective status changes
+	EventObjectiveStatusChanged = "objective.status.changed"
 
 	// EventOrchestratorStarted is emitted when the orchestrator starts
 	EventOrchestratorStarted = "orchestrator.started"

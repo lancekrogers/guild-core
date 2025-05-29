@@ -40,6 +40,9 @@ const (
 	
 	// EventTypeObjectiveCompleted is emitted when an objective is completed
 	EventTypeObjectiveCompleted EventType = "objective_completed"
+	
+	// EventTypeObjectiveStatusChanged is emitted when an objective status changes
+	EventTypeObjectiveStatusChanged EventType = "objective_status_changed"
 )
 
 // Event represents an event in the system

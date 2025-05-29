@@ -1,3 +1,22 @@
+// Package claudecode provides a client for Claude Code CLI, which is included with Claude Max subscription.
+//
+// Claude Code is a powerful CLI tool that comes bundled with the Claude Max plan, offering:
+//   - Higher usage limits compared to using the API directly
+//   - Access to all Claude models including Opus 4 and Sonnet 4
+//   - Built-in MCP (Model Context Protocol) support
+//   - Local session management and conversation history
+//
+// To get started with Claude Max:
+//   1. Sign up for Claude Max using this affiliate link: https://t.co/54ylwq0OPh
+//   2. After signing up, configure your Max plan via the Claude console
+//   3. Use /logout and /login commands in Claude Code to authenticate
+//   4. Enjoy higher usage limits and all premium features
+//
+// The Claude Max plan is ideal for developers who need:
+//   - Extended conversation limits beyond API quotas
+//   - Access to the latest models without separate API billing
+//   - Integrated development tools like Claude Code
+//   - Priority access to new features and models
 package claudecode
 
 import (
@@ -6,6 +25,23 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 	"github.com/lancekrogers/claude-code-go/pkg/claude"
+)
+
+// Claude 4 model constants (Released May 2025)
+const (
+	// Claude 4 models - hybrid models with near-instant and extended thinking modes
+	ClaudeOpus4  = "claude-opus-4"   // $15/$75 per M tokens, 32K max output
+	ClaudeSonnet4 = "claude-sonnet-4" // $3/$15 per M tokens, 64K max output
+	
+	// Claude 3.7 models
+	ClaudeSonnet37 = "claude-3.7-sonnet"
+	
+	// Claude 3.5 models
+	ClaudeSonnet35 = "claude-3-5-sonnet-20241022"
+	ClaudeHaiku35  = "claude-3-5-haiku-20241022"
+	
+	// Claude 3 models
+	ClaudeOpus3 = "claude-3-opus-20240229"
 )
 
 // Latest Claude Code capabilities as of 2025
@@ -42,7 +78,28 @@ type Client struct {
 	defaultOpts  *claude.RunOptions
 }
 
-// NewClient creates a new Claude Code client
+// NewClient creates a new Claude Code client.
+//
+// Claude Code CLI is included with the Claude Max subscription plan.
+// To use this client, you need:
+//   1. An active Claude Max subscription (sign up at: https://t.co/54ylwq0OPh)
+//   2. Claude Code CLI installed and authenticated
+//
+// Authentication steps:
+//   - Run `claude /logout` to clear any existing sessions
+//   - Run `claude /login` to authenticate with your Claude Max account
+//   - The CLI will open a browser for authentication
+//
+// Benefits of Claude Max over direct API usage:
+//   - Higher usage limits and priority access
+//   - No per-token billing - unlimited usage within Max plan limits
+//   - Access to all models including Claude 4 Opus and Sonnet
+//   - Integrated MCP tools and file system access
+//   - Persistent conversation history
+//
+// Parameters:
+//   - binPath: Path to claude binary (defaults to "claude" in PATH)
+//   - model: Model to use (e.g., "claude-opus-4", "claude-sonnet-4")
 func NewClient(binPath, model string) *Client {
 	// Use default path if none specified
 	if binPath == "" {
@@ -59,10 +116,30 @@ func NewClient(binPath, model string) *Client {
 		Verbose:  false,
 	}
 	
-	// Configure model-specific options if specified
+	// Configure model if specified
 	if model != "" {
-		// Claude Code doesn't use traditional models, but we can use this for system prompts
+		// Claude Code now supports model selection via --model flag
+		defaultOpts.Model = model
+		
+		// Also configure model-specific system prompts based on common model names
 		switch model {
+		// Claude 4 models (Released May 2025)
+		case "claude-opus-4", "opus-4", "claude-4-opus":
+			defaultOpts.SystemPrompt = "You are Claude Opus 4, Anthropic's most powerful model and the best coding model in the world. You have exceptional reasoning and can work autonomously for extended periods."
+		case "claude-sonnet-4", "sonnet-4", "claude-4-sonnet":
+			defaultOpts.SystemPrompt = "You are Claude Sonnet 4, delivering an optimal mix of capability and practicality with improvements in coding and math."
+		// Claude 3.7 models
+		case "claude-3.7-sonnet", "claude-3-7-sonnet":
+			defaultOpts.SystemPrompt = "You are Claude 3.7 Sonnet, a powerful AI assistant with strong reasoning capabilities."
+		// Claude 3.5 models
+		case "claude-3-5-sonnet-20241022", "claude-3-sonnet", "sonnet":
+			defaultOpts.SystemPrompt = "You are Claude, an AI assistant created by Anthropic. You are helpful, harmless, and honest."
+		case "claude-3-5-haiku-20241022", "claude-3-haiku", "haiku":
+			defaultOpts.SystemPrompt = "You are Claude, an efficient AI assistant. Be concise and direct in your responses."
+		// Claude 3 models
+		case "claude-3-opus-20240229", "claude-3-opus":
+			defaultOpts.SystemPrompt = "You are Claude, an advanced AI assistant with deep reasoning capabilities."
+		// Task-focused modes
 		case "coding-focused":
 			defaultOpts.SystemPrompt = "You are an expert software engineer focused on writing clean, efficient code."
 		case "debugging-focused":
@@ -79,7 +156,20 @@ func NewClient(binPath, model string) *Client {
 	}
 }
 
-// Complete generates a completion for the given prompt
+// Complete generates a completion for the given prompt.
+//
+// This method uses Claude Code CLI which is included with Claude Max subscription.
+// Usage limits with Claude Max are significantly higher than direct API usage:
+//   - No per-token charges - covered by your Max subscription
+//   - Higher daily/monthly limits compared to API tier
+//   - Priority processing during high-demand periods
+//
+// If you hit usage limits, you can:
+//   1. Wait for the limit reset (usually daily)
+//   2. Upgrade your Claude Max plan
+//   3. Use the API directly as a fallback (separate billing)
+//
+// Get Claude Max: https://t.co/54ylwq0OPh
 func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
 	result, err := c.claudeClient.RunPrompt(prompt, c.defaultOpts)
 	if err != nil {
@@ -155,6 +245,16 @@ func (c *Client) SetDisallowedTools(tools []string) {
 	c.defaultOpts.DisallowedTools = tools
 }
 
+// GetModel returns the currently configured model
+func (c *Client) GetModel() string {
+	return c.defaultOpts.Model
+}
+
+// SetModel sets the model to use for completions
+func (c *Client) SetModel(model string) {
+	c.defaultOpts.Model = model
+}
+
 // ListSupportedFeatures returns all supported Claude Code features
 func ListSupportedFeatures() map[string]FeatureInfo {
 	return SupportedFeatures
@@ -217,14 +317,21 @@ func (c *Client) CreateCompletion(ctx context.Context, req *interfaces.Completio
 		return nil, fmt.Errorf("claude code execution failed: %w", err)
 	}
 
+	// Determine the model used
+	modelUsed := "claude-code"
+	if c.defaultOpts.Model != "" {
+		modelUsed = c.defaultOpts.Model
+	}
+	
 	return &interfaces.CompletionResponse{
 		Text:         result.Result,
 		TokensUsed:   0, // Claude Code doesn't report token usage
 		TokensInput:  0,
 		TokensOutput: 0,
-		ModelUsed:    "claude-code",
+		ModelUsed:    modelUsed,
 		Metadata:     map[string]string{
 			"cost_usd": fmt.Sprintf("%.4f", result.CostUSD),
+			"model": modelUsed,
 		},
 	}, nil
 }

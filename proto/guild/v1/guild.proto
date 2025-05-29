@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package guild.v1;
+
+option go_package = "github.com/guild-ventures/guild-core/pkg/grpc/pb";
+
+// Guild service provides API for managing campaigns and monitoring their progress
+service Guild {
+  // WatchCampaign streams live dashboard updates for a campaign
+  rpc WatchCampaign(WatchRequest) returns (stream BoardUpdate);
+  
+  // Campaign management
+  rpc GetCampaign(GetCampaignRequest) returns (Campaign);
+  rpc ListCampaigns(ListCampaignsRequest) returns (ListCampaignsResponse);
+  rpc CreateCampaign(CreateCampaignRequest) returns (Campaign);
+  rpc UpdateCampaign(UpdateCampaignRequest) returns (Campaign);
+  rpc DeleteCampaign(DeleteCampaignRequest) returns (DeleteCampaignResponse);
+  
+  // Campaign state transitions
+  rpc StartPlanningCampaign(CampaignActionRequest) returns (Campaign);
+  rpc MarkCampaignReady(CampaignActionRequest) returns (Campaign);
+  rpc StartCampaign(CampaignActionRequest) returns (Campaign);
+  rpc PauseCampaign(CampaignActionRequest) returns (Campaign);
+  rpc ResumeCampaign(CampaignActionRequest) returns (Campaign);
+  rpc CompleteCampaign(CampaignActionRequest) returns (Campaign);
+  rpc CancelCampaign(CampaignActionRequest) returns (Campaign);
+  
+  // Objective management
+  rpc AddObjectiveToCampaign(AddObjectiveRequest) returns (Campaign);
+  rpc RemoveObjectiveFromCampaign(RemoveObjectiveRequest) returns (Campaign);
+}
+
+// Campaign represents a strategic goal with multiple objectives
+message Campaign {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string status = 4;
+  repeated string objective_ids = 5;
+  repeated string tags = 6;
+  double progress = 7;
+  int32 total_objectives = 8;
+  int32 completed_objectives = 9;
+  int64 created_at = 10;
+  int64 updated_at = 11;
+  int64 started_at = 12;
+  int64 completed_at = 13;
+  map<string, string> metadata = 14;
+}
+
+// WatchRequest for streaming campaign updates
+message WatchRequest {
+  string campaign_id = 1; // empty = active campaign
+  bool include_agents = 2;
+  bool include_kanban = 3;
+  bool include_progress = 4;
+}
+
+// BoardUpdate contains ASCII board frame with ANSI colors
+message BoardUpdate {
+  string frame = 1; // ASCII board with ANSI colors
+  int64 timestamp = 2;
+  BoardMetadata metadata = 3;
+}
+
+// BoardMetadata provides additional information about the board state
+message BoardMetadata {
+  int32 width = 1;
+  int32 height = 2;
+  int32 active_agents = 3;
+  int32 total_tasks = 4;
+  int32 completed_tasks = 5;
+  double fps = 6;
+}
+
+// Campaign management messages
+message GetCampaignRequest {
+  string id = 1;
+}
+
+message ListCampaignsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string status_filter = 3;
+}
+
+message ListCampaignsResponse {
+  repeated Campaign campaigns = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message CreateCampaignRequest {
+  string name = 1;
+  string description = 2;
+  repeated string tags = 3;
+  map<string, string> metadata = 4;
+}
+
+message UpdateCampaignRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  repeated string tags = 4;
+  map<string, string> metadata = 5;
+}
+
+message DeleteCampaignRequest {
+  string id = 1;
+}
+
+message DeleteCampaignResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Campaign action messages
+message CampaignActionRequest {
+  string campaign_id = 1;
+}
+
+// Objective management messages
+message AddObjectiveRequest {
+  string campaign_id = 1;
+  string objective_id = 2;
+}
+
+message RemoveObjectiveRequest {
+  string campaign_id = 1;
+  string objective_id = 2;
+}
+
+// Error details
+message ErrorDetail {
+  string code = 1;
+  string message = 2;
+  map<string, string> metadata = 3;
+}

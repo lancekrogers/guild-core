@@ -5,7 +5,23 @@ import (
 	"time"
 )
 
-// Store represents a persistent storage system for agent data
+// Store represents a persistent storage system for agent data.
+//
+// The Guild Framework uses BoltDB as its implementation, which provides:
+//   - MVCC (Multi-Version Concurrency Control): Readers don't block writers
+//   - Unlimited concurrent readers for excellent read performance
+//   - Sequential writes (single writer) with high throughput (44k writes/sec)
+//   - ACID transactions ensuring data consistency
+//
+// This design is optimal for Guild's agent coordination patterns:
+//   - Read-heavy workload (checking status, retrieving context)
+//   - Small write transactions (task updates, message appends)
+//   - Event-driven coordination reduces database contention
+//   - Proven to handle 1000+ concurrent connections in production
+//
+// Note: Do NOT replace BoltDB with client-server databases like PostgreSQL.
+// The embedded nature and performance characteristics are essential to Guild's
+// single-machine, developer-focused architecture.
 type Store interface {
 	// Put stores a value with the given key
 	Put(ctx context.Context, bucket, key string, value []byte) error

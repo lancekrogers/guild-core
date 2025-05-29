@@ -8,7 +8,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/guild-ventures/guild-core/pkg/providers/anthropic"
-	"github.com/guild-ventures/guild-core/pkg/providers/google"
 	"github.com/guild-ventures/guild-core/pkg/providers/ollama"
 	"github.com/guild-ventures/guild-core/pkg/providers/openai"
 )
@@ -69,33 +68,7 @@ func TestAnthropicModels(t *testing.T) {
 	assert.Contains(t, response, "test prompt")
 }
 
-func TestGoogleModels(t *testing.T) {
-	// Test model validation and defaults
-	client := google.NewClient("test-key", "")
-	assert.Equal(t, "gemini-2.5-flash", client.GetModel()) // Should use default
-
-	// Test with valid model
-	client = google.NewClient("test-key", "gemini-2.5-pro")
-	assert.Equal(t, "gemini-2.5-pro", client.GetModel())
-
-	// Test with invalid model (should fallback to default)
-	client = google.NewClient("test-key", "invalid-model")
-	assert.Equal(t, "gemini-2.5-flash", client.GetModel())
-
-	// Test model info
-	info, exists := client.GetModelInfo()
-	assert.True(t, exists)
-	assert.Equal(t, "gemini-2.5-flash", info.Name)
-	assert.Equal(t, "multimodal", info.Type)
-	assert.Equal(t, 1000000, info.MaxTokens)
-
-	// Test completion
-	ctx := context.Background()
-	response, err := client.Complete(ctx, "test prompt")
-	assert.NoError(t, err)
-	assert.Contains(t, response, "gemini-2.5-flash")
-	assert.Contains(t, response, "test prompt")
-}
+// Google provider tests removed - pending post-MVP implementation
 
 func TestOllamaModels(t *testing.T) {
 	// Test model validation and defaults
@@ -146,11 +119,7 @@ func TestModelRecommendations(t *testing.T) {
 	assert.Equal(t, "claude-3.7-sonnet", anthropic.GetRecommendedModel("hybrid-reasoning"))
 	assert.Equal(t, "claude-3-5-haiku-20241022", anthropic.GetRecommendedModel("cost-efficient"))
 
-	// Test Google recommendations
-	assert.Equal(t, "gemini-2.5-pro", google.GetRecommendedModel("coding"))
-	assert.Equal(t, "gemini-2.5-pro-deep", google.GetRecommendedModel("reasoning"))
-	assert.Equal(t, "gemini-2.5-flash", google.GetRecommendedModel("cost-efficient"))
-	assert.Equal(t, "gemini-2.5-flash-audio", google.GetRecommendedModel("audio"))
+	// Google recommendations tests removed - pending post-MVP implementation
 
 	// Test Ollama recommendations with RAM constraints
 	assert.Equal(t, "codegemma:7b", ollama.GetRecommendedModel("coding", 8))
@@ -204,10 +173,7 @@ func TestFactoryWithNewModels(t *testing.T) {
 	require.NoError(t, err)
 	assert.NotNil(t, client)
 
-	// Test Google
-	client, err = factory.CreateClient(ProviderGoogle, "test-key", "gemini-2.5-flash")
-	require.NoError(t, err)
-	assert.NotNil(t, client)
+	// Google provider tests removed - pending post-MVP implementation
 
 	// Test Ollama with latest model
 	client, err = factory.CreateClient(ProviderOllama, "", "llama3.3:70b")
@@ -232,11 +198,7 @@ func TestCurrentModelCoverage(t *testing.T) {
 	assert.Contains(t, anthropicModels, "claude-4-sonnet")
 	assert.Contains(t, anthropicModels, "claude-3.7-sonnet")
 
-	// Google - should have Gemini 2.5 series
-	googleModels := google.ListSupportedModels()
-	assert.Contains(t, googleModels, "gemini-2.5-pro")
-	assert.Contains(t, googleModels, "gemini-2.5-flash")
-	assert.Contains(t, googleModels, "gemini-2.5-pro-deep")
+	// Google model tests removed - pending post-MVP implementation
 
 	// Ollama - should have latest models
 	ollamaModels := ollama.ListSupportedModels()

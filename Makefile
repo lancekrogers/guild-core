@@ -215,6 +215,16 @@ fmt:
 	@go fmt ./...
 	@echo "$(GREEN)✓ Code formatted$(NC)"
 
+# Generate protobuf code
+proto:
+	@echo "$(BLUE)Generating protobuf code...$(NC)"
+	@mkdir -p pkg/grpc/pb
+	@protoc -I proto \
+		--go_out=pkg/grpc/pb --go_opt=paths=source_relative \
+		--go-grpc_out=pkg/grpc/pb --go-grpc_opt=paths=source_relative \
+		proto/guild/v1/*.proto
+	@echo "$(GREEN)✓ Protobuf generation complete$(NC)"
+
 # Development server with hot reload (using Task)
 dev:
 	@echo "$(BLUE)Starting development server...$(NC)"

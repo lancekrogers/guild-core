@@ -90,26 +90,67 @@ func TestClient_ModelConfiguration(t *testing.T) {
 		name           string
 		model          string
 		expectedPrompt string
+		expectedModel  string
 	}{
 		{
 			name:           "Coding focused model",
 			model:          "coding-focused",
 			expectedPrompt: "You are an expert software engineer focused on writing clean, efficient code.",
+			expectedModel:  "coding-focused",
 		},
 		{
 			name:           "Debugging focused model",
 			model:          "debugging-focused",
 			expectedPrompt: "You are an expert debugger focused on identifying and fixing code issues.",
+			expectedModel:  "debugging-focused",
 		},
 		{
 			name:           "Review focused model",
 			model:          "review-focused",
 			expectedPrompt: "You are an expert code reviewer focused on best practices and quality.",
+			expectedModel:  "review-focused",
+		},
+		{
+			name:           "Claude 4 Opus",
+			model:          ClaudeOpus4,
+			expectedPrompt: "You are Claude Opus 4, Anthropic's most powerful model and the best coding model in the world. You have exceptional reasoning and can work autonomously for extended periods.",
+			expectedModel:  ClaudeOpus4,
+		},
+		{
+			name:           "Claude 4 Sonnet",
+			model:          ClaudeSonnet4,
+			expectedPrompt: "You are Claude Sonnet 4, delivering an optimal mix of capability and practicality with improvements in coding and math.",
+			expectedModel:  ClaudeSonnet4,
+		},
+		{
+			name:           "Claude 3.7 Sonnet",
+			model:          ClaudeSonnet37,
+			expectedPrompt: "You are Claude 3.7 Sonnet, a powerful AI assistant with strong reasoning capabilities.",
+			expectedModel:  ClaudeSonnet37,
+		},
+		{
+			name:           "Claude 3.5 Sonnet",
+			model:          ClaudeSonnet35,
+			expectedPrompt: "You are Claude, an AI assistant created by Anthropic. You are helpful, harmless, and honest.",
+			expectedModel:  ClaudeSonnet35,
+		},
+		{
+			name:           "Claude 3.5 Haiku",
+			model:          ClaudeHaiku35,
+			expectedPrompt: "You are Claude, an efficient AI assistant. Be concise and direct in your responses.",
+			expectedModel:  ClaudeHaiku35,
+		},
+		{
+			name:           "Claude 3 Opus",
+			model:          ClaudeOpus3,
+			expectedPrompt: "You are Claude, an advanced AI assistant with deep reasoning capabilities.",
+			expectedModel:  ClaudeOpus3,
 		},
 		{
 			name:           "Unknown model",
 			model:          "unknown",
 			expectedPrompt: "",
+			expectedModel:  "unknown",
 		},
 	}
 
@@ -120,7 +161,37 @@ func TestClient_ModelConfiguration(t *testing.T) {
 			if opts.SystemPrompt != tt.expectedPrompt {
 				t.Errorf("Expected system prompt '%s', got '%s'", tt.expectedPrompt, opts.SystemPrompt)
 			}
+			if opts.Model != tt.expectedModel {
+				t.Errorf("Expected model '%s', got '%s'", tt.expectedModel, opts.Model)
+			}
+			// Test GetModel method
+			if client.GetModel() != tt.expectedModel {
+				t.Errorf("GetModel() expected '%s', got '%s'", tt.expectedModel, client.GetModel())
+			}
 		})
+	}
+}
+
+func TestClient_SetModel(t *testing.T) {
+	client := NewClient("claude-code", "initial-model")
+	
+	// Verify initial model
+	if client.GetModel() != "initial-model" {
+		t.Errorf("Expected initial model 'initial-model', got '%s'", client.GetModel())
+	}
+	
+	// Set new model
+	client.SetModel("new-model")
+	
+	// Verify model was updated
+	if client.GetModel() != "new-model" {
+		t.Errorf("Expected model 'new-model', got '%s'", client.GetModel())
+	}
+	
+	// Verify it's in the default options
+	opts := client.GetDefaultOptions()
+	if opts.Model != "new-model" {
+		t.Errorf("Expected model in options 'new-model', got '%s'", opts.Model)
 	}
 }
 

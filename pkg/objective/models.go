@@ -52,6 +52,7 @@ type Objective struct {
 	Specs       []string          `json:"specs,omitempty"`    // Specification paths
 	Completion  float64           `json:"completion"`         // Completion percentage (0.0-1.0)
 	Iteration   int               `json:"iteration"`          // Current iteration count
+	CampaignID  string            `json:"campaign_id,omitempty"` // Optional campaign association
 }
 
 // Format formats an objective as a markdown string
