@@ -1,11 +1,9 @@
 // pkg/ui/objective/update.go
-package objective_ui
+package objective
 
 import (
 	"context"
 	"fmt"
-	"os"
-	"os/exec"
 	"strings"
 	"time"
 
@@ -13,6 +11,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 
+	"github.com/guild-ventures/guild-core/pkg/objective"
 	"github.com/guild-ventures/guild-core/pkg/ui/objective/components"
 )
 
@@ -498,7 +497,7 @@ func loadObjectivesCmd(m ObjectiveChamber) tea.Cmd {
 					Title:       obj.Title,
 					Status:      string(obj.Status),
 					Path:        obj.FilePath,
-					Iterations:  obj.Iterations,
+					Iterations:  obj.Iteration,
 					CreatedAt:   obj.CreatedAt,
 					ModifiedAt:  obj.UpdatedAt,
 					Tags:        obj.Tags,
@@ -845,7 +844,7 @@ Tags: %s
 	obj.Title,
 	obj.Description,
 	obj.Status,
-	obj.Iterations,
+	obj.Iteration,
 	strings.Join(obj.Tags, ", "),
 	)
 }
@@ -885,7 +884,7 @@ func executeExternalCommandCmd(cmdStr string) tea.Cmd {
 		// Format the output for display
 		outputMsg := fmt.Sprintf("Command: guild %s\n\n", cmdStr)
 		if result.Success {
-			outputMsg += fmt.Sprintf("Success\! Output:\n%s", result.Output)
+			outputMsg += fmt.Sprintf("Success! Output:\n%s", result.Output)
 		} else {
 			outputMsg += fmt.Sprintf("Error (code %d):\n%s\n\nOutput:\n%s", 
 				result.ExitCode,
@@ -901,4 +900,3 @@ func executeExternalCommandCmd(cmdStr string) tea.Cmd {
 		}
 	}
 }
-EOF < /dev/null

@@ -2,10 +2,10 @@ package corpus
 
 import (
 	"fmt"
-	"path/filepath"
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
 )
 
 var (
@@ -71,19 +71,19 @@ func (m CorpusModel) View() string {
 
 	// Render the appropriate view based on the current mode
 	switch m.mode {
-	case modeList:
+	case ModeList:
 		s = m.renderList()
-	case modeView:
+	case ModeView:
 		s = m.renderDocument()
-	case modeSearch:
+	case ModeSearch:
 		s = m.renderSearch()
-	case modeTags:
+	case ModeTags:
 		s = m.renderTags()
-	case modeGraph:
+	case ModeGraph:
 		s = m.renderGraph()
-	case modeCommand:
+	case ModeCommand:
 		s = m.renderCommand()
-	case modeHelp:
+	case ModeHelp:
 		s = m.renderHelp()
 	default:
 		s = "Unknown mode: " + m.mode
@@ -93,20 +93,20 @@ func (m CorpusModel) View() string {
 	s = lipgloss.JoinVertical(lipgloss.Left, s, m.renderStatus())
 
 	// Add error message if there is one
-	if m.lastError != nil {
+	if m.err != nil {
 		s = lipgloss.JoinVertical(
 			lipgloss.Left,
 			s,
-			errorStyle.Render(fmt.Sprintf("Error: %v", m.lastError)),
+			errorStyle.Render(fmt.Sprintf("Error: %v", m.err)),
 		)
 	}
 
 	// Add help bar if enabled
-	if m.showHelp {
+	if m.helpView.ShowAll {
 		s = lipgloss.JoinVertical(
 			lipgloss.Left,
 			s,
-			m.helpView.View(m.keymap),
+			m.helpView.View(m.keys),
 		)
 	}
 
@@ -119,7 +119,7 @@ func (m CorpusModel) renderList() string {
 	return docStyle.
 		Width(m.width - 4).
 		Height(m.height - 6).
-		Render(m.list.View())
+		Render(m.docList.View())
 }
 
 // renderTags displays the tag list
@@ -132,7 +132,7 @@ func (m CorpusModel) renderTags() string {
 
 // renderDocument displays a single document
 func (m CorpusModel) renderDocument() string {
-	if m.currentDoc == nil {
+	if m.currentDoc.Title == "" {
 		return docStyle.
 			Width(m.width - 4).
 			Height(m.height - 6).
@@ -143,10 +143,10 @@ func (m CorpusModel) renderDocument() string {
 	contentView := docStyle.
 		Width(m.width - 4).
 		Height(m.height - 6).
-		Render(m.viewport.View())
+		Render(m.viewPort.View())
 
 	// Add title and metadata above the content
-	header := renderDocumentHeader(m.currentDoc)
+	header := renderDocumentHeader(&m.currentDoc)
 
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
@@ -192,7 +192,7 @@ func (m CorpusModel) renderSearch() string {
 	searchBar := m.searchInput.View()
 
 	// Render search results (using the list)
-	results := m.list.View()
+	results := m.docList.View()
 
 	return docStyle.
 		Width(m.width - 4).
@@ -208,7 +208,7 @@ func (m CorpusModel) renderSearch() string {
 
 // renderGraph displays graph visualization
 func (m CorpusModel) renderGraph() string {
-	if m.graph == nil {
+	if len(m.graph.Nodes) == 0 {
 		return docStyle.
 			Width(m.width - 4).
 			Height(m.height - 6).
@@ -253,7 +253,7 @@ func (m CorpusModel) renderCommand() string {
 		Render(lipgloss.JoinVertical(
 			lipgloss.Left,
 			"Command:",
-			m.cmdInput.View(),
+			m.commandInput.View(),
 			"",
 			"Available Commands:",
 			" open [path]  - Open a document",
@@ -303,7 +303,7 @@ func (m CorpusModel) renderStatus() string {
 	countText := fmt.Sprintf("Documents: %d", len(m.docs))
 	
 	// Current user
-	userText := fmt.Sprintf("User: %s", m.user)
+	userText := fmt.Sprintf("User: %s", m.config.CurrentUser)
 	
 	// Join status elements with spacing
 	status := lipgloss.JoinHorizontal(

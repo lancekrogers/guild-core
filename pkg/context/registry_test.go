@@ -7,12 +7,12 @@ import (
 )
 
 // Mock implementations for testing
-type MockAgentRegistry struct {
+type TestMockAgentRegistry struct {
 	agents       map[string]interface{}
 	defaultAgent string
 }
 
-func (m *MockAgentRegistry) RegisterAgent(name string, agent interface{}) error {
+func (m *TestMockAgentRegistry) RegisterAgent(name string, agent interface{}) error {
 	if m.agents == nil {
 		m.agents = make(map[string]interface{})
 	}
@@ -20,14 +20,14 @@ func (m *MockAgentRegistry) RegisterAgent(name string, agent interface{}) error 
 	return nil
 }
 
-func (m *MockAgentRegistry) GetAgent(name string) (interface{}, error) {
+func (m *TestMockAgentRegistry) GetAgent(name string) (interface{}, error) {
 	if agent, exists := m.agents[name]; exists {
 		return agent, nil
 	}
 	return nil, fmt.Errorf("agent '%s' not found", name)
 }
 
-func (m *MockAgentRegistry) ListAgents() []string {
+func (m *TestMockAgentRegistry) ListAgents() []string {
 	var names []string
 	for name := range m.agents {
 		names = append(names, name)
@@ -35,24 +35,24 @@ func (m *MockAgentRegistry) ListAgents() []string {
 	return names
 }
 
-func (m *MockAgentRegistry) SetDefaultAgent(name string) error {
+func (m *TestMockAgentRegistry) SetDefaultAgent(name string) error {
 	m.defaultAgent = name
 	return nil
 }
 
-func (m *MockAgentRegistry) GetDefaultAgent() (interface{}, error) {
+func (m *TestMockAgentRegistry) GetDefaultAgent() (interface{}, error) {
 	if m.defaultAgent == "" {
 		return nil, fmt.Errorf("no default agent set")
 	}
 	return m.GetAgent(m.defaultAgent)
 }
 
-type MockToolRegistry struct {
+type TestMockToolRegistry struct {
 	tools   map[string]interface{}
 	enabled map[string]bool
 }
 
-func (m *MockToolRegistry) RegisterTool(name string, tool interface{}) error {
+func (m *TestMockToolRegistry) RegisterTool(name string, tool interface{}) error {
 	if m.tools == nil {
 		m.tools = make(map[string]interface{})
 	}
@@ -64,14 +64,14 @@ func (m *MockToolRegistry) RegisterTool(name string, tool interface{}) error {
 	return nil
 }
 
-func (m *MockToolRegistry) GetTool(name string) (interface{}, error) {
+func (m *TestMockToolRegistry) GetTool(name string) (interface{}, error) {
 	if tool, exists := m.tools[name]; exists {
 		return tool, nil
 	}
 	return nil, fmt.Errorf("tool '%s' not found", name)
 }
 
-func (m *MockToolRegistry) ListTools() []string {
+func (m *TestMockToolRegistry) ListTools() []string {
 	var names []string
 	for name := range m.tools {
 		names = append(names, name)
@@ -79,7 +79,7 @@ func (m *MockToolRegistry) ListTools() []string {
 	return names
 }
 
-func (m *MockToolRegistry) EnableTool(name string) error {
+func (m *TestMockToolRegistry) EnableTool(name string) error {
 	if m.enabled == nil {
 		m.enabled = make(map[string]bool)
 	}
@@ -87,7 +87,7 @@ func (m *MockToolRegistry) EnableTool(name string) error {
 	return nil
 }
 
-func (m *MockToolRegistry) DisableTool(name string) error {
+func (m *TestMockToolRegistry) DisableTool(name string) error {
 	if m.enabled == nil {
 		m.enabled = make(map[string]bool)
 	}
@@ -95,19 +95,19 @@ func (m *MockToolRegistry) DisableTool(name string) error {
 	return nil
 }
 
-func (m *MockToolRegistry) IsToolEnabled(name string) bool {
+func (m *TestMockToolRegistry) IsToolEnabled(name string) bool {
 	if m.enabled == nil {
 		return false
 	}
 	return m.enabled[name]
 }
 
-type MockProviderRegistry struct {
+type TestMockProviderRegistry struct {
 	providers       map[string]interface{}
 	defaultProvider string
 }
 
-func (m *MockProviderRegistry) RegisterProvider(name string, provider interface{}) error {
+func (m *TestMockProviderRegistry) RegisterProvider(name string, provider interface{}) error {
 	if m.providers == nil {
 		m.providers = make(map[string]interface{})
 	}
@@ -115,14 +115,14 @@ func (m *MockProviderRegistry) RegisterProvider(name string, provider interface{
 	return nil
 }
 
-func (m *MockProviderRegistry) GetProvider(name string) (interface{}, error) {
+func (m *TestMockProviderRegistry) GetProvider(name string) (interface{}, error) {
 	if provider, exists := m.providers[name]; exists {
 		return provider, nil
 	}
 	return nil, fmt.Errorf("provider '%s' not found", name)
 }
 
-func (m *MockProviderRegistry) ListProviders() []string {
+func (m *TestMockProviderRegistry) ListProviders() []string {
 	var names []string
 	for name := range m.providers {
 		names = append(names, name)
@@ -130,24 +130,24 @@ func (m *MockProviderRegistry) ListProviders() []string {
 	return names
 }
 
-func (m *MockProviderRegistry) SetDefaultProvider(name string) error {
+func (m *TestMockProviderRegistry) SetDefaultProvider(name string) error {
 	m.defaultProvider = name
 	return nil
 }
 
-func (m *MockProviderRegistry) GetDefaultProvider() (interface{}, error) {
+func (m *TestMockProviderRegistry) GetDefaultProvider() (interface{}, error) {
 	if m.defaultProvider == "" {
 		return nil, fmt.Errorf("no default provider set")
 	}
 	return m.GetProvider(m.defaultProvider)
 }
 
-type MockMemoryRegistry struct {
+type TestMockMemoryRegistry struct {
 	memoryStores map[string]interface{}
 	vectorStores map[string]interface{}
 }
 
-func (m *MockMemoryRegistry) RegisterMemoryStore(name string, store interface{}) error {
+func (m *TestMockMemoryRegistry) RegisterMemoryStore(name string, store interface{}) error {
 	if m.memoryStores == nil {
 		m.memoryStores = make(map[string]interface{})
 	}
@@ -155,14 +155,14 @@ func (m *MockMemoryRegistry) RegisterMemoryStore(name string, store interface{})
 	return nil
 }
 
-func (m *MockMemoryRegistry) GetMemoryStore(name string) (interface{}, error) {
+func (m *TestMockMemoryRegistry) GetMemoryStore(name string) (interface{}, error) {
 	if store, exists := m.memoryStores[name]; exists {
 		return store, nil
 	}
 	return nil, fmt.Errorf("memory store '%s' not found", name)
 }
 
-func (m *MockMemoryRegistry) RegisterVectorStore(name string, store interface{}) error {
+func (m *TestMockMemoryRegistry) RegisterVectorStore(name string, store interface{}) error {
 	if m.vectorStores == nil {
 		m.vectorStores = make(map[string]interface{})
 	}
@@ -170,14 +170,14 @@ func (m *MockMemoryRegistry) RegisterVectorStore(name string, store interface{})
 	return nil
 }
 
-func (m *MockMemoryRegistry) GetVectorStore(name string) (interface{}, error) {
+func (m *TestMockMemoryRegistry) GetVectorStore(name string) (interface{}, error) {
 	if store, exists := m.vectorStores[name]; exists {
 		return store, nil
 	}
 	return nil, fmt.Errorf("vector store '%s' not found", name)
 }
 
-func (m *MockMemoryRegistry) ListMemoryStores() []string {
+func (m *TestMockMemoryRegistry) ListMemoryStores() []string {
 	var names []string
 	for name := range m.memoryStores {
 		names = append(names, name)
@@ -185,7 +185,7 @@ func (m *MockMemoryRegistry) ListMemoryStores() []string {
 	return names
 }
 
-func (m *MockMemoryRegistry) ListVectorStores() []string {
+func (m *TestMockMemoryRegistry) ListVectorStores() []string {
 	var names []string
 	for name := range m.vectorStores {
 		names = append(names, name)
@@ -193,35 +193,35 @@ func (m *MockMemoryRegistry) ListVectorStores() []string {
 	return names
 }
 
-type MockRegistryProvider struct {
-	agentRegistry    *MockAgentRegistry
-	toolRegistry     *MockToolRegistry
-	providerRegistry *MockProviderRegistry
-	memoryRegistry   *MockMemoryRegistry
+type TestMockRegistryProvider struct {
+	agentRegistry    *TestMockAgentRegistry
+	toolRegistry     *TestMockToolRegistry
+	providerRegistry *TestMockProviderRegistry
+	memoryRegistry   *TestMockMemoryRegistry
 }
 
-func NewMockRegistryProvider() *MockRegistryProvider {
-	return &MockRegistryProvider{
-		agentRegistry:    &MockAgentRegistry{},
-		toolRegistry:     &MockToolRegistry{},
-		providerRegistry: &MockProviderRegistry{},
-		memoryRegistry:   &MockMemoryRegistry{},
+func NewTestMockRegistryProvider() *TestMockRegistryProvider {
+	return &TestMockRegistryProvider{
+		agentRegistry:    &TestMockAgentRegistry{},
+		toolRegistry:     &TestMockToolRegistry{},
+		providerRegistry: &TestMockProviderRegistry{},
+		memoryRegistry:   &TestMockMemoryRegistry{},
 	}
 }
 
-func (m *MockRegistryProvider) Agents() AgentRegistry {
+func (m *TestMockRegistryProvider) Agents() AgentRegistry {
 	return m.agentRegistry
 }
 
-func (m *MockRegistryProvider) Tools() ToolRegistry {
+func (m *TestMockRegistryProvider) Tools() ToolRegistry {
 	return m.toolRegistry
 }
 
-func (m *MockRegistryProvider) Providers() ProviderRegistry {
+func (m *TestMockRegistryProvider) Providers() ProviderRegistry {
 	return m.providerRegistry
 }
 
-func (m *MockRegistryProvider) Memory() MemoryRegistry {
+func (m *TestMockRegistryProvider) Memory() MemoryRegistry {
 	return m.memoryRegistry
 }
 
@@ -235,7 +235,7 @@ func TestRegistryProviderContext(t *testing.T) {
 	}
 	
 	// Test setting and getting registry
-	mockRegistry := NewMockRegistryProvider()
+	mockRegistry := NewTestMockRegistryProvider()
 	ctx = WithRegistryProvider(ctx, mockRegistry)
 	
 	registry, err := GetRegistryProvider(ctx)
@@ -250,7 +250,7 @@ func TestRegistryProviderContext(t *testing.T) {
 
 func TestComponentAccessFromContext(t *testing.T) {
 	ctx := context.Background()
-	mockRegistry := NewMockRegistryProvider()
+	mockRegistry := NewTestMockRegistryProvider()
 	ctx = WithRegistryProvider(ctx, mockRegistry)
 	
 	// Test agent operations

@@ -1,5 +1,5 @@
 // pkg/ui/objective/view.go
-package objective_ui
+package objective
 
 import (
 	"fmt"
@@ -182,7 +182,7 @@ func (m ObjectiveChamber) renderViewingState() string {
 		status = fmt.Sprintf(
 			"Status: %s | Iterations: %d | Ready: %v",
 			m.currentObjective.Status,
-			m.currentObjective.Iterations,
+			m.currentObjective.Iteration,
 			m.readyForMaster,
 		)
 	}

@@ -47,16 +47,38 @@ func (c *MockClient) CreateCompletion(ctx context.Context, req *interfaces.Compl
 func (c *MockClient) CreateEmbedding(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
 	c.CallCount++
 	return &interfaces.EmbeddingResponse{
-		Embedding: []float32{0.1, 0.2, 0.3},
-		Dimensions: 3,
+		Model: "mock-embedding-model",
+		Embeddings: []interfaces.Embedding{
+			{
+				Index:     0,
+				Embedding: []float64{0.1, 0.2, 0.3},
+			},
+		},
+		Usage: interfaces.UsageInfo{
+			PromptTokens:     10,
+			CompletionTokens: 0,
+			TotalTokens:      10,
+		},
 	}, nil
 }
 
 // CreateEmbeddings generates embeddings for multiple texts
 func (c *MockClient) CreateEmbeddings(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
 	c.CallCount++
+	embeddings := []interfaces.Embedding{}
+	for i := range req.Input {
+		embeddings = append(embeddings, interfaces.Embedding{
+			Index:     i,
+			Embedding: []float64{0.1 * float64(i+1), 0.2 * float64(i+1), 0.3 * float64(i+1)},
+		})
+	}
 	return &interfaces.EmbeddingResponse{
-		Embeddings: [][]float32{{0.1, 0.2, 0.3}, {0.4, 0.5, 0.6}},
-		Dimensions: 3,
+		Model:      "mock-embedding-model",
+		Embeddings: embeddings,
+		Usage: interfaces.UsageInfo{
+			PromptTokens:     len(req.Input) * 10,
+			CompletionTokens: 0,
+			TotalTokens:      len(req.Input) * 10,
+		},
 	}, nil
 }

@@ -60,6 +60,8 @@ type CorpusModel struct {
 	commandInput     textinput.Model    // Command input
 	commandInputActive bool             // Whether command input is active
 	graphView        *GraphView         // Graph visualization
+	graphOffset      int                // Offset for graph scrolling
+	helpView         help.Model         // Help model
 	keys             keyMap             // Keyboard shortcuts
 	ready            bool               // Whether the UI is initialized
 }
@@ -313,7 +315,7 @@ func NewModel(cfg corpus.Config, user string) CorpusModel {
 // Init initializes the model.
 func (m CorpusModel) Init() tea.Cmd {
 	return tea.Batch(
-		loadDocuments(m.config.CorpusConfig),
+		listDocuments(m.config.CorpusConfig),
 		loadTags(m.config.CorpusConfig),
 		loadGraph(m.config.CorpusConfig),
 	)

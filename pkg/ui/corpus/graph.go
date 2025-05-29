@@ -62,25 +62,31 @@ func (g *GraphView) layoutCircular() {
 	center := struct{ x, y int }{g.width / 2, g.height / 2}
 	radius := int(math.Min(float64(g.width), float64(g.height)) * 0.4)
 	
-	for i, node := range g.graph.Nodes {
+	// Convert map keys to a slice for indexing
+	nodeNames := make([]string, 0, len(g.graph.Nodes))
+	for name := range g.graph.Nodes {
+		nodeNames = append(nodeNames, name)
+	}
+	
+	for i, nodeName := range nodeNames {
 		// Calculate position on circle
-		angle := 2 * math.Pi * float64(i) / float64(len(g.graph.Nodes))
+		angle := 2 * math.Pi * float64(i) / float64(len(nodeNames))
 		x := center.x + int(float64(radius)*math.Cos(angle))
 		y := center.y + int(float64(radius)*math.Sin(angle))
 		
-		// Create graph node
+		// Create graph node (using empty CorpusDoc with just the title)
 		gNode := graphNode{
-			doc: node,
+			doc: corpus.CorpusDoc{Title: nodeName},
 			x:   x,
 			y:   y / 2, // Compensate for terminal aspect ratio
 		}
 		
 		// Add edges
 		for _, edge := range g.graph.Edges {
-			if edge.From == node.Title {
+			if edge.From == nodeName {
 				// Find the target node index
-				for j, targetNode := range g.graph.Nodes {
-					if targetNode.Title == edge.To {
+				for j, targetName := range nodeNames {
+					if targetName == edge.To {
 						gNode.edges = append(gNode.edges, j)
 						break
 					}
@@ -94,11 +100,17 @@ func (g *GraphView) layoutCircular() {
 
 // layoutForceDirected implements a simple force-directed layout algorithm
 func (g *GraphView) layoutForceDirected() {
+	// Convert map keys to a slice for indexing
+	nodeNames := make([]string, 0, len(g.graph.Nodes))
+	for name := range g.graph.Nodes {
+		nodeNames = append(nodeNames, name)
+	}
+	
 	// Initialize with random positions
-	for _, node := range g.graph.Nodes {
+	for _, nodeName := range nodeNames {
 		// Generate a pseudorandom position based on title hash
 		hash := 0
-		for _, c := range node.Title {
+		for _, c := range nodeName {
 			hash = (hash*31 + int(c)) % 1000
 		}
 		
@@ -106,17 +118,17 @@ func (g *GraphView) layoutForceDirected() {
 		y := ((hash / g.width) % g.height) * 8 / 10
 		
 		gNode := graphNode{
-			doc: node,
+			doc: corpus.CorpusDoc{Title: nodeName},
 			x:   x,
 			y:   y / 2, // Compensate for terminal aspect ratio
 		}
 		
 		// Add edges
 		for _, edge := range g.graph.Edges {
-			if edge.From == node.Title {
+			if edge.From == nodeName {
 				// Find the target node index
-				for j, targetNode := range g.graph.Nodes {
-					if targetNode.Title == edge.To {
+				for j, targetName := range nodeNames {
+					if targetName == edge.To {
 						gNode.edges = append(gNode.edges, j)
 						break
 					}

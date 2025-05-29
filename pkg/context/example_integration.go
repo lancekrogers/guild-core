@@ -20,12 +20,7 @@ func ExampleUsage() {
 	ctx = WithResourceLimit(ctx, 3, 1024*1024*1024) // 3 concurrent, 1GB
 	
 	// 3. Set up mock registry (in real usage, this would be the actual registry)
-	mockRegistry := &MockRegistryProvider{
-		agentRegistry:    &MockAgentRegistry{},
-		toolRegistry:     &MockToolRegistry{},
-		providerRegistry: &MockProviderRegistry{},
-		memoryRegistry:   &MockMemoryRegistry{},
-	}
+	mockRegistry := NewMockRegistryProvider()
 	ctx = WithRegistryProvider(ctx, mockRegistry)
 	
 	// 4. Register some test components
@@ -153,7 +148,7 @@ func demonstrateAgentRouting(ctx context.Context) {
 
 // Mock implementations for demonstration
 
-// Mock registry types
+// MockAgentRegistry is a mock implementation of AgentRegistry for examples
 type MockAgentRegistry struct {
 	agents       map[string]interface{}
 	defaultAgent string
@@ -194,6 +189,7 @@ func (m *MockAgentRegistry) GetDefaultAgent() (interface{}, error) {
 	return m.GetAgent(m.defaultAgent)
 }
 
+// MockToolRegistry is a mock implementation of ToolRegistry for examples
 type MockToolRegistry struct {
 	tools   map[string]interface{}
 	enabled map[string]bool
@@ -249,6 +245,7 @@ func (m *MockToolRegistry) IsToolEnabled(name string) bool {
 	return m.enabled[name]
 }
 
+// MockProviderRegistry is a mock implementation of ProviderRegistry for examples
 type MockProviderRegistry struct {
 	providers       map[string]interface{}
 	defaultProvider string
@@ -289,6 +286,7 @@ func (m *MockProviderRegistry) GetDefaultProvider() (interface{}, error) {
 	return m.GetProvider(m.defaultProvider)
 }
 
+// MockMemoryRegistry is a mock implementation of MemoryRegistry for examples
 type MockMemoryRegistry struct {
 	memoryStores map[string]interface{}
 	vectorStores map[string]interface{}
@@ -340,11 +338,22 @@ func (m *MockMemoryRegistry) ListVectorStores() []string {
 	return names
 }
 
+// MockRegistryProvider is a mock implementation of RegistryProvider for examples
 type MockRegistryProvider struct {
 	agentRegistry    *MockAgentRegistry
 	toolRegistry     *MockToolRegistry
 	providerRegistry *MockProviderRegistry
 	memoryRegistry   *MockMemoryRegistry
+}
+
+// NewMockRegistryProvider creates a new mock registry provider for examples
+func NewMockRegistryProvider() *MockRegistryProvider {
+	return &MockRegistryProvider{
+		agentRegistry:    &MockAgentRegistry{},
+		toolRegistry:     &MockToolRegistry{},
+		providerRegistry: &MockProviderRegistry{},
+		memoryRegistry:   &MockMemoryRegistry{},
+	}
 }
 
 func (m *MockRegistryProvider) Agents() AgentRegistry {

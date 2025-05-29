@@ -1,4 +1,4 @@
-package objective_ui
+package objective
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/guild-ventures/guild-core/pkg/objective"
-	generator "github.com/guild-ventures/guild-core/pkg/generator/objective"
+	"github.com/guild-ventures/guild-core/pkg/generator"
 )
 
 // Define UI states
@@ -136,9 +136,23 @@ func DefaultKeyMap() GuildHallKeyMap {
 	}
 }
 
+// ShortHelp returns key bindings to be shown in the mini help view.
+func (k GuildHallKeyMap) ShortHelp() []key.Binding {
+	return []key.Binding{k.SeekGuidance, k.LeaveHall}
+}
+
+// FullHelp returns keybindings for the expanded help view.
+func (k GuildHallKeyMap) FullHelp() [][]key.Binding {
+	return [][]key.Binding{
+		{k.NavigateUp, k.NavigateDown, k.NavigateLeft, k.NavigateRight},
+		{k.Craft, k.Refine, k.ConsultMaster, k.ApproveWork},
+		{k.ExamineDocs, k.ToggleView, k.EnterHall},
+		{k.SeekGuidance, k.LeaveHall},
+	}
+}
 
 // NewModel creates a new Guild Hall model for objective planning
-func NewModel(objectivePath string, manager *objective.Manager, planner *objective.Planner, generator objective.ObjectiveGenerator) *ObjectiveChamber {
+func NewModel(objectivePath string, manager *objective.Manager, planner *objective.Planner, generator generator.ObjectiveGenerator) *ObjectiveChamber {
 	// Initialize textarea for context input
 	scribe := textarea.New()
 	scribe.Placeholder = "Enter context or reference documents (e.g., @spec/path/to/file.md)"

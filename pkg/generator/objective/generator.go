@@ -45,19 +45,15 @@ func (g *Generator) GenerateObjective(ctx context.Context, description string) (
 		return nil, fmt.Errorf("error rendering prompt: %w", err)
 	}
 
-	// Call the LLM
-	response, err := g.client.Complete(ctx, &providers.CompletionRequest{
-		Prompt:      prompt,
-		MaxTokens:   2048,
-		Temperature: 0.7,
-	})
+	// Call the LLM using the simplified interface
+	response, err := g.client.Complete(ctx, prompt)
 	if err != nil {
 		return nil, fmt.Errorf("error calling LLM: %w", err)
 	}
 
 	// Create a temporary file to parse
 	tempFile := filepath.Join(os.TempDir(), "temp_objective.md")
-	if err := os.WriteFile(tempFile, []byte(response.Text), 0644); err != nil {
+	if err := os.WriteFile(tempFile, []byte(response), 0644); err != nil {
 		return nil, fmt.Errorf("error writing temp file: %w", err)
 	}
 	defer os.Remove(tempFile)
@@ -85,18 +81,14 @@ func (g *Generator) GenerateAIDocs(ctx context.Context, obj *objective.Objective
 		return nil, fmt.Errorf("error rendering prompt: %w", err)
 	}
 
-	// Call the LLM
-	response, err := g.client.Complete(ctx, &providers.CompletionRequest{
-		Prompt:      prompt,
-		MaxTokens:   4096,
-		Temperature: 0.7,
-	})
+	// Call the LLM using the simplified interface
+	response, err := g.client.Complete(ctx, prompt)
 	if err != nil {
 		return nil, fmt.Errorf("error calling LLM: %w", err)
 	}
 
 	// Parse the response into multiple markdown documents
-	docs := parseMultipleMarkdownDocs(response.Text)
+	docs := parseMultipleMarkdownDocs(response)
 	return docs, nil
 }
 

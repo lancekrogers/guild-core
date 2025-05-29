@@ -289,15 +289,21 @@ func loadDocument(path string) tea.Cmd {
 
 func loadDocumentByTitle(title string, cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		docs, err := corpus.List(cfg)
+		paths, err := corpus.List(cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
 
 		normalizedTitle := strings.ToLower(title)
-		for _, doc := range docs {
+		for _, path := range paths {
+			// Load the document to check its title
+			doc, err := corpus.Load(path)
+			if err != nil {
+				continue // Skip documents that can't be loaded
+			}
+			
 			if strings.ToLower(doc.Title) == normalizedTitle {
-				return loadDocument(doc.FilePath)()
+				return loadDocument(path)()
 			}
 		}
 
@@ -307,14 +313,19 @@ func loadDocumentByTitle(title string, cfg corpus.Config) tea.Cmd {
 
 func listDocuments(cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		docs, err := corpus.List(cfg)
+		paths, err := corpus.List(cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
 
-		items := make([]list.Item, len(docs))
-		for i, doc := range docs {
-			items[i] = CorpusItem{doc: doc}
+		items := make([]list.Item, 0, len(paths))
+		for _, path := range paths {
+			// Load each document
+			doc, err := corpus.Load(path)
+			if err != nil {
+				continue // Skip documents that can't be loaded
+			}
+			items = append(items, CorpusItem{doc: *doc})
 		}
 
 		return listItemsMsg{items: items}
@@ -323,15 +334,20 @@ func listDocuments(cfg corpus.Config) tea.Cmd {
 
 func loadTags(cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		// Get all documents to extract tags
-		docs, err := corpus.List(cfg)
+		// Get all document paths
+		paths, err := corpus.List(cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
 
 		// Extract and count unique tags
 		tagCounts := make(map[string]int)
-		for _, doc := range docs {
+		for _, path := range paths {
+			// Load the document
+			doc, err := corpus.Load(path)
+			if err != nil {
+				continue // Skip documents that can't be loaded
+			}
 			for _, tag := range doc.Tags {
 				tagCounts[tag]++
 			}
@@ -352,17 +368,23 @@ func loadTags(cfg corpus.Config) tea.Cmd {
 
 func filterByTag(tag string, cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		docs, err := corpus.List(cfg)
+		paths, err := corpus.List(cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
 
 		// Filter documents by tag
 		var filtered []corpus.CorpusDoc
-		for _, doc := range docs {
+		for _, path := range paths {
+			// Load the document
+			doc, err := corpus.Load(path)
+			if err != nil {
+				continue // Skip documents that can't be loaded
+			}
+			
 			for _, docTag := range doc.Tags {
 				if docTag == tag {
-					filtered = append(filtered, doc)
+					filtered = append(filtered, *doc)
 					break
 				}
 			}
@@ -380,31 +402,37 @@ func filterByTag(tag string, cfg corpus.Config) tea.Cmd {
 
 func search(query string, cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		docs, err := corpus.List(cfg)
+		paths, err := corpus.List(cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
 
 		query = strings.ToLower(query)
 		var filtered []corpus.CorpusDoc
-		for _, doc := range docs {
+		for _, path := range paths {
+			// Load the document
+			doc, err := corpus.Load(path)
+			if err != nil {
+				continue // Skip documents that can't be loaded
+			}
+			
 			// Check title
 			if strings.Contains(strings.ToLower(doc.Title), query) {
-				filtered = append(filtered, doc)
+				filtered = append(filtered, *doc)
 				continue
 			}
 
 			// Check tags
 			for _, tag := range doc.Tags {
 				if strings.Contains(strings.ToLower(tag), query) {
-					filtered = append(filtered, doc)
-					continue
+					filtered = append(filtered, *doc)
+					break
 				}
 			}
 
 			// Check content (slower)
 			if strings.Contains(strings.ToLower(doc.Body), query) {
-				filtered = append(filtered, doc)
+				filtered = append(filtered, *doc)
 			}
 		}
 
@@ -505,26 +533,4 @@ The corpus is a knowledge repository for storing research findings,
 summaries and generated insights. Documents are stored as Markdown 
 files with YAML frontmatter for metadata.
 `
-}
-
-// Message types
-type errMsg struct {
-	err error
-}
-
-func (e errMsg) Error() string {
-	return e.err.Error()
-}
-
-type windowSizeMsg struct {
-	Width  int
-	Height int
-}
-
-type listItemsMsg struct {
-	items []list.Item
-}
-
-type tagListItemsMsg struct {
-	items []list.Item
 }
