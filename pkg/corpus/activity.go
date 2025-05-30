@@ -1,6 +1,7 @@
 package corpus
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -22,7 +23,7 @@ func NewActivityLog() *ActivityLog {
 }
 
 // TrackUserView records a document view by a user
-func TrackUserView(user, docPath string, cfg Config) error {
+func TrackUserView(ctx context.Context, user, docPath string, cfg Config) error {
 	if user == "" || docPath == "" {
 		return fmt.Errorf("user and document path are required")
 	}
@@ -110,7 +111,7 @@ func TrackUserView(user, docPath string, cfg Config) error {
 }
 
 // GetUserActivity retrieves a user's document viewing history
-func GetUserActivity(user string, cfg Config) ([]ViewLog, error) {
+func GetUserActivity(ctx context.Context, user string, cfg Config) ([]ViewLog, error) {
 	if user == "" {
 		return nil, fmt.Errorf("user is required")
 	}
@@ -147,7 +148,7 @@ func GetUserActivity(user string, cfg Config) ([]ViewLog, error) {
 }
 
 // GetMostViewedDocuments returns the most viewed documents across all users
-func GetMostViewedDocuments(cfg Config, limit int) (map[string]int, error) {
+func GetMostViewedDocuments(ctx context.Context, cfg Config, limit int) (map[string]int, error) {
 	if limit <= 0 {
 		limit = 10 // Default limit
 	}
@@ -217,17 +218,17 @@ func GetMostViewedDocuments(cfg Config, limit int) (map[string]int, error) {
 }
 
 // GetUserActivities is an alias for GetUserActivity for backward compatibility
-func GetUserActivities(user string, cfg Config) ([]ViewLog, error) {
-	return GetUserActivity(user, cfg)
+func GetUserActivities(ctx context.Context, user string, cfg Config) ([]ViewLog, error) {
+	return GetUserActivity(ctx, user, cfg)
 }
 
 // GetPopularDocuments is an alias for GetMostViewedDocuments for backward compatibility
-func GetPopularDocuments(cfg Config) (map[string]int, error) {
-	return GetMostViewedDocuments(cfg, 10) // Use default limit of 10
+func GetPopularDocuments(ctx context.Context, cfg Config) (map[string]int, error) {
+	return GetMostViewedDocuments(ctx, cfg, 10) // Use default limit of 10
 }
 
 // GetRecentActivity returns the most recent activity across all users
-func GetRecentActivity(cfg Config, limit int) ([]ViewLog, error) {
+func GetRecentActivity(ctx context.Context, cfg Config, limit int) ([]ViewLog, error) {
 	if limit <= 0 {
 		limit = 20 // Default limit
 	}

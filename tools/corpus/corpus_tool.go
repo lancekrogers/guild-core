@@ -154,7 +154,7 @@ func (t *CorpusTool) saveDocument(ctx context.Context, params Input) (*tools.Too
 	}
 
 	// Save the document
-	err := corpus.Save(&doc, t.config)
+	err := corpus.Save(ctx, &doc, t.config)
 	if err != nil {
 		return tools.NewToolResult("", nil, fmt.Errorf("failed to save document: %w", err), nil), nil
 	}
@@ -175,7 +175,7 @@ func (t *CorpusTool) loadDocument(ctx context.Context, params Input) (*tools.Too
 	}
 
 	// Get all documents to find the one with the matching title
-	docs, err := corpus.List(t.config)
+	docs, err := corpus.List(ctx, t.config)
 	if err != nil {
 		return tools.NewToolResult("", nil, fmt.Errorf("failed to list documents: %w", err), nil), nil
 	}
@@ -194,7 +194,7 @@ func (t *CorpusTool) loadDocument(ctx context.Context, params Input) (*tools.Too
 	}
 
 	// Load the document with content
-	doc, err := corpus.Load(targetDoc.FilePath)
+	doc, err := corpus.Load(ctx, targetDoc.FilePath)
 	if err != nil {
 		return tools.NewToolResult("", nil, fmt.Errorf("failed to load document: %w", err), nil), nil
 	}
@@ -226,7 +226,7 @@ func (t *CorpusTool) loadDocument(ctx context.Context, params Input) (*tools.Too
 // searchDocuments searches for documents in the corpus
 func (t *CorpusTool) searchDocuments(ctx context.Context, params Input) (*tools.ToolResult, error) {
 	// Get all documents
-	docs, err := corpus.List(t.config)
+	docs, err := corpus.List(ctx, t.config)
 	if err != nil {
 		return tools.NewToolResult("", nil, fmt.Errorf("failed to list documents: %w", err), nil), nil
 	}
@@ -273,7 +273,7 @@ func (t *CorpusTool) searchDocuments(ctx context.Context, params Input) (*tools.
 
 	// Load full content for each result
 	for i, doc := range results {
-		fullDoc, err := corpus.Load(doc.FilePath)
+		fullDoc, err := corpus.Load(ctx, doc.FilePath)
 		if err != nil {
 			// Skip documents that can't be loaded
 			continue
@@ -284,7 +284,7 @@ func (t *CorpusTool) searchDocuments(ctx context.Context, params Input) (*tools.
 	// Build graph if requested
 	var graph *corpus.Graph
 	if params.BuildGraph {
-		graph, _ = corpus.BuildGraph(t.config)
+		graph, _ = corpus.BuildGraph(ctx, t.config)
 	}
 
 	// Create a summary of the results
@@ -312,7 +312,7 @@ func (t *CorpusTool) searchDocuments(ctx context.Context, params Input) (*tools.
 // listDocuments lists documents in the corpus
 func (t *CorpusTool) listDocuments(ctx context.Context, params Input) (*tools.ToolResult, error) {
 	// Get all documents
-	docs, err := corpus.List(t.config)
+	docs, err := corpus.List(ctx, t.config)
 	if err != nil {
 		return tools.NewToolResult("", nil, fmt.Errorf("failed to list documents: %w", err), nil), nil
 	}
@@ -325,7 +325,7 @@ func (t *CorpusTool) listDocuments(ctx context.Context, params Input) (*tools.To
 	// Build graph if requested
 	var graph *corpus.Graph
 	if params.BuildGraph {
-		graph, _ = corpus.BuildGraph(t.config)
+		graph, _ = corpus.BuildGraph(ctx, t.config)
 	}
 
 	// Create a summary of the documents
@@ -362,7 +362,7 @@ func (t *CorpusTool) deleteDocument(ctx context.Context, params Input) (*tools.T
 	}
 
 	// Get all documents to find the one with the matching title
-	docs, err := corpus.List(t.config)
+	docs, err := corpus.List(ctx, t.config)
 	if err != nil {
 		return tools.NewToolResult("", nil, fmt.Errorf("failed to list documents: %w", err), nil), nil
 	}
@@ -381,7 +381,7 @@ func (t *CorpusTool) deleteDocument(ctx context.Context, params Input) (*tools.T
 	}
 
 	// Delete the document
-	err = corpus.Delete(targetDoc.FilePath)
+	err = corpus.Delete(ctx, targetDoc.FilePath)
 	if err != nil {
 		return tools.NewToolResult("", nil, fmt.Errorf("failed to delete document: %w", err), nil), nil
 	}
@@ -392,7 +392,7 @@ func (t *CorpusTool) deleteDocument(ctx context.Context, params Input) (*tools.T
 // getGraph builds and returns the document relationship graph
 func (t *CorpusTool) getGraph(ctx context.Context, params Input) (*tools.ToolResult, error) {
 	// Build the graph
-	graph, err := corpus.BuildGraph(t.config)
+	graph, err := corpus.BuildGraph(ctx, t.config)
 	if err != nil {
 		return tools.NewToolResult("", nil, fmt.Errorf("failed to build graph: %w", err), nil), nil
 	}

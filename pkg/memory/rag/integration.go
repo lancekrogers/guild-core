@@ -14,7 +14,7 @@ func SearchCorpus(ctx context.Context, query string, corpusConfig corpus.Config,
 	var results []SearchResult
 	
 	// List documents
-	docs, err := corpus.List(corpusConfig)
+	docs, err := corpus.List(ctx, corpusConfig)
 	if err != nil {
 		return nil, fmt.Errorf("failed to list corpus documents: %w", err)
 	}
@@ -27,7 +27,7 @@ func SearchCorpus(ctx context.Context, query string, corpusConfig corpus.Config,
 		}
 		
 		// Load document
-		doc, err := corpus.Load(docPath)
+		doc, err := corpus.Load(ctx, docPath)
 		if err != nil {
 			continue
 		}

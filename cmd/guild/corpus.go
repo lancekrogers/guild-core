@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -70,7 +71,7 @@ var corpusCreateCmd = &cobra.Command{
 		}
 		
 		// Save the document
-		err = corpus.Save(&doc, cfg)
+		err = corpus.Save(context.Background(), &doc, cfg)
 		if err != nil {
 			fmt.Printf("Error creating document: %v\n", err)
 			return
@@ -96,7 +97,7 @@ var corpusListCmd = &cobra.Command{
 		}
 		
 		// Get all documents
-		docs, err := corpus.List(cfg)
+		docs, err := corpus.List(context.Background(), cfg)
 		if err != nil {
 			fmt.Printf("Error listing documents: %v\n", err)
 			return
@@ -154,7 +155,7 @@ var corpusViewCmd = &cobra.Command{
 		}
 		
 		// Get all documents
-		docs, err := corpus.List(cfg)
+		docs, err := corpus.List(context.Background(), cfg)
 		if err != nil {
 			fmt.Printf("Error listing documents: %v\n", err)
 			return
@@ -175,7 +176,7 @@ var corpusViewCmd = &cobra.Command{
 		}
 		
 		// Load the document with content
-		doc, err := corpus.Load(targetDoc.FilePath)
+		doc, err := corpus.Load(context.Background(), targetDoc.FilePath)
 		if err != nil {
 			fmt.Printf("Error loading document: %v\n", err)
 			return
@@ -183,7 +184,7 @@ var corpusViewCmd = &cobra.Command{
 		
 		// Track the view
 		if username := os.Getenv("USER"); username != "" {
-			_ = corpus.TrackUserView(username, doc.FilePath, cfg)
+			_ = corpus.TrackUserView(context.Background(), username, doc.FilePath, cfg)
 		}
 		
 		// Display the document
@@ -229,7 +230,7 @@ var corpusDeleteCmd = &cobra.Command{
 		}
 		
 		// Get all documents
-		docs, err := corpus.List(cfg)
+		docs, err := corpus.List(context.Background(), cfg)
 		if err != nil {
 			fmt.Printf("Error listing documents: %v\n", err)
 			return
@@ -250,7 +251,7 @@ var corpusDeleteCmd = &cobra.Command{
 		}
 		
 		// Delete the document
-		err = corpus.Delete(targetDoc.FilePath)
+		err = corpus.Delete(context.Background(), targetDoc.FilePath)
 		if err != nil {
 			fmt.Printf("Error deleting document: %v\n", err)
 			return
@@ -274,7 +275,7 @@ var corpusGraphCmd = &cobra.Command{
 		}
 		
 		// Build the graph
-		graph, err := corpus.BuildGraph(cfg)
+		graph, err := corpus.BuildGraph(context.Background(), cfg)
 		if err != nil {
 			fmt.Printf("Error building graph: %v\n", err)
 			return

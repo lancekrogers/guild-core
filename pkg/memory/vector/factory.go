@@ -9,10 +9,13 @@ package vector
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"os"
 	"sync"
+	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/providers"
+	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
 // StoreType represents the type of vector store
@@ -43,23 +46,27 @@ type StoreConfig struct {
 	// Use one of the StoreType constants (e.g., StoreTypeChromem).
 	Type StoreType
 
-	// EmbeddingProvider is the LLM provider to use for generating embeddings.
-	// This is optional - if not provided, the factory will create one based
-	// on the OpenAIApiKey and EmbeddingModel.
-	EmbeddingProvider providers.LLMClient
+	// EmbeddingProvider is the AI provider to use for generating embeddings.
+	// This is optional - if not provided, the factory will auto-detect available providers.
+	// Supports any provider that implements the AIProvider interface.
+	EmbeddingProvider interfaces.AIProvider
 
 	// EmbeddingModel is the model to use for embeddings.
-	// Common values: "text-embedding-ada-002" (OpenAI), "all-MiniLM-L6-v2" (sentence-transformers)
-	// If not specified, defaults to "text-embedding-ada-002"
+	// Common values: 
+	// - "nomic-embed-text" (768 dims)
+	// - "mxbai-embed-large" (1024 dims)
+	// - "all-minilm" (384 dims)
+	// If not specified, auto-detects based on provider.
 	EmbeddingModel string
+
+	// EmbeddingStrategy specifies how to extract embeddings.
+	// Options: "auto", "dedicated", "hidden_state", "mean_pooling", "none"
+	// Defaults to "auto" which tries dedicated models first.
+	EmbeddingStrategy EmbeddingStrategy
 
 	// ChromemConfig contains Chromem-specific configuration.
 	// Only used when Type is StoreTypeChromem.
 	ChromemConfig ChromemConfig
-
-	// OpenAIApiKey is the API key for OpenAI embeddings.
-	// If not provided, the factory will look for the OPENAI_API_KEY environment variable.
-	OpenAIApiKey string
 	
 	// DefaultCollection is the default collection name to use.
 	// Collections help organize embeddings by type (e.g., "agent_memories", "corpus_documents").
@@ -76,7 +83,7 @@ type ChromemConfig struct {
 
 	// DefaultDimension is the default dimension for vectors.
 	// This should match the dimension of your embedding model.
-	// Common values: 1536 (OpenAI), 384 (all-MiniLM-L6-v2)
+	// Common values: 768 (nomic-embed-text), 1024 (mxbai-embed-large), 384 (all-minilm)
 	DefaultDimension int
 	
 	// DefaultCollection overrides the collection name from StoreConfig.
@@ -138,23 +145,72 @@ func createChromemStore(ctx context.Context, config *StoreConfig, embedder Embed
 
 // createEmbedder creates an embedder based on the configuration
 func createEmbedder(config *StoreConfig) (Embedder, error) {
-	// Try to get OpenAI API key
-	apiKey := config.OpenAIApiKey
-	if apiKey == "" {
-		apiKey = os.Getenv("OPENAI_API_KEY")
+	// If provider is already specified, use it
+	if config.EmbeddingProvider != nil {
+		opts := []EmbedderOption{
+			WithStrategy(config.EmbeddingStrategy),
+		}
+		if config.EmbeddingModel != "" {
+			opts = append(opts, WithModel(config.EmbeddingModel))
+		}
+		return NewUniversalEmbedder(config.EmbeddingProvider, opts...), nil
 	}
 
-	if apiKey == "" {
-		return nil, fmt.Errorf("OpenAI API key is required for embeddings")
+	// Auto-detect available providers
+	provider, err := detectAvailableProvider()
+	if err != nil {
+		// No provider available - use NoOpEmbedder for graceful degradation
+		return &NoOpEmbedder{}, nil
 	}
 
-	// Default to OpenAI's text-embedding-ada-002 model
-	model := "text-embedding-ada-002"
+	opts := []EmbedderOption{
+		WithStrategy(config.EmbeddingStrategy),
+	}
 	if config.EmbeddingModel != "" {
-		model = config.EmbeddingModel
+		opts = append(opts, WithModel(config.EmbeddingModel))
 	}
 
-	return NewOpenAIEmbedder(apiKey, model)
+	return NewUniversalEmbedder(provider, opts...), nil
+}
+
+// detectAvailableProvider attempts to auto-detect available AI providers
+func detectAvailableProvider() (interfaces.AIProvider, error) {
+	factory := providers.NewFactoryV2()
+	
+	// Check for Ollama first (preferred for offline operation)
+	ollamaHost := os.Getenv("OLLAMA_HOST")
+	if ollamaHost == "" {
+		ollamaHost = "http://localhost:11434"
+	}
+	
+	// Try to connect to Ollama
+	client := &http.Client{Timeout: 2 * time.Second}
+	resp, err := client.Get(ollamaHost + "/api/tags")
+	if err == nil && resp.StatusCode == http.StatusOK {
+		resp.Body.Close()
+		// Ollama is available
+		provider, err := factory.CreateAIProvider(providers.ProviderOllama, ollamaHost)
+		if err == nil {
+			return provider, nil
+		}
+	}
+	
+	// Check for other providers via environment variables
+	if apiKey := os.Getenv("OPENAI_API_KEY"); apiKey != "" {
+		provider, err := factory.CreateAIProvider(providers.ProviderOpenAI, apiKey)
+		if err == nil {
+			return provider, nil
+		}
+	}
+	
+	if apiKey := os.Getenv("ANTHROPIC_API_KEY"); apiKey != "" {
+		provider, err := factory.CreateAIProvider(providers.ProviderAnthropic, apiKey)
+		if err == nil {
+			return provider, nil
+		}
+	}
+	
+	return nil, fmt.Errorf("no AI provider available: check Ollama installation or set API keys")
 }
 
 // VectorStoreFactory is a function that creates a VectorStore
@@ -185,7 +241,7 @@ func init() {
 
 		// Set default dimension if not specified
 		if chromemConfig.DefaultDimension == 0 {
-			chromemConfig.DefaultDimension = 1536 // Default for OpenAI embeddings
+			chromemConfig.DefaultDimension = 768 // Default for common embedding models
 		}
 		
 		// Set default collection, preferring ChromemConfig over StoreConfig

@@ -1,6 +1,7 @@
 package corpus
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -54,7 +55,7 @@ func (g *Graph) GetDocumentsWithTag(tag string) []string {
 }
 
 // BuildGraph creates a graph from corpus documents
-func BuildGraph(cfg Config) (*Graph, error) {
+func BuildGraph(ctx context.Context, cfg Config) (*Graph, error) {
 	if cfg.CorpusPath == "" {
 		return nil, fmt.Errorf("corpus location not specified")
 	}
@@ -62,14 +63,14 @@ func BuildGraph(cfg Config) (*Graph, error) {
 	graph := NewGraph()
 
 	// Get all documents
-	docs, err := List(cfg)
+	docs, err := List(ctx, cfg)
 	if err != nil {
 		return nil, fmt.Errorf("failed to list corpus documents: %w", err)
 	}
 
 	// First pass: collect all nodes and their outgoing links
 	for _, path := range docs {
-		doc, err := Load(path)
+		doc, err := Load(ctx, path)
 		if err != nil {
 			continue // Skip documents that can't be loaded
 		}
@@ -106,7 +107,7 @@ func BuildGraph(cfg Config) (*Graph, error) {
 }
 
 // SaveGraph serializes and saves the graph to a JSON file
-func SaveGraph(graph *Graph, cfg Config) error {
+func SaveGraph(ctx context.Context, graph *Graph, cfg Config) error {
 	if graph == nil {
 		return fmt.Errorf("graph cannot be nil")
 	}
@@ -133,14 +134,14 @@ func SaveGraph(graph *Graph, cfg Config) error {
 }
 
 // LoadGraph loads a graph from JSON file
-func LoadGraph(cfg Config) (*Graph, error) {
+func LoadGraph(ctx context.Context, cfg Config) (*Graph, error) {
 	// Check for graph file
 	graphPath := filepath.Join(cfg.CorpusPath, GraphDirName, "links.json")
 	data, err := os.ReadFile(graphPath)
 	if err != nil {
 		if os.IsNotExist(err) {
 			// If the graph doesn't exist, build a new one
-			return BuildGraph(cfg)
+			return BuildGraph(ctx, cfg)
 		}
 		return nil, fmt.Errorf("failed to read graph file: %w", err)
 	}
@@ -155,13 +156,13 @@ func LoadGraph(cfg Config) (*Graph, error) {
 }
 
 // UpdateGraph rebuilds and saves the graph
-func UpdateGraph(cfg Config) error {
-	graph, err := BuildGraph(cfg)
+func UpdateGraph(ctx context.Context, cfg Config) error {
+	graph, err := BuildGraph(ctx, cfg)
 	if err != nil {
 		return err
 	}
 
-	return SaveGraph(graph, cfg)
+	return SaveGraph(ctx, graph, cfg)
 }
 
 // FindOrphanNodes returns documents that have no incoming links
@@ -209,7 +210,7 @@ func FindStronglyConnected(graph *Graph, minSize int) [][]string {
 }
 
 // ExportGraphDOT generates a DOT format representation for Graphviz
-func ExportGraphDOT(graph *Graph, cfg Config) error {
+func ExportGraphDOT(ctx context.Context, graph *Graph, cfg Config) error {
 	if graph == nil {
 		return fmt.Errorf("graph cannot be nil")
 	}

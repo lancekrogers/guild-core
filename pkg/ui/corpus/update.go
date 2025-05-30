@@ -1,6 +1,7 @@
 package corpus
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -70,7 +71,7 @@ func (m CorpusModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.viewPort.SetContent(msg.Body)
 		m.viewPort.GotoTop()
 		// Track the user viewing this document
-		go corpus.TrackUserView(m.config.CurrentUser, msg.FilePath, m.config.CorpusConfig)
+		go corpus.TrackUserView(context.Background(), m.config.CurrentUser, msg.FilePath, m.config.CorpusConfig)
 		return m, nil
 
 	case corpus.Graph:
@@ -279,7 +280,7 @@ func (m CorpusModel) executeCommand(cmd string) tea.Cmd {
 // Tea commands
 func loadDocument(path string) tea.Cmd {
 	return func() tea.Msg {
-		doc, err := corpus.Load(path)
+		doc, err := corpus.Load(context.Background(), path)
 		if err != nil {
 			return errMsg{err: err}
 		}
@@ -289,7 +290,7 @@ func loadDocument(path string) tea.Cmd {
 
 func loadDocumentByTitle(title string, cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		paths, err := corpus.List(cfg)
+		paths, err := corpus.List(context.Background(), cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
@@ -297,7 +298,7 @@ func loadDocumentByTitle(title string, cfg corpus.Config) tea.Cmd {
 		normalizedTitle := strings.ToLower(title)
 		for _, path := range paths {
 			// Load the document to check its title
-			doc, err := corpus.Load(path)
+			doc, err := corpus.Load(context.Background(), path)
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
@@ -313,7 +314,7 @@ func loadDocumentByTitle(title string, cfg corpus.Config) tea.Cmd {
 
 func listDocuments(cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		paths, err := corpus.List(cfg)
+		paths, err := corpus.List(context.Background(), cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
@@ -321,7 +322,7 @@ func listDocuments(cfg corpus.Config) tea.Cmd {
 		items := make([]list.Item, 0, len(paths))
 		for _, path := range paths {
 			// Load each document
-			doc, err := corpus.Load(path)
+			doc, err := corpus.Load(context.Background(), path)
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
@@ -335,7 +336,7 @@ func listDocuments(cfg corpus.Config) tea.Cmd {
 func loadTags(cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
 		// Get all document paths
-		paths, err := corpus.List(cfg)
+		paths, err := corpus.List(context.Background(), cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
@@ -344,7 +345,7 @@ func loadTags(cfg corpus.Config) tea.Cmd {
 		tagCounts := make(map[string]int)
 		for _, path := range paths {
 			// Load the document
-			doc, err := corpus.Load(path)
+			doc, err := corpus.Load(context.Background(), path)
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
@@ -368,7 +369,7 @@ func loadTags(cfg corpus.Config) tea.Cmd {
 
 func filterByTag(tag string, cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		paths, err := corpus.List(cfg)
+		paths, err := corpus.List(context.Background(), cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
@@ -377,7 +378,7 @@ func filterByTag(tag string, cfg corpus.Config) tea.Cmd {
 		var filtered []corpus.CorpusDoc
 		for _, path := range paths {
 			// Load the document
-			doc, err := corpus.Load(path)
+			doc, err := corpus.Load(context.Background(), path)
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
@@ -402,7 +403,7 @@ func filterByTag(tag string, cfg corpus.Config) tea.Cmd {
 
 func search(query string, cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		paths, err := corpus.List(cfg)
+		paths, err := corpus.List(context.Background(), cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
@@ -411,7 +412,7 @@ func search(query string, cfg corpus.Config) tea.Cmd {
 		var filtered []corpus.CorpusDoc
 		for _, path := range paths {
 			// Load the document
-			doc, err := corpus.Load(path)
+			doc, err := corpus.Load(context.Background(), path)
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
@@ -448,7 +449,7 @@ func search(query string, cfg corpus.Config) tea.Cmd {
 
 func loadGraph(cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		graph, err := corpus.BuildGraph(cfg)
+		graph, err := corpus.BuildGraph(context.Background(), cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}

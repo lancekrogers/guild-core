@@ -1,6 +1,7 @@
 package corpus
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"testing"
@@ -42,7 +43,8 @@ func TestCorpusBasics(t *testing.T) {
 	)
 
 	// Save the document
-	err = Save(doc, cfg)
+	ctx := context.Background()
+	err = Save(ctx, doc, cfg)
 	if err != nil {
 		t.Fatalf("Failed to save document: %v", err)
 	}
@@ -53,7 +55,7 @@ func TestCorpusBasics(t *testing.T) {
 	}
 
 	// Load the document
-	loadedDoc, err := Load(doc.FilePath)
+	loadedDoc, err := Load(ctx, doc.FilePath)
 	if err != nil {
 		t.Fatalf("Failed to load document: %v", err)
 	}
@@ -76,7 +78,7 @@ func TestCorpusBasics(t *testing.T) {
 	}
 
 	// List all documents
-	docs, err := List(cfg)
+	docs, err := List(ctx, cfg)
 	if err != nil {
 		t.Fatalf("Failed to list documents: %v", err)
 	}
@@ -86,7 +88,7 @@ func TestCorpusBasics(t *testing.T) {
 	}
 
 	// Delete the document
-	err = Delete(doc.FilePath)
+	err = Delete(ctx, doc.FilePath)
 	if err != nil {
 		t.Fatalf("Failed to delete document: %v", err)
 	}
@@ -98,7 +100,7 @@ func TestCorpusBasics(t *testing.T) {
 	}
 
 	// List all documents after deletion
-	docs, err = List(cfg)
+	docs, err = List(ctx, cfg)
 	if err != nil {
 		t.Fatalf("Failed to list documents after deletion: %v", err)
 	}

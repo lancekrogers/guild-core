@@ -143,6 +143,68 @@ func NewRetriever(ctx context.Context, embedder vector.Embedder, config Config) 
 	return retriever, nil
 }
 
+// NewRetrieverWithStore creates a new Retriever with an existing vector store.
+// This is useful when you want to manage the vector store lifecycle separately,
+// such as when integrating with the corpus scan command.
+//
+// Example:
+//   vectorStore, _ := vector.NewVectorStore(ctx, vectorConfig)
+//   retriever := rag.NewRetrieverWithStore(vectorStore, config)
+func NewRetrieverWithStore(vectorStore vector.VectorStore, config Config) *Retriever {
+	// Apply default config values
+	if config.ChunkSize <= 0 {
+		config.ChunkSize = 1000
+	}
+	
+	if config.ChunkOverlap <= 0 {
+		config.ChunkOverlap = 200
+	}
+	
+	if config.MaxResults <= 0 {
+		config.MaxResults = 5
+	}
+	
+	// Create chunker based on strategy
+	chunkerStrategy := ChunkByParagraph
+	if config.ChunkStrategy != "" {
+		// Map string strategy to chunker constant
+		switch strings.ToLower(config.ChunkStrategy) {
+		case "sentence":
+			chunkerStrategy = ChunkBySentence
+		case "fixed":
+			chunkerStrategy = ChunkByFixed
+		case "markdown":
+			chunkerStrategy = ChunkByMarkdown
+		default:
+			chunkerStrategy = ChunkByParagraph
+		}
+	}
+	
+	chunker := NewChunker(ChunkerConfig{
+		ChunkSize:    config.ChunkSize,
+		ChunkOverlap: config.ChunkOverlap,
+		Strategy:     chunkerStrategy,
+	})
+	
+	// Create retriever
+	retriever := &Retriever{
+		Config:      config,
+		vectorStore: vectorStore,
+		chunker:     chunker,
+	}
+	
+	// Configure corpus integration if enabled
+	if config.UseCorpus && config.CorpusPath != "" {
+		corpusConfig := &corpus.Config{
+			CorpusPath:  config.CorpusPath,
+			MaxSizeBytes: int64(config.CorpusMaxSizeMB) * 1024 * 1024,
+		}
+		retriever.corpusConfig = corpusConfig
+	}
+	
+	return retriever
+}
+
 // RetrieveContext gets relevant context for a query by searching both
 // vector embeddings and corpus documents. Results are merged and ranked
 // by relevance score.
@@ -234,7 +296,7 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 	}
 	
 	// List corpus documents
-	docs, err := corpus.List(*r.corpusConfig)
+	docs, err := corpus.List(ctx, *r.corpusConfig)
 	if err != nil {
 		return nil, fmt.Errorf("failed to list corpus documents: %w", err)
 	}
@@ -245,7 +307,7 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 	// Simple keyword matching for now
 	// TODO: Implement more sophisticated corpus search
 	for _, docPath := range docs {
-		doc, err := corpus.Load(docPath)
+		doc, err := corpus.Load(ctx, docPath)
 		if err != nil {
 			continue
 		}
@@ -432,6 +494,18 @@ func (r *Retriever) EnhancePrompt(ctx context.Context, prompt string, config Ret
 	builder.WriteString(prompt)
 	
 	return builder.String(), nil
+}
+
+// RemoveDocument removes a document and all its chunks from the vector store.
+// This is used when documents are deleted from the corpus.
+//
+// Note: This is a best-effort implementation since the VectorStore interface
+// doesn't have a delete method. In practice, this would need to be extended
+// based on the specific vector store implementation.
+func (r *Retriever) RemoveDocument(ctx context.Context, documentID string) error {
+	// TODO: The VectorStore interface needs to be extended with a DeleteEmbedding method
+	// For now, we'll document this limitation
+	return fmt.Errorf("document removal not yet implemented: VectorStore interface needs DeleteEmbedding method")
 }
 
 // Close closes the retriever and its resources.

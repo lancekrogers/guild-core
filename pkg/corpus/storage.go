@@ -1,6 +1,7 @@
 package corpus
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io/fs"
@@ -73,7 +74,7 @@ func Ensure(cfg Config) error {
 }
 
 // Save stores a CorpusDoc to the filesystem in markdown format with YAML frontmatter
-func Save(doc *CorpusDoc, cfg Config) error {
+func Save(ctx context.Context, doc *CorpusDoc, cfg Config) error {
 	if doc == nil {
 		return errors.New("document cannot be nil")
 	}
@@ -142,7 +143,7 @@ func Save(doc *CorpusDoc, cfg Config) error {
 }
 
 // Load retrieves a CorpusDoc from the filesystem
-func Load(path string) (*CorpusDoc, error) {
+func Load(ctx context.Context, path string) (*CorpusDoc, error) {
 	// Ensure the file exists
 	if _, err := os.Stat(path); err != nil {
 		if os.IsNotExist(err) {
@@ -195,7 +196,7 @@ func Load(path string) (*CorpusDoc, error) {
 }
 
 // List returns all corpus documents
-func List(cfg Config) ([]string, error) {
+func List(ctx context.Context, cfg Config) ([]string, error) {
 	if cfg.CorpusPath == "" {
 		return nil, errors.New("corpus location not specified")
 	}
@@ -225,19 +226,19 @@ func List(cfg Config) ([]string, error) {
 }
 
 // ListByTag returns all corpus documents with a specific tag
-func ListByTag(cfg Config, tag string) ([]string, error) {
+func ListByTag(ctx context.Context, cfg Config, tag string) ([]string, error) {
 	if cfg.CorpusPath == "" {
 		return nil, errors.New("corpus location not specified")
 	}
 
 	var docs []string
-	allDocs, err := List(cfg)
+	allDocs, err := List(ctx, cfg)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, path := range allDocs {
-		doc, err := Load(path)
+		doc, err := Load(ctx, path)
 		if err != nil {
 			continue // Skip documents that can't be loaded
 		}
@@ -254,7 +255,7 @@ func ListByTag(cfg Config, tag string) ([]string, error) {
 }
 
 // Delete removes a corpus document
-func Delete(path string) error {
+func Delete(ctx context.Context, path string) error {
 	if _, err := os.Stat(path); err != nil {
 		if os.IsNotExist(err) {
 			return ErrDocNotFound
