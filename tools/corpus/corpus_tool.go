@@ -174,17 +174,21 @@ func (t *CorpusTool) loadDocument(ctx context.Context, params Input) (*tools.Too
 		return tools.NewToolResult("", nil, fmt.Errorf("title is required for load action"), nil), nil
 	}
 
-	// Get all documents to find the one with the matching title
-	docs, err := corpus.List(ctx, t.config)
+	// Get all document paths
+	paths, err := corpus.List(ctx, t.config)
 	if err != nil {
 		return tools.NewToolResult("", nil, fmt.Errorf("failed to list documents: %w", err), nil), nil
 	}
 
 	// Find the document with the matching title
 	var targetDoc *corpus.CorpusDoc
-	for _, doc := range docs {
+	for _, path := range paths {
+		doc, err := corpus.Load(ctx, path)
+		if err != nil {
+			continue // Skip documents that can't be loaded
+		}
 		if strings.EqualFold(doc.Title, params.Title) {
-			targetDoc = &doc
+			targetDoc = doc
 			break
 		}
 	}
@@ -193,11 +197,8 @@ func (t *CorpusTool) loadDocument(ctx context.Context, params Input) (*tools.Too
 		return tools.NewToolResult("", nil, fmt.Errorf("document not found: %s", params.Title), nil), nil
 	}
 
-	// Load the document with content
-	doc, err := corpus.Load(ctx, targetDoc.FilePath)
-	if err != nil {
-		return tools.NewToolResult("", nil, fmt.Errorf("failed to load document: %w", err), nil), nil
-	}
+	// We already have the loaded document
+	doc := targetDoc
 
 	// Create metadata
 	metadata := map[string]string{
@@ -225,15 +226,21 @@ func (t *CorpusTool) loadDocument(ctx context.Context, params Input) (*tools.Too
 
 // searchDocuments searches for documents in the corpus
 func (t *CorpusTool) searchDocuments(ctx context.Context, params Input) (*tools.ToolResult, error) {
-	// Get all documents
-	docs, err := corpus.List(ctx, t.config)
+	// Get all document paths
+	paths, err := corpus.List(ctx, t.config)
 	if err != nil {
 		return tools.NewToolResult("", nil, fmt.Errorf("failed to list documents: %w", err), nil), nil
 	}
 
 	// Apply search criteria
 	var results []corpus.CorpusDoc
-	for _, doc := range docs {
+	for _, path := range paths {
+		// Load the document
+		doc, err := corpus.Load(ctx, path)
+		if err != nil {
+			continue // Skip documents that can't be loaded
+		}
+
 		// Search by query in title or body
 		if params.Query != "" {
 			if !(strings.Contains(strings.ToLower(doc.Title), strings.ToLower(params.Query)) ||
@@ -263,7 +270,7 @@ func (t *CorpusTool) searchDocuments(ctx context.Context, params Input) (*tools.
 		}
 
 		// Add the document to the results
-		results = append(results, doc)
+		results = append(results, *doc)
 	}
 
 	// Apply limit
@@ -311,15 +318,25 @@ func (t *CorpusTool) searchDocuments(ctx context.Context, params Input) (*tools.
 
 // listDocuments lists documents in the corpus
 func (t *CorpusTool) listDocuments(ctx context.Context, params Input) (*tools.ToolResult, error) {
-	// Get all documents
-	docs, err := corpus.List(ctx, t.config)
+	// Get all document paths
+	paths, err := corpus.List(ctx, t.config)
 	if err != nil {
 		return tools.NewToolResult("", nil, fmt.Errorf("failed to list documents: %w", err), nil), nil
 	}
 
-	// Apply limit
-	if params.Limit > 0 && len(docs) > params.Limit {
-		docs = docs[:params.Limit]
+	// Apply limit to paths
+	if params.Limit > 0 && len(paths) > params.Limit {
+		paths = paths[:params.Limit]
+	}
+
+	// Load documents
+	var docs []corpus.CorpusDoc
+	for _, path := range paths {
+		doc, err := corpus.Load(ctx, path)
+		if err != nil {
+			continue // Skip documents that can't be loaded
+		}
+		docs = append(docs, *doc)
 	}
 
 	// Build graph if requested
@@ -361,17 +378,21 @@ func (t *CorpusTool) deleteDocument(ctx context.Context, params Input) (*tools.T
 		return tools.NewToolResult("", nil, fmt.Errorf("title is required for delete action"), nil), nil
 	}
 
-	// Get all documents to find the one with the matching title
-	docs, err := corpus.List(ctx, t.config)
+	// Get all document paths
+	paths, err := corpus.List(ctx, t.config)
 	if err != nil {
 		return tools.NewToolResult("", nil, fmt.Errorf("failed to list documents: %w", err), nil), nil
 	}
 
 	// Find the document with the matching title
 	var targetDoc *corpus.CorpusDoc
-	for _, doc := range docs {
+	for _, path := range paths {
+		doc, err := corpus.Load(ctx, path)
+		if err != nil {
+			continue // Skip documents that can't be loaded
+		}
 		if strings.EqualFold(doc.Title, params.Title) {
-			targetDoc = &doc
+			targetDoc = doc
 			break
 		}
 	}

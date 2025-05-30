@@ -91,9 +91,9 @@ func NewRetriever(ctx context.Context, embedder vector.Embedder, config Config) 
 		case "sentence":
 			chunkerStrategy = ChunkBySentence
 		case "fixed":
-			chunkerStrategy = ChunkByFixed
+			chunkerStrategy = ChunkByFixedSize
 		case "markdown":
-			chunkerStrategy = ChunkByMarkdown
+			chunkerStrategy = ChunkByMarkdownHeader
 		default:
 			chunkerStrategy = ChunkByParagraph
 		}
@@ -135,7 +135,7 @@ func NewRetriever(ctx context.Context, embedder vector.Embedder, config Config) 
 	if config.UseCorpus && config.CorpusPath != "" {
 		corpusConfig := &corpus.Config{
 			Location:  config.CorpusPath,
-			MaxSizeMB: config.CorpusMaxSizeMB,
+			MaxSizeMB: int64(config.CorpusMaxSizeMB),
 		}
 		retriever.corpusConfig = corpusConfig
 	}
@@ -172,9 +172,9 @@ func NewRetrieverWithStore(vectorStore vector.VectorStore, config Config) *Retri
 		case "sentence":
 			chunkerStrategy = ChunkBySentence
 		case "fixed":
-			chunkerStrategy = ChunkByFixed
+			chunkerStrategy = ChunkByFixedSize
 		case "markdown":
-			chunkerStrategy = ChunkByMarkdown
+			chunkerStrategy = ChunkByMarkdownHeader
 		default:
 			chunkerStrategy = ChunkByParagraph
 		}
@@ -405,7 +405,7 @@ func (r *Retriever) AddDocument(ctx context.Context, id, content, source string)
 	}
 	
 	// Chunk the document
-	chunks := r.chunker.Chunk(content)
+	chunks := r.chunker.ChunkDocument(content)
 	
 	// Add each chunk to the vector store
 	for i, chunk := range chunks {

@@ -1,5 +1,6 @@
 // Package rag provides example usage of the RAG system.
 // This file demonstrates how to integrate the RAG system with the Guild framework.
+// The new RAG system is provider-agnostic and supports offline operation.
 package rag
 
 import (
@@ -9,15 +10,14 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
+	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
-// ExampleBasicUsage demonstrates basic RAG system usage
+// ExampleBasicUsage demonstrates basic RAG system usage with the new provider-agnostic design
 func ExampleBasicUsage() {
 	ctx := context.Background()
 
-	// Create an embedder (would use real implementation in production)
-	embedder := &vector.MockEmbedder{Dimension: 1536}
-
+	// The new system auto-detects available providers, preferring Ollama for offline operation
 	// Configure the RAG system
 	config := Config{
 		ChunkSize:       1000,
@@ -25,18 +25,33 @@ func ExampleBasicUsage() {
 		MaxResults:      5,
 		UseCorpus:       true,
 		CorpusPath:      "./guild_memory/corpus",
-		VectorStorePath: "./data/vectors",
+		VectorStorePath: "./embeddings", // Updated path to match new design
 	}
 
-	// Create a retriever
-	retriever, err := NewRetriever(ctx, embedder, config)
-	if err != nil {
-		log.Fatalf("Failed to create retriever: %v", err)
+	// Create vector store config - the new system auto-detects providers
+	vectorConfig := &vector.StoreConfig{
+		Type:              vector.StoreTypeChromem,
+		DefaultCollection: "rag_embeddings",
+		ChromemConfig: vector.ChromemConfig{
+			PersistencePath:  config.VectorStorePath,
+			DefaultDimension: 768, // Common dimension for local models like nomic-embed-text
+		},
+		// EmbeddingProvider will be auto-detected if not specified
 	}
-	defer retriever.Close()
+
+	// Create vector store - it will auto-detect available embedding providers
+	vectorStore, err := vector.NewVectorStore(ctx, vectorConfig)
+	if err != nil {
+		log.Fatalf("Failed to create vector store: %v", err)
+	}
+	defer vectorStore.Close()
+
+	// Create retriever with the new vector store
+	retriever := NewRetrieverWithStore(vectorStore, config)
 
 	// Index some documents
-	err = retriever.AddDocument(ctx, "doc1",
+	err = retriever.AddDocument(ctx, 
+		"guild-intro",
 		"The Guild Framework orchestrates AI agents to work together on complex tasks. "+
 			"Agents are called Artisans and work in teams called Guilds.",
 		"documentation")
@@ -44,66 +59,50 @@ func ExampleBasicUsage() {
 		log.Printf("Failed to add document: %v", err)
 	}
 
-	// Index a corpus document
-	corpusDoc := &corpus.CorpusDoc{
-		Title: "Agent Communication Protocol",
-		Body: "Agents communicate through the event bus system. "+
-			"Messages are passed using a publish-subscribe pattern.",
-		Tags:    []string{"agents", "communication", "architecture"},
-		GuildID: "guild1",
-		AgentID: "agent1",
-	}
-	err = retriever.AddCorpusDocument(ctx, corpusDoc)
-	if err != nil {
-		log.Printf("Failed to add corpus document: %v", err)
-	}
-
-	// Retrieve context for a query
+	// Query the system
+	query := "What are agents called in Guild?"
 	retrievalConfig := RetrievalConfig{
 		MaxResults:      3,
-		MinScore:        0.1,
+		MinScore:        0.5,
 		IncludeMetadata: true,
-		UseCorpus:       true,
 	}
 
-	results, err := retriever.RetrieveContext(ctx, "How do agents communicate?", retrievalConfig)
+	results, err := retriever.RetrieveContext(ctx, query, retrievalConfig)
 	if err != nil {
 		log.Printf("Failed to retrieve context: %v", err)
 	}
 
 	// Display results
-	fmt.Printf("Found %d relevant results:\n", len(results.Results))
+	fmt.Printf("Found %d results for query: %s\n", len(results.Results), query)
 	for i, result := range results.Results {
-		fmt.Printf("\n%d. Source: %s (Score: %.3f)\n", i+1, result.Source, result.Score)
-		fmt.Printf("   Content: %s\n", result.Content)
-		if result.Metadata != nil {
-			fmt.Printf("   Metadata: %v\n", result.Metadata)
+		fmt.Printf("\nResult %d (score: %.2f):\n", i+1, result.Score)
+		fmt.Printf("Content: %s\n", result.Content)
+		if result.Source != "" {
+			fmt.Printf("Source: %s\n", result.Source)
 		}
 	}
-
-	// Enhance a prompt with context
-	enhancedPrompt, err := retriever.EnhancePrompt(ctx,
-		"Explain how agents work together in the Guild framework",
-		retrievalConfig)
-	if err != nil {
-		log.Printf("Failed to enhance prompt: %v", err)
-	}
-
-	fmt.Printf("\nEnhanced Prompt:\n%s\n", enhancedPrompt)
 }
 
-// ExampleWithVectorStoreFactory demonstrates using the vector store factory
-func ExampleWithVectorStoreFactory() {
+// ExampleWithOllama demonstrates using the RAG system with Ollama for offline operation
+func ExampleWithOllama() {
 	ctx := context.Background()
 
-	// Create vector store using factory
+	// Create Ollama provider for offline operation
+	factory := providers.NewFactoryV2()
+	ollamaProvider, err := factory.CreateAIProvider(providers.ProviderOllama, "http://localhost:11434")
+	if err != nil {
+		log.Fatalf("Failed to create Ollama provider: %v", err)
+	}
+
+	// Create vector store config with explicit Ollama provider
 	storeConfig := &vector.StoreConfig{
 		Type:              vector.StoreTypeChromem,
-		OpenAIApiKey:      "your-api-key", // In production, use env var
-		DefaultCollection: "agent_memories",
+		EmbeddingProvider: ollamaProvider,
+		EmbeddingModel:    "nomic-embed-text", // Excellent local embedding model
+		DefaultCollection: "guild_knowledge",
 		ChromemConfig: vector.ChromemConfig{
-			PersistencePath:  "./data/vectors",
-			DefaultDimension: 1536,
+			PersistencePath:  "./embeddings",
+			DefaultDimension: 768, // nomic-embed-text dimension
 		},
 	}
 
@@ -113,94 +112,126 @@ func ExampleWithVectorStoreFactory() {
 	}
 	defer vectorStore.Close()
 
-	// Use the vector store for embeddings
-	embedding := vector.Embedding{
-		Text:   "Guild agents collaborate through shared objectives",
-		Source: "example",
-		Metadata: map[string]interface{}{
-			"type": "example",
-		},
+	// Create RAG config
+	ragConfig := Config{
+		ChunkSize:       1000,
+		ChunkOverlap:    200,
+		MaxResults:      5,
+		VectorStorePath: "./embeddings",
 	}
 
-	err = vectorStore.SaveEmbedding(ctx, embedding)
+	// Create retriever
+	retriever := NewRetrieverWithStore(vectorStore, ragConfig)
+
+	// Example: Add a document
+	err = retriever.AddDocument(ctx,
+		"ollama-intro",
+		"Ollama enables running large language models locally on your machine.",
+		"ollama-docs")
 	if err != nil {
-		log.Printf("Failed to save embedding: %v", err)
+		log.Printf("Failed to add document: %v", err)
 	}
 
-	// Query embeddings
-	matches, err := vectorStore.QueryEmbeddings(ctx, "How do agents collaborate?", 5)
-	if err != nil {
-		log.Printf("Failed to query embeddings: %v", err)
-	}
-
-	fmt.Printf("Found %d matches\n", len(matches))
+	fmt.Println("RAG system initialized with Ollama for offline operation")
 }
 
-// ExampleRAGAgentIntegration demonstrates integrating RAG with an agent
-func ExampleRAGAgentIntegration() {
-	ctx := context.Background()
-
-	// Create embedder and retriever
-	embedder := &vector.MockEmbedder{Dimension: 1536}
-	config := DefaultConfig()
-	retriever, err := NewRetriever(ctx, embedder, config)
-	if err != nil {
-		log.Fatalf("Failed to create retriever: %v", err)
-	}
-	defer retriever.Close()
-
-	// In a real agent's Execute method:
-	agentRequest := "What are the best practices for agent communication?"
-
-	// Enhance the request with RAG context
-	retrievalConfig := DefaultRetrievalConfig()
-	retrievalConfig.MaxResults = 3
-
-	enhancedRequest, err := retriever.EnhancePrompt(ctx, agentRequest, retrievalConfig)
-	if err != nil {
-		// Fall back to original request on error
-		enhancedRequest = agentRequest
-	}
-
-	// The agent would then use the enhanced request with its LLM
-	fmt.Printf("Original request: %s\n", agentRequest)
-	fmt.Printf("Enhanced request length: %d characters\n", len(enhancedRequest))
-}
-
-// ExampleCorpusIntegration demonstrates corpus and RAG integration
+// ExampleCorpusIntegration demonstrates RAG with corpus integration using the new on-demand model
 func ExampleCorpusIntegration() {
 	ctx := context.Background()
 
-	// Configure RAG with corpus support
-	config := Config{
-		ChunkSize:       500,
-		ChunkOverlap:    100,
-		UseCorpus:       true,
+	// Configure corpus
+	corpusConfig := corpus.Config{
 		CorpusPath:      "./guild_memory/corpus",
-		CorpusMaxSizeMB: 100,
+		ActivitiesPath:  "./guild_memory/corpus/.activities",
+		MaxSizeBytes:    100 * 1024 * 1024, // 100MB
+		DefaultCategory: "general",
 	}
 
-	embedder := &vector.MockEmbedder{Dimension: 1536}
-	retriever, err := NewRetriever(ctx, embedder, config)
+	// Create vector store with auto-detection
+	vectorConfig := &vector.StoreConfig{
+		Type:              vector.StoreTypeChromem,
+		DefaultCollection: "corpus_embeddings",
+		ChromemConfig: vector.ChromemConfig{
+			PersistencePath:  "./embeddings",
+			DefaultDimension: 768,
+		},
+	}
+	
+	vectorStore, err := vector.NewVectorStore(ctx, vectorConfig)
 	if err != nil {
-		log.Fatalf("Failed to create retriever: %v", err)
+		log.Fatalf("Failed to create vector store: %v", err)
 	}
-	defer retriever.Close()
+	defer vectorStore.Close()
 
-	// The retriever will now search both vector embeddings and corpus documents
+	// Create RAG config with corpus integration
+	ragConfig := Config{
+		ChunkSize:       1000,
+		ChunkOverlap:    200,
+		ChunkStrategy:   "paragraph",
+		MaxResults:      10,
+		UseCorpus:       true,
+		CorpusPath:      corpusConfig.CorpusPath,
+		CorpusMaxSizeMB: int(corpusConfig.MaxSizeBytes / 1024 / 1024),
+	}
+
+	// Create retriever
+	retriever := NewRetrieverWithStore(vectorStore, ragConfig)
+
+	// The new on-demand model means corpus documents are synced to RAG
+	// Users run 'guild corpus scan' to update embeddings when corpus changes
+	fmt.Println("Run 'guild corpus scan' to sync corpus documents to RAG system")
+
+	// Search with corpus integration
+	query := "How does the agent system work?"
 	retrievalConfig := RetrievalConfig{
-		MaxResults:          5,
-		UseCorpus:           true,
-		DisableVectorSearch: false, // Use both vector and corpus search
+		MaxResults:      10,
+		MinScore:        0.5, // Lower threshold for better recall
+		UseCorpus:       true,
+		IncludeMetadata: true,
 	}
 
-	results, err := retriever.RetrieveContext(ctx, "agent architecture", retrievalConfig)
+	results, err := retriever.RetrieveContext(ctx, query, retrievalConfig)
 	if err != nil {
 		log.Printf("Failed to retrieve context: %v", err)
 	}
 
-	// Results will include both vector matches and corpus documents
-	for _, result := range results.Results {
-		fmt.Printf("Source: %s, Score: %.3f\n", result.Source, result.Score)
+	// Display results
+	fmt.Printf("Found %d results (including corpus) for: %s\n", len(results.Results), query)
+	for i, result := range results.Results {
+		fmt.Printf("\nResult %d (score: %.2f):\n", i+1, result.Score)
+		fmt.Printf("Content snippet: %.100s...\n", result.Content)
+		if result.Source != "" {
+			fmt.Printf("Source: %s\n", result.Source)
+		}
+		if len(result.Metadata) > 0 {
+			fmt.Printf("Metadata: %v\n", result.Metadata)
+		}
 	}
+}
+
+// ExampleProviderAutoDetection demonstrates the auto-detection feature
+func ExampleProviderAutoDetection() {
+	ctx := context.Background()
+
+	// Create vector store without specifying a provider
+	// The system will auto-detect available providers
+	storeConfig := &vector.StoreConfig{
+		Type:              vector.StoreTypeChromem,
+		DefaultCollection: "auto_detect_demo",
+		ChromemConfig: vector.ChromemConfig{
+			PersistencePath:  "./embeddings",
+			DefaultDimension: 768, // Will adapt based on detected model
+		},
+		// No EmbeddingProvider specified - will auto-detect
+	}
+
+	vectorStore, err := vector.NewVectorStore(ctx, storeConfig)
+	if err != nil {
+		// If no providers are available, it will use NoOpEmbedder
+		log.Printf("Vector store created with fallback: %v", err)
+	}
+	defer vectorStore.Close()
+
+	fmt.Println("Vector store created with auto-detected provider")
+	fmt.Println("Priority order: Ollama (local) → OpenAI → Anthropic → NoOp")
 }
