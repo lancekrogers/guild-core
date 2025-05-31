@@ -1,6 +1,7 @@
 package corpus
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"testing"
@@ -8,6 +9,8 @@ import (
 )
 
 func TestSaveAndLoad(t *testing.T) {
+	ctx := context.Background()
+	
 	// Create a temporary directory for the test
 	tempDir, err := os.MkdirTemp("", "corpus-test-*")
 	if err != nil {
@@ -41,7 +44,7 @@ func TestSaveAndLoad(t *testing.T) {
 	}
 
 	// Save the document
-	err = Save(&doc, cfg)
+	err = Save(ctx, &doc, cfg)
 	if err != nil {
 		t.Fatalf("Failed to save document: %v", err)
 	}
@@ -58,7 +61,7 @@ func TestSaveAndLoad(t *testing.T) {
 	}
 
 	// Load the document
-	loadedDoc, err := Load(doc.FilePath)
+	loadedDoc, err := Load(ctx, doc.FilePath)
 	if err != nil {
 		t.Fatalf("Failed to load document: %v", err)
 	}
@@ -95,7 +98,7 @@ func TestSaveAndLoad(t *testing.T) {
 	}
 
 	// Test document listing
-	docs, err := List(cfg)
+	docs, err := List(ctx, cfg)
 	if err != nil {
 		t.Fatalf("Failed to list documents: %v", err)
 	}
@@ -105,7 +108,7 @@ func TestSaveAndLoad(t *testing.T) {
 	}
 
 	// Test document deletion
-	err = Delete(doc.FilePath)
+	err = Delete(ctx, doc.FilePath)
 	if err != nil {
 		t.Fatalf("Failed to delete document: %v", err)
 	}
@@ -117,7 +120,7 @@ func TestSaveAndLoad(t *testing.T) {
 	}
 
 	// Test listing after deletion
-	docs, err = List(cfg)
+	docs, err = List(ctx, cfg)
 	if err != nil {
 		t.Fatalf("Failed to list documents: %v", err)
 	}
@@ -128,6 +131,8 @@ func TestSaveAndLoad(t *testing.T) {
 }
 
 func TestMaxSizeConstraint(t *testing.T) {
+	ctx := context.Background()
+	
 	// Create a temporary directory for the test
 	tempDir, err := os.MkdirTemp("", "corpus-test-*")
 	if err != nil {
@@ -157,7 +162,7 @@ func TestMaxSizeConstraint(t *testing.T) {
 	}
 
 	// Attempt to save the document
-	err = Save(&doc, cfg)
+	err = Save(ctx, &doc, cfg)
 	if err == nil {
 		t.Errorf("Expected error for document exceeding size limit, but got none")
 	}

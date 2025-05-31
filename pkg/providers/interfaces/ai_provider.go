@@ -83,12 +83,13 @@ type Embedding struct {
 
 // ProviderCapabilities describes what a provider supports
 type ProviderCapabilities struct {
-	MaxTokens      int
-	ContextWindow  int
-	SupportsVision bool
-	SupportsTools  bool
-	SupportsStream bool
-	Models         []ModelInfo
+	MaxTokens          int
+	ContextWindow      int
+	SupportsVision     bool
+	SupportsTools      bool
+	SupportsStream     bool
+	SupportsEmbeddings bool
+	Models             []ModelInfo
 }
 
 // ModelInfo contains information about a specific model

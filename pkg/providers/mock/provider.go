@@ -38,11 +38,12 @@ func NewProvider() *Provider {
 		calls:           make([]CallRecord, 0),
 		defaultResponse: "Mock response",
 		capabilities: interfaces.ProviderCapabilities{
-			MaxTokens:      4096,
-			ContextWindow:  8192,
-			SupportsVision: false,
-			SupportsTools:  false,
-			SupportsStream: true,
+			MaxTokens:          4096,
+			ContextWindow:      8192,
+			SupportsVision:     false,
+			SupportsTools:      false,
+			SupportsStream:     true,
+			SupportsEmbeddings: true,
 			Models: []interfaces.ModelInfo{
 				{
 					ID:            "mock-model",

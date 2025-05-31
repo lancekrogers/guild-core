@@ -96,25 +96,36 @@ var corpusListCmd = &cobra.Command{
 			return
 		}
 		
-		// Get all documents
-		docs, err := corpus.List(context.Background(), cfg)
+		// Get all document paths
+		docPaths, err := corpus.List(context.Background(), cfg)
 		if err != nil {
 			fmt.Printf("Error listing documents: %v\n", err)
 			return
 		}
 		
-		// Filter by tag if provided
-		if tag != "" {
-			var filtered []corpus.CorpusDoc
-			for _, doc := range docs {
+		// Load documents and filter by tag if provided
+		var docs []corpus.CorpusDoc
+		for _, path := range docPaths {
+			doc, err := corpus.Load(context.Background(), path)
+			if err != nil {
+				continue // Skip documents that can't be loaded
+			}
+			
+			// Filter by tag if provided
+			if tag != "" {
+				hasTag := false
 				for _, t := range doc.Tags {
 					if strings.EqualFold(t, tag) {
-						filtered = append(filtered, doc)
+						hasTag = true
 						break
 					}
 				}
+				if !hasTag {
+					continue
+				}
 			}
-			docs = filtered
+			
+			docs = append(docs, *doc)
 		}
 		
 		// Display the documents
@@ -154,8 +165,8 @@ var corpusViewCmd = &cobra.Command{
 			return
 		}
 		
-		// Get all documents
-		docs, err := corpus.List(context.Background(), cfg)
+		// Get all document paths
+		docPaths, err := corpus.List(context.Background(), cfg)
 		if err != nil {
 			fmt.Printf("Error listing documents: %v\n", err)
 			return
@@ -163,9 +174,13 @@ var corpusViewCmd = &cobra.Command{
 		
 		// Find the document by title
 		var targetDoc *corpus.CorpusDoc
-		for _, doc := range docs {
+		for _, path := range docPaths {
+			doc, err := corpus.Load(context.Background(), path)
+			if err != nil {
+				continue
+			}
 			if strings.EqualFold(doc.Title, title) {
-				targetDoc = &doc
+				targetDoc = doc
 				break
 			}
 		}
@@ -175,7 +190,7 @@ var corpusViewCmd = &cobra.Command{
 			return
 		}
 		
-		// Load the document with content
+		// Document is already loaded with content
 		doc, err := corpus.Load(context.Background(), targetDoc.FilePath)
 		if err != nil {
 			fmt.Printf("Error loading document: %v\n", err)
@@ -199,7 +214,7 @@ var corpusViewCmd = &cobra.Command{
 		if !doc.UpdatedAt.IsZero() && doc.UpdatedAt != doc.CreatedAt {
 			fmt.Printf("Updated: %s\n", doc.UpdatedAt.Format("2006-01-02 15:04:05"))
 		}
-		fmt.Println("\n---\n")
+		fmt.Print("\n---\n\n")
 		fmt.Println(doc.Body)
 	},
 }
@@ -229,8 +244,8 @@ var corpusDeleteCmd = &cobra.Command{
 			return
 		}
 		
-		// Get all documents
-		docs, err := corpus.List(context.Background(), cfg)
+		// Get all document paths
+		docPaths, err := corpus.List(context.Background(), cfg)
 		if err != nil {
 			fmt.Printf("Error listing documents: %v\n", err)
 			return
@@ -238,9 +253,13 @@ var corpusDeleteCmd = &cobra.Command{
 		
 		// Find the document by title
 		var targetDoc *corpus.CorpusDoc
-		for _, doc := range docs {
+		for _, path := range docPaths {
+			doc, err := corpus.Load(context.Background(), path)
+			if err != nil {
+				continue
+			}
 			if strings.EqualFold(doc.Title, title) {
-				targetDoc = &doc
+				targetDoc = doc
 				break
 			}
 		}
@@ -283,23 +302,22 @@ var corpusGraphCmd = &cobra.Command{
 		
 		// Display the graph
 		fmt.Printf("Corpus Graph - %d documents, %d connections\n\n", len(graph.Nodes), len(graph.Edges))
-		for _, node := range graph.Nodes {
-			fmt.Printf("Document: %s\n", node.Title)
+		for nodeName, references := range graph.Nodes {
+			fmt.Printf("Document: %s\n", nodeName)
 			
-			// Find connections
-			var connections []string
-			for _, edge := range graph.Edges {
-				if edge.From == node.Title {
-					connections = append(connections, fmt.Sprintf("  → %s", edge.To))
-				} else if edge.To == node.Title {
-					connections = append(connections, fmt.Sprintf("  ← %s", edge.From))
+			// Show outgoing references
+			if len(references) > 0 {
+				fmt.Println("Links to:")
+				for _, ref := range references {
+					fmt.Printf("  → %s\n", ref)
 				}
 			}
 			
-			if len(connections) > 0 {
-				fmt.Println("Connections:")
-				for _, conn := range connections {
-					fmt.Println(conn)
+			// Show incoming references (backlinks)
+			if backlinks, exists := graph.Backlinks[nodeName]; exists && len(backlinks) > 0 {
+				fmt.Println("Linked from:")
+				for _, backlink := range backlinks {
+					fmt.Printf("  ← %s\n", backlink)
 				}
 			}
 			fmt.Println()

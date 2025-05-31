@@ -1,6 +1,7 @@
 package corpus
 
 import (
+	"context"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -9,6 +10,8 @@ import (
 )
 
 func TestTrackUserView(t *testing.T) {
+	ctx := context.Background()
+	
 	// Create a temporary directory for the test
 	tempDir, err := os.MkdirTemp("", "corpus-test-*")
 	if err != nil {
@@ -38,14 +41,14 @@ func TestTrackUserView(t *testing.T) {
 	}
 
 	// Save the document
-	err = Save(&doc, cfg)
+	err = Save(ctx, &doc, cfg)
 	if err != nil {
 		t.Fatalf("Failed to save document: %v", err)
 	}
 
 	// Track a user view
 	user := "test-user"
-	err = TrackUserView(user, doc.FilePath, cfg)
+	err = TrackUserView(ctx, user, doc.FilePath, cfg)
 	if err != nil {
 		t.Fatalf("Failed to track user view: %v", err)
 	}
@@ -89,7 +92,7 @@ func TestTrackUserView(t *testing.T) {
 
 	// Track another view
 	time.Sleep(10 * time.Millisecond) // Ensure timestamp is different
-	err = TrackUserView(user, doc.FilePath, cfg)
+	err = TrackUserView(ctx, user, doc.FilePath, cfg)
 	if err != nil {
 		t.Fatalf("Failed to track second user view: %v", err)
 	}
@@ -112,7 +115,7 @@ func TestTrackUserView(t *testing.T) {
 	}
 
 	// Test GetUserActivities
-	activities, err := GetUserActivities(user, cfg)
+	activities, err := GetUserActivities(ctx, user, cfg)
 	if err != nil {
 		t.Fatalf("Failed to get user activities: %v", err)
 	}
@@ -122,7 +125,7 @@ func TestTrackUserView(t *testing.T) {
 	}
 
 	// Test GetPopularDocuments
-	popular, err := GetPopularDocuments(cfg)
+	popular, err := GetPopularDocuments(ctx, cfg)
 	if err != nil {
 		t.Fatalf("Failed to get popular documents: %v", err)
 	}

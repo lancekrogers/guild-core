@@ -189,6 +189,12 @@ func performCorpusScan(ctx context.Context, cfg corpus.Config, ragSystem *rag.Re
 		
 		if forceRebuild {
 			needsUpdate = true
+			// When force rebuilding, treat existing files as modified
+			if _, exists := embeddingsMeta[filePath]; exists {
+				result.ModifiedFiles = append(result.ModifiedFiles, filePath)
+			} else {
+				result.NewFiles = append(result.NewFiles, filePath)
+			}
 			if verbose {
 				fmt.Printf("Force rebuilding: %s\n", filepath.Base(filePath))
 			}
@@ -250,23 +256,8 @@ func performCorpusScan(ctx context.Context, cfg corpus.Config, ragSystem *rag.Re
 }
 
 func addDocumentToRAG(ctx context.Context, ragSystem *rag.Retriever, doc *corpus.CorpusDoc) error {
-	// Create RAG document
-	ragDoc := rag.Document{
-		ID:      doc.FilePath, // Use file path as unique ID
-		Content: doc.Body,
-		Metadata: map[string]interface{}{
-			"title":      doc.Title,
-			"tags":       doc.Tags,
-			"source":     doc.Source,
-			"created_at": doc.CreatedAt,
-			"updated_at": doc.UpdatedAt,
-			"guild_id":   doc.GuildID,
-			"agent_id":   doc.AgentID,
-		},
-	}
-	
-	// Add to RAG system (this will chunk and embed the document)
-	return ragSystem.AddDocument(ctx, ragDoc)
+	// Use the AddCorpusDocument method which is designed for corpus documents
+	return ragSystem.AddCorpusDocument(ctx, doc)
 }
 
 func removeDocumentFromRAG(ctx context.Context, ragSystem *rag.Retriever, filePath string) error {
