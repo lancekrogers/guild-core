@@ -180,11 +180,14 @@ lint:
 		go vet ./... ; \
 	fi
 
-# Integration tests (requires API keys)
+# Integration tests (requires API keys for provider tests)
 integration-test:
 	@echo "$(BLUE)Running integration tests...$(NC)"
-	@echo "$(YELLOW)Note: This requires API keys to be set$(NC)"
 	@echo ""
+	@echo "$(YELLOW)Running corpus integration tests...$(NC)"
+	@go test -v -tags=integration ./integration/corpus/...
+	@echo ""
+	@echo "$(YELLOW)Running provider integration tests (requires API keys)...$(NC)"
 	@# Check for API keys
 	@if [ -z "$$OPENAI_API_KEY" ]; then \
 		echo "$(YELLOW)⚠ OPENAI_API_KEY not set - skipping OpenAI integration tests$(NC)" ; \
