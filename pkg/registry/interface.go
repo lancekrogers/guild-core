@@ -27,6 +27,12 @@ type ComponentRegistry interface {
 	// Memory returns the memory registry for managing memory components
 	Memory() MemoryRegistry
 	
+	// Project returns the project registry for managing project contexts
+	Project() ProjectRegistry
+	
+	// Prompts returns the prompt registry for managing prompt templates
+	Prompts() *PromptRegistry
+	
 	// Initialize sets up all registries with the provided configuration
 	Initialize(ctx context.Context, config Config) error
 	
@@ -115,6 +121,21 @@ type MemoryRegistry interface {
 	ListVectorStores() []string
 }
 
+// ProjectRegistry manages project detection and context.
+type ProjectRegistry interface {
+	// GetProjectManager returns the project manager instance
+	GetProjectManager() ProjectManager
+	
+	// SetProjectManager sets the project manager instance
+	SetProjectManager(manager ProjectManager) error
+	
+	// GetCurrentContext returns the current project context
+	GetCurrentContext(ctx context.Context) (*ProjectContext, error)
+	
+	// WithProjectContext returns a new context with project information
+	WithProjectContext(ctx context.Context) (context.Context, error)
+}
+
 // Define minimal interfaces to avoid import cycles
 // Agent represents an AI agent - using minimal interface for now
 type Agent interface {
@@ -128,6 +149,31 @@ type Tool = tools.Tool
 type Provider = providers.LLMClient
 type MemoryStore = memory.Store
 type VectorStore = vector.VectorStore
+
+// ProjectManager provides project management capabilities
+type ProjectManager interface {
+	// FindProjectRoot finds the project root from a starting path
+	FindProjectRoot(startPath string) (string, error)
+	// IsInitialized checks if a project exists at the given path
+	IsInitialized(path string) bool
+	// GetContext returns project context from current directory
+	GetContext() (*ProjectContext, error)
+	// GetContextFromPath returns project context from a specific path
+	GetContextFromPath(path string) (*ProjectContext, error)
+	// Initialize creates a new project structure
+	Initialize(path string) error
+}
+
+// ProjectContext represents a project's context
+type ProjectContext interface {
+	GetRootPath() string
+	GetGuildPath() string
+	GetCorpusPath() string
+	GetEmbeddingsPath() string
+	GetConfigPath() string
+	GetAgentsPath() string
+	GetObjectivesPath() string
+}
 
 // Factory function types for component creation
 type AgentFactory func(config AgentConfig) (Agent, error)

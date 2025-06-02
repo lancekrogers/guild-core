@@ -51,11 +51,23 @@ func runCorpusScan(cmd *cobra.Command, args []string) {
 	forceRebuild, _ := cmd.Flags().GetBool("force")
 	providerType, _ := cmd.Flags().GetString("provider")
 	embeddingModel, _ := cmd.Flags().GetString("model")
+	useGlobal, _ := cmd.Flags().GetBool("global")
 	
 	// Get corpus configuration
-	cfg, err := getCorpusConfig()
+	var cfg corpus.Config
+	var err error
+	
+	if useGlobal {
+		// Use global config when --global flag is set
+		cfg, err = corpus.GetGlobalConfig()
+	} else {
+		// Try project config first, fall back to global
+		cfg, err = corpus.GetConfigWithFallback(ctx)
+	}
+	
 	if err != nil {
 		fmt.Printf("Error getting corpus configuration: %v\n", err)
+		fmt.Println("Run 'guild init' to initialize a project")
 		return
 	}
 	
@@ -373,4 +385,5 @@ func init() {
 	corpusScanCmd.Flags().BoolP("force", "f", false, "Force rebuild all embeddings")
 	corpusScanCmd.Flags().StringP("provider", "p", "", "AI provider to use (ollama, openai, anthropic)")
 	corpusScanCmd.Flags().StringP("model", "m", "", "Embedding model to use (e.g., nomic-embed-text)")
+	corpusScanCmd.Flags().Bool("global", false, "Use global corpus instead of project-local")
 }

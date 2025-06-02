@@ -73,7 +73,7 @@ dashboard-test:
 	@rm -f .test-results.tmp
 	@# Run tests for each major package and capture results
 	@echo "$(YELLOW)Testing Core Packages...$(NC)"
-	@for pkg in agent memory orchestrator objective kanban; do \
+	@for pkg in agent memory orchestrator objective kanban project; do \
 		printf "  %-20s" "$$pkg:" ; \
 		if go test -short -count=1 ./pkg/$$pkg/... > /dev/null 2>&1; then \
 			echo "$(GREEN)✓ PASS$(NC)" ; \
@@ -186,6 +186,12 @@ integration-test:
 	@echo ""
 	@echo "$(YELLOW)Running corpus integration tests...$(NC)"
 	@go test -v -tags=integration ./integration/corpus/...
+	@echo ""
+	@echo "$(YELLOW)Running RAG integration tests...$(NC)"
+	@go test -v -tags=integration ./integration/rag/...
+	@echo ""
+	@echo "$(YELLOW)Running project integration tests...$(NC)"
+	@go test -v -tags=integration ./pkg/project/...
 	@echo ""
 	@echo "$(YELLOW)Running provider integration tests (requires API keys)...$(NC)"
 	@# Check for API keys

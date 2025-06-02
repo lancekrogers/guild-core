@@ -14,6 +14,8 @@ type DefaultComponentRegistry struct {
 	toolRegistry     ToolRegistry
 	providerRegistry ProviderRegistry
 	memoryRegistry   MemoryRegistry
+	projectRegistry  ProjectRegistry
+	promptRegistry   *PromptRegistry
 	config          Config
 	initialized     bool
 	mu              sync.RWMutex
@@ -26,6 +28,8 @@ func NewComponentRegistry() ComponentRegistry {
 		toolRegistry:     NewToolRegistry(),
 		providerRegistry: NewProviderRegistry(),
 		memoryRegistry:   NewMemoryRegistry(),
+		projectRegistry:  NewProjectRegistry(),
+		promptRegistry:   NewPromptRegistry(),
 	}
 }
 
@@ -49,12 +53,30 @@ func (r *DefaultComponentRegistry) Memory() MemoryRegistry {
 	return r.memoryRegistry
 }
 
+// Project returns the project registry
+func (r *DefaultComponentRegistry) Project() ProjectRegistry {
+	return r.projectRegistry
+}
+
+// Prompts returns the prompt registry
+func (r *DefaultComponentRegistry) Prompts() *PromptRegistry {
+	return r.promptRegistry
+}
+
 // Initialize sets up all registries with the provided configuration
 func (r *DefaultComponentRegistry) Initialize(ctx context.Context, config Config) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	r.config = config
+
+	// Initialize project context first as other components may depend on it
+	ctx, err := r.initializeProject(ctx)
+	if err != nil {
+		// Project initialization is optional - just log and continue
+		// This allows the system to work without a project
+		_ = err // Suppress error, project is optional
+	}
 
 	// Initialize each registry
 	if err := r.initializeAgents(ctx); err != nil {
@@ -71,6 +93,10 @@ func (r *DefaultComponentRegistry) Initialize(ctx context.Context, config Config
 
 	if err := r.initializeMemory(ctx); err != nil {
 		return fmt.Errorf("failed to initialize memory: %w", err)
+	}
+
+	if err := r.initializePrompts(ctx); err != nil {
+		return fmt.Errorf("failed to initialize prompts: %w", err)
 	}
 
 	r.initialized = true
@@ -193,5 +219,26 @@ func (r *DefaultComponentRegistry) shutdownProviders(ctx context.Context) error 
 
 func (r *DefaultComponentRegistry) shutdownMemory(ctx context.Context) error {
 	// Shutdown memory stores if needed
+	return nil
+}
+
+func (r *DefaultComponentRegistry) initializeProject(ctx context.Context) (context.Context, error) {
+	// Try to add project context to the context
+	return r.projectRegistry.WithProjectContext(ctx)
+}
+
+func (r *DefaultComponentRegistry) initializePrompts(ctx context.Context) error {
+	// Register default prompt provider
+	defaultProvider, err := NewDefaultPromptProvider()
+	if err != nil {
+		return fmt.Errorf("error creating default prompt provider: %w", err)
+	}
+
+	if err := r.promptRegistry.Register("default", defaultProvider); err != nil {
+		return fmt.Errorf("error registering default prompt provider: %w", err)
+	}
+
+	// TODO: Add any other prompt providers from config
+
 	return nil
 }

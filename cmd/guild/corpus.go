@@ -451,68 +451,39 @@ func runCorpusUI(title string) error {
 }
 
 // getCorpusConfig returns the configuration for the corpus system
+// This is kept for backward compatibility and will use project-aware config
 func getCorpusConfig() (corpus.Config, error) {
-	// Get the current working directory
-	basePath, err := os.Getwd()
+	ctx := context.Background()
+	return corpus.GetConfigWithFallback(ctx)
+}
+
+// getCorpusConfigWithFlags returns the configuration based on command flags
+func getCorpusConfigWithFlags(cmd *cobra.Command) (corpus.Config, error) {
+	ctx := context.Background()
+	useGlobal, _ := cmd.Flags().GetBool("global")
+	
+	if useGlobal {
+		return corpus.GetGlobalConfig()
+	}
+	
+	cfg, err := corpus.GetConfigWithFallback(ctx)
 	if err != nil {
-		return corpus.Config{}, fmt.Errorf("failed to get working directory: %w", err)
+		return cfg, fmt.Errorf("%w\nRun 'guild init' to initialize a project", err)
 	}
-
-	// Look for config in standard locations
-	configDir := filepath.Join(basePath, ".guild")
-	configPath := filepath.Join(configDir, "corpus.yml")
-
-	// Try to load from config file first
-	cfg, err := corpus.LoadConfigFromFile(configPath)
-	if err != nil {
-		// Fall back to default config with environment overrides
-		cfg = corpus.DefaultConfig()
-
-		// Apply any environment variable overrides
-		envVars := make(map[string]string)
-		for _, env := range os.Environ() {
-			kv := strings.SplitN(env, "=", 2)
-			if len(kv) == 2 && strings.HasPrefix(kv[0], "GUILD_CORPUS_") {
-				envVars[kv[0]] = kv[1]
-			}
-		}
-
-		// Override with environment variables
-		if path, ok := envVars[corpus.EnvCorpusPath]; ok && path != "" {
-			cfg.CorpusPath = path
-		}
-
-		if path, ok := envVars[corpus.EnvActivitiesPath]; ok && path != "" {
-			cfg.ActivitiesPath = path
-		}
-
-		if sizeStr, ok := envVars[corpus.EnvMaxSizeBytes]; ok && sizeStr != "" {
-			if size, err := strconv.ParseInt(sizeStr, 10, 64); err == nil && size > 0 {
-				cfg.MaxSizeBytes = size
-			}
-		}
-
-		if tagsStr, ok := envVars[corpus.EnvDefaultTags]; ok && tagsStr != "" {
-			// Parse comma-separated tags
-			cfg.DefaultTags = strings.Split(tagsStr, ",")
-		}
-	}
-
-	// Ensure the corpus directory exists
-	if err := os.MkdirAll(cfg.CorpusPath, 0755); err != nil {
-		return cfg, fmt.Errorf("failed to create corpus directory: %w", err)
-	}
-
-	// Ensure the activities directory exists
-	if err := os.MkdirAll(cfg.ActivitiesPath, 0755); err != nil {
-		return cfg, fmt.Errorf("failed to create activities directory: %w", err)
-	}
-
+	
 	return cfg, nil
 }
 
 // setupCorpusFlags adds common flags to the corpus commands
 func setupCorpusFlags() {
+	// Common global flag for all corpus commands
+	for _, cmd := range []*cobra.Command{
+		corpusCreateCmd, corpusListCmd, corpusViewCmd, corpusDeleteCmd,
+		corpusGraphCmd, corpusUICmd, corpusConfigCmd,
+	} {
+		cmd.Flags().Bool("global", false, "Use global corpus instead of project-local")
+	}
+	
 	// Flags for the create command
 	corpusCreateCmd.Flags().String("title", "", "Title of the document (required)")
 	corpusCreateCmd.MarkFlagRequired("title")
