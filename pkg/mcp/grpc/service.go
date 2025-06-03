@@ -53,17 +53,9 @@ func (s *MCPService) RegisterTool(ctx context.Context, req *ToolRegistrationRequ
 		return nil, status.Error(codes.Internal, "failed to marshal request")
 	}
 
-	msg := &protocol.MCPMessage{
-		ID:          generateID(),
-		Version:     "1.0",
-		MessageType: protocol.RequestMessage,
-		Method:      "tool.register",
-		Timestamp:   time.Now(),
-		Payload:     json.RawMessage(payload),
-	}
-
-	// Handle via MCP server (this is a simplified approach)
-	// In a real implementation, you'd have a proper bridge
+	// TODO: In a real implementation, create an MCP message and send through server
+	// For now, directly register with the tool registry
+	_ = payload // Mark as used
 	tool := tools.NewBaseTool(
 		toolDef.ID,
 		toolDef.Name,
@@ -109,8 +101,8 @@ func (s *MCPService) DiscoverTools(ctx context.Context, req *ToolDiscoveryReques
 		RequiredCapabilities: req.RequiredCapabilities,
 		MaxCost:              req.MaxCost,
 		MaxLatency:           time.Duration(req.MaxLatencyMs) * time.Millisecond,
-		Limit:                int(req.Limit),
 	}
+	// Note: Limit is not part of ToolQuery, would need to be handled at registry level
 
 	tools, err := s.server.GetToolRegistry().DiscoverTools(query)
 	if err != nil {
@@ -322,12 +314,21 @@ func convertParameters(params []*ToolParameter) []protocol.ToolParameter {
 func convertParametersToGRPC(params []protocol.ToolParameter) []*ToolParameter {
 	var result []*ToolParameter
 	for _, param := range params {
+		// Convert default value to string
+		var defaultStr string
+		if param.Default != nil {
+			// Marshal to JSON string for complex types
+			if bytes, err := json.Marshal(param.Default); err == nil {
+				defaultStr = string(bytes)
+			}
+		}
+		
 		result = append(result, &ToolParameter{
 			Name:        param.Name,
 			Type:        param.Type,
 			Description: param.Description,
 			Required:    param.Required,
-			Default:     param.Default,
+			Default:     defaultStr,
 		})
 	}
 	return result
@@ -341,8 +342,6 @@ func convertCostProfile(profile *CostProfile) protocol.CostProfile {
 		ComputeCost:   profile.ComputeCost,
 		MemoryCost:    profile.MemoryCost,
 		LatencyCost:   time.Duration(profile.LatencyMs) * time.Millisecond,
-		TokensCost:    int(profile.TokensCost),
-		APICallsCost:  int(profile.ApiCallsCost),
 		FinancialCost: profile.FinancialCost,
 	}
 }
@@ -352,8 +351,8 @@ func convertCostProfileToGRPC(profile protocol.CostProfile) *CostProfile {
 		ComputeCost:   profile.ComputeCost,
 		MemoryCost:    profile.MemoryCost,
 		LatencyMs:     profile.LatencyCost.Milliseconds(),
-		TokensCost:    int64(profile.TokensCost),
-		ApiCallsCost:  int64(profile.APICallsCost),
+		TokensCost:    0, // Not in protocol.CostProfile
+		ApiCallsCost:  0, // Not in protocol.CostProfile
 		FinancialCost: profile.FinancialCost,
 	}
 }

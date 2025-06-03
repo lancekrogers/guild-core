@@ -8,6 +8,7 @@ import (
 
 	mcpconfig "github.com/guild-ventures/guild-core/pkg/mcp/config"
 	"github.com/guild-ventures/guild-core/pkg/mcp/server"
+	"github.com/guild-ventures/guild-core/pkg/mcp/transport"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -82,7 +83,7 @@ func (a *MCPRegistryAdapter) IsEnabled() bool {
 }
 
 // GetConfig returns the MCP configuration
-func (a *MCPRegistryAdapter) GetConfig() *MCPConfig {
+func (a *MCPRegistryAdapter) GetConfig() *mcpconfig.MCPConfig {
 	return a.config
 }
 
@@ -103,23 +104,12 @@ func (a *MCPRegistryAdapter) Health(ctx context.Context) error {
 
 // convertToServerConfig converts MCPConfig to server.Config
 func convertToServerConfig(config *mcpconfig.MCPConfig) (*server.Config, error) {
-	// Parse request timeout
-	var requestTimeout = 30 // default 30 seconds
-	if config.RequestTimeout != "" {
-		// Parse duration string - simplified for now
-		// In production, use time.ParseDuration
-		requestTimeout = 30
-	}
-
 	// Set defaults
 	if config.ServerID == "" {
 		config.ServerID = "guild-mcp-server"
 	}
 	if config.ServerName == "" {
 		config.ServerName = "Guild MCP Server"
-	}
-	if config.MaxRequests == 0 {
-		config.MaxRequests = 100
 	}
 
 	// Default transport config if not provided
@@ -136,12 +126,12 @@ func convertToServerConfig(config *mcpconfig.MCPConfig) (*server.Config, error) 
 		Version:               "1.0.0",
 		TransportConfig:       config.Transport,
 		EnableTLS:             config.EnableTLS,
-		TLSCertFile:           config.TLSCertFile,
-		TLSKeyFile:            config.TLSKeyFile,
+		TLSCertFile:           "", // TODO: Add to MCPConfig if needed
+		TLSKeyFile:            "", // TODO: Add to MCPConfig if needed
 		EnableAuth:            config.EnableAuth,
-		JWTSecret:             config.JWTSecret,
-		MaxConcurrentRequests: config.MaxRequests,
-		RequestTimeout:        time.Duration(requestTimeout) * time.Second,
+		JWTSecret:             "", // TODO: Add to MCPConfig if needed
+		MaxConcurrentRequests: 100, // Default value
+		RequestTimeout:        30 * time.Second, // Default 30 seconds
 		EnableMetrics:         config.EnableMetrics,
 		EnableTracing:         config.EnableTracing,
 		EnableCostTracking:    config.EnableCost,
@@ -165,7 +155,7 @@ func NewMCPRegistryExtension(config *mcpconfig.MCPConfig, guildRegistry registry
 	if adapter.IsEnabled() && adapter.GetServer() != nil {
 		// Create tool bridge
 		mcpToolRegistry := adapter.GetServer().GetToolRegistry()
-		guildToolRegistry := guildRegistry.GetToolRegistry()
+		guildToolRegistry := guildRegistry.Tools()
 		
 		if guildToolRegistry != nil {
 			toolBridge = NewToolBridge(mcpToolRegistry, guildToolRegistry)

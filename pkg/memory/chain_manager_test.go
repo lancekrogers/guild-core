@@ -235,23 +235,30 @@ func TestAddMessage(t *testing.T) {
 
 	// Test with message without timestamp (should auto-set)
 	mockStore.Reset(); initBuckets(mockStore)
+	
+	// Re-create the chain after reset
+	chainID2, err := manager.CreateChain(ctx, "agent-123", "task-456")
+	if err != nil {
+		t.Fatalf("Failed to re-create chain: %v", err)
+	}
+	
 	messageNoTimestamp := memory.Message{
 		Role:    "user",
 		Content: "message without timestamp",
 	}
 
-	err = manager.AddMessage(ctx, chainID, messageNoTimestamp)
+	err = manager.AddMessage(ctx, chainID2, messageNoTimestamp)
 	if err != nil {
 		t.Fatalf("Failed to add message without timestamp: %v", err)
 	}
 
 	// Get the chain and verify the message timestamp was set
-	chain, err = manager.GetChain(ctx, chainID)
+	chain, err = manager.GetChain(ctx, chainID2)
 	if err != nil {
 		t.Fatalf("Failed to get chain after adding message without timestamp: %v", err)
 	}
 
-	if chain.Messages[1].Timestamp.IsZero() {
+	if chain.Messages[0].Timestamp.IsZero() {
 		t.Error("Expected timestamp to be set automatically, got zero value")
 	}
 

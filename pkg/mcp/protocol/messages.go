@@ -109,6 +109,7 @@ const (
 	ErrorCodeCostLimitExceed = -32003
 	ErrorCodeAuthFailed      = -32004
 	ErrorCodeTimeout         = -32005
+	ErrorCodeTooManyRequests = -32006
 )
 
 // Tool-related messages
@@ -232,4 +233,11 @@ type CostAnalysis struct {
 	BreakdownBy   string       `json:"breakdown_by"`
 	Breakdown     []CostReport `json:"breakdown"`
 	Recommendations []string   `json:"recommendations,omitempty"`
+}
+
+// ErrorResponse represents an error response message
+type ErrorResponse struct {
+	Error   *Error          `json:"error"`
+	ID      interface{}     `json:"id,omitempty"`
+	Version string          `json:"version,omitempty"`
 }

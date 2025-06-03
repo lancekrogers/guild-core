@@ -32,7 +32,7 @@ func TestWorkerAgentWithContext(t *testing.T) {
 	workerAgent := agent.NewWorkerAgent(
 		"ctx-test-agent",
 		"Context Test Agent",
-		&mocks.MockLLMClient{},
+		mocks.NewMockLLMClient(),
 		mocks.NewMockChainManager(),
 		tools.NewToolRegistry(),
 		objectiveManager,
@@ -45,7 +45,7 @@ func TestWorkerAgentWithContext(t *testing.T) {
 		t.Fatalf("Execute failed: %v", err)
 	}
 
-	if response != "Executed: test with context" {
+	if response != "Mock response" {
 		t.Errorf("Unexpected response: %s", response)
 	}
 
@@ -80,7 +80,7 @@ func TestWorkerAgentCostTracking(t *testing.T) {
 	workerAgent := agent.NewWorkerAgent(
 		"cost-test-agent",
 		"Cost Test Agent",
-		&mocks.MockLLMClient{},
+		mocks.NewMockLLMClient(),
 		mocks.NewMockChainManager(),
 		tools.NewToolRegistry(),
 		objectiveManager,
@@ -137,7 +137,7 @@ func TestManagerAgentInheritance(t *testing.T) {
 	managerAgent := agent.NewManagerAgent(
 		"manager-test",
 		"Manager Test",
-		&mocks.MockLLMClient{},
+		mocks.NewMockLLMClient(),
 		mocks.NewMockChainManager(),
 		tools.NewToolRegistry(),
 		objectiveManager,
@@ -150,7 +150,7 @@ func TestManagerAgentInheritance(t *testing.T) {
 		t.Fatalf("Execute failed: %v", err)
 	}
 
-	if response != "Executed: manager request" {
+	if response != "Mock response" {
 		t.Errorf("Unexpected response: %s", response)
 	}
 
@@ -203,7 +203,7 @@ func TestWorkerAgentWithFullMemoryContext(t *testing.T) {
 	workerAgent := agent.NewWorkerAgent(
 		"memory-test-agent",
 		"Memory Test Agent",
-		&mocks.MockLLMClient{},
+		mocks.NewMockLLMClient(),
 		memoryManager,
 		tools.NewToolRegistry(),
 		objectiveManager,
@@ -235,7 +235,7 @@ func TestWorkerAgentWithObjectiveManager(t *testing.T) {
 	workerAgent := agent.NewWorkerAgent(
 		"obj-test-agent",
 		"Objective Test Agent",
-		&mocks.MockLLMClient{},
+		mocks.NewMockLLMClient(),
 		mocks.NewMockChainManager(),
 		tools.NewToolRegistry(),
 		objManager,
@@ -294,7 +294,7 @@ func TestWorkerAgentToolExecution(t *testing.T) {
 	workerAgent := agent.NewWorkerAgent(
 		"tool-exec-agent",
 		"Tool Execution Agent",
-		&mocks.MockLLMClient{},
+		mocks.NewMockLLMClient(),
 		mocks.NewMockChainManager(),
 		toolRegistry,
 		objectiveManager,

@@ -93,14 +93,14 @@ func (m *MCPRegistryMixin) IsMCPEnabled() bool {
 
 // ExtendedComponentRegistry extends ComponentRegistry with MCP support
 type ExtendedComponentRegistry struct {
-	ComponentRegistry
+	registry.ComponentRegistry
 	*MCPRegistryMixin
 }
 
 // NewExtendedComponentRegistry creates a new extended component registry with MCP support
-func NewExtendedComponentRegistry(ctx context.Context, mcpConfig *integration.MCPConfig) (*ExtendedComponentRegistry, error) {
+func NewExtendedComponentRegistry(ctx context.Context, mcpConfig *mcpconfig.MCPConfig) (*ExtendedComponentRegistry, error) {
 	// Create base component registry
-	baseRegistry := New()
+	baseRegistry := registry.NewComponentRegistry()
 
 	// Create MCP mixin
 	mcpMixin, err := NewMCPRegistryMixin(mcpConfig, baseRegistry)
@@ -142,7 +142,7 @@ func (r *ExtendedComponentRegistry) Close(ctx context.Context) error {
 // Helper functions for easy MCP integration
 
 // WithMCP returns a configuration option to enable MCP
-func WithMCP(config *integration.MCPConfig) func(*ExtendedComponentRegistry) error {
+func WithMCP(config *mcpconfig.MCPConfig) func(*ExtendedComponentRegistry) error {
 	return func(r *ExtendedComponentRegistry) error {
 		if config == nil {
 			return nil
@@ -158,8 +158,8 @@ func WithMCP(config *integration.MCPConfig) func(*ExtendedComponentRegistry) err
 }
 
 // WithMCPDefaults returns a default MCP configuration
-func WithMCPDefaults() *integration.MCPConfig {
-	return &integration.MCPConfig{
+func WithMCPDefaults() *mcpconfig.MCPConfig {
+	return &mcpconfig.MCPConfig{
 		Enabled:        true,
 		ServerID:       "guild-mcp-server",
 		ServerName:     "Guild MCP Server",
@@ -168,8 +168,6 @@ func WithMCPDefaults() *integration.MCPConfig {
 		EnableMetrics:  true,
 		EnableTracing:  false,
 		EnableCost:     true,
-		MaxRequests:    100,
-		RequestTimeout: "30s",
 		Transport: &transport.TransportConfig{
 			Type:    "memory",
 			Address: "memory://default",

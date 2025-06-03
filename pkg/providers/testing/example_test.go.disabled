@@ -11,8 +11,8 @@ import (
 	providertesting "github.com/guild-ventures/guild-core/pkg/providers/testing"
 )
 
-// Example: Testing OpenAI provider with mock server
-func ExampleTestOpenAIWithMockServer(t *testing.T) {
+// Example_mockServer shows how to test OpenAI provider with mock server
+func Example_mockServer() {
 	// 1. Create mock HTTP server
 	mock := providertesting.NewMockHTTPServer()
 	defer mock.Close()

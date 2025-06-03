@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"time"
@@ -39,10 +40,11 @@ func recoveryMiddleware(next HandlerFunc) HandlerFunc {
 				log.Printf("MCP Panic recovered: ID=%s Method=%s Panic=%v", 
 					msg.ID, msg.Method, r)
 				
+				errData, _ := json.Marshal(fmt.Sprintf("panic: %v", r))
 				err = &protocol.Error{
-					Code:    protocol.InternalError,
+					Code:    protocol.ErrorCodeInternal,
 					Message: "Internal server error",
-					Data:    fmt.Sprintf("panic: %v", r),
+					Data:    json.RawMessage(errData),
 				}
 				response = nil
 			}
@@ -74,10 +76,11 @@ func timeoutMiddleware(timeout time.Duration) func(HandlerFunc) HandlerFunc {
 			
 			select {
 			case <-ctx.Done():
+				errData, _ := json.Marshal(fmt.Sprintf("timeout after %v", timeout))
 				return nil, &protocol.Error{
-					Code:    protocol.InternalError,
+					Code:    protocol.ErrorCodeTimeout,
 					Message: "Request timeout",
-					Data:    fmt.Sprintf("timeout after %v", timeout),
+					Data:    json.RawMessage(errData),
 				}
 			case res := <-resultCh:
 				return res.response, res.err
@@ -97,15 +100,13 @@ func authMiddleware(jwtSecret string) func(HandlerFunc) HandlerFunc {
 			
 			// Extract token from metadata
 			var token string
-			if msg.Metadata != nil {
-				if auth, ok := msg.Metadata["authorization"]; ok {
-					token = auth
-				}
+			if auth, ok := msg.Metadata.CustomFields["authorization"]; ok {
+				token = auth
 			}
 			
 			if token == "" {
 				return nil, &protocol.Error{
-					Code:    protocol.Unauthorized,
+					Code:    protocol.ErrorCodeAuthFailed,
 					Message: "Authentication required",
 				}
 			}
@@ -113,7 +114,7 @@ func authMiddleware(jwtSecret string) func(HandlerFunc) HandlerFunc {
 			// Validate JWT token (simplified - in production use proper JWT library)
 			if !isValidToken(token, jwtSecret) {
 				return nil, &protocol.Error{
-					Code:    protocol.Unauthorized,
+					Code:    protocol.ErrorCodeAuthFailed,
 					Message: "Invalid token",
 				}
 			}
@@ -154,13 +155,15 @@ func rateLimitMiddleware(limit int, window time.Duration) func(HandlerFunc) Hand
 			
 			// Check rate limit
 			if len(validRequests) >= limit {
+				dataMap := map[string]interface{}{
+					"limit":  limit,
+					"window": window.String(),
+				}
+				dataBytes, _ := json.Marshal(dataMap)
 				return nil, &protocol.Error{
 					Code:    protocol.TooManyRequests,
 					Message: "Rate limit exceeded",
-					Data: map[string]interface{}{
-						"limit":  limit,
-						"window": window.String(),
-					},
+					Data:    json.RawMessage(dataBytes),
 				}
 			}
 			
@@ -202,10 +205,10 @@ func tracingMiddleware(next HandlerFunc) HandlerFunc {
 	return func(ctx context.Context, msg *protocol.MCPMessage) (*protocol.MCPMessage, error) {
 		// Extract trace ID from metadata
 		traceID := msg.ID // Use message ID as trace ID for simplicity
-		if msg.Metadata != nil {
-			if tid, ok := msg.Metadata["trace-id"]; ok {
-				traceID = tid
-			}
+		if msg.Metadata.TraceID != "" {
+			traceID = msg.Metadata.TraceID
+		} else if tid, ok := msg.Metadata.CustomFields["trace-id"]; ok {
+			traceID = tid
 		}
 		
 		// Add trace context

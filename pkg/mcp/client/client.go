@@ -317,6 +317,20 @@ func (c *Client) sendRequest(ctx context.Context, method string, payload interfa
 	}
 
 	// Create message
+	metadata := protocol.Metadata{
+		CustomFields: make(map[string]string),
+	}
+	
+	// Add auth token if configured
+	if c.config.AuthToken != "" {
+		metadata.CustomFields["authorization"] = c.config.AuthToken
+	}
+	
+	// Add tracing if enabled
+	if c.config.EnableTracing {
+		metadata.TraceID = fmt.Sprintf("trace-%d", time.Now().UnixNano())
+	}
+	
 	msg := &protocol.MCPMessage{
 		ID:          requestID,
 		Version:     "1.0",
@@ -324,17 +338,7 @@ func (c *Client) sendRequest(ctx context.Context, method string, payload interfa
 		Method:      method,
 		Timestamp:   time.Now(),
 		Payload:     json.RawMessage(payloadBytes),
-		Metadata:    make(protocol.Metadata),
-	}
-
-	// Add auth token if configured
-	if c.config.AuthToken != "" {
-		msg.Metadata["authorization"] = c.config.AuthToken
-	}
-
-	// Add tracing if enabled
-	if c.config.EnableTracing {
-		msg.Metadata["trace-id"] = fmt.Sprintf("trace-%d", time.Now().UnixNano())
+		Metadata:    metadata,
 	}
 
 	// Create response channel

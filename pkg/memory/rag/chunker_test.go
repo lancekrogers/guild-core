@@ -27,7 +27,7 @@ func TestNewChunker(t *testing.T) {
 
 func TestChunkByParagraph(t *testing.T) {
 	config := ChunkerConfig{
-		ChunkSize:    100,
+		ChunkSize:    20, // Word count, not character count
 		ChunkOverlap: 0,
 		Strategy:     ChunkByParagraph,
 	}
@@ -84,7 +84,7 @@ func TestChunkByParagraph(t *testing.T) {
 
 func TestChunkBySentence(t *testing.T) {
 	config := ChunkerConfig{
-		ChunkSize:    100,
+		ChunkSize:    20, // Word count, not character count
 		ChunkOverlap: 0,
 		Strategy:     ChunkBySentence,
 	}
@@ -192,7 +192,7 @@ func TestChunkByFixedSize(t *testing.T) {
 
 func TestChunkByMarkdownHeader(t *testing.T) {
 	config := ChunkerConfig{
-		ChunkSize:    100,
+		ChunkSize:    20, // Word count, not character count
 		ChunkOverlap: 0,
 		Strategy:     ChunkByMarkdownHeader,
 	}

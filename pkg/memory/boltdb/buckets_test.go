@@ -21,6 +21,7 @@ func TestAllBuckets(t *testing.T) {
 		"tasks_by_status",
 		"tasks_by_agent",
 		"config",
+		"boards",
 	}
 
 	// Check that the number of buckets matches
@@ -59,6 +60,7 @@ func TestBucketConstants(t *testing.T) {
 		{boltdb.BucketTasksByStatus, "tasks_by_status"},
 		{boltdb.BucketTasksByAgent, "tasks_by_agent"},
 		{boltdb.BucketConfig, "config"},
+		{boltdb.BucketBoards, "boards"},
 	}
 
 	for _, tc := range testCases {

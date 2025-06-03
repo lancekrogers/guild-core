@@ -23,7 +23,7 @@ type Server struct {
 	toolRegistry    tools.Registry
 	costObserver    cost.Observer
 	promptAnalyzer  prompt.Analyzer
-	guildRegistry   registry.Registry
+	guildRegistry   registry.ComponentRegistry
 	handlers        map[string]HandlerFunc
 	middleware      []Middleware
 	mu              sync.RWMutex
@@ -67,7 +67,7 @@ type HandlerFunc func(ctx context.Context, msg *protocol.MCPMessage) (*protocol.
 type Middleware func(HandlerFunc) HandlerFunc
 
 // NewServer creates a new MCP server
-func NewServer(config *Config, guildRegistry registry.Registry) (*Server, error) {
+func NewServer(config *Config, guildRegistry registry.ComponentRegistry) (*Server, error) {
 	if config == nil {
 		return nil, fmt.Errorf("config cannot be nil")
 	}
@@ -217,7 +217,7 @@ func (s *Server) handleMessage(ctx context.Context, msgBytes []byte) {
 		if mcpErr, ok := err.(*protocol.Error); ok {
 			s.sendError(ctx, msg.ID, mcpErr.Code, mcpErr.Message, mcpErr.Data)
 		} else {
-			s.sendError(ctx, msg.ID, protocol.InternalError, err.Error(), nil)
+			s.sendError(ctx, msg.ID, protocol.ErrorCodeInternal, err.Error(), nil)
 		}
 		return
 	}
@@ -254,6 +254,15 @@ func (s *Server) sendMessage(ctx context.Context, msg *protocol.MCPMessage) erro
 
 // sendError sends an error response
 func (s *Server) sendError(ctx context.Context, id string, code int, message string, data interface{}) {
+	var dataBytes json.RawMessage
+	if data != nil {
+		if rawMsg, ok := data.(json.RawMessage); ok {
+			dataBytes = rawMsg
+		} else {
+			dataBytes, _ = json.Marshal(data)
+		}
+	}
+	
 	errMsg := &protocol.MCPMessage{
 		ID:          id,
 		Version:     "1.0",
@@ -263,7 +272,7 @@ func (s *Server) sendError(ctx context.Context, id string, code int, message str
 			Error: &protocol.Error{
 				Code:    code,
 				Message: message,
-				Data:    data,
+				Data:    dataBytes,
 			},
 		}),
 	}
@@ -322,7 +331,7 @@ func (s *Server) handleToolRegister(ctx context.Context, msg *protocol.MCPMessag
 	// Register tool
 	if err := s.toolRegistry.RegisterTool(tool); err != nil {
 		return nil, &protocol.Error{
-			Code:    protocol.InternalError,
+			Code:    protocol.ErrorCodeInternal,
 			Message: fmt.Sprintf("Failed to register tool: %v", err),
 		}
 	}
@@ -355,7 +364,7 @@ func (s *Server) handleToolDeregister(ctx context.Context, msg *protocol.MCPMess
 
 	if err := s.toolRegistry.DeregisterTool(req.ToolID); err != nil {
 		return nil, &protocol.Error{
-			Code:    protocol.InternalError,
+			Code:    protocol.ErrorCodeInternal,
 			Message: fmt.Sprintf("Failed to deregister tool: %v", err),
 		}
 	}
@@ -382,27 +391,26 @@ func (s *Server) handleToolDiscover(ctx context.Context, msg *protocol.MCPMessag
 	tools, err := s.toolRegistry.DiscoverTools(query)
 	if err != nil {
 		return nil, &protocol.Error{
-			Code:    protocol.InternalError,
+			Code:    protocol.ErrorCodeInternal,
 			Message: fmt.Sprintf("Failed to discover tools: %v", err),
 		}
 	}
 
 	// Convert tools to definitions
-	var toolDefs []protocol.ToolDefinition
+	var toolInfos []protocol.ToolInfo
 	for _, tool := range tools {
-		toolDefs = append(toolDefs, protocol.ToolDefinition{
-			ID:           tool.ID(),
+		toolInfos = append(toolInfos, protocol.ToolInfo{
+			ToolID:       tool.ID(),
 			Name:         tool.Name(),
 			Description:  tool.Description(),
 			Capabilities: tool.Capabilities(),
-			Parameters:   tool.GetParameters(),
-			Returns:      tool.GetReturns(),
+			Available:    tool.HealthCheck() == nil,
 			CostProfile:  tool.GetCostProfile(),
 		})
 	}
 
 	response := &protocol.ToolDiscoveryResponse{
-		Tools: toolDefs,
+		Tools: toolInfos,
 	}
 
 	return &protocol.MCPMessage{
@@ -432,6 +440,9 @@ func (s *Server) handleToolExecute(ctx context.Context, msg *protocol.MCPMessage
 		}
 	}
 
+	// Generate execution ID
+	executionID := fmt.Sprintf("exec-%s-%d", req.ToolID, time.Now().UnixNano())
+	
 	// Execute tool
 	startTime := time.Now()
 	result, err := tool.Execute(ctx, req.Parameters)
@@ -439,7 +450,7 @@ func (s *Server) handleToolExecute(ctx context.Context, msg *protocol.MCPMessage
 
 	if err != nil {
 		return nil, &protocol.Error{
-			Code:    protocol.InternalError,
+			Code:    protocol.ErrorCodeInternal,
 			Message: fmt.Sprintf("Tool execution failed: %v", err),
 		}
 	}
@@ -447,17 +458,29 @@ func (s *Server) handleToolExecute(ctx context.Context, msg *protocol.MCPMessage
 	// Record cost if enabled
 	if s.config.EnableCostTracking {
 		cost := protocol.CostReport{
-			OperationID:   req.ExecutionID,
+			OperationID:   executionID,
 			StartTime:     startTime,
 			EndTime:       endTime,
 			LatencyCost:   endTime.Sub(startTime),
 		}
-		s.costObserver.RecordCost(ctx, req.ExecutionID, cost)
+		s.costObserver.RecordCost(ctx, executionID, cost)
+	}
+
+	// Marshal result
+	resultBytes, err := json.Marshal(result)
+	if err != nil {
+		return nil, &protocol.Error{
+			Code:    protocol.ErrorCodeInternal,
+			Message: fmt.Sprintf("Failed to marshal result: %v", err),
+		}
 	}
 
 	response := &protocol.ToolExecutionResponse{
-		ExecutionID: req.ExecutionID,
-		Result:      result,
+		Success:     true,
+		ExecutionID: executionID,
+		ToolID:      req.ToolID,
+		Result:      json.RawMessage(resultBytes),
+		Duration:    endTime.Sub(startTime),
 		StartTime:   startTime,
 		EndTime:     endTime,
 	}
@@ -540,7 +563,7 @@ func (s *Server) handleCostQuery(ctx context.Context, msg *protocol.MCPMessage) 
 	analysis, err := s.costObserver.Analyze(ctx, query)
 	if err != nil {
 		return nil, &protocol.Error{
-			Code:    protocol.InternalError,
+			Code:    protocol.ErrorCodeInternal,
 			Message: fmt.Sprintf("Cost analysis failed: %v", err),
 		}
 	}
@@ -577,23 +600,25 @@ func (s *Server) handlePromptProcess(ctx context.Context, msg *protocol.MCPMessa
 
 	// Process prompt
 	input := &prompt.Input{
-		Text:       req.Prompt,
+		Text:       req.Text,
 		Parameters: req.Parameters,
-		Metadata:   req.Metadata,
 	}
 
 	output, err := chain.Process(ctx, input)
 	if err != nil {
 		return nil, &protocol.Error{
-			Code:    protocol.InternalError,
+			Code:    protocol.ErrorCodeInternal,
 			Message: fmt.Sprintf("Prompt processing failed: %v", err),
 		}
 	}
 
 	response := &protocol.PromptResponse{
-		ConversationID: req.ConversationID,
-		Response:       output.Text,
-		Metadata:       output.Metadata,
+		Text:     output.Text,
+		Metadata: output.Metadata,
+		CostUsed: protocol.CostReport{
+			StartTime: time.Now(),
+			EndTime:   time.Now(),
+		},
 	}
 
 	return &protocol.MCPMessage{
@@ -622,7 +647,7 @@ func (s *Server) handlePromptAnalyze(ctx context.Context, msg *protocol.MCPMessa
 		analysis, err := s.promptAnalyzer.GetChainAnalysis(req.ChainID)
 		if err != nil {
 			return nil, &protocol.Error{
-				Code:    protocol.InternalError,
+				Code:    protocol.ErrorCodeInternal,
 				Message: fmt.Sprintf("Failed to get chain analysis: %v", err),
 			}
 		}

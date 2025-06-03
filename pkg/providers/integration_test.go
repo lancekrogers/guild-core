@@ -52,10 +52,7 @@ func TestAllProvidersWithClaudeCode(t *testing.T) {
 			"model":   "claude-4-sonnet",
 			"api_key": "test-anthropic-key",
 		},
-		"google": map[string]interface{}{
-			"model":   "gemini-2.5-flash",
-			"api_key": "test-google-key",
-		},
+		// Google provider temporarily removed
 		"ollama": map[string]interface{}{
 			"model": "llama3.1:8b",
 			"url":   "http://localhost:11434",
@@ -76,7 +73,7 @@ func TestAllProvidersWithClaudeCode(t *testing.T) {
 	}
 
 	// Verify all providers were registered
-	expectedProviders := []string{"openai", "anthropic", "google", "ollama", "claudecode"}
+	expectedProviders := []string{"openai", "anthropic", "ollama", "claudecode"}
 	
 	if len(registry.providers) != len(expectedProviders) {
 		t.Errorf("Expected %d providers, got %d", len(expectedProviders), len(registry.providers))

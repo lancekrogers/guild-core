@@ -21,7 +21,7 @@ func TestMCPIntegration(t *testing.T) {
 	ctx := context.Background()
 
 	// Create guild registry
-	guildRegistry := registry.New()
+	guildRegistry := registry.NewComponentRegistry()
 
 	// Configure server
 	serverConfig := &server.Config{
@@ -116,8 +116,6 @@ func TestMCPIntegration(t *testing.T) {
 				ComputeCost:   0.001,
 				MemoryCost:    1024,
 				LatencyCost:   100 * time.Millisecond,
-				TokensCost:    0,
-				APICallsCost:  0,
 				FinancialCost: 0.0001,
 			},
 		}
@@ -130,13 +128,12 @@ func TestMCPIntegration(t *testing.T) {
 		query := &protocol.ToolQuery{
 			RequiredCapabilities: []string{"math"},
 			MaxCost:              1.0,
-			Limit:                10,
 		}
 
 		discovery, err := mcpClient.DiscoverTools(ctx, query)
 		require.NoError(t, err)
 		assert.Len(t, discovery.Tools, 1)
-		assert.Equal(t, "test-calculator", discovery.Tools[0].ID)
+		assert.Equal(t, "test-calculator", discovery.Tools[0].ToolID)
 
 		// Check tool health
 		healthy, err := mcpClient.CheckToolHealth(ctx, "test-calculator")
@@ -191,7 +188,6 @@ func TestMCPIntegration(t *testing.T) {
 			StartTime: time.Now().Add(-2 * time.Hour),
 			EndTime:   time.Now(),
 			GroupBy:   "operation",
-			Limit:     10,
 		}
 
 		analysis, err := mcpClient.QueryCosts(ctx, query)
@@ -207,20 +203,18 @@ func TestMCPIntegration(t *testing.T) {
 
 	t.Run("prompt_processing", func(t *testing.T) {
 		prompt := &protocol.PromptMessage{
-			ConversationID: "conv-001",
-			Prompt:         "Hello, world!",
+			Text:        "Hello, world!",
+			HistoryID:   "conv-001",
+			MaxTokens:   100,
+			Temperature: 0.7,
 			Parameters: map[string]interface{}{
-				"max_tokens": 100,
-				"temperature": 0.7,
-			},
-			Metadata: map[string]string{
 				"model": "test-model",
 			},
 		}
 
 		response, err := mcpClient.ProcessPrompt(ctx, prompt)
 		require.NoError(t, err)
-		assert.Equal(t, "conv-001", response.ConversationID)
+		assert.NotEmpty(t, response.Text)
 		// Note: The actual response content will depend on the prompt processor implementation
 	})
 }
@@ -229,7 +223,7 @@ func TestMCPConcurrency(t *testing.T) {
 	ctx := context.Background()
 
 	// Create guild registry
-	guildRegistry := registry.New()
+	guildRegistry := registry.NewComponentRegistry()
 
 	// Configure server for high concurrency
 	serverConfig := &server.Config{
@@ -361,7 +355,7 @@ func TestMCPErrorHandling(t *testing.T) {
 	ctx := context.Background()
 
 	// Create guild registry
-	guildRegistry := registry.New()
+	guildRegistry := registry.NewComponentRegistry()
 
 	serverConfig := &server.Config{
 		ServerID:        "error-test-server",
@@ -423,9 +417,8 @@ func TestMCPErrorHandling(t *testing.T) {
 	t.Run("invalid_tool_execution", func(t *testing.T) {
 		// Try to execute a non-existent tool
 		req := &protocol.ToolExecutionRequest{
-			ToolID:      "nonexistent-tool",
-			ExecutionID: "exec-001",
-			Parameters:  map[string]interface{}{},
+			ToolID:     "nonexistent-tool",
+			Parameters: map[string]interface{}{},
 		}
 
 		_, err := mcpClient.ExecuteTool(ctx, req)

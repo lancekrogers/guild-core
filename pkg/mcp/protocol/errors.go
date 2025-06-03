@@ -90,6 +90,16 @@ func NewMCPError(code int, message string, data interface{}) *MCPError {
 	}
 }
 
+// Error constants for backward compatibility
+var (
+	InternalError    = ErrInternalError
+	Unauthorized     = ErrAuthFailed
+	TooManyRequests  = ErrorCodeTooManyRequests
+	ParseError       = ErrorCodeParse
+	MethodNotFound   = ErrorCodeMethodNotFound
+	InvalidParams    = ErrorCodeInvalidParams
+)
+
 // WrapError wraps a standard error as an MCP error
 func WrapError(err error, code int) *MCPError {
 	if err == nil {

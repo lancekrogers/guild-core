@@ -25,7 +25,7 @@ func TestWorkerAgentImplementsGuildArtisan(t *testing.T) {
 // TestNewWorkerAgent tests creating a new worker agent
 func TestNewWorkerAgent(t *testing.T) {
 	// Create mock dependencies
-	llmClient := &mocks.MockLLMClient{}
+	llmClient := mocks.NewMockLLMClient()
 	memoryManager := mocks.NewMockChainManager()
 	toolRegistry := tools.NewToolRegistry()
 	
@@ -87,7 +87,7 @@ func TestNewWorkerAgent(t *testing.T) {
 // TestWorkerAgentExecute tests the Execute method
 func TestWorkerAgentExecute(t *testing.T) {
 	// Create mock dependencies
-	llmClient := &mocks.MockLLMClient{}
+	llmClient := mocks.NewMockLLMClient()
 	memoryManager := mocks.NewMockChainManager()
 	toolRegistry := tools.NewToolRegistry()
 	
@@ -115,13 +115,14 @@ func TestWorkerAgentExecute(t *testing.T) {
 
 	ctx := context.Background()
 	
-	// Test Execute method (currently returns stub response)
+	// Test Execute method
 	response, err := workerAgent.Execute(ctx, "test request")
 	if err != nil {
 		t.Fatalf("Execute failed: %v", err)
 	}
 
-	expectedResponse := "Executed: test request"
+	// The response should be what the mock LLM returns
+	expectedResponse := "Mock response"
 	if response != expectedResponse {
 		t.Errorf("Expected response '%s', got '%s'", expectedResponse, response)
 	}
@@ -177,7 +178,7 @@ func TestWorkerAgentCostManagement(t *testing.T) {
 // TestManagerAgentCreation tests creating a manager agent
 func TestManagerAgentCreation(t *testing.T) {
 	// Create mock dependencies
-	llmClient := &mocks.MockLLMClient{}
+	llmClient := mocks.NewMockLLMClient()
 	memoryManager := mocks.NewMockChainManager()
 	toolRegistry := tools.NewToolRegistry()
 	

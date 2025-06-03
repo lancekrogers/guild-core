@@ -33,7 +33,7 @@ func TestFactory_CreateClient(t *testing.T) {
 			providerType: ProviderGoogle,
 			apiKey:       "test-key",
 			model:        "gemini-2.5-flash",
-			expectError:  false,
+			expectError:  true, // Google provider temporarily removed
 		},
 		{
 			name:         "Ollama client",

@@ -192,6 +192,10 @@ func (m *BoltChainManager) GetChainsByTask(ctx context.Context, taskID string) (
 
 // BuildContext builds a context from chains for an agent and task
 func (m *BoltChainManager) BuildContext(ctx context.Context, agentID, taskID string, maxTokens int) ([]Message, error) {
+	if agentID == "" {
+		return nil, fmt.Errorf("agentID cannot be empty")
+	}
+	
 	var allMessages []Message
 	
 	// Get chains for this agent and task
