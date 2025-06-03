@@ -2,6 +2,7 @@ package agent
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/objective"
@@ -47,6 +48,10 @@ type WorkerAgent struct {
 	ToolRegistry   *tools.ToolRegistry
 	ObjectiveManager *objective.Manager
 	CostManager    *CostManager
+	
+	// Context metadata
+	capabilities []string
+	description  string
 }
 
 // NewWorkerAgent creates a new worker agent
@@ -68,8 +73,23 @@ func NewWorkerAgent(id, name string, llmClient providers.LLMClient,
 
 // Execute runs a task
 func (a *WorkerAgent) Execute(ctx context.Context, request string) (string, error) {
-	// Stub implementation
-	return "Executed: " + request, nil
+	// If we have a cost-aware implementation, use it
+	if a.LLMClient != nil && a.CostManager != nil {
+		return a.CostAwareExecute(ctx, request)
+	}
+	
+	// Otherwise, simple execution
+	if a.LLMClient == nil {
+		return "", fmt.Errorf("no LLM client configured")
+	}
+	
+	// Call the LLM
+	response, err := a.LLMClient.Complete(ctx, request)
+	if err != nil {
+		return "", fmt.Errorf("LLM completion failed: %w", err)
+	}
+	
+	return response, nil
 }
 
 // GetID returns the agent's ID
@@ -100,6 +120,36 @@ func (a *WorkerAgent) GetLLMClient() providers.LLMClient {
 // GetMemoryManager returns the memory manager
 func (a *WorkerAgent) GetMemoryManager() memory.ChainManager {
 	return a.MemoryManager
+}
+
+// SetCapabilities sets the agent's capabilities
+func (a *WorkerAgent) SetCapabilities(capabilities []string) {
+	a.capabilities = capabilities
+}
+
+// GetCapabilities returns the agent's capabilities
+func (a *WorkerAgent) GetCapabilities() []string {
+	return a.capabilities
+}
+
+// SetDescription sets the agent's description
+func (a *WorkerAgent) SetDescription(description string) {
+	a.description = description
+}
+
+// GetDescription returns the agent's description
+func (a *WorkerAgent) GetDescription() string {
+	return a.description
+}
+
+// HasCapability checks if the agent has a specific capability
+func (a *WorkerAgent) HasCapability(capability string) bool {
+	for _, cap := range a.capabilities {
+		if cap == capability {
+			return true
+		}
+	}
+	return false
 }
 
 // SetCostBudget sets the budget for a specific cost type

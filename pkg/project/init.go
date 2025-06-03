@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/guild-ventures/guild-core/pkg/config"
 )
 
 // directoryStructure defines the directory structure for a Guild project
@@ -78,6 +80,11 @@ func createStructure(baseDir string) error {
 	// Create README
 	if err := createReadme(baseDir); err != nil {
 		return fmt.Errorf("failed to create README: %w", err)
+	}
+
+	// Create default guild configuration
+	if err := createDefaultGuildConfig(baseDir); err != nil {
+		return fmt.Errorf("failed to create guild config: %w", err)
 	}
 
 	return nil
@@ -179,4 +186,13 @@ func InitializeWithConfig(path string, config interface{}) error {
 	// This would update the config.yaml with provided settings
 
 	return nil
+}
+
+// createDefaultGuildConfig creates a default guild.yaml file
+func createDefaultGuildConfig(baseDir string) error {
+	// Get the default template
+	guildConfig := config.DefaultGuildTemplate()
+	
+	// Save it to the project
+	return config.SaveGuildConfig(filepath.Dir(baseDir), guildConfig)
 }

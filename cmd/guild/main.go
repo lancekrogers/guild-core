@@ -124,6 +124,7 @@ func init() {
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(objectiveCmd)
 	rootCmd.AddCommand(agentCmd)
+	rootCmd.AddCommand(campaignCmd)
 
 	// Register objective subcommands
 	objectiveCmd.AddCommand(objectiveCreateCmd)

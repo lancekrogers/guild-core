@@ -1,0 +1,173 @@
+syntax = "proto3";
+
+package mcp.v1;
+
+option go_package = "github.com/guild-ventures/guild-core/pkg/mcp/grpc";
+
+// MCPService provides gRPC interface for Meta-Coordination Protocol
+service MCPService {
+  // Tool management
+  rpc RegisterTool(ToolRegistrationRequest) returns (ToolRegistrationResponse);
+  rpc DeregisterTool(ToolDeregistrationRequest) returns (ToolDeregistrationResponse);
+  rpc DiscoverTools(ToolDiscoveryRequest) returns (ToolDiscoveryResponse);
+  rpc ExecuteTool(ToolExecutionRequest) returns (ToolExecutionResponse);
+  rpc CheckToolHealth(ToolHealthRequest) returns (ToolHealthResponse);
+
+  // Cost tracking
+  rpc ReportCost(CostReportRequest) returns (CostReportResponse);
+  rpc QueryCosts(CostQueryRequest) returns (CostQueryResponse);
+
+  // System operations
+  rpc Ping(PingRequest) returns (PingResponse);
+  rpc GetSystemInfo(SystemInfoRequest) returns (SystemInfoResponse);
+}
+
+// Tool messages
+
+message ToolDefinition {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  repeated string capabilities = 4;
+  repeated ToolParameter parameters = 5;
+  repeated ToolParameter returns = 6;
+  CostProfile cost_profile = 7;
+}
+
+message ToolParameter {
+  string name = 1;
+  string type = 2;
+  string description = 3;
+  bool required = 4;
+  string default = 5; // JSON-encoded default value
+}
+
+message CostProfile {
+  double compute_cost = 1;
+  int64 memory_cost = 2;
+  int64 latency_ms = 3;
+  int64 tokens_cost = 4;
+  int64 api_calls_cost = 5;
+  double financial_cost = 6;
+}
+
+message ToolRegistrationRequest {
+  ToolDefinition tool = 1;
+}
+
+message ToolRegistrationResponse {
+  bool success = 1;
+  string tool_id = 2;
+  string error_message = 3;
+}
+
+message ToolDeregistrationRequest {
+  string tool_id = 1;
+}
+
+message ToolDeregistrationResponse {
+  bool success = 1;
+  string error_message = 2;
+}
+
+message ToolDiscoveryRequest {
+  repeated string required_capabilities = 1;
+  double max_cost = 2;
+  int64 max_latency_ms = 3;
+  int32 limit = 4;
+}
+
+message ToolDiscoveryResponse {
+  repeated ToolDefinition tools = 1;
+}
+
+message ToolExecutionRequest {
+  string tool_id = 1;
+  string execution_id = 2;
+  bytes parameters = 3; // JSON-encoded parameters
+}
+
+message ToolExecutionResponse {
+  string execution_id = 1;
+  bytes result = 2; // JSON-encoded result
+  int64 start_time = 3; // Unix timestamp
+  int64 end_time = 4;   // Unix timestamp
+}
+
+message ToolHealthRequest {
+  string tool_id = 1;
+}
+
+message ToolHealthResponse {
+  string tool_id = 1;
+  bool healthy = 2;
+}
+
+// Cost messages
+
+message CostReport {
+  string operation_id = 1;
+  int64 start_time = 2; // Unix timestamp
+  int64 end_time = 3;   // Unix timestamp
+  double compute_cost = 4;
+  int64 memory_cost = 5;
+  int64 latency_ms = 6;
+  int64 tokens_cost = 7;
+  int64 api_calls_cost = 8;
+  double financial_cost = 9;
+}
+
+message CostReportRequest {
+  CostReport cost = 1;
+}
+
+message CostReportResponse {
+  bool success = 1;
+  string error_message = 2;
+}
+
+message CostQueryRequest {
+  repeated string operation_ids = 1;
+  int64 start_time = 2; // Unix timestamp
+  int64 end_time = 3;   // Unix timestamp
+  string group_by = 4;  // "operation", "tool", "user"
+  int32 limit = 5;
+}
+
+message CostQueryResponse {
+  CostReport total_cost = 1;
+  string breakdown_by = 2;
+  repeated CostReport breakdown = 3;
+  repeated string recommendations = 4;
+}
+
+// System messages
+
+message PingRequest {
+  int64 timestamp = 1; // Unix timestamp
+}
+
+message PingResponse {
+  int64 timestamp = 1; // Unix timestamp
+  string server_id = 2;
+}
+
+message SystemInfoRequest {
+  // Empty for now
+}
+
+message SystemFeatures {
+  bool tls = 1;
+  bool auth = 2;
+  bool metrics = 3;
+  bool tracing = 4;
+  bool cost_tracking = 5;
+}
+
+message SystemInfoResponse {
+  string server_id = 1;
+  string server_name = 2;
+  string version = 3;
+  SystemFeatures features = 4;
+  int64 tools_count = 5;
+}
