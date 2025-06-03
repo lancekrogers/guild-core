@@ -23,6 +23,9 @@ const (
 	// StatusBlocked indicates a task that is blocked by something
 	StatusBlocked TaskStatus = "blocked"
 	
+	// StatusReadyForReview indicates a task that is ready for review
+	StatusReadyForReview TaskStatus = "ready_for_review"
+	
 	// StatusDone indicates a completed task
 	StatusDone TaskStatus = "done"
 	

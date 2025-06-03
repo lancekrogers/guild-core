@@ -122,9 +122,11 @@ func (r *MemoryRegistry) DeregisterTool(toolID string) error {
 	
 	// Update capability index
 	for _, cap := range tool.Capabilities() {
-		r.removeFromSlice(&r.indexCaps[cap], toolID)
-		if len(r.indexCaps[cap]) == 0 {
-			delete(r.indexCaps, cap)
+		if capTools, exists := r.indexCaps[cap]; exists {
+			r.indexCaps[cap] = r.removeFromSlice(capTools, toolID)
+			if len(r.indexCaps[cap]) == 0 {
+				delete(r.indexCaps, cap)
+			}
 		}
 	}
 	
@@ -238,13 +240,13 @@ func (r *MemoryRegistry) UpdateToolStatus(toolID string, available bool) error {
 }
 
 // removeFromSlice removes an element from a slice
-func (r *MemoryRegistry) removeFromSlice(slice *[]string, item string) {
-	for i, v := range *slice {
+func (r *MemoryRegistry) removeFromSlice(slice []string, item string) []string {
+	for i, v := range slice {
 		if v == item {
-			*slice = append((*slice)[:i], (*slice)[i+1:]...)
-			return
+			return append(slice[:i], slice[i+1:]...)
 		}
 	}
+	return slice
 }
 
 // BaseTool provides a base implementation of the Tool interface

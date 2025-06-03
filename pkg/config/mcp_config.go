@@ -4,9 +4,6 @@ package config
 import (
 	"fmt"
 	"time"
-
-	"github.com/guild-ventures/guild-core/pkg/mcp/integration"
-	"github.com/guild-ventures/guild-core/pkg/mcp/transport"
 )
 
 // MCPConfig represents MCP configuration section
@@ -105,58 +102,8 @@ func ProductionMCPConfig() *MCPConfig {
 	return config
 }
 
-// ToIntegrationConfig converts config format to integration format
-func (c *MCPConfig) ToIntegrationConfig() (*integration.MCPConfig, error) {
-	if c == nil {
-		return nil, nil
-	}
-
-	// Convert transport config
-	transportConfig := &transport.TransportConfig{
-		Type:    c.Transport.Type,
-		Address: c.Transport.Address,
-	}
-
-	// Parse timeouts
-	if c.Transport.ConnectTimeout != "" {
-		if timeout, err := time.ParseDuration(c.Transport.ConnectTimeout); err == nil {
-			transportConfig.ConnectTimeout = timeout
-		}
-	}
-
-	if c.Transport.ReconnectWait != "" {
-		if wait, err := time.ParseDuration(c.Transport.ReconnectWait); err == nil {
-			transportConfig.ReconnectWait = wait
-		}
-	}
-
-	transportConfig.MaxReconnects = c.Transport.MaxReconnects
-
-	// Convert config map
-	if len(c.Transport.Config) > 0 {
-		transportConfig.Config = make(map[string]interface{})
-		for k, v := range c.Transport.Config {
-			transportConfig.Config[k] = v
-		}
-	}
-
-	return &integration.MCPConfig{
-		Enabled:         c.Enabled,
-		ServerID:        c.ServerID,
-		ServerName:      c.ServerName,
-		Transport:       transportConfig,
-		EnableAuth:      c.Security.EnableAuth,
-		EnableTLS:       c.Security.EnableTLS,
-		EnableMetrics:   c.Features.EnableMetrics,
-		EnableTracing:   c.Features.EnableTracing,
-		EnableCost:      c.Features.EnableCostTracking,
-		MaxRequests:     c.Performance.MaxConcurrentRequests,
-		RequestTimeout:  c.Performance.RequestTimeout,
-		JWTSecret:       c.Security.JWTSecret,
-		TLSCertFile:     c.Security.TLSCertFile,
-		TLSKeyFile:      c.Security.TLSKeyFile,
-	}, nil
-}
+// Note: ToIntegrationConfig method removed to break circular dependency.
+// MCP integration should read this config directly and perform its own conversion.
 
 // Validate validates the MCP configuration
 func (c *MCPConfig) Validate() error {

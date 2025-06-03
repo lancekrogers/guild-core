@@ -28,6 +28,9 @@ const (
 	
 	// BucketConfig stores system configuration
 	BucketConfig = "config"
+	
+	// BucketBoards stores kanban boards
+	BucketBoards = "boards"
 )
 
 // AllBuckets returns all bucket names
@@ -45,5 +48,6 @@ func AllBuckets() []string {
 		BucketTasksByStatus,
 		BucketTasksByAgent,
 		BucketConfig,
+		BucketBoards,
 	}
 }

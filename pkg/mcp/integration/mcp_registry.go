@@ -1,18 +1,19 @@
-// Package registry provides MCP integration for the Guild registry system
-package registry
+// Package integration provides MCP integration for the Guild registry system
+package integration
 
 import (
 	"context"
 	"fmt"
 
-	"github.com/guild-ventures/guild-core/pkg/mcp/integration"
+	mcpconfig "github.com/guild-ventures/guild-core/pkg/mcp/config"
 	"github.com/guild-ventures/guild-core/pkg/mcp/transport"
+	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
 // MCPRegistry extends the component registry with MCP support
 type MCPRegistry interface {
 	// GetMCPExtension returns the MCP extension
-	GetMCPExtension() *integration.MCPRegistryExtension
+	GetMCPExtension() *MCPRegistryExtension
 	
 	// StartMCP starts the MCP server
 	StartMCP(ctx context.Context) error
@@ -29,20 +30,20 @@ type MCPRegistry interface {
 
 // MCPRegistryMixin provides MCP functionality for registries
 type MCPRegistryMixin struct {
-	mcpExtension *integration.MCPRegistryExtension
-	mcpConfig    *integration.MCPConfig
+	mcpExtension *MCPRegistryExtension
+	mcpConfig    *mcpconfig.MCPConfig
 }
 
 // NewMCPRegistryMixin creates a new MCP registry mixin
-func NewMCPRegistryMixin(config *integration.MCPConfig, baseRegistry Registry) (*MCPRegistryMixin, error) {
+func NewMCPRegistryMixin(config *mcpconfig.MCPConfig, baseRegistry registry.ComponentRegistry) (*MCPRegistryMixin, error) {
 	if config == nil {
 		// MCP disabled
 		return &MCPRegistryMixin{
-			mcpConfig: &integration.MCPConfig{Enabled: false},
+			mcpConfig: &mcpconfig.MCPConfig{Enabled: false},
 		}, nil
 	}
 
-	extension, err := integration.NewMCPRegistryExtension(config, baseRegistry)
+	extension, err := NewMCPRegistryExtension(config, baseRegistry)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create MCP extension: %w", err)
 	}
@@ -54,7 +55,7 @@ func NewMCPRegistryMixin(config *integration.MCPConfig, baseRegistry Registry) (
 }
 
 // GetMCPExtension returns the MCP extension
-func (m *MCPRegistryMixin) GetMCPExtension() *integration.MCPRegistryExtension {
+func (m *MCPRegistryMixin) GetMCPExtension() *MCPRegistryExtension {
 	return m.mcpExtension
 }
 

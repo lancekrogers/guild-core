@@ -61,6 +61,21 @@ guild init my-project
 cd my-project
 ```
 
+This creates a `.guild/` directory in your project, similar to how Git creates `.git/`. The `.guild/` directory contains all project-local configuration and data:
+
+```
+.guild/
+├── config.yaml        # Project-specific configuration
+├── corpus/           # Knowledge base and documentation
+├── embeddings/       # Vector embeddings for RAG
+├── agents/           # Agent configurations
+├── objectives/       # Project objectives
+├── memory/           # BoltDB storage
+└── cache/           # Temporary files and caches
+```
+
+**Important**: The `.guild/` directory should be added to your `.gitignore` file as it contains machine-specific data and potentially sensitive information.
+
 ### Configure Agents and Models
 
 Edit the `guild.yaml` file to configure your agents and models:
@@ -162,6 +177,7 @@ Guild is built on a component-based architecture inspired by medieval guild stru
 
 Comprehensive documentation is available in the `docs` directory:
 
+- [Project Structure](docs/project-structure.md) - Understanding the `.guild/` directory
 - [User Guide](docs/user-guide.md)
 - [Architecture](docs/architecture.md)
 - [Configuration](docs/configuration.md)

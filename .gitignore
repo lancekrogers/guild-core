@@ -32,6 +32,9 @@ go.work.sum
 .claude/auth.json
 .claude/
 
+# Guild project-local directory (similar to .git/)
+.guild/
+
 
 **/.claude/settings.local.json
 *.wip

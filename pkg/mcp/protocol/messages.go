@@ -3,6 +3,7 @@ package protocol
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -77,6 +78,14 @@ type Error struct {
 	Code    int             `json:"code"`
 	Message string          `json:"message"`
 	Data    json.RawMessage `json:"data,omitempty"`
+}
+
+// Error implements the error interface
+func (e *Error) Error() string {
+	if len(e.Data) > 0 {
+		return fmt.Sprintf("JSON-RPC error %d: %s (data: %s)", e.Code, e.Message, string(e.Data))
+	}
+	return fmt.Sprintf("JSON-RPC error %d: %s", e.Code, e.Message)
 }
 
 // Standard error codes

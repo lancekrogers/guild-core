@@ -6,37 +6,19 @@ import (
 	"fmt"
 	"time"
 
+	mcpconfig "github.com/guild-ventures/guild-core/pkg/mcp/config"
 	"github.com/guild-ventures/guild-core/pkg/mcp/server"
-	"github.com/guild-ventures/guild-core/pkg/mcp/transport"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
 // MCPRegistryAdapter adapts MCP server for Guild registry
 type MCPRegistryAdapter struct {
 	server *server.Server
-	config *MCPConfig
-}
-
-// MCPConfig represents MCP configuration for Guild
-type MCPConfig struct {
-	Enabled         bool                        `yaml:"enabled"`
-	ServerID        string                      `yaml:"server_id"`
-	ServerName      string                      `yaml:"server_name"`
-	Transport       *transport.TransportConfig  `yaml:"transport"`
-	EnableAuth      bool                        `yaml:"enable_auth"`
-	EnableTLS       bool                        `yaml:"enable_tls"`
-	EnableMetrics   bool                        `yaml:"enable_metrics"`
-	EnableTracing   bool                        `yaml:"enable_tracing"`
-	EnableCost      bool                        `yaml:"enable_cost_tracking"`
-	MaxRequests     int                         `yaml:"max_concurrent_requests"`
-	RequestTimeout  string                      `yaml:"request_timeout"`
-	JWTSecret       string                      `yaml:"jwt_secret,omitempty"`
-	TLSCertFile     string                      `yaml:"tls_cert_file,omitempty"`
-	TLSKeyFile      string                      `yaml:"tls_key_file,omitempty"`
+	config *mcpconfig.MCPConfig
 }
 
 // NewMCPRegistryAdapter creates a new MCP registry adapter
-func NewMCPRegistryAdapter(config *MCPConfig, guildRegistry registry.Registry) (*MCPRegistryAdapter, error) {
+func NewMCPRegistryAdapter(config *mcpconfig.MCPConfig, guildRegistry registry.ComponentRegistry) (*MCPRegistryAdapter, error) {
 	if config == nil {
 		return nil, fmt.Errorf("MCP config cannot be nil")
 	}
@@ -120,7 +102,7 @@ func (a *MCPRegistryAdapter) Health(ctx context.Context) error {
 }
 
 // convertToServerConfig converts MCPConfig to server.Config
-func convertToServerConfig(config *MCPConfig) (*server.Config, error) {
+func convertToServerConfig(config *mcpconfig.MCPConfig) (*server.Config, error) {
 	// Parse request timeout
 	var requestTimeout = 30 // default 30 seconds
 	if config.RequestTimeout != "" {
@@ -173,7 +155,7 @@ type MCPRegistryExtension struct {
 }
 
 // NewMCPRegistryExtension creates a new MCP registry extension
-func NewMCPRegistryExtension(config *MCPConfig, guildRegistry registry.Registry) (*MCPRegistryExtension, error) {
+func NewMCPRegistryExtension(config *mcpconfig.MCPConfig, guildRegistry registry.ComponentRegistry) (*MCPRegistryExtension, error) {
 	adapter, err := NewMCPRegistryAdapter(config, guildRegistry)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create MCP adapter: %w", err)

@@ -243,22 +243,11 @@ func (fb *FrameBuilder) buildKanbanBoard(campaign *campaign.Campaign, height int
 	doneTasks := []string{}
 
 	if board != nil {
-		for _, col := range board.Columns {
-			switch col.Name {
-			case "Todo":
-				for _, task := range col.Tasks {
-					todoTasks = append(todoTasks, task.Title)
-				}
-			case "In Progress":
-				for _, task := range col.Tasks {
-					inProgressTasks = append(inProgressTasks, task.Title)
-				}
-			case "Done":
-				for _, task := range col.Tasks {
-					doneTasks = append(doneTasks, task.Title)
-				}
-			}
-		}
+		// TODO: Implement proper task retrieval from board store
+		// For now, just show placeholder data
+		todoTasks = append(todoTasks, "[Tasks would be loaded from store]")
+		inProgressTasks = append(inProgressTasks, "[Tasks would be loaded from store]")
+		doneTasks = append(doneTasks, "[Tasks would be loaded from store]")
 	}
 
 	// Render task rows

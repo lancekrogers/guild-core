@@ -354,5 +354,18 @@ ci-test:
 	echo "Test Results: $$PASSED passed, $$FAILED failed out of $$TOTAL total" ; \
 	if [ "$$FAILED" -gt 0 ]; then exit 1; fi
 
+# Documentation commands
+docs-serve: ## Run local documentation server with pkgsite
+	@echo "$(BLUE)Starting documentation server...$(NC)"
+	@go install golang.org/x/pkgsite/cmd/pkgsite@latest 2>/dev/null || true
+	@echo "$(GREEN)Documentation server starting at http://localhost:8080/github.com/guild-ventures/guild-core$(NC)"
+	@pkgsite -http=:8080
+
+docs-generate: ## Generate API documentation
+	@echo "$(BLUE)Generating API documentation...$(NC)"
+	@mkdir -p docs/api
+	@go doc -all ./... > docs/api/generated-api-reference.txt
+	@echo "$(GREEN)✓ API documentation generated at docs/api/generated-api-reference.txt$(NC)"
+
 # Default make behavior
 .DEFAULT_GOAL := help

@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 	"unsafe"
 
 	"google.golang.org/grpc"

@@ -1,0 +1,27 @@
+name: "Test Guild"
+description: "A test guild for campaign development"
+
+manager:
+  default: "project-manager"
+  settings:
+    model: "claude-3-sonnet-20240229"
+    provider: "anthropic"
+
+agents:
+  - id: "frontend-dev"
+    role: "frontend_developer"
+    capabilities: ["javascript", "react", "css", "html"]
+    model: "claude-3-sonnet-20240229"
+    provider: "anthropic"
+    
+  - id: "backend-dev"
+    role: "backend_developer"
+    capabilities: ["python", "fastapi", "database", "api"]
+    model: "claude-3-sonnet-20240229"
+    provider: "anthropic"
+    
+  - id: "devops-specialist"
+    role: "devops_engineer"
+    capabilities: ["docker", "deployment", "aws", "infrastructure"]
+    model: "claude-3-sonnet-20240229"
+    provider: "anthropic"

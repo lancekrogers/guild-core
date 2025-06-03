@@ -44,41 +44,53 @@ func NewNATSTransport(config *TransportConfig) (*NATSTransport, error) {
 		responses: make(chan *nats.Msg, 100),
 	}
 	
-	// Set up connection options
-	opts := transport.buildConnectionOptions()
+	return transport, nil
+}
+
+// Connect establishes a connection to NATS
+func (t *NATSTransport) Connect(ctx context.Context) error {
+	t.mu.Lock()
+	defer t.mu.Unlock()
 	
-	// Connect to NATS
-	conn, err := nats.Connect(config.Address, opts...)
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect to NATS: %w", err)
+	if t.conn != nil && t.conn.IsConnected() {
+		return nil // Already connected
 	}
 	
-	transport.conn = conn
+	// Set up connection options
+	opts := t.buildConnectionOptions()
+	
+	// Connect to NATS
+	conn, err := nats.Connect(t.config.Address, opts...)
+	if err != nil {
+		return fmt.Errorf("failed to connect to NATS: %w", err)
+	}
+	
+	t.conn = conn
 	
 	// Get JetStream context if available
 	js, err := conn.JetStream()
 	if err == nil {
-		transport.js = js
+		t.js = js
 		// Create MCP stream if it doesn't exist
-		transport.ensureStream()
+		t.ensureStream()
 	}
 	
 	// Set up inbox for request-response
-	transport.inbox = nats.NewInbox()
-	sub, err := conn.Subscribe(transport.inbox, func(msg *nats.Msg) {
+	t.inbox = nats.NewInbox()
+	sub, err := conn.Subscribe(t.inbox, func(msg *nats.Msg) {
 		select {
-		case transport.responses <- msg:
+		case t.responses <- msg:
 		default:
 			// Drop message if channel is full
 		}
 	})
 	if err != nil {
 		conn.Close()
-		return nil, fmt.Errorf("failed to subscribe to inbox: %w", err)
+		return fmt.Errorf("failed to subscribe to inbox: %w", err)
 	}
-	transport.sub = sub
+	t.sub = sub
 	
-	return transport, nil
+	return nil
 }
 
 // buildConnectionOptions builds NATS connection options from config
@@ -208,8 +220,8 @@ func (t *NATSTransport) Receive(ctx context.Context) (interface{}, error) {
 	}
 }
 
-// Close closes the NATS connection
-func (t *NATSTransport) Close() error {
+// Disconnect closes the NATS connection
+func (t *NATSTransport) Disconnect(ctx context.Context) error {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	
@@ -406,5 +418,5 @@ func (s *NATSServer) Start(ctx context.Context) error {
 
 // Stop stops the server
 func (s *NATSServer) Stop(ctx context.Context) error {
-	return s.transport.Close()
+	return s.transport.Disconnect(ctx)
 }

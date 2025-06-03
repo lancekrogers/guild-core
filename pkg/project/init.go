@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-
-	"github.com/guild-ventures/guild-core/pkg/config"
 )
 
 // directoryStructure defines the directory structure for a Guild project
@@ -191,8 +189,8 @@ func InitializeWithConfig(path string, config interface{}) error {
 // createDefaultGuildConfig creates a default guild.yaml file
 func createDefaultGuildConfig(baseDir string) error {
 	// Get the default template
-	guildConfig := config.DefaultGuildTemplate()
+	guildConfig := DefaultGuildTemplate()
 	
 	// Save it to the project
-	return config.SaveGuildConfig(filepath.Dir(baseDir), guildConfig)
+	return SaveGuildConfig(filepath.Dir(baseDir), guildConfig)
 }

@@ -230,7 +230,9 @@ func NewTransport(config *TransportConfig) (Transport, error) {
 	
 	switch config.Type {
 	case "nats":
-		return NewNATSTransport(config)
+		// TODO: Fix NATS implementation to match Transport interface
+		// See CLAUDE_POST_CODING_NOTES/FIX_NATS_IMPLEMENTATION.md for details
+		return nil, fmt.Errorf("NATS transport temporarily disabled for MVP - use 'memory' instead")
 	case "memory":
 		return NewMemoryTransport(config), nil
 	default:
