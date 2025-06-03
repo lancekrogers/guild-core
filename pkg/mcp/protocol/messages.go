@@ -16,6 +16,13 @@ const (
 	MessageTypeResponse     MessageType = "response"
 	MessageTypeNotification MessageType = "notification"
 	MessageTypeError        MessageType = "error"
+	MessageTypeEvent        MessageType = "event"
+	
+	// Aliases for backward compatibility
+	RequestMessage  = MessageTypeRequest
+	ResponseMessage = MessageTypeResponse
+	ErrorMessage    = MessageTypeError
+	EventMessage    = MessageTypeEvent
 	
 	// Specific request types
 	RequestTypeToolRegister   = "tool.register"
