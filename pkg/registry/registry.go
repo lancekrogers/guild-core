@@ -11,26 +11,28 @@ import (
 
 // DefaultComponentRegistry is the default implementation of ComponentRegistry
 type DefaultComponentRegistry struct {
-	agentRegistry    AgentRegistry
-	toolRegistry     ToolRegistry
-	providerRegistry ProviderRegistry
-	memoryRegistry   MemoryRegistry
-	projectRegistry  ProjectRegistry
-	promptRegistry   *PromptRegistry
-	config          Config
-	initialized     bool
-	mu              sync.RWMutex
+	agentRegistry        AgentRegistry
+	toolRegistry         ToolRegistry
+	providerRegistry     ProviderRegistry
+	memoryRegistry       MemoryRegistry
+	projectRegistry      ProjectRegistry
+	promptRegistry       *PromptRegistry
+	orchestratorRegistry interface{}
+	config              Config
+	initialized         bool
+	mu                  sync.RWMutex
 }
 
 // NewComponentRegistry creates a new ComponentRegistry instance
 func NewComponentRegistry() ComponentRegistry {
 	return &DefaultComponentRegistry{
-		agentRegistry:    NewAgentRegistry(),
-		toolRegistry:     NewToolRegistry(),
-		providerRegistry: NewProviderRegistry(),
-		memoryRegistry:   NewMemoryRegistry(),
-		projectRegistry:  NewProjectRegistry(),
-		promptRegistry:   NewPromptRegistry(),
+		agentRegistry:        NewAgentRegistry(),
+		toolRegistry:         NewToolRegistry(),
+		providerRegistry:     NewProviderRegistry(),
+		memoryRegistry:       NewMemoryRegistry(),
+		projectRegistry:      NewProjectRegistry(),
+		promptRegistry:       NewPromptRegistry(),
+		orchestratorRegistry: nil, // Will be initialized when needed
 	}
 }
 
@@ -62,6 +64,11 @@ func (r *DefaultComponentRegistry) Project() ProjectRegistry {
 // Prompts returns the prompt registry
 func (r *DefaultComponentRegistry) Prompts() *PromptRegistry {
 	return r.promptRegistry
+}
+
+// Orchestrator returns the orchestrator registry
+func (r *DefaultComponentRegistry) Orchestrator() interface{} {
+	return r.orchestratorRegistry
 }
 
 // Initialize sets up all registries with the provided configuration

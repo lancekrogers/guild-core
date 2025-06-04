@@ -33,6 +33,9 @@ type ComponentRegistry interface {
 	// Prompts returns the prompt registry for managing prompt templates
 	Prompts() *PromptRegistry
 	
+	// Orchestrator returns the orchestrator registry for managing orchestrator components
+	Orchestrator() interface{}
+	
 	// Initialize sets up all registries with the provided configuration
 	Initialize(ctx context.Context, config Config) error
 	
@@ -178,6 +181,7 @@ type ProjectRegistry interface {
 	WithProjectContext(ctx context.Context) (context.Context, error)
 }
 
+
 // Define minimal interfaces to avoid import cycles
 // Agent represents an AI agent - using minimal interface for now
 type Agent interface {
@@ -191,6 +195,18 @@ type Tool = tools.Tool
 type Provider = providers.LLMClient
 type MemoryStore = memory.Store
 type VectorStore = vector.VectorStore
+
+// Forward declarations for orchestrator interfaces to avoid import cycles
+type CommissionTaskPlanner interface {
+	PlanFromRefinedCommission(ctx context.Context, refined interface{}, guildConfig interface{}) ([]interface{}, error)
+	AssignTasksToArtisans(ctx context.Context, tasks []interface{}, guild interface{}) error
+}
+
+type EventBus interface {
+	Publish(event interface{})
+	Subscribe(eventType string, handler interface{}) error
+	Unsubscribe(eventType string, handler interface{}) error
+}
 
 // ProjectManager provides project management capabilities
 type ProjectManager interface {
