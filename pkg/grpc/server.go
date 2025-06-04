@@ -467,6 +467,274 @@ func (s *Server) RemoveObjectiveFromCampaign(ctx context.Context, req *pb.Remove
 	return campaignToProto(c), nil
 }
 
+// SendMessageToAgent sends a message to a specific agent
+func (s *Server) SendMessageToAgent(ctx context.Context, req *pb.AgentMessageRequest) (*pb.AgentMessageResponse, error) {
+	// Validate request
+	if req.AgentId == "" {
+		return nil, status.Error(codes.InvalidArgument, "agent_id is required")
+	}
+	if req.Message == "" {
+		return nil, status.Error(codes.InvalidArgument, "message is required")
+	}
+
+	// Get agent from registry
+	agentRegistry := s.agentReg
+	if agentRegistry == nil {
+		return nil, status.Error(codes.Internal, "agent registry not initialized")
+	}
+
+	// Find the agent configuration
+	registeredAgents := agentRegistry.GetRegisteredAgents()
+	var agentConfig *registry.GuildAgentConfig
+	for _, agent := range registeredAgents {
+		if agent.ID == req.AgentId {
+			agentConfig = &agent
+			break
+		}
+	}
+
+	if agentConfig == nil {
+		return nil, status.Errorf(codes.NotFound, "agent '%s' not found", req.AgentId)
+	}
+
+	// For now, create a simple mock response
+	// TODO: Integrate with actual agent factory when orchestrator is ready
+	mockResponse := fmt.Sprintf("I'm %s, and I received your message: %s. (Note: This is a mock response - actual agent integration pending)", agentConfig.Name, req.Message)
+
+	// Add context from request
+	if req.SessionId != "" {
+		ctx = context.WithValue(ctx, "session_id", req.SessionId)
+	}
+	if req.CampaignId != "" {
+		ctx = context.WithValue(ctx, "campaign_id", req.CampaignId)
+	}
+
+	// Use the mock response for now
+	response := mockResponse
+
+	return &pb.AgentMessageResponse{
+		AgentId:   req.AgentId,
+		Response:  response,
+		Timestamp: time.Now().Unix(),
+		Metadata: map[string]string{
+			"agent_type": agentConfig.Type,
+			"model":      agentConfig.Model,
+		},
+		Status: &pb.AgentStatus{
+			State:        pb.AgentStatus_IDLE,
+			LastActivity: time.Now().Unix(),
+		},
+	}, nil
+}
+
+// StreamAgentConversation handles bidirectional streaming for agent conversations
+func (s *Server) StreamAgentConversation(stream pb.Guild_StreamAgentConversationServer) error {
+	// Create a context for this stream
+	ctx := stream.Context()
+	
+	// Track active agents and their states
+	activeAgents := make(map[string]*pb.AgentStatus)
+	
+	for {
+		// Receive message from client
+		req, err := stream.Recv()
+		if err != nil {
+			// Client disconnected
+			return nil
+		}
+
+		switch request := req.Request.(type) {
+		case *pb.AgentStreamRequest_Message:
+			// Handle agent message
+			msg := request.Message
+			
+			// Update agent status to thinking
+			if _, exists := activeAgents[msg.AgentId]; !exists {
+				activeAgents[msg.AgentId] = &pb.AgentStatus{
+					State:        pb.AgentStatus_THINKING,
+					LastActivity: time.Now().Unix(),
+				}
+			}
+			
+			// Send thinking event
+			if err := stream.Send(&pb.AgentStreamResponse{
+				Response: &pb.AgentStreamResponse_Event{
+					Event: &pb.StreamEvent{
+						Type:        pb.StreamEvent_AGENT_THINKING,
+						Description: fmt.Sprintf("%s is thinking...", msg.AgentId),
+						Data: map[string]string{
+							"agent_id": msg.AgentId,
+						},
+					},
+				},
+			}); err != nil {
+				return err
+			}
+			
+			// Mock agent creation for now
+			// TODO: Integrate with actual agent factory
+			var mockAgent interface{} = nil
+			err := fmt.Errorf("agent factory not yet integrated")
+			if err != nil {
+				// Send error event
+				if err := stream.Send(&pb.AgentStreamResponse{
+					Response: &pb.AgentStreamResponse_Event{
+						Event: &pb.StreamEvent{
+							Type:        pb.StreamEvent_ERROR,
+							Description: fmt.Sprintf("Failed to get agent: %v", err),
+						},
+					},
+				}); err != nil {
+					return err
+				}
+				continue
+			}
+			
+			// Update status to working
+			activeAgents[msg.AgentId].State = pb.AgentStatus_WORKING
+			if err := stream.Send(&pb.AgentStreamResponse{
+				Response: &pb.AgentStreamResponse_Status{
+					Status: activeAgents[msg.AgentId],
+				},
+			}); err != nil {
+				return err
+			}
+			
+			// Mock response for now
+			response := fmt.Sprintf("Mock response from agent %s: I received '%s'", msg.AgentId, msg.Message)
+			_ = mockAgent // Suppress unused variable warning
+			
+			// Simulate error for demonstration (remove this in real implementation)
+			if false {
+				// Send error
+				if err := stream.Send(&pb.AgentStreamResponse{
+					Response: &pb.AgentStreamResponse_Event{
+						Event: &pb.StreamEvent{
+							Type:        pb.StreamEvent_ERROR,
+							Description: fmt.Sprintf("Agent execution failed: %v", err),
+						},
+					},
+				}); err != nil {
+					return err
+				}
+				continue
+			}
+			
+			// Stream response in fragments (simulate streaming)
+			// In real implementation, agent.Execute would return a channel
+			fragments := splitIntoFragments(response, 100) // 100 chars per fragment
+			for i, fragment := range fragments {
+				if err := stream.Send(&pb.AgentStreamResponse{
+					Response: &pb.AgentStreamResponse_Fragment{
+						Fragment: &pb.AgentMessageFragment{
+							AgentId:    msg.AgentId,
+							Content:    fragment,
+							IsComplete: i == len(fragments)-1,
+							Timestamp:  time.Now().Unix(),
+						},
+					},
+				}); err != nil {
+					return err
+				}
+				
+				// Small delay to simulate streaming
+				time.Sleep(50 * time.Millisecond)
+			}
+			
+			// Update status to idle
+			activeAgents[msg.AgentId].State = pb.AgentStatus_IDLE
+			if err := stream.Send(&pb.AgentStreamResponse{
+				Response: &pb.AgentStreamResponse_Status{
+					Status: activeAgents[msg.AgentId],
+				},
+			}); err != nil {
+				return err
+			}
+			
+		case *pb.AgentStreamRequest_Control:
+			// Handle stream control commands
+			control := request.Control
+			switch control.Command {
+			case pb.StreamControl_STOP:
+				return nil
+			case pb.StreamControl_PAUSE:
+				// Implementation for pause
+			case pb.StreamControl_RESUME:
+				// Implementation for resume
+			}
+		}
+	}
+}
+
+// ListAvailableAgents returns all available agents
+func (s *Server) ListAvailableAgents(ctx context.Context, req *pb.ListAgentsRequest) (*pb.ListAgentsResponse, error) {
+	registeredAgents := s.agentReg.GetRegisteredAgents()
+	
+	agents := make([]*pb.AgentInfo, 0, len(registeredAgents))
+	for _, agent := range registeredAgents {
+		agentInfo := &pb.AgentInfo{
+			Id:           agent.ID,
+			Name:         agent.Name,
+			Type:         agent.Type,
+			Capabilities: agent.Capabilities,
+			Metadata: map[string]string{
+				"provider": agent.Provider,
+				"model":    agent.Model,
+			},
+		}
+		
+		// Add status if requested
+		if req.IncludeStatus {
+			agentInfo.Status = &pb.AgentStatus{
+				State:        pb.AgentStatus_IDLE,
+				LastActivity: time.Now().Unix(),
+			}
+		}
+		
+		agents = append(agents, agentInfo)
+	}
+	
+	return &pb.ListAgentsResponse{
+		Agents:     agents,
+		TotalCount: int32(len(agents)),
+	}, nil
+}
+
+// GetAgentStatus returns the current status of an agent
+func (s *Server) GetAgentStatus(ctx context.Context, req *pb.GetAgentStatusRequest) (*pb.AgentStatus, error) {
+	if req.AgentId == "" {
+		return nil, status.Error(codes.InvalidArgument, "agent_id is required")
+	}
+	
+	// In real implementation, this would check actual agent state
+	// For now, return a mock status
+	return &pb.AgentStatus{
+		State:        pb.AgentStatus_IDLE,
+		LastActivity: time.Now().Unix(),
+		Metadata: map[string]string{
+			"health": "healthy",
+		},
+	}, nil
+}
+
+// Helper function to split response into fragments
+func splitIntoFragments(text string, chunkSize int) []string {
+	if chunkSize <= 0 {
+		return []string{text}
+	}
+	
+	var fragments []string
+	for i := 0; i < len(text); i += chunkSize {
+		end := i + chunkSize
+		if end > len(text) {
+			end = len(text)
+		}
+		fragments = append(fragments, text[i:end])
+	}
+	
+	return fragments
+}
+
 // campaignToProto converts a campaign to proto format
 func campaignToProto(c *campaign.Campaign) *pb.Campaign {
 	metadata := make(map[string]string)

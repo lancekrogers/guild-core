@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.28.3
-// source: proto/prompts/v1/prompts.proto
+// source: prompts/v1/prompts.proto
 
 package v1
 
@@ -407,5 +407,5 @@ var PromptService_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "proto/prompts/v1/prompts.proto",
+	Metadata: "prompts/v1/prompts.proto",
 }

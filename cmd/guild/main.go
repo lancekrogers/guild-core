@@ -126,6 +126,7 @@ func init() {
 	rootCmd.AddCommand(agentCmd)
 	rootCmd.AddCommand(costCmd)
 	rootCmd.AddCommand(orchestratorCmd)
+	rootCmd.AddCommand(kanbanDemoCmd)
 	// rootCmd.AddCommand(campaignCmd)  // TODO: implement
 	// rootCmd.AddCommand(chatCmd)      // TODO: implement
 

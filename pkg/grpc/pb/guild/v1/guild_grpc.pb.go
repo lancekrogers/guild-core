@@ -25,6 +25,8 @@ const (
 	Guild_CreateCampaign_FullMethodName              = "/guild.v1.Guild/CreateCampaign"
 	Guild_UpdateCampaign_FullMethodName              = "/guild.v1.Guild/UpdateCampaign"
 	Guild_DeleteCampaign_FullMethodName              = "/guild.v1.Guild/DeleteCampaign"
+	Guild_StartPlanningCampaign_FullMethodName       = "/guild.v1.Guild/StartPlanningCampaign"
+	Guild_MarkCampaignReady_FullMethodName           = "/guild.v1.Guild/MarkCampaignReady"
 	Guild_StartCampaign_FullMethodName               = "/guild.v1.Guild/StartCampaign"
 	Guild_PauseCampaign_FullMethodName               = "/guild.v1.Guild/PauseCampaign"
 	Guild_ResumeCampaign_FullMethodName              = "/guild.v1.Guild/ResumeCampaign"
@@ -32,6 +34,10 @@ const (
 	Guild_CancelCampaign_FullMethodName              = "/guild.v1.Guild/CancelCampaign"
 	Guild_AddObjectiveToCampaign_FullMethodName      = "/guild.v1.Guild/AddObjectiveToCampaign"
 	Guild_RemoveObjectiveFromCampaign_FullMethodName = "/guild.v1.Guild/RemoveObjectiveFromCampaign"
+	Guild_SendMessageToAgent_FullMethodName          = "/guild.v1.Guild/SendMessageToAgent"
+	Guild_StreamAgentConversation_FullMethodName     = "/guild.v1.Guild/StreamAgentConversation"
+	Guild_ListAvailableAgents_FullMethodName         = "/guild.v1.Guild/ListAvailableAgents"
+	Guild_GetAgentStatus_FullMethodName              = "/guild.v1.Guild/GetAgentStatus"
 )
 
 // GuildClient is the client API for Guild service.
@@ -49,6 +55,8 @@ type GuildClient interface {
 	UpdateCampaign(ctx context.Context, in *UpdateCampaignRequest, opts ...grpc.CallOption) (*Campaign, error)
 	DeleteCampaign(ctx context.Context, in *DeleteCampaignRequest, opts ...grpc.CallOption) (*DeleteCampaignResponse, error)
 	// Campaign state transitions
+	StartPlanningCampaign(ctx context.Context, in *CampaignActionRequest, opts ...grpc.CallOption) (*Campaign, error)
+	MarkCampaignReady(ctx context.Context, in *CampaignActionRequest, opts ...grpc.CallOption) (*Campaign, error)
 	StartCampaign(ctx context.Context, in *CampaignActionRequest, opts ...grpc.CallOption) (*Campaign, error)
 	PauseCampaign(ctx context.Context, in *CampaignActionRequest, opts ...grpc.CallOption) (*Campaign, error)
 	ResumeCampaign(ctx context.Context, in *CampaignActionRequest, opts ...grpc.CallOption) (*Campaign, error)
@@ -57,6 +65,11 @@ type GuildClient interface {
 	// Objective management
 	AddObjectiveToCampaign(ctx context.Context, in *AddObjectiveRequest, opts ...grpc.CallOption) (*Campaign, error)
 	RemoveObjectiveFromCampaign(ctx context.Context, in *RemoveObjectiveRequest, opts ...grpc.CallOption) (*Campaign, error)
+	// Agent communication
+	SendMessageToAgent(ctx context.Context, in *AgentMessageRequest, opts ...grpc.CallOption) (*AgentMessageResponse, error)
+	StreamAgentConversation(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[AgentStreamRequest, AgentStreamResponse], error)
+	ListAvailableAgents(ctx context.Context, in *ListAgentsRequest, opts ...grpc.CallOption) (*ListAgentsResponse, error)
+	GetAgentStatus(ctx context.Context, in *GetAgentStatusRequest, opts ...grpc.CallOption) (*AgentStatus, error)
 }
 
 type guildClient struct {
@@ -136,6 +149,26 @@ func (c *guildClient) DeleteCampaign(ctx context.Context, in *DeleteCampaignRequ
 	return out, nil
 }
 
+func (c *guildClient) StartPlanningCampaign(ctx context.Context, in *CampaignActionRequest, opts ...grpc.CallOption) (*Campaign, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Campaign)
+	err := c.cc.Invoke(ctx, Guild_StartPlanningCampaign_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *guildClient) MarkCampaignReady(ctx context.Context, in *CampaignActionRequest, opts ...grpc.CallOption) (*Campaign, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Campaign)
+	err := c.cc.Invoke(ctx, Guild_MarkCampaignReady_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *guildClient) StartCampaign(ctx context.Context, in *CampaignActionRequest, opts ...grpc.CallOption) (*Campaign, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Campaign)
@@ -206,6 +239,49 @@ func (c *guildClient) RemoveObjectiveFromCampaign(ctx context.Context, in *Remov
 	return out, nil
 }
 
+func (c *guildClient) SendMessageToAgent(ctx context.Context, in *AgentMessageRequest, opts ...grpc.CallOption) (*AgentMessageResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AgentMessageResponse)
+	err := c.cc.Invoke(ctx, Guild_SendMessageToAgent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *guildClient) StreamAgentConversation(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[AgentStreamRequest, AgentStreamResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Guild_ServiceDesc.Streams[1], Guild_StreamAgentConversation_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[AgentStreamRequest, AgentStreamResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Guild_StreamAgentConversationClient = grpc.BidiStreamingClient[AgentStreamRequest, AgentStreamResponse]
+
+func (c *guildClient) ListAvailableAgents(ctx context.Context, in *ListAgentsRequest, opts ...grpc.CallOption) (*ListAgentsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListAgentsResponse)
+	err := c.cc.Invoke(ctx, Guild_ListAvailableAgents_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *guildClient) GetAgentStatus(ctx context.Context, in *GetAgentStatusRequest, opts ...grpc.CallOption) (*AgentStatus, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AgentStatus)
+	err := c.cc.Invoke(ctx, Guild_GetAgentStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GuildServer is the server API for Guild service.
 // All implementations must embed UnimplementedGuildServer
 // for forward compatibility.
@@ -221,6 +297,8 @@ type GuildServer interface {
 	UpdateCampaign(context.Context, *UpdateCampaignRequest) (*Campaign, error)
 	DeleteCampaign(context.Context, *DeleteCampaignRequest) (*DeleteCampaignResponse, error)
 	// Campaign state transitions
+	StartPlanningCampaign(context.Context, *CampaignActionRequest) (*Campaign, error)
+	MarkCampaignReady(context.Context, *CampaignActionRequest) (*Campaign, error)
 	StartCampaign(context.Context, *CampaignActionRequest) (*Campaign, error)
 	PauseCampaign(context.Context, *CampaignActionRequest) (*Campaign, error)
 	ResumeCampaign(context.Context, *CampaignActionRequest) (*Campaign, error)
@@ -229,6 +307,11 @@ type GuildServer interface {
 	// Objective management
 	AddObjectiveToCampaign(context.Context, *AddObjectiveRequest) (*Campaign, error)
 	RemoveObjectiveFromCampaign(context.Context, *RemoveObjectiveRequest) (*Campaign, error)
+	// Agent communication
+	SendMessageToAgent(context.Context, *AgentMessageRequest) (*AgentMessageResponse, error)
+	StreamAgentConversation(grpc.BidiStreamingServer[AgentStreamRequest, AgentStreamResponse]) error
+	ListAvailableAgents(context.Context, *ListAgentsRequest) (*ListAgentsResponse, error)
+	GetAgentStatus(context.Context, *GetAgentStatusRequest) (*AgentStatus, error)
 	mustEmbedUnimplementedGuildServer()
 }
 
@@ -257,6 +340,12 @@ func (UnimplementedGuildServer) UpdateCampaign(context.Context, *UpdateCampaignR
 func (UnimplementedGuildServer) DeleteCampaign(context.Context, *DeleteCampaignRequest) (*DeleteCampaignResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCampaign not implemented")
 }
+func (UnimplementedGuildServer) StartPlanningCampaign(context.Context, *CampaignActionRequest) (*Campaign, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StartPlanningCampaign not implemented")
+}
+func (UnimplementedGuildServer) MarkCampaignReady(context.Context, *CampaignActionRequest) (*Campaign, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MarkCampaignReady not implemented")
+}
 func (UnimplementedGuildServer) StartCampaign(context.Context, *CampaignActionRequest) (*Campaign, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method StartCampaign not implemented")
 }
@@ -277,6 +366,18 @@ func (UnimplementedGuildServer) AddObjectiveToCampaign(context.Context, *AddObje
 }
 func (UnimplementedGuildServer) RemoveObjectiveFromCampaign(context.Context, *RemoveObjectiveRequest) (*Campaign, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveObjectiveFromCampaign not implemented")
+}
+func (UnimplementedGuildServer) SendMessageToAgent(context.Context, *AgentMessageRequest) (*AgentMessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendMessageToAgent not implemented")
+}
+func (UnimplementedGuildServer) StreamAgentConversation(grpc.BidiStreamingServer[AgentStreamRequest, AgentStreamResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method StreamAgentConversation not implemented")
+}
+func (UnimplementedGuildServer) ListAvailableAgents(context.Context, *ListAgentsRequest) (*ListAgentsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAvailableAgents not implemented")
+}
+func (UnimplementedGuildServer) GetAgentStatus(context.Context, *GetAgentStatusRequest) (*AgentStatus, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAgentStatus not implemented")
 }
 func (UnimplementedGuildServer) mustEmbedUnimplementedGuildServer() {}
 func (UnimplementedGuildServer) testEmbeddedByValue()               {}
@@ -396,6 +497,42 @@ func _Guild_DeleteCampaign_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GuildServer).DeleteCampaign(ctx, req.(*DeleteCampaignRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Guild_StartPlanningCampaign_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CampaignActionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GuildServer).StartPlanningCampaign(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Guild_StartPlanningCampaign_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GuildServer).StartPlanningCampaign(ctx, req.(*CampaignActionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Guild_MarkCampaignReady_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CampaignActionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GuildServer).MarkCampaignReady(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Guild_MarkCampaignReady_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GuildServer).MarkCampaignReady(ctx, req.(*CampaignActionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -526,6 +663,67 @@ func _Guild_RemoveObjectiveFromCampaign_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Guild_SendMessageToAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AgentMessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GuildServer).SendMessageToAgent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Guild_SendMessageToAgent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GuildServer).SendMessageToAgent(ctx, req.(*AgentMessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Guild_StreamAgentConversation_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(GuildServer).StreamAgentConversation(&grpc.GenericServerStream[AgentStreamRequest, AgentStreamResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Guild_StreamAgentConversationServer = grpc.BidiStreamingServer[AgentStreamRequest, AgentStreamResponse]
+
+func _Guild_ListAvailableAgents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAgentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GuildServer).ListAvailableAgents(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Guild_ListAvailableAgents_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GuildServer).ListAvailableAgents(ctx, req.(*ListAgentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Guild_GetAgentStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAgentStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GuildServer).GetAgentStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Guild_GetAgentStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GuildServer).GetAgentStatus(ctx, req.(*GetAgentStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Guild_ServiceDesc is the grpc.ServiceDesc for Guild service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -552,6 +750,14 @@ var Guild_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteCampaign",
 			Handler:    _Guild_DeleteCampaign_Handler,
+		},
+		{
+			MethodName: "StartPlanningCampaign",
+			Handler:    _Guild_StartPlanningCampaign_Handler,
+		},
+		{
+			MethodName: "MarkCampaignReady",
+			Handler:    _Guild_MarkCampaignReady_Handler,
 		},
 		{
 			MethodName: "StartCampaign",
@@ -581,12 +787,30 @@ var Guild_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "RemoveObjectiveFromCampaign",
 			Handler:    _Guild_RemoveObjectiveFromCampaign_Handler,
 		},
+		{
+			MethodName: "SendMessageToAgent",
+			Handler:    _Guild_SendMessageToAgent_Handler,
+		},
+		{
+			MethodName: "ListAvailableAgents",
+			Handler:    _Guild_ListAvailableAgents_Handler,
+		},
+		{
+			MethodName: "GetAgentStatus",
+			Handler:    _Guild_GetAgentStatus_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "WatchCampaign",
 			Handler:       _Guild_WatchCampaign_Handler,
 			ServerStreams: true,
+		},
+		{
+			StreamName:    "StreamAgentConversation",
+			Handler:       _Guild_StreamAgentConversation_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "guild/v1/guild.proto",

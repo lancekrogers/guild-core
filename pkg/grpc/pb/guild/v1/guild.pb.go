@@ -21,6 +21,171 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type StreamControl_Command int32
+
+const (
+	StreamControl_START  StreamControl_Command = 0
+	StreamControl_STOP   StreamControl_Command = 1
+	StreamControl_PAUSE  StreamControl_Command = 2
+	StreamControl_RESUME StreamControl_Command = 3
+)
+
+// Enum value maps for StreamControl_Command.
+var (
+	StreamControl_Command_name = map[int32]string{
+		0: "START",
+		1: "STOP",
+		2: "PAUSE",
+		3: "RESUME",
+	}
+	StreamControl_Command_value = map[string]int32{
+		"START":  0,
+		"STOP":   1,
+		"PAUSE":  2,
+		"RESUME": 3,
+	}
+)
+
+func (x StreamControl_Command) Enum() *StreamControl_Command {
+	p := new(StreamControl_Command)
+	*p = x
+	return p
+}
+
+func (x StreamControl_Command) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (StreamControl_Command) Descriptor() protoreflect.EnumDescriptor {
+	return file_guild_v1_guild_proto_enumTypes[0].Descriptor()
+}
+
+func (StreamControl_Command) Type() protoreflect.EnumType {
+	return &file_guild_v1_guild_proto_enumTypes[0]
+}
+
+func (x StreamControl_Command) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use StreamControl_Command.Descriptor instead.
+func (StreamControl_Command) EnumDescriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{20, 0}
+}
+
+type StreamEvent_EventType int32
+
+const (
+	StreamEvent_AGENT_THINKING    StreamEvent_EventType = 0
+	StreamEvent_AGENT_WORKING     StreamEvent_EventType = 1
+	StreamEvent_TOOL_EXECUTING    StreamEvent_EventType = 2
+	StreamEvent_MEMORY_RETRIEVING StreamEvent_EventType = 3
+	StreamEvent_ERROR             StreamEvent_EventType = 4
+)
+
+// Enum value maps for StreamEvent_EventType.
+var (
+	StreamEvent_EventType_name = map[int32]string{
+		0: "AGENT_THINKING",
+		1: "AGENT_WORKING",
+		2: "TOOL_EXECUTING",
+		3: "MEMORY_RETRIEVING",
+		4: "ERROR",
+	}
+	StreamEvent_EventType_value = map[string]int32{
+		"AGENT_THINKING":    0,
+		"AGENT_WORKING":     1,
+		"TOOL_EXECUTING":    2,
+		"MEMORY_RETRIEVING": 3,
+		"ERROR":             4,
+	}
+)
+
+func (x StreamEvent_EventType) Enum() *StreamEvent_EventType {
+	p := new(StreamEvent_EventType)
+	*p = x
+	return p
+}
+
+func (x StreamEvent_EventType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (StreamEvent_EventType) Descriptor() protoreflect.EnumDescriptor {
+	return file_guild_v1_guild_proto_enumTypes[1].Descriptor()
+}
+
+func (StreamEvent_EventType) Type() protoreflect.EnumType {
+	return &file_guild_v1_guild_proto_enumTypes[1]
+}
+
+func (x StreamEvent_EventType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use StreamEvent_EventType.Descriptor instead.
+func (StreamEvent_EventType) EnumDescriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{21, 0}
+}
+
+type AgentStatus_State int32
+
+const (
+	AgentStatus_IDLE     AgentStatus_State = 0
+	AgentStatus_THINKING AgentStatus_State = 1
+	AgentStatus_WORKING  AgentStatus_State = 2
+	AgentStatus_WAITING  AgentStatus_State = 3
+	AgentStatus_ERROR    AgentStatus_State = 4
+	AgentStatus_OFFLINE  AgentStatus_State = 5
+)
+
+// Enum value maps for AgentStatus_State.
+var (
+	AgentStatus_State_name = map[int32]string{
+		0: "IDLE",
+		1: "THINKING",
+		2: "WORKING",
+		3: "WAITING",
+		4: "ERROR",
+		5: "OFFLINE",
+	}
+	AgentStatus_State_value = map[string]int32{
+		"IDLE":     0,
+		"THINKING": 1,
+		"WORKING":  2,
+		"WAITING":  3,
+		"ERROR":    4,
+		"OFFLINE":  5,
+	}
+)
+
+func (x AgentStatus_State) Enum() *AgentStatus_State {
+	p := new(AgentStatus_State)
+	*p = x
+	return p
+}
+
+func (x AgentStatus_State) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (AgentStatus_State) Descriptor() protoreflect.EnumDescriptor {
+	return file_guild_v1_guild_proto_enumTypes[2].Descriptor()
+}
+
+func (AgentStatus_State) Type() protoreflect.EnumType {
+	return &file_guild_v1_guild_proto_enumTypes[2]
+}
+
+func (x AgentStatus_State) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use AgentStatus_State.Descriptor instead.
+func (AgentStatus_State) EnumDescriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{26, 0}
+}
+
 // Campaign represents a strategic goal with multiple objectives
 type Campaign struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
@@ -1001,6 +1166,837 @@ func (x *ErrorDetail) GetMetadata() map[string]string {
 	return nil
 }
 
+// Agent communication messages
+type AgentMessageRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AgentId       string                 `protobuf:"bytes,1,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	SessionId     string                 `protobuf:"bytes,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	CampaignId    string                 `protobuf:"bytes,4,opt,name=campaign_id,json=campaignId,proto3" json:"campaign_id,omitempty"`
+	Context       map[string]string      `protobuf:"bytes,5,rep,name=context,proto3" json:"context,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"` // Additional context
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AgentMessageRequest) Reset() {
+	*x = AgentMessageRequest{}
+	mi := &file_guild_v1_guild_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AgentMessageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AgentMessageRequest) ProtoMessage() {}
+
+func (x *AgentMessageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_guild_v1_guild_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AgentMessageRequest.ProtoReflect.Descriptor instead.
+func (*AgentMessageRequest) Descriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *AgentMessageRequest) GetAgentId() string {
+	if x != nil {
+		return x.AgentId
+	}
+	return ""
+}
+
+func (x *AgentMessageRequest) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *AgentMessageRequest) GetSessionId() string {
+	if x != nil {
+		return x.SessionId
+	}
+	return ""
+}
+
+func (x *AgentMessageRequest) GetCampaignId() string {
+	if x != nil {
+		return x.CampaignId
+	}
+	return ""
+}
+
+func (x *AgentMessageRequest) GetContext() map[string]string {
+	if x != nil {
+		return x.Context
+	}
+	return nil
+}
+
+type AgentMessageResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AgentId       string                 `protobuf:"bytes,1,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
+	Response      string                 `protobuf:"bytes,2,opt,name=response,proto3" json:"response,omitempty"`
+	Timestamp     int64                  `protobuf:"varint,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Metadata      map[string]string      `protobuf:"bytes,4,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Status        *AgentStatus           `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AgentMessageResponse) Reset() {
+	*x = AgentMessageResponse{}
+	mi := &file_guild_v1_guild_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AgentMessageResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AgentMessageResponse) ProtoMessage() {}
+
+func (x *AgentMessageResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_guild_v1_guild_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AgentMessageResponse.ProtoReflect.Descriptor instead.
+func (*AgentMessageResponse) Descriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *AgentMessageResponse) GetAgentId() string {
+	if x != nil {
+		return x.AgentId
+	}
+	return ""
+}
+
+func (x *AgentMessageResponse) GetResponse() string {
+	if x != nil {
+		return x.Response
+	}
+	return ""
+}
+
+func (x *AgentMessageResponse) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *AgentMessageResponse) GetMetadata() map[string]string {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
+func (x *AgentMessageResponse) GetStatus() *AgentStatus {
+	if x != nil {
+		return x.Status
+	}
+	return nil
+}
+
+// Streaming agent communication
+type AgentStreamRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Request:
+	//
+	//	*AgentStreamRequest_Message
+	//	*AgentStreamRequest_Control
+	Request       isAgentStreamRequest_Request `protobuf_oneof:"request"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AgentStreamRequest) Reset() {
+	*x = AgentStreamRequest{}
+	mi := &file_guild_v1_guild_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AgentStreamRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AgentStreamRequest) ProtoMessage() {}
+
+func (x *AgentStreamRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_guild_v1_guild_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AgentStreamRequest.ProtoReflect.Descriptor instead.
+func (*AgentStreamRequest) Descriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *AgentStreamRequest) GetRequest() isAgentStreamRequest_Request {
+	if x != nil {
+		return x.Request
+	}
+	return nil
+}
+
+func (x *AgentStreamRequest) GetMessage() *AgentMessageRequest {
+	if x != nil {
+		if x, ok := x.Request.(*AgentStreamRequest_Message); ok {
+			return x.Message
+		}
+	}
+	return nil
+}
+
+func (x *AgentStreamRequest) GetControl() *StreamControl {
+	if x != nil {
+		if x, ok := x.Request.(*AgentStreamRequest_Control); ok {
+			return x.Control
+		}
+	}
+	return nil
+}
+
+type isAgentStreamRequest_Request interface {
+	isAgentStreamRequest_Request()
+}
+
+type AgentStreamRequest_Message struct {
+	Message *AgentMessageRequest `protobuf:"bytes,1,opt,name=message,proto3,oneof"`
+}
+
+type AgentStreamRequest_Control struct {
+	Control *StreamControl `protobuf:"bytes,2,opt,name=control,proto3,oneof"`
+}
+
+func (*AgentStreamRequest_Message) isAgentStreamRequest_Request() {}
+
+func (*AgentStreamRequest_Control) isAgentStreamRequest_Request() {}
+
+type AgentStreamResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Response:
+	//
+	//	*AgentStreamResponse_Fragment
+	//	*AgentStreamResponse_Status
+	//	*AgentStreamResponse_Event
+	Response      isAgentStreamResponse_Response `protobuf_oneof:"response"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AgentStreamResponse) Reset() {
+	*x = AgentStreamResponse{}
+	mi := &file_guild_v1_guild_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AgentStreamResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AgentStreamResponse) ProtoMessage() {}
+
+func (x *AgentStreamResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_guild_v1_guild_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AgentStreamResponse.ProtoReflect.Descriptor instead.
+func (*AgentStreamResponse) Descriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *AgentStreamResponse) GetResponse() isAgentStreamResponse_Response {
+	if x != nil {
+		return x.Response
+	}
+	return nil
+}
+
+func (x *AgentStreamResponse) GetFragment() *AgentMessageFragment {
+	if x != nil {
+		if x, ok := x.Response.(*AgentStreamResponse_Fragment); ok {
+			return x.Fragment
+		}
+	}
+	return nil
+}
+
+func (x *AgentStreamResponse) GetStatus() *AgentStatus {
+	if x != nil {
+		if x, ok := x.Response.(*AgentStreamResponse_Status); ok {
+			return x.Status
+		}
+	}
+	return nil
+}
+
+func (x *AgentStreamResponse) GetEvent() *StreamEvent {
+	if x != nil {
+		if x, ok := x.Response.(*AgentStreamResponse_Event); ok {
+			return x.Event
+		}
+	}
+	return nil
+}
+
+type isAgentStreamResponse_Response interface {
+	isAgentStreamResponse_Response()
+}
+
+type AgentStreamResponse_Fragment struct {
+	Fragment *AgentMessageFragment `protobuf:"bytes,1,opt,name=fragment,proto3,oneof"`
+}
+
+type AgentStreamResponse_Status struct {
+	Status *AgentStatus `protobuf:"bytes,2,opt,name=status,proto3,oneof"`
+}
+
+type AgentStreamResponse_Event struct {
+	Event *StreamEvent `protobuf:"bytes,3,opt,name=event,proto3,oneof"`
+}
+
+func (*AgentStreamResponse_Fragment) isAgentStreamResponse_Response() {}
+
+func (*AgentStreamResponse_Status) isAgentStreamResponse_Response() {}
+
+func (*AgentStreamResponse_Event) isAgentStreamResponse_Response() {}
+
+type AgentMessageFragment struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AgentId       string                 `protobuf:"bytes,1,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
+	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	IsComplete    bool                   `protobuf:"varint,3,opt,name=is_complete,json=isComplete,proto3" json:"is_complete,omitempty"`
+	Timestamp     int64                  `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Metadata      map[string]string      `protobuf:"bytes,5,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AgentMessageFragment) Reset() {
+	*x = AgentMessageFragment{}
+	mi := &file_guild_v1_guild_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AgentMessageFragment) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AgentMessageFragment) ProtoMessage() {}
+
+func (x *AgentMessageFragment) ProtoReflect() protoreflect.Message {
+	mi := &file_guild_v1_guild_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AgentMessageFragment.ProtoReflect.Descriptor instead.
+func (*AgentMessageFragment) Descriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *AgentMessageFragment) GetAgentId() string {
+	if x != nil {
+		return x.AgentId
+	}
+	return ""
+}
+
+func (x *AgentMessageFragment) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *AgentMessageFragment) GetIsComplete() bool {
+	if x != nil {
+		return x.IsComplete
+	}
+	return false
+}
+
+func (x *AgentMessageFragment) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
+func (x *AgentMessageFragment) GetMetadata() map[string]string {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
+type StreamControl struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Command       StreamControl_Command  `protobuf:"varint,1,opt,name=command,proto3,enum=guild.v1.StreamControl_Command" json:"command,omitempty"`
+	SessionId     string                 `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *StreamControl) Reset() {
+	*x = StreamControl{}
+	mi := &file_guild_v1_guild_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StreamControl) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StreamControl) ProtoMessage() {}
+
+func (x *StreamControl) ProtoReflect() protoreflect.Message {
+	mi := &file_guild_v1_guild_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StreamControl.ProtoReflect.Descriptor instead.
+func (*StreamControl) Descriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *StreamControl) GetCommand() StreamControl_Command {
+	if x != nil {
+		return x.Command
+	}
+	return StreamControl_START
+}
+
+func (x *StreamControl) GetSessionId() string {
+	if x != nil {
+		return x.SessionId
+	}
+	return ""
+}
+
+type StreamEvent struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          StreamEvent_EventType  `protobuf:"varint,1,opt,name=type,proto3,enum=guild.v1.StreamEvent_EventType" json:"type,omitempty"`
+	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	Data          map[string]string      `protobuf:"bytes,3,rep,name=data,proto3" json:"data,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *StreamEvent) Reset() {
+	*x = StreamEvent{}
+	mi := &file_guild_v1_guild_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StreamEvent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StreamEvent) ProtoMessage() {}
+
+func (x *StreamEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_guild_v1_guild_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StreamEvent.ProtoReflect.Descriptor instead.
+func (*StreamEvent) Descriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *StreamEvent) GetType() StreamEvent_EventType {
+	if x != nil {
+		return x.Type
+	}
+	return StreamEvent_AGENT_THINKING
+}
+
+func (x *StreamEvent) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *StreamEvent) GetData() map[string]string {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+// Agent listing and status
+type ListAgentsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CampaignId    string                 `protobuf:"bytes,1,opt,name=campaign_id,json=campaignId,proto3" json:"campaign_id,omitempty"`
+	IncludeStatus bool                   `protobuf:"varint,2,opt,name=include_status,json=includeStatus,proto3" json:"include_status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListAgentsRequest) Reset() {
+	*x = ListAgentsRequest{}
+	mi := &file_guild_v1_guild_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListAgentsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListAgentsRequest) ProtoMessage() {}
+
+func (x *ListAgentsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_guild_v1_guild_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListAgentsRequest.ProtoReflect.Descriptor instead.
+func (*ListAgentsRequest) Descriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *ListAgentsRequest) GetCampaignId() string {
+	if x != nil {
+		return x.CampaignId
+	}
+	return ""
+}
+
+func (x *ListAgentsRequest) GetIncludeStatus() bool {
+	if x != nil {
+		return x.IncludeStatus
+	}
+	return false
+}
+
+type ListAgentsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Agents        []*AgentInfo           `protobuf:"bytes,1,rep,name=agents,proto3" json:"agents,omitempty"`
+	TotalCount    int32                  `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListAgentsResponse) Reset() {
+	*x = ListAgentsResponse{}
+	mi := &file_guild_v1_guild_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListAgentsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListAgentsResponse) ProtoMessage() {}
+
+func (x *ListAgentsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_guild_v1_guild_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListAgentsResponse.ProtoReflect.Descriptor instead.
+func (*ListAgentsResponse) Descriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *ListAgentsResponse) GetAgents() []*AgentInfo {
+	if x != nil {
+		return x.Agents
+	}
+	return nil
+}
+
+func (x *ListAgentsResponse) GetTotalCount() int32 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
+}
+
+type AgentInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Type          string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"` // manager, worker, specialist
+	Capabilities  []string               `protobuf:"bytes,4,rep,name=capabilities,proto3" json:"capabilities,omitempty"`
+	Status        *AgentStatus           `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
+	Metadata      map[string]string      `protobuf:"bytes,6,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AgentInfo) Reset() {
+	*x = AgentInfo{}
+	mi := &file_guild_v1_guild_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AgentInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AgentInfo) ProtoMessage() {}
+
+func (x *AgentInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_guild_v1_guild_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AgentInfo.ProtoReflect.Descriptor instead.
+func (*AgentInfo) Descriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *AgentInfo) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *AgentInfo) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *AgentInfo) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *AgentInfo) GetCapabilities() []string {
+	if x != nil {
+		return x.Capabilities
+	}
+	return nil
+}
+
+func (x *AgentInfo) GetStatus() *AgentStatus {
+	if x != nil {
+		return x.Status
+	}
+	return nil
+}
+
+func (x *AgentInfo) GetMetadata() map[string]string {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
+type GetAgentStatusRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AgentId       string                 `protobuf:"bytes,1,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
+	CampaignId    string                 `protobuf:"bytes,2,opt,name=campaign_id,json=campaignId,proto3" json:"campaign_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAgentStatusRequest) Reset() {
+	*x = GetAgentStatusRequest{}
+	mi := &file_guild_v1_guild_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAgentStatusRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAgentStatusRequest) ProtoMessage() {}
+
+func (x *GetAgentStatusRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_guild_v1_guild_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAgentStatusRequest.ProtoReflect.Descriptor instead.
+func (*GetAgentStatusRequest) Descriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *GetAgentStatusRequest) GetAgentId() string {
+	if x != nil {
+		return x.AgentId
+	}
+	return ""
+}
+
+func (x *GetAgentStatusRequest) GetCampaignId() string {
+	if x != nil {
+		return x.CampaignId
+	}
+	return ""
+}
+
+type AgentStatus struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	State         AgentStatus_State      `protobuf:"varint,1,opt,name=state,proto3,enum=guild.v1.AgentStatus_State" json:"state,omitempty"`
+	CurrentTask   string                 `protobuf:"bytes,2,opt,name=current_task,json=currentTask,proto3" json:"current_task,omitempty"`
+	LastActivity  int64                  `protobuf:"varint,3,opt,name=last_activity,json=lastActivity,proto3" json:"last_activity,omitempty"`
+	Metadata      map[string]string      `protobuf:"bytes,4,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AgentStatus) Reset() {
+	*x = AgentStatus{}
+	mi := &file_guild_v1_guild_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AgentStatus) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AgentStatus) ProtoMessage() {}
+
+func (x *AgentStatus) ProtoReflect() protoreflect.Message {
+	mi := &file_guild_v1_guild_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AgentStatus.ProtoReflect.Descriptor instead.
+func (*AgentStatus) Descriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *AgentStatus) GetState() AgentStatus_State {
+	if x != nil {
+		return x.State
+	}
+	return AgentStatus_IDLE
+}
+
+func (x *AgentStatus) GetCurrentTask() string {
+	if x != nil {
+		return x.CurrentTask
+	}
+	return ""
+}
+
+func (x *AgentStatus) GetLastActivity() int64 {
+	if x != nil {
+		return x.LastActivity
+	}
+	return 0
+}
+
+func (x *AgentStatus) GetMetadata() map[string]string {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
 var File_guild_v1_guild_proto protoreflect.FileDescriptor
 
 const file_guild_v1_guild_proto_rawDesc = "" +
@@ -1097,21 +2093,127 @@ const file_guild_v1_guild_proto_rawDesc = "" +
 	"\bmetadata\x18\x03 \x03(\v2#.guild.v1.ErrorDetail.MetadataEntryR\bmetadata\x1a;\n" +
 	"\rMetadataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x012\xc4\a\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x8c\x02\n" +
+	"\x13AgentMessageRequest\x12\x19\n" +
+	"\bagent_id\x18\x01 \x01(\tR\aagentId\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12\x1d\n" +
+	"\n" +
+	"session_id\x18\x03 \x01(\tR\tsessionId\x12\x1f\n" +
+	"\vcampaign_id\x18\x04 \x01(\tR\n" +
+	"campaignId\x12D\n" +
+	"\acontext\x18\x05 \x03(\v2*.guild.v1.AgentMessageRequest.ContextEntryR\acontext\x1a:\n" +
+	"\fContextEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xa1\x02\n" +
+	"\x14AgentMessageResponse\x12\x19\n" +
+	"\bagent_id\x18\x01 \x01(\tR\aagentId\x12\x1a\n" +
+	"\bresponse\x18\x02 \x01(\tR\bresponse\x12\x1c\n" +
+	"\ttimestamp\x18\x03 \x01(\x03R\ttimestamp\x12H\n" +
+	"\bmetadata\x18\x04 \x03(\v2,.guild.v1.AgentMessageResponse.MetadataEntryR\bmetadata\x12-\n" +
+	"\x06status\x18\x05 \x01(\v2\x15.guild.v1.AgentStatusR\x06status\x1a;\n" +
+	"\rMetadataEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x8f\x01\n" +
+	"\x12AgentStreamRequest\x129\n" +
+	"\amessage\x18\x01 \x01(\v2\x1d.guild.v1.AgentMessageRequestH\x00R\amessage\x123\n" +
+	"\acontrol\x18\x02 \x01(\v2\x17.guild.v1.StreamControlH\x00R\acontrolB\t\n" +
+	"\arequest\"\xbf\x01\n" +
+	"\x13AgentStreamResponse\x12<\n" +
+	"\bfragment\x18\x01 \x01(\v2\x1e.guild.v1.AgentMessageFragmentH\x00R\bfragment\x12/\n" +
+	"\x06status\x18\x02 \x01(\v2\x15.guild.v1.AgentStatusH\x00R\x06status\x12-\n" +
+	"\x05event\x18\x03 \x01(\v2\x15.guild.v1.StreamEventH\x00R\x05eventB\n" +
+	"\n" +
+	"\bresponse\"\x91\x02\n" +
+	"\x14AgentMessageFragment\x12\x19\n" +
+	"\bagent_id\x18\x01 \x01(\tR\aagentId\x12\x18\n" +
+	"\acontent\x18\x02 \x01(\tR\acontent\x12\x1f\n" +
+	"\vis_complete\x18\x03 \x01(\bR\n" +
+	"isComplete\x12\x1c\n" +
+	"\ttimestamp\x18\x04 \x01(\x03R\ttimestamp\x12H\n" +
+	"\bmetadata\x18\x05 \x03(\v2,.guild.v1.AgentMessageFragment.MetadataEntryR\bmetadata\x1a;\n" +
+	"\rMetadataEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xa0\x01\n" +
+	"\rStreamControl\x129\n" +
+	"\acommand\x18\x01 \x01(\x0e2\x1f.guild.v1.StreamControl.CommandR\acommand\x12\x1d\n" +
+	"\n" +
+	"session_id\x18\x02 \x01(\tR\tsessionId\"5\n" +
+	"\aCommand\x12\t\n" +
+	"\x05START\x10\x00\x12\b\n" +
+	"\x04STOP\x10\x01\x12\t\n" +
+	"\x05PAUSE\x10\x02\x12\n" +
+	"\n" +
+	"\x06RESUME\x10\x03\"\xbc\x02\n" +
+	"\vStreamEvent\x123\n" +
+	"\x04type\x18\x01 \x01(\x0e2\x1f.guild.v1.StreamEvent.EventTypeR\x04type\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x123\n" +
+	"\x04data\x18\x03 \x03(\v2\x1f.guild.v1.StreamEvent.DataEntryR\x04data\x1a7\n" +
+	"\tDataEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"h\n" +
+	"\tEventType\x12\x12\n" +
+	"\x0eAGENT_THINKING\x10\x00\x12\x11\n" +
+	"\rAGENT_WORKING\x10\x01\x12\x12\n" +
+	"\x0eTOOL_EXECUTING\x10\x02\x12\x15\n" +
+	"\x11MEMORY_RETRIEVING\x10\x03\x12\t\n" +
+	"\x05ERROR\x10\x04\"[\n" +
+	"\x11ListAgentsRequest\x12\x1f\n" +
+	"\vcampaign_id\x18\x01 \x01(\tR\n" +
+	"campaignId\x12%\n" +
+	"\x0einclude_status\x18\x02 \x01(\bR\rincludeStatus\"b\n" +
+	"\x12ListAgentsResponse\x12+\n" +
+	"\x06agents\x18\x01 \x03(\v2\x13.guild.v1.AgentInfoR\x06agents\x12\x1f\n" +
+	"\vtotal_count\x18\x02 \x01(\x05R\n" +
+	"totalCount\"\x92\x02\n" +
+	"\tAgentInfo\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
+	"\x04type\x18\x03 \x01(\tR\x04type\x12\"\n" +
+	"\fcapabilities\x18\x04 \x03(\tR\fcapabilities\x12-\n" +
+	"\x06status\x18\x05 \x01(\v2\x15.guild.v1.AgentStatusR\x06status\x12=\n" +
+	"\bmetadata\x18\x06 \x03(\v2!.guild.v1.AgentInfo.MetadataEntryR\bmetadata\x1a;\n" +
+	"\rMetadataEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"S\n" +
+	"\x15GetAgentStatusRequest\x12\x19\n" +
+	"\bagent_id\x18\x01 \x01(\tR\aagentId\x12\x1f\n" +
+	"\vcampaign_id\x18\x02 \x01(\tR\n" +
+	"campaignId\"\xd9\x02\n" +
+	"\vAgentStatus\x121\n" +
+	"\x05state\x18\x01 \x01(\x0e2\x1b.guild.v1.AgentStatus.StateR\x05state\x12!\n" +
+	"\fcurrent_task\x18\x02 \x01(\tR\vcurrentTask\x12#\n" +
+	"\rlast_activity\x18\x03 \x01(\x03R\flastActivity\x12?\n" +
+	"\bmetadata\x18\x04 \x03(\v2#.guild.v1.AgentStatus.MetadataEntryR\bmetadata\x1a;\n" +
+	"\rMetadataEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"Q\n" +
+	"\x05State\x12\b\n" +
+	"\x04IDLE\x10\x00\x12\f\n" +
+	"\bTHINKING\x10\x01\x12\v\n" +
+	"\aWORKING\x10\x02\x12\v\n" +
+	"\aWAITING\x10\x03\x12\t\n" +
+	"\x05ERROR\x10\x04\x12\v\n" +
+	"\aOFFLINE\x10\x052\xa9\v\n" +
 	"\x05Guild\x12@\n" +
 	"\rWatchCampaign\x12\x16.guild.v1.WatchRequest\x1a\x15.guild.v1.BoardUpdate0\x01\x12?\n" +
 	"\vGetCampaign\x12\x1c.guild.v1.GetCampaignRequest\x1a\x12.guild.v1.Campaign\x12P\n" +
 	"\rListCampaigns\x12\x1e.guild.v1.ListCampaignsRequest\x1a\x1f.guild.v1.ListCampaignsResponse\x12E\n" +
 	"\x0eCreateCampaign\x12\x1f.guild.v1.CreateCampaignRequest\x1a\x12.guild.v1.Campaign\x12E\n" +
 	"\x0eUpdateCampaign\x12\x1f.guild.v1.UpdateCampaignRequest\x1a\x12.guild.v1.Campaign\x12S\n" +
-	"\x0eDeleteCampaign\x12\x1f.guild.v1.DeleteCampaignRequest\x1a .guild.v1.DeleteCampaignResponse\x12D\n" +
+	"\x0eDeleteCampaign\x12\x1f.guild.v1.DeleteCampaignRequest\x1a .guild.v1.DeleteCampaignResponse\x12L\n" +
+	"\x15StartPlanningCampaign\x12\x1f.guild.v1.CampaignActionRequest\x1a\x12.guild.v1.Campaign\x12H\n" +
+	"\x11MarkCampaignReady\x12\x1f.guild.v1.CampaignActionRequest\x1a\x12.guild.v1.Campaign\x12D\n" +
 	"\rStartCampaign\x12\x1f.guild.v1.CampaignActionRequest\x1a\x12.guild.v1.Campaign\x12D\n" +
 	"\rPauseCampaign\x12\x1f.guild.v1.CampaignActionRequest\x1a\x12.guild.v1.Campaign\x12E\n" +
 	"\x0eResumeCampaign\x12\x1f.guild.v1.CampaignActionRequest\x1a\x12.guild.v1.Campaign\x12G\n" +
 	"\x10CompleteCampaign\x12\x1f.guild.v1.CampaignActionRequest\x1a\x12.guild.v1.Campaign\x12E\n" +
 	"\x0eCancelCampaign\x12\x1f.guild.v1.CampaignActionRequest\x1a\x12.guild.v1.Campaign\x12K\n" +
 	"\x16AddObjectiveToCampaign\x12\x1d.guild.v1.AddObjectiveRequest\x1a\x12.guild.v1.Campaign\x12S\n" +
-	"\x1bRemoveObjectiveFromCampaign\x12 .guild.v1.RemoveObjectiveRequest\x1a\x12.guild.v1.CampaignB2Z0github.com/guild-ventures/guild-core/pkg/grpc/pbb\x06proto3"
+	"\x1bRemoveObjectiveFromCampaign\x12 .guild.v1.RemoveObjectiveRequest\x1a\x12.guild.v1.Campaign\x12S\n" +
+	"\x12SendMessageToAgent\x12\x1d.guild.v1.AgentMessageRequest\x1a\x1e.guild.v1.AgentMessageResponse\x12Z\n" +
+	"\x17StreamAgentConversation\x12\x1c.guild.v1.AgentStreamRequest\x1a\x1d.guild.v1.AgentStreamResponse(\x010\x01\x12P\n" +
+	"\x13ListAvailableAgents\x12\x1b.guild.v1.ListAgentsRequest\x1a\x1c.guild.v1.ListAgentsResponse\x12H\n" +
+	"\x0eGetAgentStatus\x12\x1f.guild.v1.GetAgentStatusRequest\x1a\x15.guild.v1.AgentStatusB2Z0github.com/guild-ventures/guild-core/pkg/grpc/pbb\x06proto3"
 
 var (
 	file_guild_v1_guild_proto_rawDescOnce sync.Once
@@ -1125,66 +2227,117 @@ func file_guild_v1_guild_proto_rawDescGZIP() []byte {
 	return file_guild_v1_guild_proto_rawDescData
 }
 
-var file_guild_v1_guild_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
+var file_guild_v1_guild_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_guild_v1_guild_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
 var file_guild_v1_guild_proto_goTypes = []any{
-	(*Campaign)(nil),               // 0: guild.v1.Campaign
-	(*WatchRequest)(nil),           // 1: guild.v1.WatchRequest
-	(*BoardUpdate)(nil),            // 2: guild.v1.BoardUpdate
-	(*BoardMetadata)(nil),          // 3: guild.v1.BoardMetadata
-	(*GetCampaignRequest)(nil),     // 4: guild.v1.GetCampaignRequest
-	(*ListCampaignsRequest)(nil),   // 5: guild.v1.ListCampaignsRequest
-	(*ListCampaignsResponse)(nil),  // 6: guild.v1.ListCampaignsResponse
-	(*CreateCampaignRequest)(nil),  // 7: guild.v1.CreateCampaignRequest
-	(*UpdateCampaignRequest)(nil),  // 8: guild.v1.UpdateCampaignRequest
-	(*DeleteCampaignRequest)(nil),  // 9: guild.v1.DeleteCampaignRequest
-	(*DeleteCampaignResponse)(nil), // 10: guild.v1.DeleteCampaignResponse
-	(*CampaignActionRequest)(nil),  // 11: guild.v1.CampaignActionRequest
-	(*AddObjectiveRequest)(nil),    // 12: guild.v1.AddObjectiveRequest
-	(*RemoveObjectiveRequest)(nil), // 13: guild.v1.RemoveObjectiveRequest
-	(*ErrorDetail)(nil),            // 14: guild.v1.ErrorDetail
-	nil,                            // 15: guild.v1.Campaign.MetadataEntry
-	nil,                            // 16: guild.v1.CreateCampaignRequest.MetadataEntry
-	nil,                            // 17: guild.v1.UpdateCampaignRequest.MetadataEntry
-	nil,                            // 18: guild.v1.ErrorDetail.MetadataEntry
+	(StreamControl_Command)(0),     // 0: guild.v1.StreamControl.Command
+	(StreamEvent_EventType)(0),     // 1: guild.v1.StreamEvent.EventType
+	(AgentStatus_State)(0),         // 2: guild.v1.AgentStatus.State
+	(*Campaign)(nil),               // 3: guild.v1.Campaign
+	(*WatchRequest)(nil),           // 4: guild.v1.WatchRequest
+	(*BoardUpdate)(nil),            // 5: guild.v1.BoardUpdate
+	(*BoardMetadata)(nil),          // 6: guild.v1.BoardMetadata
+	(*GetCampaignRequest)(nil),     // 7: guild.v1.GetCampaignRequest
+	(*ListCampaignsRequest)(nil),   // 8: guild.v1.ListCampaignsRequest
+	(*ListCampaignsResponse)(nil),  // 9: guild.v1.ListCampaignsResponse
+	(*CreateCampaignRequest)(nil),  // 10: guild.v1.CreateCampaignRequest
+	(*UpdateCampaignRequest)(nil),  // 11: guild.v1.UpdateCampaignRequest
+	(*DeleteCampaignRequest)(nil),  // 12: guild.v1.DeleteCampaignRequest
+	(*DeleteCampaignResponse)(nil), // 13: guild.v1.DeleteCampaignResponse
+	(*CampaignActionRequest)(nil),  // 14: guild.v1.CampaignActionRequest
+	(*AddObjectiveRequest)(nil),    // 15: guild.v1.AddObjectiveRequest
+	(*RemoveObjectiveRequest)(nil), // 16: guild.v1.RemoveObjectiveRequest
+	(*ErrorDetail)(nil),            // 17: guild.v1.ErrorDetail
+	(*AgentMessageRequest)(nil),    // 18: guild.v1.AgentMessageRequest
+	(*AgentMessageResponse)(nil),   // 19: guild.v1.AgentMessageResponse
+	(*AgentStreamRequest)(nil),     // 20: guild.v1.AgentStreamRequest
+	(*AgentStreamResponse)(nil),    // 21: guild.v1.AgentStreamResponse
+	(*AgentMessageFragment)(nil),   // 22: guild.v1.AgentMessageFragment
+	(*StreamControl)(nil),          // 23: guild.v1.StreamControl
+	(*StreamEvent)(nil),            // 24: guild.v1.StreamEvent
+	(*ListAgentsRequest)(nil),      // 25: guild.v1.ListAgentsRequest
+	(*ListAgentsResponse)(nil),     // 26: guild.v1.ListAgentsResponse
+	(*AgentInfo)(nil),              // 27: guild.v1.AgentInfo
+	(*GetAgentStatusRequest)(nil),  // 28: guild.v1.GetAgentStatusRequest
+	(*AgentStatus)(nil),            // 29: guild.v1.AgentStatus
+	nil,                            // 30: guild.v1.Campaign.MetadataEntry
+	nil,                            // 31: guild.v1.CreateCampaignRequest.MetadataEntry
+	nil,                            // 32: guild.v1.UpdateCampaignRequest.MetadataEntry
+	nil,                            // 33: guild.v1.ErrorDetail.MetadataEntry
+	nil,                            // 34: guild.v1.AgentMessageRequest.ContextEntry
+	nil,                            // 35: guild.v1.AgentMessageResponse.MetadataEntry
+	nil,                            // 36: guild.v1.AgentMessageFragment.MetadataEntry
+	nil,                            // 37: guild.v1.StreamEvent.DataEntry
+	nil,                            // 38: guild.v1.AgentInfo.MetadataEntry
+	nil,                            // 39: guild.v1.AgentStatus.MetadataEntry
 }
 var file_guild_v1_guild_proto_depIdxs = []int32{
-	15, // 0: guild.v1.Campaign.metadata:type_name -> guild.v1.Campaign.MetadataEntry
-	3,  // 1: guild.v1.BoardUpdate.metadata:type_name -> guild.v1.BoardMetadata
-	0,  // 2: guild.v1.ListCampaignsResponse.campaigns:type_name -> guild.v1.Campaign
-	16, // 3: guild.v1.CreateCampaignRequest.metadata:type_name -> guild.v1.CreateCampaignRequest.MetadataEntry
-	17, // 4: guild.v1.UpdateCampaignRequest.metadata:type_name -> guild.v1.UpdateCampaignRequest.MetadataEntry
-	18, // 5: guild.v1.ErrorDetail.metadata:type_name -> guild.v1.ErrorDetail.MetadataEntry
-	1,  // 6: guild.v1.Guild.WatchCampaign:input_type -> guild.v1.WatchRequest
-	4,  // 7: guild.v1.Guild.GetCampaign:input_type -> guild.v1.GetCampaignRequest
-	5,  // 8: guild.v1.Guild.ListCampaigns:input_type -> guild.v1.ListCampaignsRequest
-	7,  // 9: guild.v1.Guild.CreateCampaign:input_type -> guild.v1.CreateCampaignRequest
-	8,  // 10: guild.v1.Guild.UpdateCampaign:input_type -> guild.v1.UpdateCampaignRequest
-	9,  // 11: guild.v1.Guild.DeleteCampaign:input_type -> guild.v1.DeleteCampaignRequest
-	11, // 12: guild.v1.Guild.StartCampaign:input_type -> guild.v1.CampaignActionRequest
-	11, // 13: guild.v1.Guild.PauseCampaign:input_type -> guild.v1.CampaignActionRequest
-	11, // 14: guild.v1.Guild.ResumeCampaign:input_type -> guild.v1.CampaignActionRequest
-	11, // 15: guild.v1.Guild.CompleteCampaign:input_type -> guild.v1.CampaignActionRequest
-	11, // 16: guild.v1.Guild.CancelCampaign:input_type -> guild.v1.CampaignActionRequest
-	12, // 17: guild.v1.Guild.AddObjectiveToCampaign:input_type -> guild.v1.AddObjectiveRequest
-	13, // 18: guild.v1.Guild.RemoveObjectiveFromCampaign:input_type -> guild.v1.RemoveObjectiveRequest
-	2,  // 19: guild.v1.Guild.WatchCampaign:output_type -> guild.v1.BoardUpdate
-	0,  // 20: guild.v1.Guild.GetCampaign:output_type -> guild.v1.Campaign
-	6,  // 21: guild.v1.Guild.ListCampaigns:output_type -> guild.v1.ListCampaignsResponse
-	0,  // 22: guild.v1.Guild.CreateCampaign:output_type -> guild.v1.Campaign
-	0,  // 23: guild.v1.Guild.UpdateCampaign:output_type -> guild.v1.Campaign
-	10, // 24: guild.v1.Guild.DeleteCampaign:output_type -> guild.v1.DeleteCampaignResponse
-	0,  // 25: guild.v1.Guild.StartCampaign:output_type -> guild.v1.Campaign
-	0,  // 26: guild.v1.Guild.PauseCampaign:output_type -> guild.v1.Campaign
-	0,  // 27: guild.v1.Guild.ResumeCampaign:output_type -> guild.v1.Campaign
-	0,  // 28: guild.v1.Guild.CompleteCampaign:output_type -> guild.v1.Campaign
-	0,  // 29: guild.v1.Guild.CancelCampaign:output_type -> guild.v1.Campaign
-	0,  // 30: guild.v1.Guild.AddObjectiveToCampaign:output_type -> guild.v1.Campaign
-	0,  // 31: guild.v1.Guild.RemoveObjectiveFromCampaign:output_type -> guild.v1.Campaign
-	19, // [19:32] is the sub-list for method output_type
-	6,  // [6:19] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	30, // 0: guild.v1.Campaign.metadata:type_name -> guild.v1.Campaign.MetadataEntry
+	6,  // 1: guild.v1.BoardUpdate.metadata:type_name -> guild.v1.BoardMetadata
+	3,  // 2: guild.v1.ListCampaignsResponse.campaigns:type_name -> guild.v1.Campaign
+	31, // 3: guild.v1.CreateCampaignRequest.metadata:type_name -> guild.v1.CreateCampaignRequest.MetadataEntry
+	32, // 4: guild.v1.UpdateCampaignRequest.metadata:type_name -> guild.v1.UpdateCampaignRequest.MetadataEntry
+	33, // 5: guild.v1.ErrorDetail.metadata:type_name -> guild.v1.ErrorDetail.MetadataEntry
+	34, // 6: guild.v1.AgentMessageRequest.context:type_name -> guild.v1.AgentMessageRequest.ContextEntry
+	35, // 7: guild.v1.AgentMessageResponse.metadata:type_name -> guild.v1.AgentMessageResponse.MetadataEntry
+	29, // 8: guild.v1.AgentMessageResponse.status:type_name -> guild.v1.AgentStatus
+	18, // 9: guild.v1.AgentStreamRequest.message:type_name -> guild.v1.AgentMessageRequest
+	23, // 10: guild.v1.AgentStreamRequest.control:type_name -> guild.v1.StreamControl
+	22, // 11: guild.v1.AgentStreamResponse.fragment:type_name -> guild.v1.AgentMessageFragment
+	29, // 12: guild.v1.AgentStreamResponse.status:type_name -> guild.v1.AgentStatus
+	24, // 13: guild.v1.AgentStreamResponse.event:type_name -> guild.v1.StreamEvent
+	36, // 14: guild.v1.AgentMessageFragment.metadata:type_name -> guild.v1.AgentMessageFragment.MetadataEntry
+	0,  // 15: guild.v1.StreamControl.command:type_name -> guild.v1.StreamControl.Command
+	1,  // 16: guild.v1.StreamEvent.type:type_name -> guild.v1.StreamEvent.EventType
+	37, // 17: guild.v1.StreamEvent.data:type_name -> guild.v1.StreamEvent.DataEntry
+	27, // 18: guild.v1.ListAgentsResponse.agents:type_name -> guild.v1.AgentInfo
+	29, // 19: guild.v1.AgentInfo.status:type_name -> guild.v1.AgentStatus
+	38, // 20: guild.v1.AgentInfo.metadata:type_name -> guild.v1.AgentInfo.MetadataEntry
+	2,  // 21: guild.v1.AgentStatus.state:type_name -> guild.v1.AgentStatus.State
+	39, // 22: guild.v1.AgentStatus.metadata:type_name -> guild.v1.AgentStatus.MetadataEntry
+	4,  // 23: guild.v1.Guild.WatchCampaign:input_type -> guild.v1.WatchRequest
+	7,  // 24: guild.v1.Guild.GetCampaign:input_type -> guild.v1.GetCampaignRequest
+	8,  // 25: guild.v1.Guild.ListCampaigns:input_type -> guild.v1.ListCampaignsRequest
+	10, // 26: guild.v1.Guild.CreateCampaign:input_type -> guild.v1.CreateCampaignRequest
+	11, // 27: guild.v1.Guild.UpdateCampaign:input_type -> guild.v1.UpdateCampaignRequest
+	12, // 28: guild.v1.Guild.DeleteCampaign:input_type -> guild.v1.DeleteCampaignRequest
+	14, // 29: guild.v1.Guild.StartPlanningCampaign:input_type -> guild.v1.CampaignActionRequest
+	14, // 30: guild.v1.Guild.MarkCampaignReady:input_type -> guild.v1.CampaignActionRequest
+	14, // 31: guild.v1.Guild.StartCampaign:input_type -> guild.v1.CampaignActionRequest
+	14, // 32: guild.v1.Guild.PauseCampaign:input_type -> guild.v1.CampaignActionRequest
+	14, // 33: guild.v1.Guild.ResumeCampaign:input_type -> guild.v1.CampaignActionRequest
+	14, // 34: guild.v1.Guild.CompleteCampaign:input_type -> guild.v1.CampaignActionRequest
+	14, // 35: guild.v1.Guild.CancelCampaign:input_type -> guild.v1.CampaignActionRequest
+	15, // 36: guild.v1.Guild.AddObjectiveToCampaign:input_type -> guild.v1.AddObjectiveRequest
+	16, // 37: guild.v1.Guild.RemoveObjectiveFromCampaign:input_type -> guild.v1.RemoveObjectiveRequest
+	18, // 38: guild.v1.Guild.SendMessageToAgent:input_type -> guild.v1.AgentMessageRequest
+	20, // 39: guild.v1.Guild.StreamAgentConversation:input_type -> guild.v1.AgentStreamRequest
+	25, // 40: guild.v1.Guild.ListAvailableAgents:input_type -> guild.v1.ListAgentsRequest
+	28, // 41: guild.v1.Guild.GetAgentStatus:input_type -> guild.v1.GetAgentStatusRequest
+	5,  // 42: guild.v1.Guild.WatchCampaign:output_type -> guild.v1.BoardUpdate
+	3,  // 43: guild.v1.Guild.GetCampaign:output_type -> guild.v1.Campaign
+	9,  // 44: guild.v1.Guild.ListCampaigns:output_type -> guild.v1.ListCampaignsResponse
+	3,  // 45: guild.v1.Guild.CreateCampaign:output_type -> guild.v1.Campaign
+	3,  // 46: guild.v1.Guild.UpdateCampaign:output_type -> guild.v1.Campaign
+	13, // 47: guild.v1.Guild.DeleteCampaign:output_type -> guild.v1.DeleteCampaignResponse
+	3,  // 48: guild.v1.Guild.StartPlanningCampaign:output_type -> guild.v1.Campaign
+	3,  // 49: guild.v1.Guild.MarkCampaignReady:output_type -> guild.v1.Campaign
+	3,  // 50: guild.v1.Guild.StartCampaign:output_type -> guild.v1.Campaign
+	3,  // 51: guild.v1.Guild.PauseCampaign:output_type -> guild.v1.Campaign
+	3,  // 52: guild.v1.Guild.ResumeCampaign:output_type -> guild.v1.Campaign
+	3,  // 53: guild.v1.Guild.CompleteCampaign:output_type -> guild.v1.Campaign
+	3,  // 54: guild.v1.Guild.CancelCampaign:output_type -> guild.v1.Campaign
+	3,  // 55: guild.v1.Guild.AddObjectiveToCampaign:output_type -> guild.v1.Campaign
+	3,  // 56: guild.v1.Guild.RemoveObjectiveFromCampaign:output_type -> guild.v1.Campaign
+	19, // 57: guild.v1.Guild.SendMessageToAgent:output_type -> guild.v1.AgentMessageResponse
+	21, // 58: guild.v1.Guild.StreamAgentConversation:output_type -> guild.v1.AgentStreamResponse
+	26, // 59: guild.v1.Guild.ListAvailableAgents:output_type -> guild.v1.ListAgentsResponse
+	29, // 60: guild.v1.Guild.GetAgentStatus:output_type -> guild.v1.AgentStatus
+	42, // [42:61] is the sub-list for method output_type
+	23, // [23:42] is the sub-list for method input_type
+	23, // [23:23] is the sub-list for extension type_name
+	23, // [23:23] is the sub-list for extension extendee
+	0,  // [0:23] is the sub-list for field type_name
 }
 
 func init() { file_guild_v1_guild_proto_init() }
@@ -1192,18 +2345,28 @@ func file_guild_v1_guild_proto_init() {
 	if File_guild_v1_guild_proto != nil {
 		return
 	}
+	file_guild_v1_guild_proto_msgTypes[17].OneofWrappers = []any{
+		(*AgentStreamRequest_Message)(nil),
+		(*AgentStreamRequest_Control)(nil),
+	}
+	file_guild_v1_guild_proto_msgTypes[18].OneofWrappers = []any{
+		(*AgentStreamResponse_Fragment)(nil),
+		(*AgentStreamResponse_Status)(nil),
+		(*AgentStreamResponse_Event)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_guild_v1_guild_proto_rawDesc), len(file_guild_v1_guild_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   19,
+			NumEnums:      3,
+			NumMessages:   37,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_guild_v1_guild_proto_goTypes,
 		DependencyIndexes: file_guild_v1_guild_proto_depIdxs,
+		EnumInfos:         file_guild_v1_guild_proto_enumTypes,
 		MessageInfos:      file_guild_v1_guild_proto_msgTypes,
 	}.Build()
 	File_guild_v1_guild_proto = out.File

@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v5.28.3
-// source: proto/prompts/v1/prompts.proto
+// source: prompts/v1/prompts.proto
 
 package v1
 
@@ -68,11 +68,11 @@ func (x PromptLayer) String() string {
 }
 
 func (PromptLayer) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_prompts_v1_prompts_proto_enumTypes[0].Descriptor()
+	return file_prompts_v1_prompts_proto_enumTypes[0].Descriptor()
 }
 
 func (PromptLayer) Type() protoreflect.EnumType {
-	return &file_proto_prompts_v1_prompts_proto_enumTypes[0]
+	return &file_prompts_v1_prompts_proto_enumTypes[0]
 }
 
 func (x PromptLayer) Number() protoreflect.EnumNumber {
@@ -81,7 +81,7 @@ func (x PromptLayer) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PromptLayer.Descriptor instead.
 func (PromptLayer) EnumDescriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{0}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{0}
 }
 
 type PromptUpdateEvent_EventType int32
@@ -123,11 +123,11 @@ func (x PromptUpdateEvent_EventType) String() string {
 }
 
 func (PromptUpdateEvent_EventType) Descriptor() protoreflect.EnumDescriptor {
-	return file_proto_prompts_v1_prompts_proto_enumTypes[1].Descriptor()
+	return file_prompts_v1_prompts_proto_enumTypes[1].Descriptor()
 }
 
 func (PromptUpdateEvent_EventType) Type() protoreflect.EnumType {
-	return &file_proto_prompts_v1_prompts_proto_enumTypes[1]
+	return &file_prompts_v1_prompts_proto_enumTypes[1]
 }
 
 func (x PromptUpdateEvent_EventType) Number() protoreflect.EnumNumber {
@@ -136,7 +136,7 @@ func (x PromptUpdateEvent_EventType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PromptUpdateEvent_EventType.Descriptor instead.
 func (PromptUpdateEvent_EventType) EnumDescriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{19, 0}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{19, 0}
 }
 
 // SystemPrompt represents a single layer in the Guild's layered prompt system
@@ -156,7 +156,7 @@ type SystemPrompt struct {
 
 func (x *SystemPrompt) Reset() {
 	*x = SystemPrompt{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[0]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -168,7 +168,7 @@ func (x *SystemPrompt) String() string {
 func (*SystemPrompt) ProtoMessage() {}
 
 func (x *SystemPrompt) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[0]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -181,7 +181,7 @@ func (x *SystemPrompt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SystemPrompt.ProtoReflect.Descriptor instead.
 func (*SystemPrompt) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{0}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *SystemPrompt) GetLayer() PromptLayer {
@@ -258,7 +258,7 @@ type LayeredPrompt struct {
 
 func (x *LayeredPrompt) Reset() {
 	*x = LayeredPrompt{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[1]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -270,7 +270,7 @@ func (x *LayeredPrompt) String() string {
 func (*LayeredPrompt) ProtoMessage() {}
 
 func (x *LayeredPrompt) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[1]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -283,7 +283,7 @@ func (x *LayeredPrompt) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LayeredPrompt.ProtoReflect.Descriptor instead.
 func (*LayeredPrompt) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{1}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *LayeredPrompt) GetLayers() []*SystemPrompt {
@@ -364,7 +364,7 @@ type TurnContext struct {
 
 func (x *TurnContext) Reset() {
 	*x = TurnContext{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[2]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -376,7 +376,7 @@ func (x *TurnContext) String() string {
 func (*TurnContext) ProtoMessage() {}
 
 func (x *TurnContext) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[2]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -389,7 +389,7 @@ func (x *TurnContext) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TurnContext.ProtoReflect.Descriptor instead.
 func (*TurnContext) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{2}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *TurnContext) GetUserMessage() string {
@@ -445,7 +445,7 @@ type GetPromptLayerRequest struct {
 
 func (x *GetPromptLayerRequest) Reset() {
 	*x = GetPromptLayerRequest{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[3]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -457,7 +457,7 @@ func (x *GetPromptLayerRequest) String() string {
 func (*GetPromptLayerRequest) ProtoMessage() {}
 
 func (x *GetPromptLayerRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[3]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -470,7 +470,7 @@ func (x *GetPromptLayerRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPromptLayerRequest.ProtoReflect.Descriptor instead.
 func (*GetPromptLayerRequest) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{3}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetPromptLayerRequest) GetLayer() PromptLayer {
@@ -503,7 +503,7 @@ type GetPromptLayerResponse struct {
 
 func (x *GetPromptLayerResponse) Reset() {
 	*x = GetPromptLayerResponse{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[4]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -515,7 +515,7 @@ func (x *GetPromptLayerResponse) String() string {
 func (*GetPromptLayerResponse) ProtoMessage() {}
 
 func (x *GetPromptLayerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[4]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -528,7 +528,7 @@ func (x *GetPromptLayerResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPromptLayerResponse.ProtoReflect.Descriptor instead.
 func (*GetPromptLayerResponse) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{4}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetPromptLayerResponse) GetPrompt() *SystemPrompt {
@@ -547,7 +547,7 @@ type SetPromptLayerRequest struct {
 
 func (x *SetPromptLayerRequest) Reset() {
 	*x = SetPromptLayerRequest{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[5]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -559,7 +559,7 @@ func (x *SetPromptLayerRequest) String() string {
 func (*SetPromptLayerRequest) ProtoMessage() {}
 
 func (x *SetPromptLayerRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[5]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -572,7 +572,7 @@ func (x *SetPromptLayerRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetPromptLayerRequest.ProtoReflect.Descriptor instead.
 func (*SetPromptLayerRequest) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{5}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *SetPromptLayerRequest) GetPrompt() *SystemPrompt {
@@ -592,7 +592,7 @@ type SetPromptLayerResponse struct {
 
 func (x *SetPromptLayerResponse) Reset() {
 	*x = SetPromptLayerResponse{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[6]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -604,7 +604,7 @@ func (x *SetPromptLayerResponse) String() string {
 func (*SetPromptLayerResponse) ProtoMessage() {}
 
 func (x *SetPromptLayerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[6]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -617,7 +617,7 @@ func (x *SetPromptLayerResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetPromptLayerResponse.ProtoReflect.Descriptor instead.
 func (*SetPromptLayerResponse) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{6}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *SetPromptLayerResponse) GetSuccess() bool {
@@ -645,7 +645,7 @@ type DeletePromptLayerRequest struct {
 
 func (x *DeletePromptLayerRequest) Reset() {
 	*x = DeletePromptLayerRequest{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[7]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -657,7 +657,7 @@ func (x *DeletePromptLayerRequest) String() string {
 func (*DeletePromptLayerRequest) ProtoMessage() {}
 
 func (x *DeletePromptLayerRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[7]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -670,7 +670,7 @@ func (x *DeletePromptLayerRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePromptLayerRequest.ProtoReflect.Descriptor instead.
 func (*DeletePromptLayerRequest) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{7}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *DeletePromptLayerRequest) GetLayer() PromptLayer {
@@ -704,7 +704,7 @@ type DeletePromptLayerResponse struct {
 
 func (x *DeletePromptLayerResponse) Reset() {
 	*x = DeletePromptLayerResponse{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[8]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -716,7 +716,7 @@ func (x *DeletePromptLayerResponse) String() string {
 func (*DeletePromptLayerResponse) ProtoMessage() {}
 
 func (x *DeletePromptLayerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[8]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -729,7 +729,7 @@ func (x *DeletePromptLayerResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePromptLayerResponse.ProtoReflect.Descriptor instead.
 func (*DeletePromptLayerResponse) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{8}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *DeletePromptLayerResponse) GetSuccess() bool {
@@ -756,7 +756,7 @@ type ListPromptLayersRequest struct {
 
 func (x *ListPromptLayersRequest) Reset() {
 	*x = ListPromptLayersRequest{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[9]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -768,7 +768,7 @@ func (x *ListPromptLayersRequest) String() string {
 func (*ListPromptLayersRequest) ProtoMessage() {}
 
 func (x *ListPromptLayersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[9]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -781,7 +781,7 @@ func (x *ListPromptLayersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPromptLayersRequest.ProtoReflect.Descriptor instead.
 func (*ListPromptLayersRequest) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{9}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ListPromptLayersRequest) GetArtisanId() string {
@@ -807,7 +807,7 @@ type ListPromptLayersResponse struct {
 
 func (x *ListPromptLayersResponse) Reset() {
 	*x = ListPromptLayersResponse{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[10]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -819,7 +819,7 @@ func (x *ListPromptLayersResponse) String() string {
 func (*ListPromptLayersResponse) ProtoMessage() {}
 
 func (x *ListPromptLayersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[10]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -832,7 +832,7 @@ func (x *ListPromptLayersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPromptLayersResponse.ProtoReflect.Descriptor instead.
 func (*ListPromptLayersResponse) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{10}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *ListPromptLayersResponse) GetPrompts() []*SystemPrompt {
@@ -853,7 +853,7 @@ type BuildLayeredPromptRequest struct {
 
 func (x *BuildLayeredPromptRequest) Reset() {
 	*x = BuildLayeredPromptRequest{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[11]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -865,7 +865,7 @@ func (x *BuildLayeredPromptRequest) String() string {
 func (*BuildLayeredPromptRequest) ProtoMessage() {}
 
 func (x *BuildLayeredPromptRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[11]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -878,7 +878,7 @@ func (x *BuildLayeredPromptRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BuildLayeredPromptRequest.ProtoReflect.Descriptor instead.
 func (*BuildLayeredPromptRequest) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{11}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *BuildLayeredPromptRequest) GetArtisanId() string {
@@ -911,7 +911,7 @@ type BuildLayeredPromptResponse struct {
 
 func (x *BuildLayeredPromptResponse) Reset() {
 	*x = BuildLayeredPromptResponse{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[12]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -923,7 +923,7 @@ func (x *BuildLayeredPromptResponse) String() string {
 func (*BuildLayeredPromptResponse) ProtoMessage() {}
 
 func (x *BuildLayeredPromptResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[12]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -936,7 +936,7 @@ func (x *BuildLayeredPromptResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BuildLayeredPromptResponse.ProtoReflect.Descriptor instead.
 func (*BuildLayeredPromptResponse) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{12}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *BuildLayeredPromptResponse) GetPrompt() *LayeredPrompt {
@@ -956,7 +956,7 @@ type InvalidateCacheRequest struct {
 
 func (x *InvalidateCacheRequest) Reset() {
 	*x = InvalidateCacheRequest{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[13]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -968,7 +968,7 @@ func (x *InvalidateCacheRequest) String() string {
 func (*InvalidateCacheRequest) ProtoMessage() {}
 
 func (x *InvalidateCacheRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[13]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -981,7 +981,7 @@ func (x *InvalidateCacheRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvalidateCacheRequest.ProtoReflect.Descriptor instead.
 func (*InvalidateCacheRequest) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{13}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *InvalidateCacheRequest) GetArtisanId() string {
@@ -1008,7 +1008,7 @@ type InvalidateCacheResponse struct {
 
 func (x *InvalidateCacheResponse) Reset() {
 	*x = InvalidateCacheResponse{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[14]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1020,7 +1020,7 @@ func (x *InvalidateCacheResponse) String() string {
 func (*InvalidateCacheResponse) ProtoMessage() {}
 
 func (x *InvalidateCacheResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[14]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1033,7 +1033,7 @@ func (x *InvalidateCacheResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvalidateCacheResponse.ProtoReflect.Descriptor instead.
 func (*InvalidateCacheResponse) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{14}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *InvalidateCacheResponse) GetSuccess() bool {
@@ -1059,7 +1059,7 @@ type GetLayerStatsRequest struct {
 
 func (x *GetLayerStatsRequest) Reset() {
 	*x = GetLayerStatsRequest{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[15]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1071,7 +1071,7 @@ func (x *GetLayerStatsRequest) String() string {
 func (*GetLayerStatsRequest) ProtoMessage() {}
 
 func (x *GetLayerStatsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[15]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1084,7 +1084,7 @@ func (x *GetLayerStatsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetLayerStatsRequest.ProtoReflect.Descriptor instead.
 func (*GetLayerStatsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{15}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetLayerStatsRequest) GetLayer() PromptLayer {
@@ -1103,7 +1103,7 @@ type GetLayerStatsResponse struct {
 
 func (x *GetLayerStatsResponse) Reset() {
 	*x = GetLayerStatsResponse{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[16]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1115,7 +1115,7 @@ func (x *GetLayerStatsResponse) String() string {
 func (*GetLayerStatsResponse) ProtoMessage() {}
 
 func (x *GetLayerStatsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[16]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1128,7 +1128,7 @@ func (x *GetLayerStatsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetLayerStatsResponse.ProtoReflect.Descriptor instead.
 func (*GetLayerStatsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{16}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetLayerStatsResponse) GetStats() *LayerStats {
@@ -1150,7 +1150,7 @@ type LayerStats struct {
 
 func (x *LayerStats) Reset() {
 	*x = LayerStats{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[17]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1162,7 +1162,7 @@ func (x *LayerStats) String() string {
 func (*LayerStats) ProtoMessage() {}
 
 func (x *LayerStats) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[17]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1175,7 +1175,7 @@ func (x *LayerStats) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LayerStats.ProtoReflect.Descriptor instead.
 func (*LayerStats) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{17}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *LayerStats) GetLayer() PromptLayer {
@@ -1217,7 +1217,7 @@ type StreamPromptUpdatesRequest struct {
 
 func (x *StreamPromptUpdatesRequest) Reset() {
 	*x = StreamPromptUpdatesRequest{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[18]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1229,7 +1229,7 @@ func (x *StreamPromptUpdatesRequest) String() string {
 func (*StreamPromptUpdatesRequest) ProtoMessage() {}
 
 func (x *StreamPromptUpdatesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[18]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1242,7 +1242,7 @@ func (x *StreamPromptUpdatesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamPromptUpdatesRequest.ProtoReflect.Descriptor instead.
 func (*StreamPromptUpdatesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{18}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *StreamPromptUpdatesRequest) GetArtisanId() string {
@@ -1281,7 +1281,7 @@ type PromptUpdateEvent struct {
 
 func (x *PromptUpdateEvent) Reset() {
 	*x = PromptUpdateEvent{}
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[19]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1293,7 +1293,7 @@ func (x *PromptUpdateEvent) String() string {
 func (*PromptUpdateEvent) ProtoMessage() {}
 
 func (x *PromptUpdateEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_prompts_v1_prompts_proto_msgTypes[19]
+	mi := &file_prompts_v1_prompts_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1306,7 +1306,7 @@ func (x *PromptUpdateEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PromptUpdateEvent.ProtoReflect.Descriptor instead.
 func (*PromptUpdateEvent) Descriptor() ([]byte, []int) {
-	return file_proto_prompts_v1_prompts_proto_rawDescGZIP(), []int{19}
+	return file_prompts_v1_prompts_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *PromptUpdateEvent) GetEventType() PromptUpdateEvent_EventType {
@@ -1358,11 +1358,11 @@ func (x *PromptUpdateEvent) GetMetadata() map[string]string {
 	return nil
 }
 
-var File_proto_prompts_v1_prompts_proto protoreflect.FileDescriptor
+var File_prompts_v1_prompts_proto protoreflect.FileDescriptor
 
-const file_proto_prompts_v1_prompts_proto_rawDesc = "" +
+const file_prompts_v1_prompts_proto_rawDesc = "" +
 	"\n" +
-	"\x1eproto/prompts/v1/prompts.proto\x12\n" +
+	"\x18prompts/v1/prompts.proto\x12\n" +
 	"prompts.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x82\x03\n" +
 	"\fSystemPrompt\x12-\n" +
 	"\x05layer\x18\x01 \x01(\x0e2\x17.prompts.v1.PromptLayerR\x05layer\x12\x1d\n" +
@@ -1504,20 +1504,20 @@ const file_proto_prompts_v1_prompts_proto_rawDesc = "" +
 	"\x13StreamPromptUpdates\x12&.prompts.v1.StreamPromptUpdatesRequest\x1a\x1d.prompts.v1.PromptUpdateEvent0\x01B=Z;github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1b\x06proto3"
 
 var (
-	file_proto_prompts_v1_prompts_proto_rawDescOnce sync.Once
-	file_proto_prompts_v1_prompts_proto_rawDescData []byte
+	file_prompts_v1_prompts_proto_rawDescOnce sync.Once
+	file_prompts_v1_prompts_proto_rawDescData []byte
 )
 
-func file_proto_prompts_v1_prompts_proto_rawDescGZIP() []byte {
-	file_proto_prompts_v1_prompts_proto_rawDescOnce.Do(func() {
-		file_proto_prompts_v1_prompts_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_prompts_v1_prompts_proto_rawDesc), len(file_proto_prompts_v1_prompts_proto_rawDesc)))
+func file_prompts_v1_prompts_proto_rawDescGZIP() []byte {
+	file_prompts_v1_prompts_proto_rawDescOnce.Do(func() {
+		file_prompts_v1_prompts_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_prompts_v1_prompts_proto_rawDesc), len(file_prompts_v1_prompts_proto_rawDesc)))
 	})
-	return file_proto_prompts_v1_prompts_proto_rawDescData
+	return file_prompts_v1_prompts_proto_rawDescData
 }
 
-var file_proto_prompts_v1_prompts_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_proto_prompts_v1_prompts_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
-var file_proto_prompts_v1_prompts_proto_goTypes = []any{
+var file_prompts_v1_prompts_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_prompts_v1_prompts_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
+var file_prompts_v1_prompts_proto_goTypes = []any{
 	(PromptLayer)(0),                   // 0: prompts.v1.PromptLayer
 	(PromptUpdateEvent_EventType)(0),   // 1: prompts.v1.PromptUpdateEvent.EventType
 	(*SystemPrompt)(nil),               // 2: prompts.v1.SystemPrompt
@@ -1546,7 +1546,7 @@ var file_proto_prompts_v1_prompts_proto_goTypes = []any{
 	nil,                                // 25: prompts.v1.PromptUpdateEvent.MetadataEntry
 	(*timestamppb.Timestamp)(nil),      // 26: google.protobuf.Timestamp
 }
-var file_proto_prompts_v1_prompts_proto_depIdxs = []int32{
+var file_prompts_v1_prompts_proto_depIdxs = []int32{
 	0,  // 0: prompts.v1.SystemPrompt.layer:type_name -> prompts.v1.PromptLayer
 	26, // 1: prompts.v1.SystemPrompt.updated:type_name -> google.protobuf.Timestamp
 	22, // 2: prompts.v1.SystemPrompt.metadata:type_name -> prompts.v1.SystemPrompt.MetadataEntry
@@ -1594,27 +1594,27 @@ var file_proto_prompts_v1_prompts_proto_depIdxs = []int32{
 	0,  // [0:24] is the sub-list for field type_name
 }
 
-func init() { file_proto_prompts_v1_prompts_proto_init() }
-func file_proto_prompts_v1_prompts_proto_init() {
-	if File_proto_prompts_v1_prompts_proto != nil {
+func init() { file_prompts_v1_prompts_proto_init() }
+func file_prompts_v1_prompts_proto_init() {
+	if File_prompts_v1_prompts_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_prompts_v1_prompts_proto_rawDesc), len(file_proto_prompts_v1_prompts_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_prompts_v1_prompts_proto_rawDesc), len(file_prompts_v1_prompts_proto_rawDesc)),
 			NumEnums:      2,
 			NumMessages:   24,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_proto_prompts_v1_prompts_proto_goTypes,
-		DependencyIndexes: file_proto_prompts_v1_prompts_proto_depIdxs,
-		EnumInfos:         file_proto_prompts_v1_prompts_proto_enumTypes,
-		MessageInfos:      file_proto_prompts_v1_prompts_proto_msgTypes,
+		GoTypes:           file_prompts_v1_prompts_proto_goTypes,
+		DependencyIndexes: file_prompts_v1_prompts_proto_depIdxs,
+		EnumInfos:         file_prompts_v1_prompts_proto_enumTypes,
+		MessageInfos:      file_prompts_v1_prompts_proto_msgTypes,
 	}.Build()
-	File_proto_prompts_v1_prompts_proto = out.File
-	file_proto_prompts_v1_prompts_proto_goTypes = nil
-	file_proto_prompts_v1_prompts_proto_depIdxs = nil
+	File_prompts_v1_prompts_proto = out.File
+	file_prompts_v1_prompts_proto_goTypes = nil
+	file_prompts_v1_prompts_proto_depIdxs = nil
 }

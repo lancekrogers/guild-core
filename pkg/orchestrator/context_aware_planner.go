@@ -139,7 +139,7 @@ func (p *ContextAwareTaskPlanner) buildContextAwarePlanningPrompt(obj *objective
 		prompt.WriteString(fmt.Sprintf("- **Capabilities**: %s\n", strings.Join(agent.Capabilities, ", ")))
 		
 		// Include cost information if available from registry
-		if regAgent, exists := agentMap[agent.ID]; exists {
+		if _, exists := agentMap[agent.ID]; exists {
 			costMagnitude := agent.GetEffectiveCostMagnitude()
 			prompt.WriteString(fmt.Sprintf("- **Cost Magnitude**: %d (", costMagnitude))
 			switch costMagnitude {

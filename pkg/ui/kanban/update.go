@@ -1,0 +1,112 @@
+package kanban
+
+import (
+	"context"
+	
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
+)
+
+// Commands for kanban board operations
+
+// moveTaskCmd moves a task to a different status
+func (m *Model) moveTaskCmd(taskID string, newStatus kanban.TaskStatus) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		board, err := m.kanbanManager.GetBoard(ctx, m.boardID)
+		if err != nil {
+			return errorMsg{err}
+		}
+		
+		task, err := board.GetTask(ctx, taskID)
+		if err != nil {
+			return errorMsg{err}
+		}
+		
+		err = task.UpdateStatus(newStatus, "user", "Status changed via UI")
+		if err != nil {
+			return errorMsg{err}
+		}
+		
+		err = board.UpdateTask(ctx, task)
+		if err != nil {
+			return errorMsg{err}
+		}
+		
+		return taskUpdatedMsg{task}
+	}
+}
+
+// assignTaskCmd assigns a task to an agent
+func (m *Model) assignTaskCmd(taskID string, agentID string) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		board, err := m.kanbanManager.GetBoard(ctx, m.boardID)
+		if err != nil {
+			return errorMsg{err}
+		}
+		
+		task, err := board.GetTask(ctx, taskID)
+		if err != nil {
+			return errorMsg{err}
+		}
+		
+		task.UpdateAssignee(agentID, "user", "Assigned via UI")
+		
+		err = board.UpdateTask(ctx, task)
+		if err != nil {
+			return errorMsg{err}
+		}
+		
+		return taskUpdatedMsg{task}
+	}
+}
+
+// updateProgressCmd updates task progress
+func (m *Model) updateProgressCmd(taskID string, progress int) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		board, err := m.kanbanManager.GetBoard(ctx, m.boardID)
+		if err != nil {
+			return errorMsg{err}
+		}
+		
+		task, err := board.GetTask(ctx, taskID)
+		if err != nil {
+			return errorMsg{err}
+		}
+		
+		err = task.UpdateProgress(progress, "user", "Progress updated via UI")
+		if err != nil {
+			return errorMsg{err}
+		}
+		
+		err = board.UpdateTask(ctx, task)
+		if err != nil {
+			return errorMsg{err}
+		}
+		
+		return taskUpdatedMsg{task}
+	}
+}
+
+// createTaskCmd creates a new task
+func (m *Model) createTaskCmd(title, description string, status kanban.TaskStatus) tea.Cmd {
+	return func() tea.Msg {
+		ctx := context.Background()
+		board, err := m.kanbanManager.GetBoard(ctx, m.boardID)
+		if err != nil {
+			return errorMsg{err}
+		}
+		
+		task := kanban.NewTask(title, description)
+		task.Status = status
+		
+		_, err = board.CreateTask(ctx, task.Title, task.Description)
+		if err != nil {
+			return errorMsg{err}
+		}
+		
+		return taskUpdatedMsg{task}
+	}
+}

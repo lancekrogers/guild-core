@@ -61,7 +61,7 @@ type AssignmentSummary struct {
 	TotalTasks       int                    `json:"total_tasks"`
 	TotalCost        int                    `json:"total_cost"`
 	AverageCost      float64                `json:"average_cost"`
-	BudgetUtilized   float64                `json:"budget_utilized_percent"`
+	CostEfficiency   string                 `json:"cost_efficiency"`
 	Assignments      []TaskAssignmentResult `json:"assignments"`
 	AgentWorkloads   map[string]int         `json:"agent_workloads"`
 	CostBreakdown    map[string]int         `json:"cost_breakdown"`

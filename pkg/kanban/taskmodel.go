@@ -287,7 +287,7 @@ func (t *Task) RemoveBlocker(blockerID string, changedBy, comment string) {
 // IsValidStatus checks if a status is valid
 func IsValidStatus(status TaskStatus) bool {
 	switch status {
-	case StatusBacklog, StatusTodo, StatusInProgress, StatusBlocked, StatusDone, StatusCancelled:
+	case StatusBacklog, StatusTodo, StatusInProgress, StatusBlocked, StatusReadyForReview, StatusDone, StatusCancelled:
 		return true
 	default:
 		return false

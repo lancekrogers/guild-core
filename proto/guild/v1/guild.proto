@@ -28,6 +28,12 @@ service Guild {
   // Objective management
   rpc AddObjectiveToCampaign(AddObjectiveRequest) returns (Campaign);
   rpc RemoveObjectiveFromCampaign(RemoveObjectiveRequest) returns (Campaign);
+  
+  // Agent communication
+  rpc SendMessageToAgent(AgentMessageRequest) returns (AgentMessageResponse);
+  rpc StreamAgentConversation(stream AgentStreamRequest) returns (stream AgentStreamResponse);
+  rpc ListAvailableAgents(ListAgentsRequest) returns (ListAgentsResponse);
+  rpc GetAgentStatus(GetAgentStatusRequest) returns (AgentStatus);
 }
 
 // Campaign represents a strategic goal with multiple objectives
@@ -135,4 +141,109 @@ message ErrorDetail {
   string code = 1;
   string message = 2;
   map<string, string> metadata = 3;
+}
+
+// Agent communication messages
+message AgentMessageRequest {
+  string agent_id = 1;
+  string message = 2;
+  string session_id = 3;
+  string campaign_id = 4;
+  map<string, string> context = 5; // Additional context
+}
+
+message AgentMessageResponse {
+  string agent_id = 1;
+  string response = 2;
+  int64 timestamp = 3;
+  map<string, string> metadata = 4;
+  AgentStatus status = 5;
+}
+
+// Streaming agent communication
+message AgentStreamRequest {
+  oneof request {
+    AgentMessageRequest message = 1;
+    StreamControl control = 2;
+  }
+}
+
+message AgentStreamResponse {
+  oneof response {
+    AgentMessageFragment fragment = 1;
+    AgentStatus status = 2;
+    StreamEvent event = 3;
+  }
+}
+
+message AgentMessageFragment {
+  string agent_id = 1;
+  string content = 2;
+  bool is_complete = 3;
+  int64 timestamp = 4;
+  map<string, string> metadata = 5;
+}
+
+message StreamControl {
+  enum Command {
+    START = 0;
+    STOP = 1;
+    PAUSE = 2;
+    RESUME = 3;
+  }
+  Command command = 1;
+  string session_id = 2;
+}
+
+message StreamEvent {
+  enum EventType {
+    AGENT_THINKING = 0;
+    AGENT_WORKING = 1;
+    TOOL_EXECUTING = 2;
+    MEMORY_RETRIEVING = 3;
+    ERROR = 4;
+  }
+  EventType type = 1;
+  string description = 2;
+  map<string, string> data = 3;
+}
+
+// Agent listing and status
+message ListAgentsRequest {
+  string campaign_id = 1;
+  bool include_status = 2;
+}
+
+message ListAgentsResponse {
+  repeated AgentInfo agents = 1;
+  int32 total_count = 2;
+}
+
+message AgentInfo {
+  string id = 1;
+  string name = 2;
+  string type = 3; // manager, worker, specialist
+  repeated string capabilities = 4;
+  AgentStatus status = 5;
+  map<string, string> metadata = 6;
+}
+
+message GetAgentStatusRequest {
+  string agent_id = 1;
+  string campaign_id = 2;
+}
+
+message AgentStatus {
+  enum State {
+    IDLE = 0;
+    THINKING = 1;
+    WORKING = 2;
+    WAITING = 3;
+    ERROR = 4;
+    OFFLINE = 5;
+  }
+  State state = 1;
+  string current_task = 2;
+  int64 last_activity = 3;
+  map<string, string> metadata = 4;
 }
