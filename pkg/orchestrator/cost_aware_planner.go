@@ -18,7 +18,7 @@ type CostAwareTaskPlanner struct {
 	managerAgent      agent.Agent
 	kanbanBoard       KanbanManager
 	componentRegistry registry.ComponentRegistry
-	costBudget        int // Maximum cost magnitude for task assignments
+	maxCostFilter     int  // Maximum cost magnitude filter (exclude agents above this)
 	balanceWorkload   bool // Whether to balance workload across agents
 }
 
@@ -72,20 +72,20 @@ func NewCostAwareTaskPlanner(
 	managerAgent agent.Agent, 
 	kanbanBoard KanbanManager, 
 	componentRegistry registry.ComponentRegistry,
-	costBudget int,
+	maxCostFilter int,
 ) *CostAwareTaskPlanner {
 	return &CostAwareTaskPlanner{
 		managerAgent:      managerAgent,
 		kanbanBoard:       kanbanBoard,
 		componentRegistry: componentRegistry,
-		costBudget:        costBudget,
+		maxCostFilter:     maxCostFilter,
 		balanceWorkload:   true,
 	}
 }
 
 // PlanTasks decomposes an objective into tasks (enhanced with cost awareness)
 func (p *CostAwareTaskPlanner) PlanTasks(ctx context.Context, obj *objective.Objective, guild *config.GuildConfig) ([]*kanban.Task, error) {
-	// Build a cost-aware planning prompt
+	// Build a planning prompt with cost information
 	prompt := p.buildCostAwarePlanningPrompt(obj, guild)
 	
 	// Execute the planning request
@@ -133,7 +133,7 @@ func (p *CostAwareTaskPlanner) PlanTasks(ctx context.Context, obj *objective.Obj
 // AssignTasks assigns tasks using cost-aware optimization
 func (p *CostAwareTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.Task, guild *config.GuildConfig) error {
 	options := AssignmentOptions{
-		MaxCostMagnitude: p.costBudget,
+		MaxCostMagnitude: p.maxCostFilter,
 		Strategy:         StrategyBalanced,
 		BalanceWorkload:  p.balanceWorkload,
 		RequiredTools:    make(map[string][]string),
@@ -202,9 +202,13 @@ func (p *CostAwareTaskPlanner) AssignTasksWithOptions(
 	if summary.TotalTasks > 0 {
 		summary.AverageCost = float64(summary.TotalCost) / float64(summary.TotalTasks)
 	}
-	if options.MaxCostMagnitude > 0 {
-		maxPossibleCost := options.MaxCostMagnitude * summary.TotalTasks
-		summary.BudgetUtilized = float64(summary.TotalCost) / float64(maxPossibleCost) * 100
+	// Calculate cost efficiency description instead of percentage
+	if summary.AverageCost <= 2 {
+		summary.CostEfficiency = "Economical"
+	} else if summary.AverageCost <= 4 {
+		summary.CostEfficiency = "Balanced"
+	} else {
+		summary.CostEfficiency = "Premium"
 	}
 	
 	return summary, nil
@@ -271,18 +275,18 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 			return nil, fmt.Errorf("no agent found for capability %s", primaryCapability)
 		}
 		
-		// Find the best capability match within budget
+		// Find the best capability match within cost filter
 		for _, agent := range allAgents {
 			if agent.CostMagnitude <= options.MaxCostMagnitude &&
 			   p.hasAllCapabilities(agent.Capabilities, requiredCapabilities) {
 				assignedAgent = &agent
-				reason = "Best capability match within budget"
+				reason = "Best capability match within cost limit"
 				break
 			}
 		}
 		
 		if assignedAgent == nil {
-			return nil, fmt.Errorf("no agent with required capabilities within budget %d", options.MaxCostMagnitude)
+			return nil, fmt.Errorf("no agent with required capabilities within cost filter %d", options.MaxCostMagnitude)
 		}
 	}
 	
@@ -345,7 +349,7 @@ func (p *CostAwareTaskPlanner) buildCostAwarePlanningPrompt(obj *objective.Objec
 	prompt.WriteString("\n\n")
 	
 	prompt.WriteString("## Available Agents and Capabilities (with Cost Information)\n")
-	agents := p.componentRegistry.GetAgentsByCost(p.costBudget)
+	agents := p.componentRegistry.GetAgentsByCost(p.maxCostFilter)
 	for _, agent := range agents {
 		costIcon := p.getCostIcon(agent.CostMagnitude)
 		prompt.WriteString(fmt.Sprintf("- **%s** (%s) %s Cost: %d | Capabilities: %s\n", 
@@ -353,9 +357,11 @@ func (p *CostAwareTaskPlanner) buildCostAwarePlanningPrompt(obj *objective.Objec
 	}
 	prompt.WriteString("\n")
 	
-	prompt.WriteString("## Cost Budget\n")
-	prompt.WriteString(fmt.Sprintf("Maximum cost magnitude per task: %d\n", p.costBudget))
-	prompt.WriteString("Prefer lower-cost agents when capabilities are equivalent.\n\n")
+	prompt.WriteString("## Cost Considerations\n")
+	if p.maxCostFilter < 8 {
+		prompt.WriteString(fmt.Sprintf("Note: Agents with cost magnitude > %d are excluded from consideration.\n", p.maxCostFilter))
+	}
+	prompt.WriteString("Consider cost-effectiveness when assigning tasks.\n\n")
 	
 	prompt.WriteString("## Instructions\n")
 	prompt.WriteString("Break down the objective into specific tasks optimized for cost efficiency. For each task, provide:\n")
