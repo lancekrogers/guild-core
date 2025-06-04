@@ -40,12 +40,11 @@ task build
 guild init my-project
 cd my-project
 
-# Create your first objective
-guild objective create
+# Commission your first strategic work
+guild commission "Build a web API with authentication" --assign
 
-# Start a campaign
-guild campaign create --objective objectives/my-first-task.md
-guild campaign start
+# Monitor the workshop
+guild workshop
 ```
 
 ## Configuring Your First Guild
@@ -113,15 +112,15 @@ agents:
 - **cost_magnitude**: Relative cost factor (lower = cheaper, preferred for suitable tasks)
 - **context_window**: Maximum tokens before context management kicks in
 
-## Creating Objectives
+## Commissioning Strategic Work
 
-![Objective Creation Demo](docs/gifs/create-objective.gif)
-*Creating and refining hierarchical objectives*
+![Commission Creation Demo](docs/gifs/create-commission.gif)
+*Commissioning and coordinating agent collaboration*
 
-### Simple Objective
+### Simple Commission
 
 ```bash
-guild objective create --title "Build User Authentication"
+guild commission "Build User Authentication" --assign
 ```
 
 ### Hierarchical Objectives
@@ -152,17 +151,20 @@ Create structured objectives for complex projects:
 - [ ] Implement checkout flow
 ```
 
-### Refining Objectives
+### Monitoring Commissions
 
-![Objective Refinement Demo](docs/gifs/refine-objective.gif)
-*Using the manager agent to break down high-level goals*
+![Commission Monitoring Demo](docs/gifs/monitor-commission.gif)
+*Watching the Guild workshop coordinate agents*
 
 ```bash
-# Let the manager agent help refine your objective
-guild objective refine --objective objectives/ecommerce.md
+# Monitor all active commissions and agent assignments
+guild workshop
 
-# Review the refined objectives
-guild objective view --tree
+# Check specific commission progress
+guild commission status
+
+# List all commissions
+guild commission list
 ```
 
 ## Running Campaigns

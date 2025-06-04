@@ -38,6 +38,11 @@ type AgentConfig struct {
 	Tools        []string `yaml:"tools,omitempty"`
 	MaxTokens    int      `yaml:"max_tokens,omitempty"`
 	Temperature  float64  `yaml:"temperature,omitempty"`
+	
+	// Enhanced configuration for intelligent assignment
+	CostMagnitude  int    `yaml:"cost_magnitude,omitempty"`   // Fibonacci cost scale: 0=bash, 1=cheap API, 2,3,5,8=expensive models
+	ContextWindow  int    `yaml:"context_window,omitempty"`   // Context window size in tokens (auto-detected if 0)
+	ContextReset   string `yaml:"context_reset,omitempty"`    // "truncate" or "summarize" when context exceeds window
 }
 
 type Metadata struct {
@@ -69,8 +74,15 @@ func DefaultGuildTemplate() *GuildConfig {
 					"coordination",
 					"analysis",
 				},
-				MaxTokens:   4096,
-				Temperature: 0.7,
+				Tools: []string{
+					"shell",
+					"file_system",
+				},
+				MaxTokens:     4096,
+				Temperature:   0.7,
+				CostMagnitude: 8,
+				ContextWindow: 200000,
+				ContextReset:  "summarize",
 			},
 			{
 				ID:          "coder",
@@ -87,12 +99,14 @@ func DefaultGuildTemplate() *GuildConfig {
 					"code_review",
 				},
 				Tools: []string{
-					"file_edit",
-					"shell_execute",
-					"file_read",
+					"file_system",
+					"shell",
 				},
-				MaxTokens:   4096,
-				Temperature: 0.3,
+				MaxTokens:     4096,
+				Temperature:   0.3,
+				CostMagnitude: 5,
+				ContextWindow: 128000,
+				ContextReset:  "truncate",
 			},
 			{
 				ID:          "analyst",
@@ -109,12 +123,14 @@ func DefaultGuildTemplate() *GuildConfig {
 					"data_analysis",
 				},
 				Tools: []string{
-					"web_search",
-					"corpus_query",
-					"file_read",
+					"corpus",
+					"file_system",
 				},
-				MaxTokens:   4096,
-				Temperature: 0.5,
+				MaxTokens:     4096,
+				Temperature:   0.5,
+				CostMagnitude: 3,
+				ContextWindow: 200000,
+				ContextReset:  "summarize",
 			},
 		},
 		Metadata: Metadata{

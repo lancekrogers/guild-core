@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	
+	"gopkg.in/yaml.v3"
 )
 
 // directoryStructure defines the directory structure for a Guild project
@@ -191,6 +193,12 @@ func createDefaultGuildConfig(baseDir string) error {
 	// Get the default template
 	guildConfig := DefaultGuildTemplate()
 	
-	// Save it to the project
-	return SaveGuildConfig(filepath.Dir(baseDir), guildConfig)
+	// Save it to the .guild directory
+	guildPath := filepath.Join(baseDir, "guild.yaml")
+	data, err := yaml.Marshal(guildConfig)
+	if err != nil {
+		return fmt.Errorf("failed to marshal guild config: %w", err)
+	}
+
+	return os.WriteFile(guildPath, data, 0644)
 }

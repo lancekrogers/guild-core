@@ -58,7 +58,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 	fmt.Println("\nNext steps:")
 	fmt.Println("  1. Add documents to your corpus: guild corpus add <file>")
 	fmt.Println("  2. Create an agent: guild agent create <name>")
-	fmt.Println("  3. Define objectives: guild objective create")
+	fmt.Println("  3. Commission strategic work: guild commission \"Build user authentication\" --assign")
 
 	return nil
 }

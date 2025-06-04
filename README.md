@@ -14,17 +14,32 @@
 
 ## 🧠 Overview
 
-Guild is a Go-based framework for orchestrating multiple AI agents that work together on complex tasks. Inspired by the historical tradition of medieval guilds — associations of skilled craftspeople who governed their trade — Guild provides a structured approach to agentic workflow management.
+Guild coordinates specialized artisans (AI agents) to complete strategic work through intelligent orchestration. Inspired by medieval guilds where master craftspeople collaborated on complex projects, Guild automatically decomposes commissions, assigns tasks to capable agents, and coordinates their collaboration.
+
+**Commission-Based Workflow:**
+
+🏰 **COMMISSION** strategic work to your Guild:
+```bash
+guild commission "Build a REST API for user management" --assign
+guild commission "Research and implement caching strategy" --campaign performance
+```
+
+🔨 **MONITOR** the workshop and artisan progress:
+```bash
+guild workshop                    # Show active work and agent assignments
+guild commission status           # Commission progress and completion
+```
 
 **Key Features:**
 
-- 🤖 **Multi-Agent Coordination**: Organize agents with different specializations in collaborative guilds
-- 📋 **Kanban Task Management**: Track tasks through their lifecycle with a familiar board interface
-- 💾 **Memory & RAG**: Store and retrieve context with BoltDB and vector search via Qdrant
-- 🔌 **Multiple LLM Providers**: Support for OpenAI, Anthropic, Ollama (local), and Ora
+- 🎯 **Strategic Commissions**: Automatically decompose complex work into specialized tasks
+- 🤖 **Intelligent Assignment**: Match tasks to agents based on capabilities and cost
+- 📋 **Workshop Coordination**: Track progress through kanban-style task management  
+- 💾 **Contextual Memory**: Store and retrieve project context with BoltDB and vector search
+- 🔌 **Multi-Provider Support**: OpenAI, Anthropic, Ollama (local), and other LLM providers
 - 🛠️ **Tool Integration**: Seamless integration with CLI tools and external services
-- 💰 **Treasury Management**: Built-in cost tracking, budgeting, and optimization for both API and local models
-- 🧩 **Human-in-the-Loop**: Block tasks for human input when needed
+- 💰 **Cost-Aware Orchestration**: Optimize agent selection based on cost and capability
+- 🧩 **Campaign Management**: Coordinate multiple commissions toward strategic goals
 
 ## 🚀 Installation
 

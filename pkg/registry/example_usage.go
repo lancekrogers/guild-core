@@ -148,8 +148,8 @@ memory:
   default_vector_store: "chromem"
   stores:
     boltdb:
-      path: "./data/memory.db"
+      path: "./.guild/memory.db"
     chromem:
-      persistence_path: "./data/vectors"
+      persistence_path: "./.guild/vectors"
       dimension: 1536
 `

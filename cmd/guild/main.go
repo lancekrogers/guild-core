@@ -13,12 +13,22 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "guild",
 	Short: "Guild - Teams of Specialized Agents Working in Concert",
-	Long: `Guild is a fellowship of specialized agents collaborating
-through an orchestrated workflow to complete complex tasks.
+	Long: `Guild coordinates specialized artisans (agents) to complete strategic work.
 
-Within these hallowed halls, artisans of various disciplines coordinate
-their efforts through a shared system of scrolls (objectives),
-ledgers (kanban boards), and archives (memory systems).`,
+🏰 COMMISSION specialized work to your Guild:
+   guild commission "Build a REST API" --assign
+   guild commission "Research caching strategy" --campaign performance
+
+🔨 MONITOR the workshop and artisan progress:
+   guild workshop                    # Show active work
+   guild commission status           # Commission progress
+   
+🎯 COORDINATE campaigns and strategy:
+   guild campaign start "Q1 Goals"
+   guild chat                        # Interactive coordination
+
+Each commission automatically decomposes work, assigns capable artisans,
+and coordinates their collaboration through the workshop board.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// If no subcommand is provided, show help
 		cmd.Help()
@@ -34,65 +44,6 @@ var versionCmd = &cobra.Command{
 	},
 }
 
-// objectiveCmd represents the objective command
-var objectiveCmd = &cobra.Command{
-	Use:   "objective [subcommand]",
-	Short: "Manage objectives through UI or subcommands",
-	Long:  `Create, list, view, and manage objectives for your Guild agents.
-
-When run without subcommands, launches the interactive UI for objective management.
-Subcommands are available for command-line operations without the UI.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		// Launch the objective UI by default when just "guild objective" is run
-		// TODO: Implement objective UI
-		fmt.Println("Objective UI not yet implemented. Use 'guild objective --help' to see available commands.")
-	},
-}
-
-// objectiveCreateCmd represents the objective create command
-var objectiveCreateCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Create a new objective",
-	Long:  `Create a new objective for Guild agents to work on.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Creating new objective...")
-		fmt.Println("This feature is not yet implemented.")
-	},
-}
-
-// objectiveListCmd represents the objective list command
-var objectiveListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List all objectives",
-	Long:  `List all available objectives.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Listing objectives...")
-		fmt.Println("This feature is not yet implemented.")
-	},
-}
-
-// objectiveViewCmd represents the objective view command
-var objectiveViewCmd = &cobra.Command{
-	Use:   "view [id]",
-	Short: "View a specific objective",
-	Long:  `View details of a specific objective by ID.`,
-	Args:  cobra.MinimumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Viewing objective %s...\n", args[0])
-		fmt.Println("This feature is not yet implemented.")
-	},
-}
-
-// objectiveUICmd represents the objective UI command
-var objectiveUICmd = &cobra.Command{
-	Use:   "ui",
-	Short: "Launch the objective UI",
-	Long:  `Launch the interactive terminal user interface for managing objectives.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Launching objective UI...")
-		fmt.Println("This feature is not yet implemented.")
-	},
-}
 
 // agentCmd represents the agent command
 var agentCmd = &cobra.Command{
@@ -122,19 +73,10 @@ var agentStartCmd = &cobra.Command{
 func init() {
 	// Register commands
 	rootCmd.AddCommand(versionCmd)
-	rootCmd.AddCommand(objectiveCmd)
 	rootCmd.AddCommand(agentCmd)
-	rootCmd.AddCommand(costCmd)
-	rootCmd.AddCommand(orchestratorCmd)
-	rootCmd.AddCommand(kanbanDemoCmd)
+	rootCmd.AddCommand(chatCmd)
+	// rootCmd.AddCommand(costCmd)    // TODO: implement
 	// rootCmd.AddCommand(campaignCmd)  // TODO: implement
-	// rootCmd.AddCommand(chatCmd)      // TODO: implement
-
-	// Register objective subcommands
-	objectiveCmd.AddCommand(objectiveCreateCmd)
-	objectiveCmd.AddCommand(objectiveListCmd)
-	objectiveCmd.AddCommand(objectiveViewCmd)
-	objectiveCmd.AddCommand(objectiveUICmd)
 
 	// Register agent subcommands
 	agentCmd.AddCommand(agentStartCmd)

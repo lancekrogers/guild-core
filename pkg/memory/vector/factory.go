@@ -78,7 +78,7 @@ type StoreConfig struct {
 type ChromemConfig struct {
 	// PersistencePath is the path to persist embeddings to disk.
 	// If empty, the store will be in-memory only.
-	// Example: "./data/vectors"
+	// Example: "./.guild/vectors"
 	PersistencePath string
 
 	// DefaultDimension is the default dimension for vectors.
@@ -99,7 +99,7 @@ type ChromemConfig struct {
 //   config := &vector.StoreConfig{
 //       Type: vector.StoreTypeChromem,
 //       ChromemConfig: vector.ChromemConfig{
-//           PersistencePath: "./data/vectors",
+//           PersistencePath: "./.guild/vectors",
 //       },
 //   }
 //   store, err := vector.NewVectorStore(ctx, config)

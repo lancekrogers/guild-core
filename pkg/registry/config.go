@@ -100,10 +100,10 @@ func DefaultConfig() *Config {
 			DefaultVectorStore: "chromem",
 			Stores: map[string]interface{}{
 				"boltdb": map[string]interface{}{
-					"path": "./data/memory.db",
+					"path": "./.guild/memory.db",
 				},
 				"chromem": map[string]interface{}{
-					"persistence_path": "./data/vectors",
+					"persistence_path": "./.guild/vectors",
 					"dimension": 1536,
 				},
 			},

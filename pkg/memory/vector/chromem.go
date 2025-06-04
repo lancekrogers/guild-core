@@ -75,7 +75,7 @@ type Config struct {
 // Example usage:
 //   config := vector.Config{
 //       Embedder: openaiEmbedder,
-//       PersistencePath: "./data/vectors",
+//       PersistencePath: "./.guild/vectors",
 //       DefaultCollection: "agent_memories",
 //   }
 //   store, err := vector.NewChromemStore(config)

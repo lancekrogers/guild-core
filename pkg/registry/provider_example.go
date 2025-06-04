@@ -50,8 +50,8 @@ func ProviderExample() error {
 			DefaultMemoryStore: "boltdb",
 			DefaultVectorStore: "chromem",
 			Stores: map[string]interface{}{
-				"boltdb":  map[string]interface{}{"path": "./data/memory.db"},
-				"chromem": map[string]interface{}{"persistence_path": "./data/vectors"},
+				"boltdb":  map[string]interface{}{"path": "./.guild/memory.db"},
+				"chromem": map[string]interface{}{"persistence_path": "./.guild/vectors"},
 			},
 		},
 	}
@@ -158,9 +158,9 @@ memory:
   default_vector_store: "chromem"
   stores:
     boltdb:
-      path: "./data/memory.db"
+      path: "./.guild/memory.db"
     chromem:
-      persistence_path: "./data/vectors"
+      persistence_path: "./.guild/vectors"
       dimension: 1536
 `
 
@@ -234,8 +234,8 @@ func CreateProviderOnlyRegistry() (*DefaultComponentRegistry, error) {
 			DefaultMemoryStore: "boltdb",
 			DefaultVectorStore: "chromem",
 			Stores: map[string]interface{}{
-				"boltdb":  map[string]interface{}{"path": "./data/memory.db"},
-				"chromem": map[string]interface{}{"persistence_path": "./data/vectors"},
+				"boltdb":  map[string]interface{}{"path": "./.guild/memory.db"},
+				"chromem": map[string]interface{}{"persistence_path": "./.guild/vectors"},
 			},
 		},
 	}
