@@ -9,12 +9,17 @@
 *.dylib
 bin/
 guild
+layered_prompt_example
 
 # Test binary, built with `go test -c`
 *.test
+test_*
+*_test
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+coverage/
+coverage.out
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
@@ -31,6 +36,7 @@ go.work.sum
 .claude/config.json
 .claude/auth.json
 .claude/
+.task/
 
 # Guild project-local directory (similar to .git/)
 .guild/
@@ -42,3 +48,5 @@ go.work.sum
 # Test artifacts
 .test-results.tmp
 .ci-test-results.json
+
+

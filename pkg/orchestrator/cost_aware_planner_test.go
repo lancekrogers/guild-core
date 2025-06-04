@@ -226,8 +226,7 @@ PreferredCost: 3`,
 		assert.Equal(t, len(tasks), summary.TotalTasks)
 		assert.Greater(t, summary.TotalCost, 0)
 		assert.Greater(t, summary.AverageCost, 0.0)
-		assert.GreaterOrEqual(t, summary.BudgetUtilized, 0.0)
-		assert.LessOrEqual(t, summary.BudgetUtilized, 100.0)
+		assert.NotEmpty(t, summary.CostEfficiency)
 		
 		// Verify cost breakdown
 		assert.NotEmpty(t, summary.CostBreakdown)

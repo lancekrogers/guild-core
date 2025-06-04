@@ -2,6 +2,7 @@ package agent_test
 
 import (
 	"context"
+	"strings"
 	"testing"
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
@@ -53,11 +54,14 @@ func TestWorkerAgentWithContext(t *testing.T) {
 	cancelCtx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately
 
-	// Currently the stub implementation doesn't check context
-	// In a real implementation, this would return context.Canceled error
+	// The implementation should handle cancelled context
 	_, err = workerAgent.Execute(cancelCtx, "test with cancelled context")
-	if err != nil && err != context.Canceled {
-		t.Errorf("Expected nil or context.Canceled error, got: %v", err)
+	if err == nil {
+		t.Error("Expected error with cancelled context, got nil")
+	}
+	// The error should indicate context cancellation, either directly or wrapped
+	if !strings.Contains(err.Error(), "context canceled") && err != context.Canceled {
+		t.Errorf("Expected context cancellation error, got: %v", err)
 	}
 }
 

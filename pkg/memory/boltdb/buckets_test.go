@@ -22,6 +22,9 @@ func TestAllBuckets(t *testing.T) {
 		"tasks_by_agent",
 		"config",
 		"boards",
+		"prompt_layers",
+		"prompt_cache",
+		"prompt_metrics",
 	}
 
 	// Check that the number of buckets matches
@@ -61,6 +64,9 @@ func TestBucketConstants(t *testing.T) {
 		{boltdb.BucketTasksByAgent, "tasks_by_agent"},
 		{boltdb.BucketConfig, "config"},
 		{boltdb.BucketBoards, "boards"},
+		{boltdb.BucketPromptLayers, "prompt_layers"},
+		{boltdb.BucketPromptCache, "prompt_cache"},
+		{boltdb.BucketPromptMetrics, "prompt_metrics"},
 	}
 
 	for _, tc := range testCases {
