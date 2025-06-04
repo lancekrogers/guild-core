@@ -88,10 +88,11 @@ type Deliverable struct {
 type ToolData struct {
 	Name        string
 	Description string
+	Category    string
 	Usage       string
 	Parameters  []ToolParameter
 	ReturnType  string
-	Example     string
+	Examples    []string
 }
 
 // ToolParameter represents a tool parameter

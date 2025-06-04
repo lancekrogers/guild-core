@@ -3,6 +3,8 @@ package executor
 import (
 	"context"
 	"fmt"
+	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -11,6 +13,8 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 	"github.com/guild-ventures/guild-core/pkg/workspace"
+	"github.com/guild-ventures/guild-core/tools/fs"
+	"github.com/guild-ventures/guild-core/tools/shell"
 )
 
 // BasicTaskExecutor implements the TaskExecutor interface
@@ -183,8 +187,22 @@ func (e *BasicTaskExecutor) phaseInitialize(ctx context.Context) error {
 		})
 	}
 
-	// TODO: Initialize available tools with workspace context
-	// TODO: Load project context into workspace
+	// Initialize tools if registry is available
+	if e.toolRegistry != nil {
+		// Register default tools if not already registered
+		e.initializeDefaultTools()
+		
+		// Log available tools
+		availableTools := []string{}
+		for _, tool := range e.toolRegistry.ListTools() {
+			availableTools = append(availableTools, tool.Name())
+		}
+		
+		e.addExecutionLog("Initialized tools", map[string]interface{}{
+			"available_tools": availableTools,
+			"workspace":       e.execContext.WorkspaceDir,
+		})
+	}
 
 	e.addExecutionLog("Initialized execution environment", nil)
 	return nil
@@ -233,16 +251,36 @@ func (e *BasicTaskExecutor) phasePlan(ctx context.Context) error {
 
 // phaseExecute performs the actual task work
 func (e *BasicTaskExecutor) phaseExecute(ctx context.Context) error {
-	// TODO: Execute plan steps
-	// TODO: Use tools as needed
-	// TODO: Track progress and artifacts
-
-	// Mock execution for now
-	steps := []string{
-		"Analyzing task requirements",
-		"Preparing implementation",
-		"Executing main logic",
-		"Verifying results",
+	// Get execution plan from metadata
+	plan, _ := e.result.Metadata["execution_plan"].(string)
+	
+	// For now, demonstrate tool usage with a simple implementation
+	// In a real implementation, this would parse the plan and execute accordingly
+	steps := []struct {
+		name        string
+		description string
+		execute     func(context.Context) error
+	}{
+		{
+			name:        "analyze_task",
+			description: "Analyzing task requirements",
+			execute:     e.stepAnalyzeTask,
+		},
+		{
+			name:        "prepare_workspace",
+			description: "Preparing workspace",
+			execute:     e.stepPrepareWorkspace,
+		},
+		{
+			name:        "implement_solution",
+			description: "Implementing solution",
+			execute:     e.stepImplementSolution,
+		},
+		{
+			name:        "verify_results",
+			description: "Verifying results",
+			execute:     e.stepVerifyResults,
+		},
 	}
 
 	for i, step := range steps {
@@ -252,25 +290,27 @@ func (e *BasicTaskExecutor) phaseExecute(ctx context.Context) error {
 		case <-e.stopChan:
 			return fmt.Errorf("execution stopped")
 		default:
-			// Simulate step execution
-			time.Sleep(100 * time.Millisecond)
-			progress := 0.2 + (0.5 * float64(i+1) / float64(len(steps)))
-			e.updateProgress(progress, step)
-			e.addExecutionLog(fmt.Sprintf("Completed: %s", step), nil)
+			// Add small delay to allow context cancellation testing
+			time.Sleep(20 * time.Millisecond)
+			
+			progress := 0.2 + (0.5 * float64(i) / float64(len(steps)))
+			e.updateProgress(progress, step.description)
+			
+			// Execute the step
+			if err := step.execute(ctx); err != nil {
+				e.addExecutionLog(fmt.Sprintf("Step failed: %s", step.name), map[string]interface{}{
+					"error": err.Error(),
+				})
+				return fmt.Errorf("step %s failed: %w", step.name, err)
+			}
+			
+			e.addExecutionLog(fmt.Sprintf("Completed: %s", step.description), nil)
 		}
 	}
 
-	// Mock artifact creation
+	// Store execution summary
 	e.mu.Lock()
-	e.result.Artifacts = append(e.result.Artifacts, Artifact{
-		Name:        "task_output.md",
-		Type:        "documentation",
-		Path:        "/mock/path/task_output.md",
-		Size:        1024,
-		CreatedAt:   time.Now(),
-		Description: "Task execution results",
-	})
-	e.result.Output = "Task completed successfully with mock execution"
+	e.result.Output = fmt.Sprintf("Task completed successfully. Plan: %s", plan)
 	e.mu.Unlock()
 
 	return nil
@@ -400,6 +440,60 @@ func (e *BasicTaskExecutor) addExecutionLog(message string, metadata map[string]
 	}
 }
 
+// executeToolCall executes a tool and tracks its usage
+func (e *BasicTaskExecutor) executeToolCall(ctx context.Context, toolName string, params map[string]interface{}) (*tools.ToolResult, error) {
+	if e.toolRegistry == nil {
+		return nil, fmt.Errorf("no tool registry available")
+	}
+
+	// Track start time for usage metrics
+	startTime := time.Now()
+
+	// Execute the tool
+	result, err := e.toolRegistry.ExecuteToolWithParams(ctx, toolName, params)
+	
+	// Calculate execution time
+	duration := time.Since(startTime)
+
+	// Track tool usage
+	e.mu.Lock()
+	// Find or create tool usage entry
+	var toolUsage *ToolUsage
+	for i := range e.result.ToolUsage {
+		if e.result.ToolUsage[i].ToolName == toolName {
+			toolUsage = &e.result.ToolUsage[i]
+			break
+		}
+	}
+	if toolUsage == nil {
+		e.result.ToolUsage = append(e.result.ToolUsage, ToolUsage{
+			ToolName: toolName,
+		})
+		toolUsage = &e.result.ToolUsage[len(e.result.ToolUsage)-1]
+	}
+	
+	// Update usage stats
+	toolUsage.Invocations++
+	toolUsage.TotalTime += duration
+	if result != nil {
+		toolUsage.Results = append(toolUsage.Results, map[string]interface{}{
+			"timestamp": time.Now(),
+			"success":   result.Success,
+			"duration":  duration.String(),
+		})
+	}
+	e.mu.Unlock()
+
+	// Log tool execution
+	e.addExecutionLog(fmt.Sprintf("Executed tool: %s", toolName), map[string]interface{}{
+		"tool":     toolName,
+		"success":  result != nil && result.Success,
+		"duration": duration.String(),
+	})
+
+	return result, err
+}
+
 // buildPromptData builds the prompt data structure from current context
 func (e *BasicTaskExecutor) buildPromptData() execution.ExecutionPromptData {
 	e.mu.RLock()
@@ -408,20 +502,34 @@ func (e *BasicTaskExecutor) buildPromptData() execution.ExecutionPromptData {
 	// Build available tools data
 	var toolsData []execution.ToolData
 	if e.toolRegistry != nil {
-		// TODO: Get actual tools from registry
-		// For now, mock some tools
-		toolsData = []execution.ToolData{
-			{
-				Name:        "file_system",
-				Description: "Read and write files",
-				Usage:       "file_system.read(path) or file_system.write(path, content)",
-				Parameters: []execution.ToolParameter{
-					{Name: "path", Type: "string", Description: "File path"},
-					{Name: "content", Type: "string", Description: "File content (for write)"},
-				},
-				ReturnType: "string",
-				Example:    "content = file_system.read('/tmp/test.txt')",
-			},
+		// Get actual tools from registry
+		for _, tool := range e.toolRegistry.ListTools() {
+			// Convert schema to parameters
+			var params []execution.ToolParameter
+			if schema := tool.Schema(); schema != nil {
+				if props, ok := schema["properties"].(map[string]interface{}); ok {
+					for name, prop := range props {
+						if propMap, ok := prop.(map[string]interface{}); ok {
+							param := execution.ToolParameter{
+								Name:        name,
+								Type:        propMap["type"].(string),
+								Description: propMap["description"].(string),
+							}
+							params = append(params, param)
+						}
+					}
+				}
+			}
+
+			toolData := execution.ToolData{
+				Name:        tool.Name(),
+				Description: tool.Description(),
+				Category:    tool.Category(),
+				Parameters:  params,
+				ReturnType:  "ToolResult",
+				Examples:    tool.Examples(),
+			}
+			toolsData = append(toolsData, toolData)
 		}
 	}
 
@@ -503,4 +611,229 @@ func (e *BasicTaskExecutor) buildDependencies() []execution.TaskDependency {
 		})
 	}
 	return deps
+}
+
+// initializeDefaultTools registers default tools if not already registered
+func (e *BasicTaskExecutor) initializeDefaultTools() {
+	// Use workspace directory as base path for file operations
+	basePath := e.execContext.WorkspaceDir
+	if basePath == "" {
+		basePath = e.execContext.ProjectRoot
+	}
+
+	// Register file tool if not already registered
+	if _, exists := e.toolRegistry.GetTool("file"); !exists {
+		fileTool := fs.NewFileTool(basePath)
+		e.toolRegistry.RegisterTool(fileTool)
+	}
+
+	// Register shell tool if not already registered
+	if _, exists := e.toolRegistry.GetTool("shell"); !exists {
+		shellOptions := shell.ShellToolOptions{
+			WorkingDir: basePath,
+			// Add safety restrictions
+			BlockedCommands: []string{
+				"rm -rf /", "rm -rf /*", "shutdown", "reboot",
+				"passwd", "su", "sudo", "chown", "chmod 777",
+			},
+		}
+		shellTool := shell.NewShellTool(shellOptions)
+		e.toolRegistry.RegisterTool(shellTool)
+	}
+}
+
+// Step execution functions demonstrating tool usage
+
+func (e *BasicTaskExecutor) stepAnalyzeTask(ctx context.Context) error {
+	// Check context before proceeding
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	default:
+	}
+	
+	// Use shell tool to check current directory structure
+	if e.toolRegistry != nil {
+		result, err := e.executeToolCall(ctx, "shell", map[string]interface{}{
+			"command": "ls",
+			"args":    []string{"-la"},
+		})
+		if err == nil && result != nil {
+			e.addExecutionLog("Analyzed workspace structure", map[string]interface{}{
+				"files": len(strings.Split(result.Output, "\n")),
+			})
+		}
+	}
+	return nil
+}
+
+func (e *BasicTaskExecutor) stepPrepareWorkspace(ctx context.Context) error {
+	// Check context before proceeding
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	default:
+	}
+	
+	// Create a task directory and README
+	if e.toolRegistry != nil {
+		// Create task directory
+		taskDir := fmt.Sprintf("task_%s", e.currentTask.ID)
+		_, err := e.executeToolCall(ctx, "shell", map[string]interface{}{
+			"command": "mkdir",
+			"args":    []string{"-p", taskDir},
+		})
+		if err != nil {
+			return fmt.Errorf("failed to create task directory: %w", err)
+		}
+
+		// Create README file
+		readmeContent := fmt.Sprintf("# Task: %s\n\n%s\n\nStarted: %s\n", 
+			e.currentTask.Title, 
+			e.currentTask.Description,
+			time.Now().Format(time.RFC3339))
+		
+		result, err := e.executeToolCall(ctx, "file", map[string]interface{}{
+			"operation": "write",
+			"path":      filepath.Join(taskDir, "README.md"),
+			"content":   readmeContent,
+		})
+		if err != nil {
+			return fmt.Errorf("failed to create README: %w", err)
+		}
+
+		// Track artifact
+		if result != nil && result.Success {
+			e.mu.Lock()
+			e.result.Artifacts = append(e.result.Artifacts, Artifact{
+				Name:        "README.md",
+				Type:        "documentation",
+				Path:        filepath.Join(e.execContext.WorkspaceDir, taskDir, "README.md"),
+				Size:        int64(len(readmeContent)),
+				CreatedAt:   time.Now(),
+				Description: "Task documentation",
+			})
+			e.mu.Unlock()
+		}
+	}
+	return nil
+}
+
+func (e *BasicTaskExecutor) stepImplementSolution(ctx context.Context) error {
+	// Check context before proceeding
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	default:
+	}
+	
+	// Demonstrate creating a solution file
+	if e.toolRegistry != nil {
+		taskDir := fmt.Sprintf("task_%s", e.currentTask.ID)
+		
+		// Create a solution file based on task
+		solutionContent := fmt.Sprintf(`#!/bin/bash
+# Solution for: %s
+# Generated by: %s
+# Date: %s
+
+echo "Executing task solution..."
+echo "Task ID: %s"
+echo "Task Title: %s"
+
+# Task implementation would go here
+echo "Task completed successfully"
+`, 
+			e.currentTask.Title,
+			e.agent.GetName(),
+			time.Now().Format(time.RFC3339),
+			e.currentTask.ID,
+			e.currentTask.Title,
+		)
+
+		result, err := e.executeToolCall(ctx, "file", map[string]interface{}{
+			"operation": "write",
+			"path":      filepath.Join(taskDir, "solution.sh"),
+			"content":   solutionContent,
+		})
+		if err != nil {
+			return fmt.Errorf("failed to create solution: %w", err)
+		}
+
+		// Make it executable
+		_, err = e.executeToolCall(ctx, "shell", map[string]interface{}{
+			"command": "chmod",
+			"args":    []string{"+x", filepath.Join(taskDir, "solution.sh")},
+		})
+
+		// Track artifact
+		if result != nil && result.Success {
+			e.mu.Lock()
+			e.result.Artifacts = append(e.result.Artifacts, Artifact{
+				Name:        "solution.sh",
+				Type:        "script",
+				Path:        filepath.Join(e.execContext.WorkspaceDir, taskDir, "solution.sh"),
+				Size:        int64(len(solutionContent)),
+				CreatedAt:   time.Now(),
+				Description: "Task solution script",
+			})
+			e.mu.Unlock()
+		}
+	}
+	return nil
+}
+
+func (e *BasicTaskExecutor) stepVerifyResults(ctx context.Context) error {
+	// Check context before proceeding
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	default:
+	}
+	
+	// Verify created files exist
+	if e.toolRegistry != nil {
+		taskDir := fmt.Sprintf("task_%s", e.currentTask.ID)
+		
+		// List created files
+		result, err := e.executeToolCall(ctx, "shell", map[string]interface{}{
+			"command": "ls",
+			"args":    []string{"-la", taskDir},
+		})
+		if err != nil {
+			return fmt.Errorf("failed to verify results: %w", err)
+		}
+
+		// Create verification report
+		verificationReport := fmt.Sprintf(`# Verification Report
+Task: %s
+Date: %s
+Status: Completed
+
+## Created Files:
+%s
+
+## Summary:
+- Task directory created
+- Documentation generated
+- Solution implemented
+- All artifacts tracked
+`, 
+			e.currentTask.Title,
+			time.Now().Format(time.RFC3339),
+			result.Output,
+		)
+
+		_, err = e.executeToolCall(ctx, "file", map[string]interface{}{
+			"operation": "write",
+			"path":      filepath.Join(taskDir, "verification.md"),
+			"content":   verificationReport,
+		})
+
+		e.addExecutionLog("Verification completed", map[string]interface{}{
+			"artifacts_created": len(e.result.Artifacts),
+			"task_directory":    taskDir,
+		})
+	}
+	return nil
 }

@@ -36,7 +36,7 @@ func (f *GuildMasterFactory) CreateGuildMasterRefiner(providerName, model string
 	artisanClient := NewGuildArtisanClient(provider, model)
 
 	// Create response parser
-	responseParser := NewArchiveParser()
+	responseParser := NewResponseParser()
 
 	// Create structure validator
 	validator := NewDefaultValidator()
