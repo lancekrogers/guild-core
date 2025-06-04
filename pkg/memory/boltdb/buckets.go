@@ -31,6 +31,15 @@ const (
 	
 	// BucketBoards stores kanban boards
 	BucketBoards = "boards"
+	
+	// BucketPromptLayers stores layered prompts by layer type
+	BucketPromptLayers = "prompt_layers"
+	
+	// BucketPromptCache stores compiled layered prompts for performance
+	BucketPromptCache = "prompt_cache"
+	
+	// BucketPromptMetrics stores performance metrics for prompts
+	BucketPromptMetrics = "prompt_metrics"
 )
 
 // AllBuckets returns all bucket names
@@ -49,5 +58,8 @@ func AllBuckets() []string {
 		BucketTasksByAgent,
 		BucketConfig,
 		BucketBoards,
+		BucketPromptLayers,
+		BucketPromptCache,
+		BucketPromptMetrics,
 	}
 }

@@ -188,3 +188,74 @@ func (s *Store) Transaction(writable bool, fn func(*bolt.Tx) error) error {
 func (s *Store) Path() string {
 	return s.dbPath
 }
+
+// SavePromptLayer stores a layered prompt in the Guild Archives
+func (s *Store) SavePromptLayer(ctx context.Context, layer, identifier string, data []byte) error {
+	key := fmt.Sprintf("%s:%s", layer, identifier)
+	return s.Put(ctx, BucketPromptLayers, key, data)
+}
+
+// GetPromptLayer retrieves a layered prompt from the Guild Archives
+func (s *Store) GetPromptLayer(ctx context.Context, layer, identifier string) ([]byte, error) {
+	key := fmt.Sprintf("%s:%s", layer, identifier)
+	return s.Get(ctx, BucketPromptLayers, key)
+}
+
+// DeletePromptLayer removes a layered prompt from the Guild Archives
+func (s *Store) DeletePromptLayer(ctx context.Context, layer, identifier string) error {
+	key := fmt.Sprintf("%s:%s", layer, identifier)
+	return s.Delete(ctx, BucketPromptLayers, key)
+}
+
+// ListPromptLayers returns all prompts in a specific layer
+func (s *Store) ListPromptLayers(ctx context.Context, layer string) ([]string, error) {
+	prefix := layer + ":"
+	keys, err := s.ListKeys(ctx, BucketPromptLayers, prefix)
+	if err != nil {
+		return nil, err
+	}
+	
+	// Remove the layer prefix from keys
+	var identifiers []string
+	for _, key := range keys {
+		if identifier := strings.TrimPrefix(key, prefix); identifier != key {
+			identifiers = append(identifiers, identifier)
+		}
+	}
+	return identifiers, nil
+}
+
+// CacheCompiledPrompt stores a compiled layered prompt for performance
+func (s *Store) CacheCompiledPrompt(ctx context.Context, cacheKey string, data []byte) error {
+	return s.Put(ctx, BucketPromptCache, cacheKey, data)
+}
+
+// GetCachedPrompt retrieves a compiled layered prompt from cache
+func (s *Store) GetCachedPrompt(ctx context.Context, cacheKey string) ([]byte, error) {
+	return s.Get(ctx, BucketPromptCache, cacheKey)
+}
+
+// InvalidatePromptCache removes cached prompts matching a pattern
+func (s *Store) InvalidatePromptCache(ctx context.Context, keyPattern string) error {
+	keys, err := s.ListKeys(ctx, BucketPromptCache, keyPattern)
+	if err != nil {
+		return err
+	}
+	
+	for _, key := range keys {
+		if err := s.Delete(ctx, BucketPromptCache, key); err != nil {
+			return fmt.Errorf("failed to delete cached prompt %s: %w", key, err)
+		}
+	}
+	return nil
+}
+
+// SavePromptMetrics stores Guild prompt performance metrics
+func (s *Store) SavePromptMetrics(ctx context.Context, metricID string, data []byte) error {
+	return s.Put(ctx, BucketPromptMetrics, metricID, data)
+}
+
+// GetPromptMetrics retrieves Guild prompt performance metrics
+func (s *Store) GetPromptMetrics(ctx context.Context, metricID string) ([]byte, error) {
+	return s.Get(ctx, BucketPromptMetrics, metricID)
+}
