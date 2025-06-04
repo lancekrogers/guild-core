@@ -6,7 +6,11 @@ This directory contains comprehensive documentation for the Guild Framework.
 
 - `getting-started/` - Quick start guides and tutorials
 - `architecture/` - System design and architecture documentation
-- `api/` - API reference documentation (auto-generated from godoc)
+  - `task-execution.md` - Task execution system with phases and prompts
+- `api/` - API reference documentation
+  - `executor.md` - Task executor API reference
+- `features/` - Feature-specific documentation
+  - `workspace-isolation.md` - Git worktree workspace isolation
 - `examples/` - Example code and use cases
 - `deployment/` - Deployment and configuration guides
 

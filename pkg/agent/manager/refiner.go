@@ -80,6 +80,31 @@ func (r *GuildMasterRefiner) RefineCommission(ctx context.Context, commission Co
 	return refined, nil
 }
 
+// RefineCommissionSimple provides a simplified interface for CLI usage
+func (r *GuildMasterRefiner) RefineCommissionSimple(ctx context.Context, commissionText string, domain string) (string, error) {
+	// Get the appropriate system prompt based on domain
+	systemPrompt, err := r.getSystemPrompt(ctx, domain)
+	if err != nil {
+		return "", fmt.Errorf("failed to get system prompt: %w", err)
+	}
+
+	// Create simple user prompt
+	userPrompt := fmt.Sprintf("Please refine the following commission into a hierarchical implementation plan:\n\n%s", commissionText)
+
+	// Call the Guild Artisan for refinement
+	response, err := r.artisanClient.Complete(ctx, ArtisanRequest{
+		SystemPrompt: systemPrompt,
+		UserPrompt:   userPrompt,
+		Temperature:  0.7,
+		MaxTokens:    4000,
+	})
+	if err != nil {
+		return "", fmt.Errorf("failed to get Artisan response: %w", err)
+	}
+
+	return response.Content, nil
+}
+
 // getSystemPrompt retrieves the appropriate Guild Master system prompt
 func (r *GuildMasterRefiner) getSystemPrompt(ctx context.Context, domain string) (string, error) {
 	// Default to "default" domain if empty
