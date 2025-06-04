@@ -530,7 +530,7 @@ func (s *Server) SendMessageToAgent(ctx context.Context, req *pb.AgentMessageReq
 // StreamAgentConversation handles bidirectional streaming for agent conversations
 func (s *Server) StreamAgentConversation(stream pb.Guild_StreamAgentConversationServer) error {
 	// Create a context for this stream
-	ctx := stream.Context()
+	_ = stream.Context()
 	
 	// Track active agents and their states
 	activeAgents := make(map[string]*pb.AgentStatus)

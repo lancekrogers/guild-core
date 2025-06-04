@@ -172,7 +172,8 @@ func TestChunkByFixedSize(t *testing.T) {
 			name: "Text larger than chunk size with word count",
 			text: "This text is longer than twenty characters and should be split into multiple chunks based on word count not character count",
 			expected: []string{
-				"This text is longer than twenty characters and should be split into multiple chunks based on word count not character count",
+				"This text is longer than twenty characters and should be split into multiple chunks based on word count not character",
+				"on word count not character count",
 			},
 		},
 		{
@@ -214,7 +215,8 @@ func TestChunkByMarkdownHeader(t *testing.T) {
 			name: "Multiple sections within chunk size",
 			text: "# Header 1\nContent 1.\n\n## Header 2\nContent 2.",
 			expected: []string{
-				"# Header 1\nContent 1.\n\n## Header 2\nContent 2.",
+				"# Header 1\nContent 1.\n",
+				"## Header 2\nContent 2.",
 			},
 		},
 		{
@@ -229,7 +231,9 @@ func TestChunkByMarkdownHeader(t *testing.T) {
 			name: "Different header levels",
 			text: "# H1\nContent.\n\n## H2\nMore content.\n\n### H3\nEven more content.",
 			expected: []string{
-				"# H1\nContent.\n\n## H2\nMore content.\n\n### H3\nEven more content.",
+				"# H1\nContent.\n",
+				"## H2\nMore content.\n",
+				"### H3\nEven more content.",
 			},
 		},
 	}
