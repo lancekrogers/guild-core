@@ -59,19 +59,36 @@ func (d *Database) Migrate(ctx context.Context) error {
 		return fmt.Errorf("failed to create migration driver: %w", err)
 	}
 
-	// Get migrations directory relative to project root
-	// Following Guild's project structure conventions
-	migrationsPath := "file://db/migrations"
+	// Get migrations directory - try multiple locations
+	var migrationsPath string
 	
-	// Try to find migrations directory
-	if _, err := os.Stat("db/migrations"); os.IsNotExist(err) {
-		// Try relative to binary location
-		if wd, err := os.Getwd(); err == nil {
-			potentialPath := filepath.Join(wd, "db", "migrations")
+	// 1. Try current working directory
+	if _, err := os.Stat("db/migrations"); err == nil {
+		migrationsPath = "file://db/migrations"
+	} else {
+		// 2. Try relative to executable
+		execPath, err := os.Executable()
+		if err == nil {
+			execDir := filepath.Dir(execPath)
+			potentialPath := filepath.Join(execDir, "db", "migrations")
 			if _, err := os.Stat(potentialPath); err == nil {
 				migrationsPath = fmt.Sprintf("file://%s", potentialPath)
+			} else {
+				// 3. Try going up from executable to find db/migrations
+				for i := 0; i < 5; i++ { // Try up to 5 levels up
+					execDir = filepath.Dir(execDir)
+					potentialPath = filepath.Join(execDir, "db", "migrations")
+					if _, err := os.Stat(potentialPath); err == nil {
+						migrationsPath = fmt.Sprintf("file://%s", potentialPath)
+						break
+					}
+				}
 			}
 		}
+	}
+	
+	if migrationsPath == "" {
+		return fmt.Errorf("could not find database migrations directory")
 	}
 
 	// Create file source

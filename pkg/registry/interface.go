@@ -5,6 +5,7 @@ package registry
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
@@ -32,6 +33,9 @@ type ComponentRegistry interface {
 	
 	// Prompts returns the prompt registry for managing prompt templates
 	Prompts() *PromptRegistry
+	
+	// Storage returns the storage registry for managing storage backends
+	Storage() StorageRegistry
 	
 	// Orchestrator returns the orchestrator registry for managing orchestrator components
 	Orchestrator() interface{}
@@ -166,6 +170,36 @@ type MemoryRegistry interface {
 	ListVectorStores() []string
 }
 
+// StorageRegistry manages storage backend implementations
+type StorageRegistry interface {
+	// RegisterTaskRepository registers a task repository implementation
+	RegisterTaskRepository(repo TaskRepository) error
+	
+	// GetTaskRepository retrieves the registered task repository
+	GetTaskRepository() TaskRepository
+	
+	// RegisterCampaignRepository registers a campaign repository implementation
+	RegisterCampaignRepository(repo CampaignRepository) error
+	
+	// GetCampaignRepository retrieves the registered campaign repository
+	GetCampaignRepository() CampaignRepository
+	
+	// RegisterCommissionRepository registers a commission repository implementation
+	RegisterCommissionRepository(repo CommissionRepository) error
+	
+	// GetCommissionRepository retrieves the registered commission repository
+	GetCommissionRepository() CommissionRepository
+	
+	// RegisterAgentRepository registers an agent repository implementation
+	RegisterAgentRepository(repo AgentRepository) error
+	
+	// GetAgentRepository retrieves the registered agent repository
+	GetAgentRepository() AgentRepository
+	
+	// GetMemoryStore returns the configured memory store adapter
+	GetMemoryStore() MemoryStore
+}
+
 // ProjectRegistry manages project detection and context.
 type ProjectRegistry interface {
 	// GetProjectManager returns the project manager instance
@@ -195,6 +229,115 @@ type Tool = tools.Tool
 type Provider = providers.LLMClient
 type MemoryStore = memory.Store
 type VectorStore = vector.VectorStore
+
+// Forward declarations for storage repositories to avoid import cycles
+type TaskRepository interface {
+	CreateTask(ctx context.Context, task *StorageTask) error
+	GetTask(ctx context.Context, id string) (*StorageTask, error)
+	UpdateTask(ctx context.Context, task *StorageTask) error
+	DeleteTask(ctx context.Context, id string) error
+	ListTasks(ctx context.Context) ([]*StorageTask, error)
+	ListTasksByStatus(ctx context.Context, status string) ([]*StorageTask, error)
+	ListTasksByCommission(ctx context.Context, commissionID string) ([]*StorageTask, error)
+	ListTasksForKanban(ctx context.Context, commissionID string) ([]*StorageTask, error)
+	AssignTask(ctx context.Context, taskID, agentID string) error
+	UpdateTaskStatus(ctx context.Context, taskID, status string) error
+	UpdateTaskColumn(ctx context.Context, taskID, column string) error
+	RecordTaskEvent(ctx context.Context, event *TaskEvent) error
+	GetTaskHistory(ctx context.Context, taskID string) ([]*TaskEvent, error)
+	GetAgentWorkload(ctx context.Context) ([]*AgentWorkload, error)
+}
+
+type CampaignRepository interface {
+	CreateCampaign(ctx context.Context, campaign *Campaign) error
+	GetCampaign(ctx context.Context, id string) (*Campaign, error)
+	UpdateCampaignStatus(ctx context.Context, id, status string) error
+	DeleteCampaign(ctx context.Context, id string) error
+	ListCampaigns(ctx context.Context) ([]*Campaign, error)
+}
+
+type CommissionRepository interface {
+	CreateCommission(ctx context.Context, commission *Commission) error
+	GetCommission(ctx context.Context, id string) (*Commission, error)
+	UpdateCommissionStatus(ctx context.Context, id, status string) error
+	DeleteCommission(ctx context.Context, id string) error
+	ListCommissionsByCampaign(ctx context.Context, campaignID string) ([]*Commission, error)
+}
+
+type AgentRepository interface {
+	CreateAgent(ctx context.Context, agent *StorageAgent) error
+	GetAgent(ctx context.Context, id string) (*StorageAgent, error)
+	UpdateAgent(ctx context.Context, agent *StorageAgent) error
+	DeleteAgent(ctx context.Context, id string) error
+	ListAgents(ctx context.Context) ([]*StorageAgent, error)
+	ListAgentsByType(ctx context.Context, agentType string) ([]*StorageAgent, error)
+}
+
+// Storage model forward declarations
+type StorageTask struct {
+	ID              string                 `json:"id"`
+	CommissionID    string                 `json:"commission_id"`
+	AssignedAgentID *string                `json:"assigned_agent_id,omitempty"`
+	Title           string                 `json:"title"`
+	Description     *string                `json:"description,omitempty"`
+	Status          string                 `json:"status"`
+	Column          string                 `json:"column"`
+	StoryPoints     int32                  `json:"story_points"`
+	Metadata        map[string]interface{} `json:"metadata,omitempty"`
+	CreatedAt       time.Time              `json:"created_at"`
+	UpdatedAt       time.Time              `json:"updated_at"`
+	AgentName       *string                `json:"agent_name,omitempty"`
+	AgentType       *string                `json:"agent_type,omitempty"`
+}
+
+type Campaign struct {
+	ID        string    `json:"id"`
+	Name      string    `json:"name"`
+	Status    string    `json:"status"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+type Commission struct {
+	ID          string                 `json:"id"`
+	CampaignID  string                 `json:"campaign_id"`
+	Title       string                 `json:"title"`
+	Description *string                `json:"description,omitempty"`
+	Domain      *string                `json:"domain,omitempty"`
+	Context     map[string]interface{} `json:"context,omitempty"`
+	Status      string                 `json:"status"`
+	CreatedAt   time.Time              `json:"created_at"`
+}
+
+type StorageAgent struct {
+	ID             string                 `json:"id"`
+	Name           string                 `json:"name"`
+	Type           string                 `json:"type"`
+	Provider       *string                `json:"provider,omitempty"`
+	Model          *string                `json:"model,omitempty"`
+	Capabilities   map[string]interface{} `json:"capabilities,omitempty"`
+	Tools          map[string]interface{} `json:"tools,omitempty"`
+	CostMagnitude  int32                  `json:"cost_magnitude"`
+	CreatedAt      time.Time              `json:"created_at"`
+}
+
+type TaskEvent struct {
+	ID         int64     `json:"id"`
+	TaskID     string    `json:"task_id"`
+	AgentID    *string   `json:"agent_id,omitempty"`
+	EventType  string    `json:"event_type"`
+	OldValue   *string   `json:"old_value,omitempty"`
+	NewValue   *string   `json:"new_value,omitempty"`
+	Reason     *string   `json:"reason,omitempty"`
+	CreatedAt  time.Time `json:"created_at"`
+}
+
+type AgentWorkload struct {
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	TaskCount   int64  `json:"task_count"`
+	ActiveTasks int64  `json:"active_tasks"`
+}
 
 // Forward declarations for orchestrator interfaces to avoid import cycles
 type CommissionTaskPlanner interface {

@@ -1,10 +1,12 @@
 package project
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	
+	"github.com/guild-ventures/guild-core/pkg/storage"
 	"gopkg.in/yaml.v3"
 )
 
@@ -85,6 +87,11 @@ func createStructure(baseDir string) error {
 	// Create default guild configuration
 	if err := createDefaultGuildConfig(baseDir); err != nil {
 		return fmt.Errorf("failed to create guild config: %w", err)
+	}
+
+	// Initialize database
+	if err := initializeDatabase(baseDir); err != nil {
+		return fmt.Errorf("failed to initialize database: %w", err)
 	}
 
 	return nil
@@ -243,4 +250,27 @@ func createDefaultGuildConfig(baseDir string) error {
 	}
 
 	return os.WriteFile(guildPath, data, 0644)
+}
+
+// initializeDatabase creates and migrates the SQLite database
+// Following Guild's context-aware pattern
+func initializeDatabase(baseDir string) error {
+	ctx := context.Background()
+	
+	// Create database path
+	dbPath := filepath.Join(baseDir, "guild.db")
+	
+	// Create database
+	db, err := storage.NewDatabase(dbPath)
+	if err != nil {
+		return fmt.Errorf("failed to create database: %w", err)
+	}
+	defer db.Close()
+	
+	// Run migrations
+	if err := db.Migrate(ctx); err != nil {
+		return fmt.Errorf("failed to run database migrations: %w", err)
+	}
+	
+	return nil
 }

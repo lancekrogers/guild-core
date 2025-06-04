@@ -19,6 +19,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/orchestrator"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/guild-ventures/guild-core/tools"
 )
 
 // Server implements the Guild gRPC service
@@ -39,6 +40,7 @@ type Server struct {
 	grpcServer    *grpc.Server
 	listener      net.Listener
 	promptServer  *PromptsServer // Added for prompt service
+	chatService   *ChatService   // Added for real-time chat
 }
 
 // watcher represents an active campaign watcher
@@ -64,8 +66,11 @@ func NewServer(
 	agentReg registry.AgentRegistry,
 	orchestrator *orchestrator.Orchestrator,
 	promptManager prompts.LayeredManager,
+	toolReg tools.ToolRegistry,
+	eventBus EventBus,
 ) *Server {
 	promptServer := NewPromptsServer(promptManager)
+	chatService := NewChatService(agentReg, toolReg, eventBus)
 	
 	return &Server{
 		campaignMgr:   campaignMgr,
@@ -77,6 +82,7 @@ func NewServer(
 		frameBuilder:  NewFrameBuilder(campaignMgr, objectiveMgr, kanbanMgr, agentReg),
 		watchers:      make(map[string]*watcher),
 		promptServer:  promptServer,
+		chatService:   chatService,
 	}
 }
 

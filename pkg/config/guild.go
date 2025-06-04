@@ -15,6 +15,7 @@ type GuildConfig struct {
 	Description string          `yaml:"description"`
 	Version     string          `yaml:"version,omitempty"`
 	Manager     ManagerConfig   `yaml:"manager"`
+	Storage     StorageConfig   `yaml:"storage,omitempty"`
 	Providers   ProvidersConfig `yaml:"providers,omitempty"`
 	Agents      []AgentConfig   `yaml:"agents"`
 	Metadata    Metadata        `yaml:"metadata,omitempty"`
@@ -26,6 +27,23 @@ type ManagerConfig struct {
 	Override string            `yaml:"override,omitempty"` // User-specified override
 	Fallback []string          `yaml:"fallback,omitempty"` // Fallback chain if default unavailable
 	Settings map[string]string `yaml:"settings,omitempty"` // Manager-specific settings
+}
+
+// StorageConfig configures the storage backend
+type StorageConfig struct {
+	Backend string          `yaml:"backend,omitempty"` // "sqlite" or "boltdb" (default: "sqlite")
+	SQLite  SQLiteConfig    `yaml:"sqlite,omitempty"`  // SQLite-specific configuration
+	BoltDB  BoltDBConfig    `yaml:"boltdb,omitempty"`  // BoltDB-specific configuration
+}
+
+// SQLiteConfig configures SQLite storage backend
+type SQLiteConfig struct {
+	Path string `yaml:"path,omitempty"` // Path to SQLite database file (default: ".guild/guild.db")
+}
+
+// BoltDBConfig configures BoltDB storage backend (legacy)
+type BoltDBConfig struct {
+	Path string `yaml:"path,omitempty"` // Path to BoltDB database file (default: ".guild/memory.db")
 }
 
 // ProvidersConfig contains settings for each provider (no API keys - use environment variables)
@@ -438,4 +456,38 @@ func (g *GuildConfig) GetProviderBaseURL(provider string) string {
 	default:
 		return ""
 	}
+}
+
+// GetEffectiveStorageBackend returns the storage backend with smart defaults
+func (g *GuildConfig) GetEffectiveStorageBackend() string {
+	if g.Storage.Backend != "" {
+		return g.Storage.Backend
+	}
+	return "sqlite" // Default to SQLite
+}
+
+// GetEffectiveSQLitePath returns the SQLite database path with smart defaults
+func (g *GuildConfig) GetEffectiveSQLitePath() string {
+	if g.Storage.SQLite.Path != "" {
+		return g.Storage.SQLite.Path
+	}
+	return ".guild/guild.db" // Default path
+}
+
+// GetEffectiveBoltDBPath returns the BoltDB database path with smart defaults
+func (g *GuildConfig) GetEffectiveBoltDBPath() string {
+	if g.Storage.BoltDB.Path != "" {
+		return g.Storage.BoltDB.Path
+	}
+	return ".guild/memory.db" // Default path (legacy)
+}
+
+// IsUsingSQLite returns true if the configuration is set to use SQLite storage
+func (g *GuildConfig) IsUsingSQLite() bool {
+	return g.GetEffectiveStorageBackend() == "sqlite"
+}
+
+// IsUsingBoltDB returns true if the configuration is set to use BoltDB storage (legacy)
+func (g *GuildConfig) IsUsingBoltDB() bool {
+	return g.GetEffectiveStorageBackend() == "boltdb"
 }
