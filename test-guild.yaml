@@ -1,0 +1,70 @@
+name: "E-commerce Development Guild"
+description: "A specialized guild for building modern e-commerce platforms"
+version: "1.0.0"
+
+manager:
+  default: "guild-master"
+  settings:
+    model: "claude-3-sonnet-20240229"
+    provider: "anthropic"
+
+agents:
+  - id: "guild-master"
+    name: "Guild Master Architect"
+    type: "manager"
+    provider: "anthropic"
+    model: "claude-3-sonnet-20240229"
+    description: "Chief orchestrator of the coding guild, responsible for planning and coordination"
+    capabilities: ["architecture", "planning", "coordination", "system-design"]
+    tools: ["corpus", "kanban", "delegation"]
+    
+  - id: "backend-craftsman"
+    name: "Backend Code Craftsman"
+    type: "worker"
+    provider: "anthropic"
+    model: "claude-3-sonnet-20240229"
+    description: "Master of server-side development and API creation"
+    capabilities: ["golang", "api-design", "database", "microservices"]
+    tools: ["shell", "file", "corpus"]
+    
+  - id: "frontend-artisan"
+    name: "Frontend User Interface Artisan"
+    type: "worker"
+    provider: "anthropic"
+    model: "claude-3-sonnet-20240229"
+    description: "Specialist in user interface creation and user experience"
+    capabilities: ["javascript", "react", "css", "html", "ui-design"]
+    tools: ["shell", "file", "corpus"]
+    
+  - id: "payment-sentinel"
+    name: "Payment Security Sentinel"
+    type: "specialist"
+    provider: "anthropic"
+    model: "claude-3-sonnet-20240229"
+    description: "Guardian of payment processing and financial security"
+    capabilities: ["payment-processing", "security", "compliance", "stripe", "encryption"]
+    tools: ["shell", "file", "corpus"]
+    
+  - id: "deployment-marshal"
+    name: "Deployment Infrastructure Marshal"
+    type: "specialist"
+    provider: "anthropic"
+    model: "claude-3-sonnet-20240229"
+    description: "Master of deployment, infrastructure, and DevOps operations"
+    capabilities: ["docker", "kubernetes", "aws", "terraform", "monitoring"]
+    tools: ["shell", "file", "corpus"]
+    
+  - id: "test-forge"
+    name: "Quality Test Forge"
+    type: "specialist"
+    provider: "anthropic"
+    model: "claude-3-sonnet-20240229"
+    description: "Forger of comprehensive tests and quality assurance"
+    capabilities: ["testing", "automation", "quality-assurance", "integration-testing"]
+    tools: ["shell", "file", "corpus"]
+
+metadata:
+  author: "Guild Framework Demo"
+  created_at: "2024-01-01T00:00:00Z"
+  tags: ["e-commerce", "microservices", "full-stack"]
+  description: "Demonstration guild configuration for Guild Framework chat interface"

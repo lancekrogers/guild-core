@@ -13,9 +13,11 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/campaign"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
+	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/objective"
 	"github.com/guild-ventures/guild-core/pkg/orchestrator"
+	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -23,18 +25,20 @@ import (
 type Server struct {
 	pb.UnimplementedGuildServer
 	
-	campaignMgr  campaign.Manager
-	objectiveMgr *objective.Manager
-	kanbanMgr    *kanban.Manager
-	agentReg     registry.AgentRegistry
-	orchestrator *orchestrator.Orchestrator
+	campaignMgr   campaign.Manager
+	objectiveMgr  *objective.Manager
+	kanbanMgr     *kanban.Manager
+	agentReg      registry.AgentRegistry
+	orchestrator  *orchestrator.Orchestrator
+	promptManager prompts.LayeredManager // Added for prompt management
 	
 	frameBuilder *FrameBuilder
 	watchers     map[string]*watcher
 	watchersMu   sync.RWMutex
 	
-	grpcServer   *grpc.Server
-	listener     net.Listener
+	grpcServer    *grpc.Server
+	listener      net.Listener
+	promptServer  *PromptsServer // Added for prompt service
 }
 
 // watcher represents an active campaign watcher
@@ -59,15 +63,20 @@ func NewServer(
 	kanbanMgr *kanban.Manager,
 	agentReg registry.AgentRegistry,
 	orchestrator *orchestrator.Orchestrator,
+	promptManager prompts.LayeredManager,
 ) *Server {
+	promptServer := NewPromptsServer(promptManager)
+	
 	return &Server{
-		campaignMgr:  campaignMgr,
-		objectiveMgr: objectiveMgr,
-		kanbanMgr:    kanbanMgr,
-		agentReg:     agentReg,
-		orchestrator: orchestrator,
-		frameBuilder: NewFrameBuilder(campaignMgr, objectiveMgr, kanbanMgr, agentReg),
-		watchers:     make(map[string]*watcher),
+		campaignMgr:   campaignMgr,
+		objectiveMgr:  objectiveMgr,
+		kanbanMgr:     kanbanMgr,
+		agentReg:      agentReg,
+		orchestrator:  orchestrator,
+		promptManager: promptManager,
+		frameBuilder:  NewFrameBuilder(campaignMgr, objectiveMgr, kanbanMgr, agentReg),
+		watchers:      make(map[string]*watcher),
+		promptServer:  promptServer,
 	}
 }
 
@@ -81,6 +90,7 @@ func (s *Server) Start(ctx context.Context, address string) error {
 
 	s.grpcServer = grpc.NewServer()
 	pb.RegisterGuildServer(s.grpcServer, s)
+	promptspb.RegisterPromptServiceServer(s.grpcServer, s.promptServer)
 
 	// Start server in goroutine
 	go func() {

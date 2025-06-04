@@ -124,7 +124,10 @@ func init() {
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(objectiveCmd)
 	rootCmd.AddCommand(agentCmd)
-	rootCmd.AddCommand(campaignCmd)
+	rootCmd.AddCommand(costCmd)
+	rootCmd.AddCommand(orchestratorCmd)
+	// rootCmd.AddCommand(campaignCmd)  // TODO: implement
+	// rootCmd.AddCommand(chatCmd)      // TODO: implement
 
 	// Register objective subcommands
 	objectiveCmd.AddCommand(objectiveCreateCmd)

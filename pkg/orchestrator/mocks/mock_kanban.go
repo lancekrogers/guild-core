@@ -2,6 +2,7 @@ package mocks
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/guild-ventures/guild-core/pkg/kanban"
@@ -90,12 +91,21 @@ func (m *MockKanbanManager) UpdateTaskStatus(ctx context.Context, taskID, status
 }
 
 // CreateTask creates a new task
-func (m *MockKanbanManager) CreateTask(ctx context.Context, boardID string, task *kanban.Task) error {
+func (m *MockKanbanManager) CreateTask(ctx context.Context, title, description string) (*kanban.Task, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
 	if m.createTaskError != nil {
-		return m.createTaskError
+		return nil, m.createTaskError
+	}
+
+	// Create new task
+	task := &kanban.Task{
+		ID:          fmt.Sprintf("TASK-%d", len(m.tasks)+1),
+		Title:       title,
+		Description: description,
+		Status:      kanban.StatusTodo,
+		Metadata:    make(map[string]string),
 	}
 
 	// Store task
@@ -108,7 +118,7 @@ func (m *MockKanbanManager) CreateTask(ctx context.Context, boardID string, task
 	}
 	m.tasksByStatus[statusKey] = append(m.tasksByStatus[statusKey], task)
 
-	return nil
+	return task, nil
 }
 
 // GetTask retrieves a task by ID

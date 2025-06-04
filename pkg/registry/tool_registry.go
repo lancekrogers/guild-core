@@ -2,6 +2,8 @@ package registry
 
 import (
 	"fmt"
+	"sort"
+	"sync"
 
 	"github.com/guild-ventures/guild-core/pkg/tools"
 	basetools "github.com/guild-ventures/guild-core/tools"
@@ -9,13 +11,16 @@ import (
 
 // DefaultToolRegistry implements the ToolRegistry interface by wrapping the existing tool registry
 type DefaultToolRegistry struct {
-	registry *tools.ToolRegistry
+	registry      *tools.ToolRegistry
+	toolMetadata  map[string]ToolInfo // Cost and capability metadata for tools
+	mu            sync.RWMutex
 }
 
 // NewToolRegistry creates a new tool registry
 func NewToolRegistry() ToolRegistry {
 	return &DefaultToolRegistry{
-		registry: tools.NewToolRegistry(),
+		registry:     tools.NewToolRegistry(),
+		toolMetadata: make(map[string]ToolInfo),
 	}
 }
 
@@ -88,8 +93,9 @@ func (r *DefaultToolRegistry) GetUnderlyingRegistry() *tools.ToolRegistry {
 	return r.registry
 }
 
-// RegisterToolWithCost registers a tool with a specific cost (uses the existing cost tracking)
-func (r *DefaultToolRegistry) RegisterToolWithCost(tool Tool, costPerUse float64) error {
+// RegisterToolWithLegacyCost registers a tool with a specific cost (uses the existing cost tracking)
+// Deprecated: Use RegisterToolWithCost instead for Fibonacci cost magnitude
+func (r *DefaultToolRegistry) RegisterToolWithLegacyCost(tool Tool, costPerUse float64) error {
 	actualTool, ok := tool.(basetools.Tool)
 	if !ok {
 		return fmt.Errorf("tool does not implement the expected Tool interface")
@@ -106,4 +112,164 @@ func (r *DefaultToolRegistry) GetToolCost(toolName string) float64 {
 // SetToolCost sets the cost for using a specific tool
 func (r *DefaultToolRegistry) SetToolCost(toolName string, cost float64) {
 	r.registry.SetToolCost(toolName, cost)
+}
+
+// Cost-based tool selection methods
+
+// GetToolsByCost returns tools with cost magnitude <= maxCost, sorted by cost
+func (r *DefaultToolRegistry) GetToolsByCost(maxCost int) []ToolInfo {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	var tools []ToolInfo
+	for _, toolInfo := range r.toolMetadata {
+		if toolInfo.CostMagnitude <= maxCost && toolInfo.Available {
+			tools = append(tools, toolInfo)
+		}
+	}
+
+	// Sort by cost magnitude (ascending)
+	sort.Slice(tools, func(i, j int) bool {
+		return tools[i].CostMagnitude < tools[j].CostMagnitude
+	})
+
+	return tools
+}
+
+// GetCheapestToolByCapability returns the lowest-cost tool with the given capability
+func (r *DefaultToolRegistry) GetCheapestToolByCapability(capability string) (*ToolInfo, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	var cheapestTool *ToolInfo
+	lowestCost := 999 // Higher than max Fibonacci value
+
+	for _, toolInfo := range r.toolMetadata {
+		if toolInfo.Available && r.hasToolCapability(toolInfo.Capabilities, capability) {
+			if toolInfo.CostMagnitude < lowestCost {
+				lowestCost = toolInfo.CostMagnitude
+				toolCopy := toolInfo
+				cheapestTool = &toolCopy
+			}
+		}
+	}
+
+	if cheapestTool == nil {
+		return nil, fmt.Errorf("no tool found with capability '%s'", capability)
+	}
+
+	return cheapestTool, nil
+}
+
+// RegisterToolWithCost registers a tool with cost information and capabilities
+func (r *DefaultToolRegistry) RegisterToolWithCost(name string, tool Tool, costMagnitude int, capabilities []string) error {
+	if name == "" {
+		return fmt.Errorf("tool name cannot be empty")
+	}
+	if tool == nil {
+		return fmt.Errorf("tool cannot be nil")
+	}
+	
+	// Validate cost magnitude (Fibonacci scale)
+	if costMagnitude != 0 {
+		validCosts := map[int]bool{1: true, 2: true, 3: true, 5: true, 8: true}
+		if !validCosts[costMagnitude] {
+			return fmt.Errorf("invalid cost_magnitude: %d (must be 0 for free tools, or Fibonacci values: 1,2,3,5,8)", costMagnitude)
+		}
+	}
+
+	// Register the tool with the underlying registry
+	if err := r.RegisterTool(name, tool); err != nil {
+		return fmt.Errorf("failed to register tool: %w", err)
+	}
+
+	// Store metadata for cost-based selection
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	r.toolMetadata[name] = ToolInfo{
+		Name:          name,
+		Capabilities:  capabilities,
+		CostMagnitude: costMagnitude,
+		Available:     true,
+		Tool:          tool,
+	}
+
+	return nil
+}
+
+// Helper methods
+
+// hasToolCapability checks if the tool has a specific capability
+func (r *DefaultToolRegistry) hasToolCapability(capabilities []string, target string) bool {
+	for _, cap := range capabilities {
+		if cap == target {
+			return true
+		}
+	}
+	return false
+}
+
+// GetToolInfo returns metadata for a specific tool
+func (r *DefaultToolRegistry) GetToolInfo(name string) (*ToolInfo, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	toolInfo, exists := r.toolMetadata[name]
+	if !exists {
+		return nil, fmt.Errorf("tool metadata for '%s' not found", name)
+	}
+
+	return &toolInfo, nil
+}
+
+// ListToolsWithMetadata returns all registered tools with their metadata
+func (r *DefaultToolRegistry) ListToolsWithMetadata() []ToolInfo {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	tools := make([]ToolInfo, 0, len(r.toolMetadata))
+	for _, toolInfo := range r.toolMetadata {
+		tools = append(tools, toolInfo)
+	}
+
+	// Sort by cost magnitude for consistent ordering
+	sort.Slice(tools, func(i, j int) bool {
+		return tools[i].CostMagnitude < tools[j].CostMagnitude
+	})
+
+	return tools
+}
+
+// SetToolAvailability sets whether a tool is currently available
+func (r *DefaultToolRegistry) SetToolAvailability(name string, available bool) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	toolInfo, exists := r.toolMetadata[name]
+	if !exists {
+		return fmt.Errorf("tool metadata for '%s' not found", name)
+	}
+
+	toolInfo.Available = available
+	r.toolMetadata[name] = toolInfo
+	return nil
+}
+
+// RegisterBasicTools registers common tools with their cost information
+func (r *DefaultToolRegistry) RegisterBasicTools() error {
+	// This is a placeholder for registering common tools with cost metadata
+	// In practice, you'd register actual tool implementations here
+	
+	// Example registrations (these would be actual tools):
+	// Shell tools - zero cost
+	// err := r.RegisterToolWithCost("shell", shellTool, 0, []string{"execution", "file_operations"})
+	// File system tools - zero cost
+	// err = r.RegisterToolWithCost("file_system", fsTool, 0, []string{"file_operations", "read", "write"})
+	// Git tools - zero cost
+	// err = r.RegisterToolWithCost("git", gitTool, 0, []string{"version_control", "collaboration"})
+	// HTTP client - low cost
+	// err = r.RegisterToolWithCost("http_client", httpTool, 1, []string{"network", "api"})
+	
+	return nil
 }

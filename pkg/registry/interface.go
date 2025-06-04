@@ -38,6 +38,22 @@ type ComponentRegistry interface {
 	
 	// Shutdown cleanly shuts down all registries and their components
 	Shutdown(ctx context.Context) error
+	
+	// Cost-based selection methods (convenience methods for cost-aware orchestration)
+	// GetAgentsByCost returns agents with cost magnitude <= maxCost, sorted by cost
+	GetAgentsByCost(maxCost int) []AgentInfo
+	
+	// GetCheapestAgentByCapability returns the lowest-cost agent with the given capability
+	GetCheapestAgentByCapability(capability string) (*AgentInfo, error)
+	
+	// GetToolsByCost returns tools with cost magnitude <= maxCost, sorted by cost
+	GetToolsByCost(maxCost int) []ToolInfo
+	
+	// GetCheapestToolByCapability returns the lowest-cost tool with the given capability
+	GetCheapestToolByCapability(capability string) (*ToolInfo, error)
+	
+	// GetAgentsByCapability returns all agents that have the specified capability
+	GetAgentsByCapability(capability string) []AgentInfo
 }
 
 // AgentRegistry manages agent types and their factory functions.
@@ -53,6 +69,22 @@ type AgentRegistry interface {
 	
 	// HasAgentType checks if an agent type is registered
 	HasAgentType(agentType string) bool
+	
+	// Cost-based selection methods
+	// GetAgentsByCost returns agents with cost magnitude <= maxCost, sorted by cost
+	GetAgentsByCost(maxCost int) []AgentInfo
+	
+	// GetCheapestAgentByCapability returns the lowest-cost agent with the given capability
+	GetCheapestAgentByCapability(capability string) (*AgentInfo, error)
+	
+	// GetAgentsByCapability returns all agents that have the specified capability
+	GetAgentsByCapability(capability string) []AgentInfo
+	
+	// RegisterGuildAgent registers a configured agent from guild config
+	RegisterGuildAgent(config GuildAgentConfig) error
+	
+	// GetRegisteredAgents returns all registered agent configurations
+	GetRegisteredAgents() []GuildAgentConfig
 }
 
 // ToolRegistry manages tool registration and discovery.
@@ -71,6 +103,16 @@ type ToolRegistry interface {
 	
 	// HasTool checks if a tool is registered
 	HasTool(name string) bool
+	
+	// Cost-based tool selection methods
+	// GetToolsByCost returns tools with cost magnitude <= maxCost, sorted by cost
+	GetToolsByCost(maxCost int) []ToolInfo
+	
+	// GetCheapestToolByCapability returns the lowest-cost tool with the given capability
+	GetCheapestToolByCapability(capability string) (*ToolInfo, error)
+	
+	// RegisterToolWithCost registers a tool with cost information
+	RegisterToolWithCost(name string, tool Tool, costMagnitude int, capabilities []string) error
 }
 
 // ProviderRegistry manages LLM provider registration and selection.
@@ -205,6 +247,48 @@ type MemoryConfig struct {
 	DefaultMemoryStore string                 `yaml:"default_memory_store"`
 	DefaultVectorStore string                 `yaml:"default_vector_store"`
 	Stores             map[string]interface{} `yaml:"stores"`
+}
+
+// AgentInfo contains agent metadata for cost-based selection
+type AgentInfo struct {
+	ID            string   `json:"id"`
+	Name          string   `json:"name"`
+	Type          string   `json:"type"`
+	Provider      string   `json:"provider"`
+	Model         string   `json:"model"`
+	Capabilities  []string `json:"capabilities"`
+	Tools         []string `json:"tools"`
+	CostMagnitude int      `json:"cost_magnitude"`
+	ContextWindow int      `json:"context_window"`
+	ContextReset  string   `json:"context_reset"`
+	Available     bool     `json:"available"`
+}
+
+// ToolInfo contains tool metadata for cost-based selection
+type ToolInfo struct {
+	Name          string   `json:"name"`
+	Capabilities  []string `json:"capabilities"`
+	CostMagnitude int      `json:"cost_magnitude"`
+	Available     bool     `json:"available"`
+	Tool          Tool     `json:"-"` // The actual tool instance
+}
+
+// GuildAgentConfig represents an agent from guild configuration
+type GuildAgentConfig struct {
+	ID            string            `json:"id"`
+	Name          string            `json:"name"`
+	Type          string            `json:"type"`
+	Provider      string            `json:"provider"`
+	Model         string            `json:"model"`
+	Description   string            `json:"description,omitempty"`
+	Capabilities  []string          `json:"capabilities"`
+	Tools         []string          `json:"tools,omitempty"`
+	MaxTokens     int               `json:"max_tokens,omitempty"`
+	Temperature   float64           `json:"temperature,omitempty"`
+	CostMagnitude int               `json:"cost_magnitude,omitempty"`
+	ContextWindow int               `json:"context_window,omitempty"`
+	ContextReset  string            `json:"context_reset,omitempty"`
+	Settings      map[string]string `json:"settings,omitempty"`
 }
 
 // Data types used by components

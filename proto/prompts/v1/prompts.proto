@@ -1,0 +1,180 @@
+syntax = "proto3";
+
+package prompts.v1;
+
+option go_package = "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1";
+
+import "google/protobuf/timestamp.proto";
+
+// PromptService provides Guild layered prompt management
+service PromptService {
+  // GetPromptLayer retrieves a specific prompt layer
+  rpc GetPromptLayer(GetPromptLayerRequest) returns (GetPromptLayerResponse);
+  
+  // SetPromptLayer sets or updates a specific prompt layer
+  rpc SetPromptLayer(SetPromptLayerRequest) returns (SetPromptLayerResponse);
+  
+  // DeletePromptLayer removes a specific prompt layer
+  rpc DeletePromptLayer(DeletePromptLayerRequest) returns (DeletePromptLayerResponse);
+  
+  // ListPromptLayers returns all layers for an artisan/session
+  rpc ListPromptLayers(ListPromptLayersRequest) returns (ListPromptLayersResponse);
+  
+  // BuildLayeredPrompt assembles a complete layered prompt
+  rpc BuildLayeredPrompt(BuildLayeredPromptRequest) returns (BuildLayeredPromptResponse);
+  
+  // InvalidateCache clears the layered prompt cache
+  rpc InvalidateCache(InvalidateCacheRequest) returns (InvalidateCacheResponse);
+  
+  // GetLayerStats returns statistics for a specific layer
+  rpc GetLayerStats(GetLayerStatsRequest) returns (GetLayerStatsResponse);
+  
+  // StreamPromptUpdates provides real-time prompt update notifications
+  rpc StreamPromptUpdates(StreamPromptUpdatesRequest) returns (stream PromptUpdateEvent);
+}
+
+// PromptLayer represents the hierarchical layers of Guild prompts
+enum PromptLayer {
+  PROMPT_LAYER_UNSPECIFIED = 0;
+  PROMPT_LAYER_PLATFORM = 1;    // Core Guild platform rules
+  PROMPT_LAYER_GUILD = 2;       // Project-wide goals and style
+  PROMPT_LAYER_ROLE = 3;        // Artisan role definitions  
+  PROMPT_LAYER_DOMAIN = 4;      // Project type specializations
+  PROMPT_LAYER_SESSION = 5;     // User preferences and session context
+  PROMPT_LAYER_TURN = 6;        // Ephemeral instructions for single interactions
+}
+
+// SystemPrompt represents a single layer in the Guild's layered prompt system
+message SystemPrompt {
+  PromptLayer layer = 1;
+  string artisan_id = 2;
+  string session_id = 3;
+  string content = 4;
+  int32 version = 5;
+  int32 priority = 6;
+  google.protobuf.Timestamp updated = 7;
+  map<string, string> metadata = 8;
+}
+
+// LayeredPrompt represents a fully assembled Guild prompt with all layers
+message LayeredPrompt {
+  repeated SystemPrompt layers = 1;
+  string compiled = 2;
+  int32 token_count = 3;
+  bool truncated = 4;
+  string cache_key = 5;
+  string artisan_id = 6;
+  string session_id = 7;
+  google.protobuf.Timestamp assembled_at = 8;
+  map<string, string> metadata = 9;
+}
+
+// TurnContext represents ephemeral context for a single Guild interaction
+message TurnContext {
+  string user_message = 1;
+  string task_id = 2;
+  string commission_id = 3;
+  string urgency = 4;
+  repeated string instructions = 5;
+  map<string, string> metadata = 6;
+}
+
+// Request/Response messages
+
+message GetPromptLayerRequest {
+  PromptLayer layer = 1;
+  string artisan_id = 2;
+  string session_id = 3;
+}
+
+message GetPromptLayerResponse {
+  SystemPrompt prompt = 1;
+}
+
+message SetPromptLayerRequest {
+  SystemPrompt prompt = 1;
+}
+
+message SetPromptLayerResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message DeletePromptLayerRequest {
+  PromptLayer layer = 1;
+  string artisan_id = 2;
+  string session_id = 3;
+}
+
+message DeletePromptLayerResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message ListPromptLayersRequest {
+  string artisan_id = 1;
+  string session_id = 2;
+}
+
+message ListPromptLayersResponse {
+  repeated SystemPrompt prompts = 1;
+}
+
+message BuildLayeredPromptRequest {
+  string artisan_id = 1;
+  string session_id = 2;
+  TurnContext turn_context = 3;
+}
+
+message BuildLayeredPromptResponse {
+  LayeredPrompt prompt = 1;
+}
+
+message InvalidateCacheRequest {
+  string artisan_id = 1;
+  string session_id = 2;
+}
+
+message InvalidateCacheResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetLayerStatsRequest {
+  PromptLayer layer = 1;
+}
+
+message GetLayerStatsResponse {
+  LayerStats stats = 1;
+}
+
+message LayerStats {
+  PromptLayer layer = 1;
+  int32 prompt_count = 2;
+  int32 average_tokens = 3;
+  google.protobuf.Timestamp last_updated = 4;
+}
+
+message StreamPromptUpdatesRequest {
+  string artisan_id = 1;
+  string session_id = 2;
+  repeated PromptLayer layers = 3; // Filter by specific layers
+}
+
+message PromptUpdateEvent {
+  enum EventType {
+    EVENT_TYPE_UNSPECIFIED = 0;
+    EVENT_TYPE_CREATED = 1;
+    EVENT_TYPE_UPDATED = 2;
+    EVENT_TYPE_DELETED = 3;
+    EVENT_TYPE_CACHE_INVALIDATED = 4;
+  }
+  
+  EventType event_type = 1;
+  PromptLayer layer = 2;
+  string artisan_id = 3;
+  string session_id = 4;
+  SystemPrompt prompt = 5;
+  google.protobuf.Timestamp timestamp = 6;
+  map<string, string> metadata = 7;
+}

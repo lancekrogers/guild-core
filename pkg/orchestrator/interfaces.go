@@ -12,6 +12,8 @@ type KanbanManager interface {
 	ListTasksByStatus(ctx context.Context, boardID string, status kanban.TaskStatus) ([]*kanban.Task, error)
 	UpdateTaskStatus(ctx context.Context, taskID, status, assignee, comment string) error
 	GetTask(ctx context.Context, taskID string) (*kanban.Task, error)
+	CreateTask(ctx context.Context, title, description string) (*kanban.Task, error)
+	UpdateTask(ctx context.Context, task *kanban.Task) error
 }
 
 // AgentFactory interface for agent creation needed by orchestrator

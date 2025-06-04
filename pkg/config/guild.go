@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -38,7 +39,13 @@ type AgentConfig struct {
 	Tools        []string          `yaml:"tools,omitempty"`
 	MaxTokens    int               `yaml:"max_tokens,omitempty"`
 	Temperature  float64           `yaml:"temperature,omitempty"`
-	Settings     map[string]string `yaml:"settings,omitempty"` // Provider-specific settings
+	
+	// Enhanced configuration for intelligent assignment
+	CostMagnitude  int    `yaml:"cost_magnitude,omitempty"`   // Fibonacci cost scale: 0=bash, 1=cheap API, 2,3,5,8=expensive models
+	ContextWindow  int    `yaml:"context_window,omitempty"`   // Context window size in tokens (auto-detected if 0)
+	ContextReset   string `yaml:"context_reset,omitempty"`    // "truncate" or "summarize" when context exceeds window
+	
+	Settings       map[string]string `yaml:"settings,omitempty"` // Provider-specific settings
 }
 
 // Metadata contains optional metadata about the guild
@@ -158,8 +165,9 @@ func (a *AgentConfig) Validate() error {
 	if a.Provider == "" {
 		return fmt.Errorf("agent provider is required")
 	}
-	if a.Model == "" {
-		return fmt.Errorf("agent model is required")
+	// Model is required unless this is a tool-only agent (cost magnitude 0)
+	if a.Model == "" && a.CostMagnitude != 0 {
+		return fmt.Errorf("agent model is required (except for tool-only agents with cost_magnitude: 0)")
 	}
 	
 	// Validate type
@@ -177,7 +185,114 @@ func (a *AgentConfig) Validate() error {
 		return fmt.Errorf("agent must have at least one capability")
 	}
 
+	// Validate cost magnitude (Fibonacci scale)
+	if a.CostMagnitude != 0 {
+		validCosts := map[int]bool{
+			1: true, // Cheap API usage
+			2: true, // Low-mid cost
+			3: true, // Mid cost
+			5: true, // High cost
+			8: true, // Most expensive models
+		}
+		if !validCosts[a.CostMagnitude] {
+			return fmt.Errorf("invalid cost_magnitude: %d (must be 0 for bash tools, or Fibonacci values: 1,2,3,5,8)", a.CostMagnitude)
+		}
+	}
+
+	// Validate context reset behavior
+	if a.ContextReset != "" {
+		validResets := map[string]bool{
+			"truncate":   true,
+			"summarize":  true,
+		}
+		if !validResets[a.ContextReset] {
+			return fmt.Errorf("invalid context_reset: %s (must be 'truncate' or 'summarize')", a.ContextReset)
+		}
+	}
+
+	// Validate context window
+	if a.ContextWindow < 0 {
+		return fmt.Errorf("context_window must be non-negative (0 for auto-detection)")
+	}
+
 	return nil
+}
+
+// GetEffectiveCostMagnitude returns the cost magnitude with smart defaults
+func (a *AgentConfig) GetEffectiveCostMagnitude() int {
+	if a.CostMagnitude != 0 {
+		return a.CostMagnitude
+	}
+	
+	// If no model specified, this is likely a tool-only agent
+	if a.Model == "" {
+		return 0
+	}
+	
+	// Auto-assign based on model characteristics if not specified
+	modelLower := strings.ToLower(a.Model)
+	switch {
+	case strings.Contains(modelLower, "gpt-4"):
+		return 5 // High cost
+	case strings.Contains(modelLower, "gpt-3.5"):
+		return 2 // Low-mid cost  
+	case strings.Contains(modelLower, "claude-3-opus"):
+		return 8 // Most expensive
+	case strings.Contains(modelLower, "claude-3-sonnet"):
+		return 3 // Mid cost
+	case strings.Contains(modelLower, "claude-3-haiku"):
+		return 1 // Cheap
+	case strings.Contains(modelLower, "ollama") || strings.Contains(modelLower, "local"):
+		return 0 // Free local models
+	default:
+		return 1 // Default to cheap for unknown models
+	}
+}
+
+// GetEffectiveContextWindow returns the context window with auto-detection
+func (a *AgentConfig) GetEffectiveContextWindow() int {
+	if a.ContextWindow > 0 {
+		return a.ContextWindow
+	}
+	
+	// Auto-detect based on known models
+	modelLower := strings.ToLower(a.Model)
+	switch {
+	case strings.Contains(modelLower, "gpt-4-turbo"):
+		return 128000
+	case strings.Contains(modelLower, "gpt-4"):
+		return 32000
+	case strings.Contains(modelLower, "gpt-3.5"):
+		return 16000
+	case strings.Contains(modelLower, "claude-3"):
+		return 200000
+	case strings.Contains(modelLower, "claude-2"):
+		return 100000
+	default:
+		return 8000 // Conservative default
+	}
+}
+
+// GetEffectiveContextReset returns the context reset behavior with smart defaults
+func (a *AgentConfig) GetEffectiveContextReset() string {
+	if a.ContextReset != "" {
+		return a.ContextReset
+	}
+	
+	// Default based on agent type and capabilities
+	switch a.Type {
+	case "manager":
+		return "summarize" // Managers need to preserve context
+	case "worker":
+		return "truncate" // Workers can restart fresh
+	default:
+		return "truncate" // Conservative default
+	}
+}
+
+// IsToolOnlyAgent returns true if this agent only uses tools (no LLM calls)
+func (a *AgentConfig) IsToolOnlyAgent() bool {
+	return a.CostMagnitude == 0
 }
 
 // GetManagerAgent returns the manager agent configuration

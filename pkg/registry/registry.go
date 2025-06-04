@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
@@ -156,6 +157,12 @@ func (r *DefaultComponentRegistry) initializeAgents(ctx context.Context) error {
 		if r.config.Agents.DefaultType != "" {
 			agentReg.SetDefaultAgentType(r.config.Agents.DefaultType)
 		}
+		
+		// Load agents from guild configuration if available
+		if err := r.loadGuildAgents(ctx, agentReg); err != nil {
+			// Log warning but don't fail - guild config is optional
+			_ = err // Suppress error for now
+		}
 	}
 
 	return nil
@@ -168,6 +175,14 @@ func (r *DefaultComponentRegistry) initializeTools(ctx context.Context) error {
 		// This is where you'd integrate with your existing tool implementations
 		_ = toolName // Suppress unused variable warning
 	}
+	
+	// Register basic tools with cost information
+	if toolReg, ok := r.toolRegistry.(*DefaultToolRegistry); ok {
+		if err := toolReg.RegisterBasicTools(); err != nil {
+			return fmt.Errorf("failed to register basic tools: %w", err)
+		}
+	}
+	
 	return nil
 }
 
@@ -240,5 +255,101 @@ func (r *DefaultComponentRegistry) initializePrompts(ctx context.Context) error 
 
 	// TODO: Add any other prompt providers from config
 
+	return nil
+}
+
+// loadGuildAgents loads agents from guild configuration
+func (r *DefaultComponentRegistry) loadGuildAgents(ctx context.Context, agentReg *DefaultAgentRegistry) error {
+	// Try to get project context and load guild configuration
+	projectCtx, err := r.projectRegistry.GetCurrentContext(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to get project context: %w", err)
+	}
+	
+	// Load guild configuration
+	guildConfig, err := config.LoadGuildConfig((*projectCtx).GetRootPath())
+	if err != nil {
+		return fmt.Errorf("failed to load guild config: %w", err)
+	}
+	
+	// Register each agent with the registry
+	for _, agent := range guildConfig.Agents {
+		guildAgent := GuildAgentConfig{
+			ID:            agent.ID,
+			Name:          agent.Name,
+			Type:          agent.Type,
+			Provider:      agent.Provider,
+			Model:         agent.Model,
+			Description:   agent.Description,
+			Capabilities:  agent.Capabilities,
+			Tools:         agent.Tools,
+			MaxTokens:     agent.MaxTokens,
+			Temperature:   agent.Temperature,
+			CostMagnitude: agent.CostMagnitude,
+			ContextWindow: agent.ContextWindow,
+			ContextReset:  agent.ContextReset,
+			Settings:      agent.Settings,
+		}
+		
+		if err := agentReg.RegisterGuildAgent(guildAgent); err != nil {
+			return fmt.Errorf("failed to register agent %s: %w", agent.ID, err)
+		}
+	}
+	
+	return nil
+}
+
+// GetAgentsByCost provides access to cost-based agent selection
+func (r *DefaultComponentRegistry) GetAgentsByCost(maxCost int) []AgentInfo {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	
+	if agentReg, ok := r.agentRegistry.(*DefaultAgentRegistry); ok {
+		return agentReg.GetAgentsByCost(maxCost)
+	}
+	return nil
+}
+
+// GetCheapestAgentByCapability provides access to cost-optimal agent selection
+func (r *DefaultComponentRegistry) GetCheapestAgentByCapability(capability string) (*AgentInfo, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	
+	if agentReg, ok := r.agentRegistry.(*DefaultAgentRegistry); ok {
+		return agentReg.GetCheapestAgentByCapability(capability)
+	}
+	return nil, fmt.Errorf("agent registry not properly initialized")
+}
+
+// GetToolsByCost provides access to cost-based tool selection
+func (r *DefaultComponentRegistry) GetToolsByCost(maxCost int) []ToolInfo {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	
+	if toolReg, ok := r.toolRegistry.(*DefaultToolRegistry); ok {
+		return toolReg.GetToolsByCost(maxCost)
+	}
+	return nil
+}
+
+// GetCheapestToolByCapability provides access to cost-optimal tool selection
+func (r *DefaultComponentRegistry) GetCheapestToolByCapability(capability string) (*ToolInfo, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	
+	if toolReg, ok := r.toolRegistry.(*DefaultToolRegistry); ok {
+		return toolReg.GetCheapestToolByCapability(capability)
+	}
+	return nil, fmt.Errorf("tool registry not properly initialized")
+}
+
+// GetAgentsByCapability provides access to capability-based agent selection
+func (r *DefaultComponentRegistry) GetAgentsByCapability(capability string) []AgentInfo {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	
+	if agentReg, ok := r.agentRegistry.(*DefaultAgentRegistry); ok {
+		return agentReg.GetAgentsByCapability(capability)
+	}
 	return nil
 }

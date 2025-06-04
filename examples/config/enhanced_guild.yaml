@@ -1,0 +1,132 @@
+# Enhanced Guild Configuration Example
+# Demonstrates the new cost-aware agent selection features
+
+name: "Enhanced Development Guild"
+description: "A cost-optimized guild demonstrating intelligent agent selection"
+version: "1.0.0"
+
+manager:
+  default: "guild-master"
+  fallback: ["senior-architect"]
+  settings:
+    decision_threshold: "high"
+    review_required: "true"
+
+agents:
+  # Guild Master - High-capability manager
+  - id: "guild-master"
+    name: "Guild Master"
+    type: "manager"
+    provider: "anthropic"
+    model: "claude-3-opus-20240229"
+    description: "Strategic planning and high-level decision making"
+    capabilities: ["planning", "architecture", "management", "review"]
+    tools: ["file_system", "git", "documentation"]
+    cost_magnitude: 8  # Most expensive - use sparingly for critical decisions
+    context_window: 200000
+    context_reset: "summarize"
+    temperature: 0.3
+
+  # Senior Architect - Mid-cost strategic agent
+  - id: "senior-architect"
+    name: "Senior Architect"
+    type: "specialist"
+    provider: "anthropic"
+    model: "claude-3-sonnet-20240229"
+    description: "System design and technical architecture"
+    capabilities: ["architecture", "design", "backend", "database"]
+    tools: ["file_system", "http_client", "database_tools"]
+    cost_magnitude: 3  # Mid-cost for design work
+    context_window: 200000
+    context_reset: "summarize"
+    temperature: 0.2
+
+  # Backend Developer - Efficient workhorse
+  - id: "backend-dev"
+    name: "Backend Developer"
+    type: "worker"
+    provider: "anthropic"
+    model: "claude-3-haiku-20240307"
+    description: "Backend implementation and API development"
+    capabilities: ["backend", "python", "fastapi", "database", "testing"]
+    tools: ["file_system", "shell", "http_client", "mcp://localhost:3000/database-tools"]
+    cost_magnitude: 1  # Cheap for routine implementation
+    context_window: 200000
+    context_reset: "truncate"
+    temperature: 0.1
+
+  # Frontend Developer - Visual specialist
+  - id: "frontend-dev"
+    name: "Frontend Developer"
+    type: "worker"
+    provider: "openai"
+    model: "gpt-3.5-turbo"
+    description: "Frontend development and UI implementation"
+    capabilities: ["frontend", "react", "typescript", "css", "ui_design"]
+    tools: ["file_system", "shell", "browser_tools"]
+    cost_magnitude: 2  # Low-mid cost for UI work
+    context_window: 16000
+    context_reset: "truncate"
+    temperature: 0.2
+
+  # DevOps Engineer - Infrastructure specialist
+  - id: "devops-engineer"
+    name: "DevOps Engineer"  
+    type: "specialist"
+    provider: "openai"
+    model: "gpt-4-turbo"
+    description: "Infrastructure, deployment, and monitoring"
+    capabilities: ["devops", "docker", "kubernetes", "aws", "monitoring"]
+    tools: ["shell", "docker", "kubectl", "aws_cli", "terraform"]
+    cost_magnitude: 5  # High cost for complex infrastructure work
+    context_window: 128000
+    context_reset: "summarize"
+    temperature: 0.1
+
+  # Code Reviewer - Quality assurance
+  - id: "code-reviewer"
+    name: "Code Reviewer"
+    type: "specialist"
+    provider: "anthropic"
+    model: "claude-3-sonnet-20240229"
+    description: "Code review and quality assurance"
+    capabilities: ["review", "testing", "security", "performance"]
+    tools: ["file_system", "git", "static_analysis"]
+    cost_magnitude: 3  # Mid-cost for thorough reviews
+    context_window: 200000
+    context_reset: "summarize"
+    temperature: 0.1
+
+  # Local Tools Agent - Zero cost for bash operations
+  - id: "tools-agent"
+    name: "Tools Agent"
+    type: "worker"
+    provider: "local"
+    model: ""  # No LLM needed for tool-only operations
+    description: "File operations, git commands, and shell tasks"
+    capabilities: ["file_operations", "git", "shell", "automation"]
+    tools: ["file_system", "shell", "git"]
+    cost_magnitude: 0  # Zero cost - bash and tool operations only
+    context_window: 0   # No context needed
+    context_reset: "truncate"
+
+metadata:
+  author: "Guild Framework"
+  created_at: "2024-01-15"
+  tags: ["development", "cost-optimized", "enhanced"]
+  version: "2.0"
+
+# Cost Magnitude Reference:
+# 0 - Bash/tool operations only (no LLM calls)
+# 1 - Cheap API usage (Claude Haiku, basic models)
+# 2 - Low-mid cost (GPT-3.5, mid-tier models)  
+# 3 - Mid cost (Claude Sonnet, capable models)
+# 5 - High cost (GPT-4, advanced models)
+# 8 - Most expensive (Claude Opus, premium models)
+
+# This configuration enables:
+# - Automatic cost-based agent selection
+# - Tool-only agents for simple operations
+# - Context window optimization per agent
+# - Intelligent fallback chains
+# - Smart context reset strategies
