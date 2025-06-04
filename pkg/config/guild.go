@@ -11,12 +11,13 @@ import (
 
 // GuildConfig represents the configuration for a Guild (team of agents)
 type GuildConfig struct {
-	Name        string        `yaml:"name"`
-	Description string        `yaml:"description"`
-	Version     string        `yaml:"version,omitempty"`
-	Manager     ManagerConfig `yaml:"manager"`
-	Agents      []AgentConfig `yaml:"agents"`
-	Metadata    Metadata      `yaml:"metadata,omitempty"`
+	Name        string          `yaml:"name"`
+	Description string          `yaml:"description"`
+	Version     string          `yaml:"version,omitempty"`
+	Manager     ManagerConfig   `yaml:"manager"`
+	Providers   ProvidersConfig `yaml:"providers,omitempty"`
+	Agents      []AgentConfig   `yaml:"agents"`
+	Metadata    Metadata        `yaml:"metadata,omitempty"`
 }
 
 // ManagerConfig configures the manager agent selection
@@ -25,6 +26,24 @@ type ManagerConfig struct {
 	Override string            `yaml:"override,omitempty"` // User-specified override
 	Fallback []string          `yaml:"fallback,omitempty"` // Fallback chain if default unavailable
 	Settings map[string]string `yaml:"settings,omitempty"` // Manager-specific settings
+}
+
+// ProvidersConfig contains settings for each provider (no API keys - use environment variables)
+type ProvidersConfig struct {
+	OpenAI     ProviderSettings `yaml:"openai,omitempty"`
+	Anthropic  ProviderSettings `yaml:"anthropic,omitempty"`
+	Ollama     ProviderSettings `yaml:"ollama,omitempty"`
+	ClaudeCode ProviderSettings `yaml:"claude_code,omitempty"`
+	DeepSeek   ProviderSettings `yaml:"deepseek,omitempty"`
+	DeepInfra  ProviderSettings `yaml:"deepinfra,omitempty"`
+	Ora        ProviderSettings `yaml:"ora,omitempty"`
+}
+
+// ProviderSettings contains configuration for a specific provider
+// Note: API keys are NOT stored here - use environment variables for security
+type ProviderSettings struct {
+	BaseURL  string            `yaml:"base_url,omitempty"`  // Custom base URL (for self-hosted)
+	Settings map[string]string `yaml:"settings,omitempty"`  // Additional provider settings
 }
 
 // AgentConfig represents configuration for a single agent
@@ -378,4 +397,45 @@ func (a *AgentConfig) HasTool(tool string) bool {
 		}
 	}
 	return false
+}
+
+// GetProviderAPIKey returns the API key for a specific provider from environment variables only
+func (g *GuildConfig) GetProviderAPIKey(provider string) string {
+	// Only use environment variables for security
+	switch provider {
+	case "openai":
+		return os.Getenv("OPENAI_API_KEY")
+	case "anthropic":
+		return os.Getenv("ANTHROPIC_API_KEY")
+	case "deepseek":
+		return os.Getenv("DEEPSEEK_API_KEY")
+	case "deepinfra":
+		return os.Getenv("DEEPINFRA_API_KEY")
+	case "ora":
+		return os.Getenv("ORA_API_KEY")
+	default:
+		return ""
+	}
+}
+
+// GetProviderBaseURL returns the base URL for a specific provider
+func (g *GuildConfig) GetProviderBaseURL(provider string) string {
+	switch provider {
+	case "openai":
+		return g.Providers.OpenAI.BaseURL
+	case "anthropic":
+		return g.Providers.Anthropic.BaseURL
+	case "ollama":
+		return g.Providers.Ollama.BaseURL
+	case "claudecode", "claude_code":
+		return g.Providers.ClaudeCode.BaseURL
+	case "deepseek":
+		return g.Providers.DeepSeek.BaseURL
+	case "deepinfra":
+		return g.Providers.DeepInfra.BaseURL
+	case "ora":
+		return g.Providers.Ora.BaseURL
+	default:
+		return ""
+	}
 }

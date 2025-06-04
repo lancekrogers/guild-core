@@ -74,7 +74,7 @@ func init() {
 	// Register commands
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(agentCmd)
-	rootCmd.AddCommand(chatCmd)
+	// rootCmd.AddCommand(chatCmd)    // TODO: implement
 	// rootCmd.AddCommand(costCmd)    // TODO: implement
 	// rootCmd.AddCommand(campaignCmd)  // TODO: implement
 

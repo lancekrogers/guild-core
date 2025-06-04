@@ -55,10 +55,13 @@ func runInit(cmd *cobra.Command, args []string) error {
 	// Success message
 	fmt.Println("✅ Initialized Guild project")
 	fmt.Printf("Created .guild/ directory structure at: %s\n", absPath)
+	fmt.Println("\n🔑 Set up your API keys (recommended):")
+	fmt.Println("  export ANTHROPIC_API_KEY=\"your-anthropic-api-key\"")
+	fmt.Println("  export OPENAI_API_KEY=\"your-openai-api-key\"")
 	fmt.Println("\nNext steps:")
-	fmt.Println("  1. Add documents to your corpus: guild corpus add <file>")
-	fmt.Println("  2. Create an agent: guild agent create <name>")
-	fmt.Println("  3. Commission strategic work: guild commission \"Build user authentication\" --assign")
+	fmt.Println("  1. Commission strategic work: guild commission \"Build user authentication\" --assign")
+	fmt.Println("  2. Monitor progress: guild workshop")
+	fmt.Println("  3. Add documents to your corpus: guild corpus add <file>")
 
 	return nil
 }

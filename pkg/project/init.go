@@ -153,6 +153,41 @@ This directory contains Guild-specific files for this project.
 - ` + "`agents/`" + ` - Agent configurations
 - ` + "`objectives/`" + ` - Project objectives and goals
 - ` + "`config.yaml`" + ` - Project configuration
+- ` + "`guild.yaml`" + ` - Guild agent and provider configuration
+
+## Provider API Keys
+
+**Important**: Guild is configured to use environment variables for API keys by default.
+This is the recommended approach for security and team collaboration.
+
+### Required Environment Variables
+
+Set these environment variables before running Guild commands:
+
+` + "```bash" + `
+export ANTHROPIC_API_KEY="your-anthropic-api-key"
+export OPENAI_API_KEY="your-openai-api-key"
+export DEEPSEEK_API_KEY="your-deepseek-api-key"  # If using DeepSeek
+export DEEPINFRA_API_KEY="your-deepinfra-api-key"  # If using DeepInfra
+export ORA_API_KEY="your-ora-api-key"  # If using Ora
+` + "```" + `
+
+### Why Environment Variables?
+
+- **Security**: API keys are not stored in files that might be committed to version control
+- **Team Collaboration**: Each team member can use their own API keys
+- **Safe Sharing**: You can safely commit ` + "`guild.yaml`" + ` without exposing secrets
+
+### Configuration in guild.yaml
+
+The ` + "`guild.yaml`" + ` file contains agent configurations and provider settings (like base URLs for self-hosted services), but **never API keys**:
+
+` + "```yaml" + `
+providers:
+  ollama:
+    base_url: "http://localhost:11434"  # Custom base URL for self-hosted Ollama
+  # API keys are only read from environment variables
+` + "```" + `
 
 ## Usage
 
@@ -161,15 +196,22 @@ anywhere within the project directory tree.
 
 ## Version Control
 
-The following should typically be committed to version control:
+### Safe to Commit
 - ` + "`corpus/docs/`" + ` - Your project documentation
 - ` + "`agents/`" + ` - Agent configurations
 - ` + "`objectives/`" + ` - Project objectives
 - ` + "`config.yaml`" + ` - Project configuration
+- ` + "`guild.yaml`" + ` - Guild configuration (safe to commit - no API keys stored)
 
-The following should typically be ignored:
+### Should Not Be Committed
 - ` + "`embeddings/`" + ` - Can be regenerated from corpus
 - ` + "`corpus/.activities/`" + ` - Local activity tracking
+
+## Getting Started
+
+1. Set your API keys as environment variables (see above)
+2. Run: ` + "`guild commission \"Your first task\" --assign`" + `
+3. Monitor progress: ` + "`guild workshop`" + `
 `
 
 	return os.WriteFile(readmePath, []byte(content), 0644)

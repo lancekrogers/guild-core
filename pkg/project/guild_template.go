@@ -14,17 +14,33 @@ import (
 // GuildConfig represents the structure needed for templates
 // This is a minimal version to avoid importing from config package
 type GuildConfig struct {
-	Name        string         `yaml:"name"`
-	Description string         `yaml:"description"`
-	Version     string         `yaml:"version"`
-	Manager     ManagerConfig  `yaml:"manager"`
-	Agents      []AgentConfig  `yaml:"agents"`
-	Metadata    Metadata       `yaml:"metadata,omitempty"`
+	Name        string          `yaml:"name"`
+	Description string          `yaml:"description"`
+	Version     string          `yaml:"version"`
+	Manager     ManagerConfig   `yaml:"manager"`
+	Providers   ProvidersConfig `yaml:"providers,omitempty"`
+	Agents      []AgentConfig   `yaml:"agents"`
+	Metadata    Metadata        `yaml:"metadata,omitempty"`
 }
 
 type ManagerConfig struct {
 	Default  string   `yaml:"default"`
 	Fallback []string `yaml:"fallback,omitempty"`
+}
+
+type ProvidersConfig struct {
+	OpenAI     ProviderSettings `yaml:"openai,omitempty"`
+	Anthropic  ProviderSettings `yaml:"anthropic,omitempty"`
+	Ollama     ProviderSettings `yaml:"ollama,omitempty"`
+	ClaudeCode ProviderSettings `yaml:"claude_code,omitempty"`
+	DeepSeek   ProviderSettings `yaml:"deepseek,omitempty"`
+	DeepInfra  ProviderSettings `yaml:"deepinfra,omitempty"`
+	Ora        ProviderSettings `yaml:"ora,omitempty"`
+}
+
+type ProviderSettings struct {
+	BaseURL  string            `yaml:"base_url,omitempty"`  // Custom base URL (for self-hosted)
+	Settings map[string]string `yaml:"settings,omitempty"`  // Additional provider settings
 }
 
 type AgentConfig struct {
@@ -58,6 +74,12 @@ func DefaultGuildTemplate() *GuildConfig {
 		Manager: ManagerConfig{
 			Default: "orchestrator",
 			Fallback: []string{"analyst", "coder"},
+		},
+		Providers: ProvidersConfig{
+			Ollama: ProviderSettings{
+				BaseURL: "http://localhost:11434", // Default Ollama URL
+			},
+			// Note: API keys are configured via environment variables only (OPENAI_API_KEY, ANTHROPIC_API_KEY, etc.)
 		},
 		Agents: []AgentConfig{
 			{
