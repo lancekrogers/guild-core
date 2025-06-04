@@ -18,6 +18,7 @@ tasks:
     desc: Build the Guild binary
     cmds:
       - mkdir -p {{.BIN_DIR}}
+      - rm -f ./guild  # Clean any binary in root directory
       - go build {{.GO_FLAGS}} -ldflags "{{.LDFLAGS}}" -o {{.BIN_DIR}}/{{.MAIN_BIN}} {{.CMD_DIR}}
     sources:
       - "**/*.go"
@@ -41,12 +42,12 @@ tasks:
   test:
     desc: Run all tests
     cmds:
-      - go test ./...
+      - go test -race -count=1 ./...
 
   test:unit:
     desc: Run unit tests only
     cmds:
-      - go test -short ./...
+      - go test -short -race -count=1 ./...
 
   test:packages:
     desc: Run tests for specific packages
@@ -305,24 +306,90 @@ tasks:
     desc: Run linters
     cmds:
       - go vet ./...
+      - go fmt ./...
+      - |
+        # Check for any unformatted files
+        UNFORMATTED=$(gofmt -l .)
+        if [ -n "$UNFORMATTED" ]; then
+          echo "ERROR: The following files are not properly formatted:"
+          echo "$UNFORMATTED"
+          exit 1
+        fi
+        echo "✅ All files properly formatted"
       - |
         if command -v golangci-lint >/dev/null 2>&1; then
           golangci-lint run
         else
           echo "golangci-lint not found, skipping advanced linting"
         fi
+      - |
+        # Check for stray binaries
+        STRAY_BINARIES=$(find . -type f -name "guild" -o -name "*.exe" | grep -v bin/ | head -5)
+        if [ -n "$STRAY_BINARIES" ]; then
+          echo "ERROR: Found stray binaries outside bin/ directory:"
+          echo "$STRAY_BINARIES"
+          exit 1
+        fi
+        echo "✅ No stray binaries found"
 
   clean:
     desc: Remove build artifacts
     cmds:
       - rm -rf {{.BIN_DIR}}
       - rm -rf ./coverage
+      - rm -f ./guild  # Remove any binary in root directory
+      - go clean -testcache
+      - go clean -cache
 
   version:
     desc: Display Guild version
     cmds:
       - "{{.BIN_DIR}}/{{.MAIN_BIN}} version"
     deps: [build]
+
+  verify:
+    desc: Verify build and basic functionality
+    deps: [build]
+    cmds:
+      - |
+        echo "Verifying Guild binary..."
+        if [ ! -f "{{.BIN_DIR}}/{{.MAIN_BIN}}" ]; then
+          echo "ERROR: Binary not found at {{.BIN_DIR}}/{{.MAIN_BIN}}"
+          exit 1
+        fi
+        echo "✅ Binary exists"
+        
+        # Test that the binary runs without crashing
+        if {{.BIN_DIR}}/{{.MAIN_BIN}} --help > /dev/null 2>&1; then
+          echo "✅ Binary runs and shows help"
+        else
+          echo "ERROR: Binary failed to run or show help"
+          exit 1
+        fi
+        
+        echo "✅ Build verification complete"
+
+  build:all:
+    desc: Build everything and verify
+    deps: [clean, build, verify]
+    cmds:
+      - echo "✅ Complete build and verification finished"
+
+  test:race:
+    desc: Run tests with race detection
+    cmds:
+      - go test -race ./...
+
+  test:timeout:
+    desc: Run tests with timeout to catch hanging tests
+    cmds:
+      - go test -timeout=2m ./...
+
+  test:full:
+    desc: Run comprehensive test suite
+    deps: [test:race, test:timeout, lint]
+    cmds:
+      - echo "✅ Full test suite completed"
 
   deps:install:
     desc: Install required dependencies
@@ -338,6 +405,7 @@ tasks:
           echo "Please install ZeroMQ manually for your platform"
         fi
         go mod download
+        go mod tidy
 
   agent:start:
     desc: Start a specific agent or all agents

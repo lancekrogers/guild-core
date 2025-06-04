@@ -202,10 +202,31 @@ message StreamEvent {
     TOOL_EXECUTING = 2;
     MEMORY_RETRIEVING = 3;
     ERROR = 4;
+    TOOL_DISCOVERY = 5;
+    TOOL_EXECUTION_START = 6;
+    TOOL_EXECUTION_PROGRESS = 7;
+    TOOL_EXECUTION_COMPLETE = 8;
+    TOOL_AUTHORIZATION_REQUIRED = 9;
   }
   EventType type = 1;
   string description = 2;
   map<string, string> data = 3;
+  ToolExecution tool_execution = 4;
+}
+
+// Tool execution details
+message ToolExecution {
+  string tool_id = 1;
+  string tool_name = 2;
+  map<string, string> parameters = 3;
+  string status = 4;
+  double progress = 5; // 0.0 to 1.0
+  string result = 6;
+  string error = 7;
+  int64 started_at = 8;
+  int64 completed_at = 9;
+  double estimated_cost = 10;
+  repeated string required_permissions = 11;
 }
 
 // Agent listing and status

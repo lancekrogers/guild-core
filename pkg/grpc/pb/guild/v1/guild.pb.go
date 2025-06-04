@@ -76,11 +76,16 @@ func (StreamControl_Command) EnumDescriptor() ([]byte, []int) {
 type StreamEvent_EventType int32
 
 const (
-	StreamEvent_AGENT_THINKING    StreamEvent_EventType = 0
-	StreamEvent_AGENT_WORKING     StreamEvent_EventType = 1
-	StreamEvent_TOOL_EXECUTING    StreamEvent_EventType = 2
-	StreamEvent_MEMORY_RETRIEVING StreamEvent_EventType = 3
-	StreamEvent_ERROR             StreamEvent_EventType = 4
+	StreamEvent_AGENT_THINKING              StreamEvent_EventType = 0
+	StreamEvent_AGENT_WORKING               StreamEvent_EventType = 1
+	StreamEvent_TOOL_EXECUTING              StreamEvent_EventType = 2
+	StreamEvent_MEMORY_RETRIEVING           StreamEvent_EventType = 3
+	StreamEvent_ERROR                       StreamEvent_EventType = 4
+	StreamEvent_TOOL_DISCOVERY              StreamEvent_EventType = 5
+	StreamEvent_TOOL_EXECUTION_START        StreamEvent_EventType = 6
+	StreamEvent_TOOL_EXECUTION_PROGRESS     StreamEvent_EventType = 7
+	StreamEvent_TOOL_EXECUTION_COMPLETE     StreamEvent_EventType = 8
+	StreamEvent_TOOL_AUTHORIZATION_REQUIRED StreamEvent_EventType = 9
 )
 
 // Enum value maps for StreamEvent_EventType.
@@ -91,13 +96,23 @@ var (
 		2: "TOOL_EXECUTING",
 		3: "MEMORY_RETRIEVING",
 		4: "ERROR",
+		5: "TOOL_DISCOVERY",
+		6: "TOOL_EXECUTION_START",
+		7: "TOOL_EXECUTION_PROGRESS",
+		8: "TOOL_EXECUTION_COMPLETE",
+		9: "TOOL_AUTHORIZATION_REQUIRED",
 	}
 	StreamEvent_EventType_value = map[string]int32{
-		"AGENT_THINKING":    0,
-		"AGENT_WORKING":     1,
-		"TOOL_EXECUTING":    2,
-		"MEMORY_RETRIEVING": 3,
-		"ERROR":             4,
+		"AGENT_THINKING":              0,
+		"AGENT_WORKING":               1,
+		"TOOL_EXECUTING":              2,
+		"MEMORY_RETRIEVING":           3,
+		"ERROR":                       4,
+		"TOOL_DISCOVERY":              5,
+		"TOOL_EXECUTION_START":        6,
+		"TOOL_EXECUTION_PROGRESS":     7,
+		"TOOL_EXECUTION_COMPLETE":     8,
+		"TOOL_AUTHORIZATION_REQUIRED": 9,
 	}
 )
 
@@ -183,7 +198,7 @@ func (x AgentStatus_State) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use AgentStatus_State.Descriptor instead.
 func (AgentStatus_State) EnumDescriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{26, 0}
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{27, 0}
 }
 
 // Campaign represents a strategic goal with multiple objectives
@@ -1633,6 +1648,7 @@ type StreamEvent struct {
 	Type          StreamEvent_EventType  `protobuf:"varint,1,opt,name=type,proto3,enum=guild.v1.StreamEvent_EventType" json:"type,omitempty"`
 	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
 	Data          map[string]string      `protobuf:"bytes,3,rep,name=data,proto3" json:"data,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	ToolExecution *ToolExecution         `protobuf:"bytes,4,opt,name=tool_execution,json=toolExecution,proto3" json:"tool_execution,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1688,6 +1704,138 @@ func (x *StreamEvent) GetData() map[string]string {
 	return nil
 }
 
+func (x *StreamEvent) GetToolExecution() *ToolExecution {
+	if x != nil {
+		return x.ToolExecution
+	}
+	return nil
+}
+
+// Tool execution details
+type ToolExecution struct {
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	ToolId              string                 `protobuf:"bytes,1,opt,name=tool_id,json=toolId,proto3" json:"tool_id,omitempty"`
+	ToolName            string                 `protobuf:"bytes,2,opt,name=tool_name,json=toolName,proto3" json:"tool_name,omitempty"`
+	Parameters          map[string]string      `protobuf:"bytes,3,rep,name=parameters,proto3" json:"parameters,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	Status              string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	Progress            float64                `protobuf:"fixed64,5,opt,name=progress,proto3" json:"progress,omitempty"` // 0.0 to 1.0
+	Result              string                 `protobuf:"bytes,6,opt,name=result,proto3" json:"result,omitempty"`
+	Error               string                 `protobuf:"bytes,7,opt,name=error,proto3" json:"error,omitempty"`
+	StartedAt           int64                  `protobuf:"varint,8,opt,name=started_at,json=startedAt,proto3" json:"started_at,omitempty"`
+	CompletedAt         int64                  `protobuf:"varint,9,opt,name=completed_at,json=completedAt,proto3" json:"completed_at,omitempty"`
+	EstimatedCost       float64                `protobuf:"fixed64,10,opt,name=estimated_cost,json=estimatedCost,proto3" json:"estimated_cost,omitempty"`
+	RequiredPermissions []string               `protobuf:"bytes,11,rep,name=required_permissions,json=requiredPermissions,proto3" json:"required_permissions,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *ToolExecution) Reset() {
+	*x = ToolExecution{}
+	mi := &file_guild_v1_guild_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ToolExecution) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ToolExecution) ProtoMessage() {}
+
+func (x *ToolExecution) ProtoReflect() protoreflect.Message {
+	mi := &file_guild_v1_guild_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ToolExecution.ProtoReflect.Descriptor instead.
+func (*ToolExecution) Descriptor() ([]byte, []int) {
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *ToolExecution) GetToolId() string {
+	if x != nil {
+		return x.ToolId
+	}
+	return ""
+}
+
+func (x *ToolExecution) GetToolName() string {
+	if x != nil {
+		return x.ToolName
+	}
+	return ""
+}
+
+func (x *ToolExecution) GetParameters() map[string]string {
+	if x != nil {
+		return x.Parameters
+	}
+	return nil
+}
+
+func (x *ToolExecution) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *ToolExecution) GetProgress() float64 {
+	if x != nil {
+		return x.Progress
+	}
+	return 0
+}
+
+func (x *ToolExecution) GetResult() string {
+	if x != nil {
+		return x.Result
+	}
+	return ""
+}
+
+func (x *ToolExecution) GetError() string {
+	if x != nil {
+		return x.Error
+	}
+	return ""
+}
+
+func (x *ToolExecution) GetStartedAt() int64 {
+	if x != nil {
+		return x.StartedAt
+	}
+	return 0
+}
+
+func (x *ToolExecution) GetCompletedAt() int64 {
+	if x != nil {
+		return x.CompletedAt
+	}
+	return 0
+}
+
+func (x *ToolExecution) GetEstimatedCost() float64 {
+	if x != nil {
+		return x.EstimatedCost
+	}
+	return 0
+}
+
+func (x *ToolExecution) GetRequiredPermissions() []string {
+	if x != nil {
+		return x.RequiredPermissions
+	}
+	return nil
+}
+
 // Agent listing and status
 type ListAgentsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1699,7 +1847,7 @@ type ListAgentsRequest struct {
 
 func (x *ListAgentsRequest) Reset() {
 	*x = ListAgentsRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[22]
+	mi := &file_guild_v1_guild_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1711,7 +1859,7 @@ func (x *ListAgentsRequest) String() string {
 func (*ListAgentsRequest) ProtoMessage() {}
 
 func (x *ListAgentsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[22]
+	mi := &file_guild_v1_guild_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1724,7 +1872,7 @@ func (x *ListAgentsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAgentsRequest.ProtoReflect.Descriptor instead.
 func (*ListAgentsRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{22}
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *ListAgentsRequest) GetCampaignId() string {
@@ -1751,7 +1899,7 @@ type ListAgentsResponse struct {
 
 func (x *ListAgentsResponse) Reset() {
 	*x = ListAgentsResponse{}
-	mi := &file_guild_v1_guild_proto_msgTypes[23]
+	mi := &file_guild_v1_guild_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1763,7 +1911,7 @@ func (x *ListAgentsResponse) String() string {
 func (*ListAgentsResponse) ProtoMessage() {}
 
 func (x *ListAgentsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[23]
+	mi := &file_guild_v1_guild_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1776,7 +1924,7 @@ func (x *ListAgentsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAgentsResponse.ProtoReflect.Descriptor instead.
 func (*ListAgentsResponse) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{23}
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *ListAgentsResponse) GetAgents() []*AgentInfo {
@@ -1807,7 +1955,7 @@ type AgentInfo struct {
 
 func (x *AgentInfo) Reset() {
 	*x = AgentInfo{}
-	mi := &file_guild_v1_guild_proto_msgTypes[24]
+	mi := &file_guild_v1_guild_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1819,7 +1967,7 @@ func (x *AgentInfo) String() string {
 func (*AgentInfo) ProtoMessage() {}
 
 func (x *AgentInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[24]
+	mi := &file_guild_v1_guild_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1832,7 +1980,7 @@ func (x *AgentInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AgentInfo.ProtoReflect.Descriptor instead.
 func (*AgentInfo) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{24}
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *AgentInfo) GetId() string {
@@ -1887,7 +2035,7 @@ type GetAgentStatusRequest struct {
 
 func (x *GetAgentStatusRequest) Reset() {
 	*x = GetAgentStatusRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[25]
+	mi := &file_guild_v1_guild_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1899,7 +2047,7 @@ func (x *GetAgentStatusRequest) String() string {
 func (*GetAgentStatusRequest) ProtoMessage() {}
 
 func (x *GetAgentStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[25]
+	mi := &file_guild_v1_guild_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1912,7 +2060,7 @@ func (x *GetAgentStatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAgentStatusRequest.ProtoReflect.Descriptor instead.
 func (*GetAgentStatusRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{25}
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *GetAgentStatusRequest) GetAgentId() string {
@@ -1941,7 +2089,7 @@ type AgentStatus struct {
 
 func (x *AgentStatus) Reset() {
 	*x = AgentStatus{}
-	mi := &file_guild_v1_guild_proto_msgTypes[26]
+	mi := &file_guild_v1_guild_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1953,7 +2101,7 @@ func (x *AgentStatus) String() string {
 func (*AgentStatus) ProtoMessage() {}
 
 func (x *AgentStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[26]
+	mi := &file_guild_v1_guild_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1966,7 +2114,7 @@ func (x *AgentStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AgentStatus.ProtoReflect.Descriptor instead.
 func (*AgentStatus) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{26}
+	return file_guild_v1_guild_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *AgentStatus) GetState() AgentStatus_State {
@@ -2143,20 +2291,45 @@ const file_guild_v1_guild_proto_rawDesc = "" +
 	"\x04STOP\x10\x01\x12\t\n" +
 	"\x05PAUSE\x10\x02\x12\n" +
 	"\n" +
-	"\x06RESUME\x10\x03\"\xbc\x02\n" +
+	"\x06RESUME\x10\x03\"\x86\x04\n" +
 	"\vStreamEvent\x123\n" +
 	"\x04type\x18\x01 \x01(\x0e2\x1f.guild.v1.StreamEvent.EventTypeR\x04type\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x123\n" +
-	"\x04data\x18\x03 \x03(\v2\x1f.guild.v1.StreamEvent.DataEntryR\x04data\x1a7\n" +
+	"\x04data\x18\x03 \x03(\v2\x1f.guild.v1.StreamEvent.DataEntryR\x04data\x12>\n" +
+	"\x0etool_execution\x18\x04 \x01(\v2\x17.guild.v1.ToolExecutionR\rtoolExecution\x1a7\n" +
 	"\tDataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"h\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xf1\x01\n" +
 	"\tEventType\x12\x12\n" +
 	"\x0eAGENT_THINKING\x10\x00\x12\x11\n" +
 	"\rAGENT_WORKING\x10\x01\x12\x12\n" +
 	"\x0eTOOL_EXECUTING\x10\x02\x12\x15\n" +
 	"\x11MEMORY_RETRIEVING\x10\x03\x12\t\n" +
-	"\x05ERROR\x10\x04\"[\n" +
+	"\x05ERROR\x10\x04\x12\x12\n" +
+	"\x0eTOOL_DISCOVERY\x10\x05\x12\x18\n" +
+	"\x14TOOL_EXECUTION_START\x10\x06\x12\x1b\n" +
+	"\x17TOOL_EXECUTION_PROGRESS\x10\a\x12\x1b\n" +
+	"\x17TOOL_EXECUTION_COMPLETE\x10\b\x12\x1f\n" +
+	"\x1bTOOL_AUTHORIZATION_REQUIRED\x10\t\"\xcb\x03\n" +
+	"\rToolExecution\x12\x17\n" +
+	"\atool_id\x18\x01 \x01(\tR\x06toolId\x12\x1b\n" +
+	"\ttool_name\x18\x02 \x01(\tR\btoolName\x12G\n" +
+	"\n" +
+	"parameters\x18\x03 \x03(\v2'.guild.v1.ToolExecution.ParametersEntryR\n" +
+	"parameters\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\tR\x06status\x12\x1a\n" +
+	"\bprogress\x18\x05 \x01(\x01R\bprogress\x12\x16\n" +
+	"\x06result\x18\x06 \x01(\tR\x06result\x12\x14\n" +
+	"\x05error\x18\a \x01(\tR\x05error\x12\x1d\n" +
+	"\n" +
+	"started_at\x18\b \x01(\x03R\tstartedAt\x12!\n" +
+	"\fcompleted_at\x18\t \x01(\x03R\vcompletedAt\x12%\n" +
+	"\x0eestimated_cost\x18\n" +
+	" \x01(\x01R\restimatedCost\x121\n" +
+	"\x14required_permissions\x18\v \x03(\tR\x13requiredPermissions\x1a=\n" +
+	"\x0fParametersEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"[\n" +
 	"\x11ListAgentsRequest\x12\x1f\n" +
 	"\vcampaign_id\x18\x01 \x01(\tR\n" +
 	"campaignId\x12%\n" +
@@ -2228,7 +2401,7 @@ func file_guild_v1_guild_proto_rawDescGZIP() []byte {
 }
 
 var file_guild_v1_guild_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_guild_v1_guild_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
+var file_guild_v1_guild_proto_msgTypes = make([]protoimpl.MessageInfo, 39)
 var file_guild_v1_guild_proto_goTypes = []any{
 	(StreamControl_Command)(0),     // 0: guild.v1.StreamControl.Command
 	(StreamEvent_EventType)(0),     // 1: guild.v1.StreamEvent.EventType
@@ -2255,89 +2428,93 @@ var file_guild_v1_guild_proto_goTypes = []any{
 	(*AgentMessageFragment)(nil),   // 22: guild.v1.AgentMessageFragment
 	(*StreamControl)(nil),          // 23: guild.v1.StreamControl
 	(*StreamEvent)(nil),            // 24: guild.v1.StreamEvent
-	(*ListAgentsRequest)(nil),      // 25: guild.v1.ListAgentsRequest
-	(*ListAgentsResponse)(nil),     // 26: guild.v1.ListAgentsResponse
-	(*AgentInfo)(nil),              // 27: guild.v1.AgentInfo
-	(*GetAgentStatusRequest)(nil),  // 28: guild.v1.GetAgentStatusRequest
-	(*AgentStatus)(nil),            // 29: guild.v1.AgentStatus
-	nil,                            // 30: guild.v1.Campaign.MetadataEntry
-	nil,                            // 31: guild.v1.CreateCampaignRequest.MetadataEntry
-	nil,                            // 32: guild.v1.UpdateCampaignRequest.MetadataEntry
-	nil,                            // 33: guild.v1.ErrorDetail.MetadataEntry
-	nil,                            // 34: guild.v1.AgentMessageRequest.ContextEntry
-	nil,                            // 35: guild.v1.AgentMessageResponse.MetadataEntry
-	nil,                            // 36: guild.v1.AgentMessageFragment.MetadataEntry
-	nil,                            // 37: guild.v1.StreamEvent.DataEntry
-	nil,                            // 38: guild.v1.AgentInfo.MetadataEntry
-	nil,                            // 39: guild.v1.AgentStatus.MetadataEntry
+	(*ToolExecution)(nil),          // 25: guild.v1.ToolExecution
+	(*ListAgentsRequest)(nil),      // 26: guild.v1.ListAgentsRequest
+	(*ListAgentsResponse)(nil),     // 27: guild.v1.ListAgentsResponse
+	(*AgentInfo)(nil),              // 28: guild.v1.AgentInfo
+	(*GetAgentStatusRequest)(nil),  // 29: guild.v1.GetAgentStatusRequest
+	(*AgentStatus)(nil),            // 30: guild.v1.AgentStatus
+	nil,                            // 31: guild.v1.Campaign.MetadataEntry
+	nil,                            // 32: guild.v1.CreateCampaignRequest.MetadataEntry
+	nil,                            // 33: guild.v1.UpdateCampaignRequest.MetadataEntry
+	nil,                            // 34: guild.v1.ErrorDetail.MetadataEntry
+	nil,                            // 35: guild.v1.AgentMessageRequest.ContextEntry
+	nil,                            // 36: guild.v1.AgentMessageResponse.MetadataEntry
+	nil,                            // 37: guild.v1.AgentMessageFragment.MetadataEntry
+	nil,                            // 38: guild.v1.StreamEvent.DataEntry
+	nil,                            // 39: guild.v1.ToolExecution.ParametersEntry
+	nil,                            // 40: guild.v1.AgentInfo.MetadataEntry
+	nil,                            // 41: guild.v1.AgentStatus.MetadataEntry
 }
 var file_guild_v1_guild_proto_depIdxs = []int32{
-	30, // 0: guild.v1.Campaign.metadata:type_name -> guild.v1.Campaign.MetadataEntry
+	31, // 0: guild.v1.Campaign.metadata:type_name -> guild.v1.Campaign.MetadataEntry
 	6,  // 1: guild.v1.BoardUpdate.metadata:type_name -> guild.v1.BoardMetadata
 	3,  // 2: guild.v1.ListCampaignsResponse.campaigns:type_name -> guild.v1.Campaign
-	31, // 3: guild.v1.CreateCampaignRequest.metadata:type_name -> guild.v1.CreateCampaignRequest.MetadataEntry
-	32, // 4: guild.v1.UpdateCampaignRequest.metadata:type_name -> guild.v1.UpdateCampaignRequest.MetadataEntry
-	33, // 5: guild.v1.ErrorDetail.metadata:type_name -> guild.v1.ErrorDetail.MetadataEntry
-	34, // 6: guild.v1.AgentMessageRequest.context:type_name -> guild.v1.AgentMessageRequest.ContextEntry
-	35, // 7: guild.v1.AgentMessageResponse.metadata:type_name -> guild.v1.AgentMessageResponse.MetadataEntry
-	29, // 8: guild.v1.AgentMessageResponse.status:type_name -> guild.v1.AgentStatus
+	32, // 3: guild.v1.CreateCampaignRequest.metadata:type_name -> guild.v1.CreateCampaignRequest.MetadataEntry
+	33, // 4: guild.v1.UpdateCampaignRequest.metadata:type_name -> guild.v1.UpdateCampaignRequest.MetadataEntry
+	34, // 5: guild.v1.ErrorDetail.metadata:type_name -> guild.v1.ErrorDetail.MetadataEntry
+	35, // 6: guild.v1.AgentMessageRequest.context:type_name -> guild.v1.AgentMessageRequest.ContextEntry
+	36, // 7: guild.v1.AgentMessageResponse.metadata:type_name -> guild.v1.AgentMessageResponse.MetadataEntry
+	30, // 8: guild.v1.AgentMessageResponse.status:type_name -> guild.v1.AgentStatus
 	18, // 9: guild.v1.AgentStreamRequest.message:type_name -> guild.v1.AgentMessageRequest
 	23, // 10: guild.v1.AgentStreamRequest.control:type_name -> guild.v1.StreamControl
 	22, // 11: guild.v1.AgentStreamResponse.fragment:type_name -> guild.v1.AgentMessageFragment
-	29, // 12: guild.v1.AgentStreamResponse.status:type_name -> guild.v1.AgentStatus
+	30, // 12: guild.v1.AgentStreamResponse.status:type_name -> guild.v1.AgentStatus
 	24, // 13: guild.v1.AgentStreamResponse.event:type_name -> guild.v1.StreamEvent
-	36, // 14: guild.v1.AgentMessageFragment.metadata:type_name -> guild.v1.AgentMessageFragment.MetadataEntry
+	37, // 14: guild.v1.AgentMessageFragment.metadata:type_name -> guild.v1.AgentMessageFragment.MetadataEntry
 	0,  // 15: guild.v1.StreamControl.command:type_name -> guild.v1.StreamControl.Command
 	1,  // 16: guild.v1.StreamEvent.type:type_name -> guild.v1.StreamEvent.EventType
-	37, // 17: guild.v1.StreamEvent.data:type_name -> guild.v1.StreamEvent.DataEntry
-	27, // 18: guild.v1.ListAgentsResponse.agents:type_name -> guild.v1.AgentInfo
-	29, // 19: guild.v1.AgentInfo.status:type_name -> guild.v1.AgentStatus
-	38, // 20: guild.v1.AgentInfo.metadata:type_name -> guild.v1.AgentInfo.MetadataEntry
-	2,  // 21: guild.v1.AgentStatus.state:type_name -> guild.v1.AgentStatus.State
-	39, // 22: guild.v1.AgentStatus.metadata:type_name -> guild.v1.AgentStatus.MetadataEntry
-	4,  // 23: guild.v1.Guild.WatchCampaign:input_type -> guild.v1.WatchRequest
-	7,  // 24: guild.v1.Guild.GetCampaign:input_type -> guild.v1.GetCampaignRequest
-	8,  // 25: guild.v1.Guild.ListCampaigns:input_type -> guild.v1.ListCampaignsRequest
-	10, // 26: guild.v1.Guild.CreateCampaign:input_type -> guild.v1.CreateCampaignRequest
-	11, // 27: guild.v1.Guild.UpdateCampaign:input_type -> guild.v1.UpdateCampaignRequest
-	12, // 28: guild.v1.Guild.DeleteCampaign:input_type -> guild.v1.DeleteCampaignRequest
-	14, // 29: guild.v1.Guild.StartPlanningCampaign:input_type -> guild.v1.CampaignActionRequest
-	14, // 30: guild.v1.Guild.MarkCampaignReady:input_type -> guild.v1.CampaignActionRequest
-	14, // 31: guild.v1.Guild.StartCampaign:input_type -> guild.v1.CampaignActionRequest
-	14, // 32: guild.v1.Guild.PauseCampaign:input_type -> guild.v1.CampaignActionRequest
-	14, // 33: guild.v1.Guild.ResumeCampaign:input_type -> guild.v1.CampaignActionRequest
-	14, // 34: guild.v1.Guild.CompleteCampaign:input_type -> guild.v1.CampaignActionRequest
-	14, // 35: guild.v1.Guild.CancelCampaign:input_type -> guild.v1.CampaignActionRequest
-	15, // 36: guild.v1.Guild.AddObjectiveToCampaign:input_type -> guild.v1.AddObjectiveRequest
-	16, // 37: guild.v1.Guild.RemoveObjectiveFromCampaign:input_type -> guild.v1.RemoveObjectiveRequest
-	18, // 38: guild.v1.Guild.SendMessageToAgent:input_type -> guild.v1.AgentMessageRequest
-	20, // 39: guild.v1.Guild.StreamAgentConversation:input_type -> guild.v1.AgentStreamRequest
-	25, // 40: guild.v1.Guild.ListAvailableAgents:input_type -> guild.v1.ListAgentsRequest
-	28, // 41: guild.v1.Guild.GetAgentStatus:input_type -> guild.v1.GetAgentStatusRequest
-	5,  // 42: guild.v1.Guild.WatchCampaign:output_type -> guild.v1.BoardUpdate
-	3,  // 43: guild.v1.Guild.GetCampaign:output_type -> guild.v1.Campaign
-	9,  // 44: guild.v1.Guild.ListCampaigns:output_type -> guild.v1.ListCampaignsResponse
-	3,  // 45: guild.v1.Guild.CreateCampaign:output_type -> guild.v1.Campaign
-	3,  // 46: guild.v1.Guild.UpdateCampaign:output_type -> guild.v1.Campaign
-	13, // 47: guild.v1.Guild.DeleteCampaign:output_type -> guild.v1.DeleteCampaignResponse
-	3,  // 48: guild.v1.Guild.StartPlanningCampaign:output_type -> guild.v1.Campaign
-	3,  // 49: guild.v1.Guild.MarkCampaignReady:output_type -> guild.v1.Campaign
-	3,  // 50: guild.v1.Guild.StartCampaign:output_type -> guild.v1.Campaign
-	3,  // 51: guild.v1.Guild.PauseCampaign:output_type -> guild.v1.Campaign
-	3,  // 52: guild.v1.Guild.ResumeCampaign:output_type -> guild.v1.Campaign
-	3,  // 53: guild.v1.Guild.CompleteCampaign:output_type -> guild.v1.Campaign
-	3,  // 54: guild.v1.Guild.CancelCampaign:output_type -> guild.v1.Campaign
-	3,  // 55: guild.v1.Guild.AddObjectiveToCampaign:output_type -> guild.v1.Campaign
-	3,  // 56: guild.v1.Guild.RemoveObjectiveFromCampaign:output_type -> guild.v1.Campaign
-	19, // 57: guild.v1.Guild.SendMessageToAgent:output_type -> guild.v1.AgentMessageResponse
-	21, // 58: guild.v1.Guild.StreamAgentConversation:output_type -> guild.v1.AgentStreamResponse
-	26, // 59: guild.v1.Guild.ListAvailableAgents:output_type -> guild.v1.ListAgentsResponse
-	29, // 60: guild.v1.Guild.GetAgentStatus:output_type -> guild.v1.AgentStatus
-	42, // [42:61] is the sub-list for method output_type
-	23, // [23:42] is the sub-list for method input_type
-	23, // [23:23] is the sub-list for extension type_name
-	23, // [23:23] is the sub-list for extension extendee
-	0,  // [0:23] is the sub-list for field type_name
+	38, // 17: guild.v1.StreamEvent.data:type_name -> guild.v1.StreamEvent.DataEntry
+	25, // 18: guild.v1.StreamEvent.tool_execution:type_name -> guild.v1.ToolExecution
+	39, // 19: guild.v1.ToolExecution.parameters:type_name -> guild.v1.ToolExecution.ParametersEntry
+	28, // 20: guild.v1.ListAgentsResponse.agents:type_name -> guild.v1.AgentInfo
+	30, // 21: guild.v1.AgentInfo.status:type_name -> guild.v1.AgentStatus
+	40, // 22: guild.v1.AgentInfo.metadata:type_name -> guild.v1.AgentInfo.MetadataEntry
+	2,  // 23: guild.v1.AgentStatus.state:type_name -> guild.v1.AgentStatus.State
+	41, // 24: guild.v1.AgentStatus.metadata:type_name -> guild.v1.AgentStatus.MetadataEntry
+	4,  // 25: guild.v1.Guild.WatchCampaign:input_type -> guild.v1.WatchRequest
+	7,  // 26: guild.v1.Guild.GetCampaign:input_type -> guild.v1.GetCampaignRequest
+	8,  // 27: guild.v1.Guild.ListCampaigns:input_type -> guild.v1.ListCampaignsRequest
+	10, // 28: guild.v1.Guild.CreateCampaign:input_type -> guild.v1.CreateCampaignRequest
+	11, // 29: guild.v1.Guild.UpdateCampaign:input_type -> guild.v1.UpdateCampaignRequest
+	12, // 30: guild.v1.Guild.DeleteCampaign:input_type -> guild.v1.DeleteCampaignRequest
+	14, // 31: guild.v1.Guild.StartPlanningCampaign:input_type -> guild.v1.CampaignActionRequest
+	14, // 32: guild.v1.Guild.MarkCampaignReady:input_type -> guild.v1.CampaignActionRequest
+	14, // 33: guild.v1.Guild.StartCampaign:input_type -> guild.v1.CampaignActionRequest
+	14, // 34: guild.v1.Guild.PauseCampaign:input_type -> guild.v1.CampaignActionRequest
+	14, // 35: guild.v1.Guild.ResumeCampaign:input_type -> guild.v1.CampaignActionRequest
+	14, // 36: guild.v1.Guild.CompleteCampaign:input_type -> guild.v1.CampaignActionRequest
+	14, // 37: guild.v1.Guild.CancelCampaign:input_type -> guild.v1.CampaignActionRequest
+	15, // 38: guild.v1.Guild.AddObjectiveToCampaign:input_type -> guild.v1.AddObjectiveRequest
+	16, // 39: guild.v1.Guild.RemoveObjectiveFromCampaign:input_type -> guild.v1.RemoveObjectiveRequest
+	18, // 40: guild.v1.Guild.SendMessageToAgent:input_type -> guild.v1.AgentMessageRequest
+	20, // 41: guild.v1.Guild.StreamAgentConversation:input_type -> guild.v1.AgentStreamRequest
+	26, // 42: guild.v1.Guild.ListAvailableAgents:input_type -> guild.v1.ListAgentsRequest
+	29, // 43: guild.v1.Guild.GetAgentStatus:input_type -> guild.v1.GetAgentStatusRequest
+	5,  // 44: guild.v1.Guild.WatchCampaign:output_type -> guild.v1.BoardUpdate
+	3,  // 45: guild.v1.Guild.GetCampaign:output_type -> guild.v1.Campaign
+	9,  // 46: guild.v1.Guild.ListCampaigns:output_type -> guild.v1.ListCampaignsResponse
+	3,  // 47: guild.v1.Guild.CreateCampaign:output_type -> guild.v1.Campaign
+	3,  // 48: guild.v1.Guild.UpdateCampaign:output_type -> guild.v1.Campaign
+	13, // 49: guild.v1.Guild.DeleteCampaign:output_type -> guild.v1.DeleteCampaignResponse
+	3,  // 50: guild.v1.Guild.StartPlanningCampaign:output_type -> guild.v1.Campaign
+	3,  // 51: guild.v1.Guild.MarkCampaignReady:output_type -> guild.v1.Campaign
+	3,  // 52: guild.v1.Guild.StartCampaign:output_type -> guild.v1.Campaign
+	3,  // 53: guild.v1.Guild.PauseCampaign:output_type -> guild.v1.Campaign
+	3,  // 54: guild.v1.Guild.ResumeCampaign:output_type -> guild.v1.Campaign
+	3,  // 55: guild.v1.Guild.CompleteCampaign:output_type -> guild.v1.Campaign
+	3,  // 56: guild.v1.Guild.CancelCampaign:output_type -> guild.v1.Campaign
+	3,  // 57: guild.v1.Guild.AddObjectiveToCampaign:output_type -> guild.v1.Campaign
+	3,  // 58: guild.v1.Guild.RemoveObjectiveFromCampaign:output_type -> guild.v1.Campaign
+	19, // 59: guild.v1.Guild.SendMessageToAgent:output_type -> guild.v1.AgentMessageResponse
+	21, // 60: guild.v1.Guild.StreamAgentConversation:output_type -> guild.v1.AgentStreamResponse
+	27, // 61: guild.v1.Guild.ListAvailableAgents:output_type -> guild.v1.ListAgentsResponse
+	30, // 62: guild.v1.Guild.GetAgentStatus:output_type -> guild.v1.AgentStatus
+	44, // [44:63] is the sub-list for method output_type
+	25, // [25:44] is the sub-list for method input_type
+	25, // [25:25] is the sub-list for extension type_name
+	25, // [25:25] is the sub-list for extension extendee
+	0,  // [0:25] is the sub-list for field type_name
 }
 
 func init() { file_guild_v1_guild_proto_init() }
@@ -2360,7 +2537,7 @@ func file_guild_v1_guild_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_guild_v1_guild_proto_rawDesc), len(file_guild_v1_guild_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   37,
+			NumMessages:   39,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
