@@ -20,13 +20,13 @@ type OrchestratorRegistry interface {
 	SetDefaultCommissionPlanner(name string) error
 	
 	// RegisterEventBus registers an event bus for orchestrator events
-	RegisterEventBus(name string, eventBus EventBus) error
+	RegisterEventBus(name string, eventBus *EventBus) error
 	
 	// GetEventBus retrieves an event bus by name
-	GetEventBus(name string) (EventBus, error)
+	GetEventBus(name string) (*EventBus, error)
 	
 	// GetDefaultEventBus returns the default event bus
-	GetDefaultEventBus() (EventBus, error)
+	GetDefaultEventBus() (*EventBus, error)
 	
 	// ListCommissionPlanners returns all registered commission planner names
 	ListCommissionPlanners() []string
@@ -38,7 +38,7 @@ type OrchestratorRegistry interface {
 // DefaultOrchestratorRegistry implements OrchestratorRegistry
 type DefaultOrchestratorRegistry struct {
 	commissionPlanners    map[string]CommissionTaskPlanner
-	eventBuses           map[string]EventBus
+	eventBuses           map[string]*EventBus
 	defaultPlanner       string
 	defaultEventBus      string
 	mu                   sync.RWMutex
@@ -48,7 +48,7 @@ type DefaultOrchestratorRegistry struct {
 func NewOrchestratorRegistry() OrchestratorRegistry {
 	return &DefaultOrchestratorRegistry{
 		commissionPlanners: make(map[string]CommissionTaskPlanner),
-		eventBuses:        make(map[string]EventBus),
+		eventBuses:        make(map[string]*EventBus),
 	}
 }
 
@@ -110,7 +110,7 @@ func (r *DefaultOrchestratorRegistry) SetDefaultCommissionPlanner(name string) e
 }
 
 // RegisterEventBus registers an event bus for orchestrator events
-func (r *DefaultOrchestratorRegistry) RegisterEventBus(name string, eventBus EventBus) error {
+func (r *DefaultOrchestratorRegistry) RegisterEventBus(name string, eventBus *EventBus) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -129,7 +129,7 @@ func (r *DefaultOrchestratorRegistry) RegisterEventBus(name string, eventBus Eve
 }
 
 // GetEventBus retrieves an event bus by name
-func (r *DefaultOrchestratorRegistry) GetEventBus(name string) (EventBus, error) {
+func (r *DefaultOrchestratorRegistry) GetEventBus(name string) (*EventBus, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
@@ -142,7 +142,7 @@ func (r *DefaultOrchestratorRegistry) GetEventBus(name string) (EventBus, error)
 }
 
 // GetDefaultEventBus returns the default event bus
-func (r *DefaultOrchestratorRegistry) GetDefaultEventBus() (EventBus, error) {
+func (r *DefaultOrchestratorRegistry) GetDefaultEventBus() (*EventBus, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 

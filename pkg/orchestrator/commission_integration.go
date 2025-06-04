@@ -6,7 +6,6 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
 	"github.com/guild-ventures/guild-core/pkg/config"
-	guildctx "github.com/guild-ventures/guild-core/pkg/context"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/objective"
 	"github.com/guild-ventures/guild-core/pkg/registry"

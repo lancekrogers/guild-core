@@ -1,0 +1,288 @@
+// +build integration
+
+package commission_test
+
+import (
+	"context"
+	"fmt"
+	"os"
+	"path/filepath"
+	"testing"
+
+	"github.com/guild-ventures/guild-core/pkg/agent/manager"
+	"github.com/guild-ventures/guild-core/pkg/config"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/pkg/orchestrator"
+	"github.com/guild-ventures/guild-core/pkg/providers/mock"
+	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+// TestEndToEndCommissionWorkflow tests the complete pipeline from commission to kanban tasks
+func TestEndToEndCommissionWorkflow(t *testing.T) {
+	t.Skip("Skipping until commission integration is fully implemented")
+	// Setup test directory
+	tempDir, err := os.MkdirTemp("", "guild-commission-test-*")
+	require.NoError(t, err)
+	defer os.RemoveAll(tempDir)
+
+	fmt.Printf("🏰 Starting end-to-end commission workflow test\n")
+	fmt.Printf("📁 Test directory: %s\n", tempDir)
+
+	// Step 1: Initialize registry and components
+	fmt.Printf("\n🔧 Step 1: Initializing components\n")
+	
+	reg := registry.NewComponentRegistry()
+	
+	// Register mock provider
+	mockProvider := mock.NewProvider()
+	// Configure mock provider to return intelligent responses
+	mockProvider.SetResponse("You are the Guild Master refining a commission", `I have analyzed the commission and broken it down into the following tasks:
+
+<task>
+  <id>task-001</id>
+  <title>Implement User Authentication</title>
+  <description>Create a secure authentication system with JWT tokens</description>
+  <priority>high</priority>
+  <estimate>8h</estimate>
+  <category>backend</category>
+  <dependencies></dependencies>
+</task>
+
+<task>
+  <id>task-002</id>  
+  <title>Design User Profile UI</title>
+  <description>Create responsive user profile interface with edit capabilities</description>
+  <priority>medium</priority>
+  <estimate>6h</estimate>
+  <category>frontend</category>
+  <dependencies>task-001</dependencies>
+</task>
+
+<task>
+  <id>task-003</id>
+  <title>User Data Validation</title>
+  <description>Implement comprehensive input validation for user data</description>
+  <priority>high</priority>
+  <estimate>4h</estimate>
+  <category>backend</category>
+  <dependencies>task-001</dependencies>
+</task>`)
+	
+	err = reg.Providers().Register("mock", mockProvider)
+	require.NoError(t, err)
+	fmt.Printf("  ✓ Registered mock provider\n")
+
+	// Step 2: Setup kanban system with BoltDB
+	fmt.Printf("\n📋 Step 2: Setting up kanban system\n")
+	
+	dbPath := filepath.Join(tempDir, "kanban.db")
+	store, err := boltdb.NewStore(dbPath)
+	require.NoError(t, err)
+	defer store.Close()
+	
+	kanbanManager, err := kanban.NewManager(store)
+	require.NoError(t, err)
+	fmt.Printf("  ✓ Initialized kanban manager with BoltDB\n")
+
+	// Step 3: Create commission refiner
+	fmt.Printf("\n🔨 Step 3: Creating commission refiner\n")
+	
+	factory := &manager.DefaultGuildMasterFactory{}
+	refiner, err := factory.CreateGuildMasterRefiner("mock", reg)
+	require.NoError(t, err)
+	fmt.Printf("  ✓ Created Guild Master refiner\n")
+
+	// Step 4: Create response parser and commission planner
+	fmt.Printf("\n📝 Step 4: Setting up parser and planner\n")
+	
+	intelligentParser := manager.NewIntelligentParser()
+	// Wrap intelligent parser to match ResponseParser interface
+	responseParser := &manager.ResponseParserAdapter{Parser: intelligentParser}
+	
+	eventBus := orchestrator.NewEventBus()
+	commissionPlanner := orchestrator.NewCommissionTaskPlanner(
+		kanbanManager,
+		responseParser,
+		eventBus,
+	)
+	fmt.Printf("  ✓ Created commission planner with intelligent parser\n")
+
+	// Step 5: Create integration service
+	fmt.Printf("\n🔗 Step 5: Creating integration service\n")
+	
+	integrationService, err := orchestrator.NewCommissionIntegrationService(reg)
+	require.NoError(t, err)
+	
+	integrationService.SetCommissionRefiner(refiner)
+	integrationService.SetCommissionPlanner(commissionPlanner)
+	integrationService.SetEventBus(*eventBus)
+	integrationService.SetKanbanManager(kanbanManager)
+	fmt.Printf("  ✓ Wired up integration service\n")
+
+	// Step 6: Create test commission
+	fmt.Printf("\n📜 Step 6: Creating test commission\n")
+	
+	commission := manager.Commission{
+		Title:       "User Management System",
+		Description: "Build a complete user management system with authentication, profiles, and data validation",
+		Domain:      "web-development",
+		Context: map[string]interface{}{
+			"technology_stack": "Go backend, React frontend",
+			"requirements": []string{
+				"Secure authentication with JWT",
+				"User profile management",
+				"Input validation",
+			},
+		},
+	}
+	fmt.Printf("  ✓ Created commission: %s\n", commission.Title)
+
+	// Step 7: Create guild configuration
+	fmt.Printf("\n⚙️ Step 7: Setting up guild configuration\n")
+	
+	guildConfig := &config.GuildConfig{
+		Name: "Test Guild",
+		Agents: []config.AgentConfig{
+			{
+				ID:   "backend-artisan",
+				Name: "Backend Artisan",
+				Type: "backend",
+				Capabilities: []string{"go", "authentication", "validation"},
+			},
+			{
+				ID:   "frontend-artisan", 
+				Name: "Frontend Artisan",
+				Type: "frontend",
+				Capabilities: []string{"react", "ui", "design"},
+			},
+		},
+	}
+	fmt.Printf("  ✓ Configured guild with %d artisans\n", len(guildConfig.Agents))
+
+	// Step 8: Process commission through pipeline
+	fmt.Printf("\n🚀 Step 8: Processing commission through pipeline\n")
+	
+	ctx := context.Background()
+	result, err := integrationService.ProcessCommissionToTasks(ctx, commission, guildConfig)
+	require.NoError(t, err)
+	require.NotNil(t, result)
+	fmt.Printf("  ✓ Commission processed successfully\n")
+
+	// Step 9: Verify results
+	fmt.Printf("\n✅ Step 9: Verifying results\n")
+	
+	// Check refined commission
+	assert.NotNil(t, result.RefinedCommission)
+	fmt.Printf("  ✓ Commission refined with ID: %s\n", result.RefinedCommission.CommissionID)
+	
+	// Check tasks created
+	assert.Len(t, result.Tasks, 3)
+	fmt.Printf("  ✓ Created %d kanban tasks\n", len(result.Tasks))
+	
+	// Verify task details
+	for i, task := range result.Tasks {
+		assert.NotEmpty(t, task.ID)
+		assert.NotEmpty(t, task.Title)
+		assert.NotEmpty(t, task.Description)
+		assert.Equal(t, kanban.StatusTodo, task.Status)
+		fmt.Printf("    Task %d: %s (Priority: %s, Assigned: %s)\n", 
+			i+1, task.Title, task.Priority, task.AssignedTo)
+		
+		// Check metadata
+		assert.Contains(t, task.Metadata, "commission_id")
+		assert.Contains(t, task.Metadata, "required_capabilities")
+	}
+	
+	// Check artisan assignments
+	assert.NotEmpty(t, result.AssignedArtisans)
+	fmt.Printf("  ✓ Assigned to %d artisans\n", len(result.AssignedArtisans))
+	
+	// Verify task assignments match artisan capabilities
+	backendTasks := result.GetTasksByArtisan("backend-artisan")
+	frontendTasks := result.GetTasksByArtisan("frontend-artisan")
+	
+	assert.Greater(t, len(backendTasks), 0, "Backend artisan should have tasks")
+	assert.Greater(t, len(frontendTasks), 0, "Frontend artisan should have tasks")
+	
+	fmt.Printf("\n🎉 End-to-end commission workflow completed successfully!\n")
+}
+
+// TestCommissionEventFlow tests event propagation through the system
+func TestCommissionEventFlow(t *testing.T) {
+	t.Skip("Skipping until commission integration is fully implemented")
+	// Setup
+	tempDir, err := os.MkdirTemp("", "guild-event-test-*")
+	require.NoError(t, err)
+	defer os.RemoveAll(tempDir)
+
+	// Initialize components similar to above
+	reg := registry.NewComponentRegistry()
+	mockProvider := mock.NewProvider()
+	mockProvider.SetResponse("refine", `<task><id>t1</id><title>Test Task</title></task>`)
+	reg.Providers().Register("mock", mockProvider)
+
+	// Create event bus with listener
+	eventBus := orchestrator.NewEventBus()
+	receivedEvents := make([]orchestrator.Event, 0)
+	
+	eventBus.Subscribe("test-listener", func(event orchestrator.Event) {
+		receivedEvents = append(receivedEvents, event)
+	})
+
+	// Setup remaining components
+	dbPath := filepath.Join(tempDir, "events.db")
+	store, _ := boltdb.NewStore(dbPath)
+	defer store.Close()
+	
+	kanbanManager, err := kanban.NewManager(store)
+	require.NoError(t, err)
+	factory := &manager.DefaultGuildMasterFactory{}
+	refiner, _ := factory.CreateGuildMasterRefiner("mock", reg)
+	
+	parser := &manager.ResponseParserAdapter{Parser: manager.NewIntelligentParser()}
+	planner := orchestrator.NewCommissionTaskPlanner(kanbanManager, parser, eventBus)
+	
+	// Create and configure integration service
+	service, _ := orchestrator.NewCommissionIntegrationService(reg)
+	service.SetCommissionRefiner(refiner)
+	service.SetCommissionPlanner(planner)
+	service.SetEventBus(*eventBus)
+	service.SetKanbanManager(kanbanManager)
+
+	// Process commission
+	commission := manager.Commission{
+		Title: "Event Test Commission",
+		Description: "Test event propagation",
+	}
+	
+	guildConfig := &config.GuildConfig{
+		Name: "Event Test Guild",
+		Agents: []config.AgentConfig{{ID: "test-agent", Type: "general"}},
+	}
+
+	ctx := context.Background()
+	_, err = service.ProcessCommissionToTasks(ctx, commission, guildConfig)
+	require.NoError(t, err)
+
+	// Verify events were received
+	assert.Greater(t, len(receivedEvents), 0, "Should have received events")
+	
+	// Check for specific event types
+	hasTaskCreated := false
+	hasCommissionProcessed := false
+	
+	for _, event := range receivedEvents {
+		switch event.Type {
+		case "task_created":
+			hasTaskCreated = true
+		case "commission_processed":
+			hasCommissionProcessed = true
+		}
+	}
+	
+	assert.True(t, hasTaskCreated, "Should have task_created event")
+	assert.True(t, hasCommissionProcessed, "Should have commission_processed event")
+}

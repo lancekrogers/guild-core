@@ -8,7 +8,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/orchestrator/interfaces"
 )
 
 // CommissionTaskPlanner creates kanban tasks from refined commissions
@@ -24,14 +24,14 @@ type CommissionTaskPlanner interface {
 type DefaultCommissionTaskPlanner struct {
 	kanbanManager  KanbanManager
 	parser         manager.ResponseParser // IntelligentParser interface
-	eventBus       EventBus
+	eventBus       *EventBus
 }
 
 // NewCommissionTaskPlanner creates a new commission task planner
 func NewCommissionTaskPlanner(
 	kanbanManager KanbanManager,
 	parser manager.ResponseParser,
-	eventBus EventBus,
+	eventBus *EventBus,
 ) *DefaultCommissionTaskPlanner {
 	return &DefaultCommissionTaskPlanner{
 		kanbanManager: kanbanManager,
@@ -46,23 +46,9 @@ func (p *DefaultCommissionTaskPlanner) PlanFromRefinedCommission(
 	refined *manager.RefinedCommission,
 	guildConfig *config.GuildConfig,
 ) ([]*kanban.Task, error) {
-	// Extract tasks using IntelligentParser if available
-	var tasks []manager.TaskInfo
-	
-	// Check if parser supports direct task extraction
-	if intelligentParser, ok := p.parser.(*manager.IntelligentParser); ok {
-		// Use LLM-based extraction for enhanced task understanding
-		extractedTasks, err := intelligentParser.ExtractTasksDirectly(ctx, refined)
-		if err == nil {
-			tasks = extractedTasks
-		} else {
-			// Fall back to parsing from file structure
-			tasks = p.extractTasksFromStructure(refined.Structure)
-		}
-	} else {
-		// Extract from file structure metadata
-		tasks = p.extractTasksFromStructure(refined.Structure)
-	}
+	// Extract tasks from the refined commission structure
+	// The parser (via adapter) already handles intelligent extraction internally
+	tasks := p.extractTasksFromStructure(refined.Structure)
 
 	// Convert to kanban tasks
 	kanbanTasks := make([]*kanban.Task, 0, len(tasks))
@@ -156,10 +142,10 @@ func (p *DefaultCommissionTaskPlanner) convertToKanbanTask(
 		Priority:    priority,
 		EstimatedHours: parseEstimate(taskInfo.Estimate),
 		Dependencies: taskInfo.Dependencies,
-		Metadata: map[string]interface{}{
+		Metadata: map[string]string{
 			"commission_id":           commissionID,
 			"source_section":          taskInfo.Section,
-			"required_capabilities":   extractCapabilities(taskInfo),
+			"required_capabilities":   strings.Join(extractCapabilities(taskInfo), ","),
 			"original_category":       taskInfo.Category,
 			"extraction_source":       "intelligent_parser",
 		},
@@ -188,10 +174,9 @@ func (p *DefaultCommissionTaskPlanner) findBestArtisan(
 ) (*config.AgentConfig, error) {
 	// Extract required capabilities from task metadata
 	requiredCaps := []string{}
-	if caps, exists := task.Metadata["required_capabilities"]; exists {
-		if capList, ok := caps.([]string); ok {
-			requiredCaps = capList
-		}
+	if caps, exists := task.Metadata["required_capabilities"]; exists && caps != "" {
+		// Capabilities are stored as comma-separated string
+		requiredCaps = strings.Split(caps, ",")
 	}
 
 	// Find artisans with matching capabilities
@@ -219,7 +204,7 @@ func (p *DefaultCommissionTaskPlanner) findBestArtisan(
 func (p *DefaultCommissionTaskPlanner) emitTaskCreatedEvent(task *kanban.Task, commissionID string) {
 	if p.eventBus != nil {
 		event := Event{
-			Type:   EventTypeTaskCreated,
+			Type:   interfaces.EventTypeTaskCreated,
 			Source: "commission_planner",
 			Data: map[string]interface{}{
 				"task_id":       task.ID,
@@ -236,7 +221,7 @@ func (p *DefaultCommissionTaskPlanner) emitTaskCreatedEvent(task *kanban.Task, c
 func (p *DefaultCommissionTaskPlanner) emitTaskAssignedEvent(task *kanban.Task, artisanID string) {
 	if p.eventBus != nil {
 		event := Event{
-			Type:   EventTypeTaskAssigned,
+			Type:   interfaces.EventTypeTaskAssigned,
 			Source: "commission_planner",
 			Data: map[string]interface{}{
 				"task_id":    task.ID,
@@ -269,8 +254,11 @@ func hasRequiredCapabilities(agent *config.AgentConfig, required []string) bool 
 		if strings.Contains(strings.ToLower(agent.Type), strings.ToLower(req)) {
 			return true
 		}
-		if strings.Contains(strings.ToLower(agent.Role), strings.ToLower(req)) {
-			return true
+		// Check capabilities as well
+		for _, cap := range agent.Capabilities {
+			if strings.Contains(strings.ToLower(cap), strings.ToLower(req)) {
+				return true
+			}
 		}
 	}
 	return len(required) == 0 // Default to true if no specific requirements

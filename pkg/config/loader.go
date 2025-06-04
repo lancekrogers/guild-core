@@ -18,8 +18,9 @@ func NewConfigLoader(configDir string) *ConfigLoader {
 
 // LoadConfig loads configuration from a file
 func (l *ConfigLoader) LoadConfig(filename string) (map[string]interface{}, error) {
-	// This is a placeholder implementation
-	// In a real implementation, this would read and parse the file
+	// For now, return empty config since actual config loading is handled by LoadGuildConfig
+	// This exists for compatibility with corpus package
+	// TODO: Consolidate config loading approaches
 	return map[string]interface{}{}, nil
 }
 
@@ -30,9 +31,8 @@ func (l *ConfigLoader) GetConfigPath(filename string) string {
 
 // LoadFromEnv loads configuration from environment variables
 func LoadFromEnv(prefix string) map[string]string {
-	envVars := make(map[string]string)
-	
-	// This is a placeholder implementation
-	// In a real implementation, this would scan environment variables
-	return envVars
+	// For now, return empty map since env loading is handled by GetProviderAPIKey
+	// This exists for compatibility with corpus package
+	// TODO: Implement proper env var scanning with prefix
+	return make(map[string]string)
 }

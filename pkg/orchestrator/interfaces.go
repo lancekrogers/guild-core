@@ -2,11 +2,9 @@ package orchestrator
 
 import (
 	"context"
-	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/orchestrator/interfaces"
 )
 
 // KanbanManager interface for kanban operations needed by orchestrator

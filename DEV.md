@@ -14,8 +14,8 @@ This document provides guidance for developing and contributing to the Guild fra
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/blockhead-consulting/guild.git
-   cd guild
+   git clone https://github.com/guild-ventures/guild-core.git
+   cd guild-core
    ```
 
 2. Install dependencies:

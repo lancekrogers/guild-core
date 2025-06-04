@@ -77,9 +77,9 @@ tasks:
         
         # Manually specify the packages we know are working
         WORKING_PACKAGES=(
-          "github.com/blockhead-consulting/guild/pkg/providers"
-          "github.com/blockhead-consulting/guild/pkg/providers/openai"
-          "github.com/blockhead-consulting/guild/tools"
+          "github.com/guild-ventures/guild-core/pkg/providers"
+          "github.com/guild-ventures/guild-core/pkg/providers/openai"
+          "github.com/guild-ventures/guild-core/tools"
         )
         
         for pkg in "${WORKING_PACKAGES[@]}"; do
@@ -254,9 +254,9 @@ tasks:
         
         # Manually specify the packages we know are working
         WORKING_PACKAGES=(
-          "github.com/blockhead-consulting/guild/pkg/providers"
-          "github.com/blockhead-consulting/guild/pkg/providers/openai"
-          "github.com/blockhead-consulting/guild/tools"
+          "github.com/guild-ventures/guild-core/pkg/providers"
+          "github.com/guild-ventures/guild-core/pkg/providers/openai"
+          "github.com/guild-ventures/guild-core/tools"
         )
         
         for pkg in "${WORKING_PACKAGES[@]}"; do
@@ -1702,9 +1702,9 @@ tasks:
 
         # Manually specify the packages we know are working
         WORKING_PACKAGES=(
-          "github.com/blockhead-consulting/guild/pkg/providers"
-          "github.com/blockhead-consulting/guild/pkg/providers/openai"
-          "github.com/blockhead-consulting/guild/tools"
+          "github.com/guild-ventures/guild-core/pkg/providers"
+          "github.com/guild-ventures/guild-core/pkg/providers/openai"
+          "github.com/guild-ventures/guild-core/tools"
         )
 
         # Package coverage table header
