@@ -1,6 +1,7 @@
 package manager
 
 import (
+	"context"
 	"fmt"
 	"regexp"
 	"strings"
@@ -41,6 +42,11 @@ func NewResponseParser() *ResponseParserImpl {
 
 // ParseResponse implements the ResponseParser interface
 func (p *ResponseParserImpl) ParseResponse(response *ArtisanResponse) (*FileStructure, error) {
+	return p.ParseResponseWithContext(context.Background(), response)
+}
+
+// ParseResponseWithContext implements parsing with context support
+func (p *ResponseParserImpl) ParseResponseWithContext(ctx context.Context, response *ArtisanResponse) (*FileStructure, error) {
 	if response == nil || response.Content == "" {
 		return nil, fmt.Errorf("empty response content")
 	}

@@ -1,6 +1,7 @@
 package manager
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/guild-ventures/guild-core/pkg/prompts"
@@ -11,6 +12,7 @@ import (
 type GuildMasterFactory struct {
 	promptManager prompts.LayeredManager
 	providers     map[string]providers.AIProvider
+	parserMode    ParserMode
 }
 
 // NewGuildMasterFactory creates a new factory for Guild Master components
@@ -21,7 +23,13 @@ func NewGuildMasterFactory(
 	return &GuildMasterFactory{
 		promptManager: promptManager,
 		providers:     providers,
+		parserMode:    ParserModeAuto, // Default to auto mode
 	}
+}
+
+// SetParserMode configures how the factory creates parsers
+func (f *GuildMasterFactory) SetParserMode(mode ParserMode) {
+	f.parserMode = mode
 }
 
 // CreateGuildMasterRefiner creates a fully configured Guild Master refiner
@@ -35,8 +43,17 @@ func (f *GuildMasterFactory) CreateGuildMasterRefiner(providerName, model string
 	// Create Artisan client
 	artisanClient := NewGuildArtisanClient(provider, model)
 
-	// Create response parser
-	responseParser := NewResponseParser()
+	// Create intelligent response parser based on configuration
+	parserConfig := IntelligentParserConfig{
+		Mode:          f.parserMode,
+		ArtisanClient: artisanClient,
+		PromptManager: f.promptManager,
+	}
+	
+	// Create an adapter to make IntelligentParser implement ResponseParser
+	responseParser := &intelligentParserAdapter{
+		parser: NewIntelligentParser(parserConfig),
+	}
 
 	// Create structure validator
 	validator := NewDefaultValidator()
@@ -99,4 +116,15 @@ func (f *GuildMasterFactory) GetProviderCapabilities(providerName string) (provi
 		return providers.ProviderCapabilities{}, fmt.Errorf("provider %s not found", providerName)
 	}
 	return provider.GetCapabilities(), nil
+}
+
+// intelligentParserAdapter adapts IntelligentParser to ResponseParser interface
+type intelligentParserAdapter struct {
+	parser *IntelligentParser
+}
+
+// ParseResponse implements ResponseParser interface
+func (a *intelligentParserAdapter) ParseResponse(response *ArtisanResponse) (*FileStructure, error) {
+	// Use context.Background() for now - could be enhanced to accept context
+	return a.parser.ParseResponse(context.Background(), response)
 }
