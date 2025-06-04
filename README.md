@@ -1,330 +1,165 @@
 # Guild: Collaborative AI Agent Framework
 
 <div align="center">
-  <strong>Orchestrate agents working together in guilds</strong>
+  <strong>Orchestrate specialized AI agents working together in medieval-themed guilds</strong>
   <br>
   <br>
 
 [![Go Version](https://img.shields.io/badge/Go-1.24-00ADD8.svg)](https://go.dev/dl/)
-[![License](https://img.shields.io/badge/License-Proprietary-red.svg)]()
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)]()
+[![Status](https://img.shields.io/badge/Status-Pre--MVP-orange.svg)]()
 
 </div>
 
 ---
 
-## 🧠 Overview
+## 🏰 Overview
 
-Guild coordinates specialized artisans (AI agents) to complete strategic work through intelligent orchestration. Inspired by medieval guilds where master craftspeople collaborated on complex projects, Guild automatically decomposes commissions, assigns tasks to capable agents, and coordinates their collaboration.
+Guild is an ambitious AI agent orchestration framework that coordinates specialized "artisans" (AI agents) working together on complex tasks. Inspired by medieval guilds where master craftspeople collaborated on projects, Guild provides multi-agent coordination, task management, and intelligent context handling.
 
-**Commission-Based Workflow:**
+> **Note**: Guild is in active development approaching MVP. This README reflects the current state of implementation. Comprehensive documentation updates will follow post-MVP completion.
 
-🏰 **COMMISSION** strategic work to your Guild:
+## ✨ Current Features (Implemented)
+
+### Core Systems
+- ✅ **Advanced Chat Interface**: Production-ready TUI with 1,950 lines of code
+- ✅ **Tool Execution System**: Complete with workspace isolation and safety features
+- ✅ **6-Layer Prompt Architecture**: Dynamic prompt management with token optimization
+- ✅ **Project Initialization**: Full `guild init` command with configuration templates
+- ✅ **gRPC Infrastructure**: Bidirectional streaming for real-time agent communication
+- ✅ **Registry Pattern**: Component discovery and dependency injection
+- ✅ **Corpus/RAG System**: Knowledge management with vector storage
+- ✅ **Medieval Theming**: Consistent terminology throughout (artisans, guilds, commissions)
+
+### Available Commands
 ```bash
-guild commission "Build a REST API for user management" --assign
-guild commission "Research and implement caching strategy" --campaign performance
+guild init [path]           # Initialize a new guild project
+guild chat                  # Interactive chat with AI agents
+guild corpus scan          # Scan and index project documentation
+guild commission           # Create and refine work commissions
+guild prompt               # Manage layered prompt system
+guild agent start         # Start agent services
 ```
-
-🔨 **MONITOR** the workshop and artisan progress:
-```bash
-guild workshop                    # Show active work and agent assignments
-guild commission status           # Commission progress and completion
-```
-
-**Key Features:**
-
-- 🎯 **Strategic Commissions**: Automatically decompose complex work into specialized tasks
-- 🤖 **Intelligent Assignment**: Match tasks to agents based on capabilities and cost
-- 📋 **Workshop Coordination**: Track progress through kanban-style task management  
-- 💾 **Contextual Memory**: Store and retrieve project context with BoltDB and vector search
-- 🔌 **Multi-Provider Support**: OpenAI, Anthropic, Ollama (local), and other LLM providers
-- 🛠️ **Tool Integration**: Seamless integration with CLI tools and external services
-- 💰 **Cost-Aware Orchestration**: Optimize agent selection based on cost and capability
-- 🧩 **Campaign Management**: Coordinate multiple commissions toward strategic goals
-
-## 🚀 Installation
-
-### Using Go
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/guild.git
-cd guild
-
-# Install dependencies
-go mod download
-
-# Build the CLI
-go build -o bin/guild cmd/guild/main.go
-
-# Add to your PATH
-export PATH=$PATH:$(pwd)/bin
-```
-
-### Using Binaries
-
-Binary releases will be available in the future.
 
 ## 🚀 Quick Start
 
-### Create a New Guild Project
+### Prerequisites
+- Go 1.24.3 or higher
+- Git
+- (Optional) ZeroMQ for advanced messaging
+
+### Installation
 
 ```bash
-# Initialize a new Guild project
-guild init my-project
+# Clone the repository
+git clone https://github.com/guild-ventures/guild-core.git
+cd guild-core
 
-# Change to the project directory
-cd my-project
+# Install dependencies
+task deps:install
+
+# Build the CLI
+task build
+
+# Verify installation
+./guild version
 ```
 
-This creates a `.guild/` directory in your project, similar to how Git creates `.git/`. The `.guild/` directory contains all project-local configuration and data:
+### Create Your First Guild Project
 
+```bash
+# Initialize a new project
+guild init my-project
+cd my-project
+
+# Set up your API keys
+export ANTHROPIC_API_KEY="your-key"
+export OPENAI_API_KEY="your-key"
+
+# Start chatting with agents
+guild chat
+```
+
+This creates a `.guild/` directory with:
 ```
 .guild/
-├── config.yaml        # Project-specific configuration
-├── corpus/           # Knowledge base and documentation
-├── embeddings/       # Vector embeddings for RAG
-├── agents/           # Agent configurations
-├── objectives/       # Project objectives
-├── memory/           # BoltDB storage
-└── cache/           # Temporary files and caches
-```
-
-**Important**: The `.guild/` directory should be added to your `.gitignore` file as it contains machine-specific data and potentially sensitive information.
-
-### Configure Agents and Models
-
-Edit the `guild.yaml` file to configure your agents and models:
-
-```yaml
-agents:
-  - name: planner
-    provider: anthropic
-    model: claude-3-opus
-    tools:
-      - search-web
-      - file-reader
-
-  - name: implementer
-    provider: ollama
-    model: llama3-8b
-    tools:
-      - file-writer
-      - aider
-
-guilds:
-  - name: content-team
-    agents:
-      - planner
-      - implementer
-    manager: planner
-    objectives_path: objectives
-
-costs:
-  api_models:
-    claude-3-opus: 45
-    gpt-4: 60
-  local_models:
-    llama3-8b: 1
-  cli_tools:
-    default: 0
-```
-
-### Define Objectives
-
-Create an objective file in the `objectives` directory:
-
-```markdown
-# 🧠 Goal
-
-Create a technical blog post about AI agent frameworks.
-
-# 📂 Context
-
-This is the first in a series of technical blog posts about AI tools and frameworks.
-The target audience is technical practitioners in the AI space.
-
-# 🔧 Requirements
-
-- Overview of agent frameworks
-- Comparison of key frameworks
-- Code examples in Python or JavaScript
-- Focus on practical implementation
-- Target length: 1500-2000 words
-
-# 📌 Tags
-
-- ai
-- agents
-- tutorial
-- technical
-
-# 🔗 Related
-
-- None
-```
-
-### Run the Guild
-
-```bash
-# Run the guild with the defined objective
-guild run content-team
-
-# View the Kanban board
-guild kanban
-
-# Interact with blocked tasks
-guild task unblock task-123 --input "Focus more on practical examples"
+├── guild.yaml          # Main guild configuration
+├── config.yaml         # Project settings
+├── corpus/            # Knowledge base
+├── embeddings/        # Vector storage
+├── agents/            # Agent definitions
+├── objectives/        # Project goals
+└── README.md          # Project documentation
 ```
 
 ## 🏗️ Architecture
 
-Guild is built on a component-based architecture inspired by medieval guild structures:
+Guild uses a sophisticated component-based architecture:
 
-- **Agents** (Artisans): LLM-powered workers that execute specialized tasks
-- **Guilds**: Teams of artisans working together on shared objectives
-- **Kanban** (Workshop Board): Task tracking system with state management
-- **Memory** (Archives): Persistence layer with vector search capabilities
-- **Tools** (Implements): External capabilities that agents can use
-- **Objectives** (Commissions): Structured goals defined in markdown
-- **Guild Hall UI**: Medieval-themed terminal UI for objective management
+- **Agents** (Artisans): LLM-powered workers with specialized capabilities
+- **Orchestrator**: Coordinates multiple agents working on shared objectives  
+- **Kanban Board**: Task tracking with state management
+- **Memory Layer**: BoltDB for persistence, vector search for RAG
+- **Tool System**: Extensible tool integration with safety controls
+- **Prompt Layers**: 6-layer system for context and behavior management
+
+## 🔨 Development
+
+Guild uses [Taskfile](https://taskfile.dev/) for development workflows:
+
+```bash
+# Common tasks
+task test              # Run all tests
+task test:coverage     # Generate coverage report
+task build            # Build the CLI
+task clean            # Clean build artifacts
+
+# Development helpers
+task run CLI_ARGS="chat"     # Run commands directly
+task test:analyze:lore       # Check medieval naming conventions
+```
 
 ## 📚 Documentation
 
-Comprehensive documentation is available in the `docs` directory:
+> **Note**: Documentation is being updated for the MVP release. Current docs may describe planned features.
 
-- [Project Structure](docs/project-structure.md) - Understanding the `.guild/` directory
-- [User Guide](docs/user-guide.md)
-- [Architecture](docs/architecture.md)
-- [Configuration](docs/configuration.md)
-- [Agent Types](docs/agent-types.md)
-- [Tool Integration](docs/tool-integration.md)
-- [API Reference](docs/api-reference.md)
+- [GETTING_STARTED.md](GETTING_STARTED.md) - Will be updated post-MVP with demos
+- [DEV.md](DEV.md) - Developer guidelines
+- Additional documentation in `docs/` directory
 
-## 🧩 Examples
+## 🎯 Roadmap to MVP
 
-Guild includes several example projects:
+### Immediate Priorities
+1. Fix current build errors in orchestrator package
+2. Complete chat → task assignment integration  
+3. Enable real-time progress tracking
+4. Create end-to-end demo workflow
 
-- [Content Creation](examples/content-guild)
-- [Software Development](examples/dev-guild)
-- [Data Analysis](examples/analysis-guild)
+### Post-MVP Plans
+- Comprehensive documentation with GIFs/demos
+- Additional agent types and capabilities
+- Advanced orchestration strategies
+- Plugin system for custom tools
+- Web UI for monitoring
 
-## 🛠️ Development
+## 🤝 Contributing
 
-### Building from Source
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/guild.git
-cd guild
-
-# Using Taskfile (recommended)
-# Install Task if you don't have it: https://taskfile.dev/installation/
-task build      # Build the CLI
-task test       # Run tests
-task version    # Display version
-
-# Manual build
-go build -o bin/guild cmd/guild/main.go
-```
-
-### Using Taskfile
-
-Guild uses [Taskfile](https://taskfile.dev/) to simplify common development tasks:
-
-```bash
-# Install dependencies (including ZeroMQ)
-task deps:install
-
-# Build the project
-task build
-
-# Run the application
-task run CLI_ARGS="--help"
-
-# Run tests
-task test                     # Run all tests
-task test:unit                # Run unit tests only
-task test:packages            # Run tests for specific packages
-
-# Test Analysis & Quality
-task test:coverage            # Generate basic coverage report
-task test:coverage:working    # Coverage for working packages only
-task test:coverage:detailed   # Detailed coverage by package
-task test:coverage:badge      # Generate coverage badge
-task test:verify              # Identify untested functions
-task test:verify:all          # Verify all working packages
-task test:analyze             # Analyze test patterns and quality
-task test:analyze:lore        # Check adherence to Guild naming conventions
-task test:lint:naming         # Lint tests for naming compliance
-task test:report              # Generate comprehensive test quality report
-
-# Clean build artifacts
-task clean
-
-# Show version
-task version
-
-# Objective commands
-task objective:create CLI_ARGS="My new objective"
-task objective:list
-task objective:view CLI_ARGS="objective-id"
-task objective:ui      # Launch the Guild Hall UI
-
-# Agent commands
-task agent CLI_ARGS="start agent-id"
-
-# Guild Hall UI Development
-task ui:dev:setup           # Install Guild Hall UI dependencies (Bubble Tea)
-task ui:dev:run             # Run Guild Hall in craftsman's workshop mode (hot reloading)
-task ui:scaffold COMPONENT=task_list TYPE=ledger  # Craft a new Guild Hall component
-task ui:test                # Verify Guild Hall components for lore compliance
-task ui:styleguide          # Generate Guild Hall style manuscript
-task ui:docs:generate       # Scribe Guild Hall documentation
-task ui:demo                # Visit the Guild Hall demonstration
-```
-
-### Project Structure
-
-```
-guild/
-├── cmd/                 # Command-line applications
-│   └── guild/           # Guild CLI
-├── pkg/                 # Core packages
-│   ├── agent/           # Agent implementations
-│   ├── comms/           # Communication protocols
-│   ├── config/          # Configuration handling
-│   ├── kanban/          # Task management
-│   ├── memory/          # Storage interfaces
-│   ├── objective/       # Objective parsing
-│   ├── orchestrator/    # Guild coordination
-│   └── providers/       # LLM providers
-├── tools/               # Tool implementations
-├── examples/            # Example guild configurations
-└── docs/                # Documentation
-```
+Guild is currently in pre-MVP development. Contribution guidelines will be established post-MVP. For now, please open issues for bugs or feature discussions.
 
 ## ⚖️ License
 
-This project is proprietary software intended for private business use. A decision to open source may be made in the future.
-
-## 💬 Contributing
-
-As Guild is currently a private project, contributions are by invitation only. If Guild becomes open source in the future, contribution guidelines will be published.
+MIT License - see LICENSE file for details.
 
 ## 🙏 Acknowledgments
 
-Guild draws inspiration from several projects and concepts:
-
-- [CrewAI](https://github.com/joaomdmoura/crewAI)
-- [LangChain](https://github.com/langchain-ai/langchain)
-- [AutoGen](https://github.com/microsoft/autogen)
-- Medieval guild structures and collaboration models
+Guild draws inspiration from:
+- [CrewAI](https://github.com/joaomdmoura/crewAI) - Multi-agent orchestration
+- [LangChain](https://github.com/langchain-ai/langchain) - LLM application patterns
+- [Aider](https://github.com/paul-gauthier/aider) - AI pair programming
+- Medieval guild structures and craftsperson traditions
 
 ---
 
 <div align="center">
-  <i>Built with ❤️ for the age of agentic workflows</i>
+  <i>Forging the future of AI agent collaboration, one artisan at a time</i>
 </div>
- later
-- BoltDB for storage
-- (Optional) Qdrant for vector search

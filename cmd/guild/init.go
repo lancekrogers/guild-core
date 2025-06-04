@@ -7,6 +7,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v3"
 )
 
 var initCmd = &cobra.Command{
@@ -47,21 +48,136 @@ func runInit(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	// Initialize project
-	if err := project.Initialize(path); err != nil {
-		return fmt.Errorf("failed to initialize project: %w", err)
+	fmt.Printf("🏰 Initializing Guild Framework at %s...\n", absPath)
+
+	// Step 1: Detect project type
+	fmt.Print("📜 Analyzing project structure... ")
+	detector := project.NewProjectDetector()
+	projectType, err := detector.DetectProjectType(path)
+	if err != nil {
+		return fmt.Errorf("failed to detect project type: %w", err)
+	}
+	fmt.Printf("✅ Detected: %s\n", projectType.Description)
+
+	// Step 2: Generate intelligent configuration
+	fmt.Print("🎯 Generating Guild configuration... ")
+	guildConfig, err := detector.GenerateGuildConfig(projectType, path)
+	if err != nil {
+		return fmt.Errorf("failed to generate guild config: %w", err)
 	}
 
-	// Success message
-	fmt.Println("✅ Initialized Guild project")
-	fmt.Printf("Created .guild/ directory structure at: %s\n", absPath)
-	fmt.Println("\n🔑 Set up your API keys (recommended):")
-	fmt.Println("  export ANTHROPIC_API_KEY=\"your-anthropic-api-key\"")
-	fmt.Println("  export OPENAI_API_KEY=\"your-openai-api-key\"")
-	fmt.Println("\nNext steps:")
-	fmt.Println("  1. Commission strategic work: guild commission \"Build user authentication\" --assign")
-	fmt.Println("  2. Monitor progress: guild workshop")
-	fmt.Println("  3. Add documents to your corpus: guild corpus add <file>")
+	corpusConfig := detector.GenerateCorpusConfig(projectType, path)
+	fmt.Println("✅")
+
+	// Step 3: Create directory structure
+	fmt.Print("📁 Creating directory structure... ")
+	if err := project.Initialize(path); err != nil {
+		return fmt.Errorf("failed to initialize project structure: %w", err)
+	}
+	fmt.Println("✅")
+
+	// Step 4: Write intelligent configuration files
+	fmt.Print("⚙️  Writing configuration files... ")
+	
+	// Write guild.yaml
+	guildConfigPath := filepath.Join(path, ".guild", "guild.yaml")
+	guildConfigData, err := yaml.Marshal(guildConfig)
+	if err != nil {
+		return fmt.Errorf("failed to marshal guild config: %w", err)
+	}
+	if err := os.WriteFile(guildConfigPath, guildConfigData, 0644); err != nil {
+		return fmt.Errorf("failed to write guild config: %w", err)
+	}
+
+	// Write corpus.yaml
+	corpusConfigPath := filepath.Join(path, ".guild", "corpus.yaml")
+	corpusConfigData, err := yaml.Marshal(corpusConfig)
+	if err != nil {
+		return fmt.Errorf("failed to marshal corpus config: %w", err)
+	}
+	if err := os.WriteFile(corpusConfigPath, corpusConfigData, 0644); err != nil {
+		return fmt.Errorf("failed to write corpus config: %w", err)
+	}
+	fmt.Println("✅")
+
+	// Step 5: Scan for documentation to seed corpus
+	fmt.Print("📚 Scanning for documentation... ")
+	docFiles, err := detector.SeedCorpusFromProject(projectType, path)
+	if err != nil {
+		fmt.Printf("⚠️  Warning: %v\n", err)
+	} else {
+		fmt.Printf("✅ Found %d documents\n", len(docFiles))
+		
+		if len(docFiles) > 0 {
+			fmt.Println("\n📋 Suggested files for corpus:")
+			for i, file := range docFiles {
+				if i >= 5 { // Limit to first 5 suggestions
+					fmt.Printf("   ... and %d more\n", len(docFiles)-5)
+					break
+				}
+				fmt.Printf("   • %s\n", file)
+			}
+		}
+	}
+
+	// Step 6: Check provider configuration
+	fmt.Print("🔑 Checking API key configuration... ")
+	var availableProviders []string
+	if os.Getenv("ANTHROPIC_API_KEY") != "" {
+		availableProviders = append(availableProviders, "Anthropic")
+	}
+	if os.Getenv("OPENAI_API_KEY") != "" {
+		availableProviders = append(availableProviders, "OpenAI")
+	}
+	
+	if len(availableProviders) > 0 {
+		fmt.Printf("✅ Found: %v\n", availableProviders)
+	} else {
+		fmt.Println("⚠️  No API keys found")
+	}
+
+	// Success summary
+	fmt.Printf("\n🎉 Successfully initialized Guild project!\n")
+	fmt.Printf("   Project type: %s\n", projectType.Description)
+	fmt.Printf("   Location: %s\n", absPath)
+	fmt.Printf("   Agents configured: %d\n", len(guildConfig.Agents))
+	
+	// Display next steps
+	fmt.Println("\n🚀 Next steps:")
+	
+	if len(availableProviders) == 0 {
+		fmt.Println("   1. Set up your API keys:")
+		fmt.Println("      export ANTHROPIC_API_KEY=\"your-anthropic-api-key\"")
+		fmt.Println("      export OPENAI_API_KEY=\"your-openai-api-key\"")
+	}
+	
+	fmt.Println("   1. Start coding with agents:")
+	fmt.Println("      guild chat")
+	fmt.Println("   2. Create your first commission:")
+	fmt.Printf("      guild commission \"Implement %s feature\"\n", getExampleFeature(projectType))
+	fmt.Println("   3. Monitor agent progress:")
+	fmt.Println("      guild campaign watch")
+	
+	if len(docFiles) > 0 {
+		fmt.Println("   4. Add documentation to corpus:")
+		fmt.Println("      guild corpus add README.md")
+	}
 
 	return nil
+}
+
+// getExampleFeature returns an appropriate example feature for the project type
+func getExampleFeature(projectType *project.ProjectType) string {
+	switch projectType.Language {
+	case "go":
+		return "user authentication API"
+	case "javascript":
+		return "user dashboard"
+	case "python":
+		return "data processing pipeline"
+	case "rust":
+		return "concurrent task processor"
+	default:
+		return "core functionality"
+	}
 }
