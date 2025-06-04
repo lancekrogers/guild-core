@@ -147,3 +147,8 @@ func (r *GuildMasterRefiner) buildUserPrompt(commission Commission) string {
 
 	return builder.String()
 }
+
+// GetArtisanClient returns the artisan client for external use
+func (r *GuildMasterRefiner) GetArtisanClient() ArtisanClient {
+	return r.artisanClient
+}

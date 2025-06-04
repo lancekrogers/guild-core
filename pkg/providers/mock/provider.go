@@ -233,6 +233,29 @@ func (p *Provider) GetCapabilities() interfaces.ProviderCapabilities {
 	return p.capabilities
 }
 
+// Complete implements the LLMClient interface for compatibility with older systems
+func (p *Provider) Complete(ctx context.Context, prompt string) (string, error) {
+	// Create a simple request using the prompt
+	req := interfaces.ChatRequest{
+		Messages: []interfaces.ChatMessage{
+			{Role: "user", Content: prompt},
+		},
+		Model: "mock-model",
+	}
+	
+	// Use the existing ChatCompletion implementation
+	resp, err := p.ChatCompletion(ctx, req)
+	if err != nil {
+		return "", err
+	}
+	
+	if len(resp.Choices) == 0 {
+		return "", fmt.Errorf("no response choices available")
+	}
+	
+	return resp.Choices[0].Message.Content, nil
+}
+
 // mockStream implements ChatStream for testing
 type mockStream struct {
 	content string
