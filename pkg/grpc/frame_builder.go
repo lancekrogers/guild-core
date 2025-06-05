@@ -46,7 +46,7 @@ type FrameMetadata struct {
 type FrameBuilder struct {
 	width, height int
 	campaignMgr   campaign.Manager
-	objectiveMgr  *objective.Manager
+	commissionMgr *commission.Manager
 	kanbanMgr     *kanban.Manager
 	agentReg      registry.AgentRegistry
 	
@@ -59,17 +59,17 @@ type FrameBuilder struct {
 // NewFrameBuilder creates a new frame builder
 func NewFrameBuilder(
 	campaignMgr campaign.Manager,
-	objectiveMgr *objective.Manager,
+	commissionMgr *commission.Manager,
 	kanbanMgr *kanban.Manager,
 	agentReg registry.AgentRegistry,
 ) *FrameBuilder {
 	return &FrameBuilder{
-		width:        80,
-		height:       24,
-		campaignMgr:  campaignMgr,
-		objectiveMgr: objectiveMgr,
-		kanbanMgr:    kanbanMgr,
-		agentReg:     agentReg,
+		width:         80,
+		height:        24,
+		campaignMgr:   campaignMgr,
+		commissionMgr: commissionMgr,
+		kanbanMgr:     kanbanMgr,
+		agentReg:      agentReg,
 		lastRender:   time.Now(),
 	}
 }

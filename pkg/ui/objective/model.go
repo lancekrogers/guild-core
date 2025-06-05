@@ -74,7 +74,7 @@ type ObjectiveChamber struct {
 	// Content
 	aiDocsPreview   string   // Preview of generated ai_docs
 	specsPreview    string   // Preview of generated specs
-	objectivePreview string  // Preview of current objective
+	commissionPreview string  // Preview of current commission
 	contextHistory   []string // History of added context
 }
 
@@ -151,8 +151,8 @@ func (k GuildHallKeyMap) FullHelp() [][]key.Binding {
 	}
 }
 
-// NewModel creates a new Guild Hall model for objective planning
-func NewModel(objectivePath string, manager *objective.Manager, planner *objective.Planner, generator generator.ObjectiveGenerator) *ObjectiveChamber {
+// NewModel creates a new Guild Hall model for commission planning
+func NewModel(commissionPath string, manager *commission.Manager, planner *commission.Planner, generator generator.CommissionGenerator) *ObjectiveChamber {
 	// Initialize textarea for context input
 	scribe := textarea.New()
 	scribe.Placeholder = "Enter context or reference documents (e.g., @spec/path/to/file.md)"
@@ -167,11 +167,11 @@ func NewModel(objectivePath string, manager *objective.Manager, planner *objecti
 
 	// Initialize viewport for displaying content
 	viewport := viewport.New(80, 20)
-	viewport.SetContent("Welcome to the Guild Hall Objective Chamber")
+	viewport.SetContent("Welcome to the Guild Hall Commission Chamber")
 
-	// Initialize objectives list
+	// Initialize commissions list
 	ledger := list.New([]list.Item{}, list.NewDefaultDelegate(), 0, 0)
-	ledger.Title = "Guild Objectives Ledger"
+	ledger.Title = "Guild Commissions Ledger"
 	ledger.SetShowStatusBar(false)
 	ledger.SetFilteringEnabled(false)
 
@@ -180,35 +180,35 @@ func NewModel(objectivePath string, manager *objective.Manager, planner *objecti
 
 	// Create the model with Guild-themed names
 	chamber := &ObjectiveChamber{
-		objectivePath:    objectivePath,
-		objectiveManager: manager,
-		planner:          planner,
-		generator:        generator,
-		scribe:           scribe,
-		parchment:        parchment,
-		viewport:         viewport,
-		ledger:           ledger,
-		helpScroll:       helpScroll,
-		keymap:           DefaultKeyMap(),
-		chamberState:     stateViewing,
-		proclamation:     "Welcome to the Guild Objective Chamber. How may we assist your planning?",
-		contextHistory:   []string{},
+		commissionPath:    commissionPath,
+		commissionManager: manager,
+		planner:           planner,
+		generator:         generator,
+		scribe:            scribe,
+		parchment:         parchment,
+		viewport:          viewport,
+		ledger:            ledger,
+		helpScroll:        helpScroll,
+		keymap:            DefaultKeyMap(),
+		chamberState:      stateViewing,
+		proclamation:      "Welcome to the Guild Commission Chamber. How may we assist your planning?",
+		contextHistory:    []string{},
 	}
 
-	// If objective path is provided, load that objective
-	if objectivePath != "" && manager != nil {
-		// Load the objective using the manager
+	// If commission path is provided, load that commission
+	if commissionPath != "" && manager != nil {
+		// Load the commission using the manager
 		ctx := context.Background()
-		obj, err := manager.LoadObjectiveFromFile(ctx, objectivePath)
+		obj, err := manager.LoadCommissionFromFile(ctx, commissionPath)
 		if err != nil {
-			chamber.proclamation = "Failed to load objective scroll: " + err.Error()
+			chamber.proclamation = "Failed to load commission scroll: " + err.Error()
 		} else {
-			chamber.currentObjective = obj
-			chamber.proclamation = "Examining the objective scroll: " + obj.Title
+			chamber.currentCommission = obj
+			chamber.proclamation = "Examining the commission scroll: " + obj.Title
 
 			// If planner exists, set up the planning session
 			if planner != nil {
-				err := planner.SetObjective(ctx, obj.ID)
+				err := planner.SetCommission(ctx, obj.ID)
 				if err != nil {
 					chamber.proclamation = "Failed to start planning session: " + err.Error()
 				}

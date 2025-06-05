@@ -258,8 +258,8 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.proclamation = "Your knowledge has been added to the Guild's records."
 			
 			// Update preview content if we have one
-			if m.currentObjective != nil {
-				m.objectivePreview = formatObjectivePreview(m.currentObjective)
+			if m.currentCommission != nil {
+				m.commissionPreview = formatCommissionPreview(m.currentCommission)
 			}
 		}
 
@@ -302,7 +302,7 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.guildError = msg.Error
 			m.proclamation = "The objective scroll could not be retrieved: " + msg.Error.Error()
 		} else {
-			m.objectivePreview = msg.Objective
+			m.commissionPreview = msg.Commission
 			m.proclamation = "The objective scroll has been unfurled before you."
 			// Update the view with the objective content
 			m.viewport.SetContent(msg.Objective)
@@ -342,7 +342,7 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func addContextCmd(m ObjectiveChamber, content string) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
-		if m.planner != nil && m.planner.GetSession().Objective != nil {
+		if m.planner != nil && m.planner.GetSession().Commission != nil {
 			// Create a context for the operation
 			ctx := context.Background()
 
@@ -376,7 +376,7 @@ func addContextCmd(m ObjectiveChamber, content string) tea.Cmd {
 func generateDocumentsCmd(m ObjectiveChamber) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
-		if m.planner != nil && m.planner.GetSession().Objective != nil {
+		if m.planner != nil && m.planner.GetSession().Commission != nil {
 			// Create a context for the operation
 			ctx := context.Background()
 
@@ -407,7 +407,7 @@ func generateDocumentsCmd(m ObjectiveChamber) tea.Cmd {
 func requestSuggestionsCmd(m ObjectiveChamber) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
-		if m.planner != nil && m.planner.GetSession().Objective != nil {
+		if m.planner != nil && m.planner.GetSession().Commission != nil {
 			// Create a context for the operation
 			ctx := context.Background()
 
@@ -448,7 +448,7 @@ func requestSuggestionsCmd(m ObjectiveChamber) tea.Cmd {
 func markObjectiveReadyCmd(m ObjectiveChamber) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
-		if m.planner != nil && m.planner.GetSession().Objective != nil {
+		if m.planner != nil && m.planner.GetSession().Commission != nil {
 			// Create a context for the operation
 			ctx := context.Background()
 
@@ -626,7 +626,7 @@ This objective was created in the Guild Hall.
 }
 
 // Helper function to format objective content
-func formatObjectiveContent(obj *objective.Objective) string {
+func formatCommissionContent(obj *commission.Commission) string {
 	if obj == nil {
 		return "No objective available"
 	}
@@ -761,7 +761,7 @@ func executeCommandCmd(m ObjectiveChamber, command string) tea.Cmd {
 					}
 				}
 
-				m.currentObjective = obj
+				m.currentCommission = obj
 				content := ""
 				if obj.Content != "" {
 					content = obj.Content
@@ -822,7 +822,7 @@ func executeCommandCmd(m ObjectiveChamber, command string) tea.Cmd {
 }
 
 // Helper methods for update...
-func formatObjectivePreview(obj *objective.Objective) string {
+func formatCommissionPreview(obj *commission.Commission) string {
 	// Create a formatted preview of the objective
 	// This would format the objective details into a nice display
 	// using actual objective data

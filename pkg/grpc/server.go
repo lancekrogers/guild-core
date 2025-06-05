@@ -26,7 +26,7 @@ type Server struct {
 	pb.UnimplementedGuildServer
 	
 	campaignMgr   campaign.Manager
-	objectiveMgr  *objective.Manager
+	commissionMgr *commission.Manager
 	kanbanMgr     *kanban.Manager
 	agentReg      registry.AgentRegistry
 	orchestrator  *orchestrator.Orchestrator
@@ -64,7 +64,7 @@ func NewServer(
 ) *Server {
 	// Get required components from registry
 	campaignMgr := getCampaignManager(registry)
-	objectiveMgr := getObjectiveManager(registry)
+	commissionMgr := getCommissionManager(registry)
 	kanbanMgr := getKanbanManager(registry)
 	agentReg := registry.Agents()
 	orchestrator := getOrchestrator(registry)
@@ -76,12 +76,12 @@ func NewServer(
 	
 	return &Server{
 		campaignMgr:   campaignMgr,
-		objectiveMgr:  objectiveMgr,
+		commissionMgr: commissionMgr,
 		kanbanMgr:     kanbanMgr,
 		agentReg:      agentReg,
 		orchestrator:  orchestrator,
 		promptManager: nil, // TODO: Fix interface mismatch
-		frameBuilder:  NewFrameBuilder(campaignMgr, objectiveMgr, kanbanMgr, agentReg),
+		frameBuilder:  NewFrameBuilder(campaignMgr, commissionMgr, kanbanMgr, agentReg),
 		watchers:      make(map[string]*watcher),
 		promptServer:  promptServer,
 		chatService:   chatService,
@@ -791,7 +791,7 @@ func getCampaignManager(registry registry.ComponentRegistry) campaign.Manager {
 	return nil
 }
 
-func getObjectiveManager(registry registry.ComponentRegistry) *objective.Manager {
+func getCommissionManager(registry registry.ComponentRegistry) *commission.Manager {
 	// Similar to campaign manager, this would come from registry
 	return nil
 }
