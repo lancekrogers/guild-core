@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/storage/db"
 )
 
@@ -32,7 +33,8 @@ func (r *SQLiteTaskRepository) CreateTask(ctx context.Context, task *Task) error
 		var err error
 		metadataJSON, err = json.Marshal(task.Metadata)
 		if err != nil {
-			return fmt.Errorf("failed to marshal task metadata: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to marshal task metadata").
+				WithComponent("SQLiteTaskRepository")
 		}
 	}
 
@@ -50,7 +52,9 @@ func (r *SQLiteTaskRepository) CreateTask(ctx context.Context, task *Task) error
 	})
 
 	if err != nil {
-		return fmt.Errorf("failed to create task: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create task").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("CreateTask")
 	}
 
 	return nil
@@ -61,14 +65,21 @@ func (r *SQLiteTaskRepository) GetTask(ctx context.Context, id string) (*Task, e
 	dbTask, err := r.database.Queries().GetTask(ctx, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("task not found: %s", id)
+			return nil, gerror.New(gerror.ErrCodeNotFound, "task not found", nil).
+				WithComponent("SQLiteTaskRepository").
+				WithOperation("GetTask").
+				WithDetails("task_id", id)
 		}
-		return nil, fmt.Errorf("failed to get task: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get task").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("GetTask")
 	}
 
 	task, err := r.convertDBTaskToTask(dbTask)
 	if err != nil {
-		return nil, fmt.Errorf("failed to convert task: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert task").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("GetTask")
 	}
 
 	return task, nil
@@ -82,7 +93,8 @@ func (r *SQLiteTaskRepository) UpdateTask(ctx context.Context, task *Task) error
 		var err error
 		metadataJSON, err = json.Marshal(task.Metadata)
 		if err != nil {
-			return fmt.Errorf("failed to marshal task metadata: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to marshal task metadata").
+				WithComponent("SQLiteTaskRepository")
 		}
 	}
 
@@ -97,7 +109,9 @@ func (r *SQLiteTaskRepository) UpdateTask(ctx context.Context, task *Task) error
 	})
 
 	if err != nil {
-		return fmt.Errorf("failed to update task: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("UpdateTask")
 	}
 
 	return nil
@@ -107,12 +121,16 @@ func (r *SQLiteTaskRepository) UpdateTask(ctx context.Context, task *Task) error
 func (r *SQLiteTaskRepository) DeleteTask(ctx context.Context, id string) error {
 	// Delete task events first to avoid foreign key constraint issues
 	if err := r.database.Queries().DeleteTaskEvents(ctx, id); err != nil {
-		return fmt.Errorf("failed to delete task events: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete task events").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("DeleteTask")
 	}
 	
 	// Then delete the task
 	if err := r.database.Queries().DeleteTask(ctx, id); err != nil {
-		return fmt.Errorf("failed to delete task: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete task").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("DeleteTask")
 	}
 	return nil
 }
@@ -121,14 +139,19 @@ func (r *SQLiteTaskRepository) DeleteTask(ctx context.Context, id string) error 
 func (r *SQLiteTaskRepository) ListTasks(ctx context.Context) ([]*Task, error) {
 	dbTasks, err := r.database.Queries().ListTasks(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list tasks: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list tasks").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("ListTasks")
 	}
 
 	tasks := make([]*Task, len(dbTasks))
 	for i, dbTask := range dbTasks {
 		task, err := r.convertDBTaskToTask(dbTask)
 		if err != nil {
-			return nil, fmt.Errorf("failed to convert task %d: %w", i, err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert task").
+				WithComponent("SQLiteTaskRepository").
+				WithOperation("ListTasks").
+				WithDetails("task_index", i)
 		}
 		tasks[i] = task
 	}
@@ -140,14 +163,20 @@ func (r *SQLiteTaskRepository) ListTasks(ctx context.Context) ([]*Task, error) {
 func (r *SQLiteTaskRepository) ListTasksByStatus(ctx context.Context, status string) ([]*Task, error) {
 	dbTasks, err := r.database.Queries().ListTasksByStatus(ctx, status)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list tasks by status: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list tasks by status").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("ListTasksByStatus").
+			WithDetails("status", status)
 	}
 
 	tasks := make([]*Task, len(dbTasks))
 	for i, dbTask := range dbTasks {
 		task, err := r.convertDBTaskToTask(dbTask)
 		if err != nil {
-			return nil, fmt.Errorf("failed to convert task %d: %w", i, err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert task").
+				WithComponent("SQLiteTaskRepository").
+				WithOperation("ListTasks").
+				WithDetails("task_index", i)
 		}
 		tasks[i] = task
 	}
@@ -159,14 +188,20 @@ func (r *SQLiteTaskRepository) ListTasksByStatus(ctx context.Context, status str
 func (r *SQLiteTaskRepository) ListTasksByCommission(ctx context.Context, commissionID string) ([]*Task, error) {
 	dbTasks, err := r.database.Queries().ListTasksByCommission(ctx, commissionID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list tasks by commission: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list tasks by commission").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("ListTasksByCommission").
+			WithDetails("commission_id", commissionID)
 	}
 
 	tasks := make([]*Task, len(dbTasks))
 	for i, dbTask := range dbTasks {
 		task, err := r.convertDBTaskToTask(dbTask)
 		if err != nil {
-			return nil, fmt.Errorf("failed to convert task %d: %w", i, err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert task").
+				WithComponent("SQLiteTaskRepository").
+				WithOperation("ListTasks").
+				WithDetails("task_index", i)
 		}
 		tasks[i] = task
 	}
@@ -178,14 +213,20 @@ func (r *SQLiteTaskRepository) ListTasksByCommission(ctx context.Context, commis
 func (r *SQLiteTaskRepository) ListTasksByBoard(ctx context.Context, boardID string) ([]*Task, error) {
 	dbTasks, err := r.database.Queries().ListTasksByBoard(ctx, &boardID) // Pass as pointer
 	if err != nil {
-		return nil, fmt.Errorf("failed to list tasks by board: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list tasks by board").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("ListTasksByBoard").
+			WithDetails("board_id", boardID)
 	}
 
 	tasks := make([]*Task, len(dbTasks))
 	for i, dbTask := range dbTasks {
 		task, err := r.convertDBTaskToTask(dbTask)
 		if err != nil {
-			return nil, fmt.Errorf("failed to convert task %d: %w", i, err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert task").
+				WithComponent("SQLiteTaskRepository").
+				WithOperation("ListTasks").
+				WithDetails("task_index", i)
 		}
 		tasks[i] = task
 	}
@@ -197,14 +238,20 @@ func (r *SQLiteTaskRepository) ListTasksByBoard(ctx context.Context, boardID str
 func (r *SQLiteTaskRepository) ListTasksForKanban(ctx context.Context, boardID string) ([]*Task, error) {
 	dbTasks, err := r.database.Queries().ListTasksForKanban(ctx, &boardID) // Pass as pointer
 	if err != nil {
-		return nil, fmt.Errorf("failed to list tasks for kanban: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list tasks for kanban").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("ListTasksForKanban").
+			WithDetails("board_id", boardID)
 	}
 
 	tasks := make([]*Task, len(dbTasks))
 	for i, dbTask := range dbTasks {
 		task, err := r.convertDBKanbanTaskToTask(dbTask)
 		if err != nil {
-			return nil, fmt.Errorf("failed to convert kanban task %d: %w", i, err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert kanban task").
+				WithComponent("SQLiteTaskRepository").
+				WithOperation("ListTasksForKanban").
+				WithDetails("task_index", i)
 		}
 		tasks[i] = task
 	}
@@ -218,7 +265,11 @@ func (r *SQLiteTaskRepository) AssignTask(ctx context.Context, taskID, agentID s
 		AssignedAgentID: &agentID,
 		ID:              taskID,
 	}); err != nil {
-		return fmt.Errorf("failed to assign task: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to assign task").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("AssignTask").
+			WithDetails("task_id", taskID).
+			WithDetails("agent_id", agentID)
 	}
 	return nil
 }
@@ -229,7 +280,11 @@ func (r *SQLiteTaskRepository) UpdateTaskStatus(ctx context.Context, taskID, sta
 		Status: status,
 		ID:     taskID,
 	}); err != nil {
-		return fmt.Errorf("failed to update task status: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task status").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("UpdateTaskStatus").
+			WithDetails("task_id", taskID).
+			WithDetails("status", status)
 	}
 	return nil
 }
@@ -240,7 +295,11 @@ func (r *SQLiteTaskRepository) UpdateTaskColumn(ctx context.Context, taskID, col
 		Column: column,
 		ID:     taskID,
 	}); err != nil {
-		return fmt.Errorf("failed to update task column: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task column").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("UpdateTaskColumn").
+			WithDetails("task_id", taskID).
+			WithDetails("column", column)
 	}
 	return nil
 }
@@ -255,7 +314,11 @@ func (r *SQLiteTaskRepository) RecordTaskEvent(ctx context.Context, event *TaskE
 		NewValue:  event.NewValue,
 		Reason:    event.Reason,
 	}); err != nil {
-		return fmt.Errorf("failed to record task event: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to record task event").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("RecordTaskEvent").
+			WithDetails("task_id", event.TaskID).
+			WithDetails("event_type", event.EventType)
 	}
 	return nil
 }
@@ -264,7 +327,10 @@ func (r *SQLiteTaskRepository) RecordTaskEvent(ctx context.Context, event *TaskE
 func (r *SQLiteTaskRepository) GetTaskHistory(ctx context.Context, taskID string) ([]*TaskEvent, error) {
 	dbEvents, err := r.database.Queries().GetTaskHistory(ctx, taskID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get task history: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get task history").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("GetTaskHistory").
+			WithDetails("task_id", taskID)
 	}
 
 	events := make([]*TaskEvent, len(dbEvents))
@@ -293,7 +359,9 @@ func (r *SQLiteTaskRepository) GetTaskHistory(ctx context.Context, taskID string
 func (r *SQLiteTaskRepository) GetAgentWorkload(ctx context.Context) ([]*AgentWorkload, error) {
 	dbWorkloads, err := r.database.Queries().GetAgentWorkload(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get agent workload: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get agent workload").
+			WithComponent("SQLiteTaskRepository").
+			WithOperation("GetAgentWorkload")
 	}
 
 	workloads := make([]*AgentWorkload, len(dbWorkloads))
@@ -347,7 +415,9 @@ func (r *SQLiteTaskRepository) convertDBTaskToTask(dbTask db.Task) (*Task, error
 	if dbTask.Metadata != nil {
 		if metadataBytes, ok := dbTask.Metadata.([]byte); ok {
 			if err := json.Unmarshal(metadataBytes, &task.Metadata); err != nil {
-				return nil, fmt.Errorf("failed to unmarshal task metadata: %w", err)
+				return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to unmarshal task metadata").
+					WithComponent("SQLiteTaskRepository").
+					WithOperation("convertDBTaskToTask")
 			}
 		}
 	}
@@ -828,7 +898,9 @@ func (r *SQLiteTaskRepository) convertDBKanbanTaskToTask(dbTask db.ListTasksForK
 	if dbTask.Metadata != nil {
 		if metadataBytes, ok := dbTask.Metadata.([]byte); ok {
 			if err := json.Unmarshal(metadataBytes, &task.Metadata); err != nil {
-				return nil, fmt.Errorf("failed to unmarshal task metadata: %w", err)
+				return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to unmarshal task metadata").
+					WithComponent("SQLiteTaskRepository").
+					WithOperation("convertDBTaskToTask")
 			}
 		}
 	}

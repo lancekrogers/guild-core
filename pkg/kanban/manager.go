@@ -161,7 +161,7 @@ func (m *Manager) GetBoard(ctx context.Context, boardID string) (*Board, error) 
 	if m.registry == nil {
 		return nil, fmt.Errorf("board loading requires registry for SQLite backend")
 	}
-	board, err := LoadBoard(m.registry, boardID)
+	board, err := LoadBoard(ctx, m.registry, boardID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load board: %w", err)
 	}
@@ -183,7 +183,7 @@ func (m *Manager) ListBoards(ctx context.Context) ([]*Board, error) {
 	if m.registry == nil {
 		return nil, fmt.Errorf("board listing requires registry for SQLite backend")
 	}
-	return ListBoards(m.registry)
+	return ListBoards(ctx, m.registry)
 }
 
 // DeleteBoard deletes a board
@@ -201,7 +201,7 @@ func (m *Manager) DeleteBoard(ctx context.Context, boardID string) error {
 		if m.registry == nil {
 			return fmt.Errorf("board loading requires registry for SQLite backend")
 		}
-		board, err = LoadBoard(m.registry, boardID)
+		board, err = LoadBoard(ctx, m.registry, boardID)
 		if err != nil {
 			return fmt.Errorf("failed to load board: %w", err)
 		}

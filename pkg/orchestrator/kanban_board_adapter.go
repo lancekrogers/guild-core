@@ -63,3 +63,26 @@ func (k *kanbanBoardRepoAdapter) UpdateBoard(ctx context.Context, board interfac
 	}
 	return fmt.Errorf("board repository not available")
 }
+
+func (k *kanbanBoardRepoAdapter) DeleteBoard(ctx context.Context, id string) error {
+	if k.repo != nil {
+		return k.repo.DeleteBoard(ctx, id)
+	}
+	return fmt.Errorf("board repository not available")
+}
+
+func (k *kanbanBoardRepoAdapter) ListBoards(ctx context.Context) ([]interface{}, error) {
+	if k.repo != nil {
+		boards, err := k.repo.ListBoards(ctx)
+		if err != nil {
+			return nil, err
+		}
+		// Convert to []interface{}
+		result := make([]interface{}, len(boards))
+		for i, board := range boards {
+			result[i] = board
+		}
+		return result, nil
+	}
+	return nil, fmt.Errorf("board repository not available")
+}

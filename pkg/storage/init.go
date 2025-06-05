@@ -2,22 +2,28 @@ package storage
 
 import (
 	"context"
-	"fmt"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // InitializeSQLiteStorageForRegistry initializes SQLite storage and returns configured components
 // This function is designed to be called by the registry to avoid circular imports
 func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (StorageRegistry, interface{}, error) {
 	// Create database connection
-	database, err := NewDatabase(dbPath)
+	database, err := NewDatabase(ctx, dbPath)
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to create database: %w", err)
+		return nil, nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create database").
+			WithComponent("InitializeSQLiteStorageForRegistry").
+			WithOperation("NewDatabase").
+			WithDetails("db_path", dbPath)
 	}
 
 	// Run migrations
 	if err := database.Migrate(ctx); err != nil {
 		database.Close()
-		return nil, nil, fmt.Errorf("failed to run migrations: %w", err)
+		return nil, nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to run migrations").
+			WithComponent("InitializeSQLiteStorageForRegistry").
+			WithOperation("Migrate")
 	}
 
 	// Create storage registry
@@ -47,15 +53,19 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 // This creates an in-memory database and manually creates the schema
 func InitializeSQLiteStorageForTests(ctx context.Context) (StorageRegistry, interface{}, error) {
 	// Use in-memory SQLite database for tests
-	database, err := NewDatabase(":memory:")
+	database, err := NewDatabase(ctx, ":memory:")
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to create test database: %w", err)
+		return nil, nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create test database").
+			WithComponent("InitializeSQLiteStorageForTests").
+			WithOperation("NewDatabase")
 	}
 
 	// Manually create schema instead of running migrations
 	if err := createTestSchema(database); err != nil {
 		database.Close()
-		return nil, nil, fmt.Errorf("failed to create test schema: %w", err)
+		return nil, nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create test schema").
+			WithComponent("InitializeSQLiteStorageForTests").
+			WithOperation("createTestSchema")
 	}
 
 	// Create storage registry
@@ -163,7 +173,9 @@ func createTestSchema(database *Database) error {
 
 	_, err := database.DB().Exec(schema)
 	if err != nil {
-		return fmt.Errorf("failed to create test schema: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create test schema").
+			WithComponent("createTestSchema").
+			WithOperation("Exec")
 	}
 	return nil
 }

@@ -8,6 +8,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/config"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/objective"
 	"github.com/guild-ventures/guild-core/pkg/registry"
@@ -141,7 +142,9 @@ func (p *CostAwareTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.
 	
 	summary, err := p.AssignTasksWithOptions(ctx, tasks, guild, options)
 	if err != nil {
-		return err
+		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to assign tasks with cost optimization").
+			WithComponent("CostAwareTaskPlanner").
+			WithOperation("assignTasks")
 	}
 	
 	// Apply assignments to kanban board

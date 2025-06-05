@@ -261,7 +261,7 @@ func initializeDatabase(baseDir string) error {
 	dbPath := filepath.Join(baseDir, "guild.db")
 	
 	// Create database
-	db, err := storage.NewDatabase(dbPath)
+	db, err := storage.NewDatabase(ctx, dbPath)
 	if err != nil {
 		return fmt.Errorf("failed to create database: %w", err)
 	}

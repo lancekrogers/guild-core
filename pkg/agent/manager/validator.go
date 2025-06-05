@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // DefaultValidator implements the StructureValidator interface
@@ -29,15 +31,21 @@ func (v *DefaultValidator) ValidateStructure(structure *FileStructure) error {
 	}
 
 	if err := v.validateFileCount(structure); err != nil {
-		return err
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "file count validation failed").
+			WithComponent("DefaultValidator").
+			WithOperation("validateStructure")
 	}
 
 	if err := v.validateFiles(structure.Files); err != nil {
-		return err
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "file validation failed").
+			WithComponent("DefaultValidator").
+			WithOperation("validateStructure")
 	}
 
 	if err := v.validateRequiredFiles(structure.Files); err != nil {
-		return err
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "required files validation failed").
+			WithComponent("DefaultValidator").
+			WithOperation("validateStructure")
 	}
 
 	return nil
@@ -62,7 +70,10 @@ func (v *DefaultValidator) validateFiles(files []*FileEntry) error {
 
 	for i, file := range files {
 		if err := v.validateFile(file, i); err != nil {
-			return err
+			return gerror.Wrap(err, gerror.ErrCodeValidation, "individual file validation failed").
+				WithComponent("DefaultValidator").
+				WithOperation("validateFiles").
+				WithDetails("file_index", i)
 		}
 
 		// Check for duplicate paths
@@ -147,7 +158,10 @@ func (v *DefaultValidator) validateContent(content, path string) error {
 	// Basic markdown validation for .md files
 	if strings.HasSuffix(path, ".md") {
 		if err := v.validateMarkdownContent(content); err != nil {
-			return err
+			return gerror.Wrap(err, gerror.ErrCodeValidation, "markdown content validation failed").
+				WithComponent("DefaultValidator").
+				WithOperation("validateContent").
+				WithDetails("file_path", path)
 		}
 	}
 
@@ -253,7 +267,9 @@ func (v *ConfigurableValidator) ValidateStructure(structure *FileStructure) erro
 	}
 
 	if err := validator.ValidateStructure(structure); err != nil {
-		return err
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "structure validation failed with custom config").
+			WithComponent("ConfigurableValidator").
+			WithOperation("ValidateStructure")
 	}
 
 	// Additional custom validations

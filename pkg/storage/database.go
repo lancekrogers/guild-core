@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/storage/db"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
@@ -24,22 +25,31 @@ type Database struct {
 
 // NewDatabase creates a new database connection and runs migrations
 // Following Guild's constructor pattern with proper error wrapping
-func NewDatabase(dbPath string) (*Database, error) {
+func NewDatabase(ctx context.Context, dbPath string) (*Database, error) {
 	// Ensure directory exists
 	if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
-		return nil, fmt.Errorf("failed to create database directory: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create database directory").
+			WithComponent("Database").
+			WithOperation("NewDatabase").
+			WithDetails("db_path", dbPath)
 	}
 
 	// Open SQLite database
 	sqlDB, err := sql.Open("sqlite3", fmt.Sprintf("%s?_foreign_keys=on", dbPath))
 	if err != nil {
-		return nil, fmt.Errorf("failed to open database: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to open database").
+			WithComponent("Database").
+			WithOperation("NewDatabase").
+			WithDetails("db_path", dbPath)
 	}
 
 	// Test connection
-	if err := sqlDB.Ping(); err != nil {
+	if err := sqlDB.PingContext(ctx); err != nil {
 		sqlDB.Close()
-		return nil, fmt.Errorf("failed to ping database: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to ping database").
+			WithComponent("Database").
+			WithOperation("NewDatabase").
+			WithDetails("db_path", dbPath)
 	}
 
 	database := &Database{
@@ -56,7 +66,9 @@ func (d *Database) Migrate(ctx context.Context) error {
 	// Create migration driver
 	driver, err := sqlite3.WithInstance(d.db, &sqlite3.Config{})
 	if err != nil {
-		return fmt.Errorf("failed to create migration driver: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create migration driver").
+			WithComponent("Database").
+			WithOperation("Migrate")
 	}
 
 	// Get migrations directory - try multiple locations
@@ -107,24 +119,33 @@ func (d *Database) Migrate(ctx context.Context) error {
 	}
 	
 	if migrationsPath == "" {
-		return fmt.Errorf("could not find database migrations directory")
+		return gerror.New(gerror.ErrCodeNotFound, "could not find database migrations directory", nil).
+			WithComponent("Database").
+			WithOperation("Migrate")
 	}
 
 	// Create file source
 	source, err := (&file.File{}).Open(migrationsPath)
 	if err != nil {
-		return fmt.Errorf("failed to open migrations source: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to open migrations source").
+			WithComponent("Database").
+			WithOperation("Migrate").
+			WithDetails("migrations_path", migrationsPath)
 	}
 
 	// Create migrate instance
 	m, err := migrate.NewWithInstance("file", source, "sqlite3", driver)
 	if err != nil {
-		return fmt.Errorf("failed to create migrate instance: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create migrate instance").
+			WithComponent("Database").
+			WithOperation("Migrate")
 	}
 
 	// Run migrations
 	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-		return fmt.Errorf("failed to run migrations: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to run migrations").
+			WithComponent("Database").
+			WithOperation("Migrate")
 	}
 
 	return nil
@@ -158,17 +179,17 @@ func (d *Database) Close() error {
 func (d *Database) Transaction(ctx context.Context, fn func(*db.Queries) error) error {
 	tx, err := d.db.BeginTx(ctx, nil)
 	if err != nil {
-		return fmt.Errorf("failed to begin transaction: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeTransaction, "failed to begin transaction")
 	}
 	defer tx.Rollback()
 
 	qtx := d.queries.WithTx(tx)
 	if err := fn(qtx); err != nil {
-		return err
+		return gerror.Wrap(err, gerror.ErrCodeTransaction, "transaction function failed")
 	}
 
 	if err := tx.Commit(); err != nil {
-		return fmt.Errorf("failed to commit transaction: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeTransaction, "failed to commit transaction")
 	}
 
 	return nil
