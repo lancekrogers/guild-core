@@ -208,6 +208,12 @@ type StorageRegistry interface {
 	// GetAgentRepository retrieves the registered agent repository
 	GetAgentRepository() AgentRepository
 	
+	// RegisterPromptChainRepository registers a prompt chain repository implementation
+	RegisterPromptChainRepository(repo PromptChainRepository) error
+	
+	// GetPromptChainRepository retrieves the registered prompt chain repository
+	GetPromptChainRepository() PromptChainRepository
+	
 	// GetMemoryStore returns the configured memory store adapter
 	GetMemoryStore() MemoryStore
 	
@@ -293,6 +299,15 @@ type AgentRepository interface {
 	ListAgentsByType(ctx context.Context, agentType string) ([]*StorageAgent, error)
 }
 
+type PromptChainRepository interface {
+	CreateChain(ctx context.Context, chain *PromptChain) error
+	GetChain(ctx context.Context, id string) (*PromptChain, error)
+	AddMessage(ctx context.Context, chainID string, message *PromptChainMessage) error
+	GetChainsByAgent(ctx context.Context, agentID string) ([]*PromptChain, error)
+	GetChainsByTask(ctx context.Context, taskID string) ([]*PromptChain, error)
+	DeleteChain(ctx context.Context, id string) error
+}
+
 // Storage model forward declarations
 type StorageTask struct {
 	ID              string                 `json:"id"`
@@ -357,6 +372,25 @@ type AgentWorkload struct {
 	Name        string `json:"name"`
 	TaskCount   int64  `json:"task_count"`
 	ActiveTasks int64  `json:"active_tasks"`
+}
+
+type PromptChain struct {
+	ID        string                 `json:"id"`
+	AgentID   string                 `json:"agent_id"`
+	TaskID    *string                `json:"task_id,omitempty"`
+	CreatedAt time.Time              `json:"created_at"`
+	UpdatedAt time.Time              `json:"updated_at"`
+	Messages  []*PromptChainMessage  `json:"messages,omitempty"`
+}
+
+type PromptChainMessage struct {
+	ID         int64     `json:"id"`
+	ChainID    string    `json:"chain_id"`
+	Role       string    `json:"role"`
+	Content    string    `json:"content"`
+	Name       *string   `json:"name,omitempty"`
+	Timestamp  time.Time `json:"timestamp"`
+	TokenUsage int32     `json:"token_usage"`
 }
 
 // Forward declarations for orchestrator interfaces to avoid import cycles

@@ -7,12 +7,13 @@ import (
 // DefaultStorageRegistry implements StorageRegistry for the registry package
 // This is a placeholder implementation to avoid circular imports
 type DefaultStorageRegistry struct {
-	taskRepo       TaskRepository
-	campaignRepo   CampaignRepository
-	commissionRepo CommissionRepository
-	agentRepo      AgentRepository
-	memoryStore    MemoryStore
-	mu             sync.RWMutex
+	taskRepo         TaskRepository
+	campaignRepo     CampaignRepository
+	commissionRepo   CommissionRepository
+	agentRepo        AgentRepository
+	promptChainRepo  PromptChainRepository
+	memoryStore      MemoryStore
+	mu               sync.RWMutex
 }
 
 // NewStorageRegistry creates a new storage registry
@@ -78,6 +79,21 @@ func (r *DefaultStorageRegistry) GetAgentRepository() AgentRepository {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	return r.agentRepo
+}
+
+// RegisterPromptChainRepository registers a prompt chain repository implementation
+func (r *DefaultStorageRegistry) RegisterPromptChainRepository(repo PromptChainRepository) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.promptChainRepo = repo
+	return nil
+}
+
+// GetPromptChainRepository retrieves the registered prompt chain repository
+func (r *DefaultStorageRegistry) GetPromptChainRepository() PromptChainRepository {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	return r.promptChainRepo
 }
 
 // GetMemoryStore returns the configured memory store adapter

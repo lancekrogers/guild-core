@@ -2,8 +2,9 @@ package memory
 
 import (
 	"context"
-	"time"
 	"fmt"
+	"sort"
+	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/storage"
@@ -178,26 +179,26 @@ func (m *sqliteChainManager) BuildContext(ctx context.Context, agentID, taskID s
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "BuildContext: agentID cannot be empty", nil)
 	}
 
-	// Get chains for the agent
-	chains, err := m.GetChainsByAgent(ctx, agentID)
-	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "BuildContext: failed to retrieve chains")
-	}
+	var chains []*PromptChain
+	var err error
 
-	// Filter by task if specified
+	// Get chains based on task or agent
 	if taskID != "" {
-		filteredChains := make([]*PromptChain, 0)
-		for _, chain := range chains {
-			if chain.TaskID == taskID {
-				filteredChains = append(filteredChains, chain)
-			}
+		// If taskID is provided, get chains for this specific task
+		chains, err = m.GetChainsByTask(ctx, taskID)
+		if err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "BuildContext: failed to get chains by task")
 		}
-		chains = filteredChains
+	} else {
+		// Otherwise, get all chains for this agent
+		chains, err = m.GetChainsByAgent(ctx, agentID)
+		if err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "BuildContext: failed to get chains by agent")
+		}
 	}
 
-	// Collect messages from all chains
+	// Collect ALL messages from ALL chains first
 	allMessages := make([]Message, 0)
-	totalTokens := 0
 
 	for _, chain := range chains {
 		// Load full chain with messages
@@ -207,23 +208,47 @@ func (m *sqliteChainManager) BuildContext(ctx context.Context, agentID, taskID s
 			continue
 		}
 
-		// Add messages in reverse order (newest first) until token limit
+		// Extract all messages from this chain
 		for i := len(fullChain.Messages) - 1; i >= 0; i-- {
-			message := fullChain.Messages[i]
-			
-			// Check token limit
-			if maxTokens > 0 && totalTokens+message.TokenUsage > maxTokens {
+			allMessages = append(allMessages, fullChain.Messages[i])
+		}
+	}
+
+	// Sort messages by timestamp, newest first
+	sort.Slice(allMessages, func(i, j int) bool {
+		return allMessages[i].Timestamp.After(allMessages[j].Timestamp)
+	})
+
+	// Limit the context to maxTokens if provided
+	if maxTokens > 0 {
+		var totalTokens int
+		var contextMessages []Message
+
+		for _, msg := range allMessages {
+			// Calculate token count with fallback estimation
+			tokenCount := msg.TokenUsage
+			if tokenCount == 0 {
+				// Fallback: estimate tokens as 1/4 of content length
+				tokenCount = len(msg.Content) / 4
+				if tokenCount == 0 {
+					tokenCount = 1 // Ensure at least 1 token
+				}
+			}
+
+			if totalTokens + tokenCount > maxTokens {
 				break
 			}
 
-			allMessages = append([]Message{message}, allMessages...)
-			totalTokens += message.TokenUsage
+			contextMessages = append(contextMessages, msg)
+			totalTokens += tokenCount
 		}
 
-		// Break if we've hit the token limit
-		if maxTokens > 0 && totalTokens >= maxTokens {
-			break
-		}
+		allMessages = contextMessages
+	}
+
+	// Reverse to get chronological order (oldest first)
+	for i, j := 0, len(allMessages)-1; i < j; i, j = i+1, j-1 {
+		allMessages[i], allMessages[j] = allMessages[j], allMessages[i]
 	}
 
 	return allMessages, nil

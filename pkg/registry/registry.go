@@ -38,6 +38,111 @@ type SQLiteStorageRegistry struct {
 	commissionAdapter *storage.KanbanCommissionRepositoryAdapter
 }
 
+// promptChainRepositoryAdapter adapts storage.PromptChainRepository to registry.PromptChainRepository
+type promptChainRepositoryAdapter struct {
+	repo storage.PromptChainRepository
+}
+
+func (a *promptChainRepositoryAdapter) CreateChain(ctx context.Context, chain *PromptChain) error {
+	// Convert registry.PromptChain to storage.PromptChain
+	storageChain := &storage.PromptChain{
+		ID:        chain.ID,
+		AgentID:   chain.AgentID,
+		TaskID:    chain.TaskID,
+		CreatedAt: chain.CreatedAt,
+		UpdatedAt: chain.UpdatedAt,
+	}
+	return a.repo.CreateChain(ctx, storageChain)
+}
+
+func (a *promptChainRepositoryAdapter) GetChain(ctx context.Context, id string) (*PromptChain, error) {
+	storageChain, err := a.repo.GetChain(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	
+	// Convert storage.PromptChain to registry.PromptChain
+	chain := &PromptChain{
+		ID:        storageChain.ID,
+		AgentID:   storageChain.AgentID,
+		TaskID:    storageChain.TaskID,
+		CreatedAt: storageChain.CreatedAt,
+		UpdatedAt: storageChain.UpdatedAt,
+		Messages:  make([]*PromptChainMessage, 0, len(storageChain.Messages)),
+	}
+	
+	// Convert messages
+	for _, msg := range storageChain.Messages {
+		chain.Messages = append(chain.Messages, &PromptChainMessage{
+			ID:         msg.ID,
+			ChainID:    msg.ChainID,
+			Role:       msg.Role,
+			Content:    msg.Content,
+			Name:       msg.Name,
+			Timestamp:  msg.Timestamp,
+			TokenUsage: msg.TokenUsage,
+		})
+	}
+	
+	return chain, nil
+}
+
+func (a *promptChainRepositoryAdapter) AddMessage(ctx context.Context, chainID string, message *PromptChainMessage) error {
+	// Convert registry.PromptChainMessage to storage.PromptChainMessage
+	storageMsg := &storage.PromptChainMessage{
+		ID:         message.ID,
+		ChainID:    message.ChainID,
+		Role:       message.Role,
+		Content:    message.Content,
+		Name:       message.Name,
+		Timestamp:  message.Timestamp,
+		TokenUsage: message.TokenUsage,
+	}
+	return a.repo.AddMessage(ctx, chainID, storageMsg)
+}
+
+func (a *promptChainRepositoryAdapter) GetChainsByAgent(ctx context.Context, agentID string) ([]*PromptChain, error) {
+	storageChains, err := a.repo.GetChainsByAgent(ctx, agentID)
+	if err != nil {
+		return nil, err
+	}
+	
+	chains := make([]*PromptChain, 0, len(storageChains))
+	for _, sc := range storageChains {
+		chains = append(chains, &PromptChain{
+			ID:        sc.ID,
+			AgentID:   sc.AgentID,
+			TaskID:    sc.TaskID,
+			CreatedAt: sc.CreatedAt,
+			UpdatedAt: sc.UpdatedAt,
+		})
+	}
+	return chains, nil
+}
+
+func (a *promptChainRepositoryAdapter) GetChainsByTask(ctx context.Context, taskID string) ([]*PromptChain, error) {
+	storageChains, err := a.repo.GetChainsByTask(ctx, taskID)
+	if err != nil {
+		return nil, err
+	}
+	
+	chains := make([]*PromptChain, 0, len(storageChains))
+	for _, sc := range storageChains {
+		chains = append(chains, &PromptChain{
+			ID:        sc.ID,
+			AgentID:   sc.AgentID,
+			TaskID:    sc.TaskID,
+			CreatedAt: sc.CreatedAt,
+			UpdatedAt: sc.UpdatedAt,
+		})
+	}
+	return chains, nil
+}
+
+func (a *promptChainRepositoryAdapter) DeleteChain(ctx context.Context, id string) error {
+	return a.repo.DeleteChain(ctx, id)
+}
+
 func (s *SQLiteStorageRegistry) RegisterTaskRepository(repo TaskRepository) error {
 	// Not needed for SQLite - repositories are created internally
 	return nil
@@ -75,6 +180,23 @@ func (s *SQLiteStorageRegistry) RegisterAgentRepository(repo AgentRepository) er
 
 func (s *SQLiteStorageRegistry) GetAgentRepository() AgentRepository {
 	// For now, return nil - components should use type assertions to get the actual storage repos
+	return nil
+}
+
+func (s *SQLiteStorageRegistry) RegisterPromptChainRepository(repo PromptChainRepository) error {
+	// Not needed for SQLite - repositories are created internally
+	return nil
+}
+
+func (s *SQLiteStorageRegistry) GetPromptChainRepository() PromptChainRepository {
+	// Get the prompt chain repository from the underlying storage registry
+	if s.registry != nil {
+		storageRepo := s.registry.GetPromptChainRepository()
+		if storageRepo != nil {
+			// Wrap the storage repository with an adapter
+			return &promptChainRepositoryAdapter{repo: storageRepo}
+		}
+	}
 	return nil
 }
 
