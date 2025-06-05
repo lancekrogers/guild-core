@@ -2,6 +2,7 @@ package manager
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"os"
 	"testing"
@@ -10,6 +11,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
 
@@ -472,25 +474,19 @@ func createSlowArtisanClient(t *testing.T) ArtisanClient {
 	// Create a mock that simulates slow responses
 	mockClient := &MockArtisanClient{}
 	
-	mockClient.On("Complete", mock.Anything, mock.Anything).Return(
-		func(ctx context.Context, req ArtisanRequest) *ArtisanResponse {
-			// Simulate slow response
-			select {
-			case <-ctx.Done():
-				return nil
-			case <-time.After(5 * time.Second):
-				return &ArtisanResponse{Content: "{}"}
-			}
-		},
-		func(ctx context.Context, req ArtisanRequest) error {
-			select {
-			case <-ctx.Done():
-				return ctx.Err()
-			case <-time.After(5 * time.Second):
-				return nil
-			}
-		},
-	)
+	// Use Run to simulate delay before returning
+	mockClient.On("Complete", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+		ctx := args.Get(0).(context.Context)
+		// Simulate slow response
+		select {
+		case <-ctx.Done():
+			// Context was cancelled
+			return
+		case <-time.After(5 * time.Second):
+			// Timeout - response too slow
+			return
+		}
+	}).Return(&ArtisanResponse{Content: "{}"}, context.DeadlineExceeded)
 	
 	return mockClient
 }
@@ -504,6 +500,31 @@ func createTestAgentRegistry(t *testing.T) registry.AgentRegistry {
 	}
 	
 	mockRegistry.On("ListAgents").Return(testAgents)
+	
+	// Add GetRegisteredAgents expectation with test data
+	registeredAgents := []registry.GuildAgentConfig{
+		{
+			Name:          "backend-artisan",
+			Type:          "Backend Developer",
+			Provider:      "anthropic",
+			Model:         "claude-3-5-sonnet-20241022",
+			CostMagnitude: 3,
+			ContextWindow: 200000,
+			Capabilities:  []string{"Go", "APIs", "databases"},
+			Tools:         []string{"file", "shell", "http"},
+		},
+		{
+			Name:          "frontend-artisan",
+			Type:          "Frontend Developer",
+			Provider:      "openai",
+			Model:         "gpt-4",
+			CostMagnitude: 2,
+			ContextWindow: 128000,
+			Capabilities:  []string{"React", "TypeScript"},
+			Tools:         []string{"file", "shell", "http"},
+		},
+	}
+	mockRegistry.On("GetRegisteredAgents").Return(registeredAgents)
 	
 	return mockRegistry
 }

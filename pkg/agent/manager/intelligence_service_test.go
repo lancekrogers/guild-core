@@ -194,6 +194,20 @@ func TestManagerIntelligenceService_AnalyzeComplexity(t *testing.T) {
 	}
 
 	// Setup mock expectations
+	// Add GetRegisteredAgents expectation
+	mockAgentReg.On("GetRegisteredAgents").Return([]registry.GuildAgentConfig{
+		{
+			Name:          "backend-artisan",
+			Type:          "Backend Developer",
+			Provider:      "anthropic",
+			Model:         "claude-3-5-sonnet-20241022",
+			CostMagnitude: 3,
+			ContextWindow: 200000,
+			Capabilities:  []string{"Go", "APIs", "databases"},
+			Tools:         []string{"file", "shell", "http"},
+		},
+	})
+	
 	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "analysis-session", mock.AnythingOfType("prompts.TurnContext")).Return(&prompts.LayeredPrompt{
 		Compiled:   "You are a Guild Master analyzing task complexity... Analyze this task: Build a user authentication system",
 		TokenCount: 150,
@@ -324,6 +338,9 @@ func TestManagerIntelligenceService_RouteToAgents(t *testing.T) {
 	}
 
 	// Setup mock expectations
+	// Add GetRegisteredAgents expectation (not used directly in routing but needed by the service)
+	mockAgentReg.On("GetRegisteredAgents").Return([]registry.GuildAgentConfig{})
+	
 	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "routing-session", mock.AnythingOfType("prompts.TurnContext")).Return(&prompts.LayeredPrompt{
 		Compiled:   "You are a Guild Master routing tasks to agents... Route this task to optimal agents...",
 		TokenCount: 200,
@@ -421,6 +438,20 @@ func TestManagerIntelligenceService_FullAnalysisAndRouting(t *testing.T) {
 	}
 
 	// Setup expectations for both calls
+	// Add GetRegisteredAgents expectation
+	mockAgentReg.On("GetRegisteredAgents").Return([]registry.GuildAgentConfig{
+		{
+			Name:          "backend-artisan",
+			Type:          "Backend Developer",
+			Provider:      "anthropic",
+			Model:         "claude-3-5-sonnet-20241022",
+			CostMagnitude: 3,
+			ContextWindow: 200000,
+			Capabilities:  []string{"Go", "APIs", "databases"},
+			Tools:         []string{"file", "shell", "http"},
+		},
+	})
+	
 	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "analysis-session", mock.AnythingOfType("prompts.TurnContext")).Return(&prompts.LayeredPrompt{
 		Compiled:   "Complexity analysis prompt... Analyze complexity...",
 		TokenCount: 150,

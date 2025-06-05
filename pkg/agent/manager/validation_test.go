@@ -2,6 +2,7 @@ package manager
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
@@ -479,13 +480,12 @@ func TestTimeoutScenarios(t *testing.T) {
 			timeout: 5 * time.Second,
 		}
 		
-		request := ComplexityAnalysisRequest{
+		// The actual test would need a real artisan client that respects context
+		// For now, just validate that timeout context is created properly
+		_ = ComplexityAnalysisRequest{
 			TaskDescription: "Test task",
 			TokenBudget:     1000,
 		}
-		
-		// The actual test would need a real artisan client that respects context
-		// For now, just validate that timeout context is created properly
 		timeoutCtx, timeoutCancel := context.WithTimeout(ctx, analyzer.timeout)
 		defer timeoutCancel()
 		

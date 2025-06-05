@@ -374,8 +374,26 @@ func TestLayeredPromptAssembler(t *testing.T) {
 		}
 		
 		// Setup expectations
+		// Platform layer is always retrieved (returns error to use default)
+		store.On("GetPromptLayer", mock.Anything, "platform", "default").Return(
+			[]byte{}, assert.AnError).Maybe() // Not found - will use default
+		
+		// Guild layer is optional
+		store.On("GetPromptLayer", mock.Anything, "guild", "").Return(
+			[]byte{}, assert.AnError).Maybe() // Not found - optional
+		
+		// Session layer is optional
+		store.On("GetPromptLayer", mock.Anything, "session", sessionID).Return(
+			[]byte{}, assert.AnError).Maybe() // Not found - optional
+		
 		manager.On("GetSystemPrompt", mock.Anything, "backend", "default").Return(
 			"Backend artisan prompt", nil)
+		// Domain prompt is also called since artisan ID has domain "dev"
+		manager.On("GetSystemPrompt", mock.Anything, "backend", "dev").Return(
+			"Backend dev domain prompt", nil).Maybe()
+		
+		// Setup expectation for cache store
+		store.On("CacheCompiledPrompt", mock.Anything, mock.AnythingOfType("string"), mock.AnythingOfType("[]uint8")).Return(nil)
 		
 		// Execute
 		ctx := context.Background()
@@ -408,8 +426,26 @@ func TestLayeredPromptAssembler(t *testing.T) {
 		}
 		
 		// Setup expectations - manager returns error
+		// Platform layer is always retrieved
+		store.On("GetPromptLayer", mock.Anything, "platform", "default").Return(
+			[]byte{}, assert.AnError).Maybe() // Not found - will use default
+		
+		// Guild layer is optional
+		store.On("GetPromptLayer", mock.Anything, "guild", "").Return(
+			[]byte{}, assert.AnError).Maybe() // Not found - optional
+		
+		// Session layer is optional
+		store.On("GetPromptLayer", mock.Anything, "session", sessionID).Return(
+			[]byte{}, assert.AnError).Maybe() // Not found - optional
+		
 		manager.On("GetSystemPrompt", mock.Anything, "backend", "default").Return(
 			"", assert.AnError)
+		// Domain prompt is also called since artisan ID has domain "dev"
+		manager.On("GetSystemPrompt", mock.Anything, "backend", "dev").Return(
+			"", nil).Maybe() // Optional domain prompt
+		
+		// Setup expectation for cache store
+		store.On("CacheCompiledPrompt", mock.Anything, mock.AnythingOfType("string"), mock.AnythingOfType("[]uint8")).Return(nil)
 		
 		// RAG should still be called
 		ragRetriever.On("GetContextualMemory", mock.Anything, sessionID, "Test error handling", 800, 0.7).Return(
@@ -452,12 +488,27 @@ func TestLayeredPromptLayers(t *testing.T) {
 		}
 		
 		// Setup expectations
+		// Platform layer is always retrieved
+		store.On("GetPromptLayer", mock.Anything, "platform", "default").Return(
+			[]byte{}, assert.AnError).Maybe() // Not found - will use default
+		
+		// Guild layer is optional
+		store.On("GetPromptLayer", mock.Anything, "guild", "").Return(
+			[]byte{}, assert.AnError).Maybe() // Not found - optional
+		
+		// Session layer is optional
+		store.On("GetPromptLayer", mock.Anything, "session", sessionID).Return(
+			[]byte{}, assert.AnError).Maybe() // Not found - optional
+		
 		manager.On("GetSystemPrompt", mock.Anything, "backend", "default").Return(
 			"Role prompt content", nil)
 		manager.On("GetSystemPrompt", mock.Anything, "backend", "dev").Return(
 			"Domain prompt content", nil)
 		ragRetriever.On("GetContextualMemory", mock.Anything, sessionID, mock.Anything, mock.Anything, mock.Anything).Return(
 			[]prompts.MemoryChunk{}, nil)
+		
+		// Setup expectation for cache store
+		store.On("CacheCompiledPrompt", mock.Anything, mock.AnythingOfType("string"), mock.AnythingOfType("[]uint8")).Return(nil)
 		
 		// Execute
 		ctx := context.Background()
