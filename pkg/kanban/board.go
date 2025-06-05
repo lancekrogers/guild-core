@@ -2,13 +2,12 @@ package kanban
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"sort"
 	"strings"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/memory"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 	"github.com/google/uuid"
 )
 
@@ -45,10 +44,14 @@ type BoardRepository interface {
 	CreateBoard(ctx context.Context, board interface{}) error
 	GetBoard(ctx context.Context, id string) (interface{}, error)
 	UpdateBoard(ctx context.Context, board interface{}) error
+	DeleteBoard(ctx context.Context, id string) error
+	ListBoards(ctx context.Context) ([]interface{}, error)
 }
 
 type TaskRepository interface {
 	CreateTask(ctx context.Context, task interface{}) error
+	DeleteTask(ctx context.Context, id string) error
+	ListTasksByBoard(ctx context.Context, boardID string) ([]interface{}, error)
 	RecordTaskEvent(ctx context.Context, event interface{}) error
 }
 
@@ -61,9 +64,8 @@ type Board struct {
 	UpdatedAt    time.Time         `json:"updated_at"`
 	Metadata     map[string]string `json:"metadata,omitempty"`
 	
-	// Storage - use registry for SQLite access, fallback to memory store for compatibility
+	// Storage - SQLite only via registry
 	registry     ComponentRegistry
-	store        memory.Store
 	eventManager *EventManager
 }
 
@@ -105,31 +107,9 @@ type BoardEvent struct {
 	OccurredAt time.Time          `json:"occurred_at"`
 }
 
-// NewBoard creates a new kanban board
-// NewBoard creates a new board using the legacy memory.Store interface (for backward compatibility)
-func NewBoard(store memory.Store, name, description string) (*Board, error) {
-	if store == nil {
-		return nil, fmt.Errorf("store cannot be nil")
-	}
-
-	board := &Board{
-		ID:          uuid.New().String(),
-		Name:        name,
-		Description: description,
-		CreatedAt:   time.Now().UTC(),
-		UpdatedAt:   time.Now().UTC(),
-		Metadata:    make(map[string]string),
-		registry:    nil, // No registry for legacy mode
-		store:       store,
-		eventManager: nil, // Will be set by SetEventManager
-	}
-
-	// Save the board
-	if err := board.Save(context.Background()); err != nil {
-		return nil, err
-	}
-
-	return board, nil
+// NewBoard creates a new kanban board using SQLite
+func NewBoard(registry ComponentRegistry, name, description string) (*Board, error) {
+	return NewBoardWithRegistry(registry, name, description)
 }
 
 // NewBoardWithRegistry creates a new board using SQLite storage via registry
@@ -146,7 +126,6 @@ func NewBoardWithRegistry(registry ComponentRegistry, name, description string) 
 		UpdatedAt:   time.Now().UTC(),
 		Metadata:    make(map[string]string),
 		registry:    registry,
-		store:       nil, // No legacy store for SQLite mode
 		eventManager: nil, // Will be set by SetEventManager
 	}
 
@@ -258,44 +237,86 @@ func (b *Board) SetEventManager(em *EventManager) {
 	b.eventManager = em
 }
 
-// LoadBoard loads a board from the store
-func LoadBoard(store memory.Store, boardID string) (*Board, error) {
-	if store == nil {
-		return nil, fmt.Errorf("store cannot be nil")
+// LoadBoard loads a board from SQLite using the board ID
+func LoadBoard(registry ComponentRegistry, boardID string) (*Board, error) {
+	if registry == nil {
+		return nil, fmt.Errorf("registry cannot be nil")
 	}
 	
-	data, err := store.Get(context.Background(), "boards", boardID)
+	storageReg := registry.Storage()
+	if storageReg == nil {
+		return nil, fmt.Errorf("storage registry not available")
+	}
+	
+	boardRepo := storageReg.GetBoardRepository()
+	if boardRepo == nil {
+		return nil, fmt.Errorf("board repository not available")
+	}
+	
+	// Get board from SQLite
+	boardInterface, err := boardRepo.GetBoard(context.Background(), boardID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load board: %w", err)
 	}
 	
-	var board Board
-	if err := json.Unmarshal(data, &board); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal board: %w", err)
+	// Cast to storage.Board
+	storageBoard, ok := boardInterface.(*storage.Board)
+	if !ok {
+		return nil, fmt.Errorf("failed to cast board to storage.Board")
 	}
 	
-	// Set the store
-	board.store = store
+	// Convert storage board to kanban board
+	board := &Board{
+		ID:          storageBoard.ID,
+		Name:        storageBoard.Name,
+		Description: *storageBoard.Description,
+		CreatedAt:   storageBoard.CreatedAt,
+		UpdatedAt:   storageBoard.UpdatedAt,
+		Metadata:    make(map[string]string),
+		registry:    registry,
+	}
 	
-	return &board, nil
+	return board, nil
 }
 
-// ListBoards lists all boards in the store
-func ListBoards(store memory.Store) ([]*Board, error) {
-	if store == nil {
-		return nil, fmt.Errorf("store cannot be nil")
+// ListBoards lists all boards from SQLite
+func ListBoards(registry ComponentRegistry) ([]*Board, error) {
+	if registry == nil {
+		return nil, fmt.Errorf("registry cannot be nil")
 	}
 	
-	keys, err := store.List(context.Background(), "boards")
+	storageReg := registry.Storage()
+	if storageReg == nil {
+		return nil, fmt.Errorf("storage registry not available")
+	}
+	
+	boardRepo := storageReg.GetBoardRepository()
+	if boardRepo == nil {
+		return nil, fmt.Errorf("board repository not available")
+	}
+	
+	// Get all boards from SQLite
+	boardInterfaces, err := boardRepo.ListBoards(context.Background())
 	if err != nil {
 		return nil, fmt.Errorf("failed to list boards: %w", err)
 	}
 	
 	var boards []*Board
-	for _, key := range keys {
-		board, err := LoadBoard(store, key)
-		if err != nil {
-			continue // Skip this one if there's an error
+	for _, boardInterface := range boardInterfaces {
+		// Cast to storage.Board
+		storageBoard, ok := boardInterface.(*storage.Board)
+		if !ok {
+			continue // Skip invalid boards
+		}
+		
+		board := &Board{
+			ID:          storageBoard.ID,
+			Name:        storageBoard.Name,
+			Description: *storageBoard.Description,
+			CreatedAt:   storageBoard.CreatedAt,
+			UpdatedAt:   storageBoard.UpdatedAt,
+			Metadata:    make(map[string]string),
+			registry:    registry,
 		}
 		boards = append(boards, board)
 	}
@@ -303,29 +324,50 @@ func ListBoards(store memory.Store) ([]*Board, error) {
 	return boards, nil
 }
 
-// Save saves the board to the store
+// Save saves the board using SQLite
 func (b *Board) Save(ctx context.Context) error {
-	if b.store == nil {
-		return fmt.Errorf("board not connected to a store")
+	if b.registry == nil {
+		return fmt.Errorf("board not connected to registry")
 	}
 	
 	// Update timestamp
 	b.UpdatedAt = time.Now().UTC()
 	
-	// Marshal board to JSON
-	data, err := json.Marshal(b)
-	if err != nil {
-		return fmt.Errorf("failed to marshal board: %w", err)
+	// Get board repository
+	storageReg := b.registry.Storage()
+	if storageReg == nil {
+		return fmt.Errorf("storage registry not available")
 	}
 	
-	// Save to store
-	return b.store.Put(ctx, "boards", b.ID, data)
+	boardRepo := storageReg.GetBoardRepository()
+	if boardRepo == nil {
+		return fmt.Errorf("board repository not available")
+	}
+	
+	// Convert kanban.Board to storage.Board
+	description := b.Description
+	storageBoard := &storage.Board{
+		ID:           b.ID,
+		CommissionID: "default-commission", // TODO: Get from context
+		Name:         b.Name,
+		Description:  &description,
+		Status:       "active",
+		CreatedAt:    b.CreatedAt,
+		UpdatedAt:    b.UpdatedAt,
+	}
+	
+	// Try update first, if fails then create
+	if err := boardRepo.UpdateBoard(ctx, storageBoard); err != nil {
+		return boardRepo.CreateBoard(ctx, storageBoard)
+	}
+	
+	return nil
 }
 
 // Delete deletes the board from the store
 func (b *Board) Delete(ctx context.Context) error {
-	if b.store == nil {
-		return fmt.Errorf("board not connected to a store")
+	if b.registry == nil {
+		return fmt.Errorf("board not connected to registry")
 	}
 	
 	// First, delete all tasks
@@ -340,8 +382,14 @@ func (b *Board) Delete(ctx context.Context) error {
 		}
 	}
 	
-	// Delete the board itself
-	return b.store.Delete(ctx, "boards", b.ID)
+	// Delete the board itself from SQLite
+	storageReg := b.registry.Storage()
+	boardRepo := storageReg.GetBoardRepository()
+	if boardRepo == nil {
+		return fmt.Errorf("board repository not available")
+	}
+	
+	return boardRepo.DeleteBoard(ctx, b.ID)
 }
 
 // CreateTask creates a new task on the board
@@ -351,56 +399,8 @@ func (b *Board) CreateTask(ctx context.Context, title, description string) (*Tas
 		return b.createTaskSQLite(ctx, title, description)
 	}
 	
-	if b.store == nil {
-		return nil, fmt.Errorf("board not connected to any storage")
-	}
-	
-	// Legacy BoltDB path
-	task := NewTask(title, description)
-	
-	// Add board ID to metadata
-	task.Metadata["board_id"] = b.ID
-	
-	// Save task
-	taskData, err := json.Marshal(task)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal task: %w", err)
-	}
-	
-	if err := b.store.Put(ctx, "tasks", task.ID, taskData); err != nil {
-		return nil, fmt.Errorf("failed to save task: %w", err)
-	}
-	
-	// Index task by board and status
-	indexKey := fmt.Sprintf("%s:%s", b.ID, task.Status)
-	if err := b.store.Put(ctx, "tasks_by_board_status", indexKey+":"+task.ID, []byte(task.ID)); err != nil {
-		return nil, fmt.Errorf("failed to index task: %w", err)
-	}
-	
-	// Update the board's last updated time
-	b.UpdatedAt = time.Now().UTC()
-	if err := b.Save(ctx); err != nil {
-		return nil, fmt.Errorf("failed to update board: %w", err)
-	}
-	
-	// Emit task created event
-	event := BoardEvent{
-		EventType:  EventTaskCreated,
-		BoardID:    b.ID,
-		TaskID:     task.ID,
-		OccurredAt: time.Now().UTC(),
-		Data: map[string]string{
-			"title":       task.Title,
-			"description": task.Description,
-			"status":      string(task.Status),
-		},
-	}
-	if err := b.emitEvent(ctx, event); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to emit event: %v\n", err)
-	}
-	
-	return task, nil
+	// No legacy store - all operations use SQLite via registry
+	return nil, fmt.Errorf("board not connected to registry - cannot create tasks without SQLite backend")
 }
 
 // createTaskSQLite creates a task using SQLite storage
@@ -552,15 +552,15 @@ func (b *Board) recordTaskEvent(ctx context.Context, taskID, eventType, oldValue
 	storageReg := b.registry.Storage()
 	taskRepo := storageReg.GetTaskRepository()
 
-	// Create event using map to avoid import cycle
-	event := map[string]interface{}{
-		"TaskID":    taskID,
-		"AgentID":   nil,
-		"EventType": eventType,
-		"OldValue":  &oldValue,
-		"NewValue":  &newValue,
-		"Reason":    &reason,
-		"CreatedAt": time.Now().UTC(),
+	// Create event using proper TaskEvent struct
+	event := &storage.TaskEvent{
+		TaskID:    taskID,
+		AgentID:   nil,
+		EventType: eventType,
+		OldValue:  &oldValue,
+		NewValue:  &newValue,
+		Reason:    &reason,
+		CreatedAt: time.Now().UTC(),
 	}
 
 	return taskRepo.RecordTaskEvent(ctx, event)
@@ -573,26 +573,8 @@ func (b *Board) GetTask(ctx context.Context, taskID string) (*Task, error) {
 		return b.getTaskSQLite(ctx, taskID)
 	}
 	
-	if b.store == nil {
-		return nil, fmt.Errorf("board not connected to a store")
-	}
-	
-	data, err := b.store.Get(ctx, "tasks", taskID)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get task: %w", err)
-	}
-	
-	var task Task
-	if err := json.Unmarshal(data, &task); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal task: %w", err)
-	}
-	
-	// Verify the task belongs to this board (for legacy BoltDB storage only)
-	if task.Metadata["board_id"] != b.ID {
-		return nil, fmt.Errorf("task does not belong to this board")
-	}
-	
-	return &task, nil
+	// No legacy store - all operations use SQLite via registry
+	return nil, fmt.Errorf("board not connected to registry - cannot get tasks without SQLite backend")
 }
 
 // getTaskSQLite retrieves a task from SQLite storage
@@ -619,95 +601,12 @@ func (b *Board) getTaskSQLite(ctx context.Context, taskID string) (*Task, error)
 
 // UpdateTask updates a task on the board
 func (b *Board) UpdateTask(ctx context.Context, task *Task) error {
-	// Use SQLite if registry is available
-	if b.registry != nil {
-		return b.updateTaskSQLite(ctx, task)
+	// Use SQLite via registry for all task operations
+	if b.registry == nil {
+		return fmt.Errorf("board not connected to registry")
 	}
 	
-	if b.store == nil {
-		return fmt.Errorf("board not connected to a store")
-	}
-	
-	// Verify the task belongs to this board (for legacy BoltDB storage only)
-	if task.Metadata["board_id"] != b.ID {
-		return fmt.Errorf("task does not belong to this board")
-	}
-	
-	// Get the current task to check if status has changed
-	currentTask, err := b.GetTask(ctx, task.ID)
-	if err != nil {
-		return fmt.Errorf("failed to get current task: %w", err)
-	}
-	
-	oldStatus := currentTask.Status
-	newStatus := task.Status
-	
-	// Update task
-	task.UpdatedAt = time.Now().UTC()
-	taskData, err := json.Marshal(task)
-	if err != nil {
-		return fmt.Errorf("failed to marshal task: %w", err)
-	}
-	
-	if err := b.store.Put(ctx, "tasks", task.ID, taskData); err != nil {
-		return fmt.Errorf("failed to update task: %w", err)
-	}
-	
-	// If status changed, update indices
-	if oldStatus != newStatus {
-		// Delete old status index
-		oldIndexKey := fmt.Sprintf("%s:%s", b.ID, oldStatus)
-		if err := b.store.Delete(ctx, "tasks_by_board_status", oldIndexKey+":"+task.ID); err != nil {
-			return fmt.Errorf("failed to remove old status index: %w", err)
-		}
-		
-		// Add new status index
-		newIndexKey := fmt.Sprintf("%s:%s", b.ID, newStatus)
-		if err := b.store.Put(ctx, "tasks_by_board_status", newIndexKey+":"+task.ID, []byte(task.ID)); err != nil {
-			return fmt.Errorf("failed to add new status index: %w", err)
-		}
-		
-		// Emit status changed event
-		event := BoardEvent{
-			EventType:  EventTaskStatusChanged,
-			BoardID:    b.ID,
-			TaskID:     task.ID,
-			OccurredAt: time.Now().UTC(),
-			Data: map[string]string{
-				"old_status": string(oldStatus),
-				"new_status": string(newStatus),
-				"title":      task.Title,
-			},
-		}
-		if err := b.emitEvent(ctx, event); err != nil {
-			// Log but don't fail
-			fmt.Printf("warning: failed to emit event: %v\n", err)
-		}
-	}
-	
-	// Update the board's last updated time
-	b.UpdatedAt = time.Now().UTC()
-	if err := b.Save(ctx); err != nil {
-		return fmt.Errorf("failed to update board: %w", err)
-	}
-	
-	// Emit task updated event
-	event := BoardEvent{
-		EventType:  EventTaskUpdated,
-		BoardID:    b.ID,
-		TaskID:     task.ID,
-		OccurredAt: time.Now().UTC(),
-		Data: map[string]string{
-			"title":  task.Title,
-			"status": string(task.Status),
-		},
-	}
-	if err := b.emitEvent(ctx, event); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to emit event: %v\n", err)
-	}
-	
-	return nil
+	return b.updateTaskSQLite(ctx, task)
 }
 
 // updateTaskSQLite updates a task using SQLite storage
@@ -771,8 +670,8 @@ func (b *Board) updateTaskSQLite(ctx context.Context, task *Task) error {
 
 // DeleteTask deletes a task from the board
 func (b *Board) DeleteTask(ctx context.Context, taskID string) error {
-	if b.store == nil {
-		return fmt.Errorf("board not connected to a store")
+	if b.registry == nil {
+		return fmt.Errorf("board not connected to registry")
 	}
 	
 	// Get the task to check if it belongs to this board
@@ -781,72 +680,82 @@ func (b *Board) DeleteTask(ctx context.Context, taskID string) error {
 		return fmt.Errorf("failed to get task: %w", err)
 	}
 	
-	// Delete the task
-	if err := b.store.Delete(ctx, "tasks", taskID); err != nil {
+	// Delete the task from SQLite
+	storageReg := b.registry.Storage()
+	taskRepo := storageReg.GetTaskRepository()
+	if taskRepo == nil {
+		return fmt.Errorf("task repository not available")
+	}
+	
+	if err := taskRepo.DeleteTask(ctx, taskID); err != nil {
 		return fmt.Errorf("failed to delete task: %w", err)
 	}
 	
-	// Delete status index
-	indexKey := fmt.Sprintf("%s:%s", b.ID, task.Status)
-	if err := b.store.Delete(ctx, "tasks_by_board_status", indexKey+":"+taskID); err != nil {
+	// Record task deletion event
+	if err := b.recordTaskEvent(ctx, taskID, "deleted", string(task.Status), "", "Task deleted from kanban board"); err != nil {
 		// Log but don't fail
-		fmt.Printf("warning: failed to delete status index: %v\n", err)
+		fmt.Printf("warning: failed to record task event: %v\n", err)
 	}
 	
 	// Update the board's last updated time
 	b.UpdatedAt = time.Now().UTC()
-	if err := b.Save(ctx); err != nil {
-		return fmt.Errorf("failed to update board: %w", err)
-	}
-	
-	// Emit task deleted event
-	event := BoardEvent{
-		EventType:  EventTaskDeleted,
-		BoardID:    b.ID,
-		TaskID:     taskID,
-		OccurredAt: time.Now().UTC(),
-		Data: map[string]string{
-			"title":  task.Title,
-			"status": string(task.Status),
-		},
-	}
-	if err := b.emitEvent(ctx, event); err != nil {
+	if err := b.saveToSQLite(ctx); err != nil {
 		// Log but don't fail
-		fmt.Printf("warning: failed to emit event: %v\n", err)
+		fmt.Printf("warning: failed to update board timestamp: %v\n", err)
 	}
 	
 	return nil
 }
 
-// GetTasksByStatus gets all tasks with a specific status
+// GetTasksByStatus gets all tasks with a specific status from SQLite
 func (b *Board) GetTasksByStatus(ctx context.Context, status TaskStatus) ([]*Task, error) {
-	if b.store == nil {
-		return nil, fmt.Errorf("board not connected to a store")
+	if b.registry == nil {
+		return nil, fmt.Errorf("board not connected to registry")
 	}
 	
-	// Get all tasks with the given status
-	indexPrefix := fmt.Sprintf("%s:%s:", b.ID, status)
-	taskIDs, err := b.store.ListKeys(ctx, "tasks_by_board_status", indexPrefix)
+	storageReg := b.registry.Storage()
+	taskRepo := storageReg.GetTaskRepository()
+	if taskRepo == nil {
+		return nil, fmt.Errorf("task repository not available")
+	}
+	
+	// Get all tasks for this board from SQLite, then filter by status
+	taskInterfaces, err := taskRepo.ListTasksByBoard(ctx, b.ID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list task IDs: %w", err)
+		return nil, fmt.Errorf("failed to get tasks for board: %w", err)
 	}
 	
+	// Convert storage tasks to kanban tasks and filter by status
 	var tasks []*Task
-	for _, key := range taskIDs {
-		// Extract task ID from the key
-		parts := strings.Split(key, ":")
-		if len(parts) != 3 {
-			continue // Invalid key format
+	for _, taskInterface := range taskInterfaces {
+		// Cast to storage.Task
+		storageTask, ok := taskInterface.(*storage.Task)
+		if !ok {
+			continue // Skip invalid tasks
 		}
 		
-		taskID := parts[2]
-		
-		// Get the task
-		task, err := b.GetTask(ctx, taskID)
-		if err != nil {
-			// Skip this one if there's an error
+		// Filter by status
+		if storageTask.Status != string(status) {
 			continue
 		}
+		
+		task := &Task{
+			ID:          storageTask.ID,
+			Title:       storageTask.Title,
+			Description: *storageTask.Description,
+			Status:      TaskStatus(storageTask.Status),
+			CreatedAt:   storageTask.CreatedAt,
+			UpdatedAt:   storageTask.UpdatedAt,
+			Metadata:    make(map[string]string),
+		}
+		
+		// Set assigned agent if available
+		if storageTask.AssignedAgentID != nil {
+			task.AssignedTo = *storageTask.AssignedAgentID
+		}
+		
+		// Add board ID to metadata for compatibility
+		task.Metadata["board_id"] = b.ID
 		
 		tasks = append(tasks, task)
 	}
@@ -859,31 +768,52 @@ func (b *Board) GetTasksByStatus(ctx context.Context, status TaskStatus) ([]*Tas
 	return tasks, nil
 }
 
-// GetAllTasks gets all tasks on the board
+// GetAllTasks gets all tasks on the board from SQLite
 func (b *Board) GetAllTasks(ctx context.Context) ([]*Task, error) {
-	if b.store == nil {
-		return nil, fmt.Errorf("board not connected to a store")
+	if b.registry == nil {
+		return nil, fmt.Errorf("board not connected to registry")
 	}
 	
+	storageReg := b.registry.Storage()
+	taskRepo := storageReg.GetTaskRepository()
+	if taskRepo == nil {
+		return nil, fmt.Errorf("task repository not available")
+	}
+	
+	// Get all tasks for this board from SQLite
+	taskInterfaces, err := taskRepo.ListTasksByBoard(ctx, b.ID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get all tasks: %w", err)
+	}
+	
+	// Convert storage tasks to kanban tasks
 	var allTasks []*Task
-	
-	// Get tasks for each status
-	statuses := []TaskStatus{
-		StatusBacklog,
-		StatusTodo,
-		StatusInProgress,
-		StatusBlocked,
-		StatusDone,
-		StatusCancelled,
-	}
-	
-	for _, status := range statuses {
-		tasks, err := b.GetTasksByStatus(ctx, status)
-		if err != nil {
-			return nil, fmt.Errorf("failed to get tasks with status %s: %w", status, err)
+	for _, taskInterface := range taskInterfaces {
+		// Cast to storage.Task
+		storageTask, ok := taskInterface.(*storage.Task)
+		if !ok {
+			continue // Skip invalid tasks
 		}
 		
-		allTasks = append(allTasks, tasks...)
+		task := &Task{
+			ID:          storageTask.ID,
+			Title:       storageTask.Title,
+			Description: *storageTask.Description,
+			Status:      TaskStatus(storageTask.Status),
+			CreatedAt:   storageTask.CreatedAt,
+			UpdatedAt:   storageTask.UpdatedAt,
+			Metadata:    make(map[string]string),
+		}
+		
+		// Set assigned agent if available
+		if storageTask.AssignedAgentID != nil {
+			task.AssignedTo = *storageTask.AssignedAgentID
+		}
+		
+		// Add board ID to metadata for compatibility
+		task.Metadata["board_id"] = b.ID
+		
+		allTasks = append(allTasks, task)
 	}
 	
 	// Sort tasks by UpdatedAt, newest first
@@ -894,13 +824,13 @@ func (b *Board) GetAllTasks(ctx context.Context) ([]*Task, error) {
 	return allTasks, nil
 }
 
-// FilterTasks filters tasks based on the provided filter
+// FilterTasks filters tasks based on the provided filter using SQLite
 func (b *Board) FilterTasks(ctx context.Context, filter TaskFilter) ([]*Task, error) {
-	if b.store == nil {
-		return nil, fmt.Errorf("board not connected to a store")
+	if b.registry == nil {
+		return nil, fmt.Errorf("board not connected to registry")
 	}
 	
-	// Get all tasks
+	// Get all tasks from SQLite
 	allTasks, err := b.GetAllTasks(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get all tasks: %w", err)
@@ -919,8 +849,8 @@ func (b *Board) FilterTasks(ctx context.Context, filter TaskFilter) ([]*Task, er
 
 // UpdateTaskStatus updates the status of a task
 func (b *Board) UpdateTaskStatus(ctx context.Context, taskID string, newStatus TaskStatus, changedBy, comment string) error {
-	if b.store == nil {
-		return fmt.Errorf("board not connected to a store")
+	if b.registry == nil {
+		return fmt.Errorf("board not connected to registry")
 	}
 	
 	// Get the task
@@ -940,8 +870,8 @@ func (b *Board) UpdateTaskStatus(ctx context.Context, taskID string, newStatus T
 
 // AssignTask assigns a task to a user
 func (b *Board) AssignTask(ctx context.Context, taskID, assignee, changedBy, comment string) error {
-	if b.store == nil {
-		return fmt.Errorf("board not connected to a store")
+	if b.registry == nil {
+		return fmt.Errorf("board not connected to registry")
 	}
 	
 	// Get the task
@@ -979,8 +909,8 @@ func (b *Board) AssignTask(ctx context.Context, taskID, assignee, changedBy, com
 
 // AddTaskBlocker adds a blocker to a task
 func (b *Board) AddTaskBlocker(ctx context.Context, taskID, blockerID, changedBy, comment string) error {
-	if b.store == nil {
-		return fmt.Errorf("board not connected to a store")
+	if b.registry == nil {
+		return fmt.Errorf("board not connected to registry")
 	}
 	
 	// Get the task
@@ -1018,8 +948,8 @@ func (b *Board) AddTaskBlocker(ctx context.Context, taskID, blockerID, changedBy
 
 // RemoveTaskBlocker removes a blocker from a task
 func (b *Board) RemoveTaskBlocker(ctx context.Context, taskID, blockerID, changedBy, comment string) error {
-	if b.store == nil {
-		return fmt.Errorf("board not connected to a store")
+	if b.registry == nil {
+		return fmt.Errorf("board not connected to registry")
 	}
 	
 	// Get the task
@@ -1055,27 +985,8 @@ func (b *Board) RemoveTaskBlocker(ctx context.Context, taskID, blockerID, change
 	return nil
 }
 
-// emitEvent saves and publishes an event
+// emitEvent publishes an event (no storage - SQLite handles persistence)
 func (b *Board) emitEvent(ctx context.Context, event BoardEvent) error {
-	if b.store == nil {
-		return fmt.Errorf("board not connected to a store")
-	}
-
-	// Generate a unique ID for the event
-	eventID := uuid.New().String()
-
-	// Marshal event to JSON
-	eventData, err := json.Marshal(event)
-	if err != nil {
-		return fmt.Errorf("failed to marshal event: %w", err)
-	}
-
-	// Save event to local storage
-	err = b.store.Put(ctx, "board_events", eventID, eventData)
-	if err != nil {
-		return fmt.Errorf("failed to save event: %w", err)
-	}
-
 	// If event manager is available, publish the event
 	if b.eventManager != nil {
 		if pubErr := b.eventManager.PublishEvent(&event); pubErr != nil {
@@ -1084,5 +995,6 @@ func (b *Board) emitEvent(ctx context.Context, event BoardEvent) error {
 		}
 	}
 
+	// Event tracking is now handled by SQLite task operations
 	return nil
 }
