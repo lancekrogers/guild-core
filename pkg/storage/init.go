@@ -162,7 +162,10 @@ func createTestSchema(database *Database) error {
 	`
 
 	_, err := database.DB().Exec(schema)
-	return err
+	if err != nil {
+		return fmt.Errorf("failed to create test schema: %w", err)
+	}
+	return nil
 }
 
 // ShutdownSQLiteStorage properly shuts down SQLite storage components

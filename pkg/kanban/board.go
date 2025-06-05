@@ -209,7 +209,7 @@ func (b *Board) ensureCampaignExists(ctx context.Context, campaignRepo CampaignR
 	if err := campaignRepo.CreateCampaign(ctx, campaign); err != nil {
 		// Ignore UNIQUE constraint errors - campaign already exists
 		if !strings.Contains(err.Error(), "UNIQUE constraint failed") {
-			return err
+			return fmt.Errorf("failed to create campaign %s: %w", campaignID, err)
 		}
 	}
 
