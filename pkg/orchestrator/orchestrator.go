@@ -54,10 +54,10 @@ type Orchestrator interface {
 	GetAgent(agentID string) (agent.Agent, bool)
 
 	// SetObjective sets the current objective
-	SetObjective(objective *objective.Objective) error
+	SetObjective(objective *commission.Commission) error
 
 	// GetObjective gets the current objective
-	GetObjective() *objective.Objective
+	GetObjective() *commission.Commission
 
 	// AddEventHandler adds an event handler
 	AddEventHandler(handler EventHandler)

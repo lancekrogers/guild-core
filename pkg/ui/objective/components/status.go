@@ -1,4 +1,4 @@
-// Package components provides UI components for the objective UI
+// Package components provides UI components for the commission UI
 package components
 
 import (
@@ -9,14 +9,12 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/commission"
 )
 
-// StatusColors defines the colors for each objective status
+// StatusColors defines the colors for each commission status
 var StatusColors = map[string]lipgloss.Style{
-	objective.StatusEmpty:       lipgloss.NewStyle().Foreground(lipgloss.Color("#888888")),
-	objective.StatusDraft:       lipgloss.NewStyle().Foreground(lipgloss.Color("#FFAA00")),
-	objective.StatusInProgress:  lipgloss.NewStyle().Foreground(lipgloss.Color("#00AAFF")),
-	objective.StatusReady:       lipgloss.NewStyle().Foreground(lipgloss.Color("#00AA00")),
-	objective.StatusImplementing: lipgloss.NewStyle().Foreground(lipgloss.Color("#CC00FF")),
-	objective.StatusCompleted:   lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF00")),
+	string(commission.CommissionStatusDraft):     lipgloss.NewStyle().Foreground(lipgloss.Color("#FFAA00")),
+	string(commission.CommissionStatusActive):    lipgloss.NewStyle().Foreground(lipgloss.Color("#00AAFF")),
+	string(commission.CommissionStatusCompleted): lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF00")),
+	string(commission.CommissionStatusCancelled): lipgloss.NewStyle().Foreground(lipgloss.Color("#FF0000")),
 }
 
 // StatusBadge renders a status badge with appropriate color

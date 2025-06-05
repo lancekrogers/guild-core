@@ -60,9 +60,9 @@ func (w *AgentWrapper) GetToolRegistry() *tools.ToolRegistry {
 	return w.agent.GetToolRegistry()
 }
 
-// GetObjectiveManager returns the objective manager
-func (w *AgentWrapper) GetObjectiveManager() *objective.Manager {
-	return w.agent.GetObjectiveManager()
+// GetCommissionManager returns the objective manager
+func (w *AgentWrapper) GetCommissionManager() *commission.Manager {
+	return w.agent.GetCommissionManager()
 }
 
 // GetLLMClient returns the LLM client

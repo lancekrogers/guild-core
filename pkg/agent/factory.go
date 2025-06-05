@@ -27,7 +27,7 @@ type DefaultFactory struct {
 	LLMClient        providers.LLMClient
 	MemoryManager    memory.ChainManager
 	ToolRegistry     *tools.ToolRegistry
-	ObjectiveManager *objective.Manager
+	CommissionManager *commission.Manager
 }
 
 // NewFactory creates a new factory instance
@@ -35,13 +35,13 @@ func NewFactory(
 	llmClient providers.LLMClient,
 	memoryManager memory.ChainManager,
 	toolRegistry *tools.ToolRegistry,
-	objectiveManager *objective.Manager,
+	objectiveManager *commission.Manager,
 ) *DefaultFactory {
 	return &DefaultFactory{
 		LLMClient:        llmClient,
 		MemoryManager:    memoryManager,
 		ToolRegistry:     toolRegistry,
-		ObjectiveManager: objectiveManager,
+		CommissionManager: objectiveManager,
 	}
 }
 
@@ -59,10 +59,10 @@ func (f *DefaultFactory) CreateAgent(ctx context.Context, id, name string, agent
 
 // CreateWorkerAgent creates a new worker agent
 func (f *DefaultFactory) CreateWorkerAgent(ctx context.Context, id, name string) (Agent, error) {
-	return NewWorkerAgent(id, name, f.LLMClient, f.MemoryManager, f.ToolRegistry, f.ObjectiveManager), nil
+	return NewWorkerAgent(id, name, f.LLMClient, f.MemoryManager, f.ToolRegistry, f.CommissionManager), nil
 }
 
 // CreateManagerAgent creates a new manager agent
 func (f *DefaultFactory) CreateManagerAgent(ctx context.Context, id, name string) (Agent, error) {
-	return NewManagerAgent(id, name, f.LLMClient, f.MemoryManager, f.ToolRegistry, f.ObjectiveManager), nil
+	return NewManagerAgent(id, name, f.LLMClient, f.MemoryManager, f.ToolRegistry, f.CommissionManager), nil
 }

@@ -6,37 +6,37 @@ import (
 )
 
 // MockObjective creates a mock objective for testing
-func MockObjective(id, title, description string) *objective.Objective {
+func MockObjective(id, title, description string) *commission.Commission {
 	now := time.Now()
-	return &objective.Objective{
+	return &commission.Commission{
 		ID:          id,
 		Title:       title,
 		Description: description,
-		Tasks:       []*objective.ObjectiveTask{},
-		Status:      objective.ObjectiveStatusActive,
+		Tasks:       []*commission.CommissionTask{},
+		Status:      commission.CommissionStatusActive,
 		CreatedAt:   now,
 		UpdatedAt:   now,
 	}
 }
 
 // MockObjectiveWithTasks creates a mock objective with tasks
-func MockObjectiveWithTasks(id, title, description string, tasks []*objective.ObjectiveTask) *objective.Objective {
+func MockObjectiveWithTasks(id, title, description string, tasks []*commission.CommissionTask) *commission.Commission {
 	now := time.Now()
-	return &objective.Objective{
+	return &commission.Commission{
 		ID:          id,
 		Title:       title,
 		Description: description,
 		Tasks:       tasks,
-		Status:      objective.ObjectiveStatusActive,
+		Status:      commission.CommissionStatusActive,
 		CreatedAt:   now,
 		UpdatedAt:   now,
 	}
 }
 
 // MockTask creates a mock objective task
-func MockTask(id, title, description string, sortOrder int) *objective.ObjectiveTask {
+func MockTask(id, title, description string, sortOrder int) *commission.CommissionTask {
 	now := time.Now()
-	return &objective.ObjectiveTask{
+	return &commission.CommissionTask{
 		ID:          id,
 		Title:       title,
 		Description: description,

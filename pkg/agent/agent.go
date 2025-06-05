@@ -29,8 +29,8 @@ type GuildArtisan interface {
 	// GetToolRegistry returns the tool registry
 	GetToolRegistry() *tools.ToolRegistry
 	
-	// GetObjectiveManager returns the objective manager
-	GetObjectiveManager() *objective.Manager
+	// GetCommissionManager returns the commission manager
+	GetCommissionManager() *commission.Manager
 	
 	// GetLLMClient returns the LLM client
 	GetLLMClient() providers.LLMClient
@@ -46,7 +46,7 @@ type WorkerAgent struct {
 	LLMClient      providers.LLMClient
 	MemoryManager  memory.ChainManager
 	ToolRegistry   *tools.ToolRegistry
-	ObjectiveManager *objective.Manager
+	CommissionManager *commission.Manager
 	CostManager    *CostManager
 	
 	// Context metadata
@@ -58,7 +58,7 @@ type WorkerAgent struct {
 func NewWorkerAgent(id, name string, llmClient providers.LLMClient, 
 	memoryManager memory.ChainManager, 
 	toolRegistry *tools.ToolRegistry, 
-	objectiveManager *objective.Manager) *WorkerAgent {
+	objectiveManager *commission.Manager) *WorkerAgent {
 	
 	return &WorkerAgent{
 		ID:              id,
@@ -66,7 +66,7 @@ func NewWorkerAgent(id, name string, llmClient providers.LLMClient,
 		LLMClient:       llmClient,
 		MemoryManager:   memoryManager,
 		ToolRegistry:    toolRegistry,
-		ObjectiveManager: objectiveManager,
+		CommissionManager: objectiveManager,
 		CostManager:     NewCostManager(),
 	}
 }
@@ -107,9 +107,9 @@ func (a *WorkerAgent) GetToolRegistry() *tools.ToolRegistry {
 	return a.ToolRegistry
 }
 
-// GetObjectiveManager returns the objective manager
-func (a *WorkerAgent) GetObjectiveManager() *objective.Manager {
-	return a.ObjectiveManager
+// GetCommissionManager returns the objective manager
+func (a *WorkerAgent) GetCommissionManager() *commission.Manager {
+	return a.CommissionManager
 }
 
 // GetLLMClient returns the LLM client
@@ -171,7 +171,7 @@ type ManagerAgent struct {
 func NewManagerAgent(id, name string, llmClient providers.LLMClient, 
 	memoryManager memory.ChainManager, 
 	toolRegistry *tools.ToolRegistry, 
-	objectiveManager *objective.Manager) *ManagerAgent {
+	objectiveManager *commission.Manager) *ManagerAgent {
 	
 	worker := NewWorkerAgent(id, name, llmClient, memoryManager, toolRegistry, objectiveManager)
 	

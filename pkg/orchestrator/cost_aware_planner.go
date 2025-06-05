@@ -85,7 +85,7 @@ func NewCostAwareTaskPlanner(
 }
 
 // PlanTasks decomposes an objective into tasks (enhanced with cost awareness)
-func (p *CostAwareTaskPlanner) PlanTasks(ctx context.Context, obj *objective.Objective, guild *config.GuildConfig) ([]*kanban.Task, error) {
+func (p *CostAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
 	// Build a planning prompt with cost information
 	prompt := p.buildCostAwarePlanningPrompt(obj, guild)
 	
@@ -340,7 +340,7 @@ func (p *CostAwareTaskPlanner) selectOptimalTools(requiredCapabilities []string,
 
 // Helper methods
 
-func (p *CostAwareTaskPlanner) buildCostAwarePlanningPrompt(obj *objective.Objective, guild *config.GuildConfig) string {
+func (p *CostAwareTaskPlanner) buildCostAwarePlanningPrompt(obj *commission.Commission, guild *config.GuildConfig) string {
 	var prompt strings.Builder
 	
 	prompt.WriteString("You are the manager agent for the ")

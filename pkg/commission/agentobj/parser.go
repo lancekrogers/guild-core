@@ -6,25 +6,25 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/commission"
 )
 
-// AgentParser represents a specialized parser for agent-generated objectives
+// AgentParser represents a specialized parser for agent-generated commissions
 type AgentParser struct {
-	baseParser *objective.MarkdownParser
+	baseParser *commission.MarkdownParser
 }
 
 // NewAgentParser creates a new AgentParser
 func NewAgentParser() *AgentParser {
 	return &AgentParser{
-		baseParser: objective.NewMarkdownParser(objective.ParseOptions{}),
+		baseParser: commission.NewMarkdownParser(commission.ParseOptions{}),
 	}
 }
 
-// Parse parses agent-generated content into an objective
-func (p *AgentParser) Parse(content string) (*objective.Objective, error) {
+// Parse parses agent-generated content into a commission
+func (p *AgentParser) Parse(content string) (*commission.Commission, error) {
 	// This is a placeholder implementation that just forwards to the base parser
 	return p.baseParser.Parse(content, "")
 }
 
-// ExtractSections extracts specialized sections from agent-generated objectives
+// ExtractSections extracts specialized sections from agent-generated commissions
 func (p *AgentParser) ExtractSections(content string) (map[string]string, error) {
 	// This is a placeholder implementation
 	sections := make(map[string]string)

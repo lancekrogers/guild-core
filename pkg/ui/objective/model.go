@@ -50,11 +50,11 @@ type GuildHallKeyMap struct {
 // Define UI state using Guild metaphors
 type ObjectiveChamber struct {
 	// Session state
-	objectiveManager *objective.Manager      // Manages objectives
-	planner          *objective.Planner      // Plans objectives
-	currentObjective *objective.Objective    // Current objective
-	generator        generator.ObjectiveGenerator // LLM generator for objectives
-	objectivePath    string                  // Path to current objective file
+	commissionManager *commission.Manager      // Manages commissions
+	planner           *commission.Planner      // Plans commissions
+	currentCommission *commission.Commission   // Current commission
+	generator         generator.CommissionGenerator // LLM generator for commissions
+	commissionPath    string                   // Path to current commission file
 
 	// UI components
 	scribe          textarea.Model     // Text input for longer content (medieval scribe)

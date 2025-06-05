@@ -12,13 +12,13 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
-// Generator handles LLM-based generation of objectives and related documents
+// Generator handles LLM-based generation of commissions and related documents
 type Generator struct {
 	client    providers.LLMClient
 	promptMgr *prompts.PromptManager
 }
 
-// NewGenerator creates a new objective generator
+// NewGenerator creates a new commission generator
 func NewGenerator(client providers.LLMClient) (*Generator, error) {
 	// Create prompt manager
 	pm, err := prompts.NewPromptManager()
@@ -32,15 +32,15 @@ func NewGenerator(client providers.LLMClient) (*Generator, error) {
 	}, nil
 }
 
-// GenerateObjective creates a new objective from a description
-func (g *Generator) GenerateObjective(ctx context.Context, description string) (*objective.Objective, error) {
+// GenerateCommission creates a new commission from a description
+func (g *Generator) GenerateCommission(ctx context.Context, description string) (*commission.Commission, error) {
 	// Prepare data for template
 	data := map[string]interface{}{
 		"Description": description,
 	}
 
 	// Render the prompt
-	prompt, err := g.promptMgr.RenderPrompt("objective.creation", data)
+	prompt, err := g.promptMgr.RenderPrompt("commission.creation", data)
 	if err != nil {
 		return nil, fmt.Errorf("error rendering prompt: %w", err)
 	}
@@ -52,31 +52,31 @@ func (g *Generator) GenerateObjective(ctx context.Context, description string) (
 	}
 
 	// Create a temporary file to parse
-	tempFile := filepath.Join(os.TempDir(), "temp_objective.md")
+	tempFile := filepath.Join(os.TempDir(), "temp_commission.md")
 	if err := os.WriteFile(tempFile, []byte(response), 0644); err != nil {
 		return nil, fmt.Errorf("error writing temp file: %w", err)
 	}
 	defer os.Remove(tempFile)
 
-	// Parse the objective from the response
-	obj, err := objective.ParseFile(tempFile)
+	// Parse the commission from the response
+	obj, err := commission.ParseFile(tempFile)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing objective: %w", err)
+		return nil, fmt.Errorf("error parsing commission: %w", err)
 	}
 
 	return obj, nil
 }
 
-// GenerateAIDocs generates AI documentation based on an objective
-func (g *Generator) GenerateAIDocs(ctx context.Context, obj *objective.Objective, additionalContext string) (map[string]string, error) {
+// GenerateAIDocs generates AI documentation based on a commission
+func (g *Generator) GenerateAIDocs(ctx context.Context, obj *commission.Commission, additionalContext string) (map[string]string, error) {
 	// Prepare data for template
 	data := map[string]interface{}{
-		"Objective":         obj.Format(), // Method to format objective as markdown
+		"Commission":        obj.Format(), // Method to format commission as markdown
 		"AdditionalContext": additionalContext,
 	}
 
 	// Render the prompt
-	prompt, err := g.promptMgr.RenderPrompt("objective.ai_docs_gen", data)
+	prompt, err := g.promptMgr.RenderPrompt("commission.ai_docs_gen", data)
 	if err != nil {
 		return nil, fmt.Errorf("error rendering prompt: %w", err)
 	}
@@ -92,17 +92,17 @@ func (g *Generator) GenerateAIDocs(ctx context.Context, obj *objective.Objective
 	return docs, nil
 }
 
-// GenerateSpecs generates technical specifications based on an objective
-func (g *Generator) GenerateSpecs(ctx context.Context, obj *objective.Objective, additionalContext string) (map[string]string, error) {
-	// Similar implementation to GenerateAIDocs, but using the "objective.specs_gen" prompt
+// GenerateSpecs generates technical specifications based on a commission
+func (g *Generator) GenerateSpecs(ctx context.Context, obj *commission.Commission, additionalContext string) (map[string]string, error) {
+	// Similar implementation to GenerateAIDocs, but using the "commission.specs_gen" prompt
 	// ...
 
 	return nil, nil // Placeholder
 }
 
-// SuggestImprovements suggests improvements to an objective
-func (g *Generator) SuggestImprovements(ctx context.Context, obj *objective.Objective) (string, error) {
-	// Similar implementation using "objective.suggestion" prompt
+// SuggestImprovements suggests improvements to a commission
+func (g *Generator) SuggestImprovements(ctx context.Context, obj *commission.Commission) (string, error) {
+	// Similar implementation using "commission.suggestion" prompt
 	// ...
 
 	return "", nil // Placeholder

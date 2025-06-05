@@ -49,7 +49,7 @@ func (m *MockAgent) GetName() string {
 type MockGuildArtisan struct {
 	MockAgent
 	ToolRegistry     *tools.ToolRegistry
-	ObjectiveManager *objective.Manager
+	CommissionManager *commission.Manager
 	LLMClient        providers.LLMClient
 	MemoryManager    memory.ChainManager
 }
@@ -59,7 +59,7 @@ func NewMockGuildArtisan(id, name string) *MockGuildArtisan {
 	return &MockGuildArtisan{
 		MockAgent:        *NewMockAgent(id, name),
 		ToolRegistry:     tools.NewToolRegistry(),
-		ObjectiveManager: nil, // Will be set by test if needed
+		CommissionManager: nil, // Will be set by test if needed
 		LLMClient:        NewMockLLMClient(),
 		MemoryManager:    nil, // Will be set by test if needed
 	}
@@ -70,9 +70,9 @@ func (m *MockGuildArtisan) GetToolRegistry() *tools.ToolRegistry {
 	return m.ToolRegistry
 }
 
-// GetObjectiveManager implements the GuildArtisan interface
-func (m *MockGuildArtisan) GetObjectiveManager() *objective.Manager {
-	return m.ObjectiveManager
+// GetCommissionManager implements the GuildArtisan interface
+func (m *MockGuildArtisan) GetCommissionManager() *commission.Manager {
+	return m.CommissionManager
 }
 
 // GetLLMClient implements the GuildArtisan interface

@@ -57,7 +57,7 @@ PreferredCost: 3`,
 	
 	t.Run("TestPlanTasks", func(t *testing.T) {
 		// Create test objective
-		obj := &objective.Objective{
+		obj := &commission.Commission{
 			Title:       "Build User Management System",
 			Description: "Complete user authentication and management system",
 		}

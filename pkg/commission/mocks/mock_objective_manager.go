@@ -7,61 +7,61 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-// MockObjectiveManager is a mock implementation of the objective.Manager type.
-type MockObjectiveManager struct {
+// MockCommissionManager is a mock implementation of the commission.Manager type.
+type MockCommissionManager struct {
 	mock.Mock
 }
 
-// GetObjective mocks the GetObjective method.
-func (m *MockObjectiveManager) GetObjective(ctx context.Context, objectiveID string) (*objective.Objective, error) {
-	args := m.Called(ctx, objectiveID)
+// GetCommission mocks the GetCommission method.
+func (m *MockCommissionManager) GetCommission(ctx context.Context, commissionID string) (*commission.Commission, error) {
+	args := m.Called(ctx, commissionID)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*objective.Objective), args.Error(1)
+	return args.Get(0).(*commission.Commission), args.Error(1)
 }
 
-// CreateObjective mocks the CreateObjective method.
-func (m *MockObjectiveManager) CreateObjective(ctx context.Context, obj *objective.Objective) (string, error) {
+// CreateCommission mocks the CreateCommission method.
+func (m *MockCommissionManager) CreateCommission(ctx context.Context, obj *commission.Commission) (string, error) {
 	args := m.Called(ctx, obj)
 	return args.String(0), args.Error(1)
 }
 
-// UpdateObjective mocks the UpdateObjective method.
-func (m *MockObjectiveManager) UpdateObjective(ctx context.Context, obj *objective.Objective) error {
+// UpdateCommission mocks the UpdateCommission method.
+func (m *MockCommissionManager) UpdateCommission(ctx context.Context, obj *commission.Commission) error {
 	args := m.Called(ctx, obj)
 	return args.Error(0)
 }
 
-// DeleteObjective mocks the DeleteObjective method.
-func (m *MockObjectiveManager) DeleteObjective(ctx context.Context, objectiveID string) error {
-	args := m.Called(ctx, objectiveID)
+// DeleteCommission mocks the DeleteCommission method.
+func (m *MockCommissionManager) DeleteCommission(ctx context.Context, commissionID string) error {
+	args := m.Called(ctx, commissionID)
 	return args.Error(0)
 }
 
-// ListObjectives mocks the ListObjectives method.
-func (m *MockObjectiveManager) ListObjectives(ctx context.Context) ([]*objective.Objective, error) {
+// ListCommissions mocks the ListCommissions method.
+func (m *MockCommissionManager) ListCommissions(ctx context.Context) ([]*commission.Commission, error) {
 	args := m.Called(ctx)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).([]*objective.Objective), args.Error(1)
+	return args.Get(0).([]*commission.Commission), args.Error(1)
 }
 
-// GenerateObjective mocks the GenerateObjective method.
-func (m *MockObjectiveManager) GenerateObjective(ctx context.Context, prompt string) (*objective.Objective, error) {
+// GenerateCommission mocks the GenerateCommission method.
+func (m *MockCommissionManager) GenerateCommission(ctx context.Context, prompt string) (*commission.Commission, error) {
 	args := m.Called(ctx, prompt)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*objective.Objective), args.Error(1)
+	return args.Get(0).(*commission.Commission), args.Error(1)
 }
 
-// ParseObjective mocks the ParseObjective method.
-func (m *MockObjectiveManager) ParseObjective(content string) (*objective.Objective, error) {
+// ParseCommission mocks the ParseCommission method.
+func (m *MockCommissionManager) ParseCommission(content string) (*commission.Commission, error) {
 	args := m.Called(content)
 	if args.Get(0) == nil {
 		return nil, args.Error(1)
 	}
-	return args.Get(0).(*objective.Objective), args.Error(1)
+	return args.Get(0).(*commission.Commission), args.Error(1)
 }

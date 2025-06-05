@@ -17,7 +17,7 @@ type MockAgent struct {
 	id              string
 	name            string
 	toolRegistry    *tools.ToolRegistry
-	objectiveManager *objective.Manager
+	objectiveManager *commission.Manager
 	llmClient       providers.LLMClient
 	memoryManager   memory.ChainManager
 	executeFunc     func(ctx context.Context, request string) (string, error)
@@ -42,7 +42,7 @@ func (m *MockAgent) GetToolRegistry() *tools.ToolRegistry {
 	return m.toolRegistry
 }
 
-func (m *MockAgent) GetObjectiveManager() *objective.Manager {
+func (m *MockAgent) GetCommissionManager() *commission.Manager {
 	return m.objectiveManager
 }
 
@@ -153,7 +153,7 @@ func TestAgentWrapper_InterfaceCompliance(t *testing.T) {
 		t.Error("GetToolRegistry should delegate to wrapped agent")
 	}
 	
-	if wrapper.GetObjectiveManager() != mockAgent.objectiveManager {
-		t.Error("GetObjectiveManager should delegate to wrapped agent")
+	if wrapper.GetCommissionManager() != mockAgent.objectiveManager {
+		t.Error("GetCommissionManager should delegate to wrapped agent")
 	}
 }

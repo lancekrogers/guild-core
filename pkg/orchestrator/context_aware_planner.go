@@ -34,7 +34,7 @@ func NewContextAwareTaskPlanner(
 }
 
 // PlanTasks decomposes an objective into tasks
-func (p *ContextAwareTaskPlanner) PlanTasks(ctx context.Context, obj *objective.Objective, guild *config.GuildConfig) ([]*kanban.Task, error) {
+func (p *ContextAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
 	// Build a planning prompt with full agent context
 	prompt := p.buildContextAwarePlanningPrompt(obj, guild)
 	
@@ -110,7 +110,7 @@ func (p *ContextAwareTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanb
 }
 
 // buildContextAwarePlanningPrompt creates a prompt with full agent context
-func (p *ContextAwareTaskPlanner) buildContextAwarePlanningPrompt(obj *objective.Objective, guild *config.GuildConfig) string {
+func (p *ContextAwareTaskPlanner) buildContextAwarePlanningPrompt(obj *commission.Commission, guild *config.GuildConfig) string {
 	var prompt strings.Builder
 	
 	prompt.WriteString("You are the Guild Master (manager agent) for the ")

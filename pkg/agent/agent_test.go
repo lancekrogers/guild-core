@@ -74,7 +74,7 @@ func TestNewWorkerAgent(t *testing.T) {
 		t.Error("Tool registry not properly set")
 	}
 
-	if workerAgent.GetObjectiveManager() != objectiveManager {
+	if workerAgent.GetCommissionManager() != objectiveManager {
 		t.Error("Objective manager not properly set")
 	}
 

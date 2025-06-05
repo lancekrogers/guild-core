@@ -219,8 +219,8 @@ func TestWorkerAgentWithFullMemoryContext(t *testing.T) {
 	}
 }
 
-// TestWorkerAgentWithObjectiveManager tests agent with objective manager
-func TestWorkerAgentWithObjectiveManager(t *testing.T) {
+// TestWorkerAgentWithCommissionManager tests agent with objective manager
+func TestWorkerAgentWithCommissionManager(t *testing.T) {
 	// Create temporary store
 	tempDir := t.TempDir()
 	store, err := boltdb.NewStore(tempDir + "/test.db")
@@ -246,7 +246,7 @@ func TestWorkerAgentWithObjectiveManager(t *testing.T) {
 	)
 
 	// Verify objective manager is accessible
-	if workerAgent.GetObjectiveManager() != objManager {
+	if workerAgent.GetCommissionManager() != objManager {
 		t.Error("Objective manager not properly set")
 	}
 
@@ -398,7 +398,7 @@ func TestWorkerAgentIntegration(t *testing.T) {
 	if workerAgent.GetToolRegistry() == nil {
 		t.Error("Tool registry should not be nil")
 	}
-	if workerAgent.GetObjectiveManager() == nil {
+	if workerAgent.GetCommissionManager() == nil {
 		t.Error("Objective manager should not be nil")
 	}
 }

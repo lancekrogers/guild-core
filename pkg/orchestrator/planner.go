@@ -14,7 +14,7 @@ import (
 // TaskPlanner decomposes objectives into tasks and assigns them to agents
 type TaskPlanner interface {
 	// PlanTasks decomposes an objective into tasks
-	PlanTasks(ctx context.Context, obj *objective.Objective, guild *config.GuildConfig) ([]*kanban.Task, error)
+	PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error)
 	
 	// AssignTasks assigns tasks to agents based on capabilities
 	AssignTasks(ctx context.Context, tasks []*kanban.Task, guild *config.GuildConfig) error
@@ -35,7 +35,7 @@ func NewManagerTaskPlanner(managerAgent agent.Agent, kanbanBoard *kanban.Board) 
 }
 
 // PlanTasks uses the manager agent to decompose an objective into tasks
-func (p *ManagerTaskPlanner) PlanTasks(ctx context.Context, obj *objective.Objective, guild *config.GuildConfig) ([]*kanban.Task, error) {
+func (p *ManagerTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
 	// Build a prompt for the manager agent
 	prompt := p.buildPlanningPrompt(obj, guild)
 	
@@ -112,7 +112,7 @@ func (p *ManagerTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.Ta
 }
 
 // buildPlanningPrompt creates a prompt for task planning
-func (p *ManagerTaskPlanner) buildPlanningPrompt(obj *objective.Objective, guild *config.GuildConfig) string {
+func (p *ManagerTaskPlanner) buildPlanningPrompt(obj *commission.Commission, guild *config.GuildConfig) string {
 	var prompt strings.Builder
 	
 	prompt.WriteString("You are the manager agent for the ")

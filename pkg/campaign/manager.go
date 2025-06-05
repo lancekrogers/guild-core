@@ -12,26 +12,26 @@ import (
 
 // manager implements the Manager interface
 type manager struct {
-	repo         Repository
-	objectiveMgr *objective.Manager
-	fsm          FSM
-	eventBus     *orchestrator.EventBus
-	handlers     map[string][]EventHandler
-	mu           sync.RWMutex
+	repo           Repository
+	commissionMgr  *commission.Manager
+	fsm            FSM
+	eventBus       *orchestrator.EventBus
+	handlers       map[string][]EventHandler
+	mu             sync.RWMutex
 }
 
 // NewManager creates a new campaign manager
-func NewManager(repo Repository, objectiveMgr *objective.Manager, eventBus *orchestrator.EventBus) Manager {
+func NewManager(repo Repository, commissionMgr *commission.Manager, eventBus *orchestrator.EventBus) Manager {
 	mgr := &manager{
-		repo:         repo,
-		objectiveMgr: objectiveMgr,
-		fsm:          NewFSM(),
-		eventBus:     eventBus,
-		handlers:     make(map[string][]EventHandler),
+		repo:           repo,
+		commissionMgr:  commissionMgr,
+		fsm:            NewFSM(),
+		eventBus:       eventBus,
+		handlers:       make(map[string][]EventHandler),
 	}
 
-	// Subscribe to objective events
-	mgr.subscribeToObjectiveEvents()
+	// Subscribe to commission events
+	mgr.subscribeToCommissionEvents()
 
 	return mgr
 }
@@ -132,8 +132,8 @@ func (m *manager) AddObjective(ctx context.Context, campaignID, objectiveID stri
 	}
 
 	// Check if objective exists
-	if m.objectiveMgr != nil {
-		if _, err := m.objectiveMgr.GetObjective(ctx, objectiveID); err != nil {
+	if m.commissionMgr != nil {
+		if _, err := m.commissionMgr.GetCommission(ctx, objectiveID); err != nil {
 			return fmt.Errorf("objective %s not found: %w", objectiveID, err)
 		}
 	}
@@ -225,7 +225,7 @@ func (m *manager) RemoveObjective(ctx context.Context, campaignID, objectiveID s
 	return nil
 }
 
-// GetObjectives returns all objective IDs for a campaign
+// GetObjectives returns all commission IDs for a campaign (renamed from objectives to commissions internally)
 func (m *manager) GetObjectives(ctx context.Context, campaignID string) ([]string, error) {
 	campaign, err := m.repo.Get(ctx, campaignID)
 	if err != nil {
@@ -328,18 +328,18 @@ func (m *manager) UpdateProgress(ctx context.Context, campaignID string) error {
 		return err
 	}
 
-	if m.objectiveMgr == nil {
+	if m.commissionMgr == nil {
 		// Can't calculate progress without objective manager
 		return nil
 	}
 
 	completedCount := 0
 	for _, objID := range campaign.Objectives {
-		obj, err := m.objectiveMgr.GetObjective(ctx, objID)
+		obj, err := m.commissionMgr.GetCommission(ctx, objID)
 		if err != nil {
 			continue
 		}
-		if obj.Status == objective.StatusCompleted {
+		if obj.Status == commission.CommissionStatusCompleted {
 			completedCount++
 		}
 	}
@@ -393,18 +393,18 @@ func (m *manager) GetProgress(ctx context.Context, campaignID string) (*Campaign
 	pendingCount := 0
 	completedCount := 0
 
-	if m.objectiveMgr != nil {
+	if m.commissionMgr != nil {
 		for _, objID := range campaign.Objectives {
-			obj, err := m.objectiveMgr.GetObjective(ctx, objID)
+			obj, err := m.commissionMgr.GetCommission(ctx, objID)
 			if err != nil {
 				pendingCount++
 				continue
 			}
 
 			switch obj.Status {
-			case objective.ObjectiveStatusActive:
+			case commission.CommissionStatusActive:
 				activeCount++
-			case objective.ObjectiveStatusCompleted:
+			case commission.CommissionStatusCompleted:
 				completedCount++
 			default:
 				pendingCount++
@@ -497,8 +497,8 @@ func (m *manager) publishEvent(ctx context.Context, event CampaignEvent) {
 	}
 }
 
-// subscribeToObjectiveEvents subscribes to objective events to update campaign progress
-func (m *manager) subscribeToObjectiveEvents() {
+// subscribeToCommissionEvents subscribes to commission events to update campaign progress
+func (m *manager) subscribeToCommissionEvents() {
 	if m.eventBus == nil {
 		return
 	}

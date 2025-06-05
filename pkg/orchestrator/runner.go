@@ -16,7 +16,7 @@ type BaseOrchestrator struct {
 	agents          map[string]agent.Agent
 	eventBus        *EventBus
 	dispatcher      *TaskDispatcher
-	currentObjective *objective.Objective
+	currentObjective *commission.Commission
 	config          *Config
 	mu              sync.RWMutex
 	cancelFunc      context.CancelFunc
@@ -201,7 +201,7 @@ func (o *BaseOrchestrator) GetAgent(agentID string) (agent.Agent, bool) {
 }
 
 // SetObjective sets the current objective
-func (o *BaseOrchestrator) SetObjective(objective *objective.Objective) error {
+func (o *BaseOrchestrator) SetObjective(objective *commission.Commission) error {
 	o.mu.Lock()
 	defer o.mu.Unlock()
 
@@ -221,7 +221,7 @@ func (o *BaseOrchestrator) SetObjective(objective *objective.Objective) error {
 }
 
 // GetObjective gets the current objective
-func (o *BaseOrchestrator) GetObjective() *objective.Objective {
+func (o *BaseOrchestrator) GetObjective() *commission.Commission {
 	o.mu.RLock()
 	defer o.mu.RUnlock()
 	

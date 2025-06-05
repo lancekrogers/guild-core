@@ -4,25 +4,25 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/commission"
 )
 
-// GuildParser represents a specialized parser for guild-themed objectives
+// GuildParser represents a specialized parser for guild-themed commissions
 type GuildParser struct {
-	baseParser *objective.MarkdownParser
+	baseParser *commission.MarkdownParser
 }
 
 // NewGuildParser creates a new GuildParser
 func NewGuildParser() *GuildParser {
 	return &GuildParser{
-		baseParser: objective.NewMarkdownParser(objective.ParseOptions{}),
+		baseParser: commission.NewMarkdownParser(commission.ParseOptions{}),
 	}
 }
 
-// Parse parses guild-themed content into an objective
-func (p *GuildParser) Parse(content string) (*objective.Objective, error) {
+// Parse parses guild-themed content into a commission
+func (p *GuildParser) Parse(content string) (*commission.Commission, error) {
 	// This is a placeholder implementation that just forwards to the base parser
 	return p.baseParser.Parse(content, "")
 }
 
-// ExtractGuildTerms extracts guild-themed terms from an objective
+// ExtractGuildTerms extracts guild-themed terms from a commission
 func (p *GuildParser) ExtractGuildTerms(content string) map[string]string {
 	// This is a placeholder implementation
 	guildTerms := map[string]string{
@@ -37,10 +37,10 @@ func (p *GuildParser) ExtractGuildTerms(content string) map[string]string {
 	return guildTerms
 }
 
-// EnhanceWithGuildTheme adds guild-themed language to an objective
-func (p *GuildParser) EnhanceWithGuildTheme(obj *objective.Objective) *objective.Objective {
+// EnhanceWithGuildTheme adds guild-themed language to a commission
+func (p *GuildParser) EnhanceWithGuildTheme(obj *commission.Commission) *commission.Commission {
 	// This is a placeholder implementation
-	// In a real implementation, this would modify the objective to use guild-themed language
+	// In a real implementation, this would modify the commission to use guild-themed language
 	
 	// Example: Add a themed tag
 	obj.Tags = append(obj.Tags, "guild-themed")

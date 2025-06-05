@@ -9,28 +9,28 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/commission"
 )
 
-// MockObjectiveManager implements the objective.Manager interface for testing
-type MockObjectiveManager struct {
+// MockCommissionManager implements the objective.Manager interface for testing
+type MockCommissionManager struct {
 	mu          sync.RWMutex
-	objectives  map[string]*objective.Objective
+	objectives  map[string]*commission.Commission
 	error       error
 }
 
-// NewMockObjectiveManager creates a new mock objective manager
-func NewMockObjectiveManager() *MockObjectiveManager {
-	return &MockObjectiveManager{
-		objectives: make(map[string]*objective.Objective),
+// NewMockCommissionManager creates a new mock objective manager
+func NewMockCommissionManager() *MockCommissionManager {
+	return &MockCommissionManager{
+		objectives: make(map[string]*commission.Commission),
 	}
 }
 
 // WithError configures the mock to return an error
-func (m *MockObjectiveManager) WithError(err error) *MockObjectiveManager {
+func (m *MockCommissionManager) WithError(err error) *MockCommissionManager {
 	m.error = err
 	return m
 }
 
 // WithObjective adds an objective to the manager
-func (m *MockObjectiveManager) WithObjective(obj *objective.Objective) *MockObjectiveManager {
+func (m *MockCommissionManager) WithObjective(obj *commission.Commission) *MockCommissionManager {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	m.objectives[obj.ID] = obj
@@ -38,7 +38,7 @@ func (m *MockObjectiveManager) WithObjective(obj *objective.Objective) *MockObje
 }
 
 // Init implements objective.Manager.Init
-func (m *MockObjectiveManager) Init(ctx context.Context) error {
+func (m *MockCommissionManager) Init(ctx context.Context) error {
 	if m.error != nil {
 		return m.error
 	}
@@ -46,7 +46,7 @@ func (m *MockObjectiveManager) Init(ctx context.Context) error {
 }
 
 // SaveObjective implements objective.Manager.SaveObjective
-func (m *MockObjectiveManager) SaveObjective(ctx context.Context, obj *objective.Objective) error {
+func (m *MockCommissionManager) SaveObjective(ctx context.Context, obj *commission.Commission) error {
 	if m.error != nil {
 		return m.error
 	}
@@ -61,7 +61,7 @@ func (m *MockObjectiveManager) SaveObjective(ctx context.Context, obj *objective
 }
 
 // GetObjective implements objective.Manager.GetObjective
-func (m *MockObjectiveManager) GetObjective(ctx context.Context, objectiveID string) (*objective.Objective, error) {
+func (m *MockCommissionManager) GetObjective(ctx context.Context, objectiveID string) (*commission.Commission, error) {
 	if m.error != nil {
 		return nil, m.error
 	}
@@ -78,7 +78,7 @@ func (m *MockObjectiveManager) GetObjective(ctx context.Context, objectiveID str
 }
 
 // ListObjectives implements objective.Manager.ListObjectives
-func (m *MockObjectiveManager) ListObjectives(ctx context.Context) ([]*objective.Objective, error) {
+func (m *MockCommissionManager) ListObjectives(ctx context.Context) ([]*commission.Commission, error) {
 	if m.error != nil {
 		return nil, m.error
 	}
@@ -86,7 +86,7 @@ func (m *MockObjectiveManager) ListObjectives(ctx context.Context) ([]*objective
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	
-	var objectives []*objective.Objective
+	var objectives []*commission.Commission
 	for _, obj := range m.objectives {
 		objectives = append(objectives, obj)
 	}
@@ -95,7 +95,7 @@ func (m *MockObjectiveManager) ListObjectives(ctx context.Context) ([]*objective
 }
 
 // DeleteObjective implements objective.Manager.DeleteObjective
-func (m *MockObjectiveManager) DeleteObjective(ctx context.Context, objectiveID string) error {
+func (m *MockCommissionManager) DeleteObjective(ctx context.Context, objectiveID string) error {
 	if m.error != nil {
 		return m.error
 	}
@@ -113,19 +113,19 @@ func (m *MockObjectiveManager) DeleteObjective(ctx context.Context, objectiveID 
 }
 
 // LoadObjectiveFromFile implements objective.Manager.LoadObjectiveFromFile
-func (m *MockObjectiveManager) LoadObjectiveFromFile(ctx context.Context, filePath string) (*objective.Objective, error) {
+func (m *MockCommissionManager) LoadObjectiveFromFile(ctx context.Context, filePath string) (*commission.Commission, error) {
 	if m.error != nil {
 		return nil, m.error
 	}
 	
 	// Just return a new objective for testing purposes
-	obj := objective.NewObjective("Test Objective", "Loaded from mock file")
+	obj := commission.NewCommission("Test Objective", "Loaded from mock file")
 	
 	return obj, nil
 }
 
 // AddTask implements objective.Manager.AddTask
-func (m *MockObjectiveManager) AddTask(ctx context.Context, objectiveID string, task *objective.ObjectiveTask) error {
+func (m *MockCommissionManager) AddTask(ctx context.Context, objectiveID string, task *commission.CommissionTask) error {
 	if m.error != nil {
 		return m.error
 	}
@@ -145,7 +145,7 @@ func (m *MockObjectiveManager) AddTask(ctx context.Context, objectiveID string, 
 }
 
 // UpdateTaskStatus implements objective.Manager.UpdateTaskStatus
-func (m *MockObjectiveManager) UpdateTaskStatus(ctx context.Context, objectiveID string, taskID string, status string) error {
+func (m *MockCommissionManager) UpdateTaskStatus(ctx context.Context, objectiveID string, taskID string, status string) error {
 	if m.error != nil {
 		return m.error
 	}

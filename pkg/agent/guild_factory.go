@@ -17,7 +17,7 @@ type GuildFactory struct {
 	registry         registry.ComponentRegistry
 	memoryManager    memory.ChainManager
 	toolRegistry     *tools.ToolRegistry
-	objectiveManager *objective.Manager
+	objectiveManager *commission.Manager
 	guildConfig      *config.GuildConfig
 }
 
@@ -26,7 +26,7 @@ func NewGuildFactory(
 	registry registry.ComponentRegistry,
 	memoryManager memory.ChainManager,
 	toolRegistry *tools.ToolRegistry,
-	objectiveManager *objective.Manager,
+	objectiveManager *commission.Manager,
 	guildConfig *config.GuildConfig,
 ) *GuildFactory {
 	return &GuildFactory{
