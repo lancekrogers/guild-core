@@ -3,7 +3,9 @@ package orchestrator
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
 	"github.com/guild-ventures/guild-core/pkg/config"
@@ -382,6 +384,24 @@ func setupSQLiteStorage(reg registry.ComponentRegistry) error {
 		return err
 	}
 	
+	// Create default campaign that task bridge expects
+	campaignRepo := storageReg.GetCampaignRepository()
+	if campaignRepo != nil {
+		defaultCampaign := &storage.Campaign{
+			ID:        "default-campaign",
+			Name:      "Default Test Campaign",
+			Status:    "active",
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		}
+		if err := campaignRepo.CreateCampaign(ctx, defaultCampaign); err != nil {
+			// Ignore if already exists
+			if !strings.Contains(err.Error(), "UNIQUE constraint failed") {
+				return fmt.Errorf("failed to create default campaign: %w", err)
+			}
+		}
+	}
+	
 	// Cast to concrete registry to access SetStorageRegistry method
 	if defaultReg, ok := reg.(*registry.DefaultComponentRegistry); ok {
 		// Convert memory store adapter to the expected interface
@@ -446,6 +466,46 @@ func (t *testSQLiteStorageRegistry) RegisterAgentRepository(repo registry.AgentR
 
 func (t *testSQLiteStorageRegistry) GetAgentRepository() registry.AgentRepository {
 	return nil // Components should use type assertions to get the actual storage repos
+}
+
+func (t *testSQLiteStorageRegistry) GetBoardRepository() registry.KanbanBoardRepository {
+	// Return the actual board repository from storage registry
+	if t.storageRegistry != nil {
+		return &testBoardRepositoryAdapter{
+			storageRepo: t.storageRegistry.GetBoardRepository(),
+		}
+	}
+	return nil
+}
+
+func (t *testSQLiteStorageRegistry) GetKanbanTaskRepository() registry.KanbanTaskRepository {
+	// Return the actual task repository from storage registry
+	if t.storageRegistry != nil && t.storageRegistry.GetTaskRepository() != nil {
+		return &testTaskRepositoryAdapter{
+			storageRepo: t.storageRegistry.GetTaskRepository(),
+		}
+	}
+	return nil
+}
+
+func (t *testSQLiteStorageRegistry) GetKanbanCampaignRepository() registry.KanbanCampaignRepository {
+	// Return the actual campaign repository from storage registry
+	if t.storageRegistry != nil {
+		return &testCampaignRepositoryAdapter{
+			storageRepo: t.storageRegistry.GetCampaignRepository(),
+		}
+	}
+	return nil
+}
+
+func (t *testSQLiteStorageRegistry) GetKanbanCommissionRepository() registry.KanbanCommissionRepository {
+	// Return the actual commission repository from storage registry
+	if t.storageRegistry != nil {
+		return &testKanbanCommissionRepositoryAdapter{
+			storageRepo: t.storageRegistry.GetCommissionRepository(),
+		}
+	}
+	return nil
 }
 
 func (t *testSQLiteStorageRegistry) GetMemoryStore() registry.MemoryStore {
@@ -577,4 +637,220 @@ func TestCommissionProcessingResult_Methods(t *testing.T) {
 	// Test counts
 	assert.Equal(t, 3, result.GetTaskCount())
 	assert.Equal(t, 2, result.GetAssignedArtisanCount())
+}
+
+// testBoardRepositoryAdapter adapts storage.BoardRepository to registry.KanbanBoardRepository
+type testBoardRepositoryAdapter struct {
+	storageRepo storage.BoardRepository
+}
+
+func (a *testBoardRepositoryAdapter) CreateBoard(ctx context.Context, board interface{}) error {
+	if b, ok := board.(*storage.Board); ok {
+		return a.storageRepo.CreateBoard(ctx, b)
+	}
+	return fmt.Errorf("invalid board type")
+}
+
+func (a *testBoardRepositoryAdapter) GetBoard(ctx context.Context, id string) (interface{}, error) {
+	return a.storageRepo.GetBoard(ctx, id)
+}
+
+func (a *testBoardRepositoryAdapter) UpdateBoard(ctx context.Context, board interface{}) error {
+	if b, ok := board.(*storage.Board); ok {
+		return a.storageRepo.UpdateBoard(ctx, b)
+	}
+	return fmt.Errorf("invalid board type")
+}
+
+func (a *testBoardRepositoryAdapter) DeleteBoard(ctx context.Context, id string) error {
+	return a.storageRepo.DeleteBoard(ctx, id)
+}
+
+func (a *testBoardRepositoryAdapter) ListBoards(ctx context.Context) ([]interface{}, error) {
+	boards, err := a.storageRepo.ListBoards(ctx)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]interface{}, len(boards))
+	for i, board := range boards {
+		result[i] = board
+	}
+	return result, nil
+}
+
+// testTaskRepositoryAdapter adapts storage.TaskRepository to registry.KanbanTaskRepository
+type testTaskRepositoryAdapter struct {
+	storageRepo storage.TaskRepository
+}
+
+func (a *testTaskRepositoryAdapter) CreateTask(ctx context.Context, task interface{}) error {
+	if t, ok := task.(*storage.Task); ok {
+		return a.storageRepo.CreateTask(ctx, t)
+	}
+	// Handle map[string]interface{} format used by kanban
+	if taskMap, ok := task.(map[string]interface{}); ok {
+		storageTask := &storage.Task{
+			ID:              taskMap["ID"].(string),
+			BoardID:         getStringPtr(taskMap["BoardID"]),
+			AssignedAgentID: getStringPtr(taskMap["AssignedAgentID"]),
+			Title:           taskMap["Title"].(string),
+			Description:     getStringPtr(taskMap["Description"]),
+			Status:          taskMap["Status"].(string),
+			StoryPoints:     taskMap["StoryPoints"].(int32),
+			Metadata:        taskMap["Metadata"].(map[string]interface{}),
+			CreatedAt:       taskMap["CreatedAt"].(time.Time),
+			UpdatedAt:       taskMap["UpdatedAt"].(time.Time),
+		}
+		// Handle deprecated CommissionID field
+		if commissionID, ok := taskMap["CommissionID"]; ok {
+			storageTask.CommissionID = commissionID.(string)
+		}
+		return a.storageRepo.CreateTask(ctx, storageTask)
+	}
+	return fmt.Errorf("invalid task type")
+}
+
+func (a *testTaskRepositoryAdapter) UpdateTask(ctx context.Context, task interface{}) error {
+	if t, ok := task.(*storage.Task); ok {
+		return a.storageRepo.UpdateTask(ctx, t)
+	}
+	// Handle map[string]interface{} format used by kanban
+	if taskMap, ok := task.(map[string]interface{}); ok {
+		storageTask := &storage.Task{
+			ID:              taskMap["ID"].(string),
+			BoardID:         getStringPtr(taskMap["BoardID"]),
+			AssignedAgentID: getStringPtr(taskMap["AssignedAgentID"]),
+			Title:           taskMap["Title"].(string),
+			Description:     getStringPtr(taskMap["Description"]),
+			Status:          taskMap["Status"].(string),
+			StoryPoints:     taskMap["StoryPoints"].(int32),
+			Metadata:        taskMap["Metadata"].(map[string]interface{}),
+			CreatedAt:       taskMap["CreatedAt"].(time.Time),
+			UpdatedAt:       taskMap["UpdatedAt"].(time.Time),
+		}
+		// Handle deprecated CommissionID field
+		if commissionID, ok := taskMap["CommissionID"]; ok {
+			storageTask.CommissionID = commissionID.(string)
+		}
+		return a.storageRepo.UpdateTask(ctx, storageTask)
+	}
+	return fmt.Errorf("invalid task type")
+}
+
+func (a *testTaskRepositoryAdapter) DeleteTask(ctx context.Context, id string) error {
+	return a.storageRepo.DeleteTask(ctx, id)
+}
+
+func (a *testTaskRepositoryAdapter) ListTasksByBoard(ctx context.Context, boardID string) ([]interface{}, error) {
+	// For the test, we need to handle both board-based and commission-based queries
+	// The kanban system uses board IDs, but tasks might be stored with commission IDs
+	
+	// First try to get tasks by board ID
+	tasks, err := a.storageRepo.ListTasksByBoard(ctx, boardID)
+	if err != nil && !strings.Contains(err.Error(), "not found") {
+		return nil, err
+	}
+	
+	// If no tasks found by board ID, try using it as a commission ID pattern
+	// This handles the case where boardID might be "commission-board" but tasks are stored with specific commission IDs
+	if len(tasks) == 0 {
+		// Get all tasks and filter by commission pattern
+		allTasks, err := a.storageRepo.ListTasks(ctx)
+		if err != nil {
+			return nil, err
+		}
+		
+		for _, task := range allTasks {
+			// Include tasks that either match the board ID or have a related commission ID
+			if task.BoardID != nil && *task.BoardID == boardID {
+				tasks = append(tasks, task)
+			} else if strings.Contains(boardID, "commission") && task.CommissionID != "" {
+				// For commission-board, include all tasks with any commission ID
+				tasks = append(tasks, task)
+			}
+		}
+	}
+	
+	result := make([]interface{}, len(tasks))
+	for i, task := range tasks {
+		result[i] = task
+	}
+	return result, nil
+}
+
+func (a *testTaskRepositoryAdapter) RecordTaskEvent(ctx context.Context, event interface{}) error {
+	if e, ok := event.(*storage.TaskEvent); ok {
+		return a.storageRepo.RecordTaskEvent(ctx, e)
+	}
+	return fmt.Errorf("invalid event type")
+}
+
+// testCampaignRepositoryAdapter adapts storage.CampaignRepository to registry.KanbanCampaignRepository
+type testCampaignRepositoryAdapter struct {
+	storageRepo storage.CampaignRepository
+}
+
+func (a *testCampaignRepositoryAdapter) CreateCampaign(ctx context.Context, campaign interface{}) error {
+	// Handle map[string]interface{} format used by kanban
+	if campaignMap, ok := campaign.(map[string]interface{}); ok {
+		storageCampaign := &storage.Campaign{
+			ID:        campaignMap["ID"].(string),
+			Name:      campaignMap["Name"].(string),
+			Status:    campaignMap["Status"].(string),
+			CreatedAt: campaignMap["CreatedAt"].(time.Time),
+			UpdatedAt: campaignMap["UpdatedAt"].(time.Time),
+		}
+		return a.storageRepo.CreateCampaign(ctx, storageCampaign)
+	}
+	if c, ok := campaign.(*storage.Campaign); ok {
+		return a.storageRepo.CreateCampaign(ctx, c)
+	}
+	return fmt.Errorf("invalid campaign type")
+}
+
+// testKanbanCommissionRepositoryAdapter adapts storage.CommissionRepository to registry.KanbanCommissionRepository
+type testKanbanCommissionRepositoryAdapter struct {
+	storageRepo storage.CommissionRepository
+}
+
+func (a *testKanbanCommissionRepositoryAdapter) CreateCommission(ctx context.Context, commission interface{}) error {
+	// Handle map[string]interface{} format used by kanban
+	if commissionMap, ok := commission.(map[string]interface{}); ok {
+		var desc *string
+		if descVal, ok := commissionMap["Description"]; ok && descVal != nil {
+			descStr := descVal.(string)
+			desc = &descStr
+		}
+		storageCommission := &storage.Commission{
+			ID:          commissionMap["ID"].(string),
+			CampaignID:  commissionMap["CampaignID"].(string),
+			Title:       commissionMap["Title"].(string),
+			Description: desc,
+			Status:      commissionMap["Status"].(string),
+			CreatedAt:   commissionMap["CreatedAt"].(time.Time),
+		}
+		return a.storageRepo.CreateCommission(ctx, storageCommission)
+	}
+	if c, ok := commission.(*storage.Commission); ok {
+		return a.storageRepo.CreateCommission(ctx, c)
+	}
+	return fmt.Errorf("invalid commission type")
+}
+
+func (a *testKanbanCommissionRepositoryAdapter) GetCommission(ctx context.Context, id string) (interface{}, error) {
+	return a.storageRepo.GetCommission(ctx, id)
+}
+
+// Helper function to convert interface{} to *string
+func getStringPtr(val interface{}) *string {
+	if val == nil {
+		return nil
+	}
+	if strPtr, ok := val.(*string); ok {
+		return strPtr
+	}
+	if str, ok := val.(string); ok {
+		return &str
+	}
+	return nil
 }

@@ -7,19 +7,161 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
+	"github.com/guild-ventures/guild-core/pkg/memory"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
+// testRegistry implements kanban.ComponentRegistry for testing
+type testRegistry struct {
+	storageReg kanban.StorageRegistry
+}
+
+func (t *testRegistry) Storage() kanban.StorageRegistry {
+	return t.storageReg
+}
+
+// testStorageRegistry implements kanban.StorageRegistry for testing
+type testStorageRegistry struct {
+	sqliteReg storage.StorageRegistry
+	memStore  memory.Store // Use memory.Store directly
+}
+
+func (t *testStorageRegistry) GetKanbanCampaignRepository() kanban.CampaignRepository {
+	return &testCampaignRepo{repo: t.sqliteReg.GetCampaignRepository()}
+}
+
+func (t *testStorageRegistry) GetKanbanCommissionRepository() kanban.CommissionRepository {
+	return &testCommissionRepo{repo: t.sqliteReg.GetCommissionRepository()}
+}
+
+func (t *testStorageRegistry) GetBoardRepository() kanban.BoardRepository {
+	return &testBoardRepo{repo: t.sqliteReg.GetBoardRepository()}
+}
+
+func (t *testStorageRegistry) GetKanbanTaskRepository() kanban.TaskRepository {
+	return &testTaskRepo{repo: t.sqliteReg.GetTaskRepository()}
+}
+
+func (t *testStorageRegistry) GetMemoryStore() kanban.MemoryStore {
+	// The kanban manager expects this to be castable to memory.Store
+	// Since memory.Store implements all methods of kanban.MemoryStore, we can return it directly
+	return t.memStore
+}
+
+// Repository adapters
+type testCampaignRepo struct{ repo storage.CampaignRepository }
+func (r *testCampaignRepo) CreateCampaign(ctx context.Context, campaign interface{}) error {
+	if c, ok := campaign.(map[string]interface{}); ok {
+		return r.repo.CreateCampaign(ctx, &storage.Campaign{
+			ID:        c["ID"].(string),
+			Name:      c["Name"].(string),
+			Status:    c["Status"].(string),
+			CreatedAt: c["CreatedAt"].(time.Time),
+			UpdatedAt: c["UpdatedAt"].(time.Time),
+		})
+	}
+	return nil
+}
+
+type testCommissionRepo struct{ repo storage.CommissionRepository }
+func (r *testCommissionRepo) CreateCommission(ctx context.Context, commission interface{}) error {
+	if c, ok := commission.(map[string]interface{}); ok {
+		desc := c["Title"].(string)
+		return r.repo.CreateCommission(ctx, &storage.Commission{
+			ID:          c["ID"].(string),
+			CampaignID:  c["CampaignID"].(string),
+			Title:       c["Title"].(string),
+			Description: &desc,
+			Status:      c["Status"].(string),
+			CreatedAt:   c["CreatedAt"].(time.Time),
+		})
+	}
+	return nil
+}
+func (r *testCommissionRepo) GetCommission(ctx context.Context, id string) (interface{}, error) {
+	return r.repo.GetCommission(ctx, id)
+}
+
+type testBoardRepo struct{ repo storage.BoardRepository }
+func (r *testBoardRepo) CreateBoard(ctx context.Context, board interface{}) error {
+	if b, ok := board.(*storage.Board); ok {
+		return r.repo.CreateBoard(ctx, b)
+	}
+	return nil
+}
+func (r *testBoardRepo) GetBoard(ctx context.Context, id string) (interface{}, error) {
+	return r.repo.GetBoard(ctx, id)
+}
+func (r *testBoardRepo) UpdateBoard(ctx context.Context, board interface{}) error {
+	if b, ok := board.(*storage.Board); ok {
+		return r.repo.UpdateBoard(ctx, b)
+	}
+	return nil
+}
+func (r *testBoardRepo) DeleteBoard(ctx context.Context, id string) error {
+	return r.repo.DeleteBoard(ctx, id)
+}
+func (r *testBoardRepo) ListBoards(ctx context.Context) ([]interface{}, error) {
+	boards, err := r.repo.ListBoards(ctx)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]interface{}, len(boards))
+	for i, b := range boards {
+		result[i] = b
+	}
+	return result, nil
+}
+
+type testTaskRepo struct{ repo storage.TaskRepository }
+func (r *testTaskRepo) CreateTask(ctx context.Context, task interface{}) error { return nil }
+func (r *testTaskRepo) UpdateTask(ctx context.Context, task interface{}) error { return nil }
+func (r *testTaskRepo) DeleteTask(ctx context.Context, id string) error { return nil }
+func (r *testTaskRepo) ListTasksByBoard(ctx context.Context, boardID string) ([]interface{}, error) {
+	return []interface{}{}, nil
+}
+func (r *testTaskRepo) RecordTaskEvent(ctx context.Context, event interface{}) error { return nil }
+
 func setupTestKanbanManager(t *testing.T) (*kanban.Manager, *kanban.Board, func()) {
-	// Create temporary store
-	tempDB := "/tmp/test-kanban-" + time.Now().Format("20060102-150405") + ".db"
-	store, err := boltdb.NewStore(tempDB)
+	ctx := context.Background()
+	
+	// Initialize SQLite storage for tests
+	storageReg, memoryStoreAdapter, err := storage.InitializeSQLiteStorageForTests(ctx)
 	require.NoError(t, err)
 	
-	// Create manager
-	mgr, err := kanban.NewManager(store)
+	// Create default campaign
+	campaignRepo := storageReg.GetCampaignRepository()
+	defaultCampaign := &storage.Campaign{
+		ID:        "test-campaign",
+		Name:      "Test Campaign",
+		Status:    "active",
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+	err = campaignRepo.CreateCampaign(ctx, defaultCampaign)
+	require.NoError(t, err)
+	
+	// Cast memory store adapter to memory.Store
+	var memStore memory.Store
+	if memoryStoreAdapter != nil {
+		// Cast to memory.Store interface
+		if memStoreImpl, ok := memoryStoreAdapter.(memory.Store); ok {
+			memStore = memStoreImpl
+		}
+	}
+	
+	// Create test registry adapter
+	testReg := &testRegistry{
+		storageReg: &testStorageRegistry{
+			sqliteReg: storageReg,
+			memStore:  memStore,
+		},
+	}
+	
+	// Create manager with registry
+	mgr, err := kanban.NewManagerWithRegistry(testReg)
 	require.NoError(t, err)
 	
 	// Create test board
@@ -27,7 +169,7 @@ func setupTestKanbanManager(t *testing.T) (*kanban.Manager, *kanban.Board, func(
 	require.NoError(t, err)
 	
 	cleanup := func() {
-		store.Close()
+		// SQLite in-memory DB will be cleaned up automatically
 	}
 	
 	return mgr, board, cleanup

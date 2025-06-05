@@ -446,6 +446,9 @@ func (b *Board) createTaskSQLite(ctx context.Context, title, description string)
 		assignedAgent = &task.AssignedTo
 	}
 
+	// Map kanban status to SQLite-compatible status
+	storageStatus := b.mapKanbanStatusToStorageStatus(task.Status)
+	
 	// Convert to storage task format with both BoardID and CommissionID for compatibility
 	commissionID := b.ID + "-commission" // Generate commission ID based on board ID
 	storageTask := map[string]interface{}{
@@ -455,7 +458,7 @@ func (b *Board) createTaskSQLite(ctx context.Context, title, description string)
 		"AssignedAgentID": assignedAgent,
 		"Title":           task.Title,
 		"Description":     &task.Description,
-		"Status":          string(task.Status),
+		"Status":          storageStatus,
 		"StoryPoints":     int32(1), // Default story points
 		"Metadata":        metadataInterface,
 		"CreatedAt":       task.CreatedAt,
@@ -648,6 +651,22 @@ func (b *Board) mapStorageStatusToKanbanStatus(storageStatus string) TaskStatus 
 	}
 }
 
+// mapKanbanStatusToStorageStatus maps kanban status values to database-compatible status values
+func (b *Board) mapKanbanStatusToStorageStatus(kanbanStatus TaskStatus) string {
+	switch kanbanStatus {
+	case StatusBacklog:
+		return "todo" // Map backlog to todo for SQLite compatibility
+	case StatusReadyForReview:
+		return "pending_review" // Map ready_for_review to pending_review
+	case StatusCancelled:
+		return "done" // Map cancelled to done (with metadata indicating cancellation)
+	case StatusTodo, StatusInProgress, StatusBlocked, StatusDone:
+		return string(kanbanStatus) // These map directly
+	default:
+		return "todo" // Default fallback
+	}
+}
+
 // UpdateTask updates a task on the board
 func (b *Board) UpdateTask(ctx context.Context, task *Task) error {
 	// Use SQLite via registry for all task operations
@@ -682,6 +701,9 @@ func (b *Board) updateTaskSQLite(ctx context.Context, task *Task) error {
 		assignedAgent = &task.AssignedTo
 	}
 
+	// Map kanban status to SQLite-compatible status
+	storageStatus := b.mapKanbanStatusToStorageStatus(task.Status)
+	
 	// Convert to storage task format with both BoardID and CommissionID for compatibility
 	commissionID := b.ID + "-commission" // Generate commission ID based on board ID
 	storageTask := map[string]interface{}{
@@ -691,7 +713,7 @@ func (b *Board) updateTaskSQLite(ctx context.Context, task *Task) error {
 		"AssignedAgentID": assignedAgent,
 		"Title":           task.Title,
 		"Description":     &task.Description,
-		"Status":          string(task.Status),
+		"Status":          storageStatus,
 		"StoryPoints":     int32(1), // Default story points
 		"Metadata":        metadataInterface,
 		"CreatedAt":       task.CreatedAt,

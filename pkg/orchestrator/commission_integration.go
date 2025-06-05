@@ -633,7 +633,7 @@ type kanbanStorageAdapter struct {
 }
 
 // Implement kanban.StorageRegistry interface methods
-func (k *kanbanStorageAdapter) GetCampaignRepository() kanban.CampaignRepository {
+func (k *kanbanStorageAdapter) GetKanbanCampaignRepository() kanban.CampaignRepository {
 	// Get the underlying storage registry and create adapter
 	if sqliteReg, ok := k.storageRegistry.(interface{ GetStorageRegistry() storage.StorageRegistry }); ok {
 		return &kanbanCampaignRepoAdapter{repo: sqliteReg.GetStorageRegistry().GetCampaignRepository()}
@@ -642,17 +642,28 @@ func (k *kanbanStorageAdapter) GetCampaignRepository() kanban.CampaignRepository
 	return &kanbanCampaignRepoAdapter{repo: nil} // This will use the interface{} approach
 }
 
-func (k *kanbanStorageAdapter) GetCommissionRepository() kanban.CommissionRepository {
+func (k *kanbanStorageAdapter) GetKanbanCommissionRepository() kanban.CommissionRepository {
 	if sqliteReg, ok := k.storageRegistry.(interface{ GetStorageRegistry() storage.StorageRegistry }); ok {
 		return &kanbanCommissionRepoAdapter{repo: sqliteReg.GetStorageRegistry().GetCommissionRepository()}
 	}
 	return &kanbanCommissionRepoAdapter{repo: nil}
 }
 
-func (k *kanbanStorageAdapter) GetTaskRepository() kanban.TaskRepository {
+func (k *kanbanStorageAdapter) GetKanbanTaskRepository() kanban.TaskRepository {
+	// First try to get the actual kanban task repository from the registry
+	if kanbanTaskRepo := k.storageRegistry.GetKanbanTaskRepository(); kanbanTaskRepo != nil {
+		// Convert registry.KanbanTaskRepository to kanban.TaskRepository
+		if adapter, ok := kanbanTaskRepo.(kanban.TaskRepository); ok {
+			return adapter
+		}
+	}
+	
+	// Fallback: try to get the underlying storage registry
 	if sqliteReg, ok := k.storageRegistry.(interface{ GetStorageRegistry() storage.StorageRegistry }); ok {
 		return &kanbanTaskRepoAdapter{repo: sqliteReg.GetStorageRegistry().GetTaskRepository()}
 	}
+	
+	// Last resort: return an adapter that will handle the conversion
 	return &kanbanTaskRepoAdapter{repo: nil}
 }
 
@@ -877,6 +888,29 @@ func (k *kanbanTaskRepoAdapter) UpdateTask(ctx context.Context, task interface{}
 		}
 	}
 	return fmt.Errorf("task repository not available")
+}
+
+func (k *kanbanTaskRepoAdapter) DeleteTask(ctx context.Context, id string) error {
+	if k.repo != nil {
+		return k.repo.DeleteTask(ctx, id)
+	}
+	return fmt.Errorf("task repository not available")
+}
+
+func (k *kanbanTaskRepoAdapter) ListTasksByBoard(ctx context.Context, boardID string) ([]interface{}, error) {
+	if k.repo != nil {
+		tasks, err := k.repo.ListTasksByBoard(ctx, boardID)
+		if err != nil {
+			return nil, err
+		}
+		// Convert to []interface{}
+		result := make([]interface{}, len(tasks))
+		for i, task := range tasks {
+			result[i] = task
+		}
+		return result, nil
+	}
+	return nil, fmt.Errorf("task repository not available")
 }
 
 func (k *kanbanTaskRepoAdapter) RecordTaskEvent(ctx context.Context, event interface{}) error {
