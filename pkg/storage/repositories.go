@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -444,7 +443,9 @@ func (r *SQLiteCampaignRepository) CreateCampaign(ctx context.Context, campaign 
 		Name:   campaign.Name,
 		Status: campaign.Status,
 	}); err != nil {
-		return fmt.Errorf("failed to create campaign: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign").
+			WithComponent("SQLiteCampaignRepository").
+			WithOperation("CreateCampaign")
 	}
 	return nil
 }
@@ -454,9 +455,14 @@ func (r *SQLiteCampaignRepository) GetCampaign(ctx context.Context, id string) (
 	dbCampaign, err := r.database.Queries().GetCampaign(ctx, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("campaign not found: %s", id)
+			return nil, gerror.New(gerror.ErrCodeNotFound, "campaign not found", nil).
+				WithComponent("SQLiteCampaignRepository").
+				WithOperation("GetCampaign").
+				WithDetails("campaign_id", id)
 		}
-		return nil, fmt.Errorf("failed to get campaign: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get campaign").
+			WithComponent("SQLiteCampaignRepository").
+			WithOperation("GetCampaign")
 	}
 
 	campaign := &Campaign{
@@ -476,7 +482,11 @@ func (r *SQLiteCampaignRepository) UpdateCampaignStatus(ctx context.Context, id,
 		Status: status,
 		ID:     id,
 	}); err != nil {
-		return fmt.Errorf("failed to update campaign status: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update campaign status").
+			WithComponent("SQLiteCampaignRepository").
+			WithOperation("UpdateCampaignStatus").
+			WithDetails("campaign_id", id).
+			WithDetails("status", status)
 	}
 	return nil
 }
@@ -484,7 +494,10 @@ func (r *SQLiteCampaignRepository) UpdateCampaignStatus(ctx context.Context, id,
 // DeleteCampaign removes a campaign by ID
 func (r *SQLiteCampaignRepository) DeleteCampaign(ctx context.Context, id string) error {
 	if err := r.database.Queries().DeleteCampaign(ctx, id); err != nil {
-		return fmt.Errorf("failed to delete campaign: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete campaign").
+			WithComponent("SQLiteCampaignRepository").
+			WithOperation("DeleteCampaign").
+			WithDetails("campaign_id", id)
 	}
 	return nil
 }
@@ -493,7 +506,9 @@ func (r *SQLiteCampaignRepository) DeleteCampaign(ctx context.Context, id string
 func (r *SQLiteCampaignRepository) ListCampaigns(ctx context.Context) ([]*Campaign, error) {
 	dbCampaigns, err := r.database.Queries().ListCampaigns(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list campaigns: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list campaigns").
+			WithComponent("SQLiteCampaignRepository").
+			WithOperation("ListCampaigns")
 	}
 
 	campaigns := make([]*Campaign, len(dbCampaigns))
@@ -530,7 +545,9 @@ func (r *SQLiteCommissionRepository) CreateCommission(ctx context.Context, commi
 		var err error
 		contextJSON, err = json.Marshal(commission.Context)
 		if err != nil {
-			return fmt.Errorf("failed to marshal commission context: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to marshal commission context").
+				WithComponent("SQLiteCommissionRepository").
+				WithOperation("CreateCommission")
 		}
 	}
 
@@ -543,7 +560,9 @@ func (r *SQLiteCommissionRepository) CreateCommission(ctx context.Context, commi
 		Context:     contextJSON,
 		Status:      commission.Status,
 	}); err != nil {
-		return fmt.Errorf("failed to create commission: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commission").
+			WithComponent("SQLiteCommissionRepository").
+			WithOperation("CreateCommission")
 	}
 	return nil
 }
@@ -553,9 +572,14 @@ func (r *SQLiteCommissionRepository) GetCommission(ctx context.Context, id strin
 	dbCommission, err := r.database.Queries().GetCommission(ctx, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("commission not found: %s", id)
+			return nil, gerror.New(gerror.ErrCodeNotFound, "commission not found", nil).
+				WithComponent("SQLiteCommissionRepository").
+				WithOperation("GetCommission").
+				WithDetails("commission_id", id)
 		}
-		return nil, fmt.Errorf("failed to get commission: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get commission").
+			WithComponent("SQLiteCommissionRepository").
+			WithOperation("GetCommission")
 	}
 
 	commission := &Commission{
@@ -572,7 +596,9 @@ func (r *SQLiteCommissionRepository) GetCommission(ctx context.Context, id strin
 	if dbCommission.Context != nil {
 		if contextBytes, ok := dbCommission.Context.([]byte); ok {
 			if err := json.Unmarshal(contextBytes, &commission.Context); err != nil {
-				return nil, fmt.Errorf("failed to unmarshal commission context: %w", err)
+				return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to unmarshal commission context").
+					WithComponent("SQLiteCommissionRepository").
+					WithOperation("GetCommission")
 			}
 		}
 	}
@@ -586,7 +612,11 @@ func (r *SQLiteCommissionRepository) UpdateCommissionStatus(ctx context.Context,
 		Status: status,
 		ID:     id,
 	}); err != nil {
-		return fmt.Errorf("failed to update commission status: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update commission status").
+			WithComponent("SQLiteCommissionRepository").
+			WithOperation("UpdateCommissionStatus").
+			WithDetails("commission_id", id).
+			WithDetails("status", status)
 	}
 	return nil
 }
@@ -594,7 +624,10 @@ func (r *SQLiteCommissionRepository) UpdateCommissionStatus(ctx context.Context,
 // DeleteCommission removes a commission by ID
 func (r *SQLiteCommissionRepository) DeleteCommission(ctx context.Context, id string) error {
 	if err := r.database.Queries().DeleteCommission(ctx, id); err != nil {
-		return fmt.Errorf("failed to delete commission: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete commission").
+			WithComponent("SQLiteCommissionRepository").
+			WithOperation("DeleteCommission").
+			WithDetails("commission_id", id)
 	}
 	return nil
 }
@@ -603,7 +636,10 @@ func (r *SQLiteCommissionRepository) DeleteCommission(ctx context.Context, id st
 func (r *SQLiteCommissionRepository) ListCommissionsByCampaign(ctx context.Context, campaignID string) ([]*Commission, error) {
 	dbCommissions, err := r.database.Queries().ListCommissionsByCampaign(ctx, campaignID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list commissions by campaign: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list commissions by campaign").
+			WithComponent("SQLiteCommissionRepository").
+			WithOperation("ListCommissionsByCampaign").
+			WithDetails("campaign_id", campaignID)
 	}
 
 	commissions := make([]*Commission, len(dbCommissions))
@@ -622,7 +658,10 @@ func (r *SQLiteCommissionRepository) ListCommissionsByCampaign(ctx context.Conte
 		if dbCommission.Context != nil {
 			if contextBytes, ok := dbCommission.Context.([]byte); ok {
 				if err := json.Unmarshal(contextBytes, &commissions[i].Context); err != nil {
-					return nil, fmt.Errorf("failed to unmarshal commission context %d: %w", i, err)
+					return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to unmarshal commission context").
+						WithComponent("SQLiteCommissionRepository").
+						WithOperation("ListCommissionsByCampaign").
+						WithDetails("commission_index", i)
 				}
 			}
 		}
@@ -652,14 +691,18 @@ func (r *SQLiteAgentRepository) CreateAgent(ctx context.Context, agent *Agent) e
 	if agent.Capabilities != nil {
 		capabilitiesJSON, err = json.Marshal(agent.Capabilities)
 		if err != nil {
-			return fmt.Errorf("failed to marshal agent capabilities: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to marshal agent capabilities").
+				WithComponent("SQLiteAgentRepository").
+				WithOperation("CreateAgent")
 		}
 	}
 	
 	if agent.Tools != nil {
 		toolsJSON, err = json.Marshal(agent.Tools)
 		if err != nil {
-			return fmt.Errorf("failed to marshal agent tools: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to marshal agent tools").
+				WithComponent("SQLiteAgentRepository").
+				WithOperation("CreateAgent")
 		}
 	}
 
@@ -674,7 +717,9 @@ func (r *SQLiteAgentRepository) CreateAgent(ctx context.Context, agent *Agent) e
 		Tools:         toolsJSON,
 		CostMagnitude: &costMagnitude,
 	}); err != nil {
-		return fmt.Errorf("failed to create agent: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agent").
+			WithComponent("SQLiteAgentRepository").
+			WithOperation("CreateAgent")
 	}
 	return nil
 }
@@ -684,9 +729,14 @@ func (r *SQLiteAgentRepository) GetAgent(ctx context.Context, id string) (*Agent
 	dbAgent, err := r.database.Queries().GetAgent(ctx, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("agent not found: %s", id)
+			return nil, gerror.New(gerror.ErrCodeNotFound, "agent not found", nil).
+				WithComponent("SQLiteAgentRepository").
+				WithOperation("GetAgent").
+				WithDetails("agent_id", id)
 		}
-		return nil, fmt.Errorf("failed to get agent: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get agent").
+			WithComponent("SQLiteAgentRepository").
+			WithOperation("GetAgent")
 	}
 
 	// Handle cost magnitude conversion
@@ -709,7 +759,9 @@ func (r *SQLiteAgentRepository) GetAgent(ctx context.Context, id string) (*Agent
 	if dbAgent.Capabilities != nil {
 		if capabilitiesBytes, ok := dbAgent.Capabilities.([]byte); ok {
 			if err := json.Unmarshal(capabilitiesBytes, &agent.Capabilities); err != nil {
-				return nil, fmt.Errorf("failed to unmarshal agent capabilities: %w", err)
+				return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to unmarshal agent capabilities").
+					WithComponent("SQLiteAgentRepository").
+					WithOperation("GetAgent")
 			}
 		}
 	}
@@ -718,7 +770,9 @@ func (r *SQLiteAgentRepository) GetAgent(ctx context.Context, id string) (*Agent
 	if dbAgent.Tools != nil {
 		if toolsBytes, ok := dbAgent.Tools.([]byte); ok {
 			if err := json.Unmarshal(toolsBytes, &agent.Tools); err != nil {
-				return nil, fmt.Errorf("failed to unmarshal agent tools: %w", err)
+				return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to unmarshal agent tools").
+					WithComponent("SQLiteAgentRepository").
+					WithOperation("GetAgent")
 			}
 		}
 	}
@@ -735,14 +789,18 @@ func (r *SQLiteAgentRepository) UpdateAgent(ctx context.Context, agent *Agent) e
 	if agent.Capabilities != nil {
 		capabilitiesJSON, err = json.Marshal(agent.Capabilities)
 		if err != nil {
-			return fmt.Errorf("failed to marshal agent capabilities: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to marshal agent capabilities").
+				WithComponent("SQLiteAgentRepository").
+				WithOperation("CreateAgent")
 		}
 	}
 	
 	if agent.Tools != nil {
 		toolsJSON, err = json.Marshal(agent.Tools)
 		if err != nil {
-			return fmt.Errorf("failed to marshal agent tools: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to marshal agent tools").
+				WithComponent("SQLiteAgentRepository").
+				WithOperation("CreateAgent")
 		}
 	}
 
@@ -757,7 +815,9 @@ func (r *SQLiteAgentRepository) UpdateAgent(ctx context.Context, agent *Agent) e
 		CostMagnitude: &costMagnitude,
 		ID:            agent.ID,
 	}); err != nil {
-		return fmt.Errorf("failed to update agent: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update agent").
+			WithComponent("SQLiteAgentRepository").
+			WithOperation("UpdateAgent")
 	}
 	return nil
 }
@@ -765,7 +825,10 @@ func (r *SQLiteAgentRepository) UpdateAgent(ctx context.Context, agent *Agent) e
 // DeleteAgent removes an agent by ID
 func (r *SQLiteAgentRepository) DeleteAgent(ctx context.Context, id string) error {
 	if err := r.database.Queries().DeleteAgent(ctx, id); err != nil {
-		return fmt.Errorf("failed to delete agent: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete agent").
+			WithComponent("SQLiteAgentRepository").
+			WithOperation("DeleteAgent").
+			WithDetails("agent_id", id)
 	}
 	return nil
 }
@@ -774,7 +837,9 @@ func (r *SQLiteAgentRepository) DeleteAgent(ctx context.Context, id string) erro
 func (r *SQLiteAgentRepository) ListAgents(ctx context.Context) ([]*Agent, error) {
 	dbAgents, err := r.database.Queries().ListAgents(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list agents: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list agents").
+			WithComponent("SQLiteAgentRepository").
+			WithOperation("ListAgents")
 	}
 
 	agents := make([]*Agent, len(dbAgents))
@@ -799,7 +864,10 @@ func (r *SQLiteAgentRepository) ListAgents(ctx context.Context) ([]*Agent, error
 		if dbAgent.Capabilities != nil {
 			if capabilitiesBytes, ok := dbAgent.Capabilities.([]byte); ok {
 				if err := json.Unmarshal(capabilitiesBytes, &agents[i].Capabilities); err != nil {
-					return nil, fmt.Errorf("failed to unmarshal agent capabilities %d: %w", i, err)
+					return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to unmarshal agent capabilities").
+						WithComponent("SQLiteAgentRepository").
+						WithOperation("ListAgents").
+						WithDetails("agent_index", i)
 				}
 			}
 		}
@@ -808,7 +876,10 @@ func (r *SQLiteAgentRepository) ListAgents(ctx context.Context) ([]*Agent, error
 		if dbAgent.Tools != nil {
 			if toolsBytes, ok := dbAgent.Tools.([]byte); ok {
 				if err := json.Unmarshal(toolsBytes, &agents[i].Tools); err != nil {
-					return nil, fmt.Errorf("failed to unmarshal agent tools %d: %w", i, err)
+					return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to unmarshal agent tools").
+						WithComponent("SQLiteAgentRepository").
+						WithOperation("ListAgents").
+						WithDetails("agent_index", i)
 				}
 			}
 		}
@@ -821,7 +892,10 @@ func (r *SQLiteAgentRepository) ListAgents(ctx context.Context) ([]*Agent, error
 func (r *SQLiteAgentRepository) ListAgentsByType(ctx context.Context, agentType string) ([]*Agent, error) {
 	dbAgents, err := r.database.Queries().ListAgentsByType(ctx, agentType)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list agents by type: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list agents by type").
+			WithComponent("SQLiteAgentRepository").
+			WithOperation("ListAgentsByType").
+			WithDetails("agent_type", agentType)
 	}
 
 	agents := make([]*Agent, len(dbAgents))
@@ -846,7 +920,10 @@ func (r *SQLiteAgentRepository) ListAgentsByType(ctx context.Context, agentType 
 		if dbAgent.Capabilities != nil {
 			if capabilitiesBytes, ok := dbAgent.Capabilities.([]byte); ok {
 				if err := json.Unmarshal(capabilitiesBytes, &agents[i].Capabilities); err != nil {
-					return nil, fmt.Errorf("failed to unmarshal agent capabilities %d: %w", i, err)
+					return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to unmarshal agent capabilities").
+						WithComponent("SQLiteAgentRepository").
+						WithOperation("ListAgents").
+						WithDetails("agent_index", i)
 				}
 			}
 		}
@@ -855,7 +932,10 @@ func (r *SQLiteAgentRepository) ListAgentsByType(ctx context.Context, agentType 
 		if dbAgent.Tools != nil {
 			if toolsBytes, ok := dbAgent.Tools.([]byte); ok {
 				if err := json.Unmarshal(toolsBytes, &agents[i].Tools); err != nil {
-					return nil, fmt.Errorf("failed to unmarshal agent tools %d: %w", i, err)
+					return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to unmarshal agent tools").
+						WithComponent("SQLiteAgentRepository").
+						WithOperation("ListAgents").
+						WithDetails("agent_index", i)
 				}
 			}
 		}

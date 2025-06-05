@@ -83,6 +83,25 @@ type AgentWorkload struct {
 	ActiveTasks int64  `json:"active_tasks"`
 }
 
+type PromptChain struct {
+	ID        string                 `json:"id"`
+	AgentID   string                 `json:"agent_id"`
+	TaskID    *string                `json:"task_id,omitempty"`
+	CreatedAt time.Time              `json:"created_at"`
+	UpdatedAt time.Time              `json:"updated_at"`
+	Messages  []*PromptChainMessage  `json:"messages,omitempty"`
+}
+
+type PromptChainMessage struct {
+	ID         int64     `json:"id"`
+	ChainID    string    `json:"chain_id"`
+	Role       string    `json:"role"`
+	Content    string    `json:"content"`
+	Name       *string   `json:"name,omitempty"`
+	Timestamp  time.Time `json:"timestamp"`
+	TokenUsage int32     `json:"token_usage"`
+}
+
 // Repository interfaces - following Guild's context-first pattern
 type TaskRepository interface {
 	CreateTask(ctx context.Context, task *Task) error
@@ -134,6 +153,15 @@ type AgentRepository interface {
 	ListAgentsByType(ctx context.Context, agentType string) ([]*Agent, error)
 }
 
+type PromptChainRepository interface {
+	CreateChain(ctx context.Context, chain *PromptChain) error
+	GetChain(ctx context.Context, id string) (*PromptChain, error)
+	AddMessage(ctx context.Context, chainID string, message *PromptChainMessage) error
+	GetChainsByAgent(ctx context.Context, agentID string) ([]*PromptChain, error)
+	GetChainsByTask(ctx context.Context, taskID string) ([]*PromptChain, error)
+	DeleteChain(ctx context.Context, id string) error
+}
+
 // StorageRegistry follows Guild's registry pattern
 type StorageRegistry interface {
 	RegisterTaskRepository(repo TaskRepository)
@@ -141,10 +169,12 @@ type StorageRegistry interface {
 	RegisterCommissionRepository(repo CommissionRepository)
 	RegisterBoardRepository(repo BoardRepository)
 	RegisterAgentRepository(repo AgentRepository)
+	RegisterPromptChainRepository(repo PromptChainRepository)
 	
 	GetTaskRepository() TaskRepository
 	GetCampaignRepository() CampaignRepository
 	GetCommissionRepository() CommissionRepository
 	GetBoardRepository() BoardRepository
 	GetAgentRepository() AgentRepository
+	GetPromptChainRepository() PromptChainRepository
 }

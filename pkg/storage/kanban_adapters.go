@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"time"
+	
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // KanbanTaskRepositoryAdapter adapts storage.TaskRepository to handle interface{} calls from kanban
@@ -21,7 +23,7 @@ func (a *KanbanTaskRepositoryAdapter) CreateTask(ctx context.Context, task inter
 	// Convert interface{} to proper Task struct
 	storageTask, err := a.convertToTask(task)
 	if err != nil {
-		return fmt.Errorf("failed to convert task: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert task").WithComponent("KanbanTaskRepositoryAdapter").WithOperation("CreateTask")
 	}
 	
 	return a.repo.CreateTask(ctx, storageTask)
@@ -53,7 +55,7 @@ func (a *KanbanTaskRepositoryAdapter) UpdateTask(ctx context.Context, task inter
 	// Convert interface{} to proper Task struct
 	storageTask, err := a.convertToTask(task)
 	if err != nil {
-		return fmt.Errorf("failed to convert task: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert task").WithComponent("KanbanTaskRepositoryAdapter").WithOperation("UpdateTask")
 	}
 	
 	return a.repo.UpdateTask(ctx, storageTask)
@@ -64,7 +66,7 @@ func (a *KanbanTaskRepositoryAdapter) RecordTaskEvent(ctx context.Context, event
 	// Convert interface{} to proper TaskEvent struct
 	storageEvent, err := a.convertToTaskEvent(event)
 	if err != nil {
-		return fmt.Errorf("failed to convert task event: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert task event").WithComponent("KanbanTaskRepositoryAdapter").WithOperation("RecordTaskEvent")
 	}
 	
 	return a.repo.RecordTaskEvent(ctx, storageEvent)
@@ -80,7 +82,7 @@ func (a *KanbanTaskRepositoryAdapter) convertToTask(task interface{}) (*Task, er
 	case map[string]interface{}:
 		return a.convertMapToTask(t)
 	default:
-		return nil, fmt.Errorf("unsupported task type: %T", task)
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "unsupported task type", nil).WithComponent("KanbanTaskRepositoryAdapter").WithOperation("convertToTask").WithDetails("type", fmt.Sprintf("%T", task))
 	}
 }
 
@@ -92,13 +94,13 @@ func (a *KanbanTaskRepositoryAdapter) convertMapToTask(taskMap map[string]interf
 	if id, ok := taskMap["ID"].(string); ok {
 		task.ID = id
 	} else {
-		return nil, fmt.Errorf("task ID is required")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "task ID is required", nil).WithComponent("KanbanTaskRepositoryAdapter").WithOperation("convertMapToTask")
 	}
 	
 	if title, ok := taskMap["Title"].(string); ok {
 		task.Title = title
 	} else {
-		return nil, fmt.Errorf("task Title is required")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "task Title is required", nil).WithComponent("KanbanTaskRepositoryAdapter").WithOperation("convertMapToTask")
 	}
 	
 	if status, ok := taskMap["Status"].(string); ok {
@@ -111,7 +113,7 @@ func (a *KanbanTaskRepositoryAdapter) convertMapToTask(taskMap map[string]interf
 	if commissionID, ok := taskMap["CommissionID"].(string); ok && commissionID != "" {
 		task.CommissionID = commissionID
 	} else {
-		return nil, fmt.Errorf("task CommissionID is required but was %+v", taskMap["CommissionID"])
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "task CommissionID is required", nil).WithComponent("KanbanTaskRepositoryAdapter").WithOperation("convertMapToTask").WithDetails("commissionID", taskMap["CommissionID"])
 	}
 	
 	// Optional fields with proper type handling
@@ -182,7 +184,7 @@ func (a *KanbanTaskRepositoryAdapter) convertToTaskEvent(event interface{}) (*Ta
 	case TaskEvent:
 		return &e, nil
 	default:
-		return nil, fmt.Errorf("unsupported task event type: %T", event)
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "unsupported task event type", nil).WithComponent("KanbanTaskRepositoryAdapter").WithOperation("convertToTaskEvent").WithDetails("type", fmt.Sprintf("%T", event))
 	}
 }
 
@@ -200,7 +202,7 @@ func NewKanbanBoardRepositoryAdapter(repo BoardRepository) *KanbanBoardRepositor
 func (a *KanbanBoardRepositoryAdapter) CreateBoard(ctx context.Context, board interface{}) error {
 	storageBoard, err := a.convertToBoard(board)
 	if err != nil {
-		return fmt.Errorf("failed to convert board: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert board").WithComponent("KanbanBoardRepositoryAdapter").WithOperation("CreateBoard")
 	}
 	
 	return a.repo.CreateBoard(ctx, storageBoard)
@@ -215,7 +217,7 @@ func (a *KanbanBoardRepositoryAdapter) GetBoard(ctx context.Context, id string) 
 func (a *KanbanBoardRepositoryAdapter) UpdateBoard(ctx context.Context, board interface{}) error {
 	storageBoard, err := a.convertToBoard(board)
 	if err != nil {
-		return fmt.Errorf("failed to convert board: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert board").WithComponent("KanbanBoardRepositoryAdapter").WithOperation("UpdateBoard")
 	}
 	
 	return a.repo.UpdateBoard(ctx, storageBoard)
@@ -250,7 +252,7 @@ func (a *KanbanBoardRepositoryAdapter) convertToBoard(board interface{}) (*Board
 	case map[string]interface{}:
 		return a.convertMapToBoard(b)
 	default:
-		return nil, fmt.Errorf("unsupported board type: %T", board)
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "unsupported board type", nil).WithComponent("KanbanBoardRepositoryAdapter").WithOperation("convertToBoard").WithDetails("type", fmt.Sprintf("%T", board))
 	}
 }
 
@@ -262,19 +264,19 @@ func (a *KanbanBoardRepositoryAdapter) convertMapToBoard(boardMap map[string]int
 	if id, ok := boardMap["ID"].(string); ok {
 		board.ID = id
 	} else {
-		return nil, fmt.Errorf("board ID is required")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "board ID is required", nil).WithComponent("KanbanBoardRepositoryAdapter").WithOperation("convertMapToBoard")
 	}
 	
 	if name, ok := boardMap["Name"].(string); ok {
 		board.Name = name
 	} else {
-		return nil, fmt.Errorf("board Name is required")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "board Name is required", nil).WithComponent("KanbanBoardRepositoryAdapter").WithOperation("convertMapToBoard")
 	}
 	
 	if commissionID, ok := boardMap["CommissionID"].(string); ok {
 		board.CommissionID = commissionID
 	} else {
-		return nil, fmt.Errorf("board CommissionID is required")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "board CommissionID is required", nil).WithComponent("KanbanBoardRepositoryAdapter").WithOperation("convertMapToBoard")
 	}
 	
 	// Optional fields
@@ -316,7 +318,7 @@ func NewKanbanCampaignRepositoryAdapter(repo CampaignRepository) *KanbanCampaign
 func (a *KanbanCampaignRepositoryAdapter) CreateCampaign(ctx context.Context, campaign interface{}) error {
 	storageCampaign, err := a.convertToCampaign(campaign)
 	if err != nil {
-		return fmt.Errorf("failed to convert campaign: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert campaign").WithComponent("KanbanCampaignRepositoryAdapter").WithOperation("CreateCampaign")
 	}
 	
 	return a.repo.CreateCampaign(ctx, storageCampaign)
@@ -330,7 +332,7 @@ func (a *KanbanCampaignRepositoryAdapter) convertToCampaign(campaign interface{}
 	case map[string]interface{}:
 		return a.convertMapToCampaign(c)
 	default:
-		return nil, fmt.Errorf("unsupported campaign type: %T", campaign)
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "unsupported campaign type", nil).WithComponent("KanbanCampaignRepositoryAdapter").WithOperation("convertToCampaign").WithDetails("type", fmt.Sprintf("%T", campaign))
 	}
 }
 
@@ -342,13 +344,13 @@ func (a *KanbanCampaignRepositoryAdapter) convertMapToCampaign(campaignMap map[s
 	if id, ok := campaignMap["ID"].(string); ok {
 		campaign.ID = id
 	} else {
-		return nil, fmt.Errorf("campaign ID is required")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "campaign ID is required", nil).WithComponent("KanbanCampaignRepositoryAdapter").WithOperation("convertMapToCampaign")
 	}
 	
 	if name, ok := campaignMap["Name"].(string); ok {
 		campaign.Name = name
 	} else {
-		return nil, fmt.Errorf("campaign Name is required")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "campaign Name is required", nil).WithComponent("KanbanCampaignRepositoryAdapter").WithOperation("convertMapToCampaign")
 	}
 	
 	// Optional fields
@@ -384,7 +386,7 @@ func NewKanbanCommissionRepositoryAdapter(repo CommissionRepository) *KanbanComm
 func (a *KanbanCommissionRepositoryAdapter) CreateCommission(ctx context.Context, commission interface{}) error {
 	storageCommission, err := a.convertToCommission(commission)
 	if err != nil {
-		return fmt.Errorf("failed to convert commission: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert commission").WithComponent("KanbanCommissionRepositoryAdapter").WithOperation("CreateCommission")
 	}
 	
 	return a.repo.CreateCommission(ctx, storageCommission)
@@ -403,7 +405,7 @@ func (a *KanbanCommissionRepositoryAdapter) convertToCommission(commission inter
 	case map[string]interface{}:
 		return a.convertMapToCommission(c)
 	default:
-		return nil, fmt.Errorf("unsupported commission type: %T", commission)
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "unsupported commission type", nil).WithComponent("KanbanCommissionRepositoryAdapter").WithOperation("convertToCommission").WithDetails("type", fmt.Sprintf("%T", commission))
 	}
 }
 
@@ -415,19 +417,19 @@ func (a *KanbanCommissionRepositoryAdapter) convertMapToCommission(commissionMap
 	if id, ok := commissionMap["ID"].(string); ok {
 		commission.ID = id
 	} else {
-		return nil, fmt.Errorf("commission ID is required")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "commission ID is required", nil).WithComponent("KanbanCommissionRepositoryAdapter").WithOperation("convertMapToCommission")
 	}
 	
 	if campaignID, ok := commissionMap["CampaignID"].(string); ok {
 		commission.CampaignID = campaignID
 	} else {
-		return nil, fmt.Errorf("commission CampaignID is required")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "commission CampaignID is required", nil).WithComponent("KanbanCommissionRepositoryAdapter").WithOperation("convertMapToCommission")
 	}
 	
 	if title, ok := commissionMap["Title"].(string); ok {
 		commission.Title = title
 	} else {
-		return nil, fmt.Errorf("commission Title is required")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "commission Title is required", nil).WithComponent("KanbanCommissionRepositoryAdapter").WithOperation("convertMapToCommission")
 	}
 	
 	// Optional fields

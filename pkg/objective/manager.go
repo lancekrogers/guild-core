@@ -10,23 +10,22 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/memory"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
-// Manager handles storage and retrieval of objectives
+// Manager handles storage and retrieval of objectives (commissions)
 type Manager struct {
-	store          memory.Store
+	commissionRepo storage.CommissionRepository
 	fsBasePath     string
-	memoryBucket   string
 	tagsIndex      map[string][]string // tag -> objective IDs
 	objectiveCache map[string]*Objective
 	mu             sync.RWMutex
 }
 
 // NewManager creates a new objective manager
-func NewManager(store memory.Store, fsBasePath string) (*Manager, error) {
-	if store == nil {
-		return nil, fmt.Errorf("store cannot be nil")
+func NewManager(commissionRepo storage.CommissionRepository, fsBasePath string) (*Manager, error) {
+	if commissionRepo == nil {
+		return nil, fmt.Errorf("commission repository cannot be nil")
 	}
 
 	if fsBasePath == "" {
@@ -45,12 +44,100 @@ func NewManager(store memory.Store, fsBasePath string) (*Manager, error) {
 	}
 
 	return &Manager{
-		store:          store,
+		commissionRepo: commissionRepo,
 		fsBasePath:     fsBasePath,
-		memoryBucket:   "objectives",
 		tagsIndex:      make(map[string][]string),
 		objectiveCache: make(map[string]*Objective),
 	}, nil
+}
+
+// Init initializes the manager by loading existing indices
+	// Convert metadata to JSON-compatible format
+	context := make(map[string]interface{})
+	for key, value := range obj.Metadata {
+		context[key] = value
+	}
+	// Add additional objective-specific fields to context
+	if len(obj.Tags) > 0 {
+		context["tags"] = obj.Tags
+	}
+	if len(obj.Context) > 0 {
+		context["context"] = obj.Context
+	}
+	if obj.Goal != "" {
+		context["goal"] = obj.Goal
+	}
+	if len(obj.Requirements) > 0 {
+		context["requirements"] = obj.Requirements
+	}
+	if obj.Priority != "" {
+		context["priority"] = obj.Priority
+	}
+
+	return &storage.Commission{
+		ID:          obj.ID,
+		CampaignID:  "default", // Objectives don't have campaigns, use default
+		Title:       obj.Title,
+		Description: &obj.Description,
+		Context:     context,
+		Status:      string(obj.Status),
+		CreatedAt:   obj.CreatedAt,
+	}
+}
+
+// commissionToObjective converts a Commission back to an Objective
+func commissionToObjective(comm *storage.Commission) *Objective {
+	obj := &Objective{
+		ID:          comm.ID,
+		Title:       comm.Title,
+		Description: *comm.Description,
+		Status:      ObjectiveStatus(comm.Status),
+		CreatedAt:   comm.CreatedAt,
+		UpdatedAt:   time.Now(),
+		Metadata:    make(map[string]string),
+	}
+
+	// Extract objective-specific fields from context
+	if comm.Context != nil {
+		if tags, ok := comm.Context["tags"].([]interface{}); ok {
+			for _, tag := range tags {
+				if tagStr, ok := tag.(string); ok {
+					obj.Tags = append(obj.Tags, tagStr)
+				}
+			}
+		}
+		if context, ok := comm.Context["context"].([]interface{}); ok {
+			for _, ctx := range context {
+				if ctxStr, ok := ctx.(string); ok {
+					obj.Context = append(obj.Context, ctxStr)
+				}
+			}
+		}
+		if goal, ok := comm.Context["goal"].(string); ok {
+			obj.Goal = goal
+		}
+		if reqs, ok := comm.Context["requirements"].([]interface{}); ok {
+			for _, req := range reqs {
+				if reqStr, ok := req.(string); ok {
+					obj.Requirements = append(obj.Requirements, reqStr)
+				}
+			}
+		}
+		if priority, ok := comm.Context["priority"].(string); ok {
+			obj.Priority = priority
+		}
+		
+		// Copy other metadata
+		for key, value := range comm.Context {
+			if key != "tags" && key != "context" && key != "goal" && key != "requirements" && key != "priority" {
+				if strValue, ok := value.(string); ok {
+					obj.Metadata[key] = strValue
+				}
+			}
+		}
+	}
+
+	return obj
 }
 
 // Init initializes the manager by loading existing indices

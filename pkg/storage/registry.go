@@ -6,12 +6,13 @@ import (
 
 // DefaultStorageRegistry implements StorageRegistry following Guild's registry pattern
 type DefaultStorageRegistry struct {
-	taskRepo       TaskRepository
-	campaignRepo   CampaignRepository
-	commissionRepo CommissionRepository
-	boardRepo      BoardRepository
-	agentRepo      AgentRepository
-	mu             sync.RWMutex
+	taskRepo         TaskRepository
+	campaignRepo     CampaignRepository
+	commissionRepo   CommissionRepository
+	boardRepo        BoardRepository
+	agentRepo        AgentRepository
+	promptChainRepo  PromptChainRepository
+	mu               sync.RWMutex
 }
 
 // NewStorageRegistry creates a new storage registry
@@ -55,6 +56,13 @@ func (r *DefaultStorageRegistry) RegisterAgentRepository(repo AgentRepository) {
 	r.agentRepo = repo
 }
 
+// RegisterPromptChainRepository registers a prompt chain repository
+func (r *DefaultStorageRegistry) RegisterPromptChainRepository(repo PromptChainRepository) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.promptChainRepo = repo
+}
+
 // GetTaskRepository returns the registered task repository
 func (r *DefaultStorageRegistry) GetTaskRepository() TaskRepository {
 	r.mu.RLock()
@@ -88,4 +96,11 @@ func (r *DefaultStorageRegistry) GetAgentRepository() AgentRepository {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	return r.agentRepo
+}
+
+// GetPromptChainRepository returns the registered prompt chain repository
+func (r *DefaultStorageRegistry) GetPromptChainRepository() PromptChainRepository {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	return r.promptChainRepo
 }

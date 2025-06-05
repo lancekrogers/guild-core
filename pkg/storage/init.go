@@ -42,11 +42,8 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 	storageRegistry.RegisterBoardRepository(boardRepo)
 	storageRegistry.RegisterAgentRepository(agentRepo)
 
-	// Create SQLite store adapter for memory.Store interface compatibility
-	storeAdapter := NewSQLiteStoreAdapter(storageRegistry)
-
-	// Return both the storage registry and the memory store adapter
-	return storageRegistry, storeAdapter, nil
+	// Return the storage registry only - no more adapter needed
+	return storageRegistry, nil, nil
 }
 
 // InitializeSQLiteStorageForTests initializes SQLite storage without migrations for testing
@@ -84,11 +81,8 @@ func InitializeSQLiteStorageForTests(ctx context.Context) (StorageRegistry, inte
 	storageRegistry.RegisterBoardRepository(boardRepo)
 	storageRegistry.RegisterAgentRepository(agentRepo)
 
-	// Create SQLite store adapter for memory.Store interface compatibility
-	storeAdapter := NewSQLiteStoreAdapter(storageRegistry)
-
-	// Return both the storage registry and the memory store adapter
-	return storageRegistry, storeAdapter, nil
+	// Return the storage registry only - no more adapter needed
+	return storageRegistry, nil, nil
 }
 
 // createTestSchema manually creates the database schema for tests
