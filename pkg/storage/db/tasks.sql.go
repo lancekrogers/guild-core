@@ -65,7 +65,7 @@ func (q *Queries) DeleteTask(ctx context.Context, id string) error {
 	return err
 }
 
-const deleteTaskEvents = `-- name: DeleteTaskEvents :exec  
+const deleteTaskEvents = `-- name: DeleteTaskEvents :exec
 DELETE FROM task_events WHERE task_id = ?
 `
 

@@ -157,17 +157,29 @@ type MemoryRegistry interface {
 	// GetVectorStore retrieves a vector store by name
 	GetVectorStore(name string) (VectorStore, error)
 	
+	// RegisterChainManager registers a chain manager implementation
+	RegisterChainManager(name string, manager ChainManager) error
+	
+	// GetChainManager retrieves a chain manager by name
+	GetChainManager(name string) (ChainManager, error)
+	
 	// GetDefaultMemoryStore returns the configured default memory store
 	GetDefaultMemoryStore() (MemoryStore, error)
 	
 	// GetDefaultVectorStore returns the configured default vector store
 	GetDefaultVectorStore() (VectorStore, error)
 	
+	// GetDefaultChainManager returns the configured default chain manager
+	GetDefaultChainManager() (ChainManager, error)
+	
 	// ListMemoryStores returns all registered memory store names
 	ListMemoryStores() []string
 	
 	// ListVectorStores returns all registered vector store names
 	ListVectorStores() []string
+	
+	// ListChainManagers returns all registered chain manager names
+	ListChainManagers() []string
 }
 
 // StorageRegistry manages storage backend implementations
@@ -236,6 +248,7 @@ type Tool = tools.Tool
 type Provider = providers.LLMClient
 type MemoryStore = memory.Store
 type VectorStore = vector.VectorStore
+type ChainManager = memory.ChainManager
 
 // Forward declarations for storage repositories to avoid import cycles
 type TaskRepository interface {

@@ -10,8 +10,9 @@ import (
 )
 
 const createCommission = `-- name: CreateCommission :exec
-INSERT INTO commissions (id, campaign_id, title, description, domain, context, status)
-VALUES (?, ?, ?, ?, ?, ?, ?)
+INSERT INTO commissions (
+    id, campaign_id, title, description, domain, context, status
+) VALUES (?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateCommissionParams struct {
@@ -66,6 +67,42 @@ func (q *Queries) GetCommission(ctx context.Context, id string) (Commission, err
 	return i, err
 }
 
+const listCommissions = `-- name: ListCommissions :many
+SELECT id, campaign_id, title, description, domain, context, status, created_at FROM commissions ORDER BY created_at DESC
+`
+
+func (q *Queries) ListCommissions(ctx context.Context) ([]Commission, error) {
+	rows, err := q.db.QueryContext(ctx, listCommissions)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Commission{}
+	for rows.Next() {
+		var i Commission
+		if err := rows.Scan(
+			&i.ID,
+			&i.CampaignID,
+			&i.Title,
+			&i.Description,
+			&i.Domain,
+			&i.Context,
+			&i.Status,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listCommissionsByCampaign = `-- name: ListCommissionsByCampaign :many
 SELECT id, campaign_id, title, description, domain, context, status, created_at FROM commissions WHERE campaign_id = ? ORDER BY created_at DESC
 `
@@ -100,6 +137,116 @@ func (q *Queries) ListCommissionsByCampaign(ctx context.Context, campaignID stri
 		return nil, err
 	}
 	return items, nil
+}
+
+const listCommissionsByDomain = `-- name: ListCommissionsByDomain :many
+SELECT id, campaign_id, title, description, domain, context, status, created_at FROM commissions WHERE domain = ? ORDER BY created_at DESC
+`
+
+func (q *Queries) ListCommissionsByDomain(ctx context.Context, domain *string) ([]Commission, error) {
+	rows, err := q.db.QueryContext(ctx, listCommissionsByDomain, domain)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Commission{}
+	for rows.Next() {
+		var i Commission
+		if err := rows.Scan(
+			&i.ID,
+			&i.CampaignID,
+			&i.Title,
+			&i.Description,
+			&i.Domain,
+			&i.Context,
+			&i.Status,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listCommissionsByStatus = `-- name: ListCommissionsByStatus :many
+SELECT id, campaign_id, title, description, domain, context, status, created_at FROM commissions WHERE status = ? ORDER BY created_at DESC
+`
+
+func (q *Queries) ListCommissionsByStatus(ctx context.Context, status string) ([]Commission, error) {
+	rows, err := q.db.QueryContext(ctx, listCommissionsByStatus, status)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Commission{}
+	for rows.Next() {
+		var i Commission
+		if err := rows.Scan(
+			&i.ID,
+			&i.CampaignID,
+			&i.Title,
+			&i.Description,
+			&i.Domain,
+			&i.Context,
+			&i.Status,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const setCommissionCompleted = `-- name: SetCommissionCompleted :exec
+UPDATE commissions 
+SET status = 'completed'
+WHERE id = ?
+`
+
+func (q *Queries) SetCommissionCompleted(ctx context.Context, id string) error {
+	_, err := q.db.ExecContext(ctx, setCommissionCompleted, id)
+	return err
+}
+
+const updateCommission = `-- name: UpdateCommission :exec
+UPDATE commissions 
+SET title = ?, description = ?, domain = ?, context = ?, status = ?
+WHERE id = ?
+`
+
+type UpdateCommissionParams struct {
+	Title       string      `json:"title"`
+	Description *string     `json:"description"`
+	Domain      *string     `json:"domain"`
+	Context     interface{} `json:"context"`
+	Status      string      `json:"status"`
+	ID          string      `json:"id"`
+}
+
+func (q *Queries) UpdateCommission(ctx context.Context, arg UpdateCommissionParams) error {
+	_, err := q.db.ExecContext(ctx, updateCommission,
+		arg.Title,
+		arg.Description,
+		arg.Domain,
+		arg.Context,
+		arg.Status,
+		arg.ID,
+	)
+	return err
 }
 
 const updateCommissionStatus = `-- name: UpdateCommissionStatus :exec
