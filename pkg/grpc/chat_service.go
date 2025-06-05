@@ -11,11 +11,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	guildpb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb"
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/registry"
-	"github.com/guild-ventures/guild-core/tools"
 )
 
 // ChatService implements real-time bidirectional communication with Guild agents

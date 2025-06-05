@@ -49,6 +49,28 @@ tasks:
     cmds:
       - go test -short -race -count=1 ./...
 
+  test:sqlite:
+    desc: Run SQLite storage tests
+    cmds:
+      - |
+        echo "Running SQLite storage tests..."
+        go test -v ./pkg/storage/...
+        echo ""
+        echo "Running storage integration tests..."
+        go test -v ./integration/storage/...
+
+  test:integration:
+    desc: Run all integration tests
+    cmds:
+      - |
+        echo "Running all integration tests..."
+        go test -v ./integration/storage/...
+        go test -v ./integration/commission/...
+        go test -v ./integration/chat/...
+        go test -v -tags=integration ./integration/corpus/...
+        go test -v -tags=integration ./integration/rag/...
+        go test -v -tags=integration ./pkg/project/...
+
   test:packages:
     desc: Run tests for specific packages
     cmds:
@@ -374,6 +396,57 @@ tasks:
     deps: [clean, build, verify]
     cmds:
       - echo "✅ Complete build and verification finished"
+
+  build:examples:
+    desc: Build example files with special tags
+    cmds:
+      - |
+        echo "Building examples with build tags..."
+        mkdir -p {{.BIN_DIR}}
+        go build -tags example -o {{.BIN_DIR}}/commission_example ./examples/commission_refinement_example.go
+        echo "✅ Examples built successfully"
+
+  test:dashboard:
+    desc: Run tests with clean dashboard summary
+    cmds:
+      - |
+        echo "┌─────────────────────────────────────────┐"
+        echo "│           🏰 Guild Test Suite           │"
+        echo "└─────────────────────────────────────────┘"
+        echo ""
+        # Test Core Packages
+        echo "┌─ Core Components ─────────────────────┐"
+        CORE_PASS=0
+        CORE_TOTAL=0
+        for pkg in agent memory orchestrator objective kanban project campaign storage; do
+          CORE_TOTAL=$((CORE_TOTAL + 1))
+          printf "│ %-18s" "$pkg"
+          if go test -short -count=1 ./pkg/$pkg/... > /dev/null 2>&1; then
+            echo "✓ PASS │"
+            CORE_PASS=$((CORE_PASS + 1))
+          else
+            echo "✗ FAIL │"
+          fi
+        done
+        echo "└─ $CORE_PASS/$CORE_TOTAL passed ──────────────────────┘"
+        echo ""
+        # Test Other Components
+        echo "┌─ Support Systems ─────────────────────┐"
+        OTHER_PASS=0
+        OTHER_TOTAL=0
+        for pkg in registry context ui tools corpus config grpc mcp prompts workspace; do
+          if [ -d "./pkg/$pkg" ]; then
+            OTHER_TOTAL=$((OTHER_TOTAL + 1))
+            printf "│ %-18s" "$pkg"
+            if go test -short -count=1 ./pkg/$pkg/... > /dev/null 2>&1; then
+              echo "✓ PASS │"
+              OTHER_PASS=$((OTHER_PASS + 1))
+            else
+              echo "✗ FAIL │"
+            fi
+          fi
+        done
+        echo "└─ $OTHER_PASS/$OTHER_TOTAL passed ──────────────────────┘"
 
   test:race:
     desc: Run tests with race detection

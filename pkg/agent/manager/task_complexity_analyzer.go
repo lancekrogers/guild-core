@@ -21,21 +21,6 @@ type TaskComplexityAnalyzer struct {
 	timeout       time.Duration
 }
 
-// NewTaskComplexityAnalyzer creates a properly configured analyzer
-func NewTaskComplexityAnalyzer(
-	promptManager prompts.LayeredManager,
-	artisanClient ArtisanClient,
-	agentRegistry registry.AgentRegistry,
-) *TaskComplexityAnalyzer {
-	return &TaskComplexityAnalyzer{
-		promptManager: promptManager,
-		artisanClient: artisanClient,
-		agentRegistry: agentRegistry,
-		logger:        slog.Default(),
-		timeout:       30 * time.Second, // Configurable timeout
-	}
-}
-
 // ComplexityAnalysisRequest represents a request for task complexity analysis
 type ComplexityAnalysisRequest struct {
 	TaskDescription string
@@ -105,6 +90,21 @@ type AgentInfo struct {
 	Specializations []string `json:"specializations"`
 	Tools          []string `json:"tools"`
 	SuccessRate    float64  `json:"success_rate"`
+}
+
+// NewTaskComplexityAnalyzer creates a properly configured analyzer
+func NewTaskComplexityAnalyzer(
+	promptManager prompts.LayeredManager,
+	artisanClient ArtisanClient,
+	agentRegistry registry.AgentRegistry,
+) *TaskComplexityAnalyzer {
+	return &TaskComplexityAnalyzer{
+		promptManager: promptManager,
+		artisanClient: artisanClient,
+		agentRegistry: agentRegistry,
+		logger:        slog.Default(),
+		timeout:       30 * time.Second, // Configurable timeout
+	}
 }
 
 // AnalyzeComplexity analyzes task complexity with proper validation and error handling
@@ -189,28 +189,89 @@ func (tca *TaskComplexityAnalyzer) validateRequest(request ComplexityAnalysisReq
 
 // getAvailableAgentsFromRegistry gets real agent data from registry
 func (tca *TaskComplexityAnalyzer) getAvailableAgentsFromRegistry(ctx context.Context) ([]AgentInfo, error) {
-	// Try to get agents from registry first
-	registryAgents := tca.agentRegistry.ListAgents()
-	
-	if len(registryAgents) == 0 {
-		tca.logger.Warn("No agents found in registry, using default mock data")
-		return tca.getDefaultAgents(), nil
+	// Get the component registry to access storage
+	componentReg, ok := tca.agentRegistry.(interface{ GetComponentRegistry() interface{} })
+	if !ok {
+		// If we can't access the full registry, check if we have any registered guild agents
+		registeredAgents := tca.agentRegistry.GetRegisteredAgents()
+		if len(registeredAgents) == 0 {
+			tca.logger.Warn("No agents found in registry")
+			return nil, NewRegistryError("no agents available", nil)
+		}
+		
+		// Convert registered guild agents to AgentInfo
+		var agents []AgentInfo
+		for _, guildAgent := range registeredAgents {
+			agent := AgentInfo{
+				Name:          guildAgent.Name,
+				Role:          guildAgent.Type,
+				Provider:      guildAgent.Provider,
+				Model:         guildAgent.Model,
+				CostMagnitude: guildAgent.CostMagnitude,
+				ContextWindow: guildAgent.ContextWindow,
+				Specializations: guildAgent.Capabilities,
+				Tools:         guildAgent.Tools,
+				SuccessRate:   0.85, // Default success rate
+			}
+			agents = append(agents, agent)
+		}
+		return agents, nil
 	}
-
-	// Convert registry agents to AgentInfo
+	
+	// If we have access to the full registry, try to get agents from the database
+	fullRegistry := componentReg.GetComponentRegistry()
+	_, ok = fullRegistry.(interface{ Storage() interface{} })
+	if !ok {
+		// Fall back to registered agents
+		registeredAgents := tca.agentRegistry.GetRegisteredAgents()
+		if len(registeredAgents) == 0 {
+			return nil, NewRegistryError("no agents available", nil)
+		}
+		
+		// Convert as above
+		var agents []AgentInfo
+		for _, guildAgent := range registeredAgents {
+			agent := AgentInfo{
+				Name:          guildAgent.Name,
+				Role:          guildAgent.Type,
+				Provider:      guildAgent.Provider,
+				Model:         guildAgent.Model,
+				CostMagnitude: guildAgent.CostMagnitude,
+				ContextWindow: guildAgent.ContextWindow,
+				Specializations: guildAgent.Capabilities,
+				Tools:         guildAgent.Tools,
+				SuccessRate:   0.85,
+			}
+			agents = append(agents, agent)
+		}
+		return agents, nil
+	}
+	
+	// For now, just return registered agents - SQLite integration is complex
+	registeredAgents := tca.agentRegistry.GetRegisteredAgents()
+	if len(registeredAgents) == 0 {
+		return nil, NewRegistryError("no agents available", nil)
+	}
+	
+	// Convert to AgentInfo
 	var agents []AgentInfo
-	for _, regAgent := range registryAgents {
-		// This would need proper conversion from registry.Agent to AgentInfo
-		// For now, we'll use the mock data but log the registry state
-		tca.logger.Debug("Found registry agent", slog.Any("agent", regAgent))
+	for _, guildAgent := range registeredAgents {
+		agent := AgentInfo{
+			Name:          guildAgent.Name,
+			Role:          guildAgent.Type,
+			Provider:      guildAgent.Provider,
+			Model:         guildAgent.Model,
+			CostMagnitude: guildAgent.CostMagnitude,
+			ContextWindow: guildAgent.ContextWindow,
+			Specializations: guildAgent.Capabilities,
+			Tools:         guildAgent.Tools,
+			SuccessRate:   0.85,
+		}
+		agents = append(agents, agent)
 	}
-
-	// If we can't convert registry agents yet, use defaults but log this
-	tca.logger.Warn("Registry agent conversion not implemented, using mock data",
-		slog.Int("registry_agents", len(registryAgents)),
-	)
 	
-	return tca.getDefaultAgents(), nil
+	tca.logger.Info("Loaded registered agents", slog.Int("count", len(agents)))
+	return agents, nil
 }
 
 // getDefaultAgents provides fallback agent data
@@ -389,46 +450,6 @@ func (tca *TaskComplexityAnalyzer) parseAnalysisResponse(response *ArtisanRespon
 	return &result, nil
 }
 
-// extractJSONFromMarkdown attempts to extract JSON from markdown code blocks
-func extractJSONFromMarkdown(content string) string {
-	// Look for ```json code blocks
-	start := "```json"
-	end := "```"
-	
-	startIdx := findSubstring(content, start)
-	if startIdx == -1 {
-		return ""
-	}
-	
-	startIdx += len(start)
-	endIdx := findSubstringFrom(content, end, startIdx)
-	if endIdx == -1 {
-		return ""
-	}
-	
-	return content[startIdx:endIdx]
-}
-
-// Helper function to find substring
-func findSubstring(s, substr string) int {
-	for i := 0; i <= len(s)-len(substr); i++ {
-		if s[i:i+len(substr)] == substr {
-			return i
-		}
-	}
-	return -1
-}
-
-// Helper function to find substring from a starting position
-func findSubstringFrom(s, substr string, start int) int {
-	for i := start; i <= len(s)-len(substr); i++ {
-		if s[i:i+len(substr)] == substr {
-			return i
-		}
-	}
-	return -1
-}
-
 // Custom error types for better debugging
 type AnalysisError struct {
 	Type    string
@@ -469,6 +490,46 @@ func NewParseError(message string, cause error) error {
 
 func NewTimeoutError(message string, cause error) error {
 	return &AnalysisError{Type: "TimeoutError", Message: message, Cause: cause}
+}
+
+// extractJSONFromMarkdown attempts to extract JSON from markdown code blocks
+func extractJSONFromMarkdown(content string) string {
+	// Look for ```json code blocks
+	start := "```json"
+	end := "```"
+	
+	startIdx := findSubstring(content, start)
+	if startIdx == -1 {
+		return ""
+	}
+	
+	startIdx += len(start)
+	endIdx := findSubstringFrom(content, end, startIdx)
+	if endIdx == -1 {
+		return ""
+	}
+	
+	return content[startIdx:endIdx]
+}
+
+// Helper function to find substring
+func findSubstring(s, substr string) int {
+	for i := 0; i <= len(s)-len(substr); i++ {
+		if s[i:i+len(substr)] == substr {
+			return i
+		}
+	}
+	return -1
+}
+
+// Helper function to find substring from a starting position
+func findSubstringFrom(s, substr string, start int) int {
+	for i := start; i <= len(s)-len(substr); i++ {
+		if s[i:i+len(substr)] == substr {
+			return i
+		}
+	}
+	return -1
 }
 
 // Helper function for min

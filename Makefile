@@ -46,6 +46,9 @@ help:
 	@echo "$(GREEN)Development:$(NC)"
 	@echo "  make install-tools    - Install required development tools"
 	@echo "  make integration-test - Run integration tests (requires API keys)"
+	@echo "  make test-sqlite      - Run SQLite storage tests"
+	@echo "  make test-integration-all - Run all integration tests including SQLite"
+	@echo "  make build-examples   - Build example files with special tags"
 	@echo "  make status           - Show project status"
 	@echo "  make test-failures    - Show detailed test failures"
 	@echo "  make test-file FILE=path/to/test.go - Test specific file"
@@ -88,7 +91,7 @@ dashboard-test:
 	@# Test Core Packages
 	@echo "$(YELLOW)┌─ Core Components ─────────────────────┐$(NC)"
 	@CORE_PASS=0; CORE_TOTAL=0; \
-	for pkg in agent memory orchestrator objective kanban project; do \
+	for pkg in agent memory orchestrator objective kanban project campaign storage; do \
 		CORE_TOTAL=$$((CORE_TOTAL + 1)); \
 		printf "$(BLUE)│$(NC) %-18s" "$$pkg" ; \
 		if go test -short -count=1 ./pkg/$$pkg/... > /dev/null 2>&1; then \
@@ -124,7 +127,7 @@ dashboard-test:
 	@# Test Other Components
 	@echo "$(YELLOW)┌─ Support Systems ─────────────────────┐$(NC)"
 	@OTHER_PASS=0; OTHER_TOTAL=0; \
-	for pkg in registry context ui tools corpus config grpc; do \
+	for pkg in registry context ui tools corpus config grpc mcp prompts; do \
 		if [ -d "./pkg/$$pkg" ]; then \
 			OTHER_TOTAL=$$((OTHER_TOTAL + 1)); \
 			printf "$(BLUE)│$(NC) %-18s" "$$pkg" ; \
@@ -237,6 +240,15 @@ lint:
 # Integration tests (requires API keys for provider tests)
 integration-test:
 	@echo "$(BLUE)Running integration tests...$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Running storage integration tests...$(NC)"
+	@go test -v ./integration/storage/...
+	@echo ""
+	@echo "$(YELLOW)Running commission integration tests...$(NC)"
+	@go test -v ./integration/commission/...
+	@echo ""
+	@echo "$(YELLOW)Running chat integration tests...$(NC)"
+	@go test -v ./integration/chat/...
 	@echo ""
 	@echo "$(YELLOW)Running corpus integration tests...$(NC)"
 	@go test -v -tags=integration ./integration/corpus/...
@@ -541,6 +553,28 @@ test-with-progress:
 			echo "$(RED)✗$(NC)" ; \
 		fi ; \
 	done
+
+# Test SQLite storage specifically
+test-sqlite:
+	@echo "$(BLUE)Running SQLite storage tests...$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Testing storage package...$(NC)"
+	@go test -v ./pkg/storage/...
+	@echo ""
+	@echo "$(YELLOW)Testing storage integration...$(NC)"
+	@go test -v ./integration/storage/...
+	@echo ""
+	@echo "$(GREEN)✓ SQLite tests complete$(NC)"
+
+# Test all integration tests including storage
+test-integration-all: test-sqlite integration-test
+	@echo "$(GREEN)✓ All integration tests complete$(NC)"
+
+# Build examples separately (they have build tags)
+build-examples:
+	@echo "$(BLUE)Building examples...$(NC)"
+	@go build -tags example -o bin/commission_example ./examples/commission_refinement_example.go
+	@echo "$(GREEN)✓ Examples built successfully$(NC)"
 
 # Default make behavior
 .DEFAULT_GOAL := help

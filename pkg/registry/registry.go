@@ -26,6 +26,65 @@ type DefaultComponentRegistry struct {
 	mu                  sync.RWMutex
 }
 
+// SQLiteStorageRegistry implements StorageRegistry for SQLite storage
+type SQLiteStorageRegistry struct {
+	registry storage.StorageRegistry
+	memoryStore MemoryStore
+}
+
+func (s *SQLiteStorageRegistry) RegisterTaskRepository(repo TaskRepository) error {
+	// Not needed for SQLite - repositories are created internally
+	return nil
+}
+
+func (s *SQLiteStorageRegistry) GetTaskRepository() TaskRepository {
+	// For now, return nil - the kanban package uses the storage directly via type assertions
+	return nil
+}
+
+func (s *SQLiteStorageRegistry) RegisterCampaignRepository(repo CampaignRepository) error {
+	// Not needed for SQLite - repositories are created internally
+	return nil
+}
+
+func (s *SQLiteStorageRegistry) GetCampaignRepository() CampaignRepository {
+	// For now, return nil - the kanban package uses the storage directly via type assertions
+	return nil
+}
+
+func (s *SQLiteStorageRegistry) RegisterCommissionRepository(repo CommissionRepository) error {
+	// Not needed for SQLite - repositories are created internally
+	return nil
+}
+
+func (s *SQLiteStorageRegistry) GetCommissionRepository() CommissionRepository {
+	// For now, return nil - the kanban package uses the storage directly via type assertions
+	return nil
+}
+
+func (s *SQLiteStorageRegistry) RegisterAgentRepository(repo AgentRepository) error {
+	// Not needed for SQLite - repositories are created internally
+	return nil
+}
+
+func (s *SQLiteStorageRegistry) GetAgentRepository() AgentRepository {
+	// For now, return nil - components should use type assertions to get the actual storage repos
+	return nil
+}
+
+func (s *SQLiteStorageRegistry) GetMemoryStore() MemoryStore {
+	return s.memoryStore
+}
+
+func (s *SQLiteStorageRegistry) SetMemoryStore(store MemoryStore) {
+	s.memoryStore = store
+}
+
+// GetStorageRegistry returns the underlying storage.StorageRegistry for components that need it
+func (s *SQLiteStorageRegistry) GetStorageRegistry() storage.StorageRegistry {
+	return s.registry
+}
+
 // NewComponentRegistry creates a new ComponentRegistry instance
 func NewComponentRegistry() ComponentRegistry {
 	return &DefaultComponentRegistry{
@@ -291,13 +350,17 @@ func (r *DefaultComponentRegistry) initializeSQLiteStorage(dbPath string) error 
 	}
 	
 	// Replace the placeholder storage registry with the real one
-	r.storageRegistry = storageReg.(StorageRegistry)
-	
-	// Register the SQLite store adapter as the default memory store
-	// This allows existing components that expect memory.Store to work with SQLite
-	if defaultStorageReg, ok := r.storageRegistry.(*DefaultStorageRegistry); ok {
-		defaultStorageReg.SetMemoryStore(memoryStoreAdapter.(MemoryStore))
+	// Cast to storage.StorageRegistry first, then wrap with our own interface
+	if sqliteReg, ok := storageReg.(storage.StorageRegistry); ok {
+		r.storageRegistry = &SQLiteStorageRegistry{
+			registry: sqliteReg,
+			memoryStore: memoryStoreAdapter.(MemoryStore),
+		}
+	} else {
+		return fmt.Errorf("unexpected storage registry type")
 	}
+	
+	// SQLite storage registry already has the memory store set in the struct above
 	
 	return nil
 }

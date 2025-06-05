@@ -1,3 +1,6 @@
+//go:build example
+// +build example
+
 package main
 
 import (
@@ -10,7 +13,6 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
 	"github.com/guild-ventures/guild-core/pkg/orchestrator"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/providers/anthropic"
 	"github.com/guild-ventures/guild-core/pkg/providers/openai"
 	"github.com/guild-ventures/guild-core/pkg/registry"
@@ -21,7 +23,7 @@ func main() {
 	ctx := context.Background()
 
 	// Step 1: Initialize the registry
-	reg := registry.NewRegistry()
+	reg := registry.NewComponentRegistry()
 
 	// Step 2: Set up providers
 	if err := setupProviders(reg); err != nil {
@@ -165,7 +167,7 @@ func setupProviders(reg registry.ComponentRegistry) error {
 
 	// Try to register Anthropic if API key is available
 	if apiKey := os.Getenv("ANTHROPIC_API_KEY"); apiKey != "" {
-		provider := anthropic.NewProvider(apiKey)
+		provider := anthropic.NewClient(apiKey)
 		if err := providerReg.RegisterProvider("anthropic", provider); err != nil {
 			return err
 		}
@@ -174,7 +176,7 @@ func setupProviders(reg registry.ComponentRegistry) error {
 
 	// Try to register OpenAI if API key is available
 	if apiKey := os.Getenv("OPENAI_API_KEY"); apiKey != "" {
-		provider := openai.NewProvider(openai.Config{APIKey: apiKey})
+		provider := openai.NewClient(apiKey)
 		if err := providerReg.RegisterProvider("openai", provider); err != nil {
 			return err
 		}
@@ -196,25 +198,19 @@ func setupProviders(reg registry.ComponentRegistry) error {
 // setupMemory configures the memory system
 func setupMemory(reg registry.ComponentRegistry) error {
 	// Create BoltDB store
-	store, err := boltdb.NewBoltDBStore(".guild/memory.db")
+	store, err := boltdb.NewStore(".guild/memory.db")
 	if err != nil {
 		return fmt.Errorf("failed to create BoltDB store: %w", err)
 	}
 
 	// Register with memory registry
 	memReg := reg.Memory()
-	return memReg.RegisterStore("default", store)
+	return memReg.RegisterMemoryStore("default", store)
 }
 
 // setupPrompts configures the prompt system
 func setupPrompts(reg registry.ComponentRegistry) error {
-	promptReg := reg.Prompts()
-
-	// Create and register layered prompt manager
-	layeredManager := prompts.NewLayeredPromptManager(
-		prompts.NewDefaultPromptManager(prompts.NewPromptRegistry()),
-		nil, // Use default store from registry
-	)
-
-	return promptReg.RegisterManager("layered", layeredManager)
+	// The prompt registry and integration service handle prompts internally
+	// No additional setup needed for this example
+	return nil
 }

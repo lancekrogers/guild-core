@@ -19,7 +19,6 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/orchestrator"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/registry"
-	"github.com/guild-ventures/guild-core/tools"
 )
 
 // Server implements the Guild gRPC service
