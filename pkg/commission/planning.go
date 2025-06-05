@@ -1,4 +1,4 @@
-package objective
+package commission
 
 import (
 	"time"
@@ -6,8 +6,8 @@ import (
 
 // PlanningSession represents a planning session for an objective
 type PlanningSession struct {
-	// Objective is the objective being planned
-	Objective *Objective
+	// Commission is the commission being planned
+	Commission *Commission
 
 	// StartTime is when the session started
 	StartTime time.Time
@@ -91,11 +91,11 @@ func (ps *PlanningSession) GetSessionSummary() map[string]interface{} {
 	summary["duration"] = time.Since(ps.StartTime).String()
 
 	// Objective info
-	if ps.Objective != nil {
-		summary["objective_id"] = ps.Objective.ID
-		summary["objective_title"] = ps.Objective.Title
-		summary["objective_status"] = ps.Objective.Status
-		summary["objective_completion"] = ps.Objective.Completion
+	if ps.Commission != nil {
+		summary["objective_id"] = ps.Commission.ID
+		summary["objective_title"] = ps.Commission.Title
+		summary["objective_status"] = ps.Commission.Status
+		summary["objective_completion"] = ps.Commission.Completion
 	}
 
 	// Activity stats

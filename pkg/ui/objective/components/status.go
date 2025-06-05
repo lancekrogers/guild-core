@@ -6,7 +6,7 @@ import (
 	"strings"
 	
 	"github.com/charmbracelet/lipgloss"
-	"github.com/guild-ventures/guild-core/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 )
 
 // StatusColors defines the colors for each objective status

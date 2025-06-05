@@ -11,7 +11,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/storage"
-	// "github.com/guild-ventures/guild-core/pkg/objective"
+	// "github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/providers/mock"
 	"github.com/guild-ventures/guild-core/pkg/registry"

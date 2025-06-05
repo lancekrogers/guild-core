@@ -1,4 +1,4 @@
-package objective
+package commission
 
 import (
 	"context"
@@ -36,7 +36,7 @@ func (p *Planner) SetObjective(ctx context.Context, objectiveID string) error {
 
 	// Create a new session with this objective
 	p.session = NewPlanningSession()
-	p.session.Objective = obj
+	p.session.Commission = obj
 	p.session.AddActivityLog("Objective loaded: " + obj.Title)
 
 	return nil
@@ -52,7 +52,7 @@ func (p *Planner) CreateObjective(ctx context.Context, description string) error
 
 	// Set the objective in the session
 	p.session = NewPlanningSession()
-	p.session.Objective = obj
+	p.session.Commission = obj
 	p.session.AddActivityLog("Objective created: " + obj.Title)
 
 	return nil
@@ -60,23 +60,23 @@ func (p *Planner) CreateObjective(ctx context.Context, description string) error
 
 // AddContext adds context to the current objective
 func (p *Planner) AddContext(ctx context.Context, contextText string) error {
-	if p.session.Objective == nil {
+	if p.session.Commission == nil {
 		return fmt.Errorf("no objective set in the planning session")
 	}
 
 	// Add context via lifecycle manager
-	if err := p.lifecycleManager.AddContext(ctx, p.session.Objective.ID, contextText); err != nil {
+	if err := p.lifecycleManager.AddContext(ctx, p.session.Commission.ID, contextText); err != nil {
 		return fmt.Errorf("failed to add context: %w", err)
 	}
 
 	// Refresh the objective
-	obj, err := p.manager.GetObjective(ctx, p.session.Objective.ID)
+	obj, err := p.manager.GetObjective(ctx, p.session.Commission.ID)
 	if err != nil {
 		return fmt.Errorf("failed to refresh objective: %w", err)
 	}
 
 	// Update the session
-	p.session.Objective = obj
+	p.session.Commission = obj
 	p.session.AddActivityLog("Context added: " + truncateString(contextText, 50))
 	p.session.ContextAdded = append(p.session.ContextAdded, contextText)
 
@@ -85,23 +85,23 @@ func (p *Planner) AddContext(ctx context.Context, contextText string) error {
 
 // Regenerate regenerates documents for the current objective
 func (p *Planner) Regenerate(ctx context.Context) error {
-	if p.session.Objective == nil {
+	if p.session.Commission == nil {
 		return fmt.Errorf("no objective set in the planning session")
 	}
 
 	// Generate project structure via lifecycle manager
-	if err := p.lifecycleManager.GenerateProjectStructure(ctx, p.session.Objective.ID); err != nil {
+	if err := p.lifecycleManager.GenerateProjectStructure(ctx, p.session.Commission.ID); err != nil {
 		return fmt.Errorf("failed to regenerate documents: %w", err)
 	}
 
 	// Refresh the objective
-	obj, err := p.manager.GetObjective(ctx, p.session.Objective.ID)
+	obj, err := p.manager.GetObjective(ctx, p.session.Commission.ID)
 	if err != nil {
 		return fmt.Errorf("failed to refresh objective: %w", err)
 	}
 
 	// Update the session
-	p.session.Objective = obj
+	p.session.Commission = obj
 	p.session.AddActivityLog("Documents regenerated")
 	p.session.RegenerationCount++
 
@@ -110,23 +110,23 @@ func (p *Planner) Regenerate(ctx context.Context) error {
 
 // MarkReady marks the current objective as ready
 func (p *Planner) MarkReady(ctx context.Context) error {
-	if p.session.Objective == nil {
+	if p.session.Commission == nil {
 		return fmt.Errorf("no objective set in the planning session")
 	}
 
 	// Mark as ready via lifecycle manager
-	if err := p.lifecycleManager.MarkObjectiveReady(ctx, p.session.Objective.ID); err != nil {
+	if err := p.lifecycleManager.MarkObjectiveReady(ctx, p.session.Commission.ID); err != nil {
 		return fmt.Errorf("failed to mark objective as ready: %w", err)
 	}
 
 	// Refresh the objective
-	obj, err := p.manager.GetObjective(ctx, p.session.Objective.ID)
+	obj, err := p.manager.GetObjective(ctx, p.session.Commission.ID)
 	if err != nil {
 		return fmt.Errorf("failed to refresh objective: %w", err)
 	}
 
 	// Update the session
-	p.session.Objective = obj
+	p.session.Commission = obj
 	p.session.AddActivityLog("Objective marked as ready")
 	p.session.IsReady = true
 
@@ -135,7 +135,7 @@ func (p *Planner) MarkReady(ctx context.Context) error {
 
 // GetSuggestions gets improvement suggestions for the objective
 func (p *Planner) GetSuggestions(ctx context.Context) (string, error) {
-	if p.session.Objective == nil {
+	if p.session.Commission == nil {
 		return "", fmt.Errorf("no objective set in the planning session")
 	}
 

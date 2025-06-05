@@ -1,5 +1,5 @@
 // pkg/objective/context.go
-package objective
+package commission
 
 import (
 	"os"

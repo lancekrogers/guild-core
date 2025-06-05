@@ -3,7 +3,7 @@ package agentobj
 import (
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 )
 
 // AgentParser represents a specialized parser for agent-generated objectives

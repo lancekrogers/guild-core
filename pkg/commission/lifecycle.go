@@ -1,4 +1,4 @@
-package objective
+package commission
 
 import (
 	"context"
@@ -41,7 +41,7 @@ func NewLifecycleManager(manager *Manager, basePath string) *LifecycleManager {
 }
 
 // CreateObjectiveFromDescription creates a new objective from a natural language description
-func (l *LifecycleManager) CreateObjectiveFromDescription(ctx context.Context, description string) (*Objective, error) {
+func (l *LifecycleManager) CreateObjectiveFromDescription(ctx context.Context, description string) (*Commission, error) {
 	// First, ensure objectives directory exists
 	if err := os.MkdirAll(l.objectivesPath, 0755); err != nil {
 		return nil, fmt.Errorf("failed to create objectives directory: %w", err)
@@ -53,7 +53,7 @@ func (l *LifecycleManager) CreateObjectiveFromDescription(ctx context.Context, d
 	filePath := filepath.Join(l.objectivesPath, fileName)
 
 	// Create the objective object
-	obj := NewObjective(title, description)
+	obj := NewCommission(title, description)
 	obj.Status = StatusDraft
 	obj.FilePath = filePath
 	obj.Goal = description
@@ -327,7 +327,7 @@ func deriveTitle(description string) string {
 }
 
 // formatObjectiveMarkdown formats an objective as markdown
-func formatObjectiveMarkdown(obj *Objective) string {
+func formatObjectiveMarkdown(obj *Commission) string {
 	var content strings.Builder
 	
 	// Title

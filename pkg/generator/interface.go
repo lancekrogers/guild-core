@@ -3,7 +3,7 @@ package generator
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 )
 
 // ObjectiveGenerator defines the interface for objective-related content generation

@@ -9,7 +9,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/agent/mocks"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
-	"github.com/guild-ventures/guild-core/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 	toolmocks "github.com/guild-ventures/guild-core/tools/mocks"
 )

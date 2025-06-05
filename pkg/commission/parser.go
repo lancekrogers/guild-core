@@ -1,4 +1,4 @@
-package objective
+package commission
 
 import (
 	"bufio"
@@ -51,7 +51,7 @@ func NewMarkdownParser(options ParseOptions) *MarkdownParser {
 }
 
 // Parse parses an objective from markdown content
-func (p *MarkdownParser) Parse(content, source string) (*Objective, error) {
+func (p *MarkdownParser) Parse(content, source string) (*Commission, error) {
 	// Process the content into sections
 	sections, err := p.extractSections(content)
 	if err != nil {
@@ -61,51 +61,51 @@ func (p *MarkdownParser) Parse(content, source string) (*Objective, error) {
 	// Extract main title and description
 	title, description := p.extractTitleAndDescription(sections)
 	
-	// Create new objective with default values
-	objective := NewObjective(title, description)
-	objective.Source = source
-	objective.Content = content
-	objective.Status = p.options.DefaultStatus
+	// Create new commission with default values
+	commission := NewCommission(title, description)
+	commission.Source = source
+	commission.Content = content
+	commission.Status = p.options.DefaultStatus
 	
 	// Extract metadata and tags from the content
 	metadata, tags := p.extractMetadataAndTags(content)
-	objective.Metadata = metadata
-	objective.Tags = tags
+	commission.Metadata = metadata
+	commission.Tags = tags
 	
 	// Set priority if found in metadata
 	if priority, ok := metadata["priority"]; ok {
-		objective.Priority = priority
+		commission.Priority = priority
 	} else {
-		objective.Priority = p.options.DefaultPriority
+		commission.Priority = p.options.DefaultPriority
 	}
 	
 	// Set owner if found in metadata
 	if owner, ok := metadata["owner"]; ok {
-		objective.Owner = owner
+		commission.Owner = owner
 	} else {
-		objective.Owner = p.options.DefaultOwner
+		commission.Owner = p.options.DefaultOwner
 	}
 	
 	// Set assignees if found in metadata
 	if assignees, ok := metadata["assignees"]; ok {
-		objective.Assignees = strings.Split(assignees, ",")
+		commission.Assignees = strings.Split(assignees, ",")
 		// Trim spaces
-		for i, a := range objective.Assignees {
-			objective.Assignees[i] = strings.TrimSpace(a)
+		for i, a := range commission.Assignees {
+			commission.Assignees[i] = strings.TrimSpace(a)
 		}
 	}
 	
 	// Process sections into objective parts
-	objective.Parts = p.processSectionsIntoParts(sections)
+	commission.Parts = p.processSectionsIntoParts(sections)
 	
 	// Extract tasks if present
-	objective.Tasks = p.extractTasks(sections)
+	commission.Tasks = p.extractTasks(sections)
 	
-	return objective, nil
+	return commission, nil
 }
 
 // ParseFile parses an objective from a markdown file
-func (p *MarkdownParser) ParseFile(path string) (*Objective, error) {
+func (p *MarkdownParser) ParseFile(path string) (*Commission, error) {
 	// Read file content
 	content, err := os.ReadFile(path)
 	if err != nil {
@@ -117,7 +117,7 @@ func (p *MarkdownParser) ParseFile(path string) (*Objective, error) {
 }
 
 // ParseFile is a standalone function to parse a markdown file into an Objective
-func ParseFile(path string) (*Objective, error) {
+func ParseFile(path string) (*Commission, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("error opening file: %w", err)
@@ -310,8 +310,8 @@ func (p *MarkdownParser) extractMetadataAndTags(content string) (map[string]stri
 }
 
 // processSectionsIntoParts converts sections into objective parts
-func (p *MarkdownParser) processSectionsIntoParts(sections []*SectionInfo) []*ObjectivePart {
-	var parts []*ObjectivePart
+func (p *MarkdownParser) processSectionsIntoParts(sections []*SectionInfo) []*CommissionPart {
+	var parts []*CommissionPart
 	
 	// Skip the first section if it's the title/description section
 	startIdx := 0
@@ -321,7 +321,7 @@ func (p *MarkdownParser) processSectionsIntoParts(sections []*SectionInfo) []*Ob
 	
 	// Process each section into a part
 	for i, section := range sections[startIdx:] {
-		part := NewObjectivePart(
+		part := NewCommissionPart(
 			section.Title,
 			section.Content,
 			section.Type,
@@ -340,8 +340,8 @@ func (p *MarkdownParser) processSectionsIntoParts(sections []*SectionInfo) []*Ob
 }
 
 // extractTasks extracts tasks from sections
-func (p *MarkdownParser) extractTasks(sections []*SectionInfo) []*ObjectiveTask {
-	var tasks []*ObjectiveTask
+func (p *MarkdownParser) extractTasks(sections []*SectionInfo) []*CommissionTask {
+	var tasks []*CommissionTask
 	
 	// Find sections that might contain tasks
 	for _, section := range sections {
@@ -356,8 +356,8 @@ func (p *MarkdownParser) extractTasks(sections []*SectionInfo) []*ObjectiveTask 
 }
 
 // extractTasksFromSection extracts tasks from a single section
-func (p *MarkdownParser) extractTasksFromSection(section *SectionInfo) []*ObjectiveTask {
-	var tasks []*ObjectiveTask
+func (p *MarkdownParser) extractTasksFromSection(section *SectionInfo) []*CommissionTask {
+	var tasks []*CommissionTask
 	
 	// Regular expressions for task lists
 	// Matches Markdown task lists like "- [ ] Task description"
@@ -383,7 +383,7 @@ func (p *MarkdownParser) extractTasksFromSection(section *SectionInfo) []*Object
 			}
 			
 			description := matches[2]
-			task := NewObjectiveTask(
+			task := NewCommissionTask(
 				description,
 				"", // No detailed description for now
 				taskIndex,
@@ -399,7 +399,7 @@ func (p *MarkdownParser) extractTasksFromSection(section *SectionInfo) []*Object
 		matches = numberedTaskRegex.FindStringSubmatch(line)
 		if len(matches) > 2 {
 			description := matches[2]
-			task := NewObjectiveTask(
+			task := NewCommissionTask(
 				description,
 				"", // No detailed description for now
 				taskIndex,
@@ -413,12 +413,3 @@ func (p *MarkdownParser) extractTasksFromSection(section *SectionInfo) []*Object
 	return tasks
 }
 
-// containsString checks if a string slice contains a given string
-func containsString(slice []string, item string) bool {
-	for _, s := range slice {
-		if s == item {
-			return true
-		}
-	}
-	return false
-}

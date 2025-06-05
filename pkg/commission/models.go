@@ -1,4 +1,4 @@
-package objective
+package commission
 
 import (
 	"fmt"
@@ -7,37 +7,37 @@ import (
 	"time"
 )
 
-// ObjectiveStatus represents the status of an objective
-type ObjectiveStatus string
+// CommissionStatus represents the status of a commission
+type CommissionStatus string
 
 const (
-	// ObjectiveStatusDraft indicates a draft objective
-	ObjectiveStatusDraft ObjectiveStatus = "draft"
+	// CommissionStatusDraft indicates a draft commission
+	CommissionStatusDraft CommissionStatus = "draft"
 	
-	// ObjectiveStatusActive indicates an active objective
-	ObjectiveStatusActive ObjectiveStatus = "active"
+	// CommissionStatusActive indicates an active commission
+	CommissionStatusActive CommissionStatus = "active"
 	
-	// ObjectiveStatusCompleted indicates a completed objective
-	ObjectiveStatusCompleted ObjectiveStatus = "completed"
+	// CommissionStatusCompleted indicates a completed commission
+	CommissionStatusCompleted CommissionStatus = "completed"
 	
-	// ObjectiveStatusCancelled indicates a cancelled objective
-	ObjectiveStatusCancelled ObjectiveStatus = "cancelled"
+	// CommissionStatusCancelled indicates a cancelled commission
+	CommissionStatusCancelled CommissionStatus = "cancelled"
 )
 
-// Objective represents a goal or task to be accomplished
-type Objective struct {
+// Commission represents a goal or task to be accomplished
+type Commission struct {
 	ID          string            `json:"id"`
 	Title       string            `json:"title"`
 	Description string            `json:"description"`
-	Status      ObjectiveStatus   `json:"status"`
+	Status      CommissionStatus  `json:"status"`
 	CreatedAt   time.Time         `json:"created_at"`
 	UpdatedAt   time.Time         `json:"updated_at"`
 	CompletedAt *time.Time        `json:"completed_at,omitempty"`
 	Tags        []string          `json:"tags,omitempty"`
 	Metadata    map[string]string `json:"metadata,omitempty"`
 	Context     []string          `json:"context,omitempty"` // References to context documents
-	Parts       []*ObjectivePart  `json:"parts,omitempty"`
-	Tasks       []*ObjectiveTask  `json:"tasks,omitempty"`
+	Parts       []*CommissionPart `json:"parts,omitempty"`
+	Tasks       []*CommissionTask `json:"tasks,omitempty"`
 	Owner       string            `json:"owner,omitempty"`
 	Assignees   []string          `json:"assignees,omitempty"`
 	Priority    string            `json:"priority,omitempty"` // high, medium, low
@@ -55,41 +55,41 @@ type Objective struct {
 	CampaignID  string            `json:"campaign_id,omitempty"` // Optional campaign association
 }
 
-// Format formats an objective as a markdown string
-func (o *Objective) Format() string {
+// Format formats a commission as a markdown string
+func (c *Commission) Format() string {
 	var md strings.Builder
 
 	// Title
-	md.WriteString(fmt.Sprintf("# %s\n\n", o.Title))
+	md.WriteString(fmt.Sprintf("# %s\n\n", c.Title))
 
 	// Description
-	md.WriteString(fmt.Sprintf("%s\n\n", o.Description))
+	md.WriteString(fmt.Sprintf("%s\n\n", c.Description))
 
 	// Metadata
 	md.WriteString("## Metadata\n\n")
-	md.WriteString(fmt.Sprintf("- Status: %s\n", o.Status))
-	md.WriteString(fmt.Sprintf("- Owner: %s\n", o.Owner))
-	if len(o.Assignees) > 0 {
-		md.WriteString(fmt.Sprintf("- Assignees: %s\n", strings.Join(o.Assignees, ", ")))
+	md.WriteString(fmt.Sprintf("- Status: %s\n", c.Status))
+	md.WriteString(fmt.Sprintf("- Owner: %s\n", c.Owner))
+	if len(c.Assignees) > 0 {
+		md.WriteString(fmt.Sprintf("- Assignees: %s\n", strings.Join(c.Assignees, ", ")))
 	}
-	if o.Priority != "" {
-		md.WriteString(fmt.Sprintf("- Priority: %s\n", o.Priority))
+	if c.Priority != "" {
+		md.WriteString(fmt.Sprintf("- Priority: %s\n", c.Priority))
 	}
-	if len(o.Tags) > 0 {
-		md.WriteString(fmt.Sprintf("- Tags: %s\n", strings.Join(o.Tags, ", ")))
+	if len(c.Tags) > 0 {
+		md.WriteString(fmt.Sprintf("- Tags: %s\n", strings.Join(c.Tags, ", ")))
 	}
 	md.WriteString("\n")
 
 	// Parts
-	for _, part := range o.Parts {
+	for _, part := range c.Parts {
 		md.WriteString(fmt.Sprintf("## %s\n\n", part.Title))
 		md.WriteString(fmt.Sprintf("%s\n\n", part.Content))
 	}
 
 	// Tasks
-	if len(o.Tasks) > 0 {
+	if len(c.Tasks) > 0 {
 		md.WriteString("## Tasks\n\n")
-		for _, task := range o.Tasks {
+		for _, task := range c.Tasks {
 			status := ""
 			if task.Status == "done" {
 				status = "[x]"
@@ -103,8 +103,8 @@ func (o *Objective) Format() string {
 	return md.String()
 }
 
-// ObjectivePart represents a section of an objective
-type ObjectivePart struct {
+// CommissionPart represents a section of a commission
+type CommissionPart struct {
 	ID          string            `json:"id"`
 	Title       string            `json:"title"`
 	Content     string            `json:"content"`
@@ -113,8 +113,8 @@ type ObjectivePart struct {
 	Metadata    map[string]string `json:"metadata,omitempty"`
 }
 
-// ObjectiveTask represents a task to complete an objective
-type ObjectiveTask struct {
+// CommissionTask represents a task to complete a commission
+type CommissionTask struct {
 	ID          string            `json:"id"`
 	Title       string            `json:"title"`
 	Description string            `json:"description"`
@@ -129,13 +129,13 @@ type ObjectiveTask struct {
 	ParentID    string            `json:"parent_id,omitempty"` // For hierarchical tasks
 }
 
-// ObjectiveParser defines the interface for objective parsers
-type ObjectiveParser interface {
-	// Parse parses an objective from markdown content
-	Parse(content, source string) (*Objective, error)
+// CommissionParser defines the interface for commission parsers
+type CommissionParser interface {
+	// Parse parses a commission from markdown content
+	Parse(content, source string) (*Commission, error)
 	
-	// ParseFile parses an objective from a markdown file
-	ParseFile(filepath string) (*Objective, error)
+	// ParseFile parses a commission from a markdown file
+	ParseFile(filepath string) (*Commission, error)
 }
 
 // SectionInfo represents information about a markdown section
@@ -147,9 +147,9 @@ type SectionInfo struct {
 	MetaTags map[string]string
 }
 
-// ParseOptions contains options for parsing objectives
+// ParseOptions contains options for parsing commissions
 type ParseOptions struct {
-	DefaultStatus  ObjectiveStatus
+	DefaultStatus  CommissionStatus
 	DefaultPriority string
 	DefaultOwner    string
 	TagPrefixes     []string
@@ -159,47 +159,47 @@ type ParseOptions struct {
 // DefaultParseOptions returns default parse options
 func DefaultParseOptions() ParseOptions {
 	return ParseOptions{
-		DefaultStatus:   ObjectiveStatusDraft,
+		DefaultStatus:   CommissionStatusDraft,
 		DefaultPriority: "medium",
 		TagPrefixes:     []string{"#", "@tag:"},
 		MetaPrefixes:    []string{"@", "meta:"},
 	}
 }
 
-// ObjectiveGenerator defines the interface for objective generators
-type ObjectiveGenerator interface {
-	// GenerateObjective generates a new objective from a description
-	GenerateObjective(description string) (*Objective, error)
+// CommissionGenerator defines the interface for commission generators
+type CommissionGenerator interface {
+	// GenerateCommission generates a new commission from a description
+	GenerateCommission(description string) (*Commission, error)
 	
-	// RefineObjective refines an existing objective
-	RefineObjective(objective *Objective) (*Objective, error)
+	// RefineCommission refines an existing commission
+	RefineCommission(commission *Commission) (*Commission, error)
 	
-	// GenerateTasks generates tasks for an objective
-	GenerateTasks(objective *Objective) ([]*ObjectiveTask, error)
+	// GenerateTasks generates tasks for a commission
+	GenerateTasks(commission *Commission) ([]*CommissionTask, error)
 }
 
-// NewObjective creates a new objective with default values
-func NewObjective(title, description string) *Objective {
+// NewCommission creates a new commission with default values
+func NewCommission(title, description string) *Commission {
 	now := time.Now().UTC()
-	return &Objective{
+	return &Commission{
 		ID:          GenerateID(),
 		Title:       title,
 		Description: description,
-		Status:      ObjectiveStatusDraft,
+		Status:      CommissionStatusDraft,
 		CreatedAt:   now,
 		UpdatedAt:   now,
 		Tags:        []string{},
 		Metadata:    make(map[string]string),
 		Context:     []string{},
-		Parts:       []*ObjectivePart{},
-		Tasks:       []*ObjectiveTask{},
+		Parts:       []*CommissionPart{},
+		Tasks:       []*CommissionTask{},
 		Priority:    "medium",
 	}
 }
 
-// NewObjectivePart creates a new objective part
-func NewObjectivePart(title, content, partType string, sortOrder int) *ObjectivePart {
-	return &ObjectivePart{
+// NewCommissionPart creates a new commission part
+func NewCommissionPart(title, content, partType string, sortOrder int) *CommissionPart {
+	return &CommissionPart{
 		ID:        GenerateID(),
 		Title:     title,
 		Content:   content,
@@ -209,10 +209,10 @@ func NewObjectivePart(title, content, partType string, sortOrder int) *Objective
 	}
 }
 
-// NewObjectiveTask creates a new objective task
-func NewObjectiveTask(title, description string, sortOrder int) *ObjectiveTask {
+// NewCommissionTask creates a new commission task
+func NewCommissionTask(title, description string, sortOrder int) *CommissionTask {
 	now := time.Now().UTC()
-	return &ObjectiveTask{
+	return &CommissionTask{
 		ID:          GenerateID(),
 		Title:       title,
 		Description: description,
@@ -225,7 +225,7 @@ func NewObjectiveTask(title, description string, sortOrder int) *ObjectiveTask {
 	}
 }
 
-// GenerateID generates a unique ID for objectives, parts, and tasks
+// GenerateID generates a unique ID for commissions, parts, and tasks
 func GenerateID() string {
 	// Use timestamp + random characters for simplicity
 	return fmt.Sprintf("%d-%s", time.Now().UnixNano(), randomString(6))
@@ -242,32 +242,32 @@ func randomString(length int) string {
 }
 
 // CalculateCompletion calculates and updates the completion percentage
-func (o *Objective) CalculateCompletion() {
+func (c *Commission) CalculateCompletion() {
 	// Simple implementation - could be enhanced based on tasks completion, etc.
-	switch o.Status {
-	case ObjectiveStatusDraft:
-		o.Completion = 0.1
-	case ObjectiveStatusActive:
-		if len(o.Tasks) == 0 {
-			o.Completion = 0.3
+	switch c.Status {
+	case CommissionStatusDraft:
+		c.Completion = 0.1
+	case CommissionStatusActive:
+		if len(c.Tasks) == 0 {
+			c.Completion = 0.3
 		} else {
 			completed := 0
-			for _, task := range o.Tasks {
+			for _, task := range c.Tasks {
 				if task.Status == "done" {
 					completed++
 				}
 			}
-			o.Completion = 0.3 + 0.6*float64(completed)/float64(len(o.Tasks))
+			c.Completion = 0.3 + 0.6*float64(completed)/float64(len(c.Tasks))
 		}
-	case ObjectiveStatusCompleted:
-		o.Completion = 1.0
+	case CommissionStatusCompleted:
+		c.Completion = 1.0
 	default:
-		o.Completion = 0.5 // Default for other statuses
+		c.Completion = 0.5 // Default for other statuses
 	}
 }
 
 // IncrementIteration increments the iteration counter
-func (o *Objective) IncrementIteration() {
-	o.Iteration++
-	o.UpdatedAt = time.Now()
+func (c *Commission) IncrementIteration() {
+	c.Iteration++
+	c.UpdatedAt = time.Now()
 }

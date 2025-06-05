@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/guild-ventures/guild-core/internal/prompts"
-	"github.com/guild-ventures/guild-core/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 

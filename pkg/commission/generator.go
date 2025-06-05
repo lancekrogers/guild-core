@@ -1,4 +1,4 @@
-package objective
+package commission
 
 import (
 	"context"
@@ -18,21 +18,21 @@ func NewGenerator(manager *Manager) *Generator {
 }
 
 // GenerateFromPrompt generates an objective from a user prompt
-func (g *Generator) GenerateFromPrompt(ctx context.Context, prompt string) (*Objective, error) {
-	// In a real implementation, this would use an LLM to generate an objective
-	// For now, we'll create a simple objective based on the prompt
-	obj := &Objective{
+func (g *Generator) GenerateFromPrompt(ctx context.Context, prompt string) (*Commission, error) {
+	// In a real implementation, this would use an LLM to generate a commission
+	// For now, we'll create a simple commission based on the prompt
+	obj := &Commission{
 		Title:       prompt,
 		Description: "Auto-generated objective",
-		Status:      ObjectiveStatusDraft,
-		Parts:       []*ObjectivePart{},
+		Status:      CommissionStatusDraft,
+		Parts:       []*CommissionPart{},
 	}
 
 	return obj, nil
 }
 
 // SaveGeneratedObjective saves a generated objective
-func (g *Generator) SaveGeneratedObjective(ctx context.Context, obj *Objective) error {
+func (g *Generator) SaveGeneratedCommission(ctx context.Context, obj *Commission) error {
 	if obj == nil {
 		return fmt.Errorf("objective is nil")
 	}

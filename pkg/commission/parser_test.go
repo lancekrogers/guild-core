@@ -1,4 +1,4 @@
-package objective
+package commission
 
 import (
 	"strings"

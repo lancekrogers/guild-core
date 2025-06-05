@@ -1,4 +1,4 @@
-package objective
+package commission
 
 // Status constants for objectives
 const (

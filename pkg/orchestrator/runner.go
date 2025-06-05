@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 )
 
 // BaseOrchestrator implements the Orchestrator interface
