@@ -1,5 +1,5 @@
-// pkg/ui/objective/view.go
-package objective_ui
+// pkg/ui/commission/view.go
+package commission
 
 import (
 	"fmt"
@@ -83,8 +83,8 @@ func (m ObjectiveChamber) View() string {
 
 	// Get title based on current objective
 	var titleText string
-	if m.currentObjective != nil {
-		titleText = fmt.Sprintf(" Guild Hall - %s ", m.currentObjective.Title)
+	if m.currentCommission != nil {
+		titleText = fmt.Sprintf(" Guild Hall - %s ", m.currentCommission.Title)
 	} else {
 		titleText = " Guild Hall - Objective Chamber "
 	}
@@ -115,12 +115,12 @@ func (m ObjectiveChamber) View() string {
 	if m.guildError != nil {
 		proclamationStyle = warningStyle
 		m.proclamation = "Warning: " + m.guildError.Error()
-	} else if strings.Contains(m.proclamation, "success") ||
+	} else if strings.Contains(m.proclamation, "success") || 
 	          strings.Contains(m.proclamation, "completed") ||
 	          strings.Contains(m.proclamation, "approved") {
 		proclamationStyle = approvalStyle
 	}
-
+	
 	// Status footer with Town Crier's message
 	footer := workshopStyle.Copy().
 		Width(m.hallWidth - 4).
@@ -145,14 +145,14 @@ func (m ObjectiveChamber) View() string {
 // renderViewingState renders the main objective viewing state
 func (m ObjectiveChamber) renderViewingState() string {
 	var content string
-
+	
 	// If we have an objective, show its details
-	if m.currentObjective != nil || m.objectivePreview != "" {
-		objectiveContent := m.objectivePreview
-		if objectiveContent == "" && m.currentObjective != nil {
-			objectiveContent = formatObjectivePreview(m.currentObjective)
+	if m.currentCommission != nil || m.commissionPreview != "" {
+		objectiveContent := m.commissionPreview
+		if objectiveContent == "" && m.currentCommission != nil {
+			objectiveContent = formatCommissionPreview(m.currentCommission)
 		}
-
+		
 		// Render the objective in a guild chamber
 		content = chamberStyle.Copy().
 			Width(m.hallWidth - 4).
@@ -175,22 +175,22 @@ func (m ObjectiveChamber) renderViewingState() string {
 				),
 			))
 	}
-
+	
 	// Show current status and available actions
 	status := ""
-	if m.currentObjective != nil {
+	if m.currentCommission != nil {
 		status = fmt.Sprintf(
 			"Status: %s | Iterations: %d | Ready: %v",
-			m.currentObjective.Status,
-			m.currentObjective.Iterations,
+			m.currentCommission.Status,
+			m.currentCommission.Iteration,
 			m.readyForMaster,
 		)
 	}
-
+	
 	if status != "" {
 		content += "\n" + status
 	}
-
+	
 	return content
 }
 
@@ -203,9 +203,9 @@ func (m ObjectiveChamber) renderContextState() string {
 		"Use @spec/path/to/file.md or @ai_docs/path/to/file.md to reference existing documents.\n" +
 		"Press Ctrl+Enter to submit or Esc to cancel.",
 	)
-
+	
 	scribeArea := m.scribe.View()
-
+	
 	content := chamberStyle.Copy().
 		Width(m.hallWidth - 4).
 		Render(fmt.Sprintf(
@@ -214,7 +214,7 @@ func (m ObjectiveChamber) renderContextState() string {
 			instructions,
 			scribeArea,
 		))
-
+	
 	return content
 }
 
@@ -222,7 +222,7 @@ func (m ObjectiveChamber) renderContextState() string {
 func (m ObjectiveChamber) renderPreviewState() string {
 	// Show the viewport with document preview
 	header := manuscriptStyle.Render("Guild Document Archives")
-
+	
 	content := chamberStyle.Copy().
 		Width(m.hallWidth - 4).
 		Height(m.hallHeight - 10).
@@ -231,7 +231,7 @@ func (m ObjectiveChamber) renderPreviewState() string {
 			header,
 			m.viewport.View(),
 		))
-
+	
 	return content
 }
 
@@ -247,9 +247,9 @@ func (m ObjectiveChamber) renderCommandState() string {
 		"  ready - Mark the objective as ready\n" +
 		"Press Enter to execute or Esc to cancel.",
 	)
-
+	
 	commandArea := scribeStyle.Render("> " + m.parchment.View())
-
+	
 	content := chamberStyle.Copy().
 		Width(m.hallWidth - 4).
 		Render(fmt.Sprintf(
@@ -258,7 +258,7 @@ func (m ObjectiveChamber) renderCommandState() string {
 			instructions,
 			commandArea,
 		))
-
+	
 	return content
 }
 
@@ -266,12 +266,12 @@ func (m ObjectiveChamber) renderCommandState() string {
 func (m ObjectiveChamber) renderDashboardState() string {
 	// Show the list of objectives
 	header := manuscriptStyle.Render("Guild Objective Ledger")
-
+	
 	ledgerView := m.ledger.View()
 	if ledgerView == "" || !strings.Contains(ledgerView, "item") {
 		ledgerView = scrollStyle.Render("No objectives recorded in the Guild ledger.")
 	}
-
+	
 	content := chamberStyle.Copy().
 		Width(m.hallWidth - 4).
 		Height(m.hallHeight - 10).
@@ -280,7 +280,7 @@ func (m ObjectiveChamber) renderDashboardState() string {
 			header,
 			ledgerView,
 		))
-
+	
 	return content
 }
 
@@ -293,9 +293,9 @@ func (m ObjectiveChamber) renderCreatingState() string {
 		"The Guild craftsmen will shape it into a proper objective structure.\n" +
 		"Press Ctrl+Enter to submit or Esc to cancel.",
 	)
-
+	
 	creationArea := m.scribe.View()
-
+	
 	content := chamberStyle.Copy().
 		Width(m.hallWidth - 4).
 		Render(fmt.Sprintf(
@@ -304,6 +304,6 @@ func (m ObjectiveChamber) renderCreatingState() string {
 			instructions,
 			creationArea,
 		))
-
+	
 	return content
 }

@@ -6,15 +6,15 @@ import (
 	"strings"
 	
 	"github.com/charmbracelet/lipgloss"
-	"github.com/guild-ventures/guild-core/pkg/commission"
+	commissionpkg "github.com/guild-ventures/guild-core/pkg/commission"
 )
 
 // StatusColors defines the colors for each commission status
 var StatusColors = map[string]lipgloss.Style{
-	string(commission.CommissionStatusDraft):     lipgloss.NewStyle().Foreground(lipgloss.Color("#FFAA00")),
-	string(commission.CommissionStatusActive):    lipgloss.NewStyle().Foreground(lipgloss.Color("#00AAFF")),
-	string(commission.CommissionStatusCompleted): lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF00")),
-	string(commission.CommissionStatusCancelled): lipgloss.NewStyle().Foreground(lipgloss.Color("#FF0000")),
+	string(commissionpkg.CommissionStatusDraft):     lipgloss.NewStyle().Foreground(lipgloss.Color("#FFAA00")),
+	string(commissionpkg.CommissionStatusActive):    lipgloss.NewStyle().Foreground(lipgloss.Color("#00AAFF")),
+	string(commissionpkg.CommissionStatusCompleted): lipgloss.NewStyle().Foreground(lipgloss.Color("#00FF00")),
+	string(commissionpkg.CommissionStatusCancelled): lipgloss.NewStyle().Foreground(lipgloss.Color("#FF0000")),
 }
 
 // StatusBadge renders a status badge with appropriate color

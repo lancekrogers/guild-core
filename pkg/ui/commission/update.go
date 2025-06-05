@@ -1,12 +1,18 @@
-// pkg/ui/objective/update.go
-package objective_ui
+// pkg/ui/commission/update.go
+package commission
 
 import (
+	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/charmbracelet/bubbles/key"
+	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
+
+	commissionpkg "github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/pkg/ui/commission/components"
 )
 
 // Custom message types with Guild-themed names
@@ -15,6 +21,9 @@ type ContextCraftedMsg struct {
 	Success bool
 	Error   error
 }
+
+// Reference to availableCommands from model.go
+var availableCommands string
 
 type DocumentRefiningMsg struct {
 	Success bool
@@ -33,9 +42,9 @@ type ObjectiveReadyMsg struct {
 }
 
 type ObjectiveLoadedMsg struct {
-	Objective string
-	Success   bool
-	Error     error
+	Commission string
+	Success    bool
+	Error      error
 }
 
 // CommandMsg represents a command entered in the command input
@@ -55,13 +64,13 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case key.Matches(msg, m.keymap.LeaveHall):
 			m.proclamation = "Departing the Guild Hall..."
 			return m, tea.Quit
-
+			
 		case key.Matches(msg, m.keymap.SeekGuidance):
 			// Toggle help display
 			m.helpScroll.ShowAll = !m.helpScroll.ShowAll
 			return m, nil
 		}
-
+		
 		// State-specific key handling
 		switch m.chamberState {
 		case stateViewing:
@@ -71,51 +80,51 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.chamberState = stateContext
 				m.scribe.Focus()
 				m.proclamation = "The Guild scribe prepares to record your context..."
-
+				
 			case key.Matches(msg, m.keymap.Refine):
 				m.proclamation = "Summoning the Guild's craftsmen to refine the documents..."
 				return m, generateDocumentsCmd(m)
-
+				
 			case key.Matches(msg, m.keymap.ConsultMaster):
 				m.proclamation = "Seeking the Guild Master's counsel on improvements..."
 				return m, requestSuggestionsCmd(m)
-
+				
 			case key.Matches(msg, m.keymap.ApproveWork):
 				m.proclamation = "Preparing to seal the work with the Guild's mark of approval..."
 				return m, markObjectiveReadyCmd(m)
-
+				
 			case key.Matches(msg, m.keymap.ExamineDocs):
 				m.chamberState = statePreview
 				m.proclamation = "Unrolling the document scrolls for examination..."
-
+				
 			case key.Matches(msg, m.keymap.ToggleView):
 				m.chamberState = stateDashboard
 				m.proclamation = "Opening the Guild's objective ledger..."
 				return m, loadObjectivesCmd(m)
-
+				
 			case key.Matches(msg, m.keymap.EnterHall):
 				m.chamberState = stateCommands
 				m.parchment.Focus()
 				m.proclamation = "Enter thy command, and the Guild shall obey..."
 			}
-
+			
 		case stateContext:
 			// Adding context state key bindings
 			switch {
-			case key.Matches(msg, m.keymap.NavigateUp),
+			case key.Matches(msg, m.keymap.NavigateUp), 
 				 key.Matches(msg, m.keymap.NavigateDown),
 				 key.Matches(msg, m.keymap.NavigateLeft),
 				 key.Matches(msg, m.keymap.NavigateRight):
 				// Pass these navigation keys to the textarea
 				m.scribe, cmd = m.scribe.Update(msg)
 				cmds = append(cmds, cmd)
-
+				
 			case msg.Type == tea.KeyEsc:
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.scribe.Blur()
 				m.proclamation = "Context crafting cancelled. Returned to the main chamber."
-
+				
 			case msg.Type == tea.KeyEnter && key.Matches(msg, key.NewBinding(key.WithKeys("ctrl+enter"))):
 				// Submit context with Ctrl+Enter
 				content := m.scribe.Value()
@@ -127,7 +136,7 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, addContextCmd(m, content)
 				}
 			}
-
+			
 		case statePreview:
 			// Preview docs state key bindings
 			switch {
@@ -136,13 +145,13 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Scroll viewport
 				m.viewport, cmd = m.viewport.Update(msg)
 				cmds = append(cmds, cmd)
-
+				
 			case msg.Type == tea.KeyEsc, key.Matches(msg, m.keymap.ExamineDocs):
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.proclamation = "Returned to the main chamber."
 			}
-
+			
 		case stateDashboard:
 			// Dashboard state key bindings
 			switch {
@@ -151,20 +160,20 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Navigate the ledger list
 				m.ledger, cmd = m.ledger.Update(msg)
 				cmds = append(cmds, cmd)
-
-			case key.Matches(msg, m.keymap.ToggleView),
+				
+			case key.Matches(msg, m.keymap.ToggleView), 
 				 msg.Type == tea.KeyEsc:
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.proclamation = "Closed the Guild's objective ledger."
-
+				
 			case msg.Type == tea.KeyEnter:
 				// Select objective from ledger
 				// TODO: Get selected objective and load it
 				m.chamberState = stateViewing
 				m.proclamation = "A new objective scroll unfurls before you..."
 			}
-
+			
 		case stateCommands:
 			// Command input state key bindings
 			switch {
@@ -173,14 +182,14 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.chamberState = stateViewing
 				m.parchment.Blur()
 				m.proclamation = "Command cancelled. Returned to the main chamber."
-
+				
 			case msg.Type == tea.KeyEnter:
 				// Process command
 				command := m.parchment.Value()
 				m.parchment.Reset()
 				m.parchment.Blur()
 				m.chamberState = stateViewing
-
+				
 				if command == "" {
 					m.proclamation = "Command was empty. Returned to the main chamber."
 				} else {
@@ -188,24 +197,24 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, executeCommandCmd(m, command)
 				}
 			}
-
+			
 		case stateCreating:
 			// Creating a new objective state key bindings
 			switch {
-			case key.Matches(msg, m.keymap.NavigateUp),
+			case key.Matches(msg, m.keymap.NavigateUp), 
 				 key.Matches(msg, m.keymap.NavigateDown),
 				 key.Matches(msg, m.keymap.NavigateLeft),
 				 key.Matches(msg, m.keymap.NavigateRight):
 				// Pass these navigation keys to the textarea
 				m.scribe, cmd = m.scribe.Update(msg)
 				cmds = append(cmds, cmd)
-
+				
 			case msg.Type == tea.KeyEsc:
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.scribe.Blur()
 				m.proclamation = "Objective creation cancelled. Returned to the main chamber."
-
+				
 			case msg.Type == tea.KeyEnter && key.Matches(msg, key.NewBinding(key.WithKeys("ctrl+enter"))):
 				// Submit new objective with Ctrl+Enter
 				content := m.scribe.Value()
@@ -217,26 +226,26 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 		}
-
+		
 	case tea.WindowSizeMsg:
 		// Handle window resizing with Guild-themed variable names
 		m.hallWidth = msg.Width
 		m.hallHeight = msg.Height
-
+		
 		// Update viewport dimensions
 		headerHeight := 2 // Title
 		footerHeight := 4 // Status + help
 		contentHeight := m.hallHeight - headerHeight - footerHeight
-
+		
 		m.viewport.Width = m.hallWidth
 		m.viewport.Height = contentHeight
-
+		
 		// Update textarea width
 		m.scribe.SetWidth(m.hallWidth)
-
+		
 		// Update list dimensions
 		m.ledger.SetSize(m.hallWidth, contentHeight)
-
+		
 		// Update help width
 		m.helpScroll.Width = m.hallWidth
 
@@ -247,10 +256,10 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.proclamation = "The scribes failed to record your wisdom: " + msg.Error.Error()
 		} else {
 			m.proclamation = "Your knowledge has been added to the Guild's records."
-
+			
 			// Update preview content if we have one
-			if m.currentObjective != nil {
-				m.objectivePreview = formatObjectivePreview(m.currentObjective)
+			if m.currentCommission != nil {
+				m.commissionPreview = formatCommissionPreview(m.currentCommission)
 			}
 		}
 
@@ -260,11 +269,11 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.guildError = msg.Error
 			m.proclamation = "The craftsmen failed to refine the documents: " + msg.Error.Error()
 		} else {
-			m.proclamation = "The documents have been skillfully refined by our master craftsmen."
+			m.proclamation = "The documents have been skillfully refined by our artisans."
 			// Update previews with new content
 			// This would update aiDocsPreview and specsPreview
 		}
-
+		
 	case MasterSuggestionMsg:
 		// Handle suggestions from the Guild Master
 		if !msg.Success {
@@ -276,7 +285,7 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.viewport.SetContent(fmt.Sprintf("Guild Master's Wisdom:\n\n%s", msg.Suggestions))
 			m.chamberState = statePreview
 		}
-
+		
 	case ObjectiveReadyMsg:
 		// Handle marking objective as ready
 		if !msg.Success {
@@ -286,39 +295,39 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.readyForMaster = true
 			m.proclamation = "The work has been sealed with the Guild's mark of approval!"
 		}
-
+		
 	case ObjectiveLoadedMsg:
 		// Handle loading an objective
 		if !msg.Success {
 			m.guildError = msg.Error
 			m.proclamation = "The objective scroll could not be retrieved: " + msg.Error.Error()
 		} else {
-			m.objectivePreview = msg.Objective
+			m.commissionPreview = msg.Commission
 			m.proclamation = "The objective scroll has been unfurled before you."
 			// Update the view with the objective content
-			m.viewport.SetContent(msg.Objective)
+			m.viewport.SetContent(msg.Commission)
 		}
-
+		
 	case CommandMsg:
 		// Handle command execution results
 		// Parse the command and execute appropriate action
 		// This would be a more complex implementation based on command parsing
 	}
-
+	
 	// Always update active components based on state
 	switch m.chamberState {
 	case stateContext, stateCreating:
 		m.scribe, cmd = m.scribe.Update(msg)
 		cmds = append(cmds, cmd)
-
+		
 	case stateCommands:
 		m.parchment, cmd = m.parchment.Update(msg)
 		cmds = append(cmds, cmd)
-
+		
 	case statePreview:
 		m.viewport, cmd = m.viewport.Update(msg)
 		cmds = append(cmds, cmd)
-
+		
 	case stateDashboard:
 		m.ledger, cmd = m.ledger.Update(msg)
 		cmds = append(cmds, cmd)
@@ -332,11 +341,29 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // addContextCmd creates a command to add context to the objective
 func addContextCmd(m ObjectiveChamber, content string) tea.Cmd {
 	return func() tea.Msg {
-		// In a real implementation, this would call the objective planner
-		// to add context to the objective through the Manager
-		// err := m.planner.AddContext(content)
+		// If planner is available, use it
+		if m.planner != nil && m.planner.GetSession().Commission != nil {
+			// Create a context for the operation
+			ctx := context.Background()
 
-		// For now, we're just mocking the success
+			// Add context to the objective
+			err := m.planner.AddContext(ctx, content)
+			if err != nil {
+				return ContextCraftedMsg{
+					Content: content,
+					Success: false,
+					Error:   err,
+				}
+			}
+
+			return ContextCraftedMsg{
+				Content: content,
+				Success: true,
+				Error:   nil,
+			}
+		}
+
+		// Fallback to mock behavior if planner not available
 		return ContextCraftedMsg{
 			Content: content,
 			Success: true,
@@ -348,11 +375,27 @@ func addContextCmd(m ObjectiveChamber, content string) tea.Cmd {
 // generateDocumentsCmd creates a command to regenerate documents
 func generateDocumentsCmd(m ObjectiveChamber) tea.Cmd {
 	return func() tea.Msg {
-		// In a real implementation, this would call the objective planner
-		// to regenerate the documents
-		// err := m.planner.Regenerate()
+		// If planner is available, use it
+		if m.planner != nil && m.planner.GetSession().Commission != nil {
+			// Create a context for the operation
+			ctx := context.Background()
 
-		// For now, we're just mocking the success
+			// Regenerate documents
+			err := m.planner.Regenerate(ctx)
+			if err != nil {
+				return DocumentRefiningMsg{
+					Success: false,
+					Error:   err,
+				}
+			}
+
+			return DocumentRefiningMsg{
+				Success: true,
+				Error:   nil,
+			}
+		}
+
+		// Fallback to mock behavior if planner not available
 		return DocumentRefiningMsg{
 			Success: true,
 			Error:   nil,
@@ -363,10 +406,29 @@ func generateDocumentsCmd(m ObjectiveChamber) tea.Cmd {
 // requestSuggestionsCmd creates a command to get suggestions for the objective
 func requestSuggestionsCmd(m ObjectiveChamber) tea.Cmd {
 	return func() tea.Msg {
-		// In a real implementation, this would call the objective generator
-		// to get suggestions for improvement
+		// If planner is available, use it
+		if m.planner != nil && m.planner.GetSession().Commission != nil {
+			// Create a context for the operation
+			ctx := context.Background()
 
-		// Mock suggestion for now
+			// Get suggestions
+			suggestions, err := m.planner.GetSuggestions(ctx)
+			if err != nil {
+				return MasterSuggestionMsg{
+					Suggestions: "",
+					Success:     false,
+					Error:       err,
+				}
+			}
+
+			return MasterSuggestionMsg{
+				Suggestions: suggestions,
+				Success:     true,
+				Error:       nil,
+			}
+		}
+
+		// Fallback to mock behavior if planner not available
 		sampleSuggestions := `Consider the following improvements to your objective:
 
 1. Add more specific success criteria to the Requirements section
@@ -385,10 +447,27 @@ func requestSuggestionsCmd(m ObjectiveChamber) tea.Cmd {
 // markObjectiveReadyCmd creates a command to mark the objective as ready
 func markObjectiveReadyCmd(m ObjectiveChamber) tea.Cmd {
 	return func() tea.Msg {
-		// In a real implementation, this would call the objective manager
-		// to mark the objective as ready
+		// If planner is available, use it
+		if m.planner != nil && m.planner.GetSession().Commission != nil {
+			// Create a context for the operation
+			ctx := context.Background()
 
-		// For now, we're just mocking the success
+			// Mark objective as ready
+			err := m.planner.MarkReady(ctx)
+			if err != nil {
+				return ObjectiveReadyMsg{
+					Success: false,
+					Error:   err,
+				}
+			}
+
+			return ObjectiveReadyMsg{
+				Success: true,
+				Error:   nil,
+			}
+		}
+
+		// Fallback to mock behavior if planner not available
 		return ObjectiveReadyMsg{
 			Success: true,
 			Error:   nil,
@@ -399,11 +478,79 @@ func markObjectiveReadyCmd(m ObjectiveChamber) tea.Cmd {
 // loadObjectivesCmd creates a command to load all objectives for the dashboard
 func loadObjectivesCmd(m ObjectiveChamber) tea.Cmd {
 	return func() tea.Msg {
-		// In a real implementation, this would load all objectives
-		// and populate the ledger list
+		// If objective manager is available, use it
+		if m.commissionManager != nil {
+			// Create a context for the operation
+			ctx := context.Background()
 
-		// TODO: Implement with real objective loading
+			// List all objectives
+			commissions, err := m.commissionManager.ListCommissions(ctx)
+			if err != nil {
+				return nil // Handle error
+			}
 
+			// Convert commissions to list items
+			items := make([]list.Item, 0, len(commissions))
+			for _, obj := range commissions {
+				items = append(items, components.ObjectiveItem{
+					ID:          obj.ID,
+					Title:       obj.Title,
+					Status:      string(obj.Status),
+					Path:        obj.FilePath,
+					Iterations:  obj.Iteration,
+					CreatedAt:   obj.CreatedAt,
+					ModifiedAt:  obj.UpdatedAt,
+					Tags:        obj.Tags,
+					Completion:  obj.Completion,
+					Description: obj.Description,
+				})
+			}
+
+			// Update the list
+			m.ledger.SetItems(items)
+			return nil
+		}
+
+		// Fallback to mock data if manager not available
+		items := []list.Item{
+			components.ObjectiveItem{
+				ID:          "mock-1",
+				Title:       "Build a RESTful API service",
+				Status:      "in_progress",
+				Path:        "/objectives/api-service.md",
+				Iterations:  3,
+				CreatedAt:   time.Now().Add(-72 * time.Hour),
+				ModifiedAt:  time.Now().Add(-24 * time.Hour),
+				Tags:        []string{"api", "backend"},
+				Completion:  0.7,
+				Description: "Create a RESTful API service for the application",
+			},
+			components.ObjectiveItem{
+				ID:          "mock-2",
+				Title:       "Design user authentication system",
+				Status:      "draft",
+				Path:        "/objectives/auth-system.md",
+				Iterations:  1,
+				CreatedAt:   time.Now().Add(-48 * time.Hour),
+				ModifiedAt:  time.Now().Add(-48 * time.Hour),
+				Tags:        []string{"auth", "security"},
+				Completion:  0.3,
+				Description: "Design a secure user authentication system",
+			},
+			components.ObjectiveItem{
+				ID:          "mock-3",
+				Title:       "Implement database schema",
+				Status:      "completed",
+				Path:        "/objectives/db-schema.md",
+				Iterations:  5,
+				CreatedAt:   time.Now().Add(-96 * time.Hour),
+				ModifiedAt:  time.Now().Add(-12 * time.Hour),
+				Tags:        []string{"database", "schema"},
+				Completion:  1.0,
+				Description: "Design and implement the database schema",
+			},
+		}
+		m.ledger.SetItems(items)
 		return nil
 	}
 }
@@ -411,10 +558,41 @@ func loadObjectivesCmd(m ObjectiveChamber) tea.Cmd {
 // createObjectiveCmd creates a command to create a new objective
 func createObjectiveCmd(m ObjectiveChamber, description string) tea.Cmd {
 	return func() tea.Msg {
-		// In a real implementation, this would call the objective generator
-		// to create a new objective from the description
+		// If planner is available, use it
+		if m.planner != nil {
+			// Create a context for the operation
+			ctx := context.Background()
 
-		// For demonstration, create a mock objective content
+			// Create objective
+			err := m.planner.CreateObjective(ctx, description)
+			if err != nil {
+				return ObjectiveLoadedMsg{
+					Commission: "",
+					Success:    false,
+					Error:     err,
+				}
+			}
+
+			// Get the objective content
+			session := m.planner.GetSession()
+			if session.Commission != nil {
+				objectiveContent := ""
+				if session.Commission.Content != "" {
+					objectiveContent = session.Commission.Content
+				} else {
+					// Format the content if it's not available
+					objectiveContent = formatCommissionContent(session.Commission)
+				}
+
+				return ObjectiveLoadedMsg{
+					Commission: objectiveContent,
+					Success:   true,
+					Error:     nil,
+				}
+			}
+		}
+
+		// Fallback to mock behavior if planner not available
 		objectiveContent := fmt.Sprintf(`# 🧠 Goal
 
 %s
@@ -440,11 +618,63 @@ This objective was created in the Guild Hall.
 `, description)
 
 		return ObjectiveLoadedMsg{
-			Objective: objectiveContent,
+			Commission: objectiveContent,
 			Success:   true,
 			Error:     nil,
 		}
 	}
+}
+
+// Helper function to format objective content
+func formatCommissionContent(obj *commissionpkg.Commission) string {
+	if obj == nil {
+		return "No objective available"
+	}
+
+	content := fmt.Sprintf(`# 🧠 Goal
+
+%s
+
+# 📂 Context
+
+%s
+
+# 🔧 Requirements
+
+`, obj.Goal, obj.Description)
+
+	// Add requirements
+	if len(obj.Requirements) > 0 {
+		for _, req := range obj.Requirements {
+			content += fmt.Sprintf("- %s\n", req)
+		}
+	} else {
+		content += "- No requirements defined yet\n"
+	}
+
+	content += "\n# 📌 Tags\n\n"
+
+	// Add tags
+	if len(obj.Tags) > 0 {
+		for _, tag := range obj.Tags {
+			content += fmt.Sprintf("- %s\n", tag)
+		}
+	} else {
+		content += "- No tags defined yet\n"
+	}
+
+	content += "\n# 🔗 Related\n\n"
+
+	// Add related
+	if len(obj.Related) > 0 {
+		for _, rel := range obj.Related {
+			content += fmt.Sprintf("- %s\n", rel)
+		}
+	} else {
+		content += "- None yet\n"
+	}
+
+	return content
 }
 
 // executeCommandCmd creates a command to execute a command string
@@ -460,6 +690,7 @@ func executeCommandCmd(m ObjectiveChamber, command string) tea.Cmd {
 		cmd := parts[0]
 		args := parts[1:]
 
+		// Handle built-in UI commands
 		switch cmd {
 		case "add-context", "craft":
 			if len(args) > 0 {
@@ -476,7 +707,114 @@ func executeCommandCmd(m ObjectiveChamber, command string) tea.Cmd {
 		case "ready":
 			return markObjectiveReadyCmd(m)()
 
-		// Add other commands as needed
+		case "list":
+			// Switch to dashboard view which shows the objective list
+			m.chamberState = stateDashboard
+			return loadObjectivesCmd(m)()
+
+		case "create":
+			// If arguments provided, create objective from them
+			if len(args) > 0 {
+				description := strings.Join(args, " ")
+				return createObjectiveCmd(m, description)()
+			}
+			// Otherwise switch to create view
+			m.chamberState = stateCreating
+			m.scribe.Focus()
+			m.proclamation = "Describe your new objective..."
+			return nil
+
+		case "help":
+			// Show help view and command reference
+			m.helpScroll.ShowAll = true
+
+			// Also show command reference in viewport
+			m.viewport.SetContent(availableCommands)
+			m.chamberState = statePreview
+			return nil
+
+		case "view":
+			// If path provided, attempt to load objective
+			if len(args) > 0 && m.commissionManager != nil {
+				path := args[0]
+				ctx := context.Background()
+
+				// Try to load the objective
+				obj, err := m.commissionManager.LoadCommissionFromFile(ctx, path)
+				if err != nil {
+					return ObjectiveLoadedMsg{
+						Commission: "",
+						Success:   false,
+						Error:     err,
+					}
+				}
+
+				// If planner exists, set up the planning session
+				if m.planner != nil {
+					err := m.planner.SetCommission(ctx, obj.ID)
+					if err != nil {
+						return ObjectiveLoadedMsg{
+							Commission: "",
+							Success:   false,
+							Error:     err,
+						}
+					}
+				}
+
+				m.currentCommission = obj
+				content := ""
+				if obj.Content != "" {
+					content = obj.Content
+				} else {
+					content = formatCommissionContent(obj)
+				}
+
+				return ObjectiveLoadedMsg{
+					Commission: content,
+					Success:   true,
+					Error:     nil,
+				}
+			}
+			return nil
+
+		// Guild CLI passthrough commands - these will run the actual CLI commands as processes
+		case "exec":
+			// Format: exec <subcommand> [args...]
+			if len(args) > 0 {
+				return executeExternalCommandCmd(strings.Join(args, " "))()
+			}
+
+		// Direct subcommand passthrough
+		case "list-all", "create-obj", "view-obj", "agent":
+			// These are direct passthroughs to guild CLI commands
+			// Construct the command based on the UI command
+			var cliCmd string
+			switch cmd {
+			case "list-all":
+				cliCmd = "objective list"
+			case "create-obj":
+				if len(args) > 0 {
+					cliCmd = "objective create " + strings.Join(args, " ")
+				} else {
+					cliCmd = "objective create"
+				}
+			case "view-obj":
+				if len(args) > 0 {
+					cliCmd = "objective view " + strings.Join(args, " ")
+				} else {
+					cliCmd = "objective view"
+				}
+			case "agent":
+				if len(args) > 0 {
+					cliCmd = "agent " + strings.Join(args, " ")
+				} else {
+					cliCmd = "agent"
+				}
+			}
+
+			if cliCmd != "" {
+				return executeExternalCommandCmd(cliCmd)()
+			}
 		}
 
 		return nil
@@ -484,16 +822,16 @@ func executeCommandCmd(m ObjectiveChamber, command string) tea.Cmd {
 }
 
 // Helper methods for update...
-func formatObjectivePreview(obj *objective.Objective) string {
+func formatCommissionPreview(obj *commissionpkg.Commission) string {
 	// Create a formatted preview of the objective
 	// This would format the objective details into a nice display
 	// using actual objective data
-
+	
 	// Mock implementation for now
 	if obj == nil {
 		return "No objective loaded"
 	}
-
+	
 	return fmt.Sprintf(`# %s
 
 Goal: %s
@@ -502,11 +840,63 @@ Status: %s
 Iterations: %d
 
 Tags: %s
-`,
+`, 
 	obj.Title,
 	obj.Description,
 	obj.Status,
-	obj.Iterations,
+	obj.Iteration,
 	strings.Join(obj.Tags, ", "),
 	)
+}
+// init initializes variables needed by this package
+func init() {
+	// Initialize command reference
+	availableCommands = `
+Guild Hall Command Reference:
+
+UI Commands:
+  help                   - Show this guidance
+  create [description]   - Create a new objective
+  view [path]            - View an objective by path
+  list                   - List all objectives
+  add-context [text]     - Add context to current objective
+  regenerate             - Regenerate documents
+  suggest                - Get improvement suggestions
+  ready                  - Mark objective as ready
+
+CLI Passthrough:
+  exec [command]         - Execute any guild command
+  list-all               - List all objectives (CLI)
+  create-obj [desc]      - Create objective (CLI)
+  view-obj [id]          - View objective (CLI)
+  agent [subcommand]     - Run agent commands
+
+Use ctrl+enter to submit in text areas.
+`
+}
+
+// executeExternalCommandCmd creates a command to execute an external Guild CLI command
+func executeExternalCommandCmd(cmdStr string) tea.Cmd {
+	return func() tea.Msg {
+		// Execute the external command
+		result := components.ExecuteExternalCommand(cmdStr)
+		
+		// Format the output for display
+		outputMsg := fmt.Sprintf("Command: guild %s\n\n", cmdStr)
+		if result.Success {
+			outputMsg += fmt.Sprintf("Success! Output:\n%s", result.Output)
+		} else {
+			outputMsg += fmt.Sprintf("Error (code %d):\n%s\n\nOutput:\n%s", 
+				result.ExitCode,
+				result.Error.Error(),
+				result.Output)
+		}
+		
+		// Return a message that will display this output in the viewport
+		return ObjectiveLoadedMsg{
+			Commission: outputMsg,
+			Success:   true,
+			Error:     nil,
+		}
+	}
 }

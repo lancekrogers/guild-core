@@ -26,18 +26,18 @@ func (p *Planner) GetSession() *PlanningSession {
 	return p.session
 }
 
-// SetObjective sets the objective for planning
-func (p *Planner) SetObjective(ctx context.Context, objectiveID string) error {
-	// Get the objective
-	obj, err := p.manager.GetObjective(ctx, objectiveID)
+// SetCommission sets the commission for planning
+func (p *Planner) SetCommission(ctx context.Context, commissionID string) error {
+	// Get the commission
+	obj, err := p.manager.GetCommission(ctx, commissionID)
 	if err != nil {
-		return fmt.Errorf("failed to get objective: %w", err)
+		return fmt.Errorf("failed to get commission: %w", err)
 	}
 
-	// Create a new session with this objective
+	// Create a new session with this commission
 	p.session = NewPlanningSession()
 	p.session.Commission = obj
-	p.session.AddActivityLog("Objective loaded: " + obj.Title)
+	p.session.AddActivityLog("Commission loaded: " + obj.Title)
 
 	return nil
 }
