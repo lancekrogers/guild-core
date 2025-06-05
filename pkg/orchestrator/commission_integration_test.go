@@ -358,7 +358,7 @@ func setupTestRegistry(t *testing.T) registry.ComponentRegistry {
 
 	// Mock provider
 	mockProvider := mock.NewProvider()
-	mockProvider.SetResponse("", `- TASK-001: Test task`)
+	mockProvider.SetDefaultResponse(`Create a REST API for user management with proper authentication and CRUD operations`)
 	require.NoError(t, reg.Providers().RegisterProvider("mock", mockProvider))
 	reg.Providers().SetDefaultProvider("mock")
 

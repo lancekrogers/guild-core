@@ -40,7 +40,8 @@ func (r *SQLiteTaskRepository) CreateTask(ctx context.Context, task *Task) error
 	storyPoints := int64(task.StoryPoints)
 	err := r.database.Queries().CreateTask(ctx, db.CreateTaskParams{
 		ID:           task.ID,
-		BoardID:      task.BoardID,           // Use BoardID (nullable)
+		CommissionID: task.CommissionID,     // Required commission ID
+		BoardID:      task.BoardID,          // Use BoardID (nullable)
 		Title:        task.Title,
 		Description:  task.Description,
 		Status:       task.Status,
@@ -104,6 +105,12 @@ func (r *SQLiteTaskRepository) UpdateTask(ctx context.Context, task *Task) error
 
 // DeleteTask removes a task by ID
 func (r *SQLiteTaskRepository) DeleteTask(ctx context.Context, id string) error {
+	// Delete task events first to avoid foreign key constraint issues
+	if err := r.database.Queries().DeleteTaskEvents(ctx, id); err != nil {
+		return fmt.Errorf("failed to delete task events: %w", err)
+	}
+	
+	// Then delete the task
 	if err := r.database.Queries().DeleteTask(ctx, id); err != nil {
 		return fmt.Errorf("failed to delete task: %w", err)
 	}

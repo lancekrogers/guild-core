@@ -93,3 +93,22 @@ func (r *DefaultStorageRegistry) SetMemoryStore(store MemoryStore) {
 	defer r.mu.Unlock()
 	r.memoryStore = store
 }
+
+// Kanban repository methods - placeholder implementations for the default registry
+// These return nil since the default registry doesn't support kanban operations
+
+func (r *DefaultStorageRegistry) GetBoardRepository() KanbanBoardRepository {
+	return nil
+}
+
+func (r *DefaultStorageRegistry) GetKanbanTaskRepository() KanbanTaskRepository {
+	return nil
+}
+
+func (r *DefaultStorageRegistry) GetKanbanCampaignRepository() KanbanCampaignRepository {
+	return nil
+}
+
+func (r *DefaultStorageRegistry) GetKanbanCommissionRepository() KanbanCommissionRepository {
+	return nil
+}

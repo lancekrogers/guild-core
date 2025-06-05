@@ -128,15 +128,17 @@ func createTestSchema(database *Database) error {
 
 	CREATE TABLE tasks (
 		id TEXT PRIMARY KEY,
-		board_id TEXT NOT NULL REFERENCES boards(id),
+		commission_id TEXT NOT NULL REFERENCES commissions(id),
 		assigned_agent_id TEXT REFERENCES agents(id),
 		title TEXT NOT NULL,
 		description TEXT,
 		status TEXT NOT NULL DEFAULT 'todo' CHECK (status IN ('todo', 'in_progress', 'blocked', 'pending_review', 'done')),
+		column TEXT NOT NULL DEFAULT 'backlog',
 		story_points INTEGER DEFAULT 1,
 		metadata JSON,
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		board_id TEXT REFERENCES boards(id)
 	);
 
 	CREATE TABLE task_events (
@@ -151,6 +153,7 @@ func createTestSchema(database *Database) error {
 	);
 
 	CREATE INDEX idx_tasks_status ON tasks(status);
+	CREATE INDEX idx_tasks_commission ON tasks(commission_id);
 	CREATE INDEX idx_tasks_board ON tasks(board_id);
 	CREATE INDEX idx_tasks_agent ON tasks(assigned_agent_id);
 	CREATE INDEX idx_task_events_task ON task_events(task_id);

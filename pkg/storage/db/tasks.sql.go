@@ -27,23 +27,25 @@ func (q *Queries) AssignTaskToAgent(ctx context.Context, arg AssignTaskToAgentPa
 }
 
 const createTask = `-- name: CreateTask :exec
-INSERT INTO tasks (id, board_id, title, description, status, story_points, metadata)
-VALUES (?, ?, ?, ?, ?, ?, ?)
+INSERT INTO tasks (id, commission_id, board_id, title, description, status, story_points, metadata)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateTaskParams struct {
-	ID          string      `json:"id"`
-	BoardID     *string     `json:"board_id"`
-	Title       string      `json:"title"`
-	Description *string     `json:"description"`
-	Status      string      `json:"status"`
-	StoryPoints *int64      `json:"story_points"`
-	Metadata    interface{} `json:"metadata"`
+	ID           string      `json:"id"`
+	CommissionID string      `json:"commission_id"`
+	BoardID      *string     `json:"board_id"`
+	Title        string      `json:"title"`
+	Description  *string     `json:"description"`
+	Status       string      `json:"status"`
+	StoryPoints  *int64      `json:"story_points"`
+	Metadata     interface{} `json:"metadata"`
 }
 
 func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) error {
 	_, err := q.db.ExecContext(ctx, createTask,
 		arg.ID,
+		arg.CommissionID,
 		arg.BoardID,
 		arg.Title,
 		arg.Description,
@@ -60,6 +62,15 @@ DELETE FROM tasks WHERE id = ?
 
 func (q *Queries) DeleteTask(ctx context.Context, id string) error {
 	_, err := q.db.ExecContext(ctx, deleteTask, id)
+	return err
+}
+
+const deleteTaskEvents = `-- name: DeleteTaskEvents :exec  
+DELETE FROM task_events WHERE task_id = ?
+`
+
+func (q *Queries) DeleteTaskEvents(ctx context.Context, taskID string) error {
+	_, err := q.db.ExecContext(ctx, deleteTaskEvents, taskID)
 	return err
 }
 

@@ -30,6 +30,12 @@ type DefaultComponentRegistry struct {
 type SQLiteStorageRegistry struct {
 	registry storage.StorageRegistry
 	memoryStore MemoryStore
+	
+	// Kanban adapters to bridge interface{} expectations
+	taskAdapter       *storage.KanbanTaskRepositoryAdapter
+	boardAdapter      *storage.KanbanBoardRepositoryAdapter
+	campaignAdapter   *storage.KanbanCampaignRepositoryAdapter
+	commissionAdapter *storage.KanbanCommissionRepositoryAdapter
 }
 
 func (s *SQLiteStorageRegistry) RegisterTaskRepository(repo TaskRepository) error {
@@ -38,7 +44,7 @@ func (s *SQLiteStorageRegistry) RegisterTaskRepository(repo TaskRepository) erro
 }
 
 func (s *SQLiteStorageRegistry) GetTaskRepository() TaskRepository {
-	// For now, return nil - the kanban package uses the storage directly via type assertions
+	// Return nil for the interface - kanban uses the adapter via interface calls
 	return nil
 }
 
@@ -83,6 +89,36 @@ func (s *SQLiteStorageRegistry) SetMemoryStore(store MemoryStore) {
 // GetStorageRegistry returns the underlying storage.StorageRegistry for components that need it
 func (s *SQLiteStorageRegistry) GetStorageRegistry() storage.StorageRegistry {
 	return s.registry
+}
+
+// Kanban repository adapter methods
+func (s *SQLiteStorageRegistry) GetBoardRepository() KanbanBoardRepository {
+	return s.boardAdapter
+}
+
+func (s *SQLiteStorageRegistry) GetKanbanTaskRepository() KanbanTaskRepository {
+	return s.taskAdapter
+}
+
+func (s *SQLiteStorageRegistry) GetKanbanCampaignRepository() KanbanCampaignRepository {
+	return s.campaignAdapter
+}
+
+func (s *SQLiteStorageRegistry) GetKanbanCommissionRepository() KanbanCommissionRepository {
+	return s.commissionAdapter
+}
+
+// SetRegistry sets the underlying storage registry (for testing)
+func (s *SQLiteStorageRegistry) SetRegistry(registry storage.StorageRegistry) {
+	s.registry = registry
+}
+
+// SetAdapters sets the kanban adapters (for testing)
+func (s *SQLiteStorageRegistry) SetAdapters(taskAdapter *storage.KanbanTaskRepositoryAdapter, boardAdapter *storage.KanbanBoardRepositoryAdapter, campaignAdapter *storage.KanbanCampaignRepositoryAdapter, commissionAdapter *storage.KanbanCommissionRepositoryAdapter) {
+	s.taskAdapter = taskAdapter
+	s.boardAdapter = boardAdapter
+	s.campaignAdapter = campaignAdapter
+	s.commissionAdapter = commissionAdapter
 }
 
 // NewComponentRegistry creates a new ComponentRegistry instance
@@ -352,9 +388,19 @@ func (r *DefaultComponentRegistry) initializeSQLiteStorage(dbPath string) error 
 	// Replace the placeholder storage registry with the real one
 	// Cast to storage.StorageRegistry first, then wrap with our own interface
 	if sqliteReg, ok := storageReg.(storage.StorageRegistry); ok {
+		// Create kanban adapters
+		taskAdapter := storage.NewKanbanTaskRepositoryAdapter(sqliteReg.GetTaskRepository())
+		boardAdapter := storage.NewKanbanBoardRepositoryAdapter(sqliteReg.GetBoardRepository())
+		campaignAdapter := storage.NewKanbanCampaignRepositoryAdapter(sqliteReg.GetCampaignRepository())
+		commissionAdapter := storage.NewKanbanCommissionRepositoryAdapter(sqliteReg.GetCommissionRepository())
+		
 		r.storageRegistry = &SQLiteStorageRegistry{
 			registry: sqliteReg,
 			memoryStore: memoryStoreAdapter.(MemoryStore),
+			taskAdapter: taskAdapter,
+			boardAdapter: boardAdapter,
+			campaignAdapter: campaignAdapter,
+			commissionAdapter: commissionAdapter,
 		}
 	} else {
 		return fmt.Errorf("unexpected storage registry type")

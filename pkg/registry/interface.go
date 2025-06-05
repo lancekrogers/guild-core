@@ -198,6 +198,13 @@ type StorageRegistry interface {
 	
 	// GetMemoryStore returns the configured memory store adapter
 	GetMemoryStore() MemoryStore
+	
+	// Kanban-specific repository interfaces that handle interface{} parameters
+	// These are used by the kanban package to work with SQLite storage
+	GetBoardRepository() KanbanBoardRepository
+	GetKanbanTaskRepository() KanbanTaskRepository
+	GetKanbanCampaignRepository() KanbanCampaignRepository
+	GetKanbanCommissionRepository() KanbanCommissionRepository
 }
 
 // ProjectRegistry manages project detection and context.
@@ -493,6 +500,34 @@ type VectorMatch struct {
 	ID       string                 `json:"id"`
 	Score    float32                `json:"score"`
 	Metadata map[string]interface{} `json:"metadata"`
+}
+
+// Kanban-specific repository interfaces that handle interface{} parameters
+// These bridge the gap between kanban's interface{} expectations and storage's typed interfaces
+
+type KanbanTaskRepository interface {
+	CreateTask(ctx context.Context, task interface{}) error
+	UpdateTask(ctx context.Context, task interface{}) error
+	DeleteTask(ctx context.Context, id string) error
+	ListTasksByBoard(ctx context.Context, boardID string) ([]interface{}, error)
+	RecordTaskEvent(ctx context.Context, event interface{}) error
+}
+
+type KanbanBoardRepository interface {
+	CreateBoard(ctx context.Context, board interface{}) error
+	GetBoard(ctx context.Context, id string) (interface{}, error)
+	UpdateBoard(ctx context.Context, board interface{}) error
+	DeleteBoard(ctx context.Context, id string) error
+	ListBoards(ctx context.Context) ([]interface{}, error)
+}
+
+type KanbanCampaignRepository interface {
+	CreateCampaign(ctx context.Context, campaign interface{}) error
+}
+
+type KanbanCommissionRepository interface {
+	CreateCommission(ctx context.Context, commission interface{}) error
+	GetCommission(ctx context.Context, id string) (interface{}, error)
 }
 
 // Common errors

@@ -1,6 +1,6 @@
 -- name: CreateTask :exec
-INSERT INTO tasks (id, board_id, title, description, status, story_points, metadata)
-VALUES (?, ?, ?, ?, ?, ?, ?);
+INSERT INTO tasks (id, commission_id, board_id, title, description, status, story_points, metadata)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
 -- name: GetTask :one
 SELECT * FROM tasks WHERE id = ?;
@@ -49,6 +49,9 @@ WHERE id = ?;
 
 -- name: DeleteTask :exec
 DELETE FROM tasks WHERE id = ?;
+
+-- name: DeleteTaskEvents :exec  
+DELETE FROM task_events WHERE task_id = ?;
 
 -- name: GetAgentWorkload :many
 SELECT 

@@ -17,10 +17,10 @@ type ComponentRegistry interface {
 }
 
 type StorageRegistry interface {
-	GetCampaignRepository() CampaignRepository
-	GetCommissionRepository() CommissionRepository
+	GetKanbanCampaignRepository() CampaignRepository
+	GetKanbanCommissionRepository() CommissionRepository
 	GetBoardRepository() BoardRepository
-	GetTaskRepository() TaskRepository
+	GetKanbanTaskRepository() TaskRepository
 	GetMemoryStore() MemoryStore
 }
 
@@ -50,6 +50,7 @@ type BoardRepository interface {
 
 type TaskRepository interface {
 	CreateTask(ctx context.Context, task interface{}) error
+	UpdateTask(ctx context.Context, task interface{}) error
 	DeleteTask(ctx context.Context, id string) error
 	ListTasksByBoard(ctx context.Context, boardID string) ([]interface{}, error)
 	RecordTaskEvent(ctx context.Context, event interface{}) error
@@ -148,7 +149,7 @@ func (b *Board) saveToSQLite(ctx context.Context) error {
 		return fmt.Errorf("storage registry not available")
 	}
 
-	campaignRepo := storageReg.GetCampaignRepository()
+	campaignRepo := storageReg.GetKanbanCampaignRepository()
 	if campaignRepo == nil {
 		return fmt.Errorf("campaign repository not available")
 	}
@@ -344,11 +345,18 @@ func (b *Board) Save(ctx context.Context) error {
 		return fmt.Errorf("board repository not available")
 	}
 	
+	// Ensure commission exists first
+	commissionID := b.ID + "-commission" // Generate commission ID based on board ID
+	campaignID := b.getCampaignID()
+	if err := b.ensureCommissionExists(ctx, commissionID, campaignID); err != nil {
+		return fmt.Errorf("failed to ensure commission exists: %w", err)
+	}
+	
 	// Convert kanban.Board to storage.Board
 	description := b.Description
 	storageBoard := &storage.Board{
 		ID:           b.ID,
-		CommissionID: "default-commission", // TODO: Get from context
+		CommissionID: commissionID,
 		Name:         b.Name,
 		Description:  &description,
 		Status:       "active",
@@ -410,7 +418,7 @@ func (b *Board) createTaskSQLite(ctx context.Context, title, description string)
 		return nil, fmt.Errorf("storage registry not available")
 	}
 
-	taskRepo := storageReg.GetTaskRepository()
+	taskRepo := storageReg.GetKanbanTaskRepository()
 	if taskRepo == nil {
 		return nil, fmt.Errorf("task repository not available")
 	}
@@ -438,10 +446,12 @@ func (b *Board) createTaskSQLite(ctx context.Context, title, description string)
 		assignedAgent = &task.AssignedTo
 	}
 
-	// Convert to storage task format using BoardID instead of CommissionID
+	// Convert to storage task format with both BoardID and CommissionID for compatibility
+	commissionID := b.ID + "-commission" // Generate commission ID based on board ID
 	storageTask := map[string]interface{}{
 		"ID":              task.ID,
-		"BoardID":         b.ID,           // Use board ID directly
+		"BoardID":         b.ID,           // Use board ID
+		"CommissionID":    commissionID,   // Also set commission ID for compatibility
 		"AssignedAgentID": assignedAgent,
 		"Title":           task.Title,
 		"Description":     &task.Description,
@@ -493,7 +503,7 @@ func (b *Board) ensureBoardExists(ctx context.Context) error {
 
 	// Ensure campaign and commission exist first
 	campaignID := b.getCampaignID()
-	if err := b.ensureCampaignExists(ctx, storageReg.GetCampaignRepository(), campaignID); err != nil {
+	if err := b.ensureCampaignExists(ctx, storageReg.GetKanbanCampaignRepository(), campaignID); err != nil {
 		return fmt.Errorf("failed to ensure campaign exists: %w", err)
 	}
 
@@ -523,7 +533,7 @@ func (b *Board) ensureBoardExists(ctx context.Context) error {
 // ensureCommissionExists creates a commission for the board if it doesn't exist
 func (b *Board) ensureCommissionExists(ctx context.Context, commissionID, campaignID string) error {
 	storageReg := b.registry.Storage()
-	commissionRepo := storageReg.GetCommissionRepository()
+	commissionRepo := storageReg.GetKanbanCommissionRepository()
 	
 	// Try to get existing commission
 	_, err := commissionRepo.GetCommission(ctx, commissionID)
@@ -550,7 +560,7 @@ func (b *Board) ensureCommissionExists(ctx context.Context, commissionID, campai
 // recordTaskEvent records a task event for audit trail
 func (b *Board) recordTaskEvent(ctx context.Context, taskID, eventType, oldValue, newValue, reason string) error {
 	storageReg := b.registry.Storage()
-	taskRepo := storageReg.GetTaskRepository()
+	taskRepo := storageReg.GetKanbanTaskRepository()
 
 	// Create event using proper TaskEvent struct
 	event := &storage.TaskEvent{
@@ -579,24 +589,63 @@ func (b *Board) GetTask(ctx context.Context, taskID string) (*Task, error) {
 
 // getTaskSQLite retrieves a task from SQLite storage
 func (b *Board) getTaskSQLite(ctx context.Context, taskID string) (*Task, error) {
-	// For SQLite mode, we don't currently have a direct task retrieval method
-	// We'll create a simple task object since SQLite tasks are managed differently
-	// This is a compatibility layer for the kanban interface
-	
-	// For now, create a basic task that won't fail ownership validation
-	// TODO: Implement proper SQLite task retrieval when task repository interface is available
-	task := &Task{
-		ID:          taskID,
-		Title:       "SQLite Task",
-		Description: "Task managed by SQLite storage",
-		Status:      StatusTodo,
-		Metadata:    map[string]string{
-			"board_id": b.ID,
-			"storage":  "sqlite",
-		},
+	// Get the storage registry to access the underlying task repository
+	storageReg := b.registry.Storage()
+	if storageReg == nil {
+		return nil, fmt.Errorf("storage registry not available")
 	}
 	
-	return task, nil
+	// Get all tasks for this board and find the matching one
+	taskRepo := storageReg.GetKanbanTaskRepository()
+	if taskRepo == nil {
+		return nil, fmt.Errorf("task repository not available")
+	}
+	
+	// Get all tasks for this board from SQLite
+	taskInterfaces, err := taskRepo.ListTasksByBoard(ctx, b.ID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get tasks for board: %w", err)
+	}
+	
+	// Find the specific task
+	for _, taskInterface := range taskInterfaces {
+		if storageTask, ok := taskInterface.(*storage.Task); ok && storageTask.ID == taskID {
+			// Convert storage.Task back to kanban.Task
+			task := &Task{
+				ID:          storageTask.ID,
+				Title:       storageTask.Title,
+				Description: *storageTask.Description,
+				Status:      b.mapStorageStatusToKanbanStatus(storageTask.Status),
+				CreatedAt:   storageTask.CreatedAt,
+				UpdatedAt:   storageTask.UpdatedAt,
+				Metadata:    make(map[string]string),
+			}
+			
+			// Set assigned agent if available
+			if storageTask.AssignedAgentID != nil {
+				task.AssignedTo = *storageTask.AssignedAgentID
+			}
+			
+			// Add board ID to metadata for compatibility
+			task.Metadata["board_id"] = b.ID
+			
+			return task, nil
+		}
+	}
+	
+	return nil, fmt.Errorf("task not found: %s", taskID)
+}
+
+// mapStorageStatusToKanbanStatus maps database status values back to kanban status values
+func (b *Board) mapStorageStatusToKanbanStatus(storageStatus string) TaskStatus {
+	switch storageStatus {
+	case "pending_review":
+		return StatusReadyForReview
+	case "todo", "in_progress", "blocked", "done":
+		return TaskStatus(storageStatus)
+	default:
+		return StatusTodo // Default fallback
+	}
 }
 
 // UpdateTask updates a task on the board
@@ -616,7 +665,7 @@ func (b *Board) updateTaskSQLite(ctx context.Context, task *Task) error {
 		return fmt.Errorf("storage registry not available")
 	}
 
-	taskRepo := storageReg.GetTaskRepository()
+	taskRepo := storageReg.GetKanbanTaskRepository()
 	if taskRepo == nil {
 		return fmt.Errorf("task repository not available")
 	}
@@ -633,10 +682,12 @@ func (b *Board) updateTaskSQLite(ctx context.Context, task *Task) error {
 		assignedAgent = &task.AssignedTo
 	}
 
-	// Convert to storage task format using BoardID
+	// Convert to storage task format with both BoardID and CommissionID for compatibility
+	commissionID := b.ID + "-commission" // Generate commission ID based on board ID
 	storageTask := map[string]interface{}{
 		"ID":              task.ID,
-		"BoardID":         b.ID,           // Use board ID directly
+		"BoardID":         b.ID,           // Use board ID
+		"CommissionID":    commissionID,   // Also set commission ID for compatibility
 		"AssignedAgentID": assignedAgent,
 		"Title":           task.Title,
 		"Description":     &task.Description,
@@ -647,8 +698,8 @@ func (b *Board) updateTaskSQLite(ctx context.Context, task *Task) error {
 		"UpdatedAt":       time.Now().UTC(),
 	}
 
-	// Update in SQLite (CreateTask will handle upsert logic)
-	if err := taskRepo.CreateTask(ctx, storageTask); err != nil {
+	// Update in SQLite using the kanban task repository adapter
+	if err := taskRepo.UpdateTask(ctx, storageTask); err != nil {
 		return fmt.Errorf("failed to update task in SQLite: %w", err)
 	}
 
@@ -682,7 +733,7 @@ func (b *Board) DeleteTask(ctx context.Context, taskID string) error {
 	
 	// Delete the task from SQLite
 	storageReg := b.registry.Storage()
-	taskRepo := storageReg.GetTaskRepository()
+	taskRepo := storageReg.GetKanbanTaskRepository()
 	if taskRepo == nil {
 		return fmt.Errorf("task repository not available")
 	}
@@ -714,7 +765,7 @@ func (b *Board) GetTasksByStatus(ctx context.Context, status TaskStatus) ([]*Tas
 	}
 	
 	storageReg := b.registry.Storage()
-	taskRepo := storageReg.GetTaskRepository()
+	taskRepo := storageReg.GetKanbanTaskRepository()
 	if taskRepo == nil {
 		return nil, fmt.Errorf("task repository not available")
 	}
@@ -775,7 +826,7 @@ func (b *Board) GetAllTasks(ctx context.Context) ([]*Task, error) {
 	}
 	
 	storageReg := b.registry.Storage()
-	taskRepo := storageReg.GetTaskRepository()
+	taskRepo := storageReg.GetKanbanTaskRepository()
 	if taskRepo == nil {
 		return nil, fmt.Errorf("task repository not available")
 	}
