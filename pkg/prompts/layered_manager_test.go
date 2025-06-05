@@ -204,7 +204,6 @@ func TestGuildLayeredManager(t *testing.T) {
 		
 		// Setup expectations
 		store.On("SavePromptLayer", mock.Anything, "session", "session_123", mock.AnythingOfType("[]uint8")).Return(nil)
-		store.On("InvalidatePromptCache", mock.Anything, mock.AnythingOfType("string")).Return(nil)
 		
 		// Execute
 		ctx := context.Background()
@@ -227,16 +226,29 @@ func TestGuildLayeredManager(t *testing.T) {
 		sessionID := "session_123"
 		
 		// Setup expectations for different layers
-		baseManager.On("GetSystemPrompt", mock.Anything, "backend", "default").Return(
-			"Backend role prompt", nil)
-		
 		// Platform layer (default)
 		store.On("GetPromptLayer", mock.Anything, "platform", "default").Return(
-			nil, assert.AnError) // Not found - will use default
+			[]byte{}, assert.AnError) // Not found - will use default
+		
+		// Guild layer (default)
+		store.On("GetPromptLayer", mock.Anything, "guild", "default").Return(
+			[]byte{}, assert.AnError) // Not found - optional
+		
+		// Role layer (backend)
+		store.On("GetPromptLayer", mock.Anything, "role", "backend").Return(
+			[]byte{}, assert.AnError) // Not found - optional
+		
+		// Domain layer (backend:dev)
+		store.On("GetPromptLayer", mock.Anything, "domain", "backend:dev").Return(
+			[]byte{}, assert.AnError) // Not found - optional
 		
 		// Session layer
 		store.On("GetPromptLayer", mock.Anything, "session", "session_123").Return(
 			[]byte(`{"layer":"session","content":"Session preferences","version":1}`), nil)
+		
+		// Turn layer (backend-dev-001:session_123)
+		store.On("GetPromptLayer", mock.Anything, "turn", "backend-dev-001:session_123").Return(
+			[]byte{}, assert.AnError) // Not found - optional
 		
 		// Execute
 		ctx := context.Background()
@@ -316,7 +328,7 @@ func TestGuildLayeredManager(t *testing.T) {
 func TestPromptValidation(t *testing.T) {
 	t.Run("ValidatePrompt_RequiredFields", func(t *testing.T) {
 		// Setup
-		baseManager := &mockManager{}
+		baseManager := &mockManagerWithFormatter{}
 		store := &mockStore{}
 		
 		manager := prompts.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
