@@ -8,6 +8,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/providers"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
 // DefaultComponentRegistry is the default implementation of ComponentRegistry
@@ -72,6 +73,18 @@ func (r *DefaultComponentRegistry) Prompts() *PromptRegistry {
 // Storage returns the storage registry
 func (r *DefaultComponentRegistry) Storage() StorageRegistry {
 	return r.storageRegistry
+}
+
+// SetStorageRegistry sets the storage registry (used for testing)
+func (r *DefaultComponentRegistry) SetStorageRegistry(storageReg StorageRegistry, memoryStore MemoryStore) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.storageRegistry = storageReg
+	
+	// Also set the memory store in the storage registry if it's the default type
+	if defaultStorageReg, ok := r.storageRegistry.(*DefaultStorageRegistry); ok {
+		defaultStorageReg.SetMemoryStore(memoryStore)
+	}
 }
 
 // Orchestrator returns the orchestrator registry
@@ -245,51 +258,48 @@ func (r *DefaultComponentRegistry) initializeStorage(ctx context.Context) error 
 	}
 
 	// Load guild configuration to determine storage backend
-	guildConfig, err := config.LoadGuildConfig(projectCtx.GetRootPath())
+	guildConfig, err := config.LoadGuildConfig((*projectCtx).GetRootPath())
 	if err != nil {
 		// If guild config fails to load, default to SQLite
-		return r.initializeSQLiteStorage(filepath.Join(projectCtx.GetGuildPath(), "guild.db"))
+		return r.initializeSQLiteStorage(filepath.Join((*projectCtx).GetGuildPath(), "guild.db"))
 	}
 
 	// Initialize storage based on configuration
 	if guildConfig.IsUsingSQLite() {
-		dbPath := filepath.Join(projectCtx.GetGuildPath(), guildConfig.GetEffectiveSQLitePath())
+		dbPath := filepath.Join((*projectCtx).GetGuildPath(), guildConfig.GetEffectiveSQLitePath())
 		// Make path relative to guild directory
 		if !filepath.IsAbs(guildConfig.GetEffectiveSQLitePath()) {
-			dbPath = filepath.Join(projectCtx.GetGuildPath(), guildConfig.GetEffectiveSQLitePath())
+			dbPath = filepath.Join((*projectCtx).GetGuildPath(), guildConfig.GetEffectiveSQLitePath())
 		} else {
 			dbPath = guildConfig.GetEffectiveSQLitePath()
 		}
 		return r.initializeSQLiteStorage(dbPath)
 	} else {
 		// BoltDB legacy support
-		dbPath := filepath.Join(projectCtx.GetGuildPath(), guildConfig.GetEffectiveBoltDBPath())
+		dbPath := filepath.Join((*projectCtx).GetGuildPath(), guildConfig.GetEffectiveBoltDBPath())
 		return r.initializeBoltDBStorage(dbPath)
 	}
 }
 
 func (r *DefaultComponentRegistry) initializeSQLiteStorage(dbPath string) error {
-	// Import the storage package dynamically to avoid circular imports
-	// This will need to be implemented as a plugin pattern or using reflection
-	// For now, we'll create a placeholder that shows the intent
+	ctx := context.Background()
 	
-	// TODO: Implement dynamic loading of SQLite storage
-	// The pattern should be:
-	// 1. Create storage.NewDatabase(dbPath)
-	// 2. Run database migrations
-	// 3. Create repository implementations
-	// 4. Register repositories with storage registry
-	// 5. Create SQLiteStoreAdapter
-	// 6. Register adapter as memory store
+	// Initialize SQLite storage using the storage package's initialization function
+	storageReg, memoryStoreAdapter, err := storage.InitializeSQLiteStorageForRegistry(ctx, dbPath)
+	if err != nil {
+		return fmt.Errorf("failed to initialize SQLite storage: %w", err)
+	}
 	
-	_ = dbPath // Suppress unused variable warning
+	// Replace the placeholder storage registry with the real one
+	r.storageRegistry = storageReg.(StorageRegistry)
 	
-	// This is a placeholder - the actual implementation needs to:
-	// - Load storage package without circular imports
-	// - Initialize SQLite database and repositories
-	// - Register everything with the storage registry
+	// Register the SQLite store adapter as the default memory store
+	// This allows existing components that expect memory.Store to work with SQLite
+	if defaultStorageReg, ok := r.storageRegistry.(*DefaultStorageRegistry); ok {
+		defaultStorageReg.SetMemoryStore(memoryStoreAdapter.(MemoryStore))
+	}
 	
-	return fmt.Errorf("SQLite storage initialization not yet implemented - needs plugin pattern to avoid circular imports")
+	return nil
 }
 
 func (r *DefaultComponentRegistry) initializeBoltDBStorage(dbPath string) error {

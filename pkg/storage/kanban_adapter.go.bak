@@ -1,0 +1,256 @@
+package storage
+
+import (
+	"context"
+	"fmt"
+	"time"
+)
+
+// KanbanComponentRegistryAdapter implements the minimal interface needed by the kanban package
+type KanbanComponentRegistryAdapter struct {
+	registry interface{} // StorageRegistry
+	memStore interface{} // MemoryStore
+}
+
+// NewKanbanComponentRegistryAdapter creates an adapter that bridges the storage registry 
+// to the kanban package's minimal interface requirements
+func NewKanbanComponentRegistryAdapter(registry interface{}, memStore interface{}) *KanbanComponentRegistryAdapter {
+	return &KanbanComponentRegistryAdapter{
+		registry: registry,
+		memStore: memStore,
+	}
+}
+
+// GetStorageRegistry returns the underlying storage registry for testing access
+func (k *KanbanComponentRegistryAdapter) GetStorageRegistry() interface{} {
+	return k.registry
+}
+
+// Storage returns a kanban-compatible storage registry
+func (k *KanbanComponentRegistryAdapter) Storage() interface{} {
+	return &KanbanStorageRegistryAdapter{
+		registry: k.registry,
+		memStore: k.memStore,
+	}
+}
+
+// KanbanStorageRegistryAdapter implements the minimal storage registry interface for kanban
+type KanbanStorageRegistryAdapter struct {
+	registry interface{} // StorageRegistry
+	memStore interface{} // MemoryStore
+}
+
+// GetCampaignRepository returns a kanban-compatible campaign repository
+func (k *KanbanStorageRegistryAdapter) GetCampaignRepository() interface{} {
+	return &KanbanCampaignRepositoryAdapter{
+		repo: k.registry.GetCampaignRepository(),
+	}
+}
+
+// GetCommissionRepository returns a kanban-compatible commission repository
+func (k *KanbanStorageRegistryAdapter) GetCommissionRepository() interface{} {
+	return &KanbanCommissionRepositoryAdapter{
+		repo: k.registry.GetCommissionRepository(),
+	}
+}
+
+// GetTaskRepository returns a kanban-compatible task repository
+func (k *KanbanStorageRegistryAdapter) GetTaskRepository() interface{} {
+	return &KanbanTaskRepositoryAdapter{
+		repo: k.registry.GetTaskRepository(),
+	}
+}
+
+// GetMemoryStore returns the memory store
+func (k *KanbanStorageRegistryAdapter) GetMemoryStore() interface{} {
+	return k.memStore
+}
+
+// KanbanCampaignRepositoryAdapter implements the minimal campaign repository interface for kanban
+type KanbanCampaignRepositoryAdapter struct {
+	repo registry.CampaignRepository
+}
+
+// CreateCampaign creates a campaign from a map interface
+func (k *KanbanCampaignRepositoryAdapter) CreateCampaign(ctx context.Context, campaign interface{}) error {
+	// Convert map to registry.Campaign
+	campaignMap, ok := campaign.(map[string]interface{})
+	if !ok {
+		// Already a proper struct, pass through
+		if registryCampaign, ok := campaign.(*registry.Campaign); ok {
+			return k.repo.CreateCampaign(ctx, registryCampaign)
+		}
+		return fmt.Errorf("unsupported campaign type")
+	}
+
+	// Convert map to struct
+	registryCampaign := &registry.Campaign{
+		ID:     campaignMap["ID"].(string),
+		Name:   campaignMap["Name"].(string),
+		Status: campaignMap["Status"].(string),
+	}
+	
+	if createdAt, ok := campaignMap["CreatedAt"]; ok {
+		if t, ok := createdAt.(time.Time); ok {
+			registryCampaign.CreatedAt = t
+		}
+	}
+	
+	if updatedAt, ok := campaignMap["UpdatedAt"]; ok {
+		if t, ok := updatedAt.(time.Time); ok {
+			registryCampaign.UpdatedAt = t
+		}
+	}
+
+	return k.repo.CreateCampaign(ctx, registryCampaign)
+}
+
+// KanbanCommissionRepositoryAdapter implements the minimal commission repository interface for kanban
+type KanbanCommissionRepositoryAdapter struct {
+	repo registry.CommissionRepository
+}
+
+// CreateCommission creates a commission from a map interface
+func (k *KanbanCommissionRepositoryAdapter) CreateCommission(ctx context.Context, commission interface{}) error {
+	// Convert map to registry.Commission
+	commissionMap, ok := commission.(map[string]interface{})
+	if !ok {
+		// Already a proper struct, pass through
+		if registryCommission, ok := commission.(*registry.Commission); ok {
+			return k.repo.CreateCommission(ctx, registryCommission)
+		}
+		return fmt.Errorf("unsupported commission type")
+	}
+
+	// Convert map to struct
+	registryCommission := &registry.Commission{
+		ID:         commissionMap["ID"].(string),
+		CampaignID: commissionMap["CampaignID"].(string),
+		Title:      commissionMap["Title"].(string),
+		Status:     commissionMap["Status"].(string),
+	}
+	
+	if createdAt, ok := commissionMap["CreatedAt"]; ok {
+		if t, ok := createdAt.(time.Time); ok {
+			registryCommission.CreatedAt = t
+		}
+	}
+
+	return k.repo.CreateCommission(ctx, registryCommission)
+}
+
+// GetCommission retrieves a commission by ID and returns it as an interface{}
+func (k *KanbanCommissionRepositoryAdapter) GetCommission(ctx context.Context, id string) (interface{}, error) {
+	return k.repo.GetCommission(ctx, id)
+}
+
+// KanbanTaskRepositoryAdapter implements the minimal task repository interface for kanban
+type KanbanTaskRepositoryAdapter struct {
+	repo registry.TaskRepository
+}
+
+// CreateTask creates a task from a map interface
+func (k *KanbanTaskRepositoryAdapter) CreateTask(ctx context.Context, task interface{}) error {
+	// Convert map to registry.StorageTask
+	taskMap, ok := task.(map[string]interface{})
+	if !ok {
+		// Already a proper struct, pass through
+		if registryTask, ok := task.(*registry.StorageTask); ok {
+			return k.repo.CreateTask(ctx, registryTask)
+		}
+		return fmt.Errorf("unsupported task type")
+	}
+
+	// Convert map to struct
+	registryTask := &registry.StorageTask{
+		ID:           taskMap["ID"].(string),
+		CommissionID: taskMap["CommissionID"].(string),
+		Title:        taskMap["Title"].(string),
+		Status:       taskMap["Status"].(string),
+		Column:       taskMap["Column"].(string),
+		StoryPoints:  taskMap["StoryPoints"].(int32),
+	}
+	
+	if assignedAgentID, ok := taskMap["AssignedAgentID"]; ok && assignedAgentID != nil {
+		if agentID, ok := assignedAgentID.(*string); ok {
+			registryTask.AssignedAgentID = agentID
+		}
+	}
+	
+	if description, ok := taskMap["Description"]; ok && description != nil {
+		if desc, ok := description.(*string); ok {
+			registryTask.Description = desc
+		}
+	}
+	
+	if metadata, ok := taskMap["Metadata"]; ok {
+		if meta, ok := metadata.(map[string]interface{}); ok {
+			registryTask.Metadata = meta
+		}
+	}
+	
+	if createdAt, ok := taskMap["CreatedAt"]; ok {
+		if t, ok := createdAt.(time.Time); ok {
+			registryTask.CreatedAt = t
+		}
+	}
+	
+	if updatedAt, ok := taskMap["UpdatedAt"]; ok {
+		if t, ok := updatedAt.(time.Time); ok {
+			registryTask.UpdatedAt = t
+		}
+	}
+
+	return k.repo.CreateTask(ctx, registryTask)
+}
+
+// RecordTaskEvent records a task event from a map interface
+func (k *KanbanTaskRepositoryAdapter) RecordTaskEvent(ctx context.Context, event interface{}) error {
+	// Convert map to registry.TaskEvent
+	eventMap, ok := event.(map[string]interface{})
+	if !ok {
+		// Already a proper struct, pass through
+		if registryEvent, ok := event.(*registry.TaskEvent); ok {
+			return k.repo.RecordTaskEvent(ctx, registryEvent)
+		}
+		return fmt.Errorf("unsupported event type")
+	}
+
+	// Convert map to struct
+	registryEvent := &registry.TaskEvent{
+		TaskID:    eventMap["TaskID"].(string),
+		EventType: eventMap["EventType"].(string),
+	}
+	
+	if agentID, ok := eventMap["AgentID"]; ok && agentID != nil {
+		if aid, ok := agentID.(*string); ok {
+			registryEvent.AgentID = aid
+		}
+	}
+	
+	if oldValue, ok := eventMap["OldValue"]; ok && oldValue != nil {
+		if ov, ok := oldValue.(*string); ok {
+			registryEvent.OldValue = ov
+		}
+	}
+	
+	if newValue, ok := eventMap["NewValue"]; ok && newValue != nil {
+		if nv, ok := newValue.(*string); ok {
+			registryEvent.NewValue = nv
+		}
+	}
+	
+	if reason, ok := eventMap["Reason"]; ok && reason != nil {
+		if r, ok := reason.(*string); ok {
+			registryEvent.Reason = r
+		}
+	}
+	
+	if createdAt, ok := eventMap["CreatedAt"]; ok {
+		if t, ok := createdAt.(time.Time); ok {
+			registryEvent.CreatedAt = t
+		}
+	}
+
+	return k.repo.RecordTaskEvent(ctx, registryEvent)
+}

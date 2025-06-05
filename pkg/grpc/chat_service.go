@@ -4,26 +4,30 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log/slog"
 	"sync"
 	"time"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
+	guildpb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
+	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb"
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/guild-ventures/guild-core/tools"
 )
 
 // ChatService implements real-time bidirectional communication with Guild agents
+// Following the registry pattern for proper dependency management
 type ChatService struct {
 	pb.UnimplementedChatServiceServer
 	
-	agentRegistry registry.AgentRegistry
-	toolRegistry  tools.ToolRegistry
-	sessions      map[string]*ChatSession
-	sessionsMu    sync.RWMutex
+	// Registry pattern - use main component registry
+	registry     registry.ComponentRegistry
+	logger       *slog.Logger
+	sessions     map[string]*ChatSession
+	sessionsMu   sync.RWMutex
 	
 	// Event broadcasting
 	eventBus    EventBus
@@ -60,37 +64,68 @@ type ChatSession struct {
 	streamsMu sync.RWMutex
 }
 
-// NewChatService creates a new chat service
-func NewChatService(agentReg registry.AgentRegistry, toolReg tools.ToolRegistry, eventBus EventBus) *ChatService {
-	return &ChatService{
-		agentRegistry: agentReg,
-		toolRegistry:  toolReg,
-		sessions:      make(map[string]*ChatSession),
-		eventBus:      eventBus,
-		subscribers:   make(map[string][]chan *pb.ChatResponse),
+// NewChatService creates a new chat service following the registry pattern
+func NewChatService(registry registry.ComponentRegistry, eventBus EventBus) *ChatService {
+	logger := slog.With("component", "chat_service")
+	
+	service := &ChatService{
+		registry:    registry,
+		logger:      logger,
+		sessions:    make(map[string]*ChatSession),
+		eventBus:    eventBus,
+		subscribers: make(map[string][]chan *pb.ChatResponse),
 	}
+	
+	logger.Info("chat service initialized", "service_type", "bidirectional_streaming")
+	return service
 }
 
-// Chat implements bidirectional streaming chat
+// Chat implements bidirectional streaming chat with proper error handling and logging
 func (s *ChatService) Chat(stream pb.ChatService_ChatServer) error {
 	ctx := stream.Context()
+	sessionID := "unknown" // Will be populated from first message
+	
+	s.logger.Info("new chat stream started", 
+		"remote_addr", getRemoteAddr(ctx),
+		"user_agent", getUserAgent(ctx))
+	
+	defer func() {
+		s.logger.Info("chat stream ended", "session_id", sessionID)
+	}()
 	
 	for {
 		select {
 		case <-ctx.Done():
+			s.logger.Debug("chat stream context cancelled", 
+				"session_id", sessionID, 
+				"reason", ctx.Err())
 			return ctx.Err()
 		default:
 		}
 		
 		req, err := stream.Recv()
 		if err == io.EOF {
+			s.logger.Debug("chat stream closed by client", "session_id", sessionID)
 			return nil
 		}
 		if err != nil {
+			s.logger.Error("stream receive error", 
+				"error", err,
+				"session_id", sessionID)
 			return status.Errorf(codes.Internal, "stream receive error: %v", err)
 		}
 		
+		// Extract session ID for logging
+		if sessionID == "unknown" {
+			sessionID = s.extractSessionID(req)
+		}
+		
 		if err := s.handleChatRequest(ctx, req, stream); err != nil {
+			s.logger.Error("failed to handle chat request", 
+				"error", err,
+				"session_id", sessionID,
+				"request_type", fmt.Sprintf("%T", req.Request))
+			
 			// Send error response but continue streaming
 			errorResp := &pb.ChatResponse{
 				Response: &pb.ChatResponse_Error{
@@ -102,6 +137,10 @@ func (s *ChatService) Chat(stream pb.ChatService_ChatServer) error {
 				},
 			}
 			if sendErr := stream.Send(errorResp); sendErr != nil {
+				s.logger.Error("failed to send error response", 
+					"send_error", sendErr,
+					"original_error", err,
+					"session_id", sessionID)
 				return status.Errorf(codes.Internal, "failed to send error response: %v", sendErr)
 			}
 		}
@@ -335,10 +374,20 @@ func (s *ChatService) CreateChatSession(ctx context.Context, req *pb.CreateChatS
 		streams:    make(map[string]pb.ChatService_ChatServer),
 	}
 	
-	// Load agents
+	// Load agents from registry
+	agentRegistry := s.registry.Agents()
 	for _, agentID := range req.AgentIds {
-		if ag, err := s.agentRegistry.GetAgent(agentID); err == nil {
-			session.agents[agentID] = ag
+		if agentRegistry != nil {
+			if ag, err := agentRegistry.GetAgent(agentID); err == nil {
+				session.agents[agentID] = ag
+			} else {
+				s.logger.Warn("failed to load agent for session", 
+					"agent_id", agentID, 
+					"session_id", sessionID,
+					"error", err)
+			}
+		} else {
+			s.logger.Warn("agent registry not available", "session_id", sessionID)
 		}
 	}
 	
@@ -482,8 +531,11 @@ func (s *ChatService) getSession(sessionID string) (*ChatSession, error) {
 }
 
 func (s *ChatService) getAgentName(agentID string) string {
-	if ag, err := s.agentRegistry.GetAgent(agentID); err == nil {
-		return ag.GetName()
+	agentRegistry := s.registry.Agents()
+	if agentRegistry != nil {
+		if ag, err := agentRegistry.GetAgent(agentID); err == nil {
+			return ag.GetName()
+		}
 	}
 	return agentID
 }
@@ -529,6 +581,37 @@ func (s *ChatService) requestStatus(ctx context.Context, control *pb.ChatControl
 // generateSessionID creates a unique session identifier
 func generateSessionID() string {
 	return fmt.Sprintf("chat_%d", time.Now().UnixNano())
+}
+
+// Helper functions for context extraction and debugging
+
+func getRemoteAddr(ctx context.Context) string {
+	// Extract remote address from gRPC context for debugging
+	// This would use gRPC metadata to get peer information
+	return "unknown" // Placeholder
+}
+
+func getUserAgent(ctx context.Context) string {
+	// Extract user agent from gRPC context for debugging
+	return "unknown" // Placeholder
+}
+
+func (s *ChatService) extractSessionID(req *pb.ChatRequest) string {
+	switch r := req.Request.(type) {
+	case *pb.ChatRequest_Message:
+		if r.Message != nil {
+			return r.Message.SessionId
+		}
+	case *pb.ChatRequest_Control:
+		if r.Control != nil {
+			return r.Control.SessionId
+		}
+	case *pb.ChatRequest_ToolApproval:
+		if r.ToolApproval != nil {
+			return r.ToolApproval.SessionId
+		}
+	}
+	return "unknown"
 }
 
 // EventBus interface for broadcasting events

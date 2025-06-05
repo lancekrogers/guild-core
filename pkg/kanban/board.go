@@ -12,6 +12,39 @@ import (
 	"github.com/google/uuid"
 )
 
+// Minimal interfaces to avoid import cycles
+type ComponentRegistry interface {
+	Storage() StorageRegistry
+}
+
+type StorageRegistry interface {
+	GetCampaignRepository() CampaignRepository
+	GetCommissionRepository() CommissionRepository
+	GetTaskRepository() TaskRepository
+	GetMemoryStore() MemoryStore
+}
+
+type MemoryStore interface {
+	Get(ctx context.Context, bucket, key string) ([]byte, error)
+	Put(ctx context.Context, bucket, key string, value []byte) error
+	Delete(ctx context.Context, bucket, key string) error
+	List(ctx context.Context, bucket string) ([]string, error)
+}
+
+type CampaignRepository interface {
+	CreateCampaign(ctx context.Context, campaign interface{}) error
+}
+
+type CommissionRepository interface {
+	CreateCommission(ctx context.Context, commission interface{}) error
+	GetCommission(ctx context.Context, id string) (interface{}, error)
+}
+
+type TaskRepository interface {
+	CreateTask(ctx context.Context, task interface{}) error
+	RecordTaskEvent(ctx context.Context, event interface{}) error
+}
+
 // Board represents a kanban board that manages tasks
 type Board struct {
 	ID           string            `json:"id"`
@@ -20,6 +53,9 @@ type Board struct {
 	CreatedAt    time.Time         `json:"created_at"`
 	UpdatedAt    time.Time         `json:"updated_at"`
 	Metadata     map[string]string `json:"metadata,omitempty"`
+	
+	// Storage - use registry for SQLite access, fallback to memory store for compatibility
+	registry     ComponentRegistry
 	store        memory.Store
 	eventManager *EventManager
 }
@@ -63,6 +99,7 @@ type BoardEvent struct {
 }
 
 // NewBoard creates a new kanban board
+// NewBoard creates a new board using the legacy memory.Store interface (for backward compatibility)
 func NewBoard(store memory.Store, name, description string) (*Board, error) {
 	if store == nil {
 		return nil, fmt.Errorf("store cannot be nil")
@@ -75,6 +112,7 @@ func NewBoard(store memory.Store, name, description string) (*Board, error) {
 		CreatedAt:   time.Now().UTC(),
 		UpdatedAt:   time.Now().UTC(),
 		Metadata:    make(map[string]string),
+		registry:    nil, // No registry for legacy mode
 		store:       store,
 		eventManager: nil, // Will be set by SetEventManager
 	}
@@ -85,6 +123,65 @@ func NewBoard(store memory.Store, name, description string) (*Board, error) {
 	}
 
 	return board, nil
+}
+
+// NewBoardWithRegistry creates a new board using SQLite storage via registry
+func NewBoardWithRegistry(registry ComponentRegistry, name, description string) (*Board, error) {
+	if registry == nil {
+		return nil, fmt.Errorf("registry cannot be nil")
+	}
+
+	board := &Board{
+		ID:          uuid.New().String(),
+		Name:        name,
+		Description: description,
+		CreatedAt:   time.Now().UTC(),
+		UpdatedAt:   time.Now().UTC(),
+		Metadata:    make(map[string]string),
+		registry:    registry,
+		store:       nil, // No legacy store for SQLite mode
+		eventManager: nil, // Will be set by SetEventManager
+	}
+
+	// Save the board to SQLite (boards are stored as campaign records)
+	if err := board.saveToSQLite(context.Background()); err != nil {
+		return nil, fmt.Errorf("failed to save board to SQLite: %w", err)
+	}
+
+	return board, nil
+}
+
+// saveToSQLite saves the board to SQLite as a campaign record
+func (b *Board) saveToSQLite(ctx context.Context) error {
+	if b.registry == nil {
+		return fmt.Errorf("no registry available for SQLite operations")
+	}
+
+	storageReg := b.registry.Storage()
+	if storageReg == nil {
+		return fmt.Errorf("storage registry not available")
+	}
+
+	campaignRepo := storageReg.GetCampaignRepository()
+	if campaignRepo == nil {
+		return fmt.Errorf("campaign repository not available")
+	}
+
+	// Create campaign struct dynamically to avoid import cycle
+	campaign := map[string]interface{}{
+		"ID":        b.ID,
+		"Name":      b.Name,
+		"Status":    "active", // Boards are always active
+		"CreatedAt": b.CreatedAt,
+		"UpdatedAt": b.UpdatedAt,
+	}
+
+	// Create or update the campaign
+	if err := campaignRepo.CreateCampaign(ctx, campaign); err != nil {
+		return fmt.Errorf("failed to save board as campaign: %w", err)
+	}
+
+	return nil
 }
 
 // SetEventManager sets the event manager for this board
@@ -180,10 +277,16 @@ func (b *Board) Delete(ctx context.Context) error {
 
 // CreateTask creates a new task on the board
 func (b *Board) CreateTask(ctx context.Context, title, description string) (*Task, error) {
-	if b.store == nil {
-		return nil, fmt.Errorf("board not connected to a store")
+	// Use SQLite if registry is available, otherwise fallback to legacy store
+	if b.registry != nil {
+		return b.createTaskSQLite(ctx, title, description)
 	}
 	
+	if b.store == nil {
+		return nil, fmt.Errorf("board not connected to any storage")
+	}
+	
+	// Legacy BoltDB path
 	task := NewTask(title, description)
 	
 	// Add board ID to metadata
@@ -229,6 +332,121 @@ func (b *Board) CreateTask(ctx context.Context, title, description string) (*Tas
 	}
 	
 	return task, nil
+}
+
+// createTaskSQLite creates a task using SQLite storage
+func (b *Board) createTaskSQLite(ctx context.Context, title, description string) (*Task, error) {
+	storageReg := b.registry.Storage()
+	if storageReg == nil {
+		return nil, fmt.Errorf("storage registry not available")
+	}
+
+	taskRepo := storageReg.GetTaskRepository()
+	if taskRepo == nil {
+		return nil, fmt.Errorf("task repository not available")
+	}
+
+	// Create a commission for this board/task if it doesn't exist
+	commissionID := b.ID + "-default-commission"
+	if err := b.ensureDefaultCommission(ctx, commissionID); err != nil {
+		return nil, fmt.Errorf("failed to ensure default commission: %w", err)
+	}
+
+	// Create the task
+	task := NewTask(title, description)
+	
+	// Convert kanban task metadata to interface{} map
+	metadataInterface := make(map[string]interface{})
+	for k, v := range task.Metadata {
+		metadataInterface[k] = v
+	}
+
+	// Map kanban task to storage task format
+	var assignedAgent *string
+	if task.AssignedTo != "" {
+		assignedAgent = &task.AssignedTo
+	}
+
+	// Convert to storage task format (using map to avoid import cycle)
+	storageTask := map[string]interface{}{
+		"ID":              task.ID,
+		"CommissionID":    commissionID,
+		"AssignedAgentID": assignedAgent,
+		"Title":           task.Title,
+		"Description":     &task.Description,
+		"Status":          string(task.Status),
+		"Column":          "todo", // Default column for new tasks
+		"StoryPoints":     int32(1), // Default story points
+		"Metadata":        metadataInterface,
+		"CreatedAt":       task.CreatedAt,
+		"UpdatedAt":       task.UpdatedAt,
+	}
+
+	// Save to SQLite
+	if err := taskRepo.CreateTask(ctx, storageTask); err != nil {
+		return nil, fmt.Errorf("failed to save task to SQLite: %w", err)
+	}
+
+	// Record task creation event
+	if err := b.recordTaskEvent(ctx, task.ID, "created", "", string(task.Status), "Task created on board"); err != nil {
+		// Log but don't fail
+		fmt.Printf("warning: failed to record task event: %v\n", err)
+	}
+
+	// Update the board's last updated time
+	b.UpdatedAt = time.Now().UTC()
+	if err := b.saveToSQLite(ctx); err != nil {
+		// Log but don't fail
+		fmt.Printf("warning: failed to update board timestamp: %v\n", err)
+	}
+
+	return task, nil
+}
+
+// ensureDefaultCommission creates a default commission for the board if it doesn't exist
+func (b *Board) ensureDefaultCommission(ctx context.Context, commissionID string) error {
+	storageReg := b.registry.Storage()
+	commissionRepo := storageReg.GetCommissionRepository()
+	
+	// Try to get existing commission
+	_, err := commissionRepo.GetCommission(ctx, commissionID)
+	if err == nil {
+		return nil // Commission already exists
+	}
+
+	// Create default commission (using map to avoid import cycle)
+	commission := map[string]interface{}{
+		"ID":         commissionID,
+		"CampaignID": b.ID, // Board ID is campaign ID
+		"Title":      b.Name + " Tasks",
+		"Status":     "active",
+		"CreatedAt":  b.CreatedAt,
+	}
+
+	if err := commissionRepo.CreateCommission(ctx, commission); err != nil {
+		return fmt.Errorf("failed to create default commission: %w", err)
+	}
+
+	return nil
+}
+
+// recordTaskEvent records a task event for audit trail
+func (b *Board) recordTaskEvent(ctx context.Context, taskID, eventType, oldValue, newValue, reason string) error {
+	storageReg := b.registry.Storage()
+	taskRepo := storageReg.GetTaskRepository()
+
+	// Create event using map to avoid import cycle
+	event := map[string]interface{}{
+		"TaskID":    taskID,
+		"AgentID":   nil,
+		"EventType": eventType,
+		"OldValue":  &oldValue,
+		"NewValue":  &newValue,
+		"Reason":    &reason,
+		"CreatedAt": time.Now().UTC(),
+	}
+
+	return taskRepo.RecordTaskEvent(ctx, event)
 }
 
 // GetTask retrieves a task by ID

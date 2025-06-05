@@ -10,13 +10,13 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 )
 
-// MockArtisanClient for testing
-type MockArtisanClient struct {
+// SimpleMockArtisanClient for testing
+type SimpleMockArtisanClient struct {
 	response string
 	err      error
 }
 
-func (m *MockArtisanClient) Complete(ctx context.Context, request ArtisanRequest) (*ArtisanResponse, error) {
+func (m *SimpleMockArtisanClient) Complete(ctx context.Context, request ArtisanRequest) (*ArtisanResponse, error) {
 	if m.err != nil {
 		return nil, m.err
 	}
@@ -160,7 +160,7 @@ func TestTaskExtractor_ExtractTasks(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create mock client
-	mockClient := &MockArtisanClient{
+	mockClient := &SimpleMockArtisanClient{
 		response: "```json\n" + string(jsonResponse) + "\n```",
 	}
 
@@ -294,7 +294,7 @@ func TestIntelligentParser_Modes(t *testing.T) {
 			}
 
 			if tt.hasClient {
-				config.ArtisanClient = &MockArtisanClient{}
+				config.ArtisanClient = &SimpleMockArtisanClient{}
 			}
 			if tt.hasManager {
 				// Create a minimal mock that satisfies the interface check

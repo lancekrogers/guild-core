@@ -66,21 +66,40 @@ func (d *Database) Migrate(ctx context.Context) error {
 	if _, err := os.Stat("db/migrations"); err == nil {
 		migrationsPath = "file://db/migrations"
 	} else {
-		// 2. Try relative to executable
-		execPath, err := os.Executable()
+		// 2. Try walking up from current directory to find db/migrations
+		currentDir, err := os.Getwd()
 		if err == nil {
-			execDir := filepath.Dir(execPath)
-			potentialPath := filepath.Join(execDir, "db", "migrations")
-			if _, err := os.Stat(potentialPath); err == nil {
-				migrationsPath = fmt.Sprintf("file://%s", potentialPath)
-			} else {
-				// 3. Try going up from executable to find db/migrations
-				for i := 0; i < 5; i++ { // Try up to 5 levels up
-					execDir = filepath.Dir(execDir)
-					potentialPath = filepath.Join(execDir, "db", "migrations")
-					if _, err := os.Stat(potentialPath); err == nil {
-						migrationsPath = fmt.Sprintf("file://%s", potentialPath)
-						break
+			for i := 0; i < 10; i++ { // Try up to 10 levels up
+				potentialPath := filepath.Join(currentDir, "db", "migrations")
+				if _, err := os.Stat(potentialPath); err == nil {
+					migrationsPath = fmt.Sprintf("file://%s", potentialPath)
+					break
+				}
+				parentDir := filepath.Dir(currentDir)
+				if parentDir == currentDir {
+					break // Reached filesystem root
+				}
+				currentDir = parentDir
+			}
+		}
+		
+		// 3. Try relative to executable as fallback
+		if migrationsPath == "" {
+			execPath, err := os.Executable()
+			if err == nil {
+				execDir := filepath.Dir(execPath)
+				potentialPath := filepath.Join(execDir, "db", "migrations")
+				if _, err := os.Stat(potentialPath); err == nil {
+					migrationsPath = fmt.Sprintf("file://%s", potentialPath)
+				} else {
+					// Try going up from executable to find db/migrations
+					for i := 0; i < 5; i++ { // Try up to 5 levels up
+						execDir = filepath.Dir(execDir)
+						potentialPath = filepath.Join(execDir, "db", "migrations")
+						if _, err := os.Stat(potentialPath); err == nil {
+							migrationsPath = fmt.Sprintf("file://%s", potentialPath)
+							break
+						}
 					}
 				}
 			}

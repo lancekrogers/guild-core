@@ -15,6 +15,7 @@ import (
 // Manager manages multiple kanban boards
 type Manager struct {
 	store        memory.Store
+	registry     ComponentRegistry // Optional registry for new storage backend
 	boards       map[string]*Board
 	eventStream  chan BoardEvent
 	eventManager *EventManager
@@ -53,6 +54,7 @@ func NewManagerWithConfig(store memory.Store, channelConfig map[string]interface
 	// Create manager
 	manager := &Manager{
 		store:        store,
+		registry:     nil, // Will be set by NewManagerWithRegistry if needed
 		boards:       make(map[string]*Board),
 		eventStream:  make(chan BoardEvent, 100), // Buffer up to 100 events
 		eventManager: eventManager,
@@ -77,9 +79,58 @@ func NewManagerWithConfig(store memory.Store, channelConfig map[string]interface
 	return manager, nil
 }
 
+// NewManagerWithRegistry creates a new kanban manager using the component registry
+// This allows the manager to work with either SQLite or BoltDB storage backends
+func NewManagerWithRegistry(registry ComponentRegistry) (*Manager, error) {
+	if registry == nil {
+		return nil, fmt.Errorf("registry cannot be nil")
+	}
+
+	// Get memory store from storage registry
+	storageReg := registry.Storage()
+	if storageReg == nil {
+		return nil, fmt.Errorf("storage registry not initialized")
+	}
+
+	memoryStore := storageReg.GetMemoryStore()
+	if memoryStore == nil {
+		return nil, fmt.Errorf("memory store not available from storage registry")
+	}
+
+	// Convert local interface to memory.Store for compatibility
+	memStoreCompat, ok := memoryStore.(memory.Store)
+	if !ok {
+		return nil, fmt.Errorf("memory store does not implement required interface")
+	}
+
+	// Create manager with registry support
+	manager, err := NewManagerWithConfig(memStoreCompat, map[string]interface{}{
+		"pub_endpoint": "tcp://127.0.0.1:5556",
+		"sub_endpoint": "tcp://127.0.0.1:5556",
+		"identity":     "kanban-manager",
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// Set registry for advanced operations
+	manager.registry = registry
+
+	return manager, nil
+}
+
 // CreateBoard creates a new board
 func (m *Manager) CreateBoard(ctx context.Context, name, description string) (*Board, error) {
-	board, err := NewBoard(m.store, name, description)
+	var board *Board
+	var err error
+
+	// Use SQLite if registry is available, otherwise use legacy store
+	if m.registry != nil {
+		board, err = NewBoardWithRegistry(m.registry, name, description)
+	} else {
+		board, err = NewBoard(m.store, name, description)
+	}
+	
 	if err != nil {
 		return nil, fmt.Errorf("failed to create board: %w", err)
 	}
