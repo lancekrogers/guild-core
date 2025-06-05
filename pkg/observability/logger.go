@@ -7,6 +7,7 @@ import (
 	"io"
 	"log/slog"
 	"os"
+	"path/filepath"
 	"runtime"
 	"time"
 
@@ -65,6 +66,7 @@ type Config struct {
 	Environment string
 	Service     string
 	Version     string
+	EnableFile  bool // Enable file logging to .guild/logs/
 }
 
 // DefaultConfig returns default logger configuration
@@ -100,12 +102,15 @@ func NewLogger(config *Config) Logger {
 			return a
 		},
 	}
+
+	// Set up multi-writer for both console and file logging
+	output := setupLogOutput(config.Output)
 	
 	var handler slog.Handler
 	if config.Format == "text" {
-		handler = slog.NewTextHandler(config.Output, opts)
+		handler = slog.NewTextHandler(output, opts)
 	} else {
-		handler = slog.NewJSONHandler(config.Output, opts)
+		handler = slog.NewJSONHandler(output, opts)
 	}
 	
 	// Add default fields
@@ -118,6 +123,50 @@ func NewLogger(config *Config) Logger {
 	return &GuildLogger{
 		slogger: slogger,
 	}
+}
+
+// setupLogOutput creates a multi-writer that logs to both console and .guild/logs/
+func setupLogOutput(consoleOutput io.Writer) io.Writer {
+	var writers []io.Writer
+	writers = append(writers, consoleOutput)
+
+	// Add file logging to .guild/logs/ if enabled
+	if getEnv("GUILD_LOG_FILE", "false") == "true" {
+		if fileWriter := createLogFile(); fileWriter != nil {
+			writers = append(writers, fileWriter)
+		}
+	}
+
+	return io.MultiWriter(writers...)
+}
+
+// createLogFile creates a log file in .guild/logs/ directory
+func createLogFile() io.Writer {
+	// Create .guild/logs directory
+	logDir := filepath.Join(".guild", "logs")
+	if err := os.MkdirAll(logDir, 0755); err != nil {
+		// If we can't create the directory, skip file logging silently
+		return nil
+	}
+
+	// Create log file with date
+	date := time.Now().Format("2006-01-02")
+	logFileName := fmt.Sprintf("guild-%s.log", date)
+	logPath := filepath.Join(logDir, logFileName)
+
+	// Open or create log file with append mode
+	logFile, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		// If we can't create the file, skip file logging silently
+		return nil
+	}
+
+	// Create a symlink to latest log for easy access
+	latestPath := filepath.Join(logDir, "latest.log")
+	os.Remove(latestPath) // Remove existing symlink
+	os.Symlink(logFileName, latestPath) // Create new symlink (ignore errors)
+
+	return logFile
 }
 
 // GetLogger gets a logger from context or returns default

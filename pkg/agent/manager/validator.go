@@ -174,6 +174,7 @@ func (v *DefaultValidator) validateMarkdownContent(content string) error {
 	return nil
 }
 
+
 // validateFileType validates the file type
 func (v *DefaultValidator) validateFileType(fileType FileType) error {
 	switch fileType {

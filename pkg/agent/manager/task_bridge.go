@@ -8,25 +8,37 @@ import (
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/objective"
+	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
 // TaskBridge converts parsed commission structures into kanban tasks
 type TaskBridge struct {
-	kanbanBoard      *kanban.Board
-	objectiveManager *objective.Manager
-	parser           *ResponseParserImpl
+	kanbanBoard          *kanban.Board
+	commissionRepository registry.CommissionRepository
+	parser               *ResponseParserImpl
 }
 
-// NewTaskBridge creates a new task bridge
+// NewTaskBridge creates a new task bridge (deprecated - use NewTaskBridgeWithCommissions)
 func NewTaskBridge(
 	kanbanBoard *kanban.Board,
-	objectiveManager *objective.Manager,
+	objectiveManager interface{}, // Deprecated parameter - ignored
 ) *TaskBridge {
 	return &TaskBridge{
-		kanbanBoard:      kanbanBoard,
-		objectiveManager: objectiveManager,
-		parser:           NewResponseParser(),
+		kanbanBoard:          kanbanBoard,
+		commissionRepository: nil, // Will need to be set separately
+		parser:               NewResponseParser(),
+	}
+}
+
+// NewTaskBridgeWithCommissions creates a new task bridge with commission repository
+func NewTaskBridgeWithCommissions(
+	kanbanBoard *kanban.Board,
+	commissionRepository registry.CommissionRepository,
+) *TaskBridge {
+	return &TaskBridge{
+		kanbanBoard:          kanbanBoard,
+		commissionRepository: commissionRepository,
+		parser:               NewResponseParser(),
 	}
 }
 
@@ -46,24 +58,37 @@ func (tb *TaskBridge) CreateTasksFromRefinedCommission(ctx context.Context, refi
 		}
 	}
 	
-	// Create commission objective if it doesn't exist
-	commissionObj := &objective.Objective{
-		ID:          refinedCommission.CommissionID,
-		Title:       fmt.Sprintf("Commission %s", refinedCommission.CommissionID),
-		Description: "Refined commission tasks",
-		Status:      objective.StatusDraft,
-		Metadata:    make(map[string]string),
+	// Create commission record if it doesn't exist
+	commission := map[string]interface{}{
+		"ID":          refinedCommission.CommissionID,
+		"Title":       fmt.Sprintf("Commission %s", refinedCommission.CommissionID),
+		"Description": "Refined commission tasks",
+		"Status":      "draft",
+		"CampaignID":  "default-campaign", // TODO: Get from context
 	}
 	
 	// Copy metadata with type assertions
 	if title, ok := refinedCommission.Metadata["original_title"].(string); ok {
-		commissionObj.Metadata["original_title"] = title
+		commission["Title"] = title
 	}
 	
-	if err := tb.objectiveManager.SaveObjective(ctx, commissionObj); err != nil {
-		// If already exists, that's okay
-		if !strings.Contains(err.Error(), "already exists") {
-			return fmt.Errorf("failed to create commission objective: %w", err)
+	if tb.commissionRepository != nil {
+		// Convert map to registry.Commission struct
+		description := commission["Description"].(string)
+		registryCommission := &registry.Commission{
+			ID:          refinedCommission.CommissionID,
+			CampaignID:  "default-campaign", // TODO: Get from context
+			Title:       commission["Title"].(string),
+			Description: &description,
+			Status:      commission["Status"].(string),
+		}
+		
+		if err := tb.commissionRepository.CreateCommission(ctx, registryCommission); err != nil {
+			// If already exists, that's okay - ignore UNIQUE constraint errors
+			if !strings.Contains(err.Error(), "UNIQUE constraint failed") &&
+			   !strings.Contains(err.Error(), "already exists") {
+				return fmt.Errorf("failed to create commission record: %w", err)
+			}
 		}
 	}
 	
@@ -102,12 +127,11 @@ func (tb *TaskBridge) CreateTasksFromRefinedCommission(ctx context.Context, refi
 		createdTasks++
 	}
 	
-	// Update objective with task count
-	commissionObj.Metadata["total_tasks"] = fmt.Sprintf("%d", createdTasks)
-	commissionObj.Metadata["status"] = "tasks_created"
-	
-	if err := tb.objectiveManager.SaveObjective(ctx, commissionObj); err != nil {
-		return fmt.Errorf("failed to update commission objective: %w", err)
+	// Update commission with task count (if repository is available)
+	if tb.commissionRepository != nil {
+		// TODO: Add metadata update capability to commission repository
+		// For now, just log the task count
+		fmt.Printf("Created %d tasks for commission %s\n", createdTasks, refinedCommission.CommissionID)
 	}
 	
 	return nil

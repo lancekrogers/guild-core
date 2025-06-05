@@ -40,11 +40,10 @@ func (r *SQLiteTaskRepository) CreateTask(ctx context.Context, task *Task) error
 	storyPoints := int64(task.StoryPoints)
 	err := r.database.Queries().CreateTask(ctx, db.CreateTaskParams{
 		ID:           task.ID,
-		CommissionID: task.CommissionID,
+		BoardID:      task.BoardID,           // Use BoardID (nullable)
 		Title:        task.Title,
 		Description:  task.Description,
 		Status:       task.Status,
-		Column:       task.Column,
 		StoryPoints:  &storyPoints,
 		Metadata:     metadataJSON,
 	})
@@ -91,7 +90,6 @@ func (r *SQLiteTaskRepository) UpdateTask(ctx context.Context, task *Task) error
 		Title:        task.Title,
 		Description:  task.Description,
 		Status:       task.Status,
-		Column:       task.Column,
 		StoryPoints:  &storyPoints,
 		Metadata:     metadataJSON,
 		ID:           task.ID,
@@ -150,7 +148,7 @@ func (r *SQLiteTaskRepository) ListTasksByStatus(ctx context.Context, status str
 	return tasks, nil
 }
 
-// ListTasksByCommission returns tasks for a specific commission
+// ListTasksByCommission returns tasks for a specific commission (DEPRECATED - use ListTasksByBoard)
 func (r *SQLiteTaskRepository) ListTasksByCommission(ctx context.Context, commissionID string) ([]*Task, error) {
 	dbTasks, err := r.database.Queries().ListTasksByCommission(ctx, commissionID)
 	if err != nil {
@@ -169,9 +167,28 @@ func (r *SQLiteTaskRepository) ListTasksByCommission(ctx context.Context, commis
 	return tasks, nil
 }
 
+// ListTasksByBoard returns tasks for a specific board
+func (r *SQLiteTaskRepository) ListTasksByBoard(ctx context.Context, boardID string) ([]*Task, error) {
+	dbTasks, err := r.database.Queries().ListTasksByBoard(ctx, &boardID) // Pass as pointer
+	if err != nil {
+		return nil, fmt.Errorf("failed to list tasks by board: %w", err)
+	}
+
+	tasks := make([]*Task, len(dbTasks))
+	for i, dbTask := range dbTasks {
+		task, err := r.convertDBTaskToTask(dbTask)
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert task %d: %w", i, err)
+		}
+		tasks[i] = task
+	}
+
+	return tasks, nil
+}
+
 // ListTasksForKanban returns tasks with agent information for kanban display
-func (r *SQLiteTaskRepository) ListTasksForKanban(ctx context.Context, commissionID string) ([]*Task, error) {
-	dbTasks, err := r.database.Queries().ListTasksForKanban(ctx, commissionID)
+func (r *SQLiteTaskRepository) ListTasksForKanban(ctx context.Context, boardID string) ([]*Task, error) {
+	dbTasks, err := r.database.Queries().ListTasksForKanban(ctx, &boardID) // Pass as pointer
 	if err != nil {
 		return nil, fmt.Errorf("failed to list tasks for kanban: %w", err)
 	}
@@ -308,12 +325,12 @@ func (r *SQLiteTaskRepository) convertDBTaskToTask(dbTask db.Task) (*Task, error
 
 	task := &Task{
 		ID:              dbTask.ID,
-		CommissionID:    dbTask.CommissionID,
+		BoardID:         dbTask.BoardID,        // Nullable BoardID from new schema
+		CommissionID:    dbTask.CommissionID,   // Keep for backward compatibility 
 		AssignedAgentID: dbTask.AssignedAgentID,
 		Title:           dbTask.Title,
 		Description:     dbTask.Description,
 		Status:          dbTask.Status,
-		Column:          dbTask.Column,
 		StoryPoints:     storyPoints,
 		CreatedAt:       createdAt,
 		UpdatedAt:       updatedAt,
@@ -787,12 +804,12 @@ func (r *SQLiteTaskRepository) convertDBKanbanTaskToTask(dbTask db.ListTasksForK
 
 	task := &Task{
 		ID:              dbTask.ID,
-		CommissionID:    dbTask.CommissionID,
+		BoardID:         dbTask.BoardID,        // Nullable BoardID from new schema
+		CommissionID:    dbTask.CommissionID,   // Keep for backward compatibility
 		AssignedAgentID: dbTask.AssignedAgentID,
 		Title:           dbTask.Title,
 		Description:     dbTask.Description,
 		Status:          dbTask.Status,
-		Column:          dbTask.Column,
 		StoryPoints:     storyPoints,
 		CreatedAt:       createdAt,
 		UpdatedAt:       updatedAt,

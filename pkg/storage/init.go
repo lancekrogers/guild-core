@@ -27,11 +27,13 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 	taskRepo := NewSQLiteTaskRepository(database)
 	campaignRepo := NewSQLiteCampaignRepository(database)
 	commissionRepo := NewSQLiteCommissionRepository(database)
+	boardRepo := NewSQLiteBoardRepository(database)
 	agentRepo := NewSQLiteAgentRepository(database)
 
 	storageRegistry.RegisterTaskRepository(taskRepo)
 	storageRegistry.RegisterCampaignRepository(campaignRepo)
 	storageRegistry.RegisterCommissionRepository(commissionRepo)
+	storageRegistry.RegisterBoardRepository(boardRepo)
 	storageRegistry.RegisterAgentRepository(agentRepo)
 
 	// Create SQLite store adapter for memory.Store interface compatibility
@@ -63,11 +65,13 @@ func InitializeSQLiteStorageForTests(ctx context.Context) (StorageRegistry, inte
 	taskRepo := NewSQLiteTaskRepository(database)
 	campaignRepo := NewSQLiteCampaignRepository(database)
 	commissionRepo := NewSQLiteCommissionRepository(database)
+	boardRepo := NewSQLiteBoardRepository(database)
 	agentRepo := NewSQLiteAgentRepository(database)
 
 	storageRegistry.RegisterTaskRepository(taskRepo)
 	storageRegistry.RegisterCampaignRepository(campaignRepo)
 	storageRegistry.RegisterCommissionRepository(commissionRepo)
+	storageRegistry.RegisterBoardRepository(boardRepo)
 	storageRegistry.RegisterAgentRepository(agentRepo)
 
 	// Create SQLite store adapter for memory.Store interface compatibility
@@ -99,6 +103,17 @@ func createTestSchema(database *Database) error {
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	);
 
+	CREATE TABLE boards (
+		id TEXT PRIMARY KEY,
+		commission_id TEXT NOT NULL REFERENCES commissions(id),
+		name TEXT NOT NULL,
+		description TEXT,
+		status TEXT NOT NULL DEFAULT 'active',
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		UNIQUE(commission_id) -- Ensures one board per commission
+	);
+
 	CREATE TABLE agents (
 		id TEXT PRIMARY KEY,
 		name TEXT NOT NULL,
@@ -113,12 +128,11 @@ func createTestSchema(database *Database) error {
 
 	CREATE TABLE tasks (
 		id TEXT PRIMARY KEY,
-		commission_id TEXT NOT NULL REFERENCES commissions(id),
+		board_id TEXT NOT NULL REFERENCES boards(id),
 		assigned_agent_id TEXT REFERENCES agents(id),
 		title TEXT NOT NULL,
 		description TEXT,
-		status TEXT NOT NULL DEFAULT 'todo',
-		column TEXT NOT NULL DEFAULT 'backlog',
+		status TEXT NOT NULL DEFAULT 'todo' CHECK (status IN ('todo', 'in_progress', 'blocked', 'pending_review', 'done')),
 		story_points INTEGER DEFAULT 1,
 		metadata JSON,
 		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -137,10 +151,11 @@ func createTestSchema(database *Database) error {
 	);
 
 	CREATE INDEX idx_tasks_status ON tasks(status);
-	CREATE INDEX idx_tasks_commission ON tasks(commission_id);
+	CREATE INDEX idx_tasks_board ON tasks(board_id);
 	CREATE INDEX idx_tasks_agent ON tasks(assigned_agent_id);
 	CREATE INDEX idx_task_events_task ON task_events(task_id);
 	CREATE INDEX idx_commissions_campaign ON commissions(campaign_id);
+	CREATE INDEX idx_boards_commission ON boards(commission_id);
 	`
 
 	_, err := database.DB().Exec(schema)

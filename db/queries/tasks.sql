@@ -1,6 +1,6 @@
 -- name: CreateTask :exec
-INSERT INTO tasks (id, commission_id, title, description, status, column, story_points, metadata)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO tasks (id, board_id, title, description, status, story_points, metadata)
+VALUES (?, ?, ?, ?, ?, ?, ?);
 
 -- name: GetTask :one
 SELECT * FROM tasks WHERE id = ?;
@@ -14,6 +14,9 @@ SELECT * FROM tasks WHERE status = ? ORDER BY created_at DESC;
 -- name: ListTasksByCommission :many
 SELECT * FROM tasks WHERE commission_id = ? ORDER BY created_at DESC;
 
+-- name: ListTasksByBoard :many
+SELECT * FROM tasks WHERE board_id = ? ORDER BY created_at DESC;
+
 -- name: ListTasksForKanban :many
 SELECT 
     t.*,
@@ -21,8 +24,8 @@ SELECT
     a.type as agent_type
 FROM tasks t
 LEFT JOIN agents a ON t.assigned_agent_id = a.id
-WHERE t.commission_id = ?
-ORDER BY t.column, t.created_at;
+WHERE t.board_id = ?
+ORDER BY t.created_at;
 
 -- name: AssignTaskToAgent :exec
 UPDATE tasks 
@@ -41,7 +44,7 @@ WHERE id = ?;
 
 -- name: UpdateTask :exec
 UPDATE tasks 
-SET title = ?, description = ?, status = ?, column = ?, story_points = ?, metadata = ?, updated_at = CURRENT_TIMESTAMP
+SET title = ?, description = ?, status = ?, story_points = ?, metadata = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?;
 
 -- name: DeleteTask :exec

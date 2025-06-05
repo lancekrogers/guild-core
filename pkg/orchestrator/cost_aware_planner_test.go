@@ -451,6 +451,8 @@ func (m *MockComponentRegistry) Providers() registry.ProviderRegistry { return n
 func (m *MockComponentRegistry) Memory() registry.MemoryRegistry { return nil }
 func (m *MockComponentRegistry) Project() registry.ProjectRegistry { return nil }
 func (m *MockComponentRegistry) Prompts() *registry.PromptRegistry { return nil }
+func (m *MockComponentRegistry) Storage() registry.StorageRegistry { return nil }
+func (m *MockComponentRegistry) Orchestrator() interface{} { return nil }
 func (m *MockComponentRegistry) Initialize(ctx context.Context, config registry.Config) error { return nil }
 func (m *MockComponentRegistry) Shutdown(ctx context.Context) error { return nil }
 

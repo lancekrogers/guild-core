@@ -20,6 +20,16 @@ type Agent struct {
 	CreatedAt     *time.Time  `json:"created_at"`
 }
 
+type Board struct {
+	ID           string     `json:"id"`
+	CommissionID string     `json:"commission_id"`
+	Name         string     `json:"name"`
+	Description  *string    `json:"description"`
+	Status       string     `json:"status"`
+	CreatedAt    *time.Time `json:"created_at"`
+	UpdatedAt    *time.Time `json:"updated_at"`
+}
+
 type Campaign struct {
 	ID        string     `json:"id"`
 	Name      string     `json:"name"`
@@ -51,6 +61,7 @@ type Task struct {
 	Metadata        interface{} `json:"metadata"`
 	CreatedAt       *time.Time  `json:"created_at"`
 	UpdatedAt       *time.Time  `json:"updated_at"`
+	BoardID         *string     `json:"board_id"`
 }
 
 type TaskEvent struct {

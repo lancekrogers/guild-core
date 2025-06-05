@@ -9,6 +9,7 @@ type DefaultStorageRegistry struct {
 	taskRepo       TaskRepository
 	campaignRepo   CampaignRepository
 	commissionRepo CommissionRepository
+	boardRepo      BoardRepository
 	agentRepo      AgentRepository
 	mu             sync.RWMutex
 }
@@ -40,6 +41,13 @@ func (r *DefaultStorageRegistry) RegisterCommissionRepository(repo CommissionRep
 	r.commissionRepo = repo
 }
 
+// RegisterBoardRepository registers a board repository
+func (r *DefaultStorageRegistry) RegisterBoardRepository(repo BoardRepository) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.boardRepo = repo
+}
+
 // RegisterAgentRepository registers an agent repository
 func (r *DefaultStorageRegistry) RegisterAgentRepository(repo AgentRepository) {
 	r.mu.Lock()
@@ -66,6 +74,13 @@ func (r *DefaultStorageRegistry) GetCommissionRepository() CommissionRepository 
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	return r.commissionRepo
+}
+
+// GetBoardRepository returns the registered board repository
+func (r *DefaultStorageRegistry) GetBoardRepository() BoardRepository {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	return r.boardRepo
 }
 
 // GetAgentRepository returns the registered agent repository

@@ -27,29 +27,27 @@ func (q *Queries) AssignTaskToAgent(ctx context.Context, arg AssignTaskToAgentPa
 }
 
 const createTask = `-- name: CreateTask :exec
-INSERT INTO tasks (id, commission_id, title, description, status, column, story_points, metadata)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+INSERT INTO tasks (id, board_id, title, description, status, story_points, metadata)
+VALUES (?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateTaskParams struct {
-	ID           string      `json:"id"`
-	CommissionID string      `json:"commission_id"`
-	Title        string      `json:"title"`
-	Description  *string     `json:"description"`
-	Status       string      `json:"status"`
-	Column       string      `json:"column"`
-	StoryPoints  *int64      `json:"story_points"`
-	Metadata     interface{} `json:"metadata"`
+	ID          string      `json:"id"`
+	BoardID     *string     `json:"board_id"`
+	Title       string      `json:"title"`
+	Description *string     `json:"description"`
+	Status      string      `json:"status"`
+	StoryPoints *int64      `json:"story_points"`
+	Metadata    interface{} `json:"metadata"`
 }
 
 func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) error {
 	_, err := q.db.ExecContext(ctx, createTask,
 		arg.ID,
-		arg.CommissionID,
+		arg.BoardID,
 		arg.Title,
 		arg.Description,
 		arg.Status,
-		arg.Column,
 		arg.StoryPoints,
 		arg.Metadata,
 	)
@@ -112,7 +110,7 @@ func (q *Queries) GetAgentWorkload(ctx context.Context) ([]GetAgentWorkloadRow, 
 }
 
 const getTask = `-- name: GetTask :one
-SELECT id, commission_id, assigned_agent_id, title, description, status, "column", story_points, metadata, created_at, updated_at FROM tasks WHERE id = ?
+SELECT id, commission_id, assigned_agent_id, title, description, status, "column", story_points, metadata, created_at, updated_at, board_id FROM tasks WHERE id = ?
 `
 
 func (q *Queries) GetTask(ctx context.Context, id string) (Task, error) {
@@ -130,6 +128,7 @@ func (q *Queries) GetTask(ctx context.Context, id string) (Task, error) {
 		&i.Metadata,
 		&i.CreatedAt,
 		&i.UpdatedAt,
+		&i.BoardID,
 	)
 	return i, err
 }
@@ -173,7 +172,7 @@ func (q *Queries) GetTaskHistory(ctx context.Context, taskID string) ([]TaskEven
 }
 
 const listTasks = `-- name: ListTasks :many
-SELECT id, commission_id, assigned_agent_id, title, description, status, "column", story_points, metadata, created_at, updated_at FROM tasks ORDER BY created_at DESC
+SELECT id, commission_id, assigned_agent_id, title, description, status, "column", story_points, metadata, created_at, updated_at, board_id FROM tasks ORDER BY created_at DESC
 `
 
 func (q *Queries) ListTasks(ctx context.Context) ([]Task, error) {
@@ -197,6 +196,47 @@ func (q *Queries) ListTasks(ctx context.Context) ([]Task, error) {
 			&i.Metadata,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+			&i.BoardID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listTasksByBoard = `-- name: ListTasksByBoard :many
+SELECT id, commission_id, assigned_agent_id, title, description, status, "column", story_points, metadata, created_at, updated_at, board_id FROM tasks WHERE board_id = ? ORDER BY created_at DESC
+`
+
+func (q *Queries) ListTasksByBoard(ctx context.Context, boardID *string) ([]Task, error) {
+	rows, err := q.db.QueryContext(ctx, listTasksByBoard, boardID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Task{}
+	for rows.Next() {
+		var i Task
+		if err := rows.Scan(
+			&i.ID,
+			&i.CommissionID,
+			&i.AssignedAgentID,
+			&i.Title,
+			&i.Description,
+			&i.Status,
+			&i.Column,
+			&i.StoryPoints,
+			&i.Metadata,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.BoardID,
 		); err != nil {
 			return nil, err
 		}
@@ -212,7 +252,7 @@ func (q *Queries) ListTasks(ctx context.Context) ([]Task, error) {
 }
 
 const listTasksByCommission = `-- name: ListTasksByCommission :many
-SELECT id, commission_id, assigned_agent_id, title, description, status, "column", story_points, metadata, created_at, updated_at FROM tasks WHERE commission_id = ? ORDER BY created_at DESC
+SELECT id, commission_id, assigned_agent_id, title, description, status, "column", story_points, metadata, created_at, updated_at, board_id FROM tasks WHERE commission_id = ? ORDER BY created_at DESC
 `
 
 func (q *Queries) ListTasksByCommission(ctx context.Context, commissionID string) ([]Task, error) {
@@ -236,6 +276,7 @@ func (q *Queries) ListTasksByCommission(ctx context.Context, commissionID string
 			&i.Metadata,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+			&i.BoardID,
 		); err != nil {
 			return nil, err
 		}
@@ -251,7 +292,7 @@ func (q *Queries) ListTasksByCommission(ctx context.Context, commissionID string
 }
 
 const listTasksByStatus = `-- name: ListTasksByStatus :many
-SELECT id, commission_id, assigned_agent_id, title, description, status, "column", story_points, metadata, created_at, updated_at FROM tasks WHERE status = ? ORDER BY created_at DESC
+SELECT id, commission_id, assigned_agent_id, title, description, status, "column", story_points, metadata, created_at, updated_at, board_id FROM tasks WHERE status = ? ORDER BY created_at DESC
 `
 
 func (q *Queries) ListTasksByStatus(ctx context.Context, status string) ([]Task, error) {
@@ -275,6 +316,7 @@ func (q *Queries) ListTasksByStatus(ctx context.Context, status string) ([]Task,
 			&i.Metadata,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+			&i.BoardID,
 		); err != nil {
 			return nil, err
 		}
@@ -291,13 +333,13 @@ func (q *Queries) ListTasksByStatus(ctx context.Context, status string) ([]Task,
 
 const listTasksForKanban = `-- name: ListTasksForKanban :many
 SELECT 
-    t.id, t.commission_id, t.assigned_agent_id, t.title, t.description, t.status, t."column", t.story_points, t.metadata, t.created_at, t.updated_at,
+    t.id, t.commission_id, t.assigned_agent_id, t.title, t.description, t.status, t."column", t.story_points, t.metadata, t.created_at, t.updated_at, t.board_id,
     a.name as agent_name,
     a.type as agent_type
 FROM tasks t
 LEFT JOIN agents a ON t.assigned_agent_id = a.id
-WHERE t.commission_id = ?
-ORDER BY t.column, t.created_at
+WHERE t.board_id = ?
+ORDER BY t.created_at
 `
 
 type ListTasksForKanbanRow struct {
@@ -312,12 +354,13 @@ type ListTasksForKanbanRow struct {
 	Metadata        interface{} `json:"metadata"`
 	CreatedAt       *time.Time  `json:"created_at"`
 	UpdatedAt       *time.Time  `json:"updated_at"`
+	BoardID         *string     `json:"board_id"`
 	AgentName       *string     `json:"agent_name"`
 	AgentType       *string     `json:"agent_type"`
 }
 
-func (q *Queries) ListTasksForKanban(ctx context.Context, commissionID string) ([]ListTasksForKanbanRow, error) {
-	rows, err := q.db.QueryContext(ctx, listTasksForKanban, commissionID)
+func (q *Queries) ListTasksForKanban(ctx context.Context, boardID *string) ([]ListTasksForKanbanRow, error) {
+	rows, err := q.db.QueryContext(ctx, listTasksForKanban, boardID)
 	if err != nil {
 		return nil, err
 	}
@@ -337,6 +380,7 @@ func (q *Queries) ListTasksForKanban(ctx context.Context, commissionID string) (
 			&i.Metadata,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+			&i.BoardID,
 			&i.AgentName,
 			&i.AgentType,
 		); err != nil {
@@ -381,7 +425,7 @@ func (q *Queries) RecordTaskEvent(ctx context.Context, arg RecordTaskEventParams
 
 const updateTask = `-- name: UpdateTask :exec
 UPDATE tasks 
-SET title = ?, description = ?, status = ?, column = ?, story_points = ?, metadata = ?, updated_at = CURRENT_TIMESTAMP
+SET title = ?, description = ?, status = ?, story_points = ?, metadata = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 `
 
@@ -389,7 +433,6 @@ type UpdateTaskParams struct {
 	Title       string      `json:"title"`
 	Description *string     `json:"description"`
 	Status      string      `json:"status"`
-	Column      string      `json:"column"`
 	StoryPoints *int64      `json:"story_points"`
 	Metadata    interface{} `json:"metadata"`
 	ID          string      `json:"id"`
@@ -400,7 +443,6 @@ func (q *Queries) UpdateTask(ctx context.Context, arg UpdateTaskParams) error {
 		arg.Title,
 		arg.Description,
 		arg.Status,
-		arg.Column,
 		arg.StoryPoints,
 		arg.Metadata,
 		arg.ID,

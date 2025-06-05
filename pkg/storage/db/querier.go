@@ -11,29 +11,36 @@ import (
 type Querier interface {
 	AssignTaskToAgent(ctx context.Context, arg AssignTaskToAgentParams) error
 	CreateAgent(ctx context.Context, arg CreateAgentParams) error
+	CreateBoard(ctx context.Context, arg CreateBoardParams) error
 	CreateCampaign(ctx context.Context, arg CreateCampaignParams) error
 	CreateCommission(ctx context.Context, arg CreateCommissionParams) error
 	CreateTask(ctx context.Context, arg CreateTaskParams) error
 	DeleteAgent(ctx context.Context, id string) error
+	DeleteBoard(ctx context.Context, id string) error
 	DeleteCampaign(ctx context.Context, id string) error
 	DeleteCommission(ctx context.Context, id string) error
 	DeleteTask(ctx context.Context, id string) error
 	GetAgent(ctx context.Context, id string) (Agent, error)
 	GetAgentWorkload(ctx context.Context) ([]GetAgentWorkloadRow, error)
+	GetBoard(ctx context.Context, id string) (Board, error)
+	GetBoardByCommission(ctx context.Context, commissionID string) (Board, error)
 	GetCampaign(ctx context.Context, id string) (Campaign, error)
 	GetCommission(ctx context.Context, id string) (Commission, error)
 	GetTask(ctx context.Context, id string) (Task, error)
 	GetTaskHistory(ctx context.Context, taskID string) ([]TaskEvent, error)
 	ListAgents(ctx context.Context) ([]Agent, error)
 	ListAgentsByType(ctx context.Context, type_ string) ([]Agent, error)
+	ListBoards(ctx context.Context) ([]Board, error)
 	ListCampaigns(ctx context.Context) ([]Campaign, error)
 	ListCommissionsByCampaign(ctx context.Context, campaignID string) ([]Commission, error)
 	ListTasks(ctx context.Context) ([]Task, error)
+	ListTasksByBoard(ctx context.Context, boardID *string) ([]Task, error)
 	ListTasksByCommission(ctx context.Context, commissionID string) ([]Task, error)
 	ListTasksByStatus(ctx context.Context, status string) ([]Task, error)
-	ListTasksForKanban(ctx context.Context, commissionID string) ([]ListTasksForKanbanRow, error)
+	ListTasksForKanban(ctx context.Context, boardID *string) ([]ListTasksForKanbanRow, error)
 	RecordTaskEvent(ctx context.Context, arg RecordTaskEventParams) error
 	UpdateAgent(ctx context.Context, arg UpdateAgentParams) error
+	UpdateBoard(ctx context.Context, arg UpdateBoardParams) error
 	UpdateCampaignStatus(ctx context.Context, arg UpdateCampaignStatusParams) error
 	UpdateCommissionStatus(ctx context.Context, arg UpdateCommissionStatusParams) error
 	UpdateTask(ctx context.Context, arg UpdateTaskParams) error

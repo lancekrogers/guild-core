@@ -7,19 +7,21 @@ import (
 
 // Domain models - following Guild's naming conventions
 type Task struct {
-	ID                string                 `json:"id"`
-	CommissionID      string                 `json:"commission_id"`
-	AssignedAgentID   *string                `json:"assigned_agent_id,omitempty"`
-	Title             string                 `json:"title"`
-	Description       *string                `json:"description,omitempty"`
-	Status            string                 `json:"status"`
-	Column            string                 `json:"column"`
-	StoryPoints       int32                  `json:"story_points"`
-	Metadata          map[string]interface{} `json:"metadata,omitempty"`
-	CreatedAt         time.Time              `json:"created_at"`
-	UpdatedAt         time.Time              `json:"updated_at"`
-	AgentName         *string                `json:"agent_name,omitempty"`  // For joined queries
-	AgentType         *string                `json:"agent_type,omitempty"` // For joined queries
+	ID              string                 `json:"id"`
+	BoardID         *string                `json:"board_id,omitempty"`     // Nullable for new schema
+	AssignedAgentID *string                `json:"assigned_agent_id,omitempty"`
+	Title           string                 `json:"title"`
+	Description     *string                `json:"description,omitempty"`
+	Status          string                 `json:"status"`
+	StoryPoints     int32                  `json:"story_points"`
+	Metadata        map[string]interface{} `json:"metadata,omitempty"`
+	CreatedAt       time.Time              `json:"created_at"`
+	UpdatedAt       time.Time              `json:"updated_at"`
+	AgentName       *string                `json:"agent_name,omitempty"`  // For joined queries
+	AgentType       *string                `json:"agent_type,omitempty"` // For joined queries
+	
+	// DEPRECATED: Use BoardID instead - kept for backward compatibility
+	CommissionID    string                 `json:"commission_id,omitempty"`
 }
 
 type Campaign struct {
@@ -39,6 +41,16 @@ type Commission struct {
 	Context     map[string]interface{} `json:"context,omitempty"`
 	Status      string                 `json:"status"`
 	CreatedAt   time.Time              `json:"created_at"`
+}
+
+type Board struct {
+	ID           string    `json:"id"`
+	CommissionID string    `json:"commission_id"`
+	Name         string    `json:"name"`
+	Description  *string   `json:"description,omitempty"`
+	Status       string    `json:"status"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
 
 type Agent struct {
@@ -79,11 +91,10 @@ type TaskRepository interface {
 	DeleteTask(ctx context.Context, id string) error
 	ListTasks(ctx context.Context) ([]*Task, error)
 	ListTasksByStatus(ctx context.Context, status string) ([]*Task, error)
-	ListTasksByCommission(ctx context.Context, commissionID string) ([]*Task, error)
-	ListTasksForKanban(ctx context.Context, commissionID string) ([]*Task, error)
+	ListTasksByBoard(ctx context.Context, boardID string) ([]*Task, error)
+	ListTasksForKanban(ctx context.Context, boardID string) ([]*Task, error)
 	AssignTask(ctx context.Context, taskID, agentID string) error
 	UpdateTaskStatus(ctx context.Context, taskID, status string) error
-	UpdateTaskColumn(ctx context.Context, taskID, column string) error
 	RecordTaskEvent(ctx context.Context, event *TaskEvent) error
 	GetTaskHistory(ctx context.Context, taskID string) ([]*TaskEvent, error)
 	GetAgentWorkload(ctx context.Context) ([]*AgentWorkload, error)
@@ -105,6 +116,15 @@ type CommissionRepository interface {
 	ListCommissionsByCampaign(ctx context.Context, campaignID string) ([]*Commission, error)
 }
 
+type BoardRepository interface {
+	CreateBoard(ctx context.Context, board *Board) error
+	GetBoard(ctx context.Context, id string) (*Board, error)
+	GetBoardByCommission(ctx context.Context, commissionID string) (*Board, error)
+	UpdateBoard(ctx context.Context, board *Board) error
+	DeleteBoard(ctx context.Context, id string) error
+	ListBoards(ctx context.Context) ([]*Board, error)
+}
+
 type AgentRepository interface {
 	CreateAgent(ctx context.Context, agent *Agent) error
 	GetAgent(ctx context.Context, id string) (*Agent, error)
@@ -119,10 +139,12 @@ type StorageRegistry interface {
 	RegisterTaskRepository(repo TaskRepository)
 	RegisterCampaignRepository(repo CampaignRepository)
 	RegisterCommissionRepository(repo CommissionRepository)
+	RegisterBoardRepository(repo BoardRepository)
 	RegisterAgentRepository(repo AgentRepository)
 	
 	GetTaskRepository() TaskRepository
 	GetCampaignRepository() CampaignRepository
 	GetCommissionRepository() CommissionRepository
+	GetBoardRepository() BoardRepository
 	GetAgentRepository() AgentRepository
 }

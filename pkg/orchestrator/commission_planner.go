@@ -81,18 +81,33 @@ func (p *DefaultCommissionTaskPlanner) AssignTasksToArtisans(
 			return fmt.Errorf("failed to find artisan for task %s: %w", task.ID, err)
 		}
 
-		// Assign task
-		err = p.kanbanManager.UpdateTask(ctx, &kanban.Task{
-			ID:          task.ID,
-			Title:       task.Title,
-			Description: task.Description,
-			AssignedTo:  artisan.ID,
-			Status:      kanban.StatusTodo,
-			Priority:    task.Priority,
-			Metadata:    task.Metadata,
-		})
+		// Get the existing task to preserve all metadata
+		existingTask, err := p.kanbanManager.GetTask(ctx, task.ID)
+		if err != nil {
+			return fmt.Errorf("failed to get existing task %s: %w", task.ID, err)
+		}
+
+		// Update the assignment
+		existingTask.AssignedTo = artisan.ID
+		existingTask.Status = kanban.StatusTodo
+		
+		// Preserve metadata from original task (in case existing task has incomplete metadata)
+		for k, v := range task.Metadata {
+			existingTask.Metadata[k] = v
+		}
+
+		// Assign task by updating the existing task
+		err = p.kanbanManager.UpdateTask(ctx, existingTask)
 		if err != nil {
 			return fmt.Errorf("failed to assign task %s to %s: %w", task.ID, artisan.ID, err)
+		}
+
+		// Update the original task reference for return to caller
+		task.AssignedTo = artisan.ID
+		task.Status = kanban.StatusTodo
+		// Also ensure metadata is preserved in the original task reference
+		for k, v := range existingTask.Metadata {
+			task.Metadata[k] = v
 		}
 
 		// Emit assignment event
@@ -133,35 +148,30 @@ func (p *DefaultCommissionTaskPlanner) convertToKanbanTask(
 		priority = kanban.PriorityLow
 	}
 
-	// Create kanban task
-	task := &kanban.Task{
-		ID:          taskInfo.ID,
-		Title:       taskInfo.Title,
-		Description: taskInfo.Description,
-		Status:      kanban.StatusTodo,
-		Priority:    priority,
-		EstimatedHours: parseEstimate(taskInfo.Estimate),
-		Dependencies: taskInfo.Dependencies,
-		Metadata: map[string]string{
-			"commission_id":           commissionID,
-			"source_section":          taskInfo.Section,
-			"required_capabilities":   strings.Join(extractCapabilities(taskInfo), ","),
-			"original_category":       taskInfo.Category,
-			"extraction_source":       "intelligent_parser",
-		},
-	}
-
-	// Create the task in kanban system
-	createdTask, err := p.kanbanManager.CreateTask(ctx, task.Title, task.Description)
+	// Create the task in kanban system first (this generates the actual UUID)
+	createdTask, err := p.kanbanManager.CreateTask(ctx, taskInfo.Title, taskInfo.Description)
 	if err != nil {
 		return nil, err
 	}
 
-	// Update with additional metadata
-	createdTask.Priority = task.Priority
-	createdTask.EstimatedHours = task.EstimatedHours
-	createdTask.Dependencies = task.Dependencies
-	createdTask.Metadata = task.Metadata
+	// Update the created task with additional metadata and properties
+	createdTask.Priority = priority
+	createdTask.EstimatedHours = parseEstimate(taskInfo.Estimate)
+	createdTask.Dependencies = taskInfo.Dependencies
+	
+	// Initialize metadata map if nil
+	if createdTask.Metadata == nil {
+		createdTask.Metadata = make(map[string]string)
+	}
+	
+	// Add commission and task metadata
+	createdTask.Metadata["commission_id"] = commissionID
+	createdTask.Metadata["source_section"] = taskInfo.Section
+	createdTask.Metadata["required_capabilities"] = strings.Join(extractCapabilities(taskInfo), ",")
+	createdTask.Metadata["category"] = taskInfo.Category
+	createdTask.Metadata["original_category"] = taskInfo.Category
+	createdTask.Metadata["extraction_source"] = "intelligent_parser"
+	createdTask.Metadata["original_task_id"] = taskInfo.ID // Store the original parsed ID for reference
 
 	return createdTask, nil
 }

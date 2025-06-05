@@ -381,6 +381,9 @@ export OTEL_EXPORTER_OTLP_INSECURE=true
 
 # Metrics
 export GUILD_METRICS_ENABLED=true
+
+# File Logging (optional - off by default)
+export GUILD_LOG_FILE=true        # Enable logging to .guild/logs/
 ```
 
 ## Testing
@@ -409,6 +412,22 @@ func TestAgentExecution(t *testing.T) {
     }
 }
 ```
+
+## File Logging for Debugging
+
+Guild can optionally log to files in `.guild/logs/` for easier debugging:
+
+- **Daily log files**: `guild-2025-01-06.log`, `guild-2025-01-07.log`, etc.
+- **Latest symlink**: `latest.log` always points to current day's log
+- **User-friendly**: Framework users can easily find debugging information
+- **Off by default**: No disk usage unless explicitly enabled
+
+To enable file logging:
+```bash
+export GUILD_LOG_FILE=true
+```
+
+This creates log files in your project's `.guild/logs/` directory with both console and file output.
 
 ## Benefits
 

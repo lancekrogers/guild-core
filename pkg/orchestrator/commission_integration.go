@@ -10,11 +10,11 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/objective"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
 // CommissionIntegrationService coordinates the complete pipeline from commission to kanban tasks
@@ -23,7 +23,7 @@ type CommissionIntegrationService struct {
 	commissionRefiner     manager.CommissionRefiner
 	commissionPlanner     CommissionTaskPlanner
 	kanbanManager         KanbanManager
-	objectiveManager      *objective.Manager
+	commissionRepository  registry.CommissionRepository
 	eventBus              *EventBus
 	guildMasterFactory    *manager.DefaultGuildMasterFactory
 	taskBridge            *manager.TaskBridge
@@ -116,22 +116,16 @@ Format your response with XML task tags:
 		return fmt.Errorf("failed to create commission refiner: %w", err)
 	}
 
-	// Get memory registry for kanban
-	memoryRegistry := s.registry.Memory()
-	memStore, err := memoryRegistry.GetDefaultMemoryStore()
+	// Create kanban manager using SQLite storage via registry
+	// First create a custom adapter for kanban that implements their ComponentRegistry interface
+	kanbanAdapter := &kanbanRegistryAdapter{registry: s.registry}
+	kanbanMgr, err := kanban.NewManagerWithRegistry(kanbanAdapter)
 	if err != nil {
-		// Try to get any available store
-		stores := memoryRegistry.ListMemoryStores()
-		if len(stores) > 0 {
-			memStore, err = memoryRegistry.GetMemoryStore(stores[0])
-		}
-		if err != nil || memStore == nil {
-			return fmt.Errorf("failed to get memory store: %w", err)
-		}
+		return fmt.Errorf("failed to create kanban manager with SQLite storage: %w", err)
 	}
-
-	// Create kanban components
-	kanbanBoard, err := kanban.NewBoard(memStore, "kanban", "default")
+	
+	// Create a board using the SQLite-enabled manager
+	kanbanBoard, err := kanbanMgr.CreateBoard(context.Background(), "commission-board", "Board for commission tasks")
 	if err != nil {
 		return fmt.Errorf("failed to create kanban board: %w", err)
 	}
@@ -152,14 +146,19 @@ Format your response with XML task tags:
 	// Create commission planner
 	s.commissionPlanner = NewCommissionTaskPlanner(s.kanbanManager, parserAdapter, s.eventBus)
 
-	// Create objective manager
-	s.objectiveManager, err = objective.NewManager(memStore, "objectives")
-	if err != nil {
-		return fmt.Errorf("failed to create objective manager: %w", err)
+	// Get commission repository from storage registry
+	storageRegistry := s.registry.Storage()
+	if storageRegistry == nil {
+		return fmt.Errorf("storage registry not available for commission repository")
+	}
+	
+	s.commissionRepository = storageRegistry.GetCommissionRepository()
+	if s.commissionRepository == nil {
+		return fmt.Errorf("commission repository not available from storage registry")
 	}
 
-	// Create task bridge
-	s.taskBridge = manager.NewTaskBridge(kanbanBoard, s.objectiveManager)
+	// Create task bridge with commission repository instead of objective manager
+	s.taskBridge = manager.NewTaskBridgeWithCommissions(kanbanBoard, s.commissionRepository)
 
 	return nil
 }
@@ -184,9 +183,9 @@ func (s *CommissionIntegrationService) SetKanbanManager(kanbanManager KanbanMana
 	s.kanbanManager = kanbanManager
 }
 
-// SetObjectiveManager sets the objective manager (injected via registry or factory)
-func (s *CommissionIntegrationService) SetObjectiveManager(objectiveManager *objective.Manager) {
-	s.objectiveManager = objectiveManager
+// SetCommissionRepository sets the commission repository (injected via registry)
+func (s *CommissionIntegrationService) SetCommissionRepository(repo registry.CommissionRepository) {
+	s.commissionRepository = repo
 }
 
 // ProcessCommissionToTasks handles the complete pipeline from commission to kanban tasks
@@ -234,12 +233,10 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 		return nil, fmt.Errorf("failed to assign tasks to artisans: %w", err)
 	}
 
-	// Step 5: Update objective with task information
-	if s.objectiveManager != nil {
-		if err := s.updateObjectiveWithTasks(ctx, commission, tasks); err != nil {
-			log.Printf("Warning: failed to update objective: %v", err)
-			// Don't fail the entire process
-		}
+	// Step 5: Log commission completion with task information
+	if s.commissionRepository != nil {
+		log.Printf("Commission %s completed with %d tasks", commission.ID, len(tasks))
+		// TODO: Implement commission metadata updates if needed
 	}
 
 	// Step 6: Emit completion event
@@ -267,21 +264,21 @@ func (s *CommissionIntegrationService) ProcessObjectiveToTasks(
 	objectiveID string,
 	guildConfig *config.GuildConfig,
 ) (*CommissionProcessingResult, error) {
-	if s.objectiveManager == nil {
-		return nil, fmt.Errorf("objective manager not configured")
+	if s.commissionRepository == nil {
+		return nil, fmt.Errorf("commission repository not configured")
 	}
 
-	// Load objective from storage
-	obj, err := s.objectiveManager.GetObjective(ctx, objectiveID)
+	// Load commission from storage  
+	registryCommission, err := s.commissionRepository.GetCommission(ctx, objectiveID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to load objective %s: %w", objectiveID, err)
+		return nil, fmt.Errorf("failed to load commission %s: %w", objectiveID, err)
 	}
 
-	// Convert objective to commission
-	commission := s.objectiveToCommission(obj)
+	// Convert registry commission to manager commission
+	managerCommission := s.registryToManagerCommission(registryCommission)
 
 	// Process commission to tasks
-	return s.ProcessCommissionToTasks(ctx, commission, guildConfig)
+	return s.ProcessCommissionToTasks(ctx, managerCommission, guildConfig)
 }
 
 // GetTaskBridge returns the task bridge for external use
@@ -517,65 +514,30 @@ func (s *CommissionIntegrationService) addCommissionContext(ctx context.Context,
 	return ctx
 }
 
-// updateObjectiveWithTasks updates the objective with generated task information
-func (s *CommissionIntegrationService) updateObjectiveWithTasks(
-	ctx context.Context,
-	commission manager.Commission,
-	tasks []*kanban.Task,
-) error {
-	if commission.ID == "" {
-		return nil // No objective to update
-	}
-
-	// Get or create objective
-	obj, err := s.objectiveManager.GetObjective(ctx, commission.ID)
-	if err != nil {
-		// Create new objective
-		obj = &objective.Objective{
-			ID:          commission.ID,
-			Title:       commission.Title,
-			Description: commission.Description,
-			Status:      objective.StatusDraft,
-			Metadata:    make(map[string]string),
-		}
-	}
-
-	// Update metadata
-	obj.Metadata["total_tasks"] = fmt.Sprintf("%d", len(tasks))
-	obj.Metadata["tasks_created_at"] = time.Now().UTC().Format(time.RFC3339)
-	obj.Metadata["domain"] = commission.Domain
-
-	// Add task IDs
-	taskIDs := make([]string, 0, len(tasks))
-	for _, task := range tasks {
-		taskIDs = append(taskIDs, task.ID)
-	}
-	obj.Metadata["task_ids"] = strings.Join(taskIDs, ",")
-
-	// Save objective
-	return s.objectiveManager.SaveObjective(ctx, obj)
-}
-
-// objectiveToCommission converts an objective to a commission for processing
-func (s *CommissionIntegrationService) objectiveToCommission(obj *objective.Objective) manager.Commission {
-	// Extract domain from objective metadata if available
+// registryToManagerCommission converts a registry commission to a manager commission
+func (s *CommissionIntegrationService) registryToManagerCommission(registryCommission *registry.Commission) manager.Commission {
+	// Extract domain from commission if available  
 	domain := "general"
-	if obj.Metadata != nil {
-		if d, ok := obj.Metadata["domain"]; ok && d != "" {
-			domain = d
-		}
+	if registryCommission.Domain != nil && *registryCommission.Domain != "" {
+		domain = *registryCommission.Domain
 	}
 	
-	// Convert metadata to context map
+	// Get description
+	description := ""
+	if registryCommission.Description != nil {
+		description = *registryCommission.Description
+	}
+	
+	// Convert context
 	context := make(map[string]interface{})
-	for k, v := range obj.Metadata {
-		context[k] = v
+	if registryCommission.Context != nil {
+		context = registryCommission.Context
 	}
 	
 	return manager.Commission{
-		ID:          obj.ID,
-		Title:       obj.Title,
-		Description: obj.Description,
+		ID:          registryCommission.ID,
+		Title:       registryCommission.Title,
+		Description: description,
 		Domain:      domain,
 		Context:     context,
 	}
@@ -653,4 +615,300 @@ func (r *CommissionProcessingResult) GetTaskCount() int {
 // GetAssignedArtisanCount returns the number of unique assigned artisans
 func (r *CommissionProcessingResult) GetAssignedArtisanCount() int {
 	return len(r.AssignedArtisans)
+}
+
+// kanbanRegistryAdapter adapts registry.ComponentRegistry to kanban.ComponentRegistry
+type kanbanRegistryAdapter struct {
+	registry registry.ComponentRegistry
+}
+
+// Storage returns a kanban.StorageRegistry implementation
+func (k *kanbanRegistryAdapter) Storage() kanban.StorageRegistry {
+	return &kanbanStorageAdapter{storageRegistry: k.registry.Storage()}
+}
+
+// kanbanStorageAdapter adapts registry.StorageRegistry to kanban.StorageRegistry
+type kanbanStorageAdapter struct {
+	storageRegistry registry.StorageRegistry
+}
+
+// Implement kanban.StorageRegistry interface methods
+func (k *kanbanStorageAdapter) GetCampaignRepository() kanban.CampaignRepository {
+	// Get the underlying storage registry and create adapter
+	if sqliteReg, ok := k.storageRegistry.(interface{ GetStorageRegistry() storage.StorageRegistry }); ok {
+		return &kanbanCampaignRepoAdapter{repo: sqliteReg.GetStorageRegistry().GetCampaignRepository()}
+	}
+	// For registry interfaces, we need to create adapters since the method signatures differ
+	return &kanbanCampaignRepoAdapter{repo: nil} // This will use the interface{} approach
+}
+
+func (k *kanbanStorageAdapter) GetCommissionRepository() kanban.CommissionRepository {
+	if sqliteReg, ok := k.storageRegistry.(interface{ GetStorageRegistry() storage.StorageRegistry }); ok {
+		return &kanbanCommissionRepoAdapter{repo: sqliteReg.GetStorageRegistry().GetCommissionRepository()}
+	}
+	return &kanbanCommissionRepoAdapter{repo: nil}
+}
+
+func (k *kanbanStorageAdapter) GetTaskRepository() kanban.TaskRepository {
+	if sqliteReg, ok := k.storageRegistry.(interface{ GetStorageRegistry() storage.StorageRegistry }); ok {
+		return &kanbanTaskRepoAdapter{repo: sqliteReg.GetStorageRegistry().GetTaskRepository()}
+	}
+	return &kanbanTaskRepoAdapter{repo: nil}
+}
+
+func (k *kanbanStorageAdapter) GetBoardRepository() kanban.BoardRepository {
+	if sqliteReg, ok := k.storageRegistry.(interface{ GetStorageRegistry() storage.StorageRegistry }); ok {
+		return &kanbanBoardRepoAdapter{repo: sqliteReg.GetStorageRegistry().GetBoardRepository()}
+	}
+	return &kanbanBoardRepoAdapter{repo: nil}
+}
+
+func (k *kanbanStorageAdapter) GetMemoryStore() kanban.MemoryStore {
+	// Return the memory store adapter from the storage registry
+	if memStore := k.storageRegistry.GetMemoryStore(); memStore != nil {
+		// Convert from registry.MemoryStore to kanban.MemoryStore
+		return &kanbanMemoryStoreAdapter{memStore: memStore}
+	}
+	return nil
+}
+
+// kanbanMemoryStoreAdapter adapts registry.MemoryStore to kanban.MemoryStore
+type kanbanMemoryStoreAdapter struct {
+	memStore registry.MemoryStore
+}
+
+func (k *kanbanMemoryStoreAdapter) Get(ctx context.Context, bucket, key string) ([]byte, error) {
+	return k.memStore.Get(ctx, bucket, key)
+}
+
+func (k *kanbanMemoryStoreAdapter) Put(ctx context.Context, bucket, key string, value []byte) error {
+	return k.memStore.Put(ctx, bucket, key, value)
+}
+
+func (k *kanbanMemoryStoreAdapter) Delete(ctx context.Context, bucket, key string) error {
+	return k.memStore.Delete(ctx, bucket, key)
+}
+
+func (k *kanbanMemoryStoreAdapter) List(ctx context.Context, bucket string) ([]string, error) {
+	return k.memStore.List(ctx, bucket)
+}
+
+func (k *kanbanMemoryStoreAdapter) ListKeys(ctx context.Context, bucket, prefix string) ([]string, error) {
+	// Default implementation - list all keys and filter by prefix
+	allKeys, err := k.memStore.List(ctx, bucket)
+	if err != nil {
+		return nil, err
+	}
+	
+	var filteredKeys []string
+	for _, key := range allKeys {
+		if strings.HasPrefix(key, prefix) {
+			filteredKeys = append(filteredKeys, key)
+		}
+	}
+	
+	return filteredKeys, nil
+}
+
+func (k *kanbanMemoryStoreAdapter) Close() error {
+	// The underlying store should handle cleanup
+	if closer, ok := k.memStore.(interface{ Close() error }); ok {
+		return closer.Close()
+	}
+	return nil
+}
+
+// Repository adapters that bridge the interface differences between storage and kanban packages
+
+// kanbanCampaignRepoAdapter adapts storage.CampaignRepository to kanban.CampaignRepository
+type kanbanCampaignRepoAdapter struct {
+	repo storage.CampaignRepository
+}
+
+func (k *kanbanCampaignRepoAdapter) CreateCampaign(ctx context.Context, campaign interface{}) error {
+	// Convert interface{} to storage campaign format
+	if k.repo != nil {
+		// Convert map to storage.Campaign if needed
+		if campaignMap, ok := campaign.(map[string]interface{}); ok {
+			storageCampaign := &storage.Campaign{
+				ID:        campaignMap["ID"].(string),
+				Name:      campaignMap["Name"].(string),
+				Status:    campaignMap["Status"].(string),
+				CreatedAt: campaignMap["CreatedAt"].(time.Time),
+				UpdatedAt: campaignMap["UpdatedAt"].(time.Time),
+			}
+			return k.repo.CreateCampaign(ctx, storageCampaign)
+		}
+	}
+	return fmt.Errorf("campaign repository not available")
+}
+
+// kanbanCommissionRepoAdapter adapts storage.CommissionRepository to kanban.CommissionRepository
+type kanbanCommissionRepoAdapter struct {
+	repo storage.CommissionRepository
+}
+
+func (k *kanbanCommissionRepoAdapter) CreateCommission(ctx context.Context, commission interface{}) error {
+	if k.repo != nil {
+		if commissionMap, ok := commission.(map[string]interface{}); ok {
+			storageCommission := &storage.Commission{
+				ID:          commissionMap["ID"].(string),
+				CampaignID:  commissionMap["CampaignID"].(string),
+				Title:       commissionMap["Title"].(string),
+				Status:      commissionMap["Status"].(string),
+				CreatedAt:   commissionMap["CreatedAt"].(time.Time),
+			}
+			if desc, exists := commissionMap["Description"]; exists && desc != nil {
+				if descStr, ok := desc.(string); ok {
+					storageCommission.Description = &descStr
+				}
+			}
+			if domain, exists := commissionMap["Domain"]; exists && domain != nil {
+				if domainStr, ok := domain.(string); ok {
+					storageCommission.Domain = &domainStr
+				}
+			}
+			if context, exists := commissionMap["Context"]; exists {
+				if contextMap, ok := context.(map[string]interface{}); ok {
+					storageCommission.Context = contextMap
+				}
+			}
+			return k.repo.CreateCommission(ctx, storageCommission)
+		}
+	}
+	return fmt.Errorf("commission repository not available")
+}
+
+func (k *kanbanCommissionRepoAdapter) GetCommission(ctx context.Context, id string) (interface{}, error) {
+	if k.repo != nil {
+		return k.repo.GetCommission(ctx, id)
+	}
+	return nil, fmt.Errorf("commission repository not available")
+}
+
+// kanbanTaskRepoAdapter adapts storage.TaskRepository to kanban.TaskRepository
+type kanbanTaskRepoAdapter struct {
+	repo storage.TaskRepository
+}
+
+func (k *kanbanTaskRepoAdapter) CreateTask(ctx context.Context, task interface{}) error {
+	if k.repo != nil {
+		if taskMap, ok := task.(map[string]interface{}); ok {
+			// Convert BoardID to pointer since it's nullable in the new schema
+			var boardID *string
+			if bid, exists := taskMap["BoardID"]; exists && bid != nil {
+				if bidStr, ok := bid.(string); ok && bidStr != "" {
+					boardID = &bidStr
+				}
+			}
+			
+			storageTask := &storage.Task{
+				ID:            taskMap["ID"].(string),
+				BoardID:       boardID,                        // Use nullable BoardID
+				Title:         taskMap["Title"].(string),
+				Status:        taskMap["Status"].(string),
+				StoryPoints:   taskMap["StoryPoints"].(int32),
+				CreatedAt:     taskMap["CreatedAt"].(time.Time),
+				UpdatedAt:     taskMap["UpdatedAt"].(time.Time),
+			}
+			if agentID, exists := taskMap["AssignedAgentID"]; exists && agentID != nil {
+				if agentIDStr, ok := agentID.(*string); ok {
+					storageTask.AssignedAgentID = agentIDStr
+				}
+			}
+			if desc, exists := taskMap["Description"]; exists && desc != nil {
+				if descStr, ok := desc.(*string); ok {
+					storageTask.Description = descStr
+				}
+			}
+			if metadata, exists := taskMap["Metadata"]; exists {
+				if metadataMap, ok := metadata.(map[string]interface{}); ok {
+					storageTask.Metadata = metadataMap
+				}
+			}
+			
+			// Try to update first (upsert logic for kanban compatibility)
+			if err := k.repo.UpdateTask(ctx, storageTask); err != nil {
+				// If update fails, try to create (task might not exist yet)
+				return k.repo.CreateTask(ctx, storageTask)
+			}
+			return nil
+		}
+	}
+	return fmt.Errorf("task repository not available")
+}
+
+func (k *kanbanTaskRepoAdapter) UpdateTask(ctx context.Context, task interface{}) error {
+	if k.repo != nil {
+		if taskMap, ok := task.(map[string]interface{}); ok {
+			// Convert BoardID to pointer since it's nullable in the new schema
+			var boardID *string
+			if bid, exists := taskMap["BoardID"]; exists && bid != nil {
+				if bidStr, ok := bid.(string); ok && bidStr != "" {
+					boardID = &bidStr
+				}
+			}
+			
+			storageTask := &storage.Task{
+				ID:            taskMap["ID"].(string),
+				BoardID:       boardID,                        // Use nullable BoardID
+				Title:         taskMap["Title"].(string),
+				Status:        taskMap["Status"].(string),
+				StoryPoints:   taskMap["StoryPoints"].(int32),
+				CreatedAt:     taskMap["CreatedAt"].(time.Time),
+				UpdatedAt:     taskMap["UpdatedAt"].(time.Time),
+			}
+			if agentID, exists := taskMap["AssignedAgentID"]; exists && agentID != nil {
+				if agentIDStr, ok := agentID.(*string); ok {
+					storageTask.AssignedAgentID = agentIDStr
+				}
+			}
+			if desc, exists := taskMap["Description"]; exists && desc != nil {
+				if descStr, ok := desc.(*string); ok {
+					storageTask.Description = descStr
+				}
+			}
+			if metadata, exists := taskMap["Metadata"]; exists {
+				if metadataMap, ok := metadata.(map[string]interface{}); ok {
+					storageTask.Metadata = metadataMap
+				}
+			}
+			return k.repo.UpdateTask(ctx, storageTask)
+		}
+	}
+	return fmt.Errorf("task repository not available")
+}
+
+func (k *kanbanTaskRepoAdapter) RecordTaskEvent(ctx context.Context, event interface{}) error {
+	if k.repo != nil {
+		if eventMap, ok := event.(map[string]interface{}); ok {
+			storageEvent := &storage.TaskEvent{
+				TaskID:    eventMap["TaskID"].(string),
+				EventType: eventMap["EventType"].(string),
+				CreatedAt: eventMap["CreatedAt"].(time.Time),
+			}
+			if agentID, exists := eventMap["AgentID"]; exists && agentID != nil {
+				if agentIDStr, ok := agentID.(string); ok {
+					storageEvent.AgentID = &agentIDStr
+				}
+			}
+			if oldValue, exists := eventMap["OldValue"]; exists && oldValue != nil {
+				if oldValueStr, ok := oldValue.(*string); ok {
+					storageEvent.OldValue = oldValueStr
+				}
+			}
+			if newValue, exists := eventMap["NewValue"]; exists && newValue != nil {
+				if newValueStr, ok := newValue.(*string); ok {
+					storageEvent.NewValue = newValueStr
+				}
+			}
+			if reason, exists := eventMap["Reason"]; exists && reason != nil {
+				if reasonStr, ok := reason.(*string); ok {
+					storageEvent.Reason = reasonStr
+				}
+			}
+			return k.repo.RecordTaskEvent(ctx, storageEvent)
+		}
+	}
+	return fmt.Errorf("task repository not available")
 }
