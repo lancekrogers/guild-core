@@ -2,7 +2,6 @@ package orchestrator
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"

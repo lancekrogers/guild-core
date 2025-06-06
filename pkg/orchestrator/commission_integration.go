@@ -88,23 +88,8 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 		// Use the global prompt registry
 		promptRegistry := prompts.GetRegistry()
 		
-		// Register some basic prompts that may be needed
-		basicGuildMasterPrompt := `You are the Guild Master, responsible for breaking down commissions into actionable tasks.
-
-Format your response with XML task tags:
-
-<task>
-  <id>unique-task-id</id>
-  <title>Clear Task Title</title>
-  <description>Detailed description of what needs to be done</description>
-  <priority>high|medium|low</priority>
-  <estimate>estimated hours (e.g., 4h, 2d)</estimate>
-  <category>backend|frontend|database|devops|testing|documentation</category>
-  <dependencies>comma-separated task IDs that must be completed first</dependencies>
-</task>`
-		
-		promptRegistry.RegisterPrompt("manager", "default", basicGuildMasterPrompt)
-		promptRegistry.RegisterPrompt("manager", "web-development", basicGuildMasterPrompt)
+		// PromptRegistry doesn't have RegisterPrompt method - using GetDefaultManager instead
+		// TODO: Implement proper prompt registration via manager strategies
 		
 		// Create a standard prompt manager
 		var err error
@@ -148,7 +133,7 @@ Format your response with XML task tags:
 	// Create kanban manager using SQLite storage via registry
 	// First create a custom adapter for kanban that implements their ComponentRegistry interface
 	kanbanAdapter := &kanbanRegistryAdapter{registry: s.registry}
-	kanbanMgr, err := kanban.NewManagerWithRegistry(kanbanAdapter)
+	kanbanMgr, err := kanban.NewManagerWithRegistry(context.Background(), kanbanAdapter)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to create kanban manager with SQLite storage").
 			WithComponent("orchestrator").
@@ -226,7 +211,7 @@ func (s *CommissionIntegrationService) SetCommissionPlanner(planner CommissionTa
 
 // SetEventBus sets the event bus (injected via registry or factory)
 func (s *CommissionIntegrationService) SetEventBus(eventBus EventBus) {
-	s.eventBus = &eventBus
+	s.eventBus = eventBus
 }
 
 // SetKanbanManager sets the kanban manager (injected via registry or factory)
@@ -260,7 +245,7 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 		return nil, gerror.Wrap(err, gerror.ErrCodeTaskFailed, "failed to refine commission").
 			WithComponent("orchestrator").
 			WithOperation("ProcessCommissionToTasks").
-			WithDetails("commissionID", commission.ID, "commissionTitle", commission.Title)
+			WithDetails("commissionID", commission.ID)
 	}
 	log.Printf("Commission refined successfully, found %d files", len(refined.Structure.Files))
 
@@ -271,7 +256,7 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 		return nil, gerror.Wrap(err, gerror.ErrCodeTaskFailed, "failed to plan tasks from commission").
 			WithComponent("orchestrator").
 			WithOperation("ProcessCommissionToTasks").
-			WithDetails("commissionID", commission.ID, "refinedFiles", len(refined.Structure.Files))
+			WithDetails("commissionID", commission.ID)
 	}
 	log.Printf("Created %d tasks from commission", len(tasks))
 
@@ -290,7 +275,7 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 		return nil, gerror.Wrap(err, gerror.ErrCodeTaskFailed, "failed to assign tasks to artisans").
 			WithComponent("orchestrator").
 			WithOperation("ProcessCommissionToTasks").
-			WithDetails("commissionID", commission.ID, "taskCount", len(tasks))
+			WithDetails("commissionID", commission.ID)
 	}
 
 	// Step 5: Log commission completion with task information
@@ -362,9 +347,9 @@ type layeredManagerAdapter struct {
 }
 
 // BuildLayeredPrompt assembles a complete layered prompt for an artisan
-func (a *layeredManagerAdapter) BuildLayeredPrompt(ctx context.Context, artisanID, sessionID string, turnCtx layered.TurnContext) (*prompts.LayeredPrompt, error) {
+func (a *layeredManagerAdapter) BuildLayeredPrompt(ctx context.Context, artisanID, sessionID string, turnCtx layered.TurnContext) (*layered.LayeredPrompt, error) {
 	// Simple implementation using the basic Manager
-	var layers []prompts.SystemPrompt
+	var layers []layered.SystemPrompt
 	var compiled strings.Builder
 	
 	// Try to get a system prompt based on context
@@ -372,8 +357,8 @@ func (a *layeredManagerAdapter) BuildLayeredPrompt(ctx context.Context, artisanI
 		// Use manager role for commission refinement
 		systemPrompt, err := a.GetSystemPrompt(ctx, "manager", "default")
 		if err == nil {
-			layers = append(layers, prompts.SystemPrompt{
-				Layer:     prompts.LayerRole,
+			layers = append(layers, layered.SystemPrompt{
+				Layer:     layered.LayerRole,
 				ArtisanID: artisanID,
 				Content:   systemPrompt,
 				Version:   1,
@@ -389,8 +374,8 @@ func (a *layeredManagerAdapter) BuildLayeredPrompt(ctx context.Context, artisanI
 	if turnCtx.Context != nil {
 		contextStr, err := a.FormatContext(ctx, turnCtx.Context)
 		if err == nil && contextStr != "" {
-			layers = append(layers, prompts.SystemPrompt{
-				Layer:     prompts.LayerSession,
+			layers = append(layers, layered.SystemPrompt{
+				Layer:     layered.LayerSession,
 				ArtisanID: artisanID,
 				SessionID: sessionID,
 				Content:   contextStr,
@@ -406,7 +391,7 @@ func (a *layeredManagerAdapter) BuildLayeredPrompt(ctx context.Context, artisanI
 	// Add turn instructions
 	if len(turnCtx.Instructions) > 0 {
 		instructions := strings.Join(turnCtx.Instructions, "\n")
-		layers = append(layers, prompts.SystemPrompt{
+		layers = append(layers, layered.SystemPrompt{
 			Layer:     layered.LayerTurn,
 			ArtisanID: artisanID,
 			SessionID: sessionID,
@@ -418,7 +403,7 @@ func (a *layeredManagerAdapter) BuildLayeredPrompt(ctx context.Context, artisanI
 		compiled.WriteString(instructions)
 	}
 	
-	return &prompts.LayeredPrompt{
+	return &layered.LayeredPrompt{
 		Layers:      layers,
 		Compiled:    compiled.String(),
 		TokenCount:  len(compiled.String()) / 4, // Rough estimate
@@ -431,25 +416,27 @@ func (a *layeredManagerAdapter) BuildLayeredPrompt(ctx context.Context, artisanI
 }
 
 // GetPromptLayer retrieves a specific prompt layer
-func (a *layeredManagerAdapter) GetPromptLayer(ctx context.Context, layer prompts.PromptLayer, artisanID, sessionID string) (*prompts.SystemPrompt, error) {
+func (a *layeredManagerAdapter) GetPromptLayer(ctx context.Context, layer layered.PromptLayer, artisanID, sessionID string) (*layered.SystemPrompt, error) {
 	// Simple implementation - return a basic prompt based on layer
 	var content string
 	var err error
 	
 	switch layer {
-	case prompts.LayerRole:
+	case layered.LayerRole:
 		content, err = a.GetSystemPrompt(ctx, "manager", "default")
-	case prompts.LayerDomain:
+	case layered.LayerDomain:
 		content, err = a.GetSystemPrompt(ctx, "manager", "web-app")
 	default:
-		return nil, prompts.ErrLayerNotFound
+		return nil, gerror.New(gerror.ErrCodeNotFound, "layer not found", nil).
+			WithComponent("orchestrator").
+			WithOperation("GetPromptLayer")
 	}
 	
 	if err != nil {
 		return nil, err
 	}
 	
-	return &prompts.SystemPrompt{
+	return &layered.SystemPrompt{
 		Layer:     layer,
 		ArtisanID: artisanID,
 		SessionID: sessionID,
@@ -461,7 +448,7 @@ func (a *layeredManagerAdapter) GetPromptLayer(ctx context.Context, layer prompt
 }
 
 // SetPromptLayer sets or updates a specific prompt layer
-func (a *layeredManagerAdapter) SetPromptLayer(ctx context.Context, prompt prompts.SystemPrompt) error {
+func (a *layeredManagerAdapter) SetPromptLayer(ctx context.Context, prompt layered.SystemPrompt) error {
 	// Not implemented in adapter
 	return gerror.New(gerror.ErrCodeInternal, "SetPromptLayer not supported in adapter", nil).
 		WithComponent("orchestrator").
@@ -469,7 +456,7 @@ func (a *layeredManagerAdapter) SetPromptLayer(ctx context.Context, prompt promp
 }
 
 // DeletePromptLayer removes a specific prompt layer
-func (a *layeredManagerAdapter) DeletePromptLayer(ctx context.Context, layer prompts.PromptLayer, artisanID, sessionID string) error {
+func (a *layeredManagerAdapter) DeletePromptLayer(ctx context.Context, layer layered.PromptLayer, artisanID, sessionID string) error {
 	// Not implemented in adapter
 	return gerror.New(gerror.ErrCodeInternal, "DeletePromptLayer not supported in adapter", nil).
 		WithComponent("orchestrator").
@@ -477,15 +464,49 @@ func (a *layeredManagerAdapter) DeletePromptLayer(ctx context.Context, layer pro
 }
 
 // ListPromptLayers returns all layers for an artisan/session
-func (a *layeredManagerAdapter) ListPromptLayers(ctx context.Context, artisanID, sessionID string) ([]prompts.SystemPrompt, error) {
+func (a *layeredManagerAdapter) ListPromptLayers(ctx context.Context, artisanID, sessionID string) ([]layered.SystemPrompt, error) {
 	// Return empty list
-	return []prompts.SystemPrompt{}, nil
+	return []layered.SystemPrompt{}, nil
 }
 
 // InvalidateCache clears the layered prompt cache
 func (a *layeredManagerAdapter) InvalidateCache(ctx context.Context, artisanID, sessionID string) error {
 	// No cache in adapter
 	return nil
+}
+
+// ClearLayer clears a specific prompt layer (simplified interface)
+func (a *layeredManagerAdapter) ClearLayer(layer prompts.PromptLayer) error {
+	// Not implemented in adapter
+	return gerror.New(gerror.ErrCodeInternal, "ClearLayer not supported in adapter", nil).
+		WithComponent("orchestrator").
+		WithOperation("ClearLayer")
+}
+
+// SetLayer sets content for a specific layer
+func (a *layeredManagerAdapter) SetLayer(layer prompts.PromptLayer, content string) error {
+	// Not implemented in adapter
+	return gerror.New(gerror.ErrCodeInternal, "SetLayer not supported in adapter", nil).
+		WithComponent("orchestrator").
+		WithOperation("SetLayer")
+}
+
+// GetCompiledPrompt compiles all layers into a final prompt
+func (a *layeredManagerAdapter) GetCompiledPrompt(ctx context.Context, config prompts.LayerConfig) (string, error) {
+	// Simple implementation - just return basic system prompt
+	return "You are a Guild Master responsible for task coordination.", nil
+}
+
+// GetSystemPrompt retrieves a system prompt (adapter implementation)
+func (a *layeredManagerAdapter) GetSystemPrompt(ctx context.Context, role, domain string) (string, error) {
+	// Simple implementation for adapter
+	return "You are a Guild Master responsible for coordinating task execution and managing artisan workflows.", nil
+}
+
+// FormatContext formats context information into a prompt string
+func (a *layeredManagerAdapter) FormatContext(ctx context.Context, contextInfo interface{}) (string, error) {
+	// Simple implementation for adapter
+	return "Context: Processing commission with task coordination requirements.", nil
 }
 
 // llmClientWrapper wraps registry.Provider (LLMClient) to implement providers.AIProvider

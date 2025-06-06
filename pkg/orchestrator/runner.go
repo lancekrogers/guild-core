@@ -2,9 +2,7 @@ package orchestrator
 
 import (
 	"context"
-	"fmt"
 	"sync"
-	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/commission"
@@ -15,8 +13,8 @@ import (
 type BaseOrchestrator struct {
 	status          Status
 	agents          map[string]agent.Agent
-	eventBus        *EventBus
-	dispatcher      *TaskDispatcher
+	eventBus        EventBus
+	dispatcher      TaskDispatcher
 	currentObjective *commission.Commission
 	config          *Config
 	mu              sync.RWMutex
@@ -24,7 +22,7 @@ type BaseOrchestrator struct {
 }
 
 // newOrchestrator creates a new orchestrator (private constructor)
-func newOrchestrator(config *Config, dispatcher *TaskDispatcher, eventBus *EventBus) *BaseOrchestrator {
+func newOrchestrator(config *Config, dispatcher TaskDispatcher, eventBus EventBus) *BaseOrchestrator {
 	return &BaseOrchestrator{
 		status:     StatusIdle,
 		agents:     make(map[string]agent.Agent),
@@ -35,7 +33,7 @@ func newOrchestrator(config *Config, dispatcher *TaskDispatcher, eventBus *Event
 }
 
 // DefaultOrchestratorFactory creates an orchestrator factory for registry use
-func DefaultOrchestratorFactory(config *Config, dispatcher *TaskDispatcher, eventBus *EventBus) *BaseOrchestrator {
+func DefaultOrchestratorFactory(config *Config, dispatcher TaskDispatcher, eventBus EventBus) *BaseOrchestrator {
 	return newOrchestrator(config, dispatcher, eventBus)
 }
 
@@ -50,23 +48,12 @@ func (o *BaseOrchestrator) Start(ctx context.Context) error {
 			WithOperation("Start")
 	}
 
-	// Create a cancellable context
-	runCtx, cancel := context.WithCancel(ctx)
+	// Create a cancellable context for cleanup
+	_, cancel := context.WithCancel(ctx)
 	o.cancelFunc = cancel
 
-	// Start the dispatcher
-	go func() {
-		if err := o.dispatcher.Run(runCtx, 5*time.Second); err != nil && err != context.Canceled {
-			fmt.Printf("Dispatcher error: %v\n", err)
-			
-			// Emit error event
-			o.eventBus.Publish(Event{
-				Type:   EventType(EventOrchestratorError),
-				Source: "orchestrator",
-				Data:   map[string]interface{}{"error": err.Error()},
-			})
-		}
-	}()
+	// Dispatcher is now ready to accept tasks via Dispatch method
+	// No background running needed as it operates on-demand
 
 	// Update status
 	o.status = StatusRunning

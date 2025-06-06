@@ -644,6 +644,7 @@ func (r *DefaultComponentRegistry) loadGuildAgents(ctx context.Context, agentReg
 	// Register each agent with the registry
 	for _, agent := range guildConfig.Agents {
 		guildAgent := GuildAgentConfig{
+			ID:            agent.ID,
 			Name:          agent.Name,
 			Type:          agent.Type,
 			Provider:      agent.Provider,

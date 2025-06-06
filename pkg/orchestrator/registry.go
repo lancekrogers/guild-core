@@ -1,7 +1,6 @@
 package orchestrator
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"

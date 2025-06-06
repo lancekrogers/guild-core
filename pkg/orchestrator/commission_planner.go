@@ -2,7 +2,6 @@ package orchestrator
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"

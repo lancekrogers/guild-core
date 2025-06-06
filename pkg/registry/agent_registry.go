@@ -42,6 +42,7 @@ type Agent interface {
 
 // AgentInfo holds agent information
 type AgentInfo struct {
+	ID            string
 	Type          string
 	Name          string
 	Capabilities  []string
@@ -51,6 +52,7 @@ type AgentInfo struct {
 
 // GuildAgentConfig represents a configured agent from guild config
 type GuildAgentConfig struct {
+	ID            string   `yaml:"id"`
 	Name          string   `yaml:"name"`
 	Type          string   `yaml:"type"`
 	Model         string   `yaml:"model"`
