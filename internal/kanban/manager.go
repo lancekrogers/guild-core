@@ -88,7 +88,7 @@ func NewManagerWithConfig(ctx context.Context, store memory.Store, channelConfig
 
 // NewManagerWithRegistry creates a new kanban manager using the component registry
 // This allows the manager to work with either SQLite or BoltDB storage backends
-func NewManagerWithRegistry(registry ComponentRegistry) (*Manager, error) {
+func NewManagerWithRegistry(ctx context.Context, registry ComponentRegistry) (*Manager, error) {
 	if registry == nil {
 		return nil, fmt.Errorf("registry cannot be nil")
 	}
@@ -111,7 +111,7 @@ func NewManagerWithRegistry(registry ComponentRegistry) (*Manager, error) {
 	}
 
 	// Create manager with registry support
-	manager, err := NewManagerWithConfig(memStoreCompat, map[string]interface{}{
+	manager, err := NewManagerWithConfig(ctx, memStoreCompat, map[string]interface{}{
 		"pub_endpoint": "tcp://127.0.0.1:5556",
 		"sub_endpoint": "tcp://127.0.0.1:5556",
 		"identity":     "kanban-manager",
@@ -133,7 +133,7 @@ func (m *Manager) CreateBoard(ctx context.Context, name, description string) (*B
 
 	// Use SQLite if registry is available, otherwise use legacy store
 	if m.registry != nil {
-		board, err = NewBoardWithRegistry(m.registry, name, description)
+		board, err = NewBoardWithRegistry(ctx, m.registry, name, description)
 	} else {
 		return nil, fmt.Errorf("board creation requires registry for SQLite backend")
 	}
@@ -391,7 +391,7 @@ func (m *Manager) processEvents() {
 				continue
 			}
 
-		if len(events) > 0 {
+			if len(events) > 0 {
 			lastProcessedTime = events[len(events)-1].OccurredAt
 
 			// Send events to the event stream

@@ -3,7 +3,7 @@ package agent
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/internal/commission"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/providers"
@@ -26,22 +26,25 @@ type Factory interface {
 type DefaultFactory struct {
 	LLMClient        providers.LLMClient
 	MemoryManager    memory.ChainManager
-	ToolRegistry     *tools.ToolRegistry
-	CommissionManager *commission.Manager
+	ToolRegistry     tools.Registry
+	CommissionManager commission.CommissionManager
+	CostManager      CostManager
 }
 
 // NewFactory creates a new factory instance
 func NewFactory(
 	llmClient providers.LLMClient,
 	memoryManager memory.ChainManager,
-	toolRegistry *tools.ToolRegistry,
-	objectiveManager *commission.Manager,
+	toolRegistry tools.Registry,
+	commissionManager commission.CommissionManager,
+	costManager CostManager,
 ) *DefaultFactory {
 	return &DefaultFactory{
 		LLMClient:        llmClient,
 		MemoryManager:    memoryManager,
 		ToolRegistry:     toolRegistry,
-		CommissionManager: objectiveManager,
+		CommissionManager: commissionManager,
+		CostManager:      costManager,
 	}
 }
 
@@ -62,10 +65,10 @@ func (f *DefaultFactory) CreateAgent(ctx context.Context, id, name string, agent
 
 // CreateWorkerAgent creates a new worker agent
 func (f *DefaultFactory) CreateWorkerAgent(ctx context.Context, id, name string) (Agent, error) {
-	return NewWorkerAgent(id, name, f.LLMClient, f.MemoryManager, f.ToolRegistry, f.CommissionManager), nil
+	return NewWorkerAgent(id, name, f.LLMClient, f.MemoryManager, f.ToolRegistry, f.CommissionManager, f.CostManager), nil
 }
 
 // CreateManagerAgent creates a new manager agent
 func (f *DefaultFactory) CreateManagerAgent(ctx context.Context, id, name string) (Agent, error) {
-	return NewManagerAgent(id, name, f.LLMClient, f.MemoryManager, f.ToolRegistry, f.CommissionManager), nil
+	return NewManagerAgent(id, name, f.LLMClient, f.MemoryManager, f.ToolRegistry, f.CommissionManager, f.CostManager), nil
 }

@@ -3,7 +3,7 @@ package agent
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/internal/commission"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/providers"
@@ -27,10 +27,10 @@ type GuildArtisan interface {
 	Agent
 	
 	// GetToolRegistry returns the tool registry
-	GetToolRegistry() *tools.ToolRegistry
+	GetToolRegistry() tools.Registry
 	
 	// GetCommissionManager returns the commission manager
-	GetCommissionManager() *commission.Manager
+	GetCommissionManager() commission.CommissionManager
 	
 	// GetLLMClient returns the LLM client
 	GetLLMClient() providers.LLMClient
@@ -45,9 +45,9 @@ type WorkerAgent struct {
 	Name           string
 	LLMClient      providers.LLMClient
 	MemoryManager  memory.ChainManager
-	ToolRegistry   *tools.ToolRegistry
-	CommissionManager *commission.Manager
-	CostManager    *CostManager
+	ToolRegistry   tools.Registry
+	CommissionManager commission.CommissionManager
+	CostManager    CostManager
 	
 	// Context metadata
 	capabilities []string
@@ -57,17 +57,18 @@ type WorkerAgent struct {
 // NewWorkerAgent creates a new worker agent
 func NewWorkerAgent(id, name string, llmClient providers.LLMClient, 
 	memoryManager memory.ChainManager, 
-	toolRegistry *tools.ToolRegistry, 
-	objectiveManager *commission.Manager) *WorkerAgent {
+	toolRegistry tools.Registry, 
+	commissionManager commission.CommissionManager,
+	costManager CostManager) *WorkerAgent {
 	
 	return &WorkerAgent{
-		ID:              id,
-		Name:            name,
-		LLMClient:       llmClient,
-		MemoryManager:   memoryManager,
-		ToolRegistry:    toolRegistry,
-		CommissionManager: objectiveManager,
-		CostManager:     NewCostManager(),
+		ID:                id,
+		Name:              name,
+		LLMClient:         llmClient,
+		MemoryManager:     memoryManager,
+		ToolRegistry:      toolRegistry,
+		CommissionManager: commissionManager,
+		CostManager:       costManager,
 	}
 }
 
@@ -109,12 +110,12 @@ func (a *WorkerAgent) GetName() string {
 }
 
 // GetToolRegistry returns the tool registry
-func (a *WorkerAgent) GetToolRegistry() *tools.ToolRegistry {
+func (a *WorkerAgent) GetToolRegistry() tools.Registry {
 	return a.ToolRegistry
 }
 
-// GetCommissionManager returns the objective manager
-func (a *WorkerAgent) GetCommissionManager() *commission.Manager {
+// GetCommissionManager returns the commission manager
+func (a *WorkerAgent) GetCommissionManager() commission.CommissionManager {
 	return a.CommissionManager
 }
 
@@ -176,10 +177,11 @@ type ManagerAgent struct {
 // NewManagerAgent creates a new manager agent
 func NewManagerAgent(id, name string, llmClient providers.LLMClient, 
 	memoryManager memory.ChainManager, 
-	toolRegistry *tools.ToolRegistry, 
-	objectiveManager *commission.Manager) *ManagerAgent {
+	toolRegistry tools.Registry, 
+	commissionManager commission.CommissionManager,
+	costManager CostManager) *ManagerAgent {
 	
-	worker := NewWorkerAgent(id, name, llmClient, memoryManager, toolRegistry, objectiveManager)
+	worker := NewWorkerAgent(id, name, llmClient, memoryManager, toolRegistry, commissionManager, costManager)
 	
 	return &ManagerAgent{
 		WorkerAgent: *worker,

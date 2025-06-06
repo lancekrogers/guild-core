@@ -48,18 +48,6 @@ type CostEntry struct {
 	Details     map[string]interface{}
 }
 
-// Factory defines the interface for creating agents
-type Factory interface {
-	// CreateWorkerAgent creates a new worker agent
-	CreateWorkerAgent(ctx context.Context, id, name string) (Agent, error)
-	
-	// CreateManagerAgent creates a new manager agent
-	CreateManagerAgent(ctx context.Context, id, name string) (Agent, error)
-	
-	// CreateSpecializedAgent creates an agent with specific capabilities
-	CreateSpecializedAgent(ctx context.Context, id, name, specialization string) (Agent, error)
-}
-
 // ContextAwareAgent extends the basic Agent interface with context capabilities
 type ContextAwareAgent interface {
 	Agent

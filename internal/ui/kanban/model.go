@@ -35,6 +35,7 @@ type Model struct {
 	// Dependencies
 	kanbanManager *kanban.Manager
 	boardID       string
+	ctx           context.Context
 	
 	// UI State
 	columns       [5]Column
@@ -58,8 +59,9 @@ type Model struct {
 }
 
 // New creates a new kanban board UI model
-func New(kanbanManager *kanban.Manager, boardID string) *Model {
+func New(ctx context.Context, kanbanManager *kanban.Manager, boardID string) *Model {
 	m := &Model{
+		ctx:           ctx,
 		kanbanManager: kanbanManager,
 		boardID:       boardID,
 		taskCache:     make(map[string][]*kanban.Task),
@@ -105,8 +107,7 @@ type taskUpdatedMsg struct{ task *kanban.Task }
 // loadTasks loads tasks from the kanban manager
 func (m *Model) loadTasks() tea.Cmd {
 	return func() tea.Msg {
-		ctx := context.Background()
-		board, err := m.kanbanManager.GetBoard(ctx, m.boardID)
+		board, err := m.kanbanManager.GetBoard(m.ctx, m.boardID)
 		if err != nil {
 			return errorMsg{err}
 		}
@@ -114,7 +115,7 @@ func (m *Model) loadTasks() tea.Cmd {
 		// Load tasks for each column status
 		taskCache := make(map[string][]*kanban.Task)
 		for _, col := range m.columns {
-			tasks, err := board.GetTasksByStatus(ctx, col.Status)
+			tasks, err := board.GetTasksByStatus(m.ctx, col.Status)
 			if err != nil {
 				return errorMsg{err}
 			}

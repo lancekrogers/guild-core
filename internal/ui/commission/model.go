@@ -50,6 +50,7 @@ type GuildHallKeyMap struct {
 // Define UI state using Guild metaphors
 type CommissionChamber struct {
 	// Session state
+	ctx               context.Context          // Context for operations
 	commissionManager *commissionpkg.Manager      // Manages commissions
 	planner           *commissionpkg.Planner      // Plans commissions
 	currentCommission *commissionpkg.Commission   // Current commission
@@ -152,7 +153,7 @@ func (k GuildHallKeyMap) FullHelp() [][]key.Binding {
 }
 
 // NewModel creates a new Guild Hall model for commission planning
-func NewModel(commissionPath string, manager *commissionpkg.Manager, planner *commissionpkg.Planner, generator generator.CommissionGenerator) *CommissionChamber {
+func NewModel(ctx context.Context, commissionPath string, manager *commissionpkg.Manager, planner *commissionpkg.Planner, generator generator.CommissionGenerator) *CommissionChamber {
 	// Initialize textarea for context input
 	scribe := textarea.New()
 	scribe.Placeholder = "Enter context or reference documents (e.g., @spec/path/to/file.md)"
@@ -180,6 +181,7 @@ func NewModel(commissionPath string, manager *commissionpkg.Manager, planner *co
 
 	// Create the model with Guild-themed names
 	chamber := &CommissionChamber{
+		ctx:               ctx,
 		commissionPath:    commissionPath,
 		commissionManager: manager,
 		planner:           planner,
@@ -198,7 +200,6 @@ func NewModel(commissionPath string, manager *commissionpkg.Manager, planner *co
 	// If commission path is provided, load that commission
 	if commissionPath != "" && manager != nil {
 		// Load the commission using the manager
-		ctx := context.Background()
 		obj, err := manager.LoadCommissionFromFile(ctx, commissionPath)
 		if err != nil {
 			chamber.proclamation = "Failed to load commission scroll: " + err.Error()

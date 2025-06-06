@@ -83,7 +83,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				
 			case key.Matches(msg, m.keymap.Refine):
 				m.proclamation = "Summoning the Guild's craftsmen to refine the documents..."
-				return m, generateDocumentsCmd(m)
+				return m, generateDocumentsCmd(&m)
 				
 			case key.Matches(msg, m.keymap.ConsultMaster):
 				m.proclamation = "Seeking the Guild Master's counsel on improvements..."
@@ -133,7 +133,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.scribe.Reset()
 					m.chamberState = stateViewing
 					m.proclamation = "Context added to the Guild's knowledge. The craftsmen ponder..."
-					return m, addContextCmd(m, content)
+					return m, addContextCmd(&m, content)
 				}
 			}
 			
@@ -339,12 +339,12 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // Custom commands for objective operations
 
 // addContextCmd creates a command to add context to the objective
-func addContextCmd(m CommissionChamber, content string) tea.Cmd {
+func addContextCmd(m *CommissionChamber, content string) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
 		if m.planner != nil && m.planner.GetSession().Commission != nil {
 			// Create a context for the operation
-			ctx := context.Background()
+			ctx := m.ctx
 
 			// Add context to the objective
 			err := m.planner.AddContext(ctx, content)
@@ -373,12 +373,12 @@ func addContextCmd(m CommissionChamber, content string) tea.Cmd {
 }
 
 // generateDocumentsCmd creates a command to regenerate documents
-func generateDocumentsCmd(m CommissionChamber) tea.Cmd {
+func generateDocumentsCmd(m *CommissionChamber) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
 		if m.planner != nil && m.planner.GetSession().Commission != nil {
 			// Create a context for the operation
-			ctx := context.Background()
+			ctx := m.ctx
 
 			// Regenerate documents
 			err := m.planner.Regenerate(ctx)
@@ -695,11 +695,11 @@ func executeCommandCmd(m CommissionChamber, command string) tea.Cmd {
 		case "add-context", "craft":
 			if len(args) > 0 {
 				context := strings.Join(args, " ")
-				return addContextCmd(m, context)()
+				return addContextCmd(&m, context)()
 			}
 
 		case "regenerate", "refine":
-			return generateDocumentsCmd(m)()
+			return generateDocumentsCmd(&m)()
 
 		case "suggest":
 			return requestSuggestionsCmd(m)()
