@@ -10,6 +10,7 @@ import (
 	
 	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // Retriever provides methods for retrieving relevant context from both

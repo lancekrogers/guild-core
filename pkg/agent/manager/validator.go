@@ -116,12 +116,18 @@ func (v *DefaultValidator) validateFile(file *FileEntry, index int) error {
 
 	// Validate content
 	if err := v.validateContent(file.Content, file.Path); err != nil {
-		return fmt.Errorf("invalid content for file %s: %w", file.Path, err)
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "invalid content for file").
+			WithComponent("manager").
+			WithOperation("validateFile").
+			WithDetails("file_path", file.Path)
 	}
 
 	// Validate type
 	if err := v.validateFileType(file.Type); err != nil {
-		return fmt.Errorf("invalid type for file %s: %w", file.Path, err)
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "invalid type for file").
+			WithComponent("manager").
+			WithOperation("validateFile").
+			WithDetails("file_path", file.Path)
 	}
 
 	return nil
@@ -130,18 +136,27 @@ func (v *DefaultValidator) validateFile(file *FileEntry, index int) error {
 // validatePath validates a file path
 func (v *DefaultValidator) validatePath(path string) error {
 	if path == "" {
-		return fmt.Errorf("path cannot be empty")
+		return gerror.New(gerror.ErrCodeValidation, "path cannot be empty").
+			WithComponent("manager").
+			WithOperation("validatePath")
 	}
 
 	// Clean the path
 	cleanPath := filepath.Clean(path)
 	if cleanPath != path {
-		return fmt.Errorf("path should be clean: %s -> %s", path, cleanPath)
+		return gerror.New(gerror.ErrCodeValidation, "path should be clean").
+			WithComponent("manager").
+			WithOperation("validatePath").
+			WithDetails("original_path", path).
+			WithDetails("clean_path", cleanPath)
 	}
 
 	// Check for path traversal attempts
 	if strings.Contains(path, "..") {
-		return fmt.Errorf("path contains parent directory references: %s", path)
+		return gerror.New(gerror.ErrCodeValidation, "path contains parent directory references").
+			WithComponent("manager").
+			WithOperation("validatePath").
+			WithDetails("path", path)
 	}
 
 	// Check file extension
@@ -169,11 +184,17 @@ func (v *DefaultValidator) validatePath(path string) error {
 // validateContent validates file content
 func (v *DefaultValidator) validateContent(content, path string) error {
 	if content == "" {
-		return fmt.Errorf("content cannot be empty")
+		return gerror.New(gerror.ErrCodeValidation, "content cannot be empty").
+			WithComponent("manager").
+			WithOperation("validateContent")
 	}
 
 	if len(content) > v.maxFileSize {
-		return fmt.Errorf("content too large: %d characters (max: %d)", len(content), v.maxFileSize)
+		return gerror.New(gerror.ErrCodeValidation, "content too large").
+			WithComponent("manager").
+			WithOperation("validateContent").
+			WithDetails("content_size", len(content)).
+			WithDetails("max_size", v.maxFileSize)
 	}
 
 	// Basic markdown validation for .md files

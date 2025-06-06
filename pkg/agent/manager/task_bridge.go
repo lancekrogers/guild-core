@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
@@ -87,7 +88,10 @@ func (tb *TaskBridge) CreateTasksFromRefinedCommission(ctx context.Context, refi
 			// If already exists, that's okay - ignore UNIQUE constraint errors
 			if !strings.Contains(err.Error(), "UNIQUE constraint failed") &&
 			   !strings.Contains(err.Error(), "already exists") {
-				return fmt.Errorf("failed to create commission record: %w", err)
+				return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commission record").
+					WithComponent("manager").
+					WithOperation("CreateTasksFromRefinedCommission").
+					WithDetails("commission_id", refinedCommission.CommissionID)
 			}
 		}
 	}
@@ -108,7 +112,11 @@ func (tb *TaskBridge) CreateTasksFromRefinedCommission(ctx context.Context, refi
 		// Create the task in kanban (CreateTask expects title and description)
 		createdTask, err := tb.kanbanBoard.CreateTask(ctx, kanbanTask.Title, kanbanTask.Description)
 		if err != nil {
-			return fmt.Errorf("failed to create kanban task %s: %w", taskInfo.ID, err)
+			return gerror.Wrapf(err, gerror.ErrCodeStorage, "failed to create kanban task %s", taskInfo.ID).
+				WithComponent("manager").
+				WithOperation("CreateTasksFromRefinedCommission").
+				WithDetails("task_id", taskInfo.ID).
+				WithDetails("commission_id", refinedCommission.CommissionID)
 		}
 		
 		// Update task with additional properties
@@ -122,7 +130,11 @@ func (tb *TaskBridge) CreateTasksFromRefinedCommission(ctx context.Context, refi
 		
 		// Save the updated task
 		if err := tb.kanbanBoard.UpdateTask(ctx, createdTask); err != nil {
-			return fmt.Errorf("failed to update task properties: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task properties").
+				WithComponent("manager").
+				WithOperation("CreateTasksFromRefinedCommission").
+				WithDetails("task_id", createdTask.ID).
+				WithDetails("commission_id", refinedCommission.CommissionID)
 		}
 		createdTasks++
 	}
@@ -149,7 +161,10 @@ func (tb *TaskBridge) CreateTasksFromRefinedContent(ctx context.Context, commiss
 	
 	structure, err := tb.parser.ParseResponse(response)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse refined content: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to parse refined content").
+			WithComponent("manager").
+			WithOperation("CreateTasksFromRefinedContent").
+			WithDetails("commission_id", commissionID)
 	}
 	
 	// Note: refined variable removed as it was declared but not used
@@ -171,7 +186,11 @@ func (tb *TaskBridge) CreateTasksFromRefinedContent(ctx context.Context, commiss
 		// Create the task
 		createdTask, err := tb.kanbanBoard.CreateTask(ctx, kanbanTask.Title, kanbanTask.Description)
 		if err != nil {
-			return taskIDs, fmt.Errorf("failed to create task %s: %w", taskInfo.ID, err)
+			return taskIDs, gerror.Wrapf(err, gerror.ErrCodeStorage, "failed to create task %s", taskInfo.ID).
+				WithComponent("manager").
+				WithOperation("CreateTasksFromRefinedContent").
+				WithDetails("task_id", taskInfo.ID).
+				WithDetails("commission_id", commissionID)
 		}
 		
 		// Update task properties
@@ -185,7 +204,11 @@ func (tb *TaskBridge) CreateTasksFromRefinedContent(ctx context.Context, commiss
 		
 		// Save the updated task
 		if err := tb.kanbanBoard.UpdateTask(ctx, createdTask); err != nil {
-			return taskIDs, fmt.Errorf("failed to update task properties: %w", err)
+			return taskIDs, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task properties").
+				WithComponent("manager").
+				WithOperation("CreateTasksFromRefinedContent").
+				WithDetails("task_id", createdTask.ID).
+				WithDetails("commission_id", commissionID)
 		}
 		
 		taskIDs = append(taskIDs, createdTask.ID)
@@ -199,7 +222,10 @@ func (tb *TaskBridge) GetTasksForCommission(ctx context.Context, commissionID st
 	// Get all tasks from kanban
 	allTasks, err := tb.kanbanBoard.GetAllTasks(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get tasks: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get tasks").
+			WithComponent("manager").
+			WithOperation("GetTasksForCommission").
+			WithDetails("commission_id", commissionID)
 	}
 	
 	// Filter by commission ID
@@ -221,12 +247,18 @@ func (tb *TaskBridge) WriteRefinedFiles(refined *RefinedCommission, outputDir st
 		// Create directory if needed
 		dir := filepath.Dir(filePath)
 		if err := os.MkdirAll(dir, 0755); err != nil {
-			return fmt.Errorf("failed to create directory %s: %w", dir, err)
+			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to create directory %s", dir).
+				WithComponent("manager").
+				WithOperation("WriteRefinedFiles").
+				WithDetails("directory", dir)
 		}
 		
 		// Write file
 		if err := os.WriteFile(filePath, []byte(file.Content), 0644); err != nil {
-			return fmt.Errorf("failed to write file %s: %w", filePath, err)
+			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to write file %s", filePath).
+				WithComponent("manager").
+				WithOperation("WriteRefinedFiles").
+				WithDetails("file_path", filePath)
 		}
 	}
 	

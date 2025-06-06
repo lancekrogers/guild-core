@@ -2,8 +2,8 @@ package manager
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 )
 
@@ -108,7 +108,11 @@ func (ip *IntelligentParser) ParseResponse(ctx context.Context, response *Artisa
 		
 		// Otherwise return the extraction error
 		if extractErr != nil {
-			return nil, fmt.Errorf("task extraction failed: %w", extractErr)
+			return nil, gerror.New(gerror.ErrCodeAgent, "task extraction failed").
+				WithComponent("manager").
+				WithOperation("ParseResponse").
+				WithDetails("mode", ip.mode).
+				Wrap(extractErr)
 		}
 	}
 	
@@ -118,7 +122,10 @@ func (ip *IntelligentParser) ParseResponse(ctx context.Context, response *Artisa
 // ExtractTasksDirectly uses only the LLM extractor for maximum flexibility
 func (ip *IntelligentParser) ExtractTasksDirectly(ctx context.Context, refinedCommission *RefinedCommission) ([]TaskInfo, error) {
 	if ip.taskExtractor == nil {
-		return nil, fmt.Errorf("task extractor not configured")
+		return nil, gerror.New(gerror.ErrCodeInternal, "task extractor not configured").
+			WithComponent("manager").
+			WithOperation("ExtractTasksDirectly").
+			WithDetails("mode", ip.mode)
 	}
 	
 	result, err := ip.taskExtractor.ExtractTasks(ctx, refinedCommission)

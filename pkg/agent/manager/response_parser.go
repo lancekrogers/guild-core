@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 )
 
@@ -48,7 +49,9 @@ func (p *ResponseParserImpl) ParseResponse(response *ArtisanResponse) (*FileStru
 // ParseResponseWithContext implements parsing with context support
 func (p *ResponseParserImpl) ParseResponseWithContext(ctx context.Context, response *ArtisanResponse) (*FileStructure, error) {
 	if response == nil || response.Content == "" {
-		return nil, fmt.Errorf("empty response content")
+		return nil, gerror.New(gerror.ErrCodeValidation, "empty response content").
+			WithComponent("manager").
+			WithOperation("ParseResponseWithContext")
 	}
 
 	content := response.Content

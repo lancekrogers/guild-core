@@ -10,6 +10,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/tools"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // AgentWrapper adds RAG capabilities to a GuildArtisan agent
@@ -94,7 +95,10 @@ func (w *AgentWrapper) enhanceRequestWithRAG(ctx context.Context, request string
 	// Retrieve relevant context
 	results, err := w.retriever.RetrieveContext(ctx, request, retrievalConfig)
 	if err != nil {
-		return "", fmt.Errorf("failed to retrieve context: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeStorage).
+			WithComponent("memory").
+			WithOperation("enhanceRequestWithRAG").
+			WithDetails("failed to retrieve context")
 	}
 	
 	// If no results found, return the original request
@@ -124,7 +128,10 @@ func (w *AgentWrapper) EnhancePrompt(ctx context.Context, prompt, query string, 
 	// Retrieve relevant context
 	results, err := w.retriever.RetrieveContext(ctx, query, config)
 	if err != nil {
-		return "", fmt.Errorf("failed to retrieve context: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeStorage).
+			WithComponent("memory").
+			WithOperation("EnhancePrompt").
+			WithDetails("failed to retrieve context")
 	}
 	
 	// If no results found, return the original prompt

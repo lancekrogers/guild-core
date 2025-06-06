@@ -1,10 +1,11 @@
 package manager
 
 import (
-	"fmt"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // ArchiveParser implements the ResponseParser interface for Guild Archives
@@ -83,7 +84,9 @@ func (p *ArchiveParser) parseSingleFile(content string) (*FileStructure, error) 
 	content = strings.TrimSpace(content)
 	
 	if content == "" {
-		return nil, fmt.Errorf("empty Guild Master response content")
+		return nil, gerror.New(gerror.ErrCodeValidation, "empty Guild Master response content").
+			WithComponent("manager").
+			WithOperation("parseSingleFile")
 	}
 
 	// Count Workshop Board tasks

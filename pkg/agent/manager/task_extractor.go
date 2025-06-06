@@ -3,11 +3,11 @@ package manager
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"strings"
 	"time"
 
 	"github.com/guild-ventures/guild-core/internal/prompts/agent/extraction"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 )
 
@@ -89,7 +89,10 @@ func (te *TaskExtractor) ExtractTasks(ctx context.Context, refinedCommission *Re
 	// Build the layered prompt for task extraction
 	prompt, err := te.buildExtractionPrompt(ctx, refinedCommission)
 	if err != nil {
-		return nil, fmt.Errorf("failed to build extraction prompt: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to build extraction prompt").
+			WithComponent("manager").
+			WithOperation("ExtractTasks").
+			WithDetails("commission_id", refinedCommission.CommissionID)
 	}
 	
 	// Call the LLM to extract tasks
@@ -100,7 +103,10 @@ func (te *TaskExtractor) ExtractTasks(ctx context.Context, refinedCommission *Re
 		MaxTokens:    8000, // Enough for comprehensive task lists
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to extract tasks: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "failed to extract tasks").
+			WithComponent("manager").
+			WithOperation("ExtractTasks").
+			WithDetails("commission_id", refinedCommission.CommissionID)
 	}
 	
 	// Parse the JSON response
@@ -109,10 +115,18 @@ func (te *TaskExtractor) ExtractTasks(ctx context.Context, refinedCommission *Re
 		// If JSON parsing fails, try to extract JSON from the response
 		jsonContent := extractJSON(response.Content)
 		if jsonContent == "" {
-			return nil, fmt.Errorf("failed to parse extraction result: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to parse extraction result").
+				WithComponent("manager").
+				WithOperation("ExtractTasks").
+				WithDetails("commission_id", refinedCommission.CommissionID).
+				WithDetails("response_length", len(response.Content))
 		}
 		if err := json.Unmarshal([]byte(jsonContent), &result); err != nil {
-			return nil, fmt.Errorf("failed to parse extracted JSON: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to parse extracted JSON").
+				WithComponent("manager").
+				WithOperation("ExtractTasks").
+				WithDetails("commission_id", refinedCommission.CommissionID).
+				WithDetails("json_length", len(jsonContent))
 		}
 	}
 	
@@ -130,32 +144,44 @@ func (te *TaskExtractor) buildExtractionPrompt(ctx context.Context, refinedCommi
 	// Load prompt templates
 	baseLayer, err := te.loadPromptTemplate(ctx, "internal/prompts/agent/extraction/base_layer.md")
 	if err != nil {
-		return "", fmt.Errorf("failed to load base layer: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load base layer").
+			WithComponent("manager").
+			WithOperation("buildExtractionPrompt")
 	}
 	
 	guildLayer, err := te.loadPromptTemplate(ctx, "internal/prompts/agent/extraction/guild_layer.md")
 	if err != nil {
-		return "", fmt.Errorf("failed to load guild layer: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load guild layer").
+			WithComponent("manager").
+			WithOperation("buildExtractionPrompt")
 	}
 	
 	domainLayer, err := te.loadPromptTemplate(ctx, "internal/prompts/agent/extraction/domain_layer.md")
 	if err != nil {
-		return "", fmt.Errorf("failed to load domain layer: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load domain layer").
+			WithComponent("manager").
+			WithOperation("buildExtractionPrompt")
 	}
 	
 	contextLayer, err := te.loadPromptTemplate(ctx, "internal/prompts/agent/extraction/context_layer.md")
 	if err != nil {
-		return "", fmt.Errorf("failed to load context layer: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load context layer").
+			WithComponent("manager").
+			WithOperation("buildExtractionPrompt")
 	}
 	
 	contentLayer, err := te.loadPromptTemplate(ctx, "internal/prompts/agent/extraction/content_layer.md")
 	if err != nil {
-		return "", fmt.Errorf("failed to load content layer: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load content layer").
+			WithComponent("manager").
+			WithOperation("buildExtractionPrompt")
 	}
 	
 	executionLayer, err := te.loadPromptTemplate(ctx, "internal/prompts/agent/extraction/execution_layer.md")
 	if err != nil {
-		return "", fmt.Errorf("failed to load execution layer: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load execution layer").
+			WithComponent("manager").
+			WithOperation("buildExtractionPrompt")
 	}
 	
 	// Apply template data to variable layers

@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
@@ -173,16 +174,27 @@ func (tca *TaskComplexityAnalyzer) AnalyzeComplexity(
 // validateRequest validates input parameters
 func (tca *TaskComplexityAnalyzer) validateRequest(request ComplexityAnalysisRequest) error {
 	if request.TaskDescription == "" {
-		return fmt.Errorf("task description cannot be empty")
+		return gerror.New(gerror.ErrCodeValidation, "task description cannot be empty", nil).
+			WithComponent("manager").
+			WithOperation("validateRequest")
 	}
 	if len(request.TaskDescription) > 10000 {
-		return fmt.Errorf("task description too long (max 10000 chars)")
+		return gerror.Newf(gerror.ErrCodeValidation, "task description too long (max 10000 chars)").
+			WithComponent("manager").
+			WithOperation("validateRequest").
+			WithDetails("length", len(request.TaskDescription))
 	}
 	if request.TokenBudget <= 0 {
-		return fmt.Errorf("token budget must be positive")
+		return gerror.New(gerror.ErrCodeValidation, "token budget must be positive", nil).
+			WithComponent("manager").
+			WithOperation("validateRequest").
+			WithDetails("token_budget", request.TokenBudget)
 	}
 	if request.TokenBudget > 1000000 {
-		return fmt.Errorf("token budget too large (max 1M tokens)")
+		return gerror.Newf(gerror.ErrCodeValidation, "token budget too large (max 1M tokens)").
+			WithComponent("manager").
+			WithOperation("validateRequest").
+			WithDetails("token_budget", request.TokenBudget)
 	}
 	return nil
 }
@@ -424,10 +436,14 @@ func (tca *TaskComplexityAnalyzer) executeAnalysis(
 // parseAnalysisResponse parses the artisan response with detailed error handling
 func (tca *TaskComplexityAnalyzer) parseAnalysisResponse(response *ArtisanResponse) (*ComplexityAnalysisResult, error) {
 	if response == nil {
-		return nil, fmt.Errorf("response is nil")
+		return nil, gerror.New(gerror.ErrCodeValidation, "response is nil", nil).
+			WithComponent("manager").
+			WithOperation("parseAnalysisResponse")
 	}
 	if response.Content == "" {
-		return nil, fmt.Errorf("response content is empty")
+		return nil, gerror.New(gerror.ErrCodeValidation, "response content is empty", nil).
+			WithComponent("manager").
+			WithOperation("parseAnalysisResponse")
 	}
 
 	var result ComplexityAnalysisResult
@@ -440,11 +456,17 @@ func (tca *TaskComplexityAnalyzer) parseAnalysisResponse(response *ArtisanRespon
 	// Try extracting from markdown code blocks
 	extractedJSON := extractJSONFromMarkdown(response.Content)
 	if extractedJSON == "" {
-		return nil, fmt.Errorf("no JSON found in response")
+		return nil, gerror.New(gerror.ErrCodeInternal, "no JSON found in response", nil).
+			WithComponent("manager").
+			WithOperation("parseAnalysisResponse").
+			WithDetails("response_length", len(response.Content))
 	}
 
 	if err := json.Unmarshal([]byte(extractedJSON), &result); err != nil {
-		return nil, fmt.Errorf("failed to parse extracted JSON: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to parse extracted JSON").
+			WithComponent("manager").
+			WithOperation("parseAnalysisResponse").
+			WithDetails("json_length", len(extractedJSON))
 	}
 
 	return &result, nil

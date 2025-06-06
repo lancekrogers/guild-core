@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 )
 
@@ -37,7 +38,10 @@ func (r *GuildMasterRefiner) RefineCommission(ctx context.Context, commission Co
 	// Get the appropriate system prompt based on domain
 	systemPrompt, err := r.getSystemPrompt(ctx, commission.Domain)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get system prompt: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get system prompt").
+			WithComponent("manager").
+			WithOperation("RefineCommission").
+			WithDetails("domain", commission.Domain)
 	}
 
 	// Prepare the user prompt with commission details
@@ -51,18 +55,27 @@ func (r *GuildMasterRefiner) RefineCommission(ctx context.Context, commission Co
 		MaxTokens:    4000,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get Artisan response: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "failed to get Artisan response").
+			WithComponent("manager").
+			WithOperation("RefineCommission").
+			WithDetails("commission_id", commission.ID)
 	}
 
 	// Parse the response into a file structure for the Archives
 	structure, err := r.parser.ParseResponse(response)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse Artisan response: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to parse Artisan response").
+			WithComponent("manager").
+			WithOperation("RefineCommission").
+			WithDetails("commission_id", commission.ID)
 	}
 
 	// Validate the structure meets Guild standards
 	if err := r.validator.ValidateStructure(structure); err != nil {
-		return nil, fmt.Errorf("structure does not meet Guild standards: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "structure does not meet Guild standards").
+			WithComponent("manager").
+			WithOperation("RefineCommission").
+			WithDetails("commission_id", commission.ID)
 	}
 
 	// Create the refined commission
@@ -85,7 +98,10 @@ func (r *GuildMasterRefiner) RefineCommissionSimple(ctx context.Context, commiss
 	// Get the appropriate system prompt based on domain
 	systemPrompt, err := r.getSystemPrompt(ctx, domain)
 	if err != nil {
-		return "", fmt.Errorf("failed to get system prompt: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get system prompt").
+			WithComponent("manager").
+			WithOperation("RefineCommissionSimple").
+			WithDetails("domain", domain)
 	}
 
 	// Create simple user prompt
@@ -99,7 +115,9 @@ func (r *GuildMasterRefiner) RefineCommissionSimple(ctx context.Context, commiss
 		MaxTokens:    4000,
 	})
 	if err != nil {
-		return "", fmt.Errorf("failed to get Artisan response: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeAgent, "failed to get Artisan response").
+			WithComponent("manager").
+			WithOperation("RefineCommissionSimple")
 	}
 
 	return response.Content, nil
@@ -114,7 +132,10 @@ func (r *GuildMasterRefiner) getSystemPrompt(ctx context.Context, domain string)
 
 	prompt, err := r.promptManager.GetSystemPrompt(ctx, "manager", domain)
 	if err != nil {
-		return "", fmt.Errorf("failed to get Guild Master prompt for domain %s: %w", domain, err)
+		return "", gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to get Guild Master prompt for domain %s", domain).
+			WithComponent("manager").
+			WithOperation("getSystemPrompt").
+			WithDetails("domain", domain)
 	}
 
 	return prompt, nil

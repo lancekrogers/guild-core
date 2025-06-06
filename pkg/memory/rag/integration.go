@@ -2,10 +2,10 @@ package rag
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	
 	"github.com/guild-ventures/guild-core/pkg/corpus"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // SearchCorpus searches the corpus for documents matching a query
@@ -16,7 +16,10 @@ func SearchCorpus(ctx context.Context, query string, corpusConfig corpus.Config,
 	// List documents
 	docs, err := corpus.List(ctx, corpusConfig)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list corpus documents: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+			WithComponent("memory").
+			WithOperation("SearchCorpus").
+			WithDetails("failed to list corpus documents")
 	}
 	
 	// Simple matching (not using vectors)

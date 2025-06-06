@@ -3,8 +3,8 @@ package manager
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
@@ -137,7 +137,11 @@ func (ar *AgentRouter) RouteToAgents(
 	// Enhance agent info with current status and performance metrics
 	enhancedAgents, err := ar.enhanceAgentInfo(ctx, request.AvailableAgents)
 	if err != nil {
-		return nil, fmt.Errorf("failed to enhance agent info: %w", err)
+		return nil, gerror.New(gerror.ErrCodeAgent, "failed to enhance agent info").
+			WithComponent("manager").
+			WithOperation("RouteToAgents").
+			WithDetails("error", err.Error()).
+			Wrap(err)
 	}
 
 	// Build context for routing prompt
@@ -161,7 +165,11 @@ func (ar *AgentRouter) RouteToAgents(
 	
 	layeredPrompt, err := ar.promptManager.BuildLayeredPrompt(ctx, "manager-agent", "routing-session", turnCtx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to assemble routing prompt: %w", err)
+		return nil, gerror.New(gerror.ErrCodeAgent, "failed to assemble routing prompt").
+			WithComponent("manager").
+			WithOperation("RouteToAgents").
+			WithDetails("task_id", "agent-routing").
+			Wrap(err)
 	}
 
 	// Make request to artisan (manager agent)
@@ -174,7 +182,12 @@ func (ar *AgentRouter) RouteToAgents(
 
 	response, err := ar.artisanClient.Complete(ctx, artisanRequest)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get routing decision from artisan: %w", err)
+		return nil, gerror.New(gerror.ErrCodeAgent, "failed to get routing decision from artisan").
+			WithComponent("manager").
+			WithOperation("RouteToAgents").
+			WithDetails("temperature", artisanRequest.Temperature).
+			WithDetails("max_tokens", artisanRequest.MaxTokens).
+			Wrap(err)
 	}
 
 	// Parse the JSON response
@@ -183,10 +196,18 @@ func (ar *AgentRouter) RouteToAgents(
 		// If JSON parsing fails, try to extract JSON from markdown code blocks
 		if extractedJSON := extractJSONFromMarkdown(response.Content); extractedJSON != "" {
 			if err := json.Unmarshal([]byte(extractedJSON), &result); err != nil {
-				return nil, fmt.Errorf("failed to parse routing response: %w", err)
+				return nil, gerror.New(gerror.ErrCodeValidation, "failed to parse routing response").
+					WithComponent("manager").
+					WithOperation("RouteToAgents").
+					WithDetails("parsing_stage", "extracted_json").
+					Wrap(err)
 			}
 		} else {
-			return nil, fmt.Errorf("failed to parse routing response: %w", err)
+			return nil, gerror.New(gerror.ErrCodeValidation, "failed to parse routing response").
+				WithComponent("manager").
+				WithOperation("RouteToAgents").
+				WithDetails("parsing_stage", "no_json_found").
+				Wrap(err)
 		}
 	}
 

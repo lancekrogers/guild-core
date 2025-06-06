@@ -2,8 +2,8 @@ package rag
 
 import (
 	"context"
-	"fmt"
 	
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 	"github.com/guild-ventures/guild-core/pkg/project"
 )
@@ -13,7 +13,10 @@ func NewProjectAwareFactory(ctx context.Context) (*Factory, error) {
 	// Get project context
 	projCtx, err := project.GetContext()
 	if err != nil {
-		return nil, fmt.Errorf("not in a guild project: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound).
+			WithComponent("memory").
+			WithOperation("NewProjectAwareFactory").
+			WithDetails("not in a guild project")
 	}
 	
 	// Create project-specific configuration
@@ -37,7 +40,10 @@ func NewProjectAwareFactory(ctx context.Context) (*Factory, error) {
 	// Create vector store
 	vectorStore, err := vector.NewVectorStore(ctx, vectorConfig)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create vector store: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+			WithComponent("memory").
+			WithOperation("NewProjectAwareFactory").
+			WithDetails("failed to create vector store")
 	}
 	
 	// Create retriever with vector store
@@ -78,7 +84,10 @@ func GetProjectRAGConfig(ctx context.Context) (Config, error) {
 	// Try to get project context from current directory
 	projCtx, err := project.GetContext()
 	if err != nil {
-		return Config{}, fmt.Errorf("not in a guild project: %w", err)
+		return Config{}, gerror.Wrap(err, gerror.ErrCodeNotFound).
+			WithComponent("memory").
+			WithOperation("GetProjectRAGConfig").
+			WithDetails("not in a guild project")
 	}
 	
 	return Config{

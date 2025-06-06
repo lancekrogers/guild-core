@@ -2,8 +2,8 @@ package manager
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 )
@@ -37,7 +37,10 @@ func (f *GuildMasterFactory) CreateGuildMasterRefiner(providerName, model string
 	// Get the AI provider
 	provider, exists := f.providers[providerName]
 	if !exists {
-		return nil, fmt.Errorf("provider %s not found", providerName)
+		return nil, gerror.New(gerror.ErrCodeValidation, "provider not found").
+			WithComponent("manager").
+			WithOperation("CreateGuildMasterRefiner").
+			WithDetails("provider_name", providerName)
 	}
 
 	// Create Artisan client
@@ -83,7 +86,9 @@ func (f *GuildMasterFactory) CreateGuildMasterRefinerWithDefaults() (*GuildMaste
 			break
 		}
 		if providerName == "" {
-			return nil, fmt.Errorf("no AI providers available")
+			return nil, gerror.New(gerror.ErrCodeInternal, "no AI providers available").
+				WithComponent("manager").
+				WithOperation("CreateGuildMasterRefinerWithDefaults")
 		}
 		
 		// Set default model based on provider
@@ -113,7 +118,10 @@ func (f *GuildMasterFactory) GetAvailableProviders() []string {
 func (f *GuildMasterFactory) GetProviderCapabilities(providerName string) (providers.ProviderCapabilities, error) {
 	provider, exists := f.providers[providerName]
 	if !exists {
-		return providers.ProviderCapabilities{}, fmt.Errorf("provider %s not found", providerName)
+		return providers.ProviderCapabilities{}, gerror.New(gerror.ErrCodeValidation, "provider not found").
+			WithComponent("manager").
+			WithOperation("GetProviderCapabilities").
+			WithDetails("provider_name", providerName)
 	}
 	return provider.GetCapabilities(), nil
 }

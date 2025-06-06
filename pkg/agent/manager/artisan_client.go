@@ -2,8 +2,8 @@ package manager
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
@@ -43,12 +43,21 @@ func (gac *GuildArtisanClient) Complete(ctx context.Context, request ArtisanRequ
 	// Call the AI provider
 	response, err := gac.provider.ChatCompletion(ctx, chatRequest)
 	if err != nil {
-		return nil, fmt.Errorf("Guild Artisan request failed: %w", err)
+		return nil, gerror.New(gerror.ErrCodeAgent, "Guild Artisan request failed").
+			WithComponent("manager").
+			WithOperation("Complete").
+			WithDetails("model", gac.model).
+			WithDetails("temperature", request.Temperature).
+			Wrap(err)
 	}
 
 	// Validate response has choices
 	if len(response.Choices) == 0 {
-		return nil, fmt.Errorf("Guild Artisan returned no response choices")
+		return nil, gerror.New(gerror.ErrCodeAgent, "Guild Artisan returned no response choices").
+			WithComponent("manager").
+			WithOperation("Complete").
+			WithDetails("model", gac.model).
+			WithDetails("response_id", response.ID)
 	}
 
 	// Extract the content from the first choice
