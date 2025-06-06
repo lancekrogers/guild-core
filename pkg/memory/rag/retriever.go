@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 	
-	"github.com/guild-ventures/guild-core/internal/corpus"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
@@ -296,6 +296,69 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 		return nil, nil
 	}
 	
+	// Try semantic search first if vector store is available
+	if r.vectorStore != nil {
+		// Query the vector store for corpus documents
+		// We request more results than the limit to filter for corpus documents
+		matches, err := r.vectorStore.QueryEmbeddings(ctx, query, limit*3)
+		if err == nil {
+			results := make([]SearchResult, 0, limit)
+			
+			// Filter for corpus documents and convert to SearchResult
+			for _, match := range matches {
+				// Check if this is a corpus document
+				if strings.HasPrefix(match.Source, "corpus:") {
+					// Extract corpus metadata
+					var title string
+					var tags []string
+					var path string
+					
+					if metadata, ok := match.Metadata.(map[string]interface{}); ok {
+						if t, ok := metadata["title"].(string); ok {
+							title = t
+						}
+						if p, ok := metadata["path"].(string); ok {
+							path = p
+						}
+						if tagList, ok := metadata["tags"].([]interface{}); ok {
+							for _, tag := range tagList {
+								if tagStr, ok := tag.(string); ok {
+									tags = append(tags, tagStr)
+								}
+							}
+						} else if tagList, ok := metadata["tags"].([]string); ok {
+							tags = tagList
+						}
+					}
+					
+					result := SearchResult{
+						Content: match.Text,
+						Source:  match.Source,
+						Score:   match.Score,
+						Metadata: map[string]interface{}{
+							"title": title,
+							"tags":  tags,
+							"path":  path,
+						},
+					}
+					results = append(results, result)
+					
+					// Stop if we have enough results
+					if len(results) >= limit {
+						break
+					}
+				}
+			}
+			
+			// If we found results through semantic search, return them
+			if len(results) > 0 {
+				return results, nil
+			}
+		}
+		// If semantic search failed or returned no results, fall back to keyword search
+	}
+	
+	// Fallback to keyword-based search
 	// List corpus documents
 	docs, err := corpus.List(ctx, *r.corpusConfig)
 	if err != nil {
@@ -308,8 +371,7 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 	results := make([]SearchResult, 0)
 	queryLower := strings.ToLower(query)
 	
-	// Simple keyword matching for now
-	// TODO: Implement more sophisticated corpus search
+	// Simple keyword matching as fallback
 	for _, docPath := range docs {
 		doc, err := corpus.Load(ctx, docPath)
 		if err != nil {
