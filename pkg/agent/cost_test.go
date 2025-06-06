@@ -6,7 +6,7 @@ import (
 )
 
 func TestCostManager_BasicOperations(t *testing.T) {
-	cm := NewCostManager()
+	cm := newCostManager()
 	
 	// Test setting budgets
 	cm.SetBudget(CostTypeLLM, 10.0)
@@ -43,7 +43,7 @@ func TestCostManager_BasicOperations(t *testing.T) {
 }
 
 func TestCostManager_LLMCostCalculation(t *testing.T) {
-	cm := NewCostManager()
+	cm := newCostManager()
 	
 	tests := []struct {
 		model            string
@@ -93,7 +93,7 @@ func TestCostManager_LLMCostCalculation(t *testing.T) {
 }
 
 func TestCostManager_ToolCost(t *testing.T) {
-	cm := NewCostManager()
+	cm := newCostManager()
 	
 	// Test default tool cost
 	cost := cm.RecordToolCost("unknown-tool", nil)
@@ -116,7 +116,7 @@ func TestCostManager_ToolCost(t *testing.T) {
 }
 
 func TestCostManager_BudgetEnforcement(t *testing.T) {
-	cm := NewCostManager()
+	cm := newCostManager()
 	
 	// Set a small budget
 	cm.SetBudget(CostTypeLLM, 1.0)
@@ -141,7 +141,7 @@ func TestCostManager_BudgetEnforcement(t *testing.T) {
 }
 
 func TestCostManager_Report(t *testing.T) {
-	cm := NewCostManager()
+	cm := newCostManager()
 	
 	// Set budgets
 	cm.SetBudget(CostTypeLLM, 10.0)
@@ -186,7 +186,7 @@ func TestCostManager_Report(t *testing.T) {
 }
 
 func TestCostManager_ConcurrentAccess(t *testing.T) {
-	cm := NewCostManager()
+	cm := newCostManager()
 	cm.SetBudget(CostTypeLLM, 100.0)
 	
 	// Test concurrent access
@@ -220,7 +220,7 @@ func TestCostManager_ConcurrentAccess(t *testing.T) {
 }
 
 func TestCostManager_RecordTimestamps(t *testing.T) {
-	cm := NewCostManager()
+	cm := newCostManager()
 	
 	beforeRecord := time.Now()
 	cm.RecordCost(CostTypeLLM, 1.0, "Test", nil)
@@ -241,7 +241,7 @@ func TestCostManager_RecordTimestamps(t *testing.T) {
 
 // Benchmark tests
 func BenchmarkCostManager_RecordCost(b *testing.B) {
-	cm := NewCostManager()
+	cm := newCostManager()
 	
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -250,7 +250,7 @@ func BenchmarkCostManager_RecordCost(b *testing.B) {
 }
 
 func BenchmarkCostManager_CanAfford(b *testing.B) {
-	cm := NewCostManager()
+	cm := newCostManager()
 	cm.SetBudget(CostTypeLLM, 100.0)
 	cm.RecordCost(CostTypeLLM, 50.0, "Initial", nil)
 	
@@ -261,7 +261,7 @@ func BenchmarkCostManager_CanAfford(b *testing.B) {
 }
 
 func BenchmarkCostManager_GetReport(b *testing.B) {
-	cm := NewCostManager()
+	cm := newCostManager()
 	
 	// Add some data
 	for i := 0; i < 100; i++ {

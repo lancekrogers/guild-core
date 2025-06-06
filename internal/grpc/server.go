@@ -16,6 +16,7 @@ import (
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/orchestrator"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/registry"
@@ -93,7 +94,11 @@ func (s *Server) Start(ctx context.Context, address string) error {
 	var err error
 	s.listener, err = net.Listen("tcp", address)
 	if err != nil {
-		return fmt.Errorf("failed to listen: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to listen").
+			WithComponent("grpc").
+			WithOperation("Start").
+			WithDetails("address", address).
+			FromContext(ctx)
 	}
 
 	s.grpcServer = grpc.NewServer()
@@ -584,7 +589,10 @@ func (s *Server) StreamAgentConversation(stream pb.Guild_StreamAgentConversation
 			// Mock agent creation for now
 			// TODO: Integrate with actual agent factory
 			var mockAgent interface{} = nil
-			err := fmt.Errorf("agent factory not yet integrated")
+			err := gerror.New(gerror.ErrCodeInternal, "agent factory not yet integrated", nil).
+				WithComponent("grpc").
+				WithOperation("StreamAgentConversation").
+				FromContext(stream.Context())
 			if err != nil {
 				// Send error event
 				if err := stream.Send(&pb.AgentStreamResponse{

@@ -87,11 +87,11 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				
 			case key.Matches(msg, m.keymap.ConsultMaster):
 				m.proclamation = "Seeking the Guild Master's counsel on improvements..."
-				return m, requestSuggestionsCmd(m)
+				return m, requestSuggestionsCmd(&m)
 				
 			case key.Matches(msg, m.keymap.ApproveWork):
 				m.proclamation = "Preparing to seal the work with the Guild's mark of approval..."
-				return m, markCommissionReadyCmd(m)
+				return m, markCommissionReadyCmd(&m)
 				
 			case key.Matches(msg, m.keymap.ExamineDocs):
 				m.chamberState = statePreview
@@ -100,7 +100,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case key.Matches(msg, m.keymap.ToggleView):
 				m.chamberState = stateDashboard
 				m.proclamation = "Opening the Guild's objective ledger..."
-				return m, loadCommissionsCmd(m)
+				return m, loadCommissionsCmd(&m)
 				
 			case key.Matches(msg, m.keymap.EnterHall):
 				m.chamberState = stateCommands
@@ -194,7 +194,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.proclamation = "Command was empty. Returned to the main chamber."
 				} else {
 					m.proclamation = fmt.Sprintf("Executing command: %s", command)
-					return m, executeCommandCmd(m, command)
+					return m, executeCommandCmd(&m, command)
 				}
 			}
 			
@@ -222,7 +222,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.scribe.Reset()
 					m.chamberState = stateViewing
 					m.proclamation = "The Guild craftsmen begin to shape your objective..."
-					return m, createCommissionCmd(m, content)
+					return m, createCommissionCmd(&m, content)
 				}
 			}
 		}
@@ -404,12 +404,12 @@ func generateDocumentsCmd(m *CommissionChamber) tea.Cmd {
 }
 
 // requestSuggestionsCmd creates a command to get suggestions for the objective
-func requestSuggestionsCmd(m CommissionChamber) tea.Cmd {
+func requestSuggestionsCmd(m *CommissionChamber) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
 		if m.planner != nil && m.planner.GetSession().Commission != nil {
 			// Create a context for the operation
-			ctx := context.Background()
+			ctx := m.ctx
 
 			// Get suggestions
 			suggestions, err := m.planner.GetSuggestions(ctx)
@@ -445,12 +445,12 @@ func requestSuggestionsCmd(m CommissionChamber) tea.Cmd {
 }
 
 // markCommissionReadyCmd creates a command to mark the objective as ready
-func markCommissionReadyCmd(m CommissionChamber) tea.Cmd {
+func markCommissionReadyCmd(m *CommissionChamber) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
 		if m.planner != nil && m.planner.GetSession().Commission != nil {
 			// Create a context for the operation
-			ctx := context.Background()
+			ctx := m.ctx
 
 			// Mark objective as ready
 			err := m.planner.MarkReady(ctx)
@@ -476,12 +476,12 @@ func markCommissionReadyCmd(m CommissionChamber) tea.Cmd {
 }
 
 // loadCommissionsCmd creates a command to load all objectives for the dashboard
-func loadCommissionsCmd(m CommissionChamber) tea.Cmd {
+func loadCommissionsCmd(m *CommissionChamber) tea.Cmd {
 	return func() tea.Msg {
 		// If objective manager is available, use it
 		if m.commissionManager != nil {
 			// Create a context for the operation
-			ctx := context.Background()
+			ctx := m.ctx
 
 			// List all objectives
 			commissions, err := m.commissionManager.ListCommissions(ctx)
@@ -556,12 +556,12 @@ func loadCommissionsCmd(m CommissionChamber) tea.Cmd {
 }
 
 // createCommissionCmd creates a command to create a new objective
-func createCommissionCmd(m CommissionChamber, description string) tea.Cmd {
+func createCommissionCmd(m *CommissionChamber, description string) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
 		if m.planner != nil {
 			// Create a context for the operation
-			ctx := context.Background()
+			ctx := m.ctx
 
 			// Create objective
 			err := m.planner.CreateCommission(ctx, description)
@@ -678,7 +678,7 @@ func formatCommissionContent(obj *commissionpkg.Commission) string {
 }
 
 // executeCommandCmd creates a command to execute a command string
-func executeCommandCmd(m CommissionChamber, command string) tea.Cmd {
+func executeCommandCmd(m *CommissionChamber, command string) tea.Cmd {
 	return func() tea.Msg {
 		// Parse the command and execute appropriate action
 		// Format: command [args...]

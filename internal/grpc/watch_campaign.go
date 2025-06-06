@@ -14,6 +14,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // Screen represents the terminal screen state
@@ -109,7 +110,10 @@ func NewWatchCampaignClient(address string) (*WatchCampaignClient, error) {
 	// Create gRPC connection
 	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to connect").
+			WithComponent("grpc").
+			WithOperation("NewWatchCampaignClient").
+			WithDetails("address", address)
 	}
 
 	client := pb.NewGuildClient(conn)
@@ -144,7 +148,11 @@ func (c *WatchCampaignClient) Watch(ctx context.Context, campaignID string, opti
 	// Start streaming
 	stream, err := c.client.WatchCampaign(ctx, req)
 	if err != nil {
-		return fmt.Errorf("failed to start watch: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start watch").
+			WithComponent("grpc").
+			WithOperation("Watch").
+			WithDetails("campaign_id", campaignID).
+			FromContext(ctx)
 	}
 
 	// Main watch loop
@@ -168,7 +176,11 @@ func (c *WatchCampaignClient) Watch(ctx context.Context, campaignID string, opti
 				return nil
 			}
 			if err != nil {
-				return fmt.Errorf("stream error: %w", err)
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "stream error").
+					WithComponent("grpc").
+					WithOperation("Watch").
+					WithDetails("campaign_id", campaignID).
+					FromContext(ctx)
 			}
 
 			// Render frame

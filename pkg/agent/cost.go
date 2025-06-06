@@ -110,8 +110,8 @@ type CostManager struct {
 	mu sync.RWMutex
 }
 
-// NewCostManager creates a new cost manager with default settings
-func NewCostManager() *CostManager {
+// newCostManager creates a new cost manager with default settings
+func newCostManager() *CostManager {
 	return &CostManager{
 		costs:       make(map[CostType][]*CostRecord),
 		budgets:     make(map[CostType]float64),
@@ -294,4 +294,62 @@ func (cm *CostManager) GetCostReport() map[string]interface{} {
 		"record_counts": recordCounts,
 		"grand_total":   grandTotal,
 	}
+}
+
+// TrackCost implements the CostManager interface
+func (cm *CostManager) TrackCost(costType CostType, amount float64) error {
+	cm.RecordCost(costType, amount, "", nil)
+	return nil
+}
+
+// GetBudgetRemaining implements the CostManager interface
+func (cm *CostManager) GetBudgetRemaining(costType CostType) float64 {
+	cm.mu.RLock()
+	defer cm.mu.RUnlock()
+	
+	budget := cm.budgets[costType]
+	spent := cm.totalCosts[costType]
+	return budget - spent
+}
+
+// GetTotalCost implements the CostManager interface
+func (cm *CostManager) GetTotalCost() float64 {
+	cm.mu.RLock()
+	defer cm.mu.RUnlock()
+	
+	total := 0.0
+	for _, cost := range cm.totalCosts {
+		total += cost
+	}
+	return total
+}
+
+// Reset implements the CostManager interface
+func (cm *CostManager) Reset() {
+	cm.mu.Lock()
+	defer cm.mu.Unlock()
+	
+	cm.costs = make(map[CostType][]*CostRecord)
+	cm.totalCosts = make(map[CostType]float64)
+	// Keep budgets intact
+}
+
+// ExceedsBudget implements the CostManager interface
+func (cm *CostManager) ExceedsBudget(costType CostType, amount float64) bool {
+	cm.mu.RLock()
+	defer cm.mu.RUnlock()
+	
+	budget := cm.budgets[costType]
+	if budget == 0 {
+		return false // No budget set means no limit
+	}
+	
+	currentSpent := cm.totalCosts[costType]
+	return currentSpent + amount > budget
+}
+
+// DefaultCostManagerFactory is a factory function for creating cost managers
+// This should be registered with the agent registry
+func DefaultCostManagerFactory() CostManager {
+	return newCostManager()
 }

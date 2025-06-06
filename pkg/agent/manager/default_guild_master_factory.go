@@ -12,16 +12,24 @@ import (
 type DefaultGuildMasterFactory struct {
 	promptManager prompts.LayeredManager
 	providers     map[string]providers.AIProvider
+	registry      ComponentRegistry
 }
 
 // NewDefaultGuildMasterFactory creates a new Guild Master factory
 func NewDefaultGuildMasterFactory(
 	promptManager prompts.LayeredManager,
 	providers map[string]providers.AIProvider,
+	registry ComponentRegistry,
 ) *DefaultGuildMasterFactory {
+	// Create a registry if not provided
+	if registry == nil {
+		registry = NewComponentRegistry()
+	}
+	
 	return &DefaultGuildMasterFactory{
 		promptManager: promptManager,
 		providers:     providers,
+		registry:      registry,
 	}
 }
 
@@ -36,21 +44,49 @@ func (f *DefaultGuildMasterFactory) CreateCommissionRefiner(providerName, model 
 			WithDetails("provider_name", providerName)
 	}
 
-	// Create Artisan client
-	artisanClient := NewGuildArtisanClient(provider, model)
-
-	// Create intelligent response parser
-	parserConfig := IntelligentParserConfig{
-		Mode:          ParserModeAuto,
-		ArtisanClient: artisanClient,
-		PromptManager: f.promptManager,
-	}
+	// Try to get components from registry first, create if not found
 	
-	// Create the parser with ResponseParserAdapter
-	responseParser := NewResponseParserAdapter(NewIntelligentParser(parserConfig))
+	// Get or create Artisan client
+	clientKey := providerName + "-" + model
+	artisanClient, err := f.registry.GetArtisanClient(clientKey)
+	if err != nil {
+		// Create and register if not found
+		artisanClient = NewGuildArtisanClient(provider, model)
+		if regErr := f.registry.RegisterArtisanClient(clientKey, artisanClient); regErr != nil {
+			// Log registration error but continue
+			_ = regErr
+		}
+	}
 
-	// Create structure validator
-	validator := NewDefaultValidator()
+	// Get or create response parser
+	parserKey := "intelligent-auto"
+	responseParser, err := f.registry.GetParser(parserKey)
+	if err != nil {
+		// Create intelligent response parser
+		parserConfig := IntelligentParserConfig{
+			Mode:          ParserModeAuto,
+			ArtisanClient: artisanClient,
+			PromptManager: f.promptManager,
+		}
+		
+		// Create the parser with ResponseParserAdapter
+		responseParser = NewResponseParserAdapter(NewIntelligentParser(parserConfig))
+		if regErr := f.registry.RegisterParser(parserKey, responseParser); regErr != nil {
+			// Log registration error but continue
+			_ = regErr
+		}
+	}
+
+	// Get or create structure validator
+	validatorKey := "default"
+	validator, err := f.registry.GetValidator(validatorKey)
+	if err != nil {
+		validator = NewDefaultValidator()
+		if regErr := f.registry.RegisterValidator(validatorKey, validator); regErr != nil {
+			// Log registration error but continue
+			_ = regErr
+		}
+	}
 
 	// Create the Guild Master refiner
 	refiner := NewGuildMasterRefiner(

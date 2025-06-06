@@ -13,6 +13,7 @@ import (
 
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb"
 	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -155,7 +156,10 @@ func (s *ChatService) handleChatRequest(ctx context.Context, req *pb.ChatRequest
 	case *pb.ChatRequest_ToolApproval:
 		return s.handleToolApproval(ctx, r.ToolApproval, stream)
 	default:
-		return fmt.Errorf("unknown request type")
+		return gerror.New(gerror.ErrCodeInvalidInput, "unknown request type", nil).
+			WithComponent("grpc").
+			WithOperation("handleChatRequest").
+			FromContext(ctx)
 	}
 }
 
@@ -284,7 +288,11 @@ func (s *ChatService) handleChatControl(ctx context.Context, control *pb.ChatCon
 	case pb.ChatControl_REQUEST_STATUS:
 		return s.requestStatus(ctx, control, stream)
 	default:
-		return fmt.Errorf("unknown control action: %v", control.Action)
+		return gerror.Newf(gerror.ErrCodeInvalidInput, "unknown control action: %v", control.Action).
+			WithComponent("grpc").
+			WithOperation("handleChatControl").
+			WithDetails("action", control.Action).
+			FromContext(ctx)
 	}
 }
 
@@ -299,7 +307,11 @@ func (s *ChatService) handleToolApproval(ctx context.Context, approval *pb.ToolA
 	toolExec, exists := session.toolExecutions[approval.ToolExecutionId]
 	if !exists {
 		session.toolsMu.Unlock()
-		return fmt.Errorf("tool execution not found: %s", approval.ToolExecutionId)
+		return gerror.Newf(gerror.ErrCodeNotFound, "tool execution not found: %s", approval.ToolExecutionId).
+			WithComponent("grpc").
+			WithOperation("handleToolApproval").
+			WithDetails("tool_execution_id", approval.ToolExecutionId).
+			FromContext(ctx)
 	}
 	
 	if approval.Approved {
