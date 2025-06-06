@@ -1,0 +1,136 @@
+# golangci-lint configuration for Guild Framework
+# Run with: golangci-lint run
+
+run:
+  # Timeout for analysis
+  timeout: 5m
+  
+  # Include test files
+  tests: true
+  
+  # Skip directories
+  skip-dirs:
+    - vendor
+    - third_party
+    - testdata
+    - examples
+    - cmd/demos
+  
+  # Skip files
+  skip-files:
+    - ".*\\.pb\\.go$"
+    - ".*\\.pb\\.gw\\.go$"
+    - "mock_.*\\.go$"
+
+linters:
+  enable:
+    # Default linters
+    - gofmt
+    - govet
+    - staticcheck
+    - ineffassign
+    - misspell
+    - unconvert
+    - goconst
+    - gocyclo
+    - dupl
+    - gosimple
+    - unused
+    
+    # Additional useful linters
+    - bodyclose
+    - noctx
+    - golint
+    - stylecheck
+    - gosec
+    - prealloc
+    - exportloopref
+    
+  disable:
+    # Disable overly strict linters
+    - gochecknoglobals
+    - gochecknoinits
+    - godox
+    - funlen
+    - whitespace
+    - wsl
+    - goprintffuncname
+    - gomnd
+    - goerr113  # We use our own gerror package
+
+linters-settings:
+  gofmt:
+    simplify: true
+    
+  govet:
+    check-shadowing: true
+    
+  golint:
+    min-confidence: 0.8
+    
+  gocyclo:
+    min-complexity: 20
+    
+  dupl:
+    threshold: 150
+    
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+    
+  misspell:
+    locale: US
+    
+  unused:
+    check-exported: false
+    
+  gosec:
+    excludes:
+      - G204 # Subprocess audit - we need to execute shell commands
+      - G304 # File path provided as argument - we work with user files
+
+issues:
+  # Maximum issues count per one linter
+  max-issues-per-linter: 0
+  
+  # Maximum count of issues with the same text
+  max-same-issues: 0
+  
+  # Exclude some linters from running on tests files
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - dupl
+        - gosec
+        
+    # Exclude some linters from generated files
+    - path: ".*\\.pb\\.go"
+      linters:
+        - golint
+        - stylecheck
+        
+    # Allow unused params in interfaces
+    - path: interfaces\.go
+      linters:
+        - unused
+        
+    # Medieval naming convention exceptions
+    - text: "var-naming: don't use underscores in Go names"
+      linters:
+        - stylecheck
+        - golint
+
+  # Exclude known issues that are intentional
+  exclude:
+    # Allow init functions for command registration
+    - "don't use `init` function"
+    
+    # Allow TODO comments
+    - "TODO"
+    
+    # Allow complex functions in main packages
+    - "cyclomatic complexity .* of func `main` is high"
+    
+    # Allow context.Background() in main and test files
+    - "should not use basic type string as key in context.WithValue"

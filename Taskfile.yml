@@ -337,13 +337,13 @@ tasks:
           echo "$UNFORMATTED"
           exit 1
         fi
-        echo "✅ All files properly formatted"
       - |
+        # Run golangci-lint if available
         if command -v golangci-lint >/dev/null 2>&1; then
-          golangci-lint run
+          echo "Running golangci-lint..."
+          golangci-lint run ./...
         else
-          echo "golangci-lint not found, skipping advanced linting"
-        fi
+          echo "WARNING: golangci-lint not installed. Install with: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest"
       - |
         # Check for stray binaries
         STRAY_BINARIES=$(find . -type f -name "guild" -o -name "*.exe" | grep -v bin/ | head -5)

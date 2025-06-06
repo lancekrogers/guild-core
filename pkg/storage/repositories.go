@@ -51,6 +51,7 @@ func (r *SQLiteTaskRepository) CreateTask(ctx context.Context, task *Task) error
 		Title:        task.Title,
 		Description:  task.Description,
 		Status:       task.Status,
+		Column:       task.Column,           // Kanban column
 		StoryPoints:  &storyPoints,
 		Metadata:     metadataJSON,
 	})
@@ -107,6 +108,7 @@ func (r *SQLiteTaskRepository) UpdateTask(ctx context.Context, task *Task) error
 		Title:        task.Title,
 		Description:  task.Description,
 		Status:       task.Status,
+		Column:       task.Column,
 		StoryPoints:  &storyPoints,
 		Metadata:     metadataJSON,
 		ID:           task.ID,
@@ -410,6 +412,7 @@ func (r *SQLiteTaskRepository) convertDBTaskToTask(dbTask db.Task) (*Task, error
 		Title:           dbTask.Title,
 		Description:     dbTask.Description,
 		Status:          dbTask.Status,
+		Column:          dbTask.Column,         // Kanban column field
 		StoryPoints:     storyPoints,
 		CreatedAt:       createdAt,
 		UpdatedAt:       updatedAt,

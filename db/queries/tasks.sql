@@ -1,6 +1,6 @@
 -- name: CreateTask :exec
-INSERT INTO tasks (id, commission_id, board_id, title, description, status, story_points, metadata)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO tasks (id, commission_id, board_id, title, description, status, column, story_points, metadata)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 -- name: GetTask :one
 SELECT * FROM tasks WHERE id = ?;
@@ -44,7 +44,7 @@ WHERE id = ?;
 
 -- name: UpdateTask :exec
 UPDATE tasks 
-SET title = ?, description = ?, status = ?, story_points = ?, metadata = ?, updated_at = CURRENT_TIMESTAMP
+SET title = ?, description = ?, status = ?, column = ?, story_points = ?, metadata = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?;
 
 -- name: DeleteTask :exec

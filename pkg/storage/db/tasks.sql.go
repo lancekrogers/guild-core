@@ -27,8 +27,8 @@ func (q *Queries) AssignTaskToAgent(ctx context.Context, arg AssignTaskToAgentPa
 }
 
 const createTask = `-- name: CreateTask :exec
-INSERT INTO tasks (id, commission_id, board_id, title, description, status, story_points, metadata)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+INSERT INTO tasks (id, commission_id, board_id, title, description, status, column, story_points, metadata)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateTaskParams struct {
@@ -38,6 +38,7 @@ type CreateTaskParams struct {
 	Title        string      `json:"title"`
 	Description  *string     `json:"description"`
 	Status       string      `json:"status"`
+	Column       string      `json:"column"`
 	StoryPoints  *int64      `json:"story_points"`
 	Metadata     interface{} `json:"metadata"`
 }
@@ -50,6 +51,7 @@ func (q *Queries) CreateTask(ctx context.Context, arg CreateTaskParams) error {
 		arg.Title,
 		arg.Description,
 		arg.Status,
+		arg.Column,
 		arg.StoryPoints,
 		arg.Metadata,
 	)
@@ -436,7 +438,7 @@ func (q *Queries) RecordTaskEvent(ctx context.Context, arg RecordTaskEventParams
 
 const updateTask = `-- name: UpdateTask :exec
 UPDATE tasks 
-SET title = ?, description = ?, status = ?, story_points = ?, metadata = ?, updated_at = CURRENT_TIMESTAMP
+SET title = ?, description = ?, status = ?, column = ?, story_points = ?, metadata = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 `
 
@@ -444,6 +446,7 @@ type UpdateTaskParams struct {
 	Title       string      `json:"title"`
 	Description *string     `json:"description"`
 	Status      string      `json:"status"`
+	Column      string      `json:"column"`
 	StoryPoints *int64      `json:"story_points"`
 	Metadata    interface{} `json:"metadata"`
 	ID          string      `json:"id"`
@@ -454,6 +457,7 @@ func (q *Queries) UpdateTask(ctx context.Context, arg UpdateTaskParams) error {
 		arg.Title,
 		arg.Description,
 		arg.Status,
+		arg.Column,
 		arg.StoryPoints,
 		arg.Metadata,
 		arg.ID,

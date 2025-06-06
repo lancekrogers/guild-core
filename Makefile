@@ -231,7 +231,8 @@ lint:
 	fi ; \
 	echo "$(GREEN)✓ All files properly formatted$(NC)"
 	@if command -v golangci-lint >/dev/null 2>&1; then \
-		golangci-lint run ./... ; \
+		echo "$(BLUE)Running golangci-lint...$(NC)" ; \
+		golangci-lint run ./... || exit 1 ; \
 	else \
 		echo "$(YELLOW)golangci-lint not installed. Run 'make install-tools' first.$(NC)" ; \
 	fi
