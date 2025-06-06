@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
@@ -146,7 +146,10 @@ func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest)
 	}
 
 	if err := json.Unmarshal(respBody, &anthropicResp); err != nil {
-		return nil, fmt.Errorf("failed to parse Anthropic response: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeProviderAPI, "failed to parse Anthropic response").
+			WithComponent("providers").
+			WithOperation("ChatCompletion").
+			WithDetails("provider", "anthropic")
 	}
 
 	// Convert to our format
@@ -181,14 +184,21 @@ func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest)
 // StreamChatCompletion implements streaming for Anthropic
 func (c *Client) StreamChatCompletion(ctx context.Context, req interfaces.ChatRequest) (interfaces.ChatStream, error) {
 	// TODO: Implement Anthropic streaming (uses SSE format)
-	return nil, fmt.Errorf("streaming not yet implemented for Anthropic")
+	return nil, gerror.New(gerror.ErrCodeProvider, "streaming not yet implemented for Anthropic", nil).
+		WithComponent("providers").
+		WithOperation("StreamChatCompletion").
+		WithDetails("provider", "anthropic")
 }
 
 // CreateEmbedding implements the AIProvider interface
 func (c *Client) CreateEmbedding(ctx context.Context, req interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
 	// Note: Anthropic doesn't provide embeddings API
 	// You would need to use a different provider for embeddings
-	return nil, fmt.Errorf("Anthropic does not support embeddings - use OpenAI or another provider")
+	return nil, gerror.New(gerror.ErrCodeProvider, "Anthropic does not support embeddings - use OpenAI or another provider", nil).
+		WithComponent("providers").
+		WithOperation("CreateEmbedding").
+		WithDetails("provider", "anthropic").
+		WithDetails("capability", "embeddings")
 }
 
 // GetCapabilities returns provider capabilities
@@ -203,7 +213,7 @@ func (c *Client) makeRequest(ctx context.Context, endpoint string, payload inter
 		return nil, err
 	}
 
-	url := fmt.Sprintf("%s/%s", c.baseURL, endpoint)
+	url := c.baseURL + "/" + endpoint
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err

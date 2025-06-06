@@ -1,10 +1,10 @@
 package registry
 
 import (
-	"fmt"
 	"sort"
 	"sync"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 	basetools "github.com/guild-ventures/guild-core/tools"
 )
@@ -27,17 +27,23 @@ func NewToolRegistry() ToolRegistry {
 // RegisterTool registers a tool with the registry
 func (r *DefaultToolRegistry) RegisterTool(name string, tool Tool) error {
 	if name == "" {
-		return fmt.Errorf("tool name cannot be empty")
+		return gerror.New(gerror.ErrCodeInvalidInput, "tool name cannot be empty", nil).
+			WithComponent("registry").
+			WithOperation("RegisterTool")
 	}
 	if tool == nil {
-		return fmt.Errorf("tool cannot be nil")
+		return gerror.New(gerror.ErrCodeInvalidInput, "tool cannot be nil", nil).
+			WithComponent("registry").
+			WithOperation("RegisterTool")
 	}
 
 	// Convert the registry Tool interface to the actual tool interface
 	// This is a wrapper to adapt between interfaces
 	actualTool, ok := tool.(basetools.Tool)
 	if !ok {
-		return fmt.Errorf("tool does not implement the expected Tool interface")
+		return gerror.New(gerror.ErrCodeInvalidFormat, "tool does not implement the expected Tool interface", nil).
+			WithComponent("registry").
+			WithOperation("RegisterTool")
 	}
 
 	return r.registry.RegisterTool(actualTool)
@@ -47,7 +53,10 @@ func (r *DefaultToolRegistry) RegisterTool(name string, tool Tool) error {
 func (r *DefaultToolRegistry) GetTool(name string) (Tool, error) {
 	tool, exists := r.registry.GetTool(name)
 	if !exists {
-		return nil, fmt.Errorf("tool '%s' not found", name)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "tool '%s' not found", name).
+			WithComponent("registry").
+			WithOperation("GetTool").
+			WithDetails("tool", name)
 	}
 
 	// Return the tool (it already implements the Tool interface)
@@ -98,7 +107,9 @@ func (r *DefaultToolRegistry) GetUnderlyingRegistry() *tools.ToolRegistry {
 func (r *DefaultToolRegistry) RegisterToolWithLegacyCost(tool Tool, costPerUse float64) error {
 	actualTool, ok := tool.(basetools.Tool)
 	if !ok {
-		return fmt.Errorf("tool does not implement the expected Tool interface")
+		return gerror.New(gerror.ErrCodeInvalidFormat, "tool does not implement the expected Tool interface", nil).
+			WithComponent("registry").
+			WithOperation("RegisterTool")
 	}
 
 	return r.registry.RegisterToolWithCost(actualTool, costPerUse)
@@ -155,7 +166,10 @@ func (r *DefaultToolRegistry) GetCheapestToolByCapability(capability string) (*T
 	}
 
 	if cheapestTool == nil {
-		return nil, fmt.Errorf("no tool found with capability '%s'", capability)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "no tool found with capability '%s'", capability).
+			WithComponent("registry").
+			WithOperation("GetCheapestToolByCapability").
+			WithDetails("capability", capability)
 	}
 
 	return cheapestTool, nil
@@ -164,23 +178,33 @@ func (r *DefaultToolRegistry) GetCheapestToolByCapability(capability string) (*T
 // RegisterToolWithCost registers a tool with cost information and capabilities
 func (r *DefaultToolRegistry) RegisterToolWithCost(name string, tool Tool, costMagnitude int, capabilities []string) error {
 	if name == "" {
-		return fmt.Errorf("tool name cannot be empty")
+		return gerror.New(gerror.ErrCodeInvalidInput, "tool name cannot be empty", nil).
+			WithComponent("registry").
+			WithOperation("RegisterTool")
 	}
 	if tool == nil {
-		return fmt.Errorf("tool cannot be nil")
+		return gerror.New(gerror.ErrCodeInvalidInput, "tool cannot be nil", nil).
+			WithComponent("registry").
+			WithOperation("RegisterTool")
 	}
 	
 	// Validate cost magnitude (Fibonacci scale)
 	if costMagnitude != 0 {
 		validCosts := map[int]bool{1: true, 2: true, 3: true, 5: true, 8: true}
 		if !validCosts[costMagnitude] {
-			return fmt.Errorf("invalid cost_magnitude: %d (must be 0 for free tools, or Fibonacci values: 1,2,3,5,8)", costMagnitude)
+			return gerror.Newf(gerror.ErrCodeInvalidInput, "invalid cost_magnitude: %d (must be 0 for free tools, or Fibonacci values: 1,2,3,5,8)", costMagnitude).
+				WithComponent("registry").
+				WithOperation("RegisterToolWithCost").
+				WithDetails("costMagnitude", costMagnitude)
 		}
 	}
 
 	// Register the tool with the underlying registry
 	if err := r.RegisterTool(name, tool); err != nil {
-		return fmt.Errorf("failed to register tool: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register tool").
+			WithComponent("registry").
+			WithOperation("RegisterToolWithCost").
+			WithDetails("tool", name)
 	}
 
 	// Store metadata for cost-based selection
@@ -217,7 +241,10 @@ func (r *DefaultToolRegistry) GetToolInfo(name string) (*ToolInfo, error) {
 
 	toolInfo, exists := r.toolMetadata[name]
 	if !exists {
-		return nil, fmt.Errorf("tool metadata for '%s' not found", name)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "tool metadata for '%s' not found", name).
+			WithComponent("registry").
+			WithOperation("GetToolInfo").
+			WithDetails("tool", name)
 	}
 
 	return &toolInfo, nil
@@ -248,7 +275,10 @@ func (r *DefaultToolRegistry) SetToolAvailability(name string, available bool) e
 
 	toolInfo, exists := r.toolMetadata[name]
 	if !exists {
-		return fmt.Errorf("tool metadata for '%s' not found", name)
+		return gerror.Newf(gerror.ErrCodeNotFound, "tool metadata for '%s' not found", name).
+			WithComponent("registry").
+			WithOperation("SetToolAvailability").
+			WithDetails("tool", name)
 	}
 
 	toolInfo.Available = available

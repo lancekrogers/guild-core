@@ -189,7 +189,7 @@ func (e *BasicTaskExecutor) phaseInitialize(ctx context.Context) error {
 			WorkDir:      e.execContext.ProjectRoot,
 		}
 		
-		ws, err := e.workspaceManager.CreateWorkspace(context.Background(), opts)
+		ws, err := e.workspaceManager.CreateWorkspace(ctx, opts)
 		if err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create workspace").
 				WithComponent("executor").

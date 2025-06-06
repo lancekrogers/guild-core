@@ -1,10 +1,11 @@
 package registry
 
 import (
-	"fmt"
 	"sort"
 	"strings"
 	"sync"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // DefaultAgentRegistry implements the AgentRegistry interface
@@ -26,17 +27,24 @@ func NewAgentRegistry() AgentRegistry {
 // RegisterAgentType registers a new agent type with its factory function
 func (r *DefaultAgentRegistry) RegisterAgentType(name string, factory AgentFactory) error {
 	if name == "" {
-		return fmt.Errorf("agent type name cannot be empty")
+		return gerror.New(gerror.ErrCodeInvalidInput, "agent type name cannot be empty", nil).
+			WithComponent("registry").
+			WithOperation("RegisterAgentType")
 	}
 	if factory == nil {
-		return fmt.Errorf("agent factory cannot be nil")
+		return gerror.New(gerror.ErrCodeInvalidInput, "agent factory cannot be nil", nil).
+			WithComponent("registry").
+			WithOperation("RegisterAgentType")
 	}
 
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	if _, exists := r.factories[name]; exists {
-		return fmt.Errorf("agent type '%s' already registered", name)
+		return gerror.Newf(gerror.ErrCodeAlreadyExists, "agent type '%s' already registered", name).
+			WithComponent("registry").
+			WithOperation("RegisterAgentType").
+			WithDetails("agentType", name)
 	}
 
 	// Store the factory directly
@@ -52,7 +60,10 @@ func (r *DefaultAgentRegistry) GetAgent(agentType string) (Agent, error) {
 	r.mu.RUnlock()
 
 	if !exists {
-		return nil, fmt.Errorf("agent type '%s' not registered", agentType)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "agent type '%s' not registered", agentType).
+			WithComponent("registry").
+			WithOperation("GetAgent").
+			WithDetails("agentType", agentType)
 	}
 
 	// Create agent with default configuration
@@ -88,7 +99,10 @@ func (r *DefaultAgentRegistry) HasAgentType(agentType string) bool {
 // SetDefaultAgentType sets the default agent type
 func (r *DefaultAgentRegistry) SetDefaultAgentType(agentType string) error {
 	if !r.HasAgentType(agentType) {
-		return fmt.Errorf("agent type '%s' not registered", agentType)
+		return gerror.Newf(gerror.ErrCodeNotFound, "agent type '%s' not registered", agentType).
+			WithComponent("registry").
+			WithOperation("SetDefaultAgentType").
+			WithDetails("agentType", agentType)
 	}
 
 	r.mu.Lock()
@@ -111,7 +125,9 @@ func (r *DefaultAgentRegistry) CreateAgent(agentType string) (Agent, error) {
 	if agentType == "" {
 		agentType = r.GetDefaultAgentType()
 		if agentType == "" {
-			return nil, fmt.Errorf("no agent type specified and no default type set")
+			return nil, gerror.New(gerror.ErrCodeMissingRequired, "no agent type specified and no default type set", nil).
+				WithComponent("registry").
+				WithOperation("CreateAgent")
 		}
 	}
 
@@ -161,7 +177,10 @@ func (r *DefaultAgentRegistry) GetCheapestAgentByCapability(capability string) (
 	}
 
 	if cheapestAgent == nil {
-		return nil, fmt.Errorf("no agent found with capability '%s'", capability)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "no agent found with capability '%s'", capability).
+			WithComponent("registry").
+			WithOperation("GetCheapestAgentByCapability").
+			WithDetails("capability", capability)
 	}
 
 	return cheapestAgent, nil
@@ -190,20 +209,29 @@ func (r *DefaultAgentRegistry) GetAgentsByCapability(capability string) []AgentI
 // RegisterGuildAgent registers a configured agent from guild config
 func (r *DefaultAgentRegistry) RegisterGuildAgent(config GuildAgentConfig) error {
 	if config.ID == "" {
-		return fmt.Errorf("agent ID cannot be empty")
+		return gerror.New(gerror.ErrCodeInvalidInput, "agent ID cannot be empty", nil).
+			WithComponent("registry").
+			WithOperation("RegisterGuildAgent")
 	}
 	if config.Name == "" {
-		return fmt.Errorf("agent name cannot be empty")
+		return gerror.New(gerror.ErrCodeInvalidInput, "agent name cannot be empty", nil).
+			WithComponent("registry").
+			WithOperation("RegisterGuildAgent")
 	}
 	if len(config.Capabilities) == 0 {
-		return fmt.Errorf("agent must have at least one capability")
+		return gerror.New(gerror.ErrCodeInvalidInput, "agent must have at least one capability", nil).
+			WithComponent("registry").
+			WithOperation("RegisterGuildAgent")
 	}
 
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	if _, exists := r.guildAgents[config.ID]; exists {
-		return fmt.Errorf("agent with ID '%s' already registered", config.ID)
+		return gerror.Newf(gerror.ErrCodeAlreadyExists, "agent with ID '%s' already registered", config.ID).
+			WithComponent("registry").
+			WithOperation("RegisterGuildAgent").
+			WithDetails("agentID", config.ID)
 	}
 
 	r.guildAgents[config.ID] = config

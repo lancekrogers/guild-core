@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
@@ -179,11 +180,17 @@ func (e *UniversalEmbedder) tryEmbedding(ctx context.Context, text string, model
 
 	resp, err := e.provider.CreateEmbedding(ctx, req)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create embedding with model %s: %w", model, err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+			WithComponent("memory").
+			WithOperation("tryEmbedding").
+			WithDetails(fmt.Sprintf("failed to create embedding with model %s", model))
 	}
 
 	if len(resp.Embeddings) == 0 {
-		return nil, fmt.Errorf("no embeddings returned")
+		return nil, gerror.New(gerror.ErrCodeInternal).
+			WithComponent("memory").
+			WithOperation("tryEmbedding").
+			WithDetails("no embeddings returned")
 	}
 
 	// Convert to float32
@@ -216,11 +223,17 @@ Text: "%s"`, text)
 
 	resp, err := e.provider.ChatCompletion(ctx, req)
 	if err != nil {
-		return nil, fmt.Errorf("failed to generate LLM-based embedding: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+			WithComponent("memory").
+			WithOperation("embedFromLLM").
+			WithDetails("failed to generate LLM-based embedding")
 	}
 
 	if len(resp.Choices) == 0 {
-		return nil, fmt.Errorf("no response from LLM")
+		return nil, gerror.New(gerror.ErrCodeInternal).
+			WithComponent("memory").
+			WithOperation("embedFromLLM").
+			WithDetails("no response from LLM")
 	}
 
 	// Parse the response as a vector
@@ -272,7 +285,10 @@ func (e *UniversalEmbedder) GetEmbedding(ctx context.Context, text string) ([]fl
 // GetEmbeddings generates embeddings for multiple texts
 func (e *UniversalEmbedder) GetEmbeddings(ctx context.Context, texts []string) ([][]float32, error) {
 	if len(texts) == 0 {
-		return nil, fmt.Errorf("no texts provided")
+		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+			WithComponent("memory").
+			WithOperation("GetEmbeddings").
+			WithDetails("no texts provided")
 	}
 
 	// For dedicated embedding models, try batch processing
@@ -287,7 +303,10 @@ func (e *UniversalEmbedder) GetEmbeddings(ctx context.Context, texts []string) (
 	for i, text := range texts {
 		embedding, err := e.Embed(ctx, text)
 		if err != nil {
-			return nil, fmt.Errorf("failed to embed text at index %d: %w", i, err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+				WithComponent("memory").
+				WithOperation("GetEmbeddings").
+				WithDetails(fmt.Sprintf("failed to embed text at index %d", i))
 		}
 		results[i] = embedding
 	}
@@ -308,7 +327,10 @@ func (e *UniversalEmbedder) batchEmbed(ctx context.Context, texts []string) ([][
 	}
 
 	if len(resp.Embeddings) != len(texts) {
-		return nil, fmt.Errorf("expected %d embeddings, got %d", len(texts), len(resp.Embeddings))
+		return nil, gerror.New(gerror.ErrCodeInternal).
+			WithComponent("memory").
+			WithOperation("batchEmbed").
+			WithDetails(fmt.Sprintf("expected %d embeddings, got %d", len(texts), len(resp.Embeddings)))
 	}
 
 	results := make([][]float32, len(resp.Embeddings))
@@ -341,14 +363,20 @@ func parseVectorString(s string) ([]float32, error) {
 		
 		var f float64
 		if _, err := fmt.Sscanf(part, "%f", &f); err != nil {
-			return nil, fmt.Errorf("failed to parse number: %s", part)
+			return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+				WithComponent("memory").
+				WithOperation("parseVectorString").
+				WithDetails(fmt.Sprintf("failed to parse number: %s", part))
 		}
 		
 		result = append(result, float32(f))
 	}
 	
 	if len(result) == 0 {
-		return nil, fmt.Errorf("no valid numbers found in vector string")
+		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+			WithComponent("memory").
+			WithOperation("parseVectorString").
+			WithDetails("no valid numbers found in vector string")
 	}
 	
 	return result, nil

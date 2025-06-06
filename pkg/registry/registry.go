@@ -2,11 +2,11 @@ package registry
 
 import (
 	"context"
-	"fmt"
 	"path/filepath"
 	"sync"
 
 	"github.com/guild-ventures/guild-core/pkg/config"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/storage"
 )
@@ -326,27 +326,39 @@ func (r *DefaultComponentRegistry) Initialize(ctx context.Context, config Config
 
 	// Initialize each registry
 	if err := r.initializeAgents(ctx); err != nil {
-		return fmt.Errorf("failed to initialize agents: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize agents").
+			WithComponent("registry").
+			WithOperation("Initialize")
 	}
 
 	if err := r.initializeTools(ctx); err != nil {
-		return fmt.Errorf("failed to initialize tools: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize tools").
+			WithComponent("registry").
+			WithOperation("Initialize")
 	}
 
 	if err := r.initializeProviders(ctx); err != nil {
-		return fmt.Errorf("failed to initialize providers: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize providers").
+			WithComponent("registry").
+			WithOperation("Initialize")
 	}
 
 	if err := r.initializeMemory(ctx); err != nil {
-		return fmt.Errorf("failed to initialize memory: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize memory").
+			WithComponent("registry").
+			WithOperation("Initialize")
 	}
 
 	if err := r.initializeStorage(ctx); err != nil {
-		return fmt.Errorf("failed to initialize storage: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize storage").
+			WithComponent("registry").
+			WithOperation("Initialize")
 	}
 
 	if err := r.initializePrompts(ctx); err != nil {
-		return fmt.Errorf("failed to initialize prompts: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize prompts").
+			WithComponent("registry").
+			WithOperation("Initialize")
 	}
 
 	r.initialized = true
@@ -362,25 +374,35 @@ func (r *DefaultComponentRegistry) Shutdown(ctx context.Context) error {
 
 	// Shutdown each registry
 	if err := r.shutdownMemory(ctx); err != nil {
-		errors = append(errors, fmt.Errorf("memory shutdown error: %w", err))
+		errors = append(errors, gerror.Wrap(err, gerror.ErrCodeInternal, "memory shutdown error").
+			WithComponent("registry").
+			WithOperation("Shutdown"))
 	}
 
 	if err := r.shutdownProviders(ctx); err != nil {
-		errors = append(errors, fmt.Errorf("providers shutdown error: %w", err))
+		errors = append(errors, gerror.Wrap(err, gerror.ErrCodeInternal, "providers shutdown error").
+			WithComponent("registry").
+			WithOperation("Shutdown"))
 	}
 
 	if err := r.shutdownTools(ctx); err != nil {
-		errors = append(errors, fmt.Errorf("tools shutdown error: %w", err))
+		errors = append(errors, gerror.Wrap(err, gerror.ErrCodeInternal, "tools shutdown error").
+			WithComponent("registry").
+			WithOperation("Shutdown"))
 	}
 
 	if err := r.shutdownAgents(ctx); err != nil {
-		errors = append(errors, fmt.Errorf("agents shutdown error: %w", err))
+		errors = append(errors, gerror.Wrap(err, gerror.ErrCodeInternal, "agents shutdown error").
+			WithComponent("registry").
+			WithOperation("Shutdown"))
 	}
 
 	r.initialized = false
 
 	if len(errors) > 0 {
-		return fmt.Errorf("shutdown errors: %v", errors)
+		return gerror.Newf(gerror.ErrCodeInternal, "shutdown errors: %v", errors).
+			WithComponent("registry").
+			WithOperation("Shutdown")
 	}
 
 	return nil
@@ -393,13 +415,17 @@ func (r *DefaultComponentRegistry) initializeAgents(ctx context.Context) error {
 		agentReg.RegisterAgentType("worker", func(config AgentConfig) (Agent, error) {
 			// This would create a worker agent - implementation depends on your Agent interface
 			// For now, return nil to avoid compilation errors
-			return nil, fmt.Errorf("agent creation not yet implemented")
+			return nil, gerror.New(gerror.ErrCodeInternal, "agent creation not yet implemented", nil).
+				WithComponent("registry").
+				WithOperation("initializeAgents")
 		})
 
 		// Register manager agent factory  
 		agentReg.RegisterAgentType("manager", func(config AgentConfig) (Agent, error) {
 			// This would create a manager agent
-			return nil, fmt.Errorf("agent creation not yet implemented")
+			return nil, gerror.New(gerror.ErrCodeInternal, "agent creation not yet implemented", nil).
+				WithComponent("registry").
+				WithOperation("initializeAgents")
 		})
 
 		// Set default if configured
@@ -428,7 +454,9 @@ func (r *DefaultComponentRegistry) initializeTools(ctx context.Context) error {
 	// Register basic tools with cost information
 	if toolReg, ok := r.toolRegistry.(*DefaultToolRegistry); ok {
 		if err := toolReg.RegisterBasicTools(); err != nil {
-			return fmt.Errorf("failed to register basic tools: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register basic tools").
+				WithComponent("registry").
+				WithOperation("initializeTools")
 		}
 	}
 	
@@ -442,14 +470,18 @@ func (r *DefaultComponentRegistry) initializeProviders(ctx context.Context) erro
 	// Register all configured providers
 	err := factory.RegisterProvidersWithRegistry(r.providerRegistry, r.config.Providers.Providers)
 	if err != nil {
-		return fmt.Errorf("failed to register providers: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register providers").
+			WithComponent("registry").
+			WithOperation("initializeProviders")
 	}
 
 	// Set default provider if configured
 	if r.config.Providers.DefaultProvider != "" {
 		err := r.providerRegistry.SetDefaultProvider(r.config.Providers.DefaultProvider)
 		if err != nil {
-			return fmt.Errorf("failed to set default provider: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to set default provider").
+				WithComponent("registry").
+				WithOperation("initializeProviders")
 		}
 	}
 
@@ -471,14 +503,14 @@ func (r *DefaultComponentRegistry) initializeStorage(ctx context.Context) error 
 	projectCtx, err := r.projectRegistry.GetCurrentContext(ctx)
 	if err != nil {
 		// No project context available, use default SQLite backend
-		return r.initializeSQLiteStorage(".guild/guild.db")
+		return r.initializeSQLiteStorage(ctx, ".guild/guild.db")
 	}
 
 	// Load guild configuration to determine storage backend
 	guildConfig, err := config.LoadGuildConfig((*projectCtx).GetRootPath())
 	if err != nil {
 		// If guild config fails to load, default to SQLite
-		return r.initializeSQLiteStorage(filepath.Join((*projectCtx).GetGuildPath(), "guild.db"))
+		return r.initializeSQLiteStorage(ctx, filepath.Join((*projectCtx).GetGuildPath(), "guild.db"))
 	}
 
 	// Initialize storage based on configuration
@@ -490,21 +522,23 @@ func (r *DefaultComponentRegistry) initializeStorage(ctx context.Context) error 
 		} else {
 			dbPath = guildConfig.GetEffectiveSQLitePath()
 		}
-		return r.initializeSQLiteStorage(dbPath)
+		return r.initializeSQLiteStorage(ctx, dbPath)
 	} else {
 		// BoltDB legacy support
 		dbPath := filepath.Join((*projectCtx).GetGuildPath(), guildConfig.GetEffectiveBoltDBPath())
-		return r.initializeBoltDBStorage(dbPath)
+		return r.initializeBoltDBStorage(ctx, dbPath)
 	}
 }
 
-func (r *DefaultComponentRegistry) initializeSQLiteStorage(dbPath string) error {
-	ctx := context.Background()
+func (r *DefaultComponentRegistry) initializeSQLiteStorage(ctx context.Context, dbPath string) error
 	
 	// Initialize SQLite storage using the storage package's initialization function
 	storageReg, memoryStoreAdapter, err := storage.InitializeSQLiteStorageForRegistry(ctx, dbPath)
 	if err != nil {
-		return fmt.Errorf("failed to initialize SQLite storage: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize SQLite storage").
+			WithComponent("registry").
+			WithOperation("initializeSQLiteStorage").
+			WithDetails("dbPath", dbPath)
 	}
 	
 	// Replace the placeholder storage registry with the real one
@@ -525,7 +559,9 @@ func (r *DefaultComponentRegistry) initializeSQLiteStorage(dbPath string) error 
 			commissionAdapter: commissionAdapter,
 		}
 	} else {
-		return fmt.Errorf("unexpected storage registry type")
+		return gerror.New(gerror.ErrCodeInternal, "unexpected storage registry type", nil).
+			WithComponent("registry").
+			WithOperation("initializeSQLiteStorage")
 	}
 	
 	// SQLite storage registry already has the memory store set in the struct above
@@ -533,14 +569,17 @@ func (r *DefaultComponentRegistry) initializeSQLiteStorage(dbPath string) error 
 	return nil
 }
 
-func (r *DefaultComponentRegistry) initializeBoltDBStorage(dbPath string) error {
+func (r *DefaultComponentRegistry) initializeBoltDBStorage(ctx context.Context, dbPath string) error {
 	// Initialize legacy BoltDB storage
 	// This would use the existing memory package implementations
 	
+	_ = ctx // Context will be used when implementing BoltDB storage
 	_ = dbPath // Suppress unused variable warning
 	
 	// TODO: Initialize BoltDB storage for backward compatibility
-	return fmt.Errorf("BoltDB storage initialization not yet implemented")
+	return gerror.New(gerror.ErrCodeInternal, "BoltDB storage initialization not yet implemented", nil).
+		WithComponent("registry").
+		WithOperation("initializeBoltDBStorage")
 }
 
 func (r *DefaultComponentRegistry) shutdownAgents(ctx context.Context) error {
@@ -572,11 +611,15 @@ func (r *DefaultComponentRegistry) initializePrompts(ctx context.Context) error 
 	// Register default prompt provider
 	defaultProvider, err := NewDefaultPromptProvider()
 	if err != nil {
-		return fmt.Errorf("error creating default prompt provider: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "error creating default prompt provider").
+			WithComponent("registry").
+			WithOperation("initializePrompts")
 	}
 
 	if err := r.promptRegistry.Register("default", defaultProvider); err != nil {
-		return fmt.Errorf("error registering default prompt provider: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "error registering default prompt provider").
+			WithComponent("registry").
+			WithOperation("initializePrompts")
 	}
 
 	// TODO: Add any other prompt providers from config
@@ -589,13 +632,17 @@ func (r *DefaultComponentRegistry) loadGuildAgents(ctx context.Context, agentReg
 	// Try to get project context and load guild configuration
 	projectCtx, err := r.projectRegistry.GetCurrentContext(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to get project context: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get project context").
+			WithComponent("registry").
+			WithOperation("loadGuildAgents")
 	}
 	
 	// Load guild configuration
 	guildConfig, err := config.LoadGuildConfig((*projectCtx).GetRootPath())
 	if err != nil {
-		return fmt.Errorf("failed to load guild config: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load guild config").
+			WithComponent("registry").
+			WithOperation("loadGuildAgents")
 	}
 	
 	// Register each agent with the registry
@@ -618,7 +665,10 @@ func (r *DefaultComponentRegistry) loadGuildAgents(ctx context.Context, agentReg
 		}
 		
 		if err := agentReg.RegisterGuildAgent(guildAgent); err != nil {
-			return fmt.Errorf("failed to register agent %s: %w", agent.ID, err)
+			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to register agent %s", agent.ID).
+				WithComponent("registry").
+				WithOperation("loadGuildAgents").
+				WithDetails("agentID", agent.ID)
 		}
 	}
 	
@@ -644,7 +694,9 @@ func (r *DefaultComponentRegistry) GetCheapestAgentByCapability(capability strin
 	if agentReg, ok := r.agentRegistry.(*DefaultAgentRegistry); ok {
 		return agentReg.GetCheapestAgentByCapability(capability)
 	}
-	return nil, fmt.Errorf("agent registry not properly initialized")
+	return nil, gerror.New(gerror.ErrCodeInternal, "agent registry not properly initialized", nil).
+		WithComponent("registry").
+		WithOperation("GetCheapestAgentByCapability")
 }
 
 // GetToolsByCost provides access to cost-based tool selection
@@ -666,7 +718,9 @@ func (r *DefaultComponentRegistry) GetCheapestToolByCapability(capability string
 	if toolReg, ok := r.toolRegistry.(*DefaultToolRegistry); ok {
 		return toolReg.GetCheapestToolByCapability(capability)
 	}
-	return nil, fmt.Errorf("tool registry not properly initialized")
+	return nil, gerror.New(gerror.ErrCodeInternal, "tool registry not properly initialized", nil).
+		WithComponent("registry").
+		WithOperation("GetCheapestToolByCapability")
 }
 
 // GetAgentsByCapability provides access to capability-based agent selection

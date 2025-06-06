@@ -21,14 +21,16 @@ type Manager struct {
 	eventManager *EventManager
 	pubsub       comms.PubSub
 	mu           sync.RWMutex
+	ctx          context.Context
+	cancel       context.CancelFunc
 }
 
 // ManagerEventHandler is a function that handles board events for the manager
 type ManagerEventHandler func(event BoardEvent)
 
 // NewManager creates a new kanban manager
-func NewManager(store memory.Store) (*Manager, error) {
-	return NewManagerWithConfig(store, map[string]interface{}{
+func NewManager(ctx context.Context, store memory.Store) (*Manager, error) {
+	return NewManagerWithConfig(ctx, store, map[string]interface{}{
 		"pub_endpoint": "tcp://127.0.0.1:5556",
 		"sub_endpoint": "tcp://127.0.0.1:5556",
 		"identity":     "kanban-manager",
@@ -36,20 +38,23 @@ func NewManager(store memory.Store) (*Manager, error) {
 }
 
 // NewManagerWithConfig creates a new kanban manager with custom channel config
-func NewManagerWithConfig(store memory.Store, channelConfig map[string]interface{}) (*Manager, error) {
+func NewManagerWithConfig(ctx context.Context, store memory.Store, channelConfig map[string]interface{}) (*Manager, error) {
 	if store == nil {
 		return nil, fmt.Errorf("store cannot be nil")
 	}
 
 	// Initialize channel-based messaging
 	transport := channel.NewTransport()
-	pubsub, err := transport.NewPubSub(context.Background(), channelConfig)
+	pubsub, err := transport.NewPubSub(ctx, channelConfig)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create channel pubsub: %w", err)
 	}
 
 	// Create event manager
-	eventManager := NewEventManager(pubsub, "kanban.")
+	eventManager := NewEventManager(ctx, pubsub, "kanban.")
+
+	// Create a cancellable context for the manager
+	mgrCtx, cancel := context.WithCancel(ctx)
 
 	// Create manager
 	manager := &Manager{
@@ -60,6 +65,8 @@ func NewManagerWithConfig(store memory.Store, channelConfig map[string]interface
 		eventManager: eventManager,
 		pubsub:       pubsub,
 		mu:           sync.RWMutex{},
+		ctx:          mgrCtx,
+		cancel:       cancel,
 	}
 
 	// Subscribe to important events for internal processing
@@ -367,19 +374,22 @@ func (m *Manager) GetEventChannel() <-chan BoardEvent {
 
 // processEvents processes events from the store
 func (m *Manager) processEvents() {
-	ctx := context.Background()
 	ticker := time.NewTicker(1 * time.Second)
 	defer ticker.Stop()
 
 	var lastProcessedTime time.Time
 
-	for range ticker.C {
-		// Load recent events from the store
-		events, err := m.loadEventsAfter(ctx, lastProcessedTime)
-		if err != nil {
-			fmt.Printf("error loading events: %v\n", err)
-			continue
-		}
+	for {
+		select {
+		case <-m.ctx.Done():
+			return
+		case <-ticker.C:
+			// Load recent events from the store
+			events, err := m.loadEventsAfter(m.ctx, lastProcessedTime)
+			if err != nil {
+				fmt.Printf("error loading events: %v\n", err)
+				continue
+			}
 
 		if len(events) > 0 {
 			lastProcessedTime = events[len(events)-1].OccurredAt

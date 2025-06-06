@@ -23,8 +23,8 @@ type EventManager struct {
 type EventHandler func(event *BoardEvent) error
 
 // NewEventManager creates a new event manager
-func NewEventManager(pubsub comms.PubSub, topicPrefix string) *EventManager {
-	ctx, cancel := context.WithCancel(context.Background())
+func NewEventManager(ctx context.Context, pubsub comms.PubSub, topicPrefix string) *EventManager {
+	ctx, cancel := context.WithCancel(ctx)
 
 	em := &EventManager{
 		pubsub:      pubsub,

@@ -1,9 +1,9 @@
 package registry
 
 import (
-	"fmt"
 	"sync"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
@@ -26,23 +26,32 @@ func NewProviderRegistry() ProviderRegistry {
 // RegisterProvider registers an LLM provider
 func (r *DefaultProviderRegistry) RegisterProvider(name string, provider Provider) error {
 	if name == "" {
-		return fmt.Errorf("provider name cannot be empty")
+		return gerror.New(gerror.ErrCodeInvalidInput, "provider name cannot be empty", nil).
+			WithComponent("registry").
+			WithOperation("RegisterProvider")
 	}
 	if provider == nil {
-		return fmt.Errorf("provider cannot be nil")
+		return gerror.New(gerror.ErrCodeInvalidInput, "provider cannot be nil", nil).
+			WithComponent("registry").
+			WithOperation("RegisterProvider")
 	}
 
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	if _, exists := r.providers[name]; exists {
-		return fmt.Errorf("provider '%s' already registered", name)
+		return gerror.Newf(gerror.ErrCodeAlreadyExists, "provider '%s' already registered", name).
+			WithComponent("registry").
+			WithOperation("RegisterProvider").
+			WithDetails("provider", name)
 	}
 
 	// Convert the registry Provider interface to the actual LLMClient interface
 	llmClient, ok := provider.(providers.LLMClient)
 	if !ok {
-		return fmt.Errorf("provider does not implement the expected LLMClient interface")
+		return gerror.New(gerror.ErrCodeInvalidFormat, "provider does not implement the expected LLMClient interface", nil).
+			WithComponent("registry").
+			WithOperation("RegisterProvider")
 	}
 
 	r.providers[name] = llmClient
@@ -56,7 +65,10 @@ func (r *DefaultProviderRegistry) GetProvider(name string) (Provider, error) {
 	r.mu.RUnlock()
 
 	if !exists {
-		return nil, fmt.Errorf("provider '%s' not found", name)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "provider '%s' not found", name).
+			WithComponent("registry").
+			WithOperation("GetProvider").
+			WithDetails("provider", name)
 	}
 
 	return provider, nil
@@ -69,7 +81,9 @@ func (r *DefaultProviderRegistry) GetDefaultProvider() (Provider, error) {
 	r.mu.RUnlock()
 
 	if defaultName == "" {
-		return nil, fmt.Errorf("no default provider set")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "no default provider set", nil).
+			WithComponent("registry").
+			WithOperation("GetDefaultProvider")
 	}
 
 	return r.GetProvider(defaultName)
@@ -78,7 +92,10 @@ func (r *DefaultProviderRegistry) GetDefaultProvider() (Provider, error) {
 // SetDefaultProvider sets the default provider
 func (r *DefaultProviderRegistry) SetDefaultProvider(name string) error {
 	if !r.HasProvider(name) {
-		return fmt.Errorf("provider '%s' not registered", name)
+		return gerror.Newf(gerror.ErrCodeNotFound, "provider '%s' not registered", name).
+			WithComponent("registry").
+			WithOperation("SetDefaultProvider").
+			WithDetails("provider", name)
 	}
 
 	r.mu.Lock()
@@ -113,7 +130,11 @@ func (r *DefaultProviderRegistry) HasProvider(name string) bool {
 func (r *DefaultProviderRegistry) CreateAndRegisterProvider(name string, providerType providers.ProviderType, apiKey, model string) error {
 	client, err := r.factory.CreateClient(providerType, apiKey, model)
 	if err != nil {
-		return fmt.Errorf("failed to create provider: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create provider").
+			WithComponent("registry").
+			WithOperation("CreateAndRegisterProvider").
+			WithDetails("provider", name).
+			WithDetails("providerType", string(providerType))
 	}
 
 	return r.RegisterProvider(name, client)
@@ -127,7 +148,10 @@ func (r *DefaultProviderRegistry) GetLLMClient(name string) (providers.LLMClient
 	r.mu.RUnlock()
 
 	if !exists {
-		return nil, fmt.Errorf("provider '%s' not found", name)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "provider '%s' not found", name).
+			WithComponent("registry").
+			WithOperation("GetProvider").
+			WithDetails("provider", name)
 	}
 
 	return client, nil
@@ -140,7 +164,9 @@ func (r *DefaultProviderRegistry) GetDefaultLLMClient() (providers.LLMClient, er
 	r.mu.RUnlock()
 
 	if defaultName == "" {
-		return nil, fmt.Errorf("no default provider set")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "no default provider set", nil).
+			WithComponent("registry").
+			WithOperation("GetDefaultProvider")
 	}
 
 	return r.GetLLMClient(defaultName)

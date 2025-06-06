@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
@@ -120,7 +120,10 @@ func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest)
 	}
 
 	if err := json.Unmarshal(respBody, &oraResp); err != nil {
-		return nil, fmt.Errorf("failed to parse Ora response: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeProviderAPI, "failed to parse Ora response").
+			WithComponent("providers").
+			WithOperation("ChatCompletion").
+			WithDetails("provider", "ora")
 	}
 
 	// Convert to our format
@@ -151,13 +154,20 @@ func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest)
 // StreamChatCompletion implements streaming for Ora
 func (c *Client) StreamChatCompletion(ctx context.Context, req interfaces.ChatRequest) (interfaces.ChatStream, error) {
 	// TODO: Implement streaming if Ora supports it
-	return nil, fmt.Errorf("streaming not yet implemented for Ora")
+	return nil, gerror.New(gerror.ErrCodeProvider, "streaming not yet implemented for Ora", nil).
+		WithComponent("providers").
+		WithOperation("StreamChatCompletion").
+		WithDetails("provider", "ora")
 }
 
 // CreateEmbedding implements the AIProvider interface
 func (c *Client) CreateEmbedding(ctx context.Context, req interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
 	// Check if Ora supports embeddings
-	return nil, fmt.Errorf("embeddings not supported by Ora - use another provider")
+	return nil, gerror.New(gerror.ErrCodeProvider, "embeddings not supported by Ora - use another provider", nil).
+		WithComponent("providers").
+		WithOperation("CreateEmbedding").
+		WithDetails("provider", "ora").
+		WithDetails("capability", "embeddings")
 }
 
 // GetCapabilities returns provider capabilities
@@ -172,7 +182,7 @@ func (c *Client) makeRequest(ctx context.Context, endpoint string, payload inter
 		return nil, err
 	}
 
-	url := fmt.Sprintf("%s/%s", c.baseURL, endpoint)
+	url := c.baseURL + "/" + endpoint
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err

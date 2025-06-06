@@ -4,9 +4,9 @@ package registry
 
 import (
 	"context"
-	"fmt"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 	"github.com/guild-ventures/guild-core/pkg/providers"
@@ -579,8 +579,8 @@ type KanbanCommissionRepository interface {
 
 // Common errors
 var (
-	ErrComponentNotFound     = fmt.Errorf("component not found")
-	ErrComponentExists       = fmt.Errorf("component already exists")
-	ErrInvalidConfiguration  = fmt.Errorf("invalid configuration")
-	ErrRegistryNotInitialized = fmt.Errorf("registry not initialized")
+	ErrComponentNotFound     = gerror.New(gerror.ErrCodeNotFound, "component not found", nil).WithComponent("registry")
+	ErrComponentExists       = gerror.New(gerror.ErrCodeAlreadyExists, "component already exists", nil).WithComponent("registry")
+	ErrInvalidConfiguration  = gerror.New(gerror.ErrCodeInvalidFormat, "invalid configuration", nil).WithComponent("registry")
+	ErrRegistryNotInitialized = gerror.New(gerror.ErrCodeInternal, "registry not initialized", nil).WithComponent("registry")
 )

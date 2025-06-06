@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
@@ -101,7 +101,10 @@ func (p *OpenAICompatibleProvider) ChatCompletion(ctx context.Context, req inter
 	}
 
 	if err := json.Unmarshal(respBody, &openAIResp); err != nil {
-		return nil, fmt.Errorf("failed to parse response: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeProviderAPI, "failed to parse response").
+			WithComponent("providers").
+			WithOperation("ChatCompletion").
+			WithDetails("provider", p.name)
 	}
 
 	// Convert to our format
@@ -209,7 +212,10 @@ func (p *OpenAICompatibleProvider) CreateEmbedding(ctx context.Context, req inte
 	}
 
 	if err := json.Unmarshal(respBody, &embResp); err != nil {
-		return nil, fmt.Errorf("failed to parse embedding response: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeProviderAPI, "failed to parse embedding response").
+			WithComponent("providers").
+			WithOperation("CreateEmbedding").
+			WithDetails("provider", p.name)
 	}
 
 	// Convert to our format

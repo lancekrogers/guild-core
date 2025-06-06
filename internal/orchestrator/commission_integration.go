@@ -9,6 +9,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
 	"github.com/guild-ventures/guild-core/pkg/config"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/providers"
@@ -37,7 +38,9 @@ func NewCommissionIntegrationService(registry registry.ComponentRegistry) (*Comm
 
 	// Initialize components from registry
 	if err := service.initializeFromRegistry(); err != nil {
-		return nil, fmt.Errorf("failed to initialize from registry: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to initialize from registry").
+			WithComponent("orchestrator").
+			WithOperation("NewCommissionIntegrationService")
 	}
 
 	return service, nil
@@ -64,7 +67,10 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 	}
 
 	if len(providers) == 0 {
-		return fmt.Errorf("no AI providers available in registry")
+		return gerror.New(gerror.ErrCodeOrchestration, "no AI providers available in registry", nil).
+			WithComponent("orchestrator").
+			WithOperation("initializeFromRegistry").
+			WithDetails("providersChecked", []string{"anthropic", "openai", "ollama", "deepseek", "mock"})
 	}
 
 	// Get prompt manager from registry
@@ -113,7 +119,9 @@ Format your response with XML task tags:
 	var err error
 	s.commissionRefiner, err = s.guildMasterFactory.CreateCommissionRefinerWithDefaults()
 	if err != nil {
-		return fmt.Errorf("failed to create commission refiner: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to create commission refiner").
+			WithComponent("orchestrator").
+			WithOperation("initializeFromRegistry")
 	}
 
 	// Create kanban manager using SQLite storage via registry
@@ -121,13 +129,18 @@ Format your response with XML task tags:
 	kanbanAdapter := &kanbanRegistryAdapter{registry: s.registry}
 	kanbanMgr, err := kanban.NewManagerWithRegistry(kanbanAdapter)
 	if err != nil {
-		return fmt.Errorf("failed to create kanban manager with SQLite storage: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to create kanban manager with SQLite storage").
+			WithComponent("orchestrator").
+			WithOperation("initializeFromRegistry")
 	}
 	
 	// Create a board using the SQLite-enabled manager
 	kanbanBoard, err := kanbanMgr.CreateBoard(context.Background(), "commission-board", "Board for commission tasks")
 	if err != nil {
-		return fmt.Errorf("failed to create kanban board: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to create kanban board").
+			WithComponent("orchestrator").
+			WithOperation("initializeFromRegistry").
+			WithDetails("boardName", "commission-board")
 	}
 	s.kanbanManager = NewDefaultKanbanManager(kanbanBoard)
 
@@ -149,12 +162,16 @@ Format your response with XML task tags:
 	// Get commission repository from storage registry
 	storageRegistry := s.registry.Storage()
 	if storageRegistry == nil {
-		return fmt.Errorf("storage registry not available for commission repository")
+		return gerror.New(gerror.ErrCodeOrchestration, "storage registry not available for commission repository", nil).
+			WithComponent("orchestrator").
+			WithOperation("initializeFromRegistry")
 	}
 	
 	s.commissionRepository = storageRegistry.GetCommissionRepository()
 	if s.commissionRepository == nil {
-		return fmt.Errorf("commission repository not available from storage registry")
+		return gerror.New(gerror.ErrCodeOrchestration, "commission repository not available from storage registry", nil).
+			WithComponent("orchestrator").
+			WithOperation("initializeFromRegistry")
 	}
 
 	// Create task bridge with commission repository instead of objective manager
@@ -206,7 +223,10 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 	log.Printf("Refining commission: %s", commission.Title)
 	refined, err := s.commissionRefiner.RefineCommission(ctx, commission)
 	if err != nil {
-		return nil, fmt.Errorf("failed to refine commission: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeTaskFailed, "failed to refine commission").
+			WithComponent("orchestrator").
+			WithOperation("ProcessCommissionToTasks").
+			WithDetails("commissionID", commission.ID, "commissionTitle", commission.Title)
 	}
 	log.Printf("Commission refined successfully, found %d files", len(refined.Structure.Files))
 
@@ -214,7 +234,10 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 	log.Printf("Planning tasks from refined commission")
 	tasks, err := s.commissionPlanner.PlanFromRefinedCommission(ctx, refined, guildConfig)
 	if err != nil {
-		return nil, fmt.Errorf("failed to plan tasks from commission: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeTaskFailed, "failed to plan tasks from commission").
+			WithComponent("orchestrator").
+			WithOperation("ProcessCommissionToTasks").
+			WithDetails("commissionID", commission.ID, "refinedFiles", len(refined.Structure.Files))
 	}
 	log.Printf("Created %d tasks from commission", len(tasks))
 
@@ -230,7 +253,10 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 	// Step 4: Assign tasks to artisans
 	log.Printf("Assigning tasks to artisans")
 	if err := s.commissionPlanner.AssignTasksToArtisans(ctx, tasks, guildConfig); err != nil {
-		return nil, fmt.Errorf("failed to assign tasks to artisans: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeTaskFailed, "failed to assign tasks to artisans").
+			WithComponent("orchestrator").
+			WithOperation("ProcessCommissionToTasks").
+			WithDetails("commissionID", commission.ID, "taskCount", len(tasks))
 	}
 
 	// Step 5: Log commission completion with task information
@@ -265,13 +291,18 @@ func (s *CommissionIntegrationService) ProcessObjectiveToTasks(
 	guildConfig *config.GuildConfig,
 ) (*CommissionProcessingResult, error) {
 	if s.commissionRepository == nil {
-		return nil, fmt.Errorf("commission repository not configured")
+		return nil, gerror.New(gerror.ErrCodeOrchestration, "commission repository not configured", nil).
+			WithComponent("orchestrator").
+			WithOperation("ProcessObjectiveToTasks")
 	}
 
 	// Load commission from storage  
 	registryCommission, err := s.commissionRepository.GetCommission(ctx, objectiveID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to load commission %s: %w", objectiveID, err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to load commission").
+			WithComponent("orchestrator").
+			WithOperation("ProcessObjectiveToTasks").
+			WithDetails("objectiveID", objectiveID)
 	}
 
 	// Convert registry commission to manager commission
@@ -398,13 +429,17 @@ func (a *layeredManagerAdapter) GetPromptLayer(ctx context.Context, layer prompt
 // SetPromptLayer sets or updates a specific prompt layer
 func (a *layeredManagerAdapter) SetPromptLayer(ctx context.Context, prompt prompts.SystemPrompt) error {
 	// Not implemented in adapter
-	return fmt.Errorf("SetPromptLayer not supported in adapter")
+	return gerror.New(gerror.ErrCodeInternal, "SetPromptLayer not supported in adapter", nil).
+		WithComponent("orchestrator").
+		WithOperation("SetPromptLayer")
 }
 
 // DeletePromptLayer removes a specific prompt layer
 func (a *layeredManagerAdapter) DeletePromptLayer(ctx context.Context, layer prompts.PromptLayer, artisanID, sessionID string) error {
 	// Not implemented in adapter
-	return fmt.Errorf("DeletePromptLayer not supported in adapter")
+	return gerror.New(gerror.ErrCodeInternal, "DeletePromptLayer not supported in adapter", nil).
+		WithComponent("orchestrator").
+		WithOperation("DeletePromptLayer")
 }
 
 // ListPromptLayers returns all layers for an artisan/session
@@ -470,12 +505,16 @@ func (w *llmClientWrapper) ChatCompletion(ctx context.Context, req providers.Cha
 
 // StreamChatCompletion implements providers.AIProvider
 func (w *llmClientWrapper) StreamChatCompletion(ctx context.Context, req providers.ChatRequest) (providers.ChatStream, error) {
-	return nil, fmt.Errorf("streaming not supported by wrapper")
+	return nil, gerror.New(gerror.ErrCodeInternal, "streaming not supported by wrapper", nil).
+		WithComponent("orchestrator").
+		WithOperation("StreamChatCompletion")
 }
 
 // CreateEmbedding implements providers.AIProvider
 func (w *llmClientWrapper) CreateEmbedding(ctx context.Context, req providers.EmbeddingRequest) (*providers.EmbeddingResponse, error) {
-	return nil, fmt.Errorf("embeddings not supported by wrapper")
+	return nil, gerror.New(gerror.ErrCodeInternal, "embeddings not supported by wrapper", nil).
+		WithComponent("orchestrator").
+		WithOperation("CreateEmbedding")
 }
 
 // GetCapabilities implements providers.AIProvider
@@ -494,13 +533,19 @@ func (w *llmClientWrapper) GetCapabilities() providers.ProviderCapabilities {
 // validateDependencies ensures all required components are configured
 func (s *CommissionIntegrationService) validateDependencies() error {
 	if s.commissionRefiner == nil {
-		return fmt.Errorf("commission refiner not configured")
+		return gerror.New(gerror.ErrCodeOrchestration, "commission refiner not configured", nil).
+			WithComponent("orchestrator").
+			WithOperation("validateDependencies")
 	}
 	if s.commissionPlanner == nil {
-		return fmt.Errorf("commission planner not configured")
+		return gerror.New(gerror.ErrCodeOrchestration, "commission planner not configured", nil).
+			WithComponent("orchestrator").
+			WithOperation("validateDependencies")
 	}
 	if s.kanbanManager == nil {
-		return fmt.Errorf("kanban manager not configured")
+		return gerror.New(gerror.ErrCodeOrchestration, "kanban manager not configured", nil).
+			WithComponent("orchestrator").
+			WithOperation("validateDependencies")
 	}
 	return nil
 }
@@ -751,7 +796,9 @@ func (k *kanbanCampaignRepoAdapter) CreateCampaign(ctx context.Context, campaign
 			return k.repo.CreateCampaign(ctx, storageCampaign)
 		}
 	}
-	return fmt.Errorf("campaign repository not available")
+	return gerror.New(gerror.ErrCodeStorage, "campaign repository not available", nil).
+		WithComponent("orchestrator").
+		WithOperation("CreateCampaign")
 }
 
 // kanbanCommissionRepoAdapter adapts storage.CommissionRepository to kanban.CommissionRepository
@@ -787,14 +834,19 @@ func (k *kanbanCommissionRepoAdapter) CreateCommission(ctx context.Context, comm
 			return k.repo.CreateCommission(ctx, storageCommission)
 		}
 	}
-	return fmt.Errorf("commission repository not available")
+	return gerror.New(gerror.ErrCodeStorage, "commission repository not available", nil).
+		WithComponent("orchestrator").
+		WithOperation("CreateCommission")
 }
 
 func (k *kanbanCommissionRepoAdapter) GetCommission(ctx context.Context, id string) (interface{}, error) {
 	if k.repo != nil {
 		return k.repo.GetCommission(ctx, id)
 	}
-	return nil, fmt.Errorf("commission repository not available")
+	return nil, gerror.New(gerror.ErrCodeStorage, "commission repository not available", nil).
+		WithComponent("orchestrator").
+		WithOperation("GetCommission").
+		WithDetails("id", id)
 }
 
 // kanbanTaskRepoAdapter adapts storage.TaskRepository to kanban.TaskRepository
@@ -846,7 +898,9 @@ func (k *kanbanTaskRepoAdapter) CreateTask(ctx context.Context, task interface{}
 			return nil
 		}
 	}
-	return fmt.Errorf("task repository not available")
+	return gerror.New(gerror.ErrCodeStorage, "task repository not available", nil).
+		WithComponent("orchestrator").
+		WithOperation("CreateTask")
 }
 
 func (k *kanbanTaskRepoAdapter) UpdateTask(ctx context.Context, task interface{}) error {
@@ -887,14 +941,19 @@ func (k *kanbanTaskRepoAdapter) UpdateTask(ctx context.Context, task interface{}
 			return k.repo.UpdateTask(ctx, storageTask)
 		}
 	}
-	return fmt.Errorf("task repository not available")
+	return gerror.New(gerror.ErrCodeStorage, "task repository not available", nil).
+		WithComponent("orchestrator").
+		WithOperation("UpdateTask")
 }
 
 func (k *kanbanTaskRepoAdapter) DeleteTask(ctx context.Context, id string) error {
 	if k.repo != nil {
 		return k.repo.DeleteTask(ctx, id)
 	}
-	return fmt.Errorf("task repository not available")
+	return gerror.New(gerror.ErrCodeStorage, "task repository not available", nil).
+		WithComponent("orchestrator").
+		WithOperation("DeleteTask").
+		WithDetails("id", id)
 }
 
 func (k *kanbanTaskRepoAdapter) ListTasksByBoard(ctx context.Context, boardID string) ([]interface{}, error) {
@@ -910,7 +969,10 @@ func (k *kanbanTaskRepoAdapter) ListTasksByBoard(ctx context.Context, boardID st
 		}
 		return result, nil
 	}
-	return nil, fmt.Errorf("task repository not available")
+	return nil, gerror.New(gerror.ErrCodeStorage, "task repository not available", nil).
+		WithComponent("orchestrator").
+		WithOperation("ListTasksByBoard").
+		WithDetails("boardID", boardID)
 }
 
 func (k *kanbanTaskRepoAdapter) RecordTaskEvent(ctx context.Context, event interface{}) error {
@@ -944,5 +1006,7 @@ func (k *kanbanTaskRepoAdapter) RecordTaskEvent(ctx context.Context, event inter
 			return k.repo.RecordTaskEvent(ctx, storageEvent)
 		}
 	}
-	return fmt.Errorf("task repository not available")
+	return gerror.New(gerror.ErrCodeStorage, "task repository not available", nil).
+		WithComponent("orchestrator").
+		WithOperation("RecordTaskEvent")
 }

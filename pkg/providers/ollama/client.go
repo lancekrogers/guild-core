@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
@@ -161,7 +162,10 @@ func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest)
 	}
 
 	if err := json.Unmarshal(respBody, &ollamaResp); err != nil {
-		return nil, fmt.Errorf("failed to parse Ollama response: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeProviderAPI, "failed to parse Ollama response").
+			WithComponent("providers").
+			WithOperation("ChatCompletion").
+			WithDetails("provider", "ollama")
 	}
 
 	// Convert to our format
@@ -224,7 +228,11 @@ func (c *Client) StreamChatCompletion(ctx context.Context, req interfaces.ChatRe
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
 		resp.Body.Close()
-		return nil, fmt.Errorf("ollama error %d: %s", resp.StatusCode, string(body))
+		return nil, gerror.Newf(gerror.ErrCodeProviderAPI, "ollama error %d: %s", resp.StatusCode, string(body)).
+			WithComponent("providers").
+			WithOperation("StreamChatCompletion").
+			WithDetails("provider", "ollama").
+			WithDetails("status_code", resp.StatusCode)
 	}
 
 	return &ollamaStream{
@@ -237,7 +245,10 @@ func (c *Client) StreamChatCompletion(ctx context.Context, req interfaces.ChatRe
 func (c *Client) CreateEmbedding(ctx context.Context, req interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
 	// Ollama embedding endpoint expects a single prompt
 	if len(req.Input) == 0 {
-		return nil, fmt.Errorf("no input provided for embedding")
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "no input provided for embedding", nil).
+			WithComponent("providers").
+			WithOperation("CreateEmbedding").
+			WithDetails("provider", "ollama")
 	}
 
 	embeddings := make([]interfaces.Embedding, len(req.Input))
@@ -258,7 +269,10 @@ func (c *Client) CreateEmbedding(ctx context.Context, req interfaces.EmbeddingRe
 		}
 
 		if err := json.Unmarshal(respBody, &embResp); err != nil {
-			return nil, fmt.Errorf("failed to parse embedding response: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeProviderAPI, "failed to parse embedding response").
+				WithComponent("providers").
+				WithOperation("CreateEmbedding").
+				WithDetails("provider", "ollama")
 		}
 
 		embeddings[i] = interfaces.Embedding{
@@ -372,7 +386,12 @@ func (c *Client) makeRequest(ctx context.Context, endpoint string, payload inter
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("ollama error %d: %s", resp.StatusCode, string(body))
+		return nil, gerror.Newf(gerror.ErrCodeProviderAPI, "ollama error %d: %s", resp.StatusCode, string(body)).
+			WithComponent("providers").
+			WithOperation("makeRequest").
+			WithDetails("provider", "ollama").
+			WithDetails("endpoint", endpoint).
+			WithDetails("status_code", resp.StatusCode)
 	}
 
 	return body, nil

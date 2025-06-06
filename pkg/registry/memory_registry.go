@@ -1,9 +1,9 @@
 package registry
 
 import (
-	"fmt"
 	"sync"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 )
@@ -31,23 +31,32 @@ func NewMemoryRegistry() MemoryRegistry {
 // RegisterMemoryStore registers a memory store implementation
 func (r *DefaultMemoryRegistry) RegisterMemoryStore(name string, store MemoryStore) error {
 	if name == "" {
-		return fmt.Errorf("memory store name cannot be empty")
+		return gerror.New(gerror.ErrCodeInvalidInput, "memory store name cannot be empty", nil).
+			WithComponent("registry").
+			WithOperation("RegisterMemoryStore")
 	}
 	if store == nil {
-		return fmt.Errorf("memory store cannot be nil")
+		return gerror.New(gerror.ErrCodeInvalidInput, "memory store cannot be nil", nil).
+			WithComponent("registry").
+			WithOperation("RegisterMemoryStore")
 	}
 
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	if _, exists := r.memoryStores[name]; exists {
-		return fmt.Errorf("memory store '%s' already registered", name)
+		return gerror.Newf(gerror.ErrCodeAlreadyExists, "memory store '%s' already registered", name).
+			WithComponent("registry").
+			WithOperation("RegisterMemoryStore").
+			WithDetails("storeName", name)
 	}
 
 	// Convert the registry MemoryStore interface to the actual memory.Store interface
 	memStore, ok := store.(memory.Store)
 	if !ok {
-		return fmt.Errorf("memory store does not implement the expected memory.Store interface")
+		return gerror.New(gerror.ErrCodeInvalidFormat, "memory store does not implement the expected memory.Store interface", nil).
+			WithComponent("registry").
+			WithOperation("RegisterMemoryStore")
 	}
 
 	r.memoryStores[name] = memStore
@@ -61,7 +70,10 @@ func (r *DefaultMemoryRegistry) GetMemoryStore(name string) (MemoryStore, error)
 	r.mu.RUnlock()
 
 	if !exists {
-		return nil, fmt.Errorf("memory store '%s' not found", name)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "memory store '%s' not found", name).
+			WithComponent("registry").
+			WithOperation("GetMemoryStore").
+			WithDetails("storeName", name)
 	}
 
 	return store, nil
@@ -70,23 +82,32 @@ func (r *DefaultMemoryRegistry) GetMemoryStore(name string) (MemoryStore, error)
 // RegisterVectorStore registers a vector store implementation
 func (r *DefaultMemoryRegistry) RegisterVectorStore(name string, store VectorStore) error {
 	if name == "" {
-		return fmt.Errorf("vector store name cannot be empty")
+		return gerror.New(gerror.ErrCodeInvalidInput, "vector store name cannot be empty", nil).
+			WithComponent("registry").
+			WithOperation("RegisterVectorStore")
 	}
 	if store == nil {
-		return fmt.Errorf("vector store cannot be nil")
+		return gerror.New(gerror.ErrCodeInvalidInput, "vector store cannot be nil", nil).
+			WithComponent("registry").
+			WithOperation("RegisterVectorStore")
 	}
 
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	if _, exists := r.vectorStores[name]; exists {
-		return fmt.Errorf("vector store '%s' already registered", name)
+		return gerror.Newf(gerror.ErrCodeAlreadyExists, "vector store '%s' already registered", name).
+			WithComponent("registry").
+			WithOperation("RegisterVectorStore").
+			WithDetails("storeName", name)
 	}
 
 	// Convert the registry VectorStore interface to the actual vector.VectorStore interface
 	vecStore, ok := store.(vector.VectorStore)
 	if !ok {
-		return fmt.Errorf("vector store does not implement the expected vector.VectorStore interface")
+		return gerror.New(gerror.ErrCodeInvalidFormat, "vector store does not implement the expected vector.VectorStore interface", nil).
+			WithComponent("registry").
+			WithOperation("RegisterVectorStore")
 	}
 
 	r.vectorStores[name] = vecStore
@@ -100,7 +121,10 @@ func (r *DefaultMemoryRegistry) GetVectorStore(name string) (VectorStore, error)
 	r.mu.RUnlock()
 
 	if !exists {
-		return nil, fmt.Errorf("vector store '%s' not found", name)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "vector store '%s' not found", name).
+			WithComponent("registry").
+			WithOperation("GetVectorStore").
+			WithDetails("storeName", name)
 	}
 
 	return store, nil
@@ -113,7 +137,9 @@ func (r *DefaultMemoryRegistry) GetDefaultMemoryStore() (MemoryStore, error) {
 	r.mu.RUnlock()
 
 	if defaultName == "" {
-		return nil, fmt.Errorf("no default memory store set")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "no default memory store set", nil).
+			WithComponent("registry").
+			WithOperation("GetDefaultMemoryStore")
 	}
 
 	return r.GetMemoryStore(defaultName)
@@ -126,7 +152,9 @@ func (r *DefaultMemoryRegistry) GetDefaultVectorStore() (VectorStore, error) {
 	r.mu.RUnlock()
 
 	if defaultName == "" {
-		return nil, fmt.Errorf("no default vector store set")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "no default vector store set", nil).
+			WithComponent("registry").
+			WithOperation("GetDefaultVectorStore")
 	}
 
 	return r.GetVectorStore(defaultName)
@@ -139,7 +167,10 @@ func (r *DefaultMemoryRegistry) SetDefaultMemoryStore(name string) error {
 	r.mu.RUnlock()
 
 	if !exists {
-		return fmt.Errorf("memory store '%s' not registered", name)
+		return gerror.Newf(gerror.ErrCodeNotFound, "memory store '%s' not registered", name).
+			WithComponent("registry").
+			WithOperation("SetDefaultMemoryStore").
+			WithDetails("storeName", name)
 	}
 
 	r.mu.Lock()
@@ -156,7 +187,10 @@ func (r *DefaultMemoryRegistry) SetDefaultVectorStore(name string) error {
 	r.mu.RUnlock()
 
 	if !exists {
-		return fmt.Errorf("vector store '%s' not registered", name)
+		return gerror.Newf(gerror.ErrCodeNotFound, "vector store '%s' not registered", name).
+			WithComponent("registry").
+			WithOperation("SetDefaultVectorStore").
+			WithDetails("storeName", name)
 	}
 
 	r.mu.Lock()
@@ -197,7 +231,10 @@ func (r *DefaultMemoryRegistry) GetActualMemoryStore(name string) (memory.Store,
 	r.mu.RUnlock()
 
 	if !exists {
-		return nil, fmt.Errorf("memory store '%s' not found", name)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "memory store '%s' not found", name).
+			WithComponent("registry").
+			WithOperation("GetMemoryStore").
+			WithDetails("storeName", name)
 	}
 
 	return store, nil
@@ -210,7 +247,10 @@ func (r *DefaultMemoryRegistry) GetActualVectorStore(name string) (vector.Vector
 	r.mu.RUnlock()
 
 	if !exists {
-		return nil, fmt.Errorf("vector store '%s' not found", name)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "vector store '%s' not found", name).
+			WithComponent("registry").
+			WithOperation("GetVectorStore").
+			WithDetails("storeName", name)
 	}
 
 	return store, nil
@@ -219,23 +259,32 @@ func (r *DefaultMemoryRegistry) GetActualVectorStore(name string) (vector.Vector
 // RegisterChainManager registers a chain manager implementation
 func (r *DefaultMemoryRegistry) RegisterChainManager(name string, manager ChainManager) error {
 	if name == "" {
-		return fmt.Errorf("chain manager name cannot be empty")
+		return gerror.New(gerror.ErrCodeInvalidInput, "chain manager name cannot be empty", nil).
+			WithComponent("registry").
+			WithOperation("RegisterChainManager")
 	}
 	if manager == nil {
-		return fmt.Errorf("chain manager cannot be nil")
+		return gerror.New(gerror.ErrCodeInvalidInput, "chain manager cannot be nil", nil).
+			WithComponent("registry").
+			WithOperation("RegisterChainManager")
 	}
 
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	if _, exists := r.chainManagers[name]; exists {
-		return fmt.Errorf("chain manager '%s' already registered", name)
+		return gerror.Newf(gerror.ErrCodeAlreadyExists, "chain manager '%s' already registered", name).
+			WithComponent("registry").
+			WithOperation("RegisterChainManager").
+			WithDetails("managerName", name)
 	}
 
 	// Convert the registry ChainManager interface to the actual memory.ChainManager interface
 	chainMgr, ok := manager.(memory.ChainManager)
 	if !ok {
-		return fmt.Errorf("chain manager does not implement the expected memory.ChainManager interface")
+		return gerror.New(gerror.ErrCodeInvalidFormat, "chain manager does not implement the expected memory.ChainManager interface", nil).
+			WithComponent("registry").
+			WithOperation("RegisterChainManager")
 	}
 
 	r.chainManagers[name] = chainMgr
@@ -249,7 +298,10 @@ func (r *DefaultMemoryRegistry) GetChainManager(name string) (ChainManager, erro
 	r.mu.RUnlock()
 
 	if !exists {
-		return nil, fmt.Errorf("chain manager '%s' not found", name)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "chain manager '%s' not found", name).
+			WithComponent("registry").
+			WithOperation("GetChainManager").
+			WithDetails("managerName", name)
 	}
 
 	return manager, nil
@@ -262,7 +314,9 @@ func (r *DefaultMemoryRegistry) GetDefaultChainManager() (ChainManager, error) {
 	r.mu.RUnlock()
 
 	if defaultName == "" {
-		return nil, fmt.Errorf("no default chain manager set")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "no default chain manager set", nil).
+			WithComponent("registry").
+			WithOperation("GetDefaultChainManager")
 	}
 
 	return r.GetChainManager(defaultName)
@@ -275,7 +329,10 @@ func (r *DefaultMemoryRegistry) SetDefaultChainManager(name string) error {
 	r.mu.RUnlock()
 
 	if !exists {
-		return fmt.Errorf("chain manager '%s' not registered", name)
+		return gerror.Newf(gerror.ErrCodeNotFound, "chain manager '%s' not registered", name).
+			WithComponent("registry").
+			WithOperation("SetDefaultChainManager").
+			WithDetails("managerName", name)
 	}
 
 	r.mu.Lock()
@@ -304,7 +361,10 @@ func (r *DefaultMemoryRegistry) GetActualChainManager(name string) (memory.Chain
 	r.mu.RUnlock()
 
 	if !exists {
-		return nil, fmt.Errorf("chain manager '%s' not found", name)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "chain manager '%s' not found", name).
+			WithComponent("registry").
+			WithOperation("GetChainManager").
+			WithDetails("managerName", name)
 	}
 
 	return manager, nil

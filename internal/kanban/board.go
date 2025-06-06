@@ -110,12 +110,12 @@ type BoardEvent struct {
 }
 
 // NewBoard creates a new kanban board using SQLite
-func NewBoard(registry ComponentRegistry, name, description string) (*Board, error) {
-	return NewBoardWithRegistry(registry, name, description)
+func NewBoard(ctx context.Context, registry ComponentRegistry, name, description string) (*Board, error) {
+	return NewBoardWithRegistry(ctx, registry, name, description)
 }
 
 // NewBoardWithRegistry creates a new board using SQLite storage via registry
-func NewBoardWithRegistry(registry ComponentRegistry, name, description string) (*Board, error) {
+func NewBoardWithRegistry(ctx context.Context, registry ComponentRegistry, name, description string) (*Board, error) {
 	if registry == nil {
 		return nil, gerror.New(gerror.ErrCodeValidation, "registry cannot be nil", nil).
 		WithComponent("Board").
@@ -134,7 +134,7 @@ func NewBoardWithRegistry(registry ComponentRegistry, name, description string) 
 	}
 
 	// Save the board to SQLite (boards are stored as campaign records)
-	if err := board.saveToSQLite(context.Background()); err != nil {
+	if err := board.saveToSQLite(ctx); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save board to SQLite").
 			WithComponent("Board").
 			WithOperation("NewBoardWithRegistry")

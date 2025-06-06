@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
@@ -250,7 +251,10 @@ func (p *Provider) Complete(ctx context.Context, prompt string) (string, error) 
 	}
 	
 	if len(resp.Choices) == 0 {
-		return "", fmt.Errorf("no response choices available")
+		return "", gerror.New(gerror.ErrCodeProviderAPI, "no response choices available", nil).
+			WithComponent("providers").
+			WithOperation("Complete").
+			WithDetails("provider", "mock")
 	}
 	
 	return resp.Choices[0].Message.Content, nil

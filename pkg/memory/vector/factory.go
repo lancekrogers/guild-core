@@ -127,8 +127,11 @@ func NewVectorStore(ctx context.Context, config *StoreConfig) (VectorStore, erro
 	globalRegistry.mu.RUnlock()
 	
 	if !exists {
-		return nil, fmt.Errorf("unsupported vector store type: %s (registered types: %v)", 
-			config.Type, ListRegisteredStores())
+		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+			WithComponent("memory").
+			WithOperation("NewVectorStore").
+			WithDetails(fmt.Sprintf("unsupported vector store type: %s (registered types: %v)", 
+				config.Type, ListRegisteredStores()))
 	}
 	
 	// Use factory to create store
@@ -217,7 +220,10 @@ func detectAvailableProvider() (interfaces.AIProvider, error) {
 		}
 	}
 	
-	return nil, fmt.Errorf("no AI provider available: check Ollama installation or set API keys")
+	return nil, gerror.New(gerror.ErrCodeNotFound).
+		WithComponent("memory").
+		WithOperation("detectAvailableProvider").
+		WithDetails("no AI provider available: check Ollama installation or set API keys")
 }
 
 // VectorStoreFactory is a function that creates a VectorStore
@@ -265,12 +271,18 @@ func init() {
 
 	// Register placeholder for Chroma
 	RegisterVectorStore(StoreTypeChroma, func(ctx context.Context, config *StoreConfig, embedder Embedder) (VectorStore, error) {
-		return nil, fmt.Errorf("chroma vector store not implemented yet")
+		return nil, gerror.New(gerror.ErrCodeNotImplemented).
+			WithComponent("memory").
+			WithOperation("createChromaStore").
+			WithDetails("chroma vector store not implemented yet")
 	})
 
 	// Register placeholder for Milvus
 	RegisterVectorStore(StoreTypeMilvus, func(ctx context.Context, config *StoreConfig, embedder Embedder) (VectorStore, error) {
-		return nil, fmt.Errorf("milvus vector store not implemented yet")
+		return nil, gerror.New(gerror.ErrCodeNotImplemented).
+			WithComponent("memory").
+			WithOperation("createMilvusStore").
+			WithDetails("milvus vector store not implemented yet")
 	})
 }
 

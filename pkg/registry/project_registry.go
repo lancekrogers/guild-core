@@ -2,9 +2,9 @@ package registry
 
 import (
 	"context"
-	"fmt"
 	"sync"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/project"
 )
 
@@ -37,7 +37,9 @@ func (r *DefaultProjectRegistry) SetProjectManager(manager ProjectManager) error
 	defer r.mu.Unlock()
 	
 	if manager == nil {
-		return fmt.Errorf("project manager cannot be nil")
+		return gerror.New(gerror.ErrCodeInvalidInput, "project manager cannot be nil", nil).
+			WithComponent("registry").
+			WithOperation("SetProjectManager")
 	}
 	
 	r.manager = manager
@@ -51,7 +53,9 @@ func (r *DefaultProjectRegistry) GetCurrentContext(ctx context.Context) (*Projec
 	r.mu.RUnlock()
 	
 	if manager == nil {
-		return nil, fmt.Errorf("no project manager configured")
+		return nil, gerror.New(gerror.ErrCodeMissingRequired, "no project manager configured", nil).
+			WithComponent("registry").
+			WithOperation("GetCurrentContext")
 	}
 	
 	projCtx, err := manager.GetContext()

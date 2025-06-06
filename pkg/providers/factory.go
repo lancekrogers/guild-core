@@ -1,9 +1,9 @@
 package providers
 
 import (
-	"fmt"
 	"os"
 	
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers/claudecode"
 )
 
@@ -87,24 +87,36 @@ func (f *Factory) RegisterProvidersWithRegistry(registry ProviderRegistry, provi
 		case "claudecode":
 			providerType = ProviderClaudeCode
 		default:
-			return fmt.Errorf("unknown provider type: %s", providerName)
+			return gerror.Newf(gerror.ErrCodeProvider, "unknown provider type: %s", providerName).
+				WithComponent("providers").
+				WithOperation("RegisterProvidersWithRegistry").
+				WithDetails("provider_name", providerName)
 		}
 
 		// Extract provider config
 		providerConfig, ok := providerConfigRaw.(map[string]interface{})
 		if !ok {
-			return fmt.Errorf("invalid config for provider %s", providerName)
+			return gerror.Newf(gerror.ErrCodeInvalidInput, "invalid config for provider %s", providerName).
+				WithComponent("providers").
+				WithOperation("RegisterProvidersWithRegistry").
+				WithDetails("provider_name", providerName)
 		}
 
 		// Create client
 		client, err := f.CreateClientFromConfig(providerType, providerConfig)
 		if err != nil {
-			return fmt.Errorf("failed to create client for provider %s: %w", providerName, err)
+			return gerror.Wrapf(err, gerror.ErrCodeProvider, "failed to create client for provider %s", providerName).
+				WithComponent("providers").
+				WithOperation("RegisterProvidersWithRegistry").
+				WithDetails("provider_name", providerName)
 		}
 
 		// Register with registry
 		if err := registry.RegisterProvider(providerName, client); err != nil {
-			return fmt.Errorf("failed to register provider %s: %w", providerName, err)
+			return gerror.Wrapf(err, gerror.ErrCodeProvider, "failed to register provider %s", providerName).
+				WithComponent("providers").
+				WithOperation("RegisterProvidersWithRegistry").
+				WithDetails("provider_name", providerName)
 		}
 	}
 

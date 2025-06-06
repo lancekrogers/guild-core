@@ -2,9 +2,9 @@ package providers
 
 import (
 	"context"
-	"fmt"
 	"os"
 	
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers/anthropic"
 	"github.com/guild-ventures/guild-core/pkg/providers/deepinfra"
 	"github.com/guild-ventures/guild-core/pkg/providers/deepseek"
@@ -40,12 +40,21 @@ func (f *FactoryV2) CreateAIProvider(providerType ProviderType, apiKey string) (
 		return ora.NewClient(apiKey), nil
 	case ProviderGoogle:
 		// Google provider needs updating to implement AIProvider
-		return nil, fmt.Errorf("Google provider not yet updated to AIProvider interface")
+		return nil, gerror.New(gerror.ErrCodeProvider, "Google provider not yet updated to AIProvider interface", nil).
+			WithComponent("providers").
+			WithOperation("CreateAIProvider").
+			WithDetails("provider", "google")
 	case ProviderClaudeCode:
 		// Claude Code is a special case
-		return nil, fmt.Errorf("Claude Code provider not compatible with AIProvider interface")
+		return nil, gerror.New(gerror.ErrCodeProvider, "Claude Code provider not compatible with AIProvider interface", nil).
+			WithComponent("providers").
+			WithOperation("CreateAIProvider").
+			WithDetails("provider", "claudecode")
 	default:
-		return nil, fmt.Errorf("unsupported provider type: %s", providerType)
+		return nil, gerror.Newf(gerror.ErrCodeProvider, "unsupported provider type: %s", providerType).
+			WithComponent("providers").
+			WithOperation("CreateAIProvider").
+			WithDetails("provider_type", string(providerType))
 	}
 }
 
@@ -115,7 +124,10 @@ func (a *llmClientAdapter) Complete(ctx context.Context, prompt string) (string,
 		return resp.Choices[0].Message.Content, nil
 	}
 
-	return "", fmt.Errorf("no response from provider")
+	return "", gerror.New(gerror.ErrCodeProviderAPI, "no response from provider", nil).
+		WithComponent("providers").
+		WithOperation("Complete").
+		WithDetails("adapter", "llmClientAdapter")
 }
 
 // GetProviderInfo returns information about available providers

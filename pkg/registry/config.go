@@ -1,9 +1,9 @@
 package registry
 
 import (
-	"fmt"
 	"os"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"gopkg.in/yaml.v3"
 )
 
@@ -11,12 +11,18 @@ import (
 func LoadConfig(filename string) (*Config, error) {
 	data, err := os.ReadFile(filename)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read config file: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read config file").
+			WithComponent("registry").
+			WithOperation("LoadConfig").
+			WithDetails("filename", filename)
 	}
 
 	var config Config
 	if err := yaml.Unmarshal(data, &config); err != nil {
-		return nil, fmt.Errorf("failed to parse config file: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidFormat, "failed to parse config file").
+			WithComponent("registry").
+			WithOperation("LoadConfig").
+			WithDetails("filename", filename)
 	}
 
 	return &config, nil
@@ -26,7 +32,9 @@ func LoadConfig(filename string) (*Config, error) {
 func LoadConfigFromBytes(data []byte) (*Config, error) {
 	var config Config
 	if err := yaml.Unmarshal(data, &config); err != nil {
-		return nil, fmt.Errorf("failed to parse config: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidFormat, "failed to parse config").
+			WithComponent("registry").
+			WithOperation("LoadConfigFromBytes")
 	}
 
 	return &config, nil
@@ -36,11 +44,16 @@ func LoadConfigFromBytes(data []byte) (*Config, error) {
 func SaveConfig(config *Config, filename string) error {
 	data, err := yaml.Marshal(config)
 	if err != nil {
-		return fmt.Errorf("failed to marshal config: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal config").
+			WithComponent("registry").
+			WithOperation("SaveConfig")
 	}
 
 	if err := os.WriteFile(filename, data, 0644); err != nil {
-		return fmt.Errorf("failed to write config file: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write config file").
+			WithComponent("registry").
+			WithOperation("SaveConfig").
+			WithDetails("filename", filename)
 	}
 
 	return nil
@@ -115,35 +128,52 @@ func DefaultConfig() *Config {
 func ValidateConfig(config *Config) error {
 	// Validate agents configuration
 	if config.Agents.DefaultType == "" {
-		return fmt.Errorf("agents.default_type cannot be empty")
+		return gerror.New(gerror.ErrCodeMissingRequired, "agents.default_type cannot be empty", nil).
+			WithComponent("registry").
+			WithOperation("ValidateConfig")
 	}
 
 	// Validate providers configuration
 	if config.Providers.DefaultProvider == "" {
-		return fmt.Errorf("providers.default_provider cannot be empty")
+		return gerror.New(gerror.ErrCodeMissingRequired, "providers.default_provider cannot be empty", nil).
+			WithComponent("registry").
+			WithOperation("ValidateConfig")
 	}
 
 	// Check if default provider exists in providers map
 	if _, exists := config.Providers.Providers[config.Providers.DefaultProvider]; !exists {
-		return fmt.Errorf("default provider '%s' not found in providers configuration", config.Providers.DefaultProvider)
+		return gerror.Newf(gerror.ErrCodeNotFound, "default provider '%s' not found in providers configuration", config.Providers.DefaultProvider).
+			WithComponent("registry").
+			WithOperation("ValidateConfig").
+			WithDetails("provider", config.Providers.DefaultProvider)
 	}
 
 	// Validate memory configuration
 	if config.Memory.DefaultMemoryStore == "" {
-		return fmt.Errorf("memory.default_memory_store cannot be empty")
+		return gerror.New(gerror.ErrCodeMissingRequired, "memory.default_memory_store cannot be empty", nil).
+			WithComponent("registry").
+			WithOperation("ValidateConfig")
 	}
 
 	if config.Memory.DefaultVectorStore == "" {
-		return fmt.Errorf("memory.default_vector_store cannot be empty")
+		return gerror.New(gerror.ErrCodeMissingRequired, "memory.default_vector_store cannot be empty", nil).
+			WithComponent("registry").
+			WithOperation("ValidateConfig")
 	}
 
 	// Check if default stores exist in stores map
 	if _, exists := config.Memory.Stores[config.Memory.DefaultMemoryStore]; !exists {
-		return fmt.Errorf("default memory store '%s' not found in stores configuration", config.Memory.DefaultMemoryStore)
+		return gerror.Newf(gerror.ErrCodeNotFound, "default memory store '%s' not found in stores configuration", config.Memory.DefaultMemoryStore).
+			WithComponent("registry").
+			WithOperation("ValidateConfig").
+			WithDetails("memoryStore", config.Memory.DefaultMemoryStore)
 	}
 
 	if _, exists := config.Memory.Stores[config.Memory.DefaultVectorStore]; !exists {
-		return fmt.Errorf("default vector store '%s' not found in stores configuration", config.Memory.DefaultVectorStore)
+		return gerror.Newf(gerror.ErrCodeNotFound, "default vector store '%s' not found in stores configuration", config.Memory.DefaultVectorStore).
+			WithComponent("registry").
+			WithOperation("ValidateConfig").
+			WithDetails("vectorStore", config.Memory.DefaultVectorStore)
 	}
 
 	return nil
@@ -153,12 +183,18 @@ func ValidateConfig(config *Config) error {
 func (c *Config) GetProviderConfig(providerName string) (map[string]interface{}, error) {
 	config, exists := c.Providers.Providers[providerName]
 	if !exists {
-		return nil, fmt.Errorf("provider '%s' not found in configuration", providerName)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "provider '%s' not found in configuration", providerName).
+			WithComponent("registry").
+			WithOperation("GetProviderConfig").
+			WithDetails("provider", providerName)
 	}
 
 	configMap, ok := config.(map[string]interface{})
 	if !ok {
-		return nil, fmt.Errorf("invalid provider configuration for '%s'", providerName)
+		return nil, gerror.Newf(gerror.ErrCodeInvalidFormat, "invalid provider configuration for '%s'", providerName).
+			WithComponent("registry").
+			WithOperation("GetProviderConfig").
+			WithDetails("provider", providerName)
 	}
 
 	return configMap, nil
@@ -168,12 +204,18 @@ func (c *Config) GetProviderConfig(providerName string) (map[string]interface{},
 func (c *Config) GetMemoryStoreConfig(storeName string) (map[string]interface{}, error) {
 	config, exists := c.Memory.Stores[storeName]
 	if !exists {
-		return nil, fmt.Errorf("memory store '%s' not found in configuration", storeName)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "memory store '%s' not found in configuration", storeName).
+			WithComponent("registry").
+			WithOperation("GetMemoryStoreConfig").
+			WithDetails("store", storeName)
 	}
 
 	configMap, ok := config.(map[string]interface{})
 	if !ok {
-		return nil, fmt.Errorf("invalid memory store configuration for '%s'", storeName)
+		return nil, gerror.Newf(gerror.ErrCodeInvalidFormat, "invalid memory store configuration for '%s'", storeName).
+			WithComponent("registry").
+			WithOperation("GetMemoryStoreConfig").
+			WithDetails("store", storeName)
 	}
 
 	return configMap, nil

@@ -2,7 +2,8 @@ package vector
 
 import (
 	"context"
-	"fmt"
+	
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // MilvusStore implements the VectorStore interface for Milvus
@@ -15,15 +16,24 @@ type MilvusStore struct {
 // NewMilvusStore creates a new Milvus vector store
 func NewMilvusStore(address, collection string, dimension int) (*MilvusStore, error) {
 	if address == "" {
-		return nil, fmt.Errorf("address cannot be empty")
+		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+			WithComponent("memory").
+			WithOperation("NewMilvusStore").
+			WithDetails("address cannot be empty")
 	}
 	
 	if collection == "" {
-		return nil, fmt.Errorf("collection name cannot be empty")
+		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+			WithComponent("memory").
+			WithOperation("NewMilvusStore").
+			WithDetails("collection name cannot be empty")
 	}
 	
 	if dimension <= 0 {
-		return nil, fmt.Errorf("dimension must be positive")
+		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+			WithComponent("memory").
+			WithOperation("NewMilvusStore").
+			WithDetails("dimension must be positive")
 	}
 	
 	return &MilvusStore{
@@ -76,7 +86,10 @@ func (s *MilvusStore) StoreMany(ctx context.Context, docs []*Document) error {
 // Retrieve retrieves a document by ID
 func (s *MilvusStore) Retrieve(ctx context.Context, id string) (*Document, error) {
 	// This is a placeholder implementation
-	return nil, fmt.Errorf("document not found")
+	return nil, gerror.New(gerror.ErrCodeNotFound).
+		WithComponent("memory").
+		WithOperation("Retrieve").
+		WithDetails("document not found")
 }
 
 // DeleteMany removes multiple documents from the vector store

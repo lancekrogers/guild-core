@@ -1,9 +1,9 @@
 package registry
 
 import (
-	"fmt"
 	"sync"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/internal/prompts"
 )
 
@@ -55,7 +55,10 @@ func (r *PromptRegistry) Register(name string, provider PromptProvider) error {
 	defer r.mu.Unlock()
 
 	if _, exists := r.providers[name]; exists {
-		return fmt.Errorf("prompt provider %s already registered", name)
+		return gerror.Newf(gerror.ErrCodeAlreadyExists, "prompt provider %s already registered", name).
+			WithComponent("registry").
+			WithOperation("Register").
+			WithDetails("provider", name)
 	}
 
 	r.providers[name] = provider
@@ -69,7 +72,10 @@ func (r *PromptRegistry) Get(name string) (PromptProvider, error) {
 
 	provider, exists := r.providers[name]
 	if !exists {
-		return nil, fmt.Errorf("prompt provider %s not found", name)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "prompt provider %s not found", name).
+			WithComponent("registry").
+			WithOperation("Get").
+			WithDetails("provider", name)
 	}
 
 	return provider, nil
@@ -96,7 +102,9 @@ type DefaultPromptProvider struct {
 func NewDefaultPromptProvider() (*DefaultPromptProvider, error) {
 	manager, err := prompts.NewEnhancedPromptManager()
 	if err != nil {
-		return nil, fmt.Errorf("error creating prompt manager: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "error creating prompt manager").
+			WithComponent("registry").
+			WithOperation("NewDefaultPromptProvider")
 	}
 
 	return &DefaultPromptProvider{
@@ -140,7 +148,9 @@ func (p *DefaultPromptProvider) ValidatePrompt(id string, data interface{}) erro
 	if dataMap, ok := data.(map[string]interface{}); ok {
 		return p.manager.ValidatePrompt(id, dataMap)
 	}
-	return fmt.Errorf("data must be a map[string]interface{}")
+	return gerror.New(gerror.ErrCodeInvalidFormat, "data must be a map[string]interface{}", nil).
+			WithComponent("registry").
+			WithOperation("ValidatePrompt")
 }
 
 // RenderPrompt renders a prompt with the given data
@@ -172,11 +182,15 @@ func (r *DefaultComponentRegistry) IntegratePromptRegistry() error {
 	// Register default provider
 	defaultProvider, err := NewDefaultPromptProvider()
 	if err != nil {
-		return fmt.Errorf("error creating default prompt provider: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "error creating default prompt provider").
+			WithComponent("registry").
+			WithOperation("IntegratePromptRegistry")
 	}
 
 	if err := r.promptRegistry.Register("default", defaultProvider); err != nil {
-		return fmt.Errorf("error registering default prompt provider: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "error registering default prompt provider").
+			WithComponent("registry").
+			WithOperation("IntegratePromptRegistry")
 	}
 
 	return nil
@@ -185,7 +199,9 @@ func (r *DefaultComponentRegistry) IntegratePromptRegistry() error {
 // GetPromptProvider retrieves a prompt provider from the registry
 func (r *DefaultComponentRegistry) GetPromptProvider(name string) (PromptProvider, error) {
 	if r.promptRegistry == nil {
-		return nil, fmt.Errorf("prompt registry not initialized")
+		return nil, gerror.New(gerror.ErrCodeInternal, "prompt registry not initialized", nil).
+			WithComponent("registry").
+			WithOperation("GetPromptProvider")
 	}
 	return r.promptRegistry.Get(name)
 }

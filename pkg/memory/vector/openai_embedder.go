@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/sashabaranov/go-openai"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // OpenAIEmbedder implements the Embedder interface using OpenAI
@@ -16,7 +17,10 @@ type OpenAIEmbedder struct {
 // NewOpenAIEmbedder creates a new OpenAI embedder
 func NewOpenAIEmbedder(apiKey string, modelStr string) (*OpenAIEmbedder, error) {
 	if apiKey == "" {
-		return nil, fmt.Errorf("API key is required")
+		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+			WithComponent("memory").
+			WithOperation("NewOpenAIEmbedder").
+			WithDetails("API key is required")
 	}
 
 	// Convert to EmbeddingModel
@@ -40,11 +44,17 @@ func (e *OpenAIEmbedder) Embed(ctx context.Context, text string) ([]float32, err
 		Model: e.model,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to create embeddings: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+			WithComponent("memory").
+			WithOperation("Embed").
+			WithDetails("failed to create embeddings")
 	}
 
 	if len(response.Data) == 0 {
-		return nil, fmt.Errorf("no embeddings returned")
+		return nil, gerror.New(gerror.ErrCodeInternal).
+			WithComponent("memory").
+			WithOperation("Embed").
+			WithDetails("no embeddings returned")
 	}
 
 	return response.Data[0].Embedding, nil
@@ -62,11 +72,17 @@ func (e *OpenAIEmbedder) GetEmbeddings(ctx context.Context, texts []string) ([][
 		Model: e.model,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to create embeddings: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+			WithComponent("memory").
+			WithOperation("GetEmbeddings").
+			WithDetails("failed to create embeddings")
 	}
 
 	if len(response.Data) != len(texts) {
-		return nil, fmt.Errorf("expected %d embeddings, got %d", len(texts), len(response.Data))
+		return nil, gerror.New(gerror.ErrCodeInternal).
+			WithComponent("memory").
+			WithOperation("GetEmbeddings").
+			WithDetails(fmt.Sprintf("expected %d embeddings, got %d", len(texts), len(response.Data)))
 	}
 
 	embeddings := make([][]float32, len(response.Data))

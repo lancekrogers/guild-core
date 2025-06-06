@@ -23,6 +23,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 	"github.com/lancekrogers/claude-code-go/pkg/claude"
 )
@@ -173,7 +174,10 @@ func NewClient(binPath, model string) *Client {
 func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
 	result, err := c.claudeClient.RunPrompt(prompt, c.defaultOpts)
 	if err != nil {
-		return "", fmt.Errorf("claude code execution failed: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeProviderAPI, "claude code execution failed").
+			WithComponent("providers").
+			WithOperation("Complete").
+			WithDetails("provider", "claudecode")
 	}
 	
 	return result.Result, nil
@@ -314,7 +318,10 @@ func GetRecommendedConfiguration(useCase string) *claude.RunOptions {
 func (c *Client) CreateCompletion(ctx context.Context, req *interfaces.CompletionRequest) (*interfaces.CompletionResponse, error) {
 	result, err := c.claudeClient.RunPrompt(req.Prompt, c.defaultOpts)
 	if err != nil {
-		return nil, fmt.Errorf("claude code execution failed: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeProviderAPI, "claude code execution failed").
+			WithComponent("providers").
+			WithOperation("CreateCompletion").
+			WithDetails("provider", "claudecode")
 	}
 
 	// Determine the model used
@@ -338,10 +345,18 @@ func (c *Client) CreateCompletion(ctx context.Context, req *interfaces.Completio
 
 // CreateEmbedding generates an embedding (not supported by Claude Code)
 func (c *Client) CreateEmbedding(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
-	return nil, fmt.Errorf("embedding generation not supported by Claude Code provider")
+	return nil, gerror.New(gerror.ErrCodeProvider, "embedding generation not supported by Claude Code provider", nil).
+		WithComponent("providers").
+		WithOperation("CreateEmbedding").
+		WithDetails("provider", "claudecode").
+		WithDetails("capability", "embeddings")
 }
 
 // CreateEmbeddings generates embeddings (not supported by Claude Code)
 func (c *Client) CreateEmbeddings(ctx context.Context, req *interfaces.EmbeddingRequest) (*interfaces.EmbeddingResponse, error) {
-	return nil, fmt.Errorf("embedding generation not supported by Claude Code provider")
+	return nil, gerror.New(gerror.ErrCodeProvider, "embedding generation not supported by Claude Code provider", nil).
+		WithComponent("providers").
+		WithOperation("CreateEmbeddings").
+		WithDetails("provider", "claudecode").
+		WithDetails("capability", "embeddings")
 }
