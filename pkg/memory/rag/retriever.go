@@ -54,18 +54,10 @@ type SearchResults struct {
 	Query   string
 }
 
-// NewRetriever creates a new Retriever with the given configuration.
+// newRetriever creates a new Retriever with the given configuration (private constructor).
 // The retriever integrates with both the vector store and corpus systems
 // to provide comprehensive context retrieval.
-//
-// Example:
-//   config := rag.Config{
-//       ChunkSize: 1000,
-//       MaxResults: 5,
-//       UseCorpus: true,
-//   }
-//   retriever, err := rag.NewRetriever(ctx, embedder, config)
-func NewRetriever(ctx context.Context, embedder vector.Embedder, config Config) (*Retriever, error) {
+func newRetriever(ctx context.Context, embedder vector.Embedder, config Config) (*Retriever, error) {
 	// Validate embedder
 	if embedder == nil {
 		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
@@ -103,7 +95,7 @@ func NewRetriever(ctx context.Context, embedder vector.Embedder, config Config) 
 		}
 	}
 	
-	chunker := NewChunker(ChunkerConfig{
+	chunker := newChunker(ChunkerConfig{
 		ChunkSize:    config.ChunkSize,
 		ChunkOverlap: config.ChunkOverlap,
 		Strategy:     chunkerStrategy,
@@ -150,14 +142,10 @@ func NewRetriever(ctx context.Context, embedder vector.Embedder, config Config) 
 	return retriever, nil
 }
 
-// NewRetrieverWithStore creates a new Retriever with an existing vector store.
+// newRetrieverWithStore creates a new Retriever with an existing vector store (private constructor).
 // This is useful when you want to manage the vector store lifecycle separately,
 // such as when integrating with the corpus scan command.
-//
-// Example:
-//   vectorStore, _ := vector.NewVectorStore(ctx, vectorConfig)
-//   retriever := rag.NewRetrieverWithStore(vectorStore, config)
-func NewRetrieverWithStore(vectorStore vector.VectorStore, config Config) *Retriever {
+func newRetrieverWithStore(vectorStore vector.VectorStore, config Config) *Retriever {
 	// Apply default config values
 	if config.ChunkSize <= 0 {
 		config.ChunkSize = 1000
@@ -187,7 +175,7 @@ func NewRetrieverWithStore(vectorStore vector.VectorStore, config Config) *Retri
 		}
 	}
 	
-	chunker := NewChunker(ChunkerConfig{
+	chunker := newChunker(ChunkerConfig{
 		ChunkSize:    config.ChunkSize,
 		ChunkOverlap: config.ChunkOverlap,
 		Strategy:     chunkerStrategy,
@@ -546,4 +534,14 @@ func (r *Retriever) Close() error {
 		return r.vectorStore.Close()
 	}
 	return nil
+}
+
+// DefaultRetrieverFactory creates a retriever for registry use
+func DefaultRetrieverFactory(ctx context.Context, embedder vector.Embedder, config Config) (RetrieverInterface, error) {
+	return newRetriever(ctx, embedder, config)
+}
+
+// DefaultRetrieverWithStoreFactory creates a retriever with existing store for registry use
+func DefaultRetrieverWithStoreFactory(vectorStore vector.VectorStore, config Config) RetrieverInterface {
+	return newRetrieverWithStore(vectorStore, config)
 }

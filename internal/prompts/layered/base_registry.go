@@ -3,6 +3,8 @@ package layered
 import (
 	"fmt"
 	"sync"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // MemoryRegistry is an in-memory implementation of the Registry interface
@@ -26,13 +28,22 @@ func (r *MemoryRegistry) RegisterPrompt(role, domain, prompt string) error {
 	defer r.mu.Unlock()
 
 	if role == "" {
-		return fmt.Errorf("role cannot be empty")
+		return gerror.New(gerror.ErrCodeMissingRequired, "role cannot be empty", nil).
+			WithComponent("prompts").
+			WithOperation("RegisterPrompt")
 	}
 	if domain == "" {
-		return fmt.Errorf("domain cannot be empty")
+		return gerror.New(gerror.ErrCodeMissingRequired, "domain cannot be empty", nil).
+			WithComponent("prompts").
+			WithOperation("RegisterPrompt").
+			WithDetails("role", role)
 	}
 	if prompt == "" {
-		return fmt.Errorf("prompt cannot be empty")
+		return gerror.New(gerror.ErrCodeMissingRequired, "prompt cannot be empty", nil).
+			WithComponent("prompts").
+			WithOperation("RegisterPrompt").
+			WithDetails("role", role).
+			WithDetails("domain", domain)
 	}
 
 	key := r.promptKey(role, domain)
@@ -46,10 +57,15 @@ func (r *MemoryRegistry) RegisterTemplate(name, template string) error {
 	defer r.mu.Unlock()
 
 	if name == "" {
-		return fmt.Errorf("template name cannot be empty")
+		return gerror.New(gerror.ErrCodeMissingRequired, "template name cannot be empty", nil).
+			WithComponent("prompts").
+			WithOperation("RegisterTemplate")
 	}
 	if template == "" {
-		return fmt.Errorf("template cannot be empty")
+		return gerror.New(gerror.ErrCodeMissingRequired, "template cannot be empty", nil).
+			WithComponent("prompts").
+			WithOperation("RegisterTemplate").
+			WithDetails("template_name", name)
 	}
 
 	r.templates[name] = template
@@ -65,7 +81,11 @@ func (r *MemoryRegistry) GetPrompt(role, domain string) (string, error) {
 	if prompt, ok := r.prompts[key]; ok {
 		return prompt, nil
 	}
-	return "", ErrPromptNotFound
+	return "", gerror.New(gerror.ErrCodeNotFound, "prompt not found", nil).
+		WithComponent("prompts").
+		WithOperation("GetPrompt").
+		WithDetails("role", role).
+		WithDetails("domain", domain)
 }
 
 // GetTemplate retrieves a registered template
@@ -76,7 +96,10 @@ func (r *MemoryRegistry) GetTemplate(name string) (string, error) {
 	if template, ok := r.templates[name]; ok {
 		return template, nil
 	}
-	return "", ErrTemplateNotFound
+	return "", gerror.New(gerror.ErrCodeNotFound, "template not found", nil).
+		WithComponent("prompts").
+		WithOperation("GetTemplate").
+		WithDetails("template_name", name)
 }
 
 // ListPrompts returns all registered prompt keys (for debugging/testing)

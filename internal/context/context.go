@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // ContextKey represents a key for storing values in context
@@ -150,7 +151,7 @@ func GetRegistry(ctx context.Context) (ComponentRegistry, error) {
 	if registry, ok := ctx.Value(RegistryKey).(ComponentRegistry); ok {
 		return registry, nil
 	}
-	return nil, fmt.Errorf("no component registry found in context")
+	return nil, gerror.New(gerror.ErrCodeNotFound, "no component registry found in context", nil).WithComponent("context").WithOperation("GetRegistry")
 }
 
 // WithConfig adds configuration to the context
@@ -163,7 +164,7 @@ func GetConfig(ctx context.Context) (Config, error) {
 	if config, ok := ctx.Value(ConfigKey).(Config); ok {
 		return config, nil
 	}
-	return nil, fmt.Errorf("no configuration found in context")
+	return nil, gerror.New(gerror.ErrCodeNotFound, "no configuration found in context", nil).WithComponent("context").WithOperation("GetConfig")
 }
 
 // ==============================================================================

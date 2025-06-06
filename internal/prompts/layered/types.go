@@ -2,25 +2,64 @@ package layered
 
 import (
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+)
+
+// Sentinel errors for common cases
+var (
+	// ErrPromptNotFound is returned when a requested prompt does not exist
+	ErrPromptNotFound = gerror.New(gerror.ErrCodeNotFound, "prompt not found", nil).
+		WithComponent("prompts").WithOperation("GetPrompt")
 	
-	"github.com/guild-ventures/guild-core/internal/prompts"
+	// ErrTemplateNotFound is returned when a requested template does not exist
+	ErrTemplateNotFound = gerror.New(gerror.ErrCodeNotFound, "template not found", nil).
+		WithComponent("prompts").WithOperation("GetTemplate")
 )
 
-// Re-export types from main prompts package for convenience
-type (
-	PromptLayer = prompts.PromptLayer
-	LayerConfig = prompts.LayerConfig
-)
+// PromptLayer represents the hierarchical layers of Guild prompts
+type PromptLayer string
 
-// Re-export constants
 const (
-	LayerPlatform = prompts.LayerPlatform
-	LayerGuild    = prompts.LayerGuild
-	LayerRole     = prompts.LayerRole
-	LayerDomain   = prompts.LayerDomain
-	LayerSession  = prompts.LayerSession
-	LayerTurn     = prompts.LayerTurn
+	// LayerPlatform contains core Guild platform rules (terms of service, safety)
+	LayerPlatform PromptLayer = "platform"
+	
+	// LayerGuild contains project-wide goals and style guidelines
+	LayerGuild PromptLayer = "guild"
+	
+	// LayerRole contains artisan role definitions (Guild Master, Code Artisan, etc.)
+	LayerRole PromptLayer = "role"
+	
+	// LayerDomain contains project type specializations (web-app, cli-tool, etc.)
+	LayerDomain PromptLayer = "domain"
+	
+	// LayerSession contains user preferences and session-specific context
+	LayerSession PromptLayer = "session"
+	
+	// LayerTurn contains ephemeral instructions for single interactions
+	LayerTurn PromptLayer = "turn"
 )
+
+// LayerConfig provides configuration for compiling layered prompts
+type LayerConfig struct {
+	// AgentID is the ID of the agent requesting the prompt
+	AgentID string
+	
+	// SessionID is the current session ID
+	SessionID string
+	
+	// Role is the agent's role (e.g., "guild_master", "code_artisan")
+	Role string
+	
+	// Domain is the project domain (e.g., "web-app", "cli-tool")
+	Domain string
+	
+	// IncludeLayers specifies which layers to include
+	IncludeLayers []PromptLayer
+	
+	// MaxTokens limits the compiled prompt size
+	MaxTokens int
+}
 
 // SystemPrompt represents a single layer in the Guild's layered prompt system
 type SystemPrompt struct {

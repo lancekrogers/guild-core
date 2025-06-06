@@ -7,8 +7,38 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
+
+// Context interface is used by formatters (defined in parent package)
+type Context interface {
+	GetCommissionID() string
+	GetCommissionTitle() string
+	GetCurrentTask() TaskContext
+	GetRelevantSections() []Section
+	GetRelatedTasks() []TaskContext
+}
+
+// TaskContext represents information about a task
+type TaskContext struct {
+	ID            string
+	Title         string
+	Description   string
+	SourceSection string
+	Priority      string
+	Estimate      string
+	Dependencies  []string
+	Capabilities  []string
+}
+
+// Section represents a section from the objective hierarchy
+type Section struct {
+	Level   int
+	Path    string
+	Title   string
+	Content string
+	Tasks   []TaskContext
+}
 
 // XMLFormatter formats context as XML for efficient token usage
 type XMLFormatter struct {
@@ -59,23 +89,29 @@ func NewXMLFormatter() (*XMLFormatter, error) {
 
 	t, err := template.New("xml-context").Parse(tmpl)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse XML template: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to parse XML template").
+			WithComponent("prompts").
+			WithOperation("NewXMLFormatter").
+			WithDetails("template_type", "xml-context")
 	}
 
 	return &XMLFormatter{template: t}, nil
 }
 
 // FormatAsXML formats context as XML
-func (f *XMLFormatter) FormatAsXML(ctx prompts.Context) (string, error) {
+func (f *XMLFormatter) FormatAsXML(ctx Context) (string, error) {
 	var buf bytes.Buffer
 	if err := f.template.Execute(&buf, ctx); err != nil {
-		return "", fmt.Errorf("failed to execute XML template: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to execute XML template").
+			WithComponent("prompts").
+			WithOperation("FormatAsXML").
+			WithDetails("template_type", "xml-context")
 	}
 	return buf.String(), nil
 }
 
 // FormatAsMarkdown formats context as markdown
-func (f *XMLFormatter) FormatAsMarkdown(ctx prompts.Context) (string, error) {
+func (f *XMLFormatter) FormatAsMarkdown(ctx Context) (string, error) {
 	var sb strings.Builder
 
 	// Commission info

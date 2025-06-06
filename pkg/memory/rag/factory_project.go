@@ -5,7 +5,7 @@ import (
 	
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
-	"github.com/guild-ventures/guild-core/pkg/project"
+	"github.com/guild-ventures/guild-core/internal/project"
 )
 
 // NewProjectAwareFactory creates a RAG factory using project context
@@ -47,7 +47,7 @@ func NewProjectAwareFactory(ctx context.Context) (*Factory, error) {
 	}
 	
 	// Create retriever with vector store
-	retriever := NewRetrieverWithStore(vectorStore, config)
+	retriever := newRetrieverWithStore(vectorStore, config)
 	
 	// Create factory
 	factory := &Factory{

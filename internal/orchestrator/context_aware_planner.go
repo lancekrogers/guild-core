@@ -7,8 +7,9 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/internal/kanban"
+	"github.com/guild-ventures/guild-core/internal/commission"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -20,8 +21,8 @@ type ContextAwareTaskPlanner struct {
 	componentRegistry registry.ComponentRegistry
 }
 
-// NewContextAwareTaskPlanner creates a planner that uses LLM intelligence for assignments
-func NewContextAwareTaskPlanner(
+// newContextAwareTaskPlanner creates a planner that uses LLM intelligence for assignments (private constructor)
+func newContextAwareTaskPlanner(
 	managerAgent agent.Agent,
 	kanbanBoard KanbanManager,
 	componentRegistry registry.ComponentRegistry,
@@ -33,6 +34,15 @@ func NewContextAwareTaskPlanner(
 	}
 }
 
+// DefaultContextAwareTaskPlannerFactory creates a context-aware planner factory for registry use
+func DefaultContextAwareTaskPlannerFactory(
+	managerAgent agent.Agent,
+	kanbanBoard KanbanManager,
+	componentRegistry registry.ComponentRegistry,
+) *ContextAwareTaskPlanner {
+	return newContextAwareTaskPlanner(managerAgent, kanbanBoard, componentRegistry)
+}
+
 // PlanTasks decomposes an objective into tasks
 func (p *ContextAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
 	// Build a planning prompt with full agent context
@@ -41,20 +51,26 @@ func (p *ContextAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission
 	// Execute the planning request
 	response, err := p.managerAgent.Execute(ctx, prompt)
 	if err != nil {
-		return nil, fmt.Errorf("manager agent failed to plan tasks: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "manager agent failed to plan tasks").
+			WithComponent("orchestrator").
+			WithOperation("PlanTasks")
 	}
 	
 	// Parse the response into tasks
 	tasks, err := p.parseTasksFromResponse(response)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse tasks from response: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to parse tasks from response").
+			WithComponent("orchestrator").
+			WithOperation("PlanTasks")
 	}
 	
 	// Add tasks to kanban board
 	for _, task := range tasks {
 		createdTask, err := p.kanbanBoard.CreateTask(ctx, task.Title, task.Description)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create task on kanban board: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to create task on kanban board").
+				WithComponent("orchestrator").
+				WithOperation("PlanTasks")
 		}
 		
 		createdTask.Status = task.Status
@@ -62,7 +78,9 @@ func (p *ContextAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission
 		createdTask.Dependencies = task.Dependencies
 		
 		if err := p.kanbanBoard.UpdateTask(ctx, createdTask); err != nil {
-			return nil, fmt.Errorf("failed to update task: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to update task").
+				WithComponent("orchestrator").
+				WithOperation("PlanTasks")
 		}
 		
 		task.ID = createdTask.ID
@@ -79,13 +97,17 @@ func (p *ContextAwareTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanb
 	// Execute the assignment request
 	response, err := p.managerAgent.Execute(ctx, prompt)
 	if err != nil {
-		return fmt.Errorf("manager agent failed to assign tasks: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeAgent, "manager agent failed to assign tasks").
+			WithComponent("orchestrator").
+			WithOperation("AssignTasks")
 	}
 	
 	// Parse assignments from response
 	assignments, err := p.parseAssignmentsFromResponse(response, tasks, guild)
 	if err != nil {
-		return fmt.Errorf("failed to parse assignments: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to parse assignments").
+			WithComponent("orchestrator").
+			WithOperation("AssignTasks")
 	}
 	
 	// Apply assignments to tasks
@@ -102,7 +124,9 @@ func (p *ContextAwareTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanb
 		task.Metadata["assignment_confidence"] = assignment.Confidence
 		
 		if err := p.kanbanBoard.UpdateTask(ctx, task); err != nil {
-			return fmt.Errorf("failed to update task assignment: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to update task assignment").
+				WithComponent("orchestrator").
+				WithOperation("AssignTasks")
 		}
 	}
 	
@@ -443,7 +467,9 @@ func (p *ContextAwareTaskPlanner) parseTasksFromResponse(response string) ([]*ka
 	}
 	
 	if len(tasks) == 0 {
-		return nil, fmt.Errorf("no tasks found in response")
+		return nil, gerror.New(gerror.ErrCodeOrchestration, "no tasks found in response", nil).
+			WithComponent("orchestrator").
+			WithOperation("parseTasksFromResponse")
 	}
 	
 	return tasks, nil

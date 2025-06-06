@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/corpus"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/tools"
 )
 
@@ -112,7 +113,7 @@ func NewCorpusTool(config corpus.Config) *CorpusTool {
 func (t *CorpusTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	var params Input
 	if err := json.Unmarshal([]byte(input), &params); err != nil {
-		return tools.NewToolResult("", nil, fmt.Errorf("invalid input: %w", err), nil), nil
+		return tools.NewToolResult("", nil, gerror.Wrap(err, gerror.InvalidArgument, "corpus_tool", "execute", "invalid input"), nil), nil
 	}
 
 	// Execute the appropriate action
@@ -130,7 +131,7 @@ func (t *CorpusTool) Execute(ctx context.Context, input string) (*tools.ToolResu
 	case "graph":
 		return t.getGraph(ctx, params)
 	default:
-		return tools.NewToolResult("", nil, fmt.Errorf("unknown action: %s", params.Action), nil), nil
+		return tools.NewToolResult("", nil, gerror.New(gerror.InvalidArgument, "corpus_tool", "execute", "unknown action: %s", params.Action), nil), nil
 	}
 }
 
@@ -138,7 +139,7 @@ func (t *CorpusTool) Execute(ctx context.Context, input string) (*tools.ToolResu
 func (t *CorpusTool) saveDocument(ctx context.Context, params Input) (*tools.ToolResult, error) {
 	// Validate required parameters
 	if params.Title == "" {
-		return tools.NewToolResult("", nil, fmt.Errorf("title is required for save action"), nil), nil
+		return tools.NewToolResult("", nil, gerror.New(gerror.InvalidArgument, "corpus_tool", "save_document", "title is required for save action"), nil), nil
 	}
 
 	// Create a new document
@@ -156,7 +157,7 @@ func (t *CorpusTool) saveDocument(ctx context.Context, params Input) (*tools.Too
 	// Save the document
 	err := corpus.Save(ctx, &doc, t.config)
 	if err != nil {
-		return tools.NewToolResult("", nil, fmt.Errorf("failed to save document: %w", err), nil), nil
+		return tools.NewToolResult("", nil, gerror.Wrap(err, gerror.Internal, "corpus_tool", "save_document", "failed to save document"), nil), nil
 	}
 
 	metadata := map[string]string{
@@ -171,13 +172,13 @@ func (t *CorpusTool) saveDocument(ctx context.Context, params Input) (*tools.Too
 func (t *CorpusTool) loadDocument(ctx context.Context, params Input) (*tools.ToolResult, error) {
 	// Validate required parameters
 	if params.Title == "" {
-		return tools.NewToolResult("", nil, fmt.Errorf("title is required for load action"), nil), nil
+		return tools.NewToolResult("", nil, gerror.New(gerror.InvalidArgument, "corpus_tool", "load_document", "title is required for load action"), nil), nil
 	}
 
 	// Get all document paths
 	paths, err := corpus.List(ctx, t.config)
 	if err != nil {
-		return tools.NewToolResult("", nil, fmt.Errorf("failed to list documents: %w", err), nil), nil
+		return tools.NewToolResult("", nil, gerror.Wrap(err, gerror.Internal, "corpus_tool", "load_document", "failed to list documents"), nil), nil
 	}
 
 	// Find the document with the matching title
@@ -194,7 +195,7 @@ func (t *CorpusTool) loadDocument(ctx context.Context, params Input) (*tools.Too
 	}
 
 	if targetDoc == nil {
-		return tools.NewToolResult("", nil, fmt.Errorf("document not found: %s", params.Title), nil), nil
+		return tools.NewToolResult("", nil, gerror.New(gerror.NotFound, "corpus_tool", "load_document", "document not found: %s", params.Title), nil), nil
 	}
 
 	// We already have the loaded document
@@ -229,7 +230,7 @@ func (t *CorpusTool) searchDocuments(ctx context.Context, params Input) (*tools.
 	// Get all document paths
 	paths, err := corpus.List(ctx, t.config)
 	if err != nil {
-		return tools.NewToolResult("", nil, fmt.Errorf("failed to list documents: %w", err), nil), nil
+		return tools.NewToolResult("", nil, gerror.Wrap(err, gerror.Internal, "corpus_tool", "load_document", "failed to list documents"), nil), nil
 	}
 
 	// Apply search criteria
@@ -321,7 +322,7 @@ func (t *CorpusTool) listDocuments(ctx context.Context, params Input) (*tools.To
 	// Get all document paths
 	paths, err := corpus.List(ctx, t.config)
 	if err != nil {
-		return tools.NewToolResult("", nil, fmt.Errorf("failed to list documents: %w", err), nil), nil
+		return tools.NewToolResult("", nil, gerror.Wrap(err, gerror.Internal, "corpus_tool", "load_document", "failed to list documents"), nil), nil
 	}
 
 	// Apply limit to paths
@@ -375,13 +376,13 @@ func (t *CorpusTool) listDocuments(ctx context.Context, params Input) (*tools.To
 func (t *CorpusTool) deleteDocument(ctx context.Context, params Input) (*tools.ToolResult, error) {
 	// Validate required parameters
 	if params.Title == "" {
-		return tools.NewToolResult("", nil, fmt.Errorf("title is required for delete action"), nil), nil
+		return tools.NewToolResult("", nil, gerror.New(gerror.InvalidArgument, "corpus_tool", "delete_document", "title is required for delete action"), nil), nil
 	}
 
 	// Get all document paths
 	paths, err := corpus.List(ctx, t.config)
 	if err != nil {
-		return tools.NewToolResult("", nil, fmt.Errorf("failed to list documents: %w", err), nil), nil
+		return tools.NewToolResult("", nil, gerror.Wrap(err, gerror.Internal, "corpus_tool", "load_document", "failed to list documents"), nil), nil
 	}
 
 	// Find the document with the matching title
@@ -398,13 +399,13 @@ func (t *CorpusTool) deleteDocument(ctx context.Context, params Input) (*tools.T
 	}
 
 	if targetDoc == nil {
-		return tools.NewToolResult("", nil, fmt.Errorf("document not found: %s", params.Title), nil), nil
+		return tools.NewToolResult("", nil, gerror.New(gerror.NotFound, "corpus_tool", "load_document", "document not found: %s", params.Title), nil), nil
 	}
 
 	// Delete the document
 	err = corpus.Delete(ctx, targetDoc.FilePath)
 	if err != nil {
-		return tools.NewToolResult("", nil, fmt.Errorf("failed to delete document: %w", err), nil), nil
+		return tools.NewToolResult("", nil, gerror.Wrap(err, gerror.Internal, "corpus_tool", "delete_document", "failed to delete document"), nil), nil
 	}
 
 	return tools.NewToolResult(fmt.Sprintf("Document '%s' deleted successfully", params.Title), nil, nil, nil), nil
@@ -415,7 +416,7 @@ func (t *CorpusTool) getGraph(ctx context.Context, params Input) (*tools.ToolRes
 	// Build the graph
 	graph, err := corpus.BuildGraph(ctx, t.config)
 	if err != nil {
-		return tools.NewToolResult("", nil, fmt.Errorf("failed to build graph: %w", err), nil), nil
+		return tools.NewToolResult("", nil, gerror.Wrap(err, gerror.Internal, "corpus_tool", "get_graph", "failed to build graph"), nil), nil
 	}
 
 	// Create a summary of the graph

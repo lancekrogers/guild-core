@@ -40,8 +40,8 @@ type ActivityEntry struct {
 	Message   string
 }
 
-// NewPlanningSession creates a new planning session
-func NewPlanningSession() *PlanningSession {
+// newPlanningSession creates a new planning session (private constructor)
+func newPlanningSession() *PlanningSession {
 	return &PlanningSession{
 		StartTime:         time.Now().UTC(),
 		Documents:         make(map[string]string),
@@ -51,6 +51,11 @@ func NewPlanningSession() *PlanningSession {
 		IsReady:           false,
 		Tasks:             make([]*TaskPlan, 0),
 	}
+}
+
+// DefaultPlanningSessionFactory creates a planning session factory for registry use
+func DefaultPlanningSessionFactory() *PlanningSession {
+	return newPlanningSession()
 }
 
 // AddActivityLog adds an entry to the activity log

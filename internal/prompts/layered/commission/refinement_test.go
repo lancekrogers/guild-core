@@ -1,4 +1,4 @@
-package objective_test
+package commission_test
 
 import (
 	"strings"
@@ -6,11 +6,11 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts/objective"
+	"github.com/guild-ventures/guild-core/internal/prompts/layered/commission"
 )
 
 func TestManagerRefinementPrompt(t *testing.T) {
-	prompt := objective.ManagerRefinementPrompt
+	prompt := commission.ManagerRefinementPrompt
 
 	t.Run("ContainsEssentialElements", func(t *testing.T) {
 		// Check for Guild terminology
@@ -66,7 +66,7 @@ func TestManagerRefinementPrompt(t *testing.T) {
 }
 
 func TestTaskFormatTemplate(t *testing.T) {
-	template := objective.TaskFormatTemplate
+	template := commission.TaskFormatTemplate
 
 	t.Run("ContainsAllFields", func(t *testing.T) {
 		assert.Contains(t, template, "{{.Category}}")
@@ -95,7 +95,7 @@ func TestTaskFormatTemplate(t *testing.T) {
 
 func TestDomainPrompts(t *testing.T) {
 	t.Run("WebAppDomainPrompt", func(t *testing.T) {
-		prompt := objective.WebAppDomainPrompt
+		prompt := commission.WebAppDomainPrompt
 
 		assert.Contains(t, prompt, "Web Applications")
 		assert.Contains(t, prompt, "Frontend Structure")
@@ -106,7 +106,7 @@ func TestDomainPrompts(t *testing.T) {
 	})
 
 	t.Run("CLIToolDomainPrompt", func(t *testing.T) {
-		prompt := objective.CLIToolDomainPrompt
+		prompt := commission.CLIToolDomainPrompt
 
 		assert.Contains(t, prompt, "CLI Tools")
 		assert.Contains(t, prompt, "Command Structure")
@@ -117,7 +117,7 @@ func TestDomainPrompts(t *testing.T) {
 	})
 
 	t.Run("LibraryDomainPrompt", func(t *testing.T) {
-		prompt := objective.LibraryDomainPrompt
+		prompt := commission.LibraryDomainPrompt
 
 		assert.Contains(t, prompt, "Libraries")
 		assert.Contains(t, prompt, "API Design")
@@ -128,7 +128,7 @@ func TestDomainPrompts(t *testing.T) {
 	})
 
 	t.Run("MicroserviceDomainPrompt", func(t *testing.T) {
-		prompt := objective.MicroserviceDomainPrompt
+		prompt := commission.MicroserviceDomainPrompt
 
 		assert.Contains(t, prompt, "Microservices")
 		assert.Contains(t, prompt, "Service Design")
@@ -142,11 +142,11 @@ func TestDomainPrompts(t *testing.T) {
 func TestPromptsConsistency(t *testing.T) {
 	// Ensure all prompts use consistent formatting
 	prompts := map[string]string{
-		"Manager":      objective.ManagerRefinementPrompt,
-		"WebApp":       objective.WebAppDomainPrompt,
-		"CLI":          objective.CLIToolDomainPrompt,
-		"Library":      objective.LibraryDomainPrompt,
-		"Microservice": objective.MicroserviceDomainPrompt,
+		"Manager":      commission.ManagerRefinementPrompt,
+		"WebApp":       commission.WebAppDomainPrompt,
+		"CLI":          commission.CLIToolDomainPrompt,
+		"Library":      commission.LibraryDomainPrompt,
+		"Microservice": commission.MicroserviceDomainPrompt,
 	}
 
 	for name, prompt := range prompts {
@@ -168,7 +168,7 @@ func TestPromptsConsistency(t *testing.T) {
 func TestPromptLength(t *testing.T) {
 	// Ensure prompts are not too long for typical context windows
 	t.Run("ManagerPromptLength", func(t *testing.T) {
-		prompt := objective.ManagerRefinementPrompt
+		prompt := commission.ManagerRefinementPrompt
 		// Rough estimate: 1 token ≈ 4 characters
 		tokenEstimate := len(prompt) / 4
 		
@@ -178,7 +178,7 @@ func TestPromptLength(t *testing.T) {
 }
 
 func TestPromptCompleteness(t *testing.T) {
-	prompt := objective.ManagerRefinementPrompt
+	prompt := commission.ManagerRefinementPrompt
 
 	t.Run("CoversAllAspects", func(t *testing.T) {
 		// Essential aspects that should be covered

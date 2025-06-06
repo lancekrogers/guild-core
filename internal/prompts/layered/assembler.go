@@ -9,6 +9,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // LayeredPromptAssembler implements the core Guild layered prompt system
@@ -72,13 +74,20 @@ func (lpa *LayeredPromptAssembler) BuildPrompt(
 	// Get artisan configuration from registry
 	artisan, err := lpa.getArtisanConfig(ctx, artisanID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get artisan config: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get artisan config").
+			WithComponent("prompts").
+			WithOperation("BuildPrompt").
+			WithDetails("artisan_id", artisanID)
 	}
 	
 	// Collect all prompt layers in priority order
 	layers, err := lpa.collectPromptLayers(ctx, artisan, sessionID, turnCtx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to collect prompt layers: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to collect prompt layers").
+			WithComponent("prompts").
+			WithOperation("BuildPrompt").
+			WithDetails("artisan_id", artisanID).
+			WithDetails("session_id", sessionID)
 	}
 	
 	// Retrieve and inject RAG memory if available
@@ -91,7 +100,11 @@ func (lpa *LayeredPromptAssembler) BuildPrompt(
 	// Apply token budget and intelligent truncation
 	optimizedLayers, truncated, err := lpa.optimizeForTokenBudget(layers, memoryChunks)
 	if err != nil {
-		return nil, fmt.Errorf("failed to optimize for token budget: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to optimize for token budget").
+			WithComponent("prompts").
+			WithOperation("BuildPrompt").
+			WithDetails("artisan_id", artisanID).
+			WithDetails("token_budget", lpa.tokenBudget)
 	}
 	
 	// Compile the final prompt
@@ -185,7 +198,10 @@ func (lpa *LayeredPromptAssembler) getLayerPrompt(
 	case LayerTurn:
 		return lpa.getTurnPrompt(ctx, turnCtx)
 	default:
-		return nil, fmt.Errorf("unknown prompt layer: %s", layer)
+		return nil, gerror.Newf(gerror.ErrCodeInvalidInput, "unknown prompt layer: %s", layer).
+			WithComponent("prompts").
+			WithOperation("getLayerPrompt").
+			WithDetails("layer", string(layer))
 	}
 }
 
@@ -247,7 +263,10 @@ func (lpa *LayeredPromptAssembler) getGuildPrompt(ctx context.Context, guildID s
 	
 	var prompt SystemPrompt
 	if err := json.Unmarshal(data, &prompt); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal guild prompt: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to unmarshal guild prompt").
+			WithComponent("prompts").
+			WithOperation("getGuildPrompt").
+			WithDetails("guild_id", guildID)
 	}
 	
 	return &prompt, nil
@@ -312,7 +331,10 @@ func (lpa *LayeredPromptAssembler) getSessionPrompt(ctx context.Context, session
 	
 	var prompt SystemPrompt
 	if err := json.Unmarshal(data, &prompt); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal session prompt: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to unmarshal session prompt").
+			WithComponent("prompts").
+			WithOperation("getSessionPrompt").
+			WithDetails("session_id", sessionID)
 	}
 	
 	return &prompt, nil

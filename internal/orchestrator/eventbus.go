@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/orchestrator/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/internal/orchestrator/interfaces"
 )
 
 // Re-export event types
@@ -94,7 +95,9 @@ func (b *eventBus) Publish(event Event) {
 func (b *eventBus) PublishJSON(jsonEvent string) error {
 	var event Event
 	if err := json.Unmarshal([]byte(jsonEvent), &event); err != nil {
-		return fmt.Errorf("failed to unmarshal event JSON: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "failed to unmarshal event JSON").
+			WithComponent("orchestrator").
+			WithOperation("PublishJSON")
 	}
 
 	b.Publish(event)

@@ -1,0 +1,29 @@
+package agent
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/guild-ventures/guild-core/internal/commission"
+	"github.com/guild-ventures/guild-core/pkg/config"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/memory"
+	"github.com/guild-ventures/guild-core/pkg/providers"
+	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/guild-ventures/guild-core/pkg/tools"
+)
+
+// GuildFactory creates agents from guild configuration
+// NOTE: This file is disabled due to import cycle with pkg/registry
+// TODO: Refactor to eliminate circular dependency
+
+type GuildFactory struct {
+	registry         registry.ComponentRegistry
+	memoryManager    memory.ChainManager
+	toolRegistry     *tools.ToolRegistry
+	objectiveManager *commission.Manager
+	guildConfig      *config.GuildConfig
+}
+
+// Rest of the GuildFactory implementation...
+// Disabled to fix import cycle issues

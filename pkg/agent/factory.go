@@ -31,8 +31,8 @@ type DefaultFactory struct {
 	CostManager      CostManager
 }
 
-// NewFactory creates a new factory instance
-func NewFactory(
+// newFactory creates a new factory instance (private constructor)
+func newFactory(
 	llmClient providers.LLMClient,
 	memoryManager memory.ChainManager,
 	toolRegistry tools.Registry,
@@ -65,10 +65,21 @@ func (f *DefaultFactory) CreateAgent(ctx context.Context, id, name string, agent
 
 // CreateWorkerAgent creates a new worker agent
 func (f *DefaultFactory) CreateWorkerAgent(ctx context.Context, id, name string) (Agent, error) {
-	return NewWorkerAgent(id, name, f.LLMClient, f.MemoryManager, f.ToolRegistry, f.CommissionManager, f.CostManager), nil
+	return newWorkerAgent(id, name, f.LLMClient, f.MemoryManager, f.ToolRegistry, f.CommissionManager, f.CostManager), nil
 }
 
 // CreateManagerAgent creates a new manager agent
 func (f *DefaultFactory) CreateManagerAgent(ctx context.Context, id, name string) (Agent, error) {
-	return NewManagerAgent(id, name, f.LLMClient, f.MemoryManager, f.ToolRegistry, f.CommissionManager, f.CostManager), nil
+	return newManagerAgent(id, name, f.LLMClient, f.MemoryManager, f.ToolRegistry, f.CommissionManager, f.CostManager), nil
+}
+
+// DefaultFactoryFactory creates a factory for registry use
+func DefaultFactoryFactory(
+	llmClient providers.LLMClient,
+	memoryManager memory.ChainManager,
+	toolRegistry tools.Registry,
+	commissionManager commission.CommissionManager,
+	costManager CostManager,
+) Factory {
+	return newFactory(llmClient, memoryManager, toolRegistry, commissionManager, costManager)
 }

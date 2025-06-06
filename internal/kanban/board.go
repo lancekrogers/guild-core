@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/storage"
+	"github.com/guild-ventures/guild-core/internal/storage"
 	"github.com/google/uuid"
 )
 
@@ -146,7 +146,9 @@ func NewBoardWithRegistry(ctx context.Context, registry ComponentRegistry, name,
 // saveToSQLite saves the board to SQLite with proper campaign relationship
 func (b *Board) saveToSQLite(ctx context.Context) error {
 	if b.registry == nil {
-		return fmt.Errorf("no registry available for SQLite operations")
+		return gerror.New(gerror.ErrCodeInternal, "no registry available for SQLite operations", nil).
+			WithComponent("Board").
+			WithOperation("saveToSQLite")
 	}
 
 	storageReg := b.registry.Storage()
@@ -157,7 +159,9 @@ func (b *Board) saveToSQLite(ctx context.Context) error {
 
 	campaignRepo := storageReg.GetKanbanCampaignRepository()
 	if campaignRepo == nil {
-		return fmt.Errorf("campaign repository not available")
+		return gerror.New(gerror.ErrCodeInternal, "campaign repository not available", nil).
+			WithComponent("Board").
+			WithOperation("saveToSQLite")
 	}
 
 	// Get or create the campaign that this board belongs to
@@ -165,7 +169,9 @@ func (b *Board) saveToSQLite(ctx context.Context) error {
 	
 	// Ensure the campaign exists
 	if err := b.ensureCampaignExists(ctx, campaignRepo, campaignID); err != nil {
-		return fmt.Errorf("failed to ensure campaign exists: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to ensure campaign exists").
+			WithComponent("Board").
+			WithOperation("saveToSQLite")
 	}
 
 	// Store the board's campaign association in metadata
@@ -215,7 +221,9 @@ func (b *Board) ensureCampaignExists(ctx context.Context, campaignRepo CampaignR
 	if err := campaignRepo.CreateCampaign(ctx, campaign); err != nil {
 		// Ignore UNIQUE constraint errors - campaign already exists
 		if !strings.Contains(err.Error(), "UNIQUE constraint failed") {
-			return fmt.Errorf("failed to create campaign %s: %w", campaignID, err)
+			return gerror.Wrapf(err, gerror.ErrCodeStorage, "failed to create campaign %s", campaignID).
+				WithComponent("Board").
+				WithOperation("ensureCampaignExists")
 		}
 	}
 
@@ -254,24 +262,32 @@ func LoadBoard(ctx context.Context, registry ComponentRegistry, boardID string) 
 	
 	storageReg := registry.Storage()
 	if storageReg == nil {
-		return nil, fmt.Errorf("storage registry not available")
+		return nil, gerror.New(gerror.ErrCodeInternal, "storage registry not available", nil).
+			WithComponent("Board").
+			WithOperation("LoadBoard")
 	}
 	
 	boardRepo := storageReg.GetBoardRepository()
 	if boardRepo == nil {
-		return nil, fmt.Errorf("board repository not available")
+		return nil, gerror.New(gerror.ErrCodeInternal, "board repository not available", nil).
+			WithComponent("Board").
+			WithOperation("LoadBoard")
 	}
 	
 	// Get board from SQLite
 	boardInterface, err := boardRepo.GetBoard(ctx, boardID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to load board: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to load board").
+			WithComponent("Board").
+			WithOperation("LoadBoard")
 	}
 	
 	// Cast to storage.Board
 	storageBoard, ok := boardInterface.(*storage.Board)
 	if !ok {
-		return nil, fmt.Errorf("failed to cast board to storage.Board")
+		return nil, gerror.New(gerror.ErrCodeInternal, "failed to cast board to storage.Board", nil).
+			WithComponent("Board").
+			WithOperation("LoadBoard")
 	}
 	
 	// Convert storage board to kanban board
@@ -298,18 +314,24 @@ func ListBoards(ctx context.Context, registry ComponentRegistry) ([]*Board, erro
 	
 	storageReg := registry.Storage()
 	if storageReg == nil {
-		return nil, fmt.Errorf("storage registry not available")
+		return nil, gerror.New(gerror.ErrCodeInternal, "storage registry not available", nil).
+			WithComponent("Board").
+			WithOperation("ListBoards")
 	}
 	
 	boardRepo := storageReg.GetBoardRepository()
 	if boardRepo == nil {
-		return nil, fmt.Errorf("board repository not available")
+		return nil, gerror.New(gerror.ErrCodeInternal, "board repository not available", nil).
+			WithComponent("Board").
+			WithOperation("ListBoards")
 	}
 	
 	// Get all boards from SQLite
 	boardInterfaces, err := boardRepo.ListBoards(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list boards: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list boards").
+			WithComponent("Board").
+			WithOperation("ListBoards")
 	}
 	
 	var boards []*Board
@@ -362,7 +384,9 @@ func (b *Board) Save(ctx context.Context) error {
 	commissionID := b.ID + "-commission" // Generate commission ID based on board ID
 	campaignID := b.getCampaignID()
 	if err := b.ensureCommissionExists(ctx, commissionID, campaignID); err != nil {
-		return fmt.Errorf("failed to ensure commission exists: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to ensure commission exists").
+			WithComponent("Board").
+			WithOperation("Save")
 	}
 	
 	// Convert kanban.Board to storage.Board
@@ -395,12 +419,16 @@ func (b *Board) Delete(ctx context.Context) error {
 	// First, delete all tasks
 	tasks, err := b.GetAllTasks(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to get tasks: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get tasks").
+			WithComponent("Board").
+			WithOperation("Delete")
 	}
 	
 	for _, task := range tasks {
 		if err := b.DeleteTask(ctx, task.ID); err != nil {
-			return fmt.Errorf("failed to delete task %s: %w", task.ID, err)
+			return gerror.Wrapf(err, gerror.ErrCodeStorage, "failed to delete task %s", task.ID).
+				WithComponent("Board").
+				WithOperation("Delete")
 		}
 	}
 	
@@ -423,24 +451,32 @@ func (b *Board) CreateTask(ctx context.Context, title, description string) (*Tas
 	}
 	
 	// No legacy store - all operations use SQLite via registry
-	return nil, fmt.Errorf("board not connected to registry - cannot create tasks without SQLite backend")
+	return nil, gerror.New(gerror.ErrCodeInternal, "board not connected to registry - cannot create tasks without SQLite backend", nil).
+		WithComponent("Board").
+		WithOperation("CreateTask")
 }
 
 // createTaskSQLite creates a task using SQLite storage
 func (b *Board) createTaskSQLite(ctx context.Context, title, description string) (*Task, error) {
 	storageReg := b.registry.Storage()
 	if storageReg == nil {
-		return nil, fmt.Errorf("storage registry not available")
+		return nil, gerror.New(gerror.ErrCodeInternal, "storage registry not available", nil).
+			WithComponent("Board").
+			WithOperation("createTaskSQLite")
 	}
 
 	taskRepo := storageReg.GetKanbanTaskRepository()
 	if taskRepo == nil {
-		return nil, fmt.Errorf("task repository not available")
+		return nil, gerror.New(gerror.ErrCodeInternal, "task repository not available", nil).
+			WithComponent("Board").
+			WithOperation("createTaskSQLite")
 	}
 
 	// Ensure board exists in SQLite before creating tasks
 	if err := b.ensureBoardExists(ctx); err != nil {
-		return nil, fmt.Errorf("failed to ensure board exists: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to ensure board exists").
+			WithComponent("Board").
+			WithOperation("createTaskSQLite")
 	}
 
 	// Create the task
@@ -482,7 +518,9 @@ func (b *Board) createTaskSQLite(ctx context.Context, title, description string)
 
 	// Save to SQLite
 	if err := taskRepo.CreateTask(ctx, storageTask); err != nil {
-		return nil, fmt.Errorf("failed to save task to SQLite: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save task to SQLite").
+			WithComponent("Board").
+			WithOperation("createTaskSQLite")
 	}
 
 	// Record task creation event
@@ -524,12 +562,16 @@ func (b *Board) ensureBoardExists(ctx context.Context) error {
 	// Ensure campaign and commission exist first
 	campaignID := b.getCampaignID()
 	if err := b.ensureCampaignExists(ctx, storageReg.GetKanbanCampaignRepository(), campaignID); err != nil {
-		return fmt.Errorf("failed to ensure campaign exists: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to ensure campaign exists").
+			WithComponent("Board").
+			WithOperation("ensureBoardExists")
 	}
 
 	commissionID := b.ID + "-commission"
 	if err := b.ensureCommissionExists(ctx, commissionID, campaignID); err != nil {
-		return fmt.Errorf("failed to ensure commission exists: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to ensure commission exists").
+			WithComponent("Board").
+			WithOperation("ensureBoardExists")
 	}
 
 	// Create board using storage model
@@ -544,7 +586,9 @@ func (b *Board) ensureBoardExists(ctx context.Context) error {
 	}
 
 	if err := boardRepo.CreateBoard(ctx, storageBoard); err != nil {
-		return fmt.Errorf("failed to create board: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create board").
+			WithComponent("Board").
+			WithOperation("ensureBoardExists")
 	}
 
 	return nil
@@ -571,7 +615,9 @@ func (b *Board) ensureCommissionExists(ctx context.Context, commissionID, campai
 	}
 
 	if err := commissionRepo.CreateCommission(ctx, commission); err != nil {
-		return fmt.Errorf("failed to create commission: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commission").
+			WithComponent("Board").
+			WithOperation("ensureCommissionExists")
 	}
 
 	return nil
@@ -604,7 +650,9 @@ func (b *Board) GetTask(ctx context.Context, taskID string) (*Task, error) {
 	}
 	
 	// No legacy store - all operations use SQLite via registry
-	return nil, fmt.Errorf("board not connected to registry - cannot get tasks without SQLite backend")
+	return nil, gerror.New(gerror.ErrCodeInternal, "board not connected to registry - cannot get tasks without SQLite backend", nil).
+		WithComponent("Board").
+		WithOperation("GetTask")
 }
 
 // getTaskSQLite retrieves a task from SQLite storage
@@ -612,19 +660,25 @@ func (b *Board) getTaskSQLite(ctx context.Context, taskID string) (*Task, error)
 	// Get the storage registry to access the underlying task repository
 	storageReg := b.registry.Storage()
 	if storageReg == nil {
-		return nil, fmt.Errorf("storage registry not available")
+		return nil, gerror.New(gerror.ErrCodeInternal, "storage registry not available", nil).
+			WithComponent("Board").
+			WithOperation("getTaskSQLite")
 	}
 	
 	// Get all tasks for this board and find the matching one
 	taskRepo := storageReg.GetKanbanTaskRepository()
 	if taskRepo == nil {
-		return nil, fmt.Errorf("task repository not available")
+		return nil, gerror.New(gerror.ErrCodeInternal, "task repository not available", nil).
+			WithComponent("Board").
+			WithOperation("getTaskSQLite")
 	}
 	
 	// Get all tasks for this board from SQLite
 	taskInterfaces, err := taskRepo.ListTasksByBoard(ctx, b.ID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get tasks for board: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get tasks for board").
+			WithComponent("Board").
+			WithOperation("getTaskSQLite")
 	}
 	
 	// Find the specific task
@@ -653,7 +707,9 @@ func (b *Board) getTaskSQLite(ctx context.Context, taskID string) (*Task, error)
 		}
 	}
 	
-	return nil, fmt.Errorf("task not found: %s", taskID)
+	return nil, gerror.Newf(gerror.ErrCodeNotFound, "task not found: %s", taskID).
+		WithComponent("Board").
+		WithOperation("getTaskSQLite")
 }
 
 // mapStorageStatusToKanbanStatus maps database status values back to kanban status values
@@ -742,7 +798,9 @@ func (b *Board) updateTaskSQLite(ctx context.Context, task *Task) error {
 
 	// Update in SQLite using the kanban task repository adapter
 	if err := taskRepo.UpdateTask(ctx, storageTask); err != nil {
-		return fmt.Errorf("failed to update task in SQLite: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task in SQLite").
+			WithComponent("Board").
+			WithOperation("updateTaskSQLite")
 	}
 
 	// Record task update event
@@ -784,7 +842,9 @@ func (b *Board) DeleteTask(ctx context.Context, taskID string) error {
 	}
 	
 	if err := taskRepo.DeleteTask(ctx, taskID); err != nil {
-		return fmt.Errorf("failed to delete task: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete task").
+			WithComponent("Board").
+			WithOperation("DeleteTask")
 	}
 	
 	// Record task deletion event
@@ -806,19 +866,25 @@ func (b *Board) DeleteTask(ctx context.Context, taskID string) error {
 // GetTasksByStatus gets all tasks with a specific status from SQLite
 func (b *Board) GetTasksByStatus(ctx context.Context, status TaskStatus) ([]*Task, error) {
 	if b.registry == nil {
-		return nil, fmt.Errorf("board not connected to registry")
+		return nil, gerror.New(gerror.ErrCodeInternal, "board not connected to registry", nil).
+			WithComponent("Board").
+			WithOperation("GetTasksByStatus")
 	}
 	
 	storageReg := b.registry.Storage()
 	taskRepo := storageReg.GetKanbanTaskRepository()
 	if taskRepo == nil {
-		return nil, fmt.Errorf("task repository not available")
+		return nil, gerror.New(gerror.ErrCodeInternal, "task repository not available", nil).
+			WithComponent("Board").
+			WithOperation("GetTasksByStatus")
 	}
 	
 	// Get all tasks for this board from SQLite, then filter by status
 	taskInterfaces, err := taskRepo.ListTasksByBoard(ctx, b.ID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get tasks for board: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get tasks for board").
+			WithComponent("Board").
+			WithOperation("GetTasksByStatus")
 	}
 	
 	// Convert storage tasks to kanban tasks and filter by status
@@ -867,19 +933,25 @@ func (b *Board) GetTasksByStatus(ctx context.Context, status TaskStatus) ([]*Tas
 // GetAllTasks gets all tasks on the board from SQLite
 func (b *Board) GetAllTasks(ctx context.Context) ([]*Task, error) {
 	if b.registry == nil {
-		return nil, fmt.Errorf("board not connected to registry")
+		return nil, gerror.New(gerror.ErrCodeInternal, "board not connected to registry", nil).
+			WithComponent("Board").
+			WithOperation("GetAllTasks")
 	}
 	
 	storageReg := b.registry.Storage()
 	taskRepo := storageReg.GetKanbanTaskRepository()
 	if taskRepo == nil {
-		return nil, fmt.Errorf("task repository not available")
+		return nil, gerror.New(gerror.ErrCodeInternal, "task repository not available", nil).
+			WithComponent("Board").
+			WithOperation("GetAllTasks")
 	}
 	
 	// Get all tasks for this board from SQLite
 	taskInterfaces, err := taskRepo.ListTasksByBoard(ctx, b.ID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get all tasks: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get all tasks").
+			WithComponent("Board").
+			WithOperation("GetAllTasks")
 	}
 	
 	// Convert storage tasks to kanban tasks
@@ -923,13 +995,17 @@ func (b *Board) GetAllTasks(ctx context.Context) ([]*Task, error) {
 // FilterTasks filters tasks based on the provided filter using SQLite
 func (b *Board) FilterTasks(ctx context.Context, filter TaskFilter) ([]*Task, error) {
 	if b.registry == nil {
-		return nil, fmt.Errorf("board not connected to registry")
+		return nil, gerror.New(gerror.ErrCodeInternal, "board not connected to registry", nil).
+			WithComponent("Board").
+			WithOperation("FilterTasks")
 	}
 	
 	// Get all tasks from SQLite
 	allTasks, err := b.GetAllTasks(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get all tasks: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get all tasks").
+			WithComponent("Board").
+			WithOperation("FilterTasks")
 	}
 	
 	// Apply filter
@@ -959,7 +1035,9 @@ func (b *Board) UpdateTaskStatus(ctx context.Context, taskID string, newStatus T
 	
 	// Update the status
 	if err := task.UpdateStatus(newStatus, changedBy, comment); err != nil {
-		return fmt.Errorf("failed to update status: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "failed to update status").
+			WithComponent("Board").
+			WithOperation("UpdateTaskStatus")
 	}
 	
 	// Save the task
@@ -985,7 +1063,9 @@ func (b *Board) AssignTask(ctx context.Context, taskID, assignee, changedBy, com
 	
 	// Save the task
 	if err := b.UpdateTask(ctx, task); err != nil {
-		return fmt.Errorf("failed to update task: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task").
+			WithComponent("Board").
+			WithOperation("AssignTask")
 	}
 	
 	// Emit task assigned event
@@ -1026,7 +1106,9 @@ func (b *Board) AddTaskBlocker(ctx context.Context, taskID, blockerID, changedBy
 	
 	// Save the task
 	if err := b.UpdateTask(ctx, task); err != nil {
-		return fmt.Errorf("failed to update task: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task").
+			WithComponent("Board").
+			WithOperation("AddTaskBlocker")
 	}
 	
 	// Emit task blocked event
@@ -1067,7 +1149,9 @@ func (b *Board) RemoveTaskBlocker(ctx context.Context, taskID, blockerID, change
 	
 	// Save the task
 	if err := b.UpdateTask(ctx, task); err != nil {
-		return fmt.Errorf("failed to update task: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task").
+			WithComponent("Board").
+			WithOperation("RemoveTaskBlocker")
 	}
 	
 	// Emit task unblocked event

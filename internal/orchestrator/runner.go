@@ -7,7 +7,8 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/internal/commission"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // BaseOrchestrator implements the Orchestrator interface
@@ -22,8 +23,8 @@ type BaseOrchestrator struct {
 	cancelFunc      context.CancelFunc
 }
 
-// NewOrchestrator creates a new orchestrator
-func NewOrchestrator(config *Config, dispatcher *TaskDispatcher, eventBus *EventBus) *BaseOrchestrator {
+// newOrchestrator creates a new orchestrator (private constructor)
+func newOrchestrator(config *Config, dispatcher *TaskDispatcher, eventBus *EventBus) *BaseOrchestrator {
 	return &BaseOrchestrator{
 		status:     StatusIdle,
 		agents:     make(map[string]agent.Agent),
@@ -33,13 +34,20 @@ func NewOrchestrator(config *Config, dispatcher *TaskDispatcher, eventBus *Event
 	}
 }
 
+// DefaultOrchestratorFactory creates an orchestrator factory for registry use
+func DefaultOrchestratorFactory(config *Config, dispatcher *TaskDispatcher, eventBus *EventBus) *BaseOrchestrator {
+	return newOrchestrator(config, dispatcher, eventBus)
+}
+
 // Start starts the orchestrator
 func (o *BaseOrchestrator) Start(ctx context.Context) error {
 	o.mu.Lock()
 	defer o.mu.Unlock()
 
 	if o.status == StatusRunning {
-		return fmt.Errorf("orchestrator is already running")
+		return gerror.New(gerror.ErrCodeValidation, "orchestrator is already running", nil).
+			WithComponent("orchestrator").
+			WithOperation("Start")
 	}
 
 	// Create a cancellable context
@@ -79,7 +87,9 @@ func (o *BaseOrchestrator) Stop(ctx context.Context) error {
 	defer o.mu.Unlock()
 
 	if o.status != StatusRunning && o.status != StatusPaused {
-		return fmt.Errorf("orchestrator is not running or paused")
+		return gerror.New(gerror.ErrCodeValidation, "orchestrator is not running or paused", nil).
+			WithComponent("orchestrator").
+			WithOperation("Stop")
 	}
 
 	// Cancel the run context
@@ -107,7 +117,9 @@ func (o *BaseOrchestrator) Pause(ctx context.Context) error {
 	defer o.mu.Unlock()
 
 	if o.status != StatusRunning {
-		return fmt.Errorf("orchestrator is not running")
+		return gerror.New(gerror.ErrCodeValidation, "orchestrator is not running", nil).
+			WithComponent("orchestrator").
+			WithOperation("Pause")
 	}
 
 	// Update status
@@ -129,7 +141,9 @@ func (o *BaseOrchestrator) Resume(ctx context.Context) error {
 	defer o.mu.Unlock()
 
 	if o.status != StatusPaused {
-		return fmt.Errorf("orchestrator is not paused")
+		return gerror.New(gerror.ErrCodeValidation, "orchestrator is not paused", nil).
+			WithComponent("orchestrator").
+			WithOperation("Resume")
 	}
 
 	// Update status
@@ -160,7 +174,10 @@ func (o *BaseOrchestrator) AddAgent(agent agent.Agent) error {
 
 	// Check if agent already exists
 	if _, exists := o.agents[agent.GetID()]; exists {
-		return fmt.Errorf("agent %s already exists", agent.GetID())
+		return gerror.New(gerror.ErrCodeAlreadyExists, "agent already exists", nil).
+			WithComponent("orchestrator").
+			WithOperation("AddAgent").
+			WithDetails("agent_id", agent.GetID())
 	}
 
 	// Add agent to the orchestrator
@@ -179,7 +196,10 @@ func (o *BaseOrchestrator) RemoveAgent(agentID string) error {
 
 	// Check if agent exists
 	if _, exists := o.agents[agentID]; !exists {
-		return fmt.Errorf("agent %s not found", agentID)
+		return gerror.New(gerror.ErrCodeNotFound, "agent not found", nil).
+			WithComponent("orchestrator").
+			WithOperation("RemoveAgent").
+			WithDetails("agent_id", agentID)
 	}
 
 	// Remove agent from the orchestrator

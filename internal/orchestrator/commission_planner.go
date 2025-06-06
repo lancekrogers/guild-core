@@ -7,8 +7,9 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
 	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/orchestrator/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/internal/kanban"
+	"github.com/guild-ventures/guild-core/internal/orchestrator/interfaces"
 )
 
 // CommissionTaskPlanner creates kanban tasks from refined commissions
@@ -64,7 +65,10 @@ func (p *defaultCommissionTaskPlanner) PlanFromRefinedCommission(
 	for _, taskInfo := range tasks {
 		kanbanTask, err := p.convertToKanbanTask(ctx, taskInfo, refined.CommissionID, guildConfig)
 		if err != nil {
-			return nil, fmt.Errorf("failed to convert task %s: %w", taskInfo.ID, err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to convert task").
+				WithComponent("orchestrator").
+				WithOperation("PlanFromRefinedCommission").
+				WithDetails("task_id", taskInfo.ID)
 		}
 		kanbanTasks = append(kanbanTasks, kanbanTask)
 	}
@@ -87,13 +91,19 @@ func (p *defaultCommissionTaskPlanner) AssignTasksToArtisans(
 		// Find best artisan based on task requirements and current workload
 		artisan, err := p.findBestArtisan(ctx, task, guild)
 		if err != nil {
-			return fmt.Errorf("failed to find artisan for task %s: %w", task.ID, err)
+			return gerror.Wrap(err, gerror.ErrCodeAgent, "failed to find artisan for task").
+				WithComponent("orchestrator").
+				WithOperation("AssignTasksToArtisans").
+				WithDetails("task_id", task.ID)
 		}
 
 		// Get the existing task to preserve all metadata
 		existingTask, err := p.kanbanManager.GetTask(ctx, task.ID)
 		if err != nil {
-			return fmt.Errorf("failed to get existing task %s: %w", task.ID, err)
+			return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to get existing task").
+				WithComponent("orchestrator").
+				WithOperation("AssignTasksToArtisans").
+				WithDetails("task_id", task.ID)
 		}
 
 		// Update the assignment
@@ -108,7 +118,11 @@ func (p *defaultCommissionTaskPlanner) AssignTasksToArtisans(
 		// Assign task by updating the existing task
 		err = p.kanbanManager.UpdateTask(ctx, existingTask)
 		if err != nil {
-			return fmt.Errorf("failed to assign task %s to %s: %w", task.ID, artisan.ID, err)
+			return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to assign task to artisan").
+				WithComponent("orchestrator").
+				WithOperation("AssignTasksToArtisans").
+				WithDetails("task_id", task.ID).
+				WithDetails("artisan_id", artisan.ID)
 		}
 
 		// Update the original task reference for return to caller
@@ -211,7 +225,9 @@ func (p *defaultCommissionTaskPlanner) findBestArtisan(
 		if len(guild.Agents) > 0 {
 			return &guild.Agents[0], nil
 		}
-		return nil, fmt.Errorf("no available artisans in guild")
+		return nil, gerror.New(gerror.ErrCodeNoAvailableAgent, "no available artisans in guild", nil).
+			WithComponent("orchestrator").
+			WithOperation("findBestArtisan")
 	}
 
 	// For now, select first matching candidate

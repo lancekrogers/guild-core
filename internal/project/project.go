@@ -4,20 +4,20 @@ package project
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 var (
 	// ErrNotInProject indicates the current directory is not within a Guild project
-	ErrNotInProject = errors.New("not in a guild project")
+	ErrNotInProject = gerror.New(gerror.NotFound, "project", "validate", "not in a guild project")
 	// ErrAlreadyInitialized indicates a project is already initialized at the given path
-	ErrAlreadyInitialized = errors.New("project already initialized")
+	ErrAlreadyInitialized = gerror.New(gerror.AlreadyExists, "project", "initialize", "project already initialized")
 	// ErrInvalidPath indicates the provided path is invalid
-	ErrInvalidPath = errors.New("invalid project path")
+	ErrInvalidPath = gerror.New(gerror.InvalidArgument, "project", "validate", "invalid project path")
 )
 
 // Context represents a Guild project's context with paths and configuration.
@@ -36,7 +36,7 @@ type Context struct {
 func NewContext(rootPath string) (*Context, error) {
 	abs, err := filepath.Abs(rootPath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to resolve absolute path: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "project", "new_context", "failed to resolve absolute path")
 	}
 
 	guildPath := filepath.Join(abs, ".guild")
@@ -91,7 +91,7 @@ func (c *Context) GetObjectivesPath() string {
 func FindProjectRoot(startPath string) (string, error) {
 	abs, err := filepath.Abs(startPath)
 	if err != nil {
-		return "", fmt.Errorf("failed to resolve absolute path: %w", err)
+		return "", gerror.Wrap(err, gerror.Internal, "project", "find_project_root", "failed to resolve absolute path")
 	}
 
 	current := abs
@@ -114,7 +114,7 @@ func FindProjectRoot(startPath string) (string, error) {
 func GetContext() (*Context, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get current directory: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "project", "find_nearest_project", "failed to get current directory")
 	}
 
 	return GetContextFromPath(cwd)
@@ -157,7 +157,7 @@ func IsInitialized(path string) bool {
 func ValidateProjectPath(path string) error {
 	abs, err := filepath.Abs(path)
 	if err != nil {
-		return fmt.Errorf("failed to resolve absolute path: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "project", "validate_project_path", "failed to resolve absolute path")
 	}
 
 	// Ensure .guild would be within the resolved path
@@ -170,13 +170,13 @@ func ValidateProjectPath(path string) error {
 	info, err := os.Stat(abs)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return fmt.Errorf("path does not exist: %s", abs)
+			return gerror.New(gerror.NotFound, "project", "validate_project_path", "path does not exist: %s", abs)
 		}
-		return fmt.Errorf("failed to stat path: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "project", "validate_project_path", "failed to stat path")
 	}
 
 	if !info.IsDir() {
-		return fmt.Errorf("path is not a directory: %s", abs)
+		return gerror.New(gerror.InvalidArgument, "project", "validate_project_path", "path is not a directory: %s", abs)
 	}
 
 	return nil

@@ -1,9 +1,8 @@
 package layered
 
 import (
-	"fmt"
-
-	"github.com/guild-ventures/guild-core/pkg/prompts/objective"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/internal/prompts/layered/commission"
 )
 
 // Loader handles loading prompts into a registry
@@ -22,22 +21,34 @@ func NewLoader(registry Registry) *Loader {
 func (l *Loader) LoadDefaults() error {
 	// Load manager prompts
 	if err := l.loadManagerPrompts(); err != nil {
-		return fmt.Errorf("failed to load manager prompts: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load manager prompts").
+			WithComponent("prompts").
+			WithOperation("LoadDefaults").
+			WithDetails("prompt_type", "manager")
 	}
 
 	// Load developer prompts
 	if err := l.loadDeveloperPrompts(); err != nil {
-		return fmt.Errorf("failed to load developer prompts: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load developer prompts").
+			WithComponent("prompts").
+			WithOperation("LoadDefaults").
+			WithDetails("prompt_type", "developer")
 	}
 
 	// Load reviewer prompts
 	if err := l.loadReviewerPrompts(); err != nil {
-		return fmt.Errorf("failed to load reviewer prompts: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load reviewer prompts").
+			WithComponent("prompts").
+			WithOperation("LoadDefaults").
+			WithDetails("prompt_type", "reviewer")
 	}
 
 	// Load templates
 	if err := l.loadTemplates(); err != nil {
-		return fmt.Errorf("failed to load templates: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load templates").
+			WithComponent("prompts").
+			WithOperation("LoadDefaults").
+			WithDetails("prompt_type", "templates")
 	}
 
 	return nil
@@ -46,16 +57,16 @@ func (l *Loader) LoadDefaults() error {
 // loadManagerPrompts loads all manager-specific prompts
 func (l *Loader) loadManagerPrompts() error {
 	// Base manager prompt
-	if err := l.registry.RegisterPrompt("manager", "default", objective.ManagerRefinementPrompt); err != nil {
+	if err := l.registry.RegisterPrompt("manager", "default", commission.ManagerRefinementPrompt); err != nil {
 		return err
 	}
 
 	// Domain-specific manager prompts
 	domains := map[string]string{
-		"web-app":      objective.ManagerRefinementPrompt + objective.WebAppDomainPrompt,
-		"cli-tool":     objective.ManagerRefinementPrompt + objective.CLIToolDomainPrompt,
-		"library":      objective.ManagerRefinementPrompt + objective.LibraryDomainPrompt,
-		"microservice": objective.ManagerRefinementPrompt + objective.MicroserviceDomainPrompt,
+		"web-app":      commission.ManagerRefinementPrompt + commission.WebAppDomainPrompt,
+		"cli-tool":     commission.ManagerRefinementPrompt + commission.CLIToolDomainPrompt,
+		"library":      commission.ManagerRefinementPrompt + commission.LibraryDomainPrompt,
+		"microservice": commission.ManagerRefinementPrompt + commission.MicroserviceDomainPrompt,
 	}
 
 	for domain, prompt := range domains {
@@ -223,7 +234,7 @@ After review, you must:
 // loadTemplates loads all templates
 func (l *Loader) loadTemplates() error {
 	templates := map[string]string{
-		"task-format":    objective.TaskFormatTemplate,
+		"task-format":    commission.TaskFormatTemplate,
 		"markdown-file":  markdownFileTemplate,
 		"review-comment": reviewCommentTemplate,
 		"task-context":   taskContextTemplate,

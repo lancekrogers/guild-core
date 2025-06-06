@@ -3,7 +3,7 @@ package mocks
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/internal/commission"
 	"github.com/stretchr/testify/mock"
 )
 

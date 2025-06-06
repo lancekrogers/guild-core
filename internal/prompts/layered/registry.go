@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"sync"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // GuildLayeredRegistry implements LayeredRegistry interface with Guild Archives integration
@@ -53,7 +55,11 @@ func (glr *GuildLayeredRegistry) RegisterLayeredPrompt(
 ) error {
 	// Validate layer
 	if !glr.isValidLayer(layer) {
-		return fmt.Errorf("invalid prompt layer: %s", layer)
+		return gerror.Newf(gerror.ErrCodeInvalidInput, "invalid prompt layer: %s", layer).
+			WithComponent("prompts").
+			WithOperation("RegisterLayeredPrompt").
+			WithDetails("layer", string(layer)).
+			WithDetails("identifier", identifier)
 	}
 	
 	// Set layer metadata
@@ -66,13 +72,21 @@ func (glr *GuildLayeredRegistry) RegisterLayeredPrompt(
 	// Marshal prompt data
 	data, err := json.Marshal(prompt)
 	if err != nil {
-		return fmt.Errorf("failed to marshal layered prompt: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal layered prompt").
+			WithComponent("prompts").
+			WithOperation("RegisterLayeredPrompt").
+			WithDetails("layer", string(layer)).
+			WithDetails("identifier", identifier)
 	}
 	
 	// Store in Guild Archives
 	ctx := context.Background() // TODO: Pass context through interface
 	if err := glr.store.SavePromptLayer(ctx, string(layer), identifier, data); err != nil {
-		return fmt.Errorf("failed to store layered prompt: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to store layered prompt").
+			WithComponent("prompts").
+			WithOperation("RegisterLayeredPrompt").
+			WithDetails("layer", string(layer)).
+			WithDetails("identifier", identifier)
 	}
 	
 	// Update cache
@@ -99,13 +113,21 @@ func (glr *GuildLayeredRegistry) GetLayeredPrompt(layer PromptLayer, identifier 
 	ctx := context.Background() // TODO: Pass context through interface
 	data, err := glr.store.GetPromptLayer(ctx, string(layer), identifier)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get layered prompt: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get layered prompt").
+			WithComponent("prompts").
+			WithOperation("GetLayeredPrompt").
+			WithDetails("layer", string(layer)).
+			WithDetails("identifier", identifier)
 	}
 	
 	// Unmarshal prompt
 	var prompt SystemPrompt
 	if err := json.Unmarshal(data, &prompt); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal layered prompt: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to unmarshal layered prompt").
+			WithComponent("prompts").
+			WithOperation("GetLayeredPrompt").
+			WithDetails("layer", string(layer)).
+			WithDetails("identifier", identifier)
 	}
 	
 	// Update cache
@@ -121,7 +143,10 @@ func (glr *GuildLayeredRegistry) ListLayeredPrompts(layer PromptLayer) ([]System
 	ctx := context.Background() // TODO: Pass context through interface
 	identifiers, err := glr.store.ListPromptLayers(ctx, string(layer))
 	if err != nil {
-		return nil, fmt.Errorf("failed to list layered prompts: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list layered prompts").
+			WithComponent("prompts").
+			WithOperation("ListLayeredPrompts").
+			WithDetails("layer", string(layer))
 	}
 	
 	var prompts []SystemPrompt
@@ -143,7 +168,11 @@ func (glr *GuildLayeredRegistry) DeleteLayeredPrompt(layer PromptLayer, identifi
 	
 	// Remove from Guild Archives
 	if err := glr.store.DeletePromptLayer(ctx, string(layer), identifier); err != nil {
-		return fmt.Errorf("failed to delete layered prompt: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete layered prompt").
+			WithComponent("prompts").
+			WithOperation("DeleteLayeredPrompt").
+			WithDetails("layer", string(layer)).
+			WithDetails("identifier", identifier)
 	}
 	
 	// Remove from cache
@@ -171,7 +200,10 @@ func (glr *GuildLayeredRegistry) GetDefaultPrompts(layer PromptLayer) ([]SystemP
 	case LayerTurn:
 		return nil, nil // Turn prompts are ephemeral
 	default:
-		return nil, fmt.Errorf("unknown layer: %s", layer)
+		return nil, gerror.Newf(gerror.ErrCodeInvalidInput, "unknown layer: %s", layer).
+			WithComponent("prompts").
+			WithOperation("GetDefaultPrompts").
+			WithDetails("layer", string(layer))
 	}
 }
 

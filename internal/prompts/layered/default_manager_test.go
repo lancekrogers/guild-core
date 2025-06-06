@@ -1,4 +1,4 @@
-package prompts_test
+package layered_test
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/internal/prompts/layered"
 )
 
 func TestDefaultManager(t *testing.T) {
@@ -16,7 +16,7 @@ func TestDefaultManager(t *testing.T) {
 	t.Run("GetSystemPrompt", func(t *testing.T) {
 		registry := newTestRegistry()
 		formatter := &testFormatter{}
-		manager := prompts.NewDefaultManager(registry, formatter)
+		manager := layered.NewDefaultManager(registry, formatter)
 
 		// Register prompts
 		err := registry.RegisterPrompt("manager", "web-app", "You are a web app Guild Master")
@@ -43,7 +43,7 @@ func TestDefaultManager(t *testing.T) {
 	t.Run("GetTemplate", func(t *testing.T) {
 		registry := newTestRegistry()
 		formatter := &testFormatter{}
-		manager := prompts.NewDefaultManager(registry, formatter)
+		manager := layered.NewDefaultManager(registry, formatter)
 
 		// Register template
 		err := registry.RegisterTemplate("task-format", "Task template content")
@@ -56,13 +56,13 @@ func TestDefaultManager(t *testing.T) {
 
 		// Test template not found
 		_, err = manager.GetTemplate(ctx, "unknown")
-		assert.ErrorIs(t, err, prompts.ErrTemplateNotFound)
+		assert.ErrorIs(t, err, layered.ErrTemplateNotFound)
 	})
 
 	t.Run("FormatContext", func(t *testing.T) {
 		registry := newTestRegistry()
 		formatter := &testFormatter{}
-		manager := prompts.NewDefaultManager(registry, formatter)
+		manager := layered.NewDefaultManager(registry, formatter)
 
 		testCtx := &testContext{
 			commissionID:    "test-001",
@@ -76,7 +76,7 @@ func TestDefaultManager(t *testing.T) {
 	})
 
 	t.Run("ListRoles", func(t *testing.T) {
-		manager := prompts.NewDefaultManager(nil, nil)
+		manager := layered.NewDefaultManager(nil, nil)
 
 		roles, err := manager.ListRoles(ctx)
 		require.NoError(t, err)
@@ -89,7 +89,7 @@ func TestDefaultManager(t *testing.T) {
 	})
 
 	t.Run("ListDomains", func(t *testing.T) {
-		manager := prompts.NewDefaultManager(nil, nil)
+		manager := layered.NewDefaultManager(nil, nil)
 
 		// Test manager domains
 		domains, err := manager.ListDomains(ctx, "manager")
@@ -113,7 +113,7 @@ func TestDefaultManager(t *testing.T) {
 	})
 
 	t.Run("NilRegistry", func(t *testing.T) {
-		manager := prompts.NewDefaultManager(nil, &testFormatter{})
+		manager := layered.NewDefaultManager(nil, &testFormatter{})
 
 		// Test that methods handle nil registry gracefully
 		_, err := manager.GetSystemPrompt(ctx, "manager", "web-app")
@@ -126,7 +126,7 @@ func TestDefaultManager(t *testing.T) {
 	})
 
 	t.Run("NilFormatter", func(t *testing.T) {
-		manager := prompts.NewDefaultManager(newTestRegistry(), nil)
+		manager := layered.NewDefaultManager(newTestRegistry(), nil)
 
 		testCtx := &testContext{}
 		_, err := manager.FormatContext(ctx, testCtx)
@@ -135,7 +135,7 @@ func TestDefaultManager(t *testing.T) {
 	})
 
 	t.Run("SetRegistry", func(t *testing.T) {
-		manager := prompts.NewDefaultManager(nil, nil)
+		manager := layered.NewDefaultManager(nil, nil)
 		registry := newTestRegistry()
 
 		// Initially should fail
@@ -153,7 +153,7 @@ func TestDefaultManager(t *testing.T) {
 	})
 
 	t.Run("SetFormatter", func(t *testing.T) {
-		manager := prompts.NewDefaultManager(nil, nil)
+		manager := layered.NewDefaultManager(nil, nil)
 		formatter := &testFormatter{}
 
 		// Initially should fail
@@ -175,7 +175,7 @@ func TestDefaultManagerConcurrency(t *testing.T) {
 	// Test that the manager is thread-safe
 	registry := newTestRegistry()
 	formatter := &testFormatter{}
-	manager := prompts.NewDefaultManager(registry, formatter)
+	manager := layered.NewDefaultManager(registry, formatter)
 
 	// Register some prompts
 	registry.RegisterPrompt("manager", "web-app", "Web app prompt")

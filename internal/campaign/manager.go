@@ -2,12 +2,12 @@ package campaign
 
 import (
 	"context"
-	"fmt"
 	"sync"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/commission"
-	"github.com/guild-ventures/guild-core/pkg/orchestrator"
+	"github.com/guild-ventures/guild-core/internal/commission"
+	"github.com/guild-ventures/guild-core/internal/orchestrator"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // manager implements the Manager interface
@@ -39,7 +39,7 @@ func NewManager(repo Repository, commissionMgr *commission.Manager, eventBus *or
 // Create creates a new campaign
 func (m *manager) Create(ctx context.Context, campaign *Campaign) error {
 	if campaign == nil {
-		return fmt.Errorf("campaign cannot be nil")
+		return gerror.New(gerror.InvalidArgument, "campaign", "create_campaign", "campaign cannot be nil")
 	}
 
 	// Set default status if not set
@@ -54,7 +54,7 @@ func (m *manager) Create(ctx context.Context, campaign *Campaign) error {
 
 	// Create campaign in repository
 	if err := m.repo.Create(ctx, campaign); err != nil {
-		return fmt.Errorf("failed to create campaign: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "campaign", "create_campaign", "failed to create campaign")
 	}
 
 	// Publish created event
@@ -82,13 +82,13 @@ func (m *manager) List(ctx context.Context) ([]*Campaign, error) {
 // Update modifies an existing campaign
 func (m *manager) Update(ctx context.Context, campaign *Campaign) error {
 	if campaign == nil {
-		return fmt.Errorf("campaign cannot be nil")
+		return gerror.New(gerror.InvalidArgument, "campaign", "create_campaign", "campaign cannot be nil")
 	}
 
 	// Get existing campaign to check for changes
 	existing, err := m.repo.Get(ctx, campaign.ID)
 	if err != nil {
-		return fmt.Errorf("failed to get existing campaign: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "campaign", "update_campaign", "failed to get existing campaign")
 	}
 
 	// Update progress if objectives changed
@@ -101,7 +101,7 @@ func (m *manager) Update(ctx context.Context, campaign *Campaign) error {
 
 	// Update campaign in repository
 	if err := m.repo.Update(ctx, campaign); err != nil {
-		return fmt.Errorf("failed to update campaign: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "campaign", "update_campaign", "failed to update campaign")
 	}
 
 	return nil
@@ -117,7 +117,7 @@ func (m *manager) Delete(ctx context.Context, id string) error {
 
 	// Don't delete active campaigns
 	if campaign.Status == CampaignStatusActive {
-		return fmt.Errorf("cannot delete active campaign")
+		return gerror.New(gerror.InvalidArgument, "campaign", "delete_campaign", "cannot delete active campaign")
 	}
 
 	return m.repo.Delete(ctx, id)
@@ -134,14 +134,14 @@ func (m *manager) AddObjective(ctx context.Context, campaignID, objectiveID stri
 	// Check if objective exists
 	if m.commissionMgr != nil {
 		if _, err := m.commissionMgr.GetCommission(ctx, objectiveID); err != nil {
-			return fmt.Errorf("objective %s not found: %w", objectiveID, err)
+			return gerror.Wrap(err, gerror.NotFound, "campaign", "add_objective", "objective %s not found", objectiveID)
 		}
 	}
 
 	// Check if objective already in campaign
 	for _, id := range campaign.Objectives {
 		if id == objectiveID {
-			return fmt.Errorf("objective %s already in campaign", objectiveID)
+			return gerror.New(gerror.AlreadyExists, "campaign", "add_objective", "objective %s already in campaign", objectiveID)
 		}
 	}
 
@@ -194,7 +194,7 @@ func (m *manager) RemoveObjective(ctx context.Context, campaignID, objectiveID s
 	}
 
 	if !found {
-		return fmt.Errorf("objective %s not found in campaign", objectiveID)
+		return gerror.New(gerror.NotFound, "campaign", "remove_objective", "objective %s not found in campaign", objectiveID)
 	}
 
 	campaign.Objectives = newObjectives
@@ -284,7 +284,7 @@ func (m *manager) transitionStatus(ctx context.Context, campaignID string, newSt
 
 	// Update campaign
 	if err := m.repo.Update(ctx, campaign); err != nil {
-		return fmt.Errorf("failed to update campaign after transition: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "campaign", "transition_state", "failed to update campaign after transition")
 	}
 
 	// Publish appropriate event

@@ -7,17 +7,16 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts"
-	"github.com/guild-ventures/guild-core/pkg/prompts/context"
+	"github.com/guild-ventures/guild-core/internal/prompts/layered/context"
 )
 
 // Test implementation of Context interface
 type testContext struct {
 	commissionID    string
 	commissionTitle string
-	currentTask     prompts.TaskContext
-	sections        []prompts.Section
-	relatedTasks    []prompts.TaskContext
+	currentTask     context.TaskContext
+	sections        []context.Section
+	relatedTasks    []context.TaskContext
 }
 
 func (c *testContext) GetCommissionID() string {
@@ -28,15 +27,15 @@ func (c *testContext) GetCommissionTitle() string {
 	return c.commissionTitle
 }
 
-func (c *testContext) GetCurrentTask() prompts.TaskContext {
+func (c *testContext) GetCurrentTask() context.TaskContext {
 	return c.currentTask
 }
 
-func (c *testContext) GetRelevantSections() []prompts.Section {
+func (c *testContext) GetRelevantSections() []context.Section {
 	return c.sections
 }
 
-func (c *testContext) GetRelatedTasks() []prompts.TaskContext {
+func (c *testContext) GetRelatedTasks() []context.TaskContext {
 	return c.relatedTasks
 }
 
@@ -48,7 +47,7 @@ func TestXMLFormatter(t *testing.T) {
 		ctx := &testContext{
 			commissionID:    "test-001",
 			commissionTitle: "Build Test System",
-			currentTask: prompts.TaskContext{
+			currentTask: context.TaskContext{
 				ID:            "TASK-001",
 				Title:         "Implement feature",
 				Description:   "Implement the test feature",
@@ -76,7 +75,7 @@ func TestXMLFormatter(t *testing.T) {
 		ctx := &testContext{
 			commissionID:    "test-002",
 			commissionTitle: "Complex System",
-			currentTask: prompts.TaskContext{
+			currentTask: context.TaskContext{
 				ID:           "TASK-002",
 				Title:        "Feature with deps",
 				Dependencies: []string{"TASK-001", "TASK-000"},
@@ -99,17 +98,17 @@ func TestXMLFormatter(t *testing.T) {
 		ctx := &testContext{
 			commissionID:    "test-003",
 			commissionTitle: "Documented System",
-			currentTask: prompts.TaskContext{
+			currentTask: context.TaskContext{
 				ID:    "TASK-003",
 				Title: "Implement from docs",
 			},
-			sections: []prompts.Section{
+			sections: []context.Section{
 				{
 					Level:   2,
 					Path:    "2.1",
 					Title:   "Authentication",
 					Content: "Build secure authentication system",
-					Tasks: []prompts.TaskContext{
+					Tasks: []context.TaskContext{
 						{ID: "AUTH-001", Title: "JWT implementation"},
 						{ID: "AUTH-002", Title: "OAuth integration"},
 					},
@@ -132,11 +131,11 @@ func TestXMLFormatter(t *testing.T) {
 		ctx := &testContext{
 			commissionID:    "test-004",
 			commissionTitle: "Connected System",
-			currentTask: prompts.TaskContext{
+			currentTask: context.TaskContext{
 				ID:    "TASK-004",
 				Title: "Connected task",
 			},
-			relatedTasks: []prompts.TaskContext{
+			relatedTasks: []context.TaskContext{
 				{
 					ID:           "TASK-005",
 					Title:        "Related feature",
@@ -163,7 +162,7 @@ func TestXMLFormatterMarkdown(t *testing.T) {
 		ctx := &testContext{
 			commissionID:    "test-md-001",
 			commissionTitle: "Markdown Test System",
-			currentTask: prompts.TaskContext{
+			currentTask: context.TaskContext{
 				ID:            "TASK-MD-001",
 				Title:         "Markdown task",
 				Description:   "A task to test markdown formatting",
@@ -173,7 +172,7 @@ func TestXMLFormatterMarkdown(t *testing.T) {
 				Dependencies:  []string{"TASK-MD-000"},
 				Capabilities:  []string{"frontend", "react"},
 			},
-			sections: []prompts.Section{
+			sections: []context.Section{
 				{
 					Level:   1,
 					Path:    "3",
@@ -185,13 +184,13 @@ func TestXMLFormatterMarkdown(t *testing.T) {
 					Path:    "3.1",
 					Title:   "Component Design",
 					Content: "Detailed component specifications.",
-					Tasks: []prompts.TaskContext{
+					Tasks: []context.TaskContext{
 						{ID: "UI-001", Title: "Create base components"},
 						{ID: "UI-002", Title: "Implement theme system"},
 					},
 				},
 			},
-			relatedTasks: []prompts.TaskContext{
+			relatedTasks: []context.TaskContext{
 				{
 					ID:           "TASK-MD-002",
 					Title:        "Setup testing framework",
@@ -240,7 +239,7 @@ func TestXMLFormatterMarkdown(t *testing.T) {
 		ctx := &testContext{
 			commissionID:    "min-001",
 			commissionTitle: "Minimal",
-			currentTask: prompts.TaskContext{
+			currentTask: context.TaskContext{
 				ID:    "MIN-001",
 				Title: "Simple task",
 			},
@@ -304,7 +303,7 @@ func TestDefaultFormatter(t *testing.T) {
 	ctx := &testContext{
 		commissionID:    "default-001",
 		commissionTitle: "Default Test",
-		currentTask: prompts.TaskContext{
+		currentTask: context.TaskContext{
 			ID:    "DEFAULT-001",
 			Title: "Test default formatter",
 		},
@@ -333,18 +332,18 @@ func BenchmarkXMLFormatting(b *testing.B) {
 	ctx := &testContext{
 		commissionID:    "bench-001",
 		commissionTitle: "Benchmark System",
-		currentTask: prompts.TaskContext{
+		currentTask: context.TaskContext{
 			ID:           "BENCH-001",
 			Title:        "Benchmark task",
 			Dependencies: []string{"DEP-1", "DEP-2", "DEP-3"},
 			Capabilities: []string{"cap1", "cap2", "cap3"},
 		},
-		sections: []prompts.Section{
+		sections: []context.Section{
 			{Level: 1, Path: "1", Title: "Section 1", Content: "Content 1"},
 			{Level: 2, Path: "1.1", Title: "Section 1.1", Content: "Content 1.1"},
 			{Level: 2, Path: "1.2", Title: "Section 1.2", Content: "Content 1.2"},
 		},
-		relatedTasks: []prompts.TaskContext{
+		relatedTasks: []context.TaskContext{
 			{ID: "REL-1", Title: "Related 1"},
 			{ID: "REL-2", Title: "Related 2"},
 		},
@@ -361,7 +360,7 @@ func BenchmarkMarkdownFormatting(b *testing.B) {
 	ctx := &testContext{
 		commissionID:    "bench-002",
 		commissionTitle: "Benchmark System",
-		currentTask: prompts.TaskContext{
+		currentTask: context.TaskContext{
 			ID:    "BENCH-002",
 			Title: "Benchmark task",
 		},

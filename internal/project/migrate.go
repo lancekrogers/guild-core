@@ -2,11 +2,12 @@ package project
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // MigrationOptions configures the migration behavior
@@ -37,35 +38,35 @@ func MigrateFromGlobal(ctx context.Context, projectPath string, globalPath strin
 
 	// Ensure project is initialized
 	if !IsInitialized(projectPath) {
-		return nil, fmt.Errorf("project not initialized at %s", projectPath)
+		return nil, gerror.New(gerror.InvalidArgument, "project", "migrate_from_global", "project not initialized at %s", projectPath)
 	}
 
 	// Get project context
 	projCtx, err := NewContext(projectPath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get project context: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "project", "migrate_from_global", "failed to get project context")
 	}
 
 	// Migrate corpus documents
 	if err := migrateCorpus(ctx, globalPath, projCtx, opts, result); err != nil {
-		return result, fmt.Errorf("failed to migrate corpus: %w", err)
+		return result, gerror.Wrap(err, gerror.Internal, "project", "migrate_from_global", "failed to migrate corpus")
 	}
 
 	// Migrate embeddings if requested
 	if opts.IncludeEmbeddings {
 		if err := migrateEmbeddings(ctx, globalPath, projCtx, opts, result); err != nil {
-			return result, fmt.Errorf("failed to migrate embeddings: %w", err)
+			return result, gerror.Wrap(err, gerror.Internal, "project", "migrate_from_global", "failed to migrate embeddings")
 		}
 	}
 
 	// Migrate agent configurations
 	if err := migrateAgents(ctx, globalPath, projCtx, opts, result); err != nil {
-		return result, fmt.Errorf("failed to migrate agents: %w", err)
+		return result, gerror.Wrap(err, gerror.Internal, "project", "migrate_from_global", "failed to migrate agents")
 	}
 
 	// Migrate objectives
 	if err := migrateObjectives(ctx, globalPath, projCtx, opts, result); err != nil {
-		return result, fmt.Errorf("failed to migrate objectives: %w", err)
+		return result, gerror.Wrap(err, gerror.Internal, "project", "migrate_from_global", "failed to migrate objectives")
 	}
 
 	return result, nil
@@ -114,7 +115,7 @@ func migrateDirectory(src, dst string, opts MigrationOptions, result *MigrationR
 	// Walk source directory
 	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			result.Errors = append(result.Errors, fmt.Errorf("error accessing %s: %w", path, err))
+			result.Errors = append(result.Errors, gerror.Wrap(err, gerror.Internal, "project", "migrate_directory", "error accessing %s", path))
 			return nil // Continue walking
 		}
 
@@ -126,7 +127,7 @@ func migrateDirectory(src, dst string, opts MigrationOptions, result *MigrationR
 		// Calculate destination path
 		relPath, err := filepath.Rel(src, path)
 		if err != nil {
-			result.Errors = append(result.Errors, fmt.Errorf("failed to get relative path for %s: %w", path, err))
+			result.Errors = append(result.Errors, gerror.Wrap(err, gerror.Internal, "project", "migrate_directory", "failed to get relative path for %s", path))
 			return nil
 		}
 
@@ -147,13 +148,13 @@ func migrateDirectory(src, dst string, opts MigrationOptions, result *MigrationR
 		// Create destination directory
 		dstDir := filepath.Dir(dstPath)
 		if err := os.MkdirAll(dstDir, 0755); err != nil {
-			result.Errors = append(result.Errors, fmt.Errorf("failed to create directory %s: %w", dstDir, err))
+			result.Errors = append(result.Errors, gerror.Wrap(err, gerror.Internal, "project", "migrate_directory", "failed to create directory %s", dstDir))
 			return nil
 		}
 
 		// Copy file
 		if err := copyFile(path, dstPath); err != nil {
-			result.Errors = append(result.Errors, fmt.Errorf("failed to copy %s to %s: %w", path, dstPath, err))
+			result.Errors = append(result.Errors, gerror.Wrap(err, gerror.Internal, "project", "migrate_directory", "failed to copy %s to %s", path, dstPath))
 			return nil
 		}
 
@@ -184,7 +185,7 @@ func copyFile(src, dst string) error {
 func GetGlobalGuildPath() (string, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return "", fmt.Errorf("failed to get home directory: %w", err)
+		return "", gerror.Wrap(err, gerror.Internal, "project", "get_global_guild_path", "failed to get home directory")
 	}
 
 	return filepath.Join(home, ".guild"), nil

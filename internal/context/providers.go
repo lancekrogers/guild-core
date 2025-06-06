@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // ProviderClient represents a context-aware LLM provider client
@@ -81,7 +83,7 @@ func CompleteWithProvider(ctx context.Context, providerName, prompt string) (str
 	// Get provider from context
 	provider, err := GetProviderFromContext(ctx, providerName)
 	if err != nil {
-		return "", fmt.Errorf("failed to get provider '%s': %w", providerName, err)
+		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get provider").WithComponent("context").WithOperation("CompleteWithProvider").WithDetails("provider_name", providerName)
 	}
 	
 	// Try to cast to our context-aware interface
@@ -96,20 +98,20 @@ func CompleteWithProvider(ctx context.Context, providerName, prompt string) (str
 		return llmClient.Complete(ctx, prompt)
 	}
 	
-	return "", fmt.Errorf("provider '%s' does not implement required completion interface", providerName)
+	return "", gerror.Newf(gerror.ErrCodeInvalidInput, "provider '%s' does not implement required completion interface", providerName).WithComponent("context").WithOperation("CompleteWithProvider")
 }
 
 // CompleteWithDefaultProvider performs a completion using the default provider from context
 func CompleteWithDefaultProvider(ctx context.Context, prompt string) (string, error) {
 	registry, err := GetRegistryProvider(ctx)
 	if err != nil {
-		return "", fmt.Errorf("failed to get registry from context: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("CompleteWithDefaultProvider")
 	}
 	
 	// Get default provider
 	provider, err := registry.Providers().GetDefaultProvider()
 	if err != nil {
-		return "", fmt.Errorf("failed to get default provider: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get default provider").WithComponent("context").WithOperation("CompleteWithDefaultProvider")
 	}
 	
 	// Try to cast to our context-aware interface
@@ -124,7 +126,7 @@ func CompleteWithDefaultProvider(ctx context.Context, prompt string) (string, er
 		return llmClient.Complete(ctx, prompt)
 	}
 	
-	return "", fmt.Errorf("default provider does not implement required completion interface")
+	return "", gerror.New(gerror.ErrCodeInvalidInput, "default provider does not implement required completion interface", nil).WithComponent("context").WithOperation("CompleteWithDefaultProvider")
 }
 
 // CreateCompletionWithProvider creates a detailed completion request
@@ -135,7 +137,7 @@ func CreateCompletionWithProvider(ctx context.Context, providerName string, req 
 	// Get provider from context
 	provider, err := GetProviderFromContext(ctx, providerName)
 	if err != nil {
-		return CompletionResponse{}, fmt.Errorf("failed to get provider '%s': %w", providerName, err)
+		return CompletionResponse{}, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get provider").WithComponent("context").WithOperation("CreateCompletionWithProvider").WithDetails("provider_name", providerName)
 	}
 	
 	// Try to cast to our context-aware interface
@@ -143,7 +145,7 @@ func CreateCompletionWithProvider(ctx context.Context, providerName string, req 
 		return contextProvider.CreateCompletion(ctx, req)
 	}
 	
-	return CompletionResponse{}, fmt.Errorf("provider '%s' does not implement context-aware completion interface", providerName)
+	return CompletionResponse{}, gerror.Newf(gerror.ErrCodeInvalidInput, "provider '%s' does not implement context-aware completion interface", providerName).WithComponent("context").WithOperation("CreateCompletionWithProvider")
 }
 
 // enhanceCompletionRequest adds context information to the completion request
@@ -185,13 +187,13 @@ func enhanceCompletionRequest(ctx context.Context, req CompletionRequest) Comple
 func SelectBestProvider(ctx context.Context, taskType string, requirements map[string]interface{}) (string, error) {
 	registry, err := GetRegistryProvider(ctx)
 	if err != nil {
-		return "", fmt.Errorf("failed to get registry from context: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("SelectBestProvider")
 	}
 	
 	// Get all available providers
 	providers := registry.Providers().ListProviders()
 	if len(providers) == 0 {
-		return "", fmt.Errorf("no providers available")
+		return "", gerror.New(gerror.ErrCodeNotFound, "no providers available", nil).WithComponent("context").WithOperation("SelectBestProvider")
 	}
 	
 	// Simple selection logic - in production this could be more sophisticated
@@ -246,7 +248,7 @@ func RouteToProvider(ctx context.Context, taskType, prompt string, requirements 
 	// Select best provider
 	providerName, err := SelectBestProvider(ctx, taskType, requirements)
 	if err != nil {
-		return "", fmt.Errorf("failed to select provider: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to select provider").WithComponent("context").WithOperation("RouteToProvider")
 	}
 	
 	// Create enhanced context

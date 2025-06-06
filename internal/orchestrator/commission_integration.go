@@ -10,12 +10,12 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/internal/kanban"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 	"github.com/guild-ventures/guild-core/pkg/registry"
-	"github.com/guild-ventures/guild-core/pkg/storage"
+	"github.com/guild-ventures/guild-core/internal/storage"
 )
 
 // CommissionIntegrationService coordinates the complete pipeline from commission to kanban tasks
@@ -30,8 +30,8 @@ type CommissionIntegrationService struct {
 	taskBridge            *manager.TaskBridge
 }
 
-// NewCommissionIntegrationService creates a new integration service with full wiring
-func NewCommissionIntegrationService(registry registry.ComponentRegistry) (*CommissionIntegrationService, error) {
+// newCommissionIntegrationService creates a new integration service with full wiring (private constructor)
+func newCommissionIntegrationService(registry registry.ComponentRegistry) (*CommissionIntegrationService, error) {
 	service := &CommissionIntegrationService{
 		registry: registry,
 	}
@@ -44,6 +44,11 @@ func NewCommissionIntegrationService(registry registry.ComponentRegistry) (*Comm
 	}
 
 	return service, nil
+}
+
+// DefaultCommissionIntegrationServiceFactory creates a commission integration service factory for registry use
+func DefaultCommissionIntegrationServiceFactory(registry registry.ComponentRegistry) (*CommissionIntegrationService, error) {
+	return newCommissionIntegrationService(registry)
 }
 
 // initializeFromRegistry sets up all components from the registry

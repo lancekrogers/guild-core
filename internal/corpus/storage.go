@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"gopkg.in/yaml.v3"
 )
 
@@ -34,39 +35,39 @@ const (
 )
 
 // ErrCorpusTooLarge is returned when a save would exceed the configured maximum size
-var ErrCorpusTooLarge = errors.New("corpus exceeds maximum configured size")
+var ErrCorpusTooLarge = gerror.New(gerror.ErrCodeResourceLimit, "corpus exceeds maximum configured size", nil).WithComponent("corpus")
 
 // ErrDocNotFound is returned when a document cannot be found
-var ErrDocNotFound = errors.New("document not found in corpus")
+var ErrDocNotFound = gerror.New(gerror.ErrCodeNotFound, "document not found in corpus", nil).WithComponent("corpus")
 
 // Ensure creates the corpus directory structure if it doesn't exist
 func Ensure(cfg Config) error {
 	if cfg.CorpusPath == "" {
-		return errors.New("corpus location not specified")
+		return gerror.New(gerror.ErrCodeValidation, "corpus location not specified", nil).WithComponent("corpus").WithOperation("Ensure")
 	}
 
 	// Create main corpus directory
 	if err := os.MkdirAll(cfg.CorpusPath, DefaultPerms); err != nil {
-		return fmt.Errorf("failed to create corpus directory: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create corpus directory").WithComponent("corpus").WithOperation("Ensure")
 	}
 
 	// Create graph directory
 	graphDir := filepath.Join(cfg.CorpusPath, GraphDirName)
 	if err := os.MkdirAll(graphDir, DefaultPerms); err != nil {
-		return fmt.Errorf("failed to create graph directory: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create graph directory").WithComponent("corpus").WithOperation("Ensure")
 	}
 
 	// Create view log directory
 	viewLogDir := filepath.Join(cfg.CorpusPath, ViewLogDirName)
 	if err := os.MkdirAll(viewLogDir, DefaultPerms); err != nil {
-		return fmt.Errorf("failed to create view log directory: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create view log directory").WithComponent("corpus").WithOperation("Ensure")
 	}
 
 	// If default category is specified, create that directory
 	if cfg.DefaultCategory != "" {
 		defaultDir := filepath.Join(cfg.CorpusPath, cfg.DefaultCategory)
 		if err := os.MkdirAll(defaultDir, DefaultPerms); err != nil {
-			return fmt.Errorf("failed to create default category directory: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create default category directory").WithComponent("corpus").WithOperation("Ensure")
 		}
 	}
 
@@ -76,7 +77,7 @@ func Ensure(cfg Config) error {
 // Save stores a CorpusDoc to the filesystem in markdown format with YAML frontmatter
 func Save(ctx context.Context, doc *CorpusDoc, cfg Config) error {
 	if doc == nil {
-		return errors.New("document cannot be nil")
+		return gerror.New(gerror.ErrCodeValidation, "document cannot be nil", nil).WithComponent("corpus").WithOperation("Save")
 	}
 
 	// Create the corpus directory structure if needed
@@ -96,7 +97,7 @@ func Save(ctx context.Context, doc *CorpusDoc, cfg Config) error {
 	// Ensure category directory exists
 	categoryDir := filepath.Join(cfg.CorpusPath, category)
 	if err := os.MkdirAll(categoryDir, DefaultPerms); err != nil {
-		return fmt.Errorf("failed to create category directory: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create category directory").WithComponent("corpus").WithOperation("Save")
 	}
 
 	// Create a sanitized filename based on the title
@@ -117,7 +118,7 @@ func Save(ctx context.Context, doc *CorpusDoc, cfg Config) error {
 	// Marshal metadata to YAML
 	yamlData, err := yaml.Marshal(metadata)
 	if err != nil {
-		return fmt.Errorf("failed to marshal frontmatter: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal frontmatter").WithComponent("corpus").WithOperation("Save")
 	}
 
 	// Format the document content with frontmatter
@@ -136,7 +137,7 @@ func Save(ctx context.Context, doc *CorpusDoc, cfg Config) error {
 
 	// Write the file
 	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
-		return fmt.Errorf("failed to write document: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write document").WithComponent("corpus").WithOperation("Save")
 	}
 
 	return nil
@@ -149,25 +150,25 @@ func Load(ctx context.Context, path string) (*CorpusDoc, error) {
 		if os.IsNotExist(err) {
 			return nil, ErrDocNotFound
 		}
-		return nil, fmt.Errorf("failed to access document: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to access document").WithComponent("corpus").WithOperation("Load")
 	}
 
 	// Read the file
 	content, err := os.ReadFile(path)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read document: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read document").WithComponent("corpus").WithOperation("Load")
 	}
 
 	// Split the content into frontmatter and body
 	parts := strings.Split(string(content), MetadataSeparator)
 	if len(parts) < 3 {
-		return nil, fmt.Errorf("invalid document format, missing frontmatter")
+		return nil, gerror.New(gerror.ErrCodeInvalidFormat, "invalid document format, missing frontmatter", nil).WithComponent("corpus").WithOperation("Load")
 	}
 
 	// Extract YAML frontmatter
 	var metadata Metadata
 	if err := yaml.Unmarshal([]byte(parts[1]), &metadata); err != nil {
-		return nil, fmt.Errorf("failed to parse frontmatter: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidFormat, "failed to parse frontmatter").WithComponent("corpus").WithOperation("Load")
 	}
 
 	// Parse author field (guildID:agentID)
@@ -198,7 +199,7 @@ func Load(ctx context.Context, path string) (*CorpusDoc, error) {
 // List returns all corpus documents
 func List(ctx context.Context, cfg Config) ([]string, error) {
 	if cfg.CorpusPath == "" {
-		return nil, errors.New("corpus location not specified")
+		return nil, gerror.New(gerror.ErrCodeValidation, "corpus location not specified", nil).WithComponent("corpus").WithOperation("List")
 	}
 
 	var docs []string
@@ -219,7 +220,7 @@ func List(ctx context.Context, cfg Config) ([]string, error) {
 	})
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to list corpus documents: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list corpus documents").WithComponent("corpus").WithOperation("List")
 	}
 
 	return docs, nil
@@ -228,7 +229,7 @@ func List(ctx context.Context, cfg Config) ([]string, error) {
 // ListByTag returns all corpus documents with a specific tag
 func ListByTag(ctx context.Context, cfg Config, tag string) ([]string, error) {
 	if cfg.CorpusPath == "" {
-		return nil, errors.New("corpus location not specified")
+		return nil, gerror.New(gerror.ErrCodeValidation, "corpus location not specified", nil).WithComponent("corpus").WithOperation("ListByTag")
 	}
 
 	var docs []string
@@ -260,11 +261,11 @@ func Delete(ctx context.Context, path string) error {
 		if os.IsNotExist(err) {
 			return ErrDocNotFound
 		}
-		return fmt.Errorf("failed to access document: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to access document").WithComponent("corpus").WithOperation("Delete")
 	}
 
 	if err := os.Remove(path); err != nil {
-		return fmt.Errorf("failed to delete document: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete document").WithComponent("corpus").WithOperation("Delete")
 	}
 
 	return nil
@@ -273,7 +274,7 @@ func Delete(ctx context.Context, path string) error {
 // GetSize returns the total size of the corpus in bytes
 func GetSize(cfg Config) (int64, error) {
 	if cfg.CorpusPath == "" {
-		return 0, errors.New("corpus location not specified")
+		return 0, gerror.New(gerror.ErrCodeValidation, "corpus location not specified", nil).WithComponent("corpus").WithOperation("GetSize")
 	}
 
 	var size int64
@@ -292,7 +293,7 @@ func GetSize(cfg Config) (int64, error) {
 	})
 
 	if err != nil {
-		return 0, fmt.Errorf("failed to calculate corpus size: %w", err)
+		return 0, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to calculate corpus size").WithComponent("corpus").WithOperation("GetSize")
 	}
 
 	return size, nil

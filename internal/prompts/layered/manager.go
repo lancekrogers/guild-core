@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // GuildLayeredManager implements LayeredManager interface for Guild prompt management
@@ -92,7 +94,11 @@ func (glm *GuildLayeredManager) GetPromptLayer(
 func (glm *GuildLayeredManager) SetPromptLayer(ctx context.Context, prompt SystemPrompt) error {
 	// Validate the prompt
 	if err := glm.validatePrompt(prompt); err != nil {
-		return fmt.Errorf("invalid prompt: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "invalid prompt").
+			WithComponent("prompts").
+			WithOperation("SetPromptLayer").
+			WithDetails("layer", string(prompt.Layer)).
+			WithDetails("artisan_id", prompt.ArtisanID)
 	}
 	
 	// Determine the appropriate identifier
@@ -100,7 +106,11 @@ func (glm *GuildLayeredManager) SetPromptLayer(ctx context.Context, prompt Syste
 	
 	// Store the prompt
 	if err := glm.registry.RegisterLayeredPrompt(prompt.Layer, identifier, prompt); err != nil {
-		return fmt.Errorf("failed to set prompt layer: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to set prompt layer").
+			WithComponent("prompts").
+			WithOperation("SetPromptLayer").
+			WithDetails("layer", string(prompt.Layer)).
+			WithDetails("identifier", identifier)
 	}
 	
 	// Invalidate relevant caches
@@ -116,7 +126,11 @@ func (glm *GuildLayeredManager) DeletePromptLayer(
 	identifier := glm.getLayerIdentifier(layer, artisanID, sessionID)
 	
 	if err := glm.registry.DeleteLayeredPrompt(layer, identifier); err != nil {
-		return fmt.Errorf("failed to delete prompt layer: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete prompt layer").
+			WithComponent("prompts").
+			WithOperation("DeletePromptLayer").
+			WithDetails("layer", string(layer)).
+			WithDetails("identifier", identifier)
 	}
 	
 	// Invalidate relevant caches
@@ -191,22 +205,35 @@ func (glm *GuildLayeredManager) getLayerIdentifier(layer PromptLayer, artisanID,
 // validatePrompt ensures the prompt is valid before storing
 func (glm *GuildLayeredManager) validatePrompt(prompt SystemPrompt) error {
 	if prompt.Layer == "" {
-		return fmt.Errorf("prompt layer is required")
+		return gerror.New(gerror.ErrCodeMissingRequired, "prompt layer is required", nil).
+			WithComponent("prompts").
+			WithOperation("validatePrompt")
 	}
 	
 	if prompt.Content == "" {
-		return fmt.Errorf("prompt content is required")
+		return gerror.New(gerror.ErrCodeMissingRequired, "prompt content is required", nil).
+			WithComponent("prompts").
+			WithOperation("validatePrompt").
+			WithDetails("layer", string(prompt.Layer))
 	}
 	
 	// Validate layer-specific requirements
 	switch prompt.Layer {
 	case LayerSession:
 		if prompt.SessionID == "" {
-			return fmt.Errorf("session ID is required for session layer prompts")
+			return gerror.New(gerror.ErrCodeMissingRequired, "session ID is required for session layer prompts", nil).
+				WithComponent("prompts").
+				WithOperation("validatePrompt").
+				WithDetails("layer", string(prompt.Layer))
 		}
 	case LayerTurn:
 		if prompt.ArtisanID == "" || prompt.SessionID == "" {
-			return fmt.Errorf("artisan ID and session ID are required for turn layer prompts")
+			return gerror.New(gerror.ErrCodeMissingRequired, "artisan ID and session ID are required for turn layer prompts", nil).
+				WithComponent("prompts").
+				WithOperation("validatePrompt").
+				WithDetails("layer", string(prompt.Layer)).
+				WithDetails("artisan_id", prompt.ArtisanID).
+				WithDetails("session_id", prompt.SessionID)
 		}
 	}
 	

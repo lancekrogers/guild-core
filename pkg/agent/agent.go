@@ -54,8 +54,8 @@ type WorkerAgent struct {
 	description  string
 }
 
-// NewWorkerAgent creates a new worker agent
-func NewWorkerAgent(id, name string, llmClient providers.LLMClient, 
+// newWorkerAgent creates a new worker agent (private constructor)
+func newWorkerAgent(id, name string, llmClient providers.LLMClient, 
 	memoryManager memory.ChainManager, 
 	toolRegistry tools.Registry, 
 	commissionManager commission.CommissionManager,
@@ -174,14 +174,14 @@ type ManagerAgent struct {
 	WorkerAgent
 }
 
-// NewManagerAgent creates a new manager agent
-func NewManagerAgent(id, name string, llmClient providers.LLMClient, 
+// newManagerAgent creates a new manager agent (private constructor)
+func newManagerAgent(id, name string, llmClient providers.LLMClient, 
 	memoryManager memory.ChainManager, 
 	toolRegistry tools.Registry, 
 	commissionManager commission.CommissionManager,
 	costManager CostManager) *ManagerAgent {
 	
-	worker := NewWorkerAgent(id, name, llmClient, memoryManager, toolRegistry, commissionManager, costManager)
+	worker := newWorkerAgent(id, name, llmClient, memoryManager, toolRegistry, commissionManager, costManager)
 	
 	return &ManagerAgent{
 		WorkerAgent: *worker,

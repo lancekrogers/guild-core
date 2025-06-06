@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	guildcontext "github.com/guild-ventures/guild-core/pkg/context"
+	guildcontext "github.com/guild-ventures/guild-core/internal/context"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
@@ -38,8 +38,8 @@ type AgentStatus struct {
 	Metadata       map[string]interface{} `json:"metadata"`        // additional status information
 }
 
-// NewContextAwareAgent creates a new context-aware agent
-func NewContextAwareAgent(id, name, agentType string, capabilities []string) *ContextAwareAgent {
+// newContextAwareAgent creates a new context-aware agent (private constructor)
+func newContextAwareAgent(id, name, agentType string, capabilities []string) *ContextAwareAgent {
 	return &ContextAwareAgent{
 		ID:           id,
 		Name:         name,

@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"gopkg.in/yaml.v3"
 )
 
@@ -106,23 +107,31 @@ func LoadGuildConfig(projectPath string) (*GuildConfig, error) {
 		if _, err := os.Stat(altPath); err == nil {
 			configPath = altPath
 		} else {
-			return nil, fmt.Errorf("guild configuration not found at %s", configPath)
+			return nil, gerror.Newf(gerror.ErrCodeNotFound, "guild configuration not found at %s", configPath).
+				WithComponent("GuildConfig").
+				WithOperation("LoadGuildConfig")
 		}
 	}
 
 	data, err := os.ReadFile(configPath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read guild config: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read guild config").
+			WithComponent("GuildConfig").
+			WithOperation("LoadGuildConfig")
 	}
 
 	var config GuildConfig
 	if err := yaml.Unmarshal(data, &config); err != nil {
-		return nil, fmt.Errorf("failed to parse guild config: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "failed to parse guild config").
+			WithComponent("GuildConfig").
+			WithOperation("LoadGuildConfig")
 	}
 
 	// Validate the configuration
 	if err := config.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid guild configuration: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "invalid guild configuration").
+			WithComponent("GuildConfig").
+			WithOperation("LoadGuildConfig")
 	}
 
 	return &config, nil
@@ -134,16 +143,22 @@ func SaveGuildConfig(projectPath string, config *GuildConfig) error {
 	
 	// Ensure directory exists
 	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
-		return fmt.Errorf("failed to create guild directory: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create guild directory").
+			WithComponent("GuildConfig").
+			WithOperation("SaveGuildConfig")
 	}
 
 	data, err := yaml.Marshal(config)
 	if err != nil {
-		return fmt.Errorf("failed to marshal guild config: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild config").
+			WithComponent("GuildConfig").
+			WithOperation("SaveGuildConfig")
 	}
 
 	if err := os.WriteFile(configPath, data, 0644); err != nil {
-		return fmt.Errorf("failed to write guild config: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
+			WithComponent("GuildConfig").
+			WithOperation("SaveGuildConfig")
 	}
 
 	return nil
@@ -152,11 +167,15 @@ func SaveGuildConfig(projectPath string, config *GuildConfig) error {
 // Validate validates the guild configuration
 func (g *GuildConfig) Validate() error {
 	if g.Name == "" {
-		return fmt.Errorf("guild name is required")
+		return gerror.New(gerror.ErrCodeValidation, "guild name is required", nil).
+			WithComponent("GuildConfig").
+			WithOperation("Validate")
 	}
 
 	if len(g.Agents) == 0 {
-		return fmt.Errorf("at least one agent must be configured")
+		return gerror.New(gerror.ErrCodeValidation, "at least one agent must be configured", nil).
+			WithComponent("GuildConfig").
+			WithOperation("Validate")
 	}
 
 	// Validate manager configuration
@@ -169,7 +188,9 @@ func (g *GuildConfig) Validate() error {
 			}
 		}
 		if !found {
-			return fmt.Errorf("default manager agent '%s' not found in agents list", g.Manager.Default)
+			return gerror.Newf(gerror.ErrCodeValidation, "default manager agent '%s' not found in agents list", g.Manager.Default).
+				WithComponent("GuildConfig").
+				WithOperation("Validate")
 		}
 	}
 
@@ -177,10 +198,14 @@ func (g *GuildConfig) Validate() error {
 	agentIDs := make(map[string]bool)
 	for i, agent := range g.Agents {
 		if err := agent.Validate(); err != nil {
-			return fmt.Errorf("agent[%d] validation failed: %w", i, err)
+			return gerror.Wrapf(err, gerror.ErrCodeValidation, "agent[%d] validation failed", i).
+				WithComponent("GuildConfig").
+				WithOperation("Validate")
 		}
 		if agentIDs[agent.ID] {
-			return fmt.Errorf("duplicate agent ID: %s", agent.ID)
+			return gerror.Newf(gerror.ErrCodeValidation, "duplicate agent ID: %s", agent.ID).
+				WithComponent("GuildConfig").
+				WithOperation("Validate")
 		}
 		agentIDs[agent.ID] = true
 	}
@@ -191,20 +216,30 @@ func (g *GuildConfig) Validate() error {
 // Validate validates an agent configuration
 func (a *AgentConfig) Validate() error {
 	if a.ID == "" {
-		return fmt.Errorf("agent ID is required")
+		return gerror.New(gerror.ErrCodeValidation, "agent ID is required", nil).
+			WithComponent("AgentConfig").
+			WithOperation("Validate")
 	}
 	if a.Name == "" {
-		return fmt.Errorf("agent name is required")
+		return gerror.New(gerror.ErrCodeValidation, "agent name is required", nil).
+			WithComponent("AgentConfig").
+			WithOperation("Validate")
 	}
 	if a.Type == "" {
-		return fmt.Errorf("agent type is required")
+		return gerror.New(gerror.ErrCodeValidation, "agent type is required", nil).
+			WithComponent("AgentConfig").
+			WithOperation("Validate")
 	}
 	if a.Provider == "" {
-		return fmt.Errorf("agent provider is required")
+		return gerror.New(gerror.ErrCodeValidation, "agent provider is required", nil).
+			WithComponent("AgentConfig").
+			WithOperation("Validate")
 	}
 	// Model is required unless this is a tool-only agent (cost magnitude 0)
 	if a.Model == "" && a.CostMagnitude != 0 {
-		return fmt.Errorf("agent model is required (except for tool-only agents with cost_magnitude: 0)")
+		return gerror.New(gerror.ErrCodeValidation, "agent model is required (except for tool-only agents with cost_magnitude: 0)", nil).
+			WithComponent("AgentConfig").
+			WithOperation("Validate")
 	}
 	
 	// Validate type
@@ -214,12 +249,16 @@ func (a *AgentConfig) Validate() error {
 		"specialist": true,
 	}
 	if !validTypes[a.Type] {
-		return fmt.Errorf("invalid agent type: %s (must be manager, worker, or specialist)", a.Type)
+		return gerror.Newf(gerror.ErrCodeValidation, "invalid agent type: %s (must be manager, worker, or specialist)", a.Type).
+			WithComponent("AgentConfig").
+			WithOperation("Validate")
 	}
 
 	// Validate capabilities
 	if len(a.Capabilities) == 0 {
-		return fmt.Errorf("agent must have at least one capability")
+		return gerror.New(gerror.ErrCodeValidation, "agent must have at least one capability", nil).
+			WithComponent("AgentConfig").
+			WithOperation("Validate")
 	}
 
 	// Validate cost magnitude (Fibonacci scale)
@@ -232,7 +271,9 @@ func (a *AgentConfig) Validate() error {
 			8: true, // Most expensive models
 		}
 		if !validCosts[a.CostMagnitude] {
-			return fmt.Errorf("invalid cost_magnitude: %d (must be 0 for bash tools, or Fibonacci values: 1,2,3,5,8)", a.CostMagnitude)
+			return gerror.Newf(gerror.ErrCodeValidation, "invalid cost_magnitude: %d (must be 0 for bash tools, or Fibonacci values: 1,2,3,5,8)", a.CostMagnitude).
+				WithComponent("AgentConfig").
+				WithOperation("Validate")
 		}
 	}
 
@@ -243,13 +284,17 @@ func (a *AgentConfig) Validate() error {
 			"summarize":  true,
 		}
 		if !validResets[a.ContextReset] {
-			return fmt.Errorf("invalid context_reset: %s (must be 'truncate' or 'summarize')", a.ContextReset)
+			return gerror.Newf(gerror.ErrCodeValidation, "invalid context_reset: %s (must be 'truncate' or 'summarize')", a.ContextReset).
+				WithComponent("AgentConfig").
+				WithOperation("Validate")
 		}
 	}
 
 	// Validate context window
 	if a.ContextWindow < 0 {
-		return fmt.Errorf("context_window must be non-negative (0 for auto-detection)")
+		return gerror.New(gerror.ErrCodeValidation, "context_window must be non-negative (0 for auto-detection)", nil).
+			WithComponent("AgentConfig").
+			WithOperation("Validate")
 	}
 
 	return nil
@@ -351,7 +396,9 @@ func (g *GuildConfig) GetManagerAgent() (*AgentConfig, error) {
 		if len(g.Agents) > 0 {
 			return &g.Agents[0], nil
 		}
-		return nil, fmt.Errorf("no manager agent configured")
+		return nil, gerror.New(gerror.ErrCodeValidation, "no manager agent configured", nil).
+			WithComponent("GuildConfig").
+			WithOperation("GetManagerAgent")
 	}
 
 	// Find specified manager
@@ -370,7 +417,9 @@ func (g *GuildConfig) GetManagerAgent() (*AgentConfig, error) {
 		}
 	}
 
-	return nil, fmt.Errorf("manager agent '%s' not found", managerID)
+	return nil, gerror.Newf(gerror.ErrCodeNotFound, "manager agent '%s' not found", managerID).
+		WithComponent("GuildConfig").
+		WithOperation("GetManagerAgent")
 }
 
 // GetAgentByCapability returns agents that have a specific capability
@@ -394,7 +443,9 @@ func (g *GuildConfig) GetAgentByID(id string) (*AgentConfig, error) {
 			return &agent, nil
 		}
 	}
-	return nil, fmt.Errorf("agent with ID '%s' not found", id)
+	return nil, gerror.Newf(gerror.ErrCodeNotFound, "agent with ID '%s' not found", id).
+		WithComponent("GuildConfig").
+		WithOperation("GetAgentByID")
 }
 
 // HasCapability checks if an agent has a specific capability

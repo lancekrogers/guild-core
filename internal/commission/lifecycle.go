@@ -8,6 +8,8 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // LifecycleManager handles the objective lifecycle operations
@@ -19,8 +21,8 @@ type LifecycleManager struct {
 	guildReadyFile  string
 }
 
-// NewLifecycleManager creates a new lifecycle manager
-func NewLifecycleManager(manager *Manager, basePath string) *LifecycleManager {
+// newLifecycleManager creates a new lifecycle manager (private constructor)
+func newLifecycleManager(manager *Manager, basePath string) *LifecycleManager {
 	// If basePath is empty, default to current directory
 	if basePath == "" {
 		var err error
@@ -40,11 +42,16 @@ func NewLifecycleManager(manager *Manager, basePath string) *LifecycleManager {
 	}
 }
 
+// DefaultLifecycleManagerFactory creates a lifecycle manager factory for registry use
+func DefaultLifecycleManagerFactory(manager *Manager, basePath string) *LifecycleManager {
+	return newLifecycleManager(manager, basePath)
+}
+
 // CreateObjectiveFromDescription creates a new objective from a natural language description
 func (l *LifecycleManager) CreateObjectiveFromDescription(ctx context.Context, description string) (*Commission, error) {
 	// First, ensure objectives directory exists
 	if err := os.MkdirAll(l.objectivesPath, 0755); err != nil {
-		return nil, fmt.Errorf("failed to create objectives directory: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create objectives directory").WithComponent("commission").WithOperation("CreateObjectiveFromDescription")
 	}
 
 	// Create a new objective with a title derived from the description
@@ -63,7 +70,7 @@ func (l *LifecycleManager) CreateObjectiveFromDescription(ctx context.Context, d
 	
 	// Write to file
 	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
-		return nil, fmt.Errorf("failed to write objective file: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write objective file").WithComponent("commission").WithOperation("CreateObjectiveFromDescription")
 	}
 
 	// Save to manager
@@ -71,7 +78,7 @@ func (l *LifecycleManager) CreateObjectiveFromDescription(ctx context.Context, d
 	obj.Content = content
 	obj.CalculateCompletion()
 	if err := l.manager.SaveObjective(ctx, obj); err != nil {
-		return nil, fmt.Errorf("failed to save objective: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save objective").WithComponent("commission").WithOperation("CreateObjectiveFromDescription")
 	}
 
 	return obj, nil
@@ -82,7 +89,7 @@ func (l *LifecycleManager) AddContext(ctx context.Context, objectiveID, context 
 	// Get the objective
 	obj, err := l.manager.GetObjective(ctx, objectiveID)
 	if err != nil {
-		return fmt.Errorf("failed to get objective: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get objective").WithComponent("commission").WithOperation("AddContext")
 	}
 
 	// Parse the context for any document references
@@ -121,12 +128,12 @@ func (l *LifecycleManager) AddContext(ctx context.Context, objectiveID, context 
 	
 	// Save changes to file
 	if err := os.WriteFile(obj.FilePath, []byte(content), 0644); err != nil {
-		return fmt.Errorf("failed to update objective file: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update objective file").WithComponent("commission").WithOperation("AddContext")
 	}
 
 	// Save to manager
 	if err := l.manager.SaveObjective(ctx, obj); err != nil {
-		return fmt.Errorf("failed to save objective: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save objective").WithComponent("commission").WithOperation("AddContext")
 	}
 
 	return nil
@@ -137,7 +144,7 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, objecti
 	// Get the objective
 	obj, err := l.manager.GetObjective(ctx, objectiveID)
 	if err != nil {
-		return fmt.Errorf("failed to get objective: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get objective").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
 
 	// Create project directory using objective title
@@ -149,11 +156,11 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, objecti
 	specsDir := filepath.Join(projectDir, "specs")
 	
 	if err := os.MkdirAll(aiDocsDir, 0755); err != nil {
-		return fmt.Errorf("failed to create ai_docs directory: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create ai_docs directory").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
 	
 	if err := os.MkdirAll(specsDir, 0755); err != nil {
-		return fmt.Errorf("failed to create specs directory: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create specs directory").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
 
 	// TODO: In a real implementation, this would generate actual ai_docs and specs
@@ -168,7 +175,7 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, objecti
 		obj.Description)
 	
 	if err := os.WriteFile(aiDocsReadme, []byte(aiDocsContent), 0644); err != nil {
-		return fmt.Errorf("failed to write ai_docs README: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write ai_docs README").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
 
 	// Create README.md in specs
@@ -183,7 +190,7 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, objecti
 	}
 	
 	if err := os.WriteFile(specsReadme, []byte(specsContent), 0644); err != nil {
-		return fmt.Errorf("failed to write specs README: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write specs README").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
 
 	// Update objective with references to the new files
@@ -197,7 +204,7 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, objecti
 
 	// Save to manager
 	if err := l.manager.SaveObjective(ctx, obj); err != nil {
-		return fmt.Errorf("failed to save objective: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save objective").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
 
 	return nil
@@ -208,12 +215,12 @@ func (l *LifecycleManager) MarkObjectiveReady(ctx context.Context, objectiveID s
 	// Get the objective
 	obj, err := l.manager.GetObjective(ctx, objectiveID)
 	if err != nil {
-		return fmt.Errorf("failed to get objective: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get objective").WithComponent("commission").WithOperation("MarkObjectiveReady")
 	}
 
 	// Check if the objective has been processed (has ai_docs and specs)
 	if len(obj.AIDocs) == 0 || len(obj.Specs) == 0 {
-		return fmt.Errorf("objective must have generated ai_docs and specs before being marked as ready")
+		return gerror.New(gerror.ErrCodeValidation, "objective must have generated ai_docs and specs before being marked as ready", nil).WithComponent("commission").WithOperation("MarkObjectiveReady")
 	}
 
 	// Update status
@@ -229,12 +236,12 @@ func (l *LifecycleManager) MarkObjectiveReady(ctx context.Context, objectiveID s
 	// Write current time to the ready file
 	readyContent := fmt.Sprintf("Objective marked ready at: %s\n", time.Now().Format(time.RFC3339))
 	if err := os.WriteFile(readyFile, []byte(readyContent), 0644); err != nil {
-		return fmt.Errorf("failed to create ready file: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create ready file").WithComponent("commission").WithOperation("MarkObjectiveReady")
 	}
 
 	// Save to manager
 	if err := l.manager.SaveObjective(ctx, obj); err != nil {
-		return fmt.Errorf("failed to save objective: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save objective").WithComponent("commission").WithOperation("MarkObjectiveReady")
 	}
 
 	return nil
@@ -245,12 +252,12 @@ func (l *LifecycleManager) MarkObjectiveImplementing(ctx context.Context, object
 	// Get the objective
 	obj, err := l.manager.GetObjective(ctx, objectiveID)
 	if err != nil {
-		return fmt.Errorf("failed to get objective: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get objective").WithComponent("commission").WithOperation("MarkObjectiveImplementing")
 	}
 
 	// Check if the objective is ready
 	if obj.Status != StatusReady {
-		return fmt.Errorf("objective must be ready before being marked as implementing")
+		return gerror.New(gerror.ErrCodeValidation, "objective must be ready before being marked as implementing", nil).WithComponent("commission").WithOperation("MarkObjectiveImplementing")
 	}
 
 	// Update status
@@ -259,7 +266,7 @@ func (l *LifecycleManager) MarkObjectiveImplementing(ctx context.Context, object
 
 	// Save to manager
 	if err := l.manager.SaveObjective(ctx, obj); err != nil {
-		return fmt.Errorf("failed to save objective: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save objective").WithComponent("commission").WithOperation("MarkObjectiveImplementing")
 	}
 
 	return nil
@@ -270,7 +277,7 @@ func (l *LifecycleManager) MarkObjectiveCompleted(ctx context.Context, objective
 	// Get the objective
 	obj, err := l.manager.GetObjective(ctx, objectiveID)
 	if err != nil {
-		return fmt.Errorf("failed to get objective: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get objective").WithComponent("commission").WithOperation("MarkObjectiveCompleted")
 	}
 
 	// Update status
@@ -287,17 +294,17 @@ func (l *LifecycleManager) MarkObjectiveCompleted(ctx context.Context, objective
 	completionContent := fmt.Sprintf("Objective completed at: %s\n", time.Now().Format(time.RFC3339))
 	f, err := os.OpenFile(readyFile, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
-		return fmt.Errorf("failed to open ready file: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to open ready file").WithComponent("commission").WithOperation("MarkObjectiveCompleted")
 	}
 	defer f.Close()
 	
 	if _, err := f.WriteString(completionContent); err != nil {
-		return fmt.Errorf("failed to update ready file: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update ready file").WithComponent("commission").WithOperation("MarkObjectiveCompleted")
 	}
 
 	// Save to manager
 	if err := l.manager.SaveObjective(ctx, obj); err != nil {
-		return fmt.Errorf("failed to save objective: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save objective").WithComponent("commission").WithOperation("MarkObjectiveCompleted")
 	}
 
 	return nil

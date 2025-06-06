@@ -10,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/internal/kanban"
 	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/registry"

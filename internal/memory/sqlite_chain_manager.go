@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/storage"
+	"github.com/guild-ventures/guild-core/internal/storage"
 )
 
 // sqliteChainManager implements ChainManager using SQLite storage

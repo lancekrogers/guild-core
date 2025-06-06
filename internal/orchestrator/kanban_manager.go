@@ -4,7 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/internal/kanban"
 )
 
 // defaultKanbanManager implements KanbanManager using the kanban.Board
@@ -62,7 +63,9 @@ func (m *defaultKanbanManager) ListTasksByStatus(ctx context.Context, boardID st
 func (m *defaultKanbanManager) UpdateTaskStatus(ctx context.Context, taskID, status, assignee, comment string) error {
 	task, err := m.board.GetTask(ctx, taskID)
 	if err != nil {
-		return fmt.Errorf("failed to get task: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to get task").
+			WithComponent("orchestrator").
+			WithOperation("UpdateTaskStatus")
 	}
 
 	// Parse status string to TaskStatus
@@ -79,7 +82,10 @@ func (m *defaultKanbanManager) UpdateTaskStatus(ctx context.Context, taskID, sta
 	case "blocked":
 		taskStatus = kanban.StatusBlocked
 	default:
-		return fmt.Errorf("invalid status: %s", status)
+		return gerror.New(gerror.ErrCodeValidation, "invalid status", nil).
+			WithComponent("orchestrator").
+			WithOperation("UpdateTaskStatus").
+			WithDetails("status", status)
 	}
 
 	task.Status = taskStatus

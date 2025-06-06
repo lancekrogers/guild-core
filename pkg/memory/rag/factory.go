@@ -8,14 +8,14 @@ import (
 
 // Factory creates RAG components
 type Factory struct {
-	retriever *Retriever
+	retriever RetrieverInterface
 	embedder  vector.Embedder
 }
 
-// NewFactory creates a new RAG factory
-func NewFactory(ctx context.Context, embedder vector.Embedder, config Config) (*Factory, error) {
+// newFactory creates a new RAG factory (private constructor)
+func newFactory(ctx context.Context, embedder vector.Embedder, config Config) (*Factory, error) {
 	// Create retriever
-	retriever, err := NewRetriever(ctx, embedder, config)
+	retriever, err := newRetriever(ctx, embedder, config)
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func NewFactory(ctx context.Context, embedder vector.Embedder, config Config) (*
 }
 
 // GetRetriever returns the retriever
-func (f *Factory) GetRetriever() *Retriever {
+func (f *Factory) GetRetriever() RetrieverInterface {
 	return f.retriever
 }
 
@@ -45,4 +45,9 @@ func (f *Factory) Close() error {
 		return f.retriever.Close()
 	}
 	return nil
+}
+
+// DefaultFactoryFactory creates a factory for registry use
+func DefaultFactoryFactory(ctx context.Context, embedder vector.Embedder, config Config) (FactoryInterface, error) {
+	return newFactory(ctx, embedder, config)
 }

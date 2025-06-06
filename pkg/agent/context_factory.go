@@ -13,8 +13,8 @@ type ContextAgentFactory struct {
 	// Configuration for agent creation
 }
 
-// NewContextAgentFactory creates a new context-aware agent factory
-func NewContextAgentFactory() *ContextAgentFactory {
+// newContextAgentFactory creates a new context-aware agent factory (private constructor)
+func newContextAgentFactory() *ContextAgentFactory {
 	return &ContextAgentFactory{}
 }
 
@@ -44,11 +44,11 @@ func (f *ContextAgentFactory) CreateAgent(ctx context.Context, config AgentConfi
 	
 	switch config.Type {
 	case "worker", "":
-		agent = NewContextAwareAgent(config.ID, config.Name, "worker", config.Capabilities)
+		agent = newContextAwareAgent(config.ID, config.Name, "worker", config.Capabilities)
 	case "manager":
-		agent = NewContextAwareAgent(config.ID, config.Name, "manager", config.Capabilities)
+		agent = newContextAwareAgent(config.ID, config.Name, "manager", config.Capabilities)
 	case "specialist":
-		agent = NewContextAwareAgent(config.ID, config.Name, "specialist", config.Capabilities)
+		agent = newContextAwareAgent(config.ID, config.Name, "specialist", config.Capabilities)
 	default:
 		return nil, gerror.Newf(gerror.ErrCodeValidation, "unknown agent type: %s", config.Type).
 			WithComponent("agent").
@@ -273,4 +273,9 @@ func (f *ContextAgentFactory) CreateDefaultAgents(ctx context.Context) error {
 	}
 	
 	return nil
+}
+
+// DefaultContextAgentFactory creates a context-aware agent factory for registry use
+func DefaultContextAgentFactory() *ContextAgentFactory {
+	return newContextAgentFactory()
 }

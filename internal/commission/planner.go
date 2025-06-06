@@ -2,7 +2,8 @@ package commission
 
 import (
 	"context"
-	"fmt"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // Planner manages the planning process for objectives
@@ -12,13 +13,18 @@ type Planner struct {
 	session         *PlanningSession
 }
 
-// NewPlanner creates a new objective planner
-func NewPlanner(manager *Manager, lifecycleManager *LifecycleManager) *Planner {
+// newPlanner creates a new objective planner (private constructor)
+func newPlanner(manager *Manager, lifecycleManager *LifecycleManager) *Planner {
 	return &Planner{
 		manager:         manager,
 		lifecycleManager: lifecycleManager,
-		session:         NewPlanningSession(),
+		session:         newPlanningSession(),
 	}
+}
+
+// DefaultPlannerFactory creates a planner factory for registry use
+func DefaultPlannerFactory(manager *Manager, lifecycleManager *LifecycleManager) *Planner {
+	return newPlanner(manager, lifecycleManager)
 }
 
 // GetSession returns the current planning session
@@ -31,7 +37,7 @@ func (p *Planner) SetCommission(ctx context.Context, commissionID string) error 
 	// Get the commission
 	obj, err := p.manager.GetCommission(ctx, commissionID)
 	if err != nil {
-		return fmt.Errorf("failed to get commission: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "commission", "set_commission", "failed to get commission")
 	}
 
 	// Create a new session with this commission
@@ -47,7 +53,7 @@ func (p *Planner) CreateObjective(ctx context.Context, description string) error
 	// Create objective via lifecycle manager
 	obj, err := p.lifecycleManager.CreateObjectiveFromDescription(ctx, description)
 	if err != nil {
-		return fmt.Errorf("failed to create objective: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "commission", "create_objective", "failed to create objective")
 	}
 
 	// Set the objective in the session
@@ -61,18 +67,18 @@ func (p *Planner) CreateObjective(ctx context.Context, description string) error
 // AddContext adds context to the current objective
 func (p *Planner) AddContext(ctx context.Context, contextText string) error {
 	if p.session.Commission == nil {
-		return fmt.Errorf("no objective set in the planning session")
+		return gerror.New(gerror.InvalidArgument, "commission", "add_context", "no objective set in the planning session")
 	}
 
 	// Add context via lifecycle manager
 	if err := p.lifecycleManager.AddContext(ctx, p.session.Commission.ID, contextText); err != nil {
-		return fmt.Errorf("failed to add context: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "commission", "add_context", "failed to add context")
 	}
 
 	// Refresh the objective
 	obj, err := p.manager.GetObjective(ctx, p.session.Commission.ID)
 	if err != nil {
-		return fmt.Errorf("failed to refresh objective: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "commission", "refresh_objective", "failed to refresh objective")
 	}
 
 	// Update the session
@@ -86,18 +92,18 @@ func (p *Planner) AddContext(ctx context.Context, contextText string) error {
 // Regenerate regenerates documents for the current objective
 func (p *Planner) Regenerate(ctx context.Context) error {
 	if p.session.Commission == nil {
-		return fmt.Errorf("no objective set in the planning session")
+		return gerror.New(gerror.InvalidArgument, "commission", "add_context", "no objective set in the planning session")
 	}
 
 	// Generate project structure via lifecycle manager
 	if err := p.lifecycleManager.GenerateProjectStructure(ctx, p.session.Commission.ID); err != nil {
-		return fmt.Errorf("failed to regenerate documents: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "commission", "regenerate_objective", "failed to regenerate documents")
 	}
 
 	// Refresh the objective
 	obj, err := p.manager.GetObjective(ctx, p.session.Commission.ID)
 	if err != nil {
-		return fmt.Errorf("failed to refresh objective: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "commission", "refresh_objective", "failed to refresh objective")
 	}
 
 	// Update the session
@@ -111,18 +117,18 @@ func (p *Planner) Regenerate(ctx context.Context) error {
 // MarkReady marks the current objective as ready
 func (p *Planner) MarkReady(ctx context.Context) error {
 	if p.session.Commission == nil {
-		return fmt.Errorf("no objective set in the planning session")
+		return gerror.New(gerror.InvalidArgument, "commission", "add_context", "no objective set in the planning session")
 	}
 
 	// Mark as ready via lifecycle manager
 	if err := p.lifecycleManager.MarkObjectiveReady(ctx, p.session.Commission.ID); err != nil {
-		return fmt.Errorf("failed to mark objective as ready: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "commission", "finalize_objective", "failed to mark objective as ready")
 	}
 
 	// Refresh the objective
 	obj, err := p.manager.GetObjective(ctx, p.session.Commission.ID)
 	if err != nil {
-		return fmt.Errorf("failed to refresh objective: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "commission", "refresh_objective", "failed to refresh objective")
 	}
 
 	// Update the session
@@ -136,7 +142,7 @@ func (p *Planner) MarkReady(ctx context.Context) error {
 // GetSuggestions gets improvement suggestions for the objective
 func (p *Planner) GetSuggestions(ctx context.Context) (string, error) {
 	if p.session.Commission == nil {
-		return "", fmt.Errorf("no objective set in the planning session")
+		return "", gerror.New(gerror.InvalidArgument, "commission", "get_objective_status", "no objective set in the planning session")
 	}
 
 	// In a real implementation, this would use an LLM to generate suggestions
@@ -160,7 +166,7 @@ func (p *Planner) CreateTaskPlan(ctx context.Context, objectiveID string) ([]Tas
 	// Get the objective
 	obj, err := p.manager.GetObjective(ctx, objectiveID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get objective: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "commission", "get_all_objectives", "failed to get objective")
 	}
 
 	// In a real implementation, this would use an LLM to generate tasks

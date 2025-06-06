@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/internal/kanban"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 	"github.com/guild-ventures/guild-core/tools/fs"
 	"github.com/guild-ventures/guild-core/tools/shell"

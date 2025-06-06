@@ -14,10 +14,10 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/campaign"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/internal/kanban"
+	"github.com/guild-ventures/guild-core/internal/commission"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/orchestrator"
+	"github.com/guild-ventures/guild-core/internal/orchestrator"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )

@@ -1,4 +1,4 @@
-package prompts_test
+package layered_test
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/internal/prompts/layered"
 )
 
 // mockManagerWithFormatter implements both Manager and Formatter interfaces
@@ -28,7 +28,7 @@ func (m *mockManagerWithFormatter) GetTemplate(ctx context.Context, templateName
 	return args.String(0), args.Error(1)
 }
 
-func (m *mockManagerWithFormatter) FormatContext(ctx context.Context, context prompts.Context) (string, error) {
+func (m *mockManagerWithFormatter) FormatContext(ctx context.Context, context layered.Context) (string, error) {
 	args := m.Called(ctx, context)
 	return args.String(0), args.Error(1)
 }
@@ -44,12 +44,12 @@ func (m *mockManagerWithFormatter) ListDomains(ctx context.Context, role string)
 }
 
 // Formatter interface methods
-func (m *mockManagerWithFormatter) FormatAsXML(ctx prompts.Context) (string, error) {
+func (m *mockManagerWithFormatter) FormatAsXML(ctx layered.Context) (string, error) {
 	args := m.Called(ctx)
 	return args.String(0), args.Error(1)
 }
 
-func (m *mockManagerWithFormatter) FormatAsMarkdown(ctx prompts.Context) (string, error) {
+func (m *mockManagerWithFormatter) FormatAsMarkdown(ctx layered.Context) (string, error) {
 	args := m.Called(ctx)
 	return args.String(0), args.Error(1)
 }
@@ -74,7 +74,7 @@ func (m *mockLayeredManager) GetTemplate(ctx context.Context, templateName strin
 	return args.String(0), args.Error(1)
 }
 
-func (m *mockLayeredManager) FormatContext(ctx context.Context, context prompts.Context) (string, error) {
+func (m *mockLayeredManager) FormatContext(ctx context.Context, context layered.Context) (string, error) {
 	args := m.Called(ctx, context)
 	return args.String(0), args.Error(1)
 }
@@ -89,29 +89,29 @@ func (m *mockLayeredManager) ListDomains(ctx context.Context, role string) ([]st
 	return args.Get(0).([]string), args.Error(1)
 }
 
-func (m *mockLayeredManager) BuildLayeredPrompt(ctx context.Context, artisanID, sessionID string, turnCtx prompts.TurnContext) (*prompts.LayeredPrompt, error) {
+func (m *mockLayeredManager) BuildLayeredPrompt(ctx context.Context, artisanID, sessionID string, turnCtx layered.TurnContext) (*layered.LayeredPrompt, error) {
 	args := m.Called(ctx, artisanID, sessionID, turnCtx)
-	return args.Get(0).(*prompts.LayeredPrompt), args.Error(1)
+	return args.Get(0).(*layered.LayeredPrompt), args.Error(1)
 }
 
-func (m *mockLayeredManager) GetPromptLayer(ctx context.Context, layer prompts.PromptLayer, artisanID, sessionID string) (*prompts.SystemPrompt, error) {
+func (m *mockLayeredManager) GetPromptLayer(ctx context.Context, layer layered.PromptLayer, artisanID, sessionID string) (*layered.SystemPrompt, error) {
 	args := m.Called(ctx, layer, artisanID, sessionID)
-	return args.Get(0).(*prompts.SystemPrompt), args.Error(1)
+	return args.Get(0).(*layered.SystemPrompt), args.Error(1)
 }
 
-func (m *mockLayeredManager) SetPromptLayer(ctx context.Context, prompt prompts.SystemPrompt) error {
+func (m *mockLayeredManager) SetPromptLayer(ctx context.Context, prompt layered.SystemPrompt) error {
 	args := m.Called(ctx, prompt)
 	return args.Error(0)
 }
 
-func (m *mockLayeredManager) DeletePromptLayer(ctx context.Context, layer prompts.PromptLayer, artisanID, sessionID string) error {
+func (m *mockLayeredManager) DeletePromptLayer(ctx context.Context, layer layered.PromptLayer, artisanID, sessionID string) error {
 	args := m.Called(ctx, layer, artisanID, sessionID)
 	return args.Error(0)
 }
 
-func (m *mockLayeredManager) ListPromptLayers(ctx context.Context, artisanID, sessionID string) ([]prompts.SystemPrompt, error) {
+func (m *mockLayeredManager) ListPromptLayers(ctx context.Context, artisanID, sessionID string) ([]layered.SystemPrompt, error) {
 	args := m.Called(ctx, artisanID, sessionID)
-	return args.Get(0).([]prompts.SystemPrompt), args.Error(1)
+	return args.Get(0).([]layered.SystemPrompt), args.Error(1)
 }
 
 func (m *mockLayeredManager) InvalidateCache(ctx context.Context, artisanID, sessionID string) error {
@@ -126,7 +126,7 @@ func TestGuildLayeredManager(t *testing.T) {
 		store := &mockStore{}
 		
 		// Create layered manager
-		manager := prompts.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
+		manager := layered.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
 		
 		// Verify creation
 		assert.NotNil(t, manager)
@@ -138,12 +138,12 @@ func TestGuildLayeredManager(t *testing.T) {
 		store := &mockStore{}
 		
 		// Create manager
-		manager := prompts.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
+		manager := layered.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
 		
 		// Test data
 		artisanID := "backend-dev-001"
 		sessionID := "session_123"
-		turnCtx := prompts.TurnContext{
+		turnCtx := layered.TurnContext{
 			UserMessage:  "Build a REST API",
 			TaskID:       "API-001",
 			CommissionID: "COMM-001",
@@ -191,11 +191,11 @@ func TestGuildLayeredManager(t *testing.T) {
 		baseManager := &mockManagerWithFormatter{}
 		store := &mockStore{}
 		
-		manager := prompts.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
+		manager := layered.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
 		
 		// Test session prompt
-		sessionPrompt := prompts.SystemPrompt{
-			Layer:     prompts.LayerSession,
+		sessionPrompt := layered.SystemPrompt{
+			Layer:     layered.LayerSession,
 			SessionID: "session_123",
 			Content:   "User prefers detailed explanations with examples",
 			Version:   1,
@@ -219,7 +219,7 @@ func TestGuildLayeredManager(t *testing.T) {
 		baseManager := &mockManagerWithFormatter{}
 		store := &mockStore{}
 		
-		manager := prompts.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
+		manager := layered.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
 		
 		// Test data
 		artisanID := "backend-dev-001"
@@ -262,7 +262,7 @@ func TestGuildLayeredManager(t *testing.T) {
 		// Check that we have the expected layers
 		foundSession := false
 		for _, layer := range layers {
-			if layer.Layer == prompts.LayerSession {
+			if layer.Layer == layered.LayerSession {
 				foundSession = true
 				assert.Equal(t, "Session preferences", layer.Content)
 			}
@@ -278,7 +278,7 @@ func TestGuildLayeredManager(t *testing.T) {
 		baseManager := &mockManagerWithFormatter{}
 		store := &mockStore{}
 		
-		manager := prompts.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
+		manager := layered.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
 		
 		// Test data
 		artisanID := "backend-dev-001"
@@ -301,7 +301,7 @@ func TestGuildLayeredManager(t *testing.T) {
 		baseManager := &mockManagerWithFormatter{}
 		store := &mockStore{}
 		
-		manager := prompts.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
+		manager := layered.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
 		
 		// Test legacy method delegation
 		baseManager.On("GetSystemPrompt", mock.Anything, "backend", "web-app").Return(
@@ -331,18 +331,18 @@ func TestPromptValidation(t *testing.T) {
 		baseManager := &mockManagerWithFormatter{}
 		store := &mockStore{}
 		
-		manager := prompts.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
+		manager := layered.NewGuildLayeredManager(baseManager, store, nil, nil, 4000)
 		
 		tests := []struct {
 			name    string
-			prompt  prompts.SystemPrompt
+			prompt  layered.SystemPrompt
 			wantErr bool
 			errMsg  string
 		}{
 			{
 				name: "valid_platform_prompt",
-				prompt: prompts.SystemPrompt{
-					Layer:   prompts.LayerPlatform,
+				prompt: layered.SystemPrompt{
+					Layer:   layered.LayerPlatform,
 					Content: "Platform guidelines",
 					Version: 1,
 				},
@@ -350,7 +350,7 @@ func TestPromptValidation(t *testing.T) {
 			},
 			{
 				name: "missing_layer",
-				prompt: prompts.SystemPrompt{
+				prompt: layered.SystemPrompt{
 					Content: "Some content",
 					Version: 1,
 				},
@@ -359,8 +359,8 @@ func TestPromptValidation(t *testing.T) {
 			},
 			{
 				name: "missing_content",
-				prompt: prompts.SystemPrompt{
-					Layer:   prompts.LayerRole,
+				prompt: layered.SystemPrompt{
+					Layer:   layered.LayerRole,
 					Version: 1,
 				},
 				wantErr: true,
@@ -368,8 +368,8 @@ func TestPromptValidation(t *testing.T) {
 			},
 			{
 				name: "session_without_session_id",
-				prompt: prompts.SystemPrompt{
-					Layer:   prompts.LayerSession,
+				prompt: layered.SystemPrompt{
+					Layer:   layered.LayerSession,
 					Content: "Session content",
 					Version: 1,
 				},
@@ -378,8 +378,8 @@ func TestPromptValidation(t *testing.T) {
 			},
 			{
 				name: "valid_session_prompt",
-				prompt: prompts.SystemPrompt{
-					Layer:     prompts.LayerSession,
+				prompt: layered.SystemPrompt{
+					Layer:     layered.LayerSession,
 					SessionID: "session_123",
 					Content:   "Session preferences",
 					Version:   1,

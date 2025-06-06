@@ -10,8 +10,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
-	commissionpkg "github.com/guild-ventures/guild-core/pkg/commission"
-	"github.com/guild-ventures/guild-core/pkg/generator"
+	commissionpkg "github.com/guild-ventures/guild-core/internal/commission"
 )
 
 // Define UI states
@@ -51,10 +50,10 @@ type GuildHallKeyMap struct {
 type CommissionChamber struct {
 	// Session state
 	ctx               context.Context          // Context for operations
-	commissionManager *commissionpkg.Manager      // Manages commissions
-	planner           *commissionpkg.Planner      // Plans commissions
+	commissionManager CommissionManager        // Manages commissions - interface dependency
+	planner           CommissionPlanner        // Plans commissions - interface dependency
 	currentCommission *commissionpkg.Commission   // Current commission
-	generator         generator.CommissionGenerator // LLM generator for commissions
+	generator         CommissionGenerator       // LLM generator for commissions - interface dependency
 	commissionPath    string                   // Path to current commission file
 
 	// UI components
@@ -153,7 +152,7 @@ func (k GuildHallKeyMap) FullHelp() [][]key.Binding {
 }
 
 // NewModel creates a new Guild Hall model for commission planning
-func NewModel(ctx context.Context, commissionPath string, manager *commissionpkg.Manager, planner *commissionpkg.Planner, generator generator.CommissionGenerator) *CommissionChamber {
+func NewModel(ctx context.Context, commissionPath string, manager CommissionManager, planner CommissionPlanner, generator CommissionGenerator) *CommissionChamber {
 	// Initialize textarea for context input
 	scribe := textarea.New()
 	scribe.Placeholder = "Enter context or reference documents (e.g., @spec/path/to/file.md)"

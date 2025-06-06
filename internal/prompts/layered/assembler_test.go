@@ -1,4 +1,4 @@
-package prompts_test
+package layered_test
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/internal/prompts/layered"
 )
 
 // Mock implementations for testing
@@ -27,7 +27,7 @@ func (m *mockManager) GetTemplate(ctx context.Context, templateName string) (str
 	return args.String(0), args.Error(1)
 }
 
-func (m *mockManager) FormatContext(ctx context.Context, context prompts.Context) (string, error) {
+func (m *mockManager) FormatContext(ctx context.Context, context layered.Context) (string, error) {
 	args := m.Called(ctx, context)
 	return args.String(0), args.Error(1)
 }
@@ -46,12 +46,12 @@ type mockFormatter struct {
 	mock.Mock
 }
 
-func (m *mockFormatter) FormatAsXML(ctx prompts.Context) (string, error) {
+func (m *mockFormatter) FormatAsXML(ctx layered.Context) (string, error) {
 	args := m.Called(ctx)
 	return args.String(0), args.Error(1)
 }
 
-func (m *mockFormatter) FormatAsMarkdown(ctx prompts.Context) (string, error) {
+func (m *mockFormatter) FormatAsMarkdown(ctx layered.Context) (string, error) {
 	args := m.Called(ctx)
 	return args.String(0), args.Error(1)
 }
@@ -150,9 +150,9 @@ func (m *mockRAGRetriever) GetContextualMemory(
 	sessionID, query string,
 	maxTokens int,
 	threshold float64,
-) ([]prompts.MemoryChunk, error) {
+) ([]layered.MemoryChunk, error) {
 	args := m.Called(ctx, sessionID, query, maxTokens, threshold)
-	return args.Get(0).([]prompts.MemoryChunk), args.Error(1)
+	return args.Get(0).([]layered.MemoryChunk), args.Error(1)
 }
 
 func TestLayeredPromptAssembler(t *testing.T) {
@@ -164,14 +164,14 @@ func TestLayeredPromptAssembler(t *testing.T) {
 		ragRetriever := &mockRAGRetriever{}
 		
 		// Create assembler
-		assembler := prompts.NewLayeredPromptAssembler(
+		assembler := layered.NewLayeredPromptAssembler(
 			manager, formatter, store, ragRetriever, 4000,
 		)
 		
 		// Test data
 		artisanID := "backend-dev-001"
 		sessionID := "session_123"
-		turnCtx := prompts.TurnContext{
+		turnCtx := layered.TurnContext{
 			UserMessage:  "Implement user authentication",
 			TaskID:       "AUTH-001",
 			CommissionID: "COMM-001",
@@ -200,7 +200,7 @@ func TestLayeredPromptAssembler(t *testing.T) {
 		
 		// Setup expectations for RAG retrieval
 		ragRetriever.On("GetContextualMemory", mock.Anything, sessionID, "Implement user authentication", 800, 0.7).Return(
-			[]prompts.MemoryChunk{
+			[]layered.MemoryChunk{
 				{
 					Content: "Previous authentication implementation used JWT tokens...",
 					Score:   0.85,
@@ -234,13 +234,13 @@ func TestLayeredPromptAssembler(t *testing.T) {
 		foundTurn := false
 		for _, layer := range result.Layers {
 			switch layer.Layer {
-			case prompts.LayerPlatform:
+			case layered.LayerPlatform:
 				foundPlatform = true
 				assert.Contains(t, layer.Content, "Guild Framework")
-			case prompts.LayerRole:
+			case layered.LayerRole:
 				foundRole = true
 				assert.Contains(t, layer.Content, "backend artisan")
-			case prompts.LayerTurn:
+			case layered.LayerTurn:
 				foundTurn = true
 				assert.Contains(t, layer.Content, "Implement user authentication")
 			}
@@ -265,14 +265,14 @@ func TestLayeredPromptAssembler(t *testing.T) {
 		ragRetriever := &mockRAGRetriever{}
 		
 		// Create assembler with very small token budget
-		assembler := prompts.NewLayeredPromptAssembler(
+		assembler := layered.NewLayeredPromptAssembler(
 			manager, formatter, store, ragRetriever, 200, // Very small budget
 		)
 		
 		// Test data
 		artisanID := "backend-dev-001"
 		sessionID := "session_123"
-		turnCtx := prompts.TurnContext{
+		turnCtx := layered.TurnContext{
 			UserMessage: "Simple request",
 		}
 		
@@ -289,7 +289,7 @@ func TestLayeredPromptAssembler(t *testing.T) {
 		
 		// No RAG retrieval for this test
 		ragRetriever.On("GetContextualMemory", mock.Anything, sessionID, "Simple request", 40, 0.7).Return(
-			[]prompts.MemoryChunk{}, nil)
+			[]layered.MemoryChunk{}, nil)
 		
 		// Execute
 		ctx := context.Background()
@@ -313,14 +313,14 @@ func TestLayeredPromptAssembler(t *testing.T) {
 		store := &mockStore{}
 		ragRetriever := &mockRAGRetriever{}
 		
-		assembler := prompts.NewLayeredPromptAssembler(
+		assembler := layered.NewLayeredPromptAssembler(
 			manager, formatter, store, ragRetriever, 4000,
 		)
 		
 		// Test data
 		artisanID := "backend-dev-001"
 		sessionID := "session_123"
-		turnCtx := prompts.TurnContext{
+		turnCtx := layered.TurnContext{
 			UserMessage: "Test request",
 		}
 		
@@ -332,7 +332,7 @@ func TestLayeredPromptAssembler(t *testing.T) {
 		manager.On("GetSystemPrompt", mock.Anything, "backend", "dev").Return(
 			"Backend dev prompt", nil).Once()
 		ragRetriever.On("GetContextualMemory", mock.Anything, sessionID, "Test request", 800, 0.7).Return(
-			[]prompts.MemoryChunk{}, nil).Once()
+			[]layered.MemoryChunk{}, nil).Once()
 		store.On("CacheCompiledPrompt", mock.Anything, mock.AnythingOfType("string"), mock.AnythingOfType("[]uint8")).Return(nil)
 		
 		ctx := context.Background()
@@ -362,14 +362,14 @@ func TestLayeredPromptAssembler(t *testing.T) {
 		store := &mockStore{}
 		
 		// Create assembler without RAG retriever (nil)
-		assembler := prompts.NewLayeredPromptAssembler(
+		assembler := layered.NewLayeredPromptAssembler(
 			manager, formatter, store, nil, 4000,
 		)
 		
 		// Test data
 		artisanID := "backend-dev-001"
 		sessionID := "session_123"
-		turnCtx := prompts.TurnContext{
+		turnCtx := layered.TurnContext{
 			UserMessage: "Test without RAG",
 		}
 		
@@ -414,14 +414,14 @@ func TestLayeredPromptAssembler(t *testing.T) {
 		store := &mockStore{}
 		ragRetriever := &mockRAGRetriever{}
 		
-		assembler := prompts.NewLayeredPromptAssembler(
+		assembler := layered.NewLayeredPromptAssembler(
 			manager, formatter, store, ragRetriever, 4000,
 		)
 		
 		// Test data
 		artisanID := "backend-dev-001"
 		sessionID := "session_123"
-		turnCtx := prompts.TurnContext{
+		turnCtx := layered.TurnContext{
 			UserMessage: "Test error handling",
 		}
 		
@@ -449,7 +449,7 @@ func TestLayeredPromptAssembler(t *testing.T) {
 		
 		// RAG should still be called
 		ragRetriever.On("GetContextualMemory", mock.Anything, sessionID, "Test error handling", 800, 0.7).Return(
-			[]prompts.MemoryChunk{}, nil)
+			[]layered.MemoryChunk{}, nil)
 		
 		// Execute
 		ctx := context.Background()
@@ -472,14 +472,14 @@ func TestLayeredPromptLayers(t *testing.T) {
 		store := &mockStore{}
 		ragRetriever := &mockRAGRetriever{}
 		
-		assembler := prompts.NewLayeredPromptAssembler(
+		assembler := layered.NewLayeredPromptAssembler(
 			manager, formatter, store, ragRetriever, 4000,
 		)
 		
 		// Test data with complex context
 		artisanID := "backend-dev-001"
 		sessionID := "session_123"
-		turnCtx := prompts.TurnContext{
+		turnCtx := layered.TurnContext{
 			UserMessage:  "Complex request with multiple instructions",
 			TaskID:       "TASK-001",
 			CommissionID: "COMM-001",
@@ -505,7 +505,7 @@ func TestLayeredPromptLayers(t *testing.T) {
 		manager.On("GetSystemPrompt", mock.Anything, "backend", "dev").Return(
 			"Domain prompt content", nil)
 		ragRetriever.On("GetContextualMemory", mock.Anything, sessionID, mock.Anything, mock.Anything, mock.Anything).Return(
-			[]prompts.MemoryChunk{}, nil)
+			[]layered.MemoryChunk{}, nil)
 		
 		// Setup expectation for cache store
 		store.On("CacheCompiledPrompt", mock.Anything, mock.AnythingOfType("string"), mock.AnythingOfType("[]uint8")).Return(nil)

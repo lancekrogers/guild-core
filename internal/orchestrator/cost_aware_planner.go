@@ -9,8 +9,8 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/internal/kanban"
+	"github.com/guild-ventures/guild-core/internal/commission"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -69,7 +69,7 @@ type AssignmentSummary struct {
 }
 
 // NewCostAwareTaskPlanner creates a new cost-optimized task planner
-func NewCostAwareTaskPlanner(
+func newCostAwareTaskPlanner(
 	managerAgent agent.Agent, 
 	kanbanBoard KanbanManager, 
 	componentRegistry registry.ComponentRegistry,
@@ -84,6 +84,16 @@ func NewCostAwareTaskPlanner(
 	}
 }
 
+// DefaultCostAwareTaskPlannerFactory creates a cost-aware planner factory for registry use
+func DefaultCostAwareTaskPlannerFactory(
+	managerAgent agent.Agent, 
+	kanbanBoard KanbanManager, 
+	componentRegistry registry.ComponentRegistry,
+	maxCostFilter int,
+) *CostAwareTaskPlanner {
+	return newCostAwareTaskPlanner(managerAgent, kanbanBoard, componentRegistry, maxCostFilter)
+}
+
 // PlanTasks decomposes an objective into tasks (enhanced with cost awareness)
 func (p *CostAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
 	// Build a planning prompt with cost information
@@ -92,18 +102,24 @@ func (p *CostAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Co
 	// Execute the planning request
 	response, err := p.managerAgent.Execute(ctx, prompt)
 	if err != nil {
-		return nil, fmt.Errorf("manager agent failed to plan tasks: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "manager agent failed to plan tasks").
+			WithComponent("orchestrator").
+			WithOperation("PlanTasks")
 	}
 	
 	// Parse the response into tasks
 	tasks, err := p.parseTasksFromResponse(response)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse tasks from response: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to parse tasks from response").
+			WithComponent("orchestrator").
+			WithOperation("PlanTasks")
 	}
 	
 	// Enhance tasks with cost estimates
 	if err := p.enhanceTasksWithCostEstimates(ctx, tasks, guild); err != nil {
-		return nil, fmt.Errorf("failed to enhance tasks with cost estimates: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to enhance tasks with cost estimates").
+			WithComponent("orchestrator").
+			WithOperation("PlanTasks")
 	}
 	
 	// Add tasks to kanban board
@@ -111,7 +127,9 @@ func (p *CostAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Co
 		// Create task on board
 		createdTask, err := p.kanbanBoard.CreateTask(ctx, task.Title, task.Description)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create task on kanban board: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to create task on kanban board").
+				WithComponent("orchestrator").
+				WithOperation("PlanTasks")
 		}
 		
 		// Update task with parsed data and cost information
@@ -121,7 +139,9 @@ func (p *CostAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Co
 		
 		// Update the task
 		if err := p.kanbanBoard.UpdateTask(ctx, createdTask); err != nil {
-			return nil, fmt.Errorf("failed to update task: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to update task").
+				WithComponent("orchestrator").
+				WithOperation("PlanTasks")
 		}
 		
 		// Update our reference
@@ -163,7 +183,9 @@ func (p *CostAwareTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.
 		task.Metadata["agent_type"] = assignment.AgentInfo.Type
 		
 		if err := p.kanbanBoard.UpdateTask(ctx, task); err != nil {
-			return fmt.Errorf("failed to update task assignment: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to update task assignment").
+				WithComponent("orchestrator").
+				WithOperation("AssignTasks")
 		}
 	}
 	
@@ -191,7 +213,10 @@ func (p *CostAwareTaskPlanner) AssignTasksWithOptions(
 	for _, task := range sortedTasks {
 		assignment, err := p.assignSingleTask(ctx, task, guild, options, summary.AgentWorkloads)
 		if err != nil {
-			return nil, fmt.Errorf("failed to assign task %s: %w", task.ID, err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to assign task").
+				WithComponent("orchestrator").
+				WithOperation("AssignTasksWithOptions").
+				WithDetails("task_id", task.ID)
 		}
 		
 		// Update summary
@@ -231,7 +256,10 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 	requiredCapabilities := p.parseCapabilities(capabilitiesStr)
 	
 	if len(requiredCapabilities) == 0 {
-		return nil, fmt.Errorf("task %s has no required capabilities specified", task.ID)
+		return nil, gerror.New(gerror.ErrCodeValidation, "task has no required capabilities specified", nil).
+			WithComponent("orchestrator").
+			WithOperation("assignSingleTask").
+			WithDetails("task_id", task.ID)
 	}
 	
 	// Get agents that can handle the primary capability
@@ -245,10 +273,17 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 	case StrategyMinimizeCost:
 		agent, err := p.componentRegistry.GetCheapestAgentByCapability(primaryCapability)
 		if err != nil {
-			return nil, fmt.Errorf("no agent found for capability %s: %w", primaryCapability, err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "no agent found for capability").
+				WithComponent("orchestrator").
+				WithOperation("assignSingleTask").
+				WithDetails("capability", primaryCapability)
 		}
 		if agent.CostMagnitude > options.MaxCostMagnitude {
-			return nil, fmt.Errorf("cheapest agent (cost %d) exceeds budget %d", agent.CostMagnitude, options.MaxCostMagnitude)
+			return nil, gerror.New(gerror.ErrCodeValidation, "cheapest agent exceeds budget", nil).
+				WithComponent("orchestrator").
+				WithOperation("assignSingleTask").
+				WithDetails("agent_cost", agent.CostMagnitude).
+				WithDetails("max_budget", options.MaxCostMagnitude)
 		}
 		assignedAgent = agent
 		reason = fmt.Sprintf("Cheapest agent for capability '%s'", primaryCapability)
@@ -258,7 +293,11 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 		suitableAgents := p.filterAgentsByCapabilities(candidates, requiredCapabilities)
 		
 		if len(suitableAgents) == 0 {
-			return nil, fmt.Errorf("no suitable agents found for capabilities %v within budget %d", requiredCapabilities, options.MaxCostMagnitude)
+			return nil, gerror.New(gerror.ErrCodeNoAvailableAgent, "no suitable agents found for capabilities within budget", nil).
+				WithComponent("orchestrator").
+				WithOperation("assignSingleTask").
+				WithDetails("required_capabilities", fmt.Sprintf("%v", requiredCapabilities)).
+				WithDetails("max_budget", options.MaxCostMagnitude)
 		}
 		
 		// Apply workload balancing
@@ -275,7 +314,10 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 	case StrategyCapabilityFirst:
 		allAgents := p.componentRegistry.GetAgentsByCapability(primaryCapability)
 		if len(allAgents) == 0 {
-			return nil, fmt.Errorf("no agent found for capability %s", primaryCapability)
+			return nil, gerror.New(gerror.ErrCodeAgent, "no agent found for capability", nil).
+				WithComponent("orchestrator").
+				WithOperation("assignSingleTask").
+				WithDetails("capability", primaryCapability)
 		}
 		
 		// Find the best capability match within cost filter
@@ -289,7 +331,10 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 		}
 		
 		if assignedAgent == nil {
-			return nil, fmt.Errorf("no agent with required capabilities within cost filter %d", options.MaxCostMagnitude)
+			return nil, gerror.New(gerror.ErrCodeNoAvailableAgent, "no agent with required capabilities within cost filter", nil).
+				WithComponent("orchestrator").
+				WithOperation("assignSingleTask").
+				WithDetails("cost_filter", options.MaxCostMagnitude)
 		}
 	}
 	
@@ -592,7 +637,9 @@ func (p *CostAwareTaskPlanner) parseTasksFromResponse(response string) ([]*kanba
 	}
 	
 	if len(tasks) == 0 {
-		return nil, fmt.Errorf("no tasks found in response")
+		return nil, gerror.New(gerror.ErrCodeOrchestration, "no tasks found in response", nil).
+			WithComponent("orchestrator").
+			WithOperation("parseTasksFromResponse")
 	}
 	
 	return tasks, nil

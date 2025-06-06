@@ -1,5 +1,5 @@
-// Package objective contains prompts for objective refinement
-package objective
+// Package commission contains prompts for commission refinement
+package commission
 
 // ManagerRefinementPrompt is the system prompt for manager agents to refine objectives
 const ManagerRefinementPrompt = `You are a Guild Master, responsible for taking high-level commissions and breaking them down into detailed implementation plans that your guild of artisan agents can execute.

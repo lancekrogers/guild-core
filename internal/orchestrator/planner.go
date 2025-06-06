@@ -7,8 +7,9 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/internal/kanban"
+	"github.com/guild-ventures/guild-core/internal/commission"
 )
 
 // TaskPlanner decomposes objectives into tasks and assigns them to agents
@@ -47,13 +48,17 @@ func (p *managerTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Comm
 	// Execute the planning request
 	response, err := p.managerAgent.Execute(ctx, prompt)
 	if err != nil {
-		return nil, fmt.Errorf("manager agent failed to plan tasks: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "manager agent failed to plan tasks").
+			WithComponent("orchestrator").
+			WithOperation("PlanTasks")
 	}
 	
 	// Parse the response into tasks
 	tasks, err := p.parseTasksFromResponse(response)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse tasks from response: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to parse tasks from response").
+			WithComponent("orchestrator").
+			WithOperation("PlanTasks")
 	}
 	
 	// Add tasks to kanban board
@@ -61,7 +66,9 @@ func (p *managerTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Comm
 		// Create task on board
 		createdTask, err := p.kanbanBoard.CreateTask(ctx, task.Title, task.Description)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create task on kanban board: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to create task on kanban board").
+				WithComponent("orchestrator").
+				WithOperation("PlanTasks")
 		}
 		
 		// Update task with parsed data
@@ -71,7 +78,9 @@ func (p *managerTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Comm
 		
 		// Update the task
 		if err := p.kanbanBoard.UpdateTask(ctx, createdTask); err != nil {
-			return nil, fmt.Errorf("failed to update task: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to update task").
+				WithComponent("orchestrator").
+				WithOperation("PlanTasks")
 		}
 		
 		// Update our reference
@@ -89,13 +98,17 @@ func (p *managerTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.Ta
 	// Execute the assignment request
 	response, err := p.managerAgent.Execute(ctx, prompt)
 	if err != nil {
-		return fmt.Errorf("manager agent failed to assign tasks: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeAgent, "manager agent failed to assign tasks").
+			WithComponent("orchestrator").
+			WithOperation("AssignTasks")
 	}
 	
 	// Parse assignments from response
 	assignments, err := p.parseAssignmentsFromResponse(response, tasks, guild)
 	if err != nil {
-		return fmt.Errorf("failed to parse assignments: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to parse assignments").
+			WithComponent("orchestrator").
+			WithOperation("AssignTasks")
 	}
 	
 	// Apply assignments to tasks
@@ -109,7 +122,9 @@ func (p *managerTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.Ta
 		task.AssignedTo = agentID
 		task.Metadata["assigned_to"] = agentID
 		if err := p.kanbanBoard.UpdateTask(ctx, task); err != nil {
-			return fmt.Errorf("failed to update task assignment: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to update task assignment").
+				WithComponent("orchestrator").
+				WithOperation("AssignTasks")
 		}
 	}
 	
@@ -253,7 +268,9 @@ func (p *managerTaskPlanner) parseTasksFromResponse(response string) ([]*kanban.
 	}
 	
 	if len(tasks) == 0 {
-		return nil, fmt.Errorf("no tasks found in response")
+		return nil, gerror.New(gerror.ErrCodeOrchestration, "no tasks found in response", nil).
+			WithComponent("orchestrator").
+			WithOperation("parseTasksFromResponse")
 	}
 	
 	return tasks, nil

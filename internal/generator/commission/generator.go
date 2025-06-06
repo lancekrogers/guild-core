@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/guild-ventures/guild-core/internal/prompts"
-	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/internal/commission"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
@@ -18,10 +18,10 @@ type Generator struct {
 	promptMgr *prompts.PromptManager
 }
 
-// NewGenerator creates a new commission generator
-func NewGenerator(client providers.LLMClient) (*Generator, error) {
+// newGenerator creates a new commission generator (private constructor)
+func newGenerator(client providers.LLMClient) (*Generator, error) {
 	// Create prompt manager
-	pm, err := prompts.NewPromptManager()
+	pm, err := prompts.newPromptManager()
 	if err != nil {
 		return nil, fmt.Errorf("error creating prompt manager: %w", err)
 	}
@@ -30,6 +30,11 @@ func NewGenerator(client providers.LLMClient) (*Generator, error) {
 		client:    client,
 		promptMgr: pm,
 	}, nil
+}
+
+// DefaultGeneratorFactory creates a commission generator factory for registry use
+func DefaultGeneratorFactory(client providers.LLMClient) (*Generator, error) {
+	return newGenerator(client)
 }
 
 // GenerateCommission creates a new commission from a description

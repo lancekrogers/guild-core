@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/storage/db"
+	"github.com/guild-ventures/guild-core/internal/storage/db"
 )
 
 // promptChainRepository implements PromptChainRepository using SQLite

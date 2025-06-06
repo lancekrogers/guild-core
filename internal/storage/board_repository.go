@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/guild-ventures/guild-core/pkg/storage/db"
+	"github.com/guild-ventures/guild-core/internal/storage/db"
 )
 
 // SQLiteBoardRepository implements BoardRepository using SQLite

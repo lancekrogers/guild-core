@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/storage"
+	"github.com/guild-ventures/guild-core/internal/storage"
 )
 
 // Manager handles storage and retrieval of commissions
@@ -22,8 +22,8 @@ type Manager struct {
 	mu              sync.RWMutex
 }
 
-// NewManager creates a new commission manager
-func NewManager(commissionRepo storage.CommissionRepository, fsBasePath string) (*Manager, error) {
+// newManager creates a new commission manager (private constructor)
+func newManager(commissionRepo storage.CommissionRepository, fsBasePath string) (*Manager, error) {
 	if commissionRepo == nil {
 		return nil, gerror.New(gerror.ErrCodeInvalidInput, "commission repository cannot be nil", nil).
 			WithComponent("CommissionManager").
@@ -37,7 +37,7 @@ func NewManager(commissionRepo storage.CommissionRepository, fsBasePath string) 
 		if err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get working directory").
 				WithComponent("CommissionManager").
-				WithOperation("NewManager")
+				WithOperation("newManager")
 		}
 		fsBasePath = filepath.Join(fsBasePath, "commissions")
 	}
@@ -56,6 +56,11 @@ func NewManager(commissionRepo storage.CommissionRepository, fsBasePath string) 
 		tagsIndex:       make(map[string][]string),
 		commissionCache: make(map[string]*Commission),
 	}, nil
+}
+
+// DefaultCommissionManagerFactory creates a commission manager for registry use
+func DefaultCommissionManagerFactory(commissionRepo storage.CommissionRepository, fsBasePath string) (CommissionManager, error) {
+	return newManager(commissionRepo, fsBasePath)
 }
 
 // Init initializes the manager (currently a no-op due to repository limitations)

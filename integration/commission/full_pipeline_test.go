@@ -12,9 +12,9 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
 	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/internal/kanban"
 	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
-	"github.com/guild-ventures/guild-core/pkg/orchestrator"
+	"github.com/guild-ventures/guild-core/internal/orchestrator"
 	"github.com/guild-ventures/guild-core/pkg/providers/mock"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/stretchr/testify/assert"

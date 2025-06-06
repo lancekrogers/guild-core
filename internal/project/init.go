@@ -2,11 +2,11 @@ package project
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"path/filepath"
 	
-	"github.com/guild-ventures/guild-core/pkg/storage"
+	"github.com/guild-ventures/guild-core/internal/storage"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"gopkg.in/yaml.v3"
 )
 
@@ -24,7 +24,7 @@ var directoryStructure = []string{
 func Initialize(path string) error {
 	// Validate the path
 	if err := ValidateProjectPath(path); err != nil {
-		return fmt.Errorf("invalid project path: %w", err)
+		return gerror.Wrap(err, gerror.InvalidArgument, "project", "initialize", "invalid project path")
 	}
 
 	// Check if already initialized
@@ -41,19 +41,19 @@ func Initialize(path string) error {
 
 	// Create temporary directory
 	if err := os.MkdirAll(tempDir, 0755); err != nil {
-		return fmt.Errorf("failed to create temporary directory: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "project", "initialize", "failed to create temporary directory")
 	}
 
 	// Create structure in temp directory
 	if err := createStructure(tempDir); err != nil {
 		os.RemoveAll(tempDir) // Clean up on error
-		return fmt.Errorf("failed to create project structure: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "project", "initialize", "failed to create project structure")
 	}
 
 	// Atomic rename
 	if err := os.Rename(tempDir, finalDir); err != nil {
 		os.RemoveAll(tempDir) // Clean up on error
-		return fmt.Errorf("failed to finalize project structure: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "project", "initialize", "failed to finalize project structure")
 	}
 
 	return nil
@@ -65,33 +65,33 @@ func createStructure(baseDir string) error {
 	for _, dir := range directoryStructure {
 		dirPath := filepath.Join(baseDir, dir)
 		if err := os.MkdirAll(dirPath, 0755); err != nil {
-			return fmt.Errorf("failed to create directory %s: %w", dir, err)
+			return gerror.Wrap(err, gerror.Internal, "project", "create_structure", "failed to create directory %s", dir)
 		}
 	}
 
 	// Create default config file
 	if err := createDefaultConfig(baseDir); err != nil {
-		return fmt.Errorf("failed to create default config: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "project", "create_structure", "failed to create default config")
 	}
 
 	// Create .gitignore
 	if err := createGitignore(baseDir); err != nil {
-		return fmt.Errorf("failed to create .gitignore: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "project", "create_structure", "failed to create .gitignore")
 	}
 
 	// Create README
 	if err := createReadme(baseDir); err != nil {
-		return fmt.Errorf("failed to create README: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "project", "create_structure", "failed to create README")
 	}
 
 	// Create default guild configuration
 	if err := createDefaultGuildConfig(baseDir); err != nil {
-		return fmt.Errorf("failed to create guild config: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "project", "create_structure", "failed to create guild config")
 	}
 
 	// Initialize database
 	if err := initializeDatabase(baseDir); err != nil {
-		return fmt.Errorf("failed to initialize database: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "project", "create_structure", "failed to initialize database")
 	}
 
 	return nil
@@ -246,7 +246,7 @@ func createDefaultGuildConfig(baseDir string) error {
 	guildPath := filepath.Join(baseDir, "guild.yaml")
 	data, err := yaml.Marshal(guildConfig)
 	if err != nil {
-		return fmt.Errorf("failed to marshal guild config: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "project", "create_default_guild_config", "failed to marshal guild config")
 	}
 
 	return os.WriteFile(guildPath, data, 0644)
@@ -263,13 +263,13 @@ func initializeDatabase(baseDir string) error {
 	// Create database
 	db, err := storage.NewDatabase(ctx, dbPath)
 	if err != nil {
-		return fmt.Errorf("failed to create database: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "project", "initialize_database", "failed to create database")
 	}
 	defer db.Close()
 	
 	// Run migrations
 	if err := db.Migrate(ctx); err != nil {
-		return fmt.Errorf("failed to run database migrations: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "project", "initialize_database", "failed to run database migrations")
 	}
 	
 	return nil

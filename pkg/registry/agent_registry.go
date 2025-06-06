@@ -13,7 +13,17 @@ type DefaultAgentRegistry struct {
 	factories      map[string]func(config AgentConfig) (Agent, error)
 	guildAgents    map[string]GuildAgentConfig // Guild-configured agents
 	defaultType    string
+	
+	// Factory for creating agents with dependencies
+	agentFactory   AgentFactory
 	mu             sync.RWMutex
+}
+
+// AgentFactory interface for creating agents with dependency injection
+type AgentFactory interface {
+	CreateAgent(ctx context.Context, id, name string, agentType string) (Agent, error)
+	CreateWorkerAgent(ctx context.Context, id, name string) (Agent, error)
+	CreateManagerAgent(ctx context.Context, id, name string) (Agent, error)
 }
 
 // NewAgentRegistry creates a new agent registry
@@ -22,6 +32,13 @@ func NewAgentRegistry() AgentRegistry {
 		factories:   make(map[string]func(config AgentConfig) (Agent, error)),
 		guildAgents: make(map[string]GuildAgentConfig),
 	}
+}
+
+// SetAgentFactory sets the agent factory for dependency injection
+func (r *DefaultAgentRegistry) SetAgentFactory(factory AgentFactory) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.agentFactory = factory
 }
 
 // RegisterAgentType registers a new agent type with its factory function
@@ -55,24 +72,53 @@ func (r *DefaultAgentRegistry) RegisterAgentType(name string, factory AgentFacto
 
 // GetAgent creates an agent instance of the specified type
 func (r *DefaultAgentRegistry) GetAgent(agentType string) (Agent, error) {
+	return r.CreateAgentWithType(context.Background(), "", "", agentType)
+}
+
+// CreateAgentWithType creates an agent with specific type using the factory
+func (r *DefaultAgentRegistry) CreateAgentWithType(ctx context.Context, id, name, agentType string) (Agent, error) {
 	r.mu.RLock()
-	factory, exists := r.factories[agentType]
+	factory := r.agentFactory
 	r.mu.RUnlock()
 
-	if !exists {
-		return nil, gerror.Newf(gerror.ErrCodeNotFound, "agent type '%s' not registered", agentType).
+	if factory == nil {
+		return nil, gerror.New(gerror.ErrCodeInternal, "agent factory not configured", nil).
 			WithComponent("registry").
-			WithOperation("GetAgent").
-			WithDetails("agentType", agentType)
+			WithOperation("CreateAgentWithType")
 	}
 
-	// Create agent with default configuration
-	// In practice, you'd want to pass in the actual configuration
-	config := AgentConfig{
-		DefaultType: agentType,
+	// Use the factory to create the agent
+	return factory.CreateAgent(ctx, id, name, agentType)
+}
+
+// CreateWorkerAgent creates a worker agent using the factory
+func (r *DefaultAgentRegistry) CreateWorkerAgent(ctx context.Context, id, name string) (Agent, error) {
+	r.mu.RLock()
+	factory := r.agentFactory
+	r.mu.RUnlock()
+
+	if factory == nil {
+		return nil, gerror.New(gerror.ErrCodeInternal, "agent factory not configured", nil).
+			WithComponent("registry").
+			WithOperation("CreateWorkerAgent")
 	}
 
-	return factory(config)
+	return factory.CreateWorkerAgent(ctx, id, name)
+}
+
+// CreateManagerAgent creates a manager agent using the factory
+func (r *DefaultAgentRegistry) CreateManagerAgent(ctx context.Context, id, name string) (Agent, error) {
+	r.mu.RLock()
+	factory := r.agentFactory
+	r.mu.RUnlock()
+
+	if factory == nil {
+		return nil, gerror.New(gerror.ErrCodeInternal, "agent factory not configured", nil).
+			WithComponent("registry").
+			WithOperation("CreateManagerAgent")
+	}
+
+	return factory.CreateManagerAgent(ctx, id, name)
 }
 
 // ListAgentTypes returns all registered agent types

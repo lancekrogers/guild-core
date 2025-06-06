@@ -5,10 +5,13 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/config"
+	"github.com/guild-ventures/guild-core/internal/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers"
-	"github.com/guild-ventures/guild-core/pkg/storage"
+	"github.com/guild-ventures/guild-core/internal/storage"
+	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/internal/commission"
+	"github.com/guild-ventures/guild-core/pkg/tools"
 )
 
 // DefaultComponentRegistry is the default implementation of ComponentRegistry
@@ -411,22 +414,16 @@ func (r *DefaultComponentRegistry) Shutdown(ctx context.Context) error {
 func (r *DefaultComponentRegistry) initializeAgents(ctx context.Context) error {
 	// Register default agent types
 	if agentReg, ok := r.agentRegistry.(*DefaultAgentRegistry); ok {
-		// Register worker agent factory
-		agentReg.RegisterAgentType("worker", func(config AgentConfig) (Agent, error) {
-			// This would create a worker agent - implementation depends on your Agent interface
-			// For now, return nil to avoid compilation errors
-			return nil, gerror.New(gerror.ErrCodeInternal, "agent creation not yet implemented", nil).
+		// Create the agent factory with dependencies
+		agentFactory, err := r.createAgentFactory(ctx)
+		if err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create agent factory").
 				WithComponent("registry").
 				WithOperation("initializeAgents")
-		})
-
-		// Register manager agent factory  
-		agentReg.RegisterAgentType("manager", func(config AgentConfig) (Agent, error) {
-			// This would create a manager agent
-			return nil, gerror.New(gerror.ErrCodeInternal, "agent creation not yet implemented", nil).
-				WithComponent("registry").
-				WithOperation("initializeAgents")
-		})
+		}
+		
+		// Set the factory in the registry
+		agentReg.SetAgentFactory(agentFactory)
 
 		// Set default if configured
 		if r.config.Agents.DefaultType != "" {
@@ -530,7 +527,7 @@ func (r *DefaultComponentRegistry) initializeStorage(ctx context.Context) error 
 	}
 }
 
-func (r *DefaultComponentRegistry) initializeSQLiteStorage(ctx context.Context, dbPath string) error
+func (r *DefaultComponentRegistry) initializeSQLiteStorage(ctx context.Context, dbPath string) error {
 	
 	// Initialize SQLite storage using the storage package's initialization function
 	storageReg, memoryStoreAdapter, err := storage.InitializeSQLiteStorageForRegistry(ctx, dbPath)

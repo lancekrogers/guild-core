@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/tools"
 )
 
@@ -91,7 +92,11 @@ func (r *ToolRegistry) Clear() {
 func (r *ToolRegistry) RegisterToolWithCost(tool Tool, costPerUse float64) error {
 	err := r.ToolRegistry.RegisterTool(tool)
 	if err != nil {
-		return err
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register tool with cost").
+			WithComponent("tools").
+			WithOperation("RegisterToolWithCost").
+			WithDetails("tool_name", tool.Name()).
+			WithDetails("cost_per_use", fmt.Sprintf("%.2f", costPerUse))
 	}
 	
 	r.toolCosts[tool.Name()] = costPerUse

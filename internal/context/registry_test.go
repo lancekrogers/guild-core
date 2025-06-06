@@ -2,8 +2,9 @@ package context
 
 import (
 	"context"
-	"fmt"
 	"testing"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // Mock implementations for testing
@@ -24,7 +25,7 @@ func (m *TestMockAgentRegistry) GetAgent(name string) (interface{}, error) {
 	if agent, exists := m.agents[name]; exists {
 		return agent, nil
 	}
-	return nil, fmt.Errorf("agent '%s' not found", name)
+	return nil, gerror.Newf(gerror.ErrCodeNotFound, "agent '%s' not found", name).WithComponent("context").WithOperation("GetAgent")
 }
 
 func (m *TestMockAgentRegistry) ListAgents() []string {
@@ -42,7 +43,7 @@ func (m *TestMockAgentRegistry) SetDefaultAgent(name string) error {
 
 func (m *TestMockAgentRegistry) GetDefaultAgent() (interface{}, error) {
 	if m.defaultAgent == "" {
-		return nil, fmt.Errorf("no default agent set")
+		return nil, gerror.New(gerror.ErrCodeNotFound, "no default agent set", nil).WithComponent("context").WithOperation("GetDefaultAgent")
 	}
 	return m.GetAgent(m.defaultAgent)
 }
@@ -68,7 +69,7 @@ func (m *TestMockToolRegistry) GetTool(name string) (interface{}, error) {
 	if tool, exists := m.tools[name]; exists {
 		return tool, nil
 	}
-	return nil, fmt.Errorf("tool '%s' not found", name)
+	return nil, gerror.Newf(gerror.ErrCodeNotFound, "tool '%s' not found", name).WithComponent("context").WithOperation("GetTool")
 }
 
 func (m *TestMockToolRegistry) ListTools() []string {
@@ -119,7 +120,7 @@ func (m *TestMockProviderRegistry) GetProvider(name string) (interface{}, error)
 	if provider, exists := m.providers[name]; exists {
 		return provider, nil
 	}
-	return nil, fmt.Errorf("provider '%s' not found", name)
+	return nil, gerror.Newf(gerror.ErrCodeNotFound, "provider '%s' not found", name).WithComponent("context").WithOperation("GetProvider")
 }
 
 func (m *TestMockProviderRegistry) ListProviders() []string {
@@ -137,7 +138,7 @@ func (m *TestMockProviderRegistry) SetDefaultProvider(name string) error {
 
 func (m *TestMockProviderRegistry) GetDefaultProvider() (interface{}, error) {
 	if m.defaultProvider == "" {
-		return nil, fmt.Errorf("no default provider set")
+		return nil, gerror.New(gerror.ErrCodeNotFound, "no default provider set", nil).WithComponent("context").WithOperation("GetDefaultProvider")
 	}
 	return m.GetProvider(m.defaultProvider)
 }
@@ -159,7 +160,7 @@ func (m *TestMockMemoryRegistry) GetMemoryStore(name string) (interface{}, error
 	if store, exists := m.memoryStores[name]; exists {
 		return store, nil
 	}
-	return nil, fmt.Errorf("memory store '%s' not found", name)
+	return nil, gerror.Newf(gerror.ErrCodeNotFound, "memory store '%s' not found", name).WithComponent("context").WithOperation("GetMemoryStore")
 }
 
 func (m *TestMockMemoryRegistry) RegisterVectorStore(name string, store interface{}) error {
@@ -174,7 +175,7 @@ func (m *TestMockMemoryRegistry) GetVectorStore(name string) (interface{}, error
 	if store, exists := m.vectorStores[name]; exists {
 		return store, nil
 	}
-	return nil, fmt.Errorf("vector store '%s' not found", name)
+	return nil, gerror.Newf(gerror.ErrCodeNotFound, "vector store '%s' not found", name).WithComponent("context").WithOperation("GetVectorStore")
 }
 
 func (m *TestMockMemoryRegistry) ListMemoryStores() []string {

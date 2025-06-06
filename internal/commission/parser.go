@@ -15,8 +15,8 @@ type MarkdownParser struct {
 	sectionTypes map[string]string
 }
 
-// NewMarkdownParser creates a new markdown parser with the given options
-func NewMarkdownParser(options ParseOptions) *MarkdownParser {
+// newMarkdownParser creates a new markdown parser with the given options (private constructor)
+func newMarkdownParser(options ParseOptions) *MarkdownParser {
 	if options.TagPrefixes == nil {
 		options = DefaultParseOptions()
 	}
@@ -48,6 +48,11 @@ func NewMarkdownParser(options ParseOptions) *MarkdownParser {
 		options:      options,
 		sectionTypes: sectionTypes,
 	}
+}
+
+// DefaultMarkdownParserFactory creates a markdown parser for registry use
+func DefaultMarkdownParserFactory(options ParseOptions) *MarkdownParser {
+	return newMarkdownParser(options)
 }
 
 // Parse parses an objective from markdown content
@@ -131,7 +136,7 @@ func ParseFile(path string) (*Commission, error) {
 		content.WriteString("\n")
 	}
 
-	parser := NewMarkdownParser(ParseOptions{})
+	parser := DefaultMarkdownParserFactory(ParseOptions{})
 	return parser.Parse(content.String(), path)
 }
 

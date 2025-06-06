@@ -10,11 +10,16 @@ type Generator struct {
 	manager *Manager
 }
 
-// NewGenerator creates a new objective generator
-func NewGenerator(manager *Manager) *Generator {
+// newGenerator creates a new objective generator (private constructor)
+func newGenerator(manager *Manager) *Generator {
 	return &Generator{
 		manager: manager,
 	}
+}
+
+// DefaultGeneratorFactory creates a generator factory for registry use
+func DefaultGeneratorFactory(manager *Manager) *Generator {
+	return newGenerator(manager)
 }
 
 // GenerateFromPrompt generates an objective from a user prompt

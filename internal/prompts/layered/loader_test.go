@@ -1,4 +1,4 @@
-package prompts_test
+package layered_test
 
 import (
 	"testing"
@@ -6,13 +6,13 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/internal/prompts/layered"
 )
 
 func TestLoader(t *testing.T) {
 	t.Run("LoadDefaults", func(t *testing.T) {
-		registry := prompts.NewMemoryRegistry()
-		loader := prompts.NewLoader(registry)
+		registry := layered.NewMemoryRegistry()
+		loader := layered.NewLoader(registry)
 
 		err := loader.LoadDefaults()
 		require.NoError(t, err)
@@ -50,8 +50,8 @@ func TestLoader(t *testing.T) {
 	})
 
 	t.Run("LoadManagerPrompts", func(t *testing.T) {
-		registry := prompts.NewMemoryRegistry()
-		loader := prompts.NewLoader(registry)
+		registry := layered.NewMemoryRegistry()
+		loader := layered.NewLoader(registry)
 
 		// Use reflection to test private method
 		// In production, we'd test this through LoadDefaults
@@ -74,8 +74,8 @@ func TestLoader(t *testing.T) {
 	})
 
 	t.Run("LoadDeveloperPrompts", func(t *testing.T) {
-		registry := prompts.NewMemoryRegistry()
-		loader := prompts.NewLoader(registry)
+		registry := layered.NewMemoryRegistry()
+		loader := layered.NewLoader(registry)
 
 		err := loader.LoadDefaults()
 		require.NoError(t, err)
@@ -102,8 +102,8 @@ func TestLoader(t *testing.T) {
 	})
 
 	t.Run("LoadReviewerPrompts", func(t *testing.T) {
-		registry := prompts.NewMemoryRegistry()
-		loader := prompts.NewLoader(registry)
+		registry := layered.NewMemoryRegistry()
+		loader := layered.NewLoader(registry)
 
 		err := loader.LoadDefaults()
 		require.NoError(t, err)
@@ -130,8 +130,8 @@ func TestLoader(t *testing.T) {
 	})
 
 	t.Run("LoadTemplates", func(t *testing.T) {
-		registry := prompts.NewMemoryRegistry()
-		loader := prompts.NewLoader(registry)
+		registry := layered.NewMemoryRegistry()
+		loader := layered.NewLoader(registry)
 
 		err := loader.LoadDefaults()
 		require.NoError(t, err)
@@ -169,7 +169,7 @@ func TestLoader(t *testing.T) {
 	t.Run("ErrorHandling", func(t *testing.T) {
 		// Test with a registry that always returns errors
 		errorRegistry := &errorTestRegistry{}
-		loader := prompts.NewLoader(errorRegistry)
+		loader := layered.NewLoader(errorRegistry)
 
 		err := loader.LoadDefaults()
 		assert.Error(t, err)
@@ -198,8 +198,8 @@ func (r *errorTestRegistry) GetTemplate(name string) (string, error) {
 
 func TestLoaderCompleteness(t *testing.T) {
 	// Ensure all expected roles and domains are covered
-	registry := prompts.NewMemoryRegistry()
-	loader := prompts.NewLoader(registry)
+	registry := layered.NewMemoryRegistry()
+	loader := layered.NewLoader(registry)
 
 	err := loader.LoadDefaults()
 	require.NoError(t, err)

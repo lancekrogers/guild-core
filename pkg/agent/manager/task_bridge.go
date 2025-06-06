@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/internal/kanban"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 

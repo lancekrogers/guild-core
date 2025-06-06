@@ -14,12 +14,17 @@ type ContextHandler struct {
 	baseDir string
 }
 
-// NewContextHandler creates a new context handler
-func NewContextHandler(session *PlanningSession, baseDir string) *ContextHandler {
+// newContextHandler creates a new context handler (private constructor)
+func newContextHandler(session *PlanningSession, baseDir string) *ContextHandler {
 	return &ContextHandler{
 		session: session,
 		baseDir: baseDir,
 	}
+}
+
+// DefaultContextHandlerFactory creates a context handler factory for registry use
+func DefaultContextHandlerFactory(session *PlanningSession, baseDir string) *ContextHandler {
+	return newContextHandler(session, baseDir)
 }
 
 // ProcessInput handles user input and extracts document references

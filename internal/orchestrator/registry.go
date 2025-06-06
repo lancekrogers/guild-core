@@ -3,6 +3,8 @@ package orchestrator
 import (
 	"fmt"
 	"sync"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // OrchestratorRegistry manages orchestrator components for task planning and assignment
@@ -58,7 +60,10 @@ func (r *DefaultOrchestratorRegistry) RegisterCommissionPlanner(name string, pla
 	defer r.mu.Unlock()
 
 	if _, exists := r.commissionPlanners[name]; exists {
-		return fmt.Errorf("commission planner %s already exists", name)
+		return gerror.New(gerror.ErrCodeAlreadyExists, "commission planner already exists", nil).
+			WithComponent("orchestrator").
+			WithOperation("RegisterCommissionPlanner").
+			WithDetails("planner_name", name)
 	}
 
 	r.commissionPlanners[name] = planner
@@ -78,7 +83,10 @@ func (r *DefaultOrchestratorRegistry) GetCommissionPlanner(name string) (Commiss
 
 	planner, exists := r.commissionPlanners[name]
 	if !exists {
-		return nil, fmt.Errorf("commission planner %s not found", name)
+		return nil, gerror.New(gerror.ErrCodeNotFound, "commission planner not found", nil).
+			WithComponent("orchestrator").
+			WithOperation("GetCommissionPlanner").
+			WithDetails("planner_name", name)
 	}
 
 	return planner, nil
@@ -90,7 +98,9 @@ func (r *DefaultOrchestratorRegistry) GetDefaultCommissionPlanner() (CommissionT
 	defer r.mu.RUnlock()
 
 	if r.defaultPlanner == "" {
-		return nil, fmt.Errorf("no default commission planner configured")
+		return nil, gerror.New(gerror.ErrCodeValidation, "no default commission planner configured", nil).
+			WithComponent("orchestrator").
+			WithOperation("GetDefaultCommissionPlanner")
 	}
 
 	return r.GetCommissionPlanner(r.defaultPlanner)
@@ -102,7 +112,10 @@ func (r *DefaultOrchestratorRegistry) SetDefaultCommissionPlanner(name string) e
 	defer r.mu.Unlock()
 
 	if _, exists := r.commissionPlanners[name]; !exists {
-		return fmt.Errorf("commission planner %s not found", name)
+		return gerror.New(gerror.ErrCodeNotFound, "commission planner not found", nil).
+			WithComponent("orchestrator").
+			WithOperation("SetDefaultCommissionPlanner").
+			WithDetails("planner_name", name)
 	}
 
 	r.defaultPlanner = name
@@ -115,7 +128,10 @@ func (r *DefaultOrchestratorRegistry) RegisterEventBus(name string, eventBus Eve
 	defer r.mu.Unlock()
 
 	if _, exists := r.eventBuses[name]; exists {
-		return fmt.Errorf("event bus %s already exists", name)
+		return gerror.New(gerror.ErrCodeAlreadyExists, "event bus already exists", nil).
+			WithComponent("orchestrator").
+			WithOperation("RegisterEventBus").
+			WithDetails("event_bus_name", name)
 	}
 
 	r.eventBuses[name] = eventBus
@@ -135,7 +151,10 @@ func (r *DefaultOrchestratorRegistry) GetEventBus(name string) (EventBus, error)
 
 	eventBus, exists := r.eventBuses[name]
 	if !exists {
-		return nil, fmt.Errorf("event bus %s not found", name)
+		return nil, gerror.New(gerror.ErrCodeNotFound, "event bus not found", nil).
+			WithComponent("orchestrator").
+			WithOperation("GetEventBus").
+			WithDetails("event_bus_name", name)
 	}
 
 	return eventBus, nil
@@ -147,7 +166,9 @@ func (r *DefaultOrchestratorRegistry) GetDefaultEventBus() (EventBus, error) {
 	defer r.mu.RUnlock()
 
 	if r.defaultEventBus == "" {
-		return nil, fmt.Errorf("no default event bus configured")
+		return nil, gerror.New(gerror.ErrCodeValidation, "no default event bus configured", nil).
+			WithComponent("orchestrator").
+			WithOperation("GetDefaultEventBus")
 	}
 
 	return r.GetEventBus(r.defaultEventBus)

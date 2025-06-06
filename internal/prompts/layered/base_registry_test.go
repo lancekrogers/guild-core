@@ -1,4 +1,4 @@
-package prompts_test
+package layered_test
 
 import (
 	"fmt"
@@ -8,12 +8,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/internal/prompts/layered"
 )
 
 func TestMemoryRegistry(t *testing.T) {
 	t.Run("RegisterAndGetPrompt", func(t *testing.T) {
-		registry := prompts.NewMemoryRegistry()
+		registry := layered.NewMemoryRegistry()
 
 		// Test successful registration
 		err := registry.RegisterPrompt("manager", "web-app", "Web app manager prompt")
@@ -26,11 +26,11 @@ func TestMemoryRegistry(t *testing.T) {
 
 		// Test non-existent prompt
 		_, err = registry.GetPrompt("unknown", "unknown")
-		assert.ErrorIs(t, err, prompts.ErrPromptNotFound)
+		assert.ErrorIs(t, err, layered.ErrPromptNotFound)
 	})
 
 	t.Run("RegisterPromptValidation", func(t *testing.T) {
-		registry := prompts.NewMemoryRegistry()
+		registry := layered.NewMemoryRegistry()
 
 		// Test empty role
 		err := registry.RegisterPrompt("", "domain", "prompt")
@@ -49,7 +49,7 @@ func TestMemoryRegistry(t *testing.T) {
 	})
 
 	t.Run("RegisterAndGetTemplate", func(t *testing.T) {
-		registry := prompts.NewMemoryRegistry()
+		registry := layered.NewMemoryRegistry()
 
 		// Test successful registration
 		err := registry.RegisterTemplate("task-format", "Task format template")
@@ -62,11 +62,11 @@ func TestMemoryRegistry(t *testing.T) {
 
 		// Test non-existent template
 		_, err = registry.GetTemplate("unknown")
-		assert.ErrorIs(t, err, prompts.ErrTemplateNotFound)
+		assert.ErrorIs(t, err, layered.ErrTemplateNotFound)
 	})
 
 	t.Run("RegisterTemplateValidation", func(t *testing.T) {
-		registry := prompts.NewMemoryRegistry()
+		registry := layered.NewMemoryRegistry()
 
 		// Test empty name
 		err := registry.RegisterTemplate("", "template")
@@ -80,7 +80,7 @@ func TestMemoryRegistry(t *testing.T) {
 	})
 
 	t.Run("ListPrompts", func(t *testing.T) {
-		registry := prompts.NewMemoryRegistry()
+		registry := layered.NewMemoryRegistry()
 
 		// Register multiple prompts
 		registry.RegisterPrompt("manager", "web-app", "prompt1")
@@ -96,7 +96,7 @@ func TestMemoryRegistry(t *testing.T) {
 	})
 
 	t.Run("ListTemplates", func(t *testing.T) {
-		registry := prompts.NewMemoryRegistry()
+		registry := layered.NewMemoryRegistry()
 
 		// Register multiple templates
 		registry.RegisterTemplate("task-format", "template1")
@@ -112,7 +112,7 @@ func TestMemoryRegistry(t *testing.T) {
 	})
 
 	t.Run("Clear", func(t *testing.T) {
-		registry := prompts.NewMemoryRegistry()
+		registry := layered.NewMemoryRegistry()
 
 		// Add some data
 		registry.RegisterPrompt("manager", "web-app", "prompt")
@@ -129,9 +129,9 @@ func TestMemoryRegistry(t *testing.T) {
 
 		// Verify data is gone
 		_, err = registry.GetPrompt("manager", "web-app")
-		assert.ErrorIs(t, err, prompts.ErrPromptNotFound)
+		assert.ErrorIs(t, err, layered.ErrPromptNotFound)
 		_, err = registry.GetTemplate("task-format")
-		assert.ErrorIs(t, err, prompts.ErrTemplateNotFound)
+		assert.ErrorIs(t, err, layered.ErrTemplateNotFound)
 
 		// Verify lists are empty
 		assert.Empty(t, registry.ListPrompts())
@@ -139,7 +139,7 @@ func TestMemoryRegistry(t *testing.T) {
 	})
 
 	t.Run("OverwritePrompt", func(t *testing.T) {
-		registry := prompts.NewMemoryRegistry()
+		registry := layered.NewMemoryRegistry()
 
 		// Register initial prompt
 		err := registry.RegisterPrompt("manager", "web-app", "Original prompt")
@@ -156,7 +156,7 @@ func TestMemoryRegistry(t *testing.T) {
 	})
 
 	t.Run("OverwriteTemplate", func(t *testing.T) {
-		registry := prompts.NewMemoryRegistry()
+		registry := layered.NewMemoryRegistry()
 
 		// Register initial template
 		err := registry.RegisterTemplate("task-format", "Original template")
@@ -174,7 +174,7 @@ func TestMemoryRegistry(t *testing.T) {
 }
 
 func TestMemoryRegistryConcurrency(t *testing.T) {
-	registry := prompts.NewMemoryRegistry()
+	registry := layered.NewMemoryRegistry()
 	
 	// Number of concurrent operations
 	numGoroutines := 100
@@ -231,7 +231,7 @@ func TestMemoryRegistryConcurrency(t *testing.T) {
 
 // Benchmark tests
 func BenchmarkRegistryRegisterPrompt(b *testing.B) {
-	registry := prompts.NewMemoryRegistry()
+	registry := layered.NewMemoryRegistry()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
@@ -240,7 +240,7 @@ func BenchmarkRegistryRegisterPrompt(b *testing.B) {
 }
 
 func BenchmarkRegistryGetPrompt(b *testing.B) {
-	registry := prompts.NewMemoryRegistry()
+	registry := layered.NewMemoryRegistry()
 	registry.RegisterPrompt("manager", "web-app", "Benchmark prompt")
 	b.ResetTimer()
 
@@ -250,7 +250,7 @@ func BenchmarkRegistryGetPrompt(b *testing.B) {
 }
 
 func BenchmarkRegistryConcurrentRead(b *testing.B) {
-	registry := prompts.NewMemoryRegistry()
+	registry := layered.NewMemoryRegistry()
 	// Pre-populate with prompts
 	for i := 0; i < 100; i++ {
 		registry.RegisterPrompt(fmt.Sprintf("role%d", i), "domain", "prompt")

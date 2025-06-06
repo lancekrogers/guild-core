@@ -9,6 +9,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/comms"
 	"github.com/guild-ventures/guild-core/pkg/comms/channel"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 )
 
@@ -40,14 +41,18 @@ func NewManager(ctx context.Context, store memory.Store) (*Manager, error) {
 // NewManagerWithConfig creates a new kanban manager with custom channel config
 func NewManagerWithConfig(ctx context.Context, store memory.Store, channelConfig map[string]interface{}) (*Manager, error) {
 	if store == nil {
-		return nil, fmt.Errorf("store cannot be nil")
+		return nil, gerror.New(gerror.ErrCodeValidation, "store cannot be nil", nil).
+			WithComponent("KanbanManager").
+			WithOperation("NewManagerWithConfig")
 	}
 
 	// Initialize channel-based messaging
 	transport := channel.NewTransport()
 	pubsub, err := transport.NewPubSub(ctx, channelConfig)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create channel pubsub: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create channel pubsub").
+			WithComponent("KanbanManager").
+			WithOperation("NewManagerWithConfig")
 	}
 
 	// Create event manager
@@ -90,24 +95,32 @@ func NewManagerWithConfig(ctx context.Context, store memory.Store, channelConfig
 // This allows the manager to work with either SQLite or BoltDB storage backends
 func NewManagerWithRegistry(ctx context.Context, registry ComponentRegistry) (*Manager, error) {
 	if registry == nil {
-		return nil, fmt.Errorf("registry cannot be nil")
+		return nil, gerror.New(gerror.ErrCodeValidation, "registry cannot be nil", nil).
+			WithComponent("KanbanManager").
+			WithOperation("NewManagerWithRegistry")
 	}
 
 	// Get memory store from storage registry
 	storageReg := registry.Storage()
 	if storageReg == nil {
-		return nil, fmt.Errorf("storage registry not initialized")
+		return nil, gerror.New(gerror.ErrCodeInternal, "storage registry not initialized", nil).
+			WithComponent("KanbanManager").
+			WithOperation("NewManagerWithRegistry")
 	}
 
 	memoryStore := storageReg.GetMemoryStore()
 	if memoryStore == nil {
-		return nil, fmt.Errorf("memory store not available from storage registry")
+		return nil, gerror.New(gerror.ErrCodeInternal, "memory store not available from storage registry", nil).
+			WithComponent("KanbanManager").
+			WithOperation("NewManagerWithRegistry")
 	}
 
 	// Convert local interface to memory.Store for compatibility
 	memStoreCompat, ok := memoryStore.(memory.Store)
 	if !ok {
-		return nil, fmt.Errorf("memory store does not implement required interface")
+		return nil, gerror.New(gerror.ErrCodeInternal, "memory store does not implement required interface", nil).
+			WithComponent("KanbanManager").
+			WithOperation("NewManagerWithRegistry")
 	}
 
 	// Create manager with registry support
@@ -135,11 +148,15 @@ func (m *Manager) CreateBoard(ctx context.Context, name, description string) (*B
 	if m.registry != nil {
 		board, err = NewBoardWithRegistry(ctx, m.registry, name, description)
 	} else {
-		return nil, fmt.Errorf("board creation requires registry for SQLite backend")
+		return nil, gerror.New(gerror.ErrCodeInternal, "board creation requires registry for SQLite backend", nil).
+			WithComponent("KanbanManager").
+			WithOperation("CreateBoard")
 	}
 	
 	if err != nil {
-		return nil, fmt.Errorf("failed to create board: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create board").
+			WithComponent("KanbanManager").
+			WithOperation("CreateBoard")
 	}
 
 	// Set the event manager on the new board
@@ -166,11 +183,15 @@ func (m *Manager) GetBoard(ctx context.Context, boardID string) (*Board, error) 
 
 	// Load from SQLite
 	if m.registry == nil {
-		return nil, fmt.Errorf("board loading requires registry for SQLite backend")
+		return nil, gerror.New(gerror.ErrCodeInternal, "board loading requires registry for SQLite backend", nil).
+			WithComponent("KanbanManager").
+			WithOperation("GetBoard")
 	}
 	board, err := LoadBoard(ctx, m.registry, boardID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to load board: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to load board").
+			WithComponent("KanbanManager").
+			WithOperation("GetBoard")
 	}
 
 	// Set the event manager on the loaded board
@@ -188,7 +209,9 @@ func (m *Manager) GetBoard(ctx context.Context, boardID string) (*Board, error) 
 // ListBoards lists all boards
 func (m *Manager) ListBoards(ctx context.Context) ([]*Board, error) {
 	if m.registry == nil {
-		return nil, fmt.Errorf("board listing requires registry for SQLite backend")
+		return nil, gerror.New(gerror.ErrCodeInternal, "board listing requires registry for SQLite backend", nil).
+			WithComponent("KanbanManager").
+			WithOperation("ListBoards")
 	}
 	return ListBoards(ctx, m.registry)
 }
@@ -206,11 +229,15 @@ func (m *Manager) DeleteBoard(ctx context.Context, boardID string) error {
 		// Try to load it first
 		var err error
 		if m.registry == nil {
-			return fmt.Errorf("board loading requires registry for SQLite backend")
+			return gerror.New(gerror.ErrCodeInternal, "board loading requires registry for SQLite backend", nil).
+				WithComponent("KanbanManager").
+				WithOperation("DeleteBoard")
 		}
 		board, err = LoadBoard(ctx, m.registry, boardID)
 		if err != nil {
-			return fmt.Errorf("failed to load board: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to load board").
+				WithComponent("KanbanManager").
+				WithOperation("DeleteBoard")
 		}
 	}
 
@@ -222,24 +249,32 @@ func (m *Manager) GetTask(ctx context.Context, taskID string) (*Task, error) {
 	// Try to get the task directly from the store
 	data, err := m.store.Get(ctx, "tasks", taskID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get task: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get task").
+			WithComponent("KanbanManager").
+			WithOperation("GetTask")
 	}
 
 	var task Task
 	if err := json.Unmarshal(data, &task); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal task: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to unmarshal task").
+			WithComponent("KanbanManager").
+			WithOperation("GetTask")
 	}
 
 	// Get the board ID from the task's metadata
 	boardID, ok := task.Metadata["board_id"]
 	if !ok {
-		return nil, fmt.Errorf("task has no board_id in metadata")
+		return nil, gerror.New(gerror.ErrCodeValidation, "task has no board_id in metadata", nil).
+			WithComponent("KanbanManager").
+			WithOperation("GetTask")
 	}
 
 	// Get the board
 	board, err := m.GetBoard(ctx, boardID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get board: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get board").
+			WithComponent("KanbanManager").
+			WithOperation("GetTask")
 	}
 
 	// Verify the task belongs to the board
@@ -250,7 +285,9 @@ func (m *Manager) GetTask(ctx context.Context, taskID string) (*Task, error) {
 func (m *Manager) CreateTask(ctx context.Context, boardID, title, description string) (*Task, error) {
 	board, err := m.GetBoard(ctx, boardID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get board: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get board").
+			WithComponent("KanbanManager").
+			WithOperation("CreateTask")
 	}
 
 	return board.CreateTask(ctx, title, description)
@@ -261,18 +298,24 @@ func (m *Manager) UpdateTaskStatus(ctx context.Context, taskID string, status Ta
 	// Get the task to find its board
 	task, err := m.GetTask(ctx, taskID)
 	if err != nil {
-		return fmt.Errorf("failed to get task: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get task").
+			WithComponent("KanbanManager").
+			WithOperation("UpdateTaskStatus")
 	}
 
 	// Get the board
 	boardID, ok := task.Metadata["board_id"]
 	if !ok {
-		return fmt.Errorf("task has no board_id in metadata")
+		return gerror.New(gerror.ErrCodeValidation, "task has no board_id in metadata", nil).
+			WithComponent("KanbanManager").
+			WithOperation("UpdateTaskStatus")
 	}
 
 	board, err := m.GetBoard(ctx, boardID)
 	if err != nil {
-		return fmt.Errorf("failed to get board: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get board").
+			WithComponent("KanbanManager").
+			WithOperation("UpdateTaskStatus")
 	}
 
 	return board.UpdateTaskStatus(ctx, taskID, status, changedBy, comment)
@@ -283,18 +326,24 @@ func (m *Manager) AssignTask(ctx context.Context, taskID, assignee, changedBy, c
 	// Get the task to find its board
 	task, err := m.GetTask(ctx, taskID)
 	if err != nil {
-		return fmt.Errorf("failed to get task: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get task").
+			WithComponent("KanbanManager").
+			WithOperation("AssignTask")
 	}
 
 	// Get the board
 	boardID, ok := task.Metadata["board_id"]
 	if !ok {
-		return fmt.Errorf("task has no board_id in metadata")
+		return gerror.New(gerror.ErrCodeValidation, "task has no board_id in metadata", nil).
+			WithComponent("KanbanManager").
+			WithOperation("AssignTask")
 	}
 
 	board, err := m.GetBoard(ctx, boardID)
 	if err != nil {
-		return fmt.Errorf("failed to get board: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get board").
+			WithComponent("KanbanManager").
+			WithOperation("AssignTask")
 	}
 
 	return board.AssignTask(ctx, taskID, assignee, changedBy, comment)
@@ -307,7 +356,9 @@ func (m *Manager) ListTasksByStatus(ctx context.Context, status TaskStatus) ([]*
 	// List all boards
 	boards, err := m.ListBoards(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list boards: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list boards").
+			WithComponent("KanbanManager").
+			WithOperation("ListTasksByStatus")
 	}
 
 	// Get tasks from each board
@@ -332,7 +383,9 @@ func (m *Manager) ListTasksByAgent(ctx context.Context, agentID string) ([]*Task
 	// List all boards
 	boards, err := m.ListBoards(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list boards: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list boards").
+			WithComponent("KanbanManager").
+			WithOperation("ListTasksByAgent")
 	}
 
 	// Get tasks from each board

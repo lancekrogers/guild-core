@@ -7,7 +7,8 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/internal/kanban"
 )
 
 // taskDispatcher is responsible for assigning tasks to agents
@@ -89,7 +90,9 @@ func (d *taskDispatcher) DispatchTasks(ctx context.Context) error {
 	// TODO: The boardID should be configurable
 	tasks, err := d.kanbanManager.ListTasksByStatus(ctx, "default", kanban.StatusTodo)
 	if err != nil {
-		return fmt.Errorf("failed to list tasks: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to list tasks").
+			WithComponent("orchestrator").
+			WithOperation("DispatchTasks")
 	}
 
 	if len(tasks) == 0 {
@@ -150,7 +153,10 @@ func (d *taskDispatcher) StartAgent(ctx context.Context, agentID string) error {
 	d.mu.Unlock()
 	
 	if !exists {
-		return fmt.Errorf("agent %s not found or not active", agentID)
+		return gerror.New(gerror.ErrCodeAgentNotFound, "agent not found or not active", nil).
+			WithComponent("orchestrator").
+			WithOperation("StartAgent").
+			WithDetails("agent_id", agentID)
 	}
 	
 	// Start the agent's execution in a goroutine
@@ -257,7 +263,10 @@ func (d *taskDispatcher) Dispatch(ctx context.Context, task *kanban.Task) error 
 		}
 	}
 	
-	return fmt.Errorf("no available agents to handle task %s", task.ID)
+	return gerror.New(gerror.ErrCodeNoAvailableAgent, "no available agents to handle task", nil).
+		WithComponent("orchestrator").
+		WithOperation("Dispatch").
+		WithDetails("task_id", task.ID)
 }
 
 // GetTaskStatus returns the current status of a task (implements interface)
@@ -278,7 +287,10 @@ func (d *taskDispatcher) GetTaskStatus(ctx context.Context, taskID string) (Task
 		}
 	}
 	
-	return TaskStatus{}, fmt.Errorf("task %s not found", taskID)
+	return TaskStatus{}, gerror.New(gerror.ErrCodeNotFound, "task not found", nil).
+		WithComponent("orchestrator").
+		WithOperation("GetTaskStatus").
+		WithDetails("task_id", taskID)
 }
 
 // GetAgentStatus returns the current status of an agent (implements interface)

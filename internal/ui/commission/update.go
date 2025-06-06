@@ -11,7 +11,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 
-	commissionpkg "github.com/guild-ventures/guild-core/pkg/commission"
+	commissionpkg "github.com/guild-ventures/guild-core/internal/commission"
 	"github.com/guild-ventures/guild-core/pkg/ui/commission/components"
 )
 

@@ -431,7 +431,11 @@ type ProjectContext interface {
 }
 
 // Factory function types for component creation
-type AgentFactory func(config AgentConfig) (Agent, error)
+type AgentFactory interface {
+	CreateAgent(ctx context.Context, id, name string, agentType string) (Agent, error)
+	CreateWorkerAgent(ctx context.Context, id, name string) (Agent, error)
+	CreateManagerAgent(ctx context.Context, id, name string) (Agent, error)
+}
 
 // Configuration types
 type Config struct {

@@ -38,8 +38,8 @@ type Chunker struct {
 	Config ChunkerConfig
 }
 
-// NewChunker creates a new Chunker
-func NewChunker(config ChunkerConfig) *Chunker {
+// newChunker creates a new Chunker (private constructor)
+func newChunker(config ChunkerConfig) *Chunker {
 	// Default config values
 	if config.ChunkSize <= 0 {
 		config.ChunkSize = 1000
@@ -237,4 +237,43 @@ func (c *Chunker) chunkByMarkdownHeader(text string) []string {
 	}
 	
 	return chunks
+}
+
+// ChunkWithMeta represents a chunk with metadata
+type ChunkWithMeta struct {
+	Content  string
+	Index    int
+	Metadata map[string]interface{}
+}
+
+// ChunkWithMetadata chunks a document and returns chunks with metadata
+func (c *Chunker) ChunkWithMetadata(content string) []ChunkWithMeta {
+	chunks := c.ChunkDocument(content)
+	result := make([]ChunkWithMeta, len(chunks))
+	
+	for i, chunk := range chunks {
+		result[i] = ChunkWithMeta{
+			Content: chunk,
+			Index:   i,
+			Metadata: map[string]interface{}{
+				"chunk_index":  i,
+				"total_chunks": len(chunks),
+				"strategy":     string(c.Config.Strategy),
+				"chunk_size":   c.Config.ChunkSize,
+				"overlap":      c.Config.ChunkOverlap,
+			},
+		}
+	}
+	
+	return result
+}
+
+// GetConfig returns the chunker configuration
+func (c *Chunker) GetConfig() ChunkerConfig {
+	return c.Config
+}
+
+// DefaultChunkerFactory creates a chunker for registry use
+func DefaultChunkerFactory(config ChunkerConfig) (ChunkerInterface, error) {
+	return newChunker(config), nil
 }

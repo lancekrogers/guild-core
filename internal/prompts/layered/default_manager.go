@@ -2,8 +2,9 @@ package layered
 
 import (
 	"context"
-	"fmt"
 	"sync"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // DefaultManager is the default implementation of the Manager interface
@@ -27,7 +28,9 @@ func (m *DefaultManager) GetSystemPrompt(ctx context.Context, role string, domai
 	defer m.mu.RUnlock()
 
 	if m.registry == nil {
-		return "", fmt.Errorf("registry not initialized")
+		return "", gerror.New(gerror.ErrCodeInternal, "registry not initialized", nil).
+			WithComponent("prompts").
+			WithOperation("GetSystemPrompt")
 	}
 
 	prompt, err := m.registry.GetPrompt(role, domain)
@@ -35,7 +38,11 @@ func (m *DefaultManager) GetSystemPrompt(ctx context.Context, role string, domai
 		// Try to get a default prompt for the role
 		defaultPrompt, defaultErr := m.registry.GetPrompt(role, "default")
 		if defaultErr != nil {
-			return "", fmt.Errorf("prompt not found for role=%s, domain=%s: %w", role, domain, err)
+			return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "prompt not found").
+				WithComponent("prompts").
+				WithOperation("GetSystemPrompt").
+				WithDetails("role", role).
+				WithDetails("domain", domain)
 		}
 		return defaultPrompt, nil
 	}
@@ -49,7 +56,9 @@ func (m *DefaultManager) GetTemplate(ctx context.Context, templateName string) (
 	defer m.mu.RUnlock()
 
 	if m.registry == nil {
-		return "", fmt.Errorf("registry not initialized")
+		return "", gerror.New(gerror.ErrCodeInternal, "registry not initialized", nil).
+			WithComponent("prompts").
+			WithOperation("GetTemplate")
 	}
 
 	return m.registry.GetTemplate(templateName)
@@ -61,7 +70,9 @@ func (m *DefaultManager) FormatContext(ctx context.Context, context Context) (st
 	defer m.mu.RUnlock()
 
 	if m.formatter == nil {
-		return "", fmt.Errorf("formatter not initialized")
+		return "", gerror.New(gerror.ErrCodeInternal, "formatter not initialized", nil).
+			WithComponent("prompts").
+			WithOperation("FormatContext")
 	}
 
 	// Default to XML formatting for efficiency

@@ -3,10 +3,11 @@ package corpus
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // ActivityLog represents a collection of user view records
@@ -25,7 +26,7 @@ func NewActivityLog() *ActivityLog {
 // TrackUserView records a document view by a user
 func TrackUserView(ctx context.Context, user, docPath string, cfg Config) error {
 	if user == "" || docPath == "" {
-		return fmt.Errorf("user and document path are required")
+		return gerror.New(gerror.InvalidArgument, "corpus", "track_user_view", "user and document path are required")
 	}
 
 	// Ensure the activities directory exists
@@ -35,7 +36,7 @@ func TrackUserView(ctx context.Context, user, docPath string, cfg Config) error 
 	}
 
 	if err := os.MkdirAll(activitiesDir, 0755); err != nil {
-		return fmt.Errorf("failed to create activities directory: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "corpus", "track_user_view", "failed to create activities directory")
 	}
 
 	// Create or load the activity log
@@ -50,7 +51,7 @@ func TrackUserView(ctx context.Context, user, docPath string, cfg Config) error 
 		// Load existing activity log
 		data, err := os.ReadFile(activityLogPath)
 		if err != nil {
-			return fmt.Errorf("failed to read activity log: %w", err)
+			return gerror.Wrap(err, gerror.Internal, "corpus", "track_user_view", "failed to read activity log")
 		}
 
 		activityLog = &ActivityLog{
@@ -84,11 +85,11 @@ func TrackUserView(ctx context.Context, user, docPath string, cfg Config) error 
 	// Save the updated activity log
 	data, err := json.MarshalIndent(activityLog, "", "  ")
 	if err != nil {
-		return fmt.Errorf("failed to serialize activity log: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "corpus", "track_user_view", "failed to serialize activity log")
 	}
 
 	if err := os.WriteFile(activityLogPath, data, 0644); err != nil {
-		return fmt.Errorf("failed to save activity log: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "corpus", "track_user_view", "failed to save activity log")
 	}
 
 	// Also save user-specific log file for backward compatibility
@@ -100,11 +101,11 @@ func TrackUserView(ctx context.Context, user, docPath string, cfg Config) error 
 	// Save user-specific log
 	userData, err := json.MarshalIndent(userLogs, "", "  ")
 	if err != nil {
-		return fmt.Errorf("failed to marshal user log: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "corpus", "track_user_view", "failed to marshal user log")
 	}
 
 	if err := os.WriteFile(userLogPath, userData, 0644); err != nil {
-		return fmt.Errorf("failed to save user log: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "corpus", "track_user_view", "failed to save user log")
 	}
 
 	return nil
@@ -113,7 +114,7 @@ func TrackUserView(ctx context.Context, user, docPath string, cfg Config) error 
 // GetUserActivity retrieves a user's document viewing history
 func GetUserActivity(ctx context.Context, user string, cfg Config) ([]ViewLog, error) {
 	if user == "" {
-		return nil, fmt.Errorf("user is required")
+		return nil, gerror.New(gerror.InvalidArgument, "corpus", "get_user_activity", "user is required")
 	}
 
 	// Check for the activity log file
@@ -130,12 +131,12 @@ func GetUserActivity(ctx context.Context, user string, cfg Config) ([]ViewLog, e
 	// Load the activity log
 	data, err := os.ReadFile(activityLogPath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read activity log: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "corpus", "get_user_activity", "failed to read activity log")
 	}
 
 	var activityLog ActivityLog
 	if err := json.Unmarshal(data, &activityLog); err != nil {
-		return nil, fmt.Errorf("failed to parse activity log: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "corpus", "get_user_activity", "failed to parse activity log")
 	}
 
 	// Return the user's view logs (or empty slice if none)
@@ -167,12 +168,12 @@ func GetMostViewedDocuments(ctx context.Context, cfg Config, limit int) (map[str
 	// Load the activity log
 	data, err := os.ReadFile(activityLogPath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read activity log: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "corpus", "get_activity", "failed to read activity log")
 	}
 
 	var activityLog ActivityLog
 	if err := json.Unmarshal(data, &activityLog); err != nil {
-		return nil, fmt.Errorf("failed to parse activity log: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "corpus", "get_user_activity", "failed to parse activity log")
 	}
 
 	// Count document views
@@ -247,12 +248,12 @@ func GetRecentActivity(ctx context.Context, cfg Config, limit int) ([]ViewLog, e
 	// Load the activity log
 	data, err := os.ReadFile(activityLogPath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read activity log: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "corpus", "get_activity", "failed to read activity log")
 	}
 
 	var activityLog ActivityLog
 	if err := json.Unmarshal(data, &activityLog); err != nil {
-		return nil, fmt.Errorf("failed to parse activity log: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "corpus", "get_user_activity", "failed to parse activity log")
 	}
 
 	// Collect all view logs

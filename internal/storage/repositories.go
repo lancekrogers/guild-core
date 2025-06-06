@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/storage/db"
+	"github.com/guild-ventures/guild-core/internal/storage/db"
 )
 
 // SQLiteTaskRepository implements TaskRepository using SQLite

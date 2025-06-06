@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // This file demonstrates how the context system integrates with the Guild framework
@@ -166,7 +168,7 @@ func (m *MockAgentRegistry) GetAgent(name string) (interface{}, error) {
 	if agent, exists := m.agents[name]; exists {
 		return agent, nil
 	}
-	return nil, fmt.Errorf("agent '%s' not found", name)
+	return nil, gerror.Newf(gerror.ErrCodeNotFound, "agent '%s' not found", name).WithComponent("context").WithOperation("GetAgent")
 }
 
 func (m *MockAgentRegistry) ListAgents() []string {
@@ -184,7 +186,7 @@ func (m *MockAgentRegistry) SetDefaultAgent(name string) error {
 
 func (m *MockAgentRegistry) GetDefaultAgent() (interface{}, error) {
 	if m.defaultAgent == "" {
-		return nil, fmt.Errorf("no default agent set")
+		return nil, gerror.New(gerror.ErrCodeNotFound, "no default agent set", nil).WithComponent("context").WithOperation("GetDefaultAgent")
 	}
 	return m.GetAgent(m.defaultAgent)
 }
@@ -211,7 +213,7 @@ func (m *MockToolRegistry) GetTool(name string) (interface{}, error) {
 	if tool, exists := m.tools[name]; exists {
 		return tool, nil
 	}
-	return nil, fmt.Errorf("tool '%s' not found", name)
+	return nil, gerror.Newf(gerror.ErrCodeNotFound, "tool '%s' not found", name).WithComponent("context").WithOperation("GetTool")
 }
 
 func (m *MockToolRegistry) ListTools() []string {
@@ -263,7 +265,7 @@ func (m *MockProviderRegistry) GetProvider(name string) (interface{}, error) {
 	if provider, exists := m.providers[name]; exists {
 		return provider, nil
 	}
-	return nil, fmt.Errorf("provider '%s' not found", name)
+	return nil, gerror.Newf(gerror.ErrCodeNotFound, "provider '%s' not found", name).WithComponent("context").WithOperation("GetProvider")
 }
 
 func (m *MockProviderRegistry) ListProviders() []string {
@@ -281,7 +283,7 @@ func (m *MockProviderRegistry) SetDefaultProvider(name string) error {
 
 func (m *MockProviderRegistry) GetDefaultProvider() (interface{}, error) {
 	if m.defaultProvider == "" {
-		return nil, fmt.Errorf("no default provider set")
+		return nil, gerror.New(gerror.ErrCodeNotFound, "no default provider set", nil).WithComponent("context").WithOperation("GetDefaultProvider")
 	}
 	return m.GetProvider(m.defaultProvider)
 }
@@ -304,7 +306,7 @@ func (m *MockMemoryRegistry) GetMemoryStore(name string) (interface{}, error) {
 	if store, exists := m.memoryStores[name]; exists {
 		return store, nil
 	}
-	return nil, fmt.Errorf("memory store '%s' not found", name)
+	return nil, gerror.Newf(gerror.ErrCodeNotFound, "memory store '%s' not found", name).WithComponent("context").WithOperation("GetMemoryStore")
 }
 
 func (m *MockMemoryRegistry) RegisterVectorStore(name string, store interface{}) error {
@@ -319,7 +321,7 @@ func (m *MockMemoryRegistry) GetVectorStore(name string) (interface{}, error) {
 	if store, exists := m.vectorStores[name]; exists {
 		return store, nil
 	}
-	return nil, fmt.Errorf("vector store '%s' not found", name)
+	return nil, gerror.Newf(gerror.ErrCodeNotFound, "vector store '%s' not found", name).WithComponent("context").WithOperation("GetVectorStore")
 }
 
 func (m *MockMemoryRegistry) ListMemoryStores() []string {
@@ -469,7 +471,7 @@ func ExampleErrorHandling() {
 	ctx = WithSessionID(ctx, "error-demo-session")
 	
 	// Simulate an error with context
-	err := fmt.Errorf("provider connection failed")
+	err := gerror.New(gerror.ErrCodeConnection, "provider connection failed", nil).WithComponent("context").WithOperation("ExampleErrorHandling")
 	
 	// Log with context
 	logger := GetLogger(ctx)
@@ -481,7 +483,7 @@ func ExampleErrorHandling() {
 	}
 	
 	// Error wrapping with context
-	contextErr := fmt.Errorf("failed to complete request %s: %w", GetRequestID(ctx), err)
+	contextErr := gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to complete request %s", GetRequestID(ctx)).WithComponent("context").WithOperation("ExampleErrorHandling")
 	fmt.Printf("Wrapped error: %v\n", contextErr)
 }
 

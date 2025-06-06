@@ -1,4 +1,4 @@
-package prompts_test
+package layered_test
 
 import (
 	"context"
@@ -7,16 +7,16 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/internal/prompts/layered"
 )
 
 // TestManagerInterface ensures the interface is properly defined
 func TestManagerInterface(t *testing.T) {
 	// This test ensures that our interface contracts are maintained
-	var _ prompts.Manager = (*testManager)(nil)
-	var _ prompts.Context = (*testContext)(nil)
-	var _ prompts.Formatter = (*testFormatter)(nil)
-	var _ prompts.Registry = (*testRegistry)(nil)
+	var _ layered.Manager = (*testManager)(nil)
+	var _ layered.Context = (*testContext)(nil)
+	var _ layered.Formatter = (*testFormatter)(nil)
+	var _ layered.Registry = (*testRegistry)(nil)
 }
 
 // Mock implementations for testing
@@ -27,17 +27,17 @@ func (m *testManager) GetSystemPrompt(ctx context.Context, role string, domain s
 	if role == "manager" && domain == "web-app" {
 		return "You are a Guild Master for web applications...", nil
 	}
-	return "", prompts.ErrPromptNotFound
+	return "", layered.ErrPromptNotFound
 }
 
 func (m *testManager) GetTemplate(ctx context.Context, templateName string) (string, error) {
 	if templateName == "task-format" {
 		return "**Tasks Generated**:\n- {ID}: {Title}", nil
 	}
-	return "", prompts.ErrTemplateNotFound
+	return "", layered.ErrTemplateNotFound
 }
 
-func (m *testManager) FormatContext(ctx context.Context, context prompts.Context) (string, error) {
+func (m *testManager) FormatContext(ctx context.Context, context layered.Context) (string, error) {
 	return "<context>formatted</context>", nil
 }
 
@@ -55,9 +55,9 @@ func (m *testManager) ListDomains(ctx context.Context, role string) ([]string, e
 type testContext struct {
 	commissionID    string
 	commissionTitle string
-	currentTask     prompts.TaskContext
-	sections        []prompts.Section
-	relatedTasks    []prompts.TaskContext
+	currentTask     layered.TaskContext
+	sections        []layered.Section
+	relatedTasks    []layered.TaskContext
 }
 
 func (c *testContext) GetCommissionID() string {
@@ -68,25 +68,25 @@ func (c *testContext) GetCommissionTitle() string {
 	return c.commissionTitle
 }
 
-func (c *testContext) GetCurrentTask() prompts.TaskContext {
+func (c *testContext) GetCurrentTask() layered.TaskContext {
 	return c.currentTask
 }
 
-func (c *testContext) GetRelevantSections() []prompts.Section {
+func (c *testContext) GetRelevantSections() []layered.Section {
 	return c.sections
 }
 
-func (c *testContext) GetRelatedTasks() []prompts.TaskContext {
+func (c *testContext) GetRelatedTasks() []layered.TaskContext {
 	return c.relatedTasks
 }
 
 type testFormatter struct{}
 
-func (f *testFormatter) FormatAsXML(ctx prompts.Context) (string, error) {
+func (f *testFormatter) FormatAsXML(ctx layered.Context) (string, error) {
 	return "<context>xml</context>", nil
 }
 
-func (f *testFormatter) FormatAsMarkdown(ctx prompts.Context) (string, error) {
+func (f *testFormatter) FormatAsMarkdown(ctx layered.Context) (string, error) {
 	return "# Context\nmarkdown", nil
 }
 
@@ -125,14 +125,14 @@ func (r *testRegistry) GetPrompt(role, domain string) (string, error) {
 	if prompt, ok := r.prompts[key]; ok {
 		return prompt, nil
 	}
-	return "", prompts.ErrPromptNotFound
+	return "", layered.ErrPromptNotFound
 }
 
 func (r *testRegistry) GetTemplate(name string) (string, error) {
 	if template, ok := r.templates[name]; ok {
 		return template, nil
 	}
-	return "", prompts.ErrTemplateNotFound
+	return "", layered.ErrTemplateNotFound
 }
 
 // Actual tests
@@ -149,7 +149,7 @@ func TestMockManager(t *testing.T) {
 
 		// Test non-existent prompt
 		_, err = manager.GetSystemPrompt(ctx, "unknown", "unknown")
-		assert.ErrorIs(t, err, prompts.ErrPromptNotFound)
+		assert.ErrorIs(t, err, layered.ErrPromptNotFound)
 	})
 
 	t.Run("GetTemplate", func(t *testing.T) {
@@ -160,7 +160,7 @@ func TestMockManager(t *testing.T) {
 
 		// Test non-existent template
 		_, err = manager.GetTemplate(ctx, "unknown")
-		assert.ErrorIs(t, err, prompts.ErrTemplateNotFound)
+		assert.ErrorIs(t, err, layered.ErrTemplateNotFound)
 	})
 
 	t.Run("ListRoles", func(t *testing.T) {
@@ -185,12 +185,12 @@ func TestContext(t *testing.T) {
 	ctx := &testContext{
 		commissionID:    "test-commission",
 		commissionTitle: "Build Test System",
-		currentTask: prompts.TaskContext{
+		currentTask: layered.TaskContext{
 			ID:          "TASK-001",
 			Title:       "Implement feature",
 			Description: "Implement the test feature",
 		},
-		sections: []prompts.Section{
+		sections: []layered.Section{
 			{
 				Level:   1,
 				Path:    "1",
@@ -198,7 +198,7 @@ func TestContext(t *testing.T) {
 				Content: "System overview content",
 			},
 		},
-		relatedTasks: []prompts.TaskContext{
+		relatedTasks: []layered.TaskContext{
 			{
 				ID:    "TASK-002",
 				Title: "Related task",
@@ -259,7 +259,7 @@ func TestRegistry(t *testing.T) {
 
 		// Try to get non-existent prompt
 		_, err = registry.GetPrompt("unknown", "unknown")
-		assert.ErrorIs(t, err, prompts.ErrPromptNotFound)
+		assert.ErrorIs(t, err, layered.ErrPromptNotFound)
 	})
 
 	t.Run("RegisterAndGetTemplate", func(t *testing.T) {
@@ -274,6 +274,6 @@ func TestRegistry(t *testing.T) {
 
 		// Try to get non-existent template
 		_, err = registry.GetTemplate("unknown")
-		assert.ErrorIs(t, err, prompts.ErrTemplateNotFound)
+		assert.ErrorIs(t, err, layered.ErrTemplateNotFound)
 	})
 }

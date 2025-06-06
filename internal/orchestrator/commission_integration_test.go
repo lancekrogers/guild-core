@@ -9,9 +9,9 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
 	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/storage"
-	// "github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/internal/kanban"
+	"github.com/guild-ventures/guild-core/internal/storage"
+	// "github.com/guild-ventures/guild-core/internal/commission"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/providers/mock"
 	"github.com/guild-ventures/guild-core/pkg/registry"

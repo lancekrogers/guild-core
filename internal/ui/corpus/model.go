@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/corpus"
+	"github.com/guild-ventures/guild-core/internal/corpus"
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
@@ -39,11 +39,9 @@ type CorpusModel struct {
 	// Context for operations
 	ctx context.Context
 	
-	// Config holds corpus configuration
-	config struct {
-		CorpusConfig corpus.Config
-		CurrentUser  string
-	}
+	// Dependencies - interface-first design
+	corpusManager CorpusManager  // Interface dependency for corpus operations
+	config        CorpusConfig   // Interface dependency for configuration
 
 	// Data state
 	docs        []corpus.CorpusDoc  // All documents in the corpus
@@ -247,7 +245,7 @@ func (i TagItem) FilterValue() string {
 }
 
 // NewModel creates a new corpus UI model.
-func NewModel(ctx context.Context, cfg corpus.Config, user string) CorpusModel {
+func NewModel(ctx context.Context, corpusManager CorpusManager, config CorpusConfig) CorpusModel {
 	// Initialize the search input
 	searchInput := textinput.New()
 	searchInput.Placeholder = "Search documents..."
@@ -295,14 +293,9 @@ func NewModel(ctx context.Context, cfg corpus.Config, user string) CorpusModel {
 
 	// Create the model
 	return CorpusModel{
-		ctx: ctx,
-		config: struct {
-			CorpusConfig corpus.Config
-			CurrentUser  string
-		}{
-			CorpusConfig: cfg,
-			CurrentUser:  user,
-		},
+		ctx:           ctx,
+		corpusManager: corpusManager,
+		config:        config,
 		docs:        []corpus.CorpusDoc{},
 		docsByTag:   make(map[string][]string),
 		allTags:     []string{},
@@ -320,9 +313,9 @@ func NewModel(ctx context.Context, cfg corpus.Config, user string) CorpusModel {
 // Init initializes the model.
 func (m CorpusModel) Init() tea.Cmd {
 	return tea.Batch(
-		listDocuments(m.config.CorpusConfig),
-		loadTags(m.config.CorpusConfig),
-		loadGraph(m.config.CorpusConfig),
+		listDocuments(m.config),
+		loadTags(m.config),
+		loadGraph(m.config),
 	)
 }
 

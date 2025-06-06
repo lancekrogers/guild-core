@@ -3,7 +3,7 @@ package mocks
 import (
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/orchestrator/interfaces"
+	"github.com/guild-ventures/guild-core/internal/orchestrator/interfaces"
 )
 
 // MockEventHandler is a mock implementation of the EventHandler function

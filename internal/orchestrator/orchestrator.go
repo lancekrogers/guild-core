@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/internal/commission"
 )
 
 // Status represents the status of the orchestrator

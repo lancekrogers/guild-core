@@ -3,7 +3,7 @@ package agentobj
 import (
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/internal/commission"
 )
 
 // AgentParser represents a specialized parser for agent-generated commissions

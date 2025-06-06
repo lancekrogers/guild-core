@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/storage"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/internal/storage"
 )
 
 // kanbanBoardRepoAdapter adapts storage.BoardRepository to kanban.BoardRepository
@@ -32,14 +33,18 @@ func (k *kanbanBoardRepoAdapter) CreateBoard(ctx context.Context, board interfac
 			return k.repo.CreateBoard(ctx, storageBoard)
 		}
 	}
-	return fmt.Errorf("board repository not available")
+	return gerror.New(gerror.ErrCodeStorage, "board repository not available", nil).
+		WithComponent("orchestrator").
+		WithOperation("CreateBoard")
 }
 
 func (k *kanbanBoardRepoAdapter) GetBoard(ctx context.Context, id string) (interface{}, error) {
 	if k.repo != nil {
 		return k.repo.GetBoard(ctx, id)
 	}
-	return nil, fmt.Errorf("board repository not available")
+	return nil, gerror.New(gerror.ErrCodeStorage, "board repository not available", nil).
+		WithComponent("orchestrator").
+		WithOperation("GetBoard")
 }
 
 func (k *kanbanBoardRepoAdapter) UpdateBoard(ctx context.Context, board interface{}) error {
@@ -61,14 +66,18 @@ func (k *kanbanBoardRepoAdapter) UpdateBoard(ctx context.Context, board interfac
 			return k.repo.UpdateBoard(ctx, storageBoard)
 		}
 	}
-	return fmt.Errorf("board repository not available")
+	return gerror.New(gerror.ErrCodeStorage, "board repository not available", nil).
+		WithComponent("orchestrator").
+		WithOperation("UpdateBoard")
 }
 
 func (k *kanbanBoardRepoAdapter) DeleteBoard(ctx context.Context, id string) error {
 	if k.repo != nil {
 		return k.repo.DeleteBoard(ctx, id)
 	}
-	return fmt.Errorf("board repository not available")
+	return gerror.New(gerror.ErrCodeStorage, "board repository not available", nil).
+		WithComponent("orchestrator").
+		WithOperation("DeleteBoard")
 }
 
 func (k *kanbanBoardRepoAdapter) ListBoards(ctx context.Context) ([]interface{}, error) {
@@ -84,5 +93,7 @@ func (k *kanbanBoardRepoAdapter) ListBoards(ctx context.Context) ([]interface{},
 		}
 		return result, nil
 	}
-	return nil, fmt.Errorf("board repository not available")
+	return nil, gerror.New(gerror.ErrCodeStorage, "board repository not available", nil).
+		WithComponent("orchestrator").
+		WithOperation("ListBoards")
 }

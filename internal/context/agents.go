@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // AgentClient represents a context-aware agent
@@ -81,7 +83,7 @@ func ExecuteWithAgent(ctx context.Context, agentName, request string) (string, e
 	// Get agent from context
 	agent, err := GetAgentFromContext(ctx, agentName)
 	if err != nil {
-		return "", fmt.Errorf("failed to get agent '%s': %w", agentName, err)
+		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get agent").WithComponent("context").WithOperation("ExecuteWithAgent").WithDetails("agent_name", agentName)
 	}
 	
 	// Try to cast to our context-aware interface
@@ -102,20 +104,20 @@ func ExecuteWithAgent(ctx context.Context, agentName, request string) (string, e
 		return basicAgent.Execute(agentCtx, request)
 	}
 	
-	return "", fmt.Errorf("agent '%s' does not implement required execution interface", agentName)
+	return "", gerror.Newf(gerror.ErrCodeInvalidInput, "agent '%s' does not implement required execution interface", agentName).WithComponent("context").WithOperation("ExecuteWithAgent")
 }
 
 // ExecuteWithDefaultAgent runs a task using the default agent from context
 func ExecuteWithDefaultAgent(ctx context.Context, request string) (string, error) {
 	registry, err := GetRegistryProvider(ctx)
 	if err != nil {
-		return "", fmt.Errorf("failed to get registry from context: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("ExecuteWithDefaultAgent")
 	}
 	
 	// Get default agent
 	agent, err := registry.Agents().GetDefaultAgent()
 	if err != nil {
-		return "", fmt.Errorf("failed to get default agent: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get default agent").WithComponent("context").WithOperation("ExecuteWithDefaultAgent")
 	}
 	
 	// Try to cast to our context-aware interface
@@ -134,7 +136,7 @@ func ExecuteWithDefaultAgent(ctx context.Context, request string) (string, error
 		return basicAgent.Execute(agentCtx, request)
 	}
 	
-	return "", fmt.Errorf("default agent does not implement required execution interface")
+	return "", gerror.New(gerror.ErrCodeInvalidInput, "default agent does not implement required execution interface", nil).WithComponent("context").WithOperation("ExecuteWithDefaultAgent")
 }
 
 // CreateTaskRequest creates a context-aware task request
@@ -207,13 +209,13 @@ func ExecuteTaskRequest(ctx context.Context, agentName string, req TaskRequest) 
 func SelectBestAgent(ctx context.Context, taskType string, requirements map[string]interface{}) (string, error) {
 	registry, err := GetRegistryProvider(ctx)
 	if err != nil {
-		return "", fmt.Errorf("failed to get registry from context: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("SelectBestAgent")
 	}
 	
 	// Get all available agents
 	agents := registry.Agents().ListAgents()
 	if len(agents) == 0 {
-		return "", fmt.Errorf("no agents available")
+		return "", gerror.New(gerror.ErrCodeNotFound, "no agents available", nil).WithComponent("context").WithOperation("SelectBestAgent")
 	}
 	
 	// Simple selection logic - in production this could be more sophisticated
@@ -275,7 +277,7 @@ func RouteToAgent(ctx context.Context, taskType, request string, requirements ma
 	// Select best agent
 	agentName, err := SelectBestAgent(ctx, taskType, requirements)
 	if err != nil {
-		return "", fmt.Errorf("failed to select agent: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to select agent").WithComponent("context").WithOperation("RouteToAgent")
 	}
 	
 	// Create enhanced context
@@ -293,7 +295,7 @@ func RouteToAgent(ctx context.Context, taskType, request string, requirements ma
 func GetAgentStatus(ctx context.Context, agentName string) (AgentStatus, error) {
 	agent, err := GetAgentFromContext(ctx, agentName)
 	if err != nil {
-		return AgentStatus{}, fmt.Errorf("failed to get agent '%s': %w", agentName, err)
+		return AgentStatus{}, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get agent").WithComponent("context").WithOperation("GetAgentStatus").WithDetails("agent_name", agentName)
 	}
 	
 	if contextAgent, ok := agent.(AgentClient); ok {
@@ -312,7 +314,7 @@ func GetAgentStatus(ctx context.Context, agentName string) (AgentStatus, error) 
 func GetAllAgentStatuses(ctx context.Context) (map[string]AgentStatus, error) {
 	registry, err := GetRegistryProvider(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get registry from context: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("GetAllAgentStatuses")
 	}
 	
 	agents := registry.Agents().ListAgents()

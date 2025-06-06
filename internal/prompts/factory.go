@@ -44,19 +44,10 @@ type LayeredManagerConfig struct {
 	StorePath string
 }
 
-// NewManager creates a prompt manager based on the provided configuration
+// NewManager creates a prompt manager using the registry pattern
 func NewManager(ctx context.Context, config ManagerConfig) (Manager, error) {
-	switch config.Type {
-	case TypeStandard:
-		return newStandardManager(ctx, config)
-	case TypeLayered:
-		return newLayeredManager(ctx, config)
-	default:
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument, "unknown prompt manager type").
-			WithComponent("prompts").
-			WithOperation("NewManager").
-			WithDetails("type", string(config.Type))
-	}
+	registry := GetRegistry()
+	return registry.CreateManager(ctx, config)
 }
 
 // newStandardManager creates a standard template-based prompt manager
@@ -114,14 +105,16 @@ func newLayeredManager(ctx context.Context, config ManagerConfig) (Manager, erro
 
 // NewStandardManager is a convenience function to create a standard prompt manager
 func NewStandardManager() (Manager, error) {
-	return NewManager(context.Background(), ManagerConfig{
+	registry := GetRegistry()
+	return registry.CreateManager(context.Background(), ManagerConfig{
 		Type: TypeStandard,
 	})
 }
 
 // NewLayeredManager is a convenience function to create a layered prompt manager
 func NewLayeredManager() (LayeredManager, error) {
-	mgr, err := NewManager(context.Background(), ManagerConfig{
+	registry := GetRegistry()
+	mgr, err := registry.CreateManager(context.Background(), ManagerConfig{
 		Type: TypeLayered,
 	})
 	if err != nil {
