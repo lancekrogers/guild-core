@@ -12,7 +12,7 @@ import (
 // setupTestManager creates a manager for testing
 func setupTestManager(t *testing.T) (*kanban.Manager, *mocks.MockMemoryStore) {
 	store := mocks.NewMockMemoryStore()
-	manager, err := kanban.NewManager(store)
+	manager, err := kanban.NewManager(context.Background(), store)
 	if err != nil {
 		t.Fatalf("Failed to create test manager: %v", err)
 	}
@@ -22,7 +22,7 @@ func setupTestManager(t *testing.T) (*kanban.Manager, *mocks.MockMemoryStore) {
 // TestNewManager tests the creation of a new manager
 func TestNewManager(t *testing.T) {
 	store := mocks.NewMockMemoryStore()
-	manager, err := kanban.NewManager(store)
+	manager, err := kanban.NewManager(context.Background(), store)
 	if err != nil {
 		t.Fatalf("Failed to create manager: %v", err)
 	}
@@ -32,7 +32,7 @@ func TestNewManager(t *testing.T) {
 	}
 
 	// Test with nil store
-	_, err = kanban.NewManager(nil)
+	_, err = kanban.NewManager(context.Background(), nil)
 	if err == nil {
 		t.Error("Expected error with nil store, got nil")
 	}

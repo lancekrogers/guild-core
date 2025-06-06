@@ -131,7 +131,9 @@ func (t *CorpusTool) Execute(ctx context.Context, input string) (*tools.ToolResu
 	case "graph":
 		return t.getGraph(ctx, params)
 	default:
-		return tools.NewToolResult("", nil, gerror.New(gerror.ErrCodeInvalidInput, "corpus_tool", "execute", "unknown action: %s", params.Action), nil), nil
+		return tools.NewToolResult("", nil, gerror.Newf(gerror.ErrCodeInvalidInput, "unknown action: %s", params.Action).
+			WithComponent("corpus_tool").
+			WithOperation("execute"), nil), nil
 	}
 }
 
@@ -139,7 +141,9 @@ func (t *CorpusTool) Execute(ctx context.Context, input string) (*tools.ToolResu
 func (t *CorpusTool) saveDocument(ctx context.Context, params Input) (*tools.ToolResult, error) {
 	// Validate required parameters
 	if params.Title == "" {
-		return tools.NewToolResult("", nil, gerror.New(gerror.ErrCodeInvalidInput, "corpus_tool", nil).WithComponent("save_document").WithOperation("title is required for save action"), nil), nil
+		return tools.NewToolResult("", nil, gerror.New(gerror.ErrCodeInvalidInput, "title is required for save action", nil).
+			WithComponent("save_document").
+			WithOperation("corpus_tool"), nil), nil
 	}
 
 	// Create a new document
@@ -172,7 +176,9 @@ func (t *CorpusTool) saveDocument(ctx context.Context, params Input) (*tools.Too
 func (t *CorpusTool) loadDocument(ctx context.Context, params Input) (*tools.ToolResult, error) {
 	// Validate required parameters
 	if params.Title == "" {
-		return tools.NewToolResult("", nil, gerror.New(gerror.ErrCodeInvalidInput, "corpus_tool", nil).WithComponent("load_document").WithOperation("title is required for load action"), nil), nil
+		return tools.NewToolResult("", nil, gerror.New(gerror.ErrCodeInvalidInput, "title is required for load action", nil).
+			WithComponent("load_document").
+			WithOperation("corpus_tool"), nil), nil
 	}
 
 	// Get all document paths
@@ -195,7 +201,9 @@ func (t *CorpusTool) loadDocument(ctx context.Context, params Input) (*tools.Too
 	}
 
 	if targetDoc == nil {
-		return tools.NewToolResult("", nil, gerror.New(gerror.ErrCodeNotFound, "corpus_tool", "load_document", "document not found: %s", params.Title), nil), nil
+		return tools.NewToolResult("", nil, gerror.Newf(gerror.ErrCodeNotFound, "document not found: %s", params.Title).
+			WithComponent("corpus_tool").
+			WithOperation("load_document"), nil), nil
 	}
 
 	// We already have the loaded document
@@ -376,7 +384,9 @@ func (t *CorpusTool) listDocuments(ctx context.Context, params Input) (*tools.To
 func (t *CorpusTool) deleteDocument(ctx context.Context, params Input) (*tools.ToolResult, error) {
 	// Validate required parameters
 	if params.Title == "" {
-		return tools.NewToolResult("", nil, gerror.New(gerror.ErrCodeInvalidInput, "corpus_tool", nil).WithComponent("delete_document").WithOperation("title is required for delete action"), nil), nil
+		return tools.NewToolResult("", nil, gerror.New(gerror.ErrCodeInvalidInput, "title is required for delete action", nil).
+			WithComponent("delete_document").
+			WithOperation("corpus_tool"), nil), nil
 	}
 
 	// Get all document paths
@@ -399,7 +409,9 @@ func (t *CorpusTool) deleteDocument(ctx context.Context, params Input) (*tools.T
 	}
 
 	if targetDoc == nil {
-		return tools.NewToolResult("", nil, gerror.New(gerror.ErrCodeNotFound, "corpus_tool", "load_document", "document not found: %s", params.Title), nil), nil
+		return tools.NewToolResult("", nil, gerror.Newf(gerror.ErrCodeNotFound, "document not found: %s", params.Title).
+			WithComponent("corpus_tool").
+			WithOperation("load_document"), nil), nil
 	}
 
 	// Delete the document

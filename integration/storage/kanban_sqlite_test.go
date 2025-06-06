@@ -22,7 +22,7 @@ func TestKanbanSQLiteIntegration(t *testing.T) {
 		kanbanAdapter := NewTestKanbanAdapter(storageReg, memoryStoreAdapter)
 
 		// Create kanban manager with the kanban adapter (SQLite mode)
-		manager, err := kanban.NewManagerWithRegistry(kanbanAdapter)
+		manager, err := kanban.NewManagerWithRegistry(ctx, kanbanAdapter)
 		require.NoError(t, err)
 		require.NotNil(t, manager)
 
@@ -53,7 +53,7 @@ func TestKanbanSQLiteIntegration(t *testing.T) {
 		kanbanAdapter := NewTestKanbanAdapter(storageReg, memoryStoreAdapter)
 
 		// Create kanban manager and board
-		manager, err := kanban.NewManagerWithRegistry(kanbanAdapter)
+		manager, err := kanban.NewManagerWithRegistry(ctx, kanbanAdapter)
 		require.NoError(t, err)
 
 		board, err := manager.CreateBoard(ctx, "Task Test Board", "Board for testing task creation")
@@ -98,7 +98,7 @@ func TestKanbanSQLiteIntegration(t *testing.T) {
 		kanbanAdapter := NewTestKanbanAdapter(storageReg, memoryStoreAdapter)
 
 		// Create kanban manager, board, and task
-		manager, err := kanban.NewManagerWithRegistry(kanbanAdapter)
+		manager, err := kanban.NewManagerWithRegistry(ctx, kanbanAdapter)
 		require.NoError(t, err)
 
 		board, err := manager.CreateBoard(ctx, "Event Test Board", "Board for testing events")
@@ -130,7 +130,7 @@ func TestKanbanSQLiteIntegration(t *testing.T) {
 		kanbanAdapter := NewTestKanbanAdapter(storageReg, memoryStoreAdapter)
 
 		// Create the complete hierarchy
-		manager, err := kanban.NewManagerWithRegistry(kanbanAdapter)
+		manager, err := kanban.NewManagerWithRegistry(ctx, kanbanAdapter)
 		require.NoError(t, err)
 
 		// Board = Campaign

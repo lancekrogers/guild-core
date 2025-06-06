@@ -3,6 +3,7 @@ package campaign
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -47,7 +48,7 @@ func (r *repository) Create(ctx context.Context, campaign *Campaign) error {
 	key := campaignPrefix + campaign.ID
 	existing, err := r.store.Get(ctx, campaignBucket, key)
 	if err == nil && existing != nil {
-		return gerror.New(gerror.ErrCodeAlreadyExists, "campaign", "create_campaign", "campaign with ID %s already exists", campaign.ID)
+			return gerror.New(gerror.ErrCodeAlreadyExists, "campaign already exists", nil)
 	}
 
 	// Marshal campaign to JSON
@@ -74,7 +75,7 @@ func (r *repository) Get(ctx context.Context, id string) (*Campaign, error) {
 	data, err := r.store.Get(ctx, campaignBucket, key)
 	if err != nil {
 		if err == memory.ErrNotFound {
-			return nil, gerror.New(gerror.ErrCodeNotFound, "campaign", "get_campaign", "campaign %s not found", id)
+			return nil, gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("campaign not found: %s", id), nil)
 		}
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "campaign").WithComponent("get_campaign").WithOperation("failed to get campaign")
 	}
@@ -128,12 +129,12 @@ func (r *repository) Update(ctx context.Context, campaign *Campaign) error {
 	existing, err := r.store.Get(ctx, campaignBucket, key)
 	if err != nil {
 		if err == memory.ErrNotFound {
-			return gerror.New(gerror.ErrCodeNotFound, "campaign", "update_campaign", "campaign %s not found", campaign.ID)
+			return gerror.New(gerror.ErrCodeNotFound, "campaign not found", nil)
 		}
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "campaign").WithComponent("update_campaign").WithOperation("failed to check campaign existence")
 	}
 	if existing == nil {
-		return gerror.New(gerror.ErrCodeNotFound, "campaign", "update_campaign", "campaign %s not found", campaign.ID)
+			return gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("campaign not found: %s", campaign.ID), nil)
 	}
 
 	// Update timestamp
@@ -162,7 +163,7 @@ func (r *repository) Delete(ctx context.Context, id string) error {
 	key := campaignPrefix + id
 	if err := r.store.Delete(ctx, campaignBucket, key); err != nil {
 		if err == memory.ErrNotFound {
-			return gerror.New(gerror.ErrCodeNotFound, "campaign", "delete_campaign", "campaign %s not found", id)
+			return gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("campaign %s not found", id), nil)
 		}
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "campaign").WithComponent("delete_campaign").WithOperation("failed to delete campaign")
 	}

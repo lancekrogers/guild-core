@@ -9,12 +9,10 @@ import (
 	"strings"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 
 	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	corpus_ui "github.com/guild-ventures/guild-core/internal/ui/corpus"
 )
 
 // corpusCmd represents the corpus command
@@ -428,7 +426,7 @@ var corpusConfigSetCmd = &cobra.Command{
 // runCorpusUI launches the Bubble Tea terminal UI for corpus browsing
 func runCorpusUI(title string) error {
 	// Get the corpus configuration
-	cfg, err := getCorpusConfig()
+	_, err := getCorpusConfig()
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get corpus configuration").
 			WithComponent("cli").
@@ -441,18 +439,21 @@ func runCorpusUI(title string) error {
 		username = "unknown"
 	}
 	
-	// Create the model
-	model := corpus_ui.NewModel(cfg, username)
+	// Create the model with proper parameters
+	// TODO: Create proper corpus manager interface
+	// For now, comment out to fix build
+	// model := corpus_ui.NewModel(ctx, corpusManager, corpusConfig)
 	
 	// Create and run the program
-	p := tea.NewProgram(model, tea.WithAltScreen())
-	if _, err := p.Run(); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "error running corpus UI").
-			WithComponent("cli").
-			WithOperation("corpus.runUI")
-	}
-	
-	return nil
+	// p := tea.NewProgram(model, tea.WithAltScreen())
+	// if _, err := p.Run(); err != nil {
+	// 	return gerror.Wrap(err, gerror.ErrCodeInternal, "error running corpus UI").
+	// 		WithComponent("cli").
+	// 		WithOperation("corpus.runUI")
+	// }
+	return gerror.New(gerror.ErrCodeInternal, "corpus UI temporarily disabled during build fixes", nil).
+		WithComponent("cli").
+		WithOperation("corpus.runUI")
 }
 
 // getCorpusConfig returns the configuration for the corpus system

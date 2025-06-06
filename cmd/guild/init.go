@@ -39,11 +39,8 @@ func runInit(cmd *cobra.Command, args []string) error {
 	// Get absolute path for display
 	absPath, err := filepath.Abs(path)
 	if err != nil {
-		return gerror.Wrap(err, "failed to resolve path",
-			gerror.WithComponent("cli"),
-			gerror.WithOperation("runInit"),
-			gerror.WithDetails("path", path),
-		)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to resolve path").
+			WithComponent("cli").WithOperation("runInit").WithDetails("path", path)
 	}
 
 	// Check if already initialized
@@ -60,11 +57,8 @@ func runInit(cmd *cobra.Command, args []string) error {
 	detector := project.NewProjectDetector()
 	projectType, err := detector.DetectProjectType(path)
 	if err != nil {
-		return gerror.Wrap(err, "failed to detect project type",
-			gerror.WithComponent("cli"),
-			gerror.WithOperation("runInit"),
-			gerror.WithDetails("path", path),
-		)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to detect project type").
+			WithComponent("cli").WithOperation("runInit").WithDetails("path", path)
 	}
 	fmt.Printf("✅ Detected: %s\n", projectType.Description)
 
@@ -72,11 +66,8 @@ func runInit(cmd *cobra.Command, args []string) error {
 	fmt.Print("🎯 Generating Guild configuration... ")
 	guildConfig, err := detector.GenerateGuildConfig(projectType, path)
 	if err != nil {
-		return gerror.Wrap(err, "failed to generate guild config",
-			gerror.WithComponent("cli"),
-			gerror.WithOperation("runInit"),
-			gerror.WithDetails("project_type", projectType.Description),
-		)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to generate guild config").
+			WithComponent("cli").WithOperation("runInit").WithDetails("project_type", projectType.Description)
 	}
 
 	corpusConfig := detector.GenerateCorpusConfig(projectType, path)
@@ -85,11 +76,8 @@ func runInit(cmd *cobra.Command, args []string) error {
 	// Step 3: Create directory structure
 	fmt.Print("📁 Creating directory structure... ")
 	if err := project.Initialize(path); err != nil {
-		return gerror.Wrap(err, "failed to initialize project structure",
-			gerror.WithComponent("cli"),
-			gerror.WithOperation("runInit"),
-			gerror.WithDetails("path", path),
-		)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize project structure").
+			WithComponent("cli").WithOperation("runInit").WithDetails("path", path)
 	}
 	fmt.Println("✅")
 
@@ -100,34 +88,26 @@ func runInit(cmd *cobra.Command, args []string) error {
 	guildConfigPath := filepath.Join(path, ".guild", "guild.yaml")
 	guildConfigData, err := yaml.Marshal(guildConfig)
 	if err != nil {
-		return gerror.Wrap(err, "failed to marshal guild config",
-			gerror.WithComponent("cli"),
-			gerror.WithOperation("runInit"),
-		)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild config").
+			WithComponent("cli").WithOperation("runInit")
 	}
 	if err := os.WriteFile(guildConfigPath, guildConfigData, 0644); err != nil {
-		return gerror.Wrap(err, "failed to write guild config",
-			gerror.WithComponent("cli"),
-			gerror.WithOperation("runInit"),
-			gerror.WithDetails("config_path", guildConfigPath),
-		)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
+			WithComponent("cli").WithOperation("runInit").
+			WithDetails("config_path", guildConfigPath)
 	}
 
 	// Write corpus.yaml
 	corpusConfigPath := filepath.Join(path, ".guild", "corpus.yaml")
 	corpusConfigData, err := yaml.Marshal(corpusConfig)
 	if err != nil {
-		return gerror.Wrap(err, "failed to marshal corpus config",
-			gerror.WithComponent("cli"),
-			gerror.WithOperation("runInit"),
-		)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal corpus config").
+			WithComponent("cli").WithOperation("runInit")
 	}
 	if err := os.WriteFile(corpusConfigPath, corpusConfigData, 0644); err != nil {
-		return gerror.Wrap(err, "failed to write corpus config",
-			gerror.WithComponent("cli"),
-			gerror.WithOperation("runInit"),
-			gerror.WithDetails("config_path", corpusConfigPath),
-		)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write corpus config").
+			WithComponent("cli").WithOperation("runInit").
+			WithDetails("config_path", corpusConfigPath)
 	}
 	fmt.Println("✅")
 

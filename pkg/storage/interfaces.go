@@ -13,6 +13,7 @@ type Task struct {
 	Title           string                 `json:"title"`
 	Description     *string                `json:"description,omitempty"`
 	Status          string                 `json:"status"`
+	Column          string                 `json:"column"`                 // Kanban column (backlog, in_progress, etc.)
 	StoryPoints     int32                  `json:"story_points"`
 	Metadata        map[string]interface{} `json:"metadata,omitempty"`
 	CreatedAt       time.Time              `json:"created_at"`
@@ -111,6 +112,7 @@ type TaskRepository interface {
 	ListTasks(ctx context.Context) ([]*Task, error)
 	ListTasksByStatus(ctx context.Context, status string) ([]*Task, error)
 	ListTasksByBoard(ctx context.Context, boardID string) ([]*Task, error)
+	ListTasksByCommission(ctx context.Context, commissionID string) ([]*Task, error)
 	ListTasksForKanban(ctx context.Context, boardID string) ([]*Task, error)
 	AssignTask(ctx context.Context, taskID, agentID string) error
 	UpdateTaskStatus(ctx context.Context, taskID, status string) error
@@ -170,6 +172,7 @@ type StorageRegistry interface {
 	RegisterBoardRepository(repo BoardRepository)
 	RegisterAgentRepository(repo AgentRepository)
 	RegisterPromptChainRepository(repo PromptChainRepository)
+	RegisterMemoryStore(store interface{})
 	
 	GetTaskRepository() TaskRepository
 	GetCampaignRepository() CampaignRepository
@@ -177,4 +180,5 @@ type StorageRegistry interface {
 	GetBoardRepository() BoardRepository
 	GetAgentRepository() AgentRepository
 	GetPromptChainRepository() PromptChainRepository
+	GetMemoryStore() interface{}
 }

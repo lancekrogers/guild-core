@@ -92,12 +92,16 @@ func (t *HTTPTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 	case "GET", "POST", "PUT", "DELETE", "PATCH", "HEAD":
 		// Valid methods
 	default:
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "http_tool", "execute", "invalid HTTP method: %s", params.Method)
+		return nil, gerror.Newf(gerror.ErrCodeInvalidInput, "invalid HTTP method: %s", params.Method).
+			WithComponent("http_tool").
+			WithOperation("execute")
 	}
 
 	// Validate URL
 	if params.URL == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "http_tool", nil).WithComponent("execute").WithOperation("URL is required")
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "URL is required", nil).
+			WithComponent("http_tool").
+			WithOperation("execute")
 	}
 
 	// Set timeout if specified

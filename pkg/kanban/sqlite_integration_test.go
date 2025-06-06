@@ -25,7 +25,7 @@ func TestKanbanSQLiteIntegration(t *testing.T) {
 	}
 
 	// Test kanban manager creation with registry
-	manager, err := NewManagerWithRegistry(componentRegistry)
+	manager, err := NewManagerWithRegistry(ctx, componentRegistry)
 	if err != nil {
 		t.Fatalf("Failed to create kanban manager: %v", err)
 	}

@@ -67,7 +67,9 @@ func (p *Planner) CreateObjective(ctx context.Context, description string) error
 // AddContext adds context to the current objective
 func (p *Planner) AddContext(ctx context.Context, contextText string) error {
 	if p.session.Commission == nil {
-		return gerror.New(gerror.ErrCodeInvalidInput, "commission", nil).WithComponent("add_context").WithOperation("no objective set in the planning session")
+		return gerror.New(gerror.ErrCodeInvalidInput, "no objective set in the planning session", nil).
+			WithComponent("commission").
+			WithOperation("add_context")
 	}
 
 	// Add context via lifecycle manager
@@ -92,7 +94,9 @@ func (p *Planner) AddContext(ctx context.Context, contextText string) error {
 // Regenerate regenerates documents for the current objective
 func (p *Planner) Regenerate(ctx context.Context) error {
 	if p.session.Commission == nil {
-		return gerror.New(gerror.ErrCodeInvalidInput, "commission", nil).WithComponent("add_context").WithOperation("no objective set in the planning session")
+		return gerror.New(gerror.ErrCodeInvalidInput, "no objective set in the planning session", nil).
+			WithComponent("commission").
+			WithOperation("add_context")
 	}
 
 	// Generate project structure via lifecycle manager
@@ -117,7 +121,9 @@ func (p *Planner) Regenerate(ctx context.Context) error {
 // MarkReady marks the current objective as ready
 func (p *Planner) MarkReady(ctx context.Context) error {
 	if p.session.Commission == nil {
-		return gerror.New(gerror.ErrCodeInvalidInput, "commission", nil).WithComponent("add_context").WithOperation("no objective set in the planning session")
+		return gerror.New(gerror.ErrCodeInvalidInput, "no objective set in the planning session", nil).
+			WithComponent("commission").
+			WithOperation("add_context")
 	}
 
 	// Mark as ready via lifecycle manager
@@ -142,7 +148,9 @@ func (p *Planner) MarkReady(ctx context.Context) error {
 // GetSuggestions gets improvement suggestions for the objective
 func (p *Planner) GetSuggestions(ctx context.Context) (string, error) {
 	if p.session.Commission == nil {
-		return "", gerror.New(gerror.ErrCodeInvalidInput, "commission", nil).WithComponent("get_objective_status").WithOperation("no objective set in the planning session")
+		return "", gerror.New(gerror.ErrCodeInvalidInput, "no objective set in the planning session", nil).
+			WithComponent("commission").
+			WithOperation("get_objective_status")
 	}
 
 	// In a real implementation, this would use an LLM to generate suggestions

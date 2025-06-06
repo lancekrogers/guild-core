@@ -109,12 +109,10 @@ func initializeRAGSystem(ctx context.Context, cfg corpus.Config, providerType, e
 		case "anthropic":
 			pType = providers.ProviderAnthropic
 		default:
-			return nil, gerror.NewInvalidArgumentError(
-				"unsupported provider type",
-				gerror.WithComponent("cli"),
-				gerror.WithOperation("initializeRAGSystem"),
-				gerror.WithDetails("provider_type", providerType),
-			)
+			return nil, gerror.New(gerror.ErrCodeInvalidInput, "unsupported provider type", nil).
+				WithComponent("cli").
+				WithOperation("initializeRAGSystem").
+				WithDetails("provider_type", providerType)
 		}
 		
 		// Get API key or base URL from environment
@@ -128,22 +126,19 @@ func initializeRAGSystem(ctx context.Context, cfg corpus.Config, providerType, e
 			envKey := fmt.Sprintf("%s_API_KEY", strings.ToUpper(providerType))
 			apiKey = os.Getenv(envKey)
 			if apiKey == "" {
-				return nil, gerror.NewUnauthorizedError(
-					"missing API key",
-					gerror.WithComponent("cli"),
-					gerror.WithOperation("initializeRAGSystem"),
-					gerror.WithDetails("env_key", envKey),
-				)
+				return nil, gerror.New(gerror.ErrCodeMissingRequired, "missing API key", nil).
+					WithComponent("cli").
+					WithOperation("initializeRAGSystem").
+					WithDetails("env_key", envKey)
 			}
 		}
 		
 		provider, err = factory.CreateAIProvider(pType, apiKey)
 		if err != nil {
-			return nil, gerror.Wrap(err, "failed to create provider",
-				gerror.WithComponent("cli"),
-				gerror.WithOperation("initializeRAGSystem"),
-				gerror.WithDetails("provider_type", providerType),
-			)
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create provider").
+				WithComponent("cli").
+				WithOperation("initializeRAGSystem").
+				WithDetails("provider_type", providerType)
 		}
 	} else {
 		// Auto-detect will be handled by vector factory
@@ -166,10 +161,9 @@ func initializeRAGSystem(ctx context.Context, cfg corpus.Config, providerType, e
 	// Create vector store
 	vectorStore, err := vector.NewVectorStore(ctx, vectorConfig)
 	if err != nil {
-		return nil, gerror.Wrap(err, "failed to create vector store",
-			gerror.WithComponent("cli"),
-			gerror.WithOperation("initializeRAGSystem"),
-		)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create vector store").
+			WithComponent("cli").
+			WithOperation("initializeRAGSystem")
 	}
 	
 	// Create RAG configuration
@@ -195,10 +189,9 @@ func performCorpusScan(ctx context.Context, cfg corpus.Config, ragSystem *rag.Re
 	// Get current corpus documents
 	corpusFilePaths, err := corpus.List(ctx, cfg)
 	if err != nil {
-		result.Errors = append(result.Errors, gerror.Wrap(err, "failed to list corpus documents",
-			gerror.WithComponent("cli"),
-			gerror.WithOperation("performCorpusScan"),
-		))
+		result.Errors = append(result.Errors, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to list corpus documents").
+			WithComponent("cli").
+			WithOperation("performCorpusScan"))
 		result.EndTime = time.Now()
 		return result
 	}
@@ -252,21 +245,19 @@ func performCorpusScan(ctx context.Context, cfg corpus.Config, ragSystem *rag.Re
 			// Load full document content
 			fullDoc, err := corpus.Load(ctx, filePath)
 			if err != nil {
-				result.Errors = append(result.Errors, gerror.Wrap(err, "failed to load corpus document",
-					gerror.WithComponent("cli"),
-					gerror.WithOperation("performCorpusScan"),
-					gerror.WithDetails("file_path", filePath),
-				))
+				result.Errors = append(result.Errors, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to load corpus document").
+					WithComponent("cli").
+					WithOperation("performCorpusScan").
+					WithDetails("file_path", filePath))
 				continue
 			}
 			
 			// Add to RAG system
 			if err := addDocumentToRAG(ctx, ragSystem, fullDoc); err != nil {
-				result.Errors = append(result.Errors, gerror.Wrap(err, "failed to add document to RAG",
-					gerror.WithComponent("cli"),
-					gerror.WithOperation("performCorpusScan"),
-					gerror.WithDetails("file_path", filePath),
-				))
+				result.Errors = append(result.Errors, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to add document to RAG").
+					WithComponent("cli").
+					WithOperation("performCorpusScan").
+					WithDetails("file_path", filePath))
 				continue
 			}
 			
@@ -286,11 +277,10 @@ func performCorpusScan(ctx context.Context, cfg corpus.Config, ragSystem *rag.Re
 			if !dryRun {
 				// Remove from RAG system
 				if err := removeDocumentFromRAG(ctx, ragSystem, filePath); err != nil {
-					result.Errors = append(result.Errors, gerror.Wrap(err, "failed to remove document from RAG",
-					gerror.WithComponent("cli"),
-					gerror.WithOperation("performCorpusScan"),
-					gerror.WithDetails("file_path", filePath),
-				))
+					result.Errors = append(result.Errors, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to remove document from RAG").
+					WithComponent("cli").
+					WithOperation("performCorpusScan").
+					WithDetails("file_path", filePath))
 				}
 			}
 		}

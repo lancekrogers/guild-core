@@ -53,7 +53,7 @@ PreferredCost: 3`,
 	}
 	
 	// Create cost-aware planner
-	planner := NewCostAwareTaskPlanner(managerAgent, kanbanBoard, componentRegistry, 5)
+	planner := DefaultCostAwareTaskPlannerFactory(managerAgent, kanbanBoard, componentRegistry, 5)
 	
 	t.Run("TestPlanTasks", func(t *testing.T) {
 		// Create test objective

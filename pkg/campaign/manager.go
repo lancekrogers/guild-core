@@ -16,13 +16,13 @@ type manager struct {
 	repo           Repository
 	commissionMgr  *commission.Manager
 	fsm            FSM
-	eventBus       *orchestrator.EventBus
+	eventBus       orchestrator.EventBus
 	handlers       map[string][]EventHandler
 	mu             sync.RWMutex
 }
 
 // NewManager creates a new campaign manager
-func NewManager(repo Repository, commissionMgr *commission.Manager, eventBus *orchestrator.EventBus) Manager {
+func NewManager(repo Repository, commissionMgr *commission.Manager, eventBus orchestrator.EventBus) Manager {
 	mgr := &manager{
 		repo:           repo,
 		commissionMgr:  commissionMgr,
@@ -135,14 +135,14 @@ func (m *manager) AddObjective(ctx context.Context, campaignID, objectiveID stri
 	// Check if objective exists
 	if m.commissionMgr != nil {
 		if _, err := m.commissionMgr.GetCommission(ctx, objectiveID); err != nil {
-			return gerror.Wrap(err, gerror.ErrCodeNotFound, "campaign", "add_objective", "objective %s not found", objectiveID)
+				return gerror.Wrap(err, gerror.ErrCodeNotFound, fmt.Sprintf("objective %s not found", objectiveID))
 		}
 	}
 
 	// Check if objective already in campaign
 	for _, id := range campaign.Objectives {
 		if id == objectiveID {
-			return gerror.New(gerror.ErrCodeAlreadyExists, "campaign", "add_objective", "objective %s already in campaign", objectiveID)
+				return gerror.New(gerror.ErrCodeAlreadyExists, fmt.Sprintf("objective %s already in campaign", objectiveID), nil)
 		}
 	}
 
@@ -195,7 +195,7 @@ func (m *manager) RemoveObjective(ctx context.Context, campaignID, objectiveID s
 	}
 
 	if !found {
-		return gerror.New(gerror.ErrCodeNotFound, "campaign", "remove_objective", "objective %s not found in campaign", objectiveID)
+			return gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("objective %s not found", objectiveID), nil)
 	}
 
 	campaign.Objectives = newObjectives

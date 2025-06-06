@@ -85,8 +85,20 @@ func InitializeSQLiteStorageForTests(ctx context.Context) (StorageRegistry, inte
 	storageRegistry.RegisterAgentRepository(agentRepo)
 	storageRegistry.RegisterPromptChainRepository(promptChainRepo)
 
-	// Return the storage registry only - no more adapter needed
-	return storageRegistry, nil, nil
+	// Create memory store adapter that implements memory.Store interface
+	memoryStoreAdapter := NewMemoryStoreAdapter(database)
+	if err := memoryStoreAdapter.EnsureMemoryStoreTable(ctx); err != nil {
+		database.Close()
+		return nil, nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create memory store table").
+			WithComponent("InitializeSQLiteStorageForTests").
+			WithOperation("EnsureMemoryStoreTable")
+	}
+
+	// Register the memory store adapter in the storage registry
+	storageRegistry.RegisterMemoryStore(memoryStoreAdapter)
+
+	// Return the storage registry and memory store adapter
+	return storageRegistry, memoryStoreAdapter, nil
 }
 
 // createTestSchema manually creates the database schema for tests
@@ -194,6 +206,15 @@ func createTestSchema(database *Database) error {
 	CREATE INDEX idx_prompt_chains_task ON prompt_chains(task_id);
 	CREATE INDEX idx_prompt_chain_messages_chain ON prompt_chain_messages(chain_id);
 	CREATE INDEX idx_prompt_chain_messages_timestamp ON prompt_chain_messages(timestamp);
+
+	-- Add memory store table for kanban compatibility
+	CREATE TABLE memory_store (
+		bucket TEXT NOT NULL,
+		key TEXT NOT NULL,
+		value BLOB,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		PRIMARY KEY (bucket, key)
+	);
 	`
 
 	_, err := database.DB().Exec(schema)
