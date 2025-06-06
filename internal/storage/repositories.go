@@ -16,12 +16,17 @@ type SQLiteTaskRepository struct {
 	database *Database
 }
 
-// NewSQLiteTaskRepository creates a new SQLite task repository
+// newSQLiteTaskRepository creates a new SQLite task repository (private constructor)
 // Following Guild's constructor pattern
-func NewSQLiteTaskRepository(database *Database) TaskRepository {
+func newSQLiteTaskRepository(database *Database) TaskRepository {
 	return &SQLiteTaskRepository{
 		database: database,
 	}
+}
+
+// DefaultTaskRepositoryFactory creates a task repository for registry use
+func DefaultTaskRepositoryFactory(database *Database) TaskRepository {
+	return newSQLiteTaskRepository(database)
 }
 
 // CreateTask creates a new task following Guild's context-first pattern
@@ -429,11 +434,16 @@ type SQLiteCampaignRepository struct {
 	database *Database
 }
 
-// NewSQLiteCampaignRepository creates a new SQLite campaign repository
-func NewSQLiteCampaignRepository(database *Database) CampaignRepository {
+// newSQLiteCampaignRepository creates a new SQLite campaign repository (private constructor)
+func newSQLiteCampaignRepository(database *Database) CampaignRepository {
 	return &SQLiteCampaignRepository{
 		database: database,
 	}
+}
+
+// DefaultCampaignRepositoryFactory creates a campaign repository for registry use
+func DefaultCampaignRepositoryFactory(database *Database) CampaignRepository {
+	return newSQLiteCampaignRepository(database)
 }
 
 // CreateCampaign creates a new campaign
@@ -530,11 +540,16 @@ type SQLiteCommissionRepository struct {
 	database *Database
 }
 
-// NewSQLiteCommissionRepository creates a new SQLite commission repository
-func NewSQLiteCommissionRepository(database *Database) CommissionRepository {
+// newSQLiteCommissionRepository creates a new SQLite commission repository (private constructor)
+func newSQLiteCommissionRepository(database *Database) CommissionRepository {
 	return &SQLiteCommissionRepository{
 		database: database,
 	}
+}
+
+// DefaultCommissionRepositoryFactory creates a commission repository for registry use
+func DefaultCommissionRepositoryFactory(database *Database) CommissionRepository {
+	return newSQLiteCommissionRepository(database)
 }
 
 // CreateCommission creates a new commission
@@ -675,11 +690,16 @@ type SQLiteAgentRepository struct {
 	database *Database
 }
 
-// NewSQLiteAgentRepository creates a new SQLite agent repository
-func NewSQLiteAgentRepository(database *Database) AgentRepository {
+// newSQLiteAgentRepository creates a new SQLite agent repository (private constructor)
+func newSQLiteAgentRepository(database *Database) AgentRepository {
 	return &SQLiteAgentRepository{
 		database: database,
 	}
+}
+
+// DefaultAgentRepositoryFactory creates a agent repository for registry use
+func DefaultAgentRepositoryFactory(database *Database) AgentRepository {
+	return newSQLiteAgentRepository(database)
 }
 
 // CreateAgent creates a new agent

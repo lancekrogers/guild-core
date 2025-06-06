@@ -30,12 +30,12 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 	storageRegistry := DefaultStorageRegistryFactory()
 
 	// Create and register repositories
-	taskRepo := NewSQLiteTaskRepository(database)
-	campaignRepo := NewSQLiteCampaignRepository(database)
-	commissionRepo := NewSQLiteCommissionRepository(database)
-	boardRepo := NewSQLiteBoardRepository(database)
-	agentRepo := NewSQLiteAgentRepository(database)
-	promptChainRepo := NewPromptChainRepository(database.DB())
+	taskRepo := DefaultTaskRepositoryFactory(database)
+	campaignRepo := DefaultCampaignRepositoryFactory(database)
+	commissionRepo := DefaultCommissionRepositoryFactory(database)
+	boardRepo := DefaultBoardRepositoryFactory(database)
+	agentRepo := DefaultAgentRepositoryFactory(database)
+	promptChainRepo := DefaultPromptChainRepositoryFactory(database.DB())
 
 	storageRegistry.RegisterTaskRepository(taskRepo)
 	storageRegistry.RegisterCampaignRepository(campaignRepo)
@@ -71,12 +71,12 @@ func InitializeSQLiteStorageForTests(ctx context.Context) (StorageRegistry, inte
 	storageRegistry := DefaultStorageRegistryFactory()
 
 	// Create and register repositories
-	taskRepo := NewSQLiteTaskRepository(database)
-	campaignRepo := NewSQLiteCampaignRepository(database)
-	commissionRepo := NewSQLiteCommissionRepository(database)
-	boardRepo := NewSQLiteBoardRepository(database)
-	agentRepo := NewSQLiteAgentRepository(database)
-	promptChainRepo := NewPromptChainRepository(database.DB())
+	taskRepo := DefaultTaskRepositoryFactory(database)
+	campaignRepo := DefaultCampaignRepositoryFactory(database)
+	commissionRepo := DefaultCommissionRepositoryFactory(database)
+	boardRepo := DefaultBoardRepositoryFactory(database)
+	agentRepo := DefaultAgentRepositoryFactory(database)
+	promptChainRepo := DefaultPromptChainRepositoryFactory(database.DB())
 
 	storageRegistry.RegisterTaskRepository(taskRepo)
 	storageRegistry.RegisterCampaignRepository(campaignRepo)

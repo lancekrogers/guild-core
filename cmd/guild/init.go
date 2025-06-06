@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
@@ -38,7 +39,11 @@ func runInit(cmd *cobra.Command, args []string) error {
 	// Get absolute path for display
 	absPath, err := filepath.Abs(path)
 	if err != nil {
-		return fmt.Errorf("failed to resolve path: %w", err)
+		return gerror.Wrap(err, "failed to resolve path",
+			gerror.WithComponent("cli"),
+			gerror.WithOperation("runInit"),
+			gerror.WithDetails("path", path),
+		)
 	}
 
 	// Check if already initialized
@@ -55,7 +60,11 @@ func runInit(cmd *cobra.Command, args []string) error {
 	detector := project.NewProjectDetector()
 	projectType, err := detector.DetectProjectType(path)
 	if err != nil {
-		return fmt.Errorf("failed to detect project type: %w", err)
+		return gerror.Wrap(err, "failed to detect project type",
+			gerror.WithComponent("cli"),
+			gerror.WithOperation("runInit"),
+			gerror.WithDetails("path", path),
+		)
 	}
 	fmt.Printf("✅ Detected: %s\n", projectType.Description)
 
@@ -63,7 +72,11 @@ func runInit(cmd *cobra.Command, args []string) error {
 	fmt.Print("🎯 Generating Guild configuration... ")
 	guildConfig, err := detector.GenerateGuildConfig(projectType, path)
 	if err != nil {
-		return fmt.Errorf("failed to generate guild config: %w", err)
+		return gerror.Wrap(err, "failed to generate guild config",
+			gerror.WithComponent("cli"),
+			gerror.WithOperation("runInit"),
+			gerror.WithDetails("project_type", projectType.Description),
+		)
 	}
 
 	corpusConfig := detector.GenerateCorpusConfig(projectType, path)
@@ -72,7 +85,11 @@ func runInit(cmd *cobra.Command, args []string) error {
 	// Step 3: Create directory structure
 	fmt.Print("📁 Creating directory structure... ")
 	if err := project.Initialize(path); err != nil {
-		return fmt.Errorf("failed to initialize project structure: %w", err)
+		return gerror.Wrap(err, "failed to initialize project structure",
+			gerror.WithComponent("cli"),
+			gerror.WithOperation("runInit"),
+			gerror.WithDetails("path", path),
+		)
 	}
 	fmt.Println("✅")
 
@@ -83,20 +100,34 @@ func runInit(cmd *cobra.Command, args []string) error {
 	guildConfigPath := filepath.Join(path, ".guild", "guild.yaml")
 	guildConfigData, err := yaml.Marshal(guildConfig)
 	if err != nil {
-		return fmt.Errorf("failed to marshal guild config: %w", err)
+		return gerror.Wrap(err, "failed to marshal guild config",
+			gerror.WithComponent("cli"),
+			gerror.WithOperation("runInit"),
+		)
 	}
 	if err := os.WriteFile(guildConfigPath, guildConfigData, 0644); err != nil {
-		return fmt.Errorf("failed to write guild config: %w", err)
+		return gerror.Wrap(err, "failed to write guild config",
+			gerror.WithComponent("cli"),
+			gerror.WithOperation("runInit"),
+			gerror.WithDetails("config_path", guildConfigPath),
+		)
 	}
 
 	// Write corpus.yaml
 	corpusConfigPath := filepath.Join(path, ".guild", "corpus.yaml")
 	corpusConfigData, err := yaml.Marshal(corpusConfig)
 	if err != nil {
-		return fmt.Errorf("failed to marshal corpus config: %w", err)
+		return gerror.Wrap(err, "failed to marshal corpus config",
+			gerror.WithComponent("cli"),
+			gerror.WithOperation("runInit"),
+		)
 	}
 	if err := os.WriteFile(corpusConfigPath, corpusConfigData, 0644); err != nil {
-		return fmt.Errorf("failed to write corpus config: %w", err)
+		return gerror.Wrap(err, "failed to write corpus config",
+			gerror.WithComponent("cli"),
+			gerror.WithOperation("runInit"),
+			gerror.WithDetails("config_path", corpusConfigPath),
+		)
 	}
 	fmt.Println("✅")
 

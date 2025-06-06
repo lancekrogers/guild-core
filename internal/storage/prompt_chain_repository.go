@@ -15,12 +15,17 @@ type promptChainRepository struct {
 	queries *db.Queries
 }
 
-// NewPromptChainRepository creates a new SQLite-based prompt chain repository
-func NewPromptChainRepository(database *sql.DB) PromptChainRepository {
+// newPromptChainRepository creates a new SQLite-based prompt chain repository (private constructor)
+func newPromptChainRepository(database *sql.DB) PromptChainRepository {
 	return &promptChainRepository{
 		db:      database,
 		queries: db.New(database),
 	}
+}
+
+// DefaultPromptChainRepositoryFactory creates a prompt chain repository for registry use
+func DefaultPromptChainRepositoryFactory(database *sql.DB) PromptChainRepository {
+	return newPromptChainRepository(database)
 }
 
 // CreateChain creates a new prompt chain

@@ -13,11 +13,16 @@ type SQLiteBoardRepository struct {
 	database *Database
 }
 
-// NewSQLiteBoardRepository creates a new SQLite board repository
-func NewSQLiteBoardRepository(database *Database) BoardRepository {
+// newSQLiteBoardRepository creates a new SQLite board repository (private constructor)
+func newSQLiteBoardRepository(database *Database) BoardRepository {
 	return &SQLiteBoardRepository{
 		database: database,
 	}
+}
+
+// DefaultBoardRepositoryFactory creates a board repository for registry use
+func DefaultBoardRepositoryFactory(database *Database) BoardRepository {
+	return newSQLiteBoardRepository(database)
 }
 
 // CreateBoard creates a new board
