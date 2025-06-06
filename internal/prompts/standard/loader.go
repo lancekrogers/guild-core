@@ -1,4 +1,4 @@
-package prompts
+package standard
 
 // PromptManager handles loading and rendering prompt templates (legacy compatibility)
 type PromptManager struct {

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 	
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 )
 
@@ -12,7 +13,10 @@ import (
 func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (string, error) {
 	// Check if we have a valid LLM client
 	if a.LLMClient == nil {
-		return "", fmt.Errorf("no LLM client configured")
+		return "", gerror.New(gerror.ErrCodeValidation, "no LLM client configured", nil).
+			WithComponent("agent").
+			WithOperation("CostAwareExecute").
+			WithDetails("agent_id", a.ID)
 	}
 	
 	// Estimate cost for this request
@@ -28,7 +32,11 @@ func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (str
 	
 	// Check if we can afford it
 	if !a.CostManager.CanAfford(CostTypeLLM, estimatedCost) {
-		return "", fmt.Errorf("LLM budget exceeded: estimated cost $%.4f exceeds available budget", estimatedCost)
+		return "", gerror.Newf(gerror.ErrCodeResourceLimit, "LLM budget exceeded: estimated cost $%.4f exceeds available budget", estimatedCost).
+			WithComponent("agent").
+			WithOperation("CostAwareExecute").
+			WithDetails("agent_id", a.ID).
+			WithDetails("estimated_cost", estimatedCost)
 	}
 	
 	// Create or get memory chain
@@ -39,7 +47,10 @@ func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (str
 		// Create a new chain for this execution
 		chainID, err = a.MemoryManager.CreateChain(ctx, a.ID, "task-" + time.Now().Format("20060102150405"))
 		if err != nil {
-			return "", fmt.Errorf("failed to create memory chain: %w", err)
+			return "", gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create memory chain").
+				WithComponent("agent").
+				WithOperation("CostAwareExecute").
+				WithDetails("agent_id", a.ID)
 		}
 		
 		// Add the request to memory
@@ -49,14 +60,22 @@ func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (str
 			Timestamp: time.Now().UTC(),
 		})
 		if err != nil {
-			return "", fmt.Errorf("failed to add request to memory: %w", err)
+			return "", gerror.Wrap(err, gerror.ErrCodeStorage, "failed to add request to memory").
+				WithComponent("agent").
+				WithOperation("CostAwareExecute").
+				WithDetails("agent_id", a.ID).
+				WithDetails("chain_id", chainID)
 		}
 	}
 	
 	// Execute the request with the LLM
 	response, err := a.LLMClient.Complete(ctx, request)
 	if err != nil {
-		return "", fmt.Errorf("LLM execution failed: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeProvider, "LLM execution failed").
+			WithComponent("agent").
+			WithOperation("CostAwareExecute").
+			WithDetails("agent_id", a.ID).
+			WithDetails("model", model)
 	}
 	
 	// Calculate actual cost (would get actual token counts from response)
@@ -102,7 +121,12 @@ func (a *WorkerAgent) ExecuteWithTools(ctx context.Context, request string, allo
 	
 	// Check if we can afford tool usage
 	if !a.CostManager.CanAfford(CostTypeTool, totalToolCost) {
-		return "", fmt.Errorf("tool budget exceeded: estimated cost $%.4f exceeds available budget", totalToolCost)
+		return "", gerror.Newf(gerror.ErrCodeResourceLimit, "tool budget exceeded: estimated cost $%.4f exceeds available budget", totalToolCost).
+			WithComponent("agent").
+			WithOperation("ExecuteWithTools").
+			WithDetails("agent_id", a.ID).
+			WithDetails("total_tool_cost", totalToolCost).
+			WithDetails("allowed_tools", allowedTools)
 	}
 	
 	// Execute with cost-aware LLM
@@ -122,7 +146,12 @@ func (a *WorkerAgent) ExecuteWithTools(ctx context.Context, request string, allo
 		// Execute tool with cost tracking
 		result, cost, err := a.ToolRegistry.ExecuteToolWithCostTracking(ctx, toolName, toolInput)
 		if err != nil {
-			return "", fmt.Errorf("tool execution failed: %w", err)
+			return "", gerror.Wrap(err, gerror.ErrCodeAgent, "tool execution failed").
+				WithComponent("agent").
+				WithOperation("ExecuteWithTools").
+				WithDetails("agent_id", a.ID).
+				WithDetails("tool_name", toolName).
+				WithDetails("tool_input", toolInput)
 		}
 		
 		// Record tool cost

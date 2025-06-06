@@ -2,10 +2,10 @@ package agent
 
 import (
 	"context"
-	"fmt"
 
-	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 )
@@ -80,13 +80,19 @@ func (a *WorkerAgent) Execute(ctx context.Context, request string) (string, erro
 	
 	// Otherwise, simple execution
 	if a.LLMClient == nil {
-		return "", fmt.Errorf("no LLM client configured")
+		return "", gerror.New(gerror.ErrCodeValidation, "no LLM client configured", nil).
+			WithComponent("agent").
+			WithOperation("Execute").
+			WithDetails("agent_id", a.ID)
 	}
 	
 	// Call the LLM
 	response, err := a.LLMClient.Complete(ctx, request)
 	if err != nil {
-		return "", fmt.Errorf("LLM completion failed: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeProvider, "LLM completion failed").
+			WithComponent("agent").
+			WithOperation("Execute").
+			WithDetails("agent_id", a.ID)
 	}
 	
 	return response, nil

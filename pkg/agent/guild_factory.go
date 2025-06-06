@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/pkg/config"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/guild-ventures/guild-core/pkg/tools"
@@ -43,7 +44,10 @@ func (f *GuildFactory) CreateAgentFromConfig(ctx context.Context, agentID string
 	// Find agent config
 	agentConfig, err := f.guildConfig.GetAgentByID(agentID)
 	if err != nil {
-		return nil, fmt.Errorf("agent not found in guild config: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgentNotFound, "agent not found in guild config").
+			WithComponent("agent").
+			WithOperation("CreateAgentFromConfig").
+			WithDetails("agent_id", agentID)
 	}
 
 	// Get provider and create a client
@@ -51,14 +55,21 @@ func (f *GuildFactory) CreateAgentFromConfig(ctx context.Context, agentID string
 	// TODO: Update this when provider registry supports per-model clients
 	provider, err := f.registry.Providers().GetDefaultProvider()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get provider: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeProvider, "failed to get provider").
+			WithComponent("agent").
+			WithOperation("CreateAgentFromConfig").
+			WithDetails("agent_id", agentID)
 	}
 	
 	// Create an LLM client wrapper
 	// TODO: This needs to be updated when providers support model selection
 	llmClient, ok := provider.(providers.LLMClient)
 	if !ok {
-		return nil, fmt.Errorf("provider does not implement LLMClient interface")
+		return nil, gerror.New(gerror.ErrCodeProvider, "provider does not implement LLMClient interface", nil).
+			WithComponent("agent").
+			WithOperation("CreateAgentFromConfig").
+			WithDetails("agent_id", agentID).
+			WithDetails("provider_type", fmt.Sprintf("%T", provider))
 	}
 
 	// Create tool registry for this agent
@@ -96,7 +107,11 @@ func (f *GuildFactory) CreateAgentFromConfig(ctx context.Context, agentID string
 			f.objectiveManager,
 		)
 	default:
-		return nil, fmt.Errorf("unknown agent type: %s", agentConfig.Type)
+		return nil, gerror.Newf(gerror.ErrCodeValidation, "unknown agent type: %s", agentConfig.Type).
+			WithComponent("agent").
+			WithOperation("CreateAgentFromConfig").
+			WithDetails("agent_id", agentID).
+			WithDetails("agent_type", agentConfig.Type)
 	}
 
 	// Add capabilities metadata to agent
@@ -116,7 +131,9 @@ func (f *GuildFactory) CreateAgentFromConfig(ctx context.Context, agentID string
 func (f *GuildFactory) CreateManagerAgent(ctx context.Context) (Agent, error) {
 	managerConfig, err := f.guildConfig.GetManagerAgent()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get manager agent: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "failed to get manager agent").
+			WithComponent("agent").
+			WithOperation("CreateManagerAgent")
 	}
 	return f.CreateAgentFromConfig(ctx, managerConfig.ID)
 }
@@ -128,7 +145,10 @@ func (f *GuildFactory) CreateAllAgents(ctx context.Context) (map[string]Agent, e
 	for _, agentConfig := range f.guildConfig.Agents {
 		agent, err := f.CreateAgentFromConfig(ctx, agentConfig.ID)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create agent %s: %w", agentConfig.ID, err)
+			return nil, gerror.Wrapf(err, gerror.ErrCodeAgent, "failed to create agent %s", agentConfig.ID).
+				WithComponent("agent").
+				WithOperation("CreateAllAgents").
+				WithDetails("agent_id", agentConfig.ID)
 		}
 		agents[agentConfig.ID] = agent
 	}
@@ -144,7 +164,10 @@ func (f *GuildFactory) CreateAgentsByCapability(ctx context.Context, capability 
 	for _, agentConfig := range agentConfigs {
 		agent, err := f.CreateAgentFromConfig(ctx, agentConfig.ID)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create agent %s: %w", agentConfig.ID, err)
+			return nil, gerror.Wrapf(err, gerror.ErrCodeAgent, "failed to create agent %s", agentConfig.ID).
+				WithComponent("agent").
+				WithOperation("CreateAllAgents").
+				WithDetails("agent_id", agentConfig.ID)
 		}
 		agents = append(agents, agent)
 	}
@@ -155,7 +178,9 @@ func (f *GuildFactory) CreateAgentsByCapability(ctx context.Context, capability 
 // UpdateGuildConfig updates the guild configuration
 func (f *GuildFactory) UpdateGuildConfig(config *config.GuildConfig) error {
 	if err := config.Validate(); err != nil {
-		return fmt.Errorf("invalid guild config: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "invalid guild config").
+			WithComponent("agent").
+			WithOperation("UpdateGuildConfig")
 	}
 	f.guildConfig = config
 	return nil

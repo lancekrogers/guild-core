@@ -2,10 +2,10 @@ package agent
 
 import (
 	"context"
-	"fmt"
 
-	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 )
@@ -53,7 +53,10 @@ func (f *DefaultFactory) CreateAgent(ctx context.Context, id, name string, agent
 	case "manager":
 		return f.CreateManagerAgent(ctx, id, name)
 	default:
-		return nil, fmt.Errorf("unknown agent type: %s", agentType)
+		return nil, gerror.Newf(gerror.ErrCodeValidation, "unknown agent type: %s", agentType).
+			WithComponent("agent").
+			WithOperation("CreateAgent").
+			WithDetails("agent_type", agentType)
 	}
 }
 

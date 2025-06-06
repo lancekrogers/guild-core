@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // GuildArchiveWriter implements the ArchiveWriter interface with Guild safety protocols
@@ -61,7 +63,9 @@ func WithGuildPermissions(perm os.FileMode) ArchiveWriterOption {
 // WriteStructure implements the ArchiveWriter interface for Guild Archives
 func (w *GuildArchiveWriter) WriteStructure(ctx context.Context, refined *RefinedCommission) error {
 	if refined == nil || refined.Structure == nil {
-		return fmt.Errorf("refined commission or structure cannot be nil")
+		return gerror.New(gerror.ErrCodeValidation, "refined commission or structure cannot be nil", nil).
+		WithComponent("manager").
+		WithOperation("WriteStructure")
 	}
 
 	// Create target Archive directory for this commission
@@ -69,26 +73,42 @@ func (w *GuildArchiveWriter) WriteStructure(ctx context.Context, refined *Refine
 	
 	// Validate target Archive directory
 	if err := w.validateArchiveDir(targetDir); err != nil {
-		return fmt.Errorf("invalid Archive directory: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "invalid Archive directory").
+			WithComponent("manager").
+			WithOperation("WriteStructure").
+			WithDetails("target_dir", targetDir)
 	}
 
 	// Create Guild backup if files exist
 	if err := w.createGuildBackup(ctx, targetDir, refined.CommissionID); err != nil {
-		return fmt.Errorf("failed to create Guild backup: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create Guild backup").
+			WithComponent("manager").
+			WithOperation("WriteStructure").
+			WithDetails("commission_id", refined.CommissionID)
 	}
 
 	// Write Archive files atomically
 	if err := w.writeArchiveFiles(ctx, targetDir, refined.Structure); err != nil {
 		// Attempt to restore Guild backup on failure
 		if restoreErr := w.restoreGuildBackup(ctx, targetDir, refined.CommissionID); restoreErr != nil {
-			return fmt.Errorf("archive write failed and Guild backup restore failed: write error: %w, restore error: %v", err, restoreErr)
+			return gerror.Wrapf(err, gerror.ErrCodeInternal, "archive write failed and Guild backup restore failed: restore error: %v", restoreErr).
+				WithComponent("manager").
+				WithOperation("WriteStructure").
+				WithDetails("commission_id", refined.CommissionID).
+				WithDetails("restore_error", restoreErr.Error())
 		}
-		return fmt.Errorf("archive write failed, Guild backup restored: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "archive write failed, Guild backup restored").
+			WithComponent("manager").
+			WithOperation("WriteStructure").
+			WithDetails("commission_id", refined.CommissionID)
 	}
 
 	// Write Guild manifest file
 	if err := w.writeGuildManifest(ctx, targetDir, refined); err != nil {
-		return fmt.Errorf("failed to write Guild manifest: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to write Guild manifest").
+			WithComponent("manager").
+			WithOperation("WriteStructure").
+			WithDetails("commission_id", refined.CommissionID)
 	}
 
 	return nil
@@ -99,16 +119,25 @@ func (w *GuildArchiveWriter) validateArchiveDir(targetDir string) error {
 	// Check if path is within Guild Archive directory
 	absBase, err := filepath.Abs(w.archiveDir)
 	if err != nil {
-		return fmt.Errorf("failed to get absolute base path: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get absolute base path").
+			WithComponent("manager").
+			WithOperation("validateArchiveDir")
 	}
 
 	absTarget, err := filepath.Abs(targetDir)
 	if err != nil {
-		return fmt.Errorf("failed to get absolute target path: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get absolute target path").
+			WithComponent("manager").
+			WithOperation("validateArchiveDir").
+			WithDetails("target_dir", targetDir)
 	}
 
 	if !strings.HasPrefix(absTarget, absBase) {
-		return fmt.Errorf("target directory %s is outside Guild Archive directory %s", absTarget, absBase)
+		return gerror.Newf(gerror.ErrCodeValidation, "target directory %s is outside Guild Archive directory %s", absTarget, absBase).
+			WithComponent("manager").
+			WithOperation("validateArchiveDir").
+			WithDetails("target_dir", absTarget).
+			WithDetails("base_dir", absBase)
 	}
 
 	return nil
@@ -131,12 +160,19 @@ func (w *GuildArchiveWriter) createGuildBackup(ctx context.Context, targetDir, c
 	backupPath := filepath.Join(w.backupDir, fmt.Sprintf("%s-%s", commissionID, timestamp))
 
 	if err := os.MkdirAll(w.backupDir, 0755); err != nil {
-		return fmt.Errorf("failed to create backup directory: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create backup directory").
+			WithComponent("manager").
+			WithOperation("createGuildBackup").
+			WithDetails("backup_dir", w.backupDir)
 	}
 
 	// Copy existing files to backup
 	if err := copyDir(targetDir, backupPath); err != nil {
-		return fmt.Errorf("failed to copy files to backup: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to copy files to backup").
+			WithComponent("manager").
+			WithOperation("createGuildBackup").
+			WithDetails("source", targetDir).
+			WithDetails("backup_path", backupPath)
 	}
 
 	return nil
@@ -147,14 +183,20 @@ func (w *GuildArchiveWriter) writeArchiveFiles(ctx context.Context, targetDir st
 	// Create target directory
 	if !w.dryRun {
 		if err := os.MkdirAll(targetDir, 0755); err != nil {
-			return fmt.Errorf("failed to create target directory: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create target directory").
+				WithComponent("manager").
+				WithOperation("writeArchiveFiles").
+				WithDetails("target_dir", targetDir)
 		}
 	}
 
 	// Write each file to Archives
 	for _, file := range structure.Files {
 		if err := w.writeArchiveFile(ctx, targetDir, file); err != nil {
-			return fmt.Errorf("failed to write Archive file %s: %w", file.Path, err)
+			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to write Archive file %s", file.Path).
+				WithComponent("manager").
+				WithOperation("writeArchiveFiles").
+				WithDetails("file_path", file.Path)
 		}
 	}
 
@@ -169,7 +211,10 @@ func (w *GuildArchiveWriter) writeArchiveFile(ctx context.Context, targetDir str
 	dir := filepath.Dir(filePath)
 	if !w.dryRun {
 		if err := os.MkdirAll(dir, 0755); err != nil {
-			return fmt.Errorf("failed to create directory %s: %w", dir, err)
+			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to create directory %s", dir).
+				WithComponent("manager").
+				WithOperation("writeArchiveFile").
+				WithDetails("directory", dir)
 		}
 	}
 
@@ -183,13 +228,20 @@ func (w *GuildArchiveWriter) writeArchiveFile(ctx context.Context, targetDir str
 	tempFile := filePath + ".tmp"
 	
 	if err := os.WriteFile(tempFile, []byte(file.Content), w.permissions); err != nil {
-		return fmt.Errorf("failed to write temporary file: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to write temporary file").
+			WithComponent("manager").
+			WithOperation("writeArchiveFile").
+			WithDetails("temp_file", tempFile)
 	}
 
 	if err := os.Rename(tempFile, filePath); err != nil {
 		// Clean up temp file on error
 		os.Remove(tempFile)
-		return fmt.Errorf("failed to rename temporary file: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to rename temporary file").
+			WithComponent("manager").
+			WithOperation("writeArchiveFile").
+			WithDetails("temp_file", tempFile).
+			WithDetails("target_file", filePath)
 	}
 
 	return nil
@@ -226,12 +278,18 @@ func (w *GuildArchiveWriter) writeGuildManifest(ctx context.Context, targetDir s
 	// Marshal to JSON
 	data, err := json.MarshalIndent(manifest, "", "  ")
 	if err != nil {
-		return fmt.Errorf("failed to marshal Guild manifest: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal Guild manifest").
+			WithComponent("manager").
+			WithOperation("writeGuildManifest").
+			WithDetails("commission_id", refined.CommissionID)
 	}
 
 	// Write Guild manifest file
 	if err := os.WriteFile(manifestPath, data, w.permissions); err != nil {
-		return fmt.Errorf("failed to write Guild manifest file: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to write Guild manifest file").
+			WithComponent("manager").
+			WithOperation("writeGuildManifest").
+			WithDetails("manifest_path", manifestPath)
 	}
 
 	return nil
@@ -247,21 +305,34 @@ func (w *GuildArchiveWriter) restoreGuildBackup(ctx context.Context, targetDir, 
 	// Find most recent Guild backup
 	backupPath, err := w.findLatestGuildBackup(commissionID)
 	if err != nil {
-		return fmt.Errorf("failed to find Guild backup: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to find Guild backup").
+			WithComponent("manager").
+			WithOperation("restoreGuildBackup").
+			WithDetails("commission_id", commissionID)
 	}
 
 	if backupPath == "" {
-		return fmt.Errorf("no Guild backup found for commission %s", commissionID)
+		return gerror.Newf(gerror.ErrCodeNotFound, "no Guild backup found for commission %s", commissionID).
+			WithComponent("manager").
+			WithOperation("restoreGuildBackup").
+			WithDetails("commission_id", commissionID)
 	}
 
 	// Remove current directory
 	if err := os.RemoveAll(targetDir); err != nil {
-		return fmt.Errorf("failed to remove current directory: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to remove current directory").
+			WithComponent("manager").
+			WithOperation("restoreGuildBackup").
+			WithDetails("target_dir", targetDir)
 	}
 
 	// Restore from Guild backup
 	if err := copyDir(backupPath, targetDir); err != nil {
-		return fmt.Errorf("failed to restore from Guild backup: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to restore from Guild backup").
+			WithComponent("manager").
+			WithOperation("restoreGuildBackup").
+			WithDetails("backup_path", backupPath).
+			WithDetails("target_dir", targetDir)
 	}
 
 	return nil

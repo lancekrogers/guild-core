@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	guildcontext "github.com/guild-ventures/guild-core/pkg/context"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // ContextAgentFactory creates agents with context-aware capabilities
@@ -32,7 +33,10 @@ type AgentConfig struct {
 // CreateAgent creates a new context-aware agent based on configuration
 func (f *ContextAgentFactory) CreateAgent(ctx context.Context, config AgentConfig) (guildcontext.AgentClient, error) {
 	if !config.Enabled {
-		return nil, fmt.Errorf("agent '%s' is disabled", config.ID)
+		return nil, gerror.Newf(gerror.ErrCodeValidation, "agent '%s' is disabled", config.ID).
+			WithComponent("agent").
+			WithOperation("CreateAgent").
+			WithDetails("agent_id", config.ID)
 	}
 	
 	// Create the appropriate agent type
@@ -46,7 +50,11 @@ func (f *ContextAgentFactory) CreateAgent(ctx context.Context, config AgentConfi
 	case "specialist":
 		agent = NewContextAwareAgent(config.ID, config.Name, "specialist", config.Capabilities)
 	default:
-		return nil, fmt.Errorf("unknown agent type: %s", config.Type)
+		return nil, gerror.Newf(gerror.ErrCodeValidation, "unknown agent type: %s", config.Type).
+			WithComponent("agent").
+			WithOperation("CreateAgent").
+			WithDetails("agent_id", config.ID).
+			WithDetails("agent_type", config.Type)
 	}
 	
 	// Configure the agent
@@ -71,7 +79,10 @@ func (f *ContextAgentFactory) CreateAgentFromRegistry(ctx context.Context, agent
 	// Get configuration from context
 	_, err := guildcontext.GetConfigProvider(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get config from context: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get config from context").
+			WithComponent("agent").
+			WithOperation("CreateAgentFromRegistry").
+			WithDetails("agent_name", agentName)
 	}
 	
 	// This would typically load agent config from the configuration provider
@@ -92,14 +103,19 @@ func (f *ContextAgentFactory) CreateAgentFromRegistry(ctx context.Context, agent
 func (f *ContextAgentFactory) RegisterAgentsWithRegistry(ctx context.Context, agentsConfig map[string]interface{}) error {
 	registry, err := guildcontext.GetRegistryProvider(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to get registry from context: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get registry from context").
+			WithComponent("agent").
+			WithOperation("RegisterAgentsWithRegistry")
 	}
 	
 	for agentName, agentConfigRaw := range agentsConfig {
 		// Parse agent configuration
 		agentConfigMap, ok := agentConfigRaw.(map[string]interface{})
 		if !ok {
-			return fmt.Errorf("invalid config for agent %s", agentName)
+			return gerror.Newf(gerror.ErrCodeValidation, "invalid config for agent %s", agentName).
+				WithComponent("agent").
+				WithOperation("RegisterAgentsWithRegistry").
+				WithDetails("agent_name", agentName)
 		}
 		
 		agentConfig := parseAgentConfig(agentName, agentConfigMap)
@@ -107,12 +123,18 @@ func (f *ContextAgentFactory) RegisterAgentsWithRegistry(ctx context.Context, ag
 		// Create the agent
 		agent, err := f.CreateAgent(ctx, agentConfig)
 		if err != nil {
-			return fmt.Errorf("failed to create agent %s: %w", agentName, err)
+			return gerror.Wrapf(err, gerror.ErrCodeAgent, "failed to create agent %s", agentName).
+				WithComponent("agent").
+				WithOperation("RegisterAgentsWithRegistry").
+				WithDetails("agent_name", agentName)
 		}
 		
 		// Register with registry
 		if err := registry.Agents().RegisterAgent(agentName, agent); err != nil {
-			return fmt.Errorf("failed to register agent %s: %w", agentName, err)
+			return gerror.Wrapf(err, gerror.ErrCodeAgent, "failed to register agent %s", agentName).
+				WithComponent("agent").
+				WithOperation("RegisterAgentsWithRegistry").
+				WithDetails("agent_name", agentName)
 		}
 	}
 	
@@ -218,7 +240,9 @@ func GetDefaultAgentConfigs() map[string]AgentConfig {
 func (f *ContextAgentFactory) CreateDefaultAgents(ctx context.Context) error {
 	registry, err := guildcontext.GetRegistryProvider(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to get registry from context: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get registry from context").
+			WithComponent("agent").
+			WithOperation("CreateDefaultAgents")
 	}
 	
 	defaultConfigs := GetDefaultAgentConfigs()
@@ -226,17 +250,26 @@ func (f *ContextAgentFactory) CreateDefaultAgents(ctx context.Context) error {
 	for agentName, config := range defaultConfigs {
 		agent, err := f.CreateAgent(ctx, config)
 		if err != nil {
-			return fmt.Errorf("failed to create default agent %s: %w", agentName, err)
+			return gerror.Wrapf(err, gerror.ErrCodeAgent, "failed to create default agent %s", agentName).
+				WithComponent("agent").
+				WithOperation("CreateDefaultAgents").
+				WithDetails("agent_name", agentName)
 		}
 		
 		if err := registry.Agents().RegisterAgent(agentName, agent); err != nil {
-			return fmt.Errorf("failed to register default agent %s: %w", agentName, err)
+			return gerror.Wrapf(err, gerror.ErrCodeAgent, "failed to register default agent %s", agentName).
+				WithComponent("agent").
+				WithOperation("CreateDefaultAgents").
+				WithDetails("agent_name", agentName)
 		}
 	}
 	
 	// Set default agent
 	if err := registry.Agents().SetDefaultAgent("worker"); err != nil {
-		return fmt.Errorf("failed to set default agent: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeAgent, "failed to set default agent").
+			WithComponent("agent").
+			WithOperation("CreateDefaultAgents").
+			WithDetails("default_agent", "worker")
 	}
 	
 	return nil

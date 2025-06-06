@@ -6,6 +6,7 @@ import (
 	"time"
 
 	guildcontext "github.com/guild-ventures/guild-core/pkg/context"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // ContextAwareAgent represents an agent that uses the Guild context system
@@ -109,7 +110,11 @@ func (a *ContextAwareAgent) executeWithContext(ctx context.Context, request stri
 	// Determine the best provider for this request
 	providerName, err := a.selectProvider(ctx, request)
 	if err != nil {
-		return "", fmt.Errorf("failed to select provider: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeAgent, "failed to select provider").
+			WithComponent("agent").
+			WithOperation("executeWithContext").
+			WithDetails("agent_id", a.ID).
+			WithDetails("agent_type", a.AgentType)
 	}
 	
 	// Enhance context with provider information
@@ -121,7 +126,11 @@ func (a *ContextAwareAgent) executeWithContext(ctx context.Context, request stri
 	// Execute with the selected provider
 	result, err := guildcontext.CompleteWithProvider(ctx, providerName, enhancedPrompt)
 	if err != nil {
-		return "", fmt.Errorf("provider execution failed: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeProvider, "provider execution failed").
+			WithComponent("agent").
+			WithOperation("executeWithContext").
+			WithDetails("agent_id", a.ID).
+			WithDetails("provider", providerName)
 	}
 	
 	// Post-process the result if needed

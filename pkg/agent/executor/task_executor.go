@@ -10,6 +10,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/internal/prompts/agent/execution"
 	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 	"github.com/guild-ventures/guild-core/pkg/workspace"
@@ -49,7 +50,9 @@ func NewBasicTaskExecutor(
 ) (*BasicTaskExecutor, error) {
 	promptBuilder, err := execution.NewCachedPromptBuilder()
 	if err != nil {
-		return nil, fmt.Errorf("failed to create prompt builder: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create prompt builder").
+			WithComponent("executor").
+			WithOperation("NewBasicTaskExecutor")
 	}
 
 	return &BasicTaskExecutor{
@@ -83,7 +86,11 @@ func (e *BasicTaskExecutor) Execute(ctx context.Context, task *kanban.Task) (*Ex
 
 	// Update task status to in_progress
 	if err := e.updateTaskStatus(ctx, kanban.StatusInProgress, "Agent starting task execution"); err != nil {
-		return nil, fmt.Errorf("failed to update task status: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to update task status").
+			WithComponent("executor").
+			WithOperation("Execute").
+			WithDetails("task_id", task.ID).
+			WithDetails("status", kanban.StatusInProgress)
 	}
 
 	// Main execution phases
@@ -118,7 +125,11 @@ func (e *BasicTaskExecutor) Execute(ctx context.Context, task *kanban.Task) (*Ex
 
 	// Update task status to review
 	if err := e.updateTaskStatus(ctx, kanban.StatusReadyForReview, "Task completed, pending review"); err != nil {
-		return result, fmt.Errorf("failed to update final task status: %w", err)
+		return result, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to update final task status").
+			WithComponent("executor").
+			WithOperation("Execute").
+			WithDetails("task_id", e.currentTask.ID).
+			WithDetails("status", kanban.StatusReadyForReview)
 	}
 
 	return result, nil
@@ -142,7 +153,10 @@ func (e *BasicTaskExecutor) executePhases(ctx context.Context) error {
 		case <-ctx.Done():
 			return ctx.Err()
 		case <-e.stopChan:
-			return fmt.Errorf("execution stopped")
+			return gerror.New(gerror.ErrCodeCancelled, "execution stopped", nil).
+				WithComponent("executor").
+				WithOperation("phaseExecute").
+				WithDetails("task_id", e.currentTask.ID)
 		default:
 			// Continue execution
 		}
@@ -150,7 +164,11 @@ func (e *BasicTaskExecutor) executePhases(ctx context.Context) error {
 		e.updateProgress(phase.progress, phase.name)
 		
 		if err := phase.fn(ctx); err != nil {
-			return fmt.Errorf("phase %s failed: %w", phase.name, err)
+			return gerror.Wrapf(err, gerror.ErrCodeTaskFailed, "phase %s failed", phase.name).
+				WithComponent("executor").
+				WithOperation("executePhases").
+				WithDetails("task_id", e.currentTask.ID).
+				WithDetails("phase", phase.name)
 		}
 	}
 
@@ -173,7 +191,10 @@ func (e *BasicTaskExecutor) phaseInitialize(ctx context.Context) error {
 		
 		ws, err := e.workspaceManager.CreateWorkspace(context.Background(), opts)
 		if err != nil {
-			return fmt.Errorf("failed to create workspace: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create workspace").
+				WithComponent("executor").
+				WithOperation("phaseInitialize").
+				WithDetails("agent_id", e.agent.GetID())
 		}
 		
 		e.mu.Lock()
@@ -215,7 +236,10 @@ func (e *BasicTaskExecutor) phasePlan(ctx context.Context) error {
 	
 	planningPrompt, err := e.promptBuilder.BuildPlanningPromptCached(promptData)
 	if err != nil {
-		return fmt.Errorf("failed to build planning prompt: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to build planning prompt").
+			WithComponent("executor").
+			WithOperation("phasePlan").
+			WithDetails("task_id", e.currentTask.ID)
 	}
 
 	// Add planning instructions
@@ -231,7 +255,11 @@ func (e *BasicTaskExecutor) phasePlan(ctx context.Context) error {
 	// Query the agent for the execution plan
 	plan, err := e.agent.Execute(ctx, fullPrompt)
 	if err != nil {
-		return fmt.Errorf("failed to generate execution plan: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeAgent, "failed to generate execution plan").
+			WithComponent("executor").
+			WithOperation("phasePlan").
+			WithDetails("task_id", e.currentTask.ID).
+			WithDetails("agent_id", e.agent.GetID())
 	}
 
 	// TODO: Parse and validate the plan structure
@@ -288,7 +316,10 @@ func (e *BasicTaskExecutor) phaseExecute(ctx context.Context) error {
 		case <-ctx.Done():
 			return ctx.Err()
 		case <-e.stopChan:
-			return fmt.Errorf("execution stopped")
+			return gerror.New(gerror.ErrCodeCancelled, "execution stopped", nil).
+				WithComponent("executor").
+				WithOperation("phaseExecute").
+				WithDetails("task_id", e.currentTask.ID)
 		default:
 			// Add small delay to allow context cancellation testing
 			time.Sleep(20 * time.Millisecond)
@@ -301,7 +332,11 @@ func (e *BasicTaskExecutor) phaseExecute(ctx context.Context) error {
 				e.addExecutionLog(fmt.Sprintf("Step failed: %s", step.name), map[string]interface{}{
 					"error": err.Error(),
 				})
-				return fmt.Errorf("step %s failed: %w", step.name, err)
+				return gerror.Wrapf(err, gerror.ErrCodeTaskFailed, "step %s failed", step.name).
+					WithComponent("executor").
+					WithOperation("phaseExecute").
+					WithDetails("task_id", e.currentTask.ID).
+					WithDetails("step", step.name)
 			}
 			
 			e.addExecutionLog(fmt.Sprintf("Completed: %s", step.description), nil)
@@ -443,7 +478,10 @@ func (e *BasicTaskExecutor) addExecutionLog(message string, metadata map[string]
 // executeToolCall executes a tool and tracks its usage
 func (e *BasicTaskExecutor) executeToolCall(ctx context.Context, toolName string, params map[string]interface{}) (*tools.ToolResult, error) {
 	if e.toolRegistry == nil {
-		return nil, fmt.Errorf("no tool registry available")
+		return nil, gerror.New(gerror.ErrCodeValidation, "no tool registry available", nil).
+			WithComponent("executor").
+			WithOperation("executeTool").
+			WithDetails("tool_name", toolName)
 	}
 
 	// Track start time for usage metrics
@@ -684,7 +722,11 @@ func (e *BasicTaskExecutor) stepPrepareWorkspace(ctx context.Context) error {
 			"args":    []string{"-p", taskDir},
 		})
 		if err != nil {
-			return fmt.Errorf("failed to create task directory: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create task directory").
+				WithComponent("executor").
+				WithOperation("phaseFinalize").
+				WithDetails("task_id", e.currentTask.ID).
+				WithDetails("directory", taskDir)
 		}
 
 		// Create README file
@@ -699,7 +741,11 @@ func (e *BasicTaskExecutor) stepPrepareWorkspace(ctx context.Context) error {
 			"content":   readmeContent,
 		})
 		if err != nil {
-			return fmt.Errorf("failed to create README: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create README").
+				WithComponent("executor").
+				WithOperation("phaseFinalize").
+				WithDetails("task_id", e.currentTask.ID).
+				WithDetails("readme_path", readmePath)
 		}
 
 		// Track artifact
@@ -757,7 +803,11 @@ echo "Task completed successfully"
 			"content":   solutionContent,
 		})
 		if err != nil {
-			return fmt.Errorf("failed to create solution: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeAgent, "failed to create solution").
+				WithComponent("executor").
+				WithOperation("createSolution").
+				WithDetails("task_id", e.currentTask.ID).
+				WithDetails("agent_id", e.agent.GetID())
 		}
 
 		// Make it executable
@@ -801,7 +851,11 @@ func (e *BasicTaskExecutor) stepVerifyResults(ctx context.Context) error {
 			"args":    []string{"-la", taskDir},
 		})
 		if err != nil {
-			return fmt.Errorf("failed to verify results: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeAgent, "failed to verify results").
+				WithComponent("executor").
+				WithOperation("verifyResults").
+				WithDetails("task_id", e.currentTask.ID).
+				WithDetails("agent_id", e.agent.GetID())
 		}
 
 		// Create verification report

@@ -1,7 +1,6 @@
 package manager
 
 import (
-	"fmt"
 	"path/filepath"
 	"strings"
 
@@ -27,7 +26,9 @@ func NewDefaultValidator() *DefaultValidator {
 // ValidateStructure implements the StructureValidator interface
 func (v *DefaultValidator) ValidateStructure(structure *FileStructure) error {
 	if structure == nil {
-		return fmt.Errorf("structure cannot be nil")
+		return gerror.New(gerror.ErrCodeValidation, "structure cannot be nil", nil).
+			WithComponent("manager").
+			WithOperation("ValidateStructure")
 	}
 
 	if err := v.validateFileCount(structure); err != nil {
@@ -54,11 +55,17 @@ func (v *DefaultValidator) ValidateStructure(structure *FileStructure) error {
 // validateFileCount checks if the number of files is reasonable
 func (v *DefaultValidator) validateFileCount(structure *FileStructure) error {
 	if len(structure.Files) == 0 {
-		return fmt.Errorf("structure must contain at least one file")
+		return gerror.New(gerror.ErrCodeValidation, "structure must contain at least one file", nil).
+			WithComponent("manager").
+			WithOperation("validateFileCount")
 	}
 
 	if len(structure.Files) > v.maxFiles {
-		return fmt.Errorf("too many files: %d (max: %d)", len(structure.Files), v.maxFiles)
+		return gerror.Newf(gerror.ErrCodeValidation, "too many files: %d (max: %d)", len(structure.Files), v.maxFiles).
+			WithComponent("manager").
+			WithOperation("validateFileCount").
+			WithDetails("file_count", len(structure.Files)).
+			WithDetails("max_files", v.maxFiles)
 	}
 
 	return nil
@@ -78,7 +85,10 @@ func (v *DefaultValidator) validateFiles(files []*FileEntry) error {
 
 		// Check for duplicate paths
 		if seenPaths[file.Path] {
-			return fmt.Errorf("duplicate file path: %s", file.Path)
+			return gerror.Newf(gerror.ErrCodeValidation, "duplicate file path: %s", file.Path).
+				WithComponent("manager").
+				WithOperation("validateFiles").
+				WithDetails("duplicate_path", file.Path)
 		}
 		seenPaths[file.Path] = true
 	}
@@ -89,12 +99,19 @@ func (v *DefaultValidator) validateFiles(files []*FileEntry) error {
 // validateFile validates a single file
 func (v *DefaultValidator) validateFile(file *FileEntry, index int) error {
 	if file == nil {
-		return fmt.Errorf("file at index %d is nil", index)
+		return gerror.Newf(gerror.ErrCodeValidation, "file at index %d is nil", index).
+			WithComponent("manager").
+			WithOperation("validateFile").
+			WithDetails("file_index", index)
 	}
 
 	// Validate path
 	if err := v.validatePath(file.Path); err != nil {
-		return fmt.Errorf("invalid path for file %d: %w", index, err)
+		return gerror.Wrapf(err, gerror.ErrCodeValidation, "invalid path for file %d", index).
+			WithComponent("manager").
+			WithOperation("validateFile").
+			WithDetails("file_index", index).
+			WithDetails("file_path", file.Path)
 	}
 
 	// Validate content
@@ -138,7 +155,11 @@ func (v *DefaultValidator) validatePath(path string) error {
 			}
 		}
 		if !validExt {
-			return fmt.Errorf("invalid file extension: %s (allowed: %v)", ext, v.allowedExtensions)
+			return gerror.Newf(gerror.ErrCodeValidation, "invalid file extension: %s (allowed: %v)", ext, v.allowedExtensions).
+				WithComponent("manager").
+				WithOperation("validatePath").
+				WithDetails("extension", ext).
+				WithDetails("allowed_extensions", v.allowedExtensions)
 		}
 	}
 
@@ -182,7 +203,9 @@ func (v *DefaultValidator) validateMarkdownContent(content string) error {
 	}
 
 	if !hasTitle {
-		return fmt.Errorf("markdown file must contain at least one title (# heading)")
+		return gerror.New(gerror.ErrCodeValidation, "markdown file must contain at least one title (# heading)", nil).
+			WithComponent("manager").
+			WithOperation("validateMarkdownContent")
 	}
 
 	return nil
@@ -195,7 +218,10 @@ func (v *DefaultValidator) validateFileType(fileType FileType) error {
 	case FileTypeMarkdown, FileTypeManifest:
 		return nil
 	default:
-		return fmt.Errorf("unsupported file type: %s", fileType)
+		return gerror.Newf(gerror.ErrCodeValidation, "unsupported file type: %s", fileType).
+			WithComponent("manager").
+			WithOperation("validateFileType").
+			WithDetails("file_type", string(fileType))
 	}
 }
 
@@ -215,11 +241,16 @@ func (v *DefaultValidator) validateRequiredFiles(files []*FileEntry) error {
 	}
 
 	if !hasReadme {
-		return fmt.Errorf("structure must contain a README.md file")
+		return gerror.New(gerror.ErrCodeValidation, "structure must contain a README.md file", nil).
+			WithComponent("manager").
+			WithOperation("validateRequiredFiles")
 	}
 
 	if totalTasks == 0 {
-		return fmt.Errorf("structure must contain at least one task")
+		return gerror.New(gerror.ErrCodeValidation, "structure must contain at least one task", nil).
+			WithComponent("manager").
+			WithOperation("validateRequiredFiles").
+			WithDetails("total_tasks", totalTasks)
 	}
 
 	return nil
@@ -293,11 +324,16 @@ func (v *ConfigurableValidator) validateCustomRequirements(structure *FileStruct
 	}
 
 	if v.config.RequireReadme && !hasReadme {
-		return fmt.Errorf("README.md is required")
+		return gerror.New(gerror.ErrCodeValidation, "README.md is required", nil).
+			WithComponent("manager").
+			WithOperation("validateCustomRequirements")
 	}
 
 	if v.config.RequireTasks && totalTasks == 0 {
-		return fmt.Errorf("at least one task is required")
+		return gerror.New(gerror.ErrCodeValidation, "at least one task is required", nil).
+			WithComponent("manager").
+			WithOperation("validateCustomRequirements").
+			WithDetails("total_tasks", totalTasks)
 	}
 
 	return nil

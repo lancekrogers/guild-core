@@ -1,81 +1,10 @@
-// Package prompts provides system prompt management for Guild agents
-package prompts
+package layered
 
 import (
 	"context"
-	"errors"
-	"time"
-
+	
 	"github.com/guild-ventures/guild-core/pkg/memory"
 )
-
-// ErrPromptNotFound is returned when a requested prompt does not exist
-var ErrPromptNotFound = errors.New("prompt not found")
-
-// ErrTemplateNotFound is returned when a requested template does not exist  
-var ErrTemplateNotFound = errors.New("template not found")
-
-// ErrLayerNotFound is returned when a requested prompt layer does not exist
-var ErrLayerNotFound = errors.New("prompt layer not found")
-
-// PromptLayer represents the hierarchical layers of Guild prompts
-type PromptLayer string
-
-const (
-	// LayerPlatform contains core Guild platform rules (terms of service, safety)
-	LayerPlatform PromptLayer = "platform"
-	
-	// LayerGuild contains project-wide goals and style guidelines
-	LayerGuild PromptLayer = "guild"
-	
-	// LayerRole contains artisan role definitions (Guild Master, Code Artisan, etc.)
-	LayerRole PromptLayer = "role"
-	
-	// LayerDomain contains project type specializations (web-app, cli-tool, etc.)
-	LayerDomain PromptLayer = "domain"
-	
-	// LayerSession contains user preferences and session-specific context
-	LayerSession PromptLayer = "session"
-	
-	// LayerTurn contains ephemeral instructions for single interactions
-	LayerTurn PromptLayer = "turn"
-)
-
-// SystemPrompt represents a single layer in the Guild's layered prompt system
-type SystemPrompt struct {
-	Layer     PromptLayer            `json:"layer"`
-	ArtisanID string                 `json:"artisan_id,omitempty"`
-	SessionID string                 `json:"session_id,omitempty"`
-	Content   string                 `json:"content"`
-	Version   int                    `json:"version"`
-	Priority  int                    `json:"priority"`
-	Updated   time.Time              `json:"updated"`
-	Metadata  map[string]interface{} `json:"metadata,omitempty"`
-}
-
-// LayeredPrompt represents a fully assembled Guild prompt with all layers
-type LayeredPrompt struct {
-	Layers      []SystemPrompt         `json:"layers"`
-	Compiled    string                 `json:"compiled"`
-	TokenCount  int                    `json:"token_count"`
-	Truncated   bool                   `json:"truncated"`
-	CacheKey    string                 `json:"cache_key"`
-	ArtisanID   string                 `json:"artisan_id"`
-	SessionID   string                 `json:"session_id"`
-	AssembledAt time.Time              `json:"assembled_at"`
-	Metadata    map[string]interface{} `json:"metadata,omitempty"`
-}
-
-// TurnContext represents ephemeral context for a single Guild interaction
-type TurnContext struct {
-	UserMessage   string                 `json:"user_message"`
-	TaskID        string                 `json:"task_id,omitempty"`
-	CommissionID  string                 `json:"commission_id,omitempty"`
-	Urgency       string                 `json:"urgency,omitempty"`
-	Instructions  []string               `json:"instructions,omitempty"`
-	Context       Context                `json:"context,omitempty"`
-	Metadata      map[string]interface{} `json:"metadata,omitempty"`
-}
 
 // Manager defines the interface for system prompt management
 type Manager interface {
