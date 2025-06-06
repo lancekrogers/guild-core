@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-// ObjectiveItem represents an objective in the ledger list
-type ObjectiveItem struct {
+// CommissionItem represents an objective in the ledger list
+type CommissionItem struct {
 	ID           string
 	Title        string
 	Status       string
@@ -20,7 +20,7 @@ type ObjectiveItem struct {
 }
 
 // FilterValue implements list.Item interface
-func (i ObjectiveItem) FilterValue() string { 
+func (i CommissionItem) FilterValue() string { 
 	return i.Title 
 }
 

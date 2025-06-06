@@ -14,6 +14,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
@@ -105,13 +106,19 @@ type ChromemConfig struct {
 //   store, err := vector.NewVectorStore(ctx, config)
 func NewVectorStore(ctx context.Context, config *StoreConfig) (VectorStore, error) {
 	if config == nil {
-		return nil, fmt.Errorf("config cannot be nil")
+		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+			WithComponent("memory").
+			WithOperation("NewVectorStore").
+			WithDetails("config cannot be nil")
 	}
 
 	// Create embedder
 	embedder, err := createEmbedder(config)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create embedder: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+			WithComponent("memory").
+			WithOperation("NewVectorStore").
+			WithDetails("failed to create embedder")
 	}
 
 	// Look up factory in registry

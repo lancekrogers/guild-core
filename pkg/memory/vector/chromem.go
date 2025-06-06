@@ -12,6 +12,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/philippgille/chromem-go"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // ChromemStore implements the VectorStore interface using Chromem-go.
@@ -101,13 +102,19 @@ func NewChromemStore(config Config) (*ChromemStore, error) {
 	if config.PersistencePath != "" {
 		// Ensure the directory exists
 		if err := os.MkdirAll(config.PersistencePath, 0755); err != nil {
-			return nil, fmt.Errorf("failed to create persistence directory: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+				WithComponent("memory").
+				WithOperation("NewChromemStore").
+				WithDetails("failed to create persistence directory")
 		}
 		
 		// Create persistent database with compression enabled
 		db, err = chromem.NewPersistentDB(config.PersistencePath, true)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create persistent database: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+				WithComponent("memory").
+				WithOperation("NewChromemStore").
+				WithDetails("failed to create persistent database")
 		}
 	} else {
 		// Create in-memory database
@@ -124,7 +131,10 @@ func NewChromemStore(config Config) (*ChromemStore, error) {
 	
 	// Create or get default collection
 	if _, err := store.getOrCreateCollection(config.DefaultCollection); err != nil {
-		return nil, fmt.Errorf("failed to create default collection: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+			WithComponent("memory").
+			WithOperation("NewChromemStore").
+			WithDetails("failed to create default collection")
 	}
 	
 	return store, nil
@@ -151,7 +161,10 @@ func (s *ChromemStore) getOrCreateCollection(name string) (*chromem.Collection, 
 	// Create embedding function that wraps our embedder
 	embeddingFunc := func(ctx context.Context, text string) ([]float32, error) {
 		if s.embedder == nil {
-			return nil, fmt.Errorf("no embedder configured")
+			return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+				WithComponent("memory").
+				WithOperation("getOrCreateCollection").
+				WithDetails("no embedder configured")
 		}
 		return s.embedder.Embed(ctx, text)
 	}
@@ -164,7 +177,10 @@ func (s *ChromemStore) getOrCreateCollection(name string) (*chromem.Collection, 
 	
 	coll, err := s.db.CreateCollection(name, metadata, embeddingFunc)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create collection %s: %w", name, err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+			WithComponent("memory").
+			WithOperation("getOrCreateCollection").
+			WithDetails(fmt.Sprintf("failed to create collection %s", name))
 	}
 	
 	s.collections[name] = coll
@@ -204,7 +220,10 @@ func (s *ChromemStore) SaveEmbedding(ctx context.Context, embedding Embedding) e
 	// Get or create collection
 	collection, err := s.getOrCreateCollection(collectionName)
 	if err != nil {
-		return fmt.Errorf("failed to get collection: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage).
+			WithComponent("memory").
+			WithOperation("SaveEmbedding").
+			WithDetails("failed to get collection")
 	}
 
 	// Convert metadata to string map for chromem
@@ -232,7 +251,10 @@ func (s *ChromemStore) SaveEmbedding(ctx context.Context, embedding Embedding) e
 	// Add document to collection
 	// If embedding is empty, chromem will generate it using the embedding function
 	if err := collection.AddDocument(ctx, doc); err != nil {
-		return fmt.Errorf("failed to add document to collection: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage).
+			WithComponent("memory").
+			WithOperation("SaveEmbedding").
+			WithDetails("failed to add document to collection")
 	}
 	
 	return nil
@@ -347,13 +369,19 @@ func (s *ChromemStore) QueryCollection(ctx context.Context, collectionName, quer
 	// Get collection
 	collection, err := s.getOrCreateCollection(collectionName)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get collection %s: %w", collectionName, err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+			WithComponent("memory").
+			WithOperation("QueryCollection").
+			WithDetails(fmt.Sprintf("failed to get collection %s", collectionName))
 	}
 	
 	// Query the collection
 	results, err := collection.Query(ctx, query, limit, nil, nil)
 	if err != nil {
-		return nil, fmt.Errorf("failed to query collection: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+			WithComponent("memory").
+			WithOperation("QueryCollection").
+			WithDetails("failed to query collection")
 	}
 	
 	// Convert results to EmbeddingMatch
@@ -410,7 +438,10 @@ func (s *ChromemStore) DeleteEmbedding(ctx context.Context, id string) error {
 	}
 	
 	if !deleted {
-		return fmt.Errorf("document deletion not yet supported by chromem-go")
+		return gerror.New(gerror.ErrCodeNotImplemented).
+			WithComponent("memory").
+			WithOperation("DeleteEmbedding").
+			WithDetails("document deletion not yet supported by chromem-go")
 	}
 	
 	return nil

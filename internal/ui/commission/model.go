@@ -48,7 +48,7 @@ type GuildHallKeyMap struct {
 }
 
 // Define UI state using Guild metaphors
-type ObjectiveChamber struct {
+type CommissionChamber struct {
 	// Session state
 	commissionManager *commissionpkg.Manager      // Manages commissions
 	planner           *commissionpkg.Planner      // Plans commissions
@@ -152,7 +152,7 @@ func (k GuildHallKeyMap) FullHelp() [][]key.Binding {
 }
 
 // NewModel creates a new Guild Hall model for commission planning
-func NewModel(commissionPath string, manager *commissionpkg.Manager, planner *commissionpkg.Planner, generator generator.CommissionGenerator) *ObjectiveChamber {
+func NewModel(commissionPath string, manager *commissionpkg.Manager, planner *commissionpkg.Planner, generator generator.CommissionGenerator) *CommissionChamber {
 	// Initialize textarea for context input
 	scribe := textarea.New()
 	scribe.Placeholder = "Enter context or reference documents (e.g., @spec/path/to/file.md)"
@@ -179,7 +179,7 @@ func NewModel(commissionPath string, manager *commissionpkg.Manager, planner *co
 	helpScroll := help.New()
 
 	// Create the model with Guild-themed names
-	chamber := &ObjectiveChamber{
+	chamber := &CommissionChamber{
 		commissionPath:    commissionPath,
 		commissionManager: manager,
 		planner:           planner,
@@ -224,7 +224,7 @@ func NewModel(commissionPath string, manager *commissionpkg.Manager, planner *co
 }
 
 // Init implements tea.Model
-func (m ObjectiveChamber) Init() tea.Cmd {
+func (m CommissionChamber) Init() tea.Cmd {
 	// Start with multiple initialization commands
 	return tea.Batch(
 		textarea.Blink,

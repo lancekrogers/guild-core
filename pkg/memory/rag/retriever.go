@@ -68,7 +68,10 @@ type SearchResults struct {
 func NewRetriever(ctx context.Context, embedder vector.Embedder, config Config) (*Retriever, error) {
 	// Validate embedder
 	if embedder == nil {
-		return nil, fmt.Errorf("embedder cannot be nil")
+		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+			WithComponent("memory").
+			WithOperation("NewRetriever").
+			WithDetails("embedder cannot be nil")
 	}
 	
 	// Apply default config values
@@ -121,7 +124,10 @@ func NewRetriever(ctx context.Context, embedder vector.Embedder, config Config) 
 	// Create vector store
 	vectorStore, err := vector.NewChromemStore(vsConfig)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create vector store: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+			WithComponent("memory").
+			WithOperation("NewRetriever").
+			WithDetails("failed to create vector store")
 	}
 	
 	// Create retriever
@@ -219,7 +225,10 @@ func NewRetrieverWithStore(vectorStore vector.VectorStore, config Config) *Retri
 func (r *Retriever) RetrieveContext(ctx context.Context, query string, config RetrievalConfig) (*SearchResults, error) {
 	// Validate query
 	if strings.TrimSpace(query) == "" {
-		return nil, fmt.Errorf("query cannot be empty")
+		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+			WithComponent("memory").
+			WithOperation("RetrieveContext").
+			WithDetails("query cannot be empty")
 	}
 	
 	// Use default max results if not specified
@@ -240,7 +249,10 @@ func (r *Retriever) RetrieveContext(ctx context.Context, query string, config Re
 			// Log error but continue with corpus search if available
 			// This makes the system more resilient
 			if r.corpusConfig == nil || !config.UseCorpus {
-				return nil, fmt.Errorf("failed to query vector store: %w", err)
+				return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+					WithComponent("memory").
+					WithOperation("RetrieveContext").
+					WithDetails("failed to query vector store")
 			}
 		} else {
 			// Convert vector matches to search results
@@ -299,7 +311,10 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 	// List corpus documents
 	docs, err := corpus.List(ctx, *r.corpusConfig)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list corpus documents: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+			WithComponent("memory").
+			WithOperation("searchCorpus").
+			WithDetails("failed to list corpus documents")
 	}
 	
 	results := make([]SearchResult, 0)
@@ -399,10 +414,16 @@ func (r *Retriever) sortResultsByScore(results []SearchResult) {
 func (r *Retriever) AddDocument(ctx context.Context, id, content, source string) error {
 	// Validate inputs
 	if id == "" {
-		return fmt.Errorf("document ID cannot be empty")
+		return gerror.New(gerror.ErrCodeInvalidArgument).
+			WithComponent("memory").
+			WithOperation("AddDocument").
+			WithDetails("document ID cannot be empty")
 	}
 	if content == "" {
-		return fmt.Errorf("document content cannot be empty")
+		return gerror.New(gerror.ErrCodeInvalidArgument).
+			WithComponent("memory").
+			WithOperation("AddDocument").
+			WithDetails("document content cannot be empty")
 	}
 	
 	// Chunk the document
@@ -422,7 +443,10 @@ func (r *Retriever) AddDocument(ctx context.Context, id, content, source string)
 		}
 		
 		if err := r.vectorStore.SaveEmbedding(ctx, embedding); err != nil {
-			return fmt.Errorf("failed to save chunk %d: %w", i, err)
+			return gerror.Wrap(err, gerror.ErrCodeStorage).
+				WithComponent("memory").
+				WithOperation("AddDocument").
+				WithDetails(fmt.Sprintf("failed to save chunk %d", i))
 		}
 	}
 	
@@ -434,7 +458,10 @@ func (r *Retriever) AddDocument(ctx context.Context, id, content, source string)
 // in addition to keyword search.
 func (r *Retriever) AddCorpusDocument(ctx context.Context, doc *corpus.CorpusDoc) error {
 	if doc == nil {
-		return fmt.Errorf("corpus document cannot be nil")
+		return gerror.New(gerror.ErrCodeInvalidArgument).
+			WithComponent("memory").
+			WithOperation("AddCorpusDocument").
+			WithDetails("corpus document cannot be nil")
 	}
 	
 	// Create a searchable representation of the document
@@ -506,7 +533,10 @@ func (r *Retriever) EnhancePrompt(ctx context.Context, prompt string, config Ret
 func (r *Retriever) RemoveDocument(ctx context.Context, documentID string) error {
 	// TODO: The VectorStore interface needs to be extended with a DeleteEmbedding method
 	// For now, we'll document this limitation
-	return fmt.Errorf("document removal not yet implemented: VectorStore interface needs DeleteEmbedding method")
+	return gerror.New(gerror.ErrCodeNotImplemented).
+		WithComponent("memory").
+		WithOperation("RemoveDocument").
+		WithDetails("document removal not yet implemented: VectorStore interface needs DeleteEmbedding method")
 }
 
 // Close closes the retriever and its resources.

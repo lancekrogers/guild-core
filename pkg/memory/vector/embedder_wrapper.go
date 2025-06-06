@@ -3,6 +3,8 @@ package vector
 import (
 	"context"
 	"fmt"
+	
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // EmbedderWrapper wraps an Embedder to provide the EmbeddingProvider interface
@@ -34,7 +36,10 @@ func (w *EmbedderWrapper) GetEmbeddings(ctx context.Context, texts []string) ([]
 	for i, text := range texts {
 		embedding, err := w.embedder.Embed(ctx, text)
 		if err != nil {
-			return nil, fmt.Errorf("failed to embed text %d: %w", i, err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+				WithComponent("memory").
+				WithOperation("GetEmbeddings").
+				WithDetails(fmt.Sprintf("failed to embed text %d", i))
 		}
 		embeddings[i] = embedding
 	}

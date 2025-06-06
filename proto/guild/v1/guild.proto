@@ -25,9 +25,9 @@ service Guild {
   rpc CompleteCampaign(CampaignActionRequest) returns (Campaign);
   rpc CancelCampaign(CampaignActionRequest) returns (Campaign);
   
-  // Objective management
-  rpc AddObjectiveToCampaign(AddObjectiveRequest) returns (Campaign);
-  rpc RemoveObjectiveFromCampaign(RemoveObjectiveRequest) returns (Campaign);
+  // Commission management
+  rpc AddCommissionToCampaign(AddCommissionRequest) returns (Campaign);
+  rpc RemoveCommissionFromCampaign(RemoveCommissionRequest) returns (Campaign);
   
   // Agent communication
   rpc SendMessageToAgent(AgentMessageRequest) returns (AgentMessageResponse);
@@ -36,17 +36,17 @@ service Guild {
   rpc GetAgentStatus(GetAgentStatusRequest) returns (AgentStatus);
 }
 
-// Campaign represents a strategic goal with multiple objectives
+// Campaign represents a strategic goal with multiple commissions
 message Campaign {
   string id = 1;
   string name = 2;
   string description = 3;
   string status = 4;
-  repeated string objective_ids = 5;
+  repeated string commission_ids = 5;
   repeated string tags = 6;
   double progress = 7;
-  int32 total_objectives = 8;
-  int32 completed_objectives = 9;
+  int32 total_commissions = 8;
+  int32 completed_commissions = 9;
   int64 created_at = 10;
   int64 updated_at = 11;
   int64 started_at = 12;
@@ -125,15 +125,15 @@ message CampaignActionRequest {
   string campaign_id = 1;
 }
 
-// Objective management messages
-message AddObjectiveRequest {
+// Commission management messages
+message AddCommissionRequest {
   string campaign_id = 1;
-  string objective_id = 2;
+  string commission_id = 2;
 }
 
-message RemoveObjectiveRequest {
+message RemoveCommissionRequest {
   string campaign_id = 1;
-  string objective_id = 2;
+  string commission_id = 2;
 }
 
 // Error details

@@ -78,7 +78,7 @@ var (
 )
 
 // View renders the UI
-func (m ObjectiveChamber) View() string {
+func (m CommissionChamber) View() string {
 	var b strings.Builder
 
 	// Get title based on current objective
@@ -143,7 +143,7 @@ func (m ObjectiveChamber) View() string {
 }
 
 // renderViewingState renders the main objective viewing state
-func (m ObjectiveChamber) renderViewingState() string {
+func (m CommissionChamber) renderViewingState() string {
 	var content string
 	
 	// If we have an objective, show its details
@@ -195,7 +195,7 @@ func (m ObjectiveChamber) renderViewingState() string {
 }
 
 // renderContextState renders the context adding state
-func (m ObjectiveChamber) renderContextState() string {
+func (m CommissionChamber) renderContextState() string {
 	// Show the scribe's text area for adding context
 	header := manuscriptStyle.Render("The Guild Scribe's Parchment")
 	instructions := scrollStyle.Render(
@@ -219,7 +219,7 @@ func (m ObjectiveChamber) renderContextState() string {
 }
 
 // renderPreviewState renders the document preview state
-func (m ObjectiveChamber) renderPreviewState() string {
+func (m CommissionChamber) renderPreviewState() string {
 	// Show the viewport with document preview
 	header := manuscriptStyle.Render("Guild Document Archives")
 	
@@ -236,7 +236,7 @@ func (m ObjectiveChamber) renderPreviewState() string {
 }
 
 // renderCommandState renders the command input state
-func (m ObjectiveChamber) renderCommandState() string {
+func (m CommissionChamber) renderCommandState() string {
 	// Show the command input for entering commands
 	header := manuscriptStyle.Render("Guild Master's Command Hall")
 	instructions := scrollStyle.Render(
@@ -263,7 +263,7 @@ func (m ObjectiveChamber) renderCommandState() string {
 }
 
 // renderDashboardState renders the objectives dashboard state
-func (m ObjectiveChamber) renderDashboardState() string {
+func (m CommissionChamber) renderDashboardState() string {
 	// Show the list of objectives
 	header := manuscriptStyle.Render("Guild Objective Ledger")
 	
@@ -285,7 +285,7 @@ func (m ObjectiveChamber) renderDashboardState() string {
 }
 
 // renderCreatingState renders the objective creation state
-func (m ObjectiveChamber) renderCreatingState() string {
+func (m CommissionChamber) renderCreatingState() string {
 	// Show the textarea for creating a new objective
 	header := manuscriptStyle.Render("Crafting a New Objective")
 	instructions := scrollStyle.Render(

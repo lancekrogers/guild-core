@@ -36,12 +36,12 @@ type MasterSuggestionMsg struct {
 	Error       error
 }
 
-type ObjectiveReadyMsg struct {
+type CommissionReadyMsg struct {
 	Success bool
 	Error   error
 }
 
-type ObjectiveLoadedMsg struct {
+type CommissionLoadedMsg struct {
 	Commission string
 	Success    bool
 	Error      error
@@ -53,7 +53,7 @@ type CommandMsg struct {
 }
 
 // Update handles UI events and state changes
-func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
 	var cmd tea.Cmd
 
@@ -91,7 +91,7 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				
 			case key.Matches(msg, m.keymap.ApproveWork):
 				m.proclamation = "Preparing to seal the work with the Guild's mark of approval..."
-				return m, markObjectiveReadyCmd(m)
+				return m, markCommissionReadyCmd(m)
 				
 			case key.Matches(msg, m.keymap.ExamineDocs):
 				m.chamberState = statePreview
@@ -100,7 +100,7 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case key.Matches(msg, m.keymap.ToggleView):
 				m.chamberState = stateDashboard
 				m.proclamation = "Opening the Guild's objective ledger..."
-				return m, loadObjectivesCmd(m)
+				return m, loadCommissionsCmd(m)
 				
 			case key.Matches(msg, m.keymap.EnterHall):
 				m.chamberState = stateCommands
@@ -222,7 +222,7 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.scribe.Reset()
 					m.chamberState = stateViewing
 					m.proclamation = "The Guild craftsmen begin to shape your objective..."
-					return m, createObjectiveCmd(m, content)
+					return m, createCommissionCmd(m, content)
 				}
 			}
 		}
@@ -286,7 +286,7 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.chamberState = statePreview
 		}
 		
-	case ObjectiveReadyMsg:
+	case CommissionReadyMsg:
 		// Handle marking objective as ready
 		if !msg.Success {
 			m.guildError = msg.Error
@@ -296,7 +296,7 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.proclamation = "The work has been sealed with the Guild's mark of approval!"
 		}
 		
-	case ObjectiveLoadedMsg:
+	case CommissionLoadedMsg:
 		// Handle loading an objective
 		if !msg.Success {
 			m.guildError = msg.Error
@@ -339,7 +339,7 @@ func (m ObjectiveChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // Custom commands for objective operations
 
 // addContextCmd creates a command to add context to the objective
-func addContextCmd(m ObjectiveChamber, content string) tea.Cmd {
+func addContextCmd(m CommissionChamber, content string) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
 		if m.planner != nil && m.planner.GetSession().Commission != nil {
@@ -373,7 +373,7 @@ func addContextCmd(m ObjectiveChamber, content string) tea.Cmd {
 }
 
 // generateDocumentsCmd creates a command to regenerate documents
-func generateDocumentsCmd(m ObjectiveChamber) tea.Cmd {
+func generateDocumentsCmd(m CommissionChamber) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
 		if m.planner != nil && m.planner.GetSession().Commission != nil {
@@ -404,7 +404,7 @@ func generateDocumentsCmd(m ObjectiveChamber) tea.Cmd {
 }
 
 // requestSuggestionsCmd creates a command to get suggestions for the objective
-func requestSuggestionsCmd(m ObjectiveChamber) tea.Cmd {
+func requestSuggestionsCmd(m CommissionChamber) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
 		if m.planner != nil && m.planner.GetSession().Commission != nil {
@@ -444,8 +444,8 @@ func requestSuggestionsCmd(m ObjectiveChamber) tea.Cmd {
 	}
 }
 
-// markObjectiveReadyCmd creates a command to mark the objective as ready
-func markObjectiveReadyCmd(m ObjectiveChamber) tea.Cmd {
+// markCommissionReadyCmd creates a command to mark the objective as ready
+func markCommissionReadyCmd(m CommissionChamber) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
 		if m.planner != nil && m.planner.GetSession().Commission != nil {
@@ -455,28 +455,28 @@ func markObjectiveReadyCmd(m ObjectiveChamber) tea.Cmd {
 			// Mark objective as ready
 			err := m.planner.MarkReady(ctx)
 			if err != nil {
-				return ObjectiveReadyMsg{
+				return CommissionReadyMsg{
 					Success: false,
 					Error:   err,
 				}
 			}
 
-			return ObjectiveReadyMsg{
+			return CommissionReadyMsg{
 				Success: true,
 				Error:   nil,
 			}
 		}
 
 		// Fallback to mock behavior if planner not available
-		return ObjectiveReadyMsg{
+		return CommissionReadyMsg{
 			Success: true,
 			Error:   nil,
 		}
 	}
 }
 
-// loadObjectivesCmd creates a command to load all objectives for the dashboard
-func loadObjectivesCmd(m ObjectiveChamber) tea.Cmd {
+// loadCommissionsCmd creates a command to load all objectives for the dashboard
+func loadCommissionsCmd(m CommissionChamber) tea.Cmd {
 	return func() tea.Msg {
 		// If objective manager is available, use it
 		if m.commissionManager != nil {
@@ -492,7 +492,7 @@ func loadObjectivesCmd(m ObjectiveChamber) tea.Cmd {
 			// Convert commissions to list items
 			items := make([]list.Item, 0, len(commissions))
 			for _, obj := range commissions {
-				items = append(items, components.ObjectiveItem{
+				items = append(items, components.CommissionItem{
 					ID:          obj.ID,
 					Title:       obj.Title,
 					Status:      string(obj.Status),
@@ -513,7 +513,7 @@ func loadObjectivesCmd(m ObjectiveChamber) tea.Cmd {
 
 		// Fallback to mock data if manager not available
 		items := []list.Item{
-			components.ObjectiveItem{
+			components.CommissionItem{
 				ID:          "mock-1",
 				Title:       "Build a RESTful API service",
 				Status:      "in_progress",
@@ -525,7 +525,7 @@ func loadObjectivesCmd(m ObjectiveChamber) tea.Cmd {
 				Completion:  0.7,
 				Description: "Create a RESTful API service for the application",
 			},
-			components.ObjectiveItem{
+			components.CommissionItem{
 				ID:          "mock-2",
 				Title:       "Design user authentication system",
 				Status:      "draft",
@@ -537,7 +537,7 @@ func loadObjectivesCmd(m ObjectiveChamber) tea.Cmd {
 				Completion:  0.3,
 				Description: "Design a secure user authentication system",
 			},
-			components.ObjectiveItem{
+			components.CommissionItem{
 				ID:          "mock-3",
 				Title:       "Implement database schema",
 				Status:      "completed",
@@ -555,8 +555,8 @@ func loadObjectivesCmd(m ObjectiveChamber) tea.Cmd {
 	}
 }
 
-// createObjectiveCmd creates a command to create a new objective
-func createObjectiveCmd(m ObjectiveChamber, description string) tea.Cmd {
+// createCommissionCmd creates a command to create a new objective
+func createCommissionCmd(m CommissionChamber, description string) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
 		if m.planner != nil {
@@ -564,9 +564,9 @@ func createObjectiveCmd(m ObjectiveChamber, description string) tea.Cmd {
 			ctx := context.Background()
 
 			// Create objective
-			err := m.planner.CreateObjective(ctx, description)
+			err := m.planner.CreateCommission(ctx, description)
 			if err != nil {
-				return ObjectiveLoadedMsg{
+				return CommissionLoadedMsg{
 					Commission: "",
 					Success:    false,
 					Error:     err,
@@ -584,7 +584,7 @@ func createObjectiveCmd(m ObjectiveChamber, description string) tea.Cmd {
 					objectiveContent = formatCommissionContent(session.Commission)
 				}
 
-				return ObjectiveLoadedMsg{
+				return CommissionLoadedMsg{
 					Commission: objectiveContent,
 					Success:   true,
 					Error:     nil,
@@ -617,7 +617,7 @@ This objective was created in the Guild Hall.
 - None yet
 `, description)
 
-		return ObjectiveLoadedMsg{
+		return CommissionLoadedMsg{
 			Commission: objectiveContent,
 			Success:   true,
 			Error:     nil,
@@ -678,7 +678,7 @@ func formatCommissionContent(obj *commissionpkg.Commission) string {
 }
 
 // executeCommandCmd creates a command to execute a command string
-func executeCommandCmd(m ObjectiveChamber, command string) tea.Cmd {
+func executeCommandCmd(m CommissionChamber, command string) tea.Cmd {
 	return func() tea.Msg {
 		// Parse the command and execute appropriate action
 		// Format: command [args...]
@@ -705,18 +705,18 @@ func executeCommandCmd(m ObjectiveChamber, command string) tea.Cmd {
 			return requestSuggestionsCmd(m)()
 
 		case "ready":
-			return markObjectiveReadyCmd(m)()
+			return markCommissionReadyCmd(m)()
 
 		case "list":
 			// Switch to dashboard view which shows the objective list
 			m.chamberState = stateDashboard
-			return loadObjectivesCmd(m)()
+			return loadCommissionsCmd(m)()
 
 		case "create":
 			// If arguments provided, create objective from them
 			if len(args) > 0 {
 				description := strings.Join(args, " ")
-				return createObjectiveCmd(m, description)()
+				return createCommissionCmd(m, description)()
 			}
 			// Otherwise switch to create view
 			m.chamberState = stateCreating
@@ -742,7 +742,7 @@ func executeCommandCmd(m ObjectiveChamber, command string) tea.Cmd {
 				// Try to load the objective
 				obj, err := m.commissionManager.LoadCommissionFromFile(ctx, path)
 				if err != nil {
-					return ObjectiveLoadedMsg{
+					return CommissionLoadedMsg{
 						Commission: "",
 						Success:   false,
 						Error:     err,
@@ -753,7 +753,7 @@ func executeCommandCmd(m ObjectiveChamber, command string) tea.Cmd {
 				if m.planner != nil {
 					err := m.planner.SetCommission(ctx, obj.ID)
 					if err != nil {
-						return ObjectiveLoadedMsg{
+						return CommissionLoadedMsg{
 							Commission: "",
 							Success:   false,
 							Error:     err,
@@ -769,7 +769,7 @@ func executeCommandCmd(m ObjectiveChamber, command string) tea.Cmd {
 					content = formatCommissionContent(obj)
 				}
 
-				return ObjectiveLoadedMsg{
+				return CommissionLoadedMsg{
 					Commission: content,
 					Success:   true,
 					Error:     nil,
@@ -893,7 +893,7 @@ func executeExternalCommandCmd(cmdStr string) tea.Cmd {
 		}
 		
 		// Return a message that will display this output in the viewport
-		return ObjectiveLoadedMsg{
+		return CommissionLoadedMsg{
 			Commission: outputMsg,
 			Success:   true,
 			Error:     nil,
