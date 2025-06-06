@@ -231,13 +231,13 @@ func (s *Server) WatchCampaign(req *pb.WatchRequest, stream pb.Guild_WatchCampai
 // sendFrame sends a frame update to the watcher
 func (s *Server) sendFrame(w *watcher) error {
 	// Get campaign
-	campaign, err := s.campaignMgr.Get(context.Background(), w.campaignID)
+	campaign, err := s.campaignMgr.Get(w.stream.Context(), w.campaignID)
 	if err != nil {
 		return status.Errorf(codes.Internal, "failed to get campaign: %v", err)
 	}
 
 	// Build frame
-	frame, metadata := s.frameBuilder.BuildFrame(campaign, w.options)
+	frame, metadata := s.frameBuilder.BuildFrame(w.stream.Context(), campaign, w.options)
 
 	// Create board update
 	update := &pb.BoardUpdate{

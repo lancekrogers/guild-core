@@ -81,7 +81,7 @@ func (fb *FrameBuilder) SetSize(width, height int) {
 }
 
 // BuildFrame creates an ASCII board representation
-func (fb *FrameBuilder) BuildFrame(campaign *campaign.Campaign, options watchOptions) ([]byte, FrameMetadata) {
+func (fb *FrameBuilder) BuildFrame(ctx context.Context, campaign *campaign.Campaign, options watchOptions) ([]byte, FrameMetadata) {
 	// Update FPS calculation
 	now := time.Now()
 	elapsed := now.Sub(fb.lastRender).Seconds()
@@ -111,13 +111,13 @@ func (fb *FrameBuilder) BuildFrame(campaign *campaign.Campaign, options watchOpt
 		agentGrid := fb.buildAgentGrid(agentHeight)
 		buf.Write(agentGrid)
 		
-		kanbanBoard := fb.buildKanbanBoard(campaign, kanbanHeight)
+		kanbanBoard := fb.buildKanbanBoard(ctx, campaign, kanbanHeight)
 		buf.Write(kanbanBoard)
 	} else if options.includeAgents {
 		agentGrid := fb.buildAgentGrid(remainingHeight)
 		buf.Write(agentGrid)
 	} else if options.includeKanban {
-		kanbanBoard := fb.buildKanbanBoard(campaign, remainingHeight)
+		kanbanBoard := fb.buildKanbanBoard(ctx, campaign, remainingHeight)
 		buf.Write(kanbanBoard)
 	} else {
 		// Just show progress
@@ -203,7 +203,7 @@ func (fb *FrameBuilder) buildAgentGrid(height int) []byte {
 }
 
 // buildKanbanBoard creates the kanban board section
-func (fb *FrameBuilder) buildKanbanBoard(campaign *campaign.Campaign, height int) []byte {
+func (fb *FrameBuilder) buildKanbanBoard(ctx context.Context, campaign *campaign.Campaign, height int) []byte {
 	var buf bytes.Buffer
 
 	// Title
@@ -229,7 +229,6 @@ func (fb *FrameBuilder) buildKanbanBoard(campaign *campaign.Campaign, height int
 	// Get tasks
 	var board *kanban.Board
 	if fb.kanbanMgr != nil {
-		ctx := context.Background()
 		boards, _ := fb.kanbanMgr.ListBoards(ctx)
 		if len(boards) > 0 {
 			board = boards[0] // Use first board for now

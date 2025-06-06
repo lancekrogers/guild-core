@@ -10,8 +10,8 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 )
 
-// TaskDispatcher is responsible for assigning tasks to agents
-type TaskDispatcher struct {
+// taskDispatcher is responsible for assigning tasks to agents
+type taskDispatcher struct {
 	kanbanManager KanbanManager
 	agentFactory  AgentFactory
 	agentPool     map[string]agent.Agent
@@ -19,12 +19,12 @@ type TaskDispatcher struct {
 	agentTasks    map[string]*kanban.Task // Maps agent ID to their current task
 	maxAgents     int
 	mu            sync.Mutex
-	eventBus      *EventBus
+	eventBus      EventBus
 }
 
-// NewTaskDispatcher creates a new task dispatcher
-func NewTaskDispatcher(kanbanManager KanbanManager, agentFactory AgentFactory, eventBus *EventBus, maxAgents int) *TaskDispatcher {
-	return &TaskDispatcher{
+// newTaskDispatcher creates a new task dispatcher (private constructor)
+func newTaskDispatcher(kanbanManager KanbanManager, agentFactory AgentFactory, eventBus EventBus, maxAgents int) *taskDispatcher {
+	return &taskDispatcher{
 		kanbanManager: kanbanManager,
 		agentFactory:  agentFactory,
 		agentPool:     make(map[string]agent.Agent),
@@ -35,8 +35,13 @@ func NewTaskDispatcher(kanbanManager KanbanManager, agentFactory AgentFactory, e
 	}
 }
 
+// DefaultTaskDispatcherFactory creates a task dispatcher for registry use
+func DefaultTaskDispatcherFactory(kanbanManager KanbanManager, agentFactory AgentFactory, eventBus EventBus, maxAgents int) TaskDispatcher {
+	return newTaskDispatcher(kanbanManager, agentFactory, eventBus, maxAgents)
+}
+
 // RegisterAgent registers an agent with the dispatcher
-func (d *TaskDispatcher) RegisterAgent(agent agent.Agent) {
+func (d *taskDispatcher) RegisterAgent(agent agent.Agent) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
@@ -54,7 +59,7 @@ func (d *TaskDispatcher) RegisterAgent(agent agent.Agent) {
 }
 
 // UnregisterAgent unregisters an agent from the dispatcher
-func (d *TaskDispatcher) UnregisterAgent(agentID string) {
+func (d *taskDispatcher) UnregisterAgent(agentID string) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
@@ -70,7 +75,7 @@ func (d *TaskDispatcher) UnregisterAgent(agentID string) {
 }
 
 // DispatchTasks assigns tasks to available agents
-func (d *TaskDispatcher) DispatchTasks(ctx context.Context) error {
+func (d *taskDispatcher) DispatchTasks(ctx context.Context) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
@@ -139,7 +144,7 @@ func (d *TaskDispatcher) DispatchTasks(ctx context.Context) error {
 }
 
 // StartAgent starts an agent's execution
-func (d *TaskDispatcher) StartAgent(ctx context.Context, agentID string) error {
+func (d *taskDispatcher) StartAgent(ctx context.Context, agentID string) error {
 	d.mu.Lock()
 	agent, exists := d.activeAgents[agentID]
 	d.mu.Unlock()
@@ -201,7 +206,7 @@ func (d *TaskDispatcher) StartAgent(ctx context.Context, agentID string) error {
 }
 
 // GetActiveAgents returns the list of active agents
-func (d *TaskDispatcher) GetActiveAgents() []agent.Agent {
+func (d *taskDispatcher) GetActiveAgents() []agent.Agent {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	
@@ -214,7 +219,7 @@ func (d *TaskDispatcher) GetActiveAgents() []agent.Agent {
 }
 
 // GetAvailableAgents returns the list of available agents
-func (d *TaskDispatcher) GetAvailableAgents() []agent.Agent {
+func (d *taskDispatcher) GetAvailableAgents() []agent.Agent {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	
@@ -228,8 +233,82 @@ func (d *TaskDispatcher) GetAvailableAgents() []agent.Agent {
 	return agents
 }
 
+// ListAvailableAgents returns agents that can accept tasks (implements interface)
+func (d *taskDispatcher) ListAvailableAgents() []agent.Agent {
+	return d.GetAvailableAgents()
+}
+
+// Dispatch assigns a task to an available agent (implements interface)
+func (d *taskDispatcher) Dispatch(ctx context.Context, task *kanban.Task) error {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	
+	// Find an available agent
+	for id, agent := range d.agentPool {
+		if _, active := d.activeAgents[id]; !active {
+			// Assign task to agent
+			d.activeAgents[id] = agent
+			d.agentTasks[id] = task
+			
+			// Start the agent
+			go d.StartAgent(ctx, id)
+			
+			return nil
+		}
+	}
+	
+	return fmt.Errorf("no available agents to handle task %s", task.ID)
+}
+
+// GetTaskStatus returns the current status of a task (implements interface)
+func (d *taskDispatcher) GetTaskStatus(ctx context.Context, taskID string) (TaskStatus, error) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	
+	// Find task in agent assignments
+	for agentID, task := range d.agentTasks {
+		if task.ID == taskID {
+			return TaskStatus{
+				TaskID:    taskID,
+				AgentID:   agentID,
+				Status:    string(task.Status),
+				StartTime: time.Now(), // This would need proper tracking
+				Error:     nil,
+			}, nil
+		}
+	}
+	
+	return TaskStatus{}, fmt.Errorf("task %s not found", taskID)
+}
+
+// GetAgentStatus returns the current status of an agent (implements interface)
+func (d *taskDispatcher) GetAgentStatus(agentID string) AgentStatus {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	
+	_, isActive := d.activeAgents[agentID]
+	currentTask := ""
+	if task, exists := d.agentTasks[agentID]; exists {
+		currentTask = task.ID
+	}
+	
+	return AgentStatus{
+		AgentID:      agentID,
+		Available:    !isActive,
+		CurrentTask:  currentTask,
+		TasksHandled: 0, // This would need proper tracking
+	}
+}
+
+// Stop gracefully shuts down the dispatcher (implements interface)
+func (d *taskDispatcher) Stop(ctx context.Context) error {
+	// Signal all active agents to stop
+	// This would need proper implementation
+	return nil
+}
+
 // Run runs the dispatcher in a loop
-func (d *TaskDispatcher) Run(ctx context.Context, interval time.Duration) error {
+func (d *taskDispatcher) Run(ctx context.Context, interval time.Duration) error {
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
 	

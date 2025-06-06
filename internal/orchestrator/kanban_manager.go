@@ -7,36 +7,41 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 )
 
-// DefaultKanbanManager implements KanbanManager using the kanban.Board
-type DefaultKanbanManager struct {
+// defaultKanbanManager implements KanbanManager using the kanban.Board
+type defaultKanbanManager struct {
 	board *kanban.Board
 }
 
-// NewDefaultKanbanManager creates a new default kanban manager
-func NewDefaultKanbanManager(board *kanban.Board) *DefaultKanbanManager {
-	return &DefaultKanbanManager{
+// newDefaultKanbanManager creates a new default kanban manager (private constructor)
+func newDefaultKanbanManager(board *kanban.Board) *defaultKanbanManager {
+	return &defaultKanbanManager{
 		board: board,
 	}
 }
 
+// DefaultKanbanManagerFactory creates a kanban manager for registry use
+func DefaultKanbanManagerFactory(board *kanban.Board) KanbanManager {
+	return newDefaultKanbanManager(board)
+}
+
 // CreateTask creates a new task on the kanban board
-func (m *DefaultKanbanManager) CreateTask(ctx context.Context, title, description string) (*kanban.Task, error) {
+func (m *defaultKanbanManager) CreateTask(ctx context.Context, title, description string) (*kanban.Task, error) {
 	return m.board.CreateTask(ctx, title, description)
 }
 
 // UpdateTask updates an existing task
-func (m *DefaultKanbanManager) UpdateTask(ctx context.Context, task *kanban.Task) error {
+func (m *defaultKanbanManager) UpdateTask(ctx context.Context, task *kanban.Task) error {
 	return m.board.UpdateTask(ctx, task)
 }
 
 // GetTask retrieves a task by ID
-func (m *DefaultKanbanManager) GetTask(ctx context.Context, taskID string) (*kanban.Task, error) {
+func (m *defaultKanbanManager) GetTask(ctx context.Context, taskID string) (*kanban.Task, error) {
 	return m.board.GetTask(ctx, taskID)
 }
 
 
 // ListTasksByStatus retrieves tasks by status (implements KanbanManager interface)
-func (m *DefaultKanbanManager) ListTasksByStatus(ctx context.Context, boardID string, status kanban.TaskStatus) ([]*kanban.Task, error) {
+func (m *defaultKanbanManager) ListTasksByStatus(ctx context.Context, boardID string, status kanban.TaskStatus) ([]*kanban.Task, error) {
 	// Note: boardID is ignored as we have a single board
 	allTasks, err := m.board.GetAllTasks(ctx)
 	if err != nil {
@@ -54,7 +59,7 @@ func (m *DefaultKanbanManager) ListTasksByStatus(ctx context.Context, boardID st
 }
 
 // UpdateTaskStatus updates a task's status (implements KanbanManager interface)
-func (m *DefaultKanbanManager) UpdateTaskStatus(ctx context.Context, taskID, status, assignee, comment string) error {
+func (m *defaultKanbanManager) UpdateTaskStatus(ctx context.Context, taskID, status, assignee, comment string) error {
 	task, err := m.board.GetTask(ctx, taskID)
 	if err != nil {
 		return fmt.Errorf("failed to get task: %w", err)
@@ -89,11 +94,11 @@ func (m *DefaultKanbanManager) UpdateTaskStatus(ctx context.Context, taskID, sta
 }
 
 // GetAllTasks retrieves all tasks (helper method)
-func (m *DefaultKanbanManager) GetAllTasks(ctx context.Context) ([]*kanban.Task, error) {
+func (m *defaultKanbanManager) GetAllTasks(ctx context.Context) ([]*kanban.Task, error) {
 	return m.board.GetAllTasks(ctx)
 }
 
 // GetBoard returns the underlying kanban board
-func (m *DefaultKanbanManager) GetBoard() *kanban.Board {
+func (m *defaultKanbanManager) GetBoard() *kanban.Board {
 	return m.board
 }

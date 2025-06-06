@@ -25,7 +25,7 @@ type CommissionIntegrationService struct {
 	commissionPlanner     CommissionTaskPlanner
 	kanbanManager         KanbanManager
 	commissionRepository  registry.CommissionRepository
-	eventBus              *EventBus
+	eventBus              EventBus
 	guildMasterFactory    *manager.DefaultGuildMasterFactory
 	taskBridge            *manager.TaskBridge
 }
@@ -142,10 +142,23 @@ Format your response with XML task tags:
 			WithOperation("initializeFromRegistry").
 			WithDetails("boardName", "commission-board")
 	}
-	s.kanbanManager = NewDefaultKanbanManager(kanbanBoard)
+	s.kanbanManager = DefaultKanbanManagerFactory(kanbanBoard)
 
-	// Create event bus
-	s.eventBus = NewEventBus()
+	// Get or create event bus from orchestrator registry
+	orchestratorReg, ok := s.registry.Orchestrator().(OrchestratorRegistry)
+	if ok && orchestratorReg != nil {
+		// Try to get default event bus
+		if eb, err := orchestratorReg.GetDefaultEventBus(); err == nil {
+			s.eventBus = eb
+		} else {
+			// Create and register new event bus
+			s.eventBus = DefaultEventBusFactory()
+			_ = orchestratorReg.RegisterEventBus("default", s.eventBus)
+		}
+	} else {
+		// Fallback: create event bus directly
+		s.eventBus = DefaultEventBusFactory()
+	}
 
 	// Create intelligent parser for commission planner
 	parserConfig := manager.IntelligentParserConfig{
@@ -157,7 +170,7 @@ Format your response with XML task tags:
 	parserAdapter := manager.NewResponseParserAdapter(intelligentParser)
 
 	// Create commission planner
-	s.commissionPlanner = NewCommissionTaskPlanner(s.kanbanManager, parserAdapter, s.eventBus)
+	s.commissionPlanner = DefaultCommissionTaskPlannerFactory(s.kanbanManager, parserAdapter, s.eventBus)
 
 	// Get commission repository from storage registry
 	storageRegistry := s.registry.Storage()

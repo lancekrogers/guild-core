@@ -20,28 +20,37 @@ type CommissionTaskPlanner interface {
 	AssignTasksToArtisans(ctx context.Context, tasks []*kanban.Task, guild *config.GuildConfig) error
 }
 
-// DefaultCommissionTaskPlanner implements CommissionTaskPlanner using IntelligentParser
-type DefaultCommissionTaskPlanner struct {
+// defaultCommissionTaskPlanner implements CommissionTaskPlanner using IntelligentParser
+type defaultCommissionTaskPlanner struct {
 	kanbanManager  KanbanManager
 	parser         manager.ResponseParser // IntelligentParser interface
-	eventBus       *EventBus
+	eventBus       EventBus
 }
 
-// NewCommissionTaskPlanner creates a new commission task planner
-func NewCommissionTaskPlanner(
+// newCommissionTaskPlanner creates a new commission task planner (private constructor)
+func newCommissionTaskPlanner(
 	kanbanManager KanbanManager,
 	parser manager.ResponseParser,
-	eventBus *EventBus,
-) *DefaultCommissionTaskPlanner {
-	return &DefaultCommissionTaskPlanner{
+	eventBus EventBus,
+) *defaultCommissionTaskPlanner {
+	return &defaultCommissionTaskPlanner{
 		kanbanManager: kanbanManager,
 		parser:        parser,
 		eventBus:      eventBus,
 	}
 }
 
+// DefaultCommissionTaskPlannerFactory creates a commission task planner for registry use
+func DefaultCommissionTaskPlannerFactory(
+	kanbanManager KanbanManager,
+	parser manager.ResponseParser,
+	eventBus EventBus,
+) CommissionTaskPlanner {
+	return newCommissionTaskPlanner(kanbanManager, parser, eventBus)
+}
+
 // PlanFromRefinedCommission converts refined commission tasks to kanban tasks
-func (p *DefaultCommissionTaskPlanner) PlanFromRefinedCommission(
+func (p *defaultCommissionTaskPlanner) PlanFromRefinedCommission(
 	ctx context.Context,
 	refined *manager.RefinedCommission,
 	guildConfig *config.GuildConfig,
@@ -69,7 +78,7 @@ func (p *DefaultCommissionTaskPlanner) PlanFromRefinedCommission(
 }
 
 // AssignTasksToArtisans assigns tasks to appropriate guild members
-func (p *DefaultCommissionTaskPlanner) AssignTasksToArtisans(
+func (p *defaultCommissionTaskPlanner) AssignTasksToArtisans(
 	ctx context.Context,
 	tasks []*kanban.Task,
 	guild *config.GuildConfig,
@@ -118,7 +127,7 @@ func (p *DefaultCommissionTaskPlanner) AssignTasksToArtisans(
 }
 
 // extractTasksFromStructure extracts tasks from file structure metadata
-func (p *DefaultCommissionTaskPlanner) extractTasksFromStructure(structure *manager.FileStructure) []manager.TaskInfo {
+func (p *defaultCommissionTaskPlanner) extractTasksFromStructure(structure *manager.FileStructure) []manager.TaskInfo {
 	var tasks []manager.TaskInfo
 
 	for _, file := range structure.Files {
@@ -133,7 +142,7 @@ func (p *DefaultCommissionTaskPlanner) extractTasksFromStructure(structure *mana
 }
 
 // convertToKanbanTask converts TaskInfo to kanban.Task
-func (p *DefaultCommissionTaskPlanner) convertToKanbanTask(
+func (p *defaultCommissionTaskPlanner) convertToKanbanTask(
 	ctx context.Context,
 	taskInfo manager.TaskInfo,
 	commissionID string,
@@ -177,7 +186,7 @@ func (p *DefaultCommissionTaskPlanner) convertToKanbanTask(
 }
 
 // findBestArtisan finds the best artisan for a task based on capabilities and workload
-func (p *DefaultCommissionTaskPlanner) findBestArtisan(
+func (p *defaultCommissionTaskPlanner) findBestArtisan(
 	ctx context.Context,
 	task *kanban.Task,
 	guild *config.GuildConfig,
@@ -211,7 +220,7 @@ func (p *DefaultCommissionTaskPlanner) findBestArtisan(
 }
 
 // emitTaskCreatedEvent emits a task creation event
-func (p *DefaultCommissionTaskPlanner) emitTaskCreatedEvent(task *kanban.Task, commissionID string) {
+func (p *defaultCommissionTaskPlanner) emitTaskCreatedEvent(task *kanban.Task, commissionID string) {
 	if p.eventBus != nil {
 		event := Event{
 			Type:   interfaces.EventTypeTaskCreated,
@@ -228,7 +237,7 @@ func (p *DefaultCommissionTaskPlanner) emitTaskCreatedEvent(task *kanban.Task, c
 }
 
 // emitTaskAssignedEvent emits a task assignment event
-func (p *DefaultCommissionTaskPlanner) emitTaskAssignedEvent(task *kanban.Task, artisanID string) {
+func (p *defaultCommissionTaskPlanner) emitTaskAssignedEvent(task *kanban.Task, artisanID string) {
 	if p.eventBus != nil {
 		event := Event{
 			Type:   interfaces.EventTypeTaskAssigned,

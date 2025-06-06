@@ -13,21 +13,26 @@ type EventHandler = interfaces.EventHandler
 type Event = interfaces.Event
 type EventType = interfaces.EventType
 
-// EventBus handles publishing and subscribing to events
-type EventBus struct {
+// eventBus handles publishing and subscribing to events
+type eventBus struct {
 	subscribers map[string][]EventHandler
 	mu          sync.RWMutex
 }
 
-// NewEventBus creates a new event bus
-func NewEventBus() *EventBus {
-	return &EventBus{
+// newEventBus creates a new event bus (private constructor)
+func newEventBus() *eventBus {
+	return &eventBus{
 		subscribers: make(map[string][]EventHandler),
 	}
 }
 
+// DefaultEventBusFactory creates a default event bus instance for registry
+func DefaultEventBusFactory() EventBus {
+	return newEventBus()
+}
+
 // Subscribe registers a handler for a specific event type
-func (b *EventBus) Subscribe(eventType EventType, handler EventHandler) {
+func (b *eventBus) Subscribe(eventType EventType, handler EventHandler) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
@@ -35,7 +40,7 @@ func (b *EventBus) Subscribe(eventType EventType, handler EventHandler) {
 }
 
 // SubscribeAll registers a handler for all event types
-func (b *EventBus) SubscribeAll(handler EventHandler) {
+func (b *eventBus) SubscribeAll(handler EventHandler) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
@@ -43,7 +48,7 @@ func (b *EventBus) SubscribeAll(handler EventHandler) {
 }
 
 // Unsubscribe removes a handler for a specific event type
-func (b *EventBus) Unsubscribe(eventType EventType, handler EventHandler) {
+func (b *eventBus) Unsubscribe(eventType EventType, handler EventHandler) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 
@@ -65,7 +70,7 @@ func (b *EventBus) Unsubscribe(eventType EventType, handler EventHandler) {
 }
 
 // Publish sends an event to all subscribers
-func (b *EventBus) Publish(event Event) {
+func (b *eventBus) Publish(event Event) {
 	b.mu.RLock()
 	defer b.mu.RUnlock()
 
@@ -86,7 +91,7 @@ func (b *EventBus) Publish(event Event) {
 }
 
 // PublishJSON publishes an event from a JSON string
-func (b *EventBus) PublishJSON(jsonEvent string) error {
+func (b *eventBus) PublishJSON(jsonEvent string) error {
 	var event Event
 	if err := json.Unmarshal([]byte(jsonEvent), &event); err != nil {
 		return fmt.Errorf("failed to unmarshal event JSON: %w", err)

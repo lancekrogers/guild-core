@@ -702,21 +702,21 @@ func executeCommandCmd(m *CommissionChamber, command string) tea.Cmd {
 			return generateDocumentsCmd(&m)()
 
 		case "suggest":
-			return requestSuggestionsCmd(m)()
+			return requestSuggestionsCmd(&m)()
 
 		case "ready":
-			return markCommissionReadyCmd(m)()
+			return markCommissionReadyCmd(&m)()
 
 		case "list":
 			// Switch to dashboard view which shows the objective list
 			m.chamberState = stateDashboard
-			return loadCommissionsCmd(m)()
+			return loadCommissionsCmd(&m)()
 
 		case "create":
 			// If arguments provided, create objective from them
 			if len(args) > 0 {
 				description := strings.Join(args, " ")
-				return createCommissionCmd(m, description)()
+				return createCommissionCmd(&m, description)()
 			}
 			// Otherwise switch to create view
 			m.chamberState = stateCreating
@@ -737,7 +737,7 @@ func executeCommandCmd(m *CommissionChamber, command string) tea.Cmd {
 			// If path provided, attempt to load objective
 			if len(args) > 0 && m.commissionManager != nil {
 				path := args[0]
-				ctx := context.Background()
+				ctx := m.ctx
 
 				// Try to load the objective
 				obj, err := m.commissionManager.LoadCommissionFromFile(ctx, path)

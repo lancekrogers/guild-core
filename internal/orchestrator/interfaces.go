@@ -6,6 +6,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/internal/orchestrator/interfaces"
 )
 
 // KanbanManager interface for kanban operations needed by orchestrator
@@ -61,5 +62,23 @@ type AgentStatus struct {
 	Available    bool
 	CurrentTask  string
 	TasksHandled int
+}
+
+// EventBus defines the interface for publishing and subscribing to events
+type EventBus interface {
+	// Subscribe registers a handler for a specific event type
+	Subscribe(eventType interfaces.EventType, handler interfaces.EventHandler)
+	
+	// SubscribeAll registers a handler for all event types
+	SubscribeAll(handler interfaces.EventHandler)
+	
+	// Unsubscribe removes a handler for a specific event type
+	Unsubscribe(eventType interfaces.EventType, handler interfaces.EventHandler)
+	
+	// Publish sends an event to all subscribers
+	Publish(event interfaces.Event)
+	
+	// PublishJSON publishes an event from a JSON string
+	PublishJSON(jsonEvent string) error
 }
 

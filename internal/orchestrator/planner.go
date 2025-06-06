@@ -20,22 +20,27 @@ type TaskPlanner interface {
 	AssignTasks(ctx context.Context, tasks []*kanban.Task, guild *config.GuildConfig) error
 }
 
-// ManagerTaskPlanner uses the manager agent to plan tasks
-type ManagerTaskPlanner struct {
+// managerTaskPlanner uses the manager agent to plan tasks
+type managerTaskPlanner struct {
 	managerAgent agent.Agent
 	kanbanBoard  *kanban.Board
 }
 
-// NewManagerTaskPlanner creates a new manager-based task planner
-func NewManagerTaskPlanner(managerAgent agent.Agent, kanbanBoard *kanban.Board) *ManagerTaskPlanner {
-	return &ManagerTaskPlanner{
+// newManagerTaskPlanner creates a new manager-based task planner (private constructor)
+func newManagerTaskPlanner(managerAgent agent.Agent, kanbanBoard *kanban.Board) *managerTaskPlanner {
+	return &managerTaskPlanner{
 		managerAgent: managerAgent,
 		kanbanBoard:  kanbanBoard,
 	}
 }
 
+// DefaultManagerTaskPlannerFactory creates a manager task planner for registry use
+func DefaultManagerTaskPlannerFactory(managerAgent agent.Agent, kanbanBoard *kanban.Board) TaskPlanner {
+	return newManagerTaskPlanner(managerAgent, kanbanBoard)
+}
+
 // PlanTasks uses the manager agent to decompose an objective into tasks
-func (p *ManagerTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
+func (p *managerTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
 	// Build a prompt for the manager agent
 	prompt := p.buildPlanningPrompt(obj, guild)
 	
@@ -77,7 +82,7 @@ func (p *ManagerTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Comm
 }
 
 // AssignTasks assigns tasks to agents based on their capabilities
-func (p *ManagerTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.Task, guild *config.GuildConfig) error {
+func (p *managerTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.Task, guild *config.GuildConfig) error {
 	// Build a prompt for task assignment
 	prompt := p.buildAssignmentPrompt(tasks, guild)
 	
@@ -112,7 +117,7 @@ func (p *ManagerTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.Ta
 }
 
 // buildPlanningPrompt creates a prompt for task planning
-func (p *ManagerTaskPlanner) buildPlanningPrompt(obj *commission.Commission, guild *config.GuildConfig) string {
+func (p *managerTaskPlanner) buildPlanningPrompt(obj *commission.Commission, guild *config.GuildConfig) string {
 	var prompt strings.Builder
 	
 	prompt.WriteString("You are the manager agent for the ")
@@ -152,7 +157,7 @@ func (p *ManagerTaskPlanner) buildPlanningPrompt(obj *commission.Commission, gui
 }
 
 // buildAssignmentPrompt creates a prompt for task assignment
-func (p *ManagerTaskPlanner) buildAssignmentPrompt(tasks []*kanban.Task, guild *config.GuildConfig) string {
+func (p *managerTaskPlanner) buildAssignmentPrompt(tasks []*kanban.Task, guild *config.GuildConfig) string {
 	var prompt strings.Builder
 	
 	prompt.WriteString("You are the manager agent. Assign the following tasks to the most suitable agents based on their capabilities.\n\n")
@@ -191,7 +196,7 @@ func (p *ManagerTaskPlanner) buildAssignmentPrompt(tasks []*kanban.Task, guild *
 }
 
 // parseTasksFromResponse parses tasks from the manager's response
-func (p *ManagerTaskPlanner) parseTasksFromResponse(response string) ([]*kanban.Task, error) {
+func (p *managerTaskPlanner) parseTasksFromResponse(response string) ([]*kanban.Task, error) {
 	tasks := []*kanban.Task{}
 	
 	// Simple parsing - in production, use a more robust parser
@@ -255,7 +260,7 @@ func (p *ManagerTaskPlanner) parseTasksFromResponse(response string) ([]*kanban.
 }
 
 // parseAssignmentsFromResponse parses task assignments from the manager's response
-func (p *ManagerTaskPlanner) parseAssignmentsFromResponse(response string, tasks []*kanban.Task, guild *config.GuildConfig) (map[string]string, error) {
+func (p *managerTaskPlanner) parseAssignmentsFromResponse(response string, tasks []*kanban.Task, guild *config.GuildConfig) (map[string]string, error) {
 	assignments := make(map[string]string)
 	
 	// Parse response
