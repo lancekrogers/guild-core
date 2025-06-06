@@ -4,10 +4,10 @@ package server
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"sync"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/mcp/cost"
 	"github.com/guild-ventures/guild-core/pkg/mcp/prompt"
 	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
@@ -69,16 +69,16 @@ type Middleware func(HandlerFunc) HandlerFunc
 // NewServer creates a new MCP server
 func NewServer(config *Config, guildRegistry registry.ComponentRegistry) (*Server, error) {
 	if config == nil {
-		return nil, fmt.Errorf("config cannot be nil")
+		return nil, gerror.New(gerror.InvalidArgument, "mcp_server", "new_server", "config cannot be nil")
 	}
 	if guildRegistry == nil {
-		return nil, fmt.Errorf("guild registry cannot be nil")
+		return nil, gerror.New(gerror.InvalidArgument, "mcp_server", "new_server", "guild registry cannot be nil")
 	}
 
 	// Create transport
 	transport, err := transport.NewTransport(config.TransportConfig)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create transport: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "mcp_server", "new_server", "failed to create transport")
 	}
 
 	// Create components
@@ -113,12 +113,12 @@ func (s *Server) Start(ctx context.Context) error {
 	defer s.mu.Unlock()
 
 	if s.started {
-		return fmt.Errorf("server already started")
+		return gerror.New(gerror.Internal, "mcp_server", "start", "server already started")
 	}
 
 	// Connect transport
 	if err := s.transport.Connect(ctx); err != nil {
-		return fmt.Errorf("failed to connect transport: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "mcp_server", "start", "failed to connect transport")
 	}
 
 	// Start message processing
@@ -134,7 +134,7 @@ func (s *Server) Stop(ctx context.Context) error {
 	defer s.mu.Unlock()
 
 	if !s.started {
-		return fmt.Errorf("server not started")
+		return gerror.New(gerror.Internal, "mcp_server", "stop", "server not started")
 	}
 
 	// Signal stop
@@ -142,7 +142,7 @@ func (s *Server) Stop(ctx context.Context) error {
 
 	// Disconnect transport
 	if err := s.transport.Disconnect(ctx); err != nil {
-		return fmt.Errorf("failed to disconnect transport: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "mcp_server", "stop", "failed to disconnect transport")
 	}
 
 	s.started = false
@@ -245,7 +245,7 @@ func (s *Server) sendMessage(ctx context.Context, msg *protocol.MCPMessage) erro
 	// Marshal message
 	msgBytes, err := json.Marshal(msg)
 	if err != nil {
-		return fmt.Errorf("failed to marshal message: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "mcp_server", "send_message", "failed to marshal message")
 	}
 
 	// Send via transport
@@ -592,7 +592,7 @@ func (s *Server) handlePromptProcess(ctx context.Context, msg *protocol.MCPMessa
 	chain := prompt.NewChain(
 		prompt.NewValidationProcessor(func(input *prompt.Input) error {
 			if input.Text == "" {
-				return fmt.Errorf("prompt text cannot be empty")
+				return gerror.New(gerror.InvalidArgument, "mcp_server", "handle_get_prompt", "prompt text cannot be empty")
 			}
 			return nil
 		}),

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	guildcontext "github.com/guild-ventures/guild-core/pkg/context"
+	guildcontext "github.com/guild-ventures/guild-core/internal/context"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 

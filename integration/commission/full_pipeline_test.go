@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
-	"github.com/guild-ventures/guild-core/pkg/config"
+	"github.com/guild-ventures/guild-core/internal/config"
 	"github.com/guild-ventures/guild-core/internal/kanban"
 	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
 	"github.com/guild-ventures/guild-core/internal/orchestrator"

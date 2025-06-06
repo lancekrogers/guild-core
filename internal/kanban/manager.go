@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/comms"
-	"github.com/guild-ventures/guild-core/pkg/comms/channel"
+	"github.com/guild-ventures/guild-core/internal/comms"
+	"github.com/guild-ventures/guild-core/internal/comms/channel"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 )

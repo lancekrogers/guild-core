@@ -4,10 +4,10 @@ package integration
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"sync"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
 	"github.com/guild-ventures/guild-core/pkg/mcp/tools"
 	"github.com/guild-ventures/guild-core/pkg/registry"
@@ -39,12 +39,12 @@ func NewToolBridge(mcpRegistry tools.Registry, guildRegistry registry.ToolRegist
 func (b *ToolBridge) Start(ctx context.Context) error {
 	// Sync existing Guild tools to MCP
 	if err := b.syncGuildToMCP(ctx); err != nil {
-		return fmt.Errorf("failed to sync Guild tools to MCP: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "mcp_tool_bridge", "sync_tools", "failed to sync Guild tools to MCP")
 	}
 	
 	// Sync existing MCP tools to Guild
 	if err := b.syncMCPToGuild(ctx); err != nil {
-		return fmt.Errorf("failed to sync MCP tools to Guild: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "mcp_tool_bridge", "sync_tools", "failed to sync MCP tools to Guild")
 	}
 	
 	return nil
@@ -71,7 +71,7 @@ func (b *ToolBridge) RegisterGuildTool(tool basetools.Tool) error {
 	
 	// Register with Guild registry first
 	if err := b.guildRegistry.RegisterTool(tool.Name(), tool); err != nil {
-		return fmt.Errorf("failed to register tool with Guild registry: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "mcp_tool_bridge", "sync_guild_to_mcp", "failed to register tool with Guild registry")
 	}
 	
 	// Create adapter and register with MCP
@@ -82,7 +82,7 @@ func (b *ToolBridge) RegisterGuildTool(tool basetools.Tool) error {
 		// Rollback Guild registration
 		// Note: Guild registry doesn't support removal, so we just clean up our adapter
 		delete(b.guildToMCP, tool.Name())
-		return fmt.Errorf("failed to register tool with MCP registry: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "mcp_tool_bridge", "sync_tools", "failed to register tool with MCP registry")
 	}
 	
 	return nil
@@ -95,7 +95,7 @@ func (b *ToolBridge) RegisterMCPTool(tool tools.Tool) error {
 	
 	// Register with MCP registry first
 	if err := b.mcpRegistry.RegisterTool(tool); err != nil {
-		return fmt.Errorf("failed to register tool with MCP registry: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "mcp_tool_bridge", "sync_tools", "failed to register tool with MCP registry")
 	}
 	
 	// Create adapter and register with Guild
@@ -109,7 +109,7 @@ func (b *ToolBridge) RegisterMCPTool(tool tools.Tool) error {
 		// Rollback MCP registration
 		b.mcpRegistry.DeregisterTool(tool.ID())
 		delete(b.mcpToGuild, tool.ID())
-		return fmt.Errorf("failed to register tool with Guild registry: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "mcp_tool_bridge", "sync_guild_to_mcp", "failed to register tool with Guild registry")
 	}
 	
 	return nil
@@ -242,7 +242,7 @@ func (a *GuildToMCPAdapter) Execute(ctx context.Context, params map[string]inter
 	// Convert params to JSON string for Guild tool
 	inputJSON, err := json.Marshal(params)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal parameters: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "mcp_tool_bridge", "convert_schema", "failed to marshal parameters")
 	}
 	
 	// Execute Guild tool
@@ -264,7 +264,7 @@ func (a *GuildToMCPAdapter) Execute(ctx context.Context, params map[string]inter
 func (a *GuildToMCPAdapter) HealthCheck() error {
 	// Simple health check - try to get schema
 	if schema := a.guildTool.Schema(); schema == nil {
-		return fmt.Errorf("tool %s has no schema", a.guildTool.Name())
+		return gerror.New(gerror.InvalidArgument, "mcp_tool_bridge", "validate_schema", "tool %s has no schema", a.guildTool.Name())
 	}
 	return nil
 }
@@ -418,7 +418,7 @@ func (a *MCPToGuildAdapter) Execute(ctx context.Context, input string) (*basetoo
 	// Parse input JSON to map
 	var params map[string]interface{}
 	if err := json.Unmarshal([]byte(input), &params); err != nil {
-		return nil, fmt.Errorf("failed to parse input JSON: %w", err)
+		return nil, gerror.Wrap(err, gerror.InvalidArgument, "mcp_tool_bridge", "execute", "failed to parse input JSON")
 	}
 	
 	// Execute MCP tool

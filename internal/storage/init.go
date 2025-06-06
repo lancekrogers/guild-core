@@ -52,7 +52,7 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 // This creates an in-memory database and manually creates the schema
 func InitializeSQLiteStorageForTests(ctx context.Context) (StorageRegistry, interface{}, error) {
 	// Use in-memory SQLite database for tests
-	database, err := NewDatabase(ctx, ":memory:")
+	database, err := DefaultDatabaseFactory(ctx, ":memory:")
 	if err != nil {
 		return nil, nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create test database").
 			WithComponent("InitializeSQLiteStorageForTests").

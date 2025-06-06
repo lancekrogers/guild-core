@@ -2,12 +2,13 @@ package workspace
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // GitManager extends Manager with git worktree support
@@ -20,13 +21,13 @@ type GitManager struct {
 func NewGitManager(baseDir, repoPath string) (*GitManager, error) {
 	// Validate git repository
 	if err := validateGitRepository(repoPath); err != nil {
-		return nil, fmt.Errorf("invalid git repository: %w", err)
+		return nil, gerror.Wrap(err, gerror.InvalidArgument, "workspace", "new_git_manager", "invalid git repository")
 	}
 
 	// Create base manager
 	baseMgr, err := NewManager(baseDir, repoPath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create base manager: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "workspace", "new_git_manager", "failed to create base manager")
 	}
 
 	return &GitManager{
@@ -53,7 +54,7 @@ func (m *GitManager) CreateWorkspace(ctx context.Context, opts CreateOptions) (W
 	
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return nil, fmt.Errorf("failed to create worktree: %w\nOutput: %s", err, string(output))
+		return nil, gerror.Wrap(err, gerror.Internal, "workspace", "create_workspace", "failed to create worktree: %s", string(output))
 	}
 
 	// Create workspace info
@@ -135,7 +136,7 @@ func (w *GitWorkspace) Cleanup() error {
 	if err := cmd.Run(); err != nil {
 		// Fallback to manual removal
 		if err := os.RemoveAll(w.info.Path); err != nil {
-			return fmt.Errorf("failed to remove workspace: %w", err)
+			return gerror.Wrap(err, gerror.Internal, "workspace", "remove_workspace", "failed to remove workspace")
 		}
 	}
 
@@ -159,7 +160,7 @@ func (w *GitWorkspace) CommitChanges(message string) error {
 	cmd := exec.Command("git", "add", "-A")
 	cmd.Dir = w.info.Path
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("failed to stage changes: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "workspace", "stage_changes", "failed to stage changes")
 	}
 
 	// Check if there are changes to commit
@@ -175,7 +176,7 @@ func (w *GitWorkspace) CommitChanges(message string) error {
 	cmd.Dir = w.info.Path
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("failed to commit: %w\nOutput: %s", err, string(output))
+		return gerror.Wrap(err, gerror.Internal, "workspace", "commit_changes", "failed to commit: %s", string(output))
 	}
 
 	w.UpdateGitInfo()
@@ -189,7 +190,7 @@ func (w *GitWorkspace) GetDiff() (string, error) {
 	
 	output, err := cmd.Output()
 	if err != nil {
-		return "", fmt.Errorf("failed to get diff: %w", err)
+		return "", gerror.Wrap(err, gerror.Internal, "workspace", "get_diff", "failed to get diff")
 	}
 
 	return string(output), nil
@@ -201,7 +202,7 @@ func validateGitRepository(path string) error {
 	cmd.Dir = path
 	
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("not a git repository: %w", err)
+		return gerror.Wrap(err, gerror.InvalidArgument, "workspace", "validate_git_repository", "not a git repository")
 	}
 
 	// Check worktree support
@@ -209,7 +210,7 @@ func validateGitRepository(path string) error {
 	cmd.Dir = path
 	
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("git worktree not supported: %w", err)
+		return gerror.Wrap(err, gerror.InvalidArgument, "workspace", "validate_git_repository", "git worktree not supported")
 	}
 
 	return nil

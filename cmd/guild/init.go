@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/project"
+	"github.com/guild-ventures/guild-core/internal/project"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 )

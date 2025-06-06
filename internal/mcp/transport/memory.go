@@ -2,8 +2,9 @@ package transport
 
 import (
 	"context"
-	"fmt"
 	"sync"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // MemoryTransport implements an in-memory transport for testing
@@ -37,7 +38,7 @@ func (t *MemoryTransport) Connect(ctx context.Context) error {
 	defer t.mu.Unlock()
 
 	if t.connected {
-		return fmt.Errorf("already connected")
+		return gerror.New(gerror.Internal, "mcp_memory_transport", "connect", "already connected")
 	}
 
 	t.connected = true
@@ -50,7 +51,7 @@ func (t *MemoryTransport) Disconnect(ctx context.Context) error {
 	defer t.mu.Unlock()
 
 	if !t.connected {
-		return fmt.Errorf("not connected")
+		return gerror.New(gerror.Internal, "mcp_memory_transport", "disconnect", "not connected")
 	}
 
 	// Close all channels
@@ -73,7 +74,7 @@ func (t *MemoryTransport) Send(ctx context.Context, topic string, data []byte) e
 	defer t.mu.RUnlock()
 
 	if !t.connected {
-		return fmt.Errorf("not connected")
+		return gerror.New(gerror.Internal, "mcp_memory_transport", "disconnect", "not connected")
 	}
 
 	// Copy data to avoid race conditions
@@ -86,7 +87,7 @@ func (t *MemoryTransport) Send(ctx context.Context, topic string, data []byte) e
 	case <-ctx.Done():
 		return ctx.Err()
 	default:
-		return fmt.Errorf("buffer full")
+		return gerror.New(gerror.Internal, "mcp_memory_transport", "send", "buffer full")
 	}
 }
 
@@ -108,7 +109,7 @@ func (t *MemoryTransport) Subscribe(ctx context.Context, topic string) (<-chan [
 	defer t.mu.Unlock()
 
 	if !t.connected {
-		return nil, fmt.Errorf("not connected")
+		return nil, gerror.New(gerror.Internal, "mcp_memory_transport", "receive", "not connected")
 	}
 
 	ch := make(chan []byte, 100)
@@ -135,7 +136,7 @@ func (t *MemoryTransport) Publish(ctx context.Context, topic string, data []byte
 	defer t.mu.RUnlock()
 
 	if !t.connected {
-		return fmt.Errorf("not connected")
+		return gerror.New(gerror.Internal, "mcp_memory_transport", "disconnect", "not connected")
 	}
 
 	if ch, exists := t.channels[topic]; exists {
@@ -148,7 +149,7 @@ func (t *MemoryTransport) Publish(ctx context.Context, topic string, data []byte
 		case <-ctx.Done():
 			return ctx.Err()
 		default:
-			return fmt.Errorf("channel full")
+			return gerror.New(gerror.Internal, "mcp_memory_transport", "subscribe", "channel full")
 		}
 	}
 

@@ -3,9 +3,9 @@ package storage
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/guild-ventures/guild-core/internal/storage/db"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // SQLiteBoardRepository implements BoardRepository using SQLite
@@ -34,7 +34,9 @@ func (r *SQLiteBoardRepository) CreateBoard(ctx context.Context, board *Board) e
 		Description:  board.Description,
 		Status:       board.Status,
 	}); err != nil {
-		return fmt.Errorf("failed to create board: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create board").
+			WithComponent("storage").
+			WithOperation("create_board")
 	}
 	return nil
 }
@@ -44,9 +46,13 @@ func (r *SQLiteBoardRepository) GetBoard(ctx context.Context, id string) (*Board
 	dbBoard, err := r.database.Queries().GetBoard(ctx, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("board not found: %s", id)
+			return nil, gerror.Newf(gerror.ErrCodeNotFound, "board not found: %s", id).
+				WithComponent("storage").
+				WithOperation("get_board")
 		}
-		return nil, fmt.Errorf("failed to get board: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get board").
+			WithComponent("storage").
+			WithOperation("get_board")
 	}
 
 	board := &Board{
@@ -67,9 +73,13 @@ func (r *SQLiteBoardRepository) GetBoardByCommission(ctx context.Context, commis
 	dbBoard, err := r.database.Queries().GetBoardByCommission(ctx, commissionID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("board not found for commission: %s", commissionID)
+			return nil, gerror.Newf(gerror.ErrCodeNotFound, "board not found for commission: %s", commissionID).
+				WithComponent("storage").
+				WithOperation("get_board_by_commission")
 		}
-		return nil, fmt.Errorf("failed to get board by commission: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get board by commission").
+			WithComponent("storage").
+			WithOperation("get_board_by_commission")
 	}
 
 	board := &Board{
@@ -93,7 +103,7 @@ func (r *SQLiteBoardRepository) UpdateBoard(ctx context.Context, board *Board) e
 		Status:      board.Status,
 		ID:          board.ID,
 	}); err != nil {
-		return fmt.Errorf("failed to update board: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "storage", "update_board", "failed to update board")
 	}
 	return nil
 }
@@ -101,7 +111,7 @@ func (r *SQLiteBoardRepository) UpdateBoard(ctx context.Context, board *Board) e
 // DeleteBoard removes a board by ID
 func (r *SQLiteBoardRepository) DeleteBoard(ctx context.Context, id string) error {
 	if err := r.database.Queries().DeleteBoard(ctx, id); err != nil {
-		return fmt.Errorf("failed to delete board: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "storage", "delete_board", "failed to delete board")
 	}
 	return nil
 }
@@ -110,7 +120,7 @@ func (r *SQLiteBoardRepository) DeleteBoard(ctx context.Context, id string) erro
 func (r *SQLiteBoardRepository) ListBoards(ctx context.Context) ([]*Board, error) {
 	dbBoards, err := r.database.Queries().ListBoards(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed to list boards: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "storage", "list_boards", "failed to list boards")
 	}
 
 	boards := make([]*Board, len(dbBoards))

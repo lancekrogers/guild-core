@@ -13,7 +13,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
+	pb "github.com/guild-ventures/guild-core/internal/grpc/pb/guild/v1"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 

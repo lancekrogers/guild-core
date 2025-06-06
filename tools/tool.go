@@ -3,7 +3,8 @@ package tools
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // ToolResult represents the result of a tool execution
@@ -93,7 +94,9 @@ func (t *BaseTool) Examples() []string {
 
 // Execute implements the Tool interface but should be overridden by concrete tools
 func (t *BaseTool) Execute(ctx context.Context, input string) (*ToolResult, error) {
-	return nil, fmt.Errorf("Execute not implemented for BaseTool, must be implemented by concrete tool")
+	return nil, gerror.New(gerror.ErrCodeInternal, "Execute not implemented for BaseTool, must be implemented by concrete tool", nil).
+		WithComponent("tools").
+		WithOperation("execute")
 }
 
 // NewToolResult creates a new tool result
@@ -127,16 +130,22 @@ func NewToolRegistry() *ToolRegistry {
 // RegisterTool registers a tool with the registry
 func (r *ToolRegistry) RegisterTool(tool Tool) error {
 	if tool == nil {
-		return fmt.Errorf("tool cannot be nil")
+		return gerror.New(gerror.ErrCodeValidation, "tool cannot be nil", nil).
+			WithComponent("tools").
+			WithOperation("register_tool")
 	}
 
 	name := tool.Name()
 	if name == "" {
-		return fmt.Errorf("tool name cannot be empty")
+		return gerror.New(gerror.ErrCodeValidation, "tool name cannot be empty", nil).
+			WithComponent("tools").
+			WithOperation("register_tool")
 	}
 
 	if _, exists := r.tools[name]; exists {
-		return fmt.Errorf("tool with name '%s' already registered", name)
+		return gerror.Newf(gerror.ErrCodeAlreadyExists, "tool with name '%s' already registered", name).
+			WithComponent("tools").
+			WithOperation("register_tool")
 	}
 
 	r.tools[name] = tool
@@ -173,7 +182,9 @@ func (r *ToolRegistry) ListToolsByCategory(category string) []Tool {
 func (r *ToolRegistry) ExecuteTool(ctx context.Context, name string, input string) (*ToolResult, error) {
 	tool, exists := r.GetTool(name)
 	if !exists {
-		return nil, fmt.Errorf("tool '%s' not found", name)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "tool '%s' not found", name).
+			WithComponent("tools").
+			WithOperation("get_tool")
 	}
 
 	return tool.Execute(ctx, input)
@@ -184,7 +195,7 @@ func (r *ToolRegistry) ExecuteToolWithParams(ctx context.Context, name string, p
 	// Convert params to JSON
 	inputJSON, err := json.Marshal(params)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal parameters: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "tools", "get_schema", "failed to marshal parameters")
 	}
 
 	return r.ExecuteTool(ctx, name, string(inputJSON))

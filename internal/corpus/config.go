@@ -1,12 +1,12 @@
 package corpus
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
 
-	"github.com/guild-ventures/guild-core/pkg/config"
+	"github.com/guild-ventures/guild-core/internal/config"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"gopkg.in/yaml.v3"
 )
 
@@ -99,12 +99,12 @@ func LoadConfig(loader *config.ConfigLoader) (Config, error) {
 
 	// Ensure the corpus directory exists
 	if err := os.MkdirAll(cfg.CorpusPath, 0755); err != nil {
-		return cfg, fmt.Errorf("error creating corpus directory: %w", err)
+		return cfg, gerror.Wrap(err, gerror.Internal, "corpus", "new_config", "error creating corpus directory")
 	}
 
 	// Ensure the activities directory exists
 	if err := os.MkdirAll(cfg.ActivitiesPath, 0755); err != nil {
-		return cfg, fmt.Errorf("error creating activities directory: %w", err)
+		return cfg, gerror.Wrap(err, gerror.Internal, "corpus", "new_config", "error creating activities directory")
 	}
 
 	// Set backward compatibility fields
@@ -124,18 +124,18 @@ func SaveConfig(cfg Config, path string) error {
 	// Create the configuration directory if it doesn't exist
 	configDir := filepath.Dir(path)
 	if err := os.MkdirAll(configDir, 0755); err != nil {
-		return fmt.Errorf("error creating config directory: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "corpus", "save_config", "error creating config directory")
 	}
 
 	// Marshal the configuration to YAML
 	data, err := yaml.Marshal(cfg)
 	if err != nil {
-		return fmt.Errorf("error marshaling config: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "corpus", "save_config", "error marshaling config")
 	}
 
 	// Write the configuration to the file
 	if err := os.WriteFile(path, data, 0644); err != nil {
-		return fmt.Errorf("error writing config file: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "corpus", "save_config", "error writing config file")
 	}
 
 	return nil
@@ -155,13 +155,13 @@ func LoadConfigFromFile(path string) (Config, error) {
 	// Read the file
 	data, err := os.ReadFile(path)
 	if err != nil {
-		return cfg, fmt.Errorf("error reading config file: %w", err)
+		return cfg, gerror.Wrap(err, gerror.Internal, "corpus", "load_config", "error reading config file")
 	}
 
 	// Unmarshal the YAML
 	err = yaml.Unmarshal(data, &cfg)
 	if err != nil {
-		return cfg, fmt.Errorf("error unmarshaling config: %w", err)
+		return cfg, gerror.Wrap(err, gerror.Internal, "corpus", "load_config", "error unmarshaling config")
 	}
 
 	// Set backward compatibility fields

@@ -2234,7 +2234,7 @@ const file_proto_guild_v1_chat_proto_rawDesc = "" +
 	"\x0eGetChatHistory\x12\x1f.guild.v1.GetChatHistoryRequest\x1a .guild.v1.GetChatHistoryResponse\x12N\n" +
 	"\x11CreateChatSession\x12\".guild.v1.CreateChatSessionRequest\x1a\x15.guild.v1.ChatSession\x12S\n" +
 	"\x0eEndChatSession\x12\x1f.guild.v1.EndChatSessionRequest\x1a .guild.v1.EndChatSessionResponse\x12Y\n" +
-	"\x10ListChatSessions\x12!.guild.v1.ListChatSessionsRequest\x1a\".guild.v1.ListChatSessionsResponseB2Z0github.com/guild-ventures/guild-core/pkg/grpc/pbb\x06proto3"
+	"\x10ListChatSessions\x12!.guild.v1.ListChatSessionsRequest\x1a\".guild.v1.ListChatSessionsResponseB2Z0github.com/guild-ventures/guild-core/internal/grpc/pbb\x06proto3"
 
 var (
 	file_proto_guild_v1_chat_proto_rawDescOnce sync.Once

@@ -12,7 +12,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
-//go:embed objective/markdown/*.md objective/markdown/lite/*.md
+//go:embed templates/commission/markdown/*.md templates/commission/markdown/lite/*.md
 var promptFS embed.FS
 
 // EnhancedPromptManager handles loading, rendering, and managing prompt templates with metadata
@@ -28,11 +28,15 @@ func NewEnhancedPromptManager() (*EnhancedPromptManager, error) {
 	metadata := make(map[string]*PromptMetadata)
 
 	// Load prompts from both directories
-	if err := loadPromptsFromDir(promptFS, "objective/markdown", templates, metadata, "objective"); err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "prompts", "new_enhanced_prompt_manager", "error loading prompts")
+	if err := loadPromptsFromDir(promptFS, "templates/commission/markdown", templates, metadata, "commission"); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "error loading prompts").
+			WithComponent("prompts").
+			WithOperation("new_enhanced_prompt_manager")
 	}
-	if err := loadPromptsFromDir(promptFS, "objective/markdown/lite", templates, metadata, "objective.lite"); err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "prompts", "new_enhanced_prompt_manager", "error loading lite prompts")
+	if err := loadPromptsFromDir(promptFS, "templates/commission/markdown/lite", templates, metadata, "commission.lite"); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "error loading lite prompts").
+			WithComponent("prompts").
+			WithOperation("new_enhanced_prompt_manager")
 	}
 
 	return &EnhancedPromptManager{
@@ -48,14 +52,18 @@ func (pm *EnhancedPromptManager) RenderPrompt(name string, data interface{}) (st
 
 	tmpl, exists := pm.templates[name]
 	if !exists {
-		return "", gerror.New(gerror.NotFound, "prompts", "render_prompt", "prompt template %s not found", name)
+		return "", gerror.Newf(gerror.ErrCodeNotFound, "prompt template %s not found", name).
+			WithComponent("prompts").
+			WithOperation("render_prompt")
 	}
 
 	// Validate required variables if metadata exists
 	if meta, hasMetadata := pm.metadata[name]; hasMetadata {
 		if dataMap, ok := data.(map[string]interface{}); ok {
 			if err := meta.HasRequiredVariables(dataMap); err != nil {
-				return "", gerror.Wrap(err, gerror.InvalidArgument, "prompts", "render_prompt", "validation error")
+				return "", gerror.Wrap(err, gerror.ErrCodeValidation, "validation error").
+					WithComponent("prompts").
+					WithOperation("render_prompt")
 			}
 		}
 	}
@@ -74,13 +82,17 @@ func (pm *EnhancedPromptManager) RenderPrompt(name string, data interface{}) (st
 	// Clone template with functions
 	tmplWithFuncs, err := tmpl.Clone()
 	if err != nil {
-		return "", gerror.Wrap(err, gerror.Internal, "prompts", "render_prompt", "error cloning template")
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "error cloning template").
+			WithComponent("prompts").
+			WithOperation("render_prompt")
 	}
 	tmplWithFuncs = tmplWithFuncs.Funcs(funcMap)
 
 	var buf bytes.Buffer
 	if err := tmplWithFuncs.Execute(&buf, data); err != nil {
-		return "", gerror.Wrap(err, gerror.Internal, "prompts", "render_prompt", "error executing template")
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "error executing template").
+			WithComponent("prompts").
+			WithOperation("render_prompt")
 	}
 
 	// Process conditional blocks
@@ -97,7 +109,9 @@ func (pm *EnhancedPromptManager) GetMetadata(name string) (*PromptMetadata, erro
 
 	meta, exists := pm.metadata[name]
 	if !exists {
-		return nil, gerror.New(gerror.NotFound, "prompts", "get_metadata", "metadata for prompt %s not found", name)
+		return nil, gerror.Newf(gerror.ErrCodeNotFound, "metadata for prompt %s not found", name).
+			WithComponent("prompts").
+			WithOperation("get_metadata")
 	}
 	return meta, nil
 }
@@ -178,7 +192,9 @@ func (pm *EnhancedPromptManager) IsModelCompatible(promptName, modelName string)
 func loadPromptsFromDir(fsys fs.FS, dir string, templates map[string]*template.Template, metadata map[string]*PromptMetadata, prefix string) error {
 	entries, err := fs.ReadDir(fsys, dir)
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "prompts", "load_prompts_from_dir", "error reading directory %s", dir)
+		return gerror.Wrapf(err, gerror.ErrCodeInternal, "error reading directory %s", dir).
+			WithComponent("prompts").
+			WithOperation("load_prompts_from_dir")
 	}
 
 	for _, entry := range entries {
@@ -189,13 +205,17 @@ func loadPromptsFromDir(fsys fs.FS, dir string, templates map[string]*template.T
 		// Read the file
 		content, err := fs.ReadFile(fsys, filepath.Join(dir, entry.Name()))
 		if err != nil {
-			return gerror.Wrap(err, gerror.Internal, "prompts", "load_prompts_from_dir", "error reading file %s", entry.Name())
+			return gerror.Wrapf(err, gerror.ErrCodeInternal, "error reading file %s", entry.Name()).
+				WithComponent("prompts").
+				WithOperation("load_prompts_from_dir")
 		}
 
 		// Parse prompt with metadata
 		prompt, err := ParsePromptWithMetadata(string(content))
 		if err != nil {
-			return gerror.Wrap(err, gerror.Internal, "prompts", "load_prompts_from_dir", "error parsing prompt %s", entry.Name())
+			return gerror.Wrapf(err, gerror.ErrCodeInternal, "error parsing prompt %s", entry.Name()).
+				WithComponent("prompts").
+				WithOperation("load_prompts_from_dir")
 		}
 
 		// Generate template name
@@ -206,7 +226,9 @@ func loadPromptsFromDir(fsys fs.FS, dir string, templates map[string]*template.T
 		// Create template
 		tmpl, err := template.New(templateName).Parse(prompt.Content)
 		if err != nil {
-			return gerror.Wrap(err, gerror.Internal, "prompts", "load_prompts_from_dir", "error creating template %s", templateName)
+			return gerror.Wrapf(err, gerror.ErrCodeInternal, "error creating template %s", templateName).
+				WithComponent("prompts").
+				WithOperation("load_prompts_from_dir")
 		}
 
 		templates[templateName] = tmpl

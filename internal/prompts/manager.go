@@ -1,4 +1,4 @@
-package internal
+package prompts
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"sync"
 	"text/template"
 
-	"github.com/guild-ventures/guild-core/internal/prompts/objective"
+	"github.com/guild-ventures/guild-core/internal/prompts/standard/templates/commission"
 )
 
 // PromptManager handles loading and rendering of system prompts
@@ -21,14 +21,14 @@ func NewPromptManager() (*PromptManager, error) {
 		templates: make(map[string]*template.Template),
 	}
 
-	// Load objective prompts
-	objectiveTemplates, err := objective.LoadPrompts()
+	// Load commission prompts
+	commissionTemplates, err := commission.LoadPrompts()
 	if err != nil {
-		return nil, fmt.Errorf("error loading objective prompts: %w", err)
+		return nil, fmt.Errorf("error loading commission prompts: %w", err)
 	}
 
 	// Add to template map
-	for name, tmpl := range objectiveTemplates {
+	for name, tmpl := range commissionTemplates {
 		pm.templates[name] = tmpl
 	}
 
@@ -85,10 +85,10 @@ func (pm *PromptManager) ListPrompts() []string {
 
 // RefreshPrompts reloads all prompts from their sources
 func (pm *PromptManager) RefreshPrompts() error {
-	// Load objective prompts
-	objectiveTemplates, err := objective.LoadPrompts()
+	// Load commission prompts
+	commissionTemplates, err := commission.LoadPrompts()
 	if err != nil {
-		return fmt.Errorf("error refreshing objective prompts: %w", err)
+		return fmt.Errorf("error refreshing commission prompts: %w", err)
 	}
 
 	pm.mu.Lock()
@@ -97,8 +97,8 @@ func (pm *PromptManager) RefreshPrompts() error {
 	// Clear existing templates
 	pm.templates = make(map[string]*template.Template)
 
-	// Add objective templates
-	for name, tmpl := range objectiveTemplates {
+	// Add commission templates
+	for name, tmpl := range commissionTemplates {
 		pm.templates[name] = tmpl
 	}
 

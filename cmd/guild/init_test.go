@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/pkg/project"
+	"github.com/guild-ventures/guild-core/internal/project"
 )
 
 func TestInitCommand(t *testing.T) {

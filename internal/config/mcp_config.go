@@ -2,8 +2,9 @@
 package config
 
 import (
-	"fmt"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // MCPConfig represents MCP configuration section
@@ -116,11 +117,15 @@ func (c *MCPConfig) Validate() error {
 	}
 
 	if c.ServerID == "" {
-		return fmt.Errorf("server_id is required when MCP is enabled")
+		return gerror.New(gerror.ErrCodeValidation, "server_id is required when MCP is enabled", nil).
+			WithComponent("config").
+			WithOperation("validate_mcp")
 	}
 
 	if c.Transport.Type == "" {
-		return fmt.Errorf("transport type is required")
+		return gerror.New(gerror.ErrCodeValidation, "transport type is required", nil).
+			WithComponent("config").
+			WithOperation("validate_mcp")
 	}
 
 	// Validate transport type
@@ -130,37 +135,43 @@ func (c *MCPConfig) Validate() error {
 		"grpc":   true,
 	}
 	if !validTypes[c.Transport.Type] {
-		return fmt.Errorf("invalid transport type: %s", c.Transport.Type)
+		return gerror.Newf(gerror.ErrCodeValidation, "invalid transport type: %s", c.Transport.Type).
+			WithComponent("config").
+			WithOperation("validate_mcp")
 	}
 
 	// Validate timeouts
 	if c.Transport.ConnectTimeout != "" {
 		if _, err := time.ParseDuration(c.Transport.ConnectTimeout); err != nil {
-			return fmt.Errorf("invalid connect_timeout: %v", err)
+			return gerror.Wrapf(err, gerror.ErrCodeValidation, "invalid connect_timeout").
+				WithComponent("config").
+				WithOperation("validate_mcp")
 		}
 	}
 
 	if c.Transport.ReconnectWait != "" {
 		if _, err := time.ParseDuration(c.Transport.ReconnectWait); err != nil {
-			return fmt.Errorf("invalid reconnect_wait: %v", err)
+			return gerror.Wrapf(err, gerror.ErrCodeValidation, "invalid reconnect_wait").
+				WithComponent("config").
+				WithOperation("validate_mcp")
 		}
 	}
 
 	if c.Performance.RequestTimeout != "" {
 		if _, err := time.ParseDuration(c.Performance.RequestTimeout); err != nil {
-			return fmt.Errorf("invalid request_timeout: %v", err)
+			return gerror.New(gerror.InvalidArgument, "config", "validate_mcp", "invalid request_timeout: %v", err)
 		}
 	}
 
 	// Security validation
 	if c.Security.EnableTLS {
 		if c.Security.TLSCertFile == "" || c.Security.TLSKeyFile == "" {
-			return fmt.Errorf("TLS cert and key files are required when TLS is enabled")
+			return gerror.New(gerror.InvalidArgument, "config", "validate_mcp", "TLS cert and key files are required when TLS is enabled")
 		}
 	}
 
 	if c.Security.EnableAuth && c.Security.JWTSecret == "" {
-		return fmt.Errorf("JWT secret is required when authentication is enabled")
+		return gerror.New(gerror.InvalidArgument, "config", "validate_mcp", "JWT secret is required when authentication is enabled")
 	}
 
 	return nil

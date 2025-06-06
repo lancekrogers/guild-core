@@ -2,8 +2,9 @@ package registry
 
 import (
 	"context"
-	"fmt"
 	"log"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // ExampleUsage demonstrates how to use the ComponentRegistry
@@ -17,7 +18,7 @@ func ExampleUsage() error {
 	// Initialize the registry with configuration
 	ctx := context.Background()
 	if err := registry.Initialize(ctx, *config); err != nil {
-		return fmt.Errorf("failed to initialize registry: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "registry", "example_usage", "failed to initialize registry")
 	}
 
 	// Use the agent registry
@@ -31,13 +32,13 @@ func ExampleUsage() error {
 		}, nil
 	})
 	if err != nil {
-		return fmt.Errorf("failed to register agent type: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "registry", "example_usage", "failed to register agent type")
 	}
 
 	// Create an agent
 	agent, err := agentRegistry.GetAgent("example")
 	if err != nil {
-		return fmt.Errorf("failed to get agent: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "registry", "example_usage", "failed to get agent")
 	}
 
 	log.Printf("Created agent: %s (%s)", agent.GetName(), agent.GetID())
@@ -65,7 +66,7 @@ func ExampleUsage() error {
 
 	// Shutdown the registry
 	if err := registry.Shutdown(ctx); err != nil {
-		return fmt.Errorf("failed to shutdown registry: %w", err)
+		return gerror.Wrap(err, gerror.Internal, "registry", "example_usage", "failed to shutdown registry")
 	}
 
 	return nil
@@ -97,12 +98,12 @@ func CreateRegistryFromYAML(yamlConfig string) (*DefaultComponentRegistry, error
 	// Parse configuration
 	config, err := LoadConfigFromBytes([]byte(yamlConfig))
 	if err != nil {
-		return nil, fmt.Errorf("failed to load config: %w", err)
+		return nil, gerror.Wrap(err, gerror.Internal, "registry", "complete_example", "failed to load config")
 	}
 
 	// Validate configuration
 	if err := ValidateConfig(config); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		return nil, gerror.Wrap(err, gerror.InvalidArgument, "registry", "complete_example", "invalid config")
 	}
 
 	// Create and initialize registry

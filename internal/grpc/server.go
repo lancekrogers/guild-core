@@ -11,9 +11,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/guild-ventures/guild-core/pkg/campaign"
-	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
-	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
+	"github.com/guild-ventures/guild-core/internal/campaign"
+	pb "github.com/guild-ventures/guild-core/internal/grpc/pb/guild/v1"
+	promptspb "github.com/guild-ventures/guild-core/internal/grpc/pb/prompts/v1"
 	"github.com/guild-ventures/guild-core/internal/kanban"
 	"github.com/guild-ventures/guild-core/internal/commission"
 	"github.com/guild-ventures/guild-core/pkg/gerror"

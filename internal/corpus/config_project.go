@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/guild-ventures/guild-core/pkg/project"
+	"github.com/guild-ventures/guild-core/internal/project"
 )
 
 // GetProjectConfig returns corpus configuration for the current project context

@@ -102,19 +102,17 @@ func NewChromemStore(config Config) (*ChromemStore, error) {
 	if config.PersistencePath != "" {
 		// Ensure the directory exists
 		if err := os.MkdirAll(config.PersistencePath, 0755); err != nil {
-			return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create persistence directory").
 				WithComponent("memory").
-				WithOperation("NewChromemStore").
-				WithDetails("failed to create persistence directory")
+				WithOperation("NewChromemStore")
 		}
 		
 		// Create persistent database with compression enabled
 		db, err = chromem.NewPersistentDB(config.PersistencePath, true)
 		if err != nil {
-			return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create persistent database").
 				WithComponent("memory").
-				WithOperation("NewChromemStore").
-				WithDetails("failed to create persistent database")
+				WithOperation("NewChromemStore")
 		}
 	} else {
 		// Create in-memory database
@@ -177,10 +175,9 @@ func (s *ChromemStore) getOrCreateCollection(name string) (*chromem.Collection, 
 	
 	coll, err := s.db.CreateCollection(name, metadata, embeddingFunc)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+		return nil, gerror.Wrapf(err, gerror.ErrCodeStorage, "failed to create collection %s", name).
 			WithComponent("memory").
-			WithOperation("getOrCreateCollection").
-			WithDetails(fmt.Sprintf("failed to create collection %s", name))
+			WithOperation("getOrCreateCollection")
 	}
 	
 	s.collections[name] = coll

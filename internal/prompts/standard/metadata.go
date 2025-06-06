@@ -1,10 +1,10 @@
 package standard
 
 import (
-	"fmt"
 	"strings"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"gopkg.in/yaml.v3"
 )
 
@@ -49,18 +49,24 @@ func ParsePromptWithMetadata(content string) (*PromptTemplate, error) {
 	// Find the closing delimiter
 	parts := strings.SplitN(content[4:], "\n---\n", 2)
 	if len(parts) != 2 {
-		return nil, fmt.Errorf("invalid frontmatter format: missing closing delimiter")
+		return nil, gerror.New(gerror.ErrCodeValidation, "invalid frontmatter format: missing closing delimiter", nil).
+			WithComponent("prompts").
+			WithOperation("parse_prompt_metadata")
 	}
 
 	// Parse YAML metadata
 	var metadata PromptMetadata
 	if err := yaml.Unmarshal([]byte(parts[0]), &metadata); err != nil {
-		return nil, fmt.Errorf("error parsing frontmatter: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "error parsing frontmatter").
+			WithComponent("prompts").
+			WithOperation("parse_prompt_metadata")
 	}
 
 	// Validate metadata
 	if err := metadata.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid metadata: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "invalid metadata").
+			WithComponent("prompts").
+			WithOperation("parse_prompt_metadata")
 	}
 
 	return &PromptTemplate{
@@ -72,16 +78,20 @@ func ParsePromptWithMetadata(content string) (*PromptTemplate, error) {
 // Validate checks if the metadata is valid
 func (m *PromptMetadata) Validate() error {
 	if m.ID == "" {
-		return fmt.Errorf("missing required field: id")
+		return gerror.New(gerror.ErrCodeValidation, "missing required field: id", nil).
+			WithComponent("prompts").
+			WithOperation("validate")
 	}
 	if m.Version == "" {
-		return fmt.Errorf("missing required field: version")
+		return gerror.New(gerror.ErrCodeValidation, "missing required field: version", nil).
+			WithComponent("prompts").
+			WithOperation("validate")
 	}
 	if m.Category == "" {
-		return fmt.Errorf("missing required field: category")
+		return gerror.New(gerror.InvalidArgument, "prompts", "validate", "missing required field: category")
 	}
 	if m.Complexity < 1 || m.Complexity > 10 {
-		return fmt.Errorf("complexity must be between 1 and 10, got %d", m.Complexity)
+		return gerror.New(gerror.InvalidArgument, "prompts", "validate", "complexity must be between 1 and 10, got %d", m.Complexity)
 	}
 	return nil
 }
@@ -155,7 +165,7 @@ func (m *PromptMetadata) IsCompatibleWithModel(model string) bool {
 func (m *PromptMetadata) HasRequiredVariables(data map[string]interface{}) error {
 	for _, required := range m.Variables.Required {
 		if _, exists := data[required]; !exists {
-			return fmt.Errorf("missing required variable: %s", required)
+			return gerror.New(gerror.InvalidArgument, "prompts", "validate_variables", "missing required variable: %s", required)
 		}
 	}
 	return nil

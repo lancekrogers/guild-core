@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 	
-	"github.com/guild-ventures/guild-core/pkg/corpus"
+	"github.com/guild-ventures/guild-core/internal/corpus"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )

@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/internal/prompts"
 )
 
 // GuildMasterRefiner implements the CommissionRefiner interface

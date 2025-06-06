@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/corpus"
+	"github.com/guild-ventures/guild-core/internal/corpus"
 	"github.com/guild-ventures/guild-core/pkg/memory/rag"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
