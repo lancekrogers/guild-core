@@ -2,6 +2,7 @@
 package corpus
 
 import (
+	"context"
 	"fmt"
 	"path/filepath"
 	"strings"
@@ -35,6 +36,9 @@ const (
 
 // CorpusModel represents the UI state for the corpus browser.
 type CorpusModel struct {
+	// Context for operations
+	ctx context.Context
+	
 	// Config holds corpus configuration
 	config struct {
 		CorpusConfig corpus.Config
@@ -243,7 +247,7 @@ func (i TagItem) FilterValue() string {
 }
 
 // NewModel creates a new corpus UI model.
-func NewModel(cfg corpus.Config, user string) CorpusModel {
+func NewModel(ctx context.Context, cfg corpus.Config, user string) CorpusModel {
 	// Initialize the search input
 	searchInput := textinput.New()
 	searchInput.Placeholder = "Search documents..."
@@ -291,6 +295,7 @@ func NewModel(cfg corpus.Config, user string) CorpusModel {
 
 	// Create the model
 	return CorpusModel{
+		ctx: ctx,
 		config: struct {
 			CorpusConfig corpus.Config
 			CurrentUser  string

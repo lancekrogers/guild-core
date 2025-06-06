@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/guild-ventures/guild-core/pkg/corpus"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	corpus_ui "github.com/guild-ventures/guild-core/pkg/ui/corpus"
 )
 
@@ -429,7 +430,9 @@ func runCorpusUI(title string) error {
 	// Get the corpus configuration
 	cfg, err := getCorpusConfig()
 	if err != nil {
-		return fmt.Errorf("failed to get corpus configuration: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get corpus configuration").
+			WithComponent("cli").
+			WithOperation("corpus.runUI")
 	}
 	
 	// Get the current user
@@ -444,7 +447,9 @@ func runCorpusUI(title string) error {
 	// Create and run the program
 	p := tea.NewProgram(model, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
-		return fmt.Errorf("error running corpus UI: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "error running corpus UI").
+			WithComponent("cli").
+			WithOperation("corpus.runUI")
 	}
 	
 	return nil
@@ -468,7 +473,10 @@ func getCorpusConfigWithFlags(cmd *cobra.Command) (corpus.Config, error) {
 	
 	cfg, err := corpus.GetConfigWithFallback(ctx)
 	if err != nil {
-		return cfg, fmt.Errorf("%w\nRun 'guild init' to initialize a project", err)
+		return cfg, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get corpus config").
+			WithComponent("cli").
+			WithOperation("corpus.getCorpusConfig").
+			WithDetails("help", "Run 'guild init' to initialize a project")
 	}
 	
 	return cfg, nil

@@ -12,6 +12,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/corpus"
 	corpusagent "github.com/guild-ventures/guild-core/pkg/corpus/agent"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory/rag"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 	"github.com/guild-ventures/guild-core/pkg/providers"
@@ -222,7 +223,9 @@ func initializeCorpusAgent(providerType, model string) (*corpusagent.CorpusAgent
 	// Get corpus configuration
 	cfg, err := getCorpusConfig()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get corpus configuration: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get corpus configuration").
+			WithComponent("cli").
+			WithOperation("corpus.query.initializeCorpusAgent")
 	}
 	
 	// Create AI provider
@@ -240,7 +243,10 @@ func initializeCorpusAgent(providerType, model string) (*corpusagent.CorpusAgent
 		case "anthropic":
 			pType = providers.ProviderAnthropic
 		default:
-			return nil, fmt.Errorf("unsupported provider type: %s", providerType)
+			return nil, gerror.New(gerror.ErrCodeInvalidInput, "unsupported provider type", nil).
+				WithComponent("cli").
+				WithOperation("corpus.query.initializeCorpusAgent").
+				WithDetails("provider_type", providerType)
 		}
 		
 		// Get API key or base URL
@@ -254,17 +260,26 @@ func initializeCorpusAgent(providerType, model string) (*corpusagent.CorpusAgent
 			envKey := fmt.Sprintf("%s_API_KEY", strings.ToUpper(providerType))
 			apiKey = os.Getenv(envKey)
 			if apiKey == "" {
-				return nil, fmt.Errorf("missing API key: set %s environment variable", envKey)
+				return nil, gerror.New(gerror.ErrCodeProviderAuth, "missing API key", nil).
+					WithComponent("cli").
+					WithOperation("corpus.query.initializeCorpusAgent").
+					WithDetails("env_key", envKey).
+					WithDetails("provider_type", providerType)
 			}
 		}
 		
 		provider, err = factory.CreateAIProvider(pType, apiKey)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create provider: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeProvider, "failed to create provider").
+				WithComponent("cli").
+				WithOperation("corpus.query.initializeCorpusAgent").
+				WithDetails("provider_type", providerType)
 		}
 	} else {
 		// Auto-detect provider from vector factory
-		return nil, fmt.Errorf("provider type required for corpus agent")
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "provider type required for corpus agent", nil).
+			WithComponent("cli").
+			WithOperation("corpus.query.initializeCorpusAgent")
 	}
 	
 	// Create vector store configuration
@@ -281,7 +296,9 @@ func initializeCorpusAgent(providerType, model string) (*corpusagent.CorpusAgent
 	// Create vector store
 	vectorStore, err := vector.NewVectorStore(context.Background(), vectorConfig)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create vector store: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create vector store").
+			WithComponent("cli").
+			WithOperation("corpus.query.initializeCorpusAgent")
 	}
 	
 	// Create RAG configuration

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/spf13/cobra"
 )
@@ -42,13 +43,18 @@ func runMigrate(cmd *cobra.Command, args []string) error {
 	
 	// Check if we're in a project
 	if !project.IsInitialized(".") {
-		return fmt.Errorf("no Guild project found. Run 'guild init' first")
+		return gerror.New(gerror.ErrCodeInvalidInput, "no Guild project found", nil).
+			WithComponent("cli").
+			WithOperation("migrate.run").
+			WithDetails("help", "Run 'guild init' first")
 	}
 	
 	// Get global path
 	globalPath, err := project.GetGlobalGuildPath()
 	if err != nil {
-		return fmt.Errorf("failed to get global Guild path: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get global Guild path").
+			WithComponent("cli").
+			WithOperation("migrate.run")
 	}
 	
 	// Check if global Guild exists
@@ -81,7 +87,9 @@ func runMigrate(cmd *cobra.Command, args []string) error {
 		if result != nil {
 			fmt.Print(project.FormatMigrationSummary(result))
 		}
-		return fmt.Errorf("migration failed: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "migration failed").
+			WithComponent("cli").
+			WithOperation("migrate.run")
 	}
 	
 	// Show results

@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/guild-ventures/guild-core/pkg/corpus"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/spf13/cobra"
 )
@@ -39,7 +40,9 @@ func runInfo(cmd *cobra.Command, args []string) error {
 			fmt.Println("To use global Guild: add --global flag to commands")
 			return nil
 		}
-		return fmt.Errorf("failed to get project context: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get project context").
+			WithComponent("cli").
+			WithOperation("info.run")
 	}
 	
 	fmt.Println("=== Guild Project Info ===")
