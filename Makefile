@@ -35,39 +35,39 @@ define progress_bar
 	@printf "] %d%%$(NC)\n" $$((($1 * 100) / 30))
 endef
 
-# Header function for consistent section headers
+# Header function for Guild-branded section headers
 define section_header
 	@echo ""
 	@echo "$(BOLD)$(BLUE)╭────────────────────────────────────────────────────────────╮$(NC)"
-	@printf "$(BOLD)$(BLUE)│$(WHITE)  %-56s  $(BLUE)│$(NC)\n" "$(1)"
+	@echo "$(BOLD)$(BLUE)│$(PURPLE) 🏰 GUILD │$(YELLOW) $(1)                               $(BLUE)│$(NC)"
 	@echo "$(BOLD)$(BLUE)╰────────────────────────────────────────────────────────────╯$(NC)"
 	@echo ""
 endef
 
-# Status card function for test results
+# Guild-branded status card function
 define status_card
 	@echo "$(BOLD)$(BLUE)┌─────────────────────────────────────────────────────────────┐$(NC)"
 	@if [ "$(2)" = "pass" ]; then \
-		echo "$(BOLD)$(BLUE)│ $(GREEN)✓ $(1)$(NC)                                    $(BOLD)$(BLUE)│$(NC)"; \
+		echo "$(BOLD)$(BLUE)│  $(GREEN)✓ $(1) $(BOLD)$(BLUE)                                            │$(NC)"; \
 	elif [ "$(2)" = "fail" ]; then \
-		echo "$(BOLD)$(BLUE)│ $(RED)✗ $(1)$(NC)                                    $(BOLD)$(BLUE)│$(NC)"; \
+		echo "$(BOLD)$(BLUE)│  $(RED)✗ $(1) $(BOLD)$(BLUE)                                            │$(NC)"; \
 	else \
-		echo "$(BOLD)$(BLUE)│ $(YELLOW)⚙ $(1)$(NC)                                    $(BOLD)$(BLUE)│$(NC)"; \
+		echo "$(BOLD)$(BLUE)│  $(YELLOW)⚙ $(1) $(BOLD)$(BLUE)                                            │$(NC)"; \
 	fi
 	@echo "$(BOLD)$(BLUE)└─────────────────────────────────────────────────────────────┘$(NC)"
 endef
 
 # Main dashboard target - NOW ONLY RUNS UNIT TESTS
 all: clean build unit-test
-	@$(call section_header,"Guild Framework - Build Complete")
-	@$(call status_card,"Ready for Development","pass")
+	@$(call section_header,"Build Complete - Ready for Agent Development")
+	@$(call status_card,"🚀 Guild Framework Ready","pass")
 
-# Enhanced help with better organization
+# Enhanced help with Guild branding
 help:
 	@echo "$(BOLD)$(BLUE)"
 	@echo "╭─────────────────────────────────────────────────────────────╮"
-	@echo "│                    $(WHITE)$(HAMMER) Guild Framework$(BLUE)                     │"
-	@echo "│                   $(DIM)Professional Dashboard$(BLUE)                  │"
+	@echo "│  $(PURPLE)🏰 GUILD FRAMEWORK$(BLUE)                      $(WHITE)⚡ AI Agent System$(BLUE)  │"
+	@echo "│  $(DIM)Professional Multi-Agent Orchestration Platform$(BLUE)          │"
 	@echo "╰─────────────────────────────────────────────────────────────╯"
 	@echo "$(NC)"
 	@echo "$(BOLD)$(GREEN)$(ROCKET) MAIN COMMANDS$(NC)"
@@ -95,18 +95,29 @@ help:
 	@echo "  $(BOLD)make docs-serve$(NC)       $(ARROW) Start local documentation server"
 	@echo ""
 
-# Enhanced build with progress indication
+# Enhanced build with real progress indication
 build:
 	@$(call section_header,"Building Guild CLI")
 	@echo "$(BOLD)$(YELLOW)Preparing build environment...$(NC)"
 	@mkdir -p bin/
 	@rm -f ./guild
 	@echo "$(BOLD)$(YELLOW)Compiling source code...$(NC)"
-	@$(call progress_bar,10)
-	@go build -o bin/guild ./cmd/guild 2>/dev/null || (echo "$(BOLD)$(RED)$(CROSS) Build failed$(NC)" && exit 1)
-	@$(call progress_bar,30)
+	@printf "$(GRAY)[$(NC)"
+	@go build -o bin/guild ./cmd/guild 2>/dev/null & \
+	BUILD_PID=$$! ; \
+	while kill -0 $$BUILD_PID 2>/dev/null; do \
+		printf "$(GREEN)█$(NC)" ; \
+		sleep 0.1 ; \
+	done ; \
+	wait $$BUILD_PID ; \
+	BUILD_STATUS=$$? ; \
+	printf "$(GRAY)] $(GREEN)Complete$(NC)\n" ; \
+	if [ $$BUILD_STATUS -ne 0 ]; then \
+		echo "$(BOLD)$(RED)✗ Build failed$(NC)" ; \
+		exit 1 ; \
+	fi
 	@echo ""
-	@$(call status_card,"Build Successful","pass")
+	@$(call status_card,"🚀 Build Successful","pass")
 
 # Enhanced clean with better feedback
 clean:
@@ -126,68 +137,102 @@ unit-test:
 	@echo $$(date +%s) > .test-timing.tmp
 	
 	@# Core Framework Tests
-	@echo "$(BOLD)$(YELLOW)┌── Core Framework ──────────────────────────────┐$(NC)"
+	@echo "$(BOLD)$(PURPLE)┌── 🏗️  Core Framework Components ──────────────────────────┐$(NC)"
+	@echo "$(BLUE)│$(NC) $(BOLD)Package            Build    Test     Status$(NC)              $(BLUE)│$(NC)"
+	@echo "$(BLUE)├─────────────────────────────────────────────────────────────┤$(NC)"
 	@CORE_PASS=0; CORE_TOTAL=0; \
 	for pkg in agent memory orchestrator commission kanban project campaign storage registry; do \
 		CORE_TOTAL=$$((CORE_TOTAL + 1)); \
-		printf "$(BLUE)│$(NC) %-20s" "$$pkg" ; \
+		printf "$(BLUE)│$(NC) %-15s" "$$pkg" ; \
+		if go build ./pkg/$$pkg/... >/dev/null 2>&1; then \
+			printf "  $(GREEN)✓$(NC)     " ; \
+		else \
+			printf "  $(RED)✗$(NC)     " ; \
+		fi ; \
 		if go test -short -count=1 ./pkg/$$pkg/... >/dev/null 2>&1; then \
-			echo "$(GREEN)$(CHECK) PASS$(NC) $(BLUE)│$(NC)" ; \
+			printf "  $(GREEN)✓$(NC)     $(GREEN)PASS$(NC)" ; \
 			echo "PASS $$pkg" >> .test-results.tmp ; \
 			CORE_PASS=$$((CORE_PASS + 1)); \
 		else \
-			echo "$(RED)$(CROSS) FAIL$(NC) $(BLUE)│$(NC)" ; \
+			printf "  $(RED)✗$(NC)     $(RED)FAIL$(NC)" ; \
 			echo "FAIL $$pkg" >> .test-results.tmp ; \
 		fi ; \
+		printf "%*s$(BLUE)│$(NC)\n" 15 "" ; \
 	done; \
-	echo "$(BOLD)$(YELLOW)└── $$CORE_PASS/$$CORE_TOTAL Core Components ─────────────────────┘$(NC)"
+	echo "$(BOLD)$(PURPLE)└── $$CORE_PASS/$$CORE_TOTAL Core Components Passing ──────────────────────┘$(NC)"
 	
 	@echo ""
 	@# Provider Tests
-	@echo "$(BOLD)$(YELLOW)┌── AI Providers ────────────────────────────────┐$(NC)"
+	@echo "$(BOLD)$(GREEN)┌── 🤖 AI Provider Integrations ─────────────────────────────┐$(NC)"
+	@echo "$(BLUE)│$(NC) $(BOLD)Provider           Build    Test     Status$(NC)              $(BLUE)│$(NC)"
+	@echo "$(BLUE)├─────────────────────────────────────────────────────────────┤$(NC)"
 	@PROV_PASS=0; PROV_TOTAL=0; \
 	for provider in mock anthropic deepseek deepinfra ollama ora openai claudecode; do \
 		if [ -d "./pkg/providers/$$provider" ]; then \
 			PROV_TOTAL=$$((PROV_TOTAL + 1)); \
-			printf "$(BLUE)│$(NC) %-20s" "$$provider" ; \
+			printf "$(BLUE)│$(NC) %-15s" "$$provider" ; \
+			if go build ./pkg/providers/$$provider >/dev/null 2>&1; then \
+				printf "  $(GREEN)✓$(NC)     " ; \
+			else \
+				printf "  $(RED)✗$(NC)     " ; \
+			fi ; \
 			if go test -short -count=1 ./pkg/providers/$$provider >/dev/null 2>&1; then \
-				echo "$(GREEN)$(CHECK) PASS$(NC) $(BLUE)│$(NC)" ; \
+				printf "  $(GREEN)✓$(NC)     $(GREEN)PASS$(NC)" ; \
 				echo "PASS provider-$$provider" >> .test-results.tmp ; \
 				PROV_PASS=$$((PROV_PASS + 1)); \
 			else \
-				echo "$(RED)$(CROSS) FAIL$(NC) $(BLUE)│$(NC)" ; \
+				printf "  $(RED)✗$(NC)     $(RED)FAIL$(NC)" ; \
 				echo "FAIL provider-$$provider" >> .test-results.tmp ; \
 			fi ; \
+			printf "%*s$(BLUE)│$(NC)\n" 15 "" ; \
 		fi ; \
 	done; \
-	echo "$(BOLD)$(YELLOW)└── $$PROV_PASS/$$PROV_TOTAL AI Providers ─────────────────────────┘$(NC)"
+	echo "$(BOLD)$(GREEN)└── $$PROV_PASS/$$PROV_TOTAL AI Providers Passing ─────────────────────────┘$(NC)"
 	
 	@echo ""
 	@# Support Systems
-	@echo "$(BOLD)$(YELLOW)┌── Support Systems ─────────────────────────────┐$(NC)"
+	@echo "$(BOLD)$(CYAN)┌── ⚙️  Support Systems & Infrastructure ─────────────────────────┐$(NC)"
+	@echo "$(BLUE)│$(NC) $(BOLD)System             Build    Test     Status$(NC)              $(BLUE)│$(NC)"
+	@echo "$(BLUE)├─────────────────────────────────────────────────────────────┤$(NC)"
 	@OTHER_PASS=0; OTHER_TOTAL=0; \
 	for pkg in context config tools corpus grpc workspace prompts; do \
 		if [ -d "./pkg/$$pkg" ]; then \
 			OTHER_TOTAL=$$((OTHER_TOTAL + 1)); \
-			printf "$(BLUE)│$(NC) %-20s" "$$pkg" ; \
+			printf "$(BLUE)│$(NC) %-15s" "$$pkg" ; \
+			if go build ./pkg/$$pkg/... >/dev/null 2>&1; then \
+				printf "  $(GREEN)✓$(NC)     " ; \
+			else \
+				printf "  $(RED)✗$(NC)     " ; \
+			fi ; \
 			if go test -short -count=1 ./pkg/$$pkg/... >/dev/null 2>&1; then \
-				echo "$(GREEN)$(CHECK) PASS$(NC) $(BLUE)│$(NC)" ; \
+				printf "  $(GREEN)✓$(NC)     $(GREEN)PASS$(NC)" ; \
 				echo "PASS $$pkg" >> .test-results.tmp ; \
 				OTHER_PASS=$$((OTHER_PASS + 1)); \
 			else \
-				echo "$(RED)$(CROSS) FAIL$(NC) $(BLUE)│$(NC)" ; \
+				printf "  $(RED)✗$(NC)     $(RED)FAIL$(NC)" ; \
 				echo "FAIL $$pkg" >> .test-results.tmp ; \
 			fi ; \
+			printf "%*s$(BLUE)│$(NC)\n" 15 "" ; \
 		fi ; \
 	done; \
-	echo "$(BOLD)$(YELLOW)└── $$OTHER_PASS/$$OTHER_TOTAL Support Systems ────────────────────┘$(NC)"
+	echo "$(BOLD)$(CYAN)└── $$OTHER_PASS/$$OTHER_TOTAL Support Systems Passing ────────────────────┘$(NC)"
 	
 	@# Enhanced Summary
 	@echo ""
-	@if [ $$(grep -c "^FAIL" .test-results.tmp 2>/dev/null || echo "0") -eq "0" ]; then \
-		$(call status_card,"ALL UNIT TESTS PASSED","pass") ; \
+	@FAILED_COUNT=$$(grep -c "^FAIL" .test-results.tmp 2>/dev/null || echo "0") ; \
+	TOTAL_COUNT=$$(wc -l < .test-results.tmp 2>/dev/null || echo "0") ; \
+	PASSED_COUNT=$$((TOTAL_COUNT - FAILED_COUNT)) ; \
+	if [ "$$FAILED_COUNT" -eq "0" ]; then \
+		$(call status_card,"🎉 ALL TESTS PASSED! ($$PASSED_COUNT/$$TOTAL_COUNT components)","pass") ; \
 	else \
-		$(call status_card,"UNIT TESTS FAILED","fail") ; \
+		$(call status_card,"⚠️  SOME TESTS FAILED ($$PASSED_COUNT/$$TOTAL_COUNT passing)","fail") ; \
+		echo "" ; \
+		echo "$(BOLD)$(RED)📋 Failed Components:$(NC)" ; \
+		grep "^FAIL" .test-results.tmp 2>/dev/null | cut -d' ' -f2 | while read pkg; do \
+			echo "  $(RED)✗$(NC) $$pkg" ; \
+		done ; \
+		rm -f .test-results.tmp .test-timing.tmp ; \
+		exit 1 ; \
 	fi
 	@rm -f .test-results.tmp .test-timing.tmp
 
