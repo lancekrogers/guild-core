@@ -10,11 +10,11 @@ import (
 // This function is designed to be called by the registry to avoid circular imports
 func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (StorageRegistry, interface{}, error) {
 	// Create database connection
-	database, err := NewDatabase(ctx, dbPath)
+	database, err := DefaultDatabaseFactory(ctx, dbPath)
 	if err != nil {
 		return nil, nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create database").
 			WithComponent("InitializeSQLiteStorageForRegistry").
-			WithOperation("NewDatabase").
+			WithOperation("DefaultDatabaseFactory").
 			WithDetails("db_path", dbPath)
 	}
 
@@ -27,7 +27,7 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 	}
 
 	// Create storage registry
-	storageRegistry := NewStorageRegistry()
+	storageRegistry := DefaultStorageRegistryFactory()
 
 	// Create and register repositories
 	taskRepo := NewSQLiteTaskRepository(database)
@@ -68,7 +68,7 @@ func InitializeSQLiteStorageForTests(ctx context.Context) (StorageRegistry, inte
 	}
 
 	// Create storage registry
-	storageRegistry := NewStorageRegistry()
+	storageRegistry := DefaultStorageRegistryFactory()
 
 	// Create and register repositories
 	taskRepo := NewSQLiteTaskRepository(database)

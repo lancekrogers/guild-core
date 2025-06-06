@@ -85,4 +85,6 @@ type ArtisanClient interface {
 type ResponseParser interface {
 	// ParseResponse parses an Artisan response into a file structure
 	ParseResponse(response *ArtisanResponse) (*FileStructure, error)
+	// ParseResponseWithContext parses an Artisan response with context support
+	ParseResponseWithContext(ctx context.Context, response *ArtisanResponse) (*FileStructure, error)
 }

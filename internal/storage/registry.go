@@ -15,10 +15,15 @@ type DefaultStorageRegistry struct {
 	mu               sync.RWMutex
 }
 
-// NewStorageRegistry creates a new storage registry
+// newStorageRegistry creates a new storage registry (private constructor)
 // Following Guild's constructor pattern
-func NewStorageRegistry() StorageRegistry {
+func newStorageRegistry() StorageRegistry {
 	return &DefaultStorageRegistry{}
+}
+
+// DefaultStorageRegistryFactory creates a storage registry for registry use
+func DefaultStorageRegistryFactory() StorageRegistry {
+	return newStorageRegistry()
 }
 
 // RegisterTaskRepository registers a task repository

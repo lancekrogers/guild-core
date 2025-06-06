@@ -133,6 +133,11 @@ type intelligentParserAdapter struct {
 
 // ParseResponse implements ResponseParser interface
 func (a *intelligentParserAdapter) ParseResponse(response *ArtisanResponse) (*FileStructure, error) {
-	// Use context.Background() for now - could be enhanced to accept context
+	// Use context.Background() for backward compatibility
 	return a.parser.ParseResponse(context.Background(), response)
+}
+
+// ParseResponseWithContext implements ResponseParser interface with context support
+func (a *intelligentParserAdapter) ParseResponseWithContext(ctx context.Context, response *ArtisanResponse) (*FileStructure, error) {
+	return a.parser.ParseResponse(ctx, response)
 }

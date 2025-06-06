@@ -2,6 +2,7 @@ package tools
 
 import (
 	"context"
+	"fmt"
 	
 	"github.com/guild-ventures/guild-core/tools"
 )
@@ -21,17 +22,69 @@ type ToolRegistry struct {
 	toolCosts map[string]float64
 }
 
-// NewToolRegistry creates a new tool registry with cost tracking
-func NewToolRegistry() *ToolRegistry {
+// newToolRegistry creates a new tool registry with cost tracking (private constructor)
+func newToolRegistry() *ToolRegistry {
 	return &ToolRegistry{
 		ToolRegistry: tools.NewToolRegistry(),
 		toolCosts:    make(map[string]float64),
 	}
 }
 
-// RegisterTool registers a tool with the registry
-func (r *ToolRegistry) RegisterTool(tool Tool) error {
+// DefaultToolRegistryFactory creates a tool registry for registry use
+func DefaultToolRegistryFactory() Registry {
+	return newToolRegistry()
+}
+
+// RegisterTool registers a tool with the registry (implements Registry interface)
+func (r *ToolRegistry) RegisterTool(name string, tool Tool) error {
+	// The underlying registry uses the tool's Name() method, 
+	// so we validate that it matches the provided name
+	if tool.Name() != name {
+		return fmt.Errorf("tool name mismatch: provided '%s', tool reports '%s'", name, tool.Name())
+	}
 	return r.ToolRegistry.RegisterTool(tool)
+}
+
+// GetTool retrieves a tool by name (implements Registry interface)
+func (r *ToolRegistry) GetTool(name string) (Tool, error) {
+	tool, exists := r.ToolRegistry.GetTool(name)
+	if !exists {
+		return nil, fmt.Errorf("tool '%s' not found", name)
+	}
+	return tool, nil
+}
+
+// ListTools returns the names of all registered tools (implements Registry interface)
+func (r *ToolRegistry) ListTools() []string {
+	tools := r.ToolRegistry.ListTools()
+	names := make([]string, len(tools))
+	for i, tool := range tools {
+		names[i] = tool.Name()
+	}
+	return names
+}
+
+// HasTool checks if a tool is registered (implements Registry interface)
+func (r *ToolRegistry) HasTool(name string) bool {
+	_, exists := r.ToolRegistry.GetTool(name)
+	return exists
+}
+
+// UnregisterTool removes a tool from the registry (implements Registry interface)
+func (r *ToolRegistry) UnregisterTool(name string) error {
+	if !r.HasTool(name) {
+		return fmt.Errorf("tool '%s' not found", name)
+	}
+	// The underlying registry doesn't have UnregisterTool, so we need to manage this
+	// For now, return an error indicating it's not supported
+	return fmt.Errorf("unregister not supported by underlying registry")
+}
+
+// Clear removes all tools from the registry (implements Registry interface)
+func (r *ToolRegistry) Clear() {
+	// The underlying registry doesn't have Clear, so we need to recreate it
+	r.ToolRegistry = tools.NewToolRegistry()
+	r.toolCosts = make(map[string]float64)
 }
 
 // RegisterToolWithCost registers a tool with a specific cost

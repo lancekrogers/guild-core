@@ -23,14 +23,14 @@ type Database struct {
 	dbPath  string
 }
 
-// NewDatabase creates a new database connection and runs migrations
+// newDatabase creates a new database connection and runs migrations (private constructor)
 // Following Guild's constructor pattern with proper error wrapping
-func NewDatabase(ctx context.Context, dbPath string) (*Database, error) {
+func newDatabase(ctx context.Context, dbPath string) (*Database, error) {
 	// Ensure directory exists
 	if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create database directory").
 			WithComponent("Database").
-			WithOperation("NewDatabase").
+			WithOperation("newDatabase").
 			WithDetails("db_path", dbPath)
 	}
 
@@ -39,7 +39,7 @@ func NewDatabase(ctx context.Context, dbPath string) (*Database, error) {
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to open database").
 			WithComponent("Database").
-			WithOperation("NewDatabase").
+			WithOperation("newDatabase").
 			WithDetails("db_path", dbPath)
 	}
 
@@ -48,7 +48,7 @@ func NewDatabase(ctx context.Context, dbPath string) (*Database, error) {
 		sqlDB.Close()
 		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to ping database").
 			WithComponent("Database").
-			WithOperation("NewDatabase").
+			WithOperation("newDatabase").
 			WithDetails("db_path", dbPath)
 	}
 
@@ -59,6 +59,11 @@ func NewDatabase(ctx context.Context, dbPath string) (*Database, error) {
 	}
 
 	return database, nil
+}
+
+// DefaultDatabaseFactory creates a database instance for registry use
+func DefaultDatabaseFactory(ctx context.Context, dbPath string) (*Database, error) {
+	return newDatabase(ctx, dbPath)
 }
 
 // Migrate runs database migrations following Guild's error handling patterns

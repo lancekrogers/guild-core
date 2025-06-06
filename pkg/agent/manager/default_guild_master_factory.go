@@ -150,3 +150,8 @@ func (a *ResponseParserAdapter) ParseResponse(response *ArtisanResponse) (*FileS
 	// The IntelligentParser will handle the context internally
 	return a.parser.ParseResponse(context.Background(), response)
 }
+
+// ParseResponseWithContext implements the ResponseParser interface with context support
+func (a *ResponseParserAdapter) ParseResponseWithContext(ctx context.Context, response *ArtisanResponse) (*FileStructure, error) {
+	return a.parser.ParseResponse(ctx, response)
+}
