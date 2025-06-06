@@ -129,10 +129,10 @@ func NewChromemStore(config Config) (*ChromemStore, error) {
 	
 	// Create or get default collection
 	if _, err := store.getOrCreateCollection(config.DefaultCollection); err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create default collection").
 			WithComponent("memory").
 			WithOperation("NewChromemStore").
-			WithDetails("failed to create default collection")
+			WithDetails("collection", config.DefaultCollection)
 	}
 	
 	return store, nil
@@ -159,10 +159,10 @@ func (s *ChromemStore) getOrCreateCollection(name string) (*chromem.Collection, 
 	// Create embedding function that wraps our embedder
 	embeddingFunc := func(ctx context.Context, text string) ([]float32, error) {
 		if s.embedder == nil {
-			return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+			return nil, gerror.New(gerror.ErrCodeInvalidInput, "no embedder configured", nil).
 				WithComponent("memory").
 				WithOperation("getOrCreateCollection").
-				WithDetails("no embedder configured")
+				WithDetails("collection", name)
 		}
 		return s.embedder.Embed(ctx, text)
 	}
@@ -217,10 +217,10 @@ func (s *ChromemStore) SaveEmbedding(ctx context.Context, embedding Embedding) e
 	// Get or create collection
 	collection, err := s.getOrCreateCollection(collectionName)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage).
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get collection").
 			WithComponent("memory").
 			WithOperation("SaveEmbedding").
-			WithDetails("failed to get collection")
+			WithDetails("collection", collectionName)
 	}
 
 	// Convert metadata to string map for chromem
@@ -248,10 +248,10 @@ func (s *ChromemStore) SaveEmbedding(ctx context.Context, embedding Embedding) e
 	// Add document to collection
 	// If embedding is empty, chromem will generate it using the embedding function
 	if err := collection.AddDocument(ctx, doc); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage).
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to add document to collection").
 			WithComponent("memory").
 			WithOperation("SaveEmbedding").
-			WithDetails("failed to add document to collection")
+			WithDetails("document_id", doc.ID)
 	}
 	
 	return nil
@@ -366,19 +366,19 @@ func (s *ChromemStore) QueryCollection(ctx context.Context, collectionName, quer
 	// Get collection
 	collection, err := s.getOrCreateCollection(collectionName)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get collection").
 			WithComponent("memory").
 			WithOperation("QueryCollection").
-			WithDetails(fmt.Sprintf("failed to get collection %s", collectionName))
+			WithDetails("collection", collectionName)
 	}
 	
 	// Query the collection
 	results, err := collection.Query(ctx, query, limit, nil, nil)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to query collection").
 			WithComponent("memory").
 			WithOperation("QueryCollection").
-			WithDetails("failed to query collection")
+			WithDetails("collection", collectionName)
 	}
 	
 	// Convert results to EmbeddingMatch
@@ -435,10 +435,10 @@ func (s *ChromemStore) DeleteEmbedding(ctx context.Context, id string) error {
 	}
 	
 	if !deleted {
-		return gerror.New(gerror.ErrCodeNotImplemented).
+		return gerror.New(gerror.ErrCodeInternal, "document deletion not yet supported by chromem-go", nil).
 			WithComponent("memory").
 			WithOperation("DeleteEmbedding").
-			WithDetails("document deletion not yet supported by chromem-go")
+			WithDetails("id", id)
 	}
 	
 	return nil

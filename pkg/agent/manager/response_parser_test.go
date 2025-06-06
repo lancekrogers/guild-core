@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/internal/kanban"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

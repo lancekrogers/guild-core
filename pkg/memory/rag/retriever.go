@@ -60,10 +60,9 @@ type SearchResults struct {
 func newRetriever(ctx context.Context, embedder vector.Embedder, config Config) (*Retriever, error) {
 	// Validate embedder
 	if embedder == nil {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "embedder cannot be nil", nil).
 			WithComponent("memory").
-			WithOperation("NewRetriever").
-			WithDetails("embedder cannot be nil")
+			WithOperation("NewRetriever")
 	}
 	
 	// Apply default config values
@@ -116,10 +115,9 @@ func newRetriever(ctx context.Context, embedder vector.Embedder, config Config) 
 	// Create vector store
 	vectorStore, err := vector.NewChromemStore(vsConfig)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create vector store").
 			WithComponent("memory").
-			WithOperation("NewRetriever").
-			WithDetails("failed to create vector store")
+			WithOperation("NewRetriever")
 	}
 	
 	// Create retriever
@@ -142,10 +140,10 @@ func newRetriever(ctx context.Context, embedder vector.Embedder, config Config) 
 	return retriever, nil
 }
 
-// newRetrieverWithStore creates a new Retriever with an existing vector store (private constructor).
+// NewRetrieverWithStore creates a new Retriever with an existing vector store.
 // This is useful when you want to manage the vector store lifecycle separately,
 // such as when integrating with the corpus scan command.
-func newRetrieverWithStore(vectorStore vector.VectorStore, config Config) *Retriever {
+func NewRetrieverWithStore(vectorStore vector.VectorStore, config Config) *Retriever {
 	// Apply default config values
 	if config.ChunkSize <= 0 {
 		config.ChunkSize = 1000
@@ -213,10 +211,9 @@ func newRetrieverWithStore(vectorStore vector.VectorStore, config Config) *Retri
 func (r *Retriever) RetrieveContext(ctx context.Context, query string, config RetrievalConfig) (*SearchResults, error) {
 	// Validate query
 	if strings.TrimSpace(query) == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "query cannot be empty", nil).
 			WithComponent("memory").
-			WithOperation("RetrieveContext").
-			WithDetails("query cannot be empty")
+			WithOperation("RetrieveContext")
 	}
 	
 	// Use default max results if not specified
@@ -237,10 +234,9 @@ func (r *Retriever) RetrieveContext(ctx context.Context, query string, config Re
 			// Log error but continue with corpus search if available
 			// This makes the system more resilient
 			if r.corpusConfig == nil || !config.UseCorpus {
-				return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+				return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to query vector store").
 					WithComponent("memory").
-					WithOperation("RetrieveContext").
-					WithDetails("failed to query vector store")
+					WithOperation("RetrieveContext")
 			}
 		} else {
 			// Convert vector matches to search results
@@ -313,22 +309,21 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 					var tags []string
 					var path string
 					
-					if metadata, ok := match.Metadata.(map[string]interface{}); ok {
-						if t, ok := metadata["title"].(string); ok {
-							title = t
-						}
-						if p, ok := metadata["path"].(string); ok {
-							path = p
-						}
-						if tagList, ok := metadata["tags"].([]interface{}); ok {
-							for _, tag := range tagList {
-								if tagStr, ok := tag.(string); ok {
-									tags = append(tags, tagStr)
-								}
+					metadata := match.Metadata
+					if t, ok := metadata["title"].(string); ok {
+						title = t
+					}
+					if p, ok := metadata["path"].(string); ok {
+						path = p
+					}
+					if tagList, ok := metadata["tags"].([]interface{}); ok {
+						for _, tag := range tagList {
+							if tagStr, ok := tag.(string); ok {
+								tags = append(tags, tagStr)
 							}
-						} else if tagList, ok := metadata["tags"].([]string); ok {
-							tags = tagList
 						}
+					} else if tagList, ok := metadata["tags"].([]string); ok {
+						tags = tagList
 					}
 					
 					result := SearchResult{
@@ -362,10 +357,9 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 	// List corpus documents
 	docs, err := corpus.List(ctx, *r.corpusConfig)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list corpus documents").
 			WithComponent("memory").
-			WithOperation("searchCorpus").
-			WithDetails("failed to list corpus documents")
+			WithOperation("searchCorpus")
 	}
 	
 	results := make([]SearchResult, 0)
@@ -464,16 +458,14 @@ func (r *Retriever) sortResultsByScore(results []SearchResult) {
 func (r *Retriever) AddDocument(ctx context.Context, id, content, source string) error {
 	// Validate inputs
 	if id == "" {
-		return gerror.New(gerror.ErrCodeInvalidArgument).
+		return gerror.New(gerror.ErrCodeInvalidInput, "document ID cannot be empty", nil).
 			WithComponent("memory").
-			WithOperation("AddDocument").
-			WithDetails("document ID cannot be empty")
+			WithOperation("AddDocument")
 	}
 	if content == "" {
-		return gerror.New(gerror.ErrCodeInvalidArgument).
+		return gerror.New(gerror.ErrCodeInvalidInput, "document content cannot be empty", nil).
 			WithComponent("memory").
-			WithOperation("AddDocument").
-			WithDetails("document content cannot be empty")
+			WithOperation("AddDocument")
 	}
 	
 	// Chunk the document
@@ -493,10 +485,9 @@ func (r *Retriever) AddDocument(ctx context.Context, id, content, source string)
 		}
 		
 		if err := r.vectorStore.SaveEmbedding(ctx, embedding); err != nil {
-			return gerror.Wrap(err, gerror.ErrCodeStorage).
+			return gerror.Wrap(err, gerror.ErrCodeStorage, fmt.Sprintf("failed to save chunk %d", i)).
 				WithComponent("memory").
-				WithOperation("AddDocument").
-				WithDetails(fmt.Sprintf("failed to save chunk %d", i))
+				WithOperation("AddDocument")
 		}
 	}
 	
@@ -508,10 +499,9 @@ func (r *Retriever) AddDocument(ctx context.Context, id, content, source string)
 // in addition to keyword search.
 func (r *Retriever) AddCorpusDocument(ctx context.Context, doc *corpus.CorpusDoc) error {
 	if doc == nil {
-		return gerror.New(gerror.ErrCodeInvalidArgument).
+		return gerror.New(gerror.ErrCodeInvalidInput, "corpus document cannot be nil", nil).
 			WithComponent("memory").
-			WithOperation("AddCorpusDocument").
-			WithDetails("corpus document cannot be nil")
+			WithOperation("AddCorpusDocument")
 	}
 	
 	// Create a searchable representation of the document
@@ -583,10 +573,9 @@ func (r *Retriever) EnhancePrompt(ctx context.Context, prompt string, config Ret
 func (r *Retriever) RemoveDocument(ctx context.Context, documentID string) error {
 	// TODO: The VectorStore interface needs to be extended with a DeleteEmbedding method
 	// For now, we'll document this limitation
-	return gerror.New(gerror.ErrCodeNotImplemented).
+	return gerror.New(gerror.ErrCodeInternal, "document removal not yet implemented: VectorStore interface needs DeleteEmbedding method", nil).
 		WithComponent("memory").
-		WithOperation("RemoveDocument").
-		WithDetails("document removal not yet implemented: VectorStore interface needs DeleteEmbedding method")
+		WithOperation("RemoveDocument")
 }
 
 // Close closes the retriever and its resources.
@@ -605,5 +594,5 @@ func DefaultRetrieverFactory(ctx context.Context, embedder vector.Embedder, conf
 
 // DefaultRetrieverWithStoreFactory creates a retriever with existing store for registry use
 func DefaultRetrieverWithStoreFactory(vectorStore vector.VectorStore, config Config) RetrieverInterface {
-	return newRetrieverWithStore(vectorStore, config)
+	return NewRetrieverWithStore(vectorStore, config)
 }

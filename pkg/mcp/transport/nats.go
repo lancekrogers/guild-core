@@ -63,7 +63,7 @@ func (t *NATSTransport) Connect(ctx context.Context) error {
 	// Connect to NATS
 	conn, err := nats.Connect(t.config.Address, opts...)
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "mcp_transport", "connect", "failed to connect to NATS")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_transport").WithComponent("connect").WithOperation("failed to connect to NATS")
 	}
 
 	t.conn = conn
@@ -117,13 +117,13 @@ func (t *NATSTransport) Send(ctx context.Context, topic string, data []byte) err
 	t.mu.RLock()
 	if t.closed {
 		t.mu.RUnlock()
-		return gerror.New(gerror.Internal, "mcp_transport", "send", "transport is closed")
+		return gerror.New(gerror.ErrCodeInternal, "mcp_transport", nil).WithComponent("send").WithOperation("transport is closed")
 	}
 	conn := t.conn
 	t.mu.RUnlock()
 
 	if conn == nil || !conn.IsConnected() {
-		return gerror.New(gerror.Internal, "mcp_transport", "send", "not connected to NATS")
+		return gerror.New(gerror.ErrCodeInternal, "mcp_transport", nil).WithComponent("send").WithOperation("not connected to NATS")
 	}
 
 	// Create NATS message
@@ -152,13 +152,13 @@ func (t *NATSTransport) Request(ctx context.Context, topic string, data []byte) 
 	t.mu.RLock()
 	if t.closed {
 		t.mu.RUnlock()
-		return nil, gerror.New(gerror.Internal, "mcp_transport", "receive", "transport is closed")
+		return nil, gerror.New(gerror.ErrCodeInternal, "mcp_transport", nil).WithComponent("receive").WithOperation("transport is closed")
 	}
 	conn := t.conn
 	t.mu.RUnlock()
 
 	if conn == nil || !conn.IsConnected() {
-		return nil, gerror.New(gerror.Internal, "mcp_transport", "receive", "not connected to NATS")
+		return nil, gerror.New(gerror.ErrCodeInternal, "mcp_transport", nil).WithComponent("receive").WithOperation("not connected to NATS")
 	}
 
 	// Create timeout from context
@@ -170,7 +170,7 @@ func (t *NATSTransport) Request(ctx context.Context, topic string, data []byte) 
 	// Send request
 	reply, err := conn.Request(topic, data, timeout)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "mcp_transport", "request", "request failed")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_transport").WithComponent("request").WithOperation("request failed")
 	}
 
 	return reply.Data, nil
@@ -182,11 +182,11 @@ func (t *NATSTransport) Subscribe(ctx context.Context, topic string) (<-chan []b
 	defer t.mu.Unlock()
 
 	if t.closed {
-		return nil, gerror.New(gerror.Internal, "mcp_transport", "receive", "transport is closed")
+		return nil, gerror.New(gerror.ErrCodeInternal, "mcp_transport", nil).WithComponent("receive").WithOperation("transport is closed")
 	}
 
 	if t.conn == nil || !t.conn.IsConnected() {
-		return nil, gerror.New(gerror.Internal, "mcp_transport", "receive", "not connected to NATS")
+		return nil, gerror.New(gerror.ErrCodeInternal, "mcp_transport", nil).WithComponent("receive").WithOperation("not connected to NATS")
 	}
 
 	// Check if already subscribed
@@ -213,7 +213,7 @@ func (t *NATSTransport) Subscribe(ctx context.Context, topic string) (<-chan []b
 	if err != nil {
 		cancel()
 		close(dataCh)
-		return nil, gerror.Wrap(err, gerror.Internal, "mcp_transport", "subscribe", "failed to subscribe")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_transport").WithComponent("subscribe").WithOperation("failed to subscribe")
 	}
 
 	// Store subscription
@@ -254,7 +254,7 @@ func (t *NATSTransport) Unsubscribe(ctx context.Context, topic string) error {
 	// Unsubscribe
 	if sub.sub != nil {
 		if err := sub.sub.Unsubscribe(); err != nil {
-			return gerror.Wrap(err, gerror.Internal, "mcp_transport", "unsubscribe", "failed to unsubscribe")
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_transport").WithComponent("unsubscribe").WithOperation("failed to unsubscribe")
 		}
 	}
 

@@ -10,9 +10,9 @@ import (
 	"os"
 
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
-	"github.com/guild-ventures/guild-core/internal/config"
+	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
-	"github.com/guild-ventures/guild-core/internal/orchestrator"
+	"github.com/guild-ventures/guild-core/pkg/orchestrator"
 	"github.com/guild-ventures/guild-core/pkg/providers/anthropic"
 	"github.com/guild-ventures/guild-core/pkg/providers/openai"
 	"github.com/guild-ventures/guild-core/pkg/registry"

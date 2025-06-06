@@ -155,7 +155,7 @@ func (cm *CostManager) RecordCost(costType CostType, amount float64, description
 }
 
 // RecordLLMCost records the cost of an LLM API call
-func (cm *CostManager) RecordLLMCost(model string, promptTokens, completionTokens int, metadata map[string]string) float64 {
+func (cm *CostManager) RecordLLMCost(model string, promptTokens, completionTokens int, metadata map[string]string) error {
 	// Get cost rate for model ($ per 1K tokens)
 	promptRate, completionRate := cm.getLLMCostRates(model)
 	
@@ -171,7 +171,7 @@ func (cm *CostManager) RecordLLMCost(model string, promptTokens, completionToken
 	
 	cm.RecordCost(CostTypeLLM, totalCost, description, metadata)
 	
-	return totalCost
+	return nil
 }
 
 // getLLMCostRates returns the cost rates for prompt and completion tokens
@@ -223,8 +223,8 @@ func (cm *CostManager) RecordToolCost(toolName string, metadata map[string]strin
 	return rate
 }
 
-// GetTotalCost returns the total cost for a specific type
-func (cm *CostManager) GetTotalCost(costType CostType) float64 {
+// GetTotalCostByType returns the total cost for a specific type
+func (cm *CostManager) GetTotalCostByType(costType CostType) float64 {
 	cm.mu.RLock()
 	defer cm.mu.RUnlock()
 	return cm.totalCosts[costType]
@@ -246,7 +246,16 @@ func (cm *CostManager) CanAfford(costType CostType, amount float64) bool {
 }
 
 // EstimateLLMCost estimates the cost of an LLM API call
-func (cm *CostManager) EstimateLLMCost(model string, promptTokens, maxCompletionTokens int) float64 {
+// EstimateLLMCost estimates the cost of an LLM operation
+func (cm *CostManager) EstimateLLMCost(model string, estimatedTokens int) float64 {
+	// Assume 50/50 split between prompt and completion tokens
+	promptTokens := estimatedTokens / 2
+	maxCompletionTokens := estimatedTokens / 2
+	return cm.EstimateLLMCostDetailed(model, promptTokens, maxCompletionTokens)
+}
+
+// EstimateLLMCostDetailed estimates the cost with detailed token counts
+func (cm *CostManager) EstimateLLMCostDetailed(model string, promptTokens, maxCompletionTokens int) float64 {
 	// Get cost rates
 	promptRate, completionRate := cm.getLLMCostRates(model)
 	
@@ -350,6 +359,6 @@ func (cm *CostManager) ExceedsBudget(costType CostType, amount float64) bool {
 
 // DefaultCostManagerFactory is a factory function for creating cost managers
 // This should be registered with the agent registry
-func DefaultCostManagerFactory() CostManager {
+func DefaultCostManagerFactory() CostManagerInterface {
 	return newCostManager()
 }

@@ -2,6 +2,7 @@ package prompts
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -51,7 +52,7 @@ func (r *PromptRegistry) registerDefaults() {
 // RegisterManagerStrategy registers a new prompt manager strategy
 func (r *PromptRegistry) RegisterManagerStrategy(managerType ManagerType, factory ManagerFactory) error {
 	if factory == nil {
-		return gerror.New(gerror.ErrCodeInvalidArgument, "factory cannot be nil").
+		return gerror.New(gerror.ErrCodeInvalidInput, "factory cannot be nil", nil).
 			WithComponent("prompts").
 			WithOperation("RegisterManagerStrategy").
 			WithDetails("manager_type", string(managerType))
@@ -67,7 +68,7 @@ func (r *PromptRegistry) RegisterManagerStrategy(managerType ManagerType, factor
 // RegisterFormatterStrategy registers a new context formatter strategy
 func (r *PromptRegistry) RegisterFormatterStrategy(formatterType string, factory FormatterFactory) error {
 	if factory == nil {
-		return gerror.New(gerror.ErrCodeInvalidArgument, "factory cannot be nil").
+		return gerror.New(gerror.ErrCodeInvalidInput, "factory cannot be nil", nil).
 			WithComponent("prompts").
 			WithOperation("RegisterFormatterStrategy").
 			WithDetails("formatter_type", formatterType)
@@ -87,7 +88,7 @@ func (r *PromptRegistry) CreateManager(ctx context.Context, config ManagerConfig
 	r.mu.RUnlock()
 	
 	if !exists {
-		return nil, gerror.New(gerror.ErrCodeNotFound, "unknown prompt manager type").
+		return nil, gerror.New(gerror.ErrCodeNotFound, "unknown prompt manager type", nil).
 			WithComponent("prompts").
 			WithOperation("CreateManager").
 			WithDetails("manager_type", string(config.Type))
@@ -103,7 +104,7 @@ func (r *PromptRegistry) CreateFormatter(formatterType string) (Formatter, error
 	r.mu.RUnlock()
 	
 	if !exists {
-		return nil, gerror.New(gerror.ErrCodeNotFound, "unknown formatter type").
+		return nil, gerror.New(gerror.ErrCodeNotFound, "unknown formatter type", nil).
 			WithComponent("prompts").
 			WithOperation("CreateFormatter").
 			WithDetails("formatter_type", formatterType)
@@ -137,7 +138,7 @@ func (r *PromptRegistry) SetDefaultManagerType(managerType ManagerType) error {
 	r.mu.RUnlock()
 	
 	if !exists {
-		return gerror.New(gerror.ErrCodeNotFound, "manager type not registered").
+		return gerror.New(gerror.ErrCodeNotFound, "manager type not registered", nil).
 			WithComponent("prompts").
 			WithOperation("SetDefaultManagerType").
 			WithDetails("manager_type", string(managerType))
@@ -157,7 +158,7 @@ func (r *PromptRegistry) SetDefaultFormatterType(formatterType string) error {
 	r.mu.RUnlock()
 	
 	if !exists {
-		return gerror.New(gerror.ErrCodeNotFound, "formatter type not registered").
+		return gerror.New(gerror.ErrCodeNotFound, "formatter type not registered", nil).
 			WithComponent("prompts").
 			WithOperation("SetDefaultFormatterType").
 			WithDetails("formatter_type", formatterType)
@@ -235,7 +236,7 @@ type Section struct {
 
 // FormatterAdapter adapts the layered context formatter to the registry interface
 type FormatterAdapter struct {
-	xmlFormatter *XMLFormatterImpl
+	xmlFormatter XMLFormatterImpl
 }
 
 // XMLFormatterImpl wraps the actual formatter to avoid import cycles
@@ -264,7 +265,27 @@ func (f *FormatterAdapter) OptimizeForTokens(content string, maxTokens int) (str
 func defaultXMLFormatterFactory() (Formatter, error) {
 	// Create the actual formatter using the package function
 	// Note: This creates a dependency but allows the registry to work
-	return &FormatterAdapter{}, nil
+	return &FormatterAdapter{
+		xmlFormatter: &defaultXMLFormatter{},
+	}, nil
+}
+
+// defaultXMLFormatter provides a basic XML formatter implementation
+type defaultXMLFormatter struct{}
+
+func (f *defaultXMLFormatter) FormatAsXML(ctx interface{}) (string, error) {
+	return fmt.Sprintf("<context>%v</context>", ctx), nil
+}
+
+func (f *defaultXMLFormatter) FormatAsMarkdown(ctx interface{}) (string, error) {
+	return fmt.Sprintf("## Context\n\n%v", ctx), nil
+}
+
+func (f *defaultXMLFormatter) OptimizeForTokens(content string, maxTokens int) (string, error) {
+	if len(content) > maxTokens*4 {
+		return content[:maxTokens*4] + "...", nil
+	}
+	return content, nil
 }
 
 // defaultMarkdownFormatterFactory creates a Markdown formatter  

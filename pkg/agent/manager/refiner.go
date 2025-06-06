@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts"
 )
 
 // GuildMasterRefiner implements the CommissionRefiner interface
@@ -130,7 +130,12 @@ func (r *GuildMasterRefiner) getSystemPrompt(ctx context.Context, domain string)
 		domain = "default"
 	}
 
-	prompt, err := r.promptManager.GetSystemPrompt(ctx, "manager", domain)
+	// Use RenderPrompt since GetSystemPrompt is not available on prompts.Manager
+	promptData := map[string]interface{}{
+		"role": "manager",
+		"domain": domain,
+	}
+	prompt, err := r.promptManager.RenderPrompt(ctx, "manager-"+domain, promptData)
 	if err != nil {
 		return "", gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to get Guild Master prompt for domain %s", domain).
 			WithComponent("manager").

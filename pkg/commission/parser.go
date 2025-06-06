@@ -50,6 +50,11 @@ func newMarkdownParser(options ParseOptions) *MarkdownParser {
 	}
 }
 
+// NewMarkdownParser creates a new markdown parser with the given options
+func NewMarkdownParser(options ParseOptions) *MarkdownParser {
+	return newMarkdownParser(options)
+}
+
 // DefaultMarkdownParserFactory creates a markdown parser for registry use
 func DefaultMarkdownParserFactory(options ParseOptions) *MarkdownParser {
 	return newMarkdownParser(options)

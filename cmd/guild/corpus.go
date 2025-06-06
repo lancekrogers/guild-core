@@ -12,7 +12,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 
-	"github.com/guild-ventures/guild-core/internal/corpus"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	corpus_ui "github.com/guild-ventures/guild-core/internal/ui/corpus"
 )

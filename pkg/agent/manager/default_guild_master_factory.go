@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
@@ -38,7 +38,7 @@ func (f *DefaultGuildMasterFactory) CreateCommissionRefiner(providerName, model 
 	// Get the AI provider
 	provider, exists := f.providers[providerName]
 	if !exists {
-		return nil, gerror.New(gerror.ErrCodeValidation, "provider not found").
+		return nil, gerror.New(gerror.ErrCodeValidation, "provider not found", nil).
 			WithComponent("manager").
 			WithOperation("CreateCommissionRefiner").
 			WithDetails("provider_name", providerName)
@@ -113,7 +113,7 @@ func (f *DefaultGuildMasterFactory) CreateCommissionRefinerWithDefaults() (Commi
 			break
 		}
 		if providerName == "" {
-			return nil, gerror.New(gerror.ErrCodeInternal, "no AI providers available").
+			return nil, gerror.New(gerror.ErrCodeInternal, "no AI providers available", nil).
 				WithComponent("manager").
 				WithOperation("CreateCommissionRefinerWithDefaults")
 		}

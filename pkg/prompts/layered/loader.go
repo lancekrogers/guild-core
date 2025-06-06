@@ -2,7 +2,7 @@ package layered
 
 import (
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/prompts/layered/commission"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered/commission"
 )
 
 // Loader handles loading prompts into a registry

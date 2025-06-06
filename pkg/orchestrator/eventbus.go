@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/orchestrator/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/orchestrator/interfaces"
 )
 
 // Re-export event types

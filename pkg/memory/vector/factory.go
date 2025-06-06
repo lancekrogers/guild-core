@@ -106,19 +106,17 @@ type ChromemConfig struct {
 //   store, err := vector.NewVectorStore(ctx, config)
 func NewVectorStore(ctx context.Context, config *StoreConfig) (VectorStore, error) {
 	if config == nil {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "config cannot be nil", nil).
 			WithComponent("memory").
-			WithOperation("NewVectorStore").
-			WithDetails("config cannot be nil")
+			WithOperation("NewVectorStore")
 	}
 
 	// Create embedder
 	embedder, err := createEmbedder(config)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create embedder").
 			WithComponent("memory").
-			WithOperation("NewVectorStore").
-			WithDetails("failed to create embedder")
+			WithOperation("NewVectorStore")
 	}
 
 	// Look up factory in registry
@@ -127,11 +125,10 @@ func NewVectorStore(ctx context.Context, config *StoreConfig) (VectorStore, erro
 	globalRegistry.mu.RUnlock()
 	
 	if !exists {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, fmt.Sprintf("unsupported vector store type: %s (registered types: %v)", 
+				config.Type, ListRegisteredStores()), nil).
 			WithComponent("memory").
-			WithOperation("NewVectorStore").
-			WithDetails(fmt.Sprintf("unsupported vector store type: %s (registered types: %v)", 
-				config.Type, ListRegisteredStores()))
+			WithOperation("NewVectorStore")
 	}
 	
 	// Use factory to create store
@@ -220,10 +217,9 @@ func detectAvailableProvider() (interfaces.AIProvider, error) {
 		}
 	}
 	
-	return nil, gerror.New(gerror.ErrCodeNotFound).
+	return nil, gerror.New(gerror.ErrCodeNotFound, "no AI provider available: check Ollama installation or set API keys", nil).
 		WithComponent("memory").
-		WithOperation("detectAvailableProvider").
-		WithDetails("no AI provider available: check Ollama installation or set API keys")
+		WithOperation("detectAvailableProvider")
 }
 
 // VectorStoreFactory is a function that creates a VectorStore
@@ -271,18 +267,16 @@ func init() {
 
 	// Register placeholder for Chroma
 	RegisterVectorStore(StoreTypeChroma, func(ctx context.Context, config *StoreConfig, embedder Embedder) (VectorStore, error) {
-		return nil, gerror.New(gerror.ErrCodeNotImplemented).
+		return nil, gerror.New(gerror.ErrCodeInternal, "chroma vector store not implemented yet", nil).
 			WithComponent("memory").
-			WithOperation("createChromaStore").
-			WithDetails("chroma vector store not implemented yet")
+			WithOperation("createChromaStore")
 	})
 
 	// Register placeholder for Milvus
 	RegisterVectorStore(StoreTypeMilvus, func(ctx context.Context, config *StoreConfig, embedder Embedder) (VectorStore, error) {
-		return nil, gerror.New(gerror.ErrCodeNotImplemented).
+		return nil, gerror.New(gerror.ErrCodeInternal, "milvus vector store not implemented yet", nil).
 			WithComponent("memory").
-			WithOperation("createMilvusStore").
-			WithDetails("milvus vector store not implemented yet")
+			WithOperation("createMilvusStore")
 	})
 }
 

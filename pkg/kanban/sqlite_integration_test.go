@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/guild-ventures/guild-core/pkg/registry"
-	"github.com/guild-ventures/guild-core/internal/storage"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
 // TestKanbanSQLiteIntegration tests the end-to-end kanban SQLite integration

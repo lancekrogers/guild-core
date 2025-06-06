@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/storage"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 	"github.com/google/uuid"
 )
 

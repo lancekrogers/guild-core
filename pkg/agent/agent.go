@@ -3,7 +3,7 @@ package agent
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/internal/commission"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/providers"
@@ -47,7 +47,7 @@ type WorkerAgent struct {
 	MemoryManager  memory.ChainManager
 	ToolRegistry   tools.Registry
 	CommissionManager commission.CommissionManager
-	CostManager    CostManager
+	CostManager    CostManagerInterface
 	
 	// Context metadata
 	capabilities []string
@@ -59,7 +59,7 @@ func newWorkerAgent(id, name string, llmClient providers.LLMClient,
 	memoryManager memory.ChainManager, 
 	toolRegistry tools.Registry, 
 	commissionManager commission.CommissionManager,
-	costManager CostManager) *WorkerAgent {
+	costManager CostManagerInterface) *WorkerAgent {
 	
 	return &WorkerAgent{
 		ID:                id,
@@ -179,7 +179,7 @@ func newManagerAgent(id, name string, llmClient providers.LLMClient,
 	memoryManager memory.ChainManager, 
 	toolRegistry tools.Registry, 
 	commissionManager commission.CommissionManager,
-	costManager CostManager) *ManagerAgent {
+	costManager CostManagerInterface) *ManagerAgent {
 	
 	worker := newWorkerAgent(id, name, llmClient, memoryManager, toolRegistry, commissionManager, costManager)
 	

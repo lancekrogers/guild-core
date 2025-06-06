@@ -88,10 +88,14 @@ func (m *PromptMetadata) Validate() error {
 			WithOperation("validate")
 	}
 	if m.Category == "" {
-		return gerror.New(gerror.InvalidArgument, "prompts", "validate", "missing required field: category")
+		return gerror.New(gerror.ErrCodeInvalidInput, "missing required field: category", nil).
+			WithComponent("prompts").
+			WithOperation("validate")
 	}
 	if m.Complexity < 1 || m.Complexity > 10 {
-		return gerror.New(gerror.InvalidArgument, "prompts", "validate", "complexity must be between 1 and 10, got %d", m.Complexity)
+		return gerror.Newf(gerror.ErrCodeInvalidInput, "complexity must be between 1 and 10, got %d", m.Complexity).
+			WithComponent("prompts").
+			WithOperation("validate")
 	}
 	return nil
 }
@@ -165,7 +169,9 @@ func (m *PromptMetadata) IsCompatibleWithModel(model string) bool {
 func (m *PromptMetadata) HasRequiredVariables(data map[string]interface{}) error {
 	for _, required := range m.Variables.Required {
 		if _, exists := data[required]; !exists {
-			return gerror.New(gerror.InvalidArgument, "prompts", "validate_variables", "missing required variable: %s", required)
+			return gerror.Newf(gerror.ErrCodeInvalidInput, "missing required variable: %s", required).
+				WithComponent("prompts").
+				WithOperation("validate_variables")
 		}
 	}
 	return nil

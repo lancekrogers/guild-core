@@ -4,6 +4,7 @@ package project
 
 import (
 	"context"
+	"errors"
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,11 +14,17 @@ import (
 
 var (
 	// ErrNotInProject indicates the current directory is not within a Guild project
-	ErrNotInProject = gerror.New(gerror.NotFound, "project", "validate", "not in a guild project")
+	ErrNotInProject = gerror.New(gerror.ErrCodeNotFound, "not in a guild project", nil).
+		WithComponent("project").
+		WithOperation("validate")
 	// ErrAlreadyInitialized indicates a project is already initialized at the given path
-	ErrAlreadyInitialized = gerror.New(gerror.AlreadyExists, "project", "initialize", "project already initialized")
+	ErrAlreadyInitialized = gerror.New(gerror.ErrCodeAlreadyExists, "project already initialized", nil).
+		WithComponent("project").
+		WithOperation("initialize")
 	// ErrInvalidPath indicates the provided path is invalid
-	ErrInvalidPath = gerror.New(gerror.InvalidArgument, "project", "validate", "invalid project path")
+	ErrInvalidPath = gerror.New(gerror.ErrCodeInvalidInput, "invalid project path", nil).
+		WithComponent("project").
+		WithOperation("validate")
 )
 
 // Context represents a Guild project's context with paths and configuration.
@@ -36,7 +43,9 @@ type Context struct {
 func NewContext(rootPath string) (*Context, error) {
 	abs, err := filepath.Abs(rootPath)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "project", "new_context", "failed to resolve absolute path")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to resolve absolute path").
+			WithComponent("project").
+			WithOperation("new_context")
 	}
 
 	guildPath := filepath.Join(abs, ".guild")
@@ -91,7 +100,9 @@ func (c *Context) GetObjectivesPath() string {
 func FindProjectRoot(startPath string) (string, error) {
 	abs, err := filepath.Abs(startPath)
 	if err != nil {
-		return "", gerror.Wrap(err, gerror.Internal, "project", "find_project_root", "failed to resolve absolute path")
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to resolve absolute path").
+		WithComponent("project").
+		WithOperation("find_project_root")
 	}
 
 	current := abs
@@ -114,7 +125,9 @@ func FindProjectRoot(startPath string) (string, error) {
 func GetContext() (*Context, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "project", "find_nearest_project", "failed to get current directory")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get current directory").
+		WithComponent("project").
+		WithOperation("find_nearest_project")
 	}
 
 	return GetContextFromPath(cwd)
@@ -157,7 +170,9 @@ func IsInitialized(path string) bool {
 func ValidateProjectPath(path string) error {
 	abs, err := filepath.Abs(path)
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "project", "validate_project_path", "failed to resolve absolute path")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to resolve absolute path").
+		WithComponent("project").
+		WithOperation("validate_project_path")
 	}
 
 	// Ensure .guild would be within the resolved path
@@ -170,13 +185,19 @@ func ValidateProjectPath(path string) error {
 	info, err := os.Stat(abs)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return gerror.New(gerror.NotFound, "project", "validate_project_path", "path does not exist: %s", abs)
+			return gerror.Newf(gerror.ErrCodeNotFound, "path does not exist: %s", abs).
+		WithComponent("project").
+		WithOperation("validate_project_path")
 		}
-		return gerror.Wrap(err, gerror.Internal, "project", "validate_project_path", "failed to stat path")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to stat path").
+		WithComponent("project").
+		WithOperation("validate_project_path")
 	}
 
 	if !info.IsDir() {
-		return gerror.New(gerror.InvalidArgument, "project", "validate_project_path", "path is not a directory: %s", abs)
+		return gerror.Newf(gerror.ErrCodeInvalidInput, "path is not a directory: %s", abs).
+		WithComponent("project").
+		WithOperation("validate_project_path")
 	}
 
 	return nil

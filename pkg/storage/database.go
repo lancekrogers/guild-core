@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/storage/db"
+	"github.com/guild-ventures/guild-core/pkg/storage/db"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
 	"github.com/golang-migrate/migrate/v4/source/file"

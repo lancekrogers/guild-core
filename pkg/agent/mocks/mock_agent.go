@@ -4,7 +4,7 @@ import (
 	"context"
 	
 	"github.com/guild-ventures/guild-core/pkg/memory"
-	"github.com/guild-ventures/guild-core/internal/commission"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 )

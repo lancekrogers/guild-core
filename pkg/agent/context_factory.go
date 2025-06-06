@@ -2,9 +2,8 @@ package agent
 
 import (
 	"context"
-	"fmt"
 
-	guildcontext "github.com/guild-ventures/guild-core/internal/context"
+	guildcontext "github.com/guild-ventures/guild-core/pkg/context"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 

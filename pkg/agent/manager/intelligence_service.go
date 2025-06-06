@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -97,20 +97,18 @@ func (mis *ManagerIntelligenceService) AnalyzeAndRoute(
 	
 	complexityResult, err := mis.complexityAnalyzer.AnalyzeComplexity(ctx, complexityRequest)
 	if err != nil {
-		return nil, gerror.New(gerror.ErrCodeAgent, "failed to analyze task complexity").
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "failed to analyze task complexity").
 			WithComponent("manager").
 			WithOperation("AnalyzeAndRoute").
-			WithDetails("task_domain", request.TaskDomain).
-			Wrap(err)
+			WithDetails("task_domain", request.TaskDomain)
 	}
 
 	// Step 2: Get available agents
 	availableAgents, err := mis.getAvailableAgentInfo(ctx)
 	if err != nil {
-		return nil, gerror.New(gerror.ErrCodeAgent, "failed to get available agents").
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "failed to get available agents").
 			WithComponent("manager").
-			WithOperation("AnalyzeAndRoute").
-			Wrap(err)
+			WithOperation("AnalyzeAndRoute")
 	}
 
 	// Step 3: Route to optimal agents
@@ -124,11 +122,10 @@ func (mis *ManagerIntelligenceService) AnalyzeAndRoute(
 	
 	routingResult, err := mis.agentRouter.RouteToAgents(ctx, routingRequest)
 	if err != nil {
-		return nil, gerror.New(gerror.ErrCodeAgent, "failed to route to agents").
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "failed to route to agents").
 			WithComponent("manager").
 			WithOperation("AnalyzeAndRoute").
-			WithDetails("complexity_score", complexityResult.ComplexityScore).
-			Wrap(err)
+			WithDetails("complexity_score", complexityResult.ComplexityScore)
 	}
 
 	// Step 4: Generate executive summary

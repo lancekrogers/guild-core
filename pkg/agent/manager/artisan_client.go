@@ -43,17 +43,16 @@ func (gac *GuildArtisanClient) Complete(ctx context.Context, request ArtisanRequ
 	// Call the AI provider
 	response, err := gac.provider.ChatCompletion(ctx, chatRequest)
 	if err != nil {
-		return nil, gerror.New(gerror.ErrCodeAgent, "Guild Artisan request failed").
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "Guild Artisan request failed").
 			WithComponent("manager").
 			WithOperation("Complete").
 			WithDetails("model", gac.model).
-			WithDetails("temperature", request.Temperature).
-			Wrap(err)
+			WithDetails("temperature", request.Temperature)
 	}
 
 	// Validate response has choices
 	if len(response.Choices) == 0 {
-		return nil, gerror.New(gerror.ErrCodeAgent, "Guild Artisan returned no response choices").
+		return nil, gerror.New(gerror.ErrCodeAgent, "Guild Artisan returned no response choices", nil).
 			WithComponent("manager").
 			WithOperation("Complete").
 			WithDetails("model", gac.model).

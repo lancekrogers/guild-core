@@ -8,10 +8,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-ventures/guild-core/internal/prompts/agent/execution"
+	"github.com/guild-ventures/guild-core/pkg/prompts/standard/templates/agent/execution"
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/kanban"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 	"github.com/guild-ventures/guild-core/pkg/workspace"
 	"github.com/guild-ventures/guild-core/tools/fs"

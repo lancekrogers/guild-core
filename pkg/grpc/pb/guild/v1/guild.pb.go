@@ -2386,7 +2386,7 @@ const file_guild_v1_guild_proto_rawDesc = "" +
 	"\x12SendMessageToAgent\x12\x1d.guild.v1.AgentMessageRequest\x1a\x1e.guild.v1.AgentMessageResponse\x12Z\n" +
 	"\x17StreamAgentConversation\x12\x1c.guild.v1.AgentStreamRequest\x1a\x1d.guild.v1.AgentStreamResponse(\x010\x01\x12P\n" +
 	"\x13ListAvailableAgents\x12\x1b.guild.v1.ListAgentsRequest\x1a\x1c.guild.v1.ListAgentsResponse\x12H\n" +
-	"\x0eGetAgentStatus\x12\x1f.guild.v1.GetAgentStatusRequest\x1a\x15.guild.v1.AgentStatusB2Z0github.com/guild-ventures/guild-core/internal/grpc/pbb\x06proto3"
+	"\x0eGetAgentStatus\x12\x1f.guild.v1.GetAgentStatusRequest\x1a\x15.guild.v1.AgentStatusB2Z0github.com/guild-ventures/guild-core/pkg/grpc/pbb\x06proto3"
 
 var (
 	file_guild_v1_guild_proto_rawDescOnce sync.Once

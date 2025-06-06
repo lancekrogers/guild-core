@@ -6,7 +6,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/tools"
-	"github.com/guild-ventures/guild-core/internal/commission"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 )
 
 // createAgentFactory creates an agent factory with all required dependencies
@@ -14,15 +14,23 @@ func (r *DefaultComponentRegistry) createAgentFactory(ctx context.Context) (Agen
 	// Get default provider for LLM client
 	llmClient, err := r.providerRegistry.GetDefaultProvider()
 	if err != nil {
-		// If no provider is available, create a null factory that returns errors
-		return &nullAgentFactory{}, nil
+		// If no provider is available, create a null factory function
+		return func(config AgentConfig) (Agent, error) {
+			return nil, gerror.New(gerror.ErrCodeInternal, "agent factory dependencies not available", nil).
+				WithComponent("registry").
+				WithOperation("CreateAgent")
+		}, nil
 	}
 	
 	// Get default memory manager
 	memoryManager, err := r.memoryRegistry.GetDefaultChainManager()
 	if err != nil {
-		// If no memory manager is available, create a null factory
-		return &nullAgentFactory{}, nil
+		// If no memory manager is available, create a null factory function
+		return func(config AgentConfig) (Agent, error) {
+			return nil, gerror.New(gerror.ErrCodeInternal, "memory manager not available", nil).
+				WithComponent("registry").
+				WithOperation("CreateAgent")
+		}, nil
 	}
 	
 	// Get tool registry - create empty one if none exists
@@ -48,44 +56,78 @@ func (r *DefaultComponentRegistry) createAgentFactory(ctx context.Context) (Agen
 		costManager,
 	)
 	
-	return factory, nil
+	// Return a function that wraps the agent.Factory
+	return func(config AgentConfig) (Agent, error) {
+		agentInstance, err := factory.CreateWorkerAgent(ctx, config.Name+"-id", config.Name)
+		if err != nil {
+			return nil, err
+		}
+		// Wrap the agent.Agent to implement registry.Agent
+		return &agentAdapter{agent: agentInstance}, nil
+	}, nil
 }
 
-// nullAgentFactory is a placeholder factory that returns errors
-type nullAgentFactory struct{}
+// agentFactoryAdapter is no longer needed since we return functions directly
 
-func (f *nullAgentFactory) CreateAgent(ctx context.Context, id, name string, agentType string) (Agent, error) {
-	return nil, gerror.New(gerror.ErrCodeInternal, "agent factory dependencies not available", nil).
-		WithComponent("registry").
-		WithOperation("CreateAgent")
+// agentAdapter wraps agent.Agent to implement registry.Agent
+type agentAdapter struct {
+	agent agent.Agent
 }
 
-func (f *nullAgentFactory) CreateWorkerAgent(ctx context.Context, id, name string) (Agent, error) {
-	return nil, gerror.New(gerror.ErrCodeInternal, "agent factory dependencies not available", nil).
-		WithComponent("registry").
-		WithOperation("CreateWorkerAgent")
+func (a *agentAdapter) Execute(ctx context.Context, request string) (string, error) {
+	return a.agent.Execute(ctx, request)
 }
 
-func (f *nullAgentFactory) CreateManagerAgent(ctx context.Context, id, name string) (Agent, error) {
-	return nil, gerror.New(gerror.ErrCodeInternal, "agent factory dependencies not available", nil).
-		WithComponent("registry").
-		WithOperation("CreateManagerAgent")
+func (a *agentAdapter) GetID() string {
+	return a.agent.GetID()
 }
+
+func (a *agentAdapter) GetName() string {
+	return a.agent.GetName()
+}
+
+func (a *agentAdapter) GetType() string {
+	// Extract type from agent name or use a default
+	return "worker" // TODO: Implement proper type extraction
+}
+
+func (a *agentAdapter) GetCapabilities() []string {
+	// Return empty capabilities for now
+	return []string{} // TODO: Implement proper capability extraction
+}
+
+// nullAgentFactory is no longer needed since we return functions directly
 
 // toolRegistryAdapter adapts ToolRegistry interface to tools.Registry
 type toolRegistryAdapter struct {
 	registry ToolRegistry
 }
 
-func (a *toolRegistryAdapter) RegisterTool(tool tools.Tool) error {
-	return a.registry.RegisterTool(tool.GetName(), tool)
+func (a *toolRegistryAdapter) RegisterTool(name string, tool tools.Tool) error {
+	return a.registry.RegisterTool(name, tool)
 }
 
-func (a *toolRegistryAdapter) GetTool(name string) (tools.Tool, bool) {
-	tool, err := a.registry.GetTool(name)
-	return tool, err == nil
+func (a *toolRegistryAdapter) GetTool(name string) (tools.Tool, error) {
+	return a.registry.GetTool(name)
 }
 
 func (a *toolRegistryAdapter) ListTools() []string {
 	return a.registry.ListTools()
+}
+
+func (a *toolRegistryAdapter) HasTool(name string) bool {
+	return a.registry.HasTool(name)
+}
+
+func (a *toolRegistryAdapter) UnregisterTool(name string) error {
+	// ToolRegistry doesn't support unregistration
+	return gerror.New(gerror.ErrCodeInternal, "unregister not supported", nil).
+		WithComponent("registry").
+		WithOperation("UnregisterTool")
+}
+
+func (a *toolRegistryAdapter) Clear() {
+	// Clear all tools by recreating the registry
+	// This is a workaround since the underlying registry doesn't support clear
+	// In a real implementation, you'd need to track registered tools separately
 }

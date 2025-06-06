@@ -83,7 +83,7 @@ func NewHTTPTool() *HTTPTool {
 func (t *HTTPTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	var params HTTPToolInput
 	if err := json.Unmarshal([]byte(input), &params); err != nil {
-		return nil, gerror.Wrap(err, gerror.InvalidArgument, "http_tool", "execute", "invalid input")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidInput, "http_tool").WithComponent("execute").WithOperation("invalid input")
 	}
 
 	// Validate method
@@ -92,12 +92,12 @@ func (t *HTTPTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 	case "GET", "POST", "PUT", "DELETE", "PATCH", "HEAD":
 		// Valid methods
 	default:
-		return nil, gerror.New(gerror.InvalidArgument, "http_tool", "execute", "invalid HTTP method: %s", params.Method)
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "http_tool", "execute", "invalid HTTP method: %s", params.Method)
 	}
 
 	// Validate URL
 	if params.URL == "" {
-		return nil, gerror.New(gerror.InvalidArgument, "http_tool", "execute", "URL is required")
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "http_tool", nil).WithComponent("execute").WithOperation("URL is required")
 	}
 
 	// Set timeout if specified
@@ -109,7 +109,7 @@ func (t *HTTPTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 	// Create request
 	req, err := http.NewRequestWithContext(ctx, params.Method, params.URL, strings.NewReader(params.Body))
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "http_tool", "execute", "failed to create request")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "http_tool").WithComponent("execute").WithOperation("failed to create request")
 	}
 
 	// Add headers
@@ -127,14 +127,14 @@ func (t *HTTPTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 	// Send request
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "http_tool", "execute", "request failed")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "http_tool").WithComponent("execute").WithOperation("request failed")
 	}
 	defer resp.Body.Close()
 
 	// Read response body
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "http_tool", "execute", "failed to read response")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "http_tool").WithComponent("execute").WithOperation("failed to read response")
 	}
 
 	// Prepare metadata

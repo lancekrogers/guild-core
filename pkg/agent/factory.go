@@ -3,7 +3,7 @@ package agent
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/internal/commission"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/providers"
@@ -28,7 +28,7 @@ type DefaultFactory struct {
 	MemoryManager    memory.ChainManager
 	ToolRegistry     tools.Registry
 	CommissionManager commission.CommissionManager
-	CostManager      CostManager
+	CostManager      CostManagerInterface
 }
 
 // newFactory creates a new factory instance (private constructor)
@@ -37,7 +37,7 @@ func newFactory(
 	memoryManager memory.ChainManager,
 	toolRegistry tools.Registry,
 	commissionManager commission.CommissionManager,
-	costManager CostManager,
+	costManager CostManagerInterface,
 ) *DefaultFactory {
 	return &DefaultFactory{
 		LLMClient:        llmClient,
@@ -79,7 +79,7 @@ func DefaultFactoryFactory(
 	memoryManager memory.ChainManager,
 	toolRegistry tools.Registry,
 	commissionManager commission.CommissionManager,
-	costManager CostManager,
+	costManager CostManagerInterface,
 ) Factory {
 	return newFactory(llmClient, memoryManager, toolRegistry, commissionManager, costManager)
 }

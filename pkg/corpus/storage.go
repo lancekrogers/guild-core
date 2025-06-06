@@ -2,7 +2,6 @@ package corpus
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"io/fs"
 	"os"
@@ -122,9 +121,9 @@ func Save(ctx context.Context, doc *CorpusDoc, cfg Config) error {
 	}
 
 	// Format the document content with frontmatter
-	content := fmt.Sprintf("%s\n%s\n%s\n\n%s", 
-		MetadataSeparator, 
-		string(yamlData), 
+	content := fmt.Sprintf("%s\n%s\n%s\n\n%s",
+		MetadataSeparator,
+		string(yamlData),
 		MetadataSeparator,
 		doc.Body)
 
@@ -218,7 +217,6 @@ func List(ctx context.Context, cfg Config) ([]string, error) {
 		docs = append(docs, path)
 		return nil
 	})
-
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list corpus documents").WithComponent("corpus").WithOperation("List")
 	}
@@ -291,7 +289,6 @@ func GetSize(cfg Config) (int64, error) {
 		size += info.Size()
 		return nil
 	})
-
 	if err != nil {
 		return 0, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to calculate corpus size").WithComponent("corpus").WithOperation("GetSize")
 	}
@@ -375,3 +372,4 @@ func checkCorpusSize(cfg Config, newContentSize int) error {
 func extractLinks(content string) []string {
 	return ExtractLinks(content)
 }
+

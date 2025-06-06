@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/guild-ventures/guild-core/internal/corpus"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
 )
 
 var (
@@ -303,7 +303,7 @@ func (m CorpusModel) renderStatus() string {
 	countText := fmt.Sprintf("Documents: %d", len(m.docs))
 	
 	// Current user
-	userText := fmt.Sprintf("User: %s", m.config.CurrentUser)
+	userText := fmt.Sprintf("User: %s", m.config.GetUser())
 	
 	// Join status elements with spacing
 	status := lipgloss.JoinHorizontal(

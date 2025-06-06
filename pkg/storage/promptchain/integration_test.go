@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/guild-ventures/guild-core/pkg/memory"
-	"github.com/guild-ventures/guild-core/internal/storage"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
 // TestPromptChainIntegration tests the full integration of the prompt chain system

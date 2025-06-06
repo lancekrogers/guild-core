@@ -159,19 +159,25 @@ func (c *MCPConfig) Validate() error {
 
 	if c.Performance.RequestTimeout != "" {
 		if _, err := time.ParseDuration(c.Performance.RequestTimeout); err != nil {
-			return gerror.New(gerror.InvalidArgument, "config", "validate_mcp", "invalid request_timeout: %v", err)
+			return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "invalid request_timeout").
+				WithComponent("config").
+				WithOperation("validate_mcp")
 		}
 	}
 
 	// Security validation
 	if c.Security.EnableTLS {
 		if c.Security.TLSCertFile == "" || c.Security.TLSKeyFile == "" {
-			return gerror.New(gerror.InvalidArgument, "config", "validate_mcp", "TLS cert and key files are required when TLS is enabled")
+			return gerror.New(gerror.ErrCodeInvalidInput, "TLS cert and key files are required when TLS is enabled", nil).
+				WithComponent("config").
+				WithOperation("validate_mcp")
 		}
 	}
 
 	if c.Security.EnableAuth && c.Security.JWTSecret == "" {
-		return gerror.New(gerror.InvalidArgument, "config", "validate_mcp", "JWT secret is required when authentication is enabled")
+		return gerror.New(gerror.ErrCodeInvalidInput, "JWT secret is required when authentication is enabled", nil).
+			WithComponent("config").
+			WithOperation("validate_mcp")
 	}
 
 	return nil

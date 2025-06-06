@@ -1501,7 +1501,7 @@ const file_prompts_v1_prompts_proto_rawDesc = "" +
 	"\x12BuildLayeredPrompt\x12%.prompts.v1.BuildLayeredPromptRequest\x1a&.prompts.v1.BuildLayeredPromptResponse\x12Z\n" +
 	"\x0fInvalidateCache\x12\".prompts.v1.InvalidateCacheRequest\x1a#.prompts.v1.InvalidateCacheResponse\x12T\n" +
 	"\rGetLayerStats\x12 .prompts.v1.GetLayerStatsRequest\x1a!.prompts.v1.GetLayerStatsResponse\x12^\n" +
-	"\x13StreamPromptUpdates\x12&.prompts.v1.StreamPromptUpdatesRequest\x1a\x1d.prompts.v1.PromptUpdateEvent0\x01B=Z;github.com/guild-ventures/guild-core/internal/grpc/pb/prompts/v1b\x06proto3"
+	"\x13StreamPromptUpdates\x12&.prompts.v1.StreamPromptUpdatesRequest\x1a\x1d.prompts.v1.PromptUpdateEvent0\x01B=Z;github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1b\x06proto3"
 
 var (
 	file_prompts_v1_prompts_proto_rawDescOnce sync.Once

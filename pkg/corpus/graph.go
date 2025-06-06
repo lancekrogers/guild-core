@@ -3,6 +3,7 @@ package corpus
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -58,7 +59,7 @@ func (g *Graph) GetDocumentsWithTag(tag string) []string {
 // BuildGraph creates a graph from corpus documents
 func BuildGraph(ctx context.Context, cfg Config) (*Graph, error) {
 	if cfg.CorpusPath == "" {
-		return nil, gerror.New(gerror.InvalidArgument, "corpus", "build_graph", "corpus location not specified")
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "corpus", nil).WithComponent("build_graph").WithOperation("corpus location not specified")
 	}
 
 	graph := NewGraph()
@@ -66,7 +67,7 @@ func BuildGraph(ctx context.Context, cfg Config) (*Graph, error) {
 	// Get all documents
 	docs, err := List(ctx, cfg)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "corpus", "build_graph", "failed to list corpus documents")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("build_graph").WithOperation("failed to list corpus documents")
 	}
 
 	// First pass: collect all nodes and their outgoing links
@@ -110,25 +111,25 @@ func BuildGraph(ctx context.Context, cfg Config) (*Graph, error) {
 // SaveGraph serializes and saves the graph to a JSON file
 func SaveGraph(ctx context.Context, graph *Graph, cfg Config) error {
 	if graph == nil {
-		return gerror.New(gerror.InvalidArgument, "corpus", "save_graph", "graph cannot be nil")
+		return gerror.New(gerror.ErrCodeInvalidInput, "corpus", nil).WithComponent("save_graph").WithOperation("graph cannot be nil")
 	}
 
 	// Ensure the graph directory exists
 	graphDir := filepath.Join(cfg.CorpusPath, GraphDirName)
 	if err := os.MkdirAll(graphDir, 0755); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "corpus", "save_graph", "failed to create graph directory")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("save_graph").WithOperation("failed to create graph directory")
 	}
 
 	// Serialize the graph to JSON
 	graphPath := filepath.Join(graphDir, "links.json")
 	data, err := json.MarshalIndent(graph, "", "  ")
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "corpus", "save_graph", "failed to serialize graph")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("save_graph").WithOperation("failed to serialize graph")
 	}
 
 	// Write to file
 	if err := os.WriteFile(graphPath, data, 0644); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "corpus", "save_graph", "failed to save graph")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("save_graph").WithOperation("failed to save graph")
 	}
 
 	return nil
@@ -144,13 +145,13 @@ func LoadGraph(ctx context.Context, cfg Config) (*Graph, error) {
 			// If the graph doesn't exist, build a new one
 			return BuildGraph(ctx, cfg)
 		}
-		return nil, gerror.Wrap(err, gerror.Internal, "corpus", "load_graph", "failed to read graph file")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("load_graph").WithOperation("failed to read graph file")
 	}
 
 	// Deserialize the graph
 	var graph Graph
 	if err := json.Unmarshal(data, &graph); err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "corpus", "load_graph", "failed to parse graph")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("load_graph").WithOperation("failed to parse graph")
 	}
 
 	return &graph, nil
@@ -213,7 +214,7 @@ func FindStronglyConnected(graph *Graph, minSize int) [][]string {
 // ExportGraphDOT generates a DOT format representation for Graphviz
 func ExportGraphDOT(ctx context.Context, graph *Graph, cfg Config) error {
 	if graph == nil {
-		return gerror.New(gerror.InvalidArgument, "corpus", "save_graph", "graph cannot be nil")
+		return gerror.New(gerror.ErrCodeInvalidInput, "corpus", nil).WithComponent("save_graph").WithOperation("graph cannot be nil")
 	}
 
 	// Create DOT file content
@@ -242,12 +243,12 @@ func ExportGraphDOT(ctx context.Context, graph *Graph, cfg Config) error {
 	// Write to file
 	graphDir := filepath.Join(cfg.CorpusPath, GraphDirName)
 	if err := os.MkdirAll(graphDir, 0755); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "corpus", "save_graph", "failed to create graph directory")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("save_graph").WithOperation("failed to create graph directory")
 	}
 
 	dotPath := filepath.Join(graphDir, "corpus.dot")
 	if err := os.WriteFile(dotPath, []byte(sb.String()), 0644); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "corpus", "export_to_dot", "failed to save DOT file")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("export_to_dot").WithOperation("failed to save DOT file")
 	}
 
 	return nil

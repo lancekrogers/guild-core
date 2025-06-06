@@ -15,6 +15,10 @@ var (
 	// ErrTemplateNotFound is returned when a requested template does not exist
 	ErrTemplateNotFound = gerror.New(gerror.ErrCodeNotFound, "template not found", nil).
 		WithComponent("prompts").WithOperation("GetTemplate")
+	
+	// ErrLayerNotFound is returned when a requested layer does not exist
+	ErrLayerNotFound = gerror.New(gerror.ErrCodeNotFound, "layer not found", nil).
+		WithComponent("prompts").WithOperation("GetPromptLayer")
 )
 
 // PromptLayer represents the hierarchical layers of Guild prompts

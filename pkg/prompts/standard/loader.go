@@ -1,5 +1,9 @@
 package standard
 
+import (
+	"context"
+)
+
 // PromptManager handles loading and rendering prompt templates (legacy compatibility)
 type PromptManager struct {
 	enhanced *EnhancedPromptManager
@@ -18,6 +22,18 @@ func NewPromptManager() (*PromptManager, error) {
 }
 
 // RenderPrompt renders a prompt template with the given data (delegates to enhanced manager)
-func (pm *PromptManager) RenderPrompt(name string, data interface{}) (string, error) {
+func (pm *PromptManager) RenderPrompt(ctx context.Context, name string, data interface{}) (string, error) {
 	return pm.enhanced.RenderPrompt(name, data)
+}
+
+// LoadTemplate loads a template from the filesystem
+func (pm *PromptManager) LoadTemplate(ctx context.Context, path string) error {
+	// For now, just return nil as templates are embedded
+	// In the future, this could load external templates
+	return nil
+}
+
+// GetType returns the type of this manager
+func (pm *PromptManager) GetType() string {
+	return "standard"
 }

@@ -37,7 +37,7 @@ func ProviderExample() error {
 			},
 		},
 		// Minimal config for other components (required for validation)
-		Agents: AgentConfig{
+		Agents: AgentConfigYaml{
 			DefaultType: "worker",
 			Types: map[string]interface{}{
 				"worker": map[string]interface{}{"enabled": true},
@@ -60,7 +60,7 @@ func ProviderExample() error {
 	// Initialize the registry
 	ctx := context.Background()
 	if err := registry.Initialize(ctx, *config); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "provider_example", "failed to initialize registry")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example").WithOperation("failed to initialize registry")
 	}
 
 	// Get provider registry
@@ -73,7 +73,7 @@ func ProviderExample() error {
 	// Use the default provider
 	defaultProvider, err := providerRegistry.GetDefaultProvider()
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "provider_example", "failed to get default provider")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example").WithOperation("failed to get default provider")
 	}
 
 	log.Printf("Using default provider")
@@ -81,7 +81,7 @@ func ProviderExample() error {
 	// Generate a completion
 	response, err := defaultProvider.Complete(ctx, "Explain what a registry pattern is in software architecture.")
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "provider_example", "failed to generate completion")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example").WithOperation("failed to generate completion")
 	}
 
 	log.Printf("Default provider response: %s", response)
@@ -89,19 +89,19 @@ func ProviderExample() error {
 	// Try a different provider
 	anthropicProvider, err := providerRegistry.GetProvider("anthropic")
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "provider_example", "failed to get Anthropic provider")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example").WithOperation("failed to get Anthropic provider")
 	}
 
 	response, err = anthropicProvider.Complete(ctx, "What are the benefits of dependency injection?")
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "provider_example", "failed to generate completion with Anthropic")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example").WithOperation("failed to generate completion with Anthropic")
 	}
 
 	log.Printf("Anthropic provider response: %s", response)
 
 	// Switch default provider
 	if err := providerRegistry.SetDefaultProvider("anthropic"); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "provider_example", "failed to set default provider")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example").WithOperation("failed to set default provider")
 	}
 
 	log.Printf("Switched default provider to Anthropic")
@@ -109,19 +109,19 @@ func ProviderExample() error {
 	// Use the new default provider
 	newDefaultProvider, err := providerRegistry.GetDefaultProvider()
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "provider_example", "failed to get new default provider")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example").WithOperation("failed to get new default provider")
 	}
 
 	response, err = newDefaultProvider.Complete(ctx, "Summarize the registry pattern implementation.")
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "provider_example", "failed to generate completion with new default")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example").WithOperation("failed to generate completion with new default")
 	}
 
 	log.Printf("New default provider response: %s", response)
 
 	// Cleanup
 	if err := registry.Shutdown(ctx); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "provider_example", "failed to shutdown registry")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example").WithOperation("failed to shutdown registry")
 	}
 
 	return nil
@@ -168,12 +168,12 @@ memory:
 	// Load configuration from YAML
 	config, err := LoadConfigFromBytes([]byte(yamlConfig))
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "provider_example_yaml", "failed to load config")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example_yaml").WithOperation("failed to load config")
 	}
 
 	// Validate configuration
 	if err := ValidateConfig(config); err != nil {
-		return gerror.Wrap(err, gerror.InvalidArgument, "registry", "provider_example_yaml", "invalid config")
+		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "registry").WithComponent("provider_example_yaml").WithOperation("invalid config")
 	}
 
 	// Create and initialize registry
@@ -181,7 +181,7 @@ memory:
 	ctx := context.Background()
 	
 	if err := registry.Initialize(ctx, *config); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "provider_example", "failed to initialize registry")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example").WithOperation("failed to initialize registry")
 	}
 
 	// Use the providers
@@ -190,19 +190,19 @@ memory:
 	// Get and use default provider
 	provider, err := providerRegistry.GetDefaultProvider()
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "provider_example", "failed to get default provider")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example").WithOperation("failed to get default provider")
 	}
 
 	response, err := provider.Complete(ctx, "Hello from YAML-configured provider!")
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "provider_example", "failed to generate completion")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example").WithOperation("failed to generate completion")
 	}
 
 	log.Printf("YAML-configured provider response: %s", response)
 
 	// Cleanup
 	if err := registry.Shutdown(ctx); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "provider_example", "failed to shutdown registry")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example").WithOperation("failed to shutdown registry")
 	}
 
 	return nil
@@ -221,7 +221,7 @@ func CreateProviderOnlyRegistry() (*DefaultComponentRegistry, error) {
 			},
 		},
 		// Minimal required config for other components
-		Agents: AgentConfig{
+		Agents: AgentConfigYaml{
 			DefaultType: "worker",
 			Types: map[string]interface{}{
 				"worker": map[string]interface{}{"enabled": true},
@@ -245,7 +245,7 @@ func CreateProviderOnlyRegistry() (*DefaultComponentRegistry, error) {
 	ctx := context.Background()
 	
 	if err := registry.Initialize(ctx, *config); err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "registry", "create_provider_only_registry", "failed to initialize registry")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("create_provider_only_registry").WithOperation("failed to initialize registry")
 	}
 
 	return registry, nil

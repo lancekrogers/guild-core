@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/guild-ventures/guild-core/internal/storage/db"
+	"github.com/guild-ventures/guild-core/pkg/storage/db"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
@@ -103,7 +103,9 @@ func (r *SQLiteBoardRepository) UpdateBoard(ctx context.Context, board *Board) e
 		Status:      board.Status,
 		ID:          board.ID,
 	}); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "storage", "update_board", "failed to update board")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to update board").
+			WithComponent("storage").
+			WithOperation("update_board")
 	}
 	return nil
 }
@@ -111,7 +113,9 @@ func (r *SQLiteBoardRepository) UpdateBoard(ctx context.Context, board *Board) e
 // DeleteBoard removes a board by ID
 func (r *SQLiteBoardRepository) DeleteBoard(ctx context.Context, id string) error {
 	if err := r.database.Queries().DeleteBoard(ctx, id); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "storage", "delete_board", "failed to delete board")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to delete board").
+			WithComponent("storage").
+			WithOperation("delete_board")
 	}
 	return nil
 }
@@ -120,7 +124,9 @@ func (r *SQLiteBoardRepository) DeleteBoard(ctx context.Context, id string) erro
 func (r *SQLiteBoardRepository) ListBoards(ctx context.Context) ([]*Board, error) {
 	dbBoards, err := r.database.Queries().ListBoards(ctx)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "storage", "list_boards", "failed to list boards")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to list boards").
+			WithComponent("storage").
+			WithOperation("list_boards")
 	}
 
 	boards := make([]*Board, len(dbBoards))

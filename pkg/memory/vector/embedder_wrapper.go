@@ -2,7 +2,6 @@ package vector
 
 import (
 	"context"
-	"fmt"
 	
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
@@ -36,10 +35,10 @@ func (w *EmbedderWrapper) GetEmbeddings(ctx context.Context, texts []string) ([]
 	for i, text := range texts {
 		embedding, err := w.embedder.Embed(ctx, text)
 		if err != nil {
-			return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get embeddings").
 				WithComponent("memory").
 				WithOperation("GetEmbeddings").
-				WithDetails(fmt.Sprintf("failed to embed text %d", i))
+				WithDetails("text_index", i)
 		}
 		embeddings[i] = embedding
 	}

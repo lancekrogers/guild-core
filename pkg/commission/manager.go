@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/storage"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
 // Manager handles storage and retrieval of commissions
@@ -137,6 +137,33 @@ func (m *Manager) SaveCommission(ctx context.Context, commission *Commission) er
 	}
 
 	return nil
+}
+
+// CreateCommission creates a new commission
+func (m *Manager) CreateCommission(ctx context.Context, commission Commission) (*Commission, error) {
+	// Generate ID if not provided
+	if commission.ID == "" {
+		commission.ID = generateCommissionID(commission.Title)
+	}
+	
+	// Set timestamps
+	now := time.Now().UTC()
+	commission.CreatedAt = now
+	commission.UpdatedAt = now
+	
+	// Set default status if not provided
+	if commission.Status == "" {
+		commission.Status = StatusDraft
+	}
+	
+	// Save the commission
+	if err := m.SaveCommission(ctx, &commission); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commission").
+			WithComponent("CommissionManager").
+			WithOperation("CreateCommission")
+	}
+	
+	return &commission, nil
 }
 
 // GetCommission retrieves a commission by ID
@@ -412,6 +439,134 @@ func (m *Manager) UpdateTaskStatus(ctx context.Context, commissionID, taskID, st
 	return nil
 }
 
+// GetCommissionsByTag retrieves all commissions that have a specific tag
+func (m *Manager) GetCommissionsByTag(ctx context.Context, tag string) ([]*Commission, error) {
+	if tag == "" {
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "tag cannot be empty", nil).
+			WithComponent("CommissionManager").
+			WithOperation("GetCommissionsByTag")
+	}
+
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+
+	// Get commission IDs with this tag
+	commissionIDs, exists := m.tagsIndex[tag]
+	if !exists || len(commissionIDs) == 0 {
+		return []*Commission{}, nil
+	}
+
+	// Retrieve the commissions
+	var commissions []*Commission
+	for _, id := range commissionIDs {
+		commission, exists := m.commissionCache[id]
+		if exists {
+			commissions = append(commissions, commission)
+		} else {
+			// Try to load from database if not in cache
+			dbCommission, err := m.commissionRepo.GetCommission(ctx, id)
+			if err == nil {
+				commission = storageCommissionToCommission(dbCommission)
+				m.commissionCache[id] = commission
+				commissions = append(commissions, commission)
+			}
+		}
+	}
+
+	return commissions, nil
+}
+
+// UpdateCommission updates an existing commission
+func (m *Manager) UpdateCommission(ctx context.Context, commission Commission) error {
+	if commission.ID == "" {
+		return gerror.New(gerror.ErrCodeInvalidInput, "commission ID cannot be empty", nil).
+			WithComponent("CommissionManager").
+			WithOperation("UpdateCommission")
+	}
+
+	// Set updated time
+	commission.UpdatedAt = time.Now().UTC()
+
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	// Check if commission exists
+	_, exists := m.commissionCache[commission.ID]
+	if !exists {
+		// Try to load it to verify existence
+		_, err := m.commissionRepo.GetCommission(ctx, commission.ID)
+		if err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeNotFound, "commission not found").
+				WithComponent("CommissionManager").
+				WithOperation("UpdateCommission").
+				WithDetails("commission_id", commission.ID)
+		}
+	}
+
+	// Convert to storage model and update
+	storageCommission := commissionToStorageCommission(&commission)
+	// Note: Using CreateCommission as UpdateCommission is not available in the interface
+	// This will upsert the commission
+	if err := m.commissionRepo.CreateCommission(ctx, storageCommission); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update commission in database").
+			WithComponent("CommissionManager").
+			WithOperation("UpdateCommission").
+			WithDetails("commission_id", commission.ID)
+	}
+
+	// Update filesystem if source exists
+	if commission.Source != "" && strings.HasPrefix(commission.Source, m.fsBasePath) {
+		// Generate markdown content if it's not already set
+		content := commission.Content
+		if content == "" {
+			content = commissionToMarkdown(&commission)
+		}
+
+		// Save to file
+		if err := os.WriteFile(commission.Source, []byte(content), 0644); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update commission file").
+				WithComponent("CommissionManager").
+				WithOperation("UpdateCommission").
+				WithDetails("source_file", commission.Source)
+		}
+	}
+
+	// Update cache
+	m.commissionCache[commission.ID] = &commission
+
+	// Update tag index
+	for _, tag := range commission.Tags {
+		// Check if the commission is already indexed for this tag
+		if !containsString(m.tagsIndex[tag], commission.ID) {
+			m.tagsIndex[tag] = append(m.tagsIndex[tag], commission.ID)
+		}
+	}
+
+	return nil
+}
+
+// SetCommission updates the current active commission
+func (m *Manager) SetCommission(ctx context.Context, commissionID string) error {
+	if commissionID == "" {
+		return gerror.New(gerror.ErrCodeInvalidInput, "commission ID cannot be empty", nil).
+			WithComponent("CommissionManager").
+			WithOperation("SetCommission")
+	}
+
+	// Verify the commission exists
+	_, err := m.GetCommission(ctx, commissionID)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeNotFound, "commission not found").
+			WithComponent("CommissionManager").
+			WithOperation("SetCommission").
+			WithDetails("commission_id", commissionID)
+	}
+
+	// In a real implementation, this might update a "current commission" state
+	// For now, we just verify it exists
+	return nil
+}
+
 // Conversion functions between Commission and database models
 
 // storageCommissionToCommission converts a storage commission to a Commission object
@@ -628,4 +783,12 @@ func containsString(slice []string, s string) bool {
 		}
 	}
 	return false
+}
+
+// generateCommissionID generates a unique ID for a commission based on its title
+func generateCommissionID(title string) string {
+	// Use sanitized title with timestamp for uniqueness
+	base := sanitizeFilename(title)
+	timestamp := time.Now().Unix()
+	return fmt.Sprintf("%s_%d", base, timestamp)
 }

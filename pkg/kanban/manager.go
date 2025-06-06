@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-ventures/guild-core/internal/comms"
-	"github.com/guild-ventures/guild-core/internal/comms/channel"
+	"github.com/guild-ventures/guild-core/pkg/comms"
+	"github.com/guild-ventures/guild-core/pkg/comms/channel"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 )
@@ -445,16 +445,17 @@ func (m *Manager) processEvents() {
 			}
 
 			if len(events) > 0 {
-			lastProcessedTime = events[len(events)-1].OccurredAt
+				lastProcessedTime = events[len(events)-1].OccurredAt
 
-			// Send events to the event stream
-			for _, event := range events {
-				select {
-				case m.eventStream <- event:
-					// Event sent successfully
-				default:
-					// Channel is full, log and continue
-					fmt.Printf("warning: event channel is full, dropping event\n")
+				// Send events to the event stream
+				for _, event := range events {
+					select {
+					case m.eventStream <- event:
+						// Event sent successfully
+					default:
+						// Channel is full, log and continue
+						fmt.Printf("warning: event channel is full, dropping event\n")
+					}
 				}
 			}
 		}

@@ -14,7 +14,7 @@ func ExampleCostBasedSelection() {
 	
 	// Initialize with mock configuration (in practice this loads from guild.yaml)
 	config := Config{
-		Agents: AgentConfig{
+		Agents: AgentConfigYaml{
 			DefaultType: "worker",
 		},
 		Tools: ToolConfig{

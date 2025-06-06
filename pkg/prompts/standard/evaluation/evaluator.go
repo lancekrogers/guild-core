@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-ventures/guild-core/internal/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts"
 )
 
 // PromptEvaluator evaluates prompt effectiveness and quality

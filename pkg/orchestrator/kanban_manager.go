@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/kanban"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
 )
 
 // defaultKanbanManager implements KanbanManager using the kanban.Board

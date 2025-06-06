@@ -85,7 +85,9 @@ func NewFileTool(basePath string) *FileTool {
 func (t *FileTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	var params FileToolInput
 	if err := json.Unmarshal([]byte(input), &params); err != nil {
-		return nil, gerror.Wrap(err, gerror.InvalidArgument, "file_tool", "execute", "invalid input")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidInput, "invalid input").
+			WithComponent("file_tool").
+			WithOperation("execute")
 	}
 
 	// Validate operation
@@ -93,18 +95,24 @@ func (t *FileTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 	case "read", "write", "list", "exists", "delete":
 		// Valid operations
 	default:
-		return nil, gerror.New(gerror.InvalidArgument, "file_tool", "execute", "invalid operation: %s", params.Operation)
+		return nil, gerror.Newf(gerror.ErrCodeInvalidInput, "invalid operation: %s", params.Operation).
+			WithComponent("file_tool").
+			WithOperation("execute")
 	}
 
 	// Ensure path is provided
 	if params.Path == "" {
-		return nil, gerror.New(gerror.InvalidArgument, "file_tool", "execute", "path is required")
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "path is required", nil).
+			WithComponent("file_tool").
+			WithOperation("execute")
 	}
 
 	// Get absolute path while ensuring it doesn't escape the base path
 	path := t.sanitizePath(params.Path)
 	if path == "" {
-		return nil, gerror.New(gerror.InvalidArgument, "file_tool", "execute", "invalid path: %s", params.Path)
+		return nil, gerror.Newf(gerror.ErrCodeInvalidInput, "invalid path: %s", params.Path).
+			WithComponent("file_tool").
+			WithOperation("execute")
 	}
 
 	var output string
@@ -152,13 +160,17 @@ func (t *FileTool) sanitizePath(path string) string {
 func (t *FileTool) readFile(path string) (string, error) {
 	// Check if file exists
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return "", gerror.New(gerror.NotFound, "file_tool", "read_file", "file does not exist: %s", path)
+		return "", gerror.Newf(gerror.ErrCodeNotFound, "file does not exist: %s", path).
+			WithComponent("file_tool").
+			WithOperation("read_file")
 	}
 
 	// Read file content
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
-		return "", gerror.Wrap(err, gerror.Internal, "file_tool", "read_file", "failed to read file")
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to read file").
+			WithComponent("file_tool").
+			WithOperation("read_file")
 	}
 
 	return string(content), nil
@@ -169,12 +181,16 @@ func (t *FileTool) writeFile(path string, content string) (string, error) {
 	// Create parent directories if they don't exist
 	dir := filepath.Dir(path)
 	if err := os.MkdirAll(dir, 0755); err != nil {
-		return "", gerror.Wrap(err, gerror.Internal, "file_tool", "write_file", "failed to create directories")
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create directories").
+			WithComponent("file_tool").
+			WithOperation("write_file")
 	}
 
 	// Write content to file
 	if err := ioutil.WriteFile(path, []byte(content), 0644); err != nil {
-		return "", gerror.Wrap(err, gerror.Internal, "file_tool", "write_file", "failed to write to file")
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to write to file").
+			WithComponent("file_tool").
+			WithOperation("write_file")
 	}
 
 	return fmt.Sprintf("Successfully wrote %d bytes to %s", len(content), path), nil
@@ -185,16 +201,22 @@ func (t *FileTool) listFiles(path string) (string, error) {
 	// Check if directory exists
 	fileInfo, err := os.Stat(path)
 	if os.IsNotExist(err) {
-		return "", gerror.New(gerror.NotFound, "file_tool", "list_files", "directory does not exist: %s", path)
+		return "", gerror.Newf(gerror.ErrCodeNotFound, "directory does not exist: %s", path).
+			WithComponent("file_tool").
+			WithOperation("list_files")
 	}
 	if !fileInfo.IsDir() {
-		return "", gerror.New(gerror.InvalidArgument, "file_tool", "list_files", "path is not a directory: %s", path)
+		return "", gerror.Newf(gerror.ErrCodeInvalidInput, "path is not a directory: %s", path).
+			WithComponent("file_tool").
+			WithOperation("list_files")
 	}
 
 	// List directory contents
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		return "", gerror.Wrap(err, gerror.Internal, "file_tool", "list_files", "failed to read directory")
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to read directory").
+			WithComponent("file_tool").
+			WithOperation("list_files")
 	}
 
 	var result strings.Builder
@@ -216,7 +238,9 @@ func (t *FileTool) fileExists(path string) (string, error) {
 		return "false", nil
 	}
 	if err != nil {
-		return "", gerror.Wrap(err, gerror.Internal, "file_tool", "file_exists", "failed to check file")
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to check file").
+			WithComponent("file_tool").
+			WithOperation("file_exists")
 	}
 
 	fileType := "file"
@@ -232,19 +256,25 @@ func (t *FileTool) deleteFile(path string) (string, error) {
 	// Check if file exists
 	fileInfo, err := os.Stat(path)
 	if os.IsNotExist(err) {
-		return "", gerror.New(gerror.NotFound, "file_tool", "delete_file", "file does not exist: %s", path)
+		return "", gerror.Newf(gerror.ErrCodeNotFound, "file does not exist: %s", path).
+			WithComponent("file_tool").
+			WithOperation("delete_file")
 	}
 
 	// Delete file or directory
 	if fileInfo.IsDir() {
 		if err := os.RemoveAll(path); err != nil {
-			return "", gerror.Wrap(err, gerror.Internal, "file_tool", "delete_file", "failed to delete directory")
+			return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to delete directory").
+				WithComponent("file_tool").
+				WithOperation("delete_file")
 		}
 		return fmt.Sprintf("Successfully deleted directory: %s", path), nil
 	}
 
 	if err := os.Remove(path); err != nil {
-		return "", gerror.Wrap(err, gerror.Internal, "file_tool", "delete_file", "failed to delete file")
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to delete file").
+			WithComponent("file_tool").
+			WithOperation("delete_file")
 	}
 
 	return fmt.Sprintf("Successfully deleted file: %s", path), nil

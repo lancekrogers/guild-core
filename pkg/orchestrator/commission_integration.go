@@ -8,14 +8,15 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
-	"github.com/guild-ventures/guild-core/internal/config"
+	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/kanban"
-	"github.com/guild-ventures/guild-core/internal/prompts"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 	"github.com/guild-ventures/guild-core/pkg/registry"
-	"github.com/guild-ventures/guild-core/internal/storage"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
 // CommissionIntegrationService coordinates the complete pipeline from commission to kanban tasks
@@ -84,9 +85,8 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 	
 	// Try to get prompt manager from registry first
 	if promptRegistryFromReg != nil {
-		// For now, create a temporary memory registry with some basic prompts
-		// TODO: This should be properly integrated with the registry system
-		promptRegistry := prompts.NewMemoryRegistry()
+		// Use the global prompt registry
+		promptRegistry := prompts.GetRegistry()
 		
 		// Register some basic prompts that may be needed
 		basicGuildMasterPrompt := `You are the Guild Master, responsible for breaking down commissions into actionable tasks.
@@ -106,19 +106,35 @@ Format your response with XML task tags:
 		promptRegistry.RegisterPrompt("manager", "default", basicGuildMasterPrompt)
 		promptRegistry.RegisterPrompt("manager", "web-development", basicGuildMasterPrompt)
 		
-		promptManager = prompts.NewDefaultManager(promptRegistry, nil)
+		// Create a standard prompt manager
+		var err error
+		promptManager, err = promptRegistry.GetDefaultManager(context.Background())
+		if err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create prompt manager").
+				WithComponent("orchestrator").
+				WithOperation("InitializeCommissionPlanner")
+		}
 	} else {
 		// Fallback to creating a new one
-		promptRegistry := prompts.NewMemoryRegistry()
-		promptManager = prompts.NewDefaultManager(promptRegistry, nil)
+		promptRegistry := prompts.GetRegistry()
+		var err error
+		promptManager, err = promptRegistry.GetDefaultManager(context.Background())
+		if err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create prompt manager").
+				WithComponent("orchestrator").
+				WithOperation("InitializeCommissionPlanner")
+		}
 	}
 
 	// Create layered manager adapter if needed
 	// Since promptManager is concrete type, we always need the adapter
 	layeredManager := &layeredManagerAdapter{Manager: prompts.Manager(promptManager)}
 
+	// Create a component registry for the guild master factory
+	componentRegistry := manager.NewComponentRegistry()
+	
 	// Create Guild Master factory
-	s.guildMasterFactory = manager.NewDefaultGuildMasterFactory(layeredManager, providers)
+	s.guildMasterFactory = manager.NewDefaultGuildMasterFactory(layeredManager, providers, componentRegistry)
 
 	// Create commission refiner
 	var err error
@@ -346,7 +362,7 @@ type layeredManagerAdapter struct {
 }
 
 // BuildLayeredPrompt assembles a complete layered prompt for an artisan
-func (a *layeredManagerAdapter) BuildLayeredPrompt(ctx context.Context, artisanID, sessionID string, turnCtx prompts.TurnContext) (*prompts.LayeredPrompt, error) {
+func (a *layeredManagerAdapter) BuildLayeredPrompt(ctx context.Context, artisanID, sessionID string, turnCtx layered.TurnContext) (*prompts.LayeredPrompt, error) {
 	// Simple implementation using the basic Manager
 	var layers []prompts.SystemPrompt
 	var compiled strings.Builder
@@ -391,7 +407,7 @@ func (a *layeredManagerAdapter) BuildLayeredPrompt(ctx context.Context, artisanI
 	if len(turnCtx.Instructions) > 0 {
 		instructions := strings.Join(turnCtx.Instructions, "\n")
 		layers = append(layers, prompts.SystemPrompt{
-			Layer:     prompts.LayerTurn,
+			Layer:     layered.LayerTurn,
 			ArtisanID: artisanID,
 			SessionID: sessionID,
 			Content:   instructions,

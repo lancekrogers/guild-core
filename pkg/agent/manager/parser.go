@@ -84,7 +84,7 @@ func (p *ArchiveParser) parseSingleFile(content string) (*FileStructure, error) 
 	content = strings.TrimSpace(content)
 	
 	if content == "" {
-		return nil, gerror.New(gerror.ErrCodeValidation, "empty Guild Master response content").
+		return nil, gerror.New(gerror.ErrCodeValidation, "empty Guild Master response content", nil).
 			WithComponent("manager").
 			WithOperation("parseSingleFile")
 	}

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/memory"
-	"github.com/guild-ventures/guild-core/internal/commission"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 )
 
 // MockCommissionManager implements the objective.Manager interface for testing

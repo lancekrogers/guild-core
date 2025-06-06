@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	
-	"github.com/guild-ventures/guild-core/internal/storage"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"gopkg.in/yaml.v3"
 )
@@ -24,7 +24,9 @@ var directoryStructure = []string{
 func Initialize(path string) error {
 	// Validate the path
 	if err := ValidateProjectPath(path); err != nil {
-		return gerror.Wrap(err, gerror.InvalidArgument, "project", "initialize", "invalid project path")
+		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "invalid project path").
+		WithComponent("project").
+		WithOperation("initialize")
 	}
 
 	// Check if already initialized
@@ -41,19 +43,25 @@ func Initialize(path string) error {
 
 	// Create temporary directory
 	if err := os.MkdirAll(tempDir, 0755); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "project", "initialize", "failed to create temporary directory")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create temporary directory").
+		WithComponent("project").
+		WithOperation("initialize")
 	}
 
 	// Create structure in temp directory
 	if err := createStructure(tempDir); err != nil {
 		os.RemoveAll(tempDir) // Clean up on error
-		return gerror.Wrap(err, gerror.Internal, "project", "initialize", "failed to create project structure")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create project structure").
+		WithComponent("project").
+		WithOperation("initialize")
 	}
 
 	// Atomic rename
 	if err := os.Rename(tempDir, finalDir); err != nil {
 		os.RemoveAll(tempDir) // Clean up on error
-		return gerror.Wrap(err, gerror.Internal, "project", "initialize", "failed to finalize project structure")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to finalize project structure").
+		WithComponent("project").
+		WithOperation("initialize")
 	}
 
 	return nil
@@ -65,33 +73,45 @@ func createStructure(baseDir string) error {
 	for _, dir := range directoryStructure {
 		dirPath := filepath.Join(baseDir, dir)
 		if err := os.MkdirAll(dirPath, 0755); err != nil {
-			return gerror.Wrap(err, gerror.Internal, "project", "create_structure", "failed to create directory %s", dir)
+			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to create directory %s", dir).
+		WithComponent("project").
+		WithOperation("create_structure")
 		}
 	}
 
 	// Create default config file
 	if err := createDefaultConfig(baseDir); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "project", "create_structure", "failed to create default config")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create default config").
+		WithComponent("project").
+		WithOperation("create_structure")
 	}
 
 	// Create .gitignore
 	if err := createGitignore(baseDir); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "project", "create_structure", "failed to create .gitignore")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create .gitignore").
+		WithComponent("project").
+		WithOperation("create_structure")
 	}
 
 	// Create README
 	if err := createReadme(baseDir); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "project", "create_structure", "failed to create README")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create README").
+		WithComponent("project").
+		WithOperation("create_structure")
 	}
 
 	// Create default guild configuration
 	if err := createDefaultGuildConfig(baseDir); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "project", "create_structure", "failed to create guild config")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create guild config").
+		WithComponent("project").
+		WithOperation("create_structure")
 	}
 
 	// Initialize database
 	if err := initializeDatabase(baseDir); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "project", "create_structure", "failed to initialize database")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize database").
+		WithComponent("project").
+		WithOperation("create_structure")
 	}
 
 	return nil
@@ -246,7 +266,9 @@ func createDefaultGuildConfig(baseDir string) error {
 	guildPath := filepath.Join(baseDir, "guild.yaml")
 	data, err := yaml.Marshal(guildConfig)
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "project", "create_default_guild_config", "failed to marshal guild config")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild config").
+		WithComponent("project").
+		WithOperation("create_default_guild_config")
 	}
 
 	return os.WriteFile(guildPath, data, 0644)
@@ -261,15 +283,19 @@ func initializeDatabase(baseDir string) error {
 	dbPath := filepath.Join(baseDir, "guild.db")
 	
 	// Create database
-	db, err := storage.NewDatabase(ctx, dbPath)
+	db, err := storage.DefaultDatabaseFactory(ctx, dbPath)
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "project", "initialize_database", "failed to create database")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create database").
+		WithComponent("project").
+		WithOperation("initialize_database")
 	}
 	defer db.Close()
 	
 	// Run migrations
 	if err := db.Migrate(ctx); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "project", "initialize_database", "failed to run database migrations")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run database migrations").
+		WithComponent("project").
+		WithOperation("initialize_database")
 	}
 	
 	return nil

@@ -16,24 +16,21 @@ type MilvusStore struct {
 // NewMilvusStore creates a new Milvus vector store
 func NewMilvusStore(address, collection string, dimension int) (*MilvusStore, error) {
 	if address == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "address cannot be empty", nil).
 			WithComponent("memory").
-			WithOperation("NewMilvusStore").
-			WithDetails("address cannot be empty")
+			WithOperation("NewMilvusStore")
 	}
 	
 	if collection == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "collection name cannot be empty", nil).
 			WithComponent("memory").
-			WithOperation("NewMilvusStore").
-			WithDetails("collection name cannot be empty")
+			WithOperation("NewMilvusStore")
 	}
 	
 	if dimension <= 0 {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "dimension must be positive", nil).
 			WithComponent("memory").
-			WithOperation("NewMilvusStore").
-			WithDetails("dimension must be positive")
+			WithOperation("NewMilvusStore")
 	}
 	
 	return &MilvusStore{
@@ -86,10 +83,9 @@ func (s *MilvusStore) StoreMany(ctx context.Context, docs []*Document) error {
 // Retrieve retrieves a document by ID
 func (s *MilvusStore) Retrieve(ctx context.Context, id string) (*Document, error) {
 	// This is a placeholder implementation
-	return nil, gerror.New(gerror.ErrCodeNotFound).
+	return nil, gerror.New(gerror.ErrCodeNotFound, "document not found", nil).
 		WithComponent("memory").
-		WithOperation("Retrieve").
-		WithDetails("document not found")
+		WithOperation("Retrieve")
 }
 
 // DeleteMany removes multiple documents from the vector store

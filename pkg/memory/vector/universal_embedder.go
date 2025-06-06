@@ -180,17 +180,15 @@ func (e *UniversalEmbedder) tryEmbedding(ctx context.Context, text string, model
 
 	resp, err := e.provider.CreateEmbedding(ctx, req)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+		return nil, gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to create embedding with model %s", model).
 			WithComponent("memory").
-			WithOperation("tryEmbedding").
-			WithDetails(fmt.Sprintf("failed to create embedding with model %s", model))
+			WithOperation("tryEmbedding")
 	}
 
 	if len(resp.Embeddings) == 0 {
-		return nil, gerror.New(gerror.ErrCodeInternal).
+		return nil, gerror.New(gerror.ErrCodeInternal, "no embeddings returned", nil).
 			WithComponent("memory").
-			WithOperation("tryEmbedding").
-			WithDetails("no embeddings returned")
+			WithOperation("tryEmbedding")
 	}
 
 	// Convert to float32
@@ -223,17 +221,15 @@ Text: "%s"`, text)
 
 	resp, err := e.provider.ChatCompletion(ctx, req)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to generate LLM-based embedding").
 			WithComponent("memory").
-			WithOperation("embedFromLLM").
-			WithDetails("failed to generate LLM-based embedding")
+			WithOperation("embedFromLLM")
 	}
 
 	if len(resp.Choices) == 0 {
-		return nil, gerror.New(gerror.ErrCodeInternal).
+		return nil, gerror.New(gerror.ErrCodeInternal, "no response from LLM", nil).
 			WithComponent("memory").
-			WithOperation("embedFromLLM").
-			WithDetails("no response from LLM")
+			WithOperation("embedFromLLM")
 	}
 
 	// Parse the response as a vector
@@ -285,10 +281,9 @@ func (e *UniversalEmbedder) GetEmbedding(ctx context.Context, text string) ([]fl
 // GetEmbeddings generates embeddings for multiple texts
 func (e *UniversalEmbedder) GetEmbeddings(ctx context.Context, texts []string) ([][]float32, error) {
 	if len(texts) == 0 {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "no texts provided", nil).
 			WithComponent("memory").
-			WithOperation("GetEmbeddings").
-			WithDetails("no texts provided")
+			WithOperation("GetEmbeddings")
 	}
 
 	// For dedicated embedding models, try batch processing
@@ -303,10 +298,9 @@ func (e *UniversalEmbedder) GetEmbeddings(ctx context.Context, texts []string) (
 	for i, text := range texts {
 		embedding, err := e.Embed(ctx, text)
 		if err != nil {
-			return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+			return nil, gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to embed text at index %d", i).
 				WithComponent("memory").
-				WithOperation("GetEmbeddings").
-				WithDetails(fmt.Sprintf("failed to embed text at index %d", i))
+				WithOperation("GetEmbeddings")
 		}
 		results[i] = embedding
 	}
@@ -327,10 +321,9 @@ func (e *UniversalEmbedder) batchEmbed(ctx context.Context, texts []string) ([][
 	}
 
 	if len(resp.Embeddings) != len(texts) {
-		return nil, gerror.New(gerror.ErrCodeInternal).
+		return nil, gerror.Newf(gerror.ErrCodeInternal, "expected %d embeddings, got %d", len(texts), len(resp.Embeddings)).
 			WithComponent("memory").
-			WithOperation("batchEmbed").
-			WithDetails(fmt.Sprintf("expected %d embeddings, got %d", len(texts), len(resp.Embeddings)))
+			WithOperation("batchEmbed")
 	}
 
 	results := make([][]float32, len(resp.Embeddings))
@@ -363,20 +356,18 @@ func parseVectorString(s string) ([]float32, error) {
 		
 		var f float64
 		if _, err := fmt.Sscanf(part, "%f", &f); err != nil {
-			return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+			return nil, gerror.Newf(gerror.ErrCodeInvalidInput, "failed to parse number: %s", part).
 				WithComponent("memory").
-				WithOperation("parseVectorString").
-				WithDetails(fmt.Sprintf("failed to parse number: %s", part))
+				WithOperation("parseVectorString")
 		}
 		
 		result = append(result, float32(f))
 	}
 	
 	if len(result) == 0 {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "no valid numbers found in vector string", nil).
 			WithComponent("memory").
-			WithOperation("parseVectorString").
-			WithDetails("no valid numbers found in vector string")
+			WithOperation("parseVectorString")
 	}
 	
 	return result, nil

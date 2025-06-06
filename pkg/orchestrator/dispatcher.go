@@ -8,7 +8,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/kanban"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
 )
 
 // taskDispatcher is responsible for assigning tasks to agents

@@ -195,7 +195,9 @@ func (r *ToolRegistry) ExecuteToolWithParams(ctx context.Context, name string, p
 	// Convert params to JSON
 	inputJSON, err := json.Marshal(params)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "tools", "get_schema", "failed to marshal parameters")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal parameters").
+			WithComponent("tools").
+			WithOperation("get_schema")
 	}
 
 	return r.ExecuteTool(ctx, name, string(inputJSON))

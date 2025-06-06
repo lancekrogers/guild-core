@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	promptspb "github.com/guild-ventures/guild-core/internal/grpc/pb/prompts/v1"
+	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 )
 

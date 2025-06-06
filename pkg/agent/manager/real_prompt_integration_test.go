@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
+	// "github.com/guild-ventures/guild-core/pkg/memory/boltdb"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/prompts/objective"
 	promptcontext "github.com/guild-ventures/guild-core/pkg/prompts/context"

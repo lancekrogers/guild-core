@@ -4,8 +4,8 @@ import (
 	"context"
 )
 
-// CostManager defines the interface for tracking and managing agent operation costs
-type CostManager interface {
+// CostManagerInterface defines the interface for tracking and managing agent operation costs
+type CostManagerInterface interface {
 	// TrackCost records a cost for a specific operation type
 	TrackCost(costType CostType, amount float64) error
 	
@@ -26,11 +26,20 @@ type CostManager interface {
 	
 	// ExceedsBudget checks if a cost would exceed the budget
 	ExceedsBudget(costType CostType, amount float64) bool
+	
+	// EstimateLLMCost estimates the cost of an LLM operation
+	EstimateLLMCost(model string, estimatedTokens int) float64
+	
+	// CanAfford checks if a cost can be afforded within the budget
+	CanAfford(costType CostType, amount float64) bool
+	
+	// RecordLLMCost records the actual cost of an LLM operation
+	RecordLLMCost(model string, promptTokens, completionTokens int, metadata map[string]string) error
 }
 
 // CostAwareClient extends the basic cost tracking with client-specific operations
 type CostAwareClient interface {
-	CostManager
+	CostManagerInterface
 	
 	// EstimateCost estimates the cost of an operation before execution
 	EstimateCost(ctx context.Context, operation string, params map[string]interface{}) (float64, error)
@@ -46,20 +55,6 @@ type CostEntry struct {
 	Amount      float64
 	Operation   string
 	Details     map[string]interface{}
-}
-
-// ContextAwareAgent extends the basic Agent interface with context capabilities
-type ContextAwareAgent interface {
-	Agent
-	
-	// ExecuteWithContext executes a task with additional context
-	ExecuteWithContext(ctx context.Context, request string, context map[string]interface{}) (string, error)
-	
-	// GetContext returns the agent's current context
-	GetContext() map[string]interface{}
-	
-	// SetContext updates the agent's context
-	SetContext(context map[string]interface{})
 }
 
 // TaskExecutor defines the interface for executing tasks with tools

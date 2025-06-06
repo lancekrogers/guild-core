@@ -21,7 +21,7 @@ type MCPRegistryAdapter struct {
 // NewMCPRegistryAdapter creates a new MCP registry adapter
 func NewMCPRegistryAdapter(config *mcpconfig.MCPConfig, guildRegistry registry.ComponentRegistry) (*MCPRegistryAdapter, error) {
 	if config == nil {
-		return nil, gerror.New(gerror.InvalidArgument, "mcp_integration", "new_mcp_registry_adapter", "MCP config cannot be nil")
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "mcp_integration", nil).WithComponent("new_mcp_registry_adapter").WithOperation("MCP config cannot be nil")
 	}
 
 	if !config.Enabled {
@@ -31,13 +31,13 @@ func NewMCPRegistryAdapter(config *mcpconfig.MCPConfig, guildRegistry registry.C
 	// Convert MCP config to server config
 	serverConfig, err := convertToServerConfig(config)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "mcp_integration", "new_mcp_registry_adapter", "failed to convert MCP config")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_integration").WithComponent("new_mcp_registry_adapter").WithOperation("failed to convert MCP config")
 	}
 
 	// Create MCP server
 	mcpServer, err := server.NewServer(serverConfig, guildRegistry)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "mcp_integration", "new_mcp_registry_adapter", "failed to create MCP server")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_integration").WithComponent("new_mcp_registry_adapter").WithOperation("failed to create MCP server")
 	}
 
 	return &MCPRegistryAdapter{
@@ -53,7 +53,7 @@ func (a *MCPRegistryAdapter) Start(ctx context.Context) error {
 	}
 
 	if err := a.server.Start(ctx); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "mcp_integration", "start", "failed to start MCP server")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_integration").WithComponent("start").WithOperation("failed to start MCP server")
 	}
 
 	return nil
@@ -66,7 +66,7 @@ func (a *MCPRegistryAdapter) Stop(ctx context.Context) error {
 	}
 
 	if err := a.server.Stop(ctx); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "mcp_integration", "shutdown", "failed to stop MCP server")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_integration").WithComponent("shutdown").WithOperation("failed to stop MCP server")
 	}
 
 	return nil
@@ -96,7 +96,7 @@ func (a *MCPRegistryAdapter) Health(ctx context.Context) error {
 	// Perform health check - could ping server or check components
 	// For now, just verify server is configured
 	if a.server.GetConfig() == nil {
-		return gerror.New(gerror.Internal, "mcp_integration", "get_status", "MCP server not properly configured")
+		return gerror.New(gerror.ErrCodeInternal, "mcp_integration", nil).WithComponent("get_status").WithOperation("MCP server not properly configured")
 	}
 
 	return nil
@@ -148,7 +148,7 @@ type MCPRegistryExtension struct {
 func NewMCPRegistryExtension(config *mcpconfig.MCPConfig, guildRegistry registry.ComponentRegistry) (*MCPRegistryExtension, error) {
 	adapter, err := NewMCPRegistryAdapter(config, guildRegistry)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "mcp_integration", "default_mcp_factory", "failed to create MCP adapter")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_integration").WithComponent("default_mcp_factory").WithOperation("failed to create MCP adapter")
 	}
 
 	var toolBridge *ToolBridge
@@ -172,13 +172,13 @@ func NewMCPRegistryExtension(config *mcpconfig.MCPConfig, guildRegistry registry
 func (e *MCPRegistryExtension) Initialize(ctx context.Context) error {
 	// Start MCP server
 	if err := e.adapter.Start(ctx); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "mcp_integration", "sync_with_registry", "failed to start MCP adapter")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_integration").WithComponent("sync_with_registry").WithOperation("failed to start MCP adapter")
 	}
 
 	// Sync tools if bridge is available
 	if e.toolBridge != nil {
 		if err := e.toolBridge.SyncAll(ctx); err != nil {
-			return gerror.Wrap(err, gerror.Internal, "mcp_integration", "sync_with_registry", "failed to sync tools")
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_integration").WithComponent("sync_with_registry").WithOperation("failed to sync tools")
 		}
 	}
 
@@ -203,7 +203,7 @@ func (e *MCPRegistryExtension) GetToolBridge() *ToolBridge {
 // SyncTools manually syncs tools between registries
 func (e *MCPRegistryExtension) SyncTools(ctx context.Context) error {
 	if e.toolBridge == nil {
-		return gerror.New(gerror.Internal, "mcp_integration", "handle_tool_request", "tool bridge not available")
+		return gerror.New(gerror.ErrCodeInternal, "mcp_integration", nil).WithComponent("handle_tool_request").WithOperation("tool bridge not available")
 	}
 	return e.toolBridge.SyncAll(ctx)
 }

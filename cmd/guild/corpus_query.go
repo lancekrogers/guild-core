@@ -10,8 +10,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/guild-ventures/guild-core/internal/corpus"
-	corpusagent "github.com/guild-ventures/guild-core/internal/corpus/agent"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
+	corpusagent "github.com/guild-ventures/guild-core/pkg/corpus/agent"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory/rag"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"

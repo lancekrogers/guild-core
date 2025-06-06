@@ -77,6 +77,11 @@ type AgentConfig struct {
 	MaxTokens    int               `yaml:"max_tokens,omitempty"`
 	Temperature  float64           `yaml:"temperature,omitempty"`
 	
+	// Prompt configuration
+	SystemPrompt    string            `yaml:"system_prompt,omitempty"`      // Direct system prompt
+	PromptTemplate  string            `yaml:"prompt_template,omitempty"`    // Template name for layered prompts
+	PromptLayers    map[string]string `yaml:"prompt_layers,omitempty"`      // Layer overrides for layered prompts
+	
 	// Enhanced configuration for intelligent assignment
 	CostMagnitude  int    `yaml:"cost_magnitude,omitempty"`   // Fibonacci cost scale: 0=bash, 1=cheap API, 2,3,5,8=expensive models
 	ContextWindow  int    `yaml:"context_window,omitempty"`   // Context window size in tokens (auto-detected if 0)

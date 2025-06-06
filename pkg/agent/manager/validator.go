@@ -136,7 +136,7 @@ func (v *DefaultValidator) validateFile(file *FileEntry, index int) error {
 // validatePath validates a file path
 func (v *DefaultValidator) validatePath(path string) error {
 	if path == "" {
-		return gerror.New(gerror.ErrCodeValidation, "path cannot be empty").
+		return gerror.New(gerror.ErrCodeValidation, "path cannot be empty", nil).
 			WithComponent("manager").
 			WithOperation("validatePath")
 	}
@@ -144,7 +144,7 @@ func (v *DefaultValidator) validatePath(path string) error {
 	// Clean the path
 	cleanPath := filepath.Clean(path)
 	if cleanPath != path {
-		return gerror.New(gerror.ErrCodeValidation, "path should be clean").
+		return gerror.New(gerror.ErrCodeValidation, "path should be clean", nil).
 			WithComponent("manager").
 			WithOperation("validatePath").
 			WithDetails("original_path", path).
@@ -153,7 +153,7 @@ func (v *DefaultValidator) validatePath(path string) error {
 
 	// Check for path traversal attempts
 	if strings.Contains(path, "..") {
-		return gerror.New(gerror.ErrCodeValidation, "path contains parent directory references").
+		return gerror.New(gerror.ErrCodeValidation, "path contains parent directory references", nil).
 			WithComponent("manager").
 			WithOperation("validatePath").
 			WithDetails("path", path)
@@ -184,13 +184,13 @@ func (v *DefaultValidator) validatePath(path string) error {
 // validateContent validates file content
 func (v *DefaultValidator) validateContent(content, path string) error {
 	if content == "" {
-		return gerror.New(gerror.ErrCodeValidation, "content cannot be empty").
+		return gerror.New(gerror.ErrCodeValidation, "content cannot be empty", nil).
 			WithComponent("manager").
 			WithOperation("validateContent")
 	}
 
 	if len(content) > v.maxFileSize {
-		return gerror.New(gerror.ErrCodeValidation, "content too large").
+		return gerror.New(gerror.ErrCodeValidation, "content too large", nil).
 			WithComponent("manager").
 			WithOperation("validateContent").
 			WithDetails("content_size", len(content)).

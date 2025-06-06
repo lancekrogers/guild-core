@@ -4,7 +4,7 @@ import (
 	"sync"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/standard"
 )
 
 // PromptProvider defines the interface for prompt providers
@@ -95,12 +95,12 @@ func (r *PromptRegistry) List() []string {
 
 // DefaultPromptProvider implements PromptProvider using the internal prompt manager
 type DefaultPromptProvider struct {
-	manager *prompts.EnhancedPromptManager
+	manager *standard.EnhancedPromptManager
 }
 
 // NewDefaultPromptProvider creates a new default prompt provider
 func NewDefaultPromptProvider() (*DefaultPromptProvider, error) {
-	manager, err := prompts.NewEnhancedPromptManager()
+	manager, err := standard.NewEnhancedPromptManager()
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "error creating prompt manager").
 			WithComponent("registry").
@@ -159,7 +159,7 @@ func (p *DefaultPromptProvider) RenderPrompt(id string, data interface{}) (strin
 }
 
 // convertMetadata converts internal metadata to registry metadata
-func convertMetadata(internal *prompts.PromptMetadata) *PromptMetadata {
+func convertMetadata(internal *standard.PromptMetadata) *PromptMetadata {
 	return &PromptMetadata{
 		ID:                 internal.ID,
 		Version:            internal.Version,

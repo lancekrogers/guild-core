@@ -5,7 +5,7 @@ import (
 	
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
-	"github.com/guild-ventures/guild-core/internal/project"
+	"github.com/guild-ventures/guild-core/pkg/project"
 )
 
 // NewProjectAwareFactory creates a RAG factory using project context
@@ -13,10 +13,9 @@ func NewProjectAwareFactory(ctx context.Context) (*Factory, error) {
 	// Get project context
 	projCtx, err := project.GetContext()
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound).
+		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "not in a guild project").
 			WithComponent("memory").
-			WithOperation("NewProjectAwareFactory").
-			WithDetails("not in a guild project")
+			WithOperation("NewProjectAwareFactory")
 	}
 	
 	// Create project-specific configuration
@@ -40,14 +39,13 @@ func NewProjectAwareFactory(ctx context.Context) (*Factory, error) {
 	// Create vector store
 	vectorStore, err := vector.NewVectorStore(ctx, vectorConfig)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create vector store").
 			WithComponent("memory").
-			WithOperation("NewProjectAwareFactory").
-			WithDetails("failed to create vector store")
+			WithOperation("NewProjectAwareFactory")
 	}
 	
 	// Create retriever with vector store
-	retriever := newRetrieverWithStore(vectorStore, config)
+	retriever := NewRetrieverWithStore(vectorStore, config)
 	
 	// Create factory
 	factory := &Factory{
@@ -65,7 +63,15 @@ func NewProjectAwareRetriever(ctx context.Context) (*Retriever, error) {
 		return nil, err
 	}
 	
-	return factory.GetRetriever(), nil
+	// Type assert to get concrete Retriever type
+	retriever, ok := factory.GetRetriever().(*Retriever)
+	if !ok {
+		return nil, gerror.New(gerror.ErrCodeInternal, "unexpected retriever type", nil).
+			WithComponent("memory").
+			WithOperation("NewProjectAwareRetriever")
+	}
+	
+	return retriever, nil
 }
 
 // GetProjectRAGConfig returns RAG configuration for the current project
@@ -84,10 +90,9 @@ func GetProjectRAGConfig(ctx context.Context) (Config, error) {
 	// Try to get project context from current directory
 	projCtx, err := project.GetContext()
 	if err != nil {
-		return Config{}, gerror.Wrap(err, gerror.ErrCodeNotFound).
+		return Config{}, gerror.Wrap(err, gerror.ErrCodeNotFound, "not in a guild project").
 			WithComponent("memory").
-			WithOperation("GetProjectRAGConfig").
-			WithDetails("not in a guild project")
+			WithOperation("GetProjectRAGConfig")
 	}
 	
 	return Config{

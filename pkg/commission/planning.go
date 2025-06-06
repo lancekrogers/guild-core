@@ -53,6 +53,11 @@ func newPlanningSession() *PlanningSession {
 	}
 }
 
+// NewPlanningSession creates a new planning session
+func NewPlanningSession() *PlanningSession {
+	return newPlanningSession()
+}
+
 // DefaultPlanningSessionFactory creates a planning session factory for registry use
 func DefaultPlanningSessionFactory() *PlanningSession {
 	return newPlanningSession()

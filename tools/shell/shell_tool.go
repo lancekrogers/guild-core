@@ -1,6 +1,7 @@
 package shell
 
 import (
+	"fmt"
 	"context"
 	"encoding/json"
 	"os"
@@ -107,17 +108,23 @@ func NewShellTool(options ShellToolOptions) *ShellTool {
 func (t *ShellTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	var params ShellToolInput
 	if err := json.Unmarshal([]byte(input), &params); err != nil {
-		return nil, gerror.Wrap(err, gerror.InvalidArgument, "shell_tool", "execute", "invalid input")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidInput, "invalid input").
+			WithComponent("shell_tool").
+			WithOperation("execute")
 	}
 
 	// Validate command
 	if params.Command == "" {
-		return nil, gerror.New(gerror.InvalidArgument, "shell_tool", "execute", "command is required")
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "command is required", nil).
+			WithComponent("shell_tool").
+			WithOperation("execute")
 	}
 
 	// Check if command is allowed
 	if !t.isCommandAllowed(params.Command) {
-		return nil, gerror.New(gerror.InvalidArgument, "shell_tool", "execute", "command not allowed: %s", params.Command)
+		return nil, gerror.Newf(gerror.ErrCodeInvalidInput, "command not allowed: %s", params.Command).
+			WithComponent("shell_tool").
+			WithOperation("execute")
 	}
 
 	// Check for blocked commands
@@ -127,7 +134,9 @@ func (t *ShellTool) Execute(ctx context.Context, input string) (*tools.ToolResul
 	}
 	
 	if t.isCommandBlocked(fullCmd) {
-		return nil, gerror.New(gerror.InvalidArgument, "shell_tool", "execute", "command is blocked for safety reasons: %s", fullCmd)
+		return nil, gerror.Newf(gerror.ErrCodeInvalidInput, "command is blocked for safety reasons: %s", fullCmd).
+			WithComponent("shell_tool").
+			WithOperation("execute")
 	}
 
 	// Set working directory
@@ -166,14 +175,18 @@ func (t *ShellTool) Execute(ctx context.Context, input string) (*tools.ToolResul
 	if err != nil {
 		if ctx.Err() == context.DeadlineExceeded {
 			metadata["exit_code"] = "timeout"
-			return tools.NewToolResult(string(output), metadata, gerror.New(gerror.Internal, "shell_tool", "execute", "command timed out after %d seconds", params.Timeout), nil), nil
+			return tools.NewToolResult(string(output), metadata, gerror.Newf(gerror.ErrCodeInternal, "command timed out after %d seconds", params.Timeout).
+				WithComponent("shell_tool").
+				WithOperation("execute"), nil), nil
 		}
 
 		if exitErr, ok := err.(*exec.ExitError); ok {
 			metadata["exit_code"] = fmt.Sprintf("%d", exitErr.ExitCode())
 		}
 
-		return tools.NewToolResult(string(output), metadata, gerror.Wrap(err, gerror.Internal, "shell_tool", "execute", "command execution failed"), nil), nil
+		return tools.NewToolResult(string(output), metadata, gerror.Wrap(err, gerror.ErrCodeInternal, "command execution failed").
+			WithComponent("shell_tool").
+			WithOperation("execute"), nil), nil
 	}
 
 	return tools.NewToolResult(string(output), metadata, nil, nil), nil

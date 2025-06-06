@@ -2,7 +2,6 @@ package vector
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/sashabaranov/go-openai"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -17,10 +16,9 @@ type OpenAIEmbedder struct {
 // NewOpenAIEmbedder creates a new OpenAI embedder
 func NewOpenAIEmbedder(apiKey string, modelStr string) (*OpenAIEmbedder, error) {
 	if apiKey == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "API key is required", nil).
 			WithComponent("memory").
-			WithOperation("NewOpenAIEmbedder").
-			WithDetails("API key is required")
+			WithOperation("NewOpenAIEmbedder")
 	}
 
 	// Convert to EmbeddingModel
@@ -44,17 +42,15 @@ func (e *OpenAIEmbedder) Embed(ctx context.Context, text string) ([]float32, err
 		Model: e.model,
 	})
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create embeddings").
 			WithComponent("memory").
-			WithOperation("Embed").
-			WithDetails("failed to create embeddings")
+			WithOperation("Embed")
 	}
 
 	if len(response.Data) == 0 {
-		return nil, gerror.New(gerror.ErrCodeInternal).
+		return nil, gerror.New(gerror.ErrCodeInternal, "no embeddings returned", nil).
 			WithComponent("memory").
-			WithOperation("Embed").
-			WithDetails("no embeddings returned")
+			WithOperation("Embed")
 	}
 
 	return response.Data[0].Embedding, nil
@@ -72,17 +68,15 @@ func (e *OpenAIEmbedder) GetEmbeddings(ctx context.Context, texts []string) ([][
 		Model: e.model,
 	})
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create embeddings").
 			WithComponent("memory").
-			WithOperation("GetEmbeddings").
-			WithDetails("failed to create embeddings")
+			WithOperation("GetEmbeddings")
 	}
 
 	if len(response.Data) != len(texts) {
-		return nil, gerror.New(gerror.ErrCodeInternal).
+		return nil, gerror.Newf(gerror.ErrCodeInternal, "expected %d embeddings, got %d", len(texts), len(response.Data)).
 			WithComponent("memory").
-			WithOperation("GetEmbeddings").
-			WithDetails(fmt.Sprintf("expected %d embeddings, got %d", len(texts), len(response.Data)))
+			WithOperation("GetEmbeddings")
 	}
 
 	embeddings := make([][]float32, len(response.Data))

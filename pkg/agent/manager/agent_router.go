@@ -5,7 +5,8 @@ import (
 	"encoding/json"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -137,11 +138,9 @@ func (ar *AgentRouter) RouteToAgents(
 	// Enhance agent info with current status and performance metrics
 	enhancedAgents, err := ar.enhanceAgentInfo(ctx, request.AvailableAgents)
 	if err != nil {
-		return nil, gerror.New(gerror.ErrCodeAgent, "failed to enhance agent info").
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "failed to enhance agent info").
 			WithComponent("manager").
-			WithOperation("RouteToAgents").
-			WithDetails("error", err.Error()).
-			Wrap(err)
+			WithOperation("RouteToAgents")
 	}
 
 	// Build context for routing prompt
@@ -154,7 +153,7 @@ func (ar *AgentRouter) RouteToAgents(
 	}
 
 	// Generate layered prompt for agent routing
-	turnCtx := prompts.TurnContext{
+	turnCtx := layered.TurnContext{
 		UserMessage:  request.TaskDescription,
 		TaskID:       "agent-routing",
 		CommissionID: "task-routing",
@@ -163,18 +162,25 @@ func (ar *AgentRouter) RouteToAgents(
 		Metadata:     promptContext,
 	}
 	
-	layeredPrompt, err := ar.promptManager.BuildLayeredPrompt(ctx, "manager-agent", "routing-session", turnCtx)
+	// Use GetCompiledPrompt since that's available on prompts.LayeredManager
+	config := prompts.LayerConfig{
+		AgentID:   "manager-agent",
+		SessionID: "routing-session",
+		Role:      "manager",
+		Domain:    "task-routing",
+	}
+	
+	compiledPrompt, err := ar.promptManager.GetCompiledPrompt(ctx, config)
 	if err != nil {
-		return nil, gerror.New(gerror.ErrCodeAgent, "failed to assemble routing prompt").
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "failed to assemble routing prompt").
 			WithComponent("manager").
 			WithOperation("RouteToAgents").
-			WithDetails("task_id", "agent-routing").
-			Wrap(err)
+			WithDetails("task_id", "agent-routing")
 	}
 
 	// Make request to artisan (manager agent)
 	artisanRequest := ArtisanRequest{
-		SystemPrompt: layeredPrompt.Compiled,
+		SystemPrompt: compiledPrompt,
 		UserPrompt:   turnCtx.UserMessage,
 		Temperature:  0.2, // Very low temperature for routing decisions
 		MaxTokens:    3000,
@@ -182,12 +188,11 @@ func (ar *AgentRouter) RouteToAgents(
 
 	response, err := ar.artisanClient.Complete(ctx, artisanRequest)
 	if err != nil {
-		return nil, gerror.New(gerror.ErrCodeAgent, "failed to get routing decision from artisan").
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "failed to get routing decision from artisan").
 			WithComponent("manager").
 			WithOperation("RouteToAgents").
 			WithDetails("temperature", artisanRequest.Temperature).
-			WithDetails("max_tokens", artisanRequest.MaxTokens).
-			Wrap(err)
+			WithDetails("max_tokens", artisanRequest.MaxTokens)
 	}
 
 	// Parse the JSON response
@@ -196,18 +201,16 @@ func (ar *AgentRouter) RouteToAgents(
 		// If JSON parsing fails, try to extract JSON from markdown code blocks
 		if extractedJSON := extractJSONFromMarkdown(response.Content); extractedJSON != "" {
 			if err := json.Unmarshal([]byte(extractedJSON), &result); err != nil {
-				return nil, gerror.New(gerror.ErrCodeValidation, "failed to parse routing response").
+				return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "failed to parse routing response").
 					WithComponent("manager").
 					WithOperation("RouteToAgents").
-					WithDetails("parsing_stage", "extracted_json").
-					Wrap(err)
+					WithDetails("parsing_stage", "extracted_json")
 			}
 		} else {
-			return nil, gerror.New(gerror.ErrCodeValidation, "failed to parse routing response").
+			return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "failed to parse routing response").
 				WithComponent("manager").
 				WithOperation("RouteToAgents").
-				WithDetails("parsing_stage", "no_json_found").
-				Wrap(err)
+				WithDetails("parsing_stage", "no_json_found")
 		}
 	}
 

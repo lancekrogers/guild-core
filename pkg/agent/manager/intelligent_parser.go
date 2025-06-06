@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts"
 )
 
 // IntelligentParser uses either pattern matching or LLM extraction based on configuration
@@ -108,11 +108,10 @@ func (ip *IntelligentParser) ParseResponse(ctx context.Context, response *Artisa
 		
 		// Otherwise return the extraction error
 		if extractErr != nil {
-			return nil, gerror.New(gerror.ErrCodeAgent, "task extraction failed").
+			return nil, gerror.Wrap(extractErr, gerror.ErrCodeAgent, "task extraction failed").
 				WithComponent("manager").
 				WithOperation("ParseResponse").
-				WithDetails("mode", ip.mode).
-				Wrap(extractErr)
+				WithDetails("mode", ip.mode)
 		}
 	}
 	
@@ -122,7 +121,7 @@ func (ip *IntelligentParser) ParseResponse(ctx context.Context, response *Artisa
 // ExtractTasksDirectly uses only the LLM extractor for maximum flexibility
 func (ip *IntelligentParser) ExtractTasksDirectly(ctx context.Context, refinedCommission *RefinedCommission) ([]TaskInfo, error) {
 	if ip.taskExtractor == nil {
-		return nil, gerror.New(gerror.ErrCodeInternal, "task extractor not configured").
+		return nil, gerror.New(gerror.ErrCodeInternal, "task extractor not configured", nil).
 			WithComponent("manager").
 			WithOperation("ExtractTasksDirectly").
 			WithDetails("mode", ip.mode)

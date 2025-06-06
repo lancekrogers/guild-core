@@ -62,7 +62,7 @@ func SaveConfig(config *Config, filename string) error {
 // DefaultConfig returns a default configuration
 func DefaultConfig() *Config {
 	return &Config{
-		Agents: AgentConfig{
+		Agents: AgentConfigYaml{
 			DefaultType: "worker",
 			Types: map[string]interface{}{
 				"worker": map[string]interface{}{

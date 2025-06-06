@@ -8,7 +8,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/muesli/reflow/truncate"
 
-	"github.com/guild-ventures/guild-core/internal/corpus"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
 )
 
 // GraphView handles rendering the document relationship graph

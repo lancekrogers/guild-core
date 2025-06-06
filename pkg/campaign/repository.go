@@ -29,7 +29,7 @@ func NewRepository(store memory.Store) Repository {
 // Create stores a new campaign
 func (r *repository) Create(ctx context.Context, campaign *Campaign) error {
 	if campaign == nil {
-		return gerror.New(gerror.InvalidArgument, "campaign", "create_campaign", "campaign cannot be nil")
+		return gerror.New(gerror.ErrCodeInvalidInput, "campaign", nil).WithComponent("create_campaign").WithOperation("campaign cannot be nil")
 	}
 
 	// Set creation timestamp if not set
@@ -47,18 +47,18 @@ func (r *repository) Create(ctx context.Context, campaign *Campaign) error {
 	key := campaignPrefix + campaign.ID
 	existing, err := r.store.Get(ctx, campaignBucket, key)
 	if err == nil && existing != nil {
-		return gerror.New(gerror.AlreadyExists, "campaign", "create_campaign", "campaign with ID %s already exists", campaign.ID)
+		return gerror.New(gerror.ErrCodeAlreadyExists, "campaign", "create_campaign", "campaign with ID %s already exists", campaign.ID)
 	}
 
 	// Marshal campaign to JSON
 	data, err := json.Marshal(campaign)
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "campaign", "create_campaign", "failed to marshal campaign")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "campaign").WithComponent("create_campaign").WithOperation("failed to marshal campaign")
 	}
 
 	// Store campaign
 	if err := r.store.Put(ctx, campaignBucket, key, data); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "campaign", "create_campaign", "failed to store campaign")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "campaign").WithComponent("create_campaign").WithOperation("failed to store campaign")
 	}
 
 	return nil
@@ -67,21 +67,21 @@ func (r *repository) Create(ctx context.Context, campaign *Campaign) error {
 // Get retrieves a campaign by ID
 func (r *repository) Get(ctx context.Context, id string) (*Campaign, error) {
 	if id == "" {
-		return nil, gerror.New(gerror.InvalidArgument, "campaign", "get_campaign", "campaign ID cannot be empty")
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "campaign", nil).WithComponent("get_campaign").WithOperation("campaign ID cannot be empty")
 	}
 
 	key := campaignPrefix + id
 	data, err := r.store.Get(ctx, campaignBucket, key)
 	if err != nil {
 		if err == memory.ErrNotFound {
-			return nil, gerror.New(gerror.NotFound, "campaign", "get_campaign", "campaign %s not found", id)
+			return nil, gerror.New(gerror.ErrCodeNotFound, "campaign", "get_campaign", "campaign %s not found", id)
 		}
-		return nil, gerror.Wrap(err, gerror.Internal, "campaign", "get_campaign", "failed to get campaign")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "campaign").WithComponent("get_campaign").WithOperation("failed to get campaign")
 	}
 
 	var campaign Campaign
 	if err := json.Unmarshal(data, &campaign); err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "campaign", "get_campaign", "failed to unmarshal campaign")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "campaign").WithComponent("get_campaign").WithOperation("failed to unmarshal campaign")
 	}
 
 	return &campaign, nil
@@ -91,7 +91,7 @@ func (r *repository) Get(ctx context.Context, id string) (*Campaign, error) {
 func (r *repository) List(ctx context.Context) ([]*Campaign, error) {
 	keys, err := r.store.ListKeys(ctx, campaignBucket, campaignPrefix)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "campaign", "list_campaigns", "failed to list campaign keys")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "campaign").WithComponent("list_campaigns").WithOperation("failed to list campaign keys")
 	}
 
 	campaigns := make([]*Campaign, 0, len(keys))
@@ -117,10 +117,10 @@ func (r *repository) List(ctx context.Context) ([]*Campaign, error) {
 // Update modifies an existing campaign
 func (r *repository) Update(ctx context.Context, campaign *Campaign) error {
 	if campaign == nil {
-		return gerror.New(gerror.InvalidArgument, "campaign", "update_campaign", "campaign cannot be nil")
+		return gerror.New(gerror.ErrCodeInvalidInput, "campaign", nil).WithComponent("update_campaign").WithOperation("campaign cannot be nil")
 	}
 	if campaign.ID == "" {
-		return gerror.New(gerror.InvalidArgument, "campaign", "update_campaign", "campaign ID cannot be empty")
+		return gerror.New(gerror.ErrCodeInvalidInput, "campaign", nil).WithComponent("update_campaign").WithOperation("campaign ID cannot be empty")
 	}
 
 	// Check if campaign exists
@@ -128,12 +128,12 @@ func (r *repository) Update(ctx context.Context, campaign *Campaign) error {
 	existing, err := r.store.Get(ctx, campaignBucket, key)
 	if err != nil {
 		if err == memory.ErrNotFound {
-			return gerror.New(gerror.NotFound, "campaign", "update_campaign", "campaign %s not found", campaign.ID)
+			return gerror.New(gerror.ErrCodeNotFound, "campaign", "update_campaign", "campaign %s not found", campaign.ID)
 		}
-		return gerror.Wrap(err, gerror.Internal, "campaign", "update_campaign", "failed to check campaign existence")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "campaign").WithComponent("update_campaign").WithOperation("failed to check campaign existence")
 	}
 	if existing == nil {
-		return gerror.New(gerror.NotFound, "campaign", "update_campaign", "campaign %s not found", campaign.ID)
+		return gerror.New(gerror.ErrCodeNotFound, "campaign", "update_campaign", "campaign %s not found", campaign.ID)
 	}
 
 	// Update timestamp
@@ -142,12 +142,12 @@ func (r *repository) Update(ctx context.Context, campaign *Campaign) error {
 	// Marshal campaign to JSON
 	data, err := json.Marshal(campaign)
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "campaign", "create_campaign", "failed to marshal campaign")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "campaign").WithComponent("create_campaign").WithOperation("failed to marshal campaign")
 	}
 
 	// Store updated campaign
 	if err := r.store.Put(ctx, campaignBucket, key, data); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "campaign", "update_campaign", "failed to update campaign")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "campaign").WithComponent("update_campaign").WithOperation("failed to update campaign")
 	}
 
 	return nil
@@ -156,15 +156,15 @@ func (r *repository) Update(ctx context.Context, campaign *Campaign) error {
 // Delete removes a campaign
 func (r *repository) Delete(ctx context.Context, id string) error {
 	if id == "" {
-		return gerror.New(gerror.InvalidArgument, "campaign", "delete_campaign", "campaign ID cannot be empty")
+		return gerror.New(gerror.ErrCodeInvalidInput, "campaign", nil).WithComponent("delete_campaign").WithOperation("campaign ID cannot be empty")
 	}
 
 	key := campaignPrefix + id
 	if err := r.store.Delete(ctx, campaignBucket, key); err != nil {
 		if err == memory.ErrNotFound {
-			return gerror.New(gerror.NotFound, "campaign", "delete_campaign", "campaign %s not found", id)
+			return gerror.New(gerror.ErrCodeNotFound, "campaign", "delete_campaign", "campaign %s not found", id)
 		}
-		return gerror.Wrap(err, gerror.Internal, "campaign", "delete_campaign", "failed to delete campaign")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "campaign").WithComponent("delete_campaign").WithOperation("failed to delete campaign")
 	}
 
 	return nil
@@ -173,7 +173,7 @@ func (r *repository) Delete(ctx context.Context, id string) error {
 // GetByObjectiveID returns campaigns containing the specified objective
 func (r *repository) GetByObjectiveID(ctx context.Context, objectiveID string) ([]*Campaign, error) {
 	if objectiveID == "" {
-		return nil, gerror.New(gerror.InvalidArgument, "campaign", "get_by_objective_id", "objective ID cannot be empty")
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "campaign", nil).WithComponent("get_by_objective_id").WithOperation("objective ID cannot be empty")
 	}
 
 	// Get all campaigns

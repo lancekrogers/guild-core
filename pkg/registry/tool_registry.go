@@ -18,8 +18,13 @@ type DefaultToolRegistry struct {
 
 // NewToolRegistry creates a new tool registry
 func NewToolRegistry() ToolRegistry {
+	// Create a default tool registry using the package-level tools registry
+	registry := &tools.ToolRegistry{
+		ToolRegistry: basetools.NewToolRegistry(),
+	}
+	
 	return &DefaultToolRegistry{
-		registry:     tools.NewToolRegistry(),
+		registry:     registry,
 		toolMetadata: make(map[string]ToolInfo),
 	}
 }
@@ -46,13 +51,13 @@ func (r *DefaultToolRegistry) RegisterTool(name string, tool Tool) error {
 			WithOperation("RegisterTool")
 	}
 
-	return r.registry.RegisterTool(actualTool)
+	return r.registry.RegisterTool(name, actualTool)
 }
 
 // GetTool retrieves a registered tool by name
 func (r *DefaultToolRegistry) GetTool(name string) (Tool, error) {
-	tool, exists := r.registry.GetTool(name)
-	if !exists {
+	tool, err := r.registry.GetTool(name)
+	if err != nil {
 		return nil, gerror.Newf(gerror.ErrCodeNotFound, "tool '%s' not found", name).
 			WithComponent("registry").
 			WithOperation("GetTool").
@@ -65,25 +70,23 @@ func (r *DefaultToolRegistry) GetTool(name string) (Tool, error) {
 
 // ListTools returns all registered tool names
 func (r *DefaultToolRegistry) ListTools() []string {
-	tools := r.registry.ListTools()
-	names := make([]string, len(tools))
-	for i, tool := range tools {
-		names[i] = tool.Name()
-	}
-	return names
+	return r.registry.ListTools()
 }
 
 // GetToolsByCapability returns tools that have a specific capability
 func (r *DefaultToolRegistry) GetToolsByCapability(capability string) []Tool {
-	allTools := r.registry.ListTools()
+	allToolNames := r.registry.ListTools()
 	var matchingTools []Tool
 
-	for _, tool := range allTools {
-		// Check if tool has the capability
-		// This assumes tools have a way to report their capabilities
-		// You might need to adapt this based on your actual Tool interface
-		if tool.Category() == capability {
-			matchingTools = append(matchingTools, tool)
+	for _, name := range allToolNames {
+		tool, err := r.registry.GetTool(name)
+		if err == nil {
+			// Check if tool has the capability
+			// This assumes tools have a way to report their capabilities
+			// You might need to adapt this based on your actual Tool interface
+			if tool.Category() == capability {
+				matchingTools = append(matchingTools, tool)
+			}
 		}
 	}
 
@@ -92,8 +95,7 @@ func (r *DefaultToolRegistry) GetToolsByCapability(capability string) []Tool {
 
 // HasTool checks if a tool is registered
 func (r *DefaultToolRegistry) HasTool(name string) bool {
-	_, exists := r.registry.GetTool(name)
-	return exists
+	return r.registry.HasTool(name)
 }
 
 // GetUnderlyingRegistry returns the underlying tool registry for direct access

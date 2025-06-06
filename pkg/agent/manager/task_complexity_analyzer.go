@@ -8,7 +8,8 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -344,8 +345,10 @@ func (tca *TaskComplexityAnalyzer) buildLayeredPrompt(
 	ctx context.Context,
 	request ComplexityAnalysisRequest,
 	promptContext map[string]interface{},
-) (*prompts.LayeredPrompt, error) {
-	turnCtx := prompts.TurnContext{
+) (*layered.LayeredPrompt, error) {
+	// Note: turnCtx would be used with a layered.LayeredManager that has BuildLayeredPrompt
+	// For now we're using the basic prompts.LayeredManager with GetCompiledPrompt
+	_ = layered.TurnContext{
 		UserMessage:  request.TaskDescription,
 		TaskID:       "complexity-analysis",
 		CommissionID: "task-analysis",
@@ -354,13 +357,33 @@ func (tca *TaskComplexityAnalyzer) buildLayeredPrompt(
 		Metadata:     promptContext,
 	}
 
-	return tca.promptManager.BuildLayeredPrompt(ctx, "manager-agent", "analysis-session", turnCtx)
+	// Use GetCompiledPrompt since that's available on prompts.LayeredManager
+	config := prompts.LayerConfig{
+		AgentID:   "manager-agent",
+		SessionID: "analysis-session",
+		Role:      "manager",
+		Domain:    "task-analysis",
+	}
+	
+	compiledPrompt, err := tca.promptManager.GetCompiledPrompt(ctx, config)
+	if err != nil {
+		return nil, err
+	}
+	
+	// Create a LayeredPrompt structure to match the expected return type
+	return &layered.LayeredPrompt{
+		Compiled:    compiledPrompt,
+		ArtisanID:   config.AgentID,
+		SessionID:   config.SessionID,
+		AssembledAt: time.Now(),
+		Metadata:    promptContext,
+	}, nil
 }
 
 // executeAnalysis executes the analysis with retry logic
 func (tca *TaskComplexityAnalyzer) executeAnalysis(
 	ctx context.Context,
-	layeredPrompt *prompts.LayeredPrompt,
+	layeredPrompt *layered.LayeredPrompt,
 	request ComplexityAnalysisRequest,
 ) (*ComplexityAnalysisResult, error) {
 	artisanRequest := ArtisanRequest{

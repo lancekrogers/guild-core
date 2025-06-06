@@ -10,7 +10,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/guild-ventures/guild-core/internal/corpus"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
 )
 
 // Update handles UI events and state transitions
@@ -71,7 +71,8 @@ func (m CorpusModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.viewPort.SetContent(msg.Body)
 		m.viewPort.GotoTop()
 		// Track the user viewing this document
-		go corpus.TrackUserView(m.ctx, m.config.CurrentUser, msg.FilePath, m.config.CorpusConfig)
+		cfg := m.configToCorpusConfig()
+		go corpus.TrackUserView(m.ctx, m.config.GetUser(), msg.FilePath, cfg)
 		return m, nil
 
 	case corpus.Graph:
@@ -107,10 +108,12 @@ func (m CorpusModel) handleListModeUpdate(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		m.searchInput.Focus()
 		return m, textinput.Blink
 	case key.Matches(msg, m.keys.Tags):
-		return m, loadTags(m.config.CorpusConfig)
+		cfg := m.configToCorpusConfig()
+		return m, loadTags(cfg)
 	case key.Matches(msg, m.keys.Graph):
 		m.mode = ModeGraph
-		return m, loadGraph(m.config.CorpusConfig)
+		cfg := m.configToCorpusConfig()
+		return m, loadGraph(cfg)
 	default:
 		m.docList, cmd = m.docList.Update(msg)
 		return m, cmd
@@ -132,7 +135,8 @@ func (m CorpusModel) handleViewModeUpdate(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		link := m.getLinkUnderCursor()
 		if link != "" {
 			// Try to load the document with the given title
-			return m, loadDocumentByTitle(link, m.config.CorpusConfig)
+			cfg := m.configToCorpusConfig()
+			return m, loadDocumentByTitle(link, cfg)
 		}
 	default:
 		m.viewPort, cmd = m.viewPort.Update(msg)
@@ -151,7 +155,8 @@ func (m CorpusModel) handleSearchModeUpdate(msg tea.KeyMsg) (tea.Model, tea.Cmd)
 		query := m.searchInput.Value()
 		m.searchInput.Reset()
 		m.mode = ModeList
-		return m, search(query, m.config.CorpusConfig)
+		cfg := m.configToCorpusConfig()
+	return m, search(query, cfg)
 	case key.Matches(msg, m.keys.Escape):
 		m.searchInput.Reset()
 		m.mode = ModeList
@@ -195,7 +200,8 @@ func (m CorpusModel) handleTagsModeUpdate(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		if ok {
 			// Filter documents by selected tag
 			m.mode = ModeList
-			return m, filterByTag(selected.tag, m.config.CorpusConfig)
+			cfg := m.configToCorpusConfig()
+			return m, filterByTag(selected.tag, cfg)
 		}
 	default:
 		m.tagList, cmd = m.tagList.Update(msg)
@@ -250,16 +256,20 @@ func (m CorpusModel) executeCommand(cmd string) tea.Cmd {
 	switch command {
 	case "search", "s":
 		m.mode = ModeList
-		return search(args, m.config.CorpusConfig)
+		cfg := m.configToCorpusConfig()
+		return search(args, cfg)
 	case "list", "ls":
 		m.mode = ModeList
-		return listDocuments(m.config.CorpusConfig)
+		cfg := m.configToCorpusConfig()
+		return listDocuments(cfg)
 	case "tag", "tags":
 		m.mode = ModeTags
-		return loadTags(m.config.CorpusConfig)
+		cfg := m.configToCorpusConfig()
+		return loadTags(cfg)
 	case "graph", "g":
 		m.mode = ModeGraph
-		return loadGraph(m.config.CorpusConfig)
+		cfg := m.configToCorpusConfig()
+		return loadGraph(cfg)
 	case "new", "create":
 		// Open an editor to create a new document
 		// Will be implemented when integrating with CLI
@@ -280,7 +290,8 @@ func (m CorpusModel) executeCommand(cmd string) tea.Cmd {
 // Tea commands
 func loadDocument(path string) tea.Cmd {
 	return func() tea.Msg {
-		doc, err := corpus.Load(m.ctx, path)
+		// Use background context since we can't access m.ctx here
+		doc, err := corpus.Load(context.Background(), path)
 		if err != nil {
 			return errMsg{err: err}
 		}
@@ -290,7 +301,8 @@ func loadDocument(path string) tea.Cmd {
 
 func loadDocumentByTitle(title string, cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		paths, err := corpus.List(m.ctx, cfg)
+		ctx := context.Background()
+		paths, err := corpus.List(ctx, cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
@@ -298,7 +310,7 @@ func loadDocumentByTitle(title string, cfg corpus.Config) tea.Cmd {
 		normalizedTitle := strings.ToLower(title)
 		for _, path := range paths {
 			// Load the document to check its title
-			doc, err := corpus.Load(m.ctx, path)
+			doc, err := corpus.Load(ctx, path)
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
@@ -314,7 +326,8 @@ func loadDocumentByTitle(title string, cfg corpus.Config) tea.Cmd {
 
 func listDocuments(cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		paths, err := corpus.List(m.ctx, cfg)
+		ctx := context.Background()
+		paths, err := corpus.List(ctx, cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
@@ -322,7 +335,7 @@ func listDocuments(cfg corpus.Config) tea.Cmd {
 		items := make([]list.Item, 0, len(paths))
 		for _, path := range paths {
 			// Load each document
-			doc, err := corpus.Load(m.ctx, path)
+			doc, err := corpus.Load(ctx, path)
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
@@ -336,7 +349,8 @@ func listDocuments(cfg corpus.Config) tea.Cmd {
 func loadTags(cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
 		// Get all document paths
-		paths, err := corpus.List(m.ctx, cfg)
+		ctx := context.Background()
+		paths, err := corpus.List(ctx, cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
@@ -345,7 +359,7 @@ func loadTags(cfg corpus.Config) tea.Cmd {
 		tagCounts := make(map[string]int)
 		for _, path := range paths {
 			// Load the document
-			doc, err := corpus.Load(m.ctx, path)
+			doc, err := corpus.Load(ctx, path)
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
@@ -369,7 +383,8 @@ func loadTags(cfg corpus.Config) tea.Cmd {
 
 func filterByTag(tag string, cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		paths, err := corpus.List(m.ctx, cfg)
+		ctx := context.Background()
+		paths, err := corpus.List(ctx, cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
@@ -378,7 +393,7 @@ func filterByTag(tag string, cfg corpus.Config) tea.Cmd {
 		var filtered []corpus.CorpusDoc
 		for _, path := range paths {
 			// Load the document
-			doc, err := corpus.Load(m.ctx, path)
+			doc, err := corpus.Load(ctx, path)
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
@@ -403,7 +418,8 @@ func filterByTag(tag string, cfg corpus.Config) tea.Cmd {
 
 func search(query string, cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		paths, err := corpus.List(m.ctx, cfg)
+		ctx := context.Background()
+		paths, err := corpus.List(ctx, cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}
@@ -412,7 +428,7 @@ func search(query string, cfg corpus.Config) tea.Cmd {
 		var filtered []corpus.CorpusDoc
 		for _, path := range paths {
 			// Load the document
-			doc, err := corpus.Load(m.ctx, path)
+			doc, err := corpus.Load(ctx, path)
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
@@ -449,7 +465,8 @@ func search(query string, cfg corpus.Config) tea.Cmd {
 
 func loadGraph(cfg corpus.Config) tea.Cmd {
 	return func() tea.Msg {
-		graph, err := corpus.BuildGraph(m.ctx, cfg)
+		ctx := context.Background()
+		graph, err := corpus.BuildGraph(ctx, cfg)
 		if err != nil {
 			return errMsg{err: err}
 		}

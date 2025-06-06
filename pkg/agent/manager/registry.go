@@ -55,12 +55,12 @@ func NewComponentRegistry() ComponentRegistry {
 // RegisterParser registers a response parser
 func (r *DefaultComponentRegistry) RegisterParser(name string, parser ResponseParser) error {
 	if name == "" {
-		return gerror.New(gerror.ErrCodeInvalidInput, "parser name cannot be empty").
+		return gerror.New(gerror.ErrCodeInvalidInput, "parser name cannot be empty", nil).
 			WithComponent("manager-registry").
 			WithOperation("RegisterParser")
 	}
 	if parser == nil {
-		return gerror.New(gerror.ErrCodeInvalidInput, "parser cannot be nil").
+		return gerror.New(gerror.ErrCodeInvalidInput, "parser cannot be nil", nil).
 			WithComponent("manager-registry").
 			WithOperation("RegisterParser")
 	}
@@ -98,12 +98,12 @@ func (r *DefaultComponentRegistry) GetParser(name string) (ResponseParser, error
 // RegisterValidator registers a structure validator
 func (r *DefaultComponentRegistry) RegisterValidator(name string, validator StructureValidator) error {
 	if name == "" {
-		return gerror.New(gerror.ErrCodeInvalidInput, "validator name cannot be empty").
+		return gerror.New(gerror.ErrCodeInvalidInput, "validator name cannot be empty", nil).
 			WithComponent("manager-registry").
 			WithOperation("RegisterValidator")
 	}
 	if validator == nil {
-		return gerror.New(gerror.ErrCodeInvalidInput, "validator cannot be nil").
+		return gerror.New(gerror.ErrCodeInvalidInput, "validator cannot be nil", nil).
 			WithComponent("manager-registry").
 			WithOperation("RegisterValidator")
 	}
@@ -141,12 +141,12 @@ func (r *DefaultComponentRegistry) GetValidator(name string) (StructureValidator
 // RegisterRefiner registers a commission refiner
 func (r *DefaultComponentRegistry) RegisterRefiner(name string, refiner CommissionRefiner) error {
 	if name == "" {
-		return gerror.New(gerror.ErrCodeInvalidInput, "refiner name cannot be empty").
+		return gerror.New(gerror.ErrCodeInvalidInput, "refiner name cannot be empty", nil).
 			WithComponent("manager-registry").
 			WithOperation("RegisterRefiner")
 	}
 	if refiner == nil {
-		return gerror.New(gerror.ErrCodeInvalidInput, "refiner cannot be nil").
+		return gerror.New(gerror.ErrCodeInvalidInput, "refiner cannot be nil", nil).
 			WithComponent("manager-registry").
 			WithOperation("RegisterRefiner")
 	}
@@ -184,12 +184,12 @@ func (r *DefaultComponentRegistry) GetRefiner(name string) (CommissionRefiner, e
 // RegisterArtisanClient registers an artisan client
 func (r *DefaultComponentRegistry) RegisterArtisanClient(name string, client ArtisanClient) error {
 	if name == "" {
-		return gerror.New(gerror.ErrCodeInvalidInput, "client name cannot be empty").
+		return gerror.New(gerror.ErrCodeInvalidInput, "client name cannot be empty", nil).
 			WithComponent("manager-registry").
 			WithOperation("RegisterArtisanClient")
 	}
 	if client == nil {
-		return gerror.New(gerror.ErrCodeInvalidInput, "client cannot be nil").
+		return gerror.New(gerror.ErrCodeInvalidInput, "client cannot be nil", nil).
 			WithComponent("manager-registry").
 			WithOperation("RegisterArtisanClient")
 	}

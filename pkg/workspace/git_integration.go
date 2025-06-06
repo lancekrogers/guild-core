@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -21,13 +22,17 @@ type GitManager struct {
 func NewGitManager(baseDir, repoPath string) (*GitManager, error) {
 	// Validate git repository
 	if err := validateGitRepository(repoPath); err != nil {
-		return nil, gerror.Wrap(err, gerror.InvalidArgument, "workspace", "new_git_manager", "invalid git repository")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidInput, "invalid git repository").
+			WithComponent("workspace").
+			WithOperation("new_git_manager")
 	}
 
 	// Create base manager
 	baseMgr, err := NewManager(baseDir, repoPath)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "workspace", "new_git_manager", "failed to create base manager")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create base manager").
+			WithComponent("workspace").
+			WithOperation("new_git_manager")
 	}
 
 	return &GitManager{
@@ -54,7 +59,9 @@ func (m *GitManager) CreateWorkspace(ctx context.Context, opts CreateOptions) (W
 	
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "workspace", "create_workspace", "failed to create worktree: %s", string(output))
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, fmt.Sprintf("failed to create worktree: %s", string(output))).
+			WithComponent("workspace").
+			WithOperation("create_workspace")
 	}
 
 	// Create workspace info
@@ -136,7 +143,9 @@ func (w *GitWorkspace) Cleanup() error {
 	if err := cmd.Run(); err != nil {
 		// Fallback to manual removal
 		if err := os.RemoveAll(w.info.Path); err != nil {
-			return gerror.Wrap(err, gerror.Internal, "workspace", "remove_workspace", "failed to remove workspace")
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to remove workspace").
+				WithComponent("workspace").
+				WithOperation("remove_workspace")
 		}
 	}
 
@@ -160,7 +169,9 @@ func (w *GitWorkspace) CommitChanges(message string) error {
 	cmd := exec.Command("git", "add", "-A")
 	cmd.Dir = w.info.Path
 	if err := cmd.Run(); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "workspace", "stage_changes", "failed to stage changes")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to stage changes").
+			WithComponent("workspace").
+			WithOperation("stage_changes")
 	}
 
 	// Check if there are changes to commit
@@ -176,7 +187,9 @@ func (w *GitWorkspace) CommitChanges(message string) error {
 	cmd.Dir = w.info.Path
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "workspace", "commit_changes", "failed to commit: %s", string(output))
+		return gerror.Wrap(err, gerror.ErrCodeInternal, fmt.Sprintf("failed to commit: %s", string(output))).
+			WithComponent("workspace").
+			WithOperation("commit_changes")
 	}
 
 	w.UpdateGitInfo()
@@ -190,7 +203,9 @@ func (w *GitWorkspace) GetDiff() (string, error) {
 	
 	output, err := cmd.Output()
 	if err != nil {
-		return "", gerror.Wrap(err, gerror.Internal, "workspace", "get_diff", "failed to get diff")
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get diff").
+			WithComponent("workspace").
+			WithOperation("get_diff")
 	}
 
 	return string(output), nil
@@ -202,7 +217,9 @@ func validateGitRepository(path string) error {
 	cmd.Dir = path
 	
 	if err := cmd.Run(); err != nil {
-		return gerror.Wrap(err, gerror.InvalidArgument, "workspace", "validate_git_repository", "not a git repository")
+		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "not a git repository").
+			WithComponent("workspace").
+			WithOperation("validate_git_repository")
 	}
 
 	// Check worktree support
@@ -210,7 +227,9 @@ func validateGitRepository(path string) error {
 	cmd.Dir = path
 	
 	if err := cmd.Run(); err != nil {
-		return gerror.Wrap(err, gerror.InvalidArgument, "workspace", "validate_git_repository", "git worktree not supported")
+		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "git worktree not supported").
+			WithComponent("workspace").
+			WithOperation("validate_git_repository")
 	}
 
 	return nil

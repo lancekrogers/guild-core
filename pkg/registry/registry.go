@@ -5,13 +5,10 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/guild-ventures/guild-core/internal/config"
+	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers"
-	"github.com/guild-ventures/guild-core/internal/storage"
-	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/internal/commission"
-	"github.com/guild-ventures/guild-core/pkg/tools"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
 // DefaultComponentRegistry is the default implementation of ComponentRegistry
@@ -422,12 +419,14 @@ func (r *DefaultComponentRegistry) initializeAgents(ctx context.Context) error {
 				WithOperation("initializeAgents")
 		}
 		
-		// Set the factory in the registry
-		agentReg.SetAgentFactory(agentFactory)
-
-		// Set default if configured
+		// Register default agent type factory
 		if r.config.Agents.DefaultType != "" {
-			agentReg.SetDefaultAgentType(r.config.Agents.DefaultType)
+			err = agentReg.RegisterAgentType(r.config.Agents.DefaultType, agentFactory)
+			if err != nil {
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register default agent type").
+					WithComponent("registry").
+					WithOperation("initializeAgentRegistry")
+			}
 		}
 		
 		// Load agents from guild configuration if available
@@ -645,20 +644,15 @@ func (r *DefaultComponentRegistry) loadGuildAgents(ctx context.Context, agentReg
 	// Register each agent with the registry
 	for _, agent := range guildConfig.Agents {
 		guildAgent := GuildAgentConfig{
-			ID:            agent.ID,
 			Name:          agent.Name,
 			Type:          agent.Type,
 			Provider:      agent.Provider,
 			Model:         agent.Model,
-			Description:   agent.Description,
+			SystemPrompt:  agent.SystemPrompt,
 			Capabilities:  agent.Capabilities,
 			Tools:         agent.Tools,
-			MaxTokens:     agent.MaxTokens,
-			Temperature:   agent.Temperature,
 			CostMagnitude: agent.CostMagnitude,
 			ContextWindow: agent.ContextWindow,
-			ContextReset:  agent.ContextReset,
-			Settings:      agent.Settings,
 		}
 		
 		if err := agentReg.RegisterGuildAgent(guildAgent); err != nil {

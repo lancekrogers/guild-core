@@ -2,6 +2,7 @@ package registry
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -18,27 +19,28 @@ func ExampleUsage() error {
 	// Initialize the registry with configuration
 	ctx := context.Background()
 	if err := registry.Initialize(ctx, *config); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "example_usage", "failed to initialize registry")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("example_usage").WithOperation("failed to initialize registry")
 	}
 
 	// Use the agent registry
 	agentRegistry := registry.Agents()
 	
-	// Register a simple mock agent type
-	err := agentRegistry.RegisterAgentType("example", func(config AgentConfig) (Agent, error) {
+	// Register a simple mock agent type using a mock factory
+	mockFactory := func(config AgentConfig) (Agent, error) {
 		return &MockAgent{
-			id:   "example-1",
-			name: "Example Agent",
+			id:   config.Name + "-id",
+			name: config.Name,
 		}, nil
-	})
+	}
+	err := agentRegistry.RegisterAgentType("example", mockFactory)
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "example_usage", "failed to register agent type")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("example_usage").WithOperation("failed to register agent type")
 	}
 
 	// Create an agent
 	agent, err := agentRegistry.GetAgent("example")
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "example_usage", "failed to get agent")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("example_usage").WithOperation("failed to get agent")
 	}
 
 	log.Printf("Created agent: %s (%s)", agent.GetName(), agent.GetID())
@@ -66,7 +68,7 @@ func ExampleUsage() error {
 
 	// Shutdown the registry
 	if err := registry.Shutdown(ctx); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "registry", "example_usage", "failed to shutdown registry")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("example_usage").WithOperation("failed to shutdown registry")
 	}
 
 	return nil
@@ -93,17 +95,29 @@ func (m *MockAgent) GetName() string {
 	return m.name
 }
 
+// GetType implements the Agent interface
+func (m *MockAgent) GetType() string {
+	return "mock"
+}
+
+// GetCapabilities implements the Agent interface
+func (m *MockAgent) GetCapabilities() []string {
+	return []string{"mock_capability"}
+}
+
+// MockAgentFactory is now implemented as a function above
+
 // CreateRegistryFromYAML shows how to create a registry from YAML configuration
 func CreateRegistryFromYAML(yamlConfig string) (*DefaultComponentRegistry, error) {
 	// Parse configuration
 	config, err := LoadConfigFromBytes([]byte(yamlConfig))
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.Internal, "registry", "complete_example", "failed to load config")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("complete_example").WithOperation("failed to load config")
 	}
 
 	// Validate configuration
 	if err := ValidateConfig(config); err != nil {
-		return nil, gerror.Wrap(err, gerror.InvalidArgument, "registry", "complete_example", "invalid config")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidInput, "registry").WithComponent("complete_example").WithOperation("invalid config")
 	}
 
 	// Create and initialize registry

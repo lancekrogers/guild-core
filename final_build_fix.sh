@@ -1,20 +1,19 @@
+#!/bin/bash
+
+echo "Final build fixes..."
+
+# Fix agent_registry.go properly
+cat > pkg/registry/agent_registry.go << 'EOF'
 package registry
 
 import (
 	"context"
 	"sort"
+	"strings"
 	"sync"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
-
-// CostProfile represents the cost characteristics of an agent
-type CostProfile struct {
-	Magnitude     int     `yaml:"magnitude" json:"magnitude"`
-	ContextWindow int     `yaml:"context_window" json:"context_window"`
-	ContextReset  string  `yaml:"context_reset" json:"context_reset"`
-	Available     bool    `yaml:"available" json:"available"`
-}
 
 // AgentFactory creates agent instances
 type AgentFactory func(config AgentConfig) (Agent, error)
@@ -33,8 +32,6 @@ type AgentConfig struct {
 
 // Agent interface (minimal for registry)
 type Agent interface {
-	Execute(ctx context.Context, request string) (string, error)
-	GetID() string
 	GetName() string
 	GetType() string
 	GetCapabilities() []string
@@ -42,24 +39,21 @@ type Agent interface {
 
 // AgentInfo holds agent information
 type AgentInfo struct {
-	Type          string
-	Name          string
-	Capabilities  []string
-	CostProfile   CostProfile
-	CostMagnitude int // For backward compatibility
+	Type         string
+	Name         string
+	Capabilities []string
+	CostProfile  CostProfile
 }
 
 // GuildAgentConfig represents a configured agent from guild config
 type GuildAgentConfig struct {
-	Name          string   `yaml:"name"`
-	Type          string   `yaml:"type"`
-	Model         string   `yaml:"model"`
-	Provider      string   `yaml:"provider"`
-	SystemPrompt  string   `yaml:"system_prompt"`
-	Tools         []string `yaml:"tools"`
-	Capabilities  []string `yaml:"capabilities"`
-	CostMagnitude int      `yaml:"cost_magnitude,omitempty"`
-	ContextWindow int      `yaml:"context_window,omitempty"`
+	Name         string   `yaml:"name"`
+	Type         string   `yaml:"type"`
+	Model        string   `yaml:"model"`
+	Provider     string   `yaml:"provider"`
+	SystemPrompt string   `yaml:"system_prompt"`
+	Tools        []string `yaml:"tools"`
+	Capabilities []string `yaml:"capabilities"`
 }
 
 // DefaultAgentRegistry implements the AgentRegistry interface
@@ -193,3 +187,10 @@ func (r *DefaultAgentRegistry) GetRegisteredAgents() []GuildAgentConfig {
 	}
 	return agents
 }
+EOF
+
+# Clean up temporary files
+rm -f /tmp/agent_registry_fix.go
+rm -f fix_gerror_usage.sh fix_remaining_build.sh fix_final_registry.sh
+
+echo "Final fixes applied"

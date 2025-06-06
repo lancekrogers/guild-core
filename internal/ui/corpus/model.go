@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/internal/corpus"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
@@ -312,11 +312,21 @@ func NewModel(ctx context.Context, corpusManager CorpusManager, config CorpusCon
 
 // Init initializes the model.
 func (m CorpusModel) Init() tea.Cmd {
+	cfg := m.configToCorpusConfig()
 	return tea.Batch(
-		listDocuments(m.config),
-		loadTags(m.config),
-		loadGraph(m.config),
+		listDocuments(cfg),
+		loadTags(cfg),
+		loadGraph(cfg),
 	)
+}
+
+// configToCorpusConfig converts CorpusConfig interface to corpus.Config
+func (m CorpusModel) configToCorpusConfig() corpus.Config {
+	return corpus.Config{
+		CorpusPath: m.config.GetCorpusPath(),
+		// Note: corpus.Config doesn't have all the fields from our interface
+		// Some filtering will need to be done at the UI level
+	}
 }
 
 // getSelectedDoc returns the currently selected document.

@@ -7,7 +7,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/memory"
-	"github.com/guild-ventures/guild-core/internal/commission"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -57,12 +57,12 @@ func (w *AgentWrapper) GetName() string {
 // Implement the GuildArtisan interface
 
 // GetToolRegistry returns the tool registry
-func (w *AgentWrapper) GetToolRegistry() *tools.ToolRegistry {
+func (w *AgentWrapper) GetToolRegistry() tools.Registry {
 	return w.agent.GetToolRegistry()
 }
 
 // GetCommissionManager returns the objective manager
-func (w *AgentWrapper) GetCommissionManager() *commission.Manager {
+func (w *AgentWrapper) GetCommissionManager() commission.CommissionManager {
 	return w.agent.GetCommissionManager()
 }
 
@@ -95,10 +95,9 @@ func (w *AgentWrapper) enhanceRequestWithRAG(ctx context.Context, request string
 	// Retrieve relevant context
 	results, err := w.retriever.RetrieveContext(ctx, request, retrievalConfig)
 	if err != nil {
-		return "", gerror.Wrap(err, gerror.ErrCodeStorage).
+		return "", gerror.Wrap(err, gerror.ErrCodeStorage, "failed to retrieve context").
 			WithComponent("memory").
-			WithOperation("enhanceRequestWithRAG").
-			WithDetails("failed to retrieve context")
+			WithOperation("enhanceRequestWithRAG")
 	}
 	
 	// If no results found, return the original request
@@ -128,10 +127,9 @@ func (w *AgentWrapper) EnhancePrompt(ctx context.Context, prompt, query string, 
 	// Retrieve relevant context
 	results, err := w.retriever.RetrieveContext(ctx, query, config)
 	if err != nil {
-		return "", gerror.Wrap(err, gerror.ErrCodeStorage).
+		return "", gerror.Wrap(err, gerror.ErrCodeStorage, "failed to retrieve context").
 			WithComponent("memory").
-			WithOperation("EnhancePrompt").
-			WithDetails("failed to retrieve context")
+			WithOperation("EnhancePrompt")
 	}
 	
 	// If no results found, return the original prompt

@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/internal/prompts/layered"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 )
 
 // mockManagerWithFormatter implements both Manager and Formatter interfaces

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/internal/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts"
 )
 
 func TestPromptEvaluator(t *testing.T) {

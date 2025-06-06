@@ -2,7 +2,6 @@ package vector
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers/ollama"
@@ -66,10 +65,9 @@ func NewOllamaEmbedder(baseURL, model string) (*OllamaEmbedder, error) {
 // No internet connection or API keys required.
 func (e *OllamaEmbedder) Embed(ctx context.Context, text string) ([]float32, error) {
 	if text == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "text cannot be empty", nil).
 			WithComponent("memory").
-			WithOperation("Embed").
-			WithDetails("text cannot be empty")
+			WithOperation("Embed")
 	}
 
 	// Create embedding request
@@ -81,17 +79,15 @@ func (e *OllamaEmbedder) Embed(ctx context.Context, text string) ([]float32, err
 	// Call Ollama to generate embedding
 	response, err := e.client.CreateEmbedding(ctx, req)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create embedding with Ollama").
 			WithComponent("memory").
-			WithOperation("Embed").
-			WithDetails("failed to create embedding with Ollama")
+			WithOperation("Embed")
 	}
 
 	if len(response.Embeddings) == 0 {
-		return nil, gerror.New(gerror.ErrCodeInternal).
+		return nil, gerror.New(gerror.ErrCodeInternal, "no embeddings returned from Ollama", nil).
 			WithComponent("memory").
-			WithOperation("Embed").
-			WithDetails("no embeddings returned from Ollama")
+			WithOperation("Embed")
 	}
 
 	// Convert []float64 to []float32 for consistency with OpenAI embedder
@@ -113,10 +109,9 @@ func (e *OllamaEmbedder) GetEmbedding(ctx context.Context, text string) ([]float
 // This is more efficient than calling Embed multiple times.
 func (e *OllamaEmbedder) GetEmbeddings(ctx context.Context, texts []string) ([][]float32, error) {
 	if len(texts) == 0 {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "no texts provided", nil).
 			WithComponent("memory").
-			WithOperation("GetEmbeddings").
-			WithDetails("no texts provided")
+			WithOperation("GetEmbeddings")
 	}
 
 	// Create embedding request for all texts
@@ -128,17 +123,15 @@ func (e *OllamaEmbedder) GetEmbeddings(ctx context.Context, texts []string) ([][
 	// Call Ollama to generate embeddings
 	response, err := e.client.CreateEmbedding(ctx, req)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create embeddings with Ollama").
 			WithComponent("memory").
-			WithOperation("GetEmbeddings").
-			WithDetails("failed to create embeddings with Ollama")
+			WithOperation("GetEmbeddings")
 	}
 
 	if len(response.Embeddings) != len(texts) {
-		return nil, gerror.New(gerror.ErrCodeInternal).
+		return nil, gerror.Newf(gerror.ErrCodeInternal, "expected %d embeddings, got %d", len(texts), len(response.Embeddings)).
 			WithComponent("memory").
-			WithOperation("GetEmbeddings").
-			WithDetails(fmt.Sprintf("expected %d embeddings, got %d", len(texts), len(response.Embeddings)))
+			WithOperation("GetEmbeddings")
 	}
 
 	// Convert all embeddings from []float64 to []float32
@@ -186,8 +179,7 @@ func (e *OllamaEmbedder) IsModelAvailable(ctx context.Context) (bool, error) {
 func (e *OllamaEmbedder) PullModel(ctx context.Context) error {
 	// This would require extending the Ollama client to support model pulling
 	// For now, return an informative error
-	return gerror.New(gerror.ErrCodeNotImplemented).
+	return gerror.Newf(gerror.ErrCodeInternal, "model pulling not yet implemented - please run 'ollama pull %s' manually", e.model).
 		WithComponent("memory").
-		WithOperation("PullModel").
-		WithDetails(fmt.Sprintf("model pulling not yet implemented - please run 'ollama pull %s' manually", e.model))
+		WithOperation("PullModel")
 }

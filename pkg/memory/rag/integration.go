@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 	
-	"github.com/guild-ventures/guild-core/internal/corpus"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
@@ -16,10 +16,9 @@ func SearchCorpus(ctx context.Context, query string, corpusConfig corpus.Config,
 	// List documents
 	docs, err := corpus.List(ctx, corpusConfig)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeStorage).
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list corpus documents").
 			WithComponent("memory").
-			WithOperation("SearchCorpus").
-			WithDetails("failed to list corpus documents")
+			WithOperation("SearchCorpus")
 	}
 	
 	// Simple matching (not using vectors)

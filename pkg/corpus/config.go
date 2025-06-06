@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/guild-ventures/guild-core/internal/config"
+	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"gopkg.in/yaml.v3"
 )
@@ -99,12 +99,12 @@ func LoadConfig(loader *config.ConfigLoader) (Config, error) {
 
 	// Ensure the corpus directory exists
 	if err := os.MkdirAll(cfg.CorpusPath, 0755); err != nil {
-		return cfg, gerror.Wrap(err, gerror.Internal, "corpus", "new_config", "error creating corpus directory")
+		return cfg, gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("new_config").WithOperation("error creating corpus directory")
 	}
 
 	// Ensure the activities directory exists
 	if err := os.MkdirAll(cfg.ActivitiesPath, 0755); err != nil {
-		return cfg, gerror.Wrap(err, gerror.Internal, "corpus", "new_config", "error creating activities directory")
+		return cfg, gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("new_config").WithOperation("error creating activities directory")
 	}
 
 	// Set backward compatibility fields
@@ -124,18 +124,18 @@ func SaveConfig(cfg Config, path string) error {
 	// Create the configuration directory if it doesn't exist
 	configDir := filepath.Dir(path)
 	if err := os.MkdirAll(configDir, 0755); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "corpus", "save_config", "error creating config directory")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("save_config").WithOperation("error creating config directory")
 	}
 
 	// Marshal the configuration to YAML
 	data, err := yaml.Marshal(cfg)
 	if err != nil {
-		return gerror.Wrap(err, gerror.Internal, "corpus", "save_config", "error marshaling config")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("save_config").WithOperation("error marshaling config")
 	}
 
 	// Write the configuration to the file
 	if err := os.WriteFile(path, data, 0644); err != nil {
-		return gerror.Wrap(err, gerror.Internal, "corpus", "save_config", "error writing config file")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("save_config").WithOperation("error writing config file")
 	}
 
 	return nil
@@ -155,13 +155,13 @@ func LoadConfigFromFile(path string) (Config, error) {
 	// Read the file
 	data, err := os.ReadFile(path)
 	if err != nil {
-		return cfg, gerror.Wrap(err, gerror.Internal, "corpus", "load_config", "error reading config file")
+		return cfg, gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("load_config").WithOperation("error reading config file")
 	}
 
 	// Unmarshal the YAML
 	err = yaml.Unmarshal(data, &cfg)
 	if err != nil {
-		return cfg, gerror.Wrap(err, gerror.Internal, "corpus", "load_config", "error unmarshaling config")
+		return cfg, gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("load_config").WithOperation("error unmarshaling config")
 	}
 
 	// Set backward compatibility fields

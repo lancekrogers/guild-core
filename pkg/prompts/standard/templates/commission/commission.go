@@ -1,5 +1,5 @@
-// Package objective provides prompt loading for objective-related prompts
-package objective
+// Package commission provides prompt loading for commission-related prompts
+package commission
 
 import (
 	"embed"
@@ -30,7 +30,7 @@ func LoadPrompts() (map[string]*template.Template, error) {
 
 		// Get filename without extension as the template name
 		baseName := strings.TrimSuffix(entry.Name(), filepath.Ext(entry.Name()))
-		templateName := "objective." + baseName
+		templateName := "commission." + baseName
 
 		// Read the markdown file
 		content, err := fs.ReadFile(promptFS, filepath.Join("markdown", entry.Name()))

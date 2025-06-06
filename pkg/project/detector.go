@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/internal/config"
+	"github.com/guild-ventures/guild-core/pkg/config"
 )
 
 // ProjectType represents different types of projects that can be detected

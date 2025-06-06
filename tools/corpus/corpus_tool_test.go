@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/internal/corpus"
+	"github.com/guild-ventures/guild-core/pkg/corpus"
 )
 
 func TestCorpusTool(t *testing.T) {

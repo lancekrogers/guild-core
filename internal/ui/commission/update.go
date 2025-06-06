@@ -11,8 +11,8 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 
-	commissionpkg "github.com/guild-ventures/guild-core/internal/commission"
-	"github.com/guild-ventures/guild-core/pkg/ui/commission/components"
+	commissionpkg "github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/internal/ui/commission/components"
 )
 
 // Custom message types with Guild-themed names

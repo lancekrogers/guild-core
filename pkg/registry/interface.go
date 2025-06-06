@@ -242,12 +242,7 @@ type ProjectRegistry interface {
 
 
 // Define minimal interfaces to avoid import cycles
-// Agent represents an AI agent - using minimal interface for now
-type Agent interface {
-	Execute(ctx context.Context, request string) (string, error)
-	GetID() string
-	GetName() string
-}
+// Agent interface is defined in agent_registry.go to avoid duplication
 
 // Type aliases to use existing interfaces
 type Tool = tools.Tool
@@ -431,21 +426,16 @@ type ProjectContext interface {
 }
 
 // Factory function types for component creation
-type AgentFactory interface {
-	CreateAgent(ctx context.Context, id, name string, agentType string) (Agent, error)
-	CreateWorkerAgent(ctx context.Context, id, name string) (Agent, error)
-	CreateManagerAgent(ctx context.Context, id, name string) (Agent, error)
-}
 
 // Configuration types
 type Config struct {
-	Agents    AgentConfig    `yaml:"agents"`
-	Tools     ToolConfig     `yaml:"tools"`
-	Providers ProviderConfig `yaml:"providers"`
-	Memory    MemoryConfig   `yaml:"memory"`
+	Agents    AgentConfigYaml `yaml:"agents"`
+	Tools     ToolConfig      `yaml:"tools"`
+	Providers ProviderConfig  `yaml:"providers"`
+	Memory    MemoryConfig    `yaml:"memory"`
 }
 
-type AgentConfig struct {
+type AgentConfigYaml struct {
 	DefaultType string                 `yaml:"default_type"`
 	Types       map[string]interface{} `yaml:"types"`
 }
@@ -466,20 +456,7 @@ type MemoryConfig struct {
 	Stores             map[string]interface{} `yaml:"stores"`
 }
 
-// AgentInfo contains agent metadata for cost-based selection
-type AgentInfo struct {
-	ID            string   `json:"id"`
-	Name          string   `json:"name"`
-	Type          string   `json:"type"`
-	Provider      string   `json:"provider"`
-	Model         string   `json:"model"`
-	Capabilities  []string `json:"capabilities"`
-	Tools         []string `json:"tools"`
-	CostMagnitude int      `json:"cost_magnitude"`
-	ContextWindow int      `json:"context_window"`
-	ContextReset  string   `json:"context_reset"`
-	Available     bool     `json:"available"`
-}
+// AgentInfo is defined in agent_registry.go to avoid duplication
 
 // ToolInfo contains tool metadata for cost-based selection
 type ToolInfo struct {
@@ -490,23 +467,7 @@ type ToolInfo struct {
 	Tool          Tool     `json:"-"` // The actual tool instance
 }
 
-// GuildAgentConfig represents an agent from guild configuration
-type GuildAgentConfig struct {
-	ID            string            `json:"id"`
-	Name          string            `json:"name"`
-	Type          string            `json:"type"`
-	Provider      string            `json:"provider"`
-	Model         string            `json:"model"`
-	Description   string            `json:"description,omitempty"`
-	Capabilities  []string          `json:"capabilities"`
-	Tools         []string          `json:"tools,omitempty"`
-	MaxTokens     int               `json:"max_tokens,omitempty"`
-	Temperature   float64           `json:"temperature,omitempty"`
-	CostMagnitude int               `json:"cost_magnitude,omitempty"`
-	ContextWindow int               `json:"context_window,omitempty"`
-	ContextReset  string            `json:"context_reset,omitempty"`
-	Settings      map[string]string `json:"settings,omitempty"`
-}
+// GuildAgentConfig is defined in agent_registry.go to avoid duplication
 
 // Data types used by components
 type Task struct {
@@ -583,8 +544,8 @@ type KanbanCommissionRepository interface {
 
 // Common errors
 var (
-	ErrComponentNotFound     = gerror.New(gerror.ErrCodeNotFound, "component not found", nil).WithComponent("registry")
-	ErrComponentExists       = gerror.New(gerror.ErrCodeAlreadyExists, "component already exists", nil).WithComponent("registry")
-	ErrInvalidConfiguration  = gerror.New(gerror.ErrCodeInvalidFormat, "invalid configuration", nil).WithComponent("registry")
-	ErrRegistryNotInitialized = gerror.New(gerror.ErrCodeInternal, "registry not initialized", nil).WithComponent("registry")
+	ErrComponentNotFound     = gerror.New(gerror.ErrCodeNotFound, "component not found", nil)
+	ErrComponentExists       = gerror.New(gerror.ErrCodeAlreadyExists, "component already exists", nil)
+	ErrInvalidConfiguration  = gerror.New(gerror.ErrCodeInvalidFormat, "invalid configuration", nil)
+	ErrRegistryNotInitialized = gerror.New(gerror.ErrCodeInternal, "registry not initialized", nil)
 )

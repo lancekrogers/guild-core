@@ -6,7 +6,7 @@ import (
 	"sync"
 	"text/template"
 
-	"github.com/guild-ventures/guild-core/internal/prompts/standard/templates/commission"
+	"github.com/guild-ventures/guild-core/pkg/prompts/standard/templates/commission"
 )
 
 // PromptManager handles loading and rendering of system prompts

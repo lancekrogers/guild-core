@@ -3,7 +3,7 @@ package generator
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/internal/commission"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 )
 
 // CommissionGenerator defines the interface for commission-related content generation

@@ -3,12 +3,13 @@ package manager
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
 
-	"github.com/guild-ventures/guild-core/internal/prompts/standard/templates/agent/extraction"
+	"github.com/guild-ventures/guild-core/pkg/prompts/standard/templates/agent/extraction"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/internal/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts"
 )
 
 // TaskExtractor uses layered prompts and LLM intelligence to extract tasks from refined content

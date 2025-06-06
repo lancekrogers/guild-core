@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/guild-ventures/guild-core/internal/prompts"
-	"github.com/guild-ventures/guild-core/internal/prompts/layered"
+	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 )
 
 // LayeredAdapter adapts a layered.LayeredManager to implement prompts.Manager

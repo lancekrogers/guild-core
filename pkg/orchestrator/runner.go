@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/internal/commission"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 

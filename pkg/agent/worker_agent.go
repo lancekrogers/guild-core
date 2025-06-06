@@ -28,7 +28,9 @@ func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (str
 	model := "gpt-3.5-turbo" // Default model, would get from config
 	
 	// Estimate cost
-	estimatedCost := a.CostManager.EstimateLLMCost(model, estimatedPromptTokens, estimatedCompletionTokens)
+	// Estimate total tokens
+	totalEstimatedTokens := estimatedPromptTokens + estimatedCompletionTokens
+	estimatedCost := a.CostManager.EstimateLLMCost(model, totalEstimatedTokens)
 	
 	// Check if we can afford it
 	if !a.CostManager.CanAfford(CostTypeLLM, estimatedCost) {
@@ -113,14 +115,12 @@ func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (str
 
 // ExecuteWithTools executes a request that may involve tool usage
 func (a *WorkerAgent) ExecuteWithTools(ctx context.Context, request string, allowedTools []string) (string, error) {
-	// First, check the cost of using tools
-	var totalToolCost float64
-	for _, toolName := range allowedTools {
-		totalToolCost += a.ToolRegistry.GetToolCost(toolName)
-	}
+	// For now, we'll use a fixed cost per tool
+	const estimatedCostPerTool = 0.001
+	totalToolCost := float64(len(allowedTools)) * estimatedCostPerTool
 	
 	// Check if we can afford tool usage
-	if !a.CostManager.CanAfford(CostTypeTool, totalToolCost) {
+	if a.CostManager != nil && !a.CostManager.CanAfford(CostTypeTool, totalToolCost) {
 		return "", gerror.Newf(gerror.ErrCodeResourceLimit, "tool budget exceeded: estimated cost $%.4f exceeds available budget", totalToolCost).
 			WithComponent("agent").
 			WithOperation("ExecuteWithTools").
@@ -144,7 +144,18 @@ func (a *WorkerAgent) ExecuteWithTools(ctx context.Context, request string, allo
 		toolInput := `{"query": "example"}`
 		
 		// Execute tool with cost tracking
-		result, cost, err := a.ToolRegistry.ExecuteToolWithCostTracking(ctx, toolName, toolInput)
+		// Get the tool
+		tool, err := a.ToolRegistry.GetTool(toolName)
+		if err != nil {
+			return "", gerror.Wrap(err, gerror.ErrCodeAgent, "tool not found").
+				WithComponent("agent").
+				WithOperation("ExecuteWithTools").
+				WithDetails("agent_id", a.ID).
+				WithDetails("tool_name", toolName)
+		}
+		
+		// Execute the tool
+		result, err := tool.Execute(ctx, toolInput)
 		if err != nil {
 			return "", gerror.Wrap(err, gerror.ErrCodeAgent, "tool execution failed").
 				WithComponent("agent").
@@ -154,13 +165,13 @@ func (a *WorkerAgent) ExecuteWithTools(ctx context.Context, request string, allo
 				WithDetails("tool_input", toolInput)
 		}
 		
+		// Track the cost
+		cost := estimatedCostPerTool
+		
 		// Record tool cost
-		a.CostManager.RecordToolCost(toolName, map[string]string{
-			"agent_id": a.ID,
-			"input":    toolInput,
-			"output":   result.Output[:100], // Truncated for metadata
-			"cost":     fmt.Sprintf("%.4f", cost),
-		})
+		if a.CostManager != nil {
+			a.CostManager.TrackCost(CostTypeTool, cost)
+		}
 		
 		// Incorporate tool result into response
 		response = fmt.Sprintf("%s\n\nTool Result (%s):\n%s", response, toolName, result.Output)
