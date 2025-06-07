@@ -15,7 +15,11 @@ func main() {
 		ChunkSize:    1000,
 		ChunkOverlap: 100,
 	}
-	chunker := rag.NewChunker(chunkerConfig)
+	chunker, err := rag.DefaultChunkerFactory(chunkerConfig)
+	if err != nil {
+		fmt.Printf("Error creating chunker: %v\n", err)
+		return
+	}
 	fmt.Printf("Created chunker with config: %+v\n", chunkerConfig)
 	_ = chunker // Mark as used
 	

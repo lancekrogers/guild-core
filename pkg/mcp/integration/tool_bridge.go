@@ -4,6 +4,7 @@ package integration
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"sync"
 	"time"
 
@@ -264,7 +265,7 @@ func (a *GuildToMCPAdapter) Execute(ctx context.Context, params map[string]inter
 func (a *GuildToMCPAdapter) HealthCheck() error {
 	// Simple health check - try to get schema
 	if schema := a.guildTool.Schema(); schema == nil {
-		return gerror.New(gerror.ErrCodeInvalidInput, "mcp_tool_bridge", "validate_schema", "tool %s has no schema", a.guildTool.Name())
+		return gerror.Newf(gerror.ErrCodeInvalidInput, "tool %s has no schema", a.guildTool.Name()).WithComponent("mcp_tool_bridge").WithOperation("validate_schema")
 	}
 	return nil
 }

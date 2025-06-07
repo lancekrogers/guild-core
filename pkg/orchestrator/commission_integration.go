@@ -504,9 +504,29 @@ func (a *layeredManagerAdapter) GetSystemPrompt(ctx context.Context, role, domai
 }
 
 // FormatContext formats context information into a prompt string
-func (a *layeredManagerAdapter) FormatContext(ctx context.Context, contextInfo interface{}) (string, error) {
+func (a *layeredManagerAdapter) FormatContext(ctx context.Context, contextInfo layered.Context) (string, error) {
 	// Simple implementation for adapter
 	return "Context: Processing commission with task coordination requirements.", nil
+}
+
+// GetTemplate retrieves a named template
+func (a *layeredManagerAdapter) GetTemplate(ctx context.Context, templateName string) (string, error) {
+	// Simple implementation for adapter - templates not supported
+	return "", gerror.New(gerror.ErrCodeNotFound, "templates not supported in adapter", nil).
+		WithComponent("orchestrator").
+		WithOperation("GetTemplate")
+}
+
+// ListRoles returns all available roles
+func (a *layeredManagerAdapter) ListRoles(ctx context.Context) ([]string, error) {
+	// Return default roles
+	return []string{"manager", "worker", "specialist"}, nil
+}
+
+// ListDomains returns all available domains for a role
+func (a *layeredManagerAdapter) ListDomains(ctx context.Context, role string) ([]string, error) {
+	// Return default domains
+	return []string{"default", "web-app", "microservice", "cli-tool"}, nil
 }
 
 // llmClientWrapper wraps registry.Provider (LLMClient) to implement providers.AIProvider

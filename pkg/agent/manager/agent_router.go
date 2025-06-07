@@ -3,23 +3,24 @@ package manager
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
 // AgentRouter routes tasks to optimal agents using manager agent and layered prompts
 type AgentRouter struct {
-	promptManager prompts.LayeredManager
+	promptManager layered.LayeredManager
 	artisanClient ArtisanClient
 	agentRegistry registry.AgentRegistry
 }
 
 // NewAgentRouter creates a new agent router
 func NewAgentRouter(
-	promptManager prompts.LayeredManager,
+	promptManager layered.LayeredManager,
 	artisanClient ArtisanClient,
 	agentRegistry registry.AgentRegistry,
 ) *AgentRouter {
@@ -154,7 +155,19 @@ func (ar *AgentRouter) RouteToAgents(
 
 	// Generate layered prompt for agent routing
 	turnCtx := layered.TurnContext{
-		UserMessage:  request.TaskDescription,
+		UserMessage: fmt.Sprintf(`Route this task to the optimal agents:
+Task: %s
+Complexity: %d
+
+Available Agents:
+%s
+
+Selection Requirements:
+%s`, 
+			request.TaskDescription,
+			request.ComplexityScore,
+			formatAgentsForPrompt(enhancedAgents),
+			formatRequirementsForPrompt(request.AgentRequirements)),
 		TaskID:       "agent-routing",
 		CommissionID: "task-routing",
 		Urgency:      "medium",
@@ -162,17 +175,9 @@ func (ar *AgentRouter) RouteToAgents(
 		Metadata:     promptContext,
 	}
 	
-	// Use GetCompiledPrompt since that's available on prompts.LayeredManager
-	config := prompts.LayerConfig{
-		AgentID:   "manager-agent",
-		SessionID: "routing-session",
-		Role:      "manager",
-		Domain:    "task-routing",
-	}
-	
-	compiledPrompt, err := ar.promptManager.GetCompiledPrompt(ctx, config)
+	layeredPrompt, err := ar.promptManager.BuildLayeredPrompt(ctx, "manager-agent", "routing-session", turnCtx)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "failed to assemble routing prompt").
+		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "failed to build routing prompt").
 			WithComponent("manager").
 			WithOperation("RouteToAgents").
 			WithDetails("task_id", "agent-routing")
@@ -180,7 +185,7 @@ func (ar *AgentRouter) RouteToAgents(
 
 	// Make request to artisan (manager agent)
 	artisanRequest := ArtisanRequest{
-		SystemPrompt: compiledPrompt,
+		SystemPrompt: layeredPrompt.Compiled,
 		UserPrompt:   turnCtx.UserMessage,
 		Temperature:  0.2, // Very low temperature for routing decisions
 		MaxTokens:    3000,
@@ -323,4 +328,23 @@ func (ar *AgentRouter) GetAgentCapabilities(ctx context.Context) ([]EnhancedAgen
 	}
 	
 	return ar.enhanceAgentInfo(ctx, mockAgents)
+}
+
+// Helper functions for formatting
+
+func formatAgentsForPrompt(agents []EnhancedAgentInfo) string {
+	var lines []string
+	for _, agent := range agents {
+		lines = append(lines, fmt.Sprintf("- %s (%s): %s, Cost: $%.3f/1K tokens, Success: %.1f%%, Context: %d tokens",
+			agent.Name, agent.Role, agent.Provider, agent.TokenCost, agent.SuccessRate, agent.ContextWindow))
+	}
+	return strings.Join(lines, "\n")
+}
+
+func formatRequirementsForPrompt(requirements []AgentRequirement) string {
+	var lines []string
+	for _, req := range requirements {
+		lines = append(lines, fmt.Sprintf("- %s (Priority: %s)", req.Role, req.Priority))
+	}
+	return strings.Join(lines, "\n")
 }

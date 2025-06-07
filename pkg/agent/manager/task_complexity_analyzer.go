@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
@@ -16,7 +15,7 @@ import (
 // TaskComplexityAnalyzer analyzes task complexity with proper error handling,
 // validation, observability, and registry integration
 type TaskComplexityAnalyzer struct {
-	promptManager prompts.LayeredManager
+	promptManager layered.LayeredManager
 	artisanClient ArtisanClient
 	agentRegistry registry.AgentRegistry
 	logger        *slog.Logger
@@ -96,7 +95,7 @@ type AgentInfo struct {
 
 // NewTaskComplexityAnalyzer creates a properly configured analyzer
 func NewTaskComplexityAnalyzer(
-	promptManager prompts.LayeredManager,
+	promptManager layered.LayeredManager,
 	artisanClient ArtisanClient,
 	agentRegistry registry.AgentRegistry,
 ) *TaskComplexityAnalyzer {
@@ -347,7 +346,7 @@ func (tca *TaskComplexityAnalyzer) buildLayeredPrompt(
 	promptContext map[string]interface{},
 ) (*layered.LayeredPrompt, error) {
 	// Note: turnCtx would be used with a layered.LayeredManager that has BuildLayeredPrompt
-	// For now we're using the basic prompts.LayeredManager with GetCompiledPrompt
+	// For now we're using the basic layered.LayeredManager with GetCompiledPrompt
 	_ = layered.TurnContext{
 		UserMessage:  request.TaskDescription,
 		TaskID:       "complexity-analysis",
@@ -357,27 +356,30 @@ func (tca *TaskComplexityAnalyzer) buildLayeredPrompt(
 		Metadata:     promptContext,
 	}
 
-	// Use GetCompiledPrompt since that's available on prompts.LayeredManager
-	config := prompts.LayerConfig{
-		AgentID:   "manager-agent",
-		SessionID: "analysis-session",
-		Role:      "manager",
-		Domain:    "task-analysis",
+	// Build layered prompt using BuildLayeredPrompt
+	turnCtx := layered.TurnContext{
+		UserMessage: fmt.Sprintf(`Analyze task complexity:
+Task: %s
+Domain: %s
+Priority: %s
+Token Budget: %d
+Quality Level: %s`,
+			request.TaskDescription,
+			request.TaskDomain,
+			request.TaskPriority,
+			request.TokenBudget,
+			request.QualityLevel),
+		TaskID:       "task-complexity-analysis",
+		CommissionID: "analysis-session",
+		Metadata:     promptContext,
 	}
 	
-	compiledPrompt, err := tca.promptManager.GetCompiledPrompt(ctx, config)
+	layeredPrompt, err := tca.promptManager.BuildLayeredPrompt(ctx, "manager-agent", "analysis-session", turnCtx)
 	if err != nil {
 		return nil, err
 	}
 	
-	// Create a LayeredPrompt structure to match the expected return type
-	return &layered.LayeredPrompt{
-		Compiled:    compiledPrompt,
-		ArtisanID:   config.AgentID,
-		SessionID:   config.SessionID,
-		AssembledAt: time.Now(),
-		Metadata:    promptContext,
-	}, nil
+	return layeredPrompt, nil
 }
 
 // executeAnalysis executes the analysis with retry logic

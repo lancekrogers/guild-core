@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 )
 
 // IntelligentParser uses either pattern matching or LLM extraction based on configuration
@@ -33,7 +33,7 @@ const (
 type IntelligentParserConfig struct {
 	Mode          ParserMode
 	ArtisanClient ArtisanClient
-	PromptManager prompts.LayeredManager
+	PromptManager layered.LayeredManager
 }
 
 // NewIntelligentParser creates a parser that can use multiple extraction strategies

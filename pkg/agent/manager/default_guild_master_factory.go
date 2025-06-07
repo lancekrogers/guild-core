@@ -4,20 +4,20 @@ import (
 	"context"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
 // DefaultGuildMasterFactory creates a factory for Guild Master components
 type DefaultGuildMasterFactory struct {
-	promptManager prompts.LayeredManager
+	promptManager layered.LayeredManager
 	providers     map[string]providers.AIProvider
 	registry      ComponentRegistry
 }
 
 // NewDefaultGuildMasterFactory creates a new Guild Master factory
 func NewDefaultGuildMasterFactory(
-	promptManager prompts.LayeredManager,
+	promptManager layered.LayeredManager,
 	providers map[string]providers.AIProvider,
 	registry ComponentRegistry,
 ) *DefaultGuildMasterFactory {

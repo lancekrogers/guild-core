@@ -161,7 +161,7 @@ func setupTestKanbanManager(t *testing.T) (*kanban.Manager, *kanban.Board, func(
 	}
 	
 	// Create manager with registry
-	mgr, err := kanban.NewManagerWithRegistry(testReg)
+	mgr, err := kanban.NewManagerWithRegistry(context.Background(), testReg)
 	require.NoError(t, err)
 	
 	// Create test board
@@ -179,7 +179,7 @@ func TestScribeModel_New(t *testing.T) {
 	mgr, board, cleanup := setupTestKanbanManager(t)
 	defer cleanup()
 	
-	model := New(mgr, board.ID)
+	model := New(context.Background(), mgr, board.ID)
 	
 	assert.NotNil(t, model)
 	assert.Equal(t, board.ID, model.boardID)
@@ -192,7 +192,7 @@ func TestScribeModel_Init(t *testing.T) {
 	mgr, board, cleanup := setupTestKanbanManager(t)
 	defer cleanup()
 	
-	model := New(mgr, board.ID)
+	model := New(context.Background(), mgr, board.ID)
 	cmd := model.Init()
 	
 	assert.NotNil(t, cmd)
@@ -203,7 +203,7 @@ func TestScribeModel_ColumnNavigation(t *testing.T) {
 	mgr, board, cleanup := setupTestKanbanManager(t)
 	defer cleanup()
 	
-	model := New(mgr, board.ID)
+	model := New(context.Background(), mgr, board.ID)
 	
 	tests := []struct {
 		name     string
@@ -234,7 +234,7 @@ func TestScribeModel_SearchMode(t *testing.T) {
 	mgr, board, cleanup := setupTestKanbanManager(t)
 	defer cleanup()
 	
-	model := New(mgr, board.ID)
+	model := New(context.Background(), mgr, board.ID)
 	
 	// Enter search mode
 	updatedModel, _ := model.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("/")})
@@ -261,7 +261,7 @@ func TestScribeModel_TaskSorting(t *testing.T) {
 	mgr, board, cleanup := setupTestKanbanManager(t)
 	defer cleanup()
 	
-	model := New(mgr, board.ID)
+	model := New(context.Background(), mgr, board.ID)
 	
 	// Create test tasks
 	tasks := []*kanban.Task{
@@ -297,7 +297,7 @@ func TestScribeModel_ViewportScrolling(t *testing.T) {
 	mgr, board, cleanup := setupTestKanbanManager(t)
 	defer cleanup()
 	
-	model := New(mgr, board.ID)
+	model := New(context.Background(), mgr, board.ID)
 	model.viewport.VisibleRows = 5
 	
 	// Set up column with many tasks
@@ -329,7 +329,7 @@ func TestScribeModel_WindowResize(t *testing.T) {
 	mgr, board, cleanup := setupTestKanbanManager(t)
 	defer cleanup()
 	
-	model := New(mgr, board.ID)
+	model := New(context.Background(), mgr, board.ID)
 	
 	// Simulate window resize
 	newWidth := 120

@@ -12,20 +12,20 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 )
 
 // PromptsServer implements the gRPC PromptService for Guild layered prompt management
 type PromptsServer struct {
 	promptspb.UnimplementedPromptServiceServer
 	
-	manager     prompts.LayeredManager
+	manager     layered.LayeredManager
 	subscribers map[string]chan *promptspb.PromptUpdateEvent // For streaming updates
 	subMutex    sync.RWMutex
 }
 
 // NewPromptsServer creates a new gRPC prompts server
-func NewPromptsServer(manager prompts.LayeredManager) *PromptsServer {
+func NewPromptsServer(manager layered.LayeredManager) *PromptsServer {
 	return &PromptsServer{
 		manager:     manager,
 		subscribers: make(map[string]chan *promptspb.PromptUpdateEvent),
@@ -41,7 +41,7 @@ func (s *PromptsServer) GetPromptLayer(ctx context.Context, req *promptspb.GetPr
 	layer := convertProtoToPromptLayer(req.Layer)
 	prompt, err := s.manager.GetPromptLayer(ctx, layer, req.ArtisanId, req.SessionId)
 	if err != nil {
-		if err == prompts.ErrLayerNotFound {
+		if err == layered.ErrLayerNotFound {
 			return nil, status.Error(codes.NotFound, "prompt layer not found")
 		}
 		return nil, status.Errorf(codes.Internal, "failed to get prompt layer: %v", err)
@@ -97,7 +97,7 @@ func (s *PromptsServer) DeletePromptLayer(ctx context.Context, req *promptspb.De
 	layer := convertProtoToPromptLayer(req.Layer)
 	err := s.manager.DeletePromptLayer(ctx, layer, req.ArtisanId, req.SessionId)
 	if err != nil {
-		if err == prompts.ErrLayerNotFound {
+		if err == layered.ErrLayerNotFound {
 			return nil, status.Error(codes.NotFound, "prompt layer not found")
 		}
 		return nil, status.Errorf(codes.Internal, "failed to delete prompt layer: %v", err)
@@ -141,7 +141,7 @@ func (s *PromptsServer) BuildLayeredPrompt(ctx context.Context, req *promptspb.B
 		return nil, status.Error(codes.InvalidArgument, "artisan ID must be specified")
 	}
 
-	var turnCtx prompts.TurnContext
+	var turnCtx layered.TurnContext
 	if req.TurnContext != nil {
 		turnCtx = convertProtoToTurnContext(req.TurnContext)
 	}
@@ -269,51 +269,51 @@ func (s *PromptsServer) StreamPromptUpdates(req *promptspb.StreamPromptUpdatesRe
 
 // Helper methods for conversion between proto and domain types
 
-func convertProtoToPromptLayer(layer promptspb.PromptLayer) prompts.PromptLayer {
+func convertProtoToPromptLayer(layer promptspb.PromptLayer) layered.PromptLayer {
 	switch layer {
 	case promptspb.PromptLayer_PROMPT_LAYER_PLATFORM:
-		return prompts.LayerPlatform
+		return layered.LayerPlatform
 	case promptspb.PromptLayer_PROMPT_LAYER_GUILD:
-		return prompts.LayerGuild
+		return layered.LayerGuild
 	case promptspb.PromptLayer_PROMPT_LAYER_ROLE:
-		return prompts.LayerRole
+		return layered.LayerRole
 	case promptspb.PromptLayer_PROMPT_LAYER_DOMAIN:
-		return prompts.LayerDomain
+		return layered.LayerDomain
 	case promptspb.PromptLayer_PROMPT_LAYER_SESSION:
-		return prompts.LayerSession
+		return layered.LayerSession
 	case promptspb.PromptLayer_PROMPT_LAYER_TURN:
-		return prompts.LayerTurn
+		return layered.LayerTurn
 	default:
-		return prompts.LayerPlatform
+		return layered.LayerPlatform
 	}
 }
 
-func convertPromptLayerToProto(layer prompts.PromptLayer) promptspb.PromptLayer {
+func convertPromptLayerToProto(layer layered.PromptLayer) promptspb.PromptLayer {
 	switch layer {
-	case prompts.LayerPlatform:
+	case layered.LayerPlatform:
 		return promptspb.PromptLayer_PROMPT_LAYER_PLATFORM
-	case prompts.LayerGuild:
+	case layered.LayerGuild:
 		return promptspb.PromptLayer_PROMPT_LAYER_GUILD
-	case prompts.LayerRole:
+	case layered.LayerRole:
 		return promptspb.PromptLayer_PROMPT_LAYER_ROLE
-	case prompts.LayerDomain:
+	case layered.LayerDomain:
 		return promptspb.PromptLayer_PROMPT_LAYER_DOMAIN
-	case prompts.LayerSession:
+	case layered.LayerSession:
 		return promptspb.PromptLayer_PROMPT_LAYER_SESSION
-	case prompts.LayerTurn:
+	case layered.LayerTurn:
 		return promptspb.PromptLayer_PROMPT_LAYER_TURN
 	default:
 		return promptspb.PromptLayer_PROMPT_LAYER_PLATFORM
 	}
 }
 
-func convertProtoToSystemPrompt(proto *promptspb.SystemPrompt) *prompts.SystemPrompt {
+func convertProtoToSystemPrompt(proto *promptspb.SystemPrompt) *layered.SystemPrompt {
 	metadata := make(map[string]interface{})
 	for k, v := range proto.Metadata {
 		metadata[k] = v
 	}
 
-	return &prompts.SystemPrompt{
+	return &layered.SystemPrompt{
 		Layer:     convertProtoToPromptLayer(proto.Layer),
 		ArtisanID: proto.ArtisanId,
 		SessionID: proto.SessionId,
@@ -325,7 +325,7 @@ func convertProtoToSystemPrompt(proto *promptspb.SystemPrompt) *prompts.SystemPr
 	}
 }
 
-func convertSystemPromptToProto(prompt *prompts.SystemPrompt) *promptspb.SystemPrompt {
+func convertSystemPromptToProto(prompt *layered.SystemPrompt) *promptspb.SystemPrompt {
 	metadata := make(map[string]string)
 	for k, v := range prompt.Metadata {
 		if str, ok := v.(string); ok {
@@ -347,13 +347,13 @@ func convertSystemPromptToProto(prompt *prompts.SystemPrompt) *promptspb.SystemP
 	}
 }
 
-func convertProtoToTurnContext(proto *promptspb.TurnContext) prompts.TurnContext {
+func convertProtoToTurnContext(proto *promptspb.TurnContext) layered.TurnContext {
 	metadata := make(map[string]interface{})
 	for k, v := range proto.Metadata {
 		metadata[k] = v
 	}
 
-	return prompts.TurnContext{
+	return layered.TurnContext{
 		UserMessage:   proto.UserMessage,
 		TaskID:        proto.TaskId,
 		CommissionID:  proto.CommissionId,
@@ -363,7 +363,7 @@ func convertProtoToTurnContext(proto *promptspb.TurnContext) prompts.TurnContext
 	}
 }
 
-func convertLayeredPromptToProto(layered *prompts.LayeredPrompt) *promptspb.LayeredPrompt {
+func convertLayeredPromptToProto(layered *layered.LayeredPrompt) *promptspb.LayeredPrompt {
 	var protoLayers []*promptspb.SystemPrompt
 	for _, layer := range layered.Layers {
 		protoLayers = append(protoLayers, convertSystemPromptToProto(&layer))

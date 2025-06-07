@@ -214,10 +214,7 @@ func (e *BasicTaskExecutor) phaseInitialize(ctx context.Context) error {
 		e.initializeDefaultTools()
 		
 		// Log available tools
-		availableTools := []string{}
-		for _, tool := range e.toolRegistry.ListTools() {
-			availableTools = append(availableTools, tool.Name())
-		}
+		availableTools := e.toolRegistry.ListTools()
 		
 		e.addExecutionLog("Initialized tools", map[string]interface{}{
 			"available_tools": availableTools,
@@ -541,7 +538,11 @@ func (e *BasicTaskExecutor) buildPromptData() execution.ExecutionPromptData {
 	var toolsData []execution.ToolData
 	if e.toolRegistry != nil {
 		// Get actual tools from registry
-		for _, tool := range e.toolRegistry.ListTools() {
+		for _, toolName := range e.toolRegistry.ListTools() {
+			tool, err := e.toolRegistry.GetTool(toolName)
+			if err != nil {
+				continue // Skip tools that can't be retrieved
+			}
 			// Convert schema to parameters
 			var params []execution.ToolParameter
 			if schema := tool.Schema(); schema != nil {
@@ -660,13 +661,13 @@ func (e *BasicTaskExecutor) initializeDefaultTools() {
 	}
 
 	// Register file tool if not already registered
-	if _, exists := e.toolRegistry.GetTool("file"); !exists {
+	if _, err := e.toolRegistry.GetTool("file"); err != nil {
 		fileTool := fs.NewFileTool(basePath)
-		e.toolRegistry.RegisterTool(fileTool)
+		e.toolRegistry.RegisterTool("file", fileTool)
 	}
 
 	// Register shell tool if not already registered
-	if _, exists := e.toolRegistry.GetTool("shell"); !exists {
+	if _, err := e.toolRegistry.GetTool("shell"); err != nil {
 		shellOptions := shell.ShellToolOptions{
 			WorkingDir: basePath,
 			// Add safety restrictions
@@ -676,7 +677,7 @@ func (e *BasicTaskExecutor) initializeDefaultTools() {
 			},
 		}
 		shellTool := shell.NewShellTool(shellOptions)
-		e.toolRegistry.RegisterTool(shellTool)
+		e.toolRegistry.RegisterTool("shell", shellTool)
 	}
 }
 
@@ -745,7 +746,7 @@ func (e *BasicTaskExecutor) stepPrepareWorkspace(ctx context.Context) error {
 				WithComponent("executor").
 				WithOperation("phaseFinalize").
 				WithDetails("task_id", e.currentTask.ID).
-				WithDetails("readme_path", readmePath)
+				WithDetails("readme_path", filepath.Join(taskDir, "README.md"))
 		}
 
 		// Track artifact

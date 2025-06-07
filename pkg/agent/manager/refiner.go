@@ -7,13 +7,13 @@ import (
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 )
 
 // GuildMasterRefiner implements the CommissionRefiner interface
 type GuildMasterRefiner struct {
 	artisanClient ArtisanClient
-	promptManager prompts.Manager
+	promptManager layered.Manager
 	parser        ResponseParser
 	validator     StructureValidator
 }
@@ -21,7 +21,7 @@ type GuildMasterRefiner struct {
 // NewGuildMasterRefiner creates a new Guild Master refiner
 func NewGuildMasterRefiner(
 	artisanClient ArtisanClient,
-	promptManager prompts.Manager,
+	promptManager layered.Manager,
 	parser ResponseParser,
 	validator StructureValidator,
 ) *GuildMasterRefiner {
@@ -130,12 +130,8 @@ func (r *GuildMasterRefiner) getSystemPrompt(ctx context.Context, domain string)
 		domain = "default"
 	}
 
-	// Use RenderPrompt since GetSystemPrompt is not available on prompts.Manager
-	promptData := map[string]interface{}{
-		"role": "manager",
-		"domain": domain,
-	}
-	prompt, err := r.promptManager.RenderPrompt(ctx, "manager-"+domain, promptData)
+	// Use GetSystemPrompt for layered.Manager
+	prompt, err := r.promptManager.GetSystemPrompt(ctx, "manager", domain)
 	if err != nil {
 		return "", gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to get Guild Master prompt for domain %s", domain).
 			WithComponent("manager").

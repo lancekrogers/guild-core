@@ -1,4 +1,4 @@
-package memory
+package promptchain
 
 import (
 	"context"
@@ -10,6 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
@@ -124,7 +125,7 @@ func TestSQLiteChainManager_AddMessage(t *testing.T) {
 	require.NoError(t, err)
 
 	// Add a user message
-	userMsg := Message{
+	userMsg := memory.Message{
 		Role:       "user",
 		Content:    "Hello, how are you?",
 		Name:       "test-user",
@@ -135,7 +136,7 @@ func TestSQLiteChainManager_AddMessage(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Add an assistant message
-	assistantMsg := Message{
+	assistantMsg := memory.Message{
 		Role:       "assistant",
 		Content:    "I'm doing well, thank you!",
 		Timestamp:  time.Now(),
@@ -159,11 +160,11 @@ func TestSQLiteChainManager_AddMessage(t *testing.T) {
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "chainID cannot be empty")
 
-	err = manager.AddMessage(ctx, chainID, Message{})
+	err = manager.AddMessage(ctx, chainID, memory.Message{})
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "message role cannot be empty")
 
-	err = manager.AddMessage(ctx, chainID, Message{Role: "user"})
+	err = manager.AddMessage(ctx, chainID, memory.Message{Role: "user"})
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "message content cannot be empty")
 }
@@ -280,7 +281,7 @@ func TestSQLiteChainManager_BuildContext(t *testing.T) {
 	require.NoError(t, err)
 
 	// Add multiple messages
-	messages := []Message{
+	messages := []memory.Message{
 		{Role: "system", Content: "You are a helpful assistant.", TokenUsage: 5},
 		{Role: "user", Content: "What is 2+2?", TokenUsage: 3},
 		{Role: "assistant", Content: "2+2 equals 4.", TokenUsage: 4},

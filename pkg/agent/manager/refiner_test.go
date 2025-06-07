@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 )
 
 // Mock implementations for testing
@@ -37,7 +37,7 @@ func (m *mockPromptManager) GetTemplate(ctx context.Context, templateName string
 	return args.String(0), args.Error(1)
 }
 
-func (m *mockPromptManager) FormatContext(ctx context.Context, context prompts.Context) (string, error) {
+func (m *mockPromptManager) FormatContext(ctx context.Context, context layered.Context) (string, error) {
 	args := m.Called(ctx, context)
 	return args.String(0), args.Error(1)
 }
@@ -58,6 +58,11 @@ type mockResponseParser struct {
 
 func (m *mockResponseParser) ParseResponse(response *manager.ArtisanResponse) (*manager.FileStructure, error) {
 	args := m.Called(response)
+	return args.Get(0).(*manager.FileStructure), args.Error(1)
+}
+
+func (m *mockResponseParser) ParseResponseWithContext(ctx context.Context, response *manager.ArtisanResponse) (*manager.FileStructure, error) {
+	args := m.Called(ctx, response)
 	return args.Get(0).(*manager.FileStructure), args.Error(1)
 }
 

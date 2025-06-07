@@ -247,7 +247,6 @@ func createTestRegistry() registry.ComponentRegistry {
 				Type:          "worker",
 				Capabilities:  []string{"coding", "testing"},
 				CostMagnitude: 1,
-				Available:     true,
 			},
 			{
 				ID:            "security-expert",
@@ -255,7 +254,6 @@ func createTestRegistry() registry.ComponentRegistry {
 				Type:          "specialist",
 				Capabilities:  []string{"security", "coding"},
 				CostMagnitude: 3,
-				Available:     true,
 			},
 			{
 				ID:            "ui-designer",
@@ -263,7 +261,6 @@ func createTestRegistry() registry.ComponentRegistry {
 				Type:          "specialist",
 				Capabilities:  []string{"frontend", "ui-design"},
 				CostMagnitude: 2,
-				Available:     true,
 			},
 			{
 				ID:            "database-admin",
@@ -271,7 +268,6 @@ func createTestRegistry() registry.ComponentRegistry {
 				Type:          "specialist",
 				Capabilities:  []string{"database", "configuration"},
 				CostMagnitude: 2,
-				Available:     true,
 			},
 			{
 				ID:            "senior-architect",
@@ -279,7 +275,6 @@ func createTestRegistry() registry.ComponentRegistry {
 				Type:          "manager",
 				Capabilities:  []string{"architecture", "planning", "coding"},
 				CostMagnitude: 5,
-				Available:     true,
 			},
 		},
 		tools: []registry.ToolInfo{
@@ -287,19 +282,16 @@ func createTestRegistry() registry.ComponentRegistry {
 				Name:          "file_operations",
 				Capabilities:  []string{"file_operations"},
 				CostMagnitude: 0,
-				Available:     true,
 			},
 			{
 				Name:          "execution",
 				Capabilities:  []string{"execution"},
 				CostMagnitude: 0,
-				Available:     true,
 			},
 			{
 				Name:          "database",
 				Capabilities:  []string{"database"},
 				CostMagnitude: 1,
-				Available:     true,
 			},
 		},
 	}

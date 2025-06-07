@@ -31,6 +31,11 @@ func newToolRegistry() *ToolRegistry {
 	}
 }
 
+// NewToolRegistry creates a new tool registry with cost tracking (public constructor)
+func NewToolRegistry() *ToolRegistry {
+	return newToolRegistry()
+}
+
 // DefaultToolRegistryFactory creates a tool registry for registry use
 func DefaultToolRegistryFactory() Registry {
 	return newToolRegistry()
@@ -43,6 +48,12 @@ func (r *ToolRegistry) RegisterTool(name string, tool Tool) error {
 	if tool.Name() != name {
 		return fmt.Errorf("tool name mismatch: provided '%s', tool reports '%s'", name, tool.Name())
 	}
+	return r.ToolRegistry.RegisterTool(tool)
+}
+
+// Register registers a tool using its own name
+// This provides compatibility with the base registry's signature
+func (r *ToolRegistry) Register(tool Tool) error {
 	return r.ToolRegistry.RegisterTool(tool)
 }
 

@@ -1,4 +1,4 @@
-package memory_test
+package promptchain_test
 
 import (
 	"context"
@@ -11,6 +11,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/storage"
+	"github.com/guild-ventures/guild-core/pkg/storage/promptchain"
 )
 
 // TestPromptChainIntegration tests the full integration of the prompt chain system
@@ -26,7 +27,7 @@ func TestPromptChainIntegration(t *testing.T) {
 	require.NotNil(t, promptChainRepo)
 
 	// Create SQLite chain manager
-	chainManager := memory.NewSQLiteChainManager(promptChainRepo)
+	chainManager := promptchain.NewSQLiteChainManager(promptChainRepo)
 
 	// Test 1: Create a chain for an agent
 	agentID := "test-agent-integration"
@@ -128,7 +129,7 @@ func TestPromptChainConcurrency(t *testing.T) {
 	require.NotNil(t, promptChainRepo)
 
 	// Create SQLite chain manager
-	chainManager := memory.NewSQLiteChainManager(promptChainRepo)
+	chainManager := promptchain.NewSQLiteChainManager(promptChainRepo)
 
 	// Create multiple chains concurrently
 	numAgents := 5

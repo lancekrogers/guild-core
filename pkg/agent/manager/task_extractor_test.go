@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 )
 
 // SimpleMockArtisanClient for testing
@@ -28,7 +28,7 @@ func (m *SimpleMockArtisanClient) Complete(ctx context.Context, request ArtisanR
 	}, nil
 }
 
-// mockLayeredManager is a minimal mock for prompts.LayeredManager
+// mockLayeredManager is a minimal mock for layered.LayeredManager
 type mockLayeredManager struct{}
 
 func (m *mockLayeredManager) GetSystemPrompt(ctx context.Context, role string, domain string) (string, error) {
@@ -39,7 +39,7 @@ func (m *mockLayeredManager) GetTemplate(ctx context.Context, templateName strin
 	return "", nil
 }
 
-func (m *mockLayeredManager) FormatContext(ctx context.Context, context prompts.Context) (string, error) {
+func (m *mockLayeredManager) FormatContext(ctx context.Context, context layered.Context) (string, error) {
 	return "", nil
 }
 
@@ -51,23 +51,23 @@ func (m *mockLayeredManager) ListDomains(ctx context.Context, role string) ([]st
 	return nil, nil
 }
 
-func (m *mockLayeredManager) BuildLayeredPrompt(ctx context.Context, artisanID, sessionID string, turnCtx prompts.TurnContext) (*prompts.LayeredPrompt, error) {
+func (m *mockLayeredManager) BuildLayeredPrompt(ctx context.Context, artisanID, sessionID string, turnCtx layered.TurnContext) (*layered.LayeredPrompt, error) {
 	return nil, nil
 }
 
-func (m *mockLayeredManager) GetPromptLayer(ctx context.Context, layer prompts.PromptLayer, artisanID, sessionID string) (*prompts.SystemPrompt, error) {
+func (m *mockLayeredManager) GetPromptLayer(ctx context.Context, layer layered.PromptLayer, artisanID, sessionID string) (*layered.SystemPrompt, error) {
 	return nil, nil
 }
 
-func (m *mockLayeredManager) SetPromptLayer(ctx context.Context, prompt prompts.SystemPrompt) error {
+func (m *mockLayeredManager) SetPromptLayer(ctx context.Context, prompt layered.SystemPrompt) error {
 	return nil
 }
 
-func (m *mockLayeredManager) DeletePromptLayer(ctx context.Context, layer prompts.PromptLayer, artisanID, sessionID string) error {
+func (m *mockLayeredManager) DeletePromptLayer(ctx context.Context, layer layered.PromptLayer, artisanID, sessionID string) error {
 	return nil
 }
 
-func (m *mockLayeredManager) ListPromptLayers(ctx context.Context, artisanID, sessionID string) ([]prompts.SystemPrompt, error) {
+func (m *mockLayeredManager) ListPromptLayers(ctx context.Context, artisanID, sessionID string) ([]layered.SystemPrompt, error) {
 	return nil, nil
 }
 

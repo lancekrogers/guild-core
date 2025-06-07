@@ -49,5 +49,33 @@ go.work.sum
 # Test artifacts
 .test-results.tmp
 .ci-test-results.json
+.test-timing.tmp
 
+# Development artifacts - NEVER COMMIT (Enterprise Standards)
+*.disabled
+*.old
+*.needs_work
+*.backup
+*.tmp
+*.bak
+*~
+
+# Refactoring scripts - Remove after completion
+final_build_fix.sh
+fix_gerror_calls.py
+migrate_to_gerror.sh
+parallel_build_errors/
+
+# Test project directories
+test-guild-init/
+test-project/
+test-sql-integration/
+guild-core/guild-core/
+guild-test/
+
+# IDE and OS artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
 

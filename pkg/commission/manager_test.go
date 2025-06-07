@@ -5,200 +5,246 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 	
-	// "github.com/guild-ventures/guild-core/pkg/memory/boltdb"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 )
+
+// mockCommissionRepository is a simple in-memory implementation for testing
+type mockCommissionRepository struct {
+	commissions map[string]*storage.Commission
+}
+
+func newMockCommissionRepository() *mockCommissionRepository {
+	return &mockCommissionRepository{
+		commissions: make(map[string]*storage.Commission),
+	}
+}
+
+func (m *mockCommissionRepository) CreateCommission(ctx context.Context, commission *storage.Commission) error {
+	m.commissions[commission.ID] = commission
+	return nil
+}
+
+func (m *mockCommissionRepository) GetCommission(ctx context.Context, id string) (*storage.Commission, error) {
+	commission, exists := m.commissions[id]
+	if !exists {
+		return nil, storage.ErrNotFound
+	}
+	return commission, nil
+}
+
+func (m *mockCommissionRepository) UpdateCommissionStatus(ctx context.Context, id, status string) error {
+	commission, exists := m.commissions[id]
+	if !exists {
+		return storage.ErrNotFound
+	}
+	commission.Status = status
+	return nil
+}
+
+func (m *mockCommissionRepository) DeleteCommission(ctx context.Context, id string) error {
+	delete(m.commissions, id)
+	return nil
+}
+
+func (m *mockCommissionRepository) ListCommissionsByCampaign(ctx context.Context, campaignID string) ([]*storage.Commission, error) {
+	var result []*storage.Commission
+	for _, commission := range m.commissions {
+		if commission.CampaignID == campaignID {
+			result = append(result, commission)
+		}
+	}
+	return result, nil
+}
 
 func setupTestManager(t *testing.T) (*Manager, func()) {
 	// Create a temporary directory for test files
-	tempDir, err := os.MkdirTemp("", "objective-manager-test")
+	tempDir, err := os.MkdirTemp("", "commission-manager-test")
 	if err != nil {
 		t.Fatalf("Failed to create temp dir: %v", err)
 	}
 	
-	// Create a temporary database file
-	dbPath := filepath.Join(tempDir, "test.db")
+	// Create mock commission repository
+	mockRepo := newMockCommissionRepository()
 	
-	// Create a BoltDB store with objectives bucket
-	store, err := boltdb.NewStore(dbPath, boltdb.WithCustomBuckets("objectives"))
+	// Create a commission manager using the factory
+	managerInterface, err := DefaultCommissionManagerFactory(mockRepo, tempDir)
 	if err != nil {
 		os.RemoveAll(tempDir)
-		t.Fatalf("Failed to create BoltDB store: %v", err)
+		t.Fatalf("Failed to create commission manager: %v", err)
 	}
 	
-	// Create an objective manager
-	manager, err := NewManager(store, tempDir)
-	if err != nil {
-		store.Close()
+	// Type assert to get concrete manager
+	manager, ok := managerInterface.(*Manager)
+	if !ok {
 		os.RemoveAll(tempDir)
-		t.Fatalf("Failed to create objective manager: %v", err)
+		t.Fatalf("Failed to type assert to *Manager")
 	}
 	
 	// Initialize the manager
 	if err := manager.Init(context.Background()); err != nil {
-		store.Close()
 		os.RemoveAll(tempDir)
 		t.Fatalf("Failed to initialize manager: %v", err)
 	}
 	
 	// Return the manager and a cleanup function
 	cleanup := func() {
-		store.Close()
 		os.RemoveAll(tempDir)
 	}
 	
 	return manager, cleanup
 }
 
-func TestManager_SaveAndGetObjective(t *testing.T) {
+func TestManager_SaveAndGetCommission(t *testing.T) {
 	manager, cleanup := setupTestManager(t)
 	defer cleanup()
 	
-	// Create a test objective
-	obj := NewObjective("Test Objective", "This is a test objective")
-	obj.Tags = []string{"test", "example"}
-	obj.Priority = "high"
+	// Create a test commission
+	commission := NewCommission("Test Commission", "This is a test commission")
+	commission.Tags = []string{"test", "example"}
+	commission.Priority = "high"
 	
-	// Save the objective
+	// Save the commission
 	ctx := context.Background()
-	if err := manager.SaveObjective(ctx, obj); err != nil {
-		t.Fatalf("Failed to save objective: %v", err)
+	if err := manager.SaveCommission(ctx, commission); err != nil {
+		t.Fatalf("Failed to save commissionective: %v", err)
 	}
 	
-	// Get the objective
-	retrievedObj, err := manager.GetObjective(ctx, obj.ID)
+	// Get the commissionective
+	retrievedCommission, err := manager.GetCommission(ctx, commission.ID)
 	if err != nil {
-		t.Fatalf("Failed to get objective: %v", err)
+		t.Fatalf("Failed to get commissionective: %v", err)
 	}
 	
 	// Check properties
-	if retrievedObj.Title != obj.Title {
-		t.Errorf("Expected title '%s', got '%s'", obj.Title, retrievedObj.Title)
+	if retrievedCommission.Title != commission.Title {
+		t.Errorf("Expected title '%s', got '%s'", commission.Title, retrievedCommission.Title)
 	}
 	
-	if retrievedObj.Priority != obj.Priority {
-		t.Errorf("Expected priority '%s', got '%s'", obj.Priority, retrievedObj.Priority)
+	if retrievedCommission.Priority != commission.Priority {
+		t.Errorf("Expected priority '%s', got '%s'", commission.Priority, retrievedCommission.Priority)
 	}
 	
-	if len(retrievedObj.Tags) != len(obj.Tags) {
-		t.Errorf("Expected %d tags, got %d", len(obj.Tags), len(retrievedObj.Tags))
+	if len(retrievedCommission.Tags) != len(commission.Tags) {
+		t.Errorf("Expected %d tags, got %d", len(commission.Tags), len(retrievedCommission.Tags))
 	}
 }
 
-func TestManager_DeleteObjective(t *testing.T) {
+func TestManager_DeleteCommission(t *testing.T) {
 	manager, cleanup := setupTestManager(t)
 	defer cleanup()
 	
-	// Create a test objective
-	obj := NewObjective("Test Objective", "This is a test objective")
+	// Create a test commissionective
+	commission := NewCommission("Test Commission", "This is a test commissionective")
 	
-	// Save the objective
+	// Save the commissionective
 	ctx := context.Background()
-	if err := manager.SaveObjective(ctx, obj); err != nil {
-		t.Fatalf("Failed to save objective: %v", err)
+	if err := manager.SaveCommission(ctx, commission); err != nil {
+		t.Fatalf("Failed to save commissionective: %v", err)
 	}
 	
-	// Delete the objective
-	if err := manager.DeleteObjective(ctx, obj.ID); err != nil {
-		t.Fatalf("Failed to delete objective: %v", err)
+	// Delete the commissionective
+	if err := manager.DeleteCommission(ctx, commission.ID); err != nil {
+		t.Fatalf("Failed to delete commissionective: %v", err)
 	}
 	
-	// Try to get the deleted objective
-	_, err := manager.GetObjective(ctx, obj.ID)
+	// Try to get the deleted commissionective
+	_, err := manager.GetCommission(ctx, commission.ID)
 	if err == nil {
-		t.Error("Expected error when getting deleted objective, got nil")
+		t.Error("Expected error when getting deleted commissionective, got nil")
 	}
 }
 
-func TestManager_ListObjectives(t *testing.T) {
+func TestManager_ListCommissions(t *testing.T) {
 	manager, cleanup := setupTestManager(t)
 	defer cleanup()
 	
 	ctx := context.Background()
 	
-	// Create test objectives
-	obj1 := NewObjective("Test Objective 1", "First test objective")
-	obj2 := NewObjective("Test Objective 2", "Second test objective")
-	obj3 := NewObjective("Test Objective 3", "Third test objective")
+	// Create test commissionectives
+	commission1 := NewCommission("Test Commission 1", "First test commissionective")
+	commission2 := NewCommission("Test Commission 2", "Second test commissionective")
+	commission3 := NewCommission("Test Commission 3", "Third test commissionective")
 	
-	// Save objectives
-	if err := manager.SaveObjective(ctx, obj1); err != nil {
-		t.Fatalf("Failed to save objective 1: %v", err)
+	// Save commissionectives
+	if err := manager.SaveCommission(ctx, commission1); err != nil {
+		t.Fatalf("Failed to save commissionective 1: %v", err)
 	}
-	if err := manager.SaveObjective(ctx, obj2); err != nil {
-		t.Fatalf("Failed to save objective 2: %v", err)
+	if err := manager.SaveCommission(ctx, commission2); err != nil {
+		t.Fatalf("Failed to save commissionective 2: %v", err)
 	}
-	if err := manager.SaveObjective(ctx, obj3); err != nil {
-		t.Fatalf("Failed to save objective 3: %v", err)
+	if err := manager.SaveCommission(ctx, commission3); err != nil {
+		t.Fatalf("Failed to save commissionective 3: %v", err)
 	}
 	
-	// List objectives
-	objectives, err := manager.ListObjectives(ctx)
+	// List commissionectives
+	commissionectives, err := manager.ListCommissions(ctx)
 	if err != nil {
-		t.Fatalf("Failed to list objectives: %v", err)
+		t.Fatalf("Failed to list commissionectives: %v", err)
 	}
 	
 	// Check count
-	if len(objectives) != 3 {
-		t.Errorf("Expected 3 objectives, got %d", len(objectives))
+	if len(commissionectives) != 3 {
+		t.Errorf("Expected 3 commissionectives, got %d", len(commissionectives))
 	}
 }
 
-func TestManager_FindObjectivesByTags(t *testing.T) {
+func TestManager_FindCommissionsByTags(t *testing.T) {
 	manager, cleanup := setupTestManager(t)
 	defer cleanup()
 	
 	ctx := context.Background()
 	
-	// Create test objectives with tags
-	obj1 := NewObjective("Test Objective 1", "First test objective")
-	obj1.Tags = []string{"test", "important"}
+	// Create test commissionectives with tags
+	commission1 := NewCommission("Test Commission 1", "First test commissionective")
+	commission1.Tags = []string{"test", "important"}
 	
-	obj2 := NewObjective("Test Objective 2", "Second test objective")
-	obj2.Tags = []string{"test", "example"}
+	commission2 := NewCommission("Test Commission 2", "Second test commissionective")
+	commission2.Tags = []string{"test", "example"}
 	
-	obj3 := NewObjective("Test Objective 3", "Third test objective")
-	obj3.Tags = []string{"example", "low-priority"}
+	commission3 := NewCommission("Test Commission 3", "Third test commissionective")
+	commission3.Tags = []string{"example", "low-priority"}
 	
-	// Save objectives
-	if err := manager.SaveObjective(ctx, obj1); err != nil {
-		t.Fatalf("Failed to save objective 1: %v", err)
+	// Save commissionectives
+	if err := manager.SaveCommission(ctx, commission1); err != nil {
+		t.Fatalf("Failed to save commissionective 1: %v", err)
 	}
-	if err := manager.SaveObjective(ctx, obj2); err != nil {
-		t.Fatalf("Failed to save objective 2: %v", err)
+	if err := manager.SaveCommission(ctx, commission2); err != nil {
+		t.Fatalf("Failed to save commissionective 2: %v", err)
 	}
-	if err := manager.SaveObjective(ctx, obj3); err != nil {
-		t.Fatalf("Failed to save objective 3: %v", err)
+	if err := manager.SaveCommission(ctx, commission3); err != nil {
+		t.Fatalf("Failed to save commissionective 3: %v", err)
 	}
 	
-	// Find objectives with a single tag
-	objectives, err := manager.FindObjectivesByTags(ctx, []string{"test"})
+	// Find commissionectives with a single tag
+	commissionectives, err := manager.FindCommissionsByTags(ctx, []string{"test"})
 	if err != nil {
-		t.Fatalf("Failed to find objectives by tag: %v", err)
+		t.Fatalf("Failed to find commissionectives by tag: %v", err)
 	}
 	
-	if len(objectives) != 2 {
-		t.Errorf("Expected 2 objectives with tag 'test', got %d", len(objectives))
+	if len(commissionectives) != 2 {
+		t.Errorf("Expected 2 commissionectives with tag 'test', got %d", len(commissionectives))
 	}
 	
-	// Find objectives with multiple tags
-	objectives, err = manager.FindObjectivesByTags(ctx, []string{"test", "example"})
+	// Find commissionectives with multiple tags
+	commissionectives, err = manager.FindCommissionsByTags(ctx, []string{"test", "example"})
 	if err != nil {
-		t.Fatalf("Failed to find objectives by tags: %v", err)
+		t.Fatalf("Failed to find commissionectives by tags: %v", err)
 	}
 	
-	if len(objectives) != 1 {
-		t.Errorf("Expected 1 objective with tags 'test' and 'example', got %d", len(objectives))
+	if len(commissionectives) != 1 {
+		t.Errorf("Expected 1 commissionective with tags 'test' and 'example', got %d", len(commissionectives))
 	}
 	
-	// Find objectives with a non-existent tag
-	objectives, err = manager.FindObjectivesByTags(ctx, []string{"nonexistent"})
+	// Find commissionectives with a non-existent tag
+	commissionectives, err = manager.FindCommissionsByTags(ctx, []string{"nonexistent"})
 	if err != nil {
-		t.Fatalf("Failed to find objectives by tag: %v", err)
+		t.Fatalf("Failed to find commissionectives by tag: %v", err)
 	}
 	
-	if len(objectives) != 0 {
-		t.Errorf("Expected 0 objectives with tag 'nonexistent', got %d", len(objectives))
+	if len(commissionectives) != 0 {
+		t.Errorf("Expected 0 commissionectives with tag 'nonexistent', got %d", len(commissionectives))
 	}
 }
 
@@ -208,26 +254,26 @@ func TestManager_AddAndUpdateTask(t *testing.T) {
 	
 	ctx := context.Background()
 	
-	// Create a test objective
-	obj := NewObjective("Test Objective", "This is a test objective")
+	// Create a test commissionective
+	commission := NewCommission("Test Commission", "This is a test commissionective")
 	
-	// Save the objective
-	if err := manager.SaveObjective(ctx, obj); err != nil {
-		t.Fatalf("Failed to save objective: %v", err)
+	// Save the commissionective
+	if err := manager.SaveCommission(ctx, commission); err != nil {
+		t.Fatalf("Failed to save commissionective: %v", err)
 	}
 	
 	// Create a test task
-	task := NewObjectiveTask("Test Task", "This is a test task", 0)
+	task := NewCommissionTask("Test Task", "This is a test task", 0)
 	
-	// Add the task to the objective
-	if err := manager.AddTask(ctx, obj.ID, task); err != nil {
+	// Add the task to the commissionective
+	if err := manager.AddTask(ctx, commission.ID, task); err != nil {
 		t.Fatalf("Failed to add task: %v", err)
 	}
 	
-	// Get the updated objective
-	updatedObj, err := manager.GetObjective(ctx, obj.ID)
+	// Get the updated commissionective
+	updatedObj, err := manager.GetCommission(ctx, commission.ID)
 	if err != nil {
-		t.Fatalf("Failed to get updated objective: %v", err)
+		t.Fatalf("Failed to get updated commissionective: %v", err)
 	}
 	
 	// Check task
@@ -240,14 +286,14 @@ func TestManager_AddAndUpdateTask(t *testing.T) {
 	}
 	
 	// Update task status
-	if err := manager.UpdateTaskStatus(ctx, obj.ID, task.ID, "done"); err != nil {
+	if err := manager.UpdateTaskStatus(ctx, commission.ID, task.ID, "done"); err != nil {
 		t.Fatalf("Failed to update task status: %v", err)
 	}
 	
-	// Get the updated objective again
-	updatedObj, err = manager.GetObjective(ctx, obj.ID)
+	// Get the updated commissionective again
+	updatedObj, err = manager.GetCommission(ctx, commission.ID)
 	if err != nil {
-		t.Fatalf("Failed to get updated objective: %v", err)
+		t.Fatalf("Failed to get updated commissionective: %v", err)
 	}
 	
 	// Check updated status
@@ -261,20 +307,20 @@ func TestManager_AddAndUpdateTask(t *testing.T) {
 	}
 }
 
-func TestManager_LoadObjectiveFromFile(t *testing.T) {
+func TestManager_LoadCommissionFromFile(t *testing.T) {
 	manager, cleanup := setupTestManager(t)
 	defer cleanup()
 	
 	ctx := context.Background()
 	
 	// Create a test markdown file
-	testContent := `# Test Objective
+	testContent := `# Test Commission
 
 @priority: medium
 @owner: tester
 @tag:test @tag:example
 
-This is a test objective loaded from a file.
+This is a test commissionective loaded from a file.
 
 ## Context
 
@@ -292,43 +338,43 @@ This is the context section.
 - [x] Task 3
 `
 	
-	testFile := filepath.Join(manager.fsBasePath, "test_objective.md")
+	testFile := filepath.Join(manager.fsBasePath, "test_commissionective.md")
 	if err := os.WriteFile(testFile, []byte(testContent), 0644); err != nil {
 		t.Fatalf("Failed to write test file: %v", err)
 	}
 	
-	// Load the objective from file
-	obj, err := manager.LoadObjectiveFromFile(ctx, testFile)
+	// Load the commissionective from file
+	commission, err := manager.LoadCommissionFromFile(ctx, testFile)
 	if err != nil {
-		t.Fatalf("Failed to load objective from file: %v", err)
+		t.Fatalf("Failed to load commissionective from file: %v", err)
 	}
 	
 	// Check properties
-	if obj.Title != "Test Objective" {
-		t.Errorf("Expected title 'Test Objective', got '%s'", obj.Title)
+	if commission.Title != "Test Commission" {
+		t.Errorf("Expected title 'Test Commission', got '%s'", commission.Title)
 	}
 	
-	if obj.Priority != "medium" {
-		t.Errorf("Expected priority 'medium', got '%s'", obj.Priority)
+	if commission.Priority != "medium" {
+		t.Errorf("Expected priority 'medium', got '%s'", commission.Priority)
 	}
 	
-	if obj.Owner != "tester" {
-		t.Errorf("Expected owner 'tester', got '%s'", obj.Owner)
+	if commission.Owner != "tester" {
+		t.Errorf("Expected owner 'tester', got '%s'", commission.Owner)
 	}
 	
 	// Check tags
 	expectedTags := []string{"test", "example"}
-	if len(obj.Tags) != len(expectedTags) {
-		t.Errorf("Expected %d tags, got %d", len(expectedTags), len(obj.Tags))
+	if len(commission.Tags) != len(expectedTags) {
+		t.Errorf("Expected %d tags, got %d", len(expectedTags), len(commission.Tags))
 	}
 	
 	// Check tasks
-	if len(obj.Tasks) != 3 {
-		t.Errorf("Expected 3 tasks, got %d", len(obj.Tasks))
+	if len(commission.Tasks) != 3 {
+		t.Errorf("Expected 3 tasks, got %d", len(commission.Tasks))
 	}
 	
 	// Check completed task
-	for _, task := range obj.Tasks {
+	for _, task := range commission.Tasks {
 		if task.Title == "Task 3" && task.Status != "done" {
 			t.Errorf("Expected Task 3 to have status 'done', got '%s'", task.Status)
 		}

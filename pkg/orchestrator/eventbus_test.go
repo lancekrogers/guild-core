@@ -10,7 +10,7 @@ import (
 )
 
 func TestEventBusSubscribe(t *testing.T) {
-	eventBus := NewEventBus()
+	eventBus := newEventBus()
 	
 	// Track received events
 	var receivedEvent Event
@@ -56,7 +56,7 @@ func TestEventBusSubscribe(t *testing.T) {
 }
 
 func TestEventBusSubscribeAll(t *testing.T) {
-	eventBus := NewEventBus()
+	eventBus := newEventBus()
 	
 	// Track all received events
 	var receivedEvents []Event
@@ -117,7 +117,7 @@ func TestEventBusSubscribeAll(t *testing.T) {
 }
 
 func TestEventBusUnsubscribe(t *testing.T) {
-	eventBus := NewEventBus()
+	eventBus := newEventBus()
 	
 	// Track received events
 	eventReceived := make(chan bool, 1)
@@ -210,7 +210,7 @@ func TestEventBusJSON(t *testing.T) {
 }
 
 func TestEventBusConcurrency(t *testing.T) {
-	eventBus := NewEventBus()
+	eventBus := newEventBus()
 	
 	// Track events
 	var receivedCount int
@@ -272,7 +272,7 @@ func TestEventBusConcurrency(t *testing.T) {
 }
 
 func TestEventBusMultipleHandlers(t *testing.T) {
-	eventBus := NewEventBus()
+	eventBus := newEventBus()
 	
 	// Track which handlers were called
 	handler1Called := false

@@ -10,12 +10,12 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/orchestrator/mocks"
 )
 
-func setupDispatcherTest() (*TaskDispatcher, *mocks.MockKanbanManager, *mocks.MockAgentFactory, *EventBus, *mocks.MockEventHandler) {
+func setupDispatcherTest() (*taskDispatcher, *mocks.MockKanbanManager, *mocks.MockAgentFactory, *eventBus, *mocks.MockEventHandler) {
 	// Create mock event handler
 	mockEventHandler := mocks.NewMockEventHandler()
 	
 	// Create event bus
-	eventBus := NewEventBus()
+	eventBus := newEventBus()
 	eventBus.SubscribeAll(mockEventHandler.GetHandlerFunc())
 	
 	// Create mock kanban manager
@@ -25,7 +25,7 @@ func setupDispatcherTest() (*TaskDispatcher, *mocks.MockKanbanManager, *mocks.Mo
 	mockAgentFactory := mocks.NewMockAgentFactory()
 	
 	// Create task dispatcher
-	dispatcher := NewTaskDispatcher(mockKanbanManager, mockAgentFactory, eventBus, 5)
+	dispatcher := newTaskDispatcher(mockKanbanManager, mockAgentFactory, eventBus, 5)
 	
 	return dispatcher, mockKanbanManager, mockAgentFactory, eventBus, mockEventHandler
 }

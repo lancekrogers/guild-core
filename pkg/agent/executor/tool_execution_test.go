@@ -27,7 +27,7 @@ func TestTaskExecutor_ToolExecution(t *testing.T) {
 	
 	// Register file tool
 	fileTool := fs.NewFileTool(tmpDir)
-	err = toolRegistry.RegisterTool(fileTool)
+	err = toolRegistry.RegisterTool(fileTool.Name(), fileTool)
 	require.NoError(t, err)
 	
 	// Register shell tool with safety restrictions
@@ -35,7 +35,7 @@ func TestTaskExecutor_ToolExecution(t *testing.T) {
 		WorkingDir: tmpDir,
 		BlockedCommands: []string{"rm -rf /"},
 	})
-	err = toolRegistry.RegisterTool(shellTool)
+	err = toolRegistry.RegisterTool(shellTool.Name(), shellTool)
 	require.NoError(t, err)
 
 	// Create test context
@@ -136,7 +136,7 @@ func TestTaskExecutor_ToolSafety(t *testing.T) {
 		BlockedCommands: []string{"rm -rf /", "sudo"},
 		AllowedCommands: []string{"echo", "ls", "pwd"}, // Whitelist mode
 	})
-	err := toolRegistry.RegisterTool(shellTool)
+	err := toolRegistry.RegisterTool(shellTool.Name(), shellTool)
 	require.NoError(t, err)
 
 	// Create executor
@@ -191,7 +191,7 @@ func TestTaskExecutor_FileToolRestrictions(t *testing.T) {
 	// Create file tool restricted to tmpDir
 	fileTool := fs.NewFileTool(tmpDir)
 	toolRegistry := tools.NewToolRegistry()
-	err = toolRegistry.RegisterTool(fileTool)
+	err = toolRegistry.RegisterTool(fileTool.Name(), fileTool)
 	require.NoError(t, err)
 
 	// Create executor
@@ -234,10 +234,10 @@ func TestExecutor_BuildPromptDataWithTools(t *testing.T) {
 	toolRegistry := tools.NewToolRegistry()
 	
 	fileTool := fs.NewFileTool("/tmp")
-	toolRegistry.RegisterTool(fileTool)
+	toolRegistry.RegisterTool(fileTool.Name(), fileTool)
 	
 	shellTool := shell.NewShellTool(shell.ShellToolOptions{})
-	toolRegistry.RegisterTool(shellTool)
+	toolRegistry.RegisterTool(shellTool.Name(), shellTool)
 
 	// Create executor
 	executor := &BasicTaskExecutor{

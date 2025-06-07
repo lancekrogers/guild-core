@@ -209,8 +209,9 @@ func TestClient_CreateEmbedding(t *testing.T) {
 		t.Errorf("Expected error for unsupported CreateEmbedding but got none")
 	}
 
-	if err.Error() != "embedding generation not supported by Claude Code provider" {
-		t.Errorf("Expected specific error message, got: %s", err.Error())
+	expectedError := "[GUILD-5000] embedding generation not supported by Claude Code provider"
+	if err.Error() != expectedError {
+		t.Errorf("Expected error message '%s', got: %s", expectedError, err.Error())
 	}
 }
 

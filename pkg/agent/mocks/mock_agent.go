@@ -6,6 +6,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/providers"
+	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 )
 
@@ -58,7 +59,7 @@ type MockGuildArtisan struct {
 func NewMockGuildArtisan(id, name string) *MockGuildArtisan {
 	return &MockGuildArtisan{
 		MockAgent:        *NewMockAgent(id, name),
-		ToolRegistry:     tools.NewToolRegistry(),
+		ToolRegistry:     registry.NewToolRegistry().(*registry.DefaultToolRegistry).GetUnderlyingRegistry(),
 		CommissionManager: nil, // Will be set by test if needed
 		LLMClient:        NewMockLLMClient(),
 		MemoryManager:    nil, // Will be set by test if needed

@@ -12,7 +12,6 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/storage"
 	// "github.com/guild-ventures/guild-core/pkg/commission"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/providers/mock"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/stretchr/testify/assert"
@@ -155,9 +154,11 @@ See the implementation plans in the implementation/ directory for detailed techn
 	require.NoError(t, err)
 
 	// Set up prompts with realistic Guild Master system prompt
-	promptRegistry := prompts.NewMemoryRegistry()
+	// Note: The prompt registry is not used directly - the integration service gets its prompt manager from the component registry
+	// promptRegistry := prompts.NewPromptRegistry()
 	
 	// Register the actual Guild Master refinement prompt that guides LLM behavior
+	/*
 	guildMasterPrompt := `You are a Guild Master for the Guild Framework, responsible for refining commissions into detailed implementation plans.
 
 ## Your Role
@@ -209,12 +210,13 @@ Use format: CATEGORY-NUMBER: Description
 Include: (priority: high/medium/low, estimate: Xh, depends: TASK-ID)
 
 Transform the given commission into this structured format that artisans can work with effectively.`
+	*/
 
-	promptRegistry.RegisterPrompt("manager", "default", guildMasterPrompt)
-	promptRegistry.RegisterPrompt("manager", "web-app", guildMasterPrompt)
+	// promptRegistry.RegisterPrompt("manager", "default", guildMasterPrompt)
+	// promptRegistry.RegisterPrompt("manager", "web-app", guildMasterPrompt)
 
 	// Create integration service
-	service, err := NewCommissionIntegrationService(reg)
+	service, err := DefaultCommissionIntegrationServiceFactory(reg)
 	require.NoError(t, err)
 
 	// Create test guild config
@@ -300,7 +302,7 @@ func TestCommissionIntegrationService_DirectRefiner(t *testing.T) {
 
 	// Set up test infrastructure
 	reg := setupTestRegistry(t)
-	service, err := NewCommissionIntegrationService(reg)
+	service, err := DefaultCommissionIntegrationServiceFactory(reg)
 	require.NoError(t, err)
 
 	// Get the guild master factory
@@ -332,7 +334,7 @@ func TestCommissionIntegrationService_TaskBridge(t *testing.T) {
 
 	// Set up test infrastructure
 	reg := setupTestRegistry(t)
-	service, err := NewCommissionIntegrationService(reg)
+	service, err := DefaultCommissionIntegrationServiceFactory(reg)
 	require.NoError(t, err)
 
 	// Get task bridge
@@ -368,8 +370,8 @@ func setupTestRegistry(t *testing.T) registry.ComponentRegistry {
 	require.NoError(t, setupSQLiteStorage(reg))
 
 	// Prompts
-	promptRegistry := prompts.NewMemoryRegistry()
-	promptRegistry.RegisterPrompt("manager", "default", "Test prompt")
+	// promptRegistry := prompts.NewMemoryRegistry()
+	// promptRegistry.RegisterPrompt("manager", "default", "Test prompt")
 
 	return reg
 }
@@ -519,6 +521,19 @@ func (t *testSQLiteStorageRegistry) SetMemoryStore(store registry.MemoryStore) {
 // GetStorageRegistry returns the underlying storage.StorageRegistry for components that need it
 func (t *testSQLiteStorageRegistry) GetStorageRegistry() storage.StorageRegistry {
 	return t.storageRegistry
+}
+
+// RegisterPromptChainRepository registers a prompt chain repository implementation
+func (t *testSQLiteStorageRegistry) RegisterPromptChainRepository(repo registry.PromptChainRepository) error {
+	// Not needed for SQLite - repositories are created by the storage registry
+	return nil
+}
+
+// GetPromptChainRepository retrieves the registered prompt chain repository
+func (t *testSQLiteStorageRegistry) GetPromptChainRepository() registry.PromptChainRepository {
+	// For now, return nil as the types don't match between storage and registry
+	// The actual implementation would need an adapter
+	return nil
 }
 
 // testCommissionRepositoryAdapter adapts storage.CommissionRepository to registry.CommissionRepository

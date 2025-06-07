@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -14,14 +14,14 @@ import (
 type ManagerIntelligenceService struct {
 	complexityAnalyzer *TaskComplexityAnalyzer
 	agentRouter        *AgentRouter
-	promptManager      prompts.LayeredManager
+	promptManager      layered.LayeredManager
 	artisanClient      ArtisanClient
 	agentRegistry      registry.AgentRegistry
 }
 
 // NewManagerIntelligenceService creates a new manager intelligence service
 func NewManagerIntelligenceService(
-	promptManager prompts.LayeredManager,
+	promptManager layered.LayeredManager,
 	artisanClient ArtisanClient,
 	agentRegistry registry.AgentRegistry,
 ) *ManagerIntelligenceService {

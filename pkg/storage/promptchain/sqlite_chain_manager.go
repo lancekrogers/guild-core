@@ -1,4 +1,4 @@
-package memory
+package promptchain
 
 import (
 	"context"
@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
@@ -16,7 +17,7 @@ type sqliteChainManager struct {
 }
 
 // NewSQLiteChainManager creates a new SQLite-based chain manager
-func NewSQLiteChainManager(repo storage.PromptChainRepository) ChainManager {
+func NewSQLiteChainManager(repo storage.PromptChainRepository) memory.ChainManager {
 	return &sqliteChainManager{
 		repo: repo,
 	}
@@ -53,7 +54,7 @@ func (m *sqliteChainManager) CreateChain(ctx context.Context, agentID, taskID st
 }
 
 // GetChain retrieves a chain by ID
-func (m *sqliteChainManager) GetChain(ctx context.Context, chainID string) (*PromptChain, error) {
+func (m *sqliteChainManager) GetChain(ctx context.Context, chainID string) (*memory.PromptChain, error) {
 	if chainID == "" {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "GetChain: chainID cannot be empty", nil)
 	}
@@ -67,7 +68,7 @@ func (m *sqliteChainManager) GetChain(ctx context.Context, chainID string) (*Pro
 }
 
 // AddMessage adds a message to a chain
-func (m *sqliteChainManager) AddMessage(ctx context.Context, chainID string, message Message) error {
+func (m *sqliteChainManager) AddMessage(ctx context.Context, chainID string, message memory.Message) error {
 	if chainID == "" {
 		return gerror.New(gerror.ErrCodeMissingRequired, "AddMessage: chainID cannot be empty", nil)
 	}
@@ -108,7 +109,7 @@ func (m *sqliteChainManager) AddMessage(ctx context.Context, chainID string, mes
 }
 
 // GetChainsByAgent retrieves all chains for an agent
-func (m *sqliteChainManager) GetChainsByAgent(ctx context.Context, agentID string) ([]*PromptChain, error) {
+func (m *sqliteChainManager) GetChainsByAgent(ctx context.Context, agentID string) ([]*memory.PromptChain, error) {
 	if agentID == "" {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "GetChainsByAgent: agentID cannot be empty", nil)
 	}
@@ -118,16 +119,16 @@ func (m *sqliteChainManager) GetChainsByAgent(ctx context.Context, agentID strin
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "GetChainsByAgent: failed to retrieve chains")
 	}
 
-	chains := make([]*PromptChain, 0, len(storageChains))
+	chains := make([]*memory.PromptChain, 0, len(storageChains))
 	for _, storageChain := range storageChains {
 		// For list operations, we don't need to load all messages
-		chain := &PromptChain{
+		chain := &memory.PromptChain{
 			ID:        storageChain.ID,
 			AgentID:   storageChain.AgentID,
 			TaskID:    "",
 			CreatedAt: storageChain.CreatedAt,
 			UpdatedAt: storageChain.UpdatedAt,
-			Messages:  []Message{},
+			Messages:  []memory.Message{},
 		}
 
 		if storageChain.TaskID != nil {
@@ -141,7 +142,7 @@ func (m *sqliteChainManager) GetChainsByAgent(ctx context.Context, agentID strin
 }
 
 // GetChainsByTask retrieves all chains for a task
-func (m *sqliteChainManager) GetChainsByTask(ctx context.Context, taskID string) ([]*PromptChain, error) {
+func (m *sqliteChainManager) GetChainsByTask(ctx context.Context, taskID string) ([]*memory.PromptChain, error) {
 	if taskID == "" {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "GetChainsByTask: taskID cannot be empty", nil)
 	}
@@ -151,16 +152,16 @@ func (m *sqliteChainManager) GetChainsByTask(ctx context.Context, taskID string)
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "GetChainsByTask: failed to retrieve chains")
 	}
 
-	chains := make([]*PromptChain, 0, len(storageChains))
+	chains := make([]*memory.PromptChain, 0, len(storageChains))
 	for _, storageChain := range storageChains {
 		// For list operations, we don't need to load all messages
-		chain := &PromptChain{
+		chain := &memory.PromptChain{
 			ID:        storageChain.ID,
 			AgentID:   storageChain.AgentID,
 			TaskID:    "",
 			CreatedAt: storageChain.CreatedAt,
 			UpdatedAt: storageChain.UpdatedAt,
-			Messages:  []Message{},
+			Messages:  []memory.Message{},
 		}
 
 		if storageChain.TaskID != nil {
@@ -174,12 +175,12 @@ func (m *sqliteChainManager) GetChainsByTask(ctx context.Context, taskID string)
 }
 
 // BuildContext builds a context from chains for an agent and task
-func (m *sqliteChainManager) BuildContext(ctx context.Context, agentID, taskID string, maxTokens int) ([]Message, error) {
+func (m *sqliteChainManager) BuildContext(ctx context.Context, agentID, taskID string, maxTokens int) ([]memory.Message, error) {
 	if agentID == "" {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "BuildContext: agentID cannot be empty", nil)
 	}
 
-	var chains []*PromptChain
+	var chains []*memory.PromptChain
 	var err error
 
 	// Get chains based on task or agent
@@ -198,7 +199,7 @@ func (m *sqliteChainManager) BuildContext(ctx context.Context, agentID, taskID s
 	}
 
 	// Collect ALL messages from ALL chains first
-	allMessages := make([]Message, 0)
+	allMessages := make([]memory.Message, 0)
 
 	for _, chain := range chains {
 		// Load full chain with messages
@@ -222,7 +223,7 @@ func (m *sqliteChainManager) BuildContext(ctx context.Context, agentID, taskID s
 	// Limit the context to maxTokens if provided
 	if maxTokens > 0 {
 		var totalTokens int
-		var contextMessages []Message
+		var contextMessages []memory.Message
 
 		for _, msg := range allMessages {
 			// Calculate token count with fallback estimation
@@ -269,14 +270,14 @@ func (m *sqliteChainManager) DeleteChain(ctx context.Context, chainID string) er
 }
 
 // convertStorageChainToDomain converts a storage PromptChain to a domain PromptChain
-func (m *sqliteChainManager) convertStorageChainToDomain(storageChain *storage.PromptChain) *PromptChain {
-	chain := &PromptChain{
+func (m *sqliteChainManager) convertStorageChainToDomain(storageChain *storage.PromptChain) *memory.PromptChain {
+	chain := &memory.PromptChain{
 		ID:        storageChain.ID,
 		AgentID:   storageChain.AgentID,
 		TaskID:    "",
 		CreatedAt: storageChain.CreatedAt,
 		UpdatedAt: storageChain.UpdatedAt,
-		Messages:  make([]Message, 0, len(storageChain.Messages)),
+		Messages:  make([]memory.Message, 0, len(storageChain.Messages)),
 	}
 
 	if storageChain.TaskID != nil {
@@ -285,7 +286,7 @@ func (m *sqliteChainManager) convertStorageChainToDomain(storageChain *storage.P
 
 	// Convert messages
 	for _, storageMsg := range storageChain.Messages {
-		message := Message{
+		message := memory.Message{
 			Role:       storageMsg.Role,
 			Content:    storageMsg.Content,
 			Name:       "",

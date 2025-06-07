@@ -6,12 +6,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/standard"
 )
 
 // PromptEvaluator evaluates prompt effectiveness and quality
 type PromptEvaluator struct {
-	manager  *prompts.EnhancedPromptManager
+	manager  *standard.EnhancedPromptManager
 	tests    map[string][]*PromptTest
 	results  map[string]*EvaluationResult
 }
@@ -51,7 +51,7 @@ type TestFailure struct {
 }
 
 // NewPromptEvaluator creates a new prompt evaluator
-func NewPromptEvaluator(manager *prompts.EnhancedPromptManager) *PromptEvaluator {
+func NewPromptEvaluator(manager *standard.EnhancedPromptManager) *PromptEvaluator {
 	return &PromptEvaluator{
 		manager: manager,
 		tests:   make(map[string][]*PromptTest),

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -37,7 +37,7 @@ func (m *MockPromptManager) GetTemplate(ctx context.Context, templateName string
 	return args.String(0), args.Error(1)
 }
 
-func (m *MockPromptManager) FormatContext(ctx context.Context, context prompts.Context) (string, error) {
+func (m *MockPromptManager) FormatContext(ctx context.Context, context layered.Context) (string, error) {
 	args := m.Called(ctx, context)
 	return args.String(0), args.Error(1)
 }
@@ -53,29 +53,29 @@ func (m *MockPromptManager) ListDomains(ctx context.Context, role string) ([]str
 }
 
 // LayeredManager interface methods
-func (m *MockPromptManager) BuildLayeredPrompt(ctx context.Context, artisanID, sessionID string, turnCtx prompts.TurnContext) (*prompts.LayeredPrompt, error) {
+func (m *MockPromptManager) BuildLayeredPrompt(ctx context.Context, artisanID, sessionID string, turnCtx layered.TurnContext) (*layered.LayeredPrompt, error) {
 	args := m.Called(ctx, artisanID, sessionID, turnCtx)
-	return args.Get(0).(*prompts.LayeredPrompt), args.Error(1)
+	return args.Get(0).(*layered.LayeredPrompt), args.Error(1)
 }
 
-func (m *MockPromptManager) GetPromptLayer(ctx context.Context, layer prompts.PromptLayer, artisanID, sessionID string) (*prompts.SystemPrompt, error) {
+func (m *MockPromptManager) GetPromptLayer(ctx context.Context, layer layered.PromptLayer, artisanID, sessionID string) (*layered.SystemPrompt, error) {
 	args := m.Called(ctx, layer, artisanID, sessionID)
-	return args.Get(0).(*prompts.SystemPrompt), args.Error(1)
+	return args.Get(0).(*layered.SystemPrompt), args.Error(1)
 }
 
-func (m *MockPromptManager) SetPromptLayer(ctx context.Context, prompt prompts.SystemPrompt) error {
+func (m *MockPromptManager) SetPromptLayer(ctx context.Context, prompt layered.SystemPrompt) error {
 	args := m.Called(ctx, prompt)
 	return args.Error(0)
 }
 
-func (m *MockPromptManager) DeletePromptLayer(ctx context.Context, layer prompts.PromptLayer, artisanID, sessionID string) error {
+func (m *MockPromptManager) DeletePromptLayer(ctx context.Context, layer layered.PromptLayer, artisanID, sessionID string) error {
 	args := m.Called(ctx, layer, artisanID, sessionID)
 	return args.Error(0)
 }
 
-func (m *MockPromptManager) ListPromptLayers(ctx context.Context, artisanID, sessionID string) ([]prompts.SystemPrompt, error) {
+func (m *MockPromptManager) ListPromptLayers(ctx context.Context, artisanID, sessionID string) ([]layered.SystemPrompt, error) {
 	args := m.Called(ctx, artisanID, sessionID)
-	return args.Get(0).([]prompts.SystemPrompt), args.Error(1)
+	return args.Get(0).([]layered.SystemPrompt), args.Error(1)
 }
 
 func (m *MockPromptManager) InvalidateCache(ctx context.Context, artisanID, sessionID string) error {
@@ -208,7 +208,7 @@ func TestManagerIntelligenceService_AnalyzeComplexity(t *testing.T) {
 		},
 	})
 	
-	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "analysis-session", mock.AnythingOfType("prompts.TurnContext")).Return(&prompts.LayeredPrompt{
+	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "analysis-session", mock.AnythingOfType("layered.TurnContext")).Return(&layered.LayeredPrompt{
 		Compiled:   "You are a Guild Master analyzing task complexity... Analyze this task: Build a user authentication system",
 		TokenCount: 150,
 		Truncated:  false,
@@ -341,7 +341,7 @@ func TestManagerIntelligenceService_RouteToAgents(t *testing.T) {
 	// Add GetRegisteredAgents expectation (not used directly in routing but needed by the service)
 	mockAgentReg.On("GetRegisteredAgents").Return([]registry.GuildAgentConfig{})
 	
-	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "routing-session", mock.AnythingOfType("prompts.TurnContext")).Return(&prompts.LayeredPrompt{
+	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "routing-session", mock.AnythingOfType("layered.TurnContext")).Return(&layered.LayeredPrompt{
 		Compiled:   "You are a Guild Master routing tasks to agents... Route this task to optimal agents...",
 		TokenCount: 200,
 		Truncated:  false,
@@ -452,7 +452,7 @@ func TestManagerIntelligenceService_FullAnalysisAndRouting(t *testing.T) {
 		},
 	})
 	
-	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "analysis-session", mock.AnythingOfType("prompts.TurnContext")).Return(&prompts.LayeredPrompt{
+	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "analysis-session", mock.AnythingOfType("layered.TurnContext")).Return(&layered.LayeredPrompt{
 		Compiled:   "Complexity analysis prompt... Analyze complexity...",
 		TokenCount: 150,
 		Truncated:  false,
@@ -462,7 +462,7 @@ func TestManagerIntelligenceService_FullAnalysisAndRouting(t *testing.T) {
 		AssembledAt: time.Now(),
 	}, nil).Once()
 
-	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "routing-session", mock.AnythingOfType("prompts.TurnContext")).Return(&prompts.LayeredPrompt{
+	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "routing-session", mock.AnythingOfType("layered.TurnContext")).Return(&layered.LayeredPrompt{
 		Compiled:   "Routing prompt... Route to agents...",
 		TokenCount: 200,
 		Truncated:  false,

@@ -9,19 +9,19 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/prompts/standard/templates/agent/extraction"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 )
 
 // TaskExtractor uses layered prompts and LLM intelligence to extract tasks from refined content
 type TaskExtractor struct {
 	artisanClient ArtisanClient
-	promptManager prompts.LayeredManager
+	promptManager layered.LayeredManager
 }
 
 // NewTaskExtractor creates a new task extractor
 func NewTaskExtractor(
 	artisanClient ArtisanClient,
-	promptManager prompts.LayeredManager,
+	promptManager layered.LayeredManager,
 ) *TaskExtractor {
 	return &TaskExtractor{
 		artisanClient: artisanClient,

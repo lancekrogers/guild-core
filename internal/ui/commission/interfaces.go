@@ -3,7 +3,6 @@ package commission
 import (
 	"context"
 	
-	"github.com/guild-ventures/guild-core/pkg/generator"
 	commissionpkg "github.com/guild-ventures/guild-core/pkg/commission"
 )
 
@@ -26,11 +25,19 @@ type CommissionPlanner interface {
 	ValidatePlan(ctx context.Context) error
 	UpdatePlan(ctx context.Context, updates map[string]interface{}) error
 	GetCommissionID() string
+	
+	// Additional methods used by the UI
+	GetSession() *commissionpkg.PlanningSession
+	AddContext(ctx context.Context, contextText string) error
+	Regenerate(ctx context.Context) error
+	GetSuggestions(ctx context.Context) (string, error)
+	MarkReady(ctx context.Context) error
+	CreateCommission(ctx context.Context, description string) error
 }
 
 // CommissionGenerator interface abstracts commission document generation
 type CommissionGenerator interface {
-	GenerateCommissionDocs(ctx context.Context, commission *commissionpkg.Commission) (*generator.GeneratedDocs, error)
+	GenerateCommissionDocs(ctx context.Context, commission *commissionpkg.Commission) (map[string]string, error)
 	GenerateSpecs(ctx context.Context, commission *commissionpkg.Commission) (string, error)
 	GenerateAIDocs(ctx context.Context, commission *commissionpkg.Commission) (string, error)
 	SuggestImprovements(ctx context.Context, commission *commissionpkg.Commission) ([]string, error)

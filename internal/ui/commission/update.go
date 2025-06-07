@@ -2,7 +2,6 @@
 package commission
 
 import (
-	"context"
 	"fmt"
 	"strings"
 	"time"
@@ -695,28 +694,28 @@ func executeCommandCmd(m *CommissionChamber, command string) tea.Cmd {
 		case "add-context", "craft":
 			if len(args) > 0 {
 				context := strings.Join(args, " ")
-				return addContextCmd(&m, context)()
+				return addContextCmd(m, context)()
 			}
 
 		case "regenerate", "refine":
-			return generateDocumentsCmd(&m)()
+			return generateDocumentsCmd(m)()
 
 		case "suggest":
-			return requestSuggestionsCmd(&m)()
+			return requestSuggestionsCmd(m)()
 
 		case "ready":
-			return markCommissionReadyCmd(&m)()
+			return markCommissionReadyCmd(m)()
 
 		case "list":
 			// Switch to dashboard view which shows the objective list
 			m.chamberState = stateDashboard
-			return loadCommissionsCmd(&m)()
+			return loadCommissionsCmd(m)()
 
 		case "create":
 			// If arguments provided, create objective from them
 			if len(args) > 0 {
 				description := strings.Join(args, " ")
-				return createCommissionCmd(&m, description)()
+				return createCommissionCmd(m, description)()
 			}
 			// Otherwise switch to create view
 			m.chamberState = stateCreating

@@ -8,7 +8,7 @@ import (
 
 func TestNewChunker(t *testing.T) {
 	// Test default values
-	chunker := NewChunker(ChunkerConfig{})
+	chunker := newChunker(ChunkerConfig{})
 	assert.Equal(t, 1000, chunker.Config.ChunkSize)
 	assert.Equal(t, 200, chunker.Config.ChunkOverlap)
 	assert.Equal(t, ChunkByParagraph, chunker.Config.Strategy)
@@ -19,7 +19,7 @@ func TestNewChunker(t *testing.T) {
 		ChunkOverlap: 50,
 		Strategy:     ChunkBySentence,
 	}
-	chunker = NewChunker(config)
+	chunker = newChunker(config)
 	assert.Equal(t, 500, chunker.Config.ChunkSize)
 	assert.Equal(t, 50, chunker.Config.ChunkOverlap)
 	assert.Equal(t, ChunkBySentence, chunker.Config.Strategy)
@@ -31,7 +31,7 @@ func TestChunkByParagraph(t *testing.T) {
 		ChunkOverlap: 0,
 		Strategy:     ChunkByParagraph,
 	}
-	chunker := NewChunker(config)
+	chunker := newChunker(config)
 
 	tests := []struct {
 		name     string
@@ -88,7 +88,7 @@ func TestChunkBySentence(t *testing.T) {
 		ChunkOverlap: 0,
 		Strategy:     ChunkBySentence,
 	}
-	chunker := NewChunker(config)
+	chunker := newChunker(config)
 
 	tests := []struct {
 		name     string
@@ -147,7 +147,7 @@ func TestChunkByFixedSize(t *testing.T) {
 		ChunkOverlap: 5,
 		Strategy:     ChunkByFixedSize,
 	}
-	chunker := NewChunker(config)
+	chunker := newChunker(config)
 
 	tests := []struct {
 		name     string
@@ -197,7 +197,7 @@ func TestChunkByMarkdownHeader(t *testing.T) {
 		ChunkOverlap: 0,
 		Strategy:     ChunkByMarkdownHeader,
 	}
-	chunker := NewChunker(config)
+	chunker := newChunker(config)
 
 	tests := []struct {
 		name     string

@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -348,7 +348,7 @@ func TestPerformanceIntegration(t *testing.T) {
 
 // Helper functions to create test components
 
-func createTestPromptManager(t *testing.T) prompts.LayeredManager {
+func createTestPromptManager(t *testing.T) layered.LayeredManager {
 	// In a real implementation, this would create a working LayeredManager
 	// For now, we'll use a mock that returns reasonable prompts
 	mockMgr := &MockPromptManager{}
@@ -356,7 +356,7 @@ func createTestPromptManager(t *testing.T) prompts.LayeredManager {
 	// Set up realistic prompt responses
 	mockMgr.On("BuildLayeredPrompt", 
 		mock.Anything, "manager-agent", "analysis-session", mock.Anything).
-		Return(&prompts.LayeredPrompt{
+		Return(&layered.LayeredPrompt{
 			Compiled:    "You are a Guild Master analyzing task complexity. Provide JSON response with complexity_score, recommended_approach, reasoning, and agent_requirements.",
 			TokenCount:  200,
 			Truncated:   false,
@@ -368,7 +368,7 @@ func createTestPromptManager(t *testing.T) prompts.LayeredManager {
 		
 	mockMgr.On("BuildLayeredPrompt", 
 		mock.Anything, "manager-agent", "routing-session", mock.Anything).
-		Return(&prompts.LayeredPrompt{
+		Return(&layered.LayeredPrompt{
 			Compiled:    "You are a Guild Master routing tasks to agents. Provide JSON response with routing_decision, cost_analysis, and execution_plan.",
 			TokenCount:  250,
 			Truncated:   false,

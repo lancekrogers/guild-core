@@ -15,7 +15,7 @@ type ContainsAssertion struct {
 
 func (a *ContainsAssertion) Assert(output string) error {
 	if !strings.Contains(output, a.Substring) {
-		return gerror.New(gerror.ErrCodeInvalidInput, "prompts", "contains_assertion", "output does not contain '%s'", a.Substring)
+		return gerror.Newf(gerror.ErrCodeInvalidInput, "output does not contain '%s'", a.Substring).WithComponent("prompts").WithOperation("contains_assertion")
 	}
 	return nil
 }
@@ -40,7 +40,7 @@ func NewRegexAssertion(pattern string) (*RegexAssertion, error) {
 
 func (a *RegexAssertion) Assert(output string) error {
 	if !a.regex.MatchString(output) {
-		return gerror.New(gerror.ErrCodeInvalidInput, "prompts", "regex_assertion", "output does not match pattern '%s'", a.Pattern)
+		return gerror.Newf(gerror.ErrCodeInvalidInput, "output does not match pattern '%s'", a.Pattern).WithComponent("prompts").WithOperation("regex_assertion")
 	}
 	return nil
 }
@@ -58,10 +58,10 @@ type LengthAssertion struct {
 func (a *LengthAssertion) Assert(output string) error {
 	length := len(output)
 	if a.MinLength > 0 && length < a.MinLength {
-		return gerror.New(gerror.ErrCodeInvalidInput, "prompts", "length_assertion", "output too short: %d < %d", length, a.MinLength)
+		return gerror.Newf(gerror.ErrCodeInvalidInput, "output too short: %d < %d", length, a.MinLength).WithComponent("prompts").WithOperation("length_assertion")
 	}
 	if a.MaxLength > 0 && length > a.MaxLength {
-		return gerror.New(gerror.ErrCodeInvalidInput, "prompts", "length_assertion", "output too long: %d > %d", length, a.MaxLength)
+		return gerror.Newf(gerror.ErrCodeInvalidInput, "output too long: %d > %d", length, a.MaxLength).WithComponent("prompts").WithOperation("length_assertion")
 	}
 	return nil
 }
@@ -84,7 +84,7 @@ type StructureAssertion struct {
 func (a *StructureAssertion) Assert(output string) error {
 	for _, section := range a.RequiredSections {
 		if !strings.Contains(output, section) {
-			return gerror.New(gerror.ErrCodeInvalidInput, "prompts", "structure_assertion", "missing required section: %s", section)
+			return gerror.Newf(gerror.ErrCodeInvalidInput, "missing required section: %s", section).WithComponent("prompts").WithOperation("structure_assertion")
 		}
 	}
 	return nil
@@ -116,11 +116,11 @@ func (a *MultiAssertion) Assert(output string) error {
 	}
 
 	if a.RequireAll && len(errors) > 0 {
-		return gerror.New(gerror.ErrCodeInvalidInput, "prompts", "composite_assertion", "multiple assertion failures: %s", strings.Join(errors, "; "))
+		return gerror.Newf(gerror.ErrCodeInvalidInput, "multiple assertion failures: %s", strings.Join(errors, "; ")).WithComponent("prompts").WithOperation("composite_assertion")
 	}
 
 	if !a.RequireAll && len(errors) == len(a.Assertions) {
-		return gerror.New(gerror.ErrCodeInvalidInput, "prompts", "composite_assertion", "all assertions failed: %s", strings.Join(errors, "; "))
+		return gerror.Newf(gerror.ErrCodeInvalidInput, "all assertions failed: %s", strings.Join(errors, "; ")).WithComponent("prompts").WithOperation("composite_assertion")
 	}
 
 	return nil
@@ -148,7 +148,7 @@ func (a *QualityAssertion) Assert(output string) error {
 	// Count sentences (simple approximation)
 	sentences := strings.Count(output, ".") + strings.Count(output, "!") + strings.Count(output, "?")
 	if sentences < a.MinSentences {
-		return gerror.New(gerror.ErrCodeInvalidInput, "prompts", "quality_assertion", "insufficient detail: only %d sentences (min %d)", sentences, a.MinSentences)
+		return gerror.Newf(gerror.ErrCodeInvalidInput, "insufficient detail: only %d sentences (min %d)", sentences, a.MinSentences).WithComponent("prompts").WithOperation("quality_assertion")
 	}
 
 	if a.RequireExamples {
@@ -158,7 +158,7 @@ func (a *QualityAssertion) Assert(output string) error {
 			strings.Contains(output, "e.g.") ||
 			strings.Contains(output, "for instance")
 		if !hasExamples {
-			return gerror.New(gerror.ErrCodeInvalidInput, "prompts", nil).WithComponent("quality_assertion").WithOperation("no examples found in output")
+			return gerror.New(gerror.ErrCodeInvalidInput, "no examples found in output", nil).WithComponent("prompts").WithOperation("quality_assertion")
 		}
 	}
 
@@ -169,7 +169,7 @@ func (a *QualityAssertion) Assert(output string) error {
 			strings.Contains(output, "- ") ||
 			strings.Contains(output, "```")
 		if !hasFormatting {
-			return gerror.New(gerror.ErrCodeInvalidInput, "prompts", nil).WithComponent("quality_assertion").WithOperation("no formatting found in output")
+			return gerror.New(gerror.ErrCodeInvalidInput, "no formatting found in output", nil).WithComponent("prompts").WithOperation("quality_assertion")
 		}
 	}
 

@@ -27,7 +27,7 @@ func TestCostManager_BasicOperations(t *testing.T) {
 	cm.RecordCost(CostTypeLLM, 2.5, "Test LLM call", metadata)
 	
 	// Test getting total cost
-	totalLLMCost := cm.GetTotalCost(CostTypeLLM)
+	totalLLMCost := cm.GetTotalCostByType(CostTypeLLM)
 	if totalLLMCost != 2.5 {
 		t.Errorf("Expected total LLM cost of 2.5, got %f", totalLLMCost)
 	}
@@ -77,14 +77,22 @@ func TestCostManager_LLMCostCalculation(t *testing.T) {
 	
 	for _, tt := range tests {
 		t.Run(tt.description, func(t *testing.T) {
-			cost := cm.RecordLLMCost(tt.model, tt.promptTokens, tt.completionTokens, nil)
-			
-			if cost != tt.expectedCost {
-				t.Errorf("Expected cost %f, got %f", tt.expectedCost, cost)
+			err := cm.RecordLLMCost(tt.model, tt.promptTokens, tt.completionTokens, nil)
+			if err != nil {
+				t.Errorf("Unexpected error recording LLM cost: %v", err)
 			}
 			
-			// Test estimation
-			estimatedCost := cm.EstimateLLMCost(tt.model, tt.promptTokens, tt.completionTokens)
+			// Get the actual cost from the totals
+			actualCost := cm.GetTotalCostByType(CostTypeLLM)
+			if actualCost != tt.expectedCost {
+				t.Errorf("Expected cost %f, got %f", tt.expectedCost, actualCost)
+			}
+			
+			// Reset for next test
+			cm.Reset()
+			
+			// Test estimation using detailed method
+			estimatedCost := cm.EstimateLLMCostDetailed(tt.model, tt.promptTokens, tt.completionTokens)
 			if estimatedCost != tt.expectedCost {
 				t.Errorf("Expected estimated cost %f, got %f", tt.expectedCost, estimatedCost)
 			}
@@ -109,7 +117,7 @@ func TestCostManager_ToolCost(t *testing.T) {
 	}
 	
 	// Verify total tool cost
-	totalToolCost := cm.GetTotalCost(CostTypeTool)
+	totalToolCost := cm.GetTotalCostByType(CostTypeTool)
 	if totalToolCost != 0.11 {
 		t.Errorf("Expected total tool cost of 0.11, got %f", totalToolCost)
 	}
@@ -209,7 +217,7 @@ func TestCostManager_ConcurrentAccess(t *testing.T) {
 	}
 	
 	// Verify total
-	total := cm.GetTotalCost(CostTypeLLM)
+	total := cm.GetTotalCostByType(CostTypeLLM)
 	expected := 10.0 // 10 goroutines * 100 calls * 0.01
 	
 	// Use a small delta for floating point comparison

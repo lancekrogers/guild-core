@@ -128,8 +128,9 @@ func TestCostBasedAgentSelection(t *testing.T) {
 		require.NotNil(t, autoAgent)
 
 		// Should auto-detect claude-3-haiku as cost magnitude 1
-		effectiveCost := registry.getEffectiveCostMagnitude(*autoAgent)
-		assert.Equal(t, 1, effectiveCost)
+		// Note: getEffectiveCostMagnitude method doesn't exist in the current implementation
+		// The auto-detection happens during registration, so we verify the registered value
+		assert.Equal(t, 1, autoAgent.CostMagnitude)
 	})
 }
 
