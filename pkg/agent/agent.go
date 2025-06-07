@@ -2,6 +2,8 @@ package agent
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -72,14 +74,14 @@ func newWorkerAgent(id, name string, llmClient providers.LLMClient,
 	}
 }
 
-// Execute runs a task
+// Execute runs a task with full tool support
 func (a *WorkerAgent) Execute(ctx context.Context, request string) (string, error) {
 	// If we have a cost-aware implementation, use it
 	if a.LLMClient != nil && a.CostManager != nil {
 		return a.CostAwareExecute(ctx, request)
 	}
 	
-	// Otherwise, simple execution
+	// Otherwise, execute with tools if available
 	if a.LLMClient == nil {
 		return "", gerror.New(gerror.ErrCodeValidation, "no LLM client configured", nil).
 			WithComponent("agent").
@@ -87,7 +89,12 @@ func (a *WorkerAgent) Execute(ctx context.Context, request string) (string, erro
 			WithDetails("agent_id", a.ID)
 	}
 	
-	// Call the LLM
+	// If we have tools available, create a task executor for tool-enabled execution
+	if a.ToolRegistry != nil {
+		return a.executeWithTools(ctx, request)
+	}
+	
+	// Fall back to simple LLM execution without tools
 	response, err := a.LLMClient.Complete(ctx, request)
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeProvider, "LLM completion failed").
@@ -167,6 +174,49 @@ func (a *WorkerAgent) SetCostBudget(costType CostType, amount float64) {
 // GetCostReport returns a report of all costs incurred by the agent
 func (a *WorkerAgent) GetCostReport() map[string]interface{} {
 	return a.CostManager.GetCostReport()
+}
+
+// executeWithTools executes a task with tool awareness and basic tool execution
+func (a *WorkerAgent) executeWithTools(ctx context.Context, request string) (string, error) {
+	// Get available tools for context
+	var toolContext string
+	var availableTools []string
+	
+	if a.ToolRegistry != nil {
+		availableTools = a.ToolRegistry.ListTools()
+		if len(availableTools) > 0 {
+			toolDescriptions := make([]string, 0, len(availableTools))
+			for _, toolName := range availableTools {
+				tool, err := a.ToolRegistry.GetTool(toolName)
+				if err == nil {
+					toolDescriptions = append(toolDescriptions, fmt.Sprintf("- %s: %s", toolName, tool.Description()))
+				}
+			}
+			
+			if len(toolDescriptions) > 0 {
+				toolContext = "\n\nAvailable tools:\n" + strings.Join(toolDescriptions, "\n")
+				toolContext += "\n\nYou can reference these tools in your response and I can execute them if needed."
+			}
+		}
+	}
+	
+	// Create enhanced prompt with tool context
+	enhancedRequest := request + toolContext
+	
+	// Execute with LLM
+	response, err := a.LLMClient.Complete(ctx, enhancedRequest)
+	if err != nil {
+		return "", gerror.Wrap(err, gerror.ErrCodeProvider, "LLM completion failed with tool context").
+			WithComponent("agent").
+			WithOperation("executeWithTools").
+			WithDetails("agent_id", a.ID)
+	}
+	
+	// TODO: Parse the response for tool calls and execute them
+	// For now, we're just providing tool awareness to the LLM
+	// Future enhancement: Parse response for tool execution requests and execute them
+	
+	return response, nil
 }
 
 // ManagerAgent is a coordinator agent

@@ -8,14 +8,16 @@
 *.so
 *.dylib
 bin/
-guild
+/guild
+/guild.exe
 layered_prompt_example
 
 # Test binary, built with `go test -c`
 *.test
-test_*
-*_test
 .test-*
+# Test temporary files (but allow Go test source files like *_test.go)
+test_output/
+test_results/
 
 # Demo and example binaries
 guild_hall
