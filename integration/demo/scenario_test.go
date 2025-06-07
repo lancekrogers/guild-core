@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 	"testing"
 	"time"
 
@@ -284,7 +283,7 @@ func setupTestGuildProject(t *testing.T, workDir string) {
 			{
 				ID:          "demo-manager",
 				Name:        "Demo Manager",
-				Role:        "manager",
+				Type:        "manager",
 				Provider:    "mock",
 				Model:       "test-model",
 				Capabilities: []string{"coordination", "planning"},
@@ -292,7 +291,7 @@ func setupTestGuildProject(t *testing.T, workDir string) {
 			{
 				ID:          "demo-developer",
 				Name:        "Demo Developer",
-				Role:        "developer",
+				Type:        "developer",
 				Provider:    "mock",
 				Model:       "test-model",
 				Capabilities: []string{"implementation", "coding"},
@@ -300,7 +299,7 @@ func setupTestGuildProject(t *testing.T, workDir string) {
 		},
 	}
 
-	err := project.InitializeGuildProject(workDir, guildConfig)
+	err := project.InitializeWithConfig(workDir, guildConfig)
 	require.NoError(t, err)
 }
 

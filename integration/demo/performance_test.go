@@ -10,7 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -49,14 +48,6 @@ func BenchmarkAgentCreation(b *testing.B) {
 	// Use agent registry instead of factory
 	agentReg := reg.Agents()
 	require.NotNil(b, agentReg)
-
-	testConfig := config.AgentConfig{
-		ID:       "benchmark-agent",
-		Name:     "Benchmark Agent",
-		Role:     "worker",
-		Provider: "mock",
-		Model:    "test-model",
-	}
 
 	b.ResetTimer()
 
@@ -193,8 +184,8 @@ func TestConcurrentAgentPerformance(t *testing.T) {
 	err := reg.Initialize(ctx, registry.Config{})
 	require.NoError(t, err)
 
-	agentFactory, err := reg.GetAgentFactory()
-	require.NoError(t, err)
+	agentRegistry := reg.Agents()
+	require.NotNil(t, agentRegistry)
 
 	// Test concurrent agent operations
 	numAgents := 5
@@ -205,15 +196,7 @@ func TestConcurrentAgentPerformance(t *testing.T) {
 	// Create agents concurrently
 	agents := make([]interface{}, numAgents)
 	for i := 0; i < numAgents; i++ {
-		testConfig := config.AgentConfig{
-			ID:       fmt.Sprintf("concurrent-agent-%d", i),
-			Name:     fmt.Sprintf("Concurrent Agent %d", i),
-			Role:     "worker",
-			Provider: "mock",
-			Model:    "test-model",
-		}
-
-		agent, err := agentFactory.CreateAgent(ctx, testConfig.ID, testConfig)
+		agent, err := agentRegistry.GetAgent("worker")
 		if err != nil {
 			t.Logf("Agent %d creation error (may be expected): %v", i, err)
 			continue
@@ -300,14 +283,14 @@ func TestStartupPerformance(t *testing.T) {
 	require.NoError(t, err)
 
 	// Component loading
-	_, err = reg.GetAgentFactory()
-	if err != nil {
-		t.Logf("Agent factory error (may be expected): %v", err)
+	agentReg := reg.Agents()
+	if agentReg == nil {
+		t.Logf("Agent registry not available")
 	}
 
-	_, err = reg.GetToolRegistry()
-	if err != nil {
-		t.Logf("Tool registry error (may be expected): %v", err)
+	toolReg := reg.Tools()
+	if toolReg == nil {
+		t.Logf("Tool registry not available")
 	}
 
 	elapsed := time.Since(start)
@@ -340,22 +323,14 @@ func (m *MockChatModel) ProcessMessage(message string) {
 }
 
 func runIntensiveDemoOperations(ctx context.Context, reg registry.ComponentRegistry, iterations int) error {
-	agentFactory, err := reg.GetAgentFactory()
-	if err != nil {
-		return fmt.Errorf("failed to get agent factory: %w", err)
+	agentRegistry := reg.Agents()
+	if agentRegistry == nil {
+		return fmt.Errorf("agent registry not available")
 	}
 
 	// Create and use agents multiple times
 	for i := 0; i < iterations; i++ {
-		testConfig := config.AgentConfig{
-			ID:       fmt.Sprintf("intensive-agent-%d", i),
-			Name:     fmt.Sprintf("Intensive Agent %d", i),
-			Role:     "worker",
-			Provider: "mock",
-			Model:    "test-model",
-		}
-
-		agent, err := agentFactory.CreateAgent(ctx, testConfig.ID, testConfig)
+		agent, err := agentRegistry.GetAgent("worker")
 		if err != nil {
 			continue // Skip on error
 		}

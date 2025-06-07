@@ -88,12 +88,13 @@ func runChat(cmd *cobra.Command, args []string) error {
 	var serverCancel context.CancelFunc
 	if grpcAddress == "localhost:50051" {
 		serverCtx, serverCancel = context.WithCancel(context.Background())
+		defer serverCancel() // Ensure cleanup happens regardless of early returns
+		
 		if err := startEmbeddedServer(serverCtx, projCtx, guildConfig); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start embedded gRPC server").
 				WithComponent("cli").
 				WithOperation("chat.run")
 		}
-		defer serverCancel()
 
 		// Give server time to start
 		time.Sleep(500 * time.Millisecond)

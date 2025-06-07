@@ -137,10 +137,10 @@ all: dashboard
 dashboard: clean build unit-test integration
 	@$(call section_header,Complete Build & Test Summary)
 	@echo "$(BOLD)$(BLUE)┌$(BAR)┐$(NC)"
-	@printf "$(BLUE)│$(NC) $(BOLD)%-52s$(NC)$(BLUE)│$(NC)\n" "🏰 GUILD FRAMEWORK COMPLETE BUILD & TEST SUMMARY"
+	@printf "$(BLUE)│$(NC) $(BOLD)%-58s$(NC)$(BLUE)│$(NC)\n" "🏰 GUILD FRAMEWORK COMPLETE BUILD & TEST SUMMARY"
 	@echo "$(BLUE)├$(BAR)┤$(NC)"
-	@printf "$(BLUE)│$(NC)   %-54s$(BLUE)│$(NC)\n" "All unit tests, builds, and integration tests completed."
-	@printf "$(BLUE)│$(NC)   %-54s$(BLUE)│$(NC)\n" "Review the detailed results above for any failures."
+	@printf "$(BLUE)│$(NC)   %-58s$(BLUE)│$(NC)\n" "All unit tests, builds, and integration tests completed."
+	@printf "$(BLUE)│$(NC)   %-58s$(BLUE)│$(NC)\n" "Review the detailed results above for any failures."
 	@echo "$(BOLD)$(BLUE)└$(BAR)┘$(NC)"
 	@$(call status_card,$(ROCKET) Dashboard Run Complete,pass)
 
@@ -321,7 +321,6 @@ unit-test:
 		fi; \
 	done; \
 	rm -f /tmp/guild-build-test-*; \
-	$(call live_progress_bar,100,All packages tested); \
 	echo ""; \
 	echo ""; \
 	echo "$(BOLD)$(BLUE)┌$(BAR)┐$(NC)"; \
@@ -347,7 +346,7 @@ unit-test:
 	echo "$(BLUE)├$(BAR)$(NC)"; \
 	if [ $$TOTAL_PACKAGES -gt 0 ]; then \
 		BUILD_RATE=$$((BUILD_PASSED * 100 / TOTAL_PACKAGES)); \
-		printf "$(BLUE)│$(NC)   %-25s : " "Build Success Rate"; \
+		printf "$(BLUE)│$(NC)   %-24s : " "Build Success Rate"; \
 		if [ $$BUILD_RATE -eq 100 ]; then \
 			printf "$(GREEN)%d%%$(NC)" $$BUILD_RATE; \
 		elif [ $$BUILD_RATE -ge 95 ]; then \
@@ -358,7 +357,7 @@ unit-test:
 		printf "%*s $(BLUE)│$(NC)\n" $$((28 - $${#BUILD_RATE})) ""; \
 		if [ $$((TOTAL_PACKAGES - BUILD_FAILED)) -gt 0 ]; then \
 			TEST_RATE=$$((TEST_PASSED * 100 / (TOTAL_PACKAGES - BUILD_FAILED))); \
-			printf "$(BLUE)│$(NC)   %-25s : " "Test Success Rate"; \
+			printf "$(BLUE)│$(NC)   %-24s : " "Test Success Rate"; \
 			if [ $$TEST_RATE -eq 100 ]; then \
 				printf "$(GREEN)%d%%$(NC)" $$TEST_RATE; \
 			elif [ $$TEST_RATE -ge 90 ]; then \
