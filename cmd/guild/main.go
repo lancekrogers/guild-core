@@ -75,13 +75,13 @@ func init() {
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(agentCmd)
 	rootCmd.AddCommand(initCmd)
-	// rootCmd.AddCommand(migrateCmd)
+	rootCmd.AddCommand(migrateCmd)
 	rootCmd.AddCommand(chatCmd)
 	rootCmd.AddCommand(corpusCmd)
 	rootCmd.AddCommand(commissionCmd)
 	rootCmd.AddCommand(promptCmd)
-	// rootCmd.AddCommand(costCmd)    // TODO: implement
-	// rootCmd.AddCommand(campaignCmd)  // TODO: implement
+	rootCmd.AddCommand(costCmd)
+	rootCmd.AddCommand(campaignCmd)
 
 	// Register agent subcommands
 	agentCmd.AddCommand(agentStartCmd)
