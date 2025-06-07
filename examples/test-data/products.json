@@ -1,0 +1,225 @@
+{
+  "products": [
+    {
+      "id": "prod_001",
+      "name": "Premium Wireless Headphones",
+      "slug": "premium-wireless-headphones",
+      "description": "High-quality wireless headphones with active noise cancellation, 30-hour battery life, and premium sound quality.",
+      "price": 299.99,
+      "currency": "USD",
+      "brand": "AudioTech Pro",
+      "category": {
+        "id": "cat_electronics",
+        "name": "Electronics",
+        "slug": "electronics"
+      },
+      "subcategory": {
+        "id": "cat_audio",
+        "name": "Audio",
+        "slug": "audio"
+      },
+      "images": [
+        {
+          "url": "https://cdn.example.com/products/001/main.jpg",
+          "alt": "Premium Wireless Headphones - Main View",
+          "is_primary": true
+        },
+        {
+          "url": "https://cdn.example.com/products/001/side.jpg",
+          "alt": "Premium Wireless Headphones - Side View",
+          "is_primary": false
+        }
+      ],
+      "stock": {
+        "quantity": 150,
+        "status": "in_stock",
+        "warehouse_location": "US-EAST-1"
+      },
+      "rating": {
+        "average": 4.7,
+        "count": 342
+      },
+      "specifications": {
+        "battery_life": "30 hours",
+        "connectivity": "Bluetooth 5.2",
+        "weight": "250g",
+        "color_options": ["Black", "Silver", "Blue"]
+      },
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2024-06-01T15:30:00Z"
+    },
+    {
+      "id": "prod_002",
+      "name": "Smart Fitness Tracker",
+      "slug": "smart-fitness-tracker",
+      "description": "Advanced fitness tracker with heart rate monitoring, GPS, sleep tracking, and 7-day battery life.",
+      "price": 149.99,
+      "currency": "USD",
+      "brand": "FitTech",
+      "category": {
+        "id": "cat_electronics",
+        "name": "Electronics",
+        "slug": "electronics"
+      },
+      "subcategory": {
+        "id": "cat_wearables",
+        "name": "Wearables",
+        "slug": "wearables"
+      },
+      "images": [
+        {
+          "url": "https://cdn.example.com/products/002/main.jpg",
+          "alt": "Smart Fitness Tracker - Main View",
+          "is_primary": true
+        }
+      ],
+      "stock": {
+        "quantity": 500,
+        "status": "in_stock",
+        "warehouse_location": "US-WEST-1"
+      },
+      "rating": {
+        "average": 4.5,
+        "count": 1024
+      },
+      "specifications": {
+        "battery_life": "7 days",
+        "water_resistance": "IP68",
+        "display": "1.4 inch AMOLED",
+        "compatibility": ["iOS 12+", "Android 8+"]
+      },
+      "created_at": "2024-02-01T09:00:00Z",
+      "updated_at": "2024-06-10T12:00:00Z"
+    },
+    {
+      "id": "prod_003",
+      "name": "4K Webcam Pro",
+      "slug": "4k-webcam-pro",
+      "description": "Professional 4K webcam with auto-focus, noise-cancelling microphone, and adjustable field of view.",
+      "price": 199.99,
+      "currency": "USD",
+      "brand": "ViewTech",
+      "category": {
+        "id": "cat_electronics",
+        "name": "Electronics",
+        "slug": "electronics"
+      },
+      "subcategory": {
+        "id": "cat_computer_accessories",
+        "name": "Computer Accessories",
+        "slug": "computer-accessories"
+      },
+      "images": [
+        {
+          "url": "https://cdn.example.com/products/003/main.jpg",
+          "alt": "4K Webcam Pro",
+          "is_primary": true
+        }
+      ],
+      "stock": {
+        "quantity": 75,
+        "status": "low_stock",
+        "warehouse_location": "US-EAST-1"
+      },
+      "rating": {
+        "average": 4.8,
+        "count": 156
+      },
+      "specifications": {
+        "resolution": "4K (3840x2160) @ 30fps",
+        "field_of_view": "65° - 90° adjustable",
+        "microphone": "Dual stereo with noise cancellation",
+        "mounting": "Universal clip and tripod mount"
+      },
+      "created_at": "2024-03-10T14:00:00Z",
+      "updated_at": "2024-06-15T10:00:00Z"
+    },
+    {
+      "id": "prod_004",
+      "name": "Ergonomic Office Chair",
+      "slug": "ergonomic-office-chair",
+      "description": "Premium ergonomic office chair with lumbar support, adjustable armrests, and breathable mesh back.",
+      "price": 599.99,
+      "currency": "USD",
+      "brand": "ComfortWork",
+      "category": {
+        "id": "cat_furniture",
+        "name": "Furniture",
+        "slug": "furniture"
+      },
+      "subcategory": {
+        "id": "cat_office_furniture",
+        "name": "Office Furniture",
+        "slug": "office-furniture"
+      },
+      "images": [
+        {
+          "url": "https://cdn.example.com/products/004/main.jpg",
+          "alt": "Ergonomic Office Chair",
+          "is_primary": true
+        }
+      ],
+      "stock": {
+        "quantity": 25,
+        "status": "in_stock",
+        "warehouse_location": "US-CENTRAL-1"
+      },
+      "rating": {
+        "average": 4.9,
+        "count": 89
+      },
+      "specifications": {
+        "max_weight": "300 lbs",
+        "adjustable_height": "17\" - 21\"",
+        "materials": "Mesh back, foam cushion",
+        "warranty": "5 years"
+      },
+      "created_at": "2024-01-20T11:00:00Z",
+      "updated_at": "2024-06-01T09:00:00Z"
+    },
+    {
+      "id": "prod_005",
+      "name": "Portable SSD 1TB",
+      "slug": "portable-ssd-1tb",
+      "description": "Ultra-fast portable SSD with 1TB capacity, USB-C connectivity, and military-grade durability.",
+      "price": 129.99,
+      "currency": "USD",
+      "brand": "SpeedStore",
+      "category": {
+        "id": "cat_electronics",
+        "name": "Electronics",
+        "slug": "electronics"
+      },
+      "subcategory": {
+        "id": "cat_storage",
+        "name": "Storage",
+        "slug": "storage"
+      },
+      "images": [
+        {
+          "url": "https://cdn.example.com/products/005/main.jpg",
+          "alt": "Portable SSD 1TB",
+          "is_primary": true
+        }
+      ],
+      "stock": {
+        "quantity": 0,
+        "status": "out_of_stock",
+        "restock_date": "2024-07-01T00:00:00Z"
+      },
+      "rating": {
+        "average": 4.6,
+        "count": 523
+      },
+      "specifications": {
+        "capacity": "1TB",
+        "read_speed": "1050 MB/s",
+        "write_speed": "1000 MB/s",
+        "interface": "USB 3.2 Gen 2 Type-C",
+        "encryption": "256-bit AES hardware encryption"
+      },
+      "created_at": "2024-04-05T13:00:00Z",
+      "updated_at": "2024-06-20T16:00:00Z"
+    }
+  ]
+}

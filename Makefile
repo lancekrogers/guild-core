@@ -231,27 +231,27 @@ build:
 	printf "$(BLUE)│$(NC) $(BOLD)%-52s$(NC)$(BLUE)│$(NC)\n" "Build Summary"; \
 	echo "$(BLUE)├$(BAR)┤$(NC)"; \
 	if [ "$$VET_STATUS" = "pass" ]; then \
-		printf "$(BLUE)│$(NC)   %-25s : $(GREEN)%-25s$(NC) $(BLUE)│$(NC)\n" "Code Quality" "✓ PASSED"; \
+		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Code Quality" "$(GREEN)✓ PASSED$(NC)" $$((22)); \
 	else \
-		printf "$(BLUE)│$(NC)   %-25s : $(RED)%-25s$(NC) $(BLUE)│$(NC)\n" "Code Quality" "✗ FAILED"; \
+		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Code Quality" "$(RED)✗ FAILED$(NC)" $$((22)); \
 	fi; \
 	if [ "$$BUILD_STATUS" = "pass" ]; then \
-		printf "$(BLUE)│$(NC)   %-25s : $(GREEN)%-25s$(NC) $(BLUE)│$(NC)\n" "Compilation" "✓ PASSED"; \
+		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Compilation" "$(GREEN)✓ PASSED$(NC)" $$((22)); \
 	else \
-		printf "$(BLUE)│$(NC)   %-25s : $(RED)%-25s$(NC) $(BLUE)│$(NC)\n" "Compilation" "✗ FAILED"; \
+		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Compilation" "$(RED)✗ FAILED$(NC)" $$((22)); \
 	fi; \
 	if [ "$$STRIP_STATUS" = "pass" ]; then \
-		printf "$(BLUE)│$(NC)   %-25s : $(GREEN)%-25s$(NC) $(BLUE)│$(NC)\n" "Optimization" "✓ COMPLETED"; \
+		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Optimization" "$(GREEN)✓ COMPLETED$(NC)" $$((19)); \
 	elif [ "$$STRIP_STATUS" = "skip" ]; then \
-		printf "$(BLUE)│$(NC)   %-25s : $(YELLOW)%-25s$(NC) $(BLUE)│$(NC)\n" "Optimization" "○ SKIPPED"; \
+		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Optimization" "$(YELLOW)○ SKIPPED$(NC)" $$((21)); \
 	else \
-		printf "$(BLUE)│$(NC)   %-25s : $(RED)%-25s$(NC) $(BLUE)│$(NC)\n" "Optimization" "✗ FAILED"; \
+		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Optimization" "$(RED)✗ FAILED$(NC)" $$((22)); \
 	fi; \
 	echo "$(BLUE)├$(BAR)┤$(NC)"; \
 	if [ $$ERROR_COUNT -eq 0 ]; then \
-		printf "$(BLUE)│$(NC)   %-25s : $(GREEN)%-25d$(NC) $(BLUE)│$(NC)\n" "Total Errors" $$ERROR_COUNT; \
+		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Total Errors" "$(GREEN)$$ERROR_COUNT$(NC)" $$((30)); \
 	else \
-		printf "$(BLUE)│$(NC)   %-25s : $(RED)%-25d$(NC) $(BLUE)│$(NC)\n" "Total Errors" $$ERROR_COUNT; \
+		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Total Errors" "$(RED)$$ERROR_COUNT$(NC)" $$((30)); \
 	fi; \
 	$(call box_connector); \
 	if [ $$ERROR_COUNT -eq 0 ]; then \

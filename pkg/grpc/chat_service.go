@@ -265,11 +265,20 @@ func (s *ChatService) processWithSingleAgent(ctx context.Context, session *ChatS
 	stream.Send(agentResp)
 }
 
-// executeAgentResponse simulates agent response execution
+// executeAgentResponse executes the agent with real task processing
 func (s *ChatService) executeAgentResponse(ctx context.Context, ag agent.Agent, msg *pb.ChatMessage) (string, error) {
-	// This would integrate with the actual agent execution system
-	// For now, return a demo response
-	return fmt.Sprintf("Agent %s (%s) received: %s", ag.GetName(), ag.GetID(), msg.Content), nil
+	// Execute the agent with the message content
+	response, err := ag.Execute(ctx, msg.Content)
+	if err != nil {
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "agent execution failed").
+			WithComponent("grpc").
+			WithOperation("executeAgentResponse").
+			WithDetails("agent_id", ag.GetID()).
+			WithDetails("message_content", msg.Content).
+			FromContext(ctx)
+	}
+	
+	return response, nil
 }
 
 // handleChatControl processes session control commands
