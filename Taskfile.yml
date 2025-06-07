@@ -354,6 +354,54 @@ tasks:
         fi
         echo "✅ No stray binaries found"
 
+  proto:
+    desc: Generate Go code from Protocol Buffer definitions
+    cmds:
+      - |
+        if [ ! -f scripts/generate-proto.sh ]; then
+          echo "Error: Proto generation script not found"
+          echo "Expected at: scripts/generate-proto.sh"
+          exit 1
+        fi
+      - echo "Generating Go code from Protocol Buffer definitions..."
+      - ./scripts/generate-proto.sh
+      - echo "✅ Proto generation complete"
+
+  proto:check:
+    desc: Verify Protocol Buffer file validity
+    cmds:
+      - |
+        echo "Checking proto file consistency..."
+        PROTO_FILES=$(find proto -name "*.proto")
+        ISSUES=0
+        for proto in $PROTO_FILES; do
+          echo "Checking: $proto"
+          if ! protoc --proto_path=. $proto --go_out=/tmp 2>/dev/null; then
+            echo "❌ Invalid proto file: $proto"
+            ISSUES=$((ISSUES+1))
+          else
+            echo "✅ Valid"
+          fi
+        done
+        if [ $ISSUES -eq 0 ]; then
+          echo "✅ All Proto Files Valid"
+        else
+          echo "❌ $ISSUES Proto Files Have Issues"
+          exit 1
+        fi
+
+  proto:install:
+    desc: Install protobuf tools required for code generation
+    cmds:
+      - echo "Installing protobuf tools..."
+      - go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.6
+      - go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+      - |
+        echo "✅ Go protobuf tools installed"
+        echo ""
+        echo "Note: You also need protoc (Protocol Buffer Compiler) installed."
+        echo "Download from: https://github.com/protocolbuffers/protobuf/releases"
+
   clean:
     desc: Remove build artifacts
     cmds:

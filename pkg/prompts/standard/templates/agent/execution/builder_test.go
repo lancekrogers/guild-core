@@ -115,7 +115,7 @@ func TestBuildFullExecutionPrompt(t *testing.T) {
 					{Name: "path", Type: "string", Description: "File path"},
 				},
 				ReturnType: "string",
-				Example:    "content = file_system.read('/tmp/test.txt')",
+				Examples:   []string{"content = file_system.read('/tmp/test.txt')"},
 			},
 		},
 		ToolConfig: ToolConfigData{

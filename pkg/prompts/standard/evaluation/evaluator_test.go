@@ -5,12 +5,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/standard"
 )
 
 func TestPromptEvaluator(t *testing.T) {
 	// Create a mock enhanced prompt manager
-	manager, err := prompts.NewEnhancedPromptManager()
+	manager, err := standard.NewEnhancedPromptManager()
 	if err != nil {
 		t.Fatalf("Failed to create prompt manager: %v", err)
 	}
@@ -240,7 +240,7 @@ func TestRegexAssertion(t *testing.T) {
 }
 
 func TestEvaluationReport(t *testing.T) {
-	manager, _ := prompts.NewEnhancedPromptManager()
+	manager, _ := standard.NewEnhancedPromptManager()
 	evaluator := NewPromptEvaluator(manager)
 
 	// Register and run a simple test

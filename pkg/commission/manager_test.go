@@ -2,13 +2,16 @@ package commission
 
 import (
 	"context"
+	"errors"
 	"os"
 	"path/filepath"
 	"testing"
-	"time"
 	
 	"github.com/guild-ventures/guild-core/pkg/storage"
 )
+
+// Define error for not found
+var errNotFound = errors.New("not found")
 
 // mockCommissionRepository is a simple in-memory implementation for testing
 type mockCommissionRepository struct {
@@ -29,7 +32,7 @@ func (m *mockCommissionRepository) CreateCommission(ctx context.Context, commiss
 func (m *mockCommissionRepository) GetCommission(ctx context.Context, id string) (*storage.Commission, error) {
 	commission, exists := m.commissions[id]
 	if !exists {
-		return nil, storage.ErrNotFound
+		return nil, errNotFound
 	}
 	return commission, nil
 }
@@ -37,7 +40,7 @@ func (m *mockCommissionRepository) GetCommission(ctx context.Context, id string)
 func (m *mockCommissionRepository) UpdateCommissionStatus(ctx context.Context, id, status string) error {
 	commission, exists := m.commissions[id]
 	if !exists {
-		return storage.ErrNotFound
+		return errNotFound
 	}
 	commission.Status = status
 	return nil

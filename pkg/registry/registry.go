@@ -38,6 +38,135 @@ type SQLiteStorageRegistry struct {
 	commissionAdapter *storage.KanbanCommissionRepositoryAdapter
 }
 
+// campaignRepositoryAdapter adapts storage.CampaignRepository to registry.CampaignRepository
+type campaignRepositoryAdapter struct {
+	repo storage.CampaignRepository
+}
+
+func (a *campaignRepositoryAdapter) CreateCampaign(ctx context.Context, campaign *Campaign) error {
+	// Convert registry.Campaign to storage.Campaign
+	storageCampaign := &storage.Campaign{
+		ID:        campaign.ID,
+		Name:      campaign.Name,
+		Status:    campaign.Status,
+		CreatedAt: campaign.CreatedAt,
+		UpdatedAt: campaign.UpdatedAt,
+	}
+	return a.repo.CreateCampaign(ctx, storageCampaign)
+}
+
+func (a *campaignRepositoryAdapter) GetCampaign(ctx context.Context, id string) (*Campaign, error) {
+	storageCampaign, err := a.repo.GetCampaign(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	
+	// Convert storage.Campaign to registry.Campaign
+	return &Campaign{
+		ID:        storageCampaign.ID,
+		Name:      storageCampaign.Name,
+		Status:    storageCampaign.Status,
+		CreatedAt: storageCampaign.CreatedAt,
+		UpdatedAt: storageCampaign.UpdatedAt,
+	}, nil
+}
+
+func (a *campaignRepositoryAdapter) UpdateCampaignStatus(ctx context.Context, id, status string) error {
+	return a.repo.UpdateCampaignStatus(ctx, id, status)
+}
+
+func (a *campaignRepositoryAdapter) DeleteCampaign(ctx context.Context, id string) error {
+	return a.repo.DeleteCampaign(ctx, id)
+}
+
+func (a *campaignRepositoryAdapter) ListCampaigns(ctx context.Context) ([]*Campaign, error) {
+	storageCampaigns, err := a.repo.ListCampaigns(ctx)
+	if err != nil {
+		return nil, err
+	}
+	
+	campaigns := make([]*Campaign, 0, len(storageCampaigns))
+	for _, sc := range storageCampaigns {
+		campaigns = append(campaigns, &Campaign{
+			ID:        sc.ID,
+			Name:      sc.Name,
+			Status:    sc.Status,
+			CreatedAt: sc.CreatedAt,
+			UpdatedAt: sc.UpdatedAt,
+		})
+	}
+	return campaigns, nil
+}
+
+// commissionRepositoryAdapter adapts storage.CommissionRepository to registry.CommissionRepository
+type commissionRepositoryAdapter struct {
+	repo storage.CommissionRepository
+}
+
+func (a *commissionRepositoryAdapter) CreateCommission(ctx context.Context, commission *Commission) error {
+	// Convert registry.Commission to storage.Commission
+	storageCommission := &storage.Commission{
+		ID:          commission.ID,
+		CampaignID:  commission.CampaignID,
+		Title:       commission.Title,
+		Description: commission.Description,
+		Domain:      commission.Domain,
+		Context:     commission.Context,
+		Status:      commission.Status,
+		CreatedAt:   commission.CreatedAt,
+	}
+	return a.repo.CreateCommission(ctx, storageCommission)
+}
+
+func (a *commissionRepositoryAdapter) GetCommission(ctx context.Context, id string) (*Commission, error) {
+	storageCommission, err := a.repo.GetCommission(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	
+	// Convert storage.Commission to registry.Commission
+	return &Commission{
+		ID:          storageCommission.ID,
+		CampaignID:  storageCommission.CampaignID,
+		Title:       storageCommission.Title,
+		Description: storageCommission.Description,
+		Domain:      storageCommission.Domain,
+		Context:     storageCommission.Context,
+		Status:      storageCommission.Status,
+		CreatedAt:   storageCommission.CreatedAt,
+	}, nil
+}
+
+func (a *commissionRepositoryAdapter) UpdateCommissionStatus(ctx context.Context, id, status string) error {
+	return a.repo.UpdateCommissionStatus(ctx, id, status)
+}
+
+func (a *commissionRepositoryAdapter) DeleteCommission(ctx context.Context, id string) error {
+	return a.repo.DeleteCommission(ctx, id)
+}
+
+func (a *commissionRepositoryAdapter) ListCommissionsByCampaign(ctx context.Context, campaignID string) ([]*Commission, error) {
+	storageCommissions, err := a.repo.ListCommissionsByCampaign(ctx, campaignID)
+	if err != nil {
+		return nil, err
+	}
+	
+	commissions := make([]*Commission, 0, len(storageCommissions))
+	for _, sc := range storageCommissions {
+		commissions = append(commissions, &Commission{
+			ID:          sc.ID,
+			CampaignID:  sc.CampaignID,
+			Title:       sc.Title,
+			Description: sc.Description,
+			Domain:      sc.Domain,
+			Context:     sc.Context,
+			Status:      sc.Status,
+			CreatedAt:   sc.CreatedAt,
+		})
+	}
+	return commissions, nil
+}
+
 // promptChainRepositoryAdapter adapts storage.PromptChainRepository to registry.PromptChainRepository
 type promptChainRepositoryAdapter struct {
 	repo storage.PromptChainRepository
@@ -143,13 +272,374 @@ func (a *promptChainRepositoryAdapter) DeleteChain(ctx context.Context, id strin
 	return a.repo.DeleteChain(ctx, id)
 }
 
+// taskRepositoryAdapter adapts storage.TaskRepository to registry.TaskRepository
+type taskRepositoryAdapter struct {
+	repo storage.TaskRepository
+}
+
+func (a *taskRepositoryAdapter) CreateTask(ctx context.Context, task *StorageTask) error {
+	// Convert registry.StorageTask to storage.Task
+	storageTask := &storage.Task{
+		ID:              task.ID,
+		CommissionID:    task.CommissionID,
+		AssignedAgentID: task.AssignedAgentID,
+		Title:           task.Title,
+		Description:     task.Description,
+		Status:          task.Status,
+		Column:          task.Column,
+		StoryPoints:     task.StoryPoints,
+		Metadata:        task.Metadata,
+		CreatedAt:       task.CreatedAt,
+		UpdatedAt:       task.UpdatedAt,
+	}
+	return a.repo.CreateTask(ctx, storageTask)
+}
+
+func (a *taskRepositoryAdapter) GetTask(ctx context.Context, id string) (*StorageTask, error) {
+	storageTask, err := a.repo.GetTask(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	
+	// Convert storage.Task to registry.StorageTask
+	return &StorageTask{
+		ID:              storageTask.ID,
+		CommissionID:    storageTask.CommissionID,
+		AssignedAgentID: storageTask.AssignedAgentID,
+		Title:           storageTask.Title,
+		Description:     storageTask.Description,
+		Status:          storageTask.Status,
+		Column:          storageTask.Column,
+		StoryPoints:     storageTask.StoryPoints,
+		Metadata:        storageTask.Metadata,
+		CreatedAt:       storageTask.CreatedAt,
+		UpdatedAt:       storageTask.UpdatedAt,
+		AgentName:       storageTask.AgentName,
+		AgentType:       storageTask.AgentType,
+	}, nil
+}
+
+func (a *taskRepositoryAdapter) UpdateTask(ctx context.Context, task *StorageTask) error {
+	storageTask := &storage.Task{
+		ID:              task.ID,
+		CommissionID:    task.CommissionID,
+		AssignedAgentID: task.AssignedAgentID,
+		Title:           task.Title,
+		Description:     task.Description,
+		Status:          task.Status,
+		Column:          task.Column,
+		StoryPoints:     task.StoryPoints,
+		Metadata:        task.Metadata,
+		CreatedAt:       task.CreatedAt,
+		UpdatedAt:       task.UpdatedAt,
+	}
+	return a.repo.UpdateTask(ctx, storageTask)
+}
+
+func (a *taskRepositoryAdapter) DeleteTask(ctx context.Context, id string) error {
+	return a.repo.DeleteTask(ctx, id)
+}
+
+func (a *taskRepositoryAdapter) ListTasks(ctx context.Context) ([]*StorageTask, error) {
+	storageTasks, err := a.repo.ListTasks(ctx)
+	if err != nil {
+		return nil, err
+	}
+	
+	tasks := make([]*StorageTask, 0, len(storageTasks))
+	for _, st := range storageTasks {
+		tasks = append(tasks, &StorageTask{
+			ID:              st.ID,
+			CommissionID:    st.CommissionID,
+			AssignedAgentID: st.AssignedAgentID,
+			Title:           st.Title,
+			Description:     st.Description,
+			Status:          st.Status,
+			Column:          st.Column,
+			StoryPoints:     st.StoryPoints,
+			Metadata:        st.Metadata,
+			CreatedAt:       st.CreatedAt,
+			UpdatedAt:       st.UpdatedAt,
+			AgentName:       st.AgentName,
+			AgentType:       st.AgentType,
+		})
+	}
+	return tasks, nil
+}
+
+func (a *taskRepositoryAdapter) ListTasksByStatus(ctx context.Context, status string) ([]*StorageTask, error) {
+	storageTasks, err := a.repo.ListTasksByStatus(ctx, status)
+	if err != nil {
+		return nil, err
+	}
+	
+	tasks := make([]*StorageTask, 0, len(storageTasks))
+	for _, st := range storageTasks {
+		tasks = append(tasks, &StorageTask{
+			ID:              st.ID,
+			CommissionID:    st.CommissionID,
+			AssignedAgentID: st.AssignedAgentID,
+			Title:           st.Title,
+			Description:     st.Description,
+			Status:          st.Status,
+			Column:          st.Column,
+			StoryPoints:     st.StoryPoints,
+			Metadata:        st.Metadata,
+			CreatedAt:       st.CreatedAt,
+			UpdatedAt:       st.UpdatedAt,
+			AgentName:       st.AgentName,
+			AgentType:       st.AgentType,
+		})
+	}
+	return tasks, nil
+}
+
+func (a *taskRepositoryAdapter) ListTasksByCommission(ctx context.Context, commissionID string) ([]*StorageTask, error) {
+	storageTasks, err := a.repo.ListTasksByCommission(ctx, commissionID)
+	if err != nil {
+		return nil, err
+	}
+	
+	tasks := make([]*StorageTask, 0, len(storageTasks))
+	for _, st := range storageTasks {
+		tasks = append(tasks, &StorageTask{
+			ID:              st.ID,
+			CommissionID:    st.CommissionID,
+			AssignedAgentID: st.AssignedAgentID,
+			Title:           st.Title,
+			Description:     st.Description,
+			Status:          st.Status,
+			Column:          st.Column,
+			StoryPoints:     st.StoryPoints,
+			Metadata:        st.Metadata,
+			CreatedAt:       st.CreatedAt,
+			UpdatedAt:       st.UpdatedAt,
+			AgentName:       st.AgentName,
+			AgentType:       st.AgentType,
+		})
+	}
+	return tasks, nil
+}
+
+func (a *taskRepositoryAdapter) ListTasksForKanban(ctx context.Context, commissionID string) ([]*StorageTask, error) {
+	storageTasks, err := a.repo.ListTasksForKanban(ctx, commissionID)
+	if err != nil {
+		return nil, err
+	}
+	
+	tasks := make([]*StorageTask, 0, len(storageTasks))
+	for _, st := range storageTasks {
+		tasks = append(tasks, &StorageTask{
+			ID:              st.ID,
+			CommissionID:    st.CommissionID,
+			AssignedAgentID: st.AssignedAgentID,
+			Title:           st.Title,
+			Description:     st.Description,
+			Status:          st.Status,
+			Column:          st.Column,
+			StoryPoints:     st.StoryPoints,
+			Metadata:        st.Metadata,
+			CreatedAt:       st.CreatedAt,
+			UpdatedAt:       st.UpdatedAt,
+			AgentName:       st.AgentName,
+			AgentType:       st.AgentType,
+		})
+	}
+	return tasks, nil
+}
+
+func (a *taskRepositoryAdapter) AssignTask(ctx context.Context, taskID, agentID string) error {
+	return a.repo.AssignTask(ctx, taskID, agentID)
+}
+
+func (a *taskRepositoryAdapter) UpdateTaskStatus(ctx context.Context, taskID, status string) error {
+	return a.repo.UpdateTaskStatus(ctx, taskID, status)
+}
+
+func (a *taskRepositoryAdapter) UpdateTaskColumn(ctx context.Context, taskID, column string) error {
+	// The storage package doesn't have UpdateTaskColumn, so we'll need to do a full update
+	task, err := a.repo.GetTask(ctx, taskID)
+	if err != nil {
+		return err
+	}
+	task.Column = column
+	return a.repo.UpdateTask(ctx, task)
+}
+
+func (a *taskRepositoryAdapter) RecordTaskEvent(ctx context.Context, event *TaskEvent) error {
+	storageEvent := &storage.TaskEvent{
+		ID:        event.ID,
+		TaskID:    event.TaskID,
+		AgentID:   event.AgentID,
+		EventType: event.EventType,
+		OldValue:  event.OldValue,
+		NewValue:  event.NewValue,
+		Reason:    event.Reason,
+		CreatedAt: event.CreatedAt,
+	}
+	return a.repo.RecordTaskEvent(ctx, storageEvent)
+}
+
+func (a *taskRepositoryAdapter) GetTaskHistory(ctx context.Context, taskID string) ([]*TaskEvent, error) {
+	storageEvents, err := a.repo.GetTaskHistory(ctx, taskID)
+	if err != nil {
+		return nil, err
+	}
+	
+	events := make([]*TaskEvent, 0, len(storageEvents))
+	for _, se := range storageEvents {
+		events = append(events, &TaskEvent{
+			ID:        se.ID,
+			TaskID:    se.TaskID,
+			AgentID:   se.AgentID,
+			EventType: se.EventType,
+			OldValue:  se.OldValue,
+			NewValue:  se.NewValue,
+			Reason:    se.Reason,
+			CreatedAt: se.CreatedAt,
+		})
+	}
+	return events, nil
+}
+
+func (a *taskRepositoryAdapter) GetAgentWorkload(ctx context.Context) ([]*AgentWorkload, error) {
+	storageWorkloads, err := a.repo.GetAgentWorkload(ctx)
+	if err != nil {
+		return nil, err
+	}
+	
+	workloads := make([]*AgentWorkload, 0, len(storageWorkloads))
+	for _, sw := range storageWorkloads {
+		workloads = append(workloads, &AgentWorkload{
+			ID:          sw.ID,
+			Name:        sw.Name,
+			TaskCount:   sw.TaskCount,
+			ActiveTasks: sw.ActiveTasks,
+		})
+	}
+	return workloads, nil
+}
+
+// agentRepositoryAdapter adapts storage.AgentRepository to registry.AgentRepository
+type agentRepositoryAdapter struct {
+	repo storage.AgentRepository
+}
+
+func (a *agentRepositoryAdapter) CreateAgent(ctx context.Context, agent *StorageAgent) error {
+	// Convert registry.StorageAgent to storage.Agent
+	storageAgent := &storage.Agent{
+		ID:             agent.ID,
+		Name:           agent.Name,
+		Type:           agent.Type,
+		Provider:       agent.Provider,
+		Model:          agent.Model,
+		Capabilities:   agent.Capabilities,
+		Tools:          agent.Tools,
+		CostMagnitude:  agent.CostMagnitude,
+		CreatedAt:      agent.CreatedAt,
+	}
+	return a.repo.CreateAgent(ctx, storageAgent)
+}
+
+func (a *agentRepositoryAdapter) GetAgent(ctx context.Context, id string) (*StorageAgent, error) {
+	storageAgent, err := a.repo.GetAgent(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	
+	// Convert storage.Agent to registry.StorageAgent
+	return &StorageAgent{
+		ID:             storageAgent.ID,
+		Name:           storageAgent.Name,
+		Type:           storageAgent.Type,
+		Provider:       storageAgent.Provider,
+		Model:          storageAgent.Model,
+		Capabilities:   storageAgent.Capabilities,
+		Tools:          storageAgent.Tools,
+		CostMagnitude:  storageAgent.CostMagnitude,
+		CreatedAt:      storageAgent.CreatedAt,
+	}, nil
+}
+
+func (a *agentRepositoryAdapter) UpdateAgent(ctx context.Context, agent *StorageAgent) error {
+	storageAgent := &storage.Agent{
+		ID:             agent.ID,
+		Name:           agent.Name,
+		Type:           agent.Type,
+		Provider:       agent.Provider,
+		Model:          agent.Model,
+		Capabilities:   agent.Capabilities,
+		Tools:          agent.Tools,
+		CostMagnitude:  agent.CostMagnitude,
+		CreatedAt:      agent.CreatedAt,
+	}
+	return a.repo.UpdateAgent(ctx, storageAgent)
+}
+
+func (a *agentRepositoryAdapter) DeleteAgent(ctx context.Context, id string) error {
+	return a.repo.DeleteAgent(ctx, id)
+}
+
+func (a *agentRepositoryAdapter) ListAgents(ctx context.Context) ([]*StorageAgent, error) {
+	storageAgents, err := a.repo.ListAgents(ctx)
+	if err != nil {
+		return nil, err
+	}
+	
+	agents := make([]*StorageAgent, 0, len(storageAgents))
+	for _, sa := range storageAgents {
+		agents = append(agents, &StorageAgent{
+			ID:             sa.ID,
+			Name:           sa.Name,
+			Type:           sa.Type,
+			Provider:       sa.Provider,
+			Model:          sa.Model,
+			Capabilities:   sa.Capabilities,
+			Tools:          sa.Tools,
+			CostMagnitude:  sa.CostMagnitude,
+			CreatedAt:      sa.CreatedAt,
+		})
+	}
+	return agents, nil
+}
+
+func (a *agentRepositoryAdapter) ListAgentsByType(ctx context.Context, agentType string) ([]*StorageAgent, error) {
+	storageAgents, err := a.repo.ListAgentsByType(ctx, agentType)
+	if err != nil {
+		return nil, err
+	}
+	
+	agents := make([]*StorageAgent, 0, len(storageAgents))
+	for _, sa := range storageAgents {
+		agents = append(agents, &StorageAgent{
+			ID:             sa.ID,
+			Name:           sa.Name,
+			Type:           sa.Type,
+			Provider:       sa.Provider,
+			Model:          sa.Model,
+			Capabilities:   sa.Capabilities,
+			Tools:          sa.Tools,
+			CostMagnitude:  sa.CostMagnitude,
+			CreatedAt:      sa.CreatedAt,
+		})
+	}
+	return agents, nil
+}
+
 func (s *SQLiteStorageRegistry) RegisterTaskRepository(repo TaskRepository) error {
 	// Not needed for SQLite - repositories are created internally
 	return nil
 }
 
 func (s *SQLiteStorageRegistry) GetTaskRepository() TaskRepository {
-	// Return nil for the interface - kanban uses the adapter via interface calls
+	// Get the task repository from the underlying storage registry
+	if s.registry != nil {
+		storageRepo := s.registry.GetTaskRepository()
+		if storageRepo != nil {
+			// Wrap the storage repository with an adapter
+			return &taskRepositoryAdapter{repo: storageRepo}
+		}
+	}
 	return nil
 }
 
@@ -159,7 +649,14 @@ func (s *SQLiteStorageRegistry) RegisterCampaignRepository(repo CampaignReposito
 }
 
 func (s *SQLiteStorageRegistry) GetCampaignRepository() CampaignRepository {
-	// For now, return nil - the kanban package uses the storage directly via type assertions
+	// Get the campaign repository from the underlying storage registry
+	if s.registry != nil {
+		storageRepo := s.registry.GetCampaignRepository()
+		if storageRepo != nil {
+			// Wrap the storage repository with an adapter
+			return &campaignRepositoryAdapter{repo: storageRepo}
+		}
+	}
 	return nil
 }
 
@@ -169,7 +666,14 @@ func (s *SQLiteStorageRegistry) RegisterCommissionRepository(repo CommissionRepo
 }
 
 func (s *SQLiteStorageRegistry) GetCommissionRepository() CommissionRepository {
-	// For now, return nil - the kanban package uses the storage directly via type assertions
+	// Get the commission repository from the underlying storage registry
+	if s.registry != nil {
+		storageRepo := s.registry.GetCommissionRepository()
+		if storageRepo != nil {
+			// Wrap the storage repository with an adapter
+			return &commissionRepositoryAdapter{repo: storageRepo}
+		}
+	}
 	return nil
 }
 
@@ -179,7 +683,14 @@ func (s *SQLiteStorageRegistry) RegisterAgentRepository(repo AgentRepository) er
 }
 
 func (s *SQLiteStorageRegistry) GetAgentRepository() AgentRepository {
-	// For now, return nil - components should use type assertions to get the actual storage repos
+	// Get the agent repository from the underlying storage registry
+	if s.registry != nil {
+		storageRepo := s.registry.GetAgentRepository()
+		if storageRepo != nil {
+			// Wrap the storage repository with an adapter
+			return &agentRepositoryAdapter{repo: storageRepo}
+		}
+	}
 	return nil
 }
 

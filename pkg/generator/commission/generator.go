@@ -21,7 +21,7 @@ type Generator struct {
 // newGenerator creates a new commission generator (private constructor)
 func newGenerator(client providers.LLMClient) (*Generator, error) {
 	// Create prompt manager
-	pm, err := prompts.newPromptManager()
+	pm, err := prompts.NewPromptManager()
 	if err != nil {
 		return nil, fmt.Errorf("error creating prompt manager: %w", err)
 	}

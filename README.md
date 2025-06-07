@@ -22,6 +22,7 @@ Guild is an ambitious AI agent orchestration framework that coordinates speciali
 ## ✨ Current Features (Implemented)
 
 ### Core Systems
+
 - ✅ **Advanced Chat Interface**: Production-ready TUI with 1,950 lines of code
 - ✅ **Tool Execution System**: Complete with workspace isolation and safety features
 - ✅ **6-Layer Prompt Architecture**: Dynamic prompt management with token optimization
@@ -32,6 +33,7 @@ Guild is an ambitious AI agent orchestration framework that coordinates speciali
 - ✅ **Medieval Theming**: Consistent terminology throughout (artisans, guilds, commissions)
 
 ### Available Commands
+
 ```bash
 guild init [path]           # Initialize a new guild project
 guild chat                  # Interactive chat with AI agents
@@ -44,9 +46,9 @@ guild agent start         # Start agent services
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Go 1.24.3 or higher
 - Git
-- (Optional) ZeroMQ for advanced messaging
 
 ### Installation
 
@@ -81,6 +83,7 @@ guild chat
 ```
 
 This creates a `.guild/` directory with:
+
 ```
 .guild/
 ├── guild.yaml          # Main guild configuration
@@ -97,7 +100,7 @@ This creates a `.guild/` directory with:
 Guild uses a sophisticated component-based architecture:
 
 - **Agents** (Artisans): LLM-powered workers with specialized capabilities
-- **Orchestrator**: Coordinates multiple agents working on shared objectives  
+- **Orchestrator**: Coordinates multiple agents working on shared objectives
 - **Kanban Board**: Task tracking with state management
 - **Memory Layer**: BoltDB for persistence, vector search for RAG
 - **Tool System**: Extensible tool integration with safety controls
@@ -130,12 +133,14 @@ task test:analyze:lore       # Check medieval naming conventions
 ## 🎯 Roadmap to MVP
 
 ### Immediate Priorities
+
 1. Fix current build errors in orchestrator package
-2. Complete chat → task assignment integration  
+2. Complete chat → task assignment integration
 3. Enable real-time progress tracking
 4. Create end-to-end demo workflow
 
 ### Post-MVP Plans
+
 - Comprehensive documentation with GIFs/demos
 - Additional agent types and capabilities
 - Advanced orchestration strategies
@@ -153,6 +158,7 @@ MIT License - see LICENSE file for details.
 ## 🙏 Acknowledgments
 
 Guild draws inspiration from:
+
 - [CrewAI](https://github.com/joaomdmoura/crewAI) - Multi-agent orchestration
 - [LangChain](https://github.com/langchain-ai/langchain) - LLM application patterns
 - [Aider](https://github.com/paul-gauthier/aider) - AI pair programming
@@ -163,3 +169,4 @@ Guild draws inspiration from:
 <div align="center">
   <i>Forging the future of AI agent collaboration, one artisan at a time</i>
 </div>
+

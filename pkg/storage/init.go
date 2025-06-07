@@ -44,8 +44,14 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 	storageRegistry.RegisterAgentRepository(agentRepo)
 	storageRegistry.RegisterPromptChainRepository(promptChainRepo)
 
-	// Return the storage registry only - no more adapter needed
-	return storageRegistry, nil, nil
+	// Create memory store adapter that implements memory.Store interface
+	memoryStoreAdapter := NewMemoryStoreAdapter(database)
+	
+	// Register the memory store adapter in the storage registry
+	storageRegistry.RegisterMemoryStore(memoryStoreAdapter)
+
+	// Return the storage registry and memory store adapter
+	return storageRegistry, memoryStoreAdapter, nil
 }
 
 // InitializeSQLiteStorageForTests initializes SQLite storage without migrations for testing

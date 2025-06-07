@@ -49,7 +49,7 @@ func setupTestDB(t *testing.T) (*sql.DB, storage.PromptChainRepository) {
 	_, err = db.Exec(schema)
 	require.NoError(t, err)
 
-	repo := storage.NewPromptChainRepository(db)
+	repo := storage.DefaultPromptChainRepositoryFactory(db)
 	return db, repo
 }
 
@@ -329,7 +329,7 @@ func TestSQLiteChainManager_DeleteChain(t *testing.T) {
 	require.NoError(t, err)
 
 	// Add a message
-	err = manager.AddMessage(ctx, chainID, Message{
+	err = manager.AddMessage(ctx, chainID, memory.Message{
 		Role:    "user",
 		Content: "Test message",
 	})
@@ -374,7 +374,7 @@ func TestSQLiteChainManager_Integration(t *testing.T) {
 	require.NoError(t, err)
 
 	// Simulate conversation
-	conversation := []Message{
+	conversation := []memory.Message{
 		{Role: "system", Content: "You are a helpful math tutor.", TokenUsage: 6},
 		{Role: "user", Content: "Can you help me with algebra?", TokenUsage: 7},
 		{Role: "assistant", Content: "Of course! I'd be happy to help you with algebra. What specific topic would you like to work on?", TokenUsage: 20},
