@@ -1,0 +1,101 @@
+##############################
+# Guild-Core .gitattributes
+# Git attributes for consistent handling across platforms
+##############################
+
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+# Go source files
+*.go text diff=golang
+*.mod text diff=golang
+*.sum text diff=golang
+
+# Documentation
+*.md text diff=markdown
+*.txt text
+README* text
+LICENSE* text
+CHANGELOG* text
+AUTHORS* text
+CONTRIBUTORS* text
+
+# Configuration files
+*.yaml text
+*.yml text
+*.json text
+*.toml text
+*.xml text
+*.ini text
+.gitignore text
+.gitattributes text
+
+# Shell scripts
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+
+# Windows scripts (preserve CRLF)
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Protocol Buffers
+*.proto text diff=proto
+
+# SQL files
+*.sql text
+
+# Web assets (if any)
+*.html text diff=html
+*.css text diff=css
+*.js text diff=javascript
+*.ts text diff=typescript
+
+# Binary files
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+*.a binary
+*.lib binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.7z binary
+
+# Vendor files
+vendor/* linguist-vendored
+
+# Generated files
+*.pb.go linguist-generated=true
+*_gen.go linguist-generated=true
+*.gen.go linguist-generated=true
+mock_*.go linguist-generated=true
+
+# Documentation
+docs/* linguist-documentation
+
+# Examples
+examples/* linguist-documentation
+
+# Mark testdata as vendored
+testdata/* linguist-vendored
+
+# Ensure go.mod/go.sum are not marked as generated
+go.mod linguist-generated=false
+go.sum linguist-generated=false
+
+# Export ignore (files to exclude from archive exports)
+.github export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+.pre-commit-config.yaml export-ignore
+.golangci.yml export-ignore
+Makefile export-ignore

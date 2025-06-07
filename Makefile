@@ -9,7 +9,7 @@
     coverage lint format install-tools \
     health status quick-test quick-check check \
     provider-test docs-serve dashboard \
-    proto proto-check
+    proto proto-check pre-commit pre-commit-install pre-commit-update
 
 #────────────────────────── COLOURS ───────────────────────────────────────
 ifneq ($(NO_COLOR),1)
@@ -162,6 +162,9 @@ help:
 	@echo ""
 	@echo "  $(BOLD)Quality Commands:$(NC)"
 	@echo "    make lint           $(ARROW) Run linters"
+	@echo "    make format         $(ARROW) Format code with go fmt"
+	@echo "    make pre-commit     $(ARROW) Run pre-commit checks"
+	@echo "    make pre-commit-install $(ARROW) Install pre-commit hooks"
 	@echo "    make health         $(ARROW) Health check dashboard"
 	@echo ""
 	@echo "  $(BOLD)Code Generation:$(NC)"
@@ -231,27 +234,27 @@ build:
 	printf "$(BLUE)│$(NC) $(BOLD)%-52s$(NC)$(BLUE)│$(NC)\n" "Build Summary"; \
 	echo "$(BLUE)├$(BAR)┤$(NC)"; \
 	if [ "$$VET_STATUS" = "pass" ]; then \
-		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Code Quality" "$(GREEN)✓ PASSED$(NC)" $$((22)); \
+		printf "$(BLUE)│$(NC)   %-25s : " "Code Quality"; printf "$(GREEN)✓ PASSED$(NC)"; printf "%*s$(BLUE)│$(NC)\n" $$((22)) ""; \
 	else \
-		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Code Quality" "$(RED)✗ FAILED$(NC)" $$((22)); \
+		printf "$(BLUE)│$(NC)   %-25s : " "Code Quality"; printf "$(RED)✗ FAILED$(NC)"; printf "%*s$(BLUE)│$(NC)\n" $$((22)) ""; \
 	fi; \
 	if [ "$$BUILD_STATUS" = "pass" ]; then \
-		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Compilation" "$(GREEN)✓ PASSED$(NC)" $$((22)); \
+		printf "$(BLUE)│$(NC)   %-25s : " "Compilation"; printf "$(GREEN)✓ PASSED$(NC)"; printf "%*s$(BLUE)│$(NC)\n" $$((22)) ""; \
 	else \
-		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Compilation" "$(RED)✗ FAILED$(NC)" $$((22)); \
+		printf "$(BLUE)│$(NC)   %-25s : " "Compilation"; printf "$(RED)✗ FAILED$(NC)"; printf "%*s$(BLUE)│$(NC)\n" $$((22)) ""; \
 	fi; \
 	if [ "$$STRIP_STATUS" = "pass" ]; then \
-		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Optimization" "$(GREEN)✓ COMPLETED$(NC)" $$((19)); \
+		printf "$(BLUE)│$(NC)   %-25s : " "Optimization"; printf "$(GREEN)✓ COMPLETED$(NC)"; printf "%*s$(BLUE)│$(NC)\n" $$((19)) ""; \
 	elif [ "$$STRIP_STATUS" = "skip" ]; then \
-		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Optimization" "$(YELLOW)○ SKIPPED$(NC)" $$((21)); \
+		printf "$(BLUE)│$(NC)   %-25s : " "Optimization"; printf "$(YELLOW)○ SKIPPED$(NC)"; printf "%*s$(BLUE)│$(NC)\n" $$((21)) ""; \
 	else \
-		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Optimization" "$(RED)✗ FAILED$(NC)" $$((22)); \
+		printf "$(BLUE)│$(NC)   %-25s : " "Optimization"; printf "$(RED)✗ FAILED$(NC)"; printf "%*s$(BLUE)│$(NC)\n" $$((22)) ""; \
 	fi; \
 	echo "$(BLUE)├$(BAR)┤$(NC)"; \
 	if [ $$ERROR_COUNT -eq 0 ]; then \
-		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Total Errors" "$(GREEN)$$ERROR_COUNT$(NC)" $$((30)); \
+		printf "$(BLUE)│$(NC)   %-25s : " "Total Errors"; printf "$(GREEN)$$ERROR_COUNT$(NC)"; printf "%*s$(BLUE)│$(NC)\n" $$((30)) ""; \
 	else \
-		printf "$(BLUE)│$(NC)   %-25s : %s%*s$(BLUE)│$(NC)\n" "Total Errors" "$(RED)$$ERROR_COUNT$(NC)" $$((30)); \
+		printf "$(BLUE)│$(NC)   %-25s : " "Total Errors"; printf "$(RED)$$ERROR_COUNT$(NC)"; printf "%*s$(BLUE)│$(NC)\n" $$((30)) ""; \
 	fi; \
 	$(call box_connector); \
 	if [ $$ERROR_COUNT -eq 0 ]; then \
@@ -282,8 +285,8 @@ unit-test:
 	@rm -f .unit_fail .build_fail .unit_pass .build_pass
 	@echo ""; \
 	echo "$(BOLD)$(PURPLE)┌$(BAR)┐$(NC)"; \
-	printf "$(PURPLE)│$(NC) $(BOLD)%-52s$(NC)$(PURPLE)│$(NC)\n" "Discovering and Testing All Packages"; \
-	printf "$(PURPLE)│$(NC) %-54s$(PURPLE)│$(NC)\n" "Scanning for all Go packages..."; \
+	printf "$(PURPLE)│$(NC) $(BOLD)%-59s$(NC)$(PURPLE)│$(NC)\n" "Discovering and Testing All Packages"; \
+	printf "$(PURPLE)│$(NC) %-59s$(PURPLE)│$(NC)\n" "Scanning for all Go packages..."; \
 	echo "$(BOLD)$(PURPLE)└$(BAR)┘$(NC)"; \
 	echo ""; \
 	TOTAL_PACKAGES=0; \
@@ -322,24 +325,24 @@ unit-test:
 	echo ""; \
 	echo ""; \
 	echo "$(BOLD)$(BLUE)┌$(BAR)┐$(NC)"; \
-	printf "$(BLUE)│$(NC) $(BOLD)%-52s$(NC)$(BLUE)│$(NC)\n" "Test Results Summary"; \
+	printf "$(BLUE)│$(NC) $(BOLD)%-59s$(NC)$(BLUE)│$(NC)\n" "Test Results Summary"; \
 	echo "$(BLUE)├$(BAR)┤$(NC)"; \
-	printf "$(BLUE)│$(NC)   %-25s : %-29d $(BLUE)│$(NC)\n" "Total Packages" $$TOTAL_PACKAGES; \
-	printf "$(BLUE)│$(NC)   %-25s : " "Build Passed"; \
+	printf "$(BLUE)│$(NC)   %-25s : %-28d $(BLUE)│$(NC)\n" "Total Packages" $$TOTAL_PACKAGES; \
+	printf "$(BLUE)│$(NC)   %-24s : " "Build Passed"; \
 	printf "$(GREEN)%-29d$(NC) $(BLUE)│$(NC)\n" $$BUILD_PASSED; \
 	printf "$(BLUE)│$(NC)   %-25s : " "Build Failed"; \
 	if [ $$BUILD_FAILED -eq 0 ]; then \
-		printf "$(GREEN)%-29d$(NC) $(BLUE)│$(NC)\n" $$BUILD_FAILED; \
+		printf "$(GREEN)%-28d$(NC) $(BLUE)│$(NC)\n" $$BUILD_FAILED; \
 	else \
-		printf "$(RED)%-29d$(NC) $(BLUE)│$(NC)\n" $$BUILD_FAILED; \
+		printf "$(RED)%-28d$(NC) $(BLUE)│$(NC)\n" $$BUILD_FAILED; \
 	fi; \
 	printf "$(BLUE)│$(NC)   %-25s : " "Tests Passed"; \
-	printf "$(GREEN)%-29d$(NC) $(BLUE)│$(NC)\n" $$TEST_PASSED; \
+	printf "$(GREEN)%-28d$(NC) $(BLUE)│$(NC)\n" $$TEST_PASSED; \
 	printf "$(BLUE)│$(NC)   %-25s : " "Tests Failed"; \
 	if [ $$TEST_FAILED -eq 0 ]; then \
-		printf "$(GREEN)%-29d$(NC) $(BLUE)│$(NC)\n" $$TEST_FAILED; \
+		printf "$(GREEN)%-28d$(NC) $(BLUE)│$(NC)\n" $$TEST_FAILED; \
 	else \
-		printf "$(RED)%-29d$(NC) $(BLUE)│$(NC)\n" $$TEST_FAILED; \
+		printf "$(RED)%-28d$(NC) $(BLUE)│$(NC)\n" $$TEST_FAILED; \
 	fi; \
 	echo "$(BLUE)├$(BAR)$(NC)"; \
 	if [ $$TOTAL_PACKAGES -gt 0 ]; then \
@@ -415,17 +418,16 @@ integration:
 			echo "$$SUITE" >> .integration_fail; \
 		fi; \
 	done; \
-	$(call live_progress_bar,100,Integration tests complete); \
 	echo ""; \
 	echo ""; \
 	echo "$(BOLD)$(BLUE)┌$(BAR)┐$(NC)"; \
-	printf "$(BLUE)│$(NC) $(BOLD)%-52s$(NC)$(BLUE)│$(NC)\n" "Integration Test Results"; \
+	printf "$(BLUE)│$(NC) $(BOLD)%-58s$(NC)$(BLUE)│$(NC)\n" "Integration Test Results"; \
 	echo "$(BLUE)├$(BAR)┤$(NC)"; \
-	printf "$(BLUE)│$(NC) $(BOLD)%-52s$(NC)$(BLUE)│$(NC)\n" "Suite                    Status"; \
+	printf "$(BLUE)│$(NC) $(BOLD)%-58s$(NC)$(BLUE)│$(NC)\n" "Suite                    Status"; \
 	echo "$(BLUE)├$(BAR)┤$(NC)"; \
 	for D in $$(find ./integration -type d -mindepth 1 -maxdepth 1 2>/dev/null | sort); do \
 		SUITE=$$(basename $$D); \
-		printf "$(BLUE)│$(NC)   %-20s " "$$SUITE"; \
+		printf "$(BLUE)│$(NC)   %-25s " "$$SUITE"; \
 		if grep -q "^$$SUITE$$" .integration_fail 2>/dev/null; then \
 		 	printf "$(RED)✗ FAIL$(NC)"; \
 		else \
@@ -642,6 +644,57 @@ format:
 	$(call live_progress_bar,100,Formatting complete); \
 	echo ""; \
 	$(call status_card,Code Formatted Successfully,pass)
+
+#──────────────────────── PRE-COMMIT HOOKS ────────────────────────────────
+pre-commit:
+	@$(call section_header,$(SHIELD) Pre-commit Checks)
+	@if ! command -v pre-commit >/dev/null 2>&1; then \
+		echo "$(RED)$(CROSS) pre-commit not installed$(NC)"; \
+		echo ""; \
+		echo "$(YELLOW)Install with one of these methods:$(NC)"; \
+		echo "  $(DIM)brew install pre-commit$(NC)       # macOS"; \
+		echo "  $(DIM)pip install pre-commit$(NC)        # Python"; \
+		echo "  $(DIM)./scripts/setup-pre-commit.sh$(NC)  # Auto-install"; \
+		echo ""; \
+		exit 1; \
+	fi; \
+	$(call live_progress_bar,0,Running pre-commit checks...); \
+	echo ""; \
+	if pre-commit run --all-files; then \
+		$(call status_card,All Pre-commit Checks Passed,pass); \
+	else \
+		$(call status_card,Pre-commit Checks Failed,fail); \
+		exit 1; \
+	fi
+
+pre-commit-install:
+	@$(call section_header,$(BUILD) Installing Pre-commit Hooks)
+	@if [ ! -f .pre-commit-config.yaml ]; then \
+		echo "$(RED)$(CROSS) .pre-commit-config.yaml not found$(NC)"; \
+		exit 1; \
+	fi; \
+	if [ -f ./scripts/setup-pre-commit.sh ]; then \
+		./scripts/setup-pre-commit.sh; \
+	else \
+		$(call live_progress_bar,50,Installing pre-commit...); \
+		if command -v brew >/dev/null 2>&1; then \
+			brew install pre-commit >/dev/null 2>&1 || true; \
+		elif command -v pip3 >/dev/null 2>&1; then \
+			pip3 install pre-commit >/dev/null 2>&1 || true; \
+		fi; \
+		$(call live_progress_bar,100,Installing hooks...); \
+		pre-commit install; \
+		echo ""; \
+		$(call status_card,Pre-commit Hooks Installed,pass); \
+	fi
+
+pre-commit-update:
+	@$(call section_header,$(GEAR) Updating Pre-commit Hooks)
+	@$(call live_progress_bar,50,Updating hooks...); \
+	pre-commit autoupdate; \
+	$(call live_progress_bar,100,Update complete); \
+	echo ""; \
+	$(call status_card,Pre-commit Hooks Updated,pass)
 
 #──────────────────────── QUICK-CHECK & ALIASES ───────────────────────────
 quick-check: build

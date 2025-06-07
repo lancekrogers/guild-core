@@ -1,76 +1,250 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
+##############################
+# Guild-Core .gitignore
+# Enterprise-grade open source Go project
+##############################
+
+### Go ###
 # Binaries for programs and plugins
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
+
+# Build output
 bin/
-/guild
-/guild.exe
-layered_prompt_example
+dist/
+build/
 
-# Test binary, built with `go test -c`
+# Test binaries
 *.test
-.test-*
-# Test temporary files (but allow Go test source files like *_test.go)
-test_output/
-test_results/
+*.test.exe
 
-# Demo and example binaries
-guild_hall
-rag_test
-prompt_link_parser
-
-# Output of the go coverage tool, specifically when used with LiteIDE
+# Output of the go coverage tool
 *.out
+*.prof
+*.cover
 coverage/
-coverage.out
+coverage.html
+coverage.xml
+.coverage
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# Dependency directories
+vendor/
 
-# Go workspace file
+# Go workspace files
 go.work
 go.work.sum
 
-# env file
-.env
+# Go module cache
+go.sum.old
 
-# Ignore potential sensitive claude data
-.claude/history/
-.claude/config.json
-.claude/auth.json
-.claude/
-.task/
-
-# Guild project-local directory (similar to .git/)
-.guild/
-
-
-**/.claude/settings.local.json
-*.wip
+### Testing ###
+# Test output directories
+test_output/
+test_results/
+testdata/output/
+.test-project*/
+.test-guild*/
 
 # Test artifacts
 .test-results.tmp
 .ci-test-results.json
 .test-timing.tmp
+*.test.log
+test.log
 
-# Development artifacts - NEVER COMMIT (Enterprise Standards)
-*.disabled
-*.old
-*.needs_work
+# Benchmark results
+*.bench
+benchmarks/
+
+### Development Artifacts ###
+# Work in progress files (should not be committed)
+*.wip
+*.todo
+*.fixme
+
+# Backup files
 *.backup
-*.tmp
 *.bak
+*.orig
 *~
+*.swp
+*.swo
+*.swn
 
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
 
-# IDE and OS artifacts
-.DS_Store
-Thumbs.db
-.vscode/
+# Old/disabled code (should be cleaned before commit)
+*.old
+*.disabled
+*.needs_work
+
+### Guild-Specific ###
+# Guild project-local directory (runtime data)
+.guild/
+
+# Claude AI configuration (if present)
+.claude/
+**/.claude/settings.local.json
+
+# Task runner
+.task/
+
+### IDE and Editor ###
+# Visual Studio Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/settings.json.example
+
+# IntelliJ IDEA
 .idea/
+*.iml
+*.iws
+*.ipr
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+tags
+[._]*.un~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+
+# Linux
+.directory
+.Trash-*
+
+### Environment and Secrets ###
+# Environment variables
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Secrets (never commit)
+*.pem
+*.key
+*.p12
+*.pfx
+.secrets
+secrets/
+
+# API keys and credentials
+.netrc
+.authinfo
+.pgpass
+
+### Logs and Debug ###
+# Log files
+*.log
+logs/
+log/
+
+# Debug files
+debug/
+*.debug
+debug.test
+__debug_bin
+
+### Documentation ###
+# Generated documentation
+_book/
+.docusaurus/
+site/
+
+# API documentation
+api/swagger-ui/
+api/redoc-static.html
+
+### CI/CD ###
+# GitHub Actions
+.github/workflows/local/
+
+# Pre-commit
+.pre-commit-config.yaml.backup
+
+# Secrets baseline (DO commit this - it's the allowlist)
+!.secrets.baseline
+
+### Miscellaneous ###
+# Archives
+*.tar
+*.tar.gz
+*.zip
+*.7z
+*.rar
+
+# Database files (except migrations)
+*.db
+*.sqlite
+*.sqlite3
+!db/migrations/*.sql
+
+# Binary data
+*.dat
+*.bin
+
+# Cache
+.cache/
+cache/
+
+# Node.js (if frontend assets exist)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (for any Python scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+
+### Project-Specific Excludes ###
+# Add any project-specific patterns here
+
+# Keep .gitkeep files
+!.gitkeep
+
+# Allow example configurations
+!examples/**/*.yaml
+!examples/**/*.yml
+!examples/**/*.json
 
