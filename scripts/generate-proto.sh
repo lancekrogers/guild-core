@@ -64,9 +64,7 @@ generate_proto() {
     # Generate Go code
     protoc \
         --go_out="$PROJECT_ROOT" \
-        --go_opt=paths=source_relative \
         --go-grpc_out="$PROJECT_ROOT" \
-        --go-grpc_opt=paths=source_relative \
         --proto_path="$PROJECT_ROOT" \
         "$proto_file"
     
@@ -80,11 +78,11 @@ generate_proto "proto/guild/v1/guild.proto" "pkg/grpc/pb/guild/v1"
 
 # Generate Chat service proto
 echo "=== Generating Chat Service ==="
-generate_proto "proto/guild/v1/chat.proto" "pkg/grpc/pb"
+generate_proto "proto/guild/v1/chat.proto" "pkg/grpc/pb/guild/v1"
 
 # Generate MCP service proto
 echo "=== Generating MCP Service ==="
-generate_proto "proto/mcp/v1/mcp.proto" "pkg/mcp/grpc"
+generate_proto "proto/mcp/v1/mcp.proto" "pkg/grpc/pb/mcp/v1"
 
 # Generate Prompts service proto
 echo "=== Generating Prompts Service ==="
@@ -95,10 +93,10 @@ echo ""
 echo "Generated files:"
 echo "  - pkg/grpc/pb/guild/v1/guild.pb.go"
 echo "  - pkg/grpc/pb/guild/v1/guild_grpc.pb.go"
-echo "  - pkg/grpc/pb/chat.pb.go"
-echo "  - pkg/grpc/pb/chat_grpc.pb.go"
-echo "  - pkg/mcp/grpc/mcp.pb.go"
-echo "  - pkg/mcp/grpc/mcp_grpc.pb.go"
+echo "  - pkg/grpc/pb/guild/v1/chat.pb.go"
+echo "  - pkg/grpc/pb/guild/v1/chat_grpc.pb.go"
+echo "  - pkg/grpc/pb/mcp/v1/mcp.pb.go"
+echo "  - pkg/grpc/pb/mcp/v1/mcp_grpc.pb.go"
 echo "  - pkg/grpc/pb/prompts/v1/prompts.pb.go"
 echo "  - pkg/grpc/pb/prompts/v1/prompts_grpc.pb.go"
 echo ""

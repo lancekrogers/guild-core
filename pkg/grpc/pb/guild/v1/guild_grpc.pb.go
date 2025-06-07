@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.28.3
-// source: guild/v1/guild.proto
+// source: proto/guild/v1/guild.proto
 
-package pb
+package v1
 
 import (
 	context "context"
@@ -19,25 +19,25 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Guild_WatchCampaign_FullMethodName               = "/guild.v1.Guild/WatchCampaign"
-	Guild_GetCampaign_FullMethodName                 = "/guild.v1.Guild/GetCampaign"
-	Guild_ListCampaigns_FullMethodName               = "/guild.v1.Guild/ListCampaigns"
-	Guild_CreateCampaign_FullMethodName              = "/guild.v1.Guild/CreateCampaign"
-	Guild_UpdateCampaign_FullMethodName              = "/guild.v1.Guild/UpdateCampaign"
-	Guild_DeleteCampaign_FullMethodName              = "/guild.v1.Guild/DeleteCampaign"
-	Guild_StartPlanningCampaign_FullMethodName       = "/guild.v1.Guild/StartPlanningCampaign"
-	Guild_MarkCampaignReady_FullMethodName           = "/guild.v1.Guild/MarkCampaignReady"
-	Guild_StartCampaign_FullMethodName               = "/guild.v1.Guild/StartCampaign"
-	Guild_PauseCampaign_FullMethodName               = "/guild.v1.Guild/PauseCampaign"
-	Guild_ResumeCampaign_FullMethodName              = "/guild.v1.Guild/ResumeCampaign"
-	Guild_CompleteCampaign_FullMethodName            = "/guild.v1.Guild/CompleteCampaign"
-	Guild_CancelCampaign_FullMethodName              = "/guild.v1.Guild/CancelCampaign"
-	Guild_AddObjectiveToCampaign_FullMethodName      = "/guild.v1.Guild/AddObjectiveToCampaign"
-	Guild_RemoveObjectiveFromCampaign_FullMethodName = "/guild.v1.Guild/RemoveObjectiveFromCampaign"
-	Guild_SendMessageToAgent_FullMethodName          = "/guild.v1.Guild/SendMessageToAgent"
-	Guild_StreamAgentConversation_FullMethodName     = "/guild.v1.Guild/StreamAgentConversation"
-	Guild_ListAvailableAgents_FullMethodName         = "/guild.v1.Guild/ListAvailableAgents"
-	Guild_GetAgentStatus_FullMethodName              = "/guild.v1.Guild/GetAgentStatus"
+	Guild_WatchCampaign_FullMethodName                = "/guild.v1.Guild/WatchCampaign"
+	Guild_GetCampaign_FullMethodName                  = "/guild.v1.Guild/GetCampaign"
+	Guild_ListCampaigns_FullMethodName                = "/guild.v1.Guild/ListCampaigns"
+	Guild_CreateCampaign_FullMethodName               = "/guild.v1.Guild/CreateCampaign"
+	Guild_UpdateCampaign_FullMethodName               = "/guild.v1.Guild/UpdateCampaign"
+	Guild_DeleteCampaign_FullMethodName               = "/guild.v1.Guild/DeleteCampaign"
+	Guild_StartPlanningCampaign_FullMethodName        = "/guild.v1.Guild/StartPlanningCampaign"
+	Guild_MarkCampaignReady_FullMethodName            = "/guild.v1.Guild/MarkCampaignReady"
+	Guild_StartCampaign_FullMethodName                = "/guild.v1.Guild/StartCampaign"
+	Guild_PauseCampaign_FullMethodName                = "/guild.v1.Guild/PauseCampaign"
+	Guild_ResumeCampaign_FullMethodName               = "/guild.v1.Guild/ResumeCampaign"
+	Guild_CompleteCampaign_FullMethodName             = "/guild.v1.Guild/CompleteCampaign"
+	Guild_CancelCampaign_FullMethodName               = "/guild.v1.Guild/CancelCampaign"
+	Guild_AddCommissionToCampaign_FullMethodName      = "/guild.v1.Guild/AddCommissionToCampaign"
+	Guild_RemoveCommissionFromCampaign_FullMethodName = "/guild.v1.Guild/RemoveCommissionFromCampaign"
+	Guild_SendMessageToAgent_FullMethodName           = "/guild.v1.Guild/SendMessageToAgent"
+	Guild_StreamAgentConversation_FullMethodName      = "/guild.v1.Guild/StreamAgentConversation"
+	Guild_ListAvailableAgents_FullMethodName          = "/guild.v1.Guild/ListAvailableAgents"
+	Guild_GetAgentStatus_FullMethodName               = "/guild.v1.Guild/GetAgentStatus"
 )
 
 // GuildClient is the client API for Guild service.
@@ -62,9 +62,9 @@ type GuildClient interface {
 	ResumeCampaign(ctx context.Context, in *CampaignActionRequest, opts ...grpc.CallOption) (*Campaign, error)
 	CompleteCampaign(ctx context.Context, in *CampaignActionRequest, opts ...grpc.CallOption) (*Campaign, error)
 	CancelCampaign(ctx context.Context, in *CampaignActionRequest, opts ...grpc.CallOption) (*Campaign, error)
-	// Objective management
-	AddObjectiveToCampaign(ctx context.Context, in *AddObjectiveRequest, opts ...grpc.CallOption) (*Campaign, error)
-	RemoveObjectiveFromCampaign(ctx context.Context, in *RemoveObjectiveRequest, opts ...grpc.CallOption) (*Campaign, error)
+	// Commission management
+	AddCommissionToCampaign(ctx context.Context, in *AddCommissionRequest, opts ...grpc.CallOption) (*Campaign, error)
+	RemoveCommissionFromCampaign(ctx context.Context, in *RemoveCommissionRequest, opts ...grpc.CallOption) (*Campaign, error)
 	// Agent communication
 	SendMessageToAgent(ctx context.Context, in *AgentMessageRequest, opts ...grpc.CallOption) (*AgentMessageResponse, error)
 	StreamAgentConversation(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[AgentStreamRequest, AgentStreamResponse], error)
@@ -219,20 +219,20 @@ func (c *guildClient) CancelCampaign(ctx context.Context, in *CampaignActionRequ
 	return out, nil
 }
 
-func (c *guildClient) AddObjectiveToCampaign(ctx context.Context, in *AddObjectiveRequest, opts ...grpc.CallOption) (*Campaign, error) {
+func (c *guildClient) AddCommissionToCampaign(ctx context.Context, in *AddCommissionRequest, opts ...grpc.CallOption) (*Campaign, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Campaign)
-	err := c.cc.Invoke(ctx, Guild_AddObjectiveToCampaign_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Guild_AddCommissionToCampaign_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *guildClient) RemoveObjectiveFromCampaign(ctx context.Context, in *RemoveObjectiveRequest, opts ...grpc.CallOption) (*Campaign, error) {
+func (c *guildClient) RemoveCommissionFromCampaign(ctx context.Context, in *RemoveCommissionRequest, opts ...grpc.CallOption) (*Campaign, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Campaign)
-	err := c.cc.Invoke(ctx, Guild_RemoveObjectiveFromCampaign_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Guild_RemoveCommissionFromCampaign_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -304,9 +304,9 @@ type GuildServer interface {
 	ResumeCampaign(context.Context, *CampaignActionRequest) (*Campaign, error)
 	CompleteCampaign(context.Context, *CampaignActionRequest) (*Campaign, error)
 	CancelCampaign(context.Context, *CampaignActionRequest) (*Campaign, error)
-	// Objective management
-	AddObjectiveToCampaign(context.Context, *AddObjectiveRequest) (*Campaign, error)
-	RemoveObjectiveFromCampaign(context.Context, *RemoveObjectiveRequest) (*Campaign, error)
+	// Commission management
+	AddCommissionToCampaign(context.Context, *AddCommissionRequest) (*Campaign, error)
+	RemoveCommissionFromCampaign(context.Context, *RemoveCommissionRequest) (*Campaign, error)
 	// Agent communication
 	SendMessageToAgent(context.Context, *AgentMessageRequest) (*AgentMessageResponse, error)
 	StreamAgentConversation(grpc.BidiStreamingServer[AgentStreamRequest, AgentStreamResponse]) error
@@ -361,11 +361,11 @@ func (UnimplementedGuildServer) CompleteCampaign(context.Context, *CampaignActio
 func (UnimplementedGuildServer) CancelCampaign(context.Context, *CampaignActionRequest) (*Campaign, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CancelCampaign not implemented")
 }
-func (UnimplementedGuildServer) AddObjectiveToCampaign(context.Context, *AddObjectiveRequest) (*Campaign, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddObjectiveToCampaign not implemented")
+func (UnimplementedGuildServer) AddCommissionToCampaign(context.Context, *AddCommissionRequest) (*Campaign, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddCommissionToCampaign not implemented")
 }
-func (UnimplementedGuildServer) RemoveObjectiveFromCampaign(context.Context, *RemoveObjectiveRequest) (*Campaign, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RemoveObjectiveFromCampaign not implemented")
+func (UnimplementedGuildServer) RemoveCommissionFromCampaign(context.Context, *RemoveCommissionRequest) (*Campaign, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveCommissionFromCampaign not implemented")
 }
 func (UnimplementedGuildServer) SendMessageToAgent(context.Context, *AgentMessageRequest) (*AgentMessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendMessageToAgent not implemented")
@@ -627,38 +627,38 @@ func _Guild_CancelCampaign_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Guild_AddObjectiveToCampaign_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddObjectiveRequest)
+func _Guild_AddCommissionToCampaign_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCommissionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GuildServer).AddObjectiveToCampaign(ctx, in)
+		return srv.(GuildServer).AddCommissionToCampaign(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Guild_AddObjectiveToCampaign_FullMethodName,
+		FullMethod: Guild_AddCommissionToCampaign_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GuildServer).AddObjectiveToCampaign(ctx, req.(*AddObjectiveRequest))
+		return srv.(GuildServer).AddCommissionToCampaign(ctx, req.(*AddCommissionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Guild_RemoveObjectiveFromCampaign_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RemoveObjectiveRequest)
+func _Guild_RemoveCommissionFromCampaign_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveCommissionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GuildServer).RemoveObjectiveFromCampaign(ctx, in)
+		return srv.(GuildServer).RemoveCommissionFromCampaign(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Guild_RemoveObjectiveFromCampaign_FullMethodName,
+		FullMethod: Guild_RemoveCommissionFromCampaign_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GuildServer).RemoveObjectiveFromCampaign(ctx, req.(*RemoveObjectiveRequest))
+		return srv.(GuildServer).RemoveCommissionFromCampaign(ctx, req.(*RemoveCommissionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -780,12 +780,12 @@ var Guild_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Guild_CancelCampaign_Handler,
 		},
 		{
-			MethodName: "AddObjectiveToCampaign",
-			Handler:    _Guild_AddObjectiveToCampaign_Handler,
+			MethodName: "AddCommissionToCampaign",
+			Handler:    _Guild_AddCommissionToCampaign_Handler,
 		},
 		{
-			MethodName: "RemoveObjectiveFromCampaign",
-			Handler:    _Guild_RemoveObjectiveFromCampaign_Handler,
+			MethodName: "RemoveCommissionFromCampaign",
+			Handler:    _Guild_RemoveCommissionFromCampaign_Handler,
 		},
 		{
 			MethodName: "SendMessageToAgent",
@@ -813,5 +813,5 @@ var Guild_ServiceDesc = grpc.ServiceDesc{
 			ClientStreams: true,
 		},
 	},
-	Metadata: "guild/v1/guild.proto",
+	Metadata: "proto/guild/v1/guild.proto",
 }

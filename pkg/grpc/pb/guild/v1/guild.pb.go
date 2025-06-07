@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v5.28.3
-// source: guild/v1/guild.proto
+// source: proto/guild/v1/guild.proto
 
-package pb
+package v1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -57,11 +57,11 @@ func (x StreamControl_Command) String() string {
 }
 
 func (StreamControl_Command) Descriptor() protoreflect.EnumDescriptor {
-	return file_guild_v1_guild_proto_enumTypes[0].Descriptor()
+	return file_proto_guild_v1_guild_proto_enumTypes[0].Descriptor()
 }
 
 func (StreamControl_Command) Type() protoreflect.EnumType {
-	return &file_guild_v1_guild_proto_enumTypes[0]
+	return &file_proto_guild_v1_guild_proto_enumTypes[0]
 }
 
 func (x StreamControl_Command) Number() protoreflect.EnumNumber {
@@ -70,7 +70,7 @@ func (x StreamControl_Command) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StreamControl_Command.Descriptor instead.
 func (StreamControl_Command) EnumDescriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{20, 0}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{20, 0}
 }
 
 type StreamEvent_EventType int32
@@ -127,11 +127,11 @@ func (x StreamEvent_EventType) String() string {
 }
 
 func (StreamEvent_EventType) Descriptor() protoreflect.EnumDescriptor {
-	return file_guild_v1_guild_proto_enumTypes[1].Descriptor()
+	return file_proto_guild_v1_guild_proto_enumTypes[1].Descriptor()
 }
 
 func (StreamEvent_EventType) Type() protoreflect.EnumType {
-	return &file_guild_v1_guild_proto_enumTypes[1]
+	return &file_proto_guild_v1_guild_proto_enumTypes[1]
 }
 
 func (x StreamEvent_EventType) Number() protoreflect.EnumNumber {
@@ -140,7 +140,7 @@ func (x StreamEvent_EventType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use StreamEvent_EventType.Descriptor instead.
 func (StreamEvent_EventType) EnumDescriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{21, 0}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{21, 0}
 }
 
 type AgentStatus_State int32
@@ -185,11 +185,11 @@ func (x AgentStatus_State) String() string {
 }
 
 func (AgentStatus_State) Descriptor() protoreflect.EnumDescriptor {
-	return file_guild_v1_guild_proto_enumTypes[2].Descriptor()
+	return file_proto_guild_v1_guild_proto_enumTypes[2].Descriptor()
 }
 
 func (AgentStatus_State) Type() protoreflect.EnumType {
-	return &file_guild_v1_guild_proto_enumTypes[2]
+	return &file_proto_guild_v1_guild_proto_enumTypes[2]
 }
 
 func (x AgentStatus_State) Number() protoreflect.EnumNumber {
@@ -198,33 +198,33 @@ func (x AgentStatus_State) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use AgentStatus_State.Descriptor instead.
 func (AgentStatus_State) EnumDescriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{27, 0}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{27, 0}
 }
 
-// Campaign represents a strategic goal with multiple objectives
+// Campaign represents a strategic goal with multiple commissions
 type Campaign struct {
-	state               protoimpl.MessageState `protogen:"open.v1"`
-	Id                  string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name                string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Description         string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	Status              string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
-	ObjectiveIds        []string               `protobuf:"bytes,5,rep,name=objective_ids,json=objectiveIds,proto3" json:"objective_ids,omitempty"`
-	Tags                []string               `protobuf:"bytes,6,rep,name=tags,proto3" json:"tags,omitempty"`
-	Progress            float64                `protobuf:"fixed64,7,opt,name=progress,proto3" json:"progress,omitempty"`
-	TotalObjectives     int32                  `protobuf:"varint,8,opt,name=total_objectives,json=totalObjectives,proto3" json:"total_objectives,omitempty"`
-	CompletedObjectives int32                  `protobuf:"varint,9,opt,name=completed_objectives,json=completedObjectives,proto3" json:"completed_objectives,omitempty"`
-	CreatedAt           int64                  `protobuf:"varint,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt           int64                  `protobuf:"varint,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	StartedAt           int64                  `protobuf:"varint,12,opt,name=started_at,json=startedAt,proto3" json:"started_at,omitempty"`
-	CompletedAt         int64                  `protobuf:"varint,13,opt,name=completed_at,json=completedAt,proto3" json:"completed_at,omitempty"`
-	Metadata            map[string]string      `protobuf:"bytes,14,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	Id                   string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name                 string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description          string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Status               string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	CommissionIds        []string               `protobuf:"bytes,5,rep,name=commission_ids,json=commissionIds,proto3" json:"commission_ids,omitempty"`
+	Tags                 []string               `protobuf:"bytes,6,rep,name=tags,proto3" json:"tags,omitempty"`
+	Progress             float64                `protobuf:"fixed64,7,opt,name=progress,proto3" json:"progress,omitempty"`
+	TotalCommissions     int32                  `protobuf:"varint,8,opt,name=total_commissions,json=totalCommissions,proto3" json:"total_commissions,omitempty"`
+	CompletedCommissions int32                  `protobuf:"varint,9,opt,name=completed_commissions,json=completedCommissions,proto3" json:"completed_commissions,omitempty"`
+	CreatedAt            int64                  `protobuf:"varint,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt            int64                  `protobuf:"varint,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	StartedAt            int64                  `protobuf:"varint,12,opt,name=started_at,json=startedAt,proto3" json:"started_at,omitempty"`
+	CompletedAt          int64                  `protobuf:"varint,13,opt,name=completed_at,json=completedAt,proto3" json:"completed_at,omitempty"`
+	Metadata             map[string]string      `protobuf:"bytes,14,rep,name=metadata,proto3" json:"metadata,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
 }
 
 func (x *Campaign) Reset() {
 	*x = Campaign{}
-	mi := &file_guild_v1_guild_proto_msgTypes[0]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -236,7 +236,7 @@ func (x *Campaign) String() string {
 func (*Campaign) ProtoMessage() {}
 
 func (x *Campaign) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[0]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -249,7 +249,7 @@ func (x *Campaign) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Campaign.ProtoReflect.Descriptor instead.
 func (*Campaign) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{0}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Campaign) GetId() string {
@@ -280,9 +280,9 @@ func (x *Campaign) GetStatus() string {
 	return ""
 }
 
-func (x *Campaign) GetObjectiveIds() []string {
+func (x *Campaign) GetCommissionIds() []string {
 	if x != nil {
-		return x.ObjectiveIds
+		return x.CommissionIds
 	}
 	return nil
 }
@@ -301,16 +301,16 @@ func (x *Campaign) GetProgress() float64 {
 	return 0
 }
 
-func (x *Campaign) GetTotalObjectives() int32 {
+func (x *Campaign) GetTotalCommissions() int32 {
 	if x != nil {
-		return x.TotalObjectives
+		return x.TotalCommissions
 	}
 	return 0
 }
 
-func (x *Campaign) GetCompletedObjectives() int32 {
+func (x *Campaign) GetCompletedCommissions() int32 {
 	if x != nil {
-		return x.CompletedObjectives
+		return x.CompletedCommissions
 	}
 	return 0
 }
@@ -363,7 +363,7 @@ type WatchRequest struct {
 
 func (x *WatchRequest) Reset() {
 	*x = WatchRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[1]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -375,7 +375,7 @@ func (x *WatchRequest) String() string {
 func (*WatchRequest) ProtoMessage() {}
 
 func (x *WatchRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[1]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -388,7 +388,7 @@ func (x *WatchRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WatchRequest.ProtoReflect.Descriptor instead.
 func (*WatchRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{1}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *WatchRequest) GetCampaignId() string {
@@ -431,7 +431,7 @@ type BoardUpdate struct {
 
 func (x *BoardUpdate) Reset() {
 	*x = BoardUpdate{}
-	mi := &file_guild_v1_guild_proto_msgTypes[2]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -443,7 +443,7 @@ func (x *BoardUpdate) String() string {
 func (*BoardUpdate) ProtoMessage() {}
 
 func (x *BoardUpdate) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[2]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -456,7 +456,7 @@ func (x *BoardUpdate) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BoardUpdate.ProtoReflect.Descriptor instead.
 func (*BoardUpdate) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{2}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *BoardUpdate) GetFrame() string {
@@ -495,7 +495,7 @@ type BoardMetadata struct {
 
 func (x *BoardMetadata) Reset() {
 	*x = BoardMetadata{}
-	mi := &file_guild_v1_guild_proto_msgTypes[3]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -507,7 +507,7 @@ func (x *BoardMetadata) String() string {
 func (*BoardMetadata) ProtoMessage() {}
 
 func (x *BoardMetadata) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[3]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -520,7 +520,7 @@ func (x *BoardMetadata) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BoardMetadata.ProtoReflect.Descriptor instead.
 func (*BoardMetadata) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{3}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *BoardMetadata) GetWidth() int32 {
@@ -575,7 +575,7 @@ type GetCampaignRequest struct {
 
 func (x *GetCampaignRequest) Reset() {
 	*x = GetCampaignRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[4]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -587,7 +587,7 @@ func (x *GetCampaignRequest) String() string {
 func (*GetCampaignRequest) ProtoMessage() {}
 
 func (x *GetCampaignRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[4]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -600,7 +600,7 @@ func (x *GetCampaignRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCampaignRequest.ProtoReflect.Descriptor instead.
 func (*GetCampaignRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{4}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetCampaignRequest) GetId() string {
@@ -621,7 +621,7 @@ type ListCampaignsRequest struct {
 
 func (x *ListCampaignsRequest) Reset() {
 	*x = ListCampaignsRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[5]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -633,7 +633,7 @@ func (x *ListCampaignsRequest) String() string {
 func (*ListCampaignsRequest) ProtoMessage() {}
 
 func (x *ListCampaignsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[5]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -646,7 +646,7 @@ func (x *ListCampaignsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCampaignsRequest.ProtoReflect.Descriptor instead.
 func (*ListCampaignsRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{5}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListCampaignsRequest) GetPageSize() int32 {
@@ -681,7 +681,7 @@ type ListCampaignsResponse struct {
 
 func (x *ListCampaignsResponse) Reset() {
 	*x = ListCampaignsResponse{}
-	mi := &file_guild_v1_guild_proto_msgTypes[6]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -693,7 +693,7 @@ func (x *ListCampaignsResponse) String() string {
 func (*ListCampaignsResponse) ProtoMessage() {}
 
 func (x *ListCampaignsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[6]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -706,7 +706,7 @@ func (x *ListCampaignsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCampaignsResponse.ProtoReflect.Descriptor instead.
 func (*ListCampaignsResponse) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{6}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListCampaignsResponse) GetCampaigns() []*Campaign {
@@ -742,7 +742,7 @@ type CreateCampaignRequest struct {
 
 func (x *CreateCampaignRequest) Reset() {
 	*x = CreateCampaignRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[7]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -754,7 +754,7 @@ func (x *CreateCampaignRequest) String() string {
 func (*CreateCampaignRequest) ProtoMessage() {}
 
 func (x *CreateCampaignRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[7]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -767,7 +767,7 @@ func (x *CreateCampaignRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateCampaignRequest.ProtoReflect.Descriptor instead.
 func (*CreateCampaignRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{7}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *CreateCampaignRequest) GetName() string {
@@ -811,7 +811,7 @@ type UpdateCampaignRequest struct {
 
 func (x *UpdateCampaignRequest) Reset() {
 	*x = UpdateCampaignRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[8]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -823,7 +823,7 @@ func (x *UpdateCampaignRequest) String() string {
 func (*UpdateCampaignRequest) ProtoMessage() {}
 
 func (x *UpdateCampaignRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[8]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -836,7 +836,7 @@ func (x *UpdateCampaignRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateCampaignRequest.ProtoReflect.Descriptor instead.
 func (*UpdateCampaignRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{8}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *UpdateCampaignRequest) GetId() string {
@@ -883,7 +883,7 @@ type DeleteCampaignRequest struct {
 
 func (x *DeleteCampaignRequest) Reset() {
 	*x = DeleteCampaignRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[9]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -895,7 +895,7 @@ func (x *DeleteCampaignRequest) String() string {
 func (*DeleteCampaignRequest) ProtoMessage() {}
 
 func (x *DeleteCampaignRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[9]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -908,7 +908,7 @@ func (x *DeleteCampaignRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteCampaignRequest.ProtoReflect.Descriptor instead.
 func (*DeleteCampaignRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{9}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *DeleteCampaignRequest) GetId() string {
@@ -928,7 +928,7 @@ type DeleteCampaignResponse struct {
 
 func (x *DeleteCampaignResponse) Reset() {
 	*x = DeleteCampaignResponse{}
-	mi := &file_guild_v1_guild_proto_msgTypes[10]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -940,7 +940,7 @@ func (x *DeleteCampaignResponse) String() string {
 func (*DeleteCampaignResponse) ProtoMessage() {}
 
 func (x *DeleteCampaignResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[10]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -953,7 +953,7 @@ func (x *DeleteCampaignResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteCampaignResponse.ProtoReflect.Descriptor instead.
 func (*DeleteCampaignResponse) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{10}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *DeleteCampaignResponse) GetSuccess() bool {
@@ -980,7 +980,7 @@ type CampaignActionRequest struct {
 
 func (x *CampaignActionRequest) Reset() {
 	*x = CampaignActionRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[11]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -992,7 +992,7 @@ func (x *CampaignActionRequest) String() string {
 func (*CampaignActionRequest) ProtoMessage() {}
 
 func (x *CampaignActionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[11]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1005,7 +1005,7 @@ func (x *CampaignActionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CampaignActionRequest.ProtoReflect.Descriptor instead.
 func (*CampaignActionRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{11}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *CampaignActionRequest) GetCampaignId() string {
@@ -1015,30 +1015,30 @@ func (x *CampaignActionRequest) GetCampaignId() string {
 	return ""
 }
 
-// Objective management messages
-type AddObjectiveRequest struct {
+// Commission management messages
+type AddCommissionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CampaignId    string                 `protobuf:"bytes,1,opt,name=campaign_id,json=campaignId,proto3" json:"campaign_id,omitempty"`
-	ObjectiveId   string                 `protobuf:"bytes,2,opt,name=objective_id,json=objectiveId,proto3" json:"objective_id,omitempty"`
+	CommissionId  string                 `protobuf:"bytes,2,opt,name=commission_id,json=commissionId,proto3" json:"commission_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AddObjectiveRequest) Reset() {
-	*x = AddObjectiveRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[12]
+func (x *AddCommissionRequest) Reset() {
+	*x = AddCommissionRequest{}
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AddObjectiveRequest) String() string {
+func (x *AddCommissionRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AddObjectiveRequest) ProtoMessage() {}
+func (*AddCommissionRequest) ProtoMessage() {}
 
-func (x *AddObjectiveRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[12]
+func (x *AddCommissionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1049,48 +1049,48 @@ func (x *AddObjectiveRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AddObjectiveRequest.ProtoReflect.Descriptor instead.
-func (*AddObjectiveRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{12}
+// Deprecated: Use AddCommissionRequest.ProtoReflect.Descriptor instead.
+func (*AddCommissionRequest) Descriptor() ([]byte, []int) {
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *AddObjectiveRequest) GetCampaignId() string {
+func (x *AddCommissionRequest) GetCampaignId() string {
 	if x != nil {
 		return x.CampaignId
 	}
 	return ""
 }
 
-func (x *AddObjectiveRequest) GetObjectiveId() string {
+func (x *AddCommissionRequest) GetCommissionId() string {
 	if x != nil {
-		return x.ObjectiveId
+		return x.CommissionId
 	}
 	return ""
 }
 
-type RemoveObjectiveRequest struct {
+type RemoveCommissionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	CampaignId    string                 `protobuf:"bytes,1,opt,name=campaign_id,json=campaignId,proto3" json:"campaign_id,omitempty"`
-	ObjectiveId   string                 `protobuf:"bytes,2,opt,name=objective_id,json=objectiveId,proto3" json:"objective_id,omitempty"`
+	CommissionId  string                 `protobuf:"bytes,2,opt,name=commission_id,json=commissionId,proto3" json:"commission_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RemoveObjectiveRequest) Reset() {
-	*x = RemoveObjectiveRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[13]
+func (x *RemoveCommissionRequest) Reset() {
+	*x = RemoveCommissionRequest{}
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RemoveObjectiveRequest) String() string {
+func (x *RemoveCommissionRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RemoveObjectiveRequest) ProtoMessage() {}
+func (*RemoveCommissionRequest) ProtoMessage() {}
 
-func (x *RemoveObjectiveRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[13]
+func (x *RemoveCommissionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1101,21 +1101,21 @@ func (x *RemoveObjectiveRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RemoveObjectiveRequest.ProtoReflect.Descriptor instead.
-func (*RemoveObjectiveRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{13}
+// Deprecated: Use RemoveCommissionRequest.ProtoReflect.Descriptor instead.
+func (*RemoveCommissionRequest) Descriptor() ([]byte, []int) {
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{13}
 }
 
-func (x *RemoveObjectiveRequest) GetCampaignId() string {
+func (x *RemoveCommissionRequest) GetCampaignId() string {
 	if x != nil {
 		return x.CampaignId
 	}
 	return ""
 }
 
-func (x *RemoveObjectiveRequest) GetObjectiveId() string {
+func (x *RemoveCommissionRequest) GetCommissionId() string {
 	if x != nil {
-		return x.ObjectiveId
+		return x.CommissionId
 	}
 	return ""
 }
@@ -1132,7 +1132,7 @@ type ErrorDetail struct {
 
 func (x *ErrorDetail) Reset() {
 	*x = ErrorDetail{}
-	mi := &file_guild_v1_guild_proto_msgTypes[14]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1144,7 +1144,7 @@ func (x *ErrorDetail) String() string {
 func (*ErrorDetail) ProtoMessage() {}
 
 func (x *ErrorDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[14]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1157,7 +1157,7 @@ func (x *ErrorDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ErrorDetail.ProtoReflect.Descriptor instead.
 func (*ErrorDetail) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{14}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ErrorDetail) GetCode() string {
@@ -1195,7 +1195,7 @@ type AgentMessageRequest struct {
 
 func (x *AgentMessageRequest) Reset() {
 	*x = AgentMessageRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[15]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1207,7 +1207,7 @@ func (x *AgentMessageRequest) String() string {
 func (*AgentMessageRequest) ProtoMessage() {}
 
 func (x *AgentMessageRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[15]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1220,7 +1220,7 @@ func (x *AgentMessageRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AgentMessageRequest.ProtoReflect.Descriptor instead.
 func (*AgentMessageRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{15}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *AgentMessageRequest) GetAgentId() string {
@@ -1271,7 +1271,7 @@ type AgentMessageResponse struct {
 
 func (x *AgentMessageResponse) Reset() {
 	*x = AgentMessageResponse{}
-	mi := &file_guild_v1_guild_proto_msgTypes[16]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1283,7 +1283,7 @@ func (x *AgentMessageResponse) String() string {
 func (*AgentMessageResponse) ProtoMessage() {}
 
 func (x *AgentMessageResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[16]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1296,7 +1296,7 @@ func (x *AgentMessageResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AgentMessageResponse.ProtoReflect.Descriptor instead.
 func (*AgentMessageResponse) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{16}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *AgentMessageResponse) GetAgentId() string {
@@ -1348,7 +1348,7 @@ type AgentStreamRequest struct {
 
 func (x *AgentStreamRequest) Reset() {
 	*x = AgentStreamRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[17]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1360,7 +1360,7 @@ func (x *AgentStreamRequest) String() string {
 func (*AgentStreamRequest) ProtoMessage() {}
 
 func (x *AgentStreamRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[17]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1373,7 +1373,7 @@ func (x *AgentStreamRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AgentStreamRequest.ProtoReflect.Descriptor instead.
 func (*AgentStreamRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{17}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *AgentStreamRequest) GetRequest() isAgentStreamRequest_Request {
@@ -1431,7 +1431,7 @@ type AgentStreamResponse struct {
 
 func (x *AgentStreamResponse) Reset() {
 	*x = AgentStreamResponse{}
-	mi := &file_guild_v1_guild_proto_msgTypes[18]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1443,7 +1443,7 @@ func (x *AgentStreamResponse) String() string {
 func (*AgentStreamResponse) ProtoMessage() {}
 
 func (x *AgentStreamResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[18]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1456,7 +1456,7 @@ func (x *AgentStreamResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AgentStreamResponse.ProtoReflect.Descriptor instead.
 func (*AgentStreamResponse) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{18}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *AgentStreamResponse) GetResponse() isAgentStreamResponse_Response {
@@ -1528,7 +1528,7 @@ type AgentMessageFragment struct {
 
 func (x *AgentMessageFragment) Reset() {
 	*x = AgentMessageFragment{}
-	mi := &file_guild_v1_guild_proto_msgTypes[19]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1540,7 +1540,7 @@ func (x *AgentMessageFragment) String() string {
 func (*AgentMessageFragment) ProtoMessage() {}
 
 func (x *AgentMessageFragment) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[19]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1553,7 +1553,7 @@ func (x *AgentMessageFragment) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AgentMessageFragment.ProtoReflect.Descriptor instead.
 func (*AgentMessageFragment) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{19}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *AgentMessageFragment) GetAgentId() string {
@@ -1601,7 +1601,7 @@ type StreamControl struct {
 
 func (x *StreamControl) Reset() {
 	*x = StreamControl{}
-	mi := &file_guild_v1_guild_proto_msgTypes[20]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1613,7 +1613,7 @@ func (x *StreamControl) String() string {
 func (*StreamControl) ProtoMessage() {}
 
 func (x *StreamControl) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[20]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1626,7 +1626,7 @@ func (x *StreamControl) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamControl.ProtoReflect.Descriptor instead.
 func (*StreamControl) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{20}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *StreamControl) GetCommand() StreamControl_Command {
@@ -1648,14 +1648,14 @@ type StreamEvent struct {
 	Type          StreamEvent_EventType  `protobuf:"varint,1,opt,name=type,proto3,enum=guild.v1.StreamEvent_EventType" json:"type,omitempty"`
 	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
 	Data          map[string]string      `protobuf:"bytes,3,rep,name=data,proto3" json:"data,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	ToolExecution *ToolExecution         `protobuf:"bytes,4,opt,name=tool_execution,json=toolExecution,proto3" json:"tool_execution,omitempty"`
+	ToolExecution *GuildToolExecution    `protobuf:"bytes,4,opt,name=tool_execution,json=toolExecution,proto3" json:"tool_execution,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *StreamEvent) Reset() {
 	*x = StreamEvent{}
-	mi := &file_guild_v1_guild_proto_msgTypes[21]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1667,7 +1667,7 @@ func (x *StreamEvent) String() string {
 func (*StreamEvent) ProtoMessage() {}
 
 func (x *StreamEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[21]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1680,7 +1680,7 @@ func (x *StreamEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamEvent.ProtoReflect.Descriptor instead.
 func (*StreamEvent) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{21}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *StreamEvent) GetType() StreamEvent_EventType {
@@ -1704,7 +1704,7 @@ func (x *StreamEvent) GetData() map[string]string {
 	return nil
 }
 
-func (x *StreamEvent) GetToolExecution() *ToolExecution {
+func (x *StreamEvent) GetToolExecution() *GuildToolExecution {
 	if x != nil {
 		return x.ToolExecution
 	}
@@ -1712,7 +1712,7 @@ func (x *StreamEvent) GetToolExecution() *ToolExecution {
 }
 
 // Tool execution details
-type ToolExecution struct {
+type GuildToolExecution struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
 	ToolId              string                 `protobuf:"bytes,1,opt,name=tool_id,json=toolId,proto3" json:"tool_id,omitempty"`
 	ToolName            string                 `protobuf:"bytes,2,opt,name=tool_name,json=toolName,proto3" json:"tool_name,omitempty"`
@@ -1729,21 +1729,21 @@ type ToolExecution struct {
 	sizeCache           protoimpl.SizeCache
 }
 
-func (x *ToolExecution) Reset() {
-	*x = ToolExecution{}
-	mi := &file_guild_v1_guild_proto_msgTypes[22]
+func (x *GuildToolExecution) Reset() {
+	*x = GuildToolExecution{}
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ToolExecution) String() string {
+func (x *GuildToolExecution) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ToolExecution) ProtoMessage() {}
+func (*GuildToolExecution) ProtoMessage() {}
 
-func (x *ToolExecution) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[22]
+func (x *GuildToolExecution) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1754,82 +1754,82 @@ func (x *ToolExecution) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ToolExecution.ProtoReflect.Descriptor instead.
-func (*ToolExecution) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{22}
+// Deprecated: Use GuildToolExecution.ProtoReflect.Descriptor instead.
+func (*GuildToolExecution) Descriptor() ([]byte, []int) {
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{22}
 }
 
-func (x *ToolExecution) GetToolId() string {
+func (x *GuildToolExecution) GetToolId() string {
 	if x != nil {
 		return x.ToolId
 	}
 	return ""
 }
 
-func (x *ToolExecution) GetToolName() string {
+func (x *GuildToolExecution) GetToolName() string {
 	if x != nil {
 		return x.ToolName
 	}
 	return ""
 }
 
-func (x *ToolExecution) GetParameters() map[string]string {
+func (x *GuildToolExecution) GetParameters() map[string]string {
 	if x != nil {
 		return x.Parameters
 	}
 	return nil
 }
 
-func (x *ToolExecution) GetStatus() string {
+func (x *GuildToolExecution) GetStatus() string {
 	if x != nil {
 		return x.Status
 	}
 	return ""
 }
 
-func (x *ToolExecution) GetProgress() float64 {
+func (x *GuildToolExecution) GetProgress() float64 {
 	if x != nil {
 		return x.Progress
 	}
 	return 0
 }
 
-func (x *ToolExecution) GetResult() string {
+func (x *GuildToolExecution) GetResult() string {
 	if x != nil {
 		return x.Result
 	}
 	return ""
 }
 
-func (x *ToolExecution) GetError() string {
+func (x *GuildToolExecution) GetError() string {
 	if x != nil {
 		return x.Error
 	}
 	return ""
 }
 
-func (x *ToolExecution) GetStartedAt() int64 {
+func (x *GuildToolExecution) GetStartedAt() int64 {
 	if x != nil {
 		return x.StartedAt
 	}
 	return 0
 }
 
-func (x *ToolExecution) GetCompletedAt() int64 {
+func (x *GuildToolExecution) GetCompletedAt() int64 {
 	if x != nil {
 		return x.CompletedAt
 	}
 	return 0
 }
 
-func (x *ToolExecution) GetEstimatedCost() float64 {
+func (x *GuildToolExecution) GetEstimatedCost() float64 {
 	if x != nil {
 		return x.EstimatedCost
 	}
 	return 0
 }
 
-func (x *ToolExecution) GetRequiredPermissions() []string {
+func (x *GuildToolExecution) GetRequiredPermissions() []string {
 	if x != nil {
 		return x.RequiredPermissions
 	}
@@ -1847,7 +1847,7 @@ type ListAgentsRequest struct {
 
 func (x *ListAgentsRequest) Reset() {
 	*x = ListAgentsRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[23]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1859,7 +1859,7 @@ func (x *ListAgentsRequest) String() string {
 func (*ListAgentsRequest) ProtoMessage() {}
 
 func (x *ListAgentsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[23]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1872,7 +1872,7 @@ func (x *ListAgentsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAgentsRequest.ProtoReflect.Descriptor instead.
 func (*ListAgentsRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{23}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *ListAgentsRequest) GetCampaignId() string {
@@ -1899,7 +1899,7 @@ type ListAgentsResponse struct {
 
 func (x *ListAgentsResponse) Reset() {
 	*x = ListAgentsResponse{}
-	mi := &file_guild_v1_guild_proto_msgTypes[24]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1911,7 +1911,7 @@ func (x *ListAgentsResponse) String() string {
 func (*ListAgentsResponse) ProtoMessage() {}
 
 func (x *ListAgentsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[24]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1924,7 +1924,7 @@ func (x *ListAgentsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListAgentsResponse.ProtoReflect.Descriptor instead.
 func (*ListAgentsResponse) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{24}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *ListAgentsResponse) GetAgents() []*AgentInfo {
@@ -1955,7 +1955,7 @@ type AgentInfo struct {
 
 func (x *AgentInfo) Reset() {
 	*x = AgentInfo{}
-	mi := &file_guild_v1_guild_proto_msgTypes[25]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1967,7 +1967,7 @@ func (x *AgentInfo) String() string {
 func (*AgentInfo) ProtoMessage() {}
 
 func (x *AgentInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[25]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1980,7 +1980,7 @@ func (x *AgentInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AgentInfo.ProtoReflect.Descriptor instead.
 func (*AgentInfo) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{25}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *AgentInfo) GetId() string {
@@ -2035,7 +2035,7 @@ type GetAgentStatusRequest struct {
 
 func (x *GetAgentStatusRequest) Reset() {
 	*x = GetAgentStatusRequest{}
-	mi := &file_guild_v1_guild_proto_msgTypes[26]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2047,7 +2047,7 @@ func (x *GetAgentStatusRequest) String() string {
 func (*GetAgentStatusRequest) ProtoMessage() {}
 
 func (x *GetAgentStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[26]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2060,7 +2060,7 @@ func (x *GetAgentStatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAgentStatusRequest.ProtoReflect.Descriptor instead.
 func (*GetAgentStatusRequest) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{26}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *GetAgentStatusRequest) GetAgentId() string {
@@ -2089,7 +2089,7 @@ type AgentStatus struct {
 
 func (x *AgentStatus) Reset() {
 	*x = AgentStatus{}
-	mi := &file_guild_v1_guild_proto_msgTypes[27]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2101,7 +2101,7 @@ func (x *AgentStatus) String() string {
 func (*AgentStatus) ProtoMessage() {}
 
 func (x *AgentStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_guild_v1_guild_proto_msgTypes[27]
+	mi := &file_proto_guild_v1_guild_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2114,7 +2114,7 @@ func (x *AgentStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AgentStatus.ProtoReflect.Descriptor instead.
 func (*AgentStatus) Descriptor() ([]byte, []int) {
-	return file_guild_v1_guild_proto_rawDescGZIP(), []int{27}
+	return file_proto_guild_v1_guild_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *AgentStatus) GetState() AgentStatus_State {
@@ -2145,21 +2145,21 @@ func (x *AgentStatus) GetMetadata() map[string]string {
 	return nil
 }
 
-var File_guild_v1_guild_proto protoreflect.FileDescriptor
+var File_proto_guild_v1_guild_proto protoreflect.FileDescriptor
 
-const file_guild_v1_guild_proto_rawDesc = "" +
+const file_proto_guild_v1_guild_proto_rawDesc = "" +
 	"\n" +
-	"\x14guild/v1/guild.proto\x12\bguild.v1\"\x96\x04\n" +
+	"\x1aproto/guild/v1/guild.proto\x12\bguild.v1\"\x9c\x04\n" +
 	"\bCampaign\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x16\n" +
-	"\x06status\x18\x04 \x01(\tR\x06status\x12#\n" +
-	"\robjective_ids\x18\x05 \x03(\tR\fobjectiveIds\x12\x12\n" +
+	"\x06status\x18\x04 \x01(\tR\x06status\x12%\n" +
+	"\x0ecommission_ids\x18\x05 \x03(\tR\rcommissionIds\x12\x12\n" +
 	"\x04tags\x18\x06 \x03(\tR\x04tags\x12\x1a\n" +
-	"\bprogress\x18\a \x01(\x01R\bprogress\x12)\n" +
-	"\x10total_objectives\x18\b \x01(\x05R\x0ftotalObjectives\x121\n" +
-	"\x14completed_objectives\x18\t \x01(\x05R\x13completedObjectives\x12\x1d\n" +
+	"\bprogress\x18\a \x01(\x01R\bprogress\x12+\n" +
+	"\x11total_commissions\x18\b \x01(\x05R\x10totalCommissions\x123\n" +
+	"\x15completed_commissions\x18\t \x01(\x05R\x14completedCommissions\x12\x1d\n" +
 	"\n" +
 	"created_at\x18\n" +
 	" \x01(\x03R\tcreatedAt\x12\x1d\n" +
@@ -2226,15 +2226,15 @@ const file_guild_v1_guild_proto_rawDesc = "" +
 	"\amessage\x18\x02 \x01(\tR\amessage\"8\n" +
 	"\x15CampaignActionRequest\x12\x1f\n" +
 	"\vcampaign_id\x18\x01 \x01(\tR\n" +
-	"campaignId\"Y\n" +
-	"\x13AddObjectiveRequest\x12\x1f\n" +
+	"campaignId\"\\\n" +
+	"\x14AddCommissionRequest\x12\x1f\n" +
 	"\vcampaign_id\x18\x01 \x01(\tR\n" +
-	"campaignId\x12!\n" +
-	"\fobjective_id\x18\x02 \x01(\tR\vobjectiveId\"\\\n" +
-	"\x16RemoveObjectiveRequest\x12\x1f\n" +
+	"campaignId\x12#\n" +
+	"\rcommission_id\x18\x02 \x01(\tR\fcommissionId\"_\n" +
+	"\x17RemoveCommissionRequest\x12\x1f\n" +
 	"\vcampaign_id\x18\x01 \x01(\tR\n" +
-	"campaignId\x12!\n" +
-	"\fobjective_id\x18\x02 \x01(\tR\vobjectiveId\"\xb9\x01\n" +
+	"campaignId\x12#\n" +
+	"\rcommission_id\x18\x02 \x01(\tR\fcommissionId\"\xb9\x01\n" +
 	"\vErrorDetail\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12?\n" +
@@ -2291,12 +2291,12 @@ const file_guild_v1_guild_proto_rawDesc = "" +
 	"\x04STOP\x10\x01\x12\t\n" +
 	"\x05PAUSE\x10\x02\x12\n" +
 	"\n" +
-	"\x06RESUME\x10\x03\"\x86\x04\n" +
+	"\x06RESUME\x10\x03\"\x8b\x04\n" +
 	"\vStreamEvent\x123\n" +
 	"\x04type\x18\x01 \x01(\x0e2\x1f.guild.v1.StreamEvent.EventTypeR\x04type\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x123\n" +
-	"\x04data\x18\x03 \x03(\v2\x1f.guild.v1.StreamEvent.DataEntryR\x04data\x12>\n" +
-	"\x0etool_execution\x18\x04 \x01(\v2\x17.guild.v1.ToolExecutionR\rtoolExecution\x1a7\n" +
+	"\x04data\x18\x03 \x03(\v2\x1f.guild.v1.StreamEvent.DataEntryR\x04data\x12C\n" +
+	"\x0etool_execution\x18\x04 \x01(\v2\x1c.guild.v1.GuildToolExecutionR\rtoolExecution\x1a7\n" +
 	"\tDataEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xf1\x01\n" +
@@ -2310,12 +2310,12 @@ const file_guild_v1_guild_proto_rawDesc = "" +
 	"\x14TOOL_EXECUTION_START\x10\x06\x12\x1b\n" +
 	"\x17TOOL_EXECUTION_PROGRESS\x10\a\x12\x1b\n" +
 	"\x17TOOL_EXECUTION_COMPLETE\x10\b\x12\x1f\n" +
-	"\x1bTOOL_AUTHORIZATION_REQUIRED\x10\t\"\xcb\x03\n" +
-	"\rToolExecution\x12\x17\n" +
+	"\x1bTOOL_AUTHORIZATION_REQUIRED\x10\t\"\xd5\x03\n" +
+	"\x12GuildToolExecution\x12\x17\n" +
 	"\atool_id\x18\x01 \x01(\tR\x06toolId\x12\x1b\n" +
-	"\ttool_name\x18\x02 \x01(\tR\btoolName\x12G\n" +
+	"\ttool_name\x18\x02 \x01(\tR\btoolName\x12L\n" +
 	"\n" +
-	"parameters\x18\x03 \x03(\v2'.guild.v1.ToolExecution.ParametersEntryR\n" +
+	"parameters\x18\x03 \x03(\v2,.guild.v1.GuildToolExecution.ParametersEntryR\n" +
 	"parameters\x12\x16\n" +
 	"\x06status\x18\x04 \x01(\tR\x06status\x12\x1a\n" +
 	"\bprogress\x18\x05 \x01(\x01R\bprogress\x12\x16\n" +
@@ -2366,7 +2366,7 @@ const file_guild_v1_guild_proto_rawDesc = "" +
 	"\aWORKING\x10\x02\x12\v\n" +
 	"\aWAITING\x10\x03\x12\t\n" +
 	"\x05ERROR\x10\x04\x12\v\n" +
-	"\aOFFLINE\x10\x052\xa9\v\n" +
+	"\aOFFLINE\x10\x052\xad\v\n" +
 	"\x05Guild\x12@\n" +
 	"\rWatchCampaign\x12\x16.guild.v1.WatchRequest\x1a\x15.guild.v1.BoardUpdate0\x01\x12?\n" +
 	"\vGetCampaign\x12\x1c.guild.v1.GetCampaignRequest\x1a\x12.guild.v1.Campaign\x12P\n" +
@@ -2380,73 +2380,73 @@ const file_guild_v1_guild_proto_rawDesc = "" +
 	"\rPauseCampaign\x12\x1f.guild.v1.CampaignActionRequest\x1a\x12.guild.v1.Campaign\x12E\n" +
 	"\x0eResumeCampaign\x12\x1f.guild.v1.CampaignActionRequest\x1a\x12.guild.v1.Campaign\x12G\n" +
 	"\x10CompleteCampaign\x12\x1f.guild.v1.CampaignActionRequest\x1a\x12.guild.v1.Campaign\x12E\n" +
-	"\x0eCancelCampaign\x12\x1f.guild.v1.CampaignActionRequest\x1a\x12.guild.v1.Campaign\x12K\n" +
-	"\x16AddObjectiveToCampaign\x12\x1d.guild.v1.AddObjectiveRequest\x1a\x12.guild.v1.Campaign\x12S\n" +
-	"\x1bRemoveObjectiveFromCampaign\x12 .guild.v1.RemoveObjectiveRequest\x1a\x12.guild.v1.Campaign\x12S\n" +
+	"\x0eCancelCampaign\x12\x1f.guild.v1.CampaignActionRequest\x1a\x12.guild.v1.Campaign\x12M\n" +
+	"\x17AddCommissionToCampaign\x12\x1e.guild.v1.AddCommissionRequest\x1a\x12.guild.v1.Campaign\x12U\n" +
+	"\x1cRemoveCommissionFromCampaign\x12!.guild.v1.RemoveCommissionRequest\x1a\x12.guild.v1.Campaign\x12S\n" +
 	"\x12SendMessageToAgent\x12\x1d.guild.v1.AgentMessageRequest\x1a\x1e.guild.v1.AgentMessageResponse\x12Z\n" +
 	"\x17StreamAgentConversation\x12\x1c.guild.v1.AgentStreamRequest\x1a\x1d.guild.v1.AgentStreamResponse(\x010\x01\x12P\n" +
 	"\x13ListAvailableAgents\x12\x1b.guild.v1.ListAgentsRequest\x1a\x1c.guild.v1.ListAgentsResponse\x12H\n" +
-	"\x0eGetAgentStatus\x12\x1f.guild.v1.GetAgentStatusRequest\x1a\x15.guild.v1.AgentStatusB2Z0github.com/guild-ventures/guild-core/pkg/grpc/pbb\x06proto3"
+	"\x0eGetAgentStatus\x12\x1f.guild.v1.GetAgentStatusRequest\x1a\x15.guild.v1.AgentStatusB;Z9github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1b\x06proto3"
 
 var (
-	file_guild_v1_guild_proto_rawDescOnce sync.Once
-	file_guild_v1_guild_proto_rawDescData []byte
+	file_proto_guild_v1_guild_proto_rawDescOnce sync.Once
+	file_proto_guild_v1_guild_proto_rawDescData []byte
 )
 
-func file_guild_v1_guild_proto_rawDescGZIP() []byte {
-	file_guild_v1_guild_proto_rawDescOnce.Do(func() {
-		file_guild_v1_guild_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_guild_v1_guild_proto_rawDesc), len(file_guild_v1_guild_proto_rawDesc)))
+func file_proto_guild_v1_guild_proto_rawDescGZIP() []byte {
+	file_proto_guild_v1_guild_proto_rawDescOnce.Do(func() {
+		file_proto_guild_v1_guild_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_proto_guild_v1_guild_proto_rawDesc), len(file_proto_guild_v1_guild_proto_rawDesc)))
 	})
-	return file_guild_v1_guild_proto_rawDescData
+	return file_proto_guild_v1_guild_proto_rawDescData
 }
 
-var file_guild_v1_guild_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_guild_v1_guild_proto_msgTypes = make([]protoimpl.MessageInfo, 39)
-var file_guild_v1_guild_proto_goTypes = []any{
-	(StreamControl_Command)(0),     // 0: guild.v1.StreamControl.Command
-	(StreamEvent_EventType)(0),     // 1: guild.v1.StreamEvent.EventType
-	(AgentStatus_State)(0),         // 2: guild.v1.AgentStatus.State
-	(*Campaign)(nil),               // 3: guild.v1.Campaign
-	(*WatchRequest)(nil),           // 4: guild.v1.WatchRequest
-	(*BoardUpdate)(nil),            // 5: guild.v1.BoardUpdate
-	(*BoardMetadata)(nil),          // 6: guild.v1.BoardMetadata
-	(*GetCampaignRequest)(nil),     // 7: guild.v1.GetCampaignRequest
-	(*ListCampaignsRequest)(nil),   // 8: guild.v1.ListCampaignsRequest
-	(*ListCampaignsResponse)(nil),  // 9: guild.v1.ListCampaignsResponse
-	(*CreateCampaignRequest)(nil),  // 10: guild.v1.CreateCampaignRequest
-	(*UpdateCampaignRequest)(nil),  // 11: guild.v1.UpdateCampaignRequest
-	(*DeleteCampaignRequest)(nil),  // 12: guild.v1.DeleteCampaignRequest
-	(*DeleteCampaignResponse)(nil), // 13: guild.v1.DeleteCampaignResponse
-	(*CampaignActionRequest)(nil),  // 14: guild.v1.CampaignActionRequest
-	(*AddObjectiveRequest)(nil),    // 15: guild.v1.AddObjectiveRequest
-	(*RemoveObjectiveRequest)(nil), // 16: guild.v1.RemoveObjectiveRequest
-	(*ErrorDetail)(nil),            // 17: guild.v1.ErrorDetail
-	(*AgentMessageRequest)(nil),    // 18: guild.v1.AgentMessageRequest
-	(*AgentMessageResponse)(nil),   // 19: guild.v1.AgentMessageResponse
-	(*AgentStreamRequest)(nil),     // 20: guild.v1.AgentStreamRequest
-	(*AgentStreamResponse)(nil),    // 21: guild.v1.AgentStreamResponse
-	(*AgentMessageFragment)(nil),   // 22: guild.v1.AgentMessageFragment
-	(*StreamControl)(nil),          // 23: guild.v1.StreamControl
-	(*StreamEvent)(nil),            // 24: guild.v1.StreamEvent
-	(*ToolExecution)(nil),          // 25: guild.v1.ToolExecution
-	(*ListAgentsRequest)(nil),      // 26: guild.v1.ListAgentsRequest
-	(*ListAgentsResponse)(nil),     // 27: guild.v1.ListAgentsResponse
-	(*AgentInfo)(nil),              // 28: guild.v1.AgentInfo
-	(*GetAgentStatusRequest)(nil),  // 29: guild.v1.GetAgentStatusRequest
-	(*AgentStatus)(nil),            // 30: guild.v1.AgentStatus
-	nil,                            // 31: guild.v1.Campaign.MetadataEntry
-	nil,                            // 32: guild.v1.CreateCampaignRequest.MetadataEntry
-	nil,                            // 33: guild.v1.UpdateCampaignRequest.MetadataEntry
-	nil,                            // 34: guild.v1.ErrorDetail.MetadataEntry
-	nil,                            // 35: guild.v1.AgentMessageRequest.ContextEntry
-	nil,                            // 36: guild.v1.AgentMessageResponse.MetadataEntry
-	nil,                            // 37: guild.v1.AgentMessageFragment.MetadataEntry
-	nil,                            // 38: guild.v1.StreamEvent.DataEntry
-	nil,                            // 39: guild.v1.ToolExecution.ParametersEntry
-	nil,                            // 40: guild.v1.AgentInfo.MetadataEntry
-	nil,                            // 41: guild.v1.AgentStatus.MetadataEntry
+var file_proto_guild_v1_guild_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_proto_guild_v1_guild_proto_msgTypes = make([]protoimpl.MessageInfo, 39)
+var file_proto_guild_v1_guild_proto_goTypes = []any{
+	(StreamControl_Command)(0),      // 0: guild.v1.StreamControl.Command
+	(StreamEvent_EventType)(0),      // 1: guild.v1.StreamEvent.EventType
+	(AgentStatus_State)(0),          // 2: guild.v1.AgentStatus.State
+	(*Campaign)(nil),                // 3: guild.v1.Campaign
+	(*WatchRequest)(nil),            // 4: guild.v1.WatchRequest
+	(*BoardUpdate)(nil),             // 5: guild.v1.BoardUpdate
+	(*BoardMetadata)(nil),           // 6: guild.v1.BoardMetadata
+	(*GetCampaignRequest)(nil),      // 7: guild.v1.GetCampaignRequest
+	(*ListCampaignsRequest)(nil),    // 8: guild.v1.ListCampaignsRequest
+	(*ListCampaignsResponse)(nil),   // 9: guild.v1.ListCampaignsResponse
+	(*CreateCampaignRequest)(nil),   // 10: guild.v1.CreateCampaignRequest
+	(*UpdateCampaignRequest)(nil),   // 11: guild.v1.UpdateCampaignRequest
+	(*DeleteCampaignRequest)(nil),   // 12: guild.v1.DeleteCampaignRequest
+	(*DeleteCampaignResponse)(nil),  // 13: guild.v1.DeleteCampaignResponse
+	(*CampaignActionRequest)(nil),   // 14: guild.v1.CampaignActionRequest
+	(*AddCommissionRequest)(nil),    // 15: guild.v1.AddCommissionRequest
+	(*RemoveCommissionRequest)(nil), // 16: guild.v1.RemoveCommissionRequest
+	(*ErrorDetail)(nil),             // 17: guild.v1.ErrorDetail
+	(*AgentMessageRequest)(nil),     // 18: guild.v1.AgentMessageRequest
+	(*AgentMessageResponse)(nil),    // 19: guild.v1.AgentMessageResponse
+	(*AgentStreamRequest)(nil),      // 20: guild.v1.AgentStreamRequest
+	(*AgentStreamResponse)(nil),     // 21: guild.v1.AgentStreamResponse
+	(*AgentMessageFragment)(nil),    // 22: guild.v1.AgentMessageFragment
+	(*StreamControl)(nil),           // 23: guild.v1.StreamControl
+	(*StreamEvent)(nil),             // 24: guild.v1.StreamEvent
+	(*GuildToolExecution)(nil),      // 25: guild.v1.GuildToolExecution
+	(*ListAgentsRequest)(nil),       // 26: guild.v1.ListAgentsRequest
+	(*ListAgentsResponse)(nil),      // 27: guild.v1.ListAgentsResponse
+	(*AgentInfo)(nil),               // 28: guild.v1.AgentInfo
+	(*GetAgentStatusRequest)(nil),   // 29: guild.v1.GetAgentStatusRequest
+	(*AgentStatus)(nil),             // 30: guild.v1.AgentStatus
+	nil,                             // 31: guild.v1.Campaign.MetadataEntry
+	nil,                             // 32: guild.v1.CreateCampaignRequest.MetadataEntry
+	nil,                             // 33: guild.v1.UpdateCampaignRequest.MetadataEntry
+	nil,                             // 34: guild.v1.ErrorDetail.MetadataEntry
+	nil,                             // 35: guild.v1.AgentMessageRequest.ContextEntry
+	nil,                             // 36: guild.v1.AgentMessageResponse.MetadataEntry
+	nil,                             // 37: guild.v1.AgentMessageFragment.MetadataEntry
+	nil,                             // 38: guild.v1.StreamEvent.DataEntry
+	nil,                             // 39: guild.v1.GuildToolExecution.ParametersEntry
+	nil,                             // 40: guild.v1.AgentInfo.MetadataEntry
+	nil,                             // 41: guild.v1.AgentStatus.MetadataEntry
 }
-var file_guild_v1_guild_proto_depIdxs = []int32{
+var file_proto_guild_v1_guild_proto_depIdxs = []int32{
 	31, // 0: guild.v1.Campaign.metadata:type_name -> guild.v1.Campaign.MetadataEntry
 	6,  // 1: guild.v1.BoardUpdate.metadata:type_name -> guild.v1.BoardMetadata
 	3,  // 2: guild.v1.ListCampaignsResponse.campaigns:type_name -> guild.v1.Campaign
@@ -2465,8 +2465,8 @@ var file_guild_v1_guild_proto_depIdxs = []int32{
 	0,  // 15: guild.v1.StreamControl.command:type_name -> guild.v1.StreamControl.Command
 	1,  // 16: guild.v1.StreamEvent.type:type_name -> guild.v1.StreamEvent.EventType
 	38, // 17: guild.v1.StreamEvent.data:type_name -> guild.v1.StreamEvent.DataEntry
-	25, // 18: guild.v1.StreamEvent.tool_execution:type_name -> guild.v1.ToolExecution
-	39, // 19: guild.v1.ToolExecution.parameters:type_name -> guild.v1.ToolExecution.ParametersEntry
+	25, // 18: guild.v1.StreamEvent.tool_execution:type_name -> guild.v1.GuildToolExecution
+	39, // 19: guild.v1.GuildToolExecution.parameters:type_name -> guild.v1.GuildToolExecution.ParametersEntry
 	28, // 20: guild.v1.ListAgentsResponse.agents:type_name -> guild.v1.AgentInfo
 	30, // 21: guild.v1.AgentInfo.status:type_name -> guild.v1.AgentStatus
 	40, // 22: guild.v1.AgentInfo.metadata:type_name -> guild.v1.AgentInfo.MetadataEntry
@@ -2485,8 +2485,8 @@ var file_guild_v1_guild_proto_depIdxs = []int32{
 	14, // 35: guild.v1.Guild.ResumeCampaign:input_type -> guild.v1.CampaignActionRequest
 	14, // 36: guild.v1.Guild.CompleteCampaign:input_type -> guild.v1.CampaignActionRequest
 	14, // 37: guild.v1.Guild.CancelCampaign:input_type -> guild.v1.CampaignActionRequest
-	15, // 38: guild.v1.Guild.AddObjectiveToCampaign:input_type -> guild.v1.AddObjectiveRequest
-	16, // 39: guild.v1.Guild.RemoveObjectiveFromCampaign:input_type -> guild.v1.RemoveObjectiveRequest
+	15, // 38: guild.v1.Guild.AddCommissionToCampaign:input_type -> guild.v1.AddCommissionRequest
+	16, // 39: guild.v1.Guild.RemoveCommissionFromCampaign:input_type -> guild.v1.RemoveCommissionRequest
 	18, // 40: guild.v1.Guild.SendMessageToAgent:input_type -> guild.v1.AgentMessageRequest
 	20, // 41: guild.v1.Guild.StreamAgentConversation:input_type -> guild.v1.AgentStreamRequest
 	26, // 42: guild.v1.Guild.ListAvailableAgents:input_type -> guild.v1.ListAgentsRequest
@@ -2504,8 +2504,8 @@ var file_guild_v1_guild_proto_depIdxs = []int32{
 	3,  // 54: guild.v1.Guild.ResumeCampaign:output_type -> guild.v1.Campaign
 	3,  // 55: guild.v1.Guild.CompleteCampaign:output_type -> guild.v1.Campaign
 	3,  // 56: guild.v1.Guild.CancelCampaign:output_type -> guild.v1.Campaign
-	3,  // 57: guild.v1.Guild.AddObjectiveToCampaign:output_type -> guild.v1.Campaign
-	3,  // 58: guild.v1.Guild.RemoveObjectiveFromCampaign:output_type -> guild.v1.Campaign
+	3,  // 57: guild.v1.Guild.AddCommissionToCampaign:output_type -> guild.v1.Campaign
+	3,  // 58: guild.v1.Guild.RemoveCommissionFromCampaign:output_type -> guild.v1.Campaign
 	19, // 59: guild.v1.Guild.SendMessageToAgent:output_type -> guild.v1.AgentMessageResponse
 	21, // 60: guild.v1.Guild.StreamAgentConversation:output_type -> guild.v1.AgentStreamResponse
 	27, // 61: guild.v1.Guild.ListAvailableAgents:output_type -> guild.v1.ListAgentsResponse
@@ -2517,16 +2517,16 @@ var file_guild_v1_guild_proto_depIdxs = []int32{
 	0,  // [0:25] is the sub-list for field type_name
 }
 
-func init() { file_guild_v1_guild_proto_init() }
-func file_guild_v1_guild_proto_init() {
-	if File_guild_v1_guild_proto != nil {
+func init() { file_proto_guild_v1_guild_proto_init() }
+func file_proto_guild_v1_guild_proto_init() {
+	if File_proto_guild_v1_guild_proto != nil {
 		return
 	}
-	file_guild_v1_guild_proto_msgTypes[17].OneofWrappers = []any{
+	file_proto_guild_v1_guild_proto_msgTypes[17].OneofWrappers = []any{
 		(*AgentStreamRequest_Message)(nil),
 		(*AgentStreamRequest_Control)(nil),
 	}
-	file_guild_v1_guild_proto_msgTypes[18].OneofWrappers = []any{
+	file_proto_guild_v1_guild_proto_msgTypes[18].OneofWrappers = []any{
 		(*AgentStreamResponse_Fragment)(nil),
 		(*AgentStreamResponse_Status)(nil),
 		(*AgentStreamResponse_Event)(nil),
@@ -2535,18 +2535,18 @@ func file_guild_v1_guild_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_guild_v1_guild_proto_rawDesc), len(file_guild_v1_guild_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_guild_v1_guild_proto_rawDesc), len(file_proto_guild_v1_guild_proto_rawDesc)),
 			NumEnums:      3,
 			NumMessages:   39,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_guild_v1_guild_proto_goTypes,
-		DependencyIndexes: file_guild_v1_guild_proto_depIdxs,
-		EnumInfos:         file_guild_v1_guild_proto_enumTypes,
-		MessageInfos:      file_guild_v1_guild_proto_msgTypes,
+		GoTypes:           file_proto_guild_v1_guild_proto_goTypes,
+		DependencyIndexes: file_proto_guild_v1_guild_proto_depIdxs,
+		EnumInfos:         file_proto_guild_v1_guild_proto_enumTypes,
+		MessageInfos:      file_proto_guild_v1_guild_proto_msgTypes,
 	}.Build()
-	File_guild_v1_guild_proto = out.File
-	file_guild_v1_guild_proto_goTypes = nil
-	file_guild_v1_guild_proto_depIdxs = nil
+	File_proto_guild_v1_guild_proto = out.File
+	file_proto_guild_v1_guild_proto_goTypes = nil
+	file_proto_guild_v1_guild_proto_depIdxs = nil
 }

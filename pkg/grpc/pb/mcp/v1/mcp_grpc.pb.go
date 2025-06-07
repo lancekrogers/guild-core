@@ -4,7 +4,7 @@
 // - protoc             v5.28.3
 // source: proto/mcp/v1/mcp.proto
 
-package grpc
+package v1
 
 import (
 	context "context"

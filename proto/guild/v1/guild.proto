@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package guild.v1;
 
-option go_package = "github.com/guild-ventures/guild-core/pkg/grpc/pb";
+option go_package = "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1";
 
 // Guild service provides API for managing campaigns and monitoring their progress
 service Guild {
@@ -211,11 +211,11 @@ message StreamEvent {
   EventType type = 1;
   string description = 2;
   map<string, string> data = 3;
-  ToolExecution tool_execution = 4;
+  GuildToolExecution tool_execution = 4;
 }
 
 // Tool execution details
-message ToolExecution {
+message GuildToolExecution {
   string tool_id = 1;
   string tool_name = 2;
   map<string, string> parameters = 3;

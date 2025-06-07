@@ -109,8 +109,12 @@ define section_header
 	@echo ""; \
 	echo "$(BOLD)$(BLUE)┌$(BAR)$(NC)"; \
 	printf "$(BOLD)$(BLUE)│$(NC) $(PURPLE)🏰 GUILD$(NC) $(BOLD)$(YELLOW)%s$(NC)\n" "$(strip $(1))"; \
-	echo "$(BOLD)$(BLUE)└$(BAR)$(NC)"; \
-	echo ""
+	echo "$(BOLD)$(BLUE)└$(BAR)$(NC)"
+endef
+
+# Box connector for smooth transitions
+define box_connector
+	echo "$(BOLD)$(BLUE)├$(BAR)$(NC)"
 endef
 
 define status_card
@@ -132,15 +136,12 @@ all: dashboard
 
 dashboard: clean build unit-test integration
 	@$(call section_header,Complete Build & Test Summary)
-	@echo "$(BOLD)$(BLUE)┌────────────────── Final Summary Dashboard ────────────────────┐$(NC)"
-	@echo "$(BLUE)│$(NC)                                                                   $(BLUE)│$(NC)"
-	@echo "$(BLUE)│$(NC)   $(BOLD)🏰 GUILD FRAMEWORK COMPLETE BUILD & TEST SUMMARY$(NC)              $(BLUE)│$(NC)"
-	@echo "$(BLUE)│$(NC)                                                                   $(BLUE)│$(NC)"
-	@echo "$(BLUE)├───────────────────────────────────────────────────────────────────┤$(NC)"
+	@echo "$(BOLD)$(BLUE)┌$(BAR)$(NC)"
+	@echo "$(BLUE)│$(NC) $(BOLD)🏰 GUILD FRAMEWORK COMPLETE BUILD & TEST SUMMARY$(NC)              $(BLUE)│$(NC)"
+	@echo "$(BLUE)├$(BAR)$(NC)"
 	@echo "$(BLUE)│$(NC)   All unit tests, builds, and integration tests completed.       $(BLUE)│$(NC)"
 	@echo "$(BLUE)│$(NC)   Review the detailed results above for any failures.            $(BLUE)│$(NC)"
-	@echo "$(BLUE)│$(NC)                                                                   $(BLUE)│$(NC)"
-	@echo "$(BOLD)$(BLUE)└───────────────────────────────────────────────────────────────────┘$(NC)"
+	@echo "$(BOLD)$(BLUE)└$(BAR)$(NC)"
 	@$(call status_card,$(ROCKET) Dashboard Run Complete,pass)
 
 .DEFAULT_GOAL := help
@@ -226,51 +227,52 @@ build:
 	fi; \
 	$(call live_progress_bar,100,Build process complete); \
 	echo ""; \
-	echo ""; \
-	echo "$(BOLD)$(BLUE)┌─────────────── Build Summary ────────────────┐$(NC)"; \
-	printf "$(BLUE)│$(NC) $(BOLD)%-15s$(NC): " "Code Quality"; \
+	echo "$(BOLD)$(BLUE)┌$(BAR)$(NC)"; \
+	echo "$(BLUE)│$(NC) $(BOLD)Build Summary$(NC)                                            $(BLUE)│$(NC)"; \
+	echo "$(BLUE)├$(BAR)$(NC)"; \
+	printf "$(BLUE)│$(NC)   %-25s : " "Code Quality"; \
 	if [ "$$VET_STATUS" = "pass" ]; then \
-		echo "$(GREEN)✓ PASSED$(NC)                  $(BLUE)│$(NC)"; \
+		printf "$(GREEN)✓ PASSED$(NC)"; \
 	else \
-		echo "$(RED)✗ FAILED$(NC)                  $(BLUE)│$(NC)"; \
+		printf "$(RED)✗ FAILED$(NC)"; \
 	fi; \
-	printf "$(BLUE)│$(NC) $(BOLD)%-15s$(NC): " "Compilation"; \
+	printf "%*s $(BLUE)│$(NC)\n" $$((22)) ""; \
+	printf "$(BLUE)│$(NC)   %-25s : " "Compilation"; \
 	if [ "$$BUILD_STATUS" = "pass" ]; then \
-		echo "$(GREEN)✓ PASSED$(NC)                  $(BLUE)│$(NC)"; \
+		printf "$(GREEN)✓ PASSED$(NC)"; \
 	else \
-		echo "$(RED)✗ FAILED$(NC)                  $(BLUE)│$(NC)"; \
+		printf "$(RED)✗ FAILED$(NC)"; \
 	fi; \
-	printf "$(BLUE)│$(NC) $(BOLD)%-15s$(NC): " "Optimization"; \
+	printf "%*s $(BLUE)│$(NC)\n" $$((22)) ""; \
+	printf "$(BLUE)│$(NC)   %-25s : " "Optimization"; \
 	if [ "$$STRIP_STATUS" = "pass" ]; then \
-		echo "$(GREEN)✓ COMPLETED$(NC)               $(BLUE)│$(NC)"; \
+		printf "$(GREEN)✓ COMPLETED$(NC)"; \
 	elif [ "$$STRIP_STATUS" = "skip" ]; then \
-		echo "$(YELLOW)○ SKIPPED$(NC)                 $(BLUE)│$(NC)"; \
+		printf "$(YELLOW)○ SKIPPED$(NC)"; \
 	else \
-		echo "$(RED)✗ FAILED$(NC)                  $(BLUE)│$(NC)"; \
+		printf "$(RED)✗ FAILED$(NC)"; \
 	fi; \
-	echo "$(BLUE)├──────────────────────────────────────────────┤$(NC)"; \
-	printf "$(BLUE)│$(NC) $(BOLD)%-15s$(NC): " "Total Errors"; \
+	printf "%*s $(BLUE)│$(NC)\n" $$((19)) ""; \
+	echo "$(BLUE)├$(BAR)$(NC)"; \
+	printf "$(BLUE)│$(NC)   %-25s : " "Total Errors"; \
 	if [ $$ERROR_COUNT -eq 0 ]; then \
-		echo "$(GREEN)0$(NC)                         $(BLUE)│$(NC)"; \
+		printf "$(GREEN)%-29d$(NC) $(BLUE)│$(NC)\n" $$ERROR_COUNT; \
 	else \
-		echo "$(RED)$$ERROR_COUNT$(NC)                         $(BLUE)│$(NC)"; \
+		printf "$(RED)%-29d$(NC) $(BLUE)│$(NC)\n" $$ERROR_COUNT; \
 	fi; \
-	echo "$(BOLD)$(BLUE)└──────────────────────────────────────────────┘$(NC)"; \
+	$(call box_connector); \
 	if [ $$ERROR_COUNT -eq 0 ]; then \
-		echo "$(BOLD)$(BLUE)┌$(BAR)$(NC)"; \
 		printf "$(BOLD)$(BLUE)│$(NC)  $(GREEN)✓ Build Completed Successfully$(NC)\n"; \
-		echo "$(BOLD)$(BLUE)└$(BAR)$(NC)"; \
 	else \
-		echo "$(BOLD)$(BLUE)┌$(BAR)$(NC)"; \
 		printf "$(BOLD)$(BLUE)│$(NC)  $(RED)✗ Build Completed with Errors$(NC)\n"; \
-		echo "$(BOLD)$(BLUE)└$(BAR)$(NC)"; \
-		if [ -f vet_errors.txt ] && [ "$$VET_STATUS" = "fail" ]; then \
-			echo ""; \
-			echo "$(BOLD)$(RED)Code Quality Issues:$(NC)"; \
-			head -10 vet_errors.txt; \
-			echo "$(DIM)... (showing first 10 lines)$(NC)"; \
-			rm -f vet_errors.txt; \
-		fi; \
+	fi; \
+	echo "$(BOLD)$(BLUE)└$(BAR)$(NC)"; \
+	if [ $$ERROR_COUNT -ne 0 ] && [ -f vet_errors.txt ] && [ "$$VET_STATUS" = "fail" ]; then \
+		echo ""; \
+		echo "$(BOLD)$(RED)Code Quality Issues:$(NC)"; \
+		head -10 vet_errors.txt; \
+		echo "$(DIM)... (showing first 10 lines)$(NC)"; \
+		rm -f vet_errors.txt; \
 	fi
 
 #────────────────────── STRICT BUILD FOR CI ──────────────────────────────
@@ -286,9 +288,10 @@ unit-test:
 	@$(call section_header,$(TEST) Unit Test Dashboard)
 	@rm -f .unit_fail .build_fail .unit_pass .build_pass
 	@echo ""; \
-	echo "$(BOLD)$(PURPLE)┌────── Discovering and Testing All Packages ──────┐$(NC)"; \
-	echo "$(PURPLE)│$(NC) Scanning for all Go packages...                  $(PURPLE)│$(NC)"; \
-	echo "$(BOLD)$(PURPLE)└──────────────────────────────────────────────────┘$(NC)"; \
+	echo "$(BOLD)$(PURPLE)┌$(BAR)$(NC)"; \
+	echo "$(PURPLE)│$(NC) $(BOLD)Discovering and Testing All Packages$(NC)                    $(PURPLE)│$(NC)"; \
+	echo "$(PURPLE)│$(NC) Scanning for all Go packages...                             $(PURPLE)│$(NC)"; \
+	echo "$(BOLD)$(PURPLE)└$(BAR)$(NC)"; \
 	echo ""; \
 	TOTAL_PACKAGES=0; \
 	BUILD_PASSED=0; \
@@ -325,25 +328,27 @@ unit-test:
 	$(call live_progress_bar,100,All packages tested); \
 	echo ""; \
 	echo ""; \
-	echo "$(BOLD)$(BLUE)┌────────────────── Test Results Summary ──────────────────┐$(NC)"; \
-	echo "$(BLUE)├───────────────────────────────────────────────────────────┤$(NC)"; \
-	echo "$(BLUE)│$(NC) $(BOLD)Summary Statistics$(NC)                                       $(BLUE)│$(NC)"; \
-	printf "$(BLUE)│$(NC)   %-25s : %-28d$(BLUE)│$(NC)\n" "Total Packages" $$TOTAL_PACKAGES; \
-	printf "$(BLUE)│$(NC)   %-25s : $(GREEN)%-28d$(NC)$(BLUE)│$(NC)\n" "Build Passed" $$BUILD_PASSED; \
+	echo "$(BOLD)$(BLUE)┌$(BAR)$(NC)"; \
+	echo "$(BLUE)│$(NC) $(BOLD)Test Results Summary$(NC)                                     $(BLUE)│$(NC)"; \
+	echo "$(BLUE)├$(BAR)$(NC)"; \
+	printf "$(BLUE)│$(NC)   %-25s : %-29d $(BLUE)│$(NC)\n" "Total Packages" $$TOTAL_PACKAGES; \
+	printf "$(BLUE)│$(NC)   %-25s : " "Build Passed"; \
+	printf "$(GREEN)%-29d$(NC) $(BLUE)│$(NC)\n" $$BUILD_PASSED; \
 	printf "$(BLUE)│$(NC)   %-25s : " "Build Failed"; \
 	if [ $$BUILD_FAILED -eq 0 ]; then \
-		printf "$(GREEN)%-28d$(NC)$(BLUE)│$(NC)\n" $$BUILD_FAILED; \
+		printf "$(GREEN)%-29d$(NC) $(BLUE)│$(NC)\n" $$BUILD_FAILED; \
 	else \
-		printf "$(RED)%-28d$(NC)$(BLUE)│$(NC)\n" $$BUILD_FAILED; \
+		printf "$(RED)%-29d$(NC) $(BLUE)│$(NC)\n" $$BUILD_FAILED; \
 	fi; \
-	printf "$(BLUE)│$(NC)   %-25s : $(GREEN)%-28d$(NC)$(BLUE)│$(NC)\n" "Tests Passed" $$TEST_PASSED; \
+	printf "$(BLUE)│$(NC)   %-25s : " "Tests Passed"; \
+	printf "$(GREEN)%-29d$(NC) $(BLUE)│$(NC)\n" $$TEST_PASSED; \
 	printf "$(BLUE)│$(NC)   %-25s : " "Tests Failed"; \
 	if [ $$TEST_FAILED -eq 0 ]; then \
-		printf "$(GREEN)%-28d$(NC)$(BLUE)│$(NC)\n" $$TEST_FAILED; \
+		printf "$(GREEN)%-29d$(NC) $(BLUE)│$(NC)\n" $$TEST_FAILED; \
 	else \
-		printf "$(RED)%-28d$(NC)$(BLUE)│$(NC)\n" $$TEST_FAILED; \
+		printf "$(RED)%-29d$(NC) $(BLUE)│$(NC)\n" $$TEST_FAILED; \
 	fi; \
-	echo "$(BLUE)├───────────────────────────────────────────────────────────┤$(NC)"; \
+	echo "$(BLUE)├$(BAR)$(NC)"; \
 	if [ $$TOTAL_PACKAGES -gt 0 ]; then \
 		BUILD_RATE=$$((BUILD_PASSED * 100 / TOTAL_PACKAGES)); \
 		printf "$(BLUE)│$(NC)   %-25s : " "Build Success Rate"; \
@@ -354,7 +359,7 @@ unit-test:
 		else \
 			printf "$(RED)%d%%$(NC)" $$BUILD_RATE; \
 		fi; \
-		printf "%*s$(BLUE)│$(NC)\n" $$((26 - $${#BUILD_RATE})) ""; \
+		printf "%*s $(BLUE)│$(NC)\n" $$((28 - $${#BUILD_RATE})) ""; \
 		if [ $$((TOTAL_PACKAGES - BUILD_FAILED)) -gt 0 ]; then \
 			TEST_RATE=$$((TEST_PASSED * 100 / (TOTAL_PACKAGES - BUILD_FAILED))); \
 			printf "$(BLUE)│$(NC)   %-25s : " "Test Success Rate"; \
@@ -365,16 +370,17 @@ unit-test:
 			else \
 				printf "$(RED)%d%%$(NC)" $$TEST_RATE; \
 			fi; \
-			printf "%*s$(BLUE)│$(NC)\n" $$((26 - $${#TEST_RATE})) ""; \
+			printf "%*s $(BLUE)│$(NC)\n" $$((28 - $${#TEST_RATE})) ""; \
 		fi; \
 	fi; \
-	echo "$(BOLD)$(BLUE)└───────────────────────────────────────────────────────────┘$(NC)"; \
+	$(call box_connector); \
 	if [ $$TEST_FAILED -eq 0 ] && [ $$BUILD_FAILED -eq 0 ]; then \
-		echo ""; \
-		$(call status_card,✓ All Tests and Builds Passed,pass); \
+		printf "$(BOLD)$(BLUE)│$(NC)  $(GREEN)✓ All Tests and Builds Passed$(NC)\n"; \
 	else \
-		echo ""; \
-		$(call status_card,✗ Some Tests or Builds Failed,fail); \
+		printf "$(BOLD)$(BLUE)│$(NC)  $(RED)✗ Some Tests or Builds Failed$(NC)\n"; \
+	fi; \
+	echo "$(BOLD)$(BLUE)└$(BAR)$(NC)"; \
+	if [ $$TEST_FAILED -ne 0 ] || [ $$BUILD_FAILED -ne 0 ]; then \
 		if [ -f .build_fail ] && [ $$BUILD_FAILED -gt 0 ]; then \
 			echo ""; \
 			echo "$(BOLD)$(RED)Build Failures ($$BUILD_FAILED):$(NC)"; \
@@ -394,13 +400,14 @@ integration:
 	@$(call section_header,$(TEST) Integration Test Dashboard)
 	@rm -f .integration_fail .integration_pass
 	@echo ""; \
-	echo "$(BOLD)$(CYAN)┌─────── Discovering Integration Test Suites ───────┐$(NC)"; \
+	echo "$(BOLD)$(CYAN)┌$(BAR)$(NC)"; \
+	echo "$(CYAN)│$(NC) $(BOLD)Discovering Integration Test Suites$(NC)                     $(CYAN)│$(NC)"; \
 	TOTAL=0; PASSED=0; FAILED=0; CURRENT=0; \
 	for D in $$(find ./integration -type d -mindepth 1 -maxdepth 1 2>/dev/null | sort); do \
 		TOTAL=$$((TOTAL+1)); \
 	done; \
-	echo "$(CYAN)│$(NC) Found $$TOTAL integration test suites              $(CYAN)│$(NC)"; \
-	echo "$(BOLD)$(CYAN)└───────────────────────────────────────────────────┘$(NC)"; \
+	echo "$(CYAN)│$(NC) Found $$TOTAL integration test suites                            $(CYAN)│$(NC)"; \
+	echo "$(BOLD)$(CYAN)└$(BAR)$(NC)"; \
 	echo ""; \
 	for D in $$(find ./integration -type d -mindepth 1 -maxdepth 1 2>/dev/null | sort); do \
 		SUITE=$$(basename $$D); \
@@ -418,32 +425,35 @@ integration:
 	$(call live_progress_bar,100,Integration tests complete); \
 	echo ""; \
 	echo ""; \
-	echo "$(BOLD)$(BLUE)┌─────────────── Integration Test Results ──────────────┐$(NC)"; \
+	echo "$(BOLD)$(BLUE)┌$(BAR)$(NC)"; \
+	echo "$(BLUE)│$(NC) $(BOLD)Integration Test Results$(NC)                                $(BLUE)│$(NC)"; \
+	echo "$(BLUE)├$(BAR)$(NC)"; \
 	echo "$(BLUE)│$(NC) $(BOLD)Suite                    Status$(NC)                      $(BLUE)│$(NC)"; \
-	echo "$(BLUE)├────────────────────────────────────────────────────────┤$(NC)"; \
+	echo "$(BLUE)├$(BAR)$(NC)"; \
 	for D in $$(find ./integration -type d -mindepth 1 -maxdepth 1 2>/dev/null | sort); do \
 		SUITE=$$(basename $$D); \
 		printf "$(BLUE)│$(NC)   %-20s " "$$SUITE"; \
 		if grep -q "^$$SUITE$$" .integration_fail 2>/dev/null; then \
-			printf "$(RED)✗ FAIL$(NC)                     "; \
+			printf "$(RED)✗ FAIL$(NC)"; \
 		else \
-			printf "$(GREEN)✓ PASS$(NC)                     "; \
+			printf "$(GREEN)✓ PASS$(NC)"; \
 		fi; \
-		echo "$(BLUE)│$(NC)"; \
+		printf "%*s $(BLUE)│$(NC)\n" $$((32 - 6)) ""; \
 	done; \
-	echo "$(BLUE)├────────────────────────────────────────────────────────┤$(NC)"; \
-	printf "$(BLUE)│$(NC) $(BOLD)%-15s$(NC): %-37d $(BLUE)│$(NC)\n" "Total Suites" $$TOTAL; \
-	printf "$(BLUE)│$(NC) $(BOLD)%-15s$(NC): $(GREEN)%-37d$(NC) $(BLUE)│$(NC)\n" "Passed" $$PASSED; \
-	printf "$(BLUE)│$(NC) $(BOLD)%-15s$(NC): " "Failed"; \
+	echo "$(BLUE)├$(BAR)$(NC)"; \
+	printf "$(BLUE)│$(NC)   %-25s : %-29d $(BLUE)│$(NC)\n" "Total Suites" $$TOTAL; \
+	printf "$(BLUE)│$(NC)   %-25s : " "Passed"; \
+	printf "$(GREEN)%-29d$(NC) $(BLUE)│$(NC)\n" $$PASSED; \
+	printf "$(BLUE)│$(NC)   %-25s : " "Failed"; \
 	if [ $$FAILED -eq 0 ]; then \
-		printf "$(GREEN)%-37d$(NC) $(BLUE)│$(NC)\n" $$FAILED; \
+		printf "$(GREEN)%-29d$(NC) $(BLUE)│$(NC)\n" $$FAILED; \
 	else \
-		printf "$(RED)%-37d$(NC) $(BLUE)│$(NC)\n" $$FAILED; \
+		printf "$(RED)%-29d$(NC) $(BLUE)│$(NC)\n" $$FAILED; \
 	fi; \
-	echo "$(BLUE)├────────────────────────────────────────────────────────┤$(NC)"; \
+	echo "$(BLUE)├$(BAR)$(NC)"; \
 	if [ $$TOTAL -gt 0 ]; then \
 		SUCCESS_RATE=$$((PASSED * 100 / TOTAL)); \
-		printf "$(BLUE)│$(NC) $(BOLD)%-15s$(NC): " "Success Rate"; \
+		printf "$(BLUE)│$(NC)   %-25s : " "Success Rate"; \
 		if [ $$SUCCESS_RATE -eq 100 ]; then \
 			printf "$(GREEN)%d%%$(NC)" $$SUCCESS_RATE; \
 		elif [ $$SUCCESS_RATE -ge 80 ]; then \
@@ -451,20 +461,19 @@ integration:
 		else \
 			printf "$(RED)%d%%$(NC)" $$SUCCESS_RATE; \
 		fi; \
-		printf "%*s$(BLUE)│$(NC)\n" $$((34 - $${#SUCCESS_RATE})) ""; \
+		printf "%*s $(BLUE)│$(NC)\n" $$((28 - $${#SUCCESS_RATE})) ""; \
 	fi; \
-	echo "$(BOLD)$(BLUE)└────────────────────────────────────────────────────────┘$(NC)"; \
+	$(call box_connector); \
 	if [ $$FAILED -eq 0 ]; then \
-		echo ""; \
-		$(call status_card,✓ All Integration Tests Passed,pass); \
+		printf "$(BOLD)$(BLUE)│$(NC)  $(GREEN)✓ All Integration Tests Passed$(NC)\n"; \
 	else \
+		printf "$(BOLD)$(BLUE)│$(NC)  $(RED)✗ Some Integration Tests Failed$(NC)\n"; \
+	fi; \
+	echo "$(BOLD)$(BLUE)└$(BAR)$(NC)"; \
+	if [ $$FAILED -ne 0 ] && [ -f .integration_fail ]; then \
 		echo ""; \
-		$(call status_card,✗ Some Integration Tests Failed,fail); \
-		if [ -f .integration_fail ]; then \
-			echo ""; \
-			echo "$(BOLD)$(RED)Failed Integration Suites:$(NC)"; \
-			cat .integration_fail | while read suite; do echo "  - $$suite"; done; \
-		fi; \
+		echo "$(BOLD)$(RED)Failed Integration Suites:$(NC)"; \
+		cat .integration_fail | while read suite; do echo "  - $$suite"; done; \
 	fi
 	@rm -f .integration_fail .integration_pass
 	@rm -f guild_hall rag_test prompt_link_parser guild
