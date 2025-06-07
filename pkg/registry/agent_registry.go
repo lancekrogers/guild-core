@@ -3,6 +3,7 @@ package registry
 import (
 	"context"
 	"sort"
+	"strings"
 	"sync"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -148,7 +149,28 @@ func (r *DefaultAgentRegistry) GetAgentsByCost(maxCost int) []AgentInfo {
 	defer r.mu.RUnlock()
 
 	var agents []AgentInfo
-	// Implementation would filter by cost
+	for _, config := range r.guildAgents {
+		if config.CostMagnitude <= maxCost {
+			agents = append(agents, AgentInfo{
+				ID:            config.ID,
+				Name:          config.Name,
+				Type:          config.Type,
+				Capabilities:  config.Capabilities,
+				CostMagnitude: config.CostMagnitude,
+				CostProfile: CostProfile{
+					Magnitude:     config.CostMagnitude,
+					ContextWindow: config.ContextWindow,
+					Available:     true,
+				},
+			})
+		}
+	}
+
+	// Sort by cost magnitude (cheapest first)
+	sort.Slice(agents, func(i, j int) bool {
+		return agents[i].CostMagnitude < agents[j].CostMagnitude
+	})
+
 	return agents
 }
 
@@ -156,7 +178,7 @@ func (r *DefaultAgentRegistry) GetAgentsByCost(maxCost int) []AgentInfo {
 func (r *DefaultAgentRegistry) GetCheapestAgentByCapability(capability string) (*AgentInfo, error) {
 	agents := r.GetAgentsByCapability(capability)
 	if len(agents) == 0 {
-		return nil, gerror.New(gerror.ErrCodeNotFound, "no agent with capability", nil)
+		return nil, gerror.New(gerror.ErrCodeNotFound, "no agent found with capability: "+capability, nil)
 	}
 	return &agents[0], nil
 }
@@ -167,20 +189,55 @@ func (r *DefaultAgentRegistry) GetAgentsByCapability(capability string) []AgentI
 	defer r.mu.RUnlock()
 
 	var agents []AgentInfo
-	// Implementation would filter by capability
+	for _, config := range r.guildAgents {
+		// Check if this agent has the required capability
+		hasCapability := false
+		for _, cap := range config.Capabilities {
+			if cap == capability {
+				hasCapability = true
+				break
+			}
+		}
+
+		if hasCapability {
+			agents = append(agents, AgentInfo{
+				ID:            config.ID,
+				Name:          config.Name,
+				Type:          config.Type,
+				Capabilities:  config.Capabilities,
+				CostMagnitude: config.CostMagnitude,
+				CostProfile: CostProfile{
+					Magnitude:     config.CostMagnitude,
+					ContextWindow: config.ContextWindow,
+					Available:     true,
+				},
+			})
+		}
+	}
+
+	// Sort by cost magnitude (cheapest first)
+	sort.Slice(agents, func(i, j int) bool {
+		return agents[i].CostMagnitude < agents[j].CostMagnitude
+	})
+
 	return agents
 }
 
 // RegisterGuildAgent registers a configured agent from guild config
 func (r *DefaultAgentRegistry) RegisterGuildAgent(config GuildAgentConfig) error {
-	if config.Name == "" {
-		return gerror.New(gerror.ErrCodeInvalidInput, "agent name cannot be empty", nil)
+	if config.ID == "" {
+		return gerror.New(gerror.ErrCodeInvalidInput, "agent ID cannot be empty", nil)
 	}
 
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	r.guildAgents[config.Name] = config
+	// Auto-detect cost magnitude if not specified
+	if config.CostMagnitude == 0 {
+		config.CostMagnitude = r.getEffectiveCostMagnitude(config)
+	}
+
+	r.guildAgents[config.ID] = config
 	return nil
 }
 
@@ -194,4 +251,26 @@ func (r *DefaultAgentRegistry) GetRegisteredAgents() []GuildAgentConfig {
 		agents = append(agents, config)
 	}
 	return agents
+}
+
+// getEffectiveCostMagnitude auto-detects cost magnitude based on model name
+func (r *DefaultAgentRegistry) getEffectiveCostMagnitude(config GuildAgentConfig) int {
+	// Auto-detect based on model name patterns
+	switch {
+	case contains(config.Model, "gpt-3.5"), contains(config.Model, "claude-3-haiku"):
+		return 1 // Cheap models
+	case contains(config.Model, "gpt-4"), contains(config.Model, "claude-3-sonnet"):
+		return 3 // Mid-range models
+	case contains(config.Model, "claude-3-opus"), contains(config.Model, "gpt-4-turbo"):
+		return 8 // Expensive models
+	case config.Provider == "local", config.Provider == "ollama":
+		return 0 // Free/local models
+	default:
+		return 1 // Default to cheap if unknown
+	}
+}
+
+// contains checks if a string contains a substring (case-insensitive helper)
+func contains(s, substr string) bool {
+	return strings.Contains(strings.ToLower(s), strings.ToLower(substr))
 }

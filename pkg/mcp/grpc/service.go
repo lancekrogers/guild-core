@@ -10,6 +10,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/mcp/v1"
 	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
 	"github.com/guild-ventures/guild-core/pkg/mcp/server"
 	"github.com/guild-ventures/guild-core/pkg/mcp/tools"
@@ -18,7 +19,7 @@ import (
 // MCPService implements the gRPC service for MCP
 type MCPService struct {
 	server *server.Server
-	UnimplementedMCPServiceServer
+	pb.UnimplementedMCPServiceServer
 }
 
 // NewMCPService creates a new gRPC service
@@ -29,7 +30,7 @@ func NewMCPService(mcpServer *server.Server) *MCPService {
 }
 
 // RegisterTool registers a tool via gRPC
-func (s *MCPService) RegisterTool(ctx context.Context, req *ToolRegistrationRequest) (*ToolRegistrationResponse, error) {
+func (s *MCPService) RegisterTool(ctx context.Context, req *pb.ToolRegistrationRequest) (*pb.ToolRegistrationResponse, error) {
 	if req.Tool == nil {
 		return nil, status.Error(codes.InvalidArgument, "tool definition required")
 	}
@@ -73,14 +74,14 @@ func (s *MCPService) RegisterTool(ctx context.Context, req *ToolRegistrationRequ
 		return nil, status.Error(codes.AlreadyExists, err.Error())
 	}
 
-	return &ToolRegistrationResponse{
+	return &pb.ToolRegistrationResponse{
 		Success: true,
 		ToolId:  toolDef.ID,
 	}, nil
 }
 
 // DeregisterTool removes a tool via gRPC
-func (s *MCPService) DeregisterTool(ctx context.Context, req *ToolDeregistrationRequest) (*ToolDeregistrationResponse, error) {
+func (s *MCPService) DeregisterTool(ctx context.Context, req *pb.ToolDeregistrationRequest) (*pb.ToolDeregistrationResponse, error) {
 	if req.ToolId == "" {
 		return nil, status.Error(codes.InvalidArgument, "tool ID required")
 	}
@@ -89,13 +90,13 @@ func (s *MCPService) DeregisterTool(ctx context.Context, req *ToolDeregistration
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
-	return &ToolDeregistrationResponse{
+	return &pb.ToolDeregistrationResponse{
 		Success: true,
 	}, nil
 }
 
 // DiscoverTools discovers available tools via gRPC
-func (s *MCPService) DiscoverTools(ctx context.Context, req *ToolDiscoveryRequest) (*ToolDiscoveryResponse, error) {
+func (s *MCPService) DiscoverTools(ctx context.Context, req *pb.ToolDiscoveryRequest) (*pb.ToolDiscoveryResponse, error) {
 	// Convert gRPC request to protocol query
 	query := protocol.ToolQuery{
 		RequiredCapabilities: req.RequiredCapabilities,
@@ -110,9 +111,9 @@ func (s *MCPService) DiscoverTools(ctx context.Context, req *ToolDiscoveryReques
 	}
 
 	// Convert tools to gRPC response
-	var grpcTools []*ToolDefinition
+	var grpcTools []*pb.ToolDefinition
 	for _, tool := range tools {
-		grpcTools = append(grpcTools, &ToolDefinition{
+		grpcTools = append(grpcTools, &pb.ToolDefinition{
 			Id:           tool.ID(),
 			Name:         tool.Name(),
 			Description:  tool.Description(),
@@ -123,13 +124,13 @@ func (s *MCPService) DiscoverTools(ctx context.Context, req *ToolDiscoveryReques
 		})
 	}
 
-	return &ToolDiscoveryResponse{
+	return &pb.ToolDiscoveryResponse{
 		Tools: grpcTools,
 	}, nil
 }
 
 // ExecuteTool executes a tool via gRPC
-func (s *MCPService) ExecuteTool(ctx context.Context, req *ToolExecutionRequest) (*ToolExecutionResponse, error) {
+func (s *MCPService) ExecuteTool(ctx context.Context, req *pb.ToolExecutionRequest) (*pb.ToolExecutionResponse, error) {
 	if req.ToolId == "" {
 		return nil, status.Error(codes.InvalidArgument, "tool ID required")
 	}
@@ -161,7 +162,7 @@ func (s *MCPService) ExecuteTool(ctx context.Context, req *ToolExecutionRequest)
 		return nil, status.Error(codes.Internal, "failed to marshal result")
 	}
 
-	return &ToolExecutionResponse{
+	return &pb.ToolExecutionResponse{
 		ExecutionId: req.ExecutionId,
 		Result:      resultBytes,
 		StartTime:   startTime.Unix(),
@@ -170,7 +171,7 @@ func (s *MCPService) ExecuteTool(ctx context.Context, req *ToolExecutionRequest)
 }
 
 // CheckToolHealth checks tool health via gRPC
-func (s *MCPService) CheckToolHealth(ctx context.Context, req *ToolHealthRequest) (*ToolHealthResponse, error) {
+func (s *MCPService) CheckToolHealth(ctx context.Context, req *pb.ToolHealthRequest) (*pb.ToolHealthResponse, error) {
 	if req.ToolId == "" {
 		return nil, status.Error(codes.InvalidArgument, "tool ID required")
 	}
@@ -182,14 +183,14 @@ func (s *MCPService) CheckToolHealth(ctx context.Context, req *ToolHealthRequest
 
 	healthy := tool.HealthCheck() == nil
 
-	return &ToolHealthResponse{
+	return &pb.ToolHealthResponse{
 		ToolId:  req.ToolId,
 		Healthy: healthy,
 	}, nil
 }
 
 // ReportCost reports cost via gRPC
-func (s *MCPService) ReportCost(ctx context.Context, req *CostReportRequest) (*CostReportResponse, error) {
+func (s *MCPService) ReportCost(ctx context.Context, req *pb.CostReportRequest) (*pb.CostReportResponse, error) {
 	if req.Cost == nil {
 		return nil, status.Error(codes.InvalidArgument, "cost report required")
 	}
@@ -209,13 +210,13 @@ func (s *MCPService) ReportCost(ctx context.Context, req *CostReportRequest) (*C
 
 	s.server.GetCostObserver().RecordCost(ctx, cost.OperationID, cost)
 
-	return &CostReportResponse{
+	return &pb.CostReportResponse{
 		Success: true,
 	}, nil
 }
 
 // QueryCosts queries cost analysis via gRPC
-func (s *MCPService) QueryCosts(ctx context.Context, req *CostQueryRequest) (*CostQueryResponse, error) {
+func (s *MCPService) QueryCosts(ctx context.Context, req *pb.CostQueryRequest) (*pb.CostQueryResponse, error) {
 	// Convert gRPC query to protocol query
 	query := protocol.CostQuery{
 		OperationIDs: req.OperationIds,
@@ -231,9 +232,9 @@ func (s *MCPService) QueryCosts(ctx context.Context, req *CostQueryRequest) (*Co
 	}
 
 	// Convert analysis to gRPC response
-	var breakdown []*CostReport
+	var breakdown []*pb.CostReport
 	for _, cost := range analysis.Breakdown {
-		breakdown = append(breakdown, &CostReport{
+		breakdown = append(breakdown, &pb.CostReport{
 			OperationId:   cost.OperationID,
 			StartTime:     cost.StartTime.Unix(),
 			EndTime:       cost.EndTime.Unix(),
@@ -246,8 +247,8 @@ func (s *MCPService) QueryCosts(ctx context.Context, req *CostQueryRequest) (*Co
 		})
 	}
 
-	return &CostQueryResponse{
-		TotalCost: &CostReport{
+	return &pb.CostQueryResponse{
+		TotalCost: &pb.CostReport{
 			OperationId:   analysis.TotalCost.OperationID,
 			StartTime:     analysis.TotalCost.StartTime.Unix(),
 			EndTime:       analysis.TotalCost.EndTime.Unix(),
@@ -265,22 +266,22 @@ func (s *MCPService) QueryCosts(ctx context.Context, req *CostQueryRequest) (*Co
 }
 
 // Ping sends a ping via gRPC
-func (s *MCPService) Ping(ctx context.Context, req *PingRequest) (*PingResponse, error) {
-	return &PingResponse{
+func (s *MCPService) Ping(ctx context.Context, req *pb.PingRequest) (*pb.PingResponse, error) {
+	return &pb.PingResponse{
 		Timestamp: time.Now().Unix(),
 		ServerId:  s.server.GetConfig().ServerID,
 	}, nil
 }
 
 // GetSystemInfo gets system information via gRPC
-func (s *MCPService) GetSystemInfo(ctx context.Context, req *SystemInfoRequest) (*SystemInfoResponse, error) {
+func (s *MCPService) GetSystemInfo(ctx context.Context, req *pb.SystemInfoRequest) (*pb.SystemInfoResponse, error) {
 	config := s.server.GetConfig()
 	
-	return &SystemInfoResponse{
+	return &pb.SystemInfoResponse{
 		ServerId:   config.ServerID,
 		ServerName: config.ServerName,
 		Version:    config.Version,
-		Features: &SystemFeatures{
+		Features: &pb.SystemFeatures{
 			Tls:          config.EnableTLS,
 			Auth:         config.EnableAuth,
 			Metrics:      config.EnableMetrics,
@@ -297,7 +298,7 @@ func generateID() string {
 	return fmt.Sprintf("grpc-%d", time.Now().UnixNano())
 }
 
-func convertParameters(params []*ToolParameter) []protocol.ToolParameter {
+func convertParameters(params []*pb.ToolParameter) []protocol.ToolParameter {
 	var result []protocol.ToolParameter
 	for _, param := range params {
 		result = append(result, protocol.ToolParameter{
@@ -311,8 +312,8 @@ func convertParameters(params []*ToolParameter) []protocol.ToolParameter {
 	return result
 }
 
-func convertParametersToGRPC(params []protocol.ToolParameter) []*ToolParameter {
-	var result []*ToolParameter
+func convertParametersToGRPC(params []protocol.ToolParameter) []*pb.ToolParameter {
+	var result []*pb.ToolParameter
 	for _, param := range params {
 		// Convert default value to string
 		var defaultStr string
@@ -323,7 +324,7 @@ func convertParametersToGRPC(params []protocol.ToolParameter) []*ToolParameter {
 			}
 		}
 		
-		result = append(result, &ToolParameter{
+		result = append(result, &pb.ToolParameter{
 			Name:        param.Name,
 			Type:        param.Type,
 			Description: param.Description,
@@ -334,7 +335,7 @@ func convertParametersToGRPC(params []protocol.ToolParameter) []*ToolParameter {
 	return result
 }
 
-func convertCostProfile(profile *CostProfile) protocol.CostProfile {
+func convertCostProfile(profile *pb.CostProfile) protocol.CostProfile {
 	if profile == nil {
 		return protocol.CostProfile{}
 	}
@@ -346,8 +347,8 @@ func convertCostProfile(profile *CostProfile) protocol.CostProfile {
 	}
 }
 
-func convertCostProfileToGRPC(profile protocol.CostProfile) *CostProfile {
-	return &CostProfile{
+func convertCostProfileToGRPC(profile protocol.CostProfile) *pb.CostProfile {
+	return &pb.CostProfile{
 		ComputeCost:   profile.ComputeCost,
 		MemoryCost:    profile.MemoryCost,
 		LatencyMs:     profile.LatencyCost.Milliseconds(),

@@ -92,19 +92,19 @@ func TestDefaultPromptProvider(t *testing.T) {
 	validData := map[string]interface{}{
 		"Description": "Test description",
 	}
-	err = provider.ValidatePrompt("objective.creation", validData)
+	err = provider.ValidatePrompt("commission.creation", validData)
 	if err != nil {
 		t.Errorf("Expected valid data to pass validation: %v", err)
 	}
 
 	invalidData := map[string]interface{}{}
-	err = provider.ValidatePrompt("objective.creation", invalidData)
+	err = provider.ValidatePrompt("commission.creation", invalidData)
 	if err == nil {
 		t.Error("Expected invalid data to fail validation")
 	}
 
 	// Test rendering prompt
-	result, err := provider.RenderPrompt("objective.creation", validData)
+	result, err := provider.RenderPrompt("commission.creation", validData)
 	if err != nil {
 		t.Fatalf("Failed to render prompt: %v", err)
 	}

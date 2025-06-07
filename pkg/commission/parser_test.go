@@ -105,7 +105,7 @@ This feature is needed because...
 
 func TestMarkdownParser_ParseFile(t *testing.T) {
 	parser := NewMarkdownParser(DefaultParseOptions())
-	objective, err := parser.ParseFile("testdata/sample_objective.md")
+	objective, err := parser.ParseFile("testdata/sample_commission.md")
 
 	if err != nil {
 		t.Fatalf("ParseFile failed: %v", err)

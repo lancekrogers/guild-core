@@ -21,7 +21,7 @@ func TestPromptEvaluator(t *testing.T) {
 	tests := []*PromptTest{
 		{
 			Name:     "Basic objective creation",
-			PromptID: "objective.creation",
+			PromptID: "commission.creation",
 			TestData: map[string]interface{}{
 				"Description": "Build a web scraper",
 			},
@@ -31,7 +31,7 @@ func TestPromptEvaluator(t *testing.T) {
 		},
 		{
 			Name:     "Objective with context",
-			PromptID: "objective.creation",
+			PromptID: "commission.creation",
 			TestData: map[string]interface{}{
 				"Description": "Build a web scraper",
 				"UserContext": "Using Python and BeautifulSoup",
@@ -46,7 +46,7 @@ func TestPromptEvaluator(t *testing.T) {
 		},
 		{
 			Name:     "Quality check",
-			PromptID: "objective.creation",
+			PromptID: "commission.creation",
 			TestData: map[string]interface{}{
 				"Description": "Create a comprehensive data pipeline",
 			},
@@ -66,7 +66,7 @@ func TestPromptEvaluator(t *testing.T) {
 
 	// Run evaluation
 	ctx := context.Background()
-	result, err := evaluator.EvaluatePrompt(ctx, "objective.creation")
+	result, err := evaluator.EvaluatePrompt(ctx, "commission.creation")
 	if err != nil {
 		t.Fatalf("Failed to evaluate prompt: %v", err)
 	}
@@ -85,7 +85,7 @@ func TestPromptEvaluator(t *testing.T) {
 	if !strings.Contains(report, "Prompt Evaluation Report") {
 		t.Error("Report should contain title")
 	}
-	if !strings.Contains(report, "objective.creation") {
+	if !strings.Contains(report, "commission.creation") {
 		t.Error("Report should contain prompt ID")
 	}
 }
@@ -246,20 +246,20 @@ func TestEvaluationReport(t *testing.T) {
 	// Register and run a simple test
 	test := &PromptTest{
 		Name:     "Test",
-		PromptID: "objective.creation",
+		PromptID: "commission.creation",
 		TestData: map[string]interface{}{
 			"Description": "Test",
 		},
 		ExpectedOutput: &ContainsAssertion{Substring: "fail"},
 	}
 	evaluator.RegisterTest(test)
-	evaluator.EvaluatePrompt(context.Background(), "objective.creation")
+	evaluator.EvaluatePrompt(context.Background(), "commission.creation")
 
 	// Check report contains expected elements
 	report := evaluator.GenerateReport()
 	expectedElements := []string{
 		"Prompt Evaluation Report",
-		"objective.creation",
+		"commission.creation",
 		"Total Tests:",
 		"Success Rate:",
 		"Failures:",

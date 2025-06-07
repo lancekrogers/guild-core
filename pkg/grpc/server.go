@@ -454,10 +454,11 @@ func (s *Server) CancelCampaign(ctx context.Context, req *pb.CampaignActionReque
 	return campaignToProto(c), nil
 }
 
-// AddObjectiveToCampaign adds an objective to a campaign
-func (s *Server) AddObjectiveToCampaign(ctx context.Context, req *pb.AddObjectiveRequest) (*pb.Campaign, error) {
-	if err := s.campaignMgr.AddObjective(ctx, req.CampaignId, req.ObjectiveId); err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to add objective: %v", err)
+// AddCommissionToCampaign adds a commission to a campaign
+func (s *Server) AddCommissionToCampaign(ctx context.Context, req *pb.AddCommissionRequest) (*pb.Campaign, error) {
+	// Use the existing objective method since commissions and objectives refer to the same concept
+	if err := s.campaignMgr.AddObjective(ctx, req.CampaignId, req.CommissionId); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to add commission: %v", err)
 	}
 
 	c, err := s.campaignMgr.Get(ctx, req.CampaignId)
@@ -468,10 +469,11 @@ func (s *Server) AddObjectiveToCampaign(ctx context.Context, req *pb.AddObjectiv
 	return campaignToProto(c), nil
 }
 
-// RemoveObjectiveFromCampaign removes an objective from a campaign
-func (s *Server) RemoveObjectiveFromCampaign(ctx context.Context, req *pb.RemoveObjectiveRequest) (*pb.Campaign, error) {
-	if err := s.campaignMgr.RemoveObjective(ctx, req.CampaignId, req.ObjectiveId); err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to remove objective: %v", err)
+// RemoveCommissionFromCampaign removes a commission from a campaign
+func (s *Server) RemoveCommissionFromCampaign(ctx context.Context, req *pb.RemoveCommissionRequest) (*pb.Campaign, error) {
+	// Use the existing objective method since commissions and objectives refer to the same concept
+	if err := s.campaignMgr.RemoveObjective(ctx, req.CampaignId, req.CommissionId); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to remove commission: %v", err)
 	}
 
 	c, err := s.campaignMgr.Get(ctx, req.CampaignId)
@@ -763,18 +765,18 @@ func campaignToProto(c *campaign.Campaign) *pb.Campaign {
 	}
 
 	proto := &pb.Campaign{
-		Id:                  c.ID,
-		Name:                c.Name,
-		Description:         c.Description,
-		Status:              string(c.Status),
-		ObjectiveIds:        c.Objectives,
-		Tags:                c.Tags,
-		Progress:            c.Progress,
-		TotalObjectives:     int32(c.TotalObjectives),
-		CompletedObjectives: int32(c.CompletedObjectives),
-		CreatedAt:           c.CreatedAt.Unix(),
-		UpdatedAt:           c.UpdatedAt.Unix(),
-		Metadata:            metadata,
+		Id:                     c.ID,
+		Name:                   c.Name,
+		Description:            c.Description,
+		Status:                 string(c.Status),
+		CommissionIds:          c.Objectives, // Map Objectives to CommissionIds for backwards compatibility
+		Tags:                   c.Tags,
+		Progress:               c.Progress,
+		TotalCommissions:       int32(c.TotalObjectives), // Map TotalObjectives to TotalCommissions
+		CompletedCommissions:   int32(c.CompletedObjectives), // Map CompletedObjectives to CompletedCommissions
+		CreatedAt:              c.CreatedAt.Unix(),
+		UpdatedAt:              c.UpdatedAt.Unix(),
+		Metadata:               metadata,
 	}
 
 	if c.StartedAt != nil {

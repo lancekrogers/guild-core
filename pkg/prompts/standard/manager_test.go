@@ -23,11 +23,11 @@ func TestNewEnhancedPromptManager(t *testing.T) {
 
 	// Check for specific prompts we know should exist
 	expectedPrompts := []string{
-		"objective.creation",
-		"objective.ai_docs_gen",
-		"objective.refinement",
-		"objective.specs_gen",
-		"objective.suggestion",
+		"commission.creation",
+		"commission.ai_docs_gen",
+		"commission.refinement",
+		"commission.specs_gen",
+		"commission.suggestion",
 	}
 
 	for _, expected := range expectedPrompts {
@@ -52,29 +52,29 @@ func TestEnhancedPromptManager_RenderPrompt(t *testing.T) {
 	}{
 		{
 			name:       "render with valid data",
-			promptName: "objective.creation",
+			promptName: "commission.creation",
 			data: map[string]interface{}{
-				"Description": "Test description for objective",
+				"Description": "Test description for commission",
 			},
 			wantErr: false,
 			checkFunc: func(t *testing.T, result string) {
-				if !strings.Contains(result, "Test description for objective") {
+				if !strings.Contains(result, "Test description for commission") {
 					t.Error("Expected rendered content to contain the description")
 				}
-				if !strings.Contains(result, "System Prompt for Creating Guild Objectives") {
+				if !strings.Contains(result, "System Prompt for Creating Guild Commissions") {
 					t.Error("Expected rendered content to contain the prompt title")
 				}
 			},
 		},
 		{
 			name:       "render with missing required variable",
-			promptName: "objective.creation",
+			promptName: "commission.creation",
 			data:       map[string]interface{}{},
 			wantErr:    true,
 		},
 		{
 			name:       "render with optional variables",
-			promptName: "objective.creation",
+			promptName: "commission.creation",
 			data: map[string]interface{}{
 				"Description": "Test description",
 				"UserContext": "Additional context here",
@@ -126,14 +126,14 @@ func TestEnhancedPromptManager_GetMetadata(t *testing.T) {
 	}{
 		{
 			name:       "get metadata for existing prompt",
-			promptName: "objective.creation",
+			promptName: "commission.creation",
 			wantErr:    false,
 			checkFunc: func(t *testing.T, meta *PromptMetadata) {
-				if meta.ID != "objective-creation" {
-					t.Errorf("Expected ID 'objective-creation', got %s", meta.ID)
+				if meta.ID != "commission-creation" {
+					t.Errorf("Expected ID 'commission-creation', got %s", meta.ID)
 				}
-				if meta.Category != "objective" {
-					t.Errorf("Expected category 'objective', got %s", meta.Category)
+				if meta.Category != "commission" {
+					t.Errorf("Expected category 'commission', got %s", meta.Category)
 				}
 				if meta.Complexity < 1 || meta.Complexity > 10 {
 					t.Errorf("Expected complexity between 1-10, got %d", meta.Complexity)
@@ -175,7 +175,7 @@ func TestEnhancedPromptManager_ValidatePrompt(t *testing.T) {
 	}{
 		{
 			name:       "valid data",
-			promptName: "objective.creation",
+			promptName: "commission.creation",
 			data: map[string]interface{}{
 				"Description": "Test description",
 			},
@@ -183,7 +183,7 @@ func TestEnhancedPromptManager_ValidatePrompt(t *testing.T) {
 		},
 		{
 			name:       "missing required variable",
-			promptName: "objective.creation",
+			promptName: "commission.creation",
 			data:       map[string]interface{}{},
 			wantErr:    true,
 		},
@@ -211,14 +211,14 @@ func TestEnhancedPromptManager_GetPromptsByCategory(t *testing.T) {
 		t.Fatalf("Failed to create manager: %v", err)
 	}
 
-	objectivePrompts := manager.GetPromptsByCategory("objective")
-	if len(objectivePrompts) == 0 {
-		t.Error("Expected at least one objective prompt")
+	commissionPrompts := manager.GetPromptsByCategory("commission")
+	if len(commissionPrompts) == 0 {
+		t.Error("Expected at least one commission prompt")
 	}
 
-	for name, meta := range objectivePrompts {
-		if meta.Category != "objective" {
-			t.Errorf("Prompt %s has category %s, expected 'objective'", name, meta.Category)
+	for name, meta := range commissionPrompts {
+		if meta.Category != "commission" {
+			t.Errorf("Prompt %s has category %s, expected 'commission'", name, meta.Category)
 		}
 	}
 
@@ -268,13 +268,13 @@ func TestEnhancedPromptManager_IsModelCompatible(t *testing.T) {
 	}{
 		{
 			name:       "compatible model",
-			promptName: "objective.creation",
+			promptName: "commission.creation",
 			modelName:  "gpt-4",
 			want:       true,
 		},
 		{
 			name:       "another compatible model",
-			promptName: "objective.creation",
+			promptName: "commission.creation",
 			modelName:  "claude-3",
 			want:       true,
 		},
