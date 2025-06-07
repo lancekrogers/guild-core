@@ -67,18 +67,6 @@ go.work.sum
 *.bak
 *~
 
-# Refactoring scripts - Remove after completion
-final_build_fix.sh
-fix_gerror_calls.py
-migrate_to_gerror.sh
-parallel_build_errors/
-
-# Test project directories
-test-guild-init/
-test-project/
-test-sql-integration/
-guild-core/guild-core/
-guild-test/
 
 # IDE and OS artifacts
 .DS_Store

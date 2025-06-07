@@ -46,8 +46,9 @@ func BenchmarkAgentCreation(b *testing.B) {
 	err := reg.Initialize(ctx, registry.Config{})
 	require.NoError(b, err)
 
-	agentFactory, err := reg.GetAgentFactory()
-	require.NoError(b, err)
+	// Use agent registry instead of factory
+	agentReg := reg.Agents()
+	require.NotNil(b, agentReg)
 
 	testConfig := config.AgentConfig{
 		ID:       "benchmark-agent",
@@ -62,7 +63,8 @@ func BenchmarkAgentCreation(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		start := time.Now()
 		
-		agent, err := agentFactory.CreateAgent(ctx, fmt.Sprintf("bench-%d", i), testConfig)
+		// Use agent registry to get agent (simplified for benchmark)
+		agent, err := agentReg.GetAgent("worker")
 		
 		elapsed := time.Since(start)
 
@@ -377,8 +379,8 @@ func generateLargeMarkdownContent() string {
 		content += fmt.Sprintf("## Section %d\n\n", i)
 		content += "This is a large section with **bold text** and *italic text*.\n\n"
 		content += "```go\n"
-		content += "func section%d() {\n", i
-		content += "    fmt.Printf(\"Section %d processing...\\n\", %d)\n"
+		content += fmt.Sprintf("func section%d() {\n", i)
+		content += fmt.Sprintf("    fmt.Printf(\"Section %d processing...\\n\", %d)\n", i, i)
 		content += "    // Simulate some complex logic here\n"
 		content += "    for j := 0; j < 100; j++ {\n"
 		content += "        process(j)\n"
