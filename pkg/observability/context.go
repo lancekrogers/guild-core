@@ -90,7 +90,7 @@ func (rc *RequestContext) ToContext(ctx context.Context) context.Context {
 // FromContext extracts request context from a context
 func FromContext(ctx context.Context) *RequestContext {
 	rc := &RequestContext{}
-	
+
 	if v, ok := ctx.Value(RequestIDKey).(string); ok {
 		rc.RequestID = v
 	}
@@ -124,7 +124,7 @@ func FromContext(ctx context.Context) *RequestContext {
 	if v, ok := ctx.Value(OperationKey).(string); ok {
 		rc.Operation = v
 	}
-	
+
 	return rc
 }
 
@@ -236,12 +236,12 @@ func EnsureRequestContext(ctx context.Context) context.Context {
 	if GetRequestID(ctx) == "" {
 		ctx = WithRequestID(ctx, GenerateRequestID())
 	}
-	
+
 	// Check if we already have a trace ID
 	if GetTraceID(ctx) == "" {
 		ctx = WithTraceID(ctx, GenerateTraceID())
 	}
-	
+
 	return ctx
 }
 

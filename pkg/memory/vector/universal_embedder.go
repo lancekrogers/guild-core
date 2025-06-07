@@ -202,10 +202,10 @@ func (e *UniversalEmbedder) embedFromLLM(ctx context.Context, text string, metho
 	// 1. Access to model internals (hidden states)
 	// 2. Custom inference endpoints
 	// 3. Provider-specific implementations
-	
+
 	// For now, we'll use a workaround: ask the LLM to generate a semantic representation
 	// and then convert that to a vector. This is not ideal but provides a fallback.
-	
+
 	prompt := fmt.Sprintf(`Generate a semantic vector representation of the following text.
 Output only comma-separated numbers between -1 and 1, representing the text's meaning in 384 dimensions.
 Text: "%s"`, text)
@@ -241,9 +241,9 @@ Text: "%s"`, text)
 func (e *UniversalEmbedder) detectBestModel() string {
 	// Provider-specific logic to detect best model
 	// This is a simplified version - in practice, we'd query available models
-	
+
 	providerName := e.getProviderName()
-	
+
 	switch providerName {
 	case "ollama":
 		// Preferred Ollama embedding models
@@ -265,11 +265,11 @@ func (e *UniversalEmbedder) getProviderName() string {
 	// This is a hack - ideally providers would identify themselves
 	// For now, we'll check the type name
 	providerType := fmt.Sprintf("%T", e.provider)
-	
+
 	if strings.Contains(providerType, "ollama") {
 		return "ollama"
 	}
-	
+
 	return "unknown"
 }
 
@@ -347,29 +347,29 @@ func convertToFloat32(input []float64) []float32 {
 func parseVectorString(s string) ([]float32, error) {
 	parts := strings.Split(s, ",")
 	result := make([]float32, 0, len(parts))
-	
+
 	for _, part := range parts {
 		part = strings.TrimSpace(part)
 		if part == "" {
 			continue
 		}
-		
+
 		var f float64
 		if _, err := fmt.Sscanf(part, "%f", &f); err != nil {
 			return nil, gerror.Newf(gerror.ErrCodeInvalidInput, "failed to parse number: %s", part).
 				WithComponent("memory").
 				WithOperation("parseVectorString")
 		}
-		
+
 		result = append(result, float32(f))
 	}
-	
+
 	if len(result) == 0 {
 		return nil, gerror.New(gerror.ErrCodeInvalidInput, "no valid numbers found in vector string", nil).
 			WithComponent("memory").
 			WithOperation("parseVectorString")
 	}
-	
+
 	return result, nil
 }
 
@@ -391,18 +391,18 @@ func (n *NoOpEmbedder) Embed(ctx context.Context, text string) ([]float32, error
 	// Generate deterministic embedding based on text
 	// This allows tests to pass and provides consistent behavior
 	embedding := make([]float32, n.dimension)
-	
+
 	// Simple hash-based generation for deterministic results
 	hash := 0
 	for _, c := range text {
 		hash = hash*31 + int(c)
 	}
-	
+
 	// Fill embedding with values based on hash
 	for i := range embedding {
 		embedding[i] = float32((hash+i)%256) / 256.0
 	}
-	
+
 	return embedding, nil
 }
 

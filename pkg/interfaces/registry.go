@@ -9,10 +9,10 @@ import (
 type ComponentRegistry interface {
 	// Initialize sets up all registries with the provided configuration
 	Initialize(ctx context.Context, config interface{}) error
-	
+
 	// Shutdown cleanly shuts down all registries and their components
 	Shutdown(ctx context.Context) error
-	
+
 	// Additional methods will be added as needed
 }
 

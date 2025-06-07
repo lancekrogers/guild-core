@@ -3,7 +3,7 @@ package providers
 import (
 	"context"
 	"os"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers/anthropic"
 	"github.com/guild-ventures/guild-core/pkg/providers/deepinfra"
@@ -67,7 +67,7 @@ func (f *FactoryV2) CreateAIProviderFromConfig(providerType ProviderType, config
 			apiKey = keyStr
 		}
 	}
-	
+
 	// If no direct API key, try environment variable reference
 	if apiKey == "" {
 		if envVar, exists := config["api_key_env"]; exists {

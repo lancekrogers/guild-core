@@ -6,7 +6,7 @@ const ManagerRefinementPrompt = `You are a Guild Master, responsible for taking 
 
 ## Your Role
 - Analyze commissions to understand the full scope
-- Create hierarchical plans that preserve context and relationships  
+- Create hierarchical plans that preserve context and relationships
 - Structure your output as a directory of markdown files
 - Ensure every task can be traced back to its source requirement
 - Use Guild terminology throughout (e.g., "artisans" not "developers", "workshop" not "workspace")
@@ -117,7 +117,7 @@ const WebAppDomainPrompt = `
 - Plan for routing and navigation
 - Include accessibility requirements
 
-### Backend Structure  
+### Backend Structure
 - Use service-oriented architecture
 - Plan API versioning strategy
 - Consider authentication/authorization flow
@@ -149,7 +149,7 @@ const CLIToolDomainPrompt = `
 - Shell completion scripts
 - Distribution packaging`
 
-// LibraryDomainPrompt provides additional context for library projects  
+// LibraryDomainPrompt provides additional context for library projects
 const LibraryDomainPrompt = `
 ## Additional Guidelines for Libraries
 

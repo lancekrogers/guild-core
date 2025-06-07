@@ -169,4 +169,3 @@ Guild draws inspiration from:
 <div align="center">
   <i>Forging the future of AI agent collaboration, one artisan at a time</i>
 </div>
-

@@ -29,7 +29,7 @@ func NewOpenAICompatibleProvider(name, apiKey, baseURL string, modelMap map[stri
 	if !strings.HasSuffix(baseURL, "/") {
 		baseURL += "/"
 	}
-	
+
 	return &OpenAICompatibleProvider{
 		name:     name,
 		apiKey:   apiKey,

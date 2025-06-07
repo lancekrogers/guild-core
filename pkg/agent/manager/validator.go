@@ -213,7 +213,7 @@ func (v *DefaultValidator) validateContent(content, path string) error {
 // validateMarkdownContent performs basic markdown validation
 func (v *DefaultValidator) validateMarkdownContent(content string) error {
 	lines := strings.Split(content, "\n")
-	
+
 	hasTitle := false
 	for _, line := range lines {
 		// Check for at least one title

@@ -150,7 +150,7 @@ func TestAnthropicProvider(t *testing.T) {
 
 	t.Run("Capabilities", func(t *testing.T) {
 		caps := client.GetCapabilities()
-		
+
 		if caps.MaxTokens != 200000 {
 			t.Errorf("Wrong max tokens: %d", caps.MaxTokens)
 		}

@@ -109,7 +109,7 @@ const (
 
 	// EventObjectiveCompleted is emitted when an objective is completed
 	EventObjectiveCompleted = "objective.completed"
-	
+
 	// EventObjectiveStatusChanged is emitted when an objective status changes
 	EventObjectiveStatusChanged = "objective.status.changed"
 
@@ -128,4 +128,3 @@ const (
 	// EventOrchestratorError is emitted when the orchestrator encounters an error
 	EventOrchestratorError = "orchestrator.error"
 )
-

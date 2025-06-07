@@ -49,10 +49,10 @@ The providers have been updated with real API implementations, but comprehensive
    ```bash
    # Run all tests with mocks
    go test -short ./pkg/providers/...
-   
+
    # Run specific provider
    go test ./pkg/providers/openai
-   
+
    # Run with coverage
    go test -cover ./pkg/providers/...
    ```
@@ -69,7 +69,7 @@ The providers have been updated with real API implementations, but comprehensive
 func TestMyProvider(t *testing.T) {
     provider := mock.NewProvider()
     provider.SetResponse("test", "response")
-    
+
     // Test your logic
     result, err := provider.ChatCompletion(ctx, req)
 }
@@ -80,7 +80,7 @@ func TestMyProvider(t *testing.T) {
 func TestProviderHTTP(t *testing.T) {
     mock := testing.NewMockHTTPServer()
     defer mock.Close()
-    
+
     provider := NewProviderWithURL(mock.URL)
     // Test with realistic HTTP responses
 }
@@ -92,12 +92,12 @@ func TestLive(t *testing.T) {
     if testing.Short() {
         t.Skip("Skipping live test")
     }
-    
+
     apiKey := os.Getenv("PROVIDER_API_KEY")
     if apiKey == "" {
         t.Skip("No API key")
     }
-    
+
     provider := NewProvider(apiKey)
     // Minimal live API test
 }

@@ -27,7 +27,7 @@ func NewGuildLayeredManager(
 ) *GuildLayeredManager {
 	// Create layered registry
 	layeredReg := NewGuildLayeredRegistry(baseRegistry, store)
-	
+
 	// Create layered assembler
 	assembler := NewLayeredPromptAssembler(
 		baseManager,
@@ -36,7 +36,7 @@ func NewGuildLayeredManager(
 		ragRetriever,
 		tokenBudget,
 	)
-	
+
 	return &GuildLayeredManager{
 		baseManager: baseManager,
 		assembler:   assembler,
@@ -86,7 +86,7 @@ func (glm *GuildLayeredManager) GetPromptLayer(
 ) (*SystemPrompt, error) {
 	// Determine the appropriate identifier based on layer type
 	identifier := glm.getLayerIdentifier(layer, artisanID, sessionID)
-	
+
 	return glm.registry.GetLayeredPrompt(layer, identifier)
 }
 
@@ -100,10 +100,10 @@ func (glm *GuildLayeredManager) SetPromptLayer(ctx context.Context, prompt Syste
 			WithDetails("layer", string(prompt.Layer)).
 			WithDetails("artisan_id", prompt.ArtisanID)
 	}
-	
+
 	// Determine the appropriate identifier
 	identifier := glm.getLayerIdentifier(prompt.Layer, prompt.ArtisanID, prompt.SessionID)
-	
+
 	// Store the prompt
 	if err := glm.registry.RegisterLayeredPrompt(prompt.Layer, identifier, prompt); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to set prompt layer").
@@ -112,7 +112,7 @@ func (glm *GuildLayeredManager) SetPromptLayer(ctx context.Context, prompt Syste
 			WithDetails("layer", string(prompt.Layer)).
 			WithDetails("identifier", identifier)
 	}
-	
+
 	// Invalidate relevant caches
 	return glm.invalidateRelevantCaches(ctx, prompt.Layer, prompt.ArtisanID, prompt.SessionID)
 }
@@ -124,7 +124,7 @@ func (glm *GuildLayeredManager) DeletePromptLayer(
 	artisanID, sessionID string,
 ) error {
 	identifier := glm.getLayerIdentifier(layer, artisanID, sessionID)
-	
+
 	if err := glm.registry.DeleteLayeredPrompt(layer, identifier); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete prompt layer").
 			WithComponent("prompts").
@@ -132,7 +132,7 @@ func (glm *GuildLayeredManager) DeletePromptLayer(
 			WithDetails("layer", string(layer)).
 			WithDetails("identifier", identifier)
 	}
-	
+
 	// Invalidate relevant caches
 	return glm.invalidateRelevantCaches(ctx, layer, artisanID, sessionID)
 }
@@ -143,7 +143,7 @@ func (glm *GuildLayeredManager) ListPromptLayers(
 	artisanID, sessionID string,
 ) ([]SystemPrompt, error) {
 	var allPrompts []SystemPrompt
-	
+
 	// Define layer order for consistency
 	layers := []PromptLayer{
 		LayerPlatform,
@@ -153,19 +153,19 @@ func (glm *GuildLayeredManager) ListPromptLayers(
 		LayerSession,
 		LayerTurn,
 	}
-	
+
 	for _, layer := range layers {
 		identifier := glm.getLayerIdentifier(layer, artisanID, sessionID)
-		
+
 		prompt, err := glm.registry.GetLayeredPrompt(layer, identifier)
 		if err != nil {
 			// Layer may not exist - this is OK for optional layers
 			continue
 		}
-		
+
 		allPrompts = append(allPrompts, *prompt)
 	}
-	
+
 	return allPrompts, nil
 }
 
@@ -173,7 +173,7 @@ func (glm *GuildLayeredManager) ListPromptLayers(
 func (glm *GuildLayeredManager) InvalidateCache(ctx context.Context, artisanID, sessionID string) error {
 	// Clear in-memory cache in assembler
 	glm.assembler.clearCache(artisanID, sessionID)
-	
+
 	// Clear persistent cache
 	pattern := fmt.Sprintf("artisan:%s:session:%s", artisanID, sessionID)
 	return glm.store.InvalidatePromptCache(ctx, pattern)
@@ -209,14 +209,14 @@ func (glm *GuildLayeredManager) validatePrompt(prompt SystemPrompt) error {
 			WithComponent("prompts").
 			WithOperation("validatePrompt")
 	}
-	
+
 	if prompt.Content == "" {
 		return gerror.New(gerror.ErrCodeMissingRequired, "prompt content is required", nil).
 			WithComponent("prompts").
 			WithOperation("validatePrompt").
 			WithDetails("layer", string(prompt.Layer))
 	}
-	
+
 	// Validate layer-specific requirements
 	switch prompt.Layer {
 	case LayerSession:
@@ -236,7 +236,7 @@ func (glm *GuildLayeredManager) validatePrompt(prompt SystemPrompt) error {
 				WithDetails("session_id", prompt.SessionID)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -252,7 +252,7 @@ func (glm *GuildLayeredManager) invalidateRelevantCaches(
 			return err
 		}
 	}
-	
+
 	// For global layers, clear broader caches
 	switch layer {
 	case LayerPlatform, LayerGuild:
@@ -264,7 +264,7 @@ func (glm *GuildLayeredManager) invalidateRelevantCaches(
 		pattern := fmt.Sprintf("artisan:%s", role)
 		return glm.store.InvalidatePromptCache(ctx, pattern)
 	}
-	
+
 	return nil
 }
 
@@ -295,7 +295,7 @@ func extractDomain(artisanID string) string {
 func (lpa *LayeredPromptAssembler) clearCache(artisanID, sessionID string) {
 	lpa.mutex.Lock()
 	defer lpa.mutex.Unlock()
-	
+
 	// Find and remove all cache entries for this artisan/session
 	pattern := fmt.Sprintf("artisan:%s:session:%s", artisanID, sessionID)
 	for key := range lpa.cache {
@@ -340,31 +340,31 @@ func (glm *GuildLayeredManager) GetLayerStats(ctx context.Context, layer PromptL
 	if err != nil {
 		return nil, err
 	}
-	
+
 	stats := &LayerStats{
 		Layer:        layer,
 		PromptCount:  len(prompts),
 		LastUpdated:  time.Now(),
 	}
-	
+
 	// Calculate average tokens and find most recent update
 	totalTokens := 0
 	var mostRecent time.Time
-	
+
 	for _, prompt := range prompts {
 		tokens := len(prompt.Content) / 4 // Rough estimate
 		totalTokens += tokens
-		
+
 		if prompt.Updated.After(mostRecent) {
 			mostRecent = prompt.Updated
 		}
 	}
-	
+
 	if len(prompts) > 0 {
 		stats.AverageTokens = totalTokens / len(prompts)
 		stats.LastUpdated = mostRecent
 	}
-	
+
 	return stats, nil
 }
 

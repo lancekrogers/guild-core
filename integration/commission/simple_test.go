@@ -59,11 +59,11 @@ func TestCoreComponentInitialization(t *testing.T) {
 	// Test 6: Prompt registry
 	promptRegistry := prompts.NewMemoryRegistry()
 	require.NotNil(t, promptRegistry)
-	
+
 	// Register a test prompt
 	err = promptRegistry.RegisterPrompt("test", "default", "This is a test prompt")
 	require.NoError(t, err)
-	
+
 	// Retrieve the prompt
 	prompt, err := promptRegistry.GetPrompt("test", "default")
 	require.NoError(t, err)
@@ -90,7 +90,7 @@ func TestKanbanWorkflow(t *testing.T) {
 	))
 	require.NoError(t, err)
 	defer store.Close()
-	
+
 	kanbanManager, err := kanban.NewManager(store)
 	require.NoError(t, err)
 
@@ -135,7 +135,7 @@ func TestKanbanWorkflow(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, kanban.StatusInProgress, task1.Status)
 
-	// List tasks by status  
+	// List tasks by status
 	backlogTasks, err := kanbanManager.ListTasksByStatus(ctx, kanban.StatusBacklog)
 	require.NoError(t, err)
 	assert.Len(t, backlogTasks, 2) // Tasks 2 and 3 (still in backlog)
@@ -202,14 +202,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Verify all files were parsed
 	assert.Len(t, structure.Files, 4)
-	
+
 	// Check file paths
 	expectedPaths := []string{"README.md", "docs/architecture.md", "src/models/user.go", "src/handlers/auth.go"}
 	actualPaths := []string{}
 	for _, file := range structure.Files {
 		actualPaths = append(actualPaths, file.Path)
 	}
-	
+
 	// Sort for comparison
 	assert.ElementsMatch(t, expectedPaths, actualPaths)
 

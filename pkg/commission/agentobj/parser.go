@@ -28,12 +28,12 @@ func (p *AgentParser) Parse(content string) (*commission.Commission, error) {
 func (p *AgentParser) ExtractSections(content string) (map[string]string, error) {
 	// This is a placeholder implementation
 	sections := make(map[string]string)
-	
+
 	// For now, just identify blocks by headers
 	lines := strings.Split(content, "\n")
 	currentSection := ""
 	sectionContent := &strings.Builder{}
-	
+
 	for _, line := range lines {
 		if strings.HasPrefix(line, "# ") {
 			// If we were processing a section, save it
@@ -41,7 +41,7 @@ func (p *AgentParser) ExtractSections(content string) (map[string]string, error)
 				sections[currentSection] = strings.TrimSpace(sectionContent.String())
 				sectionContent.Reset()
 			}
-			
+
 			// Start a new section
 			currentSection = strings.TrimSpace(strings.TrimPrefix(line, "# "))
 		} else if currentSection != "" {
@@ -49,11 +49,11 @@ func (p *AgentParser) ExtractSections(content string) (map[string]string, error)
 			sectionContent.WriteString(line + "\n")
 		}
 	}
-	
+
 	// Save the last section if any
 	if currentSection != "" {
 		sections[currentSection] = strings.TrimSpace(sectionContent.String())
 	}
-	
+
 	return sections, nil
 }

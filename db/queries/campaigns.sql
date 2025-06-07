@@ -9,7 +9,7 @@ SELECT * FROM campaigns WHERE id = ?;
 SELECT * FROM campaigns ORDER BY created_at DESC;
 
 -- name: UpdateCampaignStatus :exec
-UPDATE campaigns 
+UPDATE campaigns
 SET status = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?;
 

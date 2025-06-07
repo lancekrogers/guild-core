@@ -149,7 +149,7 @@ func TestKanbanAdapterConversions(t *testing.T) {
 	}
 
 	// Create dependencies first: Campaign -> Commission -> Board
-	
+
 	// Test campaign adapter
 	campaignAdapter := storage.NewKanbanCampaignRepositoryAdapter(storageReg.GetCampaignRepository())
 

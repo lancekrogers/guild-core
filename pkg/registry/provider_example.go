@@ -13,10 +13,10 @@ func ProviderExample() error {
 	// Set up environment variables (in real usage, these would be set externally)
 	os.Setenv("OPENAI_API_KEY", "your-openai-api-key")
 	os.Setenv("ANTHROPIC_API_KEY", "your-anthropic-api-key")
-	
+
 	// Create registry with provider configuration
 	registry := NewComponentRegistry()
-	
+
 	// Load configuration (you could also load from YAML file)
 	config := &Config{
 		Providers: ProviderConfig{
@@ -77,7 +77,7 @@ func ProviderExample() error {
 	}
 
 	log.Printf("Using default provider")
-	
+
 	// Generate a completion
 	response, err := defaultProvider.Complete(ctx, "Explain what a registry pattern is in software architecture.")
 	if err != nil {
@@ -137,7 +137,7 @@ providers:
       model: "gpt-4"
       api_key_env: "OPENAI_API_KEY"
     anthropic:
-      model: "claude-3-sonnet-20240229" 
+      model: "claude-3-sonnet-20240229"
       api_key_env: "ANTHROPIC_API_KEY"
     ollama:
       model: "llama2"
@@ -179,14 +179,14 @@ memory:
 	// Create and initialize registry
 	registry := NewComponentRegistry()
 	ctx := context.Background()
-	
+
 	if err := registry.Initialize(ctx, *config); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("provider_example").WithOperation("failed to initialize registry")
 	}
 
 	// Use the providers
 	providerRegistry := registry.Providers()
-	
+
 	// Get and use default provider
 	provider, err := providerRegistry.GetDefaultProvider()
 	if err != nil {
@@ -243,7 +243,7 @@ func CreateProviderOnlyRegistry() (*DefaultComponentRegistry, error) {
 
 	registry := NewComponentRegistry().(*DefaultComponentRegistry)
 	ctx := context.Background()
-	
+
 	if err := registry.Initialize(ctx, *config); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "registry").WithComponent("create_provider_only_registry").WithOperation("failed to initialize registry")
 	}

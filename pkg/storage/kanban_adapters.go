@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"time"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
@@ -25,7 +25,7 @@ func (a *KanbanTaskRepositoryAdapter) CreateTask(ctx context.Context, task inter
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert task").WithComponent("KanbanTaskRepositoryAdapter").WithOperation("CreateTask")
 	}
-	
+
 	return a.repo.CreateTask(ctx, storageTask)
 }
 
@@ -40,13 +40,13 @@ func (a *KanbanTaskRepositoryAdapter) ListTasksByBoard(ctx context.Context, boar
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Convert to []interface{}
 	result := make([]interface{}, len(tasks))
 	for i, task := range tasks {
 		result[i] = task
 	}
-	
+
 	return result, nil
 }
 
@@ -57,7 +57,7 @@ func (a *KanbanTaskRepositoryAdapter) UpdateTask(ctx context.Context, task inter
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert task").WithComponent("KanbanTaskRepositoryAdapter").WithOperation("UpdateTask")
 	}
-	
+
 	return a.repo.UpdateTask(ctx, storageTask)
 }
 
@@ -68,7 +68,7 @@ func (a *KanbanTaskRepositoryAdapter) RecordTaskEvent(ctx context.Context, event
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert task event").WithComponent("KanbanTaskRepositoryAdapter").WithOperation("RecordTaskEvent")
 	}
-	
+
 	return a.repo.RecordTaskEvent(ctx, storageEvent)
 }
 
@@ -89,50 +89,50 @@ func (a *KanbanTaskRepositoryAdapter) convertToTask(task interface{}) (*Task, er
 // convertMapToTask converts map[string]interface{} to storage.Task
 func (a *KanbanTaskRepositoryAdapter) convertMapToTask(taskMap map[string]interface{}) (*Task, error) {
 	task := &Task{}
-	
+
 	// Required fields
 	if id, ok := taskMap["ID"].(string); ok {
 		task.ID = id
 	} else {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "task ID is required", nil).WithComponent("KanbanTaskRepositoryAdapter").WithOperation("convertMapToTask")
 	}
-	
+
 	if title, ok := taskMap["Title"].(string); ok {
 		task.Title = title
 	} else {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "task Title is required", nil).WithComponent("KanbanTaskRepositoryAdapter").WithOperation("convertMapToTask")
 	}
-	
+
 	if status, ok := taskMap["Status"].(string); ok {
 		task.Status = a.mapKanbanStatusToStorageStatus(status)
 	} else {
 		task.Status = "todo" // Default status
 	}
-	
+
 	// Required commission ID field
 	if commissionID, ok := taskMap["CommissionID"].(string); ok && commissionID != "" {
 		task.CommissionID = commissionID
 	} else {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "task CommissionID is required", nil).WithComponent("KanbanTaskRepositoryAdapter").WithOperation("convertMapToTask").WithDetails("commissionID", taskMap["CommissionID"])
 	}
-	
+
 	// Optional fields with proper type handling
 	if boardID, ok := taskMap["BoardID"].(string); ok && boardID != "" {
 		task.BoardID = &boardID
 	}
-	
+
 	if description, ok := taskMap["Description"].(*string); ok {
 		task.Description = description
 	} else if desc, ok := taskMap["Description"].(string); ok {
 		task.Description = &desc
 	}
-	
+
 	if assignedAgent, ok := taskMap["AssignedAgentID"].(*string); ok {
 		task.AssignedAgentID = assignedAgent
 	} else if agent, ok := taskMap["AssignedAgentID"].(string); ok && agent != "" {
 		task.AssignedAgentID = &agent
 	}
-	
+
 	// Story points with type conversion
 	if points, ok := taskMap["StoryPoints"].(int32); ok {
 		task.StoryPoints = points
@@ -141,22 +141,22 @@ func (a *KanbanTaskRepositoryAdapter) convertMapToTask(taskMap map[string]interf
 	} else {
 		task.StoryPoints = 1 // Default
 	}
-	
+
 	// Metadata
 	if metadata, ok := taskMap["Metadata"].(map[string]interface{}); ok {
 		task.Metadata = metadata
 	}
-	
+
 	// Timestamps - these should be handled by the database defaults
 	// but include them if provided
 	if createdAt, ok := taskMap["CreatedAt"].(time.Time); ok {
 		task.CreatedAt = createdAt
 	}
-	
+
 	if updatedAt, ok := taskMap["UpdatedAt"].(time.Time); ok {
 		task.UpdatedAt = updatedAt
 	}
-	
+
 	return task, nil
 }
 
@@ -204,7 +204,7 @@ func (a *KanbanBoardRepositoryAdapter) CreateBoard(ctx context.Context, board in
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert board").WithComponent("KanbanBoardRepositoryAdapter").WithOperation("CreateBoard")
 	}
-	
+
 	return a.repo.CreateBoard(ctx, storageBoard)
 }
 
@@ -219,7 +219,7 @@ func (a *KanbanBoardRepositoryAdapter) UpdateBoard(ctx context.Context, board in
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert board").WithComponent("KanbanBoardRepositoryAdapter").WithOperation("UpdateBoard")
 	}
-	
+
 	return a.repo.UpdateBoard(ctx, storageBoard)
 }
 
@@ -234,13 +234,13 @@ func (a *KanbanBoardRepositoryAdapter) ListBoards(ctx context.Context) ([]interf
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Convert to []interface{}
 	result := make([]interface{}, len(boards))
 	for i, board := range boards {
 		result[i] = board
 	}
-	
+
 	return result, nil
 }
 
@@ -259,48 +259,48 @@ func (a *KanbanBoardRepositoryAdapter) convertToBoard(board interface{}) (*Board
 // convertMapToBoard converts map[string]interface{} to storage.Board
 func (a *KanbanBoardRepositoryAdapter) convertMapToBoard(boardMap map[string]interface{}) (*Board, error) {
 	board := &Board{}
-	
+
 	// Required fields
 	if id, ok := boardMap["ID"].(string); ok {
 		board.ID = id
 	} else {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "board ID is required", nil).WithComponent("KanbanBoardRepositoryAdapter").WithOperation("convertMapToBoard")
 	}
-	
+
 	if name, ok := boardMap["Name"].(string); ok {
 		board.Name = name
 	} else {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "board Name is required", nil).WithComponent("KanbanBoardRepositoryAdapter").WithOperation("convertMapToBoard")
 	}
-	
+
 	if commissionID, ok := boardMap["CommissionID"].(string); ok {
 		board.CommissionID = commissionID
 	} else {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "board CommissionID is required", nil).WithComponent("KanbanBoardRepositoryAdapter").WithOperation("convertMapToBoard")
 	}
-	
+
 	// Optional fields
 	if description, ok := boardMap["Description"].(*string); ok {
 		board.Description = description
 	} else if desc, ok := boardMap["Description"].(string); ok {
 		board.Description = &desc
 	}
-	
+
 	if status, ok := boardMap["Status"].(string); ok {
 		board.Status = status
 	} else {
 		board.Status = "active" // Default status
 	}
-	
+
 	// Timestamps
 	if createdAt, ok := boardMap["CreatedAt"].(time.Time); ok {
 		board.CreatedAt = createdAt
 	}
-	
+
 	if updatedAt, ok := boardMap["UpdatedAt"].(time.Time); ok {
 		board.UpdatedAt = updatedAt
 	}
-	
+
 	return board, nil
 }
 
@@ -320,7 +320,7 @@ func (a *KanbanCampaignRepositoryAdapter) CreateCampaign(ctx context.Context, ca
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert campaign").WithComponent("KanbanCampaignRepositoryAdapter").WithOperation("CreateCampaign")
 	}
-	
+
 	return a.repo.CreateCampaign(ctx, storageCampaign)
 }
 
@@ -339,36 +339,36 @@ func (a *KanbanCampaignRepositoryAdapter) convertToCampaign(campaign interface{}
 // convertMapToCampaign converts map[string]interface{} to storage.Campaign
 func (a *KanbanCampaignRepositoryAdapter) convertMapToCampaign(campaignMap map[string]interface{}) (*Campaign, error) {
 	campaign := &Campaign{}
-	
+
 	// Required fields
 	if id, ok := campaignMap["ID"].(string); ok {
 		campaign.ID = id
 	} else {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "campaign ID is required", nil).WithComponent("KanbanCampaignRepositoryAdapter").WithOperation("convertMapToCampaign")
 	}
-	
+
 	if name, ok := campaignMap["Name"].(string); ok {
 		campaign.Name = name
 	} else {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "campaign Name is required", nil).WithComponent("KanbanCampaignRepositoryAdapter").WithOperation("convertMapToCampaign")
 	}
-	
+
 	// Optional fields
 	if status, ok := campaignMap["Status"].(string); ok {
 		campaign.Status = status
 	} else {
 		campaign.Status = "active" // Default status
 	}
-	
+
 	// Timestamps
 	if createdAt, ok := campaignMap["CreatedAt"].(time.Time); ok {
 		campaign.CreatedAt = createdAt
 	}
-	
+
 	if updatedAt, ok := campaignMap["UpdatedAt"].(time.Time); ok {
 		campaign.UpdatedAt = updatedAt
 	}
-	
+
 	return campaign, nil
 }
 
@@ -388,7 +388,7 @@ func (a *KanbanCommissionRepositoryAdapter) CreateCommission(ctx context.Context
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to convert commission").WithComponent("KanbanCommissionRepositoryAdapter").WithOperation("CreateCommission")
 	}
-	
+
 	return a.repo.CreateCommission(ctx, storageCommission)
 }
 
@@ -412,53 +412,53 @@ func (a *KanbanCommissionRepositoryAdapter) convertToCommission(commission inter
 // convertMapToCommission converts map[string]interface{} to storage.Commission
 func (a *KanbanCommissionRepositoryAdapter) convertMapToCommission(commissionMap map[string]interface{}) (*Commission, error) {
 	commission := &Commission{}
-	
+
 	// Required fields
 	if id, ok := commissionMap["ID"].(string); ok {
 		commission.ID = id
 	} else {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "commission ID is required", nil).WithComponent("KanbanCommissionRepositoryAdapter").WithOperation("convertMapToCommission")
 	}
-	
+
 	if campaignID, ok := commissionMap["CampaignID"].(string); ok {
 		commission.CampaignID = campaignID
 	} else {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "commission CampaignID is required", nil).WithComponent("KanbanCommissionRepositoryAdapter").WithOperation("convertMapToCommission")
 	}
-	
+
 	if title, ok := commissionMap["Title"].(string); ok {
 		commission.Title = title
 	} else {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "commission Title is required", nil).WithComponent("KanbanCommissionRepositoryAdapter").WithOperation("convertMapToCommission")
 	}
-	
+
 	// Optional fields
 	if description, ok := commissionMap["Description"].(*string); ok {
 		commission.Description = description
 	} else if desc, ok := commissionMap["Description"].(string); ok {
 		commission.Description = &desc
 	}
-	
+
 	if domain, ok := commissionMap["Domain"].(*string); ok {
 		commission.Domain = domain
 	} else if dom, ok := commissionMap["Domain"].(string); ok {
 		commission.Domain = &dom
 	}
-	
+
 	if context, ok := commissionMap["Context"].(map[string]interface{}); ok {
 		commission.Context = context
 	}
-	
+
 	if status, ok := commissionMap["Status"].(string); ok {
 		commission.Status = status
 	} else {
 		commission.Status = "active" // Default status
 	}
-	
+
 	// Timestamps
 	if createdAt, ok := commissionMap["CreatedAt"].(time.Time); ok {
 		commission.CreatedAt = createdAt
 	}
-	
+
 	return commission, nil
 }

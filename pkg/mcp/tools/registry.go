@@ -14,28 +14,28 @@ import (
 type Tool interface {
 	// ID returns the unique tool identifier
 	ID() string
-	
+
 	// Name returns the human-readable tool name
 	Name() string
-	
+
 	// Description returns the tool description
 	Description() string
-	
+
 	// Capabilities returns the tool's capabilities
 	Capabilities() []string
-	
+
 	// Execute executes the tool with given parameters
 	Execute(ctx context.Context, params map[string]interface{}) (interface{}, error)
-	
+
 	// HealthCheck checks if the tool is healthy
 	HealthCheck() error
-	
+
 	// GetCostProfile returns the tool's cost profile
 	GetCostProfile() protocol.CostProfile
-	
+
 	// GetParameters returns the tool's parameter definitions
 	GetParameters() []protocol.ToolParameter
-	
+
 	// GetReturns returns the tool's return value definitions
 	GetReturns() []protocol.ToolParameter
 }
@@ -44,19 +44,19 @@ type Tool interface {
 type Registry interface {
 	// RegisterTool registers a tool
 	RegisterTool(tool Tool) error
-	
+
 	// DeregisterTool removes a tool
 	DeregisterTool(toolID string) error
-	
+
 	// GetTool retrieves a tool by ID
 	GetTool(toolID string) (Tool, error)
-	
+
 	// DiscoverTools finds tools matching criteria
 	DiscoverTools(criteria protocol.ToolQuery) ([]Tool, error)
-	
+
 	// ListTools returns all registered tools
 	ListTools() []Tool
-	
+
 	// UpdateToolStatus updates a tool's availability
 	UpdateToolStatus(toolID string, available bool) error
 }
@@ -85,24 +85,24 @@ func (r *MemoryRegistry) RegisterTool(tool Tool) error {
 	if tool == nil {
 		return fmt.Errorf("tool cannot be nil")
 	}
-	
+
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	toolID := tool.ID()
 	if _, exists := r.tools[toolID]; exists {
 		return fmt.Errorf("tool %s already registered", toolID)
 	}
-	
+
 	// Register the tool
 	r.tools[toolID] = tool
 	r.status[toolID] = true // Available by default
-	
+
 	// Update capability index
 	for _, cap := range tool.Capabilities() {
 		r.indexCaps[cap] = append(r.indexCaps[cap], toolID)
 	}
-	
+
 	return nil
 }
 
@@ -110,16 +110,16 @@ func (r *MemoryRegistry) RegisterTool(tool Tool) error {
 func (r *MemoryRegistry) DeregisterTool(toolID string) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	tool, exists := r.tools[toolID]
 	if !exists {
 		return fmt.Errorf("tool %s not found", toolID)
 	}
-	
+
 	// Remove from tools map
 	delete(r.tools, toolID)
 	delete(r.status, toolID)
-	
+
 	// Update capability index
 	for _, cap := range tool.Capabilities() {
 		if capTools, exists := r.indexCaps[cap]; exists {
@@ -129,7 +129,7 @@ func (r *MemoryRegistry) DeregisterTool(toolID string) error {
 			}
 		}
 	}
-	
+
 	return nil
 }
 
@@ -137,12 +137,12 @@ func (r *MemoryRegistry) DeregisterTool(toolID string) error {
 func (r *MemoryRegistry) GetTool(toolID string) (Tool, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	tool, exists := r.tools[toolID]
 	if !exists {
 		return nil, fmt.Errorf("tool %s not found", toolID)
 	}
-	
+
 	return tool, nil
 }
 
@@ -150,10 +150,10 @@ func (r *MemoryRegistry) GetTool(toolID string) (Tool, error) {
 func (r *MemoryRegistry) DiscoverTools(criteria protocol.ToolQuery) ([]Tool, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	// Start with all tools
 	candidates := make(map[string]Tool)
-	
+
 	// Filter by required capabilities
 	if len(criteria.RequiredCapabilities) > 0 {
 		// Find tools that have ALL required capabilities
@@ -177,7 +177,7 @@ func (r *MemoryRegistry) DiscoverTools(criteria protocol.ToolQuery) ([]Tool, err
 				candidates = newCandidates
 			}
 		}
-		
+
 		// If no tools have all capabilities, return empty
 		if len(candidates) == 0 {
 			return []Tool{}, nil
@@ -188,7 +188,7 @@ func (r *MemoryRegistry) DiscoverTools(criteria protocol.ToolQuery) ([]Tool, err
 			candidates[id] = tool
 		}
 	}
-	
+
 	// Apply additional filters
 	var result []Tool
 	for id, tool := range candidates {
@@ -196,7 +196,7 @@ func (r *MemoryRegistry) DiscoverTools(criteria protocol.ToolQuery) ([]Tool, err
 		if available, exists := r.status[id]; exists && !available {
 			continue
 		}
-		
+
 		// Check cost constraints
 		profile := tool.GetCostProfile()
 		if criteria.MaxCost > 0 && profile.FinancialCost > criteria.MaxCost {
@@ -205,11 +205,11 @@ func (r *MemoryRegistry) DiscoverTools(criteria protocol.ToolQuery) ([]Tool, err
 		if criteria.MaxLatency > 0 && profile.LatencyCost > criteria.MaxLatency {
 			continue
 		}
-		
+
 		// Tool passed all filters
 		result = append(result, tool)
 	}
-	
+
 	return result, nil
 }
 
@@ -217,12 +217,12 @@ func (r *MemoryRegistry) DiscoverTools(criteria protocol.ToolQuery) ([]Tool, err
 func (r *MemoryRegistry) ListTools() []Tool {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	tools := make([]Tool, 0, len(r.tools))
 	for _, tool := range r.tools {
 		tools = append(tools, tool)
 	}
-	
+
 	return tools
 }
 
@@ -230,11 +230,11 @@ func (r *MemoryRegistry) ListTools() []Tool {
 func (r *MemoryRegistry) UpdateToolStatus(toolID string, available bool) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	if _, exists := r.tools[toolID]; !exists {
 		return fmt.Errorf("tool %s not found", toolID)
 	}
-	
+
 	r.status[toolID] = available
 	return nil
 }
@@ -307,7 +307,7 @@ func (t *BaseTool) Execute(ctx context.Context, params map[string]interface{}) (
 	if t.executor == nil {
 		return nil, fmt.Errorf("tool %s has no executor", t.id)
 	}
-	
+
 	// Validate required parameters
 	for _, param := range t.parameters {
 		if param.Required {
@@ -316,7 +316,7 @@ func (t *BaseTool) Execute(ctx context.Context, params map[string]interface{}) (
 			}
 		}
 	}
-	
+
 	return t.executor(ctx, params)
 }
 
@@ -325,11 +325,11 @@ func (t *BaseTool) HealthCheck() error {
 	// Basic implementation - can be overridden
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	
+
 	_, err := t.Execute(ctx, map[string]interface{}{
 		"_health_check": true,
 	})
-	
+
 	return err
 }
 

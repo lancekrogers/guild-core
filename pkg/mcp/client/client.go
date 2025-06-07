@@ -174,7 +174,7 @@ func (c *Client) RegisterTool(ctx context.Context, tool *protocol.ToolDefinition
 // DeregisterTool removes a tool from the server
 func (c *Client) DeregisterTool(ctx context.Context, toolID string) error {
 	req := map[string]string{"tool_id": toolID}
-	
+
 	_, err := c.sendRequest(ctx, "tool.deregister", req)
 	return err
 }
@@ -216,7 +216,7 @@ func (c *Client) ExecuteTool(ctx context.Context, req *protocol.ToolExecutionReq
 // CheckToolHealth checks if a tool is healthy
 func (c *Client) CheckToolHealth(ctx context.Context, toolID string) (bool, error) {
 	req := map[string]string{"tool_id": toolID}
-	
+
 	response, err := c.sendRequest(ctx, "tool.health", req)
 	if err != nil {
 		return false, err
@@ -331,7 +331,7 @@ func (c *Client) GetSystemInfo(ctx context.Context) (map[string]interface{}, err
 func (c *Client) OnEvent(eventType string, handler EventHandler) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	c.eventHandlers[eventType] = handler
 }
 
@@ -361,17 +361,17 @@ func (c *Client) sendRequest(ctx context.Context, method string, payload interfa
 	metadata := protocol.Metadata{
 		CustomFields: make(map[string]string),
 	}
-	
+
 	// Add auth token if configured
 	if c.config.AuthToken != "" {
 		metadata.CustomFields["authorization"] = c.config.AuthToken
 	}
-	
+
 	// Add tracing if enabled
 	if c.config.EnableTracing {
 		metadata.TraceID = fmt.Sprintf("trace-%d", time.Now().UnixNano())
 	}
-	
+
 	msg := &protocol.MCPMessage{
 		ID:          requestID,
 		Version:     "1.0",
@@ -384,7 +384,7 @@ func (c *Client) sendRequest(ctx context.Context, method string, payload interfa
 
 	// Create response channel
 	responseCh := make(chan *protocol.MCPMessage, 1)
-	
+
 	c.mu.Lock()
 	c.pendingReqs[requestID] = responseCh
 	c.mu.Unlock()
@@ -428,7 +428,7 @@ func (c *Client) sendRequest(ctx context.Context, method string, payload interfa
 				WithComponent("MCPClient").
 				WithOperation("sendRequest")
 		}
-		
+
 		// Check for error response
 		if response.MessageType == protocol.ErrorMessage {
 			var errorResp protocol.ErrorResponse
@@ -439,7 +439,7 @@ func (c *Client) sendRequest(ctx context.Context, method string, payload interfa
 			}
 			return nil, errorResp.Error
 		}
-		
+
 		return response, nil
 	case <-time.After(timeout):
 		return nil, gerror.Newf(gerror.ErrCodeTimeout, "request timeout after %v", timeout).
@@ -461,7 +461,7 @@ func (c *Client) processMessages(ctx context.Context) {
 				// Connection closed
 				return
 			}
-			
+
 			go c.handleMessage(ctx, msgBytes)
 		}
 	}

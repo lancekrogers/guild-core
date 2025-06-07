@@ -7,7 +7,7 @@ The Guild Framework features a sophisticated **layered prompt system** that allo
 The layered prompt system consists of **six hierarchical layers**, each serving a specific purpose:
 
 1. **Platform** (`platform`) - Core Guild platform rules and safety guidelines (global)
-2. **Guild** (`guild`) - Project-wide goals and style guidelines 
+2. **Guild** (`guild`) - Project-wide goals and style guidelines
 3. **Role** (`role`) - Artisan role definitions (backend, frontend, etc.)
 4. **Domain** (`domain`) - Project type specializations (web-app, cli-tool, etc.)
 5. **Session** (`session`) - User preferences and session-specific context
@@ -132,7 +132,7 @@ func main() {
         Content:   "User prefers concise, technical explanations",
         Version:   1,
     }
-    
+
     err = manager.SetPromptLayer(ctx, sessionPrompt)
     if err != nil {
         panic(err)
@@ -152,7 +152,7 @@ func main() {
         "user_session_123",
         turnContext,
     )
-    
+
     if err != nil {
         panic(err)
     }
@@ -209,7 +209,7 @@ func main() {
 Layers are assembled in **priority order** (lowest to highest):
 
 1. **Platform** (Priority 0) - Global Guild rules
-2. **Guild** (Priority 1) - Project-specific guidelines  
+2. **Guild** (Priority 1) - Project-specific guidelines
 3. **Role** (Priority 2) - Artisan role definitions
 4. **Domain** (Priority 3) - Domain specializations
 5. **Session** (Priority 4) - User preferences

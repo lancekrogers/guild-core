@@ -17,12 +17,12 @@ import (
 
 func TestPerformCorpusScan(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Create a temporary test directory
 	tempDir := t.TempDir()
 	corpusPath := filepath.Join(tempDir, "corpus")
 	require.NoError(t, os.MkdirAll(corpusPath, 0755))
-	
+
 	// Create corpus config
 	cfg := corpus.Config{
 		CorpusPath:      corpusPath,
@@ -30,7 +30,7 @@ func TestPerformCorpusScan(t *testing.T) {
 		MaxSizeBytes:    100 * 1024 * 1024, // 100MB
 		DefaultCategory: "test",
 	}
-	
+
 	// Create test documents
 	doc1 := &corpus.CorpusDoc{
 		Title:     "Test Document 1",
@@ -40,7 +40,7 @@ func TestPerformCorpusScan(t *testing.T) {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	
+
 	doc2 := &corpus.CorpusDoc{
 		Title:     "Test Document 2",
 		Body:      "Another test document with different content.",
@@ -49,11 +49,11 @@ func TestPerformCorpusScan(t *testing.T) {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	
+
 	// Save documents to corpus
 	require.NoError(t, corpus.Save(ctx, doc1, cfg))
 	require.NoError(t, corpus.Save(ctx, doc2, cfg))
-	
+
 	tests := []struct {
 		name         string
 		dryRun       bool
@@ -85,7 +85,7 @@ func TestPerformCorpusScan(t *testing.T) {
 			expectDel: 0,
 		},
 	}
-	
+
 	// Run initial scan first to create metadata
 	initialProvider := mock.NewProvider()
 	initialVectorConfig := &vector.StoreConfig{
@@ -103,16 +103,16 @@ func TestPerformCorpusScan(t *testing.T) {
 		ChunkOverlap: 20,
 		MaxResults:   5,
 	})
-	
+
 	// Perform initial scan to create metadata
 	_ = performCorpusScan(ctx, cfg, initialRetriever, false, false, false)
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Create a unique temp dir for each test to ensure clean state
 			testTempDir := filepath.Join(tempDir, tt.name)
 			require.NoError(t, os.MkdirAll(testTempDir, 0755))
-			
+
 			// Create mock RAG system
 			mockProvider := mock.NewProvider()
 			vectorConfig := &vector.StoreConfig{
@@ -123,21 +123,21 @@ func TestPerformCorpusScan(t *testing.T) {
 					DefaultCollection: "test",
 				},
 			}
-			
+
 			vectorStore, err := vector.NewVectorStore(ctx, vectorConfig)
 			require.NoError(t, err)
-			
+
 			ragConfig := rag.Config{
 				ChunkSize:    100,
 				ChunkOverlap: 20,
 				MaxResults:   5,
 			}
-			
+
 			retriever := rag.NewRetrieverWithStore(vectorStore, ragConfig)
-			
+
 			// Perform scan
 			result := performCorpusScan(ctx, cfg, retriever, tt.dryRun, false, tt.forceRebuild)
-			
+
 			// Check results
 			assert.Len(t, result.NewFiles, tt.expectNew, "NewFiles count mismatch")
 			assert.Len(t, result.ModifiedFiles, tt.expectMod, "ModifiedFiles count mismatch")
@@ -156,31 +156,31 @@ func TestGetEmbeddingsMetadata(t *testing.T) {
 	corpusPath := filepath.Join(tempDir, "corpus")
 	embeddingsPath := filepath.Join(tempDir, "embeddings")
 	require.NoError(t, os.MkdirAll(embeddingsPath, 0755))
-	
+
 	cfg := corpus.Config{
 		CorpusPath: corpusPath,
 	}
-	
+
 	// Test empty metadata (file doesn't exist)
 	metadata := getEmbeddingsMetadata(cfg)
 	assert.Empty(t, metadata)
-	
+
 	// Create metadata file
 	metadataPath := filepath.Join(embeddingsPath, ".metadata.json")
 	testTime := time.Now().UTC()
 	content := "/path/to/doc1.md\t" + testTime.Format(time.RFC3339) + "\n" +
 		"/path/to/doc2.md\t" + testTime.Add(-time.Hour).Format(time.RFC3339)
-	
+
 	require.NoError(t, os.WriteFile(metadataPath, []byte(content), 0644))
-	
+
 	// Test reading metadata
 	metadata = getEmbeddingsMetadata(cfg)
 	assert.Len(t, metadata, 2)
-	
+
 	// Check times (allowing for parsing precision)
 	doc1Time := metadata["/path/to/doc1.md"]
 	assert.WithinDuration(t, testTime, doc1Time, time.Second)
-	
+
 	doc2Time := metadata["/path/to/doc2.md"]
 	assert.WithinDuration(t, testTime.Add(-time.Hour), doc2Time, time.Second)
 }
@@ -190,33 +190,33 @@ func TestUpdateEmbeddingMetadata(t *testing.T) {
 	tempDir := t.TempDir()
 	corpusPath := filepath.Join(tempDir, "corpus")
 	embeddingsPath := filepath.Join(tempDir, "embeddings")
-	
+
 	cfg := corpus.Config{
 		CorpusPath: corpusPath,
 	}
-	
+
 	// Test creating new metadata
 	testTime := time.Now().UTC()
 	err := updateEmbeddingMetadata(cfg, "/path/to/doc1.md", testTime)
 	require.NoError(t, err)
-	
+
 	// Verify directory was created
 	assert.DirExists(t, embeddingsPath)
-	
+
 	// Verify metadata was written
 	metadata := getEmbeddingsMetadata(cfg)
 	assert.Len(t, metadata, 1)
 	assert.WithinDuration(t, testTime, metadata["/path/to/doc1.md"], time.Second)
-	
+
 	// Test updating existing metadata
 	newTime := testTime.Add(time.Hour)
 	err = updateEmbeddingMetadata(cfg, "/path/to/doc1.md", newTime)
 	require.NoError(t, err)
-	
+
 	// Add another document
 	err = updateEmbeddingMetadata(cfg, "/path/to/doc2.md", testTime)
 	require.NoError(t, err)
-	
+
 	// Verify both entries exist
 	metadata = getEmbeddingsMetadata(cfg)
 	assert.Len(t, metadata, 2)
@@ -234,12 +234,12 @@ func TestDisplayScanResults(t *testing.T) {
 		StartTime:     time.Now(),
 		EndTime:       time.Now().Add(time.Second),
 	}
-	
+
 	// Capture output (in a real test, you'd redirect stdout)
 	// For now, just call it to ensure no panic
 	displayScanResults(result, false)
 	displayScanResults(result, true) // Test dry run display
-	
+
 	// Test with no changes
 	emptyResult := ScanResult{
 		StartTime: time.Now(),
@@ -251,11 +251,11 @@ func TestDisplayScanResults(t *testing.T) {
 func TestInitializeRAGSystem(t *testing.T) {
 	ctx := context.Background()
 	tempDir := t.TempDir()
-	
+
 	cfg := corpus.Config{
 		CorpusPath: filepath.Join(tempDir, "corpus"),
 	}
-	
+
 	tests := []struct {
 		name           string
 		providerType   string
@@ -287,7 +287,7 @@ func TestInitializeRAGSystem(t *testing.T) {
 			expectError:  true,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Set environment variables
@@ -295,9 +295,9 @@ func TestInitializeRAGSystem(t *testing.T) {
 				os.Setenv(k, v)
 				defer os.Unsetenv(k)
 			}
-			
+
 			retriever, err := initializeRAGSystem(ctx, cfg, tt.providerType, tt.embeddingModel, false)
-			
+
 			if tt.expectError {
 				assert.Error(t, err)
 				assert.Nil(t, retriever)

@@ -26,16 +26,16 @@ func NewResponseParser() *ResponseParserImpl {
 	return &ResponseParserImpl{
 		// Match file sections: ## File: path/to/file.md
 		filePattern: regexp.MustCompile(`(?m)^##\s+File:\s+(.+)$`),
-		
+
 		// Match task definitions with various formats
 		// - CATEGORY-NUMBER: Title (priority: high, estimate: 2h)
 		// - [ ] Task description
 		// - Task: description
 		taskPattern: regexp.MustCompile(`(?m)^[\s-]*(?:\[[ x]\]|\*|-)?\s*(?:Task:|TASK-\d+:|[A-Z]+-\d+:)?\s*(.+?)(?:\s*\(.*?\))?\s*$`),
-		
+
 		// Match headers for sections
 		headerPattern: regexp.MustCompile(`(?m)^(#{1,6})\s+(.+)$`),
-		
+
 		// Match metadata in parentheses
 		metadataPattern: regexp.MustCompile(`\((.*?)\)`),
 	}
@@ -131,7 +131,7 @@ func (p *ResponseParserImpl) parseSingleDocument(content string) (*FileStructure
 
 	// If we found tasks in a specific structure, create task files
 	files := []*FileEntry{mainFile}
-	
+
 	// Group tasks by category if they follow CATEGORY-NUMBER pattern
 	tasksByCategory := p.groupTasksByCategory(tasks)
 	for category, categoryTasks := range tasksByCategory {
@@ -163,20 +163,20 @@ func (p *ResponseParserImpl) parseSingleDocument(content string) (*FileStructure
 func (p *ResponseParserImpl) extractTasks(content string) []TaskInfo {
 	var tasks []TaskInfo
 	lines := strings.Split(content, "\n")
-	
+
 	inTaskSection := false
 	currentSection := ""
-	
+
 	for i, line := range lines {
 		trimmedLine := strings.TrimSpace(line)
-		
+
 		// Check for section headers
 		if headerMatch := p.headerPattern.FindStringSubmatch(line); len(headerMatch) > 0 {
 			headerLevel := len(headerMatch[1])
 			headerText := strings.ToLower(headerMatch[2])
-			
+
 			// Look for task-related sections
-			if strings.Contains(headerText, "task") || 
+			if strings.Contains(headerText, "task") ||
 			   strings.Contains(headerText, "requirement") ||
 			   strings.Contains(headerText, "implementation") ||
 			   strings.Contains(headerText, "work item") {
@@ -187,7 +187,7 @@ func (p *ResponseParserImpl) extractTasks(content string) []TaskInfo {
 				inTaskSection = false
 			}
 		}
-		
+
 		// Extract tasks based on various patterns
 		task := p.parseTaskLine(trimmedLine, i, currentSection)
 		if task != nil {
@@ -204,7 +204,7 @@ func (p *ResponseParserImpl) extractTasks(content string) []TaskInfo {
 			tasks = append(tasks, *task)
 		}
 	}
-	
+
 	return tasks
 }
 
@@ -221,15 +221,15 @@ func (p *ResponseParserImpl) parseTaskLine(line string, lineNum int, section str
 			Section:     section,
 			LineNumber:  lineNum,
 		}
-		
+
 		// Parse metadata if present
 		if len(match) > 4 && match[4] != "" {
 			p.parseTaskMetadata(task, match[4])
 		}
-		
+
 		return task
 	}
-	
+
 	// Pattern 2: - [ ] Task description
 	checkboxPattern := regexp.MustCompile(`^[\s-]*\[[ x]\]\s+(.+)$`)
 	if match := checkboxPattern.FindStringSubmatch(line); len(match) > 0 {
@@ -241,7 +241,7 @@ func (p *ResponseParserImpl) parseTaskLine(line string, lineNum int, section str
 			LineNumber:  lineNum,
 		}
 	}
-	
+
 	// Pattern 3: Task: description
 	taskPattern := regexp.MustCompile(`^[\s-]*Task:\s*(.+)$`)
 	if match := taskPattern.FindStringSubmatch(line); len(match) > 0 {
@@ -253,7 +253,7 @@ func (p *ResponseParserImpl) parseTaskLine(line string, lineNum int, section str
 			LineNumber:  lineNum,
 		}
 	}
-	
+
 	return nil
 }
 
@@ -266,7 +266,7 @@ func (p *ResponseParserImpl) parseTaskMetadata(task *TaskInfo, metadata string) 
 		if kv := strings.SplitN(part, ":", 2); len(kv) == 2 {
 			key := strings.TrimSpace(strings.ToLower(kv[0]))
 			value := strings.TrimSpace(kv[1])
-			
+
 			switch key {
 			case "priority", "prio", "p":
 				task.Priority = value
@@ -286,30 +286,30 @@ func (p *ResponseParserImpl) looksLikeTask(line string) bool {
 	if len(line) < 3 || len(line) > 200 {
 		return false
 	}
-	
+
 	// Skip lines that are likely headers or metadata
 	if strings.HasPrefix(line, "#") || strings.HasPrefix(line, "```") {
 		return false
 	}
-	
+
 	// Look for action verbs at the beginning
-	actionVerbs := []string{"implement", "create", "add", "update", "fix", "remove", 
+	actionVerbs := []string{"implement", "create", "add", "update", "fix", "remove",
 		"design", "build", "test", "deploy", "configure", "setup", "install"}
-	
+
 	lowerLine := strings.ToLower(line)
 	for _, verb := range actionVerbs {
 		if strings.HasPrefix(lowerLine, verb) || strings.Contains(lowerLine, " "+verb+" ") {
 			return true
 		}
 	}
-	
+
 	return false
 }
 
 // groupTasksByCategory groups tasks by their category
 func (p *ResponseParserImpl) groupTasksByCategory(tasks []TaskInfo) map[string][]TaskInfo {
 	grouped := make(map[string][]TaskInfo)
-	
+
 	for _, task := range tasks {
 		category := task.Category
 		if category == "" {
@@ -317,39 +317,39 @@ func (p *ResponseParserImpl) groupTasksByCategory(tasks []TaskInfo) map[string][
 		}
 		grouped[category] = append(grouped[category], task)
 	}
-	
+
 	return grouped
 }
 
 // formatTasksAsMarkdown formats tasks as markdown content
 func (p *ResponseParserImpl) formatTasksAsMarkdown(tasks []TaskInfo) string {
 	var sb strings.Builder
-	
+
 	sb.WriteString("# Tasks\n\n")
-	
+
 	for _, task := range tasks {
 		sb.WriteString(fmt.Sprintf("## %s\n\n", task.ID))
 		sb.WriteString(fmt.Sprintf("**Title:** %s\n\n", task.Title))
-		
+
 		if task.Description != "" && task.Description != task.Title {
 			sb.WriteString(fmt.Sprintf("**Description:** %s\n\n", task.Description))
 		}
-		
+
 		if task.Priority != "" {
 			sb.WriteString(fmt.Sprintf("**Priority:** %s\n\n", task.Priority))
 		}
-		
+
 		if task.Estimate != "" {
 			sb.WriteString(fmt.Sprintf("**Estimate:** %s\n\n", task.Estimate))
 		}
-		
+
 		if len(task.Dependencies) > 0 {
 			sb.WriteString(fmt.Sprintf("**Dependencies:** %s\n\n", strings.Join(task.Dependencies, ", ")))
 		}
-		
+
 		sb.WriteString("---\n\n")
 	}
-	
+
 	return sb.String()
 }
 
@@ -371,7 +371,7 @@ type TaskInfo struct {
 // ConvertToKanbanTask converts TaskInfo to a kanban.Task
 func (t *TaskInfo) ConvertToKanbanTask(commissionID string) *kanban.Task {
 	task := kanban.NewTask(t.Title, t.Description)
-	
+
 	// Set priority
 	switch strings.ToLower(t.Priority) {
 	case "high", "1", "critical":
@@ -381,30 +381,30 @@ func (t *TaskInfo) ConvertToKanbanTask(commissionID string) *kanban.Task {
 	default:
 		task.Priority = kanban.PriorityMedium
 	}
-	
+
 	// Set initial status
 	task.Status = kanban.StatusTodo
-	
+
 	// Add metadata
 	task.Metadata["commission_id"] = commissionID
 	task.Metadata["category"] = t.Category
 	if t.Section != "" {
 		task.Metadata["section"] = t.Section
 	}
-	
+
 	// Set estimate if present
 	if t.Estimate != "" {
 		// TODO: Parse estimate to hours
 		task.Metadata["estimate_raw"] = t.Estimate
 	}
-	
+
 	// Set dependencies
 	task.Dependencies = t.Dependencies
-	
+
 	// Add tags based on category
 	if t.Category != "" {
 		task.Tags = append(task.Tags, strings.ToLower(t.Category))
 	}
-	
+
 	return task
 }

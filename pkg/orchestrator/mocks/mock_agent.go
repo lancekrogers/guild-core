@@ -27,11 +27,11 @@ func NewMockAgent(id, name string) *MockAgent {
 func (m *MockAgent) Execute(ctx context.Context, request string) (string, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	if m.executeFunc != nil {
 		return m.executeFunc(ctx, request)
 	}
-	
+
 	return "mock response: " + request, nil
 }
 
@@ -49,7 +49,7 @@ func (m *MockAgent) GetName() string {
 func (m *MockAgent) SetExecuteFunc(f func(ctx context.Context, request string) (string, error)) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.executeFunc = f
 }
 

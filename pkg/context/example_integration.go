@@ -15,49 +15,49 @@ import (
 func ExampleUsage() {
 	// 1. Create a new Guild context for a user request
 	ctx := NewGuildContext(context.Background())
-	
+
 	// 2. Add session and user information
 	ctx = WithSessionID(ctx, "session-12345")
 	ctx = WithCostBudget(ctx, 5.0, "USD")
 	ctx = WithResourceLimit(ctx, 3, 1024*1024*1024) // 3 concurrent, 1GB
-	
+
 	// 3. Set up mock registry (in real usage, this would be the actual registry)
 	mockRegistry := NewMockRegistryProvider()
 	ctx = WithRegistryProvider(ctx, mockRegistry)
-	
+
 	// 4. Register some test components
 	mockRegistry.Providers().RegisterProvider("openai", &MockProvider{Name: "openai"})
 	mockRegistry.Providers().RegisterProvider("anthropic", &MockProvider{Name: "anthropic"})
 	mockRegistry.Providers().SetDefaultProvider("anthropic")
-	
+
 	mockRegistry.Agents().RegisterAgent("coding-agent", &MockAgent{ID: "agent-001", Name: "coding-agent"})
 	mockRegistry.Agents().SetDefaultAgent("coding-agent")
-	
+
 	mockRegistry.Tools().RegisterTool("file-tool", &MockTool{Name: "file-tool"})
 	mockRegistry.Tools().EnableTool("file-tool")
-	
+
 	// 5. Demonstrate context-aware operations
 	fmt.Printf("=== Guild Context System Demo ===\n")
 	fmt.Printf("Request ID: %s\n", GetRequestID(ctx))
 	fmt.Printf("Session ID: %s\n", GetSessionID(ctx))
 	fmt.Printf("Context Summary: %s\n\n", ContextSummary(ctx))
-	
+
 	// 6. Demonstrate component access through context
 	demonstrateComponentAccess(ctx)
-	
+
 	// 7. Demonstrate context propagation through operations
 	demonstrateContextPropagation(ctx)
-	
+
 	// 8. Demonstrate context-aware provider selection
 	demonstrateProviderSelection(ctx)
-	
+
 	// 9. Demonstrate agent routing with context
 	demonstrateAgentRouting(ctx)
 }
 
 func demonstrateComponentAccess(ctx context.Context) {
 	fmt.Printf("=== Component Access Demo ===\n")
-	
+
 	// Access provider through context
 	provider, err := GetProviderFromContext(ctx, "openai")
 	if err != nil {
@@ -66,7 +66,7 @@ func demonstrateComponentAccess(ctx context.Context) {
 		mockProvider := provider.(*MockProvider)
 		fmt.Printf("Retrieved provider: %s\n", mockProvider.Name)
 	}
-	
+
 	// Access agent through context
 	agent, err := GetAgentFromContext(ctx, "coding-agent")
 	if err != nil {
@@ -75,7 +75,7 @@ func demonstrateComponentAccess(ctx context.Context) {
 		mockAgent := agent.(*MockAgent)
 		fmt.Printf("Retrieved agent: %s (ID: %s)\n", mockAgent.Name, mockAgent.ID)
 	}
-	
+
 	// Access tool through context
 	tool, err := GetToolFromContext(ctx, "file-tool")
 	if err != nil {
@@ -84,40 +84,40 @@ func demonstrateComponentAccess(ctx context.Context) {
 		mockTool := tool.(*MockTool)
 		fmt.Printf("Retrieved tool: %s\n", mockTool.Name)
 	}
-	
+
 	fmt.Printf("\n")
 }
 
 func demonstrateContextPropagation(ctx context.Context) {
 	fmt.Printf("=== Context Propagation Demo ===\n")
-	
+
 	// Create operation context
 	opCtx, cancel := NewOperationContext(ctx, "code-generation", 30*time.Second)
 	defer cancel()
-	
+
 	// Enhance context with component information
 	componentCtx := CreateComponentContext(opCtx, "agent", "coding-agent", "execute")
-	
+
 	fmt.Printf("Original Request ID: %s\n", GetRequestID(ctx))
 	fmt.Printf("Operation Context Request ID: %s\n", GetRequestID(opCtx))
 	fmt.Printf("Component Context Request ID: %s\n", GetRequestID(componentCtx))
 	fmt.Printf("Operation: %s\n", GetOperation(componentCtx))
 	fmt.Printf("Agent ID: %s\n", GetAgentID(componentCtx))
 	fmt.Printf("Span ID: %s\n", GetSpanID(componentCtx))
-	
+
 	// Demonstrate log fields extraction
 	fields := LogFields(componentCtx)
 	fmt.Printf("Log Fields: %v\n", fields)
-	
+
 	fmt.Printf("\n")
 }
 
 func demonstrateProviderSelection(ctx context.Context) {
 	fmt.Printf("=== Provider Selection Demo ===\n")
-	
+
 	// Test provider selection for different task types
 	taskTypes := []string{"coding", "reasoning", "fast", "local"}
-	
+
 	for _, taskType := range taskTypes {
 		provider, err := SelectBestProvider(ctx, taskType, nil)
 		if err != nil {
@@ -126,16 +126,16 @@ func demonstrateProviderSelection(ctx context.Context) {
 			fmt.Printf("Best provider for %s: %s\n", taskType, provider)
 		}
 	}
-	
+
 	fmt.Printf("\n")
 }
 
 func demonstrateAgentRouting(ctx context.Context) {
 	fmt.Printf("=== Agent Routing Demo ===\n")
-	
+
 	// Test agent selection for different task types
 	taskTypes := []string{"coding", "analysis", "general"}
-	
+
 	for _, taskType := range taskTypes {
 		agent, err := SelectBestAgent(ctx, taskType, nil)
 		if err != nil {
@@ -144,7 +144,7 @@ func demonstrateAgentRouting(ctx context.Context) {
 			fmt.Printf("Best agent for %s: %s\n", taskType, agent)
 		}
 	}
-	
+
 	fmt.Printf("\n")
 }
 
@@ -432,31 +432,31 @@ func (m *MockTool) Execute(ctx context.Context, args map[string]interface{}) (in
 // ExampleIntegrationWithRegistry shows how to integrate the context system with a real registry
 func ExampleIntegrationWithRegistry() {
 	// This would be used in real integration code:
-	
+
 	/*
 	// 1. Initialize the system
 	config, err := registry.LoadConfig("config.yaml")
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	componentRegistry := registry.NewComponentRegistry()
 	err = componentRegistry.Initialize(context.Background(), *config)
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	// 2. Create context with registry
 	ctx := context.NewGuildContext(context.Background())
 	ctx = context.WithRegistryProvider(ctx, componentRegistry)
 	ctx = context.WithConfigProvider(ctx, config)
-	
+
 	// 3. Use context-aware operations
 	result, err := context.CompleteWithDefaultProvider(ctx, "Write a function to sort an array")
 	if err != nil {
 		log.Error("Completion failed", context.LogFields(ctx)...)
 	}
-	
+
 	// 4. Route to appropriate agent
 	result, err = context.RouteToAgent(ctx, "coding", "Implement binary search", nil)
 	if err != nil {
@@ -469,10 +469,10 @@ func ExampleIntegrationWithRegistry() {
 func ExampleErrorHandling() {
 	ctx := NewGuildContext(context.Background())
 	ctx = WithSessionID(ctx, "error-demo-session")
-	
+
 	// Simulate an error with context
 	err := gerror.New(gerror.ErrCodeConnection, "provider connection failed", nil).WithComponent("context").WithOperation("ExampleErrorHandling")
-	
+
 	// Log with context
 	logger := GetLogger(ctx)
 	if logger != nil {
@@ -481,7 +481,7 @@ func ExampleErrorHandling() {
 		// Fallback logging
 		fmt.Printf("ERROR [%s]: %v\n", ContextSummary(ctx), err)
 	}
-	
+
 	// Error wrapping with context
 	contextErr := gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to complete request %s", GetRequestID(ctx)).WithComponent("context").WithOperation("ExampleErrorHandling")
 	fmt.Printf("Wrapped error: %v\n", contextErr)
@@ -491,21 +491,21 @@ func ExampleErrorHandling() {
 func ExampleCostTracking() {
 	ctx := NewGuildContext(context.Background())
 	ctx = WithCostBudget(ctx, 10.0, "USD")
-	
+
 	// Simulate operations that consume budget
 	costInfo := GetCostInfo(ctx)
 	if costInfo != nil {
 		fmt.Printf("Initial budget: $%.2f\n", costInfo.Budget)
-		
+
 		// Simulate cost consumption
 		costInfo.Used += 2.50
-		fmt.Printf("After operation 1: $%.2f used, $%.2f remaining\n", 
+		fmt.Printf("After operation 1: $%.2f used, $%.2f remaining\n",
 			costInfo.Used, costInfo.Budget-costInfo.Used)
-		
+
 		costInfo.Used += 1.75
-		fmt.Printf("After operation 2: $%.2f used, $%.2f remaining\n", 
+		fmt.Printf("After operation 2: $%.2f used, $%.2f remaining\n",
 			costInfo.Used, costInfo.Budget-costInfo.Used)
-		
+
 		// Check budget
 		if costInfo.Used >= costInfo.Budget {
 			fmt.Printf("Budget exceeded! Operations should be limited.\n")

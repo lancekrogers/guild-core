@@ -252,7 +252,7 @@ func (c *Client) CreateEmbedding(ctx context.Context, req interfaces.EmbeddingRe
 	}
 
 	embeddings := make([]interfaces.Embedding, len(req.Input))
-	
+
 	for i, input := range req.Input {
 		ollamaReq := map[string]interface{}{
 			"model":  req.Model,

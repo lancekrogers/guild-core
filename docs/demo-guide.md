@@ -8,7 +8,7 @@ This guide provides comprehensive instructions for demonstrating the Guild Frame
 
 ### Terminal Configuration
 
-1. **Terminal Size**: 
+1. **Terminal Size**:
    - Width: 120-140 characters
    - Height: 40-50 lines
    - Font: Use a clear monospace font (SF Mono, Fira Code, etc.)

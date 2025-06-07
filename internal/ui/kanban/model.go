@@ -36,22 +36,22 @@ type Model struct {
 	kanbanManager *kanban.Manager
 	boardID       string
 	ctx           context.Context
-	
+
 	// UI State
 	columns       [5]Column
 	viewport      ViewportState
-	
+
 	// Task cache
 	taskCache     map[string][]*kanban.Task // Status -> Tasks
 	lastUpdate    time.Time
 	loading       bool
 	error         error
-	
+
 	// Interaction state
 	selectedTaskID string
 	showHelp       bool
 	statusMessage  string
-	
+
 	// Performance tracking
 	frameCount     int
 	lastRender     time.Time
@@ -73,7 +73,7 @@ func New(ctx context.Context, kanbanManager *kanban.Manager, boardID string) *Mo
 			FocusedColumn: 0,
 		},
 	}
-	
+
 	// Initialize columns
 	m.columns = [5]Column{
 		{Status: kanban.StatusTodo, Title: "TODO"},
@@ -82,7 +82,7 @@ func New(ctx context.Context, kanbanManager *kanban.Manager, boardID string) *Mo
 		{Status: kanban.StatusReadyForReview, Title: "READY FOR REVIEW"},
 		{Status: kanban.StatusDone, Title: "DONE"},
 	}
-	
+
 	return m
 }
 
@@ -111,7 +111,7 @@ func (m *Model) loadTasks() tea.Cmd {
 		if err != nil {
 			return errorMsg{err}
 		}
-		
+
 		// Load tasks for each column status
 		taskCache := make(map[string][]*kanban.Task)
 		for _, col := range m.columns {
@@ -119,12 +119,12 @@ func (m *Model) loadTasks() tea.Cmd {
 			if err != nil {
 				return errorMsg{err}
 			}
-			
+
 			// Sort tasks by priority and age
 			tasks = m.sortTasks(tasks)
 			taskCache[string(col.Status)] = tasks
 		}
-		
+
 		return tasksLoadedMsg{tasks: taskCache}
 	}
 }
@@ -136,16 +136,16 @@ func (m *Model) sortTasks(tasks []*kanban.Task) []*kanban.Task {
 	// 2. Priority level - High/Medium/Low
 	// 3. Age - Older tasks bubble up
 	// 4. Agent availability - Tasks with available agents
-	
+
 	// For now, simple priority sort
 	sorted := make([]*kanban.Task, len(tasks))
 	copy(sorted, tasks)
-	
+
 	// Sort by priority (high first), then by age (older first)
 	for i := 0; i < len(sorted)-1; i++ {
 		for j := i + 1; j < len(sorted); j++ {
 			shouldSwap := false
-			
+
 			// Compare priorities
 			if sorted[i].Priority == kanban.PriorityLow && sorted[j].Priority != kanban.PriorityLow {
 				shouldSwap = true
@@ -157,32 +157,32 @@ func (m *Model) sortTasks(tasks []*kanban.Task) []*kanban.Task {
 					shouldSwap = true
 				}
 			}
-			
+
 			if shouldSwap {
 				sorted[i], sorted[j] = sorted[j], sorted[i]
 			}
 		}
 	}
-	
+
 	return sorted
 }
 
 // Update handles messages and updates the model
 func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
-	
+
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		if m.viewport.SearchMode {
 			return m.handleSearchMode(msg)
 		}
 		return m.handleNormalMode(msg)
-		
+
 	case tea.WindowSizeMsg:
 		m.viewport.Width = msg.Width
 		m.viewport.Height = msg.Height
 		m.calculateVisibleRows()
-		
+
 	case tickMsg:
 		// Update FPS
 		now := time.Now()
@@ -192,24 +192,24 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.lastRender = now
 		m.frameCount++
-		
+
 		// Periodic refresh
 		if time.Since(m.lastUpdate) > 5*time.Second {
 			cmds = append(cmds, m.loadTasks())
 		}
-		
+
 	case tasksLoadedMsg:
 		m.loading = false
 		m.taskCache = msg.tasks
 		m.lastUpdate = time.Now()
 		m.updateColumns()
-		
+
 	case errorMsg:
 		m.loading = false
 		m.error = msg.err
 		m.statusMessage = fmt.Sprintf("Error: %v", msg.err)
 	}
-	
+
 	return m, tea.Batch(cmds...)
 }
 
@@ -218,47 +218,47 @@ func (m *Model) handleNormalMode(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	switch msg.String() {
 	case "q", "ctrl+c":
 		return m, tea.Quit
-		
+
 	case "j", "down":
 		m.scrollColumn(1)
-		
+
 	case "k", "up":
 		m.scrollColumn(-1)
-		
+
 	case "J":
 		m.scrollColumn(m.viewport.VisibleRows) // Page down
-		
+
 	case "K":
 		m.scrollColumn(-m.viewport.VisibleRows) // Page up
-		
+
 	case "h", "left":
 		if m.viewport.FocusedColumn > 0 {
 			m.viewport.FocusedColumn--
 		}
-		
+
 	case "l", "right":
 		if m.viewport.FocusedColumn < 4 {
 			m.viewport.FocusedColumn++
 		}
-		
+
 	case "1", "2", "3", "4", "5":
 		// Jump to column
 		col := int(msg.String()[0] - '1')
 		if col >= 0 && col < 5 {
 			m.viewport.FocusedColumn = col
 		}
-		
+
 	case "/":
 		m.viewport.SearchMode = true
 		m.viewport.SearchFilter = ""
-		
+
 	case "?":
 		m.showHelp = !m.showHelp
-		
+
 	case "r", "R":
 		m.statusMessage = "Refreshing..."
 		return m, m.loadTasks()
-		
+
 	case "enter":
 		// Select task for detailed view or action
 		if task := m.getSelectedTask(); task != nil {
@@ -266,7 +266,7 @@ func (m *Model) handleNormalMode(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			// TODO: Open task detail view
 		}
 	}
-	
+
 	return m, nil
 }
 
@@ -277,24 +277,24 @@ func (m *Model) handleSearchMode(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		m.viewport.SearchMode = false
 		m.viewport.SearchFilter = ""
 		m.updateColumns()
-		
+
 	case tea.KeyEnter:
 		m.viewport.SearchMode = false
 		m.updateColumns()
-		
+
 	case tea.KeyBackspace:
 		if len(m.viewport.SearchFilter) > 0 {
 			m.viewport.SearchFilter = m.viewport.SearchFilter[:len(m.viewport.SearchFilter)-1]
 			m.updateColumns()
 		}
-		
+
 	default:
 		if msg.Type == tea.KeyRunes {
 			m.viewport.SearchFilter += string(msg.Runes)
 			m.updateColumns()
 		}
 	}
-	
+
 	return m, nil
 }
 
@@ -302,19 +302,19 @@ func (m *Model) handleSearchMode(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 func (m *Model) scrollColumn(delta int) {
 	col := &m.columns[m.viewport.FocusedColumn]
 	newOffset := col.ScrollOffset + delta
-	
+
 	// Clamp to valid range
 	maxOffset := col.TotalTasks - m.viewport.VisibleRows
 	if maxOffset < 0 {
 		maxOffset = 0
 	}
-	
+
 	if newOffset < 0 {
 		newOffset = 0
 	} else if newOffset > maxOffset {
 		newOffset = maxOffset
 	}
-	
+
 	col.ScrollOffset = newOffset
 }
 
@@ -323,7 +323,7 @@ func (m *Model) updateColumns() {
 	for i := range m.columns {
 		status := string(m.columns[i].Status)
 		allTasks := m.taskCache[status]
-		
+
 		// Apply search filter
 		var filteredTasks []*kanban.Task
 		if m.viewport.SearchFilter != "" {
@@ -338,16 +338,16 @@ func (m *Model) updateColumns() {
 		} else {
 			filteredTasks = allTasks
 		}
-		
+
 		m.columns[i].TotalTasks = len(filteredTasks)
-		
+
 		// Get visible tasks based on scroll offset
 		start := m.columns[i].ScrollOffset
 		end := start + m.viewport.VisibleRows
 		if end > len(filteredTasks) {
 			end = len(filteredTasks)
 		}
-		
+
 		if start < len(filteredTasks) {
 			m.columns[i].Tasks = filteredTasks[start:end]
 		} else {
@@ -362,12 +362,12 @@ func (m *Model) calculateVisibleRows() {
 	headerHeight := 4  // Campaign header + separator
 	columnHeight := 3  // Column headers + separator
 	bottomHeight := 2  // Help line + border
-	
+
 	availableHeight := m.viewport.Height - headerHeight - columnHeight - bottomHeight
 	if availableHeight < 1 {
 		availableHeight = 1
 	}
-	
+
 	m.viewport.VisibleRows = availableHeight
 }
 
@@ -390,22 +390,22 @@ var (
 		Foreground(lipgloss.Color("12")).
 		Background(lipgloss.Color("235")).
 		Padding(0, 1)
-		
+
 	columnHeaderStyle = lipgloss.NewStyle().
 		Bold(true).
 		Padding(0, 1).
 		Width(20).
 		Align(lipgloss.Center)
-		
+
 	taskStyle = lipgloss.NewStyle().
 		Padding(0, 1).
 		Width(20).
 		MaxHeight(3)
-		
+
 	selectedTaskStyle = taskStyle.Copy().
 		BorderStyle(lipgloss.RoundedBorder()).
 		BorderForeground(lipgloss.Color("12"))
-		
+
 	scrollIndicatorStyle = lipgloss.NewStyle().
 		Foreground(lipgloss.Color("240")).
 		Italic(true)

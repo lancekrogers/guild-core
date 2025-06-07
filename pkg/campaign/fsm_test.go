@@ -194,11 +194,11 @@ func TestFSMTransition(t *testing.T) {
 	t.Run("resume from paused", func(t *testing.T) {
 		campaign := NewCampaign("Test", "Test Campaign")
 		campaign.Status = CampaignStatusActive
-		
+
 		// First pause
 		err := fsm.Transition(ctx, campaign, CampaignStatusPaused)
 		require.NoError(t, err)
-		
+
 		// Then resume
 		err = fsm.Transition(ctx, campaign, CampaignStatusActive)
 		require.NoError(t, err)

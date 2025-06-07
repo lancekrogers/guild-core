@@ -96,7 +96,7 @@ calls := mock.GetCalls()
 **Setup Claude Max & Claude Code:**
 1. Sign up for Claude Max: https://t.co/54ylwq0OPh
 2. Install Claude Code CLI (included with Max subscription)
-3. Authenticate: 
+3. Authenticate:
    ```bash
    claude /logout  # Clear existing sessions
    claude /login   # Authenticate with Claude Max account

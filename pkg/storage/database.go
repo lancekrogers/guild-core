@@ -79,7 +79,7 @@ func (d *Database) Migrate(ctx context.Context) error {
 
 	// Get migrations directory - try multiple locations
 	var migrationsPath string
-	
+
 	// 1. Try current working directory
 	if _, err := os.Stat("db/migrations"); err == nil {
 		migrationsPath = "file://db/migrations"
@@ -100,7 +100,7 @@ func (d *Database) Migrate(ctx context.Context) error {
 				currentDir = parentDir
 			}
 		}
-		
+
 		// 3. Try relative to executable as fallback
 		if migrationsPath == "" {
 			execPath, err := os.Executable()
@@ -123,21 +123,21 @@ func (d *Database) Migrate(ctx context.Context) error {
 			}
 		}
 	}
-	
+
 	if migrationsPath == "" {
 		// Check if we're in a test environment
 		if os.Getenv("GUILD_SKIP_MIGRATIONS") == "true" {
 			// Skip migrations in test environments
 			return nil
 		}
-		
+
 		// Also skip if we're in a temporary directory (likely a test)
 		cwd, _ := os.Getwd()
 		if strings.Contains(cwd, "Test") || strings.Contains(cwd, "/T/") {
 			// We're likely in a Go test temporary directory
 			return nil
 		}
-		
+
 		return gerror.New(gerror.ErrCodeNotFound, "could not find database migrations directory", nil).
 			WithComponent("Database").
 			WithOperation("Migrate")

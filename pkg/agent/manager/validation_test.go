@@ -95,7 +95,7 @@ func TestInputValidation(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			err := analyzer.validateRequest(tc.request)
-			
+
 			if tc.expectError {
 				assert.Error(t, err, "Expected validation error")
 				assert.Contains(t, err.Error(), tc.errorType, "Error should contain expected message")
@@ -148,7 +148,7 @@ func TestCustomErrorTypes(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			err := tc.errorFunc()
-			
+
 			var analysisErr *AnalysisError
 			assert.ErrorAs(t, err, &analysisErr, "Should be an AnalysisError")
 			assert.Equal(t, tc.errorType, analysisErr.Type, "Should have correct error type")
@@ -161,14 +161,14 @@ func TestCustomErrorTypes(t *testing.T) {
 func TestErrorChaining(t *testing.T) {
 	originalErr := assert.AnError
 	wrappedErr := NewValidationError("validation failed", originalErr)
-	
+
 	// Test that we can unwrap to get the original error
 	unwrapped := wrappedErr.(*AnalysisError).Unwrap()
 	assert.Equal(t, originalErr, unwrapped, "Should unwrap to original error")
-	
+
 	// Test error.Is and error.As work correctly
 	assert.ErrorIs(t, wrappedErr, originalErr, "Should be identified as original error")
-	
+
 	var analysisErr *AnalysisError
 	assert.ErrorAs(t, wrappedErr, &analysisErr, "Should be identifiable as AnalysisError")
 }
@@ -176,7 +176,7 @@ func TestErrorChaining(t *testing.T) {
 // TestPromptContextGeneration validates prompt context building
 func TestPromptContextGeneration(t *testing.T) {
 	analyzer := &TaskComplexityAnalyzer{}
-	
+
 	request := ComplexityAnalysisRequest{
 		TaskDescription: "Test task",
 		TaskDomain:      "test-domain",
@@ -186,7 +186,7 @@ func TestPromptContextGeneration(t *testing.T) {
 		RiskTolerance:   "medium",
 		TimeConstraint:  "1 week",
 	}
-	
+
 	agents := []AgentInfo{
 		{
 			Name:          "test-agent",
@@ -195,9 +195,9 @@ func TestPromptContextGeneration(t *testing.T) {
 			CostMagnitude: 3,
 		},
 	}
-	
+
 	context := analyzer.buildPromptContext(request, agents)
-	
+
 	// Validate all required fields are present
 	assert.Equal(t, request.TaskDescription, context["TaskDescription"])
 	assert.Equal(t, request.TaskDomain, context["TaskDomain"])
@@ -208,7 +208,7 @@ func TestPromptContextGeneration(t *testing.T) {
 	assert.Equal(t, request.TimeConstraint, context["TimeConstraint"])
 	assert.Equal(t, len(agents), context["AgentCount"])
 	assert.Equal(t, agents, context["AvailableAgents"])
-	
+
 	// Validate default values are set
 	assert.NotEmpty(t, context["GuildName"])
 	assert.NotEmpty(t, context["ProjectType"])
@@ -282,7 +282,7 @@ Second:
 // TestResponseParsing validates response parsing with various inputs
 func TestResponseParsing(t *testing.T) {
 	analyzer := &TaskComplexityAnalyzer{}
-	
+
 	testCases := []struct {
 		name        string
 		response    *ArtisanResponse
@@ -391,7 +391,7 @@ Hope this helps!`,
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			result, err := analyzer.parseAnalysisResponse(tc.response)
-			
+
 			if tc.expectError {
 				assert.Error(t, err, "Expected parsing error")
 				assert.Contains(t, err.Error(), tc.errorType, "Error should contain expected message")
@@ -399,7 +399,7 @@ Hope this helps!`,
 			} else {
 				assert.NoError(t, err, "Expected no parsing error")
 				assert.NotNil(t, result, "Result should not be nil")
-				
+
 				// Validate required fields are present
 				assert.Greater(t, result.ComplexityScore, 0, "Should have complexity score")
 				assert.NotEmpty(t, result.RecommendedApproach, "Should have recommended approach")
@@ -472,14 +472,14 @@ func TestHelperFunctions(t *testing.T) {
 func TestTimeoutScenarios(t *testing.T) {
 	t.Run("ContextCancellation", func(t *testing.T) {
 		ctx, cancel := context.WithCancel(context.Background())
-		
+
 		// Cancel immediately
 		cancel()
-		
+
 		analyzer := &TaskComplexityAnalyzer{
 			timeout: 5 * time.Second,
 		}
-		
+
 		// The actual test would need a real artisan client that respects context
 		// For now, just validate that timeout context is created properly
 		_ = ComplexityAnalysisRequest{
@@ -488,7 +488,7 @@ func TestTimeoutScenarios(t *testing.T) {
 		}
 		timeoutCtx, timeoutCancel := context.WithTimeout(ctx, analyzer.timeout)
 		defer timeoutCancel()
-		
+
 		select {
 		case <-timeoutCtx.Done():
 			assert.Equal(t, context.Canceled, timeoutCtx.Err())
@@ -501,11 +501,11 @@ func TestTimeoutScenarios(t *testing.T) {
 		analyzer := &TaskComplexityAnalyzer{
 			timeout: 100 * time.Millisecond,
 		}
-		
+
 		ctx := context.Background()
 		timeoutCtx, cancel := context.WithTimeout(ctx, analyzer.timeout)
 		defer cancel()
-		
+
 		// Wait for timeout
 		<-timeoutCtx.Done()
 		assert.Equal(t, context.DeadlineExceeded, timeoutCtx.Err())
@@ -515,7 +515,7 @@ func TestTimeoutScenarios(t *testing.T) {
 // BenchmarkComplexityAnalysis benchmarks the analysis performance
 func BenchmarkComplexityAnalysis(b *testing.B) {
 	analyzer := &TaskComplexityAnalyzer{}
-	
+
 	request := ComplexityAnalysisRequest{
 		TaskDescription: "Create a comprehensive e-commerce platform with user management, product catalog, shopping cart, payment processing, order management, and administrative dashboard",
 		TaskDomain:      "full-stack-development",
@@ -525,7 +525,7 @@ func BenchmarkComplexityAnalysis(b *testing.B) {
 		RiskTolerance:   "low",
 		TimeConstraint:  "1 month",
 	}
-	
+
 	agents := []AgentInfo{
 		{
 			Name:            "backend-artisan",
@@ -537,7 +537,7 @@ func BenchmarkComplexityAnalysis(b *testing.B) {
 			SuccessRate:     92.5,
 		},
 		{
-			Name:            "frontend-artisan", 
+			Name:            "frontend-artisan",
 			Role:            "Frontend Developer",
 			Provider:        "openai",
 			CostMagnitude:   2,
@@ -546,9 +546,9 @@ func BenchmarkComplexityAnalysis(b *testing.B) {
 			SuccessRate:     89.2,
 		},
 	}
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		// Benchmark the components that don't require external services
 		_ = analyzer.validateRequest(request)
@@ -565,21 +565,21 @@ func TestMemoryUsage(t *testing.T) {
 
 	// Test that we don't have memory leaks with large requests
 	analyzer := &TaskComplexityAnalyzer{}
-	
+
 	// Create a large task description
 	largeTask := string(make([]byte, 9999)) // Just under the limit
-	
+
 	request := ComplexityAnalysisRequest{
 		TaskDescription: largeTask,
 		TokenBudget:     10000,
 	}
-	
+
 	// Run validation multiple times to check for memory accumulation
 	for i := 0; i < 1000; i++ {
 		err := analyzer.validateRequest(request)
 		assert.NoError(t, err)
 	}
-	
+
 	// Test context building doesn't accumulate memory
 	agents := make([]AgentInfo, 10)
 	for i := range agents {
@@ -589,7 +589,7 @@ func TestMemoryUsage(t *testing.T) {
 			Specializations: make([]string, 5),
 		}
 	}
-	
+
 	for i := 0; i < 100; i++ {
 		context := analyzer.buildPromptContext(request, agents)
 		assert.NotNil(t, context)

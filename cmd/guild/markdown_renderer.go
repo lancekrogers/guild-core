@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 	"regexp"
-	
+
 	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/alecthomas/chroma/v2"
@@ -80,17 +80,17 @@ func (m *MarkdownRenderer) Render(content string) string {
 	if !m.needsMarkdownProcessing(content) {
 		return content
 	}
-	
+
 	// First, extract and process code blocks separately for better syntax highlighting
 	processedContent := m.processCodeBlocks(content)
-	
+
 	// Then render the markdown
 	rendered, err := m.renderer.Render(processedContent)
 	if err != nil {
 		// Fallback to original content if rendering fails
 		return content
 	}
-	
+
 	return rendered
 }
 
@@ -110,19 +110,19 @@ func (m *MarkdownRenderer) needsMarkdownProcessing(content string) bool {
 func (m *MarkdownRenderer) processCodeBlocks(content string) string {
 	// Regex to match fenced code blocks
 	codeBlockRegex := regexp.MustCompile("```(\\w+)?\\n([\\s\\S]*?)```")
-	
+
 	return codeBlockRegex.ReplaceAllStringFunc(content, func(match string) string {
 		parts := codeBlockRegex.FindStringSubmatch(match)
 		if len(parts) < 3 {
 			return match
 		}
-		
+
 		language := parts[1]
 		code := parts[2]
-		
+
 		// Apply syntax highlighting
 		highlighted := m.highlightCode(code, language)
-		
+
 		// Wrap in styled border
 		return m.codeStyle.Render(highlighted)
 	})
@@ -134,7 +134,7 @@ func (m *MarkdownRenderer) highlightCode(code, language string) string {
 	if strings.TrimSpace(code) == "" {
 		return code
 	}
-	
+
 	// Get lexer for the language
 	var lexer chroma.Lexer
 	if language != "" {
@@ -159,20 +159,20 @@ func (m *MarkdownRenderer) highlightCode(code, language string) string {
 	if lexer == nil {
 		lexer = lexers.Fallback
 	}
-	
+
 	// Tokenize the code
 	iterator, err := lexer.Tokenise(nil, code)
 	if err != nil {
 		return code // Fallback to original code
 	}
-	
+
 	// Format with syntax highlighting
 	var buf strings.Builder
 	err = m.formatter.Format(&buf, m.style, iterator)
 	if err != nil {
 		return code // Fallback to original code
 	}
-	
+
 	return buf.String()
 }
 
@@ -182,24 +182,24 @@ func (m *MarkdownRenderer) RenderInlineCode(code string) string {
 		Background(lipgloss.Color("8")).   // Dark gray background
 		Foreground(lipgloss.Color("15")).  // Bright white text
 		Padding(0, 1)
-	
+
 	return inlineStyle.Render(code)
 }
 
 // DetectAndRenderContent automatically detects content type and applies appropriate rendering
 func (m *MarkdownRenderer) DetectAndRenderContent(content string) string {
 	// Check if content looks like markdown
-	hasMarkdown := strings.Contains(content, "```") || 
+	hasMarkdown := strings.Contains(content, "```") ||
 	              strings.Contains(content, "#") ||
 	              strings.Contains(content, "*") ||
 	              strings.Contains(content, "_") ||
 	              strings.Contains(content, "[") ||
 	              strings.Contains(content, "`")
-	
+
 	if hasMarkdown {
 		return m.Render(content)
 	}
-	
+
 	// For plain text, just return as-is (already styled by lipgloss)
 	return content
 }

@@ -65,7 +65,7 @@ type Board struct {
 	CreatedAt    time.Time         `json:"created_at"`
 	UpdatedAt    time.Time         `json:"updated_at"`
 	Metadata     map[string]string `json:"metadata,omitempty"`
-	
+
 	// Storage - SQLite only via registry
 	registry     ComponentRegistry
 	eventManager *EventManager
@@ -166,7 +166,7 @@ func (b *Board) saveToSQLite(ctx context.Context) error {
 
 	// Get or create the campaign that this board belongs to
 	campaignID := b.getCampaignID()
-	
+
 	// Ensure the campaign exists
 	if err := b.ensureCampaignExists(ctx, campaignRepo, campaignID); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to ensure campaign exists").
@@ -183,7 +183,7 @@ func (b *Board) saveToSQLite(ctx context.Context) error {
 	// Note: The board itself doesn't need to be stored as a separate entity in SQLite
 	// It exists as a logical grouping of tasks within a campaign
 	// The tasks will reference both the commission and indirectly the campaign
-	
+
 	return nil
 }
 
@@ -195,13 +195,13 @@ func (b *Board) getCampaignID() string {
 			return campaignID
 		}
 	}
-	
+
 	// Default: use board name to generate a campaign ID
 	// This allows multiple boards for the same type of work to share a campaign
 	if strings.Contains(strings.ToLower(b.Name), "commission") {
 		return "commission-campaign"
 	}
-	
+
 	// Fallback: create a campaign based on board name
 	return fmt.Sprintf("%s-campaign", strings.ToLower(strings.ReplaceAll(b.Name, " ", "-")))
 }
@@ -259,21 +259,21 @@ func LoadBoard(ctx context.Context, registry ComponentRegistry, boardID string) 
 		WithComponent("Board").
 		WithOperation("NewBoardWithRegistry")
 	}
-	
+
 	storageReg := registry.Storage()
 	if storageReg == nil {
 		return nil, gerror.New(gerror.ErrCodeInternal, "storage registry not available", nil).
 			WithComponent("Board").
 			WithOperation("LoadBoard")
 	}
-	
+
 	boardRepo := storageReg.GetBoardRepository()
 	if boardRepo == nil {
 		return nil, gerror.New(gerror.ErrCodeInternal, "board repository not available", nil).
 			WithComponent("Board").
 			WithOperation("LoadBoard")
 	}
-	
+
 	// Get board from SQLite
 	boardInterface, err := boardRepo.GetBoard(ctx, boardID)
 	if err != nil {
@@ -281,7 +281,7 @@ func LoadBoard(ctx context.Context, registry ComponentRegistry, boardID string) 
 			WithComponent("Board").
 			WithOperation("LoadBoard")
 	}
-	
+
 	// Cast to storage.Board
 	storageBoard, ok := boardInterface.(*storage.Board)
 	if !ok {
@@ -289,7 +289,7 @@ func LoadBoard(ctx context.Context, registry ComponentRegistry, boardID string) 
 			WithComponent("Board").
 			WithOperation("LoadBoard")
 	}
-	
+
 	// Convert storage board to kanban board
 	board := &Board{
 		ID:          storageBoard.ID,
@@ -300,7 +300,7 @@ func LoadBoard(ctx context.Context, registry ComponentRegistry, boardID string) 
 		Metadata:    make(map[string]string),
 		registry:    registry,
 	}
-	
+
 	return board, nil
 }
 
@@ -311,21 +311,21 @@ func ListBoards(ctx context.Context, registry ComponentRegistry) ([]*Board, erro
 		WithComponent("Board").
 		WithOperation("NewBoardWithRegistry")
 	}
-	
+
 	storageReg := registry.Storage()
 	if storageReg == nil {
 		return nil, gerror.New(gerror.ErrCodeInternal, "storage registry not available", nil).
 			WithComponent("Board").
 			WithOperation("ListBoards")
 	}
-	
+
 	boardRepo := storageReg.GetBoardRepository()
 	if boardRepo == nil {
 		return nil, gerror.New(gerror.ErrCodeInternal, "board repository not available", nil).
 			WithComponent("Board").
 			WithOperation("ListBoards")
 	}
-	
+
 	// Get all boards from SQLite
 	boardInterfaces, err := boardRepo.ListBoards(ctx)
 	if err != nil {
@@ -333,7 +333,7 @@ func ListBoards(ctx context.Context, registry ComponentRegistry) ([]*Board, erro
 			WithComponent("Board").
 			WithOperation("ListBoards")
 	}
-	
+
 	var boards []*Board
 	for _, boardInterface := range boardInterfaces {
 		// Cast to storage.Board
@@ -341,7 +341,7 @@ func ListBoards(ctx context.Context, registry ComponentRegistry) ([]*Board, erro
 		if !ok {
 			continue // Skip invalid boards
 		}
-		
+
 		board := &Board{
 			ID:          storageBoard.ID,
 			Name:        storageBoard.Name,
@@ -353,7 +353,7 @@ func ListBoards(ctx context.Context, registry ComponentRegistry) ([]*Board, erro
 		}
 		boards = append(boards, board)
 	}
-	
+
 	return boards, nil
 }
 
@@ -363,23 +363,23 @@ func (b *Board) Save(ctx context.Context) error {
 		return gerror.New(gerror.ErrCodeInternal, "board not connected to registry", nil).
 		WithComponent("Board")
 	}
-	
+
 	// Update timestamp
 	b.UpdatedAt = time.Now().UTC()
-	
+
 	// Get board repository
 	storageReg := b.registry.Storage()
 	if storageReg == nil {
 		return gerror.New(gerror.ErrCodeInternal, "storage registry not available", nil).
 		WithComponent("Board")
 	}
-	
+
 	boardRepo := storageReg.GetBoardRepository()
 	if boardRepo == nil {
 		return gerror.New(gerror.ErrCodeInternal, "board repository not available", nil).
 		WithComponent("Board")
 	}
-	
+
 	// Ensure commission exists first
 	commissionID := b.ID + "-commission" // Generate commission ID based on board ID
 	campaignID := b.getCampaignID()
@@ -388,7 +388,7 @@ func (b *Board) Save(ctx context.Context) error {
 			WithComponent("Board").
 			WithOperation("Save")
 	}
-	
+
 	// Convert kanban.Board to storage.Board
 	description := b.Description
 	storageBoard := &storage.Board{
@@ -400,12 +400,12 @@ func (b *Board) Save(ctx context.Context) error {
 		CreatedAt:    b.CreatedAt,
 		UpdatedAt:    b.UpdatedAt,
 	}
-	
+
 	// Try update first, if fails then create
 	if err := boardRepo.UpdateBoard(ctx, storageBoard); err != nil {
 		return boardRepo.CreateBoard(ctx, storageBoard)
 	}
-	
+
 	return nil
 }
 
@@ -415,7 +415,7 @@ func (b *Board) Delete(ctx context.Context) error {
 		return gerror.New(gerror.ErrCodeInternal, "board not connected to registry", nil).
 		WithComponent("Board")
 	}
-	
+
 	// First, delete all tasks
 	tasks, err := b.GetAllTasks(ctx)
 	if err != nil {
@@ -423,7 +423,7 @@ func (b *Board) Delete(ctx context.Context) error {
 			WithComponent("Board").
 			WithOperation("Delete")
 	}
-	
+
 	for _, task := range tasks {
 		if err := b.DeleteTask(ctx, task.ID); err != nil {
 			return gerror.Wrapf(err, gerror.ErrCodeStorage, "failed to delete task %s", task.ID).
@@ -431,7 +431,7 @@ func (b *Board) Delete(ctx context.Context) error {
 				WithOperation("Delete")
 		}
 	}
-	
+
 	// Delete the board itself from SQLite
 	storageReg := b.registry.Storage()
 	boardRepo := storageReg.GetBoardRepository()
@@ -439,7 +439,7 @@ func (b *Board) Delete(ctx context.Context) error {
 		return gerror.New(gerror.ErrCodeInternal, "board repository not available", nil).
 		WithComponent("Board")
 	}
-	
+
 	return boardRepo.DeleteBoard(ctx, b.ID)
 }
 
@@ -449,7 +449,7 @@ func (b *Board) CreateTask(ctx context.Context, title, description string) (*Tas
 	if b.registry != nil {
 		return b.createTaskSQLite(ctx, title, description)
 	}
-	
+
 	// No legacy store - all operations use SQLite via registry
 	return nil, gerror.New(gerror.ErrCodeInternal, "board not connected to registry - cannot create tasks without SQLite backend", nil).
 		WithComponent("Board").
@@ -481,10 +481,10 @@ func (b *Board) createTaskSQLite(ctx context.Context, title, description string)
 
 	// Create the task
 	task := NewTask(title, description)
-	
+
 	// Add board ID to metadata for ownership validation
 	task.Metadata["board_id"] = b.ID
-	
+
 	// Convert kanban task metadata to interface{} map
 	metadataInterface := make(map[string]interface{})
 	for k, v := range task.Metadata {
@@ -499,7 +499,7 @@ func (b *Board) createTaskSQLite(ctx context.Context, title, description string)
 
 	// Map kanban status to SQLite-compatible status
 	storageStatus := b.mapKanbanStatusToStorageStatus(task.Status)
-	
+
 	// Convert to storage task format with both BoardID and CommissionID for compatibility
 	commissionID := b.ID + "-commission" // Generate commission ID based on board ID
 	storageTask := map[string]interface{}{
@@ -598,7 +598,7 @@ func (b *Board) ensureBoardExists(ctx context.Context) error {
 func (b *Board) ensureCommissionExists(ctx context.Context, commissionID, campaignID string) error {
 	storageReg := b.registry.Storage()
 	commissionRepo := storageReg.GetKanbanCommissionRepository()
-	
+
 	// Try to get existing commission
 	_, err := commissionRepo.GetCommission(ctx, commissionID)
 	if err == nil {
@@ -648,7 +648,7 @@ func (b *Board) GetTask(ctx context.Context, taskID string) (*Task, error) {
 	if b.registry != nil {
 		return b.getTaskSQLite(ctx, taskID)
 	}
-	
+
 	// No legacy store - all operations use SQLite via registry
 	return nil, gerror.New(gerror.ErrCodeInternal, "board not connected to registry - cannot get tasks without SQLite backend", nil).
 		WithComponent("Board").
@@ -664,7 +664,7 @@ func (b *Board) getTaskSQLite(ctx context.Context, taskID string) (*Task, error)
 			WithComponent("Board").
 			WithOperation("getTaskSQLite")
 	}
-	
+
 	// Get all tasks for this board and find the matching one
 	taskRepo := storageReg.GetKanbanTaskRepository()
 	if taskRepo == nil {
@@ -672,7 +672,7 @@ func (b *Board) getTaskSQLite(ctx context.Context, taskID string) (*Task, error)
 			WithComponent("Board").
 			WithOperation("getTaskSQLite")
 	}
-	
+
 	// Get all tasks for this board from SQLite
 	taskInterfaces, err := taskRepo.ListTasksByBoard(ctx, b.ID)
 	if err != nil {
@@ -680,7 +680,7 @@ func (b *Board) getTaskSQLite(ctx context.Context, taskID string) (*Task, error)
 			WithComponent("Board").
 			WithOperation("getTaskSQLite")
 	}
-	
+
 	// Find the specific task
 	for _, taskInterface := range taskInterfaces {
 		if storageTask, ok := taskInterface.(*storage.Task); ok && storageTask.ID == taskID {
@@ -694,19 +694,19 @@ func (b *Board) getTaskSQLite(ctx context.Context, taskID string) (*Task, error)
 				UpdatedAt:   storageTask.UpdatedAt,
 				Metadata:    make(map[string]string),
 			}
-			
+
 			// Set assigned agent if available
 			if storageTask.AssignedAgentID != nil {
 				task.AssignedTo = *storageTask.AssignedAgentID
 			}
-			
+
 			// Add board ID to metadata for compatibility
 			task.Metadata["board_id"] = b.ID
-			
+
 			return task, nil
 		}
 	}
-	
+
 	return nil, gerror.Newf(gerror.ErrCodeNotFound, "task not found: %s", taskID).
 		WithComponent("Board").
 		WithOperation("getTaskSQLite")
@@ -747,7 +747,7 @@ func (b *Board) UpdateTask(ctx context.Context, task *Task) error {
 		return gerror.New(gerror.ErrCodeInternal, "board not connected to registry", nil).
 		WithComponent("Board")
 	}
-	
+
 	return b.updateTaskSQLite(ctx, task)
 }
 
@@ -779,7 +779,7 @@ func (b *Board) updateTaskSQLite(ctx context.Context, task *Task) error {
 
 	// Map kanban status to SQLite-compatible status
 	storageStatus := b.mapKanbanStatusToStorageStatus(task.Status)
-	
+
 	// Convert to storage task format with both BoardID and CommissionID for compatibility
 	commissionID := b.ID + "-commission" // Generate commission ID based on board ID
 	storageTask := map[string]interface{}{
@@ -825,14 +825,14 @@ func (b *Board) DeleteTask(ctx context.Context, taskID string) error {
 		return gerror.New(gerror.ErrCodeInternal, "board not connected to registry", nil).
 		WithComponent("Board")
 	}
-	
+
 	// Get the task to check if it belongs to this board
 	task, err := b.GetTask(ctx, taskID)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get task").
 			WithComponent("Board")
 	}
-	
+
 	// Delete the task from SQLite
 	storageReg := b.registry.Storage()
 	taskRepo := storageReg.GetKanbanTaskRepository()
@@ -840,26 +840,26 @@ func (b *Board) DeleteTask(ctx context.Context, taskID string) error {
 		return gerror.New(gerror.ErrCodeInternal, "task repository not available", nil).
 		WithComponent("Board")
 	}
-	
+
 	if err := taskRepo.DeleteTask(ctx, taskID); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete task").
 			WithComponent("Board").
 			WithOperation("DeleteTask")
 	}
-	
+
 	// Record task deletion event
 	if err := b.recordTaskEvent(ctx, taskID, "deleted", string(task.Status), "", "Task deleted from kanban board"); err != nil {
 		// Log but don't fail
 		fmt.Printf("warning: failed to record task event: %v\n", err)
 	}
-	
+
 	// Update the board's last updated time
 	b.UpdatedAt = time.Now().UTC()
 	if err := b.saveToSQLite(ctx); err != nil {
 		// Log but don't fail
 		fmt.Printf("warning: failed to update board timestamp: %v\n", err)
 	}
-	
+
 	return nil
 }
 
@@ -870,7 +870,7 @@ func (b *Board) GetTasksByStatus(ctx context.Context, status TaskStatus) ([]*Tas
 			WithComponent("Board").
 			WithOperation("GetTasksByStatus")
 	}
-	
+
 	storageReg := b.registry.Storage()
 	taskRepo := storageReg.GetKanbanTaskRepository()
 	if taskRepo == nil {
@@ -878,7 +878,7 @@ func (b *Board) GetTasksByStatus(ctx context.Context, status TaskStatus) ([]*Tas
 			WithComponent("Board").
 			WithOperation("GetTasksByStatus")
 	}
-	
+
 	// Get all tasks for this board from SQLite, then filter by status
 	taskInterfaces, err := taskRepo.ListTasksByBoard(ctx, b.ID)
 	if err != nil {
@@ -886,7 +886,7 @@ func (b *Board) GetTasksByStatus(ctx context.Context, status TaskStatus) ([]*Tas
 			WithComponent("Board").
 			WithOperation("GetTasksByStatus")
 	}
-	
+
 	// Convert storage tasks to kanban tasks and filter by status
 	var tasks []*Task
 	for _, taskInterface := range taskInterfaces {
@@ -895,12 +895,12 @@ func (b *Board) GetTasksByStatus(ctx context.Context, status TaskStatus) ([]*Tas
 		if !ok {
 			continue // Skip invalid tasks
 		}
-		
+
 		// Filter by status
 		if storageTask.Status != string(status) {
 			continue
 		}
-		
+
 		task := &Task{
 			ID:          storageTask.ID,
 			Title:       storageTask.Title,
@@ -910,23 +910,23 @@ func (b *Board) GetTasksByStatus(ctx context.Context, status TaskStatus) ([]*Tas
 			UpdatedAt:   storageTask.UpdatedAt,
 			Metadata:    make(map[string]string),
 		}
-		
+
 		// Set assigned agent if available
 		if storageTask.AssignedAgentID != nil {
 			task.AssignedTo = *storageTask.AssignedAgentID
 		}
-		
+
 		// Add board ID to metadata for compatibility
 		task.Metadata["board_id"] = b.ID
-		
+
 		tasks = append(tasks, task)
 	}
-	
+
 	// Sort tasks by UpdatedAt, newest first
 	sort.Slice(tasks, func(i, j int) bool {
 		return tasks[i].UpdatedAt.After(tasks[j].UpdatedAt)
 	})
-	
+
 	return tasks, nil
 }
 
@@ -937,7 +937,7 @@ func (b *Board) GetAllTasks(ctx context.Context) ([]*Task, error) {
 			WithComponent("Board").
 			WithOperation("GetAllTasks")
 	}
-	
+
 	storageReg := b.registry.Storage()
 	taskRepo := storageReg.GetKanbanTaskRepository()
 	if taskRepo == nil {
@@ -945,7 +945,7 @@ func (b *Board) GetAllTasks(ctx context.Context) ([]*Task, error) {
 			WithComponent("Board").
 			WithOperation("GetAllTasks")
 	}
-	
+
 	// Get all tasks for this board from SQLite
 	taskInterfaces, err := taskRepo.ListTasksByBoard(ctx, b.ID)
 	if err != nil {
@@ -953,7 +953,7 @@ func (b *Board) GetAllTasks(ctx context.Context) ([]*Task, error) {
 			WithComponent("Board").
 			WithOperation("GetAllTasks")
 	}
-	
+
 	// Convert storage tasks to kanban tasks
 	var allTasks []*Task
 	for _, taskInterface := range taskInterfaces {
@@ -962,7 +962,7 @@ func (b *Board) GetAllTasks(ctx context.Context) ([]*Task, error) {
 		if !ok {
 			continue // Skip invalid tasks
 		}
-		
+
 		task := &Task{
 			ID:          storageTask.ID,
 			Title:       storageTask.Title,
@@ -972,23 +972,23 @@ func (b *Board) GetAllTasks(ctx context.Context) ([]*Task, error) {
 			UpdatedAt:   storageTask.UpdatedAt,
 			Metadata:    make(map[string]string),
 		}
-		
+
 		// Set assigned agent if available
 		if storageTask.AssignedAgentID != nil {
 			task.AssignedTo = *storageTask.AssignedAgentID
 		}
-		
+
 		// Add board ID to metadata for compatibility
 		task.Metadata["board_id"] = b.ID
-		
+
 		allTasks = append(allTasks, task)
 	}
-	
+
 	// Sort tasks by UpdatedAt, newest first
 	sort.Slice(allTasks, func(i, j int) bool {
 		return allTasks[i].UpdatedAt.After(allTasks[j].UpdatedAt)
 	})
-	
+
 	return allTasks, nil
 }
 
@@ -999,7 +999,7 @@ func (b *Board) FilterTasks(ctx context.Context, filter TaskFilter) ([]*Task, er
 			WithComponent("Board").
 			WithOperation("FilterTasks")
 	}
-	
+
 	// Get all tasks from SQLite
 	allTasks, err := b.GetAllTasks(ctx)
 	if err != nil {
@@ -1007,7 +1007,7 @@ func (b *Board) FilterTasks(ctx context.Context, filter TaskFilter) ([]*Task, er
 			WithComponent("Board").
 			WithOperation("FilterTasks")
 	}
-	
+
 	// Apply filter
 	var filteredTasks []*Task
 	for _, task := range allTasks {
@@ -1015,7 +1015,7 @@ func (b *Board) FilterTasks(ctx context.Context, filter TaskFilter) ([]*Task, er
 			filteredTasks = append(filteredTasks, task)
 		}
 	}
-	
+
 	return filteredTasks, nil
 }
 
@@ -1025,21 +1025,21 @@ func (b *Board) UpdateTaskStatus(ctx context.Context, taskID string, newStatus T
 		return gerror.New(gerror.ErrCodeInternal, "board not connected to registry", nil).
 		WithComponent("Board")
 	}
-	
+
 	// Get the task
 	task, err := b.GetTask(ctx, taskID)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get task").
 			WithComponent("Board")
 	}
-	
+
 	// Update the status
 	if err := task.UpdateStatus(newStatus, changedBy, comment); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeValidation, "failed to update status").
 			WithComponent("Board").
 			WithOperation("UpdateTaskStatus")
 	}
-	
+
 	// Save the task
 	return b.UpdateTask(ctx, task)
 }
@@ -1050,24 +1050,24 @@ func (b *Board) AssignTask(ctx context.Context, taskID, assignee, changedBy, com
 		return gerror.New(gerror.ErrCodeInternal, "board not connected to registry", nil).
 		WithComponent("Board")
 	}
-	
+
 	// Get the task
 	task, err := b.GetTask(ctx, taskID)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get task").
 			WithComponent("Board")
 	}
-	
+
 	// Update the assignee
 	task.UpdateAssignee(assignee, changedBy, comment)
-	
+
 	// Save the task
 	if err := b.UpdateTask(ctx, task); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task").
 			WithComponent("Board").
 			WithOperation("AssignTask")
 	}
-	
+
 	// Emit task assigned event
 	event := BoardEvent{
 		EventType:  EventTaskAssigned,
@@ -1083,7 +1083,7 @@ func (b *Board) AssignTask(ctx context.Context, taskID, assignee, changedBy, com
 		// Log but don't fail
 		fmt.Printf("warning: failed to emit event: %v\n", err)
 	}
-	
+
 	return nil
 }
 
@@ -1093,24 +1093,24 @@ func (b *Board) AddTaskBlocker(ctx context.Context, taskID, blockerID, changedBy
 		return gerror.New(gerror.ErrCodeInternal, "board not connected to registry", nil).
 		WithComponent("Board")
 	}
-	
+
 	// Get the task
 	task, err := b.GetTask(ctx, taskID)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get task").
 			WithComponent("Board")
 	}
-	
+
 	// Add the blocker
 	task.AddBlocker(blockerID, changedBy, comment)
-	
+
 	// Save the task
 	if err := b.UpdateTask(ctx, task); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task").
 			WithComponent("Board").
 			WithOperation("AddTaskBlocker")
 	}
-	
+
 	// Emit task blocked event
 	event := BoardEvent{
 		EventType:  EventTaskBlocked,
@@ -1126,7 +1126,7 @@ func (b *Board) AddTaskBlocker(ctx context.Context, taskID, blockerID, changedBy
 		// Log but don't fail
 		fmt.Printf("warning: failed to emit event: %v\n", err)
 	}
-	
+
 	return nil
 }
 
@@ -1136,24 +1136,24 @@ func (b *Board) RemoveTaskBlocker(ctx context.Context, taskID, blockerID, change
 		return gerror.New(gerror.ErrCodeInternal, "board not connected to registry", nil).
 		WithComponent("Board")
 	}
-	
+
 	// Get the task
 	task, err := b.GetTask(ctx, taskID)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get task").
 			WithComponent("Board")
 	}
-	
+
 	// Remove the blocker
 	task.RemoveBlocker(blockerID, changedBy, comment)
-	
+
 	// Save the task
 	if err := b.UpdateTask(ctx, task); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task").
 			WithComponent("Board").
 			WithOperation("RemoveTaskBlocker")
 	}
-	
+
 	// Emit task unblocked event
 	event := BoardEvent{
 		EventType:  EventTaskUnblocked,
@@ -1169,7 +1169,7 @@ func (b *Board) RemoveTaskBlocker(ctx context.Context, taskID, blockerID, change
 		// Log but don't fail
 		fmt.Printf("warning: failed to emit event: %v\n", err)
 	}
-	
+
 	return nil
 }
 

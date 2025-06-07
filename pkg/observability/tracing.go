@@ -54,7 +54,7 @@ func InitTracing(ctx context.Context, config *TracingConfig) (*TracerProvider, e
 	if config == nil {
 		config = DefaultTracingConfig()
 	}
-	
+
 	if !config.Enabled {
 		// Return no-op provider
 		return &TracerProvider{
@@ -62,22 +62,22 @@ func InitTracing(ctx context.Context, config *TracingConfig) (*TracerProvider, e
 			shutdown: func(ctx context.Context) error { return nil },
 		}, nil
 	}
-	
+
 	// Create OTLP exporter
 	opts := []otlptracegrpc.Option{
 		otlptracegrpc.WithEndpoint(config.Endpoint),
 		otlptracegrpc.WithTimeout(30 * time.Second),
 	}
-	
+
 	if config.Insecure {
 		opts = append(opts, otlptracegrpc.WithInsecure())
 	}
-	
+
 	exporter, err := otlptrace.New(ctx, otlptracegrpc.NewClient(opts...))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create trace exporter: %w", err)
 	}
-	
+
 	// Create resource
 	res, err := resource.Merge(
 		resource.Default(),
@@ -91,23 +91,23 @@ func InitTracing(ctx context.Context, config *TracingConfig) (*TracerProvider, e
 	if err != nil {
 		return nil, fmt.Errorf("failed to create resource: %w", err)
 	}
-	
+
 	// Create tracer provider
 	provider := sdktrace.NewTracerProvider(
 		sdktrace.WithBatcher(exporter),
 		sdktrace.WithResource(res),
 		sdktrace.WithSampler(sdktrace.TraceIDRatioBased(config.SampleRate)),
 	)
-	
+
 	// Set global provider
 	otel.SetTracerProvider(provider)
-	
+
 	// Set global propagator
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(
 		propagation.TraceContext{},
 		propagation.Baggage{},
 	))
-	
+
 	return &TracerProvider{
 		provider: provider,
 		shutdown: provider.Shutdown,
@@ -134,7 +134,7 @@ func StartSpanWithAttributes(ctx context.Context, name string, attrs map[string]
 	for k, v := range attrs {
 		attributes = append(attributes, attributeFromValue(k, v))
 	}
-	
+
 	return StartSpan(ctx, name, trace.WithAttributes(attributes...))
 }
 
@@ -144,7 +144,7 @@ func RecordError(ctx context.Context, err error) {
 	if !span.IsRecording() {
 		return
 	}
-	
+
 	// Extract Guild error details
 	var gerr *gerror.GuildError
 	if gerror.As(err, &gerr) {
@@ -154,14 +154,14 @@ func RecordError(ctx context.Context, err error) {
 			attribute.String("error.operation", gerr.Operation),
 			attribute.Bool("error.retryable", gerr.Retryable),
 		)
-		
+
 		if gerr.Details != nil {
 			for k, v := range gerr.Details {
 				span.SetAttributes(attributeFromValue(fmt.Sprintf("error.details.%s", k), v))
 			}
 		}
 	}
-	
+
 	span.RecordError(err)
 	span.SetStatus(codes.Error, err.Error())
 }
@@ -172,12 +172,12 @@ func SetSpanAttributes(ctx context.Context, attrs map[string]interface{}) {
 	if !span.IsRecording() {
 		return
 	}
-	
+
 	var attributes []attribute.KeyValue
 	for k, v := range attrs {
 		attributes = append(attributes, attributeFromValue(k, v))
 	}
-	
+
 	span.SetAttributes(attributes...)
 }
 
@@ -185,12 +185,12 @@ func SetSpanAttributes(ctx context.Context, attrs map[string]interface{}) {
 func TraceOperation(ctx context.Context, name string, fn func(context.Context) error) error {
 	ctx, span := StartSpan(ctx, name)
 	defer span.End()
-	
+
 	err := fn(ctx)
 	if err != nil {
 		RecordError(ctx, err)
 	}
-	
+
 	return err
 }
 
@@ -198,12 +198,12 @@ func TraceOperation(ctx context.Context, name string, fn func(context.Context) e
 func TraceOperationWithResult[T any](ctx context.Context, name string, fn func(context.Context) (T, error)) (T, error) {
 	ctx, span := StartSpan(ctx, name)
 	defer span.End()
-	
+
 	result, err := fn(ctx)
 	if err != nil {
 		RecordError(ctx, err)
 	}
-	
+
 	return result, err
 }
 

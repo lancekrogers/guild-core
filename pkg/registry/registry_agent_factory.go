@@ -21,7 +21,7 @@ func (r *DefaultComponentRegistry) createAgentFactory(ctx context.Context) (Agen
 				WithOperation("CreateAgent")
 		}, nil
 	}
-	
+
 	// Get default memory manager
 	memoryManager, err := r.memoryRegistry.GetDefaultChainManager()
 	if err != nil {
@@ -32,21 +32,21 @@ func (r *DefaultComponentRegistry) createAgentFactory(ctx context.Context) (Agen
 				WithOperation("CreateAgent")
 		}, nil
 	}
-	
+
 	// Get tool registry - create empty one if none exists
 	var toolRegistry tools.Registry
 	if r.toolRegistry != nil {
 		// Convert to tools.Registry interface
 		toolRegistry = &toolRegistryAdapter{registry: r.toolRegistry}
 	}
-	
+
 	// Get commission manager - this may be nil for now
 	var commissionManager commission.CommissionManager
 	// TODO: Get from internal/commission package when available
-	
+
 	// Get cost manager - create a default one
 	costManager := agent.DefaultCostManagerFactory()
-	
+
 	// Create the agent factory using the existing DefaultFactoryFactory
 	factory := agent.DefaultFactoryFactory(
 		llmClient,
@@ -55,7 +55,7 @@ func (r *DefaultComponentRegistry) createAgentFactory(ctx context.Context) (Agen
 		commissionManager,
 		costManager,
 	)
-	
+
 	// Return a function that wraps the agent.Factory
 	return func(config AgentConfig) (Agent, error) {
 		agentInstance, err := factory.CreateWorkerAgent(ctx, config.Name+"-id", config.Name)

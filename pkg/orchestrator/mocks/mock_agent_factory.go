@@ -24,20 +24,20 @@ func NewMockAgentFactory() *MockAgentFactory {
 func (m *MockAgentFactory) CreateAgent(agentType, name string, options ...interface{}) (agent.Agent, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	if m.createError != nil {
 		return nil, m.createError
 	}
-	
+
 	// Create a unique ID
 	id := name + "-" + agentType
-	
+
 	// Create a new mock agent
 	mockAgent := NewMockAgent(id, name)
-	
+
 	// Store the agent
 	m.agents[id] = mockAgent
-	
+
 	return mockAgent, nil
 }
 
@@ -45,7 +45,7 @@ func (m *MockAgentFactory) CreateAgent(agentType, name string, options ...interf
 func (m *MockAgentFactory) RegisterAgent(mockAgent *MockAgent) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.agents[mockAgent.GetID()] = mockAgent
 }
 
@@ -53,7 +53,7 @@ func (m *MockAgentFactory) RegisterAgent(mockAgent *MockAgent) {
 func (m *MockAgentFactory) GetAgent(id string) (*MockAgent, bool) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	agent, exists := m.agents[id]
 	return agent, exists
 }
@@ -62,7 +62,7 @@ func (m *MockAgentFactory) GetAgent(id string) (*MockAgent, bool) {
 func (m *MockAgentFactory) SetCreateError(err error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.createError = err
 }
 
@@ -70,7 +70,7 @@ func (m *MockAgentFactory) SetCreateError(err error) {
 func (m *MockAgentFactory) Reset() {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.agents = make(map[string]*MockAgent)
 	m.createError = nil
 }

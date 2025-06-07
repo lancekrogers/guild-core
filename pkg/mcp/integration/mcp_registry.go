@@ -14,16 +14,16 @@ import (
 type MCPRegistry interface {
 	// GetMCPExtension returns the MCP extension
 	GetMCPExtension() *MCPRegistryExtension
-	
+
 	// StartMCP starts the MCP server
 	StartMCP(ctx context.Context) error
-	
+
 	// StopMCP stops the MCP server
 	StopMCP(ctx context.Context) error
-	
+
 	// SyncMCPTools synchronizes tools between MCP and Guild registries
 	SyncMCPTools(ctx context.Context) error
-	
+
 	// IsMCPEnabled returns whether MCP is enabled
 	IsMCPEnabled() bool
 }

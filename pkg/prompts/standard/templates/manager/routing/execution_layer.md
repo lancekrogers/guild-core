@@ -45,7 +45,7 @@ Based on the task requirements and agent capabilities, provide your routing deci
     "supporting_agents": [
       {
         "agent_id": "<agent id>",
-        "role": "<agent role>", 
+        "role": "<agent role>",
         "responsibility": "<specific task area>",
         "coordination_type": "<parallel|sequential|review>",
         "estimated_tokens": <token estimate>

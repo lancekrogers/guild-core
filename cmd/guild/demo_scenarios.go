@@ -218,7 +218,7 @@ func NewDemoRunner(model *ChatModel) *DemoRunner {
 // RunScenario executes a specific demo scenario
 func (dr *DemoRunner) RunScenario(scenario *DemoScenario) error {
 	dr.scenario = scenario
-	
+
 	// Show scenario introduction
 	introMsg := fmt.Sprintf(`
 🏰 Starting Demo: %s
@@ -233,36 +233,36 @@ Duration: %v | Mode: %s
 		scenario.Duration,
 		map[bool]string{true: "Auto-play", false: "Manual"}[scenario.AutoPlay],
 	)
-	
+
 	dr.model.addSystemMessage(introMsg)
-	
+
 	// Execute commands
 	for i, cmd := range scenario.Commands {
 		if dr.paused {
 			// Wait for unpause
 			continue
 		}
-		
+
 		// Show command description
 		if cmd.Description != "" {
 			descMsg := fmt.Sprintf("📋 Step %d: %s", i+1, cmd.Description)
 			dr.model.addSystemMessage(descMsg)
 		}
-		
+
 		// Delay before typing
 		time.Sleep(cmd.Delay)
-		
+
 		// Simulate typing or execute command
 		if scenario.AutoPlay {
 			dr.executeCommand(cmd.Input)
 		} else {
 			dr.showCommandPrompt(cmd.Input)
 		}
-		
+
 		// Pause after command
 		time.Sleep(cmd.PauseAfter)
 	}
-	
+
 	// Show completion message
 	completionMsg := fmt.Sprintf(`
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -272,9 +272,9 @@ Duration: %v | Mode: %s
 Expected outcomes achieved:
 %s
 `, scenario.Name, formatExpectedOutcomes(scenario.Expected))
-	
+
 	dr.model.addSystemMessage(completionMsg)
-	
+
 	return nil
 }
 
@@ -283,10 +283,10 @@ func (dr *DemoRunner) executeCommand(input string) {
 	// Simulate typing effect
 	dr.model.input.SetValue(input)
 	dr.model.input.Focus()
-	
+
 	// Small delay to show the typed command
 	time.Sleep(300 * time.Millisecond)
-	
+
 	// Process the command
 	dr.model.handleSendMessage()
 }

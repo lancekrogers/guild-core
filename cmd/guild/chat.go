@@ -94,7 +94,7 @@ func runChat(cmd *cobra.Command, args []string) error {
 				WithOperation("chat.run")
 		}
 		defer serverCancel()
-		
+
 		// Give server time to start
 		time.Sleep(500 * time.Millisecond)
 	}
@@ -186,27 +186,27 @@ type ChatModel struct {
 	systemStyle lipgloss.Style
 	errorStyle  lipgloss.Style
 	toolStyle   lipgloss.Style
-	
+
 	// Rich content rendering
 	markdownRenderer *MarkdownRenderer
 	contentFormatter *ContentFormatter
-	
+
 	// Command completion and history
 	completionEngine *CompletionEngine
 	commandHistory   *CommandHistory
 	commandProcessor *CommandProcessor
-	
+
 	// Completion state
 	showingCompletion bool
 	completionResults []CompletionResult
 	completionIndex   int
-	
+
 	// Agent status system (Agent 3)
 	statusTracker   *AgentStatusTracker
 	statusDisplay   *StatusDisplay
 	agentIndicators *AgentIndicators
 	showAgentStatus bool
-	
+
 	// Integration state (Agent 4)
 	demoMode         bool
 	integrationFlags map[string]bool
@@ -287,7 +287,7 @@ func NewCompletionEngine(guildConfig *config.GuildConfig, projectRoot string) *C
 		projectRoot: projectRoot,
 		commands:    make(map[string]Command),
 	}
-	
+
 	// Register built-in commands with medieval theming
 	engine.registerCommands()
 	return engine
@@ -306,7 +306,7 @@ func (ce *CompletionEngine) registerCommands() {
 		{Name: "/exit", Description: "Exit Guild Chat", Usage: "/exit"},
 		{Name: "/quit", Description: "Exit Guild Chat", Usage: "/quit"},
 	}
-	
+
 	for _, cmd := range commands {
 		ce.commands[cmd.Name] = cmd
 	}
@@ -315,7 +315,7 @@ func (ce *CompletionEngine) registerCommands() {
 // Complete provides intelligent completion suggestions
 func (ce *CompletionEngine) Complete(input string, cursorPos int) []CompletionResult {
 	var results []CompletionResult
-	
+
 	// Handle different completion types based on input context
 	if strings.HasPrefix(input, "/") {
 		// Command completion
@@ -333,19 +333,19 @@ func (ce *CompletionEngine) Complete(input string, cursorPos int) []CompletionRe
 		// File path completion or general text
 		results = append(results, ce.completeFilePaths(input)...)
 	}
-	
+
 	// If no results, provide helpful suggestions based on context
 	if len(results) == 0 {
 		results = ce.getHelpfulSuggestions(input)
 	}
-	
+
 	return results
 }
 
 // completeCommands suggests command completions with smart sorting
 func (ce *CompletionEngine) completeCommands(input string) []CompletionResult {
 	var results []CompletionResult
-	
+
 	// First try exact prefix match
 	for cmdName, cmd := range ce.commands {
 		if strings.HasPrefix(cmdName, input) {
@@ -356,7 +356,7 @@ func (ce *CompletionEngine) completeCommands(input string) []CompletionResult {
 			})
 		}
 	}
-	
+
 	// If no exact matches, try fuzzy matching
 	if len(results) == 0 {
 		for cmdName, cmd := range ce.commands {
@@ -369,7 +369,7 @@ func (ce *CompletionEngine) completeCommands(input string) []CompletionResult {
 			}
 		}
 	}
-	
+
 	// Sort by relevance (exact matches first, then by length)
 	sort.Slice(results, func(i, j int) bool {
 		// Exact prefix matches come first
@@ -381,14 +381,14 @@ func (ce *CompletionEngine) completeCommands(input string) []CompletionResult {
 		// Then sort by length (shorter = more relevant)
 		return len(results[i].Text) < len(results[j].Text)
 	})
-	
+
 	return results
 }
 
 // completeAgents suggests agent completions
 func (ce *CompletionEngine) completeAgents(input string) []CompletionResult {
 	var results []CompletionResult
-	
+
 	// Add @all for broadcast
 	if fuzzyMatch("@all", input) {
 		results = append(results, CompletionResult{
@@ -397,7 +397,7 @@ func (ce *CompletionEngine) completeAgents(input string) []CompletionResult {
 			Type:        "agent",
 		})
 	}
-	
+
 	// Add configured agents
 	if ce.guildConfig != nil {
 		for _, agent := range ce.guildConfig.Agents {
@@ -411,14 +411,14 @@ func (ce *CompletionEngine) completeAgents(input string) []CompletionResult {
 			}
 		}
 	}
-	
+
 	return results
 }
 
 // completeArguments suggests command argument completions
 func (ce *CompletionEngine) completeArguments(input string) []CompletionResult {
 	var results []CompletionResult
-	
+
 	// Common argument patterns
 	args := []CompletionResult{
 		{Text: "--path", Description: "File or directory path", Type: "argument"},
@@ -427,13 +427,13 @@ func (ce *CompletionEngine) completeArguments(input string) []CompletionResult {
 		{Text: "--timeout", Description: "Timeout in seconds", Type: "argument"},
 		{Text: "--command", Description: "Shell command to execute", Type: "argument"},
 	}
-	
+
 	for _, arg := range args {
 		if fuzzyMatch(arg.Text, strings.ToLower(input)) {
 			results = append(results, arg)
 		}
 	}
-	
+
 	return results
 }
 
@@ -445,21 +445,21 @@ func (ce *CompletionEngine) completeFilePaths(input string) []CompletionResult {
 		{Text: "README.md", Description: "Project readme file", Type: "file"},
 		{Text: "guild.yaml", Description: "Guild configuration file", Type: "file"},
 	}
-	
+
 	var results []CompletionResult
 	for _, path := range paths {
 		if fuzzyMatch(path.Text, input) {
 			results = append(results, path)
 		}
 	}
-	
+
 	return results
 }
 
 // completeTaskIDs suggests task ID completions
 func (ce *CompletionEngine) completeTaskIDs(input string) []CompletionResult {
 	var results []CompletionResult
-	
+
 	// Mock task IDs for now - in real implementation would fetch from kanban
 	mockTasks := []struct {
 		id     string
@@ -472,7 +472,7 @@ func (ce *CompletionEngine) completeTaskIDs(input string) []CompletionResult {
 		{"FE-001", "Design Landing Page", "review"},
 		{"FE-002", "Build Shopping Cart", "done"},
 	}
-	
+
 	// Extract any partial task ID from input
 	words := strings.Fields(input)
 	var taskPattern string
@@ -482,7 +482,7 @@ func (ce *CompletionEngine) completeTaskIDs(input string) []CompletionResult {
 			break
 		}
 	}
-	
+
 	for _, task := range mockTasks {
 		if taskPattern == "" || fuzzyMatch(task.id, taskPattern) {
 			statusIcon := "📋"
@@ -496,7 +496,7 @@ func (ce *CompletionEngine) completeTaskIDs(input string) []CompletionResult {
 			case "done":
 				statusIcon = "✅"
 			}
-			
+
 			results = append(results, CompletionResult{
 				Text:        task.id,
 				Description: fmt.Sprintf("%s %s (%s)", statusIcon, task.title, task.status),
@@ -504,17 +504,17 @@ func (ce *CompletionEngine) completeTaskIDs(input string) []CompletionResult {
 			})
 		}
 	}
-	
+
 	return results
 }
 
 // getHelpfulSuggestions provides context-aware suggestions when no matches found
 func (ce *CompletionEngine) getHelpfulSuggestions(input string) []CompletionResult {
 	var suggestions []CompletionResult
-	
+
 	// Analyze input to provide helpful suggestions
 	lowerInput := strings.ToLower(input)
-	
+
 	// Suggest commands based on keywords
 	if strings.Contains(lowerInput, "help") {
 		suggestions = append(suggestions, CompletionResult{
@@ -523,7 +523,7 @@ func (ce *CompletionEngine) getHelpfulSuggestions(input string) []CompletionResu
 			Type:        "suggestion",
 		})
 	}
-	
+
 	if strings.Contains(lowerInput, "agent") || strings.Contains(lowerInput, "who") {
 		suggestions = append(suggestions, CompletionResult{
 			Text:        "/agents",
@@ -531,7 +531,7 @@ func (ce *CompletionEngine) getHelpfulSuggestions(input string) []CompletionResu
 			Type:        "suggestion",
 		})
 	}
-	
+
 	if strings.Contains(lowerInput, "status") || strings.Contains(lowerInput, "progress") {
 		suggestions = append(suggestions, CompletionResult{
 			Text:        "/status",
@@ -539,7 +539,7 @@ func (ce *CompletionEngine) getHelpfulSuggestions(input string) []CompletionResu
 			Type:        "suggestion",
 		})
 	}
-	
+
 	if strings.Contains(lowerInput, "task") || strings.Contains(lowerInput, "work") {
 		suggestions = append(suggestions, CompletionResult{
 			Text:        "/tools status",
@@ -547,7 +547,7 @@ func (ce *CompletionEngine) getHelpfulSuggestions(input string) []CompletionResu
 			Type:        "suggestion",
 		})
 	}
-	
+
 	// If still no suggestions, provide general help
 	if len(suggestions) == 0 {
 		suggestions = append(suggestions, CompletionResult{
@@ -561,7 +561,7 @@ func (ce *CompletionEngine) getHelpfulSuggestions(input string) []CompletionResu
 			Type:        "suggestion",
 		})
 	}
-	
+
 	return suggestions
 }
 
@@ -573,26 +573,26 @@ func (ce *CompletionEngine) UpdateTaskCache(taskIDs []string) {
 // GetSmartAgentSuggestions provides context-aware agent suggestions based on message content
 func (ce *CompletionEngine) GetSmartAgentSuggestions(messageContent string) []CompletionResult {
 	var results []CompletionResult
-	
+
 	if ce.guildConfig == nil {
 		return results
 	}
-	
+
 	// Analyze message content for keywords
 	lowerContent := strings.ToLower(messageContent)
-	
+
 	type agentScore struct {
 		agent config.AgentConfig
 		score int
 		reason string
 	}
-	
+
 	var scoredAgents []agentScore
-	
+
 	for _, agent := range ce.guildConfig.Agents {
 		score := 0
 		reasons := []string{}
-		
+
 		// Check capabilities match
 		for _, capability := range agent.Capabilities {
 			capLower := strings.ToLower(capability)
@@ -601,23 +601,23 @@ func (ce *CompletionEngine) GetSmartAgentSuggestions(messageContent string) []Co
 				reasons = append(reasons, fmt.Sprintf("has %s capability", capability))
 			}
 		}
-		
+
 		// Check for related keywords
 		if strings.Contains(lowerContent, "frontend") && agent.Type == "developer" && agentHasCapability(agent, "UI") {
 			score += 5
 			reasons = append(reasons, "frontend specialist")
 		}
-		
+
 		if strings.Contains(lowerContent, "api") && agentHasCapability(agent, "API") {
 			score += 5
 			reasons = append(reasons, "API expert")
 		}
-		
+
 		if strings.Contains(lowerContent, "database") && agentHasCapability(agent, "Database") {
 			score += 5
 			reasons = append(reasons, "database specialist")
 		}
-		
+
 		if score > 0 {
 			reason := strings.Join(reasons, ", ")
 			scoredAgents = append(scoredAgents, agentScore{
@@ -627,12 +627,12 @@ func (ce *CompletionEngine) GetSmartAgentSuggestions(messageContent string) []Co
 			})
 		}
 	}
-	
+
 	// Sort by score
 	sort.Slice(scoredAgents, func(i, j int) bool {
 		return scoredAgents[i].score > scoredAgents[j].score
 	})
-	
+
 	// Build suggestions
 	for _, sa := range scoredAgents {
 		results = append(results, CompletionResult{
@@ -641,7 +641,7 @@ func (ce *CompletionEngine) GetSmartAgentSuggestions(messageContent string) []Co
 			Type:        "agent_suggestion",
 		})
 	}
-	
+
 	return results
 }
 
@@ -672,7 +672,7 @@ func NewCommandHistory(historyFile string) *CommandHistory {
 		currentPos:  -1,
 		maxSize:     1000,
 	}
-	
+
 	ch.loadHistory()
 	return ch
 }
@@ -683,21 +683,21 @@ func (ch *CommandHistory) Add(command string) {
 	if command == "" {
 		return
 	}
-	
+
 	// Remove duplicates
 	ch.removeDuplicate(command)
-	
+
 	// Add to end
 	ch.commands = append(ch.commands, command)
-	
+
 	// Maintain size limit
 	if len(ch.commands) > ch.maxSize {
 		ch.commands = ch.commands[1:]
 	}
-	
+
 	// Reset position
 	ch.currentPos = len(ch.commands)
-	
+
 	// Save to disk
 	ch.saveHistory()
 }
@@ -707,15 +707,15 @@ func (ch *CommandHistory) Previous() string {
 	if len(ch.commands) == 0 {
 		return ""
 	}
-	
+
 	if ch.currentPos > 0 {
 		ch.currentPos--
 	}
-	
+
 	if ch.currentPos < len(ch.commands) {
 		return ch.commands[ch.currentPos]
 	}
-	
+
 	return ""
 }
 
@@ -724,12 +724,12 @@ func (ch *CommandHistory) Next() string {
 	if len(ch.commands) == 0 {
 		return ""
 	}
-	
+
 	if ch.currentPos < len(ch.commands)-1 {
 		ch.currentPos++
 		return ch.commands[ch.currentPos]
 	}
-	
+
 	// At end of history
 	ch.currentPos = len(ch.commands)
 	return ""
@@ -739,20 +739,20 @@ func (ch *CommandHistory) Next() string {
 func (ch *CommandHistory) Search(term string) []string {
 	var matches []string
 	term = strings.ToLower(term)
-	
+
 	// Search from most recent to oldest
 	for i := len(ch.commands) - 1; i >= 0; i-- {
 		cmd := ch.commands[i]
 		if fuzzyMatch(strings.ToLower(cmd), term) {
 			matches = append(matches, cmd)
-			
+
 			// Limit results to prevent overwhelming UI
 			if len(matches) >= 10 {
 				break
 			}
 		}
 	}
-	
+
 	return matches
 }
 
@@ -761,21 +761,21 @@ func (ch *CommandHistory) GetRecent(count int) []string {
 	if len(ch.commands) == 0 {
 		return []string{}
 	}
-	
+
 	start := len(ch.commands) - count
 	if start < 0 {
 		start = 0
 	}
-	
+
 	// Return copy to avoid modification
 	recent := make([]string, len(ch.commands[start:]))
 	copy(recent, ch.commands[start:])
-	
+
 	// Reverse to show most recent first
 	for i, j := 0, len(recent)-1; i < j; i, j = i+1, j-1 {
 		recent[i], recent[j] = recent[j], recent[i]
 	}
-	
+
 	return recent
 }
 
@@ -813,15 +813,15 @@ func fuzzyMatch(text, pattern string) bool {
 	if pattern == "" {
 		return true
 	}
-	
+
 	text = strings.ToLower(text)
 	pattern = strings.ToLower(pattern)
-	
+
 	// First check if it's a simple substring
 	if strings.Contains(text, pattern) {
 		return true
 	}
-	
+
 	// Check if all characters in pattern appear in order in text
 	textIdx := 0
 	for _, patternChar := range pattern {
@@ -838,7 +838,7 @@ func fuzzyMatch(text, pattern string) bool {
 			return false
 		}
 	}
-	
+
 	return true
 }
 
@@ -846,27 +846,27 @@ func fuzzyMatch(text, pattern string) bool {
 func fuzzyScore(text, pattern string) int {
 	text = strings.ToLower(text)
 	pattern = strings.ToLower(pattern)
-	
+
 	// Exact match is best
 	if text == pattern {
 		return 0
 	}
-	
+
 	// Prefix match is second best
 	if strings.HasPrefix(text, pattern) {
 		return 1
 	}
-	
+
 	// Substring match
 	if strings.Contains(text, pattern) {
 		return 2
 	}
-	
+
 	// Character sequence match - calculate distance
 	score := 0
 	textIdx := 0
 	lastMatch := -1
-	
+
 	for _, patternChar := range pattern {
 		for textIdx < len(text) {
 			if rune(text[textIdx]) == patternChar {
@@ -881,7 +881,7 @@ func fuzzyScore(text, pattern string) int {
 			textIdx++
 		}
 	}
-	
+
 	return score + 3 // Base score for fuzzy match
 }
 
@@ -893,7 +893,7 @@ func (ch *CommandHistory) loadHistory() {
 		// Log error but continue with empty history
 		return
 	}
-	
+
 	// Read history file
 	data, err := os.ReadFile(ch.historyFile)
 	if err != nil {
@@ -903,7 +903,7 @@ func (ch *CommandHistory) loadHistory() {
 		}
 		return
 	}
-	
+
 	// Parse history (one command per line)
 	lines := strings.Split(string(data), "\n")
 	for _, line := range lines {
@@ -912,12 +912,12 @@ func (ch *CommandHistory) loadHistory() {
 			ch.commands = append(ch.commands, line)
 		}
 	}
-	
+
 	// Limit history size
 	if len(ch.commands) > ch.maxSize {
 		ch.commands = ch.commands[len(ch.commands)-ch.maxSize:]
 	}
-	
+
 	// Set position to end
 	ch.currentPos = len(ch.commands)
 }
@@ -930,14 +930,14 @@ func (ch *CommandHistory) saveHistory() {
 		content.WriteString(cmd)
 		content.WriteString("\n")
 	}
-	
+
 	// Create directory if needed
 	dir := filepath.Dir(ch.historyFile)
 	if err := os.MkdirAll(dir, 0755); err != nil {
 		// Log error but continue
 		return
 	}
-	
+
 	// Write to file
 	if err := os.WriteFile(ch.historyFile, []byte(content.String()), 0644); err != nil {
 		// Log error but continue
@@ -951,11 +951,11 @@ func (ch *CommandHistory) Export(filename string) error {
 	var content strings.Builder
 	content.WriteString("# Guild Chat Command History\n")
 	content.WriteString(fmt.Sprintf("# Exported: %s\n\n", time.Now().Format(time.RFC3339)))
-	
+
 	for i, cmd := range ch.commands {
 		content.WriteString(fmt.Sprintf("%d. %s\n", i+1, cmd))
 	}
-	
+
 	return os.WriteFile(filename, []byte(content.String()), 0644)
 }
 
@@ -1041,7 +1041,7 @@ type chatKeyMap struct {
 	StatusView key.Binding
 	GlobalView key.Binding // Switch to global view
 	AgentFocus key.Binding // Focus on specific agent
-	
+
 	// Completion and history
 	Tab        key.Binding // Tab completion
 	Up         key.Binding // History up / completion up
@@ -1139,12 +1139,12 @@ func newChatModel(guildConfig *config.GuildConfig, campaignID, sessionID string,
 	// Create a medieval-themed welcome banner
 	welcomeBanner := `🏰 ═══════════════════════════════════════════ 🏰
    Welcome to the Guild Chat Chamber!
-   
+
    ⚔️  Your agents await your commands
    🛡️  Type /help to see available commands
    👑  Use @agent-name to message specific agents
    📜  Use @all to broadcast to all agents
-   
+
    Ready to craft great software together!
 🏰 ═══════════════════════════════════════════ 🏰
 
@@ -1210,7 +1210,7 @@ Try these commands to see visual features:
 	// Initialize command completion and history
 	// Use current working directory as project root
 	projectRoot := "." // Agent 2 will improve this logic
-	
+
 	completionEngine := NewCompletionEngine(guildConfig, projectRoot)
 	commandHistory := NewCommandHistory(projectRoot + "/.guild/chat_history.txt")
 	commandProcessor := NewCommandProcessor(completionEngine, commandHistory, guildConfig)
@@ -1219,7 +1219,7 @@ Try these commands to see visual features:
 	statusTracker := NewAgentStatusTracker(guildConfig)
 	statusDisplay := NewStatusDisplay(statusTracker, chatWidth/4, chatWidth/3)
 	agentIndicators := NewAgentIndicators()
-	
+
 	// Start the status tracking systems
 	statusTracker.StartTracking()
 	agentIndicators.SetupDefaultAnimations()
@@ -1261,13 +1261,13 @@ Try these commands to see visual features:
 		showingCompletion: false,
 		completionResults: []CompletionResult{},
 		completionIndex:   0,
-		
+
 		// Agent status system (Agent 3)
 		statusTracker:   statusTracker,
 		statusDisplay:   statusDisplay,
 		agentIndicators: agentIndicators,
 		showAgentStatus: true, // Default to showing status
-		
+
 		// Integration state (Agent 4)
 		demoMode:         false,
 		integrationFlags: make(map[string]bool),
@@ -1368,7 +1368,7 @@ func (m ChatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		headerHeight := 3
 		helpHeight := 3
 		inputHeight := 5
-		
+
 		// Calculate dimensions for status panel (Agent 3)
 		statusPanelWidth := msg.Width / 4 // 25% of screen width
 		mainChatWidth := msg.Width - statusPanelWidth - 8 // Remaining space minus padding
@@ -1377,7 +1377,7 @@ func (m ChatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.messages.Height = msg.Height - headerHeight - inputHeight - helpHeight
 
 		m.input.SetWidth(mainChatWidth)
-		
+
 		// Update status display dimensions (Agent 3)
 		if m.statusDisplay != nil {
 			m.statusDisplay.SetDimensions(statusPanelWidth, msg.Height - headerHeight)
@@ -1498,12 +1498,12 @@ func (m *ChatModel) handleAgentStatusUpdate(msg AgentStatusUpdateMsg) {
 	if m.statusTracker != nil && msg.Status != nil {
 		m.statusTracker.UpdateAgentStatus(msg.AgentID, msg.Status)
 	}
-	
+
 	// Update agent indicators based on state
 	if m.agentIndicators != nil {
 		m.agentIndicators.UpdateAnimation(msg.AgentID, msg.State)
 	}
-	
+
 	// Update display to reflect changes
 	if m.statusDisplay != nil {
 		m.statusDisplay.Update()
@@ -1872,7 +1872,7 @@ func (m ChatModel) updateMessagesView() {
 			if m.contentFormatter != nil {
 				formattedContent = m.contentFormatter.FormatAgentResponse(msg.Content, msg.AgentID)
 			}
-			
+
 			// Show agent attribution differently based on view mode
 			if m.chatMode == globalView {
 				styled := m.agentStyle.Render(fmt.Sprintf("[%s]", msg.Sender))
@@ -1889,7 +1889,7 @@ func (m ChatModel) updateMessagesView() {
 			if m.contentFormatter != nil {
 				formattedContent = m.contentFormatter.FormatSystemMessage(msg.Content)
 			}
-			
+
 			// Show agent attribution for system messages in global view
 			if m.chatMode == globalView && msg.AgentID != "" {
 				styled := m.systemStyle.Render(fmt.Sprintf("[Guild:%s]", msg.AgentID))
@@ -1943,7 +1943,7 @@ func (m ChatModel) updateMessagesView() {
 				}
 				formattedContent = m.contentFormatter.FormatToolOutput(msg.Content, toolName)
 			}
-			
+
 			// Show agent attribution for tool messages in global view
 			if m.chatMode == globalView && msg.AgentID != "" {
 				styled := m.toolStyle.Render(fmt.Sprintf("[Tool:%s]", msg.AgentID))
@@ -2062,7 +2062,7 @@ Agents:   %d configured
 
 Prompt Layers:
   📋 Platform: Active
-  🏰 Guild:    Active  
+  🏰 Guild:    Active
   👷 Role:     Active (per agent)
   👤 Session:  %s
   💬 Turn:     None
@@ -2174,22 +2174,22 @@ func (m ChatModel) getPromptLayersText() string {
    Safety guidelines, Guild ethics, core principles
    Token usage: ~200 tokens
 
-🏰 Guild Layer:  
+🏰 Guild Layer:
    Project-specific goals and coding standards
    Token usage: ~300 tokens
-   
+
 👷 Role Layer:
    Agent-specific role definitions and capabilities
    Token usage: ~400 tokens (varies by agent)
-   
+
 📚 Domain Layer:
    Project type specializations (web-app, cli-tool, etc.)
    Token usage: ~250 tokens
-   
+
 👤 Session Layer:
    User preferences and session-specific context
    Token usage: ~150 tokens
-   
+
 💬 Turn Layer:
    Ephemeral instructions for current interaction
    Token usage: ~100 tokens
@@ -2231,7 +2231,7 @@ func (m ChatModel) handleAgentList() (ChatModel, tea.Cmd) {
 func (m ChatModel) handleStatusView() (ChatModel, tea.Cmd) {
 	// Toggle agent status panel visibility (Agent 3)
 	m.showAgentStatus = !m.showAgentStatus
-	
+
 	// Add status message
 	statusContent := m.getStatusText()
 	if m.showAgentStatus {
@@ -2239,7 +2239,7 @@ func (m ChatModel) handleStatusView() (ChatModel, tea.Cmd) {
 	} else {
 		statusContent += "\n\n📊 Agent status panel is now hidden (Ctrl+S to toggle)"
 	}
-	
+
 	msg := chatMessage{
 		Timestamp: time.Now(),
 		Sender:    "system",
@@ -2451,7 +2451,7 @@ func (m ChatModel) getToolListText() string {
    Capabilities: file-system, text-processing
    Cost: Free
 
-2. shell-exec  
+2. shell-exec
    Description: Execute shell commands
    Capabilities: system, execution
    Cost: Low
@@ -2970,15 +2970,15 @@ func (m ChatModel) generateMarkdownTestContent() string {
 This demonstrates Guild's **rich content rendering** capabilities!
 
 ## Features Included:
-- **Bold text** and *italic text* 
+- **Bold text** and *italic text*
 - Headers at multiple levels
 - Bullet points and numbered lists
-- [Links](https://github.com/guild-ventures/guild-core) 
+- [Links](https://github.com/guild-ventures/guild-core)
 - ` + "`inline code`" + ` with highlighting
 
 ### Why This Matters:
 1. **Professional appearance** - No more plain text responses
-2. **Better readability** - Structured content is easier to parse  
+2. **Better readability** - Structured content is easier to parse
 3. **Visual hierarchy** - Headers and emphasis guide the eye
 4. **Code highlighting** - Syntax highlighting for technical content
 
@@ -3016,14 +3016,14 @@ type Agent struct {
 
 func (a *Agent) ExecuteTask(task string) error {
     fmt.Printf("🤖 Agent %s executing: %s\n", a.Name, task)
-    
+
     // Simulate work
     time.Sleep(100 * time.Millisecond)
-    
+
     if task == "impossible" {
         return fmt.Errorf("task cannot be completed")
     }
-    
+
     return nil
 }
 ` + "```" + `
@@ -3046,17 +3046,17 @@ class GuildAgent:
     name: str
     specializations: List[str]
     active: bool = True
-    
+
     async def process_task(self, task: str) -> Optional[str]:
         """Process a task asynchronously."""
         print(f"🤖 {self.name} processing: {task}")
-        
+
         # Simulate async work
         await asyncio.sleep(0.1)
-        
+
         if not self.active:
             raise ValueError("Agent is not active")
-            
+
         return f"Completed: {task}"
 
 # Example usage
@@ -3078,21 +3078,21 @@ class GuildAgent {
         this.capabilities = capabilities;
         this.status = 'idle';
     }
-    
+
     async executeTask(task) {
         console.log(` + "`🤖 ${this.name} executing: ${task}`" + `);
         this.status = 'working';
-        
+
         try {
             // Simulate async work
             await new Promise(resolve => setTimeout(resolve, 100));
-            
+
             const result = {
                 success: true,
                 output: ` + "`Task completed: ${task}`" + `,
                 timestamp: new Date().toISOString()
             };
-            
+
             this.status = 'idle';
             return result;
         } catch (error) {
@@ -3160,7 +3160,7 @@ func (m ChatModel) getTestHelpText() string {
 
 Available languages for /test code:
   go, golang    - Go language syntax highlighting
-  python, py    - Python syntax highlighting  
+  python, py    - Python syntax highlighting
   javascript, js - JavaScript syntax highlighting
   sql           - SQL syntax highlighting
   bash, sh      - Shell script highlighting
@@ -3188,32 +3188,32 @@ Here's how a Guild agent might be implemented:
 ` + "```go" + `
 func (agent *GuildAgent) ProcessCommission(commission *Commission) error {
     log.Printf("🏰 Processing commission: %s", commission.Title)
-    
+
     // Break down into tasks
     tasks := agent.analyzer.BreakdownCommission(commission)
-    
+
     for _, task := range tasks {
         if err := agent.ExecuteTask(task); err != nil {
-            return gerror.Wrap(err, gerror.ErrCodeTaskFailed, 
+            return gerror.Wrap(err, gerror.ErrCodeTaskFailed,
                 "failed to execute task").
                 WithComponent("GuildAgent").
                 WithOperation("ProcessCommission")
         }
     }
-    
+
     return nil
 }
 ` + "```" + `
 
 ### Key Features:
 - **Error handling** with structured Guild errors
-- **Logging** with medieval theming 🏰  
+- **Logging** with medieval theming 🏰
 - **Task breakdown** for parallel execution
 - **Clean interfaces** following Go best practices
 
 ### Command Options:
 1. ` + "`/test markdown`" + ` - Basic markdown features
-2. ` + "`/test code <lang>`" + ` - Language-specific highlighting  
+2. ` + "`/test code <lang>`" + ` - Language-specific highlighting
 3. ` + "`/test mixed`" + ` - Combined markdown + code (this demo)
 
 > **This is exactly the kind of rich, professional content that makes Guild superior to plain-text tools!**
@@ -3307,7 +3307,7 @@ func (m ChatModel) handleDownKey() (ChatModel, tea.Cmd) {
 func (m ChatModel) handleSearchHistory() (ChatModel, tea.Cmd) {
 	// Get current input as search term
 	searchTerm := m.input.Value()
-	
+
 	// If input is empty, show recent commands
 	if searchTerm == "" {
 		recent := m.commandHistory.GetRecent(5)
@@ -3325,7 +3325,7 @@ func (m ChatModel) handleSearchHistory() (ChatModel, tea.Cmd) {
 		// Set first result
 		m.input.SetValue(results[0])
 		m.input.CursorEnd()
-		
+
 		// Store as completion results for cycling
 		m.completionResults = make([]CompletionResult, len(results))
 		for i, result := range results {
@@ -3372,45 +3372,45 @@ func (m *ChatModel) InitializeAllComponents() error {
 			m.integrationFlags["markdown_enabled"] = true
 		}
 	}
-	
+
 	// Initialize content formatter
 	if m.contentFormatter == nil {
 		m.contentFormatter = NewContentFormatter(m.markdownRenderer, m.width)
 		m.integrationFlags["formatter_enabled"] = true
 	}
-	
+
 	// Initialize completion engine
 	if m.completionEngine == nil {
 		m.completionEngine = NewCompletionEngine(m.guildConfig, ".")
 		m.integrationFlags["completion_enabled"] = true
 	}
-	
+
 	// Initialize command history
 	if m.commandHistory == nil {
 		m.commandHistory = NewCommandHistory(".guild/chat_history.txt")
 		m.integrationFlags["history_enabled"] = true
 	}
-	
+
 	// Initialize status tracker
 	if m.statusTracker == nil {
 		m.statusTracker = NewAgentStatusTracker(m.guildConfig)
 		m.statusTracker.StartTracking()
 		m.integrationFlags["status_tracking_enabled"] = true
 	}
-	
+
 	// Initialize status display
 	if m.statusDisplay == nil && m.statusTracker != nil {
 		m.statusDisplay = NewStatusDisplay(m.statusTracker, m.width/4, m.width/3)
 		m.integrationFlags["status_display_enabled"] = true
 	}
-	
+
 	// Initialize agent indicators
 	if m.agentIndicators == nil {
 		m.agentIndicators = NewAgentIndicators()
 		m.agentIndicators.SetupDefaultAnimations()
 		m.integrationFlags["indicators_enabled"] = true
 	}
-	
+
 	// Validate all components
 	return m.ValidateAllComponents()
 }
@@ -3421,11 +3421,11 @@ func (m *ChatModel) ValidateAllComponents() error {
 	if m.guildConfig == nil {
 		return fmt.Errorf("guild configuration is not loaded")
 	}
-	
+
 	if m.ctx == nil {
 		return fmt.Errorf("context is not initialized")
 	}
-	
+
 	// Log component status
 	enabledCount := 0
 	for feature, enabled := range m.integrationFlags {
@@ -3439,12 +3439,12 @@ func (m *ChatModel) ValidateAllComponents() error {
 			}
 		}
 	}
-	
+
 	// Ensure minimum components are enabled
 	if enabledCount < 3 {
 		return fmt.Errorf("insufficient components enabled: only %d of minimum 3", enabledCount)
 	}
-	
+
 	return nil
 }
 
@@ -3462,14 +3462,14 @@ func (m ChatModel) HandleIntegratedKeyInput(msg tea.KeyMsg) (tea.Model, tea.Cmd)
 				m.input.CursorEnd()
 			}
 			return m, nil
-			
+
 		case key.Matches(msg, m.keymap.Escape):
 			// Cancel completion
 			m.showingCompletion = false
 			m.completionResults = nil
 			m.completionIndex = 0
 			return m, nil
-			
+
 		case key.Matches(msg, m.keymap.Send):
 			// Accept current completion and send
 			m.showingCompletion = false
@@ -3477,7 +3477,7 @@ func (m ChatModel) HandleIntegratedKeyInput(msg tea.KeyMsg) (tea.Model, tea.Cmd)
 			return m.handleSendMessage()
 		}
 	}
-	
+
 	// Normal key handling
 	return m.Update(msg)
 }
@@ -3488,13 +3488,13 @@ func (m *ChatModel) ProcessIntegratedMessage(input string) string {
 	if m.commandHistory != nil {
 		m.commandHistory.Add(input)
 	}
-	
+
 	// Process with command processor if available
 	if m.commandProcessor != nil {
 		// Command processor would handle advanced processing
 		// For now, use the existing processMessage
 	}
-	
+
 	return m.processMessage(input)
 }
 
@@ -3503,32 +3503,32 @@ func (m *ChatModel) RenderIntegratedView() string {
 	if !m.ready {
 		return "Initializing Guild Chat Chamber..."
 	}
-	
+
 	// Build integrated view with all components
 	var sections []string
-	
+
 	// Header with agent status indicators
 	header := m.renderIntegratedHeader()
 	sections = append(sections, header)
-	
+
 	// Messages area with rich content
 	messagesView := m.borderStyle.Render(m.messages.View())
 	sections = append(sections, messagesView)
-	
+
 	// Status panel if enabled
 	if m.showAgentStatus && m.statusDisplay != nil {
 		statusPanel := m.statusDisplay.RenderStatusPanel()
 		sections = append(sections, statusPanel)
 	}
-	
+
 	// Input area with completion popup
 	inputView := m.renderIntegratedInput()
 	sections = append(sections, inputView)
-	
+
 	// Help area
 	helpView := m.help.View(m.keymap)
 	sections = append(sections, helpView)
-	
+
 	// Combine all sections
 	return lipgloss.JoinVertical(lipgloss.Left, sections...)
 }
@@ -3541,19 +3541,19 @@ func (m *ChatModel) renderIntegratedHeader() string {
 		activeAgents := m.statusTracker.GetActiveAgents()
 		activeCount = len(activeAgents)
 	}
-	
+
 	// Build header with status
 	viewInfo := "Global View"
 	if m.chatMode == agentView && m.currentAgent != "" {
 		viewInfo = fmt.Sprintf("Agent: %s", m.currentAgent)
 	}
-	
+
 	// Add live status indicators
 	statusIndicator := ""
 	if activeCount > 0 {
 		statusIndicator = fmt.Sprintf(" | %d agents active", activeCount)
 	}
-	
+
 	return m.headerStyle.Render(fmt.Sprintf(
 		"🏰 Guild Chat | %s | Campaign: %s | Session: %s%s",
 		viewInfo,
@@ -3566,40 +3566,40 @@ func (m *ChatModel) renderIntegratedHeader() string {
 // renderIntegratedInput creates input area with completion popup
 func (m *ChatModel) renderIntegratedInput() string {
 	inputView := m.inputStyle.Render(m.input.View())
-	
+
 	// Add completion popup if active
 	if m.showingCompletion && len(m.completionResults) > 0 {
 		completionView := m.renderCompletionPopup()
 		// Stack completion above input
 		return lipgloss.JoinVertical(lipgloss.Left, completionView, inputView)
 	}
-	
+
 	return inputView
 }
 
 // renderCompletionPopup creates the auto-completion popup
 func (m *ChatModel) renderCompletionPopup() string {
 	var items []string
-	
+
 	for i, result := range m.completionResults {
 		// Highlight current selection
 		style := lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
 		if i == m.completionIndex {
 			style = style.Bold(true).Foreground(lipgloss.Color("212"))
 		}
-		
+
 		// Format item
 		item := fmt.Sprintf("%s - %s", result.Text, result.Description)
 		items = append(items, style.Render(item))
 	}
-	
+
 	// Create popup box
 	popup := lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
 		BorderForeground(lipgloss.Color("212")).
 		Padding(0, 1).
 		Render(strings.Join(items, "\n"))
-		
+
 	return popup
 }
 
@@ -3619,33 +3619,33 @@ func (m *ChatModel) addSystemMessage(content string) {
 func startEmbeddedServer(ctx context.Context, projCtx *project.Context, guildConfig *config.GuildConfig) error {
 	// Initialize registry for the server
 	reg := registry.NewComponentRegistry()
-	
+
 	// Configure registry with guild config
 	registryConfig := registry.Config{
 		Agents: registry.AgentConfigYaml{
 			DefaultType: "worker",
 		},
 	}
-	
+
 	if err := reg.Initialize(ctx, registryConfig); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize server registry").
 			WithComponent("grpc").
 			WithOperation("startEmbeddedServer")
 	}
-	
+
 	// Create event bus (minimal implementation for now)
 	eventBus := &SimpleEventBus{}
-	
+
 	// Create gRPC server
 	server := guildgrpc.NewServer(reg, eventBus)
-	
+
 	// Start server in background
 	go func() {
 		if err := server.Start(ctx, ":50051"); err != nil {
 			fmt.Printf("gRPC server error: %v\n", err)
 		}
 	}()
-	
+
 	return nil
 }
 

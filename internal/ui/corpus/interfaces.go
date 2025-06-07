@@ -2,7 +2,7 @@ package corpus
 
 import (
 	"context"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/corpus"
 )
 

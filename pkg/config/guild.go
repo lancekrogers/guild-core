@@ -76,17 +76,17 @@ type AgentConfig struct {
 	Tools        []string          `yaml:"tools,omitempty"`
 	MaxTokens    int               `yaml:"max_tokens,omitempty"`
 	Temperature  float64           `yaml:"temperature,omitempty"`
-	
+
 	// Prompt configuration
 	SystemPrompt    string            `yaml:"system_prompt,omitempty"`      // Direct system prompt
 	PromptTemplate  string            `yaml:"prompt_template,omitempty"`    // Template name for layered prompts
 	PromptLayers    map[string]string `yaml:"prompt_layers,omitempty"`      // Layer overrides for layered prompts
-	
+
 	// Enhanced configuration for intelligent assignment
 	CostMagnitude  int    `yaml:"cost_magnitude,omitempty"`   // Fibonacci cost scale: 0=bash, 1=cheap API, 2,3,5,8=expensive models
 	ContextWindow  int    `yaml:"context_window,omitempty"`   // Context window size in tokens (auto-detected if 0)
 	ContextReset   string `yaml:"context_reset,omitempty"`    // "truncate" or "summarize" when context exceeds window
-	
+
 	Settings       map[string]string `yaml:"settings,omitempty"` // Provider-specific settings
 }
 
@@ -103,7 +103,7 @@ type Metadata struct {
 // LoadGuildConfig loads guild configuration from a project directory
 func LoadGuildConfig(projectPath string) (*GuildConfig, error) {
 	configPath := filepath.Join(projectPath, ".guild", "guild.yaml")
-	
+
 	// Check if file exists
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		// Also check for guild.yml
@@ -144,7 +144,7 @@ func LoadGuildConfig(projectPath string) (*GuildConfig, error) {
 // SaveGuildConfig saves guild configuration to a project directory
 func SaveGuildConfig(projectPath string, config *GuildConfig) error {
 	configPath := filepath.Join(projectPath, ".guild", "guild.yaml")
-	
+
 	// Ensure directory exists
 	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create guild directory").
@@ -245,7 +245,7 @@ func (a *AgentConfig) Validate() error {
 			WithComponent("AgentConfig").
 			WithOperation("Validate")
 	}
-	
+
 	// Validate type
 	validTypes := map[string]bool{
 		"manager":    true,
@@ -309,19 +309,19 @@ func (a *AgentConfig) GetEffectiveCostMagnitude() int {
 	if a.CostMagnitude != 0 {
 		return a.CostMagnitude
 	}
-	
+
 	// If no model specified, this is likely a tool-only agent
 	if a.Model == "" {
 		return 0
 	}
-	
+
 	// Auto-assign based on model characteristics if not specified
 	modelLower := strings.ToLower(a.Model)
 	switch {
 	case strings.Contains(modelLower, "gpt-4"):
 		return 5 // High cost
 	case strings.Contains(modelLower, "gpt-3.5"):
-		return 2 // Low-mid cost  
+		return 2 // Low-mid cost
 	case strings.Contains(modelLower, "claude-3-opus"):
 		return 8 // Most expensive
 	case strings.Contains(modelLower, "claude-3-sonnet"):
@@ -340,7 +340,7 @@ func (a *AgentConfig) GetEffectiveContextWindow() int {
 	if a.ContextWindow > 0 {
 		return a.ContextWindow
 	}
-	
+
 	// Auto-detect based on known models
 	modelLower := strings.ToLower(a.Model)
 	switch {
@@ -364,7 +364,7 @@ func (a *AgentConfig) GetEffectiveContextReset() string {
 	if a.ContextReset != "" {
 		return a.ContextReset
 	}
-	
+
 	// Default based on agent type and capabilities
 	switch a.Type {
 	case "manager":

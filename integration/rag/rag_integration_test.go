@@ -24,7 +24,7 @@ func TestRAGChunkingBehavior(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	
+
 	// Setup vector store
 	mockProvider := mock.NewProvider()
 	vectorConfig := &vector.StoreConfig{
@@ -100,9 +100,9 @@ func TestRAGChunkingBehavior(t *testing.T) {
 				}
 			}
 
-			t.Logf("Created %d chunks with size=%d, overlap=%d", 
+			t.Logf("Created %d chunks with size=%d, overlap=%d",
 				len(uniqueChunks), tc.chunkSize, tc.chunkOverlap)
-			
+
 			// With mock embeddings, we may not get meaningful retrieval results
 			// Just verify the system doesn't crash
 			if len(uniqueChunks) == 0 {
@@ -122,7 +122,7 @@ func TestRAGDocumentLifecycle(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	
+
 	// Setup
 	mockProvider := mock.NewProvider()
 	vectorConfig := &vector.StoreConfig{
@@ -147,7 +147,7 @@ func TestRAGDocumentLifecycle(t *testing.T) {
 
 	// Step 1: Add multiple documents
 	t.Log("Step 1: Adding documents")
-	
+
 	docs := []struct {
 		id       string
 		content  string
@@ -178,7 +178,7 @@ func TestRAGDocumentLifecycle(t *testing.T) {
 
 	// Step 2: Query for specific content
 	t.Log("Step 2: Querying for content")
-	
+
 	queries := []struct {
 		query    string
 		expected string
@@ -194,7 +194,7 @@ func TestRAGDocumentLifecycle(t *testing.T) {
 			MinScore:   0.0,
 		})
 		require.NoError(t, err)
-		
+
 		// Check if we got relevant results
 		found := false
 		for _, result := range results.Results {
@@ -205,13 +205,13 @@ func TestRAGDocumentLifecycle(t *testing.T) {
 				}
 			}
 		}
-		
+
 		t.Logf("  Query '%s': found=%v", q.query, found)
 	}
 
 	// Step 3: Try to remove a document (may not be implemented)
 	t.Log("Step 3: Testing document removal")
-	
+
 	err = ragSystem.RemoveDocument(ctx, "doc2")
 	if err != nil {
 		t.Logf("  Document removal not implemented: %v", err)
@@ -222,13 +222,13 @@ func TestRAGDocumentLifecycle(t *testing.T) {
 
 	// Step 4: Verify removal
 	t.Log("Step 4: Verifying removal")
-	
+
 	results, err := ragSystem.RetrieveContext(ctx, "AI machine learning", rag.RetrievalConfig{
 		MaxResults: 5,
 		MinScore:   0.0,
 	})
 	require.NoError(t, err)
-	
+
 	// Should not find doc2 content
 	for _, result := range results.Results {
 		assert.NotContains(t, result.Content, "Technology is advancing rapidly")
@@ -305,7 +305,7 @@ func TestRAGWithCorpusIntegration(t *testing.T) {
 
 	// Test 1: Add corpus documents to RAG
 	t.Log("Test 1: Adding corpus documents to RAG")
-	
+
 	for i := range corpusDocs {
 		err := ragSystem.AddCorpusDocument(ctx, &corpusDocs[i])
 		require.NoError(t, err)
@@ -314,15 +314,15 @@ func TestRAGWithCorpusIntegration(t *testing.T) {
 
 	// Test 2: Mix corpus and non-corpus documents
 	t.Log("Test 2: Adding non-corpus documents")
-	
-	err = ragSystem.AddDocument(ctx, "external-1", 
-		"External knowledge about AI providers and LLM integration patterns.", 
+
+	err = ragSystem.AddDocument(ctx, "external-1",
+		"External knowledge about AI providers and LLM integration patterns.",
 		"external")
 	require.NoError(t, err)
 
 	// Test 3: Query with corpus preference
 	t.Log("Test 3: Querying with corpus preference")
-	
+
 	results, err := ragSystem.RetrieveContext(ctx, "memory storage", rag.RetrievalConfig{
 		MaxResults:      5,
 		MinScore:        0.0,
@@ -334,7 +334,7 @@ func TestRAGWithCorpusIntegration(t *testing.T) {
 	// Check metadata to see source
 	corpusResults := 0
 	externalResults := 0
-	
+
 	for _, result := range results.Results {
 		if result.Metadata != nil {
 			if source, ok := result.Metadata["source"].(string); ok {
@@ -347,12 +347,12 @@ func TestRAGWithCorpusIntegration(t *testing.T) {
 		}
 	}
 
-	t.Logf("  Found %d corpus results and %d external results", 
+	t.Logf("  Found %d corpus results and %d external results",
 		corpusResults, externalResults)
 
 	// Test 4: Disable vector search (corpus-focused)
 	t.Log("Test 4: Corpus-focused retrieval")
-	
+
 	corpusFocusedResults, err := ragSystem.RetrieveContext(ctx, "Guild Artisans", rag.RetrievalConfig{
 		MaxResults:          5,
 		MinScore:            0.0,
@@ -360,7 +360,7 @@ func TestRAGWithCorpusIntegration(t *testing.T) {
 		DisableVectorSearch: true, // Focus on corpus results
 	})
 	require.NoError(t, err)
-	
+
 	t.Logf("  Corpus-focused query returned %d results", len(corpusFocusedResults.Results))
 }
 
@@ -371,7 +371,7 @@ func TestRAGMetadataHandling(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	
+
 	// Setup
 	mockProvider := mock.NewProvider()
 	vectorConfig := &vector.StoreConfig{
@@ -411,17 +411,17 @@ func TestRAGMetadataHandling(t *testing.T) {
 	// Verify metadata is preserved
 	for i, result := range results.Results {
 		assert.NotNil(t, result.Metadata, "Result %d should have metadata", i)
-		
+
 		if result.Metadata != nil {
 			// Check expected metadata fields
 			if docIDMeta, ok := result.Metadata["document_id"]; ok {
 				assert.Equal(t, docID, docIDMeta)
 			}
-			
+
 			if categoryMeta, ok := result.Metadata["category"]; ok {
 				assert.Equal(t, category, categoryMeta)
 			}
-			
+
 			// Check for chunk-specific metadata
 			if chunkIndex, ok := result.Metadata["chunk_index"]; ok {
 				t.Logf("  Chunk %v metadata preserved", chunkIndex)
@@ -437,7 +437,7 @@ func TestRAGErrorHandling(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	
+
 	t.Run("Empty document handling", func(t *testing.T) {
 		mockProvider := mock.NewProvider()
 		vectorStore, _ := vector.NewVectorStore(ctx, &vector.StoreConfig{
@@ -508,7 +508,7 @@ func TestRAGPerformanceCharacteristics(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	
+
 	// Setup
 	mockProvider := mock.NewProvider()
 	vectorConfig := &vector.StoreConfig{
@@ -531,26 +531,26 @@ func TestRAGPerformanceCharacteristics(t *testing.T) {
 
 	// Test 1: Add many documents
 	t.Log("Test 1: Adding multiple documents")
-	
+
 	start := time.Now()
 	numDocs := 50
-	
+
 	for i := 0; i < numDocs; i++ {
 		content := fmt.Sprintf("Document %d contains unique content about topic %d. "+
 			"This helps test retrieval accuracy and performance. "+
 			"Each document should be distinguishable.", i, i)
-		
+
 		err := ragSystem.AddDocument(ctx, fmt.Sprintf("doc-%d", i), content, "performance-test")
 		require.NoError(t, err)
 	}
-	
+
 	addDuration := time.Since(start)
-	t.Logf("  Added %d documents in %v (%.2f docs/sec)", 
+	t.Logf("  Added %d documents in %v (%.2f docs/sec)",
 		numDocs, addDuration, float64(numDocs)/addDuration.Seconds())
 
 	// Test 2: Query performance
 	t.Log("Test 2: Query performance")
-	
+
 	queries := []string{
 		"topic 5",
 		"unique content",
@@ -560,27 +560,27 @@ func TestRAGPerformanceCharacteristics(t *testing.T) {
 
 	for _, query := range queries {
 		start := time.Now()
-		
+
 		results, err := ragSystem.RetrieveContext(ctx, query, rag.RetrievalConfig{
 			MaxResults: 5,
 			MinScore:   0.0,
 		})
 		require.NoError(t, err)
-		
+
 		queryDuration := time.Since(start)
 		t.Logf("  Query '%s': %d results in %v", query, len(results.Results), queryDuration)
 	}
 
 	// Test 3: Large document handling
 	t.Log("Test 3: Large document handling")
-	
+
 	// Create a large document (10KB)
 	largeContent := strings.Repeat("This is a large document with repeated content. ", 200)
-	
+
 	start = time.Now()
 	err = ragSystem.AddDocument(ctx, "large-doc", largeContent, "large")
 	require.NoError(t, err)
-	
+
 	largeDuration := time.Since(start)
 	t.Logf("  Added large document (%d chars) in %v", len(largeContent), largeDuration)
 }

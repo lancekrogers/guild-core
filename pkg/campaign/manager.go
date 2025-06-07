@@ -372,8 +372,8 @@ func (m *manager) UpdateProgress(ctx context.Context, campaignID string) error {
 	})
 
 	// Check if campaign should be auto-completed
-	if campaign.CompletedObjectives == campaign.TotalObjectives && 
-		campaign.TotalObjectives > 0 && 
+	if campaign.CompletedObjectives == campaign.TotalObjectives &&
+		campaign.TotalObjectives > 0 &&
 		campaign.Status == CampaignStatusActive {
 		// Auto-complete campaign
 		_ = m.Complete(ctx, campaignID)

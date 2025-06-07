@@ -17,7 +17,7 @@ func NewInputModel(label string, placeholder string) InputModel {
 	ti := textinput.New()
 	ti.Placeholder = placeholder
 	ti.Focus()
-	
+
 	return InputModel{
 		textInput: ti,
 		label:     label,

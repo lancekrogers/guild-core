@@ -16,7 +16,7 @@ import (
 func Example() {
 	// Create mock provider
 	provider := mock.NewProvider()
-	
+
 	// Set up responses
 	provider.SetResponse("Hello", "Hi there!")
 	provider.SetResponse("What's 2+2?", "4")
@@ -96,7 +96,7 @@ func TestAPICallVerification(t *testing.T) {
 		if call.Method != "ChatCompletion" {
 			t.Errorf("Call %d: wrong method %s", i, call.Method)
 		}
-		
+
 		req := call.Request.(interfaces.ChatRequest)
 		if req.Messages[0].Content != requests[i] {
 			t.Errorf("Call %d: wrong content", i)

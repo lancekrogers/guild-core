@@ -30,7 +30,7 @@ func init() {
 
 func runInfo(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
-	
+
 	// Try to get project context
 	projCtx, err := project.GetContext()
 	if err != nil {
@@ -44,12 +44,12 @@ func runInfo(cmd *cobra.Command, args []string) error {
 			WithComponent("cli").
 			WithOperation("info.run")
 	}
-	
+
 	fmt.Println("=== Guild Project Info ===")
 	fmt.Printf("Project Root: %s\n", projCtx.GetRootPath())
 	fmt.Printf("Guild Path: %s\n", projCtx.GetGuildPath())
 	fmt.Println()
-	
+
 	// Get corpus info
 	cfg, err := corpus.GetProjectConfig(ctx)
 	if err != nil {
@@ -58,19 +58,19 @@ func runInfo(cmd *cobra.Command, args []string) error {
 		fmt.Println("Corpus:")
 		displayCorpusInfo(ctx, cfg)
 	}
-	
+
 	// Get embeddings info
 	fmt.Println("\nEmbeddings:")
 	displayEmbeddingsInfo(projCtx.GetEmbeddingsPath())
-	
+
 	// Get agents info
 	fmt.Println("\nAgents:")
 	displayDirectoryInfo(projCtx.GetAgentsPath(), "*.yaml")
-	
+
 	// Get objectives info
 	fmt.Println("\nObjectives:")
 	displayDirectoryInfo(projCtx.GetObjectivesPath(), "*.md")
-	
+
 	// Display config info
 	fmt.Println("\nConfiguration:")
 	if _, err := os.Stat(projCtx.GetConfigPath()); err == nil {
@@ -79,7 +79,7 @@ func runInfo(cmd *cobra.Command, args []string) error {
 	} else {
 		fmt.Println("  No custom configuration (using defaults)")
 	}
-	
+
 	return nil
 }
 
@@ -90,10 +90,10 @@ func displayCorpusInfo(ctx context.Context, cfg corpus.Config) {
 		fmt.Printf("  Error listing documents: %v\n", err)
 		return
 	}
-	
+
 	fmt.Printf("  Documents: %d\n", len(docs))
 	fmt.Printf("  Path: %s\n", cfg.CorpusPath)
-	
+
 	// Calculate total size
 	var totalSize int64
 	for _, docPath := range docs {
@@ -101,7 +101,7 @@ func displayCorpusInfo(ctx context.Context, cfg corpus.Config) {
 			totalSize += info.Size()
 		}
 	}
-	
+
 	fmt.Printf("  Total size: %s\n", formatBytes(totalSize))
 	fmt.Printf("  Max size: %s\n", formatBytes(cfg.MaxSizeBytes))
 }
@@ -112,7 +112,7 @@ func displayEmbeddingsInfo(embeddingsPath string) {
 		// Count files and calculate size
 		var fileCount int
 		var totalSize int64
-		
+
 		filepath.Walk(embeddingsPath, func(path string, info fs.FileInfo, err error) error {
 			if err == nil && !info.IsDir() {
 				fileCount++
@@ -120,7 +120,7 @@ func displayEmbeddingsInfo(embeddingsPath string) {
 			}
 			return nil
 		})
-		
+
 		if fileCount > 0 {
 			fmt.Printf("  Status: Initialized\n")
 			fmt.Printf("  Files: %d\n", fileCount)

@@ -14,10 +14,10 @@ import (
 type Factory interface {
 	// CreateAgent creates a new agent with the given parameters
 	CreateAgent(ctx context.Context, id, name string, agentType string) (Agent, error)
-	
+
 	// CreateWorkerAgent creates a new worker agent
 	CreateWorkerAgent(ctx context.Context, id, name string) (Agent, error)
-	
+
 	// CreateManagerAgent creates a new manager agent
 	CreateManagerAgent(ctx context.Context, id, name string) (Agent, error)
 }

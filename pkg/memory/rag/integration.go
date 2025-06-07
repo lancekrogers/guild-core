@@ -3,7 +3,7 @@ package rag
 import (
 	"context"
 	"strings"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
@@ -12,7 +12,7 @@ import (
 func SearchCorpus(ctx context.Context, query string, corpusConfig corpus.Config, maxResults int) ([]SearchResult, error) {
 	// This is a stub implementation without actual vector search
 	var results []SearchResult
-	
+
 	// List documents
 	docs, err := corpus.List(ctx, corpusConfig)
 	if err != nil {
@@ -20,20 +20,20 @@ func SearchCorpus(ctx context.Context, query string, corpusConfig corpus.Config,
 			WithComponent("memory").
 			WithOperation("SearchCorpus")
 	}
-	
+
 	// Simple matching (not using vectors)
 	count := 0
 	for _, docPath := range docs {
 		if count >= maxResults {
 			break
 		}
-		
+
 		// Load document
 		doc, err := corpus.Load(ctx, docPath)
 		if err != nil {
 			continue
 		}
-		
+
 		// Simple check if query appears in document
 		if containsIgnoreCase(doc.Title, query) || containsIgnoreCase(doc.Body, query) {
 			result := SearchResult{
@@ -45,7 +45,7 @@ func SearchCorpus(ctx context.Context, query string, corpusConfig corpus.Config,
 			count++
 		}
 	}
-	
+
 	return results, nil
 }
 

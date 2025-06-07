@@ -251,7 +251,7 @@ func TestXMLFormatterMarkdown(t *testing.T) {
 		// Should have basic structure
 		assert.Contains(t, result, "# Commission Context")
 		assert.Contains(t, result, "## Current Task")
-		
+
 		// Should not have empty sections
 		assert.NotContains(t, result, "## Relevant Documentation")
 		assert.NotContains(t, result, "## Related Tasks")
@@ -286,7 +286,7 @@ func TestXMLFormatterOptimization(t *testing.T) {
 			<section>More content here</section>
 			<section>Even more content that will be truncated</section>
 		</root>`
-		
+
 		result, err := formatter.OptimizeForTokens(xmlContent, 20)
 		require.NoError(t, err)
 

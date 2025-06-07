@@ -2,7 +2,7 @@ package commission
 
 import (
 	"context"
-	
+
 	commissionpkg "github.com/guild-ventures/guild-core/pkg/commission"
 )
 
@@ -25,7 +25,7 @@ type CommissionPlanner interface {
 	ValidatePlan(ctx context.Context) error
 	UpdatePlan(ctx context.Context, updates map[string]interface{}) error
 	GetCommissionID() string
-	
+
 	// Additional methods used by the UI
 	GetSession() *commissionpkg.PlanningSession
 	AddContext(ctx context.Context, contextText string) error

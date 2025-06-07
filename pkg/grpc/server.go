@@ -25,18 +25,18 @@ import (
 // Server implements the Guild gRPC service
 type Server struct {
 	pb.UnimplementedGuildServer
-	
+
 	campaignMgr   campaign.Manager
 	commissionMgr *commission.Manager
 	kanbanMgr     *kanban.Manager
 	agentReg      registry.AgentRegistry
 	orchestrator  *orchestrator.Orchestrator
 	promptManager prompts.LayeredManager // Added for prompt management
-	
+
 	frameBuilder *FrameBuilder
 	watchers     map[string]*watcher
 	watchersMu   sync.RWMutex
-	
+
 	grpcServer    *grpc.Server
 	listener      net.Listener
 	promptServer  *PromptsServer // Added for prompt service
@@ -70,11 +70,11 @@ func NewServer(
 	agentReg := registry.Agents()
 	orchestrator := getOrchestrator(registry)
 	_ = registry.Prompts() // TODO: Fix interface mismatch
-	
+
 	// TODO: Fix interface mismatch between registry and prompts
 	promptServer := NewPromptsServer(nil) // Temporarily pass nil
 	chatService := NewChatService(registry, eventBus)
-	
+
 	return &Server{
 		campaignMgr:   campaignMgr,
 		commissionMgr: commissionMgr,
@@ -117,7 +117,7 @@ func (s *Server) Start(ctx context.Context, address string) error {
 	// Wait for context cancellation
 	<-ctx.Done()
 	s.grpcServer.GracefulStop()
-	
+
 	return nil
 }
 
@@ -138,7 +138,7 @@ func (s *Server) WatchCampaign(req *pb.WatchRequest, stream pb.Guild_WatchCampai
 		if err != nil {
 			return status.Errorf(codes.Internal, "failed to list campaigns: %v", err)
 		}
-		
+
 		// Find active campaign
 		for _, c := range campaigns {
 			if c.Status == campaign.CampaignStatusActive {
@@ -146,7 +146,7 @@ func (s *Server) WatchCampaign(req *pb.WatchRequest, stream pb.Guild_WatchCampai
 				break
 			}
 		}
-		
+
 		if campaignID == "" {
 			return status.Error(codes.NotFound, "no active campaign found")
 		}
@@ -195,7 +195,7 @@ func (s *Server) WatchCampaign(req *pb.WatchRequest, stream pb.Guild_WatchCampai
 		}
 		return nil
 	}
-	
+
 	// Subscribe to all campaign events
 	s.campaignMgr.Subscribe("*", handler)
 	defer s.campaignMgr.Unsubscribe("*", handler)
@@ -548,10 +548,10 @@ func (s *Server) SendMessageToAgent(ctx context.Context, req *pb.AgentMessageReq
 func (s *Server) StreamAgentConversation(stream pb.Guild_StreamAgentConversationServer) error {
 	// Create a context for this stream
 	_ = stream.Context()
-	
+
 	// Track active agents and their states
 	activeAgents := make(map[string]*pb.AgentStatus)
-	
+
 	for {
 		// Receive message from client
 		req, err := stream.Recv()
@@ -564,7 +564,7 @@ func (s *Server) StreamAgentConversation(stream pb.Guild_StreamAgentConversation
 		case *pb.AgentStreamRequest_Message:
 			// Handle agent message
 			msg := request.Message
-			
+
 			// Update agent status to thinking
 			if _, exists := activeAgents[msg.AgentId]; !exists {
 				activeAgents[msg.AgentId] = &pb.AgentStatus{
@@ -572,7 +572,7 @@ func (s *Server) StreamAgentConversation(stream pb.Guild_StreamAgentConversation
 					LastActivity: time.Now().Unix(),
 				}
 			}
-			
+
 			// Send thinking event
 			if err := stream.Send(&pb.AgentStreamResponse{
 				Response: &pb.AgentStreamResponse_Event{
@@ -587,7 +587,7 @@ func (s *Server) StreamAgentConversation(stream pb.Guild_StreamAgentConversation
 			}); err != nil {
 				return err
 			}
-			
+
 			// Mock agent creation for now
 			// TODO: Integrate with actual agent factory
 			var mockAgent interface{} = nil
@@ -609,7 +609,7 @@ func (s *Server) StreamAgentConversation(stream pb.Guild_StreamAgentConversation
 				}
 				continue
 			}
-			
+
 			// Update status to working
 			activeAgents[msg.AgentId].State = pb.AgentStatus_WORKING
 			if err := stream.Send(&pb.AgentStreamResponse{
@@ -619,11 +619,11 @@ func (s *Server) StreamAgentConversation(stream pb.Guild_StreamAgentConversation
 			}); err != nil {
 				return err
 			}
-			
+
 			// Mock response for now
 			response := fmt.Sprintf("Mock response from agent %s: I received '%s'", msg.AgentId, msg.Message)
 			_ = mockAgent // Suppress unused variable warning
-			
+
 			// Simulate error for demonstration (remove this in real implementation)
 			if false {
 				// Send error
@@ -639,7 +639,7 @@ func (s *Server) StreamAgentConversation(stream pb.Guild_StreamAgentConversation
 				}
 				continue
 			}
-			
+
 			// Stream response in fragments (simulate streaming)
 			// In real implementation, agent.Execute would return a channel
 			fragments := splitIntoFragments(response, 100) // 100 chars per fragment
@@ -656,11 +656,11 @@ func (s *Server) StreamAgentConversation(stream pb.Guild_StreamAgentConversation
 				}); err != nil {
 					return err
 				}
-				
+
 				// Small delay to simulate streaming
 				time.Sleep(50 * time.Millisecond)
 			}
-			
+
 			// Update status to idle
 			activeAgents[msg.AgentId].State = pb.AgentStatus_IDLE
 			if err := stream.Send(&pb.AgentStreamResponse{
@@ -670,7 +670,7 @@ func (s *Server) StreamAgentConversation(stream pb.Guild_StreamAgentConversation
 			}); err != nil {
 				return err
 			}
-			
+
 		case *pb.AgentStreamRequest_Control:
 			// Handle stream control commands
 			control := request.Control
@@ -689,7 +689,7 @@ func (s *Server) StreamAgentConversation(stream pb.Guild_StreamAgentConversation
 // ListAvailableAgents returns all available agents
 func (s *Server) ListAvailableAgents(ctx context.Context, req *pb.ListAgentsRequest) (*pb.ListAgentsResponse, error) {
 	registeredAgents := s.agentReg.GetRegisteredAgents()
-	
+
 	agents := make([]*pb.AgentInfo, 0, len(registeredAgents))
 	for _, agent := range registeredAgents {
 		agentInfo := &pb.AgentInfo{
@@ -702,7 +702,7 @@ func (s *Server) ListAvailableAgents(ctx context.Context, req *pb.ListAgentsRequ
 				"model":    agent.Model,
 			},
 		}
-		
+
 		// Add status if requested
 		if req.IncludeStatus {
 			agentInfo.Status = &pb.AgentStatus{
@@ -710,10 +710,10 @@ func (s *Server) ListAvailableAgents(ctx context.Context, req *pb.ListAgentsRequ
 				LastActivity: time.Now().Unix(),
 			}
 		}
-		
+
 		agents = append(agents, agentInfo)
 	}
-	
+
 	return &pb.ListAgentsResponse{
 		Agents:     agents,
 		TotalCount: int32(len(agents)),
@@ -725,7 +725,7 @@ func (s *Server) GetAgentStatus(ctx context.Context, req *pb.GetAgentStatusReque
 	if req.AgentId == "" {
 		return nil, status.Error(codes.InvalidArgument, "agent_id is required")
 	}
-	
+
 	// In real implementation, this would check actual agent state
 	// For now, return a mock status
 	return &pb.AgentStatus{
@@ -742,7 +742,7 @@ func splitIntoFragments(text string, chunkSize int) []string {
 	if chunkSize <= 0 {
 		return []string{text}
 	}
-	
+
 	var fragments []string
 	for i := 0; i < len(text); i += chunkSize {
 		end := i + chunkSize
@@ -751,7 +751,7 @@ func splitIntoFragments(text string, chunkSize int) []string {
 		}
 		fragments = append(fragments, text[i:end])
 	}
-	
+
 	return fragments
 }
 

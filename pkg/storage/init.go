@@ -46,7 +46,7 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 
 	// Create memory store adapter that implements memory.Store interface
 	memoryStoreAdapter := NewMemoryStoreAdapter(database)
-	
+
 	// Register the memory store adapter in the storage registry
 	storageRegistry.RegisterMemoryStore(memoryStoreAdapter)
 
@@ -195,7 +195,7 @@ func createTestSchema(database *Database) error {
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	);
 
-	-- Add prompt chain messages table  
+	-- Add prompt chain messages table
 	CREATE TABLE prompt_chain_messages (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		chain_id TEXT NOT NULL REFERENCES prompt_chains(id) ON DELETE CASCADE,

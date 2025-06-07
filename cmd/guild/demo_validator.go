@@ -43,10 +43,10 @@ func NewDemoValidator(verbose bool) *DemoValidator {
 // ValidateEnvironment performs comprehensive demo environment validation
 func (dv *DemoValidator) ValidateEnvironment() (*DemoValidationResult, error) {
 	start := time.Now()
-	
+
 	fmt.Printf("🏰 Guild Demo Environment Validator\n")
 	fmt.Printf("═══════════════════════════════════════════\n\n")
-	
+
 	// Core checks
 	dv.checkTerminalEnvironment()
 	dv.checkGuildProject()
@@ -54,38 +54,38 @@ func (dv *DemoValidator) ValidateEnvironment() (*DemoValidationResult, error) {
 	dv.checkDemoFiles()
 	dv.checkVisualSupport()
 	dv.checkRecordingTools()
-	
+
 	duration := time.Since(start)
-	
+
 	// Print results
 	dv.printValidationSummary(duration)
-	
+
 	result := &DemoValidationResult{
 		Passed:   len(dv.errors) == 0,
 		Errors:   dv.errors,
 		Warnings: dv.warnings,
 		Duration: duration,
 	}
-	
+
 	if len(dv.errors) > 0 {
 		return result, gerror.New(gerror.ErrCodeValidation, "demo environment validation failed", nil).
 			WithComponent("cli").
 			WithOperation("demo.validate").
 			WithDetails("error_count", strconv.Itoa(len(dv.errors)))
 	}
-	
+
 	return result, nil
 }
 
 // checkTerminalEnvironment validates terminal size and capabilities
 func (dv *DemoValidator) checkTerminalEnvironment() {
 	fmt.Printf("📐 Checking terminal environment...\n")
-	
+
 	// Check if running in terminal
 	if !term.IsTerminal(int(os.Stdout.Fd())) {
 		dv.warnings = append(dv.warnings, "Not running in interactive terminal - some features may be limited")
 	}
-	
+
 	// Check terminal size
 	width, height, err := term.GetSize(int(os.Stdout.Fd()))
 	if err != nil {
@@ -94,7 +94,7 @@ func (dv *DemoValidator) checkTerminalEnvironment() {
 		if dv.verbose {
 			fmt.Printf("  Terminal size: %dx%d\n", width, height)
 		}
-		
+
 		if width < 120 {
 			dv.warnings = append(dv.warnings, fmt.Sprintf("Terminal width (%d) smaller than recommended (120)", width))
 		}
@@ -102,11 +102,11 @@ func (dv *DemoValidator) checkTerminalEnvironment() {
 			dv.warnings = append(dv.warnings, fmt.Sprintf("Terminal height (%d) smaller than recommended (40)", height))
 		}
 	}
-	
+
 	// Check color support
 	colorterm := os.Getenv("COLORTERM")
 	term_program := os.Getenv("TERM_PROGRAM")
-	
+
 	if colorterm == "truecolor" || term_program == "iTerm.app" {
 		if dv.verbose {
 			fmt.Printf("  ✅ Full color support detected\n")
@@ -114,53 +114,53 @@ func (dv *DemoValidator) checkTerminalEnvironment() {
 	} else {
 		dv.warnings = append(dv.warnings, "Terminal may not support full colors - set COLORTERM=truecolor")
 	}
-	
+
 	fmt.Printf("  ✅ Terminal environment checked\n\n")
 }
 
 // checkGuildProject validates Guild project setup
 func (dv *DemoValidator) checkGuildProject() {
 	fmt.Printf("🏗️  Checking Guild project setup...\n")
-	
+
 	// Check if in Guild project
 	projCtx, err := project.GetContext()
 	if err != nil {
 		dv.errors = append(dv.errors, "Not in a Guild project - run 'guild init' first")
 		return
 	}
-	
+
 	if dv.verbose {
 		fmt.Printf("  Project root: %s\n", projCtx.GetRootPath())
 	}
-	
+
 	// Check .guild directory
 	guildDir := filepath.Join(projCtx.GetRootPath(), ".guild")
 	if !dv.fileExists(guildDir) {
 		dv.errors = append(dv.errors, "Guild not initialized - run 'guild init'")
 		return
 	}
-	
+
 	// Check database
 	dbPath := filepath.Join(guildDir, "memory.db")
 	if !dv.fileExists(dbPath) {
 		dv.warnings = append(dv.warnings, "Database not found - may need to run some commands first")
 	}
-	
+
 	// Check guild.yaml
 	configPath := filepath.Join(guildDir, "guild.yaml")
 	if !dv.fileExists(configPath) {
 		dv.errors = append(dv.errors, "Guild configuration not found - check guild.yaml")
 	}
-	
+
 	fmt.Printf("  ✅ Guild project validated\n\n")
 }
 
 // checkNetworkPorts validates that required ports are available
 func (dv *DemoValidator) checkNetworkPorts() {
 	fmt.Printf("🌐 Checking network ports...\n")
-	
+
 	ports := []int{50051, 50052} // gRPC ports
-	
+
 	for _, port := range ports {
 		if dv.isPortInUse(port) {
 			if port == 50051 {
@@ -172,23 +172,23 @@ func (dv *DemoValidator) checkNetworkPorts() {
 			fmt.Printf("  ✅ Port %d available\n", port)
 		}
 	}
-	
+
 	fmt.Printf("  ✅ Network ports checked\n\n")
 }
 
 // checkDemoFiles validates that required demo files exist
 func (dv *DemoValidator) checkDemoFiles() {
 	fmt.Printf("📁 Checking demo files...\n")
-	
+
 	// Get project context for relative paths
 	projCtx, err := project.GetContext()
 	if err != nil {
 		dv.errors = append(dv.errors, "Cannot check demo files - project context unavailable")
 		return
 	}
-	
+
 	rootPath := projCtx.GetRootPath()
-	
+
 	requiredFiles := []struct {
 		path        string
 		description string
@@ -199,7 +199,7 @@ func (dv *DemoValidator) checkDemoFiles() {
 		{"docs/demo-chat.md", "Demo documentation", false},
 		{".guild/guild.yaml", "Guild configuration", true},
 	}
-	
+
 	for _, file := range requiredFiles {
 		fullPath := filepath.Join(rootPath, file.path)
 		if !dv.fileExists(fullPath) {
@@ -212,14 +212,14 @@ func (dv *DemoValidator) checkDemoFiles() {
 			fmt.Printf("  ✅ Found: %s\n", file.path)
 		}
 	}
-	
+
 	fmt.Printf("  ✅ Demo files checked\n\n")
 }
 
 // checkVisualSupport validates visual components and rendering
 func (dv *DemoValidator) checkVisualSupport() {
 	fmt.Printf("🎨 Checking visual support...\n")
-	
+
 	// Check TERM variable
 	termVar := os.Getenv("TERM")
 	if termVar == "" {
@@ -227,7 +227,7 @@ func (dv *DemoValidator) checkVisualSupport() {
 	} else if dv.verbose {
 		fmt.Printf("  TERM: %s\n", termVar)
 	}
-	
+
 	// Check for truecolor support
 	if dv.supportsColor() {
 		if dv.verbose {
@@ -236,7 +236,7 @@ func (dv *DemoValidator) checkVisualSupport() {
 	} else {
 		dv.warnings = append(dv.warnings, "Limited color support - visual features may be degraded")
 	}
-	
+
 	// Check terminal capabilities
 	if dv.hasUnicodeSupport() {
 		if dv.verbose {
@@ -245,14 +245,14 @@ func (dv *DemoValidator) checkVisualSupport() {
 	} else {
 		dv.warnings = append(dv.warnings, "Limited Unicode support - visual elements may not display correctly")
 	}
-	
+
 	fmt.Printf("  ✅ Visual support checked\n\n")
 }
 
 // checkRecordingTools validates demo recording capabilities
 func (dv *DemoValidator) checkRecordingTools() {
 	fmt.Printf("🎥 Checking recording tools...\n")
-	
+
 	tools := []struct {
 		name        string
 		command     string
@@ -263,7 +263,7 @@ func (dv *DemoValidator) checkRecordingTools() {
 		{"agg", "agg", "GIF conversion", false},
 		{"ffmpeg", "ffmpeg", "Video processing", false},
 	}
-	
+
 	for _, tool := range tools {
 		if dv.commandExists(tool.command) {
 			if dv.verbose {
@@ -277,7 +277,7 @@ func (dv *DemoValidator) checkRecordingTools() {
 			}
 		}
 	}
-	
+
 	fmt.Printf("  ✅ Recording tools checked\n\n")
 }
 
@@ -318,12 +318,12 @@ func (dv *DemoValidator) supportsColor() bool {
 	if colorterm == "truecolor" || colorterm == "24bit" {
 		return true
 	}
-	
+
 	termProgram := os.Getenv("TERM_PROGRAM")
 	if termProgram == "iTerm.app" || termProgram == "vscode" {
 		return true
 	}
-	
+
 	term := os.Getenv("TERM")
 	return strings.Contains(term, "256color") || strings.Contains(term, "color")
 }
@@ -331,7 +331,7 @@ func (dv *DemoValidator) supportsColor() bool {
 func (dv *DemoValidator) hasUnicodeSupport() bool {
 	lang := os.Getenv("LANG")
 	lc_all := os.Getenv("LC_ALL")
-	
+
 	return strings.Contains(lang, "UTF-8") || strings.Contains(lc_all, "UTF-8")
 }
 
@@ -343,7 +343,7 @@ func (dv *DemoValidator) printValidationSummary(duration time.Duration) {
 	fmt.Printf("Errors: %d\n", len(dv.errors))
 	fmt.Printf("Warnings: %d\n", len(dv.warnings))
 	fmt.Printf("\n")
-	
+
 	if len(dv.errors) > 0 {
 		fmt.Printf("❌ Errors (must fix before demo):\n")
 		for i, err := range dv.errors {
@@ -351,7 +351,7 @@ func (dv *DemoValidator) printValidationSummary(duration time.Duration) {
 		}
 		fmt.Printf("\n")
 	}
-	
+
 	if len(dv.warnings) > 0 {
 		fmt.Printf("⚠️  Warnings (recommend fixing):\n")
 		for i, warn := range dv.warnings {
@@ -359,7 +359,7 @@ func (dv *DemoValidator) printValidationSummary(duration time.Duration) {
 		}
 		fmt.Printf("\n")
 	}
-	
+
 	if len(dv.errors) == 0 {
 		fmt.Printf("✅ Demo environment ready!\n")
 		fmt.Printf("\nNext steps:\n")
@@ -370,7 +370,7 @@ func (dv *DemoValidator) printValidationSummary(duration time.Duration) {
 		fmt.Printf("❌ Demo environment not ready\n")
 		fmt.Printf("\nFix the errors above before proceeding with demo\n")
 	}
-	
+
 	fmt.Printf("═══════════════════════════════════════════\n")
 }
 
@@ -379,7 +379,7 @@ func (dv *DemoValidator) printValidationSummary(duration time.Duration) {
 // CheckAPIKeys validates that required API keys are available
 func (dv *DemoValidator) CheckAPIKeys() {
 	fmt.Printf("🔑 Checking API keys...\n")
-	
+
 	keys := []struct {
 		env         string
 		provider    string
@@ -389,7 +389,7 @@ func (dv *DemoValidator) CheckAPIKeys() {
 		{"ANTHROPIC_API_KEY", "Anthropic", false},
 		{"DEEPSEEK_API_KEY", "DeepSeek", false},
 	}
-	
+
 	hasAnyKey := false
 	for _, key := range keys {
 		if os.Getenv(key.env) != "" {
@@ -405,35 +405,35 @@ func (dv *DemoValidator) CheckAPIKeys() {
 			}
 		}
 	}
-	
+
 	if !hasAnyKey {
 		dv.warnings = append(dv.warnings, "No API keys configured - using mock provider only")
 	}
-	
+
 	fmt.Printf("  ✅ API keys checked\n\n")
 }
 
 // CheckPerformance runs basic performance checks
 func (dv *DemoValidator) CheckPerformance() {
 	fmt.Printf("⚡ Checking performance...\n")
-	
+
 	// Test file I/O speed
 	start := time.Now()
 	tmpFile := "/tmp/guild_perf_test.txt"
-	
+
 	err := os.WriteFile(tmpFile, []byte("performance test"), 0644)
 	if err == nil {
 		_, err = os.ReadFile(tmpFile)
 		os.Remove(tmpFile)
 	}
-	
+
 	ioTime := time.Since(start)
 	if ioTime > 10*time.Millisecond {
 		dv.warnings = append(dv.warnings, fmt.Sprintf("Slow file I/O detected (%v) - may affect demo smoothness", ioTime))
 	} else if dv.verbose {
 		fmt.Printf("  ✅ File I/O performance: %v\n", ioTime)
 	}
-	
+
 	fmt.Printf("  ✅ Performance checked\n\n")
 }
 
@@ -446,7 +446,7 @@ var demoCheckCmd = &cobra.Command{
 This command checks:
 - Terminal size and color support
 - Guild project initialization
-- Network port availability  
+- Network port availability
 - Required demo files
 - Visual rendering capabilities
 - Recording tool availability
@@ -456,28 +456,28 @@ Use --verbose for detailed output.`,
 		verbose, _ := cmd.Flags().GetBool("verbose")
 		apiKeys, _ := cmd.Flags().GetBool("api-keys")
 		performance, _ := cmd.Flags().GetBool("performance")
-		
+
 		validator := NewDemoValidator(verbose)
-		
+
 		// Run additional checks if requested
 		if apiKeys {
 			validator.CheckAPIKeys()
 		}
-		
+
 		if performance {
 			validator.CheckPerformance()
 		}
-		
+
 		result, err := validator.ValidateEnvironment()
 		if err != nil {
 			return err
 		}
-		
+
 		// Set exit code based on validation result
 		if !result.Passed {
 			os.Exit(1)
 		}
-		
+
 		return nil
 	},
 }
@@ -485,7 +485,7 @@ Use --verbose for detailed output.`,
 func init() {
 	// Add demo-check command to root
 	rootCmd.AddCommand(demoCheckCmd)
-	
+
 	// Add flags
 	demoCheckCmd.Flags().BoolP("verbose", "v", false, "Show detailed validation output")
 	demoCheckCmd.Flags().Bool("api-keys", false, "Check API key configuration")

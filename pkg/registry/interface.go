@@ -18,47 +18,47 @@ import (
 type ComponentRegistry interface {
 	// Agents returns the agent registry for managing agent types
 	Agents() AgentRegistry
-	
+
 	// Tools returns the tool registry for managing tools
 	Tools() ToolRegistry
-	
+
 	// Providers returns the provider registry for managing LLM providers
 	Providers() ProviderRegistry
-	
+
 	// Memory returns the memory registry for managing memory components
 	Memory() MemoryRegistry
-	
+
 	// Project returns the project registry for managing project contexts
 	Project() ProjectRegistry
-	
+
 	// Prompts returns the prompt registry for managing prompt templates
 	Prompts() *PromptRegistry
-	
+
 	// Storage returns the storage registry for managing storage backends
 	Storage() StorageRegistry
-	
+
 	// Orchestrator returns the orchestrator registry for managing orchestrator components
 	Orchestrator() interface{}
-	
+
 	// Initialize sets up all registries with the provided configuration
 	Initialize(ctx context.Context, config Config) error
-	
+
 	// Shutdown cleanly shuts down all registries and their components
 	Shutdown(ctx context.Context) error
-	
+
 	// Cost-based selection methods (convenience methods for cost-aware orchestration)
 	// GetAgentsByCost returns agents with cost magnitude <= maxCost, sorted by cost
 	GetAgentsByCost(maxCost int) []AgentInfo
-	
+
 	// GetCheapestAgentByCapability returns the lowest-cost agent with the given capability
 	GetCheapestAgentByCapability(capability string) (*AgentInfo, error)
-	
+
 	// GetToolsByCost returns tools with cost magnitude <= maxCost, sorted by cost
 	GetToolsByCost(maxCost int) []ToolInfo
-	
+
 	// GetCheapestToolByCapability returns the lowest-cost tool with the given capability
 	GetCheapestToolByCapability(capability string) (*ToolInfo, error)
-	
+
 	// GetAgentsByCapability returns all agents that have the specified capability
 	GetAgentsByCapability(capability string) []AgentInfo
 }
@@ -67,29 +67,29 @@ type ComponentRegistry interface {
 type AgentRegistry interface {
 	// RegisterAgentType registers a new agent type with its factory function
 	RegisterAgentType(name string, factory AgentFactory) error
-	
+
 	// GetAgent creates an agent instance of the specified type
 	GetAgent(agentType string) (Agent, error)
-	
+
 	// ListAgentTypes returns all registered agent types
 	ListAgentTypes() []string
-	
+
 	// HasAgentType checks if an agent type is registered
 	HasAgentType(agentType string) bool
-	
+
 	// Cost-based selection methods
 	// GetAgentsByCost returns agents with cost magnitude <= maxCost, sorted by cost
 	GetAgentsByCost(maxCost int) []AgentInfo
-	
+
 	// GetCheapestAgentByCapability returns the lowest-cost agent with the given capability
 	GetCheapestAgentByCapability(capability string) (*AgentInfo, error)
-	
+
 	// GetAgentsByCapability returns all agents that have the specified capability
 	GetAgentsByCapability(capability string) []AgentInfo
-	
+
 	// RegisterGuildAgent registers a configured agent from guild config
 	RegisterGuildAgent(config GuildAgentConfig) error
-	
+
 	// GetRegisteredAgents returns all registered agent configurations
 	GetRegisteredAgents() []GuildAgentConfig
 }
@@ -98,26 +98,26 @@ type AgentRegistry interface {
 type ToolRegistry interface {
 	// RegisterTool registers a tool with the registry
 	RegisterTool(name string, tool Tool) error
-	
+
 	// GetTool retrieves a registered tool by name
 	GetTool(name string) (Tool, error)
-	
+
 	// ListTools returns all registered tool names
 	ListTools() []string
-	
+
 	// GetToolsByCapability returns tools that have a specific capability
 	GetToolsByCapability(capability string) []Tool
-	
+
 	// HasTool checks if a tool is registered
 	HasTool(name string) bool
-	
+
 	// Cost-based tool selection methods
 	// GetToolsByCost returns tools with cost magnitude <= maxCost, sorted by cost
 	GetToolsByCost(maxCost int) []ToolInfo
-	
+
 	// GetCheapestToolByCapability returns the lowest-cost tool with the given capability
 	GetCheapestToolByCapability(capability string) (*ToolInfo, error)
-	
+
 	// RegisterToolWithCost registers a tool with cost information
 	RegisterToolWithCost(name string, tool Tool, costMagnitude int, capabilities []string) error
 }
@@ -126,19 +126,19 @@ type ToolRegistry interface {
 type ProviderRegistry interface {
 	// RegisterProvider registers an LLM provider
 	RegisterProvider(name string, provider Provider) error
-	
+
 	// GetProvider retrieves a provider by name
 	GetProvider(name string) (Provider, error)
-	
+
 	// GetDefaultProvider returns the configured default provider
 	GetDefaultProvider() (Provider, error)
-	
+
 	// SetDefaultProvider sets the default provider
 	SetDefaultProvider(name string) error
-	
+
 	// ListProviders returns all registered provider names
 	ListProviders() []string
-	
+
 	// HasProvider checks if a provider is registered
 	HasProvider(name string) bool
 }
@@ -147,37 +147,37 @@ type ProviderRegistry interface {
 type MemoryRegistry interface {
 	// RegisterMemoryStore registers a memory store implementation
 	RegisterMemoryStore(name string, store MemoryStore) error
-	
+
 	// GetMemoryStore retrieves a memory store by name
 	GetMemoryStore(name string) (MemoryStore, error)
-	
+
 	// RegisterVectorStore registers a vector store implementation
 	RegisterVectorStore(name string, store VectorStore) error
-	
+
 	// GetVectorStore retrieves a vector store by name
 	GetVectorStore(name string) (VectorStore, error)
-	
+
 	// RegisterChainManager registers a chain manager implementation
 	RegisterChainManager(name string, manager ChainManager) error
-	
+
 	// GetChainManager retrieves a chain manager by name
 	GetChainManager(name string) (ChainManager, error)
-	
+
 	// GetDefaultMemoryStore returns the configured default memory store
 	GetDefaultMemoryStore() (MemoryStore, error)
-	
+
 	// GetDefaultVectorStore returns the configured default vector store
 	GetDefaultVectorStore() (VectorStore, error)
-	
+
 	// GetDefaultChainManager returns the configured default chain manager
 	GetDefaultChainManager() (ChainManager, error)
-	
+
 	// ListMemoryStores returns all registered memory store names
 	ListMemoryStores() []string
-	
+
 	// ListVectorStores returns all registered vector store names
 	ListVectorStores() []string
-	
+
 	// ListChainManagers returns all registered chain manager names
 	ListChainManagers() []string
 }
@@ -186,37 +186,37 @@ type MemoryRegistry interface {
 type StorageRegistry interface {
 	// RegisterTaskRepository registers a task repository implementation
 	RegisterTaskRepository(repo TaskRepository) error
-	
+
 	// GetTaskRepository retrieves the registered task repository
 	GetTaskRepository() TaskRepository
-	
+
 	// RegisterCampaignRepository registers a campaign repository implementation
 	RegisterCampaignRepository(repo CampaignRepository) error
-	
+
 	// GetCampaignRepository retrieves the registered campaign repository
 	GetCampaignRepository() CampaignRepository
-	
+
 	// RegisterCommissionRepository registers a commission repository implementation
 	RegisterCommissionRepository(repo CommissionRepository) error
-	
+
 	// GetCommissionRepository retrieves the registered commission repository
 	GetCommissionRepository() CommissionRepository
-	
+
 	// RegisterAgentRepository registers an agent repository implementation
 	RegisterAgentRepository(repo AgentRepository) error
-	
+
 	// GetAgentRepository retrieves the registered agent repository
 	GetAgentRepository() AgentRepository
-	
+
 	// RegisterPromptChainRepository registers a prompt chain repository implementation
 	RegisterPromptChainRepository(repo PromptChainRepository) error
-	
+
 	// GetPromptChainRepository retrieves the registered prompt chain repository
 	GetPromptChainRepository() PromptChainRepository
-	
+
 	// GetMemoryStore returns the configured memory store adapter
 	GetMemoryStore() MemoryStore
-	
+
 	// Kanban-specific repository interfaces that handle interface{} parameters
 	// These are used by the kanban package to work with SQLite storage
 	GetBoardRepository() KanbanBoardRepository
@@ -229,13 +229,13 @@ type StorageRegistry interface {
 type ProjectRegistry interface {
 	// GetProjectManager returns the project manager instance
 	GetProjectManager() ProjectManager
-	
+
 	// SetProjectManager sets the project manager instance
 	SetProjectManager(manager ProjectManager) error
-	
+
 	// GetCurrentContext returns the current project context
 	GetCurrentContext(ctx context.Context) (*ProjectContext, error)
-	
+
 	// WithProjectContext returns a new context with project information
 	WithProjectContext(ctx context.Context) (context.Context, error)
 }

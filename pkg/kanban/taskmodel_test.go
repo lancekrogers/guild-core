@@ -767,4 +767,3 @@ func TestTaskFilters(t *testing.T) {
 		t.Error("Expected task3 not to match enhanced combined filter")
 	}
 }
-

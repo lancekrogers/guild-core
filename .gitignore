@@ -54,6 +54,14 @@ testdata/output/
 *.test.log
 test.log
 
+# Makefile test tracking files
+.build_pass
+.build_fail
+.unit_pass
+.unit_fail
+.integration_pass
+.integration_fail
+
 # Benchmark results
 *.bench
 benchmarks/
@@ -247,4 +255,3 @@ env/
 !examples/**/*.yaml
 !examples/**/*.yml
 !examples/**/*.json
-

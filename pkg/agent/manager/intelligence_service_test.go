@@ -167,7 +167,7 @@ func TestManagerIntelligenceService_AnalyzeComplexity(t *testing.T) {
 					"rationale": "API development requires backend expertise"
 				},
 				{
-					"role": "Frontend Developer", 
+					"role": "Frontend Developer",
 					"priority": "high",
 					"estimated_tokens": 1200,
 					"rationale": "UI components need frontend specialization"
@@ -207,7 +207,7 @@ func TestManagerIntelligenceService_AnalyzeComplexity(t *testing.T) {
 			Tools:         []string{"file", "shell", "http"},
 		},
 	})
-	
+
 	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "analysis-session", mock.AnythingOfType("layered.TurnContext")).Return(&layered.LayeredPrompt{
 		Compiled:   "You are a Guild Master analyzing task complexity... Analyze this task: Build a user authentication system",
 		TokenCount: 150,
@@ -305,7 +305,7 @@ func TestManagerIntelligenceService_RouteToAgents(t *testing.T) {
 						"deliverables": ["API endpoints", "Database migrations"]
 					},
 					{
-						"agent": "frontend-artisan", 
+						"agent": "frontend-artisan",
 						"tasks": ["Login components", "User dashboard", "Auth flow"],
 						"dependencies": ["API endpoints"],
 						"deliverables": ["React components", "UI tests"]
@@ -340,7 +340,7 @@ func TestManagerIntelligenceService_RouteToAgents(t *testing.T) {
 	// Setup mock expectations
 	// Add GetRegisteredAgents expectation (not used directly in routing but needed by the service)
 	mockAgentReg.On("GetRegisteredAgents").Return([]registry.GuildAgentConfig{})
-	
+
 	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "routing-session", mock.AnythingOfType("layered.TurnContext")).Return(&layered.LayeredPrompt{
 		Compiled:   "You are a Guild Master routing tasks to agents... Route this task to optimal agents...",
 		TokenCount: 200,
@@ -451,7 +451,7 @@ func TestManagerIntelligenceService_FullAnalysisAndRouting(t *testing.T) {
 			Tools:         []string{"file", "shell", "http"},
 		},
 	})
-	
+
 	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "analysis-session", mock.AnythingOfType("layered.TurnContext")).Return(&layered.LayeredPrompt{
 		Compiled:   "Complexity analysis prompt... Analyze complexity...",
 		TokenCount: 150,
@@ -499,21 +499,21 @@ func TestManagerIntelligenceService_FullAnalysisAndRouting(t *testing.T) {
 	// Assertions
 	assert.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Check complexity analysis
 	assert.Equal(t, 4, result.ComplexityAnalysis.ComplexityScore)
 	assert.Equal(t, "single-agent", result.ComplexityAnalysis.RecommendedApproach)
-	
+
 	// Check routing
 	assert.Equal(t, "backend-artisan", result.AgentRouting.RoutingDecision.PrimaryAgent.AgentID)
 	assert.Equal(t, 10, result.AgentRouting.RoutingDecision.PrimaryAgent.AssignmentConfidence)
-	
+
 	// Check executive summary
 	assert.Equal(t, "single-agent", result.ExecutiveSummary.RecommendedApproach)
 	assert.Equal(t, "backend-artisan", result.ExecutiveSummary.PrimaryAgent)
 	assert.Empty(t, result.ExecutiveSummary.SupportingAgents)
 	assert.Contains(t, result.ExecutiveSummary.EstimatedCost, "2000 tokens")
-	
+
 	// Verify all mocks were called correctly
 	mockPromptMgr.AssertExpectations(t)
 	mockArtisan.AssertExpectations(t)

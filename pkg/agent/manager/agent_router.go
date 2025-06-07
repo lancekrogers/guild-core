@@ -163,7 +163,7 @@ Available Agents:
 %s
 
 Selection Requirements:
-%s`, 
+%s`,
 			request.TaskDescription,
 			request.ComplexityScore,
 			formatAgentsForPrompt(enhancedAgents),
@@ -174,7 +174,7 @@ Selection Requirements:
 		Instructions: []string{"Route task to optimal agents based on capabilities and cost"},
 		Metadata:     promptContext,
 	}
-	
+
 	layeredPrompt, err := ar.promptManager.BuildLayeredPrompt(ctx, "manager-agent", "routing-session", turnCtx)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "failed to build routing prompt").
@@ -225,7 +225,7 @@ Selection Requirements:
 // enhanceAgentInfo adds current status and performance data to agent info
 func (ar *AgentRouter) enhanceAgentInfo(ctx context.Context, agents []AgentInfo) ([]EnhancedAgentInfo, error) {
 	var enhanced []EnhancedAgentInfo
-	
+
 	for _, agent := range agents {
 		// TODO: Get real agent status from registry
 		enhancedAgent := EnhancedAgentInfo{
@@ -239,7 +239,7 @@ func (ar *AgentRouter) enhanceAgentInfo(ctx context.Context, agents []AgentInfo)
 		}
 		enhanced = append(enhanced, enhancedAgent)
 	}
-	
+
 	return enhanced, nil
 }
 
@@ -275,13 +275,13 @@ func (ar *AgentRouter) calculateTokenCost(agent AgentInfo) float64 {
 func (ar *AgentRouter) calculateQualityScore(agent AgentInfo) float64 {
 	// Base score from success rate
 	baseScore := agent.SuccessRate / 10.0 // Convert percentage to 0-10 scale
-	
+
 	// Bonus for specialization depth (more specializations = higher versatility)
 	specializationBonus := float64(len(agent.Specializations)) * 0.1
 	if specializationBonus > 1.0 {
 		specializationBonus = 1.0 // Cap at +1 point
 	}
-	
+
 	// Context window bonus (larger windows handle complex tasks better)
 	contextBonus := 0.0
 	if agent.ContextWindow > 100000 {
@@ -289,12 +289,12 @@ func (ar *AgentRouter) calculateQualityScore(agent AgentInfo) float64 {
 	} else if agent.ContextWindow > 32000 {
 		contextBonus = 0.2
 	}
-	
+
 	totalScore := baseScore + specializationBonus + contextBonus
 	if totalScore > 10.0 {
 		totalScore = 10.0
 	}
-	
+
 	return totalScore
 }
 
@@ -326,7 +326,7 @@ func (ar *AgentRouter) GetAgentCapabilities(ctx context.Context) ([]EnhancedAgen
 			SuccessRate:     89.2,
 		},
 	}
-	
+
 	return ar.enhanceAgentInfo(ctx, mockAgents)
 }
 

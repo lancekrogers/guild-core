@@ -32,7 +32,7 @@ func (p *GuildParser) ExtractGuildTerms(content string) map[string]string {
 		"tradecraft": "Specialized skills and knowledge",
 		"commission": "An assigned task to complete",
 	}
-	
+
 	// In a real implementation, this would extract actual terms from the content
 	return guildTerms
 }
@@ -41,9 +41,9 @@ func (p *GuildParser) ExtractGuildTerms(content string) map[string]string {
 func (p *GuildParser) EnhanceWithGuildTheme(obj *commission.Commission) *commission.Commission {
 	// This is a placeholder implementation
 	// In a real implementation, this would modify the commission to use guild-themed language
-	
+
 	// Example: Add a themed tag
 	obj.Tags = append(obj.Tags, "guild-themed")
-	
+
 	return obj
 }

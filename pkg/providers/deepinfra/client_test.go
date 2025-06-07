@@ -50,7 +50,7 @@ func TestDeepInfraProvider(t *testing.T) {
 		TestModel:    Llama32_8B,
 		SkipLive:     true,
 	})
-	
+
 	suite.RunBasicTests()
 }
 

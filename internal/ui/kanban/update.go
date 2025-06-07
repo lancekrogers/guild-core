@@ -14,22 +14,22 @@ func (m *Model) moveTaskCmd(taskID string, newStatus kanban.TaskStatus) tea.Cmd 
 		if err != nil {
 			return errorMsg{err}
 		}
-		
+
 		task, err := board.GetTask(m.ctx, taskID)
 		if err != nil {
 			return errorMsg{err}
 		}
-		
+
 		err = task.UpdateStatus(newStatus, "user", "Status changed via UI")
 		if err != nil {
 			return errorMsg{err}
 		}
-		
+
 		err = board.UpdateTask(m.ctx, task)
 		if err != nil {
 			return errorMsg{err}
 		}
-		
+
 		return taskUpdatedMsg{task}
 	}
 }
@@ -41,19 +41,19 @@ func (m *Model) assignTaskCmd(taskID string, agentID string) tea.Cmd {
 		if err != nil {
 			return errorMsg{err}
 		}
-		
+
 		task, err := board.GetTask(m.ctx, taskID)
 		if err != nil {
 			return errorMsg{err}
 		}
-		
+
 		task.UpdateAssignee(agentID, "user", "Assigned via UI")
-		
+
 		err = board.UpdateTask(m.ctx, task)
 		if err != nil {
 			return errorMsg{err}
 		}
-		
+
 		return taskUpdatedMsg{task}
 	}
 }
@@ -65,22 +65,22 @@ func (m *Model) updateProgressCmd(taskID string, progress int) tea.Cmd {
 		if err != nil {
 			return errorMsg{err}
 		}
-		
+
 		task, err := board.GetTask(m.ctx, taskID)
 		if err != nil {
 			return errorMsg{err}
 		}
-		
+
 		err = task.UpdateProgress(progress, "user", "Progress updated via UI")
 		if err != nil {
 			return errorMsg{err}
 		}
-		
+
 		err = board.UpdateTask(m.ctx, task)
 		if err != nil {
 			return errorMsg{err}
 		}
-		
+
 		return taskUpdatedMsg{task}
 	}
 }
@@ -92,15 +92,15 @@ func (m *Model) createTaskCmd(title, description string, status kanban.TaskStatu
 		if err != nil {
 			return errorMsg{err}
 		}
-		
+
 		task := kanban.NewTask(title, description)
 		task.Status = status
-		
+
 		_, err = board.CreateTask(m.ctx, task.Title, task.Description)
 		if err != nil {
 			return errorMsg{err}
 		}
-		
+
 		return taskUpdatedMsg{task}
 	}
 }

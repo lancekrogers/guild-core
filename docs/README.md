@@ -27,10 +27,10 @@ Once published, documentation will be available at:
    ```bash
    # Install pkgsite
    go install golang.org/x/pkgsite/cmd/pkgsite@latest
-   
+
    # Run from guild-core directory
    pkgsite -http=:8080
-   
+
    # Open http://localhost:8080/github.com/guild-ventures/guild-core
    ```
 
@@ -38,7 +38,7 @@ Once published, documentation will be available at:
    ```bash
    # Using Hugo (recommended for Go projects)
    hugo server -D
-   
+
    # Or using MkDocs
    mkdocs serve
    ```

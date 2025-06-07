@@ -8,7 +8,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 )
 
-// RetrieverInterface defines the contract for retrieving relevant context 
+// RetrieverInterface defines the contract for retrieving relevant context
 // from both vector embeddings and corpus documents.
 type RetrieverInterface interface {
 	// RetrieveContext gets relevant context for a query by searching both

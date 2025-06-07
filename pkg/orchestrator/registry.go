@@ -10,28 +10,28 @@ import (
 type OrchestratorRegistry interface {
 	// RegisterCommissionPlanner registers a commission task planner
 	RegisterCommissionPlanner(name string, planner CommissionTaskPlanner) error
-	
+
 	// GetCommissionPlanner retrieves a commission planner by name
 	GetCommissionPlanner(name string) (CommissionTaskPlanner, error)
-	
+
 	// GetDefaultCommissionPlanner returns the default commission planner
 	GetDefaultCommissionPlanner() (CommissionTaskPlanner, error)
-	
+
 	// SetDefaultCommissionPlanner sets the default commission planner
 	SetDefaultCommissionPlanner(name string) error
-	
+
 	// RegisterEventBus registers an event bus for orchestrator events
 	RegisterEventBus(name string, eventBus EventBus) error
-	
+
 	// GetEventBus retrieves an event bus by name
 	GetEventBus(name string) (EventBus, error)
-	
+
 	// GetDefaultEventBus returns the default event bus
 	GetDefaultEventBus() (EventBus, error)
-	
+
 	// ListCommissionPlanners returns all registered commission planner names
 	ListCommissionPlanners() []string
-	
+
 	// HasCommissionPlanner checks if a commission planner is registered
 	HasCommissionPlanner(name string) bool
 }
@@ -66,12 +66,12 @@ func (r *DefaultOrchestratorRegistry) RegisterCommissionPlanner(name string, pla
 	}
 
 	r.commissionPlanners[name] = planner
-	
+
 	// Set as default if it's the first one
 	if r.defaultPlanner == "" {
 		r.defaultPlanner = name
 	}
-	
+
 	return nil
 }
 
@@ -134,12 +134,12 @@ func (r *DefaultOrchestratorRegistry) RegisterEventBus(name string, eventBus Eve
 	}
 
 	r.eventBuses[name] = eventBus
-	
+
 	// Set as default if it's the first one
 	if r.defaultEventBus == "" {
 		r.defaultEventBus = name
 	}
-	
+
 	return nil
 }
 

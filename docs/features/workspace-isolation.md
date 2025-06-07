@@ -109,12 +109,12 @@ if gitWs, ok := ws.(*workspace.GitWorkspace); ok {
     // Check for uncommitted changes
     gitWs.UpdateGitInfo()
     info := gitWs.GetGitInfo()
-    
+
     if info.IsDirty {
         // Get diff of changes
         diff, _ := gitWs.GetDiff()
         fmt.Printf("Changes:\n%s\n", diff)
-        
+
         // Commit changes
         err := gitWs.CommitChanges("Task completed: implemented feature X")
         if err != nil {
@@ -211,15 +211,15 @@ func TestWorkspaceIsolation(t *testing.T) {
     // Create test repository
     repoPath, cleanup := setupTestRepo(t)
     defer cleanup()
-    
+
     // Create manager
     manager, err := workspace.NewGitManager(".guild", repoPath)
     require.NoError(t, err)
-    
+
     // Create multiple workspaces
     ws1, _ := manager.CreateWorkspace(ctx, opts1)
     ws2, _ := manager.CreateWorkspace(ctx, opts2)
-    
+
     // Verify isolation
     assert.NotEqual(t, ws1.Path(), ws2.Path())
     assert.NotEqual(t, ws1.Branch(), ws2.Branch())
@@ -236,7 +236,7 @@ func TestWorkspaceIsolation(t *testing.T) {
 ## Future Enhancements
 
 - [ ] Worktree pooling for performance
-- [ ] Shallow clones for large repositories  
+- [ ] Shallow clones for large repositories
 - [ ] Integration with cloud storage for artifacts
 - [ ] Distributed workspace support across machines
 - [ ] Workspace templates and presets

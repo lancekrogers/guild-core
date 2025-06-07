@@ -10,13 +10,13 @@ type ChunkStrategy string
 const (
 	// ChunkByParagraph chunks by paragraphs
 	ChunkByParagraph ChunkStrategy = "paragraph"
-	
+
 	// ChunkBySentence chunks by sentences
 	ChunkBySentence ChunkStrategy = "sentence"
-	
+
 	// ChunkByFixedSize chunks by fixed size
 	ChunkByFixedSize ChunkStrategy = "fixed"
-	
+
 	// ChunkByMarkdownHeader chunks by markdown headers
 	ChunkByMarkdownHeader ChunkStrategy = "markdown_header"
 )
@@ -25,10 +25,10 @@ const (
 type ChunkerConfig struct {
 	// ChunkSize is the target size of each chunk in tokens
 	ChunkSize int
-	
+
 	// ChunkOverlap is the number of tokens to overlap between chunks
 	ChunkOverlap int
-	
+
 	// Strategy is the chunking strategy to use
 	Strategy ChunkStrategy
 }
@@ -44,15 +44,15 @@ func newChunker(config ChunkerConfig) *Chunker {
 	if config.ChunkSize <= 0 {
 		config.ChunkSize = 1000
 	}
-	
+
 	if config.ChunkOverlap <= 0 {
 		config.ChunkOverlap = 200
 	}
-	
+
 	if config.Strategy == "" {
 		config.Strategy = ChunkByParagraph
 	}
-	
+
 	return &Chunker{
 		Config: config,
 	}
@@ -78,23 +78,23 @@ func (c *Chunker) ChunkDocument(text string) []string {
 func (c *Chunker) chunkByParagraph(text string) []string {
 	// Split by double newline (paragraph)
 	paragraphs := strings.Split(text, "\n\n")
-	
+
 	// Group paragraphs into chunks of appropriate size
 	var chunks []string
 	var currentChunk strings.Builder
 	var currentSize int
-	
+
 	for _, para := range paragraphs {
 		// Simple token count estimation (words)
 		paraSize := len(strings.Fields(para))
-		
+
 		if currentSize+paraSize > c.Config.ChunkSize && currentSize > 0 {
 			// Current paragraph would make chunk too large, start a new chunk
 			chunks = append(chunks, currentChunk.String())
 			currentChunk.Reset()
 			currentSize = 0
 		}
-		
+
 		// Add paragraph to current chunk
 		if currentSize > 0 {
 			currentChunk.WriteString("\n\n")
@@ -102,12 +102,12 @@ func (c *Chunker) chunkByParagraph(text string) []string {
 		currentChunk.WriteString(para)
 		currentSize += paraSize
 	}
-	
+
 	// Add final chunk if not empty
 	if currentSize > 0 {
 		chunks = append(chunks, currentChunk.String())
 	}
-	
+
 	return chunks
 }
 
@@ -117,36 +117,36 @@ func (c *Chunker) chunkBySentence(text string) []string {
 	sentences := strings.FieldsFunc(text, func(r rune) bool {
 		return r == '.' || r == '!' || r == '?'
 	})
-	
+
 	// Group sentences into chunks of appropriate size
 	var chunks []string
 	var currentChunk strings.Builder
 	var currentSize int
-	
+
 	for i, sentence := range sentences {
 		// Clean up sentence
 		sentence = strings.TrimSpace(sentence)
 		if sentence == "" {
 			continue
 		}
-		
+
 		// Add sentence terminator back
 		if i < len(text) && (text[i] == '.' || text[i] == '!' || text[i] == '?') {
 			sentence += string(text[i])
 		} else {
 			sentence += "."
 		}
-		
+
 		// Simple token count estimation (words)
 		sentSize := len(strings.Fields(sentence))
-		
+
 		if currentSize+sentSize > c.Config.ChunkSize && currentSize > 0 {
 			// Current sentence would make chunk too large, start a new chunk
 			chunks = append(chunks, currentChunk.String())
 			currentChunk.Reset()
 			currentSize = 0
 		}
-		
+
 		// Add sentence to current chunk
 		if currentSize > 0 {
 			currentChunk.WriteString(" ")
@@ -154,12 +154,12 @@ func (c *Chunker) chunkBySentence(text string) []string {
 		currentChunk.WriteString(sentence)
 		currentSize += sentSize
 	}
-	
+
 	// Add final chunk if not empty
 	if currentSize > 0 {
 		chunks = append(chunks, currentChunk.String())
 	}
-	
+
 	return chunks
 }
 
@@ -167,22 +167,22 @@ func (c *Chunker) chunkBySentence(text string) []string {
 func (c *Chunker) chunkByFixedSize(text string) []string {
 	words := strings.Fields(text)
 	var chunks []string
-	
+
 	for i := 0; i < len(words); i += c.Config.ChunkSize - c.Config.ChunkOverlap {
 		end := i + c.Config.ChunkSize
 		if end > len(words) {
 			end = len(words)
 		}
-		
+
 		chunk := strings.Join(words[i:end], " ")
 		chunks = append(chunks, chunk)
-		
+
 		// If we've reached the end, stop
 		if end == len(words) {
 			break
 		}
 	}
-	
+
 	return chunks
 }
 
@@ -193,7 +193,7 @@ func (c *Chunker) chunkByMarkdownHeader(text string) []string {
 	var chunks []string
 	var currentChunk strings.Builder
 	var currentSize int
-	
+
 	for _, line := range lines {
 		// Check if line is a header
 		isHeader := false
@@ -202,11 +202,11 @@ func (c *Chunker) chunkByMarkdownHeader(text string) []string {
 			for i := 0; i < len(line) && line[i] == '#'; i++ {
 				headerLevel++
 			}
-			
+
 			// Check that its properly formatted with a space after #
 			if headerLevel < len(line) && line[headerLevel] == ' ' {
 				isHeader = true
-				
+
 				// If we have content in the current chunk, add it to chunks
 				if currentSize > 0 {
 					chunks = append(chunks, currentChunk.String())
@@ -215,14 +215,14 @@ func (c *Chunker) chunkByMarkdownHeader(text string) []string {
 				}
 			}
 		}
-		
+
 		// Add line to current chunk
 		if currentSize > 0 {
 			currentChunk.WriteString("\n")
 		}
 		currentChunk.WriteString(line)
 		currentSize += len(strings.Fields(line))
-		
+
 		// If chunk is too large, split it (unless we just started a new chunk)
 		if !isHeader && currentSize > c.Config.ChunkSize && currentChunk.Len() > 0 {
 			chunks = append(chunks, currentChunk.String())
@@ -230,12 +230,12 @@ func (c *Chunker) chunkByMarkdownHeader(text string) []string {
 			currentSize = 0
 		}
 	}
-	
+
 	// Add final chunk if not empty
 	if currentChunk.Len() > 0 {
 		chunks = append(chunks, currentChunk.String())
 	}
-	
+
 	return chunks
 }
 
@@ -250,7 +250,7 @@ type ChunkWithMeta struct {
 func (c *Chunker) ChunkWithMetadata(content string) []ChunkWithMeta {
 	chunks := c.ChunkDocument(content)
 	result := make([]ChunkWithMeta, len(chunks))
-	
+
 	for i, chunk := range chunks {
 		result[i] = ChunkWithMeta{
 			Content: chunk,
@@ -264,7 +264,7 @@ func (c *Chunker) ChunkWithMetadata(content string) []ChunkWithMeta {
 			},
 		}
 	}
-	
+
 	return result
 }
 

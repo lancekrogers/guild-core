@@ -74,7 +74,7 @@ agents:
 	// Test without description - should show help since it has subcommands
 	cmd.SetArgs([]string{"commission"})
 	err = cmd.Execute()
-	
+
 	// Should succeed and show help
 	assert.NoError(t, err)
 
@@ -99,7 +99,7 @@ func TestCommissionWorkshopCommand(t *testing.T) {
 }
 
 // TestCommissionExecutionSetup tests the setupGuildComponents function
-// TODO: This test requires full Guild infrastructure setup including database migrations  
+// TODO: This test requires full Guild infrastructure setup including database migrations
 // Skip for now until we have proper test infrastructure setup
 func TestCommissionExecutionSetup(t *testing.T) {
 	t.Skip("Skipping execution setup test - requires full Guild infrastructure setup")

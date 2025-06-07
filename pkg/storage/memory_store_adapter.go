@@ -31,10 +31,10 @@ func (m *MemoryStoreAdapter) Put(ctx context.Context, bucket, key string, value 
 
 	// Store as a simple key-value mapping in a dedicated table
 	query := `
-		INSERT OR REPLACE INTO memory_store (bucket, key, value) 
+		INSERT OR REPLACE INTO memory_store (bucket, key, value)
 		VALUES (?, ?, ?)
 	`
-	
+
 	_, err := m.database.DB().ExecContext(ctx, query, bucket, key, value)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to store value").
@@ -56,7 +56,7 @@ func (m *MemoryStoreAdapter) Get(ctx context.Context, bucket, key string) ([]byt
 	}
 
 	query := `SELECT value FROM memory_store WHERE bucket = ? AND key = ?`
-	
+
 	var value []byte
 	err := m.database.DB().QueryRowContext(ctx, query, bucket, key).Scan(&value)
 	if err != nil {
@@ -82,7 +82,7 @@ func (m *MemoryStoreAdapter) Delete(ctx context.Context, bucket, key string) err
 	}
 
 	query := `DELETE FROM memory_store WHERE bucket = ? AND key = ?`
-	
+
 	_, err := m.database.DB().ExecContext(ctx, query, bucket, key)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete value").
@@ -104,7 +104,7 @@ func (m *MemoryStoreAdapter) List(ctx context.Context, bucket string) ([]string,
 	}
 
 	query := `SELECT key FROM memory_store WHERE bucket = ? ORDER BY key`
-	
+
 	rows, err := m.database.DB().QueryContext(ctx, query, bucket)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list keys").
@@ -143,7 +143,7 @@ func (m *MemoryStoreAdapter) ListKeys(ctx context.Context, bucket, prefix string
 	}
 
 	query := `SELECT key FROM memory_store WHERE bucket = ? AND key LIKE ? ORDER BY key`
-	
+
 	rows, err := m.database.DB().QueryContext(ctx, query, bucket, prefix+"%")
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list keys with prefix").
@@ -197,7 +197,7 @@ func (m *MemoryStoreAdapter) EnsureMemoryStoreTable(ctx context.Context) error {
 			PRIMARY KEY (bucket, key)
 		)
 	`
-	
+
 	_, err := m.database.DB().ExecContext(ctx, query)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create memory_store table").

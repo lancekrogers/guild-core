@@ -56,7 +56,7 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 
 	// Step 1: Create test documents in corpus
 	t.Log("Step 1: Creating test documents")
-	
+
 	testDocs := []corpus.CorpusDoc{
 		{
 			Title:     "Guild Framework Architecture",
@@ -92,7 +92,7 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 
 	// Step 2: Setup RAG system with mock provider
 	t.Log("Step 2: Setting up RAG system")
-	
+
 	mockProvider := mock.NewProvider()
 	mockProvider.SetDefaultResponse("Based on the context, this is a comprehensive response.")
 
@@ -120,7 +120,7 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 
 	// Step 3: Scan corpus and build embeddings
 	t.Log("Step 3: Scanning corpus and building embeddings")
-	
+
 	// Get corpus files
 	corpusFiles, err := corpus.List(ctx, corpusConfig)
 	require.NoError(t, err)
@@ -130,7 +130,7 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 	for _, filePath := range corpusFiles {
 		doc, err := corpus.Load(ctx, filePath)
 		require.NoError(t, err)
-		
+
 		err = ragSystem.AddCorpusDocument(ctx, doc)
 		require.NoError(t, err)
 		t.Logf("  Added to RAG: %s", doc.Title)
@@ -138,9 +138,9 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 
 	// Step 4: Query the RAG system
 	t.Log("Step 4: Querying RAG system")
-	
+
 	query := "How do agents work in the Guild Framework?"
-	
+
 	retrievalConfig := rag.RetrievalConfig{
 		MaxResults:      3,
 		MinScore:        0.0, // Accept all results in test
@@ -151,23 +151,23 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 	results, err := ragSystem.RetrieveContext(ctx, query, retrievalConfig)
 	require.NoError(t, err)
 	assert.NotNil(t, results)
-	
+
 	// For debugging - log what we got
 	t.Logf("  Query returned %d results", len(results.Results))
 	for i, result := range results.Results {
-		t.Logf("    Result %d: Score=%.4f, Content=%s", i+1, result.Score, 
+		t.Logf("    Result %d: Score=%.4f, Content=%s", i+1, result.Score,
 			strings.ReplaceAll(result.Content[:min(50, len(result.Content))], "\n", " ") + "...")
 	}
-	
+
 	// For now, skip this assertion since mock embeddings may not produce meaningful scores
 	// assert.Greater(t, len(results.Results), 0)
 	t.Logf("  Found %d relevant chunks", len(results.Results))
 
 	// Step 5: Use Corpus Agent to generate a document
 	t.Log("Step 5: Using Corpus Agent to generate document")
-	
+
 	corpusAgent := agent.NewCorpusAgent(ragSystem, mockProvider, corpusConfig)
-	
+
 	response, err := corpusAgent.Execute(ctx, query)
 	require.NoError(t, err)
 	assert.NotEmpty(t, response)
@@ -175,7 +175,7 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 
 	// Step 6: Generate and save a document
 	t.Log("Step 6: Generating and saving document")
-	
+
 	newDoc, err := corpusAgent.GenerateDocument(ctx, query, "Agent Architecture Guide")
 	require.NoError(t, err)
 	assert.Equal(t, "Agent Architecture Guide", newDoc.Title)
@@ -189,7 +189,7 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 
 	// Step 7: Verify the document was saved
 	t.Log("Step 7: Verifying document persistence")
-	
+
 	updatedFiles, err := corpus.List(ctx, corpusConfig)
 	require.NoError(t, err)
 	assert.Len(t, updatedFiles, 4) // Original 3 + 1 generated
@@ -204,14 +204,14 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 			break
 		}
 	}
-	
+
 	require.NotNil(t, generatedDoc, "Generated document should exist")
 	assert.Equal(t, "corpus-agent", generatedDoc.Source)
 	assert.Equal(t, corpusAgent.GetID(), generatedDoc.AgentID)
 
 	// Step 8: Test activity tracking
 	t.Log("Step 8: Testing activity tracking")
-	
+
 	err = corpus.TrackUserView(ctx, "testuser", generatedDoc.FilePath, corpusConfig)
 	require.NoError(t, err)
 
@@ -222,7 +222,7 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 
 	// Step 9: Build and verify document graph
 	t.Log("Step 9: Building document graph")
-	
+
 	graph, err := corpus.BuildGraph(ctx, corpusConfig)
 	require.NoError(t, err)
 	assert.GreaterOrEqual(t, len(graph.Nodes), 4)
@@ -264,7 +264,7 @@ func TestProviderSwitching(t *testing.T) {
 
 	t.Run("Mock Provider", func(t *testing.T) {
 		embeddingsPath := filepath.Join(tempDir, "embeddings-mock")
-		
+
 		mockProvider := mock.NewProvider()
 		vectorConfig := &vector.StoreConfig{
 			Type:              vector.StoreTypeChromem,
@@ -296,7 +296,7 @@ func TestProviderSwitching(t *testing.T) {
 
 	t.Run("Nil Provider (NoOp Embedder)", func(t *testing.T) {
 		embeddingsPath := filepath.Join(tempDir, "embeddings-noop")
-		
+
 		// Create vector store with nil provider
 		vectorConfig := &vector.StoreConfig{
 			Type:              vector.StoreTypeChromem,
@@ -340,7 +340,7 @@ func TestOfflineOperation(t *testing.T) {
 	// Setup without any external providers
 	corpusPath := filepath.Join(tempDir, "corpus")
 	embeddingsPath := filepath.Join(tempDir, "embeddings")
-	
+
 	require.NoError(t, os.MkdirAll(corpusPath, 0755))
 
 	corpusConfig := corpus.Config{
@@ -394,7 +394,7 @@ func TestOfflineOperation(t *testing.T) {
 	for _, doc := range docs {
 		err := corpus.Save(ctx, &doc, corpusConfig)
 		require.NoError(t, err)
-		
+
 		err = ragSystem.AddCorpusDocument(ctx, &doc)
 		require.NoError(t, err)
 	}
@@ -406,7 +406,7 @@ func TestOfflineOperation(t *testing.T) {
 	})
 	require.NoError(t, err)
 	assert.NotNil(t, results)
-	
+
 	// In offline mode with NoOpEmbedder, we might not get meaningful results,
 	// but the system should not crash
 	t.Logf("Offline query returned %d results", len(results.Results))
@@ -441,7 +441,7 @@ func TestErrorScenarios(t *testing.T) {
 	t.Run("Corrupt embeddings recovery", func(t *testing.T) {
 		corpusPath := filepath.Join(tempDir, "corpus-corrupt")
 		embeddingsPath := filepath.Join(tempDir, "embeddings-corrupt")
-		
+
 		require.NoError(t, os.MkdirAll(corpusPath, 0755))
 		require.NoError(t, os.MkdirAll(embeddingsPath, 0755))
 
@@ -475,7 +475,7 @@ func TestErrorScenarios(t *testing.T) {
 
 	t.Run("Missing corpus directory", func(t *testing.T) {
 		nonExistentPath := filepath.Join(tempDir, "does-not-exist")
-		
+
 		corpusConfig := corpus.Config{
 			CorpusPath:      nonExistentPath,
 			ActivitiesPath:  filepath.Join(nonExistentPath, ".activities"),
@@ -524,7 +524,7 @@ func TestMultiAgentWorkflow(t *testing.T) {
 	// Setup shared corpus and RAG
 	corpusPath := filepath.Join(tempDir, "shared-corpus")
 	embeddingsPath := filepath.Join(tempDir, "shared-embeddings")
-	
+
 	require.NoError(t, os.MkdirAll(corpusPath, 0755))
 
 	corpusConfig := corpus.Config{
@@ -577,7 +577,7 @@ func TestMultiAgentWorkflow(t *testing.T) {
 
 	// Agent 2: Analysis Agent reads research and creates analysis
 	t.Log("Agent 2: Analysis Agent creating analysis")
-	
+
 	// First, query for research
 	results, err := ragSystem.RetrieveContext(ctx, "task automation efficiency", rag.RetrievalConfig{
 		MaxResults: 3,
@@ -606,13 +606,13 @@ func TestMultiAgentWorkflow(t *testing.T) {
 
 	// Agent 3: Corpus Agent synthesizes information
 	t.Log("Agent 3: Corpus Agent synthesizing information")
-	
+
 	corpusAgent := agent.NewCorpusAgent(ragSystem, mockProvider, corpusConfig)
-	
+
 	synthesisQuery := "Create a comprehensive guide on task automation benefits and implementation"
 	synthesisDoc, err := corpusAgent.GenerateDocument(ctx, synthesisQuery, "Task Automation Implementation Guide")
 	require.NoError(t, err)
-	
+
 	synthesisDoc.GuildID = "synthesis-guild"
 	err = corpusAgent.SaveGeneratedDocument(ctx, synthesisDoc)
 	require.NoError(t, err)
@@ -628,7 +628,7 @@ func TestMultiAgentWorkflow(t *testing.T) {
 	// Build graph to see relationships
 	graph, err := corpus.BuildGraph(ctx, corpusConfig)
 	require.NoError(t, err)
-	
+
 	// Analysis doc should link to research doc
 	analysisLinks, exists := graph.Nodes["Analysis of Task Automation Benefits"]
 	if exists && len(analysisLinks) > 0 {

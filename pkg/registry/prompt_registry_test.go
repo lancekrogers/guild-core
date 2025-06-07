@@ -59,7 +59,7 @@ func TestPromptRegistry(t *testing.T) {
 func TestDefaultPromptProvider(t *testing.T) {
 	// This test requires the actual prompt files to be available
 	// It will test the integration with the internal prompt manager
-	
+
 	provider, err := NewDefaultPromptProvider()
 	if err != nil {
 		t.Fatalf("Failed to create default prompt provider: %v", err)

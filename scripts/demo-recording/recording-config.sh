@@ -18,7 +18,7 @@ echo 'Demo visual features complete'
 "
 
 DEMO_SCENARIOS[command-experience]="
-# Command Experience Demo Script  
+# Command Experience Demo Script
 echo 'Demonstrating Guild command experience...'
 ./guild chat &
 sleep 2
@@ -131,11 +131,11 @@ generate_recording_command() {
     local theme="${3:-professional}"
     local font="${4:-medium}"
     local output="$5"
-    
+
     local preset_args=$(get_recording_preset "$preset")
     local theme_name=$(get_terminal_theme "$theme")
     local font_args=$(get_font_config "$font")
-    
+
     echo "asciinema rec $preset_args --title 'Guild Demo: $scenario' --overwrite $output.cast"
     echo "agg --theme $theme_name $font_args $output.cast $output.gif"
 }

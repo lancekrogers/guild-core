@@ -20,15 +20,15 @@ type CommissionItem struct {
 }
 
 // FilterValue implements list.Item interface
-func (i CommissionItem) FilterValue() string { 
-	return i.Title 
+func (i CommissionItem) FilterValue() string {
+	return i.Title
 }
 
 // formatTimeAgo formats a time in a relative manner (e.g., "2 days ago")
 func formatTimeAgo(t time.Time) string {
 	now := time.Now()
 	diff := now.Sub(t)
-	
+
 	switch {
 	case diff < time.Minute:
 		return "just now"

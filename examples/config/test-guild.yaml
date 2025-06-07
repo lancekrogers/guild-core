@@ -17,7 +17,7 @@ agents:
     description: "Chief orchestrator of the coding guild, responsible for planning and coordination"
     capabilities: ["architecture", "planning", "coordination", "system-design"]
     tools: ["corpus", "kanban", "delegation"]
-    
+
   - id: "backend-craftsman"
     name: "Backend Code Craftsman"
     type: "worker"
@@ -26,7 +26,7 @@ agents:
     description: "Master of server-side development and API creation"
     capabilities: ["golang", "api-design", "database", "microservices"]
     tools: ["shell", "file", "corpus"]
-    
+
   - id: "frontend-artisan"
     name: "Frontend User Interface Artisan"
     type: "worker"
@@ -35,7 +35,7 @@ agents:
     description: "Specialist in user interface creation and user experience"
     capabilities: ["javascript", "react", "css", "html", "ui-design"]
     tools: ["shell", "file", "corpus"]
-    
+
   - id: "payment-sentinel"
     name: "Payment Security Sentinel"
     type: "specialist"
@@ -44,7 +44,7 @@ agents:
     description: "Guardian of payment processing and financial security"
     capabilities: ["payment-processing", "security", "compliance", "stripe", "encryption"]
     tools: ["shell", "file", "corpus"]
-    
+
   - id: "deployment-marshal"
     name: "Deployment Infrastructure Marshal"
     type: "specialist"
@@ -53,7 +53,7 @@ agents:
     description: "Master of deployment, infrastructure, and DevOps operations"
     capabilities: ["docker", "kubernetes", "aws", "terraform", "monitoring"]
     tools: ["shell", "file", "corpus"]
-    
+
   - id: "test-forge"
     name: "Quality Test Forge"
     type: "specialist"

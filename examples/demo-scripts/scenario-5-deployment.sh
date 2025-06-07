@@ -314,20 +314,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Build and Push Docker Image
       run: |
         docker build -t ecommerce/auth-service:${GITHUB_REF#refs/tags/} .
         docker push ecommerce/auth-service:${GITHUB_REF#refs/tags/}
-    
+
     - name: Deploy to Kubernetes
       run: |
         kubectl set image deployment/auth-service \
           auth-service=ecommerce/auth-service:${GITHUB_REF#refs/tags/} \
           -n ecommerce-prod
-        
+
         kubectl rollout status deployment/auth-service -n ecommerce-prod
-    
+
     - name: Run Smoke Tests
       run: |
         ./scripts/smoke-tests.sh https://api.ecommerce.com

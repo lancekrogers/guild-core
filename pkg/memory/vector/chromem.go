@@ -28,24 +28,24 @@ import (
 //
 // Collections in Guild typically represent:
 // - "agent_memories": Memories from agent interactions
-// - "corpus_documents": Research corpus documents  
+// - "corpus_documents": Research corpus documents
 // - "tool_outputs": Results from tool executions
 type ChromemStore struct {
 	// db is the underlying Chromem database instance
 	db *chromem.DB
-	
+
 	// embedder is used to generate embeddings for text queries
 	embedder Embedder
-	
+
 	// defaultCollection is the name of the default collection
 	defaultCollection string
-	
+
 	// collections maps collection names to chromem collections
 	collections map[string]*chromem.Collection
-	
+
 	// mu protects concurrent access to the collections map
 	mu sync.RWMutex
-	
+
 	// persistencePath stores the path for persistent storage
 	persistencePath string
 }
@@ -56,15 +56,15 @@ type Config struct {
 	// Embedder is the embedding generator to use for text queries.
 	// This is required for the QueryEmbeddings method to work.
 	Embedder         Embedder
-	
+
 	// PersistencePath is the optional path for persisting the vector database.
 	// If empty, the store will be in-memory only.
 	PersistencePath  string
-	
+
 	// DefaultDimension is the default dimension for vectors.
 	// Common values: 768 (nomic-embed-text), 1024 (mxbai-embed-large), 384 (all-minilm)
 	DefaultDimension int
-	
+
 	// DefaultCollection is the name of the default collection to use.
 	// Defaults to "guild_vectors" if not specified.
 	DefaultCollection string
@@ -86,7 +86,7 @@ func NewChromemStore(config Config) (*ChromemStore, error) {
 		// Use NoOpEmbedder for graceful degradation
 		config.Embedder = &NoOpEmbedder{}
 	}
-	
+
 	// Set defaults
 	if config.DefaultDimension == 0 {
 		config.DefaultDimension = 768 // Default for common embedding models
@@ -98,7 +98,7 @@ func NewChromemStore(config Config) (*ChromemStore, error) {
 	// Create database
 	var db *chromem.DB
 	var err error
-	
+
 	if config.PersistencePath != "" {
 		// Ensure the directory exists
 		if err := os.MkdirAll(config.PersistencePath, 0755); err != nil {
@@ -106,7 +106,7 @@ func NewChromemStore(config Config) (*ChromemStore, error) {
 				WithComponent("memory").
 				WithOperation("NewChromemStore")
 		}
-		
+
 		// Create persistent database with compression enabled
 		db, err = chromem.NewPersistentDB(config.PersistencePath, true)
 		if err != nil {
@@ -118,7 +118,7 @@ func NewChromemStore(config Config) (*ChromemStore, error) {
 		// Create in-memory database
 		db = chromem.NewDB()
 	}
-	
+
 	store := &ChromemStore{
 		db:                db,
 		embedder:          config.Embedder,
@@ -126,7 +126,7 @@ func NewChromemStore(config Config) (*ChromemStore, error) {
 		collections:       make(map[string]*chromem.Collection),
 		persistencePath:   config.PersistencePath,
 	}
-	
+
 	// Create or get default collection
 	if _, err := store.getOrCreateCollection(config.DefaultCollection); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create default collection").
@@ -134,7 +134,7 @@ func NewChromemStore(config Config) (*ChromemStore, error) {
 			WithOperation("NewChromemStore").
 			WithDetails("collection", config.DefaultCollection)
 	}
-	
+
 	return store, nil
 }
 
@@ -146,16 +146,16 @@ func (s *ChromemStore) getOrCreateCollection(name string) (*chromem.Collection, 
 		return coll, nil
 	}
 	s.mu.RUnlock()
-	
+
 	// Need to create the collection
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	
+
 	// Double-check after acquiring write lock
 	if coll, exists := s.collections[name]; exists {
 		return coll, nil
 	}
-	
+
 	// Create embedding function that wraps our embedder
 	embeddingFunc := func(ctx context.Context, text string) ([]float32, error) {
 		if s.embedder == nil {
@@ -166,20 +166,20 @@ func (s *ChromemStore) getOrCreateCollection(name string) (*chromem.Collection, 
 		}
 		return s.embedder.Embed(ctx, text)
 	}
-	
+
 	// Create collection with metadata
 	metadata := map[string]string{
 		"created_at": time.Now().Format(time.RFC3339),
 		"type":       "guild_collection",
 	}
-	
+
 	coll, err := s.db.CreateCollection(name, metadata, embeddingFunc)
 	if err != nil {
 		return nil, gerror.Wrapf(err, gerror.ErrCodeStorage, "failed to create collection %s", name).
 			WithComponent("memory").
 			WithOperation("getOrCreateCollection")
 	}
-	
+
 	s.collections[name] = coll
 	return coll, nil
 }
@@ -213,7 +213,7 @@ func (s *ChromemStore) SaveEmbedding(ctx context.Context, embedding Embedding) e
 	if coll, ok := embedding.Metadata["collection"].(string); ok && coll != "" {
 		collectionName = coll
 	}
-	
+
 	// Get or create collection
 	collection, err := s.getOrCreateCollection(collectionName)
 	if err != nil {
@@ -232,7 +232,7 @@ func (s *ChromemStore) SaveEmbedding(ctx context.Context, embedding Embedding) e
 		// Convert values to strings
 		metadata[k] = fmt.Sprintf("%v", v)
 	}
-	
+
 	// Add source and timestamp to metadata
 	metadata["source"] = embedding.Source
 	metadata["timestamp"] = embedding.Timestamp.Format(time.RFC3339)
@@ -244,7 +244,7 @@ func (s *ChromemStore) SaveEmbedding(ctx context.Context, embedding Embedding) e
 		Metadata:  metadata,
 		Embedding: embedding.Vector,
 	}
-	
+
 	// Add document to collection
 	// If embedding is empty, chromem will generate it using the embedding function
 	if err := collection.AddDocument(ctx, doc); err != nil {
@@ -253,7 +253,7 @@ func (s *ChromemStore) SaveEmbedding(ctx context.Context, embedding Embedding) e
 			WithOperation("SaveEmbedding").
 			WithDetails("document_id", doc.ID)
 	}
-	
+
 	return nil
 }
 
@@ -283,7 +283,7 @@ func (s *ChromemStore) QueryEmbeddings(ctx context.Context, query string, limit 
 		collectionNames = append(collectionNames, name)
 	}
 	s.mu.RUnlock()
-	
+
 	// If no collections exist, try the default collection
 	if len(collectionNames) == 0 {
 		collectionNames = []string{s.defaultCollection}
@@ -291,19 +291,19 @@ func (s *ChromemStore) QueryEmbeddings(ctx context.Context, query string, limit 
 
 	// Query all collections and merge results
 	allMatches := make([]EmbeddingMatch, 0)
-	
+
 	for _, collName := range collectionNames {
 		collection, err := s.getOrCreateCollection(collName)
 		if err != nil {
 			continue // Skip collections that can't be accessed
 		}
-		
+
 		// Query the collection
 		results, err := collection.Query(ctx, query, limit, nil, nil)
 		if err != nil {
 			continue // Skip collections that error
 		}
-		
+
 		// Convert results to EmbeddingMatch
 		for _, result := range results {
 			// Parse timestamp from metadata
@@ -311,7 +311,7 @@ func (s *ChromemStore) QueryEmbeddings(ctx context.Context, query string, limit 
 			if ts, ok := result.Metadata["timestamp"]; ok {
 				timestamp, _ = time.Parse(time.RFC3339, ts)
 			}
-			
+
 			// Convert metadata back to map[string]interface{}
 			metadata := make(map[string]interface{})
 			for k, v := range result.Metadata {
@@ -320,7 +320,7 @@ func (s *ChromemStore) QueryEmbeddings(ctx context.Context, query string, limit 
 				}
 			}
 			metadata["collection"] = collName
-			
+
 			match := EmbeddingMatch{
 				ID:        result.ID,
 				Text:      result.Content,
@@ -362,7 +362,7 @@ func (s *ChromemStore) QueryCollection(ctx context.Context, collectionName, quer
 	if limit <= 0 {
 		limit = 10
 	}
-	
+
 	// Get collection
 	collection, err := s.getOrCreateCollection(collectionName)
 	if err != nil {
@@ -371,7 +371,7 @@ func (s *ChromemStore) QueryCollection(ctx context.Context, collectionName, quer
 			WithOperation("QueryCollection").
 			WithDetails("collection", collectionName)
 	}
-	
+
 	// Query the collection
 	results, err := collection.Query(ctx, query, limit, nil, nil)
 	if err != nil {
@@ -380,7 +380,7 @@ func (s *ChromemStore) QueryCollection(ctx context.Context, collectionName, quer
 			WithOperation("QueryCollection").
 			WithDetails("collection", collectionName)
 	}
-	
+
 	// Convert results to EmbeddingMatch
 	matches := make([]EmbeddingMatch, 0, len(results))
 	for _, result := range results {
@@ -389,7 +389,7 @@ func (s *ChromemStore) QueryCollection(ctx context.Context, collectionName, quer
 		if ts, ok := result.Metadata["timestamp"]; ok {
 			timestamp, _ = time.Parse(time.RFC3339, ts)
 		}
-		
+
 		// Convert metadata back to map[string]interface{}
 		metadata := make(map[string]interface{})
 		for k, v := range result.Metadata {
@@ -398,7 +398,7 @@ func (s *ChromemStore) QueryCollection(ctx context.Context, collectionName, quer
 			}
 		}
 		metadata["collection"] = collectionName
-		
+
 		match := EmbeddingMatch{
 			ID:        result.ID,
 			Text:      result.Content,
@@ -409,7 +409,7 @@ func (s *ChromemStore) QueryCollection(ctx context.Context, collectionName, quer
 		}
 		matches = append(matches, match)
 	}
-	
+
 	return matches, nil
 }
 
@@ -423,7 +423,7 @@ func (s *ChromemStore) DeleteEmbedding(ctx context.Context, id string) error {
 		collections = append(collections, coll)
 	}
 	s.mu.RUnlock()
-	
+
 	// Try to delete from each collection
 	deleted := false
 	for _, coll := range collections {
@@ -433,14 +433,14 @@ func (s *ChromemStore) DeleteEmbedding(ctx context.Context, id string) error {
 		_ = coll
 		deleted = true // Placeholder
 	}
-	
+
 	if !deleted {
 		return gerror.New(gerror.ErrCodeInternal, "document deletion not yet supported by chromem-go", nil).
 			WithComponent("memory").
 			WithOperation("DeleteEmbedding").
 			WithDetails("id", id)
 	}
-	
+
 	return nil
 }
 
@@ -449,12 +449,12 @@ func (s *ChromemStore) DeleteEmbedding(ctx context.Context, id string) error {
 func (s *ChromemStore) ListCollections(ctx context.Context) ([]string, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	
+
 	collections := make([]string, 0, len(s.collections))
 	for name := range s.collections {
 		collections = append(collections, name)
 	}
-	
+
 	return collections, nil
 }
 
@@ -465,10 +465,10 @@ func (s *ChromemStore) Close() error {
 	// There's no explicit close method needed, but we'll clear our references
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	
+
 	s.collections = nil
 	s.db = nil
-	
+
 	return nil
 }
 

@@ -32,7 +32,7 @@ var promptCmd = &cobra.Command{
 
 Guild uses a layered prompt system with six hierarchical layers:
 - platform: Core Guild platform rules (global)
-- guild: Project-wide goals and style guidelines  
+- guild: Project-wide goals and style guidelines
 - role: Artisan role definitions (backend, frontend, etc.)
 - domain: Project type specializations (web-app, cli-tool, etc.)
 - session: User preferences and session-specific context
@@ -377,7 +377,7 @@ func runPromptList() error {
 			}
 			fmt.Printf("   Version: %d, Priority: %d\n", prompt.Version, prompt.Priority)
 			fmt.Printf("   Updated: %s\n", prompt.Updated.AsTime().Format(time.RFC3339))
-			
+
 			// Show content preview
 			contentPreview := prompt.Content
 			if len(contentPreview) > 100 {

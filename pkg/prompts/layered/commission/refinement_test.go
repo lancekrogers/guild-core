@@ -82,7 +82,7 @@ func TestTaskFormatTemplate(t *testing.T) {
 	t.Run("HasCorrectFormat", func(t *testing.T) {
 		// Should start with task marker
 		assert.True(t, strings.HasPrefix(template, "**Tasks Generated**:"))
-		
+
 		// Should have proper indentation markers
 		assert.Contains(t, template, "- {{.Category}}-{{.Number}}:")
 		assert.Contains(t, template, "  - Priority:")
@@ -171,7 +171,7 @@ func TestPromptLength(t *testing.T) {
 		prompt := commission.ManagerRefinementPrompt
 		// Rough estimate: 1 token ≈ 4 characters
 		tokenEstimate := len(prompt) / 4
-		
+
 		// Should fit comfortably in most context windows
 		assert.Less(t, tokenEstimate, 4000, "Manager prompt might be too long for some models")
 	})

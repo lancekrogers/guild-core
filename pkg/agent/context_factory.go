@@ -37,10 +37,10 @@ func (f *ContextAgentFactory) CreateAgent(ctx context.Context, config AgentConfi
 			WithOperation("CreateAgent").
 			WithDetails("agent_id", config.ID)
 	}
-	
+
 	// Create the appropriate agent type
 	var agent *ContextAwareAgent
-	
+
 	switch config.Type {
 	case "worker", "":
 		agent = newContextAwareAgent(config.ID, config.Name, "worker", config.Capabilities)
@@ -55,21 +55,21 @@ func (f *ContextAgentFactory) CreateAgent(ctx context.Context, config AgentConfi
 			WithDetails("agent_id", config.ID).
 			WithDetails("agent_type", config.Type)
 	}
-	
+
 	// Configure the agent
 	if config.DefaultProvider != "" {
 		agent.SetDefaultProvider(config.DefaultProvider)
 	}
-	
+
 	if config.SystemPrompt != "" {
 		agent.SetSystemPrompt(config.SystemPrompt)
 	}
-	
+
 	// Apply additional settings
 	for key, value := range config.Settings {
 		agent.AddMetadata(key, value)
 	}
-	
+
 	return agent, nil
 }
 
@@ -83,7 +83,7 @@ func (f *ContextAgentFactory) CreateAgentFromRegistry(ctx context.Context, agent
 			WithOperation("CreateAgentFromRegistry").
 			WithDetails("agent_name", agentName)
 	}
-	
+
 	// This would typically load agent config from the configuration provider
 	// For now, we'll create a default configuration
 	agentConfig := AgentConfig{
@@ -94,7 +94,7 @@ func (f *ContextAgentFactory) CreateAgentFromRegistry(ctx context.Context, agent
 		Enabled:      true,
 		Settings:     make(map[string]interface{}),
 	}
-	
+
 	return f.CreateAgent(ctx, agentConfig)
 }
 
@@ -106,7 +106,7 @@ func (f *ContextAgentFactory) RegisterAgentsWithRegistry(ctx context.Context, ag
 			WithComponent("agent").
 			WithOperation("RegisterAgentsWithRegistry")
 	}
-	
+
 	for agentName, agentConfigRaw := range agentsConfig {
 		// Parse agent configuration
 		agentConfigMap, ok := agentConfigRaw.(map[string]interface{})
@@ -116,9 +116,9 @@ func (f *ContextAgentFactory) RegisterAgentsWithRegistry(ctx context.Context, ag
 				WithOperation("RegisterAgentsWithRegistry").
 				WithDetails("agent_name", agentName)
 		}
-		
+
 		agentConfig := parseAgentConfig(agentName, agentConfigMap)
-		
+
 		// Create the agent
 		agent, err := f.CreateAgent(ctx, agentConfig)
 		if err != nil {
@@ -127,7 +127,7 @@ func (f *ContextAgentFactory) RegisterAgentsWithRegistry(ctx context.Context, ag
 				WithOperation("RegisterAgentsWithRegistry").
 				WithDetails("agent_name", agentName)
 		}
-		
+
 		// Register with registry
 		if err := registry.Agents().RegisterAgent(agentName, agent); err != nil {
 			return gerror.Wrapf(err, gerror.ErrCodeAgent, "failed to register agent %s", agentName).
@@ -136,7 +136,7 @@ func (f *ContextAgentFactory) RegisterAgentsWithRegistry(ctx context.Context, ag
 				WithDetails("agent_name", agentName)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -149,28 +149,28 @@ func parseAgentConfig(name string, configMap map[string]interface{}) AgentConfig
 		Enabled:  true,
 		Settings: make(map[string]interface{}),
 	}
-	
+
 	// Parse configuration fields
 	if agentType, ok := configMap["type"].(string); ok {
 		config.Type = agentType
 	}
-	
+
 	if displayName, ok := configMap["name"].(string); ok {
 		config.Name = displayName
 	}
-	
+
 	if enabled, ok := configMap["enabled"].(bool); ok {
 		config.Enabled = enabled
 	}
-	
+
 	if defaultProvider, ok := configMap["default_provider"].(string); ok {
 		config.DefaultProvider = defaultProvider
 	}
-	
+
 	if systemPrompt, ok := configMap["system_prompt"].(string); ok {
 		config.SystemPrompt = systemPrompt
 	}
-	
+
 	// Parse capabilities
 	if capabilitiesRaw, ok := configMap["capabilities"]; ok {
 		if capabilitiesList, ok := capabilitiesRaw.([]interface{}); ok {
@@ -185,12 +185,12 @@ func parseAgentConfig(name string, configMap map[string]interface{}) AgentConfig
 			config.Capabilities = []string{capabilitiesStr}
 		}
 	}
-	
+
 	// Parse settings
 	if settings, ok := configMap["settings"].(map[string]interface{}); ok {
 		config.Settings = settings
 	}
-	
+
 	return config
 }
 
@@ -243,9 +243,9 @@ func (f *ContextAgentFactory) CreateDefaultAgents(ctx context.Context) error {
 			WithComponent("agent").
 			WithOperation("CreateDefaultAgents")
 	}
-	
+
 	defaultConfigs := GetDefaultAgentConfigs()
-	
+
 	for agentName, config := range defaultConfigs {
 		agent, err := f.CreateAgent(ctx, config)
 		if err != nil {
@@ -254,7 +254,7 @@ func (f *ContextAgentFactory) CreateDefaultAgents(ctx context.Context) error {
 				WithOperation("CreateDefaultAgents").
 				WithDetails("agent_name", agentName)
 		}
-		
+
 		if err := registry.Agents().RegisterAgent(agentName, agent); err != nil {
 			return gerror.Wrapf(err, gerror.ErrCodeAgent, "failed to register default agent %s", agentName).
 				WithComponent("agent").
@@ -262,7 +262,7 @@ func (f *ContextAgentFactory) CreateDefaultAgents(ctx context.Context) error {
 				WithDetails("agent_name", agentName)
 		}
 	}
-	
+
 	// Set default agent
 	if err := registry.Agents().SetDefaultAgent("worker"); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeAgent, "failed to set default agent").
@@ -270,7 +270,7 @@ func (f *ContextAgentFactory) CreateDefaultAgents(ctx context.Context) error {
 			WithOperation("CreateDefaultAgents").
 			WithDetails("default_agent", "worker")
 	}
-	
+
 	return nil
 }
 

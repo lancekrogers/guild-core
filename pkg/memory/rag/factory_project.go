@@ -2,7 +2,7 @@ package rag
 
 import (
 	"context"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 	"github.com/guild-ventures/guild-core/pkg/project"
@@ -17,7 +17,7 @@ func NewProjectAwareFactory(ctx context.Context) (*Factory, error) {
 			WithComponent("memory").
 			WithOperation("NewProjectAwareFactory")
 	}
-	
+
 	// Create project-specific configuration
 	config := Config{
 		ChunkSize:    1000,
@@ -26,7 +26,7 @@ func NewProjectAwareFactory(ctx context.Context) (*Factory, error) {
 		UseCorpus:    true,
 		CorpusPath:   projCtx.GetCorpusPath(),
 	}
-	
+
 	// Create vector store configuration using project paths
 	vectorConfig := &vector.StoreConfig{
 		Type: vector.StoreTypeChromem,
@@ -35,7 +35,7 @@ func NewProjectAwareFactory(ctx context.Context) (*Factory, error) {
 			DefaultCollection: "project",
 		},
 	}
-	
+
 	// Create vector store
 	vectorStore, err := vector.NewVectorStore(ctx, vectorConfig)
 	if err != nil {
@@ -43,16 +43,16 @@ func NewProjectAwareFactory(ctx context.Context) (*Factory, error) {
 			WithComponent("memory").
 			WithOperation("NewProjectAwareFactory")
 	}
-	
+
 	// Create retriever with vector store
 	retriever := NewRetrieverWithStore(vectorStore, config)
-	
+
 	// Create factory
 	factory := &Factory{
 		retriever: retriever,
 		embedder:  nil, // Embedder will be set by vector store
 	}
-	
+
 	return factory, nil
 }
 
@@ -62,7 +62,7 @@ func NewProjectAwareRetriever(ctx context.Context) (*Retriever, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Type assert to get concrete Retriever type
 	retriever, ok := factory.GetRetriever().(*Retriever)
 	if !ok {
@@ -70,7 +70,7 @@ func NewProjectAwareRetriever(ctx context.Context) (*Retriever, error) {
 			WithComponent("memory").
 			WithOperation("NewProjectAwareRetriever")
 	}
-	
+
 	return retriever, nil
 }
 
@@ -86,7 +86,7 @@ func GetProjectRAGConfig(ctx context.Context) (Config, error) {
 			CorpusPath:   projCtx.GetCorpusPath(),
 		}, nil
 	}
-	
+
 	// Try to get project context from current directory
 	projCtx, err := project.GetContext()
 	if err != nil {
@@ -94,7 +94,7 @@ func GetProjectRAGConfig(ctx context.Context) (Config, error) {
 			WithComponent("memory").
 			WithOperation("GetProjectRAGConfig")
 	}
-	
+
 	return Config{
 		ChunkSize:    1000,
 		ChunkOverlap: 200,

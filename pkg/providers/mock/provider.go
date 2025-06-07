@@ -243,20 +243,20 @@ func (p *Provider) Complete(ctx context.Context, prompt string) (string, error) 
 		},
 		Model: "mock-model",
 	}
-	
+
 	// Use the existing ChatCompletion implementation
 	resp, err := p.ChatCompletion(ctx, req)
 	if err != nil {
 		return "", err
 	}
-	
+
 	if len(resp.Choices) == 0 {
 		return "", gerror.New(gerror.ErrCodeProviderAPI, "no response choices available", nil).
 			WithComponent("providers").
 			WithOperation("Complete").
 			WithDetails("provider", "mock")
 	}
-	
+
 	return resp.Choices[0].Message.Content, nil
 }
 

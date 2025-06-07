@@ -31,14 +31,14 @@ type GuildHallKeyMap struct {
 	NavigateDown  key.Binding
 	NavigateLeft  key.Binding
 	NavigateRight key.Binding
-	
+
 	// Actions
 	Craft         key.Binding // Add context (create)
 	Refine        key.Binding // Regenerate (refine)
 	ConsultMaster key.Binding // Suggest improvements
 	ApproveWork   key.Binding // Mark as ready
 	ExamineDocs   key.Binding // Preview docs
-	
+
 	// UI Controls
 	EnterHall     key.Binding // Enter command mode
 	LeaveHall     key.Binding // Exit

@@ -69,7 +69,7 @@ type ExecutionResult struct {
 The prompt system uses composable layers to build context-aware prompts:
 
 1. **Base Layer** - Agent role and capabilities
-2. **Context Layer** - Project and commission information  
+2. **Context Layer** - Project and commission information
 3. **Task Layer** - Specific task requirements
 4. **Tool Layer** - Available tools and usage
 5. **Execution Layer** - Current step guidance
@@ -132,7 +132,7 @@ if e.workspaceManager != nil {
         BranchPrefix: "agent",
         WorkDir:      e.execContext.ProjectRoot,
     }
-    
+
     ws, err := e.workspaceManager.CreateWorkspace(ctx, opts)
     // Workspace path now available in execution context
     e.execContext.WorkspaceDir = ws.Path()
@@ -152,13 +152,13 @@ if e.workspaceManager != nil {
 func (e *BasicTaskExecutor) phaseInitialize(ctx context.Context) error {
     // Create workspace
     workspace, err := e.workspaceManager.Create(e.agent.GetID(), e.currentTask.ID)
-    
+
     // Update context with workspace
     e.execContext.WorkspaceDir = workspace.GetPath()
-    
+
     // Initialize tools with workspace context
     // Load project-specific configuration
-    
+
     return nil
 }
 ```
@@ -175,16 +175,16 @@ func (e *BasicTaskExecutor) phasePlan(ctx context.Context) error {
     // Build layered prompt
     promptData := e.buildPromptData()
     planningPrompt, err := e.promptBuilder.BuildPlanningPrompt(promptData)
-    
+
     // Add planning instructions
     fullPrompt := planningPrompt + planningInstructions
-    
+
     // Get plan from agent
     plan, err := e.agent.Execute(ctx, fullPrompt)
-    
+
     // Store for execution phase
     e.result.Metadata["execution_plan"] = plan
-    
+
     return nil
 }
 ```
@@ -200,19 +200,19 @@ func (e *BasicTaskExecutor) phasePlan(ctx context.Context) error {
 func (e *BasicTaskExecutor) phaseExecute(ctx context.Context) error {
     // Parse execution plan
     steps := e.parseExecutionPlan()
-    
+
     for i, step := range steps {
         // Update progress
         progress := 0.2 + (0.5 * float64(i+1) / float64(len(steps)))
         e.updateProgress(progress, step.Name)
-        
+
         // Execute step with tools
         result, err := e.executeStep(ctx, step)
-        
+
         // Track artifacts
         e.collectArtifacts(result)
     }
-    
+
     return nil
 }
 ```
@@ -230,16 +230,16 @@ func (e *BasicTaskExecutor) phaseFinalize(ctx context.Context) error {
     if gitWs, ok := e.workspace.(*workspace.GitWorkspace); ok {
         if gitWs.GetGitInfo().IsDirty {
             // Auto-commit changes
-            commitMsg := fmt.Sprintf("Task %s: Completed by %s", 
+            commitMsg := fmt.Sprintf("Task %s: Completed by %s",
                 e.currentTask.ID, e.agent.GetID())
             gitWs.CommitChanges(commitMsg)
         }
     }
-    
+
     // Store workspace info in results
     e.result.Metadata["workspace_path"] = e.workspace.Path()
     e.result.Metadata["workspace_branch"] = e.workspace.Branch()
-    
+
     return nil
 }
 ```

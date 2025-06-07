@@ -61,26 +61,26 @@ func (g *GraphView) Layout() {
 func (g *GraphView) layoutCircular() {
 	center := struct{ x, y int }{g.width / 2, g.height / 2}
 	radius := int(math.Min(float64(g.width), float64(g.height)) * 0.4)
-	
+
 	// Convert map keys to a slice for indexing
 	nodeNames := make([]string, 0, len(g.graph.Nodes))
 	for name := range g.graph.Nodes {
 		nodeNames = append(nodeNames, name)
 	}
-	
+
 	for i, nodeName := range nodeNames {
 		// Calculate position on circle
 		angle := 2 * math.Pi * float64(i) / float64(len(nodeNames))
 		x := center.x + int(float64(radius)*math.Cos(angle))
 		y := center.y + int(float64(radius)*math.Sin(angle))
-		
+
 		// Create graph node (using empty CorpusDoc with just the title)
 		gNode := graphNode{
 			doc: corpus.CorpusDoc{Title: nodeName},
 			x:   x,
 			y:   y / 2, // Compensate for terminal aspect ratio
 		}
-		
+
 		// Add edges
 		for _, edge := range g.graph.Edges {
 			if edge.From == nodeName {
@@ -93,7 +93,7 @@ func (g *GraphView) layoutCircular() {
 				}
 			}
 		}
-		
+
 		g.nodes = append(g.nodes, gNode)
 	}
 }
@@ -105,7 +105,7 @@ func (g *GraphView) layoutForceDirected() {
 	for name := range g.graph.Nodes {
 		nodeNames = append(nodeNames, name)
 	}
-	
+
 	// Initialize with random positions
 	for _, nodeName := range nodeNames {
 		// Generate a pseudorandom position based on title hash
@@ -113,16 +113,16 @@ func (g *GraphView) layoutForceDirected() {
 		for _, c := range nodeName {
 			hash = (hash*31 + int(c)) % 1000
 		}
-		
+
 		x := (hash % g.width) * 8 / 10
 		y := ((hash / g.width) % g.height) * 8 / 10
-		
+
 		gNode := graphNode{
 			doc: corpus.CorpusDoc{Title: nodeName},
 			x:   x,
 			y:   y / 2, // Compensate for terminal aspect ratio
 		}
-		
+
 		// Add edges
 		for _, edge := range g.graph.Edges {
 			if edge.From == nodeName {
@@ -135,10 +135,10 @@ func (g *GraphView) layoutForceDirected() {
 				}
 			}
 		}
-		
+
 		g.nodes = append(g.nodes, gNode)
 	}
-	
+
 	// Run several iterations of force-directed placement
 	iterations := 100
 	for i := 0; i < iterations; i++ {
@@ -150,29 +150,29 @@ func (g *GraphView) layoutForceDirected() {
 func (g *GraphView) applyForces() {
 	// Force parameters
 	k := float64(g.width) / math.Sqrt(float64(len(g.nodes))) // optimal distance
-	
+
 	// Calculate repulsive forces between all nodes
 	forces := make([]struct{ x, y float64 }, len(g.nodes))
-	
+
 	// Repulsive forces between all nodes
 	for i := range g.nodes {
 		for j := range g.nodes {
 			if i == j {
 				continue
 			}
-			
+
 			// Calculate distance
 			dx := float64(g.nodes[i].x - g.nodes[j].x)
 			dy := float64(g.nodes[i].y - g.nodes[j].y) * 2 // Compensate for terminal aspect ratio
 			dist := math.Max(1.0, math.Sqrt(dx*dx + dy*dy))
-			
+
 			// Repulsive force is inversely proportional to distance
 			force := k * k / dist
 			forces[i].x += (dx / dist) * force
 			forces[i].y += (dy / dist) * force
 		}
 	}
-	
+
 	// Attractive forces along edges
 	for i, node := range g.nodes {
 		for _, j := range node.edges {
@@ -180,21 +180,21 @@ func (g *GraphView) applyForces() {
 			dx := float64(g.nodes[i].x - g.nodes[j].x)
 			dy := float64(g.nodes[i].y - g.nodes[j].y) * 2 // Compensate for terminal aspect ratio
 			dist := math.Max(1.0, math.Sqrt(dx*dx + dy*dy))
-			
+
 			// Attractive force is proportional to distance
 			force := dist * dist / k
 			forces[i].x -= (dx / dist) * force
 			forces[i].y -= (dy / dist) * force
 		}
 	}
-	
+
 	// Apply forces with dampening
 	dampening := 0.1
 	for i := range g.nodes {
 		// Apply force with dampening
 		g.nodes[i].x += int(forces[i].x * dampening)
 		g.nodes[i].y += int(forces[i].y * dampening)
-		
+
 		// Keep within bounds
 		g.nodes[i].x = clamp(g.nodes[i].x, 2, g.width-3)
 		g.nodes[i].y = clamp(g.nodes[i].y, 1, g.height-2)
@@ -219,10 +219,10 @@ func (g *GraphView) Render() string {
 			Foreground(lipgloss.Color("241")).
 			Render("No documents to visualize in graph")
 	}
-	
+
 	// We'll use a simple ASCII-based approach for the graph visualization
 	// This can be enhanced with more sophisticated rendering in the future
-	
+
 	// Create a 2D grid for the canvas
 	canvas := make([][]string, g.height)
 	for i := range canvas {
@@ -231,17 +231,17 @@ func (g *GraphView) Render() string {
 			canvas[i][j] = " "
 		}
 	}
-	
+
 	// Draw edges first so they appear behind nodes
 	for i, node := range g.nodes {
 		for _, edgeIdx := range node.edges {
 			target := g.nodes[edgeIdx]
-			
+
 			// Draw a simple line from node to target
 			// This is a basic implementation - a better line algorithm would be nicer
 			drawLine(canvas, node.x, node.y, target.x, target.y, "·")
 		}
-		
+
 		// Highlight edges from selected node with a different character
 		if i == g.selectedIdx {
 			for _, edgeIdx := range node.edges {
@@ -250,7 +250,7 @@ func (g *GraphView) Render() string {
 			}
 		}
 	}
-	
+
 	// Draw nodes over the edges
 	for i, node := range g.nodes {
 		// Truncate node title to fit
@@ -258,30 +258,30 @@ func (g *GraphView) Render() string {
 		if len(title) > 20 {
 			title = truncate.StringWithTail(title, 20, "…")
 		}
-		
+
 		// Draw the node
 		nodeStyle := lipgloss.NewStyle().
 			Foreground(lipgloss.Color("3")).
 			Padding(0, 1).
 			Bold(true)
-		
+
 		// If this is the selected node, highlight it
 		if i == g.selectedIdx {
 			nodeStyle = nodeStyle.Background(lipgloss.Color("238")).
 				Foreground(lipgloss.Color("6"))
 		}
-		
+
 		// Draw title at node position
 		drawString(canvas, node.x, node.y, nodeStyle.Render(title))
-		
+
 		// For tagged nodes, show a small indicator
 		if len(node.doc.Tags) > 0 {
 			indicator := fmt.Sprintf("(%d)", len(node.doc.Tags))
-			drawString(canvas, node.x+len(title)+2, node.y, 
+			drawString(canvas, node.x+len(title)+2, node.y,
 				lipgloss.NewStyle().Foreground(lipgloss.Color("5")).Render(indicator))
 		}
 	}
-	
+
 	// Convert canvas to string
 	var builder strings.Builder
 	for _, row := range canvas {
@@ -290,7 +290,7 @@ func (g *GraphView) Render() string {
 		}
 		builder.WriteString("\n")
 	}
-	
+
 	return builder.String()
 }
 
@@ -308,7 +308,7 @@ func drawLine(canvas [][]string, x1, y1, x2, y2 int, char string) {
 		sy = -1
 	}
 	err := dx - dy
-	
+
 	for {
 		// Only draw if within canvas bounds
 		if y1 >= 0 && y1 < len(canvas) && x1 >= 0 && x1 < len(canvas[0]) {
@@ -317,11 +317,11 @@ func drawLine(canvas [][]string, x1, y1, x2, y2 int, char string) {
 				canvas[y1][x1] = char
 			}
 		}
-		
+
 		if x1 == x2 && y1 == y2 {
 			break
 		}
-		
+
 		e2 := 2 * err
 		if e2 > -dy {
 			err -= dy
@@ -340,11 +340,11 @@ func drawString(canvas [][]string, x, y int, s string) {
 	if y < 0 || y >= len(canvas) {
 		return
 	}
-	
+
 	// Handle ANSI escape sequences properly
 	inEscapeSeq := false
 	escapeBuffer := ""
-	
+
 	for i, char := range s {
 		// Check if we're in an escape sequence
 		if char == '\x1b' {
@@ -352,7 +352,7 @@ func drawString(canvas [][]string, x, y int, s string) {
 			escapeBuffer = string(char)
 			continue
 		}
-		
+
 		if inEscapeSeq {
 			escapeBuffer += string(char)
 			// Check if this is the end of the escape sequence
@@ -367,7 +367,7 @@ func drawString(canvas [][]string, x, y int, s string) {
 			}
 			continue
 		}
-		
+
 		// Regular character, place it on the canvas
 		pos := x + i
 		if pos >= 0 && pos < len(canvas[y]) {
@@ -382,11 +382,11 @@ func (g *GraphView) MoveUp() {
 	if len(g.nodes) == 0 {
 		return
 	}
-	
+
 	currY := g.nodes[g.selectedIdx].y
 	best := g.selectedIdx
 	bestDist := g.height
-	
+
 	for i, node := range g.nodes {
 		if node.y < currY {
 			dist := currY - node.y
@@ -396,7 +396,7 @@ func (g *GraphView) MoveUp() {
 			}
 		}
 	}
-	
+
 	g.selectedIdx = best
 }
 
@@ -406,11 +406,11 @@ func (g *GraphView) MoveDown() {
 	if len(g.nodes) == 0 {
 		return
 	}
-	
+
 	currY := g.nodes[g.selectedIdx].y
 	best := g.selectedIdx
 	bestDist := g.height
-	
+
 	for i, node := range g.nodes {
 		if node.y > currY {
 			dist := node.y - currY
@@ -420,7 +420,7 @@ func (g *GraphView) MoveDown() {
 			}
 		}
 	}
-	
+
 	g.selectedIdx = best
 }
 
@@ -430,11 +430,11 @@ func (g *GraphView) MoveLeft() {
 	if len(g.nodes) == 0 {
 		return
 	}
-	
+
 	currX := g.nodes[g.selectedIdx].x
 	best := g.selectedIdx
 	bestDist := g.width
-	
+
 	for i, node := range g.nodes {
 		if node.x < currX {
 			dist := currX - node.x
@@ -444,7 +444,7 @@ func (g *GraphView) MoveLeft() {
 			}
 		}
 	}
-	
+
 	g.selectedIdx = best
 }
 
@@ -454,11 +454,11 @@ func (g *GraphView) MoveRight() {
 	if len(g.nodes) == 0 {
 		return
 	}
-	
+
 	currX := g.nodes[g.selectedIdx].x
 	best := g.selectedIdx
 	bestDist := g.width
-	
+
 	for i, node := range g.nodes {
 		if node.x > currX {
 			dist := node.x - currX
@@ -468,7 +468,7 @@ func (g *GraphView) MoveRight() {
 			}
 		}
 	}
-	
+
 	g.selectedIdx = best
 }
 
@@ -477,7 +477,7 @@ func (g *GraphView) GetSelectedDoc() *corpus.CorpusDoc {
 	if len(g.nodes) == 0 || g.selectedIdx < 0 || g.selectedIdx >= len(g.nodes) {
 		return nil
 	}
-	
+
 	// Return a copy of the document
 	doc := g.nodes[g.selectedIdx].doc
 	return &doc

@@ -18,7 +18,7 @@ const (
 	// DeepSeek Models
 	DeepSeekV3 = "deepseek-v3"
 	DeepSeekR1 = "deepseek-r1"
-	
+
 	// Other Models (if supported)
 	GPT4Turbo = "gpt-4-turbo"
 	Claude3 = "claude-3"

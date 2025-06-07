@@ -12,16 +12,16 @@ import (
 type AgentClient interface {
 	// Execute runs a task with full context support
 	Execute(ctx context.Context, request string) (string, error)
-	
+
 	// GetID returns the agent's unique identifier
 	GetID() string
-	
+
 	// GetName returns the agent's display name
 	GetName() string
-	
+
 	// GetCapabilities returns the agent's capabilities
 	GetCapabilities() []string
-	
+
 	// GetStatus returns the agent's current status
 	GetStatus() AgentStatus
 }
@@ -48,7 +48,7 @@ type TaskRequest struct {
 	Timeout        time.Duration          `json:"timeout"`
 	RequiredTools  []string               `json:"required_tools"`
 	Context        map[string]interface{} `json:"context"`
-	
+
 	// Execution context
 	RequestID      string                 `json:"request_id"`
 	SessionID      string                 `json:"session_id"`
@@ -85,16 +85,16 @@ func ExecuteWithAgent(ctx context.Context, agentName, request string) (string, e
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get agent").WithComponent("context").WithOperation("ExecuteWithAgent").WithDetails("agent_name", agentName)
 	}
-	
+
 	// Try to cast to our context-aware interface
 	if contextAgent, ok := agent.(AgentClient); ok {
 		// Create enhanced context for this agent execution
 		agentCtx := WithAgentID(ctx, contextAgent.GetID())
 		agentCtx = WithOperation(agentCtx, "agent-execute")
-		
+
 		return contextAgent.Execute(agentCtx, request)
 	}
-	
+
 	// Fallback to basic agent interface
 	if basicAgent, ok := agent.(interface {
 		Execute(context.Context, string) (string, error)
@@ -103,7 +103,7 @@ func ExecuteWithAgent(ctx context.Context, agentName, request string) (string, e
 		agentCtx := WithAgentID(ctx, basicAgent.GetID())
 		return basicAgent.Execute(agentCtx, request)
 	}
-	
+
 	return "", gerror.Newf(gerror.ErrCodeInvalidInput, "agent '%s' does not implement required execution interface", agentName).WithComponent("context").WithOperation("ExecuteWithAgent")
 }
 
@@ -113,20 +113,20 @@ func ExecuteWithDefaultAgent(ctx context.Context, request string) (string, error
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("ExecuteWithDefaultAgent")
 	}
-	
+
 	// Get default agent
 	agent, err := registry.Agents().GetDefaultAgent()
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get default agent").WithComponent("context").WithOperation("ExecuteWithDefaultAgent")
 	}
-	
+
 	// Try to cast to our context-aware interface
 	if contextAgent, ok := agent.(AgentClient); ok {
 		agentCtx := WithAgentID(ctx, contextAgent.GetID())
 		agentCtx = WithOperation(agentCtx, "agent-execute")
 		return contextAgent.Execute(agentCtx, request)
 	}
-	
+
 	// Fallback to basic agent interface
 	if basicAgent, ok := agent.(interface {
 		Execute(context.Context, string) (string, error)
@@ -135,7 +135,7 @@ func ExecuteWithDefaultAgent(ctx context.Context, request string) (string, error
 		agentCtx := WithAgentID(ctx, basicAgent.GetID())
 		return basicAgent.Execute(agentCtx, request)
 	}
-	
+
 	return "", gerror.New(gerror.ErrCodeInvalidInput, "default agent does not implement required execution interface", nil).WithComponent("context").WithOperation("ExecuteWithDefaultAgent")
 }
 
@@ -145,7 +145,7 @@ func CreateTaskRequest(ctx context.Context, content, taskType string) TaskReques
 	if requestID == "" {
 		requestID = fmt.Sprintf("task-%d", time.Now().UnixNano())
 	}
-	
+
 	return TaskRequest{
 		ID:           fmt.Sprintf("%s-task", requestID),
 		Content:      content,
@@ -161,7 +161,7 @@ func CreateTaskRequest(ctx context.Context, content, taskType string) TaskReques
 // ExecuteTaskRequest executes a structured task request
 func ExecuteTaskRequest(ctx context.Context, agentName string, req TaskRequest) (TaskResponse, error) {
 	startTime := time.Now()
-	
+
 	// Enhance context with task information
 	taskCtx := WithOperation(ctx, fmt.Sprintf("task-%s", req.Type))
 	if req.Timeout > 0 {
@@ -169,11 +169,11 @@ func ExecuteTaskRequest(ctx context.Context, agentName string, req TaskRequest) 
 		taskCtx, cancel = context.WithTimeout(taskCtx, req.Timeout)
 		defer cancel()
 	}
-	
+
 	// Execute the task
 	result, err := ExecuteWithAgent(taskCtx, agentName, req.Content)
 	endTime := time.Now()
-	
+
 	// Create response
 	response := TaskResponse{
 		ID:        fmt.Sprintf("%s-response", req.ID),
@@ -185,19 +185,19 @@ func ExecuteTaskRequest(ctx context.Context, agentName string, req TaskRequest) 
 		Duration:  endTime.Sub(startTime),
 		Metadata:  make(map[string]interface{}),
 	}
-	
+
 	if err != nil {
 		response.Status = "error"
 		response.Error = err.Error()
 	} else {
 		response.Status = "success"
 	}
-	
+
 	// Add cost information if available
 	if costInfo := GetCostInfo(ctx); costInfo != nil {
 		response.CostUSD = costInfo.Used
 	}
-	
+
 	return response, err
 }
 
@@ -211,16 +211,16 @@ func SelectBestAgent(ctx context.Context, taskType string, requirements map[stri
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("SelectBestAgent")
 	}
-	
+
 	// Get all available agents
 	agents := registry.Agents().ListAgents()
 	if len(agents) == 0 {
 		return "", gerror.New(gerror.ErrCodeNotFound, "no agents available", nil).WithComponent("context").WithOperation("SelectBestAgent")
 	}
-	
+
 	// Simple selection logic - in production this could be more sophisticated
 	// considering factors like agent capabilities, current load, past performance, etc.
-	
+
 	switch taskType {
 	case "coding", "code-review", "debugging":
 		// Look for specialized coding agents
@@ -236,7 +236,7 @@ func SelectBestAgent(ctx context.Context, taskType string, requirements map[stri
 				}
 			}
 		}
-		
+
 	case "analysis", "reasoning":
 		// Look for analytical agents
 		for _, agentName := range agents {
@@ -251,7 +251,7 @@ func SelectBestAgent(ctx context.Context, taskType string, requirements map[stri
 				}
 			}
 		}
-		
+
 	case "general", "completion":
 		// Look for general-purpose agents
 		for _, agentName := range agents {
@@ -267,7 +267,7 @@ func SelectBestAgent(ctx context.Context, taskType string, requirements map[stri
 			}
 		}
 	}
-	
+
 	// Default to first available agent
 	return agents[0], nil
 }
@@ -279,10 +279,10 @@ func RouteToAgent(ctx context.Context, taskType, request string, requirements ma
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to select agent").WithComponent("context").WithOperation("RouteToAgent")
 	}
-	
+
 	// Create enhanced context
 	ctx = WithOperation(ctx, fmt.Sprintf("routed-%s", taskType))
-	
+
 	// Execute with selected agent
 	return ExecuteWithAgent(ctx, agentName, request)
 }
@@ -297,11 +297,11 @@ func GetAgentStatus(ctx context.Context, agentName string) (AgentStatus, error) 
 	if err != nil {
 		return AgentStatus{}, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get agent").WithComponent("context").WithOperation("GetAgentStatus").WithDetails("agent_name", agentName)
 	}
-	
+
 	if contextAgent, ok := agent.(AgentClient); ok {
 		return contextAgent.GetStatus(), nil
 	}
-	
+
 	// Fallback status for basic agents
 	return AgentStatus{
 		State:      "unknown",
@@ -316,16 +316,16 @@ func GetAllAgentStatuses(ctx context.Context) (map[string]AgentStatus, error) {
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("GetAllAgentStatuses")
 	}
-	
+
 	agents := registry.Agents().ListAgents()
 	statuses := make(map[string]AgentStatus)
-	
+
 	for _, agentName := range agents {
 		if status, err := GetAgentStatus(ctx, agentName); err == nil {
 			statuses[agentName] = status
 		}
 	}
-	
+
 	return statuses, nil
 }
 
@@ -335,12 +335,12 @@ func MonitorAgentHealth(ctx context.Context) (map[string]bool, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	health := make(map[string]bool)
 	for agentName, status := range statuses {
 		// Simple health check - agent is healthy if not in error state
 		health[agentName] = status.State != "error" && status.State != "disabled"
 	}
-	
+
 	return health, nil
 }

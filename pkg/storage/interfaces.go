@@ -20,7 +20,7 @@ type Task struct {
 	UpdatedAt       time.Time              `json:"updated_at"`
 	AgentName       *string                `json:"agent_name,omitempty"`  // For joined queries
 	AgentType       *string                `json:"agent_type,omitempty"` // For joined queries
-	
+
 	// DEPRECATED: Use BoardID instead - kept for backward compatibility
 	CommissionID    string                 `json:"commission_id,omitempty"`
 }
@@ -173,7 +173,7 @@ type StorageRegistry interface {
 	RegisterAgentRepository(repo AgentRepository)
 	RegisterPromptChainRepository(repo PromptChainRepository)
 	RegisterMemoryStore(store interface{})
-	
+
 	GetTaskRepository() TaskRepository
 	GetCampaignRepository() CampaignRepository
 	GetCommissionRepository() CommissionRepository

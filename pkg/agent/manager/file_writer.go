@@ -70,7 +70,7 @@ func (w *GuildArchiveWriter) WriteStructure(ctx context.Context, refined *Refine
 
 	// Create target Archive directory for this commission
 	targetDir := filepath.Join(w.archiveDir, refined.CommissionID)
-	
+
 	// Validate target Archive directory
 	if err := w.validateArchiveDir(targetDir); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeValidation, "invalid Archive directory").
@@ -219,14 +219,14 @@ func (w *GuildArchiveWriter) writeArchiveFile(ctx context.Context, targetDir str
 	}
 
 	if w.dryRun {
-		fmt.Printf("DRY RUN: Would write file %s (%d characters, %d tasks)\n", 
+		fmt.Printf("DRY RUN: Would write file %s (%d characters, %d tasks)\n",
 			filePath, len(file.Content), file.TasksCount)
 		return nil
 	}
 
 	// Write file atomically (write to temp file, then rename)
 	tempFile := filePath + ".tmp"
-	
+
 	if err := os.WriteFile(tempFile, []byte(file.Content), w.permissions); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to write temporary file").
 			WithComponent("manager").

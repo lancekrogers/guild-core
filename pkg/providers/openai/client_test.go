@@ -47,7 +47,7 @@ func TestOpenAIProvider(t *testing.T) {
 		TestModel:    GPT41Mini,
 		SkipLive:     true,
 	})
-	
+
 	suite.RunBasicTests()
 }
 

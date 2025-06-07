@@ -153,7 +153,7 @@ func (a *QualityAssertion) Assert(output string) error {
 
 	if a.RequireExamples {
 		// Look for common example indicators
-		hasExamples := strings.Contains(output, "example") || 
+		hasExamples := strings.Contains(output, "example") ||
 			strings.Contains(output, "Example") ||
 			strings.Contains(output, "e.g.") ||
 			strings.Contains(output, "for instance")
@@ -164,7 +164,7 @@ func (a *QualityAssertion) Assert(output string) error {
 
 	if a.RequireFormatting {
 		// Check for markdown formatting
-		hasFormatting := strings.Contains(output, "#") || 
+		hasFormatting := strings.Contains(output, "#") ||
 			strings.Contains(output, "**") ||
 			strings.Contains(output, "- ") ||
 			strings.Contains(output, "```")

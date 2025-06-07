@@ -199,7 +199,7 @@ func TestBasicTaskExecutor_StateTransitions(t *testing.T) {
 func TestExecutionResult_Duration(t *testing.T) {
 	start := time.Now()
 	end := start.Add(5 * time.Second)
-	
+
 	result := &ExecutionResult{
 		StartTime: start,
 		EndTime:   end,

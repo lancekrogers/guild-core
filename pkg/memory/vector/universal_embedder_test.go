@@ -12,7 +12,7 @@ import (
 
 func TestUniversalEmbedder_NewUniversalEmbedder(t *testing.T) {
 	provider := &mock.Provider{}
-	
+
 	tests := []struct {
 		name     string
 		opts     []EmbedderOption
@@ -62,7 +62,7 @@ func TestUniversalEmbedder_NewUniversalEmbedder(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			embedder := NewUniversalEmbedder(provider, tt.opts...)
-			
+
 			assert.Equal(t, tt.expected.strategy, embedder.strategy)
 			if tt.expected.model != "" {
 				assert.Equal(t, tt.expected.model, embedder.model)
@@ -73,7 +73,7 @@ func TestUniversalEmbedder_NewUniversalEmbedder(t *testing.T) {
 
 func TestUniversalEmbedder_Embed(t *testing.T) {
 	ctx := context.Background()
-	
+
 	tests := []struct {
 		name        string
 		text        string
@@ -108,20 +108,20 @@ func TestUniversalEmbedder_Embed(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			embedder := NewUniversalEmbedder(tt.provider, WithStrategy(tt.strategy))
-			
+
 			result, err := embedder.Embed(ctx, tt.text)
-			
+
 			if tt.expectError {
 				assert.Error(t, err)
 				return
 			}
-			
+
 			if tt.expectNil {
 				assert.NoError(t, err)
 				assert.Nil(t, result)
 				return
 			}
-			
+
 			require.NoError(t, err)
 			assert.NotNil(t, result)
 			assert.NotEmpty(t, result) // Should have embeddings
@@ -131,16 +131,16 @@ func TestUniversalEmbedder_Embed(t *testing.T) {
 
 func TestUniversalEmbedder_GetEmbeddings(t *testing.T) {
 	ctx := context.Background()
-	
+
 	mockProvider := mock.NewProvider()
 	embedder := NewUniversalEmbedder(mockProvider, WithStrategy(StrategyDedicated))
-	
+
 	texts := []string{"text1", "text2", "text3"}
 	results, err := embedder.GetEmbeddings(ctx, texts)
-	
+
 	require.NoError(t, err)
 	assert.Len(t, results, 3)
-	
+
 	// Each result should have embeddings
 	for _, result := range results {
 		assert.NotNil(t, result)
@@ -151,18 +151,18 @@ func TestUniversalEmbedder_GetEmbeddings(t *testing.T) {
 func TestNoOpEmbedder(t *testing.T) {
 	ctx := context.Background()
 	embedder := NewNoOpEmbedder(768)
-	
+
 	// Test single embed
 	result, err := embedder.Embed(ctx, "test")
 	assert.NoError(t, err)
 	assert.NotNil(t, result)
 	assert.Len(t, result, 768)
-	
+
 	// Test GetEmbedding
 	result2, err := embedder.GetEmbedding(ctx, "test")
 	assert.NoError(t, err)
 	assert.Equal(t, result, result2) // Should be deterministic
-	
+
 	// Test GetEmbeddings
 	results, err := embedder.GetEmbeddings(ctx, []string{"test1", "test2"})
 	assert.NoError(t, err)
@@ -173,9 +173,9 @@ func TestNoOpEmbedder(t *testing.T) {
 func TestConvertToFloat32(t *testing.T) {
 	input := []float64{0.1, 0.2, 0.3, 0.4, 0.5}
 	expected := []float32{0.1, 0.2, 0.3, 0.4, 0.5}
-	
+
 	result := convertToFloat32(input)
-	
+
 	assert.Equal(t, expected, result)
 }
 
@@ -216,12 +216,12 @@ func TestParseVectorString(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result, err := parseVectorString(tt.input)
-			
+
 			if tt.expectError {
 				assert.Error(t, err)
 				return
 			}
-			
+
 			require.NoError(t, err)
 			assert.Equal(t, tt.expected, result)
 		})

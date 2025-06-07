@@ -142,12 +142,12 @@ func TestErrorTypesStandalone(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			err := tc.errorFunc()
-			
+
 			// Test that it's an AnalysisError
 			var analysisErr *AnalysisError
 			assert.ErrorAs(t, err, &analysisErr)
 			assert.Equal(t, tc.expectedType, analysisErr.Type)
-			
+
 			// Test error string contains type
 			assert.Contains(t, err.Error(), tc.expectedType)
 		})
@@ -325,12 +325,12 @@ That's my assessment.`,
 // TestDefaultAgentsStandalone tests the default agent configuration
 func TestDefaultAgentsStandalone(t *testing.T) {
 	analyzer := &TaskComplexityAnalyzer{}
-	
+
 	agents := analyzer.getDefaultAgents()
-	
+
 	assert.NotEmpty(t, agents, "Should have default agents")
 	assert.GreaterOrEqual(t, len(agents), 2, "Should have at least 2 default agents")
-	
+
 	// Verify agent structure
 	for _, agent := range agents {
 		assert.NotEmpty(t, agent.Name, "Agent should have name")
@@ -342,13 +342,13 @@ func TestDefaultAgentsStandalone(t *testing.T) {
 		assert.NotEmpty(t, agent.Specializations, "Agent should have specializations")
 		assert.Greater(t, agent.SuccessRate, 0.0, "Agent should have success rate")
 	}
-	
+
 	// Look for expected roles
 	roles := make(map[string]bool)
 	for _, agent := range agents {
 		roles[agent.Role] = true
 	}
-	
+
 	assert.True(t, roles["Backend Developer"], "Should have backend developer")
 	assert.True(t, roles["Frontend Developer"], "Should have frontend developer")
 }
@@ -379,7 +379,7 @@ func TestUtilityFunctionsStandalone(t *testing.T) {
 // BenchmarkValidationStandalone benchmarks validation performance
 func BenchmarkValidationStandalone(b *testing.B) {
 	analyzer := &TaskComplexityAnalyzer{}
-	
+
 	request := ComplexityAnalysisRequest{
 		TaskDescription: "Create a comprehensive microservices architecture with API gateway, service discovery, load balancing, monitoring, logging, and distributed tracing",
 		TaskDomain:      "system-architecture",
@@ -389,9 +389,9 @@ func BenchmarkValidationStandalone(b *testing.B) {
 		RiskTolerance:   "low",
 		TimeConstraint:  "6 weeks",
 	}
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		_ = analyzer.validateRequest(request)
 	}
@@ -400,7 +400,7 @@ func BenchmarkValidationStandalone(b *testing.B) {
 // BenchmarkContextBuildingStandalone benchmarks context building
 func BenchmarkContextBuildingStandalone(b *testing.B) {
 	analyzer := &TaskComplexityAnalyzer{}
-	
+
 	request := ComplexityAnalysisRequest{
 		TaskDescription: "Large scale system implementation",
 		TaskDomain:      "enterprise",
@@ -410,7 +410,7 @@ func BenchmarkContextBuildingStandalone(b *testing.B) {
 		RiskTolerance:   "minimal",
 		TimeConstraint:  "3 months",
 	}
-	
+
 	agents := make([]AgentInfo, 10)
 	for i := range agents {
 		agents[i] = AgentInfo{
@@ -425,9 +425,9 @@ func BenchmarkContextBuildingStandalone(b *testing.B) {
 			SuccessRate:     90.0,
 		}
 	}
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		_ = analyzer.buildPromptContext(request, agents)
 	}

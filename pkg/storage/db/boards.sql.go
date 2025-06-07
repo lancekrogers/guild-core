@@ -120,7 +120,7 @@ func (q *Queries) ListBoards(ctx context.Context) ([]Board, error) {
 }
 
 const updateBoard = `-- name: UpdateBoard :exec
-UPDATE boards 
+UPDATE boards
 SET name = ?, description = ?, status = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 `

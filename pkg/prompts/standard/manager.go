@@ -98,7 +98,7 @@ func (pm *EnhancedPromptManager) RenderPrompt(name string, data interface{}) (st
 	// Process conditional blocks
 	rendered := buf.String()
 	rendered = processConditionalBlocks(rendered, data)
-	
+
 	return rendered, nil
 }
 
@@ -292,7 +292,7 @@ func shouldIncludeBlock(condition string, data interface{}) bool {
 	if strings.HasPrefix(condition, "has_") {
 		varName := strings.TrimPrefix(condition, "has_")
 		varName = toCamelCase(varName)
-		
+
 		if dataMap, ok := data.(map[string]interface{}); ok {
 			val, exists := dataMap[varName]
 			return exists && val != nil && val != ""

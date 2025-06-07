@@ -2,7 +2,7 @@ package vector
 
 import (
 	"context"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
@@ -20,19 +20,19 @@ func NewMilvusStore(address, collection string, dimension int) (*MilvusStore, er
 			WithComponent("memory").
 			WithOperation("NewMilvusStore")
 	}
-	
+
 	if collection == "" {
 		return nil, gerror.New(gerror.ErrCodeInvalidInput, "collection name cannot be empty", nil).
 			WithComponent("memory").
 			WithOperation("NewMilvusStore")
 	}
-	
+
 	if dimension <= 0 {
 		return nil, gerror.New(gerror.ErrCodeInvalidInput, "dimension must be positive", nil).
 			WithComponent("memory").
 			WithOperation("NewMilvusStore")
 	}
-	
+
 	return &MilvusStore{
 		address:    address,
 		collection: collection,

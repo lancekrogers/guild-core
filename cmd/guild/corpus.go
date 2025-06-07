@@ -19,9 +19,9 @@ import (
 var corpusCmd = &cobra.Command{
 	Use:   "corpus [subcommand]",
 	Short: "Manage the Guild's research corpus",
-	Long: `Guild corpus is a knowledge repository system for storing research findings, 
+	Long: `Guild corpus is a knowledge repository system for storing research findings,
 	summaries, and generated insights in a structured, human-navigable format.
-	
+
 	When run without subcommands, launches the interactive UI for corpus browsing.
 	Subcommands are available for command-line operations without the UI.`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -43,13 +43,13 @@ var corpusCreateCmd = &cobra.Command{
 		source, _ := cmd.Flags().GetString("source")
 		guildID, _ := cmd.Flags().GetString("guild")
 		agentID, _ := cmd.Flags().GetString("agent")
-		
+
 		// Check if we have a title
 		if title == "" {
 			fmt.Println("Error: Title is required")
 			return
 		}
-		
+
 		// Create the document
 		doc := corpus.CorpusDoc{
 			Title:     title,
@@ -61,21 +61,21 @@ var corpusCreateCmd = &cobra.Command{
 			UpdatedAt: time.Now(),
 			Body:      "",
 		}
-		
+
 		// Get the corpus configuration
 		cfg, err := getCorpusConfig()
 		if err != nil {
 			fmt.Printf("Error getting corpus configuration: %v\n", err)
 			return
 		}
-		
+
 		// Save the document
 		err = corpus.Save(context.Background(), &doc, cfg)
 		if err != nil {
 			fmt.Printf("Error creating document: %v\n", err)
 			return
 		}
-		
+
 		fmt.Printf("Document '%s' created successfully at %s\n", doc.Title, doc.FilePath)
 	},
 }
@@ -87,21 +87,21 @@ var corpusListCmd = &cobra.Command{
 	Long:  `List all available documents in the Guild's research corpus.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		tag, _ := cmd.Flags().GetString("tag")
-		
+
 		// Get the corpus configuration
 		cfg, err := getCorpusConfig()
 		if err != nil {
 			fmt.Printf("Error getting corpus configuration: %v\n", err)
 			return
 		}
-		
+
 		// Get all document paths
 		docPaths, err := corpus.List(context.Background(), cfg)
 		if err != nil {
 			fmt.Printf("Error listing documents: %v\n", err)
 			return
 		}
-		
+
 		// Load documents and filter by tag if provided
 		var docs []corpus.CorpusDoc
 		for _, path := range docPaths {
@@ -109,7 +109,7 @@ var corpusListCmd = &cobra.Command{
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
-			
+
 			// Filter by tag if provided
 			if tag != "" {
 				hasTag := false
@@ -123,16 +123,16 @@ var corpusListCmd = &cobra.Command{
 					continue
 				}
 			}
-			
+
 			docs = append(docs, *doc)
 		}
-		
+
 		// Display the documents
 		if len(docs) == 0 {
 			fmt.Println("No documents found")
 			return
 		}
-		
+
 		fmt.Printf("Found %d documents:\n\n", len(docs))
 		for i, doc := range docs {
 			fmt.Printf("%d. %s\n", i+1, doc.Title)
@@ -156,21 +156,21 @@ var corpusViewCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		title := args[0]
-		
+
 		// Get the corpus configuration
 		cfg, err := getCorpusConfig()
 		if err != nil {
 			fmt.Printf("Error getting corpus configuration: %v\n", err)
 			return
 		}
-		
+
 		// Get all document paths
 		docPaths, err := corpus.List(context.Background(), cfg)
 		if err != nil {
 			fmt.Printf("Error listing documents: %v\n", err)
 			return
 		}
-		
+
 		// Find the document by title
 		var targetDoc *corpus.CorpusDoc
 		for _, path := range docPaths {
@@ -183,24 +183,24 @@ var corpusViewCmd = &cobra.Command{
 				break
 			}
 		}
-		
+
 		if targetDoc == nil {
 			fmt.Printf("Document '%s' not found\n", title)
 			return
 		}
-		
+
 		// Document is already loaded with content
 		doc, err := corpus.Load(context.Background(), targetDoc.FilePath)
 		if err != nil {
 			fmt.Printf("Error loading document: %v\n", err)
 			return
 		}
-		
+
 		// Track the view
 		if username := os.Getenv("USER"); username != "" {
 			_ = corpus.TrackUserView(context.Background(), username, doc.FilePath, cfg)
 		}
-		
+
 		// Display the document
 		fmt.Printf("# %s\n\n", doc.Title)
 		if len(doc.Tags) > 0 {
@@ -226,7 +226,7 @@ var corpusDeleteCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		title := args[0]
-		
+
 		// Get confirmation
 		fmt.Printf("Are you sure you want to delete document '%s'? (y/N): ", title)
 		var confirm string
@@ -235,21 +235,21 @@ var corpusDeleteCmd = &cobra.Command{
 			fmt.Println("Operation cancelled")
 			return
 		}
-		
+
 		// Get the corpus configuration
 		cfg, err := getCorpusConfig()
 		if err != nil {
 			fmt.Printf("Error getting corpus configuration: %v\n", err)
 			return
 		}
-		
+
 		// Get all document paths
 		docPaths, err := corpus.List(context.Background(), cfg)
 		if err != nil {
 			fmt.Printf("Error listing documents: %v\n", err)
 			return
 		}
-		
+
 		// Find the document by title
 		var targetDoc *corpus.CorpusDoc
 		for _, path := range docPaths {
@@ -262,19 +262,19 @@ var corpusDeleteCmd = &cobra.Command{
 				break
 			}
 		}
-		
+
 		if targetDoc == nil {
 			fmt.Printf("Document '%s' not found\n", title)
 			return
 		}
-		
+
 		// Delete the document
 		err = corpus.Delete(context.Background(), targetDoc.FilePath)
 		if err != nil {
 			fmt.Printf("Error deleting document: %v\n", err)
 			return
 		}
-		
+
 		fmt.Printf("Document '%s' deleted successfully\n", title)
 	},
 }
@@ -291,19 +291,19 @@ var corpusGraphCmd = &cobra.Command{
 			fmt.Printf("Error getting corpus configuration: %v\n", err)
 			return
 		}
-		
+
 		// Build the graph
 		graph, err := corpus.BuildGraph(context.Background(), cfg)
 		if err != nil {
 			fmt.Printf("Error building graph: %v\n", err)
 			return
 		}
-		
+
 		// Display the graph
 		fmt.Printf("Corpus Graph - %d documents, %d connections\n\n", len(graph.Nodes), len(graph.Edges))
 		for nodeName, references := range graph.Nodes {
 			fmt.Printf("Document: %s\n", nodeName)
-			
+
 			// Show outgoing references
 			if len(references) > 0 {
 				fmt.Println("Links to:")
@@ -311,7 +311,7 @@ var corpusGraphCmd = &cobra.Command{
 					fmt.Printf("  → %s\n", ref)
 				}
 			}
-			
+
 			// Show incoming references (backlinks)
 			if backlinks, exists := graph.Backlinks[nodeName]; exists && len(backlinks) > 0 {
 				fmt.Println("Linked from:")
@@ -432,18 +432,18 @@ func runCorpusUI(title string) error {
 			WithComponent("cli").
 			WithOperation("corpus.runUI")
 	}
-	
+
 	// Get the current user
 	username := os.Getenv("USER")
 	if username == "" {
 		username = "unknown"
 	}
-	
+
 	// Create the model with proper parameters
 	// TODO: Create proper corpus manager interface
 	// For now, comment out to fix build
 	// model := corpus_ui.NewModel(ctx, corpusManager, corpusConfig)
-	
+
 	// Create and run the program
 	// p := tea.NewProgram(model, tea.WithAltScreen())
 	// if _, err := p.Run(); err != nil {
@@ -467,11 +467,11 @@ func getCorpusConfig() (corpus.Config, error) {
 func getCorpusConfigWithFlags(cmd *cobra.Command) (corpus.Config, error) {
 	ctx := context.Background()
 	useGlobal, _ := cmd.Flags().GetBool("global")
-	
+
 	if useGlobal {
 		return corpus.GetGlobalConfig()
 	}
-	
+
 	cfg, err := corpus.GetConfigWithFallback(ctx)
 	if err != nil {
 		return cfg, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get corpus config").
@@ -479,7 +479,7 @@ func getCorpusConfigWithFlags(cmd *cobra.Command) (corpus.Config, error) {
 			WithOperation("corpus.getCorpusConfig").
 			WithDetails("help", "Run 'guild init' to initialize a project")
 	}
-	
+
 	return cfg, nil
 }
 
@@ -492,7 +492,7 @@ func setupCorpusFlags() {
 	} {
 		cmd.Flags().Bool("global", false, "Use global corpus instead of project-local")
 	}
-	
+
 	// Flags for the create command
 	corpusCreateCmd.Flags().String("title", "", "Title of the document (required)")
 	corpusCreateCmd.MarkFlagRequired("title")
@@ -500,7 +500,7 @@ func setupCorpusFlags() {
 	corpusCreateCmd.Flags().String("source", "", "Source of the document information")
 	corpusCreateCmd.Flags().String("guild", "", "Guild ID associated with the document")
 	corpusCreateCmd.Flags().String("agent", "", "Agent ID that created the document")
-	
+
 	// Flags for the list command
 	corpusListCmd.Flags().String("tag", "", "Filter documents by tag")
 }

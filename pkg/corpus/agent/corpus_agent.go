@@ -24,16 +24,16 @@ type CorpusAgent struct {
 	// Base agent fields
 	ID   string
 	Name string
-	
+
 	// RAG system for querying knowledge
 	ragSystem *rag.Retriever
-	
+
 	// LLM for generating responses
 	llmProvider interfaces.AIProvider
-	
+
 	// Corpus configuration for saving documents
 	corpusConfig corpus.Config
-	
+
 	// Conversation context for iterative refinement
 	conversationHistory []Message
 }
@@ -65,7 +65,7 @@ func (a *CorpusAgent) Execute(ctx context.Context, request string) (string, erro
 		Content:   request,
 		Timestamp: time.Now(),
 	})
-	
+
 	// Query RAG system for relevant context
 	retrievalConfig := rag.RetrievalConfig{
 		MaxResults:      10,
@@ -73,30 +73,30 @@ func (a *CorpusAgent) Execute(ctx context.Context, request string) (string, erro
 		UseCorpus:       true,
 		IncludeMetadata: true,
 	}
-	
+
 	results, err := a.ragSystem.RetrieveContext(ctx, request, retrievalConfig)
 	if err != nil {
 		return "", fmt.Errorf("failed to retrieve context: %w", err)
 	}
-	
+
 	// Generate response using LLM
 	response, err := a.generateResponse(ctx, request, results)
 	if err != nil {
 		return "", fmt.Errorf("failed to generate response: %w", err)
 	}
-	
+
 	// Add assistant message to history
 	a.conversationHistory = append(a.conversationHistory, Message{
 		Role:      "assistant",
 		Content:   response,
 		Timestamp: time.Now(),
 	})
-	
+
 	// Keep conversation history limited
 	if len(a.conversationHistory) > 20 {
 		a.conversationHistory = a.conversationHistory[len(a.conversationHistory)-20:]
 	}
-	
+
 	return response, nil
 }
 
@@ -107,7 +107,7 @@ func (a *CorpusAgent) GenerateDocument(ctx context.Context, query string, title 
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Create corpus document
 	doc := &corpus.CorpusDoc{
 		Title:     title,
@@ -119,7 +119,7 @@ func (a *CorpusAgent) GenerateDocument(ctx context.Context, query string, title 
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	
+
 	return doc, nil
 }
 
@@ -129,11 +129,11 @@ func (a *CorpusAgent) SaveGeneratedDocument(ctx context.Context, doc *corpus.Cor
 	if doc.Title == "" {
 		return fmt.Errorf("document title is required")
 	}
-	
+
 	if doc.Body == "" {
 		return fmt.Errorf("document body is required")
 	}
-	
+
 	// Save to corpus
 	return corpus.Save(ctx, doc, a.corpusConfig)
 }
@@ -142,7 +142,7 @@ func (a *CorpusAgent) SaveGeneratedDocument(ctx context.Context, doc *corpus.Cor
 func (a *CorpusAgent) generateResponse(ctx context.Context, query string, results *rag.SearchResults) (string, error) {
 	// Build the prompt with context
 	prompt := a.buildPrompt(query, results)
-	
+
 	// Create chat request
 	messages := []interfaces.ChatMessage{
 		{
@@ -150,7 +150,7 @@ func (a *CorpusAgent) generateResponse(ctx context.Context, query string, result
 			Content: a.getSystemPrompt(),
 		},
 	}
-	
+
 	// Add limited conversation history for context
 	historyStart := len(a.conversationHistory) - 4
 	if historyStart < 0 {
@@ -163,20 +163,20 @@ func (a *CorpusAgent) generateResponse(ctx context.Context, query string, result
 			Content: msg.Content,
 		})
 	}
-	
+
 	// Add current prompt
 	messages = append(messages, interfaces.ChatMessage{
 		Role:    "user",
 		Content: prompt,
 	})
-	
+
 	// Get available models
 	capabilities := a.llmProvider.GetCapabilities()
 	model := ""
 	if len(capabilities.Models) > 0 {
 		model = capabilities.Models[0].ID
 	}
-	
+
 	// Create chat request
 	req := interfaces.ChatRequest{
 		Model:       model,
@@ -184,27 +184,27 @@ func (a *CorpusAgent) generateResponse(ctx context.Context, query string, result
 		Temperature: 0.7,
 		MaxTokens:   2000,
 	}
-	
+
 	// Get response from LLM
 	resp, err := a.llmProvider.ChatCompletion(ctx, req)
 	if err != nil {
 		return "", fmt.Errorf("failed to get LLM response: %w", err)
 	}
-	
+
 	if len(resp.Choices) == 0 {
 		return "", fmt.Errorf("no response from LLM")
 	}
-	
+
 	return resp.Choices[0].Message.Content, nil
 }
 
 // buildPrompt creates a prompt with retrieved context
 func (a *CorpusAgent) buildPrompt(query string, results *rag.SearchResults) string {
 	var builder strings.Builder
-	
+
 	builder.WriteString("Based on the following context from our knowledge base, ")
 	builder.WriteString("please provide a comprehensive response to this query:\n\n")
-	
+
 	// Add retrieved context
 	if len(results.Results) > 0 {
 		builder.WriteString("## Relevant Context:\n\n")
@@ -212,7 +212,7 @@ func (a *CorpusAgent) buildPrompt(query string, results *rag.SearchResults) stri
 			builder.WriteString(fmt.Sprintf("### Source %d (Relevance: %.2f)\n", i+1, result.Score))
 			builder.WriteString(result.Content)
 			builder.WriteString("\n\n")
-			
+
 			// Add metadata if available
 			if len(result.Metadata) > 0 {
 				builder.WriteString("Metadata: ")
@@ -225,18 +225,18 @@ func (a *CorpusAgent) buildPrompt(query string, results *rag.SearchResults) stri
 	} else {
 		builder.WriteString("(No specific context found in knowledge base)\n\n")
 	}
-	
+
 	builder.WriteString("## Query:\n")
 	builder.WriteString(query)
 	builder.WriteString("\n\n")
 	builder.WriteString("Please synthesize the available information into a clear, well-structured response.")
-	
+
 	return builder.String()
 }
 
 // getSystemPrompt returns the system prompt for the Corpus Agent
 func (a *CorpusAgent) getSystemPrompt() string {
-	return `You are the Corpus Knowledge Navigator, an intelligent agent that helps users 
+	return `You are the Corpus Knowledge Navigator, an intelligent agent that helps users
 explore and understand information stored in the Guild Framework's knowledge base.
 
 Your role is to:
@@ -261,26 +261,26 @@ Make information accessible, accurate, and actionable.`
 func (a *CorpusAgent) extractTags(query, response string) []string {
 	// Simple tag extraction - in production, this could use NLP
 	tags := []string{"generated", "corpus-agent"}
-	
+
 	// Add some basic keyword extraction
 	keywords := []string{"api", "function", "method", "class", "interface", "implementation",
 		"design", "architecture", "pattern", "system", "component", "module"}
-	
+
 	lowerQuery := strings.ToLower(query)
 	lowerResponse := strings.ToLower(response)
 	combined := lowerQuery + " " + lowerResponse
-	
+
 	for _, keyword := range keywords {
 		if strings.Contains(combined, keyword) {
 			tags = append(tags, keyword)
 		}
 	}
-	
+
 	// Limit to reasonable number of tags
 	if len(tags) > 10 {
 		tags = tags[:10]
 	}
-	
+
 	return tags
 }
 

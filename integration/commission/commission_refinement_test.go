@@ -27,7 +27,7 @@ func TestCommissionRefinementOnly(t *testing.T) {
 	// Setup minimal registry
 	reg := registry.NewComponentRegistry()
 	ctx := context.Background()
-	
+
 	registryConfig := registry.Config{
 		Providers: registry.ProviderConfig{
 			DefaultProvider: "mock",
@@ -65,19 +65,19 @@ This is the implementation plan for the commission.`)
 
 	// Test just the commission refinement part
 	fmt.Printf("Testing commission refinement...\n")
-	
+
 	// For now, let's test that the service was created successfully
 	assert.NotNil(t, service)
-	
+
 	fmt.Printf("✅ Commission refinement service created successfully\n")
 }
 
 // TestSimpleResponseParsing tests the response parser with simple content
 func TestSimpleResponseParsing(t *testing.T) {
 	fmt.Printf("🧪 Testing response parsing\n")
-	
+
 	parser := manager.NewResponseParser()
-	
+
 	// Test with file structure format that includes README.md
 	response := &manager.ArtisanResponse{
 		Content: `## File: commission_refined.md
@@ -112,13 +112,13 @@ This commission demonstrates the basic structure.`,
 			"source": "test",
 		},
 	}
-	
+
 	structure, err := parser.ParseResponse(response)
 	require.NoError(t, err)
 	require.NotNil(t, structure)
-	
+
 	assert.Equal(t, 2, len(structure.Files), "Should create exactly 2 files")
-	
+
 	// Find the commission file
 	var commissionFile, readmeFile *manager.FileEntry
 	for _, file := range structure.Files {
@@ -128,31 +128,31 @@ This commission demonstrates the basic structure.`,
 			readmeFile = file
 		}
 	}
-	
+
 	// Check the commission file
 	require.NotNil(t, commissionFile, "Should have commission_refined.md")
 	assert.Contains(t, commissionFile.Content, "# Test Document")
 	assert.Equal(t, manager.FileTypeMarkdown, commissionFile.Type)
-	
+
 	// Check the README file
 	require.NotNil(t, readmeFile, "Should have README.md")
 	assert.Contains(t, readmeFile.Content, "# Test Commission")
 	assert.Equal(t, manager.FileTypeMarkdown, readmeFile.Type)
-	
+
 	// Validate the content
 	validator := manager.NewDefaultValidator()
 	err = validator.ValidateStructure(structure)
 	require.NoError(t, err, "Structure should validate successfully")
-	
+
 	fmt.Printf("✅ Response parsing works correctly\n")
 }
 
 // TestBasicTaskExtraction tests task extraction from content
 func TestBasicTaskExtraction(t *testing.T) {
 	fmt.Printf("🧪 Testing task extraction\n")
-	
+
 	parser := manager.NewResponseParser()
-	
+
 	content := `## File: commission_refined.md
 
 # Test Commission
@@ -176,7 +176,7 @@ This is a test commission for validation purposes.`
 	response := &manager.ArtisanResponse{Content: content}
 	structure, err := parser.ParseResponse(response)
 	require.NoError(t, err)
-	
+
 	// Debug: print structure details
 	fmt.Printf("Found %d files:\n", len(structure.Files))
 	for i, file := range structure.Files {
@@ -190,12 +190,12 @@ This is a test commission for validation purposes.`
 			}
 		}
 	}
-	
+
 	// Validate structure
 	validator := manager.NewDefaultValidator()
 	err = validator.ValidateStructure(structure)
 	require.NoError(t, err)
-	
+
 	// Find the commission file that should contain tasks
 	var commissionFile *manager.FileEntry
 	for _, file := range structure.Files {
@@ -205,21 +205,21 @@ This is a test commission for validation purposes.`
 		}
 	}
 	require.NotNil(t, commissionFile, "Should have commission_refined.md file")
-	
+
 	// Check tasks were extracted from commission file
 	tasks, ok := commissionFile.Metadata["tasks"]
 	require.True(t, ok, "Tasks should be extracted")
-	
+
 	tasksList, ok := tasks.([]manager.TaskInfo)
 	require.True(t, ok, "Tasks should be TaskInfo slice")
 	assert.Len(t, tasksList, 2, "Should extract 2 tasks")
-	
+
 	// Verify task details (note: tasks may be in different order)
 	taskByID := make(map[string]manager.TaskInfo)
 	for _, task := range tasksList {
 		taskByID[task.ID] = task
 	}
-	
+
 	// Check BACKEND-001 task
 	backendTask, exists := taskByID["BACKEND-001"]
 	assert.True(t, exists, "Should have BACKEND-001 task")
@@ -229,8 +229,8 @@ This is a test commission for validation purposes.`
 		assert.Equal(t, "high", backendTask.Priority)
 		assert.Equal(t, "4h", backendTask.Estimate)
 	}
-	
-	// Check FRONTEND-002 task  
+
+	// Check FRONTEND-002 task
 	frontendTask, exists := taskByID["FRONTEND-002"]
 	assert.True(t, exists, "Should have FRONTEND-002 task")
 	if exists {
@@ -240,6 +240,6 @@ This is a test commission for validation purposes.`
 		assert.Equal(t, "2h", frontendTask.Estimate)
 		assert.Equal(t, []string{"BACKEND-001"}, frontendTask.Dependencies)
 	}
-	
+
 	fmt.Printf("✅ Task extraction works correctly\n")
 }

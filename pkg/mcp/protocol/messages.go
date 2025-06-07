@@ -17,13 +17,13 @@ const (
 	MessageTypeNotification MessageType = "notification"
 	MessageTypeError        MessageType = "error"
 	MessageTypeEvent        MessageType = "event"
-	
+
 	// Aliases for backward compatibility
 	RequestMessage  = MessageTypeRequest
 	ResponseMessage = MessageTypeResponse
 	ErrorMessage    = MessageTypeError
 	EventMessage    = MessageTypeEvent
-	
+
 	// Specific request types
 	RequestTypeToolRegister   = "tool.register"
 	RequestTypeToolDeregister = "tool.deregister"
@@ -102,7 +102,7 @@ const (
 	ErrorCodeMethodNotFound = -32601
 	ErrorCodeInvalidParams  = -32602
 	ErrorCodeInternal       = -32603
-	
+
 	// MCP-specific error codes
 	ErrorCodeToolNotFound    = -32001
 	ErrorCodeToolUnavailable = -32002

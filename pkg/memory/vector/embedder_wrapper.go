@@ -2,7 +2,7 @@ package vector
 
 import (
 	"context"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 

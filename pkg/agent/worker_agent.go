@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"time"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 )
@@ -18,20 +18,20 @@ func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (str
 			WithOperation("CostAwareExecute").
 			WithDetails("agent_id", a.ID)
 	}
-	
+
 	// Estimate cost for this request
 	// Rough estimation: 1 character ≈ 0.25 tokens
 	estimatedPromptTokens := len(request) / 4
 	estimatedCompletionTokens := 500 // Assume a moderate response
-	
+
 	// Get model from LLM client (this would need to be added to the interface)
 	model := "gpt-3.5-turbo" // Default model, would get from config
-	
+
 	// Estimate cost
 	// Estimate total tokens
 	totalEstimatedTokens := estimatedPromptTokens + estimatedCompletionTokens
 	estimatedCost := a.CostManager.EstimateLLMCost(model, totalEstimatedTokens)
-	
+
 	// Check if we can afford it
 	if !a.CostManager.CanAfford(CostTypeLLM, estimatedCost) {
 		return "", gerror.Newf(gerror.ErrCodeResourceLimit, "LLM budget exceeded: estimated cost $%.4f exceeds available budget", estimatedCost).
@@ -40,11 +40,11 @@ func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (str
 			WithDetails("agent_id", a.ID).
 			WithDetails("estimated_cost", estimatedCost)
 	}
-	
+
 	// Create or get memory chain
 	var chainID string
 	var err error
-	
+
 	if a.MemoryManager != nil {
 		// Create a new chain for this execution
 		chainID, err = a.MemoryManager.CreateChain(ctx, a.ID, "task-" + time.Now().Format("20060102150405"))
@@ -54,7 +54,7 @@ func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (str
 				WithOperation("CostAwareExecute").
 				WithDetails("agent_id", a.ID)
 		}
-		
+
 		// Add the request to memory
 		err = a.MemoryManager.AddMessage(ctx, chainID, memory.Message{
 			Role:      "user",
@@ -69,7 +69,7 @@ func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (str
 				WithDetails("chain_id", chainID)
 		}
 	}
-	
+
 	// Execute the request with the LLM
 	response, err := a.LLMClient.Complete(ctx, request)
 	if err != nil {
@@ -79,19 +79,19 @@ func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (str
 			WithDetails("agent_id", a.ID).
 			WithDetails("model", model)
 	}
-	
+
 	// Calculate actual cost (would get actual token counts from response)
 	// In reality, the response would include usage information
 	actualPromptTokens := len(request) / 4
 	actualCompletionTokens := len(response) / 4
-	
+
 	// Record the cost
 	cost := a.CostManager.RecordLLMCost(model, actualPromptTokens, actualCompletionTokens, map[string]string{
 		"agent_id":  a.ID,
 		"chain_id":  chainID,
 		"timestamp": time.Now().Format(time.RFC3339),
 	})
-	
+
 	// Add response to memory
 	if a.MemoryManager != nil && chainID != "" {
 		err = a.MemoryManager.AddMessage(ctx, chainID, memory.Message{
@@ -105,11 +105,11 @@ func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (str
 			fmt.Printf("Warning: failed to add response to memory: %v\n", err)
 		}
 	}
-	
+
 	// Log cost information
-	fmt.Printf("Agent %s executed request. Cost: $%.6f (Prompt: %d tokens, Completion: %d tokens)\n", 
+	fmt.Printf("Agent %s executed request. Cost: $%.6f (Prompt: %d tokens, Completion: %d tokens)\n",
 		a.ID, cost, actualPromptTokens, actualCompletionTokens)
-	
+
 	return response, nil
 }
 
@@ -118,7 +118,7 @@ func (a *WorkerAgent) ExecuteWithTools(ctx context.Context, request string, allo
 	// For now, we'll use a fixed cost per tool
 	const estimatedCostPerTool = 0.001
 	totalToolCost := float64(len(allowedTools)) * estimatedCostPerTool
-	
+
 	// Check if we can afford tool usage
 	if a.CostManager != nil && !a.CostManager.CanAfford(CostTypeTool, totalToolCost) {
 		return "", gerror.Newf(gerror.ErrCodeResourceLimit, "tool budget exceeded: estimated cost $%.4f exceeds available budget", totalToolCost).
@@ -128,21 +128,21 @@ func (a *WorkerAgent) ExecuteWithTools(ctx context.Context, request string, allo
 			WithDetails("total_tool_cost", totalToolCost).
 			WithDetails("allowed_tools", allowedTools)
 	}
-	
+
 	// Execute with cost-aware LLM
 	response, err := a.CostAwareExecute(ctx, request)
 	if err != nil {
 		return "", err
 	}
-	
+
 	// Parse response for tool calls (simplified for demo)
 	// In reality, we'd parse the response to find tool invocations
-	
+
 	// Example tool usage
 	if len(allowedTools) > 0 {
 		toolName := allowedTools[0]
 		toolInput := `{"query": "example"}`
-		
+
 		// Execute tool with cost tracking
 		// Get the tool
 		tool, err := a.ToolRegistry.GetTool(toolName)
@@ -153,7 +153,7 @@ func (a *WorkerAgent) ExecuteWithTools(ctx context.Context, request string, allo
 				WithDetails("agent_id", a.ID).
 				WithDetails("tool_name", toolName)
 		}
-		
+
 		// Execute the tool
 		result, err := tool.Execute(ctx, toolInput)
 		if err != nil {
@@ -164,31 +164,31 @@ func (a *WorkerAgent) ExecuteWithTools(ctx context.Context, request string, allo
 				WithDetails("tool_name", toolName).
 				WithDetails("tool_input", toolInput)
 		}
-		
+
 		// Track the cost
 		cost := estimatedCostPerTool
-		
+
 		// Record tool cost
 		if a.CostManager != nil {
 			a.CostManager.TrackCost(CostTypeTool, cost)
 		}
-		
+
 		// Incorporate tool result into response
 		response = fmt.Sprintf("%s\n\nTool Result (%s):\n%s", response, toolName, result.Output)
 	}
-	
+
 	return response, nil
 }
 
 // GetCurrentCosts returns a summary of current costs
 func (a *WorkerAgent) GetCurrentCosts() map[string]float64 {
 	report := a.CostManager.GetCostReport()
-	
+
 	costs := make(map[string]float64)
 	if totalCosts, ok := report["total_costs"].(map[string]float64); ok {
 		costs = totalCosts
 	}
-	
+
 	// Add budget usage percentages
 	if budgets, ok := report["budgets"].(map[string]float64); ok {
 		for costType, budget := range budgets {
@@ -198,6 +198,6 @@ func (a *WorkerAgent) GetCurrentCosts() map[string]float64 {
 			}
 		}
 	}
-	
+
 	return costs
 }

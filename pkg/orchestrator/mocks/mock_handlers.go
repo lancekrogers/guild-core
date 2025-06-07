@@ -24,9 +24,9 @@ func NewMockEventHandler() *MockEventHandler {
 func (m *MockEventHandler) HandleEvent(event interfaces.Event) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.ReceivedEvents = append(m.ReceivedEvents, event)
-	
+
 	if m.Handler != nil {
 		m.Handler(event)
 	}
@@ -41,11 +41,11 @@ func (m *MockEventHandler) GetHandlerFunc() interfaces.EventHandler {
 func (m *MockEventHandler) GetEvents() []interfaces.Event {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	// Create a copy to avoid race conditions
 	events := make([]interfaces.Event, len(m.ReceivedEvents))
 	copy(events, m.ReceivedEvents)
-	
+
 	return events
 }
 
@@ -53,7 +53,7 @@ func (m *MockEventHandler) GetEvents() []interfaces.Event {
 func (m *MockEventHandler) Reset() {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.ReceivedEvents = make([]interfaces.Event, 0)
 }
 
@@ -61,13 +61,13 @@ func (m *MockEventHandler) Reset() {
 func (m *MockEventHandler) FilterEventsByType(eventType string) []interfaces.Event {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	var filtered []interfaces.Event
 	for _, e := range m.ReceivedEvents {
 		if string(e.Type) == eventType {
 			filtered = append(filtered, e)
 		}
 	}
-	
+
 	return filtered
 }

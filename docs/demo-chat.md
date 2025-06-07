@@ -117,7 +117,7 @@ While we wait for the layered prompt system completion, the chat interface is re
 
 Guild now has a **functional, beautiful chat interface** that showcases:
 - Multi-agent communication patterns
-- Command system architecture  
+- Command system architecture
 - Medieval Guild theming
 - Layered prompt system foundation
 - Professional terminal UI

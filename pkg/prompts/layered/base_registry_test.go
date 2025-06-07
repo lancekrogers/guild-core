@@ -175,7 +175,7 @@ func TestMemoryRegistry(t *testing.T) {
 
 func TestMemoryRegistryConcurrency(t *testing.T) {
 	registry := layered.NewMemoryRegistry()
-	
+
 	// Number of concurrent operations
 	numGoroutines := 100
 	numOperations := 10
@@ -205,7 +205,7 @@ func TestMemoryRegistryConcurrency(t *testing.T) {
 				// Read operations
 				_, _ = registry.GetPrompt(role, domain)
 				_, _ = registry.GetTemplate(templateName)
-				
+
 				// List operations
 				_ = registry.ListPrompts()
 				_ = registry.ListTemplates()
@@ -223,7 +223,7 @@ func TestMemoryRegistryConcurrency(t *testing.T) {
 	// The registry should still be functional after concurrent access
 	err := registry.RegisterPrompt("final", "test", "Final prompt")
 	assert.NoError(t, err)
-	
+
 	prompt, err := registry.GetPrompt("final", "test")
 	assert.NoError(t, err)
 	assert.Equal(t, "Final prompt", prompt)
@@ -255,7 +255,7 @@ func BenchmarkRegistryConcurrentRead(b *testing.B) {
 	for i := 0; i < 100; i++ {
 		registry.RegisterPrompt(fmt.Sprintf("role%d", i), "domain", "prompt")
 	}
-	
+
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
 		i := 0

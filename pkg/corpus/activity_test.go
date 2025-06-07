@@ -11,7 +11,7 @@ import (
 
 func TestTrackUserView(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Create a temporary directory for the test
 	tempDir, err := os.MkdirTemp("", "corpus-test-*")
 	if err != nil {

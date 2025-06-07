@@ -13,13 +13,13 @@ import (
 type RegistryProvider interface {
 	// Agents returns the agent registry
 	Agents() AgentRegistry
-	
-	// Tools returns the tool registry  
+
+	// Tools returns the tool registry
 	Tools() ToolRegistry
-	
+
 	// Providers returns the provider registry
 	Providers() ProviderRegistry
-	
+
 	// Memory returns the memory registry
 	Memory() MemoryRegistry
 }
@@ -110,12 +110,12 @@ func GetAgentFromContext(ctx context.Context, name string) (interface{}, error) 
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("GetAgentFromContext")
 	}
-	
+
 	agent, err := registry.Agents().GetAgent(name)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get agent").WithComponent("context").WithOperation("GetAgentFromContext").WithDetails("agent_name", name)
 	}
-	
+
 	return agent, nil
 }
 
@@ -125,12 +125,12 @@ func GetProviderFromContext(ctx context.Context, name string) (interface{}, erro
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("GetProviderFromContext")
 	}
-	
+
 	provider, err := registry.Providers().GetProvider(name)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get provider").WithComponent("context").WithOperation("GetProviderFromContext").WithDetails("provider_name", name)
 	}
-	
+
 	return provider, nil
 }
 
@@ -140,12 +140,12 @@ func GetToolFromContext(ctx context.Context, name string) (interface{}, error) {
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("GetToolFromContext")
 	}
-	
+
 	tool, err := registry.Tools().GetTool(name)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get tool").WithComponent("context").WithOperation("GetToolFromContext").WithDetails("tool_name", name)
 	}
-	
+
 	return tool, nil
 }
 
@@ -155,12 +155,12 @@ func GetMemoryStoreFromContext(ctx context.Context, name string) (interface{}, e
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("GetMemoryStoreFromContext")
 	}
-	
+
 	store, err := registry.Memory().GetMemoryStore(name)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get memory store").WithComponent("context").WithOperation("GetMemoryStoreFromContext").WithDetails("store_name", name)
 	}
-	
+
 	return store, nil
 }
 
@@ -170,12 +170,12 @@ func GetVectorStoreFromContext(ctx context.Context, name string) (interface{}, e
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("GetVectorStoreFromContext")
 	}
-	
+
 	store, err := registry.Memory().GetVectorStore(name)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get vector store").WithComponent("context").WithOperation("GetVectorStoreFromContext").WithDetails("store_name", name)
 	}
-	
+
 	return store, nil
 }
 
@@ -189,12 +189,12 @@ func GetProviderConfigFromContext(ctx context.Context, providerName string) (map
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get config from context").WithComponent("context").WithOperation("GetProviderConfigFromContext")
 	}
-	
+
 	providerConfig, err := config.GetProviderConfig(providerName)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get provider config").WithComponent("context").WithOperation("GetProviderConfigFromContext").WithDetails("provider_name", providerName)
 	}
-	
+
 	return providerConfig, nil
 }
 
@@ -204,12 +204,12 @@ func GetToolConfigFromContext(ctx context.Context, toolName string) (map[string]
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get config from context").WithComponent("context").WithOperation("GetToolConfigFromContext")
 	}
-	
+
 	toolConfig, err := config.GetToolConfig(toolName)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get tool config").WithComponent("context").WithOperation("GetToolConfigFromContext").WithDetails("tool_name", toolName)
 	}
-	
+
 	return toolConfig, nil
 }
 
@@ -219,7 +219,7 @@ func IsToolEnabledInContext(ctx context.Context, toolName string) bool {
 	if err != nil {
 		return false // Default to disabled if no config available
 	}
-	
+
 	return config.IsToolEnabled(toolName)
 }
 
@@ -250,13 +250,13 @@ func EnhanceContextWithComponent(ctx context.Context, componentType, componentNa
 func CreateComponentContext(parentCtx context.Context, componentType, componentName, operation string) context.Context {
 	// Create operation context
 	ctx := WithOperation(parentCtx, operation)
-	
+
 	// Add component information
 	ctx = EnhanceContextWithComponent(ctx, componentType, componentName)
-	
+
 	// Generate new span ID for this component operation
 	ctx = WithSpanID(ctx, generateSpanID())
-	
+
 	return ctx
 }
 

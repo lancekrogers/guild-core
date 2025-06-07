@@ -24,12 +24,12 @@ func TestTaskExecutor_ToolExecution(t *testing.T) {
 
 	// Create tool registry with real tools
 	toolRegistry := tools.NewToolRegistry()
-	
+
 	// Register file tool
 	fileTool := fs.NewFileTool(tmpDir)
 	err = toolRegistry.RegisterTool(fileTool.Name(), fileTool)
 	require.NoError(t, err)
-	
+
 	// Register shell tool with safety restrictions
 	shellTool := shell.NewShellTool(shell.ShellToolOptions{
 		WorkingDir: tmpDir,
@@ -71,7 +71,7 @@ func TestTaskExecutor_ToolExecution(t *testing.T) {
 	// Execute task
 	ctx := context.Background()
 	result, err := executor.Execute(ctx, task)
-	
+
 	// Basic checks
 	assert.NoError(t, err)
 	assert.NotNil(t, result)
@@ -79,7 +79,7 @@ func TestTaskExecutor_ToolExecution(t *testing.T) {
 
 	// Verify tool usage was tracked
 	assert.NotEmpty(t, result.ToolUsage)
-	
+
 	// Check for both tools
 	var hasFileTool, hasShellTool bool
 	for _, usage := range result.ToolUsage {
@@ -97,7 +97,7 @@ func TestTaskExecutor_ToolExecution(t *testing.T) {
 
 	// Verify artifacts were created
 	assert.NotEmpty(t, result.Artifacts)
-	
+
 	// Check specific artifacts
 	var hasReadme, hasSolution bool
 	for _, artifact := range result.Artifacts {
@@ -130,7 +130,7 @@ func TestTaskExecutor_ToolExecution(t *testing.T) {
 func TestTaskExecutor_ToolSafety(t *testing.T) {
 	// Create tool registry
 	toolRegistry := tools.NewToolRegistry()
-	
+
 	// Register shell tool with restrictions
 	shellTool := shell.NewShellTool(shell.ShellToolOptions{
 		BlockedCommands: []string{"rm -rf /", "sudo"},
@@ -232,10 +232,10 @@ func TestTaskExecutor_FileToolRestrictions(t *testing.T) {
 func TestExecutor_BuildPromptDataWithTools(t *testing.T) {
 	// Create tool registry with tools
 	toolRegistry := tools.NewToolRegistry()
-	
+
 	fileTool := fs.NewFileTool("/tmp")
 	toolRegistry.RegisterTool(fileTool.Name(), fileTool)
-	
+
 	shellTool := shell.NewShellTool(shell.ShellToolOptions{})
 	toolRegistry.RegisterTool(shellTool.Name(), shellTool)
 
@@ -262,7 +262,7 @@ func TestExecutor_BuildPromptDataWithTools(t *testing.T) {
 
 	// Verify tools are included
 	assert.Len(t, promptData.Tools, 2)
-	
+
 	// Check file tool
 	var fileToolFound bool
 	for _, tool := range promptData.Tools {

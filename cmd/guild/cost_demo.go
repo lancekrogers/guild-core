@@ -15,7 +15,7 @@ var costCmd = &cobra.Command{
 	Use:   "cost-demo",
 	Short: "Demonstrate cost-based agent and tool selection",
 	Long: `Demonstrates the enhanced cost-based selection system for agents and tools.
-	
+
 This command shows how Guild intelligently selects the most cost-effective
 agents and tools for different tasks, using the Fibonacci cost magnitude scale:
 
@@ -55,10 +55,10 @@ func init() {
 
 func runCostDemo(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
-	
+
 	// Create and initialize registry
 	componentRegistry := registry.NewComponentRegistry()
-	
+
 	// Initialize with basic configuration
 	config := registry.Config{
 		Agents: registry.AgentConfigYaml{
@@ -68,26 +68,26 @@ func runCostDemo(cmd *cobra.Command, args []string) error {
 			EnabledTools: []string{"shell", "git", "http_client"},
 		},
 	}
-	
+
 	if err := componentRegistry.Initialize(ctx, config); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize registry").
 			WithComponent("cli").
 			WithOperation("runCostDemo")
 	}
-	
+
 	// Register some demo agents to show the system working
 	if err := registerDemoAgents(componentRegistry); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register demo agents").
 			WithComponent("cli").
 			WithOperation("runCostDemo")
 	}
-	
+
 	if err := registerDemoTools(componentRegistry); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register demo tools").
 			WithComponent("cli").
 			WithOperation("runCostDemo")
 	}
-	
+
 	// Execute the requested operation
 	switch {
 	case listAgents:
@@ -110,7 +110,7 @@ func registerDemoAgents(componentRegistry registry.ComponentRegistry) error {
 			WithComponent("cli").
 			WithOperation("registerDemoAgents")
 	}
-	
+
 	demoAgents := []registry.GuildAgentConfig{
 		{
 			ID:            "tools-agent",
@@ -167,7 +167,7 @@ func registerDemoAgents(componentRegistry registry.ComponentRegistry) error {
 			CostMagnitude: 8,
 		},
 	}
-	
+
 	for _, agent := range demoAgents {
 		if err := agentRegistry.RegisterGuildAgent(agent); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register agent").
@@ -176,7 +176,7 @@ func registerDemoAgents(componentRegistry registry.ComponentRegistry) error {
 				WithDetails("agent_id", agent.ID)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -187,7 +187,7 @@ func registerDemoTools(componentRegistry registry.ComponentRegistry) error {
 			WithComponent("cli").
 			WithOperation("registerDemoTools")
 	}
-	
+
 	// Register demo tools (these would be actual tool implementations in practice)
 	demoTools := []struct {
 		name         string
@@ -203,7 +203,7 @@ func registerDemoTools(componentRegistry registry.ComponentRegistry) error {
 		{"kubernetes", 3, []string{"orchestration", "deployment", "scaling"}},
 		{"ai_analysis", 5, []string{"ai", "analysis", "intelligence"}},
 	}
-	
+
 	for _, tool := range demoTools {
 		// Create a mock tool for demonstration
 		mockTool := &DemoTool{name: tool.name}
@@ -214,21 +214,21 @@ func registerDemoTools(componentRegistry registry.ComponentRegistry) error {
 				WithDetails("tool_name", tool.name)
 		}
 	}
-	
+
 	return nil
 }
 
 func showAgentsList(componentRegistry registry.ComponentRegistry, maxCost int) error {
 	agents := componentRegistry.GetAgentsByCost(maxCost)
-	
+
 	fmt.Printf("🏰 Available Agents (Cost ≤ %d)\n", maxCost)
 	fmt.Printf("═══════════════════════════════════════\n\n")
-	
+
 	if len(agents) == 0 {
 		fmt.Printf("No agents available within cost budget of %d\n", maxCost)
 		return nil
 	}
-	
+
 	for _, agent := range agents {
 		costIcon := getCostIcon(agent.CostMagnitude)
 		fmt.Printf("%s %s (ID: %s)\n", costIcon, agent.Name, agent.ID)
@@ -236,21 +236,21 @@ func showAgentsList(componentRegistry registry.ComponentRegistry, maxCost int) e
 		fmt.Printf("   Capabilities: %v\n", agent.Capabilities)
 		fmt.Printf("\n")
 	}
-	
+
 	return nil
 }
 
 func showToolsList(componentRegistry registry.ComponentRegistry, maxCost int) error {
 	tools := componentRegistry.GetToolsByCost(maxCost)
-	
+
 	fmt.Printf("🔧 Available Tools (Cost ≤ %d)\n", maxCost)
 	fmt.Printf("═══════════════════════════════════════\n\n")
-	
+
 	if len(tools) == 0 {
 		fmt.Printf("No tools available within cost budget of %d\n", maxCost)
 		return nil
 	}
-	
+
 	for _, tool := range tools {
 		costIcon := getCostIcon(tool.CostMagnitude)
 		fmt.Printf("%s %s\n", costIcon, tool.Name)
@@ -258,14 +258,14 @@ func showToolsList(componentRegistry registry.ComponentRegistry, maxCost int) er
 		fmt.Printf("   Capabilities: %v\n", tool.Capabilities)
 		fmt.Printf("\n")
 	}
-	
+
 	return nil
 }
 
 func showCapabilitySelection(componentRegistry registry.ComponentRegistry, capability string, budget int) error {
 	fmt.Printf("🎯 Finding Best Agent for '%s' (Budget: %d)\n", capability, budget)
 	fmt.Printf("═══════════════════════════════════════════════════\n\n")
-	
+
 	// Find cheapest agent with the capability
 	agent, err := componentRegistry.GetCheapestAgentByCapability(capability)
 	if err != nil {
@@ -274,19 +274,19 @@ func showCapabilitySelection(componentRegistry registry.ComponentRegistry, capab
 			WithOperation("showCapabilitySelection").
 			WithDetails("capability", capability)
 	}
-	
+
 	if agent.CostMagnitude > budget {
 		fmt.Printf("❌ Cheapest agent exceeds budget!\n")
 		fmt.Printf("   Required: %s (Cost: %d)\n", agent.Name, agent.CostMagnitude)
 		fmt.Printf("   Budget: %d\n", budget)
 		return nil
 	}
-	
+
 	fmt.Printf("✅ Selected Agent: %s\n", agent.Name)
 	fmt.Printf("   Cost: %d (within budget of %d)\n", agent.CostMagnitude, budget)
 	fmt.Printf("   Type: %s\n", agent.Type)
 	fmt.Printf("   All Capabilities: %v\n", agent.Capabilities)
-	
+
 	// Show alternative agents
 	fmt.Printf("\n🔄 Alternative Agents:\n")
 	allAgents := componentRegistry.GetAgentsByCost(budget)
@@ -298,11 +298,11 @@ func showCapabilitySelection(componentRegistry registry.ComponentRegistry, capab
 			fmt.Printf("   %s %s (Cost: %d)\n", costIcon, alt.Name, alt.CostMagnitude)
 		}
 	}
-	
+
 	if alternativeCount == 0 {
 		fmt.Printf("   No alternatives within budget.\n")
 	}
-	
+
 	return nil
 }
 
@@ -310,7 +310,7 @@ func simulateTaskAssignment(componentRegistry registry.ComponentRegistry, taskTy
 	fmt.Printf("🎮 Simulating Task Assignment\n")
 	fmt.Printf("═══════════════════════════════════\n")
 	fmt.Printf("Task: %s | Budget: %d\n\n", taskType, budget)
-	
+
 	// Map task types to required capabilities
 	taskCapabilityMap := map[string]string{
 		"coding":        "coding",
@@ -321,7 +321,7 @@ func simulateTaskAssignment(componentRegistry registry.ComponentRegistry, taskTy
 		"testing":       "testing",
 		"deployment":    "deployment",
 	}
-	
+
 	capability, exists := taskCapabilityMap[taskType]
 	if !exists {
 		return gerror.New(gerror.ErrCodeInvalidInput, "unknown task type", nil).
@@ -329,7 +329,7 @@ func simulateTaskAssignment(componentRegistry registry.ComponentRegistry, taskTy
 			WithOperation("simulateTaskAssignment").
 			WithDetails("task_type", taskType)
 	}
-	
+
 	// Find optimal agent
 	agent, err := componentRegistry.GetCheapestAgentByCapability(capability)
 	if err != nil {
@@ -338,21 +338,21 @@ func simulateTaskAssignment(componentRegistry registry.ComponentRegistry, taskTy
 			WithOperation("simulateTaskAssignment").
 			WithDetails("task_type", taskType)
 	}
-	
+
 	if agent.CostMagnitude > budget {
 		fmt.Printf("❌ Task cannot be completed within budget\n")
 		fmt.Printf("   Required agent cost: %d\n", agent.CostMagnitude)
 		fmt.Printf("   Available budget: %d\n", budget)
 		return nil
 	}
-	
+
 	// Find tools for the agent
 	remainingBudget := budget - agent.CostMagnitude
 	fmt.Printf("✅ Task Assignment Successful!\n\n")
 	fmt.Printf("📋 Selected Agent:\n")
 	fmt.Printf("   %s (Cost: %d)\n", agent.Name, agent.CostMagnitude)
 	fmt.Printf("   Remaining budget: %d\n\n", remainingBudget)
-	
+
 	// Show available tools within remaining budget
 	tools := componentRegistry.GetToolsByCost(remainingBudget)
 	fmt.Printf("🔧 Available Tools (Cost ≤ %d):\n", remainingBudget)
@@ -364,13 +364,13 @@ func simulateTaskAssignment(componentRegistry registry.ComponentRegistry, taskTy
 			fmt.Printf("   %s %s (Cost: %d)\n", costIcon, tool.Name, tool.CostMagnitude)
 		}
 	}
-	
+
 	// Calculate total potential cost
 	totalMinCost := agent.CostMagnitude
 	if len(tools) > 0 {
 		totalMinCost += tools[0].CostMagnitude // Add cheapest tool
 	}
-	
+
 	fmt.Printf("\n💰 Cost Summary:\n")
 	fmt.Printf("   Agent: %d\n", agent.CostMagnitude)
 	fmt.Printf("   Cheapest tool: %d\n", func() int {
@@ -379,14 +379,14 @@ func simulateTaskAssignment(componentRegistry registry.ComponentRegistry, taskTy
 	}())
 	fmt.Printf("   Total minimum: %d\n", totalMinCost)
 	fmt.Printf("   Budget utilization: %.1f%%\n", float64(totalMinCost)/float64(budget)*100)
-	
+
 	return nil
 }
 
 func showOverview(componentRegistry registry.ComponentRegistry, budget int) error {
 	fmt.Printf("🏰 Guild Cost-Based Selection System\n")
 	fmt.Printf("═══════════════════════════════════════\n\n")
-	
+
 	// Show agents by cost tiers
 	fmt.Printf("📊 Agent Distribution by Cost:\n")
 	for cost := 0; cost <= 8; cost++ {
@@ -403,7 +403,7 @@ func showOverview(componentRegistry registry.ComponentRegistry, budget int) erro
 			fmt.Printf("   %s Cost %d: %d agents\n", costIcon, cost, countAtThisCost)
 		}
 	}
-	
+
 	fmt.Printf("\n🔧 Tool Distribution by Cost:\n")
 	for cost := 0; cost <= 8; cost++ {
 		if cost == 4 || cost == 6 || cost == 7 { continue } // Skip invalid Fibonacci values
@@ -419,19 +419,19 @@ func showOverview(componentRegistry registry.ComponentRegistry, budget int) erro
 			fmt.Printf("   %s Cost %d: %d tools\n", costIcon, cost, countAtThisCost)
 		}
 	}
-	
+
 	// Show what's available within budget
 	fmt.Printf("\n💰 Within Budget (%d):\n", budget)
 	availableAgents := componentRegistry.GetAgentsByCost(budget)
 	availableTools := componentRegistry.GetToolsByCost(budget)
 	fmt.Printf("   Agents: %d available\n", len(availableAgents))
 	fmt.Printf("   Tools: %d available\n", len(availableTools))
-	
+
 	fmt.Printf("\n💡 Try these commands:\n")
 	fmt.Printf("   guild cost-demo --list-agents --max-cost %d\n", budget)
 	fmt.Printf("   guild cost-demo --capability coding --budget %d\n", budget)
 	fmt.Printf("   guild cost-demo --simulate-task review --budget %d\n", budget)
-	
+
 	return nil
 }
 

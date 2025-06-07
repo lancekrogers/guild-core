@@ -13,31 +13,31 @@ import (
 // MetricsRegistry wraps Prometheus registry
 type MetricsRegistry struct {
 	registry *prometheus.Registry
-	
+
 	// Core metrics
 	requestDuration   *prometheus.HistogramVec
 	requestTotal      *prometheus.CounterVec
 	errorTotal        *prometheus.CounterVec
 	activeRequests    *prometheus.GaugeVec
-	
+
 	// Agent metrics
 	agentTaskTotal    *prometheus.CounterVec
 	agentTaskDuration *prometheus.HistogramVec
 	agentTokenUsage   *prometheus.CounterVec
 	agentCost         *prometheus.CounterVec
 	agentUtilization  *prometheus.GaugeVec
-	
+
 	// Task metrics
 	taskQueueSize     *prometheus.GaugeVec
 	taskProcessed     *prometheus.CounterVec
 	taskDuration      *prometheus.HistogramVec
 	taskRetries       *prometheus.CounterVec
-	
+
 	// Storage metrics
 	storageOperations *prometheus.CounterVec
 	storageDuration   *prometheus.HistogramVec
 	storageErrors     *prometheus.CounterVec
-	
+
 	// Provider metrics
 	providerRequests  *prometheus.CounterVec
 	providerDuration  *prometheus.HistogramVec
@@ -69,26 +69,26 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 	if config == nil {
 		config = DefaultMetricsConfig()
 	}
-	
+
 	if !config.Enabled {
 		// Return no-op registry
 		return &MetricsRegistry{
 			registry: prometheus.NewRegistry(),
 		}
 	}
-	
+
 	registry := prometheus.NewRegistry()
-	
+
 	// Register default collectors
 	registry.MustRegister(
 		collectors.NewGoCollector(),
 		collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
 	)
-	
+
 	m := &MetricsRegistry{
 		registry: registry,
 	}
-	
+
 	// Initialize core metrics
 	m.requestDuration = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
@@ -100,7 +100,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"method", "endpoint", "status"},
 	)
-	
+
 	m.requestTotal = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: config.Namespace,
@@ -110,7 +110,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"method", "endpoint", "status"},
 	)
-	
+
 	m.errorTotal = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: config.Namespace,
@@ -120,7 +120,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"code", "component", "operation"},
 	)
-	
+
 	m.activeRequests = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Namespace: config.Namespace,
@@ -130,7 +130,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"endpoint"},
 	)
-	
+
 	// Initialize agent metrics
 	m.agentTaskTotal = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
@@ -141,7 +141,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"agent_id", "agent_type", "status"},
 	)
-	
+
 	m.agentTaskDuration = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Namespace: config.Namespace,
@@ -152,7 +152,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"agent_id", "agent_type"},
 	)
-	
+
 	m.agentTokenUsage = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: config.Namespace,
@@ -162,7 +162,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"agent_id", "agent_type", "token_type"},
 	)
-	
+
 	m.agentCost = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: config.Namespace,
@@ -172,7 +172,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"agent_id", "agent_type", "provider"},
 	)
-	
+
 	m.agentUtilization = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Namespace: config.Namespace,
@@ -182,7 +182,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"agent_id", "agent_type"},
 	)
-	
+
 	// Initialize task metrics
 	m.taskQueueSize = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
@@ -193,7 +193,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"status"},
 	)
-	
+
 	m.taskProcessed = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: config.Namespace,
@@ -203,7 +203,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"status", "campaign_id"},
 	)
-	
+
 	m.taskDuration = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Namespace: config.Namespace,
@@ -214,7 +214,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"task_type"},
 	)
-	
+
 	m.taskRetries = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: config.Namespace,
@@ -224,7 +224,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"reason"},
 	)
-	
+
 	// Initialize storage metrics
 	m.storageOperations = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
@@ -235,7 +235,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"operation", "table", "status"},
 	)
-	
+
 	m.storageDuration = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Namespace: config.Namespace,
@@ -246,7 +246,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"operation", "table"},
 	)
-	
+
 	m.storageErrors = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: config.Namespace,
@@ -256,7 +256,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"operation", "table", "error_type"},
 	)
-	
+
 	// Initialize provider metrics
 	m.providerRequests = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
@@ -267,7 +267,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"provider", "model", "status"},
 	)
-	
+
 	m.providerDuration = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Namespace: config.Namespace,
@@ -278,7 +278,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"provider", "model"},
 	)
-	
+
 	m.providerTokens = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: config.Namespace,
@@ -288,7 +288,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"provider", "model", "token_type"},
 	)
-	
+
 	m.providerCost = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: config.Namespace,
@@ -298,7 +298,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"provider", "model"},
 	)
-	
+
 	m.providerErrors = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: config.Namespace,
@@ -308,7 +308,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		},
 		[]string{"provider", "model", "error_type"},
 	)
-	
+
 	// Register all metrics
 	registry.MustRegister(
 		m.requestDuration, m.requestTotal, m.errorTotal, m.activeRequests,
@@ -317,7 +317,7 @@ func InitMetrics(config *MetricsConfig) *MetricsRegistry {
 		m.storageOperations, m.storageDuration, m.storageErrors,
 		m.providerRequests, m.providerDuration, m.providerTokens, m.providerCost, m.providerErrors,
 	)
-	
+
 	return m
 }
 
@@ -480,18 +480,18 @@ func GetMetrics() *MetricsRegistry {
 func MetricsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-		
+
 		// Track active requests
 		metrics := GetMetrics()
 		metrics.SetActiveRequests(r.URL.Path, 1)
 		defer metrics.SetActiveRequests(r.URL.Path, -1)
-		
+
 		// Wrap response writer to capture status code
 		wrapped := &responseWriter{ResponseWriter: w, statusCode: http.StatusOK}
-		
+
 		// Process request
 		next.ServeHTTP(wrapped, r)
-		
+
 		// Record metrics
 		duration := time.Since(start)
 		status := fmt.Sprintf("%d", wrapped.statusCode)

@@ -15,7 +15,7 @@ import (
 type CommissionTaskPlanner interface {
 	// PlanFromRefinedCommission converts refined commission tasks to kanban tasks
 	PlanFromRefinedCommission(ctx context.Context, refined *manager.RefinedCommission, guildConfig *config.GuildConfig) ([]*kanban.Task, error)
-	
+
 	// AssignTasksToArtisans assigns tasks to appropriate guild members based on capabilities
 	AssignTasksToArtisans(ctx context.Context, tasks []*kanban.Task, guild *config.GuildConfig) error
 }
@@ -108,7 +108,7 @@ func (p *defaultCommissionTaskPlanner) AssignTasksToArtisans(
 		// Update the assignment
 		existingTask.AssignedTo = artisan.ID
 		existingTask.Status = kanban.StatusTodo
-		
+
 		// Preserve metadata from original task (in case existing task has incomplete metadata)
 		for k, v := range task.Metadata {
 			existingTask.Metadata[k] = v
@@ -180,12 +180,12 @@ func (p *defaultCommissionTaskPlanner) convertToKanbanTask(
 	createdTask.Priority = priority
 	createdTask.EstimatedHours = parseEstimate(taskInfo.Estimate)
 	createdTask.Dependencies = taskInfo.Dependencies
-	
+
 	// Initialize metadata map if nil
 	if createdTask.Metadata == nil {
 		createdTask.Metadata = make(map[string]string)
 	}
-	
+
 	// Add commission and task metadata
 	createdTask.Metadata["commission_id"] = commissionID
 	createdTask.Metadata["source_section"] = taskInfo.Section

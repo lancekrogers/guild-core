@@ -63,11 +63,11 @@ func TestBuildPrompt(t *testing.T) {
 			prompt, err := builder.BuildPrompt(tt.layers, testData)
 			require.NoError(t, err)
 			assert.NotEmpty(t, prompt)
-			
+
 			// Verify metadata
 			assert.Contains(t, prompt, "<!-- Generated:")
 			assert.Contains(t, prompt, "<!-- Layers:")
-			
+
 			tt.verify(t, prompt)
 		})
 	}

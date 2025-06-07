@@ -4,7 +4,7 @@ package components
 import (
 	"fmt"
 	"strings"
-	
+
 	"github.com/charmbracelet/lipgloss"
 	commissionpkg "github.com/guild-ventures/guild-core/pkg/commission"
 )
@@ -23,9 +23,9 @@ func StatusBadge(status string) string {
 	if !exists {
 		style = lipgloss.NewStyle().Foreground(lipgloss.Color("#FFFFFF"))
 	}
-	
+
 	// Format the status text
 	formattedStatus := strings.ToUpper(status)
-	
+
 	return style.Render(fmt.Sprintf("[%s]", formattedStatus))
 }

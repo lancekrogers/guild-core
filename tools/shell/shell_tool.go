@@ -48,7 +48,7 @@ func NewShellTool(options ShellToolOptions) *ShellTool {
 		"rm -rf /", "rm -rf /*", "rm -rf ~", "rm -rf ~/", "rm -rf ~/*",
 		"mkfs", "dd", ">", ">>",
 	}
-	
+
 	for _, cmd := range defaultBlockedCommands {
 		if !contains(options.BlockedCommands, cmd) {
 			options.BlockedCommands = append(options.BlockedCommands, cmd)
@@ -132,7 +132,7 @@ func (t *ShellTool) Execute(ctx context.Context, input string) (*tools.ToolResul
 	if len(params.Args) > 0 {
 		fullCmd += " " + strings.Join(params.Args, " ")
 	}
-	
+
 	if t.isCommandBlocked(fullCmd) {
 		return nil, gerror.Newf(gerror.ErrCodeInvalidInput, "command is blocked for safety reasons: %s", fullCmd).
 			WithComponent("shell_tool").

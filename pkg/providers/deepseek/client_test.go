@@ -57,7 +57,7 @@ func TestDeepSeekProvider(t *testing.T) {
 		TestModel:    DeepSeekChat,
 		SkipLive:     true,
 	})
-	
+
 	suite.RunBasicTests()
 }
 
@@ -94,7 +94,7 @@ func TestDeepSeekSpecificFeatures(t *testing.T) {
 
 	t.Run("ModelMapping", func(t *testing.T) {
 		ctx := context.Background()
-		
+
 		// Test that GPT-4 is mapped to DeepSeek Chat
 		req := interfaces.ChatRequest{
 			Model: "gpt-4",
@@ -139,7 +139,7 @@ func TestDeepSeekSpecificFeatures(t *testing.T) {
 
 	t.Run("CostEfficiency", func(t *testing.T) {
 		caps := client.GetCapabilities()
-		
+
 		// Find DeepSeek Chat model
 		var chatModel *interfaces.ModelInfo
 		for _, m := range caps.Models {

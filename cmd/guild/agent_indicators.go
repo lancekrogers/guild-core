@@ -285,7 +285,7 @@ func (ai *AgentIndicators) DisableAnimations() {
 // SetAnimationSpeed sets the speed of animations
 func (ai *AgentIndicators) SetAnimationSpeed(duration time.Duration) {
 	ai.animationSpeed = duration
-	
+
 	// Restart ticker with new speed if running
 	if ai.updateTicker != nil {
 		ai.StopAnimations()
@@ -393,14 +393,14 @@ func (ai *AgentIndicators) GetProgressAnimation(progress float64) string {
 	// Create a rotating progress indicator
 	frames := []string{"◐", "◓", "◑", "◒"}
 	frameIndex := int(time.Now().UnixNano()/int64(ai.animationSpeed)) % len(frames)
-	
+
 	progressIcon := frames[frameIndex]
-	
+
 	// Add percentage if significant progress
 	if progress > 0.1 {
 		return fmt.Sprintf("%s %.0f%%", progressIcon, progress*100)
 	}
-	
+
 	return progressIcon
 }
 
@@ -463,7 +463,7 @@ func (ai *AgentIndicators) GetAnimationStats() map[string]interface{} {
 func (ai *AgentIndicators) SetupDefaultAnimations() {
 	// Start the animation system
 	ai.StartAnimations()
-	
+
 	// Set reasonable defaults
 	ai.SetAnimationSpeed(400 * time.Millisecond) // Smooth but not too fast
 	ai.EnableAnimations()
@@ -471,9 +471,9 @@ func (ai *AgentIndicators) SetupDefaultAnimations() {
 
 // Helper function to check if a string contains a substring
 func contains(s, substr string) bool {
-	return len(s) >= len(substr) && (s == substr || 
-		(len(s) > len(substr) && 
-			(s[:len(substr)] == substr || 
+	return len(s) >= len(substr) && (s == substr ||
+		(len(s) > len(substr) &&
+			(s[:len(substr)] == substr ||
 			 s[len(s)-len(substr):] == substr ||
 			 containsMiddle(s, substr))))
 }

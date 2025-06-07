@@ -210,7 +210,7 @@ func (tca *TaskComplexityAnalyzer) getAvailableAgentsFromRegistry(ctx context.Co
 			tca.logger.Warn("No agents found in registry")
 			return nil, NewRegistryError("no agents available", nil)
 		}
-		
+
 		// Convert registered guild agents to AgentInfo
 		var agents []AgentInfo
 		for _, guildAgent := range registeredAgents {
@@ -229,7 +229,7 @@ func (tca *TaskComplexityAnalyzer) getAvailableAgentsFromRegistry(ctx context.Co
 		}
 		return agents, nil
 	}
-	
+
 	// If we have access to the full registry, try to get agents from the database
 	fullRegistry := componentReg.GetComponentRegistry()
 	_, ok = fullRegistry.(interface{ Storage() interface{} })
@@ -239,7 +239,7 @@ func (tca *TaskComplexityAnalyzer) getAvailableAgentsFromRegistry(ctx context.Co
 		if len(registeredAgents) == 0 {
 			return nil, NewRegistryError("no agents available", nil)
 		}
-		
+
 		// Convert as above
 		var agents []AgentInfo
 		for _, guildAgent := range registeredAgents {
@@ -258,13 +258,13 @@ func (tca *TaskComplexityAnalyzer) getAvailableAgentsFromRegistry(ctx context.Co
 		}
 		return agents, nil
 	}
-	
+
 	// For now, just return registered agents - SQLite integration is complex
 	registeredAgents := tca.agentRegistry.GetRegisteredAgents()
 	if len(registeredAgents) == 0 {
 		return nil, NewRegistryError("no agents available", nil)
 	}
-	
+
 	// Convert to AgentInfo
 	var agents []AgentInfo
 	for _, guildAgent := range registeredAgents {
@@ -281,7 +281,7 @@ func (tca *TaskComplexityAnalyzer) getAvailableAgentsFromRegistry(ctx context.Co
 		}
 		agents = append(agents, agent)
 	}
-	
+
 	tca.logger.Info("Loaded registered agents", slog.Int("count", len(agents)))
 	return agents, nil
 }
@@ -373,12 +373,12 @@ Quality Level: %s`,
 		CommissionID: "analysis-session",
 		Metadata:     promptContext,
 	}
-	
+
 	layeredPrompt, err := tca.promptManager.BuildLayeredPrompt(ctx, "manager-agent", "analysis-session", turnCtx)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return layeredPrompt, nil
 }
 
@@ -398,7 +398,7 @@ func (tca *TaskComplexityAnalyzer) executeAnalysis(
 	// Execute with retry logic
 	const maxRetries = 3
 	var lastErr error
-	
+
 	for attempt := 1; attempt <= maxRetries; attempt++ {
 		select {
 		case <-ctx.Done():
@@ -418,12 +418,12 @@ func (tca *TaskComplexityAnalyzer) executeAnalysis(
 				slog.Int("attempt", attempt),
 				slog.Any("error", err),
 			)
-			
+
 			// Don't retry on context cancellation
 			if ctx.Err() != nil {
 				return nil, NewTimeoutError("analysis timed out", err)
 			}
-			
+
 			// Wait before retry (exponential backoff)
 			if attempt < maxRetries {
 				waitTime := time.Duration(attempt) * time.Second
@@ -447,7 +447,7 @@ func (tca *TaskComplexityAnalyzer) executeAnalysis(
 				slog.Any("error", err),
 				slog.String("raw_response", response.Content),
 			)
-			
+
 			// Don't retry parse errors - they're likely not transient
 			return nil, NewParseError("failed to parse complexity analysis response", err)
 		}
@@ -472,7 +472,7 @@ func (tca *TaskComplexityAnalyzer) parseAnalysisResponse(response *ArtisanRespon
 	}
 
 	var result ComplexityAnalysisResult
-	
+
 	// Try direct JSON parsing first
 	if err := json.Unmarshal([]byte(response.Content), &result); err == nil {
 		return &result, nil
@@ -544,18 +544,18 @@ func extractJSONFromMarkdown(content string) string {
 	// Look for ```json code blocks
 	start := "```json"
 	end := "```"
-	
+
 	startIdx := findSubstring(content, start)
 	if startIdx == -1 {
 		return ""
 	}
-	
+
 	startIdx += len(start)
 	endIdx := findSubstringFrom(content, end, startIdx)
 	if endIdx == -1 {
 		return ""
 	}
-	
+
 	return content[startIdx:endIdx]
 }
 

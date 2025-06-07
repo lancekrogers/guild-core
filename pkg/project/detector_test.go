@@ -121,7 +121,7 @@ func TestProjectDetector_GenerateGuildConfig(t *testing.T) {
 
 	// Check that we have at least architect and go-dev agents
 	assert.GreaterOrEqual(t, len(config.Agents), 2)
-	
+
 	var hasArchitect, hasGoDev bool
 	for _, agent := range config.Agents {
 		if agent.ID == "architect" {

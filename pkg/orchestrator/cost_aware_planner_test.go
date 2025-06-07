@@ -17,15 +17,15 @@ import (
 func TestCostAwareTaskPlanner(t *testing.T) {
 	// Setup test environment
 	ctx := context.Background()
-	
+
 	// Create mock registry with test agents
 	componentRegistry := createTestRegistry()
-	
+
 	// Create mock kanban board
 	kanbanBoard := &MockKanbanBoard{
 		tasks: make(map[string]*kanban.Task),
 	}
-	
+
 	// Create mock manager agent
 	managerAgent := &MockManagerAgent{
 		responses: map[string]string{
@@ -51,77 +51,77 @@ Complexity: high
 PreferredCost: 3`,
 		},
 	}
-	
+
 	// Create cost-aware planner
 	planner := DefaultCostAwareTaskPlannerFactory(managerAgent, kanbanBoard, componentRegistry, 5)
-	
+
 	t.Run("TestPlanTasks", func(t *testing.T) {
 		// Create test objective
 		obj := &commission.Commission{
 			Title:       "Build User Management System",
 			Description: "Complete user authentication and management system",
 		}
-		
+
 		// Create test guild config
 		guild := createTestGuildConfig()
-		
+
 		// Plan tasks
 		tasks, err := planner.PlanTasks(ctx, obj, guild)
 		require.NoError(t, err)
 		assert.Len(t, tasks, 3)
-		
+
 		// Verify tasks have cost estimates
 		for _, task := range tasks {
 			assert.Contains(t, task.Metadata, "estimated_cost")
 			assert.Contains(t, task.Metadata, "cheapest_agent")
 		}
-		
+
 		// Verify first task
 		assert.Equal(t, "TASK-001", tasks[0].ID)
 		assert.Equal(t, "Implement user authentication", tasks[0].Title)
 		assert.Equal(t, "coding, security", tasks[0].Metadata["capabilities"])
 		assert.Equal(t, "medium", tasks[0].Metadata["complexity"])
 	})
-	
+
 	t.Run("TestAssignTasksMinimizeCost", func(t *testing.T) {
 		// Create test tasks
 		tasks := createTestTasks()
 		guild := createTestGuildConfig()
-		
+
 		options := AssignmentOptions{
 			MaxCostMagnitude: 5,
 			Strategy:         StrategyMinimizeCost,
 			BalanceWorkload:  false,
 		}
-		
+
 		// Assign tasks
 		summary, err := planner.AssignTasksWithOptions(ctx, tasks, guild, options)
 		require.NoError(t, err)
-		
+
 		// Verify assignments prioritize cost
 		assert.Equal(t, 3, summary.TotalTasks)
 		assert.True(t, summary.TotalCost <= 15) // Max 5 per task
-		
+
 		// Verify cheapest agents are selected
 		for _, assignment := range summary.Assignments {
 			assert.LessOrEqual(t, assignment.TotalCost, 5)
 			assert.NotEmpty(t, assignment.Reason)
 		}
 	})
-	
+
 	t.Run("TestAssignTasksBalanced", func(t *testing.T) {
 		tasks := createTestTasks()
 		guild := createTestGuildConfig()
-		
+
 		options := AssignmentOptions{
 			MaxCostMagnitude: 8,
 			Strategy:         StrategyBalanced,
 			BalanceWorkload:  true,
 		}
-		
+
 		summary, err := planner.AssignTasksWithOptions(ctx, tasks, guild, options)
 		require.NoError(t, err)
-		
+
 		// Verify workload distribution
 		maxWorkload := 0
 		minWorkload := 100
@@ -133,43 +133,43 @@ PreferredCost: 3`,
 				minWorkload = workload
 			}
 		}
-		
+
 		// Workload should be reasonably balanced
 		assert.LessOrEqual(t, maxWorkload-minWorkload, 2)
 	})
-	
+
 	t.Run("TestAssignTasksCapabilityFirst", func(t *testing.T) {
 		tasks := createTestTasks()
 		guild := createTestGuildConfig()
-		
+
 		options := AssignmentOptions{
 			MaxCostMagnitude: 3,
 			Strategy:         StrategyCapabilityFirst,
 			BalanceWorkload:  false,
 		}
-		
+
 		summary, err := planner.AssignTasksWithOptions(ctx, tasks, guild, options)
 		require.NoError(t, err)
-		
+
 		// Verify all assignments have proper capabilities
 		for _, assignment := range summary.Assignments {
 			assert.NotEmpty(t, assignment.AgentInfo.Capabilities)
 		}
 	})
-	
+
 	t.Run("TestBudgetConstraints", func(t *testing.T) {
 		tasks := createTestTasks()
 		guild := createTestGuildConfig()
-		
+
 		// Very low budget
 		options := AssignmentOptions{
 			MaxCostMagnitude: 1,
 			Strategy:         StrategyMinimizeCost,
 			BalanceWorkload:  false,
 		}
-		
+
 		summary, err := planner.AssignTasksWithOptions(ctx, tasks, guild, options)
-		
+
 		// Should either succeed with low-cost agents or fail gracefully
 		if err == nil {
 			// If successful, all assignments should be within budget
@@ -181,11 +181,11 @@ PreferredCost: 3`,
 			assert.Contains(t, err.Error(), "budget")
 		}
 	})
-	
+
 	t.Run("TestToolSelection", func(t *testing.T) {
 		tasks := createTestTasks()
 		guild := createTestGuildConfig()
-		
+
 		options := AssignmentOptions{
 			MaxCostMagnitude: 8,
 			Strategy:         StrategyBalanced,
@@ -194,10 +194,10 @@ PreferredCost: 3`,
 				"TASK-002": {"database", "configuration"},
 			},
 		}
-		
+
 		summary, err := planner.AssignTasksWithOptions(ctx, tasks, guild, options)
 		require.NoError(t, err)
-		
+
 		// Verify tools are selected for tasks
 		for _, assignment := range summary.Assignments {
 			if len(assignment.Tools) > 0 {
@@ -208,29 +208,29 @@ PreferredCost: 3`,
 			}
 		}
 	})
-	
+
 	t.Run("TestAssignmentSummary", func(t *testing.T) {
 		tasks := createTestTasks()
 		guild := createTestGuildConfig()
-		
+
 		options := AssignmentOptions{
 			MaxCostMagnitude: 5,
 			Strategy:         StrategyBalanced,
 			BalanceWorkload:  true,
 		}
-		
+
 		summary, err := planner.AssignTasksWithOptions(ctx, tasks, guild, options)
 		require.NoError(t, err)
-		
+
 		// Verify summary statistics
 		assert.Equal(t, len(tasks), summary.TotalTasks)
 		assert.Greater(t, summary.TotalCost, 0)
 		assert.Greater(t, summary.AverageCost, 0.0)
 		assert.NotEmpty(t, summary.CostEfficiency)
-		
+
 		// Verify cost breakdown
 		assert.NotEmpty(t, summary.CostBreakdown)
-		
+
 		// Verify agent workloads
 		assert.NotEmpty(t, summary.AgentWorkloads)
 	})
@@ -295,7 +295,7 @@ func createTestRegistry() registry.ComponentRegistry {
 			},
 		},
 	}
-	
+
 	return mockRegistry
 }
 
@@ -374,7 +374,7 @@ func (m *MockComponentRegistry) GetAgentsByCost(maxCost int) []registry.AgentInf
 func (m *MockComponentRegistry) GetCheapestAgentByCapability(capability string) (*registry.AgentInfo, error) {
 	var cheapest *registry.AgentInfo
 	minCost := 999
-	
+
 	for _, agent := range m.agents {
 		for _, cap := range agent.Capabilities {
 			if cap == capability && agent.CostMagnitude < minCost {
@@ -385,7 +385,7 @@ func (m *MockComponentRegistry) GetCheapestAgentByCapability(capability string) 
 			}
 		}
 	}
-	
+
 	if cheapest == nil {
 		return nil, registry.ErrComponentNotFound
 	}
@@ -418,7 +418,7 @@ func (m *MockComponentRegistry) GetToolsByCost(maxCost int) []registry.ToolInfo 
 func (m *MockComponentRegistry) GetCheapestToolByCapability(capability string) (*registry.ToolInfo, error) {
 	var cheapest *registry.ToolInfo
 	minCost := 999
-	
+
 	for _, tool := range m.tools {
 		for _, cap := range tool.Capabilities {
 			if cap == capability && tool.CostMagnitude < minCost {
@@ -429,7 +429,7 @@ func (m *MockComponentRegistry) GetCheapestToolByCapability(capability string) (
 			}
 		}
 	}
-	
+
 	if cheapest == nil {
 		return nil, registry.ErrComponentNotFound
 	}

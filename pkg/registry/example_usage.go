@@ -24,7 +24,7 @@ func ExampleUsage() error {
 
 	// Use the agent registry
 	agentRegistry := registry.Agents()
-	
+
 	// Register a simple mock agent type using a mock factory
 	mockFactory := func(config AgentConfig) (Agent, error) {
 		return &MockAgent{
@@ -143,7 +143,7 @@ agents:
 tools:
   enabled_tools:
     - "file"
-    - "shell" 
+    - "shell"
     - "http"
   settings:
     timeout: "30s"

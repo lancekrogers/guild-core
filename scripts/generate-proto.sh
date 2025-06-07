@@ -54,20 +54,20 @@ echo ""
 generate_proto() {
     local proto_file=$1
     local output_dir=$2
-    
+
     echo "Generating: $proto_file"
     echo "Output dir: $output_dir"
-    
+
     # Create output directory if it doesn't exist
     mkdir -p "$output_dir"
-    
+
     # Generate Go code
     protoc \
         --go_out="$PROJECT_ROOT" \
         --go-grpc_out="$PROJECT_ROOT" \
         --proto_path="$PROJECT_ROOT" \
         "$proto_file"
-    
+
     echo "✓ Generated successfully"
     echo ""
 }

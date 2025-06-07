@@ -10,7 +10,7 @@ import (
 func TestEnhancedAgentConfiguration(t *testing.T) {
 	t.Run("ValidCostMagnitudes", func(t *testing.T) {
 		validCosts := []int{0, 1, 2, 3, 5, 8}
-		
+
 		for _, cost := range validCosts {
 			agent := &AgentConfig{
 				ID:           "test-agent",
@@ -21,7 +21,7 @@ func TestEnhancedAgentConfiguration(t *testing.T) {
 				Capabilities: []string{"testing"},
 				CostMagnitude: cost,
 			}
-			
+
 			err := agent.Validate()
 			assert.NoError(t, err, "Cost magnitude %d should be valid", cost)
 		}
@@ -29,7 +29,7 @@ func TestEnhancedAgentConfiguration(t *testing.T) {
 
 	t.Run("InvalidCostMagnitudes", func(t *testing.T) {
 		invalidCosts := []int{4, 6, 7, 9, 10}
-		
+
 		for _, cost := range invalidCosts {
 			agent := &AgentConfig{
 				ID:           "test-agent",
@@ -40,7 +40,7 @@ func TestEnhancedAgentConfiguration(t *testing.T) {
 				Capabilities: []string{"testing"},
 				CostMagnitude: cost,
 			}
-			
+
 			err := agent.Validate()
 			assert.Error(t, err, "Cost magnitude %d should be invalid", cost)
 			assert.Contains(t, err.Error(), "invalid cost_magnitude")
@@ -69,7 +69,7 @@ func TestEnhancedAgentConfiguration(t *testing.T) {
 				Capabilities: []string{"testing"},
 				ContextReset: tt.reset,
 			}
-			
+
 			err := agent.Validate()
 			if tt.shouldErr {
 				assert.Error(t, err, "Context reset '%s' should be invalid", tt.reset)
@@ -101,7 +101,7 @@ func TestEnhancedAgentConfiguration(t *testing.T) {
 				Capabilities:  []string{"testing"},
 				ContextWindow: tt.window,
 			}
-			
+
 			err := agent.Validate()
 			if tt.shouldErr {
 				assert.Error(t, err, "Context window %d should be invalid", tt.window)
@@ -136,7 +136,7 @@ func TestEffectiveCostMagnitude(t *testing.T) {
 				Model:         tt.model,
 				CostMagnitude: tt.configuredCost,
 			}
-			
+
 			result := agent.GetEffectiveCostMagnitude()
 			assert.Equal(t, tt.expectedCost, result)
 		})
@@ -165,7 +165,7 @@ func TestEffectiveContextWindow(t *testing.T) {
 				Model:         tt.model,
 				ContextWindow: tt.configuredWindow,
 			}
-			
+
 			result := agent.GetEffectiveContextWindow()
 			assert.Equal(t, tt.expectedWindow, result)
 		})
@@ -191,7 +191,7 @@ func TestEffectiveContextReset(t *testing.T) {
 				Type:         tt.agentType,
 				ContextReset: tt.configuredReset,
 			}
-			
+
 			result := agent.GetEffectiveContextReset()
 			assert.Equal(t, tt.expectedReset, result)
 		})
@@ -219,7 +219,7 @@ func TestIsToolOnlyAgent(t *testing.T) {
 				Model:         tt.model,
 				Tools:         tt.tools,
 			}
-			
+
 			result := agent.IsToolOnlyAgent()
 			assert.Equal(t, tt.expected, result)
 		})

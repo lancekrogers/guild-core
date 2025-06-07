@@ -159,7 +159,7 @@ package handlers
 import (
     "net/http"
     "strconv"
-    
+
     "github.com/gin-gonic/gin"
     "github.com/ecommerce/catalog-service/models"
     "github.com/ecommerce/catalog-service/services"
@@ -173,7 +173,7 @@ type ProductHandler struct {
 func (h *ProductHandler) ListProducts(c *gin.Context) {
     // Parse query parameters
     params := parseProductParams(c)
-    
+
     // Execute search with filters
     result, err := h.searchService.SearchProducts(c.Request.Context(), params)
     if err != nil {
@@ -182,14 +182,14 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
         })
         return
     }
-    
+
     // Get aggregations for filters
     filters, err := h.searchService.GetFilterAggregations(c.Request.Context(), params)
     if err != nil {
         // Log error but don't fail the request
         filters = &models.FilterAggregations{}
     }
-    
+
     c.JSON(http.StatusOK, gin.H{
         "data": result.Products,
         "pagination": gin.H{
@@ -205,11 +205,11 @@ func (h *ProductHandler) ListProducts(c *gin.Context) {
 func parseProductParams(c *gin.Context) *models.SearchParams {
     page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
     limit, _ := strconv.Atoi(c.DefaultQuery("limit", "20"))
-    
+
     if limit > 100 {
         limit = 100
     }
-    
+
     return &models.SearchParams{
         Query:     c.Query("q"),
         Category:  c.Query("category"),
@@ -228,13 +228,13 @@ func parseProductParams(c *gin.Context) *models.SearchParams {
 
 ```sql
 -- Full-text search with PostgreSQL
-CREATE INDEX idx_products_search ON products 
+CREATE INDEX idx_products_search ON products
 USING GIN(to_tsvector('english', name || ' ' || description || ' ' || COALESCE(brand, '')));
 
 -- Search query with filters
 WITH filtered_products AS (
-    SELECT p.*, 
-           ts_rank(to_tsvector('english', p.name || ' ' || p.description), 
+    SELECT p.*,
+           ts_rank(to_tsvector('english', p.name || ' ' || p.description),
                    plainto_tsquery('english', $1)) as rank
     FROM products p
     WHERE ($1 = '' OR to_tsvector('english', p.name || ' ' || p.description) @@ plainto_tsquery('english', $1))
@@ -245,7 +245,7 @@ WITH filtered_products AS (
       AND ($6::boolean IS FALSE OR p.stock_quantity > 0)
 )
 SELECT * FROM filtered_products
-ORDER BY 
+ORDER BY
     CASE WHEN $7 = 'price_asc' THEN price END ASC,
     CASE WHEN $7 = 'price_desc' THEN price END DESC,
     CASE WHEN $7 = 'name' THEN name END ASC,

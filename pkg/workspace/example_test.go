@@ -65,7 +65,7 @@ func Example_multipleAgents() {
 
 	// Each agent can work independently
 	for _, ws := range workspaces {
-		fmt.Printf("Workspace %s at %s on branch %s\n", 
+		fmt.Printf("Workspace %s at %s on branch %s\n",
 			ws.ID(), ws.Path(), ws.Branch())
 	}
 

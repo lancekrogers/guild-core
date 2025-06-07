@@ -33,15 +33,15 @@ func TestFullCommissionRefinementPipeline(t *testing.T) {
 
 	// Step 1: Initialize component registry
 	fmt.Printf("\n🔧 Step 1: Initializing component registry\n")
-	
+
 	reg := registry.NewComponentRegistry()
 	ctx := context.Background()
-	
+
 	// Step 2: Setup mock provider with intelligent responses FIRST
 	fmt.Printf("\n🤖 Step 2: Configuring mock AI provider\n")
-	
+
 	mockProvider := mock.NewProvider()
-	
+
 	// Configure mock to return file structure with proper ## File: format
 	// This matches what the parser expects - a structured file response
 	mockProvider.SetResponse("You are the Guild Master", `## File: commission_refined.md
@@ -92,12 +92,12 @@ This project implements a full-featured e-commerce platform.
 
 	// Step 3: Setup BoltDB with all required buckets BEFORE initializing registry
 	fmt.Printf("\n💾 Step 3: Setting up database storage\n")
-	
+
 	dbPath := filepath.Join(tempDir, "guild.db")
 	customBuckets := []string{
 		"objectives",
 		"tasks",
-		"board_metadata", 
+		"board_metadata",
 		"task_metadata",
 		"task_events",
 		"task_comments",
@@ -105,17 +105,17 @@ This project implements a full-featured e-commerce platform.
 		"board_events",
 		"tasks_by_board",
 	}
-	
+
 	store, err := boltdb.NewStore(dbPath, boltdb.WithCustomBuckets(customBuckets...))
 	require.NoError(t, err)
 	defer store.Close()
 	fmt.Printf("  ✓ BoltDB initialized with all buckets\n")
-	
+
 	// Register the memory store with the registry
 	err = reg.Memory().RegisterMemoryStore("boltdb", store)
 	require.NoError(t, err)
 	fmt.Printf("  ✓ Memory store registered\n")
-	
+
 	// Initialize registry with config AFTER registering providers and memory
 	registryConfig := registry.Config{
 		Agents: registry.AgentConfig{
@@ -134,10 +134,10 @@ This project implements a full-featured e-commerce platform.
 
 	// Step 4: Initialize kanban system
 	fmt.Printf("\n📋 Step 4: Setting up kanban board\n")
-	
+
 	kanbanMgr, err := kanban.NewManager(store)
 	require.NoError(t, err)
-	
+
 	board, err := kanbanMgr.CreateBoard(ctx, "test-board", "Test Commission Board")
 	require.NoError(t, err)
 	fmt.Printf("  ✓ Kanban board created: %s\n", board.Name)
@@ -147,21 +147,21 @@ This project implements a full-featured e-commerce platform.
 
 	// Step 5: Setup prompts system
 	fmt.Printf("\n📝 Step 5: Initializing prompt system\n")
-	
+
 	// The CommissionIntegrationService will create its own prompt registry with built-in prompts
 	// This is acceptable for the MVP since the integration service has built-in prompts
 	fmt.Printf("  ✓ Prompt system ready (service will use built-in prompts)\n")
 
 	// Step 6: Create commission integration service
 	fmt.Printf("\n🔗 Step 6: Creating commission integration service\n")
-	
+
 	integrationService, err := orchestrator.NewCommissionIntegrationService(reg)
 	require.NoError(t, err)
 	fmt.Printf("  ✓ Integration service created\n")
 
 	// Step 7: Create test commission
 	fmt.Printf("\n📜 Step 7: Creating test commission\n")
-	
+
 	commission := manager.Commission{
 		ID:          "test-commission-001",
 		Title:       "E-Commerce Platform Development",
@@ -184,7 +184,7 @@ This project implements a full-featured e-commerce platform.
 
 	// Step 8: Create guild configuration with specialized artisans
 	fmt.Printf("\n⚙️ Step 8: Configuring guild with specialized artisans\n")
-	
+
 	guildConfig := &config.GuildConfig{
 		Name:    "Elite Development Guild",
 		Version: "1.0.0",
@@ -202,7 +202,7 @@ This project implements a full-featured e-commerce platform.
 			{
 				ID:            "frontend-wizard",
 				Name:          "Frontend Wizard",
-				Type:          "specialist", 
+				Type:          "specialist",
 				Provider:      "mock",
 				Model:         "mock-model",
 				Capabilities:  []string{"react", "typescript", "ui", "ux", "responsive"},
@@ -228,29 +228,29 @@ This project implements a full-featured e-commerce platform.
 
 	// Step 9: Process commission through full pipeline
 	fmt.Printf("\n🚀 Step 9: Processing commission through FULL refinement pipeline\n")
-	
+
 	startTime := time.Now()
 	result, err := integrationService.ProcessCommissionToTasks(ctx, commission, guildConfig)
 	processingTime := time.Since(startTime)
-	
+
 	require.NoError(t, err)
 	require.NotNil(t, result)
 	fmt.Printf("  ✓ Commission processed in %v\n", processingTime)
 
 	// Step 10: Verify comprehensive results
 	fmt.Printf("\n✅ Step 10: Verifying pipeline results\n")
-	
+
 	// Check refined commission
 	assert.NotNil(t, result.RefinedCommission)
 	assert.Equal(t, commission.ID, result.RefinedCommission.CommissionID)
 	assert.NotNil(t, result.RefinedCommission.Structure)
 	fmt.Printf("  ✓ Commission refined successfully\n")
-	
+
 	// Check file structure was created
 	assert.NotNil(t, result.RefinedCommission.Structure)
 	assert.NotEmpty(t, result.RefinedCommission.Structure.Files)
 	fmt.Printf("  ✓ File structure generated with %d files\n", len(result.RefinedCommission.Structure.Files))
-	
+
 	// Verify files were written to disk
 	objectivesDir := filepath.Join(tempDir, ".guild", "objectives", "refined", commission.ID)
 	entries, err := os.ReadDir(objectivesDir)
@@ -260,11 +260,11 @@ This project implements a full-featured e-commerce platform.
 			fmt.Printf("    - %s\n", entry.Name())
 		}
 	}
-	
+
 	// Check tasks were created
 	assert.Equal(t, 5, len(result.Tasks), "Should create 5 tasks from mock response")
 	fmt.Printf("  ✓ Created %d kanban tasks\n", len(result.Tasks))
-	
+
 	// Verify task details and assignments
 	for i, task := range result.Tasks {
 		assert.NotEmpty(t, task.ID)
@@ -272,59 +272,59 @@ This project implements a full-featured e-commerce platform.
 		assert.NotEmpty(t, task.Description)
 		assert.Equal(t, kanban.StatusBacklog, task.Status)
 		assert.NotEmpty(t, task.AssignedTo, "Task should be assigned to an artisan")
-		
+
 		// Check metadata
 		assert.Contains(t, task.Metadata, "commission_id")
 		assert.Equal(t, commission.ID, task.Metadata["commission_id"])
 		assert.Contains(t, task.Metadata, "required_capabilities")
 		assert.Contains(t, task.Metadata, "original_category")
-		
+
 		fmt.Printf("    Task %d: %s\n", i+1, task.Title)
 		fmt.Printf("      - Priority: %s\n", task.Priority)
 		fmt.Printf("      - Assigned: %s\n", task.AssignedTo)
 		fmt.Printf("      - Category: %s\n", task.Metadata["original_category"])
 		fmt.Printf("      - Estimate: %.1f hours\n", task.EstimatedHours)
-		
+
 		// Verify task exists in kanban
 		kanbanTask, err := kanbanManager.GetTask(ctx, task.ID)
 		assert.NoError(t, err)
 		assert.Equal(t, task.Title, kanbanTask.Title)
 	}
-	
+
 	// Check artisan assignments match capabilities
 	backendTasks := result.GetTasksByArtisan("backend-master")
 	frontendTasks := result.GetTasksByArtisan("frontend-wizard")
 	fullstackTasks := result.GetTasksByArtisan("fullstack-generalist")
-	
+
 	fmt.Printf("\n  📊 Task Distribution:\n")
 	fmt.Printf("    - Backend Master: %d tasks\n", len(backendTasks))
 	fmt.Printf("    - Frontend Wizard: %d tasks\n", len(frontendTasks))
 	fmt.Printf("    - Fullstack Generalist: %d tasks\n", len(fullstackTasks))
-	
+
 	// Verify intelligent assignment based on capabilities
 	for _, task := range backendTasks {
 		category := task.Metadata["original_category"]
-		assert.Contains(t, []string{"backend", "database"}, category, 
+		assert.Contains(t, []string{"backend", "database"}, category,
 			"Backend tasks should be assigned to backend master")
 	}
-	
+
 	for _, task := range frontendTasks {
 		category := task.Metadata["original_category"]
 		assert.Equal(t, "frontend", category,
 			"Frontend tasks should be assigned to frontend wizard")
 	}
-	
+
 	// Check completion metrics
 	assert.Equal(t, 5, result.GetTaskCount())
 	assert.Equal(t, 3, result.GetAssignedArtisanCount())
-	
+
 	// Verify task dependencies were preserved
 	checkoutTask := findTaskByTitle(result.Tasks, "Implement Checkout Flow")
 	if checkoutTask != nil {
 		assert.Len(t, checkoutTask.Dependencies, 2, "Checkout should depend on 2 tasks")
 		fmt.Printf("  ✓ Task dependencies preserved\n")
 	}
-	
+
 	fmt.Printf("\n🎉 FULL commission refinement pipeline completed successfully!\n")
 	fmt.Printf("   The Guild Framework MVP is ready to orchestrate complex work!\n")
 }
@@ -347,7 +347,7 @@ func TestCommissionPipelineErrorHandling(t *testing.T) {
 		Title: "Test Commission",
 		Description: "Test",
 	}
-	
+
 	guildConfig := &config.GuildConfig{
 		Name: "Test Guild",
 		Agents: []config.AgentConfig{
@@ -394,7 +394,7 @@ func TestLayeredPromptIntegration(t *testing.T) {
 
 	// Create service and process commission
 	service, _ := orchestrator.NewCommissionIntegrationService(reg)
-	
+
 	commission := manager.Commission{
 		Title: "Test Layered Prompts",
 		Description: "Verify prompt layers",

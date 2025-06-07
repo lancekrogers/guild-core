@@ -74,7 +74,7 @@ web-app, task-management, react, nodejs, authentication, api, database
 # 🔗 Related
 
 - Web application development best practices
-- React component architecture patterns  
+- React component architecture patterns
 - Node.js API security guidelines
 - Database design for task management systems
 
@@ -156,7 +156,7 @@ See the implementation plans in the implementation/ directory for detailed techn
 	// Set up prompts with realistic Guild Master system prompt
 	// Note: The prompt registry is not used directly - the integration service gets its prompt manager from the component registry
 	// promptRegistry := prompts.NewPromptRegistry()
-	
+
 	// Register the actual Guild Master refinement prompt that guides LLM behavior
 	/*
 	guildMasterPrompt := `You are a Guild Master for the Guild Framework, responsible for refining commissions into detailed implementation plans.
@@ -379,13 +379,13 @@ func setupTestRegistry(t *testing.T) registry.ComponentRegistry {
 // setupSQLiteStorage initializes SQLite storage for the test registry
 func setupSQLiteStorage(reg registry.ComponentRegistry) error {
 	ctx := context.Background()
-	
+
 	// Initialize SQLite storage for tests
 	storageReg, memoryStoreAdapter, err := storage.InitializeSQLiteStorageForTests(ctx)
 	if err != nil {
 		return err
 	}
-	
+
 	// Create default campaign that task bridge expects
 	campaignRepo := storageReg.GetCampaignRepository()
 	if campaignRepo != nil {
@@ -403,7 +403,7 @@ func setupSQLiteStorage(reg registry.ComponentRegistry) error {
 			}
 		}
 	}
-	
+
 	// Cast to concrete registry to access SetStorageRegistry method
 	if defaultReg, ok := reg.(*registry.DefaultComponentRegistry); ok {
 		// Convert memory store adapter to the expected interface
@@ -413,13 +413,13 @@ func setupSQLiteStorage(reg registry.ComponentRegistry) error {
 				storageRegistry: storageReg,
 				memoryStore:     memStore,
 			}
-			
+
 			defaultReg.SetStorageRegistry(sqliteStorageReg, memStore)
 			return nil
 		}
 		return fmt.Errorf("memory store adapter does not implement expected interface")
 	}
-	
+
 	return fmt.Errorf("registry does not support SQLite initialization")
 }
 
@@ -455,7 +455,7 @@ func (t *testSQLiteStorageRegistry) GetCommissionRepository() registry.Commissio
 	if storageCommissionRepo == nil {
 		return nil
 	}
-	
+
 	// Create an adapter that implements registry.CommissionRepository interface
 	return &testCommissionRepositoryAdapter{
 		storageRepo: storageCommissionRepo,
@@ -561,7 +561,7 @@ func (a *testCommissionRepositoryAdapter) GetCommission(ctx context.Context, id 
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Convert storage.Commission to registry.Commission
 	return &registry.Commission{
 		ID:          storageCommission.ID,
@@ -588,7 +588,7 @@ func (a *testCommissionRepositoryAdapter) ListCommissionsByCampaign(ctx context.
 	if err != nil {
 		return nil, err
 	}
-	
+
 	registryCommissions := make([]*registry.Commission, len(storageCommissions))
 	for i, sc := range storageCommissions {
 		registryCommissions[i] = &registry.Commission{
@@ -759,13 +759,13 @@ func (a *testTaskRepositoryAdapter) DeleteTask(ctx context.Context, id string) e
 func (a *testTaskRepositoryAdapter) ListTasksByBoard(ctx context.Context, boardID string) ([]interface{}, error) {
 	// For the test, we need to handle both board-based and commission-based queries
 	// The kanban system uses board IDs, but tasks might be stored with commission IDs
-	
+
 	// First try to get tasks by board ID
 	tasks, err := a.storageRepo.ListTasksByBoard(ctx, boardID)
 	if err != nil && !strings.Contains(err.Error(), "not found") {
 		return nil, err
 	}
-	
+
 	// If no tasks found by board ID, try using it as a commission ID pattern
 	// This handles the case where boardID might be "commission-board" but tasks are stored with specific commission IDs
 	if len(tasks) == 0 {
@@ -774,7 +774,7 @@ func (a *testTaskRepositoryAdapter) ListTasksByBoard(ctx context.Context, boardI
 		if err != nil {
 			return nil, err
 		}
-		
+
 		for _, task := range allTasks {
 			// Include tasks that either match the board ID or have a related commission ID
 			if task.BoardID != nil && *task.BoardID == boardID {
@@ -785,7 +785,7 @@ func (a *testTaskRepositoryAdapter) ListTasksByBoard(ctx context.Context, boardI
 			}
 		}
 	}
-	
+
 	result := make([]interface{}, len(tasks))
 	for i, task := range tasks {
 		result[i] = task

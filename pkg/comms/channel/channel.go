@@ -126,7 +126,7 @@ func (tr *topicRegistry) run() {
 			// Match exact topic and pattern subscriptions (simple implementation)
 			for pattern, subs := range tr.subscribers {
 				// Basic pattern matching - exact match or prefix match with wildcard
-				if pattern == pub.topic || (pattern != "" && pattern[len(pattern)-1] == '#' && 
+				if pattern == pub.topic || (pattern != "" && pattern[len(pattern)-1] == '#' &&
 					len(pattern) > 1 && pub.topic[:len(pattern)-1] == pattern[:len(pattern)-1]) {
 					for _, sub := range subs {
 						// Don't block on slow subscribers, just send if possible

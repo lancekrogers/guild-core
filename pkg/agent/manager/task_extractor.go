@@ -95,7 +95,7 @@ func (te *TaskExtractor) ExtractTasks(ctx context.Context, refinedCommission *Re
 			WithOperation("ExtractTasks").
 			WithDetails("commission_id", refinedCommission.CommissionID)
 	}
-	
+
 	// Call the LLM to extract tasks
 	response, err := te.artisanClient.Complete(ctx, ArtisanRequest{
 		SystemPrompt: prompt,
@@ -109,7 +109,7 @@ func (te *TaskExtractor) ExtractTasks(ctx context.Context, refinedCommission *Re
 			WithOperation("ExtractTasks").
 			WithDetails("commission_id", refinedCommission.CommissionID)
 	}
-	
+
 	// Parse the JSON response
 	var result ExtractionResult
 	if err := json.Unmarshal([]byte(response.Content), &result); err != nil {
@@ -130,10 +130,10 @@ func (te *TaskExtractor) ExtractTasks(ctx context.Context, refinedCommission *Re
 				WithDetails("json_length", len(jsonContent))
 		}
 	}
-	
+
 	// Validate and enhance the result
 	te.validateAndEnhanceResult(&result, refinedCommission)
-	
+
 	return &result, nil
 }
 
@@ -141,7 +141,7 @@ func (te *TaskExtractor) ExtractTasks(ctx context.Context, refinedCommission *Re
 func (te *TaskExtractor) buildExtractionPrompt(ctx context.Context, refinedCommission *RefinedCommission) (string, error) {
 	// Prepare the prompt data
 	promptData := te.preparePromptData(refinedCommission)
-	
+
 	// Load prompt templates
 	baseLayer, err := te.loadPromptTemplate(ctx, "internal/prompts/agent/extraction/base_layer.md")
 	if err != nil {
@@ -149,47 +149,47 @@ func (te *TaskExtractor) buildExtractionPrompt(ctx context.Context, refinedCommi
 			WithComponent("manager").
 			WithOperation("buildExtractionPrompt")
 	}
-	
+
 	guildLayer, err := te.loadPromptTemplate(ctx, "internal/prompts/agent/extraction/guild_layer.md")
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load guild layer").
 			WithComponent("manager").
 			WithOperation("buildExtractionPrompt")
 	}
-	
+
 	domainLayer, err := te.loadPromptTemplate(ctx, "internal/prompts/agent/extraction/domain_layer.md")
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load domain layer").
 			WithComponent("manager").
 			WithOperation("buildExtractionPrompt")
 	}
-	
+
 	contextLayer, err := te.loadPromptTemplate(ctx, "internal/prompts/agent/extraction/context_layer.md")
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load context layer").
 			WithComponent("manager").
 			WithOperation("buildExtractionPrompt")
 	}
-	
+
 	contentLayer, err := te.loadPromptTemplate(ctx, "internal/prompts/agent/extraction/content_layer.md")
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load content layer").
 			WithComponent("manager").
 			WithOperation("buildExtractionPrompt")
 	}
-	
+
 	executionLayer, err := te.loadPromptTemplate(ctx, "internal/prompts/agent/extraction/execution_layer.md")
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load execution layer").
 			WithComponent("manager").
 			WithOperation("buildExtractionPrompt")
 	}
-	
+
 	// Apply template data to variable layers
 	domainLayer = te.renderTemplate(domainLayer, promptData)
 	contextLayer = te.renderTemplate(contextLayer, promptData)
 	contentLayer = te.renderTemplate(contentLayer, promptData)
-	
+
 	// Concatenate all layers in order
 	return te.concatenatePrompts([]string{
 		baseLayer,
@@ -208,22 +208,22 @@ func (te *TaskExtractor) preparePromptData(refinedCommission *RefinedCommission)
 	if dt, ok := refinedCommission.Metadata["domain"].(string); ok {
 		domainType = dt
 	}
-	
+
 	// Get commission title
 	title := fmt.Sprintf("Commission %s", refinedCommission.CommissionID)
 	if t, ok := refinedCommission.Metadata["original_title"].(string); ok {
 		title = t
 	}
-	
+
 	// Combine all file contents
 	var refinedContent string
 	for _, file := range refinedCommission.Structure.Files {
 		refinedContent += fmt.Sprintf("## File: %s\n\n%s\n\n", file.Path, file.Content)
 	}
-	
+
 	// Build domain context based on type
 	domainContext := te.getDomainContext(domainType)
-	
+
 	return map[string]interface{}{
 		"DomainType":       domainType,
 		"DomainContext":    domainContext,
@@ -244,21 +244,21 @@ func (te *TaskExtractor) getDomainContext(domainType string) string {
 - Database design and migrations
 - Deployment and hosting configuration
 - Testing at multiple levels (unit, integration, e2e)`,
-		
+
 		"cli-tool": `CLI tools typically include:
 - Command parsing and validation
 - Core functionality implementation
 - Configuration management
 - Output formatting and user feedback
 - Installation and distribution`,
-		
+
 		"library": `Libraries typically include:
 - Core API design and implementation
 - Documentation and examples
 - Testing and benchmarks
 - Version management and compatibility
 - Distribution and packaging`,
-		
+
 		"microservice": `Microservices typically include:
 - Service API definition
 - Business logic implementation
@@ -266,7 +266,7 @@ func (te *TaskExtractor) getDomainContext(domainType string) string {
 - Data persistence and caching
 - Monitoring and observability
 - Container and orchestration setup`,
-		
+
 		"general": `Software projects typically include:
 - Architecture and design
 - Core functionality implementation
@@ -274,7 +274,7 @@ func (te *TaskExtractor) getDomainContext(domainType string) string {
 - Documentation
 - Deployment and operations`,
 	}
-	
+
 	if context, exists := contexts[domainType]; exists {
 		return context
 	}
@@ -312,7 +312,7 @@ func (te *TaskExtractor) validateAndEnhanceResult(result *ExtractionResult, refi
 		result.ExtractionMetadata.ExtractedAt = time.Now().UTC().Format(time.RFC3339)
 	}
 	result.ExtractionMetadata.TotalTasks = len(result.Tasks)
-	
+
 	// Validate task IDs are unique
 	idMap := make(map[string]bool)
 	for i, task := range result.Tasks {
@@ -322,7 +322,7 @@ func (te *TaskExtractor) validateAndEnhanceResult(result *ExtractionResult, refi
 		}
 		idMap[task.ID] = true
 	}
-	
+
 	// Ensure all tasks have required fields
 	for i := range result.Tasks {
 		if result.Tasks[i].Category == "" {
@@ -361,20 +361,20 @@ func extractJSON(content string) string {
 			return content[start:end+1]
 		}
 	}
-	
+
 	// Skip past the marker
 	jsonStart := strings.Index(content[start:], "\n")
 	if jsonStart == -1 {
 		return ""
 	}
 	start += jsonStart + 1
-	
+
 	// Find the closing marker
 	end := strings.Index(content[start:], "```")
 	if end == -1 {
 		return ""
 	}
-	
+
 	return strings.TrimSpace(content[start:start+end])
 }
 
@@ -388,7 +388,7 @@ func (et *ExtractedTask) ConvertToTaskInfo() TaskInfo {
 		category = parts[0]
 		number = parts[1]
 	}
-	
+
 	// Convert estimated hours to string
 	estimate := ""
 	if et.EstimatedHours != nil {
@@ -401,7 +401,7 @@ func (et *ExtractedTask) ConvertToTaskInfo() TaskInfo {
 			estimate = fmt.Sprintf("%.0fw", hours/40)
 		}
 	}
-	
+
 	return TaskInfo{
 		ID:           et.ID,
 		Category:     category,

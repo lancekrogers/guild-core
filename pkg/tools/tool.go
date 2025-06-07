@@ -3,7 +3,7 @@ package tools
 import (
 	"context"
 	"fmt"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/tools"
 )
@@ -18,7 +18,7 @@ type ToolResult = tools.ToolResult
 type ToolRegistry struct {
 	// Embed the original tool registry
 	*tools.ToolRegistry
-	
+
 	// Tool costs (tool name -> cost per use)
 	toolCosts map[string]float64
 }
@@ -43,7 +43,7 @@ func DefaultToolRegistryFactory() Registry {
 
 // RegisterTool registers a tool with the registry (implements Registry interface)
 func (r *ToolRegistry) RegisterTool(name string, tool Tool) error {
-	// The underlying registry uses the tool's Name() method, 
+	// The underlying registry uses the tool's Name() method,
 	// so we validate that it matches the provided name
 	if tool.Name() != name {
 		return fmt.Errorf("tool name mismatch: provided '%s', tool reports '%s'", name, tool.Name())
@@ -109,7 +109,7 @@ func (r *ToolRegistry) RegisterToolWithCost(tool Tool, costPerUse float64) error
 			WithDetails("tool_name", tool.Name()).
 			WithDetails("cost_per_use", fmt.Sprintf("%.2f", costPerUse))
 	}
-	
+
 	r.toolCosts[tool.Name()] = costPerUse
 	return nil
 }
@@ -132,7 +132,7 @@ func (r *ToolRegistry) SetToolCost(toolName string, cost float64) {
 func (r *ToolRegistry) ExecuteToolWithCostTracking(ctx context.Context, name string, input string) (*ToolResult, float64, error) {
 	result, err := r.ExecuteTool(ctx, name, input)
 	cost := r.GetToolCost(name)
-	
+
 	return result, cost, err
 }
 
@@ -145,6 +145,6 @@ func (r *ToolRegistry) ExecuteToolWithParams(ctx context.Context, name string, p
 func (r *ToolRegistry) ExecuteToolWithParamsAndCostTracking(ctx context.Context, name string, params map[string]interface{}) (*ToolResult, float64, error) {
 	result, err := r.ExecuteToolWithParams(ctx, name, params)
 	cost := r.GetToolCost(name)
-	
+
 	return result, cost, err
 }

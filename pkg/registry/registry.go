@@ -30,7 +30,7 @@ type DefaultComponentRegistry struct {
 type SQLiteStorageRegistry struct {
 	registry storage.StorageRegistry
 	memoryStore MemoryStore
-	
+
 	// Kanban adapters to bridge interface{} expectations
 	taskAdapter       *storage.KanbanTaskRepositoryAdapter
 	boardAdapter      *storage.KanbanBoardRepositoryAdapter
@@ -60,7 +60,7 @@ func (a *campaignRepositoryAdapter) GetCampaign(ctx context.Context, id string) 
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Convert storage.Campaign to registry.Campaign
 	return &Campaign{
 		ID:        storageCampaign.ID,
@@ -84,7 +84,7 @@ func (a *campaignRepositoryAdapter) ListCampaigns(ctx context.Context) ([]*Campa
 	if err != nil {
 		return nil, err
 	}
-	
+
 	campaigns := make([]*Campaign, 0, len(storageCampaigns))
 	for _, sc := range storageCampaigns {
 		campaigns = append(campaigns, &Campaign{
@@ -123,7 +123,7 @@ func (a *commissionRepositoryAdapter) GetCommission(ctx context.Context, id stri
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Convert storage.Commission to registry.Commission
 	return &Commission{
 		ID:          storageCommission.ID,
@@ -150,7 +150,7 @@ func (a *commissionRepositoryAdapter) ListCommissionsByCampaign(ctx context.Cont
 	if err != nil {
 		return nil, err
 	}
-	
+
 	commissions := make([]*Commission, 0, len(storageCommissions))
 	for _, sc := range storageCommissions {
 		commissions = append(commissions, &Commission{
@@ -189,7 +189,7 @@ func (a *promptChainRepositoryAdapter) GetChain(ctx context.Context, id string) 
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Convert storage.PromptChain to registry.PromptChain
 	chain := &PromptChain{
 		ID:        storageChain.ID,
@@ -199,7 +199,7 @@ func (a *promptChainRepositoryAdapter) GetChain(ctx context.Context, id string) 
 		UpdatedAt: storageChain.UpdatedAt,
 		Messages:  make([]*PromptChainMessage, 0, len(storageChain.Messages)),
 	}
-	
+
 	// Convert messages
 	for _, msg := range storageChain.Messages {
 		chain.Messages = append(chain.Messages, &PromptChainMessage{
@@ -212,7 +212,7 @@ func (a *promptChainRepositoryAdapter) GetChain(ctx context.Context, id string) 
 			TokenUsage: msg.TokenUsage,
 		})
 	}
-	
+
 	return chain, nil
 }
 
@@ -235,7 +235,7 @@ func (a *promptChainRepositoryAdapter) GetChainsByAgent(ctx context.Context, age
 	if err != nil {
 		return nil, err
 	}
-	
+
 	chains := make([]*PromptChain, 0, len(storageChains))
 	for _, sc := range storageChains {
 		chains = append(chains, &PromptChain{
@@ -254,7 +254,7 @@ func (a *promptChainRepositoryAdapter) GetChainsByTask(ctx context.Context, task
 	if err != nil {
 		return nil, err
 	}
-	
+
 	chains := make([]*PromptChain, 0, len(storageChains))
 	for _, sc := range storageChains {
 		chains = append(chains, &PromptChain{
@@ -300,7 +300,7 @@ func (a *taskRepositoryAdapter) GetTask(ctx context.Context, id string) (*Storag
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Convert storage.Task to registry.StorageTask
 	return &StorageTask{
 		ID:              storageTask.ID,
@@ -345,7 +345,7 @@ func (a *taskRepositoryAdapter) ListTasks(ctx context.Context) ([]*StorageTask, 
 	if err != nil {
 		return nil, err
 	}
-	
+
 	tasks := make([]*StorageTask, 0, len(storageTasks))
 	for _, st := range storageTasks {
 		tasks = append(tasks, &StorageTask{
@@ -372,7 +372,7 @@ func (a *taskRepositoryAdapter) ListTasksByStatus(ctx context.Context, status st
 	if err != nil {
 		return nil, err
 	}
-	
+
 	tasks := make([]*StorageTask, 0, len(storageTasks))
 	for _, st := range storageTasks {
 		tasks = append(tasks, &StorageTask{
@@ -399,7 +399,7 @@ func (a *taskRepositoryAdapter) ListTasksByCommission(ctx context.Context, commi
 	if err != nil {
 		return nil, err
 	}
-	
+
 	tasks := make([]*StorageTask, 0, len(storageTasks))
 	for _, st := range storageTasks {
 		tasks = append(tasks, &StorageTask{
@@ -426,7 +426,7 @@ func (a *taskRepositoryAdapter) ListTasksForKanban(ctx context.Context, commissi
 	if err != nil {
 		return nil, err
 	}
-	
+
 	tasks := make([]*StorageTask, 0, len(storageTasks))
 	for _, st := range storageTasks {
 		tasks = append(tasks, &StorageTask{
@@ -485,7 +485,7 @@ func (a *taskRepositoryAdapter) GetTaskHistory(ctx context.Context, taskID strin
 	if err != nil {
 		return nil, err
 	}
-	
+
 	events := make([]*TaskEvent, 0, len(storageEvents))
 	for _, se := range storageEvents {
 		events = append(events, &TaskEvent{
@@ -507,7 +507,7 @@ func (a *taskRepositoryAdapter) GetAgentWorkload(ctx context.Context) ([]*AgentW
 	if err != nil {
 		return nil, err
 	}
-	
+
 	workloads := make([]*AgentWorkload, 0, len(storageWorkloads))
 	for _, sw := range storageWorkloads {
 		workloads = append(workloads, &AgentWorkload{
@@ -546,7 +546,7 @@ func (a *agentRepositoryAdapter) GetAgent(ctx context.Context, id string) (*Stor
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Convert storage.Agent to registry.StorageAgent
 	return &StorageAgent{
 		ID:             storageAgent.ID,
@@ -585,7 +585,7 @@ func (a *agentRepositoryAdapter) ListAgents(ctx context.Context) ([]*StorageAgen
 	if err != nil {
 		return nil, err
 	}
-	
+
 	agents := make([]*StorageAgent, 0, len(storageAgents))
 	for _, sa := range storageAgents {
 		agents = append(agents, &StorageAgent{
@@ -608,7 +608,7 @@ func (a *agentRepositoryAdapter) ListAgentsByType(ctx context.Context, agentType
 	if err != nil {
 		return nil, err
 	}
-	
+
 	agents := make([]*StorageAgent, 0, len(storageAgents))
 	for _, sa := range storageAgents {
 		agents = append(agents, &StorageAgent{
@@ -808,7 +808,7 @@ func (r *DefaultComponentRegistry) SetStorageRegistry(storageReg StorageRegistry
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	r.storageRegistry = storageReg
-	
+
 	// Also set the memory store in the storage registry if it's the default type
 	if defaultStorageReg, ok := r.storageRegistry.(*DefaultStorageRegistry); ok {
 		defaultStorageReg.SetMemoryStore(memoryStore)
@@ -929,7 +929,7 @@ func (r *DefaultComponentRegistry) initializeAgents(ctx context.Context) error {
 				WithComponent("registry").
 				WithOperation("initializeAgents")
 		}
-		
+
 		// Register default agent type factory
 		if r.config.Agents.DefaultType != "" {
 			err = agentReg.RegisterAgentType(r.config.Agents.DefaultType, agentFactory)
@@ -939,7 +939,7 @@ func (r *DefaultComponentRegistry) initializeAgents(ctx context.Context) error {
 					WithOperation("initializeAgentRegistry")
 			}
 		}
-		
+
 		// Load agents from guild configuration if available
 		if err := r.loadGuildAgents(ctx, agentReg); err != nil {
 			// Log warning but don't fail - guild config is optional
@@ -957,7 +957,7 @@ func (r *DefaultComponentRegistry) initializeTools(ctx context.Context) error {
 		// This is where you'd integrate with your existing tool implementations
 		_ = toolName // Suppress unused variable warning
 	}
-	
+
 	// Register basic tools with cost information
 	if toolReg, ok := r.toolRegistry.(*DefaultToolRegistry); ok {
 		if err := toolReg.RegisterBasicTools(); err != nil {
@@ -966,7 +966,7 @@ func (r *DefaultComponentRegistry) initializeTools(ctx context.Context) error {
 				WithOperation("initializeTools")
 		}
 	}
-	
+
 	return nil
 }
 
@@ -1038,7 +1038,7 @@ func (r *DefaultComponentRegistry) initializeStorage(ctx context.Context) error 
 }
 
 func (r *DefaultComponentRegistry) initializeSQLiteStorage(ctx context.Context, dbPath string) error {
-	
+
 	// Initialize SQLite storage using the storage package's initialization function
 	storageReg, memoryStoreAdapter, err := storage.InitializeSQLiteStorageForRegistry(ctx, dbPath)
 	if err != nil {
@@ -1047,7 +1047,7 @@ func (r *DefaultComponentRegistry) initializeSQLiteStorage(ctx context.Context, 
 			WithOperation("initializeSQLiteStorage").
 			WithDetails("dbPath", dbPath)
 	}
-	
+
 	// Replace the placeholder storage registry with the real one
 	// Cast to storage.StorageRegistry first, then wrap with our own interface
 	if sqliteReg, ok := storageReg.(storage.StorageRegistry); ok {
@@ -1056,7 +1056,7 @@ func (r *DefaultComponentRegistry) initializeSQLiteStorage(ctx context.Context, 
 		boardAdapter := storage.NewKanbanBoardRepositoryAdapter(sqliteReg.GetBoardRepository())
 		campaignAdapter := storage.NewKanbanCampaignRepositoryAdapter(sqliteReg.GetCampaignRepository())
 		commissionAdapter := storage.NewKanbanCommissionRepositoryAdapter(sqliteReg.GetCommissionRepository())
-		
+
 		r.storageRegistry = &SQLiteStorageRegistry{
 			registry: sqliteReg,
 			memoryStore: memoryStoreAdapter.(MemoryStore),
@@ -1070,19 +1070,19 @@ func (r *DefaultComponentRegistry) initializeSQLiteStorage(ctx context.Context, 
 			WithComponent("registry").
 			WithOperation("initializeSQLiteStorage")
 	}
-	
+
 	// SQLite storage registry already has the memory store set in the struct above
-	
+
 	return nil
 }
 
 func (r *DefaultComponentRegistry) initializeBoltDBStorage(ctx context.Context, dbPath string) error {
 	// Initialize legacy BoltDB storage
 	// This would use the existing memory package implementations
-	
+
 	_ = ctx // Context will be used when implementing BoltDB storage
 	_ = dbPath // Suppress unused variable warning
-	
+
 	// TODO: Initialize BoltDB storage for backward compatibility
 	return gerror.New(gerror.ErrCodeInternal, "BoltDB storage initialization not yet implemented", nil).
 		WithComponent("registry").
@@ -1143,7 +1143,7 @@ func (r *DefaultComponentRegistry) loadGuildAgents(ctx context.Context, agentReg
 			WithComponent("registry").
 			WithOperation("loadGuildAgents")
 	}
-	
+
 	// Load guild configuration
 	guildConfig, err := config.LoadGuildConfig((*projectCtx).GetRootPath())
 	if err != nil {
@@ -1151,7 +1151,7 @@ func (r *DefaultComponentRegistry) loadGuildAgents(ctx context.Context, agentReg
 			WithComponent("registry").
 			WithOperation("loadGuildAgents")
 	}
-	
+
 	// Register each agent with the registry
 	for _, agent := range guildConfig.Agents {
 		guildAgent := GuildAgentConfig{
@@ -1166,7 +1166,7 @@ func (r *DefaultComponentRegistry) loadGuildAgents(ctx context.Context, agentReg
 			CostMagnitude: agent.CostMagnitude,
 			ContextWindow: agent.ContextWindow,
 		}
-		
+
 		if err := agentReg.RegisterGuildAgent(guildAgent); err != nil {
 			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to register agent %s", agent.ID).
 				WithComponent("registry").
@@ -1174,7 +1174,7 @@ func (r *DefaultComponentRegistry) loadGuildAgents(ctx context.Context, agentReg
 				WithDetails("agentID", agent.ID)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -1182,7 +1182,7 @@ func (r *DefaultComponentRegistry) loadGuildAgents(ctx context.Context, agentReg
 func (r *DefaultComponentRegistry) GetAgentsByCost(maxCost int) []AgentInfo {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	if agentReg, ok := r.agentRegistry.(*DefaultAgentRegistry); ok {
 		return agentReg.GetAgentsByCost(maxCost)
 	}
@@ -1193,7 +1193,7 @@ func (r *DefaultComponentRegistry) GetAgentsByCost(maxCost int) []AgentInfo {
 func (r *DefaultComponentRegistry) GetCheapestAgentByCapability(capability string) (*AgentInfo, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	if agentReg, ok := r.agentRegistry.(*DefaultAgentRegistry); ok {
 		return agentReg.GetCheapestAgentByCapability(capability)
 	}
@@ -1206,7 +1206,7 @@ func (r *DefaultComponentRegistry) GetCheapestAgentByCapability(capability strin
 func (r *DefaultComponentRegistry) GetToolsByCost(maxCost int) []ToolInfo {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	if toolReg, ok := r.toolRegistry.(*DefaultToolRegistry); ok {
 		return toolReg.GetToolsByCost(maxCost)
 	}
@@ -1217,7 +1217,7 @@ func (r *DefaultComponentRegistry) GetToolsByCost(maxCost int) []ToolInfo {
 func (r *DefaultComponentRegistry) GetCheapestToolByCapability(capability string) (*ToolInfo, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	if toolReg, ok := r.toolRegistry.(*DefaultToolRegistry); ok {
 		return toolReg.GetCheapestToolByCapability(capability)
 	}
@@ -1230,7 +1230,7 @@ func (r *DefaultComponentRegistry) GetCheapestToolByCapability(capability string
 func (r *DefaultComponentRegistry) GetAgentsByCapability(capability string) []AgentInfo {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	if agentReg, ok := r.agentRegistry.(*DefaultAgentRegistry); ok {
 		return agentReg.GetAgentsByCapability(capability)
 	}

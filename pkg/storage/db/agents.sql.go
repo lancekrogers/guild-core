@@ -144,7 +144,7 @@ func (q *Queries) ListAgentsByType(ctx context.Context, type_ string) ([]Agent, 
 }
 
 const updateAgent = `-- name: UpdateAgent :exec
-UPDATE agents 
+UPDATE agents
 SET name = ?, type = ?, provider = ?, model = ?, capabilities = ?, tools = ?, cost_magnitude = ?
 WHERE id = ?
 `

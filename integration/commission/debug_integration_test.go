@@ -28,10 +28,10 @@ func TestDebugCommissionIntegration(t *testing.T) {
 	// Setup minimal registry
 	reg := registry.NewComponentRegistry()
 	ctx := context.Background()
-	
+
 	// First register the provider, then initialize
 	mockProvider := mock.NewProvider()
-	
+
 	// Setup response that should work
 	originalResponse := `## File: commission_refined.md
 
@@ -51,16 +51,16 @@ This is a simple commission.`
 
 	err = reg.Providers().RegisterProvider("mock", mockProvider)
 	require.NoError(t, err)
-	
+
 	// Setup memory store
 	dbPath := tempDir + "/debug.db"
 	store, err := boltdb.NewStore(dbPath)
 	require.NoError(t, err)
 	defer store.Close()
-	
+
 	err = reg.Memory().RegisterMemoryStore("default", store)
 	require.NoError(t, err)
-	
+
 	registryConfig := registry.Config{
 		Providers: registry.ProviderConfig{
 			DefaultProvider: "mock",
@@ -96,10 +96,10 @@ This is a simple commission.`
 	}
 
 	fmt.Printf("📤 Processing commission through integration service...\n")
-	
+
 	// Process commission - this should trigger the mock provider
 	result, err := service.ProcessCommissionToTasks(ctx, commission, guildConfig)
-	
+
 	fmt.Printf("\n📋 Results:\n")
 	if err != nil {
 		fmt.Printf("❌ Error: %v\n", err)
@@ -109,6 +109,6 @@ This is a simple commission.`
 			fmt.Printf("  %d. %s (ID: %s)\n", i+1, task.Title, task.ID)
 		}
 	}
-	
+
 	fmt.Printf("\n🏁 Debug test completed\n")
 }

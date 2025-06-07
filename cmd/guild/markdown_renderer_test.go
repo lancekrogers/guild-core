@@ -268,7 +268,7 @@ Second block:
 console.log("World");
 ` + "```",
 			validate: func(output string) bool {
-				return strings.Contains(output, "def hello") && 
+				return strings.Contains(output, "def hello") &&
 					   strings.Contains(output, "console.log") &&
 					   !strings.Contains(output, "```python") &&
 					   !strings.Contains(output, "```javascript")
@@ -353,8 +353,8 @@ func TestMarkdownRenderer_Render(t *testing.T) {
 			content: "# Header 1\n## Header 2\n### Header 3",
 			validate: func(output string) bool {
 				// Glamour will render headers with formatting
-				return strings.Contains(output, "Header 1") && 
-					   strings.Contains(output, "Header 2") && 
+				return strings.Contains(output, "Header 1") &&
+					   strings.Contains(output, "Header 2") &&
 					   strings.Contains(output, "Header 3")
 			},
 		},
@@ -369,8 +369,8 @@ func TestMarkdownRenderer_Render(t *testing.T) {
 			name:    "lists",
 			content: "- Item 1\n- Item 2\n  - Subitem",
 			validate: func(output string) bool {
-				return strings.Contains(output, "Item 1") && 
-					   strings.Contains(output, "Item 2") && 
+				return strings.Contains(output, "Item 1") &&
+					   strings.Contains(output, "Item 2") &&
 					   strings.Contains(output, "Subitem")
 			},
 		},
@@ -399,7 +399,7 @@ func TestMarkdownRenderer_Render(t *testing.T) {
 			name:    "blockquote",
 			content: "> This is a quote\n> With multiple lines",
 			validate: func(output string) bool {
-				return strings.Contains(output, "This is a quote") && 
+				return strings.Contains(output, "This is a quote") &&
 					   strings.Contains(output, "With multiple lines")
 			},
 		},
@@ -429,9 +429,9 @@ func TestMarkdownRenderer_Render(t *testing.T) {
 			name:    "complex nested markdown",
 			content: "# Title\n\nThis has **bold _nested italic_** text and `code`.\n\n```python\nprint('test')\n```",
 			validate: func(output string) bool {
-				return strings.Contains(output, "Title") && 
-					   strings.Contains(output, "bold") && 
-					   strings.Contains(output, "italic") && 
+				return strings.Contains(output, "Title") &&
+					   strings.Contains(output, "bold") &&
+					   strings.Contains(output, "italic") &&
 					   strings.Contains(output, "print")
 			},
 		},
@@ -578,7 +578,7 @@ func TestMarkdownRenderer_EdgeCases(t *testing.T) {
 			name:    "unicode content",
 			content: "# 🏰 Guild Framework\n\nWith **unicode** 中文 content",
 			check: func(output string) bool {
-				return strings.Contains(output, "Guild Framework") && 
+				return strings.Contains(output, "Guild Framework") &&
 					   strings.Contains(output, "中文")
 			},
 		},
@@ -586,8 +586,8 @@ func TestMarkdownRenderer_EdgeCases(t *testing.T) {
 			name:    "mixed line endings",
 			content: "Line 1\rLine 2\r\nLine 3\n",
 			check: func(output string) bool {
-				return strings.Contains(output, "Line 1") && 
-					   strings.Contains(output, "Line 2") && 
+				return strings.Contains(output, "Line 1") &&
+					   strings.Contains(output, "Line 2") &&
 					   strings.Contains(output, "Line 3")
 			},
 		},
@@ -595,8 +595,8 @@ func TestMarkdownRenderer_EdgeCases(t *testing.T) {
 			name:    "deeply nested markdown",
 			content: "**Bold with *italic and `code` inside***",
 			check: func(output string) bool {
-				return strings.Contains(output, "Bold") && 
-					   strings.Contains(output, "italic") && 
+				return strings.Contains(output, "Bold") &&
+					   strings.Contains(output, "italic") &&
 					   strings.Contains(output, "code")
 			},
 		},

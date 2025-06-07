@@ -47,7 +47,7 @@ func (d *taskDispatcher) RegisterAgent(agent agent.Agent) {
 	defer d.mu.Unlock()
 
 	d.agentPool[agent.GetID()] = agent
-	
+
 	// Emit agent added event
 	d.eventBus.Publish(Event{
 		Type:   EventType(EventAgentAdded),
@@ -66,7 +66,7 @@ func (d *taskDispatcher) UnregisterAgent(agentID string) {
 
 	delete(d.agentPool, agentID)
 	delete(d.activeAgents, agentID)
-	
+
 	// Emit agent removed event
 	d.eventBus.Publish(Event{
 		Type:   EventType(EventAgentRemoved),
@@ -98,7 +98,7 @@ func (d *taskDispatcher) DispatchTasks(ctx context.Context) error {
 	if len(tasks) == 0 {
 		return nil // No tasks to dispatch
 	}
-	
+
 	// Sort tasks by priority
 
 	// Find available agents
@@ -119,18 +119,18 @@ func (d *taskDispatcher) DispatchTasks(ctx context.Context) error {
 		}
 
 		agent := availableAgents[i]
-		
+
 		// Store task assignment
 		d.agentTasks[agent.GetID()] = task
 
 		// Mark the agent as active
 		d.activeAgents[agent.GetID()] = agent
-		
+
 		// Update the task in the kanban board
 		if err := d.kanbanManager.UpdateTaskStatus(ctx, task.ID, string(kanban.StatusInProgress), agent.GetID(), "Assigned to agent"); err != nil {
 			fmt.Printf("Error updating task status: %v\n", err)
 		}
-		
+
 		// Emit task assigned event
 		d.eventBus.Publish(Event{
 			Type:   EventType(EventTaskAssigned),
@@ -151,43 +151,43 @@ func (d *taskDispatcher) StartAgent(ctx context.Context, agentID string) error {
 	d.mu.Lock()
 	agent, exists := d.activeAgents[agentID]
 	d.mu.Unlock()
-	
+
 	if !exists {
 		return gerror.New(gerror.ErrCodeAgentNotFound, "agent not found or not active", nil).
 			WithComponent("orchestrator").
 			WithOperation("StartAgent").
 			WithDetails("agent_id", agentID)
 	}
-	
+
 	// Start the agent's execution in a goroutine
 	go func() {
 		// Create a new context with timeout
 		execCtx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
 		defer cancel()
-		
+
 		// Emit agent started event
 		d.eventBus.Publish(Event{
 			Type:   EventType(EventAgentStarted),
 			Source: "dispatcher",
 			Data:   map[string]interface{}{"agent_id": agentID},
 		})
-		
+
 		// Get the task assigned to this agent
 		task, hasTask := d.agentTasks[agentID]
 		taskRequest := "Execute assigned task"
 		if hasTask && task != nil {
 			taskRequest = fmt.Sprintf("Task: %s\nDescription: %s", task.Title, task.Description)
 		}
-		
+
 		// Execute the agent with the task details
 		_, err := agent.Execute(execCtx, taskRequest)
-		
+
 		// Agent execution completed
 		d.mu.Lock()
 		delete(d.activeAgents, agentID)
 		delete(d.agentTasks, agentID)
 		d.mu.Unlock()
-		
+
 		if err != nil {
 			// Emit agent failed event
 			d.eventBus.Publish(Event{
@@ -207,7 +207,7 @@ func (d *taskDispatcher) StartAgent(ctx context.Context, agentID string) error {
 			})
 		}
 	}()
-	
+
 	return nil
 }
 
@@ -215,12 +215,12 @@ func (d *taskDispatcher) StartAgent(ctx context.Context, agentID string) error {
 func (d *taskDispatcher) GetActiveAgents() []agent.Agent {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	
+
 	var agents []agent.Agent
 	for _, agent := range d.activeAgents {
 		agents = append(agents, agent)
 	}
-	
+
 	return agents
 }
 
@@ -228,14 +228,14 @@ func (d *taskDispatcher) GetActiveAgents() []agent.Agent {
 func (d *taskDispatcher) GetAvailableAgents() []agent.Agent {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	
+
 	var agents []agent.Agent
 	for id, agent := range d.agentPool {
 		if _, active := d.activeAgents[id]; !active {
 			agents = append(agents, agent)
 		}
 	}
-	
+
 	return agents
 }
 
@@ -248,21 +248,21 @@ func (d *taskDispatcher) ListAvailableAgents() []agent.Agent {
 func (d *taskDispatcher) Dispatch(ctx context.Context, task *kanban.Task) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	
+
 	// Find an available agent
 	for id, agent := range d.agentPool {
 		if _, active := d.activeAgents[id]; !active {
 			// Assign task to agent
 			d.activeAgents[id] = agent
 			d.agentTasks[id] = task
-			
+
 			// Start the agent
 			go d.StartAgent(ctx, id)
-			
+
 			return nil
 		}
 	}
-	
+
 	return gerror.New(gerror.ErrCodeNoAvailableAgent, "no available agents to handle task", nil).
 		WithComponent("orchestrator").
 		WithOperation("Dispatch").
@@ -273,7 +273,7 @@ func (d *taskDispatcher) Dispatch(ctx context.Context, task *kanban.Task) error 
 func (d *taskDispatcher) GetTaskStatus(ctx context.Context, taskID string) (TaskStatus, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	
+
 	// Find task in agent assignments
 	for agentID, task := range d.agentTasks {
 		if task.ID == taskID {
@@ -286,7 +286,7 @@ func (d *taskDispatcher) GetTaskStatus(ctx context.Context, taskID string) (Task
 			}, nil
 		}
 	}
-	
+
 	return TaskStatus{}, gerror.New(gerror.ErrCodeNotFound, "task not found", nil).
 		WithComponent("orchestrator").
 		WithOperation("GetTaskStatus").
@@ -297,13 +297,13 @@ func (d *taskDispatcher) GetTaskStatus(ctx context.Context, taskID string) (Task
 func (d *taskDispatcher) GetAgentStatus(agentID string) AgentStatus {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	
+
 	_, isActive := d.activeAgents[agentID]
 	currentTask := ""
 	if task, exists := d.agentTasks[agentID]; exists {
 		currentTask = task.ID
 	}
-	
+
 	return AgentStatus{
 		AgentID:      agentID,
 		Available:    !isActive,
@@ -323,7 +323,7 @@ func (d *taskDispatcher) Stop(ctx context.Context) error {
 func (d *taskDispatcher) Run(ctx context.Context, interval time.Duration) error {
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
-	
+
 	for {
 		select {
 		case <-ctx.Done():
@@ -333,7 +333,7 @@ func (d *taskDispatcher) Run(ctx context.Context, interval time.Duration) error 
 				// Log and continue
 				fmt.Printf("Error dispatching tasks: %v\n", err)
 			}
-			
+
 			// Start any agents that are ready
 			for _, agent := range d.GetActiveAgents() {
 				if _, isActive := d.activeAgents[agent.GetID()]; isActive {

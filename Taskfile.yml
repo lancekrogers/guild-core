@@ -75,7 +75,7 @@ tasks:
     desc: Run tests for specific packages
     cmds:
       - go test {{.GO_FLAGS}} {{.PACKAGE}}
-      
+
   test:coverage:
     desc: Run tests with coverage analysis
     cmds:
@@ -93,17 +93,17 @@ tasks:
       - mkdir -p ./coverage
       - |
         echo "Running coverage analysis on working packages only..."
-        
+
         # Initialize the coverage file with mode: set
         echo "mode: set" > ./coverage/working.out
-        
+
         # Manually specify the packages we know are working
         WORKING_PACKAGES=(
           "github.com/guild-ventures/guild-core/pkg/providers"
           "github.com/guild-ventures/guild-core/pkg/providers/openai"
           "github.com/guild-ventures/guild-core/tools"
         )
-        
+
         for pkg in "${WORKING_PACKAGES[@]}"; do
           echo "Testing $pkg"
           # Run test with coverage
@@ -115,14 +115,14 @@ tasks:
             echo "❌ $pkg failed"
           fi
         done
-        
+
         # Generate coverage report
         go tool cover -html=./coverage/working.out -o ./coverage/working.html
         COVERAGE=$(go tool cover -func=./coverage/working.out | grep total | awk '{print $3}')
         echo "Coverage report for working packages generated at ./coverage/working.html"
         echo "Total test coverage for working packages: $COVERAGE"
         rm -f ./coverage/temp.out
-      
+
   test:coverage:detailed:
     desc: Run tests with detailed coverage analysis by package
     cmds:
@@ -143,7 +143,7 @@ tasks:
         done
         echo "Detailed coverage by package saved to ./coverage/package_coverage.txt"
         cat ./coverage/package_coverage.txt
-        
+
   test:verify:
     desc: Verify test coverage for specific packages or files
     cmds:
@@ -153,23 +153,23 @@ tasks:
           echo "Usage: task test:verify PACKAGE=./pkg/your/package"
           exit 1
         fi
-        
+
         echo "Verifying test coverage for {{.PACKAGE}}..."
-        
+
         # Check for exported functions without tests
         mkdir -p ./coverage
         PACKAGE_PATH={{.PACKAGE}}
-        
+
         # Get all exported functions from the package
         echo "Exported functions in {{.PACKAGE}}:"
         EXPORTED_FUNCS=$(grep -r "^func [A-Z]" "$PACKAGE_PATH" --include="*.go" | grep -v "_test.go" | sed -E 's/.*func ([A-Z][a-zA-Z0-9]*).*/\1/' | sort | uniq)
         echo "$EXPORTED_FUNCS"
-        
+
         # Get all test functions for the package
         echo -e "\nTest functions in {{.PACKAGE}}:"
         TEST_FUNCS=$(grep -r "^func Test" "$PACKAGE_PATH" --include="*_test.go" | sed -E 's/.*func (Test[a-zA-Z0-9_]*).*/\1/' | sort | uniq)
         echo "$TEST_FUNCS"
-        
+
         # Check for exported functions without tests
         echo -e "\nPotentially untested functions:"
         for func in $EXPORTED_FUNCS; do
@@ -177,16 +177,16 @@ tasks:
             echo "- $func"
           fi
         done
-        
+
         # Run test with coverage
         echo -e "\nRunning tests with coverage for {{.PACKAGE}}..."
         go test {{.PACKAGE}} -coverprofile=./coverage/verify.out
         go tool cover -func=./coverage/verify.out
-        
+
         # Generate coverage report
         go tool cover -html=./coverage/verify.out -o ./coverage/verify.html
         echo "Coverage report generated at ./coverage/verify.html"
-  
+
   test:verify:all:
     desc: Verify test coverage for all working packages
     cmds:
@@ -198,13 +198,13 @@ tasks:
           "./pkg/providers/openai"
           "./tools"
         )
-        
+
         for pkg in "${WORKING_PACKAGES[@]}"; do
           echo "=== Verifying $pkg ==="
           task test:verify PACKAGE="$pkg"
           echo ""
         done
-  
+
   test:analyze:
     desc: Analyze test patterns and identify potential test quality issues
     cmds:
@@ -265,7 +265,7 @@ tasks:
           echo "Setup/teardown: $SETUP"
           echo ""
         done
-  
+
   test:coverage:badge:
     desc: Generate a test coverage badge SVG for working packages
     cmds:
@@ -273,14 +273,14 @@ tasks:
       - |
         # Initialize the coverage file with mode: set
         echo "mode: set" > ./coverage/working.out
-        
+
         # Manually specify the packages we know are working
         WORKING_PACKAGES=(
           "github.com/guild-ventures/guild-core/pkg/providers"
           "github.com/guild-ventures/guild-core/pkg/providers/openai"
           "github.com/guild-ventures/guild-core/tools"
         )
-        
+
         for pkg in "${WORKING_PACKAGES[@]}"; do
           echo "Testing $pkg"
           # Run test with coverage
@@ -292,10 +292,10 @@ tasks:
             echo "❌ $pkg failed"
           fi
         done
-        
+
         # Calculate coverage
         COVERAGE=$(go tool cover -func=./coverage/working.out | grep total | awk '{print $3}' | tr -d '%')
-        
+
         # Determine color based on coverage percentage
         if (( $(echo "$COVERAGE >= 80" | bc -l) )); then
             COLOR="brightgreen"
@@ -310,17 +310,17 @@ tasks:
         else
             COLOR="red"
         fi
-        
+
         # Create badge URL
         BADGE_URL="https://img.shields.io/badge/coverage-$COVERAGE%25-$COLOR"
-        
+
         # Download the badge SVG
         curl -s "$BADGE_URL" > ./coverage/coverage-badge.svg
-        
+
         echo "Coverage badge generated at ./coverage/coverage-badge.svg"
         echo "Add this to your README.md:"
         echo "[![Test Coverage](./coverage/coverage-badge.svg)](./coverage/working.html)"
-        
+
         # Cleanup
         rm -f ./coverage/temp.out
 
@@ -428,7 +428,7 @@ tasks:
           exit 1
         fi
         echo "✅ Binary exists"
-        
+
         # Test that the binary runs without crashing
         if {{.BIN_DIR}}/{{.MAIN_BIN}} --help > /dev/null 2>&1; then
           echo "✅ Binary runs and shows help"
@@ -436,7 +436,7 @@ tasks:
           echo "ERROR: Binary failed to run or show help"
           exit 1
         fi
-        
+
         echo "✅ Build verification complete"
 
   build:all:

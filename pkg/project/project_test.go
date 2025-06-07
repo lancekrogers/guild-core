@@ -13,7 +13,7 @@ func TestFindProjectRoot(t *testing.T) {
 	projectDir := filepath.Join(tempDir, "myproject")
 	subDir := filepath.Join(projectDir, "subdir", "deep")
 	guildDir := filepath.Join(projectDir, ".guild")
-	
+
 	// Create directories
 	if err := os.MkdirAll(subDir, 0755); err != nil {
 		t.Fatalf("Failed to create test directories: %v", err)
@@ -21,7 +21,7 @@ func TestFindProjectRoot(t *testing.T) {
 	if err := os.MkdirAll(guildDir, 0755); err != nil {
 		t.Fatalf("Failed to create .guild directory: %v", err)
 	}
-	
+
 	tests := []struct {
 		name      string
 		startPath string
@@ -47,16 +47,16 @@ func TestFindProjectRoot(t *testing.T) {
 			wantErr:   true,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			gotRoot, err := FindProjectRoot(tt.startPath)
-			
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("FindProjectRoot() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			
+
 			if err == nil && gotRoot != tt.wantRoot {
 				t.Errorf("FindProjectRoot() = %v, want %v", gotRoot, tt.wantRoot)
 			}
@@ -66,18 +66,18 @@ func TestFindProjectRoot(t *testing.T) {
 
 func TestIsInitialized(t *testing.T) {
 	tempDir := t.TempDir()
-	
+
 	// Test non-initialized directory
 	if IsInitialized(tempDir) {
 		t.Error("IsInitialized() returned true for non-initialized directory")
 	}
-	
+
 	// Create .guild directory
 	guildDir := filepath.Join(tempDir, ".guild")
 	if err := os.MkdirAll(guildDir, 0755); err != nil {
 		t.Fatalf("Failed to create .guild directory: %v", err)
 	}
-	
+
 	// Test initialized directory
 	if !IsInitialized(tempDir) {
 		t.Error("IsInitialized() returned false for initialized directory")
@@ -86,12 +86,12 @@ func TestIsInitialized(t *testing.T) {
 
 func TestInitialize(t *testing.T) {
 	tempDir := t.TempDir()
-	
+
 	// Test initialization
 	if err := Initialize(tempDir); err != nil {
 		t.Fatalf("Initialize() failed: %v", err)
 	}
-	
+
 	// Check that all expected directories were created
 	expectedDirs := []string{
 		".guild",
@@ -102,28 +102,28 @@ func TestInitialize(t *testing.T) {
 		".guild/agents",
 		".guild/objectives",
 	}
-	
+
 	for _, dir := range expectedDirs {
 		path := filepath.Join(tempDir, dir)
 		if _, err := os.Stat(path); os.IsNotExist(err) {
 			t.Errorf("Expected directory %s was not created", dir)
 		}
 	}
-	
+
 	// Check that expected files were created
 	expectedFiles := []string{
 		".guild/config.yaml",
 		".guild/.gitignore",
 		".guild/README.md",
 	}
-	
+
 	for _, file := range expectedFiles {
 		path := filepath.Join(tempDir, file)
 		if _, err := os.Stat(path); os.IsNotExist(err) {
 			t.Errorf("Expected file %s was not created", file)
 		}
 	}
-	
+
 	// Test that re-initialization fails
 	if err := Initialize(tempDir); err != ErrAlreadyInitialized {
 		t.Errorf("Expected ErrAlreadyInitialized, got %v", err)
@@ -132,7 +132,7 @@ func TestInitialize(t *testing.T) {
 
 func TestValidateProjectPath(t *testing.T) {
 	tempDir := t.TempDir()
-	
+
 	tests := []struct {
 		name    string
 		path    string
@@ -154,7 +154,7 @@ func TestValidateProjectPath(t *testing.T) {
 			wantErr: true,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := ValidateProjectPath(tt.path)
@@ -168,12 +168,12 @@ func TestValidateProjectPath(t *testing.T) {
 func TestContextMethods(t *testing.T) {
 	tempDir := t.TempDir()
 	guildDir := filepath.Join(tempDir, ".guild")
-	
+
 	ctx, err := NewContext(tempDir)
 	if err != nil {
 		t.Fatalf("NewContext() failed: %v", err)
 	}
-	
+
 	// Test all getter methods
 	tests := []struct {
 		name   string
@@ -188,7 +188,7 @@ func TestContextMethods(t *testing.T) {
 		{"GetAgentsPath", ctx.GetAgentsPath, filepath.Join(guildDir, "agents")},
 		{"GetObjectivesPath", ctx.GetObjectivesPath, filepath.Join(guildDir, "objectives")},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.getter(); got != tt.want {
@@ -200,34 +200,34 @@ func TestContextMethods(t *testing.T) {
 
 func TestContextPropagation(t *testing.T) {
 	tempDir := t.TempDir()
-	
+
 	projCtx, err := NewContext(tempDir)
 	if err != nil {
 		t.Fatalf("NewContext() failed: %v", err)
 	}
-	
+
 	// Test adding to context
 	ctx := context.Background()
 	ctxWithProject := WithContext(ctx, projCtx)
-	
+
 	// Test retrieving from context
 	retrieved, ok := FromContext(ctxWithProject)
 	if !ok {
 		t.Error("FromContext() failed to retrieve project context")
 	}
-	
+
 	if retrieved.GetRootPath() != projCtx.GetRootPath() {
-		t.Errorf("Retrieved context root path = %v, want %v", 
+		t.Errorf("Retrieved context root path = %v, want %v",
 			retrieved.GetRootPath(), projCtx.GetRootPath())
 	}
-	
+
 	// Test MustFromContext with valid context
 	mustCtx := MustFromContext(ctxWithProject)
 	if mustCtx.GetRootPath() != projCtx.GetRootPath() {
 		t.Errorf("MustFromContext() root path = %v, want %v",
 			mustCtx.GetRootPath(), projCtx.GetRootPath())
 	}
-	
+
 	// Test MustFromContext with invalid context (should panic)
 	defer func() {
 		if r := recover(); r == nil {

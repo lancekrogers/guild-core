@@ -16,12 +16,12 @@ func LoadPrompt(name string) (string, error) {
 	if !strings.HasSuffix(name, ".md") {
 		name = name + ".md"
 	}
-	
+
 	content, err := promptFiles.ReadFile(name)
 	if err != nil {
 		return "", fmt.Errorf("failed to load prompt %s: %w", name, err)
 	}
-	
+
 	// Skip the YAML frontmatter
 	contentStr := string(content)
 	if strings.HasPrefix(contentStr, "---") {
@@ -32,7 +32,7 @@ func LoadPrompt(name string) (string, error) {
 			contentStr = strings.TrimSpace(contentStr[endIndex+6:])
 		}
 	}
-	
+
 	return contentStr, nil
 }
 
@@ -49,13 +49,13 @@ func GetAvailablePrompts() ([]string, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to read prompt directory: %w", err)
 	}
-	
+
 	var prompts []string
 	for _, entry := range entries {
 		if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".md") {
 			prompts = append(prompts, strings.TrimSuffix(entry.Name(), ".md"))
 		}
 	}
-	
+
 	return prompts, nil
 }

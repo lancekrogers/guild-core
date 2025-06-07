@@ -18,7 +18,7 @@ SELECT * FROM tasks WHERE commission_id = ? ORDER BY created_at DESC;
 SELECT * FROM tasks WHERE board_id = ? ORDER BY created_at DESC;
 
 -- name: ListTasksForKanban :many
-SELECT 
+SELECT
     t.*,
     a.name as agent_name,
     a.type as agent_type
@@ -28,33 +28,33 @@ WHERE t.board_id = ?
 ORDER BY t.created_at;
 
 -- name: AssignTaskToAgent :exec
-UPDATE tasks 
+UPDATE tasks
 SET assigned_agent_id = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?;
 
 -- name: UpdateTaskStatus :exec
-UPDATE tasks 
+UPDATE tasks
 SET status = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?;
 
 -- name: UpdateTaskColumn :exec
-UPDATE tasks 
+UPDATE tasks
 SET column = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?;
 
 -- name: UpdateTask :exec
-UPDATE tasks 
+UPDATE tasks
 SET title = ?, description = ?, status = ?, column = ?, story_points = ?, metadata = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?;
 
 -- name: DeleteTask :exec
 DELETE FROM tasks WHERE id = ?;
 
--- name: DeleteTaskEvents :exec  
+-- name: DeleteTaskEvents :exec
 DELETE FROM task_events WHERE task_id = ?;
 
 -- name: GetAgentWorkload :many
-SELECT 
+SELECT
     a.id,
     a.name,
     COUNT(t.id) as task_count,
@@ -68,6 +68,6 @@ INSERT INTO task_events (task_id, agent_id, event_type, old_value, new_value, re
 VALUES (?, ?, ?, ?, ?, ?);
 
 -- name: GetTaskHistory :many
-SELECT * FROM task_events 
-WHERE task_id = ? 
+SELECT * FROM task_events
+WHERE task_id = ?
 ORDER BY created_at DESC;

@@ -77,21 +77,21 @@ func LoadConfig(loader *config.ConfigLoader) (Config, error) {
 
 	// Override with environment variables
 	envVars := config.LoadFromEnv("GUILD_CORPUS")
-	
+
 	if path, ok := envVars[EnvCorpusPath]; ok && path != "" {
 		cfg.CorpusPath = path
 	}
-	
+
 	if path, ok := envVars[EnvActivitiesPath]; ok && path != "" {
 		cfg.ActivitiesPath = path
 	}
-	
+
 	if sizeStr, ok := envVars[EnvMaxSizeBytes]; ok && sizeStr != "" {
 		if size, err := strconv.ParseInt(sizeStr, 10, 64); err == nil && size > 0 {
 			cfg.MaxSizeBytes = size
 		}
 	}
-	
+
 	if tagsStr, ok := envVars[EnvDefaultTags]; ok && tagsStr != "" {
 		// Parse comma-separated tags
 		cfg.DefaultTags = filepath.SplitList(tagsStr)

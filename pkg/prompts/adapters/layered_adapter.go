@@ -27,7 +27,7 @@ func (a *LayeredAdapter) RenderPrompt(ctx context.Context, name string, data int
 	if err != nil {
 		return "", err
 	}
-	
+
 	// TODO: Implement template rendering with data
 	// For now, just return the template
 	return template, nil
@@ -86,12 +86,12 @@ func (l *LayeredManagerAdapter) GetCompiledPrompt(ctx context.Context, config pr
 	turnCtx := layered.TurnContext{
 		// Map fields as needed
 	}
-	
+
 	layeredPrompt, err := l.mgr.BuildLayeredPrompt(ctx, config.AgentID, config.SessionID, turnCtx)
 	if err != nil {
 		return "", err
 	}
-	
+
 	return layeredPrompt.Compiled, nil
 }
 

@@ -6,25 +6,25 @@ type ProviderType string
 const (
 	// ProviderOpenAI represents the OpenAI provider
 	ProviderOpenAI ProviderType = "openai"
-	
+
 	// ProviderAnthropic represents the Anthropic provider
 	ProviderAnthropic ProviderType = "anthropic"
-	
+
 	// ProviderOllama represents the Ollama provider
 	ProviderOllama ProviderType = "ollama"
-	
+
 	// ProviderGoogle represents the Google Gemini provider
 	ProviderGoogle ProviderType = "google"
-	
+
 	// ProviderClaudeCode represents the Claude Code provider
 	ProviderClaudeCode ProviderType = "claude-code"
-	
+
 	// ProviderDeepSeek represents the DeepSeek provider
 	ProviderDeepSeek ProviderType = "deepseek"
-	
+
 	// ProviderDeepInfra represents the DeepInfra provider
 	ProviderDeepInfra ProviderType = "deepinfra"
-	
+
 	// ProviderOra represents the Ora provider
 	ProviderOra ProviderType = "ora"
 )

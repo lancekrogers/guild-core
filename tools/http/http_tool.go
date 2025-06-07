@@ -123,8 +123,8 @@ func (t *HTTPTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 	}
 
 	// Set default Content-Type for POST/PUT/PATCH if not provided
-	if (params.Method == "POST" || params.Method == "PUT" || params.Method == "PATCH") && 
-	   params.Body != "" && 
+	if (params.Method == "POST" || params.Method == "PUT" || params.Method == "PATCH") &&
+	   params.Body != "" &&
 	   req.Header.Get("Content-Type") == "" {
 		req.Header.Set("Content-Type", "application/json")
 	}

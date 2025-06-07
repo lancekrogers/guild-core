@@ -95,7 +95,7 @@ func TestSQLiteStorageIntegration(t *testing.T) {
 		require.NoError(t, err)
 
 		// 5. Verify the complete hierarchy by reading back
-		
+
 		// Get campaign
 		retrievedCampaign, err := campaignRepo.GetCampaign(ctx, campaign.ID)
 		require.NoError(t, err)
@@ -128,7 +128,7 @@ func TestSQLiteStorageIntegration(t *testing.T) {
 		assert.Equal(t, board.ID, *retrievedTask2.BoardID)
 
 		// 6. Test relationship queries
-		
+
 		// List tasks by commission
 		commissionTasks, err := taskRepo.ListTasksByCommission(ctx, commission.ID)
 		require.NoError(t, err)
@@ -241,7 +241,7 @@ func TestSQLiteStorageIntegration(t *testing.T) {
 		assert.NotNil(t, retrievedData)
 		assert.Contains(t, string(retrievedData), "value1")
 		assert.Contains(t, string(retrievedData), "42")
-		
+
 		// Test non-existent key
 		_, err = memStore.Get(ctx, "test-bucket", "non-existent")
 		assert.Error(t, err) // Should return error for non-existent key

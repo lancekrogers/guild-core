@@ -31,20 +31,20 @@ type Logger interface {
 	Info(msg string, fields ...any)
 	Warn(msg string, fields ...any)
 	Error(msg string, fields ...any)
-	
+
 	// Context-aware logging
 	DebugContext(ctx context.Context, msg string, fields ...any)
 	InfoContext(ctx context.Context, msg string, fields ...any)
 	WarnContext(ctx context.Context, msg string, fields ...any)
 	ErrorContext(ctx context.Context, msg string, fields ...any)
-	
+
 	// With methods for adding persistent fields
 	With(fields ...any) Logger
 	WithContext(ctx context.Context) Logger
 	WithError(err error) Logger
 	WithComponent(component string) Logger
 	WithOperation(operation string) Logger
-	
+
 	// Performance logging
 	Duration(operation string, duration time.Duration, fields ...any)
 	DurationContext(ctx context.Context, operation string, duration time.Duration, fields ...any)
@@ -87,7 +87,7 @@ func NewLogger(config *Config) Logger {
 	if config == nil {
 		config = DefaultConfig()
 	}
-	
+
 	opts := &slog.HandlerOptions{
 		Level:     config.Level,
 		AddSource: config.AddSource,
@@ -105,21 +105,21 @@ func NewLogger(config *Config) Logger {
 
 	// Set up multi-writer for both console and file logging
 	output := setupLogOutput(config.Output)
-	
+
 	var handler slog.Handler
 	if config.Format == "text" {
 		handler = slog.NewTextHandler(output, opts)
 	} else {
 		handler = slog.NewJSONHandler(output, opts)
 	}
-	
+
 	// Add default fields
 	slogger := slog.New(handler).With(
 		"service", config.Service,
 		"version", config.Version,
 		"env", config.Environment,
 	)
-	
+
 	return &GuildLogger{
 		slogger: slogger,
 	}
@@ -235,7 +235,7 @@ func (l *GuildLogger) WithContext(ctx context.Context) Logger {
 
 func (l *GuildLogger) WithError(err error) Logger {
 	fields := []any{"error", err.Error()}
-	
+
 	// Extract Guild error details
 	var gerr *gerror.GuildError
 	if gerror.As(err, &gerr) {
@@ -245,17 +245,17 @@ func (l *GuildLogger) WithError(err error) Logger {
 			"error_operation", gerr.Operation,
 			"error_retryable", gerr.Retryable,
 		)
-		
+
 		if gerr.Details != nil {
 			fields = append(fields, "error_details", gerr.Details)
 		}
-		
+
 		if len(gerr.Stack) > 0 && l.slogger.Enabled(context.Background(), LevelDebug) {
 			// Only include stack trace in debug mode
 			fields = append(fields, "error_stack", gerr.Stack)
 		}
 	}
-	
+
 	return l.With(fields...)
 }
 
@@ -287,13 +287,13 @@ func (l *GuildLogger) DurationContext(ctx context.Context, operation string, dur
 		"duration_ms", duration.Milliseconds(),
 		"duration_human", duration.String(),
 	)
-	
+
 	level := LevelInfo
 	if duration > 5*time.Second {
 		level = LevelWarn
 		allFields = append(allFields, "slow_operation", true)
 	}
-	
+
 	l.log(ctx, level, fmt.Sprintf("Operation completed: %s", operation), allFields...)
 }
 
@@ -306,11 +306,11 @@ func (l *GuildLogger) log(ctx context.Context, level LogLevel, msg string, field
 	if l.operation != "" {
 		fields = append([]any{"operation", l.operation}, fields...)
 	}
-	
+
 	// Extract context fields
 	contextFields := extractContextFields(ctx)
 	fields = append(contextFields, fields...)
-	
+
 	// Add caller information for errors
 	if level >= LevelError {
 		if pc, file, line, ok := runtime.Caller(3); ok {
@@ -321,14 +321,14 @@ func (l *GuildLogger) log(ctx context.Context, level LogLevel, msg string, field
 			)
 		}
 	}
-	
+
 	l.slogger.LogAttrs(ctx, level, msg, fieldsToAttrs(fields)...)
 }
 
 // extractContextFields extracts standard fields from context
 func extractContextFields(ctx context.Context) []any {
 	var fields []any
-	
+
 	// Standard context values
 	if requestID, ok := ctx.Value("request_id").(string); ok {
 		fields = append(fields, "request_id", requestID)
@@ -345,7 +345,7 @@ func extractContextFields(ctx context.Context) []any {
 	if sessionID, ok := ctx.Value("session_id").(string); ok {
 		fields = append(fields, "session_id", sessionID)
 	}
-	
+
 	// Guild-specific context
 	if agentID, ok := ctx.Value("agent_id").(string); ok {
 		fields = append(fields, "agent_id", agentID)
@@ -359,23 +359,23 @@ func extractContextFields(ctx context.Context) []any {
 	if campaignID, ok := ctx.Value("campaign_id").(string); ok {
 		fields = append(fields, "campaign_id", campaignID)
 	}
-	
+
 	return fields
 }
 
 // fieldsToAttrs converts field pairs to slog attributes
 func fieldsToAttrs(fields []any) []slog.Attr {
 	attrs := make([]slog.Attr, 0, len(fields)/2)
-	
+
 	for i := 0; i < len(fields)-1; i += 2 {
 		key, ok := fields[i].(string)
 		if !ok {
 			continue
 		}
-		
+
 		attrs = append(attrs, slog.Any(key, fields[i+1]))
 	}
-	
+
 	return attrs
 }
 
@@ -399,19 +399,19 @@ func LogError(ctx context.Context, err error, msg string, fields ...any) {
 func LogOperation(ctx context.Context, operation string, fn func() error) error {
 	logger := GetLogger(ctx)
 	logger.InfoContext(ctx, fmt.Sprintf("Starting operation: %s", operation))
-	
+
 	start := time.Now()
 	err := fn()
 	duration := time.Since(start)
-	
+
 	if err != nil {
-		logger.WithError(err).ErrorContext(ctx, 
+		logger.WithError(err).ErrorContext(ctx,
 			fmt.Sprintf("Operation failed: %s", operation),
 			"duration_ms", duration.Milliseconds(),
 		)
 	} else {
 		logger.DurationContext(ctx, operation, duration)
 	}
-	
+
 	return err
 }

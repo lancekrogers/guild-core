@@ -29,10 +29,10 @@ type CostAssignmentStrategy int
 const (
 	// StrategyMinimizeCost - Always choose the cheapest capable agent
 	StrategyMinimizeCost CostAssignmentStrategy = iota
-	
+
 	// StrategyBalanced - Balance cost optimization with workload distribution
 	StrategyBalanced
-	
+
 	// StrategyCapabilityFirst - Choose best capability match, then optimize cost
 	StrategyCapabilityFirst
 )
@@ -70,8 +70,8 @@ type AssignmentSummary struct {
 
 // NewCostAwareTaskPlanner creates a new cost-optimized task planner
 func newCostAwareTaskPlanner(
-	managerAgent agent.Agent, 
-	kanbanBoard KanbanManager, 
+	managerAgent agent.Agent,
+	kanbanBoard KanbanManager,
 	componentRegistry registry.ComponentRegistry,
 	maxCostFilter int,
 ) *CostAwareTaskPlanner {
@@ -86,8 +86,8 @@ func newCostAwareTaskPlanner(
 
 // DefaultCostAwareTaskPlannerFactory creates a cost-aware planner factory for registry use
 func DefaultCostAwareTaskPlannerFactory(
-	managerAgent agent.Agent, 
-	kanbanBoard KanbanManager, 
+	managerAgent agent.Agent,
+	kanbanBoard KanbanManager,
 	componentRegistry registry.ComponentRegistry,
 	maxCostFilter int,
 ) *CostAwareTaskPlanner {
@@ -98,7 +98,7 @@ func DefaultCostAwareTaskPlannerFactory(
 func (p *CostAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
 	// Build a planning prompt with cost information
 	prompt := p.buildCostAwarePlanningPrompt(obj, guild)
-	
+
 	// Execute the planning request
 	response, err := p.managerAgent.Execute(ctx, prompt)
 	if err != nil {
@@ -106,7 +106,7 @@ func (p *CostAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Co
 			WithComponent("orchestrator").
 			WithOperation("PlanTasks")
 	}
-	
+
 	// Parse the response into tasks
 	tasks, err := p.parseTasksFromResponse(response)
 	if err != nil {
@@ -114,14 +114,14 @@ func (p *CostAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Co
 			WithComponent("orchestrator").
 			WithOperation("PlanTasks")
 	}
-	
+
 	// Enhance tasks with cost estimates
 	if err := p.enhanceTasksWithCostEstimates(ctx, tasks, guild); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to enhance tasks with cost estimates").
 			WithComponent("orchestrator").
 			WithOperation("PlanTasks")
 	}
-	
+
 	// Add tasks to kanban board
 	for _, task := range tasks {
 		// Create task on board
@@ -131,23 +131,23 @@ func (p *CostAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Co
 				WithComponent("orchestrator").
 				WithOperation("PlanTasks")
 		}
-		
+
 		// Update task with parsed data and cost information
 		createdTask.Status = task.Status
 		createdTask.Metadata = task.Metadata
 		createdTask.Dependencies = task.Dependencies
-		
+
 		// Update the task
 		if err := p.kanbanBoard.UpdateTask(ctx, createdTask); err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to update task").
 				WithComponent("orchestrator").
 				WithOperation("PlanTasks")
 		}
-		
+
 		// Update our reference
 		task.ID = createdTask.ID
 	}
-	
+
 	return tasks, nil
 }
 
@@ -159,21 +159,21 @@ func (p *CostAwareTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.
 		BalanceWorkload:  p.balanceWorkload,
 		RequiredTools:    make(map[string][]string),
 	}
-	
+
 	summary, err := p.AssignTasksWithOptions(ctx, tasks, guild, options)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to assign tasks with cost optimization").
 			WithComponent("CostAwareTaskPlanner").
 			WithOperation("assignTasks")
 	}
-	
+
 	// Apply assignments to kanban board
 	for _, assignment := range summary.Assignments {
 		task, err := p.kanbanBoard.GetTask(ctx, assignment.TaskID)
 		if err != nil {
 			continue // Skip if task not found
 		}
-		
+
 		// Update task assignment with cost information
 		task.AssignedTo = assignment.AgentID
 		task.Metadata["assigned_to"] = assignment.AgentID
@@ -181,35 +181,35 @@ func (p *CostAwareTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.
 		task.Metadata["assignment_reason"] = assignment.Reason
 		task.Metadata["agent_name"] = assignment.AgentInfo.Name
 		task.Metadata["agent_type"] = assignment.AgentInfo.Type
-		
+
 		if err := p.kanbanBoard.UpdateTask(ctx, task); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to update task assignment").
 				WithComponent("orchestrator").
 				WithOperation("AssignTasks")
 		}
 	}
-	
+
 	return nil
 }
 
 // AssignTasksWithOptions performs cost-aware assignment with detailed configuration
 func (p *CostAwareTaskPlanner) AssignTasksWithOptions(
-	ctx context.Context, 
-	tasks []*kanban.Task, 
-	guild *config.GuildConfig, 
+	ctx context.Context,
+	tasks []*kanban.Task,
+	guild *config.GuildConfig,
 	options AssignmentOptions,
 ) (*AssignmentSummary, error) {
-	
+
 	summary := &AssignmentSummary{
 		TotalTasks:     len(tasks),
 		Assignments:    make([]TaskAssignmentResult, 0, len(tasks)),
 		AgentWorkloads: make(map[string]int),
 		CostBreakdown:  make(map[string]int),
 	}
-	
+
 	// Sort tasks by complexity and dependencies for optimal assignment order
 	sortedTasks := p.sortTasksByPriority(tasks)
-	
+
 	for _, task := range sortedTasks {
 		assignment, err := p.assignSingleTask(ctx, task, guild, options, summary.AgentWorkloads)
 		if err != nil {
@@ -218,14 +218,14 @@ func (p *CostAwareTaskPlanner) AssignTasksWithOptions(
 				WithOperation("AssignTasksWithOptions").
 				WithDetails("task_id", task.ID)
 		}
-		
+
 		// Update summary
 		summary.Assignments = append(summary.Assignments, *assignment)
 		summary.TotalCost += assignment.TotalCost
 		summary.AgentWorkloads[assignment.AgentID]++
 		summary.CostBreakdown[assignment.AgentInfo.Type] += assignment.TotalCost
 	}
-	
+
 	// Calculate summary statistics
 	if summary.TotalTasks > 0 {
 		summary.AverageCost = float64(summary.TotalCost) / float64(summary.TotalTasks)
@@ -238,7 +238,7 @@ func (p *CostAwareTaskPlanner) AssignTasksWithOptions(
 	} else {
 		summary.CostEfficiency = "Premium"
 	}
-	
+
 	return summary, nil
 }
 
@@ -250,25 +250,25 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 	options AssignmentOptions,
 	currentWorkloads map[string]int,
 ) (*TaskAssignmentResult, error) {
-	
+
 	// Extract required capabilities from task metadata
 	capabilitiesStr, _ := task.Metadata["capabilities"]
 	requiredCapabilities := p.parseCapabilities(capabilitiesStr)
-	
+
 	if len(requiredCapabilities) == 0 {
 		return nil, gerror.New(gerror.ErrCodeValidation, "task has no required capabilities specified", nil).
 			WithComponent("orchestrator").
 			WithOperation("assignSingleTask").
 			WithDetails("task_id", task.ID)
 	}
-	
+
 	// Get agents that can handle the primary capability
 	primaryCapability := requiredCapabilities[0]
-	
+
 	var assignedAgent *registry.AgentInfo
 	var reason string
 	var alternatives []registry.AgentInfo
-	
+
 	switch options.Strategy {
 	case StrategyMinimizeCost:
 		agent, err := p.componentRegistry.GetCheapestAgentByCapability(primaryCapability)
@@ -287,11 +287,11 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 		}
 		assignedAgent = agent
 		reason = fmt.Sprintf("Cheapest agent for capability '%s'", primaryCapability)
-		
+
 	case StrategyBalanced:
 		candidates := p.componentRegistry.GetAgentsByCost(options.MaxCostMagnitude)
 		suitableAgents := p.filterAgentsByCapabilities(candidates, requiredCapabilities)
-		
+
 		if len(suitableAgents) == 0 {
 			return nil, gerror.New(gerror.ErrCodeNoAvailableAgent, "no suitable agents found for capabilities within budget", nil).
 				WithComponent("orchestrator").
@@ -299,7 +299,7 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 				WithDetails("required_capabilities", fmt.Sprintf("%v", requiredCapabilities)).
 				WithDetails("max_budget", options.MaxCostMagnitude)
 		}
-		
+
 		// Apply workload balancing
 		if options.BalanceWorkload {
 			assignedAgent = p.selectBalancedAgent(suitableAgents, currentWorkloads)
@@ -308,9 +308,9 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 			assignedAgent = &suitableAgents[0] // Already sorted by cost
 			reason = "Cost-optimized selection"
 		}
-		
+
 		alternatives = suitableAgents[1:] // Store alternatives for reporting
-		
+
 	case StrategyCapabilityFirst:
 		allAgents := p.componentRegistry.GetAgentsByCapability(primaryCapability)
 		if len(allAgents) == 0 {
@@ -319,7 +319,7 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 				WithOperation("assignSingleTask").
 				WithDetails("capability", primaryCapability)
 		}
-		
+
 		// Find the best capability match within cost filter
 		for _, agent := range allAgents {
 			if agent.CostMagnitude <= options.MaxCostMagnitude &&
@@ -329,7 +329,7 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 				break
 			}
 		}
-		
+
 		if assignedAgent == nil {
 			return nil, gerror.New(gerror.ErrCodeNoAvailableAgent, "no agent with required capabilities within cost filter", nil).
 				WithComponent("orchestrator").
@@ -337,7 +337,7 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 				WithDetails("cost_filter", options.MaxCostMagnitude)
 		}
 	}
-	
+
 	// Find required tools for the task
 	requiredToolCaps, exists := options.RequiredTools[task.ID]
 	if !exists {
@@ -345,10 +345,10 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 		complexity, _ := task.Metadata["complexity"]
 		requiredToolCaps = p.getDefaultToolRequirements(complexity)
 	}
-	
+
 	// Select optimal tools
 	tools, toolCost := p.selectOptimalTools(requiredToolCaps, options.MaxCostMagnitude-assignedAgent.CostMagnitude)
-	
+
 	result := &TaskAssignmentResult{
 		TaskID:       task.ID,
 		AgentID:      assignedAgent.ID,
@@ -358,7 +358,7 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 		Reason:       reason,
 		Alternatives: alternatives,
 	}
-	
+
 	return result, nil
 }
 
@@ -366,20 +366,20 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 func (p *CostAwareTaskPlanner) selectOptimalTools(requiredCapabilities []string, remainingBudget int) ([]registry.ToolInfo, int) {
 	var selectedTools []registry.ToolInfo
 	totalCost := 0
-	
+
 	for _, capability := range requiredCapabilities {
 		tool, err := p.componentRegistry.GetCheapestToolByCapability(capability)
 		if err != nil {
 			continue // Tool not available
 		}
-		
+
 		if tool.CostMagnitude <= remainingBudget {
 			selectedTools = append(selectedTools, *tool)
 			totalCost += tool.CostMagnitude
 			remainingBudget -= tool.CostMagnitude
 		}
 	}
-	
+
 	return selectedTools, totalCost
 }
 
@@ -387,30 +387,30 @@ func (p *CostAwareTaskPlanner) selectOptimalTools(requiredCapabilities []string,
 
 func (p *CostAwareTaskPlanner) buildCostAwarePlanningPrompt(obj *commission.Commission, guild *config.GuildConfig) string {
 	var prompt strings.Builder
-	
+
 	prompt.WriteString("You are the manager agent for the ")
 	prompt.WriteString(guild.Name)
 	prompt.WriteString(" guild. Your task is to decompose the following objective into concrete, actionable tasks with cost optimization in mind.\n\n")
-	
+
 	prompt.WriteString("## Objective\n")
 	prompt.WriteString(obj.Format())
 	prompt.WriteString("\n\n")
-	
+
 	prompt.WriteString("## Available Agents and Capabilities (with Cost Information)\n")
 	agents := p.componentRegistry.GetAgentsByCost(p.maxCostFilter)
 	for _, agent := range agents {
 		costIcon := p.getCostIcon(agent.CostMagnitude)
-		prompt.WriteString(fmt.Sprintf("- **%s** (%s) %s Cost: %d | Capabilities: %s\n", 
+		prompt.WriteString(fmt.Sprintf("- **%s** (%s) %s Cost: %d | Capabilities: %s\n",
 			agent.Name, agent.ID, costIcon, agent.CostMagnitude, strings.Join(agent.Capabilities, ", ")))
 	}
 	prompt.WriteString("\n")
-	
+
 	prompt.WriteString("## Cost Considerations\n")
 	if p.maxCostFilter < 8 {
 		prompt.WriteString(fmt.Sprintf("Note: Agents with cost magnitude > %d are excluded from consideration.\n", p.maxCostFilter))
 	}
 	prompt.WriteString("Consider cost-effectiveness when assigning tasks.\n\n")
-	
+
 	prompt.WriteString("## Instructions\n")
 	prompt.WriteString("Break down the objective into specific tasks optimized for cost efficiency. For each task, provide:\n")
 	prompt.WriteString("1. A unique task ID (e.g., TASK-001)\n")
@@ -420,7 +420,7 @@ func (p *CostAwareTaskPlanner) buildCostAwarePlanningPrompt(obj *commission.Comm
 	prompt.WriteString("5. Dependencies on other tasks (if any)\n")
 	prompt.WriteString("6. Estimated complexity (low, medium, high)\n")
 	prompt.WriteString("7. Preferred cost level (0=free, 1=cheap, 2=mid, 3=expensive)\n\n")
-	
+
 	prompt.WriteString("Format your response as follows:\n")
 	prompt.WriteString("```\n")
 	prompt.WriteString("TASK-001: [Title]\n")
@@ -431,7 +431,7 @@ func (p *CostAwareTaskPlanner) buildCostAwarePlanningPrompt(obj *commission.Comm
 	prompt.WriteString("PreferredCost: [0|1|2|3]\n")
 	prompt.WriteString("---\n")
 	prompt.WriteString("```\n")
-	
+
 	return prompt.String()
 }
 
@@ -440,7 +440,7 @@ func (p *CostAwareTaskPlanner) enhanceTasksWithCostEstimates(ctx context.Context
 		// Extract capabilities
 		capabilitiesStr, _ := task.Metadata["capabilities"]
 		capabilities := p.parseCapabilities(capabilitiesStr)
-		
+
 		if len(capabilities) > 0 {
 			// Find cheapest agent for estimation
 			agent, err := p.componentRegistry.GetCheapestAgentByCapability(capabilities[0])
@@ -449,13 +449,13 @@ func (p *CostAwareTaskPlanner) enhanceTasksWithCostEstimates(ctx context.Context
 				task.Metadata["cheapest_agent"] = agent.Name
 			}
 		}
-		
+
 		// Extract preferred cost from planning
 		if preferredCost, exists := task.Metadata["preferred_cost"]; exists {
 			task.Metadata["preferred_cost"] = preferredCost
 		}
 	}
-	
+
 	return nil
 }
 
@@ -463,24 +463,24 @@ func (p *CostAwareTaskPlanner) parseCapabilities(capabilitiesStr string) []strin
 	if capabilitiesStr == "" {
 		return nil
 	}
-	
+
 	capabilities := strings.Split(capabilitiesStr, ",")
 	for i := range capabilities {
 		capabilities[i] = strings.TrimSpace(capabilities[i])
 	}
-	
+
 	return capabilities
 }
 
 func (p *CostAwareTaskPlanner) filterAgentsByCapabilities(agents []registry.AgentInfo, requiredCapabilities []string) []registry.AgentInfo {
 	var suitable []registry.AgentInfo
-	
+
 	for _, agent := range agents {
 		if p.hasAllCapabilities(agent.Capabilities, requiredCapabilities) {
 			suitable = append(suitable, agent)
 		}
 	}
-	
+
 	return suitable
 }
 
@@ -505,38 +505,38 @@ func (p *CostAwareTaskPlanner) selectBalancedAgent(agents []registry.AgentInfo, 
 	sort.Slice(agents, func(i, j int) bool {
 		workloadI := currentWorkloads[agents[i].ID]
 		workloadJ := currentWorkloads[agents[j].ID]
-		
+
 		if workloadI != workloadJ {
 			return workloadI < workloadJ // Prefer less loaded agent
 		}
-		
+
 		return agents[i].CostMagnitude < agents[j].CostMagnitude // Then prefer cheaper
 	})
-	
+
 	return &agents[0]
 }
 
 func (p *CostAwareTaskPlanner) sortTasksByPriority(tasks []*kanban.Task) []*kanban.Task {
 	sortedTasks := make([]*kanban.Task, len(tasks))
 	copy(sortedTasks, tasks)
-	
+
 	// Sort by dependencies first, then by complexity
 	sort.Slice(sortedTasks, func(i, j int) bool {
 		// Tasks with no dependencies come first
 		iDeps := len(sortedTasks[i].Dependencies)
 		jDeps := len(sortedTasks[j].Dependencies)
-		
+
 		if iDeps != jDeps {
 			return iDeps < jDeps
 		}
-		
+
 		// Then by complexity (high complexity first to get expensive agents early)
 		iComplexity := p.getComplexityScore(sortedTasks[i].Metadata["complexity"])
 		jComplexity := p.getComplexityScore(sortedTasks[j].Metadata["complexity"])
-		
+
 		return iComplexity > jComplexity
 	})
-	
+
 	return sortedTasks
 }
 
@@ -581,13 +581,13 @@ func (p *CostAwareTaskPlanner) getCostIcon(cost int) string {
 // parseTasksFromResponse parses tasks from the manager's response (enhanced for cost info)
 func (p *CostAwareTaskPlanner) parseTasksFromResponse(response string) ([]*kanban.Task, error) {
 	tasks := []*kanban.Task{}
-	
+
 	lines := strings.Split(response, "\n")
 	var currentTask *kanban.Task
-	
+
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
-		
+
 		// Skip empty lines and markers
 		if line == "" || line == "```" || line == "---" {
 			if currentTask != nil {
@@ -596,7 +596,7 @@ func (p *CostAwareTaskPlanner) parseTasksFromResponse(response string) ([]*kanba
 			}
 			continue
 		}
-		
+
 		// Parse task ID and title
 		if strings.Contains(line, ":") && strings.HasPrefix(line, "TASK-") {
 			parts := strings.SplitN(line, ":", 2)
@@ -630,17 +630,17 @@ func (p *CostAwareTaskPlanner) parseTasksFromResponse(response string) ([]*kanba
 			}
 		}
 	}
-	
+
 	// Add last task if any
 	if currentTask != nil {
 		tasks = append(tasks, currentTask)
 	}
-	
+
 	if len(tasks) == 0 {
 		return nil, gerror.New(gerror.ErrCodeOrchestration, "no tasks found in response", nil).
 			WithComponent("orchestrator").
 			WithOperation("parseTasksFromResponse")
 	}
-	
+
 	return tasks, nil
 }

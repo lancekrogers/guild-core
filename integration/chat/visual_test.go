@@ -73,7 +73,7 @@ func TestMarkdownRendering(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			output := renderer.Render(tt.input)
 			assert.NotEmpty(t, output, "Rendered output should not be empty")
-			
+
 			for _, expected := range tt.contains {
 				assert.Contains(t, output, expected, "Output should contain expected content")
 			}
@@ -124,15 +124,15 @@ func TestSyntaxHighlighting(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Mock highlighting - in real implementation this would use chroma
 			highlighted := mockHighlightCode(tt.code, tt.language)
-			
+
 			// Should not be empty
 			assert.NotEmpty(t, highlighted, "Highlighted code should not be empty")
-			
+
 			// Should contain the original code elements
 			for _, expected := range tt.expected {
 				assert.Contains(t, highlighted, expected, "Highlighted code should contain original elements")
 			}
-			
+
 			// Mock should indicate highlighting was applied
 			assert.Contains(t, highlighted, "HIGHLIGHTED", "Should indicate highlighting was applied")
 		})
@@ -182,13 +182,13 @@ func TestContentFormatting(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			formatted := mockFormatContent(tt.content, tt.messageType)
-			
+
 			assert.NotEmpty(t, formatted, "Formatted content should not be empty")
-			
+
 			for _, expected := range tt.expected {
 				assert.Contains(t, formatted, expected, "Formatted content should contain expected elements")
 			}
-			
+
 			// Should include message type formatting
 			assert.Contains(t, formatted, "TYPE["+tt.messageType+"]", "Should include message type")
 		})
@@ -204,20 +204,20 @@ func mockFormatContent(content, messageType string) string {
 func TestVisualThemeConsistency(t *testing.T) {
 	// Test guild theme colors and styling
 	theme := mockGetGuildTheme()
-	
+
 	assert.NotNil(t, theme, "Guild theme should be available")
 	assert.NotEmpty(t, theme.Primary, "Primary color should be defined")
 	assert.NotEmpty(t, theme.Secondary, "Secondary color should be defined")
 	assert.NotEmpty(t, theme.Success, "Success color should be defined")
 	assert.NotEmpty(t, theme.Warning, "Warning color should be defined")
 	assert.NotEmpty(t, theme.Error, "Error color should be defined")
-	
+
 	// Test medieval-themed elements
 	agentIcons := mockGetAgentIcons()
 	assert.Contains(t, agentIcons, "manager", "Should have manager icon")
 	assert.Contains(t, agentIcons, "developer", "Should have developer icon")
 	assert.Contains(t, agentIcons, "reviewer", "Should have reviewer icon")
-	
+
 	// Verify icons are medieval-themed
 	for role, icon := range agentIcons {
 		assert.NotEmpty(t, icon, "Icon should not be empty for role: "+role)
@@ -290,9 +290,9 @@ func TestProgressIndicators(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			progressBar := mockRenderProgress(tt.progress, tt.label)
-			
+
 			assert.NotEmpty(t, progressBar, "Progress bar should not be empty")
-			
+
 			for _, expected := range tt.expected {
 				assert.Contains(t, progressBar, expected, "Progress bar should contain expected elements")
 			}
@@ -323,11 +323,11 @@ func TestAgentStatusDisplay(t *testing.T) {
 	for _, agent := range mockAgents {
 		t.Run(agent.name, func(t *testing.T) {
 			status := mockRenderAgentStatus(agent.id, agent.name, agent.status, agent.role)
-			
+
 			assert.NotEmpty(t, status, "Agent status should not be empty")
 			assert.Contains(t, status, agent.name, "Should contain agent name")
 			assert.Contains(t, status, agent.status, "Should contain agent status")
-			
+
 			// Should include appropriate icon for role
 			icons := mockGetAgentIcons()
 			if icon, exists := icons[agent.role]; exists {
@@ -360,7 +360,7 @@ func TestTerminalCompatibility(t *testing.T) {
 	// Test graceful degradation when features aren't supported
 	if !colorSupport.TrueColor {
 		// Should fall back to 256 colors or basic colors
-		assert.True(t, colorSupport.Color256 || colorSupport.BasicColor, 
+		assert.True(t, colorSupport.Color256 || colorSupport.BasicColor,
 			"Should have some color support")
 	}
 

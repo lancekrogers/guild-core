@@ -27,22 +27,22 @@ type AgentFactory interface {
 type TaskDispatcher interface {
 	// RegisterAgent adds an agent to the dispatcher's pool
 	RegisterAgent(agent agent.Agent)
-	
+
 	// UnregisterAgent removes an agent from the dispatcher's pool
 	UnregisterAgent(agentID string)
-	
+
 	// Dispatch assigns a task to an available agent
 	Dispatch(ctx context.Context, task *kanban.Task) error
-	
+
 	// GetTaskStatus returns the current status of a task
 	GetTaskStatus(ctx context.Context, taskID string) (TaskStatus, error)
-	
+
 	// GetAgentStatus returns the current status of an agent
 	GetAgentStatus(agentID string) AgentStatus
-	
+
 	// ListAvailableAgents returns agents that can accept tasks
 	ListAvailableAgents() []agent.Agent
-	
+
 	// Stop gracefully shuts down the dispatcher
 	Stop(ctx context.Context) error
 }
@@ -68,17 +68,16 @@ type AgentStatus struct {
 type EventBus interface {
 	// Subscribe registers a handler for a specific event type
 	Subscribe(eventType interfaces.EventType, handler interfaces.EventHandler)
-	
+
 	// SubscribeAll registers a handler for all event types
 	SubscribeAll(handler interfaces.EventHandler)
-	
+
 	// Unsubscribe removes a handler for a specific event type
 	Unsubscribe(eventType interfaces.EventType, handler interfaces.EventHandler)
-	
+
 	// Publish sends an event to all subscribers
 	Publish(event interfaces.Event)
-	
+
 	// PublishJSON publishes an event from a JSON string
 	PublishJSON(jsonEvent string) error
 }
-

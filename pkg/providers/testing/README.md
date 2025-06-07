@@ -7,7 +7,7 @@ This package provides a comprehensive testing framework for AI provider implemen
 The testing framework offers three main approaches:
 
 1. **Mock Provider** - Pure Go implementation for unit tests
-2. **HTTP Mock Server** - Simulates real API responses for integration tests  
+2. **HTTP Mock Server** - Simulates real API responses for integration tests
 3. **Provider Test Suite** - Reusable test cases for all providers
 
 ## Usage
@@ -73,10 +73,10 @@ func TestMyFeature(t *testing.T) {
     // Use mock provider
     provider := mock.NewProvider()
     provider.SetResponse("specific prompt", "expected response")
-    
+
     // Test your code
     result := myFunction(provider)
-    
+
     // Verify behavior
     calls := provider.GetCalls()
     if len(calls) != 1 {
@@ -91,10 +91,10 @@ func TestMyFeature(t *testing.T) {
 func TestOpenAIIntegration(t *testing.T) {
     mock := providertesting.NewMockHTTPServer()
     defer mock.Close()
-    
+
     // Your provider with mock URL
     provider := createProviderWithURL(mock.URL)
-    
+
     // Test actual HTTP communication
     // Mock server returns OpenAI-compatible responses
 }
@@ -107,12 +107,12 @@ func TestLiveAPI(t *testing.T) {
     if testing.Short() {
         t.Skip("Skipping live API test")
     }
-    
+
     apiKey := os.Getenv("OPENAI_API_KEY")
     if apiKey == "" {
         t.Skip("API key not set")
     }
-    
+
     provider := openai.NewClient(apiKey)
     // Run limited tests against real API
 }
@@ -151,7 +151,7 @@ go test -cover ./pkg/providers/...
 ## Environment Variables for Live Tests
 
 - `OPENAI_API_KEY` - OpenAI API key
-- `ANTHROPIC_API_KEY` - Anthropic API key  
+- `ANTHROPIC_API_KEY` - Anthropic API key
 - `DEEPSEEK_API_KEY` - DeepSeek API key
 - `DEEPINFRA_TOKEN` - DeepInfra API token
 - `ORA_API_KEY` - Ora API key
@@ -187,7 +187,7 @@ import (
 func TestMyProvider(t *testing.T) {
     // Create provider (with mock if needed)
     provider := NewClient("test-key")
-    
+
     // Run standard suite
     suite := testing.NewProviderTestSuite(t, provider, testing.TestConfig{
         ProviderName: "MyProvider",

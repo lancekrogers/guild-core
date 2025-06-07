@@ -40,7 +40,7 @@ check_pre_commit() {
 # Install pre-commit
 install_pre_commit() {
     echo "Installing pre-commit..."
-    
+
     if [[ "$OSTYPE" == "darwin"* ]]; then
         # macOS
         if command -v brew &> /dev/null; then
@@ -70,7 +70,7 @@ install_pre_commit() {
 check_go_tools() {
     echo ""
     echo "Checking Go tools..."
-    
+
     # Check go fmt (built-in)
     if command -v go &> /dev/null; then
         print_success "go fmt available"
@@ -78,7 +78,7 @@ check_go_tools() {
         print_error "Go not installed. Please install Go first: https://golang.org/dl/"
         exit 1
     fi
-    
+
     # Check golangci-lint
     if command -v golangci-lint &> /dev/null; then
         print_success "golangci-lint is installed ($(golangci-lint --version | head -1))"
@@ -88,7 +88,7 @@ check_go_tools() {
         curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
         print_success "golangci-lint installed"
     fi
-    
+
     # Check goimports-reviser
     if command -v goimports-reviser &> /dev/null; then
         print_success "goimports-reviser is installed"
@@ -103,14 +103,14 @@ check_go_tools() {
 setup_hooks() {
     echo ""
     echo "Setting up pre-commit hooks..."
-    
+
     # Install the pre-commit hooks
     pre-commit install
     print_success "Pre-commit hooks installed"
-    
+
     # Install commit-msg hook for conventional commits (optional)
     pre-commit install --hook-type commit-msg 2>/dev/null || true
-    
+
     # Run pre-commit on all files to check current state
     echo ""
     echo "Running initial pre-commit check (this may take a moment)..."
@@ -137,27 +137,27 @@ main() {
         print_error "Not in a git repository. Please run from the guild-core root directory."
         exit 1
     fi
-    
+
     # Check if .pre-commit-config.yaml exists
     if [ ! -f ".pre-commit-config.yaml" ]; then
         print_error ".pre-commit-config.yaml not found. Please run from the guild-core root directory."
         exit 1
     fi
-    
+
     # Install pre-commit if needed
     if ! check_pre_commit; then
         install_pre_commit
     fi
-    
+
     # Check Go tools
     check_go_tools
-    
+
     # Ensure git hooks directory exists
     ensure_git_hooks_dir
-    
+
     # Setup hooks
     setup_hooks
-    
+
     echo ""
     print_success "Pre-commit setup complete! 🎉"
     echo ""

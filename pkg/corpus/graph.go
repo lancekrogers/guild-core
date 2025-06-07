@@ -194,7 +194,7 @@ func FindStronglyConnected(graph *Graph, minSize int) [][]string {
 
 	// For now, we'll just group documents by common tags
 	clusters := make(map[string][]string)
-	
+
 	// Group by tags
 	for tag, docs := range graph.Tags {
 		if len(docs) >= minSize {
@@ -228,12 +228,12 @@ func ExportGraphDOT(ctx context.Context, graph *Graph, cfg Config) error {
 		// Clean node name for DOT
 		cleanNode := strings.ReplaceAll(node, "-", "_")
 		cleanNode = strings.ReplaceAll(cleanNode, " ", "_")
-		
+
 		for _, link := range links {
 			// Clean link name for DOT
 			cleanLink := strings.ReplaceAll(link, "-", "_")
 			cleanLink = strings.ReplaceAll(cleanLink, " ", "_")
-			
+
 			sb.WriteString(fmt.Sprintf("  %s -> %s;\n", cleanNode, cleanLink))
 		}
 	}

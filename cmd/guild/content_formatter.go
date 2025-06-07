@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
-	
+
 	"github.com/charmbracelet/lipgloss"
 )
 
@@ -53,7 +53,7 @@ func NewContentFormatter(markdownRenderer *MarkdownRenderer, width int) *Content
 func (cf *ContentFormatter) FormatAgentResponse(content string, agentID string) string {
 	// Apply markdown rendering for rich content
 	renderedContent := cf.markdownRenderer.DetectAndRenderContent(content)
-	
+
 	// Add agent-specific formatting if needed
 	if agentID != "" {
 		// Add subtle agent attribution for complex responses
@@ -62,7 +62,7 @@ func (cf *ContentFormatter) FormatAgentResponse(content string, agentID string) 
 			renderedContent = fmt.Sprintf("%s\n%s", attribution, renderedContent)
 		}
 	}
-	
+
 	return renderedContent
 }
 
@@ -70,7 +70,7 @@ func (cf *ContentFormatter) FormatAgentResponse(content string, agentID string) 
 func (cf *ContentFormatter) FormatSystemMessage(content string) string {
 	// System messages often contain status updates and notifications
 	renderedContent := cf.markdownRenderer.DetectAndRenderContent(content)
-	
+
 	// Add system message formatting
 	if cf.isImportantSystemMessage(content) {
 		// Highlight important system messages
@@ -81,7 +81,7 @@ func (cf *ContentFormatter) FormatSystemMessage(content string) string {
 			Margin(1, 0)
 		renderedContent = style.Render(renderedContent)
 	}
-	
+
 	return renderedContent
 }
 
@@ -89,7 +89,7 @@ func (cf *ContentFormatter) FormatSystemMessage(content string) string {
 func (cf *ContentFormatter) FormatErrorMessage(content string) string {
 	// Render any markdown in error content
 	renderedContent := cf.markdownRenderer.DetectAndRenderContent(content)
-	
+
 	// Style error messages for visibility
 	errorStyle := lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
@@ -97,11 +97,11 @@ func (cf *ContentFormatter) FormatErrorMessage(content string) string {
 		Padding(0, 1).
 		Margin(1, 0).
 		Foreground(lipgloss.Color("196"))
-	
+
 	// Add error icon and formatting
 	errorIcon := "❌"
 	styledContent := errorStyle.Render(fmt.Sprintf("%s %s", errorIcon, renderedContent))
-	
+
 	return styledContent
 }
 
@@ -109,19 +109,19 @@ func (cf *ContentFormatter) FormatErrorMessage(content string) string {
 func (cf *ContentFormatter) FormatToolOutput(content string, toolName string) string {
 	// Tool output often contains code, logs, or structured data
 	renderedContent := cf.markdownRenderer.DetectAndRenderContent(content)
-	
+
 	// Add tool-specific formatting
 	toolHeader := cf.messageStyles["tool"].Render(fmt.Sprintf("🔧 %s", toolName))
-	
+
 	// Style tool output with distinct borders
 	toolStyle := lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
 		BorderForeground(lipgloss.Color("208")). // Orange
 		Padding(0, 1).
 		Margin(1, 0)
-	
+
 	styledContent := toolStyle.Render(fmt.Sprintf("%s\n%s", toolHeader, renderedContent))
-	
+
 	return styledContent
 }
 
@@ -129,43 +129,43 @@ func (cf *ContentFormatter) FormatToolOutput(content string, toolName string) st
 func (cf *ContentFormatter) FormatThinkingMessage(content string, agentID string) string {
 	// Thinking messages show agent planning and reasoning
 	renderedContent := cf.markdownRenderer.DetectAndRenderContent(content)
-	
+
 	// Add thinking indicators
 	thinkingIcon := "🤔"
 	if agentID != "" {
 		thinkingIcon = fmt.Sprintf("🤔 %s", agentID)
 	}
-	
+
 	// Style thinking messages with muted colors
 	thinkingStyle := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("141")). // Purple
 		Italic(true).
 		Padding(0, 1)
-	
+
 	styledContent := thinkingStyle.Render(fmt.Sprintf("%s %s", thinkingIcon, renderedContent))
-	
+
 	return styledContent
 }
 
-// FormatWorkingMessage formats agent working/executing messages  
+// FormatWorkingMessage formats agent working/executing messages
 func (cf *ContentFormatter) FormatWorkingMessage(content string, agentID string) string {
 	// Working messages show active task execution
 	renderedContent := cf.markdownRenderer.DetectAndRenderContent(content)
-	
+
 	// Add working indicators
 	workingIcon := "⚙️"
 	if agentID != "" {
 		workingIcon = fmt.Sprintf("⚙️ %s", agentID)
 	}
-	
+
 	// Style working messages with active colors
 	workingStyle := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("76")). // Bright green
 		Bold(true).
 		Padding(0, 1)
-	
+
 	styledContent := workingStyle.Render(fmt.Sprintf("%s %s", workingIcon, renderedContent))
-	
+
 	return styledContent
 }
 
@@ -181,7 +181,7 @@ func (cf *ContentFormatter) FormatTimestamp(timestamp time.Time) string {
 	timestampStyle := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("8")). // Gray
 		Italic(true)
-	
+
 	return timestampStyle.Render(timestamp.Format("15:04:05"))
 }
 
@@ -194,14 +194,14 @@ func (cf *ContentFormatter) isImportantSystemMessage(content string) bool {
 		"completed", "finished", "ready",
 		"started", "connecting", "disconnected",
 	}
-	
+
 	lowerContent := strings.ToLower(content)
 	for _, keyword := range importantKeywords {
 		if strings.Contains(lowerContent, keyword) {
 			return true
 		}
 	}
-	
+
 	return false
 }
 

@@ -20,7 +20,7 @@ type ToolBridge struct {
 	mcpRegistry   tools.Registry
 	guildRegistry registry.ToolRegistry
 	mu            sync.RWMutex
-	
+
 	// Adapters for converting between interfaces
 	guildToMCP map[string]*GuildToMCPAdapter
 	mcpToGuild map[string]*MCPToGuildAdapter
@@ -42,12 +42,12 @@ func (b *ToolBridge) Start(ctx context.Context) error {
 	if err := b.syncGuildToMCP(ctx); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_tool_bridge").WithComponent("sync_tools").WithOperation("failed to sync Guild tools to MCP")
 	}
-	
+
 	// Sync existing MCP tools to Guild
 	if err := b.syncMCPToGuild(ctx); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_tool_bridge").WithComponent("sync_tools").WithOperation("failed to sync MCP tools to Guild")
 	}
-	
+
 	return nil
 }
 
@@ -69,23 +69,23 @@ func (b *ToolBridge) SyncAll(ctx context.Context) error {
 func (b *ToolBridge) RegisterGuildTool(tool basetools.Tool) error {
 	b.mu.Lock()
 	defer b.mu.Unlock()
-	
+
 	// Register with Guild registry first
 	if err := b.guildRegistry.RegisterTool(tool.Name(), tool); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_tool_bridge").WithComponent("sync_guild_to_mcp").WithOperation("failed to register tool with Guild registry")
 	}
-	
+
 	// Create adapter and register with MCP
 	adapter := NewGuildToMCPAdapter(tool)
 	b.guildToMCP[tool.Name()] = adapter
-	
+
 	if err := b.mcpRegistry.RegisterTool(adapter); err != nil {
 		// Rollback Guild registration
 		// Note: Guild registry doesn't support removal, so we just clean up our adapter
 		delete(b.guildToMCP, tool.Name())
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_tool_bridge").WithComponent("sync_tools").WithOperation("failed to register tool with MCP registry")
 	}
-	
+
 	return nil
 }
 
@@ -93,77 +93,77 @@ func (b *ToolBridge) RegisterGuildTool(tool basetools.Tool) error {
 func (b *ToolBridge) RegisterMCPTool(tool tools.Tool) error {
 	b.mu.Lock()
 	defer b.mu.Unlock()
-	
+
 	// Register with MCP registry first
 	if err := b.mcpRegistry.RegisterTool(tool); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_tool_bridge").WithComponent("sync_tools").WithOperation("failed to register tool with MCP registry")
 	}
-	
+
 	// Create adapter and register with Guild
 	adapter := NewMCPToGuildAdapter(tool)
 	b.mcpToGuild[tool.ID()] = adapter
-	
+
 	// Determine cost magnitude based on MCP cost profile
 	costMagnitude := b.calculateCostMagnitude(tool.GetCostProfile())
-	
+
 	if err := b.guildRegistry.RegisterToolWithCost(tool.Name(), adapter, costMagnitude, tool.Capabilities()); err != nil {
 		// Rollback MCP registration
 		b.mcpRegistry.DeregisterTool(tool.ID())
 		delete(b.mcpToGuild, tool.ID())
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_tool_bridge").WithComponent("sync_guild_to_mcp").WithOperation("failed to register tool with Guild registry")
 	}
-	
+
 	return nil
 }
 
 // syncGuildToMCP syncs existing Guild tools to MCP registry
 func (b *ToolBridge) syncGuildToMCP(ctx context.Context) error {
 	guildTools := b.guildRegistry.ListTools()
-	
+
 	for _, toolName := range guildTools {
 		// Skip if already synced
 		if _, exists := b.guildToMCP[toolName]; exists {
 			continue
 		}
-		
+
 		tool, err := b.guildRegistry.GetTool(toolName)
 		if err != nil {
 			continue // Skip tools that can't be retrieved
 		}
-		
+
 		// Only sync base tools that implement the expected interface
 		if baseTool, ok := tool.(basetools.Tool); ok {
 			adapter := NewGuildToMCPAdapter(baseTool)
 			b.guildToMCP[toolName] = adapter
-			
+
 			// Register with MCP, ignore errors for individual tools
 			_ = b.mcpRegistry.RegisterTool(adapter)
 		}
 	}
-	
+
 	return nil
 }
 
 // syncMCPToGuild syncs existing MCP tools to Guild registry
 func (b *ToolBridge) syncMCPToGuild(ctx context.Context) error {
 	mcpTools := b.mcpRegistry.ListTools()
-	
+
 	for _, tool := range mcpTools {
 		// Skip if already synced
 		if _, exists := b.mcpToGuild[tool.ID()]; exists {
 			continue
 		}
-		
+
 		adapter := NewMCPToGuildAdapter(tool)
 		b.mcpToGuild[tool.ID()] = adapter
-		
+
 		// Calculate cost magnitude from MCP cost profile
 		costMagnitude := b.calculateCostMagnitude(tool.GetCostProfile())
-		
+
 		// Register with Guild, ignore errors for individual tools
 		_ = b.guildRegistry.RegisterToolWithCost(tool.Name(), adapter, costMagnitude, tool.Capabilities())
 	}
-	
+
 	return nil
 }
 
@@ -173,7 +173,7 @@ func (b *ToolBridge) calculateCostMagnitude(profile protocol.CostProfile) int {
 	if profile.FinancialCost == 0 && profile.LatencyCost < time.Millisecond*100 {
 		return 0
 	}
-	
+
 	// Map based on financial cost and latency
 	if profile.FinancialCost < 0.001 && profile.LatencyCost < time.Second {
 		return 1 // Very low cost
@@ -222,7 +222,7 @@ func (a *GuildToMCPAdapter) Capabilities() []string {
 	// Map Guild categories to capabilities
 	category := a.guildTool.Category()
 	capabilities := []string{category}
-	
+
 	// Add common capabilities based on category
 	switch category {
 	case "file":
@@ -234,7 +234,7 @@ func (a *GuildToMCPAdapter) Capabilities() []string {
 	case "shell":
 		capabilities = append(capabilities, "execution", "system", "command")
 	}
-	
+
 	return capabilities
 }
 
@@ -245,13 +245,13 @@ func (a *GuildToMCPAdapter) Execute(ctx context.Context, params map[string]inter
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_tool_bridge").WithComponent("convert_schema").WithOperation("failed to marshal parameters")
 	}
-	
+
 	// Execute Guild tool
 	result, err := a.guildTool.Execute(ctx, string(inputJSON))
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Return the result as a structured response
 	return map[string]interface{}{
 		"output":   result.Output,
@@ -277,7 +277,7 @@ func (a *GuildToMCPAdapter) GetCostProfile() protocol.CostProfile {
 		FinancialCost: 0, // Default to free
 		LatencyCost:   time.Millisecond * 100, // Default 100ms
 	}
-	
+
 	// Adjust based on category
 	switch a.guildTool.Category() {
 	case "web", "api":
@@ -287,7 +287,7 @@ func (a *GuildToMCPAdapter) GetCostProfile() protocol.CostProfile {
 		profile.LatencyCost = time.Millisecond * 500
 		profile.ComputeCost = 0.1
 	}
-	
+
 	return profile
 }
 
@@ -297,10 +297,10 @@ func (a *GuildToMCPAdapter) GetParameters() []protocol.ToolParameter {
 	if schema == nil {
 		return nil
 	}
-	
+
 	// Extract parameters from JSON schema
 	var params []protocol.ToolParameter
-	
+
 	if properties, ok := schema["properties"].(map[string]interface{}); ok {
 		required := make(map[string]bool)
 		if reqList, ok := schema["required"].([]interface{}); ok {
@@ -310,7 +310,7 @@ func (a *GuildToMCPAdapter) GetParameters() []protocol.ToolParameter {
 				}
 			}
 		}
-		
+
 		for name, prop := range properties {
 			if propMap, ok := prop.(map[string]interface{}); ok {
 				param := protocol.ToolParameter{
@@ -324,7 +324,7 @@ func (a *GuildToMCPAdapter) GetParameters() []protocol.ToolParameter {
 			}
 		}
 	}
-	
+
 	return params
 }
 
@@ -386,7 +386,7 @@ func (a *MCPToGuildAdapter) Schema() map[string]interface{} {
 	// Convert MCP parameters to JSON schema
 	properties := make(map[string]interface{})
 	required := []string{}
-	
+
 	for _, param := range a.mcpTool.GetParameters() {
 		propDef := map[string]interface{}{
 			"type":        param.Type,
@@ -396,21 +396,21 @@ func (a *MCPToGuildAdapter) Schema() map[string]interface{} {
 			propDef["default"] = param.Default
 		}
 		properties[param.Name] = propDef
-		
+
 		if param.Required {
 			required = append(required, param.Name)
 		}
 	}
-	
+
 	schema := map[string]interface{}{
 		"type":       "object",
 		"properties": properties,
 	}
-	
+
 	if len(required) > 0 {
 		schema["required"] = required
 	}
-	
+
 	return schema
 }
 
@@ -421,13 +421,13 @@ func (a *MCPToGuildAdapter) Execute(ctx context.Context, input string) (*basetoo
 	if err := json.Unmarshal([]byte(input), &params); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidInput, "mcp_tool_bridge").WithComponent("execute").WithOperation("failed to parse input JSON")
 	}
-	
+
 	// Execute MCP tool
 	result, err := a.mcpTool.Execute(ctx, params)
 	if err != nil {
 		return basetools.NewToolResult("", nil, err, nil), nil
 	}
-	
+
 	// Convert result to string output
 	var output string
 	switch v := result.(type) {
@@ -447,7 +447,7 @@ func (a *MCPToGuildAdapter) Execute(ctx context.Context, input string) (*basetoo
 		jsonOut, _ := json.MarshalIndent(result, "", "  ")
 		output = string(jsonOut)
 	}
-	
+
 	// Extract metadata if available
 	metadata := make(map[string]string)
 	if resultMap, ok := result.(map[string]interface{}); ok {
@@ -459,7 +459,7 @@ func (a *MCPToGuildAdapter) Execute(ctx context.Context, input string) (*basetoo
 			}
 		}
 	}
-	
+
 	return basetools.NewToolResult(output, metadata, nil, nil), nil
 }
 
@@ -470,7 +470,7 @@ func (a *MCPToGuildAdapter) Examples() []string {
 	if len(params) == 0 {
 		return []string{`{}`}
 	}
-	
+
 	example := make(map[string]interface{})
 	for _, param := range params {
 		switch param.Type {
@@ -486,7 +486,7 @@ func (a *MCPToGuildAdapter) Examples() []string {
 			example[param.Name] = map[string]interface{}{"key": "value"}
 		}
 	}
-	
+
 	jsonExample, _ := json.MarshalIndent(example, "", "  ")
 	return []string{string(jsonExample)}
 }

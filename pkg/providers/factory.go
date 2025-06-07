@@ -2,7 +2,7 @@ package providers
 
 import (
 	"os"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers/claudecode"
 )
@@ -26,14 +26,14 @@ func (f *Factory) CreateClient(providerType ProviderType, apiKey string, model s
 		// For Claude Code, apiKey is used as binary path, model is configuration type
 		return claudecode.NewClient(apiKey, model), nil
 	}
-	
+
 	// For all other providers, use the V2 factory to create AIProvider,
 	// then wrap it with the LLMClient adapter
 	aiProvider, err := f.v2Factory.CreateAIProvider(providerType, apiKey)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return f.v2Factory.CreateLLMClientAdapter(aiProvider), nil
 }
 
@@ -52,7 +52,7 @@ func (f *Factory) CreateClientFromConfig(providerType ProviderType, config map[s
 			apiKey = keyStr
 		}
 	}
-	
+
 	// If no direct API key, try environment variable reference
 	if apiKey == "" {
 		if envVar, exists := config["api_key_env"]; exists {

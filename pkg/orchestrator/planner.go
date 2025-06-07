@@ -16,7 +16,7 @@ import (
 type TaskPlanner interface {
 	// PlanTasks decomposes an objective into tasks
 	PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error)
-	
+
 	// AssignTasks assigns tasks to agents based on capabilities
 	AssignTasks(ctx context.Context, tasks []*kanban.Task, guild *config.GuildConfig) error
 }
@@ -44,7 +44,7 @@ func DefaultManagerTaskPlannerFactory(managerAgent agent.Agent, kanbanBoard *kan
 func (p *managerTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
 	// Build a prompt for the manager agent
 	prompt := p.buildPlanningPrompt(obj, guild)
-	
+
 	// Execute the planning request
 	response, err := p.managerAgent.Execute(ctx, prompt)
 	if err != nil {
@@ -52,7 +52,7 @@ func (p *managerTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Comm
 			WithComponent("orchestrator").
 			WithOperation("PlanTasks")
 	}
-	
+
 	// Parse the response into tasks
 	tasks, err := p.parseTasksFromResponse(response)
 	if err != nil {
@@ -60,7 +60,7 @@ func (p *managerTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Comm
 			WithComponent("orchestrator").
 			WithOperation("PlanTasks")
 	}
-	
+
 	// Add tasks to kanban board
 	for _, task := range tasks {
 		// Create task on board
@@ -70,23 +70,23 @@ func (p *managerTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Comm
 				WithComponent("orchestrator").
 				WithOperation("PlanTasks")
 		}
-		
+
 		// Update task with parsed data
 		createdTask.Status = task.Status
 		createdTask.Metadata = task.Metadata
 		createdTask.Dependencies = task.Dependencies
-		
+
 		// Update the task
 		if err := p.kanbanBoard.UpdateTask(ctx, createdTask); err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to update task").
 				WithComponent("orchestrator").
 				WithOperation("PlanTasks")
 		}
-		
+
 		// Update our reference
 		task.ID = createdTask.ID
 	}
-	
+
 	return tasks, nil
 }
 
@@ -94,7 +94,7 @@ func (p *managerTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Comm
 func (p *managerTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.Task, guild *config.GuildConfig) error {
 	// Build a prompt for task assignment
 	prompt := p.buildAssignmentPrompt(tasks, guild)
-	
+
 	// Execute the assignment request
 	response, err := p.managerAgent.Execute(ctx, prompt)
 	if err != nil {
@@ -102,7 +102,7 @@ func (p *managerTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.Ta
 			WithComponent("orchestrator").
 			WithOperation("AssignTasks")
 	}
-	
+
 	// Parse assignments from response
 	assignments, err := p.parseAssignmentsFromResponse(response, tasks, guild)
 	if err != nil {
@@ -110,14 +110,14 @@ func (p *managerTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.Ta
 			WithComponent("orchestrator").
 			WithOperation("AssignTasks")
 	}
-	
+
 	// Apply assignments to tasks
 	for taskID, agentID := range assignments {
 		task, err := p.kanbanBoard.GetTask(ctx, taskID)
 		if err != nil {
 			continue // Skip if task not found
 		}
-		
+
 		// Update task assignment
 		task.AssignedTo = agentID
 		task.Metadata["assigned_to"] = agentID
@@ -127,28 +127,28 @@ func (p *managerTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.Ta
 				WithOperation("AssignTasks")
 		}
 	}
-	
+
 	return nil
 }
 
 // buildPlanningPrompt creates a prompt for task planning
 func (p *managerTaskPlanner) buildPlanningPrompt(obj *commission.Commission, guild *config.GuildConfig) string {
 	var prompt strings.Builder
-	
+
 	prompt.WriteString("You are the manager agent for the ")
 	prompt.WriteString(guild.Name)
 	prompt.WriteString(" guild. Your task is to decompose the following objective into concrete, actionable tasks.\n\n")
-	
+
 	prompt.WriteString("## Objective\n")
 	prompt.WriteString(obj.Format())
 	prompt.WriteString("\n\n")
-	
+
 	prompt.WriteString("## Available Agents and Capabilities\n")
 	for _, agent := range guild.Agents {
 		prompt.WriteString(fmt.Sprintf("- **%s** (%s): %s\n", agent.Name, agent.ID, strings.Join(agent.Capabilities, ", ")))
 	}
 	prompt.WriteString("\n")
-	
+
 	prompt.WriteString("## Instructions\n")
 	prompt.WriteString("Break down the objective into specific tasks. For each task, provide:\n")
 	prompt.WriteString("1. A unique task ID (e.g., TASK-001)\n")
@@ -157,7 +157,7 @@ func (p *managerTaskPlanner) buildPlanningPrompt(obj *commission.Commission, gui
 	prompt.WriteString("4. Required capabilities (from the list above)\n")
 	prompt.WriteString("5. Dependencies on other tasks (if any)\n")
 	prompt.WriteString("6. Estimated complexity (low, medium, high)\n\n")
-	
+
 	prompt.WriteString("Format your response as follows:\n")
 	prompt.WriteString("```\n")
 	prompt.WriteString("TASK-001: [Title]\n")
@@ -167,60 +167,60 @@ func (p *managerTaskPlanner) buildPlanningPrompt(obj *commission.Commission, gui
 	prompt.WriteString("Complexity: [low|medium|high]\n")
 	prompt.WriteString("---\n")
 	prompt.WriteString("```\n")
-	
+
 	return prompt.String()
 }
 
 // buildAssignmentPrompt creates a prompt for task assignment
 func (p *managerTaskPlanner) buildAssignmentPrompt(tasks []*kanban.Task, guild *config.GuildConfig) string {
 	var prompt strings.Builder
-	
+
 	prompt.WriteString("You are the manager agent. Assign the following tasks to the most suitable agents based on their capabilities.\n\n")
-	
+
 	prompt.WriteString("## Tasks to Assign\n")
 	for _, task := range tasks {
 		capabilities := ""
 		if caps, ok := task.Metadata["capabilities"]; ok {
 			capabilities = caps
 		}
-		prompt.WriteString(fmt.Sprintf("- **%s**: %s (requires: %s)\n", 
+		prompt.WriteString(fmt.Sprintf("- **%s**: %s (requires: %s)\n",
 			task.ID, task.Title, capabilities))
 	}
 	prompt.WriteString("\n")
-	
+
 	prompt.WriteString("## Available Agents\n")
 	for _, agent := range guild.Agents {
-		prompt.WriteString(fmt.Sprintf("- **%s** (%s): capabilities: %s\n", 
+		prompt.WriteString(fmt.Sprintf("- **%s** (%s): capabilities: %s\n",
 			agent.Name, agent.ID, strings.Join(agent.Capabilities, ", ")))
 	}
 	prompt.WriteString("\n")
-	
+
 	prompt.WriteString("## Instructions\n")
 	prompt.WriteString("Assign each task to the most suitable agent. Consider:\n")
 	prompt.WriteString("1. Agent capabilities must match task requirements\n")
 	prompt.WriteString("2. Balance workload across agents\n")
 	prompt.WriteString("3. Prefer specialists for their domain\n\n")
-	
+
 	prompt.WriteString("Format your response as:\n")
 	prompt.WriteString("```\n")
 	prompt.WriteString("TASK-001: agent_id\n")
 	prompt.WriteString("TASK-002: agent_id\n")
 	prompt.WriteString("```\n")
-	
+
 	return prompt.String()
 }
 
 // parseTasksFromResponse parses tasks from the manager's response
 func (p *managerTaskPlanner) parseTasksFromResponse(response string) ([]*kanban.Task, error) {
 	tasks := []*kanban.Task{}
-	
+
 	// Simple parsing - in production, use a more robust parser
 	lines := strings.Split(response, "\n")
 	var currentTask *kanban.Task
-	
+
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
-		
+
 		// Skip empty lines and markers
 		if line == "" || line == "```" || line == "---" {
 			if currentTask != nil {
@@ -229,7 +229,7 @@ func (p *managerTaskPlanner) parseTasksFromResponse(response string) ([]*kanban.
 			}
 			continue
 		}
-		
+
 		// Parse task ID and title
 		if strings.Contains(line, ":") && strings.HasPrefix(line, "TASK-") {
 			parts := strings.SplitN(line, ":", 2)
@@ -261,25 +261,25 @@ func (p *managerTaskPlanner) parseTasksFromResponse(response string) ([]*kanban.
 			}
 		}
 	}
-	
+
 	// Add last task if any
 	if currentTask != nil {
 		tasks = append(tasks, currentTask)
 	}
-	
+
 	if len(tasks) == 0 {
 		return nil, gerror.New(gerror.ErrCodeOrchestration, "no tasks found in response", nil).
 			WithComponent("orchestrator").
 			WithOperation("parseTasksFromResponse")
 	}
-	
+
 	return tasks, nil
 }
 
 // parseAssignmentsFromResponse parses task assignments from the manager's response
 func (p *managerTaskPlanner) parseAssignmentsFromResponse(response string, tasks []*kanban.Task, guild *config.GuildConfig) (map[string]string, error) {
 	assignments := make(map[string]string)
-	
+
 	// Parse response
 	lines := strings.Split(response, "\n")
 	for _, line := range lines {
@@ -287,14 +287,14 @@ func (p *managerTaskPlanner) parseAssignmentsFromResponse(response string, tasks
 		if line == "" || line == "```" {
 			continue
 		}
-		
+
 		// Parse "TASK-XXX: agent_id"
 		if strings.Contains(line, ":") && strings.HasPrefix(line, "TASK-") {
 			parts := strings.SplitN(line, ":", 2)
 			if len(parts) == 2 {
 				taskID := strings.TrimSpace(parts[0])
 				agentID := strings.TrimSpace(parts[1])
-				
+
 				// Validate agent exists
 				if _, err := guild.GetAgentByID(agentID); err == nil {
 					assignments[taskID] = agentID
@@ -302,6 +302,6 @@ func (p *managerTaskPlanner) parseAssignmentsFromResponse(response string, tasks
 			}
 		}
 	}
-	
+
 	return assignments, nil
 }

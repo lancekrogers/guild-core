@@ -349,11 +349,11 @@ func TestExecuteToolWithParams(t *testing.T) {
 	if mockTool.LastParamsValue["param1"] != "value1" {
 		t.Errorf("Expected param1 'value1', got '%v'", mockTool.LastParamsValue["param1"])
 	}
-	
+
 	if mockTool.LastParamsValue["param2"] != float64(123) {
 		t.Errorf("Expected param2 123, got %v", mockTool.LastParamsValue["param2"])
 	}
-	
+
 	if mockTool.LastParamsValue["param3"] != true {
 		t.Errorf("Expected param3 true, got %v", mockTool.LastParamsValue["param3"])
 	}

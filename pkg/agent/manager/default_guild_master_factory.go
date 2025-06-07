@@ -25,7 +25,7 @@ func NewDefaultGuildMasterFactory(
 	if registry == nil {
 		registry = NewComponentRegistry()
 	}
-	
+
 	return &DefaultGuildMasterFactory{
 		promptManager: promptManager,
 		providers:     providers,
@@ -45,7 +45,7 @@ func (f *DefaultGuildMasterFactory) CreateCommissionRefiner(providerName, model 
 	}
 
 	// Try to get components from registry first, create if not found
-	
+
 	// Get or create Artisan client
 	clientKey := providerName + "-" + model
 	artisanClient, err := f.registry.GetArtisanClient(clientKey)
@@ -68,7 +68,7 @@ func (f *DefaultGuildMasterFactory) CreateCommissionRefiner(providerName, model 
 			ArtisanClient: artisanClient,
 			PromptManager: f.promptManager,
 		}
-		
+
 		// Create the parser with ResponseParserAdapter
 		responseParser = NewResponseParserAdapter(NewIntelligentParser(parserConfig))
 		if regErr := f.registry.RegisterParser(parserKey, responseParser); regErr != nil {
@@ -117,7 +117,7 @@ func (f *DefaultGuildMasterFactory) CreateCommissionRefinerWithDefaults() (Commi
 				WithComponent("manager").
 				WithOperation("CreateCommissionRefinerWithDefaults")
 		}
-		
+
 		// Set default model based on provider
 		switch providerName {
 		case "openai":

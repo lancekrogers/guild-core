@@ -128,4 +128,3 @@ func (t *MockTool) Category() string {
 func (t *MockTool) RequiresAuth() bool {
 	return t.NeedsAuthValue
 }
-

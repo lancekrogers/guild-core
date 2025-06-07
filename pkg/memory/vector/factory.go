@@ -53,7 +53,7 @@ type StoreConfig struct {
 	EmbeddingProvider interfaces.AIProvider
 
 	// EmbeddingModel is the model to use for embeddings.
-	// Common values: 
+	// Common values:
 	// - "nomic-embed-text" (768 dims)
 	// - "mxbai-embed-large" (1024 dims)
 	// - "all-minilm" (384 dims)
@@ -68,7 +68,7 @@ type StoreConfig struct {
 	// ChromemConfig contains Chromem-specific configuration.
 	// Only used when Type is StoreTypeChromem.
 	ChromemConfig ChromemConfig
-	
+
 	// DefaultCollection is the default collection name to use.
 	// Collections help organize embeddings by type (e.g., "agent_memories", "corpus_documents").
 	DefaultCollection string
@@ -86,7 +86,7 @@ type ChromemConfig struct {
 	// This should match the dimension of your embedding model.
 	// Common values: 768 (nomic-embed-text), 1024 (mxbai-embed-large), 384 (all-minilm)
 	DefaultDimension int
-	
+
 	// DefaultCollection overrides the collection name from StoreConfig.
 	// If both are set, this one takes precedence.
 	DefaultCollection string
@@ -123,14 +123,14 @@ func NewVectorStore(ctx context.Context, config *StoreConfig) (VectorStore, erro
 	globalRegistry.mu.RLock()
 	factory, exists := globalRegistry.factories[config.Type]
 	globalRegistry.mu.RUnlock()
-	
+
 	if !exists {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, fmt.Sprintf("unsupported vector store type: %s (registered types: %v)", 
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, fmt.Sprintf("unsupported vector store type: %s (registered types: %v)",
 				config.Type, ListRegisteredStores()), nil).
 			WithComponent("memory").
 			WithOperation("NewVectorStore")
 	}
-	
+
 	// Use factory to create store
 	return factory(ctx, config, embedder)
 }
@@ -183,13 +183,13 @@ func createEmbedder(config *StoreConfig) (Embedder, error) {
 // detectAvailableProvider attempts to auto-detect available AI providers
 func detectAvailableProvider() (interfaces.AIProvider, error) {
 	factory := providers.NewFactoryV2()
-	
+
 	// Check for Ollama first (preferred for offline operation)
 	ollamaHost := os.Getenv("OLLAMA_HOST")
 	if ollamaHost == "" {
 		ollamaHost = "http://localhost:11434"
 	}
-	
+
 	// Try to connect to Ollama
 	client := &http.Client{Timeout: 2 * time.Second}
 	resp, err := client.Get(ollamaHost + "/api/tags")
@@ -201,7 +201,7 @@ func detectAvailableProvider() (interfaces.AIProvider, error) {
 			return provider, nil
 		}
 	}
-	
+
 	// Check for other providers via environment variables
 	if apiKey := os.Getenv("OPENAI_API_KEY"); apiKey != "" {
 		provider, err := factory.CreateAIProvider(providers.ProviderOpenAI, apiKey)
@@ -209,14 +209,14 @@ func detectAvailableProvider() (interfaces.AIProvider, error) {
 			return provider, nil
 		}
 	}
-	
+
 	if apiKey := os.Getenv("ANTHROPIC_API_KEY"); apiKey != "" {
 		provider, err := factory.CreateAIProvider(providers.ProviderAnthropic, apiKey)
 		if err == nil {
 			return provider, nil
 		}
 	}
-	
+
 	return nil, gerror.New(gerror.ErrCodeNotFound, "no AI provider available: check Ollama installation or set API keys", nil).
 		WithComponent("memory").
 		WithOperation("detectAvailableProvider")
@@ -252,7 +252,7 @@ func init() {
 		if chromemConfig.DefaultDimension == 0 {
 			chromemConfig.DefaultDimension = 768 // Default for common embedding models
 		}
-		
+
 		// Set default collection, preferring ChromemConfig over StoreConfig
 		if config.ChromemConfig.DefaultCollection != "" {
 			chromemConfig.DefaultCollection = config.ChromemConfig.DefaultCollection
@@ -291,7 +291,7 @@ func init() {
 func RegisterVectorStore(storeType StoreType, factory VectorStoreFactory) {
 	globalRegistry.mu.Lock()
 	defer globalRegistry.mu.Unlock()
-	
+
 	globalRegistry.factories[storeType] = factory
 }
 
@@ -306,11 +306,11 @@ func GetVectorStore(ctx context.Context, config *StoreConfig) (VectorStore, erro
 func ListRegisteredStores() []StoreType {
 	globalRegistry.mu.RLock()
 	defer globalRegistry.mu.RUnlock()
-	
+
 	types := make([]StoreType, 0, len(globalRegistry.factories))
 	for t := range globalRegistry.factories {
 		types = append(types, t)
 	}
-	
+
 	return types
 }

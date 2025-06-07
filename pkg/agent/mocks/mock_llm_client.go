@@ -31,16 +31,16 @@ func (m *MockLLMClient) Complete(ctx context.Context, prompt string) (string, er
 	default:
 		// Continue execution
 	}
-	
+
 	// Track the call
 	m.CallCount++
 	m.LastPrompt = prompt
-	
+
 	// Return configured error if set
 	if m.Error != nil {
 		return "", m.Error
 	}
-	
+
 	// Return configured response
 	return m.Response, nil
 }

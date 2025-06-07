@@ -7,17 +7,17 @@ INSERT INTO commissions (
 SELECT * FROM commissions WHERE id = ?;
 
 -- name: UpdateCommission :exec
-UPDATE commissions 
+UPDATE commissions
 SET title = ?, description = ?, domain = ?, context = ?, status = ?
 WHERE id = ?;
 
 -- name: UpdateCommissionStatus :exec
-UPDATE commissions 
+UPDATE commissions
 SET status = ?
 WHERE id = ?;
 
 -- name: SetCommissionCompleted :exec
-UPDATE commissions 
+UPDATE commissions
 SET status = 'completed'
 WHERE id = ?;
 
@@ -35,4 +35,3 @@ SELECT * FROM commissions WHERE domain = ? ORDER BY created_at DESC;
 
 -- name: ListCommissionsByCampaign :many
 SELECT * FROM commissions WHERE campaign_id = ? ORDER BY created_at DESC;
-

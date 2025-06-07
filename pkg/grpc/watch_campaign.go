@@ -53,26 +53,26 @@ func (s *Screen) ShowCursor() {
 // Render renders a frame using shadow-diff algorithm
 func (s *Screen) Render(frame []byte) {
 	lines := bytes.Split(frame, []byte{'\n'})
-	
+
 	// Ensure we have enough lines in prev
 	if len(lines) > len(s.prev) {
 		newPrev := make([][]byte, len(lines))
 		copy(newPrev, s.prev)
 		s.prev = newPrev
 	}
-	
+
 	for row, line := range lines {
 		if row >= s.height {
 			break // Don't render beyond screen height
 		}
-		
+
 		if !bytes.Equal(line, s.prev[row]) {
 			// Move cursor to row and render line
 			fmt.Printf("\033[%d;1H%s\033[K", row+1, line)
 			s.prev[row] = append([]byte(nil), line...)
 		}
 	}
-	
+
 	// Clear any remaining lines from previous frame
 	for row := len(lines); row < len(s.prev) && row < s.height; row++ {
 		if len(s.prev[row]) > 0 {
@@ -87,14 +87,14 @@ func (s *Screen) Resize() {
 	w, h := getTermSize()
 	s.width = w
 	s.height = h
-	
+
 	// Reallocate prev buffer if needed
 	if h > len(s.prev) {
 		newPrev := make([][]byte, h)
 		copy(newPrev, s.prev)
 		s.prev = newPrev
 	}
-	
+
 	// Force full redraw
 	s.Clear()
 }
@@ -160,7 +160,7 @@ func (c *WatchCampaignClient) Watch(ctx context.Context, campaignID string, opti
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
-			
+
 		case sig := <-sigCh:
 			switch sig {
 			case syscall.SIGINT, syscall.SIGTERM:
@@ -168,7 +168,7 @@ func (c *WatchCampaignClient) Watch(ctx context.Context, campaignID string, opti
 			case syscall.SIGWINCH:
 				c.screen.Resize()
 			}
-			
+
 		default:
 			// Receive update from stream
 			update, err := stream.Recv()
@@ -198,14 +198,14 @@ func (c *WatchCampaignClient) Watch(ctx context.Context, campaignID string, opti
 func (c *WatchCampaignClient) displayMetadata(meta *pb.BoardMetadata) {
 	// Move to bottom of screen
 	fmt.Printf("\033[%d;1H", c.screen.height)
-	
+
 	// Display metadata
 	status := fmt.Sprintf("Size: %dx%d | Agents: %d | Tasks: %d/%d | FPS: %.1f",
 		meta.Width, meta.Height,
 		meta.ActiveAgents,
 		meta.CompletedTasks, meta.TotalTasks,
 		meta.Fps)
-	
+
 	fmt.Printf("\033[K%s", status) // Clear to end of line and print status
 }
 
@@ -237,19 +237,19 @@ func getTermSize() (width, height int) {
 		Xpixel uint16
 		Ypixel uint16
 	}
-	
+
 	_, _, _ = syscall.Syscall(
 		syscall.SYS_IOCTL,
 		uintptr(syscall.Stdout),
 		uintptr(syscall.TIOCGWINSZ),
 		uintptr(unsafe.Pointer(&ws)),
 	)
-	
+
 	if ws.Col == 0 || ws.Row == 0 {
 		// Fallback to reasonable defaults
 		return 80, 24
 	}
-	
+
 	return int(ws.Col), int(ws.Row)
 }
 

@@ -14,13 +14,13 @@ The main interface for task execution.
 type TaskExecutor interface {
     // Execute runs the task execution loop for a given task
     Execute(ctx context.Context, task *kanban.Task) (*ExecutionResult, error)
-    
+
     // GetProgress returns the current execution progress (0.0 to 1.0)
     GetProgress() float64
-    
+
     // GetStatus returns the current execution status
     GetStatus() ExecutionStatus
-    
+
     // Stop gracefully stops the execution
     Stop() error
 }
@@ -207,8 +207,8 @@ for {
         progress := exec.GetProgress()
         status := exec.GetStatus()
         fmt.Printf("Progress: %.0f%% [%s]\n", progress*100, status)
-        
-        if status == executor.StatusCompleted || 
+
+        if status == executor.StatusCompleted ||
            status == executor.StatusFailed {
             return
         }
@@ -265,11 +265,11 @@ if err == nil {
     if wsPath, ok := result.Metadata["workspace_path"].(string); ok {
         fmt.Printf("Task executed in: %s\n", wsPath)
     }
-    
+
     if wsBranch, ok := result.Metadata["workspace_branch"].(string); ok {
         fmt.Printf("Git branch: %s\n", wsBranch)
     }
-    
+
     if plan, ok := result.Metadata["execution_plan"].(string); ok {
         fmt.Printf("Execution plan:\n%s\n", plan)
     }
@@ -351,7 +351,7 @@ func TestExecutor(t *testing.T) {
     execContext := &executor.ExecutionContext{
         AgentID: "test-agent",
     }
-    
+
     // Create executor
     exec, err := executor.NewBasicTaskExecutor(
         mockAgent,
@@ -361,13 +361,13 @@ func TestExecutor(t *testing.T) {
         nil, // No workspace
     )
     require.NoError(t, err)
-    
+
     // Create test task
     task := &kanban.Task{
         ID:    "test-task",
         Title: "Test Task",
     }
-    
+
     // Execute
     result, err := exec.Execute(context.Background(), task)
     assert.NoError(t, err)

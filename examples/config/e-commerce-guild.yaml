@@ -35,9 +35,9 @@ agents:
       - Service mesh and API gateway configuration
       - Database schema design and optimization
       - Inter-service communication patterns
-      
+
       Always provide production-ready, scalable solutions following industry best practices.
-    
+
   - id: "catalog-craftsman"
     name: "CatalogCraftsman"
     role: "Product catalog and inventory management specialist"
@@ -60,9 +60,9 @@ agents:
       - Category hierarchies and faceted search
       - Inventory tracking and stock management
       - Product recommendation algorithms
-      
+
       Focus on performance, scalability, and user experience in product discovery.
-    
+
   - id: "payment-sentinel"
     name: "PaymentSentinel"
     role: "Payment processing and financial security specialist"
@@ -85,9 +85,9 @@ agents:
       - Payment tokenization and secure storage
       - Fraud detection and prevention
       - Webhook handling and reconciliation
-      
+
       Always prioritize security, compliance, and data protection in financial operations.
-    
+
   - id: "order-orchestrator"
     name: "OrderOrchestrator"
     role: "Order workflow and fulfillment specialist"
@@ -110,9 +110,9 @@ agents:
       - Event-driven order processing
       - Integration with fulfillment systems
       - Return and refund workflows
-      
+
       Design robust, fault-tolerant order processing systems with clear audit trails.
-    
+
   - id: "gateway-guardian"
     name: "GatewayGuardian"
     role: "API gateway and authentication specialist"
@@ -135,9 +135,9 @@ agents:
       - Rate limiting and throttling strategies
       - Load balancing and circuit breakers
       - CORS and security header configuration
-      
+
       Ensure secure, performant, and reliable API access for all clients.
-    
+
   - id: "deployment-marshal"
     name: "DeploymentMarshal"
     role: "Deployment and infrastructure specialist"
@@ -161,7 +161,7 @@ agents:
       - Monitoring and observability setup
       - CI/CD pipeline configuration
       - Infrastructure as Code (Terraform/Helm)
-      
+
       Create production-ready, scalable deployment solutions with zero-downtime strategies.
 
 # Campaign configuration for demos
@@ -176,23 +176,23 @@ campaigns:
       - "Integrate payment processing"
       - "Build order management system"
       - "Set up monitoring and deployment"
-    
+
 # Memory configuration
 memory:
   vector_store:
     type: "chromem"
     persist_path: ".guild/memory/e-commerce"
-  
+
 # Tool configurations
 tools:
   file_writer:
     type: "fs"
     allowed_extensions: [".go", ".ts", ".tsx", ".yaml", ".json", ".md"]
-  
+
   code_generator:
     type: "template"
     templates_path: "templates/"
-  
+
   database_tool:
     type: "sql"
     dialect: "postgresql"

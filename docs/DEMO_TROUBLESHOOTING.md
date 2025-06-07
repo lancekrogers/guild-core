@@ -285,7 +285,7 @@ sudo sync && sudo sysctl vm.drop_caches=3
 nslookup api.openai.com
 nslookup api.anthropic.com
 
-# Test HTTP connectivity  
+# Test HTTP connectivity
 curl -I https://api.openai.com/v1/models
 curl -I https://api.anthropic.com/v1/messages
 

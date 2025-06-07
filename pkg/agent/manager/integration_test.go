@@ -50,20 +50,20 @@ func TestManagerIntelligenceIntegration(t *testing.T) {
 		}
 
 		result, err := service.AnalyzeComplexityOnly(ctx, request)
-		
+
 		require.NoError(t, err, "Complexity analysis should succeed")
 		require.NotNil(t, result, "Result should not be nil")
-		
+
 		// Validate the analysis results
 		assert.Greater(t, result.ComplexityScore, 0, "Complexity score should be positive")
 		assert.LessOrEqual(t, result.ComplexityScore, 10, "Complexity score should be <= 10")
 		assert.NotEmpty(t, result.RecommendedApproach, "Should have a recommended approach")
 		assert.NotEmpty(t, result.Reasoning, "Should have reasoning")
 		assert.NotEmpty(t, result.AgentRequirements, "Should have agent requirements")
-		
+
 		// Validate that the analysis makes sense for a complex backend task
 		assert.Contains(t, []string{"single-agent", "multi-agent"}, result.RecommendedApproach)
-		
+
 		// Log the results for manual verification
 		logger.Info("Complexity analysis completed",
 			slog.Int("complexity_score", result.ComplexityScore),
@@ -125,18 +125,18 @@ func TestManagerIntelligenceIntegration(t *testing.T) {
 		}
 
 		routingResult, err := service.RouteToAgentsOnly(ctx, routingRequest)
-		
+
 		require.NoError(t, err, "Agent routing should succeed")
 		require.NotNil(t, routingResult, "Routing result should not be nil")
-		
+
 		// Validate routing results
 		assert.NotEmpty(t, routingResult.RoutingDecision.PrimaryAgent.AgentID, "Should have primary agent")
 		assert.Greater(t, routingResult.RoutingDecision.PrimaryAgent.AssignmentConfidence, 0, "Should have confidence score")
 		assert.Greater(t, routingResult.CostAnalysis.TotalEstimatedTokens, 0, "Should have token estimate")
-		
+
 		// The backend specialist should be preferred for a backend-only task
 		if complexityResult.RecommendedApproach == "single-agent" {
-			assert.Equal(t, "backend-specialist", routingResult.RoutingDecision.PrimaryAgent.AgentID, 
+			assert.Equal(t, "backend-specialist", routingResult.RoutingDecision.PrimaryAgent.AgentID,
 				"Backend specialist should be chosen for simple backend tasks")
 		}
 
@@ -162,20 +162,20 @@ func TestManagerIntelligenceIntegration(t *testing.T) {
 		}
 
 		result, err := service.AnalyzeAndRoute(ctx, request)
-		
+
 		require.NoError(t, err, "Full workflow should succeed")
 		require.NotNil(t, result, "Result should not be nil")
-		
+
 		// Validate all components are present
 		assert.NotNil(t, result.ComplexityAnalysis, "Should have complexity analysis")
 		assert.NotNil(t, result.AgentRouting, "Should have agent routing")
 		assert.NotEmpty(t, result.ExecutiveSummary.RecommendedApproach, "Should have executive summary")
-		
+
 		// Validate executive summary makes sense
 		assert.NotEmpty(t, result.ExecutiveSummary.PrimaryAgent, "Should have primary agent recommendation")
 		assert.Contains(t, result.ExecutiveSummary.EstimatedCost, "tokens", "Should have cost estimate")
 		assert.NotEmpty(t, result.ExecutiveSummary.EstimatedDuration, "Should have duration estimate")
-		
+
 		// Complex tasks should likely recommend multi-agent approach
 		if result.ComplexityAnalysis.ComplexityScore > 6 {
 			assert.Equal(t, "multi-agent", result.ComplexityAnalysis.RecommendedApproach,
@@ -220,10 +220,10 @@ func TestErrorHandlingIntegration(t *testing.T) {
 		}
 
 		result, err := analyzer.AnalyzeComplexity(ctx, request)
-		
+
 		assert.Error(t, err, "Should timeout")
 		assert.Nil(t, result, "Result should be nil on timeout")
-		
+
 		// Check that it's specifically a timeout error
 		var analysisErr *AnalysisError
 		assert.ErrorAs(t, err, &analysisErr, "Should be an AnalysisError")
@@ -270,10 +270,10 @@ func TestErrorHandlingIntegration(t *testing.T) {
 			t.Run(tc.name, func(t *testing.T) {
 				ctx := context.Background()
 				result, err := analyzer.AnalyzeComplexity(ctx, tc.request)
-				
+
 				assert.Error(t, err, "Should have validation error")
 				assert.Nil(t, result, "Result should be nil on validation error")
-				
+
 				var analysisErr *AnalysisError
 				assert.ErrorAs(t, err, &analysisErr, "Should be an AnalysisError")
 				assert.Equal(t, "ValidationError", analysisErr.Type, "Should be a validation error")
@@ -296,11 +296,11 @@ func TestPerformanceIntegration(t *testing.T) {
 
 	t.Run("ConcurrentAnalysis", func(t *testing.T) {
 		ctx := context.Background()
-		
+
 		// Run multiple analyses concurrently
 		const numAnalyses = 5
 		results := make(chan error, numAnalyses)
-		
+
 		for i := 0; i < numAnalyses; i++ {
 			go func(taskNum int) {
 				request := IntelligenceRequest{
@@ -309,12 +309,12 @@ func TestPerformanceIntegration(t *testing.T) {
 					TokenBudget:     2000,
 					QualityLevel:    "development",
 				}
-				
+
 				_, err := service.AnalyzeAndRoute(ctx, request)
 				results <- err
 			}(i)
 		}
-		
+
 		// Collect results
 		for i := 0; i < numAnalyses; i++ {
 			err := <-results
@@ -324,24 +324,24 @@ func TestPerformanceIntegration(t *testing.T) {
 
 	t.Run("ResponseTimeBaseline", func(t *testing.T) {
 		ctx := context.Background()
-		
+
 		request := ComplexityAnalysisRequest{
 			TaskDescription: "Create a simple web application with user authentication",
 			TaskDomain:      "web-development",
 			TokenBudget:     3000,
 			QualityLevel:    "development",
 		}
-		
+
 		start := time.Now()
 		result, err := service.AnalyzeComplexityOnly(ctx, request)
 		duration := time.Since(start)
-		
+
 		require.NoError(t, err)
 		require.NotNil(t, result)
-		
+
 		// Should complete within reasonable time (this depends on LLM provider)
 		assert.Less(t, duration, 10*time.Second, "Analysis should complete within 10 seconds")
-		
+
 		t.Logf("Analysis completed in %v", duration)
 	})
 }
@@ -352,9 +352,9 @@ func createTestPromptManager(t *testing.T) layered.LayeredManager {
 	// In a real implementation, this would create a working LayeredManager
 	// For now, we'll use a mock that returns reasonable prompts
 	mockMgr := &MockPromptManager{}
-	
+
 	// Set up realistic prompt responses
-	mockMgr.On("BuildLayeredPrompt", 
+	mockMgr.On("BuildLayeredPrompt",
 		mock.Anything, "manager-agent", "analysis-session", mock.Anything).
 		Return(&layered.LayeredPrompt{
 			Compiled:    "You are a Guild Master analyzing task complexity. Provide JSON response with complexity_score, recommended_approach, reasoning, and agent_requirements.",
@@ -365,8 +365,8 @@ func createTestPromptManager(t *testing.T) layered.LayeredManager {
 			SessionID:   "analysis-session",
 			AssembledAt: time.Now(),
 		}, nil)
-		
-	mockMgr.On("BuildLayeredPrompt", 
+
+	mockMgr.On("BuildLayeredPrompt",
 		mock.Anything, "manager-agent", "routing-session", mock.Anything).
 		Return(&layered.LayeredPrompt{
 			Compiled:    "You are a Guild Master routing tasks to agents. Provide JSON response with routing_decision, cost_analysis, and execution_plan.",
@@ -377,14 +377,14 @@ func createTestPromptManager(t *testing.T) layered.LayeredManager {
 			SessionID:   "routing-session",
 			AssembledAt: time.Now(),
 		}, nil)
-	
+
 	return mockMgr
 }
 
 func createTestArtisanClient(t *testing.T) ArtisanClient {
 	// Create a mock that returns realistic responses
 	mockClient := &MockArtisanClient{}
-	
+
 	// Complexity analysis response
 	complexityResponse := &ArtisanResponse{
 		Content: `{
@@ -416,7 +416,7 @@ func createTestArtisanClient(t *testing.T) ArtisanClient {
 			}
 		}`,
 	}
-	
+
 	// Routing response
 	routingResponse := &ArtisanResponse{
 		Content: `{
@@ -457,23 +457,23 @@ func createTestArtisanClient(t *testing.T) ArtisanClient {
 			}
 		}`,
 	}
-	
+
 	// Set up the mock to return appropriate responses based on request
 	mockClient.On("Complete", mock.Anything, mock.MatchedBy(func(req ArtisanRequest) bool {
 		return req.MaxTokens == 2000 // Complexity analysis
 	})).Return(complexityResponse, nil)
-	
+
 	mockClient.On("Complete", mock.Anything, mock.MatchedBy(func(req ArtisanRequest) bool {
 		return req.MaxTokens == 3000 // Routing
 	})).Return(routingResponse, nil)
-	
+
 	return mockClient
 }
 
 func createSlowArtisanClient(t *testing.T) ArtisanClient {
 	// Create a mock that simulates slow responses
 	mockClient := &MockArtisanClient{}
-	
+
 	// Use Run to simulate delay before returning
 	mockClient.On("Complete", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 		ctx := args.Get(0).(context.Context)
@@ -487,20 +487,20 @@ func createSlowArtisanClient(t *testing.T) ArtisanClient {
 			return
 		}
 	}).Return(&ArtisanResponse{Content: "{}"}, context.DeadlineExceeded)
-	
+
 	return mockClient
 }
 
 func createTestAgentRegistry(t *testing.T) registry.AgentRegistry {
 	// Create a mock registry with test agents
 	mockRegistry := &MockAgentRegistry{}
-	
+
 	testAgents := []registry.Agent{
 		// Would contain actual agent implementations
 	}
-	
+
 	mockRegistry.On("ListAgents").Return(testAgents)
-	
+
 	// Add GetRegisteredAgents expectation with test data
 	registeredAgents := []registry.GuildAgentConfig{
 		{
@@ -525,6 +525,6 @@ func createTestAgentRegistry(t *testing.T) registry.AgentRegistry {
 		},
 	}
 	mockRegistry.On("GetRegisteredAgents").Return(registeredAgents)
-	
+
 	return mockRegistry
 }

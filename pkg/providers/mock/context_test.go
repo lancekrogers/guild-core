@@ -138,7 +138,7 @@ func TestContextWithMultipleProviders(t *testing.T) {
 	for _, p := range providers {
 		t.Run(p.name, func(t *testing.T) {
 			resp, err := p.provider.ChatCompletion(ctx, req)
-			
+
 			if p.name == "mock-fast" {
 				// Fast provider should succeed
 				if err != nil {

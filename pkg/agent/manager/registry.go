@@ -10,25 +10,25 @@ import (
 type ComponentRegistry interface {
 	// RegisterParser registers a response parser
 	RegisterParser(name string, parser ResponseParser) error
-	
+
 	// GetParser retrieves a parser by name
 	GetParser(name string) (ResponseParser, error)
-	
+
 	// RegisterValidator registers a structure validator
 	RegisterValidator(name string, validator StructureValidator) error
-	
+
 	// GetValidator retrieves a validator by name
 	GetValidator(name string) (StructureValidator, error)
-	
+
 	// RegisterRefiner registers a commission refiner
 	RegisterRefiner(name string, refiner CommissionRefiner) error
-	
+
 	// GetRefiner retrieves a refiner by name
 	GetRefiner(name string) (CommissionRefiner, error)
-	
+
 	// RegisterArtisanClient registers an artisan client
 	RegisterArtisanClient(name string, client ArtisanClient) error
-	
+
 	// GetArtisanClient retrieves an artisan client by name
 	GetArtisanClient(name string) (ArtisanClient, error)
 }

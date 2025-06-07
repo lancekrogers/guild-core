@@ -9,12 +9,7 @@ repos:
       - id: golangci-lint
         args: ['--fix']
 
-  # Go imports formatting
-  - repo: https://github.com/incu6us/goimports-reviser
-    rev: v3.6.4
-    hooks:
-      - id: goimports-reviser
-        args: ['-rm-unused', '-set-alias', '-format']
+  # Go imports formatting (moved to local hooks below)
 
   # General file fixes
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -47,6 +42,13 @@ repos:
         language: system
         files: '\.go$'
         pass_filenames: false
+
+      - id: goimports-reviser
+        name: goimports-reviser
+        entry: goimports-reviser -rm-unused -set-alias -format
+        language: system
+        types: [go]
+        pass_filenames: true
 
       - id: go-mod-tidy
         name: go mod tidy
@@ -91,4 +93,4 @@ repos:
 
 # Configuration for specific hooks
 default_language_version:
-  golang: 1.21
+  golang: "1.24.3"

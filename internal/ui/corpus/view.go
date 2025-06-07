@@ -218,10 +218,10 @@ func (m CorpusModel) renderGraph() string {
 	// This is a placeholder for the actual graph visualization
 	// In a real implementation, we would render a proper graph visualization
 	// using ASCII/ANSI art, or use a more sophisticated approach
-	
+
 	var sb strings.Builder
 	sb.WriteString("Corpus Graph Visualization\n\n")
-	
+
 	// Simple node-link representation
 	nodeCount := 0
 	for node, links := range m.graph.Nodes {
@@ -234,9 +234,9 @@ func (m CorpusModel) renderGraph() string {
 		}
 		nodeCount++
 	}
-	
-	sb.WriteString(fmt.Sprintf("\nShowing %d/%d nodes (use j/k to scroll)", 
-		min(20, nodeCount-m.graphOffset), 
+
+	sb.WriteString(fmt.Sprintf("\nShowing %d/%d nodes (use j/k to scroll)",
+		min(20, nodeCount-m.graphOffset),
 		nodeCount))
 
 	return docStyle.
@@ -298,13 +298,13 @@ Commands:
 func (m CorpusModel) renderStatus() string {
 	// Mode indicator
 	modeText := fmt.Sprintf("Mode: %s", strings.ToUpper(m.mode))
-	
+
 	// Document count
 	countText := fmt.Sprintf("Documents: %d", len(m.docs))
-	
+
 	// Current user
 	userText := fmt.Sprintf("User: %s", m.config.GetUser())
-	
+
 	// Join status elements with spacing
 	status := lipgloss.JoinHorizontal(
 		lipgloss.Left,
@@ -314,7 +314,7 @@ func (m CorpusModel) renderStatus() string {
 		strings.Repeat(" ", 5),
 		userText,
 	)
-	
+
 	return statusStyle.
 		Width(m.width).
 		Render(status)

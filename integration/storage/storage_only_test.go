@@ -43,7 +43,7 @@ func TestStoragePackageOnly(t *testing.T) {
 		campaignRepo := storageReg.GetCampaignRepository()
 		commissionRepo := storageReg.GetCommissionRepository()
 		taskRepo := storageReg.GetTaskRepository()
-		
+
 		require.NotNil(t, campaignRepo)
 		require.NotNil(t, commissionRepo)
 		require.NotNil(t, taskRepo)

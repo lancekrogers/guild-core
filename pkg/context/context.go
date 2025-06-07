@@ -17,26 +17,26 @@ const (
 	// Registry and component access
 	RegistryKey     ContextKey = "guild.registry"
 	ConfigKey       ContextKey = "guild.config"
-	
+
 	// Request tracking
 	RequestIDKey    ContextKey = "guild.request_id"
 	SessionIDKey    ContextKey = "guild.session_id"
 	OperationKey    ContextKey = "guild.operation"
-	
+
 	// Component identification
 	AgentIDKey      ContextKey = "guild.agent_id"
 	ProviderKey     ContextKey = "guild.provider"
 	ToolKey         ContextKey = "guild.tool"
-	
+
 	// Execution context
 	TimeoutKey      ContextKey = "guild.timeout"
 	RetryCountKey   ContextKey = "guild.retry_count"
-	
+
 	// Debugging and observability
 	TraceIDKey      ContextKey = "guild.trace_id"
 	SpanIDKey       ContextKey = "guild.span_id"
 	LoggerKey       ContextKey = "guild.logger"
-	
+
 	// Cost and resource tracking
 	CostBudgetKey   ContextKey = "guild.cost_budget"
 	ResourceLimitKey ContextKey = "guild.resource_limit"
@@ -108,11 +108,11 @@ type ResourceInfo struct {
 func NewGuildContext(parent context.Context) context.Context {
 	requestID := uuid.New().String()
 	traceID := uuid.New().String()
-	
+
 	ctx := context.WithValue(parent, RequestIDKey, requestID)
 	ctx = context.WithValue(ctx, TraceIDKey, traceID)
 	ctx = context.WithValue(ctx, SpanIDKey, uuid.New().String())
-	
+
 	// Add request info
 	requestInfo := &RequestInfo{
 		ID:        requestID,
@@ -121,7 +121,7 @@ func NewGuildContext(parent context.Context) context.Context {
 		Metadata:  make(map[string]interface{}),
 	}
 	ctx = context.WithValue(ctx, "guild.request_info", requestInfo)
-	
+
 	return ctx
 }
 
@@ -129,11 +129,11 @@ func NewGuildContext(parent context.Context) context.Context {
 func NewOperationContext(parent context.Context, operation string, timeout time.Duration) (context.Context, context.CancelFunc) {
 	ctx := context.WithValue(parent, OperationKey, operation)
 	ctx = context.WithValue(ctx, SpanIDKey, uuid.New().String())
-	
+
 	if timeout > 0 {
 		return context.WithTimeout(ctx, timeout)
 	}
-	
+
 	return ctx, func() {}
 }
 
@@ -346,7 +346,7 @@ func GetRequestInfo(ctx context.Context) *RequestInfo {
 	if requestInfo, ok := ctx.Value("guild.request_info").(*RequestInfo); ok {
 		return requestInfo
 	}
-	
+
 	// Fallback: construct from individual fields
 	return &RequestInfo{
 		ID:        GetRequestID(ctx),
@@ -362,7 +362,7 @@ func GetRequestInfo(ctx context.Context) *RequestInfo {
 // LogFields returns structured logging fields from context
 func LogFields(ctx context.Context) []interface{} {
 	fields := []interface{}{}
-	
+
 	if requestID := GetRequestID(ctx); requestID != "" {
 		fields = append(fields, "request_id", requestID)
 	}
@@ -384,7 +384,7 @@ func LogFields(ctx context.Context) []interface{} {
 	if operation := GetOperation(ctx); operation != "" {
 		fields = append(fields, "operation", operation)
 	}
-	
+
 	return fields
 }
 
@@ -394,7 +394,7 @@ func ContextSummary(ctx context.Context) string {
 	operation := GetOperation(ctx)
 	agentID := GetAgentID(ctx)
 	provider := GetProvider(ctx)
-	
+
 	summary := fmt.Sprintf("Request[%s]", requestID)
 	if operation != "" {
 		summary += fmt.Sprintf(" Op[%s]", operation)
@@ -405,6 +405,6 @@ func ContextSummary(ctx context.Context) string {
 	if provider != "" {
 		summary += fmt.Sprintf(" Provider[%s]", provider)
 	}
-	
+
 	return summary
 }

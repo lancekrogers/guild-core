@@ -276,7 +276,7 @@ func (s *MCPService) Ping(ctx context.Context, req *pb.PingRequest) (*pb.PingRes
 // GetSystemInfo gets system information via gRPC
 func (s *MCPService) GetSystemInfo(ctx context.Context, req *pb.SystemInfoRequest) (*pb.SystemInfoResponse, error) {
 	config := s.server.GetConfig()
-	
+
 	return &pb.SystemInfoResponse{
 		ServerId:   config.ServerID,
 		ServerName: config.ServerName,
@@ -323,7 +323,7 @@ func convertParametersToGRPC(params []protocol.ToolParameter) []*pb.ToolParamete
 				defaultStr = string(bytes)
 			}
 		}
-		
+
 		result = append(result, &pb.ToolParameter{
 			Name:        param.Name,
 			Type:        param.Type,

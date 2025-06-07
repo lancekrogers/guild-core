@@ -156,7 +156,7 @@ func NewMCPRegistryExtension(config *mcpconfig.MCPConfig, guildRegistry registry
 		// Create tool bridge
 		mcpToolRegistry := adapter.GetServer().GetToolRegistry()
 		guildToolRegistry := guildRegistry.Tools()
-		
+
 		if guildToolRegistry != nil {
 			toolBridge = NewToolBridge(mcpToolRegistry, guildToolRegistry)
 		}

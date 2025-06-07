@@ -11,11 +11,11 @@ var (
 	// ErrPromptNotFound is returned when a requested prompt does not exist
 	ErrPromptNotFound = gerror.New(gerror.ErrCodeNotFound, "prompt not found", nil).
 		WithComponent("prompts").WithOperation("GetPrompt")
-	
+
 	// ErrTemplateNotFound is returned when a requested template does not exist
 	ErrTemplateNotFound = gerror.New(gerror.ErrCodeNotFound, "template not found", nil).
 		WithComponent("prompts").WithOperation("GetTemplate")
-	
+
 	// ErrLayerNotFound is returned when a requested layer does not exist
 	ErrLayerNotFound = gerror.New(gerror.ErrCodeNotFound, "layer not found", nil).
 		WithComponent("prompts").WithOperation("GetPromptLayer")
@@ -27,19 +27,19 @@ type PromptLayer string
 const (
 	// LayerPlatform contains core Guild platform rules (terms of service, safety)
 	LayerPlatform PromptLayer = "platform"
-	
+
 	// LayerGuild contains project-wide goals and style guidelines
 	LayerGuild PromptLayer = "guild"
-	
+
 	// LayerRole contains artisan role definitions (Guild Master, Code Artisan, etc.)
 	LayerRole PromptLayer = "role"
-	
+
 	// LayerDomain contains project type specializations (web-app, cli-tool, etc.)
 	LayerDomain PromptLayer = "domain"
-	
+
 	// LayerSession contains user preferences and session-specific context
 	LayerSession PromptLayer = "session"
-	
+
 	// LayerTurn contains ephemeral instructions for single interactions
 	LayerTurn PromptLayer = "turn"
 )
@@ -48,19 +48,19 @@ const (
 type LayerConfig struct {
 	// AgentID is the ID of the agent requesting the prompt
 	AgentID string
-	
+
 	// SessionID is the current session ID
 	SessionID string
-	
+
 	// Role is the agent's role (e.g., "guild_master", "code_artisan")
 	Role string
-	
+
 	// Domain is the project domain (e.g., "web-app", "cli-tool")
 	Domain string
-	
+
 	// IncludeLayers specifies which layers to include
 	IncludeLayers []PromptLayer
-	
+
 	// MaxTokens limits the compiled prompt size
 	MaxTokens int
 }

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 	"time"
-	
+
 	"github.com/charmbracelet/lipgloss"
 )
 
@@ -104,8 +104,8 @@ func TestContentFormatter_FormatAgentResponse(t *testing.T) {
 			content: "# Analysis Results\n\n- **Item 1**: Passed\n- **Item 2**: Failed",
 			agentID: "tester-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "Analysis Results") && 
-					   strings.Contains(output, "Item 1") && 
+				return strings.Contains(output, "Analysis Results") &&
+					   strings.Contains(output, "Item 1") &&
 					   strings.Contains(output, "Item 2")
 			},
 		},
@@ -130,8 +130,8 @@ func TestContentFormatter_FormatAgentResponse(t *testing.T) {
 			content: "Medieval theming with emojis: 🏰 ⚔️ 🛡️",
 			agentID: "theme-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "🏰") && 
-					   strings.Contains(output, "⚔️") && 
+				return strings.Contains(output, "🏰") &&
+					   strings.Contains(output, "⚔️") &&
 					   strings.Contains(output, "🛡️")
 			},
 		},
@@ -246,8 +246,8 @@ func TestContentFormatter_FormatErrorMessage(t *testing.T) {
 			name:    "error with details",
 			content: "Compilation failed:\n```\nundefined: fmt.Printlnn\n```",
 			validate: func(output string) bool {
-				return strings.Contains(output, "❌") && 
-					   strings.Contains(output, "Compilation failed") && 
+				return strings.Contains(output, "❌") &&
+					   strings.Contains(output, "Compilation failed") &&
 					   strings.Contains(output, "undefined")
 			},
 		},
@@ -255,8 +255,8 @@ func TestContentFormatter_FormatErrorMessage(t *testing.T) {
 			name:    "error with markdown",
 			content: "**Critical Error**: Database connection lost\n- Retry count: 3\n- Last attempt: failed",
 			validate: func(output string) bool {
-				return strings.Contains(output, "Critical Error") && 
-					   strings.Contains(output, "Retry count") && 
+				return strings.Contains(output, "Critical Error") &&
+					   strings.Contains(output, "Retry count") &&
 					   strings.Contains(output, "Last attempt")
 			},
 		},
@@ -272,8 +272,8 @@ func TestContentFormatter_FormatErrorMessage(t *testing.T) {
 			name:    "multi-line error",
 			content: "Stack trace:\n  at main.go:42\n  at handler.go:15\n  at server.go:200",
 			validate: func(output string) bool {
-				return strings.Contains(output, "Stack trace") && 
-					   strings.Contains(output, "main.go:42") && 
+				return strings.Contains(output, "Stack trace") &&
+					   strings.Contains(output, "main.go:42") &&
 					   strings.Contains(output, "handler.go:15")
 			},
 		},
@@ -307,8 +307,8 @@ func TestContentFormatter_FormatToolOutput(t *testing.T) {
 			content:  "File created successfully",
 			toolName: "FileWriter",
 			validate: func(output string) bool {
-				return strings.Contains(output, "🔧") && 
-					   strings.Contains(output, "FileWriter") && 
+				return strings.Contains(output, "🔧") &&
+					   strings.Contains(output, "FileWriter") &&
 					   strings.Contains(output, "File created successfully")
 			},
 		},
@@ -317,7 +317,7 @@ func TestContentFormatter_FormatToolOutput(t *testing.T) {
 			content:  "Generated code:\n```go\ntype Config struct {}\n```",
 			toolName: "CodeGenerator",
 			validate: func(output string) bool {
-				return strings.Contains(output, "CodeGenerator") && 
+				return strings.Contains(output, "CodeGenerator") &&
 					   strings.Contains(output, "type Config")
 			},
 		},
@@ -326,8 +326,8 @@ func TestContentFormatter_FormatToolOutput(t *testing.T) {
 			content:  "[INFO] Starting process\n[DEBUG] Loading config\n[INFO] Process complete",
 			toolName: "ShellExecutor",
 			validate: func(output string) bool {
-				return strings.Contains(output, "ShellExecutor") && 
-					   strings.Contains(output, "[INFO]") && 
+				return strings.Contains(output, "ShellExecutor") &&
+					   strings.Contains(output, "[INFO]") &&
 					   strings.Contains(output, "[DEBUG]")
 			},
 		},
@@ -344,8 +344,8 @@ func TestContentFormatter_FormatToolOutput(t *testing.T) {
 			content:  "Results:\n- Test 1: PASS\n- Test 2: PASS\n- Test 3: FAIL",
 			toolName: "TestRunner",
 			validate: func(output string) bool {
-				return strings.Contains(output, "TestRunner") && 
-					   strings.Contains(output, "PASS") && 
+				return strings.Contains(output, "TestRunner") &&
+					   strings.Contains(output, "PASS") &&
 					   strings.Contains(output, "FAIL")
 			},
 		},
@@ -354,8 +354,8 @@ func TestContentFormatter_FormatToolOutput(t *testing.T) {
 			content:  `{"status": "success", "files": ["main.go", "test.go"]}`,
 			toolName: "JSONParser",
 			validate: func(output string) bool {
-				return strings.Contains(output, "JSONParser") && 
-					   strings.Contains(output, "status") && 
+				return strings.Contains(output, "JSONParser") &&
+					   strings.Contains(output, "status") &&
 					   strings.Contains(output, "success")
 			},
 		},
@@ -389,8 +389,8 @@ func TestContentFormatter_FormatThinkingMessage(t *testing.T) {
 			content: "Analyzing the request...",
 			agentID: "analyzer-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "🤔") && 
-					   strings.Contains(output, "analyzer-1") && 
+				return strings.Contains(output, "🤔") &&
+					   strings.Contains(output, "analyzer-1") &&
 					   strings.Contains(output, "Analyzing")
 			},
 		},
@@ -399,7 +399,7 @@ func TestContentFormatter_FormatThinkingMessage(t *testing.T) {
 			content: "Processing information...",
 			agentID: "",
 			validate: func(output string) bool {
-				return strings.Contains(output, "🤔") && 
+				return strings.Contains(output, "🤔") &&
 					   strings.Contains(output, "Processing") &&
 					   !strings.Contains(output, "🤔 ")
 			},
@@ -409,8 +409,8 @@ func TestContentFormatter_FormatThinkingMessage(t *testing.T) {
 			content: "Considering options:\n- **Option A**: Fast but risky\n- **Option B**: Slow but safe",
 			agentID: "planner-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "planner-1") && 
-					   strings.Contains(output, "Option A") && 
+				return strings.Contains(output, "planner-1") &&
+					   strings.Contains(output, "Option A") &&
 					   strings.Contains(output, "Option B")
 			},
 		},
@@ -427,8 +427,8 @@ func TestContentFormatter_FormatThinkingMessage(t *testing.T) {
 			content: "The function `processData()` appears to have a complexity of O(n²)",
 			agentID: "reviewer-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "reviewer-1") && 
-					   strings.Contains(output, "processData") && 
+				return strings.Contains(output, "reviewer-1") &&
+					   strings.Contains(output, "processData") &&
 					   strings.Contains(output, "O(n²)")
 			},
 		},
@@ -462,8 +462,8 @@ func TestContentFormatter_FormatWorkingMessage(t *testing.T) {
 			content: "Executing task...",
 			agentID: "worker-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "⚙️") && 
-					   strings.Contains(output, "worker-1") && 
+				return strings.Contains(output, "⚙️") &&
+					   strings.Contains(output, "worker-1") &&
 					   strings.Contains(output, "Executing task")
 			},
 		},
@@ -472,7 +472,7 @@ func TestContentFormatter_FormatWorkingMessage(t *testing.T) {
 			content: "Building project...",
 			agentID: "",
 			validate: func(output string) bool {
-				return strings.Contains(output, "⚙️") && 
+				return strings.Contains(output, "⚙️") &&
 					   strings.Contains(output, "Building project")
 			},
 		},
@@ -481,8 +481,8 @@ func TestContentFormatter_FormatWorkingMessage(t *testing.T) {
 			content: "Processing files: 10/100 (10%)",
 			agentID: "processor-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "processor-1") && 
-					   strings.Contains(output, "10/100") && 
+				return strings.Contains(output, "processor-1") &&
+					   strings.Contains(output, "10/100") &&
 					   strings.Contains(output, "10%")
 			},
 		},
@@ -491,8 +491,8 @@ func TestContentFormatter_FormatWorkingMessage(t *testing.T) {
 			content: "Running tests:\n- ✓ Test 1\n- ✓ Test 2\n- ⏳ Test 3",
 			agentID: "tester-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "tester-1") && 
-					   strings.Contains(output, "✓") && 
+				return strings.Contains(output, "tester-1") &&
+					   strings.Contains(output, "✓") &&
 					   strings.Contains(output, "⏳")
 			},
 		},
@@ -539,7 +539,7 @@ func TestContentFormatter_FormatUserMessage(t *testing.T) {
 			name:    "user message with command",
 			content: "@worker-1 implement the login system",
 			validate: func(output string) bool {
-				return strings.Contains(output, "@worker-1") && 
+				return strings.Contains(output, "@worker-1") &&
 					   strings.Contains(output, "implement the login system")
 			},
 		},
@@ -554,7 +554,7 @@ func TestContentFormatter_FormatUserMessage(t *testing.T) {
 			name:    "user message with code",
 			content: "Fix this code:\n```go\nfmt.Printlnn(\"typo\")\n```",
 			validate: func(output string) bool {
-				return strings.Contains(output, "Fix this code") && 
+				return strings.Contains(output, "Fix this code") &&
 					   strings.Contains(output, "fmt.Printlnn")
 			},
 		},
@@ -569,8 +569,8 @@ func TestContentFormatter_FormatUserMessage(t *testing.T) {
 			name:    "user message with special characters",
 			content: "What does `x && !y || z` mean?",
 			validate: func(output string) bool {
-				return strings.Contains(output, "&&") && 
-					   strings.Contains(output, "!y") && 
+				return strings.Contains(output, "&&") &&
+					   strings.Contains(output, "!y") &&
 					   strings.Contains(output, "||")
 			},
 		},
@@ -879,7 +879,7 @@ func TestContentFormatter_SetTheme(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Should not panic
 			formatter.SetTheme(tt.theme)
-			
+
 			// Verify theme was applied
 			switch tt.theme {
 			case "modern":
@@ -991,7 +991,7 @@ func BenchmarkContentFormatter_FormatAgentResponse(b *testing.B) {
 		b.Fatalf("Failed to create renderer: %v", err)
 	}
 	formatter := NewContentFormatter(renderer, 80)
-	
+
 	content := `# Agent Response
 
 Here's the analysis:
@@ -1019,7 +1019,7 @@ func BenchmarkContentFormatter_FormatSystemMessage(b *testing.B) {
 		b.Fatalf("Failed to create renderer: %v", err)
 	}
 	formatter := NewContentFormatter(renderer, 80)
-	
+
 	content := "Task completed successfully with 3 warnings"
 
 	b.ResetTimer()
@@ -1034,7 +1034,7 @@ func BenchmarkContentFormatter_AllMessageTypes(b *testing.B) {
 		b.Fatalf("Failed to create renderer: %v", err)
 	}
 	formatter := NewContentFormatter(renderer, 80)
-	
+
 	messages := []struct {
 		content string
 		format  func(string) string

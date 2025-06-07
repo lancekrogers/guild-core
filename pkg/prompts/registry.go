@@ -31,10 +31,10 @@ func NewPromptRegistry() *PromptRegistry {
 		defaultManagerType: TypeLayered, // Default to layered for Guild
 		defaultFormatterType: "xml",
 	}
-	
+
 	// Register default strategies
 	registry.registerDefaults()
-	
+
 	return registry
 }
 
@@ -43,7 +43,7 @@ func (r *PromptRegistry) registerDefaults() {
 	// Register manager strategies
 	r.managerFactories[TypeStandard] = newStandardManager
 	r.managerFactories[TypeLayered] = newLayeredManager
-	
+
 	// Register formatter strategies
 	r.formatterFactories["xml"] = defaultXMLFormatterFactory
 	r.formatterFactories["markdown"] = defaultMarkdownFormatterFactory
@@ -57,10 +57,10 @@ func (r *PromptRegistry) RegisterManagerStrategy(managerType ManagerType, factor
 			WithOperation("RegisterManagerStrategy").
 			WithDetails("manager_type", string(managerType))
 	}
-	
+
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	r.managerFactories[managerType] = factory
 	return nil
 }
@@ -73,10 +73,10 @@ func (r *PromptRegistry) RegisterFormatterStrategy(formatterType string, factory
 			WithOperation("RegisterFormatterStrategy").
 			WithDetails("formatter_type", formatterType)
 	}
-	
+
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	r.formatterFactories[formatterType] = factory
 	return nil
 }
@@ -86,14 +86,14 @@ func (r *PromptRegistry) CreateManager(ctx context.Context, config ManagerConfig
 	r.mu.RLock()
 	factory, exists := r.managerFactories[config.Type]
 	r.mu.RUnlock()
-	
+
 	if !exists {
 		return nil, gerror.New(gerror.ErrCodeNotFound, "unknown prompt manager type", nil).
 			WithComponent("prompts").
 			WithOperation("CreateManager").
 			WithDetails("manager_type", string(config.Type))
 	}
-	
+
 	return factory(ctx, config)
 }
 
@@ -102,14 +102,14 @@ func (r *PromptRegistry) CreateFormatter(formatterType string) (Formatter, error
 	r.mu.RLock()
 	factory, exists := r.formatterFactories[formatterType]
 	r.mu.RUnlock()
-	
+
 	if !exists {
 		return nil, gerror.New(gerror.ErrCodeNotFound, "unknown formatter type", nil).
 			WithComponent("prompts").
 			WithOperation("CreateFormatter").
 			WithDetails("formatter_type", formatterType)
 	}
-	
+
 	return factory()
 }
 
@@ -122,7 +122,7 @@ func (r *PromptRegistry) GetDefaultManager(ctx context.Context) (Manager, error)
 			DefaultGuildPrompt:    "Follow Guild conventions and medieval naming patterns...",
 		},
 	}
-	
+
 	return r.CreateManager(ctx, config)
 }
 
@@ -136,18 +136,18 @@ func (r *PromptRegistry) SetDefaultManagerType(managerType ManagerType) error {
 	r.mu.RLock()
 	_, exists := r.managerFactories[managerType]
 	r.mu.RUnlock()
-	
+
 	if !exists {
 		return gerror.New(gerror.ErrCodeNotFound, "manager type not registered", nil).
 			WithComponent("prompts").
 			WithOperation("SetDefaultManagerType").
 			WithDetails("manager_type", string(managerType))
 	}
-	
+
 	r.mu.Lock()
 	r.defaultManagerType = managerType
 	r.mu.Unlock()
-	
+
 	return nil
 }
 
@@ -156,18 +156,18 @@ func (r *PromptRegistry) SetDefaultFormatterType(formatterType string) error {
 	r.mu.RLock()
 	_, exists := r.formatterFactories[formatterType]
 	r.mu.RUnlock()
-	
+
 	if !exists {
 		return gerror.New(gerror.ErrCodeNotFound, "formatter type not registered", nil).
 			WithComponent("prompts").
 			WithOperation("SetDefaultFormatterType").
 			WithDetails("formatter_type", formatterType)
 	}
-	
+
 	r.mu.Lock()
 	r.defaultFormatterType = formatterType
 	r.mu.Unlock()
-	
+
 	return nil
 }
 
@@ -175,12 +175,12 @@ func (r *PromptRegistry) SetDefaultFormatterType(formatterType string) error {
 func (r *PromptRegistry) ListManagerTypes() []ManagerType {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	types := make([]ManagerType, 0, len(r.managerFactories))
 	for managerType := range r.managerFactories {
 		types = append(types, managerType)
 	}
-	
+
 	return types
 }
 
@@ -188,12 +188,12 @@ func (r *PromptRegistry) ListManagerTypes() []ManagerType {
 func (r *PromptRegistry) ListFormatterTypes() []string {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	types := make([]string, 0, len(r.formatterFactories))
 	for formatterType := range r.formatterFactories {
 		types = append(types, formatterType)
 	}
-	
+
 	return types
 }
 
@@ -288,7 +288,7 @@ func (f *defaultXMLFormatter) OptimizeForTokens(content string, maxTokens int) (
 	return content, nil
 }
 
-// defaultMarkdownFormatterFactory creates a Markdown formatter  
+// defaultMarkdownFormatterFactory creates a Markdown formatter
 func defaultMarkdownFormatterFactory() (Formatter, error) {
 	// For now, use the same XML formatter which supports both formats
 	return &FormatterAdapter{}, nil

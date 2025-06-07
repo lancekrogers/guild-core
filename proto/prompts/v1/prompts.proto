@@ -10,25 +10,25 @@ import "google/protobuf/timestamp.proto";
 service PromptService {
   // GetPromptLayer retrieves a specific prompt layer
   rpc GetPromptLayer(GetPromptLayerRequest) returns (GetPromptLayerResponse);
-  
+
   // SetPromptLayer sets or updates a specific prompt layer
   rpc SetPromptLayer(SetPromptLayerRequest) returns (SetPromptLayerResponse);
-  
+
   // DeletePromptLayer removes a specific prompt layer
   rpc DeletePromptLayer(DeletePromptLayerRequest) returns (DeletePromptLayerResponse);
-  
+
   // ListPromptLayers returns all layers for an artisan/session
   rpc ListPromptLayers(ListPromptLayersRequest) returns (ListPromptLayersResponse);
-  
+
   // BuildLayeredPrompt assembles a complete layered prompt
   rpc BuildLayeredPrompt(BuildLayeredPromptRequest) returns (BuildLayeredPromptResponse);
-  
+
   // InvalidateCache clears the layered prompt cache
   rpc InvalidateCache(InvalidateCacheRequest) returns (InvalidateCacheResponse);
-  
+
   // GetLayerStats returns statistics for a specific layer
   rpc GetLayerStats(GetLayerStatsRequest) returns (GetLayerStatsResponse);
-  
+
   // StreamPromptUpdates provides real-time prompt update notifications
   rpc StreamPromptUpdates(StreamPromptUpdatesRequest) returns (stream PromptUpdateEvent);
 }
@@ -38,7 +38,7 @@ enum PromptLayer {
   PROMPT_LAYER_UNSPECIFIED = 0;
   PROMPT_LAYER_PLATFORM = 1;    // Core Guild platform rules
   PROMPT_LAYER_GUILD = 2;       // Project-wide goals and style
-  PROMPT_LAYER_ROLE = 3;        // Artisan role definitions  
+  PROMPT_LAYER_ROLE = 3;        // Artisan role definitions
   PROMPT_LAYER_DOMAIN = 4;      // Project type specializations
   PROMPT_LAYER_SESSION = 5;     // User preferences and session context
   PROMPT_LAYER_TURN = 6;        // Ephemeral instructions for single interactions
@@ -169,7 +169,7 @@ message PromptUpdateEvent {
     EVENT_TYPE_DELETED = 3;
     EVENT_TYPE_CACHE_INVALIDATED = 4;
   }
-  
+
   EventType event_type = 1;
   PromptLayer layer = 2;
   string artisan_id = 3;

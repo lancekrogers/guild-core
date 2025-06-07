@@ -10,7 +10,7 @@ import (
 // AgentStatusTracker monitors agent states and activities
 type AgentStatusTracker struct {
 	agents          map[string]*AgentStatus  // agentID -> status
-	activeTools     map[string]*ToolStatus   // toolID -> status  
+	activeTools     map[string]*ToolStatus   // toolID -> status
 	globalActivity  []ActivityEvent          // Recent activity log
 	updateChannel   chan AgentStatusUpdate   // Real-time updates
 	guildConfig     *config.GuildConfig

@@ -39,7 +39,7 @@ import (
     "crypto/sha256"
     "encoding/hex"
     "fmt"
-    
+
     "github.com/stripe/stripe-go/v74"
     "github.com/stripe/stripe-go/v74/paymentintent"
     "github.com/stripe/stripe-go/v74/webhook"
@@ -79,16 +79,16 @@ func (h *PaymentHandler) CreatePaymentIntent(c *gin.Context) {
         c.JSON(400, gin.H{"error": "Invalid request"})
         return
     }
-    
+
     // Validate amount and currency
     if err := h.validatePaymentAmount(req.Amount, req.Currency); err != nil {
         c.JSON(400, gin.H{"error": err.Error()})
         return
     }
-    
+
     // Create idempotency key for safe retries
     idempotencyKey := h.generateIdempotencyKey(req.OrderID)
-    
+
     // Create payment intent with Stripe
     params := &stripe.PaymentIntentParams{
         Amount:   stripe.Int64(req.Amount),
@@ -102,14 +102,14 @@ func (h *PaymentHandler) CreatePaymentIntent(c *gin.Context) {
         },
     }
     params.SetIdempotencyKey(idempotencyKey)
-    
+
     pi, err := paymentintent.New(params)
     if err != nil {
         h.logger.Error("Payment intent creation failed", "error", err)
         c.JSON(500, gin.H{"error": "Payment processing failed"})
         return
     }
-    
+
     // Log payment attempt (never log sensitive data)
     h.auditLogger.Log(AuditEvent{
         Type:       "payment_intent_created",
@@ -118,7 +118,7 @@ func (h *PaymentHandler) CreatePaymentIntent(c *gin.Context) {
         Amount:     req.Amount,
         // Never log: card numbers, CVV, full client secret
     })
-    
+
     c.JSON(200, gin.H{
         "payment_intent_id": pi.ID,
         "client_secret":     pi.ClientSecret,
@@ -143,7 +143,7 @@ func (h *WebhookHandler) HandleStripeWebhook(c *gin.Context) {
         c.JSON(400, gin.H{"error": "Invalid payload"})
         return
     }
-    
+
     // Verify webhook signature
     signatureHeader := c.GetHeader("Stripe-Signature")
     event, err := webhook.ConstructEvent(payload, signatureHeader, h.webhookSecret)
@@ -152,23 +152,23 @@ func (h *WebhookHandler) HandleStripeWebhook(c *gin.Context) {
         c.JSON(400, gin.H{"error": "Invalid signature"})
         return
     }
-    
+
     // Process webhook asynchronously to avoid timeouts
     go h.processWebhookEvent(event)
-    
+
     // Acknowledge receipt immediately
     c.JSON(200, gin.H{"received": true})
 }
 
 func (h *WebhookHandler) processWebhookEvent(event stripe.Event) {
     ctx := context.Background()
-    
+
     // Implement idempotency - prevent duplicate processing
     if h.isEventProcessed(ctx, event.ID) {
         h.logger.Info("Skipping duplicate event", "event_id", event.ID)
         return
     }
-    
+
     switch event.Type {
     case "payment_intent.succeeded":
         var pi stripe.PaymentIntent
@@ -177,7 +177,7 @@ func (h *WebhookHandler) processWebhookEvent(event stripe.Event) {
             return
         }
         h.handlePaymentSuccess(ctx, &pi)
-        
+
     case "payment_intent.payment_failed":
         var pi stripe.PaymentIntent
         if err := json.Unmarshal(event.Data.Raw, &pi); err != nil {
@@ -186,7 +186,7 @@ func (h *WebhookHandler) processWebhookEvent(event stripe.Event) {
         }
         h.handlePaymentFailure(ctx, &pi)
     }
-    
+
     // Mark event as processed
     h.markEventProcessed(ctx, event.ID)
 }
@@ -205,12 +205,12 @@ security:
     require_tokenization: true
     # Enable TLS 1.2+ only
     min_tls_version: "1.2"
-    
+
   # Rate limiting for payment endpoints
   rate_limits:
     create_payment: "10/minute"
     webhook: "1000/minute"
-    
+
   # Encryption for sensitive data at rest
   encryption:
     algorithm: "AES-256-GCM"
@@ -247,7 +247,7 @@ func (m *PaymentSecurityMonitor) DetectAnomalies(payment *Payment) {
             Details:  "Multiple payments from same customer",
         })
     }
-    
+
     // Amount threshold checks
     if payment.Amount > LARGE_PAYMENT_THRESHOLD {
         m.alerting.SendAlert(Alert{
@@ -256,7 +256,7 @@ func (m *PaymentSecurityMonitor) DetectAnomalies(payment *Payment) {
             Details:  fmt.Sprintf("Payment over threshold: %d", payment.Amount),
         })
     }
-    
+
     // Geographic anomalies
     if m.isGeographicAnomaly(payment) {
         m.alerting.SendAlert(Alert{

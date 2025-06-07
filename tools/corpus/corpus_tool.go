@@ -434,24 +434,24 @@ func (t *CorpusTool) getGraph(ctx context.Context, params Input) (*tools.ToolRes
 	// Create a summary of the graph
 	var summary strings.Builder
 	summary.WriteString(fmt.Sprintf("Corpus Graph: %d documents, %d connections\n\n", len(graph.Nodes), len(graph.Edges)))
-	
+
 	// Show most connected documents
 	type docConnection struct {
 		title string
 		count int
 	}
-	
+
 	connections := make(map[string]int)
 	for _, edge := range graph.Edges {
 		connections[edge.From]++
 		connections[edge.To]++
 	}
-	
+
 	var sorted []docConnection
 	for title, count := range connections {
 		sorted = append(sorted, docConnection{title, count})
 	}
-	
+
 	// Sort by connection count (simple bubble sort)
 	for i := 0; i < len(sorted)-1; i++ {
 		for j := 0; j < len(sorted)-i-1; j++ {
@@ -460,13 +460,13 @@ func (t *CorpusTool) getGraph(ctx context.Context, params Input) (*tools.ToolRes
 			}
 		}
 	}
-	
+
 	// Show top 5 most connected documents
 	limit := 5
 	if len(sorted) < limit {
 		limit = len(sorted)
 	}
-	
+
 	if limit > 0 {
 		summary.WriteString("Most connected documents:\n")
 		for i := 0; i < limit; i++ {

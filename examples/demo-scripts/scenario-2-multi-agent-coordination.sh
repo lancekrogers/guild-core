@@ -84,21 +84,21 @@ func (h *AuthHandler) Register(c *gin.Context) {
         c.JSON(400, gin.H{"error": "Invalid request"})
         return
     }
-    
+
     // Validate and create user
     user, err := h.userService.CreateUser(req)
     if err != nil {
         c.JSON(400, gin.H{"error": err.Error()})
         return
     }
-    
+
     // Generate tokens
     tokens, err := h.tokenService.GenerateTokenPair(user.ID)
     if err != nil {
         c.JSON(500, gin.H{"error": "Token generation failed"})
         return
     }
-    
+
     c.JSON(201, gin.H{
         "user": user,
         "tokens": tokens,
@@ -118,14 +118,14 @@ http:
       middlewares:
         - auth-rate-limit
         - secure-headers
-        
+
   middlewares:
     auth-rate-limit:
       rateLimit:
         average: 10
         burst: 20
         period: 1m
-        
+
     secure-headers:
       headers:
         customRequestHeaders:

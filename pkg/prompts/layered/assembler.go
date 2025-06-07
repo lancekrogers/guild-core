@@ -65,12 +65,12 @@ func (lpa *LayeredPromptAssembler) BuildPrompt(
 ) (*LayeredPrompt, error) {
 	// Generate cache key
 	cacheKey := lpa.generateCacheKey(artisanID, sessionID, turnCtx)
-	
+
 	// Check cache first
 	if cached := lpa.getCachedPrompt(cacheKey); cached != nil {
 		return cached, nil
 	}
-	
+
 	// Get artisan configuration from registry
 	artisan, err := lpa.getArtisanConfig(ctx, artisanID)
 	if err != nil {
@@ -79,7 +79,7 @@ func (lpa *LayeredPromptAssembler) BuildPrompt(
 			WithOperation("BuildPrompt").
 			WithDetails("artisan_id", artisanID)
 	}
-	
+
 	// Collect all prompt layers in priority order
 	layers, err := lpa.collectPromptLayers(ctx, artisan, sessionID, turnCtx)
 	if err != nil {
@@ -89,14 +89,14 @@ func (lpa *LayeredPromptAssembler) BuildPrompt(
 			WithDetails("artisan_id", artisanID).
 			WithDetails("session_id", sessionID)
 	}
-	
+
 	// Retrieve and inject RAG memory if available
 	memoryChunks, err := lpa.retrieveMemoryChunks(ctx, sessionID, turnCtx)
 	if err != nil {
 		// Log warning but don't fail - memory retrieval is optional
 		// TODO: Add proper logging
 	}
-	
+
 	// Apply token budget and intelligent truncation
 	optimizedLayers, truncated, err := lpa.optimizeForTokenBudget(layers, memoryChunks)
 	if err != nil {
@@ -106,10 +106,10 @@ func (lpa *LayeredPromptAssembler) BuildPrompt(
 			WithDetails("artisan_id", artisanID).
 			WithDetails("token_budget", lpa.tokenBudget)
 	}
-	
+
 	// Compile the final prompt
 	compiled := lpa.compilePrompt(optimizedLayers, memoryChunks, turnCtx)
-	
+
 	// Create the layered prompt result
 	layeredPrompt := &LayeredPrompt{
 		Layers:      optimizedLayers,
@@ -127,17 +127,17 @@ func (lpa *LayeredPromptAssembler) BuildPrompt(
 			"turn_context":   turnCtx.UserMessage != "",
 		},
 	}
-	
+
 	// Cache the result
 	lpa.cachePrompt(cacheKey, layeredPrompt)
-	
+
 	// Store in persistent cache if significant
 	if lpa.isSignificantPrompt(layeredPrompt) {
 		if err := lpa.storePersistentCache(ctx, cacheKey, layeredPrompt); err != nil {
 			// Log warning but don't fail
 		}
 	}
-	
+
 	return layeredPrompt, nil
 }
 
@@ -149,7 +149,7 @@ func (lpa *LayeredPromptAssembler) collectPromptLayers(
 	turnCtx TurnContext,
 ) ([]SystemPrompt, error) {
 	var layers []SystemPrompt
-	
+
 	// Layer order by priority (lowest to highest)
 	layerOrder := []PromptLayer{
 		LayerPlatform,
@@ -159,20 +159,20 @@ func (lpa *LayeredPromptAssembler) collectPromptLayers(
 		LayerSession,
 		LayerTurn,
 	}
-	
+
 	for priority, layer := range layerOrder {
 		prompt, err := lpa.getLayerPrompt(ctx, layer, artisan, sessionID, turnCtx)
 		if err != nil {
 			// Some layers may not exist - this is OK
 			continue
 		}
-		
+
 		if prompt != nil {
 			prompt.Priority = priority
 			layers = append(layers, *prompt)
 		}
 	}
-	
+
 	return layers, nil
 }
 
@@ -215,7 +215,7 @@ func (lpa *LayeredPromptAssembler) getPlatformPrompt(ctx context.Context) (*Syst
 			return &prompt, nil
 		}
 	}
-	
+
 	// Fall back to default platform prompt
 	content := `You are part of the Guild Framework, a high-performance AI agent orchestration system.
 
@@ -254,13 +254,13 @@ func (lpa *LayeredPromptAssembler) getGuildPrompt(ctx context.Context, guildID s
 	if guildID == "" {
 		return nil, nil // No guild-specific prompt
 	}
-	
+
 	// Try to get from storage
 	data, err := lpa.store.GetPromptLayer(ctx, string(LayerGuild), guildID)
 	if err != nil {
 		return nil, nil // Guild prompt is optional
 	}
-	
+
 	var prompt SystemPrompt
 	if err := json.Unmarshal(data, &prompt); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to unmarshal guild prompt").
@@ -268,7 +268,7 @@ func (lpa *LayeredPromptAssembler) getGuildPrompt(ctx context.Context, guildID s
 			WithOperation("getGuildPrompt").
 			WithDetails("guild_id", guildID)
 	}
-	
+
 	return &prompt, nil
 }
 
@@ -279,7 +279,7 @@ func (lpa *LayeredPromptAssembler) getRolePrompt(ctx context.Context, role strin
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &SystemPrompt{
 		Layer:   LayerRole,
 		Content: content,
@@ -297,13 +297,13 @@ func (lpa *LayeredPromptAssembler) getDomainPrompt(ctx context.Context, role, do
 	if domain == "" || domain == "default" {
 		return nil, nil // No domain specialization
 	}
-	
+
 	// Use existing manager for domain prompts
 	content, err := lpa.manager.GetSystemPrompt(ctx, role, domain)
 	if err != nil {
 		return nil, nil // Domain prompt is optional
 	}
-	
+
 	return &SystemPrompt{
 		Layer:   LayerDomain,
 		Content: content,
@@ -322,13 +322,13 @@ func (lpa *LayeredPromptAssembler) getSessionPrompt(ctx context.Context, session
 	if sessionID == "" {
 		return nil, nil // No session context
 	}
-	
+
 	// Try to get from storage
 	data, err := lpa.store.GetPromptLayer(ctx, string(LayerSession), sessionID)
 	if err != nil {
 		return nil, nil // Session prompt is optional
 	}
-	
+
 	var prompt SystemPrompt
 	if err := json.Unmarshal(data, &prompt); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to unmarshal session prompt").
@@ -336,7 +336,7 @@ func (lpa *LayeredPromptAssembler) getSessionPrompt(ctx context.Context, session
 			WithOperation("getSessionPrompt").
 			WithDetails("session_id", sessionID)
 	}
-	
+
 	return &prompt, nil
 }
 
@@ -345,33 +345,33 @@ func (lpa *LayeredPromptAssembler) getTurnPrompt(ctx context.Context, turnCtx Tu
 	if turnCtx.UserMessage == "" && len(turnCtx.Instructions) == 0 {
 		return nil, nil // No turn context
 	}
-	
+
 	var content strings.Builder
 	content.WriteString("## Current Turn Context\n\n")
-	
+
 	if turnCtx.UserMessage != "" {
 		content.WriteString(fmt.Sprintf("**User Request**: %s\n\n", turnCtx.UserMessage))
 	}
-	
+
 	if turnCtx.TaskID != "" {
 		content.WriteString(fmt.Sprintf("**Active Task**: %s\n", turnCtx.TaskID))
 	}
-	
+
 	if turnCtx.CommissionID != "" {
 		content.WriteString(fmt.Sprintf("**Commission**: %s\n", turnCtx.CommissionID))
 	}
-	
+
 	if turnCtx.Urgency != "" {
 		content.WriteString(fmt.Sprintf("**Urgency**: %s\n", turnCtx.Urgency))
 	}
-	
+
 	if len(turnCtx.Instructions) > 0 {
 		content.WriteString("\n**Special Instructions**:\n")
 		for _, instruction := range turnCtx.Instructions {
 			content.WriteString(fmt.Sprintf("- %s\n", instruction))
 		}
 	}
-	
+
 	return &SystemPrompt{
 		Layer:   LayerTurn,
 		Content: content.String(),
@@ -398,19 +398,19 @@ type ArtisanConfig struct {
 func (lpa *LayeredPromptAssembler) getArtisanConfig(ctx context.Context, artisanID string) (*ArtisanConfig, error) {
 	// TODO: Implement proper registry lookup when agent registry is available
 	// For now, return a default config based on artisanID
-	
+
 	// Parse artisanID to extract role and domain hints
 	parts := strings.Split(artisanID, "-")
 	role := "artisan"
 	domain := "default"
-	
+
 	if len(parts) >= 2 {
 		role = parts[0]
 		if len(parts) >= 3 {
 			domain = parts[1]
 		}
 	}
-	
+
 	return &ArtisanConfig{
 		ID:     artisanID,
 		Role:   role,
@@ -423,7 +423,7 @@ func (lpa *LayeredPromptAssembler) getArtisanConfig(ctx context.Context, artisan
 func (lpa *LayeredPromptAssembler) generateCacheKey(artisanID, sessionID string, turnCtx TurnContext) string {
 	// Create deterministic cache key
 	key := fmt.Sprintf("artisan:%s:session:%s", artisanID, sessionID)
-	
+
 	// Add turn context hash for ephemeral turns
 	if turnCtx.UserMessage != "" || len(turnCtx.Instructions) > 0 {
 		h := md5.New()
@@ -433,14 +433,14 @@ func (lpa *LayeredPromptAssembler) generateCacheKey(artisanID, sessionID string,
 		}
 		key += fmt.Sprintf(":turn:%x", h.Sum(nil)[:8])
 	}
-	
+
 	return key
 }
 
 func (lpa *LayeredPromptAssembler) getCachedPrompt(cacheKey string) *LayeredPrompt {
 	lpa.mutex.RLock()
 	defer lpa.mutex.RUnlock()
-	
+
 	if prompt, exists := lpa.cache[cacheKey]; exists {
 		// Check if cache is still fresh (5 minutes)
 		if time.Since(prompt.AssembledAt) < 5*time.Minute {
@@ -469,15 +469,15 @@ func (lpa *LayeredPromptAssembler) retrieveMemoryChunks(
 	if lpa.ragRetriever == nil {
 		return nil, nil
 	}
-	
+
 	query := turnCtx.UserMessage
 	if query == "" {
 		return nil, nil
 	}
-	
+
 	// Reserve 20% of token budget for memory
 	memoryTokenBudget := int(float64(lpa.tokenBudget) * 0.2)
-	
+
 	return lpa.ragRetriever.GetContextualMemory(ctx, sessionID, query, memoryTokenBudget, 0.7)
 }
 
@@ -491,36 +491,36 @@ func (lpa *LayeredPromptAssembler) optimizeForTokenBudget(
 	for _, layer := range layers {
 		totalTokens += lpa.estimateTokens(layer.Content)
 	}
-	
+
 	for _, chunk := range memoryChunks {
 		totalTokens += chunk.Tokens
 	}
-	
+
 	// If within budget, return as-is
 	if totalTokens <= lpa.tokenBudget {
 		return layers, false, nil
 	}
-	
+
 	// Sort layers by priority (higher priority = more important)
 	sort.Slice(layers, func(i, j int) bool {
 		return layers[i].Priority > layers[j].Priority
 	})
-	
+
 	// Apply truncation strategy
 	optimizedLayers := make([]SystemPrompt, 0, len(layers))
 	remainingBudget := lpa.tokenBudget
-	
+
 	// Reserve tokens for memory chunks (they're high priority)
 	memoryTokens := 0
 	for _, chunk := range memoryChunks {
 		memoryTokens += chunk.Tokens
 	}
 	remainingBudget -= memoryTokens
-	
+
 	// Add layers in priority order until budget is exhausted
 	for _, layer := range layers {
 		layerTokens := lpa.estimateTokens(layer.Content)
-		
+
 		if layerTokens <= remainingBudget {
 			optimizedLayers = append(optimizedLayers, layer)
 			remainingBudget -= layerTokens
@@ -532,7 +532,7 @@ func (lpa *LayeredPromptAssembler) optimizeForTokenBudget(
 			break
 		}
 	}
-	
+
 	return optimizedLayers, true, nil
 }
 
@@ -543,19 +543,19 @@ func (lpa *LayeredPromptAssembler) compilePrompt(
 	turnCtx TurnContext,
 ) string {
 	var compiled strings.Builder
-	
+
 	// Add layers in reverse priority order (platform first, turn last)
 	sort.Slice(layers, func(i, j int) bool {
 		return layers[i].Priority < layers[j].Priority
 	})
-	
+
 	for i, layer := range layers {
 		if i > 0 {
 			compiled.WriteString("\n\n---\n\n")
 		}
 		compiled.WriteString(layer.Content)
 	}
-	
+
 	// Add memory chunks if available
 	if len(memoryChunks) > 0 {
 		compiled.WriteString("\n\n## Relevant Guild Memory\n\n")
@@ -563,7 +563,7 @@ func (lpa *LayeredPromptAssembler) compilePrompt(
 			compiled.WriteString(fmt.Sprintf("[[MEMORY:%s]] %s\n\n", chunk.Source, chunk.Content))
 		}
 	}
-	
+
 	// Add turn context if available
 	if turnCtx.Context != nil {
 		if contextStr, err := lpa.formatter.FormatAsXML(turnCtx.Context); err == nil {
@@ -571,7 +571,7 @@ func (lpa *LayeredPromptAssembler) compilePrompt(
 			compiled.WriteString(contextStr)
 		}
 	}
-	
+
 	return compiled.String()
 }
 
@@ -586,14 +586,14 @@ func (lpa *LayeredPromptAssembler) truncateContent(content string, maxTokens int
 	if len(content) <= maxChars {
 		return content
 	}
-	
+
 	// Try to truncate at sentence boundaries
 	truncated := content[:maxChars]
 	lastPeriod := strings.LastIndex(truncated, ".")
 	if lastPeriod > maxChars/2 { // If we find a reasonable sentence boundary
 		truncated = truncated[:lastPeriod+1]
 	}
-	
+
 	return truncated + "\n\n[Content truncated due to token limit]"
 }
 
@@ -612,6 +612,6 @@ func (lpa *LayeredPromptAssembler) storePersistentCache(
 	if err != nil {
 		return err
 	}
-	
+
 	return lpa.store.CacheCompiledPrompt(ctx, cacheKey, data)
 }

@@ -21,13 +21,13 @@ func BenchmarkChatResponsiveness(b *testing.B) {
 	require.NotNil(b, model)
 
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		start := time.Now()
-		
+
 		// Simulate UI update operation
 		model.ProcessMessage(fmt.Sprintf("test message %d", i))
-		
+
 		elapsed := time.Since(start)
 
 		// Must be under 16ms for 60fps
@@ -40,7 +40,7 @@ func BenchmarkChatResponsiveness(b *testing.B) {
 // BenchmarkAgentCreation benchmarks agent instantiation performance
 func BenchmarkAgentCreation(b *testing.B) {
 	ctx := context.Background()
-	
+
 	// Setup registry
 	reg := registry.NewComponentRegistry()
 	err := reg.Initialize(ctx, registry.Config{})
@@ -62,10 +62,10 @@ func BenchmarkAgentCreation(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		start := time.Now()
-		
+
 		// Use agent registry to get agent (simplified for benchmark)
 		agent, err := agentReg.GetAgent("worker")
-		
+
 		elapsed := time.Since(start)
 
 		if err != nil {
@@ -127,7 +127,7 @@ func TestMemoryUsage(t *testing.T) {
 	t.Logf("Memory growth: %.2f MB", growthMB)
 
 	// Should not grow more than 50MB (generous limit for demo)
-	assert.Less(t, growth, uint64(50*1024*1024), 
+	assert.Less(t, growth, uint64(50*1024*1024),
 		"Memory growth should be reasonable (< 50MB), got %.2f MB", growthMB)
 }
 
@@ -164,14 +164,14 @@ This is a **simple** markdown test with *emphasis*.`,
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			start := time.Now()
-			
+
 			// Mock markdown rendering
 			rendered := mockRenderMarkdown(tc.content)
-			
+
 			elapsed := time.Since(start)
 
 			assert.NotEmpty(t, rendered, "Rendered content should not be empty")
-			assert.Less(t, elapsed, tc.maxTime, 
+			assert.Less(t, elapsed, tc.maxTime,
 				"Rendering should be fast: got %v, expected < %v", elapsed, tc.maxTime)
 
 			t.Logf("Rendered %d chars in %v", len(tc.content), elapsed)
@@ -227,7 +227,7 @@ func TestConcurrentAgentPerformance(t *testing.T) {
 			if agent == nil {
 				continue
 			}
-			
+
 			if execAgent, ok := agent.(interface{ Execute(context.Context, string) (string, error) }); ok {
 				_, err := execAgent.Execute(ctx, fmt.Sprintf("Operation %d", i))
 				if err != nil {
@@ -242,7 +242,7 @@ func TestConcurrentAgentPerformance(t *testing.T) {
 	t.Logf("Concurrent operations completed in %v", elapsed)
 
 	// Should complete within reasonable time
-	assert.Less(t, elapsed, 30*time.Second, 
+	assert.Less(t, elapsed, 30*time.Second,
 		"Concurrent operations should complete in reasonable time")
 }
 
@@ -261,9 +261,9 @@ func TestUIResponsiveness(t *testing.T) {
 
 	for i := 0; i < numUpdates; i++ {
 		updateStart := time.Now()
-		
+
 		model.ProcessMessage(fmt.Sprintf("rapid update %d", i))
-		
+
 		updateElapsed := time.Since(updateStart)
 
 		// Each update should be fast
@@ -275,11 +275,11 @@ func TestUIResponsiveness(t *testing.T) {
 	totalElapsed := time.Since(start)
 	avgTime := totalElapsed / time.Duration(numUpdates)
 
-	t.Logf("Processed %d updates in %v (avg: %v per update)", 
+	t.Logf("Processed %d updates in %v (avg: %v per update)",
 		numUpdates, totalElapsed, avgTime)
 
 	// Average should be well under 1ms for good responsiveness
-	assert.Less(t, avgTime, 1*time.Millisecond, 
+	assert.Less(t, avgTime, 1*time.Millisecond,
 		"Average UI update time should be very fast")
 }
 
@@ -315,7 +315,7 @@ func TestStartupPerformance(t *testing.T) {
 	t.Logf("Demo startup simulation completed in %v", elapsed)
 
 	// Startup should be fast (under 5 seconds)
-	assert.Less(t, elapsed, 5*time.Second, 
+	assert.Less(t, elapsed, 5*time.Second,
 		"Demo startup should be fast")
 }
 
@@ -334,7 +334,7 @@ func createMockChatModel() *MockChatModel {
 func (m *MockChatModel) ProcessMessage(message string) {
 	// Simulate message processing
 	m.messageCount++
-	
+
 	// Simulate some work
 	time.Sleep(100 * time.Microsecond)
 }
@@ -374,7 +374,7 @@ func runIntensiveDemoOperations(ctx context.Context, reg registry.ComponentRegis
 
 func generateLargeMarkdownContent() string {
 	content := "# Large Markdown Document\n\n"
-	
+
 	for i := 0; i < 50; i++ {
 		content += fmt.Sprintf("## Section %d\n\n", i)
 		content += "This is a large section with **bold text** and *italic text*.\n\n"
@@ -388,18 +388,18 @@ func generateLargeMarkdownContent() string {
 		content += "}\n"
 		content += "```\n\n"
 	}
-	
+
 	return content
 }
 
 func mockRenderMarkdown(content string) string {
 	// Simulate markdown rendering work
 	time.Sleep(10 * time.Microsecond)
-	
+
 	// Simple mock processing
 	lines := len(content) / 50 // Approximate line count
 	processed := fmt.Sprintf("RENDERED[%d lines]: %s", lines, content[:min(len(content), 100)])
-	
+
 	return processed
 }
 

@@ -27,13 +27,13 @@ type BasicTaskExecutor struct {
 	promptBuilder   *execution.CachedPromptBuilder
 	workspaceManager workspace.Manager
 	workspace       workspace.Workspace
-	
+
 	// Execution state
 	status       ExecutionStatus
 	progress     float64
 	currentTask  *kanban.Task
 	result       *ExecutionResult
-	
+
 	// Synchronization
 	mu           sync.RWMutex
 	stopChan     chan struct{}
@@ -162,7 +162,7 @@ func (e *BasicTaskExecutor) executePhases(ctx context.Context) error {
 		}
 
 		e.updateProgress(phase.progress, phase.name)
-		
+
 		if err := phase.fn(ctx); err != nil {
 			return gerror.Wrapf(err, gerror.ErrCodeTaskFailed, "phase %s failed", phase.name).
 				WithComponent("executor").
@@ -188,7 +188,7 @@ func (e *BasicTaskExecutor) phaseInitialize(ctx context.Context) error {
 			BranchPrefix: "agent",
 			WorkDir:      e.execContext.ProjectRoot,
 		}
-		
+
 		ws, err := e.workspaceManager.CreateWorkspace(ctx, opts)
 		if err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create workspace").
@@ -196,7 +196,7 @@ func (e *BasicTaskExecutor) phaseInitialize(ctx context.Context) error {
 				WithOperation("phaseInitialize").
 				WithDetails("agent_id", e.agent.GetID())
 		}
-		
+
 		e.mu.Lock()
 		e.workspace = ws
 		e.execContext.WorkspaceDir = ws.Path()
@@ -212,10 +212,10 @@ func (e *BasicTaskExecutor) phaseInitialize(ctx context.Context) error {
 	if e.toolRegistry != nil {
 		// Register default tools if not already registered
 		e.initializeDefaultTools()
-		
+
 		// Log available tools
 		availableTools := e.toolRegistry.ListTools()
-		
+
 		e.addExecutionLog("Initialized tools", map[string]interface{}{
 			"available_tools": availableTools,
 			"workspace":       e.execContext.WorkspaceDir,
@@ -230,7 +230,7 @@ func (e *BasicTaskExecutor) phaseInitialize(ctx context.Context) error {
 func (e *BasicTaskExecutor) phasePlan(ctx context.Context) error {
 	// Build the planning prompt with all context layers except execution
 	promptData := e.buildPromptData()
-	
+
 	planningPrompt, err := e.promptBuilder.BuildPlanningPromptCached(promptData)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to build planning prompt").
@@ -278,7 +278,7 @@ func (e *BasicTaskExecutor) phasePlan(ctx context.Context) error {
 func (e *BasicTaskExecutor) phaseExecute(ctx context.Context) error {
 	// Get execution plan from metadata
 	plan, _ := e.result.Metadata["execution_plan"].(string)
-	
+
 	// For now, demonstrate tool usage with a simple implementation
 	// In a real implementation, this would parse the plan and execute accordingly
 	steps := []struct {
@@ -320,10 +320,10 @@ func (e *BasicTaskExecutor) phaseExecute(ctx context.Context) error {
 		default:
 			// Add small delay to allow context cancellation testing
 			time.Sleep(20 * time.Millisecond)
-			
+
 			progress := 0.2 + (0.5 * float64(i) / float64(len(steps)))
 			e.updateProgress(progress, step.description)
-			
+
 			// Execute the step
 			if err := step.execute(ctx); err != nil {
 				e.addExecutionLog(fmt.Sprintf("Step failed: %s", step.name), map[string]interface{}{
@@ -335,7 +335,7 @@ func (e *BasicTaskExecutor) phaseExecute(ctx context.Context) error {
 					WithDetails("task_id", e.currentTask.ID).
 					WithDetails("step", step.name)
 			}
-			
+
 			e.addExecutionLog(fmt.Sprintf("Completed: %s", step.description), nil)
 		}
 	}
@@ -362,7 +362,7 @@ func (e *BasicTaskExecutor) phaseFinalize(ctx context.Context) error {
 				e.addExecutionLog("Uncommitted changes detected", map[string]interface{}{
 					"diff_size": len(diff),
 				})
-				
+
 				// Commit changes
 				commitMsg := fmt.Sprintf("Task %s: Auto-commit by agent %s", e.currentTask.ID, e.agent.GetID())
 				if err := gitWs.CommitChanges(commitMsg); err != nil {
@@ -392,10 +392,10 @@ func (e *BasicTaskExecutor) phaseFinalize(ctx context.Context) error {
 		"artifacts_count": len(e.result.Artifacts),
 		"duration":        time.Since(e.result.StartTime).String(),
 	})
-	
+
 	// Note: We don't cleanup the workspace here - it might be needed for review
 	// The workspace manager should handle cleanup based on retention policy
-	
+
 	return nil
 }
 
@@ -425,7 +425,7 @@ func (e *BasicTaskExecutor) Stop() error {
 	e.stopped = true
 	close(e.stopChan)
 	e.status = StatusStopped
-	
+
 	return nil
 }
 
@@ -463,7 +463,7 @@ func (e *BasicTaskExecutor) addExecutionLog(message string, metadata map[string]
 		e.result.Output += "\n"
 	}
 	e.result.Output += fmt.Sprintf("[%s] %s", time.Now().Format("15:04:05"), message)
-	
+
 	// Add to metadata if provided
 	if metadata != nil {
 		for k, v := range metadata {
@@ -486,7 +486,7 @@ func (e *BasicTaskExecutor) executeToolCall(ctx context.Context, toolName string
 
 	// Execute the tool
 	result, err := e.toolRegistry.ExecuteToolWithParams(ctx, toolName, params)
-	
+
 	// Calculate execution time
 	duration := time.Since(startTime)
 
@@ -506,7 +506,7 @@ func (e *BasicTaskExecutor) executeToolCall(ctx context.Context, toolName string
 		})
 		toolUsage = &e.result.ToolUsage[len(e.result.ToolUsage)-1]
 	}
-	
+
 	// Update usage stats
 	toolUsage.Invocations++
 	toolUsage.TotalTime += duration
@@ -690,7 +690,7 @@ func (e *BasicTaskExecutor) stepAnalyzeTask(ctx context.Context) error {
 		return ctx.Err()
 	default:
 	}
-	
+
 	// Use shell tool to check current directory structure
 	if e.toolRegistry != nil {
 		result, err := e.executeToolCall(ctx, "shell", map[string]interface{}{
@@ -713,7 +713,7 @@ func (e *BasicTaskExecutor) stepPrepareWorkspace(ctx context.Context) error {
 		return ctx.Err()
 	default:
 	}
-	
+
 	// Create a task directory and README
 	if e.toolRegistry != nil {
 		// Create task directory
@@ -731,11 +731,11 @@ func (e *BasicTaskExecutor) stepPrepareWorkspace(ctx context.Context) error {
 		}
 
 		// Create README file
-		readmeContent := fmt.Sprintf("# Task: %s\n\n%s\n\nStarted: %s\n", 
-			e.currentTask.Title, 
+		readmeContent := fmt.Sprintf("# Task: %s\n\n%s\n\nStarted: %s\n",
+			e.currentTask.Title,
 			e.currentTask.Description,
 			time.Now().Format(time.RFC3339))
-		
+
 		result, err := e.executeToolCall(ctx, "file", map[string]interface{}{
 			"operation": "write",
 			"path":      filepath.Join(taskDir, "README.md"),
@@ -773,11 +773,11 @@ func (e *BasicTaskExecutor) stepImplementSolution(ctx context.Context) error {
 		return ctx.Err()
 	default:
 	}
-	
+
 	// Demonstrate creating a solution file
 	if e.toolRegistry != nil {
 		taskDir := fmt.Sprintf("task_%s", e.currentTask.ID)
-		
+
 		// Create a solution file based on task
 		solutionContent := fmt.Sprintf(`#!/bin/bash
 # Solution for: %s
@@ -790,7 +790,7 @@ echo "Task Title: %s"
 
 # Task implementation would go here
 echo "Task completed successfully"
-`, 
+`,
 			e.currentTask.Title,
 			e.agent.GetName(),
 			time.Now().Format(time.RFC3339),
@@ -841,11 +841,11 @@ func (e *BasicTaskExecutor) stepVerifyResults(ctx context.Context) error {
 		return ctx.Err()
 	default:
 	}
-	
+
 	// Verify created files exist
 	if e.toolRegistry != nil {
 		taskDir := fmt.Sprintf("task_%s", e.currentTask.ID)
-		
+
 		// List created files
 		result, err := e.executeToolCall(ctx, "shell", map[string]interface{}{
 			"command": "ls",
@@ -873,7 +873,7 @@ Status: Completed
 - Documentation generated
 - Solution implemented
 - All artifacts tracked
-`, 
+`,
 			e.currentTask.Title,
 			time.Now().Format(time.RFC3339),
 			result.Output,

@@ -18,7 +18,7 @@ type ArchiveParser struct {
 func NewArchiveParser() *ArchiveParser {
 	// Pattern to match file sections in the response
 	filePattern := regexp.MustCompile(`(?m)^## File: (.+)$\n((?:.*\n?)*)(?=^## File: |$)`)
-	
+
 	// Pattern to match tasks in content (Workshop Board tasks)
 	taskPattern := regexp.MustCompile(`(?m)^\*\*Tasks Generated\*\*:\s*\n((?:^- \w+-\d+:.*\n(?:^\s+- .*\n)*)+)`)
 
@@ -82,7 +82,7 @@ func (p *ArchiveParser) parseStructuredResponse(content string) []*FileEntry {
 func (p *ArchiveParser) parseSingleFile(content string) (*FileStructure, error) {
 	// Clean up the content
 	content = strings.TrimSpace(content)
-	
+
 	if content == "" {
 		return nil, gerror.New(gerror.ErrCodeValidation, "empty Guild Master response content", nil).
 			WithComponent("manager").
@@ -116,19 +116,19 @@ func (p *ArchiveParser) parseSingleFile(content string) (*FileStructure, error) 
 func (p *ArchiveParser) cleanFilePath(path string) string {
 	// Remove any leading/trailing whitespace
 	path = strings.TrimSpace(path)
-	
+
 	// Remove any markdown formatting that might have leaked in
 	path = strings.TrimPrefix(path, "`")
 	path = strings.TrimSuffix(path, "`")
-	
+
 	// Clean the path
 	path = filepath.Clean(path)
-	
+
 	// Ensure it ends with .md if it's not a directory
 	if !strings.HasSuffix(path, "/") && !strings.HasSuffix(path, ".md") {
 		path += ".md"
 	}
-	
+
 	return path
 }
 
@@ -136,7 +136,7 @@ func (p *ArchiveParser) cleanFilePath(path string) string {
 func (p *ArchiveParser) countWorkshopTasks(content string) int {
 	matches := p.taskPattern.FindAllString(content, -1)
 	count := 0
-	
+
 	for _, match := range matches {
 		// Count individual task lines (- CATEGORY-NUMBER: title)
 		lines := strings.Split(match, "\n")
@@ -146,25 +146,25 @@ func (p *ArchiveParser) countWorkshopTasks(content string) int {
 			}
 		}
 	}
-	
+
 	return count
 }
 
 // ExtractWorkshopTasksFromFile extracts Workshop Board tasks from a specific Archive file
 func (p *ArchiveParser) ExtractWorkshopTasksFromFile(content string) []WorkshopTaskInfo {
 	var tasks []WorkshopTaskInfo
-	
+
 	matches := p.taskPattern.FindAllStringSubmatch(content, -1)
-	
+
 	for _, match := range matches {
 		if len(match) < 2 {
 			continue
 		}
-		
+
 		taskSection := match[1]
 		tasks = append(tasks, p.parseWorkshopTaskSection(taskSection)...)
 	}
-	
+
 	return tasks
 }
 
@@ -172,22 +172,22 @@ func (p *ArchiveParser) ExtractWorkshopTasksFromFile(content string) []WorkshopT
 func (p *ArchiveParser) parseWorkshopTaskSection(section string) []WorkshopTaskInfo {
 	var tasks []WorkshopTaskInfo
 	lines := strings.Split(section, "\n")
-	
+
 	var currentTask *WorkshopTaskInfo
-	
+
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if line == "" {
 			continue
 		}
-		
+
 		// Check if this is a Workshop Board task line (- CATEGORY-NUMBER: title)
 		if matches := regexp.MustCompile(`^- (\w+)-(\d+): (.+)$`).FindStringSubmatch(line); len(matches) == 4 {
 			// Save previous task if exists
 			if currentTask != nil {
 				tasks = append(tasks, *currentTask)
 			}
-			
+
 			// Start new artisan task
 			currentTask = &WorkshopTaskInfo{
 				ID:       matches[1] + "-" + matches[2],
@@ -223,12 +223,12 @@ func (p *ArchiveParser) parseWorkshopTaskSection(section string) []WorkshopTaskI
 			}
 		}
 	}
-	
+
 	// Don't forget the last task
 	if currentTask != nil {
 		tasks = append(tasks, *currentTask)
 	}
-	
+
 	return tasks
 }
 

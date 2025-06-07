@@ -189,7 +189,7 @@ func GetMostViewedDocuments(ctx context.Context, cfg Config, limit int) (map[str
 		path  string
 		count int
 	}
-	
+
 	var counts []docCount
 	for path, count := range viewCounts {
 		counts = append(counts, docCount{path, count})
@@ -207,10 +207,10 @@ func GetMostViewedDocuments(ctx context.Context, cfg Config, limit int) (map[str
 				maxIdx = j
 			}
 		}
-		
+
 		// Add to result
 		result[counts[maxIdx].path] = counts[maxIdx].count
-		
+
 		// Remove from counts
 		counts = append(counts[:maxIdx], counts[maxIdx+1:]...)
 	}
@@ -274,10 +274,10 @@ func GetRecentActivity(ctx context.Context, cfg Config, limit int) ([]ViewLog, e
 				mostRecentIdx = j
 			}
 		}
-		
+
 		// Add to result
 		recentLogs = append(recentLogs, allLogs[mostRecentIdx])
-		
+
 		// Remove from allLogs
 		allLogs = append(allLogs[:mostRecentIdx], allLogs[mostRecentIdx+1:]...)
 	}

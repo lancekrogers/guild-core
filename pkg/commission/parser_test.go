@@ -16,7 +16,7 @@ func TestMarkdownParser_Parse(t *testing.T) {
 		{
 			name: "Basic objective",
 			content: `# Test Objective
-			
+
 This is a description of the test objective.
 
 ## Context
@@ -44,7 +44,7 @@ Some notes about the objective.
 		{
 			name: "Objective with metadata",
 			content: `# Feature Implementation
-			
+
 @priority: high
 @owner: alice
 @tag:important @tag:feature
@@ -78,26 +78,26 @@ This feature is needed because...
 		t.Run(tc.name, func(t *testing.T) {
 			parser := NewMarkdownParser(DefaultParseOptions())
 			objective, err := parser.Parse(tc.content, "test.md")
-			
+
 			if err != nil {
 				t.Fatalf("Parse failed: %v", err)
 			}
-			
+
 			if objective.Title != tc.expectedTitle {
 				t.Errorf("Expected title '%s', got '%s'", tc.expectedTitle, objective.Title)
 			}
-			
+
 			if len(objective.Parts) != tc.expectedParts {
 				t.Errorf("Expected %d parts, got %d", tc.expectedParts, len(objective.Parts))
 				for i, part := range objective.Parts {
 					t.Logf("Part %d: Title=%s, Type=%s", i, part.Title, part.Type)
 				}
 			}
-			
+
 			if len(objective.Tasks) != tc.expectedTasks {
 				t.Errorf("Expected %d tasks, got %d", tc.expectedTasks, len(objective.Tasks))
 			}
-			
+
 			// Additional tests for other objective properties could go here
 		})
 	}
@@ -143,37 +143,37 @@ func TestMarkdownParser_ParseFile(t *testing.T) {
 
 func TestExtractSections(t *testing.T) {
 	parser := NewMarkdownParser(DefaultParseOptions())
-	
+
 	content := `# Main Title
-	
+
 This is the main description.
 
 ## Section 1
-	
+
 This is section 1 content.
 
 ## Section 2
-	
+
 This is section 2 content.
 `
-	
+
 	sections, err := parser.extractSections(content)
 	if err != nil {
 		t.Fatalf("extractSections failed: %v", err)
 	}
-	
+
 	if len(sections) != 3 {
 		t.Errorf("Expected 3 sections, got %d", len(sections))
 	}
-	
+
 	if sections[0].Title != "Main Title" {
 		t.Errorf("Expected first section title 'Main Title', got '%s'", sections[0].Title)
 	}
-	
+
 	if sections[1].Title != "Section 1" {
 		t.Errorf("Expected second section title 'Section 1', got '%s'", sections[1].Title)
 	}
-	
+
 	if !strings.Contains(sections[1].Content, "This is section 1 content.") {
 		t.Errorf("Expected section 1 to contain its content, got '%s'", sections[1].Content)
 	}
@@ -181,7 +181,7 @@ This is section 2 content.
 
 func TestExtractTasks(t *testing.T) {
 	parser := NewMarkdownParser(DefaultParseOptions())
-	
+
 	section := &SectionInfo{
 		Title: "Tasks",
 		Type:  "tasks",
@@ -192,21 +192,21 @@ func TestExtractTasks(t *testing.T) {
 2. Numbered task 2
 `,
 	}
-	
+
 	tasks := parser.extractTasksFromSection(section)
-	
+
 	if len(tasks) != 4 {
 		t.Errorf("Expected 4 tasks, got %d", len(tasks))
 	}
-	
+
 	if tasks[0].Title != "Task 1" {
 		t.Errorf("Expected first task title 'Task 1', got '%s'", tasks[0].Title)
 	}
-	
+
 	if tasks[0].Status != "todo" {
 		t.Errorf("Expected first task status 'todo', got '%s'", tasks[0].Status)
 	}
-	
+
 	if tasks[1].Status != "done" {
 		t.Errorf("Expected second task status 'done', got '%s'", tasks[1].Status)
 	}

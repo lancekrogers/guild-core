@@ -34,47 +34,47 @@ var (
 		Code:    ErrorCodeParse,
 		Message: "Parse error",
 	}
-	
+
 	ErrInvalidRequest = &MCPError{
 		Code:    ErrorCodeInvalidRequest,
 		Message: "Invalid request",
 	}
-	
+
 	ErrMethodNotFound = &MCPError{
 		Code:    ErrorCodeMethodNotFound,
 		Message: "Method not found",
 	}
-	
+
 	ErrInvalidParams = &MCPError{
 		Code:    ErrorCodeInvalidParams,
 		Message: "Invalid params",
 	}
-	
+
 	ErrInternalError = &MCPError{
 		Code:    ErrorCodeInternal,
 		Message: "Internal error",
 	}
-	
+
 	ErrToolNotFound = &MCPError{
 		Code:    ErrorCodeToolNotFound,
 		Message: "Tool not found",
 	}
-	
+
 	ErrToolUnavailable = &MCPError{
 		Code:    ErrorCodeToolUnavailable,
 		Message: "Tool unavailable",
 	}
-	
+
 	ErrCostLimitExceeded = &MCPError{
 		Code:    ErrorCodeCostLimitExceed,
 		Message: "Cost limit exceeded",
 	}
-	
+
 	ErrAuthFailed = &MCPError{
 		Code:    ErrorCodeAuthFailed,
 		Message: "Authentication failed",
 	}
-	
+
 	ErrTimeout = &MCPError{
 		Code:    ErrorCodeTimeout,
 		Message: "Request timeout",
@@ -105,11 +105,11 @@ func WrapError(err error, code int) *MCPError {
 	if err == nil {
 		return nil
 	}
-	
+
 	if mcpErr, ok := err.(*MCPError); ok {
 		return mcpErr
 	}
-	
+
 	return &MCPError{
 		Code:    code,
 		Message: err.Error(),

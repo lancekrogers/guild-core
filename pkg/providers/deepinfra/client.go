@@ -13,11 +13,11 @@ const (
 	// Llama Models
 	Llama32_8B  = "meta-llama/Meta-Llama-3.2-8B-Instruct"
 	Llama33_70B = "meta-llama/Meta-Llama-3.3-70B-Instruct"
-	
+
 	// Mistral Models
 	Mistral7B = "mistralai/Mistral-7B-Instruct-v0.3"
 	Mixtral8x7B = "mistralai/Mixtral-8x7B-Instruct-v0.1"
-	
+
 	// Other Models
 	Qwen25_72B = "Qwen/Qwen2.5-72B-Instruct"
 	Gemma2_9B = "google/gemma-2-9b-it"

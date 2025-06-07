@@ -8,16 +8,16 @@ option go_package = "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1";
 service ChatService {
   // Interactive bidirectional chat with agents
   rpc Chat(stream ChatRequest) returns (stream ChatResponse);
-  
+
   // Get chat history for a session
   rpc GetChatHistory(GetChatHistoryRequest) returns (GetChatHistoryResponse);
-  
+
   // Create a new chat session
   rpc CreateChatSession(CreateChatSessionRequest) returns (ChatSession);
-  
+
   // End a chat session
   rpc EndChatSession(EndChatSessionRequest) returns (EndChatSessionResponse);
-  
+
   // List active chat sessions
   rpc ListChatSessions(ListChatSessionsRequest) returns (ListChatSessionsResponse);
 }
@@ -51,7 +51,7 @@ message ChatMessage {
   MessageType type = 5;
   int64 timestamp = 6;
   map<string, string> metadata = 7;
-  
+
   enum MessageType {
     USER_MESSAGE = 0;
     AGENT_RESPONSE = 1;
@@ -70,7 +70,7 @@ message AgentThinking {
   ThinkingState state = 4;
   string description = 5;
   int64 timestamp = 6;
-  
+
   enum ThinkingState {
     ANALYZING = 0;
     PLANNING = 1;
@@ -97,7 +97,7 @@ message ToolExecution {
   double estimated_cost = 12;
   repeated string required_permissions = 13;
   bool requires_approval = 14;
-  
+
   enum ExecutionStatus {
     PENDING = 0;
     AWAITING_APPROVAL = 1;
@@ -113,7 +113,7 @@ message ChatControl {
   ControlAction action = 1;
   string session_id = 2;
   map<string, string> parameters = 3;
-  
+
   enum ControlAction {
     START_SESSION = 0;
     END_SESSION = 1;
@@ -140,7 +140,7 @@ message ChatEvent {
   string description = 3;
   map<string, string> data = 4;
   int64 timestamp = 5;
-  
+
   enum EventType {
     SESSION_STARTED = 0;
     SESSION_ENDED = 1;
@@ -162,7 +162,7 @@ message ChatError {
   string message = 3;
   map<string, string> details = 4;
   int64 timestamp = 5;
-  
+
   enum ErrorCode {
     UNKNOWN = 0;
     INVALID_SESSION = 1;
@@ -186,7 +186,7 @@ message ChatSession {
   int64 last_activity = 7;
   map<string, string> metadata = 8;
   SessionContext context = 9;
-  
+
   enum SessionStatus {
     ACTIVE = 0;
     PAUSED = 1;

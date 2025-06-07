@@ -22,7 +22,7 @@ func NewToolRegistry() ToolRegistry {
 	registry := &tools.ToolRegistry{
 		ToolRegistry: basetools.NewToolRegistry(),
 	}
-	
+
 	return &DefaultToolRegistry{
 		registry:     registry,
 		toolMetadata: make(map[string]ToolInfo),
@@ -189,7 +189,7 @@ func (r *DefaultToolRegistry) RegisterToolWithCost(name string, tool Tool, costM
 			WithComponent("registry").
 			WithOperation("RegisterTool")
 	}
-	
+
 	// Validate cost magnitude (Fibonacci scale)
 	if costMagnitude != 0 {
 		validCosts := map[int]bool{1: true, 2: true, 3: true, 5: true, 8: true}
@@ -292,7 +292,7 @@ func (r *DefaultToolRegistry) SetToolAvailability(name string, available bool) e
 func (r *DefaultToolRegistry) RegisterBasicTools() error {
 	// This is a placeholder for registering common tools with cost metadata
 	// In practice, you'd register actual tool implementations here
-	
+
 	// Example registrations (these would be actual tools):
 	// Shell tools - zero cost
 	// err := r.RegisterToolWithCost("shell", shellTool, 0, []string{"execution", "file_operations"})
@@ -302,6 +302,6 @@ func (r *DefaultToolRegistry) RegisterBasicTools() error {
 	// err = r.RegisterToolWithCost("git", gitTool, 0, []string{"version_control", "collaboration"})
 	// HTTP client - low cost
 	// err = r.RegisterToolWithCost("http_client", httpTool, 1, []string{"network", "api"})
-	
+
 	return nil
 }

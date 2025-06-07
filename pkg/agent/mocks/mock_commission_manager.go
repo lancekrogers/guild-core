@@ -50,13 +50,13 @@ func (m *MockCommissionManager) SaveObjective(ctx context.Context, obj *commissi
 	if m.error != nil {
 		return m.error
 	}
-	
+
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	obj.UpdatedAt = time.Now().UTC()
 	m.objectives[obj.ID] = obj
-	
+
 	return nil
 }
 
@@ -65,15 +65,15 @@ func (m *MockCommissionManager) GetObjective(ctx context.Context, objectiveID st
 	if m.error != nil {
 		return nil, m.error
 	}
-	
+
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	obj, ok := m.objectives[objectiveID]
 	if !ok {
 		return nil, memory.ErrNotFound
 	}
-	
+
 	return obj, nil
 }
 
@@ -82,15 +82,15 @@ func (m *MockCommissionManager) ListObjectives(ctx context.Context) ([]*commissi
 	if m.error != nil {
 		return nil, m.error
 	}
-	
+
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	var objectives []*commission.Commission
 	for _, obj := range m.objectives {
 		objectives = append(objectives, obj)
 	}
-	
+
 	return objectives, nil
 }
 
@@ -99,16 +99,16 @@ func (m *MockCommissionManager) DeleteObjective(ctx context.Context, objectiveID
 	if m.error != nil {
 		return m.error
 	}
-	
+
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	if _, ok := m.objectives[objectiveID]; !ok {
 		return memory.ErrNotFound
 	}
-	
+
 	delete(m.objectives, objectiveID)
-	
+
 	return nil
 }
 
@@ -117,10 +117,10 @@ func (m *MockCommissionManager) LoadObjectiveFromFile(ctx context.Context, fileP
 	if m.error != nil {
 		return nil, m.error
 	}
-	
+
 	// Just return a new objective for testing purposes
 	obj := commission.NewCommission("Test Objective", "Loaded from mock file")
-	
+
 	return obj, nil
 }
 
@@ -137,10 +137,10 @@ func (m *MockCommissionManager) AddTask(ctx context.Context, objectiveID string,
 	if !ok {
 		return memory.ErrNotFound
 	}
-	
+
 	obj.Tasks = append(obj.Tasks, task)
 	obj.UpdatedAt = time.Now().UTC()
-	
+
 	return nil
 }
 
@@ -149,15 +149,15 @@ func (m *MockCommissionManager) UpdateTaskStatus(ctx context.Context, objectiveI
 	if m.error != nil {
 		return m.error
 	}
-	
+
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	obj, ok := m.objectives[objectiveID]
 	if !ok {
 		return memory.ErrNotFound
 	}
-	
+
 	for i, task := range obj.Tasks {
 		if task.ID == taskID {
 			obj.Tasks[i].Status = status
@@ -169,6 +169,6 @@ func (m *MockCommissionManager) UpdateTaskStatus(ctx context.Context, objectiveI
 			return nil
 		}
 	}
-	
+
 	return memory.ErrNotFound
 }

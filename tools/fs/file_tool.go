@@ -147,12 +147,12 @@ func (t *FileTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 func (t *FileTool) sanitizePath(path string) string {
 	// Convert to absolute path
 	absPath := filepath.Join(t.basePath, path)
-	
+
 	// Ensure the path is within the base path
 	if !strings.HasPrefix(absPath, t.basePath) {
 		return ""
 	}
-	
+
 	return absPath
 }
 

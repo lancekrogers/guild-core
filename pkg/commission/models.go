@@ -13,13 +13,13 @@ type CommissionStatus string
 const (
 	// CommissionStatusDraft indicates a draft commission
 	CommissionStatusDraft CommissionStatus = "draft"
-	
+
 	// CommissionStatusActive indicates an active commission
 	CommissionStatusActive CommissionStatus = "active"
-	
+
 	// CommissionStatusCompleted indicates a completed commission
 	CommissionStatusCompleted CommissionStatus = "completed"
-	
+
 	// CommissionStatusCancelled indicates a cancelled commission
 	CommissionStatusCancelled CommissionStatus = "cancelled"
 )
@@ -133,7 +133,7 @@ type CommissionTask struct {
 type CommissionParser interface {
 	// Parse parses a commission from markdown content
 	Parse(content, source string) (*Commission, error)
-	
+
 	// ParseFile parses a commission from a markdown file
 	ParseFile(filepath string) (*Commission, error)
 }
@@ -170,10 +170,10 @@ func DefaultParseOptions() ParseOptions {
 type CommissionGenerator interface {
 	// GenerateCommission generates a new commission from a description
 	GenerateCommission(description string) (*Commission, error)
-	
+
 	// RefineCommission refines an existing commission
 	RefineCommission(commission *Commission) (*Commission, error)
-	
+
 	// GenerateTasks generates tasks for a commission
 	GenerateTasks(commission *Commission) ([]*CommissionTask, error)
 }

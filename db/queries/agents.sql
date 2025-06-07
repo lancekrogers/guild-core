@@ -12,7 +12,7 @@ SELECT * FROM agents ORDER BY created_at DESC;
 SELECT * FROM agents WHERE type = ? ORDER BY created_at DESC;
 
 -- name: UpdateAgent :exec
-UPDATE agents 
+UPDATE agents
 SET name = ?, type = ?, provider = ?, model = ?, capabilities = ?, tools = ?, cost_magnitude = ?
 WHERE id = ?;
 

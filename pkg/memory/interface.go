@@ -25,19 +25,19 @@ import (
 type Store interface {
 	// Put stores a value with the given key
 	Put(ctx context.Context, bucket, key string, value []byte) error
-	
+
 	// Get retrieves a value by key
 	Get(ctx context.Context, bucket, key string) ([]byte, error)
-	
+
 	// Delete removes a value by key
 	Delete(ctx context.Context, bucket, key string) error
-	
+
 	// List returns all keys in a bucket
 	List(ctx context.Context, bucket string) ([]string, error)
-	
+
 	// ListKeys returns keys with the given prefix in a bucket
 	ListKeys(ctx context.Context, bucket, prefix string) ([]string, error)
-	
+
 	// Close closes the store
 	Close() error
 }
@@ -65,22 +65,22 @@ type Message struct {
 type ChainManager interface {
 	// CreateChain creates a new prompt chain
 	CreateChain(ctx context.Context, agentID, taskID string) (string, error)
-	
+
 	// GetChain retrieves a chain by ID
 	GetChain(ctx context.Context, chainID string) (*PromptChain, error)
-	
+
 	// AddMessage adds a message to a chain
 	AddMessage(ctx context.Context, chainID string, message Message) error
-	
+
 	// GetChainsByAgent retrieves all chains for an agent
 	GetChainsByAgent(ctx context.Context, agentID string) ([]*PromptChain, error)
-	
+
 	// GetChainsByTask retrieves all chains for a task
 	GetChainsByTask(ctx context.Context, taskID string) ([]*PromptChain, error)
-	
+
 	// BuildContext builds a context from chains for an agent and task
 	BuildContext(ctx context.Context, agentID, taskID string, maxTokens int) ([]Message, error)
-	
+
 	// DeleteChain deletes a chain
 	DeleteChain(ctx context.Context, chainID string) error
 }
@@ -99,19 +99,19 @@ type Document struct {
 type CorpusManager interface {
 	// AddDocument adds a document to the corpus
 	AddDocument(ctx context.Context, doc *Document) (string, error)
-	
+
 	// GetDocument retrieves a document by ID
 	GetDocument(ctx context.Context, docID string) (*Document, error)
-	
+
 	// UpdateDocument updates a document
 	UpdateDocument(ctx context.Context, doc *Document) error
-	
+
 	// DeleteDocument deletes a document
 	DeleteDocument(ctx context.Context, docID string) error
-	
+
 	// SearchDocuments searches documents by text
 	SearchDocuments(ctx context.Context, query string, limit int) ([]*Document, error)
-	
+
 	// ListDocuments lists all documents with optional filters
 	ListDocuments(ctx context.Context, filters map[string]string, limit, offset int) ([]*Document, error)
 }

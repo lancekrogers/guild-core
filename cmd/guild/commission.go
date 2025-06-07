@@ -103,7 +103,7 @@ var workshopCmd = &cobra.Command{
 
 The workshop shows real-time status of:
 - Agent assignments and progress
-- Task dependencies and blockers  
+- Task dependencies and blockers
 - Resource utilization and costs
 - Collaboration coordination`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -148,7 +148,7 @@ func executeCommission(ctx context.Context, description string) error {
 	obj := commission.NewCommission("Guild Commission", description)
 	obj.Priority = priorityFlag
 	obj.CampaignID = campaignIDFlag
-	
+
 	// Save commission
 	desc := obj.Description
 	commission := &storage.Commission{
@@ -391,7 +391,7 @@ func showCommissionStatusRefine(ctx context.Context, components *guildComponents
 	if commission.CampaignID != "" {
 		fmt.Printf("Campaign: %s\n", commission.CampaignID)
 	}
-	
+
 	// TODO: Calculate and show completion based on tasks
 	fmt.Printf("Completion: N/A\n")
 
@@ -470,7 +470,7 @@ func setupGuildComponents(ctx context.Context) (*guildComponents, error) {
 			WithComponent("cli").
 			WithOperation("commission.setupGuildComponents")
 	}
-	
+
 	// Wrap the registry commission repo to match storage interface
 	commissionRepo := &commissionRepoAdapter{repo: regCommissionRepo}
 
@@ -536,7 +536,7 @@ func setupGuildComponents(ctx context.Context) (*guildComponents, error) {
 			}
 		}
 	}
-	
+
 	if memoryManager == nil {
 		return nil, gerror.New(gerror.ErrCodeInternal, "failed to create memory manager", nil).
 			WithComponent("cli").
@@ -545,7 +545,7 @@ func setupGuildComponents(ctx context.Context) (*guildComponents, error) {
 
 	// Initialize tool registry via registry pattern
 	toolRegistryComponent := reg.Tools()
-	
+
 	// Create a tools.Registry adapter if needed
 	var toolsRegistry tools.Registry
 	if toolRegistryComponent != nil {
@@ -573,10 +573,10 @@ func setupGuildComponents(ctx context.Context) (*guildComponents, error) {
 			WithComponent("cli").
 			WithOperation("commission.setupGuildComponents")
 	}
-	
+
 	// Create kanban manager adapter
 	kanbanManager := &kanbanManagerAdapter{board: kanbanBoard}
-	
+
 	dispatcher := orchestrator.DefaultTaskDispatcherFactory(kanbanManager, agentFactory, eventBus, orchestratorConfig.MaxConcurrentAgents)
 
 	orch := orchestrator.DefaultOrchestratorFactory(orchestratorConfig, dispatcher, eventBus)
@@ -597,11 +597,11 @@ func getManagerAgentID(guild *config.GuildConfig) string {
 	if managerFlag != "" {
 		return managerFlag
 	}
-	
+
 	if guild.Manager.Override != "" {
 		return guild.Manager.Override
 	}
-	
+
 	if guild.Manager.Default != "" {
 		return guild.Manager.Default
 	}
@@ -631,7 +631,7 @@ func (k *kanbanManagerAdapter) ListTasksByStatus(ctx context.Context, boardID st
 	return k.board.GetTasksByStatus(ctx, status)
 }
 
-// UpdateTaskStatus implements orchestrator.KanbanManager  
+// UpdateTaskStatus implements orchestrator.KanbanManager
 func (k *kanbanManagerAdapter) UpdateTaskStatus(ctx context.Context, taskID, status, assignee, comment string) error {
 	return k.board.UpdateTaskStatus(ctx, taskID, kanban.TaskStatus(status), assignee, comment)
 }
@@ -764,7 +764,7 @@ func (f *guildAgentFactory) CreateAgent(agentID, name string, options ...interfa
 
 	// Get API key from guild configuration (with environment variable fallback)
 	apiKey := f.guildConfig.GetProviderAPIKey(agentConfig.Provider)
-	
+
 	// Check if API key is required and missing for this provider
 	if apiKey == "" && requiresAPIKey(agentConfig.Provider) {
 		return nil, gerror.New(gerror.ErrCodeProviderAuth, "API key required", nil).
@@ -773,7 +773,7 @@ func (f *guildAgentFactory) CreateAgent(agentID, name string, options ...interfa
 			WithDetails("provider", agentConfig.Provider).
 			WithDetails("env_var", getEnvVarName(agentConfig.Provider))
 	}
-	
+
 	// Create LLM client for this agent
 	llmClient, err := f.providerFactory.CreateClient(providerType, apiKey, agentConfig.Model)
 	if err != nil {
@@ -819,7 +819,7 @@ func (f *guildAgentFactory) CreateAgent(agentID, name string, options ...interfa
 // getManagerAgent returns the manager agent instance
 func getManagerAgent(components *guildComponents, agentFactory *guildAgentFactory) (agent.Agent, error) {
 	managerID := getManagerAgentID(components.guildConfig)
-	
+
 	// Try to get from orchestrator first
 	if agent, exists := components.orchestrator.GetAgent(managerID); exists {
 		return agent, nil

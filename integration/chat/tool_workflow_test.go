@@ -18,18 +18,18 @@ import (
 func TestToolWorkflowIntegration(t *testing.T) {
 	// Create a test registry with tools
 	reg := registry.NewComponentRegistry()
-	
+
 	// Initialize with basic config
 	cfg := registry.Config{
 		Tools: registry.ToolConfig{
 			EnabledTools: []string{"test-tool", "file-reader"},
 		},
 	}
-	
+
 	ctx := context.Background()
 	err := reg.Initialize(ctx, cfg)
 	require.NoError(t, err)
-	
+
 	// Register a test tool
 	testTool := &mockTool{
 		name:        "test-tool",
@@ -49,35 +49,35 @@ func TestToolWorkflowIntegration(t *testing.T) {
 			"/tool test-tool --input 'hello world'",
 		},
 	}
-	
+
 	err = reg.Tools().RegisterTool("test-tool", testTool)
 	require.NoError(t, err)
-	
+
 	// Test tool discovery
 	t.Run("ToolDiscovery", func(t *testing.T) {
 		toolNames := reg.Tools().ListTools()
 		assert.Contains(t, toolNames, "test-tool")
-		
+
 		// Test tool retrieval
 		tool, err := reg.Tools().GetTool("test-tool")
 		assert.NoError(t, err)
 		assert.NotNil(t, tool)
 	})
-	
+
 	// Test tool execution workflow
 	t.Run("ToolExecution", func(t *testing.T) {
 		tool, err := reg.Tools().GetTool("test-tool")
 		require.NoError(t, err)
-		
+
 		// Execute tool with test input
 		input := "test execution"
-		
+
 		result, err := tool.Execute(ctx, input)
 		assert.NoError(t, err)
 		assert.True(t, result.Success)
 		assert.Contains(t, result.Output, "test execution")
 	})
-	
+
 	// Test tool capability search
 	t.Run("ToolCapabilitySearch", func(t *testing.T) {
 		// Check if capability-tool already exists, if not register it
@@ -92,11 +92,11 @@ func TestToolWorkflowIntegration(t *testing.T) {
 				},
 				examples: []string{},
 			}
-			
+
 			err := reg.Tools().RegisterTool(toolName, capabilityTool)
 			assert.NoError(t, err)
 		}
-		
+
 		// Register tool with capabilities if method exists
 		if toolRegistry := reg.Tools(); toolRegistry != nil {
 			// Get the tool instance
@@ -114,14 +114,14 @@ func TestToolWorkflowIntegration(t *testing.T) {
 				}
 			}
 		}
-		
+
 		// Search by capability
 		tools := reg.Tools().GetToolsByCapability("testing")
 		// This may be empty if capability search is not implemented
 		// That's OK for this test - we're just testing the interface
 		t.Logf("Found %d tools with testing capability", len(tools))
 	})
-	
+
 	// Test cost-based tool selection (if available)
 	t.Run("CostBasedSelection", func(t *testing.T) {
 		// Skip if cost methods are not implemented
@@ -132,7 +132,7 @@ func TestToolWorkflowIntegration(t *testing.T) {
 			// Get tools by cost
 			toolInfos := costRegistry.GetToolsByCost(5)
 			t.Logf("Found %d tools with cost <= 5", len(toolInfos))
-			
+
 			// Get cheapest tool by capability
 			cheapest, err := costRegistry.GetCheapestToolByCapability("testing")
 			if err == nil && cheapest != nil {
@@ -145,16 +145,16 @@ func TestToolWorkflowIntegration(t *testing.T) {
 			t.Skip("Cost-based selection methods not implemented in this registry")
 		}
 	})
-	
+
 	// Test concurrent tool execution
 	t.Run("ConcurrentExecution", func(t *testing.T) {
 		tool, err := reg.Tools().GetTool("test-tool")
 		require.NoError(t, err)
-		
+
 		// Execute multiple tools concurrently
 		results := make(chan *tools.ToolResult, 3)
 		errors := make(chan error, 3)
-		
+
 		for i := 0; i < 3; i++ {
 			go func(id int) {
 				input := fmt.Sprintf("concurrent-%d", id)
@@ -166,7 +166,7 @@ func TestToolWorkflowIntegration(t *testing.T) {
 				}
 			}(i)
 		}
-		
+
 		// Collect results
 		for i := 0; i < 3; i++ {
 			select {
@@ -180,20 +180,20 @@ func TestToolWorkflowIntegration(t *testing.T) {
 			}
 		}
 	})
-	
+
 	// Test error handling
 	t.Run("ErrorHandling", func(t *testing.T) {
 		// Test non-existent tool
 		_, err := reg.Tools().GetTool("non-existent")
 		assert.Error(t, err)
-		
+
 		// Test tool execution with invalid input
 		tool, err := reg.Tools().GetTool("test-tool")
 		require.NoError(t, err)
-		
-		// Execute with empty input 
+
+		// Execute with empty input
 		input := ""
-		
+
 		result, err := tool.Execute(ctx, input)
 		// Should handle gracefully (depending on tool implementation)
 		assert.NoError(t, err) // Mock tool handles any input
@@ -244,16 +244,16 @@ func TestChatToolCommandParsing(t *testing.T) {
 			},
 		},
 	}
-	
+
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// Parse the input
 			parts := strings.Fields(tc.input)
 			require.GreaterOrEqual(t, len(parts), 3) // Should have at least "/tool toolname param"
-			
+
 			toolID := parts[1]
 			assert.Equal(t, tc.expectedTool, toolID)
-			
+
 			// Parse parameters
 			params := make(map[string]string)
 			for _, arg := range parts[2:] {
@@ -264,13 +264,13 @@ func TestChatToolCommandParsing(t *testing.T) {
 					// For flags without values, store as "true"
 					params[strings.TrimPrefix(arg, "--")] = "true"
 				} else {
-					// For positional arguments that don't start with --, 
+					// For positional arguments that don't start with --,
 					// we might handle them differently depending on the tool
 					// For now, just continue parsing
 					continue
 				}
 			}
-			
+
 			assert.Equal(t, tc.expectedParams, params)
 		})
 	}

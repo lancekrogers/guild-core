@@ -45,7 +45,7 @@ func (m *MockGuildTool) Execute(ctx context.Context, input string) (*basetools.T
 	if err := json.Unmarshal([]byte(input), &params); err != nil {
 		return nil, err
 	}
-	
+
 	output := "Executed with: " + params["input"].(string)
 	return basetools.NewToolResult(output, nil, nil, nil), nil
 }
@@ -103,29 +103,29 @@ func (m *MockMCPTool) GetReturns() []protocol.ToolParameter {
 func TestGuildToMCPAdapter(t *testing.T) {
 	// Create a mock Guild tool
 	guildTool := &MockGuildTool{name: "test_guild_tool"}
-	
+
 	// Create adapter
 	adapter := NewGuildToMCPAdapter(guildTool)
-	
+
 	// Test interface methods
 	assert.Equal(t, "guild_test_guild_tool", adapter.ID())
 	assert.Equal(t, "test_guild_tool", adapter.Name())
 	assert.Equal(t, "Mock Guild tool for testing", adapter.Description())
 	assert.Contains(t, adapter.Capabilities(), "test")
-	
+
 	// Test parameter conversion
 	params := adapter.GetParameters()
 	require.Len(t, params, 1)
 	assert.Equal(t, "input", params[0].Name)
 	assert.Equal(t, "string", params[0].Type)
 	assert.True(t, params[0].Required)
-	
+
 	// Test execution
 	ctx := context.Background()
 	result, err := adapter.Execute(ctx, map[string]interface{}{"input": "hello"})
 	require.NoError(t, err)
 	assert.True(t, guildTool.executed)
-	
+
 	resultMap, ok := result.(map[string]interface{})
 	require.True(t, ok)
 	assert.Equal(t, "Executed with: hello", resultMap["output"])
@@ -135,26 +135,26 @@ func TestGuildToMCPAdapter(t *testing.T) {
 func TestMCPToGuildAdapter(t *testing.T) {
 	// Create a mock MCP tool
 	mcpTool := &MockMCPTool{id: "mcp_test", name: "test_mcp_tool"}
-	
+
 	// Create adapter
 	adapter := NewMCPToGuildAdapter(mcpTool)
-	
+
 	// Test interface methods
 	assert.Equal(t, "test_mcp_tool", adapter.Name())
 	assert.Equal(t, "Mock MCP tool for testing", adapter.Description())
 	assert.Equal(t, "test", adapter.Category())
 	assert.True(t, adapter.RequiresAuth()) // Because financial cost > 0
-	
+
 	// Test schema generation
 	schema := adapter.Schema()
 	props, ok := schema["properties"].(map[string]interface{})
 	require.True(t, ok)
 	require.Contains(t, props, "input")
-	
+
 	required, ok := schema["required"].([]string)
 	require.True(t, ok)
 	assert.Contains(t, required, "input")
-	
+
 	// Test execution
 	ctx := context.Background()
 	input := `{"input": "world"}`
@@ -167,31 +167,31 @@ func TestMCPToGuildAdapter(t *testing.T) {
 
 func TestToolBridge(t *testing.T) {
 	t.Skip("ToolBridge tests disabled - registry methods need to be implemented")
-	
+
 	// Create registries
 	mcpRegistry := tools.NewMemoryRegistry()
 	guildRegistry := registry.NewToolRegistry()
-	
+
 	// Create bridge
 	bridge := NewToolBridge(mcpRegistry, guildRegistry)
-	
+
 	// Test registering a Guild tool
 	guildTool := &MockGuildTool{name: "bridge_test_guild"}
 	err := bridge.RegisterGuildTool(guildTool)
 	require.NoError(t, err)
-	
-	// Test registering an MCP tool  
+
+	// Test registering an MCP tool
 	mcpToolOrig := &MockMCPTool{id: "bridge_mcp", name: "bridge_test_mcp"}
 	err = bridge.RegisterMCPTool(mcpToolOrig)
 	require.NoError(t, err)
-	
+
 	mcpTools := mcpRegistry.ListTools()
 	assert.NotEmpty(t, mcpTools)
 }
 
 func TestCostMagnitudeCalculation(t *testing.T) {
 	bridge := &ToolBridge{}
-	
+
 	tests := []struct {
 		name     string
 		profile  protocol.CostProfile
@@ -246,7 +246,7 @@ func TestCostMagnitudeCalculation(t *testing.T) {
 			expected: 8,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := bridge.calculateCostMagnitude(tt.profile)

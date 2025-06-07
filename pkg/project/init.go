@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 	"path/filepath"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/storage"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"gopkg.in/yaml.v3"
@@ -218,7 +218,7 @@ providers:
 
 ## Usage
 
-Guild commands will automatically use this project context when run from 
+Guild commands will automatically use this project context when run from
 anywhere within the project directory tree.
 
 ## Version Control
@@ -261,7 +261,7 @@ func InitializeWithConfig(path string, config interface{}) error {
 func createDefaultGuildConfig(baseDir string) error {
 	// Get the default template
 	guildConfig := DefaultGuildTemplate()
-	
+
 	// Save it to the .guild directory
 	guildPath := filepath.Join(baseDir, "guild.yaml")
 	data, err := yaml.Marshal(guildConfig)
@@ -278,10 +278,10 @@ func createDefaultGuildConfig(baseDir string) error {
 // Following Guild's context-aware pattern
 func initializeDatabase(baseDir string) error {
 	ctx := context.Background()
-	
+
 	// Create database path
 	dbPath := filepath.Join(baseDir, "guild.db")
-	
+
 	// Create database
 	db, err := storage.DefaultDatabaseFactory(ctx, dbPath)
 	if err != nil {
@@ -290,13 +290,13 @@ func initializeDatabase(baseDir string) error {
 		WithOperation("initialize_database")
 	}
 	defer db.Close()
-	
+
 	// Run migrations
 	if err := db.Migrate(ctx); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run database migrations").
 		WithComponent("project").
 		WithOperation("initialize_database")
 	}
-	
+
 	return nil
 }

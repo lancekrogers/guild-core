@@ -314,7 +314,7 @@ func loadDocumentByTitle(title string, cfg corpus.Config) tea.Cmd {
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
-			
+
 			if strings.ToLower(doc.Title) == normalizedTitle {
 				return loadDocument(path)()
 			}
@@ -397,7 +397,7 @@ func filterByTag(tag string, cfg corpus.Config) tea.Cmd {
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
-			
+
 			for _, docTag := range doc.Tags {
 				if docTag == tag {
 					filtered = append(filtered, *doc)
@@ -432,7 +432,7 @@ func search(query string, cfg corpus.Config) tea.Cmd {
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
-			
+
 			// Check title
 			if strings.Contains(strings.ToLower(doc.Title), query) {
 				filtered = append(filtered, *doc)
@@ -499,13 +499,13 @@ func (m CorpusModel) getLinkUnderCursor() string {
 func (m CorpusModel) getCurrentLine() string {
 	content := m.viewPort.View()
 	lines := strings.Split(content, "\n")
-	
+
 	// Find the line at cursor position (approximation)
 	cursorY := m.viewPort.YOffset + m.viewPort.YPosition
 	if cursorY < 0 || cursorY >= len(lines) {
 		return ""
 	}
-	
+
 	return lines[cursorY]
 }
 
@@ -547,8 +547,8 @@ When viewing a document:
 - Press Esc to return to the list view
 
 ## Guild Research Corpus
-The corpus is a knowledge repository for storing research findings, 
-summaries and generated insights. Documents are stored as Markdown 
+The corpus is a knowledge repository for storing research findings,
+summaries and generated insights. Documents are stored as Markdown
 files with YAML frontmatter for metadata.
 `
 }

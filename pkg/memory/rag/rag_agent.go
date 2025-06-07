@@ -39,7 +39,7 @@ func (w *AgentWrapper) Execute(ctx context.Context, request string) (string, err
 		// If there's an error enhancing the request, just use the original
 		return w.agent.Execute(ctx, request)
 	}
-	
+
 	// Execute with enhanced request
 	return w.agent.Execute(ctx, enhancedRequest)
 }
@@ -82,7 +82,7 @@ func (w *AgentWrapper) enhanceRequestWithRAG(ctx context.Context, request string
 	if w.retriever == nil {
 		return request, nil
 	}
-	
+
 	// Define retrieval configuration
 	retrievalConfig := RetrievalConfig{
 		Query:           request,
@@ -91,7 +91,7 @@ func (w *AgentWrapper) enhanceRequestWithRAG(ctx context.Context, request string
 		IncludeMetadata: true,
 		UseCorpus:       true,
 	}
-	
+
 	// Retrieve relevant context
 	results, err := w.retriever.RetrieveContext(ctx, request, retrievalConfig)
 	if err != nil {
@@ -99,25 +99,25 @@ func (w *AgentWrapper) enhanceRequestWithRAG(ctx context.Context, request string
 			WithComponent("memory").
 			WithOperation("enhanceRequestWithRAG")
 	}
-	
+
 	// If no results found, return the original request
 	if len(results.Results) == 0 {
 		return request, nil
 	}
-	
+
 	// Build enhanced request with context
 	var enhancedRequest strings.Builder
 	enhancedRequest.WriteString("Based on the following relevant context:\n\n")
-	
+
 	for i, result := range results.Results {
 		enhancedRequest.WriteString(fmt.Sprintf("Context %d (Score: %.3f, Source: %s):\n", i+1, result.Score, result.Source))
 		enhancedRequest.WriteString(result.Content)
 		enhancedRequest.WriteString("\n\n")
 	}
-	
+
 	enhancedRequest.WriteString("Now, please respond to this request:\n")
 	enhancedRequest.WriteString(request)
-	
+
 	return enhancedRequest.String(), nil
 }
 
@@ -131,17 +131,17 @@ func (w *AgentWrapper) EnhancePrompt(ctx context.Context, prompt, query string, 
 			WithComponent("memory").
 			WithOperation("EnhancePrompt")
 	}
-	
+
 	// If no results found, return the original prompt
 	if len(results.Results) == 0 {
 		return prompt, nil
 	}
-	
+
 	// Build enhanced prompt with context
 	var enhancedPrompt strings.Builder
 	enhancedPrompt.WriteString(prompt)
 	enhancedPrompt.WriteString("\n\n## Relevant Context\n\n")
-	
+
 	for i, result := range results.Results {
 		enhancedPrompt.WriteString(fmt.Sprintf("### Context %d (Score: %.3f)\n", i+1, result.Score))
 		if result.Source != "" {
@@ -150,6 +150,6 @@ func (w *AgentWrapper) EnhancePrompt(ctx context.Context, prompt, query string, 
 		enhancedPrompt.WriteString(result.Content)
 		enhancedPrompt.WriteString("\n\n")
 	}
-	
+
 	return enhancedPrompt.String(), nil
 }

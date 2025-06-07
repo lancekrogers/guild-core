@@ -22,7 +22,7 @@ type StatusDisplay struct {
 // StatusStyles contains all visual styling for status display
 type StatusStyles struct {
 	AgentPanel     lipgloss.Style   // Individual agent status panels
-	ActivityBadge  lipgloss.Style   // Activity state indicators  
+	ActivityBadge  lipgloss.Style   // Activity state indicators
 	ProgressBar    lipgloss.Style   // Task progress visualization
 	ToolIndicator  lipgloss.Style   // Active tool display
 	HeaderStyle    lipgloss.Style   // Status section headers
@@ -145,7 +145,7 @@ func (d *StatusDisplay) RenderCompactStatus() string {
 		}
 	}
 
-	summary := fmt.Sprintf("🏰 %d agents (%d active, %d working)", 
+	summary := fmt.Sprintf("🏰 %d agents (%d active, %d working)",
 		len(agents), activeCount, workingCount)
 
 	// Add tool count if any are active
@@ -159,11 +159,11 @@ func (d *StatusDisplay) RenderCompactStatus() string {
 // renderSummaryLine creates a summary line with key metrics
 func (d *StatusDisplay) renderSummaryLine() string {
 	summary := d.tracker.GetCoordinationSummary()
-	
+
 	return d.styles.MetricsStyle.Render(fmt.Sprintf(
 		"Active: %d/%d | Tools: %d | Cost: $%.3f | Updated: %s",
 		summary["active_agents"],
-		summary["total_agents"], 
+		summary["total_agents"],
 		summary["active_tools"],
 		summary["total_cost"],
 		d.lastUpdate.Format("15:04:05"),
@@ -203,7 +203,7 @@ func (d *StatusDisplay) RenderAgentCard(agent *AgentStatus) string {
 	// Agent name and type with status indicator
 	statusIcon := d.getStatusIcon(agent.State)
 	agentHeader := fmt.Sprintf("%s %s (%s)", statusIcon, agent.Name, agent.Type)
-	
+
 	// Highlight selected agent
 	if d.selectedAgent == agent.ID {
 		agentHeader = d.styles.ActivityBadge.
@@ -214,7 +214,7 @@ func (d *StatusDisplay) RenderAgentCard(agent *AgentStatus) string {
 			Foreground(d.getStatusColor(agent.State)).
 			Render(agentHeader)
 	}
-	
+
 	card.WriteString(agentHeader)
 	card.WriteString("\n")
 
@@ -222,7 +222,7 @@ func (d *StatusDisplay) RenderAgentCard(agent *AgentStatus) string {
 	if agent.CurrentTask != "" {
 		card.WriteString(fmt.Sprintf("   Task: %s", agent.CurrentTask))
 		card.WriteString("\n")
-		
+
 		if agent.Progress > 0 {
 			progressBar := d.RenderProgressBar(agent.Progress)
 			card.WriteString(fmt.Sprintf("   %s %.1f%%", progressBar, agent.Progress*100))
@@ -297,7 +297,7 @@ func (d *StatusDisplay) renderCoordinationSection() string {
 
 	for _, event := range recentEvents {
 		timestamp := event.Timestamp.Format("15:04:05")
-		
+
 		// Format event based on type
 		var eventStr string
 		switch event.EventType {
@@ -333,7 +333,7 @@ func (d *StatusDisplay) RenderActivityStream(events []ActivityEvent) string {
 
 	for _, event := range events {
 		timestamp := event.Timestamp.Format("15:04:05")
-		content.WriteString(fmt.Sprintf("[%s] %s: %s\n", 
+		content.WriteString(fmt.Sprintf("[%s] %s: %s\n",
 			timestamp, event.AgentID, event.Description))
 	}
 
@@ -410,7 +410,7 @@ func (d *StatusDisplay) SelectAgent(agentID string) {
 func (d *StatusDisplay) SetDimensions(width, height int) {
 	d.width = width
 	d.height = height
-	
+
 	// Update agent panel width
 	d.styles.AgentPanel = d.styles.AgentPanel.Width(width - 4)
 }
@@ -437,22 +437,22 @@ func (d *StatusDisplay) RenderCoordinationOverview() string {
 	}
 
 	summary := d.tracker.GetCoordinationSummary()
-	
+
 	var content strings.Builder
 	content.WriteString(d.styles.HeaderStyle.Render("🤝 Coordination Overview"))
 	content.WriteString("\n")
-	
+
 	content.WriteString(fmt.Sprintf("Total Agents: %d\n", summary["total_agents"]))
 	content.WriteString(fmt.Sprintf("Active: %d\n", summary["active_agents"]))
 	content.WriteString(fmt.Sprintf("Active Tools: %d\n", summary["active_tools"]))
 	content.WriteString(fmt.Sprintf("Coordination Events: %d\n", summary["coordination_events"]))
-	
+
 	totalCost := summary["total_cost"].(float64)
 	if totalCost > 0 {
 		costStr := d.styles.CostStyle.Render(fmt.Sprintf("$%.4f", totalCost))
 		content.WriteString(fmt.Sprintf("Total Cost: %s\n", costStr))
 	}
-	
+
 	totalTasks := summary["total_tasks"].(int)
 	if totalTasks > 0 {
 		content.WriteString(fmt.Sprintf("Completed Tasks: %d\n", totalTasks))

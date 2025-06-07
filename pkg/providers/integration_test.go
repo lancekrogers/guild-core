@@ -7,7 +7,7 @@ import (
 // TestClaudeCodeProviderConfiguration tests Claude Code provider configuration parsing
 func TestClaudeCodeProviderConfiguration(t *testing.T) {
 	factory := NewFactory()
-	
+
 	// Test configuration with all Claude Code options
 	claudeConfigMap := map[string]interface{}{
 		"model":    "coding-focused",
@@ -74,7 +74,7 @@ func TestAllProvidersWithClaudeCode(t *testing.T) {
 
 	// Verify all providers were registered
 	expectedProviders := []string{"openai", "anthropic", "ollama", "claudecode"}
-	
+
 	if len(registry.providers) != len(expectedProviders) {
 		t.Errorf("Expected %d providers, got %d", len(expectedProviders), len(registry.providers))
 	}

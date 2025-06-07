@@ -118,11 +118,11 @@ func TestOllamaProvider(t *testing.T) {
 
 	t.Run("FreeLocalModel", func(t *testing.T) {
 		caps := client.GetCapabilities()
-		
+
 		// Verify all models are free (local)
 		for _, model := range caps.Models {
 			if model.InputCost != 0 || model.OutputCost != 0 {
-				t.Errorf("Ollama model %s should be free, got costs: $%.2f/$%.2f", 
+				t.Errorf("Ollama model %s should be free, got costs: $%.2f/$%.2f",
 					model.ID, model.InputCost, model.OutputCost)
 			}
 		}
@@ -212,7 +212,7 @@ func handleTagsRequest(t *testing.T, w http.ResponseWriter, r *http.Request) {
 func handlePullRequest(t *testing.T, w http.ResponseWriter, r *http.Request) {
 	// Stream progress updates
 	w.Header().Set("Content-Type", "application/x-ndjson")
-	
+
 	updates := []map[string]interface{}{
 		{"status": "pulling manifest"},
 		{"status": "downloading", "completed": 1000, "total": 5000},

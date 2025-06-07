@@ -83,7 +83,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 
 	// Step 4: Write intelligent configuration files
 	fmt.Print("⚙️  Writing configuration files... ")
-	
+
 	// Write guild.yaml
 	guildConfigPath := filepath.Join(path, ".guild", "guild.yaml")
 	guildConfigData, err := yaml.Marshal(guildConfig)
@@ -118,7 +118,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 		fmt.Printf("⚠️  Warning: %v\n", err)
 	} else {
 		fmt.Printf("✅ Found %d documents\n", len(docFiles))
-		
+
 		if len(docFiles) > 0 {
 			fmt.Println("\n📋 Suggested files for corpus:")
 			for i, file := range docFiles {
@@ -140,7 +140,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 	if os.Getenv("OPENAI_API_KEY") != "" {
 		availableProviders = append(availableProviders, "OpenAI")
 	}
-	
+
 	if len(availableProviders) > 0 {
 		fmt.Printf("✅ Found: %v\n", availableProviders)
 	} else {
@@ -152,23 +152,23 @@ func runInit(cmd *cobra.Command, args []string) error {
 	fmt.Printf("   Project type: %s\n", projectType.Description)
 	fmt.Printf("   Location: %s\n", absPath)
 	fmt.Printf("   Agents configured: %d\n", len(guildConfig.Agents))
-	
+
 	// Display next steps
 	fmt.Println("\n🚀 Next steps:")
-	
+
 	if len(availableProviders) == 0 {
 		fmt.Println("   1. Set up your API keys:")
 		fmt.Println("      export ANTHROPIC_API_KEY=\"your-anthropic-api-key\"")
 		fmt.Println("      export OPENAI_API_KEY=\"your-openai-api-key\"")
 	}
-	
+
 	fmt.Println("   1. Start coding with agents:")
 	fmt.Println("      guild chat")
 	fmt.Println("   2. Create your first commission:")
 	fmt.Printf("      guild commission \"Implement %s feature\"\n", getExampleFeature(projectType))
 	fmt.Println("   3. Monitor agent progress:")
 	fmt.Println("      guild campaign watch")
-	
+
 	if len(docFiles) > 0 {
 		fmt.Println("   4. Add documentation to corpus:")
 		fmt.Println("      guild corpus add README.md")

@@ -15,7 +15,7 @@ type ManagerType string
 const (
 	// TypeStandard represents the standard template-based prompt system
 	TypeStandard ManagerType = "standard"
-	
+
 	// TypeLayered represents the advanced 6-layer prompt system
 	TypeLayered ManagerType = "layered"
 )
@@ -24,10 +24,10 @@ const (
 type ManagerConfig struct {
 	// Type specifies which prompt manager to create
 	Type ManagerType
-	
+
 	// TemplateDir is the directory containing prompt templates (for standard)
 	TemplateDir string
-	
+
 	// LayeredConfig provides configuration for the layered system
 	LayeredConfig *LayeredManagerConfig
 }
@@ -36,10 +36,10 @@ type ManagerConfig struct {
 type LayeredManagerConfig struct {
 	// DefaultPlatformPrompt is the default platform layer content
 	DefaultPlatformPrompt string
-	
+
 	// DefaultGuildPrompt is the default guild layer content
 	DefaultGuildPrompt string
-	
+
 	// StorePath is where to persist prompts (optional)
 	StorePath string
 }
@@ -58,7 +58,7 @@ func newStandardManager(ctx context.Context, config ManagerConfig) (Manager, err
 			WithComponent("prompts").
 			WithOperation("newStandardManager")
 	}
-	
+
 	// Load templates if directory specified
 	if config.TemplateDir != "" {
 		// TODO: Implement LoadFromDirectory in standard manager
@@ -69,7 +69,7 @@ func newStandardManager(ctx context.Context, config ManagerConfig) (Manager, err
 		// 		WithDetails("template_dir", config.TemplateDir)
 		// }
 	}
-	
+
 	return mgr, nil
 }
 
@@ -78,10 +78,10 @@ func newLayeredManager(ctx context.Context, config ManagerConfig) (Manager, erro
 	if config.LayeredConfig == nil {
 		config.LayeredConfig = &LayeredManagerConfig{}
 	}
-	
+
 	// Create the layered manager
 	mgr := layered.NewLayeredPromptManager()
-	
+
 	// Set default platform prompt if provided
 	if config.LayeredConfig.DefaultPlatformPrompt != "" {
 		if err := mgr.SetLayer(LayerPlatform, config.LayeredConfig.DefaultPlatformPrompt); err != nil {
@@ -90,7 +90,7 @@ func newLayeredManager(ctx context.Context, config ManagerConfig) (Manager, erro
 				WithOperation("newLayeredManager")
 		}
 	}
-	
+
 	// Set default guild prompt if provided
 	if config.LayeredConfig.DefaultGuildPrompt != "" {
 		if err := mgr.SetLayer(LayerGuild, config.LayeredConfig.DefaultGuildPrompt); err != nil {
@@ -99,7 +99,7 @@ func newLayeredManager(ctx context.Context, config ManagerConfig) (Manager, erro
 				WithOperation("newLayeredManager")
 		}
 	}
-	
+
 	return mgr, nil
 }
 
@@ -120,11 +120,11 @@ func NewLayeredManager() (LayeredManager, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	layeredMgr, ok := mgr.(LayeredManager)
 	if !ok {
 		return nil, fmt.Errorf("manager is not a LayeredManager")
 	}
-	
+
 	return layeredMgr, nil
 }

@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -26,16 +26,16 @@ import (
 type Retriever struct {
 	// Config holds the retriever configuration
 	Config      Config
-	
+
 	// vectorStore is the underlying vector database for embeddings
 	vectorStore vector.VectorStore
-	
+
 	// embedder generates embeddings for queries
 	embedder    vector.Embedder
-	
+
 	// chunker breaks documents into searchable chunks
 	chunker     *Chunker
-	
+
 	// corpusConfig is the corpus system configuration (optional)
 	corpusConfig *corpus.Config
 }
@@ -64,20 +64,20 @@ func newRetriever(ctx context.Context, embedder vector.Embedder, config Config) 
 			WithComponent("memory").
 			WithOperation("NewRetriever")
 	}
-	
+
 	// Apply default config values
 	if config.ChunkSize <= 0 {
 		config.ChunkSize = 1000
 	}
-	
+
 	if config.ChunkOverlap <= 0 {
 		config.ChunkOverlap = 200
 	}
-	
+
 	if config.MaxResults <= 0 {
 		config.MaxResults = 5
 	}
-	
+
 	// Create chunker based on strategy
 	chunkerStrategy := ChunkByParagraph
 	if config.ChunkStrategy != "" {
@@ -93,25 +93,25 @@ func newRetriever(ctx context.Context, embedder vector.Embedder, config Config) 
 			chunkerStrategy = ChunkByParagraph
 		}
 	}
-	
+
 	chunker := newChunker(ChunkerConfig{
 		ChunkSize:    config.ChunkSize,
 		ChunkOverlap: config.ChunkOverlap,
 		Strategy:     chunkerStrategy,
 	})
-	
+
 	// Create vector store config
 	vsConfig := vector.Config{
 		Embedder:         embedder,
 		DefaultDimension: 1536, // Default for modern embeddings
 		DefaultCollection: "rag_embeddings",
 	}
-	
+
 	// Apply vector store persistence if configured
 	if config.VectorStorePath != "" {
 		vsConfig.PersistencePath = config.VectorStorePath
 	}
-	
+
 	// Create vector store
 	vectorStore, err := vector.NewChromemStore(vsConfig)
 	if err != nil {
@@ -119,7 +119,7 @@ func newRetriever(ctx context.Context, embedder vector.Embedder, config Config) 
 			WithComponent("memory").
 			WithOperation("NewRetriever")
 	}
-	
+
 	// Create retriever
 	retriever := &Retriever{
 		Config:      config,
@@ -127,7 +127,7 @@ func newRetriever(ctx context.Context, embedder vector.Embedder, config Config) 
 		embedder:    embedder,
 		chunker:     chunker,
 	}
-	
+
 	// Configure corpus integration if enabled
 	if config.UseCorpus && config.CorpusPath != "" {
 		corpusConfig := &corpus.Config{
@@ -136,7 +136,7 @@ func newRetriever(ctx context.Context, embedder vector.Embedder, config Config) 
 		}
 		retriever.corpusConfig = corpusConfig
 	}
-	
+
 	return retriever, nil
 }
 
@@ -148,15 +148,15 @@ func NewRetrieverWithStore(vectorStore vector.VectorStore, config Config) *Retri
 	if config.ChunkSize <= 0 {
 		config.ChunkSize = 1000
 	}
-	
+
 	if config.ChunkOverlap <= 0 {
 		config.ChunkOverlap = 200
 	}
-	
+
 	if config.MaxResults <= 0 {
 		config.MaxResults = 5
 	}
-	
+
 	// Create chunker based on strategy
 	chunkerStrategy := ChunkByParagraph
 	if config.ChunkStrategy != "" {
@@ -172,20 +172,20 @@ func NewRetrieverWithStore(vectorStore vector.VectorStore, config Config) *Retri
 			chunkerStrategy = ChunkByParagraph
 		}
 	}
-	
+
 	chunker := newChunker(ChunkerConfig{
 		ChunkSize:    config.ChunkSize,
 		ChunkOverlap: config.ChunkOverlap,
 		Strategy:     chunkerStrategy,
 	})
-	
+
 	// Create retriever
 	retriever := &Retriever{
 		Config:      config,
 		vectorStore: vectorStore,
 		chunker:     chunker,
 	}
-	
+
 	// Configure corpus integration if enabled
 	if config.UseCorpus && config.CorpusPath != "" {
 		corpusConfig := &corpus.Config{
@@ -194,7 +194,7 @@ func NewRetrieverWithStore(vectorStore vector.VectorStore, config Config) *Retri
 		}
 		retriever.corpusConfig = corpusConfig
 	}
-	
+
 	return retriever
 }
 
@@ -215,18 +215,18 @@ func (r *Retriever) RetrieveContext(ctx context.Context, query string, config Re
 			WithComponent("memory").
 			WithOperation("RetrieveContext")
 	}
-	
+
 	// Use default max results if not specified
 	if config.MaxResults <= 0 {
 		config.MaxResults = r.Config.MaxResults
 	}
-	
+
 	// Initialize results
 	results := &SearchResults{
 		Query:   query,
 		Results: make([]SearchResult, 0),
 	}
-	
+
 	// Get vector store results
 	if !config.DisableVectorSearch {
 		matches, err := r.vectorStore.QueryEmbeddings(ctx, query, config.MaxResults*2) // Get extra for filtering
@@ -245,23 +245,23 @@ func (r *Retriever) RetrieveContext(ctx context.Context, query string, config Re
 				if match.Score < config.MinScore {
 					continue
 				}
-				
+
 				result := SearchResult{
 					Content: match.Text,
 					Source:  match.Source,
 					Score:   match.Score,
 				}
-				
+
 				// Add metadata if requested
 				if config.IncludeMetadata {
 					result.Metadata = match.Metadata
 				}
-				
+
 				results.Results = append(results.Results, result)
 			}
 		}
 	}
-	
+
 	// Search corpus if enabled and configured
 	if config.UseCorpus && r.corpusConfig != nil {
 		corpusResults, err := r.searchCorpus(ctx, query, config.MaxResults)
@@ -273,15 +273,15 @@ func (r *Retriever) RetrieveContext(ctx context.Context, query string, config Re
 			results.Results = append(results.Results, corpusResults...)
 		}
 	}
-	
+
 	// Sort all results by score (highest first)
 	r.sortResultsByScore(results.Results)
-	
+
 	// Limit to requested number of results
 	if len(results.Results) > config.MaxResults {
 		results.Results = results.Results[:config.MaxResults]
 	}
-	
+
 	return results, nil
 }
 
@@ -291,7 +291,7 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 	if r.corpusConfig == nil {
 		return nil, nil
 	}
-	
+
 	// Try semantic search first if vector store is available
 	if r.vectorStore != nil {
 		// Query the vector store for corpus documents
@@ -299,7 +299,7 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 		matches, err := r.vectorStore.QueryEmbeddings(ctx, query, limit*3)
 		if err == nil {
 			results := make([]SearchResult, 0, limit)
-			
+
 			// Filter for corpus documents and convert to SearchResult
 			for _, match := range matches {
 				// Check if this is a corpus document
@@ -308,7 +308,7 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 					var title string
 					var tags []string
 					var path string
-					
+
 					metadata := match.Metadata
 					if t, ok := metadata["title"].(string); ok {
 						title = t
@@ -325,7 +325,7 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 					} else if tagList, ok := metadata["tags"].([]string); ok {
 						tags = tagList
 					}
-					
+
 					result := SearchResult{
 						Content: match.Text,
 						Source:  match.Source,
@@ -337,14 +337,14 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 						},
 					}
 					results = append(results, result)
-					
+
 					// Stop if we have enough results
 					if len(results) >= limit {
 						break
 					}
 				}
 			}
-			
+
 			// If we found results through semantic search, return them
 			if len(results) > 0 {
 				return results, nil
@@ -352,7 +352,7 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 		}
 		// If semantic search failed or returned no results, fall back to keyword search
 	}
-	
+
 	// Fallback to keyword-based search
 	// List corpus documents
 	docs, err := corpus.List(ctx, *r.corpusConfig)
@@ -361,17 +361,17 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 			WithComponent("memory").
 			WithOperation("searchCorpus")
 	}
-	
+
 	results := make([]SearchResult, 0)
 	queryLower := strings.ToLower(query)
-	
+
 	// Simple keyword matching as fallback
 	for _, docPath := range docs {
 		doc, err := corpus.Load(ctx, docPath)
 		if err != nil {
 			continue
 		}
-		
+
 		// Calculate relevance score based on keyword matches
 		score := r.calculateCorpusScore(doc, queryLower)
 		if score > 0 {
@@ -388,15 +388,15 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 			results = append(results, result)
 		}
 	}
-	
+
 	// Sort corpus results by score
 	r.sortResultsByScore(results)
-	
+
 	// Limit results
 	if len(results) > limit {
 		results = results[:limit]
 	}
-	
+
 	return results, nil
 }
 
@@ -404,12 +404,12 @@ func (r *Retriever) searchCorpus(ctx context.Context, query string, limit int) (
 // Higher scores indicate better matches.
 func (r *Retriever) calculateCorpusScore(doc *corpus.CorpusDoc, queryLower string) float32 {
 	score := float32(0.0)
-	
+
 	// Title match is highly relevant
 	if strings.Contains(strings.ToLower(doc.Title), queryLower) {
 		score += 0.5
 	}
-	
+
 	// Tag matches are moderately relevant
 	for _, tag := range doc.Tags {
 		if strings.Contains(strings.ToLower(tag), queryLower) {
@@ -417,7 +417,7 @@ func (r *Retriever) calculateCorpusScore(doc *corpus.CorpusDoc, queryLower strin
 			break
 		}
 	}
-	
+
 	// Body content matches
 	bodyLower := strings.ToLower(doc.Body)
 	matches := strings.Count(bodyLower, queryLower)
@@ -425,13 +425,13 @@ func (r *Retriever) calculateCorpusScore(doc *corpus.CorpusDoc, queryLower strin
 		// Normalize by document length to avoid bias toward longer documents
 		normalizedScore := float32(matches) / float32(len(doc.Body)) * 100
 		score += normalizedScore
-		
+
 		// Cap the body score contribution
 		if score > 1.0 {
 			score = 1.0
 		}
 	}
-	
+
 	return score
 }
 
@@ -441,7 +441,7 @@ func (r *Retriever) sortResultsByScore(results []SearchResult) {
 	for i := 1; i < len(results); i++ {
 		key := results[i]
 		j := i - 1
-		
+
 		for j >= 0 && results[j].Score < key.Score {
 			results[j+1] = results[j]
 			j--
@@ -467,10 +467,10 @@ func (r *Retriever) AddDocument(ctx context.Context, id, content, source string)
 			WithComponent("memory").
 			WithOperation("AddDocument")
 	}
-	
+
 	// Chunk the document
 	chunks := r.chunker.ChunkDocument(content)
-	
+
 	// Add each chunk to the vector store
 	for i, chunk := range chunks {
 		embedding := vector.Embedding{
@@ -483,14 +483,14 @@ func (r *Retriever) AddDocument(ctx context.Context, id, content, source string)
 				"total_chunks": len(chunks),
 			},
 		}
-		
+
 		if err := r.vectorStore.SaveEmbedding(ctx, embedding); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, fmt.Sprintf("failed to save chunk %d", i)).
 				WithComponent("memory").
 				WithOperation("AddDocument")
 		}
 	}
-	
+
 	return nil
 }
 
@@ -503,16 +503,16 @@ func (r *Retriever) AddCorpusDocument(ctx context.Context, doc *corpus.CorpusDoc
 			WithComponent("memory").
 			WithOperation("AddCorpusDocument")
 	}
-	
+
 	// Create a searchable representation of the document
 	searchableContent := fmt.Sprintf("%s\n\n%s", doc.Title, doc.Body)
-	
+
 	// Add tags to the content for better searchability
 	if len(doc.Tags) > 0 {
-		searchableContent = fmt.Sprintf("Tags: %s\n\n%s", 
+		searchableContent = fmt.Sprintf("Tags: %s\n\n%s",
 			strings.Join(doc.Tags, ", "), searchableContent)
 	}
-	
+
 	// Generate document ID
 	docID := fmt.Sprintf("corpus_%s_%s", doc.GuildID, doc.AgentID)
 	if doc.Title != "" {
@@ -520,7 +520,7 @@ func (r *Retriever) AddCorpusDocument(ctx context.Context, doc *corpus.CorpusDoc
 		sanitizedTitle := strings.ReplaceAll(strings.ToLower(doc.Title), " ", "_")
 		docID = fmt.Sprintf("corpus_%s", sanitizedTitle)
 	}
-	
+
 	// Add document with corpus-specific metadata
 	return r.AddDocument(ctx, docID, searchableContent, "corpus")
 }
@@ -536,31 +536,31 @@ func (r *Retriever) EnhancePrompt(ctx context.Context, prompt string, config Ret
 	if err != nil {
 		return prompt, err // Return original prompt on error
 	}
-	
+
 	// If no results, return original prompt
 	if len(results.Results) == 0 {
 		return prompt, nil
 	}
-	
+
 	// Build enhanced prompt with context
 	var builder strings.Builder
-	
+
 	// Add context header
 	builder.WriteString("# Context\n")
 	builder.WriteString("The following information may be relevant to your query:\n\n")
-	
+
 	// Add each result as context
 	for i, result := range results.Results {
-		builder.WriteString(fmt.Sprintf("## Source %d: %s (Relevance: %.2f)\n", 
+		builder.WriteString(fmt.Sprintf("## Source %d: %s (Relevance: %.2f)\n",
 			i+1, result.Source, result.Score))
 		builder.WriteString(result.Content)
 		builder.WriteString("\n\n")
 	}
-	
+
 	// Add original prompt
 	builder.WriteString("# Query\n")
 	builder.WriteString(prompt)
-	
+
 	return builder.String(), nil
 }
 

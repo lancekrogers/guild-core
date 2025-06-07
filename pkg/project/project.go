@@ -49,7 +49,7 @@ func NewContext(rootPath string) (*Context, error) {
 	}
 
 	guildPath := filepath.Join(abs, ".guild")
-	
+
 	return &Context{
 		rootPath:       abs,
 		guildPath:      guildPath,

@@ -13,13 +13,13 @@ type MockStore struct {
 	mu      sync.RWMutex
 	buckets map[string]map[string][]byte
 	closed  bool
-	
+
 	// For tracking calls in tests
 	PutCalls    int
 	GetCalls    int
 	DeleteCalls int
 	ListCalls   int
-	
+
 	// Optional errors to return
 	PutError    error
 	GetError    error
@@ -45,9 +45,9 @@ func (m *MockStore) Put(ctx context.Context, bucket, key string, value []byte) e
 
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.PutCalls++
-	
+
 	if m.PutError != nil {
 		return m.PutError
 	}
@@ -64,7 +64,7 @@ func (m *MockStore) Put(ctx context.Context, bucket, key string, value []byte) e
 	// Copy the value
 	valueCopy := make([]byte, len(value))
 	copy(valueCopy, value)
-	
+
 	m.buckets[bucket][key] = valueCopy
 	return nil
 }
@@ -80,9 +80,9 @@ func (m *MockStore) Get(ctx context.Context, bucket, key string) ([]byte, error)
 
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	m.GetCalls++
-	
+
 	if m.GetError != nil {
 		return nil, m.GetError
 	}
@@ -104,7 +104,7 @@ func (m *MockStore) Get(ctx context.Context, bucket, key string) ([]byte, error)
 	// Return a copy of the value
 	valueCopy := make([]byte, len(value))
 	copy(valueCopy, value)
-	
+
 	return valueCopy, nil
 }
 
@@ -119,9 +119,9 @@ func (m *MockStore) Delete(ctx context.Context, bucket, key string) error {
 
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.DeleteCalls++
-	
+
 	if m.DeleteError != nil {
 		return m.DeleteError
 	}
@@ -150,9 +150,9 @@ func (m *MockStore) List(ctx context.Context, bucket string) ([]string, error) {
 
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	m.ListCalls++
-	
+
 	if m.ListError != nil {
 		return nil, m.ListError
 	}
@@ -170,7 +170,7 @@ func (m *MockStore) List(ctx context.Context, bucket string) ([]string, error) {
 	for k := range bucketMap {
 		keys = append(keys, k)
 	}
-	
+
 	return keys, nil
 }
 
@@ -185,9 +185,9 @@ func (m *MockStore) ListKeys(ctx context.Context, bucket, prefix string) ([]stri
 
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	m.ListCalls++
-	
+
 	if m.ListError != nil {
 		return nil, m.ListError
 	}
@@ -207,7 +207,7 @@ func (m *MockStore) ListKeys(ctx context.Context, bucket, prefix string) ([]stri
 			keys = append(keys, k)
 		}
 	}
-	
+
 	return keys, nil
 }
 
@@ -215,7 +215,7 @@ func (m *MockStore) ListKeys(ctx context.Context, bucket, prefix string) ([]stri
 func (m *MockStore) Close() error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.closed = true
 	return nil
 }
@@ -224,7 +224,7 @@ func (m *MockStore) Close() error {
 func (m *MockStore) Reset() {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.buckets = make(map[string]map[string][]byte)
 	m.PutCalls = 0
 	m.GetCalls = 0
@@ -241,7 +241,7 @@ func (m *MockStore) Reset() {
 func (m *MockStore) SetError(method string, err error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	switch method {
 	case "Put":
 		m.PutError = err

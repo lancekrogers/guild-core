@@ -117,7 +117,7 @@ func TestPromptChainIntegration(t *testing.T) {
 // TestPromptChainConcurrency tests concurrent access to the prompt chain system
 func TestPromptChainConcurrency(t *testing.T) {
 	t.Skip("Skipping concurrency test - SQLite in-memory databases have connection isolation issues")
-	
+
 	ctx := context.Background()
 
 	// Initialize SQLite storage for testing
@@ -134,13 +134,13 @@ func TestPromptChainConcurrency(t *testing.T) {
 	// Create multiple chains concurrently
 	numAgents := 5
 	numMessagesPerAgent := 10
-	
+
 	type result struct {
 		agentID string
 		chainID string
 		err     error
 	}
-	
+
 	results := make(chan result, numAgents)
 
 	// Launch goroutines to create chains and add messages

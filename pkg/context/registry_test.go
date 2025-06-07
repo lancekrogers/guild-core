@@ -228,22 +228,22 @@ func (m *TestMockRegistryProvider) Memory() MemoryRegistry {
 
 func TestRegistryProviderContext(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Test getting registry when none exists
 	_, err := GetRegistryProvider(ctx)
 	if err == nil {
 		t.Error("Expected error when getting registry from empty context")
 	}
-	
+
 	// Test setting and getting registry
 	mockRegistry := NewTestMockRegistryProvider()
 	ctx = WithRegistryProvider(ctx, mockRegistry)
-	
+
 	registry, err := GetRegistryProvider(ctx)
 	if err != nil {
 		t.Fatalf("Failed to get registry from context: %v", err)
 	}
-	
+
 	if registry != mockRegistry {
 		t.Error("Retrieved registry does not match the one we set")
 	}
@@ -253,83 +253,83 @@ func TestComponentAccessFromContext(t *testing.T) {
 	ctx := context.Background()
 	mockRegistry := NewTestMockRegistryProvider()
 	ctx = WithRegistryProvider(ctx, mockRegistry)
-	
+
 	// Test agent operations
 	testAgent := "test-agent-instance"
 	err := mockRegistry.Agents().RegisterAgent("test-agent", testAgent)
 	if err != nil {
 		t.Fatalf("Failed to register agent: %v", err)
 	}
-	
+
 	retrievedAgent, err := GetAgentFromContext(ctx, "test-agent")
 	if err != nil {
 		t.Fatalf("Failed to get agent from context: %v", err)
 	}
-	
+
 	if retrievedAgent.(string) != testAgent {
 		t.Error("Retrieved agent does not match registered agent")
 	}
-	
+
 	// Test provider operations
 	testProvider := "test-provider-instance"
 	err = mockRegistry.Providers().RegisterProvider("test-provider", testProvider)
 	if err != nil {
 		t.Fatalf("Failed to register provider: %v", err)
 	}
-	
+
 	retrievedProvider, err := GetProviderFromContext(ctx, "test-provider")
 	if err != nil {
 		t.Fatalf("Failed to get provider from context: %v", err)
 	}
-	
+
 	if retrievedProvider.(string) != testProvider {
 		t.Error("Retrieved provider does not match registered provider")
 	}
-	
+
 	// Test tool operations
 	testTool := "test-tool-instance"
 	err = mockRegistry.Tools().RegisterTool("test-tool", testTool)
 	if err != nil {
 		t.Fatalf("Failed to register tool: %v", err)
 	}
-	
+
 	retrievedTool, err := GetToolFromContext(ctx, "test-tool")
 	if err != nil {
 		t.Fatalf("Failed to get tool from context: %v", err)
 	}
-	
+
 	if retrievedTool.(string) != testTool {
 		t.Error("Retrieved tool does not match registered tool")
 	}
-	
+
 	// Test memory store operations
 	testMemoryStore := "test-memory-store-instance"
 	err = mockRegistry.Memory().RegisterMemoryStore("test-memory", testMemoryStore)
 	if err != nil {
 		t.Fatalf("Failed to register memory store: %v", err)
 	}
-	
+
 	retrievedMemoryStore, err := GetMemoryStoreFromContext(ctx, "test-memory")
 	if err != nil {
 		t.Fatalf("Failed to get memory store from context: %v", err)
 	}
-	
+
 	if retrievedMemoryStore.(string) != testMemoryStore {
 		t.Error("Retrieved memory store does not match registered memory store")
 	}
-	
+
 	// Test vector store operations
 	testVectorStore := "test-vector-store-instance"
 	err = mockRegistry.Memory().RegisterVectorStore("test-vector", testVectorStore)
 	if err != nil {
 		t.Fatalf("Failed to register vector store: %v", err)
 	}
-	
+
 	retrievedVectorStore, err := GetVectorStoreFromContext(ctx, "test-vector")
 	if err != nil {
 		t.Fatalf("Failed to get vector store from context: %v", err)
 	}
-	
+
 	if retrievedVectorStore.(string) != testVectorStore {
 		t.Error("Retrieved vector store does not match registered vector store")
 	}
@@ -338,28 +338,28 @@ func TestComponentAccessFromContext(t *testing.T) {
 func TestEnhanceContextWithComponent(t *testing.T) {
 	// Start with a Guild context that has proper request info
 	ctx := NewGuildContext(context.Background())
-	
+
 	// Test agent enhancement
 	ctx = EnhanceContextWithComponent(ctx, "agent", "test-agent")
 	agentID := GetAgentID(ctx)
 	if agentID != "test-agent" {
 		t.Errorf("Expected agent ID 'test-agent', got %s", agentID)
 	}
-	
+
 	// Test provider enhancement
 	ctx = EnhanceContextWithComponent(ctx, "provider", "test-provider")
 	provider := GetProvider(ctx)
 	if provider != "test-provider" {
 		t.Errorf("Expected provider 'test-provider', got %s", provider)
 	}
-	
+
 	// Test tool enhancement
 	ctx = EnhanceContextWithComponent(ctx, "tool", "test-tool")
 	tool := GetTool(ctx)
 	if tool != "test-tool" {
 		t.Errorf("Expected tool 'test-tool', got %s", tool)
 	}
-	
+
 	// Test unknown component type (should be added to metadata)
 	ctx = EnhanceContextWithComponent(ctx, "unknown", "test-unknown")
 	requestInfo := GetRequestInfo(ctx)
@@ -370,28 +370,28 @@ func TestEnhanceContextWithComponent(t *testing.T) {
 
 func TestCreateComponentContext(t *testing.T) {
 	parentCtx := NewGuildContext(context.Background())
-	
+
 	ctx := CreateComponentContext(parentCtx, "agent", "test-agent", "execute")
-	
+
 	// Check that operation is set
 	operation := GetOperation(ctx)
 	if operation != "execute" {
 		t.Errorf("Expected operation 'execute', got %s", operation)
 	}
-	
+
 	// Check that agent ID is set
 	agentID := GetAgentID(ctx)
 	if agentID != "test-agent" {
 		t.Errorf("Expected agent ID 'test-agent', got %s", agentID)
 	}
-	
+
 	// Check that span ID is set (should be different from parent)
 	spanID := GetSpanID(ctx)
 	parentSpanID := GetSpanID(parentCtx)
 	if spanID == parentSpanID {
 		t.Error("Expected different span ID for component context")
 	}
-	
+
 	// Check that parent context values are preserved
 	requestID := GetRequestID(ctx)
 	parentRequestID := GetRequestID(parentCtx)

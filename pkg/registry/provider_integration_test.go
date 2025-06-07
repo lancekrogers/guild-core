@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/providers/mocks"
 )
 
@@ -16,23 +16,23 @@ func TestProviderIntegration(t *testing.T) {
 
 	// Create provider registry and add mock providers
 	providerRegistry := registry.Providers()
-	
+
 	// Register mock providers directly
 	mockOpenAI := mocks.NewMockClient()
 	mockOpenAI.CompletionResponses = []string{"Mock OpenAI response: Hello, world!"}
 	err := providerRegistry.RegisterProvider("openai", mockOpenAI)
 	require.NoError(t, err)
-	
+
 	mockAnthropic := mocks.NewMockClient()
 	mockAnthropic.CompletionResponses = []string{"Mock Anthropic response: Hello, world!"}
 	err = providerRegistry.RegisterProvider("anthropic", mockAnthropic)
 	require.NoError(t, err)
-	
+
 	mockOllama := mocks.NewMockClient()
 	mockOllama.CompletionResponses = []string{"Mock Ollama response: Hello, world!"}
 	err = providerRegistry.RegisterProvider("ollama", mockOllama)
 	require.NoError(t, err)
-	
+
 	// Set default provider
 	err = providerRegistry.SetDefaultProvider("openai")
 	require.NoError(t, err)
@@ -105,14 +105,14 @@ func TestProviderConfigLoading(t *testing.T) {
 			// Create registry
 			registry := NewComponentRegistry()
 			providerRegistry := registry.Providers()
-			
+
 			// Register mock provider for this test
 			mockClient := mocks.NewMockClient()
 			mockClient.CompletionResponses = []string{tc.mockResponse}
-			
+
 			err := providerRegistry.RegisterProvider(tc.providerName, mockClient)
 			require.NoError(t, err)
-			
+
 			// Set as default provider
 			err = providerRegistry.SetDefaultProvider(tc.providerName)
 			require.NoError(t, err)

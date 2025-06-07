@@ -222,7 +222,7 @@ func TestLoaderCompleteness(t *testing.T) {
 	// Verify templates
 	expectedTemplates := []string{
 		"task-format",
-		"markdown-file", 
+		"markdown-file",
 		"review-comment",
 		"task-context",
 	}

@@ -372,4 +372,3 @@ func checkCorpusSize(cfg Config, newContentSize int) error {
 func extractLinks(content string) []string {
 	return ExtractLinks(content)
 }
-

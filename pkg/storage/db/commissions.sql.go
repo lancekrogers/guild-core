@@ -212,7 +212,7 @@ func (q *Queries) ListCommissionsByStatus(ctx context.Context, status string) ([
 }
 
 const setCommissionCompleted = `-- name: SetCommissionCompleted :exec
-UPDATE commissions 
+UPDATE commissions
 SET status = 'completed'
 WHERE id = ?
 `
@@ -223,7 +223,7 @@ func (q *Queries) SetCommissionCompleted(ctx context.Context, id string) error {
 }
 
 const updateCommission = `-- name: UpdateCommission :exec
-UPDATE commissions 
+UPDATE commissions
 SET title = ?, description = ?, domain = ?, context = ?, status = ?
 WHERE id = ?
 `
@@ -250,7 +250,7 @@ func (q *Queries) UpdateCommission(ctx context.Context, arg UpdateCommissionPara
 }
 
 const updateCommissionStatus = `-- name: UpdateCommissionStatus :exec
-UPDATE commissions 
+UPDATE commissions
 SET status = ?
 WHERE id = ?
 `

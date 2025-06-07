@@ -30,25 +30,25 @@ func ExecuteExternalCommand(cmdStr string) ExternalCommandResult {
 			ExitCode: -1,
 		}
 	}
-	
+
 	// Get the directory containing the current executable
 	exeDir := filepath.Dir(exePath)
-	
+
 	// Construct the path to the guild binary
 	guildBin := filepath.Join(exeDir, "guild")
-	
+
 	// Split command into args
 	args := strings.Fields(cmdStr)
-	
+
 	// Create command
 	cmd := exec.Command(guildBin, args...)
-	
+
 	// Set current directory as working directory
 	cmd.Dir, _ = os.Getwd()
-	
+
 	// Capture output
 	output, err := cmd.CombinedOutput()
-	
+
 	// Check for errors
 	exitCode := 0
 	success := true
@@ -60,7 +60,7 @@ func ExecuteExternalCommand(cmdStr string) ExternalCommandResult {
 			exitCode = -1
 		}
 	}
-	
+
 	return ExternalCommandResult{
 		Command:  cmdStr,
 		Output:   string(output),

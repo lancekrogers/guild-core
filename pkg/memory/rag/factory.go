@@ -2,7 +2,7 @@ package rag
 
 import (
 	"context"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 )
 
@@ -19,13 +19,13 @@ func newFactory(ctx context.Context, embedder vector.Embedder, config Config) (*
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Create factory
 	factory := &Factory{
 		retriever: retriever,
 		embedder:  embedder,
 	}
-	
+
 	return factory, nil
 }
 

@@ -50,7 +50,7 @@ func ExampleBasicUsage() {
 	retriever := NewRetrieverWithStore(vectorStore, config)
 
 	// Index some documents
-	err = retriever.AddDocument(ctx, 
+	err = retriever.AddDocument(ctx,
 		"guild-intro",
 		"The Guild Framework orchestrates AI agents to work together on complex tasks. "+
 			"Agents are called Artisans and work in teams called Guilds.",
@@ -156,7 +156,7 @@ func ExampleCorpusIntegration() {
 			DefaultDimension: 768,
 		},
 	}
-	
+
 	vectorStore, err := vector.NewVectorStore(ctx, vectorConfig)
 	if err != nil {
 		log.Fatalf("Failed to create vector store: %v", err)

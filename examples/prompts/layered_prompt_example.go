@@ -53,7 +53,7 @@ func main() {
 			"source": "example",
 		},
 	}
-	
+
 	if err := layeredManager.SetPromptLayer(ctx, platformPrompt); err != nil {
 		log.Printf("Failed to set platform prompt: %v", err)
 	} else {
@@ -72,7 +72,7 @@ func main() {
 			"source":          "example",
 		},
 	}
-	
+
 	if err := layeredManager.SetPromptLayer(ctx, sessionPrompt); err != nil {
 		log.Printf("Failed to set session prompt: %v", err)
 	} else {

@@ -77,7 +77,7 @@ func TestAllDemoScenarios(t *testing.T) {
 		t.Run(scenario.name, func(t *testing.T) {
 			// Create isolated test directory
 			workDir := t.TempDir()
-			
+
 			// Change to work directory
 			originalDir, err := os.Getwd()
 			require.NoError(t, err)
@@ -85,7 +85,7 @@ func TestAllDemoScenarios(t *testing.T) {
 				err := os.Chdir(originalDir)
 				require.NoError(t, err)
 			}()
-			
+
 			err = os.Chdir(workDir)
 			require.NoError(t, err)
 
@@ -104,7 +104,7 @@ func TestAllDemoScenarios(t *testing.T) {
 
 			cmd := exec.CommandContext(ctx, "bash", scriptPath)
 			cmd.Dir = workDir
-			
+
 			// Capture both stdout and stderr
 			output, err := cmd.CombinedOutput()
 			outputStr := string(output)
@@ -124,7 +124,7 @@ func TestAllDemoScenarios(t *testing.T) {
 
 			// Check required output is present
 			for _, req := range scenario.required {
-				assert.Contains(t, outputStr, req, 
+				assert.Contains(t, outputStr, req,
 					"Output should contain required element: %s", req)
 			}
 		})
@@ -138,7 +138,7 @@ func TestDemoEnvironmentValidation(t *testing.T) {
 	}
 
 	workDir := t.TempDir()
-	
+
 	// Change to work directory
 	originalDir, err := os.Getwd()
 	require.NoError(t, err)
@@ -146,7 +146,7 @@ func TestDemoEnvironmentValidation(t *testing.T) {
 		err := os.Chdir(originalDir)
 		require.NoError(t, err)
 	}()
-	
+
 	err = os.Chdir(workDir)
 	require.NoError(t, err)
 
@@ -162,7 +162,7 @@ func TestDemoEnvironmentValidation(t *testing.T) {
 
 	cmd := exec.CommandContext(ctx, guildBinary, "demo-check", "--verbose")
 	cmd.Dir = workDir
-	
+
 	output, err := cmd.CombinedOutput()
 	outputStr := string(output)
 
@@ -174,11 +174,11 @@ func TestDemoEnvironmentValidation(t *testing.T) {
 	}
 
 	// Should contain validation sections
-	assert.Contains(t, outputStr, "Guild Demo Environment Validator", 
+	assert.Contains(t, outputStr, "Guild Demo Environment Validator",
 		"Should show validator header")
-	assert.Contains(t, outputStr, "Checking terminal environment", 
+	assert.Contains(t, outputStr, "Checking terminal environment",
 		"Should check terminal")
-	assert.Contains(t, outputStr, "Checking Guild project", 
+	assert.Contains(t, outputStr, "Checking Guild project",
 		"Should check guild project")
 }
 
@@ -253,22 +253,22 @@ func TestPerformanceRequirements(t *testing.T) {
 
 	// Test file I/O performance
 	start := time.Now()
-	
+
 	workDir := t.TempDir()
 	testFile := filepath.Join(workDir, "perf-test.txt")
-	
+
 	// Write test
 	err := os.WriteFile(testFile, []byte("performance test content"), 0644)
 	require.NoError(t, err)
-	
+
 	// Read test
 	_, err = os.ReadFile(testFile)
 	require.NoError(t, err)
-	
+
 	elapsed := time.Since(start)
 
 	// Should be very fast for simple file operations
-	assert.Less(t, elapsed, 100*time.Millisecond, 
+	assert.Less(t, elapsed, 100*time.Millisecond,
 		"Basic file operations should be fast")
 
 	t.Logf("File I/O performance: %v", elapsed)
@@ -291,7 +291,7 @@ func setupTestGuildProject(t *testing.T, workDir string) {
 			},
 			{
 				ID:          "demo-developer",
-				Name:        "Demo Developer", 
+				Name:        "Demo Developer",
 				Role:        "developer",
 				Provider:    "mock",
 				Model:       "test-model",
@@ -468,6 +468,6 @@ esac
 `
 	err := os.WriteFile(mockScript, []byte(mockContent), 0755)
 	require.NoError(t, err)
-	
+
 	return mockScript
 }

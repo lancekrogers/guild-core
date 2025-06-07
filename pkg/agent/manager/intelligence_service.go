@@ -49,10 +49,10 @@ type IntelligenceRequest struct {
 type IntelligenceResult struct {
 	// Complexity Analysis Results
 	ComplexityAnalysis *ComplexityAnalysisResult `json:"complexity_analysis"`
-	
+
 	// Agent Routing Results
 	AgentRouting *RoutingResult `json:"agent_routing"`
-	
+
 	// Executive Summary
 	ExecutiveSummary ExecutiveSummary `json:"executive_summary"`
 }
@@ -94,7 +94,7 @@ func (mis *ManagerIntelligenceService) AnalyzeAndRoute(
 		RiskTolerance:   request.RiskTolerance,
 		TimeConstraint:  request.TimeConstraint,
 	}
-	
+
 	complexityResult, err := mis.complexityAnalyzer.AnalyzeComplexity(ctx, complexityRequest)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "failed to analyze task complexity").
@@ -119,7 +119,7 @@ func (mis *ManagerIntelligenceService) AnalyzeAndRoute(
 		AgentRequirements:   complexityResult.AgentRequirements,
 		AvailableAgents:     availableAgents,
 	}
-	
+
 	routingResult, err := mis.agentRouter.RouteToAgents(ctx, routingRequest)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeAgent, "failed to route to agents").
@@ -285,7 +285,7 @@ func (mis *ManagerIntelligenceService) estimateDuration(complexity int) string {
 // generateAlternatives converts routing alternatives to executive format
 func (mis *ManagerIntelligenceService) generateAlternatives(alternatives []AlternativeApproach) []AlternativeOption {
 	var options []AlternativeOption
-	
+
 	for _, alt := range alternatives {
 		option := AlternativeOption{
 			Strategy:     alt.Approach,
@@ -296,6 +296,6 @@ func (mis *ManagerIntelligenceService) generateAlternatives(alternatives []Alter
 		}
 		options = append(options, option)
 	}
-	
+
 	return options
 }

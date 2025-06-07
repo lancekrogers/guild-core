@@ -57,7 +57,7 @@ func (o *BaseOrchestrator) Start(ctx context.Context) error {
 
 	// Update status
 	o.status = StatusRunning
-	
+
 	// Emit started event
 	o.eventBus.Publish(Event{
 		Type:   EventType(EventOrchestratorStarted),
@@ -87,7 +87,7 @@ func (o *BaseOrchestrator) Stop(ctx context.Context) error {
 
 	// Update status
 	o.status = StatusIdle
-	
+
 	// Emit stopped event
 	o.eventBus.Publish(Event{
 		Type:   EventType(EventOrchestratorStopped),
@@ -111,7 +111,7 @@ func (o *BaseOrchestrator) Pause(ctx context.Context) error {
 
 	// Update status
 	o.status = StatusPaused
-	
+
 	// Emit paused event
 	o.eventBus.Publish(Event{
 		Type:   EventType(EventOrchestratorPaused),
@@ -135,7 +135,7 @@ func (o *BaseOrchestrator) Resume(ctx context.Context) error {
 
 	// Update status
 	o.status = StatusRunning
-	
+
 	// Emit resumed event
 	o.eventBus.Publish(Event{
 		Type:   EventType(EventOrchestratorResumed),
@@ -150,7 +150,7 @@ func (o *BaseOrchestrator) Resume(ctx context.Context) error {
 func (o *BaseOrchestrator) Status() Status {
 	o.mu.RLock()
 	defer o.mu.RUnlock()
-	
+
 	return o.status
 }
 
@@ -169,7 +169,7 @@ func (o *BaseOrchestrator) AddAgent(agent agent.Agent) error {
 
 	// Add agent to the orchestrator
 	o.agents[agent.GetID()] = agent
-	
+
 	// Add agent to the dispatcher
 	o.dispatcher.RegisterAgent(agent)
 
@@ -191,7 +191,7 @@ func (o *BaseOrchestrator) RemoveAgent(agentID string) error {
 
 	// Remove agent from the orchestrator
 	delete(o.agents, agentID)
-	
+
 	// Remove agent from the dispatcher
 	o.dispatcher.UnregisterAgent(agentID)
 
@@ -213,7 +213,7 @@ func (o *BaseOrchestrator) SetObjective(objective *commission.Commission) error 
 	defer o.mu.Unlock()
 
 	o.currentObjective = objective
-	
+
 	// Emit objective set event
 	o.eventBus.Publish(Event{
 		Type:   EventType(EventObjectiveSet),
@@ -231,7 +231,7 @@ func (o *BaseOrchestrator) SetObjective(objective *commission.Commission) error 
 func (o *BaseOrchestrator) GetObjective() *commission.Commission {
 	o.mu.RLock()
 	defer o.mu.RUnlock()
-	
+
 	return o.currentObjective
 }
 

@@ -38,7 +38,7 @@ const (
 type CorpusModel struct {
 	// Context for operations
 	ctx context.Context
-	
+
 	// Dependencies - interface-first design
 	corpusManager CorpusManager  // Interface dependency for corpus operations
 	config        CorpusConfig   // Interface dependency for configuration

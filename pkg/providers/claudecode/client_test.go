@@ -75,10 +75,10 @@ func TestClient_GetBinPath(t *testing.T) {
 
 func TestClient_SetSystemPrompt(t *testing.T) {
 	client := NewClient("claude-code", "")
-	
+
 	testPrompt := "You are a helpful assistant"
 	client.SetSystemPrompt(testPrompt)
-	
+
 	opts := client.GetDefaultOptions()
 	if opts.SystemPrompt != testPrompt {
 		t.Errorf("Expected system prompt '%s', got '%s'", testPrompt, opts.SystemPrompt)
@@ -174,20 +174,20 @@ func TestClient_ModelConfiguration(t *testing.T) {
 
 func TestClient_SetModel(t *testing.T) {
 	client := NewClient("claude-code", "initial-model")
-	
+
 	// Verify initial model
 	if client.GetModel() != "initial-model" {
 		t.Errorf("Expected initial model 'initial-model', got '%s'", client.GetModel())
 	}
-	
+
 	// Set new model
 	client.SetModel("new-model")
-	
+
 	// Verify model was updated
 	if client.GetModel() != "new-model" {
 		t.Errorf("Expected model 'new-model', got '%s'", client.GetModel())
 	}
-	
+
 	// Verify it's in the default options
 	opts := client.GetDefaultOptions()
 	if opts.Model != "new-model" {

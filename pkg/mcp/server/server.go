@@ -206,7 +206,7 @@ func (s *Server) handleMessage(ctx context.Context, msgBytes []byte) {
 	s.mu.RUnlock()
 
 	if !exists {
-		s.sendError(ctx, msg.ID, protocol.MethodNotFound, 
+		s.sendError(ctx, msg.ID, protocol.MethodNotFound,
 			fmt.Sprintf("Method %s not found", msg.Method), nil)
 		return
 	}
@@ -263,7 +263,7 @@ func (s *Server) sendError(ctx context.Context, id string, code int, message str
 			dataBytes, _ = json.Marshal(data)
 		}
 	}
-	
+
 	errMsg := &protocol.MCPMessage{
 		ID:          id,
 		Version:     "1.0",
@@ -443,7 +443,7 @@ func (s *Server) handleToolExecute(ctx context.Context, msg *protocol.MCPMessage
 
 	// Generate execution ID
 	executionID := fmt.Sprintf("exec-%s-%d", req.ToolID, time.Now().UnixNano())
-	
+
 	// Execute tool
 	startTime := time.Now()
 	result, err := tool.Execute(ctx, req.Parameters)

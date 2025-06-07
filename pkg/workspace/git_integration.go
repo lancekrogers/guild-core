@@ -56,7 +56,7 @@ func (m *GitManager) CreateWorkspace(ctx context.Context, opts CreateOptions) (W
 
 	cmd := exec.Command("git", "worktree", "add", "-b", branchName, workspacePath, baseBranch)
 	cmd.Dir = m.repoPath
-	
+
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, fmt.Sprintf("failed to create worktree: %s", string(output))).
@@ -116,7 +116,7 @@ func (w *GitWorkspace) UpdateGitInfo() error {
 	// Get current commit SHA
 	cmd := exec.Command("git", "rev-parse", "HEAD")
 	cmd.Dir = w.info.Path
-	
+
 	output, err := cmd.Output()
 	if err == nil {
 		w.gitInfo.CommitHash = strings.TrimSpace(string(output))
@@ -125,7 +125,7 @@ func (w *GitWorkspace) UpdateGitInfo() error {
 	// Check for uncommitted changes
 	cmd = exec.Command("git", "status", "--porcelain")
 	cmd.Dir = w.info.Path
-	
+
 	output, err = cmd.Output()
 	if err == nil {
 		w.gitInfo.IsDirty = len(output) > 0
@@ -139,7 +139,7 @@ func (w *GitWorkspace) Cleanup() error {
 	// Remove worktree
 	cmd := exec.Command("git", "worktree", "remove", w.info.Path, "--force")
 	cmd.Dir = w.repoPath
-	
+
 	if err := cmd.Run(); err != nil {
 		// Fallback to manual removal
 		if err := os.RemoveAll(w.info.Path); err != nil {
@@ -200,7 +200,7 @@ func (w *GitWorkspace) CommitChanges(message string) error {
 func (w *GitWorkspace) GetDiff() (string, error) {
 	cmd := exec.Command("git", "diff", "HEAD")
 	cmd.Dir = w.info.Path
-	
+
 	output, err := cmd.Output()
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get diff").
@@ -215,7 +215,7 @@ func (w *GitWorkspace) GetDiff() (string, error) {
 func validateGitRepository(path string) error {
 	cmd := exec.Command("git", "rev-parse", "--git-dir")
 	cmd.Dir = path
-	
+
 	if err := cmd.Run(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "not a git repository").
 			WithComponent("workspace").
@@ -225,7 +225,7 @@ func validateGitRepository(path string) error {
 	// Check worktree support
 	cmd = exec.Command("git", "worktree", "list")
 	cmd.Dir = path
-	
+
 	if err := cmd.Run(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "git worktree not supported").
 			WithComponent("workspace").
@@ -240,7 +240,7 @@ func detectDefaultBranch(repoPath string) string {
 	// Try to get the default branch from origin
 	cmd := exec.Command("git", "symbolic-ref", "refs/remotes/origin/HEAD")
 	cmd.Dir = repoPath
-	
+
 	output, err := cmd.Output()
 	if err == nil {
 		parts := strings.Split(strings.TrimSpace(string(output)), "/")
@@ -260,4 +260,3 @@ func detectDefaultBranch(repoPath string) string {
 
 	return "main"
 }
-

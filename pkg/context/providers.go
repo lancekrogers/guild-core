@@ -12,10 +12,10 @@ import (
 type ProviderClient interface {
 	// Complete generates a completion with full context support
 	Complete(ctx context.Context, prompt string) (string, error)
-	
+
 	// CreateCompletion creates a completion with detailed request/response
 	CreateCompletion(ctx context.Context, req CompletionRequest) (CompletionResponse, error)
-	
+
 	// GetProviderInfo returns information about this provider
 	GetProviderInfo() ProviderInfo
 }
@@ -30,7 +30,7 @@ type CompletionRequest struct {
 	Stop            []string               `json:"stop,omitempty"`
 	Stream          bool                   `json:"stream,omitempty"`
 	Metadata        map[string]interface{} `json:"metadata,omitempty"`
-	
+
 	// Context-specific fields
 	RequestID       string                 `json:"request_id,omitempty"`
 	SessionID       string                 `json:"session_id,omitempty"`
@@ -50,7 +50,7 @@ type CompletionResponse struct {
 	FinishReason    string                 `json:"finish_reason"`
 	Usage           UsageInfo              `json:"usage"`
 	Metadata        map[string]interface{} `json:"metadata,omitempty"`
-	
+
 	// Context-specific fields
 	RequestID       string                 `json:"request_id,omitempty"`
 	ProcessingTime  time.Duration          `json:"processing_time,omitempty"`
@@ -85,19 +85,19 @@ func CompleteWithProvider(ctx context.Context, providerName, prompt string) (str
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get provider").WithComponent("context").WithOperation("CompleteWithProvider").WithDetails("provider_name", providerName)
 	}
-	
+
 	// Try to cast to our context-aware interface
 	if contextProvider, ok := provider.(ProviderClient); ok {
 		return contextProvider.Complete(ctx, prompt)
 	}
-	
+
 	// Fallback to basic LLM client interface
 	if llmClient, ok := provider.(interface {
 		Complete(context.Context, string) (string, error)
 	}); ok {
 		return llmClient.Complete(ctx, prompt)
 	}
-	
+
 	return "", gerror.Newf(gerror.ErrCodeInvalidInput, "provider '%s' does not implement required completion interface", providerName).WithComponent("context").WithOperation("CompleteWithProvider")
 }
 
@@ -107,25 +107,25 @@ func CompleteWithDefaultProvider(ctx context.Context, prompt string) (string, er
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("CompleteWithDefaultProvider")
 	}
-	
+
 	// Get default provider
 	provider, err := registry.Providers().GetDefaultProvider()
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get default provider").WithComponent("context").WithOperation("CompleteWithDefaultProvider")
 	}
-	
+
 	// Try to cast to our context-aware interface
 	if contextProvider, ok := provider.(ProviderClient); ok {
 		return contextProvider.Complete(ctx, prompt)
 	}
-	
+
 	// Fallback to basic LLM client interface
 	if llmClient, ok := provider.(interface {
 		Complete(context.Context, string) (string, error)
 	}); ok {
 		return llmClient.Complete(ctx, prompt)
 	}
-	
+
 	return "", gerror.New(gerror.ErrCodeInvalidInput, "default provider does not implement required completion interface", nil).WithComponent("context").WithOperation("CompleteWithDefaultProvider")
 }
 
@@ -133,18 +133,18 @@ func CompleteWithDefaultProvider(ctx context.Context, prompt string) (string, er
 func CreateCompletionWithProvider(ctx context.Context, providerName string, req CompletionRequest) (CompletionResponse, error) {
 	// Enhance request with context information
 	req = enhanceCompletionRequest(ctx, req)
-	
+
 	// Get provider from context
 	provider, err := GetProviderFromContext(ctx, providerName)
 	if err != nil {
 		return CompletionResponse{}, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get provider").WithComponent("context").WithOperation("CreateCompletionWithProvider").WithDetails("provider_name", providerName)
 	}
-	
+
 	// Try to cast to our context-aware interface
 	if contextProvider, ok := provider.(ProviderClient); ok {
 		return contextProvider.CreateCompletion(ctx, req)
 	}
-	
+
 	return CompletionResponse{}, gerror.Newf(gerror.ErrCodeInvalidInput, "provider '%s' does not implement context-aware completion interface", providerName).WithComponent("context").WithOperation("CreateCompletionWithProvider")
 }
 
@@ -162,12 +162,12 @@ func enhanceCompletionRequest(ctx context.Context, req CompletionRequest) Comple
 	if req.Operation == "" {
 		req.Operation = GetOperation(ctx)
 	}
-	
+
 	// Add cost budget if available
 	if costInfo := GetCostInfo(ctx); costInfo != nil && req.CostBudget == 0 {
 		req.CostBudget = costInfo.Budget - costInfo.Used
 	}
-	
+
 	// Add timeout if available from context deadline
 	if deadline, ok := ctx.Deadline(); ok {
 		timeout := time.Until(deadline)
@@ -175,7 +175,7 @@ func enhanceCompletionRequest(ctx context.Context, req CompletionRequest) Comple
 			req.TimeoutSeconds = int(timeout.Seconds())
 		}
 	}
-	
+
 	return req
 }
 
@@ -189,16 +189,16 @@ func SelectBestProvider(ctx context.Context, taskType string, requirements map[s
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get registry from context").WithComponent("context").WithOperation("SelectBestProvider")
 	}
-	
+
 	// Get all available providers
 	providers := registry.Providers().ListProviders()
 	if len(providers) == 0 {
 		return "", gerror.New(gerror.ErrCodeNotFound, "no providers available", nil).WithComponent("context").WithOperation("SelectBestProvider")
 	}
-	
+
 	// Simple selection logic - in production this could be more sophisticated
 	// considering factors like cost, performance, model capabilities, etc.
-	
+
 	switch taskType {
 	case "coding", "code-review", "debugging":
 		// Prefer Claude Code for coding tasks
@@ -213,7 +213,7 @@ func SelectBestProvider(ctx context.Context, taskType string, requirements map[s
 				return provider, nil
 			}
 		}
-		
+
 	case "reasoning", "analysis":
 		// Prefer Claude or GPT-4 for reasoning tasks
 		for _, provider := range providers {
@@ -221,7 +221,7 @@ func SelectBestProvider(ctx context.Context, taskType string, requirements map[s
 				return provider, nil
 			}
 		}
-		
+
 	case "fast", "simple":
 		// Prefer faster models
 		for _, provider := range providers {
@@ -229,7 +229,7 @@ func SelectBestProvider(ctx context.Context, taskType string, requirements map[s
 				return provider, nil
 			}
 		}
-		
+
 	case "local", "private":
 		// Prefer local models
 		for _, provider := range providers {
@@ -238,7 +238,7 @@ func SelectBestProvider(ctx context.Context, taskType string, requirements map[s
 			}
 		}
 	}
-	
+
 	// Default to first available provider
 	return providers[0], nil
 }
@@ -250,11 +250,11 @@ func RouteToProvider(ctx context.Context, taskType, prompt string, requirements 
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to select provider").WithComponent("context").WithOperation("RouteToProvider")
 	}
-	
+
 	// Create enhanced context
 	ctx = WithProvider(ctx, providerName)
 	ctx = WithOperation(ctx, fmt.Sprintf("completion-%s", taskType))
-	
+
 	// Perform completion
 	return CompleteWithProvider(ctx, providerName, prompt)
 }
@@ -286,7 +286,7 @@ func TrackProviderUsage(ctx context.Context, providerName string, latency time.D
 			"cost_usd", cost,
 			"tokens", tokens,
 		}
-		
+
 		if err != nil {
 			fields = append(fields, "error", err.Error())
 			logger.Error("Provider request failed", fields...)

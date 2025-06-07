@@ -52,7 +52,7 @@ func (f *GuildMasterFactory) CreateGuildMasterRefiner(providerName, model string
 		ArtisanClient: artisanClient,
 		PromptManager: f.promptManager,
 	}
-	
+
 	// Create an adapter to make IntelligentParser implement ResponseParser
 	responseParser := &intelligentParserAdapter{
 		parser: NewIntelligentParser(parserConfig),
@@ -90,7 +90,7 @@ func (f *GuildMasterFactory) CreateGuildMasterRefinerWithDefaults() (*GuildMaste
 				WithComponent("manager").
 				WithOperation("CreateGuildMasterRefinerWithDefaults")
 		}
-		
+
 		// Set default model based on provider
 		switch providerName {
 		case "openai":

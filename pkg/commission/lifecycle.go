@@ -67,7 +67,7 @@ func (l *LifecycleManager) CreateObjectiveFromDescription(ctx context.Context, d
 
 	// Generate initial markdown content
 	content := formatObjectiveMarkdown(obj)
-	
+
 	// Write to file
 	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write objective file").WithComponent("commission").WithOperation("CreateObjectiveFromDescription")
@@ -94,7 +94,7 @@ func (l *LifecycleManager) AddContext(ctx context.Context, objectiveID, context 
 
 	// Parse the context for any document references
 	context, refs := parseDocumentReferences(context)
-	
+
 	// Add the context to the objective
 	if obj.Context == nil {
 		obj.Context = []string{context}
@@ -118,14 +118,14 @@ func (l *LifecycleManager) AddContext(ctx context.Context, objectiveID, context 
 
 	// Increment iteration counter
 	obj.IncrementIteration()
-	
+
 	// Calculate completion
 	obj.CalculateCompletion()
 
 	// Update the file content
 	content := formatObjectiveMarkdown(obj)
 	obj.Content = content
-	
+
 	// Save changes to file
 	if err := os.WriteFile(obj.FilePath, []byte(content), 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update objective file").WithComponent("commission").WithOperation("AddContext")
@@ -150,15 +150,15 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, objecti
 	// Create project directory using objective title
 	projectName := sanitizeFilename(obj.Title)
 	projectDir := filepath.Join(filepath.Dir(obj.FilePath), projectName)
-	
+
 	// Create the ai_docs and specs directories
 	aiDocsDir := filepath.Join(projectDir, "ai_docs")
 	specsDir := filepath.Join(projectDir, "specs")
-	
+
 	if err := os.MkdirAll(aiDocsDir, 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create ai_docs directory").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
-	
+
 	if err := os.MkdirAll(specsDir, 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create specs directory").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
@@ -169,26 +169,26 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, objecti
 
 	// Create README.md in ai_docs
 	aiDocsReadme := filepath.Join(aiDocsDir, "README.md")
-	aiDocsContent := fmt.Sprintf("# AI Docs for %s\n\nGenerated from objective: %s\n\n## Overview\n\n%s\n\n## Related Specs\n\n@spec/README.md\n", 
-		obj.Title, 
+	aiDocsContent := fmt.Sprintf("# AI Docs for %s\n\nGenerated from objective: %s\n\n## Overview\n\n%s\n\n## Related Specs\n\n@spec/README.md\n",
+		obj.Title,
 		filepath.Base(obj.FilePath),
 		obj.Description)
-	
+
 	if err := os.WriteFile(aiDocsReadme, []byte(aiDocsContent), 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write ai_docs README").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
 
 	// Create README.md in specs
 	specsReadme := filepath.Join(specsDir, "README.md")
-	specsContent := fmt.Sprintf("# Specifications for %s\n\nGenerated from objective: %s\n\n## Requirements\n\n", 
-		obj.Title, 
+	specsContent := fmt.Sprintf("# Specifications for %s\n\nGenerated from objective: %s\n\n## Requirements\n\n",
+		obj.Title,
 		filepath.Base(obj.FilePath))
-	
+
 	// Add requirements
 	for _, req := range obj.Requirements {
 		specsContent += fmt.Sprintf("- %s\n", req)
 	}
-	
+
 	if err := os.WriteFile(specsReadme, []byte(specsContent), 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write specs README").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
@@ -196,7 +196,7 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, objecti
 	// Update objective with references to the new files
 	obj.AIDocs = []string{aiDocsReadme}
 	obj.Specs = []string{specsReadme}
-	
+
 	// Update status
 	obj.Status = StatusInProgress
 	obj.IncrementIteration()
@@ -232,7 +232,7 @@ func (l *LifecycleManager) MarkObjectiveReady(ctx context.Context, objectiveID s
 	projectName := sanitizeFilename(obj.Title)
 	projectDir := filepath.Join(filepath.Dir(obj.FilePath), projectName)
 	readyFile := filepath.Join(projectDir, l.guildReadyFile)
-	
+
 	// Write current time to the ready file
 	readyContent := fmt.Sprintf("Objective marked ready at: %s\n", time.Now().Format(time.RFC3339))
 	if err := os.WriteFile(readyFile, []byte(readyContent), 0644); err != nil {
@@ -289,7 +289,7 @@ func (l *LifecycleManager) MarkObjectiveCompleted(ctx context.Context, objective
 	projectName := sanitizeFilename(obj.Title)
 	projectDir := filepath.Join(filepath.Dir(obj.FilePath), projectName)
 	readyFile := filepath.Join(projectDir, l.guildReadyFile)
-	
+
 	// Append completion time to the ready file
 	completionContent := fmt.Sprintf("Objective completed at: %s\n", time.Now().Format(time.RFC3339))
 	f, err := os.OpenFile(readyFile, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
@@ -297,7 +297,7 @@ func (l *LifecycleManager) MarkObjectiveCompleted(ctx context.Context, objective
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to open ready file").WithComponent("commission").WithOperation("MarkObjectiveCompleted")
 	}
 	defer f.Close()
-	
+
 	if _, err := f.WriteString(completionContent); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update ready file").WithComponent("commission").WithOperation("MarkObjectiveCompleted")
 	}
@@ -317,7 +317,7 @@ func deriveTitle(description string) string {
 	// Extract the first line as title
 	lines := strings.Split(description, "\n")
 	title := lines[0]
-	
+
 	// If title is too long, truncate it
 	maxTitleLength := 50
 	if len(title) > maxTitleLength {
@@ -329,17 +329,17 @@ func deriveTitle(description string) string {
 			title = title[:maxTitleLength-3] + "..."
 		}
 	}
-	
+
 	return title
 }
 
 // formatObjectiveMarkdown formats an objective as markdown
 func formatObjectiveMarkdown(obj *Commission) string {
 	var content strings.Builder
-	
+
 	// Title
 	content.WriteString(fmt.Sprintf("# 🧠 Goal\n\n%s\n\n", obj.Goal))
-	
+
 	// Context
 	content.WriteString("# 📂 Context\n\n")
 	if len(obj.Context) > 0 {
@@ -349,7 +349,7 @@ func formatObjectiveMarkdown(obj *Commission) string {
 	} else {
 		content.WriteString("No context provided yet.\n\n")
 	}
-	
+
 	// Requirements
 	content.WriteString("# 🔧 Requirements\n\n")
 	if len(obj.Requirements) > 0 {
@@ -360,7 +360,7 @@ func formatObjectiveMarkdown(obj *Commission) string {
 	} else {
 		content.WriteString("No specific requirements defined yet.\n\n")
 	}
-	
+
 	// Tags
 	content.WriteString("# 📌 Tags\n\n")
 	if len(obj.Tags) > 0 {
@@ -371,7 +371,7 @@ func formatObjectiveMarkdown(obj *Commission) string {
 	} else {
 		content.WriteString("No tags defined yet.\n\n")
 	}
-	
+
 	// Related
 	content.WriteString("# 🔗 Related\n\n")
 	if len(obj.Related) > 0 {
@@ -382,7 +382,7 @@ func formatObjectiveMarkdown(obj *Commission) string {
 	} else {
 		content.WriteString("No related objectives defined yet.\n\n")
 	}
-	
+
 	return content.String()
 }
 
@@ -390,10 +390,10 @@ func formatObjectiveMarkdown(obj *Commission) string {
 func parseDocumentReferences(content string) (string, []string) {
 	// Regular expression to match document references like @ai_docs/... or @spec/...
 	referenceRegex := regexp.MustCompile(`@(ai_docs|spec)/[a-zA-Z0-9_\.\-\/]+`)
-	
+
 	// Extract all references
 	matches := referenceRegex.FindAllString(content, -1)
-	
+
 	// Return the content and the list of references
 	return content, matches
 }

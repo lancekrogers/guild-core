@@ -145,24 +145,24 @@ func (m *Manager) CreateCommission(ctx context.Context, commission Commission) (
 	if commission.ID == "" {
 		commission.ID = generateCommissionID(commission.Title)
 	}
-	
+
 	// Set timestamps
 	now := time.Now().UTC()
 	commission.CreatedAt = now
 	commission.UpdatedAt = now
-	
+
 	// Set default status if not provided
 	if commission.Status == "" {
 		commission.Status = StatusDraft
 	}
-	
+
 	// Save the commission
 	if err := m.SaveCommission(ctx, &commission); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commission").
 			WithComponent("CommissionManager").
 			WithOperation("CreateCommission")
 	}
-	
+
 	return &commission, nil
 }
 
@@ -401,7 +401,7 @@ func (m *Manager) UpdateTaskStatus(ctx context.Context, commissionID, taskID, st
 		if task.ID == taskID {
 			commission.Tasks[i].Status = status
 			commission.Tasks[i].UpdatedAt = time.Now().UTC()
-			
+
 			// Set completed time if status is "done"
 			if status == "done" {
 				now := time.Now().UTC()
@@ -409,7 +409,7 @@ func (m *Manager) UpdateTaskStatus(ctx context.Context, commissionID, taskID, st
 			} else {
 				commission.Tasks[i].CompletedAt = nil
 			}
-			
+
 			found = true
 			break
 		}

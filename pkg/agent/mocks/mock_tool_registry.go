@@ -51,11 +51,11 @@ func (m *MockToolRegistry) WithExecutionError(err error) *MockToolRegistry {
 func (m *MockToolRegistry) RegisterTool(tool tools.Tool) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	if tool == nil {
 		return fmt.Errorf("tool cannot be nil")
 	}
-	
+
 	m.tools[tool.Name()] = tool
 	return nil
 }
@@ -64,7 +64,7 @@ func (m *MockToolRegistry) RegisterTool(tool tools.Tool) error {
 func (m *MockToolRegistry) GetTool(name string) (tools.Tool, bool) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	tool, ok := m.tools[name]
 	return tool, ok
 }
@@ -73,12 +73,12 @@ func (m *MockToolRegistry) GetTool(name string) (tools.Tool, bool) {
 func (m *MockToolRegistry) ListTools() []tools.Tool {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	var toolList []tools.Tool
 	for _, tool := range m.tools {
 		toolList = append(toolList, tool)
 	}
-	
+
 	return toolList
 }
 
@@ -91,21 +91,21 @@ func (m *MockToolRegistry) ExecuteTool(ctx context.Context, name string, input s
 	default:
 		// Continue execution
 	}
-	
+
 	// Return error if configured
 	if m.executionError != nil {
 		return nil, m.executionError
 	}
-	
+
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	// Check if tool exists
 	_, ok := m.tools[name]
 	if !ok {
 		return nil, fmt.Errorf("tool %s not found", name)
 	}
-	
+
 	// Return predefined result
 	return m.executionResult, nil
 }
@@ -119,21 +119,21 @@ func (m *MockToolRegistry) ExecuteToolWithParams(ctx context.Context, name strin
 	default:
 		// Continue execution
 	}
-	
+
 	// Return error if configured
 	if m.executionError != nil {
 		return nil, m.executionError
 	}
-	
+
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	// Check if tool exists
 	_, ok := m.tools[name]
 	if !ok {
 		return nil, fmt.Errorf("tool %s not found", name)
 	}
-	
+
 	// Return predefined result
 	return m.executionResult, nil
 }
@@ -196,12 +196,12 @@ func (t *MockTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 	default:
 		// Continue execution
 	}
-	
+
 	// Return error if configured
 	if t.err != nil {
 		return nil, t.err
 	}
-	
+
 	return t.result, nil
 }
 
@@ -214,11 +214,11 @@ func (t *MockTool) ExecuteWithParams(ctx context.Context, params map[string]inte
 	default:
 		// Continue execution
 	}
-	
+
 	// Return error if configured
 	if t.err != nil {
 		return nil, t.err
 	}
-	
+
 	return t.result, nil
 }

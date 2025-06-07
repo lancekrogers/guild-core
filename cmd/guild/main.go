@@ -22,7 +22,7 @@ var rootCmd = &cobra.Command{
 🔨 MONITOR the workshop and artisan progress:
    guild workshop                    # Show active work
    guild commission status           # Commission progress
-   
+
 🎯 COORDINATE campaigns and strategy:
    guild campaign start "Q1 Goals"
    guild chat                        # Interactive coordination

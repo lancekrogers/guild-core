@@ -18,7 +18,7 @@ import (
 // PromptsServer implements the gRPC PromptService for Guild layered prompt management
 type PromptsServer struct {
 	promptspb.UnimplementedPromptServiceServer
-	
+
 	manager     layered.LayeredManager
 	subscribers map[string]chan *promptspb.PromptUpdateEvent // For streaming updates
 	subMutex    sync.RWMutex
@@ -237,7 +237,7 @@ func (s *PromptsServer) StreamPromptUpdates(req *promptspb.StreamPromptUpdatesRe
 			if !ok {
 				return nil
 			}
-			
+
 			// Filter by requested layers if specified
 			if len(req.Layers) > 0 {
 				found := false

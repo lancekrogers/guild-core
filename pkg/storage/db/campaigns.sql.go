@@ -85,7 +85,7 @@ func (q *Queries) ListCampaigns(ctx context.Context) ([]Campaign, error) {
 }
 
 const updateCampaignStatus = `-- name: UpdateCampaignStatus :exec
-UPDATE campaigns 
+UPDATE campaigns
 SET status = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 `

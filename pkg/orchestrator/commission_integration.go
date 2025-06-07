@@ -57,7 +57,7 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 	// Get providers from registry
 	providerRegistry := s.registry.Providers()
 	providers := make(map[string]interfaces.AIProvider)
-	
+
 	// Get all available providers
 	for _, providerName := range []string{"anthropic", "openai", "ollama", "deepseek", "mock"} {
 		provider, err := providerRegistry.GetProvider(providerName)
@@ -82,15 +82,15 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 	// Get prompt manager from registry
 	promptRegistryFromReg := s.registry.Prompts()
 	var promptManager prompts.Manager
-	
+
 	// Try to get prompt manager from registry first
 	if promptRegistryFromReg != nil {
 		// Use the global prompt registry
 		promptRegistry := prompts.GetRegistry()
-		
+
 		// PromptRegistry doesn't have RegisterPrompt method - using GetDefaultManager instead
 		// TODO: Implement proper prompt registration via manager strategies
-		
+
 		// Create a standard prompt manager
 		var err error
 		promptManager, err = promptRegistry.GetDefaultManager(context.Background())
@@ -117,7 +117,7 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 
 	// Create a component registry for the guild master factory
 	componentRegistry := manager.NewComponentRegistry()
-	
+
 	// Create Guild Master factory
 	s.guildMasterFactory = manager.NewDefaultGuildMasterFactory(layeredManager, providers, componentRegistry)
 
@@ -139,7 +139,7 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 			WithComponent("orchestrator").
 			WithOperation("initializeFromRegistry")
 	}
-	
+
 	// Create a board using the SQLite-enabled manager
 	kanbanBoard, err := kanbanMgr.CreateBoard(context.Background(), "commission-board", "Board for commission tasks")
 	if err != nil {
@@ -185,7 +185,7 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 			WithComponent("orchestrator").
 			WithOperation("initializeFromRegistry")
 	}
-	
+
 	s.commissionRepository = storageRegistry.GetCommissionRepository()
 	if s.commissionRepository == nil {
 		return gerror.New(gerror.ErrCodeOrchestration, "commission repository not available from storage registry", nil).
@@ -315,7 +315,7 @@ func (s *CommissionIntegrationService) ProcessObjectiveToTasks(
 			WithOperation("ProcessObjectiveToTasks")
 	}
 
-	// Load commission from storage  
+	// Load commission from storage
 	registryCommission, err := s.commissionRepository.GetCommission(ctx, objectiveID)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to load commission").
@@ -351,7 +351,7 @@ func (a *layeredManagerAdapter) BuildLayeredPrompt(ctx context.Context, artisanI
 	// Simple implementation using the basic Manager
 	var layers []layered.SystemPrompt
 	var compiled strings.Builder
-	
+
 	// Try to get a system prompt based on context
 	if turnCtx.CommissionID != "" {
 		// Use manager role for commission refinement
@@ -369,7 +369,7 @@ func (a *layeredManagerAdapter) BuildLayeredPrompt(ctx context.Context, artisanI
 			compiled.WriteString("\n\n")
 		}
 	}
-	
+
 	// Add context if available
 	if turnCtx.Context != nil {
 		contextStr, err := a.FormatContext(ctx, turnCtx.Context)
@@ -387,7 +387,7 @@ func (a *layeredManagerAdapter) BuildLayeredPrompt(ctx context.Context, artisanI
 			compiled.WriteString("\n\n")
 		}
 	}
-	
+
 	// Add turn instructions
 	if len(turnCtx.Instructions) > 0 {
 		instructions := strings.Join(turnCtx.Instructions, "\n")
@@ -402,7 +402,7 @@ func (a *layeredManagerAdapter) BuildLayeredPrompt(ctx context.Context, artisanI
 		})
 		compiled.WriteString(instructions)
 	}
-	
+
 	return &layered.LayeredPrompt{
 		Layers:      layers,
 		Compiled:    compiled.String(),
@@ -420,7 +420,7 @@ func (a *layeredManagerAdapter) GetPromptLayer(ctx context.Context, layer layere
 	// Simple implementation - return a basic prompt based on layer
 	var content string
 	var err error
-	
+
 	switch layer {
 	case layered.LayerRole:
 		content, err = a.GetSystemPrompt(ctx, "manager", "default")
@@ -431,11 +431,11 @@ func (a *layeredManagerAdapter) GetPromptLayer(ctx context.Context, layer layere
 			WithComponent("orchestrator").
 			WithOperation("GetPromptLayer")
 	}
-	
+
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &layered.SystemPrompt{
 		Layer:     layer,
 		ArtisanID: artisanID,
@@ -550,7 +550,7 @@ func (w *llmClientWrapper) ChatCompletion(ctx context.Context, req providers.Cha
 		}
 	}
 	prompt += "Assistant: "
-	
+
 	completion, err := w.client.Complete(ctx, prompt)
 	if err != nil {
 		return nil, err
@@ -572,7 +572,7 @@ func (w *llmClientWrapper) ChatCompletion(ctx context.Context, req providers.Cha
 		},
 		Usage: interfaces.UsageInfo{
 			PromptTokens:     100, // Estimate
-			CompletionTokens: 100, // Estimate  
+			CompletionTokens: 100, // Estimate
 			TotalTokens:      200,
 		},
 	}, nil
@@ -636,24 +636,24 @@ func (s *CommissionIntegrationService) addCommissionContext(ctx context.Context,
 
 // registryToManagerCommission converts a registry commission to a manager commission
 func (s *CommissionIntegrationService) registryToManagerCommission(registryCommission *registry.Commission) manager.Commission {
-	// Extract domain from commission if available  
+	// Extract domain from commission if available
 	domain := "general"
 	if registryCommission.Domain != nil && *registryCommission.Domain != "" {
 		domain = *registryCommission.Domain
 	}
-	
+
 	// Get description
 	description := ""
 	if registryCommission.Description != nil {
 		description = *registryCommission.Description
 	}
-	
+
 	// Convert context
 	context := make(map[string]interface{})
 	if registryCommission.Context != nil {
 		context = registryCommission.Context
 	}
-	
+
 	return manager.Commission{
 		ID:          registryCommission.ID,
 		Title:       registryCommission.Title,
@@ -777,12 +777,12 @@ func (k *kanbanStorageAdapter) GetKanbanTaskRepository() kanban.TaskRepository {
 			return adapter
 		}
 	}
-	
+
 	// Fallback: try to get the underlying storage registry
 	if sqliteReg, ok := k.storageRegistry.(interface{ GetStorageRegistry() storage.StorageRegistry }); ok {
 		return &kanbanTaskRepoAdapter{repo: sqliteReg.GetStorageRegistry().GetTaskRepository()}
 	}
-	
+
 	// Last resort: return an adapter that will handle the conversion
 	return &kanbanTaskRepoAdapter{repo: nil}
 }
@@ -830,14 +830,14 @@ func (k *kanbanMemoryStoreAdapter) ListKeys(ctx context.Context, bucket, prefix 
 	if err != nil {
 		return nil, err
 	}
-	
+
 	var filteredKeys []string
 	for _, key := range allKeys {
 		if strings.HasPrefix(key, prefix) {
 			filteredKeys = append(filteredKeys, key)
 		}
 	}
-	
+
 	return filteredKeys, nil
 }
 
@@ -939,7 +939,7 @@ func (k *kanbanTaskRepoAdapter) CreateTask(ctx context.Context, task interface{}
 					boardID = &bidStr
 				}
 			}
-			
+
 			storageTask := &storage.Task{
 				ID:            taskMap["ID"].(string),
 				BoardID:       boardID,                        // Use nullable BoardID
@@ -964,7 +964,7 @@ func (k *kanbanTaskRepoAdapter) CreateTask(ctx context.Context, task interface{}
 					storageTask.Metadata = metadataMap
 				}
 			}
-			
+
 			// Try to update first (upsert logic for kanban compatibility)
 			if err := k.repo.UpdateTask(ctx, storageTask); err != nil {
 				// If update fails, try to create (task might not exist yet)
@@ -988,7 +988,7 @@ func (k *kanbanTaskRepoAdapter) UpdateTask(ctx context.Context, task interface{}
 					boardID = &bidStr
 				}
 			}
-			
+
 			storageTask := &storage.Task{
 				ID:            taskMap["ID"].(string),
 				BoardID:       boardID,                        // Use nullable BoardID

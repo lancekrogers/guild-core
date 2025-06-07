@@ -40,7 +40,7 @@ func (s *ProviderTestSuite) RunBasicTests() {
 	s.t.Run("Capabilities", func(t *testing.T) { s.TestCapabilities() })
 	s.t.Run("ChatCompletion", func(t *testing.T) { s.TestChatCompletion() })
 	s.t.Run("ErrorHandling", func(t *testing.T) { s.TestErrorHandling() })
-	
+
 	if !s.config.SkipLive && s.config.LiveAPIKey != "" {
 		s.t.Run("LiveAPI", func(t *testing.T) { s.TestLiveAPI() })
 	}
@@ -49,20 +49,20 @@ func (s *ProviderTestSuite) RunBasicTests() {
 // TestCapabilities verifies provider capabilities
 func (s *ProviderTestSuite) TestCapabilities() {
 	caps := s.provider.GetCapabilities()
-	
+
 	// Basic validations
 	if caps.MaxTokens <= 0 {
 		s.t.Error("MaxTokens should be positive")
 	}
-	
+
 	if caps.ContextWindow <= 0 {
 		s.t.Error("ContextWindow should be positive")
 	}
-	
+
 	if len(caps.Models) == 0 {
 		s.t.Error("Provider should have at least one model")
 	}
-	
+
 	// Validate model info
 	for _, model := range caps.Models {
 		if model.ID == "" {
@@ -80,18 +80,18 @@ func (s *ProviderTestSuite) TestCapabilities() {
 // TestChatCompletion tests basic chat completion
 func (s *ProviderTestSuite) TestChatCompletion() {
 	ctx := context.Background()
-	
+
 	// Use first available model
 	caps := s.provider.GetCapabilities()
 	if len(caps.Models) == 0 {
 		s.t.Skip("No models available")
 	}
-	
+
 	model := caps.Models[0].ID
 	if s.config.TestModel != "" {
 		model = s.config.TestModel
 	}
-	
+
 	req := interfaces.ChatRequest{
 		Model: model,
 		Messages: []interfaces.ChatMessage{
@@ -100,7 +100,7 @@ func (s *ProviderTestSuite) TestChatCompletion() {
 		MaxTokens:   100,
 		Temperature: 0,
 	}
-	
+
 	// For unit tests, we'll use mocked responses
 	// Real providers should implement proper mocking in their test files
 	_, err := s.provider.ChatCompletion(ctx, req)
@@ -113,7 +113,7 @@ func (s *ProviderTestSuite) TestChatCompletion() {
 // TestErrorHandling tests error scenarios
 func (s *ProviderTestSuite) TestErrorHandling() {
 	ctx := context.Background()
-	
+
 	testCases := []struct {
 		name string
 		req  interfaces.ChatRequest
@@ -140,7 +140,7 @@ func (s *ProviderTestSuite) TestErrorHandling() {
 			},
 		},
 	}
-	
+
 	for _, tc := range testCases {
 		s.t.Run(tc.name, func(t *testing.T) {
 			_, err := s.provider.ChatCompletion(ctx, tc.req)
@@ -156,19 +156,19 @@ func (s *ProviderTestSuite) TestLiveAPI() {
 	if s.config.SkipLive {
 		s.t.Skip("Live API tests disabled")
 	}
-	
+
 	ctx := context.Background()
 	caps := s.provider.GetCapabilities()
-	
+
 	if len(caps.Models) == 0 {
 		s.t.Skip("No models available")
 	}
-	
+
 	model := caps.Models[0].ID
 	if s.config.TestModel != "" {
 		model = s.config.TestModel
 	}
-	
+
 	req := interfaces.ChatRequest{
 		Model: model,
 		Messages: []interfaces.ChatMessage{
@@ -177,16 +177,16 @@ func (s *ProviderTestSuite) TestLiveAPI() {
 		MaxTokens:   50,
 		Temperature: 0,
 	}
-	
+
 	resp, err := s.provider.ChatCompletion(ctx, req)
 	if err != nil {
 		s.t.Fatalf("Live API test failed: %v", err)
 	}
-	
+
 	if len(resp.Choices) == 0 {
 		s.t.Fatal("No choices in response")
 	}
-	
+
 	s.t.Logf("Live API response: %s", resp.Choices[0].Message.Content)
 }
 
@@ -209,7 +209,7 @@ func NewMockHTTPServer() *MockHTTPServer {
 	mock := &MockHTTPServer{
 		Requests: make([]RecordedRequest, 0),
 	}
-	
+
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Record request
 		body := make([]byte, 0)
@@ -217,14 +217,14 @@ func NewMockHTTPServer() *MockHTTPServer {
 			body, _ = io.ReadAll(r.Body)
 			r.Body.Close()
 		}
-		
+
 		mock.Requests = append(mock.Requests, RecordedRequest{
 			Method:  r.Method,
 			Path:    r.URL.Path,
 			Headers: r.Header.Clone(),
 			Body:    body,
 		})
-		
+
 		// Route based on path
 		switch r.URL.Path {
 		case "/v1/chat/completions", "/chat/completions":
@@ -243,7 +243,7 @@ func NewMockHTTPServer() *MockHTTPServer {
 			})
 		}
 	})
-	
+
 	mock.Server = httptest.NewServer(handler)
 	return mock
 }
@@ -254,7 +254,7 @@ func (m *MockHTTPServer) handleChatCompletion(w http.ResponseWriter, r *http.Req
 		w.WriteHeader(400)
 		return
 	}
-	
+
 	// Check for auth
 	auth := r.Header.Get("Authorization")
 	if auth == "" || auth == "Bearer " {
@@ -267,7 +267,7 @@ func (m *MockHTTPServer) handleChatCompletion(w http.ResponseWriter, r *http.Req
 		})
 		return
 	}
-	
+
 	// Mock response
 	response := map[string]interface{}{
 		"id":      "chatcmpl-mock123",
@@ -290,7 +290,7 @@ func (m *MockHTTPServer) handleChatCompletion(w http.ResponseWriter, r *http.Req
 			"total_tokens":      15,
 		},
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
@@ -298,7 +298,7 @@ func (m *MockHTTPServer) handleChatCompletion(w http.ResponseWriter, r *http.Req
 func (m *MockHTTPServer) handleEmbeddings(w http.ResponseWriter, r *http.Request, body []byte) {
 	var req map[string]interface{}
 	json.Unmarshal(body, &req)
-	
+
 	response := map[string]interface{}{
 		"object": "list",
 		"data": []map[string]interface{}{
@@ -314,7 +314,7 @@ func (m *MockHTTPServer) handleEmbeddings(w http.ResponseWriter, r *http.Request
 			"total_tokens":  5,
 		},
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
@@ -331,7 +331,7 @@ func (m *MockHTTPServer) handleModels(w http.ResponseWriter, r *http.Request) {
 			},
 		},
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }

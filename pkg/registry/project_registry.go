@@ -35,13 +35,13 @@ func (r *DefaultProjectRegistry) GetProjectManager() ProjectManager {
 func (r *DefaultProjectRegistry) SetProjectManager(manager ProjectManager) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	if manager == nil {
 		return gerror.New(gerror.ErrCodeInvalidInput, "project manager cannot be nil", nil).
 			WithComponent("registry").
 			WithOperation("SetProjectManager")
 	}
-	
+
 	r.manager = manager
 	return nil
 }
@@ -51,18 +51,18 @@ func (r *DefaultProjectRegistry) GetCurrentContext(ctx context.Context) (*Projec
 	r.mu.RLock()
 	manager := r.manager
 	r.mu.RUnlock()
-	
+
 	if manager == nil {
 		return nil, gerror.New(gerror.ErrCodeMissingRequired, "no project manager configured", nil).
 			WithComponent("registry").
 			WithOperation("GetCurrentContext")
 	}
-	
+
 	projCtx, err := manager.GetContext()
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// The manager already returns a *ProjectContext
 	return projCtx, nil
 }
@@ -75,7 +75,7 @@ func (r *DefaultProjectRegistry) WithProjectContext(ctx context.Context) (contex
 		// This allows the system to work without a project
 		return ctx, nil
 	}
-	
+
 	// Store in context using a registry-specific key
 	return context.WithValue(ctx, projectRegistryContextKey, projCtx), nil
 }

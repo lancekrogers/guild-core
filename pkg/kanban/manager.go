@@ -152,7 +152,7 @@ func (m *Manager) CreateBoard(ctx context.Context, name, description string) (*B
 			WithComponent("KanbanManager").
 			WithOperation("CreateBoard")
 	}
-	
+
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create board").
 			WithComponent("KanbanManager").
@@ -499,4 +499,3 @@ func (m *Manager) Close() error {
 
 	return nil
 }
-

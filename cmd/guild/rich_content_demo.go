@@ -31,11 +31,11 @@ func ProcessData(items []string) error {
     if len(items) == 0 {
         return fmt.Errorf("no items to process")
     }
-    
+
     for i, item := range items {
         fmt.Printf("Processing item %d: %s\n", i+1, item)
     }
-    
+
     return nil
 }
 ` + "```" + `
@@ -68,7 +68,7 @@ The main changes:
 ` + "```" + `
 === RUN   TestProcessData
 --- PASS: TestProcessData (0.00s)
-=== RUN   TestValidateInput  
+=== RUN   TestValidateInput
 --- PASS: TestValidateInput (0.00s)
 PASS
 ok      github.com/guild/example    0.123s
@@ -100,7 +100,7 @@ Please fix these issues before proceeding.`
 	fmt.Println("\n6. Agent Working:")
 	workingContent := `Refactoring in progress:
 - ✓ Updated interfaces
-- ✓ Migrated old implementations  
+- ✓ Migrated old implementations
 - ⏳ Running tests...
 - ⏳ Updating documentation`
 
@@ -116,7 +116,7 @@ The codebase analysis revealed **3 critical issues** and *5 minor improvements*.
 
 ### Critical Issues
 1. **Memory Leak** in the connection pool
-2. **Race Condition** in the worker threads  
+2. **Race Condition** in the worker threads
 3. **SQL Injection** vulnerability in user input handling
 
 ### Recommendations
@@ -136,7 +136,7 @@ var mu sync.Mutex
 func SafeUpdate(data *SharedData) {
     mu.Lock()
     defer mu.Unlock()
-    
+
     // Safe operations here
     data.Value++
 }

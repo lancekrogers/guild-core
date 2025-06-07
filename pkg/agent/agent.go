@@ -16,10 +16,10 @@ import (
 type Agent interface {
 	// Execute runs a task
 	Execute(ctx context.Context, request string) (string, error)
-	
+
 	// GetID returns the agent's ID
 	GetID() string
-	
+
 	// GetName returns the agent's name
 	GetName() string
 }
@@ -27,16 +27,16 @@ type Agent interface {
 // GuildArtisan is the primary agent interface
 type GuildArtisan interface {
 	Agent
-	
+
 	// GetToolRegistry returns the tool registry
 	GetToolRegistry() tools.Registry
-	
+
 	// GetCommissionManager returns the commission manager
 	GetCommissionManager() commission.CommissionManager
-	
+
 	// GetLLMClient returns the LLM client
 	GetLLMClient() providers.LLMClient
-	
+
 	// GetMemoryManager returns the memory manager
 	GetMemoryManager() memory.ChainManager
 }
@@ -50,19 +50,19 @@ type WorkerAgent struct {
 	ToolRegistry   tools.Registry
 	CommissionManager commission.CommissionManager
 	CostManager    CostManagerInterface
-	
+
 	// Context metadata
 	capabilities []string
 	description  string
 }
 
 // newWorkerAgent creates a new worker agent (private constructor)
-func newWorkerAgent(id, name string, llmClient providers.LLMClient, 
-	memoryManager memory.ChainManager, 
-	toolRegistry tools.Registry, 
+func newWorkerAgent(id, name string, llmClient providers.LLMClient,
+	memoryManager memory.ChainManager,
+	toolRegistry tools.Registry,
 	commissionManager commission.CommissionManager,
 	costManager CostManagerInterface) *WorkerAgent {
-	
+
 	return &WorkerAgent{
 		ID:                id,
 		Name:              name,
@@ -80,7 +80,7 @@ func (a *WorkerAgent) Execute(ctx context.Context, request string) (string, erro
 	if a.LLMClient != nil && a.CostManager != nil {
 		return a.CostAwareExecute(ctx, request)
 	}
-	
+
 	// Otherwise, execute with tools if available
 	if a.LLMClient == nil {
 		return "", gerror.New(gerror.ErrCodeValidation, "no LLM client configured", nil).
@@ -88,12 +88,12 @@ func (a *WorkerAgent) Execute(ctx context.Context, request string) (string, erro
 			WithOperation("Execute").
 			WithDetails("agent_id", a.ID)
 	}
-	
+
 	// If we have tools available, create a task executor for tool-enabled execution
 	if a.ToolRegistry != nil {
 		return a.executeWithTools(ctx, request)
 	}
-	
+
 	// Fall back to simple LLM execution without tools
 	response, err := a.LLMClient.Complete(ctx, request)
 	if err != nil {
@@ -102,7 +102,7 @@ func (a *WorkerAgent) Execute(ctx context.Context, request string) (string, erro
 			WithOperation("Execute").
 			WithDetails("agent_id", a.ID)
 	}
-	
+
 	return response, nil
 }
 
@@ -181,7 +181,7 @@ func (a *WorkerAgent) executeWithTools(ctx context.Context, request string) (str
 	// Get available tools for context
 	var toolContext string
 	var availableTools []string
-	
+
 	if a.ToolRegistry != nil {
 		availableTools = a.ToolRegistry.ListTools()
 		if len(availableTools) > 0 {
@@ -192,17 +192,17 @@ func (a *WorkerAgent) executeWithTools(ctx context.Context, request string) (str
 					toolDescriptions = append(toolDescriptions, fmt.Sprintf("- %s: %s", toolName, tool.Description()))
 				}
 			}
-			
+
 			if len(toolDescriptions) > 0 {
 				toolContext = "\n\nAvailable tools:\n" + strings.Join(toolDescriptions, "\n")
 				toolContext += "\n\nYou can reference these tools in your response and I can execute them if needed."
 			}
 		}
 	}
-	
+
 	// Create enhanced prompt with tool context
 	enhancedRequest := request + toolContext
-	
+
 	// Execute with LLM
 	response, err := a.LLMClient.Complete(ctx, enhancedRequest)
 	if err != nil {
@@ -211,11 +211,11 @@ func (a *WorkerAgent) executeWithTools(ctx context.Context, request string) (str
 			WithOperation("executeWithTools").
 			WithDetails("agent_id", a.ID)
 	}
-	
+
 	// TODO: Parse the response for tool calls and execute them
 	// For now, we're just providing tool awareness to the LLM
 	// Future enhancement: Parse response for tool execution requests and execute them
-	
+
 	return response, nil
 }
 
@@ -225,14 +225,14 @@ type ManagerAgent struct {
 }
 
 // newManagerAgent creates a new manager agent (private constructor)
-func newManagerAgent(id, name string, llmClient providers.LLMClient, 
-	memoryManager memory.ChainManager, 
-	toolRegistry tools.Registry, 
+func newManagerAgent(id, name string, llmClient providers.LLMClient,
+	memoryManager memory.ChainManager,
+	toolRegistry tools.Registry,
 	commissionManager commission.CommissionManager,
 	costManager CostManagerInterface) *ManagerAgent {
-	
+
 	worker := newWorkerAgent(id, name, llmClient, memoryManager, toolRegistry, commissionManager, costManager)
-	
+
 	return &ManagerAgent{
 		WorkerAgent: *worker,
 	}

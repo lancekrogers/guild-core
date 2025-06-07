@@ -33,14 +33,14 @@ const (
 	// Claude 4 models - hybrid models with near-instant and extended thinking modes
 	ClaudeOpus4  = "claude-opus-4"   // $15/$75 per M tokens, 32K max output
 	ClaudeSonnet4 = "claude-sonnet-4" // $3/$15 per M tokens, 64K max output
-	
+
 	// Claude 3.7 models
 	ClaudeSonnet37 = "claude-3.7-sonnet"
-	
+
 	// Claude 3.5 models
 	ClaudeSonnet35 = "claude-3-5-sonnet-20241022"
 	ClaudeHaiku35  = "claude-3-5-haiku-20241022"
-	
+
 	// Claude 3 models
 	ClaudeOpus3 = "claude-3-opus-20240229"
 )
@@ -52,12 +52,12 @@ var SupportedFeatures = map[string]FeatureInfo{
 	"code-review":        {Name: "code-review", Type: "coding", Description: "Code analysis and review capabilities"},
 	"debugging":          {Name: "debugging", Type: "coding", Description: "Debug code and identify issues"},
 	"refactoring":        {Name: "refactoring", Type: "coding", Description: "Code refactoring and optimization"},
-	
+
 	// MCP Integration
 	"mcp-tools":          {Name: "mcp-tools", Type: "integration", Description: "Model Context Protocol tool integration"},
 	"file-processing":    {Name: "file-processing", Type: "integration", Description: "File system operations"},
 	"git-integration":    {Name: "git-integration", Type: "integration", Description: "Git repository operations"},
-	
+
 	// Advanced Features
 	"multi-turn":         {Name: "multi-turn", Type: "conversation", Description: "Multi-turn conversation support"},
 	"session-management": {Name: "session-management", Type: "conversation", Description: "Session persistence and resumption"},
@@ -106,22 +106,22 @@ func NewClient(binPath, model string) *Client {
 	if binPath == "" {
 		binPath = "claude" // Assumes claude is in PATH
 	}
-	
+
 	// Create claude client
 	claudeClient := claude.NewClient(binPath)
-	
+
 	// Set up default options
 	defaultOpts := &claude.RunOptions{
 		Format:   claude.TextOutput,
 		MaxTurns: 10,
 		Verbose:  false,
 	}
-	
+
 	// Configure model if specified
 	if model != "" {
 		// Claude Code now supports model selection via --model flag
 		defaultOpts.Model = model
-		
+
 		// Also configure model-specific system prompts based on common model names
 		switch model {
 		// Claude 4 models (Released May 2025)
@@ -179,7 +179,7 @@ func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
 			WithOperation("Complete").
 			WithDetails("provider", "claudecode")
 	}
-	
+
 	return result.Result, nil
 }
 
@@ -188,14 +188,14 @@ func (c *Client) CompleteWithOptions(ctx context.Context, prompt string, opts *c
 	if opts == nil {
 		opts = c.defaultOpts
 	}
-	
+
 	return c.claudeClient.RunPrompt(prompt, opts)
 }
 
 // StreamComplete generates a streaming completion
 func (c *Client) StreamComplete(ctx context.Context, prompt string) (<-chan string, <-chan error) {
 	messageChan, errorChan := c.claudeClient.StreamPrompt(ctx, prompt, c.defaultOpts)
-	
+
 	// Convert Message channel to string channel
 	stringChan := make(chan string)
 	go func() {
@@ -206,7 +206,7 @@ func (c *Client) StreamComplete(ctx context.Context, prompt string) (<-chan stri
 			}
 		}
 	}()
-	
+
 	return stringChan, errorChan
 }
 
@@ -215,7 +215,7 @@ func (c *Client) ContinueConversation(ctx context.Context, sessionID, prompt str
 	opts := *c.defaultOpts // Copy default options
 	opts.ResumeID = sessionID
 	opts.Continue = true
-	
+
 	return c.claudeClient.RunPrompt(prompt, &opts)
 }
 
@@ -287,26 +287,26 @@ func GetRecommendedConfiguration(useCase string) *claude.RunOptions {
 	case "coding":
 		baseOpts.SystemPrompt = "You are an expert software engineer. Write clean, efficient, well-documented code. Follow best practices and explain your approach."
 		baseOpts.MaxTurns = 20 // Allow longer conversations for complex coding tasks
-		
+
 	case "debugging":
 		baseOpts.SystemPrompt = "You are an expert debugger. Analyze code carefully, identify issues, and provide clear explanations and fixes."
 		baseOpts.Format = claude.JSONOutput // Structured output for debugging info
-		
+
 	case "code-review":
 		baseOpts.SystemPrompt = "You are an expert code reviewer. Focus on code quality, best practices, security, and maintainability."
 		baseOpts.MaxTurns = 15
-		
+
 	case "refactoring":
 		baseOpts.SystemPrompt = "You are an expert at code refactoring. Improve code structure, readability, and performance while maintaining functionality."
-		
+
 	case "architecture":
 		baseOpts.SystemPrompt = "You are a software architect. Design scalable, maintainable systems and provide architectural guidance."
 		baseOpts.MaxTurns = 25 // Architecture discussions can be lengthy
-		
+
 	case "learning":
 		baseOpts.SystemPrompt = "You are a patient programming teacher. Explain concepts clearly with examples and help learners understand."
 		baseOpts.MaxTurns = 30 // Learning conversations can be long
-		
+
 	default:
 		baseOpts.SystemPrompt = "You are a helpful AI assistant with expertise in software development."
 	}
@@ -329,7 +329,7 @@ func (c *Client) CreateCompletion(ctx context.Context, req *interfaces.Completio
 	if c.defaultOpts.Model != "" {
 		modelUsed = c.defaultOpts.Model
 	}
-	
+
 	return &interfaces.CompletionResponse{
 		Text:         result.Result,
 		TokensUsed:   0, // Claude Code doesn't report token usage

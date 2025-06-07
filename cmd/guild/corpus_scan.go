@@ -23,12 +23,12 @@ var corpusScanCmd = &cobra.Command{
 	Use:   "scan",
 	Short: "Scan corpus and update RAG embeddings",
 	Long: `Scans the corpus directory for new or modified documents and updates the RAG system embeddings.
-	
-This command is used to synchronize human-added documents in the corpus directory with the 
-RAG (Retrieval-Augmented Generation) system. It detects new files, modified files, and 
+
+This command is used to synchronize human-added documents in the corpus directory with the
+RAG (Retrieval-Augmented Generation) system. It detects new files, modified files, and
 deleted files, updating the vector embeddings accordingly.
 
-The scan command ensures that all human-curated knowledge in the corpus is available 
+The scan command ensures that all human-curated knowledge in the corpus is available
 to AI agents through the RAG system's semantic search capabilities.`,
 	Run: runCorpusScan,
 }
@@ -45,7 +45,7 @@ type ScanResult struct {
 
 func runCorpusScan(cmd *cobra.Command, args []string) {
 	ctx := context.Background()
-	
+
 	// Get flags
 	dryRun, _ := cmd.Flags().GetBool("dry-run")
 	verbose, _ := cmd.Flags().GetBool("verbose")
@@ -53,11 +53,11 @@ func runCorpusScan(cmd *cobra.Command, args []string) {
 	providerType, _ := cmd.Flags().GetString("provider")
 	embeddingModel, _ := cmd.Flags().GetString("model")
 	useGlobal, _ := cmd.Flags().GetBool("global")
-	
+
 	// Get corpus configuration
 	var cfg corpus.Config
 	var err error
-	
+
 	if useGlobal {
 		// Use global config when --global flag is set
 		cfg, err = corpus.GetGlobalConfig()
@@ -65,28 +65,28 @@ func runCorpusScan(cmd *cobra.Command, args []string) {
 		// Try project config first, fall back to global
 		cfg, err = corpus.GetConfigWithFallback(ctx)
 	}
-	
+
 	if err != nil {
 		fmt.Printf("Error getting corpus configuration: %v\n", err)
 		fmt.Println("Run 'guild init' to initialize a project")
 		return
 	}
-	
+
 	if verbose {
 		fmt.Printf("Corpus path: %s\n", cfg.CorpusPath)
 		fmt.Printf("Scanning for changes...\n\n")
 	}
-	
+
 	// Initialize RAG system
 	ragSystem, err := initializeRAGSystem(ctx, cfg, providerType, embeddingModel, verbose)
 	if err != nil {
 		fmt.Printf("Error initializing RAG system: %v\n", err)
 		return
 	}
-	
+
 	// Perform the scan
 	result := performCorpusScan(ctx, cfg, ragSystem, dryRun, verbose, forceRebuild)
-	
+
 	// Display results
 	displayScanResults(result, dryRun)
 }
@@ -95,9 +95,9 @@ func initializeRAGSystem(ctx context.Context, cfg corpus.Config, providerType, e
 	// Create provider based on type or auto-detect
 	var provider interfaces.AIProvider
 	var err error
-	
+
 	factory := providers.NewFactoryV2()
-	
+
 	if providerType != "" {
 		// Use specified provider
 		var pType providers.ProviderType
@@ -114,7 +114,7 @@ func initializeRAGSystem(ctx context.Context, cfg corpus.Config, providerType, e
 				WithOperation("initializeRAGSystem").
 				WithDetails("provider_type", providerType)
 		}
-		
+
 		// Get API key or base URL from environment
 		apiKey := ""
 		if pType == providers.ProviderOllama {
@@ -132,7 +132,7 @@ func initializeRAGSystem(ctx context.Context, cfg corpus.Config, providerType, e
 					WithDetails("env_key", envKey)
 			}
 		}
-		
+
 		provider, err = factory.CreateAIProvider(pType, apiKey)
 		if err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create provider").
@@ -146,7 +146,7 @@ func initializeRAGSystem(ctx context.Context, cfg corpus.Config, providerType, e
 			fmt.Println("Auto-detecting available AI provider...")
 		}
 	}
-	
+
 	// Create vector store configuration
 	vectorConfig := &vector.StoreConfig{
 		Type:              vector.StoreTypeChromem,
@@ -157,7 +157,7 @@ func initializeRAGSystem(ctx context.Context, cfg corpus.Config, providerType, e
 			DefaultCollection: "corpus",
 		},
 	}
-	
+
 	// Create vector store
 	vectorStore, err := vector.NewVectorStore(ctx, vectorConfig)
 	if err != nil {
@@ -165,7 +165,7 @@ func initializeRAGSystem(ctx context.Context, cfg corpus.Config, providerType, e
 			WithComponent("cli").
 			WithOperation("initializeRAGSystem")
 	}
-	
+
 	// Create RAG configuration
 	ragConfig := rag.Config{
 		ChunkSize:    1000,
@@ -174,10 +174,10 @@ func initializeRAGSystem(ctx context.Context, cfg corpus.Config, providerType, e
 		UseCorpus:    true,
 		CorpusPath:   cfg.CorpusPath,
 	}
-	
+
 	// Create retriever with existing vector store
 	retriever := rag.NewRetrieverWithStore(vectorStore, ragConfig)
-	
+
 	return retriever, nil
 }
 
@@ -185,7 +185,7 @@ func performCorpusScan(ctx context.Context, cfg corpus.Config, ragSystem *rag.Re
 	result := ScanResult{
 		StartTime: time.Now(),
 	}
-	
+
 	// Get current corpus documents
 	corpusFilePaths, err := corpus.List(ctx, cfg)
 	if err != nil {
@@ -195,7 +195,7 @@ func performCorpusScan(ctx context.Context, cfg corpus.Config, ragSystem *rag.Re
 		result.EndTime = time.Now()
 		return result
 	}
-	
+
 	// Build a map of file paths to modification times
 	corpusFiles := make(map[string]time.Time)
 	for _, filePath := range corpusFilePaths {
@@ -204,15 +204,15 @@ func performCorpusScan(ctx context.Context, cfg corpus.Config, ragSystem *rag.Re
 			corpusFiles[filePath] = info.ModTime()
 		}
 	}
-	
+
 	// Get embeddings metadata to track what's already indexed
 	embeddingsMeta := getEmbeddingsMetadata(cfg)
-	
+
 	// Check each corpus file
 	for _, filePath := range corpusFilePaths {
 		needsUpdate := false
 		modTime := corpusFiles[filePath]
-		
+
 		if forceRebuild {
 			needsUpdate = true
 			// When force rebuilding, treat existing files as modified
@@ -240,7 +240,7 @@ func performCorpusScan(ctx context.Context, cfg corpus.Config, ragSystem *rag.Re
 				}
 			}
 		}
-		
+
 		if needsUpdate && !dryRun {
 			// Load full document content
 			fullDoc, err := corpus.Load(ctx, filePath)
@@ -251,7 +251,7 @@ func performCorpusScan(ctx context.Context, cfg corpus.Config, ragSystem *rag.Re
 					WithDetails("file_path", filePath))
 				continue
 			}
-			
+
 			// Add to RAG system
 			if err := addDocumentToRAG(ctx, ragSystem, fullDoc); err != nil {
 				result.Errors = append(result.Errors, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to add document to RAG").
@@ -260,12 +260,12 @@ func performCorpusScan(ctx context.Context, cfg corpus.Config, ragSystem *rag.Re
 					WithDetails("file_path", filePath))
 				continue
 			}
-			
+
 			// Update metadata
 			updateEmbeddingMetadata(cfg, filePath, time.Now())
 		}
 	}
-	
+
 	// Check for deleted files
 	for filePath := range embeddingsMeta {
 		if _, exists := corpusFiles[filePath]; !exists {
@@ -273,7 +273,7 @@ func performCorpusScan(ctx context.Context, cfg corpus.Config, ragSystem *rag.Re
 			if verbose {
 				fmt.Printf("Deleted file: %s\n", filePath)
 			}
-			
+
 			if !dryRun {
 				// Remove from RAG system
 				if err := removeDocumentFromRAG(ctx, ragSystem, filePath); err != nil {
@@ -285,7 +285,7 @@ func performCorpusScan(ctx context.Context, cfg corpus.Config, ragSystem *rag.Re
 			}
 		}
 	}
-	
+
 	result.EndTime = time.Now()
 	return result
 }
@@ -303,15 +303,15 @@ func removeDocumentFromRAG(ctx context.Context, ragSystem *rag.Retriever, filePa
 func getEmbeddingsMetadata(cfg corpus.Config) map[string]time.Time {
 	// Read metadata file that tracks when each document was last indexed
 	metadataPath := filepath.Join(cfg.CorpusPath, "..", "embeddings", ".metadata.json")
-	
+
 	metadata := make(map[string]time.Time)
-	
+
 	data, err := os.ReadFile(metadataPath)
 	if err != nil {
 		// File doesn't exist yet, return empty map
 		return metadata
 	}
-	
+
 	// Parse JSON metadata
 	// Format: {"file_path": "2024-01-01T00:00:00Z", ...}
 	// This is a simplified version - in production, use proper JSON parsing
@@ -324,72 +324,72 @@ func getEmbeddingsMetadata(cfg corpus.Config) map[string]time.Time {
 			}
 		}
 	}
-	
+
 	return metadata
 }
 
 func updateEmbeddingMetadata(cfg corpus.Config, filePath string, indexTime time.Time) error {
 	metadataPath := filepath.Join(cfg.CorpusPath, "..", "embeddings", ".metadata.json")
-	
+
 	// Ensure directory exists
 	if err := os.MkdirAll(filepath.Dir(metadataPath), 0755); err != nil {
 		return err
 	}
-	
+
 	// Read existing metadata
 	metadata := getEmbeddingsMetadata(cfg)
-	
+
 	// Update entry
 	metadata[filePath] = indexTime
-	
+
 	// Write back
 	// This is a simplified version - in production, use proper JSON encoding
 	var lines []string
 	for path, t := range metadata {
 		lines = append(lines, fmt.Sprintf("%s\t%s", path, t.Format(time.RFC3339)))
 	}
-	
+
 	return os.WriteFile(metadataPath, []byte(strings.Join(lines, "\n")), 0644)
 }
 
 func displayScanResults(result ScanResult, dryRun bool) {
 	duration := result.EndTime.Sub(result.StartTime)
-	
+
 	fmt.Println("\n=== Corpus Scan Results ===")
 	fmt.Printf("Scan duration: %v\n", duration)
-	
+
 	if dryRun {
 		fmt.Println("\n[DRY RUN - No changes were made]")
 	}
-	
+
 	if len(result.NewFiles) > 0 {
 		fmt.Printf("\nNew files (%d):\n", len(result.NewFiles))
 		for _, f := range result.NewFiles {
 			fmt.Printf("  + %s\n", filepath.Base(f))
 		}
 	}
-	
+
 	if len(result.ModifiedFiles) > 0 {
 		fmt.Printf("\nModified files (%d):\n", len(result.ModifiedFiles))
 		for _, f := range result.ModifiedFiles {
 			fmt.Printf("  ~ %s\n", filepath.Base(f))
 		}
 	}
-	
+
 	if len(result.DeletedFiles) > 0 {
 		fmt.Printf("\nDeleted files (%d):\n", len(result.DeletedFiles))
 		for _, f := range result.DeletedFiles {
 			fmt.Printf("  - %s\n", filepath.Base(f))
 		}
 	}
-	
+
 	if len(result.Errors) > 0 {
 		fmt.Printf("\nErrors (%d):\n", len(result.Errors))
 		for _, err := range result.Errors {
 			fmt.Printf("  ! %v\n", err)
 		}
 	}
-	
+
 	total := len(result.NewFiles) + len(result.ModifiedFiles) + len(result.DeletedFiles)
 	if total == 0 && len(result.Errors) == 0 {
 		fmt.Println("\nNo changes detected. Corpus and RAG system are in sync.")
@@ -401,7 +401,7 @@ func displayScanResults(result ScanResult, dryRun bool) {
 func init() {
 	// Add scan command to corpus
 	corpusCmd.AddCommand(corpusScanCmd)
-	
+
 	// Add flags
 	corpusScanCmd.Flags().BoolP("dry-run", "n", false, "Show what would be done without making changes")
 	corpusScanCmd.Flags().BoolP("verbose", "v", false, "Show detailed progress")

@@ -80,7 +80,7 @@ agents:
     provider: "anthropic"
     cost_magnitude: 0.75
     context_window: 200000
-    
+
   - id: "frontend-dev"
     role: "frontend_developer"
     capabilities: ["javascript", "react", "css", "ui/ux"]
@@ -91,7 +91,7 @@ agents:
     provider: "openai"
     cost_magnitude: 1.0
     context_window: 128000
-    
+
   - id: "researcher"
     role: "research_analyst"
     capabilities: ["research", "documentation", "analysis"]
@@ -348,7 +348,7 @@ agents:
    ```bash
    # Check for build issues
    go build ./...
-   
+
    # Use the build task
    task build
    ```
@@ -358,7 +358,7 @@ agents:
    # Check agent status
    guild chat
    > /status
-   
+
    # Restart specific agent
    > /restart backend-dev
    ```
@@ -384,7 +384,7 @@ agents:
 - Single objective file
 - Basic CRUD operations
 
-### 2. Full-Stack Application  
+### 2. Full-Stack Application
 - 5 agents (backend, frontend, designer, tester, devops)
 - Hierarchical objectives
 - Complete development lifecycle

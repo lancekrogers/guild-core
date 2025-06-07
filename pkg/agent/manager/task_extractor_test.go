@@ -181,7 +181,7 @@ func TestTaskExtractor_ExtractTasks(t *testing.T) {
 - Set up Express.js server with proper middleware
 - Implement JWT authentication for secure access
 
-## Frontend Architecture  
+## Frontend Architecture
 - Create React application with TypeScript
 - Set up routing and state management`,
 					Type: FileTypeMarkdown,

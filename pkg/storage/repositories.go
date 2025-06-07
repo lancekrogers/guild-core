@@ -131,7 +131,7 @@ func (r *SQLiteTaskRepository) DeleteTask(ctx context.Context, id string) error 
 			WithComponent("SQLiteTaskRepository").
 			WithOperation("DeleteTask")
 	}
-	
+
 	// Then delete the task
 	if err := r.database.Queries().DeleteTask(ctx, id); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete task").
@@ -345,7 +345,7 @@ func (r *SQLiteTaskRepository) GetTaskHistory(ctx context.Context, taskID string
 		if dbEvent.CreatedAt != nil {
 			createdAt = *dbEvent.CreatedAt
 		}
-		
+
 		events[i] = &TaskEvent{
 			ID:        dbEvent.ID,
 			TaskID:    dbEvent.TaskID,
@@ -376,7 +376,7 @@ func (r *SQLiteTaskRepository) GetAgentWorkload(ctx context.Context) ([]*AgentWo
 		if dbWorkload.ActiveTasks != nil {
 			activeTasks = int64(*dbWorkload.ActiveTasks)
 		}
-		
+
 		workloads[i] = &AgentWorkload{
 			ID:          dbWorkload.ID,
 			Name:        dbWorkload.Name,
@@ -395,7 +395,7 @@ func (r *SQLiteTaskRepository) convertDBTaskToTask(dbTask db.Task) (*Task, error
 	if dbTask.StoryPoints != nil {
 		storyPoints = int32(*dbTask.StoryPoints)
 	}
-	
+
 	var createdAt, updatedAt time.Time
 	if dbTask.CreatedAt != nil {
 		createdAt = *dbTask.CreatedAt
@@ -407,7 +407,7 @@ func (r *SQLiteTaskRepository) convertDBTaskToTask(dbTask db.Task) (*Task, error
 	task := &Task{
 		ID:              dbTask.ID,
 		BoardID:         dbTask.BoardID,        // Nullable BoardID from new schema
-		CommissionID:    dbTask.CommissionID,   // Keep for backward compatibility 
+		CommissionID:    dbTask.CommissionID,   // Keep for backward compatibility
 		AssignedAgentID: dbTask.AssignedAgentID,
 		Title:           dbTask.Title,
 		Description:     dbTask.Description,
@@ -710,7 +710,7 @@ func (r *SQLiteAgentRepository) CreateAgent(ctx context.Context, agent *Agent) e
 	// Convert capabilities and tools to JSON
 	var capabilitiesJSON, toolsJSON []byte
 	var err error
-	
+
 	if agent.Capabilities != nil {
 		capabilitiesJSON, err = json.Marshal(agent.Capabilities)
 		if err != nil {
@@ -719,7 +719,7 @@ func (r *SQLiteAgentRepository) CreateAgent(ctx context.Context, agent *Agent) e
 				WithOperation("CreateAgent")
 		}
 	}
-	
+
 	if agent.Tools != nil {
 		toolsJSON, err = json.Marshal(agent.Tools)
 		if err != nil {
@@ -808,7 +808,7 @@ func (r *SQLiteAgentRepository) UpdateAgent(ctx context.Context, agent *Agent) e
 	// Convert capabilities and tools to JSON
 	var capabilitiesJSON, toolsJSON []byte
 	var err error
-	
+
 	if agent.Capabilities != nil {
 		capabilitiesJSON, err = json.Marshal(agent.Capabilities)
 		if err != nil {
@@ -817,7 +817,7 @@ func (r *SQLiteAgentRepository) UpdateAgent(ctx context.Context, agent *Agent) e
 				WithOperation("CreateAgent")
 		}
 	}
-	
+
 	if agent.Tools != nil {
 		toolsJSON, err = json.Marshal(agent.Tools)
 		if err != nil {
@@ -973,7 +973,7 @@ func (r *SQLiteTaskRepository) convertDBKanbanTaskToTask(dbTask db.ListTasksForK
 	if dbTask.StoryPoints != nil {
 		storyPoints = int32(*dbTask.StoryPoints)
 	}
-	
+
 	var createdAt, updatedAt time.Time
 	if dbTask.CreatedAt != nil {
 		createdAt = *dbTask.CreatedAt

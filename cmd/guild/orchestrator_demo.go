@@ -62,86 +62,86 @@ func runOrchestratorDemo(cmd *cobra.Command, args []string) error {
 	}
 
 	ctx := context.Background()
-	
+
 	// Create and initialize registry
 	componentRegistry := registry.NewComponentRegistry()
 	config := registry.Config{
 		Agents: registry.AgentConfigYaml{DefaultType: "worker"},
 		Tools:  registry.ToolConfig{EnabledTools: []string{"shell", "git", "http_client"}},
 	}
-	
+
 	if err := componentRegistry.Initialize(ctx, config); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize registry").
 			WithComponent("cli").
 			WithOperation("runOrchestratorDemo")
 	}
-	
+
 	// Register demo agents and tools
 	if err := registerOrchestratorDemoAgents(componentRegistry); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register demo agents").
 			WithComponent("cli").WithOperation("runOrchestratorDemo")
 	}
-	
+
 	if err := registerOrchestratorDemoTools(componentRegistry); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register demo tools").
 			WithComponent("cli").WithOperation("runOrchestratorDemo")
 	}
-	
+
 	// Create mock kanban board
 	kanbanBoard := &OrchestratorMockKanbanBoard{
 		tasks: make(map[string]*kanban.Task),
 	}
-	
+
 	// Create mock manager agent
 	managerAgent := &OrchestratorMockManagerAgent{}
-	
+
 	// Create cost-aware planner
 	planner := orchestrator.DefaultCostAwareTaskPlannerFactory(
-		managerAgent, 
-		kanbanBoard, 
-		componentRegistry, 
+		managerAgent,
+		kanbanBoard,
+		componentRegistry,
 		orchestratorMaxCostFilter,
 	)
-	
+
 	// Create objective
 	obj := &commission.Commission{
 		Title:       "Development Project",
 		Description: orchestratorObjectiveText,
 	}
-	
+
 	// Create guild config
 	guild := createOrchestratorGuildConfig()
-	
+
 	// Plan tasks
 	fmt.Printf("🏰 Guild Orchestrator - Cost-Aware Task Planning\n")
 	fmt.Printf("═══════════════════════════════════════════════\n\n")
-	
+
 	fmt.Printf("📋 Objective: %s\n", orchestratorObjectiveText)
 	fmt.Printf("🔍 Max Cost Filter: %d (excluding agents above this cost)\n", orchestratorMaxCostFilter)
 	fmt.Printf("🎯 Strategy: %s\n\n", orchestratorAssignmentStrategy)
-	
+
 	// Plan tasks using the orchestrator
 	tasks, err := planner.PlanTasks(ctx, obj, guild)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to plan tasks").
 			WithComponent("cli").WithOperation("runOrchestratorDemo").WithDetails("objective", orchestratorObjectiveText)
 	}
-	
+
 	fmt.Printf("✅ Planned %d tasks:\n", len(tasks))
 	for i, task := range tasks {
 		estimated := task.Metadata["estimated_cost"]
 		cheapest := task.Metadata["cheapest_agent"]
-		fmt.Printf("   %d. %s (Est. cost: %s, Cheapest: %s)\n", 
+		fmt.Printf("   %d. %s (Est. cost: %s, Cheapest: %s)\n",
 			i+1, task.Title, estimated, cheapest)
 	}
 	fmt.Printf("\n")
-	
+
 	// Assign tasks with selected strategy
 	strategyEnum := parseAssignmentStrategy(orchestratorAssignmentStrategy)
-	
+
 	// Apply cost filter to exclude expensive agents if requested
 	maxCostPerTask := min(8, orchestratorMaxCostFilter) // Cap at max Fibonacci value
-	
+
 	options := orchestrator.AssignmentOptions{
 		MaxCostMagnitude: maxCostPerTask,
 		Strategy:         strategyEnum,
@@ -152,18 +152,18 @@ func runOrchestratorDemo(cmd *cobra.Command, args []string) error {
 			"TASK-003": {"file_operations", "network"},
 		},
 	}
-	
+
 	summary, err := planner.AssignTasksWithOptions(ctx, tasks, guild, options)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to assign tasks").
 			WithComponent("cli").WithOperation("runOrchestratorDemo").WithDetails("strategy", orchestratorAssignmentStrategy)
 	}
-	
+
 	// Display results
 	if orchestratorOutputJSON {
 		return outputAssignmentJSON(summary)
 	}
-	
+
 	return displayAssignmentResults(summary, orchestratorShowAlternatives, orchestratorShowWorkload)
 }
 
@@ -181,14 +181,14 @@ func parseAssignmentStrategy(strategy string) orchestrator.CostAssignmentStrateg
 func displayAssignmentResults(summary *orchestrator.AssignmentSummary, showAlternatives, showWorkload bool) error {
 	fmt.Printf("🎯 Task Assignment Results\n")
 	fmt.Printf("═══════════════════════════\n\n")
-	
+
 	// Assignment details
 	for _, assignment := range summary.Assignments {
 		costIcon := getOrchestratorCostIcon(assignment.TotalCost)
 		fmt.Printf("%s Task: %s\n", costIcon, assignment.TaskID)
 		fmt.Printf("   Agent: %s (%s)\n", assignment.AgentInfo.Name, assignment.AgentInfo.Type)
 		fmt.Printf("   Cost: %d | Reason: %s\n", assignment.TotalCost, assignment.Reason)
-		
+
 		if len(assignment.Tools) > 0 {
 			fmt.Printf("   Tools: ")
 			for i, tool := range assignment.Tools {
@@ -197,7 +197,7 @@ func displayAssignmentResults(summary *orchestrator.AssignmentSummary, showAlter
 			}
 			fmt.Printf("\n")
 		}
-		
+
 		if orchestratorShowAlternatives && len(assignment.Alternatives) > 0 {
 			fmt.Printf("   Alternatives: ")
 			for i, alt := range assignment.Alternatives {
@@ -208,7 +208,7 @@ func displayAssignmentResults(summary *orchestrator.AssignmentSummary, showAlter
 		}
 		fmt.Printf("\n")
 	}
-	
+
 	// Summary statistics
 	fmt.Printf("📊 Summary Statistics\n")
 	fmt.Printf("════════════════════\n")
@@ -217,7 +217,7 @@ func displayAssignmentResults(summary *orchestrator.AssignmentSummary, showAlter
 	fmt.Printf("Average Cost: %.1f\n", summary.AverageCost)
 	// Removed confusing budget utilization metric
 	fmt.Printf("\n")
-	
+
 	// Cost breakdown
 	fmt.Printf("💰 Cost Breakdown by Agent Type\n")
 	fmt.Printf("═══════════════════════════════\n")
@@ -226,7 +226,7 @@ func displayAssignmentResults(summary *orchestrator.AssignmentSummary, showAlter
 		fmt.Printf("%s: %d (%.1f%%)\n", agentType, cost, percentage)
 	}
 	fmt.Printf("\n")
-	
+
 	// Workload distribution
 	if orchestratorShowWorkload {
 		fmt.Printf("👥 Agent Workload Distribution\n")
@@ -236,7 +236,7 @@ func displayAssignmentResults(summary *orchestrator.AssignmentSummary, showAlter
 		}
 		fmt.Printf("\n")
 	}
-	
+
 	// Cost efficiency analysis based on average cost
 	if summary.AverageCost <= 2 {
 		fmt.Printf("💡 Cost Profile: ECONOMICAL - Using mostly low-cost agents\n")
@@ -245,7 +245,7 @@ func displayAssignmentResults(summary *orchestrator.AssignmentSummary, showAlter
 	} else {
 		fmt.Printf("💡 Cost Profile: PREMIUM - Using high-cost agents for quality\n")
 	}
-	
+
 	return nil
 }
 
@@ -255,7 +255,7 @@ func outputAssignmentJSON(summary *orchestrator.AssignmentSummary) error {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal summary to JSON").
 			WithComponent("cli").WithOperation("outputAssignmentJSON")
 	}
-	
+
 	fmt.Println(string(data))
 	return nil
 }
@@ -263,7 +263,7 @@ func outputAssignmentJSON(summary *orchestrator.AssignmentSummary) error {
 func showAssignmentStrategies() error {
 	fmt.Printf("🎯 Available Assignment Strategies\n")
 	fmt.Printf("═════════════════════════════════\n\n")
-	
+
 	strategies := []struct {
 		name        string
 		description string
@@ -285,13 +285,13 @@ func showAssignmentStrategies() error {
 			use_case:    "Complex tasks, quality-critical projects",
 		},
 	}
-	
+
 	for _, strategy := range strategies {
 		fmt.Printf("🔹 **%s**\n", strategy.name)
 		fmt.Printf("   Description: %s\n", strategy.description)
 		fmt.Printf("   Best for: %s\n\n", strategy.use_case)
 	}
-	
+
 	fmt.Printf("💡 Usage: --strategy [minimize-cost|balanced|capability-first]\n")
 	return nil
 }
@@ -305,7 +305,7 @@ func registerOrchestratorDemoAgents(componentRegistry registry.ComponentRegistry
 			WithComponent("cli").
 			WithOperation("registerOrchestratorDemoAgents")
 	}
-	
+
 	demoAgents := []registry.GuildAgentConfig{
 		{
 			ID:            "shell-automator",
@@ -319,7 +319,7 @@ func registerOrchestratorDemoAgents(componentRegistry registry.ComponentRegistry
 		{
 			ID:            "junior-dev",
 			Name:          "Junior Developer",
-			Type:          "worker", 
+			Type:          "worker",
 			Provider:      "anthropic",
 			Model:         "claude-3-haiku",
 			Capabilities:  []string{"coding", "testing", "documentation"},
@@ -336,7 +336,7 @@ func registerOrchestratorDemoAgents(componentRegistry registry.ComponentRegistry
 		},
 		{
 			ID:            "security-specialist",
-			Name:          "Security Specialist", 
+			Name:          "Security Specialist",
 			Type:          "specialist",
 			Provider:      "anthropic",
 			Model:         "claude-3-sonnet",
@@ -356,20 +356,20 @@ func registerOrchestratorDemoAgents(componentRegistry registry.ComponentRegistry
 			ID:            "expert-consultant",
 			Name:          "Expert Consultant",
 			Type:          "manager",
-			Provider:      "anthropic", 
+			Provider:      "anthropic",
 			Model:         "claude-3-opus",
 			Capabilities:  []string{"strategy", "optimization", "research"},
 			CostMagnitude: 8,
 		},
 	}
-	
+
 	for _, agent := range demoAgents {
 		if err := agentRegistry.RegisterGuildAgent(agent); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register agent").
 				WithComponent("cli").WithOperation("runOrchestratorDemo").WithDetails("agent_id", agent.ID)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -380,7 +380,7 @@ func registerOrchestratorDemoTools(componentRegistry registry.ComponentRegistry)
 			WithComponent("cli").
 			WithOperation("registerOrchestratorDemoTools")
 	}
-	
+
 	demoTools := []struct {
 		name         string
 		costMagnitude int
@@ -395,7 +395,7 @@ func registerOrchestratorDemoTools(componentRegistry registry.ComponentRegistry)
 		{"security_scanner", 3, []string{"security", "analysis", "vulnerability"}},
 		{"ai_assistant", 5, []string{"analysis", "optimization", "intelligence"}},
 	}
-	
+
 	for _, tool := range demoTools {
 		mockTool := &OrchestratorDemoTool{name: tool.name}
 		if err := toolRegistry.RegisterToolWithCost(tool.name, mockTool, tool.costMagnitude, tool.capabilities); err != nil {
@@ -403,7 +403,7 @@ func registerOrchestratorDemoTools(componentRegistry registry.ComponentRegistry)
 				WithComponent("cli").WithOperation("registerOrchestratorDemoTools").WithDetails("tool_name", tool.name)
 		}
 	}
-	
+
 	return nil
 }
 

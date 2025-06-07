@@ -110,7 +110,7 @@ func (d *ProjectDetector) DetectProjectType(path string) (*ProjectType, error) {
 	// Create a map of files and directories for quick lookup
 	fileMap := make(map[string]bool)
 	dirMap := make(map[string]bool)
-	
+
 	for _, entry := range entries {
 		name := entry.Name()
 		if entry.IsDir() {
@@ -176,7 +176,7 @@ func (d *ProjectDetector) scoreProjectType(projectType *ProjectType, fileMap, di
 // GenerateGuildConfig creates an appropriate guild configuration for the detected project type
 func (d *ProjectDetector) GenerateGuildConfig(projectType *ProjectType, projectPath string) (*config.GuildConfig, error) {
 	projectName := filepath.Base(projectPath)
-	
+
 	guildConfig := &config.GuildConfig{
 		Name:        projectName,
 		Description: fmt.Sprintf("%s project initialized with Guild", projectType.Description),
@@ -213,14 +213,14 @@ func (d *ProjectDetector) generateAgentsForProjectType(projectType *ProjectType)
 			Name:         "Go Developer",
 			Type:         "worker",
 			Capabilities: []string{"golang", "backend", "testing", "performance"},
-			Model:        "claude-3-sonnet-20240229", 
+			Model:        "claude-3-sonnet-20240229",
 			Provider:     "anthropic",
 			CostMagnitude: 3, // Mid-level development work
 		})
 	case "javascript":
 		baseAgents = append(baseAgents, config.AgentConfig{
 			ID:           "js-dev",
-			Name:         "JavaScript Developer", 
+			Name:         "JavaScript Developer",
 			Type:         "worker",
 			Capabilities: []string{"javascript", "nodejs", "frontend", "testing"},
 			Model:        "claude-3-sonnet-20240229",
@@ -231,7 +231,7 @@ func (d *ProjectDetector) generateAgentsForProjectType(projectType *ProjectType)
 		baseAgents = append(baseAgents, config.AgentConfig{
 			ID:           "python-dev",
 			Name:         "Python Developer",
-			Type:         "worker", 
+			Type:         "worker",
 			Capabilities: []string{"python", "backend", "data", "testing"},
 			Model:        "claude-3-sonnet-20240229",
 			Provider:     "anthropic",
@@ -244,7 +244,7 @@ func (d *ProjectDetector) generateAgentsForProjectType(projectType *ProjectType)
 			Type:         "worker",
 			Capabilities: []string{"rust", "systems", "performance", "safety"},
 			Model:        "claude-3-sonnet-20240229",
-			Provider:     "anthropic", 
+			Provider:     "anthropic",
 			CostMagnitude: 5,
 		})
 	}
@@ -322,21 +322,21 @@ type CorpusConfig struct {
 func (d *ProjectDetector) GenerateCorpusConfig(projectType *ProjectType, projectPath string) CorpusConfig {
 	// Update paths to be project-relative
 	guildPath := filepath.Join(projectPath, ".guild")
-	
+
 	corpusConfig := CorpusConfig{
 		CorpusPath:      filepath.Join(guildPath, "corpus"),
 		ActivitiesPath:  filepath.Join(guildPath, "corpus", ".activities"),
 		MaxSizeBytes:    100 * 1024 * 1024, // 100MB default
 		DefaultCategory: projectType.Language,
 	}
-	
+
 	// Set appropriate tags based on project type
 	tags := []string{projectType.Language}
 	if projectType.Framework != "" {
 		tags = append(tags, projectType.Framework)
 	}
 	corpusConfig.DefaultTags = tags
-	
+
 	return corpusConfig
 }
 
@@ -370,7 +370,7 @@ func (d *ProjectDetector) SeedCorpusFromProject(projectType *ProjectType, projec
 		if !info.IsDir() {
 			ext := strings.ToLower(filepath.Ext(info.Name()))
 			name := strings.ToLower(info.Name())
-			
+
 			// Documentation file patterns
 			isDoc := ext == ".md" || ext == ".txt" || ext == ".rst" ||
 				strings.Contains(name, "readme") ||

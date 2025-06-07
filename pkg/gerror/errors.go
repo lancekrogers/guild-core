@@ -101,12 +101,12 @@ func (e *GuildError) Is(target error) bool {
 	if target == nil {
 		return false
 	}
-	
+
 	// Check if target is a GuildError with the same code
 	if gerr, ok := target.(*GuildError); ok {
 		return e.Code == gerr.Code
 	}
-	
+
 	// Check wrapped error
 	return errors.Is(e.Cause, target)
 }
@@ -163,21 +163,21 @@ func New(code ErrorCode, message string, cause error) *GuildError {
 		Timestamp: time.Now(),
 		Stack:     captureStack(2), // Skip New and the caller
 	}
-	
+
 	// Set retryable based on error code
 	switch code {
-	case ErrCodeTimeout, ErrCodeCancelled, ErrCodeRateLimit, 
+	case ErrCodeTimeout, ErrCodeCancelled, ErrCodeRateLimit,
 	     ErrCodeConnection, ErrCodeAgentTimeout, ErrCodeProviderTimeout:
 		err.Retryable = true
 	}
-	
+
 	// Set user-safe for certain error types
 	switch code {
 	case ErrCodeValidation, ErrCodeInvalidInput, ErrCodeMissingRequired,
 	     ErrCodeInvalidFormat, ErrCodeOutOfRange, ErrCodeNotFound:
 		err.UserSafe = true
 	}
-	
+
 	return err
 }
 
@@ -191,7 +191,7 @@ func Wrap(err error, code ErrorCode, message string) *GuildError {
 	if err == nil {
 		return nil
 	}
-	
+
 	// If already a GuildError, preserve some information
 	if gerr, ok := err.(*GuildError); ok {
 		newErr := New(code, message, err)
@@ -204,7 +204,7 @@ func Wrap(err error, code ErrorCode, message string) *GuildError {
 		}
 		return newErr
 	}
-	
+
 	return New(code, message, err)
 }
 
@@ -227,15 +227,15 @@ func (e *GuildError) FromContext(ctx context.Context) *GuildError {
 // captureStack captures the current stack trace
 func captureStack(skip int) []StackFrame {
 	var frames []StackFrame
-	
+
 	// Capture up to 10 frames
 	pcs := make([]uintptr, 10)
 	n := runtime.Callers(skip+1, pcs)
-	
+
 	if n > 0 {
 		frames = make([]StackFrame, 0, n)
 		callFrames := runtime.CallersFrames(pcs[:n])
-		
+
 		for {
 			frame, more := callFrames.Next()
 			frames = append(frames, StackFrame{
@@ -243,13 +243,13 @@ func captureStack(skip int) []StackFrame {
 				File:     frame.File,
 				Line:     frame.Line,
 			})
-			
+
 			if !more {
 				break
 			}
 		}
 	}
-	
+
 	return frames
 }
 
@@ -258,11 +258,11 @@ var (
 	// Storage errors
 	ErrNotFound      = New(ErrCodeNotFound, "resource not found", nil)
 	ErrAlreadyExists = New(ErrCodeAlreadyExists, "resource already exists", nil)
-	
+
 	// Agent errors
 	ErrNoAgentAvailable = New(ErrCodeNoAvailableAgent, "no agent available for task", nil)
 	ErrAgentNotFound    = New(ErrCodeAgentNotFound, "agent not found", nil)
-	
+
 	// System errors
 	ErrTimeout   = New(ErrCodeTimeout, "operation timed out", nil)
 	ErrCancelled = New(ErrCodeCancelled, "operation cancelled", nil)
@@ -273,12 +273,12 @@ func Is(err error, target interface{}) bool {
 	if err == nil {
 		return false
 	}
-	
+
 	// Check if target is an error
 	if targetErr, ok := target.(error); ok {
 		return errors.Is(err, targetErr)
 	}
-	
+
 	// Check if target is an error code
 	if code, ok := target.(ErrorCode); ok {
 		var gerr *GuildError
@@ -286,7 +286,7 @@ func Is(err error, target interface{}) bool {
 			return gerr.Code == code
 		}
 	}
-	
+
 	return false
 }
 

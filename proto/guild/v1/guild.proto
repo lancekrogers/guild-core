@@ -8,14 +8,14 @@ option go_package = "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1";
 service Guild {
   // WatchCampaign streams live dashboard updates for a campaign
   rpc WatchCampaign(WatchRequest) returns (stream BoardUpdate);
-  
+
   // Campaign management
   rpc GetCampaign(GetCampaignRequest) returns (Campaign);
   rpc ListCampaigns(ListCampaignsRequest) returns (ListCampaignsResponse);
   rpc CreateCampaign(CreateCampaignRequest) returns (Campaign);
   rpc UpdateCampaign(UpdateCampaignRequest) returns (Campaign);
   rpc DeleteCampaign(DeleteCampaignRequest) returns (DeleteCampaignResponse);
-  
+
   // Campaign state transitions
   rpc StartPlanningCampaign(CampaignActionRequest) returns (Campaign);
   rpc MarkCampaignReady(CampaignActionRequest) returns (Campaign);
@@ -24,11 +24,11 @@ service Guild {
   rpc ResumeCampaign(CampaignActionRequest) returns (Campaign);
   rpc CompleteCampaign(CampaignActionRequest) returns (Campaign);
   rpc CancelCampaign(CampaignActionRequest) returns (Campaign);
-  
+
   // Commission management
   rpc AddCommissionToCampaign(AddCommissionRequest) returns (Campaign);
   rpc RemoveCommissionFromCampaign(RemoveCommissionRequest) returns (Campaign);
-  
+
   // Agent communication
   rpc SendMessageToAgent(AgentMessageRequest) returns (AgentMessageResponse);
   rpc StreamAgentConversation(stream AgentStreamRequest) returns (stream AgentStreamResponse);

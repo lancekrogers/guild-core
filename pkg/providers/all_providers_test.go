@@ -188,7 +188,7 @@ func TestLiveProviders(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	
+
 	// Test each provider if API key is available
 	testCases := []struct {
 		name     string
@@ -225,7 +225,7 @@ func TestLiveProviders(t *testing.T) {
 
 		t.Run(tc.name+"_Live", func(t *testing.T) {
 			provider := tc.provider(apiKey)
-			
+
 			req := interfaces.ChatRequest{
 				Model: tc.model,
 				Messages: []interfaces.ChatMessage{

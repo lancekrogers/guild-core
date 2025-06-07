@@ -197,7 +197,7 @@ func (t *NATSTransport) Subscribe(ctx context.Context, topic string) (<-chan []b
 
 	// Create channel for this subscription
 	dataCh := make(chan []byte, 100)
-	
+
 	// Create context for managing subscription
 	subCtx, cancel := context.WithCancel(context.Background())
 

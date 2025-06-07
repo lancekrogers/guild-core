@@ -34,7 +34,7 @@ func (gac *GuildArtisanClient) Complete(ctx context.Context, request ArtisanRequ
 				Content: request.SystemPrompt,
 			},
 			{
-				Role:    "user", 
+				Role:    "user",
 				Content: request.UserPrompt,
 			},
 		},

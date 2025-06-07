@@ -13,10 +13,10 @@ import (
 type Processor interface {
 	// Process handles a prompt input
 	Process(ctx context.Context, input *Input) (*Output, error)
-	
+
 	// SetNext sets the next processor in the chain
 	SetNext(next Processor) Processor
-	
+
 	// GetName returns the processor name
 	GetName() string
 }
@@ -58,7 +58,7 @@ func NewChain(processors ...Processor) *Chain {
 	for i := 0; i < len(processors)-1; i++ {
 		processors[i].SetNext(processors[i+1])
 	}
-	
+
 	return &Chain{
 		processors: processors,
 		analyzer:   NewAnalyzer(),
@@ -70,18 +70,18 @@ func (c *Chain) Process(ctx context.Context, input *Input) (*Output, error) {
 	if len(c.processors) == 0 {
 		return nil, fmt.Errorf("no processors in chain")
 	}
-	
+
 	// Start chain analysis
 	chainID := c.analyzer.StartChain(ctx, input)
 	defer c.analyzer.EndChain(ctx, chainID)
-	
+
 	// Process through first processor (which calls next)
 	output, err := c.processors[0].Process(ctx, input)
 	if err != nil {
 		c.analyzer.RecordError(ctx, chainID, err)
 		return nil, err
 	}
-	
+
 	return output, nil
 }
 
@@ -146,7 +146,7 @@ func (p *ValidationProcessor) Process(ctx context.Context, input *Input) (*Outpu
 			return nil, fmt.Errorf("validation failed: %w", err)
 		}
 	}
-	
+
 	return p.BaseProcessor.Process(ctx, input)
 }
 
@@ -174,7 +174,7 @@ func (p *EnhancementProcessor) Process(ctx context.Context, input *Input) (*Outp
 			return nil, fmt.Errorf("enhancement failed: %w", err)
 		}
 	}
-	
+
 	return p.BaseProcessor.Process(ctx, enhanced)
 }
 
@@ -202,7 +202,7 @@ func NewCachingProcessor(keyFunc func(*Input) string, ttl time.Duration) *Cachin
 func (p *CachingProcessor) Process(ctx context.Context, input *Input) (*Output, error) {
 	// Generate cache key
 	key := p.keyFunc(input)
-	
+
 	// Check cache
 	if cached, exists := p.cache[key]; exists {
 		// Return cached result
@@ -212,18 +212,18 @@ func (p *CachingProcessor) Process(ctx context.Context, input *Input) (*Output, 
 			Cost:     protocol.CostReport{}, // No cost for cached
 		}, nil
 	}
-	
+
 	// Process normally
 	output, err := p.BaseProcessor.Process(ctx, input)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Cache result
 	p.cache[key] = output
-	
+
 	// TODO: Implement TTL and max items cleanup
-	
+
 	return output, nil
 }
 
@@ -249,10 +249,10 @@ func NewMetricsProcessor(observer CostObserver) *MetricsProcessor {
 // Process collects metrics
 func (p *MetricsProcessor) Process(ctx context.Context, input *Input) (*Output, error) {
 	start := time.Now()
-	
+
 	// Process
 	output, err := p.BaseProcessor.Process(ctx, input)
-	
+
 	// Record metrics
 	cost := protocol.CostReport{
 		StartTime:    start,
@@ -260,16 +260,16 @@ func (p *MetricsProcessor) Process(ctx context.Context, input *Input) (*Output, 
 		LatencyCost:  time.Since(start),
 		OperationID:  fmt.Sprintf("prompt-%d", time.Now().UnixNano()),
 	}
-	
+
 	if output != nil {
 		cost = output.Cost
 		cost.StartTime = start
 		cost.EndTime = time.Now()
 		cost.LatencyCost = time.Since(start)
 	}
-	
+
 	p.observer.RecordCost(ctx, cost.OperationID, cost)
-	
+
 	return output, err
 }
 
@@ -301,7 +301,7 @@ func (p *RouterProcessor) Process(ctx context.Context, input *Input) (*Output, e
 			return route.Processor.Process(ctx, input)
 		}
 	}
-	
+
 	// No route matched, use default next
 	return p.BaseProcessor.Process(ctx, input)
 }
@@ -336,13 +336,13 @@ func (p *TransformProcessor) Process(ctx context.Context, input *Input) (*Output
 			return nil, fmt.Errorf("input transform failed: %w", err)
 		}
 	}
-	
+
 	// Process
 	output, err := p.BaseProcessor.Process(ctx, transformed)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Transform output if needed
 	if p.outputTransform != nil {
 		output, err = p.outputTransform(output)
@@ -350,6 +350,6 @@ func (p *TransformProcessor) Process(ctx context.Context, input *Input) (*Output
 			return nil, fmt.Errorf("output transform failed: %w", err)
 		}
 	}
-	
+
 	return output, nil
 }

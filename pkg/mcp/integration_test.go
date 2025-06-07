@@ -194,7 +194,7 @@ func TestMCPIntegration(t *testing.T) {
 
 		analysis, err := mcpClient.QueryCosts(ctx, query)
 		require.NoError(t, err)
-		
+
 		assert.Equal(t, 0.015, analysis.TotalCost.ComputeCost)
 		assert.Equal(t, int64(3072), analysis.TotalCost.MemoryCost)
 		assert.Equal(t, 150, analysis.TotalCost.TokensCost)
@@ -440,7 +440,7 @@ func TestMCPComponentsCreation(t *testing.T) {
 
 	t.Run("server_creation", func(t *testing.T) {
 		guildRegistry := registry.NewComponentRegistry()
-		
+
 		serverConfig := &server.Config{
 			ServerID:              "test-server",
 			ServerName:            "Test Server",

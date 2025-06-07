@@ -26,7 +26,7 @@ project-local approach. It will:
 
 func init() {
 	rootCmd.AddCommand(migrateCmd)
-	
+
 	// Add flags
 	migrateCmd.Flags().Bool("embeddings", false, "Also migrate embeddings (can be regenerated with 'guild corpus scan')")
 	migrateCmd.Flags().Bool("overwrite", false, "Overwrite existing files in project")
@@ -35,12 +35,12 @@ func init() {
 
 func runMigrate(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
-	
+
 	// Get flags
 	includeEmbeddings, _ := cmd.Flags().GetBool("embeddings")
 	overwrite, _ := cmd.Flags().GetBool("overwrite")
 	dryRun, _ := cmd.Flags().GetBool("dry-run")
-	
+
 	// Check if we're in a project
 	if !project.IsInitialized(".") {
 		return gerror.New(gerror.ErrCodeInvalidInput, "no Guild project found", nil).
@@ -48,7 +48,7 @@ func runMigrate(cmd *cobra.Command, args []string) error {
 			WithOperation("migrate.run").
 			WithDetails("help", "Run 'guild init' first")
 	}
-	
+
 	// Get global path
 	globalPath, err := project.GetGlobalGuildPath()
 	if err != nil {
@@ -56,13 +56,13 @@ func runMigrate(cmd *cobra.Command, args []string) error {
 			WithComponent("cli").
 			WithOperation("migrate.run")
 	}
-	
+
 	// Check if global Guild exists
 	if _, err := os.Stat(globalPath); os.IsNotExist(err) {
 		fmt.Println("No global Guild data found. Nothing to migrate.")
 		return nil
 	}
-	
+
 	// Create migration options
 	opts := project.MigrationOptions{
 		IncludeEmbeddings: includeEmbeddings,
@@ -70,16 +70,16 @@ func runMigrate(cmd *cobra.Command, args []string) error {
 		OverwriteExisting: overwrite,
 		DryRun:           dryRun,
 	}
-	
+
 	if dryRun {
 		fmt.Println("DRY RUN - No changes will be made")
 		fmt.Println()
 	}
-	
+
 	fmt.Printf("Migrating from: %s\n", globalPath)
 	fmt.Printf("Migrating to: .guild/\n")
 	fmt.Println()
-	
+
 	// Perform migration
 	result, err := project.MigrateFromGlobal(ctx, ".", globalPath, opts)
 	if err != nil {
@@ -91,10 +91,10 @@ func runMigrate(cmd *cobra.Command, args []string) error {
 			WithComponent("cli").
 			WithOperation("migrate.run")
 	}
-	
+
 	// Show results
 	fmt.Print(project.FormatMigrationSummary(result))
-	
+
 	if !dryRun && result.FilesCopied > 0 {
 		fmt.Println("\nMigration complete!")
 		fmt.Println("\nNext steps:")
@@ -104,6 +104,6 @@ func runMigrate(cmd *cobra.Command, args []string) error {
 		}
 		fmt.Println("  3. (Optional) Remove global data: rm -rf " + globalPath)
 	}
-	
+
 	return nil
 }

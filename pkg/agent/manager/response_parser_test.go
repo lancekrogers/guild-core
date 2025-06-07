@@ -96,11 +96,11 @@ Task: Configure CI/CD pipeline`,
 - API-001: Design REST endpoints (priority: high, estimate: 3h)
   - Assigned to: backend-artisan
   - Capabilities required: api-design, openapi
-  
+
 - API-002: Implement data models (priority: medium, estimate: 4h)
   - Dependencies: API-001
   - Capabilities: database, orm
-  
+
 - TEST-001: Write integration tests (priority: medium, estimate: 5h)
   - Dependencies: API-001, API-002`,
 			},
@@ -139,14 +139,14 @@ Task: Configure CI/CD pipeline`,
 			require.NotNil(t, structure)
 
 			// Check file count
-			assert.Equal(t, tt.expectedFiles, len(structure.Files), 
+			assert.Equal(t, tt.expectedFiles, len(structure.Files),
 				"Expected %d files, got %d", tt.expectedFiles, len(structure.Files))
 
 			// Count total unique tasks (only from main file to avoid duplicates)
 			totalTasks := 0
 			foundMainFile := false
 			for _, file := range structure.Files {
-				// Only count tasks from the main file 
+				// Only count tasks from the main file
 				if tasks, ok := file.Metadata["tasks"].([]TaskInfo); ok {
 					if file.Path == "commission_refined.md" || (!foundMainFile && len(tasks) > 0) {
 						totalTasks = len(tasks)
@@ -216,7 +216,7 @@ Task: Set up monitoring and logging`,
 - API-001: Create REST endpoints (priority: high)
 - [ ] Set up middleware
 
-## Frontend  
+## Frontend
 Task: Build component library
 
 ## Testing
@@ -245,23 +245,23 @@ Task: Build component library
 				}
 
 				actualTask := tasks[i]
-				
+
 				// For tasks without explicit IDs, we generate them
 				if expectedTask.ID != "" {
 					assert.Equal(t, expectedTask.ID, actualTask.ID)
 				}
-				
+
 				assert.Equal(t, expectedTask.Category, actualTask.Category)
 				assert.Equal(t, expectedTask.Title, actualTask.Title)
-				
+
 				if expectedTask.Priority != "" {
 					assert.Equal(t, expectedTask.Priority, actualTask.Priority)
 				}
-				
+
 				if expectedTask.Estimate != "" {
 					assert.Equal(t, expectedTask.Estimate, actualTask.Estimate)
 				}
-				
+
 				if len(expectedTask.Dependencies) > 0 {
 					assert.Equal(t, expectedTask.Dependencies, actualTask.Dependencies)
 				}
@@ -317,15 +317,15 @@ func TestResponseParser_ConvertToKanbanTask(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			task := tt.taskInfo.ConvertToKanbanTask(tt.commissionID)
-			
+
 			assert.NotNil(t, task)
 			assert.NotEmpty(t, task.ID)
 			assert.Equal(t, tt.taskInfo.Title, task.Title)
-			
+
 			if tt.taskInfo.Description != "" {
 				assert.Equal(t, tt.taskInfo.Description, task.Description)
 			}
-			
+
 			tt.validate(t, task)
 		})
 	}

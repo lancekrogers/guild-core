@@ -12,31 +12,31 @@ import (
 func ExampleAgentExecution(ctx context.Context) error {
 	// Ensure request context
 	ctx = EnsureRequestContext(ctx)
-	
+
 	// Get logger and add context
 	logger := GetLogger(ctx).
 		WithComponent("agent").
 		WithOperation("execute_task")
-	
+
 	// Start a trace span
 	ctx, span := StartAgentSpan(ctx, "agent-123", "execute_task")
 	defer span.End()
-	
+
 	// Get metrics
 	metrics := GetMetrics()
-	
+
 	logger.InfoContext(ctx, "Starting agent task execution",
 		"agent_id", "agent-123",
 		"task_id", "task-456",
 	)
-	
+
 	start := time.Now()
-	
+
 	// Simulate task execution
 	err := executeTask(ctx)
-	
+
 	duration := time.Since(start)
-	
+
 	if err != nil {
 		// Create structured error
 		gerr := gerror.Wrap(err, gerror.ErrCodeAgentFailed, "agent task execution failed").
@@ -45,28 +45,28 @@ func ExampleAgentExecution(ctx context.Context) error {
 			WithDetails("agent_id", "agent-123").
 			WithDetails("task_id", "task-456").
 			FromContext(ctx)
-		
+
 		// Log error with context
 		logger.WithError(gerr).ErrorContext(ctx, "Task execution failed")
-		
+
 		// Record error in trace
 		RecordError(ctx, gerr)
-		
+
 		// Record metrics
 		metrics.RecordAgentTask("agent-123", "worker", "failed")
 		metrics.RecordError(string(gerr.Code), "agent", "execute_task")
-		
+
 		return gerr
 	}
-	
+
 	// Success logging and metrics
 	logger.InfoContext(ctx, "Task execution completed successfully",
 		"duration_ms", duration.Milliseconds(),
 	)
-	
+
 	metrics.RecordAgentTask("agent-123", "worker", "success")
 	metrics.RecordAgentTaskDuration("agent-123", "worker", duration)
-	
+
 	return nil
 }
 
@@ -74,18 +74,18 @@ func ExampleAgentExecution(ctx context.Context) error {
 func ExampleStorageOperation(ctx context.Context) error {
 	logger := GetLogger(ctx).WithComponent("storage")
 	metrics := GetMetrics()
-	
+
 	// Start storage span
 	ctx, span := StartStorageSpan(ctx, "create", "tasks")
 	defer span.End()
-	
+
 	start := time.Now()
-	
+
 	// Simulate storage operation
 	err := performStorageOperation(ctx)
-	
+
 	duration := time.Since(start)
-	
+
 	if err != nil {
 		// Check for specific errors
 		if gerror.Is(err, gerror.ErrNotFound) {
@@ -98,15 +98,15 @@ func ExampleStorageOperation(ctx context.Context) error {
 			logger.WithError(err).ErrorContext(ctx, "Storage operation failed")
 			metrics.RecordStorageError("create", "tasks", "unknown")
 		}
-		
+
 		RecordError(ctx, err)
 		return err
 	}
-	
+
 	// Record success metrics
 	metrics.RecordStorageOperation("create", "tasks", "success")
 	metrics.RecordStorageDuration("create", "tasks", duration)
-	
+
 	return nil
 }
 
@@ -114,25 +114,25 @@ func ExampleStorageOperation(ctx context.Context) error {
 func ExampleProviderCall(ctx context.Context) error {
 	logger := GetLogger(ctx).WithComponent("provider")
 	metrics := GetMetrics()
-	
+
 	// Start provider span
 	ctx, span := StartProviderSpan(ctx, "openai", "completion")
 	defer span.End()
-	
+
 	// Set span attributes
 	SetSpanAttributes(ctx, map[string]interface{}{
 		"provider.model": "gpt-4",
 		"provider.max_tokens": 1000,
 		"provider.temperature": 0.7,
 	})
-	
+
 	start := time.Now()
-	
+
 	// Simulate provider call
 	response, err := callProvider(ctx)
-	
+
 	duration := time.Since(start)
-	
+
 	if err != nil {
 		// Handle retryable errors
 		if gerror.IsRetryable(err) {
@@ -146,11 +146,11 @@ func ExampleProviderCall(ctx context.Context) error {
 			logger.WithError(err).ErrorContext(ctx, "Provider call failed")
 			metrics.RecordProviderError("openai", "gpt-4", "permanent")
 		}
-		
+
 		RecordError(ctx, err)
 		return err
 	}
-	
+
 	// Record success metrics
 	logger.InfoContext(ctx, "Provider call completed",
 		"provider", "openai",
@@ -159,13 +159,13 @@ func ExampleProviderCall(ctx context.Context) error {
 		"completion_tokens", response.CompletionTokens,
 		"duration_ms", duration.Milliseconds(),
 	)
-	
+
 	metrics.RecordProviderRequest("openai", "gpt-4", "success")
 	metrics.RecordProviderDuration("openai", "gpt-4", duration)
 	metrics.RecordProviderTokens("openai", "gpt-4", "prompt", response.PromptTokens)
 	metrics.RecordProviderTokens("openai", "gpt-4", "completion", response.CompletionTokens)
 	metrics.RecordProviderCost("openai", "gpt-4", response.Cost)
-	
+
 	return nil
 }
 

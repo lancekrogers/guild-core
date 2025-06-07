@@ -169,10 +169,10 @@ Don't share (add to .gitignore):
 # .github/workflows/guild.yml
 - name: Initialize Guild
   run: guild init
-  
+
 - name: Add documentation to corpus
   run: guild corpus add docs/
-  
+
 - name: Run validation
   run: guild validate
 ```

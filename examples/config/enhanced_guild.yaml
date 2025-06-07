@@ -71,7 +71,7 @@ agents:
 
   # DevOps Engineer - Infrastructure specialist
   - id: "devops-engineer"
-    name: "DevOps Engineer"  
+    name: "DevOps Engineer"
     type: "specialist"
     provider: "openai"
     model: "gpt-4-turbo"
@@ -119,7 +119,7 @@ metadata:
 # Cost Magnitude Reference:
 # 0 - Bash/tool operations only (no LLM calls)
 # 1 - Cheap API usage (Claude Haiku, basic models)
-# 2 - Low-mid cost (GPT-3.5, mid-tier models)  
+# 2 - Low-mid cost (GPT-3.5, mid-tier models)
 # 3 - Mid cost (Claude Sonnet, capable models)
 # 5 - High cost (GPT-4, advanced models)
 # 8 - Most expensive (Claude Opus, premium models)

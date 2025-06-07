@@ -11,7 +11,7 @@ import (
 )
 
 const assignTaskToAgent = `-- name: AssignTaskToAgent :exec
-UPDATE tasks 
+UPDATE tasks
 SET assigned_agent_id = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 `
@@ -77,7 +77,7 @@ func (q *Queries) DeleteTaskEvents(ctx context.Context, taskID string) error {
 }
 
 const getAgentWorkload = `-- name: GetAgentWorkload :many
-SELECT 
+SELECT
     a.id,
     a.name,
     COUNT(t.id) as task_count,
@@ -147,8 +147,8 @@ func (q *Queries) GetTask(ctx context.Context, id string) (Task, error) {
 }
 
 const getTaskHistory = `-- name: GetTaskHistory :many
-SELECT id, task_id, agent_id, event_type, old_value, new_value, reason, created_at FROM task_events 
-WHERE task_id = ? 
+SELECT id, task_id, agent_id, event_type, old_value, new_value, reason, created_at FROM task_events
+WHERE task_id = ?
 ORDER BY created_at DESC
 `
 
@@ -345,7 +345,7 @@ func (q *Queries) ListTasksByStatus(ctx context.Context, status string) ([]Task,
 }
 
 const listTasksForKanban = `-- name: ListTasksForKanban :many
-SELECT 
+SELECT
     t.id, t.commission_id, t.assigned_agent_id, t.title, t.description, t.status, t."column", t.story_points, t.metadata, t.created_at, t.updated_at, t.board_id,
     a.name as agent_name,
     a.type as agent_type
@@ -437,7 +437,7 @@ func (q *Queries) RecordTaskEvent(ctx context.Context, arg RecordTaskEventParams
 }
 
 const updateTask = `-- name: UpdateTask :exec
-UPDATE tasks 
+UPDATE tasks
 SET title = ?, description = ?, status = ?, column = ?, story_points = ?, metadata = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 `
@@ -466,7 +466,7 @@ func (q *Queries) UpdateTask(ctx context.Context, arg UpdateTaskParams) error {
 }
 
 const updateTaskColumn = `-- name: UpdateTaskColumn :exec
-UPDATE tasks 
+UPDATE tasks
 SET column = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 `
@@ -482,7 +482,7 @@ func (q *Queries) UpdateTaskColumn(ctx context.Context, arg UpdateTaskColumnPara
 }
 
 const updateTaskStatus = `-- name: UpdateTaskStatus :exec
-UPDATE tasks 
+UPDATE tasks
 SET status = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 `

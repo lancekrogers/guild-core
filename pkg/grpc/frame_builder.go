@@ -25,7 +25,7 @@ const (
 	colorCyan   = "\033[36m"
 	colorWhite  = "\033[37m"
 	colorGray   = "\033[90m"
-	
+
 	bgRed    = "\033[41m"
 	bgGreen  = "\033[42m"
 	bgYellow = "\033[43m"
@@ -49,7 +49,7 @@ type FrameBuilder struct {
 	commissionMgr *commission.Manager
 	kanbanMgr     *kanban.Manager
 	agentReg      registry.AgentRegistry
-	
+
 	// Rendering state
 	lastRender    time.Time
 	frameCount    int
@@ -107,10 +107,10 @@ func (fb *FrameBuilder) BuildFrame(ctx context.Context, campaign *campaign.Campa
 		// Split screen between agents and kanban
 		agentHeight := remainingHeight / 3
 		kanbanHeight := remainingHeight - agentHeight
-		
+
 		agentGrid := fb.buildAgentGrid(agentHeight)
 		buf.Write(agentGrid)
-		
+
 		kanbanBoard := fb.buildKanbanBoard(ctx, campaign, kanbanHeight)
 		buf.Write(kanbanBoard)
 	} else if options.includeAgents {
@@ -155,7 +155,7 @@ func (fb *FrameBuilder) buildHeader(campaign *campaign.Campaign) []byte {
 
 	// Status line
 	statusColor := fb.getStatusColor(campaign.Status)
-	statusLine := fmt.Sprintf("Status: %s%s%s | Progress: %.1f%%", 
+	statusLine := fmt.Sprintf("Status: %s%s%s | Progress: %.1f%%",
 		statusColor, campaign.Status, colorReset, campaign.Progress*100)
 	buf.WriteString(colorBlue + "║" + colorReset + " " + statusLine)
 	buf.WriteString(strings.Repeat(" ", fb.width-len(stripANSI(statusLine))-4))
@@ -215,7 +215,7 @@ func (fb *FrameBuilder) buildKanbanBoard(ctx context.Context, campaign *campaign
 	colWidth := (fb.width - 2) / 3
 	headers := []string{"Todo", "In Progress", "Done"}
 	colors := []string{colorYellow, colorCyan, colorGreen}
-	
+
 	buf.WriteString(colorBlue + "║" + colorReset)
 	for i, header := range headers {
 		headerText := colors[i] + fb.centerText(header, colWidth) + colorReset
@@ -252,7 +252,7 @@ func (fb *FrameBuilder) buildKanbanBoard(ctx context.Context, campaign *campaign
 	// Render task rows
 	for i := 0; i < contentHeight; i++ {
 		buf.WriteString(colorBlue + "║" + colorReset)
-		
+
 		// Todo column
 		if i < len(todoTasks) {
 			task := truncateText(todoTasks[i], colWidth-2)
@@ -260,7 +260,7 @@ func (fb *FrameBuilder) buildKanbanBoard(ctx context.Context, campaign *campaign
 		} else {
 			buf.WriteString(strings.Repeat(" ", colWidth))
 		}
-		
+
 		// In Progress column
 		if i < len(inProgressTasks) {
 			task := truncateText(inProgressTasks[i], colWidth-2)
@@ -268,7 +268,7 @@ func (fb *FrameBuilder) buildKanbanBoard(ctx context.Context, campaign *campaign
 		} else {
 			buf.WriteString(strings.Repeat(" ", colWidth))
 		}
-		
+
 		// Done column
 		if i < len(doneTasks) {
 			task := truncateText(doneTasks[i], colWidth-2)
@@ -276,7 +276,7 @@ func (fb *FrameBuilder) buildKanbanBoard(ctx context.Context, campaign *campaign
 		} else {
 			buf.WriteString(strings.Repeat(" ", colWidth))
 		}
-		
+
 		buf.WriteString(colorBlue + "║" + colorReset + "\n")
 	}
 
@@ -296,7 +296,7 @@ func (fb *FrameBuilder) buildProgressDetails(campaign *campaign.Campaign, height
 	progressWidth := fb.width - 4
 	filled := int(campaign.Progress * float64(progressWidth))
 	progressBar := colorGreen + strings.Repeat("█", filled) + colorGray + strings.Repeat("░", progressWidth-filled) + colorReset
-	
+
 	buf.WriteString(colorBlue + "║ " + progressBar + " ║" + colorReset + "\n")
 
 	// Stats
@@ -325,15 +325,15 @@ func (fb *FrameBuilder) buildProgressDetails(campaign *campaign.Campaign, height
 // buildBottomBorder creates the bottom border
 func (fb *FrameBuilder) buildBottomBorder() []byte {
 	var buf bytes.Buffer
-	
+
 	// FPS counter in bottom right
 	fpsText := fmt.Sprintf(" FPS: %.1f ", fb.fps)
 	borderWidth := fb.width - len(fpsText) - 2
-	
+
 	buf.WriteString(colorBlue + "╚" + strings.Repeat("═", borderWidth) + colorReset)
 	buf.WriteString(colorGray + fpsText + colorReset)
 	buf.WriteString(colorBlue + "╝" + colorReset + "\n")
-	
+
 	return buf.Bytes()
 }
 
@@ -345,7 +345,7 @@ func (fb *FrameBuilder) centerText(text string, width int) string {
 	if textLen >= width {
 		return text
 	}
-	
+
 	padding := (width - textLen) / 2
 	return strings.Repeat(" ", padding) + text + strings.Repeat(" ", width-textLen-padding)
 }

@@ -51,7 +51,7 @@ func NewXMLFormatter() (*XMLFormatter, error) {
   <commission id="{{.GetCommissionID}}">
     <title>{{.GetCommissionTitle}}</title>
   </commission>
-  
+
   <current-task>
     <id>{{.GetCurrentTask.ID}}</id>
     <title>{{.GetCurrentTask.Title}}</title>
@@ -66,7 +66,7 @@ func NewXMLFormatter() (*XMLFormatter, error) {
       <capability>{{.}}</capability>
     {{end}}</capabilities>{{end}}
   </current-task>
-  
+
   {{if .GetRelevantSections}}<relevant-sections>{{range .GetRelevantSections}}
     <section level="{{.Level}}" path="{{.Path}}">
       <title>{{.Title}}</title>
@@ -76,7 +76,7 @@ func NewXMLFormatter() (*XMLFormatter, error) {
       {{end}}</tasks>{{end}}
     </section>
   {{end}}</relevant-sections>{{end}}
-  
+
   {{if .GetRelatedTasks}}<related-tasks>{{range .GetRelatedTasks}}
     <task id="{{.ID}}">
       <title>{{.Title}}</title>
@@ -193,7 +193,7 @@ func (f *XMLFormatter) OptimizeForTokens(content string, maxTokens int) (string,
 
 	// Find a good truncation point
 	truncated := content[:maxChars]
-	
+
 	// Try to truncate at a closing XML tag
 	lastCloseTag := strings.LastIndex(truncated, ">")
 	if lastCloseTag > maxChars*3/4 { // If we found a tag in the last quarter

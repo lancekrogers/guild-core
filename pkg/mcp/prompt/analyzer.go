@@ -13,22 +13,22 @@ import (
 type Analyzer interface {
 	// StartChain marks the start of a chain execution
 	StartChain(ctx context.Context, input *Input) string
-	
+
 	// EndChain marks the end of a chain execution
 	EndChain(ctx context.Context, chainID string)
-	
+
 	// RecordExchange records a prompt exchange
 	RecordExchange(ctx context.Context, exchange *Exchange)
-	
+
 	// RecordError records an error in the chain
 	RecordError(ctx context.Context, chainID string, err error)
-	
+
 	// RecordFailure records a complete failure
 	RecordFailure(ctx context.Context, input *Input, err error, duration time.Duration)
-	
+
 	// GetChainAnalysis returns analysis for a chain
 	GetChainAnalysis(chainID string) (*ChainAnalysis, error)
-	
+
 	// GetAggregateAnalysis returns aggregate analysis
 	GetAggregateAnalysis() *AggregateAnalysis
 }
@@ -91,9 +91,9 @@ func NewAnalyzer() *MemoryAnalyzer {
 func (a *MemoryAnalyzer) StartChain(ctx context.Context, input *Input) string {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	
+
 	chainID := fmt.Sprintf("chain-%d-%s", time.Now().UnixNano(), randomString(8))
-	
+
 	analysis := &ChainAnalysis{
 		ChainID:       chainID,
 		StartTime:     time.Now(),
@@ -101,19 +101,19 @@ func (a *MemoryAnalyzer) StartChain(ctx context.Context, input *Input) string {
 		ProcessorPath: make([]string, 0),
 		Success:       true, // Assume success until proven otherwise
 	}
-	
+
 	a.chains[chainID] = analysis
 	a.chainOrder = append(a.chainOrder, chainID)
-	
+
 	// Cleanup old chains if needed
 	if len(a.chains) > a.maxChains {
 		oldestID := a.chainOrder[0]
 		delete(a.chains, oldestID)
 		a.chainOrder = a.chainOrder[1:]
 	}
-	
+
 	a.aggregate.TotalChains++
-	
+
 	return chainID
 }
 
@@ -121,15 +121,15 @@ func (a *MemoryAnalyzer) StartChain(ctx context.Context, input *Input) string {
 func (a *MemoryAnalyzer) EndChain(ctx context.Context, chainID string) {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	
+
 	analysis, exists := a.chains[chainID]
 	if !exists {
 		return
 	}
-	
+
 	analysis.EndTime = time.Now()
 	analysis.Duration = analysis.EndTime.Sub(analysis.StartTime)
-	
+
 	// Calculate total cost
 	for _, exchange := range analysis.Exchanges {
 		analysis.TotalCost.ComputeCost += exchange.Metrics.ComputeCost
@@ -139,18 +139,18 @@ func (a *MemoryAnalyzer) EndChain(ctx context.Context, chainID string) {
 		analysis.TotalCost.APICallsCost += exchange.Metrics.APICallsCost
 		analysis.TotalCost.FinancialCost += exchange.Metrics.FinancialCost
 	}
-	
+
 	// Update aggregate stats
 	if analysis.Success {
 		a.aggregate.SuccessfulChains++
 	} else {
 		a.aggregate.FailedChains++
 	}
-	
+
 	// Update average latency
 	totalLatency := a.aggregate.AverageLatency * time.Duration(a.aggregate.TotalChains-1)
 	a.aggregate.AverageLatency = (totalLatency + analysis.Duration) / time.Duration(a.aggregate.TotalChains)
-	
+
 	// Update total cost
 	a.aggregate.TotalCost.ComputeCost += analysis.TotalCost.ComputeCost
 	a.aggregate.TotalCost.MemoryCost += analysis.TotalCost.MemoryCost
@@ -164,22 +164,22 @@ func (a *MemoryAnalyzer) EndChain(ctx context.Context, chainID string) {
 func (a *MemoryAnalyzer) RecordExchange(ctx context.Context, exchange *Exchange) {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	
+
 	// Get chain ID from context
 	chainID, ok := ctx.Value("chain_id").(string)
 	if !ok {
 		return
 	}
-	
+
 	analysis, exists := a.chains[chainID]
 	if !exists {
 		return
 	}
-	
+
 	// Add exchange
 	analysis.Exchanges = append(analysis.Exchanges, exchange)
 	analysis.ProcessorPath = append(analysis.ProcessorPath, exchange.Processor)
-	
+
 	// Update processor stats
 	stats, exists := a.aggregate.ProcessorStats[exchange.Processor]
 	if !exists {
@@ -188,15 +188,15 @@ func (a *MemoryAnalyzer) RecordExchange(ctx context.Context, exchange *Exchange)
 		}
 		a.aggregate.ProcessorStats[exchange.Processor] = stats
 	}
-	
+
 	stats.Invocations++
 	stats.Successes++ // Will be decremented if error recorded
-	
+
 	// Update processor latency
 	processorLatency := exchange.EndTime.Sub(exchange.StartTime)
 	totalLatency := stats.AverageLatency * time.Duration(stats.Invocations-1)
 	stats.AverageLatency = (totalLatency + processorLatency) / time.Duration(stats.Invocations)
-	
+
 	// Update processor cost
 	stats.TotalCost.ComputeCost += exchange.Metrics.ComputeCost
 	stats.TotalCost.MemoryCost += exchange.Metrics.MemoryCost
@@ -210,15 +210,15 @@ func (a *MemoryAnalyzer) RecordExchange(ctx context.Context, exchange *Exchange)
 func (a *MemoryAnalyzer) RecordError(ctx context.Context, chainID string, err error) {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	
+
 	analysis, exists := a.chains[chainID]
 	if !exists {
 		return
 	}
-	
+
 	analysis.Success = false
 	analysis.Error = err
-	
+
 	// Update processor failure stats if we know which processor failed
 	if len(analysis.ProcessorPath) > 0 {
 		lastProcessor := analysis.ProcessorPath[len(analysis.ProcessorPath)-1]
@@ -233,14 +233,14 @@ func (a *MemoryAnalyzer) RecordError(ctx context.Context, chainID string, err er
 func (a *MemoryAnalyzer) RecordFailure(ctx context.Context, input *Input, err error, duration time.Duration) {
 	chainID := a.StartChain(ctx, input)
 	a.RecordError(ctx, chainID, err)
-	
+
 	a.mu.Lock()
 	if analysis, exists := a.chains[chainID]; exists {
 		analysis.Duration = duration
 		analysis.EndTime = analysis.StartTime.Add(duration)
 	}
 	a.mu.Unlock()
-	
+
 	a.EndChain(ctx, chainID)
 }
 
@@ -248,19 +248,19 @@ func (a *MemoryAnalyzer) RecordFailure(ctx context.Context, input *Input, err er
 func (a *MemoryAnalyzer) GetChainAnalysis(chainID string) (*ChainAnalysis, error) {
 	a.mu.RLock()
 	defer a.mu.RUnlock()
-	
+
 	analysis, exists := a.chains[chainID]
 	if !exists {
 		return nil, fmt.Errorf("chain %s not found", chainID)
 	}
-	
+
 	// Return a copy to prevent modification
 	result := *analysis
 	result.Exchanges = make([]*Exchange, len(analysis.Exchanges))
 	copy(result.Exchanges, analysis.Exchanges)
 	result.ProcessorPath = make([]string, len(analysis.ProcessorPath))
 	copy(result.ProcessorPath, analysis.ProcessorPath)
-	
+
 	return &result, nil
 }
 
@@ -268,7 +268,7 @@ func (a *MemoryAnalyzer) GetChainAnalysis(chainID string) (*ChainAnalysis, error
 func (a *MemoryAnalyzer) GetAggregateAnalysis() *AggregateAnalysis {
 	a.mu.RLock()
 	defer a.mu.RUnlock()
-	
+
 	// Return a copy
 	result := &AggregateAnalysis{
 		TotalChains:      a.aggregate.TotalChains,
@@ -278,13 +278,13 @@ func (a *MemoryAnalyzer) GetAggregateAnalysis() *AggregateAnalysis {
 		TotalCost:        a.aggregate.TotalCost,
 		ProcessorStats:   make(map[string]*ProcessorStats),
 	}
-	
+
 	// Copy processor stats
 	for name, stats := range a.aggregate.ProcessorStats {
 		statsCopy := *stats
 		result.ProcessorStats[name] = &statsCopy
 	}
-	
+
 	return result
 }
 

@@ -58,7 +58,7 @@ func (c *Codec) EncodeRequest(method string, params interface{}) (*Request, erro
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal params: %w", err)
 	}
-	
+
 	return &Request{
 		JSONRPC: JSONRPCVersion,
 		ID:      c.idGen.NextID(),
@@ -73,7 +73,7 @@ func (c *Codec) EncodeResponse(id interface{}, result interface{}) (*Response, e
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal result: %w", err)
 	}
-	
+
 	return &Response{
 		JSONRPC: JSONRPCVersion,
 		ID:      id,
@@ -91,7 +91,7 @@ func (c *Codec) EncodeError(id interface{}, code int, message string, data inter
 			return nil, fmt.Errorf("failed to marshal error data: %w", err)
 		}
 	}
-	
+
 	return &Response{
 		JSONRPC: JSONRPCVersion,
 		ID:      id,
@@ -109,7 +109,7 @@ func (c *Codec) EncodeNotification(method string, params interface{}) (*Notifica
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal params: %w", err)
 	}
-	
+
 	return &Notification{
 		JSONRPC: JSONRPCVersion,
 		Method:  method,
@@ -127,7 +127,7 @@ func (c *Codec) DecodeMessage(data []byte) (interface{}, error) {
 			Message: "Parse error",
 		}
 	}
-	
+
 	// Check JSON-RPC version
 	var version string
 	if v, ok := raw["jsonrpc"]; ok {
@@ -143,13 +143,13 @@ func (c *Codec) DecodeMessage(data []byte) (interface{}, error) {
 			Message: "Missing JSON-RPC version",
 		}
 	}
-	
+
 	// Determine message type
 	_, hasID := raw["id"]
 	_, hasMethod := raw["method"]
 	_, hasResult := raw["result"]
 	_, hasError := raw["error"]
-	
+
 	switch {
 	case hasMethod && hasID:
 		// Request
@@ -161,7 +161,7 @@ func (c *Codec) DecodeMessage(data []byte) (interface{}, error) {
 			}
 		}
 		return &req, nil
-		
+
 	case hasMethod && !hasID:
 		// Notification
 		var notif Notification
@@ -172,7 +172,7 @@ func (c *Codec) DecodeMessage(data []byte) (interface{}, error) {
 			}
 		}
 		return &notif, nil
-		
+
 	case (hasResult || hasError) && hasID:
 		// Response
 		var resp Response
@@ -183,7 +183,7 @@ func (c *Codec) DecodeMessage(data []byte) (interface{}, error) {
 			}
 		}
 		return &resp, nil
-		
+
 	default:
 		return nil, &Error{
 			Code:    ErrorCodeInvalidRequest,
@@ -200,7 +200,7 @@ type Batch struct {
 // EncodeBatch encodes multiple messages as a batch
 func (c *Codec) EncodeBatch(messages ...interface{}) ([]byte, error) {
 	batch := make([]json.RawMessage, 0, len(messages))
-	
+
 	for _, msg := range messages {
 		msgJSON, err := json.Marshal(msg)
 		if err != nil {
@@ -208,7 +208,7 @@ func (c *Codec) EncodeBatch(messages ...interface{}) ([]byte, error) {
 		}
 		batch = append(batch, msgJSON)
 	}
-	
+
 	return json.Marshal(batch)
 }
 
@@ -223,7 +223,7 @@ func (c *Codec) DecodeBatch(data []byte) ([]interface{}, error) {
 		}
 		return []interface{}{msg}, nil
 	}
-	
+
 	messages := make([]interface{}, 0, len(batch))
 	for _, raw := range batch {
 		msg, err := c.DecodeMessage(raw)
@@ -234,6 +234,6 @@ func (c *Codec) DecodeBatch(data []byte) ([]interface{}, error) {
 			messages = append(messages, msg)
 		}
 	}
-	
+
 	return messages, nil
 }

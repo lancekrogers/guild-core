@@ -63,13 +63,13 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case key.Matches(msg, m.keymap.LeaveHall):
 			m.proclamation = "Departing the Guild Hall..."
 			return m, tea.Quit
-			
+
 		case key.Matches(msg, m.keymap.SeekGuidance):
 			// Toggle help display
 			m.helpScroll.ShowAll = !m.helpScroll.ShowAll
 			return m, nil
 		}
-		
+
 		// State-specific key handling
 		switch m.chamberState {
 		case stateViewing:
@@ -79,51 +79,51 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.chamberState = stateContext
 				m.scribe.Focus()
 				m.proclamation = "The Guild scribe prepares to record your context..."
-				
+
 			case key.Matches(msg, m.keymap.Refine):
 				m.proclamation = "Summoning the Guild's craftsmen to refine the documents..."
 				return m, generateDocumentsCmd(&m)
-				
+
 			case key.Matches(msg, m.keymap.ConsultMaster):
 				m.proclamation = "Seeking the Guild Master's counsel on improvements..."
 				return m, requestSuggestionsCmd(&m)
-				
+
 			case key.Matches(msg, m.keymap.ApproveWork):
 				m.proclamation = "Preparing to seal the work with the Guild's mark of approval..."
 				return m, markCommissionReadyCmd(&m)
-				
+
 			case key.Matches(msg, m.keymap.ExamineDocs):
 				m.chamberState = statePreview
 				m.proclamation = "Unrolling the document scrolls for examination..."
-				
+
 			case key.Matches(msg, m.keymap.ToggleView):
 				m.chamberState = stateDashboard
 				m.proclamation = "Opening the Guild's objective ledger..."
 				return m, loadCommissionsCmd(&m)
-				
+
 			case key.Matches(msg, m.keymap.EnterHall):
 				m.chamberState = stateCommands
 				m.parchment.Focus()
 				m.proclamation = "Enter thy command, and the Guild shall obey..."
 			}
-			
+
 		case stateContext:
 			// Adding context state key bindings
 			switch {
-			case key.Matches(msg, m.keymap.NavigateUp), 
+			case key.Matches(msg, m.keymap.NavigateUp),
 				 key.Matches(msg, m.keymap.NavigateDown),
 				 key.Matches(msg, m.keymap.NavigateLeft),
 				 key.Matches(msg, m.keymap.NavigateRight):
 				// Pass these navigation keys to the textarea
 				m.scribe, cmd = m.scribe.Update(msg)
 				cmds = append(cmds, cmd)
-				
+
 			case msg.Type == tea.KeyEsc:
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.scribe.Blur()
 				m.proclamation = "Context crafting cancelled. Returned to the main chamber."
-				
+
 			case msg.Type == tea.KeyEnter && key.Matches(msg, key.NewBinding(key.WithKeys("ctrl+enter"))):
 				// Submit context with Ctrl+Enter
 				content := m.scribe.Value()
@@ -135,7 +135,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, addContextCmd(&m, content)
 				}
 			}
-			
+
 		case statePreview:
 			// Preview docs state key bindings
 			switch {
@@ -144,13 +144,13 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Scroll viewport
 				m.viewport, cmd = m.viewport.Update(msg)
 				cmds = append(cmds, cmd)
-				
+
 			case msg.Type == tea.KeyEsc, key.Matches(msg, m.keymap.ExamineDocs):
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.proclamation = "Returned to the main chamber."
 			}
-			
+
 		case stateDashboard:
 			// Dashboard state key bindings
 			switch {
@@ -159,20 +159,20 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Navigate the ledger list
 				m.ledger, cmd = m.ledger.Update(msg)
 				cmds = append(cmds, cmd)
-				
-			case key.Matches(msg, m.keymap.ToggleView), 
+
+			case key.Matches(msg, m.keymap.ToggleView),
 				 msg.Type == tea.KeyEsc:
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.proclamation = "Closed the Guild's objective ledger."
-				
+
 			case msg.Type == tea.KeyEnter:
 				// Select objective from ledger
 				// TODO: Get selected objective and load it
 				m.chamberState = stateViewing
 				m.proclamation = "A new objective scroll unfurls before you..."
 			}
-			
+
 		case stateCommands:
 			// Command input state key bindings
 			switch {
@@ -181,14 +181,14 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.chamberState = stateViewing
 				m.parchment.Blur()
 				m.proclamation = "Command cancelled. Returned to the main chamber."
-				
+
 			case msg.Type == tea.KeyEnter:
 				// Process command
 				command := m.parchment.Value()
 				m.parchment.Reset()
 				m.parchment.Blur()
 				m.chamberState = stateViewing
-				
+
 				if command == "" {
 					m.proclamation = "Command was empty. Returned to the main chamber."
 				} else {
@@ -196,24 +196,24 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return m, executeCommandCmd(&m, command)
 				}
 			}
-			
+
 		case stateCreating:
 			// Creating a new objective state key bindings
 			switch {
-			case key.Matches(msg, m.keymap.NavigateUp), 
+			case key.Matches(msg, m.keymap.NavigateUp),
 				 key.Matches(msg, m.keymap.NavigateDown),
 				 key.Matches(msg, m.keymap.NavigateLeft),
 				 key.Matches(msg, m.keymap.NavigateRight):
 				// Pass these navigation keys to the textarea
 				m.scribe, cmd = m.scribe.Update(msg)
 				cmds = append(cmds, cmd)
-				
+
 			case msg.Type == tea.KeyEsc:
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.scribe.Blur()
 				m.proclamation = "Objective creation cancelled. Returned to the main chamber."
-				
+
 			case msg.Type == tea.KeyEnter && key.Matches(msg, key.NewBinding(key.WithKeys("ctrl+enter"))):
 				// Submit new objective with Ctrl+Enter
 				content := m.scribe.Value()
@@ -225,26 +225,26 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				}
 			}
 		}
-		
+
 	case tea.WindowSizeMsg:
 		// Handle window resizing with Guild-themed variable names
 		m.hallWidth = msg.Width
 		m.hallHeight = msg.Height
-		
+
 		// Update viewport dimensions
 		headerHeight := 2 // Title
 		footerHeight := 4 // Status + help
 		contentHeight := m.hallHeight - headerHeight - footerHeight
-		
+
 		m.viewport.Width = m.hallWidth
 		m.viewport.Height = contentHeight
-		
+
 		// Update textarea width
 		m.scribe.SetWidth(m.hallWidth)
-		
+
 		// Update list dimensions
 		m.ledger.SetSize(m.hallWidth, contentHeight)
-		
+
 		// Update help width
 		m.helpScroll.Width = m.hallWidth
 
@@ -255,7 +255,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.proclamation = "The scribes failed to record your wisdom: " + msg.Error.Error()
 		} else {
 			m.proclamation = "Your knowledge has been added to the Guild's records."
-			
+
 			// Update preview content if we have one
 			if m.currentCommission != nil {
 				m.commissionPreview = formatCommissionPreview(m.currentCommission)
@@ -272,7 +272,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// Update previews with new content
 			// This would update aiDocsPreview and specsPreview
 		}
-		
+
 	case MasterSuggestionMsg:
 		// Handle suggestions from the Guild Master
 		if !msg.Success {
@@ -284,7 +284,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.viewport.SetContent(fmt.Sprintf("Guild Master's Wisdom:\n\n%s", msg.Suggestions))
 			m.chamberState = statePreview
 		}
-		
+
 	case CommissionReadyMsg:
 		// Handle marking objective as ready
 		if !msg.Success {
@@ -294,7 +294,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.readyForMaster = true
 			m.proclamation = "The work has been sealed with the Guild's mark of approval!"
 		}
-		
+
 	case CommissionLoadedMsg:
 		// Handle loading an objective
 		if !msg.Success {
@@ -306,27 +306,27 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// Update the view with the objective content
 			m.viewport.SetContent(msg.Commission)
 		}
-		
+
 	case CommandMsg:
 		// Handle command execution results
 		// Parse the command and execute appropriate action
 		// This would be a more complex implementation based on command parsing
 	}
-	
+
 	// Always update active components based on state
 	switch m.chamberState {
 	case stateContext, stateCreating:
 		m.scribe, cmd = m.scribe.Update(msg)
 		cmds = append(cmds, cmd)
-		
+
 	case stateCommands:
 		m.parchment, cmd = m.parchment.Update(msg)
 		cmds = append(cmds, cmd)
-		
+
 	case statePreview:
 		m.viewport, cmd = m.viewport.Update(msg)
 		cmds = append(cmds, cmd)
-		
+
 	case stateDashboard:
 		m.ledger, cmd = m.ledger.Update(msg)
 		cmds = append(cmds, cmd)
@@ -825,12 +825,12 @@ func formatCommissionPreview(obj *commissionpkg.Commission) string {
 	// Create a formatted preview of the objective
 	// This would format the objective details into a nice display
 	// using actual objective data
-	
+
 	// Mock implementation for now
 	if obj == nil {
 		return "No objective loaded"
 	}
-	
+
 	return fmt.Sprintf(`# %s
 
 Goal: %s
@@ -839,7 +839,7 @@ Status: %s
 Iterations: %d
 
 Tags: %s
-`, 
+`,
 	obj.Title,
 	obj.Description,
 	obj.Status,
@@ -879,18 +879,18 @@ func executeExternalCommandCmd(cmdStr string) tea.Cmd {
 	return func() tea.Msg {
 		// Execute the external command
 		result := components.ExecuteExternalCommand(cmdStr)
-		
+
 		// Format the output for display
 		outputMsg := fmt.Sprintf("Command: guild %s\n\n", cmdStr)
 		if result.Success {
 			outputMsg += fmt.Sprintf("Success! Output:\n%s", result.Output)
 		} else {
-			outputMsg += fmt.Sprintf("Error (code %d):\n%s\n\nOutput:\n%s", 
+			outputMsg += fmt.Sprintf("Error (code %d):\n%s\n\nOutput:\n%s",
 				result.ExitCode,
 				result.Error.Error(),
 				result.Output)
 		}
-		
+
 		// Return a message that will display this output in the viewport
 		return CommissionLoadedMsg{
 			Commission: outputMsg,

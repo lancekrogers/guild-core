@@ -13,22 +13,22 @@ type TaskStatus string
 const (
 	// StatusBacklog indicates a task that hasn't been started
 	StatusBacklog TaskStatus = "backlog"
-	
+
 	// StatusTodo indicates a task that is ready to be worked on
 	StatusTodo TaskStatus = "todo"
-	
+
 	// StatusInProgress indicates a task that is currently being worked on
 	StatusInProgress TaskStatus = "in_progress"
-	
+
 	// StatusBlocked indicates a task that is blocked by something
 	StatusBlocked TaskStatus = "blocked"
-	
+
 	// StatusReadyForReview indicates a task that is ready for review
 	StatusReadyForReview TaskStatus = "ready_for_review"
-	
+
 	// StatusDone indicates a completed task
 	StatusDone TaskStatus = "done"
-	
+
 	// StatusCancelled indicates a cancelled task
 	StatusCancelled TaskStatus = "cancelled"
 )
@@ -39,10 +39,10 @@ type TaskPriority string
 const (
 	// PriorityHigh represents a high priority task
 	PriorityHigh TaskPriority = "high"
-	
+
 	// PriorityMedium represents a medium priority task
 	PriorityMedium TaskPriority = "medium"
-	
+
 	// PriorityLow represents a low priority task
 	PriorityLow TaskPriority = "low"
 )
@@ -139,11 +139,11 @@ func (t *Task) UpdateStatus(newStatus TaskStatus, changedBy, comment string) err
 	if !IsValidStatus(newStatus) {
 		return fmt.Errorf("invalid status: %s", newStatus)
 	}
-	
+
 	oldStatus := t.Status
 	t.Status = newStatus
 	t.UpdatedAt = time.Now().UTC()
-	
+
 	// Update progress based on status
 	switch newStatus {
 	case StatusDone:
@@ -153,7 +153,7 @@ func (t *Task) UpdateStatus(newStatus TaskStatus, changedBy, comment string) err
 	case StatusBacklog:
 		t.Progress = 0
 	}
-	
+
 	// Record the status change in history
 	history := TaskHistory{
 		Timestamp:  time.Now().UTC(),
@@ -163,7 +163,7 @@ func (t *Task) UpdateStatus(newStatus TaskStatus, changedBy, comment string) err
 		Comment:    comment,
 	}
 	t.History = append(t.History, history)
-	
+
 	return nil
 }
 
@@ -172,7 +172,7 @@ func (t *Task) UpdateAssignee(newAssignee, changedBy, comment string) {
 	oldAssignee := t.AssignedTo
 	t.AssignedTo = newAssignee
 	t.UpdatedAt = time.Now().UTC()
-	
+
 	// Record the assignee change in history
 	history := TaskHistory{
 		Timestamp:   time.Now().UTC(),
@@ -189,17 +189,17 @@ func (t *Task) UpdateProgress(progress int, changedBy, comment string) error {
 	if progress < 0 || progress > 100 {
 		return fmt.Errorf("progress must be between 0 and 100")
 	}
-	
+
 	oldProgress := t.Progress
 	t.Progress = progress
 	t.UpdatedAt = time.Now().UTC()
-	
+
 	// Record the progress change in history
 	changes := map[string]string{
 		"progress": fmt.Sprintf("%d -> %d", oldProgress, progress),
 	}
 	t.AddHistory(changedBy, comment, changes)
-	
+
 	return nil
 }
 
@@ -211,7 +211,7 @@ func (t *Task) AddDependency(dependencyID string) {
 			return // Already exists
 		}
 	}
-	
+
 	t.Dependencies = append(t.Dependencies, dependencyID)
 	t.UpdatedAt = time.Now().UTC()
 }
@@ -236,15 +236,15 @@ func (t *Task) AddBlocker(blockerID string, changedBy, comment string) {
 			return // Already exists
 		}
 	}
-	
+
 	t.Blockers = append(t.Blockers, blockerID)
 	t.UpdatedAt = time.Now().UTC()
-	
+
 	// If we're adding a blocker, automatically set status to blocked
 	if t.Status != StatusBlocked && len(t.Blockers) == 1 {
 		t.UpdateStatus(StatusBlocked, changedBy, "Task blocked")
 	}
-	
+
 	// Record the blocker addition in history
 	changes := map[string]string{
 		"blocker_added": blockerID,
@@ -256,7 +256,7 @@ func (t *Task) AddBlocker(blockerID string, changedBy, comment string) {
 func (t *Task) RemoveBlocker(blockerID string, changedBy, comment string) {
 	var newBlockers []string
 	removed := false
-	
+
 	for _, b := range t.Blockers {
 		if b != blockerID {
 			newBlockers = append(newBlockers, b)
@@ -264,19 +264,19 @@ func (t *Task) RemoveBlocker(blockerID string, changedBy, comment string) {
 			removed = true
 		}
 	}
-	
+
 	if !removed {
 		return // Blocker not found
 	}
-	
+
 	t.Blockers = newBlockers
 	t.UpdatedAt = time.Now().UTC()
-	
+
 	// If we removed the last blocker, change status from blocked to todo
 	if len(t.Blockers) == 0 && t.Status == StatusBlocked {
 		t.UpdateStatus(StatusTodo, changedBy, "Task unblocked")
 	}
-	
+
 	// Record the blocker removal in history
 	changes := map[string]string{
 		"blocker_removed": blockerID,

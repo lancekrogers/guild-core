@@ -41,7 +41,7 @@ func NewOllamaEmbedder(baseURL, model string) (*OllamaEmbedder, error) {
 	if baseURL == "" {
 		baseURL = "http://localhost:11434" // Default Ollama URL
 	}
-	
+
 	if model == "" {
 		model = "nomic-embed-text" // Default embedding model
 	}

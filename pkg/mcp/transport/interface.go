@@ -15,25 +15,25 @@ import (
 type Transport interface {
 	// Connect establishes a connection
 	Connect(ctx context.Context) error
-	
+
 	// Disconnect closes the connection
 	Disconnect(ctx context.Context) error
-	
+
 	// Send sends a message through the transport
 	Send(ctx context.Context, topic string, data []byte) error
-	
+
 	// Receive receives messages from the transport
 	Receive(ctx context.Context) <-chan []byte
-	
+
 	// Request sends a request and waits for response
 	Request(ctx context.Context, topic string, data []byte) ([]byte, error)
-	
+
 	// Subscribe subscribes to a topic
 	Subscribe(ctx context.Context, topic string) (<-chan []byte, error)
-	
+
 	// Unsubscribe unsubscribes from a topic
 	Unsubscribe(ctx context.Context, topic string) error
-	
+
 	// Publish publishes to a topic
 	Publish(ctx context.Context, topic string, data []byte) error
 }
@@ -41,10 +41,10 @@ type Transport interface {
 // StreamTransport supports streaming operations
 type StreamTransport interface {
 	Transport
-	
+
 	// SendStream sends a stream of messages
 	SendStream(ctx context.Context) (StreamWriter, error)
-	
+
 	// ReceiveStream receives a stream of messages
 	ReceiveStream(ctx context.Context) (StreamReader, error)
 }
@@ -53,7 +53,7 @@ type StreamTransport interface {
 type StreamWriter interface {
 	// Write writes a message to the stream
 	Write(msg interface{}) error
-	
+
 	// Close closes the stream
 	Close() error
 }
@@ -62,7 +62,7 @@ type StreamWriter interface {
 type StreamReader interface {
 	// Read reads the next message from the stream
 	Read() (interface{}, error)
-	
+
 	// Close closes the stream
 	Close() error
 }
@@ -80,28 +80,28 @@ type ConnectionInfo struct {
 type TransportConfig struct {
 	// Transport type
 	Type           string            // "nats", "memory", "grpc"
-	
+
 	// Connection settings
 	Address        string
 	TLSConfig      *TLSConfig
 	ConnectTimeout time.Duration
-	
+
 	// Retry settings
 	MaxReconnects  int
 	ReconnectWait  time.Duration
-	
+
 	// Message settings
 	MaxMessageSize int
 	Compression    bool
-	
+
 	// Authentication
 	AuthType       string // "none", "token", "cert"
 	AuthToken      string
-	
+
 	// Metadata
 	ClientID       string
 	Metadata       map[string]string
-	
+
 	// Transport-specific config
 	Config         map[string]interface{}
 }
@@ -122,13 +122,13 @@ type MessageHandler func(ctx context.Context, msg interface{}) error
 type Server interface {
 	// Start starts the server
 	Start(ctx context.Context) error
-	
+
 	// Stop stops the server
 	Stop(ctx context.Context) error
-	
+
 	// Accept accepts incoming connections
 	Accept() (Transport, error)
-	
+
 	// Addr returns the server address
 	Addr() string
 }
@@ -137,7 +137,7 @@ type Server interface {
 type Client interface {
 	// Connect establishes a connection
 	Connect(ctx context.Context) (Transport, error)
-	
+
 	// Close closes the client
 	Close() error
 }
@@ -146,7 +146,7 @@ type Client interface {
 type Codec interface {
 	// Encode encodes a message
 	Encode(msg interface{}) ([]byte, error)
-	
+
 	// Decode decodes a message
 	Decode(data []byte) (interface{}, error)
 }
@@ -177,7 +177,7 @@ func (c *DefaultCodec) Encode(msg interface{}) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		
+
 		mcpMsg := &protocol.MCPMessage{
 			ID:          generateID(),
 			Version:     "1.0",
@@ -185,7 +185,7 @@ func (c *DefaultCodec) Encode(msg interface{}) ([]byte, error) {
 			Timestamp:   time.Now(),
 			Payload:     payload,
 		}
-		
+
 		return json.Marshal(mcpMsg)
 	}
 }
@@ -197,13 +197,13 @@ func (c *DefaultCodec) Decode(data []byte) (interface{}, error) {
 	if err == nil {
 		return msg, nil
 	}
-	
+
 	// Try to decode as MCPMessage
 	var mcpMsg protocol.MCPMessage
 	if err := json.Unmarshal(data, &mcpMsg); err == nil {
 		return &mcpMsg, nil
 	}
-	
+
 	return nil, fmt.Errorf("failed to decode message")
 }
 
@@ -227,7 +227,7 @@ func NewTransport(config *TransportConfig) (Transport, error) {
 	if config == nil {
 		return nil, fmt.Errorf("transport config cannot be nil")
 	}
-	
+
 	switch config.Type {
 	case "nats":
 		return NewNATSTransport(config)

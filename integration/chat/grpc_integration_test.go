@@ -52,7 +52,7 @@ func TestGRPCServerStartup(t *testing.T) {
 
 	// Create a mock event bus
 	eventBus := &mockEventBus{}
-	
+
 	// Start gRPC server in goroutine
 	server := grpcpkg.NewServer(reg, eventBus)
 	go func() {
@@ -76,7 +76,7 @@ func TestGRPCServerStartup(t *testing.T) {
 	// Test health check or basic operation
 	// Note: Adjust this based on actual service methods available
 	_, err = client.GetGuildInfo(ctx, &guildv1.GetGuildInfoRequest{})
-	
+
 	// We expect this to work or fail gracefully, not panic or hang
 	if err != nil {
 		// Log the error but don't fail if it's just unimplemented
@@ -96,7 +96,7 @@ func TestChatServiceBasics(t *testing.T) {
 
 	// Setup test environment
 	testDir := t.TempDir()
-	
+
 	// Skip complex project initialization for integration test
 	// Focus on basic gRPC server functionality
 	_ = testDir // Mark as used
@@ -157,7 +157,7 @@ func TestAgentExecution(t *testing.T) {
 
 	// Setup test project
 	testDir := t.TempDir()
-	
+
 	guildConfig := &config.GuildConfig{
 		Name:        "test-execution-guild",
 		Description: "Test guild for agent execution testing",
@@ -200,24 +200,24 @@ func TestAgentExecution(t *testing.T) {
 
 	// Test agent execution
 	response, err := agent.Execute(ctx, "Create a simple task breakdown for user authentication")
-	
+
 	// Should not fail outright
 	if err != nil {
 		t.Logf("Agent execution returned error (may be expected with mock): %v", err)
 	}
-	
+
 	// Should get some response (even if it's mock)
 	if response != "" {
 		t.Logf("Agent response: %s", response)
-		
+
 		// Should NOT be hardcoded demo response
 		assert.NotEqual(t, "I'll analyze this request...", response)
-		
+
 		// Should contain relevant terms for the request
 		lowerResponse := strings.ToLower(response)
-		assert.True(t, 
-			strings.Contains(lowerResponse, "task") || 
-			strings.Contains(lowerResponse, "auth") || 
+		assert.True(t,
+			strings.Contains(lowerResponse, "task") ||
+			strings.Contains(lowerResponse, "auth") ||
 			strings.Contains(lowerResponse, "user") ||
 			strings.Contains(lowerResponse, "mock"), // Allow mock responses
 			"Response should contain relevant terms or indicate mock usage")
@@ -236,7 +236,7 @@ func TestToolExecution(t *testing.T) {
 
 	// Create workspace
 	workspace := t.TempDir()
-	
+
 	// Setup test project
 	guildConfig := &config.GuildConfig{
 		Name:        "test-tool-guild",
@@ -284,7 +284,7 @@ func TestToolExecution(t *testing.T) {
 		if err == nil && fileTool != nil {
 			// Test basic file tool functionality
 			t.Logf("File tool available: %s", fileTool.Description())
-			
+
 			// Note: Actual tool execution would require more complex setup
 			// This is testing that tools are registered and accessible
 		}
@@ -323,7 +323,7 @@ func TestChatPerformance(t *testing.T) {
 
 	// Benchmark agent creation time
 	start := time.Now()
-	
+
 	agentFactory, err := reg.GetAgentFactory()
 	require.NoError(t, err)
 
@@ -336,7 +336,7 @@ func TestChatPerformance(t *testing.T) {
 	}
 
 	_, err = agentFactory.CreateAgent(ctx, "perf-test", testConfig)
-	
+
 	elapsed := time.Since(start)
 
 	// Agent creation should be fast (under 1 second)
@@ -387,7 +387,7 @@ func TestMemoryUsage(t *testing.T) {
 		if err != nil {
 			continue // Skip on error
 		}
-		
+
 		// Execute something to trigger memory allocation
 		if agent != nil {
 			_, _ = agent.Execute(ctx, fmt.Sprintf("Memory test operation %d", i))

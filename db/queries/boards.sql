@@ -12,7 +12,7 @@ SELECT id, commission_id, name, description, status, created_at, updated_at FROM
 WHERE commission_id = ? LIMIT 1;
 
 -- name: UpdateBoard :exec
-UPDATE boards 
+UPDATE boards
 SET name = ?, description = ?, status = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?;
 

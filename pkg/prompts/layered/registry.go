@@ -61,14 +61,14 @@ func (glr *GuildLayeredRegistry) RegisterLayeredPrompt(
 			WithDetails("layer", string(layer)).
 			WithDetails("identifier", identifier)
 	}
-	
+
 	// Set layer metadata
 	prompt.Layer = layer
 	prompt.Updated = time.Now()
 	if prompt.Version == 0 {
 		prompt.Version = 1
 	}
-	
+
 	// Marshal prompt data
 	data, err := json.Marshal(prompt)
 	if err != nil {
@@ -78,7 +78,7 @@ func (glr *GuildLayeredRegistry) RegisterLayeredPrompt(
 			WithDetails("layer", string(layer)).
 			WithDetails("identifier", identifier)
 	}
-	
+
 	// Store in Guild Archives
 	ctx := context.Background() // TODO: Pass context through interface
 	if err := glr.store.SavePromptLayer(ctx, string(layer), identifier, data); err != nil {
@@ -88,13 +88,13 @@ func (glr *GuildLayeredRegistry) RegisterLayeredPrompt(
 			WithDetails("layer", string(layer)).
 			WithDetails("identifier", identifier)
 	}
-	
+
 	// Update cache
 	cacheKey := glr.makeCacheKey(layer, identifier)
 	glr.mutex.Lock()
 	glr.cache[cacheKey] = &prompt
 	glr.mutex.Unlock()
-	
+
 	return nil
 }
 
@@ -108,7 +108,7 @@ func (glr *GuildLayeredRegistry) GetLayeredPrompt(layer PromptLayer, identifier 
 		return cached, nil
 	}
 	glr.mutex.RUnlock()
-	
+
 	// Retrieve from Guild Archives
 	ctx := context.Background() // TODO: Pass context through interface
 	data, err := glr.store.GetPromptLayer(ctx, string(layer), identifier)
@@ -119,7 +119,7 @@ func (glr *GuildLayeredRegistry) GetLayeredPrompt(layer PromptLayer, identifier 
 			WithDetails("layer", string(layer)).
 			WithDetails("identifier", identifier)
 	}
-	
+
 	// Unmarshal prompt
 	var prompt SystemPrompt
 	if err := json.Unmarshal(data, &prompt); err != nil {
@@ -129,12 +129,12 @@ func (glr *GuildLayeredRegistry) GetLayeredPrompt(layer PromptLayer, identifier 
 			WithDetails("layer", string(layer)).
 			WithDetails("identifier", identifier)
 	}
-	
+
 	// Update cache
 	glr.mutex.Lock()
 	glr.cache[cacheKey] = &prompt
 	glr.mutex.Unlock()
-	
+
 	return &prompt, nil
 }
 
@@ -148,7 +148,7 @@ func (glr *GuildLayeredRegistry) ListLayeredPrompts(layer PromptLayer) ([]System
 			WithOperation("ListLayeredPrompts").
 			WithDetails("layer", string(layer))
 	}
-	
+
 	var prompts []SystemPrompt
 	for _, identifier := range identifiers {
 		prompt, err := glr.GetLayeredPrompt(layer, identifier)
@@ -158,14 +158,14 @@ func (glr *GuildLayeredRegistry) ListLayeredPrompts(layer PromptLayer) ([]System
 		}
 		prompts = append(prompts, *prompt)
 	}
-	
+
 	return prompts, nil
 }
 
 // DeleteLayeredPrompt implements LayeredRegistry interface
 func (glr *GuildLayeredRegistry) DeleteLayeredPrompt(layer PromptLayer, identifier string) error {
 	ctx := context.Background() // TODO: Pass context through interface
-	
+
 	// Remove from Guild Archives
 	if err := glr.store.DeletePromptLayer(ctx, string(layer), identifier); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete layered prompt").
@@ -174,13 +174,13 @@ func (glr *GuildLayeredRegistry) DeleteLayeredPrompt(layer PromptLayer, identifi
 			WithDetails("layer", string(layer)).
 			WithDetails("identifier", identifier)
 	}
-	
+
 	// Remove from cache
 	cacheKey := glr.makeCacheKey(layer, identifier)
 	glr.mutex.Lock()
 	delete(glr.cache, cacheKey)
 	glr.mutex.Unlock()
-	
+
 	return nil
 }
 
@@ -218,7 +218,7 @@ func (glr *GuildLayeredRegistry) isValidLayer(layer PromptLayer) bool {
 		LayerSession,
 		LayerTurn,
 	}
-	
+
 	for _, valid := range validLayers {
 		if layer == valid {
 			return true
@@ -286,7 +286,7 @@ func (glr *GuildLayeredRegistry) InvalidateCache() {
 func (glr *GuildLayeredRegistry) InvalidateLayerCache(layer PromptLayer) {
 	glr.mutex.Lock()
 	defer glr.mutex.Unlock()
-	
+
 	prefix := string(layer) + ":"
 	for key := range glr.cache {
 		if len(key) > len(prefix) && key[:len(prefix)] == prefix {
