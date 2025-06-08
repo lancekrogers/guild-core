@@ -15,6 +15,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"google.golang.org/grpc"
 
+	"github.com/guild-ventures/guild-core/internal/chat/commands"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	guildcontext "github.com/guild-ventures/guild-core/pkg/context"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -188,6 +189,7 @@ Try these commands to see visual features:
 
 	completionEngine := NewCompletionEngine(guildConfig, projectRoot)
 	commandHistory := NewCommandHistory(projectRoot + "/.guild/chat_history.txt")
+	commandPalette := commands.NewCommandPalette()
 	// Command processor will be set after model creation
 
 	// Initialize agent status systems (Agent 3)
@@ -228,6 +230,7 @@ Try these commands to see visual features:
 		commandProc:   nil, // Set after model is created
 		completionEng: completionEngine,
 		history:       commandHistory,
+		commandPalette: commandPalette,
 
 		// State
 		messages:      []Message{},
@@ -581,9 +584,8 @@ func (m ChatModel) executeToolDirectly(toolID string, params map[string]string) 
 	m.activeTools[execID] = execution
 	// m.activeTools is a map, not a slice - already added above
 
-	// TODO: Implement actual tool execution via registry
-	// For now, return mock response
-	go m.simulateToolExecution(execID)
+	// Send tool execution request via gRPC
+	go m.executeToolViaGRPC(execID, toolID, params)
 
 	return fmt.Sprintf("🔨 Started tool execution: %s\nExecution ID: %s\nParameters: %v\n\nUse '/tools status' to monitor progress.",
 		lipgloss.NewStyle().Foreground(lipgloss.Color("208")).Bold(true).Render(toolID), execID, params)

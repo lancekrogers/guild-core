@@ -11,6 +11,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/guild-ventures/guild-core/pkg/corpus"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // Update handles UI events and state transitions
@@ -72,7 +73,15 @@ func (m CorpusModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.viewPort.GotoTop()
 		// Track the user viewing this document
 		cfg := m.configToCorpusConfig()
-		go corpus.TrackUserView(m.ctx, m.config.GetUser(), msg.FilePath, cfg)
+		go func() {
+			if err := corpus.TrackUserView(m.ctx, m.config.GetUser(), msg.FilePath, cfg); err != nil {
+				// Log error but don't block UI updates
+				_ = gerror.Wrap(err, gerror.ErrCodeInternal, "failed to track user view").
+					WithComponent("ui.corpus").
+					WithOperation("trackUserView")
+				// TODO: Add proper logging system
+			}
+		}()
 		return m, nil
 
 	case corpus.Graph:

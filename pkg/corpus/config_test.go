@@ -32,7 +32,11 @@ func TestSaveAndLoadConfig(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}
-	defer os.RemoveAll(tempDir)
+	defer func() {
+		if rmErr := os.RemoveAll(tempDir); rmErr != nil {
+			t.Logf("Failed to cleanup temp dir: %v", rmErr)
+		}
+	}()
 
 	configPath := filepath.Join(tempDir, "corpus.yml")
 
@@ -85,7 +89,9 @@ func TestLoadConfigFromNonExistentFile(t *testing.T) {
 	nonExistentPath := filepath.Join(os.TempDir(), "non-existent-config.yml")
 
 	// Make sure the file doesn't exist
-	os.Remove(nonExistentPath)
+	if rmErr := os.Remove(nonExistentPath); rmErr != nil && !os.IsNotExist(rmErr) {
+		t.Logf("Failed to remove non-existent file: %v", rmErr)
+	}
 
 	// Load the config
 	cfg, err := LoadConfigFromFile(nonExistentPath)

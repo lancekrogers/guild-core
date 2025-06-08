@@ -1,7 +1,7 @@
 package components
 
 import (
-	"fmt"
+	// "fmt" - temporarily unused due to commented out formatTimeAgo function
 	"time"
 )
 
@@ -25,6 +25,9 @@ func (i CommissionItem) FilterValue() string {
 }
 
 // formatTimeAgo formats a time in a relative manner (e.g., "2 days ago")
+// TODO: This function will be used for displaying commission timestamps in the UI
+// Temporarily commented out to avoid "unused" linter warnings
+/*
 func formatTimeAgo(t time.Time) string {
 	now := time.Now()
 	diff := now.Sub(t)
@@ -58,3 +61,4 @@ func formatTimeAgo(t time.Time) string {
 		return fmt.Sprintf("%d months ago", months)
 	}
 }
+*/

@@ -170,7 +170,12 @@ func (a *WorkerAgent) ExecuteWithTools(ctx context.Context, request string, allo
 
 		// Record tool cost
 		if a.CostManager != nil {
-			a.CostManager.TrackCost(CostTypeTool, cost)
+			if err := a.CostManager.TrackCost(CostTypeTool, cost); err != nil {
+				return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to track tool cost").
+					WithComponent("WorkerAgent").
+					WithOperation("processTools").
+					WithDetails("tool_name", toolName)
+			}
 		}
 
 		// Incorporate tool result into response

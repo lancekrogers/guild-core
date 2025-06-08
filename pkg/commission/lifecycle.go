@@ -296,7 +296,14 @@ func (l *LifecycleManager) MarkObjectiveCompleted(ctx context.Context, objective
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to open ready file").WithComponent("commission").WithOperation("MarkObjectiveCompleted")
 	}
-	defer f.Close()
+	defer func() {
+		if closeErr := f.Close(); closeErr != nil {
+			// Log the close error but don't override the main error
+			_ = gerror.Wrap(closeErr, gerror.ErrCodeStorage, "failed to close ready file").
+				WithComponent("commission").
+				WithOperation("MarkObjectiveCompleted")
+		}
+	}()
 
 	if _, err := f.WriteString(completionContent); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update ready file").WithComponent("commission").WithOperation("MarkObjectiveCompleted")

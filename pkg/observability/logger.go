@@ -163,8 +163,18 @@ func createLogFile() io.Writer {
 
 	// Create a symlink to latest log for easy access
 	latestPath := filepath.Join(logDir, "latest.log")
-	os.Remove(latestPath)               // Remove existing symlink
-	os.Symlink(logFileName, latestPath) // Create new symlink (ignore errors)
+	if err := os.Remove(latestPath); err != nil && !os.IsNotExist(err) {
+		// Ignore errors - symlink creation is non-critical
+		_ = gerror.Wrap(err, gerror.ErrCodeStorage, "failed to remove old symlink").
+			WithComponent("logger").
+			WithOperation("createLogFile")
+	}
+	if err := os.Symlink(logFileName, latestPath); err != nil {
+		// Ignore errors - symlink creation is non-critical
+		_ = gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create symlink").
+			WithComponent("logger").
+			WithOperation("createLogFile")
+	}
 
 	return logFile
 }

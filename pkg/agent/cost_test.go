@@ -156,7 +156,9 @@ func TestCostManager_Report(t *testing.T) {
 	cm.SetBudget(CostTypeTool, 5.0)
 
 	// Record various costs
-	cm.RecordLLMCost("gpt-4", 1000, 500, nil)
+	if err := cm.RecordLLMCost("gpt-4", 1000, 500, nil); err != nil {
+		t.Fatalf("Failed to record LLM cost: %v", err)
+	}
 	cm.RecordToolCost("shell", nil)
 	cm.RecordCost(CostTypeStorage, 0.05, "Storage usage", nil)
 

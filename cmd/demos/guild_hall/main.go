@@ -15,10 +15,11 @@ var (
 	burgundy  = lipgloss.Color("#8B0000") // Guild Master's robes
 	parchment = lipgloss.Color("#F5F5DC") // Guild records
 	gold      = lipgloss.Color("#D4AF37") // Guild seal
-	darkOak   = lipgloss.Color("#3E2723") // Guild hall panels
 	ivory     = lipgloss.Color("#FFFFF0") // Parchment text
 	emerald   = lipgloss.Color("#2E8B57") // Success states
-	ruby      = lipgloss.Color("#9B111E") // Error states
+	// Unused colors removed - can be re-added when needed
+	// darkOak   = lipgloss.Color("#3E2723") // Guild hall panels
+	// ruby      = lipgloss.Color("#9B111E") // Error states
 )
 
 // UI Styles for the Guild Hall demo
@@ -45,11 +46,11 @@ var (
 	textStyle = lipgloss.NewStyle().
 			Foreground(ivory)
 
-	// Selected text style
-	selectedStyle = lipgloss.NewStyle().
-			Foreground(darkOak).
-			Background(parchment).
-			Bold(true)
+	// Selected text style (unused for now)
+	// selectedStyle = lipgloss.NewStyle().
+	//		Foreground(darkOak).
+	//		Background(parchment).
+	//		Bold(true)
 
 	// Status style
 	statusStyle = lipgloss.NewStyle().

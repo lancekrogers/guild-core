@@ -34,6 +34,11 @@ func (m ChatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 	case tea.KeyMsg:
+		// Handle command palette navigation first if open
+		if m.commandPalette != nil && m.commandPalette.IsOpen() {
+			return m.handleCommandPaletteKey(msg)
+		}
+		
 		switch {
 		case key.Matches(msg, m.keys.Quit):
 			return m, tea.Quit
@@ -92,6 +97,9 @@ func (m ChatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.messages = []Message{}
 			m.updateMessagesView()
 			return m, nil
+
+		case key.Matches(msg, m.keys.CommandPalette):
+			return m.handleCommandPalette()
 
 		case msg.String() == "tab":
 			return m.handleTabCompletion()

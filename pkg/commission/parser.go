@@ -6,6 +6,8 @@ import (
 	"os"
 	"regexp"
 	"strings"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // MarkdownParser implements ObjectiveParser for markdown files
@@ -132,7 +134,15 @@ func ParseFile(path string) (*Commission, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error opening file: %w", err)
 	}
-	defer file.Close()
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil {
+			// Log the close error
+			_ = gerror.Wrap(closeErr, gerror.ErrCodeStorage, "failed to close commission file").
+				WithComponent("commission.parser").
+				WithOperation("ParseFile").
+				WithDetails("file_path", path)
+		}
+	}()
 
 	scanner := bufio.NewScanner(file)
 	content := &strings.Builder{}

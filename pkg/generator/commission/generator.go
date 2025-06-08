@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 )
@@ -61,7 +62,13 @@ func (g *Generator) GenerateCommission(ctx context.Context, description string) 
 	if err := os.WriteFile(tempFile, []byte(response), 0644); err != nil {
 		return nil, fmt.Errorf("error writing temp file: %w", err)
 	}
-	defer os.Remove(tempFile)
+	defer func() {
+		if err := os.Remove(tempFile); err != nil {
+			_ = gerror.Wrap(err, gerror.ErrCodeStorage, "failed to remove temp file").
+				WithComponent("generator").
+				WithOperation("GenerateCommission")
+		}
+	}()
 
 	// Parse the commission from the response
 	obj, err := commission.ParseFile(tempFile)

@@ -17,7 +17,11 @@ func TestTrackUserView(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}
-	defer os.RemoveAll(tempDir)
+	defer func() {
+		if rmErr := os.RemoveAll(tempDir); rmErr != nil {
+			t.Logf("Failed to cleanup temp dir: %v", rmErr)
+		}
+	}()
 
 	// Create test configuration
 	cfg := Config{

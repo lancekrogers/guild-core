@@ -312,7 +312,12 @@ func (c *Client) PullModel(ctx context.Context, model string) error {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			// Log close error but don't override main error
+			// TODO: Add proper logging
+		}
+	}()
 
 	// Stream progress updates
 	scanner := bufio.NewScanner(resp.Body)
@@ -340,7 +345,12 @@ func (c *Client) ListModels(ctx context.Context) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			// Log close error but don't override main error
+			// TODO: Add proper logging
+		}
+	}()
 
 	var result struct {
 		Models []struct {

@@ -39,6 +39,12 @@ func (m ChatModel) View() string {
 			s.WriteString("\n")
 		}
 
+		// Show command palette if open
+		if m.commandPalette != nil && m.commandPalette.IsOpen() {
+			s.WriteString(m.commandPalette.View())
+			s.WriteString("\n")
+		}
+
 		// Input area with campaign indicator
 		inputLabel := fmt.Sprintf("📜 %s", m.getCampaignDisplay())
 		s.WriteString(lipgloss.NewStyle().Foreground(lipgloss.Color("62")).Render(inputLabel))
@@ -68,8 +74,46 @@ func (m ChatModel) updateMessagesView() {
 			content.WriteString("\n\n")
 		}
 
-		// Format message based on type
-		formattedContent := m.safeFormatContent(msg.Type, msg.Content, msg.AgentID)
+		// Use rich content formatter if available, otherwise fall back to safe formatting
+		var formattedContent string
+		if m.contentFormatter != nil {
+			// Convert message type to string for content formatter
+			msgTypeStr := ""
+			switch msg.Type {
+			case messageTypeAgent:
+				msgTypeStr = "agent"
+			case messageTypeUser:
+				msgTypeStr = "user"
+			case messageTypeSystem:
+				msgTypeStr = "system"
+			case messageTypeError:
+				msgTypeStr = "error"
+			case messageTypeThinking:
+				msgTypeStr = "thinking"
+			case messageTypeWorking:
+				msgTypeStr = "working"
+			case messageTypeToolOutput:
+				msgTypeStr = "tool"
+			}
+			
+			// Use the rich content formatter
+			if msgTypeStr == "agent" {
+				formattedContent = m.contentFormatter.FormatAgentResponse(msg.Content, msg.AgentID)
+			} else if msgTypeStr == "user" {
+				formattedContent = m.contentFormatter.FormatUserMessage(msg.Content)
+			} else if msgTypeStr == "system" {
+				formattedContent = m.contentFormatter.FormatSystemMessage(msg.Content)
+			} else if msgTypeStr == "error" {
+				formattedContent = m.contentFormatter.FormatErrorMessage(msg.Content)
+			} else {
+				// For thinking, working, tool output, use agent response formatter
+				formattedContent = m.contentFormatter.FormatAgentResponse(msg.Content, msg.AgentID)
+			}
+		} else {
+			// Fall back to safe formatting if content formatter not available
+			formattedContent = m.safeFormatContent(msg.Type, msg.Content, msg.AgentID)
+		}
+		
 		content.WriteString(formattedContent)
 	}
 

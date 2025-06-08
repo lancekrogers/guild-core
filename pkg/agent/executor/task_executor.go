@@ -109,7 +109,12 @@ func (e *BasicTaskExecutor) Execute(ctx context.Context, task *kanban.Task) (*Ex
 		e.mu.Unlock()
 
 		// Update task status to blocked
-		e.updateTaskStatus(ctx, kanban.StatusBlocked, fmt.Sprintf("Execution failed: %v", err))
+		if statusErr := e.updateTaskStatus(ctx, kanban.StatusBlocked, fmt.Sprintf("Execution failed: %v", err)); statusErr != nil {
+			// Log status update error but don't override the main execution error
+			_ = gerror.Wrap(statusErr, gerror.ErrCodeInternal, "failed to update task status").
+				WithComponent("TaskExecutor").
+				WithOperation("ExecuteStep")
+		}
 		return e.result, err
 	}
 
@@ -354,7 +359,12 @@ func (e *BasicTaskExecutor) phaseFinalize(ctx context.Context) error {
 	if e.workspace != nil {
 		// Check for uncommitted changes if using git workspace
 		if gitWs, ok := e.workspace.(*workspace.GitWorkspace); ok {
-			gitWs.UpdateGitInfo()
+			if err := gitWs.UpdateGitInfo(); err != nil {
+				// Log git update error but don't fail the finalization
+				_ = gerror.Wrap(err, gerror.ErrCodeInternal, "failed to update git info").
+					WithComponent("TaskExecutor").
+					WithOperation("phaseFinalize")
+			}
 			gitInfo := gitWs.GetGitInfo()
 			if gitInfo.IsDirty {
 				// Get diff for logging
@@ -663,7 +673,12 @@ func (e *BasicTaskExecutor) initializeDefaultTools() {
 	// Register file tool if not already registered
 	if _, err := e.toolRegistry.GetTool("file"); err != nil {
 		fileTool := fs.NewFileTool(basePath)
-		e.toolRegistry.RegisterTool("file", fileTool)
+		if regErr := e.toolRegistry.RegisterTool("file", fileTool); regErr != nil {
+			// Log tool registration error but don't fail initialization
+			_ = gerror.Wrap(regErr, gerror.ErrCodeInternal, "failed to register file tool").
+				WithComponent("TaskExecutor").
+				WithOperation("initializeTools")
+		}
 	}
 
 	// Register shell tool if not already registered
@@ -677,7 +692,12 @@ func (e *BasicTaskExecutor) initializeDefaultTools() {
 			},
 		}
 		shellTool := shell.NewShellTool(shellOptions)
-		e.toolRegistry.RegisterTool("shell", shellTool)
+		if regErr := e.toolRegistry.RegisterTool("shell", shellTool); regErr != nil {
+			// Log tool registration error but don't fail initialization
+			_ = gerror.Wrap(regErr, gerror.ErrCodeInternal, "failed to register shell tool").
+				WithComponent("TaskExecutor").
+				WithOperation("initializeTools")
+		}
 	}
 }
 

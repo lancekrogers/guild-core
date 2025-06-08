@@ -74,20 +74,26 @@ func setupTestManager(t *testing.T) (*Manager, func()) {
 	// Create a commission manager using the factory
 	managerInterface, err := DefaultCommissionManagerFactory(mockRepo, tempDir)
 	if err != nil {
-		os.RemoveAll(tempDir)
+		if rmErr := os.RemoveAll(tempDir); rmErr != nil {
+			t.Logf("Failed to cleanup temp dir: %v", rmErr)
+		}
 		t.Fatalf("Failed to create commission manager: %v", err)
 	}
 
 	// Type assert to get concrete manager
 	manager, ok := managerInterface.(*Manager)
 	if !ok {
-		os.RemoveAll(tempDir)
+		if rmErr := os.RemoveAll(tempDir); rmErr != nil {
+			t.Logf("Failed to cleanup temp dir: %v", rmErr)
+		}
 		t.Fatalf("Failed to type assert to *Manager")
 	}
 
 	// Initialize the manager
 	if err := manager.Init(context.Background()); err != nil {
-		os.RemoveAll(tempDir)
+		if rmErr := os.RemoveAll(tempDir); rmErr != nil {
+			t.Logf("Failed to cleanup temp dir: %v", rmErr)
+		}
 		t.Fatalf("Failed to initialize manager: %v", err)
 	}
 

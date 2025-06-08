@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log/slog"
@@ -354,12 +355,48 @@ func (s *ChatService) executeApprovedTool(ctx context.Context, session *ChatSess
 	}
 	stream.Send(progressResp)
 
-	// Simulate tool execution (this would integrate with the actual tool system)
-	time.Sleep(time.Second) // Simulate work
+	// Get tool registry
+	toolRegistry := s.registry.Tools()
+	if toolRegistry == nil {
+		toolExec.Status = pb.ToolExecution_FAILED
+		toolExec.Error = "Tool registry not available"
+		toolExec.UpdatedAt = time.Now().Unix()
+		return
+	}
+
+	// Get the tool
+	tool, err := toolRegistry.GetTool(toolExec.ToolName)
+	if err != nil {
+		toolExec.Status = pb.ToolExecution_FAILED
+		toolExec.Error = fmt.Sprintf("Tool not found: %v", err)
+		toolExec.UpdatedAt = time.Now().Unix()
+		return
+	}
+
+	// Convert parameters to JSON string for tool execution
+	paramsJSON, err := json.Marshal(toolExec.Parameters)
+	if err != nil {
+		toolExec.Status = pb.ToolExecution_FAILED
+		toolExec.Error = fmt.Sprintf("Failed to marshal parameters: %v", err)
+		toolExec.UpdatedAt = time.Now().Unix()
+		return
+	}
+
+	// Execute the tool
+	result, err := tool.Execute(ctx, string(paramsJSON))
+	if err != nil {
+		toolExec.Status = pb.ToolExecution_FAILED
+		toolExec.Error = fmt.Sprintf("Tool execution failed: %v", err)
+		toolExec.UpdatedAt = time.Now().Unix()
+		return
+	}
 
 	toolExec.Status = pb.ToolExecution_COMPLETED
 	toolExec.Progress = 1.0
-	toolExec.Result = "Tool execution completed successfully"
+	toolExec.Result = result.Output
+	if result.Error != "" {
+		toolExec.Error = result.Error
+	}
 	toolExec.UpdatedAt = time.Now().Unix()
 
 	completionResp := &pb.ChatResponse{

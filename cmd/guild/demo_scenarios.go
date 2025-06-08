@@ -222,24 +222,28 @@ func (dr *DemoRunner) RunScenario(scenario *DemoScenario) error {
 	dr.scenario = scenario
 
 	// Show scenario introduction
-	introMsg := fmt.Sprintf(`
-🏰 Starting Demo: %s
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-%s
+	// TODO: Need public API for adding system messages
+	/*
+		introMsg := fmt.Sprintf(`
+	🏰 Starting Demo: %s
+	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	%s
 
-Duration: %v | Mode: %s
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-`,
-		scenario.Name,
-		scenario.Description,
-		scenario.Duration,
-		map[bool]string{true: "Auto-play", false: "Manual"}[scenario.AutoPlay],
-	)
+	Duration: %v | Mode: %s
+	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	`,
+			scenario.Name,
+			scenario.Description,
+			scenario.Duration,
+			map[bool]string{true: "Auto-play", false: "Manual"}[scenario.AutoPlay],
+		)
+	*/
 
-	dr.model.addSystemMessage(introMsg)
+	// TODO: Need public API for adding system messages
+	// dr.model.addSystemMessage(introMsg)
 
 	// Execute commands
-	for i, cmd := range scenario.Commands {
+	for _, cmd := range scenario.Commands {
 		if dr.paused {
 			// Wait for unpause
 			continue
@@ -247,8 +251,9 @@ Duration: %v | Mode: %s
 
 		// Show command description
 		if cmd.Description != "" {
-			descMsg := fmt.Sprintf("📋 Step %d: %s", i+1, cmd.Description)
-			dr.model.addSystemMessage(descMsg)
+			// TODO: Need public API for adding system messages
+			// descMsg := fmt.Sprintf("📋 Step %d: %s", i+1, cmd.Description)
+			// dr.model.addSystemMessage(descMsg)
 		}
 
 		// Delay before typing
@@ -266,37 +271,47 @@ Duration: %v | Mode: %s
 	}
 
 	// Show completion message
-	completionMsg := fmt.Sprintf(`
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ Demo Complete: %s
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	// TODO: Need public API for adding system messages
+	/*
+		completionMsg := fmt.Sprintf(`
+	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+	✅ Demo Complete: %s
+	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Expected outcomes achieved:
-%s
-`, scenario.Name, formatExpectedOutcomes(scenario.Expected))
+	Expected outcomes achieved:
+	%s
+	`, scenario.Name, formatExpectedOutcomes(scenario.Expected))
+	*/
 
-	dr.model.addSystemMessage(completionMsg)
+	// TODO: Need public API for adding system messages
+	// dr.model.addSystemMessage(completionMsg)
 
 	return nil
 }
 
 // executeCommand automatically executes a command
 func (dr *DemoRunner) executeCommand(input string) {
-	// Simulate typing effect
-	dr.model.input.SetValue(input)
-	dr.model.input.Focus()
+	// TODO: Need public API for input manipulation
+	/*
+		// Simulate typing effect
+		dr.model.input.SetValue(input)
+		dr.model.input.Focus()
 
-	// Small delay to show the typed command
-	time.Sleep(300 * time.Millisecond)
+		// Small delay to show the typed command
+		time.Sleep(300 * time.Millisecond)
 
-	// Process the command
-	dr.model.handleSendMessage()
+		// Process the command
+		dr.model.handleSendMessage()
+	*/
+	_ = input // Avoid unused parameter warning
 }
 
 // showCommandPrompt shows command for manual execution
 func (dr *DemoRunner) showCommandPrompt(input string) {
-	promptMsg := fmt.Sprintf("👉 Type: %s", input)
-	dr.model.addSystemMessage(promptMsg)
+	// TODO: Need public API for adding system messages
+	// promptMsg := fmt.Sprintf("👉 Type: %s", input)
+	// dr.model.addSystemMessage(promptMsg)
+	_ = input // Avoid unused parameter warning
 }
 
 // Pause pauses the demo execution

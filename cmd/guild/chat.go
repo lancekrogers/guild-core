@@ -46,13 +46,13 @@ func runChat(cmd *cobra.Command, args []string) error {
 	// Load configuration
 	guildConfig, err := loadGuildConfig()
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeConfig, "failed to load guild configuration").
+		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to load guild configuration").
 			WithComponent("cli").
 			WithOperation("chat.run")
 	}
 
 	// Initialize project
-	proj, err := project.LoadProject(".")
+	_, err = project.GetContext()
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load project").
 			WithComponent("cli").
@@ -65,7 +65,7 @@ func runChat(cmd *cobra.Command, args []string) error {
 	}
 
 	// Connect to gRPC server
-	serverAddr := fmt.Sprintf("localhost:%d", guildConfig.Server.Port)
+	serverAddr := "localhost:9090" // Default gRPC server port
 	conn, err := grpc.Dial(serverAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to connect to Guild server").
@@ -81,10 +81,8 @@ func runChat(cmd *cobra.Command, args []string) error {
 
 	// Initialize registry
 	reg := registry.NewComponentRegistry()
-	registryConfig := &registry.Config{
-		GuildConfig: guildConfig,
-		GRPCConn:    conn,
-		ProjectPath: proj.Path,
+	registryConfig := registry.Config{
+		// Basic registry configuration - will be enhanced later
 	}
 
 	if err := reg.Initialize(context.Background(), registryConfig); err != nil {

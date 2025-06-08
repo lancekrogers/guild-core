@@ -9,6 +9,7 @@ import (
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 
+	"github.com/guild-ventures/guild-core/internal/chat/commands"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
@@ -195,6 +196,7 @@ type ChatModel struct {
 	commandProc   *CommandProcessor
 	completionEng *CompletionEngine
 	history       *CommandHistory
+	commandPalette *commands.CommandPalette
 
 	// State
 	messages      []Message

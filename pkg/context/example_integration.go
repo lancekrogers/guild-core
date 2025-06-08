@@ -3,6 +3,7 @@ package context
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -26,15 +27,36 @@ func ExampleUsage() {
 	ctx = WithRegistryProvider(ctx, mockRegistry)
 
 	// 4. Register some test components
-	mockRegistry.Providers().RegisterProvider("openai", &MockProvider{Name: "openai"})
-	mockRegistry.Providers().RegisterProvider("anthropic", &MockProvider{Name: "anthropic"})
-	mockRegistry.Providers().SetDefaultProvider("anthropic")
+	if err := mockRegistry.Providers().RegisterProvider("openai", &MockProvider{Name: "openai"}); err != nil {
+		log.Printf("Failed to register openai provider: %v", err)
+		return
+	}
+	if err := mockRegistry.Providers().RegisterProvider("anthropic", &MockProvider{Name: "anthropic"}); err != nil {
+		log.Printf("Failed to register anthropic provider: %v", err)
+		return
+	}
+	if err := mockRegistry.Providers().SetDefaultProvider("anthropic"); err != nil {
+		log.Printf("Failed to set default provider: %v", err)
+		return
+	}
 
-	mockRegistry.Agents().RegisterAgent("coding-agent", &MockAgent{ID: "agent-001", Name: "coding-agent"})
-	mockRegistry.Agents().SetDefaultAgent("coding-agent")
+	if err := mockRegistry.Agents().RegisterAgent("coding-agent", &MockAgent{ID: "agent-001", Name: "coding-agent"}); err != nil {
+		log.Printf("Failed to register agent: %v", err)
+		return
+	}
+	if err := mockRegistry.Agents().SetDefaultAgent("coding-agent"); err != nil {
+		log.Printf("Failed to set default agent: %v", err)
+		return
+	}
 
-	mockRegistry.Tools().RegisterTool("file-tool", &MockTool{Name: "file-tool"})
-	mockRegistry.Tools().EnableTool("file-tool")
+	if err := mockRegistry.Tools().RegisterTool("file-tool", &MockTool{Name: "file-tool"}); err != nil {
+		log.Printf("Failed to register tool: %v", err)
+		return
+	}
+	if err := mockRegistry.Tools().EnableTool("file-tool"); err != nil {
+		log.Printf("Failed to enable tool: %v", err)
+		return
+	}
 
 	// 5. Demonstrate context-aware operations
 	fmt.Printf("=== Guild Context System Demo ===\n")

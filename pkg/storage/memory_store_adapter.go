@@ -112,7 +112,14 @@ func (m *MemoryStoreAdapter) List(ctx context.Context, bucket string) ([]string,
 			WithOperation("List").
 			WithDetails("bucket", bucket)
 	}
-	defer rows.Close()
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			// Log close error
+			_ = gerror.Wrap(closeErr, gerror.ErrCodeStorage, "failed to close rows").
+				WithComponent("MemoryStoreAdapter").
+				WithOperation("List")
+		}
+	}()
 
 	var keys []string
 	for rows.Next() {
@@ -152,7 +159,14 @@ func (m *MemoryStoreAdapter) ListKeys(ctx context.Context, bucket, prefix string
 			WithDetails("bucket", bucket).
 			WithDetails("prefix", prefix)
 	}
-	defer rows.Close()
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			// Log close error
+			_ = gerror.Wrap(closeErr, gerror.ErrCodeStorage, "failed to close rows").
+				WithComponent("MemoryStoreAdapter").
+				WithOperation("ListKeys")
+		}
+	}()
 
 	var keys []string
 	for rows.Next() {
