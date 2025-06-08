@@ -404,17 +404,17 @@ echo "✅ Demo environment ready!"
 	case "Rich Content Rendering":
 		scriptContent = `#!/bin/bash
 echo "Testing rich content rendering..."
-echo "Markdown rendering active"
-echo "Syntax highlighting enabled"
+echo "markdown rendering active"
+echo "syntax highlighting enabled"
 echo "Visual features operational"
 `
 
 	case "Multi-Agent Coordination":
 		scriptContent = `#!/bin/bash
 echo "Testing multi-agent coordination..."
-echo "Agents loaded and ready"
+echo "agents loaded and ready"
 echo "Agent coordination system active"
-echo "Status display functional"
+echo "status display functional"
 `
 
 	default:

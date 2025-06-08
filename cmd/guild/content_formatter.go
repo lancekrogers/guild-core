@@ -13,6 +13,10 @@ type ContentFormatter struct {
 	markdownRenderer *MarkdownRenderer
 	width           int
 	messageStyles   map[string]lipgloss.Style
+	
+	// Content optimization
+	maxContentLength int  // Maximum content length before truncation
+	showMoreEnabled  bool // Whether to enable "show more" functionality
 }
 
 // NewContentFormatter creates a new content formatter with medieval theming
@@ -46,6 +50,8 @@ func NewContentFormatter(markdownRenderer *MarkdownRenderer, width int) *Content
 		markdownRenderer: markdownRenderer,
 		width:           width,
 		messageStyles:   messageStyles,
+		maxContentLength: 5000,  // Default max content length
+		showMoreEnabled:  true,  // Enable "show more" by default
 	}
 }
 
@@ -247,4 +253,326 @@ func (cf *ContentFormatter) applyMinimalTheme() {
 	for key := range cf.messageStyles {
 		cf.messageStyles[key] = defaultStyle
 	}
+}
+
+// ContentType represents the detected type of content
+type ContentType int
+
+const (
+	ContentTypePlainText ContentType = iota
+	ContentTypeMarkdown
+	ContentTypeCode
+	ContentTypeJSON
+	ContentTypeYAML
+	ContentTypeMixed
+)
+
+// DetectContentType intelligently detects the type of content
+func (cf *ContentFormatter) DetectContentType(content string) ContentType {
+	// Quick empty check
+	if strings.TrimSpace(content) == "" {
+		return ContentTypePlainText
+	}
+	
+	// Check for code blocks first (highest priority)
+	if strings.Contains(content, "```") {
+		return ContentTypeMixed // Has both markdown and code
+	}
+	
+	// Check for JSON
+	trimmed := strings.TrimSpace(content)
+	if (strings.HasPrefix(trimmed, "{") && strings.HasSuffix(trimmed, "}")) ||
+	   (strings.HasPrefix(trimmed, "[") && strings.HasSuffix(trimmed, "]")) {
+		// Likely JSON
+		return ContentTypeJSON
+	}
+	
+	// Check for YAML
+	if strings.Contains(content, ":") && strings.Contains(content, "\n") {
+		lines := strings.Split(content, "\n")
+		yamlScore := 0
+		for _, line := range lines {
+			if strings.Contains(line, ": ") || strings.HasSuffix(line, ":") {
+				yamlScore++
+			}
+		}
+		if yamlScore > len(lines)/3 {
+			return ContentTypeYAML
+		}
+	}
+	
+	// Check for markdown indicators
+	markdownIndicators := []string{"#", "*", "_", "[", "`", "1.", "-"}
+	for _, indicator := range markdownIndicators {
+		if strings.Contains(content, indicator) {
+			return ContentTypeMarkdown
+		}
+	}
+	
+	// Check if it looks like code (heuristic)
+	if cf.looksLikeCode(content) {
+		return ContentTypeCode
+	}
+	
+	return ContentTypePlainText
+}
+
+// looksLikeCode uses heuristics to detect if content looks like code
+func (cf *ContentFormatter) looksLikeCode(content string) bool {
+	codeIndicators := []string{
+		"func ", "function ", "def ", "class ", "import ", "const ", "var ", "let ",
+		"if (", "for (", "while (", "return ", "package ", "public ", "private ",
+		"=>", "==", "!=", "&&", "||", ":=", "++", "--",
+	}
+	
+	indicatorCount := 0
+	for _, indicator := range codeIndicators {
+		if strings.Contains(content, indicator) {
+			indicatorCount++
+		}
+	}
+	
+	// If we find multiple code indicators, it's likely code
+	return indicatorCount >= 2
+}
+
+// InferLanguage attempts to infer the programming language from code content
+func (cf *ContentFormatter) InferLanguage(code string) string {
+	// Language detection heuristics
+	languagePatterns := map[string][]string{
+		"go": {"package ", "func ", ":=", "import (", "go mod", "defer ", "chan "},
+		"python": {"def ", "import ", "from ", "__init__", "class ", "self.", "pip "},
+		"javascript": {"function ", "const ", "let ", "var ", "=>", "require(", "export "},
+		"typescript": {"interface ", "type ", ": string", ": number", "export class", "import {"},
+		"json": {"\":", "\": ", "{\n", "[\n", "},", "],"},
+		"yaml": {"- ", ": ", "---", "...", "!!", "<<:"},
+		"bash": {"#!/bin/bash", "echo ", "if [", "then", "fi", "do", "done"},
+		"sql": {"SELECT ", "FROM ", "WHERE ", "INSERT ", "UPDATE ", "CREATE TABLE"},
+	}
+	
+	scores := make(map[string]int)
+	for lang, patterns := range languagePatterns {
+		for _, pattern := range patterns {
+			if strings.Contains(code, pattern) {
+				scores[lang]++
+			}
+		}
+	}
+	
+	// Find language with highest score
+	maxScore := 0
+	detectedLang := ""
+	for lang, score := range scores {
+		if score > maxScore {
+			maxScore = score
+			detectedLang = lang
+		}
+	}
+	
+	return detectedLang
+}
+
+// OptimizeContentLength truncates long content with "show more" indicator
+func (cf *ContentFormatter) OptimizeContentLength(content string) string {
+	if !cf.showMoreEnabled || len(content) <= cf.maxContentLength {
+		return content
+	}
+	
+	// Find a good truncation point (end of line or sentence)
+	truncateAt := cf.maxContentLength
+	
+	// Try to find end of line
+	if idx := strings.LastIndex(content[:truncateAt], "\n"); idx > truncateAt*3/4 {
+		truncateAt = idx
+	} else if idx := strings.LastIndex(content[:truncateAt], ". "); idx > truncateAt*3/4 {
+		// Try to find end of sentence
+		truncateAt = idx + 1
+	}
+	
+	truncated := content[:truncateAt]
+	remaining := len(content) - truncateAt
+	
+	// Add "show more" indicator
+	showMoreStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("141")). // Purple
+		Italic(true)
+	
+	showMore := showMoreStyle.Render(fmt.Sprintf("\n... (%d more characters) ...", remaining))
+	
+	return truncated + showMore
+}
+
+// ProcessContent applies the full content processing pipeline
+func (cf *ContentFormatter) ProcessContent(content string) string {
+	// Detect content type
+	contentType := cf.DetectContentType(content)
+	
+	// Apply appropriate processing based on type
+	var processed string
+	switch contentType {
+	case ContentTypeCode:
+		// Wrap in code block with inferred language
+		lang := cf.InferLanguage(content)
+		processed = fmt.Sprintf("```%s\n%s\n```", lang, content)
+		processed = cf.markdownRenderer.Render(processed)
+		
+	case ContentTypeJSON:
+		// Format as JSON code block
+		processed = fmt.Sprintf("```json\n%s\n```", content)
+		processed = cf.markdownRenderer.Render(processed)
+		
+	case ContentTypeYAML:
+		// Format as YAML code block
+		processed = fmt.Sprintf("```yaml\n%s\n```", content)
+		processed = cf.markdownRenderer.Render(processed)
+		
+	case ContentTypeMarkdown, ContentTypeMixed:
+		// Process with markdown renderer
+		processed = cf.markdownRenderer.Render(content)
+		
+	default:
+		// Plain text - no special processing
+		processed = content
+	}
+	
+	// Apply content length optimization
+	return cf.OptimizeContentLength(processed)
+}
+
+// IsRichContent checks if content contains rich formatting elements
+func (cf *ContentFormatter) IsRichContent(content string) bool {
+	contentType := cf.DetectContentType(content)
+	return contentType != ContentTypePlainText
+}
+
+// FormatMessage formats a generic message with intelligent content processing
+func (cf *ContentFormatter) FormatMessage(messageType, content string, metadata map[string]string) string {
+	// Apply error boundaries - never crash on malformed content
+	defer func() {
+		if r := recover(); r != nil {
+			// Log the error (in production, this would go to a logger)
+			fmt.Printf("Error formatting message: %v\n", r)
+		}
+	}()
+	
+	// Process content through the pipeline
+	processed := cf.ProcessContent(content)
+	
+	// Apply message type specific styling
+	switch messageType {
+	case "agent":
+		if agentID, ok := metadata["agentID"]; ok {
+			return cf.FormatAgentResponse(processed, agentID)
+		}
+		return cf.FormatAgentResponse(processed, "")
+		
+	case "system":
+		return cf.FormatSystemMessage(processed)
+		
+	case "error":
+		return cf.FormatErrorMessage(processed)
+		
+	case "tool":
+		if toolName, ok := metadata["toolName"]; ok {
+			return cf.FormatToolOutput(processed, toolName)
+		}
+		return cf.FormatToolOutput(processed, "Tool")
+		
+	case "thinking":
+		if agentID, ok := metadata["agentID"]; ok {
+			return cf.FormatThinkingMessage(processed, agentID)
+		}
+		return cf.FormatThinkingMessage(processed, "")
+		
+	case "working":
+		if agentID, ok := metadata["agentID"]; ok {
+			return cf.FormatWorkingMessage(processed, agentID)
+		}
+		return cf.FormatWorkingMessage(processed, "")
+		
+	case "user":
+		return cf.FormatUserMessage(processed)
+		
+	default:
+		return processed
+	}
+}
+
+// ContentFormatterInterface defines the contract for content formatting
+type ContentFormatterInterface interface {
+	FormatAgentResponse(content string, agentID string) string
+	FormatSystemMessage(content string) string
+	FormatErrorMessage(content string) string
+	FormatToolOutput(content string, toolName string) string
+	FormatThinkingMessage(content string, agentID string) string
+	FormatWorkingMessage(content string, agentID string) string
+	FormatUserMessage(content string) string
+	FormatTimestamp(timestamp time.Time) string
+	UpdateWidth(newWidth int)
+}
+
+// PlainTextFormatter provides fallback plain text formatting when rich rendering fails
+type PlainTextFormatter struct {
+	width int
+}
+
+// NewPlainTextFormatter creates a plain text formatter for graceful degradation
+func NewPlainTextFormatter(width int) *PlainTextFormatter {
+	return &PlainTextFormatter{
+		width: width,
+	}
+}
+
+// FormatAgentResponse formats agent responses with simple text formatting
+func (ptf *PlainTextFormatter) FormatAgentResponse(content string, agentID string) string {
+	if agentID != "" {
+		return fmt.Sprintf("🤖 %s: %s", agentID, content)
+	}
+	return fmt.Sprintf("🤖 %s", content)
+}
+
+// FormatSystemMessage formats system messages with simple text formatting
+func (ptf *PlainTextFormatter) FormatSystemMessage(content string) string {
+	return fmt.Sprintf("⚙️ System: %s", content)
+}
+
+// FormatErrorMessage formats error messages with simple text formatting
+func (ptf *PlainTextFormatter) FormatErrorMessage(content string) string {
+	return fmt.Sprintf("❌ Error: %s", content)
+}
+
+// FormatToolOutput formats tool execution output with simple text formatting
+func (ptf *PlainTextFormatter) FormatToolOutput(content string, toolName string) string {
+	return fmt.Sprintf("🔧 %s: %s", toolName, content)
+}
+
+// FormatThinkingMessage formats agent thinking/planning messages with simple text formatting
+func (ptf *PlainTextFormatter) FormatThinkingMessage(content string, agentID string) string {
+	if agentID != "" {
+		return fmt.Sprintf("🤔 %s: %s", agentID, content)
+	}
+	return fmt.Sprintf("🤔 %s", content)
+}
+
+// FormatWorkingMessage formats agent working/executing messages with simple text formatting
+func (ptf *PlainTextFormatter) FormatWorkingMessage(content string, agentID string) string {
+	if agentID != "" {
+		return fmt.Sprintf("⚙️ %s: %s", agentID, content)
+	}
+	return fmt.Sprintf("⚙️ %s", content)
+}
+
+// FormatUserMessage formats user input messages with simple text formatting
+func (ptf *PlainTextFormatter) FormatUserMessage(content string) string {
+	return content // User messages don't need special formatting in plain text mode
+}
+
+// FormatTimestamp formats timestamps with simple text formatting
+func (ptf *PlainTextFormatter) FormatTimestamp(timestamp time.Time) string {
+	return timestamp.Format("15:04:05")
+}
+
+// UpdateWidth adjusts the formatter for new terminal width
+func (ptf *PlainTextFormatter) UpdateWidth(newWidth int) {
+	ptf.width = newWidth
 }

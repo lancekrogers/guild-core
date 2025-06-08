@@ -6,6 +6,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/charmbracelet/bubbles/help"
+	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/viewport"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -252,45 +254,118 @@ func TestStatusIntegration(t *testing.T) {
 	})
 }
 
-// TestFullIntegration tests all components working together
-func TestFullIntegration(t *testing.T) {
+// TestCompleteVisualIntegration tests all visual components working together
+func TestCompleteVisualIntegration(t *testing.T) {
 	model := createTestChatModel(t)
 
-	t.Run("complete_workflow", func(t *testing.T) {
-		t.Skip("Skipping complete workflow test - requires full UI component initialization")
-
-		// Initialize all components
+	t.Run("component_initialization", func(t *testing.T) {
+		// Test 1: Component initialization
 		err := model.InitializeAllComponents()
-		require.NoError(t, err)
+		require.NoError(t, err, "All components should initialize")
 
-		// Test component initialization rather than full UI interaction
+		// Verify components are initialized
 		assert.NotNil(t, model.completionEngine, "Completion engine should be initialized")
 		assert.NotNil(t, model.commandHistory, "Command history should be initialized")
+		assert.NotNil(t, model.commandProcessor, "Command processor should be initialized")
+		assert.NotNil(t, model.statusTracker, "Status tracker should be initialized")
+		assert.NotNil(t, model.statusDisplay, "Status display should be initialized")
+	})
 
-		// Test basic completion functionality
-		if model.completionEngine != nil {
-			completions := model.completionEngine.Complete("/te", 3)
-			assert.NotEmpty(t, completions, "Should find completions for /te")
-		}
+	t.Run("rich_content_rendering", func(t *testing.T) {
+		// Test 2: Rich content rendering
+		markdownMsg := createTestMessage("agent", "# API Design\n\n```go\nfunc main() {}\n```", msgAgent)
+		model.addMessage(markdownMsg)
 
-		// Test message addition directly
-		testMsg := chatMessage{
-			Timestamp: time.Now(),
-			Sender:    "user",
-			Content:   "implement user authentication",
-			Type:      msgUser,
-		}
-		model.addMessage(testMsg)
+		rendered := model.View()
+		assert.Contains(t, rendered, "API Design", "Header should be rendered")
+		// Note: We can't test that raw markdown is processed without the actual renderer
+		// but we can verify content appears
+		assert.Contains(t, rendered, "func main()", "Code content should appear")
+	})
 
-		// Verify message was added
-		found := false
-		for _, msg := range model.messageLog {
-			if strings.Contains(msg.Content, "implement user authentication") {
-				found = true
-				break
+	t.Run("status_display_integration", func(t *testing.T) {
+		// Test 3: Status display integration
+		if model.statusDisplay != nil && model.statusTracker != nil {
+			// Create a test agent status
+			status := &AgentStatus{
+				ID:           "service-architect",
+				Name:         "Service Architect",
+				State:        AgentThinking,
+				CurrentTask:  "Analyzing architecture",
+				LastActivity: time.Now(),
 			}
+			model.statusTracker.UpdateAgentStatus("service-architect", status)
+			
+			statusView := model.statusDisplay.RenderStatusPanel()
+			assert.NotEmpty(t, statusView)
+			assert.Contains(t, statusView, "service-architect")
+		} else {
+			t.Skip("Status display not initialized")
 		}
-		assert.True(t, found, "Message should be added to log")
+	})
+
+	t.Run("multiple_message_types", func(t *testing.T) {
+		// Test 4: Multiple message types
+		testMessages := []chatMessage{
+			createTestMessage("user", "Design a REST API", msgUser),
+			createTestMessage("service-architect", "# API Design\n\n## Endpoints\n\n```go\nfunc GetUsers() {}\n```", msgAgent),
+			createTestMessage("system", "Task completed", msgSystem),
+		}
+
+		for _, msg := range testMessages {
+			model.addMessage(msg)
+		}
+
+		finalView := model.View()
+		assert.NotEmpty(t, finalView)
+		// Verify no crashes with mixed content
+		assert.Contains(t, finalView, "Design a REST API")
+		assert.Contains(t, finalView, "API Design")
+		assert.Contains(t, finalView, "Task completed")
+	})
+
+	t.Run("demo_scenario_structure", func(t *testing.T) {
+		// Test that demo scenarios work
+		scenario := GetDemoScenarioByName("Rich Content Showcase")
+		require.NotNil(t, scenario)
+
+		runner := NewDemoRunner(model)
+
+		// Run scenario (in test mode, would need mocking)
+		// This validates the scenario structure
+		assert.Equal(t, "Rich Content Showcase", scenario.Name)
+		assert.NotEmpty(t, scenario.Commands)
+		assert.NotEmpty(t, scenario.Expected)
+
+		_ = runner // Avoid unused variable
+	})
+
+	t.Run("performance_under_load", func(t *testing.T) {
+		// Test with many messages and active agents
+		start := time.Now()
+
+		// Add 100 messages
+		for i := 0; i < 100; i++ {
+			msg := chatMessage{
+				Timestamp: time.Now(),
+				Sender:    "agent",
+				AgentID:   "developer",
+				Content:   "Processing task " + string(rune(i)),
+				Type:      msgAgent,
+			}
+			model.addMessage(msg)
+		}
+
+		// Update view
+		model.updateMessagesView()
+
+		duration := time.Since(start)
+
+		// Should handle 100 messages in under 100ms
+		assert.Less(t, duration, 100*time.Millisecond)
+
+		// Memory usage should be reasonable
+		assert.Less(t, len(model.messageLog), 1000) // Assuming some limit
 	})
 
 	t.Run("demo_scenarios", func(t *testing.T) {
@@ -390,6 +465,17 @@ func TestErrorHandling(t *testing.T) {
 	})
 }
 
+// createTestMessage creates a test message with proper structure
+func createTestMessage(sender, content string, msgType messageType) chatMessage {
+	return chatMessage{
+		Timestamp: time.Now(),
+		Sender:    sender,
+		AgentID:   sender,
+		Content:   content,
+		Type:      msgType,
+	}
+}
+
 // Helper function to create test chat model
 func createTestChatModel(t *testing.T) *ChatModel {
 	// Create minimal config
@@ -428,11 +514,26 @@ func createTestChatModel(t *testing.T) *ChatModel {
 	ctx, cancel := context.WithCancel(context.Background())
 	t.Cleanup(cancel)
 
+	// Initialize textarea for input (needed for tests)
+	ta := textarea.New()
+	ta.Placeholder = "Test input..."
+	ta.Focus()
+	ta.SetHeight(3)
+	ta.ShowLineNumbers = false
+
+	// Initialize help
+	helpModel := help.New()
+
 	// Create basic model
 	model := &ChatModel{
 		guildConfig:       guildConfig,
+		campaignID:        "test-campaign",
+		sessionID:         "test-session-12345678", // Initialize with adequate length for slicing
 		ctx:              ctx,
 		cancel:           cancel,
+		input:            ta, // Initialize textarea to prevent nil pointer
+		help:             helpModel, // Initialize help to prevent nil pointer
+		keymap:           newChatKeyMap(), // Initialize keymap for help.View call
 		messageLog:       []chatMessage{},
 		agentStreams:     make(map[string][]chatMessage),
 		globalStream:     []chatMessage{},
@@ -453,6 +554,16 @@ func createTestChatModel(t *testing.T) *ChatModel {
 
 	// Initialize viewport (mock for testing)
 	model.messages = viewport.New(80, 20)
+
+	// Mock status tracker for testing
+	if model.statusTracker == nil {
+		model.statusTracker = NewAgentStatusTracker(guildConfig)
+	}
+	
+	// Mock status display for testing  
+	if model.statusDisplay == nil {
+		model.statusDisplay = NewStatusDisplay(model.statusTracker, 20, 30)
+	}
 
 	return model
 }

@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 	"regexp"
+	"sync"
 
 	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
@@ -14,29 +16,71 @@ import (
 
 // MarkdownRenderer provides rich content rendering for Guild chat
 type MarkdownRenderer struct {
-	renderer   *glamour.TermRenderer
-	width      int
-	codeStyle  lipgloss.Style
-	formatter  chroma.Formatter
-	style      *chroma.Style
+	renderer       *glamour.TermRenderer
+	width          int
+	codeStyle      lipgloss.Style
+	formatter      chroma.Formatter
+	style          *chroma.Style
+	
+	// Performance optimization
+	renderCache    sync.Map // Cache for rendered content
+	maxCacheSize   int      // Maximum cache entries
+	cacheHits      int64    // Performance metrics
+	cacheMisses    int64
+	
+	// Error handling
+	errorFallback  bool     // Whether to use fallback on errors
+	lastError      error    // Last rendering error for debugging
 }
 
 // NewMarkdownRenderer creates a new markdown renderer with medieval theming
 func NewMarkdownRenderer(width int) (*MarkdownRenderer, error) {
+	// Ensure minimum width for proper rendering
+	if width < 40 {
+		width = 40
+	}
+	if width > 200 {
+		width = 200 // Cap maximum width for readability
+	}
+
 	// Create glamour renderer with medieval-themed styling
-	renderer, err := glamour.NewTermRenderer(
-		glamour.WithAutoStyle(),
-		glamour.WithWordWrap(width-4), // Account for borders
-		glamour.WithEmoji(),
-	)
-	if err != nil {
-		// Fallback to basic renderer if glamour fails
-		renderer, err = glamour.NewTermRenderer(
-			glamour.WithWordWrap(width-4),
-		)
-		if err != nil {
-			return nil, err
+	var renderer *glamour.TermRenderer
+	var lastErr error
+	
+	// Try multiple style configurations for robustness
+	configs := []func() (*glamour.TermRenderer, error){
+		func() (*glamour.TermRenderer, error) {
+			// Primary: Custom medieval theme
+			return glamour.NewTermRenderer(
+				glamour.WithStylePath("dracula"), // Purple-themed style
+				glamour.WithWordWrap(width-8),    // Account for borders and padding
+				glamour.WithEmoji(),
+				glamour.WithPreservedNewLines(),
+			)
+		},
+		func() (*glamour.TermRenderer, error) {
+			// Fallback 1: Auto style
+			return glamour.NewTermRenderer(
+				glamour.WithAutoStyle(),
+				glamour.WithWordWrap(width-8),
+				glamour.WithEmoji(),
+			)
+		},
+		func() (*glamour.TermRenderer, error) {
+			// Fallback 2: Basic style
+			return glamour.NewTermRenderer(
+				glamour.WithWordWrap(width-8),
+			)
+		},
+	}
+	
+	for _, config := range configs {
+		r, err := config()
+		if err == nil {
+			renderer = r
+			break
 		}
+		lastErr = err
 	}
 
 	// Create chroma formatter for syntax highlighting
@@ -48,8 +92,11 @@ func NewMarkdownRenderer(width int) (*MarkdownRenderer, error) {
 		formatter = formatters.Fallback
 	}
 
-	// Use a dark style that works well in terminals (medieval theme)
+	// Use a medieval-themed style (monokai/dracula have purple accents)
 	style := styles.Get("monokai")
+	if style == nil {
+		style = styles.Get("dracula")
+	}
 	if style == nil {
 		style = styles.Get("native")
 	}
@@ -57,20 +104,23 @@ func NewMarkdownRenderer(width int) (*MarkdownRenderer, error) {
 		style = styles.Fallback
 	}
 
-	// Medieval-themed style for code blocks
+	// Medieval-themed style for code blocks with consistent purple borders
 	codeStyle := lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color("63")). // Medieval purple
+		BorderForeground(lipgloss.Color("141")). // Consistent medieval purple
 		Padding(0, 1).
 		Margin(1, 0).
-		MaxWidth(width - 6) // Ensure proper wrapping
+		MaxWidth(width - 8) // Ensure proper wrapping with extra padding
 
 	return &MarkdownRenderer{
-		renderer:  renderer,
-		width:     width,
-		codeStyle: codeStyle,
-		formatter: formatter,
-		style:     style,
+		renderer:      renderer,
+		width:         width,
+		codeStyle:     codeStyle,
+		formatter:     formatter,
+		style:         style,
+		maxCacheSize:  100,  // Cache up to 100 rendered items
+		errorFallback: true,
+		lastError:     lastErr,
 	}, nil
 }
 
@@ -122,6 +172,23 @@ func (m *MarkdownRenderer) processCodeBlocks(content string) string {
 
 		// Apply syntax highlighting
 		highlighted := m.highlightCode(code, language)
+
+		// Add line numbers for code blocks with more than 5 lines
+		lines := strings.Split(strings.TrimRight(code, "\n"), "\n")
+		if len(lines) > 5 {
+			highlighted = m.addLineNumbers(highlighted, len(lines))
+		}
+
+		// Add language label if specified
+		if language != "" {
+			langStyle := lipgloss.NewStyle().
+				Foreground(lipgloss.Color("141")). // Purple for medieval theme
+				Bold(true).
+				Margin(0, 0, 0, 1)
+			
+			langLabel := langStyle.Render(language)
+			highlighted = langLabel + "\n" + highlighted
+		}
 
 		// Wrap in styled border
 		return m.codeStyle.Render(highlighted)
@@ -202,4 +269,66 @@ func (m *MarkdownRenderer) DetectAndRenderContent(content string) string {
 
 	// For plain text, just return as-is (already styled by lipgloss)
 	return content
+}
+
+// generateCacheKey creates a unique key for caching rendered content
+func (m *MarkdownRenderer) generateCacheKey(content string) string {
+	// Simple hash-based key generation
+	// In production, this could use crypto/md5 for better distribution
+	return content[:minInt(len(content), 32)]
+}
+
+// getCacheSize returns the approximate size of the cache
+func (m *MarkdownRenderer) getCacheSize() int {
+	size := 0
+	m.renderCache.Range(func(key, value interface{}) bool {
+		size++
+		return true
+	})
+	return size
+}
+
+// cleanCache removes old entries from the cache
+func (m *MarkdownRenderer) cleanCache() {
+	// Simple implementation: clear half the cache
+	// In production, this could use LRU or time-based eviction
+	count := 0
+	target := m.maxCacheSize / 2
+	m.renderCache.Range(func(key, value interface{}) bool {
+		if count < target {
+			m.renderCache.Delete(key)
+			count++
+		}
+		return count < target
+	})
+}
+
+// minInt returns the minimum of two integers
+func minInt(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+// addLineNumbers adds line numbers to code content
+func (m *MarkdownRenderer) addLineNumbers(content string, lineCount int) string {
+	lines := strings.Split(content, "\n")
+	numberedLines := make([]string, 0, len(lines))
+	
+	// Style for line numbers
+	lineNumStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("240")). // Gray
+		Margin(0, 1, 0, 0)
+	
+	// Calculate width for line number padding
+	width := len(fmt.Sprintf("%d", lineCount))
+	
+	for i, line := range lines {
+		lineNumText := fmt.Sprintf("%*d", width, i+1)
+		lineNum := lineNumStyle.Render(lineNumText)
+		numberedLines = append(numberedLines, lineNum + line)
+	}
+	
+	return strings.Join(numberedLines, "\n")
 }

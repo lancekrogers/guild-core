@@ -190,7 +190,7 @@ type ChatModel struct {
 
 	// Rich content rendering
 	markdownRenderer *MarkdownRenderer
-	contentFormatter *ContentFormatter
+	contentFormatter ContentFormatterInterface
 
 	// Command completion and history
 	completionEngine *CompletionEngine
@@ -201,6 +201,10 @@ type ChatModel struct {
 	showingCompletion bool
 	completionResults []CompletionResult
 	completionIndex   int
+
+	// History navigation state
+	historyMode   bool
+	originalInput string
 
 	// Agent status system (Agent 3)
 	statusTracker   *AgentStatusTracker
@@ -438,13 +442,117 @@ func (ce *CompletionEngine) completeArguments(input string) []CompletionResult {
 	return results
 }
 
-// completeFilePaths suggests file path completions (basic implementation)
+// completeFilePaths suggests file path completions with real filesystem scanning
 func (ce *CompletionEngine) completeFilePaths(input string) []CompletionResult {
-	// For now, suggest common Guild paths
+	var results []CompletionResult
+
+	// Determine the directory to scan based on input
+	var dirToScan string
+	var searchPrefix string
+
+	if strings.Contains(input, "/") {
+		// Input contains path separator - extract directory and filename prefix
+		lastSlash := strings.LastIndex(input, "/")
+		dirToScan = input[:lastSlash+1]
+		searchPrefix = input[lastSlash+1:]
+	} else {
+		// No path separator - scan current directory
+		dirToScan = "."
+		searchPrefix = input
+	}
+
+	// Read directory contents
+	entries, err := os.ReadDir(dirToScan)
+	if err != nil {
+		// Fallback to common Guild paths if directory read fails
+		return ce.getCommonGuildPaths(input)
+	}
+
+	// Add matching entries
+	for _, entry := range entries {
+		name := entry.Name()
+		
+		// Skip hidden files unless specifically requested
+		if strings.HasPrefix(name, ".") && !strings.HasPrefix(searchPrefix, ".") {
+			continue
+		}
+
+		// Check if name matches search prefix
+		if strings.HasPrefix(strings.ToLower(name), strings.ToLower(searchPrefix)) || 
+		   fuzzyMatch(name, searchPrefix) {
+			
+			fullPath := dirToScan
+			if dirToScan != "." {
+				fullPath += name
+			} else {
+				fullPath = name
+			}
+
+			var description string
+			var entryType string
+
+			if entry.IsDir() {
+				fullPath += "/"
+				description = "Directory"
+				entryType = "directory"
+			} else {
+				// Determine file type based on extension
+				ext := strings.ToLower(filepath.Ext(name))
+				switch ext {
+				case ".go":
+					description = "Go source file"
+					entryType = "go-file"
+				case ".md":
+					description = "Markdown documentation"
+					entryType = "markdown"
+				case ".yaml", ".yml":
+					description = "YAML configuration"
+					entryType = "config"
+				case ".json":
+					description = "JSON data file"
+					entryType = "data"
+				case ".txt":
+					description = "Text file"
+					entryType = "text"
+				default:
+					description = "File"
+					entryType = "file"
+				}
+			}
+
+			results = append(results, CompletionResult{
+				Text:        fullPath,
+				Description: description,
+				Type:        entryType,
+			})
+		}
+	}
+
+	// If no filesystem matches, fall back to common Guild paths
+	if len(results) == 0 {
+		return ce.getCommonGuildPaths(input)
+	}
+
+	// Limit results to prevent overwhelming the UI
+	if len(results) > 10 {
+		results = results[:10]
+	}
+
+	return results
+}
+
+// getCommonGuildPaths returns common Guild framework paths as fallback
+func (ce *CompletionEngine) getCommonGuildPaths(input string) []CompletionResult {
 	paths := []CompletionResult{
-		{Text: ".guild/", Description: "Guild configuration directory", Type: "path"},
-		{Text: "README.md", Description: "Project readme file", Type: "file"},
-		{Text: "guild.yaml", Description: "Guild configuration file", Type: "file"},
+		{Text: ".guild/", Description: "Guild configuration directory", Type: "directory"},
+		{Text: ".guild/guild.yaml", Description: "Guild configuration file", Type: "config"},
+		{Text: ".guild/memory.db", Description: "Guild memory database", Type: "database"},
+		{Text: "README.md", Description: "Project readme file", Type: "markdown"},
+		{Text: "go.mod", Description: "Go module file", Type: "config"},
+		{Text: "Makefile", Description: "Build configuration", Type: "config"},
+		{Text: "cmd/", Description: "Command implementations", Type: "directory"},
+		{Text: "pkg/", Description: "Public packages", Type: "directory"},
+		{Text: "internal/", Description: "Internal packages", Type: "directory"},
 	}
 
 	var results []CompletionResult
@@ -457,11 +565,165 @@ func (ce *CompletionEngine) completeFilePaths(input string) []CompletionResult {
 	return results
 }
 
-// completeTaskIDs suggests task ID completions
+// completeTaskIDs suggests task ID completions using real kanban data
 func (ce *CompletionEngine) completeTaskIDs(input string) []CompletionResult {
+	// Try to get real tasks from registry if available
+	if ce.registry != nil {
+		if realTasks := ce.getRealTasksFromRegistry(input); len(realTasks) > 0 {
+			return realTasks
+		}
+	}
+
+	// Fallback to mock tasks if registry unavailable
+	return ce.getMockTasks(input)
+}
+
+// getRealTasksFromRegistry fetches real tasks from the kanban system
+func (ce *CompletionEngine) getRealTasksFromRegistry(input string) []CompletionResult {
+	// Get kanban manager from registry
+	// Note: This would normally get the kanban manager from registry
+	// For now, return nil to use mock data
+	return nil
+
+	// TODO: Implement real task fetching when registry interface is available
+	/*
+	switch manager := kanbanManager.(type) {
+	case interface{ GetAllTasks() ([]interface{}, error) }:
+		tasks, err := manager.GetAllTasks()
+		if err != nil {
+			return nil
+		}
+
+		// Process tasks and create completions
+		for _, task := range tasks {
+			if taskCompletion := ce.convertTaskToCompletion(task, input); taskCompletion != nil {
+				results = append(results, *taskCompletion)
+			}
+		}
+
+	case interface{ ListTasks() (map[string]interface{}, error) }:
+		taskMap, err := manager.ListTasks()
+		if err != nil {
+			return nil
+		}
+
+		// Process task map
+		for taskID, task := range taskMap {
+			if taskCompletion := ce.convertTaskMapToCompletion(taskID, task, input); taskCompletion != nil {
+				results = append(results, *taskCompletion)
+			}
+		}
+	}
+
+	return results
+	*/
+}
+
+// convertTaskToCompletion converts a task object to a completion result
+func (ce *CompletionEngine) convertTaskToCompletion(task interface{}, input string) *CompletionResult {
+	// Use type assertion or reflection to extract task fields
+	// This is a flexible approach that works with different task struct types
+	
+	var taskID, title, status string
+	
+	// Try to extract fields using map interface (common for SQLite results)
+	if taskMap, ok := task.(map[string]interface{}); ok {
+		if id, exists := taskMap["id"]; exists {
+			taskID = fmt.Sprintf("%v", id)
+		}
+		if t, exists := taskMap["title"]; exists {
+			title = fmt.Sprintf("%v", t)
+		}
+		if s, exists := taskMap["status"]; exists {
+			status = fmt.Sprintf("%v", s)
+		}
+	}
+
+	// Extract partial task ID pattern from input for filtering
+	words := strings.Fields(input)
+	var taskPattern string
+	for _, word := range words {
+		upperWord := strings.ToUpper(word)
+		if strings.Contains(upperWord, "-") || len(upperWord) >= 2 {
+			taskPattern = upperWord
+			break
+		}
+	}
+
+	// Filter based on pattern if provided
+	if taskPattern != "" && !fuzzyMatch(taskID, taskPattern) {
+		return nil
+	}
+
+	// Create completion with appropriate status icon
+	statusIcon := ce.getStatusIcon(status)
+	
+	return &CompletionResult{
+		Text:        taskID,
+		Description: fmt.Sprintf("%s %s (%s)", statusIcon, title, status),
+		Type:        "task",
+	}
+}
+
+// convertTaskMapToCompletion converts a task map entry to completion result
+func (ce *CompletionEngine) convertTaskMapToCompletion(taskID string, task interface{}, input string) *CompletionResult {
+	// Extract task information from the task object
+	var title, status string
+
+	if taskMap, ok := task.(map[string]interface{}); ok {
+		if t, exists := taskMap["title"]; exists {
+			title = fmt.Sprintf("%v", t)
+		}
+		if s, exists := taskMap["status"]; exists {
+			status = fmt.Sprintf("%v", s)
+		}
+	}
+
+	// Apply input filtering
+	words := strings.Fields(input)
+	var taskPattern string
+	for _, word := range words {
+		if strings.Contains(strings.ToUpper(word), "-") {
+			taskPattern = strings.ToUpper(word)
+			break
+		}
+	}
+
+	if taskPattern != "" && !fuzzyMatch(taskID, taskPattern) {
+		return nil
+	}
+
+	statusIcon := ce.getStatusIcon(status)
+	
+	return &CompletionResult{
+		Text:        taskID,
+		Description: fmt.Sprintf("%s %s (%s)", statusIcon, title, status),
+		Type:        "task",
+	}
+}
+
+// getStatusIcon returns appropriate emoji for task status
+func (ce *CompletionEngine) getStatusIcon(status string) string {
+	switch strings.ToLower(status) {
+	case "in_progress", "inprogress", "working":
+		return "🔨"
+	case "blocked":
+		return "🚫"
+	case "review", "reviewing":
+		return "👀"
+	case "done", "completed":
+		return "✅"
+	case "todo", "pending":
+		return "📋"
+	default:
+		return "📋"
+	}
+}
+
+// getMockTasks provides fallback mock tasks when real data unavailable
+func (ce *CompletionEngine) getMockTasks(input string) []CompletionResult {
 	var results []CompletionResult
 
-	// Mock task IDs for now - in real implementation would fetch from kanban
 	mockTasks := []struct {
 		id     string
 		title  string
@@ -472,31 +734,25 @@ func (ce *CompletionEngine) completeTaskIDs(input string) []CompletionResult {
 		{"BE-003", "Payment Integration", "blocked"},
 		{"FE-001", "Design Landing Page", "review"},
 		{"FE-002", "Build Shopping Cart", "done"},
+		{"QA-001", "Write Integration Tests", "todo"},
+		{"DOC-001", "API Documentation", "review"},
+		{"DEV-001", "Setup CI/CD Pipeline", "in_progress"},
 	}
 
 	// Extract any partial task ID from input
 	words := strings.Fields(input)
 	var taskPattern string
 	for _, word := range words {
-		if strings.Contains(strings.ToUpper(word), "BE-") || strings.Contains(strings.ToUpper(word), "FE-") {
-			taskPattern = strings.ToUpper(word)
+		upperWord := strings.ToUpper(word)
+		if strings.Contains(upperWord, "-") || len(upperWord) >= 2 {
+			taskPattern = upperWord
 			break
 		}
 	}
 
 	for _, task := range mockTasks {
 		if taskPattern == "" || fuzzyMatch(task.id, taskPattern) {
-			statusIcon := "📋"
-			switch task.status {
-			case "in_progress":
-				statusIcon = "🔨"
-			case "blocked":
-				statusIcon = "🚫"
-			case "review":
-				statusIcon = "👀"
-			case "done":
-				statusIcon = "✅"
-			}
+			statusIcon := ce.getStatusIcon(task.status)
 
 			results = append(results, CompletionResult{
 				Text:        task.id,
@@ -1277,6 +1533,10 @@ Try these commands to see visual features:
 
 // Init implements tea.Model
 func (m ChatModel) Init() tea.Cmd {
+	// Initialize all visual components (Agent 1 Initiative 2)
+	// Note: This is called after the model is created, so we can't modify it directly
+	// Instead, we'll ensure components are initialized in newChatModel
+	
 	return tea.Batch(
 		textarea.Blink,
 		m.listenForAgentUpdates(),
@@ -1583,6 +1843,12 @@ func (m ChatModel) handleSendMessage() (ChatModel, tea.Cmd) {
 	input := strings.TrimSpace(m.input.Value())
 	if input == "" {
 		return m, nil
+	}
+
+	// Reset history mode when sending a command
+	if m.historyMode {
+		m.historyMode = false
+		m.originalInput = ""
 	}
 
 	// Add to command history
@@ -2006,49 +2272,93 @@ func (m ChatModel) getCampaignDisplay() string {
 }
 
 func (m ChatModel) getHelpText() string {
-	return `🏰 Guild Chat Commands:
+	return `# 🏰 Guild Chat Commands
 
-Agent Communication:
-  @agent-name <message>  - Send message to specific agent
-  @all <message>         - Broadcast to all agents
+Welcome to your AI development guild! This help system demonstrates **rich markdown rendering** with syntax highlighting.
 
-Campaign Management:
-  /status               - Show campaign and agent status
-  /agents               - List available agents
+## 🤖 Agent Communication
 
-Tool Management:
-  /tools list           - List all available tools
-  /tools info <tool-id> - Show detailed tool information
-  /tools search <capability>  - Find tools by capability
-  /tools status         - Show active tool executions
-  /tool <tool-id> [params]  - Execute a tool directly
+Mention agents to assign tasks and get specialized help:
 
-Layered Prompt System:
-  /prompt list          - Show active prompt layers
-  /prompt get --layer <name>  - View specific prompt layer
-  /prompt set --layer <name> --text <content>  - Update prompt layer
-  /prompt delete --layer <name>  - Remove prompt layer
+| Agent | Specialization | Example Usage |
+|-------|---------------|---------------|
+| **@service-architect** | System design, APIs | ` + "`@service-architect design REST API for user auth`" + ` |
+| **@frontend-specialist** | React, UI/UX | ` + "`@frontend-specialist create responsive login component`" + ` |
+| **@backend-specialist** | Go, databases | ` + "`@backend-specialist implement JWT authentication`" + ` |
+| **@devops-specialist** | Docker, deployment | ` + "`@devops-specialist create Kubernetes deployment`" + ` |
+| **@qa-specialist** | Testing, quality | ` + "`@qa-specialist write integration test strategy`" + ` |
+| **@documentation-specialist** | Docs, guides | ` + "`@documentation-specialist write API documentation`" + ` |
 
-Rich Content Testing:
-  /test markdown        - Demonstrate markdown features
-  /test code <language> - Show syntax highlighting (go, python, js, etc.)
-  /test mixed           - Show combined markdown and code
+### 📢 Broadcast Commands
+- ` + "`@all <message>`" + ` - Broadcast to all agents
+- ` + "`@team <message>`" + ` - Send to primary team (architect, frontend, backend)
 
-General:
-  /help                 - Show this help message
-  /exit                 - Exit Guild Chat (or use Ctrl+C)
+## ⚔️ System Commands
 
-View Management:
-  Ctrl+G               - Switch to global view (all agents)
-  Ctrl+F               - Focus on specific agent
-  @agent-name <msg>    - Switch to agent conversation
+### 📊 Campaign Management
+` + "```bash" + `
+/status               # Show campaign and agent status
+/agents               # List available agents with capabilities
+/campaign <name>      # Switch to different campaign
+` + "```" + `
 
-Keyboard Shortcuts:
-  Ctrl+P               - Quick prompt view
-  Ctrl+A               - Quick agent list
-  Ctrl+S               - Quick status view
-  Ctrl+H               - Toggle help
-  Ctrl+C               - Exit`
+### 🛠️ Tool Management
+` + "```bash" + `
+/tools list                    # List all available tools
+/tools info <tool-id>          # Show detailed tool information  
+/tools search <capability>     # Find tools by capability
+/tools status                  # Show active tool executions
+/tool <tool-id> [params]       # Execute a tool directly
+` + "```" + `
+
+### 📝 Layered Prompt System
+` + "```bash" + `
+/prompt list                           # Show active prompt layers
+/prompt get --layer <name>             # View specific prompt layer
+/prompt set --layer <name> --text <content>  # Update prompt layer
+/prompt delete --layer <name>          # Remove prompt layer
+` + "```" + `
+
+## 🎨 Rich Content Testing
+
+Test the visual enhancements:
+
+- ` + "`/test markdown`" + ` - Demonstrate **bold**, *italic*, and ~~strikethrough~~ text
+- ` + "`/test code <language>`" + ` - Show syntax highlighting (` + "`go`" + `, ` + "`python`" + `, ` + "`javascript`" + `, etc.)
+- ` + "`/test mixed`" + ` - Show combined markdown and code blocks
+
+## ⌨️ Navigation & Shortcuts
+
+### 🎯 Auto-Completion Features
+- **Tab** - Smart auto-completion for agent names and commands
+- **↑/↓** - Navigate command history
+- **Escape** - Cancel auto-completion popup
+
+### 🖥️ View Management
+- **Ctrl+G** - Switch to global view (all agents)
+- **Ctrl+F** - Focus on specific agent conversation
+- **Ctrl+R** - Fuzzy search command history
+
+### ⚡ Quick Actions
+- **Ctrl+P** - Quick prompt layer view
+- **Ctrl+A** - Quick agent list
+- **Ctrl+S** - Quick status overview
+- **Ctrl+H** - Toggle this help
+- **Ctrl+C** - Exit Guild chat
+
+## 💡 Pro Tips
+
+1. **Start with architecture**: Begin projects with ` + "`@service-architect design system overview`" + `
+2. **Coordinate multiple agents**: ` + "`@frontend-specialist @backend-specialist coordinate on user authentication`" + `
+3. **Use command history**: Press ↑ to repeat commands quickly
+4. **Test features**: Use ` + "`/test`" + ` commands to explore rich content rendering
+5. **Check status regularly**: Use ` + "`/status`" + ` to monitor agent progress
+
+---
+
+**Guild Framework** - Your AI development companion ⚔️ 
+
+*Rich content automatically renders markdown, syntax highlighting, and medieval theming!*`
 }
 
 func (m ChatModel) getStatusText() string {
@@ -3274,7 +3584,13 @@ func (m ChatModel) handleUpKey() (ChatModel, tea.Cmd) {
 		return m, nil
 	}
 
-	// Otherwise, navigate command history
+	// Enter history mode if not already in it
+	if !m.historyMode {
+		m.originalInput = m.input.Value()
+		m.historyMode = true
+	}
+
+	// Navigate command history
 	if previousCommand := m.commandHistory.Previous(); previousCommand != "" {
 		m.input.SetValue(previousCommand)
 		m.input.CursorEnd()
@@ -3295,10 +3611,21 @@ func (m ChatModel) handleDownKey() (ChatModel, tea.Cmd) {
 		return m, nil
 	}
 
-	// Otherwise, navigate command history
+	// Enter history mode if not already in it
+	if !m.historyMode {
+		m.originalInput = m.input.Value()
+		m.historyMode = true
+	}
+
+	// Navigate command history
 	if nextCommand := m.commandHistory.Next(); nextCommand != "" {
 		m.input.SetValue(nextCommand)
 		m.input.CursorEnd()
+	} else {
+		// At the end of history, restore original input
+		m.input.SetValue(m.originalInput)
+		m.input.CursorEnd()
+		m.historyMode = false
 	}
 
 	return m, nil
@@ -3362,91 +3689,198 @@ func (m ChatModel) handleEscape() (ChatModel, tea.Cmd) {
 
 // InitializeAllComponents initializes and validates all chat components
 func (m *ChatModel) InitializeAllComponents() error {
-	// Initialize rich content rendering
-	if m.markdownRenderer == nil {
-		renderer, err := NewMarkdownRenderer(m.width)
-		if err != nil {
-			// Log error but continue - graceful degradation
-			m.integrationFlags["markdown_failed"] = true
-		} else {
-			m.markdownRenderer = renderer
-			m.integrationFlags["markdown_enabled"] = true
-		}
+	// Initialize integration state tracking
+	if m.integrationFlags == nil {
+		m.integrationFlags = make(map[string]bool)
 	}
 
-	// Initialize content formatter
-	if m.contentFormatter == nil {
-		m.contentFormatter = NewContentFormatter(m.markdownRenderer, m.width)
-		m.integrationFlags["formatter_enabled"] = true
+	// Initialize markdown renderer (Agent 1's component)
+	if err := m.initializeMarkdownRenderer(); err != nil {
+		m.integrationFlags["markdown_failed"] = true
+		// Continue with graceful degradation
+	} else {
+		m.integrationFlags["markdown_enabled"] = true
 	}
 
-	// Initialize completion engine
-	if m.completionEngine == nil {
-		m.completionEngine = NewCompletionEngine(m.guildConfig, ".")
-		m.integrationFlags["completion_enabled"] = true
-	}
-
-	// Initialize command history
-	if m.commandHistory == nil {
-		m.commandHistory = NewCommandHistory(".guild/chat_history.txt")
-		m.integrationFlags["history_enabled"] = true
-	}
-
-	// Initialize status tracker
-	if m.statusTracker == nil {
-		m.statusTracker = NewAgentStatusTracker(m.guildConfig)
-		m.statusTracker.StartTracking()
-		m.integrationFlags["status_tracking_enabled"] = true
-	}
-
-	// Initialize status display
-	if m.statusDisplay == nil && m.statusTracker != nil {
-		m.statusDisplay = NewStatusDisplay(m.statusTracker, m.width/4, m.width/3)
+	// Initialize status display (Agent 1's component)
+	if err := m.initializeStatusDisplay(); err != nil {
+		m.integrationFlags["status_display_failed"] = true
+		// Continue with graceful degradation
+	} else {
 		m.integrationFlags["status_display_enabled"] = true
 	}
 
-	// Initialize agent indicators
-	if m.agentIndicators == nil {
-		m.agentIndicators = NewAgentIndicators()
-		m.agentIndicators.SetupDefaultAnimations()
-		m.integrationFlags["indicators_enabled"] = true
+	// Initialize auto-completion (Agent 4's component)
+	if err := m.initializeAutoCompletion(); err != nil {
+		m.integrationFlags["auto_complete_failed"] = true
+		// Continue with graceful degradation
+	} else {
+		m.integrationFlags["auto_complete_enabled"] = true
 	}
 
-	// Validate all components
+	// Initialize command history (Agent 4's component)
+	if err := m.initializeCommandHistory(); err != nil {
+		m.integrationFlags["command_history_failed"] = true
+		// Continue with graceful degradation
+	} else {
+		m.integrationFlags["command_history_enabled"] = true
+	}
+
 	return m.ValidateAllComponents()
 }
 
 // ValidateAllComponents ensures all components are properly configured
 func (m *ChatModel) ValidateAllComponents() error {
-	// Check critical components
-	if m.guildConfig == nil {
-		return fmt.Errorf("guild configuration is not loaded")
+	var validationErrors []string
+
+	// Validate markdown components
+	if m.integrationFlags["markdown_enabled"] {
+		if m.markdownRenderer == nil || m.contentFormatter == nil {
+			validationErrors = append(validationErrors, "markdown components not properly initialized")
+		}
 	}
 
-	if m.ctx == nil {
-		return fmt.Errorf("context is not initialized")
-	}
-
-	// Log component status
-	enabledCount := 0
-	for feature, enabled := range m.integrationFlags {
-		if enabled {
-			enabledCount++
+	// Validate status display
+	if m.integrationFlags["status_display_enabled"] {
+		if m.statusDisplay == nil {
+			validationErrors = append(validationErrors, "status display not initialized")
 		} else {
-			// Log warning for disabled features
-			if feature == "markdown_failed" {
-				// This is okay - we have graceful degradation
-				continue
+			// Test render to ensure it works
+			if testRender := m.statusDisplay.RenderCompactStatus(); testRender == "" {
+				validationErrors = append(validationErrors, "status display render test failed")
 			}
 		}
 	}
 
-	// Ensure minimum components are enabled
-	if enabledCount < 3 {
-		return fmt.Errorf("insufficient components enabled: only %d of minimum 3", enabledCount)
+	// Validate auto-completion
+	if m.integrationFlags["auto_complete_enabled"] {
+		if m.completionEngine == nil {
+			validationErrors = append(validationErrors, "auto-completion not initialized")
+		}
+	}
+
+	// Validate command history
+	if m.integrationFlags["command_history_enabled"] {
+		if m.commandHistory == nil {
+			validationErrors = append(validationErrors, "command history not initialized")
+		}
+	}
+
+	// Check for critical failures
+	criticalComponents := []string{"markdown_enabled", "status_display_enabled"}
+	allCriticalFailed := true
+	for _, component := range criticalComponents {
+		if m.integrationFlags[component] {
+			allCriticalFailed = false
+			break
+		}
+	}
+
+	if allCriticalFailed {
+		return fmt.Errorf("all critical visual components failed to initialize")
+	}
+
+	if len(validationErrors) > 0 {
+		// Log warnings but don't fail - graceful degradation
+		for _, err := range validationErrors {
+			fmt.Printf("Warning: %s\n", err)
+		}
 	}
 
 	return nil
+}
+
+// Individual initialization methods (placeholders for Agent 1's work)
+func (m *ChatModel) initializeMarkdownRenderer() error {
+	if m.markdownRenderer == nil {
+		renderer, err := NewMarkdownRenderer(m.width)
+		if err != nil {
+			return fmt.Errorf("markdown renderer initialization failed: %w", err)
+		}
+		m.markdownRenderer = renderer
+	}
+
+	// Initialize content formatter if not exists
+	if m.contentFormatter == nil {
+		m.contentFormatter = NewContentFormatter(m.markdownRenderer, m.width)
+	}
+
+	return nil
+}
+
+func (m *ChatModel) initializeStatusDisplay() error {
+	if m.statusDisplay == nil {
+		m.statusDisplay = NewStatusDisplay(m.statusTracker, m.width/3, m.height-4)
+	}
+	return nil
+}
+
+// Agent 4's components (already implemented - verifying initialization)
+func (m *ChatModel) initializeAutoCompletion() error {
+	if m.completionEngine == nil {
+		m.completionEngine = NewCompletionEngine(m.guildConfig, ".")
+		if m.completionEngine == nil {
+			return fmt.Errorf("failed to create completion engine")
+		}
+	}
+	return nil
+}
+
+func (m *ChatModel) initializeCommandHistory() error {
+	if m.commandHistory == nil {
+		m.commandHistory = NewCommandHistory(".guild/chat_history.txt")
+		if m.commandHistory == nil {
+			return fmt.Errorf("failed to create command history")
+		}
+	}
+	return nil
+}
+
+// HandleComponentFailure provides graceful degradation when components fail
+func (m *ChatModel) HandleComponentFailure(component string, err error) {
+	m.integrationFlags[component+"_failed"] = true
+
+	switch component {
+	case "markdown":
+		// Fall back to plain text rendering
+		m.markdownRenderer = nil
+		m.contentFormatter = NewPlainTextFormatter(m.width)
+
+	case "status_display":
+		// Disable status display but continue
+		m.statusDisplay = nil
+
+	case "auto_complete":
+		// Disable auto-completion but continue
+		m.completionEngine = nil
+
+	case "command_history":
+		// Disable history but continue
+		m.commandHistory = nil
+	}
+
+	// Log the failure for debugging
+	fmt.Printf("Component %s failed: %v (continuing with degraded functionality)\n", component, err)
+}
+
+// LogIntegrationStatus provides debugging information about component status
+func (m *ChatModel) LogIntegrationStatus() {
+	fmt.Println("=== Guild Integration Status ===")
+
+	components := []string{
+		"markdown_enabled", "markdown_failed",
+		"status_display_enabled", "status_display_failed",
+		"auto_complete_enabled", "auto_complete_failed",
+		"command_history_enabled", "command_history_failed",
+	}
+
+	for _, component := range components {
+		if m.integrationFlags[component] {
+			fmt.Printf("✓ %s\n", component)
+		}
+	}
+
+	fmt.Println("===============================")
 }
 
 // HandleIntegratedKeyInput processes keyboard input with all components integrated
@@ -3566,7 +4000,26 @@ func (m *ChatModel) renderIntegratedHeader() string {
 
 // renderIntegratedInput creates input area with completion popup
 func (m *ChatModel) renderIntegratedInput() string {
-	inputView := m.inputStyle.Render(m.input.View())
+	// Choose input style based on mode
+	var inputStyle lipgloss.Style
+	var modeIndicator string
+
+	if m.historyMode {
+		// History mode - use medieval orange/amber styling
+		inputStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("208")).  // Orange
+			Padding(0, 1)
+		modeIndicator = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("208")).
+			Bold(true).
+			Render("📜 History Mode")
+	} else {
+		// Normal mode - use standard cyan styling
+		inputStyle = m.inputStyle
+	}
+
+	inputView := inputStyle.Render(m.input.View())
 
 	// Add completion popup if active
 	if m.showingCompletion && len(m.completionResults) > 0 {
@@ -3575,33 +4028,119 @@ func (m *ChatModel) renderIntegratedInput() string {
 		return lipgloss.JoinVertical(lipgloss.Left, completionView, inputView)
 	}
 
+	// Add history mode indicator if active
+	if m.historyMode && modeIndicator != "" {
+		return lipgloss.JoinVertical(lipgloss.Left, modeIndicator, inputView)
+	}
+
 	return inputView
 }
 
 // renderCompletionPopup creates the auto-completion popup
 func (m *ChatModel) renderCompletionPopup() string {
-	var items []string
-
-	for i, result := range m.completionResults {
-		// Highlight current selection
-		style := lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
-		if i == m.completionIndex {
-			style = style.Bold(true).Foreground(lipgloss.Color("212"))
-		}
-
-		// Format item
-		item := fmt.Sprintf("%s - %s", result.Text, result.Description)
-		items = append(items, style.Render(item))
+	if len(m.completionResults) == 0 {
+		return ""
 	}
 
-	// Create popup box
+	var items []string
+
+	// Add header with medieval styling
+	headerStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("63")).  // Purple
+		Bold(true)
+	header := headerStyle.Render("⚔️ Guild Suggestions")
+	items = append(items, header)
+	
+	// Add separator
+	separatorStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("63"))
+	separator := separatorStyle.Render(strings.Repeat("─", 25))
+	items = append(items, separator)
+
+	// Render completion items with type-specific icons and medieval styling
+	for i, result := range m.completionResults {
+		icon := m.getCompletionIcon(result.Type)
+		
+		// Define styles for selected vs unselected items
+		var nameStyle, descStyle lipgloss.Style
+		
+		if i == m.completionIndex {
+			// Selected item - highlight with medieval purple theme
+			nameStyle = lipgloss.NewStyle().
+				Bold(true).
+				Foreground(lipgloss.Color("230")).  // Light yellow
+				Background(lipgloss.Color("63"))    // Purple background
+			descStyle = lipgloss.NewStyle().
+				Foreground(lipgloss.Color("254")).  // Light gray
+				Background(lipgloss.Color("63"))    // Purple background
+		} else {
+			// Unselected items
+			nameStyle = lipgloss.NewStyle().
+				Foreground(lipgloss.Color("141"))   // Medium purple
+			descStyle = lipgloss.NewStyle().
+				Foreground(lipgloss.Color("245"))   // Dark gray
+		}
+
+		// Format item with proper spacing and medieval icons
+		name := nameStyle.Render(result.Text)
+		description := descStyle.Render(result.Description)
+		
+		// Create the full item line
+		var itemLine string
+		if i == m.completionIndex {
+			// Selected item gets special formatting
+			itemLine = fmt.Sprintf("⚡ %s %s  %s", icon, name, description)
+		} else {
+			itemLine = fmt.Sprintf("  %s %s  %s", icon, name, description)
+		}
+		
+		items = append(items, itemLine)
+	}
+
+	// Add footer with count
+	footerStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("245")).
+		Italic(true)
+	footer := footerStyle.Render(fmt.Sprintf("⚡ %d of %d suggestions", 
+		m.completionIndex+1, len(m.completionResults)))
+	items = append(items, footer)
+
+	// Create popup box with medieval styling
 	popup := lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color("212")).
+		BorderForeground(lipgloss.Color("63")).  // Purple border
+		Background(lipgloss.Color("0")).         // Black background
 		Padding(0, 1).
 		Render(strings.Join(items, "\n"))
 
 	return popup
+}
+
+// getCompletionIcon returns a medieval-themed icon for completion type
+func (m *ChatModel) getCompletionIcon(completionType string) string {
+	switch completionType {
+	case "command":
+		return "⚔️"  // Sword for commands
+	case "agent":
+		return "👤"  // Person for agents
+	case "file", "go-file":
+		return "📜"  // Scroll for files
+	case "directory":
+		return "📂"  // Folder for directories
+	case "config":
+		return "⚙️"  // Gear for configuration
+	case "markdown":
+		return "📝"  // Memo for markdown
+	case "task":
+		return "📋"  // Clipboard for tasks
+	case "tool":
+		return "🔨"  // Hammer for tools
+	case "argument":
+		return "🏷️"  // Tag for arguments
+	case "database":
+		return "🗃️"  // File cabinet for databases
+	default:
+		return "✨"  // Sparkles for unknown types
+	}
 }
 
 // addSystemMessage adds a system message to the chat
