@@ -346,8 +346,13 @@ func (cf *ContentFormatter) InferLanguage(code string) string {
 		"typescript": {"interface ", "type ", ": string", ": number", "export class", "import {"},
 		"json": {"\":", "\": ", "{\n", "[\n", "},", "],"},
 		"yaml": {"- ", ": ", "---", "...", "!!", "<<:"},
-		"bash": {"#!/bin/bash", "echo ", "if [", "then", "fi", "do", "done"},
-		"sql": {"SELECT ", "FROM ", "WHERE ", "INSERT ", "UPDATE ", "CREATE TABLE"},
+		"bash": {"#!/bin/bash", "#!/bin/sh", "if [", "then", "fi", "do", "done", "echo", "export"},
+		"sql": {"SELECT", "FROM", "WHERE", "INSERT", "UPDATE", "CREATE TABLE", "ALTER", "DROP"},
+		"rust": {"fn ", "let ", "mut ", "impl ", "trait ", "use ", "pub ", "mod ", "match"},
+		"java": {"public class", "private ", "public static", "import java", "extends", "implements"},
+		"ruby": {"def ", "end", "class ", "module ", "require ", "puts ", "attr_"},
+		"dockerfile": {"FROM ", "RUN ", "CMD ", "EXPOSE ", "ENV ", "COPY ", "WORKDIR"},
+		"makefile": {"PHONY:", "all:", "clean:", "install:", "$(", "@echo", "CFLAGS"},
 	}
 	
 	scores := make(map[string]int)

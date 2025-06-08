@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"sort"
@@ -2115,6 +2116,44 @@ func (m ChatModel) handlePromptCommand(args []string) string {
 }
 
 // updateMessagesView refreshes the messages viewport
+// safeFormatContent safely formats content with error recovery
+func (m *ChatModel) safeFormatContent(msgType messageType, content string, agentID string) (result string) {
+	// Defer panic recovery
+	defer func() {
+		if r := recover(); r != nil {
+			// Log the error and return plain text fallback
+			log.Printf("Content formatting panic: %v", r)
+			// Return plain text with basic formatting
+			result = content
+		}
+	}()
+	
+	if m.contentFormatter == nil {
+		return content
+	}
+	
+	switch msgType {
+	case msgUser:
+		result = m.contentFormatter.FormatUserMessage(content)
+	case msgAgent:
+		result = m.contentFormatter.FormatAgentResponse(content, agentID)
+	case msgSystem:
+		result = m.contentFormatter.FormatSystemMessage(content)
+	case msgError:
+		result = m.contentFormatter.FormatErrorMessage(content)
+	case msgToolStart, msgToolProgress, msgToolComplete:
+		result = m.contentFormatter.FormatToolOutput(content, agentID)
+	case msgAgentThinking:
+		result = m.contentFormatter.FormatThinkingMessage(content, agentID)
+	case msgAgentWorking:
+		result = m.contentFormatter.FormatWorkingMessage(content, agentID)
+	default:
+		result = content
+	}
+	
+	return result
+}
+
 func (m ChatModel) updateMessagesView() {
 	var content strings.Builder
 
@@ -2127,18 +2166,12 @@ func (m ChatModel) updateMessagesView() {
 		switch msg.Type {
 		case msgUser:
 			// Format user message with potential markdown
-			formattedContent := msg.Content
-			if m.contentFormatter != nil {
-				formattedContent = m.contentFormatter.FormatUserMessage(msg.Content)
-			}
+			formattedContent := m.safeFormatContent(msg.Type, msg.Content, "")
 			content.WriteString(fmt.Sprintf("[%s] You: %s\n", timestamp, formattedContent))
 
 		case msgAgent:
 			// Format agent message with rich content rendering
-			formattedContent := msg.Content
-			if m.contentFormatter != nil {
-				formattedContent = m.contentFormatter.FormatAgentResponse(msg.Content, msg.AgentID)
-			}
+			formattedContent := m.safeFormatContent(msg.Type, msg.Content, msg.AgentID)
 
 			// Show agent attribution differently based on view mode
 			if m.chatMode == globalView {
@@ -2152,10 +2185,7 @@ func (m ChatModel) updateMessagesView() {
 
 		case msgSystem:
 			// Format system message with rich content rendering
-			formattedContent := msg.Content
-			if m.contentFormatter != nil {
-				formattedContent = m.contentFormatter.FormatSystemMessage(msg.Content)
-			}
+			formattedContent := m.safeFormatContent(msg.Type, msg.Content, msg.AgentID)
 
 			// Show agent attribution for system messages in global view
 			if m.chatMode == globalView && msg.AgentID != "" {
@@ -2171,45 +2201,22 @@ func (m ChatModel) updateMessagesView() {
 
 		case msgError:
 			// Format error message with rich content and emphasis
-			formattedContent := msg.Content
-			if m.contentFormatter != nil {
-				formattedContent = m.contentFormatter.FormatErrorMessage(msg.Content)
-			} else {
-				styled := m.errorStyle.Render("[Error]")
-				formattedContent = fmt.Sprintf("%s: %s", styled, msg.Content)
-			}
+			formattedContent := m.safeFormatContent(msg.Type, msg.Content, msg.AgentID)
 			content.WriteString(fmt.Sprintf("[%s] %s\n", timestamp, formattedContent))
 
 		case msgAgentThinking:
 			// Format thinking message with rich content
-			formattedContent := msg.Content
-			if m.contentFormatter != nil {
-				formattedContent = m.contentFormatter.FormatThinkingMessage(msg.Content, msg.AgentID)
-			} else {
-				formattedContent = fmt.Sprintf("🤔 %s", msg.Content)
-			}
+			formattedContent := m.safeFormatContent(msgAgentThinking, msg.Content, msg.AgentID)
 			content.WriteString(fmt.Sprintf("[%s] %s\n", timestamp, formattedContent))
 
 		case msgAgentWorking:
 			// Format working message with rich content
-			formattedContent := msg.Content
-			if m.contentFormatter != nil {
-				formattedContent = m.contentFormatter.FormatWorkingMessage(msg.Content, msg.AgentID)
-			} else {
-				formattedContent = fmt.Sprintf("⚙️ %s", msg.Content)
-			}
+			formattedContent := m.safeFormatContent(msgAgentWorking, msg.Content, msg.AgentID)
 			content.WriteString(fmt.Sprintf("[%s] %s\n", timestamp, formattedContent))
 
 		case msgToolStart:
 			// Format tool message with rich content
-			formattedContent := msg.Content
-			if m.contentFormatter != nil {
-				toolName := "Tool"
-				if msg.AgentID != "" {
-					toolName = msg.AgentID
-				}
-				formattedContent = m.contentFormatter.FormatToolOutput(msg.Content, toolName)
-			}
+			formattedContent := m.safeFormatContent(msgToolStart, msg.Content, msg.AgentID)
 
 			// Show agent attribution for tool messages in global view
 			if m.chatMode == globalView && msg.AgentID != "" {

@@ -19,6 +19,7 @@ type MarkdownRenderer struct {
 	renderer       *glamour.TermRenderer
 	width          int
 	codeStyle      lipgloss.Style
+	lineNumberStyle lipgloss.Style
 	formatter      chroma.Formatter
 	style          *chroma.Style
 	
@@ -112,15 +113,21 @@ func NewMarkdownRenderer(width int) (*MarkdownRenderer, error) {
 		Margin(1, 0).
 		MaxWidth(width - 8) // Ensure proper wrapping with extra padding
 
+	// Line number style
+	lineNumberStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("8")). // Dark gray
+		MarginRight(1)
+
 	return &MarkdownRenderer{
-		renderer:      renderer,
-		width:         width,
-		codeStyle:     codeStyle,
-		formatter:     formatter,
-		style:         style,
-		maxCacheSize:  100,  // Cache up to 100 rendered items
-		errorFallback: true,
-		lastError:     lastErr,
+		renderer:        renderer,
+		width:           width,
+		codeStyle:       codeStyle,
+		lineNumberStyle: lineNumberStyle,
+		formatter:       formatter,
+		style:           style,
+		maxCacheSize:    100,  // Cache up to 100 rendered items
+		errorFallback:   true,
+		lastError:       lastErr,
 	}, nil
 }
 
@@ -316,19 +323,32 @@ func (m *MarkdownRenderer) addLineNumbers(content string, lineCount int) string 
 	lines := strings.Split(content, "\n")
 	numberedLines := make([]string, 0, len(lines))
 	
-	// Style for line numbers
-	lineNumStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("240")). // Gray
-		Margin(0, 1, 0, 0)
-	
 	// Calculate width for line number padding
 	width := len(fmt.Sprintf("%d", lineCount))
 	
 	for i, line := range lines {
-		lineNumText := fmt.Sprintf("%*d", width, i+1)
-		lineNum := lineNumStyle.Render(lineNumText)
-		numberedLines = append(numberedLines, lineNum + line)
+		// Format with proper padding and separator
+		format := fmt.Sprintf("%%-%dd│", width)
+		lineNumStr := fmt.Sprintf(format, i+1)
+		
+		// Apply style to line number
+		styledLineNum := m.lineNumberStyle.Render(lineNumStr)
+		
+		// Combine line number with code line
+		numberedLines = append(numberedLines, styledLineNum + line)
 	}
 	
 	return strings.Join(numberedLines, "\n")
+}
+
+// GetCacheStats returns cache performance statistics
+func (mr *MarkdownRenderer) GetCacheStats() string {
+	total := mr.cacheHits + mr.cacheMisses
+	if total == 0 {
+		return "Cache stats: No cache activity yet"
+	}
+	
+	ratio := float64(mr.cacheHits) / float64(total) * 100
+	return fmt.Sprintf("Cache hits: %d, misses: %d, ratio: %.2f%%",
+		mr.cacheHits, mr.cacheMisses, ratio)
 }
