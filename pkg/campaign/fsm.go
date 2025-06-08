@@ -2,9 +2,10 @@ package campaign
 
 import (
 	"context"
-	"fmt"
 	"sync"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // fsm implements the FSM interface for campaign state transitions
@@ -49,12 +50,18 @@ func (f *fsm) CanTransition(from, to CampaignStatus) bool {
 // Transition performs a state transition on a campaign
 func (f *fsm) Transition(ctx context.Context, campaign *Campaign, to CampaignStatus) error {
 	if campaign == nil {
-		return fmt.Errorf("campaign cannot be nil")
+		return gerror.New(gerror.ErrCodeValidation, "campaign cannot be nil", nil).
+			WithComponent("campaign").
+			WithOperation("Transition")
 	}
 
 	// Check if transition is valid
 	if !f.CanTransition(campaign.Status, to) {
-		return fmt.Errorf("invalid transition from %s to %s", campaign.Status, to)
+		return gerror.New(gerror.ErrCodeValidation, "invalid state transition", nil).
+			WithComponent("campaign").
+			WithOperation("Transition").
+			WithDetails("from_status", string(campaign.Status)).
+			WithDetails("to_status", string(to))
 	}
 
 	// Store previous status
@@ -102,7 +109,10 @@ func (f *fsm) GetValidTransitions(from CampaignStatus) []CampaignStatus {
 // ValidateStatus checks if a status is valid
 func ValidateStatus(status CampaignStatus) error {
 	if !status.IsValid() {
-		return fmt.Errorf("invalid campaign status: %s", status)
+		return gerror.New(gerror.ErrCodeValidation, "invalid campaign status", nil).
+			WithComponent("campaign").
+			WithOperation("ValidateStatus").
+			WithDetails("status", string(status))
 	}
 	return nil
 }

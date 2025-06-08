@@ -46,7 +46,11 @@ func (r *ToolRegistry) RegisterTool(name string, tool Tool) error {
 	// The underlying registry uses the tool's Name() method,
 	// so we validate that it matches the provided name
 	if tool.Name() != name {
-		return fmt.Errorf("tool name mismatch: provided '%s', tool reports '%s'", name, tool.Name())
+		return gerror.New(gerror.ErrCodeValidation, "tool name mismatch", nil).
+			WithComponent("tools").
+			WithOperation("RegisterTool").
+			WithDetails("provided_name", name).
+			WithDetails("tool_name", tool.Name())
 	}
 	return r.ToolRegistry.RegisterTool(tool)
 }
@@ -61,7 +65,10 @@ func (r *ToolRegistry) Register(tool Tool) error {
 func (r *ToolRegistry) GetTool(name string) (Tool, error) {
 	tool, exists := r.ToolRegistry.GetTool(name)
 	if !exists {
-		return nil, fmt.Errorf("tool '%s' not found", name)
+		return nil, gerror.New(gerror.ErrCodeNotFound, "tool not found", nil).
+			WithComponent("tools").
+			WithOperation("GetTool").
+			WithDetails("tool_name", name)
 	}
 	return tool, nil
 }
@@ -85,11 +92,17 @@ func (r *ToolRegistry) HasTool(name string) bool {
 // UnregisterTool removes a tool from the registry (implements Registry interface)
 func (r *ToolRegistry) UnregisterTool(name string) error {
 	if !r.HasTool(name) {
-		return fmt.Errorf("tool '%s' not found", name)
+		return gerror.New(gerror.ErrCodeNotFound, "tool not found", nil).
+			WithComponent("tools").
+			WithOperation("UnregisterTool").
+			WithDetails("tool_name", name)
 	}
 	// The underlying registry doesn't have UnregisterTool, so we need to manage this
 	// For now, return an error indicating it's not supported
-	return fmt.Errorf("unregister not supported by underlying registry")
+	return gerror.New(gerror.ErrCodeInternal, "unregister not supported by underlying registry", nil).
+		WithComponent("tools").
+		WithOperation("UnregisterTool").
+		WithDetails("tool_name", name)
 }
 
 // Clear removes all tools from the registry (implements Registry interface)

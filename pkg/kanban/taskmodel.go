@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
