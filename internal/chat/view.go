@@ -347,7 +347,7 @@ func (m ChatModel) renderAgentActivityBar() string {
 	// Get active animations
 	animations := m.agentIndicators.GetActiveAnimations()
 	
-	for agentID, animType := range animations {
+	for agentID, _ := range animations {
 		indicator := m.agentIndicators.GetCurrentIndicator(agentID)
 		context := m.agentIndicators.GetAnimationContext(agentID)
 		

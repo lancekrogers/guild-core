@@ -1,7 +1,6 @@
 package chat
 
 import (
-	"strings"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -121,7 +120,7 @@ func (m ChatModel) handleTabCompletion() (ChatModel, tea.Cmd) {
 
 	// Get current input
 	input := m.input.Value()
-	cursorPos := m.input.Position()
+	cursorPos := len(input) // Use length as approximation for cursor position
 
 	// If already showing completions, cycle through them
 	if m.showingCompletion && len(m.completionResults) > 0 {

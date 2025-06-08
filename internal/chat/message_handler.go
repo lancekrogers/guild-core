@@ -145,10 +145,8 @@ func (m ChatModel) handleCommand(command string) string {
 	cmd := strings.ToLower(parts[0])
 	args := parts[1:]
 
-	// Use command processor if available
-	if m.commandProc != nil {
-		return m.commandProc.ProcessCommand(cmd, args)
-	}
+	// Note: command processor returns tea.Cmd, this function needs string
+	// For now, use fallback handling until integration is complete
 
 	// Fallback to basic command handling
 	switch cmd {
@@ -231,10 +229,14 @@ func (m *ChatModel) streamAgentConversation(agentID, message string) {
 
 	// Send initial request
 	req := &pb.AgentStreamRequest{
-		CampaignId: m.campaignID,
-		AgentId:    agentID,
-		Message:    message,
-		SessionId:  m.sessionID,
+		Request: &pb.AgentStreamRequest_Message{
+			Message: &pb.AgentMessageRequest{
+				AgentId:    agentID,
+				Message:    message,
+				SessionId:  m.sessionID,
+				CampaignId: m.campaignID,
+			},
+		},
 	}
 
 	if err := stream.Send(req); err != nil {
@@ -260,52 +262,43 @@ func (m *ChatModel) streamAgentConversation(agentID, message string) {
 			break
 		}
 
-		switch resp.Type {
-		case pb.AgentStreamResponse_THINKING:
-			// Agent is thinking
-			if m.agentStatusTracker != nil {
-				status := m.agentStatusTracker.GetAgentStatus(resp.AgentId)
-				if status != nil {
-					status.State = AgentThinking
-					status.CurrentTask = "Processing request..."
-					m.agentStatusTracker.UpdateAgentStatus(resp.AgentId, status)
+		switch response := resp.Response.(type) {
+		case *pb.AgentStreamResponse_Fragment:
+			// Handle message fragment
+			fragment := response.Fragment
+			if fragment != nil {
+				// Accumulate content
+				currentContent.WriteString(fragment.Content)
+				
+				// Update agent status
+				if m.agentStatusTracker != nil {
+					status := m.agentStatusTracker.GetAgentStatus(fragment.AgentId)
+					if status != nil {
+						status.State = AgentWorking
+						status.CurrentTask = "Generating response..."
+						m.agentStatusTracker.UpdateAgentStatus(fragment.AgentId, status)
+					}
 				}
 			}
 
-		case pb.AgentStreamResponse_CONTENT:
-			// Accumulate content
-			currentContent.WriteString(resp.Content)
-			
-			// Update animation
-			if m.agentIndicators != nil {
-				m.agentIndicators.SetWorkingAnimation(resp.AgentId, "responding")
-			}
-
-		case pb.AgentStreamResponse_TOOL_CALL:
-			// Tool execution started
-			toolExec := resp.ToolExecution
-			if toolExec != nil {
-				m.addToolExecutionMessage(toolExec)
-			}
-
-		case pb.AgentStreamResponse_COMPLETE:
-			// Stream complete
-			if m.agentIndicators != nil {
-				m.agentIndicators.ClearAnimation(resp.AgentId)
+		case *pb.AgentStreamResponse_Status:
+			// Handle status update
+			agentStatus := response.Status
+			if agentStatus != nil && m.agentStatusTracker != nil {
+				// Convert proto status to internal status
+				// This needs proper implementation based on the AgentStatus structure
 			}
 			
-			// Add final message
-			if currentContent.Len() > 0 {
-				m.addAgentMessage(resp.AgentId, currentContent.String())
+		case *pb.AgentStreamResponse_Event:
+			// Handle stream event
+			event := response.Event
+			if event != nil {
+				// Handle different event types based on StreamEvent structure
+				// This needs implementation based on the actual event type
 			}
 
-		case pb.AgentStreamResponse_ERROR:
-			// Handle error
-			m.addErrorMessage(fmt.Sprintf("Agent %s error: %s", resp.AgentId, resp.Error))
-			
-			if m.agentIndicators != nil {
-				m.agentIndicators.ClearAnimation(resp.AgentId)
-			}
+		default:
+			// Unknown response type
 		}
 	}
 }

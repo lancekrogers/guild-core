@@ -363,6 +363,26 @@ func (ce *CompletionEngine) SetRegistry(reg registry.ComponentRegistry) {
 	ce.registry = reg
 }
 
+// GetAllCommands returns all registered command names for testing/debugging
+func (ce *CompletionEngine) GetAllCommands() []string {
+	var commands []string
+	for name := range ce.commands {
+		commands = append(commands, name)
+	}
+	return commands
+}
+
+// GetAllAgents returns all registered agent IDs for testing/debugging
+func (ce *CompletionEngine) GetAllAgents() []string {
+	var agents []string
+	if ce.guildConfig != nil {
+		for _, agent := range ce.guildConfig.Agents {
+			agents = append(agents, "@"+agent.ID)
+		}
+	}
+	return agents
+}
+
 // fuzzyMatch performs a simple fuzzy matching algorithm
 func fuzzyMatch(text, pattern string) bool {
 	if pattern == "" {

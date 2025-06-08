@@ -225,6 +225,28 @@ func (cf *ContentFormatter) UpdateWidth(newWidth int) {
 	// Note: MarkdownRenderer width should be updated separately if needed
 }
 
+// SetWidth is an alias for UpdateWidth for compatibility
+func (cf *ContentFormatter) SetWidth(newWidth int) {
+	cf.UpdateWidth(newWidth)
+}
+
+// FormatMarkdown formats markdown content using the markdown renderer
+func (cf *ContentFormatter) FormatMarkdown(content string) string {
+	if cf.markdownRenderer != nil {
+		return cf.markdownRenderer.Render(content)
+	}
+	return content
+}
+
+// FormatCodeBlock formats a code block with syntax highlighting
+func (cf *ContentFormatter) FormatCodeBlock(content, language string) string {
+	if cf.markdownRenderer != nil {
+		codeBlock := fmt.Sprintf("```%s\n%s\n```", language, content)
+		return cf.markdownRenderer.Render(codeBlock)
+	}
+	return content
+}
+
 // SetTheme allows switching between different visual themes
 func (cf *ContentFormatter) SetTheme(theme string) {
 	switch theme {

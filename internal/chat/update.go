@@ -3,15 +3,10 @@ package chat
 import (
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/textarea"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
-	"golang.org/x/net/context"
-	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 )
 
 // Update implements tea.Model

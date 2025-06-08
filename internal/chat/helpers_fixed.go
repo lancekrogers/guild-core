@@ -2,13 +2,7 @@ package chat
 
 import (
 	"fmt"
-	"log"
-	"strings"
 	"time"
-
-	"github.com/charmbracelet/lipgloss"
-	"github.com/guild-ventures/guild-core/pkg/config"
-	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 )
 
 // Tool execution message handlers (FIXED VERSION)

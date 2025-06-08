@@ -8,6 +8,7 @@ import (
 	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/guild-ventures/guild-core/pkg/config"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 )
@@ -189,6 +190,7 @@ type ChatModel struct {
 	promptsClient promptspb.PromptServiceClient
 	sessionID     string
 	campaignID    string
+	guildConfig   *config.GuildConfig
 	commandProc   *CommandProcessor
 	completionEng *CompletionEngine
 	history       *CommandHistory

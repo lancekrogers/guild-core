@@ -1,30 +1,23 @@
 package chat
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 	"time"
 
 	"github.com/charmbracelet/bubbles/help"
-	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 	"google.golang.org/grpc"
 
 	"github.com/guild-ventures/guild-core/pkg/config"
-	guildcontext "github.com/guild-ventures/guild-core/pkg/context"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	guildgrpc "github.com/guild-ventures/guild-core/pkg/grpc"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 	"github.com/guild-ventures/guild-core/pkg/project"
-	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
 // NewChatModel creates a new chat model
@@ -43,14 +36,14 @@ func NewChatModel(guildConfig *config.GuildConfig, conn *grpc.ClientConn, prompt
 	vp.SetContent("🏰 Welcome to Guild Chat\n\nType '/help' for available commands.")
 
 	// Create gRPC clients
-	grpcClient := pb.NewGuildServiceClient(conn)
-	promptsClient := promptspb.NewPromptsServiceClient(promptsConn)
+	grpcClient := pb.NewGuildClient(conn)
+	promptsClient := promptspb.NewPromptServiceClient(promptsConn)
 
 	// Initialize command history
 	var historyFile string
-	projectInfo, err := project.DetectProject(".")
-	if err == nil && projectInfo != nil {
-		historyFile = filepath.Join(projectInfo.Root, ".guild", "chat_history.txt")
+	projectCtx, err := project.GetContextFromPath(".")
+	if err == nil && projectCtx != nil {
+		historyFile = filepath.Join(projectCtx.GetGuildPath(), "chat_history.txt")
 	} else {
 		// Fallback to home directory
 		homeDir, _ := os.UserHomeDir()
@@ -68,7 +61,7 @@ func NewChatModel(guildConfig *config.GuildConfig, conn *grpc.ClientConn, prompt
 		campaignID:    campaignID,
 		sessionID:     fmt.Sprintf("chat-%d", time.Now().Unix()),
 		guildConfig:   guildConfig,
-		keys:          DefaultKeyMap(),
+		keys:          newChatKeyMap(),
 		help:          help.New(),
 		err:           nil,
 		width:         80,
@@ -120,9 +113,9 @@ func (m ChatModel) Init() tea.Cmd {
 func (m *ChatModel) initializeMarkdownRenderer() error {
 	renderer, err := NewMarkdownRenderer(m.width)
 	if err != nil {
-		return gerror.Wrap(err, "failed to create markdown renderer",
-			gerror.WithComponent("chat"),
-			gerror.WithOperation("initializeMarkdownRenderer"))
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create markdown renderer").
+			WithComponent("chat").
+			WithOperation("initializeMarkdownRenderer")
 	}
 	
 	m.markdownRenderer = renderer
@@ -134,9 +127,9 @@ func (m *ChatModel) initializeMarkdownRenderer() error {
 // initializeStatusDisplay sets up the agent status display
 func (m *ChatModel) initializeStatusDisplay() error {
 	if m.guildConfig == nil {
-		return gerror.New(gerror.ErrCodeMissingRequired, "guild config not provided",
-			gerror.WithComponent("chat"),
-			gerror.WithOperation("initializeStatusDisplay"))
+		return gerror.New(gerror.ErrCodeMissingRequired, "guild config not provided", nil).
+			WithComponent("chat").
+			WithOperation("initializeStatusDisplay")
 	}
 	
 	// Create agent status tracker
@@ -153,24 +146,17 @@ func (m *ChatModel) initializeStatusDisplay() error {
 
 // initializeAutoCompletion sets up the auto-completion engine
 func (m *ChatModel) initializeAutoCompletion() error {
-	// Create completion engine with guild context
-	engine := NewCompletionEngine()
-	
-	// Register command completions
-	engine.RegisterCommands([]string{
-		"/help", "/status", "/agents", "/prompt", "/tools",
-		"/test", "/clear", "/exit", "/quit",
-	})
-	
-	// Register agent completions from guild config
-	if m.guildConfig != nil {
-		for _, agent := range m.guildConfig.Agents {
-			engine.RegisterAgent("@" + agent.ID, agent.Name)
-		}
+	// Get project root for completion engine
+	projectRoot := "."
+	if projectCtx, err := project.GetContextFromPath("."); err == nil {
+		projectRoot = projectCtx.GetRootPath()
 	}
+
+	// Create completion engine with guild context
+	engine := NewCompletionEngine(m.guildConfig, projectRoot)
 	
 	m.completionEng = engine
-	m.commandProc = NewCommandProcessor(m.guildConfig)
+	m.commandProc = NewCommandProcessor(m)
 	
 	return nil
 }
@@ -179,9 +165,9 @@ func (m *ChatModel) initializeAutoCompletion() error {
 func (m *ChatModel) initializeCommandHistory() error {
 	if m.history == nil {
 		// This shouldn't happen as it's initialized in NewChatModel
-		return gerror.New(gerror.ErrCodeInternalError, "command history not initialized",
-			gerror.WithComponent("chat"),
-			gerror.WithOperation("initializeCommandHistory"))
+		return gerror.New(gerror.ErrCodeInternal, "command history not initialized", nil).
+			WithComponent("chat").
+			WithOperation("initializeCommandHistory")
 	}
 	
 	// History is already initialized in NewChatModel
