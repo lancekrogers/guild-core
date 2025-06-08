@@ -47,11 +47,11 @@ type FileStructure struct {
 
 // FileEntry represents a file in the structure
 type FileEntry struct {
-	Path        string
-	Content     string
-	Type        FileType
-	TasksCount  int
-	Metadata    map[string]interface{}
+	Path       string
+	Content    string
+	Type       FileType
+	TasksCount int
+	Metadata   map[string]interface{}
 }
 
 // FileType represents the type of file

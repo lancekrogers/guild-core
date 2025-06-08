@@ -183,16 +183,16 @@ func TestPromptCompleteness(t *testing.T) {
 	t.Run("CoversAllAspects", func(t *testing.T) {
 		// Essential aspects that should be covered
 		aspects := []string{
-			"commission",              // Input understanding
+			"commission",             // Input understanding
 			"hierarchical",           // Structure requirement
 			"markdown",               // Output format
 			"Tasks Generated",        // Task formatting
 			"Dependencies",           // Relationship tracking
 			"Capabilities",           // Agent matching
-			"Priority",              // Task prioritization
-			"Estimate",              // Time planning
+			"Priority",               // Task prioritization
+			"Estimate",               // Time planning
 			"Testing Considerations", // Quality assurance
-			"artisan",               // Guild terminology
+			"artisan",                // Guild terminology
 		}
 
 		for _, aspect := range aspects {

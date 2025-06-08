@@ -11,6 +11,7 @@ This objective covers the implementation of the objective system for Guild, whic
 Guild agents need to understand high-level objectives described in markdown format. These objectives include context, goals, implementation details, and success criteria.
 
 The objective system is a core component that enables agents to:
+
 1. Parse markdown objective documents
 2. Extract structured information
 3. Generate tasks based on objectives

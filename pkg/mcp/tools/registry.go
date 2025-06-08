@@ -63,11 +63,11 @@ type Registry interface {
 
 // MemoryRegistry implements an in-memory tool registry
 type MemoryRegistry struct {
-	tools      map[string]Tool
-	status     map[string]bool // tool availability status
-	mu         sync.RWMutex
-	indexCaps  map[string][]string // capability -> tool IDs index
-	indexTags  map[string][]string // tag -> tool IDs index
+	tools     map[string]Tool
+	status    map[string]bool // tool availability status
+	mu        sync.RWMutex
+	indexCaps map[string][]string // capability -> tool IDs index
+	indexTags map[string][]string // tag -> tool IDs index
 }
 
 // NewMemoryRegistry creates a new in-memory registry

@@ -115,12 +115,12 @@ func (m *DefaultManager) ListRoles(ctx context.Context) ([]string, error) {
 	// For now, return predefined roles
 	// In the future, this could be dynamic based on registry content
 	return []string{
-		"manager",      // Guild Master
-		"developer",    // Code Artisan
-		"reviewer",     // Quality Inspector
-		"architect",    // Architecture Sage
-		"tester",       // Test Crafter
-		"documenter",   // Scribe
+		"manager",    // Guild Master
+		"developer",  // Code Artisan
+		"reviewer",   // Quality Inspector
+		"architect",  // Architecture Sage
+		"tester",     // Test Crafter
+		"documenter", // Scribe
 	}, nil
 }
 

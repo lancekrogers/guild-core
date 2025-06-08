@@ -316,8 +316,8 @@ func TestGuildMasterRefiner(t *testing.T) {
 			Title:       "Test Commission",
 			Description: "A test commission for the Guild",
 			Context: map[string]interface{}{
-				"technology": "Go",
-				"deadline":   "2 weeks",
+				"technology":  "Go",
+				"deadline":    "2 weeks",
 				"complex_obj": map[string]string{"key": "value"},
 			},
 		}

@@ -99,9 +99,9 @@ func (p *ArchiveParser) parseSingleFile(content string) (*FileStructure, error) 
 		Type:       FileTypeMarkdown,
 		TasksCount: taskCount,
 		Metadata: map[string]interface{}{
-			"source":       "guild_master_response",
-			"archived_by":  "guild_archive_parser",
-			"single_file":  true,
+			"source":            "guild_master_response",
+			"archived_by":       "guild_archive_parser",
+			"single_file":       true,
 			"commission_format": "unified",
 		},
 	}

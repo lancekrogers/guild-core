@@ -26,33 +26,33 @@ const (
 
 // Commission represents a goal or task to be accomplished
 type Commission struct {
-	ID          string            `json:"id"`
-	Title       string            `json:"title"`
-	Description string            `json:"description"`
-	Status      CommissionStatus  `json:"status"`
-	CreatedAt   time.Time         `json:"created_at"`
-	UpdatedAt   time.Time         `json:"updated_at"`
-	CompletedAt *time.Time        `json:"completed_at,omitempty"`
-	Tags        []string          `json:"tags,omitempty"`
-	Metadata    map[string]string `json:"metadata,omitempty"`
-	Context     []string          `json:"context,omitempty"` // References to context documents
-	Parts       []*CommissionPart `json:"parts,omitempty"`
-	Tasks       []*CommissionTask `json:"tasks,omitempty"`
-	Owner       string            `json:"owner,omitempty"`
-	Assignees   []string          `json:"assignees,omitempty"`
-	Priority    string            `json:"priority,omitempty"` // high, medium, low
-	Source      string            `json:"source,omitempty"`   // Path to the source file
-	Content     string            `json:"-"`                  // Original content, not stored in JSON
-	FilePath    string            `json:"-"`                  // Path to the file
-	FileName    string            `json:"-"`                  // Name of the file
-	Goal        string            `json:"goal,omitempty"`     // The main goal of the objective
-	Requirements []string         `json:"requirements,omitempty"` // Requirements for completion
-	Related     []string          `json:"related,omitempty"`  // Related objectives
-	AIDocs      []string          `json:"ai_docs,omitempty"`  // AI documentation paths
-	Specs       []string          `json:"specs,omitempty"`    // Specification paths
-	Completion  float64           `json:"completion"`         // Completion percentage (0.0-1.0)
-	Iteration   int               `json:"iteration"`          // Current iteration count
-	CampaignID  string            `json:"campaign_id,omitempty"` // Optional campaign association
+	ID           string            `json:"id"`
+	Title        string            `json:"title"`
+	Description  string            `json:"description"`
+	Status       CommissionStatus  `json:"status"`
+	CreatedAt    time.Time         `json:"created_at"`
+	UpdatedAt    time.Time         `json:"updated_at"`
+	CompletedAt  *time.Time        `json:"completed_at,omitempty"`
+	Tags         []string          `json:"tags,omitempty"`
+	Metadata     map[string]string `json:"metadata,omitempty"`
+	Context      []string          `json:"context,omitempty"` // References to context documents
+	Parts        []*CommissionPart `json:"parts,omitempty"`
+	Tasks        []*CommissionTask `json:"tasks,omitempty"`
+	Owner        string            `json:"owner,omitempty"`
+	Assignees    []string          `json:"assignees,omitempty"`
+	Priority     string            `json:"priority,omitempty"`     // high, medium, low
+	Source       string            `json:"source,omitempty"`       // Path to the source file
+	Content      string            `json:"-"`                      // Original content, not stored in JSON
+	FilePath     string            `json:"-"`                      // Path to the file
+	FileName     string            `json:"-"`                      // Name of the file
+	Goal         string            `json:"goal,omitempty"`         // The main goal of the objective
+	Requirements []string          `json:"requirements,omitempty"` // Requirements for completion
+	Related      []string          `json:"related,omitempty"`      // Related objectives
+	AIDocs       []string          `json:"ai_docs,omitempty"`      // AI documentation paths
+	Specs        []string          `json:"specs,omitempty"`        // Specification paths
+	Completion   float64           `json:"completion"`             // Completion percentage (0.0-1.0)
+	Iteration    int               `json:"iteration"`              // Current iteration count
+	CampaignID   string            `json:"campaign_id,omitempty"`  // Optional campaign association
 }
 
 // Format formats a commission as a markdown string
@@ -105,28 +105,28 @@ func (c *Commission) Format() string {
 
 // CommissionPart represents a section of a commission
 type CommissionPart struct {
-	ID          string            `json:"id"`
-	Title       string            `json:"title"`
-	Content     string            `json:"content"`
-	Type        string            `json:"type"`     // context, goal, acceptance, implementation, etc.
-	SortOrder   int               `json:"sort_order"`
-	Metadata    map[string]string `json:"metadata,omitempty"`
+	ID        string            `json:"id"`
+	Title     string            `json:"title"`
+	Content   string            `json:"content"`
+	Type      string            `json:"type"` // context, goal, acceptance, implementation, etc.
+	SortOrder int               `json:"sort_order"`
+	Metadata  map[string]string `json:"metadata,omitempty"`
 }
 
 // CommissionTask represents a task to complete a commission
 type CommissionTask struct {
-	ID          string            `json:"id"`
-	Title       string            `json:"title"`
-	Description string            `json:"description"`
-	Status      string            `json:"status"`    // todo, in_progress, done, etc.
-	CreatedAt   time.Time         `json:"created_at"`
-	UpdatedAt   time.Time         `json:"updated_at"`
-	CompletedAt *time.Time        `json:"completed_at,omitempty"`
-	Assignee    string            `json:"assignee,omitempty"`
-	Dependencies []string         `json:"dependencies,omitempty"` // IDs of tasks this depends on
-	SortOrder   int               `json:"sort_order"`
-	Metadata    map[string]string `json:"metadata,omitempty"`
-	ParentID    string            `json:"parent_id,omitempty"` // For hierarchical tasks
+	ID           string            `json:"id"`
+	Title        string            `json:"title"`
+	Description  string            `json:"description"`
+	Status       string            `json:"status"` // todo, in_progress, done, etc.
+	CreatedAt    time.Time         `json:"created_at"`
+	UpdatedAt    time.Time         `json:"updated_at"`
+	CompletedAt  *time.Time        `json:"completed_at,omitempty"`
+	Assignee     string            `json:"assignee,omitempty"`
+	Dependencies []string          `json:"dependencies,omitempty"` // IDs of tasks this depends on
+	SortOrder    int               `json:"sort_order"`
+	Metadata     map[string]string `json:"metadata,omitempty"`
+	ParentID     string            `json:"parent_id,omitempty"` // For hierarchical tasks
 }
 
 // CommissionParser defines the interface for commission parsers
@@ -149,7 +149,7 @@ type SectionInfo struct {
 
 // ParseOptions contains options for parsing commissions
 type ParseOptions struct {
-	DefaultStatus  CommissionStatus
+	DefaultStatus   CommissionStatus
 	DefaultPriority string
 	DefaultOwner    string
 	TagPrefixes     []string
@@ -213,14 +213,14 @@ func NewCommissionPart(title, content, partType string, sortOrder int) *Commissi
 func NewCommissionTask(title, description string, sortOrder int) *CommissionTask {
 	now := time.Now().UTC()
 	return &CommissionTask{
-		ID:          GenerateID(),
-		Title:       title,
-		Description: description,
-		Status:      "todo",
-		CreatedAt:   now,
-		UpdatedAt:   now,
-		SortOrder:   sortOrder,
-		Metadata:    make(map[string]string),
+		ID:           GenerateID(),
+		Title:        title,
+		Description:  description,
+		Status:       "todo",
+		CreatedAt:    now,
+		UpdatedAt:    now,
+		SortOrder:    sortOrder,
+		Metadata:     make(map[string]string),
 		Dependencies: []string{},
 	}
 }

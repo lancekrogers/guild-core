@@ -7,16 +7,16 @@ import (
 
 // CommissionItem represents an objective in the ledger list
 type CommissionItem struct {
-	ID           string
-	Title        string
-	Status       string
-	Path         string
-	Iterations   int
-	CreatedAt    time.Time
-	ModifiedAt   time.Time
-	Tags         []string
-	Completion   float64 // 0.0-1.0 representing completion percentage
-	Description  string
+	ID          string
+	Title       string
+	Status      string
+	Path        string
+	Iterations  int
+	CreatedAt   time.Time
+	ModifiedAt  time.Time
+	Tags        []string
+	Completion  float64 // 0.0-1.0 representing completion percentage
+	Description string
 }
 
 // FilterValue implements list.Item interface

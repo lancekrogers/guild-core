@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/providers/ollama"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/providers/ollama"
 )
 
 // OllamaEmbedder implements the Embedder interface using local Ollama models.
@@ -58,9 +58,9 @@ func NewOllamaEmbedder(baseURL, model string) (*OllamaEmbedder, error) {
 // Embed generates an embedding from text using the local Ollama model.
 //
 // This method:
-//   1. Sends the text to the local Ollama server
-//   2. Uses the configured embedding model to generate vectors
-//   3. Returns the embedding as float32 slice for compatibility
+//  1. Sends the text to the local Ollama server
+//  2. Uses the configured embedding model to generate vectors
+//  3. Returns the embedding as float32 slice for compatibility
 //
 // No internet connection or API keys required.
 func (e *OllamaEmbedder) Embed(ctx context.Context, text string) ([]float32, error) {

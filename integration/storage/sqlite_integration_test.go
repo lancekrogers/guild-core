@@ -5,10 +5,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/memory"
-	"github.com/guild-ventures/guild-core/pkg/storage"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/guild-ventures/guild-core/pkg/memory"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
 // TestSQLiteStorageIntegration tests the SQLite storage implementation directly
@@ -275,9 +276,9 @@ func TestSQLiteStorageIntegration(t *testing.T) {
 			Provider: strPtr("openai"),
 			Model:    strPtr("gpt-4"),
 			Capabilities: map[string]interface{}{
-				"coding":     true,
-				"reasoning":  true,
-				"languages":  []string{"go", "python"},
+				"coding":    true,
+				"reasoning": true,
+				"languages": []string{"go", "python"},
 			},
 			Tools: map[string]interface{}{
 				"file_operations": true,

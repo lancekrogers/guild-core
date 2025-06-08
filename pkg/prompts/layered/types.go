@@ -10,15 +10,15 @@ import (
 var (
 	// ErrPromptNotFound is returned when a requested prompt does not exist
 	ErrPromptNotFound = gerror.New(gerror.ErrCodeNotFound, "prompt not found", nil).
-		WithComponent("prompts").WithOperation("GetPrompt")
+				WithComponent("prompts").WithOperation("GetPrompt")
 
 	// ErrTemplateNotFound is returned when a requested template does not exist
 	ErrTemplateNotFound = gerror.New(gerror.ErrCodeNotFound, "template not found", nil).
-		WithComponent("prompts").WithOperation("GetTemplate")
+				WithComponent("prompts").WithOperation("GetTemplate")
 
 	// ErrLayerNotFound is returned when a requested layer does not exist
 	ErrLayerNotFound = gerror.New(gerror.ErrCodeNotFound, "layer not found", nil).
-		WithComponent("prompts").WithOperation("GetPromptLayer")
+				WithComponent("prompts").WithOperation("GetPromptLayer")
 )
 
 // PromptLayer represents the hierarchical layers of Guild prompts
@@ -92,11 +92,11 @@ type LayeredPrompt struct {
 
 // TurnContext represents ephemeral context for a single Guild interaction
 type TurnContext struct {
-	UserMessage   string                 `json:"user_message"`
-	TaskID        string                 `json:"task_id,omitempty"`
-	CommissionID  string                 `json:"commission_id,omitempty"`
-	Urgency       string                 `json:"urgency,omitempty"`
-	Instructions  []string               `json:"instructions,omitempty"`
-	Context       Context                `json:"context,omitempty"`
-	Metadata      map[string]interface{} `json:"metadata,omitempty"`
+	UserMessage  string                 `json:"user_message"`
+	TaskID       string                 `json:"task_id,omitempty"`
+	CommissionID string                 `json:"commission_id,omitempty"`
+	Urgency      string                 `json:"urgency,omitempty"`
+	Instructions []string               `json:"instructions,omitempty"`
+	Context      Context                `json:"context,omitempty"`
+	Metadata     map[string]interface{} `json:"metadata,omitempty"`
 }

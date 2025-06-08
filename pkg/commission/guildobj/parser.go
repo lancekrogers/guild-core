@@ -26,11 +26,11 @@ func (p *GuildParser) Parse(content string) (*commission.Commission, error) {
 func (p *GuildParser) ExtractGuildTerms(content string) map[string]string {
 	// This is a placeholder implementation
 	guildTerms := map[string]string{
-		"guild":      "A collaborative team of specialized agents",
-		"craftsman":  "A worker agent that executes specific tasks",
+		"guild":       "A collaborative team of specialized agents",
+		"craftsman":   "A worker agent that executes specific tasks",
 		"guildmaster": "A manager agent that coordinates work",
-		"tradecraft": "Specialized skills and knowledge",
-		"commission": "An assigned task to complete",
+		"tradecraft":  "Specialized skills and knowledge",
+		"commission":  "An assigned task to complete",
 	}
 
 	// In a real implementation, this would extract actual terms from the content

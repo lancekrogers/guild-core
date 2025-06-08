@@ -17,13 +17,16 @@ This directory contains comprehensive documentation for the Guild Framework.
 ## Viewing Documentation
 
 ### Online
+
 Once published, documentation will be available at:
+
 - https://pkg.go.dev/github.com/guild-ventures/guild-core (API docs)
 - https://guild-ventures.github.io/guild-core (User guides)
 
 ### Local Development
 
 1. **View API Documentation locally with pkgsite:**
+
    ```bash
    # Install pkgsite
    go install golang.org/x/pkgsite/cmd/pkgsite@latest
@@ -35,6 +38,7 @@ Once published, documentation will be available at:
    ```
 
 2. **Generate static documentation site:**
+
    ```bash
    # Using Hugo (recommended for Go projects)
    hugo server -D
@@ -46,11 +50,13 @@ Once published, documentation will be available at:
 ## Writing Documentation
 
 ### API Documentation
+
 - Write godoc comments for all exported types, functions, and packages
 - First sentence should be a clear summary
 - Use examples in `*_test.go` files with `Example` prefix
 
 ### User Documentation
+
 - Write in Markdown format
 - Include code examples
 - Follow the structure in this directory

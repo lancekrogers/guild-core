@@ -9,8 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-ventures/guild-core/tools"
 	"github.com/gocolly/colly"
+
+	"github.com/guild-ventures/guild-core/tools"
 )
 
 const (

@@ -21,7 +21,7 @@ const (
 
 	// Other Models (if supported)
 	GPT4Turbo = "gpt-4-turbo"
-	Claude3 = "claude-3"
+	Claude3   = "claude-3"
 )
 
 // Client implements the AIProvider interface for Ora
@@ -50,8 +50,8 @@ func NewClient(apiKey string) *Client {
 				Name:          "DeepSeek V3",
 				ContextWindow: 64000,
 				MaxOutput:     8192,
-				InputCost:     0.1,  // Estimated
-				OutputCost:    1.0,  // Estimated
+				InputCost:     0.1, // Estimated
+				OutputCost:    1.0, // Estimated
 			},
 			{
 				ID:            DeepSeekR1,
@@ -140,8 +140,8 @@ func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest)
 	}
 
 	return &interfaces.ChatResponse{
-		ID:    oraResp.ID,
-		Model: oraResp.Model,
+		ID:      oraResp.ID,
+		Model:   oraResp.Model,
 		Choices: choices,
 		Usage: interfaces.UsageInfo{
 			PromptTokens:     oraResp.Usage.PromptTokens,

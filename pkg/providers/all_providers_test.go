@@ -148,8 +148,8 @@ func TestFactoryV2Creation(t *testing.T) {
 	factory := providers.NewFactoryV2()
 
 	testCases := []struct {
-		provider providers.ProviderType
-		apiKey   string
+		provider   providers.ProviderType
+		apiKey     string
 		shouldFail bool
 	}{
 		{providers.ProviderOpenAI, "test-key", false},
@@ -158,7 +158,7 @@ func TestFactoryV2Creation(t *testing.T) {
 		{providers.ProviderDeepInfra, "test-key", false},
 		{providers.ProviderOllama, "", false},
 		{providers.ProviderOra, "test-key", false},
-		{providers.ProviderGoogle, "test-key", true}, // Not updated yet
+		{providers.ProviderGoogle, "test-key", true},     // Not updated yet
 		{providers.ProviderClaudeCode, "test-key", true}, // Not compatible
 	}
 

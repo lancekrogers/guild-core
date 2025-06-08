@@ -15,10 +15,10 @@ type MetricsRegistry struct {
 	registry *prometheus.Registry
 
 	// Core metrics
-	requestDuration   *prometheus.HistogramVec
-	requestTotal      *prometheus.CounterVec
-	errorTotal        *prometheus.CounterVec
-	activeRequests    *prometheus.GaugeVec
+	requestDuration *prometheus.HistogramVec
+	requestTotal    *prometheus.CounterVec
+	errorTotal      *prometheus.CounterVec
+	activeRequests  *prometheus.GaugeVec
 
 	// Agent metrics
 	agentTaskTotal    *prometheus.CounterVec
@@ -28,10 +28,10 @@ type MetricsRegistry struct {
 	agentUtilization  *prometheus.GaugeVec
 
 	// Task metrics
-	taskQueueSize     *prometheus.GaugeVec
-	taskProcessed     *prometheus.CounterVec
-	taskDuration      *prometheus.HistogramVec
-	taskRetries       *prometheus.CounterVec
+	taskQueueSize *prometheus.GaugeVec
+	taskProcessed *prometheus.CounterVec
+	taskDuration  *prometheus.HistogramVec
+	taskRetries   *prometheus.CounterVec
 
 	// Storage metrics
 	storageOperations *prometheus.CounterVec
@@ -39,11 +39,11 @@ type MetricsRegistry struct {
 	storageErrors     *prometheus.CounterVec
 
 	// Provider metrics
-	providerRequests  *prometheus.CounterVec
-	providerDuration  *prometheus.HistogramVec
-	providerTokens    *prometheus.CounterVec
-	providerCost      *prometheus.CounterVec
-	providerErrors    *prometheus.CounterVec
+	providerRequests *prometheus.CounterVec
+	providerDuration *prometheus.HistogramVec
+	providerTokens   *prometheus.CounterVec
+	providerCost     *prometheus.CounterVec
+	providerErrors   *prometheus.CounterVec
 }
 
 // MetricsConfig holds metrics configuration

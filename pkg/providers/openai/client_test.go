@@ -19,7 +19,7 @@ func TestOpenAIProvider(t *testing.T) {
 		OpenAICompatibleProvider: base.NewOpenAICompatibleProvider(
 			"openai",
 			"test-api-key",
-			mock.URL + "/v1",
+			mock.URL+"/v1",
 			nil,
 			interfaces.ProviderCapabilities{
 				MaxTokens:      128000,
@@ -136,7 +136,7 @@ func TestOpenAILegacyInterface(t *testing.T) {
 		OpenAICompatibleProvider: base.NewOpenAICompatibleProvider(
 			"openai",
 			"test-api-key",
-			mock.URL + "/v1",
+			mock.URL+"/v1",
 			nil,
 			interfaces.ProviderCapabilities{
 				Models: []interfaces.ModelInfo{

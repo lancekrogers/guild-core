@@ -2,10 +2,12 @@
 
 You are an AI assistant tasked with refining and improving an objective document.
 
-## Current Objective:
+## Current Objective
+
 {{.Objective}}
 
-## Your Task:
+## Your Task
+
 Review this objective document and provide improvements in the following areas:
 
 1. Clarity: Make sure the goal and requirements are clearly stated without ambiguity.

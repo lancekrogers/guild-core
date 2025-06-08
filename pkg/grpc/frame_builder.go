@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/campaign"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -51,9 +51,9 @@ type FrameBuilder struct {
 	agentReg      registry.AgentRegistry
 
 	// Rendering state
-	lastRender    time.Time
-	frameCount    int
-	fps           float64
+	lastRender time.Time
+	frameCount int
+	fps        float64
 }
 
 // NewFrameBuilder creates a new frame builder
@@ -70,7 +70,7 @@ func NewFrameBuilder(
 		commissionMgr: commissionMgr,
 		kanbanMgr:     kanbanMgr,
 		agentReg:      agentReg,
-		lastRender:   time.Now(),
+		lastRender:    time.Now(),
 	}
 }
 

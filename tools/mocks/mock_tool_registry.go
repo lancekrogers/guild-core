@@ -3,8 +3,9 @@ package mocks
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/tools"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/guild-ventures/guild-core/tools"
 )
 
 // MockToolRegistry is a mock implementation of the tools.ToolRegistry type.

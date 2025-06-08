@@ -129,8 +129,8 @@ func convertToServerConfig(config *mcpconfig.MCPConfig) (*server.Config, error) 
 		TLSCertFile:           "", // TODO: Add to MCPConfig if needed
 		TLSKeyFile:            "", // TODO: Add to MCPConfig if needed
 		EnableAuth:            config.EnableAuth,
-		JWTSecret:             "", // TODO: Add to MCPConfig if needed
-		MaxConcurrentRequests: 100, // Default value
+		JWTSecret:             "",               // TODO: Add to MCPConfig if needed
+		MaxConcurrentRequests: 100,              // Default value
 		RequestTimeout:        30 * time.Second, // Default 30 seconds
 		EnableMetrics:         config.EnableMetrics,
 		EnableTracing:         config.EnableTracing,

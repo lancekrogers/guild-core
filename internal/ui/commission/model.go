@@ -10,6 +10,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
+
 	commissionpkg "github.com/guild-ventures/guild-core/pkg/commission"
 )
 
@@ -40,29 +41,29 @@ type GuildHallKeyMap struct {
 	ExamineDocs   key.Binding // Preview docs
 
 	// UI Controls
-	EnterHall     key.Binding // Enter command mode
-	LeaveHall     key.Binding // Exit
-	SeekGuidance  key.Binding // Help
-	ToggleView    key.Binding // Toggle between views
+	EnterHall    key.Binding // Enter command mode
+	LeaveHall    key.Binding // Exit
+	SeekGuidance key.Binding // Help
+	ToggleView   key.Binding // Toggle between views
 }
 
 // Define UI state using Guild metaphors
 type CommissionChamber struct {
 	// Session state
-	ctx               context.Context          // Context for operations
-	commissionManager CommissionManager        // Manages commissions - interface dependency
-	planner           CommissionPlanner        // Plans commissions - interface dependency
-	currentCommission *commissionpkg.Commission   // Current commission
+	ctx               context.Context           // Context for operations
+	commissionManager CommissionManager         // Manages commissions - interface dependency
+	planner           CommissionPlanner         // Plans commissions - interface dependency
+	currentCommission *commissionpkg.Commission // Current commission
 	generator         CommissionGenerator       // LLM generator for commissions - interface dependency
-	commissionPath    string                   // Path to current commission file
+	commissionPath    string                    // Path to current commission file
 
 	// UI components
-	scribe          textarea.Model     // Text input for longer content (medieval scribe)
-	parchment       textinput.Model    // Text input for commands (writing on parchment)
-	viewport        viewport.Model     // Content viewing area (viewing the scroll)
-	ledger          list.Model         // Objectives list (guild ledger)
-	helpScroll      help.Model         // Help display (instruction scroll)
-	keymap          GuildHallKeyMap    // Key bindings
+	scribe     textarea.Model  // Text input for longer content (medieval scribe)
+	parchment  textinput.Model // Text input for commands (writing on parchment)
+	viewport   viewport.Model  // Content viewing area (viewing the scroll)
+	ledger     list.Model      // Objectives list (guild ledger)
+	helpScroll help.Model      // Help display (instruction scroll)
+	keymap     GuildHallKeyMap // Key bindings
 
 	// UI state
 	hallWidth, hallHeight int    // Terminal dimensions (hall dimensions)
@@ -72,10 +73,10 @@ type CommissionChamber struct {
 	guildError            error  // Error state
 
 	// Content
-	aiDocsPreview   string   // Preview of generated ai_docs
-	specsPreview    string   // Preview of generated specs
-	commissionPreview string  // Preview of current commission
-	contextHistory   []string // History of added context
+	aiDocsPreview     string   // Preview of generated ai_docs
+	specsPreview      string   // Preview of generated specs
+	commissionPreview string   // Preview of current commission
+	contextHistory    []string // History of added context
 }
 
 // DefaultKeyMap returns the default key mappings with Guild-themed help text

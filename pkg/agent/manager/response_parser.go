@@ -97,9 +97,9 @@ func (p *ResponseParserImpl) parseFileStructure(content string) *FileStructure {
 			Type:       FileTypeMarkdown,
 			TasksCount: len(tasks),
 			Metadata: map[string]interface{}{
-				"tasks":      tasks,
-				"source":     "llm_response",
-				"parser":     "response_parser",
+				"tasks":  tasks,
+				"source": "llm_response",
+				"parser": "response_parser",
 			},
 		})
 	}
@@ -177,9 +177,9 @@ func (p *ResponseParserImpl) extractTasks(content string) []TaskInfo {
 
 			// Look for task-related sections
 			if strings.Contains(headerText, "task") ||
-			   strings.Contains(headerText, "requirement") ||
-			   strings.Contains(headerText, "implementation") ||
-			   strings.Contains(headerText, "work item") {
+				strings.Contains(headerText, "requirement") ||
+				strings.Contains(headerText, "implementation") ||
+				strings.Contains(headerText, "work item") {
 				inTaskSection = true
 				currentSection = headerMatch[2]
 			} else if headerLevel <= 2 {
@@ -214,12 +214,12 @@ func (p *ResponseParserImpl) parseTaskLine(line string, lineNum int, section str
 	categoryPattern := regexp.MustCompile(`^[\s-]*([A-Z]+)-(\d+):\s*(.+?)(?:\s*\((.*?)\))?\s*$`)
 	if match := categoryPattern.FindStringSubmatch(line); len(match) > 0 {
 		task := &TaskInfo{
-			ID:          match[1] + "-" + match[2],
-			Category:    match[1],
-			Number:      match[2],
-			Title:       match[3],
-			Section:     section,
-			LineNumber:  lineNum,
+			ID:         match[1] + "-" + match[2],
+			Category:   match[1],
+			Number:     match[2],
+			Title:      match[3],
+			Section:    section,
+			LineNumber: lineNum,
 		}
 
 		// Parse metadata if present

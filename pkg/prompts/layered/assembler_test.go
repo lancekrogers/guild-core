@@ -140,7 +140,6 @@ func (m *mockStore) GetPromptMetrics(ctx context.Context, metricID string) ([]by
 	return args.Get(0).([]byte), args.Error(1)
 }
 
-
 type mockRAGRetriever struct {
 	mock.Mock
 }

@@ -8,10 +8,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts/standard/templates/agent/execution"
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/pkg/prompts/standard/templates/agent/execution"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 	"github.com/guild-ventures/guild-core/pkg/workspace"
 	"github.com/guild-ventures/guild-core/tools/fs"
@@ -20,24 +20,24 @@ import (
 
 // BasicTaskExecutor implements the TaskExecutor interface
 type BasicTaskExecutor struct {
-	agent           agent.Agent
-	kanbanBoard     *kanban.Board
-	toolRegistry    *tools.ToolRegistry
-	execContext     *ExecutionContext
-	promptBuilder   *execution.CachedPromptBuilder
+	agent            agent.Agent
+	kanbanBoard      *kanban.Board
+	toolRegistry     *tools.ToolRegistry
+	execContext      *ExecutionContext
+	promptBuilder    *execution.CachedPromptBuilder
 	workspaceManager workspace.Manager
-	workspace       workspace.Workspace
+	workspace        workspace.Workspace
 
 	// Execution state
-	status       ExecutionStatus
-	progress     float64
-	currentTask  *kanban.Task
-	result       *ExecutionResult
+	status      ExecutionStatus
+	progress    float64
+	currentTask *kanban.Task
+	result      *ExecutionResult
 
 	// Synchronization
-	mu           sync.RWMutex
-	stopChan     chan struct{}
-	stopped      bool
+	mu       sync.RWMutex
+	stopChan chan struct{}
+	stopped  bool
 }
 
 // NewBasicTaskExecutor creates a new task executor
@@ -590,9 +590,9 @@ func (e *BasicTaskExecutor) buildPromptData() execution.ExecutionPromptData {
 			RelatedTasks:       []execution.RelatedTask{},
 		},
 		Commission: execution.CommissionData{
-			Title:            e.execContext.Objective,
-			Description:      "Complete the assigned commission",
-			SuccessCriteria:  []string{"Task completed successfully", "Tests pass", "Documentation updated"},
+			Title:           e.execContext.Objective,
+			Description:     "Complete the assigned commission",
+			SuccessCriteria: []string{"Task completed successfully", "Tests pass", "Documentation updated"},
 		},
 		Task: execution.TaskData{
 			Title:          e.currentTask.Title,

@@ -68,17 +68,17 @@ type ProcessorStats struct {
 
 // MemoryAnalyzer implements an in-memory analyzer
 type MemoryAnalyzer struct {
-	chains      map[string]*ChainAnalysis
-	aggregate   *AggregateAnalysis
-	mu          sync.RWMutex
-	maxChains   int
-	chainOrder  []string // Track insertion order for cleanup
+	chains     map[string]*ChainAnalysis
+	aggregate  *AggregateAnalysis
+	mu         sync.RWMutex
+	maxChains  int
+	chainOrder []string // Track insertion order for cleanup
 }
 
 // NewAnalyzer creates a new memory analyzer
 func NewAnalyzer() *MemoryAnalyzer {
 	return &MemoryAnalyzer{
-		chains:    make(map[string]*ChainAnalysis),
+		chains: make(map[string]*ChainAnalysis),
 		aggregate: &AggregateAnalysis{
 			ProcessorStats: make(map[string]*ProcessorStats),
 		},

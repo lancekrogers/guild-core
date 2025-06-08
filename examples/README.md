@@ -21,7 +21,9 @@ go build -tags example examples/commission_refinement_example.go
 ## Available Examples
 
 ### Commission Refinement Example
+
 `commission_refinement_example.go` - Demonstrates the complete commission refinement pipeline, including:
+
 - Setting up the component registry
 - Configuring AI providers (Anthropic, OpenAI)
 - Creating and processing a commission through the GuildMaster refiner
@@ -29,7 +31,9 @@ go build -tags example examples/commission_refinement_example.go
 - Using the TaskBridge for commission-based task queries
 
 ### Layered Prompt Example
+
 `prompts/layered_prompt_example.go` - Shows how to use the layered prompt system:
+
 - Creating platform and session-specific prompt layers
 - Building layered prompts with context
 - Managing prompt caching
@@ -38,6 +42,7 @@ go build -tags example examples/commission_refinement_example.go
 ## Prerequisites
 
 Before running the examples, ensure you have:
+
 1. Set up appropriate environment variables for AI providers:
    - `ANTHROPIC_API_KEY` for Anthropic Claude
    - `OPENAI_API_KEY` for OpenAI GPT models

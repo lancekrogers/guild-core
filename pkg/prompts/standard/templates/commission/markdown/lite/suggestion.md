@@ -2,10 +2,12 @@
 
 You are an AI assistant tasked with suggesting improvements for an existing objective.
 
-## Current Objective:
+## Current Objective
+
 {{.Objective}}
 
-## Your Task:
+## Your Task
+
 Review this objective and provide constructive suggestions for improving it. Consider:
 
 1. Clarity and specificity

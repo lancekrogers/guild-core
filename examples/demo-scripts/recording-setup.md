@@ -5,6 +5,7 @@
 ## Environment Configuration
 
 ### Terminal Setup
+
 ```bash
 # Clean, professional prompt
 export PS1="$ "
@@ -22,6 +23,7 @@ export TZ=UTC
 ```
 
 ### Theme Configuration
+
 ```bash
 # Apply monokai theme with medieval purple accents
 # Colors optimized for syntax highlighting visibility:
@@ -37,6 +39,7 @@ export TZ=UTC
 ```
 
 ### Guild Configuration Optimization
+
 ```yaml
 # .guild/config/demo.yaml
 demo:
@@ -46,16 +49,16 @@ demo:
     fast_init: true
     skip_health_checks: false  # Keep for reliability
     cache_responses: true
-    
+
     # Visual enhancements
     rich_rendering: true
     syntax_highlighting: true
     medieval_theme: true
-    
+
     # Performance tuning
     response_timeout: 30s
     max_concurrent_agents: 6
-    
+
   # Demo-specific settings
   agent_status_indicators: true
   progress_animations: true
@@ -65,6 +68,7 @@ demo:
 ## Pre-Recording Checklist
 
 ### Environment Verification
+
 - [ ] Terminal size: 40x120 (verify with `tput lines cols`)
 - [ ] Theme applied and visible
 - [ ] Guild CLI compiled and accessible
@@ -74,6 +78,7 @@ demo:
 - [ ] Recording software configured
 
 ### Content Preparation
+
 - [ ] All demo scripts reviewed and timed
 - [ ] Commission files contain rich markdown content
 - [ ] Agent response samples validated
@@ -81,6 +86,7 @@ demo:
 - [ ] Demo data cleaned and consistent
 
 ### Technical Validation
+
 ```bash
 # Verify Guild installation
 guild version
@@ -99,6 +105,7 @@ guild agents ping --all --timeout 10s
 ```
 
 ### Visual Quality Check
+
 - [ ] Syntax highlighting visible and correct
 - [ ] Markdown rendering professional
 - [ ] Agent status indicators working
@@ -110,6 +117,7 @@ guild agents ping --all --timeout 10s
 ## Performance Optimization
 
 ### Response Time Optimization
+
 ```bash
 # Pre-warm agent connections
 guild agents warm-up --all
@@ -127,6 +135,7 @@ export OPENAI_API_POOL_SIZE=3
 ```
 
 ### Demo Mode Configuration
+
 ```bash
 # Enable demo optimizations
 guild config demo-mode enable
@@ -146,6 +155,7 @@ guild config gc-frequency reduced
 ## Recording Commands & Workflow
 
 ### Primary Recording Setup
+
 ```bash
 # Start asciinema recording with optimal settings
 asciinema rec \
@@ -159,6 +169,7 @@ script -t 2>demo-timing.txt demo-session.txt
 ```
 
 ### Post-Recording Processing
+
 ```bash
 # Convert to optimized GIF with medieval theme
 agg \
@@ -175,7 +186,7 @@ agg \
 agg --theme monokai --speed 1.5 \
   demo.cast demo-fast.gif
 
-# Detailed walkthrough (0.8x speed)  
+# Detailed walkthrough (0.8x speed)
 agg --theme monokai --speed 0.8 \
   demo.cast demo-detailed.gif
 
@@ -185,6 +196,7 @@ agg --theme monokai --cols 80 --rows 80 \
 ```
 
 ### Video Export Options
+
 ```bash
 # High-quality MP4 for presentations
 svg-term --cast demo.cast --out demo.svg --window
@@ -197,6 +209,7 @@ svg-term --cast demo.cast --out demo.svg --window
 ## Timing Guidelines & Best Practices
 
 ### Pacing Standards
+
 - **Pause before typing**: 0.5-1 seconds (builds anticipation)
 - **Typing speed**: 80-100 WPM (realistic but not slow)
 - **Wait for responses**: Show agent "thinking" indicators
@@ -204,6 +217,7 @@ svg-term --cast demo.cast --out demo.svg --window
 - **Reading time**: Allow 2 seconds per line for viewers
 
 ### Command Execution Flow
+
 ```bash
 # Example timing pattern:
 echo "Starting authentication demo..."  # 1s pause
@@ -214,6 +228,7 @@ sleep 2
 ```
 
 ### Error Recovery Strategies
+
 - **Agent timeout**: "Guild agents provide thoughtful responses - let's wait for quality"
 - **Command error**: Have backup commands ready and tested
 - **Network issues**: Pre-cached responses for critical demos
@@ -222,18 +237,21 @@ sleep 2
 ## Visual Quality Standards
 
 ### Code Presentation
+
 - All code must have proper syntax highlighting
 - Indentation must be consistent and visible
 - Comments should be meaningful and professional
 - Variable names should be realistic and clear
 
 ### Markdown Rendering
+
 - Headers must have clear hierarchy (H1 > H2 > H3)
 - Lists must be properly formatted and indented
 - Tables must align correctly and be readable
 - Emphasis (bold/italic) must be visible and consistent
 
 ### Professional Appearance
+
 - No debug messages or error logs visible
 - Clean terminal history (clear before recording)
 - Consistent color scheme throughout
@@ -241,6 +259,7 @@ sleep 2
 - No placeholder or "TODO" content
 
 ### Medieval Theme Integration
+
 - Guild-specific terminology consistently used
 - Purple accent color (#6B46C1) for highlights
 - Medieval emojis and metaphors where appropriate
@@ -249,6 +268,7 @@ sleep 2
 ## Equipment & Software Requirements
 
 ### Recording Software Options
+
 1. **asciinema** (Recommended for terminal)
    - Lightweight and high-quality
    - Easy post-processing with agg
@@ -265,6 +285,7 @@ sleep 2
    - Limited editing capabilities
 
 ### Hardware Recommendations
+
 - **Display**: 1920x1080 minimum resolution
 - **Memory**: 8GB+ RAM for smooth performance
 - **CPU**: Multi-core for parallel agent processing
@@ -272,6 +293,7 @@ sleep 2
 - **Audio**: Quality microphone for narration
 
 ### Software Dependencies
+
 ```bash
 # Install recording tools
 brew install asciinema       # Terminal recording
@@ -287,18 +309,21 @@ ffmpeg -version
 ## Demo-Specific Optimizations
 
 ### Quick Demo (2 minutes)
+
 - Pre-load commission in memory
 - Cache service-architect response
 - Minimize typing delays
 - Focus on visual impact
 
 ### Full Workflow (8 minutes)
+
 - Warm up all agents beforehand
 - Pre-stage kanban directory structure
 - Cache complex technical responses
 - Practice transitions between sections
 
 ### Multi-Agent Coordination (5 minutes)
+
 - Test parallel agent responses
 - Verify status indicators work
 - Practice conflict resolution scenario
@@ -307,6 +332,7 @@ ffmpeg -version
 ## Quality Assurance Checklist
 
 ### Pre-Recording Final Check
+
 - [ ] All scripts timed and practiced
 - [ ] Demo environment clean and configured
 - [ ] Recording software tested and working
@@ -319,6 +345,7 @@ ffmpeg -version
 - [ ] Lighting adequate (if showing screen)
 
 ### Post-Recording Validation
+
 - [ ] Recording quality meets standards
 - [ ] Audio clear and professional
 - [ ] Visual elements render correctly
@@ -330,6 +357,7 @@ ffmpeg -version
 ## Troubleshooting Common Issues
 
 ### Agent Response Delays
+
 ```bash
 # If agents are slow:
 guild agents restart --all
@@ -341,6 +369,7 @@ guild status --detailed
 ```
 
 ### Rendering Problems
+
 ```bash
 # If rich content doesn't render:
 guild config rich-rendering verify
@@ -353,6 +382,7 @@ source ~/.bashrc
 ```
 
 ### Recording Quality Issues
+
 ```bash
 # If terminal looks wrong:
 tput reset
@@ -367,6 +397,7 @@ guild test color-output
 ## Distribution & Marketing
 
 ### File Organization
+
 ```
 demo-recordings/
 ├── raw/                          # Original recordings
@@ -384,6 +415,7 @@ demo-recordings/
 ```
 
 ### Version Control
+
 - Tag recordings with dates and versions
 - Keep raw recordings for re-processing
 - Document any post-processing applied

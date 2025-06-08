@@ -5,8 +5,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	yaml "gopkg.in/yaml.v3"
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"gopkg.in/yaml.v3"
 )
 
 // GuildConfig represents the configuration for a Guild (team of agents)
@@ -23,7 +24,7 @@ type GuildConfig struct {
 
 // ManagerConfig configures the manager agent selection
 type ManagerConfig struct {
-	Default  string            `yaml:"default"`           // Default manager agent ID
+	Default  string            `yaml:"default"`            // Default manager agent ID
 	Override string            `yaml:"override,omitempty"` // User-specified override
 	Fallback []string          `yaml:"fallback,omitempty"` // Fallback chain if default unavailable
 	Settings map[string]string `yaml:"settings,omitempty"` // Manager-specific settings
@@ -31,9 +32,9 @@ type ManagerConfig struct {
 
 // StorageConfig configures the storage backend
 type StorageConfig struct {
-	Backend string          `yaml:"backend,omitempty"` // "sqlite" or "boltdb" (default: "sqlite")
-	SQLite  SQLiteConfig    `yaml:"sqlite,omitempty"`  // SQLite-specific configuration
-	BoltDB  BoltDBConfig    `yaml:"boltdb,omitempty"`  // BoltDB-specific configuration
+	Backend string       `yaml:"backend,omitempty"` // "sqlite" or "boltdb" (default: "sqlite")
+	SQLite  SQLiteConfig `yaml:"sqlite,omitempty"`  // SQLite-specific configuration
+	BoltDB  BoltDBConfig `yaml:"boltdb,omitempty"`  // BoltDB-specific configuration
 }
 
 // SQLiteConfig configures SQLite storage backend
@@ -60,34 +61,34 @@ type ProvidersConfig struct {
 // ProviderSettings contains configuration for a specific provider
 // Note: API keys are NOT stored here - use environment variables for security
 type ProviderSettings struct {
-	BaseURL  string            `yaml:"base_url,omitempty"`  // Custom base URL (for self-hosted)
-	Settings map[string]string `yaml:"settings,omitempty"`  // Additional provider settings
+	BaseURL  string            `yaml:"base_url,omitempty"` // Custom base URL (for self-hosted)
+	Settings map[string]string `yaml:"settings,omitempty"` // Additional provider settings
 }
 
 // AgentConfig represents configuration for a single agent
 type AgentConfig struct {
-	ID           string            `yaml:"id"`
-	Name         string            `yaml:"name"`
-	Type         string            `yaml:"type"` // manager, worker, specialist
-	Provider     string            `yaml:"provider"`
-	Model        string            `yaml:"model"`
-	Description  string            `yaml:"description,omitempty"`
-	Capabilities []string          `yaml:"capabilities"`
-	Tools        []string          `yaml:"tools,omitempty"`
-	MaxTokens    int               `yaml:"max_tokens,omitempty"`
-	Temperature  float64           `yaml:"temperature,omitempty"`
+	ID           string   `yaml:"id"`
+	Name         string   `yaml:"name"`
+	Type         string   `yaml:"type"` // manager, worker, specialist
+	Provider     string   `yaml:"provider"`
+	Model        string   `yaml:"model"`
+	Description  string   `yaml:"description,omitempty"`
+	Capabilities []string `yaml:"capabilities"`
+	Tools        []string `yaml:"tools,omitempty"`
+	MaxTokens    int      `yaml:"max_tokens,omitempty"`
+	Temperature  float64  `yaml:"temperature,omitempty"`
 
 	// Prompt configuration
-	SystemPrompt    string            `yaml:"system_prompt,omitempty"`      // Direct system prompt
-	PromptTemplate  string            `yaml:"prompt_template,omitempty"`    // Template name for layered prompts
-	PromptLayers    map[string]string `yaml:"prompt_layers,omitempty"`      // Layer overrides for layered prompts
+	SystemPrompt   string            `yaml:"system_prompt,omitempty"`   // Direct system prompt
+	PromptTemplate string            `yaml:"prompt_template,omitempty"` // Template name for layered prompts
+	PromptLayers   map[string]string `yaml:"prompt_layers,omitempty"`   // Layer overrides for layered prompts
 
 	// Enhanced configuration for intelligent assignment
-	CostMagnitude  int    `yaml:"cost_magnitude,omitempty"`   // Fibonacci cost scale: 0=bash, 1=cheap API, 2,3,5,8=expensive models
-	ContextWindow  int    `yaml:"context_window,omitempty"`   // Context window size in tokens (auto-detected if 0)
-	ContextReset   string `yaml:"context_reset,omitempty"`    // "truncate" or "summarize" when context exceeds window
+	CostMagnitude int    `yaml:"cost_magnitude,omitempty"` // Fibonacci cost scale: 0=bash, 1=cheap API, 2,3,5,8=expensive models
+	ContextWindow int    `yaml:"context_window,omitempty"` // Context window size in tokens (auto-detected if 0)
+	ContextReset  string `yaml:"context_reset,omitempty"`  // "truncate" or "summarize" when context exceeds window
 
-	Settings       map[string]string `yaml:"settings,omitempty"` // Provider-specific settings
+	Settings map[string]string `yaml:"settings,omitempty"` // Provider-specific settings
 }
 
 // Metadata contains optional metadata about the guild
@@ -284,8 +285,8 @@ func (a *AgentConfig) Validate() error {
 	// Validate context reset behavior
 	if a.ContextReset != "" {
 		validResets := map[string]bool{
-			"truncate":   true,
-			"summarize":  true,
+			"truncate":  true,
+			"summarize": true,
 		}
 		if !validResets[a.ContextReset] {
 			return gerror.Newf(gerror.ErrCodeValidation, "invalid context_reset: %s (must be 'truncate' or 'summarize')", a.ContextReset).

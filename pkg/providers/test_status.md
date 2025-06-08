@@ -21,18 +21,21 @@ The providers have been updated with real API implementations, but comprehensive
 ## Testing Framework Components
 
 ### 1. Mock Provider (`pkg/providers/mock/`)
+
 - ✅ Implemented and working
 - ✅ Supports responses, errors, streaming, embeddings
 - ✅ Call recording and verification
 - ✅ Example tests included
 
 ### 2. HTTP Mock Server (`pkg/providers/testing/`)
+
 - ✅ OpenAI-compatible responses
 - ✅ Request recording
 - ✅ Error simulation
 - ⚠️ Minor compilation fixes needed
 
 ### 3. Provider Test Suite
+
 - ✅ Standard test cases
 - ✅ Capability testing
 - ✅ Error handling tests
@@ -46,6 +49,7 @@ The providers have been updated with real API implementations, but comprehensive
    - Resolve test suite method signatures
 
 2. **Run comprehensive tests**:
+
    ```bash
    # Run all tests with mocks
    go test -short ./pkg/providers/...
@@ -65,6 +69,7 @@ The providers have been updated with real API implementations, but comprehensive
 ## How to Test a Provider
 
 ### Unit Test (No External Dependencies)
+
 ```go
 func TestMyProvider(t *testing.T) {
     provider := mock.NewProvider()
@@ -76,6 +81,7 @@ func TestMyProvider(t *testing.T) {
 ```
 
 ### Integration Test (With Mock HTTP)
+
 ```go
 func TestProviderHTTP(t *testing.T) {
     mock := testing.NewMockHTTPServer()
@@ -87,6 +93,7 @@ func TestProviderHTTP(t *testing.T) {
 ```
 
 ### Live Test (Optional)
+
 ```go
 func TestLive(t *testing.T) {
     if testing.Short() {
@@ -113,6 +120,7 @@ func TestLive(t *testing.T) {
 - `OLLAMA_HOST` - For Ollama server (default: http://localhost:11434)
 
 Set `-short` flag to skip all live API tests:
+
 ```bash
 go test -short ./pkg/providers/...
 ```

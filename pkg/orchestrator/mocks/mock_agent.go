@@ -9,10 +9,10 @@ import (
 
 // MockAgent is a mock implementation of the agent.Agent interface
 type MockAgent struct {
-	id           string
-	name         string
-	mu           sync.Mutex
-	executeFunc  func(ctx context.Context, request string) (string, error)
+	id          string
+	name        string
+	mu          sync.Mutex
+	executeFunc func(ctx context.Context, request string) (string, error)
 }
 
 // NewMockAgent creates a new mock agent

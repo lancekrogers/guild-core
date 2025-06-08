@@ -22,40 +22,40 @@ type ProviderClient interface {
 
 // CompletionRequest represents a context-aware completion request
 type CompletionRequest struct {
-	Prompt          string                 `json:"prompt"`
-	Model           string                 `json:"model,omitempty"`
-	MaxTokens       int                    `json:"max_tokens,omitempty"`
-	Temperature     float64                `json:"temperature,omitempty"`
-	TopP            float64                `json:"top_p,omitempty"`
-	Stop            []string               `json:"stop,omitempty"`
-	Stream          bool                   `json:"stream,omitempty"`
-	Metadata        map[string]interface{} `json:"metadata,omitempty"`
+	Prompt      string                 `json:"prompt"`
+	Model       string                 `json:"model,omitempty"`
+	MaxTokens   int                    `json:"max_tokens,omitempty"`
+	Temperature float64                `json:"temperature,omitempty"`
+	TopP        float64                `json:"top_p,omitempty"`
+	Stop        []string               `json:"stop,omitempty"`
+	Stream      bool                   `json:"stream,omitempty"`
+	Metadata    map[string]interface{} `json:"metadata,omitempty"`
 
 	// Context-specific fields
-	RequestID       string                 `json:"request_id,omitempty"`
-	SessionID       string                 `json:"session_id,omitempty"`
-	AgentID         string                 `json:"agent_id,omitempty"`
-	Operation       string                 `json:"operation,omitempty"`
-	CostBudget      float64                `json:"cost_budget,omitempty"`
-	TimeoutSeconds  int                    `json:"timeout_seconds,omitempty"`
+	RequestID      string  `json:"request_id,omitempty"`
+	SessionID      string  `json:"session_id,omitempty"`
+	AgentID        string  `json:"agent_id,omitempty"`
+	Operation      string  `json:"operation,omitempty"`
+	CostBudget     float64 `json:"cost_budget,omitempty"`
+	TimeoutSeconds int     `json:"timeout_seconds,omitempty"`
 }
 
 // CompletionResponse represents a context-aware completion response
 type CompletionResponse struct {
-	ID              string                 `json:"id"`
-	Object          string                 `json:"object"`
-	Created         int64                  `json:"created"`
-	Model           string                 `json:"model"`
-	Content         string                 `json:"content"`
-	FinishReason    string                 `json:"finish_reason"`
-	Usage           UsageInfo              `json:"usage"`
-	Metadata        map[string]interface{} `json:"metadata,omitempty"`
+	ID           string                 `json:"id"`
+	Object       string                 `json:"object"`
+	Created      int64                  `json:"created"`
+	Model        string                 `json:"model"`
+	Content      string                 `json:"content"`
+	FinishReason string                 `json:"finish_reason"`
+	Usage        UsageInfo              `json:"usage"`
+	Metadata     map[string]interface{} `json:"metadata,omitempty"`
 
 	// Context-specific fields
-	RequestID       string                 `json:"request_id,omitempty"`
-	ProcessingTime  time.Duration          `json:"processing_time,omitempty"`
-	CostUSD         float64                `json:"cost_usd,omitempty"`
-	Provider        string                 `json:"provider,omitempty"`
+	RequestID      string        `json:"request_id,omitempty"`
+	ProcessingTime time.Duration `json:"processing_time,omitempty"`
+	CostUSD        float64       `json:"cost_usd,omitempty"`
+	Provider       string        `json:"provider,omitempty"`
 }
 
 // UsageInfo contains token usage statistics
@@ -265,14 +265,14 @@ func RouteToProvider(ctx context.Context, taskType, prompt string, requirements 
 
 // ProviderMetrics contains metrics for provider operations
 type ProviderMetrics struct {
-	ProviderName    string        `json:"provider_name"`
-	RequestCount    int64         `json:"request_count"`
-	SuccessCount    int64         `json:"success_count"`
-	ErrorCount      int64         `json:"error_count"`
-	AvgLatency      time.Duration `json:"avg_latency"`
-	TotalCost       float64       `json:"total_cost"`
-	TotalTokens     int64         `json:"total_tokens"`
-	LastUsed        time.Time     `json:"last_used"`
+	ProviderName string        `json:"provider_name"`
+	RequestCount int64         `json:"request_count"`
+	SuccessCount int64         `json:"success_count"`
+	ErrorCount   int64         `json:"error_count"`
+	AvgLatency   time.Duration `json:"avg_latency"`
+	TotalCost    float64       `json:"total_cost"`
+	TotalTokens  int64         `json:"total_tokens"`
+	LastUsed     time.Time     `json:"last_used"`
 }
 
 // TrackProviderUsage records provider usage metrics in context

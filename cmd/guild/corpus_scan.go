@@ -278,9 +278,9 @@ func performCorpusScan(ctx context.Context, cfg corpus.Config, ragSystem *rag.Re
 				// Remove from RAG system
 				if err := removeDocumentFromRAG(ctx, ragSystem, filePath); err != nil {
 					result.Errors = append(result.Errors, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to remove document from RAG").
-					WithComponent("cli").
-					WithOperation("performCorpusScan").
-					WithDetails("file_path", filePath))
+						WithComponent("cli").
+						WithOperation("performCorpusScan").
+						WithDetails("file_path", filePath))
 				}
 			}
 		}

@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/tools"
-	"github.com/guild-ventures/guild-core/pkg/commission"
 )
 
 // createAgentFactory creates an agent factory with all required dependencies

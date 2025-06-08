@@ -12,7 +12,9 @@ Select optimal agent(s) for the following task assignment:
 ## Available Agents Analysis
 
 {{range .AvailableAgents}}
+
 ### {{.Name}} - {{.Role}}
+
 - **Provider**: {{.Provider}} ({{.Model}})
 - **Cost**: {{.CostMagnitude}}/10 magnitude ({{.TokenCost}} per 1K tokens)
 - **Context**: {{.ContextWindow}} tokens

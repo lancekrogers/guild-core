@@ -12,11 +12,11 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/guild-ventures/guild-core/pkg/campaign"
+	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/commission"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/orchestrator"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/registry"
@@ -37,10 +37,10 @@ type Server struct {
 	watchers     map[string]*watcher
 	watchersMu   sync.RWMutex
 
-	grpcServer    *grpc.Server
-	listener      net.Listener
-	promptServer  *PromptsServer // Added for prompt service
-	chatService   *ChatService   // Added for real-time chat
+	grpcServer   *grpc.Server
+	listener     net.Listener
+	promptServer *PromptsServer // Added for prompt service
+	chatService  *ChatService   // Added for real-time chat
 }
 
 // watcher represents an active campaign watcher
@@ -765,18 +765,18 @@ func campaignToProto(c *campaign.Campaign) *pb.Campaign {
 	}
 
 	proto := &pb.Campaign{
-		Id:                     c.ID,
-		Name:                   c.Name,
-		Description:            c.Description,
-		Status:                 string(c.Status),
-		CommissionIds:          c.Objectives, // Map Objectives to CommissionIds for backwards compatibility
-		Tags:                   c.Tags,
-		Progress:               c.Progress,
-		TotalCommissions:       int32(c.TotalObjectives), // Map TotalObjectives to TotalCommissions
-		CompletedCommissions:   int32(c.CompletedObjectives), // Map CompletedObjectives to CompletedCommissions
-		CreatedAt:              c.CreatedAt.Unix(),
-		UpdatedAt:              c.UpdatedAt.Unix(),
-		Metadata:               metadata,
+		Id:                   c.ID,
+		Name:                 c.Name,
+		Description:          c.Description,
+		Status:               string(c.Status),
+		CommissionIds:        c.Objectives, // Map Objectives to CommissionIds for backwards compatibility
+		Tags:                 c.Tags,
+		Progress:             c.Progress,
+		TotalCommissions:     int32(c.TotalObjectives),     // Map TotalObjectives to TotalCommissions
+		CompletedCommissions: int32(c.CompletedObjectives), // Map CompletedObjectives to CompletedCommissions
+		CreatedAt:            c.CreatedAt.Unix(),
+		UpdatedAt:            c.UpdatedAt.Unix(),
+		Metadata:             metadata,
 	}
 
 	if c.StartedAt != nil {

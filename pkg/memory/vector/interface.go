@@ -79,10 +79,10 @@ type EmbeddingProvider interface {
 
 // Document represents a document with its embedding
 type Document struct {
-	ID        string                 `json:"id"`
-	Content   string                 `json:"content"`
-	Embedding []float32              `json:"embedding,omitempty"`
-	Metadata  interface{}            `json:"metadata,omitempty"`
+	ID        string      `json:"id"`
+	Content   string      `json:"content"`
+	Embedding []float32   `json:"embedding,omitempty"`
+	Metadata  interface{} `json:"metadata,omitempty"`
 }
 
 // QueryResult represents a search result from the vector store

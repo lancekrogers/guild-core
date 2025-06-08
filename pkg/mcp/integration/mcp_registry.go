@@ -160,14 +160,14 @@ func WithMCP(config *mcpconfig.MCPConfig) func(*ExtendedComponentRegistry) error
 // WithMCPDefaults returns a default MCP configuration
 func WithMCPDefaults() *mcpconfig.MCPConfig {
 	return &mcpconfig.MCPConfig{
-		Enabled:        true,
-		ServerID:       "guild-mcp-server",
-		ServerName:     "Guild MCP Server",
-		EnableAuth:     false,
-		EnableTLS:      false,
-		EnableMetrics:  true,
-		EnableTracing:  false,
-		EnableCost:     true,
+		Enabled:       true,
+		ServerID:      "guild-mcp-server",
+		ServerName:    "Guild MCP Server",
+		EnableAuth:    false,
+		EnableTLS:     false,
+		EnableMetrics: true,
+		EnableTracing: false,
+		EnableCost:    true,
 		Transport: &transport.TransportConfig{
 			Type:    "memory",
 			Address: "memory://default",

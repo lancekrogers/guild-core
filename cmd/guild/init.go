@@ -5,10 +5,11 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+	yaml "gopkg.in/yaml.v3"
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/project"
-	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
 )
 
 var initCmd = &cobra.Command{

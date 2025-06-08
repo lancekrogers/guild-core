@@ -4,20 +4,21 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/guild-ventures/guild-core/pkg/kanban"
 )
 
 func TestResponseParser_ParseResponse(t *testing.T) {
 	parser := NewResponseParser()
 
 	tests := []struct {
-		name           string
-		response       *ArtisanResponse
-		expectedFiles  int
-		expectedTasks  int
-		expectedError  bool
+		name          string
+		response      *ArtisanResponse
+		expectedFiles int
+		expectedTasks int
+		expectedError bool
 	}{
 		{
 			name: "parse_multiple_file_structure",
@@ -118,7 +119,7 @@ Task: Configure CI/CD pipeline`,
 			expectedError: true,
 		},
 		{
-			name: "nil_response",
+			name:          "nil_response",
 			response:      nil,
 			expectedFiles: 0,
 			expectedTasks: 0,
@@ -399,7 +400,7 @@ func TestResponseParser_LooksLikeTask(t *testing.T) {
 		{"# Header text", false},
 		{"```javascript", false},
 		{"This is just a regular sentence.", false},
-		{"x", false}, // Too short
+		{"x", false},                      // Too short
 		{strings.Repeat("a", 201), false}, // Too long
 	}
 

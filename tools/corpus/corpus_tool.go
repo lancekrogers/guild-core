@@ -20,16 +20,16 @@ type CorpusTool struct {
 
 // Input defines the input parameters for the corpus tool
 type Input struct {
-	Action    string   `json:"action"`    // save, load, search, list, delete
-	Title     string   `json:"title"`     // for save, load, delete
-	Content   string   `json:"content"`   // for save
-	Tags      []string `json:"tags"`      // for save, search
-	Source    string   `json:"source"`    // for save
-	Query     string   `json:"query"`     // for search
-	GuildID   string   `json:"guild_id"`  // for save
-	AgentID   string   `json:"agent_id"`  // for save
-	Limit     int      `json:"limit"`     // for list, search
-	BuildGraph bool     `json:"graph"`     // whether to build and include graph data
+	Action     string   `json:"action"`   // save, load, search, list, delete
+	Title      string   `json:"title"`    // for save, load, delete
+	Content    string   `json:"content"`  // for save
+	Tags       []string `json:"tags"`     // for save, search
+	Source     string   `json:"source"`   // for save
+	Query      string   `json:"query"`    // for search
+	GuildID    string   `json:"guild_id"` // for save
+	AgentID    string   `json:"agent_id"` // for save
+	Limit      int      `json:"limit"`    // for list, search
+	BuildGraph bool     `json:"graph"`    // whether to build and include graph data
 }
 
 // NewCorpusTool creates a new corpus tool

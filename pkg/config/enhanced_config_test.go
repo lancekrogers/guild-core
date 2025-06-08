@@ -13,12 +13,12 @@ func TestEnhancedAgentConfiguration(t *testing.T) {
 
 		for _, cost := range validCosts {
 			agent := &AgentConfig{
-				ID:           "test-agent",
-				Name:         "Test Agent",
-				Type:         "worker",
-				Provider:     "anthropic",
-				Model:        "claude-3-haiku",
-				Capabilities: []string{"testing"},
+				ID:            "test-agent",
+				Name:          "Test Agent",
+				Type:          "worker",
+				Provider:      "anthropic",
+				Model:         "claude-3-haiku",
+				Capabilities:  []string{"testing"},
 				CostMagnitude: cost,
 			}
 
@@ -32,12 +32,12 @@ func TestEnhancedAgentConfiguration(t *testing.T) {
 
 		for _, cost := range invalidCosts {
 			agent := &AgentConfig{
-				ID:           "test-agent",
-				Name:         "Test Agent",
-				Type:         "worker",
-				Provider:     "anthropic",
-				Model:        "claude-3-haiku",
-				Capabilities: []string{"testing"},
+				ID:            "test-agent",
+				Name:          "Test Agent",
+				Type:          "worker",
+				Provider:      "anthropic",
+				Model:         "claude-3-haiku",
+				Capabilities:  []string{"testing"},
 				CostMagnitude: cost,
 			}
 
@@ -52,11 +52,11 @@ func TestEnhancedAgentConfiguration(t *testing.T) {
 			reset     string
 			shouldErr bool
 		}{
-			{"", false},           // Empty is valid (uses default)
-			{"truncate", false},   // Valid option
-			{"summarize", false},  // Valid option
-			{"invalid", true},     // Invalid option
-			{"compress", true},    // Invalid option
+			{"", false},          // Empty is valid (uses default)
+			{"truncate", false},  // Valid option
+			{"summarize", false}, // Valid option
+			{"invalid", true},    // Invalid option
+			{"compress", true},   // Invalid option
 		}
 
 		for _, tt := range tests {
@@ -84,11 +84,11 @@ func TestEnhancedAgentConfiguration(t *testing.T) {
 			window    int
 			shouldErr bool
 		}{
-			{0, false},        // Auto-detection
-			{1000, false},     // Valid positive value
-			{200000, false},   // Large valid value
-			{-1, true},        // Invalid negative
-			{-1000, true},     // Invalid large negative
+			{0, false},      // Auto-detection
+			{1000, false},   // Valid positive value
+			{200000, false}, // Large valid value
+			{-1, true},      // Invalid negative
+			{-1000, true},   // Invalid large negative
 		}
 
 		for _, tt := range tests {
@@ -114,10 +114,10 @@ func TestEnhancedAgentConfiguration(t *testing.T) {
 
 func TestEffectiveCostMagnitude(t *testing.T) {
 	tests := []struct {
-		name              string
-		model             string
-		configuredCost    int
-		expectedCost      int
+		name           string
+		model          string
+		configuredCost int
+		expectedCost   int
 	}{
 		{"Explicit cost takes precedence", "gpt-4", 2, 2},
 		{"GPT-4 auto-detection", "gpt-4-turbo", 0, 5},
@@ -145,10 +145,10 @@ func TestEffectiveCostMagnitude(t *testing.T) {
 
 func TestEffectiveContextWindow(t *testing.T) {
 	tests := []struct {
-		name              string
-		model             string
-		configuredWindow  int
-		expectedWindow    int
+		name             string
+		model            string
+		configuredWindow int
+		expectedWindow   int
 	}{
 		{"Explicit window takes precedence", "gpt-4", 50000, 50000},
 		{"GPT-4-turbo auto-detection", "gpt-4-turbo", 0, 128000},

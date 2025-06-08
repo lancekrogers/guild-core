@@ -10,8 +10,8 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 
-	commissionpkg "github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/internal/ui/commission/components"
+	commissionpkg "github.com/guild-ventures/guild-core/pkg/commission"
 )
 
 // Custom message types with Guild-themed names
@@ -111,9 +111,9 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// Adding context state key bindings
 			switch {
 			case key.Matches(msg, m.keymap.NavigateUp),
-				 key.Matches(msg, m.keymap.NavigateDown),
-				 key.Matches(msg, m.keymap.NavigateLeft),
-				 key.Matches(msg, m.keymap.NavigateRight):
+				key.Matches(msg, m.keymap.NavigateDown),
+				key.Matches(msg, m.keymap.NavigateLeft),
+				key.Matches(msg, m.keymap.NavigateRight):
 				// Pass these navigation keys to the textarea
 				m.scribe, cmd = m.scribe.Update(msg)
 				cmds = append(cmds, cmd)
@@ -140,7 +140,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// Preview docs state key bindings
 			switch {
 			case key.Matches(msg, m.keymap.NavigateUp),
-				 key.Matches(msg, m.keymap.NavigateDown):
+				key.Matches(msg, m.keymap.NavigateDown):
 				// Scroll viewport
 				m.viewport, cmd = m.viewport.Update(msg)
 				cmds = append(cmds, cmd)
@@ -155,13 +155,13 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// Dashboard state key bindings
 			switch {
 			case key.Matches(msg, m.keymap.NavigateUp),
-				 key.Matches(msg, m.keymap.NavigateDown):
+				key.Matches(msg, m.keymap.NavigateDown):
 				// Navigate the ledger list
 				m.ledger, cmd = m.ledger.Update(msg)
 				cmds = append(cmds, cmd)
 
 			case key.Matches(msg, m.keymap.ToggleView),
-				 msg.Type == tea.KeyEsc:
+				msg.Type == tea.KeyEsc:
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.proclamation = "Closed the Guild's objective ledger."
@@ -201,9 +201,9 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// Creating a new objective state key bindings
 			switch {
 			case key.Matches(msg, m.keymap.NavigateUp),
-				 key.Matches(msg, m.keymap.NavigateDown),
-				 key.Matches(msg, m.keymap.NavigateLeft),
-				 key.Matches(msg, m.keymap.NavigateRight):
+				key.Matches(msg, m.keymap.NavigateDown),
+				key.Matches(msg, m.keymap.NavigateLeft),
+				key.Matches(msg, m.keymap.NavigateRight):
 				// Pass these navigation keys to the textarea
 				m.scribe, cmd = m.scribe.Update(msg)
 				cmds = append(cmds, cmd)
@@ -568,7 +568,7 @@ func createCommissionCmd(m *CommissionChamber, description string) tea.Cmd {
 				return CommissionLoadedMsg{
 					Commission: "",
 					Success:    false,
-					Error:     err,
+					Error:      err,
 				}
 			}
 
@@ -585,8 +585,8 @@ func createCommissionCmd(m *CommissionChamber, description string) tea.Cmd {
 
 				return CommissionLoadedMsg{
 					Commission: objectiveContent,
-					Success:   true,
-					Error:     nil,
+					Success:    true,
+					Error:      nil,
 				}
 			}
 		}
@@ -618,8 +618,8 @@ This objective was created in the Guild Hall.
 
 		return CommissionLoadedMsg{
 			Commission: objectiveContent,
-			Success:   true,
-			Error:     nil,
+			Success:    true,
+			Error:      nil,
 		}
 	}
 }
@@ -743,8 +743,8 @@ func executeCommandCmd(m *CommissionChamber, command string) tea.Cmd {
 				if err != nil {
 					return CommissionLoadedMsg{
 						Commission: "",
-						Success:   false,
-						Error:     err,
+						Success:    false,
+						Error:      err,
 					}
 				}
 
@@ -754,8 +754,8 @@ func executeCommandCmd(m *CommissionChamber, command string) tea.Cmd {
 					if err != nil {
 						return CommissionLoadedMsg{
 							Commission: "",
-							Success:   false,
-							Error:     err,
+							Success:    false,
+							Error:      err,
 						}
 					}
 				}
@@ -770,8 +770,8 @@ func executeCommandCmd(m *CommissionChamber, command string) tea.Cmd {
 
 				return CommissionLoadedMsg{
 					Commission: content,
-					Success:   true,
-					Error:     nil,
+					Success:    true,
+					Error:      nil,
 				}
 			}
 			return nil
@@ -840,13 +840,14 @@ Iterations: %d
 
 Tags: %s
 `,
-	obj.Title,
-	obj.Description,
-	obj.Status,
-	obj.Iteration,
-	strings.Join(obj.Tags, ", "),
+		obj.Title,
+		obj.Description,
+		obj.Status,
+		obj.Iteration,
+		strings.Join(obj.Tags, ", "),
 	)
 }
+
 // init initializes variables needed by this package
 func init() {
 	// Initialize command reference
@@ -894,8 +895,8 @@ func executeExternalCommandCmd(cmdStr string) tea.Cmd {
 		// Return a message that will display this output in the viewport
 		return CommissionLoadedMsg{
 			Commission: outputMsg,
-			Success:   true,
-			Error:     nil,
+			Success:    true,
+			Error:      nil,
 		}
 	}
 }

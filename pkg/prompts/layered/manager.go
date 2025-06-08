@@ -11,7 +11,7 @@ import (
 
 // GuildLayeredManager implements LayeredManager interface for Guild prompt management
 type GuildLayeredManager struct {
-	baseManager Manager                // Existing prompt manager
+	baseManager Manager                 // Existing prompt manager
 	assembler   *LayeredPromptAssembler // Prompt assembler
 	registry    LayeredRegistry         // Layered registry
 	store       LayeredStore            // Guild Archives storage with layered support
@@ -309,10 +309,10 @@ func (lpa *LayeredPromptAssembler) clearCache(artisanID, sessionID string) {
 func (glm *GuildLayeredManager) GetMetrics(ctx context.Context) (*PromptMetrics, error) {
 	// TODO: Implement comprehensive metrics collection
 	return &PromptMetrics{
-		CacheHitRate:    0.85, // Placeholder
-		AverageTokens:   1247, // Placeholder
-		AssemblyTime:    time.Millisecond * 8, // Placeholder
-		ActiveSessions:  42, // Placeholder
+		CacheHitRate:   0.85,                 // Placeholder
+		AverageTokens:  1247,                 // Placeholder
+		AssemblyTime:   time.Millisecond * 8, // Placeholder
+		ActiveSessions: 42,                   // Placeholder
 		LayerUsage: map[PromptLayer]int{
 			LayerPlatform: 100,
 			LayerGuild:    95,
@@ -326,12 +326,12 @@ func (glm *GuildLayeredManager) GetMetrics(ctx context.Context) (*PromptMetrics,
 
 // PromptMetrics represents performance metrics for the layered prompt system
 type PromptMetrics struct {
-	CacheHitRate   float64                 `json:"cache_hit_rate"`
-	AverageTokens  int                     `json:"average_tokens"`
-	AssemblyTime   time.Duration           `json:"assembly_time"`
-	ActiveSessions int                     `json:"active_sessions"`
-	LayerUsage     map[PromptLayer]int     `json:"layer_usage"`
-	LastUpdated    time.Time               `json:"last_updated"`
+	CacheHitRate   float64             `json:"cache_hit_rate"`
+	AverageTokens  int                 `json:"average_tokens"`
+	AssemblyTime   time.Duration       `json:"assembly_time"`
+	ActiveSessions int                 `json:"active_sessions"`
+	LayerUsage     map[PromptLayer]int `json:"layer_usage"`
+	LastUpdated    time.Time           `json:"last_updated"`
 }
 
 // GetLayerStats returns statistics for a specific layer
@@ -342,9 +342,9 @@ func (glm *GuildLayeredManager) GetLayerStats(ctx context.Context, layer PromptL
 	}
 
 	stats := &LayerStats{
-		Layer:        layer,
-		PromptCount:  len(prompts),
-		LastUpdated:  time.Now(),
+		Layer:       layer,
+		PromptCount: len(prompts),
+		LastUpdated: time.Now(),
 	}
 
 	// Calculate average tokens and find most recent update

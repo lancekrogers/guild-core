@@ -46,12 +46,12 @@ func (r *SQLiteTaskRepository) CreateTask(ctx context.Context, task *Task) error
 	storyPoints := int64(task.StoryPoints)
 	err := r.database.Queries().CreateTask(ctx, db.CreateTaskParams{
 		ID:           task.ID,
-		CommissionID: task.CommissionID,     // Required commission ID
-		BoardID:      task.BoardID,          // Use BoardID (nullable)
+		CommissionID: task.CommissionID, // Required commission ID
+		BoardID:      task.BoardID,      // Use BoardID (nullable)
 		Title:        task.Title,
 		Description:  task.Description,
 		Status:       task.Status,
-		Column:       task.Column,           // Kanban column
+		Column:       task.Column, // Kanban column
 		StoryPoints:  &storyPoints,
 		Metadata:     metadataJSON,
 	})
@@ -105,13 +105,13 @@ func (r *SQLiteTaskRepository) UpdateTask(ctx context.Context, task *Task) error
 
 	storyPoints := int64(task.StoryPoints)
 	err := r.database.Queries().UpdateTask(ctx, db.UpdateTaskParams{
-		Title:        task.Title,
-		Description:  task.Description,
-		Status:       task.Status,
-		Column:       task.Column,
-		StoryPoints:  &storyPoints,
-		Metadata:     metadataJSON,
-		ID:           task.ID,
+		Title:       task.Title,
+		Description: task.Description,
+		Status:      task.Status,
+		Column:      task.Column,
+		StoryPoints: &storyPoints,
+		Metadata:    metadataJSON,
+		ID:          task.ID,
 	})
 
 	if err != nil {
@@ -406,13 +406,13 @@ func (r *SQLiteTaskRepository) convertDBTaskToTask(dbTask db.Task) (*Task, error
 
 	task := &Task{
 		ID:              dbTask.ID,
-		BoardID:         dbTask.BoardID,        // Nullable BoardID from new schema
-		CommissionID:    dbTask.CommissionID,   // Keep for backward compatibility
+		BoardID:         dbTask.BoardID,      // Nullable BoardID from new schema
+		CommissionID:    dbTask.CommissionID, // Keep for backward compatibility
 		AssignedAgentID: dbTask.AssignedAgentID,
 		Title:           dbTask.Title,
 		Description:     dbTask.Description,
 		Status:          dbTask.Status,
-		Column:          dbTask.Column,         // Kanban column field
+		Column:          dbTask.Column, // Kanban column field
 		StoryPoints:     storyPoints,
 		CreatedAt:       createdAt,
 		UpdatedAt:       updatedAt,
@@ -984,8 +984,8 @@ func (r *SQLiteTaskRepository) convertDBKanbanTaskToTask(dbTask db.ListTasksForK
 
 	task := &Task{
 		ID:              dbTask.ID,
-		BoardID:         dbTask.BoardID,        // Nullable BoardID from new schema
-		CommissionID:    dbTask.CommissionID,   // Keep for backward compatibility
+		BoardID:         dbTask.BoardID,      // Nullable BoardID from new schema
+		CommissionID:    dbTask.CommissionID, // Keep for backward compatibility
 		AssignedAgentID: dbTask.AssignedAgentID,
 		Title:           dbTask.Title,
 		Description:     dbTask.Description,

@@ -3,8 +3,8 @@ package mocks
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/guild-ventures/guild-core/pkg/tools"
@@ -49,20 +49,20 @@ func (m *MockAgent) GetName() string {
 // MockGuildArtisan implements the agent.GuildArtisan interface for testing
 type MockGuildArtisan struct {
 	MockAgent
-	ToolRegistry     *tools.ToolRegistry
+	ToolRegistry      *tools.ToolRegistry
 	CommissionManager *commission.Manager
-	LLMClient        providers.LLMClient
-	MemoryManager    memory.ChainManager
+	LLMClient         providers.LLMClient
+	MemoryManager     memory.ChainManager
 }
 
 // NewMockGuildArtisan creates a new mock guild artisan
 func NewMockGuildArtisan(id, name string) *MockGuildArtisan {
 	return &MockGuildArtisan{
-		MockAgent:        *NewMockAgent(id, name),
-		ToolRegistry:     registry.NewToolRegistry().(*registry.DefaultToolRegistry).GetUnderlyingRegistry(),
+		MockAgent:         *NewMockAgent(id, name),
+		ToolRegistry:      registry.NewToolRegistry().(*registry.DefaultToolRegistry).GetUnderlyingRegistry(),
 		CommissionManager: nil, // Will be set by test if needed
-		LLMClient:        NewMockLLMClient(),
-		MemoryManager:    nil, // Will be set by test if needed
+		LLMClient:         NewMockLLMClient(),
+		MemoryManager:     nil, // Will be set by test if needed
 	}
 }
 

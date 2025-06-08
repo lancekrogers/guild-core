@@ -32,7 +32,7 @@ func TestTaskExecutor_ToolExecution(t *testing.T) {
 
 	// Register shell tool with safety restrictions
 	shellTool := shell.NewShellTool(shell.ShellToolOptions{
-		WorkingDir: tmpDir,
+		WorkingDir:      tmpDir,
 		BlockedCommands: []string{"rm -rf /"},
 	})
 	err = toolRegistry.RegisterTool(shellTool.Name(), shellTool)

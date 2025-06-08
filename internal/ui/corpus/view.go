@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
+
 	"github.com/guild-ventures/guild-core/pkg/corpus"
 )
 
@@ -20,44 +21,44 @@ var (
 
 	// Base styles
 	docStyle = lipgloss.NewStyle().
-		Border(lipgloss.RoundedBorder()).
-		BorderForeground(archiveAccent).
-		Padding(1, 2).
-		Background(archivePaper).
-		Foreground(archiveInk)
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(archiveAccent).
+			Padding(1, 2).
+			Background(archivePaper).
+			Foreground(archiveInk)
 
 	titleStyle = lipgloss.NewStyle().
-		Foreground(archiveHeading).
-		Bold(true).
-		MarginBottom(1)
+			Foreground(archiveHeading).
+			Bold(true).
+			MarginBottom(1)
 
 	tagStyle = lipgloss.NewStyle().
-		Foreground(archiveTag).
-		Italic(true)
+			Foreground(archiveTag).
+			Italic(true)
 
 	linkStyle = lipgloss.NewStyle().
-		Foreground(archiveLink).
-		Underline(true)
+			Foreground(archiveLink).
+			Underline(true)
 
 	errorStyle = lipgloss.NewStyle().
-		Foreground(archiveWarn).
-		Bold(true)
+			Foreground(archiveWarn).
+			Bold(true)
 
 	helpStyle = lipgloss.NewStyle().
-		Foreground(archiveInk).
-		Background(archivePaper)
+			Foreground(archiveInk).
+			Background(archivePaper)
 
 	statusStyle = lipgloss.NewStyle().
-		Foreground(archiveInk).
-		Background(archivePaper).
-		Border(lipgloss.NormalBorder(), false, false, true, false).
-		BorderForeground(archiveAccent).
-		PaddingLeft(1).
-		PaddingRight(1)
+			Foreground(archiveInk).
+			Background(archivePaper).
+			Border(lipgloss.NormalBorder(), false, false, true, false).
+			BorderForeground(archiveAccent).
+			PaddingLeft(1).
+			PaddingRight(1)
 
 	// Layout elements
 	appStyle = lipgloss.NewStyle().
-		Margin(1, 2)
+			Margin(1, 2)
 )
 
 // View renders the current UI state

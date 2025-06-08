@@ -2,36 +2,36 @@ package chat
 
 import (
 	"fmt"
-	"strings"
 	"regexp"
+	"strings"
 	"sync"
 
-	"github.com/charmbracelet/glamour"
-	"github.com/charmbracelet/lipgloss"
-	"github.com/alecthomas/chroma/v2"
+	chroma "github.com/alecthomas/chroma/v2"
 	"github.com/alecthomas/chroma/v2/formatters"
 	"github.com/alecthomas/chroma/v2/lexers"
 	"github.com/alecthomas/chroma/v2/styles"
+	"github.com/charmbracelet/glamour"
+	"github.com/charmbracelet/lipgloss"
 )
 
 // MarkdownRenderer provides rich content rendering for Guild chat
 type MarkdownRenderer struct {
-	renderer       *glamour.TermRenderer
-	width          int
-	codeStyle      lipgloss.Style
+	renderer        *glamour.TermRenderer
+	width           int
+	codeStyle       lipgloss.Style
 	lineNumberStyle lipgloss.Style
-	formatter      chroma.Formatter
-	style          *chroma.Style
-	
+	formatter       chroma.Formatter
+	style           *chroma.Style
+
 	// Performance optimization
-	renderCache    sync.Map // Cache for rendered content
-	maxCacheSize   int      // Maximum cache entries
-	cacheHits      int64    // Performance metrics
-	cacheMisses    int64
-	
+	renderCache  sync.Map // Cache for rendered content
+	maxCacheSize int      // Maximum cache entries
+	cacheHits    int64    // Performance metrics
+	cacheMisses  int64
+
 	// Error handling
-	errorFallback  bool     // Whether to use fallback on errors
-	lastError      error    // Last rendering error for debugging
+	errorFallback bool  // Whether to use fallback on errors
+	lastError     error // Last rendering error for debugging
 }
 
 // NewMarkdownRenderer creates a new markdown renderer with medieval theming
@@ -47,7 +47,7 @@ func NewMarkdownRenderer(width int) (*MarkdownRenderer, error) {
 	// Create glamour renderer with medieval-themed styling
 	var renderer *glamour.TermRenderer
 	var lastErr error
-	
+
 	// Try multiple style configurations for robustness
 	configs := []func() (*glamour.TermRenderer, error){
 		func() (*glamour.TermRenderer, error) {
@@ -70,11 +70,11 @@ func NewMarkdownRenderer(width int) (*MarkdownRenderer, error) {
 		func() (*glamour.TermRenderer, error) {
 			// Fallback 2: Basic style
 			return glamour.NewTermRenderer(
-				glamour.WithWordWrap(width-8),
+				glamour.WithWordWrap(width - 8),
 			)
 		},
 	}
-	
+
 	for _, config := range configs {
 		r, err := config()
 		if err == nil {
@@ -125,7 +125,7 @@ func NewMarkdownRenderer(width int) (*MarkdownRenderer, error) {
 		lineNumberStyle: lineNumberStyle,
 		formatter:       formatter,
 		style:           style,
-		maxCacheSize:    100,  // Cache up to 100 rendered items
+		maxCacheSize:    100, // Cache up to 100 rendered items
 		errorFallback:   true,
 		lastError:       lastErr,
 	}, nil
@@ -192,7 +192,7 @@ func (m *MarkdownRenderer) processCodeBlocks(content string) string {
 				Foreground(lipgloss.Color("141")). // Purple for medieval theme
 				Bold(true).
 				Margin(0, 0, 0, 1)
-			
+
 			langLabel := langStyle.Render(language)
 			highlighted = langLabel + "\n" + highlighted
 		}
@@ -217,10 +217,10 @@ func (m *MarkdownRenderer) highlightCode(code, language string) string {
 		if lexer == nil {
 			aliases := map[string]string{
 				"golang": "go",
-				"js": "javascript",
-				"py": "python",
-				"sh": "bash",
-				"yml": "yaml",
+				"js":     "javascript",
+				"py":     "python",
+				"sh":     "bash",
+				"yml":    "yaml",
 			}
 			if alias, exists := aliases[language]; exists {
 				lexer = lexers.Get(alias)
@@ -253,8 +253,8 @@ func (m *MarkdownRenderer) highlightCode(code, language string) string {
 // RenderInlineCode applies highlighting to inline code snippets
 func (m *MarkdownRenderer) RenderInlineCode(code string) string {
 	inlineStyle := lipgloss.NewStyle().
-		Background(lipgloss.Color("8")).   // Dark gray background
-		Foreground(lipgloss.Color("15")).  // Bright white text
+		Background(lipgloss.Color("8")).  // Dark gray background
+		Foreground(lipgloss.Color("15")). // Bright white text
 		Padding(0, 1)
 
 	return inlineStyle.Render(code)
@@ -264,11 +264,11 @@ func (m *MarkdownRenderer) RenderInlineCode(code string) string {
 func (m *MarkdownRenderer) DetectAndRenderContent(content string) string {
 	// Check if content looks like markdown
 	hasMarkdown := strings.Contains(content, "```") ||
-	              strings.Contains(content, "#") ||
-	              strings.Contains(content, "*") ||
-	              strings.Contains(content, "_") ||
-	              strings.Contains(content, "[") ||
-	              strings.Contains(content, "`")
+		strings.Contains(content, "#") ||
+		strings.Contains(content, "*") ||
+		strings.Contains(content, "_") ||
+		strings.Contains(content, "[") ||
+		strings.Contains(content, "`")
 
 	if hasMarkdown {
 		return m.Render(content)
@@ -322,22 +322,22 @@ func minInt(a, b int) int {
 func (m *MarkdownRenderer) addLineNumbers(content string, lineCount int) string {
 	lines := strings.Split(content, "\n")
 	numberedLines := make([]string, 0, len(lines))
-	
+
 	// Calculate width for line number padding
 	width := len(fmt.Sprintf("%d", lineCount))
-	
+
 	for i, line := range lines {
 		// Format with proper padding and separator
 		format := fmt.Sprintf("%%-%dd│", width)
 		lineNumStr := fmt.Sprintf(format, i+1)
-		
+
 		// Apply style to line number
 		styledLineNum := m.lineNumberStyle.Render(lineNumStr)
-		
+
 		// Combine line number with code line
-		numberedLines = append(numberedLines, styledLineNum + line)
+		numberedLines = append(numberedLines, styledLineNum+line)
 	}
-	
+
 	return strings.Join(numberedLines, "\n")
 }
 
@@ -347,7 +347,7 @@ func (mr *MarkdownRenderer) GetCacheStats() string {
 	if total == 0 {
 		return "Cache stats: No cache activity yet"
 	}
-	
+
 	ratio := float64(mr.cacheHits) / float64(total) * 100
 	return fmt.Sprintf("Cache hits: %d, misses: %d, ratio: %.2f%%",
 		mr.cacheHits, mr.cacheMisses, ratio)

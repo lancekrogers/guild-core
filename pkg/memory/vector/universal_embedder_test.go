@@ -4,10 +4,11 @@ import (
 	"context"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
-	"github.com/guild-ventures/guild-core/pkg/providers/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/providers/mock"
 )
 
 func TestUniversalEmbedder_NewUniversalEmbedder(t *testing.T) {
@@ -90,10 +91,10 @@ func TestUniversalEmbedder_Embed(t *testing.T) {
 			expectError: false,
 		},
 		{
-			name:     "graceful degradation with none strategy",
-			text:     "test text",
-			strategy: StrategyNone,
-			provider: mock.NewProvider(),
+			name:      "graceful degradation with none strategy",
+			text:      "test text",
+			strategy:  StrategyNone,
+			provider:  mock.NewProvider(),
 			expectNil: true,
 		},
 		{

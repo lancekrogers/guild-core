@@ -67,9 +67,9 @@ type AgentAssignment struct {
 
 // CostAnalysis provides detailed cost breakdown and alternatives
 type CostAnalysis struct {
-	TotalEstimatedTokens   int                     `json:"total_estimated_tokens"`
-	CostBreakdown          []AgentCostBreakdown    `json:"cost_breakdown"`
-	AlternativeApproaches  []AlternativeApproach   `json:"alternative_approaches"`
+	TotalEstimatedTokens  int                   `json:"total_estimated_tokens"`
+	CostBreakdown         []AgentCostBreakdown  `json:"cost_breakdown"`
+	AlternativeApproaches []AlternativeApproach `json:"alternative_approaches"`
 }
 
 // AgentCostBreakdown shows cost per agent
@@ -90,10 +90,10 @@ type AlternativeApproach struct {
 
 // ExecutionPlan defines how agents will coordinate
 type ExecutionPlan struct {
-	CoordinationStrategy string               `json:"coordination_strategy"`
-	TaskDistribution     []TaskDistribution   `json:"task_distribution"`
-	QualityGates         []QualityGate        `json:"quality_gates"`
-	RiskMitigation       []RiskMitigation     `json:"risk_mitigation"`
+	CoordinationStrategy string             `json:"coordination_strategy"`
+	TaskDistribution     []TaskDistribution `json:"task_distribution"`
+	QualityGates         []QualityGate      `json:"quality_gates"`
+	RiskMitigation       []RiskMitigation   `json:"risk_mitigation"`
 }
 
 // TaskDistribution specifies tasks for each agent
@@ -120,9 +120,9 @@ type RiskMitigation struct {
 
 // SuccessMetrics defines how to measure execution quality
 type SuccessMetrics struct {
-	CompletionCriteria     []string          `json:"completion_criteria"`
-	QualityThresholds      QualityThresholds `json:"quality_thresholds"`
-	PerformanceIndicators  []string          `json:"performance_indicators"`
+	CompletionCriteria    []string          `json:"completion_criteria"`
+	QualityThresholds     QualityThresholds `json:"quality_thresholds"`
+	PerformanceIndicators []string          `json:"performance_indicators"`
 }
 
 // QualityThresholds defines quality score expectations

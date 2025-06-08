@@ -12,13 +12,17 @@ Guild follows a project-local approach similar to Git. Each project has its own 
 ## Key Concepts
 
 ### Project Root
+
 The directory containing `.guild/` is considered the project root. All Guild commands work relative to this root, regardless of your current directory within the project.
 
 ### Automatic Detection
+
 Guild automatically searches for `.guild/` in the current directory and all parent directories, similar to how Git finds `.git/`.
 
 ### Data Locality
+
 All project data stays within `.guild/`:
+
 - Knowledge corpus for RAG
 - Agent conversation history
 - Task states and progress
@@ -82,22 +86,26 @@ cd ~/projects/api && guild status
 Guild looks for configuration in this order:
 
 1. **Command-line flags** (highest priority)
+
    ```bash
    guild run --model gpt-4
    ```
 
 2. **Environment variables**
+
    ```bash
    export GUILD_MODEL=gpt-4
    ```
 
 3. **Project config** (`.guild/config.yaml`)
+
    ```yaml
    model: gpt-4
    provider: openai
    ```
 
 4. **Global config** (`~/.guild/config.yaml`)
+
    ```yaml
    model: gpt-3.5-turbo
    provider: openai
@@ -110,6 +118,7 @@ Guild looks for configuration in this order:
 ### What Goes in .guild/
 
 **Stored in .guild/:**
+
 - Processed documents and embeddings
 - Agent state and memory
 - Task history and progress
@@ -117,6 +126,7 @@ Guild looks for configuration in this order:
 - Project-specific configuration
 
 **Stored in project root:**
+
 - `guild.yaml` - Project definition (version controlled)
 - `objectives/` - Objective definitions (version controlled)
 - Source code and documents
@@ -124,11 +134,13 @@ Guild looks for configuration in this order:
 ### Backup Considerations
 
 Essential to backup:
+
 - `.guild/memory/` - Project memory and state
 - `.guild/corpus/documents/` - Original documents
 - `.guild/config.yaml` - Project configuration
 
 Can be regenerated:
+
 - `.guild/embeddings/` - Can be recreated from corpus
 - `.guild/cache/` - Temporary data
 - `.guild/logs/` - Can be rotated
@@ -156,11 +168,13 @@ guild status --summary
 ### Team Collaboration
 
 Share these files (via Git):
+
 - `guild.yaml` - Project definition
 - `objectives/*.md` - Objective definitions
 - `docs/` - Documentation for corpus
 
 Don't share (add to .gitignore):
+
 - `.guild/` - Local state and data
 
 ### CI/CD Integration

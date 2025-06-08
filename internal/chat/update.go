@@ -24,7 +24,7 @@ func (m ChatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.viewport.Height = msg.Height - 3 // Leave room for input
 		m.input.SetWidth(msg.Width - 2)
 		m.ready = true
-		
+
 		// Update visual components with new dimensions
 		if m.statusDisplay != nil {
 			m.statusDisplay.SetDimensions(msg.Width, msg.Height)
@@ -208,7 +208,7 @@ func (m *ChatModel) handleAgentStream(msg agentStreamMsg) {
 func (m *ChatModel) handleAgentStatus(msg agentStatusMsg) {
 	// Update agent status in the UI
 	statusMsg := fmt.Sprintf("Agent %s status: %s", msg.agentID, msg.status)
-	
+
 	// Update status display
 	if m.agentStatusTracker != nil {
 		status := m.agentStatusTracker.GetAgentStatus(msg.agentID)
@@ -227,7 +227,7 @@ func (m *ChatModel) handleAgentStatus(msg agentStatusMsg) {
 			m.agentStatusTracker.UpdateAgentStatus(msg.agentID, status)
 		}
 	}
-	
+
 	log.Printf("Agent status update: %s", statusMsg)
 }
 
@@ -248,12 +248,12 @@ func (m *ChatModel) handleAgentStatusUpdate(msg AgentStatusUpdateMsg) {
 	if m.agentStatusTracker != nil && msg.Status != nil {
 		m.agentStatusTracker.UpdateAgentStatus(msg.AgentID, msg.Status)
 	}
-	
+
 	if msg.Event != nil {
 		// Log the activity event
 		log.Printf("Agent activity: %s - %s", msg.AgentID, msg.Event.Description)
 	}
-	
+
 	// Update UI if in status view mode
 	if m.viewMode == chatModeStatus {
 		// Trigger a view refresh to show updated status

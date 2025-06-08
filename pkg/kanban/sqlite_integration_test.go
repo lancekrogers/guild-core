@@ -234,19 +234,40 @@ func (m *MockComponentRegistry) Storage() StorageRegistry {
 
 // Implement other ComponentRegistry methods as no-ops
 func (m *MockComponentRegistry) Agents() registry.AgentRegistry { return nil }
+
 func (m *MockComponentRegistry) Tools() registry.ToolRegistry { return nil }
+
 func (m *MockComponentRegistry) Providers() registry.ProviderRegistry { return nil }
+
 func (m *MockComponentRegistry) Memory() registry.MemoryRegistry { return nil }
+
 func (m *MockComponentRegistry) Project() registry.ProjectRegistry { return nil }
+
 func (m *MockComponentRegistry) Prompts() *registry.PromptRegistry { return nil }
+
 func (m *MockComponentRegistry) Orchestrator() interface{} { return nil }
-func (m *MockComponentRegistry) Initialize(ctx context.Context, config registry.Config) error { return nil }
+
+func (m *MockComponentRegistry) Initialize(ctx context.Context, config registry.Config) error {
+	return nil
+}
+
 func (m *MockComponentRegistry) Shutdown(ctx context.Context) error { return nil }
+
 func (m *MockComponentRegistry) GetAgentsByCost(maxCost int) []registry.AgentInfo { return nil }
-func (m *MockComponentRegistry) GetCheapestAgentByCapability(capability string) (*registry.AgentInfo, error) { return nil, nil }
+
+func (m *MockComponentRegistry) GetCheapestAgentByCapability(capability string) (*registry.AgentInfo, error) {
+	return nil, nil
+}
+
 func (m *MockComponentRegistry) GetToolsByCost(maxCost int) []registry.ToolInfo { return nil }
-func (m *MockComponentRegistry) GetCheapestToolByCapability(capability string) (*registry.ToolInfo, error) { return nil, nil }
-func (m *MockComponentRegistry) GetAgentsByCapability(capability string) []registry.AgentInfo { return nil }
+
+func (m *MockComponentRegistry) GetCheapestToolByCapability(capability string) (*registry.ToolInfo, error) {
+	return nil, nil
+}
+
+func (m *MockComponentRegistry) GetAgentsByCapability(capability string) []registry.AgentInfo {
+	return nil
+}
 
 // MockStorageRegistry is a mock storage registry for testing
 type MockStorageRegistry struct {

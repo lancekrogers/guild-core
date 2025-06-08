@@ -38,18 +38,18 @@ type OrchestratorRegistry interface {
 
 // DefaultOrchestratorRegistry implements OrchestratorRegistry
 type DefaultOrchestratorRegistry struct {
-	commissionPlanners    map[string]CommissionTaskPlanner
-	eventBuses           map[string]EventBus
-	defaultPlanner       string
-	defaultEventBus      string
-	mu                   sync.RWMutex
+	commissionPlanners map[string]CommissionTaskPlanner
+	eventBuses         map[string]EventBus
+	defaultPlanner     string
+	defaultEventBus    string
+	mu                 sync.RWMutex
 }
 
 // NewOrchestratorRegistry creates a new orchestrator registry
 func NewOrchestratorRegistry() OrchestratorRegistry {
 	return &DefaultOrchestratorRegistry{
 		commissionPlanners: make(map[string]CommissionTaskPlanner),
-		eventBuses:        make(map[string]EventBus),
+		eventBuses:         make(map[string]EventBus),
 	}
 }
 

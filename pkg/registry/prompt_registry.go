@@ -149,8 +149,8 @@ func (p *DefaultPromptProvider) ValidatePrompt(id string, data interface{}) erro
 		return p.manager.ValidatePrompt(id, dataMap)
 	}
 	return gerror.New(gerror.ErrCodeInvalidFormat, "data must be a map[string]interface{}", nil).
-			WithComponent("registry").
-			WithOperation("ValidatePrompt")
+		WithComponent("registry").
+		WithOperation("ValidatePrompt")
 }
 
 // RenderPrompt renders a prompt with the given data

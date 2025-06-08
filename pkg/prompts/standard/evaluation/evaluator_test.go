@@ -92,9 +92,9 @@ func TestPromptEvaluator(t *testing.T) {
 
 func TestAssertions(t *testing.T) {
 	testCases := []struct {
-		name      string
-		assertion PromptAssertion
-		output    string
+		name       string
+		assertion  PromptAssertion
+		output     string
 		shouldPass bool
 	}{
 		// ContainsAssertion tests

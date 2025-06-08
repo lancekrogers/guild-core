@@ -2,13 +2,16 @@
 
 You are an AI assistant tasked with generating technical specifications based on a project objective.
 
-## Objective:
+## Objective
+
 {{.Objective}}
 
-## Additional Context:
+## Additional Context
+
 {{.AdditionalContext}}
 
-## Your Task:
+## Your Task
+
 Create detailed technical specifications for implementing the described objective. Include:
 
 1. System architecture
@@ -21,8 +24,9 @@ Create detailed technical specifications for implementing the described objectiv
 Present each section in a separate markdown file, structured with appropriate headers and detailed content.
 
 Use the following naming convention for files:
+
 - specs/architecture.md
 - specs/api_definitions.md
 - etc.
 
-Begin each file with ```markdown and end with ``` to clearly separate the files.
+Begin each file with ```markdown and end with``` to clearly separate the files.

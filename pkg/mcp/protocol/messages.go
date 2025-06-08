@@ -197,10 +197,10 @@ type CostLimit struct {
 
 // PromptResponse contains the result of prompt processing
 type PromptResponse struct {
-	Text      string     `json:"text"`
+	Text      string            `json:"text"`
 	Metadata  map[string]string `json:"metadata,omitempty"`
-	CostUsed  CostReport `json:"cost_used"`
-	ToolsUsed []string   `json:"tools_used,omitempty"`
+	CostUsed  CostReport        `json:"cost_used"`
+	ToolsUsed []string          `json:"tools_used,omitempty"`
 }
 
 // Cost-related messages
@@ -220,24 +220,24 @@ type CostReport struct {
 
 // CostQuery for querying cost information
 type CostQuery struct {
-	OperationIDs []string      `json:"operation_ids,omitempty"`
-	StartTime    time.Time     `json:"start_time,omitempty"`
-	EndTime      time.Time     `json:"end_time,omitempty"`
-	GroupBy      string        `json:"group_by,omitempty"` // "operation", "tool", "user"
-	Limit        int           `json:"limit,omitempty"`
+	OperationIDs []string  `json:"operation_ids,omitempty"`
+	StartTime    time.Time `json:"start_time,omitempty"`
+	EndTime      time.Time `json:"end_time,omitempty"`
+	GroupBy      string    `json:"group_by,omitempty"` // "operation", "tool", "user"
+	Limit        int       `json:"limit,omitempty"`
 }
 
 // CostAnalysis contains cost analysis results
 type CostAnalysis struct {
-	TotalCost     CostReport   `json:"total_cost"`
-	BreakdownBy   string       `json:"breakdown_by"`
-	Breakdown     []CostReport `json:"breakdown"`
-	Recommendations []string   `json:"recommendations,omitempty"`
+	TotalCost       CostReport   `json:"total_cost"`
+	BreakdownBy     string       `json:"breakdown_by"`
+	Breakdown       []CostReport `json:"breakdown"`
+	Recommendations []string     `json:"recommendations,omitempty"`
 }
 
 // ErrorResponse represents an error response message
 type ErrorResponse struct {
-	Error   *Error          `json:"error"`
-	ID      interface{}     `json:"id,omitempty"`
-	Version string          `json:"version,omitempty"`
+	Error   *Error      `json:"error"`
+	ID      interface{} `json:"id,omitempty"`
+	Version string      `json:"version,omitempty"`
 }

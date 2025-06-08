@@ -14,11 +14,11 @@ import (
 
 // LifecycleManager handles the objective lifecycle operations
 type LifecycleManager struct {
-	manager         *Manager
-	objectivesPath  string
-	aiDocsPath      string
-	specsPath       string
-	guildReadyFile  string
+	manager        *Manager
+	objectivesPath string
+	aiDocsPath     string
+	specsPath      string
+	guildReadyFile string
 }
 
 // newLifecycleManager creates a new lifecycle manager (private constructor)

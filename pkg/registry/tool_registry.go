@@ -11,9 +11,9 @@ import (
 
 // DefaultToolRegistry implements the ToolRegistry interface by wrapping the existing tool registry
 type DefaultToolRegistry struct {
-	registry      *tools.ToolRegistry
-	toolMetadata  map[string]ToolInfo // Cost and capability metadata for tools
-	mu            sync.RWMutex
+	registry     *tools.ToolRegistry
+	toolMetadata map[string]ToolInfo // Cost and capability metadata for tools
+	mu           sync.RWMutex
 }
 
 // NewToolRegistry creates a new tool registry

@@ -144,17 +144,17 @@ func (k chatKeyMap) FullHelp() [][]key.Binding {
 // Help styles for consistent appearance
 var (
 	helpTitleStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("141")).
-		Bold(true).
-		MarginBottom(1)
+			Foreground(lipgloss.Color("141")).
+			Bold(true).
+			MarginBottom(1)
 
 	helpStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("241"))
+			Foreground(lipgloss.Color("241"))
 
 	helpKeyStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("141")).
-		Bold(true)
+			Foreground(lipgloss.Color("141")).
+			Bold(true)
 
 	helpDescStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("244"))
+			Foreground(lipgloss.Color("244"))
 )

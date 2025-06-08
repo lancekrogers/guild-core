@@ -324,9 +324,9 @@ func (m *MockHTTPServer) handleModels(w http.ResponseWriter, r *http.Request) {
 		"object": "list",
 		"data": []map[string]interface{}{
 			{
-				"id":      "gpt-4",
-				"object":  "model",
-				"created": 1234567890,
+				"id":       "gpt-4",
+				"object":   "model",
+				"created":  1234567890,
 				"owned_by": "openai",
 			},
 		},

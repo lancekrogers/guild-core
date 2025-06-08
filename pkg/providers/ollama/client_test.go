@@ -168,19 +168,19 @@ func handleChatRequest(t *testing.T, w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := map[string]interface{}{
-		"model":     req["model"],
+		"model":      req["model"],
 		"created_at": "2024-01-01T00:00:00Z",
 		"message": map[string]string{
 			"role":    "assistant",
 			"content": "Hello from Ollama!",
 		},
-		"done":                true,
-		"total_duration":      1000000000,
-		"load_duration":       500000000,
-		"prompt_eval_count":   10,
+		"done":                 true,
+		"total_duration":       1000000000,
+		"load_duration":        500000000,
+		"prompt_eval_count":    10,
 		"prompt_eval_duration": 100000000,
-		"eval_count":          5,
-		"eval_duration":       50000000,
+		"eval_count":           5,
+		"eval_duration":        50000000,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

@@ -21,14 +21,14 @@ type DefaultComponentRegistry struct {
 	promptRegistry       *PromptRegistry
 	storageRegistry      StorageRegistry
 	orchestratorRegistry interface{}
-	config              Config
-	initialized         bool
-	mu                  sync.RWMutex
+	config               Config
+	initialized          bool
+	mu                   sync.RWMutex
 }
 
 // SQLiteStorageRegistry implements StorageRegistry for SQLite storage
 type SQLiteStorageRegistry struct {
-	registry storage.StorageRegistry
+	registry    storage.StorageRegistry
 	memoryStore MemoryStore
 
 	// Kanban adapters to bridge interface{} expectations
@@ -528,15 +528,15 @@ type agentRepositoryAdapter struct {
 func (a *agentRepositoryAdapter) CreateAgent(ctx context.Context, agent *StorageAgent) error {
 	// Convert registry.StorageAgent to storage.Agent
 	storageAgent := &storage.Agent{
-		ID:             agent.ID,
-		Name:           agent.Name,
-		Type:           agent.Type,
-		Provider:       agent.Provider,
-		Model:          agent.Model,
-		Capabilities:   agent.Capabilities,
-		Tools:          agent.Tools,
-		CostMagnitude:  agent.CostMagnitude,
-		CreatedAt:      agent.CreatedAt,
+		ID:            agent.ID,
+		Name:          agent.Name,
+		Type:          agent.Type,
+		Provider:      agent.Provider,
+		Model:         agent.Model,
+		Capabilities:  agent.Capabilities,
+		Tools:         agent.Tools,
+		CostMagnitude: agent.CostMagnitude,
+		CreatedAt:     agent.CreatedAt,
 	}
 	return a.repo.CreateAgent(ctx, storageAgent)
 }
@@ -549,29 +549,29 @@ func (a *agentRepositoryAdapter) GetAgent(ctx context.Context, id string) (*Stor
 
 	// Convert storage.Agent to registry.StorageAgent
 	return &StorageAgent{
-		ID:             storageAgent.ID,
-		Name:           storageAgent.Name,
-		Type:           storageAgent.Type,
-		Provider:       storageAgent.Provider,
-		Model:          storageAgent.Model,
-		Capabilities:   storageAgent.Capabilities,
-		Tools:          storageAgent.Tools,
-		CostMagnitude:  storageAgent.CostMagnitude,
-		CreatedAt:      storageAgent.CreatedAt,
+		ID:            storageAgent.ID,
+		Name:          storageAgent.Name,
+		Type:          storageAgent.Type,
+		Provider:      storageAgent.Provider,
+		Model:         storageAgent.Model,
+		Capabilities:  storageAgent.Capabilities,
+		Tools:         storageAgent.Tools,
+		CostMagnitude: storageAgent.CostMagnitude,
+		CreatedAt:     storageAgent.CreatedAt,
 	}, nil
 }
 
 func (a *agentRepositoryAdapter) UpdateAgent(ctx context.Context, agent *StorageAgent) error {
 	storageAgent := &storage.Agent{
-		ID:             agent.ID,
-		Name:           agent.Name,
-		Type:           agent.Type,
-		Provider:       agent.Provider,
-		Model:          agent.Model,
-		Capabilities:   agent.Capabilities,
-		Tools:          agent.Tools,
-		CostMagnitude:  agent.CostMagnitude,
-		CreatedAt:      agent.CreatedAt,
+		ID:            agent.ID,
+		Name:          agent.Name,
+		Type:          agent.Type,
+		Provider:      agent.Provider,
+		Model:         agent.Model,
+		Capabilities:  agent.Capabilities,
+		Tools:         agent.Tools,
+		CostMagnitude: agent.CostMagnitude,
+		CreatedAt:     agent.CreatedAt,
 	}
 	return a.repo.UpdateAgent(ctx, storageAgent)
 }
@@ -589,15 +589,15 @@ func (a *agentRepositoryAdapter) ListAgents(ctx context.Context) ([]*StorageAgen
 	agents := make([]*StorageAgent, 0, len(storageAgents))
 	for _, sa := range storageAgents {
 		agents = append(agents, &StorageAgent{
-			ID:             sa.ID,
-			Name:           sa.Name,
-			Type:           sa.Type,
-			Provider:       sa.Provider,
-			Model:          sa.Model,
-			Capabilities:   sa.Capabilities,
-			Tools:          sa.Tools,
-			CostMagnitude:  sa.CostMagnitude,
-			CreatedAt:      sa.CreatedAt,
+			ID:            sa.ID,
+			Name:          sa.Name,
+			Type:          sa.Type,
+			Provider:      sa.Provider,
+			Model:         sa.Model,
+			Capabilities:  sa.Capabilities,
+			Tools:         sa.Tools,
+			CostMagnitude: sa.CostMagnitude,
+			CreatedAt:     sa.CreatedAt,
 		})
 	}
 	return agents, nil
@@ -612,15 +612,15 @@ func (a *agentRepositoryAdapter) ListAgentsByType(ctx context.Context, agentType
 	agents := make([]*StorageAgent, 0, len(storageAgents))
 	for _, sa := range storageAgents {
 		agents = append(agents, &StorageAgent{
-			ID:             sa.ID,
-			Name:           sa.Name,
-			Type:           sa.Type,
-			Provider:       sa.Provider,
-			Model:          sa.Model,
-			Capabilities:   sa.Capabilities,
-			Tools:          sa.Tools,
-			CostMagnitude:  sa.CostMagnitude,
-			CreatedAt:      sa.CreatedAt,
+			ID:            sa.ID,
+			Name:          sa.Name,
+			Type:          sa.Type,
+			Provider:      sa.Provider,
+			Model:         sa.Model,
+			Capabilities:  sa.Capabilities,
+			Tools:         sa.Tools,
+			CostMagnitude: sa.CostMagnitude,
+			CreatedAt:     sa.CreatedAt,
 		})
 	}
 	return agents, nil
@@ -1058,11 +1058,11 @@ func (r *DefaultComponentRegistry) initializeSQLiteStorage(ctx context.Context, 
 		commissionAdapter := storage.NewKanbanCommissionRepositoryAdapter(sqliteReg.GetCommissionRepository())
 
 		r.storageRegistry = &SQLiteStorageRegistry{
-			registry: sqliteReg,
-			memoryStore: memoryStoreAdapter.(MemoryStore),
-			taskAdapter: taskAdapter,
-			boardAdapter: boardAdapter,
-			campaignAdapter: campaignAdapter,
+			registry:          sqliteReg,
+			memoryStore:       memoryStoreAdapter.(MemoryStore),
+			taskAdapter:       taskAdapter,
+			boardAdapter:      boardAdapter,
+			campaignAdapter:   campaignAdapter,
 			commissionAdapter: commissionAdapter,
 		}
 	} else {
@@ -1080,7 +1080,7 @@ func (r *DefaultComponentRegistry) initializeBoltDBStorage(ctx context.Context, 
 	// Initialize legacy BoltDB storage
 	// This would use the existing memory package implementations
 
-	_ = ctx // Context will be used when implementing BoltDB storage
+	_ = ctx    // Context will be used when implementing BoltDB storage
 	_ = dbPath // Suppress unused variable warning
 
 	// TODO: Initialize BoltDB storage for backward compatibility

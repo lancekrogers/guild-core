@@ -10,14 +10,14 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
+	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	promptcontext "github.com/guild-ventures/guild-core/pkg/prompts/layered/context"
 	"github.com/guild-ventures/guild-core/pkg/providers"
-	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/registry"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
 )
 
 var (
@@ -588,8 +588,8 @@ func extractTasksFromContent(content, filePath string) []TaskInfo {
 
 		// Look for numbered task lists (1. Task name)
 		if matched := strings.HasPrefix(line, "1.") || strings.HasPrefix(line, "2.") ||
-		               strings.HasPrefix(line, "3.") || strings.HasPrefix(line, "4.") ||
-		               strings.HasPrefix(line, "5."); matched {
+			strings.HasPrefix(line, "3.") || strings.HasPrefix(line, "4.") ||
+			strings.HasPrefix(line, "5."); matched {
 			// Extract task title after the number
 			parts := strings.SplitN(line, ".", 2)
 			if len(parts) == 2 {
@@ -643,7 +643,7 @@ func extractTaskDescription(lines []string, startIndex int) string {
 			break
 		}
 		if strings.HasPrefix(line, "- ") || strings.HasPrefix(line, "* ") ||
-		   strings.HasPrefix(line, "#") {
+			strings.HasPrefix(line, "#") {
 			break
 		}
 		description = append(description, line)
@@ -659,19 +659,19 @@ func inferAgentType(taskTitle, filePath string) string {
 
 	// Backend/API tasks
 	if strings.Contains(taskLower, "api") || strings.Contains(taskLower, "server") ||
-	   strings.Contains(taskLower, "database") || strings.Contains(pathLower, "backend") {
+		strings.Contains(taskLower, "database") || strings.Contains(pathLower, "backend") {
 		return "backend-specialist"
 	}
 
 	// Frontend tasks
 	if strings.Contains(taskLower, "ui") || strings.Contains(taskLower, "frontend") ||
-	   strings.Contains(taskLower, "component") || strings.Contains(pathLower, "frontend") {
+		strings.Contains(taskLower, "component") || strings.Contains(pathLower, "frontend") {
 		return "frontend-specialist"
 	}
 
 	// DevOps/Infrastructure tasks
 	if strings.Contains(taskLower, "deploy") || strings.Contains(taskLower, "docker") ||
-	   strings.Contains(taskLower, "infrastructure") || strings.Contains(taskLower, "ci/cd") {
+		strings.Contains(taskLower, "infrastructure") || strings.Contains(taskLower, "ci/cd") {
 		return "devops-specialist"
 	}
 
@@ -682,7 +682,7 @@ func inferAgentType(taskTitle, filePath string) string {
 
 	// Documentation tasks
 	if strings.Contains(taskLower, "document") || strings.Contains(pathLower, "readme") ||
-	   strings.Contains(pathLower, "docs") {
+		strings.Contains(pathLower, "docs") {
 		return "documentation-specialist"
 	}
 

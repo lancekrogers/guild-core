@@ -115,7 +115,7 @@ func TestSyntaxHighlighting(t *testing.T) {
 		{
 			name:     "SQL Code",
 			language: "sql",
-			code: `SELECT name, email FROM users WHERE active = true;`,
+			code:     `SELECT name, email FROM users WHERE active = true;`,
 			expected: []string{"SELECT", "name", "email", "FROM", "users", "WHERE"},
 		},
 	}
@@ -239,12 +239,12 @@ type MockGuildTheme struct {
 
 func mockGetGuildTheme() *MockGuildTheme {
 	return &MockGuildTheme{
-		Primary:   "#63",    // Purple
-		Secondary: "#220",   // Gold
-		Success:   "#76",    // Green
-		Warning:   "#214",   // Orange
-		Error:     "#196",   // Red
-		Muted:     "#245",   // Gray
+		Primary:   "#63",  // Purple
+		Secondary: "#220", // Gold
+		Success:   "#76",  // Green
+		Warning:   "#214", // Orange
+		Error:     "#196", // Red
+		Muted:     "#245", // Gray
 	}
 }
 

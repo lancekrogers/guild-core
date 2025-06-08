@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/spf13/cobra"
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/project"
-	"github.com/spf13/cobra"
 )
 
 var migrateCmd = &cobra.Command{
@@ -68,7 +69,7 @@ func runMigrate(cmd *cobra.Command, args []string) error {
 		IncludeEmbeddings: includeEmbeddings,
 		IncludeActivities: false, // Usually don't want to migrate activity logs
 		OverwriteExisting: overwrite,
-		DryRun:           dryRun,
+		DryRun:            dryRun,
 	}
 
 	if dryRun {

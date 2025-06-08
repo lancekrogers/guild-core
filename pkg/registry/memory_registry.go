@@ -10,13 +10,13 @@ import (
 
 // DefaultMemoryRegistry implements the MemoryRegistry interface
 type DefaultMemoryRegistry struct {
-	memoryStores       map[string]memory.Store
-	vectorStores       map[string]vector.VectorStore
-	chainManagers      map[string]memory.ChainManager
-	defaultMemoryStore string
-	defaultVectorStore string
+	memoryStores        map[string]memory.Store
+	vectorStores        map[string]vector.VectorStore
+	chainManagers       map[string]memory.ChainManager
+	defaultMemoryStore  string
+	defaultVectorStore  string
 	defaultChainManager string
-	mu                 sync.RWMutex
+	mu                  sync.RWMutex
 }
 
 // NewMemoryRegistry creates a new memory registry

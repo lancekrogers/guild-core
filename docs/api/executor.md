@@ -139,6 +139,7 @@ func NewBasicTaskExecutor(
 ```
 
 **Parameters:**
+
 - `agent`: The AI agent that will execute the task
 - `kanbanBoard`: Kanban board for task status updates (can be nil)
 - `toolRegistry`: Registry of available tools (can be nil)
@@ -146,6 +147,7 @@ func NewBasicTaskExecutor(
 - `workspaceManager`: Manager for workspace isolation (can be nil)
 
 **Returns:**
+
 - `*BasicTaskExecutor`: The executor instance
 - `error`: Creation error, if any
 
@@ -314,6 +316,7 @@ The BasicTaskExecutor is thread-safe and can be safely accessed from multiple go
 ### Prompt Caching
 
 Prompts are cached for 5 minutes by default:
+
 - Reduces template parsing overhead
 - Improves response time for repeated tasks
 - Cache size limited to 100 entries
@@ -321,6 +324,7 @@ Prompts are cached for 5 minutes by default:
 ### Workspace Creation
 
 Workspace creation has overhead:
+
 - Git worktree creation: ~100-500ms
 - Consider pooling for high-frequency tasks
 - Can disable with nil workspace manager

@@ -16,6 +16,7 @@ updated: "2025-01-06T12:00:00Z"
 You are extracting tasks for a {{.DomainType}} project. This domain has specific patterns and requirements:
 
 ## Domain Context
+
 {{.DomainContext}}
 
 ## Common Task Patterns for {{.DomainType}}
@@ -31,6 +32,7 @@ Based on the domain type, prioritize and categorize tasks appropriately. Conside
 ## Priority Guidance
 
 For {{.DomainType}} projects, consider these priority factors:
+
 - **Critical Path**: What must be done first to unblock other work?
 - **User Impact**: What affects the user experience most directly?
 - **Technical Dependencies**: What foundational work enables other tasks?
@@ -39,6 +41,7 @@ For {{.DomainType}} projects, consider these priority factors:
 ## Estimation Considerations
 
 When estimating task duration for {{.DomainType}}:
+
 - Consider complexity relative to the domain
 - Account for integration and testing time
 - Include time for documentation and review

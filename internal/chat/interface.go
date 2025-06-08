@@ -5,7 +5,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"google.golang.org/grpc"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/config"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
@@ -30,18 +30,18 @@ func WithSession(id string) Option {
 }
 
 // New creates a new chat model with the given configuration
-func New(ctx context.Context, cfg *config.GuildConfig, conn *grpc.ClientConn, 
+func New(ctx context.Context, cfg *config.GuildConfig, conn *grpc.ClientConn,
 	guildClient pb.GuildClient, promptsClient promptspb.PromptServiceClient,
 	registry registry.ComponentRegistry, opts ...Option) *ChatModel {
-	
+
 	// Create base model
 	model := newChatModel(cfg, "", "", conn, guildClient, promptsClient, registry)
-	
+
 	// Apply options
 	for _, opt := range opts {
 		opt(&model)
 	}
-	
+
 	return &model
 }
 
@@ -49,20 +49,20 @@ func New(ctx context.Context, cfg *config.GuildConfig, conn *grpc.ClientConn,
 func Run(ctx context.Context, cfg *config.GuildConfig, conn *grpc.ClientConn,
 	guildClient pb.GuildClient, promptsClient promptspb.PromptServiceClient,
 	registry registry.ComponentRegistry, opts ...Option) error {
-	
+
 	// Create the chat model
 	model := newChatModel(cfg, "", "", conn, guildClient, promptsClient, registry)
-	
+
 	// Apply options
 	for _, opt := range opts {
 		opt(&model)
 	}
-	
+
 	// Start the TUI
 	p := tea.NewProgram(model, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		return err
 	}
-	
+
 	return nil
 }

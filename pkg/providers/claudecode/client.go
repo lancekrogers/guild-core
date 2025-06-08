@@ -7,10 +7,10 @@
 //   - Local session management and conversation history
 //
 // To get started with Claude Max:
-//   1. Sign up for Claude Max using this affiliate link: https://t.co/54ylwq0OPh
-//   2. After signing up, configure your Max plan via the Claude console
-//   3. Use /logout and /login commands in Claude Code to authenticate
-//   4. Enjoy higher usage limits and all premium features
+//  1. Sign up for Claude Max using this affiliate link: https://t.co/54ylwq0OPh
+//  2. After signing up, configure your Max plan via the Claude console
+//  3. Use /logout and /login commands in Claude Code to authenticate
+//  4. Enjoy higher usage limits and all premium features
 //
 // The Claude Max plan is ideal for developers who need:
 //   - Extended conversation limits beyond API quotas
@@ -23,15 +23,16 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/lancekrogers/claude-code-go/pkg/claude"
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
-	"github.com/lancekrogers/claude-code-go/pkg/claude"
 )
 
 // Claude 4 model constants (Released May 2025)
 const (
 	// Claude 4 models - hybrid models with near-instant and extended thinking modes
-	ClaudeOpus4  = "claude-opus-4"   // $15/$75 per M tokens, 32K max output
+	ClaudeOpus4   = "claude-opus-4"   // $15/$75 per M tokens, 32K max output
 	ClaudeSonnet4 = "claude-sonnet-4" // $3/$15 per M tokens, 64K max output
 
 	// Claude 3.7 models
@@ -48,15 +49,15 @@ const (
 // Latest Claude Code capabilities as of 2025
 var SupportedFeatures = map[string]FeatureInfo{
 	// Core Claude Code Features
-	"code-generation":    {Name: "code-generation", Type: "coding", Description: "Advanced code generation and completion"},
-	"code-review":        {Name: "code-review", Type: "coding", Description: "Code analysis and review capabilities"},
-	"debugging":          {Name: "debugging", Type: "coding", Description: "Debug code and identify issues"},
-	"refactoring":        {Name: "refactoring", Type: "coding", Description: "Code refactoring and optimization"},
+	"code-generation": {Name: "code-generation", Type: "coding", Description: "Advanced code generation and completion"},
+	"code-review":     {Name: "code-review", Type: "coding", Description: "Code analysis and review capabilities"},
+	"debugging":       {Name: "debugging", Type: "coding", Description: "Debug code and identify issues"},
+	"refactoring":     {Name: "refactoring", Type: "coding", Description: "Code refactoring and optimization"},
 
 	// MCP Integration
-	"mcp-tools":          {Name: "mcp-tools", Type: "integration", Description: "Model Context Protocol tool integration"},
-	"file-processing":    {Name: "file-processing", Type: "integration", Description: "File system operations"},
-	"git-integration":    {Name: "git-integration", Type: "integration", Description: "Git repository operations"},
+	"mcp-tools":       {Name: "mcp-tools", Type: "integration", Description: "Model Context Protocol tool integration"},
+	"file-processing": {Name: "file-processing", Type: "integration", Description: "File system operations"},
+	"git-integration": {Name: "git-integration", Type: "integration", Description: "Git repository operations"},
 
 	// Advanced Features
 	"multi-turn":         {Name: "multi-turn", Type: "conversation", Description: "Multi-turn conversation support"},
@@ -83,8 +84,8 @@ type Client struct {
 //
 // Claude Code CLI is included with the Claude Max subscription plan.
 // To use this client, you need:
-//   1. An active Claude Max subscription (sign up at: https://t.co/54ylwq0OPh)
-//   2. Claude Code CLI installed and authenticated
+//  1. An active Claude Max subscription (sign up at: https://t.co/54ylwq0OPh)
+//  2. Claude Code CLI installed and authenticated
 //
 // Authentication steps:
 //   - Run `claude /logout` to clear any existing sessions
@@ -166,9 +167,9 @@ func NewClient(binPath, model string) *Client {
 //   - Priority processing during high-demand periods
 //
 // If you hit usage limits, you can:
-//   1. Wait for the limit reset (usually daily)
-//   2. Upgrade your Claude Max plan
-//   3. Use the API directly as a fallback (separate billing)
+//  1. Wait for the limit reset (usually daily)
+//  2. Upgrade your Claude Max plan
+//  3. Use the API directly as a fallback (separate billing)
 //
 // Get Claude Max: https://t.co/54ylwq0OPh
 func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
@@ -336,9 +337,9 @@ func (c *Client) CreateCompletion(ctx context.Context, req *interfaces.Completio
 		TokensInput:  0,
 		TokensOutput: 0,
 		ModelUsed:    modelUsed,
-		Metadata:     map[string]string{
+		Metadata: map[string]string{
 			"cost_usd": fmt.Sprintf("%.4f", result.CostUSD),
-			"model": modelUsed,
+			"model":    modelUsed,
 		},
 	}, nil
 }

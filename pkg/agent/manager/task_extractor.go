@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts/standard/templates/agent/extraction"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
+	"github.com/guild-ventures/guild-core/pkg/prompts/standard/templates/agent/extraction"
 )
 
 // TaskExtractor uses layered prompts and LLM intelligence to extract tasks from refined content
@@ -31,15 +31,15 @@ func NewTaskExtractor(
 
 // ExtractedTask represents a task extracted by the LLM
 type ExtractedTask struct {
-	ID                   string                 `json:"id"`
-	Title                string                 `json:"title"`
-	Description          string                 `json:"description"`
-	Category             string                 `json:"category"`
-	Priority             string                 `json:"priority"`
-	EstimatedHours       *float64               `json:"estimatedHours"`
-	Dependencies         []string               `json:"dependencies"`
-	RequiredCapabilities []string               `json:"requiredCapabilities"`
-	Metadata             ExtractedTaskMetadata  `json:"metadata"`
+	ID                   string                `json:"id"`
+	Title                string                `json:"title"`
+	Description          string                `json:"description"`
+	Category             string                `json:"category"`
+	Priority             string                `json:"priority"`
+	EstimatedHours       *float64              `json:"estimatedHours"`
+	Dependencies         []string              `json:"dependencies"`
+	RequiredCapabilities []string              `json:"requiredCapabilities"`
+	Metadata             ExtractedTaskMetadata `json:"metadata"`
 }
 
 // ExtractedTaskMetadata contains additional task information
@@ -52,17 +52,17 @@ type ExtractedTaskMetadata struct {
 
 // ExtractionResult contains all extracted tasks and metadata
 type ExtractionResult struct {
-	ExtractionMetadata ExtractionMetadata   `json:"extractionMetadata"`
-	Tasks              []ExtractedTask      `json:"tasks"`
-	TaskRelationships  TaskRelationships    `json:"taskRelationships"`
+	ExtractionMetadata ExtractionMetadata `json:"extractionMetadata"`
+	Tasks              []ExtractedTask    `json:"tasks"`
+	TaskRelationships  TaskRelationships  `json:"taskRelationships"`
 }
 
 // ExtractionMetadata contains information about the extraction process
 type ExtractionMetadata struct {
-	CommissionID    string           `json:"commissionId"`
-	ExtractedAt     string           `json:"extractedAt"`
-	TotalTasks      int              `json:"totalTasks"`
-	ContentAnalysis ContentAnalysis  `json:"contentAnalysis"`
+	CommissionID    string          `json:"commissionId"`
+	ExtractedAt     string          `json:"extractedAt"`
+	TotalTasks      int             `json:"totalTasks"`
+	ContentAnalysis ContentAnalysis `json:"contentAnalysis"`
 }
 
 // ContentAnalysis provides insights about the analyzed content
@@ -100,7 +100,7 @@ func (te *TaskExtractor) ExtractTasks(ctx context.Context, refinedCommission *Re
 	response, err := te.artisanClient.Complete(ctx, ArtisanRequest{
 		SystemPrompt: prompt,
 		UserPrompt:   "Extract all actionable tasks from the refined commission content provided in the system prompt. Output valid JSON following the specified format.",
-		Temperature:  0.3, // Lower temperature for more consistent extraction
+		Temperature:  0.3,  // Lower temperature for more consistent extraction
 		MaxTokens:    8000, // Enough for comprehensive task lists
 	})
 	if err != nil {
@@ -225,13 +225,13 @@ func (te *TaskExtractor) preparePromptData(refinedCommission *RefinedCommission)
 	domainContext := te.getDomainContext(domainType)
 
 	return map[string]interface{}{
-		"DomainType":       domainType,
-		"DomainContext":    domainContext,
-		"CommissionID":     refinedCommission.CommissionID,
-		"CommissionTitle":  title,
-		"CommissionGoals":  "Extract all actionable tasks from the refined commission",
-		"RefinedContent":   refinedContent,
-		"ContentFormat":    "Markdown with hierarchical structure",
+		"DomainType":      domainType,
+		"DomainContext":   domainContext,
+		"CommissionID":    refinedCommission.CommissionID,
+		"CommissionTitle": title,
+		"CommissionGoals": "Extract all actionable tasks from the refined commission",
+		"RefinedContent":  refinedContent,
+		"ContentFormat":   "Markdown with hierarchical structure",
 	}
 }
 
@@ -358,7 +358,7 @@ func extractJSON(content string) string {
 			if end == -1 || end <= start {
 				return ""
 			}
-			return content[start:end+1]
+			return content[start : end+1]
 		}
 	}
 
@@ -375,7 +375,7 @@ func extractJSON(content string) string {
 		return ""
 	}
 
-	return strings.TrimSpace(content[start:start+end])
+	return strings.TrimSpace(content[start : start+end])
 }
 
 // ConvertToTaskInfo converts an ExtractedTask to TaskInfo for compatibility

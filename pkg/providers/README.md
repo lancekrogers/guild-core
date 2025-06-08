@@ -5,6 +5,7 @@ This package provides a unified interface for interacting with multiple AI/LLM p
 ## Status
 
 ✅ **Production Ready Providers:**
+
 - **OpenAI** - Full API support with GPT-4.1, GPT-4o, O3 models
 - **Anthropic** - Full API support with Claude 4 models
 - **DeepSeek** - OpenAI-compatible API with Chat and Reasoner models
@@ -14,6 +15,7 @@ This package provides a unified interface for interacting with multiple AI/LLM p
 - **Mock** - Full-featured mock provider for testing
 
 ✅ **Special Purpose Providers:**
+
 - **Claude Code** - CLI wrapper using claude-code-go SDK v0.1.1+
   - **Included with Claude Max subscription** (Sign up: https://t.co/54ylwq0OPh)
   - Supports MCP (Model Context Protocol) integration
@@ -23,12 +25,15 @@ This package provides a unified interface for interacting with multiple AI/LLM p
   - No per-token billing with Max subscription
 
 ⚠️ **Not Yet Implemented:**
+
 - **Google** - Removed for now - needs AIProvider interface implementation (see README_GOOGLE_REMOVAL.md)
 
 ## Key Features
 
 ### 1. Unified Interface
+
 All providers implement the `AIProvider` interface:
+
 ```go
 type AIProvider interface {
     ChatCompletion(ctx context.Context, req ChatRequest) (*ChatResponse, error)
@@ -39,16 +44,19 @@ type AIProvider interface {
 ```
 
 ### 2. Proper Context Handling
+
 - All providers properly propagate context for cancellation/timeout
 - HTTP requests use `http.NewRequestWithContext()`
 - No context is dropped in the call chain
 
 ### 3. Real API Implementations
+
 - No stubs - all providers make actual API calls
 - Proper error handling with typed errors
 - Rate limit and retry support
 
 ### 4. Comprehensive Testing
+
 - Mock provider for unit tests (zero dependencies)
 - HTTP mock server for integration tests
 - Reusable test suite for all providers
@@ -57,6 +65,7 @@ type AIProvider interface {
 ## Usage
 
 ### Basic Usage
+
 ```go
 // Create a provider
 client := openai.NewClient("your-api-key")
@@ -71,12 +80,14 @@ resp, err := client.ChatCompletion(ctx, interfaces.ChatRequest{
 ```
 
 ### Using the Factory
+
 ```go
 factory := providers.NewFactoryV2()
 provider, err := factory.CreateAIProvider(providers.ProviderOpenAI, "api-key")
 ```
 
 ### Testing with Mock Provider
+
 ```go
 // Create mock with predefined responses
 mock := mock.NewBuilder().
@@ -94,16 +105,20 @@ calls := mock.GetCalls()
 ### Using Claude Code Provider
 
 **Setup Claude Max & Claude Code:**
+
 1. Sign up for Claude Max: https://t.co/54ylwq0OPh
 2. Install Claude Code CLI (included with Max subscription)
 3. Authenticate:
+
    ```bash
    claude /logout  # Clear existing sessions
    claude /login   # Authenticate with Claude Max account
    ```
+
 4. Configure via Claude console as needed
 
 **Usage in Go:**
+
 ```go
 // Create with Claude 4 models (Released May 2025)
 client := claudecode.NewClient("/usr/local/bin/claude", claudecode.ClaudeOpus4)  // Best coding model
@@ -127,6 +142,7 @@ client.SetAllowedTools([]string{"mcp__filesystem__read", "mcp__git__status"})
 ```
 
 **Benefits over API:**
+
 - Higher usage limits with Max subscription
 - No per-token charges
 - Access to all models including Claude 4

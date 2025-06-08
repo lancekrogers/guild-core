@@ -41,9 +41,9 @@ func TestNewClient(t *testing.T) {
 
 func TestClient_GetBinPath(t *testing.T) {
 	tests := []struct {
-		name        string
-		binPath     string
-		expected    string
+		name     string
+		binPath  string
+		expected string
 	}{
 		{
 			name:     "Default path",

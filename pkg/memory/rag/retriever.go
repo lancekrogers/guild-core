@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/corpus"
-	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 )
 
 // Retriever provides methods for retrieving relevant context from both
@@ -25,16 +25,16 @@ import (
 // - Metadata enrichment
 type Retriever struct {
 	// Config holds the retriever configuration
-	Config      Config
+	Config Config
 
 	// vectorStore is the underlying vector database for embeddings
 	vectorStore vector.VectorStore
 
 	// embedder generates embeddings for queries
-	embedder    vector.Embedder
+	embedder vector.Embedder
 
 	// chunker breaks documents into searchable chunks
-	chunker     *Chunker
+	chunker *Chunker
 
 	// corpusConfig is the corpus system configuration (optional)
 	corpusConfig *corpus.Config
@@ -102,8 +102,8 @@ func newRetriever(ctx context.Context, embedder vector.Embedder, config Config) 
 
 	// Create vector store config
 	vsConfig := vector.Config{
-		Embedder:         embedder,
-		DefaultDimension: 1536, // Default for modern embeddings
+		Embedder:          embedder,
+		DefaultDimension:  1536, // Default for modern embeddings
 		DefaultCollection: "rag_embeddings",
 	}
 
@@ -189,7 +189,7 @@ func NewRetrieverWithStore(vectorStore vector.VectorStore, config Config) *Retri
 	// Configure corpus integration if enabled
 	if config.UseCorpus && config.CorpusPath != "" {
 		corpusConfig := &corpus.Config{
-			CorpusPath:  config.CorpusPath,
+			CorpusPath:   config.CorpusPath,
 			MaxSizeBytes: int64(config.CorpusMaxSizeMB) * 1024 * 1024,
 		}
 		retriever.corpusConfig = corpusConfig
@@ -454,7 +454,8 @@ func (r *Retriever) sortResultsByScore(results []SearchResult) {
 // This is used to index new content for retrieval.
 //
 // Example:
-//   err := retriever.AddDocument(ctx, "doc1", "Guild framework documentation...", "docs")
+//
+//	err := retriever.AddDocument(ctx, "doc1", "Guild framework documentation...", "docs")
 func (r *Retriever) AddDocument(ctx context.Context, id, content, source string) error {
 	// Validate inputs
 	if id == "" {
@@ -478,8 +479,8 @@ func (r *Retriever) AddDocument(ctx context.Context, id, content, source string)
 			Text:   chunk,
 			Source: source,
 			Metadata: map[string]interface{}{
-				"document_id": id,
-				"chunk_index": i,
+				"document_id":  id,
+				"chunk_index":  i,
 				"total_chunks": len(chunks),
 			},
 		}
@@ -529,7 +530,8 @@ func (r *Retriever) AddCorpusDocument(ctx context.Context, doc *corpus.CorpusDoc
 // This is the main integration point with the agent system.
 //
 // Example:
-//   enhanced, err := retriever.EnhancePrompt(ctx, "How do agents communicate?", config)
+//
+//	enhanced, err := retriever.EnhancePrompt(ctx, "How do agents communicate?", config)
 func (r *Retriever) EnhancePrompt(ctx context.Context, prompt string, config RetrievalConfig) (string, error) {
 	// Retrieve relevant context
 	results, err := r.RetrieveContext(ctx, prompt, config)

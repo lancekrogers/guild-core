@@ -24,11 +24,13 @@ mkdir -p .guild/kanban/{todo,doing,review,blocked,done}
 **Narrator**: "Enterprise software development requires more than just coding - it needs project management, code review, documentation, testing, and deployment coordination. Watch Guild deliver a complete professional workflow."
 
 **Commands**:
+
 ```bash
 guild chat --campaign e-commerce
 ```
 
 **In Chat**:
+
 ```
 We're starting a new e-commerce platform project. I need a complete project kickoff including requirements analysis, technical architecture, and development planning.
 ```
@@ -36,6 +38,7 @@ We're starting a new e-commerce platform project. I need a complete project kick
 #### Requirements Analysis (30-60 seconds)
 
 **Expected Response from @service-architect**:
+
 ```markdown
 # 🏰 E-commerce Platform Project Kickoff
 
@@ -59,7 +62,7 @@ Based on our commission analysis, I'll lead the technical planning for our micro
 
 ## Next Steps
 1. **Architecture Design** (Week 1)
-2. **Core Services Development** (Weeks 2-4)  
+2. **Core Services Development** (Weeks 2-4)
 3. **Integration & Testing** (Weeks 5-6)
 4. **Deployment & Documentation** (Weeks 7-8)
 
@@ -69,17 +72,19 @@ Based on our commission analysis, I'll lead the technical planning for our micro
 #### Sprint Planning (60-90 seconds)
 
 **Commands**:
+
 ```bash
 guild commission refine .guild/commissions/e-commerce-platform.md --create-sprint-plan
 ```
 
 **Expected Output**:
+
 ```
 🏰 Guild Sprint Planning Complete
 
 📊 Project Breakdown:
 ├── 🎯 Epic 1: User Management System (16 story points)
-├── 🎯 Epic 2: Product Catalog Service (20 story points)  
+├── 🎯 Epic 2: Product Catalog Service (20 story points)
 ├── 🎯 Epic 3: Shopping Cart & Checkout (18 story points)
 ├── 🎯 Epic 4: Order Management (14 story points)
 ├── 🎯 Epic 5: Payment Integration (12 story points)
@@ -106,11 +111,13 @@ guild commission refine .guild/commissions/e-commerce-platform.md --create-sprin
 #### Task Assignment & Execution (90-150 seconds)
 
 **Chat Commands**:
+
 ```
 Let's start Sprint 1! @service-architect please begin with the authentication API design, then hand off to the implementation teams.
 ```
 
 **@service-architect Response**:
+
 ```markdown
 # 🏗️ Authentication API Design
 
@@ -189,6 +196,7 @@ components:
 ```
 
 ## Database Schema
+
 ```sql
 -- Users table with proper constraints
 CREATE TABLE users (
@@ -221,12 +229,14 @@ CREATE INDEX idx_refresh_tokens_expires_at ON refresh_tokens(expires_at);
 ```
 
 **Handoff Notes:**
+
 - **@frontend-specialist**: Please implement login form with validation
 - **@backend-specialist**: Implement this exact API specification
 - **@qa-specialist**: Focus on security testing and edge cases
 - **@documentation-specialist**: Create user-facing auth documentation
 
 Moving task to DOING status...
+
 ```
 
 #### Parallel Development (150-210 seconds)
@@ -240,6 +250,7 @@ guild kanban status
 ```
 
 **Chat Commands**:
+
 ```
 Perfect! @frontend-specialist and @backend-specialist please start your implementations in parallel. @qa-specialist prepare test cases.
 ```
@@ -247,6 +258,7 @@ Perfect! @frontend-specialist and @backend-specialist please start your implemen
 **Expected Multi-Agent Response Showing Parallel Work**:
 
 **@frontend-specialist**:
+
 ```typescript
 # 🎨 Login Component Implementation
 
@@ -286,7 +298,7 @@ export const LoginForm: React.FC = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     setApiError(null);
-    
+
     try {
       await login(data.email, data.password);
       // Navigation handled by auth context
@@ -300,7 +312,7 @@ export const LoginForm: React.FC = () => {
       <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
         Sign In
       </h2>
-      
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <Input
@@ -351,6 +363,7 @@ export const LoginForm: React.FC = () => {
 **Implementation Status**: ✅ Login form complete
 **Next**: Implementing authentication context and API integration
 **Dependencies**: Waiting for @backend-specialist API endpoints
+
 ```
 
 **@backend-specialist** (parallel response):
@@ -429,7 +442,7 @@ func (h *Handler) Login(c *gin.Context) {
     response, err := h.authService.Login(ctx, req.Email, req.Password)
     if err != nil {
         h.logger.Errorf("Login failed for email %s: %v", req.Email, err)
-        
+
         switch err {
         case ErrInvalidCredentials:
             c.JSON(http.StatusUnauthorized, gin.H{
@@ -494,6 +507,7 @@ func (h *Handler) RegisterRoutes(router *gin.RouterGroup) {
 **Implementation Status**: ✅ API handlers complete
 **Next**: Database integration and JWT token management
 **Integration**: Ready for @frontend-specialist API calls
+
 ```
 
 #### Code Review Process (210-270 seconds)
@@ -507,11 +521,13 @@ guild kanban move auth-backend-impl doing review
 ```
 
 **Chat Commands**:
+
 ```
 @qa-specialist please review the authentication implementations and provide feedback
 ```
 
 **@qa-specialist Review Response**:
+
 ```markdown
 # 🧪 Authentication Implementation Review
 
@@ -539,7 +555,7 @@ const response = await fetch('/api/v1/auth/login', {
 // RECOMMENDED:
 const response = await fetch('/api/v1/auth/login', {
   method: 'POST',
-  headers: { 
+  headers: {
     'Content-Type': 'application/json',
     'X-CSRF-Token': getCsrfToken(), // Add CSRF protection
   },
@@ -549,13 +565,14 @@ const response = await fetch('/api/v1/auth/login', {
 ```
 
 #### Backend Issues
+
 ```go
 // ISSUE: Missing rate limiting per user
 // CURRENT: Rate limiting only by IP
 auth.POST("/login", rateLimitMiddleware(5, time.Minute), h.Login)
 
 // RECOMMENDED: Add per-user rate limiting
-auth.POST("/login", 
+auth.POST("/login",
     rateLimitMiddleware(5, time.Minute),
     userRateLimitMiddleware(3, time.Minute), // 3 attempts per user per minute
     h.Login)
@@ -565,22 +582,23 @@ func validatePassword(password string) error {
     if len(password) < 12 { // Increase from 8 to 12
         return errors.New("password must be at least 12 characters")
     }
-    
+
     // Add complexity requirements
     hasUpper := regexp.MustCompile(`[A-Z]`).MatchString(password)
     hasLower := regexp.MustCompile(`[a-z]`).MatchString(password)
     hasNumber := regexp.MustCompile(`[0-9]`).MatchString(password)
     hasSpecial := regexp.MustCompile(`[!@#$%^&*(),.?":{}|<>]`).MatchString(password)
-    
+
     if !hasUpper || !hasLower || !hasNumber || !hasSpecial {
         return errors.New("password must contain uppercase, lowercase, number, and special character")
     }
-    
+
     return nil
 }
 ```
 
 ### 🧪 Test Coverage Analysis
+
 ```go
 // Required test cases to add:
 func TestAuthenticationSecurity(t *testing.T) {
@@ -593,6 +611,7 @@ func TestAuthenticationSecurity(t *testing.T) {
 ```
 
 ### 📋 Review Checklist
+
 - ✅ API specification compliance
 - ✅ Error handling comprehensive
 - ✅ Input validation present
@@ -604,6 +623,7 @@ func TestAuthenticationSecurity(t *testing.T) {
 **Recommendation**: Address security issues before moving to DONE. Implementations are solid but need hardening for production.
 
 **Status**: Moving back to DOING for security improvements.
+
 ```
 
 ### Act 3: Quality Assurance & Deployment (270-420 seconds) 🛡️
@@ -612,7 +632,9 @@ func TestAuthenticationSecurity(t *testing.T) {
 
 **Chat Commands**:
 ```
+
 Thanks @qa-specialist! @frontend-specialist and @backend-specialist please address the security concerns before we proceed.
+
 ```
 
 **Visual Expectation**: Quick updates from both specialists addressing security issues
@@ -621,7 +643,9 @@ Thanks @qa-specialist! @frontend-specialist and @backend-specialist please addre
 
 **Chat Commands**:
 ```
+
 @documentation-specialist create the final API documentation and @devops-specialist prepare deployment configuration
+
 ```
 
 **Expected Documentation Response**:
@@ -654,7 +678,9 @@ curl -X POST https://api.ecommerce.com/api/v1/auth/login \
 ```
 
 ## Integration Examples
+
 [Comprehensive examples for different frameworks]
+
 ```
 
 #### Final Integration Test (390-420 seconds)
@@ -665,12 +691,13 @@ guild commission status e-commerce-platform
 ```
 
 **Expected Output**:
+
 ```
 🏰 E-commerce Platform Commission Status
 
 📊 Sprint 1 Completion:
 ├── ✅ Authentication API Design (5 pts) - @service-architect
-├── ✅ Login Components (3 pts) - @frontend-specialist  
+├── ✅ Login Components (3 pts) - @frontend-specialist
 ├── ✅ Auth Service Implementation (8 pts) - @backend-specialist
 ├── ✅ Security Testing (3 pts) - @qa-specialist
 └── ✅ API Documentation (2 pts) - @documentation-specialist
@@ -698,6 +725,7 @@ guild commission status e-commerce-platform
 ## Recording Notes
 
 ### Professional Elements Demonstrated
+
 1. **Project Management**: Sprint planning, task tracking, status reporting
 2. **Code Review**: Formal review process with specific feedback
 3. **Quality Assurance**: Security testing, standards compliance
@@ -705,6 +733,7 @@ guild commission status e-commerce-platform
 5. **Team Coordination**: Handoffs, parallel work, issue resolution
 
 ### Key Visual Moments
+
 1. **Sprint Planning**: Professional project breakdown
 2. **Parallel Development**: Multiple agents working simultaneously
 3. **Code Review Process**: Formal feedback and improvements
@@ -712,6 +741,7 @@ guild commission status e-commerce-platform
 5. **Project Status**: Professional reporting and metrics
 
 ### Success Criteria
+
 - ✅ Complete professional development workflow
 - ✅ Real project management processes
 - ✅ Quality assurance and security practices

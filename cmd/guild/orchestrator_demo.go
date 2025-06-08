@@ -6,10 +6,11 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/orchestrator"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/guild-ventures/guild-core/tools"
@@ -192,7 +193,9 @@ func displayAssignmentResults(summary *orchestrator.AssignmentSummary, showAlter
 		if len(assignment.Tools) > 0 {
 			fmt.Printf("   Tools: ")
 			for i, tool := range assignment.Tools {
-				if i > 0 { fmt.Printf(", ") }
+				if i > 0 {
+					fmt.Printf(", ")
+				}
 				fmt.Printf("%s(%d)", tool.Name, tool.CostMagnitude)
 			}
 			fmt.Printf("\n")
@@ -201,7 +204,9 @@ func displayAssignmentResults(summary *orchestrator.AssignmentSummary, showAlter
 		if orchestratorShowAlternatives && len(assignment.Alternatives) > 0 {
 			fmt.Printf("   Alternatives: ")
 			for i, alt := range assignment.Alternatives {
-				if i > 0 { fmt.Printf(", ") }
+				if i > 0 {
+					fmt.Printf(", ")
+				}
 				fmt.Printf("%s(%d)", alt.Name, alt.CostMagnitude)
 			}
 			fmt.Printf("\n")
@@ -382,9 +387,9 @@ func registerOrchestratorDemoTools(componentRegistry registry.ComponentRegistry)
 	}
 
 	demoTools := []struct {
-		name         string
+		name          string
 		costMagnitude int
-		capabilities []string
+		capabilities  []string
 	}{
 		{"shell", 0, []string{"execution", "file_operations", "automation"}},
 		{"git", 0, []string{"version_control", "collaboration"}},
@@ -421,12 +426,18 @@ func createOrchestratorGuildConfig() *config.GuildConfig {
 
 func getOrchestratorCostIcon(cost int) string {
 	switch {
-	case cost == 0: return "🆓"
-	case cost <= 2: return "💚"
-	case cost <= 4: return "💛"
-	case cost <= 6: return "🧡"
-	case cost <= 8: return "❤️"
-	default: return "💜"
+	case cost == 0:
+		return "🆓"
+	case cost <= 2:
+		return "💚"
+	case cost <= 4:
+		return "💛"
+	case cost <= 6:
+		return "🧡"
+	case cost <= 8:
+		return "❤️"
+	default:
+		return "💜"
 	}
 }
 
@@ -530,32 +541,41 @@ Complexity: high
 PreferredCost: 3`, nil
 }
 
-func (m *OrchestratorMockManagerAgent) GetID() string   { return "orchestrator-manager" }
+func (m *OrchestratorMockManagerAgent) GetID() string { return "orchestrator-manager" }
+
 func (m *OrchestratorMockManagerAgent) GetName() string { return "Orchestrator Manager" }
 
 type OrchestratorDemoTool struct {
 	name string
 }
 
-func (d *OrchestratorDemoTool) Name() string        { return d.name }
+func (d *OrchestratorDemoTool) Name() string { return d.name }
+
 func (d *OrchestratorDemoTool) Description() string { return fmt.Sprintf("Demo %s tool", d.name) }
-func (d *OrchestratorDemoTool) Category() string    { return "demo" }
+
+func (d *OrchestratorDemoTool) Category() string { return "demo" }
+
 func (d *OrchestratorDemoTool) Schema() map[string]interface{} {
 	return map[string]interface{}{
 		"type": "object",
 		"properties": map[string]interface{}{
 			"input": map[string]interface{}{
-				"type": "string",
+				"type":        "string",
 				"description": "Input for the tool",
 			},
 		},
 	}
 }
+
 func (d *OrchestratorDemoTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	return &tools.ToolResult{
 		Output:  fmt.Sprintf("Demo result from %s", d.name),
 		Success: true,
 	}, nil
 }
-func (d *OrchestratorDemoTool) Examples() []string    { return []string{fmt.Sprintf("example for %s", d.name)} }
-func (d *OrchestratorDemoTool) RequiresAuth() bool    { return false }
+
+func (d *OrchestratorDemoTool) Examples() []string {
+	return []string{fmt.Sprintf("example for %s", d.name)}
+}
+
+func (d *OrchestratorDemoTool) RequiresAuth() bool { return false }

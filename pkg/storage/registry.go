@@ -6,14 +6,14 @@ import (
 
 // DefaultStorageRegistry implements StorageRegistry following Guild's registry pattern
 type DefaultStorageRegistry struct {
-	taskRepo         TaskRepository
-	campaignRepo     CampaignRepository
-	commissionRepo   CommissionRepository
-	boardRepo        BoardRepository
-	agentRepo        AgentRepository
-	promptChainRepo  PromptChainRepository
-	memoryStore      interface{} // Can be memory.Store or MemoryStoreAdapter
-	mu               sync.RWMutex
+	taskRepo        TaskRepository
+	campaignRepo    CampaignRepository
+	commissionRepo  CommissionRepository
+	boardRepo       BoardRepository
+	agentRepo       AgentRepository
+	promptChainRepo PromptChainRepository
+	memoryStore     interface{} // Can be memory.Store or MemoryStoreAdapter
+	mu              sync.RWMutex
 }
 
 // newStorageRegistry creates a new storage registry (private constructor)

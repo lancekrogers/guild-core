@@ -188,17 +188,17 @@ func (cm *CostManager) getLLMCostRates(model string) (float64, float64) {
 	// Default rates if not specified
 	switch {
 	case strings.Contains(model, "claude-3-opus"):
-		return 0.01500, 0.04500  // $15.00 per 1M prompt, $45.00 per 1M completion
+		return 0.01500, 0.04500 // $15.00 per 1M prompt, $45.00 per 1M completion
 	case strings.Contains(model, "claude-3-sonnet"):
-		return 0.00300, 0.01500  // $3.00 per 1M prompt, $15.00 per 1M completion
+		return 0.00300, 0.01500 // $3.00 per 1M prompt, $15.00 per 1M completion
 	case strings.Contains(model, "claude-3-haiku"):
-		return 0.00025, 0.00125  // $0.25 per 1M prompt, $1.25 per 1M completion
+		return 0.00025, 0.00125 // $0.25 per 1M prompt, $1.25 per 1M completion
 	case strings.Contains(model, "gpt-4-turbo"):
-		return 0.00100, 0.00300  // $1.00 per 1M prompt, $3.00 per 1M completion
+		return 0.00100, 0.00300 // $1.00 per 1M prompt, $3.00 per 1M completion
 	case strings.Contains(model, "gpt-4"):
-		return 0.03000, 0.06000  // $30.00 per 1M prompt, $60.00 per 1M completion
+		return 0.03000, 0.06000 // $30.00 per 1M prompt, $60.00 per 1M completion
 	case strings.Contains(model, "gpt-3.5-turbo"):
-		return 0.00050, 0.00150  // $0.50 per 1M prompt, $1.50 per 1M completion
+		return 0.00050, 0.00150 // $0.50 per 1M prompt, $1.50 per 1M completion
 	default:
 		// Default to a reasonable rate for unknown models
 		return 0.00100, 0.00200
@@ -354,7 +354,7 @@ func (cm *CostManager) ExceedsBudget(costType CostType, amount float64) bool {
 	}
 
 	currentSpent := cm.totalCosts[costType]
-	return currentSpent + amount > budget
+	return currentSpent+amount > budget
 }
 
 // DefaultCostManagerFactory is a factory function for creating cost managers

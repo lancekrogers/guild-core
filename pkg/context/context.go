@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
@@ -15,30 +16,30 @@ type ContextKey string
 // Core context keys for the Guild framework
 const (
 	// Registry and component access
-	RegistryKey     ContextKey = "guild.registry"
-	ConfigKey       ContextKey = "guild.config"
+	RegistryKey ContextKey = "guild.registry"
+	ConfigKey   ContextKey = "guild.config"
 
 	// Request tracking
-	RequestIDKey    ContextKey = "guild.request_id"
-	SessionIDKey    ContextKey = "guild.session_id"
-	OperationKey    ContextKey = "guild.operation"
+	RequestIDKey ContextKey = "guild.request_id"
+	SessionIDKey ContextKey = "guild.session_id"
+	OperationKey ContextKey = "guild.operation"
 
 	// Component identification
-	AgentIDKey      ContextKey = "guild.agent_id"
-	ProviderKey     ContextKey = "guild.provider"
-	ToolKey         ContextKey = "guild.tool"
+	AgentIDKey  ContextKey = "guild.agent_id"
+	ProviderKey ContextKey = "guild.provider"
+	ToolKey     ContextKey = "guild.tool"
 
 	// Execution context
-	TimeoutKey      ContextKey = "guild.timeout"
-	RetryCountKey   ContextKey = "guild.retry_count"
+	TimeoutKey    ContextKey = "guild.timeout"
+	RetryCountKey ContextKey = "guild.retry_count"
 
 	// Debugging and observability
-	TraceIDKey      ContextKey = "guild.trace_id"
-	SpanIDKey       ContextKey = "guild.span_id"
-	LoggerKey       ContextKey = "guild.logger"
+	TraceIDKey ContextKey = "guild.trace_id"
+	SpanIDKey  ContextKey = "guild.span_id"
+	LoggerKey  ContextKey = "guild.logger"
 
 	// Cost and resource tracking
-	CostBudgetKey   ContextKey = "guild.cost_budget"
+	CostBudgetKey    ContextKey = "guild.cost_budget"
 	ResourceLimitKey ContextKey = "guild.resource_limit"
 )
 
@@ -75,12 +76,12 @@ type RequestInfo struct {
 
 // OperationInfo contains metadata about the current operation
 type OperationInfo struct {
-	Name      string
-	Component string
-	Action    string
-	Timeout   time.Duration
+	Name       string
+	Component  string
+	Action     string
+	Timeout    time.Duration
 	RetryCount int
-	Metadata  map[string]interface{}
+	Metadata   map[string]interface{}
 }
 
 // CostInfo tracks cost and resource usage

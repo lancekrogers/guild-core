@@ -143,7 +143,7 @@ func TestFactory_CreateClientFromConfig(t *testing.T) {
 
 // MockProviderRegistry implements ProviderRegistry for testing
 type MockProviderRegistry struct {
-	providers map[string]LLMClient
+	providers       map[string]LLMClient
 	defaultProvider string
 }
 

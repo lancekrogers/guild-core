@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/prompts/standard"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // ManagerType defines the type of prompt manager

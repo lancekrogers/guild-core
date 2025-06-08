@@ -70,9 +70,9 @@ func TestRichContentIntegration(t *testing.T) {
 		viewContent := model.messages.View()
 
 		// Verify language-specific content appears
-		assert.Contains(t, viewContent, "fmt.Printf")      // Go
-		assert.Contains(t, viewContent, "async def")       // Python
-		assert.Contains(t, viewContent, "constructor")     // JavaScript
+		assert.Contains(t, viewContent, "fmt.Printf")  // Go
+		assert.Contains(t, viewContent, "async def")   // Python
+		assert.Contains(t, viewContent, "constructor") // JavaScript
 	})
 
 	t.Run("performance_large_content", func(t *testing.T) {
@@ -221,9 +221,9 @@ func TestStatusIntegration(t *testing.T) {
 		}
 
 		// Verify status indicators
-		assert.Contains(t, statusView, "🤔") // Thinking
+		assert.Contains(t, statusView, "🤔")  // Thinking
 		assert.Contains(t, statusView, "⚙️") // Working
-		assert.Contains(t, statusView, "🟢") // Idle
+		assert.Contains(t, statusView, "🟢")  // Idle
 	})
 
 	t.Run("status_with_message_flow", func(t *testing.T) {
@@ -295,7 +295,7 @@ func TestCompleteVisualIntegration(t *testing.T) {
 				LastActivity: time.Now(),
 			}
 			model.statusTracker.UpdateAgentStatus("service-architect", status)
-			
+
 			statusView := model.statusDisplay.RenderStatusPanel()
 			assert.NotEmpty(t, statusView)
 			assert.Contains(t, statusView, "service-architect")
@@ -526,13 +526,13 @@ func createTestChatModel(t *testing.T) *ChatModel {
 
 	// Create basic model
 	model := &ChatModel{
-		guildConfig:       guildConfig,
-		campaignID:        "test-campaign",
-		sessionID:         "test-session-12345678", // Initialize with adequate length for slicing
+		guildConfig:      guildConfig,
+		campaignID:       "test-campaign",
+		sessionID:        "test-session-12345678", // Initialize with adequate length for slicing
 		ctx:              ctx,
 		cancel:           cancel,
-		input:            ta, // Initialize textarea to prevent nil pointer
-		help:             helpModel, // Initialize help to prevent nil pointer
+		input:            ta,              // Initialize textarea to prevent nil pointer
+		help:             helpModel,       // Initialize help to prevent nil pointer
 		keymap:           newChatKeyMap(), // Initialize keymap for help.View call
 		messageLog:       []chatMessage{},
 		agentStreams:     make(map[string][]chatMessage),
@@ -559,8 +559,8 @@ func createTestChatModel(t *testing.T) *ChatModel {
 	if model.statusTracker == nil {
 		model.statusTracker = NewAgentStatusTracker(guildConfig)
 	}
-	
-	// Mock status display for testing  
+
+	// Mock status display for testing
 	if model.statusDisplay == nil {
 		model.statusDisplay = NewStatusDisplay(model.statusTracker, 20, 30)
 	}

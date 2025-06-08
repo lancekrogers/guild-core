@@ -8,13 +8,13 @@ import (
 
 func BenchmarkMarkdownRendering(b *testing.B) {
 	renderer, _ := NewMarkdownRenderer(80)
-	
+
 	// Generate large markdown content
 	content := generateLargeMarkdown(10000) // 10KB
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		_ = renderer.Render(content)
 	}
@@ -24,7 +24,7 @@ func BenchmarkStatusPanelUpdate(b *testing.B) {
 	guildConfig := createTestConfig()
 	tracker := NewAgentStatusTracker(guildConfig)
 	display := NewStatusDisplay(tracker, 80, 24)
-	
+
 	// Pre-populate with agents
 	for i := 0; i < 10; i++ {
 		tracker.UpdateAgentStatus(fmt.Sprintf("agent-%d", i), &AgentStatus{
@@ -32,10 +32,10 @@ func BenchmarkStatusPanelUpdate(b *testing.B) {
 			State: AgentWorking,
 		})
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		_ = display.RenderCompactStatus() // RenderFullStatus doesn't exist
 	}
@@ -45,15 +45,15 @@ func BenchmarkAnimationSystem(b *testing.B) {
 	indicators := NewAgentIndicators()
 	indicators.StartAnimations()
 	defer indicators.StopAnimations()
-	
+
 	// Add animations for multiple agents
 	for i := 0; i < 20; i++ {
 		indicators.SetWorkingAnimation(fmt.Sprintf("agent-%d", i), "task")
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		for j := 0; j < 20; j++ {
 			_ = indicators.GetCurrentIndicator(fmt.Sprintf("agent-%d", j))
@@ -63,7 +63,7 @@ func BenchmarkAnimationSystem(b *testing.B) {
 
 func BenchmarkConcurrentStatusUpdates(b *testing.B) {
 	tracker := NewAgentStatusTracker(createTestConfig())
-	
+
 	b.RunParallel(func(pb *testing.PB) {
 		i := 0
 		for pb.Next() {
@@ -80,7 +80,7 @@ func BenchmarkConcurrentStatusUpdates(b *testing.B) {
 func BenchmarkContentFormatting(b *testing.B) {
 	renderer, _ := NewMarkdownRenderer(80)
 	formatter := NewContentFormatter(renderer, 80)
-	
+
 	// Various content types
 	contents := []struct {
 		msgType string
@@ -91,10 +91,10 @@ func BenchmarkContentFormatting(b *testing.B) {
 		{"tool", "```go\nfunc Execute() error {\n    return nil\n}\n```"},
 		{"error", "Error: Failed to process request due to timeout"},
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		content := contents[i%len(contents)]
 		_ = formatter.FormatMessage(content.msgType, content.content, nil)
@@ -103,13 +103,13 @@ func BenchmarkContentFormatting(b *testing.B) {
 
 func BenchmarkLineNumberAddition(b *testing.B) {
 	renderer, _ := NewMarkdownRenderer(80)
-	
+
 	// Code with many lines
 	code := generateLargeCode(100) // 100 lines
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		_ = renderer.addLineNumbers(code, 100)
 	}
@@ -117,16 +117,16 @@ func BenchmarkLineNumberAddition(b *testing.B) {
 
 func BenchmarkCachePerformance(b *testing.B) {
 	renderer, _ := NewMarkdownRenderer(80)
-	
+
 	// Generate various content to test cache
 	contents := make([]string, 50)
 	for i := 0; i < 50; i++ {
 		contents[i] = fmt.Sprintf("# Document %d\n\nContent with **markdown** and `code`", i)
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		// Access pattern: 80% cache hits, 20% misses
 		idx := i % 50
@@ -135,14 +135,14 @@ func BenchmarkCachePerformance(b *testing.B) {
 		}
 		_ = renderer.Render(contents[idx])
 	}
-	
+
 	b.StopTimer()
 	b.Logf("Cache stats: %s", renderer.GetCacheStats())
 }
 
 func BenchmarkLanguageDetection(b *testing.B) {
 	formatter := &ContentFormatter{}
-	
+
 	// Various code samples
 	codeSamples := []string{
 		`func main() { fmt.Println("Go") }`,
@@ -155,10 +155,10 @@ func BenchmarkLanguageDetection(b *testing.B) {
 		`FROM ubuntu:latest\nRUN apt-get update`,
 		`all:\n\t@echo "Makefile"`,
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		code := codeSamples[i%len(codeSamples)]
 		_ = formatter.InferLanguage(code)
@@ -167,7 +167,7 @@ func BenchmarkLanguageDetection(b *testing.B) {
 
 func BenchmarkSyntaxHighlighting(b *testing.B) {
 	renderer, _ := NewMarkdownRenderer(80)
-	
+
 	// Go code sample
 	code := `package main
 
@@ -185,10 +185,10 @@ func main() {
 func handler(w http.ResponseWriter, r *http.Request) {
     fmt.Fprintf(w, "Hello, World!")
 }`
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		_ = renderer.highlightCode(code, "go")
 	}
@@ -199,26 +199,26 @@ func BenchmarkRealTimeUpdates(b *testing.B) {
 	tracker := NewAgentStatusTracker(guildConfig)
 	display := NewStatusDisplay(tracker, 80, 24)
 	indicators := NewAgentIndicators()
-	
+
 	// Simulate real-time system
 	agents := []string{"manager", "developer", "reviewer", "tester"}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		agentID := agents[i%len(agents)]
-		
+
 		// Update status
 		tracker.UpdateAgentStatus(agentID, &AgentStatus{
 			ID:       agentID,
 			State:    AgentState(i % 5),
 			Progress: float64(i%100) / 100.0,
 		})
-		
+
 		// Update animation
 		indicators.SetWorkingAnimation(agentID, "task")
-		
+
 		// Render display
 		_ = display.RenderCompactStatus()
 		_ = indicators.GetCurrentIndicator(agentID)
@@ -238,7 +238,7 @@ func BenchmarkMemoryAllocation(b *testing.B) {
 			}
 		}
 	})
-	
+
 	b.Run("MarkdownRenderer", func(b *testing.B) {
 		b.ReportAllocs()
 		for i := 0; i < b.N; i++ {
@@ -246,7 +246,7 @@ func BenchmarkMemoryAllocation(b *testing.B) {
 			_ = renderer.Render("# Test\nSome content")
 		}
 	})
-	
+
 	b.Run("ContentFormatter", func(b *testing.B) {
 		renderer, _ := NewMarkdownRenderer(80)
 		b.ReportAllocs()
@@ -261,30 +261,30 @@ func BenchmarkMemoryAllocation(b *testing.B) {
 
 func generateLargeMarkdown(size int) string {
 	var builder strings.Builder
-	
+
 	builder.WriteString("# Large Document\n\n")
-	
+
 	for i := 0; i < size/100; i++ {
 		builder.WriteString(fmt.Sprintf("## Section %d\n\n", i))
 		builder.WriteString("This is a **paragraph** with *emphasis* and `code`.\n\n")
 		builder.WriteString("```go\nfunc example() {\n    fmt.Println(\"test\")\n}\n```\n\n")
 	}
-	
+
 	return builder.String()
 }
 
 func generateLargeCode(lines int) string {
 	var builder strings.Builder
-	
+
 	builder.WriteString("package main\n\n")
 	builder.WriteString("import \"fmt\"\n\n")
-	
+
 	for i := 0; i < lines-4; i++ {
 		builder.WriteString(fmt.Sprintf("func function%d() {\n", i))
 		builder.WriteString(fmt.Sprintf("    fmt.Println(\"Line %d\")\n", i))
 		builder.WriteString("}\n")
 	}
-	
+
 	return builder.String()
 }
 
@@ -301,7 +301,7 @@ func BenchmarkSummary(b *testing.B) {
 		renderer, _ := NewMarkdownRenderer(80)
 		formatter := NewContentFormatter(renderer, 80)
 		indicators := NewAgentIndicators()
-		
+
 		// Pre-populate
 		for i := 0; i < 5; i++ {
 			tracker.UpdateAgentStatus(fmt.Sprintf("agent-%d", i), &AgentStatus{
@@ -309,12 +309,12 @@ func BenchmarkSummary(b *testing.B) {
 				State: AgentWorking,
 			})
 		}
-		
+
 		content := "# Update\n\nAgent is working on:\n```go\nfunc Process() {}\n```"
-		
+
 		b.ResetTimer()
 		b.ReportAllocs()
-		
+
 		for i := 0; i < b.N; i++ {
 			// Complete visual update cycle
 			_ = display.RenderCompactStatus() // RenderFullStatus doesn't exist

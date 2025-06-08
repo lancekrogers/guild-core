@@ -3,8 +3,9 @@ package mocks
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/guild-ventures/guild-core/pkg/memory"
 )
 
 // MockMemoryManager is a mock implementation of the memory.ChainManager interface.

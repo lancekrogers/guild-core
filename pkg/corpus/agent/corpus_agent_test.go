@@ -6,12 +6,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/guild-ventures/guild-core/pkg/memory/rag"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 	"github.com/guild-ventures/guild-core/pkg/providers/mock"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestNewCorpusAgent(t *testing.T) {
@@ -89,7 +90,7 @@ func TestCorpusAgent_Execute(t *testing.T) {
 	// Add test document to RAG
 	err = ragSystem.AddDocument(ctx, "guild-intro",
 		"The Guild Framework orchestrates AI agents to work together on complex tasks. "+
-		"Agents are called Artisans and work in teams called Guilds.", "test")
+			"Agents are called Artisans and work in teams called Guilds.", "test")
 	require.NoError(t, err)
 
 	corpusConfig := corpus.Config{
@@ -310,21 +311,21 @@ func TestCorpusAgent_ExtractTags(t *testing.T) {
 		expectedTags []string
 	}{
 		{
-			name:     "API and interface keywords",
-			query:    "How to implement the API interface?",
-			response: "The API interface implementation can be done by creating a class that follows the interface pattern.",
+			name:         "API and interface keywords",
+			query:        "How to implement the API interface?",
+			response:     "The API interface implementation can be done by creating a class that follows the interface pattern.",
 			expectedTags: []string{"generated", "corpus-agent", "api", "interface", "implementation", "class", "pattern"},
 		},
 		{
-			name:     "Architecture keywords",
-			query:    "Explain the system architecture",
-			response: "The system uses a modular design with components organized into modules.",
+			name:         "Architecture keywords",
+			query:        "Explain the system architecture",
+			response:     "The system uses a modular design with components organized into modules.",
 			expectedTags: []string{"generated", "corpus-agent", "system", "architecture", "design", "component", "module"},
 		},
 		{
-			name:     "No matching keywords",
-			query:    "Hello world",
-			response: "Hello! How can I help you today?",
+			name:         "No matching keywords",
+			query:        "Hello world",
+			response:     "Hello! How can I help you today?",
 			expectedTags: []string{"generated", "corpus-agent"},
 		},
 	}

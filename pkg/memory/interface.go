@@ -54,11 +54,11 @@ type PromptChain struct {
 
 // Message represents a single message in a prompt chain
 type Message struct {
-	Role      string    `json:"role"`       // "system", "user", "assistant", or "tool"
-	Content   string    `json:"content"`    // The message content
-	Name      string    `json:"name,omitempty"` // Name of the tool for tool messages
-	Timestamp time.Time `json:"timestamp"`  // When the message was added
-	TokenUsage int      `json:"token_usage,omitempty"` // Tokens used for this message
+	Role       string    `json:"role"`                  // "system", "user", "assistant", or "tool"
+	Content    string    `json:"content"`               // The message content
+	Name       string    `json:"name,omitempty"`        // Name of the tool for tool messages
+	Timestamp  time.Time `json:"timestamp"`             // When the message was added
+	TokenUsage int       `json:"token_usage,omitempty"` // Tokens used for this message
 }
 
 // ChainManager manages prompt chains

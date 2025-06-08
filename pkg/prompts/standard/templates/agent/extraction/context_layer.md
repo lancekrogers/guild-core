@@ -17,30 +17,39 @@ updated: "2025-01-06T12:00:00Z"
 You are extracting tasks for the following commission:
 
 ## Commission Details
+
 - **ID**: {{.CommissionID}}
 - **Title**: {{.CommissionTitle}}
 
 ## Commission Goals
+
 {{.CommissionGoals}}
 
 {{if .Constraints}}
+
 ## Constraints and Requirements
+
 {{.Constraints}}
 {{end}}
 
 {{if .Technologies}}
+
 ## Technology Stack
+
 {{.Technologies}}
 {{end}}
 
 {{if .Timeline}}
+
 ## Timeline Considerations
+
 {{.Timeline}}
 {{end}}
 
 ## Extraction Context
 
 When extracting tasks, keep in mind:
+
 1. All tasks should contribute to achieving the commission goals
 2. Respect any stated constraints or requirements
 3. Consider the technology choices when determining task complexity

@@ -21,14 +21,14 @@ import (
 
 // CommissionIntegrationService coordinates the complete pipeline from commission to kanban tasks
 type CommissionIntegrationService struct {
-	registry              registry.ComponentRegistry
-	commissionRefiner     manager.CommissionRefiner
-	commissionPlanner     CommissionTaskPlanner
-	kanbanManager         KanbanManager
-	commissionRepository  registry.CommissionRepository
-	eventBus              EventBus
-	guildMasterFactory    *manager.DefaultGuildMasterFactory
-	taskBridge            *manager.TaskBridge
+	registry             registry.ComponentRegistry
+	commissionRefiner    manager.CommissionRefiner
+	commissionPlanner    CommissionTaskPlanner
+	kanbanManager        KanbanManager
+	commissionRepository registry.CommissionRepository
+	eventBus             EventBus
+	guildMasterFactory   *manager.DefaultGuildMasterFactory
+	taskBridge           *manager.TaskBridge
 }
 
 // newCommissionIntegrationService creates a new integration service with full wiring (private constructor)
@@ -296,10 +296,10 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 	}
 
 	return &CommissionProcessingResult{
-		Commission:       commission,
+		Commission:        commission,
 		RefinedCommission: refined,
-		Tasks:           tasks,
-		AssignedArtisans: s.extractAssignedArtisans(tasks),
+		Tasks:             tasks,
+		AssignedArtisans:  s.extractAssignedArtisans(tasks),
 	}, nil
 }
 
@@ -689,8 +689,8 @@ func (s *CommissionIntegrationService) emitCommissionProcessedEvent(commission m
 			Data: map[string]interface{}{
 				"commission_id":    commission.ID,
 				"commission_title": commission.Title,
-				"task_count":      len(tasks),
-				"domain":          commission.Domain,
+				"task_count":       len(tasks),
+				"domain":           commission.Domain,
 			},
 		}
 		s.eventBus.Publish(event)
@@ -699,10 +699,10 @@ func (s *CommissionIntegrationService) emitCommissionProcessedEvent(commission m
 
 // CommissionProcessingResult contains the results of commission processing
 type CommissionProcessingResult struct {
-	Commission        manager.Commission        `json:"commission"`
+	Commission        manager.Commission         `json:"commission"`
 	RefinedCommission *manager.RefinedCommission `json:"refined_commission"`
-	Tasks            []*kanban.Task            `json:"tasks"`
-	AssignedArtisans []string                  `json:"assigned_artisans"`
+	Tasks             []*kanban.Task             `json:"tasks"`
+	AssignedArtisans  []string                   `json:"assigned_artisans"`
 }
 
 // GetTasksByStatus returns tasks filtered by status
@@ -755,7 +755,9 @@ type kanbanStorageAdapter struct {
 // Implement kanban.StorageRegistry interface methods
 func (k *kanbanStorageAdapter) GetKanbanCampaignRepository() kanban.CampaignRepository {
 	// Get the underlying storage registry and create adapter
-	if sqliteReg, ok := k.storageRegistry.(interface{ GetStorageRegistry() storage.StorageRegistry }); ok {
+	if sqliteReg, ok := k.storageRegistry.(interface {
+		GetStorageRegistry() storage.StorageRegistry
+	}); ok {
 		return &kanbanCampaignRepoAdapter{repo: sqliteReg.GetStorageRegistry().GetCampaignRepository()}
 	}
 	// For registry interfaces, we need to create adapters since the method signatures differ
@@ -763,7 +765,9 @@ func (k *kanbanStorageAdapter) GetKanbanCampaignRepository() kanban.CampaignRepo
 }
 
 func (k *kanbanStorageAdapter) GetKanbanCommissionRepository() kanban.CommissionRepository {
-	if sqliteReg, ok := k.storageRegistry.(interface{ GetStorageRegistry() storage.StorageRegistry }); ok {
+	if sqliteReg, ok := k.storageRegistry.(interface {
+		GetStorageRegistry() storage.StorageRegistry
+	}); ok {
 		return &kanbanCommissionRepoAdapter{repo: sqliteReg.GetStorageRegistry().GetCommissionRepository()}
 	}
 	return &kanbanCommissionRepoAdapter{repo: nil}
@@ -779,7 +783,9 @@ func (k *kanbanStorageAdapter) GetKanbanTaskRepository() kanban.TaskRepository {
 	}
 
 	// Fallback: try to get the underlying storage registry
-	if sqliteReg, ok := k.storageRegistry.(interface{ GetStorageRegistry() storage.StorageRegistry }); ok {
+	if sqliteReg, ok := k.storageRegistry.(interface {
+		GetStorageRegistry() storage.StorageRegistry
+	}); ok {
 		return &kanbanTaskRepoAdapter{repo: sqliteReg.GetStorageRegistry().GetTaskRepository()}
 	}
 
@@ -788,7 +794,9 @@ func (k *kanbanStorageAdapter) GetKanbanTaskRepository() kanban.TaskRepository {
 }
 
 func (k *kanbanStorageAdapter) GetBoardRepository() kanban.BoardRepository {
-	if sqliteReg, ok := k.storageRegistry.(interface{ GetStorageRegistry() storage.StorageRegistry }); ok {
+	if sqliteReg, ok := k.storageRegistry.(interface {
+		GetStorageRegistry() storage.StorageRegistry
+	}); ok {
 		return &kanbanBoardRepoAdapter{repo: sqliteReg.GetStorageRegistry().GetBoardRepository()}
 	}
 	return &kanbanBoardRepoAdapter{repo: nil}
@@ -885,11 +893,11 @@ func (k *kanbanCommissionRepoAdapter) CreateCommission(ctx context.Context, comm
 	if k.repo != nil {
 		if commissionMap, ok := commission.(map[string]interface{}); ok {
 			storageCommission := &storage.Commission{
-				ID:          commissionMap["ID"].(string),
-				CampaignID:  commissionMap["CampaignID"].(string),
-				Title:       commissionMap["Title"].(string),
-				Status:      commissionMap["Status"].(string),
-				CreatedAt:   commissionMap["CreatedAt"].(time.Time),
+				ID:         commissionMap["ID"].(string),
+				CampaignID: commissionMap["CampaignID"].(string),
+				Title:      commissionMap["Title"].(string),
+				Status:     commissionMap["Status"].(string),
+				CreatedAt:  commissionMap["CreatedAt"].(time.Time),
 			}
 			if desc, exists := commissionMap["Description"]; exists && desc != nil {
 				if descStr, ok := desc.(string); ok {
@@ -941,13 +949,13 @@ func (k *kanbanTaskRepoAdapter) CreateTask(ctx context.Context, task interface{}
 			}
 
 			storageTask := &storage.Task{
-				ID:            taskMap["ID"].(string),
-				BoardID:       boardID,                        // Use nullable BoardID
-				Title:         taskMap["Title"].(string),
-				Status:        taskMap["Status"].(string),
-				StoryPoints:   taskMap["StoryPoints"].(int32),
-				CreatedAt:     taskMap["CreatedAt"].(time.Time),
-				UpdatedAt:     taskMap["UpdatedAt"].(time.Time),
+				ID:          taskMap["ID"].(string),
+				BoardID:     boardID, // Use nullable BoardID
+				Title:       taskMap["Title"].(string),
+				Status:      taskMap["Status"].(string),
+				StoryPoints: taskMap["StoryPoints"].(int32),
+				CreatedAt:   taskMap["CreatedAt"].(time.Time),
+				UpdatedAt:   taskMap["UpdatedAt"].(time.Time),
 			}
 			if agentID, exists := taskMap["AssignedAgentID"]; exists && agentID != nil {
 				if agentIDStr, ok := agentID.(*string); ok {
@@ -990,13 +998,13 @@ func (k *kanbanTaskRepoAdapter) UpdateTask(ctx context.Context, task interface{}
 			}
 
 			storageTask := &storage.Task{
-				ID:            taskMap["ID"].(string),
-				BoardID:       boardID,                        // Use nullable BoardID
-				Title:         taskMap["Title"].(string),
-				Status:        taskMap["Status"].(string),
-				StoryPoints:   taskMap["StoryPoints"].(int32),
-				CreatedAt:     taskMap["CreatedAt"].(time.Time),
-				UpdatedAt:     taskMap["UpdatedAt"].(time.Time),
+				ID:          taskMap["ID"].(string),
+				BoardID:     boardID, // Use nullable BoardID
+				Title:       taskMap["Title"].(string),
+				Status:      taskMap["Status"].(string),
+				StoryPoints: taskMap["StoryPoints"].(int32),
+				CreatedAt:   taskMap["CreatedAt"].(time.Time),
+				UpdatedAt:   taskMap["UpdatedAt"].(time.Time),
 			}
 			if agentID, exists := taskMap["AssignedAgentID"]; exists && agentID != nil {
 				if agentIDStr, ok := agentID.(*string); ok {

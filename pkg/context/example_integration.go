@@ -434,34 +434,34 @@ func ExampleIntegrationWithRegistry() {
 	// This would be used in real integration code:
 
 	/*
-	// 1. Initialize the system
-	config, err := registry.LoadConfig("config.yaml")
-	if err != nil {
-		log.Fatal(err)
-	}
+		// 1. Initialize the system
+		config, err := registry.LoadConfig("config.yaml")
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	componentRegistry := registry.NewComponentRegistry()
-	err = componentRegistry.Initialize(context.Background(), *config)
-	if err != nil {
-		log.Fatal(err)
-	}
+		componentRegistry := registry.NewComponentRegistry()
+		err = componentRegistry.Initialize(context.Background(), *config)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	// 2. Create context with registry
-	ctx := context.NewGuildContext(context.Background())
-	ctx = context.WithRegistryProvider(ctx, componentRegistry)
-	ctx = context.WithConfigProvider(ctx, config)
+		// 2. Create context with registry
+		ctx := context.NewGuildContext(context.Background())
+		ctx = context.WithRegistryProvider(ctx, componentRegistry)
+		ctx = context.WithConfigProvider(ctx, config)
 
-	// 3. Use context-aware operations
-	result, err := context.CompleteWithDefaultProvider(ctx, "Write a function to sort an array")
-	if err != nil {
-		log.Error("Completion failed", context.LogFields(ctx)...)
-	}
+		// 3. Use context-aware operations
+		result, err := context.CompleteWithDefaultProvider(ctx, "Write a function to sort an array")
+		if err != nil {
+			log.Error("Completion failed", context.LogFields(ctx)...)
+		}
 
-	// 4. Route to appropriate agent
-	result, err = context.RouteToAgent(ctx, "coding", "Implement binary search", nil)
-	if err != nil {
-		log.Error("Agent routing failed", context.LogFields(ctx)...)
-	}
+		// 4. Route to appropriate agent
+		result, err = context.RouteToAgent(ctx, "coding", "Implement binary search", nil)
+		if err != nil {
+			log.Error("Agent routing failed", context.LogFields(ctx)...)
+		}
 	*/
 }
 

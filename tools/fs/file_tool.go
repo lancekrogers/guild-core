@@ -42,8 +42,8 @@ func NewFileTool(basePath string) *FileTool {
 		"type": "object",
 		"properties": map[string]interface{}{
 			"operation": map[string]interface{}{
-				"type": "string",
-				"enum": []string{"read", "write", "list", "exists", "delete"},
+				"type":        "string",
+				"enum":        []string{"read", "write", "list", "exists", "delete"},
 				"description": "File operation to perform",
 			},
 			"path": map[string]interface{}{

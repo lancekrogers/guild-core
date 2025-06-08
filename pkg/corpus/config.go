@@ -5,9 +5,10 @@ import (
 	"path/filepath"
 	"strconv"
 
+	yaml "gopkg.in/yaml.v3"
+
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"gopkg.in/yaml.v3"
 )
 
 // ConfigKeys defines the environment variable keys for corpus configuration
@@ -45,7 +46,7 @@ func DefaultConfig() Config {
 		MaxSizeBytes:    maxSizeBytes,
 		DefaultTags:     []string{},
 		DefaultCategory: "general",
-		Location:        corpusPath, // Set Location as an alias to CorpusPath
+		Location:        corpusPath,                 // Set Location as an alias to CorpusPath
 		MaxSizeMB:       maxSizeBytes / 1024 / 1024, // Convert bytes to MB
 	}
 }

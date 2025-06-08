@@ -87,7 +87,7 @@ func (tb *TaskBridge) CreateTasksFromRefinedCommission(ctx context.Context, refi
 		if err := tb.commissionRepository.CreateCommission(ctx, registryCommission); err != nil {
 			// If already exists, that's okay - ignore UNIQUE constraint errors
 			if !strings.Contains(err.Error(), "UNIQUE constraint failed") &&
-			   !strings.Contains(err.Error(), "already exists") {
+				!strings.Contains(err.Error(), "already exists") {
 				return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commission record").
 					WithComponent("manager").
 					WithOperation("CreateTasksFromRefinedCommission").

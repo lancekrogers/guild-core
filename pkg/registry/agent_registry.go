@@ -11,10 +11,10 @@ import (
 
 // CostProfile represents the cost characteristics of an agent
 type CostProfile struct {
-	Magnitude     int     `yaml:"magnitude" json:"magnitude"`
-	ContextWindow int     `yaml:"context_window" json:"context_window"`
-	ContextReset  string  `yaml:"context_reset" json:"context_reset"`
-	Available     bool    `yaml:"available" json:"available"`
+	Magnitude     int    `yaml:"magnitude" json:"magnitude"`
+	ContextWindow int    `yaml:"context_window" json:"context_window"`
+	ContextReset  string `yaml:"context_reset" json:"context_reset"`
+	Available     bool   `yaml:"available" json:"available"`
 }
 
 // AgentFactory creates agent instances
@@ -67,11 +67,11 @@ type GuildAgentConfig struct {
 
 // DefaultAgentRegistry implements the AgentRegistry interface
 type DefaultAgentRegistry struct {
-	factories      map[string]AgentFactory
-	guildAgents    map[string]GuildAgentConfig
-	defaultType    string
-	agentFactory   AgentFactory
-	mu             sync.RWMutex
+	factories    map[string]AgentFactory
+	guildAgents  map[string]GuildAgentConfig
+	defaultType  string
+	agentFactory AgentFactory
+	mu           sync.RWMutex
 }
 
 // NewAgentRegistry creates a new agent registry

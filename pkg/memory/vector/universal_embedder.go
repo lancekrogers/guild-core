@@ -374,7 +374,7 @@ func parseVectorString(s string) ([]float32, error) {
 }
 
 // NoOpEmbedder provides a no-op implementation for graceful degradation
-type NoOpEmbedder struct{
+type NoOpEmbedder struct {
 	dimension int
 }
 

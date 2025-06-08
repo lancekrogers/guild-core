@@ -28,50 +28,50 @@ type AgentClient interface {
 
 // AgentStatus represents the current status of an agent
 type AgentStatus struct {
-	State          string            `json:"state"`           // idle, busy, error, disabled
-	CurrentTask    string            `json:"current_task"`    // description of current task
-	LastActive     time.Time         `json:"last_active"`     // last activity timestamp
-	TaskCount      int64             `json:"task_count"`      // total tasks executed
-	SuccessCount   int64             `json:"success_count"`   // successful tasks
-	ErrorCount     int64             `json:"error_count"`     // failed tasks
-	AverageLatency time.Duration     `json:"average_latency"` // average task execution time
-	Metadata       map[string]interface{} `json:"metadata"`   // additional status information
+	State          string                 `json:"state"`           // idle, busy, error, disabled
+	CurrentTask    string                 `json:"current_task"`    // description of current task
+	LastActive     time.Time              `json:"last_active"`     // last activity timestamp
+	TaskCount      int64                  `json:"task_count"`      // total tasks executed
+	SuccessCount   int64                  `json:"success_count"`   // successful tasks
+	ErrorCount     int64                  `json:"error_count"`     // failed tasks
+	AverageLatency time.Duration          `json:"average_latency"` // average task execution time
+	Metadata       map[string]interface{} `json:"metadata"`        // additional status information
 }
 
 // TaskRequest represents a context-aware task request
 type TaskRequest struct {
-	ID             string                 `json:"id"`
-	AgentID        string                 `json:"agent_id"`
-	Content        string                 `json:"content"`
-	Type           string                 `json:"type"`           // completion, analysis, coding, etc.
-	Priority       int                    `json:"priority"`       // 1-10, 10 being highest
-	Timeout        time.Duration          `json:"timeout"`
-	RequiredTools  []string               `json:"required_tools"`
-	Context        map[string]interface{} `json:"context"`
+	ID            string                 `json:"id"`
+	AgentID       string                 `json:"agent_id"`
+	Content       string                 `json:"content"`
+	Type          string                 `json:"type"`     // completion, analysis, coding, etc.
+	Priority      int                    `json:"priority"` // 1-10, 10 being highest
+	Timeout       time.Duration          `json:"timeout"`
+	RequiredTools []string               `json:"required_tools"`
+	Context       map[string]interface{} `json:"context"`
 
 	// Execution context
-	RequestID      string                 `json:"request_id"`
-	SessionID      string                 `json:"session_id"`
-	ParentTaskID   string                 `json:"parent_task_id,omitempty"`
-	Dependencies   []string               `json:"dependencies,omitempty"`
-	Metadata       map[string]interface{} `json:"metadata,omitempty"`
+	RequestID    string                 `json:"request_id"`
+	SessionID    string                 `json:"session_id"`
+	ParentTaskID string                 `json:"parent_task_id,omitempty"`
+	Dependencies []string               `json:"dependencies,omitempty"`
+	Metadata     map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // TaskResponse represents a context-aware task response
 type TaskResponse struct {
-	ID             string                 `json:"id"`
-	TaskID         string                 `json:"task_id"`
-	AgentID        string                 `json:"agent_id"`
-	Result         string                 `json:"result"`
-	Status         string                 `json:"status"`         // success, error, timeout, cancelled
-	Error          string                 `json:"error,omitempty"`
-	StartTime      time.Time              `json:"start_time"`
-	EndTime        time.Time              `json:"end_time"`
-	Duration       time.Duration          `json:"duration"`
-	TokensUsed     int                    `json:"tokens_used"`
-	CostUSD        float64                `json:"cost_usd"`
-	ToolsUsed      []string               `json:"tools_used"`
-	Metadata       map[string]interface{} `json:"metadata,omitempty"`
+	ID         string                 `json:"id"`
+	TaskID     string                 `json:"task_id"`
+	AgentID    string                 `json:"agent_id"`
+	Result     string                 `json:"result"`
+	Status     string                 `json:"status"` // success, error, timeout, cancelled
+	Error      string                 `json:"error,omitempty"`
+	StartTime  time.Time              `json:"start_time"`
+	EndTime    time.Time              `json:"end_time"`
+	Duration   time.Duration          `json:"duration"`
+	TokensUsed int                    `json:"tokens_used"`
+	CostUSD    float64                `json:"cost_usd"`
+	ToolsUsed  []string               `json:"tools_used"`
+	Metadata   map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // ==============================================================================
@@ -147,14 +147,14 @@ func CreateTaskRequest(ctx context.Context, content, taskType string) TaskReques
 	}
 
 	return TaskRequest{
-		ID:           fmt.Sprintf("%s-task", requestID),
-		Content:      content,
-		Type:         taskType,
-		Priority:     5, // Default priority
-		RequestID:    requestID,
-		SessionID:    GetSessionID(ctx),
-		Context:      make(map[string]interface{}),
-		Metadata:     make(map[string]interface{}),
+		ID:        fmt.Sprintf("%s-task", requestID),
+		Content:   content,
+		Type:      taskType,
+		Priority:  5, // Default priority
+		RequestID: requestID,
+		SessionID: GetSessionID(ctx),
+		Context:   make(map[string]interface{}),
+		Metadata:  make(map[string]interface{}),
 	}
 }
 

@@ -44,7 +44,6 @@ var versionCmd = &cobra.Command{
 	},
 }
 
-
 // agentCmd represents the agent command
 var agentCmd = &cobra.Command{
 	Use:   "agent",

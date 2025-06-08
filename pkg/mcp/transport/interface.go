@@ -69,17 +69,17 @@ type StreamReader interface {
 
 // ConnectionInfo provides information about a transport connection
 type ConnectionInfo struct {
-	Protocol    string            // "nats", "grpc", "websocket", etc.
-	LocalAddr   string            // Local address
-	RemoteAddr  string            // Remote address
-	Secure      bool              // Whether TLS is enabled
-	Metadata    map[string]string // Additional metadata
+	Protocol   string            // "nats", "grpc", "websocket", etc.
+	LocalAddr  string            // Local address
+	RemoteAddr string            // Remote address
+	Secure     bool              // Whether TLS is enabled
+	Metadata   map[string]string // Additional metadata
 }
 
 // TransportConfig provides common configuration for transports
 type TransportConfig struct {
 	// Transport type
-	Type           string            // "nats", "memory", "grpc"
+	Type string // "nats", "memory", "grpc"
 
 	// Connection settings
 	Address        string
@@ -87,32 +87,32 @@ type TransportConfig struct {
 	ConnectTimeout time.Duration
 
 	// Retry settings
-	MaxReconnects  int
-	ReconnectWait  time.Duration
+	MaxReconnects int
+	ReconnectWait time.Duration
 
 	// Message settings
 	MaxMessageSize int
 	Compression    bool
 
 	// Authentication
-	AuthType       string // "none", "token", "cert"
-	AuthToken      string
+	AuthType  string // "none", "token", "cert"
+	AuthToken string
 
 	// Metadata
-	ClientID       string
-	Metadata       map[string]string
+	ClientID string
+	Metadata map[string]string
 
 	// Transport-specific config
-	Config         map[string]interface{}
+	Config map[string]interface{}
 }
 
 // TLSConfig provides TLS configuration
 type TLSConfig struct {
-	CertFile       string
-	KeyFile        string
-	CAFile         string
-	ServerName     string
-	SkipVerify     bool
+	CertFile   string
+	KeyFile    string
+	CAFile     string
+	ServerName string
+	SkipVerify bool
 }
 
 // MessageHandler handles incoming messages

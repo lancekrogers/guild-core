@@ -3,7 +3,8 @@ package vector
 import (
 	"context"
 
-	"github.com/sashabaranov/go-openai"
+	openai "github.com/sashabaranov/go-openai"
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 

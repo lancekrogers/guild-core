@@ -26,12 +26,14 @@ pre-commit install
 Pre-commit runs the following checks before each commit:
 
 ### Go Code Quality
+
 - **go fmt** - Ensures consistent code formatting
 - **go vet** - Catches common Go errors
 - **golangci-lint** - Comprehensive linting with auto-fixes
 - **goimports-reviser** - Organizes imports properly
 
 ### General Code Quality
+
 - **Trailing whitespace** - Removes unnecessary whitespace
 - **End of file fixer** - Ensures files end with newline
 - **Check YAML** - Validates YAML syntax
@@ -40,14 +42,17 @@ Pre-commit runs the following checks before each commit:
 - **Mixed line endings** - Enforces consistent line endings (LF)
 
 ### Guild-Specific Checks
+
 - **No development artifacts** - Prevents .disabled, .old, .wip files
 - **Build verification** - Ensures code compiles
 - **Short tests** - Runs quick unit tests
 
 ### Security
+
 - **detect-secrets** - Scans for potential secrets or API keys
 
 ### Documentation
+
 - **markdownlint** - Ensures consistent markdown formatting
 
 ## 📋 Usage
@@ -106,11 +111,13 @@ Pre-commit is configured in `.pre-commit-config.yaml`. Key settings:
 ### Common Issues
 
 1. **"pre-commit not found"**
+
    ```bash
    make pre-commit-install
    ```
 
 2. **"golangci-lint not found"**
+
    ```bash
    go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
    ```

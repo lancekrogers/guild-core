@@ -11,7 +11,9 @@ import (
 
 // Re-export event types
 type EventHandler = interfaces.EventHandler
+
 type Event = interfaces.Event
+
 type EventType = interfaces.EventType
 
 // eventBus handles publishing and subscribing to events

@@ -16,12 +16,12 @@ import (
 // OpenAICompatibleProvider implements AIProvider for OpenAI-compatible APIs
 // This is exported to allow provider packages to embed it
 type OpenAICompatibleProvider struct {
-	name          string
-	apiKey        string
-	baseURL       string
-	modelMap      map[string]string
-	client        *http.Client
-	capabilities  interfaces.ProviderCapabilities
+	name         string
+	apiKey       string
+	baseURL      string
+	modelMap     map[string]string
+	client       *http.Client
+	capabilities interfaces.ProviderCapabilities
 }
 
 // NewOpenAICompatibleProvider creates a new OpenAI-compatible provider
@@ -121,8 +121,8 @@ func (p *OpenAICompatibleProvider) ChatCompletion(ctx context.Context, req inter
 	}
 
 	return &interfaces.ChatResponse{
-		ID:    openAIResp.ID,
-		Model: openAIResp.Model,
+		ID:      openAIResp.ID,
+		Model:   openAIResp.Model,
 		Choices: choices,
 		Usage: interfaces.UsageInfo{
 			PromptTokens:     openAIResp.Usage.PromptTokens,

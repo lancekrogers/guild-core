@@ -35,11 +35,11 @@ func (c *MockClient) Complete(ctx context.Context, prompt string) (string, error
 func (c *MockClient) CreateCompletion(ctx context.Context, req *interfaces.CompletionRequest) (*interfaces.CompletionResponse, error) {
 	c.CallCount++
 	return &interfaces.CompletionResponse{
-		Text: fmt.Sprintf("Mock response for: %s", req.Prompt),
-		TokensUsed: 10,
-		TokensInput: 5,
+		Text:         fmt.Sprintf("Mock response for: %s", req.Prompt),
+		TokensUsed:   10,
+		TokensInput:  5,
 		TokensOutput: 5,
-		ModelUsed: "mock-model",
+		ModelUsed:    "mock-model",
 	}, nil
 }
 

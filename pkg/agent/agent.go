@@ -43,13 +43,13 @@ type GuildArtisan interface {
 
 // WorkerAgent is a standard worker agent
 type WorkerAgent struct {
-	ID             string
-	Name           string
-	LLMClient      providers.LLMClient
-	MemoryManager  memory.ChainManager
-	ToolRegistry   tools.Registry
+	ID                string
+	Name              string
+	LLMClient         providers.LLMClient
+	MemoryManager     memory.ChainManager
+	ToolRegistry      tools.Registry
 	CommissionManager commission.CommissionManager
-	CostManager    CostManagerInterface
+	CostManager       CostManagerInterface
 
 	// Context metadata
 	capabilities []string

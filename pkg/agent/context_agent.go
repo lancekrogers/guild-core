@@ -312,7 +312,7 @@ func containsAny(text string, keywords []string) bool {
 func contains(text, keyword string) bool {
 	// Simple implementation - in production you might want more sophisticated matching
 	return len(text) >= len(keyword) &&
-		   findSubstring(text, keyword) != -1
+		findSubstring(text, keyword) != -1
 }
 
 // findSubstring performs a simple case-insensitive substring search

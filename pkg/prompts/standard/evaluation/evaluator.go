@@ -11,9 +11,9 @@ import (
 
 // PromptEvaluator evaluates prompt effectiveness and quality
 type PromptEvaluator struct {
-	manager  *standard.EnhancedPromptManager
-	tests    map[string][]*PromptTest
-	results  map[string]*EvaluationResult
+	manager *standard.EnhancedPromptManager
+	tests   map[string][]*PromptTest
+	results map[string]*EvaluationResult
 }
 
 // PromptTest defines a test case for a prompt

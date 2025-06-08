@@ -36,13 +36,13 @@ type ComplexityAnalysisRequest struct {
 
 // ComplexityAnalysisResult represents the result of complexity analysis
 type ComplexityAnalysisResult struct {
-	ComplexityScore      int                    `json:"complexity_score"`
-	RecommendedApproach  string                 `json:"recommended_approach"`
-	Reasoning            string                 `json:"reasoning"`
-	AgentRequirements    []AgentRequirement     `json:"agent_requirements"`
-	ExecutionStrategy    ExecutionStrategy      `json:"execution_strategy"`
-	CostEstimate         CostEstimate           `json:"cost_estimate"`
-	QualityAssurance     QualityAssurance       `json:"quality_assurance"`
+	ComplexityScore     int                `json:"complexity_score"`
+	RecommendedApproach string             `json:"recommended_approach"`
+	Reasoning           string             `json:"reasoning"`
+	AgentRequirements   []AgentRequirement `json:"agent_requirements"`
+	ExecutionStrategy   ExecutionStrategy  `json:"execution_strategy"`
+	CostEstimate        CostEstimate       `json:"cost_estimate"`
+	QualityAssurance    QualityAssurance   `json:"quality_assurance"`
 }
 
 // AgentRequirement specifies what type of agent is needed
@@ -55,9 +55,9 @@ type AgentRequirement struct {
 
 // ExecutionStrategy defines how the task should be executed
 type ExecutionStrategy struct {
-	ParallelTasks    []string          `json:"parallel_tasks"`
-	SequentialTasks  []string          `json:"sequential_tasks"`
-	Dependencies     []TaskDependency  `json:"dependencies"`
+	ParallelTasks   []string         `json:"parallel_tasks"`
+	SequentialTasks []string         `json:"sequential_tasks"`
+	Dependencies    []TaskDependency `json:"dependencies"`
 }
 
 // TaskDependency represents a dependency between tasks
@@ -68,29 +68,29 @@ type TaskDependency struct {
 
 // CostEstimate provides token usage estimates
 type CostEstimate struct {
-	SingleAgentTokens     int    `json:"single_agent_tokens"`
-	MultiAgentTokens      int    `json:"multi_agent_tokens"`
-	RecommendedSavings    string `json:"recommended_savings"`
+	SingleAgentTokens  int    `json:"single_agent_tokens"`
+	MultiAgentTokens   int    `json:"multi_agent_tokens"`
+	RecommendedSavings string `json:"recommended_savings"`
 }
 
 // QualityAssurance defines quality control measures
 type QualityAssurance struct {
-	ReviewPoints     []string `json:"review_points"`
-	TestingStrategy  string   `json:"testing_strategy"`
-	RiskMitigation   []string `json:"risk_mitigation"`
+	ReviewPoints    []string `json:"review_points"`
+	TestingStrategy string   `json:"testing_strategy"`
+	RiskMitigation  []string `json:"risk_mitigation"`
 }
 
 // AgentInfo represents information about an available agent
 type AgentInfo struct {
-	Name           string   `json:"name"`
-	Role           string   `json:"role"`
-	Provider       string   `json:"provider"`
-	Model          string   `json:"model"`
-	CostMagnitude  int      `json:"cost_magnitude"`
-	ContextWindow  int      `json:"context_window"`
+	Name            string   `json:"name"`
+	Role            string   `json:"role"`
+	Provider        string   `json:"provider"`
+	Model           string   `json:"model"`
+	CostMagnitude   int      `json:"cost_magnitude"`
+	ContextWindow   int      `json:"context_window"`
 	Specializations []string `json:"specializations"`
-	Tools          []string `json:"tools"`
-	SuccessRate    float64  `json:"success_rate"`
+	Tools           []string `json:"tools"`
+	SuccessRate     float64  `json:"success_rate"`
 }
 
 // NewTaskComplexityAnalyzer creates a properly configured analyzer
@@ -215,15 +215,15 @@ func (tca *TaskComplexityAnalyzer) getAvailableAgentsFromRegistry(ctx context.Co
 		var agents []AgentInfo
 		for _, guildAgent := range registeredAgents {
 			agent := AgentInfo{
-				Name:          guildAgent.Name,
-				Role:          guildAgent.Type,
-				Provider:      guildAgent.Provider,
-				Model:         guildAgent.Model,
-				CostMagnitude: guildAgent.CostMagnitude,
-				ContextWindow: guildAgent.ContextWindow,
+				Name:            guildAgent.Name,
+				Role:            guildAgent.Type,
+				Provider:        guildAgent.Provider,
+				Model:           guildAgent.Model,
+				CostMagnitude:   guildAgent.CostMagnitude,
+				ContextWindow:   guildAgent.ContextWindow,
 				Specializations: guildAgent.Capabilities,
-				Tools:         guildAgent.Tools,
-				SuccessRate:   0.85, // Default success rate
+				Tools:           guildAgent.Tools,
+				SuccessRate:     0.85, // Default success rate
 			}
 			agents = append(agents, agent)
 		}
@@ -244,15 +244,15 @@ func (tca *TaskComplexityAnalyzer) getAvailableAgentsFromRegistry(ctx context.Co
 		var agents []AgentInfo
 		for _, guildAgent := range registeredAgents {
 			agent := AgentInfo{
-				Name:          guildAgent.Name,
-				Role:          guildAgent.Type,
-				Provider:      guildAgent.Provider,
-				Model:         guildAgent.Model,
-				CostMagnitude: guildAgent.CostMagnitude,
-				ContextWindow: guildAgent.ContextWindow,
+				Name:            guildAgent.Name,
+				Role:            guildAgent.Type,
+				Provider:        guildAgent.Provider,
+				Model:           guildAgent.Model,
+				CostMagnitude:   guildAgent.CostMagnitude,
+				ContextWindow:   guildAgent.ContextWindow,
 				Specializations: guildAgent.Capabilities,
-				Tools:         guildAgent.Tools,
-				SuccessRate:   0.85,
+				Tools:           guildAgent.Tools,
+				SuccessRate:     0.85,
 			}
 			agents = append(agents, agent)
 		}
@@ -269,15 +269,15 @@ func (tca *TaskComplexityAnalyzer) getAvailableAgentsFromRegistry(ctx context.Co
 	var agents []AgentInfo
 	for _, guildAgent := range registeredAgents {
 		agent := AgentInfo{
-			Name:          guildAgent.Name,
-			Role:          guildAgent.Type,
-			Provider:      guildAgent.Provider,
-			Model:         guildAgent.Model,
-			CostMagnitude: guildAgent.CostMagnitude,
-			ContextWindow: guildAgent.ContextWindow,
+			Name:            guildAgent.Name,
+			Role:            guildAgent.Type,
+			Provider:        guildAgent.Provider,
+			Model:           guildAgent.Model,
+			CostMagnitude:   guildAgent.CostMagnitude,
+			ContextWindow:   guildAgent.ContextWindow,
 			Specializations: guildAgent.Capabilities,
-			Tools:         guildAgent.Tools,
-			SuccessRate:   0.85,
+			Tools:           guildAgent.Tools,
+			SuccessRate:     0.85,
 		}
 		agents = append(agents, agent)
 	}
@@ -320,22 +320,22 @@ func (tca *TaskComplexityAnalyzer) buildPromptContext(
 	availableAgents []AgentInfo,
 ) map[string]interface{} {
 	return map[string]interface{}{
-		"GuildName":         "Current Guild", // TODO: Get from config
-		"ProjectType":       "Software Development", // TODO: Get from project context
-		"AgentCount":        len(availableAgents),
-		"TokenBudget":       request.TokenBudget,
-		"TaskDescription":   request.TaskDescription,
-		"TaskDomain":        request.TaskDomain,
-		"TaskPriority":      request.TaskPriority,
-		"TaskDeadline":      request.TaskDeadline,
-		"AvailableAgents":   availableAgents,
-		"CorpusDocuments":   100, // TODO: Get from corpus system
-		"CodebaseSize":      500, // TODO: Get from project analysis
-		"RecentTasks":       10,  // TODO: Get from task history
-		"TeamVelocity":      5,   // TODO: Calculate from metrics
-		"QualityLevel":      request.QualityLevel,
-		"RiskTolerance":     request.RiskTolerance,
-		"TimeConstraint":    request.TimeConstraint,
+		"GuildName":       "Current Guild",        // TODO: Get from config
+		"ProjectType":     "Software Development", // TODO: Get from project context
+		"AgentCount":      len(availableAgents),
+		"TokenBudget":     request.TokenBudget,
+		"TaskDescription": request.TaskDescription,
+		"TaskDomain":      request.TaskDomain,
+		"TaskPriority":    request.TaskPriority,
+		"TaskDeadline":    request.TaskDeadline,
+		"AvailableAgents": availableAgents,
+		"CorpusDocuments": 100, // TODO: Get from corpus system
+		"CodebaseSize":    500, // TODO: Get from project analysis
+		"RecentTasks":     10,  // TODO: Get from task history
+		"TeamVelocity":    5,   // TODO: Calculate from metrics
+		"QualityLevel":    request.QualityLevel,
+		"RiskTolerance":   request.RiskTolerance,
+		"TimeConstraint":  request.TimeConstraint,
 	}
 }
 

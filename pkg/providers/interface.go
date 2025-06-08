@@ -16,19 +16,19 @@ type AIProvider = interfaces.AIProvider
 
 // Re-export all interfaces types for convenience
 type (
-	ChatRequest         = interfaces.ChatRequest
-	ChatResponse        = interfaces.ChatResponse
-	ChatMessage         = interfaces.ChatMessage
-	ChatChoice          = interfaces.ChatChoice
-	ChatStream          = interfaces.ChatStream
-	ChatStreamChunk     = interfaces.ChatStreamChunk
-	EmbeddingRequest    = interfaces.EmbeddingRequest
-	EmbeddingResponse   = interfaces.EmbeddingResponse
-	Embedding           = interfaces.Embedding
+	ChatRequest          = interfaces.ChatRequest
+	ChatResponse         = interfaces.ChatResponse
+	ChatMessage          = interfaces.ChatMessage
+	ChatChoice           = interfaces.ChatChoice
+	ChatStream           = interfaces.ChatStream
+	ChatStreamChunk      = interfaces.ChatStreamChunk
+	EmbeddingRequest     = interfaces.EmbeddingRequest
+	EmbeddingResponse    = interfaces.EmbeddingResponse
+	Embedding            = interfaces.Embedding
 	ProviderCapabilities = interfaces.ProviderCapabilities
-	ModelInfo           = interfaces.ModelInfo
-	ProviderError       = interfaces.ProviderError
-	StreamHandler       = interfaces.StreamHandler
+	ModelInfo            = interfaces.ModelInfo
+	ProviderError        = interfaces.ProviderError
+	StreamHandler        = interfaces.StreamHandler
 )
 
 // ProviderType is an alias for interfaces.ProviderType

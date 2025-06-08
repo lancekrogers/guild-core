@@ -97,13 +97,14 @@ type ChromemConfig struct {
 // requested store type. This allows for easy extension with new store types.
 //
 // Example:
-//   config := &vector.StoreConfig{
-//       Type: vector.StoreTypeChromem,
-//       ChromemConfig: vector.ChromemConfig{
-//           PersistencePath: "./.guild/vectors",
-//       },
-//   }
-//   store, err := vector.NewVectorStore(ctx, config)
+//
+//	config := &vector.StoreConfig{
+//	    Type: vector.StoreTypeChromem,
+//	    ChromemConfig: vector.ChromemConfig{
+//	        PersistencePath: "./.guild/vectors",
+//	    },
+//	}
+//	store, err := vector.NewVectorStore(ctx, config)
 func NewVectorStore(ctx context.Context, config *StoreConfig) (VectorStore, error) {
 	if config == nil {
 		return nil, gerror.New(gerror.ErrCodeInvalidInput, "config cannot be nil", nil).
@@ -126,7 +127,7 @@ func NewVectorStore(ctx context.Context, config *StoreConfig) (VectorStore, erro
 
 	if !exists {
 		return nil, gerror.New(gerror.ErrCodeInvalidInput, fmt.Sprintf("unsupported vector store type: %s (registered types: %v)",
-				config.Type, ListRegisteredStores()), nil).
+			config.Type, ListRegisteredStores()), nil).
 			WithComponent("memory").
 			WithOperation("NewVectorStore")
 	}
@@ -138,8 +139,8 @@ func NewVectorStore(ctx context.Context, config *StoreConfig) (VectorStore, erro
 // createChromemStore creates a Chromem vector store
 func createChromemStore(ctx context.Context, config *StoreConfig, embedder Embedder) (VectorStore, error) {
 	chromemConfig := Config{
-		Embedder:        embedder,
-		PersistencePath: config.ChromemConfig.PersistencePath,
+		Embedder:         embedder,
+		PersistencePath:  config.ChromemConfig.PersistencePath,
 		DefaultDimension: config.ChromemConfig.DefaultDimension,
 	}
 
@@ -285,9 +286,10 @@ func init() {
 // of available vector store types.
 //
 // Example:
-//   vector.RegisterVectorStore("custom", func(ctx context.Context, config *StoreConfig, embedder Embedder) (VectorStore, error) {
-//       return NewCustomStore(config, embedder)
-//   })
+//
+//	vector.RegisterVectorStore("custom", func(ctx context.Context, config *StoreConfig, embedder Embedder) (VectorStore, error) {
+//	    return NewCustomStore(config, embedder)
+//	})
 func RegisterVectorStore(storeType StoreType, factory VectorStoreFactory) {
 	globalRegistry.mu.Lock()
 	defer globalRegistry.mu.Unlock()

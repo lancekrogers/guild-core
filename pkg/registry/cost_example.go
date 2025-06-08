@@ -104,9 +104,9 @@ func CostAwareToolSelection(registry ComponentRegistry, capability string, maxCo
 // that considers both agent and tool costs
 func OptimizeWorkflow(registry ComponentRegistry, tasks []Task, totalBudget int) (WorkflowPlan, error) {
 	plan := WorkflowPlan{
-		Tasks:       make([]TaskAssignment, 0, len(tasks)),
-		TotalCost:   0,
-		BudgetUsed:  0,
+		Tasks:      make([]TaskAssignment, 0, len(tasks)),
+		TotalCost:  0,
+		BudgetUsed: 0,
 	}
 
 	for _, task := range tasks {
@@ -135,10 +135,10 @@ func OptimizeWorkflow(registry ComponentRegistry, tasks []Task, totalBudget int)
 		}
 
 		assignment := TaskAssignment{
-			Task:      task,
-			Agent:     *agent,
-			Tools:     tools,
-			Cost:      agent.CostMagnitude + sumToolCosts(tools),
+			Task:  task,
+			Agent: *agent,
+			Tools: tools,
+			Cost:  agent.CostMagnitude + sumToolCosts(tools),
 		}
 
 		plan.Tasks = append(plan.Tasks, assignment)
@@ -157,10 +157,10 @@ type WorkflowPlan struct {
 }
 
 type TaskAssignment struct {
-	Task  Task        `json:"task"`
-	Agent AgentInfo   `json:"agent"`
-	Tools []ToolInfo  `json:"tools"`
-	Cost  int         `json:"cost"`
+	Task  Task       `json:"task"`
+	Agent AgentInfo  `json:"agent"`
+	Tools []ToolInfo `json:"tools"`
+	Cost  int        `json:"cost"`
 }
 
 // Helper functions

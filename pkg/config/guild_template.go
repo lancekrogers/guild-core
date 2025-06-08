@@ -7,7 +7,7 @@ func DefaultGuildTemplate() *GuildConfig {
 		Description: "A guild of AI agents working together",
 		Version:     "1.0.0",
 		Manager: ManagerConfig{
-			Default: "orchestrator",
+			Default:  "orchestrator",
 			Fallback: []string{"analyst", "coder"},
 		},
 		Agents: []AgentConfig{
@@ -147,11 +147,11 @@ func ExampleGuildTemplates() map[string]*GuildConfig {
 			},
 			Agents: []AgentConfig{
 				{
-					ID:          "tech_lead",
-					Name:        "Technical Lead",
-					Type:        "manager",
-					Provider:    "anthropic",
-					Model:       "claude-3-opus-20240229",
+					ID:       "tech_lead",
+					Name:     "Technical Lead",
+					Type:     "manager",
+					Provider: "anthropic",
+					Model:    "claude-3-opus-20240229",
 					Capabilities: []string{
 						"planning",
 						"architecture",
@@ -160,11 +160,11 @@ func ExampleGuildTemplates() map[string]*GuildConfig {
 					},
 				},
 				{
-					ID:          "frontend_dev",
-					Name:        "Frontend Developer",
-					Type:        "worker",
-					Provider:    "openai",
-					Model:       "gpt-4-turbo-preview",
+					ID:       "frontend_dev",
+					Name:     "Frontend Developer",
+					Type:     "worker",
+					Provider: "openai",
+					Model:    "gpt-4-turbo-preview",
 					Capabilities: []string{
 						"frontend",
 						"react",
@@ -178,11 +178,11 @@ func ExampleGuildTemplates() map[string]*GuildConfig {
 					},
 				},
 				{
-					ID:          "backend_dev",
-					Name:        "Backend Developer",
-					Type:        "worker",
-					Provider:    "anthropic",
-					Model:       "claude-3-sonnet-20240229",
+					ID:       "backend_dev",
+					Name:     "Backend Developer",
+					Type:     "worker",
+					Provider: "anthropic",
+					Model:    "claude-3-sonnet-20240229",
 					Capabilities: []string{
 						"backend",
 						"api_development",
@@ -206,11 +206,11 @@ func ExampleGuildTemplates() map[string]*GuildConfig {
 			},
 			Agents: []AgentConfig{
 				{
-					ID:          "data_architect",
-					Name:        "Data Architect",
-					Type:        "manager",
-					Provider:    "anthropic",
-					Model:       "claude-3-opus-20240229",
+					ID:       "data_architect",
+					Name:     "Data Architect",
+					Type:     "manager",
+					Provider: "anthropic",
+					Model:    "claude-3-opus-20240229",
 					Capabilities: []string{
 						"planning",
 						"data_architecture",
@@ -219,11 +219,11 @@ func ExampleGuildTemplates() map[string]*GuildConfig {
 					},
 				},
 				{
-					ID:          "data_engineer",
-					Name:        "Data Engineer",
-					Type:        "worker",
-					Provider:    "openai",
-					Model:       "gpt-4",
+					ID:       "data_engineer",
+					Name:     "Data Engineer",
+					Type:     "worker",
+					Provider: "openai",
+					Model:    "gpt-4",
 					Capabilities: []string{
 						"data_engineering",
 						"etl",
@@ -238,11 +238,11 @@ func ExampleGuildTemplates() map[string]*GuildConfig {
 					},
 				},
 				{
-					ID:          "ml_engineer",
-					Name:        "ML Engineer",
-					Type:        "worker",
-					Provider:    "anthropic",
-					Model:       "claude-3-sonnet-20240229",
+					ID:       "ml_engineer",
+					Name:     "ML Engineer",
+					Type:     "worker",
+					Provider: "anthropic",
+					Model:    "claude-3-sonnet-20240229",
 					Capabilities: []string{
 						"machine_learning",
 						"deep_learning",

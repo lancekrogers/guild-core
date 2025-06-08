@@ -19,7 +19,7 @@ func TestDeepInfraProvider(t *testing.T) {
 		OpenAICompatibleProvider: base.NewOpenAICompatibleProvider(
 			"deepinfra",
 			"test-api-key",
-			mock.URL + "/v1/openai",
+			mock.URL+"/v1/openai",
 			map[string]string{
 				"gpt-3.5-turbo": Llama32_8B,
 				"gpt-4":         Llama33_70B,

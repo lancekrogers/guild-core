@@ -7,13 +7,13 @@ import (
 // DefaultStorageRegistry implements StorageRegistry for the registry package
 // This is a placeholder implementation to avoid circular imports
 type DefaultStorageRegistry struct {
-	taskRepo         TaskRepository
-	campaignRepo     CampaignRepository
-	commissionRepo   CommissionRepository
-	agentRepo        AgentRepository
-	promptChainRepo  PromptChainRepository
-	memoryStore      MemoryStore
-	mu               sync.RWMutex
+	taskRepo        TaskRepository
+	campaignRepo    CampaignRepository
+	commissionRepo  CommissionRepository
+	agentRepo       AgentRepository
+	promptChainRepo PromptChainRepository
+	memoryStore     MemoryStore
+	mu              sync.RWMutex
 }
 
 // NewStorageRegistry creates a new storage registry

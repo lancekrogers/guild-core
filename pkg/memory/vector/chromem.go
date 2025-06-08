@@ -11,7 +11,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/philippgille/chromem-go"
+	chromem "github.com/philippgille/chromem-go"
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
@@ -55,11 +56,11 @@ type ChromemStore struct {
 type Config struct {
 	// Embedder is the embedding generator to use for text queries.
 	// This is required for the QueryEmbeddings method to work.
-	Embedder         Embedder
+	Embedder Embedder
 
 	// PersistencePath is the optional path for persisting the vector database.
 	// If empty, the store will be in-memory only.
-	PersistencePath  string
+	PersistencePath string
 
 	// DefaultDimension is the default dimension for vectors.
 	// Common values: 768 (nomic-embed-text), 1024 (mxbai-embed-large), 384 (all-minilm)
@@ -74,12 +75,13 @@ type Config struct {
 // The store can be configured for in-memory operation or with persistence to disk.
 //
 // Example usage:
-//   config := vector.Config{
-//       Embedder: openaiEmbedder,
-//       PersistencePath: "./.guild/vectors",
-//       DefaultCollection: "agent_memories",
-//   }
-//   store, err := vector.NewChromemStore(config)
+//
+//	config := vector.Config{
+//	    Embedder: openaiEmbedder,
+//	    PersistencePath: "./.guild/vectors",
+//	    DefaultCollection: "agent_memories",
+//	}
+//	store, err := vector.NewChromemStore(config)
 func NewChromemStore(config Config) (*ChromemStore, error) {
 	// Validate configuration
 	if config.Embedder == nil {
@@ -193,15 +195,16 @@ func (s *ChromemStore) getOrCreateCollection(name string) (*chromem.Collection, 
 // generated from the text content.
 //
 // Example:
-//   embedding := vector.Embedding{
-//       Text: "Guild is a framework for orchestrating AI agents",
-//       Source: "documentation",
-//       Metadata: map[string]interface{}{
-//           "collection": "corpus_documents",
-//           "category": "architecture",
-//       },
-//   }
-//   err := store.SaveEmbedding(ctx, embedding)
+//
+//	embedding := vector.Embedding{
+//	    Text: "Guild is a framework for orchestrating AI agents",
+//	    Source: "documentation",
+//	    Metadata: map[string]interface{}{
+//	        "collection": "corpus_documents",
+//	        "category": "architecture",
+//	    },
+//	}
+//	err := store.SaveEmbedding(ctx, embedding)
 func (s *ChromemStore) SaveEmbedding(ctx context.Context, embedding Embedding) error {
 	// Generate ID if not provided
 	if embedding.ID == "" {
@@ -266,10 +269,11 @@ func (s *ChromemStore) SaveEmbedding(ctx context.Context, embedding Embedding) e
 // specified number of results.
 //
 // Example:
-//   matches, err := store.QueryEmbeddings(ctx, "How do agents communicate?", 5)
-//   for _, match := range matches {
-//       fmt.Printf("Found: %s (score: %.3f)\n", match.Text, match.Score)
-//   }
+//
+//	matches, err := store.QueryEmbeddings(ctx, "How do agents communicate?", 5)
+//	for _, match := range matches {
+//	    fmt.Printf("Found: %s (score: %.3f)\n", match.Text, match.Score)
+//	}
 func (s *ChromemStore) QueryEmbeddings(ctx context.Context, query string, limit int) ([]EmbeddingMatch, error) {
 	// Set default limit
 	if limit <= 0 {
@@ -356,7 +360,8 @@ func (s *ChromemStore) QueryEmbeddings(ctx context.Context, query string, limit 
 // such as agent memories, corpus documents, or tool outputs.
 //
 // Example:
-//   matches, err := store.QueryCollection(ctx, "corpus_documents", "RAG architecture", 10)
+//
+//	matches, err := store.QueryCollection(ctx, "corpus_documents", "RAG architecture", 10)
 func (s *ChromemStore) QueryCollection(ctx context.Context, collectionName, query string, limit int) ([]EmbeddingMatch, error) {
 	// Set default limit
 	if limit <= 0 {

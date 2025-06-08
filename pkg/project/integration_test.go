@@ -1,3 +1,4 @@
+//go:build integration
 // +build integration
 
 package project_test
@@ -192,7 +193,7 @@ func TestProjectMigration(t *testing.T) {
 	opts := project.MigrationOptions{
 		IncludeEmbeddings: false,
 		OverwriteExisting: false,
-		DryRun:           false,
+		DryRun:            false,
 	}
 
 	result, err := project.MigrateFromGlobal(ctx, projectDir, globalDir, opts)

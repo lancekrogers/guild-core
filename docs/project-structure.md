@@ -42,7 +42,9 @@ The `.guild/` directory is the heart of a Guild project. It stores all project-l
 ## File Descriptions
 
 ### config.yaml
+
 Project-specific configuration that overrides global settings:
+
 - Provider configurations
 - Model preferences
 - Tool settings
@@ -50,37 +52,49 @@ Project-specific configuration that overrides global settings:
 - Feature flags
 
 ### corpus/
+
 The knowledge base for your project:
+
 - **documents/**: Original source documents (markdown, text, code)
 - **chunks/**: Processed chunks for efficient retrieval
 - **metadata/**: Document relationships and metadata
 
 ### embeddings/
+
 Vector embeddings organized by provider:
+
 - Supports multiple embedding providers
 - Automatic fallback to different providers
 - Cached to avoid recomputation
 
 ### agents/
+
 Agent configurations and state:
+
 - **templates/**: Reusable agent configurations
 - **instances/**: Running agent instances with their state
 
 ### objectives/
+
 Project goals and tasks:
+
 - **active/**: Currently being worked on
 - **completed/**: Historical record of completed work
 - **templates/**: Reusable objective patterns
 
 ### memory/
+
 BoltDB database containing:
+
 - Task states
 - Agent conversations
 - Tool execution history
 - Cost tracking data
 
 ### cache/
+
 Temporary data that can be safely deleted:
+
 - LLM responses (for retry/resume)
 - Tool outputs
 - Intermediate processing results
@@ -126,12 +140,14 @@ Each level overrides the previous, allowing fine-grained control.
 ### Version Control
 
 Add to `.gitignore`:
+
 ```gitignore
 # Guild project directory
 .guild/
 ```
 
 However, you may want to track certain templates:
+
 ```gitignore
 # Ignore all of .guild except templates
 .guild/*
@@ -142,6 +158,7 @@ However, you may want to track certain templates:
 ### Backup Strategy
 
 Important data to backup:
+
 - `.guild/memory/guild.db` - Your project's memory
 - `.guild/corpus/documents/` - Source documents
 - `.guild/config.yaml` - Project configuration
@@ -149,6 +166,7 @@ Important data to backup:
 ### Security Considerations
 
 The `.guild/` directory may contain:
+
 - API keys (in config.yaml)
 - Sensitive document content
 - Conversation history

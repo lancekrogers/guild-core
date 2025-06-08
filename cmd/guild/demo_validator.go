@@ -381,9 +381,9 @@ func (dv *DemoValidator) CheckAPIKeys() {
 	fmt.Printf("🔑 Checking API keys...\n")
 
 	keys := []struct {
-		env         string
-		provider    string
-		required    bool
+		env      string
+		provider string
+		required bool
 	}{
 		{"OPENAI_API_KEY", "OpenAI", false},
 		{"ANTHROPIC_API_KEY", "Anthropic", false},

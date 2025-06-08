@@ -183,12 +183,12 @@ func runCorpusChat(cmd *cobra.Command, args []string) {
 
 			// Create and save document
 			doc := &corpus.CorpusDoc{
-				Title:     title,
-				Body:      lastResponse,
-				Tags:      []string{"generated", "corpus-agent", "chat"},
-				Source:    "corpus-agent-chat",
-				GuildID:   "corpus",
-				AgentID:   corpusAgent.GetID(),
+				Title:   title,
+				Body:    lastResponse,
+				Tags:    []string{"generated", "corpus-agent", "chat"},
+				Source:  "corpus-agent-chat",
+				GuildID: "corpus",
+				AgentID: corpusAgent.GetID(),
 			}
 
 			if err := corpusAgent.SaveGeneratedDocument(ctx, doc); err != nil {

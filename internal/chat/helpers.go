@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
+
 	"github.com/guild-ventures/guild-core/pkg/config"
 )
 
@@ -72,9 +73,9 @@ func (m ChatModel) safeFormatContent(msgType messageType, content string, agentI
 func (m ChatModel) getHelpText() string {
 	helpStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("62"))
 	commandStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("33")).Bold(true)
-	
+
 	help := helpStyle.Render("🏰 Guild Chat Commands:\n\n")
-	
+
 	commands := []struct {
 		cmd  string
 		desc string
@@ -96,13 +97,13 @@ func (m ChatModel) getHelpText() string {
 		{"tab", "Auto-complete commands"},
 		{"↑/↓", "Navigate history"},
 	}
-	
+
 	for _, cmd := range commands {
-		help += fmt.Sprintf("%s - %s\n", 
-			commandStyle.Render(cmd.cmd), 
+		help += fmt.Sprintf("%s - %s\n",
+			commandStyle.Render(cmd.cmd),
 			helpStyle.Render(cmd.desc))
 	}
-	
+
 	return help
 }
 
@@ -113,7 +114,7 @@ func (m ChatModel) getStatusText() string {
 	status += fmt.Sprintf("Session: %s\n", m.sessionID)
 	status += fmt.Sprintf("Messages: %d\n", len(m.messages))
 	status += fmt.Sprintf("Active Tools: %d\n", len(m.activeTools))
-	
+
 	if m.agentStatusTracker != nil {
 		activeAgents := 0
 		for _, status := range m.agentStatusTracker.agents {
@@ -123,7 +124,7 @@ func (m ChatModel) getStatusText() string {
 		}
 		status += fmt.Sprintf("Active Agents: %d\n", activeAgents)
 	}
-	
+
 	return status
 }
 
@@ -131,26 +132,26 @@ func (m ChatModel) getStatusText() string {
 func (m ChatModel) getAgentsText() string {
 	// Try to get agents from the gRPC client
 	result := "🛡️ Available Agents:\n\n"
-	
+
 	agentStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("141")).Bold(true)
 	capStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("245"))
-	
+
 	// For now, use mock agents until we have proper agent listing
 	mockAgents := []struct {
-		ID string
-		Name string
+		ID           string
+		Name         string
 		Capabilities []string
 	}{
 		{"manager", "Guild Master", []string{"planning", "coordination"}},
 		{"developer", "Code Artisan", []string{"coding", "testing"}},
 		{"reviewer", "Review Artisan", []string{"review", "quality"}},
 	}
-	
+
 	for _, agent := range mockAgents {
 		// Get current status if available
 		statusIcon := "⚫" // Default offline
 		statusText := "offline"
-		
+
 		if m.agentStatusTracker != nil {
 			if status := m.agentStatusTracker.GetAgentStatus(agent.ID); status != nil {
 				switch status.State {
@@ -169,21 +170,21 @@ func (m ChatModel) getAgentsText() string {
 				}
 			}
 		}
-		
-		result += fmt.Sprintf("%s %s - %s (%s)\n", 
+
+		result += fmt.Sprintf("%s %s - %s (%s)\n",
 			statusIcon,
 			agentStyle.Render(fmt.Sprintf("@%s", agent.ID)),
 			agent.Name,
 			statusText)
-		
+
 		if len(agent.Capabilities) > 0 {
-			result += fmt.Sprintf("   %s\n", 
-				capStyle.Render(fmt.Sprintf("Capabilities: %s", 
+			result += fmt.Sprintf("   %s\n",
+				capStyle.Render(fmt.Sprintf("Capabilities: %s",
 					strings.Join(agent.Capabilities, ", "))))
 		}
 		result += "\n"
 	}
-	
+
 	return result
 }
 
@@ -193,9 +194,9 @@ func (m ChatModel) getToolListText() string {
 	// For now, return mock data
 	toolStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("226"))
 	descStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("245"))
-	
+
 	result := "🔨 Available Tools:\n\n"
-	
+
 	tools := []struct {
 		name string
 		desc string
@@ -207,7 +208,7 @@ func (m ChatModel) getToolListText() string {
 			caps: []string{"read", "search", "parse"},
 		},
 		{
-			name: "code-writer", 
+			name: "code-writer",
 			desc: "Generate and modify code",
 			caps: []string{"write", "refactor", "test"},
 		},
@@ -222,7 +223,7 @@ func (m ChatModel) getToolListText() string {
 			caps: []string{"run", "pipe", "script"},
 		},
 	}
-	
+
 	for _, tool := range tools {
 		result += fmt.Sprintf("%s - %s\n",
 			toolStyle.Render(tool.name),
@@ -233,7 +234,7 @@ func (m ChatModel) getToolListText() string {
 		}
 		result += "\n"
 	}
-	
+
 	return result
 }
 
@@ -256,15 +257,15 @@ func (m ChatModel) getActiveToolsStatus() string {
 	if len(m.activeTools) == 0 {
 		return "No tools currently executing"
 	}
-	
+
 	result := fmt.Sprintf("⚙️ Active Tool Executions (%d):\n\n", len(m.activeTools))
-	
+
 	for agentID, tool := range m.activeTools {
 		elapsed := time.Since(tool.StartTime)
 		result += fmt.Sprintf("• %s by @%s\n", tool.ToolName, agentID)
 		result += fmt.Sprintf("  Status: %s\n", tool.Status)
 		result += fmt.Sprintf("  Duration: %s\n", elapsed.Round(time.Second))
-		
+
 		if float64(tool.Progress) > 0 {
 			// Create progress bar
 			width := 20
@@ -274,7 +275,7 @@ func (m ChatModel) getActiveToolsStatus() string {
 		}
 		result += "\n"
 	}
-	
+
 	return result
 }
 
@@ -289,7 +290,7 @@ func (m *ChatModel) handleToolExecutionStart(msg toolExecutionStartMsg) {
 		StartTime: time.Now(),
 		Progress:  0,
 	}
-	
+
 	// Add message
 	m.messages = append(m.messages, Message{
 		Type:      msgToolStart,
@@ -308,22 +309,22 @@ func (m *ChatModel) handleToolExecutionProgress(msg toolExecutionProgressMsg) {
 	if tool, exists := m.activeTools[msg.executionID]; exists {
 		tool.Status = "running"
 		tool.Progress = msg.progress
-		
+
 		// Update or add progress message
-		progressContent := fmt.Sprintf("⚙️ Execution %s: %.0f%%", 
+		progressContent := fmt.Sprintf("⚙️ Execution %s: %.0f%%",
 			msg.executionID, float64(msg.progress)*100)
-		
+
 		// Find and update last progress message for this tool
 		updated := false
 		for i := len(m.messages) - 1; i >= 0; i-- {
-			if m.messages[i].Type == msgToolProgress && 
-			   m.messages[i].Metadata["execution_id"] == msg.executionID {
+			if m.messages[i].Type == msgToolProgress &&
+				m.messages[i].Metadata["execution_id"] == msg.executionID {
 				m.messages[i].Content = progressContent
 				updated = true
 				break
 			}
 		}
-		
+
 		if !updated {
 			m.messages = append(m.messages, Message{
 				Type:      msgToolProgress,

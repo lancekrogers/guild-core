@@ -16,7 +16,7 @@ type CompletionEngine struct {
 	guildConfig *config.GuildConfig
 	projectRoot string
 	commands    map[string]Command
-	taskIDs     []string // Cache of task IDs for completion
+	taskIDs     []string                   // Cache of task IDs for completion
 	registry    registry.ComponentRegistry // Access to kanban for task completion
 }
 
@@ -90,8 +90,8 @@ func (ce *CompletionEngine) completeCommands(input string) []CompletionResult {
 	for cmdName, cmd := range ce.commands {
 		if strings.HasPrefix(cmdName, input) {
 			results = append(results, CompletionResult{
-				Content:  cmdName,
-				AgentID:  "system",
+				Content: cmdName,
+				AgentID: "system",
 				Metadata: map[string]string{
 					"type":        "command",
 					"description": cmd.Description,
@@ -105,8 +105,8 @@ func (ce *CompletionEngine) completeCommands(input string) []CompletionResult {
 		for cmdName, cmd := range ce.commands {
 			if fuzzyMatch(cmdName, input) {
 				results = append(results, CompletionResult{
-					Content:  cmdName,
-					AgentID:  "system",
+					Content: cmdName,
+					AgentID: "system",
 					Metadata: map[string]string{
 						"type":        "command",
 						"description": cmd.Description,
@@ -138,8 +138,8 @@ func (ce *CompletionEngine) completeAgents(input string) []CompletionResult {
 	// Add @all for broadcast
 	if fuzzyMatch("@all", input) {
 		results = append(results, CompletionResult{
-			Content:  "@all",
-			AgentID:  "system",
+			Content: "@all",
+			AgentID: "system",
 			Metadata: map[string]string{
 				"type":        "agent",
 				"description": "Broadcast to all agents",
@@ -153,8 +153,8 @@ func (ce *CompletionEngine) completeAgents(input string) []CompletionResult {
 			agentMention := "@" + agent.ID
 			if fuzzyMatch(agentMention, input) {
 				results = append(results, CompletionResult{
-					Content:  agentMention,
-					AgentID:  agent.ID,
+					Content: agentMention,
+					AgentID: agent.ID,
 					Metadata: map[string]string{
 						"type":        "agent",
 						"description": fmt.Sprintf("%s - %s", agent.Name, strings.Join(agent.Capabilities, ", ")),
@@ -218,7 +218,7 @@ func (ce *CompletionEngine) completeFilePaths(input string) []CompletionResult {
 	// Add matching entries
 	for _, entry := range entries {
 		name := entry.Name()
-		
+
 		// Skip hidden files unless explicitly searching for them
 		if strings.HasPrefix(name, ".") && !strings.HasPrefix(searchPrefix, ".") {
 			continue
@@ -270,7 +270,7 @@ func (ce *CompletionEngine) completeTaskIDs(input string) []CompletionResult {
 	for _, taskID := range ce.taskIDs {
 		if fuzzyMatch(taskID, input) {
 			results = append(results, CompletionResult{
-				Content:  taskID,
+				Content: taskID,
 				AgentID: "system",
 				Metadata: map[string]string{
 					"type":        "task",
@@ -297,19 +297,19 @@ func (ce *CompletionEngine) getHelpfulSuggestions(input string) []CompletionResu
 	} else if strings.HasPrefix(input, "@") && len(input) == 1 {
 		// Show all available agents when just @ is typed
 		results = append(results, CompletionResult{
-			Content:  "@all",
+			Content: "@all",
 			AgentID: "system",
 			Metadata: map[string]string{
 				"type":        "agent",
 				"description": "Broadcast to all agents",
 			},
 		})
-		
+
 		if ce.guildConfig != nil {
 			for _, agent := range ce.guildConfig.Agents {
 				results = append(results, CompletionResult{
-					Content:  "@" + agent.ID,
-					AgentID:  agent.ID,
+					Content: "@" + agent.ID,
+					AgentID: agent.ID,
 					Metadata: map[string]string{
 						"type":        "agent",
 						"description": agent.Name,
@@ -340,7 +340,7 @@ func (ce *CompletionEngine) getCommonGuildPaths(input string) []CompletionResult
 	for _, path := range commonPaths {
 		if fuzzyMatch(path, input) {
 			results = append(results, CompletionResult{
-				Content:  path,
+				Content: path,
 				AgentID: "system",
 				Metadata: map[string]string{
 					"type":        "file",

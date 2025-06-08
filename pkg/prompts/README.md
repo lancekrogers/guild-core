@@ -33,12 +33,14 @@ internal/prompts/
 ## Prompt Systems
 
 ### 1. Standard System (`standard/`)
+
 - Template-based prompt rendering
 - Markdown templates with metadata
 - Simple variable substitution
 - Good for static prompts
 
 ### 2. Layered System (`layered/`) - KEY INNOVATION
+
 The layered prompt system is one of Guild's key innovations, providing a sophisticated 6-layer hierarchy:
 
 1. **Platform Layer** - Core Guild platform rules (safety, terms of service)
@@ -49,6 +51,7 @@ The layered prompt system is one of Guild's key innovations, providing a sophist
 6. **Turn Layer** - Ephemeral instructions for single interactions
 
 This allows for:
+
 - Dynamic prompt composition
 - Context-aware behavior modification
 - Runtime prompt customization

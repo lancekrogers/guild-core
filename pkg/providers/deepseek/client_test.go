@@ -19,7 +19,7 @@ func TestDeepSeekProvider(t *testing.T) {
 		OpenAICompatibleProvider: base.NewOpenAICompatibleProvider(
 			"deepseek",
 			"test-api-key",
-			mock.URL + "/v1",
+			mock.URL+"/v1",
 			map[string]string{
 				"gpt-4": DeepSeekChat,
 			},
@@ -76,7 +76,7 @@ func TestDeepSeekSpecificFeatures(t *testing.T) {
 		OpenAICompatibleProvider: base.NewOpenAICompatibleProvider(
 			"deepseek",
 			"test-api-key",
-			mock.URL + "/v1",
+			mock.URL+"/v1",
 			modelMap,
 			interfaces.ProviderCapabilities{
 				MaxTokens:      64000,

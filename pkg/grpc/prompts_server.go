@@ -74,12 +74,12 @@ func (s *PromptsServer) SetPromptLayer(ctx context.Context, req *promptspb.SetPr
 
 	// Notify subscribers of the update
 	s.notifySubscribers(&promptspb.PromptUpdateEvent{
-		EventType:  promptspb.PromptUpdateEvent_EVENT_TYPE_UPDATED,
-		Layer:      req.Prompt.Layer,
-		ArtisanId:  req.Prompt.ArtisanId,
-		SessionId:  req.Prompt.SessionId,
-		Prompt:     req.Prompt,
-		Timestamp:  timestamppb.Now(),
+		EventType: promptspb.PromptUpdateEvent_EVENT_TYPE_UPDATED,
+		Layer:     req.Prompt.Layer,
+		ArtisanId: req.Prompt.ArtisanId,
+		SessionId: req.Prompt.SessionId,
+		Prompt:    req.Prompt,
+		Timestamp: timestamppb.Now(),
 	})
 
 	return &promptspb.SetPromptLayerResponse{
@@ -105,11 +105,11 @@ func (s *PromptsServer) DeletePromptLayer(ctx context.Context, req *promptspb.De
 
 	// Notify subscribers of the deletion
 	s.notifySubscribers(&promptspb.PromptUpdateEvent{
-		EventType:  promptspb.PromptUpdateEvent_EVENT_TYPE_DELETED,
-		Layer:      req.Layer,
-		ArtisanId:  req.ArtisanId,
-		SessionId:  req.SessionId,
-		Timestamp:  timestamppb.Now(),
+		EventType: promptspb.PromptUpdateEvent_EVENT_TYPE_DELETED,
+		Layer:     req.Layer,
+		ArtisanId: req.ArtisanId,
+		SessionId: req.SessionId,
+		Timestamp: timestamppb.Now(),
 	})
 
 	return &promptspb.DeletePromptLayerResponse{
@@ -165,10 +165,10 @@ func (s *PromptsServer) InvalidateCache(ctx context.Context, req *promptspb.Inva
 
 	// Notify subscribers of cache invalidation
 	s.notifySubscribers(&promptspb.PromptUpdateEvent{
-		EventType:  promptspb.PromptUpdateEvent_EVENT_TYPE_CACHE_INVALIDATED,
-		ArtisanId:  req.ArtisanId,
-		SessionId:  req.SessionId,
-		Timestamp:  timestamppb.Now(),
+		EventType: promptspb.PromptUpdateEvent_EVENT_TYPE_CACHE_INVALIDATED,
+		ArtisanId: req.ArtisanId,
+		SessionId: req.SessionId,
+		Timestamp: timestamppb.Now(),
 	})
 
 	return &promptspb.InvalidateCacheResponse{
@@ -187,7 +187,7 @@ func (s *PromptsServer) GetLayerStats(ctx context.Context, req *promptspb.GetLay
 	// TODO: Implement actual statistics collection in the manager
 	stats := &promptspb.LayerStats{
 		Layer:         req.Layer,
-		PromptCount:   42,  // Mock data
+		PromptCount:   42,   // Mock data
 		AverageTokens: 1247, // Mock data
 		LastUpdated:   timestamppb.Now(),
 	}
@@ -354,12 +354,12 @@ func convertProtoToTurnContext(proto *promptspb.TurnContext) layered.TurnContext
 	}
 
 	return layered.TurnContext{
-		UserMessage:   proto.UserMessage,
-		TaskID:        proto.TaskId,
-		CommissionID:  proto.CommissionId,
-		Urgency:       proto.Urgency,
-		Instructions:  proto.Instructions,
-		Metadata:      metadata,
+		UserMessage:  proto.UserMessage,
+		TaskID:       proto.TaskId,
+		CommissionID: proto.CommissionId,
+		Urgency:      proto.Urgency,
+		Instructions: proto.Instructions,
+		Metadata:     metadata,
 	}
 }
 

@@ -108,6 +108,7 @@ executionPrompt, err := promptBuilder.BuildFullExecutionPrompt(data)
 ### Caching
 
 Prompts are cached for performance:
+
 - Cache key generated from layers + data
 - 5-minute TTL by default
 - LRU eviction when cache full
@@ -117,6 +118,7 @@ Prompts are cached for performance:
 Each task executes in an isolated Git worktree:
 
 ### Benefits
+
 - **No conflicts** between concurrent tasks
 - **Clean environment** for each execution
 - **Change tracking** via Git
@@ -331,6 +333,7 @@ e.addExecutionLog("Created execution plan", map[string]interface{}{
 ### Metrics Collection
 
 Key metrics tracked:
+
 - Execution duration
 - Tool usage frequency
 - Artifact generation

@@ -13,23 +13,23 @@ type StatusDisplay struct {
 	tracker       *AgentStatusTracker
 	width         int
 	height        int
-	showDetails   bool              // Expanded vs compact view
-	selectedAgent string            // Currently focused agent
-	styles        StatusStyles      // Medieval-themed styling
-	lastUpdate    time.Time         // Last update timestamp for refresh control
+	showDetails   bool         // Expanded vs compact view
+	selectedAgent string       // Currently focused agent
+	styles        StatusStyles // Medieval-themed styling
+	lastUpdate    time.Time    // Last update timestamp for refresh control
 }
 
 // StatusStyles contains all visual styling for status display
 type StatusStyles struct {
-	AgentPanel     lipgloss.Style   // Individual agent status panels
-	ActivityBadge  lipgloss.Style   // Activity state indicators
-	ProgressBar    lipgloss.Style   // Task progress visualization
-	ToolIndicator  lipgloss.Style   // Active tool display
-	HeaderStyle    lipgloss.Style   // Status section headers
-	CompactStyle   lipgloss.Style   // Compact status line
-	CoordStyle     lipgloss.Style   // Coordination events
-	CostStyle      lipgloss.Style   // Cost information
-	MetricsStyle   lipgloss.Style   // Metrics and statistics
+	AgentPanel    lipgloss.Style // Individual agent status panels
+	ActivityBadge lipgloss.Style // Activity state indicators
+	ProgressBar   lipgloss.Style // Task progress visualization
+	ToolIndicator lipgloss.Style // Active tool display
+	HeaderStyle   lipgloss.Style // Status section headers
+	CompactStyle  lipgloss.Style // Compact status line
+	CoordStyle    lipgloss.Style // Coordination events
+	CostStyle     lipgloss.Style // Cost information
+	MetricsStyle  lipgloss.Style // Metrics and statistics
 }
 
 // NewStatusDisplay creates a new status display with medieval styling
@@ -382,17 +382,17 @@ func (d *StatusDisplay) getStatusIcon(state AgentState) string {
 func (d *StatusDisplay) getStatusColor(state AgentState) lipgloss.Color {
 	switch state {
 	case AgentIdle:
-		return lipgloss.Color("76")  // Green
+		return lipgloss.Color("76") // Green
 	case AgentThinking:
-		return lipgloss.Color("33")  // Blue
+		return lipgloss.Color("33") // Blue
 	case AgentWorking:
 		return lipgloss.Color("214") // Orange
 	case AgentBlocked:
 		return lipgloss.Color("220") // Yellow
 	case AgentOffline:
-		return lipgloss.Color("8")   // Gray
+		return lipgloss.Color("8") // Gray
 	default:
-		return lipgloss.Color("7")   // Light gray
+		return lipgloss.Color("7") // Light gray
 	}
 }
 

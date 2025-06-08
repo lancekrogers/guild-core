@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
@@ -15,6 +14,8 @@ import (
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+
+	"github.com/guild-ventures/guild-core/pkg/corpus"
 )
 
 // UI modes
@@ -40,49 +41,49 @@ type CorpusModel struct {
 	ctx context.Context
 
 	// Dependencies - interface-first design
-	corpusManager CorpusManager  // Interface dependency for corpus operations
-	config        CorpusConfig   // Interface dependency for configuration
+	corpusManager CorpusManager // Interface dependency for corpus operations
+	config        CorpusConfig  // Interface dependency for configuration
 
 	// Data state
-	docs        []corpus.CorpusDoc  // All documents in the corpus
-	docsByTag   map[string][]string // Documents grouped by tag
-	allTags     []string            // All tags in the corpus
-	currentDoc  corpus.CorpusDoc    // Currently viewed document
-	graph       corpus.Graph        // Document relationship graph
-	err         error               // Last error that occurred
+	docs       []corpus.CorpusDoc  // All documents in the corpus
+	docsByTag  map[string][]string // Documents grouped by tag
+	allTags    []string            // All tags in the corpus
+	currentDoc corpus.CorpusDoc    // Currently viewed document
+	graph      corpus.Graph        // Document relationship graph
+	err        error               // Last error that occurred
 
 	// UI state
-	mode             string             // Current UI mode
-	width            int                // Terminal width
-	height           int                // Terminal height
-	docList          list.Model         // Document list
-	tagList          list.Model         // Tag list
-	viewPort         viewport.Model     // Content viewer
-	searchInput      textinput.Model    // Search input
-	commandInput     textinput.Model    // Command input
-	commandInputActive bool             // Whether command input is active
-	graphView        *GraphView         // Graph visualization
-	graphOffset      int                // Offset for graph scrolling
-	helpView         help.Model         // Help model
-	keys             keyMap             // Keyboard shortcuts
-	ready            bool               // Whether the UI is initialized
+	mode               string          // Current UI mode
+	width              int             // Terminal width
+	height             int             // Terminal height
+	docList            list.Model      // Document list
+	tagList            list.Model      // Tag list
+	viewPort           viewport.Model  // Content viewer
+	searchInput        textinput.Model // Search input
+	commandInput       textinput.Model // Command input
+	commandInputActive bool            // Whether command input is active
+	graphView          *GraphView      // Graph visualization
+	graphOffset        int             // Offset for graph scrolling
+	helpView           help.Model      // Help model
+	keys               keyMap          // Keyboard shortcuts
+	ready              bool            // Whether the UI is initialized
 }
 
 // keyMap defines the key bindings for the UI.
 type keyMap struct {
 	// Navigation
-	Up     key.Binding
-	Down   key.Binding
-	Left   key.Binding
-	Right  key.Binding
-	PageUp key.Binding
+	Up       key.Binding
+	Down     key.Binding
+	Left     key.Binding
+	Right    key.Binding
+	PageUp   key.Binding
 	PageDown key.Binding
 
 	// Actions
-	Enter    key.Binding
-	Back     key.Binding
-	Select   key.Binding
-	Escape   key.Binding
+	Enter      key.Binding
+	Back       key.Binding
+	Select     key.Binding
+	Escape     key.Binding
 	FollowLink key.Binding
 
 	// Tabs/Views
@@ -296,17 +297,17 @@ func NewModel(ctx context.Context, corpusManager CorpusManager, config CorpusCon
 		ctx:           ctx,
 		corpusManager: corpusManager,
 		config:        config,
-		docs:        []corpus.CorpusDoc{},
-		docsByTag:   make(map[string][]string),
-		allTags:     []string{},
-		mode:        ModeList,
-		docList:     docList,
-		tagList:     tagList,
-		viewPort:    viewPort,
-		searchInput: searchInput,
-		commandInput: commandInput,
-		keys:        defaultKeyMap(),
-		ready:       false,
+		docs:          []corpus.CorpusDoc{},
+		docsByTag:     make(map[string][]string),
+		allTags:       []string{},
+		mode:          ModeList,
+		docList:       docList,
+		tagList:       tagList,
+		viewPort:      viewPort,
+		searchInput:   searchInput,
+		commandInput:  commandInput,
+		keys:          defaultKeyMap(),
+		ready:         false,
 	}
 }
 

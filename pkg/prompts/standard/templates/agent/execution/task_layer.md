@@ -1,28 +1,38 @@
 # Task Layer: Specific Task Requirements
 
 ## Current Task
+
 <task>
 ### Title: {{.TaskTitle}}
 
 ### Description
+
 {{.TaskDescription}}
 
 ### Requirements
+
 {{range .Requirements}}
+
 - {{.}}
 {{end}}
 
 ### Constraints
+
 {{range .Constraints}}
+
 - {{.}}
 {{end}}
 
 ### Priority: {{.Priority}}
+
 ### Due Date: {{.DueDate}}
+
 ### Estimated Hours: {{.EstimatedHours}}
+
 </task>
 
 ## Dependencies
+
 <dependencies>
 {{range .TaskDependencies}}
 ### Depends On: {{.TaskID}}
@@ -33,6 +43,7 @@
 </dependencies>
 
 ## Expected Deliverables
+
 <deliverables>
 {{range .Deliverables}}
 ### {{.Name}}

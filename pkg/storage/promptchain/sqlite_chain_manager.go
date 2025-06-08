@@ -236,7 +236,7 @@ func (m *sqliteChainManager) BuildContext(ctx context.Context, agentID, taskID s
 				}
 			}
 
-			if totalTokens + tokenCount > maxTokens {
+			if totalTokens+tokenCount > maxTokens {
 				break
 			}
 

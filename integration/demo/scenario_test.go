@@ -25,7 +25,7 @@ func TestAllDemoScenarios(t *testing.T) {
 		name     string
 		script   string
 		maxTime  time.Duration
-		required []string // Required output
+		required []string                           // Required output
 		setup    func(t *testing.T, workDir string) // Setup function
 	}{
 		{
@@ -281,19 +281,19 @@ func setupTestGuildProject(t *testing.T, workDir string) {
 		Description: "Test guild for demo scenarios",
 		Agents: []config.AgentConfig{
 			{
-				ID:          "demo-manager",
-				Name:        "Demo Manager",
-				Type:        "manager",
-				Provider:    "mock",
-				Model:       "test-model",
+				ID:           "demo-manager",
+				Name:         "Demo Manager",
+				Type:         "manager",
+				Provider:     "mock",
+				Model:        "test-model",
 				Capabilities: []string{"coordination", "planning"},
 			},
 			{
-				ID:          "demo-developer",
-				Name:        "Demo Developer",
-				Type:        "developer",
-				Provider:    "mock",
-				Model:       "test-model",
+				ID:           "demo-developer",
+				Name:         "Demo Developer",
+				Type:         "developer",
+				Provider:     "mock",
+				Model:        "test-model",
 				Capabilities: []string{"implementation", "coding"},
 			},
 		},

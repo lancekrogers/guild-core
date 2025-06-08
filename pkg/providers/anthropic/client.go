@@ -99,8 +99,8 @@ func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest)
 
 	// Build Anthropic request
 	anthropicReq := map[string]interface{}{
-		"model":     req.Model,
-		"messages":  anthropicMessages,
+		"model":      req.Model,
+		"messages":   anthropicMessages,
 		"max_tokens": 4096, // Default if not specified
 	}
 
@@ -129,11 +129,11 @@ func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest)
 
 	// Parse Anthropic response
 	var anthropicResp struct {
-		ID           string `json:"id"`
-		Type         string `json:"type"`
-		Role         string `json:"role"`
-		Model        string `json:"model"`
-		Content      []struct {
+		ID      string `json:"id"`
+		Type    string `json:"type"`
+		Role    string `json:"role"`
+		Model   string `json:"model"`
+		Content []struct {
 			Type string `json:"type"`
 			Text string `json:"text"`
 		} `json:"content"`

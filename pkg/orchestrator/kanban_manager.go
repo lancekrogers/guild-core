@@ -39,7 +39,6 @@ func (m *defaultKanbanManager) GetTask(ctx context.Context, taskID string) (*kan
 	return m.board.GetTask(ctx, taskID)
 }
 
-
 // ListTasksByStatus retrieves tasks by status (implements KanbanManager interface)
 func (m *defaultKanbanManager) ListTasksByStatus(ctx context.Context, boardID string, status kanban.TaskStatus) ([]*kanban.Task, error) {
 	// Note: boardID is ignored as we have a single board

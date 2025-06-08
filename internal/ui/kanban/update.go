@@ -2,6 +2,7 @@ package kanban
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
+
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 )
 

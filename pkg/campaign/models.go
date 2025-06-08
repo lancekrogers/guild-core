@@ -44,12 +44,12 @@ type Campaign struct {
 
 // CampaignEvent represents state changes in a campaign
 type CampaignEvent struct {
-	ID        string                 `json:"id"`
-	Type      string                 `json:"type"`
-	CampaignID string                `json:"campaign_id"`
-	Campaign  *Campaign              `json:"campaign,omitempty"`
-	Timestamp time.Time              `json:"timestamp"`
-	Data      map[string]interface{} `json:"data,omitempty"`
+	ID         string                 `json:"id"`
+	Type       string                 `json:"type"`
+	CampaignID string                 `json:"campaign_id"`
+	Campaign   *Campaign              `json:"campaign,omitempty"`
+	Timestamp  time.Time              `json:"timestamp"`
+	Data       map[string]interface{} `json:"data,omitempty"`
 }
 
 // CampaignProgress represents detailed progress information
@@ -65,17 +65,17 @@ type CampaignProgress struct {
 
 // Event types for campaign state changes
 const (
-	EventCampaignCreated      = "campaign.created"
+	EventCampaignCreated         = "campaign.created"
 	EventCampaignPlanningStarted = "campaign.planning.started"
-	EventCampaignMarkedReady  = "campaign.marked.ready"
-	EventCampaignStarted      = "campaign.started"
-	EventCampaignPaused       = "campaign.paused"
-	EventCampaignResumed      = "campaign.resumed"
-	EventCampaignCompleted    = "campaign.completed"
-	EventCampaignCancelled    = "campaign.cancelled"
-	EventCampaignProgress     = "campaign.progress"
-	EventObjectiveAdded       = "campaign.objective.added"
-	EventObjectiveRemoved     = "campaign.objective.removed"
+	EventCampaignMarkedReady     = "campaign.marked.ready"
+	EventCampaignStarted         = "campaign.started"
+	EventCampaignPaused          = "campaign.paused"
+	EventCampaignResumed         = "campaign.resumed"
+	EventCampaignCompleted       = "campaign.completed"
+	EventCampaignCancelled       = "campaign.cancelled"
+	EventCampaignProgress        = "campaign.progress"
+	EventObjectiveAdded          = "campaign.objective.added"
+	EventObjectiveRemoved        = "campaign.objective.removed"
 )
 
 // IsTerminal returns true if the campaign is in a terminal state

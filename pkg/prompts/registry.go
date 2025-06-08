@@ -16,19 +16,19 @@ type FormatterFactory func() (Formatter, error)
 
 // PromptRegistry manages runtime selection of prompt strategies
 type PromptRegistry struct {
-	mu              sync.RWMutex
-	managerFactories map[ManagerType]ManagerFactory
-	formatterFactories map[string]FormatterFactory
-	defaultManagerType ManagerType
+	mu                   sync.RWMutex
+	managerFactories     map[ManagerType]ManagerFactory
+	formatterFactories   map[string]FormatterFactory
+	defaultManagerType   ManagerType
 	defaultFormatterType string
 }
 
 // NewPromptRegistry creates a new prompt registry with default strategies
 func NewPromptRegistry() *PromptRegistry {
 	registry := &PromptRegistry{
-		managerFactories:   make(map[ManagerType]ManagerFactory),
-		formatterFactories: make(map[string]FormatterFactory),
-		defaultManagerType: TypeLayered, // Default to layered for Guild
+		managerFactories:     make(map[ManagerType]ManagerFactory),
+		formatterFactories:   make(map[string]FormatterFactory),
+		defaultManagerType:   TypeLayered, // Default to layered for Guild
 		defaultFormatterType: "xml",
 	}
 

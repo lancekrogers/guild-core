@@ -8,6 +8,7 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 )
@@ -22,7 +23,7 @@ func (m ChatModel) handleSendMessage() (ChatModel, tea.Cmd) {
 	// Clear input
 	m.input.SetValue("")
 	m.input.CursorStart()
-	
+
 	// Hide completions
 	m.showingCompletion = false
 	m.completionResults = nil
@@ -50,7 +51,7 @@ func (m *ChatModel) ProcessIntegratedMessage(input string) tea.Cmd {
 		Timestamp: time.Now(),
 	}
 	m.messages = append(m.messages, userMsg)
-	
+
 	// Check for commands
 	if strings.HasPrefix(input, "/") {
 		result := m.handleCommand(input)
@@ -62,20 +63,20 @@ func (m *ChatModel) ProcessIntegratedMessage(input string) tea.Cmd {
 		m.updateMessagesView()
 		return nil
 	}
-	
+
 	// Check for agent mentions with enhanced routing
 	if strings.HasPrefix(input, "@") {
 		m.handleAgentMention(input)
 		return nil
 	}
-	
+
 	// Default: broadcast to all agents with visual feedback
 	m.messages = append(m.messages, Message{
 		Type:      msgSystem,
 		Content:   "📡 Broadcasting to all Guild agents...",
 		Timestamp: time.Now(),
 	})
-	
+
 	m.updateMessagesView()
 	return nil
 }
@@ -86,7 +87,7 @@ func (m ChatModel) processMessage(input string) (ChatModel, tea.Cmd) {
 	if m.integrationFlags != nil && m.integrationFlags["integrated_processing"] {
 		return m, m.ProcessIntegratedMessage(input)
 	}
-	
+
 	// Add user message
 	userMsg := Message{
 		Type:      msgUser,
@@ -269,7 +270,7 @@ func (m *ChatModel) streamAgentConversation(agentID, message string) {
 			if fragment != nil {
 				// Accumulate content
 				currentContent.WriteString(fragment.Content)
-				
+
 				// Update agent status
 				if m.agentStatusTracker != nil {
 					status := m.agentStatusTracker.GetAgentStatus(fragment.AgentId)
@@ -288,7 +289,7 @@ func (m *ChatModel) streamAgentConversation(agentID, message string) {
 				// Convert proto status to internal status
 				// This needs proper implementation based on the AgentStatus structure
 			}
-			
+
 		case *pb.AgentStreamResponse_Event:
 			// Handle stream event
 			event := response.Event
@@ -332,7 +333,7 @@ func (m ChatModel) handlePromptCommand(args []string) string {
 		var result strings.Builder
 		result.WriteString("📜 Prompt Layers:\n")
 		for _, prompt := range resp.Prompts {
-			result.WriteString(fmt.Sprintf("  - %s (priority: %d)\n", 
+			result.WriteString(fmt.Sprintf("  - %s (priority: %d)\n",
 				prompt.Layer.String(), prompt.Priority))
 		}
 		return result.String()
@@ -450,7 +451,7 @@ func (m *ChatModel) addToolExecutionMessage(toolExec *pb.GuildToolExecution) {
 	if toolExec == nil {
 		return
 	}
-	
+
 	msg := Message{
 		Type:      msgToolStart,
 		Content:   fmt.Sprintf("🔨 Executing tool: %s", toolExec.ToolName),
@@ -460,7 +461,7 @@ func (m *ChatModel) addToolExecutionMessage(toolExec *pb.GuildToolExecution) {
 			"tool_name": toolExec.ToolName,
 		},
 	}
-	
+
 	// Add parameters if any
 	if len(toolExec.Parameters) > 0 {
 		var params []string
@@ -469,6 +470,6 @@ func (m *ChatModel) addToolExecutionMessage(toolExec *pb.GuildToolExecution) {
 		}
 		msg.Content += fmt.Sprintf(" [%s]", strings.Join(params, ", "))
 	}
-	
+
 	m.addMessage(msg)
 }

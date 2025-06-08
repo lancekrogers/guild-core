@@ -48,7 +48,7 @@ func (r *repository) Create(ctx context.Context, campaign *Campaign) error {
 	key := campaignPrefix + campaign.ID
 	existing, err := r.store.Get(ctx, campaignBucket, key)
 	if err == nil && existing != nil {
-			return gerror.New(gerror.ErrCodeAlreadyExists, "campaign already exists", nil)
+		return gerror.New(gerror.ErrCodeAlreadyExists, "campaign already exists", nil)
 	}
 
 	// Marshal campaign to JSON
@@ -134,7 +134,7 @@ func (r *repository) Update(ctx context.Context, campaign *Campaign) error {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "campaign").WithComponent("update_campaign").WithOperation("failed to check campaign existence")
 	}
 	if existing == nil {
-			return gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("campaign not found: %s", campaign.ID), nil)
+		return gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("campaign not found: %s", campaign.ID), nil)
 	}
 
 	// Update timestamp

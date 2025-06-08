@@ -11,9 +11,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -23,10 +23,10 @@ type ChatService struct {
 	pb.UnimplementedChatServiceServer
 
 	// Registry pattern - use main component registry
-	registry     registry.ComponentRegistry
-	logger       *slog.Logger
-	sessions     map[string]*ChatSession
-	sessionsMu   sync.RWMutex
+	registry   registry.ComponentRegistry
+	logger     *slog.Logger
+	sessions   map[string]*ChatSession
+	sessionsMu sync.RWMutex
 
 	// Event broadcasting
 	eventBus    EventBus
@@ -36,23 +36,23 @@ type ChatService struct {
 
 // ChatSession represents an active chat session
 type ChatSession struct {
-	ID          string
-	Name        string
-	AgentIDs    []string
-	CampaignID  string
-	Status      pb.ChatSession_SessionStatus
-	CreatedAt   time.Time
+	ID           string
+	Name         string
+	AgentIDs     []string
+	CampaignID   string
+	Status       pb.ChatSession_SessionStatus
+	CreatedAt    time.Time
 	LastActivity time.Time
-	Context     *pb.SessionContext
-	Metadata    map[string]string
+	Context      *pb.SessionContext
+	Metadata     map[string]string
 
 	// Active agents in this session
-	agents    map[string]agent.Agent
-	agentsMu  sync.RWMutex
+	agents   map[string]agent.Agent
+	agentsMu sync.RWMutex
 
 	// Message history
-	messages    []*pb.ChatMessage
-	messagesMu  sync.RWMutex
+	messages   []*pb.ChatMessage
+	messagesMu sync.RWMutex
 
 	// Tool execution tracking
 	toolExecutions map[string]*pb.ToolExecution
@@ -378,19 +378,19 @@ func (s *ChatService) CreateChatSession(ctx context.Context, req *pb.CreateChatS
 
 	sessionID := generateSessionID()
 	session := &ChatSession{
-		ID:         sessionID,
-		Name:       req.Name,
-		AgentIDs:   req.AgentIds,
-		CampaignID: req.CampaignId,
-		Status:     pb.ChatSession_ACTIVE,
-		CreatedAt:  time.Now(),
-		LastActivity: time.Now(),
-		Context:    req.Context,
-		Metadata:   req.Metadata,
-		agents:     make(map[string]agent.Agent),
-		messages:   make([]*pb.ChatMessage, 0),
+		ID:             sessionID,
+		Name:           req.Name,
+		AgentIDs:       req.AgentIds,
+		CampaignID:     req.CampaignId,
+		Status:         pb.ChatSession_ACTIVE,
+		CreatedAt:      time.Now(),
+		LastActivity:   time.Now(),
+		Context:        req.Context,
+		Metadata:       req.Metadata,
+		agents:         make(map[string]agent.Agent),
+		messages:       make([]*pb.ChatMessage, 0),
 		toolExecutions: make(map[string]*pb.ToolExecution),
-		streams:    make(map[string]pb.ChatService_ChatServer),
+		streams:        make(map[string]pb.ChatService_ChatServer),
 	}
 
 	// Load agents from registry
@@ -455,10 +455,10 @@ func (s *ChatService) EndChatSession(ctx context.Context, req *pb.EndChatSession
 	session.streamsMu.Unlock()
 
 	summary := &pb.ChatSessionSummary{
-		TotalMessages:   int32(len(session.messages)),
-		ToolsExecuted:   int32(len(session.toolExecutions)),
-		AgentsInvolved:  session.AgentIDs,
-		Outcome:         req.Reason,
+		TotalMessages:  int32(len(session.messages)),
+		ToolsExecuted:  int32(len(session.toolExecutions)),
+		AgentsInvolved: session.AgentIDs,
+		Outcome:        req.Reason,
 	}
 
 	delete(s.sessions, req.SessionId)

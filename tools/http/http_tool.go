@@ -21,8 +21,8 @@ type HTTPTool struct {
 
 // HTTPToolInput represents the input for HTTP requests
 type HTTPToolInput struct {
-	Method  string            `json:"method"`           // GET, POST, PUT, DELETE, etc.
-	URL     string            `json:"url"`              // Request URL
+	Method  string            `json:"method"`            // GET, POST, PUT, DELETE, etc.
+	URL     string            `json:"url"`               // Request URL
 	Headers map[string]string `json:"headers,omitempty"` // Request headers
 	Body    string            `json:"body,omitempty"`    // Request body
 	Timeout int               `json:"timeout,omitempty"` // Timeout in seconds
@@ -34,8 +34,8 @@ func NewHTTPTool() *HTTPTool {
 		"type": "object",
 		"properties": map[string]interface{}{
 			"method": map[string]interface{}{
-				"type": "string",
-				"enum": []string{"GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"},
+				"type":        "string",
+				"enum":        []string{"GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"},
 				"description": "HTTP method to use",
 			},
 			"url": map[string]interface{}{
@@ -124,8 +124,8 @@ func (t *HTTPTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 
 	// Set default Content-Type for POST/PUT/PATCH if not provided
 	if (params.Method == "POST" || params.Method == "PUT" || params.Method == "PATCH") &&
-	   params.Body != "" &&
-	   req.Header.Get("Content-Type") == "" {
+		params.Body != "" &&
+		req.Header.Get("Content-Type") == "" {
 		req.Header.Set("Content-Type", "application/json")
 	}
 

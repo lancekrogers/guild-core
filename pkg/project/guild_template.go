@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"gopkg.in/yaml.v3"
+	yaml "gopkg.in/yaml.v3"
 )
 
 // GuildTemplate provides default guild configurations for new projects
@@ -39,8 +39,8 @@ type ProvidersConfig struct {
 }
 
 type ProviderSettings struct {
-	BaseURL  string            `yaml:"base_url,omitempty"`  // Custom base URL (for self-hosted)
-	Settings map[string]string `yaml:"settings,omitempty"`  // Additional provider settings
+	BaseURL  string            `yaml:"base_url,omitempty"` // Custom base URL (for self-hosted)
+	Settings map[string]string `yaml:"settings,omitempty"` // Additional provider settings
 }
 
 type AgentConfig struct {
@@ -56,9 +56,9 @@ type AgentConfig struct {
 	Temperature  float64  `yaml:"temperature,omitempty"`
 
 	// Enhanced configuration for intelligent assignment
-	CostMagnitude  int    `yaml:"cost_magnitude,omitempty"`   // Fibonacci cost scale: 0=bash, 1=cheap API, 2,3,5,8=expensive models
-	ContextWindow  int    `yaml:"context_window,omitempty"`   // Context window size in tokens (auto-detected if 0)
-	ContextReset   string `yaml:"context_reset,omitempty"`    // "truncate" or "summarize" when context exceeds window
+	CostMagnitude int    `yaml:"cost_magnitude,omitempty"` // Fibonacci cost scale: 0=bash, 1=cheap API, 2,3,5,8=expensive models
+	ContextWindow int    `yaml:"context_window,omitempty"` // Context window size in tokens (auto-detected if 0)
+	ContextReset  string `yaml:"context_reset,omitempty"`  // "truncate" or "summarize" when context exceeds window
 }
 
 type Metadata struct {
@@ -72,7 +72,7 @@ func DefaultGuildTemplate() *GuildConfig {
 		Description: "A guild of AI agents working together",
 		Version:     "1.0.0",
 		Manager: ManagerConfig{
-			Default: "orchestrator",
+			Default:  "orchestrator",
 			Fallback: []string{"analyst", "coder"},
 		},
 		Providers: ProvidersConfig{

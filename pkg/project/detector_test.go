@@ -11,11 +11,11 @@ import (
 
 func TestProjectDetector_DetectProjectType(t *testing.T) {
 	tests := []struct {
-		name           string
-		files          map[string]string // filename -> content
-		dirs           []string
-		expectedName   string
-		expectedLang   string
+		name         string
+		files        map[string]string // filename -> content
+		dirs         []string
+		expectedName string
+		expectedLang string
 	}{
 		{
 			name: "go web project",
@@ -49,7 +49,7 @@ func TestProjectDetector_DetectProjectType(t *testing.T) {
 		{
 			name: "rust application",
 			files: map[string]string{
-				"Cargo.toml": `[package]\nname = "my-app"\nversion = "0.1.0"`,
+				"Cargo.toml":  `[package]\nname = "my-app"\nversion = "0.1.0"`,
 				"src/main.rs": "fn main() {\n    println!(\"Hello, world!\");\n}",
 			},
 			expectedName: "rust-app",
@@ -177,8 +177,8 @@ func TestProjectDetector_SeedCorpusFromProject(t *testing.T) {
 		"docs/api.md":         "# API Documentation",
 		"docs/setup.md":       "# Setup Guide",
 		"src/main.go":         "package main", // Should be ignored
-		"node_modules/lib.js": "// Library", // Should be ignored
-		".git/config":         "[core]",      // Should be ignored
+		"node_modules/lib.js": "// Library",   // Should be ignored
+		".git/config":         "[core]",       // Should be ignored
 	}
 
 	for filename, content := range testFiles {

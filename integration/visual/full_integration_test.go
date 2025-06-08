@@ -81,7 +81,7 @@ func (ast *AgentStatusTracker) UpdateAgentStatus(agentID string, status *AgentSt
 	ast.mu.Lock()
 	defer ast.mu.Unlock()
 	ast.agents[agentID] = status
-	
+
 	event := ActivityEvent{
 		Timestamp:   time.Now(),
 		EventType:   ActivityStatusChange,
@@ -95,7 +95,7 @@ func (ast *AgentStatusTracker) UpdateAgentStatus(agentID string, status *AgentSt
 func (ast *AgentStatusTracker) GetActiveAgents() []*AgentStatus {
 	ast.mu.RLock()
 	defer ast.mu.RUnlock()
-	
+
 	active := make([]*AgentStatus, 0)
 	for _, agent := range ast.agents {
 		if agent.State != AgentIdle && agent.State != AgentCompleted {
@@ -108,7 +108,7 @@ func (ast *AgentStatusTracker) GetActiveAgents() []*AgentStatus {
 func (ast *AgentStatusTracker) LogCoordinationEvent(description string, agents []string, metadata map[string]interface{}) {
 	ast.mu.Lock()
 	defer ast.mu.Unlock()
-	
+
 	event := ActivityEvent{
 		Timestamp:   time.Now(),
 		EventType:   ActivityCoordination,
@@ -122,12 +122,12 @@ func (ast *AgentStatusTracker) LogCoordinationEvent(description string, agents [
 func (ast *AgentStatusTracker) GetRecentActivity(limit int) []ActivityEvent {
 	ast.mu.RLock()
 	defer ast.mu.RUnlock()
-	
+
 	start := len(ast.activities) - limit
 	if start < 0 {
 		start = 0
 	}
-	
+
 	result := make([]ActivityEvent, len(ast.activities[start:]))
 	copy(result, ast.activities[start:])
 	return result
@@ -150,14 +150,19 @@ func NewStatusDisplay(tracker *AgentStatusTracker, width, height int) *StatusDis
 func (sd *StatusDisplay) RenderCompactStatus() string {
 	active := sd.tracker.GetActiveAgents()
 	var lines []string
-	
+
 	lines = append(lines, "╭─ Active Agents ─╮")
 	for _, agent := range active {
-		status := fmt.Sprintf("│ %s: %s │", agent.Name, agent.CurrentTask)
+		// Use ID if Name is empty, otherwise use Name
+		displayName := agent.Name
+		if displayName == "" {
+			displayName = agent.ID
+		}
+		status := fmt.Sprintf("│ %s: %s │", displayName, agent.CurrentTask)
 		lines = append(lines, status)
 	}
 	lines = append(lines, "╰─────────────────╯")
-	
+
 	return strings.Join(lines, "\n")
 }
 
@@ -210,28 +215,71 @@ func (ai *AgentIndicators) GetCurrentIndicator(agentID string) string {
 
 // Mock MarkdownRenderer for testing
 type MarkdownRenderer struct {
-	width          int
-	cacheHits      int64
-	cacheMisses    int64
+	width           int
+	cacheHits       int64
+	cacheMisses     int64
 	lineNumberStyle string
 }
 
 func NewMarkdownRenderer(width int) (*MarkdownRenderer, error) {
 	return &MarkdownRenderer{
-		width: width,
+		width:           width,
 		lineNumberStyle: "default",
 	}, nil
 }
 
 func (mr *MarkdownRenderer) Render(content string) string {
-	// Simple mock rendering
+	// Simple mock rendering with line wrapping
 	if strings.Contains(content, "```") {
-		return "[CODE BLOCK]\n" + content
+		return "[CODE BLOCK]\n" + mr.wrapText(content)
 	}
 	if strings.HasPrefix(content, "#") {
-		return "[HEADING] " + content
+		return "[HEADING] " + mr.wrapText(content)
 	}
-	return content
+	return mr.wrapText(content)
+}
+
+// wrapText wraps text to the specified width
+func (mr *MarkdownRenderer) wrapText(text string) string {
+	if mr.width <= 0 {
+		return text
+	}
+
+	var result []string
+	lines := strings.Split(text, "\n")
+
+	for _, line := range lines {
+		if len(line) <= mr.width {
+			result = append(result, line)
+			continue
+		}
+
+		// Wrap long lines
+		for len(line) > mr.width {
+			// Find the last space before the width limit
+			breakPoint := mr.width
+			for i := mr.width - 1; i >= 0; i-- {
+				if line[i] == ' ' {
+					breakPoint = i
+					break
+				}
+			}
+
+			// If no space found, just break at width
+			if breakPoint == mr.width && line[mr.width-1] != ' ' {
+				breakPoint = mr.width
+			}
+
+			result = append(result, line[:breakPoint])
+			line = strings.TrimLeft(line[breakPoint:], " ")
+		}
+
+		if len(line) > 0 {
+			result = append(result, line)
+		}
+	}
+
+	return strings.Join(result, "\n")
 }
 
 func (mr *MarkdownRenderer) GetCacheStats() string {
@@ -239,7 +287,7 @@ func (mr *MarkdownRenderer) GetCacheStats() string {
 	if total == 0 {
 		return "Cache stats: No cache activity yet"
 	}
-	
+
 	ratio := float64(mr.cacheHits) / float64(total) * 100
 	return fmt.Sprintf("Cache hits: %d, misses: %d, ratio: %.2f%%",
 		mr.cacheHits, mr.cacheMisses, ratio)
@@ -248,13 +296,13 @@ func (mr *MarkdownRenderer) GetCacheStats() string {
 // Mock ContentFormatter for testing
 type ContentFormatter struct {
 	markdownRenderer *MarkdownRenderer
-	width           int
+	width            int
 }
 
 func NewContentFormatter(renderer *MarkdownRenderer, width int) *ContentFormatter {
 	return &ContentFormatter{
 		markdownRenderer: renderer,
-		width:           width,
+		width:            width,
 	}
 }
 
@@ -282,68 +330,68 @@ func TestFullVisualIntegration(t *testing.T) {
 		display := NewStatusDisplay(tracker, 80, 24)
 		renderer, err := NewMarkdownRenderer(80)
 		require.NoError(t, err)
-		
+
 		// Simulate agent activity
 		tracker.UpdateAgentStatus("manager", &AgentStatus{
-			ID:    "manager",
-			Name:  "Guild Master",
-			State: AgentThinking,
+			ID:          "manager",
+			Name:        "Guild Master",
+			State:       AgentThinking,
 			CurrentTask: "Planning architecture",
 		})
-		
+
 		// Render markdown content
 		content := "# Task Update\n\nThe **manager** is working on:\n```go\nfunc Plan() {}\n```"
 		rendered := renderer.Render(content)
-		
+
 		// Get status panel
 		statusPanel := display.RenderCompactStatus()
-		
+
 		// Verify both render correctly
 		assert.Contains(t, rendered, "Task Update")
 		assert.Contains(t, statusPanel, "Guild Master")
 		assert.Contains(t, statusPanel, "Planning architecture")
-		
+
 		// Verify no visual corruption when combined
 		combined := statusPanel + "\n---\n" + rendered
 		assert.NotContains(t, combined, "\x1b[0m\x1b[0m") // No double escapes
 	})
-	
+
 	// Test 2: Multi-agent coordination visualization
 	t.Run("multi_agent_visual_coordination", func(t *testing.T) {
 		testConfig := createTestConfig()
 		tracker := NewAgentStatusTracker(testConfig)
 		indicators := NewAgentIndicators()
 		indicators.StartAnimations()
-		
+
 		// Start multiple agents
 		agents := []string{"manager", "developer", "reviewer"}
 		for _, agent := range agents {
 			tracker.UpdateAgentStatus(agent, &AgentStatus{
-				ID:    agent,
-				State: AgentWorking,
+				ID:          agent,
+				State:       AgentWorking,
 				CurrentTask: "Collaborative task",
 			})
 			indicators.SetWorkingAnimation(agent, "collaboration")
 		}
-		
+
 		// Log coordination event
 		tracker.LogCoordinationEvent(
 			"Agents coordinating on API design",
 			agents,
 			map[string]interface{}{"phase": "planning"},
 		)
-		
+
 		// Verify all agents show working state
 		activeAgents := tracker.GetActiveAgents()
 		assert.Len(t, activeAgents, 3)
-		
+
 		// Verify animations are active
 		for _, agent := range agents {
 			assert.True(t, indicators.IsAnimating(agent))
 			indicator := indicators.GetCurrentIndicator(agent)
 			assert.NotEqual(t, "⚪", indicator)
 		}
-		
+
 		// Check coordination in activity log
 		events := tracker.GetRecentActivity(10)
 		found := false
@@ -355,13 +403,13 @@ func TestFullVisualIntegration(t *testing.T) {
 		}
 		assert.True(t, found, "Coordination event should be logged")
 	})
-	
+
 	// Test 3: Error recovery with visual stability
 	t.Run("error_recovery_visual_stability", func(t *testing.T) {
 		renderer, err := NewMarkdownRenderer(80)
 		require.NoError(t, err)
 		formatter := NewContentFormatter(renderer, 80)
-		
+
 		// Test malformed content
 		malformedCases := []struct {
 			name    string
@@ -372,13 +420,13 @@ func TestFullVisualIntegration(t *testing.T) {
 			{"invalid_unicode", "Invalid: \x00\x01\x02"},
 			{"huge_content", string(make([]byte, 1024*1024))}, // 1MB
 		}
-		
+
 		for _, tc := range malformedCases {
 			t.Run(tc.name, func(t *testing.T) {
 				// Should not panic
 				result := formatter.FormatMessage("test", tc.content, nil)
 				assert.NotEmpty(t, result)
-				
+
 				// Should have valid output
 				assert.NotContains(t, result, "\x00")
 				assert.True(t, len(result) < 10000) // Reasonable size
@@ -392,7 +440,7 @@ func TestVisualUpdateStability(t *testing.T) {
 	testConfig := createTestConfig()
 	tracker := NewAgentStatusTracker(testConfig)
 	display := NewStatusDisplay(tracker, 80, 24)
-	
+
 	// Simulate rapid updates
 	results := make([]string, 100)
 	for i := 0; i < 100; i++ {
@@ -403,7 +451,7 @@ func TestVisualUpdateStability(t *testing.T) {
 		})
 		results[i] = display.RenderCompactStatus()
 	}
-	
+
 	// Verify no empty frames
 	for i, result := range results {
 		assert.NotEmpty(t, result, "Frame %d should not be empty", i)
@@ -416,7 +464,7 @@ func TestConcurrentVisualUpdates(t *testing.T) {
 	testConfig := createTestConfig()
 	tracker := NewAgentStatusTracker(testConfig)
 	display := NewStatusDisplay(tracker, 80, 24)
-	
+
 	// Run concurrent updates
 	var wg sync.WaitGroup
 	for i := 0; i < 10; i++ {
@@ -426,24 +474,24 @@ func TestConcurrentVisualUpdates(t *testing.T) {
 			for j := 0; j < 100; j++ {
 				agentID := fmt.Sprintf("agent-%d", id)
 				tracker.UpdateAgentStatus(agentID, &AgentStatus{
-					ID:    agentID,
-					Name:  fmt.Sprintf("Agent %d", id),
-					State: AgentState(j % 5),
+					ID:          agentID,
+					Name:        fmt.Sprintf("Agent %d", id),
+					State:       AgentState(j % 5),
 					CurrentTask: fmt.Sprintf("Task %d", j),
 				})
-				
+
 				// Try to render during updates
 				_ = display.RenderCompactStatus()
 			}
 		}(i)
 	}
-	
+
 	wg.Wait()
-	
+
 	// Verify final state is consistent
 	finalStatus := display.RenderCompactStatus()
 	assert.NotEmpty(t, finalStatus)
-	
+
 	// Should have some active agents
 	activeAgents := tracker.GetActiveAgents()
 	assert.NotEmpty(t, activeAgents)
@@ -453,7 +501,7 @@ func TestConcurrentVisualUpdates(t *testing.T) {
 func TestVisualMemoryUsage(t *testing.T) {
 	renderer, err := NewMarkdownRenderer(80)
 	require.NoError(t, err)
-	
+
 	// Generate large content
 	var content strings.Builder
 	for i := 0; i < 1000; i++ {
@@ -461,12 +509,12 @@ func TestVisualMemoryUsage(t *testing.T) {
 		content.WriteString("This is a paragraph with **bold** text and `inline code`.\n\n")
 		content.WriteString("```go\nfunc example() {\n    fmt.Println(\"test\")\n}\n```\n\n")
 	}
-	
+
 	// Should handle large content without issues
 	start := time.Now()
 	rendered := renderer.Render(content.String())
 	duration := time.Since(start)
-	
+
 	assert.NotEmpty(t, rendered)
 	assert.Less(t, duration, 5*time.Second, "Rendering should complete in reasonable time")
 }
@@ -481,7 +529,7 @@ func TestVisualThemeConsistency(t *testing.T) {
 	require.NoError(t, err)
 	formatter := NewContentFormatter(renderer, 80)
 	indicators := NewAgentIndicators()
-	
+
 	// Test that all components use consistent styling
 	components := []struct {
 		name   string
@@ -492,7 +540,7 @@ func TestVisualThemeConsistency(t *testing.T) {
 		{"formatter", formatter.FormatMessage("agent", "Test message", nil)},
 		{"indicator", indicators.GetCurrentIndicator("test")},
 	}
-	
+
 	for _, comp := range components {
 		t.Run(comp.name, func(t *testing.T) {
 			assert.NotEmpty(t, comp.output, "%s output should not be empty", comp.name)
@@ -513,14 +561,14 @@ func TestVisualGracefulDegradation(t *testing.T) {
 		{"no_color", "color", "Plain text"},
 		{"narrow_terminal", "width", "Wrapped content"},
 	}
-	
+
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			// In real implementation, would test with limited capabilities
 			// For now, just verify components handle edge cases
 			renderer, err := NewMarkdownRenderer(40) // Narrow width
 			require.NoError(t, err)
-			
+
 			output := renderer.Render("This is a very long line that should wrap properly in narrow terminals")
 			assert.NotEmpty(t, output)
 			assert.Less(t, len(strings.Split(output, "\n")[0]), 45, "Lines should be wrapped")

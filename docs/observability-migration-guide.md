@@ -5,6 +5,7 @@ This guide helps migrate Guild components to use the new production-ready error 
 ## Overview
 
 The new observability system provides:
+
 - **Structured error handling** with `pkg/gerror`
 - **Structured logging** with `pkg/observability`
 - **Distributed tracing** with OpenTelemetry
@@ -15,12 +16,14 @@ The new observability system provides:
 
 ### 1. Replace Error Handling
 
-#### Before:
+#### Before
+
 ```go
 return fmt.Errorf("failed to create task: %w", err)
 ```
 
-#### After:
+#### After
+
 ```go
 import "github.com/guild-ventures/guild-core/pkg/gerror"
 
@@ -33,13 +36,15 @@ return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create task").
 
 ### 2. Replace Logging
 
-#### Before:
+#### Before
+
 ```go
 import "log"
 log.Printf("Processing task: %s", taskID)
 ```
 
-#### After:
+#### After
+
 ```go
 import "github.com/guild-ventures/guild-core/pkg/observability"
 
@@ -55,7 +60,8 @@ logger.InfoContext(ctx, "Processing task",
 
 ### 3. Add Tracing
 
-#### Before:
+#### Before
+
 ```go
 func ProcessTask(ctx context.Context, taskID string) error {
     // Process task
@@ -63,7 +69,8 @@ func ProcessTask(ctx context.Context, taskID string) error {
 }
 ```
 
-#### After:
+#### After
+
 ```go
 import "github.com/guild-ventures/guild-core/pkg/observability"
 
@@ -79,12 +86,14 @@ func ProcessTask(ctx context.Context, taskID string) error {
 
 ### 4. Add Metrics
 
-#### Before:
+#### Before
+
 ```go
 // No metrics
 ```
 
-#### After:
+#### After
+
 ```go
 metrics := observability.GetMetrics()
 
@@ -423,6 +432,7 @@ Guild can optionally log to files in `.guild/logs/` for easier debugging:
 - **Off by default**: No disk usage unless explicitly enabled
 
 To enable file logging:
+
 ```bash
 export GUILD_LOG_FILE=true
 ```
@@ -432,6 +442,7 @@ This creates log files in your project's `.guild/logs/` directory with both cons
 ## Benefits
 
 After migration, you'll have:
+
 - **Better debugging**: Structured errors with stack traces and context
 - **Production visibility**: Metrics dashboards and distributed traces
 - **Improved reliability**: Proper error categorization and retry logic

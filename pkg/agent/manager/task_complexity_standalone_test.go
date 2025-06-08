@@ -103,38 +103,38 @@ func TestPromptContextBuildingStandalone(t *testing.T) {
 // TestErrorTypesStandalone tests custom error types without external dependencies
 func TestErrorTypesStandalone(t *testing.T) {
 	testCases := []struct {
-		name        string
-		errorFunc   func() error
+		name         string
+		errorFunc    func() error
 		expectedType string
 	}{
 		{
-			name:        "ValidationError",
-			errorFunc:   func() error { return NewValidationError("test validation error", nil) },
+			name:         "ValidationError",
+			errorFunc:    func() error { return NewValidationError("test validation error", nil) },
 			expectedType: "ValidationError",
 		},
 		{
-			name:        "RegistryError",
-			errorFunc:   func() error { return NewRegistryError("test registry error", nil) },
+			name:         "RegistryError",
+			errorFunc:    func() error { return NewRegistryError("test registry error", nil) },
 			expectedType: "RegistryError",
 		},
 		{
-			name:        "PromptError",
-			errorFunc:   func() error { return NewPromptError("test prompt error", nil) },
+			name:         "PromptError",
+			errorFunc:    func() error { return NewPromptError("test prompt error", nil) },
 			expectedType: "PromptError",
 		},
 		{
-			name:        "ArtisanError",
-			errorFunc:   func() error { return NewArtisanError("test artisan error", nil) },
+			name:         "ArtisanError",
+			errorFunc:    func() error { return NewArtisanError("test artisan error", nil) },
 			expectedType: "ArtisanError",
 		},
 		{
-			name:        "ParseError",
-			errorFunc:   func() error { return NewParseError("test parse error", nil) },
+			name:         "ParseError",
+			errorFunc:    func() error { return NewParseError("test parse error", nil) },
 			expectedType: "ParseError",
 		},
 		{
-			name:        "TimeoutError",
-			errorFunc:   func() error { return NewTimeoutError("test timeout error", nil) },
+			name:         "TimeoutError",
+			errorFunc:    func() error { return NewTimeoutError("test timeout error", nil) },
 			expectedType: "TimeoutError",
 		},
 	}

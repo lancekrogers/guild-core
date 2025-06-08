@@ -22,12 +22,14 @@ guild agents list
 **Narrator**: "Modern software development requires coordinating multiple specialists. Watch Guild transform a complex e-commerce platform requirement into executable development tasks."
 
 **Commands**:
+
 ```bash
 # Display the comprehensive commission
 cat .guild/commissions/e-commerce-platform.md
 ```
 
 **Key Visual Elements**:
+
 - Rich markdown with technical specifications
 - Mermaid architecture diagrams
 - Professional table formatting
@@ -36,12 +38,14 @@ cat .guild/commissions/e-commerce-platform.md
 ### Agent Assembly (30-90 seconds)
 
 **Commands**:
+
 ```bash
 # Show configured agents and specializations
 guild agents list --detailed
 ```
 
 **Expected Output**:
+
 ```
 🏰 Guild Agents Ready for Service
 
@@ -79,11 +83,13 @@ guild agents list --detailed
 ### Commission Brief (90-120 seconds)
 
 **Commands**:
+
 ```bash
 guild chat --campaign e-commerce
 ```
 
 **In Chat**:
+
 ```
 Analyze our e-commerce commission and identify the key architectural decisions needed. @service-architect please lead this analysis.
 ```
@@ -93,11 +99,13 @@ Analyze our e-commerce commission and identify the key architectural decisions n
 ### System Architecture (2-3 minutes)
 
 **Chat Commands**:
+
 ```
 @service-architect Design the complete microservices architecture including API gateway, database relationships, and inter-service communication
 ```
 
 **Expected Rich Response**:
+
 ```markdown
 # 🏰 E-commerce Platform Architecture
 
@@ -156,6 +164,7 @@ graph TB
 ## Core API Design
 
 ### Authentication Service APIs
+
 ```go
 // Authentication endpoints
 POST   /api/v1/auth/register
@@ -167,6 +176,7 @@ PUT    /api/v1/auth/profile
 ```
 
 ### Product Catalog APIs
+
 ```go
 // Product management
 GET    /api/v1/products              // List with pagination & filters
@@ -239,13 +249,16 @@ CREATE TABLE orders (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 ```
+
 ```
 
 ### Infrastructure Planning (3-4 minutes)
 
 **Chat Commands**:
 ```
+
 @devops-specialist Plan the containerization and deployment strategy for our microservices architecture
+
 ```
 
 **Expected Response** (with Docker and Kubernetes configurations):
@@ -264,7 +277,7 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o service ./cmd/
 
-# Runtime stage  
+# Runtime stage
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 WORKDIR /root/
@@ -278,6 +291,7 @@ CMD ["./service"]
 ## Kubernetes Deployment Architecture
 
 ### Service Deployment Template
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -340,22 +354,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Run Tests
       run: |
         go test ./...
         docker-compose -f docker-compose.test.yml up --abort-on-container-exit
-    
+
     - name: Build Images
       run: |
         docker build -t ecommerce/auth-service:${{ github.sha }} ./services/auth/
         docker build -t ecommerce/catalog-service:${{ github.sha }} ./services/catalog/
-    
+
     - name: Deploy to Kubernetes
       run: |
         kubectl set image deployment/auth-service auth-service=ecommerce/auth-service:${{ github.sha }}
         kubectl rollout status deployment/auth-service
 ```
+
 ```
 
 ## Act 3: Implementation Planning (5-7 minutes) 💻
@@ -364,7 +379,9 @@ jobs:
 
 **Chat Commands**:
 ```
+
 @frontend-specialist Create the React component architecture and state management strategy for our e-commerce platform
+
 ```
 
 **Expected Response**:
@@ -387,7 +404,7 @@ export const ProductCatalog: React.FC = () => {
   const { data: products, isLoading, error } = useQuery(
     ['products', filters],
     () => productApi.getProducts(filters),
-    { 
+    {
       keepPreviousData: true,
       staleTime: 5 * 60 * 1000 // 5 minutes
     }
@@ -395,11 +412,11 @@ export const ProductCatalog: React.FC = () => {
 
   return (
     <div className="product-catalog">
-      <ProductFilters 
-        filters={filters} 
-        onFiltersChange={setFilters} 
+      <ProductFilters
+        filters={filters}
+        onFiltersChange={setFilters}
       />
-      
+
       {isLoading ? (
         <ProductSkeleton count={12} />
       ) : error ? (
@@ -407,16 +424,16 @@ export const ProductCatalog: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products?.data.map((product: Product) => (
-            <ProductCard 
-              key={product.id} 
+            <ProductCard
+              key={product.id}
               product={product}
               onAddToCart={handleAddToCart}
             />
           ))}
         </div>
       )}
-      
-      <Pagination 
+
+      <Pagination
         current={products?.pagination.page}
         total={products?.pagination.totalPages}
         onPageChange={handlePageChange}
@@ -443,8 +460,8 @@ export const useCartStore = create<CartStore>()(
     (set, get) => ({
       items: [],
       total: 0,
-      
-      addItem: (product, quantity) => 
+
+      addItem: (product, quantity) =>
         set((state) => {
           const existingItem = state.items.find(item => item.productId === product.id);
           if (existingItem) {
@@ -457,14 +474,14 @@ export const useCartStore = create<CartStore>()(
               total: calculateTotal(state.items)
             };
           }
-          
+
           const newItem = { ...product, quantity, productId: product.id };
           return {
             items: [...state.items, newItem],
             total: calculateTotal([...state.items, newItem])
           };
         }),
-        
+
       updateQuantity: (id, quantity) =>
         set((state) => ({
           items: state.items.map(item =>
@@ -472,13 +489,13 @@ export const useCartStore = create<CartStore>()(
           ),
           total: calculateTotal(state.items)
         })),
-        
+
       removeItem: (id) =>
         set((state) => ({
           items: state.items.filter(item => item.productId !== id),
           total: calculateTotal(state.items.filter(item => item.productId !== id))
         })),
-        
+
       clearCart: () => set({ items: [], total: 0 })
     }),
     { name: 'cart-storage' }
@@ -489,6 +506,7 @@ export const useCartStore = create<CartStore>()(
 ### Backend Service Implementation (6-7 minutes)
 
 **Chat Commands**:
+
 ```
 @backend-specialist Implement the Go backend services with proper error handling and database integration
 ```
@@ -498,17 +516,19 @@ export const useCartStore = create<CartStore>()(
 ### Commission Refinement (7-7.5 minutes)
 
 **Commands**:
+
 ```bash
 guild commission refine .guild/commissions/e-commerce-platform.md --create-tasks --assign-agents
 ```
 
 **Expected Output**:
+
 ```
 🏰 Guild Commission Refinement Complete
 
 📊 Analysis Summary:
 ├── 🎯 6 Specialized Agents Identified
-├── 🏗️ 23 Core Tasks Extracted  
+├── 🏗️ 23 Core Tasks Extracted
 ├── 📦 6 Microservices Planned
 └── 🧪 Comprehensive Testing Strategy
 
@@ -554,6 +574,7 @@ guild commission refine .guild/commissions/e-commerce-platform.md --create-tasks
 ### Review Workflow (7.5-8 minutes)
 
 **Commands**:
+
 ```bash
 # Show generated review files
 ls -la .guild/kanban/review/
@@ -565,12 +586,14 @@ cat .guild/kanban/review/api-design.md | head -20
 ## Recording Notes
 
 ### Timing Breakdown
+
 - **Act 1 (0-2min)**: Commission analysis and agent introduction
 - **Act 2 (2-5min)**: Architecture design with rich technical content
 - **Act 3 (5-7min)**: Implementation planning across specializations
 - **Act 4 (7-8min)**: Task creation and review workflow
 
 ### Key Visual Moments
+
 1. **Rich Commission Display**: Professional markdown rendering
 2. **Agent Coordination**: Multiple specialized responses
 3. **Technical Depth**: Real code, architectures, and configurations
@@ -578,6 +601,7 @@ cat .guild/kanban/review/api-design.md | head -20
 5. **Review Workflow**: File-based collaboration system
 
 ### Success Metrics
+
 - ✅ Complete development workflow demonstrated
 - ✅ All agent specializations clearly shown
 - ✅ Rich technical content throughout

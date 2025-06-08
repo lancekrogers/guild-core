@@ -53,7 +53,7 @@ func TestExtractLinks(t *testing.T) {
 			result := ExtractLinks(tt.content)
 
 			// Special handling for comparing empty slices
-			if (len(result) == 0 && len(tt.expected) == 0) {
+			if len(result) == 0 && len(tt.expected) == 0 {
 				// Both are empty, test passes
 				return
 			}

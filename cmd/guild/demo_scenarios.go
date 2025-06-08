@@ -9,12 +9,12 @@ import (
 
 // DemoScenario represents a demo test case
 type DemoScenario struct {
-	Name         string
-	Description  string
-	Commands     []DemoCommand // Sequence of commands to execute
-	Expected     []string      // Expected visual outcomes
-	Duration     time.Duration // Scenario duration
-	AutoPlay     bool         // Auto-execute commands
+	Name        string
+	Description string
+	Commands    []DemoCommand // Sequence of commands to execute
+	Expected    []string      // Expected visual outcomes
+	Duration    time.Duration // Scenario duration
+	AutoPlay    bool          // Auto-execute commands
 }
 
 // DemoCommand represents a command in a demo scenario

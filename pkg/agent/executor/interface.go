@@ -36,16 +36,16 @@ const (
 
 // ExecutionResult contains the outcome of a task execution
 type ExecutionResult struct {
-	TaskID      string                 `json:"task_id"`
-	Status      ExecutionStatus        `json:"status"`
-	StartTime   time.Time              `json:"start_time"`
-	EndTime     time.Time              `json:"end_time"`
-	Duration    time.Duration          `json:"duration"`
-	Output      string                 `json:"output"`
-	Artifacts   []Artifact             `json:"artifacts"`
-	ToolUsage   []ToolUsage            `json:"tool_usage"`
-	Errors      []ExecutionError       `json:"errors,omitempty"`
-	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+	TaskID    string                 `json:"task_id"`
+	Status    ExecutionStatus        `json:"status"`
+	StartTime time.Time              `json:"start_time"`
+	EndTime   time.Time              `json:"end_time"`
+	Duration  time.Duration          `json:"duration"`
+	Output    string                 `json:"output"`
+	Artifacts []Artifact             `json:"artifacts"`
+	ToolUsage []ToolUsage            `json:"tool_usage"`
+	Errors    []ExecutionError       `json:"errors,omitempty"`
+	Metadata  map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // Artifact represents a file or resource created during execution
@@ -60,9 +60,9 @@ type Artifact struct {
 
 // ToolUsage tracks which tools were used during execution
 type ToolUsage struct {
-	ToolName    string                 `json:"tool_name"`
-	Invocations int                    `json:"invocations"`
-	TotalTime   time.Duration          `json:"total_time"`
+	ToolName    string                   `json:"tool_name"`
+	Invocations int                      `json:"invocations"`
+	TotalTime   time.Duration            `json:"total_time"`
 	Results     []map[string]interface{} `json:"results,omitempty"`
 }
 

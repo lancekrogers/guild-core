@@ -11,7 +11,7 @@ func stripANSI(s string) string {
 	// Remove ANSI escape sequences
 	ansi := regexp.MustCompile(`\x1b\[[0-9;]*m`)
 	s = ansi.ReplaceAllString(s, "")
-	
+
 	// Also remove the literal [0m patterns that appear in the output
 	s = strings.ReplaceAll(s, "[0m", "")
 	s = strings.ReplaceAll(s, "[38;2;248;248;242m", "")
@@ -19,11 +19,11 @@ func stripANSI(s string) string {
 	s = strings.ReplaceAll(s, "[38;2;255;184;108;1m", "")
 	s = strings.ReplaceAll(s, "[38;2;80;250;123m", "")
 	s = strings.ReplaceAll(s, "[38;5;231m", "")
-	
+
 	// Remove any remaining bracket patterns
 	bracketPattern := regexp.MustCompile(`\[[0-9;]+m`)
 	s = bracketPattern.ReplaceAllString(s, "")
-	
+
 	return s
 }
 
@@ -41,36 +41,36 @@ func TestChatMarkdownIntegration(t *testing.T) {
 
 	// Test message formatting for different types
 	tests := []struct {
-		name        string
-		messageType string
-		content     string
-		agentID     string
+		name         string
+		messageType  string
+		content      string
+		agentID      string
 		wantContains []string
 	}{
 		{
-			name:        "agent response with markdown",
-			messageType: "agent",
-			content:     "# Task Complete\n\nI've **successfully** completed the task with `code`.",
-			agentID:     "developer",
+			name:         "agent response with markdown",
+			messageType:  "agent",
+			content:      "# Task Complete\n\nI've **successfully** completed the task with `code`.",
+			agentID:      "developer",
 			wantContains: []string{"Task", "Complete", "successfully", "code"},
 		},
 		{
-			name:        "system message with emphasis",
-			messageType: "system",
-			content:     "System **initialized** and ready.",
+			name:         "system message with emphasis",
+			messageType:  "system",
+			content:      "System **initialized** and ready.",
 			wantContains: []string{"System", "initialized", "ready"},
 		},
 		{
-			name:        "error message formatting",
-			messageType: "error",
-			content:     "Failed to execute task: permission denied",
+			name:         "error message formatting",
+			messageType:  "error",
+			content:      "Failed to execute task: permission denied",
 			wantContains: []string{"Failed", "permission denied"},
 		},
 		{
-			name:        "tool output with code",
-			messageType: "tool",
-			content:     "```bash\nls -la\n```\nListed directory contents.",
-			agentID:     "file-reader",
+			name:         "tool output with code",
+			messageType:  "tool",
+			content:      "```bash\nls -la\n```\nListed directory contents.",
+			agentID:      "file-reader",
 			wantContains: []string{"file-reader", "bash"},
 		},
 	}
@@ -78,7 +78,7 @@ func TestChatMarkdownIntegration(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var formatted string
-			
+
 			metadata := make(map[string]string)
 			if tt.agentID != "" {
 				metadata["agentID"] = tt.agentID
@@ -95,7 +95,7 @@ func TestChatMarkdownIntegration(t *testing.T) {
 			// Note: Content may be split across lines due to formatting
 			normalizedOutput := strings.ReplaceAll(strippedOutput, "\n", " ")
 			normalizedOutput = strings.ReplaceAll(normalizedOutput, "  ", " ")
-			
+
 			for _, want := range tt.wantContains {
 				if !strings.Contains(normalizedOutput, want) && !strings.Contains(strippedOutput, want) {
 					t.Errorf("Formatted message missing expected content %q\nStripped output: %s", want, strippedOutput)
@@ -114,6 +114,6 @@ func TestChatViewIntegration(t *testing.T) {
 	// This is a placeholder test that would verify the View() method
 	// properly includes status panels and rich content rendering
 	// In a real test, we would create a full chat model and verify its output
-	
+
 	t.Skip("Full chat view integration test requires complete model setup")
 }

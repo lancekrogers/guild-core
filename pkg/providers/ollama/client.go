@@ -19,8 +19,8 @@ import (
 // Popular Ollama models
 const (
 	// Llama Models
-	Llama33_70B = "llama3.3:70b"
-	Llama31_8B  = "llama3.1:8b"
+	Llama33_70B   = "llama3.3:70b"
+	Llama31_8B    = "llama3.1:8b"
 	Llama32Vision = "llama3.2-vision:11b"
 
 	// Gemma Models
@@ -146,19 +146,19 @@ func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest)
 
 	// Parse Ollama response
 	var ollamaResp struct {
-		Model              string `json:"model"`
-		CreatedAt          string `json:"created_at"`
-		Message            struct {
+		Model     string `json:"model"`
+		CreatedAt string `json:"created_at"`
+		Message   struct {
 			Role    string `json:"role"`
 			Content string `json:"content"`
 		} `json:"message"`
-		Done               bool   `json:"done"`
-		TotalDuration      int64  `json:"total_duration"`
-		LoadDuration       int64  `json:"load_duration"`
-		PromptEvalCount    int    `json:"prompt_eval_count"`
-		PromptEvalDuration int64  `json:"prompt_eval_duration"`
-		EvalCount          int    `json:"eval_count"`
-		EvalDuration       int64  `json:"eval_duration"`
+		Done               bool  `json:"done"`
+		TotalDuration      int64 `json:"total_duration"`
+		LoadDuration       int64 `json:"load_duration"`
+		PromptEvalCount    int   `json:"prompt_eval_count"`
+		PromptEvalDuration int64 `json:"prompt_eval_duration"`
+		EvalCount          int   `json:"eval_count"`
+		EvalDuration       int64 `json:"eval_duration"`
 	}
 
 	if err := json.Unmarshal(respBody, &ollamaResp); err != nil {

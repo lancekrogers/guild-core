@@ -30,28 +30,28 @@ func TestBuildGraph(t *testing.T) {
 	// Define the document structure (we won't save these, but this is reference for manual graph creation)
 	_ = []CorpusDoc{
 		{
-			Title:     "Document 1",
-			Body:      "This links to [[Document 2]] and [[Document 3]].",
-			Links:     []string{"Document 2", "Document 3"},
-			Tags:      []string{"tag1", "tag2"},
+			Title: "Document 1",
+			Body:  "This links to [[Document 2]] and [[Document 3]].",
+			Links: []string{"Document 2", "Document 3"},
+			Tags:  []string{"tag1", "tag2"},
 		},
 		{
-			Title:     "Document 2",
-			Body:      "This links to [[Document 3]].",
-			Links:     []string{"Document 3"},
-			Tags:      []string{"tag2"},
+			Title: "Document 2",
+			Body:  "This links to [[Document 3]].",
+			Links: []string{"Document 3"},
+			Tags:  []string{"tag2"},
 		},
 		{
-			Title:     "Document 3",
-			Body:      "This links back to [[Document 1]].",
-			Links:     []string{"Document 1"},
-			Tags:      []string{"tag1", "tag3"},
+			Title: "Document 3",
+			Body:  "This links back to [[Document 1]].",
+			Links: []string{"Document 1"},
+			Tags:  []string{"tag1", "tag3"},
 		},
 		{
-			Title:     "Document 4",
-			Body:      "This has no links.",
-			Links:     []string{},
-			Tags:      []string{"tag4"},
+			Title: "Document 4",
+			Body:  "This has no links.",
+			Links: []string{},
+			Tags:  []string{"tag4"},
 		},
 	}
 

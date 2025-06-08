@@ -99,6 +99,7 @@ Produce a JSON object with the following structure:
 ## Quality Checks
 
 Before outputting, ensure:
+
 - All actionable items from the content are captured
 - Task IDs are unique and follow the naming convention
 - Dependencies form a valid graph (no cycles)

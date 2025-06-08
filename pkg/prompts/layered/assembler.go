@@ -15,9 +15,9 @@ import (
 
 // LayeredPromptAssembler implements the core Guild layered prompt system
 type LayeredPromptAssembler struct {
-	manager      Manager                    // Existing prompt manager
-	formatter    Formatter                  // Context formatter
-	store        LayeredStore               // Guild Archives storage with layered support
+	manager      Manager                   // Existing prompt manager
+	formatter    Formatter                 // Context formatter
+	store        LayeredStore              // Guild Archives storage with layered support
 	ragRetriever RAGRetriever              // Memory retrieval interface
 	tokenBudget  int                       // Maximum tokens for assembled prompt
 	cache        map[string]*LayeredPrompt // In-memory cache
@@ -121,10 +121,10 @@ func (lpa *LayeredPromptAssembler) BuildPrompt(
 		SessionID:   sessionID,
 		AssembledAt: time.Now(),
 		Metadata: map[string]interface{}{
-			"layer_count":    len(optimizedLayers),
-			"memory_chunks":  len(memoryChunks),
-			"token_budget":   lpa.tokenBudget,
-			"turn_context":   turnCtx.UserMessage != "",
+			"layer_count":   len(optimizedLayers),
+			"memory_chunks": len(memoryChunks),
+			"token_budget":  lpa.tokenBudget,
+			"turn_context":  turnCtx.UserMessage != "",
 		},
 	}
 
@@ -378,9 +378,9 @@ func (lpa *LayeredPromptAssembler) getTurnPrompt(ctx context.Context, turnCtx Tu
 		Version: 1,
 		Updated: time.Now(),
 		Metadata: map[string]interface{}{
-			"ephemeral":     true,
-			"turn_context":  true,
-			"has_task":      turnCtx.TaskID != "",
+			"ephemeral":      true,
+			"turn_context":   true,
+			"has_task":       turnCtx.TaskID != "",
 			"has_commission": turnCtx.CommissionID != "",
 		},
 	}, nil
@@ -412,9 +412,9 @@ func (lpa *LayeredPromptAssembler) getArtisanConfig(ctx context.Context, artisan
 	}
 
 	return &ArtisanConfig{
-		ID:     artisanID,
-		Role:   role,
-		Domain: domain,
+		ID:      artisanID,
+		Role:    role,
+		Domain:  domain,
 		GuildID: "", // Will be set when guild registry is implemented
 	}, nil
 }

@@ -26,12 +26,12 @@ func TestBuildPrompt(t *testing.T) {
 	require.NoError(t, err)
 
 	testData := map[string]interface{}{
-		"AgentName":     "TestArtisan",
-		"AgentRole":     "Code generation specialist",
-		"Capabilities":  []string{"coding", "testing", "documentation"},
-		"GuildID":       "guild-123",
-		"ProjectName":   "TestProject",
-		"WorkspaceDir":  "/tmp/workspace",
+		"AgentName":    "TestArtisan",
+		"AgentRole":    "Code generation specialist",
+		"Capabilities": []string{"coding", "testing", "documentation"},
+		"GuildID":      "guild-123",
+		"ProjectName":  "TestProject",
+		"WorkspaceDir": "/tmp/workspace",
 	}
 
 	tests := []struct {

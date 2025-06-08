@@ -2,7 +2,8 @@
 
 The Google provider has been temporarily removed from the Guild Framework as it needs to be updated to implement the new `AIProvider` interface. This is a low priority task that will be addressed after MVP.
 
-## What was removed:
+## What was removed
+
 - `/pkg/providers/google/` directory and all its contents
 - Google provider references from:
   - `pkg/providers/factory.go`
@@ -10,12 +11,14 @@ The Google provider has been temporarily removed from the Guild Framework as it 
   - `pkg/providers/example_2025_models.go`
   - `Makefile` provider lists
 
-## Current status:
+## Current status
+
 - All other providers (OpenAI, Anthropic, DeepSeek, DeepInfra, Ollama, Ora, Mock) are fully functional
 - All provider tests passing
 - Build succeeds without Google provider
 
-## To re-add Google provider (post-MVP):
+## To re-add Google provider (post-MVP)
+
 1. Create new `/pkg/providers/google/` package
 2. Implement the `interfaces.AIProvider` interface
 3. Add back to factory files
@@ -23,4 +26,5 @@ The Google provider has been temporarily removed from the Guild Framework as it 
 5. Add comprehensive tests using the provider testing framework
 
 ## Note
+
 The removal was done to unblock development as the Google provider was using an outdated interface and preventing the build from succeeding after the major provider refactoring.

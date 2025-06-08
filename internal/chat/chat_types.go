@@ -8,6 +8,7 @@ import (
 	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
+
 	"github.com/guild-ventures/guild-core/pkg/config"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
@@ -167,20 +168,20 @@ type chatKeyMap struct {
 // ChatModel represents the main chat application state
 type ChatModel struct {
 	// UI Components
-	input         textarea.Model
-	viewport      viewport.Model
-	help          help.Model
-	width         int
-	height        int
-	ready         bool
-	err           error
-	viewMode      chatViewMode
-	keys          chatKeyMap
-	focusedAgent  string
+	input        textarea.Model
+	viewport     viewport.Model
+	help         help.Model
+	width        int
+	height       int
+	ready        bool
+	err          error
+	viewMode     chatViewMode
+	keys         chatKeyMap
+	focusedAgent string
 
 	// Visual Components
-	markdownRenderer  *MarkdownRenderer
-	contentFormatter  *ContentFormatter
+	markdownRenderer   *MarkdownRenderer
+	contentFormatter   *ContentFormatter
 	agentStatusTracker *AgentStatusTracker
 	statusDisplay      *StatusDisplay
 	agentIndicators    *AgentIndicators
@@ -206,15 +207,16 @@ type ChatModel struct {
 	costConsent   map[string]bool
 	taskCache     map[string]string
 	blockedTools  map[string]bool
-	
+
 	// Completion state
 	showingCompletion bool
 	completionResults []CompletionResult
 	completionIndex   int
-	
+
 	// Integration flags
 	integrationFlags map[string]bool
 }
+
 // Test messages
 type testRichContentMsg struct {
 	content  string

@@ -49,25 +49,25 @@ const (
 
 // Task represents a task in the kanban board
 type Task struct {
-	ID          string            `json:"id"`
-	Title       string            `json:"title"`
-	Description string            `json:"description"`
-	Status      TaskStatus        `json:"status"`
-	Priority    TaskPriority      `json:"priority"`
-	AssignedTo  string            `json:"assigned_to,omitempty"`
-	CreatedAt   time.Time         `json:"created_at"`
-	UpdatedAt   time.Time         `json:"updated_at"`
-	DueDate     *time.Time        `json:"due_date,omitempty"`
-	Tags        []string          `json:"tags,omitempty"`
-	Metadata    map[string]string `json:"metadata,omitempty"`
-	ParentID    string            `json:"parent_id,omitempty"`
-	Dependencies []string         `json:"dependencies,omitempty"`
-	Blockers    []string          `json:"blockers,omitempty"`
-	Progress    int               `json:"progress"`
-	EstimatedHours float64        `json:"estimated_hours,omitempty"`
-	ActualHours float64           `json:"actual_hours,omitempty"`
-	Notes       []TaskNote        `json:"notes,omitempty"`
-	History     []TaskHistory     `json:"history,omitempty"`
+	ID             string            `json:"id"`
+	Title          string            `json:"title"`
+	Description    string            `json:"description"`
+	Status         TaskStatus        `json:"status"`
+	Priority       TaskPriority      `json:"priority"`
+	AssignedTo     string            `json:"assigned_to,omitempty"`
+	CreatedAt      time.Time         `json:"created_at"`
+	UpdatedAt      time.Time         `json:"updated_at"`
+	DueDate        *time.Time        `json:"due_date,omitempty"`
+	Tags           []string          `json:"tags,omitempty"`
+	Metadata       map[string]string `json:"metadata,omitempty"`
+	ParentID       string            `json:"parent_id,omitempty"`
+	Dependencies   []string          `json:"dependencies,omitempty"`
+	Blockers       []string          `json:"blockers,omitempty"`
+	Progress       int               `json:"progress"`
+	EstimatedHours float64           `json:"estimated_hours,omitempty"`
+	ActualHours    float64           `json:"actual_hours,omitempty"`
+	Notes          []TaskNote        `json:"notes,omitempty"`
+	History        []TaskHistory     `json:"history,omitempty"`
 }
 
 // TaskNote represents a note attached to a task
@@ -80,34 +80,34 @@ type TaskNote struct {
 
 // TaskHistory represents a historical change to a task
 type TaskHistory struct {
-	Timestamp  time.Time         `json:"timestamp"`
-	ChangedBy  string            `json:"changed_by"`
-	FromStatus TaskStatus        `json:"from_status,omitempty"`
-	ToStatus   TaskStatus        `json:"to_status,omitempty"`
-	FromAssignee string          `json:"from_assignee,omitempty"`
-	ToAssignee string            `json:"to_assignee,omitempty"`
-	Changes    map[string]string `json:"changes,omitempty"`
-	Comment    string            `json:"comment,omitempty"`
+	Timestamp    time.Time         `json:"timestamp"`
+	ChangedBy    string            `json:"changed_by"`
+	FromStatus   TaskStatus        `json:"from_status,omitempty"`
+	ToStatus     TaskStatus        `json:"to_status,omitempty"`
+	FromAssignee string            `json:"from_assignee,omitempty"`
+	ToAssignee   string            `json:"to_assignee,omitempty"`
+	Changes      map[string]string `json:"changes,omitempty"`
+	Comment      string            `json:"comment,omitempty"`
 }
 
 // NewTask creates a new task with default values
 func NewTask(title, description string) *Task {
 	now := time.Now().UTC()
 	return &Task{
-		ID:          uuid.New().String(),
-		Title:       title,
-		Description: description,
-		Status:      StatusBacklog,
-		Priority:    PriorityMedium,
-		CreatedAt:   now,
-		UpdatedAt:   now,
-		Progress:    0,
-		Metadata:    make(map[string]string),
-		Tags:        []string{},
+		ID:           uuid.New().String(),
+		Title:        title,
+		Description:  description,
+		Status:       StatusBacklog,
+		Priority:     PriorityMedium,
+		CreatedAt:    now,
+		UpdatedAt:    now,
+		Progress:     0,
+		Metadata:     make(map[string]string),
+		Tags:         []string{},
 		Dependencies: []string{},
-		Blockers:    []string{},
-		Notes:       []TaskNote{},
-		History:     []TaskHistory{},
+		Blockers:     []string{},
+		Notes:        []TaskNote{},
+		History:      []TaskHistory{},
 	}
 }
 
@@ -175,11 +175,11 @@ func (t *Task) UpdateAssignee(newAssignee, changedBy, comment string) {
 
 	// Record the assignee change in history
 	history := TaskHistory{
-		Timestamp:   time.Now().UTC(),
-		ChangedBy:   changedBy,
+		Timestamp:    time.Now().UTC(),
+		ChangedBy:    changedBy,
 		FromAssignee: oldAssignee,
 		ToAssignee:   newAssignee,
-		Comment:     comment,
+		Comment:      comment,
 	}
 	t.History = append(t.History, history)
 }

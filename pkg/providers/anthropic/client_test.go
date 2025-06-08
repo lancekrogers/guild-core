@@ -36,10 +36,10 @@ func TestAnthropicProvider(t *testing.T) {
 
 		// Mock response
 		response := map[string]interface{}{
-			"id":         "msg_test123",
-			"type":       "message",
-			"role":       "assistant",
-			"model":      req["model"],
+			"id":    "msg_test123",
+			"type":  "message",
+			"role":  "assistant",
+			"model": req["model"],
 			"content": []map[string]interface{}{
 				{
 					"type": "text",

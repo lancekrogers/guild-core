@@ -3,6 +3,7 @@
 Create a REST API for managing tasks with the following requirements:
 
 ## Features
+
 - User authentication and authorization
 - CRUD operations for tasks
 - Task assignment to users
@@ -11,6 +12,7 @@ Create a REST API for managing tasks with the following requirements:
 - Priority levels (high, medium, low)
 
 ## Technical Requirements
+
 - RESTful API design
 - JWT authentication
 - PostgreSQL database
@@ -19,6 +21,7 @@ Create a REST API for managing tasks with the following requirements:
 - API documentation
 
 ## Non-functional Requirements
+
 - Unit tests with 80% coverage
 - Docker containerization
 - CI/CD pipeline setup

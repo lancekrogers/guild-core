@@ -9,16 +9,16 @@ import (
 
 // DefaultValidator implements the StructureValidator interface
 type DefaultValidator struct {
-	maxFiles       int
-	maxFileSize    int
+	maxFiles          int
+	maxFileSize       int
 	allowedExtensions []string
 }
 
 // NewDefaultValidator creates a new structure validator
 func NewDefaultValidator() *DefaultValidator {
 	return &DefaultValidator{
-		maxFiles:    50,  // Maximum number of files
-		maxFileSize: 50000, // Maximum file size in characters
+		maxFiles:          50,    // Maximum number of files
+		maxFileSize:       50000, // Maximum file size in characters
 		allowedExtensions: []string{".md", ".txt"},
 	}
 }
@@ -232,7 +232,6 @@ func (v *DefaultValidator) validateMarkdownContent(content string) error {
 	return nil
 }
 
-
 // validateFileType validates the file type
 func (v *DefaultValidator) validateFileType(fileType FileType) error {
 	switch fileType {
@@ -313,8 +312,8 @@ func NewConfigurableValidator(config ValidationConfig) *ConfigurableValidator {
 func (v *ConfigurableValidator) ValidateStructure(structure *FileStructure) error {
 	// Use similar logic to DefaultValidator but with custom config
 	validator := &DefaultValidator{
-		maxFiles:       v.config.MaxFiles,
-		maxFileSize:    v.config.MaxFileSize,
+		maxFiles:          v.config.MaxFiles,
+		maxFileSize:       v.config.MaxFileSize,
 		allowedExtensions: v.config.AllowedExtensions,
 	}
 

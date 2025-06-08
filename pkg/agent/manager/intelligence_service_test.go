@@ -5,10 +5,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
-	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
+	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
 // MockArtisanClient for testing
@@ -209,12 +210,12 @@ func TestManagerIntelligenceService_AnalyzeComplexity(t *testing.T) {
 	})
 
 	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "analysis-session", mock.AnythingOfType("layered.TurnContext")).Return(&layered.LayeredPrompt{
-		Compiled:   "You are a Guild Master analyzing task complexity... Analyze this task: Build a user authentication system",
-		TokenCount: 150,
-		Truncated:  false,
-		CacheKey:   "test-cache-key",
-		ArtisanID:  "manager-agent",
-		SessionID:  "analysis-session",
+		Compiled:    "You are a Guild Master analyzing task complexity... Analyze this task: Build a user authentication system",
+		TokenCount:  150,
+		Truncated:   false,
+		CacheKey:    "test-cache-key",
+		ArtisanID:   "manager-agent",
+		SessionID:   "analysis-session",
 		AssembledAt: time.Now(),
 	}, nil)
 
@@ -342,12 +343,12 @@ func TestManagerIntelligenceService_RouteToAgents(t *testing.T) {
 	mockAgentReg.On("GetRegisteredAgents").Return([]registry.GuildAgentConfig{})
 
 	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "routing-session", mock.AnythingOfType("layered.TurnContext")).Return(&layered.LayeredPrompt{
-		Compiled:   "You are a Guild Master routing tasks to agents... Route this task to optimal agents...",
-		TokenCount: 200,
-		Truncated:  false,
-		CacheKey:   "routing-cache-key",
-		ArtisanID:  "manager-agent",
-		SessionID:  "routing-session",
+		Compiled:    "You are a Guild Master routing tasks to agents... Route this task to optimal agents...",
+		TokenCount:  200,
+		Truncated:   false,
+		CacheKey:    "routing-cache-key",
+		ArtisanID:   "manager-agent",
+		SessionID:   "routing-session",
 		AssembledAt: time.Now(),
 	}, nil)
 
@@ -453,22 +454,22 @@ func TestManagerIntelligenceService_FullAnalysisAndRouting(t *testing.T) {
 	})
 
 	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "analysis-session", mock.AnythingOfType("layered.TurnContext")).Return(&layered.LayeredPrompt{
-		Compiled:   "Complexity analysis prompt... Analyze complexity...",
-		TokenCount: 150,
-		Truncated:  false,
-		CacheKey:   "complexity-cache-key",
-		ArtisanID:  "manager-agent",
-		SessionID:  "analysis-session",
+		Compiled:    "Complexity analysis prompt... Analyze complexity...",
+		TokenCount:  150,
+		Truncated:   false,
+		CacheKey:    "complexity-cache-key",
+		ArtisanID:   "manager-agent",
+		SessionID:   "analysis-session",
 		AssembledAt: time.Now(),
 	}, nil).Once()
 
 	mockPromptMgr.On("BuildLayeredPrompt", mock.Anything, "manager-agent", "routing-session", mock.AnythingOfType("layered.TurnContext")).Return(&layered.LayeredPrompt{
-		Compiled:   "Routing prompt... Route to agents...",
-		TokenCount: 200,
-		Truncated:  false,
-		CacheKey:   "routing-cache-key",
-		ArtisanID:  "manager-agent",
-		SessionID:  "routing-session",
+		Compiled:    "Routing prompt... Route to agents...",
+		TokenCount:  200,
+		Truncated:   false,
+		CacheKey:    "routing-cache-key",
+		ArtisanID:   "manager-agent",
+		SessionID:   "routing-session",
 		AssembledAt: time.Now(),
 	}, nil).Once()
 

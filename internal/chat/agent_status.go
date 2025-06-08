@@ -9,56 +9,56 @@ import (
 
 // AgentStatusTracker monitors agent states and activities
 type AgentStatusTracker struct {
-	agents          map[string]*AgentStatus  // agentID -> status
-	activeTools     map[string]*ToolStatus   // toolID -> status
-	globalActivity  []ActivityEvent          // Recent activity log
-	updateChannel   chan AgentStatusUpdate   // Real-time updates
-	guildConfig     *config.GuildConfig
-	mutex           sync.RWMutex             // Thread-safe access
-	maxActivity     int                      // Maximum activity events to keep
+	agents         map[string]*AgentStatus // agentID -> status
+	activeTools    map[string]*ToolStatus  // toolID -> status
+	globalActivity []ActivityEvent         // Recent activity log
+	updateChannel  chan AgentStatusUpdate  // Real-time updates
+	guildConfig    *config.GuildConfig
+	mutex          sync.RWMutex // Thread-safe access
+	maxActivity    int          // Maximum activity events to keep
 }
 
 // AgentStatus represents current state of an agent
 type AgentStatus struct {
-	ID              string
-	Name            string
-	Type            string            // "manager", "worker", "specialist"
-	State           AgentState        // idle, thinking, working, blocked
-	CurrentTask     string            // Current task description
-	Progress        float64           // 0.0 to 1.0
-	LastActivity    time.Time
-	ActiveTools     []string          // Currently running tools
-	Capabilities    []string          // Agent specializations
-	CostMagnitude   int              // Cost tier (1-5)
-	TotalCost       float64          // Total cost accumulated
-	TasksCompleted  int              // Number of completed tasks
-	StartTime       time.Time        // When agent became active
+	ID             string
+	Name           string
+	Type           string     // "manager", "worker", "specialist"
+	State          AgentState // idle, thinking, working, blocked
+	CurrentTask    string     // Current task description
+	Progress       float64    // 0.0 to 1.0
+	LastActivity   time.Time
+	ActiveTools    []string  // Currently running tools
+	Capabilities   []string  // Agent specializations
+	CostMagnitude  int       // Cost tier (1-5)
+	TotalCost      float64   // Total cost accumulated
+	TasksCompleted int       // Number of completed tasks
+	StartTime      time.Time // When agent became active
 }
 
 // ToolStatus represents current state of a tool execution
 type ToolStatus struct {
-	ID          string
-	Name        string
-	AgentID     string
-	State       ToolState
-	Progress    float64
-	StartTime   time.Time
-	EndTime     *time.Time
-	Cost        float64
-	Parameters  map[string]string
-	Result      string
-	Error       string
+	ID         string
+	Name       string
+	AgentID    string
+	State      ToolState
+	Progress   float64
+	StartTime  time.Time
+	EndTime    *time.Time
+	Cost       float64
+	Parameters map[string]string
+	Result     string
+	Error      string
 }
 
 // AgentState represents agent activity states
 type AgentState int
 
 const (
-	AgentIdle AgentState = iota
-	AgentThinking    // Processing input, planning
-	AgentWorking     // Executing tasks, using tools
-	AgentBlocked     // Waiting for input/resources
-	AgentOffline     // Not available
+	AgentIdle     AgentState = iota
+	AgentThinking            // Processing input, planning
+	AgentWorking             // Executing tasks, using tools
+	AgentBlocked             // Waiting for input/resources
+	AgentOffline             // Not available
 )
 
 // String returns the string representation of AgentState
@@ -195,19 +195,19 @@ func (t *AgentStatusTracker) initializeAgent(agentConfig config.AgentConfig) {
 	defer t.mutex.Unlock()
 
 	status := &AgentStatus{
-		ID:           agentConfig.ID,
-		Name:         agentConfig.Name,
-		Type:         agentConfig.Type,
-		State:        AgentOffline, // Start offline until activated
-		CurrentTask:  "",
-		Progress:     0.0,
-		LastActivity: time.Now(),
-		ActiveTools:  []string{},
-		Capabilities: agentConfig.Capabilities,
-		CostMagnitude: determineCostMagnitude(agentConfig.Provider),
-		TotalCost:    0.0,
+		ID:             agentConfig.ID,
+		Name:           agentConfig.Name,
+		Type:           agentConfig.Type,
+		State:          AgentOffline, // Start offline until activated
+		CurrentTask:    "",
+		Progress:       0.0,
+		LastActivity:   time.Now(),
+		ActiveTools:    []string{},
+		Capabilities:   agentConfig.Capabilities,
+		CostMagnitude:  determineCostMagnitude(agentConfig.Provider),
+		TotalCost:      0.0,
 		TasksCompleted: 0,
-		StartTime:    time.Now(),
+		StartTime:      time.Now(),
 	}
 
 	t.agents[agentConfig.ID] = status

@@ -21,7 +21,7 @@ func newContextAgentFactory() *ContextAgentFactory {
 type AgentConfig struct {
 	ID              string                 `yaml:"id" json:"id"`
 	Name            string                 `yaml:"name" json:"name"`
-	Type            string                 `yaml:"type" json:"type"`                         // worker, manager, specialist
+	Type            string                 `yaml:"type" json:"type"` // worker, manager, specialist
 	Capabilities    []string               `yaml:"capabilities" json:"capabilities"`
 	DefaultProvider string                 `yaml:"default_provider" json:"default_provider"`
 	SystemPrompt    string                 `yaml:"system_prompt" json:"system_prompt"`

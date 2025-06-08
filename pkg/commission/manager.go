@@ -572,16 +572,16 @@ func (m *Manager) SetCommission(ctx context.Context, commissionID string) error 
 // storageCommissionToCommission converts a storage commission to a Commission object
 func storageCommissionToCommission(storageCommission *storage.Commission) *Commission {
 	commission := &Commission{
-		ID:          storageCommission.ID,
-		Title:       storageCommission.Title,
-		Status:      CommissionStatus(storageCommission.Status),
-		CampaignID:  storageCommission.CampaignID,
-		Tags:        []string{},
-		Metadata:    make(map[string]string),
-		Context:     []string{},
-		Parts:       []*CommissionPart{},
-		Tasks:       []*CommissionTask{},
-		Priority:    "medium",
+		ID:         storageCommission.ID,
+		Title:      storageCommission.Title,
+		Status:     CommissionStatus(storageCommission.Status),
+		CampaignID: storageCommission.CampaignID,
+		Tags:       []string{},
+		Metadata:   make(map[string]string),
+		Context:    []string{},
+		Parts:      []*CommissionPart{},
+		Tasks:      []*CommissionTask{},
+		Priority:   "medium",
 	}
 
 	if storageCommission.Description != nil {

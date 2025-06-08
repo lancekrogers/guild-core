@@ -8,17 +8,17 @@ import (
 
 // Planner manages the planning process for objectives
 type Planner struct {
-	manager         *Manager
+	manager          *Manager
 	lifecycleManager *LifecycleManager
-	session         *PlanningSession
+	session          *PlanningSession
 }
 
 // newPlanner creates a new objective planner (private constructor)
 func newPlanner(manager *Manager, lifecycleManager *LifecycleManager) *Planner {
 	return &Planner{
-		manager:         manager,
+		manager:          manager,
 		lifecycleManager: lifecycleManager,
-		session:         newPlanningSession(),
+		session:          newPlanningSession(),
 	}
 }
 
@@ -183,41 +183,41 @@ func (p *Planner) CreateTaskPlan(ctx context.Context, objectiveID string) ([]Tas
 
 	// Add a planning task
 	tasks = append(tasks, TaskPlan{
-		Title:       "Plan implementation approach",
-		Description: "Determine the best approach to implement " + obj.Title,
-		Priority:    "high",
+		Title:        "Plan implementation approach",
+		Description:  "Determine the best approach to implement " + obj.Title,
+		Priority:     "high",
 		Dependencies: []string{},
 	})
 
 	// Add a research task
 	tasks = append(tasks, TaskPlan{
-		Title:       "Research existing solutions",
-		Description: "Research existing solutions and libraries for " + obj.Title,
-		Priority:    "medium",
+		Title:        "Research existing solutions",
+		Description:  "Research existing solutions and libraries for " + obj.Title,
+		Priority:     "medium",
 		Dependencies: []string{},
 	})
 
 	// Add an implementation task
 	tasks = append(tasks, TaskPlan{
-		Title:       "Implement core functionality",
-		Description: "Implement the core functionality for " + obj.Title,
-		Priority:    "high",
+		Title:        "Implement core functionality",
+		Description:  "Implement the core functionality for " + obj.Title,
+		Priority:     "high",
 		Dependencies: []string{"Plan implementation approach"},
 	})
 
 	// Add a testing task
 	tasks = append(tasks, TaskPlan{
-		Title:       "Write tests",
-		Description: "Write tests for " + obj.Title,
-		Priority:    "medium",
+		Title:        "Write tests",
+		Description:  "Write tests for " + obj.Title,
+		Priority:     "medium",
 		Dependencies: []string{"Implement core functionality"},
 	})
 
 	// Add a documentation task
 	tasks = append(tasks, TaskPlan{
-		Title:       "Document the implementation",
-		Description: "Document how to use the implementation of " + obj.Title,
-		Priority:    "low",
+		Title:        "Document the implementation",
+		Description:  "Document how to use the implementation of " + obj.Title,
+		Priority:     "low",
 		Dependencies: []string{"Implement core functionality"},
 	})
 

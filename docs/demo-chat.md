@@ -17,6 +17,7 @@ The Guild Chat interface is now **functional** and ready for use! Here's what yo
 ### 💬 Chat Features Implemented
 
 #### **Agent Communication**
+
 ```
 # Message specific agents
 @backend-craftsman design the user authentication API
@@ -28,6 +29,7 @@ The Guild Chat interface is now **functional** and ready for use! Here's what yo
 ```
 
 #### **Slash Commands**
+
 ```
 /help                    # Show all available commands
 /status                  # Show campaign and agent status
@@ -38,6 +40,7 @@ The Guild Chat interface is now **functional** and ready for use! Here's what yo
 ```
 
 #### **Keyboard Shortcuts**
+
 ```
 Ctrl+P    # Quick prompt layer view
 Ctrl+A    # Quick agent list
@@ -49,6 +52,7 @@ Ctrl+C    # Exit chat
 ### 🎨 Medieval Guild Theming
 
 The interface uses consistent Guild terminology:
+
 - **Agents** → "Artisans" (Backend Craftsman, Frontend Artisan, etc.)
 - **Chat** → "Guild Chat Chamber"
 - **Commands** → "Guild Commands"
@@ -106,6 +110,7 @@ The chat interface includes a preview of Guild's revolutionary layered prompt sy
 ### 🔮 Coming Next
 
 While we wait for the layered prompt system completion, the chat interface is ready for:
+
 - gRPC integration for real agent communication
 - Tool execution visualization
 - Real-time task status updates
@@ -116,6 +121,7 @@ While we wait for the layered prompt system completion, the chat interface is re
 **Guild Chat TUI: Phase 1 Complete!** ✅
 
 Guild now has a **functional, beautiful chat interface** that showcases:
+
 - Multi-agent communication patterns
 - Command system architecture
 - Medieval Guild theming

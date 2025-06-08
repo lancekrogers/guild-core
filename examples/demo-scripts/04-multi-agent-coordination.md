@@ -21,23 +21,26 @@ guild agents status
 **Narrator**: "Modern software development requires coordination between specialists - frontend developers, backend engineers, DevOps experts, QA engineers. Watch Guild orchestrate six AI agents working together like a real development team."
 
 **Commands**:
+
 ```bash
 guild chat --campaign e-commerce
 ```
 
 **In Chat**:
+
 ```
 Show me our current guild lineup with their specializations
 ```
 
 **Expected Output**:
+
 ```
 🏰 Guild Assembly - E-commerce Platform Development
 
 👑 @service-architect - System Design Lead
    └── Specializes in: API design, microservices, database architecture
 
-⚔️ @frontend-specialist - React & TypeScript Expert  
+⚔️ @frontend-specialist - React & TypeScript Expert
    └── Specializes in: UI components, state management, responsive design
 
 🛡️ @backend-specialist - Go Services Expert
@@ -58,6 +61,7 @@ Show me our current guild lineup with their specializations
 ### Segment 1: Cross-Team Planning (30-120 seconds) 🤝
 
 **Chat Commands**:
+
 ```
 I need to implement user authentication. @service-architect @frontend-specialist @backend-specialist @qa-specialist coordinate on this feature
 ```
@@ -65,6 +69,7 @@ I need to implement user authentication. @service-architect @frontend-specialist
 **Expected Coordinated Responses**:
 
 **@service-architect** (responds first with high-level design):
+
 ```markdown
 # 🏰 Authentication System Architecture
 
@@ -91,13 +96,15 @@ sequenceDiagram
 ```
 
 ### API Specifications
+
 - **POST** `/api/v1/auth/login` - User login
-- **POST** `/api/v1/auth/register` - User registration  
+- **POST** `/api/v1/auth/register` - User registration
 - **POST** `/api/v1/auth/refresh` - Token refresh
 - **GET** `/api/v1/auth/profile` - Get user profile
 - **POST** `/api/v1/auth/logout` - User logout
 
 ### Security Requirements
+
 - JWT tokens with 15-minute expiry
 - Refresh tokens with 7-day expiry
 - Bcrypt password hashing (cost 12)
@@ -106,6 +113,7 @@ sequenceDiagram
 
 **Frontend & Backend teams**: Please implement based on these specifications.
 **QA team**: Focus testing on security boundaries and edge cases.
+
 ```
 
 **@frontend-specialist** (responds with React implementation):
@@ -134,7 +142,7 @@ interface AuthState {
   isAuthenticated: boolean;
 }
 
-type AuthAction = 
+type AuthAction =
   | { type: 'LOGIN_START' }
   | { type: 'LOGIN_SUCCESS'; payload: { user: User; token: string } }
   | { type: 'LOGIN_FAILURE' }
@@ -185,7 +193,7 @@ export const useAuth = () => {
 
   const login = async (email: string, password: string) => {
     dispatch({ type: 'LOGIN_START' });
-    
+
     try {
       const response = await fetch('/api/v1/auth/login', {
         method: 'POST',
@@ -198,10 +206,10 @@ export const useAuth = () => {
       }
 
       const { user, token } = await response.json();
-      
+
       localStorage.setItem('auth_token', token);
       dispatch({ type: 'LOGIN_SUCCESS', payload: { user, token } });
-      
+
       return { success: true };
     } catch (error) {
       dispatch({ type: 'LOGIN_FAILURE' });
@@ -228,6 +236,7 @@ export const useAuth = () => {
 ```
 
 ## Login Component
+
 ```tsx
 // components/LoginForm.tsx
 import React, { useState } from 'react';
@@ -237,7 +246,7 @@ export const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  
+
   const { login, isLoading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -264,7 +273,7 @@ export const LoginForm: React.FC = () => {
           required
         />
       </div>
-      
+
       <div className="mb-6">
         <label className="block text-gray-700 text-sm font-bold mb-2">
           Password
@@ -296,6 +305,7 @@ export const LoginForm: React.FC = () => {
 
 **@backend-specialist will handle the Go implementation.**
 **@qa-specialist will need to test token expiry and security edge cases.**
+
 ```
 
 **@backend-specialist** (responds with Go service):
@@ -361,9 +371,9 @@ func NewService(db *sqlx.DB, jwtSecret []byte, logger Logger) *Service {
 func (s *Service) Login(ctx context.Context, req LoginRequest) (*LoginResponse, error) {
     // Get user by email
     var user User
-    query := `SELECT id, email, password_hash, first_name, last_name, role, created_at, updated_at 
+    query := `SELECT id, email, password_hash, first_name, last_name, role, created_at, updated_at
               FROM users WHERE email = $1 AND deleted_at IS NULL`
-    
+
     err := s.db.GetContext(ctx, &user, query, req.Email)
     if err != nil {
         if err == sql.ErrNoRows {
@@ -424,13 +434,13 @@ func (s *Service) generateRefreshToken(userID string) (string, error) {
 }
 
 func (s *Service) storeRefreshToken(ctx context.Context, userID, token string) error {
-    query := `INSERT INTO refresh_tokens (user_id, token, expires_at) 
+    query := `INSERT INTO refresh_tokens (user_id, token, expires_at)
               VALUES ($1, $2, $3)
-              ON CONFLICT (user_id) DO UPDATE SET 
-              token = EXCLUDED.token, 
-              expires_at = EXCLUDED.expires_at, 
+              ON CONFLICT (user_id) DO UPDATE SET
+              token = EXCLUDED.token,
+              expires_at = EXCLUDED.expires_at,
               updated_at = NOW()`
-    
+
     expiresAt := time.Now().Add(7 * 24 * time.Hour) // 7 days
     _, err := s.db.ExecContext(ctx, query, userID, token, expiresAt)
     return err
@@ -460,6 +470,7 @@ func (s *Service) LoginHandler(c *gin.Context) {
 
 **Frontend team**: Token should be included in Authorization header as `Bearer <token>`
 **QA team**: Please test password hashing, token validation, and rate limiting
+
 ```
 
 **@qa-specialist** (responds with testing strategy):
@@ -482,7 +493,7 @@ func TestPasswordSecurity(t *testing.T) {
         {"no special chars", "Password123", false},
         {"too short", "Pass1!", false},
     }
-    
+
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
             err := validatePassword(tt.password)
@@ -499,19 +510,19 @@ func TestPasswordSecurity(t *testing.T) {
 func TestTokenExpiry(t *testing.T) {
     service := setupAuthService()
     user := createTestUser()
-    
+
     // Generate token with short expiry for testing
     token, err := service.generateAccessToken(user, 1*time.Second)
     require.NoError(t, err)
-    
+
     // Token should be valid immediately
     claims, err := service.ValidateToken(token)
     assert.NoError(t, err)
     assert.Equal(t, user.ID, claims.UserID)
-    
+
     // Wait for expiry
     time.Sleep(2 * time.Second)
-    
+
     // Token should now be invalid
     _, err = service.ValidateToken(token)
     assert.Error(t, err)
@@ -521,13 +532,13 @@ func TestTokenExpiry(t *testing.T) {
 // Test rate limiting
 func TestLoginRateLimit(t *testing.T) {
     server := setupTestServer()
-    
+
     // Make 5 failed login attempts (should be allowed)
     for i := 0; i < 5; i++ {
         resp := makeLoginRequest(server, "invalid@email.com", "wrongpassword")
         assert.Equal(t, http.StatusUnauthorized, resp.StatusCode)
     }
-    
+
     // 6th attempt should be rate limited
     resp := makeLoginRequest(server, "invalid@email.com", "wrongpassword")
     assert.Equal(t, http.StatusTooManyRequests, resp.StatusCode)
@@ -535,25 +546,26 @@ func TestLoginRateLimit(t *testing.T) {
 ```
 
 ## End-to-End Test Scenarios
+
 ```typescript
 // Playwright E2E tests
 test('complete authentication flow', async ({ page }) => {
   // Navigate to login
   await page.goto('/login');
-  
+
   // Fill login form
   await page.fill('[data-testid=email-input]', 'test@example.com');
   await page.fill('[data-testid=password-input]', 'TestPassword123!');
-  
+
   // Submit login
   await page.click('[data-testid=login-button]');
-  
+
   // Verify redirect to dashboard
   await expect(page).toHaveURL('/dashboard');
-  
+
   // Verify user profile is displayed
   await expect(page.locator('[data-testid=user-profile]')).toBeVisible();
-  
+
   // Test logout
   await page.click('[data-testid=logout-button]');
   await expect(page).toHaveURL('/login');
@@ -561,16 +573,20 @@ test('complete authentication flow', async ({ page }) => {
 ```
 
 **Coordination Notes:**
+
 - Frontend: I'll need test IDs added to login components
 - Backend: Please ensure test database has consistent user fixtures
 - All teams: Let's coordinate on error message formats for consistency
+
 ```
 
 ### Segment 2: Task Handoffs (120-180 seconds) 🔄
 
 **Chat Commands**:
 ```
+
 Great work team! Now @devops-specialist please plan the deployment for this authentication system, and @documentation-specialist document the API
+
 ```
 
 **Visual Expectations**:
@@ -583,12 +599,14 @@ Great work team! Now @devops-specialist please plan the deployment for this auth
 
 **Chat Commands**:
 ```
+
 I see a potential issue - the frontend wants to store tokens in localStorage but security best practices recommend httpOnly cookies. @service-architect @frontend-specialist @qa-specialist discuss and resolve this
+
 ```
 
 **Expected Coordinated Discussion**:
 - @service-architect provides security guidance
-- @frontend-specialist explains implementation constraints  
+- @frontend-specialist explains implementation constraints
 - @qa-specialist highlights security testing implications
 - Collaborative resolution with consensus
 
@@ -600,12 +618,13 @@ guild commission refine .guild/commissions/e-commerce-platform.md --validate-coo
 ```
 
 **Expected Output**:
+
 ```
 🏰 Guild Coordination Analysis
 
 ✅ Multi-Agent Collaboration Summary:
 ├── 📋 Requirements: @service-architect provided complete specifications
-├── 🎨 Frontend: @frontend-specialist delivered React implementation  
+├── 🎨 Frontend: @frontend-specialist delivered React implementation
 ├── ⚙️ Backend: @backend-specialist created Go service
 ├── 🧪 Testing: @qa-specialist defined comprehensive test strategy
 ├── 🐳 Deployment: @devops-specialist planned infrastructure
@@ -630,6 +649,7 @@ guild commission refine .guild/commissions/e-commerce-platform.md --validate-coo
 ## Recording Notes
 
 ### Visual Focus Points
+
 1. **Agent Status Indicators**: Multiple agents "thinking" simultaneously
 2. **Cross-References**: Agents referencing each other's work
 3. **Coordinated Responses**: Related implementations across agents
@@ -637,12 +657,14 @@ guild commission refine .guild/commissions/e-commerce-platform.md --validate-coo
 5. **Integration Validation**: System-level coordination verification
 
 ### Key Coordination Moments
+
 - **Parallel Planning**: Multiple agents working on same feature
 - **Implementation Handoffs**: Work passing between specialists
 - **Conflict Resolution**: Agents discussing and resolving issues
 - **Integration Validation**: System checking coordination quality
 
 ### Success Criteria
+
 - ✅ Clear multi-agent coordination visible
 - ✅ Agents reference each other's work
 - ✅ Professional inter-team communication

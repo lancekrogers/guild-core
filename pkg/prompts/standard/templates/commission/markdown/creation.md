@@ -120,21 +120,27 @@ agent, planning, golang, llm, cli
 ## User Input Processing
 
 <if_block condition="has_user_context">
+
 ### Additional Context Provided
+
 {{.UserContext}}
 
 This context should be incorporated into the objective structure where relevant.
 </if_block>
 
 <if_block condition="has_document_context">
+
 ### Referenced Documents
+
 {{.DocumentContext}}
 
 These documents should inform the requirements and context sections.
 </if_block>
 
 <if_block condition="has_existing_commission">
+
 ### Existing Commission to Refine
+
 {{.ExistingCommission}}
 
 Build upon this existing structure, preserving what works and improving areas marked with TODO or unclear sections.
@@ -144,7 +150,8 @@ Build upon this existing structure, preserving what works and improving areas ma
 
 Now, based on the user's input, generate a comprehensive Guild commission:
 
-### User's Description:
+### User's Description
+
 {{.Description}}
 
 <result name="generated_commission">
@@ -152,6 +159,7 @@ Now, based on the user's input, generate a comprehensive Guild commission:
 </result>
 
 Remember to:
+
 - Use the exact format shown in the example
 - Include all required sections
 - Make requirements specific and actionable

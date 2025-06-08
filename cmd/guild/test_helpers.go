@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"testing"
 	"time"
-	"github.com/guild-ventures/guild-core/pkg/config"
+
 	"github.com/guild-ventures/guild-core/internal/chat"
+	"github.com/guild-ventures/guild-core/pkg/config"
 )
 
 func createTestConfig() *config.GuildConfig {
@@ -13,17 +14,17 @@ func createTestConfig() *config.GuildConfig {
 		Name: "test-guild",
 		Agents: []config.AgentConfig{
 			{
-				ID:   "manager",
-				Name: "Test Manager",
-				Type: "manager",
-				Provider: "mock",
+				ID:           "manager",
+				Name:         "Test Manager",
+				Type:         "manager",
+				Provider:     "mock",
 				Capabilities: []string{"planning", "coordination"},
 			},
 			{
-				ID:   "developer",
-				Name: "Test Developer",
-				Type: "worker",
-				Provider: "mock",
+				ID:           "developer",
+				Name:         "Test Developer",
+				Type:         "worker",
+				Provider:     "mock",
 				Capabilities: []string{"coding", "testing"},
 			},
 		},
@@ -110,12 +111,12 @@ main();`
 // Visual validation helpers
 func validateVisualOutput(t *testing.T, output string, expectedElements []string) {
 	t.Helper()
-	
+
 	if output == "" {
 		t.Error("Visual output is empty")
 		return
 	}
-	
+
 	for _, element := range expectedElements {
 		if !containsString(output, element) {
 			t.Errorf("Expected output to contain '%s', but it doesn't", element)
@@ -125,14 +126,14 @@ func validateVisualOutput(t *testing.T, output string, expectedElements []string
 
 func validateNoVisualCorruption(t *testing.T, output string) {
 	t.Helper()
-	
+
 	// Check for common visual corruption patterns
 	corruptionPatterns := []string{
-		"\x1b[0m\x1b[0m",  // Double escape sequences
-		"\x00",            // Null bytes
-		"\x1b[m\x1b[m",    // Malformed escapes
+		"\x1b[0m\x1b[0m", // Double escape sequences
+		"\x00",           // Null bytes
+		"\x1b[m\x1b[m",   // Malformed escapes
 	}
-	
+
 	for _, pattern := range corruptionPatterns {
 		if containsString(output, pattern) {
 			t.Errorf("Visual corruption detected: found '%s' in output", pattern)
@@ -143,13 +144,13 @@ func validateNoVisualCorruption(t *testing.T, output string) {
 // Performance measurement helpers
 func measureRenderTime(t *testing.T, name string, renderFunc func() string) (string, time.Duration) {
 	t.Helper()
-	
+
 	start := time.Now()
 	result := renderFunc()
 	duration := time.Since(start)
-	
+
 	t.Logf("%s render time: %v", name, duration)
-	
+
 	return result, duration
 }
 
@@ -161,10 +162,10 @@ func simulateAgentActivity(tracker *chat.AgentStatusTracker, agentID string, dur
 		chat.AgentThinking, // Replace AgentReviewing which doesn't exist
 		chat.AgentWorking,  // Replace AgentCompleted which doesn't exist
 	}
-	
+
 	ticker := time.NewTicker(duration / 4)
 	defer ticker.Stop()
-	
+
 	for i, state := range states {
 		tracker.UpdateAgentStatus(agentID, &chat.AgentStatus{
 			ID:          agentID,
@@ -173,7 +174,7 @@ func simulateAgentActivity(tracker *chat.AgentStatusTracker, agentID string, dur
 			CurrentTask: "Task phase " + string(rune('A'+i)),
 			Progress:    float64(i+1) / 4.0,
 		})
-		
+
 		if i < len(states)-1 {
 			<-ticker.C
 		}
@@ -200,19 +201,19 @@ func containsStringAt(str, substr string, start int) bool {
 // Medieval theme validation
 func validateMedievalTheme(t *testing.T, output string) {
 	t.Helper()
-	
+
 	// Check for medieval-themed elements
 	medievalElements := []string{
 		"Guild",
 		"Artisan",
 		"Master",
-		"⚔️",  // Sword
-		"🛡️",  // Shield
+		"⚔️", // Sword
+		"🛡️", // Shield
 		"🏰",  // Castle
 		"👑",  // Crown
 		"📜",  // Scroll
 	}
-	
+
 	foundAny := false
 	for _, element := range medievalElements {
 		if containsString(output, element) {
@@ -220,7 +221,7 @@ func validateMedievalTheme(t *testing.T, output string) {
 			break
 		}
 	}
-	
+
 	if !foundAny {
 		t.Log("Warning: No medieval theme elements found in output")
 	}
@@ -265,7 +266,7 @@ func setupBenchmarkEnvironment() (*chat.AgentStatusTracker, *chat.StatusDisplay,
 	display := chat.NewStatusDisplay(tracker, 80, 24)
 	renderer, _ := chat.NewMarkdownRenderer(80)
 	formatter := chat.NewContentFormatter(renderer, 80)
-	
+
 	// Pre-populate with test data
 	for i := 0; i < 5; i++ {
 		tracker.UpdateAgentStatus(fmt.Sprintf("agent-%d", i), &chat.AgentStatus{
@@ -274,6 +275,6 @@ func setupBenchmarkEnvironment() (*chat.AgentStatusTracker, *chat.StatusDisplay,
 			State: chat.AgentWorking,
 		})
 	}
-	
+
 	return tracker, display, renderer, formatter
 }

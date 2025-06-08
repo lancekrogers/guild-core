@@ -15,16 +15,16 @@ import (
 var (
 	// ErrNotInProject indicates the current directory is not within a Guild project
 	ErrNotInProject = gerror.New(gerror.ErrCodeNotFound, "not in a guild project", nil).
-		WithComponent("project").
-		WithOperation("validate")
+			WithComponent("project").
+			WithOperation("validate")
 	// ErrAlreadyInitialized indicates a project is already initialized at the given path
 	ErrAlreadyInitialized = gerror.New(gerror.ErrCodeAlreadyExists, "project already initialized", nil).
-		WithComponent("project").
-		WithOperation("initialize")
+				WithComponent("project").
+				WithOperation("initialize")
 	// ErrInvalidPath indicates the provided path is invalid
 	ErrInvalidPath = gerror.New(gerror.ErrCodeInvalidInput, "invalid project path", nil).
-		WithComponent("project").
-		WithOperation("validate")
+			WithComponent("project").
+			WithOperation("validate")
 )
 
 // Context represents a Guild project's context with paths and configuration.
@@ -101,8 +101,8 @@ func FindProjectRoot(startPath string) (string, error) {
 	abs, err := filepath.Abs(startPath)
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to resolve absolute path").
-		WithComponent("project").
-		WithOperation("find_project_root")
+			WithComponent("project").
+			WithOperation("find_project_root")
 	}
 
 	current := abs
@@ -126,8 +126,8 @@ func GetContext() (*Context, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get current directory").
-		WithComponent("project").
-		WithOperation("find_nearest_project")
+			WithComponent("project").
+			WithOperation("find_nearest_project")
 	}
 
 	return GetContextFromPath(cwd)
@@ -171,8 +171,8 @@ func ValidateProjectPath(path string) error {
 	abs, err := filepath.Abs(path)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to resolve absolute path").
-		WithComponent("project").
-		WithOperation("validate_project_path")
+			WithComponent("project").
+			WithOperation("validate_project_path")
 	}
 
 	// Ensure .guild would be within the resolved path
@@ -186,18 +186,18 @@ func ValidateProjectPath(path string) error {
 	if err != nil {
 		if os.IsNotExist(err) {
 			return gerror.Newf(gerror.ErrCodeNotFound, "path does not exist: %s", abs).
-		WithComponent("project").
-		WithOperation("validate_project_path")
+				WithComponent("project").
+				WithOperation("validate_project_path")
 		}
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to stat path").
-		WithComponent("project").
-		WithOperation("validate_project_path")
+			WithComponent("project").
+			WithOperation("validate_project_path")
 	}
 
 	if !info.IsDir() {
 		return gerror.Newf(gerror.ErrCodeInvalidInput, "path is not a directory: %s", abs).
-		WithComponent("project").
-		WithOperation("validate_project_path")
+			WithComponent("project").
+			WithOperation("validate_project_path")
 	}
 
 	return nil

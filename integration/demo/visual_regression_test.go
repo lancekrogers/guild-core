@@ -24,7 +24,7 @@ func TestVisualRegressionSuite(t *testing.T) {
 	t.Run("markdown_syntax_highlighting_compatibility", func(t *testing.T) {
 		// Test that markdown and syntax highlighting work together
 		content := createComplexMarkdownContent()
-		
+
 		// Write test content
 		contentFile := filepath.Join(workDir, "test-visual.md")
 		err := os.WriteFile(contentFile, []byte(content), 0644)
@@ -35,7 +35,7 @@ func TestVisualRegressionSuite(t *testing.T) {
 		require.NoError(t, err)
 
 		contentStr := string(readContent)
-		
+
 		// Should contain all elements
 		assert.Contains(t, contentStr, "# Visual Test")
 		assert.Contains(t, contentStr, "```go")
@@ -43,7 +43,7 @@ func TestVisualRegressionSuite(t *testing.T) {
 		assert.Contains(t, contentStr, "**bold text**")
 		assert.Contains(t, contentStr, "- List item")
 		assert.Contains(t, contentStr, "> This is a blockquote")
-		
+
 		// Should be well-formed
 		assert.True(t, strings.Count(contentStr, "```")%2 == 0, "Code blocks should be balanced")
 		assert.Contains(t, contentStr, "fmt.Println", "Go code should be present")
@@ -53,7 +53,7 @@ func TestVisualRegressionSuite(t *testing.T) {
 	t.Run("agent_status_markdown_integration", func(t *testing.T) {
 		// Test agent status display with markdown content
 		agentConfig := createAdvancedAgentConfig()
-		
+
 		configPath := filepath.Join(workDir, ".guild", "guild.yaml")
 		err := os.WriteFile(configPath, []byte(agentConfig), 0644)
 		require.NoError(t, err)
@@ -63,7 +63,7 @@ func TestVisualRegressionSuite(t *testing.T) {
 
 ## Current Agents
 - 🤔 **Manager**: Analyzing requirements
-- ⚙️ **Developer**: Implementing features  
+- ⚙️ **Developer**: Implementing features
 - 🔍 **Reviewer**: Checking code quality
 - 📊 **Architect**: Designing systems
 
@@ -104,18 +104,18 @@ This tests that **status displays** work with *markdown rendering*.`
 			expected []string
 		}{
 			{
-				input:   "@man",
-				context: "agent completion with markdown",
+				input:    "@man",
+				context:  "agent completion with markdown",
 				expected: []string{"manager", "architect"},
 			},
 			{
-				input:   "/test",
-				context: "command completion with code blocks",
+				input:    "/test",
+				context:  "command completion with code blocks",
 				expected: []string{"markdown", "code", "mixed"},
 			},
 			{
-				input:   "/prompt ",
-				context: "subcommand completion with status display",
+				input:    "/prompt ",
+				context:  "subcommand completion with status display",
 				expected: []string{"list", "show", "edit"},
 			},
 		}
@@ -159,7 +159,7 @@ This should work alongside rich markdown and status displays.`,
 
 		historyFile := filepath.Join(workDir, "command-history.txt")
 		historyContent := strings.Join(historyCommands, "\n")
-		
+
 		err := os.WriteFile(historyFile, []byte(historyContent), 0644)
 		require.NoError(t, err)
 
@@ -168,12 +168,12 @@ This should work alongside rich markdown and status displays.`,
 		require.NoError(t, err)
 
 		contentStr := string(content)
-		
+
 		// Rich formatting should be preserved
 		assert.Contains(t, contentStr, "**this important code**")
-		assert.Contains(t, contentStr, "```func main() {}```") 
+		assert.Contains(t, contentStr, "```func main() {}```")
 		assert.Contains(t, contentStr, "*emphasis*")
-		
+
 		// Commands should be preserved
 		for _, cmd := range historyCommands {
 			assert.Contains(t, contentStr, cmd)
@@ -193,7 +193,7 @@ This should work alongside rich markdown and status displays.`,
 				context: "# Test Content\n\nThis has **bold** text",
 			},
 			{
-				name:    "agent_communication_error", 
+				name:    "agent_communication_error",
 				error:   "Agent 'developer' not responding",
 				context: "@developer implement ```go\nfunc test() {}\n```",
 			},
@@ -227,7 +227,7 @@ Error should display clearly without breaking visual formatting.`,
 				// Verify error formatting
 				content, err := os.ReadFile(errorFile)
 				require.NoError(t, err)
-				
+
 				contentStr := string(content)
 				assert.Contains(t, contentStr, "❌")
 				assert.Contains(t, contentStr, scenario.error)
@@ -257,7 +257,7 @@ func TestDemoVisualStability(t *testing.T) {
 		}
 
 		largeContent := strings.Join(contentParts, "")
-		
+
 		contentFile := filepath.Join(workDir, "large-content.md")
 		err := os.WriteFile(contentFile, []byte(largeContent), 0644)
 		require.NoError(t, err)
@@ -265,7 +265,7 @@ func TestDemoVisualStability(t *testing.T) {
 		// Verify it can be processed
 		content, err := os.ReadFile(contentFile)
 		require.NoError(t, err)
-		
+
 		// Should handle large content gracefully
 		assert.Greater(t, len(content), 5000, "Should have substantial content")
 		assert.Contains(t, string(content), "Large Demo Content")
@@ -285,7 +285,7 @@ func TestDemoVisualStability(t *testing.T) {
 **Time**: %v
 **Status**: Processing update %d
 
-` + "```go\nfunc update%d() {\n    fmt.Printf(\"Update %d\")\n}\n```" + `
+`+"```go\nfunc update%d() {\n    fmt.Printf(\"Update %d\")\n}\n```"+`
 
 ## Progress
 %s`,
@@ -323,12 +323,12 @@ func TestDemoVisualStability(t *testing.T) {
 		}
 
 		statusContent := "# Multi-Agent Status Display\n\n"
-		
+
 		for _, agent := range agentStatuses {
 			statusContent += fmt.Sprintf("## %s %s Agent\n\n", agent.emoji, strings.Title(agent.agent))
 			statusContent += fmt.Sprintf("**Status**: %s\n", agent.status)
 			statusContent += fmt.Sprintf("**Current Task**: %s\n\n", agent.task)
-			statusContent += fmt.Sprintf("```\n[%s] %s: %s\n```\n\n", 
+			statusContent += fmt.Sprintf("```\n[%s] %s: %s\n```\n\n",
 				time.Now().Format("15:04:05"), agent.agent, agent.task)
 		}
 
@@ -339,7 +339,7 @@ func TestDemoVisualStability(t *testing.T) {
 		// Verify status display structure
 		content, err := os.ReadFile(statusFile)
 		require.NoError(t, err)
-		
+
 		contentStr := string(content)
 		for _, agent := range agentStatuses {
 			assert.Contains(t, contentStr, agent.emoji)
@@ -386,7 +386,7 @@ import (
 
 func main() {
     fmt.Println("Welcome to Guild!")
-    
+
     agents := []string{"manager", "developer", "reviewer"}
     for _, agent := range agents {
         fmt.Printf("Agent: %s\n", agent)
@@ -403,7 +403,7 @@ class GuildAgent:
     def __init__(self, name: str, capabilities: List[str]):
         self.name = name
         self.capabilities = capabilities
-    
+
     async def execute_task(self, task: str) -> Dict[str, str]:
         await asyncio.sleep(0.1)  # Simulate work
         return {"status": "complete", "result": f"Completed: {task}"}
@@ -413,7 +413,7 @@ async def main():
         GuildAgent("manager", ["planning", "coordination"]),
         GuildAgent("developer", ["coding", "testing"]),
     ]
-    
+
     for agent in agents:
         result = await agent.execute_task("sample task")
         print(f"{agent.name}: {result}")
@@ -453,7 +453,7 @@ And then more text with *emphasis* and ` + "`inline code`" + `.
 
 Guild supports rich visual elements:
 - 🏰 Medieval guild theming
-- ⚙️ Agent status indicators  
+- ⚙️ Agent status indicators
 - 📊 Progress visualization
 - 🚀 Deployment indicators
 - ✅ Success markers
@@ -487,7 +487,7 @@ agents:
       - task-breakdown
       - resource-allocation
     status_emoji: "🤔"
-    
+
   - id: developer
     name: Code Artisan
     role: developer
@@ -499,7 +499,7 @@ agents:
       - testing
       - debugging
     status_emoji: "⚙️"
-    
+
   - id: reviewer
     name: Quality Keeper
     role: reviewer
@@ -511,7 +511,7 @@ agents:
       - validation
       - documentation
     status_emoji: "🔍"
-    
+
   - id: architect
     name: System Designer
     role: architect
@@ -528,14 +528,14 @@ campaigns:
   - name: visual-test
     description: Visual component testing campaign
     agents: [manager, developer, reviewer, architect]
-    
+
 visual_config:
   theme: medieval
   enable_rich_content: true
   enable_syntax_highlighting: true
   enable_agent_status: true
   enable_progress_bars: true
-  
+
 demo_settings:
   auto_play: false
   show_typing_effect: true

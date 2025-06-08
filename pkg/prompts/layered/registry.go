@@ -12,10 +12,10 @@ import (
 
 // GuildLayeredRegistry implements LayeredRegistry interface with Guild Archives integration
 type GuildLayeredRegistry struct {
-	baseRegistry Registry      // Existing registry for legacy support
-	store        LayeredStore  // Guild Archives storage with layered support
+	baseRegistry Registry                 // Existing registry for legacy support
+	store        LayeredStore             // Guild Archives storage with layered support
 	cache        map[string]*SystemPrompt // Layer cache for performance
-	mutex        sync.RWMutex  // Thread-safe access
+	mutex        sync.RWMutex             // Thread-safe access
 }
 
 // NewGuildLayeredRegistry creates a new layered registry for Guild prompts

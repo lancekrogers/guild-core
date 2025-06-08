@@ -75,10 +75,10 @@ func TestProviderIntegration(t *testing.T) {
 func TestProviderConfigLoading(t *testing.T) {
 	// Test configuration loading with different scenarios
 	testCases := []struct {
-		name           string
-		providerName   string
-		mockResponse   string
-		expectError    bool
+		name         string
+		providerName string
+		mockResponse string
+		expectError  bool
 	}{
 		{
 			name:         "Mock OpenAI provider",

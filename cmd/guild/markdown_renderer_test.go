@@ -269,27 +269,27 @@ console.log("World");
 ` + "```",
 			validate: func(output string) bool {
 				return strings.Contains(output, "def hello") &&
-					   strings.Contains(output, "console.log") &&
-					   !strings.Contains(output, "```python") &&
-					   !strings.Contains(output, "```javascript")
+					strings.Contains(output, "console.log") &&
+					!strings.Contains(output, "```python") &&
+					!strings.Contains(output, "```javascript")
 			},
 		},
 		{
-			name: "code block without language",
+			name:    "code block without language",
 			content: "```\nplain text code\n```",
 			validate: func(output string) bool {
 				return strings.Contains(output, "plain text code") && !strings.Contains(output, "```")
 			},
 		},
 		{
-			name: "nested backticks in code",
+			name:    "nested backticks in code",
 			content: "```go\nfmt.Sprintf(\"`%s`\", value)\n```",
 			validate: func(output string) bool {
 				return strings.Contains(output, "fmt.Sprintf")
 			},
 		},
 		{
-			name: "empty code block",
+			name:    "empty code block",
 			content: "```go\n\n```",
 			validate: func(output string) bool {
 				// Empty blocks should still be processed
@@ -297,7 +297,7 @@ console.log("World");
 			},
 		},
 		{
-			name: "malformed code block missing closing",
+			name:    "malformed code block missing closing",
 			content: "```go\nfunc incomplete() {",
 			validate: func(output string) bool {
 				// Should return original if malformed
@@ -305,14 +305,14 @@ console.log("World");
 			},
 		},
 		{
-			name: "text with no code blocks",
+			name:    "text with no code blocks",
 			content: "This is just regular text without any code blocks",
 			validate: func(output string) bool {
 				return output == "This is just regular text without any code blocks"
 			},
 		},
 		{
-			name: "code block with special chars",
+			name:    "code block with special chars",
 			content: "```bash\n#!/bin/bash\necho \"$HOME\"\n```",
 			validate: func(output string) bool {
 				return strings.Contains(output, "#!/bin/bash") && strings.Contains(output, "echo")
@@ -354,8 +354,8 @@ func TestMarkdownRenderer_Render(t *testing.T) {
 			validate: func(output string) bool {
 				// Glamour will render headers with formatting
 				return strings.Contains(output, "Header 1") &&
-					   strings.Contains(output, "Header 2") &&
-					   strings.Contains(output, "Header 3")
+					strings.Contains(output, "Header 2") &&
+					strings.Contains(output, "Header 3")
 			},
 		},
 		{
@@ -370,8 +370,8 @@ func TestMarkdownRenderer_Render(t *testing.T) {
 			content: "- Item 1\n- Item 2\n  - Subitem",
 			validate: func(output string) bool {
 				return strings.Contains(output, "Item 1") &&
-					   strings.Contains(output, "Item 2") &&
-					   strings.Contains(output, "Subitem")
+					strings.Contains(output, "Item 2") &&
+					strings.Contains(output, "Subitem")
 			},
 		},
 		{
@@ -400,7 +400,7 @@ func TestMarkdownRenderer_Render(t *testing.T) {
 			content: "> This is a quote\n> With multiple lines",
 			validate: func(output string) bool {
 				return strings.Contains(output, "This is a quote") &&
-					   strings.Contains(output, "With multiple lines")
+					strings.Contains(output, "With multiple lines")
 			},
 		},
 		{
@@ -430,9 +430,9 @@ func TestMarkdownRenderer_Render(t *testing.T) {
 			content: "# Title\n\nThis has **bold _nested italic_** text and `code`.\n\n```python\nprint('test')\n```",
 			validate: func(output string) bool {
 				return strings.Contains(output, "Title") &&
-					   strings.Contains(output, "bold") &&
-					   strings.Contains(output, "italic") &&
-					   strings.Contains(output, "print")
+					strings.Contains(output, "bold") &&
+					strings.Contains(output, "italic") &&
+					strings.Contains(output, "print")
 			},
 		},
 	}
@@ -579,7 +579,7 @@ func TestMarkdownRenderer_EdgeCases(t *testing.T) {
 			content: "# 🏰 Guild Framework\n\nWith **unicode** 中文 content",
 			check: func(output string) bool {
 				return strings.Contains(output, "Guild Framework") &&
-					   strings.Contains(output, "中文")
+					strings.Contains(output, "中文")
 			},
 		},
 		{
@@ -587,8 +587,8 @@ func TestMarkdownRenderer_EdgeCases(t *testing.T) {
 			content: "Line 1\rLine 2\r\nLine 3\n",
 			check: func(output string) bool {
 				return strings.Contains(output, "Line 1") &&
-					   strings.Contains(output, "Line 2") &&
-					   strings.Contains(output, "Line 3")
+					strings.Contains(output, "Line 2") &&
+					strings.Contains(output, "Line 3")
 			},
 		},
 		{
@@ -596,8 +596,8 @@ func TestMarkdownRenderer_EdgeCases(t *testing.T) {
 			content: "**Bold with *italic and `code` inside***",
 			check: func(output string) bool {
 				return strings.Contains(output, "Bold") &&
-					   strings.Contains(output, "italic") &&
-					   strings.Contains(output, "code")
+					strings.Contains(output, "italic") &&
+					strings.Contains(output, "code")
 			},
 		},
 		{

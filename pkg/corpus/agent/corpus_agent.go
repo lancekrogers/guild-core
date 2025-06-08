@@ -40,7 +40,7 @@ type CorpusAgent struct {
 
 // Message represents a conversation message
 type Message struct {
-	Role      string    // "user" or "assistant"
+	Role      string // "user" or "assistant"
 	Content   string
 	Timestamp time.Time
 }

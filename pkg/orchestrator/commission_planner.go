@@ -22,9 +22,9 @@ type CommissionTaskPlanner interface {
 
 // defaultCommissionTaskPlanner implements CommissionTaskPlanner using IntelligentParser
 type defaultCommissionTaskPlanner struct {
-	kanbanManager  KanbanManager
-	parser         manager.ResponseParser // IntelligentParser interface
-	eventBus       EventBus
+	kanbanManager KanbanManager
+	parser        manager.ResponseParser // IntelligentParser interface
+	eventBus      EventBus
 }
 
 // newCommissionTaskPlanner creates a new commission task planner (private constructor)

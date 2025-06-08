@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/guild-ventures/guild-core/tools"
@@ -190,9 +191,9 @@ func registerDemoTools(componentRegistry registry.ComponentRegistry) error {
 
 	// Register demo tools (these would be actual tool implementations in practice)
 	demoTools := []struct {
-		name         string
+		name          string
 		costMagnitude int
-		capabilities []string
+		capabilities  []string
 	}{
 		{"shell", 0, []string{"execution", "file_operations"}},
 		{"git", 0, []string{"version_control", "collaboration"}},
@@ -374,7 +375,9 @@ func simulateTaskAssignment(componentRegistry registry.ComponentRegistry, taskTy
 	fmt.Printf("\n💰 Cost Summary:\n")
 	fmt.Printf("   Agent: %d\n", agent.CostMagnitude)
 	fmt.Printf("   Cheapest tool: %d\n", func() int {
-		if len(tools) > 0 { return tools[0].CostMagnitude }
+		if len(tools) > 0 {
+			return tools[0].CostMagnitude
+		}
 		return 0
 	}())
 	fmt.Printf("   Total minimum: %d\n", totalMinCost)
@@ -390,7 +393,9 @@ func showOverview(componentRegistry registry.ComponentRegistry, budget int) erro
 	// Show agents by cost tiers
 	fmt.Printf("📊 Agent Distribution by Cost:\n")
 	for cost := 0; cost <= 8; cost++ {
-		if cost == 4 || cost == 6 || cost == 7 { continue } // Skip invalid Fibonacci values
+		if cost == 4 || cost == 6 || cost == 7 {
+			continue
+		} // Skip invalid Fibonacci values
 		agents := componentRegistry.GetAgentsByCost(cost)
 		var countAtThisCost int
 		for _, agent := range agents {
@@ -406,7 +411,9 @@ func showOverview(componentRegistry registry.ComponentRegistry, budget int) erro
 
 	fmt.Printf("\n🔧 Tool Distribution by Cost:\n")
 	for cost := 0; cost <= 8; cost++ {
-		if cost == 4 || cost == 6 || cost == 7 { continue } // Skip invalid Fibonacci values
+		if cost == 4 || cost == 6 || cost == 7 {
+			continue
+		} // Skip invalid Fibonacci values
 		tools := componentRegistry.GetToolsByCost(cost)
 		var countAtThisCost int
 		for _, tool := range tools {
@@ -438,13 +445,20 @@ func showOverview(componentRegistry registry.ComponentRegistry, budget int) erro
 // Helper functions
 func getCostIcon(cost int) string {
 	switch cost {
-	case 0: return "🆓" // Free
-	case 1: return "💚" // Cheap
-	case 2: return "💛" // Low-mid
-	case 3: return "🧡" // Mid
-	case 5: return "❤️"  // High
-	case 8: return "💜" // Premium
-	default: return "❓"
+	case 0:
+		return "🆓" // Free
+	case 1:
+		return "💚" // Cheap
+	case 2:
+		return "💛" // Low-mid
+	case 3:
+		return "🧡" // Mid
+	case 5:
+		return "❤️" // High
+	case 8:
+		return "💜" // Premium
+	default:
+		return "❓"
 	}
 }
 
@@ -462,25 +476,31 @@ type DemoTool struct {
 	name string
 }
 
-func (d *DemoTool) Name() string        { return d.name }
+func (d *DemoTool) Name() string { return d.name }
+
 func (d *DemoTool) Description() string { return fmt.Sprintf("Demo %s tool", d.name) }
-func (d *DemoTool) Category() string    { return "demo" }
+
+func (d *DemoTool) Category() string { return "demo" }
+
 func (d *DemoTool) Schema() map[string]interface{} {
 	return map[string]interface{}{
 		"type": "object",
 		"properties": map[string]interface{}{
 			"input": map[string]interface{}{
-				"type": "string",
+				"type":        "string",
 				"description": "Input for the tool",
 			},
 		},
 	}
 }
+
 func (d *DemoTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	return &tools.ToolResult{
 		Output:  fmt.Sprintf("Demo result from %s", d.name),
 		Success: true,
 	}, nil
 }
-func (d *DemoTool) Examples() []string    { return []string{fmt.Sprintf("example for %s", d.name)} }
-func (d *DemoTool) RequiresAuth() bool    { return false }
+
+func (d *DemoTool) Examples() []string { return []string{fmt.Sprintf("example for %s", d.name)} }
+
+func (d *DemoTool) RequiresAuth() bool { return false }

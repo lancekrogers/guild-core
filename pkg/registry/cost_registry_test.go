@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	"github.com/guild-ventures/guild-core/tools"
 )
 
@@ -61,7 +62,7 @@ func TestCostBasedAgentSelection(t *testing.T) {
 	t.Run("GetAgentsByCost", func(t *testing.T) {
 		// Test getting agents within cost budget
 		cheapAgents := registry.GetAgentsByCost(1)
-		assert.Len(t, cheapAgents, 2) // tools-only and cheap-claude
+		assert.Len(t, cheapAgents, 2)                    // tools-only and cheap-claude
 		assert.Equal(t, "tools-only", cheapAgents[0].ID) // Should be sorted by cost
 		assert.Equal(t, "cheap-claude", cheapAgents[1].ID)
 
@@ -235,25 +236,31 @@ type MockTool struct {
 	category string
 }
 
-func (m *MockTool) Name() string        { return m.name }
+func (m *MockTool) Name() string { return m.name }
+
 func (m *MockTool) Description() string { return "Mock tool" }
-func (m *MockTool) Category() string    { return m.category }
+
+func (m *MockTool) Category() string { return m.category }
+
 func (m *MockTool) Schema() map[string]interface{} {
 	return map[string]interface{}{
 		"type": "object",
 		"properties": map[string]interface{}{
 			"input": map[string]interface{}{
-				"type": "string",
+				"type":        "string",
 				"description": "Test input",
 			},
 		},
 	}
 }
+
 func (m *MockTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	return &tools.ToolResult{
 		Output:  "mock result",
 		Success: true,
 	}, nil
 }
-func (m *MockTool) Examples() []string    { return []string{"example input"} }
-func (m *MockTool) RequiresAuth() bool    { return false }
+
+func (m *MockTool) Examples() []string { return []string{"example input"} }
+
+func (m *MockTool) RequiresAuth() bool { return false }

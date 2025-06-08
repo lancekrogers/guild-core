@@ -7,16 +7,17 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/spf13/cobra"
+
 	"github.com/guild-ventures/guild-core/pkg/campaign"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/memory"
-	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/orchestrator"
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/guild-ventures/guild-core/pkg/registry"
-	"github.com/spf13/cobra"
 )
 
 var (
@@ -222,18 +223,18 @@ func createCampaign(cmd *cobra.Command, args []string) error {
 	}
 
 	campaignModel := &campaign.Campaign{
-		ID:          fmt.Sprintf("campaign-%d", time.Now().Unix()),
-		Name:        campaignName,
-		Description: obj.Description,
-		Status:      campaign.CampaignStatusReady,
-		Objectives:  []string{obj.ID},
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
+		ID:              fmt.Sprintf("campaign-%d", time.Now().Unix()),
+		Name:            campaignName,
+		Description:     obj.Description,
+		Status:          campaign.CampaignStatusReady,
+		Objectives:      []string{obj.ID},
+		CreatedAt:       time.Now(),
+		UpdatedAt:       time.Now(),
 		TotalObjectives: 1,
 		Metadata: map[string]interface{}{
-			"guild_config": guildConfig.Name,
+			"guild_config":  guildConfig.Name,
 			"manager_agent": guildConfig.Manager.Default,
-			"board_id": board.ID,
+			"board_id":      board.ID,
 		},
 	}
 

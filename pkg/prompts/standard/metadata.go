@@ -4,8 +4,9 @@ import (
 	"strings"
 	"time"
 
+	yaml "gopkg.in/yaml.v3"
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"gopkg.in/yaml.v3"
 )
 
 // PromptMetadata contains metadata for a prompt template

@@ -5,6 +5,7 @@ This guide helps resolve common issues during Guild framework demonstrations and
 ## 🚨 Emergency Quick Fixes
 
 ### Demo Day Checklist (30 seconds)
+
 ```bash
 # Quick pre-demo validation
 ./guild demo-check --verbose --api-keys --performance
@@ -22,6 +23,7 @@ rm -rf .guild && ./guild init
 **Symptom**: `Failed to connect to localhost:50051` or similar connection errors
 
 **Immediate Solutions**:
+
 ```bash
 # Check if port is in use
 lsof -i :50051
@@ -37,11 +39,13 @@ sudo lsof -ti:50051 | xargs kill -9
 ```
 
 **Root Causes**:
+
 - Previous guild process still running
 - Port blocked by firewall
 - Network configuration issues
 
 **Prevention**:
+
 - Always run `./guild daemon stop` before demos
 - Use `--grpc-address` flag for custom ports
 - Check firewall settings in advance
@@ -51,6 +55,7 @@ sudo lsof -ti:50051 | xargs kill -9
 **Symptom**: No response after sending `@agent` messages, or agents appear offline
 
 **Immediate Solutions**:
+
 ```bash
 # Verify agents are configured
 ./guild agents list
@@ -67,12 +72,14 @@ echo $ANTHROPIC_API_KEY
 ```
 
 **Root Causes**:
+
 - Missing or invalid API keys
 - Network connectivity issues
 - Agent configuration errors
 - Provider service outages
 
 **Prevention**:
+
 - Set backup API keys for multiple providers
 - Test agent responses before demos
 - Have mock provider ready as fallback
@@ -83,6 +90,7 @@ echo $ANTHROPIC_API_KEY
 **Symptom**: No colors, broken formatting, missing unicode characters
 
 **Immediate Solutions**:
+
 ```bash
 # Check terminal capabilities
 echo $COLORTERM $TERM $TERM_PROGRAM
@@ -111,6 +119,7 @@ export NO_COLOR=1
 | VS Code | Set `"terminal.integrated.gpuAcceleration": "on"` | Install Nerd Fonts |
 
 **Prevention**:
+
 - Test on target presentation setup
 - Have screenshots ready as backup
 - Use widely-supported terminal emulators
@@ -120,6 +129,7 @@ export NO_COLOR=1
 **Symptom**: Slow responses, UI lag, high CPU usage
 
 **Immediate Solutions**:
+
 ```bash
 # Close other applications
 killall Chrome Safari Slack Docker
@@ -138,6 +148,7 @@ top -pid `pgrep guild`
 ```
 
 **Optimization Settings**:
+
 ```bash
 # Reduce visual effects
 export GUILD_ANIMATIONS=false
@@ -152,6 +163,7 @@ export GUILD_BATCH_SIZE=1
 ```
 
 **Prevention**:
+
 - Run performance tests before demos
 - Close unnecessary applications
 - Use SSD storage for better I/O
@@ -162,6 +174,7 @@ export GUILD_BATCH_SIZE=1
 **Symptom**: asciinema or agg fails, poor quality recordings
 
 **Immediate Solutions**:
+
 ```bash
 # Update recording tools
 brew upgrade asciinema agg
@@ -180,6 +193,7 @@ script -a demo-transcript.txt  # Record terminal session
 ```
 
 **Recording Best Practices**:
+
 ```bash
 # Optimal settings for different purposes
 # For GIFs (social media):
@@ -193,6 +207,7 @@ agg --speed 1.5 --theme monokai --font-size 18
 ```
 
 **Prevention**:
+
 - Test recording setup beforehand
 - Have backup recording methods ready
 - Record in smaller segments
@@ -203,11 +218,13 @@ agg --speed 1.5 --theme monokai --font-size 18
 ### If Live Demo Completely Fails
 
 **Option 1: Pre-recorded Video**
+
 - Have MP4 backup ready on desktop
 - Practice smooth transition to video
 - Narrate over video to maintain engagement
 
 **Option 2: Static Screenshots with Narration**
+
 ```
 Prepare these screenshots in advance:
 1. Guild initialization screen
@@ -218,6 +235,7 @@ Prepare these screenshots in advance:
 ```
 
 **Option 3: Code Walkthrough**
+
 - Open code editor with Guild source
 - Walk through key architectural components
 - Show tests passing as proof of functionality
@@ -247,6 +265,7 @@ Prepare these screenshots in advance:
 ## 🔧 Advanced Troubleshooting
 
 ### Debug Mode Commands
+
 ```bash
 # Enable comprehensive debugging
 export GUILD_DEBUG=true
@@ -261,6 +280,7 @@ tail -f debug.log | grep -E "(ERROR|WARN|DEBUG)"
 ```
 
 ### Memory and Resource Issues
+
 ```bash
 # Monitor memory usage
 while true; do
@@ -280,6 +300,7 @@ sudo sync && sudo sysctl vm.drop_caches=3
 ```
 
 ### Network and Connectivity
+
 ```bash
 # Test DNS resolution
 nslookup api.openai.com
@@ -300,11 +321,13 @@ nc -zv localhost 50052
 ## 📞 Support Contacts
 
 ### During Demo Day
+
 - **Emergency hotline**: Keep developer phone ready
 - **Backup presenter**: Have colleague ready to take over
 - **Technical support**: Remote screen sharing setup
 
 ### For Practice Sessions
+
 - Test with full setup 24 hours before
 - Record practice session for review
 - Get feedback from test audience
@@ -313,6 +336,7 @@ nc -zv localhost 50052
 ## 📚 Preparation Checklist
 
 ### 24 Hours Before Demo
+
 - [ ] Full system test on target hardware
 - [ ] Record backup video
 - [ ] Test all scenarios end-to-end
@@ -321,6 +345,7 @@ nc -zv localhost 50052
 - [ ] Prepare offline fallback materials
 
 ### 1 Hour Before Demo
+
 - [ ] Close all unnecessary applications
 - [ ] Disable notifications and updates
 - [ ] Run `./guild demo-check --verbose`
@@ -329,6 +354,7 @@ nc -zv localhost 50052
 - [ ] Clear browser cache and restart
 
 ### 5 Minutes Before Demo
+
 - [ ] Final `./guild demo-check`
 - [ ] Start recording (if needed)
 - [ ] Open backup materials
@@ -337,18 +363,21 @@ nc -zv localhost 50052
 ## 💡 Pro Tips for Smooth Demos
 
 ### Presentation Techniques
+
 1. **Narrate your actions**: "Now I'm going to ask the manager agent to..."
 2. **Highlight unique features**: "Notice how Guild shows real-time agent status..."
 3. **Handle delays gracefully**: "While this processes, let me explain..."
 4. **Engage the audience**: "What would you like to see the agents build next?"
 
 ### Technical Tricks
+
 1. **Pre-type complex commands**: Copy-paste for speed and accuracy
 2. **Use tab completion**: Shows interactive features naturally
 3. **Leverage command history**: Demonstrates usability
 4. **Show error recovery**: Demonstrates robustness
 
 ### Risk Mitigation
+
 1. **Multiple backup plans**: Video, screenshots, code walkthrough
 2. **Practice transitions**: Smooth switches between backup methods
 3. **Time buffers**: Finish early to allow for Q&A

@@ -10,11 +10,11 @@ import (
 
 // ExternalCommandResult represents the result of executing an external command
 type ExternalCommandResult struct {
-	Command   string
-	Output    string
-	Success   bool
-	Error     error
-	ExitCode  int
+	Command  string
+	Output   string
+	Success  bool
+	Error    error
+	ExitCode int
 }
 
 // ExecuteExternalCommand runs an external guild command and returns the result

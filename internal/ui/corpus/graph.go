@@ -163,8 +163,8 @@ func (g *GraphView) applyForces() {
 
 			// Calculate distance
 			dx := float64(g.nodes[i].x - g.nodes[j].x)
-			dy := float64(g.nodes[i].y - g.nodes[j].y) * 2 // Compensate for terminal aspect ratio
-			dist := math.Max(1.0, math.Sqrt(dx*dx + dy*dy))
+			dy := float64(g.nodes[i].y-g.nodes[j].y) * 2 // Compensate for terminal aspect ratio
+			dist := math.Max(1.0, math.Sqrt(dx*dx+dy*dy))
 
 			// Repulsive force is inversely proportional to distance
 			force := k * k / dist
@@ -178,8 +178,8 @@ func (g *GraphView) applyForces() {
 		for _, j := range node.edges {
 			// Calculate distance
 			dx := float64(g.nodes[i].x - g.nodes[j].x)
-			dy := float64(g.nodes[i].y - g.nodes[j].y) * 2 // Compensate for terminal aspect ratio
-			dist := math.Max(1.0, math.Sqrt(dx*dx + dy*dy))
+			dy := float64(g.nodes[i].y-g.nodes[j].y) * 2 // Compensate for terminal aspect ratio
+			dist := math.Max(1.0, math.Sqrt(dx*dx+dy*dy))
 
 			// Attractive force is proportional to distance
 			force := dist * dist / k
@@ -359,7 +359,7 @@ func drawString(canvas [][]string, x, y int, s string) {
 			if char == 'm' {
 				inEscapeSeq = false
 				// Apply escape sequence to all cells it will affect
-				for j := x + i; j < x + len(s); j++ {
+				for j := x + i; j < x+len(s); j++ {
 					if j >= 0 && j < len(canvas[y]) {
 						canvas[y][j] = escapeBuffer + canvas[y][j]
 					}

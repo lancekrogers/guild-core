@@ -19,7 +19,9 @@ The refined commission content is provided in {{.ContentFormat}} format.
 {{end}}
 
 {{if .ContentStructure}}
+
 ## Content Structure
+
 {{.ContentStructure}}
 {{end}}
 

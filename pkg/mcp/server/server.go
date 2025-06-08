@@ -19,17 +19,17 @@ import (
 
 // Server represents the MCP server
 type Server struct {
-	config          *Config
-	transport       transport.Transport
-	toolRegistry    tools.Registry
-	costObserver    cost.Observer
-	promptAnalyzer  prompt.Analyzer
-	guildRegistry   registry.ComponentRegistry
-	handlers        map[string]HandlerFunc
-	middleware      []Middleware
-	mu              sync.RWMutex
-	started         bool
-	stopCh          chan struct{}
+	config         *Config
+	transport      transport.Transport
+	toolRegistry   tools.Registry
+	costObserver   cost.Observer
+	promptAnalyzer prompt.Analyzer
+	guildRegistry  registry.ComponentRegistry
+	handlers       map[string]HandlerFunc
+	middleware     []Middleware
+	mu             sync.RWMutex
+	started        bool
+	stopCh         chan struct{}
 }
 
 // Config holds server configuration
@@ -43,12 +43,12 @@ type Config struct {
 	TransportConfig *transport.TransportConfig
 
 	// Security settings
-	EnableTLS          bool
-	TLSCertFile        string
-	TLSKeyFile         string
-	EnableAuth         bool
-	JWTSecret          string
-	AllowedOrigins     []string
+	EnableTLS      bool
+	TLSCertFile    string
+	TLSKeyFile     string
+	EnableAuth     bool
+	JWTSecret      string
+	AllowedOrigins []string
 
 	// Performance settings
 	MaxConcurrentRequests int
@@ -459,10 +459,10 @@ func (s *Server) handleToolExecute(ctx context.Context, msg *protocol.MCPMessage
 	// Record cost if enabled
 	if s.config.EnableCostTracking {
 		cost := protocol.CostReport{
-			OperationID:   executionID,
-			StartTime:     startTime,
-			EndTime:       endTime,
-			LatencyCost:   endTime.Sub(startTime),
+			OperationID: executionID,
+			StartTime:   startTime,
+			EndTime:     endTime,
+			LatencyCost: endTime.Sub(startTime),
 		}
 		s.costObserver.RecordCost(ctx, executionID, cost)
 	}

@@ -27,10 +27,10 @@ func TestMCPIntegration(t *testing.T) {
 
 	// Configure server
 	serverConfig := &server.Config{
-		ServerID:              "test-server",
-		ServerName:            "Test MCP Server",
-		Version:               "1.0.0",
-		TransportConfig:       &transport.TransportConfig{
+		ServerID:   "test-server",
+		ServerName: "Test MCP Server",
+		Version:    "1.0.0",
+		TransportConfig: &transport.TransportConfig{
 			Type: "memory", // Use memory transport for testing
 		},
 		MaxConcurrentRequests: 100,
@@ -49,9 +49,9 @@ func TestMCPIntegration(t *testing.T) {
 
 	// Configure client
 	clientConfig := &client.Config{
-		ClientID:        "test-client",
-		ClientName:      "Test MCP Client",
-		Version:         "1.0.0",
+		ClientID:   "test-client",
+		ClientName: "Test MCP Client",
+		Version:    "1.0.0",
 		TransportConfig: &transport.TransportConfig{
 			Type: "memory", // Use memory transport for testing
 		},
@@ -83,9 +83,9 @@ func TestMCPIntegration(t *testing.T) {
 	t.Run("tool_lifecycle", func(t *testing.T) {
 		// Define a test tool
 		toolDef := &protocol.ToolDefinition{
-			ID:          "test-calculator",
-			Name:        "Calculator",
-			Description: "Simple calculator tool",
+			ID:           "test-calculator",
+			Name:         "Calculator",
+			Description:  "Simple calculator tool",
 			Capabilities: []string{"math", "calculation"},
 			Parameters: []protocol.ToolParameter{
 				{
@@ -232,10 +232,10 @@ func TestMCPConcurrency(t *testing.T) {
 
 	// Configure server for high concurrency
 	serverConfig := &server.Config{
-		ServerID:              "concurrent-server",
-		ServerName:            "Concurrent Test Server",
-		Version:               "1.0.0",
-		TransportConfig:       &transport.TransportConfig{
+		ServerID:   "concurrent-server",
+		ServerName: "Concurrent Test Server",
+		Version:    "1.0.0",
+		TransportConfig: &transport.TransportConfig{
 			Type: "memory",
 		},
 		MaxConcurrentRequests: 1000,
@@ -256,9 +256,9 @@ func TestMCPConcurrency(t *testing.T) {
 
 	for i := 0; i < numClients; i++ {
 		clientConfig := &client.Config{
-			ClientID:        fmt.Sprintf("client-%d", i),
-			ClientName:      fmt.Sprintf("Test Client %d", i),
-			Version:         "1.0.0",
+			ClientID:   fmt.Sprintf("client-%d", i),
+			ClientName: fmt.Sprintf("Test Client %d", i),
+			Version:    "1.0.0",
 			TransportConfig: &transport.TransportConfig{
 				Type: "memory",
 			},
@@ -283,9 +283,9 @@ func TestMCPConcurrency(t *testing.T) {
 		for i, mcpClient := range clients {
 			go func(clientIdx int, client *client.Client) {
 				toolDef := &protocol.ToolDefinition{
-					ID:          fmt.Sprintf("tool-%d", clientIdx),
-					Name:        fmt.Sprintf("Tool %d", clientIdx),
-					Description: "Concurrent test tool",
+					ID:           fmt.Sprintf("tool-%d", clientIdx),
+					Name:         fmt.Sprintf("Tool %d", clientIdx),
+					Description:  "Concurrent test tool",
 					Capabilities: []string{"test"},
 					CostProfile: protocol.CostProfile{
 						ComputeCost:   0.001,
@@ -366,9 +366,9 @@ func TestMCPErrorHandling(t *testing.T) {
 	guildRegistry := registry.NewComponentRegistry()
 
 	serverConfig := &server.Config{
-		ServerID:        "error-test-server",
-		ServerName:      "Error Test Server",
-		Version:         "1.0.0",
+		ServerID:   "error-test-server",
+		ServerName: "Error Test Server",
+		Version:    "1.0.0",
 		TransportConfig: &transport.TransportConfig{
 			Type: "memory",
 		},
@@ -383,7 +383,7 @@ func TestMCPErrorHandling(t *testing.T) {
 	defer mcpServer.Stop(ctx)
 
 	clientConfig := &client.Config{
-		ClientID:        "error-test-client",
+		ClientID: "error-test-client",
 		TransportConfig: &transport.TransportConfig{
 			Type: "memory",
 		},

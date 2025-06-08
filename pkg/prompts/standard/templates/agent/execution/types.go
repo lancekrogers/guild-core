@@ -49,9 +49,9 @@ type RelatedTask struct {
 
 // CommissionData contains commission (objective) information
 type CommissionData struct {
-	Title            string
-	Description      string
-	SuccessCriteria  []string
+	Title           string
+	Description     string
+	SuccessCriteria []string
 }
 
 // TaskData contains current task information

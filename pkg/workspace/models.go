@@ -18,21 +18,21 @@ type WorkspaceInfo struct {
 
 // GitInfo contains git-related information for a workspace
 type GitInfo struct {
-	CommitHash   string
-	BranchName   string
-	RemoteURL    string
-	IsDirty      bool
-	TrackedFiles int
+	CommitHash     string
+	BranchName     string
+	RemoteURL      string
+	IsDirty        bool
+	TrackedFiles   int
 	UntrackedFiles int
 }
 
 // WorkspaceMetrics tracks usage statistics
 type WorkspaceMetrics struct {
-	TotalCreated   int
-	ActiveCount    int
-	CleanedCount   int
+	TotalCreated    int
+	ActiveCount     int
+	CleanedCount    int
 	AverageLifespan time.Duration
-	LastCleanup    time.Time
+	LastCleanup     time.Time
 }
 
 // Error types for workspace operations

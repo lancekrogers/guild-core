@@ -38,11 +38,11 @@ const (
 	ErrCodeConnection    ErrorCode = "GUILD-3004"
 
 	// Agent errors (4xxx)
-	ErrCodeAgent           ErrorCode = "GUILD-4000"
-	ErrCodeAgentNotFound   ErrorCode = "GUILD-4001"
-	ErrCodeAgentBusy       ErrorCode = "GUILD-4002"
-	ErrCodeAgentFailed     ErrorCode = "GUILD-4003"
-	ErrCodeAgentTimeout    ErrorCode = "GUILD-4004"
+	ErrCodeAgent            ErrorCode = "GUILD-4000"
+	ErrCodeAgentNotFound    ErrorCode = "GUILD-4001"
+	ErrCodeAgentBusy        ErrorCode = "GUILD-4002"
+	ErrCodeAgentFailed      ErrorCode = "GUILD-4003"
+	ErrCodeAgentTimeout     ErrorCode = "GUILD-4004"
 	ErrCodeNoAvailableAgent ErrorCode = "GUILD-4005"
 
 	// Provider errors (5xxx)
@@ -53,27 +53,27 @@ const (
 	ErrCodeProviderTimeout ErrorCode = "GUILD-5004"
 
 	// Task/Orchestration errors (6xxx)
-	ErrCodeOrchestration    ErrorCode = "GUILD-6000"
-	ErrCodeTaskFailed       ErrorCode = "GUILD-6001"
-	ErrCodeInvalidTransition ErrorCode = "GUILD-6002"
-	ErrCodeDependencyFailed  ErrorCode = "GUILD-6003"
+	ErrCodeOrchestration      ErrorCode = "GUILD-6000"
+	ErrCodeTaskFailed         ErrorCode = "GUILD-6001"
+	ErrCodeInvalidTransition  ErrorCode = "GUILD-6002"
+	ErrCodeDependencyFailed   ErrorCode = "GUILD-6003"
 	ErrCodeCircularDependency ErrorCode = "GUILD-6004"
 )
 
 // GuildError is the standard error type for the Guild framework
 type GuildError struct {
-	Code       ErrorCode              `json:"code"`
-	Message    string                 `json:"message"`
-	Details    map[string]interface{} `json:"details,omitempty"`
-	Cause      error                  `json:"-"`
-	Stack      []StackFrame           `json:"stack,omitempty"`
-	Timestamp  time.Time              `json:"timestamp"`
-	RequestID  string                 `json:"request_id,omitempty"`
-	TraceID    string                 `json:"trace_id,omitempty"`
-	Component  string                 `json:"component,omitempty"`
-	Operation  string                 `json:"operation,omitempty"`
-	Retryable  bool                   `json:"retryable"`
-	UserSafe   bool                   `json:"user_safe"`
+	Code      ErrorCode              `json:"code"`
+	Message   string                 `json:"message"`
+	Details   map[string]interface{} `json:"details,omitempty"`
+	Cause     error                  `json:"-"`
+	Stack     []StackFrame           `json:"stack,omitempty"`
+	Timestamp time.Time              `json:"timestamp"`
+	RequestID string                 `json:"request_id,omitempty"`
+	TraceID   string                 `json:"trace_id,omitempty"`
+	Component string                 `json:"component,omitempty"`
+	Operation string                 `json:"operation,omitempty"`
+	Retryable bool                   `json:"retryable"`
+	UserSafe  bool                   `json:"user_safe"`
 }
 
 // StackFrame represents a single frame in the error stack trace
@@ -167,14 +167,14 @@ func New(code ErrorCode, message string, cause error) *GuildError {
 	// Set retryable based on error code
 	switch code {
 	case ErrCodeTimeout, ErrCodeCancelled, ErrCodeRateLimit,
-	     ErrCodeConnection, ErrCodeAgentTimeout, ErrCodeProviderTimeout:
+		ErrCodeConnection, ErrCodeAgentTimeout, ErrCodeProviderTimeout:
 		err.Retryable = true
 	}
 
 	// Set user-safe for certain error types
 	switch code {
 	case ErrCodeValidation, ErrCodeInvalidInput, ErrCodeMissingRequired,
-	     ErrCodeInvalidFormat, ErrCodeOutOfRange, ErrCodeNotFound:
+		ErrCodeInvalidFormat, ErrCodeOutOfRange, ErrCodeNotFound:
 		err.UserSafe = true
 	}
 

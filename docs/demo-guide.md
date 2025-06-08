@@ -54,17 +54,20 @@ guild info
 **Purpose**: Show AI-powered project planning and task breakdown
 
 **Key Points**:
+
 - Guild understands complex project requirements
 - AI automatically identifies needed specialists
 - Tasks are intelligently distributed
 - Realistic effort estimates provided
 
 **Script**:
+
 ```bash
 ./examples/demo-scripts/scenario-1-commission-refinement.sh
 ```
 
 **Talking Points**:
+
 - "Guild analyzes the entire project specification"
 - "It identifies that we need 6 different specialists"
 - "Each agent has specific expertise areas"
@@ -77,27 +80,32 @@ guild info
 **Setup**: Open two terminals side by side
 
 **Terminal 1**:
+
 ```bash
 guild campaign watch e-commerce
 ```
 
 **Terminal 2**:
+
 ```bash
 guild chat --campaign e-commerce
 ```
 
 **Demo Commands**:
+
 ```
 Create the user authentication API with JWT tokens and OAuth2 support
 ```
 
 **Key Points**:
+
 - Multiple agents activate based on the request
 - Real-time status updates in the monitor
 - Agents work in parallel when possible
 - Each contributes their expertise
 
 **Talking Points**:
+
 - "Notice how multiple agents start thinking"
 - "ServiceArchitect handles API design"
 - "GatewayGuardian configures security"
@@ -109,17 +117,20 @@ Create the user authentication API with JWT tokens and OAuth2 support
 **Purpose**: Show depth of agent expertise
 
 **Demo Command**:
+
 ```
 @service-architect Design a complete REST API for the product catalog with search, filtering, and pagination
 ```
 
 **Key Points**:
+
 - Production-quality code generation
 - Best practices automatically applied
 - Database optimization included
 - Complete with documentation
 
 **Talking Points**:
+
 - "ServiceArchitect provides enterprise-grade solutions"
 - "Notice the attention to performance"
 - "Includes database indices for search"
@@ -130,17 +141,20 @@ Create the user authentication API with JWT tokens and OAuth2 support
 **Purpose**: Demonstrate specialized security expertise
 
 **Demo Command**:
+
 ```
 @payment-sentinel Integrate Stripe payment processing with webhook handling and PCI compliance
 ```
 
 **Key Points**:
+
 - Security is built-in, not bolted on
 - PCI compliance requirements met
 - Comprehensive error handling
 - Audit logging included
 
 **Talking Points**:
+
 - "PaymentSentinel prioritizes security"
 - "Never stores sensitive card data"
 - "Implements webhook signature verification"
@@ -151,17 +165,20 @@ Create the user authentication API with JWT tokens and OAuth2 support
 **Purpose**: Show DevOps and infrastructure expertise
 
 **Demo Command**:
+
 ```
 @deployment-marshal Create production Kubernetes deployment with monitoring and auto-scaling
 ```
 
 **Key Points**:
+
 - Production-ready configurations
 - Monitoring built-in from start
 - Auto-scaling based on metrics
 - Zero-downtime deployment strategy
 
 **Talking Points**:
+
 - "DeploymentMarshal creates battle-tested configs"
 - "Includes health checks and graceful shutdown"
 - "Prometheus metrics exposed automatically"
@@ -222,6 +239,7 @@ A: No, this is just an example. Guild can be configured for any software develop
 ### Demo Recovery
 
 If something goes wrong:
+
 1. Stay calm and explain it's a live demo
 2. Use `guild chat --resume` to recover session
 3. Have backup screenshots ready
@@ -232,6 +250,7 @@ If something goes wrong:
 ### Recommended Tools
 
 1. **asciinema** - Terminal recording
+
    ```bash
    asciinema rec demo.cast
    # Run demo
@@ -239,6 +258,7 @@ If something goes wrong:
    ```
 
 2. **agg** - Convert to GIF
+
    ```bash
    agg --theme monokai demo.cast demo.gif
    ```
@@ -256,6 +276,7 @@ If something goes wrong:
 ## Post-Demo Resources
 
 Direct interested parties to:
+
 - GitHub repository
 - Documentation site
 - Example configurations

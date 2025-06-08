@@ -94,7 +94,7 @@ func runChat(cmd *cobra.Command, args []string) error {
 	}
 
 	// Create and run chat interface
-	return chat.Run(ctx, guildConfig, conn, guildClient, promptClient, reg, 
+	return chat.Run(ctx, guildConfig, conn, guildClient, promptClient, reg,
 		chat.WithCampaign(chatCampaignID),
 		chat.WithSession(chatSessionID))
 }

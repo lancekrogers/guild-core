@@ -103,7 +103,7 @@ func TestMemoryUsage(t *testing.T) {
 
 	// Force garbage collection
 	runtime.GC()
-	runtime.GC() // Run twice to be thorough
+	runtime.GC()                       // Run twice to be thorough
 	time.Sleep(100 * time.Millisecond) // Let GC complete
 
 	// Check memory after operations
@@ -146,7 +146,7 @@ This is a **simple** markdown test with *emphasis*.`,
 			maxTime: 10 * time.Millisecond,
 		},
 		{
-			name: "Large Content",
+			name:    "Large Content",
 			content: generateLargeMarkdownContent(),
 			maxTime: 50 * time.Millisecond,
 		},
@@ -211,7 +211,9 @@ func TestConcurrentAgentPerformance(t *testing.T) {
 				continue
 			}
 
-			if execAgent, ok := agent.(interface{ Execute(context.Context, string) (string, error) }); ok {
+			if execAgent, ok := agent.(interface {
+				Execute(context.Context, string) (string, error)
+			}); ok {
 				_, err := execAgent.Execute(ctx, fmt.Sprintf("Operation %d", i))
 				if err != nil {
 					t.Logf("Agent %d operation %d error (may be expected): %v", j, i, err)
@@ -336,7 +338,9 @@ func runIntensiveDemoOperations(ctx context.Context, reg registry.ComponentRegis
 		}
 
 		// Execute operations to trigger memory allocation
-		if execAgent, ok := agent.(interface{ Execute(context.Context, string) (string, error) }); ok {
+		if execAgent, ok := agent.(interface {
+			Execute(context.Context, string) (string, error)
+		}); ok {
 			_, _ = execAgent.Execute(ctx, fmt.Sprintf("Intensive operation %d with lots of text to process and allocate memory for testing purposes", i))
 		}
 

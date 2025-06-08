@@ -163,7 +163,7 @@ func createLogFile() io.Writer {
 
 	// Create a symlink to latest log for easy access
 	latestPath := filepath.Join(logDir, "latest.log")
-	os.Remove(latestPath) // Remove existing symlink
+	os.Remove(latestPath)               // Remove existing symlink
 	os.Symlink(logFileName, latestPath) // Create new symlink (ignore errors)
 
 	return logFile

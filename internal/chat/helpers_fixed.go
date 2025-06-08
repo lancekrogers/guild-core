@@ -12,7 +12,7 @@ func (m *ChatModel) handleToolExecutionComplete(msg toolExecutionCompleteMsg) {
 	if exists {
 		// Remove from active tools
 		delete(m.activeTools, msg.executionID)
-		
+
 		// Add completion message
 		m.messages = append(m.messages, Message{
 			Type:      msgToolComplete,
@@ -45,7 +45,7 @@ func (m *ChatModel) handleToolExecutionError(msg toolExecutionErrorMsg) {
 	if exists {
 		// Remove from active tools
 		delete(m.activeTools, msg.executionID)
-		
+
 		// Add error message
 		m.messages = append(m.messages, Message{
 			Type:      msgToolError,

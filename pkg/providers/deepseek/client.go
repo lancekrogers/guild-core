@@ -27,8 +27,8 @@ func NewClient(apiKey string) *Client {
 
 	// Model mappings for OpenAI compatibility
 	modelMap := map[string]string{
-		"gpt-4":       DeepSeekChat,
-		"gpt-4-turbo": DeepSeekReasoner,
+		"gpt-4":         DeepSeekChat,
+		"gpt-4-turbo":   DeepSeekReasoner,
 		"gpt-3.5-turbo": DeepSeekChat,
 	}
 
@@ -44,8 +44,8 @@ func NewClient(apiKey string) *Client {
 				Name:          "DeepSeek Chat V3",
 				ContextWindow: 64000,
 				MaxOutput:     8192,
-				InputCost:     0.07,  // Cached price
-				OutputCost:    1.10,  // Per million tokens
+				InputCost:     0.07, // Cached price
+				OutputCost:    1.10, // Per million tokens
 			},
 			{
 				ID:            DeepSeekReasoner,

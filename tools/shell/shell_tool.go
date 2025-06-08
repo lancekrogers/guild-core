@@ -1,9 +1,9 @@
 package shell
 
 import (
-	"fmt"
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -23,10 +23,10 @@ type ShellTool struct {
 
 // ShellToolInput represents the input for shell command execution
 type ShellToolInput struct {
-	Command   string   `json:"command"`            // Command to execute
-	Args      []string `json:"args,omitempty"`     // Command arguments
-	Timeout   int      `json:"timeout,omitempty"`  // Timeout in seconds
-	WorkingDir string  `json:"working_dir,omitempty"` // Working directory for the command
+	Command    string   `json:"command"`               // Command to execute
+	Args       []string `json:"args,omitempty"`        // Command arguments
+	Timeout    int      `json:"timeout,omitempty"`     // Timeout in seconds
+	WorkingDir string   `json:"working_dir,omitempty"` // Working directory for the command
 }
 
 // ShellToolOptions contains options for the shell tool
@@ -164,11 +164,11 @@ func (t *ShellTool) Execute(ctx context.Context, input string) (*tools.ToolResul
 
 	// Prepare metadata
 	metadata := map[string]string{
-		"command":      params.Command,
-		"args":         strings.Join(params.Args, " "),
-		"working_dir":  workingDir,
-		"exit_code":    "0",
-		"timeout":      fmt.Sprintf("%d", params.Timeout),
+		"command":     params.Command,
+		"args":        strings.Join(params.Args, " "),
+		"working_dir": workingDir,
+		"exit_code":   "0",
+		"timeout":     fmt.Sprintf("%d", params.Timeout),
 	}
 
 	// Handle errors

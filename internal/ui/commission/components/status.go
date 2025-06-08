@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
+
 	commissionpkg "github.com/guild-ventures/guild-core/pkg/commission"
 )
 

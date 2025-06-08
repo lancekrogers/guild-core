@@ -304,6 +304,7 @@ guild chat
 *How agents decide what to store for future reference*
 
 Agents automatically determine what information to store in the RAG system:
+
 - 💾 Stored in RAG: Reusable project knowledge
 - 🧠 Context only: Temporary conversation data
 - 📊 Context meter: Visual indicator of remaining context
@@ -314,6 +315,7 @@ Agents automatically determine what information to store in the RAG system:
 *Automatic context window handling*
 
 Watch as agents manage their context windows:
+
 - Warning indicators when approaching limits
 - Automatic summarization or truncation
 - Seamless continuation of long tasks
@@ -324,6 +326,7 @@ Watch as agents manage their context windows:
 *Task assignment based on agent capabilities and cost*
 
 Guild automatically assigns tasks to the most cost-effective capable agent:
+
 1. Filters agents by required capabilities
 2. Checks tool availability
 3. Selects lowest cost_magnitude agent
@@ -345,6 +348,7 @@ agents:
 ### Common Issues
 
 1. **Import Cycle Errors**
+
    ```bash
    # Check for build issues
    go build ./...
@@ -354,6 +358,7 @@ agents:
    ```
 
 2. **Agent Not Responding**
+
    ```bash
    # Check agent status
    guild chat
@@ -364,6 +369,7 @@ agents:
    ```
 
 3. **Task Stuck in Review**
+
    ```bash
    # Force approve
    guild task approve --id BE-003 --force
@@ -380,16 +386,19 @@ agents:
 ## Example Projects
 
 ### 1. Simple API
+
 - 2 agents (backend, tester)
 - Single objective file
 - Basic CRUD operations
 
 ### 2. Full-Stack Application
+
 - 5 agents (backend, frontend, designer, tester, devops)
 - Hierarchical objectives
 - Complete development lifecycle
 
 ### 3. Research Project
+
 - 3 agents (researcher, analyst, writer)
 - Low-cost models for research
 - High-quality model for final output

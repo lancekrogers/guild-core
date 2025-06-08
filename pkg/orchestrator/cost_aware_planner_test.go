@@ -8,9 +8,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -438,14 +439,25 @@ func (m *MockComponentRegistry) GetCheapestToolByCapability(capability string) (
 
 // Stub methods for ComponentRegistry interface
 func (m *MockComponentRegistry) Agents() registry.AgentRegistry { return nil }
+
 func (m *MockComponentRegistry) Tools() registry.ToolRegistry { return nil }
+
 func (m *MockComponentRegistry) Providers() registry.ProviderRegistry { return nil }
+
 func (m *MockComponentRegistry) Memory() registry.MemoryRegistry { return nil }
+
 func (m *MockComponentRegistry) Project() registry.ProjectRegistry { return nil }
+
 func (m *MockComponentRegistry) Prompts() *registry.PromptRegistry { return nil }
+
 func (m *MockComponentRegistry) Storage() registry.StorageRegistry { return nil }
+
 func (m *MockComponentRegistry) Orchestrator() interface{} { return nil }
-func (m *MockComponentRegistry) Initialize(ctx context.Context, config registry.Config) error { return nil }
+
+func (m *MockComponentRegistry) Initialize(ctx context.Context, config registry.Config) error {
+	return nil
+}
+
 func (m *MockComponentRegistry) Shutdown(ctx context.Context) error { return nil }
 
 type MockKanbanBoard struct {
@@ -517,4 +529,5 @@ func (m *MockManagerAgent) Execute(ctx context.Context, request string) (string,
 }
 
 func (m *MockManagerAgent) GetID() string { return "mock-manager" }
+
 func (m *MockManagerAgent) GetName() string { return "Mock Manager" }

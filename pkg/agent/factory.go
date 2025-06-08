@@ -24,11 +24,11 @@ type Factory interface {
 
 // DefaultFactory is the default implementation of Factory
 type DefaultFactory struct {
-	LLMClient        providers.LLMClient
-	MemoryManager    memory.ChainManager
-	ToolRegistry     tools.Registry
+	LLMClient         providers.LLMClient
+	MemoryManager     memory.ChainManager
+	ToolRegistry      tools.Registry
 	CommissionManager commission.CommissionManager
-	CostManager      CostManagerInterface
+	CostManager       CostManagerInterface
 }
 
 // newFactory creates a new factory instance (private constructor)
@@ -40,11 +40,11 @@ func newFactory(
 	costManager CostManagerInterface,
 ) *DefaultFactory {
 	return &DefaultFactory{
-		LLMClient:        llmClient,
-		MemoryManager:    memoryManager,
-		ToolRegistry:     toolRegistry,
+		LLMClient:         llmClient,
+		MemoryManager:     memoryManager,
+		ToolRegistry:      toolRegistry,
 		CommissionManager: commissionManager,
-		CostManager:      costManager,
+		CostManager:       costManager,
 	}
 }
 

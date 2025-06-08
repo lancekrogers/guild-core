@@ -156,7 +156,7 @@ func (m CorpusModel) handleSearchModeUpdate(msg tea.KeyMsg) (tea.Model, tea.Cmd)
 		m.searchInput.Reset()
 		m.mode = ModeList
 		cfg := m.configToCorpusConfig()
-	return m, search(query, cfg)
+		return m, search(query, cfg)
 	case key.Matches(msg, m.keys.Escape):
 		m.searchInput.Reset()
 		m.mode = ModeList

@@ -113,6 +113,7 @@ The bridge uses two adapter types:
 2. **MCPToGuildAdapter**: Wraps MCP tools to implement the Guild Tool interface
 
 These adapters handle:
+
 - Parameter conversion (string ↔ map[string]interface{})
 - Schema translation (Guild schema ↔ MCP parameters)
 - Result formatting (ToolResult ↔ arbitrary data)
@@ -128,6 +129,7 @@ go test ./pkg/mcp/integration -v
 ```
 
 Tests cover:
+
 - Adapter functionality
 - Bidirectional tool registration
 - Cost magnitude calculation

@@ -52,7 +52,7 @@ func (d *taskDispatcher) RegisterAgent(agent agent.Agent) {
 	d.eventBus.Publish(Event{
 		Type:   EventType(EventAgentAdded),
 		Source: "dispatcher",
-		Data:   map[string]interface{}{
+		Data: map[string]interface{}{
 			"agent_id":   agent.GetID(),
 			"agent_name": agent.GetName(),
 		},
@@ -136,8 +136,8 @@ func (d *taskDispatcher) DispatchTasks(ctx context.Context) error {
 			Type:   EventType(EventTaskAssigned),
 			Source: "dispatcher",
 			Data: map[string]interface{}{
-				"task_id":   task.ID,
-				"agent_id":  agent.GetID(),
+				"task_id":    task.ID,
+				"agent_id":   agent.GetID(),
 				"task_title": task.Title,
 			},
 		})

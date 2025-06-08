@@ -14,6 +14,7 @@ When multiple AI agents work on the same repository, they need isolation to prev
 ## Current Status
 
 ✅ **Implemented:**
+
 - Basic workspace interface and models
 - Manager for creating and tracking workspaces
 - Lifecycle management (create, get, list, cleanup)
@@ -22,6 +23,7 @@ When multiple AI agents work on the same repository, they need isolation to prev
 - Comprehensive test coverage
 
 ⏳ **TODO (Git Integration):**
+
 - Git worktree creation and management
 - Branch creation and switching
 - Commit operations

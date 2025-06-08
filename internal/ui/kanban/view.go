@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
+
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 )
 
@@ -108,7 +109,7 @@ func (m *Model) renderColumnHeaders() string {
 		case kanban.StatusInProgress:
 			style = style.Foreground(lipgloss.Color("14")) // Cyan
 		case kanban.StatusBlocked:
-			style = style.Foreground(lipgloss.Color("9"))  // Red
+			style = style.Foreground(lipgloss.Color("9")) // Red
 		case kanban.StatusReadyForReview:
 			style = style.Foreground(lipgloss.Color("13")) // Purple
 		case kanban.StatusDone:

@@ -274,7 +274,7 @@ func (a *GuildToMCPAdapter) HealthCheck() error {
 func (a *GuildToMCPAdapter) GetCostProfile() protocol.CostProfile {
 	// Map Guild tool categories to approximate cost profiles
 	profile := protocol.CostProfile{
-		FinancialCost: 0, // Default to free
+		FinancialCost: 0,                      // Default to free
 		LatencyCost:   time.Millisecond * 100, // Default 100ms
 	}
 

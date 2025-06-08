@@ -11,7 +11,7 @@ type MockLLMClient struct {
 	// Error to return
 	Error error
 	// Track calls for assertions
-	CallCount int
+	CallCount  int
 	LastPrompt string
 }
 

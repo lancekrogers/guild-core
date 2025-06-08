@@ -47,7 +47,7 @@ func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (str
 
 	if a.MemoryManager != nil {
 		// Create a new chain for this execution
-		chainID, err = a.MemoryManager.CreateChain(ctx, a.ID, "task-" + time.Now().Format("20060102150405"))
+		chainID, err = a.MemoryManager.CreateChain(ctx, a.ID, "task-"+time.Now().Format("20060102150405"))
 		if err != nil {
 			return "", gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create memory chain").
 				WithComponent("agent").

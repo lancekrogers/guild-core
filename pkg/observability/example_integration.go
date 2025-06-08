@@ -121,8 +121,8 @@ func ExampleProviderCall(ctx context.Context) error {
 
 	// Set span attributes
 	SetSpanAttributes(ctx, map[string]interface{}{
-		"provider.model": "gpt-4",
-		"provider.max_tokens": 1000,
+		"provider.model":       "gpt-4",
+		"provider.max_tokens":  1000,
 		"provider.temperature": 0.7,
 	})
 

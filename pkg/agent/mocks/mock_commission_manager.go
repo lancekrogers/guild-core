@@ -5,15 +5,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/guild-ventures/guild-core/pkg/memory"
 )
 
 // MockCommissionManager implements the objective.Manager interface for testing
 type MockCommissionManager struct {
-	mu          sync.RWMutex
-	objectives  map[string]*commission.Commission
-	error       error
+	mu         sync.RWMutex
+	objectives map[string]*commission.Commission
+	error      error
 }
 
 // NewMockCommissionManager creates a new mock objective manager

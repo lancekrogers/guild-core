@@ -18,12 +18,14 @@ cp ../../.guild/guild.yaml .guild/
 **Narrator**: "While other AI coding tools show plain text, Guild renders rich, professional content that makes development more intuitive and impressive."
 
 **Commands**:
+
 ```bash
 # Start with the commission to show rich markdown
 guild chat --campaign e-commerce
 ```
 
 **In Chat**:
+
 ```
 Show me our e-commerce commission requirements with technical specifications
 ```
@@ -33,11 +35,13 @@ Show me our e-commerce commission requirements with technical specifications
 ### Segment 1: Code Syntax Highlighting (30-90 seconds) 🌈
 
 **Chat Commands**:
+
 ```
 @backend-specialist Show me a complete Go microservice implementation with error handling, middleware, and database integration
 ```
 
 **Expected Rich Response**:
+
 ```go
 // E-commerce Product Service Implementation
 package main
@@ -87,17 +91,17 @@ func NewProductService(db *sqlx.DB, logger *log.Logger) *ProductService {
 // GetProducts retrieves products with pagination and filtering
 func (s *ProductService) GetProducts(ctx context.Context, filters ProductFilters) (*ProductResponse, error) {
     query := `
-        SELECT p.id, p.name, p.description, p.price, p.inventory_quantity, 
+        SELECT p.id, p.name, p.description, p.price, p.inventory_quantity,
                p.category_id, p.status, p.created_at, p.updated_at,
                c.name as category_name
         FROM products p
         LEFT JOIN categories c ON p.category_id = c.id
         WHERE p.status = 'active'
     `
-    
+
     args := []interface{}{}
     argIndex := 1
-    
+
     // Add search filter
     if filters.Search != "" {
         query += fmt.Sprintf(" AND (p.name ILIKE $%d OR p.description ILIKE $%d)", argIndex, argIndex+1)
@@ -105,27 +109,27 @@ func (s *ProductService) GetProducts(ctx context.Context, filters ProductFilters
         args = append(args, searchTerm, searchTerm)
         argIndex += 2
     }
-    
+
     // Add category filter
     if filters.CategoryID != "" {
         query += fmt.Sprintf(" AND p.category_id = $%d", argIndex)
         args = append(args, filters.CategoryID)
         argIndex++
     }
-    
+
     // Add price range filter
     if filters.MinPrice > 0 {
         query += fmt.Sprintf(" AND p.price >= $%d", argIndex)
         args = append(args, filters.MinPrice)
         argIndex++
     }
-    
+
     if filters.MaxPrice > 0 {
         query += fmt.Sprintf(" AND p.price <= $%d", argIndex)
         args = append(args, filters.MaxPrice)
         argIndex++
     }
-    
+
     // Add sorting
     if filters.SortBy != "" {
         query += " ORDER BY " + filters.SortBy
@@ -137,17 +141,17 @@ func (s *ProductService) GetProducts(ctx context.Context, filters ProductFilters
     } else {
         query += " ORDER BY p.created_at DESC"
     }
-    
+
     // Add pagination
     query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", argIndex, argIndex+1)
     args = append(args, filters.Limit, filters.Offset)
-    
+
     var products []Product
     if err := s.db.SelectContext(ctx, &products, query, args...); err != nil {
         s.logger.Printf("Error fetching products: %v", err)
         return nil, fmt.Errorf("failed to fetch products: %w", err)
     }
-    
+
     // Get total count for pagination
     countQuery := `SELECT COUNT(*) FROM products WHERE status = 'active'`
     var totalCount int
@@ -155,7 +159,7 @@ func (s *ProductService) GetProducts(ctx context.Context, filters ProductFilters
         s.logger.Printf("Error counting products: %v", err)
         return nil, fmt.Errorf("failed to count products: %w", err)
     }
-    
+
     return &ProductResponse{
         Products: products,
         Pagination: PaginationInfo{
@@ -176,18 +180,18 @@ func (s *ProductService) CreateProduct(ctx context.Context, product *Product) er
     product.CreatedAt = time.Now()
     product.UpdatedAt = time.Now()
     product.Status = "active"
-    
+
     query := `
         INSERT INTO products (id, name, description, price, inventory_quantity, category_id, status, created_at, updated_at)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
     `
-    
+
     _, err := s.db.ExecContext(ctx, query,
         product.ID, product.Name, product.Description, product.Price,
         product.Inventory, product.CategoryID, product.Status,
         product.CreatedAt, product.UpdatedAt,
     )
-    
+
     if err != nil {
         if pqErr, ok := err.(*pq.Error); ok {
             switch pqErr.Code {
@@ -200,7 +204,7 @@ func (s *ProductService) CreateProduct(ctx context.Context, product *Product) er
         s.logger.Printf("Error creating product: %v", err)
         return fmt.Errorf("failed to create product: %w", err)
     }
-    
+
     s.logger.Printf("Product created successfully: %s", product.ID)
     return nil
 }
@@ -218,10 +222,10 @@ func (s *Server) setupRoutes() {
     s.router.Use(gin.Recovery())
     s.router.Use(corsMiddleware())
     s.router.Use(rateLimitMiddleware())
-    
+
     // Health check
     s.router.GET("/health", s.healthCheck)
-    
+
     // API routes
     v1 := s.router.Group("/api/v1")
     {
@@ -234,7 +238,7 @@ func (s *Server) setupRoutes() {
             products.PUT("/:id", authMiddleware(), adminMiddleware(), s.updateProduct)
             products.DELETE("/:id", authMiddleware(), adminMiddleware(), s.deleteProduct)
         }
-        
+
         // Search routes
         v1.GET("/search", s.searchProducts)
     }
@@ -250,25 +254,25 @@ func (s *Server) getProducts(c *gin.Context) {
         Page:       1,
         Limit:      20,
     }
-    
+
     if page, err := strconv.Atoi(c.DefaultQuery("page", "1")); err == nil && page > 0 {
         filters.Page = page
     }
-    
+
     if limit, err := strconv.Atoi(c.DefaultQuery("limit", "20")); err == nil && limit > 0 && limit <= 100 {
         filters.Limit = limit
     }
-    
+
     filters.Offset = (filters.Page - 1) * filters.Limit
-    
+
     if minPrice, err := strconv.ParseFloat(c.Query("min_price"), 64); err == nil {
         filters.MinPrice = minPrice
     }
-    
+
     if maxPrice, err := strconv.ParseFloat(c.Query("max_price"), 64); err == nil {
         filters.MaxPrice = maxPrice
     }
-    
+
     response, err := s.productService.GetProducts(c.Request.Context(), filters)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{
@@ -280,7 +284,7 @@ func (s *Server) getProducts(c *gin.Context) {
         })
         return
     }
-    
+
     c.JSON(http.StatusOK, response)
 }
 ```
@@ -290,6 +294,7 @@ func (s *Server) getProducts(c *gin.Context) {
 ### Segment 2: Multi-Language Support (90-150 seconds) 💻
 
 **Chat Commands**:
+
 ```
 @frontend-specialist Show me React components with TypeScript, @devops-specialist show Docker configurations, @qa-specialist show testing code
 ```
@@ -297,6 +302,7 @@ func (s *Server) getProducts(c *gin.Context) {
 **Expected Parallel Rich Responses**:
 
 **TypeScript/React**:
+
 ```typescript
 // Advanced React Component with Hooks and TypeScript
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
@@ -336,9 +342,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
     sortOrder: 'desc',
   });
   const [page, setPage] = useState(1);
-  
+
   const queryClient = useQueryClient();
-  
+
   // Debounced search to avoid excessive API calls
   const debouncedSearch = useCallback(
     debounce((query: string) => {
@@ -347,7 +353,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
     }, 300),
     []
   );
-  
+
   // Fetch products with React Query
   const {
     data: productsResponse,
@@ -356,11 +362,11 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
     error,
   } = useQuery(
     ['products', { searchQuery, filters, page }],
-    () => productApi.getProducts({ 
-      search: searchQuery, 
-      ...filters, 
+    () => productApi.getProducts({
+      search: searchQuery,
+      ...filters,
       page,
-      limit: 20 
+      limit: 20
     }),
     {
       keepPreviousData: true,
@@ -368,10 +374,10 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
       cacheTime: 10 * 60 * 1000, // 10 minutes
     }
   );
-  
+
   // Add to cart mutation
   const addToCartMutation = useMutation(
-    (data: { productId: string; quantity: number }) => 
+    (data: { productId: string; quantity: number }) =>
       cartApi.addItem(data.productId, data.quantity),
     {
       onSuccess: () => {
@@ -383,15 +389,15 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
       },
     }
   );
-  
+
   const handleAddToCart = useCallback((product: Product, quantity: number = 1) => {
     addToCartMutation.mutate({ productId: product.id, quantity });
   }, [addToCartMutation]);
-  
+
   // Memoized product grid to optimize rendering
   const productGrid = useMemo(() => {
     if (!productsResponse?.products) return null;
-    
+
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {productsResponse.products.map((product) => (
@@ -406,7 +412,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
       </div>
     );
   }, [productsResponse?.products, onProductSelect, handleAddToCart, addToCartMutation.isLoading]);
-  
+
   if (isError) {
     return (
       <ErrorBoundary>
@@ -428,7 +434,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
       </ErrorBoundary>
     );
   }
-  
+
   return (
     <div className="product-catalog">
       {/* Search and Filters */}
@@ -439,14 +445,14 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           placeholder="Search products..."
           className="w-full"
         />
-        
+
         <ProductFilters
           filters={filters}
           onFiltersChange={setFilters}
           categories={categories}
         />
       </div>
-      
+
       {/* Loading State */}
       {isLoading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -455,10 +461,10 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           ))}
         </div>
       )}
-      
+
       {/* Products Grid */}
       {!isLoading && productGrid}
-      
+
       {/* Pagination */}
       {productsResponse?.pagination && (
         <Pagination
@@ -474,6 +480,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 ```
 
 **Docker**:
+
 ```dockerfile
 # Multi-stage Docker build for React application
 FROM node:18-alpine AS builder
@@ -514,6 +521,7 @@ CMD ["nginx", "-g", "daemon off;"]
 ```
 
 **Testing Code**:
+
 ```go
 // Comprehensive testing suite
 func TestProductService_GetProducts(t *testing.T) {
@@ -540,7 +548,7 @@ func TestProductService_GetProducts(t *testing.T) {
                     }).AddRow(
                         "123", "MacBook Pro", 2499.99, 5,
                     ))
-                
+
                 mock.ExpectQuery("SELECT COUNT").
                     WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(25))
             },
@@ -552,18 +560,18 @@ func TestProductService_GetProducts(t *testing.T) {
             },
         },
     }
-    
+
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
             db, mock, err := sqlmock.New()
             require.NoError(t, err)
             defer db.Close()
-            
+
             tt.setupMock(mock)
-            
+
             service := NewProductService(sqlx.NewDb(db, "postgres"), log.New(os.Stdout, "", 0))
             result, err := service.GetProducts(context.Background(), tt.filters)
-            
+
             if tt.expectedError != "" {
                 assert.Error(t, err)
                 assert.Contains(t, err.Error(), tt.expectedError)
@@ -571,7 +579,7 @@ func TestProductService_GetProducts(t *testing.T) {
                 assert.NoError(t, err)
                 assert.Equal(t, tt.expectedResult, result)
             }
-            
+
             assert.NoError(t, mock.ExpectationsWereMet())
         })
     }
@@ -581,6 +589,7 @@ func TestProductService_GetProducts(t *testing.T) {
 ### Segment 3: Documentation and Diagrams (150-180 seconds) 📊
 
 **Chat Commands**:
+
 ```
 @documentation-specialist Create comprehensive API documentation with examples, and @service-architect show me system architecture diagrams
 ```
@@ -592,6 +601,7 @@ func TestProductService_GetProducts(t *testing.T) {
 **Narrator**: "While competitors show plain text responses, Guild delivers a rich, visual development experience that makes complex projects manageable and impressive. This is the future of AI-assisted development."
 
 **Visual Summary**:
+
 - Side-by-side comparison concepts (implied)
 - Professional syntax highlighting throughout
 - Rich markdown rendering
@@ -601,12 +611,14 @@ func TestProductService_GetProducts(t *testing.T) {
 ## Recording Notes
 
 ### Technical Setup
+
 - **Focus**: Maximize syntax highlighting visibility
 - **Languages Showcased**: Go, TypeScript, SQL, Docker, YAML, Bash
 - **Visual Elements**: Headers, tables, code blocks, emphasis
 - **Theme**: High contrast for clear syntax highlighting
 
 ### Key Visual Moments
+
 1. **Rich Markdown**: Professional document formatting
 2. **Syntax Highlighting**: Multiple programming languages
 3. **Code Structure**: Proper indentation and organization
@@ -614,6 +626,7 @@ func TestProductService_GetProducts(t *testing.T) {
 5. **Documentation**: API docs with examples and tables
 
 ### Success Criteria
+
 - ✅ Clear visual superiority over plain-text tools
 - ✅ Professional development environment appearance
 - ✅ Rich content rendering without glitches

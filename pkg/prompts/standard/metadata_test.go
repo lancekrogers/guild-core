@@ -236,9 +236,9 @@ Result placeholder
 			want: 5, // Adjusted: 1 base + 2 conditionals + 1 for 6 vars + 1 result
 		},
 		{
-			name: "very long prompt",
+			name:    "very long prompt",
 			content: strings.Repeat("word ", 600) + "{{.Var}}",
-			want: 3, // Adjusted: 1 base + 2 for length
+			want:    3, // Adjusted: 1 base + 2 for length
 		},
 	}
 

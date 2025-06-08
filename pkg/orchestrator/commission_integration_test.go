@@ -7,15 +7,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/storage"
-	// "github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/providers/mock"
 	"github.com/guild-ventures/guild-core/pkg/registry"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
 // TestCommissionIntegrationService_FullPipeline tests the complete commission refinement pipeline
@@ -159,57 +159,57 @@ See the implementation plans in the implementation/ directory for detailed techn
 
 	// Register the actual Guild Master refinement prompt that guides LLM behavior
 	/*
-	guildMasterPrompt := `You are a Guild Master for the Guild Framework, responsible for refining commissions into detailed implementation plans.
+			guildMasterPrompt := `You are a Guild Master for the Guild Framework, responsible for refining commissions into detailed implementation plans.
 
-## Your Role
-You analyze commissions (objectives) and transform them into structured, actionable plans that can be assigned to specialized artisans through the Workshop Board (kanban system).
+		## Your Role
+		You analyze commissions (objectives) and transform them into structured, actionable plans that can be assigned to specialized artisans through the Workshop Board (kanban system).
 
-## Output Format
-Create a hierarchical file structure with markdown files that follows this format:
+		## Output Format
+		Create a hierarchical file structure with markdown files that follows this format:
 
-### Main Commission File (commission_refined.md)
-Use this structure for the refined commission:
+		### Main Commission File (commission_refined.md)
+		Use this structure for the refined commission:
 
-# 🧠 Goal
-[Clear, specific goal statement based on the commission]
+		# 🧠 Goal
+		[Clear, specific goal statement based on the commission]
 
-# 📂 Context
-[Enhanced context incorporating technical requirements and constraints]
+		# 📂 Context
+		[Enhanced context incorporating technical requirements and constraints]
 
-# 🔧 Requirements
-[Detailed requirements broken down into:]
-## Core Features
-[User-facing functionality]
+		# 🔧 Requirements
+		[Detailed requirements broken down into:]
+		## Core Features
+		[User-facing functionality]
 
-## Technical Requirements
-[Implementation specifics]
+		## Technical Requirements
+		[Implementation specifics]
 
-## Implementation Tasks
-[Specific tasks in format: CATEGORY-NUMBER: Description (priority: X, estimate: Xh, depends: Y)]
+		## Implementation Tasks
+		[Specific tasks in format: CATEGORY-NUMBER: Description (priority: X, estimate: Xh, depends: Y)]
 
-# 📌 Tags
-[Relevant tags for categorization]
+		# 📌 Tags
+		[Relevant tags for categorization]
 
-# 🔗 Related
-[Related documents, patterns, or references]
+		# 🔗 Related
+		[Related documents, patterns, or references]
 
-### Additional Implementation Files
-Create supporting files like:
-- implementation/backend_plan.md
-- implementation/frontend_plan.md
-- implementation/testing_plan.md
+		### Additional Implementation Files
+		Create supporting files like:
+		- implementation/backend_plan.md
+		- implementation/frontend_plan.md
+		- implementation/testing_plan.md
 
-## Task Naming Convention
-Use format: CATEGORY-NUMBER: Description
-- BACKEND-001, BACKEND-002, etc.
-- FRONTEND-001, FRONTEND-002, etc.
-- API-001, API-002, etc.
-- TEST-001, TEST-002, etc.
+		## Task Naming Convention
+		Use format: CATEGORY-NUMBER: Description
+		- BACKEND-001, BACKEND-002, etc.
+		- FRONTEND-001, FRONTEND-002, etc.
+		- API-001, API-002, etc.
+		- TEST-001, TEST-002, etc.
 
-## Task Metadata Format
-Include: (priority: high/medium/low, estimate: Xh, depends: TASK-ID)
+		## Task Metadata Format
+		Include: (priority: high/medium/low, estimate: Xh, depends: TASK-ID)
 
-Transform the given commission into this structured format that artisans can work with effectively.`
+		Transform the given commission into this structured format that artisans can work with effectively.`
 	*/
 
 	// promptRegistry.RegisterPrompt("manager", "default", guildMasterPrompt)

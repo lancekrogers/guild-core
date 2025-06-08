@@ -63,23 +63,23 @@ func MigrateFromGlobal(ctx context.Context, projectPath string, globalPath strin
 	if opts.IncludeEmbeddings {
 		if err := migrateEmbeddings(ctx, globalPath, projCtx, opts, result); err != nil {
 			return result, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to migrate embeddings").
-		WithComponent("project").
-		WithOperation("migrate_from_global")
+				WithComponent("project").
+				WithOperation("migrate_from_global")
 		}
 	}
 
 	// Migrate agent configurations
 	if err := migrateAgents(ctx, globalPath, projCtx, opts, result); err != nil {
 		return result, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to migrate agents").
-		WithComponent("project").
-		WithOperation("migrate_from_global")
+			WithComponent("project").
+			WithOperation("migrate_from_global")
 	}
 
 	// Migrate objectives
 	if err := migrateObjectives(ctx, globalPath, projCtx, opts, result); err != nil {
 		return result, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to migrate objectives").
-		WithComponent("project").
-		WithOperation("migrate_from_global")
+			WithComponent("project").
+			WithOperation("migrate_from_global")
 	}
 
 	return result, nil
@@ -129,8 +129,8 @@ func migrateDirectory(src, dst string, opts MigrationOptions, result *MigrationR
 	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			result.Errors = append(result.Errors, gerror.Wrapf(err, gerror.ErrCodeInternal, "error accessing %s", path).
-		WithComponent("project").
-		WithOperation("migrate_directory"))
+				WithComponent("project").
+				WithOperation("migrate_directory"))
 			return nil // Continue walking
 		}
 
@@ -143,8 +143,8 @@ func migrateDirectory(src, dst string, opts MigrationOptions, result *MigrationR
 		relPath, err := filepath.Rel(src, path)
 		if err != nil {
 			result.Errors = append(result.Errors, gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to get relative path for %s", path).
-		WithComponent("project").
-		WithOperation("migrate_directory"))
+				WithComponent("project").
+				WithOperation("migrate_directory"))
 			return nil
 		}
 
@@ -166,16 +166,16 @@ func migrateDirectory(src, dst string, opts MigrationOptions, result *MigrationR
 		dstDir := filepath.Dir(dstPath)
 		if err := os.MkdirAll(dstDir, 0755); err != nil {
 			result.Errors = append(result.Errors, gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to create directory %s", dstDir).
-		WithComponent("project").
-		WithOperation("migrate_directory"))
+				WithComponent("project").
+				WithOperation("migrate_directory"))
 			return nil
 		}
 
 		// Copy file
 		if err := copyFile(path, dstPath); err != nil {
 			result.Errors = append(result.Errors, gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to copy %s to %s", path, dstPath).
-		WithComponent("project").
-		WithOperation("migrate_directory"))
+				WithComponent("project").
+				WithOperation("migrate_directory"))
 			return nil
 		}
 
@@ -207,8 +207,8 @@ func GetGlobalGuildPath() (string, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get home directory").
-		WithComponent("project").
-		WithOperation("get_global_guild_path")
+			WithComponent("project").
+			WithOperation("get_global_guild_path")
 	}
 
 	return filepath.Join(home, ".guild"), nil

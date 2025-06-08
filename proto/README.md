@@ -14,6 +14,7 @@ This directory contains the Protocol Buffer (protobuf) definitions for the Guild
 The Guild Framework provides multiple ways to generate Go code from these proto files:
 
 ### Using Taskfile (Recommended)
+
 ```bash
 # Install required tools
 task proto:install
@@ -26,6 +27,7 @@ task proto:check
 ```
 
 ### Using Makefile
+
 ```bash
 # Generate Go code
 make proto
@@ -35,12 +37,14 @@ make proto-check
 ```
 
 ### Using go generate
+
 ```bash
 # From the project root
 go generate ./...
 ```
 
 ### Manual generation
+
 ```bash
 # Run the generation script directly
 ./scripts/generate-proto.sh
@@ -54,6 +58,7 @@ go generate ./...
 
 2. **Go protobuf plugins**
    - Install with: `task proto:install` or manually:
+
    ```bash
    go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.6
    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest

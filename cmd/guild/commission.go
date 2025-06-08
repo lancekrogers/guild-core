@@ -16,11 +16,11 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/memory"
-	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/orchestrator"
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/guild-ventures/guild-core/pkg/providers"
@@ -31,11 +31,11 @@ import (
 
 var (
 	// Commission flags
-	assignFlag      bool   // Auto-assign agents to tasks
-	dryRunFlag      bool   // Show what would be done without executing
-	campaignIDFlag  string // Associate with campaign
-	priorityFlag    string // Commission priority (high, medium, low)
-	managerFlag     string // Override default manager agent
+	assignFlag     bool   // Auto-assign agents to tasks
+	dryRunFlag     bool   // Show what would be done without executing
+	campaignIDFlag string // Associate with campaign
+	priorityFlag   string // Commission priority (high, medium, low)
+	managerFlag    string // Override default manager agent
 )
 
 // commissionCmd represents the commission command group
@@ -400,14 +400,14 @@ func showCommissionStatusRefine(ctx context.Context, components *guildComponents
 
 // guildComponents holds all the components needed for Guild operations
 type guildComponents struct {
-	guildConfig       *config.GuildConfig
-	commissionRepo    storage.CommissionRepository
-	kanbanBoard      *kanban.Board
-	orchestrator     orchestrator.Orchestrator
-	eventBus         orchestrator.EventBus
-	registry         registry.ComponentRegistry
-	agentFactory     *guildAgentFactory
-	store            interface{} // Keep reference for cleanup
+	guildConfig    *config.GuildConfig
+	commissionRepo storage.CommissionRepository
+	kanbanBoard    *kanban.Board
+	orchestrator   orchestrator.Orchestrator
+	eventBus       orchestrator.EventBus
+	registry       registry.ComponentRegistry
+	agentFactory   *guildAgentFactory
+	store          interface{} // Keep reference for cleanup
 }
 
 // cleanup cleans up resources
@@ -558,13 +558,13 @@ func setupGuildComponents(ctx context.Context) (*guildComponents, error) {
 
 	// Create guild agent factory
 	agentFactory := &guildAgentFactory{
-		registry:         reg,
-		guildConfig:      guildConfig,
-		agentInstances:   make(map[string]agent.Agent),
-		providerFactory:  providerFactory,
-		memoryManager:    memoryManager,
-		toolRegistry:     toolsRegistry,
-		commissionRepo:   commissionRepo,
+		registry:        reg,
+		guildConfig:     guildConfig,
+		agentInstances:  make(map[string]agent.Agent),
+		providerFactory: providerFactory,
+		memoryManager:   memoryManager,
+		toolRegistry:    toolsRegistry,
+		commissionRepo:  commissionRepo,
 	}
 
 	// Register all agents from guild config into the registry
@@ -582,13 +582,13 @@ func setupGuildComponents(ctx context.Context) (*guildComponents, error) {
 	orch := orchestrator.DefaultOrchestratorFactory(orchestratorConfig, dispatcher, eventBus)
 
 	return &guildComponents{
-		guildConfig:      guildConfig,
-		commissionRepo:   commissionRepo,
-		kanbanBoard:     kanbanBoard,
-		orchestrator:    orch,
-		eventBus:        eventBus,
-		registry:        reg,
-		agentFactory:    agentFactory,
+		guildConfig:    guildConfig,
+		commissionRepo: commissionRepo,
+		kanbanBoard:    kanbanBoard,
+		orchestrator:   orch,
+		eventBus:       eventBus,
+		registry:       reg,
+		agentFactory:   agentFactory,
 	}, nil
 }
 
@@ -706,13 +706,13 @@ func (k *kanbanManagerAdapter) UpdateTask(ctx context.Context, task *kanban.Task
 
 // guildAgentFactory implements AgentFactory interface
 type guildAgentFactory struct {
-	registry      registry.ComponentRegistry
-	guildConfig   *config.GuildConfig
-	agentInstances map[string]agent.Agent // Cache for created agents
+	registry        registry.ComponentRegistry
+	guildConfig     *config.GuildConfig
+	agentInstances  map[string]agent.Agent // Cache for created agents
 	providerFactory *providers.Factory
-	memoryManager memory.ChainManager
-	toolRegistry  tools.Registry
-	commissionRepo storage.CommissionRepository
+	memoryManager   memory.ChainManager
+	toolRegistry    tools.Registry
+	commissionRepo  storage.CommissionRepository
 }
 
 // CreateAgent creates an agent from guild configuration
@@ -870,6 +870,7 @@ func registerGuildAgents(reg registry.ComponentRegistry, guildConfig *config.Gui
 
 	return nil
 }
+
 // requiresAPIKey checks if a provider requires an API key
 func requiresAPIKey(provider string) bool {
 	switch provider {

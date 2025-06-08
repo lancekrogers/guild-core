@@ -162,7 +162,7 @@ func (m ChatModel) handleCompletionKey(msg tea.KeyMsg) (ChatModel, tea.Cmd) {
 		m.showingCompletion = false
 		m.completionResults = nil
 		return m, nil
-		
+
 	case "enter":
 		// Accept current completion
 		if len(m.completionResults) > 0 {
@@ -172,7 +172,7 @@ func (m ChatModel) handleCompletionKey(msg tea.KeyMsg) (ChatModel, tea.Cmd) {
 		m.showingCompletion = false
 		m.completionResults = nil
 		return m, nil
-		
+
 	case "tab":
 		// Cycle through completions
 		if len(m.completionResults) > 0 {
@@ -182,7 +182,7 @@ func (m ChatModel) handleCompletionKey(msg tea.KeyMsg) (ChatModel, tea.Cmd) {
 			m.input.CursorEnd()
 		}
 		return m, nil
-		
+
 	default:
 		// Any other key cancels completion and processes normally
 		m.showingCompletion = false

@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/guild-ventures/guild-core/pkg/storage/db"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/storage/db"
 )
 
 // SQLiteBoardRepository implements BoardRepository using SQLite

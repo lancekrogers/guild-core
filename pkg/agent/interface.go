@@ -50,11 +50,11 @@ type CostAwareClient interface {
 
 // CostEntry represents a single cost tracking entry
 type CostEntry struct {
-	Timestamp   int64
-	CostType    CostType
-	Amount      float64
-	Operation   string
-	Details     map[string]interface{}
+	Timestamp int64
+	CostType  CostType
+	Amount    float64
+	Operation string
+	Details   map[string]interface{}
 }
 
 // TaskExecutor defines the interface for executing tasks with tools
@@ -77,10 +77,10 @@ type Task struct {
 
 // TaskResult represents the outcome of task execution
 type TaskResult struct {
-	Success    bool
-	Output     string
-	ToolsUsed  []string
-	Cost       float64
-	Error      error
-	Metadata   map[string]interface{}
+	Success   bool
+	Output    string
+	ToolsUsed []string
+	Cost      float64
+	Error     error
+	Metadata  map[string]interface{}
 }

@@ -211,11 +211,11 @@ func (p *Publisher) Close() error {
 
 // Subscriber implements comms.Subscriber using Go channels
 type subscriber struct {
-	registry     *topicRegistry
-	msgCh        chan comms.Message
+	registry      *topicRegistry
+	msgCh         chan comms.Message
 	subscriptions map[string]struct{}
-	closed       bool
-	closeMutex   sync.Mutex
+	closed        bool
+	closeMutex    sync.Mutex
 }
 
 func newSubscriber(registry *topicRegistry, bufferSize int) *subscriber {

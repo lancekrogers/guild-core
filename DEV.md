@@ -13,22 +13,26 @@ This document provides guidance for developing and contributing to the Guild fra
 ### Getting Started
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/guild-ventures/guild-core.git
    cd guild-core
    ```
 
 2. Install dependencies:
+
    ```bash
    task deps:install
    ```
 
 3. Build the project:
+
    ```bash
    task build
    ```
 
 4. Run tests:
+
    ```bash
    task test
    ```
@@ -96,6 +100,7 @@ The Guild Hall is our TUI (Terminal User Interface) built with Bubble Tea and st
 - **Style Guide**: `docs/ui/styleguide.md`
 
 The UI follows Guild's lore and naming conventions:
+
 - **Hall**: Main application views
 - **Chamber**: Section/panel components
 - **Workshop**: Interactive components
@@ -122,6 +127,7 @@ Tools are capabilities that agents can use to interact with the environment.
 ### Adding a New Feature
 
 1. Create a feature branch:
+
    ```bash
    git checkout -b feature/my-new-feature
    ```
@@ -129,11 +135,13 @@ Tools are capabilities that agents can use to interact with the environment.
 2. Implement the feature and add tests.
 
 3. Run all tests:
+
    ```bash
    task test
    ```
 
 4. Format and lint your code:
+
    ```bash
    task lint
    ```
@@ -153,16 +161,19 @@ task run CLI_ARGS="--debug objective list"
 ### Running Tests
 
 - Run all tests:
+
   ```bash
   task test
   ```
 
 - Run unit tests only:
+
   ```bash
   task test:unit
   ```
 
 - Run tests for a specific package:
+
   ```bash
   task test:packages PACKAGE="./pkg/objective"
   ```
@@ -172,21 +183,25 @@ task run CLI_ARGS="--debug objective list"
 Guild includes comprehensive test coverage tools:
 
 - Generate basic coverage report:
+
   ```bash
   task test:coverage
   ```
 
 - Generate coverage for working packages only:
+
   ```bash
   task test:coverage:working
   ```
 
 - Generate detailed coverage by package:
+
   ```bash
   task test:coverage:detailed
   ```
 
 - Generate a coverage badge for your README:
+
   ```bash
   task test:coverage:badge
   ```
@@ -196,16 +211,19 @@ Guild includes comprehensive test coverage tools:
 Guild provides advanced test verification tools that help maintain code quality:
 
 - Identify untested functions in a package:
+
   ```bash
   task test:verify PACKAGE="./pkg/objective"
   ```
 
 - Verify test coverage for all working packages:
+
   ```bash
   task test:verify:all
   ```
 
 - Analyze test patterns and quality:
+
   ```bash
   task test:analyze
   ```
@@ -215,16 +233,19 @@ Guild provides advanced test verification tools that help maintain code quality:
 Guild follows specific naming conventions based on medieval guild terminology. These tools help ensure tests adhere to these conventions:
 
 - Check adherence to Guild naming conventions:
+
   ```bash
   task test:analyze:lore
   ```
 
 - Lint tests for naming compliance:
+
   ```bash
   task test:lint:naming
   ```
 
 - Generate a comprehensive test quality report that includes coverage, verification, and lore compliance:
+
   ```bash
   task test:report
   ```
@@ -288,14 +309,19 @@ Generated components follow Guild's naming and styling conventions automatically
 
 1. Use `task ui:scaffold` to create new components
 2. Run the UI in development mode with hot reloading:
+
    ```bash
    task ui:dev:run
    ```
+
 3. Test the UI components with Guild lore verification:
+
    ```bash
    task ui:test
    ```
+
 4. Check your component against the style guide:
+
    ```bash
    task ui:styleguide
    ```
@@ -351,12 +377,14 @@ Or directly:
 
 1. Update version in `cmd/guild/main.go`.
 2. Tag the release:
+
    ```bash
    git tag -a v0.1.0 -m "Release v0.1.0"
    git push origin v0.1.0
    ```
 
 3. Build binaries:
+
    ```bash
    task build
    ```

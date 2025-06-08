@@ -21,60 +21,60 @@ var (
 
 	// Title bar styled as a Guild banner
 	bannerStyle = lipgloss.NewStyle().
-		Foreground(gold).
-		Background(burgundy).
-		Bold(true).
-		Padding(0, 1).
-		Width(80)
+			Foreground(gold).
+			Background(burgundy).
+			Bold(true).
+			Padding(0, 1).
+			Width(80)
 
 	// Section headers like manuscript titles
 	manuscriptStyle = lipgloss.NewStyle().
-		Foreground(gold).
-		Background(darkOak).
-		Bold(true).
-		Padding(0, 2)
+			Foreground(gold).
+			Background(darkOak).
+			Bold(true).
+			Padding(0, 2)
 
 	// Normal text like parchment scrolls
 	scrollStyle = lipgloss.NewStyle().
-		Foreground(ivory).
-		Background(darkOak).
-		Padding(0, 2)
+			Foreground(ivory).
+			Background(darkOak).
+			Padding(0, 2)
 
 	// Command text like a scribe's notes
 	scribeStyle = lipgloss.NewStyle().
-		Foreground(parchment).
-		Italic(true)
+			Foreground(parchment).
+			Italic(true)
 
 	// Error message like a warning seal
 	warningStyle = lipgloss.NewStyle().
-		Foreground(ruby).
-		Bold(true)
+			Foreground(ruby).
+			Bold(true)
 
 	// Success message like a master craftsman's approval
 	approvalStyle = lipgloss.NewStyle().
-		Foreground(emerald).
-		Bold(true)
+			Foreground(emerald).
+			Bold(true)
 
 	// Help text like an apprentice's guide
 	guideStyle = lipgloss.NewStyle().
-		Foreground(gold).
-		Faint(true)
+			Foreground(gold).
+			Faint(true)
 
 	// Border styles for different components
 	guildHallStyle = lipgloss.NewStyle().
-		BorderStyle(lipgloss.DoubleBorder()).
-		BorderForeground(burgundy).
-		Padding(1, 2)
+			BorderStyle(lipgloss.DoubleBorder()).
+			BorderForeground(burgundy).
+			Padding(1, 2)
 
 	chamberStyle = lipgloss.NewStyle().
-		BorderStyle(lipgloss.RoundedBorder()).
-		BorderForeground(gold).
-		Padding(1, 2)
+			BorderStyle(lipgloss.RoundedBorder()).
+			BorderForeground(gold).
+			Padding(1, 2)
 
 	workshopStyle = lipgloss.NewStyle().
-		BorderStyle(lipgloss.NormalBorder()).
-		BorderForeground(darkOak).
-		Padding(0, 1)
+			BorderStyle(lipgloss.NormalBorder()).
+			BorderForeground(darkOak).
+			Padding(0, 1)
 )
 
 // View renders the UI
@@ -116,8 +116,8 @@ func (m CommissionChamber) View() string {
 		proclamationStyle = warningStyle
 		m.proclamation = "Warning: " + m.guildError.Error()
 	} else if strings.Contains(m.proclamation, "success") ||
-	          strings.Contains(m.proclamation, "completed") ||
-	          strings.Contains(m.proclamation, "approved") {
+		strings.Contains(m.proclamation, "completed") ||
+		strings.Contains(m.proclamation, "approved") {
 		proclamationStyle = approvalStyle
 	}
 
@@ -170,8 +170,8 @@ func (m CommissionChamber) renderViewingState() string {
 				manuscriptStyle.Render("Welcome to the Guild Hall"),
 				scrollStyle.Render(
 					"Press 'c' to craft a new objective\n"+
-					"Press 'tab' to view existing objectives\n"+
-					"Press ':' to enter command mode",
+						"Press 'tab' to view existing objectives\n"+
+						"Press ':' to enter command mode",
 				),
 			))
 	}
@@ -200,8 +200,8 @@ func (m CommissionChamber) renderContextState() string {
 	header := manuscriptStyle.Render("The Guild Scribe's Parchment")
 	instructions := scrollStyle.Render(
 		"Enter context or reference documents for your objective.\n" +
-		"Use @spec/path/to/file.md or @ai_docs/path/to/file.md to reference existing documents.\n" +
-		"Press Ctrl+Enter to submit or Esc to cancel.",
+			"Use @spec/path/to/file.md or @ai_docs/path/to/file.md to reference existing documents.\n" +
+			"Press Ctrl+Enter to submit or Esc to cancel.",
 	)
 
 	scribeArea := m.scribe.View()
@@ -241,11 +241,11 @@ func (m CommissionChamber) renderCommandState() string {
 	header := manuscriptStyle.Render("Guild Master's Command Hall")
 	instructions := scrollStyle.Render(
 		"Enter a command to execute:\n" +
-		"  add-context \"<text>\" - Add context to the objective\n" +
-		"  regenerate - Rebuild documents from current objective\n" +
-		"  suggest - Request improvement suggestions\n" +
-		"  ready - Mark the objective as ready\n" +
-		"Press Enter to execute or Esc to cancel.",
+			"  add-context \"<text>\" - Add context to the objective\n" +
+			"  regenerate - Rebuild documents from current objective\n" +
+			"  suggest - Request improvement suggestions\n" +
+			"  ready - Mark the objective as ready\n" +
+			"Press Enter to execute or Esc to cancel.",
 	)
 
 	commandArea := scribeStyle.Render("> " + m.parchment.View())
@@ -290,8 +290,8 @@ func (m CommissionChamber) renderCreatingState() string {
 	header := manuscriptStyle.Render("Crafting a New Objective")
 	instructions := scrollStyle.Render(
 		"Describe your objective in natural language.\n" +
-		"The Guild craftsmen will shape it into a proper objective structure.\n" +
-		"Press Ctrl+Enter to submit or Esc to cancel.",
+			"The Guild craftsmen will shape it into a proper objective structure.\n" +
+			"Press Ctrl+Enter to submit or Esc to cancel.",
 	)
 
 	creationArea := m.scribe.View()

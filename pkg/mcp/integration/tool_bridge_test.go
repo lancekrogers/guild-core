@@ -6,12 +6,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
 	"github.com/guild-ventures/guild-core/pkg/mcp/tools"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	basetools "github.com/guild-ventures/guild-core/tools"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 // MockGuildTool implements the Guild Tool interface
@@ -20,11 +21,15 @@ type MockGuildTool struct {
 	executed bool
 }
 
-func (m *MockGuildTool) Name() string        { return m.name }
+func (m *MockGuildTool) Name() string { return m.name }
+
 func (m *MockGuildTool) Description() string { return "Mock Guild tool for testing" }
-func (m *MockGuildTool) Category() string    { return "test" }
-func (m *MockGuildTool) RequiresAuth() bool  { return false }
-func (m *MockGuildTool) Examples() []string  { return []string{`{"input": "test"}`} }
+
+func (m *MockGuildTool) Category() string { return "test" }
+
+func (m *MockGuildTool) RequiresAuth() bool { return false }
+
+func (m *MockGuildTool) Examples() []string { return []string{`{"input": "test"}`} }
 
 func (m *MockGuildTool) Schema() map[string]interface{} {
 	return map[string]interface{}{
@@ -57,16 +62,20 @@ type MockMCPTool struct {
 	executed bool
 }
 
-func (m *MockMCPTool) ID() string          { return m.id }
-func (m *MockMCPTool) Name() string        { return m.name }
+func (m *MockMCPTool) ID() string { return m.id }
+
+func (m *MockMCPTool) Name() string { return m.name }
+
 func (m *MockMCPTool) Description() string { return "Mock MCP tool for testing" }
+
 func (m *MockMCPTool) Capabilities() []string { return []string{"test", "mock"} }
+
 func (m *MockMCPTool) HealthCheck() error { return nil }
 
 func (m *MockMCPTool) Execute(ctx context.Context, params map[string]interface{}) (interface{}, error) {
 	m.executed = true
 	return map[string]interface{}{
-		"output": "MCP executed with: " + params["input"].(string),
+		"output":  "MCP executed with: " + params["input"].(string),
 		"success": true,
 	}, nil
 }

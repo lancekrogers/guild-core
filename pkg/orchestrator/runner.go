@@ -11,14 +11,14 @@ import (
 
 // BaseOrchestrator implements the Orchestrator interface
 type BaseOrchestrator struct {
-	status          Status
-	agents          map[string]agent.Agent
-	eventBus        EventBus
-	dispatcher      TaskDispatcher
+	status           Status
+	agents           map[string]agent.Agent
+	eventBus         EventBus
+	dispatcher       TaskDispatcher
 	currentObjective *commission.Commission
-	config          *Config
-	mu              sync.RWMutex
-	cancelFunc      context.CancelFunc
+	config           *Config
+	mu               sync.RWMutex
+	cancelFunc       context.CancelFunc
 }
 
 // newOrchestrator creates a new orchestrator (private constructor)

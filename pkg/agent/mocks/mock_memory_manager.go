@@ -11,12 +11,12 @@ import (
 
 // MockChainManager implements the memory.ChainManager interface for testing
 type MockChainManager struct {
-	mu        sync.RWMutex
-	chains    map[string]*memory.PromptChain
-	chainMap  map[string][]string // Maps agentID/taskID to chainIDs
-	nextID    int
-	buildCtx  []memory.Message
-	Error     error
+	mu       sync.RWMutex
+	chains   map[string]*memory.PromptChain
+	chainMap map[string][]string // Maps agentID/taskID to chainIDs
+	nextID   int
+	buildCtx []memory.Message
+	Error    error
 }
 
 // NewMockChainManager creates a new mock chain manager

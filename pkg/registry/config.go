@@ -3,8 +3,9 @@ package registry
 import (
 	"os"
 
+	yaml "gopkg.in/yaml.v3"
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"gopkg.in/yaml.v3"
 )
 
 // LoadConfig loads configuration from a YAML file
@@ -87,23 +88,23 @@ func DefaultConfig() *Config {
 			DefaultProvider: "openai",
 			Providers: map[string]interface{}{
 				"openai": map[string]interface{}{
-					"model": "gpt-4.1",
+					"model":       "gpt-4.1",
 					"api_key_env": "OPENAI_API_KEY",
 				},
 				"anthropic": map[string]interface{}{
-					"model": "claude-4-sonnet",
+					"model":       "claude-4-sonnet",
 					"api_key_env": "ANTHROPIC_API_KEY",
 				},
 				"google": map[string]interface{}{
-					"model": "gemini-2.5-flash",
+					"model":       "gemini-2.5-flash",
 					"api_key_env": "GOOGLE_API_KEY",
 				},
 				"ollama": map[string]interface{}{
 					"model": "llama3.1:8b",
-					"url": "http://localhost:11434",
+					"url":   "http://localhost:11434",
 				},
 				"claudecode": map[string]interface{}{
-					"model": "sonnet",
+					"model":    "sonnet",
 					"bin_path": "claude-code",
 				},
 			},
@@ -117,7 +118,7 @@ func DefaultConfig() *Config {
 				},
 				"chromem": map[string]interface{}{
 					"persistence_path": "./.guild/vectors",
-					"dimension": 1536,
+					"dimension":        1536,
 				},
 			},
 		},

@@ -7,15 +7,16 @@ import (
 	"sync"
 
 	tea "github.com/charmbracelet/bubbletea"
+
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 )
 
 // CommandProcessor handles command execution for the chat interface
 type CommandProcessor struct {
-	model         *ChatModel
-	commands      map[string]func(args []string) tea.Cmd
-	mu            sync.RWMutex
+	model    *ChatModel
+	commands map[string]func(args []string) tea.Cmd
+	mu       sync.RWMutex
 }
 
 // NewCommandProcessor creates a new command processor
@@ -313,7 +314,7 @@ func (cp *CommandProcessor) handlePromptGet(layer string) tea.Cmd {
 				Content: fmt.Sprintf("Unknown prompt layer: %s", layer),
 			}
 		}
-		
+
 		resp, err := cp.model.promptsClient.GetPromptLayer(ctx, &promptspb.GetPromptLayerRequest{
 			Layer: layerEnum,
 		})
@@ -475,7 +476,7 @@ This demonstrates Guild's **rich markdown rendering** capabilities.
 ### Quotes
 
 > "The Guild stands ready to serve, with artisans skilled in every craft."
-> 
+>
 > — Guild Master
 
 ### Tables
@@ -512,14 +513,14 @@ type GuildArtisan struct {
 
 func (g *GuildArtisan) Execute(ctx context.Context, task Task) error {
     fmt.Printf("🛡️ %s executing task: %s\n", g.Name, task.ID)
-    
+
     // Medieval-themed task execution
     for i, step := range task.Steps {
         if err := g.performStep(ctx, step); err != nil {
             return fmt.Errorf("step %d failed: %w", i, err)
         }
     }
-    
+
     return nil
 }`,
 		"python": `# Guild Agent Implementation
@@ -528,22 +529,22 @@ from typing import List, Dict, Any
 
 class GuildArtisan:
     """A skilled artisan in the Guild framework"""
-    
+
     def __init__(self, id: str, name: str, capabilities: List[str]):
         self.id = id
         self.name = name
         self.capabilities = capabilities
         self.active_tasks = []
-    
+
     async def execute_task(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """Execute a task with medieval flair"""
         print(f"🛡️ {self.name} executing task: {task['id']}")
-        
+
         # Simulate task execution
         for step in task.get('steps', []):
             await self._perform_step(step)
             await asyncio.sleep(0.1)
-        
+
         return {
             'status': 'completed',
             'artisan': self.name,
@@ -557,10 +558,10 @@ class GuildArtisan {
         this.capabilities = capabilities;
         this.activeTasks = new Map();
     }
-    
+
     async executeTask(task) {
         console.log(` + "`🛡️ ${this.name} executing task: ${task.id}`" + `);
-        
+
         // Medieval-themed task execution
         for (const [index, step] of task.steps.entries()) {
             try {
@@ -569,7 +570,7 @@ class GuildArtisan {
                 throw new Error(` + "`Step ${index} failed: ${error.message}`" + `);
             }
         }
-        
+
         return {
             status: 'completed',
             artisan: this.name,
@@ -609,13 +610,13 @@ When a Guild artisan receives a task, the following process occurs:
 func (g *GuildOrchestrator) ExecuteCommission(commission Commission) error {
     // 1. Parse commission into tasks
     tasks := g.parseCommission(commission)
-    
+
     // 2. Assign tasks to artisans
     for _, task := range tasks {
         artisan := g.selectArtisan(task)
         g.assignTask(artisan, task)
     }
-    
+
     // 3. Monitor execution
     return g.monitorExecution()
 }

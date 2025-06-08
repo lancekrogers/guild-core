@@ -14,11 +14,11 @@ import (
 // Provider is a mock AI provider for testing
 type Provider struct {
 	mu              sync.Mutex
-	responses       map[string]string              // Predefined responses by prompt
-	errors          map[string]error               // Predefined errors by prompt
-	calls           []CallRecord                   // Record of all calls
-	defaultResponse string                         // Default response if no match
-	delay           time.Duration                  // Simulated latency
+	responses       map[string]string // Predefined responses by prompt
+	errors          map[string]error  // Predefined errors by prompt
+	calls           []CallRecord      // Record of all calls
+	defaultResponse string            // Default response if no match
+	delay           time.Duration     // Simulated latency
 	capabilities    interfaces.ProviderCapabilities
 }
 

@@ -8,26 +8,27 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 )
 
 // Column represents a kanban board column
 type Column struct {
-	Status      kanban.TaskStatus
-	Title       string
-	Tasks       []*kanban.Task
-	ScrollOffset int  // Current scroll position
-	TotalTasks   int  // Total tasks in this column (may be > len(Tasks) due to viewport)
+	Status       kanban.TaskStatus
+	Title        string
+	Tasks        []*kanban.Task
+	ScrollOffset int // Current scroll position
+	TotalTasks   int // Total tasks in this column (may be > len(Tasks) due to viewport)
 }
 
 // ViewportState manages the visible portion of the board
 type ViewportState struct {
-	Width           int      // Terminal width
-	Height          int      // Terminal height
-	VisibleRows     int      // Number of task rows that fit
-	FocusedColumn   int      // Currently selected column (0-4)
-	SearchFilter    string   // Active search term
-	SearchMode      bool     // Whether search mode is active
+	Width         int    // Terminal width
+	Height        int    // Terminal height
+	VisibleRows   int    // Number of task rows that fit
+	FocusedColumn int    // Currently selected column (0-4)
+	SearchFilter  string // Active search term
+	SearchMode    bool   // Whether search mode is active
 }
 
 // Model represents the kanban board UI state
@@ -38,14 +39,14 @@ type Model struct {
 	ctx           context.Context
 
 	// UI State
-	columns       [5]Column
-	viewport      ViewportState
+	columns  [5]Column
+	viewport ViewportState
 
 	// Task cache
-	taskCache     map[string][]*kanban.Task // Status -> Tasks
-	lastUpdate    time.Time
-	loading       bool
-	error         error
+	taskCache  map[string][]*kanban.Task // Status -> Tasks
+	lastUpdate time.Time
+	loading    bool
+	error      error
 
 	// Interaction state
 	selectedTaskID string
@@ -53,9 +54,9 @@ type Model struct {
 	statusMessage  string
 
 	// Performance tracking
-	frameCount     int
-	lastRender     time.Time
-	fps            float64
+	frameCount int
+	lastRender time.Time
+	fps        float64
 }
 
 // New creates a new kanban board UI model
@@ -67,9 +68,9 @@ func New(ctx context.Context, kanbanManager *kanban.Manager, boardID string) *Mo
 		taskCache:     make(map[string][]*kanban.Task),
 		lastRender:    time.Now(),
 		viewport: ViewportState{
-			Width:        80,
-			Height:       24,
-			VisibleRows:  10,
+			Width:         80,
+			Height:        24,
+			VisibleRows:   10,
 			FocusedColumn: 0,
 		},
 	}
@@ -98,10 +99,13 @@ func (m *Model) Init() tea.Cmd {
 
 // Message types
 type tickMsg time.Time
+
 type tasksLoadedMsg struct {
 	tasks map[string][]*kanban.Task
 }
+
 type errorMsg struct{ err error }
+
 type taskUpdatedMsg struct{ task *kanban.Task }
 
 // loadTasks loads tasks from the kanban manager
@@ -330,8 +334,8 @@ func (m *Model) updateColumns() {
 			filter := strings.ToLower(m.viewport.SearchFilter)
 			for _, task := range allTasks {
 				if strings.Contains(strings.ToLower(task.Title), filter) ||
-				   strings.Contains(strings.ToLower(task.Description), filter) ||
-				   strings.Contains(strings.ToLower(task.AssignedTo), filter) {
+					strings.Contains(strings.ToLower(task.Description), filter) ||
+					strings.Contains(strings.ToLower(task.AssignedTo), filter) {
 					filteredTasks = append(filteredTasks, task)
 				}
 			}
@@ -359,9 +363,9 @@ func (m *Model) updateColumns() {
 // calculateVisibleRows calculates how many task rows fit in the viewport
 func (m *Model) calculateVisibleRows() {
 	// Account for header, column titles, borders, help line
-	headerHeight := 4  // Campaign header + separator
-	columnHeight := 3  // Column headers + separator
-	bottomHeight := 2  // Help line + border
+	headerHeight := 4 // Campaign header + separator
+	columnHeight := 3 // Column headers + separator
+	bottomHeight := 2 // Help line + border
 
 	availableHeight := m.viewport.Height - headerHeight - columnHeight - bottomHeight
 	if availableHeight < 1 {
@@ -382,31 +386,30 @@ func (m *Model) getSelectedTask() *kanban.Task {
 	return nil
 }
 
-
 // Styles for the kanban board
 var (
 	headerStyle = lipgloss.NewStyle().
-		Bold(true).
-		Foreground(lipgloss.Color("12")).
-		Background(lipgloss.Color("235")).
-		Padding(0, 1)
+			Bold(true).
+			Foreground(lipgloss.Color("12")).
+			Background(lipgloss.Color("235")).
+			Padding(0, 1)
 
 	columnHeaderStyle = lipgloss.NewStyle().
-		Bold(true).
-		Padding(0, 1).
-		Width(20).
-		Align(lipgloss.Center)
+				Bold(true).
+				Padding(0, 1).
+				Width(20).
+				Align(lipgloss.Center)
 
 	taskStyle = lipgloss.NewStyle().
-		Padding(0, 1).
-		Width(20).
-		MaxHeight(3)
+			Padding(0, 1).
+			Width(20).
+			MaxHeight(3)
 
 	selectedTaskStyle = taskStyle.Copy().
-		BorderStyle(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color("12"))
+				BorderStyle(lipgloss.RoundedBorder()).
+				BorderForeground(lipgloss.Color("12"))
 
 	scrollIndicatorStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("240")).
-		Italic(true)
+				Foreground(lipgloss.Color("240")).
+				Italic(true)
 )

@@ -35,19 +35,19 @@ type Config struct {
 	TransportConfig *transport.TransportConfig
 
 	// Security settings
-	AuthToken      string
-	EnableTLS      bool
-	TLSInsecure    bool
+	AuthToken   string
+	EnableTLS   bool
+	TLSInsecure bool
 
 	// Performance settings
-	RequestTimeout  time.Duration
-	ConnectTimeout  time.Duration
-	ReconnectDelay  time.Duration
-	MaxReconnects   int
+	RequestTimeout time.Duration
+	ConnectTimeout time.Duration
+	ReconnectDelay time.Duration
+	MaxReconnects  int
 
 	// Features
-	EnableMetrics   bool
-	EnableTracing   bool
+	EnableMetrics bool
+	EnableTracing bool
 }
 
 // EventHandler handles server events

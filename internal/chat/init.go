@@ -70,15 +70,15 @@ func NewChatModel(guildConfig *config.GuildConfig, conn *grpc.ClientConn, prompt
 		promptLayers:  []string{},
 		activeTools:   make(map[string]*toolExecution),
 		costConsent:   make(map[string]bool),
-		
+
 		// Initialize history
 		history: NewCommandHistory(historyFile),
-		
+
 		// Completion state
 		showingCompletion: false,
 		completionResults: nil,
 		completionIndex:   0,
-		
+
 		// Integration flags
 		integrationFlags: make(map[string]bool),
 	}
@@ -117,10 +117,10 @@ func (m *ChatModel) initializeMarkdownRenderer() error {
 			WithComponent("chat").
 			WithOperation("initializeMarkdownRenderer")
 	}
-	
+
 	m.markdownRenderer = renderer
 	m.contentFormatter = NewContentFormatter(renderer, m.width)
-	
+
 	return nil
 }
 
@@ -131,16 +131,16 @@ func (m *ChatModel) initializeStatusDisplay() error {
 			WithComponent("chat").
 			WithOperation("initializeStatusDisplay")
 	}
-	
+
 	// Create agent status tracker
 	m.agentStatusTracker = NewAgentStatusTracker(m.guildConfig)
-	
+
 	// Create status display
 	m.statusDisplay = NewStatusDisplay(m.agentStatusTracker, m.width, m.height)
-	
+
 	// Create agent indicators
 	m.agentIndicators = NewAgentIndicators()
-	
+
 	return nil
 }
 
@@ -154,10 +154,10 @@ func (m *ChatModel) initializeAutoCompletion() error {
 
 	// Create completion engine with guild context
 	engine := NewCompletionEngine(m.guildConfig, projectRoot)
-	
+
 	m.completionEng = engine
 	m.commandProc = NewCommandProcessor(m)
-	
+
 	return nil
 }
 
@@ -169,7 +169,7 @@ func (m *ChatModel) initializeCommandHistory() error {
 			WithComponent("chat").
 			WithOperation("initializeCommandHistory")
 	}
-	
+
 	// History is already initialized in NewChatModel
 	return nil
 }
@@ -275,7 +275,7 @@ func (m *ChatModel) ValidateAllComponents() error {
 	// Mark integration as ready
 	m.integrationFlags["enhanced_view"] = true
 	m.integrationFlags["integrated_processing"] = true
-	
+
 	return nil
 }
 

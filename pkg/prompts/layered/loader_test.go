@@ -206,9 +206,9 @@ func TestLoaderCompleteness(t *testing.T) {
 
 	// Define expected coverage
 	expectedRoles := map[string][]string{
-		"manager": {"default", "web-app", "cli-tool", "library", "microservice"},
+		"manager":   {"default", "web-app", "cli-tool", "library", "microservice"},
 		"developer": {"default", "backend", "frontend", "fullstack"},
-		"reviewer": {"default", "code-quality", "security", "performance"},
+		"reviewer":  {"default", "code-quality", "security", "performance"},
 	}
 
 	// Verify all expected prompts exist

@@ -38,12 +38,12 @@ type Output struct {
 
 // Exchange represents a complete prompt-response pair
 type Exchange struct {
-	Input      *Input
-	Output     *Output
-	Processor  string
-	StartTime  time.Time
-	EndTime    time.Time
-	Metrics    protocol.CostReport
+	Input     *Input
+	Output    *Output
+	Processor string
+	StartTime time.Time
+	EndTime   time.Time
+	Metrics   protocol.CostReport
 }
 
 // Chain represents a chain of processors
@@ -255,10 +255,10 @@ func (p *MetricsProcessor) Process(ctx context.Context, input *Input) (*Output, 
 
 	// Record metrics
 	cost := protocol.CostReport{
-		StartTime:    start,
-		EndTime:      time.Now(),
-		LatencyCost:  time.Since(start),
-		OperationID:  fmt.Sprintf("prompt-%d", time.Now().UnixNano()),
+		StartTime:   start,
+		EndTime:     time.Now(),
+		LatencyCost: time.Since(start),
+		OperationID: fmt.Sprintf("prompt-%d", time.Now().UnixNano()),
 	}
 
 	if output != nil {

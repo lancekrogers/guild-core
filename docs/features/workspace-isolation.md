@@ -5,6 +5,7 @@ The Guild Framework provides workspace isolation for agents using Git worktrees,
 ## Overview
 
 Each agent task executes in its own isolated Git worktree, providing:
+
 - **Complete isolation** between concurrent agent tasks
 - **Clean working environment** for each task
 - **Automatic change tracking** via Git
@@ -42,6 +43,7 @@ Each agent task executes in its own isolated Git worktree, providing:
 ### Branch Naming Convention
 
 Each workspace gets its own Git branch:
+
 ```
 agent/{agentID}-{timestamp}
 ```
@@ -127,21 +129,25 @@ if gitWs, ok := ws.(*workspace.GitWorkspace); ok {
 ## Workspace Lifecycle
 
 ### 1. Creation Phase
+
 - Git worktree created from base branch (main/master)
 - New branch created for the workspace
 - Workspace registered with manager
 
 ### 2. Active Phase
+
 - Agent works in isolated directory
 - All file operations are contained
 - Changes tracked by Git automatically
 
 ### 3. Finalization Phase
+
 - Uncommitted changes detected
 - Optional auto-commit with task metadata
 - Workspace info stored in execution results
 
 ### 4. Cleanup Phase
+
 - Worktree removed from filesystem
 - Branch optionally deleted
 - Resources freed
@@ -177,6 +183,7 @@ workspace:
 Common errors and solutions:
 
 ### Workspace Creation Fails
+
 ```go
 ws, err := manager.CreateWorkspace(ctx, opts)
 if err != nil {
@@ -189,6 +196,7 @@ if err != nil {
 ```
 
 ### Commit Fails
+
 ```go
 err := gitWs.CommitChanges("Task complete")
 if err != nil {
@@ -201,11 +209,13 @@ if err != nil {
 ## Testing
 
 ### Unit Tests
+
 ```bash
 go test ./pkg/workspace/...
 ```
 
 ### Integration Tests
+
 ```go
 func TestWorkspaceIsolation(t *testing.T) {
     // Create test repository

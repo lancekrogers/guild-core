@@ -240,15 +240,18 @@ type ProjectRegistry interface {
 	WithProjectContext(ctx context.Context) (context.Context, error)
 }
 
-
 // Define minimal interfaces to avoid import cycles
 // Agent interface is defined in agent_registry.go to avoid duplication
 
 // Type aliases to use existing interfaces
 type Tool = tools.Tool
+
 type Provider = providers.LLMClient
+
 type MemoryStore = memory.Store
+
 type VectorStore = vector.VectorStore
+
 type ChainManager = memory.ChainManager
 
 // Forward declarations for storage repositories to avoid import cycles
@@ -340,26 +343,26 @@ type Commission struct {
 }
 
 type StorageAgent struct {
-	ID             string                 `json:"id"`
-	Name           string                 `json:"name"`
-	Type           string                 `json:"type"`
-	Provider       *string                `json:"provider,omitempty"`
-	Model          *string                `json:"model,omitempty"`
-	Capabilities   map[string]interface{} `json:"capabilities,omitempty"`
-	Tools          map[string]interface{} `json:"tools,omitempty"`
-	CostMagnitude  int32                  `json:"cost_magnitude"`
-	CreatedAt      time.Time              `json:"created_at"`
+	ID            string                 `json:"id"`
+	Name          string                 `json:"name"`
+	Type          string                 `json:"type"`
+	Provider      *string                `json:"provider,omitempty"`
+	Model         *string                `json:"model,omitempty"`
+	Capabilities  map[string]interface{} `json:"capabilities,omitempty"`
+	Tools         map[string]interface{} `json:"tools,omitempty"`
+	CostMagnitude int32                  `json:"cost_magnitude"`
+	CreatedAt     time.Time              `json:"created_at"`
 }
 
 type TaskEvent struct {
-	ID         int64     `json:"id"`
-	TaskID     string    `json:"task_id"`
-	AgentID    *string   `json:"agent_id,omitempty"`
-	EventType  string    `json:"event_type"`
-	OldValue   *string   `json:"old_value,omitempty"`
-	NewValue   *string   `json:"new_value,omitempty"`
-	Reason     *string   `json:"reason,omitempty"`
-	CreatedAt  time.Time `json:"created_at"`
+	ID        int64     `json:"id"`
+	TaskID    string    `json:"task_id"`
+	AgentID   *string   `json:"agent_id,omitempty"`
+	EventType string    `json:"event_type"`
+	OldValue  *string   `json:"old_value,omitempty"`
+	NewValue  *string   `json:"new_value,omitempty"`
+	Reason    *string   `json:"reason,omitempty"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type AgentWorkload struct {
@@ -370,12 +373,12 @@ type AgentWorkload struct {
 }
 
 type PromptChain struct {
-	ID        string                 `json:"id"`
-	AgentID   string                 `json:"agent_id"`
-	TaskID    *string                `json:"task_id,omitempty"`
-	CreatedAt time.Time              `json:"created_at"`
-	UpdatedAt time.Time              `json:"updated_at"`
-	Messages  []*PromptChainMessage  `json:"messages,omitempty"`
+	ID        string                `json:"id"`
+	AgentID   string                `json:"agent_id"`
+	TaskID    *string               `json:"task_id,omitempty"`
+	CreatedAt time.Time             `json:"created_at"`
+	UpdatedAt time.Time             `json:"updated_at"`
+	Messages  []*PromptChainMessage `json:"messages,omitempty"`
 }
 
 type PromptChainMessage struct {
@@ -493,8 +496,8 @@ type ToolOutput struct {
 }
 
 type CompletionRequest struct {
-	Messages []Message `json:"messages"`
-	Model    string    `json:"model"`
+	Messages []Message              `json:"messages"`
+	Model    string                 `json:"model"`
 	Options  map[string]interface{} `json:"options,omitempty"`
 }
 
@@ -544,8 +547,8 @@ type KanbanCommissionRepository interface {
 
 // Common errors
 var (
-	ErrComponentNotFound     = gerror.New(gerror.ErrCodeNotFound, "component not found", nil)
-	ErrComponentExists       = gerror.New(gerror.ErrCodeAlreadyExists, "component already exists", nil)
-	ErrInvalidConfiguration  = gerror.New(gerror.ErrCodeInvalidFormat, "invalid configuration", nil)
+	ErrComponentNotFound      = gerror.New(gerror.ErrCodeNotFound, "component not found", nil)
+	ErrComponentExists        = gerror.New(gerror.ErrCodeAlreadyExists, "component already exists", nil)
+	ErrInvalidConfiguration   = gerror.New(gerror.ErrCodeInvalidFormat, "invalid configuration", nil)
 	ErrRegistryNotInitialized = gerror.New(gerror.ErrCodeInternal, "registry not initialized", nil)
 )

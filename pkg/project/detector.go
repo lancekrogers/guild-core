@@ -195,12 +195,12 @@ func (d *ProjectDetector) GenerateGuildConfig(projectType *ProjectType, projectP
 func (d *ProjectDetector) generateAgentsForProjectType(projectType *ProjectType) []config.AgentConfig {
 	baseAgents := []config.AgentConfig{
 		{
-			ID:           "architect",
-			Name:         "System Architect",
-			Type:         "manager",
-			Capabilities: []string{"system_design", "architecture", "planning"},
-			Model:        "claude-3-sonnet-20240229",
-			Provider:     "anthropic",
+			ID:            "architect",
+			Name:          "System Architect",
+			Type:          "manager",
+			Capabilities:  []string{"system_design", "architecture", "planning"},
+			Model:         "claude-3-sonnet-20240229",
+			Provider:      "anthropic",
 			CostMagnitude: 8, // High-level strategic work
 		},
 	}
@@ -209,42 +209,42 @@ func (d *ProjectDetector) generateAgentsForProjectType(projectType *ProjectType)
 	switch projectType.Language {
 	case "go":
 		baseAgents = append(baseAgents, config.AgentConfig{
-			ID:           "go-dev",
-			Name:         "Go Developer",
-			Type:         "worker",
-			Capabilities: []string{"golang", "backend", "testing", "performance"},
-			Model:        "claude-3-sonnet-20240229",
-			Provider:     "anthropic",
+			ID:            "go-dev",
+			Name:          "Go Developer",
+			Type:          "worker",
+			Capabilities:  []string{"golang", "backend", "testing", "performance"},
+			Model:         "claude-3-sonnet-20240229",
+			Provider:      "anthropic",
 			CostMagnitude: 3, // Mid-level development work
 		})
 	case "javascript":
 		baseAgents = append(baseAgents, config.AgentConfig{
-			ID:           "js-dev",
-			Name:         "JavaScript Developer",
-			Type:         "worker",
-			Capabilities: []string{"javascript", "nodejs", "frontend", "testing"},
-			Model:        "claude-3-sonnet-20240229",
-			Provider:     "anthropic",
+			ID:            "js-dev",
+			Name:          "JavaScript Developer",
+			Type:          "worker",
+			Capabilities:  []string{"javascript", "nodejs", "frontend", "testing"},
+			Model:         "claude-3-sonnet-20240229",
+			Provider:      "anthropic",
 			CostMagnitude: 3,
 		})
 	case "python":
 		baseAgents = append(baseAgents, config.AgentConfig{
-			ID:           "python-dev",
-			Name:         "Python Developer",
-			Type:         "worker",
-			Capabilities: []string{"python", "backend", "data", "testing"},
-			Model:        "claude-3-sonnet-20240229",
-			Provider:     "anthropic",
+			ID:            "python-dev",
+			Name:          "Python Developer",
+			Type:          "worker",
+			Capabilities:  []string{"python", "backend", "data", "testing"},
+			Model:         "claude-3-sonnet-20240229",
+			Provider:      "anthropic",
 			CostMagnitude: 3,
 		})
 	case "rust":
 		baseAgents = append(baseAgents, config.AgentConfig{
-			ID:           "rust-dev",
-			Name:         "Rust Developer",
-			Type:         "worker",
-			Capabilities: []string{"rust", "systems", "performance", "safety"},
-			Model:        "claude-3-sonnet-20240229",
-			Provider:     "anthropic",
+			ID:            "rust-dev",
+			Name:          "Rust Developer",
+			Type:          "worker",
+			Capabilities:  []string{"rust", "systems", "performance", "safety"},
+			Model:         "claude-3-sonnet-20240229",
+			Provider:      "anthropic",
 			CostMagnitude: 5,
 		})
 	}
@@ -252,24 +252,24 @@ func (d *ProjectDetector) generateAgentsForProjectType(projectType *ProjectType)
 	// Add framework-specific agents
 	if projectType.Framework == "web" {
 		baseAgents = append(baseAgents, config.AgentConfig{
-			ID:           "frontend-dev",
-			Name:         "Frontend Developer",
-			Type:         "specialist",
-			Capabilities: []string{"ui", "ux", "css", "html", "responsive"},
-			Model:        "claude-3-haiku-20240307",
-			Provider:     "anthropic",
+			ID:            "frontend-dev",
+			Name:          "Frontend Developer",
+			Type:          "specialist",
+			Capabilities:  []string{"ui", "ux", "css", "html", "responsive"},
+			Model:         "claude-3-haiku-20240307",
+			Provider:      "anthropic",
 			CostMagnitude: 2,
 		})
 	}
 
 	if projectType.Framework == "data-science" {
 		baseAgents = append(baseAgents, config.AgentConfig{
-			ID:           "data-scientist",
-			Name:         "Data Scientist",
-			Type:         "specialist",
-			Capabilities: []string{"data_analysis", "machine_learning", "visualization", "statistics"},
-			Model:        "claude-3-sonnet-20240229",
-			Provider:     "anthropic",
+			ID:            "data-scientist",
+			Name:          "Data Scientist",
+			Type:          "specialist",
+			Capabilities:  []string{"data_analysis", "machine_learning", "visualization", "statistics"},
+			Model:         "claude-3-sonnet-20240229",
+			Provider:      "anthropic",
 			CostMagnitude: 5,
 		})
 	}

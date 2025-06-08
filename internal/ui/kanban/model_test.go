@@ -6,11 +6,12 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/storage"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 // testRegistry implements kanban.ComponentRegistry for testing
@@ -52,6 +53,7 @@ func (t *testStorageRegistry) GetMemoryStore() kanban.MemoryStore {
 
 // Repository adapters
 type testCampaignRepo struct{ repo storage.CampaignRepository }
+
 func (r *testCampaignRepo) CreateCampaign(ctx context.Context, campaign interface{}) error {
 	if c, ok := campaign.(map[string]interface{}); ok {
 		return r.repo.CreateCampaign(ctx, &storage.Campaign{
@@ -66,6 +68,7 @@ func (r *testCampaignRepo) CreateCampaign(ctx context.Context, campaign interfac
 }
 
 type testCommissionRepo struct{ repo storage.CommissionRepository }
+
 func (r *testCommissionRepo) CreateCommission(ctx context.Context, commission interface{}) error {
 	if c, ok := commission.(map[string]interface{}); ok {
 		desc := c["Title"].(string)
@@ -80,29 +83,35 @@ func (r *testCommissionRepo) CreateCommission(ctx context.Context, commission in
 	}
 	return nil
 }
+
 func (r *testCommissionRepo) GetCommission(ctx context.Context, id string) (interface{}, error) {
 	return r.repo.GetCommission(ctx, id)
 }
 
 type testBoardRepo struct{ repo storage.BoardRepository }
+
 func (r *testBoardRepo) CreateBoard(ctx context.Context, board interface{}) error {
 	if b, ok := board.(*storage.Board); ok {
 		return r.repo.CreateBoard(ctx, b)
 	}
 	return nil
 }
+
 func (r *testBoardRepo) GetBoard(ctx context.Context, id string) (interface{}, error) {
 	return r.repo.GetBoard(ctx, id)
 }
+
 func (r *testBoardRepo) UpdateBoard(ctx context.Context, board interface{}) error {
 	if b, ok := board.(*storage.Board); ok {
 		return r.repo.UpdateBoard(ctx, b)
 	}
 	return nil
 }
+
 func (r *testBoardRepo) DeleteBoard(ctx context.Context, id string) error {
 	return r.repo.DeleteBoard(ctx, id)
 }
+
 func (r *testBoardRepo) ListBoards(ctx context.Context) ([]interface{}, error) {
 	boards, err := r.repo.ListBoards(ctx)
 	if err != nil {
@@ -116,12 +125,17 @@ func (r *testBoardRepo) ListBoards(ctx context.Context) ([]interface{}, error) {
 }
 
 type testTaskRepo struct{ repo storage.TaskRepository }
+
 func (r *testTaskRepo) CreateTask(ctx context.Context, task interface{}) error { return nil }
+
 func (r *testTaskRepo) UpdateTask(ctx context.Context, task interface{}) error { return nil }
+
 func (r *testTaskRepo) DeleteTask(ctx context.Context, id string) error { return nil }
+
 func (r *testTaskRepo) ListTasksByBoard(ctx context.Context, boardID string) ([]interface{}, error) {
 	return []interface{}{}, nil
 }
+
 func (r *testTaskRepo) RecordTaskEvent(ctx context.Context, event interface{}) error { return nil }
 
 func setupTestKanbanManager(t *testing.T) (*kanban.Manager, *kanban.Board, func()) {

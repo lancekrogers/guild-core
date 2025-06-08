@@ -7,10 +7,10 @@ import (
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -48,24 +48,24 @@ type AssignmentOptions struct {
 
 // TaskAssignmentResult contains assignment details with cost information
 type TaskAssignmentResult struct {
-	TaskID        string                 `json:"task_id"`
-	AgentID       string                 `json:"agent_id"`
-	AgentInfo     *registry.AgentInfo    `json:"agent_info"`
-	Tools         []registry.ToolInfo    `json:"tools"`
-	TotalCost     int                    `json:"total_cost"`
-	Reason        string                 `json:"reason"`
-	Alternatives  []registry.AgentInfo   `json:"alternatives"`
+	TaskID       string               `json:"task_id"`
+	AgentID      string               `json:"agent_id"`
+	AgentInfo    *registry.AgentInfo  `json:"agent_info"`
+	Tools        []registry.ToolInfo  `json:"tools"`
+	TotalCost    int                  `json:"total_cost"`
+	Reason       string               `json:"reason"`
+	Alternatives []registry.AgentInfo `json:"alternatives"`
 }
 
 // AssignmentSummary provides overview of cost-optimized assignments
 type AssignmentSummary struct {
-	TotalTasks       int                    `json:"total_tasks"`
-	TotalCost        int                    `json:"total_cost"`
-	AverageCost      float64                `json:"average_cost"`
-	CostEfficiency   string                 `json:"cost_efficiency"`
-	Assignments      []TaskAssignmentResult `json:"assignments"`
-	AgentWorkloads   map[string]int         `json:"agent_workloads"`
-	CostBreakdown    map[string]int         `json:"cost_breakdown"`
+	TotalTasks     int                    `json:"total_tasks"`
+	TotalCost      int                    `json:"total_cost"`
+	AverageCost    float64                `json:"average_cost"`
+	CostEfficiency string                 `json:"cost_efficiency"`
+	Assignments    []TaskAssignmentResult `json:"assignments"`
+	AgentWorkloads map[string]int         `json:"agent_workloads"`
+	CostBreakdown  map[string]int         `json:"cost_breakdown"`
 }
 
 // NewCostAwareTaskPlanner creates a new cost-optimized task planner
@@ -323,7 +323,7 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 		// Find the best capability match within cost filter
 		for _, agent := range allAgents {
 			if agent.CostMagnitude <= options.MaxCostMagnitude &&
-			   p.hasAllCapabilities(agent.Capabilities, requiredCapabilities) {
+				p.hasAllCapabilities(agent.Capabilities, requiredCapabilities) {
 				assignedAgent = &agent
 				reason = "Best capability match within cost limit"
 				break
@@ -568,13 +568,20 @@ func (p *CostAwareTaskPlanner) getDefaultToolRequirements(complexity string) []s
 
 func (p *CostAwareTaskPlanner) getCostIcon(cost int) string {
 	switch cost {
-	case 0: return "🆓"
-	case 1: return "💚"
-	case 2: return "💛"
-	case 3: return "🧡"
-	case 5: return "❤️"
-	case 8: return "💜"
-	default: return "❓"
+	case 0:
+		return "🆓"
+	case 1:
+		return "💚"
+	case 2:
+		return "💛"
+	case 3:
+		return "🧡"
+	case 5:
+		return "❤️"
+	case 8:
+		return "💜"
+	default:
+		return "❓"
 	}
 }
 

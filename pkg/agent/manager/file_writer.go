@@ -64,8 +64,8 @@ func WithGuildPermissions(perm os.FileMode) ArchiveWriterOption {
 func (w *GuildArchiveWriter) WriteStructure(ctx context.Context, refined *RefinedCommission) error {
 	if refined == nil || refined.Structure == nil {
 		return gerror.New(gerror.ErrCodeValidation, "refined commission or structure cannot be nil", nil).
-		WithComponent("manager").
-		WithOperation("WriteStructure")
+			WithComponent("manager").
+			WithOperation("WriteStructure")
 	}
 
 	// Create target Archive directory for this commission
@@ -251,11 +251,11 @@ func (w *GuildArchiveWriter) writeArchiveFile(ctx context.Context, targetDir str
 func (w *GuildArchiveWriter) writeGuildManifest(ctx context.Context, targetDir string, refined *RefinedCommission) error {
 	manifest := &GuildManifest{
 		CommissionID: refined.CommissionID,
-		CreatedAt:     time.Now(),
-		FileCount:     len(refined.Structure.Files),
-		TotalTasks:    w.countTotalTasks(refined.Structure),
-		Files:         make([]FileManifestEntry, 0, len(refined.Structure.Files)),
-		Metadata:      refined.Metadata,
+		CreatedAt:    time.Now(),
+		FileCount:    len(refined.Structure.Files),
+		TotalTasks:   w.countTotalTasks(refined.Structure),
+		Files:        make([]FileManifestEntry, 0, len(refined.Structure.Files)),
+		Metadata:     refined.Metadata,
 	}
 
 	// Add file entries to manifest
@@ -389,12 +389,12 @@ func (w *GuildArchiveWriter) countTotalTasks(structure *FileStructure) int {
 
 // GuildManifest represents the metadata file for a refined commission in Guild Archives
 type GuildManifest struct {
-	CommissionID string               `json:"commission_id"`
-	CreatedAt   time.Time             `json:"created_at"`
-	FileCount   int                   `json:"file_count"`
-	TotalTasks  int                   `json:"total_tasks"`
-	Files       []FileManifestEntry   `json:"files"`
-	Metadata    map[string]interface{} `json:"metadata"`
+	CommissionID string                 `json:"commission_id"`
+	CreatedAt    time.Time              `json:"created_at"`
+	FileCount    int                    `json:"file_count"`
+	TotalTasks   int                    `json:"total_tasks"`
+	Files        []FileManifestEntry    `json:"files"`
+	Metadata     map[string]interface{} `json:"metadata"`
 }
 
 // FileManifestEntry represents a file in the manifest

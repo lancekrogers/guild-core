@@ -11,9 +11,9 @@ import (
 // ContentFormatter provides high-level content formatting for different message types
 type ContentFormatter struct {
 	markdownRenderer *MarkdownRenderer
-	width           int
-	messageStyles   map[string]lipgloss.Style
-	
+	width            int
+	messageStyles    map[string]lipgloss.Style
+
 	// Content optimization
 	maxContentLength int  // Maximum content length before truncation
 	showMoreEnabled  bool // Whether to enable "show more" functionality
@@ -48,10 +48,10 @@ func NewContentFormatter(markdownRenderer *MarkdownRenderer, width int) *Content
 
 	return &ContentFormatter{
 		markdownRenderer: markdownRenderer,
-		width:           width,
-		messageStyles:   messageStyles,
-		maxContentLength: 5000,  // Default max content length
-		showMoreEnabled:  true,  // Enable "show more" by default
+		width:            width,
+		messageStyles:    messageStyles,
+		maxContentLength: 5000, // Default max content length
+		showMoreEnabled:  true, // Enable "show more" by default
 	}
 }
 
@@ -263,10 +263,10 @@ func (cf *ContentFormatter) SetTheme(theme string) {
 
 // applyModernTheme applies a modern color scheme
 func (cf *ContentFormatter) applyModernTheme() {
-	cf.messageStyles["agent"] = lipgloss.NewStyle().Foreground(lipgloss.Color("39"))    // Blue
-	cf.messageStyles["system"] = lipgloss.NewStyle().Foreground(lipgloss.Color("245"))  // Gray
-	cf.messageStyles["error"] = lipgloss.NewStyle().Foreground(lipgloss.Color("196"))   // Red
-	cf.messageStyles["tool"] = lipgloss.NewStyle().Foreground(lipgloss.Color("214"))    // Orange
+	cf.messageStyles["agent"] = lipgloss.NewStyle().Foreground(lipgloss.Color("39"))   // Blue
+	cf.messageStyles["system"] = lipgloss.NewStyle().Foreground(lipgloss.Color("245")) // Gray
+	cf.messageStyles["error"] = lipgloss.NewStyle().Foreground(lipgloss.Color("196"))  // Red
+	cf.messageStyles["tool"] = lipgloss.NewStyle().Foreground(lipgloss.Color("214"))   // Orange
 }
 
 // applyMinimalTheme applies a minimal monochrome scheme
@@ -295,20 +295,20 @@ func (cf *ContentFormatter) DetectContentType(content string) ContentType {
 	if strings.TrimSpace(content) == "" {
 		return ContentTypePlainText
 	}
-	
+
 	// Check for code blocks first (highest priority)
 	if strings.Contains(content, "```") {
 		return ContentTypeMixed // Has both markdown and code
 	}
-	
+
 	// Check for JSON
 	trimmed := strings.TrimSpace(content)
 	if (strings.HasPrefix(trimmed, "{") && strings.HasSuffix(trimmed, "}")) ||
-	   (strings.HasPrefix(trimmed, "[") && strings.HasSuffix(trimmed, "]")) {
+		(strings.HasPrefix(trimmed, "[") && strings.HasSuffix(trimmed, "]")) {
 		// Likely JSON
 		return ContentTypeJSON
 	}
-	
+
 	// Check for YAML
 	if strings.Contains(content, ":") && strings.Contains(content, "\n") {
 		lines := strings.Split(content, "\n")
@@ -322,7 +322,7 @@ func (cf *ContentFormatter) DetectContentType(content string) ContentType {
 			return ContentTypeYAML
 		}
 	}
-	
+
 	// Check for markdown indicators
 	markdownIndicators := []string{"#", "*", "_", "[", "`", "1.", "-"}
 	for _, indicator := range markdownIndicators {
@@ -330,12 +330,12 @@ func (cf *ContentFormatter) DetectContentType(content string) ContentType {
 			return ContentTypeMarkdown
 		}
 	}
-	
+
 	// Check if it looks like code (heuristic)
 	if cf.looksLikeCode(content) {
 		return ContentTypeCode
 	}
-	
+
 	return ContentTypePlainText
 }
 
@@ -346,14 +346,14 @@ func (cf *ContentFormatter) looksLikeCode(content string) bool {
 		"if (", "for (", "while (", "return ", "package ", "public ", "private ",
 		"=>", "==", "!=", "&&", "||", ":=", "++", "--",
 	}
-	
+
 	indicatorCount := 0
 	for _, indicator := range codeIndicators {
 		if strings.Contains(content, indicator) {
 			indicatorCount++
 		}
 	}
-	
+
 	// If we find multiple code indicators, it's likely code
 	return indicatorCount >= 2
 }
@@ -362,21 +362,21 @@ func (cf *ContentFormatter) looksLikeCode(content string) bool {
 func (cf *ContentFormatter) InferLanguage(code string) string {
 	// Language detection heuristics
 	languagePatterns := map[string][]string{
-		"go": {"package ", "func ", ":=", "import (", "go mod", "defer ", "chan "},
-		"python": {"def ", "import ", "from ", "__init__", "class ", "self.", "pip "},
+		"go":         {"package ", "func ", ":=", "import (", "go mod", "defer ", "chan "},
+		"python":     {"def ", "import ", "from ", "__init__", "class ", "self.", "pip "},
 		"javascript": {"function ", "const ", "let ", "var ", "=>", "require(", "export "},
 		"typescript": {"interface ", "type ", ": string", ": number", "export class", "import {"},
-		"json": {"\":", "\": ", "{\n", "[\n", "},", "],"},
-		"yaml": {"- ", ": ", "---", "...", "!!", "<<:"},
-		"bash": {"#!/bin/bash", "#!/bin/sh", "if [", "then", "fi", "do", "done", "echo", "export"},
-		"sql": {"SELECT", "FROM", "WHERE", "INSERT", "UPDATE", "CREATE TABLE", "ALTER", "DROP"},
-		"rust": {"fn ", "let ", "mut ", "impl ", "trait ", "use ", "pub ", "mod ", "match"},
-		"java": {"public class", "private ", "public static", "import java", "extends", "implements"},
-		"ruby": {"def ", "end", "class ", "module ", "require ", "puts ", "attr_"},
+		"json":       {"\":", "\": ", "{\n", "[\n", "},", "],"},
+		"yaml":       {"- ", ": ", "---", "...", "!!", "<<:"},
+		"bash":       {"#!/bin/bash", "#!/bin/sh", "if [", "then", "fi", "do", "done", "echo", "export"},
+		"sql":        {"SELECT", "FROM", "WHERE", "INSERT", "UPDATE", "CREATE TABLE", "ALTER", "DROP"},
+		"rust":       {"fn ", "let ", "mut ", "impl ", "trait ", "use ", "pub ", "mod ", "match"},
+		"java":       {"public class", "private ", "public static", "import java", "extends", "implements"},
+		"ruby":       {"def ", "end", "class ", "module ", "require ", "puts ", "attr_"},
 		"dockerfile": {"FROM ", "RUN ", "CMD ", "EXPOSE ", "ENV ", "COPY ", "WORKDIR"},
-		"makefile": {"PHONY:", "all:", "clean:", "install:", "$(", "@echo", "CFLAGS"},
+		"makefile":   {"PHONY:", "all:", "clean:", "install:", "$(", "@echo", "CFLAGS"},
 	}
-	
+
 	scores := make(map[string]int)
 	for lang, patterns := range languagePatterns {
 		for _, pattern := range patterns {
@@ -385,7 +385,7 @@ func (cf *ContentFormatter) InferLanguage(code string) string {
 			}
 		}
 	}
-	
+
 	// Find language with highest score
 	maxScore := 0
 	detectedLang := ""
@@ -395,7 +395,7 @@ func (cf *ContentFormatter) InferLanguage(code string) string {
 			detectedLang = lang
 		}
 	}
-	
+
 	return detectedLang
 }
 
@@ -404,10 +404,10 @@ func (cf *ContentFormatter) OptimizeContentLength(content string) string {
 	if !cf.showMoreEnabled || len(content) <= cf.maxContentLength {
 		return content
 	}
-	
+
 	// Find a good truncation point (end of line or sentence)
 	truncateAt := cf.maxContentLength
-	
+
 	// Try to find end of line
 	if idx := strings.LastIndex(content[:truncateAt], "\n"); idx > truncateAt*3/4 {
 		truncateAt = idx
@@ -415,17 +415,17 @@ func (cf *ContentFormatter) OptimizeContentLength(content string) string {
 		// Try to find end of sentence
 		truncateAt = idx + 1
 	}
-	
+
 	truncated := content[:truncateAt]
 	remaining := len(content) - truncateAt
-	
+
 	// Add "show more" indicator
 	showMoreStyle := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("141")). // Purple
 		Italic(true)
-	
+
 	showMore := showMoreStyle.Render(fmt.Sprintf("\n... (%d more characters) ...", remaining))
-	
+
 	return truncated + showMore
 }
 
@@ -433,7 +433,7 @@ func (cf *ContentFormatter) OptimizeContentLength(content string) string {
 func (cf *ContentFormatter) ProcessContent(content string) string {
 	// Detect content type
 	contentType := cf.DetectContentType(content)
-	
+
 	// Apply appropriate processing based on type
 	var processed string
 	switch contentType {
@@ -442,26 +442,26 @@ func (cf *ContentFormatter) ProcessContent(content string) string {
 		lang := cf.InferLanguage(content)
 		processed = fmt.Sprintf("```%s\n%s\n```", lang, content)
 		processed = cf.markdownRenderer.Render(processed)
-		
+
 	case ContentTypeJSON:
 		// Format as JSON code block
 		processed = fmt.Sprintf("```json\n%s\n```", content)
 		processed = cf.markdownRenderer.Render(processed)
-		
+
 	case ContentTypeYAML:
 		// Format as YAML code block
 		processed = fmt.Sprintf("```yaml\n%s\n```", content)
 		processed = cf.markdownRenderer.Render(processed)
-		
+
 	case ContentTypeMarkdown, ContentTypeMixed:
 		// Process with markdown renderer
 		processed = cf.markdownRenderer.Render(content)
-		
+
 	default:
 		// Plain text - no special processing
 		processed = content
 	}
-	
+
 	// Apply content length optimization
 	return cf.OptimizeContentLength(processed)
 }
@@ -481,10 +481,10 @@ func (cf *ContentFormatter) FormatMessage(messageType, content string, metadata 
 			fmt.Printf("Error formatting message: %v\n", r)
 		}
 	}()
-	
+
 	// Process content through the pipeline
 	processed := cf.ProcessContent(content)
-	
+
 	// Apply message type specific styling
 	switch messageType {
 	case "agent":
@@ -492,34 +492,34 @@ func (cf *ContentFormatter) FormatMessage(messageType, content string, metadata 
 			return cf.FormatAgentResponse(processed, agentID)
 		}
 		return cf.FormatAgentResponse(processed, "")
-		
+
 	case "system":
 		return cf.FormatSystemMessage(processed)
-		
+
 	case "error":
 		return cf.FormatErrorMessage(processed)
-		
+
 	case "tool":
 		if toolName, ok := metadata["toolName"]; ok {
 			return cf.FormatToolOutput(processed, toolName)
 		}
 		return cf.FormatToolOutput(processed, "Tool")
-		
+
 	case "thinking":
 		if agentID, ok := metadata["agentID"]; ok {
 			return cf.FormatThinkingMessage(processed, agentID)
 		}
 		return cf.FormatThinkingMessage(processed, "")
-		
+
 	case "working":
 		if agentID, ok := metadata["agentID"]; ok {
 			return cf.FormatWorkingMessage(processed, agentID)
 		}
 		return cf.FormatWorkingMessage(processed, "")
-		
+
 	case "user":
 		return cf.FormatUserMessage(processed)
-		
+
 	default:
 		return processed
 	}

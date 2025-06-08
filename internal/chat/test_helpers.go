@@ -41,7 +41,7 @@ func TestMarkdown() {
 	if m.contentFormatter != nil {
 		return m.contentFormatter.FormatMarkdown(testContent)
 	}
-	
+
 	// Fallback to plain text
 	return testContent
 }
@@ -56,7 +56,7 @@ import "fmt"
 func main() {
     // Medieval-themed example
     fmt.Println("Welcome to the Guild!")
-    
+
     agents := []string{"manager", "developer", "reviewer"}
     for _, agent := range agents {
         fmt.Printf("Agent @%s is ready\n", agent)
@@ -65,17 +65,17 @@ func main() {
 		"python": `def process_commission(commission):
     """Process a guild commission"""
     agents = ["manager", "developer", "reviewer"]
-    
+
     for agent in agents:
         print(f"Assigning task to @{agent}")
-        
+
     return "Commission completed!"`,
 		"javascript": `class GuildAgent {
     constructor(id, capabilities) {
         this.id = id;
         this.capabilities = capabilities;
     }
-    
+
     async processTask(task) {
         console.log(` + "`Agent @${this.id} processing: ${task}`" + `);
         // Simulate work
@@ -84,7 +84,7 @@ func main() {
     }
 }`,
 	}
-	
+
 	var result string
 	for lang, code := range codeExamples {
 		if m.contentFormatter != nil {
@@ -94,7 +94,7 @@ func main() {
 			result += fmt.Sprintf("```%s\n%s\n```\n\n", lang, code)
 		}
 	}
-	
+
 	return result
 }
 
@@ -141,19 +141,19 @@ func (h *Handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
         http.Error(w, "Invalid request", http.StatusBadRequest)
         return
     }
-    
+
     // Validate product
     if err := h.validator.Validate(product); err != nil {
         http.Error(w, err.Error(), http.StatusBadRequest)
         return
     }
-    
+
     // Save to database
     if err := h.db.Create(&product); err != nil {
         http.Error(w, "Failed to create product", http.StatusInternalServerError)
         return
     }
-    
+
     w.WriteHeader(http.StatusCreated)
     json.NewEncoder(w).Encode(product)
 }
@@ -164,7 +164,7 @@ func (h *Handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	if m.contentFormatter != nil {
 		return m.contentFormatter.FormatMarkdown(mixedContent)
 	}
-	
+
 	return mixedContent
 }
 
@@ -174,16 +174,16 @@ func (m *ChatModel) testAgentAnimations() {
 		m.addSystemMessage("Agent indicators not initialized")
 		return
 	}
-	
+
 	// Simulate various agent activities
 	agents := []string{"manager", "developer", "reviewer", "tester"}
-	
+
 	// Start thinking animations
 	for _, agent := range agents {
 		m.agentIndicators.SetThinkingAnimation(agent)
 		m.addSystemMessage(fmt.Sprintf("@%s is thinking...", agent))
 	}
-	
+
 	// After 2 seconds, switch to working
 	go func() {
 		time.Sleep(2 * time.Second)
@@ -192,7 +192,7 @@ func (m *ChatModel) testAgentAnimations() {
 			m.agentIndicators.SetWorkingAnimation(agent, contexts[i])
 			m.addSystemMessage(fmt.Sprintf("@%s is now %s", agent, contexts[i]))
 		}
-		
+
 		// After another 3 seconds, clear animations
 		time.Sleep(3 * time.Second)
 		for _, agent := range agents {
@@ -208,7 +208,7 @@ func (m *ChatModel) testCompletionSystem() {
 		m.addSystemMessage("Completion engine not initialized")
 		return
 	}
-	
+
 	// Test various completion scenarios
 	testCases := []struct {
 		input    string
@@ -220,27 +220,27 @@ func (m *ChatModel) testCompletionSystem() {
 		{"@dev", "Should complete to @developer"},
 		{"/tools st", "Should complete to /tools status"},
 	}
-	
+
 	m.addSystemMessage("Testing auto-completion system:")
-	
+
 	for _, tc := range testCases {
 		completions := m.completionEng.Complete(tc.input, len(tc.input))
 		if len(completions) > 0 {
-			m.addSystemMessage(fmt.Sprintf("✅ '%s' → '%s' (%s)", 
+			m.addSystemMessage(fmt.Sprintf("✅ '%s' → '%s' (%s)",
 				tc.input, completions[0].Content, tc.expected))
 		} else {
-			m.addSystemMessage(fmt.Sprintf("❌ '%s' → No completions (%s)", 
+			m.addSystemMessage(fmt.Sprintf("❌ '%s' → No completions (%s)",
 				tc.input, tc.expected))
 		}
 	}
-	
+
 	// Test command registration
 	m.addSystemMessage("\nRegistered commands:")
 	commands := m.completionEng.GetAllCommands()
 	for _, cmd := range commands {
 		m.addSystemMessage(fmt.Sprintf("  • %s", cmd))
 	}
-	
+
 	// Test agent registration
 	m.addSystemMessage("\nRegistered agents:")
 	agents := m.completionEng.GetAllAgents()
@@ -259,7 +259,7 @@ func (m *ChatModel) handleTestRichContent(msg testRichContentMsg) {
 		Timestamp: time.Now(),
 		Metadata:  msg.metadata,
 	})
-	
+
 	// If we have a content formatter, the View will handle rendering
 	m.updateMessagesView()
 }

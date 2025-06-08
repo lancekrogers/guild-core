@@ -14,9 +14,9 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	guildv1 "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
-	grpcpkg "github.com/guild-ventures/guild-core/pkg/grpc"
 	"github.com/guild-ventures/guild-core/pkg/config"
+	grpcpkg "github.com/guild-ventures/guild-core/pkg/grpc"
+	guildv1 "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
@@ -25,7 +25,9 @@ import (
 type mockEventBus struct{}
 
 func (m *mockEventBus) Publish(event interface{}) {}
+
 func (m *mockEventBus) Subscribe(eventType string, handler func(interface{})) {}
+
 func (m *mockEventBus) Unsubscribe(eventType string, handler func(interface{})) {}
 
 // TestGRPCServerStartup tests that the gRPC server starts correctly
@@ -163,19 +165,19 @@ func TestAgentExecution(t *testing.T) {
 		Description: "Test guild for agent execution testing",
 		Agents: []config.AgentConfig{
 			{
-				ID:          "test-manager",
-				Name:        "Test Manager",
-				Type:        "manager",
-				Provider:    "mock",
-				Model:       "test-model",
+				ID:           "test-manager",
+				Name:         "Test Manager",
+				Type:         "manager",
+				Provider:     "mock",
+				Model:        "test-model",
 				Capabilities: []string{"task-management", "coordination"},
 			},
 			{
-				ID:          "test-worker",
-				Name:        "Test Worker",
-				Type:        "worker",
-				Provider:    "mock",
-				Model:       "test-model",
+				ID:           "test-worker",
+				Name:         "Test Worker",
+				Type:         "worker",
+				Provider:     "mock",
+				Model:        "test-model",
 				Capabilities: []string{"implementation", "testing"},
 			},
 		},
@@ -221,9 +223,9 @@ func TestAgentExecution(t *testing.T) {
 		lowerResponse := strings.ToLower(response)
 		assert.True(t,
 			strings.Contains(lowerResponse, "task") ||
-			strings.Contains(lowerResponse, "auth") ||
-			strings.Contains(lowerResponse, "user") ||
-			strings.Contains(lowerResponse, "mock"), // Allow mock responses
+				strings.Contains(lowerResponse, "auth") ||
+				strings.Contains(lowerResponse, "user") ||
+				strings.Contains(lowerResponse, "mock"), // Allow mock responses
 			"Response should contain relevant terms or indicate mock usage")
 	}
 }
@@ -247,11 +249,11 @@ func TestToolExecution(t *testing.T) {
 		Description: "Test guild for tool execution",
 		Agents: []config.AgentConfig{
 			{
-				ID:          "test-developer",
-				Name:        "Test Developer",
-				Type:        "developer",
-				Provider:    "mock",
-				Model:       "test-model",
+				ID:           "test-developer",
+				Name:         "Test Developer",
+				Type:         "developer",
+				Provider:     "mock",
+				Model:        "test-model",
 				Capabilities: []string{"file-creation", "coding"},
 			},
 		},

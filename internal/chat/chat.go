@@ -23,7 +23,6 @@ import (
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/guild-ventures/guild-core/pkg/registry"
-	// "github.com/spf13/cobra" // Removed - now in cmd/guild/chat.go
 )
 
 // Helper to check if agent has capability
@@ -203,15 +202,15 @@ Try these commands to see visual features:
 	// Build the complete model
 	model := ChatModel{
 		// UI Components
-		input:    ta,
-		viewport: vp,
-		help:     help,
-		width:    0, // Will be set on window size
-		height:   0, // Will be set on window size
-		ready:    false,
-		err:      nil,
-		viewMode: chatModeNormal,
-		keys:     newChatKeyMap(),
+		input:        ta,
+		viewport:     vp,
+		help:         help,
+		width:        0, // Will be set on window size
+		height:       0, // Will be set on window size
+		ready:        false,
+		err:          nil,
+		viewMode:     chatModeNormal,
+		keys:         newChatKeyMap(),
 		focusedAgent: "",
 
 		// Visual Components
@@ -281,12 +280,7 @@ Try these commands to see visual features:
 // updateMessagesView refreshes the messages viewport
 // safeFormatContent safely formats content with error recovery
 
-
 // Helper methods for command responses
-
-
-
-
 
 // getStatusIcon returns an icon for the agent status
 func getStatusIcon(status *pb.AgentStatus) string {
@@ -346,12 +340,11 @@ Note: Actual layered prompt integration is in progress.
 Use /prompt get --layer <name> to view specific layers.`
 }
 
-
 func (m ChatModel) handleAgentList() (ChatModel, tea.Cmd) {
 	// Add agent list message
 	msg := Message{
 		Timestamp: time.Now(),
-		AgentID:    "system",
+		AgentID:   "system",
 		Content:   m.getAgentsText(),
 		Type:      msgSystem,
 	}
@@ -360,7 +353,6 @@ func (m ChatModel) handleAgentList() (ChatModel, tea.Cmd) {
 
 	return m, nil
 }
-
 
 // addMessage adds a message to appropriate streams (global + agent-specific)
 
@@ -378,7 +370,7 @@ func (m ChatModel) handleAgentFocus() (ChatModel, tea.Cmd) {
 	// For now, show instructions - in a full implementation this could open a selection UI
 	msg := Message{
 		Timestamp: time.Now(),
-		AgentID:    "system",
+		AgentID:   "system",
 		Content:   "🎯 To focus on an agent, use @agent-name or try:\n" + m.getAgentFocusHelp(),
 		Type:      msgSystem,
 	}
@@ -476,7 +468,7 @@ Active Tool Executions:
 // searchToolsText searches for tools by capability
 func (m ChatModel) searchToolsText(capability string) string {
 	// Try tool registry search
-	var toolRegistry interface{
+	var toolRegistry interface {
 		ListTools() []string
 		GetTool(string) interface{}
 		GetToolsByCapability(string) []interface{}
@@ -548,23 +540,23 @@ func (m ChatModel) getToolStatusText() string {
 	i := 0
 	for execID, execution := range m.activeTools {
 		_ = execID // Not used in this loop
-			duration := time.Since(execution.StartTime)
-			if execution.EndTime != nil {
-				duration = execution.EndTime.Sub(execution.StartTime)
-			}
-
-			content.WriteString(fmt.Sprintf("%d. %s\n", i+1, lipgloss.NewStyle().Foreground(lipgloss.Color("208")).Bold(true).Render(execution.ToolName)))
-			content.WriteString(fmt.Sprintf("   ID: %s\n", execution.ID))
-			content.WriteString(fmt.Sprintf("   Agent: %s\n", execution.AgentID))
-			content.WriteString(fmt.Sprintf("   Status: %s\n", execution.Status))
-			content.WriteString(fmt.Sprintf("   Duration: %v\n", duration.Round(time.Millisecond)))
-			if execution.Progress > 0 {
-				content.WriteString(fmt.Sprintf("   Progress: %.1f%%\n", execution.Progress*100))
-			}
-			// TODO: Add cost tracking when Cost field is added to toolExecution
-			content.WriteString("\n")
-			i++
+		duration := time.Since(execution.StartTime)
+		if execution.EndTime != nil {
+			duration = execution.EndTime.Sub(execution.StartTime)
 		}
+
+		content.WriteString(fmt.Sprintf("%d. %s\n", i+1, lipgloss.NewStyle().Foreground(lipgloss.Color("208")).Bold(true).Render(execution.ToolName)))
+		content.WriteString(fmt.Sprintf("   ID: %s\n", execution.ID))
+		content.WriteString(fmt.Sprintf("   Agent: %s\n", execution.AgentID))
+		content.WriteString(fmt.Sprintf("   Status: %s\n", execution.Status))
+		content.WriteString(fmt.Sprintf("   Duration: %v\n", duration.Round(time.Millisecond)))
+		if execution.Progress > 0 {
+			content.WriteString(fmt.Sprintf("   Progress: %.1f%%\n", execution.Progress*100))
+		}
+		// TODO: Add cost tracking when Cost field is added to toolExecution
+		content.WriteString("\n")
+		i++
+	}
 
 	return content.String()
 }
@@ -832,13 +824,13 @@ const result = await agent.executeTask('build component');
 
 **Language**: %s
 
-` + "```%s" + `
+`+"```%s"+`
 // Sample code in %s
 function example() {
     console.log("This is %s code with syntax highlighting!");
     return "syntax-highlighted";
 }
-` + "```" + `
+`+"```"+`
 
 **Try these languages**: go, python, javascript, sql, bash, yaml`, language, language, language, language)
 	}
@@ -939,9 +931,7 @@ func (agent *GuildAgent) ProcessCommission(commission *Commission) error {
 
 // Individual initialization methods (placeholders for Agent 1's work)
 
-
 // Agent 4's components (already implemented - verifying initialization)
-
 
 // HandleComponentFailure provides graceful degradation when components fail
 func (m *ChatModel) HandleComponentFailure(component string, err error) {
@@ -1068,7 +1058,7 @@ func (m *ChatModel) renderIntegratedInput() string {
 		// History mode - use medieval orange/amber styling
 		inputStyle = lipgloss.NewStyle().
 			Border(lipgloss.RoundedBorder()).
-			BorderForeground(lipgloss.Color("208")).  // Orange
+			BorderForeground(lipgloss.Color("208")). // Orange
 			Padding(0, 1)
 		modeIndicator = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("208")).
@@ -1106,11 +1096,11 @@ func (m *ChatModel) renderCompletionPopup() string {
 
 	// Add header with medieval styling
 	headerStyle := lipgloss.NewStyle().
-		Foreground(lipgloss.Color("63")).  // Purple
+		Foreground(lipgloss.Color("63")). // Purple
 		Bold(true)
 	header := headerStyle.Render("⚔️ Guild Suggestions")
 	items = append(items, header)
-	
+
 	// Add separator
 	separatorStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("63"))
 	separator := separatorStyle.Render(strings.Repeat("─", 25))
@@ -1119,31 +1109,31 @@ func (m *ChatModel) renderCompletionPopup() string {
 	// Render completion items with type-specific icons and medieval styling
 	for i, result := range m.completionResults {
 		icon := m.getCompletionIcon(result.Metadata["type"])
-		
+
 		// Define styles for selected vs unselected items
 		var nameStyle, descStyle lipgloss.Style
-		
+
 		if i == m.completionIndex {
 			// Selected item - highlight with medieval purple theme
 			nameStyle = lipgloss.NewStyle().
 				Bold(true).
-				Foreground(lipgloss.Color("230")).  // Light yellow
-				Background(lipgloss.Color("63"))    // Purple background
+				Foreground(lipgloss.Color("230")). // Light yellow
+				Background(lipgloss.Color("63"))   // Purple background
 			descStyle = lipgloss.NewStyle().
-				Foreground(lipgloss.Color("254")).  // Light gray
-				Background(lipgloss.Color("63"))    // Purple background
+				Foreground(lipgloss.Color("254")). // Light gray
+				Background(lipgloss.Color("63"))   // Purple background
 		} else {
 			// Unselected items
 			nameStyle = lipgloss.NewStyle().
-				Foreground(lipgloss.Color("141"))   // Medium purple
+				Foreground(lipgloss.Color("141")) // Medium purple
 			descStyle = lipgloss.NewStyle().
-				Foreground(lipgloss.Color("245"))   // Dark gray
+				Foreground(lipgloss.Color("245")) // Dark gray
 		}
 
 		// Format item with proper spacing and medieval icons
 		name := nameStyle.Render(result.Content)
 		description := descStyle.Render(result.Metadata["description"])
-		
+
 		// Create the full item line
 		var itemLine string
 		if i == m.completionIndex {
@@ -1152,7 +1142,7 @@ func (m *ChatModel) renderCompletionPopup() string {
 		} else {
 			itemLine = fmt.Sprintf("  %s %s  %s", icon, name, description)
 		}
-		
+
 		items = append(items, itemLine)
 	}
 
@@ -1160,15 +1150,15 @@ func (m *ChatModel) renderCompletionPopup() string {
 	footerStyle := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("245")).
 		Italic(true)
-	footer := footerStyle.Render(fmt.Sprintf("⚡ %d of %d suggestions", 
+	footer := footerStyle.Render(fmt.Sprintf("⚡ %d of %d suggestions",
 		m.completionIndex+1, len(m.completionResults)))
 	items = append(items, footer)
 
 	// Create popup box with medieval styling
 	popup := lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color("63")).  // Purple border
-		Background(lipgloss.Color("0")).         // Black background
+		BorderForeground(lipgloss.Color("63")). // Purple border
+		Background(lipgloss.Color("0")).        // Black background
 		Padding(0, 1).
 		Render(strings.Join(items, "\n"))
 

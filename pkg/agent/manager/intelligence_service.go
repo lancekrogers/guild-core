@@ -59,23 +59,23 @@ type IntelligenceResult struct {
 
 // ExecutiveSummary provides high-level recommendations
 type ExecutiveSummary struct {
-	RecommendedApproach   string             `json:"recommended_approach"`
-	PrimaryAgent          string             `json:"primary_agent"`
-	SupportingAgents      []string           `json:"supporting_agents"`
-	EstimatedCost         string             `json:"estimated_cost"`
-	EstimatedDuration     string             `json:"estimated_duration"`
-	ConfidenceLevel       string             `json:"confidence_level"`
-	KeyRisks              []string           `json:"key_risks"`
-	SuccessFactors        []string           `json:"success_factors"`
-	AlternativeOptions    []AlternativeOption `json:"alternative_options"`
+	RecommendedApproach string              `json:"recommended_approach"`
+	PrimaryAgent        string              `json:"primary_agent"`
+	SupportingAgents    []string            `json:"supporting_agents"`
+	EstimatedCost       string              `json:"estimated_cost"`
+	EstimatedDuration   string              `json:"estimated_duration"`
+	ConfidenceLevel     string              `json:"confidence_level"`
+	KeyRisks            []string            `json:"key_risks"`
+	SuccessFactors      []string            `json:"success_factors"`
+	AlternativeOptions  []AlternativeOption `json:"alternative_options"`
 }
 
 // AlternativeOption represents different execution strategies
 type AlternativeOption struct {
-	Strategy    string `json:"strategy"`
-	Description string `json:"description"`
-	CostDelta   string `json:"cost_delta"`
-	TimeDelta   string `json:"time_delta"`
+	Strategy     string `json:"strategy"`
+	Description  string `json:"description"`
+	CostDelta    string `json:"cost_delta"`
+	TimeDelta    string `json:"time_delta"`
 	QualityDelta string `json:"quality_delta"`
 }
 
@@ -249,14 +249,14 @@ func (mis *ManagerIntelligenceService) generateExecutiveSummary(
 
 	return ExecutiveSummary{
 		RecommendedApproach: complexity.RecommendedApproach,
-		PrimaryAgent:       routing.RoutingDecision.PrimaryAgent.AgentID,
-		SupportingAgents:   supportingAgents,
-		EstimatedCost:      mis.formatTokenCost(routing.CostAnalysis.TotalEstimatedTokens),
-		EstimatedDuration:  mis.estimateDuration(complexity.ComplexityScore),
-		ConfidenceLevel:    confidenceLevel,
-		KeyRisks:          keyRisks,
-		SuccessFactors:    successFactors,
-		AlternativeOptions: mis.generateAlternatives(routing.CostAnalysis.AlternativeApproaches),
+		PrimaryAgent:        routing.RoutingDecision.PrimaryAgent.AgentID,
+		SupportingAgents:    supportingAgents,
+		EstimatedCost:       mis.formatTokenCost(routing.CostAnalysis.TotalEstimatedTokens),
+		EstimatedDuration:   mis.estimateDuration(complexity.ComplexityScore),
+		ConfidenceLevel:     confidenceLevel,
+		KeyRisks:            keyRisks,
+		SuccessFactors:      successFactors,
+		AlternativeOptions:  mis.generateAlternatives(routing.CostAnalysis.AlternativeApproaches),
 	}
 }
 

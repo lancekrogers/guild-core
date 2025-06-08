@@ -8,7 +8,7 @@ import (
 
 // AgentIndicators provides real-time visual feedback and animations
 type AgentIndicators struct {
-	animations     map[string]*Animation  // agentID -> current animation
+	animations     map[string]*Animation // agentID -> current animation
 	blinkStates    map[string]bool       // Activity blink states
 	updateTicker   *time.Ticker          // Animation update timer
 	enabled        bool                  // Enable/disable animations
@@ -18,28 +18,28 @@ type AgentIndicators struct {
 
 // Animation represents a status animation
 type Animation struct {
-	Type         AnimationType    // spinner, pulse, progress, blink
-	Duration     time.Duration    // Animation duration
-	StartTime    time.Time       // When animation started
-	Frames       []string        // Animation frames
-	CurrentFrame int            // Current frame index
-	Infinite     bool           // Whether animation loops indefinitely
-	AgentID      string         // Associated agent ID
-	Context      string         // Additional context (task, tool, etc.)
+	Type         AnimationType // spinner, pulse, progress, blink
+	Duration     time.Duration // Animation duration
+	StartTime    time.Time     // When animation started
+	Frames       []string      // Animation frames
+	CurrentFrame int           // Current frame index
+	Infinite     bool          // Whether animation loops indefinitely
+	AgentID      string        // Associated agent ID
+	Context      string        // Additional context (task, tool, etc.)
 }
 
 // AnimationType represents different types of visual animations
 type AnimationType int
 
 const (
-	AnimationSpinner AnimationType = iota // Spinning indicator
-	AnimationPulse                        // Pulsing effect
-	AnimationProgress                     // Progress bar animation
-	AnimationBlink                        // Blinking indicator
-	AnimationThinking                     // Thinking animation sequence
-	AnimationWorking                      // Working animation sequence
-	AnimationCoordination                 // Multi-agent coordination
-	AnimationToolExecution                // Tool execution animation
+	AnimationSpinner       AnimationType = iota // Spinning indicator
+	AnimationPulse                              // Pulsing effect
+	AnimationProgress                           // Progress bar animation
+	AnimationBlink                              // Blinking indicator
+	AnimationThinking                           // Thinking animation sequence
+	AnimationWorking                            // Working animation sequence
+	AnimationCoordination                       // Multi-agent coordination
+	AnimationToolExecution                      // Tool execution animation
 )
 
 // String returns the string representation of AnimationType
@@ -347,11 +347,11 @@ func (ai *AgentIndicators) getThinkingFrames() []string {
 // getWorkingFrames returns the working animation sequence
 func (ai *AgentIndicators) getWorkingFrames() []string {
 	return []string{
-		"⚙️",  // Gear
+		"⚙️", // Gear
 		"🔄",  // Arrows in circle
 		"⚡",  // Lightning bolt
 		"🛠️", // Hammer and wrench
-		"⚙️",  // Gear
+		"⚙️", // Gear
 		"🔧",  // Wrench
 	}
 }
@@ -444,9 +444,9 @@ func (ai *AgentIndicators) GetAnimationStats() map[string]interface{} {
 
 	stats := map[string]interface{}{
 		"total_animations": len(ai.animations),
-		"enabled":         ai.enabled,
-		"animation_speed": ai.animationSpeed.String(),
-		"types":          make(map[string]int),
+		"enabled":          ai.enabled,
+		"animation_speed":  ai.animationSpeed.String(),
+		"types":            make(map[string]int),
 	}
 
 	// Count animation types
@@ -474,8 +474,8 @@ func contains(s, substr string) bool {
 	return len(s) >= len(substr) && (s == substr ||
 		(len(s) > len(substr) &&
 			(s[:len(substr)] == substr ||
-			 s[len(s)-len(substr):] == substr ||
-			 containsMiddle(s, substr))))
+				s[len(s)-len(substr):] == substr ||
+				containsMiddle(s, substr))))
 }
 
 // Helper function to check substring in middle
