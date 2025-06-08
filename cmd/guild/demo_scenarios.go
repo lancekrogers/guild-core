@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"time"
+
+	"github.com/guild-ventures/guild-core/internal/chat"
 )
 
 // DemoScenario represents a demo test case
@@ -202,13 +204,13 @@ var DemoScenarios = []DemoScenario{
 
 // DemoRunner executes demo scenarios for recording or live demonstration
 type DemoRunner struct {
-	model    *ChatModel
+	model    *chat.ChatModel
 	scenario *DemoScenario
 	paused   bool
 }
 
 // NewDemoRunner creates a new demo runner
-func NewDemoRunner(model *ChatModel) *DemoRunner {
+func NewDemoRunner(model *chat.ChatModel) *DemoRunner {
 	return &DemoRunner{
 		model:  model,
 		paused: false,

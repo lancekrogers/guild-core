@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 	"github.com/guild-ventures/guild-core/pkg/config"
+	"github.com/guild-ventures/guild-core/internal/chat"
 )
 
 func createTestConfig() *config.GuildConfig {
@@ -29,11 +30,11 @@ func createTestConfig() *config.GuildConfig {
 	}
 }
 
-func setupTestEnvironment(t *testing.T) (*AgentStatusTracker, *StatusDisplay, *MarkdownRenderer) {
+func setupTestEnvironment(t *testing.T) (*chat.AgentStatusTracker, *chat.StatusDisplay, *chat.MarkdownRenderer) {
 	config := createTestConfig()
-	tracker := NewAgentStatusTracker(config)
-	display := NewStatusDisplay(tracker, 80, 24)
-	renderer, err := NewMarkdownRenderer(80)
+	tracker := chat.NewAgentStatusTracker(config)
+	display := chat.NewStatusDisplay(tracker, 80, 24)
+	renderer, err := chat.NewMarkdownRenderer(80)
 	if err != nil {
 		t.Fatalf("Failed to create markdown renderer: %v", err)
 	}
@@ -41,8 +42,8 @@ func setupTestEnvironment(t *testing.T) (*AgentStatusTracker, *StatusDisplay, *M
 }
 
 // Mock agent status for testing
-func createMockAgentStatus(id, name string, state AgentState) *AgentStatus {
-	return &AgentStatus{
+func createMockAgentStatus(id, name string, state chat.AgentState) *chat.AgentStatus {
+	return &chat.AgentStatus{
 		ID:        id,
 		Name:      name,
 		State:     state,
@@ -153,19 +154,19 @@ func measureRenderTime(t *testing.T, name string, renderFunc func() string) (str
 }
 
 // Agent simulation helpers
-func simulateAgentActivity(tracker *AgentStatusTracker, agentID string, duration time.Duration) {
-	states := []AgentState{
-		AgentThinking,
-		AgentWorking,
-		AgentThinking, // Replace AgentReviewing which doesn't exist
-		AgentWorking,  // Replace AgentCompleted which doesn't exist
+func simulateAgentActivity(tracker *chat.AgentStatusTracker, agentID string, duration time.Duration) {
+	states := []chat.AgentState{
+		chat.AgentThinking,
+		chat.AgentWorking,
+		chat.AgentThinking, // Replace AgentReviewing which doesn't exist
+		chat.AgentWorking,  // Replace AgentCompleted which doesn't exist
 	}
 	
 	ticker := time.NewTicker(duration / 4)
 	defer ticker.Stop()
 	
 	for i, state := range states {
-		tracker.UpdateAgentStatus(agentID, &AgentStatus{
+		tracker.UpdateAgentStatus(agentID, &chat.AgentStatus{
 			ID:          agentID,
 			Name:        "Test Agent",
 			State:       state,
@@ -258,19 +259,19 @@ type TerminalCapabilities struct {
 }
 
 // Benchmark helpers
-func setupBenchmarkEnvironment() (*AgentStatusTracker, *StatusDisplay, *MarkdownRenderer, *ContentFormatter) {
+func setupBenchmarkEnvironment() (*chat.AgentStatusTracker, *chat.StatusDisplay, *chat.MarkdownRenderer, *chat.ContentFormatter) {
 	config := createTestConfig()
-	tracker := NewAgentStatusTracker(config)
-	display := NewStatusDisplay(tracker, 80, 24)
-	renderer, _ := NewMarkdownRenderer(80)
-	formatter := NewContentFormatter(renderer, 80)
+	tracker := chat.NewAgentStatusTracker(config)
+	display := chat.NewStatusDisplay(tracker, 80, 24)
+	renderer, _ := chat.NewMarkdownRenderer(80)
+	formatter := chat.NewContentFormatter(renderer, 80)
 	
 	// Pre-populate with test data
 	for i := 0; i < 5; i++ {
-		tracker.UpdateAgentStatus(fmt.Sprintf("agent-%d", i), &AgentStatus{
+		tracker.UpdateAgentStatus(fmt.Sprintf("agent-%d", i), &chat.AgentStatus{
 			ID:    fmt.Sprintf("agent-%d", i),
 			Name:  fmt.Sprintf("Agent %d", i),
-			State: AgentWorking,
+			State: chat.AgentWorking,
 		})
 	}
 	
