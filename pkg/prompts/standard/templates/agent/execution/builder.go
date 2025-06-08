@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"text/template"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // Layer represents a prompt layer type
@@ -47,12 +49,19 @@ func NewPromptBuilder() (*PromptBuilder, error) {
 	for _, l := range layers {
 		content, err := loader.LoadPrompt(l.file)
 		if err != nil {
-			return nil, fmt.Errorf("failed to load %s layer: %w", l.layer, err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to load prompt layer").
+				WithComponent("prompts").
+				WithOperation("NewPromptBuilder").
+				WithDetails("layer", string(l.layer)).
+				WithDetails("file", l.file)
 		}
 
 		tmpl, err := template.New(string(l.layer)).Parse(content)
 		if err != nil {
-			return nil, fmt.Errorf("failed to parse %s template: %w", l.layer, err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "failed to parse template").
+				WithComponent("prompts").
+				WithOperation("NewPromptBuilder").
+				WithDetails("layer", string(l.layer))
 		}
 
 		builder.templates[l.layer] = tmpl
@@ -73,7 +82,10 @@ func (b *PromptBuilder) BuildPrompt(layers []Layer, data map[string]interface{})
 	for i, layer := range layers {
 		tmpl, exists := b.templates[layer]
 		if !exists {
-			return "", fmt.Errorf("unknown layer: %s", layer)
+			return "", gerror.New(gerror.ErrCodeValidation, "unknown prompt layer", nil).
+				WithComponent("prompts").
+				WithOperation("BuildPrompt").
+				WithDetails("layer", string(layer))
 		}
 
 		// Add layer separator
@@ -83,7 +95,10 @@ func (b *PromptBuilder) BuildPrompt(layers []Layer, data map[string]interface{})
 
 		// Execute template with data
 		if err := tmpl.Execute(&result, data); err != nil {
-			return "", fmt.Errorf("failed to execute %s layer: %w", layer, err)
+			return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to execute template").
+				WithComponent("prompts").
+				WithOperation("BuildPrompt").
+				WithDetails("layer", string(layer))
 		}
 	}
 

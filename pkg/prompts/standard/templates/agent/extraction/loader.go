@@ -2,9 +2,10 @@ package extraction
 
 import (
 	"embed"
-	"fmt"
 	"path/filepath"
 	"strings"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 //go:embed *.md
@@ -19,7 +20,10 @@ func LoadPrompt(name string) (string, error) {
 
 	content, err := promptFiles.ReadFile(name)
 	if err != nil {
-		return "", fmt.Errorf("failed to load prompt %s: %w", name, err)
+		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to load prompt").
+			WithComponent("prompts").
+			WithOperation("LoadPrompt").
+			WithDetails("prompt_name", name)
 	}
 
 	// Skip the YAML frontmatter
@@ -47,7 +51,9 @@ func LoadPromptByPath(path string) (string, error) {
 func GetAvailablePrompts() ([]string, error) {
 	entries, err := promptFiles.ReadDir(".")
 	if err != nil {
-		return nil, fmt.Errorf("failed to read prompt directory: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read prompt directory").
+			WithComponent("prompts").
+			WithOperation("GetAvailablePrompts")
 	}
 
 	var prompts []string

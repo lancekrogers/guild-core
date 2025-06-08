@@ -1,10 +1,11 @@
 package workspace
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // workspace implements the Workspace interface
@@ -92,10 +93,16 @@ func (w *workspace) updateActivity() {
 func (w *workspace) validatePath() error {
 	info, err := os.Stat(w.info.Path)
 	if err != nil {
-		return fmt.Errorf("workspace path error: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "workspace path error").
+			WithComponent("workspace").
+			WithOperation("validatePath").
+			WithDetails("path", w.info.Path)
 	}
 	if !info.IsDir() {
-		return fmt.Errorf("workspace path is not a directory: %s", w.info.Path)
+		return gerror.New(gerror.ErrCodeValidation, "workspace path is not a directory", nil).
+			WithComponent("workspace").
+			WithOperation("validatePath").
+			WithDetails("path", w.info.Path)
 	}
 	return nil
 }

@@ -2,10 +2,10 @@ package corpus
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"path/filepath"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/project"
 )
 
@@ -46,7 +46,9 @@ func GetProjectConfig(ctx context.Context) (Config, error) {
 func GetGlobalConfig() (Config, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return DefaultConfig(), fmt.Errorf("failed to get home directory: %w", err)
+		return DefaultConfig(), gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get home directory").
+			WithComponent("corpus").
+			WithOperation("GetGlobalConfig")
 	}
 
 	corpusPath := filepath.Join(home, ".guild", "corpus")

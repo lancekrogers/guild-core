@@ -75,7 +75,10 @@ func InitTracing(ctx context.Context, config *TracingConfig) (*TracerProvider, e
 
 	exporter, err := otlptrace.New(ctx, otlptracegrpc.NewClient(opts...))
 	if err != nil {
-		return nil, fmt.Errorf("failed to create trace exporter: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to create trace exporter").
+			WithComponent("observability").
+			WithOperation("InitTracing").
+			WithDetails("endpoint", config.Endpoint)
 	}
 
 	// Create resource
@@ -89,7 +92,10 @@ func InitTracing(ctx context.Context, config *TracingConfig) (*TracerProvider, e
 		),
 	)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create resource: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create resource").
+			WithComponent("observability").
+			WithOperation("InitTracing").
+			WithDetails("service_name", config.ServiceName)
 	}
 
 	// Create tracer provider

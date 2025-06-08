@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // ExampleCostBasedSelection demonstrates how to use the cost-based registry system
@@ -72,12 +74,19 @@ func CostAwareTaskAssignment(registry ComponentRegistry, task Task, maxCost int)
 	// Find the cheapest agent that can handle this task
 	agent, err := registry.GetCheapestAgentByCapability(requiredCapability)
 	if err != nil {
-		return nil, fmt.Errorf("no agent available for capability '%s': %w", requiredCapability, err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "no agent available for capability").
+			WithComponent("registry").
+			WithOperation("CostAwareTaskAssignment").
+			WithDetails("capability", requiredCapability)
 	}
 
 	// Check if agent is within budget
 	if agent.CostMagnitude > maxCost {
-		return nil, fmt.Errorf("cheapest agent (cost %d) exceeds budget %d", agent.CostMagnitude, maxCost)
+		return nil, gerror.New(gerror.ErrCodeValidation, "agent cost exceeds budget", nil).
+			WithComponent("registry").
+			WithOperation("CostAwareTaskAssignment").
+			WithDetails("agent_cost", fmt.Sprintf("%d", agent.CostMagnitude)).
+			WithDetails("max_budget", fmt.Sprintf("%d", maxCost))
 	}
 
 	return agent, nil
@@ -89,12 +98,19 @@ func CostAwareToolSelection(registry ComponentRegistry, capability string, maxCo
 	// Find the cheapest tool for the required capability
 	tool, err := registry.GetCheapestToolByCapability(capability)
 	if err != nil {
-		return nil, fmt.Errorf("no tool available for capability '%s': %w", capability, err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "no tool available for capability").
+			WithComponent("registry").
+			WithOperation("CostAwareToolSelection").
+			WithDetails("capability", capability)
 	}
 
 	// Check if tool is within budget
 	if tool.CostMagnitude > maxCost {
-		return nil, fmt.Errorf("cheapest tool (cost %d) exceeds budget %d", tool.CostMagnitude, maxCost)
+		return nil, gerror.New(gerror.ErrCodeValidation, "tool cost exceeds budget", nil).
+			WithComponent("registry").
+			WithOperation("CostAwareToolSelection").
+			WithDetails("tool_cost", fmt.Sprintf("%d", tool.CostMagnitude)).
+			WithDetails("max_budget", fmt.Sprintf("%d", maxCost))
 	}
 
 	return tool, nil
@@ -117,7 +133,10 @@ func OptimizeWorkflow(registry ComponentRegistry, tasks []Task, totalBudget int)
 		// Find optimal agent for this task
 		agent, err := CostAwareTaskAssignment(registry, task, taskBudget)
 		if err != nil {
-			return plan, fmt.Errorf("failed to assign task %s: %w", task.ID, err)
+			return plan, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to assign task").
+				WithComponent("registry").
+				WithOperation("OptimizeWorkflow").
+				WithDetails("task_id", task.ID)
 		}
 
 		// Find optimal tools for this agent

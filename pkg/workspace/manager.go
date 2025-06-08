@@ -9,6 +9,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // manager implements the Manager interface
@@ -23,13 +25,19 @@ type manager struct {
 func NewManager(baseDir, repoPath string) (Manager, error) {
 	// Ensure base directory exists
 	if err := os.MkdirAll(baseDir, 0755); err != nil {
-		return nil, fmt.Errorf("failed to create base directory: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create base directory").
+			WithComponent("workspace").
+			WithOperation("NewManager").
+			WithDetails("base_dir", baseDir)
 	}
 
 	// Ensure workspaces subdirectory exists
 	workspacesDir := filepath.Join(baseDir, "workspaces")
 	if err := os.MkdirAll(workspacesDir, 0755); err != nil {
-		return nil, fmt.Errorf("failed to create workspaces directory: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create workspaces directory").
+			WithComponent("workspace").
+			WithOperation("NewManager").
+			WithDetails("workspaces_dir", workspacesDir)
 	}
 
 	return &manager{
@@ -170,14 +178,20 @@ func (m *manager) CleanupInactive(threshold time.Duration) error {
 	for _, id := range toCleanup {
 		ws := m.workspaces[id]
 		if err := ws.Cleanup(); err != nil {
-			errs = append(errs, fmt.Errorf("failed to cleanup workspace %s: %w", id, err))
+			errs = append(errs, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to cleanup workspace").
+				WithComponent("workspace").
+				WithOperation("CleanupInactive").
+				WithDetails("workspace_id", id))
 			continue
 		}
 		delete(m.workspaces, id)
 	}
 
 	if len(errs) > 0 {
-		return fmt.Errorf("cleanup errors: %v", errs)
+		return gerror.New(gerror.ErrCodeStorage, "cleanup errors occurred", errs[0]).
+			WithComponent("workspace").
+			WithOperation("CleanupInactive").
+			WithDetails("error_count", fmt.Sprintf("%d", len(errs)))
 	}
 
 	return nil

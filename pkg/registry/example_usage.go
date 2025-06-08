@@ -124,7 +124,9 @@ func CreateRegistryFromYAML(yamlConfig string) (*DefaultComponentRegistry, error
 	registry := NewComponentRegistry().(*DefaultComponentRegistry)
 	ctx := context.Background()
 	if err := registry.Initialize(ctx, *config); err != nil {
-		return nil, fmt.Errorf("failed to initialize registry: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize registry").
+			WithComponent("registry").
+			WithOperation("CreateRegistryFromYAML")
 	}
 
 	return registry, nil
@@ -153,10 +155,10 @@ providers:
   providers:
     openai:
       model: "gpt-4"
-      api_key_env: "OPENAI_API_KEY"
+      api_key_env: "OPENAI_API_KEY"  # pragma: allowlist secret
     anthropic:
       model: "claude-3-sonnet-20240229"
-      api_key_env: "ANTHROPIC_API_KEY"
+      api_key_env: "ANTHROPIC_API_KEY"  # pragma: allowlist secret
 
 memory:
   default_memory_store: "boltdb"

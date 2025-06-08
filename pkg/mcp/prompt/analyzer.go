@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
 )
 
@@ -251,7 +252,10 @@ func (a *MemoryAnalyzer) GetChainAnalysis(chainID string) (*ChainAnalysis, error
 
 	analysis, exists := a.chains[chainID]
 	if !exists {
-		return nil, fmt.Errorf("chain %s not found", chainID)
+		return nil, gerror.New(gerror.ErrCodeNotFound, "chain not found", nil).
+			WithComponent("mcp").
+			WithOperation("GetChainAnalysis").
+			WithDetails("chain_id", chainID)
 	}
 
 	// Return a copy to prevent modification

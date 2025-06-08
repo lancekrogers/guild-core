@@ -188,7 +188,9 @@ func (d *Database) Queries() *db.Queries {
 func (d *Database) Close() error {
 	if d.db != nil {
 		if err := d.db.Close(); err != nil {
-			return fmt.Errorf("failed to close database: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to close database").
+				WithComponent("Database").
+				WithOperation("Close")
 		}
 	}
 	return nil

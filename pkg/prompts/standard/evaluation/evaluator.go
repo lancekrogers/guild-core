@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts/standard"
 )
 
@@ -63,12 +64,18 @@ func NewPromptEvaluator(manager *standard.EnhancedPromptManager) *PromptEvaluato
 func (e *PromptEvaluator) RegisterTest(test *PromptTest) error {
 	// Validate the prompt exists
 	if _, err := e.manager.GetMetadata(test.PromptID); err != nil {
-		return fmt.Errorf("prompt %s not found: %w", test.PromptID, err)
+		return gerror.Wrap(err, gerror.ErrCodeNotFound, "prompt not found").
+			WithComponent("prompts").
+			WithOperation("RegisterTest").
+			WithDetails("prompt_id", test.PromptID)
 	}
 
 	// Validate test data
 	if err := e.manager.ValidatePrompt(test.PromptID, test.TestData); err != nil {
-		return fmt.Errorf("invalid test data: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "invalid test data").
+			WithComponent("prompts").
+			WithOperation("RegisterTest").
+			WithDetails("prompt_id", test.PromptID)
 	}
 
 	e.tests[test.PromptID] = append(e.tests[test.PromptID], test)
@@ -79,7 +86,10 @@ func (e *PromptEvaluator) RegisterTest(test *PromptTest) error {
 func (e *PromptEvaluator) EvaluatePrompt(ctx context.Context, promptID string) (*EvaluationResult, error) {
 	tests, exists := e.tests[promptID]
 	if !exists {
-		return nil, fmt.Errorf("no tests registered for prompt %s", promptID)
+		return nil, gerror.New(gerror.ErrCodeNotFound, "no tests registered for prompt", nil).
+			WithComponent("prompts").
+			WithOperation("EvaluatePrompt").
+			WithDetails("prompt_id", promptID)
 	}
 
 	result := &EvaluationResult{
@@ -140,7 +150,10 @@ func (e *PromptEvaluator) EvaluateAll(ctx context.Context) (map[string]*Evaluati
 	for promptID := range e.tests {
 		result, err := e.EvaluatePrompt(ctx, promptID)
 		if err != nil {
-			return nil, fmt.Errorf("error evaluating prompt %s: %w", promptID, err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "error evaluating prompt").
+				WithComponent("prompts").
+				WithOperation("EvaluateAll").
+				WithDetails("prompt_id", promptID)
 		}
 		results[promptID] = result
 	}

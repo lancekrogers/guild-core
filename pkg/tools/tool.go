@@ -99,7 +99,7 @@ func (r *ToolRegistry) UnregisterTool(name string) error {
 	}
 	// The underlying registry doesn't have UnregisterTool, so we need to manage this
 	// For now, return an error indicating it's not supported
-	return gerror.New(gerror.ErrCodeInternal, "unregister not supported by underlying registry", nil).
+	return gerror.New(gerror.ErrCodeNotImplemented, "unregister not supported by underlying registry", nil).
 		WithComponent("tools").
 		WithOperation("UnregisterTool").
 		WithDetails("tool_name", name)

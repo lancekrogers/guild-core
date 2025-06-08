@@ -2,8 +2,9 @@ package execution
 
 import (
 	"embed"
-	"fmt"
 	"path/filepath"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 //go:embed *.md
@@ -32,7 +33,10 @@ func (l *Loader) LoadPrompt(name string) (string, error) {
 
 	content, err := l.fs.ReadFile(filename)
 	if err != nil {
-		return "", fmt.Errorf("failed to read prompt file %s: %w", filename, err)
+		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to read prompt file").
+			WithComponent("prompts").
+			WithOperation("LoadPrompt").
+			WithDetails("filename", filename)
 	}
 
 	return string(content), nil

@@ -2,8 +2,8 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 )
@@ -37,7 +37,9 @@ func (a *LayeredAdapter) RenderPrompt(ctx context.Context, name string, data int
 func (a *LayeredAdapter) LoadTemplate(ctx context.Context, path string) error {
 	// The layered system doesn't load from filesystem in the same way
 	// This would need to be implemented based on requirements
-	return fmt.Errorf("LoadTemplate not implemented for layered system")
+	return gerror.New(gerror.ErrCodeNotImplemented, "LoadTemplate not implemented for layered system", nil).
+		WithComponent("prompts").
+		WithOperation("LoadTemplate")
 }
 
 // GetType returns the type of prompt manager
@@ -63,7 +65,9 @@ func (l *LayeredManagerAdapter) RenderPrompt(ctx context.Context, name string, d
 
 // LoadTemplate implements prompts.Manager
 func (l *LayeredManagerAdapter) LoadTemplate(ctx context.Context, path string) error {
-	return fmt.Errorf("LoadTemplate not implemented for layered system")
+	return gerror.New(gerror.ErrCodeNotImplemented, "LoadTemplate not implemented for layered system", nil).
+		WithComponent("prompts").
+		WithOperation("LoadTemplate")
 }
 
 // GetType implements prompts.Manager

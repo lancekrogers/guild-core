@@ -268,14 +268,14 @@ func init() {
 
 	// Register placeholder for Chroma
 	RegisterVectorStore(StoreTypeChroma, func(ctx context.Context, config *StoreConfig, embedder Embedder) (VectorStore, error) {
-		return nil, gerror.New(gerror.ErrCodeInternal, "chroma vector store not implemented yet", nil).
+		return nil, gerror.New(gerror.ErrCodeNotImplemented, "chroma vector store not implemented yet", nil).
 			WithComponent("memory").
 			WithOperation("createChromaStore")
 	})
 
 	// Register placeholder for Milvus
 	RegisterVectorStore(StoreTypeMilvus, func(ctx context.Context, config *StoreConfig, embedder Embedder) (VectorStore, error) {
-		return nil, gerror.New(gerror.ErrCodeInternal, "milvus vector store not implemented yet", nil).
+		return nil, gerror.New(gerror.ErrCodeNotImplemented, "milvus vector store not implemented yet", nil).
 			WithComponent("memory").
 			WithOperation("createMilvusStore")
 	})

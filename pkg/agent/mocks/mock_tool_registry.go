@@ -2,9 +2,9 @@ package mocks
 
 import (
 	"context"
-	"fmt"
 	"sync"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/tools"
 )
 
@@ -53,7 +53,9 @@ func (m *MockToolRegistry) RegisterTool(tool tools.Tool) error {
 	defer m.mu.Unlock()
 
 	if tool == nil {
-		return fmt.Errorf("tool cannot be nil")
+		return gerror.New(gerror.ErrCodeValidation, "tool cannot be nil", nil).
+			WithComponent("tools").
+			WithOperation("RegisterTool")
 	}
 
 	m.tools[tool.Name()] = tool
@@ -103,7 +105,10 @@ func (m *MockToolRegistry) ExecuteTool(ctx context.Context, name string, input s
 	// Check if tool exists
 	_, ok := m.tools[name]
 	if !ok {
-		return nil, fmt.Errorf("tool %s not found", name)
+		return nil, gerror.New(gerror.ErrCodeNotFound, "tool not found", nil).
+			WithComponent("tools").
+			WithOperation("ExecuteTool").
+			WithDetails("tool_name", name)
 	}
 
 	// Return predefined result
@@ -131,7 +136,10 @@ func (m *MockToolRegistry) ExecuteToolWithParams(ctx context.Context, name strin
 	// Check if tool exists
 	_, ok := m.tools[name]
 	if !ok {
-		return nil, fmt.Errorf("tool %s not found", name)
+		return nil, gerror.New(gerror.ErrCodeNotFound, "tool not found", nil).
+			WithComponent("tools").
+			WithOperation("ExecuteTool").
+			WithDetails("tool_name", name)
 	}
 
 	// Return predefined result

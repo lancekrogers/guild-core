@@ -2,7 +2,6 @@ package prompts
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
@@ -123,7 +122,9 @@ func NewLayeredManager() (LayeredManager, error) {
 
 	layeredMgr, ok := mgr.(LayeredManager)
 	if !ok {
-		return nil, fmt.Errorf("manager is not a LayeredManager")
+		return nil, gerror.New(gerror.ErrCodeValidation, "manager is not a LayeredManager", nil).
+			WithComponent("prompts").
+			WithOperation("NewLayeredManager")
 	}
 
 	return layeredMgr, nil

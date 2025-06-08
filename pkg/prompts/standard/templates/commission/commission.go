@@ -3,11 +3,12 @@ package commission
 
 import (
 	"embed"
-	"fmt"
 	"io/fs"
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 //go:embed markdown/*.md
@@ -20,7 +21,9 @@ func LoadPrompts() (map[string]*template.Template, error) {
 	// Read all markdown files in the markdown directory
 	entries, err := fs.ReadDir(promptFS, "markdown")
 	if err != nil {
-		return nil, fmt.Errorf("error reading prompt directory: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "error reading prompt directory").
+			WithComponent("prompts").
+			WithOperation("LoadPrompts")
 	}
 
 	for _, entry := range entries {
@@ -35,13 +38,19 @@ func LoadPrompts() (map[string]*template.Template, error) {
 		// Read the markdown file
 		content, err := fs.ReadFile(promptFS, filepath.Join("markdown", entry.Name()))
 		if err != nil {
-			return nil, fmt.Errorf("error reading prompt file %s: %w", entry.Name(), err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "error reading prompt file").
+				WithComponent("prompts").
+				WithOperation("LoadPrompts").
+				WithDetails("file", entry.Name())
 		}
 
 		// Create template from markdown content
 		tmpl, err := template.New(templateName).Parse(string(content))
 		if err != nil {
-			return nil, fmt.Errorf("error parsing template %s: %w", templateName, err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "error parsing template").
+				WithComponent("prompts").
+				WithOperation("LoadPrompts").
+				WithDetails("template_name", templateName)
 		}
 
 		templates[templateName] = tmpl

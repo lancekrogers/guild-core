@@ -4,10 +4,10 @@ package channel
 import (
 	"context"
 	"errors"
-	"fmt"
 	"sync"
 
 	"github.com/guild-ventures/guild-core/pkg/comms"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // Transport implements transport.Transport using Go channels
@@ -252,7 +252,10 @@ func (s *subscriber) Subscribe(ctx context.Context, topicPattern string) error {
 		// Wait for registration to complete
 		err := <-resultCh
 		if err != nil {
-			return fmt.Errorf("failed to subscribe: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to subscribe").
+				WithComponent("comms").
+				WithOperation("Subscribe").
+				WithDetails("topic_pattern", topicPattern)
 		}
 
 		s.closeMutex.Lock()
@@ -291,7 +294,10 @@ func (s *subscriber) Unsubscribe(ctx context.Context, topicPattern string) error
 		// Wait for unregistration to complete
 		err := <-resultCh
 		if err != nil {
-			return fmt.Errorf("failed to unsubscribe: %w", err)
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to unsubscribe").
+				WithComponent("comms").
+				WithOperation("Unsubscribe").
+				WithDetails("topic_pattern", topicPattern)
 		}
 
 		s.closeMutex.Lock()

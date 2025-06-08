@@ -2,7 +2,6 @@ package observability
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -178,7 +177,9 @@ func executeTask(ctx context.Context) error {
 	case <-time.After(100 * time.Millisecond):
 		// Simulate random failure
 		if time.Now().Unix()%10 == 0 {
-			return fmt.Errorf("simulated task failure")
+			return gerror.New(gerror.ErrCodeInternal, "simulated task failure", nil).
+				WithComponent("example").
+				WithOperation("executeTask")
 		}
 		return nil
 	}
