@@ -17,8 +17,8 @@ import (
 type MockAgent struct {
 	id                string
 	name              string
-	toolRegistry      *tools.ToolRegistry
-	commissionManager *commission.Manager
+	toolRegistry      tools.Registry
+	commissionManager commission.CommissionManager
 	llmClient         providers.LLMClient
 	memoryManager     memory.ChainManager
 	executeFunc       func(ctx context.Context, request string) (string, error)
@@ -39,11 +39,11 @@ func (m *MockAgent) GetName() string {
 	return m.name
 }
 
-func (m *MockAgent) GetToolRegistry() *tools.ToolRegistry {
+func (m *MockAgent) GetToolRegistry() tools.Registry {
 	return m.toolRegistry
 }
 
-func (m *MockAgent) GetCommissionManager() *commission.Manager {
+func (m *MockAgent) GetCommissionManager() commission.CommissionManager {
 	return m.commissionManager
 }
 
@@ -67,10 +67,8 @@ func TestAgentWrapper_BasicDelegation(t *testing.T) {
 		MaxResults: 5,
 		ChunkSize:  1000,
 	}
-	wrapper := &rag.AgentWrapper{
-		Agent:  mockAgent,
-		Config: config,
-	}
+	// Use constructor since fields are unexported
+	wrapper := rag.NewAgentWrapper(mockAgent, nil, config)
 
 	// Test delegation methods
 	if wrapper.GetID() != "test-agent" {
@@ -99,10 +97,8 @@ func TestAgentWrapper_ExecuteWithoutRetriever(t *testing.T) {
 		MaxResults: 5,
 		ChunkSize:  1000,
 	}
-	wrapper := &rag.AgentWrapper{
-		Agent:  mockAgent,
-		Config: config,
-	}
+	// Use constructor since fields are unexported
+	wrapper := rag.NewAgentWrapper(mockAgent, nil, config)
 
 	// Execute without RAG enhancement
 	ctx := context.Background()
@@ -130,7 +126,7 @@ func TestAgentWrapper_InterfaceCompliance(t *testing.T) {
 		id:                "test-agent",
 		name:              "Test Agent",
 		toolRegistry:      tools.NewToolRegistry(),
-		commissionManager: &commission.Manager{},
+		commissionManager: nil, // Mock commission manager
 		llmClient:         nil, // Would use a mock in real test
 		memoryManager:     nil, // Would use a mock in real test
 	}
@@ -140,10 +136,8 @@ func TestAgentWrapper_InterfaceCompliance(t *testing.T) {
 		MaxResults: 5,
 		ChunkSize:  1000,
 	}
-	wrapper := &rag.AgentWrapper{
-		Agent:  mockAgent,
-		Config: config,
-	}
+	// Use constructor since fields are unexported
+	wrapper := rag.NewAgentWrapper(mockAgent, nil, config)
 
 	// Verify interface implementations
 	var _ agent.Agent = wrapper
@@ -212,10 +206,8 @@ func TestRAGIntegration(t *testing.T) {
 		}
 
 		for i, config := range configs {
-			wrapper := &rag.AgentWrapper{
-				Agent:  mockAgent,
-				Config: config,
-			}
+			// Use constructor since fields are unexported
+			wrapper := rag.NewAgentWrapper(mockAgent, nil, config)
 
 			if wrapper.GetID() != "rag-test-agent" {
 				t.Errorf("Wrapper %d: Expected ID 'rag-test-agent', got '%s'", i, wrapper.GetID())
@@ -243,10 +235,8 @@ func TestRAGIntegration(t *testing.T) {
 			MaxResults: 3,
 			ChunkSize:  800,
 		}
-		wrapper := &rag.AgentWrapper{
-			Agent:  mockAgent,
-			Config: config,
-		}
+		// Use constructor since fields are unexported
+		wrapper := rag.NewAgentWrapper(mockAgent, nil, config)
 
 		// Execute multiple requests
 		requests := []string{
@@ -291,10 +281,8 @@ func BenchmarkAgentWrapper(b *testing.B) {
 		MaxResults: 5,
 		ChunkSize:  1000,
 	}
-	wrapper := &rag.AgentWrapper{
-		Agent:  mockAgent,
-		Config: config,
-	}
+	// Use constructor since fields are unexported
+	wrapper := rag.NewAgentWrapper(mockAgent, nil, config)
 
 	b.ResetTimer()
 	b.ReportAllocs()

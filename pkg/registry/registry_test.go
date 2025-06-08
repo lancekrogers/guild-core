@@ -31,7 +31,7 @@ func TestConfigLoading(t *testing.T) {
 	// Test config fields
 	assert.Equal(t, "worker", config.Agents.DefaultType)
 	assert.Equal(t, "openai", config.Providers.DefaultProvider)
-	assert.Equal(t, "boltdb", config.Memory.DefaultMemoryStore)
+	assert.Equal(t, "sqlite", config.Memory.DefaultMemoryStore)
 	assert.Equal(t, "chromem", config.Memory.DefaultVectorStore)
 }
 
@@ -158,7 +158,7 @@ func TestConfigHelpers(t *testing.T) {
 	assert.Error(t, err)
 
 	// Test GetMemoryStoreConfig
-	storeConfig, err := config.GetMemoryStoreConfig("boltdb")
+	storeConfig, err := config.GetMemoryStoreConfig("sqlite")
 	assert.NoError(t, err)
 	assert.NotNil(t, storeConfig)
 

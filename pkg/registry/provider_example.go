@@ -48,10 +48,10 @@ func ProviderExample() error {
 			Settings:     map[string]interface{}{"timeout": "30s"},
 		},
 		Memory: MemoryConfig{
-			DefaultMemoryStore: "boltdb",
+			DefaultMemoryStore: "sqlite",
 			DefaultVectorStore: "chromem",
 			Stores: map[string]interface{}{
-				"boltdb":  map[string]interface{}{"path": "./.guild/memory.db"},
+				"sqlite":  map[string]interface{}{"path": "./.guild/memory.db"},
 				"chromem": map[string]interface{}{"persistence_path": "./.guild/vectors"},
 			},
 		},
@@ -155,10 +155,10 @@ tools:
     timeout: "30s"
 
 memory:
-  default_memory_store: "boltdb"
+  default_memory_store: "sqlite"
   default_vector_store: "chromem"
   stores:
-    boltdb:
+    sqlite:
       path: "./.guild/memory.db"
     chromem:
       persistence_path: "./.guild/vectors"
@@ -232,10 +232,10 @@ func CreateProviderOnlyRegistry() (*DefaultComponentRegistry, error) {
 			Settings:     map[string]interface{}{},
 		},
 		Memory: MemoryConfig{
-			DefaultMemoryStore: "boltdb",
+			DefaultMemoryStore: "sqlite",
 			DefaultVectorStore: "chromem",
 			Stores: map[string]interface{}{
-				"boltdb":  map[string]interface{}{"path": "./.guild/memory.db"},
+				"sqlite":  map[string]interface{}{"path": "./.guild/memory.db"},
 				"chromem": map[string]interface{}{"persistence_path": "./.guild/vectors"},
 			},
 		},

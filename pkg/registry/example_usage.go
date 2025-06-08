@@ -161,10 +161,10 @@ providers:
       api_key_env: "ANTHROPIC_API_KEY"  # pragma: allowlist secret
 
 memory:
-  default_memory_store: "boltdb"
+  default_memory_store: "sqlite"
   default_vector_store: "chromem"
   stores:
-    boltdb:
+    sqlite:
       path: "./.guild/memory.db"
     chromem:
       persistence_path: "./.guild/vectors"

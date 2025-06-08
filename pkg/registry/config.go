@@ -110,10 +110,10 @@ func DefaultConfig() *Config {
 			},
 		},
 		Memory: MemoryConfig{
-			DefaultMemoryStore: "boltdb",
+			DefaultMemoryStore: "sqlite",
 			DefaultVectorStore: "chromem",
 			Stores: map[string]interface{}{
-				"boltdb": map[string]interface{}{
+				"sqlite": map[string]interface{}{
 					"path": "./.guild/memory.db",
 				},
 				"chromem": map[string]interface{}{

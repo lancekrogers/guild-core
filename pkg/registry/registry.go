@@ -1020,21 +1020,15 @@ func (r *DefaultComponentRegistry) initializeStorage(ctx context.Context) error 
 		return r.initializeSQLiteStorage(ctx, filepath.Join((*projectCtx).GetGuildPath(), "guild.db"))
 	}
 
-	// Initialize storage based on configuration
-	if guildConfig.IsUsingSQLite() {
-		dbPath := filepath.Join((*projectCtx).GetGuildPath(), guildConfig.GetEffectiveSQLitePath())
-		// Make path relative to guild directory
-		if !filepath.IsAbs(guildConfig.GetEffectiveSQLitePath()) {
-			dbPath = filepath.Join((*projectCtx).GetGuildPath(), guildConfig.GetEffectiveSQLitePath())
-		} else {
-			dbPath = guildConfig.GetEffectiveSQLitePath()
-		}
-		return r.initializeSQLiteStorage(ctx, dbPath)
+	// Initialize SQLite storage (BoltDB no longer supported)
+	dbPath := filepath.Join((*projectCtx).GetGuildPath(), guildConfig.GetEffectiveSQLitePath())
+	// Make path relative to guild directory
+	if !filepath.IsAbs(guildConfig.GetEffectiveSQLitePath()) {
+		dbPath = filepath.Join((*projectCtx).GetGuildPath(), guildConfig.GetEffectiveSQLitePath())
 	} else {
-		// BoltDB legacy support
-		dbPath := filepath.Join((*projectCtx).GetGuildPath(), guildConfig.GetEffectiveBoltDBPath())
-		return r.initializeBoltDBStorage(ctx, dbPath)
+		dbPath = guildConfig.GetEffectiveSQLitePath()
 	}
+	return r.initializeSQLiteStorage(ctx, dbPath)
 }
 
 func (r *DefaultComponentRegistry) initializeSQLiteStorage(ctx context.Context, dbPath string) error {
@@ -1074,19 +1068,6 @@ func (r *DefaultComponentRegistry) initializeSQLiteStorage(ctx context.Context, 
 	// SQLite storage registry already has the memory store set in the struct above
 
 	return nil
-}
-
-func (r *DefaultComponentRegistry) initializeBoltDBStorage(ctx context.Context, dbPath string) error {
-	// Initialize legacy BoltDB storage
-	// This would use the existing memory package implementations
-
-	_ = ctx    // Context will be used when implementing BoltDB storage
-	_ = dbPath // Suppress unused variable warning
-
-	// TODO: Initialize BoltDB storage for backward compatibility
-	return gerror.New(gerror.ErrCodeInternal, "BoltDB storage initialization not yet implemented", nil).
-		WithComponent("registry").
-		WithOperation("initializeBoltDBStorage")
 }
 
 func (r *DefaultComponentRegistry) shutdownAgents(ctx context.Context) error {

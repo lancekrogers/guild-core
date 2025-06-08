@@ -9,7 +9,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/memory/boltdb"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 )
 
