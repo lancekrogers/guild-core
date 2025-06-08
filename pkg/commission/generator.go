@@ -2,7 +2,8 @@ package commission
 
 import (
 	"context"
-	"fmt"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // Generator is responsible for generating objectives
@@ -39,7 +40,9 @@ func (g *Generator) GenerateFromPrompt(ctx context.Context, prompt string) (*Com
 // SaveGeneratedObjective saves a generated objective
 func (g *Generator) SaveGeneratedCommission(ctx context.Context, obj *Commission) error {
 	if obj == nil {
-		return fmt.Errorf("objective is nil")
+		return gerror.New(gerror.ErrCodeInvalidInput, "commission is nil", nil).
+			WithComponent("commission.generator").
+			WithOperation("SaveGeneratedCommission")
 	}
 
 	// Save the objective using the manager

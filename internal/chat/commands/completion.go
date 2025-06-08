@@ -63,10 +63,10 @@ func NewCompletionProvider() *DefaultCompletionProvider {
 		commandRegistry: make(map[string]CommandInfo),
 		recentItems:     NewRecentItemsCache(100),
 	}
-	
+
 	// Register default commands
 	provider.registerDefaultCommands()
-	
+
 	return provider
 }
 
@@ -74,10 +74,10 @@ func NewCompletionProvider() *DefaultCompletionProvider {
 func (p *DefaultCompletionProvider) GetCompletions(input string, cursor int) []Completion {
 	p.mu.RLock()
 	defer p.mu.RUnlock()
-	
+
 	// Extract the relevant portion for completion
 	prefix := input[:cursor]
-	
+
 	// Determine completion type based on prefix
 	switch {
 	case strings.HasPrefix(prefix, "/"):
@@ -95,7 +95,7 @@ func (p *DefaultCompletionProvider) GetCompletions(input string, cursor int) []C
 func (p *DefaultCompletionProvider) getCommandCompletions(prefix string) []Completion {
 	var completions []Completion
 	search := strings.ToLower(prefix[1:]) // Remove leading /
-	
+
 	for name, info := range p.commandRegistry {
 		if strings.HasPrefix(strings.ToLower(name), search) {
 			completions = append(completions, Completion{
@@ -105,7 +105,7 @@ func (p *DefaultCompletionProvider) getCommandCompletions(prefix string) []Compl
 				Icon:        "📋",
 			})
 		}
-		
+
 		// Also check aliases
 		for _, alias := range info.Aliases {
 			if strings.HasPrefix(strings.ToLower(alias), search) {
@@ -118,7 +118,7 @@ func (p *DefaultCompletionProvider) getCommandCompletions(prefix string) []Compl
 			}
 		}
 	}
-	
+
 	// Add recent commands
 	recentCommands := p.recentItems.GetRecent("command", search)
 	for _, cmd := range recentCommands {
@@ -131,7 +131,7 @@ func (p *DefaultCompletionProvider) getCommandCompletions(prefix string) []Compl
 			})
 		}
 	}
-	
+
 	return completions
 }
 
@@ -139,7 +139,7 @@ func (p *DefaultCompletionProvider) getCommandCompletions(prefix string) []Compl
 func (p *DefaultCompletionProvider) getAgentCompletions(prefix string) []Completion {
 	var completions []Completion
 	search := strings.ToLower(prefix[1:]) // Remove leading @
-	
+
 	for _, agent := range p.context.AvailableAgents {
 		if strings.HasPrefix(strings.ToLower(agent), search) {
 			completions = append(completions, Completion{
@@ -150,7 +150,7 @@ func (p *DefaultCompletionProvider) getAgentCompletions(prefix string) []Complet
 			})
 		}
 	}
-	
+
 	// Add current agent if matches
 	if p.context.CurrentAgent != "" && strings.HasPrefix(strings.ToLower(p.context.CurrentAgent), search) {
 		completions = append(completions, Completion{
@@ -160,7 +160,7 @@ func (p *DefaultCompletionProvider) getAgentCompletions(prefix string) []Complet
 			Icon:        "⭐",
 		})
 	}
-	
+
 	return completions
 }
 
@@ -170,13 +170,13 @@ func (p *DefaultCompletionProvider) getArgumentCompletions(input string) []Compl
 	if len(parts) < 2 {
 		return nil
 	}
-	
+
 	// Get the command (first part)
 	cmd := parts[0]
 	if strings.HasPrefix(cmd, "/") {
 		cmd = cmd[1:]
 	}
-	
+
 	// Find command info
 	cmdInfo, exists := p.commandRegistry[cmd]
 	if !exists {
@@ -194,20 +194,20 @@ func (p *DefaultCompletionProvider) getArgumentCompletions(input string) []Compl
 			}
 		}
 	}
-	
+
 	if !exists {
 		return nil
 	}
-	
+
 	// Determine which argument we're completing
 	argIndex := len(parts) - 2
 	if argIndex >= len(cmdInfo.Arguments) {
 		return nil
 	}
-	
+
 	argInfo := cmdInfo.Arguments[argIndex]
 	lastPart := parts[len(parts)-1]
-	
+
 	// Generate completions based on argument type
 	switch argInfo.Type {
 	case "agent":
@@ -225,7 +225,7 @@ func (p *DefaultCompletionProvider) getArgumentCompletions(input string) []Compl
 func (p *DefaultCompletionProvider) getFileCompletions(prefix string) []Completion {
 	// This will be implemented in filepath_completion.go
 	var completions []Completion
-	
+
 	// For now, add recent files
 	for _, file := range p.context.RecentFiles {
 		if strings.HasPrefix(file, prefix) {
@@ -237,7 +237,7 @@ func (p *DefaultCompletionProvider) getFileCompletions(prefix string) []Completi
 			})
 		}
 	}
-	
+
 	return completions
 }
 
@@ -245,7 +245,7 @@ func (p *DefaultCompletionProvider) getFileCompletions(prefix string) []Completi
 func (p *DefaultCompletionProvider) getChoiceCompletions(prefix string, choices []string) []Completion {
 	var completions []Completion
 	search := strings.ToLower(prefix)
-	
+
 	for _, choice := range choices {
 		if strings.HasPrefix(strings.ToLower(choice), search) {
 			completions = append(completions, Completion{
@@ -256,14 +256,14 @@ func (p *DefaultCompletionProvider) getChoiceCompletions(prefix string, choices 
 			})
 		}
 	}
-	
+
 	return completions
 }
 
 // getGeneralCompletions returns general completions when no prefix is detected
 func (p *DefaultCompletionProvider) getGeneralCompletions(prefix string) []Completion {
 	var completions []Completion
-	
+
 	// Suggest command prefix
 	completions = append(completions, Completion{
 		Text:        "/",
@@ -271,7 +271,7 @@ func (p *DefaultCompletionProvider) getGeneralCompletions(prefix string) []Compl
 		Description: "Start typing a command",
 		Icon:        "📋",
 	})
-	
+
 	// Suggest agent prefix
 	completions = append(completions, Completion{
 		Text:        "@",
@@ -279,7 +279,7 @@ func (p *DefaultCompletionProvider) getGeneralCompletions(prefix string) []Compl
 		Description: "Select an AI agent",
 		Icon:        "🤖",
 	})
-	
+
 	return completions
 }
 
@@ -287,7 +287,7 @@ func (p *DefaultCompletionProvider) getGeneralCompletions(prefix string) []Compl
 func (p *DefaultCompletionProvider) AddCustomCompletion(pattern string, suggestions []string) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	
+
 	p.customPatterns[pattern] = suggestions
 }
 
@@ -295,7 +295,7 @@ func (p *DefaultCompletionProvider) AddCustomCompletion(pattern string, suggesti
 func (p *DefaultCompletionProvider) UpdateContext(ctx CompletionContext) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	
+
 	p.context = ctx
 }
 
@@ -310,7 +310,7 @@ func (p *DefaultCompletionProvider) registerDefaultCommands() {
 			{Name: "agent", Type: "agent", Required: false},
 		},
 	}
-	
+
 	// Campaign commands
 	p.commandRegistry["campaign"] = CommandInfo{
 		Name:        "campaign",
@@ -319,7 +319,7 @@ func (p *DefaultCompletionProvider) registerDefaultCommands() {
 			{Name: "action", Type: "choice", Required: true, Choices: []string{"info", "list"}},
 		},
 	}
-	
+
 	// Prompt commands
 	p.commandRegistry["prompt"] = CommandInfo{
 		Name:        "prompt",
@@ -329,7 +329,7 @@ func (p *DefaultCompletionProvider) registerDefaultCommands() {
 			{Name: "layer", Type: "choice", Required: false, Choices: []string{"base", "context", "task", "style", "constraints", "examples"}},
 		},
 	}
-	
+
 	// Tool commands
 	p.commandRegistry["tool"] = CommandInfo{
 		Name:        "tool",
@@ -339,7 +339,7 @@ func (p *DefaultCompletionProvider) registerDefaultCommands() {
 			{Name: "tool", Type: "string", Required: false},
 		},
 	}
-	
+
 	// Help command
 	p.commandRegistry["help"] = CommandInfo{
 		Name:        "help",
@@ -347,7 +347,7 @@ func (p *DefaultCompletionProvider) registerDefaultCommands() {
 		Arguments:   []ArgumentInfo{},
 		Aliases:     []string{"?", "h"},
 	}
-	
+
 	// Clear command
 	p.commandRegistry["clear"] = CommandInfo{
 		Name:        "clear",
@@ -355,7 +355,7 @@ func (p *DefaultCompletionProvider) registerDefaultCommands() {
 		Arguments:   []ArgumentInfo{},
 		Aliases:     []string{"cls"},
 	}
-	
+
 	// Exit command
 	p.commandRegistry["exit"] = CommandInfo{
 		Name:        "exit",
@@ -384,12 +384,12 @@ func NewRecentItemsCache(maxItems int) *RecentItemsCache {
 func (r *RecentItemsCache) Add(category, item string) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	// Initialize category if needed
 	if r.items[category] == nil {
 		r.items[category] = make([]string, 0, r.maxItems)
 	}
-	
+
 	// Remove if already exists
 	items := r.items[category]
 	for i, existing := range items {
@@ -398,10 +398,10 @@ func (r *RecentItemsCache) Add(category, item string) {
 			break
 		}
 	}
-	
+
 	// Add to front
 	r.items[category] = append([]string{item}, items...)
-	
+
 	// Trim to max size
 	if len(r.items[category]) > r.maxItems {
 		r.items[category] = r.items[category][:r.maxItems]
@@ -412,19 +412,19 @@ func (r *RecentItemsCache) Add(category, item string) {
 func (r *RecentItemsCache) GetRecent(category, prefix string) []string {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	items, exists := r.items[category]
 	if !exists {
 		return nil
 	}
-	
+
 	var matches []string
 	for _, item := range items {
 		if strings.HasPrefix(item, prefix) {
 			matches = append(matches, item)
 		}
 	}
-	
+
 	return matches
 }
 
@@ -432,14 +432,14 @@ func (r *RecentItemsCache) GetRecent(category, prefix string) []string {
 func FuzzyMatch(pattern, text string) bool {
 	pattern = strings.ToLower(pattern)
 	text = strings.ToLower(text)
-	
+
 	patternIdx := 0
 	for _, ch := range text {
 		if patternIdx < len(pattern) && ch == rune(pattern[patternIdx]) {
 			patternIdx++
 		}
 	}
-	
+
 	return patternIdx == len(pattern)
 }
 
@@ -447,6 +447,6 @@ func FuzzyMatch(pattern, text string) bool {
 func (p *DefaultCompletionProvider) RegisterCommand(cmd CommandInfo) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	
+
 	p.commandRegistry[cmd.Name] = cmd
 }

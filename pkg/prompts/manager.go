@@ -2,10 +2,10 @@ package prompts
 
 import (
 	"bytes"
-	"fmt"
 	"sync"
 	"text/template"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts/standard/templates/commission"
 )
 
@@ -24,7 +24,9 @@ func NewPromptManager() (*PromptManager, error) {
 	// Load commission prompts
 	commissionTemplates, err := commission.LoadPrompts()
 	if err != nil {
-		return nil, fmt.Errorf("error loading commission prompts: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "error loading commission prompts").
+			WithComponent("prompts").
+			WithOperation("NewPromptManager")
 	}
 
 	// Add to template map
@@ -52,12 +54,18 @@ func (pm *PromptManager) RenderPrompt(name string, data interface{}) (string, er
 	pm.mu.RUnlock()
 
 	if !exists {
-		return "", fmt.Errorf("prompt template '%s' not found", name)
+		return "", gerror.New(gerror.ErrCodeNotFound, "prompt template not found", nil).
+			WithComponent("prompts").
+			WithOperation("RenderPrompt").
+			WithDetails("template_name", name)
 	}
 
 	var buf bytes.Buffer
 	if err := tmpl.Execute(&buf, data); err != nil {
-		return "", fmt.Errorf("error rendering prompt '%s': %w", name, err)
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "error rendering prompt template").
+			WithComponent("prompts").
+			WithOperation("RenderPrompt").
+			WithDetails("template_name", name)
 	}
 
 	return buf.String(), nil
@@ -88,7 +96,9 @@ func (pm *PromptManager) RefreshPrompts() error {
 	// Load commission prompts
 	commissionTemplates, err := commission.LoadPrompts()
 	if err != nil {
-		return fmt.Errorf("error refreshing commission prompts: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "error refreshing commission prompts").
+			WithComponent("prompts").
+			WithOperation("RefreshPrompts")
 	}
 
 	pm.mu.Lock()

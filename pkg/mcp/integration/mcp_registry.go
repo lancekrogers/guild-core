@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	mcpconfig "github.com/guild-ventures/guild-core/pkg/mcp/config"
 	"github.com/guild-ventures/guild-core/pkg/mcp/transport"
 	"github.com/guild-ventures/guild-core/pkg/registry"
@@ -45,7 +46,9 @@ func NewMCPRegistryMixin(config *mcpconfig.MCPConfig, baseRegistry registry.Comp
 
 	extension, err := NewMCPRegistryExtension(config, baseRegistry)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create MCP extension: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create MCP extension").
+			WithComponent("mcp.integration").
+			WithOperation("NewMCPRegistryMixin")
 	}
 
 	return &MCPRegistryMixin{
@@ -62,7 +65,9 @@ func (m *MCPRegistryMixin) GetMCPExtension() *MCPRegistryExtension {
 // StartMCP starts the MCP server
 func (m *MCPRegistryMixin) StartMCP(ctx context.Context) error {
 	if m.mcpExtension == nil {
-		return fmt.Errorf("MCP not configured")
+		return gerror.New(gerror.ErrCodeInternal, "MCP not configured", nil).
+			WithComponent("mcp.integration").
+			WithOperation("StartMCP")
 	}
 
 	return m.mcpExtension.Initialize(ctx)
@@ -80,7 +85,9 @@ func (m *MCPRegistryMixin) StopMCP(ctx context.Context) error {
 // SyncMCPTools synchronizes tools between registries
 func (m *MCPRegistryMixin) SyncMCPTools(ctx context.Context) error {
 	if m.mcpExtension == nil {
-		return fmt.Errorf("MCP not configured")
+		return gerror.New(gerror.ErrCodeInternal, "MCP not configured", nil).
+			WithComponent("mcp.integration").
+			WithOperation("SyncMCPTools")
 	}
 
 	return m.mcpExtension.SyncTools(ctx)
@@ -105,7 +112,9 @@ func NewExtendedComponentRegistry(ctx context.Context, mcpConfig *mcpconfig.MCPC
 	// Create MCP mixin
 	mcpMixin, err := NewMCPRegistryMixin(mcpConfig, baseRegistry)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create MCP mixin: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create MCP mixin").
+			WithComponent("mcp.integration").
+			WithOperation("WrapWithMCP")
 	}
 
 	extended := &ExtendedComponentRegistry{
@@ -116,7 +125,9 @@ func NewExtendedComponentRegistry(ctx context.Context, mcpConfig *mcpconfig.MCPC
 	// Initialize MCP if enabled
 	if mcpMixin.IsMCPEnabled() {
 		if err := mcpMixin.StartMCP(ctx); err != nil {
-			return nil, fmt.Errorf("failed to start MCP: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start MCP").
+				WithComponent("mcp.integration").
+				WithOperation("WrapWithMCP")
 		}
 	}
 

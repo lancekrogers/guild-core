@@ -1,7 +1,6 @@
 package chat_test
 
 import (
-	"context"
 	"fmt"
 	"strings"
 	"testing"
@@ -48,9 +47,9 @@ func TestRichContentIntegration(t *testing.T) {
 			t.Run(tc.name, func(t *testing.T) {
 				rendered := renderer.Render(tc.content)
 				assert.NotEmpty(t, rendered)
-				
+
 				for _, expected := range tc.contains {
-					assert.Contains(t, rendered, expected, 
+					assert.Contains(t, rendered, expected,
 						"Rendered content should contain '%s'", expected)
 				}
 			})
@@ -61,7 +60,7 @@ func TestRichContentIntegration(t *testing.T) {
 		// Test content formatter with markdown renderer
 		renderer, err := chat.NewMarkdownRenderer(80)
 		require.NoError(t, err)
-		
+
 		formatter := chat.NewContentFormatter(renderer, 80)
 		require.NotNil(t, formatter)
 
@@ -166,7 +165,7 @@ func TestStatusIntegration(t *testing.T) {
 
 		// Test different agent states
 		agents := []string{"manager", "developer", "reviewer"}
-		
+
 		for _, agentID := range agents {
 			indicators.SetWorkingAnimation(agentID, "Processing task")
 			indicator := indicators.GetCurrentIndicator(agentID)
@@ -181,13 +180,13 @@ func TestComponentInteraction(t *testing.T) {
 		// Create components
 		renderer, err := chat.NewMarkdownRenderer(80)
 		require.NoError(t, err)
-		
+
 		formatter := chat.NewContentFormatter(renderer, 80)
 		require.NotNil(t, formatter)
 
 		// Test that they work together without conflicts
 		content := "# API Response\n\n```json\n{\"status\": \"success\"}\n```"
-		
+
 		// Format through the formatter
 		formatted := formatter.FormatMessage("agent", content, nil)
 		assert.NotEmpty(t, formatted)
@@ -249,11 +248,11 @@ func TestErrorHandling(t *testing.T) {
 
 		// Test with problematic content
 		edgeCases := []string{
-			"", // Empty content
-			"\x00\x01\x02", // Invalid UTF-8
+			"",                          // Empty content
+			"\x00\x01\x02",              // Invalid UTF-8
 			strings.Repeat("x", 100000), // Very long content
-			"**unclosed bold",             // Malformed markdown
-			"```\nunclosed code block",    // Incomplete code block
+			"**unclosed bold",           // Malformed markdown
+			"```\nunclosed code block",  // Incomplete code block
 		}
 
 		for i, content := range edgeCases {
@@ -274,8 +273,8 @@ func TestErrorHandling(t *testing.T) {
 
 		// Test with invalid agent IDs
 		invalidCases := []string{
-			"", // Empty ID
-			"non-existent-agent", // Agent not in config
+			"",                             // Empty ID
+			"non-existent-agent",           // Agent not in config
 			"agent-with-special-chars@#$%", // Special characters
 		}
 
@@ -287,7 +286,7 @@ func TestErrorHandling(t *testing.T) {
 					State: chat.AgentIdle,
 				}
 				tracker.UpdateAgentStatus(agentID, status)
-				
+
 				// Should handle gracefully
 				retrievedStatus := tracker.GetAgentStatus(agentID)
 				// May be nil for invalid agents, but shouldn't crash
@@ -300,14 +299,14 @@ func TestErrorHandling(t *testing.T) {
 		// Test thread safety of components
 		guildConfig := createTestConfig()
 		tracker := chat.NewAgentStatusTracker(guildConfig)
-		
+
 		// Test concurrent status updates
 		done := make(chan bool, 10)
-		
+
 		for i := 0; i < 10; i++ {
 			go func(agentNum int) {
 				defer func() { done <- true }()
-				
+
 				agentID := fmt.Sprintf("agent-%d", agentNum)
 				for j := 0; j < 50; j++ {
 					status := &chat.AgentStatus{
@@ -315,13 +314,13 @@ func TestErrorHandling(t *testing.T) {
 						State: chat.AgentState(j % 4),
 					}
 					tracker.UpdateAgentStatus(agentID, status)
-					
+
 					// Brief pause to allow interleaving
 					time.Sleep(time.Microsecond)
 				}
 			}(i)
 		}
-		
+
 		// Wait for all goroutines to complete
 		for i := 0; i < 10; i++ {
 			select {
@@ -331,7 +330,7 @@ func TestErrorHandling(t *testing.T) {
 				t.Fatal("Timeout waiting for concurrent operations")
 			}
 		}
-		
+
 		// Should not have crashed and should have some final states
 		for i := 0; i < 10; i++ {
 			agentID := fmt.Sprintf("agent-%d", i)
@@ -364,21 +363,21 @@ func TestPerformanceBaseline(t *testing.T) {
 		for _, tc := range testSizes {
 			t.Run(tc.name, func(t *testing.T) {
 				content := strings.Repeat("# Header\n\nParagraph with **bold** text.\n\n", tc.size/50)
-				
+
 				start := time.Now()
 				rendered := renderer.Render(content)
 				duration := time.Since(start)
-				
+
 				assert.NotEmpty(t, rendered)
-				
+
 				// Performance expectations
 				maxDuration := time.Duration(tc.size/10) * time.Millisecond
 				if maxDuration < 10*time.Millisecond {
 					maxDuration = 10 * time.Millisecond
 				}
-				
+
 				assert.Less(t, duration, maxDuration,
-					"Rendering %d chars should take less than %v, took %v", 
+					"Rendering %d chars should take less than %v, took %v",
 					tc.size, maxDuration, duration)
 			})
 		}
@@ -408,7 +407,7 @@ func TestPerformanceBaseline(t *testing.T) {
 		totalUpdates := agentCount * updatesPerAgent
 		updatesPerSecond := float64(totalUpdates) / duration.Seconds()
 
-		t.Logf("Performed %d status updates in %v (%.0f updates/sec)", 
+		t.Logf("Performed %d status updates in %v (%.0f updates/sec)",
 			totalUpdates, duration, updatesPerSecond)
 
 		// Should handle at least 10000 updates per second

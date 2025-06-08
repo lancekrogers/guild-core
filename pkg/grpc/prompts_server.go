@@ -34,6 +34,10 @@ func NewPromptsServer(manager layered.LayeredManager) *PromptsServer {
 
 // GetPromptLayer retrieves a specific prompt layer
 func (s *PromptsServer) GetPromptLayer(ctx context.Context, req *promptspb.GetPromptLayerRequest) (*promptspb.GetPromptLayerResponse, error) {
+	if s.manager == nil {
+		return nil, status.Error(codes.Unimplemented, "prompt manager not available")
+	}
+
 	if req.Layer == promptspb.PromptLayer_PROMPT_LAYER_UNSPECIFIED {
 		return nil, status.Error(codes.InvalidArgument, "prompt layer must be specified")
 	}
@@ -54,6 +58,10 @@ func (s *PromptsServer) GetPromptLayer(ctx context.Context, req *promptspb.GetPr
 
 // SetPromptLayer sets or updates a specific prompt layer
 func (s *PromptsServer) SetPromptLayer(ctx context.Context, req *promptspb.SetPromptLayerRequest) (*promptspb.SetPromptLayerResponse, error) {
+	if s.manager == nil {
+		return nil, status.Error(codes.Unimplemented, "prompt manager not available")
+	}
+
 	if req.Prompt == nil {
 		return nil, status.Error(codes.InvalidArgument, "prompt must be provided")
 	}
@@ -90,6 +98,10 @@ func (s *PromptsServer) SetPromptLayer(ctx context.Context, req *promptspb.SetPr
 
 // DeletePromptLayer removes a specific prompt layer
 func (s *PromptsServer) DeletePromptLayer(ctx context.Context, req *promptspb.DeletePromptLayerRequest) (*promptspb.DeletePromptLayerResponse, error) {
+	if s.manager == nil {
+		return nil, status.Error(codes.Unimplemented, "prompt manager not available")
+	}
+
 	if req.Layer == promptspb.PromptLayer_PROMPT_LAYER_UNSPECIFIED {
 		return nil, status.Error(codes.InvalidArgument, "prompt layer must be specified")
 	}
@@ -120,6 +132,10 @@ func (s *PromptsServer) DeletePromptLayer(ctx context.Context, req *promptspb.De
 
 // ListPromptLayers returns all layers for an artisan/session
 func (s *PromptsServer) ListPromptLayers(ctx context.Context, req *promptspb.ListPromptLayersRequest) (*promptspb.ListPromptLayersResponse, error) {
+	if s.manager == nil {
+		return nil, status.Error(codes.Unimplemented, "prompt manager not available")
+	}
+
 	layers, err := s.manager.ListPromptLayers(ctx, req.ArtisanId, req.SessionId)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to list prompt layers: %v", err)
@@ -137,6 +153,10 @@ func (s *PromptsServer) ListPromptLayers(ctx context.Context, req *promptspb.Lis
 
 // BuildLayeredPrompt assembles a complete layered prompt
 func (s *PromptsServer) BuildLayeredPrompt(ctx context.Context, req *promptspb.BuildLayeredPromptRequest) (*promptspb.BuildLayeredPromptResponse, error) {
+	if s.manager == nil {
+		return nil, status.Error(codes.Unimplemented, "prompt manager not available")
+	}
+
 	if req.ArtisanId == "" {
 		return nil, status.Error(codes.InvalidArgument, "artisan ID must be specified")
 	}
@@ -158,6 +178,10 @@ func (s *PromptsServer) BuildLayeredPrompt(ctx context.Context, req *promptspb.B
 
 // InvalidateCache clears the layered prompt cache
 func (s *PromptsServer) InvalidateCache(ctx context.Context, req *promptspb.InvalidateCacheRequest) (*promptspb.InvalidateCacheResponse, error) {
+	if s.manager == nil {
+		return nil, status.Error(codes.Unimplemented, "prompt manager not available")
+	}
+
 	err := s.manager.InvalidateCache(ctx, req.ArtisanId, req.SessionId)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to invalidate cache: %v", err)

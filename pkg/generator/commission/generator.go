@@ -2,7 +2,6 @@ package objective
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -24,7 +23,9 @@ func newGenerator(client providers.LLMClient) (*Generator, error) {
 	// Create prompt manager
 	pm, err := prompts.NewPromptManager()
 	if err != nil {
-		return nil, fmt.Errorf("error creating prompt manager: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create prompt manager").
+			WithComponent("generator").
+			WithOperation("newGenerator")
 	}
 
 	return &Generator{
@@ -48,19 +49,29 @@ func (g *Generator) GenerateCommission(ctx context.Context, description string) 
 	// Render the prompt
 	prompt, err := g.promptMgr.RenderPrompt("commission.creation", data)
 	if err != nil {
-		return nil, fmt.Errorf("error rendering prompt: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to render commission creation prompt").
+			WithComponent("generator").
+			WithOperation("GenerateCommission").
+			WithDetails("prompt_template", "commission.creation")
 	}
 
 	// Call the LLM using the simplified interface
 	response, err := g.client.Complete(ctx, prompt)
 	if err != nil {
-		return nil, fmt.Errorf("error calling LLM: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeProvider, "failed to complete LLM request for commission generation").
+			WithComponent("generator").
+			WithOperation("GenerateCommission").
+			WithDetails("prompt_length", len(prompt))
 	}
 
 	// Create a temporary file to parse
 	tempFile := filepath.Join(os.TempDir(), "temp_commission.md")
 	if err := os.WriteFile(tempFile, []byte(response), 0644); err != nil {
-		return nil, fmt.Errorf("error writing temp file: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write temporary commission file").
+			WithComponent("generator").
+			WithOperation("GenerateCommission").
+			WithDetails("temp_file", tempFile).
+			WithDetails("response_length", len(response))
 	}
 	defer func() {
 		if err := os.Remove(tempFile); err != nil {
@@ -73,7 +84,11 @@ func (g *Generator) GenerateCommission(ctx context.Context, description string) 
 	// Parse the commission from the response
 	obj, err := commission.ParseFile(tempFile)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing commission: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "failed to parse generated commission content").
+			WithComponent("generator").
+			WithOperation("GenerateCommission").
+			WithDetails("temp_file", tempFile).
+			WithDetails("response_length", len(response))
 	}
 
 	return obj, nil
@@ -90,13 +105,19 @@ func (g *Generator) GenerateAIDocs(ctx context.Context, obj *commission.Commissi
 	// Render the prompt
 	prompt, err := g.promptMgr.RenderPrompt("commission.ai_docs_gen", data)
 	if err != nil {
-		return nil, fmt.Errorf("error rendering prompt: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to render AI docs generation prompt").
+			WithComponent("generator").
+			WithOperation("GenerateAIDocs").
+			WithDetails("prompt_template", "commission.ai_docs_gen")
 	}
 
 	// Call the LLM using the simplified interface
 	response, err := g.client.Complete(ctx, prompt)
 	if err != nil {
-		return nil, fmt.Errorf("error calling LLM: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeProvider, "failed to complete LLM request for AI docs generation").
+			WithComponent("generator").
+			WithOperation("GenerateAIDocs").
+			WithDetails("prompt_length", len(prompt))
 	}
 
 	// Parse the response into multiple markdown documents

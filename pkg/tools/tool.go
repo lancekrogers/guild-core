@@ -128,6 +128,19 @@ func (r *ToolRegistry) SetToolCost(toolName string, cost float64) {
 	r.toolCosts[toolName] = cost
 }
 
+// ExecuteTool executes a tool by name with string input
+func (r *ToolRegistry) ExecuteTool(ctx context.Context, name string, input string) (*ToolResult, error) {
+	tool, err := r.GetTool(name)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "tool not found").
+			WithComponent("tools").
+			WithOperation("ExecuteTool").
+			WithDetails("tool_name", name)
+	}
+
+	return tool.Execute(ctx, input)
+}
+
 // ExecuteToolWithCostTracking executes a tool and returns the result with cost information
 func (r *ToolRegistry) ExecuteToolWithCostTracking(ctx context.Context, name string, input string) (*ToolResult, float64, error) {
 	result, err := r.ExecuteTool(ctx, name, input)

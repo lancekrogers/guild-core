@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
 )
 
@@ -204,7 +205,9 @@ func (c *DefaultCodec) Decode(data []byte) (interface{}, error) {
 		return &mcpMsg, nil
 	}
 
-	return nil, fmt.Errorf("failed to decode message")
+	return nil, gerror.New(gerror.ErrCodeInvalidFormat, "failed to decode MCP message", nil).
+		WithComponent("mcp.transport").
+		WithOperation("DecodeMessage")
 }
 
 // Helpers
@@ -225,7 +228,9 @@ func randomString(n int) string {
 // NewTransport creates a new transport based on configuration
 func NewTransport(config *TransportConfig) (Transport, error) {
 	if config == nil {
-		return nil, fmt.Errorf("transport config cannot be nil")
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "transport config cannot be nil", nil).
+			WithComponent("mcp.transport").
+			WithOperation("NewTransport")
 	}
 
 	switch config.Type {
@@ -234,6 +239,9 @@ func NewTransport(config *TransportConfig) (Transport, error) {
 	case "memory":
 		return NewMemoryTransport(config), nil
 	default:
-		return nil, fmt.Errorf("unsupported transport type: %s", config.Type)
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "unsupported transport type", nil).
+			WithComponent("mcp.transport").
+			WithOperation("NewTransport").
+			WithDetails("transport_type", config.Type)
 	}
 }

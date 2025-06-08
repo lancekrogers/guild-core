@@ -17,8 +17,9 @@ import (
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/pkg/orchestrator"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -31,7 +32,7 @@ type Server struct {
 	kanbanMgr     *kanban.Manager
 	agentReg      registry.AgentRegistry
 	orchestrator  *orchestrator.Orchestrator
-	promptManager prompts.LayeredManager // Added for prompt management
+	promptManager layered.LayeredManager // Added for prompt management
 
 	frameBuilder *FrameBuilder
 	watchers     map[string]*watcher
@@ -69,9 +70,13 @@ func NewServer(
 	kanbanMgr := getKanbanManager(registry)
 	agentReg := registry.Agents()
 	orchestrator := getOrchestrator(registry)
-	
-	// Create prompt server (simplified for now)
-	promptServer := NewPromptsServer(nil) // Will be enhanced later
+
+	// Get prompt manager from registry - for now, this will be nil
+	// until registry integration is complete
+	promptManager := getPromptManager(registry)
+
+	// Create prompt server with proper manager
+	promptServer := NewPromptsServer(promptManager)
 	chatService := NewChatService(registry, eventBus)
 
 	return &Server{
@@ -80,7 +85,7 @@ func NewServer(
 		kanbanMgr:     kanbanMgr,
 		agentReg:      agentReg,
 		orchestrator:  orchestrator,
-		promptManager: nil, // Will be enhanced later
+		promptManager: promptManager,
 		frameBuilder:  NewFrameBuilder(campaignMgr, commissionMgr, kanbanMgr, agentReg),
 		watchers:      make(map[string]*watcher),
 		promptServer:  promptServer,
@@ -108,7 +113,14 @@ func (s *Server) Start(ctx context.Context, address string) error {
 	// Start server in goroutine
 	go func() {
 		if err := s.grpcServer.Serve(s.listener); err != nil {
-			fmt.Printf("gRPC server error: %v\n", err)
+			// Log server error with proper context
+			observability.GetLogger(ctx).
+				WithComponent("grpc").
+				WithOperation("Start").
+				WithError(err).
+				Error("gRPC server encountered an error during serving",
+					"address", address,
+				)
 		}
 	}()
 
@@ -257,23 +269,105 @@ func (s *Server) sendFrame(w *watcher) error {
 
 // GetCampaign retrieves a campaign by ID
 func (s *Server) GetCampaign(ctx context.Context, req *pb.GetCampaignRequest) (*pb.Campaign, error) {
+	// Initialize observability for gRPC campaign retrieval
+	logger := observability.GetLogger(ctx).
+		WithComponent("grpc").
+		WithOperation("GetCampaign").
+		With("campaign_id", req.Id)
+
+	start := time.Now()
+	logger.Debug("gRPC GetCampaign request received",
+		"campaign_id", req.Id,
+	)
+
 	campaign, err := s.campaignMgr.Get(ctx, req.Id)
+	duration := time.Since(start)
+
 	if err != nil {
+		// Enhanced error observability for campaign retrieval
+		logger.WithError(err).Error("Failed to get campaign via gRPC",
+			"campaign_id", req.Id,
+			"retrieval_duration_ms", duration.Milliseconds(),
+		)
+
+		// Log performance metrics for failed request
+		logger.Duration("grpc.get_campaign", duration,
+			"success", false,
+			"campaign_id", req.Id,
+			"error_type", fmt.Sprintf("%T", err),
+		)
+
 		return nil, status.Errorf(codes.NotFound, "campaign not found: %v", err)
 	}
 
-	return campaignToProto(campaign), nil
+	// Convert to proto format
+	protoStart := time.Now()
+	protoCampaign := campaignToProto(campaign)
+	protoConversionDuration := time.Since(protoStart)
+
+	logger.Info("gRPC GetCampaign completed successfully",
+		"campaign_id", req.Id,
+		"retrieval_duration_ms", duration.Milliseconds(),
+		"proto_conversion_duration_ms", protoConversionDuration.Milliseconds(),
+		"total_duration_ms", time.Since(start).Milliseconds(),
+	)
+
+	// Log performance metrics for successful request
+	logger.Duration("grpc.get_campaign", time.Since(start),
+		"success", true,
+		"campaign_id", req.Id,
+		"proto_conversion_duration_ms", protoConversionDuration.Milliseconds(),
+	)
+
+	return protoCampaign, nil
 }
 
 // ListCampaigns returns a list of campaigns
 func (s *Server) ListCampaigns(ctx context.Context, req *pb.ListCampaignsRequest) (*pb.ListCampaignsResponse, error) {
+	// Initialize observability for gRPC campaign listing
+	logger := observability.GetLogger(ctx).
+		WithComponent("grpc").
+		WithOperation("ListCampaigns").
+		With("status_filter", req.StatusFilter).
+		With("page_size", req.PageSize).
+		With("page_token", req.PageToken)
+
+	start := time.Now()
+	logger.Debug("gRPC ListCampaigns request received",
+		"status_filter", req.StatusFilter,
+		"page_size", req.PageSize,
+		"has_page_token", req.PageToken != "",
+	)
+
 	campaigns, err := s.campaignMgr.List(ctx)
+	listDuration := time.Since(start)
+
 	if err != nil {
+		// Enhanced error observability for campaign listing
+		logger.WithError(err).Error("Failed to list campaigns via gRPC",
+			"list_duration_ms", listDuration.Milliseconds(),
+			"status_filter", req.StatusFilter,
+		)
+
+		// Log performance metrics for failed request
+		logger.Duration("grpc.list_campaigns", listDuration,
+			"success", false,
+			"status_filter", req.StatusFilter,
+			"error_type", fmt.Sprintf("%T", err),
+		)
+
 		return nil, status.Errorf(codes.Internal, "failed to list campaigns: %v", err)
 	}
 
-	// Apply status filter if provided
+	originalCount := len(campaigns)
+	logger.Debug("Campaigns retrieved from manager",
+		"total_campaigns", originalCount,
+		"list_duration_ms", listDuration.Milliseconds(),
+	)
+
+	// Apply status filter if provided with enhanced observability
 	if req.StatusFilter != "" {
+		filterStart := time.Now()
 		filtered := make([]*campaign.Campaign, 0)
 		for _, c := range campaigns {
 			if string(c.Status) == req.StatusFilter {
@@ -281,13 +375,43 @@ func (s *Server) ListCampaigns(ctx context.Context, req *pb.ListCampaignsRequest
 			}
 		}
 		campaigns = filtered
+		filterDuration := time.Since(filterStart)
+
+		logger.Debug("Status filter applied",
+			"status_filter", req.StatusFilter,
+			"original_count", originalCount,
+			"filtered_count", len(campaigns),
+			"filter_duration_ms", filterDuration.Milliseconds(),
+		)
 	}
 
-	// Convert to proto
+	// Convert to proto with enhanced observability
+	protoStart := time.Now()
 	protoCampaigns := make([]*pb.Campaign, len(campaigns))
 	for i, c := range campaigns {
 		protoCampaigns[i] = campaignToProto(c)
 	}
+	protoConversionDuration := time.Since(protoStart)
+
+	totalDuration := time.Since(start)
+	finalCount := len(protoCampaigns)
+
+	logger.Info("gRPC ListCampaigns completed successfully",
+		"original_count", originalCount,
+		"final_count", finalCount,
+		"list_duration_ms", listDuration.Milliseconds(),
+		"proto_conversion_duration_ms", protoConversionDuration.Milliseconds(),
+		"total_duration_ms", totalDuration.Milliseconds(),
+		"status_filter", req.StatusFilter,
+	)
+
+	// Log performance metrics for successful request
+	logger.Duration("grpc.list_campaigns", totalDuration,
+		"success", true,
+		"campaigns_returned", finalCount,
+		"status_filter", req.StatusFilter,
+		"proto_conversion_duration_ms", protoConversionDuration.Milliseconds(),
+	)
 
 	return &pb.ListCampaignsResponse{
 		Campaigns:  protoCampaigns,
@@ -811,5 +935,17 @@ func getKanbanManager(registry registry.ComponentRegistry) *kanban.Manager {
 
 func getOrchestrator(registry registry.ComponentRegistry) *orchestrator.Orchestrator {
 	// Orchestrator would come from registry.Orchestrator() when implemented
+	return nil
+}
+
+func getPromptManager(registry registry.ComponentRegistry) layered.LayeredManager {
+	// Try to get prompt provider from registry
+	promptReg := registry.Prompts()
+	if promptReg == nil {
+		return nil
+	}
+
+	// For now, we would need to create an adapter or get a specific manager
+	// This would be implemented when the registry integration is complete
 	return nil
 }

@@ -312,12 +312,12 @@ func TestErrorHandlingInDemos(t *testing.T) {
 	t.Run("component_failure_graceful_degradation", func(t *testing.T) {
 		// Test with invalid renderer width
 		_, err := chat.NewMarkdownRenderer(0) // Invalid width
-		assert.NoError(t, err) // Should handle gracefully
+		assert.NoError(t, err)                // Should handle gracefully
 
 		// Test with very large width
 		renderer, err := chat.NewMarkdownRenderer(10000)
 		assert.NoError(t, err)
-		
+
 		// Should still render content
 		content := "# Test"
 		rendered := renderer.Render(content)
@@ -403,7 +403,7 @@ func createTestChatModel(t *testing.T) *chat.ChatModel {
 	// For testing, we just need to verify the model can be created
 	// Most functionality will be mocked in the validator
 	model := &chat.ChatModel{}
-	
+
 	// Note: In a real implementation, we would initialize the model properly
 	// For now, this is a minimal mock for testing the validation logic
 	t.Helper()

@@ -85,20 +85,20 @@ func (se *SuggestionEngine) findBestMatch(input string, candidates []string) str
 	if len(candidates) == 0 {
 		return ""
 	}
-	
+
 	input = strings.ToLower(input)
-	
+
 	// Calculate distances for all candidates
 	type match struct {
 		candidate string
 		distance  int
 	}
-	
+
 	matches := make([]match, 0, len(candidates))
-	
+
 	for _, candidate := range candidates {
 		dist := levenshteinDistance(input, strings.ToLower(candidate))
-		
+
 		// Only consider matches with reasonable distance
 		if dist <= 3 || dist <= len(input)/2 {
 			matches = append(matches, match{
@@ -107,16 +107,16 @@ func (se *SuggestionEngine) findBestMatch(input string, candidates []string) str
 			})
 		}
 	}
-	
+
 	if len(matches) == 0 {
 		return ""
 	}
-	
+
 	// Sort by distance
 	sort.Slice(matches, func(i, j int) bool {
 		return matches[i].distance < matches[j].distance
 	})
-	
+
 	// Return best match
 	return matches[0].candidate
 }
@@ -129,13 +129,13 @@ func levenshteinDistance(s1, s2 string) int {
 	if len(s2) == 0 {
 		return len(s1)
 	}
-	
+
 	// Create matrix
 	matrix := make([][]int, len(s1)+1)
 	for i := range matrix {
 		matrix[i] = make([]int, len(s2)+1)
 	}
-	
+
 	// Initialize first column and row
 	for i := 0; i <= len(s1); i++ {
 		matrix[i][0] = i
@@ -143,7 +143,7 @@ func levenshteinDistance(s1, s2 string) int {
 	for j := 0; j <= len(s2); j++ {
 		matrix[0][j] = j
 	}
-	
+
 	// Calculate distances
 	for i := 1; i <= len(s1); i++ {
 		for j := 1; j <= len(s2); j++ {
@@ -151,7 +151,7 @@ func levenshteinDistance(s1, s2 string) int {
 			if s1[i-1] != s2[j-1] {
 				cost = 1
 			}
-			
+
 			matrix[i][j] = min3(
 				matrix[i-1][j]+1,      // deletion
 				matrix[i][j-1]+1,      // insertion
@@ -159,7 +159,7 @@ func levenshteinDistance(s1, s2 string) int {
 			)
 		}
 	}
-	
+
 	return matrix[len(s1)][len(s2)]
 }
 
@@ -180,7 +180,7 @@ func min3(a, b, c int) int {
 // GetSmartErrorMessage creates an error message with helpful suggestions
 func (se *SuggestionEngine) GetSmartErrorMessage(errorType string, input string) string {
 	var msg strings.Builder
-	
+
 	switch errorType {
 	case "unknown_command":
 		cmd := strings.TrimPrefix(input, "/")
@@ -191,7 +191,7 @@ func (se *SuggestionEngine) GetSmartErrorMessage(errorType string, input string)
 		} else {
 			msg.WriteString(". Type /help for available commands.")
 		}
-		
+
 	case "unknown_agent":
 		agent := strings.TrimPrefix(input, "@")
 		msg.WriteString(fmt.Sprintf("No agent '%s' found", agent))
@@ -201,7 +201,7 @@ func (se *SuggestionEngine) GetSmartErrorMessage(errorType string, input string)
 		} else {
 			msg.WriteString(". Use /agents to see available agents.")
 		}
-		
+
 	case "unknown_tool":
 		msg.WriteString(fmt.Sprintf("Tool '%s' not found", input))
 		if suggestion := se.GetToolSuggestion(input); suggestion != "" {
@@ -210,7 +210,7 @@ func (se *SuggestionEngine) GetSmartErrorMessage(errorType string, input string)
 		} else {
 			msg.WriteString(". Use /tools list to see available tools.")
 		}
-		
+
 	case "unknown_layer":
 		msg.WriteString(fmt.Sprintf("Unknown prompt layer: %s", input))
 		if suggestion := se.GetPromptLayerSuggestion(input); suggestion != "" {
@@ -219,11 +219,11 @@ func (se *SuggestionEngine) GetSmartErrorMessage(errorType string, input string)
 		} else {
 			msg.WriteString(". Valid layers: base, context, task, style, constraints, examples")
 		}
-		
+
 	default:
 		msg.WriteString(fmt.Sprintf("Error: %s", input))
 	}
-	
+
 	return msg.String()
 }
 
@@ -245,7 +245,7 @@ func (se *SuggestionEngine) AddCommonMisspellings() {
 		"cls":     "clear",
 		"clr":     "clear",
 	}
-	
+
 	// Add to commands if not already present
 	for _, correct := range commonCommandTypos {
 		found := false

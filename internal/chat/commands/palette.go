@@ -20,13 +20,13 @@ type PaletteCommand struct {
 
 // CommandPalette manages the command palette interface
 type CommandPalette struct {
-	commands       []PaletteCommand
-	filteredCmds   []PaletteCommand
-	searchQuery    string
-	selectedIndex  int
-	isOpen         bool
-	width          int
-	height         int
+	commands      []PaletteCommand
+	filteredCmds  []PaletteCommand
+	searchQuery   string
+	selectedIndex int
+	isOpen        bool
+	width         int
+	height        int
 }
 
 // NewCommandPalette creates a new command palette
@@ -37,10 +37,10 @@ func NewCommandPalette() *CommandPalette {
 		selectedIndex: 0,
 		isOpen:        false,
 	}
-	
+
 	// Register default commands
 	cp.registerDefaultCommands()
-	
+
 	return cp
 }
 
@@ -66,7 +66,7 @@ func (cp *CommandPalette) registerDefaultCommands() {
 			Category:    "General",
 			Shortcut:    "/exit",
 		},
-		
+
 		// Agent Commands
 		{
 			Name:        "List Agents",
@@ -86,7 +86,7 @@ func (cp *CommandPalette) registerDefaultCommands() {
 			Category:    "Agents",
 			Shortcut:    "/status",
 		},
-		
+
 		// Prompt Commands
 		{
 			Name:        "List Prompts",
@@ -106,7 +106,7 @@ func (cp *CommandPalette) registerDefaultCommands() {
 			Category:    "Prompts",
 			Shortcut:    "/prompt set",
 		},
-		
+
 		// Tool Commands
 		{
 			Name:        "List Tools",
@@ -132,7 +132,7 @@ func (cp *CommandPalette) registerDefaultCommands() {
 			Category:    "Tools",
 			Shortcut:    "/tool",
 		},
-		
+
 		// Campaign Commands
 		{
 			Name:        "Campaign Info",
@@ -140,7 +140,7 @@ func (cp *CommandPalette) registerDefaultCommands() {
 			Category:    "Campaign",
 			Shortcut:    "/campaign info",
 		},
-		
+
 		// Test Commands
 		{
 			Name:        "Test Markdown",
@@ -161,7 +161,7 @@ func (cp *CommandPalette) registerDefaultCommands() {
 			Shortcut:    "/test mixed",
 		},
 	}
-	
+
 	cp.commands = commands
 	cp.filteredCmds = commands
 }
@@ -196,12 +196,12 @@ func (cp *CommandPalette) SetDimensions(width, height int) {
 func (cp *CommandPalette) UpdateSearch(query string) {
 	cp.searchQuery = query
 	cp.selectedIndex = 0
-	
+
 	if query == "" {
 		cp.filteredCmds = cp.commands
 		return
 	}
-	
+
 	// Filter commands based on fuzzy search
 	cp.filteredCmds = cp.filterCommands(query)
 }
@@ -210,7 +210,7 @@ func (cp *CommandPalette) UpdateSearch(query string) {
 func (cp *CommandPalette) filterCommands(query string) []PaletteCommand {
 	var filtered []PaletteCommand
 	query = strings.ToLower(query)
-	
+
 	for _, cmd := range cp.commands {
 		// Check if query matches name, description, category, or shortcut
 		if fuzzyMatch(strings.ToLower(cmd.Name), query) ||
@@ -220,29 +220,29 @@ func (cp *CommandPalette) filterCommands(query string) []PaletteCommand {
 			filtered = append(filtered, cmd)
 		}
 	}
-	
+
 	// Sort by relevance
 	sort.Slice(filtered, func(i, j int) bool {
 		// Prioritize exact matches in name
 		iNameMatch := strings.Contains(strings.ToLower(filtered[i].Name), query)
 		jNameMatch := strings.Contains(strings.ToLower(filtered[j].Name), query)
-		
+
 		if iNameMatch != jNameMatch {
 			return iNameMatch
 		}
-		
+
 		// Then by shortcut match
 		iShortcutMatch := strings.Contains(strings.ToLower(filtered[i].Shortcut), query)
 		jShortcutMatch := strings.Contains(strings.ToLower(filtered[j].Shortcut), query)
-		
+
 		if iShortcutMatch != jShortcutMatch {
 			return iShortcutMatch
 		}
-		
+
 		// Finally by name alphabetically
 		return filtered[i].Name < filtered[j].Name
 	})
-	
+
 	return filtered
 }
 
@@ -277,7 +277,7 @@ func (cp *CommandPalette) View() string {
 	if !cp.isOpen {
 		return ""
 	}
-	
+
 	// Styles
 	paletteStyle := lipgloss.NewStyle().
 		Width(cp.width - 4).
@@ -285,31 +285,31 @@ func (cp *CommandPalette) View() string {
 		Border(lipgloss.RoundedBorder()).
 		BorderForeground(lipgloss.Color("141")).
 		Padding(1)
-	
+
 	searchStyle := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("141")).
 		Bold(true)
-	
+
 	selectedStyle := lipgloss.NewStyle().
 		Background(lipgloss.Color("141")).
 		Foreground(lipgloss.Color("235")).
 		Bold(true).
 		Width(cp.width - 8)
-	
+
 	normalStyle := lipgloss.NewStyle().
 		Width(cp.width - 8)
-	
+
 	categoryStyle := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("243")).
 		Italic(true)
-	
+
 	shortcutStyle := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("71")).
 		Bold(true)
-	
+
 	// Build content
 	var content strings.Builder
-	
+
 	// Search box
 	content.WriteString(searchStyle.Render("🔍 Search: "))
 	content.WriteString(cp.searchQuery)
@@ -317,39 +317,39 @@ func (cp *CommandPalette) View() string {
 		content.WriteString("_") // Cursor
 	}
 	content.WriteString("\n\n")
-	
+
 	// Results count
 	if len(cp.filteredCmds) == 0 {
 		content.WriteString("No commands found")
 	} else {
 		content.WriteString(fmt.Sprintf("Found %d commands\n\n", len(cp.filteredCmds)))
-		
+
 		// Commands list
 		maxVisible := 10
 		startIdx := 0
-		
+
 		// Adjust start index to keep selected item visible
 		if cp.selectedIndex >= maxVisible {
 			startIdx = cp.selectedIndex - maxVisible + 1
 		}
-		
+
 		endIdx := startIdx + maxVisible
 		if endIdx > len(cp.filteredCmds) {
 			endIdx = len(cp.filteredCmds)
 		}
-		
+
 		// Group by category
 		var lastCategory string
 		for i := startIdx; i < endIdx; i++ {
 			cmd := cp.filteredCmds[i]
-			
+
 			// Show category header
 			if cmd.Category != lastCategory {
 				content.WriteString(categoryStyle.Render(cmd.Category))
 				content.WriteString("\n")
 				lastCategory = cmd.Category
 			}
-			
+
 			// Command line
 			var line strings.Builder
 			line.WriteString("  ")
@@ -360,7 +360,7 @@ func (cp *CommandPalette) View() string {
 				line.WriteString(" ")
 				line.WriteString(shortcutStyle.Render(cmd.Shortcut))
 			}
-			
+
 			// Apply selection style
 			if i == cp.selectedIndex {
 				content.WriteString(selectedStyle.Render(line.String()))
@@ -369,20 +369,20 @@ func (cp *CommandPalette) View() string {
 			}
 			content.WriteString("\n")
 		}
-		
+
 		// Scroll indicator
 		if len(cp.filteredCmds) > maxVisible {
 			content.WriteString("\n")
 			content.WriteString(categoryStyle.Render(
-				fmt.Sprintf("Showing %d-%d of %d (↑↓ to navigate)", 
+				fmt.Sprintf("Showing %d-%d of %d (↑↓ to navigate)",
 					startIdx+1, endIdx, len(cp.filteredCmds))))
 		}
 	}
-	
+
 	// Help footer
 	content.WriteString("\n\n")
 	content.WriteString(categoryStyle.Render("Enter: Select • Esc: Cancel • Tab: Next"))
-	
+
 	return paletteStyle.Render(content.String())
 }
 
@@ -391,14 +391,14 @@ func fuzzyMatch(text, pattern string) bool {
 	if pattern == "" {
 		return true
 	}
-	
+
 	patternIdx := 0
 	for _, ch := range text {
 		if patternIdx < len(pattern) && ch == rune(pattern[patternIdx]) {
 			patternIdx++
 		}
 	}
-	
+
 	return patternIdx == len(pattern)
 }
 

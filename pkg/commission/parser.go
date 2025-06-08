@@ -2,7 +2,6 @@ package commission
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"regexp"
 	"strings"
@@ -67,7 +66,9 @@ func (p *MarkdownParser) Parse(content, source string) (*Commission, error) {
 	// Process the content into sections
 	sections, err := p.extractSections(content)
 	if err != nil {
-		return nil, fmt.Errorf("failed to extract sections: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidFormat, "failed to extract sections").
+			WithComponent("commission.parser").
+			WithOperation("Parse")
 	}
 
 	// Extract main title and description
@@ -121,7 +122,10 @@ func (p *MarkdownParser) ParseFile(path string) (*Commission, error) {
 	// Read file content
 	content, err := os.ReadFile(path)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read file: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read commission file").
+			WithComponent("commission.parser").
+			WithOperation("ParseFile").
+			WithDetails("file_path", path)
 	}
 
 	// Parse the content
@@ -132,7 +136,10 @@ func (p *MarkdownParser) ParseFile(path string) (*Commission, error) {
 func ParseFile(path string) (*Commission, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("error opening file: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to open commission file").
+			WithComponent("commission.parser").
+			WithOperation("ParseFile").
+			WithDetails("file_path", path)
 	}
 	defer func() {
 		if closeErr := file.Close(); closeErr != nil {
@@ -222,7 +229,9 @@ func (p *MarkdownParser) extractSections(content string) ([]*SectionInfo, error)
 	}
 
 	if len(sections) == 0 {
-		return nil, fmt.Errorf("no sections found in content")
+		return nil, gerror.New(gerror.ErrCodeInvalidFormat, "no sections found in commission content", nil).
+			WithComponent("commission.parser").
+			WithOperation("extractSections")
 	}
 
 	return sections, nil

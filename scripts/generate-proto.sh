@@ -61,12 +61,23 @@ generate_proto() {
     # Create output directory if it doesn't exist
     mkdir -p "$output_dir"
 
-    # Generate Go code
+    # Generate Go code with proper module path handling
+    # Use --go_out=paths=source_relative to generate files relative to the proto file location
+    # instead of using the go_package option to create directory structure
     protoc \
-        --go_out="$PROJECT_ROOT" \
-        --go-grpc_out="$PROJECT_ROOT" \
+        --go_out=paths=source_relative:"$PROJECT_ROOT" \
+        --go-grpc_out=paths=source_relative:"$PROJECT_ROOT" \
         --proto_path="$PROJECT_ROOT" \
         "$proto_file"
+
+    # Move generated files from proto directory to proper pkg location
+    proto_dir=$(dirname "$proto_file")
+    for generated_file in "$proto_dir"/*.pb.go; do
+        if [ -f "$generated_file" ]; then
+            mv "$generated_file" "$output_dir/"
+            echo "Moved $(basename "$generated_file") to $output_dir/"
+        fi
+    done
 
     echo "✓ Generated successfully"
     echo ""

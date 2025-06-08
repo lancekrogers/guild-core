@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // TaskStatus represents the status of a task
@@ -137,7 +138,10 @@ func (t *Task) AddHistory(changedBy, comment string, changes map[string]string) 
 // UpdateStatus updates the task's status and records the change in history
 func (t *Task) UpdateStatus(newStatus TaskStatus, changedBy, comment string) error {
 	if !IsValidStatus(newStatus) {
-		return fmt.Errorf("invalid status: %s", newStatus)
+		return gerror.New(gerror.ErrCodeValidation, "invalid status", nil).
+			WithComponent("kanban").
+			WithOperation("UpdateStatus").
+			WithDetails("attempted_status", string(newStatus))
 	}
 
 	oldStatus := t.Status
@@ -187,7 +191,10 @@ func (t *Task) UpdateAssignee(newAssignee, changedBy, comment string) {
 // UpdateProgress updates the task's progress percentage
 func (t *Task) UpdateProgress(progress int, changedBy, comment string) error {
 	if progress < 0 || progress > 100 {
-		return fmt.Errorf("progress must be between 0 and 100")
+		return gerror.New(gerror.ErrCodeValidation, "progress must be between 0 and 100", nil).
+			WithComponent("kanban").
+			WithOperation("UpdateProgress").
+			WithDetails("attempted_progress", fmt.Sprintf("%d", progress))
 	}
 
 	oldProgress := t.Progress

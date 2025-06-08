@@ -80,22 +80,22 @@ func (m ChatModel) updateMessagesView() {
 			// Convert message type to string for content formatter
 			msgTypeStr := ""
 			switch msg.Type {
-			case messageTypeAgent:
+			case msgAgent:
 				msgTypeStr = "agent"
-			case messageTypeUser:
+			case msgUser:
 				msgTypeStr = "user"
-			case messageTypeSystem:
+			case msgSystem:
 				msgTypeStr = "system"
-			case messageTypeError:
+			case msgError:
 				msgTypeStr = "error"
-			case messageTypeThinking:
+			case msgAgentThinking:
 				msgTypeStr = "thinking"
-			case messageTypeWorking:
+			case msgAgentWorking:
 				msgTypeStr = "working"
-			case messageTypeToolOutput:
+			case msgToolComplete:
 				msgTypeStr = "tool"
 			}
-			
+
 			// Use the rich content formatter
 			if msgTypeStr == "agent" {
 				formattedContent = m.contentFormatter.FormatAgentResponse(msg.Content, msg.AgentID)
@@ -113,7 +113,7 @@ func (m ChatModel) updateMessagesView() {
 			// Fall back to safe formatting if content formatter not available
 			formattedContent = m.safeFormatContent(msg.Type, msg.Content, msg.AgentID)
 		}
-		
+
 		content.WriteString(formattedContent)
 	}
 

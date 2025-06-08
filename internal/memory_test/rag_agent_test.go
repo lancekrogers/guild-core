@@ -251,7 +251,7 @@ func TestRAGIntegration(t *testing.T) {
 		// Execute multiple requests
 		requests := []string{
 			"Analyze the codebase structure",
-			"Generate API documentation", 
+			"Generate API documentation",
 			"Review security practices",
 		}
 

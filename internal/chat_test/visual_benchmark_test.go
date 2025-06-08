@@ -6,22 +6,7 @@ import (
 	"testing"
 
 	"github.com/guild-ventures/guild-core/internal/chat"
-	"github.com/guild-ventures/guild-core/pkg/config"
 )
-
-func BenchmarkMarkdownRendering(b *testing.B) {
-	renderer, _ := chat.NewMarkdownRenderer(80)
-
-	// Generate large markdown content
-	content := generateLargeMarkdown(10000) // 10KB
-
-	b.ResetTimer()
-	b.ReportAllocs()
-
-	for i := 0; i < b.N; i++ {
-		_ = renderer.Render(content)
-	}
-}
 
 func BenchmarkStatusPanelUpdate(b *testing.B) {
 	guildConfig := createTestConfig()
@@ -277,19 +262,6 @@ func generateLargeCode(lines int) string {
 	}
 
 	return builder.String()
-}
-
-// Test config helper
-func createTestConfig() *config.GuildConfig {
-	return &config.GuildConfig{
-		Agents: []config.AgentConfig{
-			{
-				ID:   "test-agent",
-				Name: "Test Agent",
-				Type: "worker",
-			},
-		},
-	}
 }
 
 // Benchmark results analysis helpers

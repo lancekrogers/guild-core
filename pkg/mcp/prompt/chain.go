@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
 )
 
@@ -68,7 +69,9 @@ func NewChain(processors ...Processor) *Chain {
 // Process executes the chain
 func (c *Chain) Process(ctx context.Context, input *Input) (*Output, error) {
 	if len(c.processors) == 0 {
-		return nil, fmt.Errorf("no processors in chain")
+		return nil, gerror.New(gerror.ErrCodeValidation, "no processors in chain", nil).
+			WithComponent("mcp_prompt").
+			WithOperation("Process")
 	}
 
 	// Start chain analysis
@@ -107,7 +110,10 @@ func NewBaseProcessor(name string) *BaseProcessor {
 // Process is the default implementation that passes to next
 func (b *BaseProcessor) Process(ctx context.Context, input *Input) (*Output, error) {
 	if b.next == nil {
-		return nil, fmt.Errorf("end of chain reached")
+		return nil, gerror.New(gerror.ErrCodeInternal, "end of chain reached", nil).
+			WithComponent("mcp_prompt").
+			WithOperation("Process").
+			WithDetails("processor_name", b.name)
 	}
 	return b.next.Process(ctx, input)
 }
@@ -143,7 +149,9 @@ func NewValidationProcessor(validator func(*Input) error) *ValidationProcessor {
 func (p *ValidationProcessor) Process(ctx context.Context, input *Input) (*Output, error) {
 	if p.validator != nil {
 		if err := p.validator(input); err != nil {
-			return nil, fmt.Errorf("validation failed: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "validation failed").
+				WithComponent("mcp_prompt").
+				WithOperation("ValidationProcessor.Process")
 		}
 	}
 
@@ -171,7 +179,9 @@ func (p *EnhancementProcessor) Process(ctx context.Context, input *Input) (*Outp
 		var err error
 		enhanced, err = p.enhancer(ctx, input)
 		if err != nil {
-			return nil, fmt.Errorf("enhancement failed: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "enhancement failed").
+				WithComponent("mcp_prompt").
+				WithOperation("EnhancementProcessor.Process")
 		}
 	}
 
@@ -333,7 +343,9 @@ func (p *TransformProcessor) Process(ctx context.Context, input *Input) (*Output
 		var err error
 		transformed, err = p.inputTransform(input)
 		if err != nil {
-			return nil, fmt.Errorf("input transform failed: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "input transform failed").
+				WithComponent("mcp_prompt").
+				WithOperation("TransformProcessor.Process")
 		}
 	}
 
@@ -347,7 +359,9 @@ func (p *TransformProcessor) Process(ctx context.Context, input *Input) (*Output
 	if p.outputTransform != nil {
 		output, err = p.outputTransform(output)
 		if err != nil {
-			return nil, fmt.Errorf("output transform failed: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "output transform failed").
+				WithComponent("mcp_prompt").
+				WithOperation("TransformProcessor.Process")
 		}
 	}
 

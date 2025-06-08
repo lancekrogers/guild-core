@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"sync"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 
@@ -31,14 +32,14 @@ func NewCommandProcessor(model *ChatModel) *CommandProcessor {
 
 	// Register all commands
 	cp.registerCommands()
-	
+
 	// Update suggestion engine with available commands
 	commandList := make([]string, 0, len(cp.commands))
 	for cmd := range cp.commands {
 		commandList = append(commandList, cmd)
 	}
 	cp.suggestion.UpdateCommands(commandList)
-	
+
 	return cp
 }
 
@@ -352,11 +353,11 @@ func (cp *CommandProcessor) handlePromptSet(layer, content string) tea.Cmd {
 	return func() tea.Msg {
 		// For now, simulate prompt setting
 		// TODO: Implement actual gRPC call to set prompt layer
-		
+
 		// Validate layer
 		validLayers := []string{"PLATFORM", "GUILD", "ROLE", "DOMAIN", "SESSION", "TURN"}
 		layerUpper := strings.ToUpper(layer)
-		
+
 		isValid := false
 		for _, valid := range validLayers {
 			if layerUpper == valid {
@@ -364,7 +365,7 @@ func (cp *CommandProcessor) handlePromptSet(layer, content string) tea.Cmd {
 				break
 			}
 		}
-		
+
 		if !isValid {
 			cp.suggestion.UpdatePromptLayers(validLayers)
 			return Message{
@@ -372,11 +373,11 @@ func (cp *CommandProcessor) handlePromptSet(layer, content string) tea.Cmd {
 				Content: cp.suggestion.GetSmartErrorMessage("unknown_layer", layer),
 			}
 		}
-		
+
 		// Simulate success
 		return Message{
-			Type:    msgSystem,
-			Content: fmt.Sprintf("✅ **Prompt Layer Updated**\n\nLayer: %s\nContent: %s\n\n*Note: This is a simulation. Actual gRPC implementation pending.*", 
+			Type: msgSystem,
+			Content: fmt.Sprintf("✅ **Prompt Layer Updated**\n\nLayer: %s\nContent: %s\n\n*Note: This is a simulation. Actual gRPC implementation pending.*",
 				layerUpper, content),
 		}
 	}
@@ -386,11 +387,11 @@ func (cp *CommandProcessor) handlePromptDelete(layer string) tea.Cmd {
 	return func() tea.Msg {
 		// For now, simulate prompt deletion
 		// TODO: Implement actual gRPC call to delete prompt layer
-		
+
 		// Validate layer
 		validLayers := []string{"PLATFORM", "GUILD", "ROLE", "DOMAIN", "SESSION", "TURN"}
 		layerUpper := strings.ToUpper(layer)
-		
+
 		isValid := false
 		for _, valid := range validLayers {
 			if layerUpper == valid {
@@ -398,7 +399,7 @@ func (cp *CommandProcessor) handlePromptDelete(layer string) tea.Cmd {
 				break
 			}
 		}
-		
+
 		if !isValid {
 			cp.suggestion.UpdatePromptLayers(validLayers)
 			return Message{
@@ -406,7 +407,7 @@ func (cp *CommandProcessor) handlePromptDelete(layer string) tea.Cmd {
 				Content: cp.suggestion.GetSmartErrorMessage("unknown_layer", layer),
 			}
 		}
-		
+
 		// Check if it's a protected layer
 		protectedLayers := []string{"PLATFORM", "GUILD"}
 		for _, protected := range protectedLayers {
@@ -417,7 +418,7 @@ func (cp *CommandProcessor) handlePromptDelete(layer string) tea.Cmd {
 				}
 			}
 		}
-		
+
 		// Simulate success
 		return Message{
 			Type:    msgSystem,
@@ -462,17 +463,17 @@ func (cp *CommandProcessor) handleToolsList() tea.Cmd {
   📄 **file_read** - Read contents of a file
   📝 **file_write** - Write or create files
   📁 **file_list** - List directory contents
-  
+
 **Code Analysis:**
   🔍 **code_search** - Search for patterns in code
   📊 **code_analyze** - Analyze code structure
   🧪 **test_run** - Execute test suites
-  
+
 **Version Control:**
   🌿 **git_status** - Check repository status
   📦 **git_commit** - Create commits
   🔄 **git_diff** - View changes
-  
+
 **Development Tools:**
   🛠️ **build** - Build the project
   🚀 **deploy** - Deploy to environments
@@ -492,7 +493,7 @@ func (cp *CommandProcessor) handleToolsSearch(query string) tea.Cmd {
 	return func() tea.Msg {
 		// Simulate tool search functionality
 		// TODO: Integrate with actual tool registry search
-		
+
 		// Define mock tools for search
 		tools := []struct {
 			name        string
@@ -513,24 +514,24 @@ func (cp *CommandProcessor) handleToolsSearch(query string) tea.Cmd {
 			{"deploy", "Development", "Deploy to environments", "🚀"},
 			{"lint", "Development", "Run code linters", "📋"},
 		}
-		
+
 		// Search tools
 		var matches []string
 		queryLower := strings.ToLower(query)
-		
+
 		for _, tool := range tools {
 			if strings.Contains(strings.ToLower(tool.name), queryLower) ||
-			   strings.Contains(strings.ToLower(tool.description), queryLower) ||
-			   strings.Contains(strings.ToLower(tool.category), queryLower) {
-				matches = append(matches, fmt.Sprintf("%s **%s** - %s", 
+				strings.Contains(strings.ToLower(tool.description), queryLower) ||
+				strings.Contains(strings.ToLower(tool.category), queryLower) {
+				matches = append(matches, fmt.Sprintf("%s **%s** - %s",
 					tool.icon, tool.name, tool.description))
 			}
 		}
-		
+
 		// Build result message
 		var content strings.Builder
 		content.WriteString(fmt.Sprintf("🔍 **Tool Search Results for '%s'**\n\n", query))
-		
+
 		if len(matches) == 0 {
 			content.WriteString("No tools found matching your query.\n")
 			content.WriteString("Try searching for: file, code, git, build, test")
@@ -543,7 +544,7 @@ func (cp *CommandProcessor) handleToolsSearch(query string) tea.Cmd {
 			}
 			content.WriteString("\nUse /tool <name> to execute a specific tool.")
 		}
-		
+
 		return Message{
 			Type:    msgSystem,
 			Content: content.String(),
@@ -555,7 +556,7 @@ func (cp *CommandProcessor) handleToolInfo(toolID string) tea.Cmd {
 	return func() tea.Msg {
 		// Simulate tool info functionality
 		// TODO: Integrate with actual tool registry
-		
+
 		// Define mock tool information
 		toolInfo := map[string]struct {
 			name        string
@@ -594,7 +595,7 @@ func (cp *CommandProcessor) handleToolInfo(toolID string) tea.Cmd {
 				icon:        "🌿",
 			},
 		}
-		
+
 		// Look up tool
 		tool, exists := toolInfo[toolID]
 		if !exists {
@@ -604,23 +605,23 @@ func (cp *CommandProcessor) handleToolInfo(toolID string) tea.Cmd {
 				toolNames = append(toolNames, name)
 			}
 			cp.suggestion.UpdateTools(toolNames)
-			
+
 			return Message{
 				Type:    msgError,
 				Content: cp.suggestion.GetSmartErrorMessage("unknown_tool", toolID),
 			}
 		}
-		
+
 		// Build detailed info
 		var content strings.Builder
 		content.WriteString(fmt.Sprintf("%s **Tool Information: %s**\n\n", tool.icon, tool.name))
 		content.WriteString(fmt.Sprintf("**Category:** %s\n", tool.category))
 		content.WriteString(fmt.Sprintf("**Description:** %s\n\n", tool.description))
-		
+
 		content.WriteString("**Usage:**\n```\n")
 		content.WriteString(tool.usage)
 		content.WriteString("\n```\n\n")
-		
+
 		if len(tool.parameters) > 0 {
 			content.WriteString("**Parameters:**\n")
 			for _, param := range tool.parameters {
@@ -628,16 +629,16 @@ func (cp *CommandProcessor) handleToolInfo(toolID string) tea.Cmd {
 			}
 			content.WriteString("\n")
 		}
-		
+
 		if len(tool.examples) > 0 {
 			content.WriteString("**Examples:**\n")
 			for _, example := range tool.examples {
 				content.WriteString(fmt.Sprintf("  ```\n  %s\n  ```\n", example))
 			}
 		}
-		
+
 		content.WriteString("\n💡 **Tip:** Use tab completion after /tool for available tools.")
-		
+
 		return Message{
 			Type:    msgSystem,
 			Content: content.String(),
@@ -680,10 +681,99 @@ func (cp *CommandProcessor) handleTool(args []string) tea.Cmd {
 	}
 
 	toolID := args[0]
-	_ = args[1:] // params - will be used when tool execution is implemented
 
-	// TODO: Implement direct tool execution
-	return cp.errorMessage(fmt.Sprintf("Direct tool execution for '%s' not yet implemented", toolID))
+	// Get tool registry from the model
+	toolRegistry := cp.model.registry.Tools()
+	if toolRegistry == nil {
+		return cp.errorMessage("Tool registry not available")
+	}
+
+	// Safety check: verify tool exists
+	if !toolRegistry.HasTool(toolID) {
+		return cp.errorMessage(fmt.Sprintf("Tool '%s' not found in registry", toolID))
+	}
+
+	// Get the tool
+	tool, err := toolRegistry.GetTool(toolID)
+	if err != nil {
+		return cp.errorMessage(fmt.Sprintf("Failed to get tool '%s': %v", toolID, err))
+	}
+
+	// Safety check: verify tool permissions (if required)
+	if tool.RequiresAuth() {
+		// Check if user has granted permission for this tool
+		if blocked, exists := cp.model.blockedTools[toolID]; exists && blocked {
+			return cp.errorMessage(fmt.Sprintf("Tool '%s' execution blocked by user", toolID))
+		}
+	}
+
+	// Parse parameters from remaining args
+	params := make(map[string]interface{})
+	if len(args) > 1 {
+		// Simple parameter parsing: key=value format
+		for _, arg := range args[1:] {
+			if strings.Contains(arg, "=") {
+				parts := strings.SplitN(arg, "=", 2)
+				if len(parts) == 2 {
+					params[parts[0]] = parts[1]
+				}
+			}
+		}
+	}
+
+	// Execute tool directly (synchronously for command interface)
+	return func() tea.Msg {
+		// Create execution context with timeout
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		// Execute the tool with safety checks
+		result, err := cp.model.executeToolSafely(ctx, tool, params)
+		if err != nil {
+			return Message{
+				Type:      msgSystem,
+				Content:   fmt.Sprintf("❌ Tool execution failed: %v", err),
+				AgentID:   "system",
+				Timestamp: time.Now(),
+			}
+		}
+
+		// Format successful result
+		var content strings.Builder
+		content.WriteString(fmt.Sprintf("🔨 Tool '%s' completed successfully\n\n", toolID))
+
+		if result != nil {
+			if result.Output != "" {
+				content.WriteString("📤 Output:\n")
+				content.WriteString(result.Output)
+				content.WriteString("\n")
+			}
+
+			if len(result.Metadata) > 0 {
+				content.WriteString("\n📊 Metadata:\n")
+				for key, value := range result.Metadata {
+					content.WriteString(fmt.Sprintf("  %s: %s\n", key, value))
+				}
+			}
+
+			if result.Error != "" {
+				content.WriteString(fmt.Sprintf("\n⚠️ Tool reported error: %s\n", result.Error))
+			}
+		}
+
+		// Track cost if available
+		cost := toolRegistry.GetToolCost(toolID)
+		if cost > 0 {
+			content.WriteString(fmt.Sprintf("\n💰 Cost: %.2f credits\n", cost))
+		}
+
+		return Message{
+			Type:      msgToolComplete,
+			Content:   content.String(),
+			AgentID:   "system",
+			Timestamp: time.Now(),
+		}
+	}
 }
 
 func (cp *CommandProcessor) handleTest(args []string) tea.Cmd {

@@ -3,10 +3,10 @@ package kanban
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"sync"
 
 	"github.com/guild-ventures/guild-core/pkg/comms"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // EventManager handles kanban event publishing and subscription
@@ -44,7 +44,10 @@ func NewEventManager(ctx context.Context, pubsub comms.PubSub, topicPrefix strin
 func (em *EventManager) PublishEvent(event *BoardEvent) error {
 	data, err := MarshalEvent(event)
 	if err != nil {
-		return fmt.Errorf("failed to marshal event: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal event").
+			WithComponent("kanban").
+			WithOperation("PublishEvent").
+			WithDetails("event_type", string(event.EventType))
 	}
 
 	topic := em.topicPrefix + string(event.EventType)
@@ -60,7 +63,11 @@ func (em *EventManager) Subscribe(eventType EventType, handler EventHandler) err
 	if len(em.handlers[eventType]) == 0 {
 		topic := em.topicPrefix + string(eventType)
 		if err := em.pubsub.Subscribe(em.ctx, topic); err != nil {
-			return fmt.Errorf("failed to subscribe to topic %s: %w", topic, err)
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to subscribe to topic").
+				WithComponent("kanban").
+				WithOperation("Subscribe").
+				WithDetails("topic", topic).
+				WithDetails("event_type", string(eventType))
 		}
 	}
 
@@ -75,7 +82,10 @@ func (em *EventManager) SubscribeAll(handler EventHandler) error {
 
 	// Subscribe to all kanban events
 	if err := em.pubsub.Subscribe(em.ctx, em.topicPrefix); err != nil {
-		return fmt.Errorf("failed to subscribe to all events: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to subscribe to all events").
+			WithComponent("kanban").
+			WithOperation("SubscribeToAll").
+			WithDetails("topic_prefix", em.topicPrefix)
 	}
 
 	// Add handler to all event types
@@ -153,7 +163,10 @@ func (em *EventManager) dispatchEvent(event *BoardEvent) {
 func MarshalEvent(event *BoardEvent) ([]byte, error) {
 	eventData, err := json.Marshal(event)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal event: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal event").
+			WithComponent("kanban").
+			WithOperation("MarshalEvent").
+			WithDetails("event_type", string(event.EventType))
 	}
 	return eventData, nil
 }
@@ -162,7 +175,9 @@ func MarshalEvent(event *BoardEvent) ([]byte, error) {
 func UnmarshalEvent(data []byte) (*BoardEvent, error) {
 	var event BoardEvent
 	if err := json.Unmarshal(data, &event); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal event: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to unmarshal event").
+			WithComponent("kanban").
+			WithOperation("UnmarshalEvent")
 	}
 	return &event, nil
 }

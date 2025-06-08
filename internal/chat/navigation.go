@@ -2,7 +2,7 @@ package chat
 
 import (
 	"strings"
-	
+
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -200,7 +200,7 @@ func (m ChatModel) handleCommandPalette() (ChatModel, tea.Cmd) {
 	if m.commandPalette == nil {
 		return m, nil
 	}
-	
+
 	if m.commandPalette.IsOpen() {
 		// Close palette
 		m.commandPalette.Close()
@@ -209,7 +209,7 @@ func (m ChatModel) handleCommandPalette() (ChatModel, tea.Cmd) {
 		m.commandPalette.Open()
 		m.commandPalette.SetDimensions(m.width, m.height)
 	}
-	
+
 	return m, nil
 }
 
@@ -220,36 +220,36 @@ func (m ChatModel) handleCommandPaletteKey(msg tea.KeyMsg) (ChatModel, tea.Cmd) 
 		// Close palette
 		m.commandPalette.Close()
 		return m, nil
-		
+
 	case "enter":
 		// Execute selected command
 		if cmd := m.commandPalette.GetSelectedCommand(); cmd != nil {
 			// Close palette
 			m.commandPalette.Close()
-			
+
 			// Execute the command by setting the input
 			m.input.SetValue(cmd.Shortcut)
 			m.input.CursorEnd()
-			
+
 			// Optionally auto-submit for certain commands
-			if strings.HasPrefix(cmd.Shortcut, "/help") || 
-			   strings.HasPrefix(cmd.Shortcut, "/status") ||
-			   strings.HasPrefix(cmd.Shortcut, "/agents") {
+			if strings.HasPrefix(cmd.Shortcut, "/help") ||
+				strings.HasPrefix(cmd.Shortcut, "/status") ||
+				strings.HasPrefix(cmd.Shortcut, "/agents") {
 				return m.handleSendMessage()
 			}
 		}
 		return m, nil
-		
+
 	case "up", "k", "shift+tab":
 		// Move up in list
 		m.commandPalette.MoveUp()
 		return m, nil
-		
+
 	case "down", "j", "tab":
 		// Move down in list
 		m.commandPalette.MoveDown()
 		return m, nil
-		
+
 	default:
 		// Update search query with typed characters
 		if len(msg.String()) == 1 || msg.String() == "backspace" {

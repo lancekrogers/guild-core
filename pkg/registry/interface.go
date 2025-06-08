@@ -120,6 +120,12 @@ type ToolRegistry interface {
 
 	// RegisterToolWithCost registers a tool with cost information
 	RegisterToolWithCost(name string, tool Tool, costMagnitude int, capabilities []string) error
+
+	// GetToolCost returns the cost for using a specific tool
+	GetToolCost(toolName string) float64
+
+	// SetToolCost sets the cost for using a specific tool
+	SetToolCost(toolName string, cost float64)
 }
 
 // ProviderRegistry manages LLM provider registration and selection.

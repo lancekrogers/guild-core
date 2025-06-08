@@ -38,7 +38,7 @@ func (m ChatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if m.commandPalette != nil && m.commandPalette.IsOpen() {
 			return m.handleCommandPaletteKey(msg)
 		}
-		
+
 		switch {
 		case key.Matches(msg, m.keys.Quit):
 			return m, tea.Quit

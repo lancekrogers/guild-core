@@ -2,6 +2,8 @@ package agent_test
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"strings"
 	"testing"
 
@@ -15,20 +17,30 @@ import (
 
 // TestWorkerAgentWithContext tests WorkerAgent with context handling
 func TestWorkerAgentWithContext(t *testing.T) {
+	// Create mock dependencies
+	llmClient := mocks.NewMockLLMClient()
+	memoryManager := mocks.NewMockChainManager()
+	toolRegistry := tools.NewToolRegistry()
 	commissionManager := &commission.Manager{}
-	
-	// Create worker agent
-	workerAgent := agent.NewWorkerAgent(
-		"ctx-test-agent",
-		"Context Test Agent",
-		mocks.NewMockLLMClient(),
-		mocks.NewMockChainManager(),
-		tools.NewToolRegistry(),
+	costManager := mocks.NewMockCostManager()
+
+	// Create factory
+	factory := agent.DefaultFactoryFactory(
+		llmClient,
+		memoryManager,
+		toolRegistry,
 		commissionManager,
+		costManager,
 	)
 
-	// Test with context
+	// Create worker agent via factory
 	ctx := context.Background()
+	workerAgent, err := factory.CreateWorkerAgent(ctx, "ctx-test-agent", "Context Test Agent")
+	if err != nil {
+		t.Fatalf("Failed to create worker agent: %v", err)
+	}
+
+	// Test with context
 	response, err := workerAgent.Execute(ctx, "test with context")
 	if err != nil {
 		t.Fatalf("Execute failed: %v", err)
@@ -55,20 +67,30 @@ func TestWorkerAgentWithContext(t *testing.T) {
 
 // TestWorkerAgentCostTracking tests cost tracking functionality if available
 func TestWorkerAgentCostTracking(t *testing.T) {
+	// Create mock dependencies
+	llmClient := mocks.NewMockLLMClient()
+	memoryManager := mocks.NewMockChainManager()
+	toolRegistry := tools.NewToolRegistry()
 	commissionManager := &commission.Manager{}
+	costManager := mocks.NewMockCostManager()
 
-	// Create worker agent
-	workerAgent := agent.NewWorkerAgent(
-		"cost-test-agent",
-		"Cost Test Agent",
-		mocks.NewMockLLMClient(),
-		mocks.NewMockChainManager(),
-		tools.NewToolRegistry(),
+	// Create factory
+	factory := agent.DefaultFactoryFactory(
+		llmClient,
+		memoryManager,
+		toolRegistry,
 		commissionManager,
+		costManager,
 	)
 
-	// Test basic execution (cost tracking may not be publicly available)
+	// Create worker agent via factory
 	ctx := context.Background()
+	workerAgent, err := factory.CreateWorkerAgent(ctx, "cost-test-agent", "Cost Test Agent")
+	if err != nil {
+		t.Fatalf("Failed to create worker agent: %v", err)
+	}
+
+	// Test basic execution (cost tracking may not be publicly available)
 	response, err := workerAgent.Execute(ctx, "test operation")
 	if err != nil {
 		t.Fatalf("Execute failed: %v", err)
@@ -86,20 +108,30 @@ func TestWorkerAgentCostTracking(t *testing.T) {
 
 // TestManagerAgentInheritance tests that ManagerAgent inherits WorkerAgent functionality
 func TestManagerAgentInheritance(t *testing.T) {
+	// Create mock dependencies
+	llmClient := mocks.NewMockLLMClient()
+	memoryManager := mocks.NewMockChainManager()
+	toolRegistry := tools.NewToolRegistry()
 	commissionManager := &commission.Manager{}
-	
-	// Create manager agent
-	managerAgent := agent.NewManagerAgent(
-		"manager-test",
-		"Manager Test",
-		mocks.NewMockLLMClient(),
-		mocks.NewMockChainManager(),
-		tools.NewToolRegistry(),
+	costManager := mocks.NewMockCostManager()
+
+	// Create factory
+	factory := agent.DefaultFactoryFactory(
+		llmClient,
+		memoryManager,
+		toolRegistry,
 		commissionManager,
+		costManager,
 	)
 
-	// Test that it has all WorkerAgent functionality
+	// Create manager agent via factory
 	ctx := context.Background()
+	managerAgent, err := factory.CreateManagerAgent(ctx, "manager-test", "Manager Test")
+	if err != nil {
+		t.Fatalf("Failed to create manager agent: %v", err)
+	}
+
+	// Test that it has all WorkerAgent functionality
 	response, err := managerAgent.Execute(ctx, "manager request")
 	if err != nil {
 		t.Fatalf("Execute failed: %v", err)
@@ -143,25 +175,40 @@ func TestWorkerAgentWithFullMemoryContext(t *testing.T) {
 	}
 	memoryManager.WithBuildContext(messages)
 
+	// Create mock dependencies
+	llmClient := mocks.NewMockLLMClient()
+	toolRegistry := tools.NewToolRegistry()
 	commissionManager := &commission.Manager{}
+	costManager := mocks.NewMockCostManager()
 
-	// Create worker agent
-	workerAgent := agent.NewWorkerAgent(
-		"memory-test-agent",
-		"Memory Test Agent",
-		mocks.NewMockLLMClient(),
+	// Create factory
+	factory := agent.DefaultFactoryFactory(
+		llmClient,
 		memoryManager,
-		tools.NewToolRegistry(),
+		toolRegistry,
 		commissionManager,
+		costManager,
 	)
 
+	// Create worker agent via factory
+	ctx := context.Background()
+	workerAgent, err := factory.CreateWorkerAgent(ctx, "memory-test-agent", "Memory Test Agent")
+	if err != nil {
+		t.Fatalf("Failed to create worker agent: %v", err)
+	}
+
+	// Cast to GuildArtisan to access memory manager
+	guildArtisan, ok := workerAgent.(agent.GuildArtisan)
+	if !ok {
+		t.Fatal("Worker agent should implement GuildArtisan interface")
+	}
+
 	// Verify memory manager is accessible and has context
-	if workerAgent.GetMemoryManager() != memoryManager {
+	if guildArtisan.GetMemoryManager() != memoryManager {
 		t.Error("Memory manager not properly set")
 	}
 
 	// Test execution with memory context
-	ctx := context.Background()
 	response, err := workerAgent.Execute(ctx, "continue conversation")
 	if err != nil {
 		t.Fatalf("Execute with memory context failed: %v", err)
@@ -174,26 +221,41 @@ func TestWorkerAgentWithFullMemoryContext(t *testing.T) {
 
 // TestWorkerAgentWithCommissionManager tests agent with commission manager
 func TestWorkerAgentWithCommissionManager(t *testing.T) {
-	// Create commission manager
+	// Create mock dependencies
+	llmClient := mocks.NewMockLLMClient()
+	memoryManager := mocks.NewMockChainManager()
+	toolRegistry := tools.NewToolRegistry()
 	commissionManager := &commission.Manager{}
+	costManager := mocks.NewMockCostManager()
 
-	// Create worker agent
-	workerAgent := agent.NewWorkerAgent(
-		"commission-test-agent",
-		"Commission Test Agent",
-		mocks.NewMockLLMClient(),
-		mocks.NewMockChainManager(),
-		tools.NewToolRegistry(),
+	// Create factory
+	factory := agent.DefaultFactoryFactory(
+		llmClient,
+		memoryManager,
+		toolRegistry,
 		commissionManager,
+		costManager,
 	)
 
+	// Create worker agent via factory
+	ctx := context.Background()
+	workerAgent, err := factory.CreateWorkerAgent(ctx, "commission-test-agent", "Commission Test Agent")
+	if err != nil {
+		t.Fatalf("Failed to create worker agent: %v", err)
+	}
+
+	// Cast to GuildArtisan to access commission manager
+	guildArtisan, ok := workerAgent.(agent.GuildArtisan)
+	if !ok {
+		t.Fatal("Worker agent should implement GuildArtisan interface")
+	}
+
 	// Verify commission manager is accessible
-	if workerAgent.GetCommissionManager() != commissionManager {
+	if guildArtisan.GetCommissionManager() != commissionManager {
 		t.Error("Commission manager not properly set")
 	}
 
 	// Test commission-based execution
-	ctx := context.Background()
 	response, err := workerAgent.Execute(ctx, "work on commission")
 	if err != nil {
 		t.Fatalf("Execute failed: %v", err)
@@ -208,47 +270,63 @@ func TestWorkerAgentWithCommissionManager(t *testing.T) {
 func TestWorkerAgentToolExecution(t *testing.T) {
 	// Create tool registry with multiple tools
 	toolRegistry := tools.NewToolRegistry()
-	
+
 	// Add calculation tool
 	calcTool := toolmocks.NewMockTool("calculator", "Performs calculations")
-	err := toolRegistry.RegisterTool(calcTool)
+	err := toolRegistry.RegisterTool("calculator", calcTool)
 	if err != nil {
 		t.Fatalf("Failed to register calculator tool: %v", err)
 	}
-	
+
 	// Add search tool
 	searchTool := toolmocks.NewMockTool("search", "Searches the web")
-	err = toolRegistry.RegisterTool(searchTool)
+	err = toolRegistry.RegisterTool("search", searchTool)
 	if err != nil {
 		t.Fatalf("Failed to register search tool: %v", err)
 	}
 
+	// Create mock dependencies
+	llmClient := mocks.NewMockLLMClient()
+	memoryManager := mocks.NewMockChainManager()
 	commissionManager := &commission.Manager{}
+	costManager := mocks.NewMockCostManager()
 
-	// Create worker agent with tools
-	workerAgent := agent.NewWorkerAgent(
-		"tool-exec-agent",
-		"Tool Execution Agent",
-		mocks.NewMockLLMClient(),
-		mocks.NewMockChainManager(),
+	// Create factory
+	factory := agent.DefaultFactoryFactory(
+		llmClient,
+		memoryManager,
 		toolRegistry,
 		commissionManager,
+		costManager,
 	)
 
+	// Create worker agent via factory
+	ctx := context.Background()
+	workerAgent, err := factory.CreateWorkerAgent(ctx, "tool-exec-agent", "Tool Execution Agent")
+	if err != nil {
+		t.Fatalf("Failed to create worker agent: %v", err)
+	}
+
+	// Cast to GuildArtisan to access tool registry
+	guildArtisan, ok := workerAgent.(agent.GuildArtisan)
+	if !ok {
+		t.Fatal("Worker agent should implement GuildArtisan interface")
+	}
+
 	// Verify tools are available
-	registry := workerAgent.GetToolRegistry()
-	
-	calcToolRetrieved, exists := registry.GetTool("calculator")
-	if !exists {
-		t.Fatal("Calculator tool should exist in registry")
+	registry := guildArtisan.GetToolRegistry()
+
+	calcToolRetrieved, err := registry.GetTool("calculator")
+	if err != nil {
+		t.Fatalf("Calculator tool should exist in registry: %v", err)
 	}
 	if calcToolRetrieved.Name() != "calculator" {
 		t.Error("Calculator tool not properly registered")
 	}
 
-	searchToolRetrieved, exists := registry.GetTool("search")
-	if !exists {
-		t.Fatal("Search tool should exist in registry")
+	searchToolRetrieved, err := registry.GetTool("search")
+	if err != nil {
+		t.Fatalf("Search tool should exist in registry: %v", err)
 	}
 	if searchToolRetrieved.Name() != "search" {
 		t.Error("Search tool not properly registered")
@@ -261,7 +339,6 @@ func TestWorkerAgentToolExecution(t *testing.T) {
 	}
 
 	// Test execution with tools available
-	ctx := context.Background()
 	response, err := workerAgent.Execute(ctx, "use tools for calculation")
 	if err != nil {
 		t.Fatalf("Execute with tools failed: %v", err)
@@ -289,25 +366,31 @@ func TestWorkerAgentIntegration(t *testing.T) {
 
 	// Create tool registry with tools
 	toolRegistry := tools.NewToolRegistry()
-	err := toolRegistry.RegisterTool(toolmocks.NewMockTool("executor", "Executes tasks"))
+	err := toolRegistry.RegisterTool("executor", toolmocks.NewMockTool("executor", "Executes tasks"))
 	if err != nil {
 		t.Fatalf("Failed to register tool: %v", err)
 	}
 
 	commissionManager := &commission.Manager{}
+	costManager := mocks.NewMockCostManager()
 
-	// Create fully integrated worker agent
-	workerAgent := agent.NewWorkerAgent(
-		"integrated-agent",
-		"Integrated Test Agent",
+	// Create factory
+	factory := agent.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
 		commissionManager,
+		costManager,
 	)
 
-	// Execute a complex task
+	// Create fully integrated worker agent via factory
 	ctx := context.Background()
+	workerAgent, err := factory.CreateWorkerAgent(ctx, "integrated-agent", "Integrated Test Agent")
+	if err != nil {
+		t.Fatalf("Failed to create worker agent: %v", err)
+	}
+
+	// Execute a complex task
 	response, err := workerAgent.Execute(ctx, "Execute complex integration test")
 	if err != nil {
 		t.Fatalf("Execute failed: %v", err)
@@ -318,17 +401,23 @@ func TestWorkerAgentIntegration(t *testing.T) {
 		t.Error("Expected non-empty response")
 	}
 
+	// Cast to GuildArtisan to access all components
+	guildArtisan, ok := workerAgent.(agent.GuildArtisan)
+	if !ok {
+		t.Fatal("Worker agent should implement GuildArtisan interface")
+	}
+
 	// Verify all components are accessible
-	if workerAgent.GetLLMClient() == nil {
+	if guildArtisan.GetLLMClient() == nil {
 		t.Error("LLM client should not be nil")
 	}
-	if workerAgent.GetMemoryManager() == nil {
+	if guildArtisan.GetMemoryManager() == nil {
 		t.Error("Memory manager should not be nil")
 	}
-	if workerAgent.GetToolRegistry() == nil {
+	if guildArtisan.GetToolRegistry() == nil {
 		t.Error("Tool registry should not be nil")
 	}
-	if workerAgent.GetCommissionManager() == nil {
+	if guildArtisan.GetCommissionManager() == nil {
 		t.Error("Commission manager should not be nil")
 	}
 }
@@ -338,20 +427,31 @@ func TestWorkerAgentErrorHandling(t *testing.T) {
 	t.Run("llm_client_error", func(t *testing.T) {
 		// Create mock client that returns an error
 		llmClient := mocks.NewMockLLMClient()
-		llmClient.WithError("LLM service unavailable")
+		llmClient.WithError(errors.New("LLM service unavailable"))
 
+		// Create mock dependencies
+		memoryManager := mocks.NewMockChainManager()
+		toolRegistry := tools.NewToolRegistry()
 		commissionManager := &commission.Manager{}
-		workerAgent := agent.NewWorkerAgent(
-			"error-test-agent",
-			"Error Test Agent",
+		costManager := mocks.NewMockCostManager()
+
+		// Create factory
+		factory := agent.DefaultFactoryFactory(
 			llmClient,
-			mocks.NewMockChainManager(),
-			tools.NewToolRegistry(),
+			memoryManager,
+			toolRegistry,
 			commissionManager,
+			costManager,
 		)
 
+		// Create worker agent via factory
 		ctx := context.Background()
-		_, err := workerAgent.Execute(ctx, "test request")
+		workerAgent, err := factory.CreateWorkerAgent(ctx, "error-test-agent", "Error Test Agent")
+		if err != nil {
+			t.Fatalf("Failed to create worker agent: %v", err)
+		}
+
+		_, err = workerAgent.Execute(ctx, "test request")
 		if err == nil {
 			t.Error("Expected error when LLM client fails")
 		}
@@ -371,14 +471,25 @@ func TestWorkerAgentErrorHandling(t *testing.T) {
 
 		// This might not work depending on the implementation,
 		// but shouldn't cause a panic
-		workerAgent := agent.NewWorkerAgent(
-			"nil-test-agent",
-			"Nil Test Agent",
+		costManager := mocks.NewMockCostManager()
+
+		// Create factory with nil dependencies
+		factory := agent.DefaultFactoryFactory(
 			nil, // nil LLM client
 			nil, // nil memory manager
 			nil, // nil tool registry
 			nil, // nil commission manager
+			costManager,
 		)
+
+		// Create worker agent via factory - this may fail gracefully
+		ctx := context.Background()
+		workerAgent, err := factory.CreateWorkerAgent(ctx, "nil-test-agent", "Nil Test Agent")
+		// Don't fail if creation fails with nil dependencies - that's acceptable
+		if err != nil {
+			t.Logf("Factory creation failed with nil dependencies (expected): %v", err)
+			return
+		}
 
 		// Basic property access should work even with nil dependencies
 		if workerAgent.GetID() != "nil-test-agent" {
@@ -389,18 +500,30 @@ func TestWorkerAgentErrorHandling(t *testing.T) {
 
 // TestWorkerAgentConcurrency tests concurrent access to worker agent
 func TestWorkerAgentConcurrency(t *testing.T) {
+	// Create mock dependencies
+	llmClient := mocks.NewMockLLMClient()
+	memoryManager := mocks.NewMockChainManager()
+	toolRegistry := tools.NewToolRegistry()
 	commissionManager := &commission.Manager{}
-	workerAgent := agent.NewWorkerAgent(
-		"concurrent-agent",
-		"Concurrent Test Agent",
-		mocks.NewMockLLMClient(),
-		mocks.NewMockChainManager(),
-		tools.NewToolRegistry(),
+	costManager := mocks.NewMockCostManager()
+
+	// Create factory
+	factory := agent.DefaultFactoryFactory(
+		llmClient,
+		memoryManager,
+		toolRegistry,
 		commissionManager,
+		costManager,
 	)
 
-	// Test concurrent execution
+	// Create worker agent via factory
 	ctx := context.Background()
+	workerAgent, err := factory.CreateWorkerAgent(ctx, "concurrent-agent", "Concurrent Test Agent")
+	if err != nil {
+		t.Fatalf("Failed to create worker agent: %v", err)
+	}
+
+	// Test concurrent execution
 	numGoroutines := 10
 	done := make(chan bool, numGoroutines)
 	errors := make(chan error, numGoroutines)
@@ -408,15 +531,15 @@ func TestWorkerAgentConcurrency(t *testing.T) {
 	for i := 0; i < numGoroutines; i++ {
 		go func(id int) {
 			defer func() { done <- true }()
-			
+
 			response, err := workerAgent.Execute(ctx, "concurrent request")
 			if err != nil {
 				errors <- err
 				return
 			}
-			
+
 			if response == "" {
-				errors <- testing.Errorf("Empty response from goroutine %d", id)
+				errors <- fmt.Errorf("Empty response from goroutine %d", id)
 			}
 		}(i)
 	}
@@ -434,17 +557,29 @@ func TestWorkerAgentConcurrency(t *testing.T) {
 
 // BenchmarkWorkerAgentExecution benchmarks worker agent execution
 func BenchmarkWorkerAgentExecution(b *testing.B) {
+	// Create mock dependencies
+	llmClient := mocks.NewMockLLMClient()
+	memoryManager := mocks.NewMockChainManager()
+	toolRegistry := tools.NewToolRegistry()
 	commissionManager := &commission.Manager{}
-	workerAgent := agent.NewWorkerAgent(
-		"benchmark-agent",
-		"Benchmark Agent",
-		mocks.NewMockLLMClient(),
-		mocks.NewMockChainManager(),
-		tools.NewToolRegistry(),
+	costManager := mocks.NewMockCostManager()
+
+	// Create factory
+	factory := agent.DefaultFactoryFactory(
+		llmClient,
+		memoryManager,
+		toolRegistry,
 		commissionManager,
+		costManager,
 	)
 
+	// Create worker agent via factory
 	ctx := context.Background()
+	workerAgent, err := factory.CreateWorkerAgent(ctx, "benchmark-agent", "Benchmark Agent")
+	if err != nil {
+		b.Fatalf("Failed to create worker agent: %v", err)
+	}
+
 	b.ResetTimer()
 	b.ReportAllocs()
 

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"sync"
 	"sync/atomic"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 const JSONRPCVersion = "2.0"
@@ -56,7 +58,9 @@ func NewCodec(idGen IDGenerator) *Codec {
 func (c *Codec) EncodeRequest(method string, params interface{}) (*Request, error) {
 	paramsJSON, err := json.Marshal(params)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal params: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal params").
+			WithComponent("mcp_protocol").
+			WithOperation("EncodeRequest")
 	}
 
 	return &Request{
@@ -71,7 +75,9 @@ func (c *Codec) EncodeRequest(method string, params interface{}) (*Request, erro
 func (c *Codec) EncodeResponse(id interface{}, result interface{}) (*Response, error) {
 	resultJSON, err := json.Marshal(result)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal result: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal result").
+			WithComponent("mcp_protocol").
+			WithOperation("EncodeResponse")
 	}
 
 	return &Response{
@@ -88,7 +94,9 @@ func (c *Codec) EncodeError(id interface{}, code int, message string, data inter
 		var err error
 		dataJSON, err = json.Marshal(data)
 		if err != nil {
-			return nil, fmt.Errorf("failed to marshal error data: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal error data").
+				WithComponent("mcp_protocol").
+				WithOperation("EncodeError")
 		}
 	}
 
@@ -107,7 +115,9 @@ func (c *Codec) EncodeError(id interface{}, code int, message string, data inter
 func (c *Codec) EncodeNotification(method string, params interface{}) (*Notification, error) {
 	paramsJSON, err := json.Marshal(params)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal params: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal params").
+			WithComponent("mcp_protocol").
+			WithOperation("EncodeNotification")
 	}
 
 	return &Notification{
@@ -204,7 +214,9 @@ func (c *Codec) EncodeBatch(messages ...interface{}) ([]byte, error) {
 	for _, msg := range messages {
 		msgJSON, err := json.Marshal(msg)
 		if err != nil {
-			return nil, fmt.Errorf("failed to marshal message: %w", err)
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal message").
+				WithComponent("mcp_protocol").
+				WithOperation("EncodeBatch")
 		}
 		batch = append(batch, msgJSON)
 	}

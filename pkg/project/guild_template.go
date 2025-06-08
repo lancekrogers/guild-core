@@ -1,11 +1,12 @@
 package project
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
 	yaml "gopkg.in/yaml.v3"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // GuildTemplate provides default guild configurations for new projects
@@ -167,12 +168,18 @@ func SaveGuildConfig(projectPath string, config *GuildConfig) error {
 	// This avoids importing the config package
 	data, err := yaml.Marshal(config)
 	if err != nil {
-		return fmt.Errorf("failed to marshal guild config: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild config").
+			WithComponent("project").
+			WithOperation("SaveGuildConfig").
+			WithDetails("project_path", projectPath)
 	}
 
 	guildPath := filepath.Join(projectPath, "guild.yaml")
 	if err := os.WriteFile(guildPath, data, 0644); err != nil {
-		return fmt.Errorf("failed to write guild config: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
+			WithComponent("project").
+			WithOperation("SaveGuildConfig").
+			WithDetails("guild_path", guildPath)
 	}
 
 	return nil

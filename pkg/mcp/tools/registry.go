@@ -3,10 +3,10 @@ package tools
 
 import (
 	"context"
-	"fmt"
 	"sync"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
 )
 
@@ -83,7 +83,9 @@ func NewMemoryRegistry() *MemoryRegistry {
 // RegisterTool registers a tool in the registry
 func (r *MemoryRegistry) RegisterTool(tool Tool) error {
 	if tool == nil {
-		return fmt.Errorf("tool cannot be nil")
+		return gerror.New(gerror.ErrCodeInvalidInput, "tool cannot be nil", nil).
+			WithComponent("mcp.tools.registry").
+			WithOperation("RegisterTool")
 	}
 
 	r.mu.Lock()
@@ -91,7 +93,10 @@ func (r *MemoryRegistry) RegisterTool(tool Tool) error {
 
 	toolID := tool.ID()
 	if _, exists := r.tools[toolID]; exists {
-		return fmt.Errorf("tool %s already registered", toolID)
+		return gerror.New(gerror.ErrCodeAlreadyExists, "tool already registered", nil).
+			WithComponent("mcp.tools.registry").
+			WithOperation("RegisterTool").
+			WithDetails("tool_id", toolID)
 	}
 
 	// Register the tool
@@ -113,7 +118,10 @@ func (r *MemoryRegistry) DeregisterTool(toolID string) error {
 
 	tool, exists := r.tools[toolID]
 	if !exists {
-		return fmt.Errorf("tool %s not found", toolID)
+		return gerror.New(gerror.ErrCodeNotFound, "tool not found", nil).
+			WithComponent("mcp.tools.registry").
+			WithOperation("DeregisterTool").
+			WithDetails("tool_id", toolID)
 	}
 
 	// Remove from tools map
@@ -140,7 +148,10 @@ func (r *MemoryRegistry) GetTool(toolID string) (Tool, error) {
 
 	tool, exists := r.tools[toolID]
 	if !exists {
-		return nil, fmt.Errorf("tool %s not found", toolID)
+		return nil, gerror.New(gerror.ErrCodeNotFound, "tool not found", nil).
+			WithComponent("mcp.tools.registry").
+			WithOperation("GetTool").
+			WithDetails("tool_id", toolID)
 	}
 
 	return tool, nil
@@ -232,7 +243,10 @@ func (r *MemoryRegistry) UpdateToolStatus(toolID string, available bool) error {
 	defer r.mu.Unlock()
 
 	if _, exists := r.tools[toolID]; !exists {
-		return fmt.Errorf("tool %s not found", toolID)
+		return gerror.New(gerror.ErrCodeNotFound, "tool not found", nil).
+			WithComponent("mcp.tools.registry").
+			WithOperation("UpdateToolStatus").
+			WithDetails("tool_id", toolID)
 	}
 
 	r.status[toolID] = available
@@ -305,14 +319,21 @@ func (t *BaseTool) Capabilities() []string {
 // Execute executes the tool
 func (t *BaseTool) Execute(ctx context.Context, params map[string]interface{}) (interface{}, error) {
 	if t.executor == nil {
-		return nil, fmt.Errorf("tool %s has no executor", t.id)
+		return nil, gerror.New(gerror.ErrCodeValidation, "tool has no executor", nil).
+			WithComponent("mcp.tools.basetool").
+			WithOperation("Execute").
+			WithDetails("tool_id", t.id)
 	}
 
 	// Validate required parameters
 	for _, param := range t.parameters {
 		if param.Required {
 			if _, exists := params[param.Name]; !exists {
-				return nil, fmt.Errorf("required parameter %s missing", param.Name)
+				return nil, gerror.New(gerror.ErrCodeMissingRequired, "required parameter missing", nil).
+					WithComponent("mcp.tools.basetool").
+					WithOperation("Execute").
+					WithDetails("parameter_name", param.Name).
+					WithDetails("tool_id", t.id)
 			}
 		}
 	}

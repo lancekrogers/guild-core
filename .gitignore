@@ -92,6 +92,10 @@ temp/
 *.disabled
 *.needs_work
 
+# Protobuf generation artifacts (prevent github.com/ directory creation)
+github.com/
+*/github.com/
+
 ### Guild-Specific ###
 # Guild project-local directory (runtime data)
 .guild/

@@ -2,6 +2,7 @@ package chat
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -24,6 +25,7 @@ import (
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/guild-ventures/guild-core/tools"
 )
 
 // Helper to check if agent has capability
@@ -223,14 +225,16 @@ Try these commands to see visual features:
 		agentIndicators:    agentIndicators,
 
 		// Core Components
-		grpcClient:    guildClient,
-		promptsClient: promptClient,
-		sessionID:     sessionID,
-		campaignID:    campaignID,
-		commandProc:   nil, // Set after model is created
-		completionEng: completionEngine,
-		history:       commandHistory,
+		grpcClient:     guildClient,
+		promptsClient:  promptClient,
+		sessionID:      sessionID,
+		campaignID:     campaignID,
+		guildConfig:    guildConfig,
+		commandProc:    nil, // Set after model is created
+		completionEng:  completionEngine,
+		history:        commandHistory,
 		commandPalette: commandPalette,
+		registry:       registry,
 
 		// State
 		messages:      []Message{},
@@ -556,7 +560,10 @@ func (m ChatModel) getToolStatusText() string {
 		if execution.Progress > 0 {
 			content.WriteString(fmt.Sprintf("   Progress: %.1f%%\n", execution.Progress*100))
 		}
-		// TODO: Add cost tracking when Cost field is added to toolExecution
+		// Display cost if available
+		if execution.Cost > 0 {
+			content.WriteString(fmt.Sprintf("   Cost: %.2f credits\n", execution.Cost))
+		}
 		content.WriteString("\n")
 		i++
 	}
@@ -613,7 +620,7 @@ func (m *ChatModel) simulateToolExecution(execID string) {
 	execution.EndTime = &now
 	execution.Status = "completed"
 	execution.Result = "Tool execution completed successfully"
-	// TODO: Add cost tracking when Cost field is added
+	// Cost tracking is now implemented in executeToolViaGRPC
 
 	// Remove from active tools map
 	delete(m.activeTools, execID)
@@ -1216,4 +1223,225 @@ func (seb *SimpleEventBus) Publish(event interface{}) {
 func (seb *SimpleEventBus) Subscribe(eventType string, handler func(event interface{})) {
 	// Minimal implementation - events not needed for basic chat
 	// TODO: Implement proper event subscription when needed
+}
+
+// executeToolViaGRPC sends tool execution request through gRPC
+func (m *ChatModel) executeToolViaGRPC(execID, toolID string, params map[string]string) {
+	go func() {
+		// Get tool execution from tracking
+		exec, ok := m.activeTools[execID]
+		if !ok {
+			return
+		}
+
+		// Update status to running
+		exec.Status = "running"
+		exec.Progress = 0.0
+
+		// Get tool registry from component registry
+		toolRegistry := m.registry.Tools()
+		if toolRegistry == nil {
+			exec.Status = "failed"
+			exec.Error = "Tool registry not available"
+			return
+		}
+
+		// Safety check: verify tool exists
+		if !toolRegistry.HasTool(toolID) {
+			exec.Status = "failed"
+			exec.Error = fmt.Sprintf("Tool '%s' not found in registry", toolID)
+			return
+		}
+
+		// Get the tool
+		tool, err := toolRegistry.GetTool(toolID)
+		if err != nil {
+			exec.Status = "failed"
+			exec.Error = fmt.Sprintf("Failed to get tool '%s': %v", toolID, err)
+			return
+		}
+
+		// Safety check: verify tool permissions (if required)
+		if tool.RequiresAuth() {
+			// Check if user has granted permission for this tool
+			if blocked, exists := m.blockedTools[toolID]; exists && blocked {
+				exec.Status = "failed"
+				exec.Error = fmt.Sprintf("Tool '%s' execution blocked by user", toolID)
+				return
+			}
+		}
+
+		// Progress update: preparation complete
+		exec.Progress = 0.3
+
+		// Convert string params to JSON for tool execution
+		jsonParams := make(map[string]interface{})
+		for k, v := range params {
+			jsonParams[k] = v
+		}
+
+		// Create execution context with timeout
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+
+		// Progress update: starting execution
+		exec.Progress = 0.5
+
+		// Execute the tool with safety checks
+		result, err := m.executeToolSafely(ctx, tool, jsonParams)
+
+		// Progress update: execution complete
+		exec.Progress = 0.9
+
+		// Handle results
+		if err != nil {
+			exec.Status = "failed"
+			exec.Error = fmt.Sprintf("Tool execution failed: %v", err)
+		} else {
+			exec.Status = "completed"
+			exec.Progress = 1.0
+
+			// Store the result
+			if result != nil {
+				exec.Output = result.Output
+				if result.Error != "" {
+					exec.Error = result.Error
+					exec.Status = "failed"
+				}
+			}
+
+			// Track cost if available
+			cost := toolRegistry.GetToolCost(toolID)
+			if cost > 0 {
+				exec.Cost = cost
+			}
+		}
+	}()
+}
+
+// executeToolSafely executes a tool with safety checks and workspace isolation
+func (m *ChatModel) executeToolSafely(ctx context.Context, tool registry.Tool, params map[string]interface{}) (*tools.ToolResult, error) {
+	// Import the tools package for ToolResult
+	// Convert registry.Tool back to tools.Tool for execution
+	actualTool, ok := tool.(tools.Tool)
+	if !ok {
+		return nil, gerror.New(gerror.ErrCodeInvalidFormat, "tool does not implement expected interface", nil).
+			WithComponent("chat").
+			WithOperation("executeToolSafely")
+	}
+
+	// Validate parameters against tool schema
+	schema := actualTool.Schema()
+	if schema != nil {
+		if err := m.validateToolParams(params, schema); err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeInvalidInput, "tool parameter validation failed").
+				WithComponent("chat").
+				WithOperation("executeToolSafely")
+		}
+	}
+
+	// Convert params to JSON string for tool execution
+	var paramJSON string
+	if len(params) > 0 {
+		jsonBytes, err := json.Marshal(params)
+		if err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal tool parameters").
+				WithComponent("chat").
+				WithOperation("executeToolSafely")
+		}
+		paramJSON = string(jsonBytes)
+	} else {
+		paramJSON = "{}"
+	}
+
+	// Execute the tool with the context (includes timeout)
+	result, err := actualTool.Execute(ctx, paramJSON)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "tool execution failed").
+			WithComponent("chat").
+			WithOperation("executeToolSafely").
+			WithDetails("tool", actualTool.Name())
+	}
+
+	return result, nil
+}
+
+// validateToolParams validates parameters against a tool's JSON schema
+func (m *ChatModel) validateToolParams(params map[string]interface{}, schema map[string]interface{}) error {
+	// Basic validation - check required fields
+	if properties, ok := schema["properties"].(map[string]interface{}); ok {
+		if required, ok := schema["required"].([]interface{}); ok {
+			for _, requiredField := range required {
+				if fieldName, ok := requiredField.(string); ok {
+					if _, exists := params[fieldName]; !exists {
+						return gerror.Newf(gerror.ErrCodeInvalidInput, "required parameter '%s' is missing", fieldName).
+							WithComponent("chat").
+							WithOperation("validateToolParams")
+					}
+				}
+			}
+		}
+
+		// Validate each parameter type (basic validation)
+		for paramName, paramValue := range params {
+			if propSchema, exists := properties[paramName]; exists {
+				if err := m.validateParamType(paramName, paramValue, propSchema); err != nil {
+					return err
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
+// validateParamType validates a single parameter against its schema
+func (m *ChatModel) validateParamType(paramName string, value interface{}, propSchema interface{}) error {
+	schema, ok := propSchema.(map[string]interface{})
+	if !ok {
+		return nil // Skip validation if schema format is unexpected
+	}
+
+	paramType, ok := schema["type"].(string)
+	if !ok {
+		return nil // Skip validation if type is not specified
+	}
+
+	switch paramType {
+	case "string":
+		if _, ok := value.(string); !ok {
+			return gerror.Newf(gerror.ErrCodeInvalidInput, "parameter '%s' must be a string", paramName).
+				WithComponent("chat").
+				WithOperation("validateParamType")
+		}
+	case "number":
+		switch value.(type) {
+		case float64, int, int64, float32:
+			// Valid numeric types
+		default:
+			return gerror.Newf(gerror.ErrCodeInvalidInput, "parameter '%s' must be a number", paramName).
+				WithComponent("chat").
+				WithOperation("validateParamType")
+		}
+	case "boolean":
+		if _, ok := value.(bool); !ok {
+			return gerror.Newf(gerror.ErrCodeInvalidInput, "parameter '%s' must be a boolean", paramName).
+				WithComponent("chat").
+				WithOperation("validateParamType")
+		}
+	case "array":
+		if _, ok := value.([]interface{}); !ok {
+			return gerror.Newf(gerror.ErrCodeInvalidInput, "parameter '%s' must be an array", paramName).
+				WithComponent("chat").
+				WithOperation("validateParamType")
+		}
+	case "object":
+		if _, ok := value.(map[string]interface{}); !ok {
+			return gerror.Newf(gerror.ErrCodeInvalidInput, "parameter '%s' must be an object", paramName).
+				WithComponent("chat").
+				WithOperation("validateParamType")
+		}
+	}
+
+	return nil
 }

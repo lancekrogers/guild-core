@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
@@ -72,7 +73,7 @@ func NewClient(apiKey string) *Client {
 	}
 
 	return &Client{
-		apiKey:       apiKey,
+		apiKey:       apiKey, // pragma: allowlist secret
 		baseURL:      "https://api.anthropic.com/v1",
 		client:       &http.Client{Timeout: 2 * time.Minute},
 		capabilities: capabilities,
@@ -81,6 +82,12 @@ func NewClient(apiKey string) *Client {
 
 // ChatCompletion implements the AIProvider interface
 func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest) (*interfaces.ChatResponse, error) {
+	logger := observability.GetLogger(ctx).
+		WithComponent("providers.anthropic").
+		WithOperation("ChatCompletion").
+		With("model", req.Model).
+		With("message_count", len(req.Messages))
+
 	// Convert messages to Anthropic format
 	anthropicMessages := make([]map[string]interface{}, 0)
 	systemPrompt := ""
@@ -96,6 +103,14 @@ func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest)
 			})
 		}
 	}
+
+	start := time.Now()
+	logger.InfoContext(ctx, "Starting Anthropic chat completion request",
+		"max_tokens", req.MaxTokens,
+		"temperature", req.Temperature,
+		"has_system_prompt", systemPrompt != "",
+		"message_count", len(anthropicMessages),
+	)
 
 	// Build Anthropic request
 	anthropicReq := map[string]interface{}{
@@ -124,6 +139,10 @@ func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest)
 	// Make request
 	respBody, err := c.makeRequest(ctx, "messages", anthropicReq)
 	if err != nil {
+		duration := time.Since(start)
+		logger.WithError(err).ErrorContext(ctx, "Anthropic API request failed",
+			"duration_ms", duration.Milliseconds(),
+		)
 		return nil, err
 	}
 
@@ -160,7 +179,7 @@ func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest)
 		}
 	}
 
-	return &interfaces.ChatResponse{
+	response := &interfaces.ChatResponse{
 		ID:    anthropicResp.ID,
 		Model: anthropicResp.Model,
 		Choices: []interfaces.ChatChoice{
@@ -178,7 +197,19 @@ func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest)
 			CompletionTokens: anthropicResp.Usage.OutputTokens,
 			TotalTokens:      anthropicResp.Usage.InputTokens + anthropicResp.Usage.OutputTokens,
 		},
-	}, nil
+	}
+
+	duration := time.Since(start)
+	logger.InfoContext(ctx, "Anthropic chat completion succeeded",
+		"duration_ms", duration.Milliseconds(),
+		"input_tokens", anthropicResp.Usage.InputTokens,
+		"output_tokens", anthropicResp.Usage.OutputTokens,
+		"total_tokens", anthropicResp.Usage.InputTokens+anthropicResp.Usage.OutputTokens,
+		"stop_reason", anthropicResp.StopReason,
+		"response_length", len(content),
+	)
+
+	return response, nil
 }
 
 // StreamChatCompletion implements streaming for Anthropic

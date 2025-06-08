@@ -13,6 +13,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/config"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
+	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
 // chatViewMode represents different view modes in the chat interface
@@ -62,7 +63,9 @@ type toolExecution struct {
 	Status      string
 	Progress    float32
 	Result      string
+	Output      string
 	Error       string
+	Cost        float64
 	Parameters  map[string]string
 	WorkspaceID string
 }
@@ -188,15 +191,16 @@ type ChatModel struct {
 	agentIndicators    *AgentIndicators
 
 	// Core Components
-	grpcClient    pb.GuildClient
-	promptsClient promptspb.PromptServiceClient
-	sessionID     string
-	campaignID    string
-	guildConfig   *config.GuildConfig
-	commandProc   *CommandProcessor
-	completionEng *CompletionEngine
-	history       *CommandHistory
+	grpcClient     pb.GuildClient
+	promptsClient  promptspb.PromptServiceClient
+	sessionID      string
+	campaignID     string
+	guildConfig    *config.GuildConfig
+	commandProc    *CommandProcessor
+	completionEng  *CompletionEngine
+	history        *CommandHistory
 	commandPalette *commands.CommandPalette
+	registry       registry.ComponentRegistry
 
 	// State
 	messages      []Message

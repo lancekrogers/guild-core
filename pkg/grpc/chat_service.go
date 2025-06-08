@@ -15,6 +15,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -85,48 +86,149 @@ func (s *ChatService) Chat(stream pb.ChatService_ChatServer) error {
 	ctx := stream.Context()
 	sessionID := "unknown" // Will be populated from first message
 
-	s.logger.Info("new chat stream started",
-		"remote_addr", getRemoteAddr(ctx),
-		"user_agent", getUserAgent(ctx))
+	// Initialize comprehensive observability for gRPC chat stream
+	logger := observability.GetLogger(ctx).
+		WithComponent("grpc").
+		WithOperation("Chat")
+
+	streamStart := time.Now()
+	var messageCount int64
+	var requestCount int64
+	var responseCount int64
+	var errorCount int64
+
+	// Enhanced stream initialization observability
+	remoteAddr := getRemoteAddr(ctx)
+	userAgent := getUserAgent(ctx)
+	logger.Info("New gRPC chat stream started",
+		"remote_addr", remoteAddr,
+		"user_agent", userAgent,
+		"stream_type", "bidirectional",
+	)
+
+	// Add context values for distributed tracing
+	ctx = context.WithValue(ctx, "stream_id", fmt.Sprintf("chat_%d", time.Now().UnixNano()))
+	ctx = context.WithValue(ctx, "remote_addr", remoteAddr)
 
 	defer func() {
-		s.logger.Info("chat stream ended", "session_id", sessionID)
+		streamDuration := time.Since(streamStart)
+
+		// Comprehensive stream completion observability
+		logger.Info("gRPC chat stream ended",
+			"session_id", sessionID,
+			"stream_duration_ms", streamDuration.Milliseconds(),
+			"total_messages_processed", messageCount,
+			"requests_received", requestCount,
+			"responses_sent", responseCount,
+			"errors_encountered", errorCount,
+			"remote_addr", remoteAddr,
+		)
+
+		// Log performance metrics for monitoring
+		logger.Duration("grpc.chat_stream", streamDuration,
+			"session_id", sessionID,
+			"message_count", messageCount,
+			"request_count", requestCount,
+			"response_count", responseCount,
+			"error_count", errorCount,
+			"success", errorCount == 0,
+		)
 	}()
 
 	for {
+		iterationStart := time.Now()
+
 		select {
 		case <-ctx.Done():
-			s.logger.Debug("chat stream context cancelled",
+			contextDuration := time.Since(iterationStart)
+
+			// Enhanced context cancellation observability
+			logger.Warn("gRPC chat stream context cancelled",
 				"session_id", sessionID,
-				"reason", ctx.Err())
+				"cancellation_reason", ctx.Err().Error(),
+				"stream_duration_ms", time.Since(streamStart).Milliseconds(),
+				"messages_processed", messageCount,
+				"context_check_duration_ms", contextDuration.Milliseconds(),
+			)
 			return ctx.Err()
 		default:
 		}
 
+		// Enhanced request reception with comprehensive error observability
+		recvStart := time.Now()
 		req, err := stream.Recv()
+		recvDuration := time.Since(recvStart)
+		requestCount++
+
 		if err == io.EOF {
-			s.logger.Debug("chat stream closed by client", "session_id", sessionID)
+			// Enhanced EOF observability
+			logger.Info("gRPC chat stream closed by client",
+				"session_id", sessionID,
+				"stream_duration_ms", time.Since(streamStart).Milliseconds(),
+				"total_messages_processed", messageCount,
+				"final_recv_duration_ms", recvDuration.Milliseconds(),
+			)
 			return nil
 		}
 		if err != nil {
-			s.logger.Error("stream receive error",
-				"error", err,
-				"session_id", sessionID)
+			errorCount++
+
+			// Enhanced stream receive error observability
+			logger.WithError(err).Error("gRPC stream receive error",
+				"session_id", sessionID,
+				"request_count", requestCount,
+				"stream_duration_ms", time.Since(streamStart).Milliseconds(),
+				"recv_duration_ms", recvDuration.Milliseconds(),
+				"remote_addr", remoteAddr,
+			)
+
+			// Log error metrics
+			logger.Duration("grpc.stream_recv", recvDuration,
+				"success", false,
+				"session_id", sessionID,
+				"error_type", fmt.Sprintf("%T", err),
+			)
+
 			return status.Errorf(codes.Internal, "stream receive error: %v", err)
 		}
 
-		// Extract session ID for logging
+		// Log successful request reception
+		logger.Debug("gRPC request received successfully",
+			"session_id", sessionID,
+			"recv_duration_ms", recvDuration.Milliseconds(),
+			"request_type", fmt.Sprintf("%T", req.Request),
+		)
+
+		// Extract session ID for logging with enhanced observability
 		if sessionID == "unknown" {
+			extractStart := time.Now()
 			sessionID = s.extractSessionID(req)
+			extractDuration := time.Since(extractStart)
+
+			logger.Debug("Session ID extracted from request",
+				"session_id", sessionID,
+				"extraction_duration_ms", extractDuration.Milliseconds(),
+			)
 		}
 
+		// Enhanced request handling with comprehensive error observability
+		handleStart := time.Now()
 		if err := s.handleChatRequest(ctx, req, stream); err != nil {
-			s.logger.Error("failed to handle chat request",
-				"error", err,
-				"session_id", sessionID,
-				"request_type", fmt.Sprintf("%T", req.Request))
+			errorCount++
+			handleDuration := time.Since(handleStart)
 
-			// Send error response but continue streaming
+			// Enhanced request handling error observability
+			logger.WithError(err).Error("Failed to handle gRPC chat request",
+				"session_id", sessionID,
+				"request_type", fmt.Sprintf("%T", req.Request),
+				"handle_duration_ms", handleDuration.Milliseconds(),
+				"stream_duration_ms", time.Since(streamStart).Milliseconds(),
+				"total_errors", errorCount,
+				"remote_addr", remoteAddr,
+			)
+
+			// Send error response but continue streaming with enhanced observability
+			errorRespStart := time.Now()
 			errorResp := &pb.ChatResponse{
 				Response: &pb.ChatResponse_Error{
 					Error: &pb.ChatError{
@@ -136,13 +238,49 @@ func (s *ChatService) Chat(stream pb.ChatService_ChatServer) error {
 					},
 				},
 			}
+
 			if sendErr := stream.Send(errorResp); sendErr != nil {
-				s.logger.Error("failed to send error response",
-					"send_error", sendErr,
-					"original_error", err,
-					"session_id", sessionID)
+				errorRespDuration := time.Since(errorRespStart)
+
+				// Enhanced error response send failure observability
+				logger.WithError(sendErr).Error("Failed to send error response over gRPC stream",
+					"session_id", sessionID,
+					"original_error", err.Error(),
+					"send_error", sendErr.Error(),
+					"error_resp_duration_ms", errorRespDuration.Milliseconds(),
+					"handle_duration_ms", handleDuration.Milliseconds(),
+					"total_errors", errorCount,
+				)
+
 				return status.Errorf(codes.Internal, "failed to send error response: %v", sendErr)
 			}
+
+			errorRespDuration := time.Since(errorRespStart)
+			logger.Debug("Error response sent successfully",
+				"session_id", sessionID,
+				"error_resp_duration_ms", errorRespDuration.Milliseconds(),
+			)
+			responseCount++
+
+		} else {
+			handleDuration := time.Since(handleStart)
+			messageCount++
+			responseCount++
+
+			// Log successful request handling
+			logger.Debug("gRPC chat request handled successfully",
+				"session_id", sessionID,
+				"request_type", fmt.Sprintf("%T", req.Request),
+				"handle_duration_ms", handleDuration.Milliseconds(),
+				"total_messages_processed", messageCount,
+			)
+
+			// Log performance metrics for successful request
+			logger.Duration("grpc.request_handling", handleDuration,
+				"success", true,
+				"session_id", sessionID,
+				"request_type", fmt.Sprintf("%T", req.Request),
+			)
 		}
 	}
 }

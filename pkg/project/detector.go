@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/config"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // ProjectType represents different types of projects that can be detected
@@ -104,7 +105,10 @@ var knownProjectTypes = []ProjectType{
 func (d *ProjectDetector) DetectProjectType(path string) (*ProjectType, error) {
 	entries, err := os.ReadDir(path)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read directory: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read directory").
+			WithComponent("project").
+			WithOperation("DetectProjectType").
+			WithDetails("path", path)
 	}
 
 	// Create a map of files and directories for quick lookup
@@ -391,7 +395,10 @@ func (d *ProjectDetector) SeedCorpusFromProject(projectType *ProjectType, projec
 	})
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to scan project for corpus files: %w", err)
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to scan project for corpus files").
+			WithComponent("project").
+			WithOperation("SuggestCorpusFiles").
+			WithDetails("project_root", projectPath)
 	}
 
 	return suggestions, nil

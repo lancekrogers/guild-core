@@ -11,6 +11,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/pkg/prompts/standard/templates/agent/execution"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 	"github.com/guild-ventures/guild-core/pkg/workspace"
@@ -48,14 +49,37 @@ func NewBasicTaskExecutor(
 	execContext *ExecutionContext,
 	workspaceManager workspace.Manager,
 ) (*BasicTaskExecutor, error) {
+	// Initialize observability for task executor creation
+	logger := observability.GetLogger(context.Background()).
+		WithComponent("executor").
+		WithOperation("NewBasicTaskExecutor").
+		With("agent_id", agent.GetID())
+
+	logger.Debug("Creating new task executor",
+		"agent_name", agent.GetName(),
+		"has_kanban_board", kanbanBoard != nil,
+		"has_tool_registry", toolRegistry != nil,
+		"has_workspace_manager", workspaceManager != nil,
+		"project_root", execContext.ProjectRoot,
+	)
+
 	promptBuilder, err := execution.NewCachedPromptBuilder()
 	if err != nil {
+		// Enhanced error observability with comprehensive context
+		logger.WithError(err).Error("Failed to create prompt builder for task executor",
+			"agent_id", agent.GetID(),
+			"agent_name", agent.GetName(),
+			"project_root", execContext.ProjectRoot,
+		)
+
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create prompt builder").
 			WithComponent("executor").
-			WithOperation("NewBasicTaskExecutor")
+			WithOperation("NewBasicTaskExecutor").
+			WithDetails("agent_id", agent.GetID()).
+			WithDetails("agent_name", agent.GetName())
 	}
 
-	return &BasicTaskExecutor{
+	executor := &BasicTaskExecutor{
 		agent:            agent,
 		kanbanBoard:      kanbanBoard,
 		toolRegistry:     toolRegistry,
@@ -65,11 +89,36 @@ func NewBasicTaskExecutor(
 		status:           StatusInitializing,
 		progress:         0.0,
 		stopChan:         make(chan struct{}),
-	}, nil
+	}
+
+	logger.Info("Task executor created successfully",
+		"agent_id", agent.GetID(),
+		"agent_name", agent.GetName(),
+		"initial_status", StatusInitializing,
+	)
+
+	return executor, nil
 }
 
 // Execute runs the task execution loop
 func (e *BasicTaskExecutor) Execute(ctx context.Context, task *kanban.Task) (*ExecutionResult, error) {
+	// Initialize observability for task execution with full context
+	logger := observability.GetLogger(ctx).
+		WithComponent("executor").
+		WithOperation("Execute").
+		With("task_id", task.ID).
+		With("agent_id", e.agent.GetID())
+
+	start := time.Now()
+	logger.Info("Starting task execution",
+		"task_title", task.Title,
+		"task_description_length", len(task.Description),
+		"agent_name", e.agent.GetName(),
+		"has_kanban_board", e.kanbanBoard != nil,
+		"has_tool_registry", e.toolRegistry != nil,
+		"has_workspace_manager", e.workspaceManager != nil,
+	)
+
 	e.mu.Lock()
 	e.currentTask = task
 	e.status = StatusInitializing
@@ -84,17 +133,51 @@ func (e *BasicTaskExecutor) Execute(ctx context.Context, task *kanban.Task) (*Ex
 	}
 	e.mu.Unlock()
 
-	// Update task status to in_progress
+	// Update task status to in_progress with enhanced error logging
+	statusUpdateStart := time.Now()
 	if err := e.updateTaskStatus(ctx, kanban.StatusInProgress, "Agent starting task execution"); err != nil {
+		statusUpdateDuration := time.Since(statusUpdateStart)
+
+		// Enhanced error observability with comprehensive context
+		logger.WithError(err).Error("Failed to update task status to in_progress",
+			"task_id", task.ID,
+			"task_title", task.Title,
+			"agent_id", e.agent.GetID(),
+			"agent_name", e.agent.GetName(),
+			"target_status", kanban.StatusInProgress,
+			"status_update_duration_ms", statusUpdateDuration.Milliseconds(),
+			"has_kanban_board", e.kanbanBoard != nil,
+		)
+
 		return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to update task status").
 			WithComponent("executor").
 			WithOperation("Execute").
 			WithDetails("task_id", task.ID).
-			WithDetails("status", kanban.StatusInProgress)
+			WithDetails("status", kanban.StatusInProgress).
+			WithDetails("agent_id", e.agent.GetID()).
+			WithDetails("status_update_duration_ms", statusUpdateDuration.Milliseconds())
 	}
+	statusUpdateDuration := time.Since(statusUpdateStart)
 
-	// Main execution phases
+	logger.Debug("Task status updated to in_progress",
+		"status_update_duration_ms", statusUpdateDuration.Milliseconds(),
+	)
+
+	// Main execution phases with comprehensive error observability
+	phasesStart := time.Now()
 	if err := e.executePhases(ctx); err != nil {
+		phasesDuration := time.Since(phasesStart)
+
+		// Enhanced error observability for execution failure
+		logger.WithError(err).Error("Task execution phases failed",
+			"task_id", task.ID,
+			"task_title", task.Title,
+			"agent_id", e.agent.GetID(),
+			"agent_name", e.agent.GetName(),
+			"phases_duration_ms", phasesDuration.Milliseconds(),
+			"total_execution_duration_ms", time.Since(start).Milliseconds(),
+		)
+
 		e.mu.Lock()
 		e.status = StatusFailed
 		e.result.Status = StatusFailed
@@ -106,19 +189,57 @@ func (e *BasicTaskExecutor) Execute(ctx context.Context, task *kanban.Task) (*Ex
 			Timestamp: time.Now(),
 			Retryable: false,
 		})
+		finalResult := e.result
 		e.mu.Unlock()
 
-		// Update task status to blocked
+		// Update task status to blocked with enhanced error logging
+		blockingStatusStart := time.Now()
 		if statusErr := e.updateTaskStatus(ctx, kanban.StatusBlocked, fmt.Sprintf("Execution failed: %v", err)); statusErr != nil {
+			blockingStatusDuration := time.Since(blockingStatusStart)
+
+			// Enhanced error observability for status update failure
+			logger.WithError(statusErr).Error("Failed to update task status to blocked after execution failure",
+				"task_id", task.ID,
+				"task_title", task.Title,
+				"agent_id", e.agent.GetID(),
+				"agent_name", e.agent.GetName(),
+				"original_execution_error", err.Error(),
+				"blocking_status_duration_ms", blockingStatusDuration.Milliseconds(),
+				"total_execution_duration_ms", time.Since(start).Milliseconds(),
+			)
+
 			// Log status update error but don't override the main execution error
 			_ = gerror.Wrap(statusErr, gerror.ErrCodeInternal, "failed to update task status").
-				WithComponent("TaskExecutor").
-				WithOperation("ExecuteStep")
+				WithComponent("executor").
+				WithOperation("Execute").
+				WithDetails("task_id", task.ID).
+				WithDetails("original_error", err.Error()).
+				WithDetails("blocking_status_duration_ms", blockingStatusDuration.Milliseconds())
+		} else {
+			blockingStatusDuration := time.Since(blockingStatusStart)
+			logger.Debug("Task status updated to blocked after execution failure",
+				"blocking_status_duration_ms", blockingStatusDuration.Milliseconds(),
+			)
 		}
-		return e.result, err
-	}
 
-	// Mark execution as completed
+		// Log final execution failure metrics
+		logger.Duration("executor.task_execution", time.Since(start),
+			"success", false,
+			"task_id", task.ID,
+			"agent_id", e.agent.GetID(),
+			"phases_duration_ms", phasesDuration.Milliseconds(),
+			"final_status", StatusFailed,
+		)
+
+		return finalResult, err
+	}
+	phasesDuration := time.Since(phasesStart)
+
+	logger.Debug("Task execution phases completed successfully",
+		"phases_duration_ms", phasesDuration.Milliseconds(),
+	)
+
+	// Mark execution as completed with comprehensive success observability
 	e.mu.Lock()
 	e.status = StatusCompleted
 	e.result.Status = StatusCompleted
@@ -126,22 +247,88 @@ func (e *BasicTaskExecutor) Execute(ctx context.Context, task *kanban.Task) (*Ex
 	e.result.Duration = e.result.EndTime.Sub(e.result.StartTime)
 	e.progress = 1.0
 	result := e.result
+	artifactCount := len(e.result.Artifacts)
+	toolUsageCount := len(e.result.ToolUsage)
 	e.mu.Unlock()
 
-	// Update task status to review
+	logger.Info("Task execution completed successfully",
+		"total_duration_ms", result.Duration.Milliseconds(),
+		"phases_duration_ms", phasesDuration.Milliseconds(),
+		"artifacts_created", artifactCount,
+		"tools_used", toolUsageCount,
+	)
+
+	// Update task status to review with enhanced error logging
+	reviewStatusStart := time.Now()
 	if err := e.updateTaskStatus(ctx, kanban.StatusReadyForReview, "Task completed, pending review"); err != nil {
+		reviewStatusDuration := time.Since(reviewStatusStart)
+
+		// Enhanced error observability for final status update failure
+		logger.WithError(err).Error("Failed to update task status to ready_for_review after successful execution",
+			"task_id", task.ID,
+			"task_title", task.Title,
+			"agent_id", e.agent.GetID(),
+			"agent_name", e.agent.GetName(),
+			"execution_duration_ms", result.Duration.Milliseconds(),
+			"review_status_duration_ms", reviewStatusDuration.Milliseconds(),
+			"artifacts_created", artifactCount,
+			"tools_used", toolUsageCount,
+		)
+
+		// Log performance metrics even if status update fails
+		logger.Duration("executor.task_execution", time.Since(start),
+			"success", true,
+			"task_id", task.ID,
+			"agent_id", e.agent.GetID(),
+			"phases_duration_ms", phasesDuration.Milliseconds(),
+			"final_status", StatusCompleted,
+			"status_update_failed", true,
+		)
+
 		return result, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to update final task status").
 			WithComponent("executor").
 			WithOperation("Execute").
 			WithDetails("task_id", e.currentTask.ID).
-			WithDetails("status", kanban.StatusReadyForReview)
+			WithDetails("status", kanban.StatusReadyForReview).
+			WithDetails("execution_duration_ms", result.Duration.Milliseconds()).
+			WithDetails("review_status_duration_ms", reviewStatusDuration.Milliseconds())
 	}
+	reviewStatusDuration := time.Since(reviewStatusStart)
+
+	logger.Debug("Task status updated to ready_for_review",
+		"review_status_duration_ms", reviewStatusDuration.Milliseconds(),
+	)
+
+	// Log comprehensive success metrics
+	totalDuration := time.Since(start)
+	logger.Duration("executor.task_execution", totalDuration,
+		"success", true,
+		"task_id", task.ID,
+		"agent_id", e.agent.GetID(),
+		"phases_duration_ms", phasesDuration.Milliseconds(),
+		"review_status_duration_ms", reviewStatusDuration.Milliseconds(),
+		"final_status", StatusCompleted,
+		"artifacts_created", artifactCount,
+		"tools_used", toolUsageCount,
+	)
+
+	logger.Info("Task execution fully completed with status update",
+		"total_duration_ms", totalDuration.Milliseconds(),
+		"final_status", kanban.StatusReadyForReview,
+	)
 
 	return result, nil
 }
 
 // executePhases runs through the execution phases
 func (e *BasicTaskExecutor) executePhases(ctx context.Context) error {
+	// Initialize observability for phase execution
+	logger := observability.GetLogger(ctx).
+		WithComponent("executor").
+		WithOperation("executePhases").
+		With("task_id", e.currentTask.ID).
+		With("agent_id", e.agent.GetID())
+
 	phases := []struct {
 		name     string
 		progress float64
@@ -153,53 +340,161 @@ func (e *BasicTaskExecutor) executePhases(ctx context.Context) error {
 		{"finalize", 0.9, e.phaseFinalize},
 	}
 
-	for _, phase := range phases {
+	logger.Debug("Starting execution phases",
+		"total_phases", len(phases),
+		"phase_names", []string{"initialize", "plan", "execute", "finalize"},
+	)
+
+	for i, phase := range phases {
+		phaseStart := time.Now()
+
+		// Enhanced context cancellation and stop detection with observability
 		select {
 		case <-ctx.Done():
+			logger.Warn("Execution cancelled by context",
+				"cancelled_at_phase", phase.name,
+				"completed_phases", i,
+				"remaining_phases", len(phases)-i,
+				"context_error", ctx.Err().Error(),
+			)
 			return ctx.Err()
 		case <-e.stopChan:
+			logger.Warn("Execution stopped by stop signal",
+				"stopped_at_phase", phase.name,
+				"completed_phases", i,
+				"remaining_phases", len(phases)-i,
+			)
 			return gerror.New(gerror.ErrCodeCancelled, "execution stopped", nil).
 				WithComponent("executor").
-				WithOperation("phaseExecute").
-				WithDetails("task_id", e.currentTask.ID)
+				WithOperation("executePhases").
+				WithDetails("task_id", e.currentTask.ID).
+				WithDetails("stopped_at_phase", phase.name).
+				WithDetails("completed_phases", i)
 		default:
 			// Continue execution
 		}
 
+		logger.Debug("Starting execution phase",
+			"phase_name", phase.name,
+			"phase_index", i,
+			"target_progress", phase.progress,
+		)
+
 		e.updateProgress(phase.progress, phase.name)
 
+		// Execute phase with comprehensive error observability
 		if err := phase.fn(ctx); err != nil {
+			phaseDuration := time.Since(phaseStart)
+
+			// Enhanced error observability for phase failure
+			logger.WithError(err).Error("Execution phase failed",
+				"phase_name", phase.name,
+				"phase_index", i,
+				"phase_duration_ms", phaseDuration.Milliseconds(),
+				"completed_phases", i,
+				"remaining_phases", len(phases)-i-1,
+				"task_id", e.currentTask.ID,
+				"task_title", e.currentTask.Title,
+				"agent_id", e.agent.GetID(),
+				"agent_name", e.agent.GetName(),
+			)
+
+			// Log performance metrics for failed phase
+			logger.Duration("executor.phase_execution", phaseDuration,
+				"success", false,
+				"phase_name", phase.name,
+				"phase_index", i,
+				"task_id", e.currentTask.ID,
+				"agent_id", e.agent.GetID(),
+			)
+
 			return gerror.Wrapf(err, gerror.ErrCodeTaskFailed, "phase %s failed", phase.name).
 				WithComponent("executor").
 				WithOperation("executePhases").
 				WithDetails("task_id", e.currentTask.ID).
-				WithDetails("phase", phase.name)
+				WithDetails("phase", phase.name).
+				WithDetails("phase_index", i).
+				WithDetails("phase_duration_ms", phaseDuration.Milliseconds()).
+				WithDetails("completed_phases", i)
 		}
+
+		phaseDuration := time.Since(phaseStart)
+		logger.Debug("Execution phase completed successfully",
+			"phase_name", phase.name,
+			"phase_index", i,
+			"phase_duration_ms", phaseDuration.Milliseconds(),
+		)
+
+		// Log performance metrics for successful phase
+		logger.Duration("executor.phase_execution", phaseDuration,
+			"success", true,
+			"phase_name", phase.name,
+			"phase_index", i,
+			"task_id", e.currentTask.ID,
+			"agent_id", e.agent.GetID(),
+		)
 	}
+
+	logger.Info("All execution phases completed successfully",
+		"total_phases", len(phases),
+	)
 
 	return nil
 }
 
 // phaseInitialize sets up the execution environment
 func (e *BasicTaskExecutor) phaseInitialize(ctx context.Context) error {
+	// Initialize observability for initialization phase
+	logger := observability.GetLogger(ctx).
+		WithComponent("executor").
+		WithOperation("phaseInitialize").
+		With("task_id", e.currentTask.ID).
+		With("agent_id", e.agent.GetID())
+
+	logger.Debug("Starting initialization phase",
+		"has_workspace_manager", e.workspaceManager != nil,
+		"has_tool_registry", e.toolRegistry != nil,
+		"project_root", e.execContext.ProjectRoot,
+	)
+
 	e.mu.Lock()
 	e.status = StatusRunning
 	e.mu.Unlock()
 
-	// Set up workspace isolation if manager is available
+	// Set up workspace isolation if manager is available with enhanced error observability
 	if e.workspaceManager != nil {
+		workspaceStart := time.Now()
 		opts := workspace.CreateOptions{
 			AgentID:      e.agent.GetID(),
 			BranchPrefix: "agent",
 			WorkDir:      e.execContext.ProjectRoot,
 		}
 
+		logger.Debug("Creating isolated workspace",
+			"agent_id", e.agent.GetID(),
+			"branch_prefix", opts.BranchPrefix,
+			"work_dir", opts.WorkDir,
+		)
+
 		ws, err := e.workspaceManager.CreateWorkspace(ctx, opts)
+		workspaceDuration := time.Since(workspaceStart)
+
 		if err != nil {
+			// Enhanced error observability for workspace creation failure
+			logger.WithError(err).Error("Failed to create isolated workspace",
+				"agent_id", e.agent.GetID(),
+				"agent_name", e.agent.GetName(),
+				"project_root", e.execContext.ProjectRoot,
+				"branch_prefix", opts.BranchPrefix,
+				"workspace_creation_duration_ms", workspaceDuration.Milliseconds(),
+			)
+
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create workspace").
 				WithComponent("executor").
 				WithOperation("phaseInitialize").
-				WithDetails("agent_id", e.agent.GetID())
+				WithDetails("agent_id", e.agent.GetID()).
+				WithDetails("project_root", e.execContext.ProjectRoot).
+				WithDetails("workspace_creation_duration_ms", workspaceDuration.Milliseconds())
 		}
 
 		e.mu.Lock()
@@ -207,42 +502,98 @@ func (e *BasicTaskExecutor) phaseInitialize(ctx context.Context) error {
 		e.execContext.WorkspaceDir = ws.Path()
 		e.mu.Unlock()
 
+		logger.Info("Isolated workspace created successfully",
+			"workspace_path", ws.Path(),
+			"workspace_branch", ws.Branch(),
+			"workspace_creation_duration_ms", workspaceDuration.Milliseconds(),
+		)
+
 		e.addExecutionLog("Created isolated workspace", map[string]interface{}{
 			"path":   ws.Path(),
 			"branch": ws.Branch(),
 		})
+	} else {
+		logger.Debug("No workspace manager available, skipping workspace isolation")
 	}
 
-	// Initialize tools if registry is available
+	// Initialize tools if registry is available with enhanced error observability
 	if e.toolRegistry != nil {
+		toolInitStart := time.Now()
+
+		logger.Debug("Starting tool initialization",
+			"workspace_dir", e.execContext.WorkspaceDir,
+		)
+
 		// Register default tools if not already registered
 		e.initializeDefaultTools()
 
 		// Log available tools
 		availableTools := e.toolRegistry.ListTools()
+		toolInitDuration := time.Since(toolInitStart)
+
+		logger.Info("Tools initialized successfully",
+			"available_tools_count", len(availableTools),
+			"available_tools", availableTools,
+			"workspace_dir", e.execContext.WorkspaceDir,
+			"tool_init_duration_ms", toolInitDuration.Milliseconds(),
+		)
 
 		e.addExecutionLog("Initialized tools", map[string]interface{}{
 			"available_tools": availableTools,
 			"workspace":       e.execContext.WorkspaceDir,
 		})
+	} else {
+		logger.Debug("No tool registry available, skipping tool initialization")
 	}
 
+	logger.Info("Initialization phase completed successfully")
 	e.addExecutionLog("Initialized execution environment", nil)
 	return nil
 }
 
 // phasePlan creates the execution plan using the agent
 func (e *BasicTaskExecutor) phasePlan(ctx context.Context) error {
+	// Initialize observability for planning phase
+	logger := observability.GetLogger(ctx).
+		WithComponent("executor").
+		WithOperation("phasePlan").
+		With("task_id", e.currentTask.ID).
+		With("agent_id", e.agent.GetID())
+
+	logger.Debug("Starting planning phase",
+		"task_title", e.currentTask.Title,
+		"task_description_length", len(e.currentTask.Description),
+	)
+
 	// Build the planning prompt with all context layers except execution
+	promptBuildStart := time.Now()
 	promptData := e.buildPromptData()
 
 	planningPrompt, err := e.promptBuilder.BuildPlanningPromptCached(promptData)
+	promptBuildDuration := time.Since(promptBuildStart)
+
 	if err != nil {
+		// Enhanced error observability for prompt building failure
+		logger.WithError(err).Error("Failed to build planning prompt",
+			"task_id", e.currentTask.ID,
+			"task_title", e.currentTask.Title,
+			"agent_id", e.agent.GetID(),
+			"agent_name", e.agent.GetName(),
+			"prompt_build_duration_ms", promptBuildDuration.Milliseconds(),
+		)
+
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to build planning prompt").
 			WithComponent("executor").
 			WithOperation("phasePlan").
-			WithDetails("task_id", e.currentTask.ID)
+			WithDetails("task_id", e.currentTask.ID).
+			WithDetails("agent_id", e.agent.GetID()).
+			WithDetails("prompt_build_duration_ms", promptBuildDuration.Milliseconds())
 	}
+
+	logger.Debug("Planning prompt built successfully",
+		"prompt_length", len(planningPrompt),
+		"prompt_build_duration_ms", promptBuildDuration.Milliseconds(),
+	)
 
 	// Add planning instructions
 	fullPrompt := planningPrompt + "\n\n## Planning Instructions\n\n" +
@@ -254,15 +605,42 @@ func (e *BasicTaskExecutor) phasePlan(ctx context.Context) error {
 		"4. Potential challenges and how to address them\n\n" +
 		"Format your response as a structured plan that can be executed step by step."
 
-	// Query the agent for the execution plan
+	logger.Debug("Executing planning query with agent",
+		"full_prompt_length", len(fullPrompt),
+		"agent_name", e.agent.GetName(),
+	)
+
+	// Query the agent for the execution plan with enhanced error observability
+	agentExecuteStart := time.Now()
 	plan, err := e.agent.Execute(ctx, fullPrompt)
+	agentExecuteDuration := time.Since(agentExecuteStart)
+
 	if err != nil {
+		// Enhanced error observability for agent execution failure during planning
+		logger.WithError(err).Error("Failed to generate execution plan with agent",
+			"task_id", e.currentTask.ID,
+			"task_title", e.currentTask.Title,
+			"agent_id", e.agent.GetID(),
+			"agent_name", e.agent.GetName(),
+			"prompt_length", len(fullPrompt),
+			"agent_execute_duration_ms", agentExecuteDuration.Milliseconds(),
+			"prompt_build_duration_ms", promptBuildDuration.Milliseconds(),
+		)
+
 		return gerror.Wrap(err, gerror.ErrCodeAgent, "failed to generate execution plan").
 			WithComponent("executor").
 			WithOperation("phasePlan").
 			WithDetails("task_id", e.currentTask.ID).
-			WithDetails("agent_id", e.agent.GetID())
+			WithDetails("agent_id", e.agent.GetID()).
+			WithDetails("prompt_length", len(fullPrompt)).
+			WithDetails("agent_execute_duration_ms", agentExecuteDuration.Milliseconds())
 	}
+
+	logger.Info("Execution plan generated successfully",
+		"plan_length", len(plan),
+		"agent_execute_duration_ms", agentExecuteDuration.Milliseconds(),
+		"prompt_build_duration_ms", promptBuildDuration.Milliseconds(),
+	)
 
 	// TODO: Parse and validate the plan structure
 	// For now, just log the plan
@@ -484,23 +862,78 @@ func (e *BasicTaskExecutor) addExecutionLog(message string, metadata map[string]
 
 // executeToolCall executes a tool and tracks its usage
 func (e *BasicTaskExecutor) executeToolCall(ctx context.Context, toolName string, params map[string]interface{}) (*tools.ToolResult, error) {
+	// Initialize observability for tool execution
+	logger := observability.GetLogger(ctx).
+		WithComponent("executor").
+		WithOperation("executeToolCall").
+		With("task_id", e.currentTask.ID).
+		With("agent_id", e.agent.GetID()).
+		With("tool_name", toolName)
+
+	logger.Debug("Starting tool execution",
+		"tool_name", toolName,
+		"params_count", len(params),
+		"has_tool_registry", e.toolRegistry != nil,
+	)
+
 	if e.toolRegistry == nil {
+		// Enhanced error observability for missing tool registry
+		logger.Error("Tool execution failed - no tool registry available",
+			"tool_name", toolName,
+			"params_count", len(params),
+			"task_id", e.currentTask.ID,
+			"agent_id", e.agent.GetID(),
+		)
+
 		return nil, gerror.New(gerror.ErrCodeValidation, "no tool registry available", nil).
 			WithComponent("executor").
-			WithOperation("executeTool").
-			WithDetails("tool_name", toolName)
+			WithOperation("executeToolCall").
+			WithDetails("tool_name", toolName).
+			WithDetails("task_id", e.currentTask.ID).
+			WithDetails("agent_id", e.agent.GetID())
 	}
 
 	// Track start time for usage metrics
 	startTime := time.Now()
 
-	// Execute the tool
+	logger.Debug("Executing tool with registry",
+		"tool_name", toolName,
+		"params", params,
+	)
+
+	// Execute the tool with enhanced error observability
 	result, err := e.toolRegistry.ExecuteToolWithParams(ctx, toolName, params)
 
 	// Calculate execution time
 	duration := time.Since(startTime)
 
-	// Track tool usage
+	// Enhanced error and success observability
+	if err != nil {
+		logger.WithError(err).Error("Tool execution failed",
+			"tool_name", toolName,
+			"execution_duration_ms", duration.Milliseconds(),
+			"params_count", len(params),
+			"task_id", e.currentTask.ID,
+			"agent_id", e.agent.GetID(),
+		)
+	} else if result == nil {
+		logger.Warn("Tool execution returned no result",
+			"tool_name", toolName,
+			"execution_duration_ms", duration.Milliseconds(),
+			"params_count", len(params),
+		)
+	} else {
+		logger.Debug("Tool execution completed",
+			"tool_name", toolName,
+			"execution_duration_ms", duration.Milliseconds(),
+			"tool_success", result.Success,
+			"result_output_length", len(result.Output),
+			"has_extra_data", len(result.ExtraData) > 0,
+		)
+	}
+
+	// Track tool usage with enhanced observability
+	usageTrackingStart := time.Now()
 	e.mu.Lock()
 	// Find or create tool usage entry
 	var toolUsage *ToolUsage
@@ -515,9 +948,11 @@ func (e *BasicTaskExecutor) executeToolCall(ctx context.Context, toolName string
 			ToolName: toolName,
 		})
 		toolUsage = &e.result.ToolUsage[len(e.result.ToolUsage)-1]
+		logger.Debug("Created new tool usage entry", "tool_name", toolName)
 	}
 
 	// Update usage stats
+	previousInvocations := toolUsage.Invocations
 	toolUsage.Invocations++
 	toolUsage.TotalTime += duration
 	if result != nil {
@@ -527,16 +962,55 @@ func (e *BasicTaskExecutor) executeToolCall(ctx context.Context, toolName string
 			"duration":  duration.String(),
 		})
 	}
+	currentTotalUsage := len(e.result.ToolUsage)
 	e.mu.Unlock()
+	usageTrackingDuration := time.Since(usageTrackingStart)
 
-	// Log tool execution
+	logger.Debug("Tool usage tracking updated",
+		"tool_name", toolName,
+		"previous_invocations", previousInvocations,
+		"current_invocations", toolUsage.Invocations,
+		"total_tool_types_used", currentTotalUsage,
+		"usage_tracking_duration_ms", usageTrackingDuration.Milliseconds(),
+	)
+
+	// Log tool execution with comprehensive context
+	isSuccess := result != nil && result.Success
 	e.addExecutionLog(fmt.Sprintf("Executed tool: %s", toolName), map[string]interface{}{
 		"tool":     toolName,
-		"success":  result != nil && result.Success,
+		"success":  isSuccess,
 		"duration": duration.String(),
 	})
 
-	return result, err
+	// Log performance metrics for monitoring
+	logger.Duration("executor.tool_execution", duration,
+		"tool_name", toolName,
+		"success", isSuccess,
+		"task_id", e.currentTask.ID,
+		"agent_id", e.agent.GetID(),
+		"params_count", len(params),
+		"result_has_output", result != nil && len(result.Output) > 0,
+		"result_has_extra_data", result != nil && len(result.ExtraData) > 0,
+	)
+
+	// Final success/error return with comprehensive context
+	if err != nil {
+		return result, gerror.Wrap(err, gerror.ErrCodeInternal, "tool execution failed").
+			WithComponent("executor").
+			WithOperation("executeToolCall").
+			WithDetails("tool_name", toolName).
+			WithDetails("execution_duration_ms", duration.Milliseconds()).
+			WithDetails("task_id", e.currentTask.ID).
+			WithDetails("agent_id", e.agent.GetID())
+	}
+
+	logger.Info("Tool execution completed successfully",
+		"tool_name", toolName,
+		"execution_duration_ms", duration.Milliseconds(),
+		"tool_success", isSuccess,
+	)
+
+	return result, nil
 }
 
 // buildPromptData builds the prompt data structure from current context

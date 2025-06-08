@@ -224,19 +224,19 @@ func (dr *DemoRunner) RunScenario(scenario *DemoScenario) error {
 	// Show scenario introduction
 	// TODO: Need public API for adding system messages
 	/*
-		introMsg := fmt.Sprintf(`
-	🏰 Starting Demo: %s
-	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	%s
+			introMsg := fmt.Sprintf(`
+		🏰 Starting Demo: %s
+		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		%s
 
-	Duration: %v | Mode: %s
-	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	`,
-			scenario.Name,
-			scenario.Description,
-			scenario.Duration,
-			map[bool]string{true: "Auto-play", false: "Manual"}[scenario.AutoPlay],
-		)
+		Duration: %v | Mode: %s
+		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		`,
+				scenario.Name,
+				scenario.Description,
+				scenario.Duration,
+				map[bool]string{true: "Auto-play", false: "Manual"}[scenario.AutoPlay],
+			)
 	*/
 
 	// TODO: Need public API for adding system messages
@@ -273,14 +273,14 @@ func (dr *DemoRunner) RunScenario(scenario *DemoScenario) error {
 	// Show completion message
 	// TODO: Need public API for adding system messages
 	/*
-		completionMsg := fmt.Sprintf(`
-	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-	✅ Demo Complete: %s
-	━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+			completionMsg := fmt.Sprintf(`
+		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		✅ Demo Complete: %s
+		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-	Expected outcomes achieved:
-	%s
-	`, scenario.Name, formatExpectedOutcomes(scenario.Expected))
+		Expected outcomes achieved:
+		%s
+		`, scenario.Name, formatExpectedOutcomes(scenario.Expected))
 	*/
 
 	// TODO: Need public API for adding system messages

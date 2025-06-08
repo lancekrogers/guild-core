@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/corpus"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory/rag"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
@@ -76,13 +77,21 @@ func (a *CorpusAgent) Execute(ctx context.Context, request string) (string, erro
 
 	results, err := a.ragSystem.RetrieveContext(ctx, request, retrievalConfig)
 	if err != nil {
-		return "", fmt.Errorf("failed to retrieve context: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to retrieve context from RAG system").
+			WithComponent("corpus_agent").
+			WithOperation("Execute").
+			WithDetails("request_length", len(request)).
+			WithDetails("max_results", retrievalConfig.MaxResults)
 	}
 
 	// Generate response using LLM
 	response, err := a.generateResponse(ctx, request, results)
 	if err != nil {
-		return "", fmt.Errorf("failed to generate response: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeProvider, "failed to generate response using LLM").
+			WithComponent("corpus_agent").
+			WithOperation("Execute").
+			WithDetails("request_length", len(request)).
+			WithDetails("results_count", len(results.Results))
 	}
 
 	// Add assistant message to history
@@ -127,11 +136,15 @@ func (a *CorpusAgent) GenerateDocument(ctx context.Context, query string, title 
 func (a *CorpusAgent) SaveGeneratedDocument(ctx context.Context, doc *corpus.CorpusDoc) error {
 	// Validate document
 	if doc.Title == "" {
-		return fmt.Errorf("document title is required")
+		return gerror.New(gerror.ErrCodeValidation, "document title is required", nil).
+			WithComponent("corpus_agent").
+			WithOperation("SaveGeneratedDocument")
 	}
 
 	if doc.Body == "" {
-		return fmt.Errorf("document body is required")
+		return gerror.New(gerror.ErrCodeValidation, "document body is required", nil).
+			WithComponent("corpus_agent").
+			WithOperation("SaveGeneratedDocument")
 	}
 
 	// Save to corpus
@@ -188,11 +201,18 @@ func (a *CorpusAgent) generateResponse(ctx context.Context, query string, result
 	// Get response from LLM
 	resp, err := a.llmProvider.ChatCompletion(ctx, req)
 	if err != nil {
-		return "", fmt.Errorf("failed to get LLM response: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeProvider, "failed to get LLM chat completion response").
+			WithComponent("corpus_agent").
+			WithOperation("generateResponse").
+			WithDetails("model", req.Model).
+			WithDetails("message_count", len(req.Messages))
 	}
 
 	if len(resp.Choices) == 0 {
-		return "", fmt.Errorf("no response from LLM")
+		return "", gerror.New(gerror.ErrCodeProvider, "no response choices from LLM provider", nil).
+			WithComponent("corpus_agent").
+			WithOperation("generateResponse").
+			WithDetails("model", req.Model)
 	}
 
 	return resp.Choices[0].Message.Content, nil
