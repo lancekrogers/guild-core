@@ -147,6 +147,33 @@ task test:analyze:lore       # Check medieval naming conventions
 - Plugin system for custom tools
 - Web UI for monitoring
 
+## 🔧 Troubleshooting
+
+### Git Submodule Issues
+
+If you encounter `fatal: this operation must be run in a work tree` when running git commands:
+
+```bash
+# Run the fix script
+./scripts/fix-git-config.sh
+```
+
+Or manually fix:
+```bash
+git config --file=../.git/modules/guild-core/config core.bare false
+git config --file=../.git/modules/guild-core/config core.worktree ../../../guild-core
+```
+
+This issue can occur when pre-commit hooks reset the git submodule configuration.
+
+### Pre-commit Hook Issues
+
+If pre-commit hooks fail due to VCS issues:
+```bash
+# Commit without pre-commit hooks (when necessary)
+git commit --no-verify -m "Your commit message"
+```
+
 ## 🤝 Contributing
 
 Guild is currently in pre-MVP development. Contribution guidelines will be established post-MVP. For now, please open issues for bugs or feature discussions.

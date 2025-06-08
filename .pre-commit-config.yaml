@@ -72,7 +72,7 @@ repos:
 
       - id: check-build
         name: Check build
-        entry: bash -c 'go build -o /tmp/guild-pre-commit-test ./cmd/guild && rm /tmp/guild-pre-commit-test'
+        entry: bash -c 'go build -buildvcs=false -o /tmp/guild-pre-commit-test ./cmd/guild && rm /tmp/guild-pre-commit-test'
         language: system
         files: '\.go$'
         pass_filenames: false
