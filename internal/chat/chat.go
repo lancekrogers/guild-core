@@ -740,7 +740,7 @@ func (a *Agent) ExecuteTask(task string) error {
     time.Sleep(100 * time.Millisecond)
 
     if task == "impossible" {
-        return fmt.Errorf("task cannot be completed")
+        return gerror.New(gerror.ErrCodeOperationFailed, "task cannot be completed", nil)
     }
 
     return nil

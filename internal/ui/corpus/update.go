@@ -291,7 +291,9 @@ func (m CorpusModel) executeCommand(cmd string) tea.Cmd {
 		return nil
 	default:
 		return func() tea.Msg {
-			return errMsg{err: fmt.Errorf("unknown command: %s", command)}
+			return errMsg{err: gerror.New(gerror.ErrCodeInvalidInput, fmt.Sprintf("unknown command: %s", command), nil).
+				WithComponent("corpus").
+				WithOperation("processCommand")}
 		}
 	}
 }
@@ -329,7 +331,9 @@ func loadDocumentByTitle(title string, cfg corpus.Config) tea.Cmd {
 			}
 		}
 
-		return errMsg{err: fmt.Errorf("document not found: %s", title)}
+		return errMsg{err: gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("document not found: %s", title), nil).
+			WithComponent("corpus").
+			WithOperation("openDocument")}
 	}
 }
 

@@ -99,8 +99,8 @@ func runChat(cmd *cobra.Command, args []string) error {
 
 // loadGuildConfig loads the guild configuration from the project
 func loadGuildConfig() (*config.GuildConfig, error) {
-	// Implementation from original file
-	return config.LoadGuildConfig(".guild/guild.yaml")
+	// Load from current directory (LoadGuildConfig will add .guild/guild.yaml)
+	return config.LoadGuildConfig(".")
 }
 
 // generateUUID generates a new UUID for session ID

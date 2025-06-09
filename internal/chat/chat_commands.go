@@ -861,7 +861,9 @@ func (g *GuildArtisan) Execute(ctx context.Context, task Task) error {
     // Medieval-themed task execution
     for i, step := range task.Steps {
         if err := g.performStep(ctx, step); err != nil {
-            return fmt.Errorf("step %d failed: %w", i, err)
+            return gerror.Wrap(err, gerror.ErrCodeOperationFailed, fmt.Sprintf("step %d failed", i)).
+                WithComponent("chat").
+                WithOperation("GuildAgent.executeTask")
         }
     }
 

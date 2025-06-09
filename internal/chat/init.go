@@ -264,7 +264,9 @@ func (m *ChatModel) ValidateAllComponents() error {
 	}
 
 	if allCriticalFailed {
-		return fmt.Errorf("all critical visual components failed to initialize")
+		return gerror.New(gerror.ErrCodeInternal, "all critical visual components failed to initialize", nil).
+			WithComponent("chat").
+			WithOperation("ValidateAllComponents")
 	}
 
 	if len(validationErrors) > 0 {

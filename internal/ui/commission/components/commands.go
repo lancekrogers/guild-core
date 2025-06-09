@@ -1,11 +1,12 @@
 package components
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // ExternalCommandResult represents the result of executing an external command
@@ -26,7 +27,9 @@ func ExecuteExternalCommand(cmdStr string) ExternalCommandResult {
 			Command:  cmdStr,
 			Output:   "",
 			Success:  false,
-			Error:    fmt.Errorf("failed to get executable path: %w", err),
+			Error:    gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get executable path").
+			WithComponent("commission").
+			WithOperation("ExecuteExternalCommand"),
 			ExitCode: -1,
 		}
 	}

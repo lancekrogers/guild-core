@@ -76,6 +76,7 @@ func init() {
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(migrateCmd)
 	rootCmd.AddCommand(chatCmd)
+	rootCmd.AddCommand(serveCmd)
 	rootCmd.AddCommand(corpusCmd)
 	rootCmd.AddCommand(commissionCmd)
 	rootCmd.AddCommand(promptCmd)
