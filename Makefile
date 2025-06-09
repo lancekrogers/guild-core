@@ -107,24 +107,24 @@ endef
 
 define section_header
 	@echo ""; \
-	echo "$(BOLD)$(BLUE)┌$(BAR)┐$(NC)"; \
-	printf "$(BOLD)$(BLUE)│$(NC) $(PURPLE)🏰 GUILD$(NC) $(BOLD)$(YELLOW)%-52s$(NC)$(BOLD)$(BLUE)│$(NC)\n" "$(strip $(1))"; \
-	echo "$(BOLD)$(BLUE)└$(BAR)┘$(NC)"
+	echo "$(BOLD)$(BLUE)┌────────────────────────────────────────────────────────────┐$(NC)"; \
+	printf "$(BOLD)$(BLUE)│$(NC) $(PURPLE)🏰 GUILD$(NC) $(BOLD)$(YELLOW)%-51s$(NC)$(BOLD)$(BLUE)│$(NC)\n" "$(strip $(1))"; \
+	echo "$(BOLD)$(BLUE)└────────────────────────────────────────────────────────────┘$(NC)"
 endef
 
 # Box connector for smooth transitions
 define box_connector
-	echo "$(BOLD)$(BLUE)├$(BAR)┤$(NC)"
+	echo "$(BOLD)$(BLUE)├────────────────────────────────────────────────────────────┤$(NC)"
 endef
 
 define status_card
-	echo "$(BOLD)$(BLUE)┌$(BAR)┐$(NC)"; \
+	echo "$(BOLD)$(BLUE)┌────────────────────────────────────────────────────────────┐$(NC)"; \
 	if [ "$(2)" = "pass" ]; then \
 		printf "$(BOLD)$(BLUE)│$(NC)  $(GREEN)✓ %-56s$(NC)$(BOLD)$(BLUE)│$(NC)\n" "$(1)"; \
 	else \
 		printf "$(BOLD)$(BLUE)│$(NC)  $(RED)✗ %-56s$(NC)$(BOLD)$(BLUE)│$(NC)\n" "$(1)"; \
 	fi; \
-	echo "$(BOLD)$(BLUE)└$(BAR)┘$(NC)"
+	echo "$(BOLD)$(BLUE)└────────────────────────────────────────────────────────────┘$(NC)"
 endef
 
 # Build status tracking
@@ -136,13 +136,13 @@ all: dashboard
 
 dashboard: clean build unit-test integration
 	@$(call section_header,Complete Build & Test Summary)
-	@echo "$(BOLD)$(BLUE)┌$(BAR)┐$(NC)"
-	@printf "$(BLUE)│$(NC) $(BOLD)%-58s$(NC)$(BLUE)│$(NC)\n" "🏰 GUILD FRAMEWORK COMPLETE BUILD & TEST SUMMARY"
-	@echo "$(BLUE)├$(BAR)┤$(NC)"
-	@printf "$(BLUE)│$(NC)   %-58s$(BLUE)│$(NC)\n" "All unit tests, builds, and integration tests completed."
-	@printf "$(BLUE)│$(NC)   %-58s$(BLUE)│$(NC)\n" "Review the detailed results above for any failures."
-	@echo "$(BOLD)$(BLUE)└$(BAR)┘$(NC)"
-	@$(call status_card,$(ROCKET) Dashboard Run Complete,pass)
+	@echo "$(BOLD)$(BLUE)┌────────────────────────────────────────────────────────────┐$(NC)"
+	@printf "$(BLUE)│$(NC) $(BOLD)%-58s$(NC) $(BLUE)│$(NC)\n" "🏰 GUILD FRAMEWORK COMPLETE BUILD & TEST SUMMARY"
+	@echo "$(BLUE)├────────────────────────────────────────────────────────────┤$(NC)"
+	@printf "$(BLUE)│$(NC)   %-56s $(BLUE)│$(NC)\n" "All unit tests, builds, and integration tests completed."
+	@printf "$(BLUE)│$(NC)   %-56s $(BLUE)│$(NC)\n" "Review the detailed results above for any failures."
+	@echo "$(BOLD)$(BLUE)└────────────────────────────────────────────────────────────┘$(NC)"
+	@$(call status_card,✓ 🚀 Dashboard Run Complete,pass)
 
 .DEFAULT_GOAL := help
 
@@ -230,9 +230,9 @@ build:
 	fi; \
 	$(call live_progress_bar,100,Build process complete); \
 	echo ""; \
-	echo "$(BOLD)$(BLUE)┌$(BAR)┐$(NC)"; \
+	echo "$(BOLD)$(BLUE)┌────────────────────────────────────────────────────────────┐$(NC)"; \
 	printf "$(BLUE)│$(NC) $(BOLD)%-59s$(NC)$(BLUE)│$(NC)\n" "Build Summary"; \
-	echo "$(BLUE)├$(BAR)┤$(NC)"; \
+	echo "$(BLUE)├────────────────────────────────────────────────────────────┤$(NC)"; \
 	if [ "$$VET_STATUS" = "pass" ]; then \
 		printf "$(BLUE)│$(NC)   %-24s : " "Code Quality"; printf "$(GREEN)✓ PASSED$(NC)"; printf "%*s$(BLUE)│$(NC)\n" $$((22)) ""; \
 	else \
@@ -250,7 +250,7 @@ build:
 	else \
 		printf "$(BLUE)│$(NC)   %-24s : " "Optimization"; printf "$(RED)✗ FAILED$(NC)"; printf "%*s$(BLUE)│$(NC)\n" $$((22)) ""; \
 	fi; \
-	echo "$(BLUE)├$(BAR)┤$(NC)"; \
+	echo "$(BLUE)├────────────────────────────────────────────────────────────┤$(NC)"; \
 	if [ $$ERROR_COUNT -eq 0 ]; then \
 		printf "$(BLUE)│$(NC)   %-24s : " "Total Errors"; printf "$(GREEN)$$ERROR_COUNT$(NC)"; printf "%*s$(BLUE)│$(NC)\n" $$((29)) ""; \
 	else \
@@ -262,7 +262,7 @@ build:
 	else \
 		printf "$(BOLD)$(BLUE)│$(NC)  $(RED)%-60s$(NC)$(BOLD)$(BLUE)│$(NC)\n" "✗ Build Completed with Errors"; \
 	fi; \
-	echo "$(BOLD)$(BLUE)└$(BAR)┘$(NC)"; \
+	echo "$(BOLD)$(BLUE)└────────────────────────────────────────────────────────────┘$(NC)"; \
 	if [ $$ERROR_COUNT -ne 0 ] && [ -f vet_errors.txt ] && [ "$$VET_STATUS" = "fail" ]; then \
 		echo ""; \
 		echo "$(BOLD)$(RED)Code Quality Issues:$(NC)"; \

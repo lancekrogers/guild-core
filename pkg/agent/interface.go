@@ -37,6 +37,71 @@ type CostManagerInterface interface {
 	RecordLLMCost(model string, promptTokens, completionTokens int, metadata map[string]string) error
 }
 
+// AgentRegistry defines the interface for agent registration and discovery
+// This interface is defined here to avoid circular dependencies with the registry package
+type AgentRegistry interface {
+	// GetAgentsByCost returns agents with cost magnitude <= maxCost, sorted by cost
+	GetAgentsByCost(maxCost int) []AgentInfo
+
+	// GetCheapestAgentByCapability returns the lowest-cost agent with the given capability
+	GetCheapestAgentByCapability(capability string) (*AgentInfo, error)
+
+	// GetAgentsByCapability returns all agents that have the specified capability
+	GetAgentsByCapability(capability string) []AgentInfo
+
+	// GetRegisteredAgents returns all registered agent configurations
+	GetRegisteredAgents() []GuildAgentConfig
+}
+
+// GuildAgentConfig represents a configured agent from guild config
+type GuildAgentConfig struct {
+	ID            string   `yaml:"id"`
+	Name          string   `yaml:"name"`
+	Type          string   `yaml:"type"`
+	Model         string   `yaml:"model"`
+	Provider      string   `yaml:"provider"`
+	SystemPrompt  string   `yaml:"system_prompt"`
+	Tools         []string `yaml:"tools"`
+	Capabilities  []string `yaml:"capabilities"`
+	CostMagnitude int      `yaml:"cost_magnitude,omitempty"`
+	ContextWindow int      `yaml:"context_window,omitempty"`
+}
+
+// AgentInfo holds agent information for registry operations
+type AgentInfo struct {
+	ID            string
+	Type          string
+	Name          string
+	Capabilities  []string
+	CostProfile   CostProfile
+	CostMagnitude int // For backward compatibility
+}
+
+// CostProfile represents the cost characteristics of an agent
+type CostProfile struct {
+	Magnitude     int    `yaml:"magnitude" json:"magnitude"`
+	ContextWindow int    `yaml:"context_window" json:"context_window"`
+	ContextReset  string `yaml:"context_reset" json:"context_reset"`
+	Available     bool   `yaml:"available" json:"available"`
+}
+
+// CommissionRepository defines the interface for commission storage operations
+// This interface is defined here to avoid circular dependencies with the registry package
+type CommissionRepository interface {
+	CreateCommission(ctx context.Context, commission *Commission) error
+	GetCommission(ctx context.Context, id string) (*Commission, error)
+}
+
+// Commission represents a commission in the system
+// For now, using a simplified version to avoid importing registry
+type Commission struct {
+	ID          string
+	CampaignID  string
+	Title       string
+	Description *string
+	Status      string
+}
+
 // CostAwareClient extends the basic cost tracking with client-specific operations
 type CostAwareClient interface {
 	CostManagerInterface

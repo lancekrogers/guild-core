@@ -6,23 +6,23 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
-	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
 // AgentRouter routes tasks to optimal agents using manager agent and layered prompts
 type AgentRouter struct {
 	promptManager layered.LayeredManager
 	artisanClient ArtisanClient
-	agentRegistry registry.AgentRegistry
+	agentRegistry agent.AgentRegistry
 }
 
 // NewAgentRouter creates a new agent router
 func NewAgentRouter(
 	promptManager layered.LayeredManager,
 	artisanClient ArtisanClient,
-	agentRegistry registry.AgentRegistry,
+	agentRegistry agent.AgentRegistry,
 ) *AgentRouter {
 	return &AgentRouter{
 		promptManager: promptManager,

@@ -9,13 +9,13 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/guild-ventures/guild-core/pkg/agent"
 )
 
 // TaskBridge converts parsed commission structures into kanban tasks
 type TaskBridge struct {
 	kanbanBoard          *kanban.Board
-	commissionRepository registry.CommissionRepository
+	commissionRepository agent.CommissionRepository
 	parser               *ResponseParserImpl
 }
 
@@ -34,7 +34,7 @@ func NewTaskBridge(
 // NewTaskBridgeWithCommissions creates a new task bridge with commission repository
 func NewTaskBridgeWithCommissions(
 	kanbanBoard *kanban.Board,
-	commissionRepository registry.CommissionRepository,
+	commissionRepository agent.CommissionRepository,
 ) *TaskBridge {
 	return &TaskBridge{
 		kanbanBoard:          kanbanBoard,
@@ -74,9 +74,9 @@ func (tb *TaskBridge) CreateTasksFromRefinedCommission(ctx context.Context, refi
 	}
 
 	if tb.commissionRepository != nil {
-		// Convert map to registry.Commission struct
+		// Convert map to agent.Commission struct
 		description := commission["Description"].(string)
-		registryCommission := &registry.Commission{
+		registryCommission := &agent.Commission{
 			ID:          refinedCommission.CommissionID,
 			CampaignID:  "default-campaign", // TODO: Get from context
 			Title:       commission["Title"].(string),

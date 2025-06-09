@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
-	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
 // ManagerIntelligenceService provides intelligent task analysis and agent routing
@@ -16,14 +16,14 @@ type ManagerIntelligenceService struct {
 	agentRouter        *AgentRouter
 	promptManager      layered.LayeredManager
 	artisanClient      ArtisanClient
-	agentRegistry      registry.AgentRegistry
+	agentRegistry      agent.AgentRegistry
 }
 
 // NewManagerIntelligenceService creates a new manager intelligence service
 func NewManagerIntelligenceService(
 	promptManager layered.LayeredManager,
 	artisanClient ArtisanClient,
-	agentRegistry registry.AgentRegistry,
+	agentRegistry agent.AgentRegistry,
 ) *ManagerIntelligenceService {
 	return &ManagerIntelligenceService{
 		complexityAnalyzer: NewTaskComplexityAnalyzer(promptManager, artisanClient, agentRegistry),

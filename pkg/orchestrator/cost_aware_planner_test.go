@@ -450,6 +450,10 @@ func (m *MockComponentRegistry) Project() registry.ProjectRegistry { return nil 
 
 func (m *MockComponentRegistry) Prompts() *registry.PromptRegistry { return nil }
 
+func (m *MockComponentRegistry) GetPromptManager() (registry.LayeredPromptManager, error) {
+	return nil, nil
+}
+
 func (m *MockComponentRegistry) Storage() registry.StorageRegistry { return nil }
 
 func (m *MockComponentRegistry) Orchestrator() interface{} { return nil }

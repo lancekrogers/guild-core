@@ -8,23 +8,15 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/interfaces"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 )
 
-// Agent is the interface for all Guild agents
-type Agent interface {
-	// Execute runs a task
-	Execute(ctx context.Context, request string) (string, error)
-
-	// GetID returns the agent's ID
-	GetID() string
-
-	// GetName returns the agent's name
-	GetName() string
-}
+// Agent is an alias to the shared interface to avoid circular dependencies
+type Agent = interfaces.Agent
 
 // GuildArtisan is the primary agent interface
 type GuildArtisan interface {
@@ -195,6 +187,11 @@ func (a *WorkerAgent) SetCapabilities(capabilities []string) {
 // GetCapabilities returns the agent's capabilities
 func (a *WorkerAgent) GetCapabilities() []string {
 	return a.capabilities
+}
+
+// GetType returns the agent's type
+func (a *WorkerAgent) GetType() string {
+	return "worker"
 }
 
 // SetDescription sets the agent's description

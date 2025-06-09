@@ -266,6 +266,11 @@ func (a *ContextAwareAgent) GetAgentType() string {
 	return a.AgentType
 }
 
+// GetType returns the agent's type (implements interfaces.Agent)
+func (a *ContextAwareAgent) GetType() string {
+	return a.AgentType
+}
+
 // UpdateCapabilities updates the agent's capabilities
 func (a *ContextAwareAgent) UpdateCapabilities(capabilities []string) {
 	a.Capabilities = capabilities

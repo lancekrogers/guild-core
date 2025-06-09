@@ -129,20 +129,20 @@ func (a *simpleTestAgent) GetName() string {
 
 // Test that our simple agent implements the Agent interface
 func TestSimpleAgent(t *testing.T) {
-	agent := &simpleTestAgent{
+	testAgent := &simpleTestAgent{
 		id:   "test-agent",
 		name: "Test Agent",
 	}
 
 	// Test interface compliance
-	var _ agent.Agent = agent
+	var _ agent.Agent = testAgent
 
 	// Test methods
-	assert.Equal(t, "test-agent", agent.GetID())
-	assert.Equal(t, "Test Agent", agent.GetName())
+	assert.Equal(t, "test-agent", testAgent.GetID())
+	assert.Equal(t, "Test Agent", testAgent.GetName())
 
 	ctx := context.Background()
-	response, err := agent.Execute(ctx, "test request")
+	response, err := testAgent.Execute(ctx, "test request")
 	assert.NoError(t, err)
 	assert.Equal(t, "test response", response)
 }
@@ -200,8 +200,11 @@ func TestSimpleEventBus(t *testing.T) {
 	eventBus.Subscribe("test", func(event interfaces.Event) {})
 	eventBus.SubscribeAll(func(event interfaces.Event) {})
 	eventBus.Unsubscribe("test", func(event interfaces.Event) {})
-	eventBus.Publish(interfaces.Event{Type: "test", Data: "test"})
+	eventBus.Publish(interfaces.Event{
+		Type: "test",
+		Data: map[string]interface{}{"message": "test"},
+	})
 	
-	err := eventBus.PublishJSON(`{"type": "test", "data": "test"}`)
+	err := eventBus.PublishJSON(`{"type": "test", "data": {"message": "test"}}`)
 	assert.NoError(t, err)
 }

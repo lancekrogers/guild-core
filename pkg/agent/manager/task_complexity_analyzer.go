@@ -9,7 +9,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
-	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/guild-ventures/guild-core/pkg/agent"
 )
 
 // TaskComplexityAnalyzer analyzes task complexity with proper error handling,
@@ -17,7 +17,7 @@ import (
 type TaskComplexityAnalyzer struct {
 	promptManager layered.LayeredManager
 	artisanClient ArtisanClient
-	agentRegistry registry.AgentRegistry
+	agentRegistry agent.AgentRegistry
 	logger        *slog.Logger
 	timeout       time.Duration
 }
@@ -97,7 +97,7 @@ type AgentInfo struct {
 func NewTaskComplexityAnalyzer(
 	promptManager layered.LayeredManager,
 	artisanClient ArtisanClient,
-	agentRegistry registry.AgentRegistry,
+	agentRegistry agent.AgentRegistry,
 ) *TaskComplexityAnalyzer {
 	return &TaskComplexityAnalyzer{
 		promptManager: promptManager,

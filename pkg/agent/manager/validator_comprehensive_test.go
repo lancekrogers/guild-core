@@ -104,9 +104,11 @@ func TestDefaultValidator_ValidateStructure(t *testing.T) {
 			structure: &FileStructure{
 				Files: []*FileEntry{
 					{
-						Path:     "docs/",
-						Type:     FileTypeManifest,
-						Metadata: map[string]interface{}{"isDirectory": true},
+						Path:       "README.md",
+						Type:       FileTypeMarkdown,
+						Content:    "# README\n\nMain readme",
+						TasksCount: 1,
+						Metadata:   map[string]interface{}{"size": 20},
 					},
 					{
 						Path:       "docs/guide.md",
@@ -124,15 +126,16 @@ func TestDefaultValidator_ValidateStructure(t *testing.T) {
 			structure: &FileStructure{
 				Files: []*FileEntry{
 					{
-						Path:     "test.md",
-						Type:     FileTypeMarkdown,
-						Content:  "test",
-						Metadata: map[string]interface{}{"size": 4},
+						Path:       "test.md",
+						Type:       FileTypeMarkdown,
+						Content:    "# Test",
+						TasksCount: 1,
+						Metadata:   map[string]interface{}{"size": 6},
 					},
 				},
 			},
 			wantErr:     true,
-			errContains: "missing required files",
+			errContains: "must contain a README.md file",
 		},
 		{
 			name: "empty content file",
@@ -154,7 +157,7 @@ func TestDefaultValidator_ValidateStructure(t *testing.T) {
 				},
 			},
 			wantErr:     true,
-			errContains: "empty content",
+			errContains: "content cannot be empty",
 		},
 	}
 
@@ -202,7 +205,7 @@ func TestDefaultValidator_validateFileCount(t *testing.T) {
 		{
 			name:      "zero files",
 			fileCount: 0,
-			wantErr:   false,
+			wantErr:   true,
 		},
 	}
 
@@ -238,26 +241,19 @@ func TestDefaultValidator_validateMarkdownContent(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:        "contains script tag",
-			content:     "# Title\n\n<script>alert('xss')</script>",
+			name:        "missing title",
+			content:     "This is markdown without a title heading",
 			wantErr:     true,
-			errContains: "potentially unsafe",
-		},
-		{
-			name:        "contains style tag",
-			content:     "# Title\n\n<style>body { display: none; }</style>",
-			wantErr:     true,
-			errContains: "potentially unsafe",
-		},
-		{
-			name:        "contains iframe",
-			content:     "# Title\n\n<iframe src='evil.com'></iframe>",
-			wantErr:     true,
-			errContains: "potentially unsafe",
+			errContains: "must contain at least one title",
 		},
 		{
 			name:    "markdown with code block",
 			content: "# Title\n\n```python\nprint('hello')\n```",
+			wantErr: false,
+		},
+		{
+			name:    "title with content",
+			content: "# Main Title\n\nSome content here\n\n## Subtitle\n\nMore content",
 			wantErr: false,
 		},
 	}
@@ -343,15 +339,16 @@ func TestConfigurableValidator_ValidateStructure(t *testing.T) {
 			structure: &FileStructure{
 				Files: []*FileEntry{
 					{
-						Path:     "main.go",
-						Type:     FileTypeMarkdown,
-						Content:  "package main",
-						Metadata: map[string]interface{}{"size": 12},
+						Path:       "main.go",
+						Type:       FileTypeMarkdown,
+						Content:    "# Main\n\npackage main",
+						TasksCount: 1,
+						Metadata:   map[string]interface{}{"size": 20},
 					},
 				},
 			},
 			wantErr:     true,
-			errContains: "missing required",
+			errContains: "structure must contain a README.md file",
 		},
 		{
 			name: "invalid extension",

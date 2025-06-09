@@ -3,6 +3,7 @@ package providers
 import (
 	"context"
 	"os"
+	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers/anthropic"
@@ -142,4 +143,44 @@ func GetProviderInfo() map[ProviderType]string {
 		ProviderGoogle:     "Google (Gemini) - Legacy only",
 		ProviderClaudeCode: "Claude Code (MCP) - Legacy only",
 	}
+}
+
+// extractSystemPromptFromMessages extracts system prompt from messages and returns remaining messages
+func extractSystemPromptFromMessages(messages []interfaces.ChatMessage) (string, []interfaces.ChatMessage) {
+	if len(messages) == 0 {
+		return "", messages
+	}
+
+	var systemPrompt string
+	var remaining []interfaces.ChatMessage
+
+	for i, msg := range messages {
+		if msg.Role == "system" && systemPrompt == "" {
+			systemPrompt = msg.Content
+		} else {
+			remaining = append(remaining, messages[i])
+		}
+	}
+
+	return systemPrompt, remaining
+}
+
+// buildPromptFromMessages builds a single prompt string from messages
+func buildPromptFromMessages(messages []interfaces.ChatMessage) string {
+	if len(messages) == 0 {
+		return ""
+	}
+
+	var parts []string
+	for _, msg := range messages {
+		role := msg.Role
+		if role == "user" {
+			role = "User"
+		} else if role == "assistant" {
+			role = "Assistant"
+		}
+		parts = append(parts, role+": "+msg.Content)
+	}
+
+	return strings.Join(parts, "\n\n")
 }

@@ -47,3 +47,22 @@ type ConfigLoader interface {
 	Get(key string) interface{}
 	Set(key string, value interface{})
 }
+
+// Agent is the interface for all Guild agents
+// This is defined here to break the circular dependency between agent and registry packages
+type Agent interface {
+	// Execute runs a task
+	Execute(ctx context.Context, request string) (string, error)
+
+	// GetID returns the agent's ID
+	GetID() string
+
+	// GetName returns the agent's name
+	GetName() string
+
+	// GetType returns the agent's type
+	GetType() string
+
+	// GetCapabilities returns the agent's capabilities
+	GetCapabilities() []string
+}

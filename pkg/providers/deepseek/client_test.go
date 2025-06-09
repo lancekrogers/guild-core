@@ -2,8 +2,10 @@ package deepseek
 
 import (
 	"context"
+	"os"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/guild-ventures/guild-core/pkg/providers/base"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 	providertesting "github.com/guild-ventures/guild-core/pkg/providers/testing"
@@ -165,4 +167,112 @@ func TestDeepSeekSpecificFeatures(t *testing.T) {
 func TestDeepSeekPricingNote(t *testing.T) {
 	t.Log("DeepSeek offers 50-75% off-peak discount (16:30-00:30 UTC)")
 	t.Log("Cache hit pricing also available for repeated content")
+}
+
+// TestNewClient tests client creation with different API key sources
+func TestNewClient(t *testing.T) {
+	tests := []struct {
+		name           string
+		apiKey         string
+		envKey         string
+		expectedNotNil bool
+	}{
+		{
+			name:           "with explicit API key",
+			apiKey:         "test-api-key",
+			expectedNotNil: true,
+		},
+		{
+			name:           "with environment variable",
+			apiKey:         "",
+			envKey:         "env-api-key",
+			expectedNotNil: true,
+		},
+		{
+			name:           "empty API key",
+			apiKey:         "",
+			envKey:         "",
+			expectedNotNil: true, // Client still created, just without key
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Set environment variable if needed
+			if tt.envKey != "" {
+				os.Setenv("DEEPSEEK_API_KEY", tt.envKey)
+				defer os.Unsetenv("DEEPSEEK_API_KEY")
+			}
+
+			client := NewClient(tt.apiKey)
+			assert.Equal(t, tt.expectedNotNil, client != nil)
+			if client != nil {
+				assert.NotNil(t, client.OpenAICompatibleProvider)
+			}
+		})
+	}
+}
+
+// TestGetRecommendedModel tests model recommendation logic
+func TestGetRecommendedModel(t *testing.T) {
+	tests := []struct {
+		name     string
+		useCase  string
+		expected string
+	}{
+		{
+			name:     "coding use case",
+			useCase:  "coding",
+			expected: DeepSeekChat,
+		},
+		{
+			name:     "reasoning use case",
+			useCase:  "reasoning",
+			expected: DeepSeekReasoner,
+		},
+		{
+			name:     "cost-efficient use case",
+			useCase:  "cost-efficient",
+			expected: DeepSeekChat,
+		},
+		{
+			name:     "general use case",
+			useCase:  "general",
+			expected: DeepSeekChat,
+		},
+		{
+			name:     "unknown use case",
+			useCase:  "unknown",
+			expected: DeepSeekChat,
+		},
+		{
+			name:     "empty use case",
+			useCase:  "",
+			expected: DeepSeekChat,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result := GetRecommendedModel(tt.useCase)
+			assert.Equal(t, tt.expected, result)
+		})
+	}
+}
+
+// TestComplete tests the Complete method
+func TestComplete(t *testing.T) {
+	// Skip integration test if no API key
+	if os.Getenv("DEEPSEEK_API_KEY") == "" {
+		t.Skip("DEEPSEEK_API_KEY not set")
+	}
+
+	client := NewClient("")
+	ctx := context.Background()
+
+	// Test basic completion
+	result, err := client.Complete(ctx, "Say 'Hello' and nothing else")
+	assert.NoError(t, err)
+	assert.NotEmpty(t, result)
+	assert.Contains(t, result, "Hello")
 }

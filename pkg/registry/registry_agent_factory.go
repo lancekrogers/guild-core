@@ -6,6 +6,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/interfaces"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 )
 
@@ -57,7 +58,7 @@ func (r *DefaultComponentRegistry) createAgentFactory(ctx context.Context) (Agen
 	)
 
 	// Return a function that wraps the agent.Factory
-	return func(config AgentConfig) (Agent, error) {
+	return func(config AgentConfig) (interfaces.Agent, error) {
 		agentInstance, err := factory.CreateWorkerAgent(ctx, config.Name+"-id", config.Name)
 		if err != nil {
 			return nil, err
@@ -71,7 +72,7 @@ func (r *DefaultComponentRegistry) createAgentFactory(ctx context.Context) (Agen
 
 // agentAdapter wraps agent.Agent to implement registry.Agent
 type agentAdapter struct {
-	agent agent.Agent
+	agent interfaces.Agent
 }
 
 func (a *agentAdapter) Execute(ctx context.Context, request string) (string, error) {

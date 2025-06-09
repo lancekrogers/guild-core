@@ -1,24 +1,20 @@
 package registry
 
 import (
-	"context"
 	"sort"
 	"strings"
 	"sync"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/interfaces"
 )
 
-// CostProfile represents the cost characteristics of an agent
-type CostProfile struct {
-	Magnitude     int    `yaml:"magnitude" json:"magnitude"`
-	ContextWindow int    `yaml:"context_window" json:"context_window"`
-	ContextReset  string `yaml:"context_reset" json:"context_reset"`
-	Available     bool   `yaml:"available" json:"available"`
-}
+// CostProfile is an alias to agent.CostProfile
+type CostProfile = agent.CostProfile
 
 // AgentFactory creates agent instances
-type AgentFactory func(config AgentConfig) (Agent, error)
+type AgentFactory func(config AgentConfig) (interfaces.Agent, error)
 
 // AgentConfig holds agent configuration
 type AgentConfig struct {
@@ -32,38 +28,14 @@ type AgentConfig struct {
 	CostProfile  CostProfile
 }
 
-// Agent interface (minimal for registry)
-type Agent interface {
-	Execute(ctx context.Context, request string) (string, error)
-	GetID() string
-	GetName() string
-	GetType() string
-	GetCapabilities() []string
-}
+// Agent is an alias to the shared interface
+type Agent = interfaces.Agent
 
-// AgentInfo holds agent information
-type AgentInfo struct {
-	ID            string
-	Type          string
-	Name          string
-	Capabilities  []string
-	CostProfile   CostProfile
-	CostMagnitude int // For backward compatibility
-}
+// AgentInfo is an alias to agent.AgentInfo
+type AgentInfo = agent.AgentInfo
 
-// GuildAgentConfig represents a configured agent from guild config
-type GuildAgentConfig struct {
-	ID            string   `yaml:"id"`
-	Name          string   `yaml:"name"`
-	Type          string   `yaml:"type"`
-	Model         string   `yaml:"model"`
-	Provider      string   `yaml:"provider"`
-	SystemPrompt  string   `yaml:"system_prompt"`
-	Tools         []string `yaml:"tools"`
-	Capabilities  []string `yaml:"capabilities"`
-	CostMagnitude int      `yaml:"cost_magnitude,omitempty"`
-	ContextWindow int      `yaml:"context_window,omitempty"`
-}
+// GuildAgentConfig is an alias to agent.GuildAgentConfig
+type GuildAgentConfig = agent.GuildAgentConfig
 
 // DefaultAgentRegistry implements the AgentRegistry interface
 type DefaultAgentRegistry struct {
@@ -103,7 +75,7 @@ func (r *DefaultAgentRegistry) RegisterAgentType(name string, factory AgentFacto
 }
 
 // GetAgent creates an agent instance of the specified type
-func (r *DefaultAgentRegistry) GetAgent(agentType string) (Agent, error) {
+func (r *DefaultAgentRegistry) GetAgent(agentType string) (interfaces.Agent, error) {
 	r.mu.RLock()
 	factory, exists := r.factories[agentType]
 	r.mu.RUnlock()

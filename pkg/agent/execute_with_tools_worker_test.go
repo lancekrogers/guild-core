@@ -147,7 +147,7 @@ func TestWorkerAgent_ExecuteWithTools(t *testing.T) {
 			request:      "test request",
 			allowedTools: []string{"test-tool"},
 			expectErr:    true,
-			errContains:  "failed to track tool cost",
+			errContains:  "tool budget exceeded",
 		},
 		{
 			name: "execution with multiple tools",
