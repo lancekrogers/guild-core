@@ -11,6 +11,7 @@ import (
 
 	"github.com/gocolly/colly"
 
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/tools"
 )
 
@@ -110,7 +111,9 @@ func (s *Scraper) Call(input string) (string, error) {
 	ctx := context.Background()
 	_, err := url.ParseRequestURI(input)
 	if err != nil {
-		return "", fmt.Errorf("%s: %w", ErrScrapingFailed, err)
+		return "", gerror.Wrap(err, gerror.ErrCodeInvalidInput, ErrScrapingFailed.Error()).
+			WithComponent("scraper").
+			WithOperation("ParseURL")
 	}
 
 	c := colly.NewCollector(
@@ -124,7 +127,9 @@ func (s *Scraper) Call(input string) (string, error) {
 		Delay:       time.Duration(s.Delay) * time.Second,
 	})
 	if err != nil {
-		return "", fmt.Errorf("%s: %w", ErrScrapingFailed, err)
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, ErrScrapingFailed.Error()).
+			WithComponent("scraper").
+			WithOperation("SetLimits")
 	}
 
 	var siteData strings.Builder
@@ -227,7 +232,10 @@ func (s *Scraper) Call(input string) (string, error) {
 	fmt.Println("input: ", input)
 	err = c.Visit(input)
 	if err != nil {
-		return "", fmt.Errorf("%s: %w", ErrScrapingFailed, err)
+		return "", gerror.Wrap(err, gerror.ErrCodeConnection, ErrScrapingFailed.Error()).
+			WithComponent("scraper").
+			WithOperation("Visit").
+			WithDetails("url", input)
 	}
 
 	select {

@@ -36,6 +36,15 @@ func (a *WorkerAgent) CostAwareExecute(ctx context.Context, request string) (str
 			WithDetails("agent_id", a.ID)
 	}
 
+	// Check if we have a valid cost manager
+	if a.CostManager == nil {
+		logger.ErrorContext(ctx, "No cost manager configured")
+		return "", gerror.New(gerror.ErrCodeValidation, "no cost manager configured", nil).
+			WithComponent("agent").
+			WithOperation("CostAwareExecute").
+			WithDetails("agent_id", a.ID)
+	}
+
 	// Estimate cost for this request
 	// Rough estimation: 1 character ≈ 0.25 tokens
 	estimatedPromptTokens := len(request) / 4

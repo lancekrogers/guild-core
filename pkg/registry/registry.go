@@ -7,23 +7,88 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
+// layeredManagerWrapper wraps a basic manager to implement LayeredManager interface
+type layeredManagerWrapper struct {
+	manager layered.Manager
+}
+
+// Manager interface methods (delegate to wrapped manager)
+func (w *layeredManagerWrapper) GetSystemPrompt(ctx context.Context, role string, domain string) (string, error) {
+	return w.manager.GetSystemPrompt(ctx, role, domain)
+}
+
+func (w *layeredManagerWrapper) GetTemplate(ctx context.Context, templateName string) (string, error) {
+	return w.manager.GetTemplate(ctx, templateName)
+}
+
+func (w *layeredManagerWrapper) FormatContext(ctx context.Context, context layered.Context) (string, error) {
+	return w.manager.FormatContext(ctx, context)
+}
+
+func (w *layeredManagerWrapper) ListRoles(ctx context.Context) ([]string, error) {
+	return w.manager.ListRoles(ctx)
+}
+
+func (w *layeredManagerWrapper) ListDomains(ctx context.Context, role string) ([]string, error) {
+	return w.manager.ListDomains(ctx, role)
+}
+
+// LayeredManager interface methods (stub implementations for now)
+func (w *layeredManagerWrapper) BuildLayeredPrompt(ctx context.Context, artisanID, sessionID string, turnCtx layered.TurnContext) (*layered.LayeredPrompt, error) {
+	return nil, gerror.New(gerror.ErrCodeNotImplemented, "layered prompt building not yet implemented", nil).
+		WithComponent("registry").
+		WithOperation("BuildLayeredPrompt")
+}
+
+func (w *layeredManagerWrapper) GetPromptLayer(ctx context.Context, layer layered.PromptLayer, artisanID, sessionID string) (*layered.SystemPrompt, error) {
+	return nil, gerror.New(gerror.ErrCodeNotImplemented, "prompt layer retrieval not yet implemented", nil).
+		WithComponent("registry").
+		WithOperation("GetPromptLayer")
+}
+
+func (w *layeredManagerWrapper) SetPromptLayer(ctx context.Context, prompt layered.SystemPrompt) error {
+	return gerror.New(gerror.ErrCodeNotImplemented, "prompt layer setting not yet implemented", nil).
+		WithComponent("registry").
+		WithOperation("SetPromptLayer")
+}
+
+func (w *layeredManagerWrapper) DeletePromptLayer(ctx context.Context, layer layered.PromptLayer, artisanID, sessionID string) error {
+	return gerror.New(gerror.ErrCodeNotImplemented, "prompt layer deletion not yet implemented", nil).
+		WithComponent("registry").
+		WithOperation("DeletePromptLayer")
+}
+
+func (w *layeredManagerWrapper) ListPromptLayers(ctx context.Context, artisanID, sessionID string) ([]layered.SystemPrompt, error) {
+	return nil, gerror.New(gerror.ErrCodeNotImplemented, "prompt layer listing not yet implemented", nil).
+		WithComponent("registry").
+		WithOperation("ListPromptLayers")
+}
+
+func (w *layeredManagerWrapper) InvalidateCache(ctx context.Context, artisanID, sessionID string) error {
+	return gerror.New(gerror.ErrCodeNotImplemented, "cache invalidation not yet implemented", nil).
+		WithComponent("registry").
+		WithOperation("InvalidateCache")
+}
+
 // DefaultComponentRegistry is the default implementation of ComponentRegistry
 type DefaultComponentRegistry struct {
-	agentRegistry        AgentRegistry
-	toolRegistry         ToolRegistry
-	providerRegistry     ProviderRegistry
-	memoryRegistry       MemoryRegistry
-	projectRegistry      ProjectRegistry
-	promptRegistry       *PromptRegistry
-	storageRegistry      StorageRegistry
-	orchestratorRegistry interface{}
-	config               Config
-	initialized          bool
-	mu                   sync.RWMutex
+	agentRegistry         AgentRegistry
+	toolRegistry          ToolRegistry
+	providerRegistry      ProviderRegistry
+	memoryRegistry        MemoryRegistry
+	projectRegistry       ProjectRegistry
+	promptRegistry        *PromptRegistry
+	layeredPromptManager  LayeredPromptManager
+	storageRegistry       StorageRegistry
+	orchestratorRegistry  interface{}
+	config                Config
+	initialized           bool
+	mu                    sync.RWMutex
 }
 
 // SQLiteStorageRegistry implements StorageRegistry for SQLite storage
@@ -798,6 +863,20 @@ func (r *DefaultComponentRegistry) Prompts() *PromptRegistry {
 	return r.promptRegistry
 }
 
+// GetPromptManager returns the configured layered prompt manager
+func (r *DefaultComponentRegistry) GetPromptManager() (LayeredPromptManager, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	if r.layeredPromptManager == nil {
+		return nil, gerror.New(gerror.ErrCodeInternal, "layered prompt manager not initialized", nil).
+			WithComponent("registry").
+			WithOperation("GetPromptManager")
+	}
+
+	return r.layeredPromptManager, nil
+}
+
 // Storage returns the storage registry
 func (r *DefaultComponentRegistry) Storage() StorageRegistry {
 	return r.storageRegistry
@@ -1108,6 +1187,14 @@ func (r *DefaultComponentRegistry) initializePrompts(ctx context.Context) error 
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "error registering default prompt provider").
 			WithComponent("registry").
 			WithOperation("initializePrompts")
+	}
+
+	// Initialize layered prompt manager
+	// TODO: Create a proper layered prompt manager with Guild storage and dependencies
+	// For now, create a basic manager and wrap it to implement LayeredManager interface
+	basicManager := layered.NewLayeredPromptManager()
+	r.layeredPromptManager = &layeredManagerWrapper{
+		manager: basicManager,
 	}
 
 	// TODO: Add any other prompt providers from config

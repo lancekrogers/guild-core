@@ -11,6 +11,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
 	"github.com/guild-ventures/guild-core/pkg/config"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/orchestrator"
 	"github.com/guild-ventures/guild-core/pkg/providers/anthropic"
 	"github.com/guild-ventures/guild-core/pkg/providers/openai"
@@ -188,7 +189,9 @@ func setupProviders(reg registry.ComponentRegistry) error {
 	} else if _, err := providerReg.GetProvider("openai"); err == nil {
 		providerReg.SetDefaultProvider("openai")
 	} else {
-		return fmt.Errorf("no AI providers available - set ANTHROPIC_API_KEY or OPENAI_API_KEY")
+		return gerror.New(gerror.ErrCodeMissingRequired, "no AI providers available - set ANTHROPIC_API_KEY or OPENAI_API_KEY", nil).
+			WithComponent("commission_example").
+			WithOperation("setupProviders")
 	}
 
 	return nil
@@ -199,7 +202,9 @@ func setupMemory(reg registry.ComponentRegistry) error {
 	// Create BoltDB store
 	store, err := boltdb.NewStore(".guild/memory.db")
 	if err != nil {
-		return fmt.Errorf("failed to create BoltDB store: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create BoltDB store").
+			WithComponent("commission_example").
+			WithOperation("setupMemory")
 	}
 
 	// Register with memory registry

@@ -9,6 +9,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/tools"
 )
@@ -33,6 +34,9 @@ type ComponentRegistry interface {
 
 	// Prompts returns the prompt registry for managing prompt templates
 	Prompts() *PromptRegistry
+
+	// GetPromptManager returns the configured layered prompt manager
+	GetPromptManager() (LayeredPromptManager, error)
 
 	// Storage returns the storage registry for managing storage backends
 	Storage() StorageRegistry
@@ -259,6 +263,8 @@ type MemoryStore = memory.Store
 type VectorStore = vector.VectorStore
 
 type ChainManager = memory.ChainManager
+
+type LayeredPromptManager = layered.LayeredManager
 
 // Forward declarations for storage repositories to avoid import cycles
 type TaskRepository interface {

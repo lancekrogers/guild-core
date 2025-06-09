@@ -42,6 +42,8 @@ import (
 	"os"
 	"regexp"
 	"strings"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 const maxDepth = 5
@@ -73,12 +75,18 @@ func main() {
 // ParseMarkdownWithLinks expands @link references recursively
 func ParseMarkdownWithLinks(path string, depth int) (string, error) {
 	if depth > maxDepth {
-		return "", fmt.Errorf("max link recursion depth (%d) exceeded at %s", maxDepth, path)
+		return "", gerror.New(gerror.ErrCodeOutOfRange, "max link recursion depth exceeded", nil).
+			WithComponent("prompt_link_parser").
+			WithOperation("ParseMarkdownWithLinks").
+			WithDetails("maxDepth", maxDepth, "path", path)
 	}
 
 	file, err := os.Open(path)
 	if err != nil {
-		return "", fmt.Errorf("failed to open file %s: %w", path, err)
+		return "", gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to open file").
+			WithComponent("prompt_link_parser").
+			WithOperation("OpenFile").
+			WithDetails("path", path)
 	}
 	defer file.Close()
 
@@ -103,7 +111,10 @@ func ParseMarkdownWithLinks(path string, depth int) (string, error) {
 				linkPath := match[1]
 				expandedContent, err := ParseMarkdownWithLinks(linkPath, depth+1)
 				if err != nil {
-					return "", fmt.Errorf("error expanding link %s: %w", linkPath, err)
+					return "", gerror.Wrap(err, gerror.ErrCodeInternal, "error expanding link").
+						WithComponent("prompt_link_parser").
+						WithOperation("ExpandLink").
+						WithDetails("linkPath", linkPath)
 				}
 				expandedLine = strings.ReplaceAll(expandedLine, "@"+linkPath, expandedContent)
 			}
@@ -112,7 +123,10 @@ func ParseMarkdownWithLinks(path string, depth int) (string, error) {
 		output.WriteString("\n")
 	}
 	if err := scanner.Err(); err != nil {
-		return "", fmt.Errorf("error reading file %s: %w", path, err)
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "error reading file").
+			WithComponent("prompt_link_parser").
+			WithOperation("ReadFile").
+			WithDetails("path", path)
 	}
 	return output.String(), nil
 }

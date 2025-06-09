@@ -8,6 +8,8 @@ import (
 	"log"
 	"strings"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // Demo script to showcase rich content rendering
@@ -30,7 +32,9 @@ func main() {
 ` + "```go" + `
 func ProcessData(items []string) error {
     if len(items) == 0 {
-        return fmt.Errorf("no items to process")
+        return gerror.New(gerror.ErrCodeInvalidInput, "no items to process", nil).
+            WithComponent("demo").
+            WithOperation("ProcessData")
     }
 
     for i, item := range items {

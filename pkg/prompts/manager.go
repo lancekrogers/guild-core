@@ -35,14 +35,7 @@ func NewPromptManager() (*PromptManager, error) {
 	}
 
 	// In the future, add other prompt categories here
-	// Example:
-	// agentTemplates, err := agent.LoadPrompts()
-	// if err != nil {
-	//     return nil, fmt.Errorf("error loading agent prompts: %w", err)
-	// }
-	// for name, tmpl := range agentTemplates {
-	//     pm.templates[name] = tmpl
-	// }
+	// Example implementation would use gerror instead of fmt.Errorf
 
 	return pm, nil
 }
