@@ -139,14 +139,20 @@ func TestTaskExecutor_ToolSafety(t *testing.T) {
 	err := toolRegistry.RegisterTool(shellTool.Name(), shellTool)
 	require.NoError(t, err)
 
-	// Create executor
+	// Create executor properly
 	execContext := &ExecutionContext{
 		AgentID: "safety-test",
+	}
+	task := &kanban.Task{
+		ID:          "safety-test-task",
+		Title:       "Safety Test Task",
+		Description: "Testing tool safety mechanisms",
 	}
 	executor := &BasicTaskExecutor{
 		agent:        &mockAgent{id: "safety-test"},
 		toolRegistry: toolRegistry,
 		execContext:  execContext,
+		currentTask:  task,
 		result: &ExecutionResult{
 			ToolUsage: []ToolUsage{},
 			Metadata:  make(map[string]interface{}),
@@ -194,11 +200,17 @@ func TestTaskExecutor_FileToolRestrictions(t *testing.T) {
 	err = toolRegistry.RegisterTool(fileTool.Name(), fileTool)
 	require.NoError(t, err)
 
-	// Create executor
+	// Create executor properly
+	task := &kanban.Task{
+		ID:          "file-test-task",
+		Title:       "File Test Task",
+		Description: "Testing file tool restrictions",
+	}
 	executor := &BasicTaskExecutor{
 		agent:        &mockAgent{id: "file-test"},
 		toolRegistry: toolRegistry,
 		execContext:  &ExecutionContext{AgentID: "file-test"},
+		currentTask:  task,
 		result: &ExecutionResult{
 			ToolUsage: []ToolUsage{},
 			Metadata:  make(map[string]interface{}),
