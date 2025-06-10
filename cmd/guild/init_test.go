@@ -33,8 +33,8 @@ func TestInitCommand(t *testing.T) {
 
 	// Check expected files exist
 	expectedFiles := []string{
-		".guild/config.yaml",
-		".guild/README.md",
+		".guild/guild.yaml",
+		".guild/corpus.yaml",
 		".guild/.gitignore",
 	}
 

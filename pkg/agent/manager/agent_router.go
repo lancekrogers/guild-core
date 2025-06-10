@@ -325,6 +325,28 @@ func (ar *AgentRouter) GetAgentCapabilities(ctx context.Context) ([]EnhancedAgen
 			Tools:           []string{"file", "shell", "http"},
 			SuccessRate:     89.2,
 		},
+		{
+			Name:            "devops-artisan",
+			Role:            "DevOps Engineer",
+			Provider:        "anthropic",
+			Model:           "claude-3-5-sonnet-20241022",
+			CostMagnitude:   3,
+			ContextWindow:   200000,
+			Specializations: []string{"Kubernetes", "Docker", "CI/CD", "Infrastructure as Code"},
+			Tools:           []string{"file", "shell", "http", "kubernetes"},
+			SuccessRate:     90.8,
+		},
+		{
+			Name:            "security-artisan",
+			Role:            "Security Analyst",
+			Provider:        "openai",
+			Model:           "gpt-4",
+			CostMagnitude:   3,
+			ContextWindow:   128000,
+			Specializations: []string{"Security Auditing", "Vulnerability Assessment", "Penetration Testing", "Compliance"},
+			Tools:           []string{"file", "shell", "http", "security-scanner"},
+			SuccessRate:     88.5,
+		},
 	}
 
 	return ar.enhanceAgentInfo(ctx, mockAgents)

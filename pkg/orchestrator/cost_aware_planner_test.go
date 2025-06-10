@@ -535,3 +535,9 @@ func (m *MockManagerAgent) Execute(ctx context.Context, request string) (string,
 func (m *MockManagerAgent) GetID() string { return "mock-manager" }
 
 func (m *MockManagerAgent) GetName() string { return "Mock Manager" }
+
+func (m *MockManagerAgent) GetType() string { return "manager" }
+
+func (m *MockManagerAgent) GetCapabilities() []string { 
+	return []string{"task_planning", "orchestration", "delegation"}
+}

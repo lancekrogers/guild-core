@@ -312,10 +312,6 @@ func (m *Manager) GetActiveServers() []ActiveServerInfo {
 	return m.serverManager.GetActiveServers()
 }
 
-// Shutdown shuts down all language servers
-func (m *Manager) Shutdown(ctx context.Context) error {
-	return m.serverManager.Shutdown(ctx)
-}
 
 // filePathToURI converts a file path to a URI
 func filePathToURI(path string) string {

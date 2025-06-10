@@ -545,6 +545,12 @@ func (m *OrchestratorMockManagerAgent) GetID() string { return "orchestrator-man
 
 func (m *OrchestratorMockManagerAgent) GetName() string { return "Orchestrator Manager" }
 
+func (m *OrchestratorMockManagerAgent) GetType() string { return "manager" }
+
+func (m *OrchestratorMockManagerAgent) GetCapabilities() []string { 
+	return []string{"task_planning", "orchestration", "project_management"} 
+}
+
 type OrchestratorDemoTool struct {
 	name string
 }

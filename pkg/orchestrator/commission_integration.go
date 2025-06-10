@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -193,8 +194,11 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 			WithOperation("initializeFromRegistry")
 	}
 
+	// Create adapter to convert between registry.CommissionRepository and agent.CommissionRepository
+	commissionAdapter := newCommissionRepositoryAdapter(s.commissionRepository)
+	
 	// Create task bridge with commission repository instead of objective manager
-	s.taskBridge = manager.NewTaskBridgeWithCommissions(kanbanBoard, s.commissionRepository)
+	s.taskBridge = manager.NewTaskBridgeWithCommissions(kanbanBoard, commissionAdapter)
 
 	return nil
 }
@@ -1092,4 +1096,68 @@ func (k *kanbanTaskRepoAdapter) RecordTaskEvent(ctx context.Context, event inter
 	return gerror.New(gerror.ErrCodeStorage, "task repository not available", nil).
 		WithComponent("orchestrator").
 		WithOperation("RecordTaskEvent")
+}
+
+// commissionRepositoryAdapter adapts registry.CommissionRepository to agent.CommissionRepository
+type commissionRepositoryAdapter struct {
+	repo registry.CommissionRepository
+}
+
+// newCommissionRepositoryAdapter creates a new commission repository adapter
+func newCommissionRepositoryAdapter(repo registry.CommissionRepository) agent.CommissionRepository {
+	return &commissionRepositoryAdapter{repo: repo}
+}
+
+// CreateCommission implements agent.CommissionRepository
+func (c *commissionRepositoryAdapter) CreateCommission(ctx context.Context, commission *agent.Commission) error {
+	if c.repo == nil {
+		return gerror.New(gerror.ErrCodeStorage, "commission repository not available", nil).
+			WithComponent("orchestrator").
+			WithOperation("CreateCommission")
+	}
+
+	// Convert agent.Commission to registry.Commission
+	registryCommission := &registry.Commission{
+		ID:         commission.ID,
+		CampaignID: commission.CampaignID,
+		Title:      commission.Title,
+		Status:     commission.Status,
+	}
+
+	// Handle nullable Description field
+	if commission.Description != nil && *commission.Description != "" {
+		registryCommission.Description = commission.Description
+	}
+
+	return c.repo.CreateCommission(ctx, registryCommission)
+}
+
+// GetCommission implements agent.CommissionRepository
+func (c *commissionRepositoryAdapter) GetCommission(ctx context.Context, id string) (*agent.Commission, error) {
+	if c.repo == nil {
+		return nil, gerror.New(gerror.ErrCodeStorage, "commission repository not available", nil).
+			WithComponent("orchestrator").
+			WithOperation("GetCommission").
+			WithDetails("id", id)
+	}
+
+	registryCommission, err := c.repo.GetCommission(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convert registry.Commission to agent.Commission
+	agentCommission := &agent.Commission{
+		ID:         registryCommission.ID,
+		CampaignID: registryCommission.CampaignID,
+		Title:      registryCommission.Title,
+		Status:     registryCommission.Status,
+	}
+
+	// Handle nullable Description field
+	if registryCommission.Description != nil {
+		agentCommission.Description = registryCommission.Description
+	}
+
+	return agentCommission, nil
 }

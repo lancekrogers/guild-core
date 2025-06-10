@@ -78,7 +78,8 @@ func ParseMarkdownWithLinks(path string, depth int) (string, error) {
 		return "", gerror.New(gerror.ErrCodeOutOfRange, "max link recursion depth exceeded", nil).
 			WithComponent("prompt_link_parser").
 			WithOperation("ParseMarkdownWithLinks").
-			WithDetails("maxDepth", maxDepth, "path", path)
+			WithDetails("maxDepth", maxDepth).
+			WithDetails("path", path)
 	}
 
 	file, err := os.Open(path)

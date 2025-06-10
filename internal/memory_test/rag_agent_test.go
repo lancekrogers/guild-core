@@ -55,6 +55,14 @@ func (m *MockAgent) GetMemoryManager() memory.ChainManager {
 	return m.memoryManager
 }
 
+func (m *MockAgent) GetType() string {
+	return "mock"
+}
+
+func (m *MockAgent) GetCapabilities() []string {
+	return []string{"testing", "mocking"}
+}
+
 func TestAgentWrapper_BasicDelegation(t *testing.T) {
 	// Create mock agent
 	mockAgent := &MockAgent{

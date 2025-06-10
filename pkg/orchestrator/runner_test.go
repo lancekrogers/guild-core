@@ -7,6 +7,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/orchestrator/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/orchestrator/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -82,7 +83,7 @@ func TestOrchestratorAgentManagement(t *testing.T) {
 	orch := newOrchestrator(&config, dispatcher, eventBus)
 
 	// Test AddAgent
-	agent1 := &simpleTestAgent{id: "agent1", name: "Agent 1"}
+	agent1 := mocks.NewMockAgent("agent1", "Agent 1")
 	err := orch.AddAgent(agent1)
 	assert.NoError(t, err)
 
@@ -96,7 +97,7 @@ func TestOrchestratorAgentManagement(t *testing.T) {
 	assert.False(t, exists)
 
 	// Test AddAgent with duplicate ID
-	agent2 := &simpleTestAgent{id: "agent1", name: "Duplicate"}
+	agent2 := mocks.NewMockAgent("agent1", "Duplicate")
 	err = orch.AddAgent(agent2)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "already exists")
@@ -224,10 +225,10 @@ func TestOrchestratorConcurrentOperations(t *testing.T) {
 	done := make(chan bool, 10)
 	for i := 0; i < 10; i++ {
 		go func(id int) {
-			agent := &simpleTestAgent{
-				id:   string(rune('a' + id)),
-				name: string(rune('A' + id)),
-			}
+			agent := mocks.NewMockAgent(
+				string(rune('a' + id)),
+				string(rune('A' + id)),
+			)
 			orch.AddAgent(agent)
 			done <- true
 		}(i)

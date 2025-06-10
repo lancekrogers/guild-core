@@ -127,6 +127,14 @@ func (a *simpleTestAgent) GetName() string {
 	return a.name
 }
 
+func (a *simpleTestAgent) GetType() string {
+	return "test"
+}
+
+func (a *simpleTestAgent) GetCapabilities() []string {
+	return []string{"testing"}
+}
+
 // Test that our simple agent implements the Agent interface
 func TestSimpleAgent(t *testing.T) {
 	testAgent := &simpleTestAgent{

@@ -254,6 +254,8 @@ func (m *mockGuildArtisan) GetToolRegistry() tools.Registry { return nil }
 func (m *mockGuildArtisan) GetCommissionManager() commission.CommissionManager { return nil }
 func (m *mockGuildArtisan) GetLLMClient() providers.LLMClient { return nil }
 func (m *mockGuildArtisan) GetMemoryManager() memory.ChainManager { return nil }
+func (m *mockGuildArtisan) GetType() string { return "mock" }
+func (m *mockGuildArtisan) GetCapabilities() []string { return []string{"testing"} }
 
 // Test the rag agent wrapper Execute method
 func TestAgentWrapper_Execute_Additional(t *testing.T) {

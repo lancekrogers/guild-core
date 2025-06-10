@@ -45,6 +45,16 @@ func (m *MockAgent) GetName() string {
 	return m.name
 }
 
+// GetType returns the agent's type
+func (m *MockAgent) GetType() string {
+	return "mock"
+}
+
+// GetCapabilities returns the agent's capabilities
+func (m *MockAgent) GetCapabilities() []string {
+	return []string{"testing", "mocking"}
+}
+
 // SetExecuteFunc sets the function to be called by Execute
 func (m *MockAgent) SetExecuteFunc(f func(ctx context.Context, request string) (string, error)) {
 	m.mu.Lock()

@@ -198,6 +198,8 @@ func (t *testBaseAgent) GetToolRegistry() tools.Registry { return t.toolRegistry
 func (t *testBaseAgent) GetCommissionManager() commission.CommissionManager { return t.commissionMgr }
 func (t *testBaseAgent) GetLLMClient() providers.LLMClient { return t.llmClient }
 func (t *testBaseAgent) GetMemoryManager() memory.ChainManager { return t.memoryManager }
+func (t *testBaseAgent) GetType() string { return "test" }
+func (t *testBaseAgent) GetCapabilities() []string { return []string{"testing"} }
 
 type testRetriever struct {
 	enhanceFunc func(context.Context, string) (string, error)

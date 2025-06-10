@@ -107,7 +107,7 @@ endef
 define section_header
 	@echo ""; \
 	echo "$(BOLD)$(BLUE)┌────────────────────────────────────────────────────────────┐$(NC)"; \
-	printf "$(BOLD)$(BLUE)│$(NC) $(PURPLE)🏰 GUILD$(NC) $(BOLD)$(YELLOW)%-49s$(NC) $(BOLD)$(BLUE)│$(NC)\n" "$(strip $(1))"; \
+	printf "$(BOLD)$(BLUE)│$(NC) $(PURPLE)🏰 GUILD$(NC) $(BOLD)$(YELLOW)$(strip $(1))                     $(NC)$(BOLD)$(BLUE)│$(NC)\n"; \
 	echo "$(BOLD)$(BLUE)└────────────────────────────────────────────────────────────┘$(NC)"
 endef
 
@@ -119,9 +119,9 @@ endef
 define status_card
 	echo "$(BOLD)$(BLUE)┌────────────────────────────────────────────────────────────┐$(NC)"; \
 	if [ "$(2)" = "pass" ]; then \
-		printf "$(BOLD)$(BLUE)│$(NC)  $(GREEN)✓ %-55s$(NC)$(BOLD)$(BLUE)│$(NC)\n"  "$(1)"; \
+		printf "$(BOLD)$(BLUE)│$(NC)  $(GREEN)✓ $(1)                             $(NC)$(BOLD)$(BLUE)│$(NC)\n"; \
 	else \
-		printf "$(BOLD)$(BLUE)│$(NC)  $(RED)✗ %-55s$(NC)$(BOLD)$(BLUE)│$(NC)\n"  "$(1)"; \
+		printf "$(BOLD)$(BLUE)│$(NC)  $(RED)✗ $(1)                             $(NC)$(BOLD)$(BLUE)│$(NC)\n"; \
 	fi; \
 	echo "$(BOLD)$(BLUE)└────────────────────────────────────────────────────────────┘$(NC)"
 endef
@@ -136,10 +136,10 @@ all: dashboard
 dashboard: clean build unit-test integration
 	@$(call section_header,Complete Build & Test Summary)
 	@echo "$(BOLD)$(BLUE)┌────────────────────────────────────────────────────────────┐$(NC)"
-	@printf "$(BLUE)│$(NC) $(BOLD)🏰 GUILD FRAMEWORK COMPLETE BUILD & TEST SUMMARY        $(NC)$(BLUE)│$(NC)\n"
+	@printf "$(BLUE)│$(NC) $(BOLD)🏰 GUILD FRAMEWORK COMPLETE BUILD & TEST SUMMARY       $(NC)$(BLUE)│$(NC)\n"
 	@echo "$(BLUE)├────────────────────────────────────────────────────────────┤$(NC)"
-	@printf "$(BLUE)│$(NC)   All unit tests, builds, and integration tests completed.$(BLUE)│$(NC)\n"
-	@printf "$(BLUE)│$(NC)   Review the detailed results above for any failures.     $(BLUE)│$(NC)\n"
+	@printf "$(BLUE)│$(NC)   All unit tests, builds, and integration tests completed. $(BLUE)│$(NC)\n"
+	@printf "$(BLUE)│$(NC)   Review the detailed results above for any failures.      $(BLUE)│$(NC)\n"
 	@echo "$(BOLD)$(BLUE)└────────────────────────────────────────────────────────────┘$(NC)"
 	@$(call status_card,🚀 Dashboard Run Complete,pass)
 
@@ -306,17 +306,17 @@ unit-test:
 		$(call live_progress_bar,$$PERCENT,Processing $$PKG_SHORT...); \
 		if go build -o /tmp/guild-build-test-$$$$ $$pkg >/dev/null 2>&1; then \
 			BUILD_PASSED=$$((BUILD_PASSED + 1)); \
-			echo "$$PKG_SHORT" >> .build_pass; \
+			printf "$$PKG_SHORT\n" >> .build_pass; \
 			if go test -short -count=1 $$pkg >/dev/null 2>&1; then \
 				TEST_PASSED=$$((TEST_PASSED + 1)); \
-				echo "$$PKG_SHORT" >> .unit_pass; \
+				printf "$$PKG_SHORT\n" >> .unit_pass; \
 			else \
 				TEST_FAILED=$$((TEST_FAILED + 1)); \
-				echo "$$PKG_SHORT" >> .unit_fail; \
+				printf "$$PKG_SHORT\n" >> .unit_fail; \
 			fi; \
 		else \
 			BUILD_FAILED=$$((BUILD_FAILED + 1)); \
-			echo "$$PKG_SHORT" >> .build_fail; \
+			printf "$$PKG_SHORT\n" >> .build_fail; \
 		fi; \
 	done; \
 	rm -f /tmp/guild-build-test-*; \
@@ -410,10 +410,10 @@ integration:
 		$(call live_progress_bar,$$PERCENT,Testing $$SUITE...); \
 		if go test -v -tags=integration $$D >/dev/null 2>&1; then \
 			PASSED=$$((PASSED+1)); \
-			echo "$$SUITE" >> .integration_pass; \
+			printf "$$SUITE\n" >> .integration_pass; \
 		else \
 			FAILED=$$((FAILED+1)); \
-			echo "$$SUITE" >> .integration_fail; \
+			printf "$$SUITE\n" >> .integration_fail; \
 		fi; \
 	done; \
 	echo ""; \

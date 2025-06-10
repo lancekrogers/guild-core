@@ -46,7 +46,13 @@ func (m *GitManager) CreateWorkspace(ctx context.Context, opts CreateOptions) (W
 	// Generate workspace info
 	id := generateWorkspaceID(opts.AgentID)
 	workspacePath := filepath.Join(opts.WorkDir, "workspaces", id)
-	branchName := fmt.Sprintf("%s/%s-%s", opts.BranchPrefix, opts.AgentID, id)
+	
+	// Generate branch name with proper prefix
+	branchPrefix := opts.BranchPrefix
+	if branchPrefix == "" {
+		branchPrefix = "agent"
+	}
+	branchName := fmt.Sprintf("%s/%s-%s", branchPrefix, opts.AgentID, id)
 
 	// Create worktree
 	baseBranch := opts.BaseBranch

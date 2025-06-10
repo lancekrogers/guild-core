@@ -1,18 +1,16 @@
-package tools
+package registry
 
 import (
 	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/guild-ventures/guild-core/tools/code"
 	"github.com/guild-ventures/guild-core/tools/edit"
 )
 
 func TestGetCodeToolNames(t *testing.T) {
-	names := registry.registry.GetCodeToolNames()
+	names := GetCodeToolNames()
 	
 	// Should return all 7 tools
 	assert.Len(t, names, 7)
@@ -34,7 +32,7 @@ func TestGetCodeToolNames(t *testing.T) {
 }
 
 func TestGetCodeToolsByCategory(t *testing.T) {
-	categories := registry.registry.GetCodeToolsByCategory()
+	categories := GetCodeToolsByCategory()
 	
 	// Should have 3 categories
 	assert.Len(t, categories, 3)
@@ -141,8 +139,8 @@ func TestCodeToolInstantiation(t *testing.T) {
 
 func TestCodeToolsCategories_Consistency(t *testing.T) {
 	// Verify that category mappings are consistent
-	categories := registry.registry.GetCodeToolsByCategory()
-	allNames := registry.registry.GetCodeToolNames()
+	categories := GetCodeToolsByCategory()
+	allNames := GetCodeToolNames()
 	
 	// Count tools in categories
 	categoryCount := 0
@@ -210,7 +208,7 @@ func TestCodeToolsJSON_Examples(t *testing.T) {
 
 func BenchmarkGetCodeToolNames(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		names := registry.GetCodeToolNames()
+		names := GetCodeToolNames()
 		if len(names) == 0 {
 			b.Fatal("Should return tool names")
 		}
@@ -219,7 +217,7 @@ func BenchmarkGetCodeToolNames(b *testing.B) {
 
 func BenchmarkGetCodeToolsByCategory(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		categories := registry.GetCodeToolsByCategory()
+		categories := GetCodeToolsByCategory()
 		if len(categories) == 0 {
 			b.Fatal("Should return categories")
 		}

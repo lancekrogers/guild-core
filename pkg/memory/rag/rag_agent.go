@@ -76,6 +76,16 @@ func (w *AgentWrapper) GetMemoryManager() memory.ChainManager {
 	return w.agent.GetMemoryManager()
 }
 
+// GetType returns the agent's type
+func (w *AgentWrapper) GetType() string {
+	return w.agent.GetType()
+}
+
+// GetCapabilities returns the agent's capabilities
+func (w *AgentWrapper) GetCapabilities() []string {
+	return w.agent.GetCapabilities()
+}
+
 // enhanceRequestWithRAG enhances a request with relevant context from the RAG system
 func (w *AgentWrapper) enhanceRequestWithRAG(ctx context.Context, request string) (string, error) {
 	// If no retriever, return the original request

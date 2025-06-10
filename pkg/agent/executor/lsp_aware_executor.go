@@ -3,10 +3,11 @@ package executor
 import (
 	"context"
 	"fmt"
-	"path/filepath"
 	"strings"
 
+	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/lsp"
 	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/tools"
@@ -15,17 +16,17 @@ import (
 
 // LSPAwareExecutor is a task executor that leverages LSP for intelligent code operations
 type LSPAwareExecutor struct {
-	*TaskExecutor
-	lspManager *lsp.Manager
-	lspTools   map[string]tools.Tool
+	*BasicTaskExecutor // Embed the BasicTaskExecutor
+	lspManager         *lsp.Manager
+	lspTools           map[string]tools.Tool
 }
 
 // NewLSPAwareExecutor creates a new LSP-aware task executor
-func NewLSPAwareExecutor(baseExecutor *TaskExecutor, lspManager *lsp.Manager) *LSPAwareExecutor {
+func NewLSPAwareExecutor(baseExecutor *BasicTaskExecutor, lspManager *lsp.Manager) *LSPAwareExecutor {
 	executor := &LSPAwareExecutor{
-		TaskExecutor: baseExecutor,
-		lspManager:   lspManager,
-		lspTools:     make(map[string]tools.Tool),
+		BasicTaskExecutor: baseExecutor,
+		lspManager:        lspManager,
+		lspTools:          make(map[string]tools.Tool),
 	}
 	
 	// Register LSP tools
@@ -55,7 +56,7 @@ func (e *LSPAwareExecutor) registerLSPTools() {
 }
 
 // ExecuteWithContext executes a task with LSP context enhancement
-func (e *LSPAwareExecutor) ExecuteWithContext(ctx context.Context, task Task) (TaskResult, error) {
+func (e *LSPAwareExecutor) ExecuteWithContext(ctx context.Context, task agent.Task) (agent.TaskResult, error) {
 	logger := observability.GetLogger(ctx)
 	
 	// Check if this is a code-related task
@@ -72,12 +73,48 @@ func (e *LSPAwareExecutor) ExecuteWithContext(ctx context.Context, task Task) (T
 		}
 	}
 	
+	// Convert agent.Task to kanban.Task for the base executor
+	kanbanTask := &kanban.Task{
+		ID:          task.ID,
+		Title:       task.Description,
+		Description: task.Description,
+		Status:      kanban.StatusTodo,
+	}
+	
 	// Execute with the base executor
-	return e.TaskExecutor.Execute(ctx, task)
+	result, err := e.BasicTaskExecutor.Execute(ctx, kanbanTask)
+	if err != nil {
+		return agent.TaskResult{
+			Success: false,
+			Error:   err,
+		}, err
+	}
+	
+	// Convert ExecutionResult to agent.TaskResult
+	// Determine success based on status
+	success := result.Status == StatusCompleted
+	
+	// Extract tool names from ToolUsage
+	var toolsUsed []string
+	for _, usage := range result.ToolUsage {
+		toolsUsed = append(toolsUsed, usage.ToolName)
+	}
+	
+	// Calculate cost from tool usage (placeholder for now)
+	var totalCost float64
+	// TODO: Extract cost from tool usage results if available
+	
+	return agent.TaskResult{
+		Success:   success,
+		Output:    result.Output,
+		ToolsUsed: toolsUsed,
+		Cost:      totalCost,
+		Metadata:  result.Metadata,
+	}, nil
 }
 
 // isCodeRelatedTask determines if a task is code-related
-func (e *LSPAwareExecutor) isCodeRelatedTask(task Task) bool {
+func (e *LSPAwareExecutor) isCodeRelatedTask(task agent.Task) bool {
 	// Check tool name
 	codeTools := []string{
 		"read_file", "write_file", "edit_file",
@@ -85,9 +122,11 @@ func (e *LSPAwareExecutor) isCodeRelatedTask(task Task) bool {
 		"lsp_completion", "lsp_definition", "lsp_references", "lsp_hover",
 	}
 	
-	for _, tool := range codeTools {
-		if strings.Contains(task.Tool, tool) {
-			return true
+	for _, codeToolName := range codeTools {
+		for _, taskTool := range task.Tools {
+			if strings.Contains(taskTool, codeToolName) {
+				return true
+			}
 		}
 	}
 	
@@ -109,7 +148,7 @@ func (e *LSPAwareExecutor) isCodeRelatedTask(task Task) bool {
 }
 
 // enhanceTaskWithLSP enhances a task with LSP-derived context
-func (e *LSPAwareExecutor) enhanceTaskWithLSP(ctx context.Context, task Task) (Task, error) {
+func (e *LSPAwareExecutor) enhanceTaskWithLSP(ctx context.Context, task agent.Task) (agent.Task, error) {
 	logger := observability.GetLogger(ctx)
 	
 	// Extract file information from task
@@ -155,11 +194,11 @@ func (e *LSPAwareExecutor) enhanceTaskWithLSP(ctx context.Context, task Task) (T
 		}
 	}
 	
-	// Add context to task
-	if task.Context == nil {
-		task.Context = make(map[string]interface{})
+	// Add context to task parameters
+	if task.Parameters == nil {
+		task.Parameters = make(map[string]interface{})
 	}
-	task.Context["lsp_context"] = enhancedContext
+	task.Parameters["lsp_context"] = enhancedContext
 	
 	logger.DebugContext(ctx, "Enhanced task with LSP context",
 		"task_id", task.ID,
@@ -177,33 +216,33 @@ type fileInfo struct {
 }
 
 // extractFileInfo extracts file information from a task
-func (e *LSPAwareExecutor) extractFileInfo(task Task) fileInfo {
+func (e *LSPAwareExecutor) extractFileInfo(task agent.Task) fileInfo {
 	info := fileInfo{}
 	
 	// Check input parameters
-	if task.Input != nil {
-		if filePath, ok := task.Input["file"].(string); ok {
+	if task.Parameters != nil {
+		if filePath, ok := task.Parameters["file"].(string); ok {
 			info.FilePath = filePath
-		} else if filePath, ok := task.Input["path"].(string); ok {
+		} else if filePath, ok := task.Parameters["path"].(string); ok {
 			info.FilePath = filePath
 		}
 		
-		if line, ok := task.Input["line"].(int); ok {
+		if line, ok := task.Parameters["line"].(int); ok {
 			info.Line = line
-		} else if line, ok := task.Input["line"].(float64); ok {
+		} else if line, ok := task.Parameters["line"].(float64); ok {
 			info.Line = int(line)
 		}
 		
-		if column, ok := task.Input["column"].(int); ok {
+		if column, ok := task.Parameters["column"].(int); ok {
 			info.Column = column
-		} else if column, ok := task.Input["column"].(float64); ok {
+		} else if column, ok := task.Parameters["column"].(float64); ok {
 			info.Column = int(column)
 		}
 	}
 	
-	// Check context for file information
-	if info.FilePath == "" && task.Context != nil {
-		if filePath, ok := task.Context["current_file"].(string); ok {
+	// Check parameters for file information  
+	if info.FilePath == "" {
+		if filePath, ok := task.Parameters["current_file"].(string); ok {
 			info.FilePath = filePath
 		}
 	}
@@ -233,33 +272,40 @@ func (e *LSPAwareExecutor) extractHoverInfo(hover *lsp.Hover) map[string]interfa
 }
 
 // SelectTool selects the most appropriate tool for a task, preferring LSP tools when available
-func (e *LSPAwareExecutor) SelectTool(ctx context.Context, task Task) (tools.Tool, error) {
+func (e *LSPAwareExecutor) SelectTool(ctx context.Context, task agent.Task) (tools.Tool, error) {
 	// If task explicitly requests an LSP tool, use it
-	if strings.HasPrefix(task.Tool, "lsp_") {
-		if tool, exists := e.lspTools[task.Tool]; exists {
-			return tool, nil
-		}
-	}
-	
-	// For code intelligence tasks, prefer LSP tools
-	if e.shouldUseLSPTool(ctx, task) {
-		lspTool := e.mapToLSPTool(task.Tool)
-		if lspTool != "" {
-			if tool, exists := e.lspTools[lspTool]; exists {
-				observability.GetLogger(ctx).DebugContext(ctx, "Using LSP tool instead of regular tool",
-					"original_tool", task.Tool,
-					"lsp_tool", lspTool)
+	for _, taskTool := range task.Tools {
+		if strings.HasPrefix(taskTool, "lsp_") {
+			if tool, exists := e.lspTools[taskTool]; exists {
 				return tool, nil
 			}
 		}
 	}
 	
+	// For code intelligence tasks, prefer LSP tools
+	if e.shouldUseLSPTool(ctx, task) {
+		for _, taskTool := range task.Tools {
+			lspTool := e.mapToLSPTool(taskTool)
+			if lspTool != "" {
+				if tool, exists := e.lspTools[lspTool]; exists {
+					observability.GetLogger(ctx).DebugContext(ctx, "Using LSP tool instead of regular tool",
+						"original_tool", taskTool,
+						"lsp_tool", lspTool)
+					return tool, nil
+				}
+			}
+		}
+	}
+	
 	// Fall back to regular tool selection
-	return e.TaskExecutor.selectTool(task)
+	// TODO: Implement fallback tool selection
+	return nil, gerror.New(gerror.ErrCodeNotFound, "no appropriate tool found", nil).
+		WithComponent("lsp_aware_executor").
+		WithOperation("SelectTool")
 }
 
 // shouldUseLSPTool determines if an LSP tool should be used instead of a regular tool
-func (e *LSPAwareExecutor) shouldUseLSPTool(ctx context.Context, task Task) bool {
+func (e *LSPAwareExecutor) shouldUseLSPTool(ctx context.Context, task agent.Task) bool {
 	// Check if we have file context
 	fileInfo := e.extractFileInfo(task)
 	if fileInfo.FilePath == "" {
