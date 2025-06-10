@@ -120,9 +120,9 @@ endef
 define status_card
 	echo "$(BOLD)$(BLUE)┌────────────────────────────────────────────────────────────┐$(NC)"; \
 	if [ "$(2)" = "pass" ]; then \
-		printf "$(BOLD)$(BLUE)│$(NC)  $(GREEN)✓ %-56s$(NC)$(BOLD)$(BLUE)│$(NC)\n" "$(1)"; \
+		printf "$(BOLD)$(BLUE)│$(NC)  $(GREEN)✓ %-56s$(NC)$(BOLD)$(BLUE)│$(NC)\n"  "$(1)"; \
 	else \
-		printf "$(BOLD)$(BLUE)│$(NC)  $(RED)✗ %-56s$(NC)$(BOLD)$(BLUE)│$(NC)\n" "$(1)"; \
+		printf "$(BOLD)$(BLUE)│$(NC)  $(RED)✗ %-56s$(NC)$(BOLD)$(BLUE)│$(NC)\n"  "$(1)"; \
 	fi; \
 	echo "$(BOLD)$(BLUE)└────────────────────────────────────────────────────────────┘$(NC)"
 endef
@@ -137,7 +137,7 @@ all: dashboard
 dashboard: clean build unit-test integration
 	@$(call section_header,Complete Build & Test Summary)
 	@echo "$(BOLD)$(BLUE)┌────────────────────────────────────────────────────────────┐$(NC)"
-	@printf "$(BLUE)│$(NC) $(BOLD)🏰 GUILD FRAMEWORK COMPLETE BUILD & TEST SUMMARY           $(NC)$(BLUE)│$(NC)\n"
+	@printf "$(BLUE)│$(NC) $(BOLD)🏰 GUILD FRAMEWORK COMPLETE BUILD & TEST SUMMARY             $(NC)$(BLUE)│$(NC)\n"
 	@echo "$(BLUE)├────────────────────────────────────────────────────────────┤$(NC)"
 	@printf "$(BLUE)│$(NC)   All unit tests, builds, and integration tests completed. $(BLUE)│$(NC)\n"
 	@printf "$(BLUE)│$(NC)   Review the detailed results above for any failures.      $(BLUE)│$(NC)\n"

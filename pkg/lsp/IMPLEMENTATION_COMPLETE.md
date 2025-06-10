@@ -33,13 +33,12 @@ All 4 LSP integration tasks have been successfully completed:
 - Only file path, line, and column needed
 - Massive reduction in API costs
 
-### 🌍 Multi-Language Support
-- Go (gopls)
-- TypeScript/JavaScript (typescript-language-server)
-- Python (pylsp)
-- Rust (rust-analyzer) 
-- Java (jdtls)
-- C# (OmniSharp)
+### 🌍 Universal Language Support
+- Works with ANY LSP-compliant language server
+- User-configurable via ~/.guild/lsp/config.yaml
+- Similar to editor LSP support (VS Code, Neovim/Mason)
+- No hardcoded language limitations
+- Support for custom/proprietary languages
 
 ### 🏗️ Robust Architecture
 - Automatic server lifecycle management

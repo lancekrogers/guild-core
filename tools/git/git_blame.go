@@ -96,7 +96,7 @@ func (t *GitBlameTool) Execute(ctx context.Context, input string) (*tools.ToolRe
 
 	// Validate required parameters
 	if params.File == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "file parameter is required").
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "file parameter is required", nil).
 			WithComponent("tools.git").
 			WithOperation("execute_blame")
 	}
@@ -115,20 +115,20 @@ func (t *GitBlameTool) Execute(ctx context.Context, input string) (*tools.ToolRe
 	// Check if file exists
 	filePath := filepath.Join(gitWs.Path(), params.File)
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return nil, gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("file not found: %s", params.File)).
+		return nil, gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("file not found: %s", params.File), nil).
 			WithComponent("tools.git").
 			WithOperation("execute_blame")
 	}
 
 	// Validate line range parameters
 	if (params.LineStart > 0 && params.LineEnd == 0) || (params.LineStart == 0 && params.LineEnd > 0) {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "both line_start and line_end must be specified together").
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "both line_start and line_end must be specified together", nil).
 			WithComponent("tools.git").
 			WithOperation("execute_blame")
 	}
 
 	if params.LineStart > params.LineEnd && params.LineEnd > 0 {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "line_start must be less than or equal to line_end").
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "line_start must be less than or equal to line_end", nil).
 			WithComponent("tools.git").
 			WithOperation("execute_blame")
 	}
@@ -163,12 +163,12 @@ func (t *GitBlameTool) Execute(ctx context.Context, input string) (*tools.ToolRe
 		// Check for common error cases
 		errStr := err.Error()
 		if strings.Contains(errStr, "no such path") {
-			return nil, gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("file not found in git history: %s", params.File)).
+			return nil, gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("file not found in git history: %s", params.File), nil).
 				WithComponent("tools.git").
 				WithOperation("execute_blame")
 		}
 		if strings.Contains(errStr, "not under version control") {
-			return nil, gerror.New(gerror.ErrCodeInvalidInput, fmt.Sprintf("file is not tracked by git: %s", params.File)).
+			return nil, gerror.New(gerror.ErrCodeInvalidInput, fmt.Sprintf("file is not tracked by git: %s", params.File), nil).
 				WithComponent("tools.git").
 				WithOperation("execute_blame")
 		}
@@ -177,12 +177,7 @@ func (t *GitBlameTool) Execute(ctx context.Context, input string) (*tools.ToolRe
 
 	// For porcelain format, we need to get the actual file content separately
 	// to show the blame with line content
-	fileContent, err := os.ReadFile(filePath)
-	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to read file content").
-			WithComponent("tools.git").
-			WithOperation("execute_blame")
-	}
+	// Note: For now, we'll use simple git blame format instead
 
 	// Parse blame information
 	// For now, use simple git blame format instead of porcelain for better readability

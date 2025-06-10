@@ -15,14 +15,14 @@ import (
 func executeInWorkspace(ctx context.Context, args ...string) (string, error) {
 	ws := workspace.FromContext(ctx)
 	if ws == nil {
-		return "", gerror.New(gerror.ErrCodeInvalidInput, "no workspace in context").
+		return "", gerror.New(gerror.ErrCodeInvalidInput, "no workspace in context", nil).
 			WithComponent("tools.git").
 			WithOperation("execute")
 	}
 
 	gitWs, ok := ws.(*workspace.GitWorkspace)
 	if !ok {
-		return "", gerror.New(gerror.ErrCodeInvalidInput, "workspace is not git-enabled").
+		return "", gerror.New(gerror.ErrCodeInvalidInput, "workspace is not git-enabled", nil).
 			WithComponent("tools.git").
 			WithOperation("execute")
 	}
@@ -68,7 +68,7 @@ func validatePath(ws *workspace.GitWorkspace, path string) error {
 	}
 
 	if !strings.HasPrefix(absPath, wsPath) {
-		return gerror.New(gerror.ErrCodeSecurityViolation, "path outside workspace").
+		return gerror.New(gerror.ErrCodeSecurityViolation, "path outside workspace", nil).
 			WithComponent("tools.git").
 			WithOperation("validate_path").
 			WithDetails("path", path).
@@ -82,14 +82,14 @@ func validatePath(ws *workspace.GitWorkspace, path string) error {
 func getWorkspaceFromContext(ctx context.Context) (*workspace.GitWorkspace, error) {
 	ws := workspace.FromContext(ctx)
 	if ws == nil {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "no workspace in context").
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "no workspace in context", nil).
 			WithComponent("tools.git").
 			WithOperation("get_workspace")
 	}
 
 	gitWs, ok := ws.(*workspace.GitWorkspace)
 	if !ok {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "workspace is not git-enabled").
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "workspace is not git-enabled", nil).
 			WithComponent("tools.git").
 			WithOperation("get_workspace")
 	}
@@ -118,7 +118,7 @@ func formatGitError(err error, operation string) error {
 		}
 	}
 
-	return gerror.New(gerror.ErrCodeInternal, fmt.Sprintf("git %s failed: %s", operation, errMsg)).
+	return gerror.New(gerror.ErrCodeInternal, fmt.Sprintf("git %s failed: %s", operation, errMsg), nil).
 		WithComponent("tools.git").
 		WithOperation(operation)
 }

@@ -2,130 +2,156 @@
 
 The Guild framework includes powerful Language Server Protocol (LSP) integration that provides zero-token code intelligence. This means agents can perform code completions, find definitions, locate references, and get type information without sending any file content - resulting in 97.5% token savings!
 
-## Overview
+## Key Features
 
-The LSP integration allows Guild agents to:
-- Get code completions at any position
-- Navigate to symbol definitions
-- Find all references to a symbol
-- Get hover information (types, documentation)
-- All without transmitting file content!
+- **Universal Language Support**: Works with ANY LSP-compliant language server
+- **Zero File Content**: All operations use only file path and position
+- **97.5% Token Savings**: Dramatically reduces API costs
+- **Extensible Configuration**: Add any language server via simple YAML config
+- **Automatic Management**: Servers start/stop/restart automatically
+- **Agent Integration**: Seamlessly integrated with Guild's agent system
 
-## Architecture
+## How It Works
+
+The LSP integration allows Guild to use the same language servers that power VS Code, Neovim, and other modern editors. If a language has an LSP server, Guild can use it!
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │   Guild Agent   │────▶│   LSP Manager   │────▶│ Language Server │
 └─────────────────┘     └─────────────────┘     └─────────────────┘
-                               │
-                               ├── Go (gopls)
-                               ├── TypeScript (typescript-language-server)
-                               ├── Python (pylsp)
-                               ├── Rust (rust-analyzer)
-                               └── More...
-```
-
-## Supported Languages
-
-Out of the box, Guild supports LSP for:
-- **Go** - via `gopls`
-- **TypeScript/JavaScript** - via `typescript-language-server`
-- **Python** - via `pylsp`
-- **Rust** - via `rust-analyzer`
-- **Java** - via `jdtls`
-- **C#** - via `omnisharp`
-
-## Installation
-
-### Language Server Installation
-
-Before using LSP features, install the language servers you need:
-
-```bash
-# Go
-go install golang.org/x/tools/gopls@latest
-
-# TypeScript/JavaScript
-npm install -g typescript typescript-language-server
-
-# Python
-pip install python-lsp-server
-
-# Rust
-rustup component add rust-analyzer
-
-# Java (requires manual download)
-# Download from: https://download.eclipse.org/jdtls/
-
-# C#
-# Download OmniSharp from: https://github.com/OmniSharp/omnisharp-roslyn
-```
-
-## Usage
-
-### Using LSP Tools Directly
-
-```go
-import (
-    "github.com/guild-ventures/guild-core/pkg/lsp"
-    lsptools "github.com/guild-ventures/guild-core/tools/lsp"
-)
-
-// Create LSP manager
-manager, err := lsp.NewManager("")
-if err != nil {
-    log.Fatal(err)
-}
-defer manager.Shutdown(context.Background())
-
-// Create completion tool
-completionTool := lsptools.NewCompletionTool(manager)
-
-// Get completions
-input := `{"file": "/path/to/main.go", "line": 10, "column": 15}`
-result, err := completionTool.Execute(ctx, input)
-```
-
-### Using with Agents
-
-The LSP integration is automatically available to agents through the LSP-aware executor:
-
-```go
-// Create LSP-aware executor
-executor := executor.NewLSPAwareExecutor(baseExecutor, lspManager)
-
-// Agent can now use LSP tools
-task := Task{
-    Tool: "lsp_completion",
-    Input: map[string]interface{}{
-        "file": "/path/to/file.go",
-        "line": 20,
-        "column": 10,
-    },
-}
+                              │
+                              ├── ANY LSP Server You Install
+                              ├── gopls, rust-analyzer, pylsp...
+                              ├── clangd, typescript-language-server...
+                              └── Your custom language server!
 ```
 
 ## Configuration
 
-LSP configuration is stored in `~/.guild/lsp/config.yaml`:
+LSP servers are configured in `~/.guild/lsp/config.yaml`. The system starts with an empty configuration - you add only what you need!
+
+### Adding a Language Server
+
+To add support for any language, create or edit `~/.guild/lsp/config.yaml`:
 
 ```yaml
 servers:
+  # Example: Go with gopls
   go:
+    language: go
     command: ["gopls", "serve"]
+    file_patterns: ["*.go"]
+    root_markers: ["go.mod", "go.sum"]
     init_options:
       usePlaceholders: true
       completeUnimported: true
-    file_patterns: ["*.go"]
-    root_markers: ["go.mod", "go.sum"]
-    
-  typescript:
-    command: ["typescript-language-server", "--stdio"]
-    init_options:
-      preferences:
-        includeCompletionsWithSnippetText: true
-    file_patterns: ["*.ts", "*.tsx", "*.js", "*.jsx"]
-    root_markers: ["package.json", "tsconfig.json"]
+
+  # Example: Python with pyright
+  python:
+    language: python
+    command: ["pyright-langserver", "--stdio"]
+    file_patterns: ["*.py", "*.pyi"]
+    root_markers: ["pyproject.toml", "setup.py", "requirements.txt"]
+
+  # Example: Your custom language
+  my-language:
+    language: mylang
+    command: ["/path/to/my-language-server", "--lsp"]
+    file_patterns: ["*.mylang", "*.ml"]
+    root_markers: ["project.mylang"]
+    environment:
+      MYLANG_HOME: "/opt/mylang"
+```
+
+### Configuration Options
+
+- **language**: Language identifier (any string you choose)
+- **command**: Command to start the LSP server
+- **file_patterns**: Glob patterns for files this server handles
+- **root_markers**: Files that indicate project root directory
+- **init_options**: Server-specific initialization options
+- **environment**: Environment variables for the server process
+
+## Installing Language Servers
+
+You can install language servers using your preferred package manager, similar to setting up your editor:
+
+```bash
+# Examples of installing popular language servers:
+
+# Go
+go install golang.org/x/tools/gopls@latest
+
+# TypeScript/JavaScript  
+npm install -g typescript typescript-language-server
+
+# Python (multiple options)
+pip install python-lsp-server[all]  # or
+pip install pyright                  # or
+pip install jedi-language-server
+
+# Rust
+rustup component add rust-analyzer
+
+# C/C++
+# Ubuntu/Debian: apt install clangd
+# macOS: brew install llvm
+# Or download from: https://clangd.llvm.org/
+
+# Ruby
+gem install solargraph
+
+# PHP
+npm install -g intelephense
+
+# ... and many more!
+```
+
+For a comprehensive list of available language servers, see:
+- https://microsoft.github.io/language-server-protocol/implementors/servers/
+- https://langserver.org/
+
+## Usage Examples
+
+### Direct Usage
+
+```go
+import (
+    "github.com/guild-ventures/guild-core/pkg/lsp"
+    lsptools "github.com/guild-ventures/guild-core/pkg/lsp/tools"
+)
+
+// Create LSP manager (loads config from ~/.guild/lsp/config.yaml)
+manager, err := lsp.NewManager("")
+defer manager.Shutdown(context.Background())
+
+// Use any configured language server
+completionTool := lsptools.NewCompletionTool(manager)
+
+// Works with any file type you've configured!
+result, _ := completionTool.Execute(ctx, `{
+    "file": "/path/to/code.anything",
+    "line": 10,
+    "column": 15
+}`)
+```
+
+### Agent Integration
+
+Agents automatically get LSP tools for all configured languages:
+
+```go
+// The agent executor automatically detects code tasks
+// and uses LSP tools when available
+task := Task{
+    Description: "Add error handling to the parse function",
+    Tool: "lsp_hover",  // Works for ANY configured language
+    Input: map[string]interface{}{
+        "file": "/project/parser.rs",  // Or .py, .ts, .java, etc.
+        "line": 42,
+        "column": 10,
+    },
+}
 ```
 
 ## Token Savings Example
@@ -140,11 +166,11 @@ Traditional approach (sending file content):
 ```
 **Tokens used: ~2000**
 
-LSP approach:
+LSP approach (works with ANY language):
 ```json
 {
   "tool": "lsp_completion",
-  "file": "/path/to/file.go",
+  "file": "/path/to/any/supported/file.ext",
   "line": 50,
   "column": 10
 }
@@ -153,54 +179,80 @@ LSP approach:
 
 **Savings: 97.5%!**
 
+## Available LSP Tools
+
+All tools work with ANY configured language server:
+
+1. **lsp_completion**: Get code completions at a position
+2. **lsp_definition**: Navigate to symbol definition
+3. **lsp_references**: Find all references to a symbol
+4. **lsp_hover**: Get type info and documentation
+
 ## Advanced Features
 
-### Lifecycle Management
+### Multi-Language Projects
 
-The LSP manager automatically:
-- Starts language servers on demand
-- Pools servers for reuse
-- Cleans up idle servers
-- Monitors server health
-- Restarts failed servers
+Guild automatically detects the correct language server based on file extensions:
 
-### Context Enhancement
+```yaml
+servers:
+  # Frontend
+  typescript:
+    file_patterns: ["*.ts", "*.tsx", "*.js", "*.jsx"]
+    
+  # Backend
+  go:
+    file_patterns: ["*.go"]
+    
+  # Scripts
+  python:
+    file_patterns: ["*.py"]
+    
+  # Documentation
+  markdown:
+    file_patterns: ["*.md", "*.mdx"]
+```
 
-The LSP context enhancer automatically adds rich context to agent tasks:
-- Symbol types and signatures
-- Related files and imports
-- Project structure information
-- All without sending file content!
+### Custom Language Support
+
+Have a domain-specific language? Just add its LSP server:
+
+```yaml
+servers:
+  company-dsl:
+    language: company-dsl
+    command: ["/opt/company/bin/dsl-language-server"]
+    file_patterns: ["*.dsl", "*.rules"]
+    root_markers: ["project.dsl", ".dsl-config"]
+    init_options:
+      dialect: "v2"
+      strict: true
+```
 
 ## Troubleshooting
 
+### Language Not Detected
+
+1. Check that file patterns match in config.yaml
+2. Ensure the language server is configured
+3. Verify file extension is included in patterns
+
 ### Server Not Starting
 
-1. Ensure the language server is installed and in PATH
-2. Check the server command in config.yaml
-3. Look for errors in the Guild logs
+1. Verify the language server is installed: `which <server-command>`
+2. Check the command in config.yaml matches installation
+3. Look for errors in Guild logs
+4. Test the server manually: `<server-command> --help`
 
-### No Completions/Results
+### Adding New Languages
 
-1. Ensure the file has been saved (LSP works on saved files)
-2. Check that the project root is correctly detected
-3. Verify the language server supports the requested feature
+1. Find an LSP server for your language
+2. Install it using the recommended method
+3. Add configuration to ~/.guild/lsp/config.yaml
+4. Test with a sample file
 
-### Performance Issues
+## See Also
 
-1. Adjust idle timeout in lifecycle manager
-2. Increase memory limits for language servers
-3. Use server pooling for better performance
-
-## Contributing
-
-To add support for a new language:
-
-1. Add default configuration in `config.go`
-2. Add language detection in `DetectLanguage()`
-3. Test with the language server
-4. Submit a PR!
-
-## License
-
-The LSP integration is part of the Guild framework and follows the same license.
+- `config_example.yaml` - Example configuration for many languages
+- Language Server Protocol: https://microsoft.github.io/language-server-protocol/
+- Available servers: https://langserver.org/
