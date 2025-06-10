@@ -218,6 +218,32 @@ func (m *MockLLMProvider) GetCapabilities() interfaces.ProviderCapabilities {
 	}
 }
 
+// Complete implements the LLMClient interface for legacy compatibility
+func (m *MockLLMProvider) Complete(ctx context.Context, prompt string) (string, error) {
+	// Convert to ChatRequest
+	req := interfaces.ChatRequest{
+		Model: "default",
+		Messages: []interfaces.ChatMessage{
+			{
+				Role:    "user",
+				Content: prompt,
+			},
+		},
+	}
+	
+	// Use ChatCompletion
+	resp, err := m.ChatCompletion(ctx, req)
+	if err != nil {
+		return "", err
+	}
+	
+	if len(resp.Choices) > 0 {
+		return resp.Choices[0].Message.Content, nil
+	}
+	
+	return "", fmt.Errorf("no response choices")
+}
+
 // mockChatStream implements the ChatStream interface
 type mockChatStream struct {
 	ctx    context.Context

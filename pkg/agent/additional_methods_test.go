@@ -146,7 +146,7 @@ func TestWorkerAgent_CostManagement(t *testing.T) {
 	// Test getting cost report (should not be nil)
 	report := agent.GetCostReport()
 	assert.NotNil(t, report)
-	assert.IsType(t, map[string]interface{}{}, report)
+	assert.IsType(t, map[string]any{}, report)
 }
 
 // Test cost management edge cases
@@ -179,11 +179,11 @@ func TestWorkerAgent_CostManagement_EdgeCases(t *testing.T) {
 // Test comprehensive agent functionality
 func TestWorkerAgent_ComprehensiveFunctionality(t *testing.T) {
 	agent := &WorkerAgent{
-		ID:          "comprehensive-agent",
-		Name:        "Comprehensive Test Agent",
-		description: "Initial description",
+		ID:           "comprehensive-agent",
+		Name:         "Comprehensive Test Agent",
+		description:  "Initial description",
 		capabilities: []string{"test-capability"},
-		CostManager: newCostManager(),
+		CostManager:  newCostManager(),
 	}
 
 	// Test all getter methods work together

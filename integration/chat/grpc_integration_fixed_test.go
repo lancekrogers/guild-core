@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"sync"
@@ -22,6 +23,26 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
+
+// eventBusAdapter wraps MockEventBus to match the gRPC EventBus interface
+type eventBusAdapter struct {
+	mock *testutil.MockEventBus
+}
+
+func (a *eventBusAdapter) Publish(event interface{}) {
+	// Extract type from event if possible, otherwise use generic type
+	eventType := "generic"
+	if typed, ok := event.(map[string]interface{}); ok {
+		if t, exists := typed["type"]; exists {
+			eventType = fmt.Sprintf("%v", t)
+		}
+	}
+	a.mock.Publish(eventType, event)
+}
+
+func (a *eventBusAdapter) Subscribe(eventType string, handler func(event interface{})) {
+	a.mock.Subscribe(eventType, handler)
+}
 
 // TestChatServiceBasicsFixed tests basic chat service functionality with proper project setup
 func TestChatServiceBasicsFixed(t *testing.T) {
@@ -62,9 +83,7 @@ func TestChatServiceBasicsFixed(t *testing.T) {
 
 	// Create registry with mock provider
 	mockProvider := testutil.NewMockLLMProvider()
-	mockProvider.SetResponse("test", &testutil.MockAgentResponse{
-		Content: "Mock response for chat service test",
-	})
+	mockProvider.SetResponse("test", "Mock response for chat service test")
 
 	// Create registry with test configuration
 	reg := registry.NewComponentRegistry()
@@ -100,7 +119,7 @@ func TestChatServiceBasicsFixed(t *testing.T) {
 			DefaultVectorStore: "chromem",
 			Stores: map[string]interface{}{
 				"sqlite": map[string]interface{}{
-					"path": projCtx.GetDatabasePath(),
+					"path": filepath.Join(projCtx.GetGuildPath(), "memory.db"),
 				},
 				"chromem": map[string]interface{}{
 					"persistence_path": projCtx.GetEmbeddingsPath(),
@@ -110,15 +129,16 @@ func TestChatServiceBasicsFixed(t *testing.T) {
 		},
 	}
 
-	// Initialize registry with project context
-	err = reg.InitializeWithContext(ctx, *registryConfig, projCtx)
+	// Initialize registry
+	err = reg.Initialize(ctx, *registryConfig)
 	require.NoError(t, err)
 
-	// Create event bus
-	eventBus := testutil.NewMockEventBus()
+	// Create event bus adapter
+	mockEventBus := testutil.NewMockEventBus()
+	eventBusAdapter := &eventBusAdapter{mock: mockEventBus}
 
 	// Start server
-	server := grpcpkg.NewServer(reg, eventBus)
+	server := grpcpkg.NewServer(reg, eventBusAdapter)
 	go func() {
 		err := server.Start(ctx, address)
 		if err != nil && ctx.Err() == nil {
@@ -181,7 +201,7 @@ func TestAgentExecutionFixed(t *testing.T) {
 
 	// Create mock provider with specific responses
 	mockProvider := testutil.NewMockLLMProvider()
-	mockProvider.SetResponse("manager", testutil.GenerateMockAgentResponse(
+	mockAgentResponse := testutil.GenerateMockAgentResponse(
 		testutil.AgentResponseOptions{
 			Type: "task_breakdown",
 			Tasks: []string{
@@ -190,12 +210,13 @@ func TestAgentExecutionFixed(t *testing.T) {
 				"Create implementation plan",
 			},
 		},
-	))
+	)
+	mockProvider.SetResponse("manager", mockAgentResponse.Content)
 
 	// Create registry
 	reg := registry.NewComponentRegistry()
 	registryConfig := createTestRegistryConfig(projCtx, mockProvider)
-	err := reg.InitializeWithContext(ctx, *registryConfig, projCtx)
+	err := reg.Initialize(ctx, *registryConfig)
 	require.NoError(t, err)
 
 	// Get agent registry
@@ -267,12 +288,13 @@ func TestToolExecutionFixed(t *testing.T) {
 
 	// Create mock provider
 	mockProvider := testutil.NewMockLLMProvider()
-	mockProvider.SetResponse("developer", testutil.GenerateMockAgentResponse(
+	devResponse := testutil.GenerateMockAgentResponse(
 		testutil.AgentResponseOptions{
 			Type: "implementation",
 			Code: "// File operations completed successfully",
 		},
-	))
+	)
+	mockProvider.SetResponse("developer", devResponse.Content)
 
 	// Create registry with tools enabled
 	reg := registry.NewComponentRegistry()
@@ -281,7 +303,7 @@ func TestToolExecutionFixed(t *testing.T) {
 	// Ensure tools are enabled
 	registryConfig.Tools.EnabledTools = []string{"file", "shell", "http"}
 	
-	err := reg.InitializeWithContext(ctx, *registryConfig, projCtx)
+	err := reg.Initialize(ctx, *registryConfig)
 	require.NoError(t, err)
 
 	// Get tool registry
@@ -340,14 +362,12 @@ func TestChatPerformanceFixed(t *testing.T) {
 
 	// Create lightweight mock provider
 	mockProvider := testutil.NewMockLLMProvider()
-	mockProvider.SetResponse("worker", &testutil.MockAgentResponse{
-		Content: "Quick response",
-	})
+	mockProvider.SetResponse("worker", "Quick response")
 
 	// Create registry
 	reg := registry.NewComponentRegistry()
 	registryConfig := createMinimalRegistryConfig(projCtx, mockProvider)
-	err := reg.InitializeWithContext(ctx, *registryConfig, projCtx)
+	err := reg.Initialize(ctx, *registryConfig)
 	require.NoError(t, err)
 
 	agentRegistry := reg.Agents()
@@ -419,14 +439,12 @@ func TestMemoryUsageFixed(t *testing.T) {
 
 	// Create lightweight provider
 	mockProvider := testutil.NewMockLLMProvider()
-	mockProvider.SetResponse("worker", &testutil.MockAgentResponse{
-		Content: "Memory test response",
-	})
+	mockProvider.SetResponse("worker", "Memory test response")
 
 	// Create registry
 	reg := registry.NewComponentRegistry()
 	registryConfig := createMinimalRegistryConfig(projCtx, mockProvider)
-	err := reg.InitializeWithContext(ctx, *registryConfig, projCtx)
+	err := reg.Initialize(ctx, *registryConfig)
 	require.NoError(t, err)
 
 	agentRegistry := reg.Agents()
@@ -483,7 +501,7 @@ func TestMemoryUsageFixed(t *testing.T) {
 
 // Helper functions
 
-func createTestRegistryConfig(projCtx project.Context, provider interface{}) *registry.Config {
+func createTestRegistryConfig(projCtx *project.Context, provider interface{}) *registry.Config {
 	return &registry.Config{
 		Agents: registry.AgentConfigYaml{
 			DefaultType: "worker",
@@ -519,7 +537,7 @@ func createTestRegistryConfig(projCtx project.Context, provider interface{}) *re
 			DefaultVectorStore: "chromem",
 			Stores: map[string]interface{}{
 				"sqlite": map[string]interface{}{
-					"path": projCtx.GetDatabasePath(),
+					"path": filepath.Join(projCtx.GetGuildPath(), "memory.db"),
 				},
 				"chromem": map[string]interface{}{
 					"persistence_path": projCtx.GetEmbeddingsPath(),
@@ -530,7 +548,7 @@ func createTestRegistryConfig(projCtx project.Context, provider interface{}) *re
 	}
 }
 
-func createMinimalRegistryConfig(projCtx project.Context, provider interface{}) *registry.Config {
+func createMinimalRegistryConfig(projCtx *project.Context, provider interface{}) *registry.Config {
 	return &registry.Config{
 		Agents: registry.AgentConfigYaml{
 			DefaultType: "worker",

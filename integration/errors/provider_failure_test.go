@@ -97,11 +97,11 @@ func TestLLMProviderFailures(t *testing.T) {
 			atomic.AddInt32(&retryCount, 1)
 			
 			// Check if it's a rate limit error
-			if gerr, ok := err.(*gerror.Error); ok {
-				if gerr.Type == gerror.ErrorTypeRateLimit {
+			if gerr, ok := err.(*gerror.GuildError); ok {
+				if gerr.Code == gerror.ErrCodeRateLimit {
 					// Wait based on retry-after header
 					waitTime := time.Duration(attempt) * 500 * time.Millisecond
-					if resetTime, ok := gerr.Context["reset_after"]; ok {
+					if resetTime, ok := gerr.Details["reset_after"]; ok {
 						waitTime = resetTime.(time.Duration)
 					}
 					time.Sleep(waitTime)

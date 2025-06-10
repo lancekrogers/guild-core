@@ -1,0 +1,117 @@
+# Guild Framework - Simple Makefile
+# Uses Go-based build tool for reliable visual output
+
+# Go build tool
+BUILDTOOL := go run tools/buildtool/main.go
+
+# Default target
+.DEFAULT_GOAL := help
+
+# Disable built-in rules for cleaner output
+.SUFFIXES:
+MAKEFLAGS += --no-builtin-rules
+
+# Help target
+help:
+	@echo "Guild Framework Build System"
+	@echo ""
+	@echo "Usage: make [target]"
+	@echo ""
+	@echo "Main targets:"
+	@echo "  build        Build the Guild CLI with visual progress"
+	@echo "  test         Run unit tests with dashboard"
+	@echo "  integration  Run integration tests"
+	@echo "  clean        Clean all build artifacts"
+	@echo "  all          Run clean, build, test, and integration"
+	@echo ""
+	@echo "Quick targets:"
+	@echo "  quick        Quick build without visual output"
+	@echo "  check        Run go vet and go fmt"
+	@echo ""
+	@echo "Development:"
+	@echo "  run          Run guild with arguments (e.g., make run ARGS='chat')"
+	@echo "  coverage     Generate test coverage report"
+	@echo "  lint         Run golangci-lint"
+	@echo ""
+
+# Main targets using build tool
+build:
+	@$(BUILDTOOL) -skip-vet build
+
+# Build with strict checks (includes vet)
+build-strict:
+	@$(BUILDTOOL) build
+
+# Build without strict checks (skip vet)
+build-quick:
+	@echo "Building Guild CLI (quick mode)..."
+	@mkdir -p bin
+	@go build -o bin/guild ./cmd/guild
+	@echo "✓ Build complete: bin/guild"
+
+test:
+	@$(BUILDTOOL) test
+
+integration:
+	@$(BUILDTOOL) integration
+
+clean:
+	@$(BUILDTOOL) clean
+	@# Additional cleanup
+	@find . -name "*.test" -delete 2>/dev/null || true
+	@find . -name ".test-*" -type d -exec rm -rf {} + 2>/dev/null || true
+
+all:
+	@$(BUILDTOOL) all
+
+# Quick targets without visual feedback
+quick:
+	@echo "Quick build..."
+	@go build -o bin/guild ./cmd/guild
+	@echo "Build complete: bin/guild"
+
+check:
+	@echo "Running go vet..."
+	@go vet ./...
+	@echo "Running go fmt..."
+	@go fmt ./...
+	@echo "Code checks complete"
+
+# Run target
+run: quick
+	@./bin/guild $(ARGS)
+
+# Coverage with simple output
+coverage:
+	@echo "Generating test coverage..."
+	@go test -coverprofile=coverage.out ./...
+	@go tool cover -html=coverage.out -o coverage.html
+	@echo "Coverage report: coverage.html"
+
+# Lint if golangci-lint is installed
+lint:
+	@if command -v golangci-lint >/dev/null 2>&1; then \
+		echo "Running golangci-lint..."; \
+		golangci-lint run; \
+	else \
+		echo "golangci-lint not installed. Install with:"; \
+		echo "  go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest"; \
+	fi
+
+# Install the build tool globally (optional)
+install-buildtool:
+	@echo "Installing Guild build tool..."
+	@go install ./tools/buildtool
+	@echo "Build tool installed. You can now use: guild-build [command]"
+
+# CI-friendly targets (no color, simple output)
+ci-build:
+	@$(BUILDTOOL) -no-color build
+
+ci-test:
+	@$(BUILDTOOL) -no-color test
+
+ci-integration:
+	@$(BUILDTOOL) -no-color integration
+
+.PHONY: help build test integration clean all quick check run coverage lint install-buildtool ci-build ci-test ci-integration

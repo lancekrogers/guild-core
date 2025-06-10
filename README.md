@@ -108,18 +108,40 @@ Guild uses a sophisticated component-based architecture:
 
 ## 🔨 Development
 
-Guild uses [Taskfile](https://taskfile.dev/) for development workflows:
+### 🚨 CRITICAL: Test Execution Rules
+
+**NEVER run `go test` directly** - it creates `.test` binaries that pollute the repository!
 
 ```bash
-# Common tasks
-task test              # Run all tests
-task test:coverage     # Generate coverage report
-task build            # Build the CLI
-task clean            # Clean build artifacts
+# ❌ WRONG - Creates .test binaries
+go test ./...
+
+# ✅ CORRECT - Use make or task
+make test              # Run all tests properly
+make unit-test         # Run unit tests with dashboard
+make integration       # Run integration tests
+task test              # Alternative using Taskfile
+```
+
+### Development Workflow
+
+Guild uses both Makefile and [Taskfile](https://taskfile.dev/) for development:
+
+```bash
+# Build commands (ALWAYS use make/task)
+make build            # Build with visual progress
+task build            # Alternative build command
+
+# Test commands (NEVER use go test directly)
+make test              # Run all tests
+make unit-test         # Unit tests with dashboard
+make coverage          # Generate coverage report
+task test:coverage     # Alternative coverage command
 
 # Development helpers
 task run CLI_ARGS="chat"     # Run commands directly
 task test:analyze:lore       # Check medieval naming conventions
+make clean            # Clean ALL artifacts including .test files
 ```
 
 ## 📚 Documentation
