@@ -113,10 +113,10 @@ func LoadConfig(path string) (*Config, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			// Return empty config if file doesn't exist
-			// Users can add their own LSP servers
+			// Return config with default servers if file doesn't exist
+			// This ensures basic functionality works out of the box
 			return &Config{
-				Servers: make(map[string]*ServerConfig),
+				Servers: DefaultConfigs(),
 			}, nil
 		}
 		return nil, gerror.Wrap(err, gerror.ErrCodeIO, "failed to read LSP config file").

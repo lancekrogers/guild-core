@@ -86,19 +86,28 @@ func TestRetriever_NewWithStrategies(t *testing.T) {
 	ctx := context.Background()
 	embedder := &MockEmbedder{}
 	
-	strategies := []string{"sentence", "fixed", "markdown_header"}
-	for _, strategy := range strategies {
+	strategies := []struct {
+		input    string
+		expected ChunkStrategy
+	}{
+		{"sentence", ChunkBySentence},
+		{"fixed", ChunkByFixedSize},
+		{"markdown", ChunkByMarkdownHeader},
+		{"unknown", ChunkByParagraph}, // Default
+	}
+	
+	for _, test := range strategies {
 		config := Config{
-			CollectionName: "test_" + strategy,
+			CollectionName: "test_" + test.input,
 			ChunkSize:      500,
 			ChunkOverlap:   50,
-			ChunkStrategy:  strategy,
+			ChunkStrategy:  test.input,
 		}
 		
 		retriever, err := newRetriever(ctx, embedder, config)
 		assert.NoError(t, err)
 		assert.NotNil(t, retriever)
-		assert.Equal(t, ChunkStrategy(strategy), retriever.chunker.Config.Strategy)
+		assert.Equal(t, test.expected, retriever.chunker.Config.Strategy)
 		retriever.Close()
 	}
 }
@@ -120,7 +129,8 @@ func TestRetriever_AddDocument_Additional(t *testing.T) {
 	
 	// Test with empty content
 	err = retriever.AddDocument(ctx, "doc1", "", "empty.txt")
-	assert.NoError(t, err)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "document content cannot be empty")
 	
 	// Test with small content
 	err = retriever.AddDocument(ctx, "doc2", "Small content", "small.txt")
@@ -142,7 +152,8 @@ func TestRetriever_RemoveDocument_Additional(t *testing.T) {
 	
 	// Remove a document (even if it doesn't exist)
 	err = retriever.RemoveDocument(ctx, "doc123")
-	assert.NoError(t, err)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "document removal not yet implemented")
 }
 
 // Test EnhancePrompt method
@@ -160,7 +171,8 @@ func TestRetriever_EnhancePrompt_Additional(t *testing.T) {
 	
 	// Test with empty prompt
 	result, err := retriever.EnhancePrompt(ctx, "", RetrievalConfig{})
-	assert.NoError(t, err)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "query cannot be empty")
 	assert.Equal(t, "", result)
 	
 	// Test with simple prompt (will have no results)

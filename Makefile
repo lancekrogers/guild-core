@@ -74,7 +74,7 @@ define live_progress_bar
 	PERCENT=$(1); WIDTH=40; MESSAGE="$(2)"; \
 	FILLED=$$(($$PERCENT * $$WIDTH / 100)); \
 	EMPTY=$$(($$WIDTH - $$FILLED)); \
-	printf "\r$(CLEAR)$(GRAY)["; \
+	printf "\033[2K\r$(GRAY)["; \
 	if [ $$FILLED -gt 0 ]; then \
 		for i in $$(seq 1 $$FILLED); do printf "$(GREEN)█"; done; \
 	fi; \
@@ -294,6 +294,10 @@ unit-test:
 	TEST_PASSED=0; \
 	TEST_FAILED=0; \
 	CURRENT=0; \
+	BUILD_PASS_LIST=""; \
+	BUILD_FAIL_LIST=""; \
+	UNIT_PASS_LIST=""; \
+	UNIT_FAIL_LIST=""; \
 	for pkg in $$(go list ./... 2>/dev/null | grep -v /vendor/ | grep -v /integration/); do \
 		TOTAL_PACKAGES=$$((TOTAL_PACKAGES + 1)); \
 	done; \
@@ -302,23 +306,36 @@ unit-test:
 	for pkg in $$(go list ./... 2>/dev/null | grep -v /vendor/ | grep -v /integration/); do \
 		CURRENT=$$((CURRENT + 1)); \
 		PERCENT=$$((CURRENT * 100 / TOTAL_PACKAGES)); \
-		PKG_SHORT=$$(echo $$pkg | sed 's|github.com/guild-ventures/guild-core/||'); \
-		$(call live_progress_bar,$$PERCENT,Processing $$PKG_SHORT...); \
+		PKG_SHORT=$${pkg#github.com/guild-ventures/guild-core/}; \
+		FILLED=$$(($$PERCENT * 40 / 100)); \
+		EMPTY=$$((40 - $$FILLED)); \
+		printf "\033[2K\r$(GRAY)["; \
+		if [ $$FILLED -gt 0 ]; then \
+			for i in $$(seq 1 $$FILLED); do printf "$(GREEN)█"; done; \
+		fi; \
+		if [ $$EMPTY -gt 0 ]; then \
+			for i in $$(seq 1 $$EMPTY); do printf "$(GRAY)░"; done; \
+		fi; \
+		printf "$(GRAY)] $(BOLD)%3d%%$(NC) $(YELLOW)Processing $$PKG_SHORT...$(NC)" $$PERCENT; \
 		if go build -o /tmp/guild-build-test-$$$$ $$pkg >/dev/null 2>&1; then \
 			BUILD_PASSED=$$((BUILD_PASSED + 1)); \
-			printf "$$PKG_SHORT\n" >> .build_pass; \
+			BUILD_PASS_LIST="$$BUILD_PASS_LIST$$PKG_SHORT\n"; \
 			if go test -short -count=1 $$pkg >/dev/null 2>&1; then \
 				TEST_PASSED=$$((TEST_PASSED + 1)); \
-				printf "$$PKG_SHORT\n" >> .unit_pass; \
+				UNIT_PASS_LIST="$$UNIT_PASS_LIST$$PKG_SHORT\n"; \
 			else \
 				TEST_FAILED=$$((TEST_FAILED + 1)); \
-				printf "$$PKG_SHORT\n" >> .unit_fail; \
+				UNIT_FAIL_LIST="$$UNIT_FAIL_LIST$$PKG_SHORT\n"; \
 			fi; \
 		else \
 			BUILD_FAILED=$$((BUILD_FAILED + 1)); \
-			printf "$$PKG_SHORT\n" >> .build_fail; \
+			BUILD_FAIL_LIST="$$BUILD_FAIL_LIST$$PKG_SHORT\n"; \
 		fi; \
 	done; \
+	printf "$$BUILD_PASS_LIST" > .build_pass 2>/dev/null; \
+	printf "$$BUILD_FAIL_LIST" > .build_fail 2>/dev/null; \
+	printf "$$UNIT_PASS_LIST" > .unit_pass 2>/dev/null; \
+	printf "$$UNIT_FAIL_LIST" > .unit_fail 2>/dev/null; \
 	rm -f /tmp/guild-build-test-*; \
 	echo ""; \
 	echo ""; \
