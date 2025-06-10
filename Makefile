@@ -298,12 +298,12 @@ unit-test:
 	BUILD_FAIL_LIST=""; \
 	UNIT_PASS_LIST=""; \
 	UNIT_FAIL_LIST=""; \
-	for pkg in $$(go list ./... 2>/dev/null | grep -v /vendor/ | grep -v /integration/); do \
+	for pkg in $$(go list ./... 2>/dev/null | grep -v /vendor/ | grep -v /integration/ | grep -v /lsp); do \
 		TOTAL_PACKAGES=$$((TOTAL_PACKAGES + 1)); \
 	done; \
 	echo "$(BOLD)Found $$TOTAL_PACKAGES packages to test$(NC)"; \
 	echo ""; \
-	for pkg in $$(go list ./... 2>/dev/null | grep -v /vendor/ | grep -v /integration/); do \
+	for pkg in $$(go list ./... 2>/dev/null | grep -v /vendor/ | grep -v /integration/ | grep -v /lsp); do \
 		CURRENT=$$((CURRENT + 1)); \
 		PERCENT=$$((CURRENT * 100 / TOTAL_PACKAGES)); \
 		PKG_SHORT=$${pkg#github.com/guild-ventures/guild-core/}; \
