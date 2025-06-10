@@ -108,7 +108,7 @@ endef
 define section_header
 	@echo ""; \
 	echo "$(BOLD)$(BLUE)┌────────────────────────────────────────────────────────────┐$(NC)"; \
-	printf "$(BOLD)$(BLUE)│$(NC) $(PURPLE)🏰 GUILD$(NC) $(BOLD)$(YELLOW)%-51s$(NC)$(BOLD)$(BLUE)│$(NC)\n" "$(strip $(1))"; \
+	printf "$(BOLD)$(BLUE)│$(NC) $(PURPLE)🏰 GUILD$(NC) $(BOLD)$(YELLOW)%-50s$(NC) $(BOLD)$(BLUE)│$(NC)\n" "$(strip $(1))"; \
 	echo "$(BOLD)$(BLUE)└────────────────────────────────────────────────────────────┘$(NC)"
 endef
 
@@ -142,7 +142,7 @@ dashboard: clean build unit-test integration
 	@printf "$(BLUE)│$(NC)   %-56s $(BLUE)│$(NC)\n" "All unit tests, builds, and integration tests completed."
 	@printf "$(BLUE)│$(NC)   %-56s $(BLUE)│$(NC)\n" "Review the detailed results above for any failures."
 	@echo "$(BOLD)$(BLUE)└────────────────────────────────────────────────────────────┘$(NC)"
-	@$(call status_card,✓ 🚀 Dashboard Run Complete,pass)
+	@$(call status_card,🚀 Dashboard Run Complete,pass)
 
 .DEFAULT_GOAL := help
 
