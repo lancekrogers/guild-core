@@ -59,6 +59,15 @@ const (
 	ErrCodeInvalidTransition  ErrorCode = "GUILD-6002"
 	ErrCodeDependencyFailed   ErrorCode = "GUILD-6003"
 	ErrCodeCircularDependency ErrorCode = "GUILD-6004"
+	
+	// External service errors (7xxx)
+	ErrCodeExternal        ErrorCode = "GUILD-7000"
+	ErrCodeExternalTimeout ErrorCode = "GUILD-7001"
+	ErrCodeExternalAuth    ErrorCode = "GUILD-7002"
+	
+	// I/O errors (8xxx)
+	ErrCodeIO      ErrorCode = "GUILD-8000"
+	ErrCodeParsing ErrorCode = "GUILD-8001"
 )
 
 // GuildError is the standard error type for the Guild framework

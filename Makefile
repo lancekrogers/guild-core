@@ -108,7 +108,7 @@ endef
 define section_header
 	@echo ""; \
 	echo "$(BOLD)$(BLUE)┌────────────────────────────────────────────────────────────┐$(NC)"; \
-	printf "$(BOLD)$(BLUE)│$(NC) $(PURPLE)🏰 GUILD$(NC) $(BOLD)$(YELLOW)%-50s$(NC) $(BOLD)$(BLUE)│$(NC)\n" "$(strip $(1))"; \
+	printf "$(BOLD)$(BLUE)│$(NC) $(PURPLE)🏰 GUILD$(NC) $(BOLD)$(YELLOW)%-50s$(NC)$(BOLD)$(BLUE)│$(NC)\n" "$(strip $(1))"; \
 	echo "$(BOLD)$(BLUE)└────────────────────────────────────────────────────────────┘$(NC)"
 endef
 
@@ -137,10 +137,10 @@ all: dashboard
 dashboard: clean build unit-test integration
 	@$(call section_header,Complete Build & Test Summary)
 	@echo "$(BOLD)$(BLUE)┌────────────────────────────────────────────────────────────┐$(NC)"
-	@printf "$(BLUE)│$(NC) $(BOLD)%-58s$(NC) $(BLUE)│$(NC)\n" "🏰 GUILD FRAMEWORK COMPLETE BUILD & TEST SUMMARY"
+	@printf "$(BLUE)│$(NC) $(BOLD)🏰 GUILD FRAMEWORK COMPLETE BUILD & TEST SUMMARY           $(NC)$(BLUE)│$(NC)\n"
 	@echo "$(BLUE)├────────────────────────────────────────────────────────────┤$(NC)"
-	@printf "$(BLUE)│$(NC)   %-56s $(BLUE)│$(NC)\n" "All unit tests, builds, and integration tests completed."
-	@printf "$(BLUE)│$(NC)   %-56s $(BLUE)│$(NC)\n" "Review the detailed results above for any failures."
+	@printf "$(BLUE)│$(NC)   All unit tests, builds, and integration tests completed. $(BLUE)│$(NC)\n"
+	@printf "$(BLUE)│$(NC)   Review the detailed results above for any failures.      $(BLUE)│$(NC)\n"
 	@echo "$(BOLD)$(BLUE)└────────────────────────────────────────────────────────────┘$(NC)"
 	@$(call status_card,🚀 Dashboard Run Complete,pass)
 

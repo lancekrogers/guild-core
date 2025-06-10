@@ -1,0 +1,112 @@
+# Example LSP Configuration File
+# Users can add ANY LSP server that follows the Language Server Protocol
+# Place this file at ~/.guild/lsp/config.yaml
+
+servers:
+  # Go language server
+  go:
+    language: go
+    command: ["gopls", "serve"]
+    file_patterns: ["*.go"]
+    root_markers: ["go.mod", "go.sum"]
+    init_options:
+      usePlaceholders: true
+      completeUnimported: true
+
+  # TypeScript/JavaScript
+  typescript:
+    language: typescript
+    command: ["typescript-language-server", "--stdio"]
+    file_patterns: ["*.ts", "*.tsx", "*.js", "*.jsx"]
+    root_markers: ["package.json", "tsconfig.json"]
+
+  # Python
+  python:
+    language: python
+    command: ["pylsp"]
+    file_patterns: ["*.py"]
+    root_markers: ["setup.py", "requirements.txt", "pyproject.toml"]
+
+  # Rust
+  rust:
+    language: rust
+    command: ["rust-analyzer"]
+    file_patterns: ["*.rs"]
+    root_markers: ["Cargo.toml"]
+
+  # C/C++ via clangd
+  cpp:
+    language: cpp
+    command: ["clangd"]
+    file_patterns: ["*.c", "*.cpp", "*.cc", "*.cxx", "*.h", "*.hpp"]
+    root_markers: ["compile_commands.json", ".clangd", "CMakeLists.txt"]
+
+  # Ruby via Solargraph
+  ruby:
+    language: ruby
+    command: ["solargraph", "stdio"]
+    file_patterns: ["*.rb"]
+    root_markers: ["Gemfile", ".ruby-version"]
+
+  # PHP via Intelephense
+  php:
+    language: php
+    command: ["intelephense", "--stdio"]
+    file_patterns: ["*.php"]
+    root_markers: ["composer.json"]
+
+  # Lua
+  lua:
+    language: lua
+    command: ["lua-language-server"]
+    file_patterns: ["*.lua"]
+    root_markers: [".luarc.json", ".luacheckrc"]
+
+  # Kotlin
+  kotlin:
+    language: kotlin
+    command: ["kotlin-language-server"]
+    file_patterns: ["*.kt", "*.kts"]
+    root_markers: ["build.gradle.kts", "settings.gradle.kts"]
+
+  # Swift via SourceKit-LSP
+  swift:
+    language: swift
+    command: ["sourcekit-lsp"]
+    file_patterns: ["*.swift"]
+    root_markers: ["Package.swift"]
+
+  # Zig
+  zig:
+    language: zig
+    command: ["zls"]
+    file_patterns: ["*.zig"]
+    root_markers: ["build.zig"]
+
+  # Haskell
+  haskell:
+    language: haskell
+    command: ["haskell-language-server-wrapper", "--lsp"]
+    file_patterns: ["*.hs", "*.lhs"]
+    root_markers: ["stack.yaml", "cabal.project", "*.cabal"]
+
+  # Elixir
+  elixir:
+    language: elixir
+    command: ["elixir-ls"]
+    file_patterns: ["*.ex", "*.exs"]
+    root_markers: ["mix.exs"]
+
+  # Custom language server example
+  my-custom-language:
+    language: customlang
+    command: ["/path/to/my-language-server", "--stdio"]
+    file_patterns: ["*.custom", "*.mylang"]
+    root_markers: ["project.custom"]
+    init_options:
+      customOption: true
+      features:
+        - completion
+        - hover
+    environment:
+      CUSTOM_VAR: "value"

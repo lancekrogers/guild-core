@@ -95,8 +95,13 @@ type Metadata struct {
 	Description string   `yaml:"description,omitempty"`
 }
 
-// LoadGuildConfig loads guild configuration from a project directory
+// LoadGuildConfig loads guild configuration with global -> project hierarchy
 func LoadGuildConfig(projectPath string) (*GuildConfig, error) {
+	// First ensure global config is initialized
+	if err := ensureGlobalConfig(); err != nil {
+		return nil, err
+	}
+
 	configPath := filepath.Join(projectPath, ".guild", "guild.yaml")
 
 	// Check if file exists
@@ -527,4 +532,210 @@ func (g *GuildConfig) GetEffectiveSQLitePath() string {
 // IsUsingSQLite returns true if the configuration is set to use SQLite storage
 func (g *GuildConfig) IsUsingSQLite() bool {
 	return g.GetEffectiveStorageBackend() == "sqlite"
+}
+
+// ensureGlobalConfig ensures the global Guild configuration is initialized
+func ensureGlobalConfig() error {
+	globalDir := getGlobalGuildDir()
+	configPath := filepath.Join(globalDir, "config.yaml")
+	
+	// Check if already initialized
+	if _, err := os.Stat(configPath); err == nil {
+		return nil
+	}
+	
+	// Initialize global directory structure inline
+	return initializeGlobalConfig()
+}
+
+// getGlobalGuildDir returns the path to the global Guild directory
+func getGlobalGuildDir() string {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		// Fallback to current directory
+		return ".guild"
+	}
+	return filepath.Join(homeDir, ".guild")
+}
+
+// LoadGlobalConfig loads the global Guild configuration
+func LoadGlobalConfig() (*GlobalConfig, error) {
+	configPath := filepath.Join(getGlobalGuildDir(), "config.yaml")
+	
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			// Initialize global config if not exists
+			if err := initializeGlobalConfig(); err != nil {
+				return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize global config").
+					WithComponent("GlobalConfig").
+					WithOperation("LoadGlobalConfig")
+			}
+			// Try reading again
+			data, err = os.ReadFile(configPath)
+			if err != nil {
+				return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read global config after initialization").
+					WithComponent("GlobalConfig").
+					WithOperation("LoadGlobalConfig")
+			}
+		} else {
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read global config").
+				WithComponent("GlobalConfig").
+				WithOperation("LoadGlobalConfig")
+		}
+	}
+
+	var config GlobalConfig
+	if err := yaml.Unmarshal(data, &config); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "failed to parse global config").
+			WithComponent("GlobalConfig").
+			WithOperation("LoadGlobalConfig")
+	}
+
+	return &config, nil
+}
+
+// GlobalConfig represents the global Guild configuration
+type GlobalConfig struct {
+	Providers ProvidersGlobalConfig `yaml:"providers"`
+	Tools     ToolsConfig          `yaml:"tools"`
+	Cache     CacheConfig          `yaml:"cache"`
+	Logging   LoggingConfig        `yaml:"logging"`
+	UI        UIConfig             `yaml:"ui"`
+	Security  GlobalSecurityConfig `yaml:"security"`
+}
+
+// ProvidersGlobalConfig contains global provider settings
+type ProvidersGlobalConfig struct {
+	Default  string   `yaml:"default"`
+	Fallback []string `yaml:"fallback"`
+}
+
+// ToolsConfig contains global tool settings
+type ToolsConfig struct {
+	Enabled  []string `yaml:"enabled"`
+	Disabled []string `yaml:"disabled"`
+}
+
+// CacheConfig contains cache settings
+type CacheConfig struct {
+	Embeddings EmbeddingsCacheConfig `yaml:"embeddings"`
+}
+
+// EmbeddingsCacheConfig contains embeddings cache settings
+type EmbeddingsCacheConfig struct {
+	MaxSizeGB int `yaml:"max_size_gb"`
+	TTLDays   int `yaml:"ttl_days"`
+}
+
+// LoggingConfig contains logging settings
+type LoggingConfig struct {
+	Level    string `yaml:"level"`
+	MaxSizeMB int   `yaml:"max_size_mb"`
+	MaxFiles  int   `yaml:"max_files"`
+}
+
+// UIConfig contains UI settings
+type UIConfig struct {
+	VimMode bool   `yaml:"vim_mode"`
+	Theme   string `yaml:"theme"`
+}
+
+// GlobalSecurityConfig contains global security settings
+type GlobalSecurityConfig struct {
+	APIKeys APIKeyConfig `yaml:"api_keys"`
+}
+
+// APIKeyConfig contains API key settings
+type APIKeyConfig struct {
+	Source string `yaml:"source"` // Should always be "environment"
+}
+
+// initializeGlobalConfig creates the global configuration directory and files
+func initializeGlobalConfig() error {
+	globalDir := getGlobalGuildDir()
+
+	// Create global directory
+	if err := os.MkdirAll(globalDir, 0755); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create global Guild directory").
+			WithComponent("config").
+			WithOperation("initializeGlobalConfig").
+			WithDetails("path", globalDir)
+	}
+
+	// Create subdirectories
+	subdirs := []string{
+		"providers",
+		"tools", 
+		"templates",
+		"templates/golang",
+		"templates/python",
+		"templates/typescript",
+		"cache",
+		"logs",
+	}
+	
+	for _, dir := range subdirs {
+		dirPath := filepath.Join(globalDir, dir)
+		if err := os.MkdirAll(dirPath, 0755); err != nil {
+			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to create directory %s", dir).
+				WithComponent("config").
+				WithOperation("initializeGlobalConfig")
+		}
+	}
+
+	// Create default global config
+	configPath := filepath.Join(globalDir, "config.yaml")
+	defaultConfig := `# Guild Global Configuration
+# This file contains settings that apply to all Guild projects
+
+# Default provider settings
+providers:
+  default: "anthropic"
+  fallback:
+    - "openai"
+    - "ollama"
+
+# Tool settings
+tools:
+  enabled:
+    - git
+    - code
+    - lsp
+    - file
+    - web
+  disabled: []
+
+# Cache settings
+cache:
+  embeddings:
+    max_size_gb: 10
+    ttl_days: 30
+  
+# Logging settings
+logging:
+  level: "info"
+  max_size_mb: 100
+  max_files: 5
+
+# UI settings
+ui:
+  vim_mode: true
+  theme: "monokai"
+  
+# Security settings
+security:
+  api_keys:
+    # NEVER store actual API keys here
+    # Always use environment variables
+    source: "environment"
+`
+
+	if err := os.WriteFile(configPath, []byte(defaultConfig), 0644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create global config").
+			WithComponent("config").
+			WithOperation("initializeGlobalConfig")
+	}
+
+	return nil
 }
