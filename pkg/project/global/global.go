@@ -1,4 +1,4 @@
-package project
+package global
 
 import (
 	"os"
@@ -10,7 +10,7 @@ import (
 // globalDirectoryStructure defines the directory structure for the global Guild configuration
 var globalDirectoryStructure = []string{
 	"providers",
-	"tools",
+	"tools",      // Global tool installations (shared across all projects)
 	"templates",
 	"templates/golang",
 	"templates/python",
@@ -98,7 +98,7 @@ providers:
     - "openai"
     - "ollama"
 
-# Tool settings
+# Tool settings (global defaults - can be overridden per project)
 tools:
   enabled:
     - git

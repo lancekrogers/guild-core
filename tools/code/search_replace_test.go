@@ -14,8 +14,8 @@ import (
 func TestSearchReplaceTool_NewSearchReplaceTool(t *testing.T) {
 	tool := NewSearchReplaceTool()
 	assert.NotNil(t, tool)
-	assert.Equal(t, "search_replace", tool.GetName())
-	assert.Equal(t, "code", tool.GetCategory())
+	assert.Equal(t, "search_replace", tool.Name())
+	assert.Equal(t, "code", tool.Category())
 }
 
 func TestSearchReplaceTool_Execute_SearchOnly(t *testing.T) {
@@ -55,8 +55,8 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should find the match
-	assert.Contains(t, result.Content, "1 matches in 1 files")
-	assert.Contains(t, result.Content, "fmt.Println")
+	assert.Contains(t, result.Output, "1 matches in 1 files")
+	assert.Contains(t, result.Output, "fmt.Println")
 }
 
 func TestSearchReplaceTool_Execute_SearchAndReplace(t *testing.T) {
@@ -95,7 +95,7 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should apply replacement
-	assert.Contains(t, result.Content, "Modified 1 files")
+	assert.Contains(t, result.Output, "Modified 1 files")
 	
 	// Verify file was actually modified
 	modifiedContent, err := os.ReadFile(tmpFile.Name())
@@ -139,9 +139,9 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should show preview
-	assert.Contains(t, result.Content, "Preview of changes:")
-	assert.Contains(t, result.Content, "oldFunction")
-	assert.Contains(t, result.Content, "newFunction")
+	assert.Contains(t, result.Output, "Preview of changes:")
+	assert.Contains(t, result.Output, "oldFunction")
+	assert.Contains(t, result.Output, "newFunction")
 	
 	// File should not be modified
 	originalContent, err := os.ReadFile(tmpFile.Name())
@@ -186,8 +186,8 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should find regex matches
-	assert.Contains(t, result.Content, "user1")
-	assert.Contains(t, result.Content, "user2")
+	assert.Contains(t, result.Output, "user1")
+	assert.Contains(t, result.Output, "user2")
 }
 
 func TestSearchReplaceTool_Execute_CaseSensitive(t *testing.T) {
@@ -226,7 +226,7 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should only find lowercase match
-	assert.Contains(t, result.Content, "1 matches in 1 files")
+	assert.Contains(t, result.Output, "1 matches in 1 files")
 }
 
 func TestSearchReplaceTool_Execute_WholeWord(t *testing.T) {
@@ -264,7 +264,7 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should only match whole word "test", not "testing" or "contest"
-	assert.Contains(t, result.Content, "1 matches in 1 files")
+	assert.Contains(t, result.Output, "1 matches in 1 files")
 }
 
 func TestSearchReplaceTool_Execute_MultipleFiles(t *testing.T) {
@@ -275,7 +275,7 @@ func TestSearchReplaceTool_Execute_MultipleFiles(t *testing.T) {
 
 	// Create multiple files
 	files := []string{"file1.go", "file2.go", "file3.txt"}
-	for i, filename := range files {
+	for _, filename := range files {
 		content := `package main
 
 func main() {
@@ -302,7 +302,7 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should find matches in Go files only
-	assert.Contains(t, result.Content, "2 matches in 2 files")
+	assert.Contains(t, result.Output, "2 matches in 2 files")
 }
 
 func TestSearchReplaceTool_Execute_RecursiveSearch(t *testing.T) {
@@ -353,7 +353,7 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should find matches in both directories
-	assert.Contains(t, result.Content, "2 matches in 2 files")
+	assert.Contains(t, result.Output, "2 matches in 2 files")
 }
 
 func TestSearchReplaceTool_Execute_InvalidPattern(t *testing.T) {
@@ -412,7 +412,7 @@ func TestSearchReplaceTool_Execute_NoFiles(t *testing.T) {
 	assert.NotNil(t, result)
 	
 	// Should return no matches
-	assert.Contains(t, result.Content, "0 matches in 0 files")
+	assert.Contains(t, result.Output, "0 matches in 0 files")
 }
 
 func TestSearchReplaceTool_Execute_MaxResults(t *testing.T) {
@@ -452,7 +452,7 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should limit results
-	assert.Contains(t, result.Content, "3 matches in 1 files")
+	assert.Contains(t, result.Output, "3 matches in 1 files")
 }
 
 func TestSearchReplaceTool_Execute_LanguageBreakdown(t *testing.T) {
@@ -492,7 +492,7 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should show language breakdown
-	assert.Contains(t, result.Content, "Language breakdown:")
-	assert.Contains(t, result.Content, "go:")
-	assert.Contains(t, result.Content, "python:")
+	assert.Contains(t, result.Output, "Language breakdown:")
+	assert.Contains(t, result.Output, "go:")
+	assert.Contains(t, result.Output, "python:")
 }

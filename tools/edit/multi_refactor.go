@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"go/ast"
-	"go/format"
 	"go/parser"
 	"go/token"
 	"os"
@@ -150,7 +149,7 @@ func NewMultiFileRefactorTool() *MultiFileRefactorTool {
 						"description": "End line for range-based refactoring",
 					},
 				},
-				"required": ["file"],
+				"required": []string{"file"},
 			},
 			"new_name": map[string]interface{}{
 				"type":        "string",
@@ -308,13 +307,13 @@ func (t *MultiFileRefactorTool) performRefactoring(ctx context.Context, params R
 // performRename performs a rename refactoring operation
 func (t *MultiFileRefactorTool) performRename(ctx context.Context, params RefactorParams, result *RefactorResult) (*RefactorResult, error) {
 	if params.NewName == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "new_name is required for rename operation").
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "new_name is required for rename operation", nil).
 			WithComponent("multi_refactor_tool").
 			WithOperation("perform_rename")
 	}
 
 	if params.Target.Symbol == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "target symbol is required for rename operation").
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "target symbol is required for rename operation", nil).
 			WithComponent("multi_refactor_tool").
 			WithOperation("perform_rename")
 	}
@@ -364,13 +363,13 @@ func (t *MultiFileRefactorTool) performRename(ctx context.Context, params Refact
 // performExtract performs an extract method refactoring
 func (t *MultiFileRefactorTool) performExtract(ctx context.Context, params RefactorParams, result *RefactorResult) (*RefactorResult, error) {
 	if params.NewName == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "new_name is required for extract operation").
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "new_name is required for extract operation", nil).
 			WithComponent("multi_refactor_tool").
 			WithOperation("perform_extract")
 	}
 
 	if params.Target.StartLine == 0 || params.Target.EndLine == 0 {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "start_line and end_line are required for extract operation").
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "start_line and end_line are required for extract operation", nil).
 			WithComponent("multi_refactor_tool").
 			WithOperation("perform_extract")
 	}
@@ -383,7 +382,7 @@ func (t *MultiFileRefactorTool) performExtract(ctx context.Context, params Refac
 
 	lines := strings.Split(string(content), "\n")
 	if params.Target.StartLine > len(lines) || params.Target.EndLine > len(lines) {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "line numbers out of range").
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "line numbers out of range", nil).
 			WithComponent("multi_refactor_tool").
 			WithOperation("perform_extract")
 	}
@@ -451,7 +450,7 @@ func (t *MultiFileRefactorTool) performExtract(ctx context.Context, params Refac
 // performMove performs a move refactoring operation
 func (t *MultiFileRefactorTool) performMove(ctx context.Context, params RefactorParams, result *RefactorResult) (*RefactorResult, error) {
 	if params.Destination == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "destination file is required for move operation").
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "destination file is required for move operation", nil).
 			WithComponent("multi_refactor_tool").
 			WithOperation("perform_move")
 	}
@@ -542,8 +541,6 @@ func (t *MultiFileRefactorTool) findReferences(sourceFile, symbol string, files 
 
 // findSymbolReferences finds references to a symbol in a single file
 func (t *MultiFileRefactorTool) findSymbolReferences(filename, symbol string) ([]*SymbolReference, error) {
-	var references []*SymbolReference
-
 	content, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err

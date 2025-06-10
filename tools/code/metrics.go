@@ -212,7 +212,7 @@ func (t *MetricsTool) calculateMetrics(ctx context.Context, params MetricsParams
 
 	if fileInfo.IsDir() {
 		if !params.Recursive {
-			return nil, gerror.New(gerror.ErrCodeInvalidInput, "directory analysis requires recursive=true").
+			return nil, gerror.New(gerror.ErrCodeInvalidInput, "directory analysis requires recursive=true", nil).
 				WithComponent("metrics_tool").
 				WithOperation("calculate_metrics")
 		}

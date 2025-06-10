@@ -39,10 +39,10 @@ type ConflictInfo struct {
 
 // ConflictBlock represents a single conflict block
 type ConflictBlock struct {
-	StartLine int
-	EndLine   int
-	OurLines  []string
-	BaseLines []string
+	StartLine  int
+	EndLine    int
+	OurLines   []string
+	BaseLines  []string
 	TheirLines []string
 }
 
@@ -62,9 +62,14 @@ func parseGitLog(output string) []CommitInfo {
 			continue
 		}
 
+		shortHash := parts[0]
+		if len(shortHash) > 7 {
+			shortHash = shortHash[:7]
+		}
+
 		commit := CommitInfo{
 			Hash:      parts[0],
-			ShortHash: parts[0][:7],
+			ShortHash: shortHash,
 			Message:   parts[1],
 			Subject:   parts[1],
 		}
@@ -90,9 +95,13 @@ func parseGitLogVerbose(output string) []CommitInfo {
 				commits = append(commits, *current)
 			}
 			hash := strings.TrimPrefix(line, "commit ")
+			shortHash := hash
+			if len(shortHash) > 7 {
+				shortHash = shortHash[:7]
+			}
 			current = &CommitInfo{
 				Hash:      hash,
-				ShortHash: hash[:7],
+				ShortHash: shortHash,
 			}
 			inMessage = false
 		} else if current != nil {
@@ -160,11 +169,11 @@ func parseGitBlame(output string) []BlameInfo {
 
 		// Parse format: hash (author date time timezone linenum) content
 		// Example: abc123 (John Doe 2024-01-01 12:00:00 +0000   1) package main
-		
+
 		// Find the parentheses
 		openParen := strings.Index(line, "(")
 		closeParen := strings.Index(line, ")")
-		
+
 		if openParen == -1 || closeParen == -1 || openParen >= closeParen {
 			continue
 		}
@@ -172,8 +181,8 @@ func parseGitBlame(output string) []BlameInfo {
 		hash := strings.TrimSpace(line[:openParen])
 		metaInfo := line[openParen+1 : closeParen]
 		content := ""
-		if closeParen+1 < len(line) {
-			content = line[closeParen+1:]
+		if closeParen+2 < len(line) {
+			content = line[closeParen+2:] // Skip the ") " part
 		}
 
 		// Parse metadata
@@ -190,26 +199,27 @@ func parseGitBlame(output string) []BlameInfo {
 			continue
 		}
 
-		// Previous 4 fields are date components
+		// Previous 3 fields are date components (date, time, timezone)
 		dateEndIdx := len(parts) - 1
-		dateStartIdx := dateEndIdx - 4
+		dateStartIdx := dateEndIdx - 3
 		if dateStartIdx < 0 {
 			continue
 		}
 
 		// Everything before date is author name
 		author := strings.Join(parts[:dateStartIdx], " ")
-		
+
 		// Parse date
 		dateStr := strings.Join(parts[dateStartIdx:dateEndIdx], " ")
 		authorTime, _ := parseGitDate(dateStr)
 
+		// Preserve leading whitespace in content but trim trailing spaces
 		blame := BlameInfo{
 			Commit:      hash,
 			Author:      author,
 			AuthorTime:  authorTime,
 			LineNumber:  lineNum,
-			LineContent: strings.TrimSpace(content),
+			LineContent: strings.TrimRight(content, " \t"),
 		}
 
 		blameInfo = append(blameInfo, blame)
@@ -222,14 +232,14 @@ func parseGitBlame(output string) []BlameInfo {
 func parseConflictedFiles(output string) []string {
 	files := []string{}
 	lines := strings.Split(strings.TrimSpace(output), "\n")
-	
+
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if line != "" {
 			files = append(files, line)
 		}
 	}
-	
+
 	return files
 }
 
@@ -249,9 +259,9 @@ func parseConflictMarkers(content string) ConflictInfo {
 		if strings.HasPrefix(line, "<<<<<<<") {
 			// Start of conflict
 			currentBlock = &ConflictBlock{
-				StartLine: i + 1,
-				OurLines:  []string{},
-				BaseLines: []string{},
+				StartLine:  i + 1,
+				OurLines:   []string{},
+				BaseLines:  []string{},
 				TheirLines: []string{},
 			}
 			inOurs = true
@@ -294,18 +304,18 @@ func parseConflictMarkers(content string) ConflictInfo {
 func parseGitStatus(output string) map[string]string {
 	status := make(map[string]string)
 	lines := strings.Split(output, "\n")
-	
+
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if line == "" {
 			continue
 		}
-		
+
 		// Parse status codes
 		if len(line) > 3 {
 			statusCode := line[:2]
 			filename := strings.TrimSpace(line[3:])
-			
+
 			switch statusCode {
 			case "??":
 				status[filename] = "untracked"
@@ -328,6 +338,6 @@ func parseGitStatus(output string) map[string]string {
 			}
 		}
 	}
-	
+
 	return status
 }

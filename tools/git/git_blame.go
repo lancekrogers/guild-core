@@ -25,10 +25,11 @@ type GitBlameInput struct {
 // GitBlameTool implements git blame functionality
 type GitBlameTool struct {
 	*tools.BaseTool
+	workspacePath string
 }
 
 // NewGitBlameTool creates a new git blame tool
-func NewGitBlameTool() *GitBlameTool {
+func NewGitBlameTool(workspacePath string) *GitBlameTool {
 	schema := map[string]interface{}{
 		"type":     "object",
 		"required": []string{"file"},
@@ -80,7 +81,8 @@ func NewGitBlameTool() *GitBlameTool {
 	)
 
 	return &GitBlameTool{
-		BaseTool: baseTool,
+		BaseTool:      baseTool,
+		workspacePath: workspacePath,
 	}
 }
 
@@ -101,19 +103,20 @@ func (t *GitBlameTool) Execute(ctx context.Context, input string) (*tools.ToolRe
 			WithOperation("execute_blame")
 	}
 
-	// Get workspace from context
-	gitWs, err := getWorkspaceFromContext(ctx)
-	if err != nil {
-		return nil, err
+	// Verify workspace is a git repository
+	if !isGitRepository(t.workspacePath) {
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "workspace is not a git repository", nil).
+			WithComponent("tools.git").
+			WithOperation("execute_blame")
 	}
 
 	// Validate file path is within workspace
-	if err := validatePath(gitWs, params.File); err != nil {
+	if err := validatePathWithBase(t.workspacePath, params.File); err != nil {
 		return nil, err
 	}
 
 	// Check if file exists
-	filePath := filepath.Join(gitWs.Path(), params.File)
+	filePath := filepath.Join(t.workspacePath, params.File)
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		return nil, gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("file not found: %s", params.File), nil).
 			WithComponent("tools.git").
@@ -158,7 +161,7 @@ func (t *GitBlameTool) Execute(ctx context.Context, input string) (*tools.ToolRe
 	args = append(args, params.File)
 
 	// Execute command
-	output, err := executeGitCommand(gitWs.Path(), args...)
+	output, err := executeGitCommand(t.workspacePath, args...)
 	if err != nil {
 		// Check for common error cases
 		errStr := err.Error()
@@ -199,7 +202,7 @@ func (t *GitBlameTool) Execute(ctx context.Context, input string) (*tools.ToolRe
 
 	args = append(args, params.File)
 
-	output, err = executeGitCommand(gitWs.Path(), args...)
+	output, err = executeGitCommand(t.workspacePath, args...)
 	if err != nil {
 		return nil, formatGitError(err, "blame")
 	}
@@ -217,8 +220,7 @@ func (t *GitBlameTool) Execute(ctx context.Context, input string) (*tools.ToolRe
 
 	// Prepare metadata
 	metadata := map[string]string{
-		"workspace":      gitWs.ID(),
-		"branch":         gitWs.Branch(),
+		"workspace_path": t.workspacePath,
 		"file":           params.File,
 		"unique_authors": fmt.Sprintf("%d", countUniqueAuthors(blameInfo)),
 	}
@@ -238,22 +240,22 @@ func (t *GitBlameTool) Execute(ctx context.Context, input string) (*tools.ToolRe
 func (t *GitBlameTool) EstimateCost(params map[string]interface{}) float64 {
 	// Cost depends on file size and line range
 	// Since we don't know file size upfront, use line range as proxy
-	
+
 	lineStart := 0
 	lineEnd := 0
-	
+
 	if val, ok := params["line_start"].(float64); ok {
 		lineStart = int(val)
 	} else if val, ok := params["line_start"].(int); ok {
 		lineStart = val
 	}
-	
+
 	if val, ok := params["line_end"].(float64); ok {
 		lineEnd = int(val)
 	} else if val, ok := params["line_end"].(int); ok {
 		lineEnd = val
 	}
-	
+
 	// If line range specified, use that for cost estimation
 	if lineStart > 0 && lineEnd > 0 {
 		lines := lineEnd - lineStart + 1
@@ -265,7 +267,7 @@ func (t *GitBlameTool) EstimateCost(params map[string]interface{}) float64 {
 			return 3.0 // Large range
 		}
 	}
-	
+
 	// Without line range, assume medium cost
 	return 2.0
 }

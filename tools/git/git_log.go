@@ -26,10 +26,11 @@ type GitLogInput struct {
 // GitLogTool implements git log functionality
 type GitLogTool struct {
 	*tools.BaseTool
+	workspacePath string
 }
 
 // NewGitLogTool creates a new git log tool
-func NewGitLogTool() *GitLogTool {
+func NewGitLogTool(workspacePath string) *GitLogTool {
 	schema := map[string]interface{}{
 		"type": "object",
 		"properties": map[string]interface{}{
@@ -89,7 +90,8 @@ func NewGitLogTool() *GitLogTool {
 	)
 
 	return &GitLogTool{
-		BaseTool: baseTool,
+		BaseTool:      baseTool,
+		workspacePath: workspacePath,
 	}
 }
 
@@ -103,10 +105,11 @@ func (t *GitLogTool) Execute(ctx context.Context, input string) (*tools.ToolResu
 			WithOperation("execute_log")
 	}
 
-	// Get workspace from context
-	gitWs, err := getWorkspaceFromContext(ctx)
-	if err != nil {
-		return nil, err
+	// Verify workspace is a git repository
+	if !isGitRepository(t.workspacePath) {
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "workspace is not a git repository", nil).
+			WithComponent("tools.git").
+			WithOperation("execute_log")
 	}
 
 	// Set defaults
@@ -156,22 +159,21 @@ func (t *GitLogTool) Execute(ctx context.Context, input string) (*tools.ToolResu
 	// Path filter (must come after --)
 	if params.Path != "" {
 		// Validate path is within workspace
-		if err := validatePath(gitWs, params.Path); err != nil {
+		if err := validatePathWithBase(t.workspacePath, params.Path); err != nil {
 			return nil, err
 		}
 		args = append(args, "--", params.Path)
 	}
 
 	// Execute command
-	output, err := executeGitCommand(gitWs.Path(), args...)
+	output, err := executeGitCommand(t.workspacePath, args...)
 	if err != nil {
 		// Check if it's just an empty repository
 		if strings.Contains(err.Error(), "does not have any commits yet") {
 			return tools.NewToolResult(
 				"No commits found in repository",
 				map[string]string{
-					"workspace": gitWs.ID(),
-					"branch":    gitWs.Branch(),
+					"workspace_path": t.workspacePath,
 				},
 				nil,
 				nil,
@@ -183,8 +185,7 @@ func (t *GitLogTool) Execute(ctx context.Context, input string) (*tools.ToolResu
 	// Parse and format output
 	var formattedOutput string
 	metadata := map[string]string{
-		"workspace": gitWs.ID(),
-		"branch":    gitWs.Branch(),
+		"workspace_path": t.workspacePath,
 	}
 
 	if params.OneLine && !params.ShowDiff {

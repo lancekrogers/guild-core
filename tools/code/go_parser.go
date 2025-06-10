@@ -32,10 +32,9 @@ func (p *GoParser) Parse(ctx context.Context, filename string, content []byte) (
 		var parseErrors []ParseError
 		if list, ok := err.(scanner.ErrorList); ok {
 			for _, e := range list {
-				pos := fset.Position(e.Pos)
 				parseErrors = append(parseErrors, ParseError{
-					Line:     pos.Line,
-					Column:   pos.Column,
+					Line:     e.Pos.Line,
+					Column:   e.Pos.Column,
 					Message:  e.Msg,
 					Severity: "error",
 				})

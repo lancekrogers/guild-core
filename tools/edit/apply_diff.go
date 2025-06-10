@@ -210,7 +210,7 @@ func (t *ApplyDiffTool) applyDiff(ctx context.Context, params ApplyDiffParams) (
 	}
 
 	if result.TargetFile == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "could not determine target file").
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "could not determine target file", nil).
 			WithComponent("apply_diff_tool").
 			WithOperation("apply_diff")
 	}

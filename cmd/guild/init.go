@@ -15,14 +15,23 @@ import (
 var initCmd = &cobra.Command{
 	Use:   "init [path]",
 	Short: "Initialize a Guild project",
-	Long: `Creates a .guild directory structure in the current or specified path.
+	Long: `Creates both global (~/.guild) and local (.guild) directory structures.
 
-This initializes a project-local Guild environment with:
-- Corpus for project documentation
-- Embeddings for semantic search
-- Agent configurations
-- Objective tracking
-- Project-specific configuration`,
+Global directory (~/.guild) contains:
+- Provider configurations
+- Tool installations  
+- LSP servers
+- Project templates
+- Shared cache
+
+Local directory (.guild) contains:
+- Project configuration (guild.yaml)
+- SQLite database (memory.db)
+- Corpus and RAG vector stores  
+- Commissions (user objectives/goals)
+- Project-specific tools
+- Agent workspaces
+- Task tracking (Kanban)`,
 	Args: cobra.MaximumNArgs(1),
 	RunE: runInit,
 }
@@ -45,7 +54,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 	}
 
 	// Check if already initialized
-	if project.IsInitialized(path) {
+	if project.IsProjectInitialized(path) {
 		fmt.Fprintf(os.Stderr, "Error: Project already initialized at %s\n", absPath)
 		fmt.Fprintln(os.Stderr, "The .guild directory already exists.")
 		return nil
@@ -74,9 +83,9 @@ func runInit(cmd *cobra.Command, args []string) error {
 	corpusConfig := detector.GenerateCorpusConfig(projectType, path)
 	fmt.Println("✅")
 
-	// Step 3: Create directory structure
+	// Step 3: Create directory structure (both global and local)
 	fmt.Print("📁 Creating directory structure... ")
-	if err := project.Initialize(path); err != nil {
+	if err := project.InitializeProject(path); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize project structure").
 			WithComponent("cli").WithOperation("runInit").WithDetails("path", path)
 	}
@@ -152,6 +161,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 	fmt.Printf("\n🎉 Successfully initialized Guild project!\n")
 	fmt.Printf("   Project type: %s\n", projectType.Description)
 	fmt.Printf("   Location: %s\n", absPath)
+	fmt.Printf("   Global config: ~/.guild/\n")
 	fmt.Printf("   Agents configured: %d\n", len(guildConfig.Agents))
 
 	// Display next steps

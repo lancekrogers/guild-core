@@ -41,7 +41,7 @@ func formatCommitHistoryVerbose(commits []CommitInfo) string {
 			output = append(output, fmt.Sprintf("Date:   %s", formatGitDate(commit.AuthorDate)))
 		}
 		output = append(output, "")
-		
+
 		// Indent commit message
 		messageLines := strings.Split(commit.Message, "\n")
 		for _, line := range messageLines {
@@ -64,7 +64,7 @@ func formatBlameOutput(blameInfo []BlameInfo) string {
 	}
 
 	var output []string
-	
+
 	// Find the maximum line number for padding
 	maxLineNum := 0
 	for _, info := range blameInfo {
@@ -80,7 +80,7 @@ func formatBlameOutput(blameInfo []BlameInfo) string {
 		if len(author) > 20 {
 			author = author[:17] + "..."
 		}
-		
+
 		line := fmt.Sprintf("%8s %-20s %*d: %s",
 			info.Commit[:8],
 			author,
@@ -101,7 +101,7 @@ func formatBlameOutputWithDates(blameInfo []BlameInfo) string {
 	}
 
 	var output []string
-	
+
 	// Find the maximum line number for padding
 	maxLineNum := 0
 	for _, info := range blameInfo {
@@ -117,9 +117,9 @@ func formatBlameOutputWithDates(blameInfo []BlameInfo) string {
 		if len(author) > 15 {
 			author = author[:12] + "..."
 		}
-		
+
 		dateStr := info.AuthorTime.Format("2006-01-02")
-		
+
 		line := fmt.Sprintf("%8s (%s %s %*d) %s",
 			info.Commit[:8],
 			author,
@@ -147,7 +147,7 @@ func formatConflictList(conflicts []ConflictInfo) string {
 	for _, conflict := range conflicts {
 		output = append(output, fmt.Sprintf("  %s:", conflict.File))
 		output = append(output, fmt.Sprintf("    - %d conflict block(s)", conflict.ConflictCount))
-		
+
 		// Show line ranges for each conflict
 		for i, block := range conflict.ConflictBlocks {
 			output = append(output, fmt.Sprintf("    - Block %d: lines %d-%d", i+1, block.StartLine, block.EndLine))
@@ -168,20 +168,20 @@ func formatConflictList(conflicts []ConflictInfo) string {
 // formatConflictDetails formats detailed conflict information
 func formatConflictDetails(conflict ConflictInfo) string {
 	var output []string
-	
+
 	output = append(output, fmt.Sprintf("Conflicts in %s:", conflict.File))
 	output = append(output, fmt.Sprintf("Total conflict blocks: %d", conflict.ConflictCount))
 	output = append(output, "")
 
 	for i, block := range conflict.ConflictBlocks {
 		output = append(output, fmt.Sprintf("=== Conflict Block %d (lines %d-%d) ===", i+1, block.StartLine, block.EndLine))
-		
+
 		// Show our version
 		output = append(output, "<<<<<<< OURS")
 		for _, line := range block.OurLines {
 			output = append(output, line)
 		}
-		
+
 		// Show base version if available (3-way merge)
 		if len(block.BaseLines) > 0 {
 			output = append(output, "||||||| BASE")
@@ -189,9 +189,9 @@ func formatConflictDetails(conflict ConflictInfo) string {
 				output = append(output, line)
 			}
 		}
-		
+
 		output = append(output, "=======")
-		
+
 		// Show their version
 		for _, line := range block.TheirLines {
 			output = append(output, line)

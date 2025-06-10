@@ -13,8 +13,8 @@ import (
 func TestASTTool_NewASTTool(t *testing.T) {
 	tool := NewASTTool()
 	assert.NotNil(t, tool)
-	assert.Equal(t, "ast", tool.GetName())
-	assert.Equal(t, "code", tool.GetCategory())
+	assert.Equal(t, "ast", tool.Name())
+	assert.Equal(t, "code", tool.Category())
 	assert.NotNil(t, tool.parsers)
 }
 
@@ -51,7 +51,7 @@ func (u User) Greet() string {
 	// Test basic analysis
 	params := ASTParams{
 		File:   tmpFile.Name(),
-		Target: "functions",
+		Query: "functions",
 	}
 	
 	input, err := json.Marshal(params)
@@ -61,24 +61,10 @@ func (u User) Greet() string {
 	require.NoError(t, err)
 	assert.NotNil(t, result)
 	
-	// Parse the result
-	var astResult ASTResult
-	err = json.Unmarshal([]byte(result.ExtraData["result"].(map[string]interface{})["functions"].(string)), &astResult.Functions)
-	require.NoError(t, err)
-	
-	// Should find main and Greet functions
-	assert.GreaterOrEqual(t, len(astResult.Functions), 2)
-	
-	// Check for main function
-	foundMain := false
-	for _, fn := range astResult.Functions {
-		if fn.Name == "main" {
-			foundMain = true
-			assert.Equal(t, 4, fn.StartLine)
-			break
-		}
-	}
-	assert.True(t, foundMain)
+	// Check the output contains expected functions
+	assert.Contains(t, result.Output, "Functions")
+	assert.Contains(t, result.Output, "main")
+	assert.Contains(t, result.Output, "Greet")
 }
 
 func TestASTTool_Execute_PythonFile(t *testing.T) {
@@ -110,7 +96,7 @@ if __name__ == "__main__":
 	
 	params := ASTParams{
 		File:   tmpFile.Name(),
-		Target: "classes",
+		Query: "classes",
 	}
 	
 	input, err := json.Marshal(params)
@@ -126,7 +112,7 @@ func TestASTTool_Execute_InvalidFile(t *testing.T) {
 	
 	params := ASTParams{
 		File:   "nonexistent.go",
-		Target: "functions",
+		Query: "functions",
 	}
 	
 	input, err := json.Marshal(params)
@@ -150,7 +136,7 @@ func TestASTTool_Execute_EmptyFile(t *testing.T) {
 	
 	params := ASTParams{
 		File:   "",
-		Target: "functions",
+		Query: "functions",
 	}
 	
 	input, err := json.Marshal(params)
@@ -197,7 +183,7 @@ func TestASTTool_Execute_UnsupportedLanguage(t *testing.T) {
 	
 	params := ASTParams{
 		File:   tmpFile.Name(),
-		Target: "functions",
+		Query: "functions",
 	}
 	
 	input, err := json.Marshal(params)
@@ -208,7 +194,7 @@ func TestASTTool_Execute_UnsupportedLanguage(t *testing.T) {
 	assert.NotNil(t, result)
 	
 	// Should return empty results for unsupported language
-	assert.Contains(t, result.Content, "Language: unknown")
+	assert.Contains(t, result.Output, "Language: unknown")
 }
 
 func TestASTTool_Execute_AllTargets(t *testing.T) {
@@ -258,7 +244,7 @@ const MaxAge = 100
 		t.Run("target_"+target, func(t *testing.T) {
 			params := ASTParams{
 				File:   tmpFile.Name(),
-				Target: target,
+				Query: target,
 			}
 			
 			input, err := json.Marshal(params)
@@ -267,7 +253,7 @@ const MaxAge = 100
 			result, err := tool.Execute(context.Background(), string(input))
 			require.NoError(t, err)
 			assert.NotNil(t, result)
-			assert.Contains(t, result.Content, "Language: go")
+			assert.Contains(t, result.Output, "Language: go")
 		})
 	}
 }

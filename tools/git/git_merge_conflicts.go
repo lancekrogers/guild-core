@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/workspace"
 	"github.com/guild-ventures/guild-core/tools"
 )
 
@@ -24,10 +23,11 @@ type GitMergeConflictsInput struct {
 // GitMergeConflictsTool implements git merge conflict detection and resolution
 type GitMergeConflictsTool struct {
 	*tools.BaseTool
+	workspacePath string
 }
 
 // NewGitMergeConflictsTool creates a new git merge conflicts tool
-func NewGitMergeConflictsTool() *GitMergeConflictsTool {
+func NewGitMergeConflictsTool(workspacePath string) *GitMergeConflictsTool {
 	schema := map[string]interface{}{
 		"type": "object",
 		"properties": map[string]interface{}{
@@ -71,7 +71,8 @@ func NewGitMergeConflictsTool() *GitMergeConflictsTool {
 	)
 
 	return &GitMergeConflictsTool{
-		BaseTool: baseTool,
+		BaseTool:      baseTool,
+		workspacePath: workspacePath,
 	}
 }
 
@@ -90,30 +91,31 @@ func (t *GitMergeConflictsTool) Execute(ctx context.Context, input string) (*too
 		params.Action = "list"
 	}
 
-	// Get workspace from context
-	gitWs, err := getWorkspaceFromContext(ctx)
-	if err != nil {
-		return nil, err
+	// Verify workspace is a git repository
+	if !isGitRepository(t.workspacePath) {
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "workspace is not a git repository", nil).
+			WithComponent("tools.git").
+			WithOperation("execute_merge_conflicts")
 	}
 
 	// Route to appropriate handler based on action
 	switch params.Action {
 	case "list":
-		return t.listConflicts(gitWs)
+		return t.listConflicts()
 	case "show":
 		if params.File == "" {
 			return nil, gerror.New(gerror.ErrCodeInvalidInput, "file parameter required for show action", nil).
 				WithComponent("tools.git").
 				WithOperation("execute_merge_conflicts")
 		}
-		return t.showConflict(gitWs, params.File)
+		return t.showConflict(params.File)
 	case "resolve":
 		if params.File == "" || params.Strategy == "" {
 			return nil, gerror.New(gerror.ErrCodeInvalidInput, "file and strategy parameters required for resolve action", nil).
 				WithComponent("tools.git").
 				WithOperation("execute_merge_conflicts")
 		}
-		return t.resolveConflict(gitWs, params.File, params.Strategy, params.Preview)
+		return t.resolveConflict(params.File, params.Strategy, params.Preview)
 	default:
 		return nil, gerror.New(gerror.ErrCodeInvalidInput, fmt.Sprintf("unknown action: %s", params.Action), nil).
 			WithComponent("tools.git").
@@ -122,18 +124,17 @@ func (t *GitMergeConflictsTool) Execute(ctx context.Context, input string) (*too
 }
 
 // listConflicts lists all files with merge conflicts
-func (t *GitMergeConflictsTool) listConflicts(ws *workspace.GitWorkspace) (*tools.ToolResult, error) {
+func (t *GitMergeConflictsTool) listConflicts() (*tools.ToolResult, error) {
 	// Get files with merge conflicts using git diff
-	output, err := executeGitCommand(ws.Path(), "diff", "--name-only", "--diff-filter=U")
+	output, err := executeGitCommand(t.workspacePath, "diff", "--name-only", "--diff-filter=U")
 	if err != nil {
 		// Check if we're in a merge state at all
-		mergeHeadPath := filepath.Join(ws.Path(), ".git", "MERGE_HEAD")
+		mergeHeadPath := filepath.Join(t.workspacePath, ".git", "MERGE_HEAD")
 		if _, statErr := os.Stat(mergeHeadPath); os.IsNotExist(statErr) {
 			return tools.NewToolResult(
 				"No merge in progress",
 				map[string]string{
-					"workspace":      ws.ID(),
-					"branch":         ws.Branch(),
+					"workspace_path": t.workspacePath,
 					"conflict_count": "0",
 				},
 				nil,
@@ -145,13 +146,12 @@ func (t *GitMergeConflictsTool) listConflicts(ws *workspace.GitWorkspace) (*tool
 
 	// Parse conflicted files
 	files := parseConflictedFiles(output)
-	
+
 	if len(files) == 0 {
 		return tools.NewToolResult(
 			"No merge conflicts found",
 			map[string]string{
-				"workspace":      ws.ID(),
-				"branch":         ws.Branch(),
+				"workspace_path": t.workspacePath,
 				"conflict_count": "0",
 			},
 			nil,
@@ -162,7 +162,7 @@ func (t *GitMergeConflictsTool) listConflicts(ws *workspace.GitWorkspace) (*tool
 	// Analyze each conflict
 	conflicts := []ConflictInfo{}
 	for _, file := range files {
-		info, err := t.analyzeConflict(ws, file)
+		info, err := t.analyzeConflict(file)
 		if err != nil {
 			// Skip files we can't analyze
 			continue
@@ -172,15 +172,14 @@ func (t *GitMergeConflictsTool) listConflicts(ws *workspace.GitWorkspace) (*tool
 
 	// Format output
 	formattedOutput := formatConflictList(conflicts)
-	
+
 	// Calculate total conflict markers
 	totalMarkers := countConflictMarkers(conflicts)
 
 	metadata := map[string]string{
-		"workspace":       ws.ID(),
-		"branch":          ws.Branch(),
-		"conflict_count":  fmt.Sprintf("%d", len(conflicts)),
-		"total_markers":   fmt.Sprintf("%d", totalMarkers),
+		"workspace_path":   t.workspacePath,
+		"conflict_count":   fmt.Sprintf("%d", len(conflicts)),
+		"total_markers":    fmt.Sprintf("%d", totalMarkers),
 		"conflicted_files": strings.Join(files, ","),
 	}
 
@@ -188,14 +187,14 @@ func (t *GitMergeConflictsTool) listConflicts(ws *workspace.GitWorkspace) (*tool
 }
 
 // showConflict shows detailed conflict information for a specific file
-func (t *GitMergeConflictsTool) showConflict(ws *workspace.GitWorkspace, file string) (*tools.ToolResult, error) {
+func (t *GitMergeConflictsTool) showConflict(file string) (*tools.ToolResult, error) {
 	// Validate file path
-	if err := validatePath(ws, file); err != nil {
+	if err := validatePathWithBase(t.workspacePath, file); err != nil {
 		return nil, err
 	}
 
 	// Read file content
-	filePath := filepath.Join(ws.Path(), file)
+	filePath := filepath.Join(t.workspacePath, file)
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -216,9 +215,8 @@ func (t *GitMergeConflictsTool) showConflict(ws *workspace.GitWorkspace, file st
 		return tools.NewToolResult(
 			fmt.Sprintf("No conflict markers found in %s", file),
 			map[string]string{
-				"workspace": ws.ID(),
-				"branch":    ws.Branch(),
-				"file":      file,
+				"workspace_path": t.workspacePath,
+				"file":           file,
 			},
 			nil,
 			nil,
@@ -229,8 +227,7 @@ func (t *GitMergeConflictsTool) showConflict(ws *workspace.GitWorkspace, file st
 	formattedOutput := formatConflictDetails(conflictInfo)
 
 	metadata := map[string]string{
-		"workspace":      ws.ID(),
-		"branch":         ws.Branch(),
+		"workspace_path": t.workspacePath,
 		"file":           file,
 		"conflict_count": fmt.Sprintf("%d", conflictInfo.ConflictCount),
 		"our_markers":    fmt.Sprintf("%d", conflictInfo.OurMarkers),
@@ -241,14 +238,14 @@ func (t *GitMergeConflictsTool) showConflict(ws *workspace.GitWorkspace, file st
 }
 
 // resolveConflict attempts to resolve conflicts using the specified strategy
-func (t *GitMergeConflictsTool) resolveConflict(ws *workspace.GitWorkspace, file string, strategy string, preview bool) (*tools.ToolResult, error) {
+func (t *GitMergeConflictsTool) resolveConflict(file string, strategy string, preview bool) (*tools.ToolResult, error) {
 	// Validate file path
-	if err := validatePath(ws, file); err != nil {
+	if err := validatePathWithBase(t.workspacePath, file); err != nil {
 		return nil, err
 	}
 
 	// Check if file has conflicts
-	output, err := executeGitCommand(ws.Path(), "diff", "--name-only", "--diff-filter=U", file)
+	output, err := executeGitCommand(t.workspacePath, "diff", "--name-only", "--diff-filter=U", file)
 	if err != nil {
 		return nil, formatGitError(err, "diff")
 	}
@@ -257,9 +254,8 @@ func (t *GitMergeConflictsTool) resolveConflict(ws *workspace.GitWorkspace, file
 		return tools.NewToolResult(
 			fmt.Sprintf("File %s has no merge conflicts", file),
 			map[string]string{
-				"workspace": ws.ID(),
-				"branch":    ws.Branch(),
-				"file":      file,
+				"workspace_path": t.workspacePath,
+				"file":           file,
 			},
 			nil,
 			nil,
@@ -273,34 +269,34 @@ func (t *GitMergeConflictsTool) resolveConflict(ws *workspace.GitWorkspace, file
 	case "ours":
 		// Use --ours strategy
 		if !preview {
-			if _, err := executeGitCommand(ws.Path(), "checkout", "--ours", file); err != nil {
+			if _, err := executeGitCommand(t.workspacePath, "checkout", "--ours", file); err != nil {
 				return nil, formatGitError(err, "checkout --ours")
 			}
 			// Stage the resolved file
-			if _, err := executeGitCommand(ws.Path(), "add", file); err != nil {
+			if _, err := executeGitCommand(t.workspacePath, "add", file); err != nil {
 				return nil, formatGitError(err, "add")
 			}
 			resolvedContent = fmt.Sprintf("✓ Resolved %s using 'ours' strategy (keeping current branch changes)", file)
 		} else {
 			// Show what would happen
-			content, _ := executeGitCommand(ws.Path(), "show", fmt.Sprintf(":%d:%s", 2, file))
+			content, _ := executeGitCommand(t.workspacePath, "show", fmt.Sprintf(":%d:%s", 2, file))
 			resolvedContent = fmt.Sprintf("Preview: Would use 'ours' strategy for %s\n\nContent that would be kept:\n%s", file, truncateOutput(content, 50))
 		}
 
 	case "theirs":
 		// Use --theirs strategy
 		if !preview {
-			if _, err := executeGitCommand(ws.Path(), "checkout", "--theirs", file); err != nil {
+			if _, err := executeGitCommand(t.workspacePath, "checkout", "--theirs", file); err != nil {
 				return nil, formatGitError(err, "checkout --theirs")
 			}
 			// Stage the resolved file
-			if _, err := executeGitCommand(ws.Path(), "add", file); err != nil {
+			if _, err := executeGitCommand(t.workspacePath, "add", file); err != nil {
 				return nil, formatGitError(err, "add")
 			}
 			resolvedContent = fmt.Sprintf("✓ Resolved %s using 'theirs' strategy (keeping incoming changes)", file)
 		} else {
 			// Show what would happen
-			content, _ := executeGitCommand(ws.Path(), "show", fmt.Sprintf(":%d:%s", 3, file))
+			content, _ := executeGitCommand(t.workspacePath, "show", fmt.Sprintf(":%d:%s", 3, file))
 			resolvedContent = fmt.Sprintf("Preview: Would use 'theirs' strategy for %s\n\nContent that would be kept:\n%s", file, truncateOutput(content, 50))
 		}
 
@@ -329,18 +325,17 @@ To resolve manually:
 	}
 
 	metadata = map[string]string{
-		"workspace": ws.ID(),
-		"branch":    ws.Branch(),
-		"file":      file,
-		"strategy":  strategy,
-		"preview":   fmt.Sprintf("%v", preview),
+		"workspace_path": t.workspacePath,
+		"file":           file,
+		"strategy":       strategy,
+		"preview":        fmt.Sprintf("%v", preview),
 	}
 
 	if !preview && strategy != "manual" {
 		metadata["resolved"] = "true"
-		
+
 		// Check if all conflicts are resolved
-		remainingConflicts, _ := executeGitCommand(ws.Path(), "diff", "--name-only", "--diff-filter=U")
+		remainingConflicts, _ := executeGitCommand(t.workspacePath, "diff", "--name-only", "--diff-filter=U")
 		if strings.TrimSpace(remainingConflicts) == "" {
 			resolvedContent += "\n\n✅ All conflicts have been resolved! You can now commit the changes."
 			metadata["all_resolved"] = "true"
@@ -355,8 +350,8 @@ To resolve manually:
 }
 
 // analyzeConflict analyzes a single file for conflict information
-func (t *GitMergeConflictsTool) analyzeConflict(ws *workspace.GitWorkspace, file string) (ConflictInfo, error) {
-	filePath := filepath.Join(ws.Path(), file)
+func (t *GitMergeConflictsTool) analyzeConflict(file string) (ConflictInfo, error) {
+	filePath := filepath.Join(t.workspacePath, file)
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return ConflictInfo{}, err

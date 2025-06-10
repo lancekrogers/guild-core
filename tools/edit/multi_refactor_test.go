@@ -13,8 +13,8 @@ import (
 func TestMultiFileRefactorTool_NewMultiFileRefactorTool(t *testing.T) {
 	tool := NewMultiFileRefactorTool()
 	assert.NotNil(t, tool)
-	assert.Equal(t, "multi_refactor", tool.GetName())
-	assert.Equal(t, "edit", tool.GetCategory())
+	assert.Equal(t, "multi_refactor", tool.Name())
+	assert.Equal(t, "edit", tool.Category())
 }
 
 func TestMultiFileRefactorTool_Execute_RenameFunction(t *testing.T) {
@@ -62,10 +62,10 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should show rename preview
-	assert.Contains(t, result.Content, "Multi-File Refactoring Preview (Rename)")
-	assert.Contains(t, result.Content, "oldFunction")
-	assert.Contains(t, result.Content, "newFunction")
-	assert.Contains(t, result.Content, "References found:")
+	assert.Contains(t, result.Output, "Multi-File Refactoring Preview (Rename)")
+	assert.Contains(t, result.Output, "oldFunction")
+	assert.Contains(t, result.Output, "newFunction")
+	assert.Contains(t, result.Output, "References found:")
 }
 
 func TestMultiFileRefactorTool_Execute_RenameApply(t *testing.T) {
@@ -114,8 +114,8 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should apply rename
-	assert.Contains(t, result.Content, "Multi-File Refactoring Applied (Rename)")
-	assert.Contains(t, result.Content, "References updated:")
+	assert.Contains(t, result.Output, "Multi-File Refactoring Applied (Rename)")
+	assert.Contains(t, result.Output, "References updated:")
 	
 	// Verify file was modified
 	modifiedContent, err := os.ReadFile(tmpFile.Name())
@@ -167,9 +167,9 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should show extract preview
-	assert.Contains(t, result.Content, "Multi-File Refactoring Preview (Extract)")
-	assert.Contains(t, result.Content, "printGreeting")
-	assert.Contains(t, result.Content, "3 lines into method")
+	assert.Contains(t, result.Output, "Multi-File Refactoring Preview (Extract)")
+	assert.Contains(t, result.Output, "printGreeting")
+	assert.Contains(t, result.Output, "3 lines into method")
 }
 
 func TestMultiFileRefactorTool_Execute_MoveRefactor(t *testing.T) {
@@ -228,8 +228,8 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should handle move operation (placeholder implementation)
-	assert.Contains(t, result.Content, "Move refactoring")
-	assert.Contains(t, result.Content, "not fully implemented")
+	assert.Contains(t, result.Output, "Move refactoring")
+	assert.Contains(t, result.Output, "not fully implemented")
 }
 
 func TestMultiFileRefactorTool_Execute_InlineRefactor(t *testing.T) {
@@ -273,8 +273,8 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should handle inline operation (placeholder implementation)
-	assert.Contains(t, result.Content, "Inline refactoring")
-	assert.Contains(t, result.Content, "not fully implemented")
+	assert.Contains(t, result.Output, "Inline refactoring")
+	assert.Contains(t, result.Output, "not fully implemented")
 }
 
 func TestMultiFileRefactorTool_Execute_NamingConflict(t *testing.T) {
@@ -323,8 +323,8 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should detect naming conflict
-	assert.Contains(t, result.Content, "Conflicts")
-	assert.Contains(t, result.Content, "name_collision")
+	assert.Contains(t, result.Output, "Conflicts")
+	assert.Contains(t, result.Output, "name_collision")
 }
 
 func TestMultiFileRefactorTool_Execute_InvalidType(t *testing.T) {
@@ -543,7 +543,7 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should search in package scope
-	assert.Contains(t, result.Content, "References found:")
+	assert.Contains(t, result.Output, "References found:")
 }
 
 func TestMultiFileRefactorTool_Execute_ExtractOutOfBounds(t *testing.T) {
@@ -625,5 +625,5 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should use default options
-	assert.Contains(t, result.Content, "References found:")
+	assert.Contains(t, result.Output, "References found:")
 }

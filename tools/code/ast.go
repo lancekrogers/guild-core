@@ -246,7 +246,7 @@ func (t *ASTTool) analyzeFile(ctx context.Context, params ASTParams) (*ASTResult
 
 	// Extract requested information based on query
 	switch params.Query {
-	case "functions", "all":
+	case "functions":
 		functions, err := parser.GetFunctions(parseResult)
 		if err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to extract functions").
@@ -256,7 +256,7 @@ func (t *ASTTool) analyzeFile(ctx context.Context, params ASTParams) (*ASTResult
 		result.Functions = functions
 		result.Summary.TotalFunctions = len(functions)
 
-	case "classes", "all":
+	case "classes":
 		classes, err := parser.GetClasses(parseResult)
 		if err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to extract classes").
@@ -266,7 +266,36 @@ func (t *ASTTool) analyzeFile(ctx context.Context, params ASTParams) (*ASTResult
 		result.Classes = classes
 		result.Summary.TotalClasses = len(classes)
 
-	case "imports", "all":
+	case "imports":
+		imports, err := parser.GetImports(parseResult)
+		if err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to extract imports").
+				WithComponent("ast_tool").
+				WithOperation("analyze_file")
+		}
+		result.Imports = imports
+		result.Summary.TotalImports = len(imports)
+		
+	case "all":
+		// Get all information
+		functions, err := parser.GetFunctions(parseResult)
+		if err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to extract functions").
+				WithComponent("ast_tool").
+				WithOperation("analyze_file")
+		}
+		result.Functions = functions
+		result.Summary.TotalFunctions = len(functions)
+		
+		classes, err := parser.GetClasses(parseResult)
+		if err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to extract classes").
+				WithComponent("ast_tool").
+				WithOperation("analyze_file")
+		}
+		result.Classes = classes
+		result.Summary.TotalClasses = len(classes)
+		
 		imports, err := parser.GetImports(parseResult)
 		if err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to extract imports").
@@ -278,7 +307,7 @@ func (t *ASTTool) analyzeFile(ctx context.Context, params ASTParams) (*ASTResult
 
 	case "symbol":
 		if params.Filter == "" {
-			return nil, gerror.New(gerror.ErrCodeInvalidInput, "symbol query requires filter parameter with symbol name").
+			return nil, gerror.New(gerror.ErrCodeInvalidInput, "symbol query requires filter parameter with symbol name", nil).
 				WithComponent("ast_tool").
 				WithOperation("analyze_file")
 		}

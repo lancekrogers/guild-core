@@ -14,8 +14,8 @@ import (
 func TestDependenciesTool_NewDependenciesTool(t *testing.T) {
 	tool := NewDependenciesTool()
 	assert.NotNil(t, tool)
-	assert.Equal(t, "dependencies", tool.GetName())
-	assert.Equal(t, "code", tool.GetCategory())
+	assert.Equal(t, "dependencies", tool.Name())
+	assert.Equal(t, "code", tool.Category())
 }
 
 func TestDependenciesTool_Execute_GoMod(t *testing.T) {
@@ -63,9 +63,8 @@ func main() {
 	tool := NewDependenciesTool()
 	
 	params := DependenciesParams{
-		Path:   tmpDir,
+		ProjectPath:   tmpDir,
 		Format: "tree",
-		Depth:  2,
 	}
 	
 	input, err := json.Marshal(params)
@@ -76,8 +75,8 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should detect Go project
-	assert.Contains(t, result.Content, "Project Type: go")
-	assert.Contains(t, result.Content, "Dependencies found:")
+	assert.Contains(t, result.Output, "Project Type: go")
+	assert.Contains(t, result.Output, "Dependencies found:")
 }
 
 func TestDependenciesTool_Execute_PythonRequirements(t *testing.T) {
@@ -111,7 +110,7 @@ def main():
 	tool := NewDependenciesTool()
 	
 	params := DependenciesParams{
-		Path:   tmpDir,
+		ProjectPath:   tmpDir,
 		Format: "list",
 	}
 	
@@ -123,9 +122,9 @@ def main():
 	assert.NotNil(t, result)
 	
 	// Should detect Python project
-	assert.Contains(t, result.Content, "Project Type: python")
-	assert.Contains(t, result.Content, "requests")
-	assert.Contains(t, result.Content, "flask")
+	assert.Contains(t, result.Output, "Project Type: python")
+	assert.Contains(t, result.Output, "requests")
+	assert.Contains(t, result.Output, "flask")
 }
 
 func TestDependenciesTool_Execute_NodeJS(t *testing.T) {
@@ -154,7 +153,7 @@ func TestDependenciesTool_Execute_NodeJS(t *testing.T) {
 	tool := NewDependenciesTool()
 	
 	params := DependenciesParams{
-		Path:   tmpDir,
+		ProjectPath:   tmpDir,
 		Format: "json",
 	}
 	
@@ -166,16 +165,16 @@ func TestDependenciesTool_Execute_NodeJS(t *testing.T) {
 	assert.NotNil(t, result)
 	
 	// Should detect Node.js project
-	assert.Contains(t, result.Content, "Project Type: nodejs")
-	assert.Contains(t, result.Content, "express")
-	assert.Contains(t, result.Content, "lodash")
+	assert.Contains(t, result.Output, "Project Type: nodejs")
+	assert.Contains(t, result.Output, "express")
+	assert.Contains(t, result.Output, "lodash")
 }
 
 func TestDependenciesTool_Execute_InvalidPath(t *testing.T) {
 	tool := NewDependenciesTool()
 	
 	params := DependenciesParams{
-		Path: "/nonexistent/path",
+		ProjectPath: "/nonexistent/path",
 	}
 	
 	input, err := json.Marshal(params)
@@ -190,7 +189,7 @@ func TestDependenciesTool_Execute_EmptyPath(t *testing.T) {
 	tool := NewDependenciesTool()
 	
 	params := DependenciesParams{
-		Path: "",
+		ProjectPath: "",
 	}
 	
 	input, err := json.Marshal(params)
@@ -222,7 +221,7 @@ func TestDependenciesTool_Execute_UnknownProject(t *testing.T) {
 	tool := NewDependenciesTool()
 	
 	params := DependenciesParams{
-		Path: tmpDir,
+		ProjectPath: tmpDir,
 	}
 	
 	input, err := json.Marshal(params)
@@ -233,7 +232,7 @@ func TestDependenciesTool_Execute_UnknownProject(t *testing.T) {
 	assert.NotNil(t, result)
 	
 	// Should detect unknown project type
-	assert.Contains(t, result.Content, "Project Type: unknown")
+	assert.Contains(t, result.Output, "Project Type: unknown")
 }
 
 func TestDependenciesTool_Execute_WithFilters(t *testing.T) {
@@ -259,9 +258,8 @@ require (
 	tool := NewDependenciesTool()
 	
 	params := DependenciesParams{
-		Path:    tmpDir,
-		Format:  "list",
-		Filters: []string{"github.com/stretchr", "github.com/spf13"},
+		ProjectPath:    tmpDir,
+		Format:  "summary",
 	}
 	
 	input, err := json.Marshal(params)
@@ -272,8 +270,8 @@ require (
 	assert.NotNil(t, result)
 	
 	// Should include filtered dependencies
-	assert.Contains(t, result.Content, "testify")
-	assert.Contains(t, result.Content, "cobra")
+	assert.Contains(t, result.Output, "testify")
+	assert.Contains(t, result.Output, "cobra")
 }
 
 func TestDependenciesTool_Execute_Outdated(t *testing.T) {
@@ -297,8 +295,8 @@ require (
 	tool := NewDependenciesTool()
 	
 	params := DependenciesParams{
-		Path:     tmpDir,
-		Outdated: true,
+		ProjectPath:     tmpDir,
+		CheckUpdates: true,
 	}
 	
 	input, err := json.Marshal(params)
@@ -309,7 +307,7 @@ require (
 	assert.NotNil(t, result)
 	
 	// Should include outdated check information
-	assert.Contains(t, result.Content, "Project Type: go")
+	assert.Contains(t, result.Output, "Project Type: go")
 }
 
 func TestDependenciesTool_Execute_AllFormats(t *testing.T) {
@@ -337,7 +335,7 @@ require (
 	for _, format := range formats {
 		t.Run("format_"+format, func(t *testing.T) {
 			params := DependenciesParams{
-				Path:   tmpDir,
+				ProjectPath:   tmpDir,
 				Format: format,
 			}
 			
@@ -347,7 +345,7 @@ require (
 			result, err := tool.Execute(context.Background(), string(input))
 			require.NoError(t, err)
 			assert.NotNil(t, result)
-			assert.Contains(t, result.Content, "Project Type: go")
+			assert.Contains(t, result.Output, "Project Type: go")
 		})
 	}
 }

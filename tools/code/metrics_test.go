@@ -13,8 +13,8 @@ import (
 func TestMetricsTool_NewMetricsTool(t *testing.T) {
 	tool := NewMetricsTool()
 	assert.NotNil(t, tool)
-	assert.Equal(t, "metrics", tool.GetName())
-	assert.Equal(t, "code", tool.GetCategory())
+	assert.Equal(t, "metrics", tool.Name())
+	assert.Equal(t, "code", tool.Category())
 }
 
 func TestMetricsTool_Execute_GoFile(t *testing.T) {
@@ -91,10 +91,9 @@ func (u User) ValidateEmail() bool {
 	tool := NewMetricsTool()
 	
 	params := MetricsParams{
-		File:        tmpFile.Name(),
-		Granularity: "function",
-		IncludeComplexity: true,
-		IncludeLOC:        true,
+		Path:        tmpFile.Name(),
+		Metrics:     []string{"complexity", "loc"},
+		Format:      "json",
 	}
 	
 	input, err := json.Marshal(params)
@@ -105,13 +104,13 @@ func (u User) ValidateEmail() bool {
 	assert.NotNil(t, result)
 	
 	// Check that metrics were calculated
-	assert.Contains(t, result.Content, "Language: go")
-	assert.Contains(t, result.Content, "Functions analyzed:")
-	assert.Contains(t, result.Content, "main")
-	assert.Contains(t, result.Content, "complexFunction")
+	assert.Contains(t, result.Output, "Language: go")
+	assert.Contains(t, result.Output, "Functions analyzed:")
+	assert.Contains(t, result.Output, "main")
+	assert.Contains(t, result.Output, "complexFunction")
 	
 	// The complex function should have higher complexity
-	assert.Contains(t, result.Content, "Complexity:")
+	assert.Contains(t, result.Output, "Complexity:")
 }
 
 func TestMetricsTool_Execute_PythonFile(t *testing.T) {
@@ -166,10 +165,9 @@ class Calculator:
 	tool := NewMetricsTool()
 	
 	params := MetricsParams{
-		File:        tmpFile.Name(),
-		Granularity: "file",
-		IncludeComplexity: true,
-		IncludeLOC:        true,
+		Path:        tmpFile.Name(),
+		Metrics:     []string{"complexity", "loc"},
+		Format:      "summary",
 	}
 	
 	input, err := json.Marshal(params)
@@ -179,15 +177,15 @@ class Calculator:
 	require.NoError(t, err)
 	assert.NotNil(t, result)
 	
-	assert.Contains(t, result.Content, "Language: python")
-	assert.Contains(t, result.Content, "Total lines:")
+	assert.Contains(t, result.Output, "Language: python")
+	assert.Contains(t, result.Output, "Total lines:")
 }
 
 func TestMetricsTool_Execute_InvalidFile(t *testing.T) {
 	tool := NewMetricsTool()
 	
 	params := MetricsParams{
-		File: "nonexistent.go",
+		Path: "nonexistent.go",
 	}
 	
 	input, err := json.Marshal(params)
@@ -202,7 +200,7 @@ func TestMetricsTool_Execute_EmptyFile(t *testing.T) {
 	tool := NewMetricsTool()
 	
 	params := MetricsParams{
-		File: "",
+		Path: "",
 	}
 	
 	input, err := json.Marshal(params)
@@ -234,7 +232,7 @@ func TestMetricsTool_Execute_UnsupportedLanguage(t *testing.T) {
 	tool := NewMetricsTool()
 	
 	params := MetricsParams{
-		File: tmpFile.Name(),
+		Path: tmpFile.Name(),
 	}
 	
 	input, err := json.Marshal(params)
@@ -245,8 +243,8 @@ func TestMetricsTool_Execute_UnsupportedLanguage(t *testing.T) {
 	assert.NotNil(t, result)
 	
 	// Should return basic metrics for unsupported language
-	assert.Contains(t, result.Content, "Language: unknown")
-	assert.Contains(t, result.Content, "Total lines:")
+	assert.Contains(t, result.Output, "Language: unknown")
+	assert.Contains(t, result.Output, "Total lines:")
 }
 
 func TestMetricsTool_Execute_Thresholds(t *testing.T) {
@@ -304,13 +302,9 @@ func highComplexityFunction(x int) int {
 	tool := NewMetricsTool()
 	
 	params := MetricsParams{
-		File:              tmpFile.Name(),
-		Granularity:       "function",
-		IncludeComplexity: true,
-		Thresholds: &MetricsThresholds{
-			CyclomaticComplexity: 5,
-			LinesOfCode:          20,
-		},
+		Path:        tmpFile.Name(),
+		Metrics:     []string{"complexity", "loc"},
+		Format:      "text",
 	}
 	
 	input, err := json.Marshal(params)
@@ -321,8 +315,8 @@ func highComplexityFunction(x int) int {
 	assert.NotNil(t, result)
 	
 	// Should identify threshold violations
-	assert.Contains(t, result.Content, "highComplexityFunction")
-	assert.Contains(t, result.Content, "Complexity:")
+	assert.Contains(t, result.Output, "highComplexityFunction")
+	assert.Contains(t, result.Output, "Complexity:")
 }
 
 func TestMetricsTool_Execute_AllGranularities(t *testing.T) {
@@ -353,8 +347,8 @@ func helper() {
 	for _, granularity := range granularities {
 		t.Run("granularity_"+granularity, func(t *testing.T) {
 			params := MetricsParams{
-				File:        tmpFile.Name(),
-				Granularity: granularity,
+				Path:    tmpFile.Name(),
+				Format:  "json",
 			}
 			
 			input, err := json.Marshal(params)
@@ -363,7 +357,7 @@ func helper() {
 			result, err := tool.Execute(context.Background(), string(input))
 			require.NoError(t, err)
 			assert.NotNil(t, result)
-			assert.Contains(t, result.Content, "Language: go")
+			assert.Contains(t, result.Output, "Language: go")
 		})
 	}
 }
@@ -381,8 +375,8 @@ func TestMetricsTool_Execute_EmptyGoFile(t *testing.T) {
 	tool := NewMetricsTool()
 	
 	params := MetricsParams{
-		File:        tmpFile.Name(),
-		Granularity: "function",
+		Path:        tmpFile.Name(),
+		Format: "function",
 	}
 	
 	input, err := json.Marshal(params)
@@ -393,8 +387,8 @@ func TestMetricsTool_Execute_EmptyGoFile(t *testing.T) {
 	assert.NotNil(t, result)
 	
 	// Should handle empty file gracefully
-	assert.Contains(t, result.Content, "Language: go")
-	assert.Contains(t, result.Content, "No functions found")
+	assert.Contains(t, result.Output, "Language: go")
+	assert.Contains(t, result.Output, "No functions found")
 }
 
 func TestMetricsTool_Execute_OnlyComplexity(t *testing.T) {
@@ -419,10 +413,9 @@ func main() {
 	tool := NewMetricsTool()
 	
 	params := MetricsParams{
-		File:              tmpFile.Name(),
-		Granularity:       "function",
-		IncludeComplexity: true,
-		IncludeLOC:        false,
+		Path:    tmpFile.Name(),
+		Metrics: []string{"complexity"},
+		Format:  "json",
 	}
 	
 	input, err := json.Marshal(params)
@@ -432,7 +425,7 @@ func main() {
 	require.NoError(t, err)
 	assert.NotNil(t, result)
 	
-	assert.Contains(t, result.Content, "Complexity:")
+	assert.Contains(t, result.Output, "Complexity:")
 	// Should not include LOC details when disabled
 }
 
@@ -456,10 +449,9 @@ func main() {
 	tool := NewMetricsTool()
 	
 	params := MetricsParams{
-		File:              tmpFile.Name(),
-		Granularity:       "function",
-		IncludeComplexity: false,
-		IncludeLOC:        true,
+		Path:    tmpFile.Name(),
+		Metrics: []string{"loc"},
+		Format:  "json",
 	}
 	
 	input, err := json.Marshal(params)
@@ -469,6 +461,6 @@ func main() {
 	require.NoError(t, err)
 	assert.NotNil(t, result)
 	
-	assert.Contains(t, result.Content, "Lines:")
+	assert.Contains(t, result.Output, "Lines:")
 	// Should not include complexity details when disabled
 }

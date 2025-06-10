@@ -13,8 +13,8 @@ import (
 func TestApplyDiffTool_NewApplyDiffTool(t *testing.T) {
 	tool := NewApplyDiffTool()
 	assert.NotNil(t, tool)
-	assert.Equal(t, "apply_diff", tool.GetName())
-	assert.Equal(t, "edit", tool.GetCategory())
+	assert.Equal(t, "apply_diff", tool.Name())
+	assert.Equal(t, "edit", tool.Category())
 }
 
 func TestApplyDiffTool_Execute_SimpleDiff(t *testing.T) {
@@ -63,9 +63,9 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should show preview
-	assert.Contains(t, result.Content, "Diff Application Preview")
-	assert.Contains(t, result.Content, "Hello, World!")
-	assert.Contains(t, result.Content, "Hello, Universe!")
+	assert.Contains(t, result.Output, "Diff Application Preview")
+	assert.Contains(t, result.Output, "Hello, World!")
+	assert.Contains(t, result.Output, "Hello, Universe!")
 }
 
 func TestApplyDiffTool_Execute_ApplyDiff(t *testing.T) {
@@ -114,7 +114,7 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should apply diff
-	assert.Contains(t, result.Content, "Diff Applied Successfully")
+	assert.Contains(t, result.Output, "Diff Applied Successfully")
 	
 	// Verify file was modified
 	modifiedContent, err := os.ReadFile(tmpFile.Name())
@@ -123,7 +123,7 @@ func main() {
 	assert.NotContains(t, string(modifiedContent), "Hello, World!")
 	
 	// Check backup was created
-	assert.Contains(t, result.Content, "Backup created:")
+	assert.Contains(t, result.Output, "Backup created:")
 }
 
 func TestApplyDiffTool_Execute_ReverseDiff(t *testing.T) {
@@ -172,8 +172,8 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should apply reverse diff
-	assert.Contains(t, result.Content, "Diff Applied Successfully")
-	assert.Contains(t, result.Content, "Mode: Reverse application")
+	assert.Contains(t, result.Output, "Diff Applied Successfully")
+	assert.Contains(t, result.Output, "Mode: Reverse application")
 	
 	// Verify file was reverted
 	revertedContent, err := os.ReadFile(tmpFile.Name())
@@ -242,9 +242,9 @@ func helper() {
 	assert.NotNil(t, result)
 	
 	// Should handle multiple hunks
-	assert.Contains(t, result.Content, "2 hunks")
-	assert.Contains(t, result.Content, "Hello, Universe!")
-	assert.Contains(t, result.Content, "Modified helper")
+	assert.Contains(t, result.Output, "2 hunks")
+	assert.Contains(t, result.Output, "Hello, Universe!")
+	assert.Contains(t, result.Output, "Modified helper")
 }
 
 func TestApplyDiffTool_Execute_ContextMismatch(t *testing.T) {
@@ -292,8 +292,8 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should detect conflicts
-	assert.Contains(t, result.Content, "Conflicts")
-	assert.Contains(t, result.Content, "Cannot apply diff")
+	assert.Contains(t, result.Output, "Conflicts")
+	assert.Contains(t, result.Output, "Cannot apply diff")
 }
 
 func TestApplyDiffTool_Execute_AutoDetectFile(t *testing.T) {
@@ -339,7 +339,7 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should auto-detect target file
-	assert.Contains(t, result.Content, "Target File: "+tmpFile.Name())
+	assert.Contains(t, result.Output, "Target File: "+tmpFile.Name())
 }
 
 func TestApplyDiffTool_Execute_InvalidDiff(t *testing.T) {
@@ -478,9 +478,9 @@ func helper(name string) string {
 	assert.NotNil(t, result)
 	
 	// Should handle complex diff
-	assert.Contains(t, result.Content, "Changes: +")
-	assert.Contains(t, result.Content, "strings")
-	assert.Contains(t, result.Content, "TrimSpace")
+	assert.Contains(t, result.Output, "Changes: +")
+	assert.Contains(t, result.Output, "strings")
+	assert.Contains(t, result.Output, "TrimSpace")
 }
 
 func TestApplyDiffTool_Execute_EmptyFile(t *testing.T) {
@@ -515,7 +515,7 @@ func TestApplyDiffTool_Execute_EmptyFile(t *testing.T) {
 	assert.NotNil(t, result)
 	
 	// Should handle empty file
-	assert.Contains(t, result.Content, "Diff Application Preview")
+	assert.Contains(t, result.Output, "Diff Application Preview")
 }
 
 func TestApplyDiffTool_Execute_WithBackup(t *testing.T) {
@@ -563,7 +563,7 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should create backup
-	assert.Contains(t, result.Content, "Backup created:")
+	assert.Contains(t, result.Output, "Backup created:")
 	
 	// Verify backup exists and contains original content
 	backupContent, err := os.ReadFile(tmpFile.Name() + ".bak")

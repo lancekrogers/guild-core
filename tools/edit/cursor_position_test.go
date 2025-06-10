@@ -13,8 +13,8 @@ import (
 func TestCursorPositionTool_NewCursorPositionTool(t *testing.T) {
 	tool := NewCursorPositionTool()
 	assert.NotNil(t, tool)
-	assert.Equal(t, "cursor_position", tool.GetName())
-	assert.Equal(t, "edit", tool.GetCategory())
+	assert.Equal(t, "cursor_position", tool.Name())
+	assert.Equal(t, "edit", tool.Category())
 	assert.NotNil(t, tool.marks)
 }
 
@@ -53,9 +53,9 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should navigate to position
-	assert.Contains(t, result.Content, "Position: Line 6, Column 10")
-	assert.Contains(t, result.Content, "Language: go")
-	assert.Contains(t, result.Content, "Context: function")
+	assert.Contains(t, result.Output, "Position: Line 6, Column 10")
+	assert.Contains(t, result.Output, "Language: go")
+	assert.Contains(t, result.Output, "Context: function")
 }
 
 func TestCursorPositionTool_Execute_FindSymbol(t *testing.T) {
@@ -101,8 +101,8 @@ func (u User) Greet() string {
 	assert.NotNil(t, result)
 	
 	// Should find the Greet function
-	assert.Contains(t, result.Content, "Line 14")
-	assert.Contains(t, result.Content, "Function: Greet")
+	assert.Contains(t, result.Output, "Line 14")
+	assert.Contains(t, result.Output, "Function: Greet")
 }
 
 func TestCursorPositionTool_Execute_SetMark(t *testing.T) {
@@ -139,8 +139,8 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should set mark
-	assert.Contains(t, result.Content, "Mark 'important_line' set")
-	assert.Contains(t, result.Content, "Position: Line 3, Column 1")
+	assert.Contains(t, result.Output, "Mark 'important_line' set")
+	assert.Contains(t, result.Output, "Position: Line 3, Column 1")
 	
 	// Verify mark was stored
 	assert.Contains(t, tool.marks, "important_line")
@@ -185,8 +185,8 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should go to mark
-	assert.Contains(t, result.Content, "Jumped to mark 'test_mark'")
-	assert.Contains(t, result.Content, "Position: Line 4, Column 5")
+	assert.Contains(t, result.Output, "Jumped to mark 'test_mark'")
+	assert.Contains(t, result.Output, "Position: Line 4, Column 5")
 }
 
 func TestCursorPositionTool_Execute_PatternSearch(t *testing.T) {
@@ -225,8 +225,8 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should find the TODO comment
-	assert.Contains(t, result.Content, "Line 7")
-	assert.Contains(t, result.Content, "TODO")
+	assert.Contains(t, result.Output, "Line 7")
+	assert.Contains(t, result.Output, "TODO")
 }
 
 func TestCursorPositionTool_Execute_PythonSymbol(t *testing.T) {
@@ -268,8 +268,8 @@ if __name__ == "__main__":
 	assert.NotNil(t, result)
 	
 	// Should find the User class
-	assert.Contains(t, result.Content, "Line 4")
-	assert.Contains(t, result.Content, "Language: python")
+	assert.Contains(t, result.Output, "Line 4")
+	assert.Contains(t, result.Output, "Language: python")
 }
 
 func TestCursorPositionTool_Execute_InvalidFile(t *testing.T) {
@@ -371,7 +371,7 @@ func main() {}
 	assert.NotNil(t, result)
 	
 	// Should handle out of bounds gracefully
-	assert.Contains(t, result.Content, "Target not found")
+	assert.Contains(t, result.Output, "Target not found")
 }
 
 func TestCursorPositionTool_Execute_NoOperation(t *testing.T) {
@@ -437,8 +437,8 @@ function helper() {
 	assert.NotNil(t, result)
 	
 	// Should find symbol using generic search
-	assert.Contains(t, result.Content, "Line 5")
-	assert.Contains(t, result.Content, "helper")
+	assert.Contains(t, result.Output, "Line 5")
+	assert.Contains(t, result.Output, "helper")
 }
 
 func TestCursorPositionTool_Execute_SymbolNotFound(t *testing.T) {
@@ -473,7 +473,7 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should handle symbol not found
-	assert.Contains(t, result.Content, "Target not found")
+	assert.Contains(t, result.Output, "Target not found")
 }
 
 func TestCursorPositionTool_Execute_GoContextDetection(t *testing.T) {
@@ -525,8 +525,8 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should detect function and struct context
-	assert.Contains(t, result.Content, "Function: Start")
-	assert.Contains(t, result.Content, "Context: function")
+	assert.Contains(t, result.Output, "Function: Start")
+	assert.Contains(t, result.Output, "Context: function")
 }
 
 func TestCursorPositionTool_Execute_DirectionalNavigation(t *testing.T) {
@@ -566,5 +566,5 @@ func helper() {
 	assert.NotNil(t, result)
 	
 	// Should handle directional navigation (even if not fully implemented)
-	assert.Contains(t, result.Content, "not yet fully implemented")
+	assert.Contains(t, result.Output, "not yet fully implemented")
 }

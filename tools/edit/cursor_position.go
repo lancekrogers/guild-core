@@ -9,7 +9,6 @@ import (
 	"go/token"
 	"os"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -330,7 +329,7 @@ func (t *CursorPositionTool) navigate(ctx context.Context, params CursorParams) 
 		return t.navigateDirection(params)
 	}
 
-	return nil, gerror.New(gerror.ErrCodeInvalidInput, "no navigation operation specified").
+	return nil, gerror.New(gerror.ErrCodeInvalidInput, "no navigation operation specified", nil).
 		WithComponent("cursor_position_tool").
 		WithOperation("navigate")
 }
@@ -570,7 +569,7 @@ func (t *CursorPositionTool) getCodeContext(filename string, pos *Position) (*Co
 
 	lines := strings.Split(string(content), "\n")
 	if pos.Line < 1 || pos.Line > len(lines) {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "position out of bounds").
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "position out of bounds", nil).
 			WithComponent("cursor_position_tool").
 			WithOperation("get_code_context")
 	}

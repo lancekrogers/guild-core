@@ -132,7 +132,7 @@ func (t *DependenciesTool) Execute(ctx context.Context, input string) (*tools.To
 	// Detect project type
 	projectType := t.detectProjectType(params.ProjectPath)
 	if projectType == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "could not detect project type (no go.mod, package.json, requirements.txt, etc.)").
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "could not detect project type (no go.mod, package.json, requirements.txt, etc.)", nil).
 			WithComponent("dependencies_tool").
 			WithOperation("execute")
 	}
@@ -370,7 +370,7 @@ func (t *DependenciesTool) analyzePythonDependencies(ctx context.Context, params
 	}
 
 	if len(dependencies) == 0 {
-		return nil, gerror.New(gerror.ErrCodeNotFound, "no dependency files found (requirements.txt, pyproject.toml, etc.)").
+		return nil, gerror.New(gerror.ErrCodeNotFound, "no dependency files found (requirements.txt, pyproject.toml, etc.)", nil).
 			WithComponent("dependencies_tool").
 			WithOperation("analyze_python_dependencies")
 	}
@@ -387,7 +387,7 @@ func (t *DependenciesTool) analyzePythonDependencies(ctx context.Context, params
 // analyzeRustDependencies analyzes Rust Cargo dependencies
 func (t *DependenciesTool) analyzeRustDependencies(ctx context.Context, params DependenciesParams) (*DependenciesResult, error) {
 	// Placeholder implementation for Rust
-	return nil, gerror.New(gerror.ErrCodeNotImplemented, "Rust dependency analysis not yet implemented").
+	return nil, gerror.New(gerror.ErrCodeNotImplemented, "Rust dependency analysis not yet implemented", nil).
 		WithComponent("dependencies_tool").
 		WithOperation("analyze_rust_dependencies")
 }
@@ -532,7 +532,7 @@ func (t *DependenciesTool) checkGoUpdates(ctx context.Context, result *Dependenc
 	}
 	
 	// Parse the output to find outdated packages
-	lines := strings.Split(strings.TrimSpace(output), "\n")
+	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
 	
 	for _, line := range lines {
 		if strings.TrimSpace(line) == "" {

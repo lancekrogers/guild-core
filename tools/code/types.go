@@ -2,7 +2,6 @@ package code
 
 import (
 	"context"
-	"go/ast"
 	"go/token"
 )
 

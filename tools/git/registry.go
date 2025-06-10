@@ -6,11 +6,11 @@ import (
 )
 
 // RegisterGitTools registers all git tools with the provided registry
-func RegisterGitTools(registry *tools.ToolRegistry) error {
+func RegisterGitTools(registry *tools.ToolRegistry, workspacePath string) error {
 	// Create git tools
-	gitLogTool := NewGitLogTool()
-	gitBlameTool := NewGitBlameTool()
-	gitMergeConflictsTool := NewGitMergeConflictsTool()
+	gitLogTool := NewGitLogTool(workspacePath)
+	gitBlameTool := NewGitBlameTool(workspacePath)
+	gitMergeConflictsTool := NewGitMergeConflictsTool(workspacePath)
 
 	// Register git log tool
 	if err := registry.RegisterTool(gitLogTool); err != nil {
@@ -40,22 +40,22 @@ func RegisterGitTools(registry *tools.ToolRegistry) error {
 }
 
 // GetGitTools returns all git tools for registration with cost-aware registries
-func GetGitTools() []GitToolInfo {
+func GetGitTools(workspacePath string) []GitToolInfo {
 	return []GitToolInfo{
 		{
-			Tool:         NewGitLogTool(),
+			Tool:          NewGitLogTool(workspacePath),
 			CostMagnitude: 0, // Local operation, zero cost
-			Capabilities: []string{"version_control", "history", "search"},
+			Capabilities:  []string{"version_control", "history", "search"},
 		},
 		{
-			Tool:         NewGitBlameTool(),
+			Tool:          NewGitBlameTool(workspacePath),
 			CostMagnitude: 0, // Local operation, zero cost
-			Capabilities: []string{"version_control", "authorship", "analysis"},
+			Capabilities:  []string{"version_control", "authorship", "analysis"},
 		},
 		{
-			Tool:         NewGitMergeConflictsTool(),
+			Tool:          NewGitMergeConflictsTool(workspacePath),
 			CostMagnitude: 0, // Local operation, zero cost
-			Capabilities: []string{"version_control", "conflict_resolution", "merge"},
+			Capabilities:  []string{"version_control", "conflict_resolution", "merge"},
 		},
 	}
 }

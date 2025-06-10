@@ -1,34 +1,13 @@
 package git
 
 import (
-	"context"
 	"fmt"
 	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/workspace"
 )
-
-// executeInWorkspace runs a git command in the workspace directory
-func executeInWorkspace(ctx context.Context, args ...string) (string, error) {
-	ws := workspace.FromContext(ctx)
-	if ws == nil {
-		return "", gerror.New(gerror.ErrCodeInvalidInput, "no workspace in context", nil).
-			WithComponent("tools.git").
-			WithOperation("execute")
-	}
-
-	gitWs, ok := ws.(*workspace.GitWorkspace)
-	if !ok {
-		return "", gerror.New(gerror.ErrCodeInvalidInput, "workspace is not git-enabled", nil).
-			WithComponent("tools.git").
-			WithOperation("execute")
-	}
-
-	return executeGitCommand(gitWs.Path(), args...)
-}
 
 // executeGitCommand runs a git command in the specified directory
 func executeGitCommand(workDir string, args ...string) (string, error) {
@@ -47,54 +26,44 @@ func executeGitCommand(workDir string, args ...string) (string, error) {
 	return string(output), nil
 }
 
-// validatePath ensures a path is within the workspace boundaries
-func validatePath(ws *workspace.GitWorkspace, path string) error {
+// validatePathWithBase ensures a path is within the workspace boundaries
+func validatePathWithBase(basePath, path string) error {
 	if path == "" {
 		return nil // Empty path is valid (means workspace root)
 	}
 
-	absPath, err := filepath.Abs(filepath.Join(ws.Path(), path))
+	// Check for absolute paths first
+	if filepath.IsAbs(path) {
+		return gerror.New(gerror.ErrCodeInvalidInput, "absolute paths not allowed", nil).
+			WithComponent("tools.git").
+			WithOperation("validate_path").
+			WithDetails("path", path).
+			WithDetails("base", basePath)
+	}
+
+	absPath, err := filepath.Abs(filepath.Join(basePath, path))
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to resolve path").
 			WithComponent("tools.git").
 			WithOperation("validate_path")
 	}
 
-	wsPath, err := filepath.Abs(ws.Path())
+	absBase, err := filepath.Abs(basePath)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to resolve workspace path").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to resolve base path").
 			WithComponent("tools.git").
 			WithOperation("validate_path")
 	}
 
-	if !strings.HasPrefix(absPath, wsPath) {
-		return gerror.New(gerror.ErrCodeSecurityViolation, "path outside workspace", nil).
+	if !strings.HasPrefix(absPath, absBase) {
+		return gerror.New(gerror.ErrCodeInvalidInput, "path outside workspace", nil).
 			WithComponent("tools.git").
 			WithOperation("validate_path").
 			WithDetails("path", path).
-			WithDetails("workspace", ws.Path())
+			WithDetails("base", basePath)
 	}
 
 	return nil
-}
-
-// getWorkspaceFromContext extracts and validates the GitWorkspace from context
-func getWorkspaceFromContext(ctx context.Context) (*workspace.GitWorkspace, error) {
-	ws := workspace.FromContext(ctx)
-	if ws == nil {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "no workspace in context", nil).
-			WithComponent("tools.git").
-			WithOperation("get_workspace")
-	}
-
-	gitWs, ok := ws.(*workspace.GitWorkspace)
-	if !ok {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "workspace is not git-enabled", nil).
-			WithComponent("tools.git").
-			WithOperation("get_workspace")
-	}
-
-	return gitWs, nil
 }
 
 // formatGitError formats git command errors for better readability
@@ -104,7 +73,7 @@ func formatGitError(err error, operation string) error {
 	}
 
 	// Check if it's already a gerror
-	if gerr, ok := err.(*gerror.Error); ok {
+	if gerr, ok := err.(*gerror.GuildError); ok {
 		return gerr
 	}
 
@@ -131,7 +100,7 @@ func truncateOutput(output string, maxLines int) string {
 	}
 
 	truncated := lines[:maxLines]
-	truncated = append(truncated, fmt.Sprintf("\n... truncated %d lines ...", len(lines)-maxLines))
+	truncated = append(truncated, fmt.Sprintf("... truncated %d lines ...", len(lines)-maxLines))
 	return strings.Join(truncated, "\n")
 }
 
