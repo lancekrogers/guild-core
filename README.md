@@ -1,6 +1,9 @@
 # Guild: Collaborative AI Agent Framework
 
 <div align="center">
+  <img src="docs/images/readme_banner.png" alt="Guild Framework Banner" width="100%">
+  <br>
+  <br>
   <strong>Orchestrate specialized AI agents working together in medieval-themed guilds</strong>
   <br>
   <br>
