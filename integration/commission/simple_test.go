@@ -6,11 +6,12 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/guild-ventures/guild-core/internal/testutil"
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/guild-ventures/guild-core/pkg/storage"
 	"github.com/stretchr/testify/assert"
@@ -25,7 +26,9 @@ func TestCoreComponentInitialization(t *testing.T) {
 	})
 	defer cleanup()
 
+	// Use project context for proper initialization
 	ctx := context.Background()
+	_ = projCtx // Project context is available if needed
 
 	// Test 1: Registry
 	reg := registry.NewComponentRegistry()
@@ -71,7 +74,7 @@ func TestCoreComponentInitialization(t *testing.T) {
 	fmt.Println("✓ Response parser created")
 
 	// Test 7: Prompt registry
-	promptRegistry := prompts.NewMemoryRegistry()
+	promptRegistry := layered.NewMemoryRegistry()
 	require.NotNil(t, promptRegistry)
 
 	// Register a test prompt
@@ -95,7 +98,9 @@ func TestKanbanWorkflow(t *testing.T) {
 	})
 	defer cleanup()
 
+	// Use project context for proper initialization
 	ctx := context.Background()
+	_ = projCtx // Project context is available if needed
 
 	// Setup database and storage
 	storageReg, _, err := storage.InitializeSQLiteStorageForTests(ctx)
@@ -250,13 +255,13 @@ type testKanbanStorageAdapter struct {
 }
 
 func (t *testKanbanStorageAdapter) GetKanbanCampaignRepository() kanban.CampaignRepository {
-	// Return nil - not used in this test
-	return nil
+	// Create adapter for storage.CampaignRepository to kanban.CampaignRepository
+	return &kanbanCampaignRepoAdapter{repo: t.storageRegistry.GetCampaignRepository()}
 }
 
 func (t *testKanbanStorageAdapter) GetKanbanCommissionRepository() kanban.CommissionRepository {
-	// Return nil - not used in this test
-	return nil
+	// Create adapter for storage.CommissionRepository to kanban.CommissionRepository
+	return &kanbanCommissionRepoAdapter{repo: t.storageRegistry.GetCommissionRepository()}
 }
 
 func (t *testKanbanStorageAdapter) GetKanbanTaskRepository() kanban.TaskRepository {
@@ -270,8 +275,17 @@ func (t *testKanbanStorageAdapter) GetBoardRepository() kanban.BoardRepository {
 }
 
 func (t *testKanbanStorageAdapter) GetMemoryStore() kanban.MemoryStore {
-	// Return nil - not used in this test
-	return nil
+	// Get the memory store from the storage registry
+	memStore := t.storageRegistry.GetMemoryStore()
+	if memStore == nil {
+		return nil
+	}
+	// Cast to kanban.MemoryStore interface if possible
+	if kanbanStore, ok := memStore.(kanban.MemoryStore); ok {
+		return kanbanStore
+	}
+	// Otherwise wrap it
+	return &memoryStoreAdapter{memStore: memStore}
 }
 
 // Simple adapters to bridge interface differences
@@ -282,6 +296,37 @@ type kanbanTaskRepoAdapter struct {
 func (k *kanbanTaskRepoAdapter) CreateTask(ctx context.Context, task interface{}) error {
 	// Convert to storage.Task
 	if storageTask, ok := task.(*storage.Task); ok {
+		return k.repo.CreateTask(ctx, storageTask)
+	}
+	// Handle map[string]interface{} case for kanban compatibility
+	if taskMap, ok := task.(map[string]interface{}); ok {
+		// Convert map to storage.Task
+		storageTask := &storage.Task{
+			ID:           taskMap["ID"].(string),
+			Title:        taskMap["Title"].(string),
+			Status:       taskMap["Status"].(string),
+			StoryPoints:  taskMap["StoryPoints"].(int32),
+			CreatedAt:    taskMap["CreatedAt"].(time.Time),
+			UpdatedAt:    taskMap["UpdatedAt"].(time.Time),
+		}
+		// Handle nullable fields
+		if boardID, ok := taskMap["BoardID"].(string); ok {
+			storageTask.BoardID = &boardID
+		}
+		if commissionID, ok := taskMap["CommissionID"].(string); ok {
+			storageTask.CommissionID = commissionID
+		}
+		if agentID, ok := taskMap["AssignedAgentID"].(*string); ok {
+			storageTask.AssignedAgentID = agentID
+		}
+		if desc, ok := taskMap["Description"].(*string); ok {
+			storageTask.Description = desc
+		}
+		if metadata, ok := taskMap["Metadata"].(map[string]interface{}); ok {
+			storageTask.Metadata = metadata
+		}
+		// Set default column
+		storageTask.Column = "backlog"
 		return k.repo.CreateTask(ctx, storageTask)
 	}
 	return fmt.Errorf("invalid task type")
@@ -327,6 +372,26 @@ func (k *kanbanBoardRepoAdapter) CreateBoard(ctx context.Context, board interfac
 	if storageBoard, ok := board.(*storage.Board); ok {
 		return k.repo.CreateBoard(ctx, storageBoard)
 	}
+	// Handle map[string]interface{} case for kanban compatibility
+	if boardMap, ok := board.(map[string]interface{}); ok {
+		// Convert map to storage.Board
+		storageBoard := &storage.Board{
+			ID:           boardMap["ID"].(string),
+			CommissionID: boardMap["CommissionID"].(string),
+			Name:         boardMap["Name"].(string),
+			Status:       boardMap["Status"].(string),
+		}
+		if desc, ok := boardMap["Description"].(*string); ok && desc != nil {
+			storageBoard.Description = desc
+		}
+		if createdAt, ok := boardMap["CreatedAt"].(time.Time); ok {
+			storageBoard.CreatedAt = createdAt
+		}
+		if updatedAt, ok := boardMap["UpdatedAt"].(time.Time); ok {
+			storageBoard.UpdatedAt = updatedAt
+		}
+		return k.repo.CreateBoard(ctx, storageBoard)
+	}
 	return fmt.Errorf("invalid board type")
 }
 
@@ -357,4 +422,89 @@ func (k *kanbanBoardRepoAdapter) ListBoards(ctx context.Context) ([]interface{},
 		result[i] = board
 	}
 	return result, nil
+}
+
+func (k *kanbanBoardRepoAdapter) DeleteBoard(ctx context.Context, id string) error {
+	// Storage interface doesn't have DeleteBoard, so we return an error
+	return fmt.Errorf("DeleteBoard not implemented in storage layer")
+}
+
+// kanbanCampaignRepoAdapter adapts storage.CampaignRepository to kanban.CampaignRepository
+type kanbanCampaignRepoAdapter struct {
+	repo storage.CampaignRepository
+}
+
+// kanbanCommissionRepoAdapter adapts storage.CommissionRepository to kanban.CommissionRepository
+type kanbanCommissionRepoAdapter struct {
+	repo storage.CommissionRepository
+}
+
+func (k *kanbanCommissionRepoAdapter) CreateCommission(ctx context.Context, commission interface{}) error {
+	if storageCommission, ok := commission.(*storage.Commission); ok {
+		return k.repo.CreateCommission(ctx, storageCommission)
+	}
+	// Handle map[string]interface{} case for kanban compatibility
+	if commissionMap, ok := commission.(map[string]interface{}); ok {
+		// Convert map to storage.Commission
+		storageCommission := &storage.Commission{
+			ID:         commissionMap["ID"].(string),
+			CampaignID: commissionMap["CampaignID"].(string),
+			Title:      commissionMap["Title"].(string),
+			Status:     commissionMap["Status"].(string),
+		}
+		if createdAt, ok := commissionMap["CreatedAt"].(time.Time); ok {
+			storageCommission.CreatedAt = createdAt
+		}
+		return k.repo.CreateCommission(ctx, storageCommission)
+	}
+	return fmt.Errorf("invalid commission type")
+}
+
+func (k *kanbanCommissionRepoAdapter) GetCommission(ctx context.Context, id string) (interface{}, error) {
+	return k.repo.GetCommission(ctx, id)
+}
+
+func (k *kanbanCampaignRepoAdapter) CreateCampaign(ctx context.Context, campaign interface{}) error {
+	if storageCampaign, ok := campaign.(*storage.Campaign); ok {
+		return k.repo.CreateCampaign(ctx, storageCampaign)
+	}
+	// Handle map[string]interface{} case for kanban compatibility
+	if campaignMap, ok := campaign.(map[string]interface{}); ok {
+		// Convert map to storage.Campaign
+		storageCampaign := &storage.Campaign{
+			ID:     campaignMap["ID"].(string),
+			Name:   campaignMap["Name"].(string),
+			Status: campaignMap["Status"].(string),
+		}
+		if createdAt, ok := campaignMap["CreatedAt"].(time.Time); ok {
+			storageCampaign.CreatedAt = createdAt
+		}
+		if updatedAt, ok := campaignMap["UpdatedAt"].(time.Time); ok {
+			storageCampaign.UpdatedAt = updatedAt
+		}
+		return k.repo.CreateCampaign(ctx, storageCampaign)
+	}
+	return fmt.Errorf("invalid campaign type")
+}
+
+// memoryStoreAdapter wraps generic memory store to implement kanban.MemoryStore
+type memoryStoreAdapter struct {
+	memStore interface{}
+}
+
+func (m *memoryStoreAdapter) Get(ctx context.Context, bucket, key string) ([]byte, error) {
+	// This is a simplified adapter - real implementation would need to match interfaces
+	return nil, fmt.Errorf("memory store adapter not fully implemented")
+}
+
+func (m *memoryStoreAdapter) Put(ctx context.Context, bucket, key string, value []byte) error {
+	return fmt.Errorf("memory store adapter not fully implemented")
+}
+
+func (m *memoryStoreAdapter) Delete(ctx context.Context, bucket, key string) error {
+	return fmt.Errorf("memory store adapter not fully implemented")
+}
+
+func (m *memoryStoreAdapter) List(ctx context.Context, bucket string) ([]string, error) {
+	return nil, fmt.Errorf("memory store adapter not fully implemented")
 }

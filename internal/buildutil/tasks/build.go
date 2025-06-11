@@ -65,7 +65,7 @@ func Build(verbose bool) error {
 		// Build
 		ui.Progress(i+1, total, fmt.Sprintf("Building %s", shortName))
 		start = time.Now()
-		cmd = exec.Command("go", "build", pkg)
+		cmd = exec.Command("go", "build", "-o", "/dev/null", pkg)
 		if verbose {
 			cmd.Stdout = os.Stdout
 			cmd.Stderr = os.Stderr

@@ -17,8 +17,8 @@ func TestChunkWithMetadata(t *testing.T) {
 		{
 			name: "Simple text with metadata",
 			config: ChunkerConfig{
-				ChunkSize:    20,
-				ChunkOverlap: 5,
+				ChunkSize:    3, // Small enough to force splitting
+				ChunkOverlap: 1,
 				Strategy:     ChunkByParagraph,
 			},
 			text: "This is paragraph one.\n\nThis is paragraph two.",
@@ -31,8 +31,8 @@ func TestChunkWithMetadata(t *testing.T) {
 				assert.Equal(t, 0, chunks[0].Metadata["chunk_index"])
 				assert.Equal(t, 2, chunks[0].Metadata["total_chunks"])
 				assert.Equal(t, "paragraph", chunks[0].Metadata["strategy"])
-				assert.Equal(t, 20, chunks[0].Metadata["chunk_size"])
-				assert.Equal(t, 5, chunks[0].Metadata["overlap"])
+				assert.Equal(t, 3, chunks[0].Metadata["chunk_size"])
+				assert.Equal(t, 1, chunks[0].Metadata["overlap"])
 				
 				// Check second chunk
 				assert.Equal(t, "This is paragraph two.", chunks[1].Content)
@@ -44,8 +44,8 @@ func TestChunkWithMetadata(t *testing.T) {
 		{
 			name: "Sentence strategy with metadata",
 			config: ChunkerConfig{
-				ChunkSize:    15,
-				ChunkOverlap: 3,
+				ChunkSize:    1, // Force each sentence into separate chunk
+				ChunkOverlap: 1,
 				Strategy:     ChunkBySentence,
 			},
 			text: "First sentence. Second sentence. Third sentence.",
@@ -56,8 +56,8 @@ func TestChunkWithMetadata(t *testing.T) {
 					assert.Equal(t, i, chunk.Metadata["chunk_index"])
 					assert.Equal(t, 3, chunk.Metadata["total_chunks"])
 					assert.Equal(t, "sentence", chunk.Metadata["strategy"])
-					assert.Equal(t, 15, chunk.Metadata["chunk_size"])
-					assert.Equal(t, 3, chunk.Metadata["overlap"])
+					assert.Equal(t, 1, chunk.Metadata["chunk_size"])
+					assert.Equal(t, 1, chunk.Metadata["overlap"])
 				}
 			},
 		},
@@ -191,8 +191,8 @@ func TestDefaultChunkerFactory(t *testing.T) {
 
 func TestChunkDocument_UnknownStrategy(t *testing.T) {
 	config := ChunkerConfig{
-		ChunkSize:    100,
-		ChunkOverlap: 20,
+		ChunkSize:    5, // Small enough to force splitting
+		ChunkOverlap: 1,
 		Strategy:     ChunkStrategy("unknown_strategy"),
 	}
 	

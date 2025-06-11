@@ -19,10 +19,48 @@ func TestEndToEndChatGRPC(t *testing.T) {
 	reg := registry.NewComponentRegistry()
 	eventBus := newMockEventBus()
 	
-	// Start test gRPC server
-	server := guildgrpc.NewServer(reg, eventBus)
+	// Initialize registry with basic configuration to prevent nil panics
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+	
+	err := reg.Initialize(ctx, registry.Config{
+		Agents: registry.AgentConfigYaml{
+			DefaultType: "worker",
+			Types: map[string]interface{}{
+				"worker": map[string]interface{}{
+					"enabled": true,
+				},
+			},
+		},
+		Providers: registry.ProviderConfig{
+			DefaultProvider: "claudecode",
+			Providers: map[string]interface{}{
+				"claudecode": map[string]interface{}{
+					"model":    "sonnet",
+					"bin_path": "claude-code",
+				},
+			},
+		},
+	})
+	require.NoError(t, err)
+	
+	// Register a mock agent factory
+	agentRegistry := reg.Agents()
+	err = agentRegistry.RegisterAgentType("mock", func(config registry.AgentConfig) (registry.Agent, error) {
+		return &mockAgent{
+			id:           config.Name,
+			name:         config.Name,
+			toolRegistry: nil, // Chat test doesn't need tools
+			responses: map[string]string{
+				"Hello, Guild!": "Greetings from the mock agent!",
+				"test":          "Mock agent response",
+			},
+		}, nil
+	})
+	require.NoError(t, err)
+	
+	// Start test gRPC server
+	server := guildgrpc.NewServer(reg, eventBus)
 
 	// Start server in background
 	go func() {
@@ -45,6 +83,7 @@ func TestEndToEndChatGRPC(t *testing.T) {
 		createResp, err := client.CreateChatSession(context.Background(), &guildpb.CreateChatSessionRequest{
 			Name:       "Test Session 1",
 			CampaignId: "test-campaign",
+			AgentIds:   []string{"mock"}, // Use our mock agent
 		})
 		require.NoError(t, err)
 		assert.NotEmpty(t, createResp.Id)
@@ -86,6 +125,7 @@ func TestEndToEndChatGRPC(t *testing.T) {
 		createResp, err := client.CreateChatSession(context.Background(), &guildpb.CreateChatSessionRequest{
 			Name:       "Test Session 2",
 			CampaignId: "test-campaign",
+			AgentIds:   []string{}, // Empty agents for this test
 		})
 		require.NoError(t, err)
 		sessionID := createResp.Id
@@ -168,6 +208,7 @@ func TestEndToEndChatGRPC(t *testing.T) {
 				createResp, err := client.CreateChatSession(context.Background(), &guildpb.CreateChatSessionRequest{
 					Name:       sessionName,
 					CampaignId: "test-campaign",
+					AgentIds:   []string{}, // Empty agents for this test
 				})
 				require.NoError(t, err)
 				sessionID := createResp.Id

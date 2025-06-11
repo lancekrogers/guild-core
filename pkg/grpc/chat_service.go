@@ -331,6 +331,25 @@ func (s *ChatService) handleChatMessage(ctx context.Context, msg *pb.ChatMessage
 		}
 	}
 
+	// Process message with agents - ensure we always send a response
+	if len(session.AgentIDs) == 0 {
+		// No agents configured, send a default response
+		defaultResp := &pb.ChatResponse{
+			Response: &pb.ChatResponse_Message{
+				Message: &pb.ChatMessage{
+					SessionId:  msg.SessionId,
+					SenderId:   "system",
+					SenderName: "Guild System",
+					Content:    "No agents are configured for this session. Please check your guild configuration.",
+					Type:       pb.ChatMessage_SYSTEM_MESSAGE,
+					Timestamp:  time.Now().Unix(),
+				},
+			},
+		}
+		session.addMessage(defaultResp.GetMessage())
+		return stream.Send(defaultResp)
+	}
+
 	// Process message with agents
 	go s.processWithAgents(ctx, session, msg, stream)
 
@@ -345,6 +364,21 @@ func (s *ChatService) processWithAgents(ctx context.Context, session *ChatSessio
 		agents = append(agents, ag)
 	}
 	session.agentsMu.RUnlock()
+
+	// If no agents are loaded, send an error response
+	if len(agents) == 0 {
+		errorResp := &pb.ChatResponse{
+			Response: &pb.ChatResponse_Error{
+				Error: &pb.ChatError{
+					Code:      pb.ChatError_AGENT_UNAVAILABLE,
+					Message:   "No agents are currently available for this session",
+					Timestamp: time.Now().Unix(),
+				},
+			},
+		}
+		stream.Send(errorResp)
+		return
+	}
 
 	for _, ag := range agents {
 		go s.processWithSingleAgent(ctx, session, ag, msg, stream)

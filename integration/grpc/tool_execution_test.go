@@ -53,6 +53,45 @@ func TestToolExecutionViaGRPC(t *testing.T) {
 	// Create registry and register test tools
 	reg := registry.NewComponentRegistry()
 	
+	// Initialize registry with mock configuration
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	
+	err := reg.Initialize(ctx, registry.Config{
+		Agents: registry.AgentConfigYaml{
+			DefaultType: "worker",
+			Types: map[string]interface{}{
+				"worker": map[string]interface{}{
+					"enabled": true,
+				},
+			},
+		},
+		Providers: registry.ProviderConfig{
+			DefaultProvider: "claudecode",
+			Providers: map[string]interface{}{
+				"claudecode": map[string]interface{}{
+					"model":    "sonnet",
+					"bin_path": "claude-code",
+				},
+			},
+		},
+	})
+	require.NoError(t, err)
+	
+	// Register a mock agent factory
+	agentRegistry := reg.Agents()
+	err = agentRegistry.RegisterAgentType("tool-agent", func(config registry.AgentConfig) (registry.Agent, error) {
+		return &mockAgent{
+			id:           config.Name,
+			name:         config.Name,
+			toolRegistry: reg.Tools(), // Pass the tool registry so it can execute tools
+			responses: map[string]string{
+				// Remove hardcoded tool responses - let the agent execute real tools
+			},
+		}, nil
+	})
+	require.NoError(t, err)
+	
 	// Create test tools
 	testTool1 := &TestTool{
 		name:        "test-tool-1",
@@ -67,7 +106,7 @@ func TestToolExecutionViaGRPC(t *testing.T) {
 	}
 
 	// Register tools
-	err := reg.Tools().RegisterTool(testTool1.Name(), testTool1)
+	err = reg.Tools().RegisterTool(testTool1.Name(), testTool1)
 	require.NoError(t, err)
 	err = reg.Tools().RegisterTool(testTool2.Name(), testTool2)
 	require.NoError(t, err)
@@ -75,8 +114,6 @@ func TestToolExecutionViaGRPC(t *testing.T) {
 	// Start gRPC server with registry
 	eventBus := newMockEventBus()
 	server := guildgrpc.NewServer(reg, eventBus)
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
 
 	go func() {
 		err := server.Start(ctx, ":50052")
@@ -91,10 +128,11 @@ func TestToolExecutionViaGRPC(t *testing.T) {
 	client := guildpb.NewChatServiceClient(conn)
 
 	t.Run("execute tool via /tool command", func(t *testing.T) {
-		// Create session
+		// Create session with tool agent
 		createResp, err := client.CreateChatSession(context.Background(), &guildpb.CreateChatSessionRequest{
 			Name:       "Tool Test 1",
 			CampaignId: "test-campaign",
+			AgentIds:   []string{"tool-agent"},
 		})
 		require.NoError(t, err)
 
@@ -152,6 +190,7 @@ func TestToolExecutionViaGRPC(t *testing.T) {
 		createResp, err := client.CreateChatSession(context.Background(), &guildpb.CreateChatSessionRequest{
 			Name:       "Cost Test 1",
 			CampaignId: "test-campaign",
+			AgentIds:   []string{"tool-agent"},
 		})
 		require.NoError(t, err)
 
@@ -190,6 +229,7 @@ func TestToolExecutionViaGRPC(t *testing.T) {
 		createResp, err := client.CreateChatSession(context.Background(), &guildpb.CreateChatSessionRequest{
 			Name:       "Error Test 1",
 			CampaignId: "test-campaign",
+			AgentIds:   []string{"tool-agent"},
 		})
 		require.NoError(t, err)
 
@@ -232,6 +272,7 @@ func TestToolExecutionViaGRPC(t *testing.T) {
 				createResp, err := client.CreateChatSession(context.Background(), &guildpb.CreateChatSessionRequest{
 					Name:       sessionID,
 					CampaignId: "test-campaign",
+					AgentIds:   []string{"tool-agent"},
 				})
 				require.NoError(t, err)
 

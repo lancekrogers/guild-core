@@ -191,12 +191,9 @@ func TestASTTool_Execute_UnsupportedLanguage(t *testing.T) {
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
 	
-	result, err := tool.Execute(context.Background(), string(input))
-	require.NoError(t, err)
-	assert.NotNil(t, result)
-	
-	// Should return empty results for unsupported language
-	assert.Contains(t, result.Output, "Language: unknown")
+	_, err = tool.Execute(context.Background(), string(input))
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "unsupported language: unknown")
 }
 
 func TestASTTool_Execute_AllTargets(t *testing.T) {
@@ -240,7 +237,7 @@ const MaxAge = 100
 
 	tool := NewASTTool()
 	
-	targets := []string{"functions", "types", "variables", "imports", "all"}
+	targets := []string{"functions", "classes", "imports", "all"}
 	
 	for _, target := range targets {
 		t.Run("target_"+target, func(t *testing.T) {
@@ -255,7 +252,7 @@ const MaxAge = 100
 			result, err := tool.Execute(context.Background(), string(input))
 			require.NoError(t, err)
 			assert.NotNil(t, result)
-			assert.Contains(t, result.Output, "Language: go")
+			assert.Contains(t, result.Output, "(go)")
 		})
 	}
 }

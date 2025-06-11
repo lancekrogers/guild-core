@@ -407,6 +407,17 @@ func (t *ApplyDiffTool) applyHunk(lines []string, hunk *DiffHunk, reverse bool) 
 		startLine = hunk.NewStart - 1
 	}
 	
+	// Validate startLine to prevent array bounds errors
+	if startLine < 0 {
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "invalid hunk start line", nil).
+			WithComponent("apply_diff").
+			WithOperation("applyHunk").
+			WithDetails("start_line", startLine).
+			WithDetails("old_start", hunk.OldStart).
+			WithDetails("new_start", hunk.NewStart).
+			WithDetails("reverse", reverse)
+	}
+	
 	// Validate context and apply changes
 	oldLineIdx := 0
 	newLines := []string{}
@@ -496,9 +507,19 @@ func (t *ApplyDiffTool) applyHunk(lines []string, hunk *DiffHunk, reverse bool) 
 		
 		// Create new slice with replacement
 		result := make([]string, 0, len(lines)-linesToReplace+len(newLines))
-		result = append(result, lines[:startLine]...)
+		
+		// Safely append the first part
+		if startLine > 0 && startLine <= len(lines) {
+			result = append(result, lines[:startLine]...)
+		}
+		
+		// Append new lines
 		result = append(result, newLines...)
-		result = append(result, lines[end:]...)
+		
+		// Safely append the remaining part
+		if end < len(lines) {
+			result = append(result, lines[end:]...)
+		}
 		
 		// Update the original slice
 		copy(lines, result)

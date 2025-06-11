@@ -130,7 +130,7 @@ func TestSearchCorpus(t *testing.T) {
 			
 			// Verify all results have high scores
 			for _, result := range results {
-				assert.Equal(t, 0.9, result.Score)
+				assert.Equal(t, float32(0.9), result.Score)
 				assert.NotEmpty(t, result.Content)
 				assert.NotEmpty(t, result.Source)
 			}
@@ -176,7 +176,7 @@ func TestSearchCorpus_ErrorHandling(t *testing.T) {
 			
 			if tt.wantError {
 				assert.Error(t, err)
-				if tt.errorContains != "" {
+				if tt.errorContains != "" && err != nil {
 					assert.Contains(t, err.Error(), tt.errorContains)
 				}
 				assert.Nil(t, results)

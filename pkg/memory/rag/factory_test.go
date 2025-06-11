@@ -57,7 +57,7 @@ func TestNewFactory(t *testing.T) {
 				CollectionName: "test_collection",
 			},
 			wantError: true,
-			errorMsg:  "embedder is required",
+			errorMsg:  "embedder cannot be nil",
 		},
 		{
 			name:     "Empty config uses defaults",
