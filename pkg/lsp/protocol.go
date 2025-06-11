@@ -390,3 +390,238 @@ type ReferenceParams struct {
 type ReferenceContext struct {
 	IncludeDeclaration bool `json:"includeDeclaration"`
 }
+
+// Type aliases for consistency
+type HoverParams = TextDocumentPositionParams
+type DefinitionParams = TextDocumentPositionParams
+
+// DocumentSymbolParams represents parameters for textDocument/documentSymbol
+type DocumentSymbolParams struct {
+	TextDocument TextDocumentIdentifier `json:"textDocument"`
+}
+
+// CodeActionParams represents parameters for textDocument/codeAction
+type CodeActionParams struct {
+	TextDocument TextDocumentIdentifier `json:"textDocument"`
+	Range        Range                  `json:"range"`
+	Context      CodeActionContext      `json:"context"`
+}
+
+// CodeActionContext represents the context for code actions
+type CodeActionContext struct {
+	Diagnostics []Diagnostic `json:"diagnostics"`
+	Only        []string     `json:"only,omitempty"`
+}
+
+// ExecuteCommandParams represents parameters for workspace/executeCommand
+type ExecuteCommandParams struct {
+	Command   string        `json:"command"`
+	Arguments []interface{} `json:"arguments,omitempty"`
+}
+
+// WorkspaceSymbolParams represents parameters for workspace/symbol
+type WorkspaceSymbolParams struct {
+	Query string `json:"query"`
+}
+
+// SignatureHelpParams represents parameters for textDocument/signatureHelp
+type SignatureHelpParams struct {
+	TextDocumentPositionParams
+	Context *SignatureHelpContext `json:"context,omitempty"`
+}
+
+// SignatureHelpContext represents the context for signature help
+type SignatureHelpContext struct {
+	TriggerKind         SignatureHelpTriggerKind `json:"triggerKind"`
+	TriggerCharacter    string                   `json:"triggerCharacter,omitempty"`
+	IsRetrigger         bool                     `json:"isRetrigger"`
+	ActiveSignatureHelp *SignatureHelp           `json:"activeSignatureHelp,omitempty"`
+}
+
+// SignatureHelpTriggerKind represents how signature help was triggered
+type SignatureHelpTriggerKind int
+
+const (
+	// SignatureHelpTriggerKindInvoked means signature help was invoked manually
+	SignatureHelpTriggerKindInvoked SignatureHelpTriggerKind = 1
+	// SignatureHelpTriggerKindTriggerCharacter means signature help was triggered by a character
+	SignatureHelpTriggerKindTriggerCharacter SignatureHelpTriggerKind = 2
+	// SignatureHelpTriggerKindContentChange means signature help was triggered by content change
+	SignatureHelpTriggerKindContentChange SignatureHelpTriggerKind = 3
+)
+
+// CodeLensParams represents parameters for textDocument/codeLens
+type CodeLensParams struct {
+	TextDocument TextDocumentIdentifier `json:"textDocument"`
+}
+
+// DocumentHighlightParams represents parameters for textDocument/documentHighlight
+type DocumentHighlightParams = TextDocumentPositionParams
+
+// RenameParams represents parameters for textDocument/rename
+type RenameParams struct {
+	TextDocumentPositionParams
+	NewName string `json:"newName"`
+}
+
+// DocumentFormattingParams represents parameters for textDocument/formatting
+type DocumentFormattingParams struct {
+	TextDocument TextDocumentIdentifier `json:"textDocument"`
+	Options      FormattingOptions      `json:"options"`
+}
+
+// FormattingOptions represents formatting options
+type FormattingOptions struct {
+	TabSize      int  `json:"tabSize"`
+	InsertSpaces bool `json:"insertSpaces"`
+	TrimTrailingWhitespace bool `json:"trimTrailingWhitespace,omitempty"`
+	InsertFinalNewline     bool `json:"insertFinalNewline,omitempty"`
+	TrimFinalNewlines      bool `json:"trimFinalNewlines,omitempty"`
+}
+
+// Additional types needed for the interface methods
+
+// DocumentSymbol represents a symbol in a document
+type DocumentSymbol struct {
+	Name           string           `json:"name"`
+	Detail         string           `json:"detail,omitempty"`
+	Kind           SymbolKind       `json:"kind"`
+	Deprecated     bool             `json:"deprecated,omitempty"`
+	Range          Range            `json:"range"`
+	SelectionRange Range            `json:"selectionRange"`
+	Children       []DocumentSymbol `json:"children,omitempty"`
+}
+
+// SymbolKind represents the kind of a symbol
+type SymbolKind int
+
+const (
+	SymbolKindFile          SymbolKind = 1
+	SymbolKindModule        SymbolKind = 2
+	SymbolKindNamespace     SymbolKind = 3
+	SymbolKindPackage       SymbolKind = 4
+	SymbolKindClass         SymbolKind = 5
+	SymbolKindMethod        SymbolKind = 6
+	SymbolKindProperty      SymbolKind = 7
+	SymbolKindField         SymbolKind = 8
+	SymbolKindConstructor   SymbolKind = 9
+	SymbolKindEnum          SymbolKind = 10
+	SymbolKindInterface     SymbolKind = 11
+	SymbolKindFunction      SymbolKind = 12
+	SymbolKindVariable      SymbolKind = 13
+	SymbolKindConstant      SymbolKind = 14
+	SymbolKindString        SymbolKind = 15
+	SymbolKindNumber        SymbolKind = 16
+	SymbolKindBoolean       SymbolKind = 17
+	SymbolKindArray         SymbolKind = 18
+	SymbolKindObject        SymbolKind = 19
+	SymbolKindKey           SymbolKind = 20
+	SymbolKindNull          SymbolKind = 21
+	SymbolKindEnumMember    SymbolKind = 22
+	SymbolKindStruct        SymbolKind = 23
+	SymbolKindEvent         SymbolKind = 24
+	SymbolKindOperator      SymbolKind = 25
+	SymbolKindTypeParameter SymbolKind = 26
+)
+
+// CodeAction represents a code action
+type CodeAction struct {
+	Title       string         `json:"title"`
+	Kind        string         `json:"kind,omitempty"`
+	Diagnostics []Diagnostic   `json:"diagnostics,omitempty"`
+	IsPreferred bool           `json:"isPreferred,omitempty"`
+	Edit        *WorkspaceEdit `json:"edit,omitempty"`
+	Command     *Command       `json:"command,omitempty"`
+}
+
+// WorkspaceEdit represents changes to many resources
+type WorkspaceEdit struct {
+	Changes map[string][]TextEdit `json:"changes,omitempty"`
+}
+
+// Diagnostic represents a diagnostic
+type Diagnostic struct {
+	Range              Range              `json:"range"`
+	Severity           DiagnosticSeverity `json:"severity,omitempty"`
+	Code               interface{}        `json:"code,omitempty"`
+	Source             string             `json:"source,omitempty"`
+	Message            string             `json:"message"`
+	Tags               []DiagnosticTag    `json:"tags,omitempty"`
+	RelatedInformation []DiagnosticRelatedInformation `json:"relatedInformation,omitempty"`
+}
+
+// DiagnosticSeverity represents the severity of a diagnostic
+type DiagnosticSeverity int
+
+const (
+	DiagnosticSeverityError       DiagnosticSeverity = 1
+	DiagnosticSeverityWarning     DiagnosticSeverity = 2
+	DiagnosticSeverityInformation DiagnosticSeverity = 3
+	DiagnosticSeverityHint        DiagnosticSeverity = 4
+)
+
+// DiagnosticTag represents a diagnostic tag
+type DiagnosticTag int
+
+const (
+	DiagnosticTagUnnecessary DiagnosticTag = 1
+	DiagnosticTagDeprecated  DiagnosticTag = 2
+)
+
+// DiagnosticRelatedInformation represents related information for a diagnostic
+type DiagnosticRelatedInformation struct {
+	Location Location `json:"location"`
+	Message  string   `json:"message"`
+}
+
+// SymbolInformation represents information about a symbol
+type SymbolInformation struct {
+	Name          string     `json:"name"`
+	Kind          SymbolKind `json:"kind"`
+	Deprecated    bool       `json:"deprecated,omitempty"`
+	Location      Location   `json:"location"`
+	ContainerName string     `json:"containerName,omitempty"`
+}
+
+// SignatureHelp represents signature help
+type SignatureHelp struct {
+	Signatures      []SignatureInformation `json:"signatures"`
+	ActiveSignature int                    `json:"activeSignature,omitempty"`
+	ActiveParameter int                    `json:"activeParameter,omitempty"`
+}
+
+// SignatureInformation represents information about a signature
+type SignatureInformation struct {
+	Label           string                  `json:"label"`
+	Documentation   interface{}             `json:"documentation,omitempty"`
+	Parameters      []ParameterInformation  `json:"parameters,omitempty"`
+	ActiveParameter int                     `json:"activeParameter,omitempty"`
+}
+
+// ParameterInformation represents information about a parameter
+type ParameterInformation struct {
+	Label         interface{} `json:"label"`
+	Documentation interface{} `json:"documentation,omitempty"`
+}
+
+// CodeLens represents a code lens
+type CodeLens struct {
+	Range   Range    `json:"range"`
+	Command *Command `json:"command,omitempty"`
+	Data    interface{} `json:"data,omitempty"`
+}
+
+// DocumentHighlight represents a document highlight
+type DocumentHighlight struct {
+	Range Range                  `json:"range"`
+	Kind  DocumentHighlightKind  `json:"kind,omitempty"`
+}
+
+// DocumentHighlightKind represents the kind of a document highlight
+type DocumentHighlightKind int
+
+const (
+	DocumentHighlightKindText  DocumentHighlightKind = 1
+	DocumentHighlightKindRead  DocumentHighlightKind = 2
+	DocumentHighlightKindWrite DocumentHighlightKind = 3
+)

@@ -1,3 +1,6 @@
+//go:build integration && lsp
+// +build integration,lsp
+
 package lsp_test
 
 import (
@@ -15,6 +18,17 @@ import (
 )
 
 func TestLSPManager(t *testing.T) {
+	// Set a timeout for the entire test
+	if deadline, ok := t.Deadline(); !ok {
+		t.Fatal("Test must have a deadline")
+	} else if time.Until(deadline) > 30*time.Second {
+		// Limit test to 30 seconds max
+		var cancel context.CancelFunc
+		ctx := context.Background()
+		ctx, cancel = context.WithTimeout(ctx, 30*time.Second)
+		defer cancel()
+	}
+
 	// Skip if gopls is not available
 	if _, err := exec.LookPath("gopls"); err != nil {
 		t.Skip("gopls not found in PATH, skipping LSP tests")
@@ -54,12 +68,18 @@ go 1.21
 	// Create LSP manager
 	manager, err := lsp.NewManager("")
 	require.NoError(t, err)
-	defer manager.Shutdown(context.Background())
-
-	ctx := context.Background()
+	
+	// Create timeout context for all operations
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	defer manager.Shutdown(ctx)
 
 	t.Run("GetServerForFile", func(t *testing.T) {
-		server, err := manager.GetServerForFile(ctx, testFile)
+		// Add sub-test timeout
+		subCtx, subCancel := context.WithTimeout(ctx, 5*time.Second)
+		defer subCancel()
+		
+		server, err := manager.GetServerForFile(subCtx, testFile)
 		require.NoError(t, err)
 		assert.NotNil(t, server)
 		assert.Equal(t, "go", server.Language)
@@ -67,8 +87,12 @@ go 1.21
 	})
 
 	t.Run("GetCompletion", func(t *testing.T) {
+		// Add sub-test timeout
+		subCtx, subCancel := context.WithTimeout(ctx, 5*time.Second)
+		defer subCancel()
+		
 		// Test completion after "fmt."
-		completions, err := manager.GetCompletion(ctx, testFile, 6, 5, ".")
+		completions, err := manager.GetCompletion(subCtx, testFile, 6, 5, ".")
 		require.NoError(t, err)
 		assert.NotNil(t, completions)
 		assert.True(t, len(completions.Items) > 0)

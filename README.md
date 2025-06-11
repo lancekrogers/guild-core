@@ -9,7 +9,7 @@
   <br>
 
 [![Go Version](https://img.shields.io/badge/Go-1.24-00ADD8.svg)](https://go.dev/dl/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)]()
+[![License](https://img.shields.io/badge/License-Custom-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/Status-Pre--MVP-orange.svg)]()
 
 </div>
@@ -205,7 +205,7 @@ Guild is currently in pre-MVP development. Contribution guidelines will be estab
 
 ## ⚖️ License
 
-MIT License - see LICENSE file for details.
+Custom License - see [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 

@@ -1,120 +1,132 @@
+// internal/buildutil/main.go
 package main
 
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
-	"os/exec"
-	"strings"
+	"time"
+	
+	"github.com/guild-ventures/guild-core/internal/buildutil/tasks"
+	"github.com/guild-ventures/guild-core/internal/buildutil/ui"
+)
+
+var (
+	noColor bool
+	verbose bool
 )
 
 func main() {
-	verbose := flag.Bool("v", false, "Verbose output")
+	flag.BoolVar(&noColor, "no-color", false, "disable ANSI colours")
+	flag.BoolVar(&verbose, "v", false, "verbose output")
 	flag.Parse()
-
+	
+	// Initialize UI with color preferences
+	ui.Init(noColor)
+	
 	if flag.NArg() == 0 {
-		fmt.Println("Usage: go run tools/buildtool/simple.go [build|test|clean]")
-		os.Exit(1)
+		log.Fatalf("usage: buildutil <build|test|integration|clean|all>")
 	}
-
-	switch flag.Arg(0) {
+	
+	cmd := flag.Arg(0)
+	startTime := time.Now()
+	
+	// Hide cursor during operations
+	if ui.ColourEnabled() {
+		fmt.Print(ui.HideCursor)
+		defer fmt.Print(ui.ShowCursor)
+	}
+	
+	var err error
+	
+	switch cmd {
 	case "build":
-		build(*verbose)
+		err = tasks.Build(verbose)
+		
 	case "test":
-		test(*verbose)
+		err = tasks.Test(verbose)
+		
+	case "integration":
+		err = tasks.Integration(verbose)
+		
 	case "clean":
-		clean(*verbose)
+		err = tasks.Clean(verbose)
+		
+	case "all":
+		// Run all tasks in sequence
+		var errors []error
+		
+		fmt.Println("\n🧹 Cleaning...")
+		if cleanErr := tasks.Clean(verbose); cleanErr != nil {
+			errors = append(errors, fmt.Errorf("clean failed: %w", cleanErr))
+		}
+		
+		fmt.Println("\n🔨 Building...")
+		if buildErr := tasks.Build(verbose); buildErr != nil {
+			errors = append(errors, fmt.Errorf("build failed: %w", buildErr))
+			// Don't continue if build fails - can't test broken code
+			err = fmt.Errorf("stopping due to build failure: %w", buildErr)
+			break
+		}
+		
+		fmt.Println("\n🧪 Testing...")
+		if testErr := tasks.Test(verbose); testErr != nil {
+			errors = append(errors, fmt.Errorf("tests failed: %w", testErr))
+			// Continue to integration tests even if unit tests fail
+		}
+		
+		fmt.Println("\n🔗 Integration Testing...")
+		if integrationErr := tasks.Integration(verbose); integrationErr != nil {
+			errors = append(errors, fmt.Errorf("integration tests failed: %w", integrationErr))
+		}
+		
+		// Set overall error if any step failed
+		if len(errors) > 0 {
+			err = fmt.Errorf("%d tasks failed", len(errors))
+		}
+		
+		// Show overall summary
+		if err == nil {
+			totalTime := time.Since(startTime)
+			cleanStatus := "✓ Complete"
+			buildStatus := "✓ Complete"
+			testStatus := "✓ Complete"
+			integrationStatus := "✓ Complete"
+			
+			if ui.ColourEnabled() {
+				cleanStatus = ui.Green + cleanStatus + ui.Reset
+				buildStatus = ui.Green + buildStatus + ui.Reset
+				testStatus = ui.Green + testStatus + ui.Reset
+				integrationStatus = ui.Green + integrationStatus + ui.Reset
+			}
+			
+			rows := [][]string{
+				{"Task", "Status"},
+				{"Clean", cleanStatus},
+				{"Build", buildStatus},
+				{"Test", testStatus},
+				{"Integration", integrationStatus},
+			}
+			ui.SummaryCard("All Tasks Complete", rows, fmt.Sprintf("%.2fs", totalTime.Seconds()), true)
+		}
+		
+	case "quick":
+		// Quick build without visual effects
+		noColor = true
+		ui.Init(noColor)
+		err = tasks.Build(verbose)
+		
 	default:
-		fmt.Printf("Unknown command: %s\n", flag.Arg(0))
-		os.Exit(1)
-	}
-}
-
-func build(verbose bool) {
-	fmt.Println("\n🔨 Building Guild...")
-	
-	// Clean first
-	fmt.Println("  → Cleaning old artifacts...")
-	os.RemoveAll("bin")
-	
-	// Create bin directory
-	os.MkdirAll("bin", 0755)
-	
-	// Run go generate
-	fmt.Println("  → Running code generation...")
-	runCmd("go", "generate", "./...")
-	
-	// Build
-	fmt.Println("  → Compiling binary...")
-	if err := runCmd("go", "build", "-o", "bin/guild", "./cmd/guild"); err != nil {
-		fmt.Println("  ❌ Build failed!")
-		os.Exit(1)
+		log.Fatalf("unknown command %q", cmd)
 	}
 	
-	fmt.Println("  ✅ Build complete: bin/guild")
-	fmt.Println()
-}
-
-func test(verbose bool) {
-	fmt.Println("\n🧪 Running tests...")
-	
-	packages := []string{
-		"./pkg/agent/...",
-		"./pkg/memory/...",
-		"./pkg/orchestrator/...",
-		"./pkg/providers/...",
-	}
-	
-	failed := 0
-	for _, pkg := range packages {
-		shortName := strings.TrimPrefix(pkg, "./")
-		fmt.Printf("  → Testing %s...", shortName)
-		
-		cmd := exec.Command("go", "test", "-short", pkg)
-		if !verbose {
-			cmd.Stdout = nil
-			cmd.Stderr = nil
-		}
-		
-		if err := cmd.Run(); err != nil {
-			fmt.Println(" ❌")
-			failed++
+	if err != nil {
+		if ui.ColourEnabled() {
+			fmt.Printf("\n%s✗ Error: %v%s\n", ui.Red, err, ui.Reset)
 		} else {
-			fmt.Println(" ✅")
+			fmt.Printf("\nError: %v\n", err)
 		}
-	}
-	
-	if failed > 0 {
-		fmt.Printf("\n  ❌ %d packages failed\n", failed)
 		os.Exit(1)
-	} else {
-		fmt.Println("\n  ✅ All tests passed!")
 	}
-	fmt.Println()
-}
-
-func clean(verbose bool) {
-	fmt.Println("\n🧹 Cleaning...")
-	
-	items := []string{"bin/", "*.test", "coverage.out", ".test-*"}
-	
-	for _, item := range items {
-		fmt.Printf("  → Removing %s...\n", item)
-		if strings.Contains(item, "*") {
-			// Use shell for wildcards
-			exec.Command("sh", "-c", "rm -rf "+item).Run()
-		} else {
-			os.RemoveAll(item)
-		}
-	}
-	
-	fmt.Println("  ✅ Clean complete!")
-	fmt.Println()
-}
-
-func runCmd(name string, args ...string) error {
-	cmd := exec.Command(name, args...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
 }

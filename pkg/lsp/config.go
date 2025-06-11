@@ -215,6 +215,12 @@ func DetectLanguage(filePath string) string {
 		".bash": "bash",
 		".zsh":  "zsh",
 		".fish": "fish",
+		".css":  "css",
+		".html": "html",
+		".htm":  "html",
+		".json": "json",
+		".yaml": "yaml",
+		".yml":  "yaml",
 	}
 	
 	if lang, ok := commonMappings[ext]; ok {
