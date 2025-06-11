@@ -194,7 +194,7 @@ The system follows a layered architecture:
 3. Data Access Layer
 
 ## File: src/models/user.go
-package models
+` + "package models" + `
 
 type User struct {
     ID       string
@@ -204,7 +204,7 @@ type User struct {
 }
 
 ## File: src/handlers/auth.go
-package handlers
+` + "package handlers" + `
 
 import "net/http"
 
