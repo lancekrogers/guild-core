@@ -15,7 +15,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/internal/testutil"
 	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/context"
+	guildcontext "github.com/guild-ventures/guild-core/pkg/context"
 	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/memory/rag"

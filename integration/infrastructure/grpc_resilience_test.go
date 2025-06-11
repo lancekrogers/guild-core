@@ -19,7 +19,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/internal/testutil"
 	grpcserver "github.com/guild-ventures/guild-core/pkg/grpc"
-	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb"
+	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
