@@ -165,11 +165,11 @@ func executeCommission(ctx context.Context, description string) error {
 			WithOperation("commission.execute")
 	}
 
-	fmt.Printf("✅ Commission registered as objective: %s\n", obj.ID)
+	fmt.Printf("✅ Commission registered: %s\n", obj.ID)
 
 	// Set objective in orchestrator
-	if err := components.orchestrator.SetObjective(obj); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to set objective in orchestrator").
+	if err := components.orchestrator.SetCommission(obj); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to set commission in orchestrator").
 			WithComponent("cli").
 			WithOperation("commission.execute")
 	}

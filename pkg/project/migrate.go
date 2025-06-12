@@ -76,7 +76,7 @@ func MigrateFromGlobal(ctx context.Context, projectPath string, globalPath strin
 	}
 
 	// Migrate objectives
-	if err := migrateObjectives(ctx, globalPath, projCtx, opts, result); err != nil {
+	if err := migrateCommissions(ctx, globalPath, projCtx, opts, result); err != nil {
 		return result, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to migrate objectives").
 			WithComponent("project").
 			WithOperation("migrate_from_global")
@@ -109,12 +109,12 @@ func migrateAgents(ctx context.Context, globalPath string, projCtx *Context, opt
 	return migrateDirectory(globalAgentsPath, projectAgentsPath, opts, result)
 }
 
-// migrateObjectives migrates objectives
-func migrateObjectives(ctx context.Context, globalPath string, projCtx *Context, opts MigrationOptions, result *MigrationResult) error {
-	globalObjectivesPath := filepath.Join(globalPath, "objectives")
-	projectObjectivesPath := projCtx.GetCommissionsPath()
+// migrateCommissions migrates commissions
+func migrateCommissions(ctx context.Context, globalPath string, projCtx *Context, opts MigrationOptions, result *MigrationResult) error {
+	globalCommissionsPath := filepath.Join(globalPath, "commissions")
+	projectCommissionsPath := projCtx.GetCommissionsPath()
 
-	return migrateDirectory(globalObjectivesPath, projectObjectivesPath, opts, result)
+	return migrateDirectory(globalCommissionsPath, projectCommissionsPath, opts, result)
 }
 
 // migrateDirectory migrates files from source to destination directory

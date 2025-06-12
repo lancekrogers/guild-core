@@ -12,7 +12,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
-// LifecycleManager handles the objective lifecycle operations
+// LifecycleManager handles the commission lifecycle operations
 type LifecycleManager struct {
 	manager        *Manager
 	commissionsPath string
@@ -47,55 +47,55 @@ func DefaultLifecycleManagerFactory(manager *Manager, basePath string) *Lifecycl
 	return newLifecycleManager(manager, basePath)
 }
 
-// CreateObjectiveFromDescription creates a new objective from a natural language description
-func (l *LifecycleManager) CreateObjectiveFromDescription(ctx context.Context, description string) (*Commission, error) {
-	// First, ensure objectives directory exists
+// CreateCommissionFromDescription creates a new commission from a natural language description
+func (l *LifecycleManager) CreateCommissionFromDescription(ctx context.Context, description string) (*Commission, error) {
+	// First, ensure commissions directory exists
 	if err := os.MkdirAll(l.commissionsPath, 0755); err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commissions directory").WithComponent("commission").WithOperation("CreateObjectiveFromDescription")
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commissions directory").WithComponent("commission").WithOperation("CreateCommissionFromDescription")
 	}
 
-	// Create a new objective with a title derived from the description
+	// Create a new commission with a title derived from the description
 	title := deriveTitle(description)
 	fileName := sanitizeFilename(title) + ".md"
 	filePath := filepath.Join(l.commissionsPath, fileName)
 
-	// Create the objective object
+	// Create the commission object
 	obj := NewCommission(title, description)
 	obj.Status = StatusDraft
 	obj.FilePath = filePath
 	obj.Goal = description
 
 	// Generate initial markdown content
-	content := formatObjectiveMarkdown(obj)
+	content := formatCommissionMarkdown(obj)
 
 	// Write to file
 	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write objective file").WithComponent("commission").WithOperation("CreateObjectiveFromDescription")
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write commission file").WithComponent("commission").WithOperation("CreateCommissionFromDescription")
 	}
 
 	// Save to manager
 	obj.Source = filePath
 	obj.Content = content
 	obj.CalculateCompletion()
-	if err := l.manager.SaveObjective(ctx, obj); err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save objective").WithComponent("commission").WithOperation("CreateObjectiveFromDescription")
+	if err := l.manager.SaveCommission(ctx, obj); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save commission").WithComponent("commission").WithOperation("CreateCommissionFromDescription")
 	}
 
 	return obj, nil
 }
 
-// AddContext adds context to an objective and updates its lifecycle state
-func (l *LifecycleManager) AddContext(ctx context.Context, objectiveID, context string) error {
-	// Get the objective
-	obj, err := l.manager.GetObjective(ctx, objectiveID)
+// AddContext adds context to an commission and updates its lifecycle state
+func (l *LifecycleManager) AddContext(ctx context.Context, commissionID, context string) error {
+	// Get the commission
+	obj, err := l.manager.GetCommission(ctx, commissionID)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get objective").WithComponent("commission").WithOperation("AddContext")
+		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get commission").WithComponent("commission").WithOperation("AddContext")
 	}
 
 	// Parse the context for any document references
 	context, refs := parseDocumentReferences(context)
 
-	// Add the context to the objective
+	// Add the context to the commission
 	if obj.Context == nil {
 		obj.Context = []string{context}
 	} else {
@@ -123,31 +123,31 @@ func (l *LifecycleManager) AddContext(ctx context.Context, objectiveID, context 
 	obj.CalculateCompletion()
 
 	// Update the file content
-	content := formatObjectiveMarkdown(obj)
+	content := formatCommissionMarkdown(obj)
 	obj.Content = content
 
 	// Save changes to file
 	if err := os.WriteFile(obj.FilePath, []byte(content), 0644); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update objective file").WithComponent("commission").WithOperation("AddContext")
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update commission file").WithComponent("commission").WithOperation("AddContext")
 	}
 
 	// Save to manager
-	if err := l.manager.SaveObjective(ctx, obj); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save objective").WithComponent("commission").WithOperation("AddContext")
+	if err := l.manager.SaveCommission(ctx, obj); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save commission").WithComponent("commission").WithOperation("AddContext")
 	}
 
 	return nil
 }
 
-// GenerateProjectStructure generates ai_docs and specs from an objective
-func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, objectiveID string) error {
-	// Get the objective
-	obj, err := l.manager.GetObjective(ctx, objectiveID)
+// GenerateProjectStructure generates ai_docs and specs from an commission
+func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, commissionID string) error {
+	// Get the commission
+	obj, err := l.manager.GetCommission(ctx, commissionID)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get objective").WithComponent("commission").WithOperation("GenerateProjectStructure")
+		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get commission").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
 
-	// Create project directory using objective title
+	// Create project directory using commission title
 	projectName := sanitizeFilename(obj.Title)
 	projectDir := filepath.Join(filepath.Dir(obj.FilePath), projectName)
 
@@ -164,12 +164,12 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, objecti
 	}
 
 	// TODO: In a real implementation, this would generate actual ai_docs and specs
-	// based on the objective using the LLM generators.
+	// based on the commission using the LLM generators.
 	// For now, we'll just create stub files
 
 	// Create README.md in ai_docs
 	aiDocsReadme := filepath.Join(aiDocsDir, "README.md")
-	aiDocsContent := fmt.Sprintf("# AI Docs for %s\n\nGenerated from objective: %s\n\n## Overview\n\n%s\n\n## Related Specs\n\n@spec/README.md\n",
+	aiDocsContent := fmt.Sprintf("# AI Docs for %s\n\nGenerated from commission: %s\n\n## Overview\n\n%s\n\n## Related Specs\n\n@spec/README.md\n",
 		obj.Title,
 		filepath.Base(obj.FilePath),
 		obj.Description)
@@ -180,7 +180,7 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, objecti
 
 	// Create README.md in specs
 	specsReadme := filepath.Join(specsDir, "README.md")
-	specsContent := fmt.Sprintf("# Specifications for %s\n\nGenerated from objective: %s\n\n## Requirements\n\n",
+	specsContent := fmt.Sprintf("# Specifications for %s\n\nGenerated from commission: %s\n\n## Requirements\n\n",
 		obj.Title,
 		filepath.Base(obj.FilePath))
 
@@ -193,7 +193,7 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, objecti
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write specs README").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
 
-	// Update objective with references to the new files
+	// Update commission with references to the new files
 	obj.AIDocs = []string{aiDocsReadme}
 	obj.Specs = []string{specsReadme}
 
@@ -203,24 +203,24 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, objecti
 	obj.CalculateCompletion()
 
 	// Save to manager
-	if err := l.manager.SaveObjective(ctx, obj); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save objective").WithComponent("commission").WithOperation("GenerateProjectStructure")
+	if err := l.manager.SaveCommission(ctx, obj); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save commission").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
 
 	return nil
 }
 
-// MarkObjectiveReady marks an objective as ready for implementation
-func (l *LifecycleManager) MarkObjectiveReady(ctx context.Context, objectiveID string) error {
-	// Get the objective
-	obj, err := l.manager.GetObjective(ctx, objectiveID)
+// MarkCommissionReady marks an commission as ready for implementation
+func (l *LifecycleManager) MarkCommissionReady(ctx context.Context, commissionID string) error {
+	// Get the commission
+	obj, err := l.manager.GetCommission(ctx, commissionID)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get objective").WithComponent("commission").WithOperation("MarkObjectiveReady")
+		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get commission").WithComponent("commission").WithOperation("MarkCommissionReady")
 	}
 
-	// Check if the objective has been processed (has ai_docs and specs)
+	// Check if the commission has been processed (has ai_docs and specs)
 	if len(obj.AIDocs) == 0 || len(obj.Specs) == 0 {
-		return gerror.New(gerror.ErrCodeValidation, "objective must have generated ai_docs and specs before being marked as ready", nil).WithComponent("commission").WithOperation("MarkObjectiveReady")
+		return gerror.New(gerror.ErrCodeValidation, "commission must have generated ai_docs and specs before being marked as ready", nil).WithComponent("commission").WithOperation("MarkCommissionReady")
 	}
 
 	// Update status
@@ -234,30 +234,30 @@ func (l *LifecycleManager) MarkObjectiveReady(ctx context.Context, objectiveID s
 	readyFile := filepath.Join(projectDir, l.guildReadyFile)
 
 	// Write current time to the ready file
-	readyContent := fmt.Sprintf("Objective marked ready at: %s\n", time.Now().Format(time.RFC3339))
+	readyContent := fmt.Sprintf("Commission marked ready at: %s\n", time.Now().Format(time.RFC3339))
 	if err := os.WriteFile(readyFile, []byte(readyContent), 0644); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create ready file").WithComponent("commission").WithOperation("MarkObjectiveReady")
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create ready file").WithComponent("commission").WithOperation("MarkCommissionReady")
 	}
 
 	// Save to manager
-	if err := l.manager.SaveObjective(ctx, obj); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save objective").WithComponent("commission").WithOperation("MarkObjectiveReady")
+	if err := l.manager.SaveCommission(ctx, obj); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save commission").WithComponent("commission").WithOperation("MarkCommissionReady")
 	}
 
 	return nil
 }
 
-// MarkObjectiveImplementing marks an objective as being implemented
-func (l *LifecycleManager) MarkObjectiveImplementing(ctx context.Context, objectiveID string) error {
-	// Get the objective
-	obj, err := l.manager.GetObjective(ctx, objectiveID)
+// MarkCommissionImplementing marks an commission as being implemented
+func (l *LifecycleManager) MarkCommissionImplementing(ctx context.Context, commissionID string) error {
+	// Get the commission
+	obj, err := l.manager.GetCommission(ctx, commissionID)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get objective").WithComponent("commission").WithOperation("MarkObjectiveImplementing")
+		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get commission").WithComponent("commission").WithOperation("MarkCommissionImplementing")
 	}
 
-	// Check if the objective is ready
+	// Check if the commission is ready
 	if obj.Status != StatusReady {
-		return gerror.New(gerror.ErrCodeValidation, "objective must be ready before being marked as implementing", nil).WithComponent("commission").WithOperation("MarkObjectiveImplementing")
+		return gerror.New(gerror.ErrCodeValidation, "commission must be ready before being marked as implementing", nil).WithComponent("commission").WithOperation("MarkCommissionImplementing")
 	}
 
 	// Update status
@@ -265,19 +265,19 @@ func (l *LifecycleManager) MarkObjectiveImplementing(ctx context.Context, object
 	obj.IncrementIteration()
 
 	// Save to manager
-	if err := l.manager.SaveObjective(ctx, obj); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save objective").WithComponent("commission").WithOperation("MarkObjectiveImplementing")
+	if err := l.manager.SaveCommission(ctx, obj); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save commission").WithComponent("commission").WithOperation("MarkCommissionImplementing")
 	}
 
 	return nil
 }
 
-// MarkObjectiveCompleted marks an objective as completed
-func (l *LifecycleManager) MarkObjectiveCompleted(ctx context.Context, objectiveID string) error {
-	// Get the objective
-	obj, err := l.manager.GetObjective(ctx, objectiveID)
+// MarkCommissionCompleted marks an commission as completed
+func (l *LifecycleManager) MarkCommissionCompleted(ctx context.Context, commissionID string) error {
+	// Get the commission
+	obj, err := l.manager.GetCommission(ctx, commissionID)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get objective").WithComponent("commission").WithOperation("MarkObjectiveCompleted")
+		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to get commission").WithComponent("commission").WithOperation("MarkCommissionCompleted")
 	}
 
 	// Update status
@@ -291,27 +291,27 @@ func (l *LifecycleManager) MarkObjectiveCompleted(ctx context.Context, objective
 	readyFile := filepath.Join(projectDir, l.guildReadyFile)
 
 	// Append completion time to the ready file
-	completionContent := fmt.Sprintf("Objective completed at: %s\n", time.Now().Format(time.RFC3339))
+	completionContent := fmt.Sprintf("Commission completed at: %s\n", time.Now().Format(time.RFC3339))
 	f, err := os.OpenFile(readyFile, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to open ready file").WithComponent("commission").WithOperation("MarkObjectiveCompleted")
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to open ready file").WithComponent("commission").WithOperation("MarkCommissionCompleted")
 	}
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil {
 			// Log the close error but don't override the main error
 			_ = gerror.Wrap(closeErr, gerror.ErrCodeStorage, "failed to close ready file").
 				WithComponent("commission").
-				WithOperation("MarkObjectiveCompleted")
+				WithOperation("MarkCommissionCompleted")
 		}
 	}()
 
 	if _, err := f.WriteString(completionContent); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update ready file").WithComponent("commission").WithOperation("MarkObjectiveCompleted")
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update ready file").WithComponent("commission").WithOperation("MarkCommissionCompleted")
 	}
 
 	// Save to manager
-	if err := l.manager.SaveObjective(ctx, obj); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save objective").WithComponent("commission").WithOperation("MarkObjectiveCompleted")
+	if err := l.manager.SaveCommission(ctx, obj); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save commission").WithComponent("commission").WithOperation("MarkCommissionCompleted")
 	}
 
 	return nil
@@ -340,8 +340,8 @@ func deriveTitle(description string) string {
 	return title
 }
 
-// formatObjectiveMarkdown formats an objective as markdown
-func formatObjectiveMarkdown(obj *Commission) string {
+// formatCommissionMarkdown formats an commission as markdown
+func formatCommissionMarkdown(obj *Commission) string {
 	var content strings.Builder
 
 	// Title
@@ -387,7 +387,7 @@ func formatObjectiveMarkdown(obj *Commission) string {
 		}
 		content.WriteString("\n")
 	} else {
-		content.WriteString("No related objectives defined yet.\n\n")
+		content.WriteString("No related commissions defined yet.\n\n")
 	}
 
 	return content.String()

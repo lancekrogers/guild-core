@@ -21,7 +21,7 @@ project-local approach. It will:
 - Copy corpus documents from global to project
 - Optionally migrate embeddings (with --embeddings flag)
 - Copy agent configurations
-- Copy objectives`,
+- Copy commissions`,
 	RunE: runMigrate,
 }
 

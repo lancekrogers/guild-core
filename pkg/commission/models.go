@@ -45,9 +45,9 @@ type Commission struct {
 	Content      string            `json:"-"`                      // Original content, not stored in JSON
 	FilePath     string            `json:"-"`                      // Path to the file
 	FileName     string            `json:"-"`                      // Name of the file
-	Goal         string            `json:"goal,omitempty"`         // The main goal of the objective
+	Goal         string            `json:"goal,omitempty"`         // The main goal of the commission
 	Requirements []string          `json:"requirements,omitempty"` // Requirements for completion
-	Related      []string          `json:"related,omitempty"`      // Related objectives
+	Related      []string          `json:"related,omitempty"`      // Related commissions
 	AIDocs       []string          `json:"ai_docs,omitempty"`      // AI documentation paths
 	Specs        []string          `json:"specs,omitempty"`        // Specification paths
 	Completion   float64           `json:"completion"`             // Completion percentage (0.0-1.0)

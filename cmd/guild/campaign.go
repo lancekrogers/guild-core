@@ -21,7 +21,7 @@ import (
 )
 
 var (
-	objectivePath string
+	commissionPath string
 	campaignName  string
 	managerID     string
 	campaignID    string
@@ -31,19 +31,19 @@ var (
 var campaignCmd = &cobra.Command{
 	Use:   "campaign",
 	Short: "Manage and execute campaigns",
-	Long: `A campaign coordinates agents to work on an objective.
+	Long: `A campaign coordinates agents to work on a commission.
 
-Campaigns decompose objectives into tasks, assign them to agents,
+Campaigns decompose commissions into tasks, assign them to agents,
 and orchestrate execution based on agent capabilities.`,
 }
 
-// createCampaignCmd creates a new campaign from an objective
+// createCampaignCmd creates a new campaign from a commission
 var createCampaignCmd = &cobra.Command{
 	Use:   "create",
-	Short: "Create a new campaign from an objective",
-	Long: `Create a campaign that will coordinate agents to complete an objective.
+	Short: "Create a new campaign from a commission",
+	Long: `Create a campaign that will coordinate agents to complete a commission.
 
-The manager agent will decompose the objective into tasks and assign
+The manager agent will decompose the commission into tasks and assign
 them to appropriate agents based on their capabilities.`,
 	RunE: createCampaign,
 }
@@ -85,9 +85,9 @@ func init() {
 	campaignCmd.AddCommand(campaignStatusCmd)
 
 	// Add flags to create command
-	createCampaignCmd.Flags().StringVarP(&objectivePath, "objective", "o", "", "Path to objective file (required)")
-	createCampaignCmd.MarkFlagRequired("objective")
-	createCampaignCmd.Flags().StringVarP(&campaignName, "name", "n", "", "Campaign name (defaults to objective title)")
+	createCampaignCmd.Flags().StringVarP(&commissionPath, "commission", "o", "", "Path to commission file (required)")
+	createCampaignCmd.MarkFlagRequired("commission")
+	createCampaignCmd.Flags().StringVarP(&campaignName, "name", "n", "", "Campaign name (defaults to commission title)")
 	createCampaignCmd.Flags().StringVar(&managerID, "manager", "", "Override default manager agent ID")
 
 	// Add flags to start, watch, and status commands
@@ -112,17 +112,17 @@ func createCampaign(cmd *cobra.Command, args []string) error {
 			WithOperation("campaign.create")
 	}
 
-	// Load objective
-	if !filepath.IsAbs(objectivePath) {
-		objectivePath = filepath.Join(projCtx.GetRootPath(), objectivePath)
+	// Load commission
+	if !filepath.IsAbs(commissionPath) {
+		commissionPath = filepath.Join(projCtx.GetRootPath(), commissionPath)
 	}
 
-	obj, err := commission.ParseFile(objectivePath)
+	obj, err := commission.ParseFile(commissionPath)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to parse objective").
+		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to parse commission").
 			WithComponent("cli").
 			WithOperation("campaign.create").
-			WithDetails("path", objectivePath)
+			WithDetails("path", commissionPath)
 	}
 
 	// Load guild configuration
@@ -179,7 +179,7 @@ func createCampaign(cmd *cobra.Command, args []string) error {
 	// memoryManager := &dummyMemoryManager{}
 	// toolRegistryComponent := tools.DefaultToolRegistryFactory()
 
-	// Use commission repository instead of objective manager
+	// Use commission repository
 	commissionRepo := storageReg.GetCommissionRepository()
 	if commissionRepo == nil {
 		return gerror.New(gerror.ErrCodeInternal, "commission repository not available", nil).
@@ -227,10 +227,10 @@ func createCampaign(cmd *cobra.Command, args []string) error {
 		Name:            campaignName,
 		Description:     obj.Description,
 		Status:          campaign.CampaignStatusReady,
-		Objectives:      []string{obj.ID},
+		Commissions:     []string{obj.ID},
 		CreatedAt:       time.Now(),
 		UpdatedAt:       time.Now(),
-		TotalObjectives: 1,
+		TotalCommissions: 1,
 		Metadata: map[string]interface{}{
 			"guild_config":  guildConfig.Name,
 			"manager_agent": guildConfig.Manager.Default,
@@ -251,7 +251,7 @@ func createCampaign(cmd *cobra.Command, args []string) error {
 	fmt.Printf("\nCampaign created successfully!\n")
 	fmt.Printf("ID: %s\n", campaignModel.ID)
 	fmt.Printf("Name: %s\n", campaignModel.Name)
-	fmt.Printf("Objective: %s\n", obj.Title)
+	fmt.Printf("Commission: %s\n", obj.Title)
 	fmt.Printf("Tasks: %d\n", len(tasks))
 	fmt.Printf("\nUse 'guild campaign start --id %s' to begin execution\n", campaignModel.ID)
 
