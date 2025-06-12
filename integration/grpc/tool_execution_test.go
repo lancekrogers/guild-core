@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"sync"
 	"testing"
 
 	guildgrpc "github.com/guild-ventures/guild-core/pkg/grpc"
@@ -20,6 +21,7 @@ type TestTool struct {
 	description string
 	executed    bool
 	result      string
+	mu          sync.Mutex
 }
 
 func (t *TestTool) Name() string        { return t.name }
@@ -33,7 +35,9 @@ func (t *TestTool) Schema() map[string]interface{} {
 	}
 }
 func (t *TestTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
+	t.mu.Lock()
 	t.executed = true
+	t.mu.Unlock()
 	return &tools.ToolResult{
 		Output:  t.result,
 		Success: true,
@@ -47,6 +51,13 @@ func (t *TestTool) Category() string {
 }
 func (t *TestTool) RequiresAuth() bool {
 	return false
+}
+
+// IsExecuted safely checks if the tool was executed
+func (t *TestTool) IsExecuted() bool {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	return t.executed
 }
 
 func TestToolExecutionViaGRPC(t *testing.T) {
@@ -161,7 +172,7 @@ func TestToolExecutionViaGRPC(t *testing.T) {
 		if msgResp, ok := resp.Response.(*guildpb.ChatResponse_Message); ok {
 			assert.Contains(t, msgResp.Message.Content, "Tool 1 executed successfully")
 		}
-		assert.True(t, testTool1.executed)
+		assert.True(t, testTool1.IsExecuted())
 	})
 
 	t.Run("safety checks", func(t *testing.T) {
