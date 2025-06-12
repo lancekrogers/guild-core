@@ -12,10 +12,10 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 )
 
-// TaskPlanner decomposes objectives into tasks and assigns them to agents
+// TaskPlanner decomposes commissions into tasks and assigns them to agents
 type TaskPlanner interface {
-	// PlanTasks decomposes an objective into tasks
-	PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error)
+	// PlanTasks decomposes a commission into tasks
+	PlanTasks(ctx context.Context, commission *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error)
 
 	// AssignTasks assigns tasks to agents based on capabilities
 	AssignTasks(ctx context.Context, tasks []*kanban.Task, guild *config.GuildConfig) error
@@ -40,10 +40,10 @@ func DefaultManagerTaskPlannerFactory(managerAgent agent.Agent, kanbanBoard *kan
 	return newManagerTaskPlanner(managerAgent, kanbanBoard)
 }
 
-// PlanTasks uses the manager agent to decompose an objective into tasks
-func (p *managerTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
+// PlanTasks uses the manager agent to decompose a commission into tasks
+func (p *managerTaskPlanner) PlanTasks(ctx context.Context, commission *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
 	// Build a prompt for the manager agent
-	prompt := p.buildPlanningPrompt(obj, guild)
+	prompt := p.buildPlanningPrompt(commission, guild)
 
 	// Execute the planning request
 	response, err := p.managerAgent.Execute(ctx, prompt)
@@ -132,15 +132,15 @@ func (p *managerTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanban.Ta
 }
 
 // buildPlanningPrompt creates a prompt for task planning
-func (p *managerTaskPlanner) buildPlanningPrompt(obj *commission.Commission, guild *config.GuildConfig) string {
+func (p *managerTaskPlanner) buildPlanningPrompt(commission *commission.Commission, guild *config.GuildConfig) string {
 	var prompt strings.Builder
 
 	prompt.WriteString("You are the manager agent for the ")
 	prompt.WriteString(guild.Name)
-	prompt.WriteString(" guild. Your task is to decompose the following objective into concrete, actionable tasks.\n\n")
+	prompt.WriteString(" guild. Your task is to decompose the following commission into concrete, actionable tasks.\n\n")
 
-	prompt.WriteString("## Objective\n")
-	prompt.WriteString(obj.Format())
+	prompt.WriteString("## Commission\n")
+	prompt.WriteString(commission.Format())
 	prompt.WriteString("\n\n")
 
 	prompt.WriteString("## Available Agents and Capabilities\n")
@@ -150,7 +150,7 @@ func (p *managerTaskPlanner) buildPlanningPrompt(obj *commission.Commission, gui
 	prompt.WriteString("\n")
 
 	prompt.WriteString("## Instructions\n")
-	prompt.WriteString("Break down the objective into specific tasks. For each task, provide:\n")
+	prompt.WriteString("Break down the commission into specific tasks. For each task, provide:\n")
 	prompt.WriteString("1. A unique task ID (e.g., TASK-001)\n")
 	prompt.WriteString("2. A clear, concise title\n")
 	prompt.WriteString("3. A detailed description\n")

@@ -15,7 +15,7 @@ type BaseOrchestrator struct {
 	agents           map[string]agent.Agent
 	eventBus         EventBus
 	dispatcher       TaskDispatcher
-	currentObjective *commission.Commission
+	currentCommission *commission.Commission
 	config           *Config
 	mu               sync.RWMutex
 	cancelFunc       context.CancelFunc
@@ -207,32 +207,32 @@ func (o *BaseOrchestrator) GetAgent(agentID string) (agent.Agent, bool) {
 	return agent, exists
 }
 
-// SetObjective sets the current objective
-func (o *BaseOrchestrator) SetObjective(objective *commission.Commission) error {
+// SetCommission sets the current commission
+func (o *BaseOrchestrator) SetCommission(commission *commission.Commission) error {
 	o.mu.Lock()
 	defer o.mu.Unlock()
 
-	o.currentObjective = objective
+	o.currentCommission = commission
 
-	// Emit objective set event
+	// Emit commission set event
 	o.eventBus.Publish(Event{
-		Type:   EventType(EventObjectiveSet),
+		Type:   EventType(EventCommissionSet),
 		Source: "orchestrator",
 		Data: map[string]interface{}{
-			"objective_id":    objective.ID,
-			"objective_title": objective.Title,
+			"commission_id":    commission.ID,
+			"commission_title": commission.Title,
 		},
 	})
 
 	return nil
 }
 
-// GetObjective gets the current objective
-func (o *BaseOrchestrator) GetObjective() *commission.Commission {
+// GetCommission gets the current commission
+func (o *BaseOrchestrator) GetCommission() *commission.Commission {
 	o.mu.RLock()
 	defer o.mu.RUnlock()
 
-	return o.currentObjective
+	return o.currentCommission
 }
 
 // AddEventHandler adds an event handler

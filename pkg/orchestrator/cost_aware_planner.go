@@ -94,10 +94,10 @@ func DefaultCostAwareTaskPlannerFactory(
 	return newCostAwareTaskPlanner(managerAgent, kanbanBoard, componentRegistry, maxCostFilter)
 }
 
-// PlanTasks decomposes an objective into tasks (enhanced with cost awareness)
-func (p *CostAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
+// PlanTasks decomposes a commission into tasks (enhanced with cost awareness)
+func (p *CostAwareTaskPlanner) PlanTasks(ctx context.Context, commission *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
 	// Build a planning prompt with cost information
-	prompt := p.buildCostAwarePlanningPrompt(obj, guild)
+	prompt := p.buildCostAwarePlanningPrompt(commission, guild)
 
 	// Execute the planning request
 	response, err := p.managerAgent.Execute(ctx, prompt)
@@ -385,15 +385,15 @@ func (p *CostAwareTaskPlanner) selectOptimalTools(requiredCapabilities []string,
 
 // Helper methods
 
-func (p *CostAwareTaskPlanner) buildCostAwarePlanningPrompt(obj *commission.Commission, guild *config.GuildConfig) string {
+func (p *CostAwareTaskPlanner) buildCostAwarePlanningPrompt(commission *commission.Commission, guild *config.GuildConfig) string {
 	var prompt strings.Builder
 
 	prompt.WriteString("You are the manager agent for the ")
 	prompt.WriteString(guild.Name)
-	prompt.WriteString(" guild. Your task is to decompose the following objective into concrete, actionable tasks with cost optimization in mind.\n\n")
+	prompt.WriteString(" guild. Your task is to decompose the following commission into concrete, actionable tasks with cost optimization in mind.\n\n")
 
-	prompt.WriteString("## Objective\n")
-	prompt.WriteString(obj.Format())
+	prompt.WriteString("## Commission\n")
+	prompt.WriteString(commission.Format())
 	prompt.WriteString("\n\n")
 
 	prompt.WriteString("## Available Agents and Capabilities (with Cost Information)\n")
@@ -412,7 +412,7 @@ func (p *CostAwareTaskPlanner) buildCostAwarePlanningPrompt(obj *commission.Comm
 	prompt.WriteString("Consider cost-effectiveness when assigning tasks.\n\n")
 
 	prompt.WriteString("## Instructions\n")
-	prompt.WriteString("Break down the objective into specific tasks optimized for cost efficiency. For each task, provide:\n")
+	prompt.WriteString("Break down the commission into specific tasks optimized for cost efficiency. For each task, provide:\n")
 	prompt.WriteString("1. A unique task ID (e.g., TASK-001)\n")
 	prompt.WriteString("2. A clear, concise title\n")
 	prompt.WriteString("3. A detailed description\n")

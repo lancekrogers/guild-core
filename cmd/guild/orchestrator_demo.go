@@ -24,13 +24,13 @@ var orchestratorCmd = &cobra.Command{
 for task planning and agent assignment.
 
 The orchestrator:
-1. Decomposes objectives into tasks using a manager agent
+1. Decomposes commissions into tasks using a manager agent
 2. Assigns tasks to the most cost-effective agents
 3. Selects optimal tools based on cost considerations
 4. Provides detailed cost analysis and workload balancing
 
 Examples:
-  guild orchestrator-demo --objective "Build user auth system" --max-cost 5
+  guild orchestrator-demo --commission "Build user auth system" --max-cost 5
   guild orchestrator-demo --strategy balanced --show-alternatives
   guild orchestrator-demo --strategy minimize-cost --max-cost 3
   guild orchestrator-demo --list-strategies`,
@@ -38,7 +38,7 @@ Examples:
 }
 
 var (
-	orchestratorObjectiveText      string
+	orchestratorCommissionText      string
 	orchestratorMaxCostFilter      int
 	orchestratorAssignmentStrategy string
 	orchestratorShowAlternatives   bool
@@ -48,7 +48,7 @@ var (
 )
 
 func init() {
-	orchestratorCmd.Flags().StringVar(&orchestratorObjectiveText, "objective", "Build a web application with user authentication", "Objective to plan and assign")
+	orchestratorCmd.Flags().StringVar(&orchestratorCommissionText, "commission", "Build a web application with user authentication", "Commission to plan and assign")
 	orchestratorCmd.Flags().IntVar(&orchestratorMaxCostFilter, "max-cost", 8, "Maximum cost magnitude filter for agents (0-8)")
 	orchestratorCmd.Flags().StringVar(&orchestratorAssignmentStrategy, "strategy", "balanced", "Assignment strategy: minimize-cost, balanced, capability-first")
 	orchestratorCmd.Flags().BoolVar(&orchestratorShowAlternatives, "show-alternatives", false, "Show alternative agent assignments")
@@ -104,10 +104,10 @@ func runOrchestratorDemo(cmd *cobra.Command, args []string) error {
 		orchestratorMaxCostFilter,
 	)
 
-	// Create objective
+	// Create commission
 	obj := &commission.Commission{
 		Title:       "Development Project",
-		Description: orchestratorObjectiveText,
+		Description: orchestratorCommissionText,
 	}
 
 	// Create guild config
@@ -117,7 +117,7 @@ func runOrchestratorDemo(cmd *cobra.Command, args []string) error {
 	fmt.Printf("🏰 Guild Orchestrator - Cost-Aware Task Planning\n")
 	fmt.Printf("═══════════════════════════════════════════════\n\n")
 
-	fmt.Printf("📋 Objective: %s\n", orchestratorObjectiveText)
+	fmt.Printf("📋 Commission: %s\n", orchestratorCommissionText)
 	fmt.Printf("🔍 Max Cost Filter: %d (excluding agents above this cost)\n", orchestratorMaxCostFilter)
 	fmt.Printf("🎯 Strategy: %s\n\n", orchestratorAssignmentStrategy)
 
@@ -125,7 +125,7 @@ func runOrchestratorDemo(cmd *cobra.Command, args []string) error {
 	tasks, err := planner.PlanTasks(ctx, obj, guild)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to plan tasks").
-			WithComponent("cli").WithOperation("runOrchestratorDemo").WithDetails("objective", orchestratorObjectiveText)
+			WithComponent("cli").WithOperation("runOrchestratorDemo").WithDetails("commission", orchestratorCommissionText)
 	}
 
 	fmt.Printf("✅ Planned %d tasks:\n", len(tasks))

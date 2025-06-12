@@ -92,8 +92,8 @@ func (m *manager) Update(ctx context.Context, campaign *Campaign) error {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "campaign").WithComponent("update_campaign").WithOperation("failed to get existing campaign")
 	}
 
-	// Update progress if objectives changed
-	if len(campaign.Objectives) != len(existing.Objectives) {
+	// Update progress if commissions changed
+	if len(campaign.Commissions) != len(existing.Commissions) {
 		if err := m.UpdateProgress(ctx, campaign.ID); err != nil {
 			// Log error but don't fail the update
 			fmt.Printf("Warning: failed to update progress: %v\n", err)
@@ -124,31 +124,31 @@ func (m *manager) Delete(ctx context.Context, id string) error {
 	return m.repo.Delete(ctx, id)
 }
 
-// AddObjective adds an objective to a campaign
-func (m *manager) AddObjective(ctx context.Context, campaignID, objectiveID string) error {
+// AddCommission adds a commission to a campaign
+func (m *manager) AddCommission(ctx context.Context, campaignID, commissionID string) error {
 	// Get campaign
 	campaign, err := m.repo.Get(ctx, campaignID)
 	if err != nil {
 		return err
 	}
 
-	// Check if objective exists
+	// Check if commission exists
 	if m.commissionMgr != nil {
-		if _, err := m.commissionMgr.GetCommission(ctx, objectiveID); err != nil {
-			return gerror.Wrap(err, gerror.ErrCodeNotFound, fmt.Sprintf("objective %s not found", objectiveID))
+		if _, err := m.commissionMgr.GetCommission(ctx, commissionID); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeNotFound, fmt.Sprintf("commission %s not found", commissionID))
 		}
 	}
 
-	// Check if objective already in campaign
-	for _, id := range campaign.Objectives {
-		if id == objectiveID {
-			return gerror.New(gerror.ErrCodeAlreadyExists, fmt.Sprintf("objective %s already in campaign", objectiveID), nil)
+	// Check if commission already in campaign
+	for _, id := range campaign.Commissions {
+		if id == commissionID {
+			return gerror.New(gerror.ErrCodeAlreadyExists, fmt.Sprintf("commission %s already in campaign", commissionID), nil)
 		}
 	}
 
-	// Add objective
-	campaign.Objectives = append(campaign.Objectives, objectiveID)
-	campaign.TotalObjectives = len(campaign.Objectives)
+	// Add commission
+	campaign.Commissions = append(campaign.Commissions, commissionID)
+	campaign.TotalCommissions = len(campaign.Commissions)
 
 	// Update campaign
 	if err := m.repo.Update(ctx, campaign); err != nil {
@@ -164,42 +164,42 @@ func (m *manager) AddObjective(ctx context.Context, campaignID, objectiveID stri
 	// Publish event
 	m.publishEvent(ctx, CampaignEvent{
 		ID:         generateID(),
-		Type:       EventObjectiveAdded,
+		Type:       EventCommissionAdded,
 		CampaignID: campaignID,
 		Timestamp:  time.Now(),
 		Data: map[string]interface{}{
-			"objective_id": objectiveID,
+			"commission_id": commissionID,
 		},
 	})
 
 	return nil
 }
 
-// RemoveObjective removes an objective from a campaign
-func (m *manager) RemoveObjective(ctx context.Context, campaignID, objectiveID string) error {
+// RemoveCommission removes a commission from a campaign
+func (m *manager) RemoveCommission(ctx context.Context, campaignID, commissionID string) error {
 	// Get campaign
 	campaign, err := m.repo.Get(ctx, campaignID)
 	if err != nil {
 		return err
 	}
 
-	// Remove objective
-	newObjectives := make([]string, 0, len(campaign.Objectives))
+	// Remove commission
+	newCommissions := make([]string, 0, len(campaign.Commissions))
 	found := false
-	for _, id := range campaign.Objectives {
-		if id != objectiveID {
-			newObjectives = append(newObjectives, id)
+	for _, id := range campaign.Commissions {
+		if id != commissionID {
+			newCommissions = append(newCommissions, id)
 		} else {
 			found = true
 		}
 	}
 
 	if !found {
-		return gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("objective %s not found", objectiveID), nil)
+		return gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("commission %s not found", commissionID), nil)
 	}
 
-	campaign.Objectives = newObjectives
-	campaign.TotalObjectives = len(campaign.Objectives)
+	campaign.Commissions = newCommissions
+	campaign.TotalCommissions = len(campaign.Commissions)
 
 	// Update campaign
 	if err := m.repo.Update(ctx, campaign); err != nil {
@@ -215,24 +215,24 @@ func (m *manager) RemoveObjective(ctx context.Context, campaignID, objectiveID s
 	// Publish event
 	m.publishEvent(ctx, CampaignEvent{
 		ID:         generateID(),
-		Type:       EventObjectiveRemoved,
+		Type:       EventCommissionRemoved,
 		CampaignID: campaignID,
 		Timestamp:  time.Now(),
 		Data: map[string]interface{}{
-			"objective_id": objectiveID,
+			"commission_id": commissionID,
 		},
 	})
 
 	return nil
 }
 
-// GetObjectives returns all commission IDs for a campaign (renamed from objectives to commissions internally)
-func (m *manager) GetObjectives(ctx context.Context, campaignID string) ([]string, error) {
+// GetCommissions returns all commission IDs for a campaign
+func (m *manager) GetCommissions(ctx context.Context, campaignID string) ([]string, error) {
 	campaign, err := m.repo.Get(ctx, campaignID)
 	if err != nil {
 		return nil, err
 	}
-	return campaign.Objectives, nil
+	return campaign.Commissions, nil
 }
 
 // StartPlanning transitions a campaign from dream to planning status
@@ -330,25 +330,25 @@ func (m *manager) UpdateProgress(ctx context.Context, campaignID string) error {
 	}
 
 	if m.commissionMgr == nil {
-		// Can't calculate progress without objective manager
+		// Can't calculate progress without commission manager
 		return nil
 	}
 
 	completedCount := 0
-	for _, objID := range campaign.Objectives {
-		obj, err := m.commissionMgr.GetCommission(ctx, objID)
+	for _, commID := range campaign.Commissions {
+		comm, err := m.commissionMgr.GetCommission(ctx, commID)
 		if err != nil {
 			continue
 		}
-		if obj.Status == commission.CommissionStatusCompleted {
+		if comm.Status == commission.CommissionStatusCompleted {
 			completedCount++
 		}
 	}
 
-	campaign.CompletedObjectives = completedCount
-	campaign.TotalObjectives = len(campaign.Objectives)
-	if campaign.TotalObjectives > 0 {
-		campaign.Progress = float64(completedCount) / float64(campaign.TotalObjectives)
+	campaign.CompletedCommissions = completedCount
+	campaign.TotalCommissions = len(campaign.Commissions)
+	if campaign.TotalCommissions > 0 {
+		campaign.Progress = float64(completedCount) / float64(campaign.TotalCommissions)
 	} else {
 		campaign.Progress = 0.0
 	}
@@ -366,14 +366,14 @@ func (m *manager) UpdateProgress(ctx context.Context, campaignID string) error {
 		Timestamp:  time.Now(),
 		Data: map[string]interface{}{
 			"progress":             campaign.Progress,
-			"completed_objectives": campaign.CompletedObjectives,
-			"total_objectives":     campaign.TotalObjectives,
+			"completed_commissions": campaign.CompletedCommissions,
+			"total_commissions":     campaign.TotalCommissions,
 		},
 	})
 
 	// Check if campaign should be auto-completed
-	if campaign.CompletedObjectives == campaign.TotalObjectives &&
-		campaign.TotalObjectives > 0 &&
+	if campaign.CompletedCommissions == campaign.TotalCommissions &&
+		campaign.TotalCommissions > 0 &&
 		campaign.Status == CampaignStatusActive {
 		// Auto-complete campaign
 		_ = m.Complete(ctx, campaignID)
@@ -389,20 +389,20 @@ func (m *manager) GetProgress(ctx context.Context, campaignID string) (*Campaign
 		return nil, err
 	}
 
-	// Count objective statuses
+	// Count commission statuses
 	activeCount := 0
 	pendingCount := 0
 	completedCount := 0
 
 	if m.commissionMgr != nil {
-		for _, objID := range campaign.Objectives {
-			obj, err := m.commissionMgr.GetCommission(ctx, objID)
+		for _, commID := range campaign.Commissions {
+			comm, err := m.commissionMgr.GetCommission(ctx, commID)
 			if err != nil {
 				pendingCount++
 				continue
 			}
 
-			switch obj.Status {
+			switch comm.Status {
 			case commission.CommissionStatusActive:
 				activeCount++
 			case commission.CommissionStatusCompleted:
@@ -412,17 +412,17 @@ func (m *manager) GetProgress(ctx context.Context, campaignID string) (*Campaign
 			}
 		}
 	} else {
-		// If no objective manager, use campaign's stored values
-		completedCount = campaign.CompletedObjectives
-		pendingCount = campaign.TotalObjectives - completedCount
+		// If no commission manager, use campaign's stored values
+		completedCount = campaign.CompletedCommissions
+		pendingCount = campaign.TotalCommissions - completedCount
 	}
 
 	return &CampaignProgress{
 		CampaignID:          campaign.ID,
-		TotalObjectives:     campaign.TotalObjectives,
-		CompletedObjectives: completedCount,
-		ActiveObjectives:    activeCount,
-		PendingObjectives:   pendingCount,
+		TotalCommissions:     campaign.TotalCommissions,
+		CompletedCommissions: completedCount,
+		ActiveCommissions:    activeCount,
+		PendingCommissions:   pendingCount,
 		Progress:            campaign.Progress,
 		UpdatedAt:           time.Now(),
 	}, nil
@@ -504,16 +504,16 @@ func (m *manager) subscribeToCommissionEvents() {
 		return
 	}
 
-	// Subscribe to objective completion
-	m.eventBus.Subscribe(orchestrator.EventObjectiveCompleted, func(e orchestrator.Event) {
-		objectiveID, ok := e.Data["objective_id"].(string)
+	// Subscribe to commission completion
+	m.eventBus.Subscribe(orchestrator.EventCommissionCompleted, func(e orchestrator.Event) {
+		commissionID, ok := e.Data["commission_id"].(string)
 		if !ok {
 			return
 		}
 
-		// Find campaigns containing this objective
+		// Find campaigns containing this commission
 		ctx := context.Background()
-		campaigns, err := m.repo.GetByObjectiveID(ctx, objectiveID)
+		campaigns, err := m.repo.GetByCommissionID(ctx, commissionID)
 		if err != nil {
 			return
 		}
@@ -524,16 +524,16 @@ func (m *manager) subscribeToCommissionEvents() {
 		}
 	})
 
-	// Subscribe to objective status changes
-	m.eventBus.Subscribe(orchestrator.EventObjectiveStatusChanged, func(e orchestrator.Event) {
-		objectiveID, ok := e.Data["objective_id"].(string)
+	// Subscribe to commission status changes
+	m.eventBus.Subscribe(orchestrator.EventCommissionStatusChanged, func(e orchestrator.Event) {
+		commissionID, ok := e.Data["commission_id"].(string)
 		if !ok {
 			return
 		}
 
-		// Find campaigns containing this objective
+		// Find campaigns containing this commission
 		ctx := context.Background()
-		campaigns, err := m.repo.GetByObjectiveID(ctx, objectiveID)
+		campaigns, err := m.repo.GetByCommissionID(ctx, commissionID)
 		if err != nil {
 			return
 		}

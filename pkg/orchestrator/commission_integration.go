@@ -197,7 +197,7 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 	// Create adapter to convert between registry.CommissionRepository and agent.CommissionRepository
 	commissionAdapter := newCommissionRepositoryAdapter(s.commissionRepository)
 
-	// Create task bridge with commission repository instead of objective manager
+	// Create task bridge with commission repository
 	s.taskBridge = manager.NewTaskBridgeWithCommissions(kanbanBoard, commissionAdapter)
 
 	return nil
@@ -307,25 +307,25 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 	}, nil
 }
 
-// ProcessObjectiveToTasks loads an objective and processes it to kanban tasks
-func (s *CommissionIntegrationService) ProcessObjectiveToTasks(
+// ProcessCommissionToTasksByID loads a commission and processes it to kanban tasks
+func (s *CommissionIntegrationService) ProcessCommissionToTasksByID(
 	ctx context.Context,
-	objectiveID string,
+	commissionID string,
 	guildConfig *config.GuildConfig,
 ) (*CommissionProcessingResult, error) {
 	if s.commissionRepository == nil {
 		return nil, gerror.New(gerror.ErrCodeOrchestration, "commission repository not configured", nil).
 			WithComponent("orchestrator").
-			WithOperation("ProcessObjectiveToTasks")
+			WithOperation("ProcessCommissionToTasksByID")
 	}
 
 	// Load commission from storage
-	registryCommission, err := s.commissionRepository.GetCommission(ctx, objectiveID)
+	registryCommission, err := s.commissionRepository.GetCommission(ctx, commissionID)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to load commission").
 			WithComponent("orchestrator").
-			WithOperation("ProcessObjectiveToTasks").
-			WithDetails("objectiveID", objectiveID)
+			WithOperation("ProcessCommissionToTasksByID").
+			WithDetails("commissionID", commissionID)
 	}
 
 	// Convert registry commission to manager commission

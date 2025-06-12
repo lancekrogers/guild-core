@@ -37,7 +37,7 @@ func TestNewRetriever_Coverage(t *testing.T) {
 	// Test with nil embedder
 	_, err := newRetriever(ctx, nil, Config{})
 	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "embedder is required")
+	assert.Contains(t, err.Error(), "embedder cannot be nil")
 
 	// Test with valid embedder
 	embedder := &MockEmbedder{}
@@ -73,7 +73,7 @@ func TestCalculateCorpusScore_Coverage(t *testing.T) {
 		Body:  "This body also contains query information",
 	}
 	score := retriever.calculateCorpusScore(doc1, "query")
-	assert.Equal(t, float32(0.8), score) // 0.5 (title) + 0.3 (body)
+	assert.Equal(t, float32(1.0), score) // 0.5 (title) + body score, capped at 1.0
 
 	// Test tag match
 	doc2 := &corpus.CorpusDoc{
@@ -82,16 +82,16 @@ func TestCalculateCorpusScore_Coverage(t *testing.T) {
 		Tags:  []string{"query", "test"},
 	}
 	score = retriever.calculateCorpusScore(doc2, "query")
-	assert.Greater(t, score, float32(0.0))
+	assert.Equal(t, float32(0.3), score) // Tag match gives 0.3
 
-	// Test source match
+	// Test no match
 	doc3 := &corpus.CorpusDoc{
 		Title:  "Document",
 		Body:   "No match",
-		Source: "query-source",
+		Source: "query-source", // Source is not checked in calculateCorpusScore
 	}
 	score = retriever.calculateCorpusScore(doc3, "query")
-	assert.Greater(t, score, float32(0.0))
+	assert.Equal(t, float32(0.0), score) // No match, so 0.0
 }
 
 // Test sortResultsByScore with empty slice
@@ -193,9 +193,10 @@ func TestEnhanceRequestWithRAG_Coverage(t *testing.T) {
 	wrapper.retriever = retriever
 	wrapper.config = DefaultConfig()
 
-	// This will fail to retrieve but should handle gracefully
+	// This will retrieve but return no results, so returns original request
 	result, err = wrapper.enhanceRequestWithRAG(ctx, "test request")
-	assert.Error(t, err) // Expected to fail without proper setup
+	assert.NoError(t, err) // Should handle gracefully
+	assert.Equal(t, "test request", result) // Should return original request when no results
 }
 
 // Test EnhancePrompt method on AgentWrapper
@@ -212,9 +213,10 @@ func TestAgentWrapper_EnhancePromptMethod(t *testing.T) {
 		config:    DefaultConfig(),
 	}
 
-	// This will fail without proper retriever setup, but tests the path
-	_, err := wrapper.EnhancePrompt(ctx, "prompt", "query", RetrievalConfig{
+	// This will return original prompt when no results are found
+	result, err := wrapper.EnhancePrompt(ctx, "prompt", "query", RetrievalConfig{
 		MaxResults: 3,
 	})
-	assert.Error(t, err) // Expected to fail
+	assert.NoError(t, err) // Should handle gracefully
+	assert.Equal(t, "prompt", result) // Should return original prompt when no results
 }

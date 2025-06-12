@@ -14,7 +14,7 @@ type CampaignStatus string
 
 const (
 	CampaignStatusDream     CampaignStatus = "dream"     // Initial idea/concept stage
-	CampaignStatusPlanning  CampaignStatus = "planning"  // Objectives being defined and iterated
+	CampaignStatusPlanning  CampaignStatus = "planning"  // Commissions being defined and iterated
 	CampaignStatusReady     CampaignStatus = "ready"     // Ready to execute
 	CampaignStatusActive    CampaignStatus = "active"    // Currently being executed
 	CampaignStatusPaused    CampaignStatus = "paused"    // Temporarily halted
@@ -22,13 +22,13 @@ const (
 	CampaignStatusCancelled CampaignStatus = "cancelled" // Terminated before completion
 )
 
-// Campaign represents a strategic goal with multiple objectives
+// Campaign represents a strategic goal with multiple commissions
 type Campaign struct {
 	ID          string                 `json:"id"`
 	Name        string                 `json:"name"`
 	Description string                 `json:"description"`
 	Status      CampaignStatus         `json:"status"`
-	Objectives  []string               `json:"objectives"` // Objective IDs
+	Commissions  []string               `json:"commissions"` // Commission IDs
 	Tags        []string               `json:"tags"`
 	Metadata    map[string]interface{} `json:"metadata"`
 	CreatedAt   time.Time              `json:"created_at"`
@@ -37,8 +37,8 @@ type Campaign struct {
 	CompletedAt *time.Time             `json:"completed_at,omitempty"`
 
 	// Progress tracking
-	TotalObjectives     int     `json:"total_objectives"`
-	CompletedObjectives int     `json:"completed_objectives"`
+	TotalCommissions     int     `json:"total_commissions"`
+	CompletedCommissions int     `json:"completed_commissions"`
 	Progress            float64 `json:"progress"` // 0.0 to 1.0
 }
 
@@ -55,10 +55,10 @@ type CampaignEvent struct {
 // CampaignProgress represents detailed progress information
 type CampaignProgress struct {
 	CampaignID          string    `json:"campaign_id"`
-	TotalObjectives     int       `json:"total_objectives"`
-	CompletedObjectives int       `json:"completed_objectives"`
-	ActiveObjectives    int       `json:"active_objectives"`
-	PendingObjectives   int       `json:"pending_objectives"`
+	TotalCommissions     int       `json:"total_commissions"`
+	CompletedCommissions int       `json:"completed_commissions"`
+	ActiveCommissions    int       `json:"active_commissions"`
+	PendingCommissions   int       `json:"pending_commissions"`
 	Progress            float64   `json:"progress"`
 	UpdatedAt           time.Time `json:"updated_at"`
 }
@@ -74,8 +74,8 @@ const (
 	EventCampaignCompleted       = "campaign.completed"
 	EventCampaignCancelled       = "campaign.cancelled"
 	EventCampaignProgress        = "campaign.progress"
-	EventObjectiveAdded          = "campaign.objective.added"
-	EventObjectiveRemoved        = "campaign.objective.removed"
+	EventCommissionAdded          = "campaign.commission.added"
+	EventCommissionRemoved        = "campaign.commission.removed"
 )
 
 // IsTerminal returns true if the campaign is in a terminal state
@@ -108,7 +108,7 @@ func NewCampaign(name, description string) *Campaign {
 		Name:        name,
 		Description: description,
 		Status:      CampaignStatusDream, // Start in dream/idea stage
-		Objectives:  []string{},
+		Commissions:  []string{},
 		Tags:        []string{},
 		Metadata:    make(map[string]interface{}),
 		CreatedAt:   now,

@@ -32,17 +32,17 @@ const (
 	// EventTypeAgentStopped is emitted when an agent stops
 	EventTypeAgentStopped EventType = "agent_stopped"
 
-	// EventTypeObjectiveCreated is emitted when a new objective is created
-	EventTypeObjectiveCreated EventType = "objective_created"
+	// EventTypeCommissionCreated is emitted when a new commission is created
+	EventTypeCommissionCreated EventType = "commission_created"
 
-	// EventTypeObjectiveUpdated is emitted when an objective is updated
-	EventTypeObjectiveUpdated EventType = "objective_updated"
+	// EventTypeCommissionUpdated is emitted when a commission is updated
+	EventTypeCommissionUpdated EventType = "commission_updated"
 
-	// EventTypeObjectiveCompleted is emitted when an objective is completed
-	EventTypeObjectiveCompleted EventType = "objective_completed"
+	// EventTypeCommissionCompleted is emitted when a commission is completed
+	EventTypeCommissionCompleted EventType = "commission_completed"
 
-	// EventTypeObjectiveStatusChanged is emitted when an objective status changes
-	EventTypeObjectiveStatusChanged EventType = "objective_status_changed"
+	// EventTypeCommissionStatusChanged is emitted when a commission status changes
+	EventTypeCommissionStatusChanged EventType = "commission_status_changed"
 )
 
 // Event represents an event in the system

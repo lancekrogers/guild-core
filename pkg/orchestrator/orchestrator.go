@@ -27,7 +27,7 @@ const (
 // Use Event and EventHandler from interfaces package
 // These are re-exported in eventbus.go
 
-// Orchestrator coordinates multiple agents to complete objectives
+// Orchestrator coordinates multiple agents to complete commissions
 type Orchestrator interface {
 	// Start starts the orchestrator
 	Start(ctx context.Context) error
@@ -53,11 +53,11 @@ type Orchestrator interface {
 	// GetAgent gets an agent by ID
 	GetAgent(agentID string) (agent.Agent, bool)
 
-	// SetObjective sets the current objective
-	SetObjective(objective *commission.Commission) error
+	// SetCommission sets the current commission
+	SetCommission(commission *commission.Commission) error
 
-	// GetObjective gets the current objective
-	GetObjective() *commission.Commission
+	// GetCommission gets the current commission
+	GetCommission() *commission.Commission
 
 	// AddEventHandler adds an event handler
 	AddEventHandler(handler EventHandler)
@@ -71,7 +71,7 @@ type Config struct {
 	MaxConcurrentAgents int    `json:"max_concurrent_agents"`
 	ManagerAgentID      string `json:"manager_agent_id"`
 	KanbanBoardID       string `json:"kanban_board_id"`
-	ObjectiveID         string `json:"objective_id,omitempty"`
+	CommissionID         string `json:"commission_id,omitempty"`
 	ExecutionMode       string `json:"execution_mode"` // "sequential", "parallel", "managed"
 }
 
@@ -104,14 +104,14 @@ const (
 	// EventTaskCompleted is emitted when a task is completed
 	EventTaskCompleted = "task.completed"
 
-	// EventObjectiveSet is emitted when an objective is set
-	EventObjectiveSet = "objective.set"
+	// EventCommissionSet is emitted when a commission is set
+	EventCommissionSet = "commission.set"
 
-	// EventObjectiveCompleted is emitted when an objective is completed
-	EventObjectiveCompleted = "objective.completed"
+	// EventCommissionCompleted is emitted when a commission is completed
+	EventCommissionCompleted = "commission.completed"
 
-	// EventObjectiveStatusChanged is emitted when an objective status changes
-	EventObjectiveStatusChanged = "objective.status.changed"
+	// EventCommissionStatusChanged is emitted when a commission status changes
+	EventCommissionStatusChanged = "commission.status.changed"
 
 	// EventOrchestratorStarted is emitted when the orchestrator starts
 	EventOrchestratorStarted = "orchestrator.started"

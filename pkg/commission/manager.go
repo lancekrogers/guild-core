@@ -646,30 +646,6 @@ func commissionToStorageCommission(commission *Commission) *storage.Commission {
 	return storageCommission
 }
 
-// Legacy method names for backward compatibility
-func (m *Manager) SaveObjective(ctx context.Context, obj *Commission) error {
-	return m.SaveCommission(ctx, obj)
-}
-
-func (m *Manager) GetObjective(ctx context.Context, id string) (*Commission, error) {
-	return m.GetCommission(ctx, id)
-}
-
-func (m *Manager) LoadObjectiveFromFile(ctx context.Context, filePath string) (*Commission, error) {
-	return m.LoadCommissionFromFile(ctx, filePath)
-}
-
-func (m *Manager) DeleteObjective(ctx context.Context, id string) error {
-	return m.DeleteCommission(ctx, id)
-}
-
-func (m *Manager) ListObjectives(ctx context.Context) ([]*Commission, error) {
-	return m.ListCommissions(ctx)
-}
-
-func (m *Manager) FindObjectivesByTags(ctx context.Context, tags []string) ([]*Commission, error) {
-	return m.FindCommissionsByTags(ctx, tags)
-}
 
 // commissionToMarkdown converts a commission to markdown format
 func commissionToMarkdown(commission *Commission) string {

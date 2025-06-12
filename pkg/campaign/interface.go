@@ -21,8 +21,8 @@ type Repository interface {
 	// Delete removes a campaign
 	Delete(ctx context.Context, id string) error
 
-	// GetByObjectiveID returns campaigns containing the specified objective
-	GetByObjectiveID(ctx context.Context, objectiveID string) ([]*Campaign, error)
+	// GetByCommissionID returns campaigns containing the specified commission
+	GetByCommissionID(ctx context.Context, commissionID string) ([]*Campaign, error)
 }
 
 // Manager defines the interface for campaign business logic
@@ -34,10 +34,10 @@ type Manager interface {
 	Update(ctx context.Context, campaign *Campaign) error
 	Delete(ctx context.Context, id string) error
 
-	// Objective management
-	AddObjective(ctx context.Context, campaignID, objectiveID string) error
-	RemoveObjective(ctx context.Context, campaignID, objectiveID string) error
-	GetObjectives(ctx context.Context, campaignID string) ([]string, error)
+	// Commission management
+	AddCommission(ctx context.Context, campaignID, commissionID string) error
+	RemoveCommission(ctx context.Context, campaignID, commissionID string) error
+	GetCommissions(ctx context.Context, campaignID string) ([]string, error)
 
 	// State transitions
 	StartPlanning(ctx context.Context, campaignID string) error
@@ -72,7 +72,7 @@ type FSM interface {
 	GetValidTransitions(from CampaignStatus) []CampaignStatus
 }
 
-// ProgressCalculator computes campaign progress based on objectives
+// ProgressCalculator computes campaign progress based on commissions
 type ProgressCalculator interface {
 	// Calculate computes progress for a campaign
 	Calculate(ctx context.Context, campaign *Campaign) (*CampaignProgress, error)

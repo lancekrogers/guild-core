@@ -11,7 +11,7 @@ import (
 // SearchCorpus searches the corpus for documents matching a query
 func SearchCorpus(ctx context.Context, query string, corpusConfig corpus.Config, maxResults int) ([]SearchResult, error) {
 	// This is a stub implementation without actual vector search
-	var results []SearchResult
+	results := make([]SearchResult, 0)
 
 	// List documents
 	docs, err := corpus.List(ctx, corpusConfig)

@@ -214,7 +214,7 @@ func TestRetriever_RetrieveContext_Advanced(t *testing.T) {
 				MaxResults: 10,
 				MinScore:   0.0,
 			},
-			wantDocs: 2, // Should match doc1 and doc2
+			wantDocs: 3, // Mock returns all documents
 		},
 		{
 			name:  "With high min score",

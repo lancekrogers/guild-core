@@ -171,10 +171,10 @@ func (r *repository) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
-// GetByObjectiveID returns campaigns containing the specified objective
-func (r *repository) GetByObjectiveID(ctx context.Context, objectiveID string) ([]*Campaign, error) {
-	if objectiveID == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, "campaign", nil).WithComponent("get_by_objective_id").WithOperation("objective ID cannot be empty")
+// GetByCommissionID returns campaigns containing the specified commission
+func (r *repository) GetByCommissionID(ctx context.Context, commissionID string) ([]*Campaign, error) {
+	if commissionID == "" {
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "campaign", nil).WithComponent("get_by_commission_id").WithOperation("commission ID cannot be empty")
 	}
 
 	// Get all campaigns
@@ -183,11 +183,11 @@ func (r *repository) GetByObjectiveID(ctx context.Context, objectiveID string) (
 		return nil, err
 	}
 
-	// Filter campaigns containing the objective
+	// Filter campaigns containing the commission
 	var result []*Campaign
 	for _, campaign := range campaigns {
-		for _, objID := range campaign.Objectives {
-			if objID == objectiveID {
+		for _, commID := range campaign.Commissions {
+			if commID == commissionID {
 				result = append(result, campaign)
 				break
 			}

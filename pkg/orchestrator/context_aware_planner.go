@@ -43,10 +43,10 @@ func DefaultContextAwareTaskPlannerFactory(
 	return newContextAwareTaskPlanner(managerAgent, kanbanBoard, componentRegistry)
 }
 
-// PlanTasks decomposes an objective into tasks
-func (p *ContextAwareTaskPlanner) PlanTasks(ctx context.Context, obj *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
+// PlanTasks decomposes a commission into tasks
+func (p *ContextAwareTaskPlanner) PlanTasks(ctx context.Context, commission *commission.Commission, guild *config.GuildConfig) ([]*kanban.Task, error) {
 	// Build a planning prompt with full agent context
-	prompt := p.buildContextAwarePlanningPrompt(obj, guild)
+	prompt := p.buildContextAwarePlanningPrompt(commission, guild)
 
 	// Execute the planning request
 	response, err := p.managerAgent.Execute(ctx, prompt)
@@ -134,15 +134,15 @@ func (p *ContextAwareTaskPlanner) AssignTasks(ctx context.Context, tasks []*kanb
 }
 
 // buildContextAwarePlanningPrompt creates a prompt with full agent context
-func (p *ContextAwareTaskPlanner) buildContextAwarePlanningPrompt(obj *commission.Commission, guild *config.GuildConfig) string {
+func (p *ContextAwareTaskPlanner) buildContextAwarePlanningPrompt(commission *commission.Commission, guild *config.GuildConfig) string {
 	var prompt strings.Builder
 
 	prompt.WriteString("You are the Guild Master (manager agent) for the ")
 	prompt.WriteString(guild.Name)
-	prompt.WriteString(" guild. Your task is to decompose the following objective into concrete, actionable tasks.\n\n")
+	prompt.WriteString(" guild. Your task is to decompose the following commission into concrete, actionable tasks.\n\n")
 
-	prompt.WriteString("## Objective\n")
-	prompt.WriteString(obj.Format())
+	prompt.WriteString("## Commission\n")
+	prompt.WriteString(commission.Format())
 	prompt.WriteString("\n\n")
 
 	prompt.WriteString("## Available Guild Members (Agents)\n\n")
@@ -199,7 +199,7 @@ func (p *ContextAwareTaskPlanner) buildContextAwarePlanningPrompt(obj *commissio
 	}
 
 	prompt.WriteString("## Instructions\n")
-	prompt.WriteString("Break down the objective into specific tasks. Consider:\n")
+	prompt.WriteString("Break down the commission into specific tasks. Consider:\n")
 	prompt.WriteString("1. Which agents are best suited for each type of work\n")
 	prompt.WriteString("2. The cost implications of using different agents\n")
 	prompt.WriteString("3. Dependencies between tasks\n")

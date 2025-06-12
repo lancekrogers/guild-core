@@ -228,7 +228,7 @@ func (r *Retriever) RetrieveContext(ctx context.Context, query string, config Re
 	}
 
 	// Get vector store results
-	if !config.DisableVectorSearch {
+	if !config.DisableVectorSearch && r.vectorStore != nil {
 		matches, err := r.vectorStore.QueryEmbeddings(ctx, query, config.MaxResults*2) // Get extra for filtering
 		if err != nil {
 			// Log error but continue with corpus search if available

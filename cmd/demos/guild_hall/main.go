@@ -77,7 +77,7 @@ func (i item) Description() string { return i.description }
 
 // GuildHall is our main UI model
 type GuildHall struct {
-	objectives list.Model
+	commissions list.Model
 	details    viewport.Model
 	selected   string
 	width      int
@@ -117,10 +117,10 @@ func createDemoItems() []list.Item {
 
 // Initialize creates our initial model
 func Initialize() *GuildHall {
-	// Create the list of objectives
+	// Create the list of commissions
 	items := createDemoItems()
 	l := list.New(items, list.NewDefaultDelegate(), 0, 0)
-	l.Title = "Guild Objectives Ledger"
+	l.Title = "Guild Commissions Ledger"
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(false)
 	l.Styles.Title = titleStyle
@@ -131,7 +131,7 @@ func Initialize() *GuildHall {
 	d.Style = textStyle
 
 	return &GuildHall{
-		objectives: l,
+		commissions: l,
 		details:    d,
 		selected:   "",
 	}
@@ -162,14 +162,14 @@ func (m GuildHall) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		leftWidth := m.width * 40 / 100
 		rightWidth := m.width - leftWidth - 5 // 5 for padding/border
 
-		m.objectives.SetWidth(leftWidth)
-		m.objectives.SetHeight(mainHeight)
+		m.commissions.SetWidth(leftWidth)
+		m.commissions.SetHeight(mainHeight)
 
 		m.details.Width = rightWidth
 		m.details.Height = mainHeight
 
 		// If we have selection, update viewport content
-		if i, ok := m.objectives.SelectedItem().(item); ok {
+		if i, ok := m.commissions.SelectedItem().(item); ok {
 			m.selected = i.title
 			m.updateDetailsContent(i)
 		}
@@ -181,18 +181,18 @@ func (m GuildHall) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		// Handle list key presses
-		if m.objectives.FilterState() != list.Filtering {
+		if m.commissions.FilterState() != list.Filtering {
 			prevSelection := ""
-			if i, ok := m.objectives.SelectedItem().(item); ok {
+			if i, ok := m.commissions.SelectedItem().(item); ok {
 				prevSelection = i.title
 			}
 
 			// Let the list handle the key press
-			m.objectives, cmd = m.objectives.Update(msg)
+			m.commissions, cmd = m.commissions.Update(msg)
 			cmds = append(cmds, cmd)
 
 			// If selection changed, update details
-			if i, ok := m.objectives.SelectedItem().(item); ok && i.title != prevSelection {
+			if i, ok := m.commissions.SelectedItem().(item); ok && i.title != prevSelection {
 				m.selected = i.title
 				m.updateDetailsContent(i)
 			}
@@ -208,7 +208,7 @@ func (m GuildHall) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 // updateDetailsContent updates the content in the details panel
 func (m *GuildHall) updateDetailsContent(i item) {
-	// Simulate a detailed objective content
+	// Simulate a detailed commission content
 	content := fmt.Sprintf(
 		"%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n",
 		titleStyle.Render("📜 "+i.title),
@@ -218,7 +218,7 @@ func (m *GuildHall) updateDetailsContent(i item) {
 		getStatusStyle(i.status).Render("  "+i.status),
 		textStyle.Render("Guild Master:"),
 		textStyle.Render("  Master Craftsman Claude"),
-		textStyle.Render("This objective seeks to advance the Guild's capabilities through diligent craft and dedicated artisanship. The work shall be conducted according to the ancient traditions of guild practice, with attention to detail and commitment to excellence."),
+		textStyle.Render("This commission seeks to advance the Guild's capabilities through diligent craft and dedicated artisanship. The work shall be conducted according to the ancient traditions of guild practice, with attention to detail and commitment to excellence."),
 	)
 	m.details.SetContent(content)
 }
@@ -248,14 +248,14 @@ func (m GuildHall) View() string {
 		return "Initializing..."
 	}
 
-	// Render the left panel (Objectives list)
+	// Render the left panel (Commissions list)
 	leftPanel := chamberStyle.Copy().
-		Width(m.objectives.Width()).
-		Height(m.objectives.Height()).
-		Render(m.objectives.View())
+		Width(m.commissions.Width()).
+		Height(m.commissions.Height()).
+		Render(m.commissions.View())
 
 	// Render the right panel (Details panel)
-	detailsTitle := titleStyle.Render("Objective Details")
+	detailsTitle := titleStyle.Render("Commission Details")
 	detailsContent := m.details.View()
 	rightPanel := chamberStyle.Copy().
 		Width(m.details.Width).
@@ -284,7 +284,7 @@ func (m GuildHall) View() string {
 		Height(m.height - hallStyle.GetVerticalFrameSize()).
 		Render(lipgloss.JoinVertical(
 			lipgloss.Left,
-			lipgloss.NewStyle().Bold(true).Foreground(gold).Render("🏰 Guild Hall - Objective Management Chamber"),
+			lipgloss.NewStyle().Bold(true).Foreground(gold).Render("🏰 Guild Hall - Commission Management Chamber"),
 			mainContent,
 			statusBar,
 		))
