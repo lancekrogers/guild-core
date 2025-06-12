@@ -19,7 +19,7 @@ import (
 // from starting a chat session to completing and reviewing tasks
 func TestDeveloperDailyWorkflow(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Setup test environment
 	projCtx, cleanup := testutil.SetupTestProject(t)
 	defer cleanup()
@@ -37,7 +37,7 @@ func TestDeveloperDailyWorkflow(t *testing.T) {
 	t.Run("Step1_ChatSessionInitialization", func(t *testing.T) {
 		// Developer starts their day by opening chat
 		startTime := time.Now()
-		
+
 		// Simulate chat session creation
 		sessionID := "dev-session-001"
 		sessionPath := filepath.Join(projCtx.GetGuildPath(), "sessions", sessionID)
@@ -376,10 +376,10 @@ func TestDeveloperProductivity(t *testing.T) {
 	t.Run("TimeToFirstCommit", func(t *testing.T) {
 		// Measure time from commission creation to first working code
 		startTime := time.Now()
-		
+
 		// Simulate commission → task → code workflow
 		// In real scenario, this would track actual execution time
-		
+
 		duration := time.Since(startTime)
 		assert.Less(t, duration, 5*time.Minute, "Should produce working code within 5 minutes")
 	})
@@ -388,7 +388,7 @@ func TestDeveloperProductivity(t *testing.T) {
 		// Track what percentage of tasks complete successfully
 		totalTasks := 10
 		completedTasks := 8
-		
+
 		completionRate := float64(completedTasks) / float64(totalTasks) * 100
 		assert.Greater(t, completionRate, 70.0, "Should complete >70% of tasks successfully")
 	})

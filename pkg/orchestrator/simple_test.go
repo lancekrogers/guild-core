@@ -28,8 +28,8 @@ func TestConfig(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "empty config",
-			config: Config{},
+			name:    "empty config",
+			config:  Config{},
 			wantErr: false, // Empty config is valid, will use defaults
 		},
 		{
@@ -48,12 +48,12 @@ func TestConfig(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Test that config struct is properly formed
 			assert.IsType(t, Config{}, tt.config)
-			
+
 			// Test specific fields
 			if tt.config.MaxConcurrentAgents > 0 {
 				assert.Greater(t, tt.config.MaxConcurrentAgents, 0)
 			}
-			
+
 			if tt.config.ExecutionMode != "" {
 				assert.Contains(t, []string{"parallel", "sequential", "managed"}, tt.config.ExecutionMode)
 			}
@@ -158,15 +158,15 @@ func TestSimpleAgent(t *testing.T) {
 // Simple task dispatcher for testing
 type simpleTestDispatcher struct{}
 
-func (d *simpleTestDispatcher) RegisterAgent(agent agent.Agent) {}
-func (d *simpleTestDispatcher) UnregisterAgent(agentID string) {}
+func (d *simpleTestDispatcher) RegisterAgent(agent agent.Agent)                       {}
+func (d *simpleTestDispatcher) UnregisterAgent(agentID string)                        {}
 func (d *simpleTestDispatcher) Dispatch(ctx context.Context, task *kanban.Task) error { return nil }
 func (d *simpleTestDispatcher) GetTaskStatus(ctx context.Context, taskID string) (TaskStatus, error) {
 	return TaskStatus{}, nil
 }
 func (d *simpleTestDispatcher) GetAgentStatus(agentID string) AgentStatus { return AgentStatus{} }
-func (d *simpleTestDispatcher) ListAvailableAgents() []agent.Agent { return nil }
-func (d *simpleTestDispatcher) Stop(ctx context.Context) error { return nil }
+func (d *simpleTestDispatcher) ListAvailableAgents() []agent.Agent        { return nil }
+func (d *simpleTestDispatcher) Stop(ctx context.Context) error            { return nil }
 
 // Test that our simple dispatcher implements the TaskDispatcher interface
 func TestSimpleDispatcher(t *testing.T) {
@@ -178,11 +178,11 @@ func TestSimpleDispatcher(t *testing.T) {
 	// Test basic methods don't panic
 	dispatcher.RegisterAgent(&simpleTestAgent{id: "test"})
 	dispatcher.UnregisterAgent("test")
-	
+
 	ctx := context.Background()
 	err := dispatcher.Dispatch(ctx, &kanban.Task{ID: "task-1"})
 	assert.NoError(t, err)
-	
+
 	status, err := dispatcher.GetTaskStatus(ctx, "task-1")
 	assert.NoError(t, err)
 	assert.IsType(t, TaskStatus{}, status)
@@ -191,10 +191,12 @@ func TestSimpleDispatcher(t *testing.T) {
 // Simple event bus for testing
 type simpleTestEventBus struct{}
 
-func (e *simpleTestEventBus) Subscribe(eventType interfaces.EventType, handler interfaces.EventHandler) {}
+func (e *simpleTestEventBus) Subscribe(eventType interfaces.EventType, handler interfaces.EventHandler) {
+}
 func (e *simpleTestEventBus) SubscribeAll(handler interfaces.EventHandler) {}
-func (e *simpleTestEventBus) Unsubscribe(eventType interfaces.EventType, handler interfaces.EventHandler) {}
-func (e *simpleTestEventBus) Publish(event interfaces.Event) {}
+func (e *simpleTestEventBus) Unsubscribe(eventType interfaces.EventType, handler interfaces.EventHandler) {
+}
+func (e *simpleTestEventBus) Publish(event interfaces.Event)     {}
 func (e *simpleTestEventBus) PublishJSON(jsonEvent string) error { return nil }
 
 // Test that our simple event bus implements the EventBus interface
@@ -212,7 +214,7 @@ func TestSimpleEventBus(t *testing.T) {
 		Type: "test",
 		Data: map[string]interface{}{"message": "test"},
 	})
-	
+
 	err := eventBus.PublishJSON(`{"type": "test", "data": {"message": "test"}}`)
 	assert.NoError(t, err)
 }

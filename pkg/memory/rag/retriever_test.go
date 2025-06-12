@@ -48,13 +48,13 @@ func TestNewRetrieverWithStore(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			mockStore := &mockVectorStore{}
-			
+
 			retriever := NewRetrieverWithStore(mockStore, tt.config)
-			
+
 			assert.NotNil(t, retriever)
 			assert.NotNil(t, retriever.chunker)
 			assert.Equal(t, mockStore, retriever.vectorStore)
-			
+
 			// Check defaults were applied
 			if tt.config.MaxResults == 0 {
 				assert.Equal(t, 5, retriever.Config.MaxResults)
@@ -164,21 +164,21 @@ func TestRetriever_RetrieveContext(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			mockStore := &mockVectorStore{}
-			
+
 			if tt.setupMocks != nil {
 				tt.setupMocks(mockStore)
 			}
-			
+
 			retriever := &Retriever{
 				Config: Config{
 					MaxResults: 10,
 				},
 				vectorStore: mockStore,
 			}
-			
+
 			ctx := context.Background()
 			results, err := retriever.RetrieveContext(ctx, tt.query, tt.config)
-			
+
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
@@ -186,7 +186,7 @@ func TestRetriever_RetrieveContext(t *testing.T) {
 				assert.NotNil(t, results)
 				assert.Len(t, results.Results, tt.wantCount)
 			}
-			
+
 			mockStore.AssertExpectations(t)
 		})
 	}
@@ -195,11 +195,11 @@ func TestRetriever_RetrieveContext(t *testing.T) {
 // Test AddDocument
 func TestRetriever_AddDocument(t *testing.T) {
 	tests := []struct {
-		name     string
-		id       string
-		content  string
-		source   string
-		wantErr  bool
+		name    string
+		id      string
+		content string
+		source  string
+		wantErr bool
 	}{
 		{
 			name:    "successful document addition",
@@ -227,22 +227,22 @@ func TestRetriever_AddDocument(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			mockStore := &mockVectorStore{}
-			
+
 			// For successful cases, expect SaveEmbedding to be called for each chunk
 			if !tt.wantErr && tt.content != "" {
 				mockStore.On("SaveEmbedding", mock.Anything, mock.MatchedBy(func(emb vector.Embedding) bool {
-					return strings.HasPrefix(emb.ID, tt.id+"_chunk_") && 
-						   emb.Source == tt.source &&
-						   emb.Text != ""
+					return strings.HasPrefix(emb.ID, tt.id+"_chunk_") &&
+						emb.Source == tt.source &&
+						emb.Text != ""
 				})).Return(nil).Maybe() // Maybe because chunking might create 0 or more chunks
 			}
-			
+
 			chunker := newChunker(ChunkerConfig{
 				ChunkSize:    100,
 				ChunkOverlap: 20,
 				Strategy:     ChunkByParagraph,
 			})
-			
+
 			retriever := &Retriever{
 				Config: Config{
 					ChunkSize:    100,
@@ -251,16 +251,16 @@ func TestRetriever_AddDocument(t *testing.T) {
 				vectorStore: mockStore,
 				chunker:     chunker,
 			}
-			
+
 			ctx := context.Background()
 			err := retriever.AddDocument(ctx, tt.id, tt.content, tt.source)
-			
+
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)
 			}
-			
+
 			mockStore.AssertExpectations(t)
 		})
 	}
@@ -331,21 +331,21 @@ func TestRetriever_EnhancePrompt(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			mockStore := &mockVectorStore{}
-			
+
 			if tt.setupMocks != nil {
 				tt.setupMocks(mockStore)
 			}
-			
+
 			retriever := &Retriever{
 				Config: Config{
 					MaxResults: 10,
 				},
 				vectorStore: mockStore,
 			}
-			
+
 			ctx := context.Background()
 			enhanced, err := retriever.EnhancePrompt(ctx, tt.prompt, tt.config)
-			
+
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
@@ -357,7 +357,7 @@ func TestRetriever_EnhancePrompt(t *testing.T) {
 					assert.Equal(t, tt.prompt, enhanced)
 				}
 			}
-			
+
 			mockStore.AssertExpectations(t)
 		})
 	}
@@ -366,10 +366,10 @@ func TestRetriever_EnhancePrompt(t *testing.T) {
 // Test RemoveDocument
 func TestRetriever_RemoveDocument(t *testing.T) {
 	retriever := &Retriever{}
-	
+
 	ctx := context.Background()
 	err := retriever.RemoveDocument(ctx, "doc1")
-	
+
 	// RemoveDocument is not yet implemented, should return error
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "not yet implemented")
@@ -378,16 +378,16 @@ func TestRetriever_RemoveDocument(t *testing.T) {
 // Test Close
 func TestRetriever_Close(t *testing.T) {
 	mockStore := &mockVectorStore{}
-	
+
 	// Mock the close operation
 	mockStore.On("Close").Return(nil)
-	
+
 	retriever := &Retriever{
 		vectorStore: mockStore,
 	}
-	
+
 	err := retriever.Close()
-	
+
 	assert.NoError(t, err)
 	mockStore.AssertExpectations(t)
 }

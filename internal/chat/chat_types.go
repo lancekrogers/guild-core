@@ -182,10 +182,10 @@ type ChatModel struct {
 	viewMode     chatViewMode
 	keys         chatKeyMap
 	focusedAgent string
-	
+
 	// Vim mode support
-	vimState      *VimState
-	vimKeys       vimKeyMap
+	vimState       *VimState
+	vimKeys        vimKeyMap
 	vimModeEnabled bool
 
 	// Visual Components
@@ -218,12 +218,12 @@ type ChatModel struct {
 	costConsent   map[string]bool
 	taskCache     map[string]string
 	blockedTools  map[string]bool
-	
+
 	// Vim mode additional state
-	cursorX        int
-	cursorY        int
+	cursorX         int
+	cursorY         int
 	showLineNumbers bool
-	wrapLines      bool
+	wrapLines       bool
 
 	// Completion state
 	showingCompletion bool

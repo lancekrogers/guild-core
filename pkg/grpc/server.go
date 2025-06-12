@@ -945,14 +945,14 @@ func getCampaignManager(registry registry.ComponentRegistry) campaign.Manager {
 		eventBus := orchestrator.DefaultEventBusFactory()
 		return campaign.NewManager(nil, nil, eventBus)
 	}
-	
+
 	campaignRepo := storageReg.GetCampaignRepository()
 	if campaignRepo == nil {
 		// Return a basic working campaign manager if repository is not available
 		eventBus := orchestrator.DefaultEventBusFactory()
 		return campaign.NewManager(nil, nil, eventBus)
 	}
-	
+
 	// Create campaign manager with repository
 	// The registry.CampaignRepository doesn't match campaign.Repository interface exactly
 	// For now, we'll create a basic manager which is better than nil
@@ -972,7 +972,7 @@ func getCommissionManager(registry registry.ComponentRegistry) *commission.Manag
 		}
 		return mgr.(*commission.Manager)
 	}
-	
+
 	commissionRepo := storageReg.GetCommissionRepository()
 	if commissionRepo == nil {
 		// Return a basic working commission manager if repository is not available
@@ -982,7 +982,7 @@ func getCommissionManager(registry registry.ComponentRegistry) *commission.Manag
 		}
 		return mgr.(*commission.Manager)
 	}
-	
+
 	// Create commission manager with repository
 	// The registry.CommissionRepository doesn't match storage.CommissionRepository interface exactly
 	// For now, we'll use nil to avoid compilation errors
@@ -997,7 +997,7 @@ func getCommissionManager(registry registry.ComponentRegistry) *commission.Manag
 func getKanbanManager(registry registry.ComponentRegistry) *kanban.Manager {
 	// Create adapter to bridge interface mismatch
 	adapter := &kanbanRegistryAdapter{registry: registry}
-	
+
 	// Use the registry-aware constructor with adapter
 	ctx := context.Background()
 	manager, err := kanban.NewManagerWithRegistry(ctx, adapter)
@@ -1018,7 +1018,7 @@ func getOrchestrator(registry registry.ComponentRegistry) orchestrator.Orchestra
 		dispatcher := orchestrator.DefaultTaskDispatcherFactory(nil, nil, eventBus, 3)
 		return orchestrator.DefaultOrchestratorFactory(config, dispatcher, eventBus)
 	}
-	
+
 	// For now, return a basic orchestrator - better than nil
 	// In the future, we'd extract components from orchReg
 	eventBus := orchestrator.DefaultEventBusFactory()
@@ -1030,26 +1030,26 @@ func getOrchestrator(registry registry.ComponentRegistry) orchestrator.Orchestra
 func getPromptManager(registry registry.ComponentRegistry) layered.LayeredManager {
 	// Create a simple memory-based layered manager for basic functionality
 	// This provides a working implementation without requiring full storage integration
-	
+
 	// Create base components
 	baseRegistry := layered.NewMemoryRegistry()
 	formatter := &simplePromptFormatter{}
-	
+
 	// Create a simple memory-based layered store
 	memStore := &memoryLayeredStore{
 		prompts: make(map[string][]byte),
 		cache:   make(map[string][]byte),
 	}
-	
+
 	// Create a base manager that implements both Manager and Formatter
 	baseManager := &formatterAwareManager{
 		manager:   layered.NewDefaultManager(baseRegistry, formatter),
 		formatter: formatter,
 	}
-	
+
 	// Create the layered manager without RAG (can be added later)
 	tokenBudget := 8000 // Default token budget
-	
+
 	return layered.NewGuildLayeredManager(
 		baseManager,
 		memStore,
@@ -1129,7 +1129,7 @@ type memoryLayeredStore struct {
 func (m *memoryLayeredStore) Put(ctx context.Context, bucket, key string, value []byte) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	fullKey := fmt.Sprintf("%s:%s", bucket, key)
 	m.prompts[fullKey] = value
 	return nil
@@ -1138,7 +1138,7 @@ func (m *memoryLayeredStore) Put(ctx context.Context, bucket, key string, value 
 func (m *memoryLayeredStore) Get(ctx context.Context, bucket, key string) ([]byte, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	fullKey := fmt.Sprintf("%s:%s", bucket, key)
 	if data, ok := m.prompts[fullKey]; ok {
 		return data, nil
@@ -1149,7 +1149,7 @@ func (m *memoryLayeredStore) Get(ctx context.Context, bucket, key string) ([]byt
 func (m *memoryLayeredStore) Delete(ctx context.Context, bucket, key string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	fullKey := fmt.Sprintf("%s:%s", bucket, key)
 	delete(m.prompts, fullKey)
 	return nil
@@ -1158,7 +1158,7 @@ func (m *memoryLayeredStore) Delete(ctx context.Context, bucket, key string) err
 func (m *memoryLayeredStore) List(ctx context.Context, bucket string) ([]string, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	prefix := bucket + ":"
 	var keys []string
 	for k := range m.prompts {
@@ -1172,7 +1172,7 @@ func (m *memoryLayeredStore) List(ctx context.Context, bucket string) ([]string,
 func (m *memoryLayeredStore) ListKeys(ctx context.Context, bucket, prefix string) ([]string, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	bucketPrefix := bucket + ":"
 	var keys []string
 	for k := range m.prompts {
@@ -1223,7 +1223,7 @@ func (m *memoryLayeredStore) GetCachedPrompt(ctx context.Context, cacheKey strin
 func (m *memoryLayeredStore) InvalidatePromptCache(ctx context.Context, keyPattern string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	// Simple implementation - clear all cache entries
 	// In a real implementation, this would match patterns
 	prefix := "cache:"

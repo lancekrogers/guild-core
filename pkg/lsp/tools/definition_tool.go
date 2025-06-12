@@ -102,7 +102,7 @@ func (t *DefinitionTool) Execute(ctx context.Context, input string) (*tools.Tool
 	for _, loc := range locations {
 		// Convert URI to file path
 		filePath := strings.TrimPrefix(loc.URI, "file://")
-		
+
 		result.Locations = append(result.Locations, LocationResult{
 			File:      filePath,
 			Line:      loc.Range.Start.Line,
@@ -136,15 +136,15 @@ func FormatDefinitionsAsText(result *DefinitionResult) string {
 	}
 
 	var builder strings.Builder
-	
+
 	if len(result.Locations) == 1 {
 		loc := result.Locations[0]
-		builder.WriteString(fmt.Sprintf("Definition found at:\n%s:%d:%d", 
+		builder.WriteString(fmt.Sprintf("Definition found at:\n%s:%d:%d",
 			loc.File, loc.Line+1, loc.Column+1))
 	} else {
 		builder.WriteString(fmt.Sprintf("Found %d definitions:\n\n", len(result.Locations)))
 		for i, loc := range result.Locations {
-			builder.WriteString(fmt.Sprintf("%d. %s:%d:%d\n", 
+			builder.WriteString(fmt.Sprintf("%d. %s:%d:%d\n",
 				i+1, loc.File, loc.Line+1, loc.Column+1))
 		}
 	}

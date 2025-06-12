@@ -10,7 +10,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/lsp"
 	lsptools "github.com/guild-ventures/guild-core/pkg/lsp/tools"
 )
@@ -86,30 +86,30 @@ go 1.21
 
 	t.Run("CompletionTool", func(t *testing.T) {
 		tool := lsptools.NewCompletionTool(manager)
-		
+
 		// Test completion after "c." in the Add method
 		input := map[string]interface{}{
 			"file":   testFile,
-			"line":   21,  // Line with "return a + b"
-			"column": 2,   // After 'c.'
+			"line":   21, // Line with "return a + b"
+			"column": 2,  // After 'c.'
 		}
-		
+
 		inputJSON, err := json.Marshal(input)
 		require.NoError(t, err)
-		
+
 		result, err := tool.Execute(ctx, string(inputJSON))
 		require.NoError(t, err)
 		assert.NotNil(t, result)
 		assert.True(t, result.Success)
-		
+
 		// Parse result
 		var completionResult lsptools.CompletionResult
 		err = json.Unmarshal([]byte(result.Output), &completionResult)
 		require.NoError(t, err)
-		
+
 		// Should have completions for Calculator methods
 		assert.True(t, len(completionResult.Items) > 0)
-		
+
 		// Check metadata
 		assert.Equal(t, testFile, result.Metadata["file"])
 		assert.NotEmpty(t, result.Metadata["completion_count"])
@@ -117,27 +117,27 @@ go 1.21
 
 	t.Run("DefinitionTool", func(t *testing.T) {
 		tool := lsptools.NewDefinitionTool(manager)
-		
+
 		// Test going to definition of Calculator type in NewCalculator
 		input := map[string]interface{}{
 			"file":   testFile,
-			"line":   13,  // Line with "func NewCalculator"
-			"column": 30,  // On '*Calculator'
+			"line":   13, // Line with "func NewCalculator"
+			"column": 30, // On '*Calculator'
 		}
-		
+
 		inputJSON, err := json.Marshal(input)
 		require.NoError(t, err)
-		
+
 		result, err := tool.Execute(ctx, string(inputJSON))
 		require.NoError(t, err)
 		assert.NotNil(t, result)
 		assert.True(t, result.Success)
-		
+
 		// Parse result
 		var defResult lsptools.DefinitionResult
 		err = json.Unmarshal([]byte(result.Output), &defResult)
 		require.NoError(t, err)
-		
+
 		// Should find the Calculator type definition
 		assert.GreaterOrEqual(t, len(defResult.Locations), 1)
 		if len(defResult.Locations) > 0 {
@@ -149,55 +149,55 @@ go 1.21
 
 	t.Run("ReferencesTool", func(t *testing.T) {
 		tool := lsptools.NewReferencesTool(manager)
-		
+
 		// Test finding references to the precision field
 		input := map[string]interface{}{
-			"file":               testFile,
-			"line":               9,   // Line with "precision int"
-			"column":             1,   // On 'precision'
+			"file":                testFile,
+			"line":                9, // Line with "precision int"
+			"column":              1, // On 'precision'
 			"include_declaration": true,
 		}
-		
+
 		inputJSON, err := json.Marshal(input)
 		require.NoError(t, err)
-		
+
 		result, err := tool.Execute(ctx, string(inputJSON))
 		require.NoError(t, err)
 		assert.NotNil(t, result)
 		assert.True(t, result.Success)
-		
+
 		// Parse result
 		var refResult lsptools.ReferencesResult
 		err = json.Unmarshal([]byte(result.Output), &refResult)
 		require.NoError(t, err)
-		
+
 		// Should find at least 3 references (declaration, NewCalculator, Format)
 		assert.GreaterOrEqual(t, refResult.TotalCount, 3)
 	})
 
 	t.Run("HoverTool", func(t *testing.T) {
 		tool := lsptools.NewHoverTool(manager)
-		
+
 		// Test hover over Calculator type
 		input := map[string]interface{}{
 			"file":   testFile,
-			"line":   8,   // Line with "type Calculator struct"
-			"column": 5,   // On 'Calculator'
+			"line":   8, // Line with "type Calculator struct"
+			"column": 5, // On 'Calculator'
 		}
-		
+
 		inputJSON, err := json.Marshal(input)
 		require.NoError(t, err)
-		
+
 		result, err := tool.Execute(ctx, string(inputJSON))
 		require.NoError(t, err)
 		assert.NotNil(t, result)
 		assert.True(t, result.Success)
-		
+
 		// Parse result
 		var hoverResult lsptools.HoverResult
 		err = json.Unmarshal([]byte(result.Output), &hoverResult)
 		require.NoError(t, err)
-		
+
 		// Should have hover content
 		assert.NotEmpty(t, hoverResult.Content)
 		// Content should mention Calculator
@@ -207,7 +207,7 @@ go 1.21
 
 func TestLSPToolsEdgeCases(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Create a mock manager that will return errors
 	manager, err := lsp.NewManager("")
 	require.NoError(t, err)
@@ -215,12 +215,12 @@ func TestLSPToolsEdgeCases(t *testing.T) {
 
 	t.Run("InvalidInput", func(t *testing.T) {
 		tool := lsptools.NewCompletionTool(manager)
-		
+
 		// Test with invalid JSON
 		result, err := tool.Execute(ctx, "invalid json")
 		assert.Error(t, err)
 		assert.Nil(t, result)
-		
+
 		// Test with missing required fields
 		result, err = tool.Execute(ctx, `{"file": "test.go"}`)
 		assert.Error(t, err)
@@ -229,16 +229,16 @@ func TestLSPToolsEdgeCases(t *testing.T) {
 
 	t.Run("NonExistentFile", func(t *testing.T) {
 		tool := lsptools.NewDefinitionTool(manager)
-		
+
 		input := map[string]interface{}{
 			"file":   "/nonexistent/file.go",
 			"line":   0,
 			"column": 0,
 		}
-		
+
 		inputJSON, err := json.Marshal(input)
 		require.NoError(t, err)
-		
+
 		_, err = tool.Execute(ctx, string(inputJSON))
 		// Should handle gracefully
 		assert.Error(t, err)
@@ -253,7 +253,7 @@ func TestFormatters(t *testing.T) {
 				{Label: "Printf", Kind: "function", Detail: "func Printf(format string, a ...interface{})"},
 			},
 		}
-		
+
 		text := lsptools.FormatCompletionsAsText(result)
 		assert.Contains(t, text, "Found 2 completions")
 		assert.Contains(t, text, "Println")
@@ -266,7 +266,7 @@ func TestFormatters(t *testing.T) {
 				{File: "/path/to/file.go", Line: 10, Column: 5},
 			},
 		}
-		
+
 		text := lsptools.FormatDefinitionsAsText(result)
 		assert.Contains(t, text, "Definition found at:")
 		assert.Contains(t, text, "/path/to/file.go:11:6") // 1-based in output
@@ -281,7 +281,7 @@ func TestFormatters(t *testing.T) {
 			},
 			TotalCount: 3,
 		}
-		
+
 		text := lsptools.FormatReferencesAsText(result)
 		assert.Contains(t, text, "Found 3 references")
 		assert.Contains(t, text, "file1.go (2 references)")
@@ -293,7 +293,7 @@ func TestFormatters(t *testing.T) {
 			Content:  "type Calculator struct",
 			Language: "go",
 		}
-		
+
 		text := lsptools.FormatHoverAsText(result)
 		assert.Contains(t, text, "Language: go")
 		assert.Contains(t, text, "type Calculator struct")

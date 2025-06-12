@@ -12,12 +12,12 @@ import (
 // Test executeWithTools method to improve coverage
 func TestWorkerAgent_executeWithTools(t *testing.T) {
 	tests := []struct {
-		name         string
-		setupAgent   func() *WorkerAgent
-		request      string
-		expectErr    bool
-		errContains  string
-		expectTools  bool
+		name        string
+		setupAgent  func() *WorkerAgent
+		request     string
+		expectErr   bool
+		errContains string
+		expectTools bool
 	}{
 		{
 			name: "execution with no tool registry",

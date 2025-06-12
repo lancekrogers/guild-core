@@ -86,11 +86,11 @@ func SetupTestProject(t *testing.T, opts ...TestProjectOptions) (*project.Contex
 // CleanupTestProject ensures proper cleanup of test resources
 func CleanupTestProject(t *testing.T, rootPath string) {
 	t.Helper()
-	
+
 	if rootPath == "" || rootPath == "/" || rootPath == os.Getenv("HOME") {
 		t.Fatal("refusing to cleanup dangerous path")
 	}
-	
+
 	err := os.RemoveAll(rootPath)
 	if err != nil {
 		t.Logf("failed to cleanup test project: %v", err)
@@ -156,7 +156,7 @@ func InitTestDatabase(t *testing.T, projCtx *project.Context) {
 	// Database is automatically initialized during project.Initialize()
 	// This function is here for explicit database operations if needed
 	dbPath := filepath.Join(projCtx.GetGuildPath(), "guild.db")
-	
+
 	// Verify database exists
 	_, err := os.Stat(dbPath)
 	require.NoError(t, err, "database file should exist")
@@ -167,7 +167,7 @@ func createTestCorpus(t *testing.T, projCtx *project.Context) {
 	t.Helper()
 
 	docsPath := filepath.Join(projCtx.GetCorpusPath(), "docs")
-	
+
 	// Architecture document
 	archDoc := `# System Architecture
 

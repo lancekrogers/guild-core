@@ -66,7 +66,7 @@ func TestCampaignLifecycleManagement(t *testing.T) {
 	// The test focuses on event bus functionality
 
 	// Test campaign lifecycle transitions
-	
+
 	// 1. Planning -> Active
 	eventBus.Publish(interfaces.Event{
 		ID:        "evt-1",
@@ -352,7 +352,7 @@ func TestEventDrivenCoordination(t *testing.T) {
 	})
 
 	// Simulate commission workflow
-	
+
 	// 1. Commission created
 	eventBus.Publish(interfaces.Event{
 		ID:        "evt-commission-1",
@@ -563,7 +563,7 @@ func TestResourceAllocationAndWorkload(t *testing.T) {
 
 	// Create components (for potential use in workload testing)
 	_ = orchestrator.DefaultEventBusFactory() // Event bus not used in this test
-	
+
 	// Create agents with different capabilities and workload limits
 	agentSpecs := []struct {
 		id           string
@@ -589,9 +589,9 @@ func TestResourceAllocationAndWorkload(t *testing.T) {
 
 	// Define tasks with different requirements
 	tasks := []struct {
-		id               string
+		id                 string
 		requiredCapability string
-		complexity       int
+		complexity         int
 	}{
 		{"task-1", "architecture", 2},
 		{"task-2", "complex-coding", 2},
@@ -643,11 +643,11 @@ func TestResourceAllocationAndWorkload(t *testing.T) {
 	t.Log("Workload distribution:")
 	for _, spec := range agentSpecs {
 		workload := agentWorkloads[spec.id]
-		t.Logf("- %s: %d/%d (%.0f%% utilized)", 
-			spec.id, workload, spec.maxWorkload, 
+		t.Logf("- %s: %d/%d (%.0f%% utilized)",
+			spec.id, workload, spec.maxWorkload,
 			float64(workload)/float64(spec.maxWorkload)*100)
-		
-		assert.LessOrEqual(t, workload, spec.maxWorkload, 
+
+		assert.LessOrEqual(t, workload, spec.maxWorkload,
 			"Agent %s should not exceed max workload", spec.id)
 	}
 
@@ -680,8 +680,8 @@ func TestResourceAllocationAndWorkload(t *testing.T) {
 			}
 		}
 
-		assert.True(t, hasCapability, 
-			"Agent %s should have capability %s for task %s", 
+		assert.True(t, hasCapability,
+			"Agent %s should have capability %s for task %s",
 			agentID, requiredCap, taskID)
 	}
 }
@@ -713,7 +713,7 @@ func TestErrorHandlingAndRecovery(t *testing.T) {
 	// Subscribe to error events
 	eventBus.Subscribe(interfaces.EventTypeTaskFailed, func(event interfaces.Event) {
 		atomic.AddInt32(&errorCount, 1)
-		
+
 		if taskID, ok := event.Data["task_id"].(string); ok {
 			if retries, ok := event.Data["retries"].(int); ok && retries < 3 {
 				atomic.AddInt32(&retryCount, 1)
@@ -737,10 +737,10 @@ func TestErrorHandlingAndRecovery(t *testing.T) {
 
 	// Create test scenarios
 	scenarios := []struct {
-		name        string
-		taskID      string
-		shouldFail  bool
-		maxRetries  int
+		name       string
+		taskID     string
+		shouldFail bool
+		maxRetries int
 	}{
 		{"Normal task", "normal-task", false, 0},
 		{"Failing task with recovery", "fail-task", true, 3},
@@ -804,7 +804,7 @@ func TestErrorHandlingAndRecovery(t *testing.T) {
 	t.Run("TransactionRollback", func(t *testing.T) {
 		// Track rollback events
 		var rollbackCount int32
-		
+
 		eventBus.Subscribe(interfaces.EventType("transaction.rollback"), func(event interfaces.Event) {
 			atomic.AddInt32(&rollbackCount, 1)
 		})

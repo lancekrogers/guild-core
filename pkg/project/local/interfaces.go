@@ -5,15 +5,15 @@ type LocalGuildStructure struct {
 	// Core files
 	ConfigPath   string // guild.yaml
 	DatabasePath string // memory.db
-	
+
 	// Directories
-	CommissionsDir  string // commissions/ - User objectives/goals
-	CampaignsDir    string // campaigns/ - Execution plans
-	KanbanDir       string // kanban/ - Task tracking
-	CorpusDir       string // corpus/ - Project documentation
-	PromptsDir      string // prompts/ - Custom templates
-	ToolsDir        string // tools/ - Project-specific tool installations/configs
-	WorkspacesDir   string // workspaces/ - Agent work areas
+	CommissionsDir string // commissions/ - User objectives/goals
+	CampaignsDir   string // campaigns/ - Execution plans
+	KanbanDir      string // kanban/ - Task tracking
+	CorpusDir      string // corpus/ - Project documentation
+	PromptsDir     string // prompts/ - Custom templates
+	ToolsDir       string // tools/ - Project-specific tool installations/configs
+	WorkspacesDir  string // workspaces/ - Agent work areas
 	// ArchivesDir  string // TODO: archives/ - Agent memory (pending ChromemGo deletion)
 }
 

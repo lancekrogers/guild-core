@@ -154,7 +154,7 @@ func TestOrchestratorObjectiveManagement(t *testing.T) {
 	}
 	err = orch.SetObjective(newObjective)
 	assert.NoError(t, err) // Current implementation allows setting objective while running
-	
+
 	// Verify new objective was set
 	retrieved = orch.GetObjective()
 	assert.NotNil(t, retrieved)
@@ -226,8 +226,8 @@ func TestOrchestratorConcurrentOperations(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		go func(id int) {
 			agent := mocks.NewMockAgent(
-				string(rune('a' + id)),
-				string(rune('A' + id)),
+				string(rune('a'+id)),
+				string(rune('A'+id)),
 			)
 			orch.AddAgent(agent)
 			done <- true

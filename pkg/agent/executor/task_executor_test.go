@@ -16,9 +16,9 @@ type mockAgent struct {
 	name string
 }
 
-func (m *mockAgent) GetID() string   { return m.id }
-func (m *mockAgent) GetName() string { return m.name }
-func (m *mockAgent) GetType() string { return "test" }
+func (m *mockAgent) GetID() string             { return m.id }
+func (m *mockAgent) GetName() string           { return m.name }
+func (m *mockAgent) GetType() string           { return "test" }
 func (m *mockAgent) GetCapabilities() []string { return []string{"testing"} }
 func (m *mockAgent) Execute(ctx context.Context, request string) (string, error) {
 	// Mock execution

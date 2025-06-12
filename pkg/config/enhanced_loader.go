@@ -17,10 +17,10 @@ type EnhancedGuildConfig struct {
 	*GuildConfig
 
 	// Global configuration overlays
-	GlobalProviders *global.ProvidersConfig `yaml:"-"`
-	GlobalTools     *global.ToolsConfig     `yaml:"-"`
-	GlobalUI        *global.UIConfig        `yaml:"-"`
-	GlobalSecurity  *global.GlobalSecurityConfig  `yaml:"-"`
+	GlobalProviders *global.ProvidersConfig           `yaml:"-"`
+	GlobalTools     *global.ToolsConfig               `yaml:"-"`
+	GlobalUI        *global.UIConfig                  `yaml:"-"`
+	GlobalSecurity  *global.GlobalSecurityConfig      `yaml:"-"`
 	GlobalLSP       map[string]global.LSPServerConfig `yaml:"-"`
 }
 
@@ -116,7 +116,7 @@ func applyGlobalDefaults(enhanced *EnhancedGuildConfig, globalConfig *global.Glo
 // loadProviderConfig loads provider-specific configuration from global
 func loadProviderConfig(enhanced *EnhancedGuildConfig, provider string) {
 	providerConfigPath := global.GlobalProviderConfigPath(provider)
-	
+
 	data, err := os.ReadFile(providerConfigPath)
 	if err != nil {
 		return // Ignore errors, use defaults
@@ -179,20 +179,20 @@ func getDefaultGlobalConfig() *global.GlobalConfig {
 func GetProjectPaths(projectPath string) map[string]string {
 	return map[string]string{
 		// Global paths
-		"global_dir":       global.GlobalGuildDir(),
-		"global_config":    global.GlobalConfigPath(),
-		"providers_dir":    filepath.Join(global.GlobalGuildDir(), "providers"),
-		"tools_dir":        filepath.Join(global.GlobalGuildDir(), "tools"),
-		"templates_dir":    filepath.Join(global.GlobalGuildDir(), "templates"),
-		"lsp_dir":          filepath.Join(global.GlobalGuildDir(), "lsp"),
-		
+		"global_dir":    global.GlobalGuildDir(),
+		"global_config": global.GlobalConfigPath(),
+		"providers_dir": filepath.Join(global.GlobalGuildDir(), "providers"),
+		"tools_dir":     filepath.Join(global.GlobalGuildDir(), "tools"),
+		"templates_dir": filepath.Join(global.GlobalGuildDir(), "templates"),
+		"lsp_dir":       filepath.Join(global.GlobalGuildDir(), "lsp"),
+
 		// Local paths
-		"local_dir":        local.LocalGuildDir(projectPath),
-		"local_config":     local.LocalConfigPath(projectPath),
-		"database":         local.LocalDatabasePath(projectPath),
-		"corpus":           local.LocalCorpusPath(projectPath),
-		"commissions":      local.LocalCommissionsPath(projectPath), // User objectives/goals
-		"local_tools":      local.LocalToolsPath(projectPath),
-		"workspaces":       local.LocalWorkspacesPath(projectPath),
+		"local_dir":    local.LocalGuildDir(projectPath),
+		"local_config": local.LocalConfigPath(projectPath),
+		"database":     local.LocalDatabasePath(projectPath),
+		"corpus":       local.LocalCorpusPath(projectPath),
+		"commissions":  local.LocalCommissionsPath(projectPath), // User objectives/goals
+		"local_tools":  local.LocalToolsPath(projectPath),
+		"workspaces":   local.LocalWorkspacesPath(projectPath),
 	}
 }

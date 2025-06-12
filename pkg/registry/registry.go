@@ -77,18 +77,18 @@ func (w *layeredManagerWrapper) InvalidateCache(ctx context.Context, artisanID, 
 
 // DefaultComponentRegistry is the default implementation of ComponentRegistry
 type DefaultComponentRegistry struct {
-	agentRegistry         AgentRegistry
-	toolRegistry          ToolRegistry
-	providerRegistry      ProviderRegistry
-	memoryRegistry        MemoryRegistry
-	projectRegistry       ProjectRegistry
-	promptRegistry        *PromptRegistry
-	layeredPromptManager  LayeredPromptManager
-	storageRegistry       StorageRegistry
-	orchestratorRegistry  interface{}
-	config                Config
-	initialized           bool
-	mu                    sync.RWMutex
+	agentRegistry        AgentRegistry
+	toolRegistry         ToolRegistry
+	providerRegistry     ProviderRegistry
+	memoryRegistry       MemoryRegistry
+	projectRegistry      ProjectRegistry
+	promptRegistry       *PromptRegistry
+	layeredPromptManager LayeredPromptManager
+	storageRegistry      StorageRegistry
+	orchestratorRegistry interface{}
+	config               Config
+	initialized          bool
+	mu                   sync.RWMutex
 }
 
 // SQLiteStorageRegistry implements StorageRegistry for SQLite storage

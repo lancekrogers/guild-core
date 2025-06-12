@@ -28,7 +28,6 @@ var directoryStructure = []string{
 	"objectives",
 }
 
-
 // Initialize creates a new Guild project with the given options and returns the project context
 // This is the modern API that journey tests expect
 func Initialize(ctx context.Context, path string, opts InitOptions) (*Context, error) {

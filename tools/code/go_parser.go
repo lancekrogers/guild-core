@@ -24,7 +24,7 @@ func NewGoParser() Parser {
 // Parse parses Go source code and returns the AST
 func (p *GoParser) Parse(ctx context.Context, filename string, content []byte) (*ParseResult, error) {
 	fset := token.NewFileSet()
-	
+
 	// Parse the Go file
 	file, err := parser.ParseFile(fset, filename, content, parser.ParseComments)
 	if err != nil {
@@ -47,7 +47,7 @@ func (p *GoParser) Parse(ctx context.Context, filename string, content []byte) (
 				Severity: "error",
 			})
 		}
-		
+
 		return &ParseResult{
 			Language: LanguageGo,
 			Filename: filename,
@@ -191,7 +191,7 @@ func (p *GoParser) GetImports(result *ParseResult) ([]*Import, error) {
 
 	for _, imp := range file.Imports {
 		importPath, _ := strconv.Unquote(imp.Path.Value)
-		
+
 		goImport := &Import{
 			Path: importPath,
 			Line: result.FileSet.Position(imp.Pos()).Line,
@@ -235,7 +235,7 @@ func (p *GoParser) FindSymbol(result *ParseResult, symbolName string) ([]*Symbol
 			if node.Name.Name == symbolName {
 				pos := result.FileSet.Position(node.Pos())
 				end := result.FileSet.Position(node.End())
-				
+
 				symbol := &Symbol{
 					Name:      node.Name.Name,
 					Type:      "function",
@@ -245,18 +245,18 @@ func (p *GoParser) FindSymbol(result *ParseResult, symbolName string) ([]*Symbol
 					StartCol:  pos.Column,
 					EndCol:    end.Column,
 				}
-				
+
 				if node.Doc != nil {
 					symbol.DocString = node.Doc.Text()
 				}
-				
+
 				// Determine visibility
 				if ast.IsExported(node.Name.Name) {
 					symbol.Visibility = "public"
 				} else {
 					symbol.Visibility = "private"
 				}
-				
+
 				symbols = append(symbols, symbol)
 			}
 
@@ -264,14 +264,14 @@ func (p *GoParser) FindSymbol(result *ParseResult, symbolName string) ([]*Symbol
 			if node.Name.Name == symbolName {
 				pos := result.FileSet.Position(node.Pos())
 				end := result.FileSet.Position(node.End())
-				
+
 				symbolType := "type"
 				if _, ok := node.Type.(*ast.StructType); ok {
 					symbolType = "struct"
 				} else if _, ok := node.Type.(*ast.InterfaceType); ok {
 					symbolType = "interface"
 				}
-				
+
 				symbol := &Symbol{
 					Name:      node.Name.Name,
 					Type:      symbolType,
@@ -281,13 +281,13 @@ func (p *GoParser) FindSymbol(result *ParseResult, symbolName string) ([]*Symbol
 					StartCol:  pos.Column,
 					EndCol:    end.Column,
 				}
-				
+
 				if ast.IsExported(node.Name.Name) {
 					symbol.Visibility = "public"
 				} else {
 					symbol.Visibility = "private"
 				}
-				
+
 				symbols = append(symbols, symbol)
 			}
 
@@ -296,7 +296,7 @@ func (p *GoParser) FindSymbol(result *ParseResult, symbolName string) ([]*Symbol
 				if name.Name == symbolName {
 					pos := result.FileSet.Position(name.Pos())
 					end := result.FileSet.Position(name.End())
-					
+
 					symbol := &Symbol{
 						Name:      name.Name,
 						Type:      "variable",
@@ -306,13 +306,13 @@ func (p *GoParser) FindSymbol(result *ParseResult, symbolName string) ([]*Symbol
 						StartCol:  pos.Column,
 						EndCol:    end.Column,
 					}
-					
+
 					if ast.IsExported(name.Name) {
 						symbol.Visibility = "public"
 					} else {
 						symbol.Visibility = "private"
 					}
-					
+
 					symbols = append(symbols, symbol)
 				}
 			}
@@ -426,7 +426,7 @@ func (p *GoParser) extractStruct(typeSpec *ast.TypeSpec, structType *ast.StructT
 	if structType.Fields != nil {
 		for _, field := range structType.Fields.List {
 			fieldType := p.typeToString(field.Type)
-			
+
 			if len(field.Names) == 0 {
 				// Embedded field
 				class.Fields = append(class.Fields, &Field{
@@ -441,14 +441,14 @@ func (p *GoParser) extractStruct(typeSpec *ast.TypeSpec, structType *ast.StructT
 					if ast.IsExported(name.Name) {
 						fieldVisibility = "public"
 					}
-					
+
 					fieldObj := &Field{
 						Name:       name.Name,
 						Type:       fieldType,
 						Visibility: fieldVisibility,
 						Line:       fset.Position(name.Pos()).Line,
 					}
-					
+
 					// Extract field tag if present
 					if field.Tag != nil {
 						tag, _ := strconv.Unquote(field.Tag.Value)
@@ -456,7 +456,7 @@ func (p *GoParser) extractStruct(typeSpec *ast.TypeSpec, structType *ast.StructT
 							fieldObj.DocString = "Tag: " + tag
 						}
 					}
-					
+
 					class.Fields = append(class.Fields, fieldObj)
 				}
 			}
@@ -519,11 +519,11 @@ func (p *GoParser) typeToString(expr ast.Expr) string {
 // buildFunctionSignature builds a readable function signature
 func (p *GoParser) buildFunctionSignature(fn *Function) string {
 	var sig strings.Builder
-	
+
 	sig.WriteString("func ")
 	sig.WriteString(fn.Name)
 	sig.WriteString("(")
-	
+
 	for i, param := range fn.Parameters {
 		if i > 0 {
 			sig.WriteString(", ")
@@ -537,13 +537,13 @@ func (p *GoParser) buildFunctionSignature(fn *Function) string {
 		}
 		sig.WriteString(param.Type)
 	}
-	
+
 	sig.WriteString(")")
-	
+
 	if fn.ReturnType != "" {
 		sig.WriteString(" ")
 		sig.WriteString(fn.ReturnType)
 	}
-	
+
 	return sig.String()
 }

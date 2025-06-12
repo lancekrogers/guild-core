@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 	"github.com/guild-ventures/guild-core/tools"
-	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 )
 
 // MockLLMProvider provides a configurable mock LLM provider for testing
@@ -230,17 +230,17 @@ func (m *MockLLMProvider) Complete(ctx context.Context, prompt string) (string, 
 			},
 		},
 	}
-	
+
 	// Use ChatCompletion
 	resp, err := m.ChatCompletion(ctx, req)
 	if err != nil {
 		return "", err
 	}
-	
+
 	if len(resp.Choices) > 0 {
 		return resp.Choices[0].Message.Content, nil
 	}
-	
+
 	return "", fmt.Errorf("no response choices")
 }
 
@@ -323,7 +323,7 @@ func (r *MockToolRegistry) RegisterTool(name string, tool tools.Tool) error {
 func (r *MockToolRegistry) GetTool(name string) (tools.Tool, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	tool, exists := r.tools[name]
 	if !exists {
 		return nil, fmt.Errorf("tool not found: %s", name)
@@ -335,7 +335,7 @@ func (r *MockToolRegistry) GetTool(name string) (tools.Tool, error) {
 func (r *MockToolRegistry) ListTools() []string {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	names := make([]string, 0, len(r.tools))
 	for name := range r.tools {
 		names = append(names, name)
@@ -530,11 +530,11 @@ func (t *mockHTTPTool) Execute(ctx context.Context, input string) (*tools.ToolRe
 
 // MockEventBus provides a test event bus for testing event-driven flows
 type MockEventBus struct {
-	mu         sync.RWMutex
-	events     []interface{}
-	handlers   map[string][]func(interface{})
-	blockSend  bool
-	sendDelay  time.Duration
+	mu        sync.RWMutex
+	events    []interface{}
+	handlers  map[string][]func(interface{})
+	blockSend bool
+	sendDelay time.Duration
 }
 
 // NewMockEventBus creates a new mock event bus
@@ -627,7 +627,7 @@ func NewMockVectorStore() *MockVectorStore {
 func (s *MockVectorStore) Add(ctx context.Context, doc *vector.Document) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	
+
 	s.documents[doc.ID] = doc
 	// Generate mock embedding
 	s.embeddings[doc.ID] = generateMockEmbedding(doc.Content)
@@ -663,7 +663,7 @@ func (s *MockVectorStore) Search(ctx context.Context, query []float32, k int, fi
 func (s *MockVectorStore) Delete(ctx context.Context, id string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	
+
 	delete(s.documents, id)
 	delete(s.embeddings, id)
 	return nil
@@ -694,7 +694,7 @@ func (s *MockVectorStore) Count() int {
 func (s *MockVectorStore) SaveEmbedding(ctx context.Context, embedding vector.Embedding) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	
+
 	// Convert Embedding to Document for storage
 	doc := &vector.Document{
 		ID:       embedding.ID,
@@ -710,7 +710,7 @@ func (s *MockVectorStore) SaveEmbedding(ctx context.Context, embedding vector.Em
 func (s *MockVectorStore) QueryEmbeddings(ctx context.Context, query string, limit int) ([]vector.EmbeddingMatch, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	
+
 	// For mock, return first N documents as matches
 	matches := make([]vector.EmbeddingMatch, 0, limit)
 	for id, doc := range s.documents {
@@ -724,7 +724,7 @@ func (s *MockVectorStore) QueryEmbeddings(ctx context.Context, query string, lim
 				metadata = m
 			}
 		}
-		
+
 		matches = append(matches, vector.EmbeddingMatch{
 			ID:        id,
 			Text:      doc.Content,
@@ -734,7 +734,7 @@ func (s *MockVectorStore) QueryEmbeddings(ctx context.Context, query string, lim
 			Metadata:  metadata,
 		})
 	}
-	
+
 	return matches, nil
 }
 
@@ -761,7 +761,7 @@ func matchFilters(doc *vector.Document, filters map[string]interface{}) bool {
 	if !ok {
 		return false
 	}
-	
+
 	for key, value := range filters {
 		if docValue, ok := metadata[key]; !ok || docValue != value {
 			return false

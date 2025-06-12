@@ -15,25 +15,25 @@ import (
 // Client represents an LSP client that communicates with a language server
 type Client struct {
 	// Server info
-	language   string
-	command    []string
-	rootURI    string
-	
+	language string
+	command  []string
+	rootURI  string
+
 	// Process management
-	cmd        *exec.Cmd
-	stdin      io.WriteCloser
-	stdout     io.ReadCloser
-	stderr     io.ReadCloser
-	
+	cmd    *exec.Cmd
+	stdin  io.WriteCloser
+	stdout io.ReadCloser
+	stderr io.ReadCloser
+
 	// Transport
-	transport  *ClientTransport
-	requestID  int64
-	
+	transport *ClientTransport
+	requestID int64
+
 	// State
 	initialized bool
 	ready       bool
 	mu          sync.RWMutex
-	
+
 	// Capabilities
 	serverCapabilities ServerCapabilities
 }
@@ -51,17 +51,17 @@ func NewClient(language string, command []string, rootURI string) *Client {
 // Start starts the language server process
 func (c *Client) Start(ctx context.Context) error {
 	logger := observability.GetLogger(ctx)
-	
+
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	if c.cmd != nil && c.cmd.Process != nil {
 		return gerror.New(gerror.ErrCodeAlreadyExists, "language server already started", nil).
 			WithComponent("lsp").
 			WithOperation("start").
 			WithDetails("language", c.language)
 	}
-	
+
 	// Create command
 	if len(c.command) == 0 {
 		return gerror.New(gerror.ErrCodeValidation, "no command specified for language server", nil).
@@ -69,10 +69,10 @@ func (c *Client) Start(ctx context.Context) error {
 			WithOperation("start").
 			WithDetails("language", c.language)
 	}
-	
+
 	c.cmd = exec.CommandContext(ctx, c.command[0], c.command[1:]...)
 	c.cmd.Env = os.Environ()
-	
+
 	// Setup pipes
 	var err error
 	c.stdin, err = c.cmd.StdinPipe()
@@ -82,7 +82,7 @@ func (c *Client) Start(ctx context.Context) error {
 			WithOperation("start").
 			WithDetails("language", c.language)
 	}
-	
+
 	c.stdout, err = c.cmd.StdoutPipe()
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create stdout pipe").
@@ -90,7 +90,7 @@ func (c *Client) Start(ctx context.Context) error {
 			WithOperation("start").
 			WithDetails("language", c.language)
 	}
-	
+
 	c.stderr, err = c.cmd.StderrPipe()
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create stderr pipe").
@@ -98,7 +98,7 @@ func (c *Client) Start(ctx context.Context) error {
 			WithOperation("start").
 			WithDetails("language", c.language)
 	}
-	
+
 	// Start process
 	if err := c.cmd.Start(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeExternal, "failed to start language server").
@@ -107,13 +107,13 @@ func (c *Client) Start(ctx context.Context) error {
 			WithDetails("language", c.language).
 			WithDetails("command", fmt.Sprintf("%v", c.command))
 	}
-	
+
 	// Create transport
 	c.transport = NewClientTransport(c.stdout, c.stdin)
-	
+
 	// Start listening for server messages in background
 	go c.transport.Listen(ctx)
-	
+
 	// Log stderr in background
 	go func() {
 		buf := make([]byte, 4096)
@@ -134,25 +134,25 @@ func (c *Client) Start(ctx context.Context) error {
 			}
 		}
 	}()
-	
+
 	logger.InfoContext(ctx, "Started language server",
 		"language", c.language,
 		"command", c.command)
-	
+
 	return nil
 }
 
 // Stop stops the language server process
 func (c *Client) Stop(ctx context.Context) error {
 	logger := observability.GetLogger(ctx)
-	
+
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	if c.cmd == nil || c.cmd.Process == nil {
 		return nil // Already stopped
 	}
-	
+
 	// Send shutdown request
 	if c.initialized {
 		if err := c.shutdown(ctx); err != nil {
@@ -161,7 +161,7 @@ func (c *Client) Stop(ctx context.Context) error {
 				"error", err)
 		}
 	}
-	
+
 	// Close pipes
 	if c.stdin != nil {
 		c.stdin.Close()
@@ -172,7 +172,7 @@ func (c *Client) Stop(ctx context.Context) error {
 	if c.stderr != nil {
 		c.stderr.Close()
 	}
-	
+
 	// Kill process if still running
 	if c.cmd.Process != nil {
 		if err := c.cmd.Process.Kill(); err != nil {
@@ -182,16 +182,16 @@ func (c *Client) Stop(ctx context.Context) error {
 		}
 		c.cmd.Wait()
 	}
-	
+
 	// Reset state
 	c.cmd = nil
 	c.transport = nil
 	c.initialized = false
 	c.ready = false
-	
+
 	logger.InfoContext(ctx, "Stopped language server",
 		"language", c.language)
-	
+
 	return nil
 }
 
@@ -199,41 +199,41 @@ func (c *Client) Stop(ctx context.Context) error {
 func (c *Client) Initialize(ctx context.Context, params InitializeParams) (*InitializeResult, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	if c.initialized {
 		return nil, gerror.New(gerror.ErrCodeAlreadyExists, "client already initialized", nil).
 			WithComponent("lsp").
 			WithOperation("initialize").
 			WithDetails("language", c.language)
 	}
-	
+
 	if c.transport == nil {
 		return nil, gerror.New(gerror.ErrCodeValidation, "client not started", nil).
 			WithComponent("lsp").
 			WithOperation("initialize").
 			WithDetails("language", c.language)
 	}
-	
+
 	// Set default root URI if not provided
 	if params.RootURI == "" {
 		params.RootURI = c.rootURI
 	}
-	
+
 	var result InitializeResult
 	if err := c.request(ctx, "initialize", params, &result); err != nil {
 		return nil, err
 	}
-	
+
 	c.serverCapabilities = result.Capabilities
 	c.initialized = true
-	
+
 	// Send initialized notification
 	if err := c.notify(ctx, "initialized", &InitializedParams{}); err != nil {
 		return nil, err
 	}
-	
+
 	c.ready = true
-	
+
 	return &result, nil
 }
 
@@ -251,7 +251,7 @@ func (c *Client) request(ctx context.Context, method string, params interface{},
 			WithOperation("request").
 			WithDetails("method", method)
 	}
-	
+
 	return c.transport.Request(ctx, method, params, result)
 }
 
@@ -263,7 +263,7 @@ func (c *Client) notify(ctx context.Context, method string, params interface{}) 
 			WithOperation("notify").
 			WithDetails("method", method)
 	}
-	
+
 	return c.transport.Notify(ctx, method, params)
 }
 

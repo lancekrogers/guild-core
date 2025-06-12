@@ -256,7 +256,7 @@ func (m *Manager) GetTask(ctx context.Context, taskID string) (*Task, error) {
 				WithComponent("KanbanManager").
 				WithOperation("GetTask")
 		}
-		
+
 		for _, board := range boards {
 			task, err := board.GetTask(ctx, taskID)
 			if err == nil {
@@ -264,7 +264,7 @@ func (m *Manager) GetTask(ctx context.Context, taskID string) (*Task, error) {
 			}
 			// Continue searching if task not found in this board
 		}
-		
+
 		return nil, gerror.New(gerror.ErrCodeStorage, "task not found", nil).
 			WithComponent("KanbanManager").
 			WithOperation("GetTask")

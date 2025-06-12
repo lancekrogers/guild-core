@@ -16,7 +16,7 @@ func TestNewClientSimple(t *testing.T) {
 	// Test with environment variable
 	os.Setenv("ANTHROPIC_API_KEY", "env-key")
 	defer os.Unsetenv("ANTHROPIC_API_KEY")
-	
+
 	client2 := NewClient("")
 	assert.NotNil(t, client2)
 }

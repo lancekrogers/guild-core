@@ -19,9 +19,9 @@ type HoverTool struct {
 
 // HoverResult represents the result of a hover request
 type HoverResult struct {
-	Content    string  `json:"content"`
-	Language   string  `json:"language,omitempty"`
-	Range      *Range  `json:"range,omitempty"`
+	Content  string `json:"content"`
+	Language string `json:"language,omitempty"`
+	Range    *Range `json:"range,omitempty"`
 }
 
 // Range represents a text range
@@ -89,7 +89,7 @@ func (t *HoverTool) Execute(ctx context.Context, input string) (*tools.ToolResul
 
 	// Convert to our format
 	result := HoverResult{}
-	
+
 	// Extract content based on type
 	switch content := hover.Contents.(type) {
 	case string:
@@ -157,13 +157,13 @@ func (t *HoverTool) Execute(ctx context.Context, input string) (*tools.ToolResul
 // extractHoverInfo extracts structured information from hover content
 func extractHoverInfo(content string) map[string]interface{} {
 	info := make(map[string]interface{})
-	
+
 	lines := strings.Split(content, "\n")
-	
+
 	// Try to extract type information
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
-		
+
 		// Common patterns for type info
 		if strings.HasPrefix(line, "type ") {
 			info["type_definition"] = line
@@ -174,7 +174,7 @@ func extractHoverInfo(content string) map[string]interface{} {
 		} else if strings.HasPrefix(line, "class ") || strings.HasPrefix(line, "interface ") {
 			info["class_or_interface"] = line
 		}
-		
+
 		// Extract package info for Go
 		if strings.Contains(line, "package ") && strings.Contains(line, " ") {
 			parts := strings.Fields(line)
@@ -186,12 +186,12 @@ func extractHoverInfo(content string) map[string]interface{} {
 			}
 		}
 	}
-	
+
 	// Check if content contains documentation
 	if strings.Contains(content, "//") || strings.Contains(content, "/*") || strings.Contains(content, "/**") {
 		info["has_documentation"] = true
 	}
-	
+
 	return info
 }
 
@@ -202,18 +202,18 @@ func FormatHoverAsText(result *HoverResult) string {
 	}
 
 	var builder strings.Builder
-	
+
 	if result.Language != "" {
 		builder.WriteString(fmt.Sprintf("Language: %s\n\n", result.Language))
 	}
-	
+
 	builder.WriteString(result.Content)
-	
+
 	if result.Range != nil {
 		builder.WriteString(fmt.Sprintf("\n\nRange: Line %d:%d to %d:%d",
 			result.Range.StartLine+1, result.Range.StartColumn+1,
 			result.Range.EndLine+1, result.Range.EndColumn+1))
 	}
-	
+
 	return builder.String()
 }

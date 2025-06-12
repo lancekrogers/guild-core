@@ -13,10 +13,10 @@ import (
 
 // CommissionOptions configures test commission generation
 type CommissionOptions struct {
-	Title       string
-	Complexity  string // simple, medium, complex
-	Domain      string // web, api, cli, data
-	NumTasks    int
+	Title      string
+	Complexity string // simple, medium, complex
+	Domain     string // web, api, cli, data
+	NumTasks   int
 }
 
 // GenerateTestCommission creates a sample commission document
@@ -253,7 +253,7 @@ func GenerateCampaignConfig(opts CampaignConfigOptions) *config.GuildConfig {
 			ID:           fmt.Sprintf("test-%s", role.role),
 			Name:         fmt.Sprintf("Test %s", strings.Title(role.role)),
 			Type:         role.agentType,
-			Provider:     "ollama",  // Use mock provider
+			Provider:     "ollama", // Use mock provider
 			Model:        "mock-model",
 			Capabilities: role.capabilities,
 		})
@@ -322,7 +322,7 @@ func generateTaskBreakdown(tasks []string) string {
 
 	var content strings.Builder
 	content.WriteString("Based on the commission, I'll break this down into the following tasks:\n\n")
-	
+
 	for i, task := range tasks {
 		content.WriteString(fmt.Sprintf("## Task %d: %s\n", i+1, task))
 		content.WriteString("**Priority**: High\n")

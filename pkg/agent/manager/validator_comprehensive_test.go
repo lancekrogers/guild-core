@@ -10,7 +10,7 @@ import (
 // Test NewDefaultValidator
 func TestNewDefaultValidator(t *testing.T) {
 	validator := NewDefaultValidator()
-	
+
 	assert.NotNil(t, validator)
 	assert.Equal(t, 50, validator.maxFiles)
 	assert.Equal(t, 50000, validator.maxFileSize)
@@ -20,16 +20,16 @@ func TestNewDefaultValidator(t *testing.T) {
 // Test ValidateStructure with various scenarios
 func TestDefaultValidator_ValidateStructure(t *testing.T) {
 	tests := []struct {
-		name          string
-		structure     *FileStructure
-		wantErr       bool
-		errContains   string
+		name        string
+		structure   *FileStructure
+		wantErr     bool
+		errContains string
 	}{
 		{
-			name:          "nil structure",
-			structure:     nil,
-			wantErr:       true,
-			errContains:   "structure cannot be nil",
+			name:        "nil structure",
+			structure:   nil,
+			wantErr:     true,
+			errContains: "structure cannot be nil",
 		},
 		{
 			name: "valid simple structure",
@@ -149,7 +149,7 @@ func TestDefaultValidator_ValidateStructure(t *testing.T) {
 					},
 					{
 						Path:       "README.md",
-						Type:       FileTypeMarkdown, 
+						Type:       FileTypeMarkdown,
 						Content:    "# README",
 						TasksCount: 1,
 						Metadata:   map[string]interface{}{"size": 8},
@@ -165,7 +165,7 @@ func TestDefaultValidator_ValidateStructure(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			validator := NewDefaultValidator()
 			err := validator.ValidateStructure(tt.structure)
-			
+
 			if tt.wantErr {
 				assert.Error(t, err)
 				if tt.errContains != "" {
@@ -181,7 +181,7 @@ func TestDefaultValidator_ValidateStructure(t *testing.T) {
 // Test validateFileCount
 func TestDefaultValidator_validateFileCount(t *testing.T) {
 	validator := NewDefaultValidator()
-	
+
 	tests := []struct {
 		name      string
 		fileCount int
@@ -215,7 +215,7 @@ func TestDefaultValidator_validateFileCount(t *testing.T) {
 				Files: make([]*FileEntry, tt.fileCount),
 			}
 			err := validator.validateFileCount(structure)
-			
+
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
@@ -228,7 +228,7 @@ func TestDefaultValidator_validateFileCount(t *testing.T) {
 // Test validateMarkdownContent
 func TestDefaultValidator_validateMarkdownContent(t *testing.T) {
 	validator := NewDefaultValidator()
-	
+
 	tests := []struct {
 		name        string
 		content     string
@@ -261,7 +261,7 @@ func TestDefaultValidator_validateMarkdownContent(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := validator.validateMarkdownContent(tt.content)
-			
+
 			if tt.wantErr {
 				assert.Error(t, err)
 				if tt.errContains != "" {
@@ -283,9 +283,9 @@ func TestNewConfigurableValidator(t *testing.T) {
 		RequireReadme:     true,
 		RequireTasks:      true,
 	}
-	
+
 	validator := NewConfigurableValidator(config)
-	
+
 	assert.NotNil(t, validator)
 	assert.Equal(t, 100, validator.config.MaxFiles)
 	assert.Equal(t, 100000, validator.config.MaxFileSize)
@@ -303,9 +303,9 @@ func TestConfigurableValidator_ValidateStructure(t *testing.T) {
 		RequireReadme:     true,
 		RequireTasks:      false,
 	}
-	
+
 	validator := NewConfigurableValidator(config)
-	
+
 	tests := []struct {
 		name        string
 		structure   *FileStructure
@@ -376,7 +376,7 @@ func TestConfigurableValidator_ValidateStructure(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := validator.ValidateStructure(tt.structure)
-			
+
 			if tt.wantErr {
 				assert.Error(t, err)
 				if tt.errContains != "" {

@@ -21,13 +21,13 @@ type ServerManager struct {
 
 // Server represents a managed language server instance
 type Server struct {
-	Language   string
-	Config     *ServerConfig
-	Client     *Client
-	Workspace  string
-	Ready      bool
-	StartTime  time.Time
-	LastUsed   time.Time
+	Language  string
+	Config    *ServerConfig
+	Client    *Client
+	Workspace string
+	Ready     bool
+	StartTime time.Time
+	LastUsed  time.Time
 }
 
 // NewServerManager creates a new server manager
@@ -37,7 +37,7 @@ func NewServerManager(config *Config) *ServerManager {
 			Servers: DefaultConfigs(),
 		}
 	}
-	
+
 	return &ServerManager{
 		config:  config,
 		servers: make(map[string]*Server),
@@ -48,7 +48,7 @@ func NewServerManager(config *Config) *ServerManager {
 func (m *ServerManager) GetServer(ctx context.Context, language string, workspace string) (*Server, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	// Check if server already exists for this language and workspace
 	key := fmt.Sprintf("%s:%s", language, workspace)
 	if server, exists := m.servers[key]; exists {
@@ -66,7 +66,7 @@ func (m *ServerManager) GetServer(ctx context.Context, language string, workspac
 			}
 		}
 	}
-	
+
 	// Get server config
 	config, exists := m.config.Servers[language]
 	if !exists {
@@ -75,7 +75,7 @@ func (m *ServerManager) GetServer(ctx context.Context, language string, workspac
 			WithOperation("get_server").
 			WithDetails("language", language)
 	}
-	
+
 	// Create and start new server
 	server := &Server{
 		Language:  language,
@@ -84,16 +84,16 @@ func (m *ServerManager) GetServer(ctx context.Context, language string, workspac
 		StartTime: time.Now(),
 		LastUsed:  time.Now(),
 	}
-	
+
 	// Create client
 	rootURI := fmt.Sprintf("file://%s", workspace)
 	server.Client = NewClient(language, config.Command, rootURI)
-	
+
 	// Start the server
 	if err := server.Client.Start(ctx); err != nil {
 		return nil, err
 	}
-	
+
 	// Initialize the server
 	processID := int64(os.Getpid())
 	initParams := InitializeParams{
@@ -102,7 +102,7 @@ func (m *ServerManager) GetServer(ctx context.Context, language string, workspac
 			Name:    "guild-lsp-client",
 			Version: "1.0.0",
 		},
-		RootURI: rootURI,
+		RootURI:               rootURI,
 		InitializationOptions: config.InitOptions,
 		Capabilities: ClientCapabilities{
 			Workspace: &WorkspaceClientCapabilities{
@@ -127,7 +127,7 @@ func (m *ServerManager) GetServer(ctx context.Context, language string, workspac
 			},
 		},
 	}
-	
+
 	_, err := server.Client.Initialize(ctx, initParams)
 	if err != nil {
 		server.Client.Stop(ctx)
@@ -136,15 +136,15 @@ func (m *ServerManager) GetServer(ctx context.Context, language string, workspac
 			WithOperation("initialize").
 			WithDetails("language", language)
 	}
-	
+
 	server.Ready = true
 	m.servers[key] = server
-	
+
 	observability.GetLogger(ctx).InfoContext(ctx, "Started language server",
 		"language", language,
 		"workspace", workspace,
 		"command", config.Command)
-	
+
 	return server, nil
 }
 
@@ -152,13 +152,13 @@ func (m *ServerManager) GetServer(ctx context.Context, language string, workspac
 func (m *ServerManager) StopServer(ctx context.Context, language string, workspace string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	key := fmt.Sprintf("%s:%s", language, workspace)
 	server, exists := m.servers[key]
 	if !exists {
 		return nil // Already stopped
 	}
-	
+
 	if server.Client != nil {
 		if err := server.Client.Stop(ctx); err != nil {
 			observability.GetLogger(ctx).ErrorContext(ctx, "Failed to stop language server",
@@ -167,13 +167,13 @@ func (m *ServerManager) StopServer(ctx context.Context, language string, workspa
 				"error", err)
 		}
 	}
-	
+
 	delete(m.servers, key)
-	
+
 	observability.GetLogger(ctx).InfoContext(ctx, "Stopped language server",
 		"language", language,
 		"workspace", workspace)
-	
+
 	return nil
 }
 
@@ -181,7 +181,7 @@ func (m *ServerManager) StopServer(ctx context.Context, language string, workspa
 func (m *ServerManager) StopAll(ctx context.Context) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	var lastErr error
 	for key, server := range m.servers {
 		if server.Client != nil {
@@ -193,9 +193,9 @@ func (m *ServerManager) StopAll(ctx context.Context) error {
 			}
 		}
 	}
-	
+
 	m.servers = make(map[string]*Server)
-	
+
 	return lastErr
 }
 
@@ -203,7 +203,7 @@ func (m *ServerManager) StopAll(ctx context.Context) error {
 func (m *ServerManager) GetActiveServers() []ActiveServerInfo {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	var servers []ActiveServerInfo
 	for key, server := range m.servers {
 		servers = append(servers, ActiveServerInfo{
@@ -215,7 +215,7 @@ func (m *ServerManager) GetActiveServers() []ActiveServerInfo {
 			LastUsed:  server.LastUsed,
 		})
 	}
-	
+
 	return servers
 }
 
@@ -233,17 +233,17 @@ type ActiveServerInfo struct {
 func (m *ServerManager) CleanupIdleServers(ctx context.Context, idleTimeout time.Duration) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	logger := observability.GetLogger(ctx)
 	now := time.Now()
 	var toRemove []string
-	
+
 	for key, server := range m.servers {
 		if now.Sub(server.LastUsed) > idleTimeout {
 			toRemove = append(toRemove, key)
 		}
 	}
-	
+
 	var lastErr error
 	for _, key := range toRemove {
 		server := m.servers[key]
@@ -261,7 +261,7 @@ func (m *ServerManager) CleanupIdleServers(ctx context.Context, idleTimeout time
 		}
 		delete(m.servers, key)
 	}
-	
+
 	return lastErr
 }
 
@@ -269,17 +269,17 @@ func (m *ServerManager) CleanupIdleServers(ctx context.Context, idleTimeout time
 func (m *ServerManager) CheckServerHealth(ctx context.Context, language string, workspace string) (bool, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	key := fmt.Sprintf("%s:%s", language, workspace)
 	server, exists := m.servers[key]
 	if !exists {
 		return false, nil
 	}
-	
+
 	if !server.Ready {
 		return false, nil
 	}
-	
+
 	// TODO: Implement actual health check (e.g., send a simple request)
 	return server.Client.IsReady(), nil
 }

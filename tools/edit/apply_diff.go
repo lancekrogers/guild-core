@@ -20,31 +20,31 @@ type ApplyDiffTool struct {
 
 // ApplyDiffParams represents the input parameters for applying diffs
 type ApplyDiffParams struct {
-	Diff       string `json:"diff"`                   // Unified diff content
-	TargetFile string `json:"target_file,omitempty"`  // Specific target file (auto-detect from diff if empty)
-	Reverse    bool   `json:"reverse,omitempty"`      // Apply diff in reverse
-	DryRun     bool   `json:"dry_run,omitempty"`      // Show what would be changed without applying
-	Context    int    `json:"context,omitempty"`      // Number of context lines (default: 3)
-	Backup     bool   `json:"backup,omitempty"`       // Create backup before applying
+	Diff       string `json:"diff"`                  // Unified diff content
+	TargetFile string `json:"target_file,omitempty"` // Specific target file (auto-detect from diff if empty)
+	Reverse    bool   `json:"reverse,omitempty"`     // Apply diff in reverse
+	DryRun     bool   `json:"dry_run,omitempty"`     // Show what would be changed without applying
+	Context    int    `json:"context,omitempty"`     // Number of context lines (default: 3)
+	Backup     bool   `json:"backup,omitempty"`      // Create backup before applying
 }
 
 // ApplyDiffResult represents the result of applying a diff
 type ApplyDiffResult struct {
-	TargetFile     string            `json:"target_file"`
-	Applied        bool              `json:"applied"`
-	DryRun         bool              `json:"dry_run"`
-	Reverse        bool              `json:"reverse"`
-	Changes        []*DiffChange     `json:"changes"`
-	Stats          *DiffStats        `json:"stats"`
-	Conflicts      []*DiffConflict   `json:"conflicts,omitempty"`
-	BackupFile     string            `json:"backup_file,omitempty"`
-	Errors         []string          `json:"errors,omitempty"`
-	Preview        string            `json:"preview,omitempty"`
+	TargetFile string          `json:"target_file"`
+	Applied    bool            `json:"applied"`
+	DryRun     bool            `json:"dry_run"`
+	Reverse    bool            `json:"reverse"`
+	Changes    []*DiffChange   `json:"changes"`
+	Stats      *DiffStats      `json:"stats"`
+	Conflicts  []*DiffConflict `json:"conflicts,omitempty"`
+	BackupFile string          `json:"backup_file,omitempty"`
+	Errors     []string        `json:"errors,omitempty"`
+	Preview    string          `json:"preview,omitempty"`
 }
 
 // DiffChange represents a single change from the diff
 type DiffChange struct {
-	Type        string `json:"type"`        // add, remove, modify
+	Type        string `json:"type"` // add, remove, modify
 	LineNumber  int    `json:"line_number"`
 	OldContent  string `json:"old_content,omitempty"`
 	NewContent  string `json:"new_content,omitempty"`
@@ -61,20 +61,20 @@ type DiffStats struct {
 
 // DiffConflict represents a conflict during diff application
 type DiffConflict struct {
-	LineNumber    int    `json:"line_number"`
-	Expected      string `json:"expected"`
-	Actual        string `json:"actual"`
-	ConflictType  string `json:"conflict_type"` // context_mismatch, line_missing, etc.
-	Resolved      bool   `json:"resolved"`
+	LineNumber   int    `json:"line_number"`
+	Expected     string `json:"expected"`
+	Actual       string `json:"actual"`
+	ConflictType string `json:"conflict_type"` // context_mismatch, line_missing, etc.
+	Resolved     bool   `json:"resolved"`
 }
 
 // DiffHunk represents a hunk in a unified diff
 type DiffHunk struct {
-	OldStart  int
-	OldLines  int
-	NewStart  int
-	NewLines  int
-	Lines     []DiffLine
+	OldStart int
+	OldLines int
+	NewStart int
+	NewLines int
+	Lines    []DiffLine
 }
 
 // DiffLine represents a line in a diff hunk
@@ -313,14 +313,14 @@ func (t *ApplyDiffTool) parseUnifiedDiff(diffContent string) ([]*DiffHunk, strin
 
 	// Parse hunks
 	hunkRegex := regexp.MustCompile(`^@@\s+-(\d+)(?:,(\d+))?\s+\+(\d+)(?:,(\d+))?\s+@@`)
-	
+
 	i := 0
 	for i < len(lines) {
 		line := lines[i]
-		
+
 		if matches := hunkRegex.FindStringSubmatch(line); matches != nil {
 			hunk := &DiffHunk{}
-			
+
 			// Parse hunk header
 			hunk.OldStart, _ = strconv.Atoi(matches[1])
 			if matches[2] != "" {
@@ -328,33 +328,33 @@ func (t *ApplyDiffTool) parseUnifiedDiff(diffContent string) ([]*DiffHunk, strin
 			} else {
 				hunk.OldLines = 1
 			}
-			
+
 			hunk.NewStart, _ = strconv.Atoi(matches[3])
 			if matches[4] != "" {
 				hunk.NewLines, _ = strconv.Atoi(matches[4])
 			} else {
 				hunk.NewLines = 1
 			}
-			
+
 			// Parse hunk lines
 			i++
 			lineNum := 0
 			for i < len(lines) {
 				line := lines[i]
-				
+
 				// Check if this is the start of the next hunk
 				if hunkRegex.MatchString(line) {
 					break
 				}
-				
+
 				// Skip empty lines at the end
 				if line == "" && i == len(lines)-1 {
 					break
 				}
-				
+
 				diffLine := DiffLine{Number: lineNum}
 				lineNum++
-				
+
 				if len(line) == 0 {
 					diffLine.Type = " "
 					diffLine.Content = ""
@@ -364,11 +364,11 @@ func (t *ApplyDiffTool) parseUnifiedDiff(diffContent string) ([]*DiffHunk, strin
 						diffLine.Content = line[1:]
 					}
 				}
-				
+
 				hunk.Lines = append(hunk.Lines, diffLine)
 				i++
 			}
-			
+
 			hunks = append(hunks, hunk)
 		} else {
 			i++
@@ -382,9 +382,9 @@ func (t *ApplyDiffTool) parseUnifiedDiff(diffContent string) ([]*DiffHunk, strin
 func (t *ApplyDiffTool) applyHunks(originalLines []string, hunks []*DiffHunk, reverse bool) ([]string, []*DiffConflict, error) {
 	modifiedLines := make([]string, len(originalLines))
 	copy(modifiedLines, originalLines)
-	
+
 	var allConflicts []*DiffConflict
-	
+
 	// Apply hunks in reverse order to maintain line numbers
 	for i := len(hunks) - 1; i >= 0; i-- {
 		hunk := hunks[i]
@@ -401,19 +401,19 @@ func (t *ApplyDiffTool) applyHunks(originalLines []string, hunks []*DiffHunk, re
 // applyHunk applies a single hunk to the file content
 func (t *ApplyDiffTool) applyHunk(lines []string, hunk *DiffHunk, reverse bool) ([]*DiffConflict, error) {
 	var conflicts []*DiffConflict
-	
+
 	startLine := hunk.OldStart - 1 // Convert to 0-based
 	if reverse {
 		startLine = hunk.NewStart - 1
 	}
-	
+
 	// Handle empty file case (OldStart == 0 for empty files)
 	if hunk.OldStart == 0 && !reverse {
 		startLine = 0
 	} else if hunk.NewStart == 0 && reverse {
 		startLine = 0
 	}
-	
+
 	// Validate startLine to prevent array bounds errors
 	if startLine < 0 {
 		return nil, gerror.New(gerror.ErrCodeInvalidInput, "invalid hunk start line", nil).
@@ -424,11 +424,11 @@ func (t *ApplyDiffTool) applyHunk(lines []string, hunk *DiffHunk, reverse bool) 
 			WithDetails("new_start", hunk.NewStart).
 			WithDetails("reverse", reverse)
 	}
-	
+
 	// Validate context and apply changes
 	oldLineIdx := 0
 	newLines := []string{}
-	
+
 	for _, diffLine := range hunk.Lines {
 		switch diffLine.Type {
 		case " ": // Context line
@@ -441,12 +441,12 @@ func (t *ApplyDiffTool) applyHunk(lines []string, hunk *DiffHunk, reverse bool) 
 						Actual:       lines[startLine+oldLineIdx],
 						ConflictType: "context_mismatch",
 					}
-					
+
 					// Try to resolve minor whitespace differences
 					if strings.TrimSpace(lines[startLine+oldLineIdx]) == strings.TrimSpace(diffLine.Content) {
 						conflict.Resolved = true
 					}
-					
+
 					conflicts = append(conflicts, conflict)
 				}
 				newLines = append(newLines, lines[startLine+oldLineIdx])
@@ -459,7 +459,7 @@ func (t *ApplyDiffTool) applyHunk(lines []string, hunk *DiffHunk, reverse bool) 
 				})
 			}
 			oldLineIdx++
-			
+
 		case "-": // Line to be removed
 			if !reverse {
 				if startLine+oldLineIdx < len(lines) {
@@ -477,7 +477,7 @@ func (t *ApplyDiffTool) applyHunk(lines []string, hunk *DiffHunk, reverse bool) 
 				// In reverse mode, '-' becomes '+'
 				newLines = append(newLines, diffLine.Content)
 			}
-			
+
 		case "+": // Line to be added
 			if !reverse {
 				newLines = append(newLines, diffLine.Content)
@@ -497,7 +497,7 @@ func (t *ApplyDiffTool) applyHunk(lines []string, hunk *DiffHunk, reverse bool) 
 			}
 		}
 	}
-	
+
 	// Replace the section in the original lines
 	if len(conflicts) == 0 || t.allConflictsResolved(conflicts) {
 		// Calculate how many lines to replace
@@ -505,29 +505,29 @@ func (t *ApplyDiffTool) applyHunk(lines []string, hunk *DiffHunk, reverse bool) 
 		if reverse {
 			linesToReplace = hunk.NewLines
 		}
-		
+
 		// Replace the lines
 		end := startLine + linesToReplace
 		if end > len(lines) {
 			end = len(lines)
 		}
-		
+
 		// Create new slice with replacement
 		result := make([]string, 0, len(lines)-linesToReplace+len(newLines))
-		
+
 		// Safely append the first part
 		if startLine > 0 && startLine <= len(lines) {
 			result = append(result, lines[:startLine]...)
 		}
-		
+
 		// Append new lines
 		result = append(result, newLines...)
-		
+
 		// Safely append the remaining part
 		if end < len(lines) {
 			result = append(result, lines[end:]...)
 		}
-		
+
 		// Update the original slice
 		copy(lines, result)
 		if len(result) != len(lines) {
@@ -538,7 +538,7 @@ func (t *ApplyDiffTool) applyHunk(lines []string, hunk *DiffHunk, reverse bool) 
 			// In a real implementation, this would need to return the new slice
 		}
 	}
-	
+
 	return conflicts, nil
 }
 
@@ -555,13 +555,13 @@ func (t *ApplyDiffTool) allConflictsResolved(conflicts []*DiffConflict) bool {
 // generateChangesList generates a list of changes between original and modified content
 func (t *ApplyDiffTool) generateChangesList(original, modified []string) []*DiffChange {
 	var changes []*DiffChange
-	
+
 	// Simple diff algorithm - could be improved with a proper diff implementation
 	minLen := len(original)
 	if len(modified) < minLen {
 		minLen = len(modified)
 	}
-	
+
 	for i := 0; i < minLen; i++ {
 		if original[i] != modified[i] {
 			changes = append(changes, &DiffChange{
@@ -572,7 +572,7 @@ func (t *ApplyDiffTool) generateChangesList(original, modified []string) []*Diff
 			})
 		}
 	}
-	
+
 	// Handle added lines
 	if len(modified) > len(original) {
 		for i := len(original); i < len(modified); i++ {
@@ -583,7 +583,7 @@ func (t *ApplyDiffTool) generateChangesList(original, modified []string) []*Diff
 			})
 		}
 	}
-	
+
 	// Handle removed lines
 	if len(original) > len(modified) {
 		for i := len(modified); i < len(original); i++ {
@@ -594,7 +594,7 @@ func (t *ApplyDiffTool) generateChangesList(original, modified []string) []*Diff
 			})
 		}
 	}
-	
+
 	return changes
 }
 
@@ -603,7 +603,7 @@ func (t *ApplyDiffTool) calculateStats(changes []*DiffChange, hunkCount int) *Di
 	stats := &DiffStats{
 		Hunks: hunkCount,
 	}
-	
+
 	for _, change := range changes {
 		switch change.Type {
 		case "add":
@@ -614,21 +614,21 @@ func (t *ApplyDiffTool) calculateStats(changes []*DiffChange, hunkCount int) *Di
 			stats.LinesChanged++
 		}
 	}
-	
+
 	return stats
 }
 
 // generatePreview generates a preview of what the file would look like after applying the diff
 func (t *ApplyDiffTool) generatePreview(original, modified []string) string {
 	var preview strings.Builder
-	
+
 	preview.WriteString("Preview of changes:\n\n")
-	
+
 	minLen := len(original)
 	if len(modified) < minLen {
 		minLen = len(modified)
 	}
-	
+
 	for i := 0; i < minLen; i++ {
 		if original[i] != modified[i] {
 			preview.WriteString(fmt.Sprintf("Line %d:\n", i+1))
@@ -637,7 +637,7 @@ func (t *ApplyDiffTool) generatePreview(original, modified []string) string {
 			preview.WriteString("\n")
 		}
 	}
-	
+
 	// Show added lines
 	if len(modified) > len(original) {
 		preview.WriteString("Added lines:\n")
@@ -646,7 +646,7 @@ func (t *ApplyDiffTool) generatePreview(original, modified []string) string {
 		}
 		preview.WriteString("\n")
 	}
-	
+
 	// Show removed lines
 	if len(original) > len(modified) {
 		preview.WriteString("Removed lines:\n")
@@ -654,14 +654,14 @@ func (t *ApplyDiffTool) generatePreview(original, modified []string) string {
 			preview.WriteString(fmt.Sprintf("- %d: %s\n", i+1, original[i]))
 		}
 	}
-	
+
 	return preview.String()
 }
 
 // formatResult formats the apply diff result for output
 func (t *ApplyDiffTool) formatResult(result *ApplyDiffResult) string {
 	var output strings.Builder
-	
+
 	// Header
 	if result.DryRun {
 		output.WriteString("Diff Application Preview\n")
@@ -670,23 +670,23 @@ func (t *ApplyDiffTool) formatResult(result *ApplyDiffResult) string {
 	} else {
 		output.WriteString("Diff Application Failed\n")
 	}
-	
+
 	output.WriteString(fmt.Sprintf("Target File: %s\n", result.TargetFile))
-	
+
 	if result.Reverse {
 		output.WriteString("Mode: Reverse application\n")
 	}
-	
+
 	// Statistics
 	stats := result.Stats
 	output.WriteString(fmt.Sprintf("Changes: +%d -%d ~%d lines (%d hunks)\n",
 		stats.LinesAdded, stats.LinesRemoved, stats.LinesChanged, stats.Hunks))
-	
+
 	// Backup info
 	if result.BackupFile != "" {
 		output.WriteString(fmt.Sprintf("Backup created: %s\n", result.BackupFile))
 	}
-	
+
 	// Conflicts
 	if len(result.Conflicts) > 0 {
 		output.WriteString(fmt.Sprintf("\nConflicts (%d):\n", len(result.Conflicts)))
@@ -695,13 +695,13 @@ func (t *ApplyDiffTool) formatResult(result *ApplyDiffResult) string {
 			if conflict.Resolved {
 				status = "RESOLVED"
 			}
-			output.WriteString(fmt.Sprintf("  Line %d [%s]: %s\n", 
+			output.WriteString(fmt.Sprintf("  Line %d [%s]: %s\n",
 				conflict.LineNumber, status, conflict.ConflictType))
 			output.WriteString(fmt.Sprintf("    Expected: %s\n", conflict.Expected))
 			output.WriteString(fmt.Sprintf("    Actual:   %s\n", conflict.Actual))
 		}
 	}
-	
+
 	// Changes summary
 	if len(result.Changes) > 0 && !result.DryRun {
 		output.WriteString(fmt.Sprintf("\nChanges Applied (%d):\n", len(result.Changes)))
@@ -710,7 +710,7 @@ func (t *ApplyDiffTool) formatResult(result *ApplyDiffResult) string {
 				output.WriteString(fmt.Sprintf("  ... and %d more changes\n", len(result.Changes)-10))
 				break
 			}
-			
+
 			switch change.Type {
 			case "add":
 				output.WriteString(fmt.Sprintf("  +%d: %s\n", change.LineNumber, change.NewContent))
@@ -721,13 +721,13 @@ func (t *ApplyDiffTool) formatResult(result *ApplyDiffResult) string {
 			}
 		}
 	}
-	
+
 	// Preview for dry run
 	if result.DryRun && result.Preview != "" {
 		output.WriteString("\n")
 		output.WriteString(result.Preview)
 	}
-	
+
 	// Errors
 	if len(result.Errors) > 0 {
 		output.WriteString("\nWarnings/Errors:\n")
@@ -735,6 +735,6 @@ func (t *ApplyDiffTool) formatResult(result *ApplyDiffResult) string {
 			output.WriteString(fmt.Sprintf("- %s\n", err))
 		}
 	}
-	
+
 	return output.String()
 }

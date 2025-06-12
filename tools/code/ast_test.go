@@ -37,30 +37,30 @@ func (u User) Greet() string {
 	return "Hello, " + u.Name
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(goCode)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewASTTool()
-	
+
 	// Test basic analysis
 	params := ASTParams{
-		File:   tmpFile.Name(),
+		File:  tmpFile.Name(),
 		Query: "functions",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Check the output contains expected functions
 	assert.Contains(t, result.Output, "Functions")
 	assert.Contains(t, result.Output, "main")
@@ -69,7 +69,7 @@ func (u User) Greet() string {
 
 func TestASTTool_Execute_PythonFile(t *testing.T) {
 	t.Skip("Python parser not yet implemented")
-	
+
 	// Create a temporary Python file
 	pythonCode := `def main():
     print("Hello, World!")
@@ -85,25 +85,25 @@ class User:
 if __name__ == "__main__":
     main()
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.py")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(pythonCode)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewASTTool()
-	
+
 	params := ASTParams{
-		File:   tmpFile.Name(),
+		File:  tmpFile.Name(),
 		Query: "classes",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
@@ -111,15 +111,15 @@ if __name__ == "__main__":
 
 func TestASTTool_Execute_InvalidFile(t *testing.T) {
 	tool := NewASTTool()
-	
+
 	params := ASTParams{
-		File:   "nonexistent.go",
+		File:  "nonexistent.go",
 		Query: "functions",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -127,7 +127,7 @@ func TestASTTool_Execute_InvalidFile(t *testing.T) {
 
 func TestASTTool_Execute_InvalidJSON(t *testing.T) {
 	tool := NewASTTool()
-	
+
 	result, err := tool.Execute(context.Background(), "invalid json")
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -135,15 +135,15 @@ func TestASTTool_Execute_InvalidJSON(t *testing.T) {
 
 func TestASTTool_Execute_EmptyFile(t *testing.T) {
 	tool := NewASTTool()
-	
+
 	params := ASTParams{
-		File:   "",
+		File:  "",
 		Query: "functions",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -162,7 +162,7 @@ func TestDetectLanguage(t *testing.T) {
 		{"app.tsx", LanguageTypeScript},
 		{"unknown.txt", LanguageUnknown},
 	}
-	
+
 	for _, test := range tests {
 		t.Run(test.filename, func(t *testing.T) {
 			result := DetectLanguage(test.filename)
@@ -176,21 +176,21 @@ func TestASTTool_Execute_UnsupportedLanguage(t *testing.T) {
 	tmpFile, err := os.CreateTemp("", "test_*.txt")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString("some content")
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewASTTool()
-	
+
 	params := ASTParams{
-		File:   tmpFile.Name(),
+		File:  tmpFile.Name(),
 		Query: "functions",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	_, err = tool.Execute(context.Background(), string(input))
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "unsupported language: unknown")
@@ -226,29 +226,29 @@ func (u User) Greet() string {
 var GlobalVar = "test"
 const MaxAge = 100
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(goCode)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewASTTool()
-	
+
 	targets := []string{"functions", "classes", "imports", "all"}
-	
+
 	for _, target := range targets {
 		t.Run("target_"+target, func(t *testing.T) {
 			params := ASTParams{
-				File:   tmpFile.Name(),
+				File:  tmpFile.Name(),
 				Query: target,
 			}
-			
+
 			input, err := json.Marshal(params)
 			require.NoError(t, err)
-			
+
 			result, err := tool.Execute(context.Background(), string(input))
 			require.NoError(t, err)
 			assert.NotNil(t, result)

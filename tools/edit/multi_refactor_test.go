@@ -32,17 +32,17 @@ func main() {
 	fmt.Println("Calling old function")
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(content)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "rename",
 		Target: &RefactorTarget{
@@ -53,14 +53,14 @@ func main() {
 		Preview: true,
 		Scope:   "file",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should show rename preview
 	assert.Contains(t, result.Output, "Multi-File Refactoring Preview (Rename)")
 	assert.Contains(t, result.Output, "oldFunction")
@@ -81,17 +81,17 @@ func main() {
 	println(result)
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(content)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "rename",
 		Target: &RefactorTarget{
@@ -105,18 +105,18 @@ func main() {
 			BackupFiles:      true,
 		},
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should apply rename
 	assert.Contains(t, result.Output, "Multi-File Refactoring Applied (Rename)")
 	assert.Contains(t, result.Output, "References updated:")
-	
+
 	// Verify file was modified
 	modifiedContent, err := os.ReadFile(tmpFile.Name())
 	require.NoError(t, err)
@@ -137,17 +137,17 @@ func main() {
 	fmt.Println("Have a nice day!")
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(content)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "extract",
 		Target: &RefactorTarget{
@@ -158,14 +158,14 @@ func main() {
 		NewName: "printGreeting",
 		Preview: true,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should show extract preview
 	assert.Contains(t, result.Output, "Multi-File Refactoring Preview (Extract)")
 	assert.Contains(t, result.Output, "printGreeting")
@@ -185,11 +185,11 @@ func main() {
 	println(result)
 }
 `
-	
+
 	sourceFile, err := os.CreateTemp("", "source_*.go")
 	require.NoError(t, err)
 	defer os.Remove(sourceFile.Name())
-	
+
 	_, err = sourceFile.WriteString(sourceContent)
 	require.NoError(t, err)
 	sourceFile.Close()
@@ -199,17 +199,17 @@ func main() {
 
 // Destination file for utility functions
 `
-	
+
 	destFile, err := os.CreateTemp("", "dest_*.go")
 	require.NoError(t, err)
 	defer os.Remove(destFile.Name())
-	
+
 	_, err = destFile.WriteString(destContent)
 	require.NoError(t, err)
 	destFile.Close()
 
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "move",
 		Target: &RefactorTarget{
@@ -219,14 +219,14 @@ func main() {
 		Destination: destFile.Name(),
 		Preview:     true,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should handle move operation (placeholder implementation)
 	assert.Contains(t, result.Output, "Move refactoring")
 	assert.Contains(t, result.Output, "not fully implemented")
@@ -245,17 +245,17 @@ func main() {
 	println(result)
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(content)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "inline",
 		Target: &RefactorTarget{
@@ -264,14 +264,14 @@ func main() {
 		},
 		Preview: true,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should handle inline operation (placeholder implementation)
 	assert.Contains(t, result.Output, "Inline refactoring")
 	assert.Contains(t, result.Output, "not fully implemented")
@@ -294,17 +294,17 @@ func main() {
 	existingFunction()
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(content)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "rename",
 		Target: &RefactorTarget{
@@ -314,14 +314,14 @@ func main() {
 		NewName: "existingFunction", // This should conflict
 		Preview: true,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should detect naming conflict
 	assert.Contains(t, result.Output, "Conflicts")
 	assert.Contains(t, result.Output, "name_collision")
@@ -332,27 +332,27 @@ func TestMultiFileRefactorTool_Execute_InvalidType(t *testing.T) {
 	content := `package main
 func main() {}
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(content)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "invalid_type",
 		Target: &RefactorTarget{
 			File: tmpFile.Name(),
 		},
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -360,15 +360,15 @@ func main() {}
 
 func TestMultiFileRefactorTool_Execute_MissingTarget(t *testing.T) {
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "rename",
 		// Missing target
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -376,17 +376,17 @@ func TestMultiFileRefactorTool_Execute_MissingTarget(t *testing.T) {
 
 func TestMultiFileRefactorTool_Execute_MissingFile(t *testing.T) {
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "rename",
 		Target: &RefactorTarget{
 			File: "nonexistent.go",
 		},
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -394,7 +394,7 @@ func TestMultiFileRefactorTool_Execute_MissingFile(t *testing.T) {
 
 func TestMultiFileRefactorTool_Execute_InvalidJSON(t *testing.T) {
 	tool := NewMultiFileRefactorTool()
-	
+
 	result, err := tool.Execute(context.Background(), "invalid json")
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -405,17 +405,17 @@ func TestMultiFileRefactorTool_Execute_RenameWithoutNewName(t *testing.T) {
 	content := `package main
 func oldFunc() {}
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(content)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "rename",
 		Target: &RefactorTarget{
@@ -424,10 +424,10 @@ func oldFunc() {}
 		},
 		// Missing NewName
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -440,17 +440,17 @@ func main() {
 	println("test")
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(content)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "extract",
 		Target: &RefactorTarget{
@@ -459,10 +459,10 @@ func main() {
 		},
 		NewName: "extractedMethod",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -473,17 +473,17 @@ func TestMultiFileRefactorTool_Execute_MoveWithoutDestination(t *testing.T) {
 	content := `package main
 func testFunc() {}
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(content)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "move",
 		Target: &RefactorTarget{
@@ -492,10 +492,10 @@ func testFunc() {}
 		},
 		// Missing Destination
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -513,17 +513,17 @@ func main() {
 	testFunction()
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(content)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "rename",
 		Target: &RefactorTarget{
@@ -534,14 +534,14 @@ func main() {
 		Scope:   "package", // Search entire package
 		Preview: true,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should search in package scope
 	assert.Contains(t, result.Output, "References found:")
 }
@@ -554,17 +554,17 @@ func main() {
 	println("test")
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(content)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "extract",
 		Target: &RefactorTarget{
@@ -574,10 +574,10 @@ func main() {
 		},
 		NewName: "extractedMethod",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -595,17 +595,17 @@ func main() {
 	oldFunc()
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(content)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMultiFileRefactorTool()
-	
+
 	params := RefactorParams{
 		Type: "rename",
 		Target: &RefactorTarget{
@@ -616,14 +616,14 @@ func main() {
 		Preview: true,
 		// No Options specified - should use defaults
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should use default options
 	assert.Contains(t, result.Output, "References found:")
 }

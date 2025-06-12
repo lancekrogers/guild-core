@@ -27,11 +27,11 @@ func main() {
 	fmt.Println("Hello, World!")
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(originalContent)
 	require.NoError(t, err)
 	tmpFile.Close()
@@ -48,20 +48,20 @@ func main() {
 `
 
 	tool := NewApplyDiffTool()
-	
+
 	params := ApplyDiffParams{
 		Diff:       diff,
 		TargetFile: tmpFile.Name(),
 		DryRun:     true,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should show preview
 	assert.Contains(t, result.Output, "Diff Application Preview")
 	assert.Contains(t, result.Output, "Hello, World!")
@@ -78,11 +78,11 @@ func main() {
 	fmt.Println("Hello, World!")
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(originalContent)
 	require.NoError(t, err)
 	tmpFile.Close()
@@ -99,29 +99,29 @@ func main() {
 `
 
 	tool := NewApplyDiffTool()
-	
+
 	params := ApplyDiffParams{
 		Diff:       diff,
 		TargetFile: tmpFile.Name(),
 		Backup:     true,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should apply diff
 	assert.Contains(t, result.Output, "Diff Applied Successfully")
-	
+
 	// Verify file was modified
 	modifiedContent, err := os.ReadFile(tmpFile.Name())
 	require.NoError(t, err)
 	assert.Contains(t, string(modifiedContent), "Hello, Universe!")
 	assert.NotContains(t, string(modifiedContent), "Hello, World!")
-	
+
 	// Check backup was created
 	assert.Contains(t, result.Output, "Backup created:")
 }
@@ -136,11 +136,11 @@ func main() {
 	fmt.Println("Hello, Universe!")
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(modifiedContent)
 	require.NoError(t, err)
 	tmpFile.Close()
@@ -157,24 +157,24 @@ func main() {
 `
 
 	tool := NewApplyDiffTool()
-	
+
 	params := ApplyDiffParams{
 		Diff:       diff,
 		TargetFile: tmpFile.Name(),
 		Reverse:    true,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should apply reverse diff
 	assert.Contains(t, result.Output, "Diff Applied Successfully")
 	assert.Contains(t, result.Output, "Mode: Reverse application")
-	
+
 	// Verify file was reverted
 	revertedContent, err := os.ReadFile(tmpFile.Name())
 	require.NoError(t, err)
@@ -199,11 +199,11 @@ func helper() {
 	fmt.Println("Helper function")
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(originalContent)
 	require.NoError(t, err)
 	tmpFile.Close()
@@ -227,20 +227,20 @@ func helper() {
  }`
 
 	tool := NewApplyDiffTool()
-	
+
 	params := ApplyDiffParams{
 		Diff:       diff,
 		TargetFile: tmpFile.Name(),
 		DryRun:     true,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should handle multiple hunks
 	assert.Contains(t, result.Output, "2 hunks")
 	assert.Contains(t, result.Output, "Hello, Universe!")
@@ -257,11 +257,11 @@ func main() {
 	fmt.Println("Different content!")
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(actualContent)
 	require.NoError(t, err)
 	tmpFile.Close()
@@ -278,19 +278,19 @@ func main() {
 `
 
 	tool := NewApplyDiffTool()
-	
+
 	params := ApplyDiffParams{
 		Diff:       diff,
 		TargetFile: tmpFile.Name(),
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should detect conflicts
 	assert.Contains(t, result.Output, "Conflicts")
 	assert.Contains(t, result.Output, "Cannot apply diff")
@@ -304,11 +304,11 @@ func main() {
 	println("test")
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(originalContent)
 	require.NoError(t, err)
 	tmpFile.Close()
@@ -325,33 +325,33 @@ func main() {
 `
 
 	tool := NewApplyDiffTool()
-	
+
 	params := ApplyDiffParams{
 		Diff:   diff,
 		DryRun: true,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should auto-detect target file
 	assert.Contains(t, result.Output, "Target File: "+tmpFile.Name())
 }
 
 func TestApplyDiffTool_Execute_InvalidDiff(t *testing.T) {
 	tool := NewApplyDiffTool()
-	
+
 	params := ApplyDiffParams{
 		Diff: "not a valid diff",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.NotNil(t, result)
@@ -360,14 +360,14 @@ func TestApplyDiffTool_Execute_InvalidDiff(t *testing.T) {
 
 func TestApplyDiffTool_Execute_EmptyDiff(t *testing.T) {
 	tool := NewApplyDiffTool()
-	
+
 	params := ApplyDiffParams{
 		Diff: "",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -383,14 +383,14 @@ func TestApplyDiffTool_Execute_NonexistentFile(t *testing.T) {
 `
 
 	tool := NewApplyDiffTool()
-	
+
 	params := ApplyDiffParams{
 		Diff: diff,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.NotNil(t, result)
@@ -399,7 +399,7 @@ func TestApplyDiffTool_Execute_NonexistentFile(t *testing.T) {
 
 func TestApplyDiffTool_Execute_InvalidJSON(t *testing.T) {
 	tool := NewApplyDiffTool()
-	
+
 	result, err := tool.Execute(context.Background(), "invalid json")
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -426,11 +426,11 @@ func helper(name string) string {
 	return "Hello, " + name
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(originalContent)
 	require.NoError(t, err)
 	tmpFile.Close()
@@ -465,20 +465,20 @@ func helper(name string) string {
 `
 
 	tool := NewApplyDiffTool()
-	
+
 	params := ApplyDiffParams{
 		Diff:       diff,
 		TargetFile: tmpFile.Name(),
 		DryRun:     true,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should handle complex diff
 	assert.Contains(t, result.Output, "Changes: +")
 	assert.Contains(t, result.Output, "strings")
@@ -502,20 +502,20 @@ func TestApplyDiffTool_Execute_EmptyFile(t *testing.T) {
 `
 
 	tool := NewApplyDiffTool()
-	
+
 	params := ApplyDiffParams{
 		Diff:       diff,
 		TargetFile: tmpFile.Name(),
 		DryRun:     true,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should handle empty file
 	assert.Contains(t, result.Output, "Diff Application Preview")
 }
@@ -528,12 +528,12 @@ func main() {
 	println("original")
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
 	defer os.Remove(tmpFile.Name() + ".bak") // Clean up backup
-	
+
 	_, err = tmpFile.WriteString(originalContent)
 	require.NoError(t, err)
 	tmpFile.Close()
@@ -550,28 +550,28 @@ func main() {
 `
 
 	tool := NewApplyDiffTool()
-	
+
 	params := ApplyDiffParams{
 		Diff:       diff,
 		TargetFile: tmpFile.Name(),
 		Backup:     true,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should create backup
 	assert.Contains(t, result.Output, "Backup created:")
-	
+
 	// Verify backup exists and contains original content
 	backupContent, err := os.ReadFile(tmpFile.Name() + ".bak")
 	require.NoError(t, err)
 	assert.Contains(t, string(backupContent), "original")
-	
+
 	// Verify main file was modified
 	modifiedContent, err := os.ReadFile(tmpFile.Name())
 	require.NoError(t, err)

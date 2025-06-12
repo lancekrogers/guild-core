@@ -47,14 +47,14 @@ func TestLLMProviderFailures(t *testing.T) {
 
 		// For now, we'll test the provider fallback directly
 		// since agent creation API has changed significantly
-		
+
 		// Test primary provider failure
 		primaryProvider.SetError("*", fmt.Errorf("primary provider unavailable"))
-		
+
 		// Try primary first
 		_, err = primaryProvider.Complete(ctx, "Test message")
 		assert.Error(t, err)
-		
+
 		// Fallback to secondary should work
 		resp, err := secondaryProvider.Complete(ctx, "Test message")
 		require.NoError(t, err)
@@ -83,11 +83,11 @@ func TestLLMProviderFailures(t *testing.T) {
 
 		// Track retry attempts
 		var retryCount int32
-		
+
 		// Create custom retry handler
 		retryHandler := func(err error, attempt int) bool {
 			atomic.AddInt32(&retryCount, 1)
-			
+
 			// Check if it's a rate limit error
 			if gerr, ok := err.(*gerror.GuildError); ok {
 				if gerr.Code == gerror.ErrCodeRateLimit {
@@ -105,7 +105,7 @@ func TestLLMProviderFailures(t *testing.T) {
 
 		// Execute with retry logic
 		startTime := time.Now()
-		
+
 		// Simulate multiple attempts
 		success := false
 		for i := 0; i < 5; i++ {
@@ -115,16 +115,16 @@ func TestLLMProviderFailures(t *testing.T) {
 				break
 			}
 			// lastErr = err
-			
+
 			if !retryHandler(err, i) {
 				break
 			}
 		}
 
 		duration := time.Since(startTime)
-		
+
 		// Should eventually succeed after rate limit resets
-		assert.True(t, success || duration > rateLimitProvider.resetAfter, 
+		assert.True(t, success || duration > rateLimitProvider.resetAfter,
 			"Should handle rate limiting with retries")
 		assert.Greater(t, retryCount, int32(0), "Should attempt retries")
 	})
@@ -148,7 +148,7 @@ func TestLLMProviderFailures(t *testing.T) {
 		// Test cost tracking directly on provider
 		_, err = costlyFailProvider.Complete(ctx, "This will fail after using tokens")
 		assert.Error(t, err, "Request should fail")
-		
+
 		// Verify tokens were consumed before failure
 		assert.Equal(t, 1000, costlyFailProvider.tokensUsed, "Should track tokens used")
 	})
@@ -192,7 +192,7 @@ func TestLLMProviderFailures(t *testing.T) {
 
 				// Check error is user-friendly
 				assert.Contains(t, err.Error(), tc.expectedMsg)
-				
+
 				// Verify error has proper context
 				if gerr, ok := err.(*gerror.GuildError); ok {
 					assert.NotNil(t, gerr.Details, "Error should have details")
@@ -206,7 +206,7 @@ func TestLLMProviderFailures(t *testing.T) {
 // TestProviderFailoverChain tests cascading fallback through multiple providers
 func TestProviderFailoverChain(t *testing.T) {
 	t.Skip("Skipping - agent factory API has changed significantly")
-	
+
 	// This test needs to be rewritten to use the new agent factory API
 	// The concept of provider failover chain is still valid but needs
 	// different implementation approach
@@ -219,7 +219,7 @@ func TestProviderRecoveryPatterns(t *testing.T) {
 	t.Run("ExponentialBackoff", func(t *testing.T) {
 		attempts := 0
 		delays := []time.Duration{}
-		
+
 		var provider *failingProvider
 		provider = &failingProvider{
 			failureMode: "transient",
@@ -245,14 +245,14 @@ func TestProviderRecoveryPatterns(t *testing.T) {
 		// Retry with backoff
 		var lastErr error
 		startTime := time.Now()
-		
+
 		for i := 0; i < 5; i++ {
 			_, err := provider.Complete(ctx, "test message")
 			if err == nil {
 				break
 			}
 			// lastErr = err
-			
+
 			delay := backoff(i)
 			delays = append(delays, delay)
 			time.Sleep(delay)
@@ -263,12 +263,12 @@ func TestProviderRecoveryPatterns(t *testing.T) {
 		// Should succeed after backoff
 		assert.Equal(t, 4, attempts, "Should succeed on 4th attempt")
 		assert.Nil(t, lastErr, "Should eventually succeed")
-		
+
 		// Verify exponential delays
 		assert.Equal(t, 100*time.Millisecond, delays[0])
 		assert.Equal(t, 200*time.Millisecond, delays[1])
 		assert.Equal(t, 400*time.Millisecond, delays[2])
-		
+
 		// Total time should be sum of delays
 		expectedDuration := 100*time.Millisecond + 200*time.Millisecond + 400*time.Millisecond
 		assert.Greater(t, totalDuration, expectedDuration)
@@ -308,11 +308,11 @@ func TestProviderRecoveryPatterns(t *testing.T) {
 
 			// Attempt call
 			_, err := provider.Complete(ctx, "test message")
-			
+
 			if err != nil {
 				failures++
 				lastFailureTime = time.Now()
-				
+
 				if failures >= failureThreshold {
 					state = open
 				}
@@ -421,7 +421,7 @@ func (f *failingProvider) ChatCompletion(ctx context.Context, req providers.Chat
 	case "unavailable":
 		err := gerror.New(gerror.ErrCodeProvider, f.errorMsg, nil)
 		err.Details = map[string]interface{}{
-			"provider": "test",
+			"provider":     "test",
 			"failure_mode": f.failureMode,
 		}
 		return nil, err
@@ -429,10 +429,10 @@ func (f *failingProvider) ChatCompletion(ctx context.Context, req providers.Chat
 	case "rate_limit":
 		err := gerror.New(gerror.ErrCodeRateLimit, f.errorMsg, nil)
 		err.Details = map[string]interface{}{
-			"reset_after": f.resetAfter,
+			"reset_after":  f.resetAfter,
 			"failure_mode": f.failureMode,
 		}
-		
+
 		// Succeed after reset time
 		if attempts > 1 && time.Since(time.Now().Add(-f.resetAfter)) > 0 {
 			f.failureMode = "success"
@@ -457,7 +457,7 @@ func (f *failingProvider) ChatCompletion(ctx context.Context, req providers.Chat
 		err := gerror.New(gerror.ErrCodeProviderAuth, f.errorMsg, nil)
 		err.Details = map[string]interface{}{
 			"failure_mode": f.failureMode,
-			"help": "Please check your API key configuration",
+			"help":         "Please check your API key configuration",
 		}
 		return nil, err
 
@@ -465,16 +465,16 @@ func (f *failingProvider) ChatCompletion(ctx context.Context, req providers.Chat
 		// Simulate partial response with token usage
 		err := gerror.New(gerror.ErrCodeProvider, f.errorMsg, nil)
 		err.Details = map[string]interface{}{
-			"tokens_used": f.tokensUsed,
+			"tokens_used":     f.tokensUsed,
 			"partial_content": "The response was truncated...",
-			"failure_mode": f.failureMode,
+			"failure_mode":    f.failureMode,
 		}
 		return nil, err
 
 	case "server_error":
 		err := gerror.New(gerror.ErrCodeProvider, f.errorMsg, nil)
 		err.Details = map[string]interface{}{
-			"status_code": 500,
+			"status_code":  500,
 			"failure_mode": f.failureMode,
 		}
 		return nil, err
@@ -482,7 +482,7 @@ func (f *failingProvider) ChatCompletion(ctx context.Context, req providers.Chat
 	case "transient":
 		err := gerror.New(gerror.ErrCodeProvider, f.errorMsg, nil)
 		err.Details = map[string]interface{}{
-			"retry_after": "1s",
+			"retry_after":  "1s",
 			"failure_mode": f.failureMode,
 		}
 		return nil, err
@@ -559,17 +559,17 @@ func (f *failingProvider) Complete(ctx context.Context, prompt string) (string, 
 			},
 		},
 	}
-	
+
 	// Use ChatCompletion
 	resp, err := f.ChatCompletion(ctx, req)
 	if err != nil {
 		return "", err
 	}
-	
+
 	if len(resp.Choices) > 0 {
 		return resp.Choices[0].Message.Content, nil
 	}
-	
+
 	return "", fmt.Errorf("no response choices")
 }
 

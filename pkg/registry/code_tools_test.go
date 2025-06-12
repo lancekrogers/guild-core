@@ -4,28 +4,28 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/guild-ventures/guild-core/tools/code"
 	"github.com/guild-ventures/guild-core/tools/edit"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetCodeToolNames(t *testing.T) {
 	names := GetCodeToolNames()
-	
+
 	// Should return all 7 tools
 	assert.Len(t, names, 7)
-	
+
 	// Check specific tools are included
 	expectedTools := []string{
 		"ast",
-		"dependencies", 
+		"dependencies",
 		"metrics",
 		"search_replace",
 		"apply_diff",
 		"cursor_position",
 		"multi_refactor",
 	}
-	
+
 	for _, expected := range expectedTools {
 		assert.Contains(t, names, expected, "Should include tool: %s", expected)
 	}
@@ -33,22 +33,22 @@ func TestGetCodeToolNames(t *testing.T) {
 
 func TestGetCodeToolsByCategory(t *testing.T) {
 	categories := GetCodeToolsByCategory()
-	
+
 	// Should have 3 categories
 	assert.Len(t, categories, 3)
-	
+
 	// Check code_analysis category
 	codeAnalysis, exists := categories["code_analysis"]
 	assert.True(t, exists)
 	assert.Contains(t, codeAnalysis, "ast")
 	assert.Contains(t, codeAnalysis, "dependencies")
 	assert.Contains(t, codeAnalysis, "metrics")
-	
+
 	// Check code_search category
 	codeSearch, exists := categories["code_search"]
 	assert.True(t, exists)
 	assert.Contains(t, codeSearch, "search_replace")
-	
+
 	// Check code_editing category
 	codeEditing, exists := categories["code_editing"]
 	assert.True(t, exists)
@@ -60,9 +60,9 @@ func TestGetCodeToolsByCategory(t *testing.T) {
 func TestCodeToolInstantiation(t *testing.T) {
 	// Test that each tool can be instantiated properly
 	testCases := []struct {
-		name        string
-		toolName    string
-		category    string
+		name     string
+		toolName string
+		category string
 	}{
 		{
 			name:     "AST Tool",
@@ -70,19 +70,19 @@ func TestCodeToolInstantiation(t *testing.T) {
 			category: "code",
 		},
 		{
-			name:     "Dependencies Tool", 
+			name:     "Dependencies Tool",
 			toolName: "dependencies",
 			category: "code",
 		},
 		{
 			name:     "Metrics Tool",
-			toolName: "metrics", 
+			toolName: "metrics",
 			category: "code",
 		},
 		{
 			name:     "Search Replace Tool",
 			toolName: "search_replace",
-			category: "code", 
+			category: "code",
 		},
 		{
 			name:     "Apply Diff Tool",
@@ -97,14 +97,14 @@ func TestCodeToolInstantiation(t *testing.T) {
 		{
 			name:     "Multi Refactor Tool",
 			toolName: "multi_refactor",
-			category: "edit", 
+			category: "edit",
 		},
 	}
-	
+
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			var tool interface{}
-			
+
 			// Instantiate the tool based on category and name
 			switch tc.category {
 			case "code":
@@ -128,9 +128,9 @@ func TestCodeToolInstantiation(t *testing.T) {
 					tool = edit.NewMultiFileRefactorTool()
 				}
 			}
-			
+
 			assert.NotNil(t, tool, "Tool should be instantiated")
-			
+
 			// Test that tool has required methods (assuming they implement a common interface)
 			// This is a basic check that the tools are properly constructed
 		})
@@ -141,16 +141,16 @@ func TestCodeToolsCategories_Consistency(t *testing.T) {
 	// Verify that category mappings are consistent
 	categories := GetCodeToolsByCategory()
 	allNames := GetCodeToolNames()
-	
+
 	// Count tools in categories
 	categoryCount := 0
 	for _, toolNames := range categories {
 		categoryCount += len(toolNames)
 	}
-	
+
 	// Should match total tool count
 	assert.Equal(t, len(allNames), categoryCount, "Category tool count should match total tool count")
-	
+
 	// Verify no duplicate tools across categories
 	seen := make(map[string]bool)
 	for _, toolNames := range categories {
@@ -173,11 +173,11 @@ func TestCodeToolsExamples(t *testing.T) {
 		edit.NewCursorPositionTool(),
 		edit.NewMultiFileRefactorTool(),
 	}
-	
+
 	for i, tool := range tools {
 		t.Run("tool_"+string(rune(i+'0')), func(t *testing.T) {
 			assert.NotNil(t, tool, "Tool should be instantiated")
-			
+
 			// If the tool has a GetExamples method, test it
 			// This would require knowing the exact interface, so we'll skip this for now
 			// In a real implementation, you'd cast to the specific tool interface
@@ -188,15 +188,15 @@ func TestCodeToolsExamples(t *testing.T) {
 func TestCodeToolsJSON_Examples(t *testing.T) {
 	// Test some example JSON strings that should be valid for tools
 	validExamples := []string{
-		`{"file": "main.go", "target": "functions"}`,                                           // AST
-		`{"path": ".", "format": "tree"}`,                                                      // Dependencies  
-		`{"file": "main.go", "granularity": "function"}`,                                       // Metrics
-		`{"pattern": "TODO", "files": ["*.go"]}`,                                              // Search Replace
-		`{"diff": "--- a/file.go\n+++ b/file.go\n@@ -1,1 +1,1 @@\n-old\n+new"}`,            // Apply Diff
-		`{"file": "main.go", "line": 10, "column": 5}`,                                        // Cursor Position
+		`{"file": "main.go", "target": "functions"}`,                                                    // AST
+		`{"path": ".", "format": "tree"}`,                                                               // Dependencies
+		`{"file": "main.go", "granularity": "function"}`,                                                // Metrics
+		`{"pattern": "TODO", "files": ["*.go"]}`,                                                        // Search Replace
+		`{"diff": "--- a/file.go\n+++ b/file.go\n@@ -1,1 +1,1 @@\n-old\n+new"}`,                         // Apply Diff
+		`{"file": "main.go", "line": 10, "column": 5}`,                                                  // Cursor Position
 		`{"type": "rename", "target": {"file": "main.go", "symbol": "oldName"}, "new_name": "newName"}`, // Multi Refactor
 	}
-	
+
 	for i, example := range validExamples {
 		t.Run("example_"+string(rune(i+'0')), func(t *testing.T) {
 			var parsed interface{}
@@ -233,7 +233,7 @@ func BenchmarkToolInstantiation(b *testing.B) {
 			}
 		}
 	})
-	
+
 	b.Run("Dependencies", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			tool := code.NewDependenciesTool()
@@ -242,7 +242,7 @@ func BenchmarkToolInstantiation(b *testing.B) {
 			}
 		}
 	})
-	
+
 	b.Run("Metrics", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			tool := code.NewMetricsTool()
@@ -251,7 +251,7 @@ func BenchmarkToolInstantiation(b *testing.B) {
 			}
 		}
 	})
-	
+
 	b.Run("SearchReplace", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			tool := code.NewSearchReplaceTool()
@@ -260,7 +260,7 @@ func BenchmarkToolInstantiation(b *testing.B) {
 			}
 		}
 	})
-	
+
 	b.Run("ApplyDiff", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			tool := edit.NewApplyDiffTool()
@@ -269,7 +269,7 @@ func BenchmarkToolInstantiation(b *testing.B) {
 			}
 		}
 	})
-	
+
 	b.Run("CursorPosition", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			tool := edit.NewCursorPositionTool()
@@ -278,7 +278,7 @@ func BenchmarkToolInstantiation(b *testing.B) {
 			}
 		}
 	})
-	
+
 	b.Run("MultiRefactor", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			tool := edit.NewMultiFileRefactorTool()

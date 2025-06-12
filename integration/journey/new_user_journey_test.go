@@ -29,7 +29,7 @@ func TestNewUserCompleteOnboarding(t *testing.T) {
 	t.Run("Step1_GlobalDirectorySetup", func(t *testing.T) {
 		// User runs 'guild init' for the first time
 		globalPath := filepath.Join(homeDir, ".guild")
-		
+
 		// Verify no existing configuration
 		_, err := os.Stat(globalPath)
 		assert.True(t, os.IsNotExist(err), "User should start with no .guild directory")
@@ -76,7 +76,7 @@ func TestNewUserCompleteOnboarding(t *testing.T) {
 	t.Run("Step3_ConfigureProviders", func(t *testing.T) {
 		// User configures their API keys
 		globalConfig := filepath.Join(homeDir, ".guild", "config.yml")
-		
+
 		// Simulate user adding API keys through configuration
 		cfg := &GlobalConfig{
 			Providers: map[string]ProviderConfig{
@@ -157,18 +157,18 @@ I want to create a simple TODO list application with the following features:
 
 		// Simulate commission execution workflow
 		startTime := time.Now()
-		
+
 		// Mock the execution (in real scenario, this would involve the full pipeline)
 		tasks := []string{
 			"Create Task struct and methods",
-			"Implement file storage", 
+			"Implement file storage",
 			"Build CLI interface",
 			"Write unit tests",
 		}
 
 		// Verify tasks are created
 		assert.Len(t, tasks, 4, "Should create 4 tasks from commission")
-		
+
 		// Simulate task completion time
 		duration := time.Since(startTime)
 		assert.Less(t, duration, 5*time.Minute, "First commission should complete quickly")
@@ -182,7 +182,7 @@ I want to create a simple TODO list application with the following features:
 		// Simulate kanban board state after execution
 		kanbanDir := filepath.Join(projCtx.GetGuildPath(), "kanban", "commission-001")
 		reviewDir := filepath.Join(kanbanDir, "review")
-		
+
 		err := os.MkdirAll(reviewDir, 0755)
 		require.NoError(t, err)
 
@@ -231,7 +231,7 @@ func TestNewUserErrorRecovery(t *testing.T) {
 			WithOperation("initialize").
 			WithDetails("provider", "openai").
 			WithDetails("help", "Please set your OpenAI API key in ~/.guild/config.yml"))
-		
+
 		// Register the mock provider
 		err = reg.Providers().RegisterProvider("openai", mockProvider)
 		require.NoError(t, err)
@@ -239,7 +239,7 @@ func TestNewUserErrorRecovery(t *testing.T) {
 		// Try to use provider - should get error about missing API key
 		provider, err := reg.Providers().Get("openai")
 		require.NoError(t, err, "Getting provider should not error")
-		
+
 		// Try to use the provider
 		_, err = provider.Complete(context.Background(), "test prompt")
 		assert.Error(t, err, "Should error on missing API key")
@@ -256,7 +256,7 @@ func TestNewUserErrorRecovery(t *testing.T) {
 		projCtx, err := project.Load(context.Background(), tempDir)
 		assert.Error(t, err, "Should error when not in guild project")
 		assert.Nil(t, projCtx, "Should not return project context")
-		
+
 		// Error should guide user to run 'guild init'
 		assert.Contains(t, err.Error(), "guild init", "Error should mention guild init")
 	})
@@ -358,7 +358,7 @@ func loadGlobalConfig(path string) (*GlobalConfig, error) {
 // Additional structures for testing
 type GlobalConfig struct {
 	DefaultProvider string
-	Providers      map[string]ProviderConfig
+	Providers       map[string]ProviderConfig
 }
 
 type ProviderConfig struct {

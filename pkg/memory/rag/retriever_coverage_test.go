@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/guild-ventures/guild-core/pkg/corpus"
-	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/memory/vector"
+	"github.com/stretchr/testify/assert"
 )
 
 // Simple mock vector store for enhanced testing
@@ -43,7 +43,7 @@ func (m *simpleMockVectorStore) QueryEmbeddings(ctx context.Context, query strin
 	if m.shouldFail {
 		return nil, fmt.Errorf("mock error")
 	}
-	
+
 	// Return mock results
 	results := []vector.EmbeddingMatch{}
 	for _, embeddings := range m.embeddings {
@@ -69,7 +69,7 @@ func (m *simpleMockVectorStore) Close() error {
 // Test newRetriever with different configurations
 func TestNewRetriever_AllPaths(t *testing.T) {
 	ctx := context.Background()
-	
+
 	tests := []struct {
 		name      string
 		embedder  vector.Embedder
@@ -85,9 +85,9 @@ func TestNewRetriever_AllPaths(t *testing.T) {
 			errorMsg:  "embedder cannot be nil",
 		},
 		{
-			name:     "Valid with default config",
-			embedder: &MockEmbedder{},
-			config:   Config{},
+			name:      "Valid with default config",
+			embedder:  &MockEmbedder{},
+			config:    Config{},
 			wantError: false,
 		},
 		{
@@ -134,11 +134,11 @@ func TestNewRetriever_AllPaths(t *testing.T) {
 			wantError: false,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			retriever, err := newRetriever(ctx, tt.embedder, tt.config)
-			
+
 			if tt.wantError {
 				assert.Error(t, err)
 				if tt.errorMsg != "" {
@@ -151,7 +151,7 @@ func TestNewRetriever_AllPaths(t *testing.T) {
 				assert.NotNil(t, retriever.vectorStore)
 				assert.NotNil(t, retriever.chunker)
 				assert.Equal(t, tt.embedder, retriever.embedder)
-				
+
 				// Clean up
 				if retriever != nil {
 					retriever.Close()
@@ -165,25 +165,25 @@ func TestNewRetriever_AllPaths(t *testing.T) {
 func TestRetriever_RetrieveContext_Advanced(t *testing.T) {
 	ctx := context.Background()
 	embedder := &MockEmbedder{}
-	
+
 	config := Config{
 		CollectionName: "test_retrieve",
 		ChunkSize:      100,
 		ChunkOverlap:   20,
 	}
-	
+
 	// Use mock vector store instead of ChromemGo for predictable results
 	mockStore := newSimpleMockVectorStore()
 	retriever := &Retriever{
 		Config:      config,
 		vectorStore: mockStore,
 		embedder:    embedder,
-		chunker:     newChunker(ChunkerConfig{
+		chunker: newChunker(ChunkerConfig{
 			ChunkSize:    config.ChunkSize,
 			ChunkOverlap: config.ChunkOverlap,
 		}),
 	}
-	
+
 	// Add test documents
 	docs := []struct {
 		id      string
@@ -194,12 +194,12 @@ func TestRetriever_RetrieveContext_Advanced(t *testing.T) {
 		{"doc2", "Deep learning neural networks", "dl.txt"},
 		{"doc3", "Natural language processing", "nlp.txt"},
 	}
-	
+
 	for _, doc := range docs {
 		err := retriever.AddDocument(ctx, doc.id, doc.content, doc.source)
 		assert.NoError(t, err)
 	}
-	
+
 	// Test different retrieval configurations
 	tests := []struct {
 		name     string
@@ -244,11 +244,11 @@ func TestRetriever_RetrieveContext_Advanced(t *testing.T) {
 			wantDocs: 0,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			results, err := retriever.RetrieveContext(ctx, tt.query, tt.config)
-			
+
 			if tt.query == "" {
 				// Empty query should return an error
 				assert.Error(t, err)
@@ -265,7 +265,7 @@ func TestRetriever_RetrieveContext_Advanced(t *testing.T) {
 // Test AddDocument error paths
 func TestRetriever_AddDocument_Errors(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Test with nil vector store
 	retriever := &Retriever{
 		vectorStore: nil,
@@ -274,16 +274,16 @@ func TestRetriever_AddDocument_Errors(t *testing.T) {
 			ChunkOverlap: 20,
 		}),
 	}
-	
+
 	err := retriever.AddDocument(ctx, "doc1", "content", "test.txt")
 	assert.Error(t, err)
-	
+
 	// Test with failing vector store
 	mockStore := &simpleMockVectorStore{shouldFail: true}
 	retriever.vectorStore = mockStore
 	retriever.embedder = &MockEmbedder{}
 	retriever.Config.CollectionName = "test"
-	
+
 	err = retriever.AddDocument(ctx, "doc2", "content", "test.txt")
 	assert.Error(t, err)
 }
@@ -291,11 +291,11 @@ func TestRetriever_AddDocument_Errors(t *testing.T) {
 // Test Close method with error handling
 func TestRetriever_Close_ErrorHandling(t *testing.T) {
 	retriever := &Retriever{}
-	
+
 	// Close with nil vector store
 	err := retriever.Close()
 	assert.NoError(t, err)
-	
+
 	// Close with mock vector store
 	retriever.vectorStore = newSimpleMockVectorStore()
 	err = retriever.Close()
@@ -305,7 +305,7 @@ func TestRetriever_Close_ErrorHandling(t *testing.T) {
 // Test searchCorpus error scenarios
 func TestRetriever_SearchCorpus_Errors(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Test without corpus config
 	retriever := &Retriever{
 		Config: Config{
@@ -313,16 +313,16 @@ func TestRetriever_SearchCorpus_Errors(t *testing.T) {
 		},
 		corpusConfig: nil,
 	}
-	
+
 	results, err := retriever.searchCorpus(ctx, "test", 5)
 	assert.NoError(t, err)
 	assert.Nil(t, results) // Returns nil when no corpus config
-	
+
 	// Test with invalid corpus path - corpus.List returns empty list
 	retriever.corpusConfig = &corpus.Config{
 		CorpusPath: "/invalid/path/that/does/not/exist",
 	}
-	
+
 	results, err = retriever.searchCorpus(ctx, "test", 5)
 	assert.NoError(t, err)
 	assert.Empty(t, results) // No documents found in invalid path
@@ -331,7 +331,7 @@ func TestRetriever_SearchCorpus_Errors(t *testing.T) {
 // Test enhanceRequestWithRAG error handling
 func TestEnhanceRequestWithRAG_Errors(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Test with retriever that fails
 	mockStore := &simpleMockVectorStore{shouldFail: true}
 	retriever := &Retriever{
@@ -341,12 +341,12 @@ func TestEnhanceRequestWithRAG_Errors(t *testing.T) {
 			CollectionName: "test",
 		},
 	}
-	
+
 	wrapper := &AgentWrapper{
 		retriever: retriever,
 		config:    DefaultConfig(),
 	}
-	
+
 	result, err := wrapper.enhanceRequestWithRAG(ctx, "test request")
 	assert.Error(t, err)
 	assert.Empty(t, result)
@@ -356,7 +356,7 @@ func TestEnhanceRequestWithRAG_Errors(t *testing.T) {
 // Test AgentWrapper EnhancePrompt error handling
 func TestAgentWrapper_EnhancePrompt_Errors(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Test with failing retriever
 	mockStore := &simpleMockVectorStore{shouldFail: true}
 	retriever := &Retriever{
@@ -366,12 +366,12 @@ func TestAgentWrapper_EnhancePrompt_Errors(t *testing.T) {
 			CollectionName: "test",
 		},
 	}
-	
+
 	wrapper := &AgentWrapper{
 		retriever: retriever,
 		config:    DefaultConfig(),
 	}
-	
+
 	_, err := wrapper.EnhancePrompt(ctx, "prompt", "query", RetrievalConfig{
 		MaxResults: 3,
 	})
@@ -383,7 +383,7 @@ func TestAgentWrapper_EnhancePrompt_Errors(t *testing.T) {
 func TestExampleUsageFunctions(t *testing.T) {
 	// These are example functions that demonstrate usage
 	// We'll test them to improve coverage
-	
+
 	// Note: These functions typically have complex setup requirements
 	// and interact with external services, so we'll skip them in unit tests
 	t.Skip("Example usage functions are for documentation purposes")

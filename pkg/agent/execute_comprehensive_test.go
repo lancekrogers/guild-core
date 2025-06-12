@@ -107,7 +107,7 @@ func TestWorkerAgent_Execute_ContextCancellation(t *testing.T) {
 	// Should error due to context deadline
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "context deadline exceeded")
-	
+
 	// Should not take the full delay time
 	assert.Less(t, duration, 50*time.Millisecond)
 }
@@ -141,7 +141,7 @@ func TestWorkerAgent_Execute_Concurrent(t *testing.T) {
 	const numGoroutines = 10
 	responses := make([]string, numGoroutines)
 	errors := make([]error, numGoroutines)
-	
+
 	// Channel to coordinate goroutines
 	done := make(chan int, numGoroutines)
 
@@ -179,7 +179,7 @@ type mockLLMClient struct {
 
 func (m *mockLLMClient) Complete(ctx context.Context, prompt string) (string, error) {
 	m.callCount++
-	
+
 	// Simulate delay if specified
 	if m.delay > 0 {
 		select {
@@ -189,14 +189,14 @@ func (m *mockLLMClient) Complete(ctx context.Context, prompt string) (string, er
 			return "", ctx.Err()
 		}
 	}
-	
+
 	if m.shouldError {
 		if m.errorMsg != "" {
 			return "", &mockError{msg: m.errorMsg}
 		}
 		return "", &mockError{msg: "LLM error"}
 	}
-	
+
 	return m.response, nil
 }
 

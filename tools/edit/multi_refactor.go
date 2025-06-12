@@ -24,67 +24,67 @@ type MultiFileRefactorTool struct {
 
 // RefactorParams represents the input parameters for multi-file refactoring
 type RefactorParams struct {
-	Type        string         `json:"type"`                   // rename, extract, move, inline
-	Target      *RefactorTarget `json:"target"`                // What to refactor
-	NewName     string         `json:"new_name,omitempty"`     // New name for rename operations
-	Destination string         `json:"destination,omitempty"`  // Destination file for move operations
-	Preview     bool           `json:"preview,omitempty"`      // Show preview before applying
-	Scope       string         `json:"scope,omitempty"`        // file, package, project
-	Language    string         `json:"language,omitempty"`     // Target language
-	Options     *RefactorOptions `json:"options,omitempty"`   // Additional options
+	Type        string           `json:"type"`                  // rename, extract, move, inline
+	Target      *RefactorTarget  `json:"target"`                // What to refactor
+	NewName     string           `json:"new_name,omitempty"`    // New name for rename operations
+	Destination string           `json:"destination,omitempty"` // Destination file for move operations
+	Preview     bool             `json:"preview,omitempty"`     // Show preview before applying
+	Scope       string           `json:"scope,omitempty"`       // file, package, project
+	Language    string           `json:"language,omitempty"`    // Target language
+	Options     *RefactorOptions `json:"options,omitempty"`     // Additional options
 }
 
 // RefactorTarget specifies what to refactor
 type RefactorTarget struct {
-	File       string `json:"file"`                  // Source file
-	Line       int    `json:"line,omitempty"`        // Line number
-	Column     int    `json:"column,omitempty"`      // Column number
-	Symbol     string `json:"symbol,omitempty"`      // Symbol name
-	StartLine  int    `json:"start_line,omitempty"`  // Start of selection
-	EndLine    int    `json:"end_line,omitempty"`    // End of selection
-	Type       string `json:"type,omitempty"`        // function, variable, type, etc.
+	File      string `json:"file"`                 // Source file
+	Line      int    `json:"line,omitempty"`       // Line number
+	Column    int    `json:"column,omitempty"`     // Column number
+	Symbol    string `json:"symbol,omitempty"`     // Symbol name
+	StartLine int    `json:"start_line,omitempty"` // Start of selection
+	EndLine   int    `json:"end_line,omitempty"`   // End of selection
+	Type      string `json:"type,omitempty"`       // function, variable, type, etc.
 }
 
 // RefactorOptions provides additional refactoring options
 type RefactorOptions struct {
-	UpdateReferences bool     `json:"update_references"`      // Update all references
-	UpdateImports    bool     `json:"update_imports"`         // Update import statements
-	UpdateComments   bool     `json:"update_comments"`        // Update comments and docs
-	IncludeTests     bool     `json:"include_tests"`          // Include test files
-	BackupFiles      bool     `json:"backup_files"`           // Create backups
+	UpdateReferences bool     `json:"update_references"`       // Update all references
+	UpdateImports    bool     `json:"update_imports"`          // Update import statements
+	UpdateComments   bool     `json:"update_comments"`         // Update comments and docs
+	IncludeTests     bool     `json:"include_tests"`           // Include test files
+	BackupFiles      bool     `json:"backup_files"`            // Create backups
 	FilePatterns     []string `json:"file_patterns,omitempty"` // File patterns to search
 }
 
 // RefactorResult represents the result of a multi-file refactoring operation
 type RefactorResult struct {
-	Type             string               `json:"type"`
-	Applied          bool                 `json:"applied"`
-	Preview          bool                 `json:"preview"`
-	FilesChanged     []*FileChange        `json:"files_changed"`
-	ReferencesFound  int                  `json:"references_found"`
+	Type              string              `json:"type"`
+	Applied           bool                `json:"applied"`
+	Preview           bool                `json:"preview"`
+	FilesChanged      []*FileChange       `json:"files_changed"`
+	ReferencesFound   int                 `json:"references_found"`
 	ReferencesUpdated int                 `json:"references_updated"`
-	ImportsUpdated   []*ImportChange      `json:"imports_updated,omitempty"`
-	MovedCode        *CodeMove            `json:"moved_code,omitempty"`
-	Conflicts        []*RefactorConflict  `json:"conflicts,omitempty"`
-	Warnings         []string             `json:"warnings,omitempty"`
-	Errors           []string             `json:"errors,omitempty"`
-	Summary          string               `json:"summary"`
+	ImportsUpdated    []*ImportChange     `json:"imports_updated,omitempty"`
+	MovedCode         *CodeMove           `json:"moved_code,omitempty"`
+	Conflicts         []*RefactorConflict `json:"conflicts,omitempty"`
+	Warnings          []string            `json:"warnings,omitempty"`
+	Errors            []string            `json:"errors,omitempty"`
+	Summary           string              `json:"summary"`
 }
 
 // FileChange represents changes made to a single file
 type FileChange struct {
-	File        string             `json:"file"`
-	ChangeType  string             `json:"change_type"` // modified, created, deleted
-	Changes     []*LineChange      `json:"changes"`
-	BackupFile  string             `json:"backup_file,omitempty"`
-	NewContent  string             `json:"new_content,omitempty"`
-	Preview     string             `json:"preview,omitempty"`
+	File       string        `json:"file"`
+	ChangeType string        `json:"change_type"` // modified, created, deleted
+	Changes    []*LineChange `json:"changes"`
+	BackupFile string        `json:"backup_file,omitempty"`
+	NewContent string        `json:"new_content,omitempty"`
+	Preview    string        `json:"preview,omitempty"`
 }
 
 // LineChange represents a change to a specific line
 type LineChange struct {
 	Line       int    `json:"line"`
-	Type       string `json:"type"`        // replace, insert, delete
+	Type       string `json:"type"` // replace, insert, delete
 	OldContent string `json:"old_content,omitempty"`
 	NewContent string `json:"new_content,omitempty"`
 }
@@ -110,7 +110,7 @@ type CodeMove struct {
 type RefactorConflict struct {
 	File        string `json:"file"`
 	Line        int    `json:"line"`
-	Type        string `json:"type"`        // name_collision, syntax_error, etc.
+	Type        string `json:"type"` // name_collision, syntax_error, etc.
 	Description string `json:"description"`
 	Suggestion  string `json:"suggestion,omitempty"`
 }
@@ -266,11 +266,11 @@ func (t *MultiFileRefactorTool) Execute(ctx context.Context, input string) (*too
 	output := t.formatResult(result)
 
 	metadata := map[string]string{
-		"type":              params.Type,
-		"source":            params.Target.File,
-		"applied":           fmt.Sprintf("%t", result.Applied),
-		"files_changed":     fmt.Sprintf("%d", len(result.FilesChanged)),
-		"references_found":  fmt.Sprintf("%d", result.ReferencesFound),
+		"type":               params.Type,
+		"source":             params.Target.File,
+		"applied":            fmt.Sprintf("%t", result.Applied),
+		"files_changed":      fmt.Sprintf("%d", len(result.FilesChanged)),
+		"references_found":   fmt.Sprintf("%d", result.ReferencesFound),
 		"references_updated": fmt.Sprintf("%d", result.ReferencesUpdated),
 	}
 
@@ -347,14 +347,14 @@ func (t *MultiFileRefactorTool) performRename(ctx context.Context, params Refact
 		if err != nil {
 			return nil, err
 		}
-		
+
 		if !params.Preview {
 			result.Applied = true
 		}
 		result.ReferencesUpdated = len(references)
 	}
 
-	result.Summary = fmt.Sprintf("Renamed '%s' to '%s' (%d references in %d files)", 
+	result.Summary = fmt.Sprintf("Renamed '%s' to '%s' (%d references in %d files)",
 		params.Target.Symbol, params.NewName, result.ReferencesFound, len(result.FilesChanged))
 
 	return result, nil
@@ -441,7 +441,7 @@ func (t *MultiFileRefactorTool) performExtract(ctx context.Context, params Refac
 		result.Applied = true
 	}
 
-	result.Summary = fmt.Sprintf("Extracted %d lines into method '%s'", 
+	result.Summary = fmt.Sprintf("Extracted %d lines into method '%s'",
 		params.Target.EndLine-params.Target.StartLine+1, params.NewName)
 
 	return result, nil
@@ -483,7 +483,7 @@ func (t *MultiFileRefactorTool) findFilesInScope(params RefactorParams) ([]strin
 		// Find files in the same package/directory
 		dir := filepath.Dir(params.Target.File)
 		language := code.DetectLanguage(params.Target.File)
-		
+
 		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
@@ -500,7 +500,7 @@ func (t *MultiFileRefactorTool) findFilesInScope(params RefactorParams) ([]strin
 	case "project":
 		// Find files in the entire project
 		language := code.DetectLanguage(params.Target.File)
-		
+
 		err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
@@ -547,11 +547,11 @@ func (t *MultiFileRefactorTool) findSymbolReferences(filename, symbol string) ([
 	}
 
 	language := code.DetectLanguage(filename)
-	
+
 	if language == code.LanguageGo {
 		return t.findGoReferences(filename, symbol, content)
 	}
-	
+
 	// Fallback to simple text search
 	return t.findTextReferences(filename, symbol, content), nil
 }
@@ -594,7 +594,7 @@ func (t *MultiFileRefactorTool) findTextReferences(filename, symbol string, cont
 		// Use word boundary regex to find whole word matches
 		pattern := `\b` + regexp.QuoteMeta(symbol) + `\b`
 		regex := regexp.MustCompile(pattern)
-		
+
 		matches := regex.FindAllStringIndex(line, -1)
 		for _, match := range matches {
 			references = append(references, &SymbolReference{
@@ -688,7 +688,7 @@ func (t *MultiFileRefactorTool) applyFileChanges(fileChange *FileChange, createB
 
 	// Apply changes (simplified implementation)
 	lines := strings.Split(string(content), "\n")
-	
+
 	for _, change := range fileChange.Changes {
 		if change.Line > 0 && change.Line <= len(lines) {
 			switch change.Type {
@@ -714,7 +714,7 @@ func (t *MultiFileRefactorTool) applyFileChanges(fileChange *FileChange, createB
 	// Write modified content
 	newContent := strings.Join(lines, "\n")
 	fileChange.NewContent = newContent
-	
+
 	return os.WriteFile(fileChange.File, []byte(newContent), 0644)
 }
 
@@ -722,7 +722,7 @@ func (t *MultiFileRefactorTool) applyFileChanges(fileChange *FileChange, createB
 func (t *MultiFileRefactorTool) analyzeExtractedCode(code, filename string) ([]string, []string) {
 	// Simplified analysis - in a real implementation, this would use AST analysis
 	// to determine variables used, defined, and returned
-	
+
 	var parameters []string
 	var returnValues []string
 
@@ -763,7 +763,7 @@ func (t *MultiFileRefactorTool) generateExtractedMethod(name string, params, ret
 	}
 
 	method.WriteString(" {\n")
-	
+
 	// Indent the extracted code
 	lines := strings.Split(code, "\n")
 	for _, line := range lines {
@@ -771,7 +771,7 @@ func (t *MultiFileRefactorTool) generateExtractedMethod(name string, params, ret
 			method.WriteString("\t" + line + "\n")
 		}
 	}
-	
+
 	method.WriteString("}")
 
 	return method.String()
@@ -780,7 +780,7 @@ func (t *MultiFileRefactorTool) generateExtractedMethod(name string, params, ret
 // generateMethodCall generates a method call to replace extracted code
 func (t *MultiFileRefactorTool) generateMethodCall(name string, params, returns []string) string {
 	call := name + "(" + strings.Join(params, ", ") + ")"
-	
+
 	if len(returns) > 0 {
 		if len(returns) == 1 {
 			return returns[0] + " := " + call
@@ -788,7 +788,7 @@ func (t *MultiFileRefactorTool) generateMethodCall(name string, params, returns 
 			return strings.Join(returns, ", ") + " := " + call
 		}
 	}
-	
+
 	return call
 }
 
@@ -820,9 +820,9 @@ func (t *MultiFileRefactorTool) formatResult(result *RefactorResult) string {
 	if len(result.FilesChanged) > 0 {
 		output.WriteString("\nFiles modified:\n")
 		for _, fileChange := range result.FilesChanged {
-			output.WriteString(fmt.Sprintf("  %s (%s, %d changes)\n", 
+			output.WriteString(fmt.Sprintf("  %s (%s, %d changes)\n",
 				fileChange.File, fileChange.ChangeType, len(fileChange.Changes)))
-			
+
 			if fileChange.BackupFile != "" {
 				output.WriteString(fmt.Sprintf("    Backup: %s\n", fileChange.BackupFile))
 			}

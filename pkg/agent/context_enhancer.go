@@ -23,32 +23,32 @@ func NewLSPContextEnhancer(lspManager *lsp.Manager) *LSPContextEnhancer {
 
 // EnhancedContext represents context enhanced with LSP information
 type EnhancedContext struct {
-	OriginalContext map[string]interface{}   `json:"original_context"`
-	Files           []FileContext            `json:"files"`
-	Symbols         []SymbolContext          `json:"symbols"`
-	Dependencies    []string                 `json:"dependencies"`
-	ProjectInfo     ProjectInfo              `json:"project_info"`
+	OriginalContext map[string]interface{} `json:"original_context"`
+	Files           []FileContext          `json:"files"`
+	Symbols         []SymbolContext        `json:"symbols"`
+	Dependencies    []string               `json:"dependencies"`
+	ProjectInfo     ProjectInfo            `json:"project_info"`
 }
 
 // FileContext represents context for a specific file
 type FileContext struct {
-	Path         string                   `json:"path"`
-	Language     string                   `json:"language"`
-	Symbols      []SymbolInfo             `json:"symbols,omitempty"`
-	Imports      []string                 `json:"imports,omitempty"`
-	RelatedFiles []string                 `json:"related_files,omitempty"`
+	Path         string       `json:"path"`
+	Language     string       `json:"language"`
+	Symbols      []SymbolInfo `json:"symbols,omitempty"`
+	Imports      []string     `json:"imports,omitempty"`
+	RelatedFiles []string     `json:"related_files,omitempty"`
 }
 
 // SymbolContext represents context for a specific symbol
 type SymbolContext struct {
-	Name         string       `json:"name"`
-	Kind         string       `json:"kind"`
-	File         string       `json:"file"`
-	Position     Position     `json:"position"`
-	Type         string       `json:"type,omitempty"`
-	Documentation string      `json:"documentation,omitempty"`
-	References   []Location   `json:"references,omitempty"`
-	Definition   *Location    `json:"definition,omitempty"`
+	Name          string     `json:"name"`
+	Kind          string     `json:"kind"`
+	File          string     `json:"file"`
+	Position      Position   `json:"position"`
+	Type          string     `json:"type,omitempty"`
+	Documentation string     `json:"documentation,omitempty"`
+	References    []Location `json:"references,omitempty"`
+	Definition    *Location  `json:"definition,omitempty"`
 }
 
 // SymbolInfo represents basic symbol information
@@ -80,20 +80,20 @@ type ProjectInfo struct {
 // EnhanceContext enhances the given context with LSP information
 func (e *LSPContextEnhancer) EnhanceContext(ctx context.Context, originalContext map[string]interface{}) (*EnhancedContext, error) {
 	logger := observability.GetLogger(ctx)
-	
+
 	enhanced := &EnhancedContext{
 		OriginalContext: originalContext,
 		Files:           []FileContext{},
 		Symbols:         []SymbolContext{},
 		Dependencies:    []string{},
 	}
-	
+
 	// Extract file paths from context
 	filePaths := e.extractFilePaths(originalContext)
 	if len(filePaths) == 0 {
 		return enhanced, nil
 	}
-	
+
 	// Process each file
 	for _, filePath := range filePaths {
 		fileCtx, err := e.processFile(ctx, filePath)
@@ -105,7 +105,7 @@ func (e *LSPContextEnhancer) EnhanceContext(ctx context.Context, originalContext
 		}
 		enhanced.Files = append(enhanced.Files, fileCtx)
 	}
-	
+
 	// Extract symbols from context
 	symbols := e.extractSymbols(originalContext)
 	for _, symbol := range symbols {
@@ -118,12 +118,12 @@ func (e *LSPContextEnhancer) EnhanceContext(ctx context.Context, originalContext
 		}
 		enhanced.Symbols = append(enhanced.Symbols, symbolCtx)
 	}
-	
+
 	// Add project information
 	if len(filePaths) > 0 {
 		enhanced.ProjectInfo = e.gatherProjectInfo(filePaths)
 	}
-	
+
 	return enhanced, nil
 }
 
@@ -131,10 +131,10 @@ func (e *LSPContextEnhancer) EnhanceContext(ctx context.Context, originalContext
 func (e *LSPContextEnhancer) extractFilePaths(context map[string]interface{}) []string {
 	var paths []string
 	seen := make(map[string]bool)
-	
+
 	// Common keys that might contain file paths
 	fileKeys := []string{"file", "files", "path", "paths", "source", "target"}
-	
+
 	for _, key := range fileKeys {
 		if value, exists := context[key]; exists {
 			switch v := value.(type) {
@@ -160,7 +160,7 @@ func (e *LSPContextEnhancer) extractFilePaths(context map[string]interface{}) []
 			}
 		}
 	}
-	
+
 	return paths
 }
 
@@ -171,23 +171,23 @@ func (e *LSPContextEnhancer) isFilePath(s string) bool {
 		".go", ".js", ".ts", ".py", ".java", ".cs", ".rb", ".php",
 		".c", ".cpp", ".h", ".hpp", ".rs", ".swift", ".kt",
 	}
-	
+
 	for _, ext := range extensions {
 		if strings.HasSuffix(s, ext) {
 			return true
 		}
 	}
-	
+
 	return false
 }
 
 // extractSymbols extracts symbol information from the context
 func (e *LSPContextEnhancer) extractSymbols(context map[string]interface{}) []SymbolContext {
 	var symbols []SymbolContext
-	
+
 	// Look for symbol-related keys
 	symbolKeys := []string{"symbol", "symbols", "function", "method", "class", "variable"}
-	
+
 	for _, key := range symbolKeys {
 		if value, exists := context[key]; exists {
 			switch v := value.(type) {
@@ -210,7 +210,7 @@ func (e *LSPContextEnhancer) extractSymbols(context map[string]interface{}) []Sy
 			}
 		}
 	}
-	
+
 	return symbols
 }
 
@@ -220,19 +220,19 @@ func (e *LSPContextEnhancer) processFile(ctx context.Context, filePath string) (
 		Path:     filePath,
 		Language: lsp.DetectLanguage(filePath),
 	}
-	
+
 	// Get language server for the file
 	server, err := e.lspManager.GetServerForFile(ctx, filePath)
 	if err != nil {
 		return fileCtx, err
 	}
-	
+
 	fileCtx.Language = server.Language
-	
+
 	// TODO: Extract symbols from file using textDocument/documentSymbol
 	// TODO: Extract imports/dependencies
 	// TODO: Find related files (same package/module)
-	
+
 	return fileCtx, nil
 }
 
@@ -241,12 +241,12 @@ func (e *LSPContextEnhancer) processSymbol(ctx context.Context, symbol SymbolCon
 	if symbol.File == "" {
 		return symbol, nil // Can't process without file context
 	}
-	
+
 	// TODO: Find symbol position in file
 	// TODO: Get hover information for type/documentation
 	// TODO: Find references
 	// TODO: Find definition
-	
+
 	return symbol, nil
 }
 
@@ -255,12 +255,12 @@ func (e *LSPContextEnhancer) gatherProjectInfo(filePaths []string) ProjectInfo {
 	info := ProjectInfo{
 		Languages: []string{},
 	}
-	
+
 	// Find common root path
 	if len(filePaths) > 0 {
 		info.RootPath = e.findCommonRoot(filePaths)
 	}
-	
+
 	// Collect unique languages
 	langMap := make(map[string]bool)
 	for _, path := range filePaths {
@@ -268,14 +268,14 @@ func (e *LSPContextEnhancer) gatherProjectInfo(filePaths []string) ProjectInfo {
 			langMap[lang] = true
 		}
 	}
-	
+
 	for lang := range langMap {
 		info.Languages = append(info.Languages, lang)
 	}
-	
+
 	// Detect project type based on root markers
 	info.Type = e.detectProjectType(info.RootPath)
-	
+
 	return info
 }
 
@@ -284,42 +284,42 @@ func (e *LSPContextEnhancer) findCommonRoot(paths []string) string {
 	if len(paths) == 0 {
 		return ""
 	}
-	
+
 	if len(paths) == 1 {
 		return filepath.Dir(paths[0])
 	}
-	
+
 	// Split all paths into components
 	var splitPaths [][]string
 	for _, path := range paths {
 		absPath, _ := filepath.Abs(path)
 		splitPaths = append(splitPaths, strings.Split(filepath.Dir(absPath), string(filepath.Separator)))
 	}
-	
+
 	// Find common prefix
 	var common []string
 	for i := 0; i < len(splitPaths[0]); i++ {
 		component := splitPaths[0][i]
 		allMatch := true
-		
+
 		for j := 1; j < len(splitPaths); j++ {
 			if i >= len(splitPaths[j]) || splitPaths[j][i] != component {
 				allMatch = false
 				break
 			}
 		}
-		
+
 		if allMatch {
 			common = append(common, component)
 		} else {
 			break
 		}
 	}
-	
+
 	if len(common) == 0 {
 		return "/"
 	}
-	
+
 	return strings.Join(common, string(filepath.Separator))
 }
 
@@ -328,41 +328,41 @@ func (e *LSPContextEnhancer) detectProjectType(rootPath string) string {
 	if rootPath == "" {
 		return ""
 	}
-	
+
 	// Check for project type indicators
 	indicators := map[string]string{
-		"go.mod":         "go",
-		"package.json":   "node",
+		"go.mod":           "go",
+		"package.json":     "node",
 		"requirements.txt": "python",
-		"Cargo.toml":     "rust",
-		"pom.xml":        "java/maven",
-		"build.gradle":   "java/gradle",
-		"*.csproj":       "dotnet",
-		"Gemfile":        "ruby",
-		"composer.json":  "php",
+		"Cargo.toml":       "rust",
+		"pom.xml":          "java/maven",
+		"build.gradle":     "java/gradle",
+		"*.csproj":         "dotnet",
+		"Gemfile":          "ruby",
+		"composer.json":    "php",
 	}
-	
+
 	for file, projectType := range indicators {
 		if _, err := filepath.Glob(filepath.Join(rootPath, file)); err == nil {
 			return projectType
 		}
 	}
-	
+
 	return "unknown"
 }
 
 // GetMinimalContext returns minimal context needed for a specific task
 func (e *LSPContextEnhancer) GetMinimalContext(ctx context.Context, taskDescription string, currentFile string) (map[string]interface{}, error) {
 	context := make(map[string]interface{})
-	
+
 	if currentFile == "" {
 		return context, nil
 	}
-	
+
 	// Add current file information
 	context["current_file"] = currentFile
 	context["language"] = lsp.DetectLanguage(currentFile)
-	
+
 	// Parse task to determine what context is needed
 	if strings.Contains(taskDescription, "implement") || strings.Contains(taskDescription, "create") {
 		// For implementation tasks, get interface/type definitions
@@ -374,6 +374,6 @@ func (e *LSPContextEnhancer) GetMinimalContext(ctx context.Context, taskDescript
 		// For refactoring, get all references to the target
 		// TODO: Use LSP references
 	}
-	
+
 	return context, nil
 }

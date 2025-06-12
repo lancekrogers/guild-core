@@ -13,7 +13,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/lsp"
 )
 
@@ -68,7 +68,7 @@ go 1.21
 	// Create LSP manager
 	manager, err := lsp.NewManager("")
 	require.NoError(t, err)
-	
+
 	// Create timeout context for all operations
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
@@ -78,7 +78,7 @@ go 1.21
 		// Add sub-test timeout
 		subCtx, subCancel := context.WithTimeout(ctx, 5*time.Second)
 		defer subCancel()
-		
+
 		server, err := manager.GetServerForFile(subCtx, testFile)
 		require.NoError(t, err)
 		assert.NotNil(t, server)
@@ -90,7 +90,7 @@ go 1.21
 		// Add sub-test timeout
 		subCtx, subCancel := context.WithTimeout(ctx, 5*time.Second)
 		defer subCancel()
-		
+
 		// Test completion after "fmt."
 		completions, err := manager.GetCompletion(subCtx, testFile, 6, 5, ".")
 		require.NoError(t, err)
@@ -140,7 +140,7 @@ func TestLSPConfig(t *testing.T) {
 	t.Run("DefaultConfigs", func(t *testing.T) {
 		configs := lsp.DefaultConfigs()
 		assert.NotEmpty(t, configs)
-		
+
 		// Check Go config
 		goConfig, exists := configs["go"]
 		assert.True(t, exists)

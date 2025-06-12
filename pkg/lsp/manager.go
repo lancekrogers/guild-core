@@ -14,11 +14,11 @@ import (
 
 // Manager is the main LSP manager that coordinates language servers
 type Manager struct {
-	serverManager *ServerManager
-	config        *Config
+	serverManager   *ServerManager
+	config          *Config
 	projectDetector *project.ProjectDetector
-	mu            sync.RWMutex
-	
+	mu              sync.RWMutex
+
 	// File to server mapping
 	fileServers map[string]*Server
 }
@@ -30,7 +30,7 @@ func NewManager(configPath string) (*Manager, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &Manager{
 		serverManager:   NewServerManager(config),
 		config:          config,
@@ -43,12 +43,12 @@ func NewManager(configPath string) (*Manager, error) {
 func (m *Manager) GetServerForFile(ctx context.Context, filePath string) (*Server, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	// Check cache
 	if server, exists := m.fileServers[filePath]; exists {
 		return server, nil
 	}
-	
+
 	// Detect language by checking configured file patterns
 	language, serverConfig := m.detectLanguageFromConfig(filePath)
 	if serverConfig == nil {
@@ -61,7 +61,7 @@ func (m *Manager) GetServerForFile(ctx context.Context, filePath string) (*Serve
 				WithDetails("file", filePath).
 				WithDetails("hint", "No LSP server configured for this file type. Add server configuration to ~/.guild/lsp/config.yaml")
 		}
-		
+
 		// Check if we have config for detected language
 		var exists bool
 		serverConfig, exists = m.config.Servers[language]
@@ -73,40 +73,40 @@ func (m *Manager) GetServerForFile(ctx context.Context, filePath string) (*Serve
 				WithDetails("hint", fmt.Sprintf("Add %s server configuration to ~/.guild/lsp/config.yaml", language))
 		}
 	}
-	
+
 	// Find project root
 	rootPath, err := FindRootPath(filePath, serverConfig.RootMarkers)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Get or start server
 	server, err := m.serverManager.GetServer(ctx, language, rootPath)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Cache the mapping
 	m.fileServers[filePath] = server
-	
+
 	return server, nil
 }
 
 // GetCompletion gets code completions for the given file and position
 func (m *Manager) GetCompletion(ctx context.Context, filePath string, line, character int, triggerChar string) (*CompletionList, error) {
 	logger := observability.GetLogger(ctx)
-	
+
 	// Get server for file
 	server, err := m.GetServerForFile(ctx, filePath)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Ensure file is opened in server
 	if err := m.ensureFileOpened(ctx, server, filePath); err != nil {
 		return nil, err
 	}
-	
+
 	// Create completion parameters
 	params := &CompletionParams{
 		TextDocumentPositionParams: TextDocumentPositionParams{
@@ -119,14 +119,14 @@ func (m *Manager) GetCompletion(ctx context.Context, filePath string, line, char
 			},
 		},
 	}
-	
+
 	if triggerChar != "" {
 		params.Context = &CompletionContext{
 			TriggerKind:      CompletionTriggerKindTriggerCharacter,
 			TriggerCharacter: triggerChar,
 		}
 	}
-	
+
 	// Send completion request
 	var result CompletionList
 	if err := server.Client.request(ctx, "textDocument/completion", params, &result); err != nil {
@@ -136,12 +136,12 @@ func (m *Manager) GetCompletion(ctx context.Context, filePath string, line, char
 			WithDetails("file", filePath).
 			WithDetails("position", fmt.Sprintf("%d:%d", line, character))
 	}
-	
+
 	logger.DebugContext(ctx, "Got completions",
 		"file", filePath,
 		"position", fmt.Sprintf("%d:%d", line, character),
 		"count", len(result.Items))
-	
+
 	return &result, nil
 }
 
@@ -152,12 +152,12 @@ func (m *Manager) GetDefinition(ctx context.Context, filePath string, line, char
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Ensure file is opened in server
 	if err := m.ensureFileOpened(ctx, server, filePath); err != nil {
 		return nil, err
 	}
-	
+
 	// Create parameters
 	params := &TextDocumentPositionParams{
 		TextDocument: TextDocumentIdentifier{
@@ -168,7 +168,7 @@ func (m *Manager) GetDefinition(ctx context.Context, filePath string, line, char
 			Character: character,
 		},
 	}
-	
+
 	// Send definition request
 	var result []Location
 	if err := server.Client.request(ctx, "textDocument/definition", params, &result); err != nil {
@@ -178,7 +178,7 @@ func (m *Manager) GetDefinition(ctx context.Context, filePath string, line, char
 			WithDetails("file", filePath).
 			WithDetails("position", fmt.Sprintf("%d:%d", line, character))
 	}
-	
+
 	return result, nil
 }
 
@@ -189,12 +189,12 @@ func (m *Manager) GetReferences(ctx context.Context, filePath string, line, char
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Ensure file is opened in server
 	if err := m.ensureFileOpened(ctx, server, filePath); err != nil {
 		return nil, err
 	}
-	
+
 	// Create parameters
 	params := &ReferenceParams{
 		TextDocumentPositionParams: TextDocumentPositionParams{
@@ -210,7 +210,7 @@ func (m *Manager) GetReferences(ctx context.Context, filePath string, line, char
 			IncludeDeclaration: includeDeclaration,
 		},
 	}
-	
+
 	// Send references request
 	var result []Location
 	if err := server.Client.request(ctx, "textDocument/references", params, &result); err != nil {
@@ -220,7 +220,7 @@ func (m *Manager) GetReferences(ctx context.Context, filePath string, line, char
 			WithDetails("file", filePath).
 			WithDetails("position", fmt.Sprintf("%d:%d", line, character))
 	}
-	
+
 	return result, nil
 }
 
@@ -231,12 +231,12 @@ func (m *Manager) GetHover(ctx context.Context, filePath string, line, character
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Ensure file is opened in server
 	if err := m.ensureFileOpened(ctx, server, filePath); err != nil {
 		return nil, err
 	}
-	
+
 	// Create parameters
 	params := &TextDocumentPositionParams{
 		TextDocument: TextDocumentIdentifier{
@@ -247,7 +247,7 @@ func (m *Manager) GetHover(ctx context.Context, filePath string, line, character
 			Character: character,
 		},
 	}
-	
+
 	// Send hover request
 	var result Hover
 	if err := server.Client.request(ctx, "textDocument/hover", params, &result); err != nil {
@@ -257,7 +257,7 @@ func (m *Manager) GetHover(ctx context.Context, filePath string, line, character
 			WithDetails("file", filePath).
 			WithDetails("position", fmt.Sprintf("%d:%d", line, character))
 	}
-	
+
 	return &result, nil
 }
 
@@ -265,7 +265,7 @@ func (m *Manager) GetHover(ctx context.Context, filePath string, line, character
 func (m *Manager) ensureFileOpened(ctx context.Context, server *Server, filePath string) error {
 	// TODO: Track which files are opened per server
 	// For now, always open the file
-	
+
 	// Read file content
 	content, err := readFile(filePath)
 	if err != nil {
@@ -274,7 +274,7 @@ func (m *Manager) ensureFileOpened(ctx context.Context, server *Server, filePath
 			WithOperation("ensure_file_opened").
 			WithDetails("file", filePath)
 	}
-	
+
 	// Send didOpen notification
 	params := &DidOpenTextDocumentParams{
 		TextDocument: TextDocumentItem{
@@ -284,14 +284,14 @@ func (m *Manager) ensureFileOpened(ctx context.Context, server *Server, filePath
 			Text:       content,
 		},
 	}
-	
+
 	if err := server.Client.notify(ctx, "textDocument/didOpen", params); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeExternal, "failed to open file in language server").
 			WithComponent("lsp").
 			WithOperation("ensure_file_opened").
 			WithDetails("file", filePath)
 	}
-	
+
 	return nil
 }
 
@@ -299,10 +299,10 @@ func (m *Manager) ensureFileOpened(ctx context.Context, server *Server, filePath
 func (m *Manager) Shutdown(ctx context.Context) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	// Clear file cache
 	m.fileServers = make(map[string]*Server)
-	
+
 	// Stop all servers
 	return m.serverManager.StopAll(ctx)
 }
@@ -311,7 +311,6 @@ func (m *Manager) Shutdown(ctx context.Context) error {
 func (m *Manager) GetActiveServers() []ActiveServerInfo {
 	return m.serverManager.GetActiveServers()
 }
-
 
 // filePathToURI converts a file path to a URI
 func filePathToURI(path string) string {
@@ -331,7 +330,7 @@ func readFile(path string) (string, error) {
 // detectLanguageFromConfig detects language based on configured file patterns
 func (m *Manager) detectLanguageFromConfig(filePath string) (string, *ServerConfig) {
 	fileName := filepath.Base(filePath)
-	
+
 	// Check each configured server's file patterns
 	for lang, config := range m.config.Servers {
 		for _, pattern := range config.FilePatterns {
@@ -341,6 +340,6 @@ func (m *Manager) detectLanguageFromConfig(filePath string) (string, *ServerConf
 			}
 		}
 	}
-	
+
 	return "", nil
 }

@@ -36,9 +36,9 @@ type simpleMockAgent struct {
 	response string
 }
 
-func (m *simpleMockAgent) GetID() string        { return m.id }
-func (m *simpleMockAgent) GetName() string      { return m.name }
-func (m *simpleMockAgent) GetType() string      { return "worker" }
+func (m *simpleMockAgent) GetID() string             { return m.id }
+func (m *simpleMockAgent) GetName() string           { return m.name }
+func (m *simpleMockAgent) GetType() string           { return "worker" }
 func (m *simpleMockAgent) GetCapabilities() []string { return []string{"task-breakdown"} }
 func (m *simpleMockAgent) Execute(ctx context.Context, input string) (string, error) {
 	return m.response, nil
@@ -142,7 +142,7 @@ func TestChatServiceBasicsFixed(t *testing.T) {
 	// Initialize registry with claudecode provider (doesn't need actual connection)
 	err = reg.Initialize(ctx, *registryConfig)
 	require.NoError(t, err)
-	
+
 	// Now register mock provider
 	err = reg.Providers().RegisterProvider("mock", mockProvider)
 	require.NoError(t, err)
@@ -206,7 +206,7 @@ func TestAgentExecutionFixed(t *testing.T) {
 
 	// Setup test project
 	projCtx, cleanup := testutil.SetupTestProject(t, testutil.TestProjectOptions{
-		Name: "agent-execution-test",
+		Name:         "agent-execution-test",
 		CustomConfig: testutil.CreateTestGuildConfig("test-execution-guild"),
 	})
 	defer cleanup()
@@ -233,7 +233,7 @@ func TestAgentExecutionFixed(t *testing.T) {
 	registryConfig := createTestRegistryConfig(projCtx, mockProvider)
 	err := reg.Initialize(ctx, *registryConfig)
 	require.NoError(t, err)
-	
+
 	// Register mock provider after initialization
 	err = reg.Providers().RegisterProvider("mock", mockProvider)
 	require.NoError(t, err)
@@ -319,13 +319,13 @@ func TestToolExecutionFixed(t *testing.T) {
 	// Create registry with tools enabled
 	reg := registry.NewComponentRegistry()
 	registryConfig := createTestRegistryConfig(projCtx, mockProvider)
-	
+
 	// Ensure tools are enabled
 	registryConfig.Tools.EnabledTools = []string{"file", "shell", "http"}
-	
+
 	err := reg.Initialize(ctx, *registryConfig)
 	require.NoError(t, err)
-	
+
 	// Register mock provider after initialization
 	err = reg.Providers().RegisterProvider("mock", mockProvider)
 	require.NoError(t, err)
@@ -344,9 +344,9 @@ func TestToolExecutionFixed(t *testing.T) {
 		fileTool, err := toolRegistry.GetTool("file")
 		require.NoError(t, err)
 		require.NotNil(t, fileTool)
-		
+
 		t.Logf("File tool available: %s", fileTool.Description())
-		
+
 		// Test basic file operation
 		testFile := "test-file.txt"
 		result, err := fileTool.Execute(ctx, fmt.Sprintf(`{"action": "write", "path": "%s", "content": "test content"}`, testFile))
@@ -394,7 +394,7 @@ func TestChatPerformanceFixed(t *testing.T) {
 	registryConfig := createMinimalRegistryConfig(projCtx, mockProvider)
 	err := reg.Initialize(ctx, *registryConfig)
 	require.NoError(t, err)
-	
+
 	// Register mock provider after initialization
 	err = reg.Providers().RegisterProvider("mock", mockProvider)
 	require.NoError(t, err)
@@ -476,7 +476,7 @@ func TestMemoryUsageFixed(t *testing.T) {
 	registryConfig := createMinimalRegistryConfig(projCtx, mockProvider)
 	err := reg.Initialize(ctx, *registryConfig)
 	require.NoError(t, err)
-	
+
 	// Register mock provider after initialization
 	err = reg.Providers().RegisterProvider("mock", mockProvider)
 	require.NoError(t, err)
@@ -523,9 +523,9 @@ func TestMemoryUsageFixed(t *testing.T) {
 	if len(allocations) > 2 {
 		avgGrowthPerOp := growth / 50
 		t.Logf("- Average growth per operation: %d bytes", avgGrowthPerOp)
-		
+
 		// Should not grow more than 100KB per operation on average
-		assert.Less(t, avgGrowthPerOp, uint64(100*1024), 
+		assert.Less(t, avgGrowthPerOp, uint64(100*1024),
 			"Memory growth per operation should be reasonable")
 	}
 

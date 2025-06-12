@@ -45,7 +45,7 @@ func Progress(curr, total int, msg string) {
 		// Simple format without ANSI codes
 		fmt.Printf("\r[%d/%d] %s", curr, total, msg)
 	}
-	
+
 	// Store message for clearing later
 	progressMsg = msg
 }
@@ -134,11 +134,11 @@ func SummaryCardWithStatus(title string, rows [][]string, totalTime string, succ
 			for _, cw := range colWidths {
 				totalColWidth += cw
 			}
-			
+
 			// Account for spaces between columns (2 spaces per column except last)
 			spaceBetweenCols := (len(colWidths) - 1) * 2
 			contentWidth := totalColWidth + spaceBetweenCols
-			
+
 			// Calculate available space and distribute extra to last column
 			availableSpace := width - 4 // "║ " at start, " ║" at end
 			extraSpace := availableSpace - contentWidth

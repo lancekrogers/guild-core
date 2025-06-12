@@ -539,17 +539,16 @@ func (g *GuildConfig) IsUsingSQLite() bool {
 func ensureLocalConfig(projectPath string) error {
 	localDir := filepath.Join(projectPath, ".guild")
 	configPath := filepath.Join(localDir, "guild.yaml")
-	
+
 	// Check if already initialized
 	if _, err := os.Stat(configPath); err == nil {
 		return nil
 	}
-	
+
 	return gerror.New(gerror.ErrCodeNotFound, "local guild config not found", nil).
 		WithComponent("config").
 		WithOperation("ensureLocalConfig")
 }
-
 
 // LoadGlobalConfig is deprecated - use enhanced_loader.go instead
 // Kept for backward compatibility

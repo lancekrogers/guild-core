@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // Create a fully functional mock vector store
@@ -34,7 +34,7 @@ func (m *functionalMockVectorStore) SaveEmbedding(ctx context.Context, embedding
 
 func (m *functionalMockVectorStore) QueryEmbeddings(ctx context.Context, query string, limit int) ([]vector.EmbeddingMatch, error) {
 	results := []vector.EmbeddingMatch{}
-	
+
 	// Return mock matches based on query
 	for _, embeddings := range m.embeddings {
 		for i, emb := range embeddings {
@@ -50,7 +50,7 @@ func (m *functionalMockVectorStore) QueryEmbeddings(ctx context.Context, query s
 			}
 		}
 	}
-	
+
 	return results, nil
 }
 
@@ -70,7 +70,7 @@ func TestConfigFunctions(t *testing.T) {
 	assert.Equal(t, "", config.VectorStorePath)
 	assert.Equal(t, "", config.CorpusPath)
 	assert.False(t, config.UseCorpus)
-	
+
 	// Test DefaultRetrievalConfig
 	retrieval := DefaultRetrievalConfig()
 	assert.Equal(t, 5, retrieval.MaxResults)
@@ -86,13 +86,13 @@ func TestChunkerMethods(t *testing.T) {
 		ChunkOverlap: 100,
 		Strategy:     ChunkBySentence,
 	}
-	
+
 	chunker := newChunker(config)
-	
+
 	// Test GetConfig
 	gotConfig := chunker.GetConfig()
 	assert.Equal(t, config, gotConfig)
-	
+
 	// chunker doesn't have GetChunker method, skip this test
 }
 
@@ -100,11 +100,11 @@ func TestChunkerMethods(t *testing.T) {
 func TestSearchCorpusFunction(t *testing.T) {
 	ctx := context.Background()
 	tempDir := t.TempDir()
-	
+
 	corpusConfig := corpus.Config{
 		CorpusPath: tempDir,
 	}
-	
+
 	// Create test documents
 	docs := []*corpus.CorpusDoc{
 		{
@@ -114,31 +114,31 @@ func TestSearchCorpusFunction(t *testing.T) {
 			Source:   "tutorial",
 		},
 		{
-			Title:    "Python Tutorial",  
+			Title:    "Python Tutorial",
 			Body:     "Python is a high-level programming language",
 			FilePath: tempDir + "/python.md",
 			Source:   "tutorial",
 		},
 	}
-	
+
 	// Save documents
 	for _, doc := range docs {
 		err := corpus.Save(ctx, doc, corpusConfig)
 		require.NoError(t, err)
 	}
-	
+
 	// Search
 	results, err := SearchCorpus(ctx, "programming", corpusConfig, 10)
 	assert.NoError(t, err)
 	assert.Len(t, results, 2)
-	
+
 	// Verify results
 	for _, result := range results {
 		assert.Equal(t, float32(0.9), result.Score)
 		assert.NotEmpty(t, result.Content)
 		assert.NotEmpty(t, result.Source)
 	}
-	
+
 	// Test containsIgnoreCase directly
 	assert.True(t, containsIgnoreCase("Hello World", "hello"))
 	assert.True(t, containsIgnoreCase("HELLO", "hello"))
@@ -149,7 +149,7 @@ func TestSearchCorpusFunction(t *testing.T) {
 func TestRetrieverSearchCorpus(t *testing.T) {
 	ctx := context.Background()
 	tempDir := t.TempDir()
-	
+
 	retriever := &Retriever{
 		Config: Config{
 			UseCorpus: true,
@@ -158,7 +158,7 @@ func TestRetrieverSearchCorpus(t *testing.T) {
 			CorpusPath: tempDir,
 		},
 	}
-	
+
 	// Create a test document
 	doc := &corpus.CorpusDoc{
 		Title:    "Test Document",
@@ -167,16 +167,16 @@ func TestRetrieverSearchCorpus(t *testing.T) {
 		Source:   "test",
 		Tags:     []string{"test"},
 	}
-	
+
 	err := corpus.Save(ctx, doc, *retriever.corpusConfig)
 	require.NoError(t, err)
-	
+
 	// Search
 	results, err := retriever.searchCorpus(ctx, "test", 5)
 	assert.NoError(t, err)
 	assert.Len(t, results, 1)
 	assert.Greater(t, results[0].Score, float32(0))
-	
+
 	// Test with corpus disabled - searchCorpus is internal and still works
 	// UseCorpus is checked at a higher level in RetrieveContext
 	retriever.Config.UseCorpus = false
@@ -188,26 +188,26 @@ func TestRetrieverSearchCorpus(t *testing.T) {
 // Test calculateCorpusScore
 func TestCalculateCorpusScore(t *testing.T) {
 	retriever := &Retriever{}
-	
+
 	doc := &corpus.CorpusDoc{
 		Title:  "Machine Learning Guide",
 		Body:   "Introduction to machine learning concepts",
 		Tags:   []string{"ml", "ai", "learning"},
 		Source: "tutorial",
 	}
-	
+
 	// Test title match
 	score := retriever.calculateCorpusScore(doc, "machine")
 	assert.Greater(t, score, float32(0))
-	
+
 	// Test body match
 	score = retriever.calculateCorpusScore(doc, "introduction")
 	assert.Greater(t, score, float32(0))
-	
+
 	// Test tag match
 	score = retriever.calculateCorpusScore(doc, "ml")
 	assert.Greater(t, score, float32(0))
-	
+
 	// Test no match
 	score = retriever.calculateCorpusScore(doc, "notfound")
 	assert.Equal(t, float32(0), score)
@@ -216,7 +216,7 @@ func TestCalculateCorpusScore(t *testing.T) {
 // Test RetrieveContext
 func TestRetrieverRetrieveContext(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Create retriever with mock store
 	mockStore := newFunctionalMockVectorStore()
 	retriever := &Retriever{
@@ -226,7 +226,7 @@ func TestRetrieverRetrieveContext(t *testing.T) {
 			CollectionName: "test",
 		},
 	}
-	
+
 	// Add test embeddings
 	testEmbeddings := []vector.Embedding{
 		{
@@ -244,24 +244,24 @@ func TestRetrieverRetrieveContext(t *testing.T) {
 			Timestamp: time.Now(),
 		},
 	}
-	
+
 	for _, emb := range testEmbeddings {
 		err := mockStore.SaveEmbedding(ctx, emb)
 		assert.NoError(t, err)
 	}
-	
+
 	// Test retrieval
 	config := RetrievalConfig{
 		MaxResults:      5,
 		MinScore:        0.5,
 		IncludeMetadata: true,
 	}
-	
+
 	results, err := retriever.RetrieveContext(ctx, "learning", config)
 	assert.NoError(t, err)
 	assert.NotNil(t, results)
 	assert.Greater(t, len(results.Results), 0)
-	
+
 	// Test with empty query
 	results, err = retriever.RetrieveContext(ctx, "", config)
 	assert.Error(t, err)
@@ -271,7 +271,7 @@ func TestRetrieverRetrieveContext(t *testing.T) {
 // Test EnhancePrompt on retriever
 func TestRetrieverEnhancePrompt(t *testing.T) {
 	ctx := context.Background()
-	
+
 	mockStore := newFunctionalMockVectorStore()
 	retriever := &Retriever{
 		vectorStore: mockStore,
@@ -280,7 +280,7 @@ func TestRetrieverEnhancePrompt(t *testing.T) {
 			CollectionName: "test",
 		},
 	}
-	
+
 	// Add test data
 	err := mockStore.SaveEmbedding(ctx, vector.Embedding{
 		ID:     "doc1",
@@ -288,18 +288,18 @@ func TestRetrieverEnhancePrompt(t *testing.T) {
 		Source: "ai.txt",
 	})
 	assert.NoError(t, err)
-	
+
 	config := RetrievalConfig{
 		MaxResults: 3,
 		MinScore:   0.5,
 	}
-	
+
 	// Test enhancement
 	enhanced, err := retriever.EnhancePrompt(ctx, "Tell me about AI", config)
 	assert.NoError(t, err)
 	assert.Contains(t, enhanced, "Tell me about AI")
 	assert.Contains(t, enhanced, "# Context")
-	
+
 	// Test with empty prompt
 	enhanced, err = retriever.EnhancePrompt(ctx, "", config)
 	assert.Error(t, err)
@@ -309,7 +309,7 @@ func TestRetrieverEnhancePrompt(t *testing.T) {
 // Test AddCorpusDocument
 func TestAddCorpusDocument(t *testing.T) {
 	ctx := context.Background()
-	
+
 	mockStore := newFunctionalMockVectorStore()
 	retriever := &Retriever{
 		vectorStore: mockStore,
@@ -322,24 +322,24 @@ func TestAddCorpusDocument(t *testing.T) {
 			ChunkOverlap: 20,
 		}),
 	}
-	
+
 	doc := &corpus.CorpusDoc{
 		Title:    "Test Document",
 		Body:     "This is a test document with enough content to be processed",
 		FilePath: "test.md",
 		Source:   "test",
 	}
-	
+
 	err := retriever.AddCorpusDocument(ctx, doc)
 	assert.NoError(t, err)
-	
+
 	// Test with empty content
 	emptyDoc := &corpus.CorpusDoc{
 		Title:    "Empty",
 		Body:     "",
 		FilePath: "empty.md",
 	}
-	
+
 	err = retriever.AddCorpusDocument(ctx, emptyDoc)
 	assert.NoError(t, err) // Should handle gracefully
 }
@@ -347,7 +347,7 @@ func TestAddCorpusDocument(t *testing.T) {
 // Test RemoveDocument
 func TestRemoveDocument(t *testing.T) {
 	retriever := &Retriever{}
-	
+
 	err := retriever.RemoveDocument(context.Background(), "doc1")
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "not yet implemented")
@@ -359,10 +359,10 @@ func TestDefaultRetrieverWithStoreFactory(t *testing.T) {
 	config := Config{
 		CollectionName: "test",
 	}
-	
+
 	factoryFunc := DefaultRetrieverWithStoreFactory(store, config)
 	assert.NotNil(t, factoryFunc)
-	
+
 	// The factory function would be called with context and embedder
 	// We're just testing that it returns a function
 }
@@ -374,11 +374,11 @@ func TestDefaultRetrieverFactory(t *testing.T) {
 	config := Config{
 		CollectionName: "test_factory",
 	}
-	
+
 	retriever, err := DefaultRetrieverFactory(ctx, embedder, config)
 	assert.NoError(t, err)
 	assert.NotNil(t, retriever)
-	
+
 	// Clean up
 	err = retriever.Close()
 	assert.NoError(t, err)
@@ -387,7 +387,7 @@ func TestDefaultRetrieverFactory(t *testing.T) {
 // Test the enhanced request with RAG
 func TestEnhanceRequestWithRAG(t *testing.T) {
 	ctx := context.Background()
-	
+
 	mockStore := newFunctionalMockVectorStore()
 	retriever := &Retriever{
 		vectorStore: mockStore,
@@ -397,7 +397,7 @@ func TestEnhanceRequestWithRAG(t *testing.T) {
 			MaxResults:     3,
 		},
 	}
-	
+
 	// Add test data
 	err := mockStore.SaveEmbedding(ctx, vector.Embedding{
 		ID:     "doc1",
@@ -405,10 +405,10 @@ func TestEnhanceRequestWithRAG(t *testing.T) {
 		Source: "ml.txt",
 	})
 	assert.NoError(t, err)
-	
+
 	agent := &mockGuildArtisan{}
 	wrapper := NewAgentWrapper(agent, retriever, retriever.Config)
-	
+
 	// Test enhancement
 	enhanced, err := wrapper.enhanceRequestWithRAG(ctx, "Tell me about ML")
 	assert.NoError(t, err)

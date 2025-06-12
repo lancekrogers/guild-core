@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
+	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 )
 
 // MockEmbedder implements vector.Embedder for testing
@@ -26,7 +26,7 @@ func (m *MockEmbedder) Embed(ctx context.Context, text string) ([]float32, error
 	for _, ch := range text {
 		hash = (hash*31 + int(ch)) % 1000
 	}
-	
+
 	// Fill the embedding with deterministic values based on the text
 	for i := range embedding {
 		embedding[i] = float32((hash+i)%100) / 100.0
@@ -43,7 +43,7 @@ func (m *MockEmbedder) Close() error {
 
 func TestNewFactory(t *testing.T) {
 	ctx := context.Background()
-	
+
 	tests := []struct {
 		name      string
 		embedder  vector.Embedder
@@ -72,9 +72,9 @@ func TestNewFactory(t *testing.T) {
 			errorMsg:  "embedder cannot be nil",
 		},
 		{
-			name:     "Empty config uses defaults",
-			embedder: &MockEmbedder{},
-			config:   Config{},
+			name:      "Empty config uses defaults",
+			embedder:  &MockEmbedder{},
+			config:    Config{},
 			wantError: false,
 		},
 	}
@@ -82,7 +82,7 @@ func TestNewFactory(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			factory, err := newFactory(ctx, tt.embedder, tt.config)
-			
+
 			if tt.wantError {
 				assert.Error(t, err)
 				if tt.errorMsg != "" {
@@ -107,11 +107,11 @@ func TestFactory_GetRetriever(t *testing.T) {
 		ChunkSize:      500,
 		ChunkOverlap:   50,
 	}
-	
+
 	factory, err := newFactory(ctx, embedder, config)
 	require.NoError(t, err)
 	require.NotNil(t, factory)
-	
+
 	retriever := factory.GetRetriever()
 	assert.NotNil(t, retriever)
 	assert.Equal(t, factory.retriever, retriever)
@@ -125,11 +125,11 @@ func TestFactory_GetEmbedder(t *testing.T) {
 		ChunkSize:      500,
 		ChunkOverlap:   50,
 	}
-	
+
 	factory, err := newFactory(ctx, embedder, config)
 	require.NoError(t, err)
 	require.NotNil(t, factory)
-	
+
 	retrievedEmbedder := factory.GetEmbedder()
 	assert.NotNil(t, retrievedEmbedder)
 	assert.Equal(t, embedder, retrievedEmbedder)
@@ -137,7 +137,7 @@ func TestFactory_GetEmbedder(t *testing.T) {
 
 func TestFactory_Close(t *testing.T) {
 	ctx := context.Background()
-	
+
 	tests := []struct {
 		name        string
 		setupFunc   func() *Factory
@@ -171,7 +171,7 @@ func TestFactory_Close(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			factory := tt.setupFunc()
 			err := factory.Close()
-			
+
 			if tt.expectError {
 				assert.Error(t, err)
 			} else {
@@ -183,7 +183,7 @@ func TestFactory_Close(t *testing.T) {
 
 func TestDefaultFactoryFactory(t *testing.T) {
 	ctx := context.Background()
-	
+
 	tests := []struct {
 		name      string
 		embedder  vector.Embedder
@@ -202,9 +202,9 @@ func TestDefaultFactoryFactory(t *testing.T) {
 			wantError: false,
 		},
 		{
-			name:     "Default config",
-			embedder: &MockEmbedder{},
-			config:   Config{},
+			name:      "Default config",
+			embedder:  &MockEmbedder{},
+			config:    Config{},
 			wantError: false,
 		},
 		{
@@ -218,22 +218,22 @@ func TestDefaultFactoryFactory(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			factory, err := DefaultFactoryFactory(ctx, tt.embedder, tt.config)
-			
+
 			if tt.wantError {
 				assert.Error(t, err)
 				assert.Nil(t, factory)
 			} else {
 				assert.NoError(t, err)
 				assert.NotNil(t, factory)
-				
+
 				// Verify it implements the interface
 				_, ok := factory.(FactoryInterface)
 				assert.True(t, ok)
-				
+
 				// Verify components are accessible
 				assert.NotNil(t, factory.GetRetriever())
 				assert.NotNil(t, factory.GetEmbedder())
-				
+
 				// Clean up
 				err = factory.Close()
 				assert.NoError(t, err)
@@ -245,17 +245,17 @@ func TestDefaultFactoryFactory(t *testing.T) {
 func TestFactory_InterfaceCompliance(t *testing.T) {
 	// This test ensures that Factory implements FactoryInterface
 	var _ FactoryInterface = (*Factory)(nil)
-	
+
 	// Also test with actual instance
 	ctx := context.Background()
 	embedder := &MockEmbedder{}
 	config := Config{
 		CollectionName: "test_interface",
 	}
-	
+
 	factory, err := newFactory(ctx, embedder, config)
 	require.NoError(t, err)
-	
+
 	// Test all interface methods
 	var fi FactoryInterface = factory
 	assert.NotNil(t, fi.GetRetriever())

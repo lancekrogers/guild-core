@@ -15,12 +15,12 @@ func TestDefaultCostManagerFactory(t *testing.T) {
 
 	// Verify it's not nil and is the right type
 	assert.NotNil(t, costManager)
-	
+
 	// Test basic operations
 	costManager.SetBudget(CostTypeLLM, 100.0)
 	// Use GetBudgetRemaining since GetBudget doesn't exist in interface
 	assert.Equal(t, 100.0, costManager.GetBudgetRemaining(CostTypeLLM))
-	
+
 	// Test it can track costs
 	err := costManager.TrackCost(CostTypeLLM, 5.0)
 	assert.NoError(t, err)

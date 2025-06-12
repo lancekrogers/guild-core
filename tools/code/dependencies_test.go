@@ -39,10 +39,10 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 )
 `
-	
+
 	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goMod), 0644)
 	require.NoError(t, err)
-	
+
 	// Create some Go files
 	mainGo := `package main
 
@@ -56,24 +56,24 @@ func main() {
 	fmt.Println("Hello")
 }
 `
-	
+
 	err = os.WriteFile(filepath.Join(tmpDir, "main.go"), []byte(mainGo), 0644)
 	require.NoError(t, err)
 
 	tool := NewDependenciesTool()
-	
+
 	params := DependenciesParams{
-		ProjectPath:   tmpDir,
-		Format: "tree",
+		ProjectPath: tmpDir,
+		Format:      "tree",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should detect Go project
 	assert.Contains(t, result.Output, "(go)")
 	assert.Contains(t, result.Output, "Dependencies for")
@@ -91,7 +91,7 @@ flask>=2.0.0,<3.0.0
 numpy
 pandas==1.5.2
 `
-	
+
 	err = os.WriteFile(filepath.Join(tmpDir, "requirements.txt"), []byte(requirements), 0644)
 	require.NoError(t, err)
 
@@ -103,24 +103,24 @@ import numpy as np
 def main():
     pass
 `
-	
+
 	err = os.WriteFile(filepath.Join(tmpDir, "main.py"), []byte(pythonFile), 0644)
 	require.NoError(t, err)
 
 	tool := NewDependenciesTool()
-	
+
 	params := DependenciesParams{
-		ProjectPath:   tmpDir,
-		Format: "list",
+		ProjectPath: tmpDir,
+		Format:      "list",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should detect Python project
 	assert.Contains(t, result.Output, "(python)")
 	assert.Contains(t, result.Output, "requests")
@@ -146,24 +146,24 @@ func TestDependenciesTool_Execute_NodeJS(t *testing.T) {
     "typescript": "^4.8.0"
   }
 }`
-	
+
 	err = os.WriteFile(filepath.Join(tmpDir, "package.json"), []byte(packageJSON), 0644)
 	require.NoError(t, err)
 
 	tool := NewDependenciesTool()
-	
+
 	params := DependenciesParams{
-		ProjectPath:   tmpDir,
-		Format: "json",
+		ProjectPath: tmpDir,
+		Format:      "json",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should detect Node.js project in JSON output
 	assert.Contains(t, result.Output, `"project_type": "node"`)
 	assert.Contains(t, result.Output, "express")
@@ -172,14 +172,14 @@ func TestDependenciesTool_Execute_NodeJS(t *testing.T) {
 
 func TestDependenciesTool_Execute_InvalidPath(t *testing.T) {
 	tool := NewDependenciesTool()
-	
+
 	params := DependenciesParams{
 		ProjectPath: "/nonexistent/path",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -187,14 +187,14 @@ func TestDependenciesTool_Execute_InvalidPath(t *testing.T) {
 
 func TestDependenciesTool_Execute_EmptyPath(t *testing.T) {
 	tool := NewDependenciesTool()
-	
+
 	params := DependenciesParams{
 		ProjectPath: "",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -202,7 +202,7 @@ func TestDependenciesTool_Execute_EmptyPath(t *testing.T) {
 
 func TestDependenciesTool_Execute_InvalidJSON(t *testing.T) {
 	tool := NewDependenciesTool()
-	
+
 	result, err := tool.Execute(context.Background(), "invalid json")
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -219,18 +219,18 @@ func TestDependenciesTool_Execute_UnknownProject(t *testing.T) {
 	require.NoError(t, err)
 
 	tool := NewDependenciesTool()
-	
+
 	params := DependenciesParams{
 		ProjectPath: tmpDir,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should detect unknown project type
 	assert.Contains(t, result.Output, "Project Type: unknown")
 }
@@ -251,24 +251,24 @@ require (
 	github.com/gin-gonic/gin v1.9.0
 )
 `
-	
+
 	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goMod), 0644)
 	require.NoError(t, err)
 
 	tool := NewDependenciesTool()
-	
+
 	params := DependenciesParams{
-		ProjectPath:    tmpDir,
-		Format:  "summary",
+		ProjectPath: tmpDir,
+		Format:      "summary",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should include filtered dependencies
 	assert.Contains(t, result.Output, "testify")
 	assert.Contains(t, result.Output, "cobra")
@@ -288,24 +288,24 @@ require (
 	github.com/stretchr/testify v1.8.4
 )
 `
-	
+
 	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goMod), 0644)
 	require.NoError(t, err)
 
 	tool := NewDependenciesTool()
-	
+
 	params := DependenciesParams{
-		ProjectPath:     tmpDir,
+		ProjectPath:  tmpDir,
 		CheckUpdates: true,
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should include outdated check information
 	assert.Contains(t, result.Output, "Project Type: go")
 }
@@ -324,24 +324,24 @@ require (
 	github.com/stretchr/testify v1.8.4
 )
 `
-	
+
 	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goMod), 0644)
 	require.NoError(t, err)
 
 	tool := NewDependenciesTool()
-	
+
 	formats := []string{"list", "tree", "json", "graph"}
-	
+
 	for _, format := range formats {
 		t.Run("format_"+format, func(t *testing.T) {
 			params := DependenciesParams{
-				ProjectPath:   tmpDir,
-				Format: format,
+				ProjectPath: tmpDir,
+				Format:      format,
 			}
-			
+
 			input, err := json.Marshal(params)
 			require.NoError(t, err)
-			
+
 			result, err := tool.Execute(context.Background(), string(input))
 			require.NoError(t, err)
 			assert.NotNil(t, result)

@@ -32,10 +32,10 @@ type inMemoryEventBus struct {
 func (b *inMemoryEventBus) Publish(event interface{}) {
 	b.mu.RLock()
 	defer b.mu.RUnlock()
-	
+
 	// Get event type name
 	eventType := fmt.Sprintf("%T", event)
-	
+
 	// Call all handlers for this event type
 	for _, handler := range b.handlers[eventType] {
 		handler(event)
@@ -45,23 +45,23 @@ func (b *inMemoryEventBus) Publish(event interface{}) {
 func (b *inMemoryEventBus) Subscribe(eventType string, handler func(event interface{})) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
-	
+
 	b.handlers[eventType] = append(b.handlers[eventType], handler)
 }
 
 // TestBidirectionalStreamingUnderLoad tests gRPC streaming with high message volume
 // TODO: This test needs major rework to properly handle the chat service requirements:
-// 1. The ChatService expects sessions to be created via CreateChatSession before messages can be sent
-// 2. The test should either:
-//    a) Create sessions properly before sending messages
-//    b) Use a simpler mock service that doesn't require session management
-//    c) Focus on pure gRPC infrastructure testing without the chat logic
-// 3. The current implementation causes session not found errors and times out
-// 4. Consider creating a separate SimpleStreamingService for infrastructure testing
+//  1. The ChatService expects sessions to be created via CreateChatSession before messages can be sent
+//  2. The test should either:
+//     a) Create sessions properly before sending messages
+//     b) Use a simpler mock service that doesn't require session management
+//     c) Focus on pure gRPC infrastructure testing without the chat logic
+//  3. The current implementation causes session not found errors and times out
+//  4. Consider creating a separate SimpleStreamingService for infrastructure testing
 func TestBidirectionalStreamingUnderLoad(t *testing.T) {
 	t.Skip("Test needs rework to handle session creation requirements")
 	ctx := context.Background()
-	
+
 	// Setup server
 	server, addr := setupTestGRPCServer(t)
 	defer server.Stop()
@@ -157,12 +157,12 @@ func TestBidirectionalStreamingUnderLoad(t *testing.T) {
 					close(done)
 					return
 				}
-				
+
 				// Extract message number from content
 				var msgNum int
 				if chatMsg := msg.GetMessage(); chatMsg != nil {
 					fmt.Sscanf(chatMsg.Content, "Ordered message %d", &msgNum)
-					
+
 					mu.Lock()
 					receivedOrder = append(receivedOrder, msgNum)
 					mu.Unlock()
@@ -192,9 +192,9 @@ func TestBidirectionalStreamingUnderLoad(t *testing.T) {
 		// Verify order preserved
 		mu.Lock()
 		defer mu.Unlock()
-		
+
 		for i := 1; i < len(receivedOrder); i++ {
-			assert.Greater(t, receivedOrder[i], receivedOrder[i-1], 
+			assert.Greater(t, receivedOrder[i], receivedOrder[i-1],
 				"Messages should be received in order")
 		}
 	})
@@ -212,7 +212,7 @@ func TestBidirectionalStreamingUnderLoad(t *testing.T) {
 					close(slowReceiver)
 					return
 				}
-				
+
 				// Simulate slow processing
 				time.Sleep(10 * time.Millisecond)
 				select {
@@ -242,7 +242,7 @@ func TestBidirectionalStreamingUnderLoad(t *testing.T) {
 		}
 
 		stream.CloseSend()
-		
+
 		// Should handle backpressure gracefully
 		assert.Less(t, sendErrors, 100, "Should have few send errors despite backpressure")
 	})
@@ -280,7 +280,7 @@ func TestBidirectionalStreamingUnderLoad(t *testing.T) {
 
 		// Memory should not grow excessively
 		maxExpectedGrowth := uint64(100 * 10000 * 2) // 100 messages * 10KB * 2 (for overhead)
-		assert.Less(t, memoryGrowth, maxExpectedGrowth, 
+		assert.Less(t, memoryGrowth, maxExpectedGrowth,
 			"Memory growth should be bounded")
 	})
 }
@@ -295,7 +295,7 @@ func TestConnectionRecovery(t *testing.T) {
 		// Setup server with controlled listener
 		lis, err := net.Listen("tcp", "localhost:0")
 		require.NoError(t, err)
-		
+
 		// Wrap listener to control connections
 		controlledLis := &controlledListener{
 			Listener: lis,
@@ -385,7 +385,7 @@ func TestConnectionRecovery(t *testing.T) {
 	t.Run("AutomaticReconnection", func(t *testing.T) {
 		// Server that tracks connections
 		connectionCount := int32(0)
-		
+
 		server := grpc.NewServer(
 			grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 				atomic.AddInt32(&connectionCount, 1)
@@ -420,7 +420,7 @@ func TestConnectionRecovery(t *testing.T) {
 		// Restart server on same port
 		newLis, err := net.Listen("tcp", lis.Addr().String())
 		require.NoError(t, err)
-		
+
 		newServer := grpc.NewServer()
 		pb.RegisterChatServiceServer(newServer, chatService)
 		go newServer.Serve(newLis)
@@ -434,7 +434,7 @@ func TestConnectionRecovery(t *testing.T) {
 		// This should work after automatic reconnection
 		stream, err := client.Chat(ctx)
 		require.NoError(t, err, "Should reconnect automatically")
-		
+
 		err = stream.Send(&pb.ChatRequest{
 			Request: &pb.ChatRequest_Message{
 				Message: &pb.ChatMessage{
@@ -500,7 +500,7 @@ func TestConnectionRecovery(t *testing.T) {
 		require.NoError(t, err)
 		// Verify response is a valid chat event
 		assert.NotNil(t, syncResp.GetEvent())
-		
+
 		// Verify we can continue from where we left off
 		err = session2.Send(&pb.ChatRequest{
 			Request: &pb.ChatRequest_Message{
@@ -696,7 +696,7 @@ func TestConcurrentClientHandling(t *testing.T) {
 		// Server should accept some but gracefully reject others
 		assert.Greater(t, activeStreams, int32(50), "Should handle many concurrent streams")
 		assert.Greater(t, rejectedConnections, int32(0), "Should reject excess connections gracefully")
-		
+
 		t.Logf("Active streams: %d, Rejected: %d", activeStreams, rejectedConnections)
 	})
 }
@@ -717,7 +717,7 @@ func setupTestGRPCServer(t *testing.T) (*grpc.Server, string) {
 }
 
 func createTestGRPCServer(t *testing.T) *grpcserver.ChatService {
-	// Setup test project and registry  
+	// Setup test project and registry
 	_, cleanup := testutil.SetupTestProject(t)
 	t.Cleanup(cleanup)
 

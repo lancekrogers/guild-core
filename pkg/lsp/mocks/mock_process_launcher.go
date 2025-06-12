@@ -2,7 +2,7 @@ package mocks
 
 import (
 	"context"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/lsp"
 )
 
@@ -10,10 +10,10 @@ import (
 type MockProcessLauncher struct {
 	// Mock client to return
 	MockClient *MockLSPClient
-	
+
 	// Error injection
 	LaunchError error
-	
+
 	// Call tracking
 	LaunchCalls int
 	LastCommand string
@@ -34,16 +34,16 @@ func (m *MockProcessLauncher) LaunchServer(ctx context.Context, command string, 
 	m.LastCommand = command
 	m.LastArgs = args
 	m.LastWorkDir = workDir
-	
+
 	if m.LaunchError != nil {
 		return nil, m.LaunchError
 	}
-	
+
 	// Simulate starting the mock client
 	if err := m.MockClient.Start(ctx); err != nil {
 		return nil, err
 	}
-	
+
 	return m.MockClient, nil
 }
 

@@ -24,7 +24,7 @@ func TestChunkWithMetadata(t *testing.T) {
 			text: "This is paragraph one.\n\nThis is paragraph two.",
 			verify: func(t *testing.T, chunks []ChunkWithMeta) {
 				require.Len(t, chunks, 2)
-				
+
 				// Check first chunk
 				assert.Equal(t, "This is paragraph one.", chunks[0].Content)
 				assert.Equal(t, 0, chunks[0].Index)
@@ -33,7 +33,7 @@ func TestChunkWithMetadata(t *testing.T) {
 				assert.Equal(t, "paragraph", chunks[0].Metadata["strategy"])
 				assert.Equal(t, 3, chunks[0].Metadata["chunk_size"])
 				assert.Equal(t, 1, chunks[0].Metadata["overlap"])
-				
+
 				// Check second chunk
 				assert.Equal(t, "This is paragraph two.", chunks[1].Content)
 				assert.Equal(t, 1, chunks[1].Index)
@@ -130,10 +130,10 @@ func TestGetConfig(t *testing.T) {
 		ChunkOverlap: 100,
 		Strategy:     ChunkByMarkdownHeader,
 	}
-	
+
 	chunker := newChunker(config)
 	retrievedConfig := chunker.GetConfig()
-	
+
 	assert.Equal(t, config.ChunkSize, retrievedConfig.ChunkSize)
 	assert.Equal(t, config.ChunkOverlap, retrievedConfig.ChunkOverlap)
 	assert.Equal(t, config.Strategy, retrievedConfig.Strategy)
@@ -145,7 +145,7 @@ func TestDefaultChunkerFactory(t *testing.T) {
 		config ChunkerConfig
 	}{
 		{
-			name: "Default config",
+			name:   "Default config",
 			config: ChunkerConfig{},
 		},
 		{
@@ -163,11 +163,11 @@ func TestDefaultChunkerFactory(t *testing.T) {
 			chunker, err := DefaultChunkerFactory(tt.config)
 			require.NoError(t, err)
 			require.NotNil(t, chunker)
-			
+
 			// Verify it implements the interface
 			_, ok := chunker.(ChunkerInterface)
 			assert.True(t, ok)
-			
+
 			// Verify config is applied
 			retrievedConfig := chunker.GetConfig()
 			if tt.config.ChunkSize > 0 {
@@ -195,10 +195,10 @@ func TestChunkDocument_UnknownStrategy(t *testing.T) {
 		ChunkOverlap: 1,
 		Strategy:     ChunkStrategy("unknown_strategy"),
 	}
-	
+
 	chunker := newChunker(config)
 	text := "This is some text to be chunked.\n\nThis is another paragraph."
-	
+
 	// Should fall back to paragraph chunking
 	chunks := chunker.ChunkDocument(text)
 	assert.NotEmpty(t, chunks)

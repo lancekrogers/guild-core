@@ -14,8 +14,8 @@ import (
 
 	"github.com/guild-ventures/guild-core/internal/testutil"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/tools"
 	"github.com/guild-ventures/guild-core/pkg/workspace"
+	"github.com/guild-ventures/guild-core/tools"
 )
 
 // Tool implementations for testing
@@ -28,9 +28,9 @@ func (t *crashingToolImpl) Execute(ctx context.Context, input string) (*tools.To
 	if err := json.Unmarshal([]byte(input), &params); err != nil {
 		return nil, err
 	}
-	
+
 	action := params["action"].(string)
-	
+
 	switch action {
 	case "panic":
 		panic("Tool crashed!")
@@ -65,14 +65,14 @@ func (t *destructiveToolImpl) Execute(ctx context.Context, input string) (*tools
 			WithDetails("cwd", cwd).
 			WithDetails("workspace", t.workspaceDir)
 	}
-	
+
 	// Try to access file outside workspace (should fail)
 	_, err := os.Stat(t.importantFile)
 	if err == nil {
 		return nil, gerror.New(gerror.ErrCodeInternal, "workspace isolation failed - can access external file", nil).
 			WithDetails("file", t.importantFile)
 	}
-	
+
 	return tools.NewToolResult("workspace properly isolated", nil, nil, nil), nil
 }
 
@@ -83,7 +83,7 @@ type detailedErrorToolImpl struct {
 func (t *detailedErrorToolImpl) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	var params map[string]interface{}
 	json.Unmarshal([]byte(input), &params)
-	
+
 	// Create error with rich context
 	err := gerror.New(gerror.ErrCodeInternal, "tool execution failed", nil).
 		WithDetails("tool", "detailed_error_tool").
@@ -105,10 +105,10 @@ func (tool *transactionalToolImpl) Execute(ctx context.Context, input string) (*
 	if err := json.Unmarshal([]byte(input), &params); err != nil {
 		return nil, err
 	}
-	
+
 	ops := params["operations"].([]interface{})
 	completed := []string{}
-	
+
 	// Create rollback function
 	rollback := func() {
 		for i := len(completed) - 1; i >= 0; i-- {
@@ -160,10 +160,10 @@ func (t *writeToolImpl) Execute(ctx context.Context, input string) (*tools.ToolR
 	if err := json.Unmarshal([]byte(input), &params); err != nil {
 		return nil, err
 	}
-	
+
 	path := params["path"].(string)
 	content := params["content"].(string)
-	
+
 	err := os.WriteFile(path, []byte(content), 0644)
 	if err != nil {
 		return nil, gerror.New(gerror.ErrCodeValidation, "write permission denied", err).
@@ -183,9 +183,9 @@ func (t *networkToolImpl) Execute(ctx context.Context, input string) (*tools.Too
 	if err := json.Unmarshal([]byte(input), &params); err != nil {
 		return nil, err
 	}
-	
+
 	url := params["url"].(string)
-	
+
 	// Simulate network restriction check
 	if isNetworkRestricted() {
 		return nil, gerror.New(gerror.ErrCodeValidation, "network access denied", nil).
@@ -208,9 +208,9 @@ func (t *resilientToolImpl) Execute(ctx context.Context, input string) (*tools.T
 	if err := json.Unmarshal([]byte(input), &params); err != nil {
 		return nil, err
 	}
-	
+
 	mode := params["mode"].(string)
-	
+
 	switch mode {
 	case "optimal":
 		// Try optimal approach
@@ -222,28 +222,28 @@ func (t *resilientToolImpl) Execute(ctx context.Context, input string) (*tools.T
 			return tools.NewToolResult("", nil, nil, result), nil
 		}
 		fallthrough
-	
+
 	case "degraded":
 		// Fallback to degraded mode
 		if hasBasicPermissions() {
 			result := map[string]interface{}{
-				"result": "Executed with limited features",
-				"mode":   "degraded",
+				"result":  "Executed with limited features",
+				"mode":    "degraded",
 				"warning": "Some features unavailable due to permissions",
 			}
 			return tools.NewToolResult("", nil, nil, result), nil
 		}
 		fallthrough
-	
+
 	case "minimal":
 		// Minimal functionality
 		result := map[string]interface{}{
-			"result": "Executed with minimal features",
-			"mode":   "minimal",
+			"result":  "Executed with minimal features",
+			"mode":    "minimal",
 			"warning": "Most features disabled due to restrictions",
 		}
 		return tools.NewToolResult("", nil, nil, result), nil
-	
+
 	default:
 		return nil, fmt.Errorf("unknown mode: %s", mode)
 	}
@@ -258,20 +258,20 @@ func (t *userFriendlyToolImpl) Execute(ctx context.Context, input string) (*tool
 	if err := json.Unmarshal([]byte(input), &params); err != nil {
 		return nil, err
 	}
-	
+
 	action := params["action"].(string)
-	
+
 	errorCases := map[string]*gerror.GuildError{
 		"no_permission": gerror.New(gerror.ErrCodeValidation, "Cannot access the requested resource", nil).
 			WithDetails("technical", "EACCES: permission denied").
 			WithDetails("user_message", "You don't have permission to perform this action. Please contact your administrator.").
 			WithDetails("help_url", "https://docs.example.com/permissions"),
-		
+
 		"file_locked": gerror.New(gerror.ErrCodeInternal, "File is currently in use", nil).
 			WithDetails("technical", "EBUSY: resource busy").
 			WithDetails("user_message", "The file is being used by another program. Please close it and try again.").
 			WithDetails("suggestion", "Check if the file is open in an editor"),
-		
+
 		"quota_exceeded": gerror.New(gerror.ErrCodeResourceLimit, "Storage limit reached", nil).
 			WithDetails("technical", "EDQUOT: disk quota exceeded").
 			WithDetails("user_message", "You've reached your storage limit. Please free up some space or upgrade your plan.").
@@ -375,19 +375,19 @@ func TestToolExecutionFailures(t *testing.T) {
 					false,
 					[]string{},
 				),
-				workspaceDir: ws.Path(),
+				workspaceDir:  ws.Path(),
 				importantFile: importantFile,
 			}
 
 			// Execute in workspace context
 			wsCtx := context.WithValue(ctx, "workspace", ws)
 			_, err = destructiveTool.Execute(wsCtx, "{}")
-			
+
 			// Tool should succeed with proper isolation message
 			if err != nil {
 				t.Logf("Tool execution error: %v", err)
 			}
-			
+
 			// Important file should still exist
 			assert.FileExists(t, importantFile, "Important file should still exist")
 		})
@@ -467,7 +467,7 @@ func TestToolExecutionFailures(t *testing.T) {
 		t.Run("AlternativeToolSuggestions", func(t *testing.T) {
 			// Registry with multiple similar tools
 			registry := tools.NewToolRegistry()
-			
+
 			// Register tools
 			err := registry.RegisterTool(&simpleToolImpl{
 				BaseTool: tools.NewBaseTool(
@@ -512,7 +512,7 @@ func TestToolExecutionFailures(t *testing.T) {
 			// Try primary tool
 			tool, exists := registry.GetTool("file_write")
 			require.True(t, exists, "Tool should exist")
-			
+
 			result, err := tool.Execute(ctx, `{"path": "test.txt", "content": "Hello"}`)
 
 			// Should fail
@@ -544,7 +544,7 @@ func TestToolExecutionFailures(t *testing.T) {
 			readOnlyFile := filepath.Join(projCtx.GetRootPath(), "readonly.txt")
 			err := os.WriteFile(readOnlyFile, []byte("Read only content"), 0644)
 			require.NoError(t, err)
-			
+
 			// Make it read-only
 			err = os.Chmod(readOnlyFile, 0444)
 			require.NoError(t, err)
@@ -632,7 +632,7 @@ func TestToolExecutionFailures(t *testing.T) {
 
 			// Test different error scenarios
 			testCases := []string{"no_permission", "file_locked", "quota_exceeded"}
-			
+
 			for _, tc := range testCases {
 				result, err := userFriendlyTool.Execute(ctx, fmt.Sprintf(`{"action": "%s"}`, tc))
 

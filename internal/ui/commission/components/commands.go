@@ -24,12 +24,12 @@ func ExecuteExternalCommand(cmdStr string) ExternalCommandResult {
 	exePath, err := os.Executable()
 	if err != nil {
 		return ExternalCommandResult{
-			Command:  cmdStr,
-			Output:   "",
-			Success:  false,
-			Error:    gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get executable path").
-			WithComponent("commission").
-			WithOperation("ExecuteExternalCommand"),
+			Command: cmdStr,
+			Output:  "",
+			Success: false,
+			Error: gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get executable path").
+				WithComponent("commission").
+				WithOperation("ExecuteExternalCommand"),
 			ExitCode: -1,
 		}
 	}

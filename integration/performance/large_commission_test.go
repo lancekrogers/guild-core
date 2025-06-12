@@ -38,7 +38,7 @@ func TestLargeCommissionHandling(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration test in short mode")
 	}
-	
+
 	ctx := context.Background()
 
 	t.Run("100PlusTaskCommission", func(t *testing.T) {
@@ -64,7 +64,7 @@ func TestLargeCommissionHandling(t *testing.T) {
 		for i := 0; i < taskCount; i++ {
 			tasks[i] = fmt.Sprintf("Task %d: Implement feature component %d", i+1, i+1)
 		}
-		
+
 		// Set up mock provider response as a simple string for the new API
 		mockResponse := "Tasks breakdown:\n"
 		for _, task := range tasks {
@@ -83,15 +83,15 @@ func TestLargeCommissionHandling(t *testing.T) {
 
 		// Process commission
 		startTime := time.Now()
-		
+
 		// Get repositories from storage registry
 		commissionRepo := storageRegistry.GetCommissionRepository()
 		taskRepo := storageRegistry.GetTaskRepository()
-		
+
 		// Create commission manager with new API
 		manager, err := commission.DefaultCommissionManagerFactory(commissionRepo, "/tmp/commissions")
 		require.NoError(t, err)
-		
+
 		// Suppress unused variable warning
 		_ = taskRepo
 
@@ -128,14 +128,14 @@ func TestLargeCommissionHandling(t *testing.T) {
 
 		// Test UI responsiveness with large task list
 		uiStartTime := time.Now()
-		
+
 		// Simulate UI operations
 		for i := 0; i < 10; i++ {
 			// Simulate fetching tasks for display
 			_, err := taskRepo.ListTasksByStatus(ctx, "todo")
 			require.NoError(t, err)
 		}
-		
+
 		uiResponseTime := time.Since(uiStartTime) / 10
 		assert.Less(t, uiResponseTime, 100*time.Millisecond, "UI queries should be fast")
 	})
@@ -151,7 +151,7 @@ func TestLargeCommissionHandling(t *testing.T) {
 
 		storageRegistry, _, err := storage.InitializeSQLiteStorageForTests(ctx)
 		require.NoError(t, err)
-		
+
 		// Suppress unused variable warnings
 		_ = reg
 		_ = storageRegistry
@@ -188,7 +188,7 @@ func TestLargeCommissionHandling(t *testing.T) {
 		// Test efficient scheduling of many tasks
 		taskQueue := make(chan *MockTask, 1000)
 		completedTasks := int32(0)
-		
+
 		// Create worker pool
 		workerCount := 10
 		var wg sync.WaitGroup
@@ -245,7 +245,7 @@ func TestLargeCommissionHandling(t *testing.T) {
 		// Insert many tasks
 		insertStart := time.Now()
 		taskCount := 10000
-		
+
 		// Individual task creation (no batch API available)
 		for i := 0; i < taskCount; i++ {
 			task := &storage.Task{
@@ -309,7 +309,7 @@ func TestLargeCommissionHandling(t *testing.T) {
 				}
 				avgDuration := time.Since(start) / time.Duration(iterations)
 
-				assert.Less(t, avgDuration, 10*time.Millisecond, 
+				assert.Less(t, avgDuration, 10*time.Millisecond,
 					fmt.Sprintf("%s should be fast", q.name))
 			})
 		}
@@ -402,7 +402,7 @@ This is a comprehensive system implementation requiring many interconnected comp
 
 func generateTasksWithDependencies(count int) []*MockTask {
 	tasks := make([]*MockTask, count)
-	
+
 	for i := 0; i < count; i++ {
 		task := &MockTask{
 			ID:           fmt.Sprintf("task-%d", i),
@@ -415,7 +415,7 @@ func generateTasksWithDependencies(count int) []*MockTask {
 			// Depend on previous task
 			task.Dependencies = append(task.Dependencies, fmt.Sprintf("task-%d", i-1))
 		}
-		
+
 		if i > 10 && i%10 == 0 {
 			// Every 10th task depends on task 10 steps back
 			task.Dependencies = append(task.Dependencies, fmt.Sprintf("task-%d", i-10))
@@ -510,7 +510,7 @@ func findCriticalPath(tasks []*MockTask) []string {
 
 	// Simple path: just follow first dependency chain
 	path := []string{startTasks[0].ID}
-	
+
 	// Find dependent tasks
 	for i := 0; i < 10 && i < len(tasks); i++ {
 		lastTask := path[len(path)-1]
@@ -572,7 +572,7 @@ type GraphNode struct {
 
 func generateDependencyGraph(nodes, edges int) []*GraphNode {
 	graph := make([]*GraphNode, nodes)
-	
+
 	for i := 0; i < nodes; i++ {
 		graph[i] = &GraphNode{
 			ID:    fmt.Sprintf("node-%d", i),
@@ -600,7 +600,7 @@ type NodeLayout struct {
 
 func calculateGraphLayout(graph []*GraphNode) []NodeLayout {
 	layout := make([]NodeLayout, len(graph))
-	
+
 	// Simple force-directed layout simulation
 	for i, node := range graph {
 		layout[i] = NodeLayout{

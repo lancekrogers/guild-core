@@ -331,23 +331,23 @@ func TestContextRetrievalForAgents(t *testing.T) {
 	// Add knowledge base
 	knowledgeBase := []*vector.Document{
 		{
-			ID:      "kb-1",
-			Content: "The Guild Framework uses a manager agent to break down commissions into tasks",
+			ID:       "kb-1",
+			Content:  "The Guild Framework uses a manager agent to break down commissions into tasks",
 			Metadata: map[string]interface{}{"source": "architecture.md"},
 		},
 		{
-			ID:      "kb-2",
-			Content: "Worker agents execute assigned tasks and can use tools like file operations and HTTP requests",
+			ID:       "kb-2",
+			Content:  "Worker agents execute assigned tasks and can use tools like file operations and HTTP requests",
 			Metadata: map[string]interface{}{"source": "agents.md"},
 		},
 		{
-			ID:      "kb-3",
-			Content: "The orchestrator coordinates multiple agents using an event-driven architecture",
+			ID:       "kb-3",
+			Content:  "The orchestrator coordinates multiple agents using an event-driven architecture",
 			Metadata: map[string]interface{}{"source": "orchestration.md"},
 		},
 		{
-			ID:      "kb-4",
-			Content: "Campaigns represent long-running initiatives with multiple objectives and tasks",
+			ID:       "kb-4",
+			Content:  "Campaigns represent long-running initiatives with multiple objectives and tasks",
 			Metadata: map[string]interface{}{"source": "campaigns.md"},
 		},
 	}

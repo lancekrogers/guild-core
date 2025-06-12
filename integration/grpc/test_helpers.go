@@ -63,24 +63,24 @@ func (m *mockAgent) Execute(ctx context.Context, input string) (string, error) {
 	// Check if this is a tool command
 	if strings.HasPrefix(input, "/tool ") {
 		toolName := strings.TrimPrefix(input, "/tool ")
-		
+
 		// If we have a tool registry, actually execute the tool
 		if m.toolRegistry != nil {
 			tool, err := m.toolRegistry.GetTool(toolName)
 			if err != nil {
 				return fmt.Sprintf("Tool not found: %s", toolName), nil
 			}
-			
+
 			// Execute the tool with empty input
 			result, err := tool.Execute(ctx, "{}")
 			if err != nil {
 				return fmt.Sprintf("Tool execution failed: %v", err), nil
 			}
-			
+
 			return result.Output, nil
 		}
 	}
-	
+
 	// Simple response based on input
 	if response, exists := m.responses[input]; exists {
 		return response, nil

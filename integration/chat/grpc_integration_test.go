@@ -524,7 +524,7 @@ func TestGRPCServerServicesDiscoverable(t *testing.T) {
 
 	t.Run("Guild Service Available", func(t *testing.T) {
 		client := guildv1.NewGuildClient(conn)
-		
+
 		// Test that the Guild service is registered and responds
 		// The important thing is that the service is registered, not that it works with mock data
 		func() {
@@ -538,7 +538,7 @@ func TestGRPCServerServicesDiscoverable(t *testing.T) {
 				t.Logf("ListCampaigns error (expected with nil repos): %v", err)
 			}
 		}()
-		
+
 		// Test that ListAvailableAgents works
 		func() {
 			defer func() {
@@ -556,7 +556,7 @@ func TestGRPCServerServicesDiscoverable(t *testing.T) {
 				assert.NotNil(t, agents)
 			}
 		}()
-		
+
 		// The key success is that we can connect and call methods without the server crashing
 		// Panics/errors are expected because we're using nil repositories in our test setup
 		t.Log("✅ Guild service is properly registered and accessible")
@@ -564,7 +564,7 @@ func TestGRPCServerServicesDiscoverable(t *testing.T) {
 
 	t.Run("Chat Service Available", func(t *testing.T) {
 		chatClient := guildv1.NewChatServiceClient(conn)
-		
+
 		// Test bidirectional streaming capability exists
 		func() {
 			defer func() {
@@ -581,20 +581,20 @@ func TestGRPCServerServicesDiscoverable(t *testing.T) {
 				t.Log("✅ Chat service stream created successfully")
 			}
 		}()
-		
+
 		t.Log("✅ Chat service is properly registered and accessible")
 	})
 
 	t.Run("Server Registry Components", func(t *testing.T) {
 		// Test that the registry components are properly initialized
 		// This verifies our interface adapters and helper functions work
-		
+
 		// The fact that the server started successfully indicates:
 		// 1. Registry initialization succeeded
 		// 2. All gRPC services registered
 		// 3. Interface adapters worked
 		// 4. No nil pointer errors in helper functions
-		
+
 		assert.True(t, true, "Server started successfully with all components")
 	})
 }
@@ -669,7 +669,7 @@ func TestCompleteServerClientWorkflow(t *testing.T) {
 
 	// Start server (same as serve.go)
 	server := grpcpkg.NewServer(reg, eventBus)
-	
+
 	serverDone := make(chan error, 1)
 	go func() {
 		serverDone <- server.Start(ctx, address)
@@ -684,13 +684,13 @@ func TestCompleteServerClientWorkflow(t *testing.T) {
 	defer conn.Close()
 
 	// Test all three services that serve.go claims to register:
-	// ✅ Guild Service (campaigns, agents, commissions) 
+	// ✅ Guild Service (campaigns, agents, commissions)
 	// ✅ Chat Service (interactive agent communication)
 	// ✅ Prompt Service (prompt management)
 
 	t.Run("Guild Service Functional", func(t *testing.T) {
 		client := guildv1.NewGuildClient(conn)
-		
+
 		// Test campaigns functionality
 		campaigns, err := client.ListCampaigns(ctx, &guildv1.ListCampaignsRequest{})
 		if err != nil {
@@ -699,7 +699,7 @@ func TestCompleteServerClientWorkflow(t *testing.T) {
 			t.Logf("Campaigns service working: %d campaigns", len(campaigns.Campaigns))
 		}
 
-		// Test agents functionality  
+		// Test agents functionality
 		agents, err := client.ListAvailableAgents(ctx, &guildv1.ListAgentsRequest{})
 		if err != nil {
 			t.Logf("ListAvailableAgents error (acceptable): %v", err)
@@ -710,7 +710,7 @@ func TestCompleteServerClientWorkflow(t *testing.T) {
 
 	t.Run("Chat Service Functional", func(t *testing.T) {
 		chatClient := guildv1.NewChatServiceClient(conn)
-		
+
 		// Test that we can create a chat stream
 		stream, err := chatClient.Chat(ctx)
 		if err != nil {
@@ -724,7 +724,7 @@ func TestCompleteServerClientWorkflow(t *testing.T) {
 
 	// Verify graceful shutdown works
 	cancel() // Cancel context to trigger graceful shutdown
-	
+
 	select {
 	case <-serverDone:
 		t.Log("Server shut down gracefully")

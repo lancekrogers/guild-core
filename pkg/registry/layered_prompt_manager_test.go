@@ -11,10 +11,10 @@ import (
 
 func TestGetPromptManager(t *testing.T) {
 	tests := []struct {
-		name        string
-		setupFunc   func() ComponentRegistry
-		wantError   bool
-		errorCode   gerror.ErrorCode
+		name      string
+		setupFunc func() ComponentRegistry
+		wantError bool
+		errorCode gerror.ErrorCode
 	}{
 		{
 			name: "Initialized registry returns layered prompt manager",
@@ -70,7 +70,7 @@ func TestGetPromptManager(t *testing.T) {
 
 				// Test that the manager implements the interface correctly
 				ctx := context.Background()
-				
+
 				// Test basic Manager interface methods
 				roles, err := manager.ListRoles(ctx)
 				if err != nil {

@@ -5,10 +5,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/guild-ventures/guild-core/pkg/providers/base"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 	providertesting "github.com/guild-ventures/guild-core/pkg/providers/testing"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDeepSeekProvider(t *testing.T) {

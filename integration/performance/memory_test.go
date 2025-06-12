@@ -65,7 +65,7 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 		}()
 
 		// Simulate 24-hour workload (accelerated)
-		simulationDuration := 24 * time.Minute // 1 minute = 1 hour
+		simulationDuration := 24 * time.Minute             // 1 minute = 1 hour
 		workloadTicker := time.NewTicker(10 * time.Second) // Task every 10s
 		defer workloadTicker.Stop()
 
@@ -126,7 +126,7 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 	t.Run("MemoryGrowthPatterns", func(t *testing.T) {
 		// Track memory allocation patterns
 		allocPatterns := make(map[string]uint64)
-		
+
 		// Baseline
 		runtime.GC()
 		var baseline runtime.MemStats
@@ -142,7 +142,7 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 				test: func() {
 					reg := registry.NewComponentRegistry()
 					reg.Initialize(ctx, registry.Config{})
-					
+
 					for i := 0; i < 100; i++ {
 						// Create a simple mock agent for testing
 						_ = mocks.NewMockAgent(fmt.Sprintf("agent-%d", i), fmt.Sprintf("Agent %d", i))
@@ -154,7 +154,7 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 				test: func() {
 					// Skip complex RAG test - APIs have changed
 					// Would need to use DefaultChunkerFactory and updated store APIs
-					// Generate large document content  
+					// Generate large document content
 					largeDoc := strings.Repeat("This is a sample document for memory testing. ", 10000)
 					_ = len(largeDoc) // Minimal processing
 				},
@@ -349,7 +349,7 @@ func TestLargeContextHandling(t *testing.T) {
 		// Streaming should use significantly less memory
 		memoryRatio := float64(streamMemory) / float64(batchMemory)
 		assert.Less(t, memoryRatio, 0.2, "Streaming should use < 20% of batch memory")
-		t.Logf("Batch memory: %d KB, Stream memory: %d KB, Ratio: %.2f", 
+		t.Logf("Batch memory: %d KB, Stream memory: %d KB, Ratio: %.2f",
 			batchMemory/1024, streamMemory/1024, memoryRatio)
 	})
 
@@ -368,7 +368,7 @@ func TestLargeContextHandling(t *testing.T) {
 
 			// Simulate token counting
 			tokenCount := countTokens(text)
-			
+
 			runtime.GC()
 			var after runtime.MemStats
 			runtime.ReadMemStats(&after)
@@ -385,7 +385,7 @@ func TestLargeContextHandling(t *testing.T) {
 	t.Run("ContextPruningAlgorithms", func(t *testing.T) {
 		// Test different context pruning strategies
 		fullContext := strings.Repeat("This is test context content. ", 10000) // 10k words
-		targetSize := 1000 // Target 1k words
+		targetSize := 1000                                                     // Target 1k words
 
 		strategies := []struct {
 			name  string
@@ -454,21 +454,21 @@ func processBatch(data []byte) {
 
 func generateStream(ch chan<- []byte, totalSize int) {
 	defer close(ch)
-	
+
 	chunkSize := 1024 // 1KB chunks
 	sent := 0
-	
+
 	for sent < totalSize {
 		size := chunkSize
 		if sent+size > totalSize {
 			size = totalSize - sent
 		}
-		
+
 		chunk := make([]byte, size)
 		for i := range chunk {
 			chunk[i] = byte('a' + (sent+i)%26)
 		}
-		
+
 		ch <- chunk
 		sent += size
 	}
@@ -491,7 +491,7 @@ func countWords(text string) []string {
 	// Simple word splitting
 	words := []string{}
 	current := ""
-	
+
 	for _, ch := range text {
 		if ch == ' ' || ch == '\n' || ch == '\t' {
 			if current != "" {
@@ -502,11 +502,11 @@ func countWords(text string) []string {
 			current += string(ch)
 		}
 	}
-	
+
 	if current != "" {
 		words = append(words, current)
 	}
-	
+
 	return words
 }
 
@@ -525,13 +525,13 @@ func sampleWords(words []string, count int) []string {
 	if len(words) <= count {
 		return words
 	}
-	
+
 	step := len(words) / count
 	result := make([]string, 0, count)
-	
+
 	for i := 0; i < len(words) && len(result) < count; i += step {
 		result = append(result, words[i])
 	}
-	
+
 	return result
 }

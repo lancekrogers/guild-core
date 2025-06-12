@@ -21,34 +21,34 @@ type ASTTool struct {
 // ASTParams represents the input parameters for AST analysis
 type ASTParams struct {
 	File       string `json:"file"`
-	Query      string `json:"query"`                    // What to find: functions, classes, imports, symbol:<name>
-	Language   string `json:"language,omitempty"`       // Auto-detect if not specified
-	IncludeDoc bool   `json:"include_doc,omitempty"`    // Include documentation strings
-	Recursive  bool   `json:"recursive,omitempty"`      // For directory analysis
-	Filter     string `json:"filter,omitempty"`         // Additional filtering
+	Query      string `json:"query"`                 // What to find: functions, classes, imports, symbol:<name>
+	Language   string `json:"language,omitempty"`    // Auto-detect if not specified
+	IncludeDoc bool   `json:"include_doc,omitempty"` // Include documentation strings
+	Recursive  bool   `json:"recursive,omitempty"`   // For directory analysis
+	Filter     string `json:"filter,omitempty"`      // Additional filtering
 }
 
 // ASTResult represents the result of AST analysis
 type ASTResult struct {
-	File      string      `json:"file"`
-	Language  string      `json:"language"`
-	Query     string      `json:"query"`
-	Functions []*Function `json:"functions,omitempty"`
-	Classes   []*Class    `json:"classes,omitempty"`
-	Imports   []*Import   `json:"imports,omitempty"`
-	Symbols   []*Symbol   `json:"symbols,omitempty"`
+	File      string       `json:"file"`
+	Language  string       `json:"language"`
+	Query     string       `json:"query"`
+	Functions []*Function  `json:"functions,omitempty"`
+	Classes   []*Class     `json:"classes,omitempty"`
+	Imports   []*Import    `json:"imports,omitempty"`
+	Symbols   []*Symbol    `json:"symbols,omitempty"`
 	Errors    []ParseError `json:"errors,omitempty"`
-	Summary   *ASTSummary `json:"summary"`
+	Summary   *ASTSummary  `json:"summary"`
 }
 
 // ASTSummary provides a summary of the AST analysis
 type ASTSummary struct {
-	TotalFunctions int `json:"total_functions"`
-	TotalClasses   int `json:"total_classes"`
-	TotalImports   int `json:"total_imports"`
-	TotalSymbols   int `json:"total_symbols"`
+	TotalFunctions int  `json:"total_functions"`
+	TotalClasses   int  `json:"total_classes"`
+	TotalImports   int  `json:"total_imports"`
+	TotalSymbols   int  `json:"total_symbols"`
 	HasErrors      bool `json:"has_errors"`
-	LinesAnalyzed  int `json:"lines_analyzed"`
+	LinesAnalyzed  int  `json:"lines_analyzed"`
 }
 
 // NewASTTool creates a new AST analysis tool
@@ -118,10 +118,10 @@ func NewASTTool() *ASTTool {
 func (t *ASTTool) registerParsers() {
 	// Register Go parser
 	t.parsers[LanguageGo] = NewGoParser()
-	
+
 	// Register Python parser (placeholder for now)
 	// t.parsers[LanguagePython] = NewPythonParser()
-	
+
 	// Register TypeScript parser (placeholder for now)
 	// t.parsers[LanguageTypeScript] = NewTypeScriptParser()
 }
@@ -275,7 +275,7 @@ func (t *ASTTool) analyzeFile(ctx context.Context, params ASTParams) (*ASTResult
 		}
 		result.Imports = imports
 		result.Summary.TotalImports = len(imports)
-		
+
 	case "all":
 		// Get all information
 		functions, err := parser.GetFunctions(parseResult)
@@ -286,7 +286,7 @@ func (t *ASTTool) analyzeFile(ctx context.Context, params ASTParams) (*ASTResult
 		}
 		result.Functions = functions
 		result.Summary.TotalFunctions = len(functions)
-		
+
 		classes, err := parser.GetClasses(parseResult)
 		if err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to extract classes").
@@ -295,7 +295,7 @@ func (t *ASTTool) analyzeFile(ctx context.Context, params ASTParams) (*ASTResult
 		}
 		result.Classes = classes
 		result.Summary.TotalClasses = len(classes)
-		
+
 		imports, err := parser.GetImports(parseResult)
 		if err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to extract imports").
@@ -385,14 +385,14 @@ func (t *ASTTool) formatResults(results []*ASTResult, query string) (string, err
 	}
 
 	var output strings.Builder
-	
+
 	// Write summary
 	totalFunctions := 0
 	totalClasses := 0
 	totalImports := 0
 	totalSymbols := 0
 	totalErrors := 0
-	
+
 	for _, result := range results {
 		totalFunctions += result.Summary.TotalFunctions
 		totalClasses += result.Summary.TotalClasses
@@ -417,7 +417,7 @@ func (t *ASTTool) formatResults(results []*ASTResult, query string) (string, err
 	// Write detailed results for each file
 	for _, result := range results {
 		output.WriteString(fmt.Sprintf("File: %s (%s)\n", result.File, result.Language))
-		
+
 		if len(result.Functions) > 0 {
 			output.WriteString(fmt.Sprintf("  Functions (%d):\n", len(result.Functions)))
 			for _, fn := range result.Functions {

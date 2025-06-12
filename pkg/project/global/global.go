@@ -10,7 +10,7 @@ import (
 // globalDirectoryStructure defines the directory structure for the global Guild configuration
 var globalDirectoryStructure = []string{
 	"providers",
-	"tools",      // Global tool installations (shared across all projects)
+	"tools", // Global tool installations (shared across all projects)
 	"templates",
 	"templates/golang",
 	"templates/python",
@@ -380,7 +380,7 @@ func GlobalTemplatePath(templateName string) string {
 // ListTemplates returns available project templates
 func ListTemplates() ([]string, error) {
 	templatesDir := filepath.Join(GlobalGuildDir(), "templates")
-	
+
 	entries, err := os.ReadDir(templatesDir)
 	if err != nil {
 		if os.IsNotExist(err) {

@@ -10,11 +10,11 @@ import (
 // Test CostAwareExecute method to improve coverage
 func TestWorkerAgent_CostAwareExecute(t *testing.T) {
 	tests := []struct {
-		name         string
-		setupAgent   func() *WorkerAgent
-		request      string
-		expectErr    bool
-		errContains  string
+		name        string
+		setupAgent  func() *WorkerAgent
+		request     string
+		expectErr   bool
+		errContains string
 	}{
 		{
 			name: "successful cost-aware execution",
@@ -120,7 +120,7 @@ func TestWorkerAgent_CostAwareExecute_CostTracking(t *testing.T) {
 
 	// Set up initial budget
 	agent.SetCostBudget(CostTypeLLM, 1000.0)
-	
+
 	// Execute first request
 	response1, err1 := agent.CostAwareExecute(ctx, "first request")
 	assert.NoError(t, err1)

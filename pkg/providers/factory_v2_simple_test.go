@@ -28,7 +28,7 @@ func TestCreateAIProviderFromConfig_Basic(t *testing.T) {
 	// Test with environment variable
 	os.Setenv("TEST_API_KEY", "env-key")
 	defer os.Unsetenv("TEST_API_KEY")
-	
+
 	config2 := map[string]interface{}{
 		"api_key_env": "TEST_API_KEY",
 	}
@@ -97,7 +97,7 @@ func TestBuildPrompt(t *testing.T) {
 func TestGetProviderInfo(t *testing.T) {
 	info := GetProviderInfo()
 	assert.NotNil(t, info)
-	
+
 	// Check all providers are listed
 	assert.Contains(t, info, ProviderOpenAI)
 	assert.Contains(t, info, ProviderAnthropic)
@@ -107,7 +107,7 @@ func TestGetProviderInfo(t *testing.T) {
 	assert.Contains(t, info, ProviderOra)
 	assert.Contains(t, info, ProviderGoogle)
 	assert.Contains(t, info, ProviderClaudeCode)
-	
+
 	// Check descriptions exist
 	assert.NotEmpty(t, info[ProviderOpenAI])
 	assert.NotEmpty(t, info[ProviderAnthropic])

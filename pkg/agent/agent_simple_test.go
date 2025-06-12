@@ -80,7 +80,7 @@ func TestWorkerAgent_GetCurrentCosts(t *testing.T) {
 
 	report := agent.GetCurrentCosts()
 	assert.NotNil(t, report)
-	
+
 	// The report structure might be different - let's just check it's not empty
 	assert.Greater(t, len(report), 0, "Report should not be empty")
 }

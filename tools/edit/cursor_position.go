@@ -24,36 +24,36 @@ type CursorPositionTool struct {
 
 // CursorParams represents the input parameters for cursor operations
 type CursorParams struct {
-	File      string `json:"file"`                   // Target file
-	Line      int    `json:"line,omitempty"`         // Line number (1-based)
-	Column    int    `json:"column,omitempty"`       // Column number (1-based)
-	Symbol    string `json:"symbol,omitempty"`       // Symbol name to find
-	Direction string `json:"direction,omitempty"`    // next, prev, up, down
-	Target    string `json:"target,omitempty"`       // function, class, block, etc.
-	SetMark   string `json:"set_mark,omitempty"`     // Save current position with name
-	GoToMark  string `json:"go_to_mark,omitempty"`   // Jump to named mark
-	Pattern   string `json:"pattern,omitempty"`      // Search pattern
-	Scope     string `json:"scope,omitempty"`        // local, file, project
+	File      string `json:"file"`                 // Target file
+	Line      int    `json:"line,omitempty"`       // Line number (1-based)
+	Column    int    `json:"column,omitempty"`     // Column number (1-based)
+	Symbol    string `json:"symbol,omitempty"`     // Symbol name to find
+	Direction string `json:"direction,omitempty"`  // next, prev, up, down
+	Target    string `json:"target,omitempty"`     // function, class, block, etc.
+	SetMark   string `json:"set_mark,omitempty"`   // Save current position with name
+	GoToMark  string `json:"go_to_mark,omitempty"` // Jump to named mark
+	Pattern   string `json:"pattern,omitempty"`    // Search pattern
+	Scope     string `json:"scope,omitempty"`      // local, file, project
 }
 
 // CursorResult represents the result of cursor operations
 type CursorResult struct {
-	File            string            `json:"file"`
-	Position        *Position         `json:"position"`
-	Found           bool              `json:"found"`
-	Context         *CodeContext      `json:"context,omitempty"`
-	Suggestions     []*NavigationHint `json:"suggestions,omitempty"`
-	MarkSet         string            `json:"mark_set,omitempty"`
-	Errors          []string          `json:"errors,omitempty"`
-	Preview         string            `json:"preview,omitempty"`
+	File        string            `json:"file"`
+	Position    *Position         `json:"position"`
+	Found       bool              `json:"found"`
+	Context     *CodeContext      `json:"context,omitempty"`
+	Suggestions []*NavigationHint `json:"suggestions,omitempty"`
+	MarkSet     string            `json:"mark_set,omitempty"`
+	Errors      []string          `json:"errors,omitempty"`
+	Preview     string            `json:"preview,omitempty"`
 }
 
 // Position represents a cursor position in a file
 type Position struct {
-	Line       int    `json:"line"`        // 1-based line number
-	Column     int    `json:"column"`      // 1-based column number
-	Offset     int    `json:"offset"`      // Byte offset from start of file
-	Character  string `json:"character,omitempty"` // Character at position
+	Line      int    `json:"line"`                // 1-based line number
+	Column    int    `json:"column"`              // 1-based column number
+	Offset    int    `json:"offset"`              // Byte offset from start of file
+	Character string `json:"character,omitempty"` // Character at position
 }
 
 // CodeContext provides context around a cursor position
@@ -88,20 +88,20 @@ type ClassContext struct {
 
 // BlockContext provides information about the containing block
 type BlockContext struct {
-	Type      string    `json:"type"`       // if, for, while, try, etc.
+	Type      string    `json:"type"` // if, for, while, try, etc.
 	StartLine int       `json:"start_line"`
 	EndLine   int       `json:"end_line"`
-	Level     int       `json:"level"`      // Nesting level
+	Level     int       `json:"level"` // Nesting level
 	Position  *Position `json:"position"`
 }
 
 // NavigationHint provides suggestions for navigation
 type NavigationHint struct {
-	Type        string    `json:"type"`        // function, class, symbol, etc.
+	Type        string    `json:"type"` // function, class, symbol, etc.
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Position    *Position `json:"position"`
-	Distance    int       `json:"distance"`    // Lines away from current position
+	Distance    int       `json:"distance"` // Lines away from current position
 }
 
 // NewCursorPositionTool creates a new cursor position tool
@@ -249,18 +249,18 @@ func (t *CursorPositionTool) navigate(ctx context.Context, params CursorParams) 
 		if params.Column == 0 {
 			position.Column = 1
 		}
-		
+
 		t.marks[params.SetMark] = position
 		result.MarkSet = params.SetMark
 		result.Position = position
 		result.Found = true
-		
+
 		// Still get context for the position
 		context, err := t.getCodeContext(params.File, position)
 		if err == nil {
 			result.Context = context
 		}
-		
+
 		return result, nil
 	}
 
@@ -268,12 +268,12 @@ func (t *CursorPositionTool) navigate(ctx context.Context, params CursorParams) 
 		if mark, exists := t.marks[params.GoToMark]; exists {
 			result.Position = mark
 			result.Found = true
-			
+
 			context, err := t.getCodeContext(params.File, mark)
 			if err == nil {
 				result.Context = context
 			}
-			
+
 			return result, nil
 		} else {
 			return nil, gerror.Newf(gerror.ErrCodeNotFound, "mark '%s' not found", params.GoToMark).
@@ -294,23 +294,23 @@ func (t *CursorPositionTool) navigate(ctx context.Context, params CursorParams) 
 		if position.Column == 0 {
 			position.Column = 1
 		}
-		
+
 		// Validate position is within file bounds
 		valid, err := t.validatePosition(params.File, position)
 		if err != nil {
 			return nil, err
 		}
-		
+
 		result.Position = position
 		result.Found = valid
-		
+
 		if valid {
 			context, err := t.getCodeContext(params.File, position)
 			if err == nil {
 				result.Context = context
 			}
 		}
-		
+
 		return result, nil
 	}
 
@@ -340,22 +340,22 @@ func (t *CursorPositionTool) validatePosition(filename string, pos *Position) (b
 	if err != nil {
 		return false, err
 	}
-	
+
 	lines := strings.Split(string(content), "\n")
-	
+
 	if pos.Line < 1 || pos.Line > len(lines) {
 		return false, nil
 	}
-	
+
 	if pos.Column < 1 {
 		return false, nil
 	}
-	
+
 	line := lines[pos.Line-1]
 	if pos.Column > len(line)+1 { // +1 for end of line position
 		return false, nil
 	}
-	
+
 	// Calculate offset
 	offset := 0
 	for i := 0; i < pos.Line-1; i++ {
@@ -363,12 +363,12 @@ func (t *CursorPositionTool) validatePosition(filename string, pos *Position) (b
 	}
 	offset += pos.Column - 1
 	pos.Offset = offset
-	
+
 	// Get character at position
 	if pos.Column <= len(line) {
 		pos.Character = string(line[pos.Column-1])
 	}
-	
+
 	return true, nil
 }
 
@@ -380,7 +380,7 @@ func (t *CursorPositionTool) findSymbol(params CursorParams) (*CursorResult, err
 
 	// Detect language
 	language := code.DetectLanguage(params.File)
-	
+
 	switch language {
 	case code.LanguageGo:
 		return t.findGoSymbol(params, result)
@@ -456,7 +456,7 @@ func (t *CursorPositionTool) findPythonSymbol(params CursorParams, result *Curso
 	}
 
 	lines := strings.Split(string(content), "\n")
-	
+
 	// Simple regex-based search for Python symbols
 	functionRegex := regexp.MustCompile(`^\s*def\s+` + regexp.QuoteMeta(params.Symbol) + `\s*\(`)
 	classRegex := regexp.MustCompile(`^\s*class\s+` + regexp.QuoteMeta(params.Symbol) + `\s*[\(:]`)
@@ -492,7 +492,7 @@ func (t *CursorPositionTool) findGenericSymbol(params CursorParams, result *Curs
 	}
 
 	lines := strings.Split(string(content), "\n")
-	
+
 	for i, line := range lines {
 		if strings.Contains(line, params.Symbol) {
 			symbolPos := strings.Index(line, params.Symbol)
@@ -525,7 +525,7 @@ func (t *CursorPositionTool) searchPattern(params CursorParams) (*CursorResult, 
 	}
 
 	lines := strings.Split(string(content), "\n")
-	
+
 	// Simple text search for now
 	for i, line := range lines {
 		if strings.Contains(line, params.Pattern) {
@@ -556,7 +556,7 @@ func (t *CursorPositionTool) navigateDirection(params CursorParams) (*CursorResu
 	// This would implement navigation like "next function", "previous class", etc.
 	// For now, return a placeholder implementation
 	result.Errors = append(result.Errors, "Directional navigation not yet fully implemented")
-	
+
 	return result, nil
 }
 
@@ -608,7 +608,7 @@ func (t *CursorPositionTool) getGoContext(filename string, pos *Position, contex
 		case *ast.FuncDecl:
 			start := fset.Position(node.Pos())
 			end := fset.Position(node.End())
-			
+
 			if pos.Line >= start.Line && pos.Line <= end.Line {
 				context.Function = &FunctionContext{
 					Name:      node.Name.Name,
@@ -620,7 +620,7 @@ func (t *CursorPositionTool) getGoContext(filename string, pos *Position, contex
 					},
 				}
 				context.Scope = "function"
-				
+
 				// Extract parameters
 				if node.Type.Params != nil {
 					for _, field := range node.Type.Params.List {
@@ -630,12 +630,12 @@ func (t *CursorPositionTool) getGoContext(filename string, pos *Position, contex
 					}
 				}
 			}
-			
+
 		case *ast.TypeSpec:
 			if structType, ok := node.Type.(*ast.StructType); ok {
 				start := fset.Position(node.Pos())
 				end := fset.Position(structType.End())
-				
+
 				if pos.Line >= start.Line && pos.Line <= end.Line {
 					context.Class = &ClassContext{
 						Name:      node.Name.Name,
@@ -660,7 +660,7 @@ func (t *CursorPositionTool) getGoContext(filename string, pos *Position, contex
 // formatResult formats the cursor position result for output
 func (t *CursorPositionTool) formatResult(result *CursorResult, params CursorParams) string {
 	var output strings.Builder
-	
+
 	if result.MarkSet != "" {
 		output.WriteString(fmt.Sprintf("Mark '%s' set in %s\n", result.MarkSet, result.File))
 	} else if params.GoToMark != "" {
@@ -670,9 +670,9 @@ func (t *CursorPositionTool) formatResult(result *CursorResult, params CursorPar
 	}
 
 	if result.Position != nil {
-		output.WriteString(fmt.Sprintf("Position: Line %d, Column %d", 
+		output.WriteString(fmt.Sprintf("Position: Line %d, Column %d",
 			result.Position.Line, result.Position.Column))
-		
+
 		if result.Position.Character != "" {
 			output.WriteString(fmt.Sprintf(" ('%s')", result.Position.Character))
 		}
@@ -687,20 +687,20 @@ func (t *CursorPositionTool) formatResult(result *CursorResult, params CursorPar
 	if result.Context != nil {
 		ctx := result.Context
 		output.WriteString(fmt.Sprintf("Context: %s (%s)\n", ctx.Scope, ctx.Language))
-		
+
 		if ctx.Function != nil {
-			output.WriteString(fmt.Sprintf("Function: %s (lines %d-%d)\n", 
+			output.WriteString(fmt.Sprintf("Function: %s (lines %d-%d)\n",
 				ctx.Function.Name, ctx.Function.StartLine, ctx.Function.EndLine))
 			if len(ctx.Function.Parameters) > 0 {
 				output.WriteString(fmt.Sprintf("Parameters: %s\n", strings.Join(ctx.Function.Parameters, ", ")))
 			}
 		}
-		
+
 		if ctx.Class != nil {
-			output.WriteString(fmt.Sprintf("%s: %s (lines %d-%d)\n", 
+			output.WriteString(fmt.Sprintf("%s: %s (lines %d-%d)\n",
 				strings.Title(ctx.Class.Type), ctx.Class.Name, ctx.Class.StartLine, ctx.Class.EndLine))
 		}
-		
+
 		if ctx.LineContent != "" {
 			output.WriteString(fmt.Sprintf("Line content: %s\n", strings.TrimSpace(ctx.LineContent)))
 		}
@@ -710,7 +710,7 @@ func (t *CursorPositionTool) formatResult(result *CursorResult, params CursorPar
 	if len(result.Suggestions) > 0 {
 		output.WriteString("\nNavigation suggestions:\n")
 		for _, suggestion := range result.Suggestions {
-			output.WriteString(fmt.Sprintf("- %s: %s (line %d)\n", 
+			output.WriteString(fmt.Sprintf("- %s: %s (line %d)\n",
 				suggestion.Type, suggestion.Name, suggestion.Position.Line))
 		}
 	}

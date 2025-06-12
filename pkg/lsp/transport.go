@@ -20,7 +20,7 @@ type Transport struct {
 	writer  io.Writer
 	scanner *bufio.Scanner
 	mu      sync.Mutex
-	
+
 	// Request tracking
 	pendingRequests map[int64]chan<- *Response
 	requestMu       sync.Mutex
@@ -40,7 +40,7 @@ func NewTransport(reader io.Reader, writer io.Writer) *Transport {
 func (t *Transport) Send(ctx context.Context, req *Request) error {
 	t.mu.Lock()
 	defer t.mu.Unlock()
-	
+
 	// Marshal request
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -49,7 +49,7 @@ func (t *Transport) Send(ctx context.Context, req *Request) error {
 			WithOperation("send").
 			WithDetails("method", req.Method)
 	}
-	
+
 	// Write header and content
 	header := fmt.Sprintf("Content-Length: %d\r\n\r\n", len(data))
 	if _, err := t.writer.Write([]byte(header)); err != nil {
@@ -57,13 +57,13 @@ func (t *Transport) Send(ctx context.Context, req *Request) error {
 			WithComponent("lsp.transport").
 			WithOperation("send")
 	}
-	
+
 	if _, err := t.writer.Write(data); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to write content").
 			WithComponent("lsp.transport").
 			WithOperation("send")
 	}
-	
+
 	return nil
 }
 
@@ -74,27 +74,27 @@ func (t *Transport) Call(ctx context.Context, req *Request) (*Response, error) {
 			WithComponent("lsp.transport").
 			WithOperation("call")
 	}
-	
+
 	// Create response channel
 	respChan := make(chan *Response, 1)
-	
+
 	// Register pending request
 	t.requestMu.Lock()
 	t.pendingRequests[req.ID.Number] = respChan
 	t.requestMu.Unlock()
-	
+
 	// Clean up on exit
 	defer func() {
 		t.requestMu.Lock()
 		delete(t.pendingRequests, req.ID.Number)
 		t.requestMu.Unlock()
 	}()
-	
+
 	// Send request
 	if err := t.Send(ctx, req); err != nil {
 		return nil, err
 	}
-	
+
 	// Wait for response
 	select {
 	case resp := <-respChan:
@@ -105,7 +105,7 @@ func (t *Transport) Call(ctx context.Context, req *Request) (*Response, error) {
 				WithDetails("method", req.Method)
 		}
 		return resp, nil
-		
+
 	case <-ctx.Done():
 		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeTimeout, "request cancelled").
 			WithComponent("lsp.transport").
@@ -117,7 +117,7 @@ func (t *Transport) Call(ctx context.Context, req *Request) (*Response, error) {
 // Listen starts listening for responses and notifications
 func (t *Transport) Listen(ctx context.Context) error {
 	logger := observability.GetLogger(ctx)
-	
+
 	for {
 		select {
 		case <-ctx.Done():
@@ -134,7 +134,7 @@ func (t *Transport) Listen(ctx context.Context) error {
 					"error", err)
 				continue
 			}
-			
+
 			// Handle message
 			if err := t.handleMessage(ctx, msg); err != nil {
 				logger.ErrorContext(ctx, "Failed to handle LSP message",
@@ -153,22 +153,22 @@ func (t *Transport) readMessage() (json.RawMessage, error) {
 		if err != nil {
 			return nil, err
 		}
-		
+
 		if line == "" {
 			// Empty line signals end of headers
 			break
 		}
-		
+
 		parts := strings.SplitN(line, ":", 2)
 		if len(parts) != 2 {
 			return nil, gerror.Newf(gerror.ErrCodeParsing, "invalid header: %s", line).
 				WithComponent("lsp.transport").
 				WithOperation("read_message")
 		}
-		
+
 		headers[strings.TrimSpace(parts[0])] = strings.TrimSpace(parts[1])
 	}
-	
+
 	// Get content length
 	lengthStr, ok := headers["Content-Length"]
 	if !ok {
@@ -176,14 +176,14 @@ func (t *Transport) readMessage() (json.RawMessage, error) {
 			WithComponent("lsp.transport").
 			WithOperation("read_message")
 	}
-	
+
 	contentLength, err := strconv.Atoi(lengthStr)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeParsing, "invalid Content-Length").
 			WithComponent("lsp.transport").
 			WithOperation("read_message")
 	}
-	
+
 	// Read content
 	content := make([]byte, contentLength)
 	if _, err := io.ReadFull(t.reader, content); err != nil {
@@ -191,7 +191,7 @@ func (t *Transport) readMessage() (json.RawMessage, error) {
 			WithComponent("lsp.transport").
 			WithOperation("read_message")
 	}
-	
+
 	return json.RawMessage(content), nil
 }
 
@@ -200,20 +200,20 @@ func (t *Transport) readLine() (string, error) {
 	if t.scanner.Scan() {
 		return t.scanner.Text(), nil
 	}
-	
+
 	if err := t.scanner.Err(); err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeIO, "scanner error").
 			WithComponent("lsp.transport").
 			WithOperation("read_line")
 	}
-	
+
 	return "", io.EOF
 }
 
 // handleMessage handles an incoming message
 func (t *Transport) handleMessage(ctx context.Context, msg json.RawMessage) error {
 	logger := observability.GetLogger(ctx)
-	
+
 	// Try to parse as response first
 	var resp Response
 	if err := json.Unmarshal(msg, &resp); err == nil && resp.ID != nil {
@@ -228,7 +228,7 @@ func (t *Transport) handleMessage(ctx context.Context, msg json.RawMessage) erro
 		t.requestMu.Unlock()
 		return nil
 	}
-	
+
 	// Try to parse as request/notification
 	var req Request
 	if err := json.Unmarshal(msg, &req); err == nil {
@@ -238,7 +238,7 @@ func (t *Transport) handleMessage(ctx context.Context, msg json.RawMessage) erro
 			"method", req.Method)
 		return nil
 	}
-	
+
 	return gerror.New(gerror.ErrCodeParsing, "failed to parse LSP message", nil).
 		WithComponent("lsp.transport").
 		WithOperation("handle_message")
@@ -265,19 +265,19 @@ func (c *ClientTransport) Request(ctx context.Context, method string, params int
 	c.requestID++
 	id := c.requestID
 	c.mu.Unlock()
-	
+
 	req := &Request{
 		JSONRPC: "2.0",
 		ID:      &RequestID{Number: id},
 		Method:  method,
 		Params:  params,
 	}
-	
+
 	resp, err := c.transport.Call(ctx, req)
 	if err != nil {
 		return err
 	}
-	
+
 	if result != nil && len(resp.Result) > 0 {
 		if err := json.Unmarshal(resp.Result, result); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeParsing, "failed to unmarshal response").
@@ -286,7 +286,7 @@ func (c *ClientTransport) Request(ctx context.Context, method string, params int
 				WithDetails("method", method)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -297,7 +297,7 @@ func (c *ClientTransport) Notify(ctx context.Context, method string, params inte
 		Method:  method,
 		Params:  params,
 	}
-	
+
 	return c.transport.Send(ctx, req)
 }
 

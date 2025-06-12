@@ -38,7 +38,7 @@ func TestChatCompletionBasic(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "POST", r.Method)
 		assert.Equal(t, "/chat/completions", r.URL.Path)
-		
+
 		response := map[string]interface{}{
 			"choices": []map[string]interface{}{
 				{
@@ -48,7 +48,7 @@ func TestChatCompletionBasic(t *testing.T) {
 				},
 			},
 		}
-		
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(response)
 	}))
@@ -79,7 +79,7 @@ func TestStreamChatCompletionBasic(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/event-stream")
 		w.WriteHeader(http.StatusOK)
-		
+
 		// Send simple SSE data
 		w.Write([]byte("data: {\"choices\":[{\"delta\":{\"content\":\"Hello\"}}]}\n\n"))
 		w.Write([]byte("data: [DONE]\n\n"))
@@ -89,7 +89,7 @@ func TestStreamChatCompletionBasic(t *testing.T) {
 
 	provider := NewOpenAICompatibleProvider(
 		"test",
-		"test-key", 
+		"test-key",
 		server.URL,
 		map[string]string{},
 		interfaces.ProviderCapabilities{},
@@ -105,13 +105,13 @@ func TestStreamChatCompletionBasic(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.NotNil(t, stream)
-	
+
 	// Read one chunk
 	chunk, err := stream.Next()
 	if err == nil {
 		assert.NotEmpty(t, chunk.Delta.Content)
 	}
-	
+
 	stream.Close()
 }
 
@@ -124,7 +124,7 @@ func TestCreateEmbeddingBasic(t *testing.T) {
 				},
 			},
 		}
-		
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(response)
 	}))
@@ -172,12 +172,12 @@ func TestGetCapabilitiesBase(t *testing.T) {
 
 func TestParseErrorBasic(t *testing.T) {
 	provider := &OpenAICompatibleProvider{}
-	
+
 	// Test 400 error
 	err := provider.parseError(400, []byte(`{"error": {"message": "Bad request"}}`))
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "Bad request")
-	
+
 	// Test 429 rate limit
 	err = provider.parseError(429, []byte("Rate limit"))
 	assert.Error(t, err)

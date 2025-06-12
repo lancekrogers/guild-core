@@ -4,25 +4,25 @@ package global
 type GlobalConfig struct {
 	// Provider settings
 	Providers ProvidersConfig `yaml:"providers"`
-	
+
 	// Tool settings
 	Tools ToolsConfig `yaml:"tools"`
-	
+
 	// Cache settings
 	Cache CacheConfig `yaml:"cache"`
-	
+
 	// Logging settings
 	Logging LoggingConfig `yaml:"logging"`
-	
+
 	// UI settings
 	UI UIConfig `yaml:"ui"`
-	
-	// Security settings  
+
+	// Security settings
 	Security GlobalSecurityConfig `yaml:"security"`
-	
+
 	// LSP server configurations
 	LSPServers map[string]LSPServerConfig `yaml:"lsp_servers,omitempty"`
-	
+
 	// Global corpus settings
 	GlobalCorpus CorpusConfig `yaml:"global_corpus,omitempty"`
 }
@@ -93,12 +93,12 @@ type CorpusConfig struct {
 
 // TemplateConfig represents a project template
 type TemplateConfig struct {
-	Name        string            `yaml:"name"`
-	Description string            `yaml:"description"`
-	Agents      []TemplateAgent   `yaml:"agents"`
-	Tools       []string          `yaml:"tools"`
-	Corpus      CorpusTemplate    `yaml:"corpus"`
-	Objectives  []string          `yaml:"objectives"`
+	Name        string          `yaml:"name"`
+	Description string          `yaml:"description"`
+	Agents      []TemplateAgent `yaml:"agents"`
+	Tools       []string        `yaml:"tools"`
+	Corpus      CorpusTemplate  `yaml:"corpus"`
+	Objectives  []string        `yaml:"objectives"`
 }
 
 // TemplateAgent represents an agent in a template

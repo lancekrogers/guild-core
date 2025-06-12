@@ -43,7 +43,7 @@ func DefaultConfigs() map[string]*ServerConfig {
 			Command:  []string{"typescript-language-server", "--stdio"},
 			InitOptions: map[string]interface{}{
 				"preferences": map[string]interface{}{
-					"includeCompletionsWithSnippetText": true,
+					"includeCompletionsWithSnippetText":     true,
 					"includeCompletionsForImportStatements": true,
 				},
 			},
@@ -56,7 +56,7 @@ func DefaultConfigs() map[string]*ServerConfig {
 			InitOptions: map[string]interface{}{
 				"plugins": map[string]interface{}{
 					"jedi_completion": map[string]interface{}{
-						"enabled": true,
+						"enabled":        true,
 						"include_params": true,
 					},
 					"jedi_hover": map[string]interface{}{
@@ -66,7 +66,7 @@ func DefaultConfigs() map[string]*ServerConfig {
 						"enabled": true,
 					},
 					"jedi_definition": map[string]interface{}{
-						"enabled": true,
+						"enabled":        true,
 						"follow_imports": true,
 					},
 				},
@@ -89,14 +89,14 @@ func DefaultConfigs() map[string]*ServerConfig {
 			RootMarkers:  []string{"Cargo.toml"},
 		},
 		"java": {
-			Language: "java",
-			Command:  []string{"jdtls"},
+			Language:     "java",
+			Command:      []string{"jdtls"},
 			FilePatterns: []string{"*.java"},
 			RootMarkers:  []string{"pom.xml", "build.gradle", ".project"},
 		},
 		"csharp": {
-			Language: "csharp",
-			Command:  []string{"omnisharp", "--languageserver", "--hostPID", "$$"},
+			Language:     "csharp",
+			Command:      []string{"omnisharp", "--languageserver", "--hostPID", "$$"},
 			FilePatterns: []string{"*.cs"},
 			RootMarkers:  []string{"*.csproj", "*.sln"},
 		},
@@ -109,7 +109,7 @@ func LoadConfig(path string) (*Config, error) {
 	if path == "" {
 		path = GetConfigPath()
 	}
-	
+
 	data, err := os.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -183,50 +183,50 @@ func DetectLanguage(filePath string) string {
 	// This is now handled by the manager using configured file patterns
 	// Kept for backward compatibility
 	ext := filepath.Ext(filePath)
-	
+
 	// Common extension mappings as fallback
 	commonMappings := map[string]string{
-		".go":   "go",
-		".ts":   "typescript",
-		".tsx":  "typescript",
-		".js":   "javascript",
-		".jsx":  "javascript",
-		".py":   "python",
-		".rs":   "rust",
-		".java": "java",
-		".cs":   "csharp",
-		".c":    "c",
-		".cpp":  "cpp",
-		".cc":   "cpp",
-		".cxx":  "cpp",
-		".rb":   "ruby",
-		".php":  "php",
-		".lua":  "lua",
-		".kt":   "kotlin",
-		".kts":  "kotlin",
+		".go":    "go",
+		".ts":    "typescript",
+		".tsx":   "typescript",
+		".js":    "javascript",
+		".jsx":   "javascript",
+		".py":    "python",
+		".rs":    "rust",
+		".java":  "java",
+		".cs":    "csharp",
+		".c":     "c",
+		".cpp":   "cpp",
+		".cc":    "cpp",
+		".cxx":   "cpp",
+		".rb":    "ruby",
+		".php":   "php",
+		".lua":   "lua",
+		".kt":    "kotlin",
+		".kts":   "kotlin",
 		".swift": "swift",
-		".zig":  "zig",
-		".hs":   "haskell",
-		".lhs":  "haskell",
-		".ex":   "elixir",
-		".exs":  "elixir",
-		".vim":  "vim",
-		".sh":   "bash",
-		".bash": "bash",
-		".zsh":  "zsh",
-		".fish": "fish",
-		".css":  "css",
-		".html": "html",
-		".htm":  "html",
-		".json": "json",
-		".yaml": "yaml",
-		".yml":  "yaml",
+		".zig":   "zig",
+		".hs":    "haskell",
+		".lhs":   "haskell",
+		".ex":    "elixir",
+		".exs":   "elixir",
+		".vim":   "vim",
+		".sh":    "bash",
+		".bash":  "bash",
+		".zsh":   "zsh",
+		".fish":  "fish",
+		".css":   "css",
+		".html":  "html",
+		".htm":   "html",
+		".json":  "json",
+		".yaml":  "yaml",
+		".yml":   "yaml",
 	}
-	
+
 	if lang, ok := commonMappings[ext]; ok {
 		return lang
 	}
-	
+
 	return ""
 }
 

@@ -184,7 +184,7 @@ func TestWorkerAgent_ExecuteWithTools(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 				assert.NotEmpty(t, response)
-				
+
 				// If tools were allowed, response should include tool result
 				if len(tt.allowedTools) > 0 {
 					assert.Contains(t, response, "Tool Result")
@@ -314,7 +314,6 @@ func (t *mockFailingTool) RequiresAuth() bool {
 	return false
 }
 
-
 // Mock error cost manager
 type mockErrorCostManager struct{}
 
@@ -402,7 +401,7 @@ func TestWorkerAgent_ExecuteWithTools_EdgeCases(t *testing.T) {
 func TestWorkerAgent_ExecuteWithTools_CostTracking(t *testing.T) {
 	costMgr := newCostManager()
 	costMgr.SetBudget(CostTypeTool, 10.0)
-	
+
 	agent := &WorkerAgent{
 		ID:           "test-agent",
 		Name:         "Test Agent",
@@ -421,7 +420,7 @@ func TestWorkerAgent_ExecuteWithTools_CostTracking(t *testing.T) {
 	// Verify cost tracking worked
 	report := costMgr.GetCostReport()
 	assert.NotNil(t, report)
-	
+
 	// Should have tracked some tool cost
 	totalCosts, ok := report["total_costs"].(map[string]float64)
 	assert.True(t, ok)

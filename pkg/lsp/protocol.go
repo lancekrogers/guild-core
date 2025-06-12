@@ -51,13 +51,13 @@ type ResponseError struct {
 
 // InitializeParams represents the parameters for the initialize request
 type InitializeParams struct {
-	ProcessID             *int64                 `json:"processId"`
-	ClientInfo            *ClientInfo            `json:"clientInfo,omitempty"`
-	RootURI               string                 `json:"rootUri,omitempty"`
-	InitializationOptions interface{}            `json:"initializationOptions,omitempty"`
-	Capabilities          ClientCapabilities     `json:"capabilities"`
-	Trace                 string                 `json:"trace,omitempty"`
-	WorkspaceFolders      []WorkspaceFolder      `json:"workspaceFolders,omitempty"`
+	ProcessID             *int64             `json:"processId"`
+	ClientInfo            *ClientInfo        `json:"clientInfo,omitempty"`
+	RootURI               string             `json:"rootUri,omitempty"`
+	InitializationOptions interface{}        `json:"initializationOptions,omitempty"`
+	Capabilities          ClientCapabilities `json:"capabilities"`
+	Trace                 string             `json:"trace,omitempty"`
+	WorkspaceFolders      []WorkspaceFolder  `json:"workspaceFolders,omitempty"`
 }
 
 // ClientInfo represents information about the client
@@ -75,7 +75,7 @@ type ClientCapabilities struct {
 
 // WorkspaceClientCapabilities represents workspace client capabilities
 type WorkspaceClientCapabilities struct {
-	ApplyEdit              bool `json:"applyEdit,omitempty"`
+	ApplyEdit              bool        `json:"applyEdit,omitempty"`
 	WorkspaceEdit          interface{} `json:"workspaceEdit,omitempty"`
 	DidChangeConfiguration interface{} `json:"didChangeConfiguration,omitempty"`
 	DidChangeWatchedFiles  interface{} `json:"didChangeWatchedFiles,omitempty"`
@@ -85,32 +85,32 @@ type WorkspaceClientCapabilities struct {
 
 // TextDocumentClientCapabilities represents text document client capabilities
 type TextDocumentClientCapabilities struct {
-	Synchronization    interface{} `json:"synchronization,omitempty"`
+	Synchronization    interface{}                   `json:"synchronization,omitempty"`
 	Completion         *CompletionClientCapabilities `json:"completion,omitempty"`
-	Hover              interface{} `json:"hover,omitempty"`
-	SignatureHelp      interface{} `json:"signatureHelp,omitempty"`
-	Declaration        interface{} `json:"declaration,omitempty"`
-	Definition         interface{} `json:"definition,omitempty"`
-	TypeDefinition     interface{} `json:"typeDefinition,omitempty"`
-	Implementation     interface{} `json:"implementation,omitempty"`
-	References         interface{} `json:"references,omitempty"`
-	DocumentHighlight  interface{} `json:"documentHighlight,omitempty"`
-	DocumentSymbol     interface{} `json:"documentSymbol,omitempty"`
-	CodeAction         interface{} `json:"codeAction,omitempty"`
-	CodeLens           interface{} `json:"codeLens,omitempty"`
-	DocumentLink       interface{} `json:"documentLink,omitempty"`
-	ColorProvider      interface{} `json:"colorProvider,omitempty"`
-	Formatting         interface{} `json:"formatting,omitempty"`
-	RangeFormatting    interface{} `json:"rangeFormatting,omitempty"`
-	OnTypeFormatting   interface{} `json:"onTypeFormatting,omitempty"`
-	Rename             interface{} `json:"rename,omitempty"`
-	PublishDiagnostics interface{} `json:"publishDiagnostics,omitempty"`
-	FoldingRange       interface{} `json:"foldingRange,omitempty"`
+	Hover              interface{}                   `json:"hover,omitempty"`
+	SignatureHelp      interface{}                   `json:"signatureHelp,omitempty"`
+	Declaration        interface{}                   `json:"declaration,omitempty"`
+	Definition         interface{}                   `json:"definition,omitempty"`
+	TypeDefinition     interface{}                   `json:"typeDefinition,omitempty"`
+	Implementation     interface{}                   `json:"implementation,omitempty"`
+	References         interface{}                   `json:"references,omitempty"`
+	DocumentHighlight  interface{}                   `json:"documentHighlight,omitempty"`
+	DocumentSymbol     interface{}                   `json:"documentSymbol,omitempty"`
+	CodeAction         interface{}                   `json:"codeAction,omitempty"`
+	CodeLens           interface{}                   `json:"codeLens,omitempty"`
+	DocumentLink       interface{}                   `json:"documentLink,omitempty"`
+	ColorProvider      interface{}                   `json:"colorProvider,omitempty"`
+	Formatting         interface{}                   `json:"formatting,omitempty"`
+	RangeFormatting    interface{}                   `json:"rangeFormatting,omitempty"`
+	OnTypeFormatting   interface{}                   `json:"onTypeFormatting,omitempty"`
+	Rename             interface{}                   `json:"rename,omitempty"`
+	PublishDiagnostics interface{}                   `json:"publishDiagnostics,omitempty"`
+	FoldingRange       interface{}                   `json:"foldingRange,omitempty"`
 }
 
 // CompletionClientCapabilities represents completion client capabilities
 type CompletionClientCapabilities struct {
-	DynamicRegistration bool                       `json:"dynamicRegistration,omitempty"`
+	DynamicRegistration bool                        `json:"dynamicRegistration,omitempty"`
 	CompletionItem      *CompletionItemCapabilities `json:"completionItem,omitempty"`
 }
 
@@ -143,30 +143,30 @@ type ServerInfo struct {
 
 // ServerCapabilities represents the capabilities of the server
 type ServerCapabilities struct {
-	TextDocumentSync           interface{}                     `json:"textDocumentSync,omitempty"`
-	CompletionProvider         *CompletionOptions              `json:"completionProvider,omitempty"`
-	HoverProvider              interface{}                     `json:"hoverProvider,omitempty"`
-	SignatureHelpProvider      interface{}                     `json:"signatureHelpProvider,omitempty"`
-	DeclarationProvider        interface{}                     `json:"declarationProvider,omitempty"`
-	DefinitionProvider         interface{}                     `json:"definitionProvider,omitempty"`
-	TypeDefinitionProvider     interface{}                     `json:"typeDefinitionProvider,omitempty"`
-	ImplementationProvider     interface{}                     `json:"implementationProvider,omitempty"`
-	ReferencesProvider         interface{}                     `json:"referencesProvider,omitempty"`
-	DocumentHighlightProvider  interface{}                     `json:"documentHighlightProvider,omitempty"`
-	DocumentSymbolProvider     interface{}                     `json:"documentSymbolProvider,omitempty"`
-	CodeActionProvider         interface{}                     `json:"codeActionProvider,omitempty"`
-	CodeLensProvider           interface{}                     `json:"codeLensProvider,omitempty"`
-	DocumentLinkProvider       interface{}                     `json:"documentLinkProvider,omitempty"`
-	ColorProvider              interface{}                     `json:"colorProvider,omitempty"`
-	DocumentFormattingProvider interface{}                     `json:"documentFormattingProvider,omitempty"`
-	DocumentRangeFormattingProvider interface{}                `json:"documentRangeFormattingProvider,omitempty"`
-	DocumentOnTypeFormattingProvider interface{}               `json:"documentOnTypeFormattingProvider,omitempty"`
-	RenameProvider             interface{}                     `json:"renameProvider,omitempty"`
-	FoldingRangeProvider       interface{}                     `json:"foldingRangeProvider,omitempty"`
-	ExecuteCommandProvider     interface{}                     `json:"executeCommandProvider,omitempty"`
-	WorkspaceSymbolProvider    interface{}                     `json:"workspaceSymbolProvider,omitempty"`
-	Workspace                  *WorkspaceServerCapabilities    `json:"workspace,omitempty"`
-	Experimental               interface{}                     `json:"experimental,omitempty"`
+	TextDocumentSync                 interface{}                  `json:"textDocumentSync,omitempty"`
+	CompletionProvider               *CompletionOptions           `json:"completionProvider,omitempty"`
+	HoverProvider                    interface{}                  `json:"hoverProvider,omitempty"`
+	SignatureHelpProvider            interface{}                  `json:"signatureHelpProvider,omitempty"`
+	DeclarationProvider              interface{}                  `json:"declarationProvider,omitempty"`
+	DefinitionProvider               interface{}                  `json:"definitionProvider,omitempty"`
+	TypeDefinitionProvider           interface{}                  `json:"typeDefinitionProvider,omitempty"`
+	ImplementationProvider           interface{}                  `json:"implementationProvider,omitempty"`
+	ReferencesProvider               interface{}                  `json:"referencesProvider,omitempty"`
+	DocumentHighlightProvider        interface{}                  `json:"documentHighlightProvider,omitempty"`
+	DocumentSymbolProvider           interface{}                  `json:"documentSymbolProvider,omitempty"`
+	CodeActionProvider               interface{}                  `json:"codeActionProvider,omitempty"`
+	CodeLensProvider                 interface{}                  `json:"codeLensProvider,omitempty"`
+	DocumentLinkProvider             interface{}                  `json:"documentLinkProvider,omitempty"`
+	ColorProvider                    interface{}                  `json:"colorProvider,omitempty"`
+	DocumentFormattingProvider       interface{}                  `json:"documentFormattingProvider,omitempty"`
+	DocumentRangeFormattingProvider  interface{}                  `json:"documentRangeFormattingProvider,omitempty"`
+	DocumentOnTypeFormattingProvider interface{}                  `json:"documentOnTypeFormattingProvider,omitempty"`
+	RenameProvider                   interface{}                  `json:"renameProvider,omitempty"`
+	FoldingRangeProvider             interface{}                  `json:"foldingRangeProvider,omitempty"`
+	ExecuteCommandProvider           interface{}                  `json:"executeCommandProvider,omitempty"`
+	WorkspaceSymbolProvider          interface{}                  `json:"workspaceSymbolProvider,omitempty"`
+	Workspace                        *WorkspaceServerCapabilities `json:"workspace,omitempty"`
+	Experimental                     interface{}                  `json:"experimental,omitempty"`
 }
 
 // CompletionOptions represents completion options
@@ -182,7 +182,7 @@ type WorkspaceServerCapabilities struct {
 
 // WorkspaceFoldersServerCapabilities represents workspace folders server capabilities
 type WorkspaceFoldersServerCapabilities struct {
-	Supported           bool `json:"supported,omitempty"`
+	Supported           bool        `json:"supported,omitempty"`
 	ChangeNotifications interface{} `json:"changeNotifications,omitempty"`
 }
 
@@ -250,27 +250,27 @@ const (
 
 // CompletionList represents a list of completion items
 type CompletionList struct {
-	IsIncomplete bool              `json:"isIncomplete"`
-	Items        []CompletionItem  `json:"items"`
+	IsIncomplete bool             `json:"isIncomplete"`
+	Items        []CompletionItem `json:"items"`
 }
 
 // CompletionItem represents a completion item
 type CompletionItem struct {
-	Label               string              `json:"label"`
-	Kind                CompletionItemKind  `json:"kind,omitempty"`
-	Detail              string              `json:"detail,omitempty"`
-	Documentation       interface{}         `json:"documentation,omitempty"`
-	Deprecated          bool                `json:"deprecated,omitempty"`
-	Preselect           bool                `json:"preselect,omitempty"`
-	SortText            string              `json:"sortText,omitempty"`
-	FilterText          string              `json:"filterText,omitempty"`
-	InsertText          string              `json:"insertText,omitempty"`
-	InsertTextFormat    InsertTextFormat    `json:"insertTextFormat,omitempty"`
-	TextEdit            *TextEdit           `json:"textEdit,omitempty"`
-	AdditionalTextEdits []TextEdit          `json:"additionalTextEdits,omitempty"`
-	CommitCharacters    []string            `json:"commitCharacters,omitempty"`
-	Command             *Command            `json:"command,omitempty"`
-	Data                interface{}         `json:"data,omitempty"`
+	Label               string             `json:"label"`
+	Kind                CompletionItemKind `json:"kind,omitempty"`
+	Detail              string             `json:"detail,omitempty"`
+	Documentation       interface{}        `json:"documentation,omitempty"`
+	Deprecated          bool               `json:"deprecated,omitempty"`
+	Preselect           bool               `json:"preselect,omitempty"`
+	SortText            string             `json:"sortText,omitempty"`
+	FilterText          string             `json:"filterText,omitempty"`
+	InsertText          string             `json:"insertText,omitempty"`
+	InsertTextFormat    InsertTextFormat   `json:"insertTextFormat,omitempty"`
+	TextEdit            *TextEdit          `json:"textEdit,omitempty"`
+	AdditionalTextEdits []TextEdit         `json:"additionalTextEdits,omitempty"`
+	CommitCharacters    []string           `json:"commitCharacters,omitempty"`
+	Command             *Command           `json:"command,omitempty"`
+	Data                interface{}        `json:"data,omitempty"`
 }
 
 // CompletionItemKind represents the kind of a completion item
@@ -364,8 +364,8 @@ type TextDocumentItem struct {
 
 // DidChangeTextDocumentParams represents parameters for textDocument/didChange
 type DidChangeTextDocumentParams struct {
-	TextDocument   VersionedTextDocumentIdentifier   `json:"textDocument"`
-	ContentChanges []TextDocumentContentChangeEvent  `json:"contentChanges"`
+	TextDocument   VersionedTextDocumentIdentifier  `json:"textDocument"`
+	ContentChanges []TextDocumentContentChangeEvent `json:"contentChanges"`
 }
 
 // TextDocumentContentChangeEvent represents a change to a text document
@@ -472,8 +472,8 @@ type DocumentFormattingParams struct {
 
 // FormattingOptions represents formatting options
 type FormattingOptions struct {
-	TabSize      int  `json:"tabSize"`
-	InsertSpaces bool `json:"insertSpaces"`
+	TabSize                int  `json:"tabSize"`
+	InsertSpaces           bool `json:"insertSpaces"`
 	TrimTrailingWhitespace bool `json:"trimTrailingWhitespace,omitempty"`
 	InsertFinalNewline     bool `json:"insertFinalNewline,omitempty"`
 	TrimFinalNewlines      bool `json:"trimFinalNewlines,omitempty"`
@@ -541,12 +541,12 @@ type WorkspaceEdit struct {
 
 // Diagnostic represents a diagnostic
 type Diagnostic struct {
-	Range              Range              `json:"range"`
-	Severity           DiagnosticSeverity `json:"severity,omitempty"`
-	Code               interface{}        `json:"code,omitempty"`
-	Source             string             `json:"source,omitempty"`
-	Message            string             `json:"message"`
-	Tags               []DiagnosticTag    `json:"tags,omitempty"`
+	Range              Range                          `json:"range"`
+	Severity           DiagnosticSeverity             `json:"severity,omitempty"`
+	Code               interface{}                    `json:"code,omitempty"`
+	Source             string                         `json:"source,omitempty"`
+	Message            string                         `json:"message"`
+	Tags               []DiagnosticTag                `json:"tags,omitempty"`
 	RelatedInformation []DiagnosticRelatedInformation `json:"relatedInformation,omitempty"`
 }
 
@@ -592,10 +592,10 @@ type SignatureHelp struct {
 
 // SignatureInformation represents information about a signature
 type SignatureInformation struct {
-	Label           string                  `json:"label"`
-	Documentation   interface{}             `json:"documentation,omitempty"`
-	Parameters      []ParameterInformation  `json:"parameters,omitempty"`
-	ActiveParameter int                     `json:"activeParameter,omitempty"`
+	Label           string                 `json:"label"`
+	Documentation   interface{}            `json:"documentation,omitempty"`
+	Parameters      []ParameterInformation `json:"parameters,omitempty"`
+	ActiveParameter int                    `json:"activeParameter,omitempty"`
 }
 
 // ParameterInformation represents information about a parameter
@@ -606,15 +606,15 @@ type ParameterInformation struct {
 
 // CodeLens represents a code lens
 type CodeLens struct {
-	Range   Range    `json:"range"`
-	Command *Command `json:"command,omitempty"`
+	Range   Range       `json:"range"`
+	Command *Command    `json:"command,omitempty"`
 	Data    interface{} `json:"data,omitempty"`
 }
 
 // DocumentHighlight represents a document highlight
 type DocumentHighlight struct {
-	Range Range                  `json:"range"`
-	Kind  DocumentHighlightKind  `json:"kind,omitempty"`
+	Range Range                 `json:"range"`
+	Kind  DocumentHighlightKind `json:"kind,omitempty"`
 }
 
 // DocumentHighlightKind represents the kind of a document highlight

@@ -20,59 +20,59 @@ type SearchReplaceTool struct {
 
 // SearchReplaceParams represents the input parameters for search and replace
 type SearchReplaceParams struct {
-	Pattern       string   `json:"pattern"`                     // Search pattern (regex or literal)
-	Replacement   string   `json:"replacement,omitempty"`       // Replacement text (empty for search-only)
-	Files         []string `json:"files,omitempty"`             // File glob patterns to search
-	Preview       bool     `json:"preview,omitempty"`           // Show preview before applying
-	Regex         bool     `json:"regex,omitempty"`             // Use regex pattern matching
-	CaseSensitive bool     `json:"case_sensitive,omitempty"`    // Case sensitive search
-	WholeWord     bool     `json:"whole_word,omitempty"`        // Match whole words only
-	Recursive     bool     `json:"recursive,omitempty"`         // Search recursively in directories
-	MaxResults    int      `json:"max_results,omitempty"`       // Maximum number of results (default: 100)
-	Context       int      `json:"context,omitempty"`           // Number of context lines to show
+	Pattern       string   `json:"pattern"`                  // Search pattern (regex or literal)
+	Replacement   string   `json:"replacement,omitempty"`    // Replacement text (empty for search-only)
+	Files         []string `json:"files,omitempty"`          // File glob patterns to search
+	Preview       bool     `json:"preview,omitempty"`        // Show preview before applying
+	Regex         bool     `json:"regex,omitempty"`          // Use regex pattern matching
+	CaseSensitive bool     `json:"case_sensitive,omitempty"` // Case sensitive search
+	WholeWord     bool     `json:"whole_word,omitempty"`     // Match whole words only
+	Recursive     bool     `json:"recursive,omitempty"`      // Search recursively in directories
+	MaxResults    int      `json:"max_results,omitempty"`    // Maximum number of results (default: 100)
+	Context       int      `json:"context,omitempty"`        // Number of context lines to show
 }
 
 // SearchReplaceResult represents the result of search and replace operation
 type SearchReplaceResult struct {
-	Pattern      string        `json:"pattern"`
-	Replacement  string        `json:"replacement,omitempty"`
-	TotalMatches int           `json:"total_matches"`
-	FilesChanged int           `json:"files_changed"`
-	Matches      []*SearchMatch `json:"matches"`
+	Pattern      string           `json:"pattern"`
+	Replacement  string           `json:"replacement,omitempty"`
+	TotalMatches int              `json:"total_matches"`
+	FilesChanged int              `json:"files_changed"`
+	Matches      []*SearchMatch   `json:"matches"`
 	Preview      []*PreviewChange `json:"preview,omitempty"`
-	Applied      bool          `json:"applied"`
-	Errors       []string      `json:"errors,omitempty"`
-	Summary      *SearchSummary `json:"summary"`
+	Applied      bool             `json:"applied"`
+	Errors       []string         `json:"errors,omitempty"`
+	Summary      *SearchSummary   `json:"summary"`
 }
 
 // SearchMatch represents a single search match
 type SearchMatch struct {
-	File         string   `json:"file"`
-	Line         int      `json:"line"`
-	Column       int      `json:"column"`
-	MatchText    string   `json:"match_text"`
+	File          string   `json:"file"`
+	Line          int      `json:"line"`
+	Column        int      `json:"column"`
+	MatchText     string   `json:"match_text"`
 	ContextBefore []string `json:"context_before,omitempty"`
 	ContextAfter  []string `json:"context_after,omitempty"`
-	Replaced     bool     `json:"replaced,omitempty"`
+	Replaced      bool     `json:"replaced,omitempty"`
 }
 
 // PreviewChange represents a preview of what would be changed
 type PreviewChange struct {
-	File        string `json:"file"`
-	Line        int    `json:"line"`
-	Before      string `json:"before"`
-	After       string `json:"after"`
-	MatchStart  int    `json:"match_start"`
-	MatchEnd    int    `json:"match_end"`
+	File       string `json:"file"`
+	Line       int    `json:"line"`
+	Before     string `json:"before"`
+	After      string `json:"after"`
+	MatchStart int    `json:"match_start"`
+	MatchEnd   int    `json:"match_end"`
 }
 
 // SearchSummary provides summary statistics
 type SearchSummary struct {
-	FilesSearched   int            `json:"files_searched"`
-	FilesWithMatches int           `json:"files_with_matches"`
+	FilesSearched     int            `json:"files_searched"`
+	FilesWithMatches  int            `json:"files_with_matches"`
 	LanguageBreakdown map[string]int `json:"language_breakdown"`
-	PatternType     string         `json:"pattern_type"` // literal, regex, semantic
-	TimeElapsed     string         `json:"time_elapsed,omitempty"`
+	PatternType       string         `json:"pattern_type"` // literal, regex, semantic
+	TimeElapsed       string         `json:"time_elapsed,omitempty"`
 }
 
 // NewSearchReplaceTool creates a new search and replace tool
@@ -330,17 +330,17 @@ func (t *SearchReplaceTool) findFiles(patterns []string, recursive bool) ([]stri
 				if err != nil || info.IsDir() {
 					return err
 				}
-				
+
 				matched, err := filepath.Match(pattern, filepath.Base(path))
 				if err != nil {
 					return err
 				}
-				
+
 				if matched && !seen[path] {
 					files = append(files, path)
 					seen[path] = true
 				}
-				
+
 				return nil
 			})
 			if err != nil {
@@ -382,7 +382,7 @@ func (t *SearchReplaceTool) searchFile(filename string, pattern *regexp.Regexp, 
 		for _, match := range lineMatches {
 			searchMatch := &SearchMatch{
 				File:      filename,
-				Line:      lineNum + 1, // 1-based line numbers
+				Line:      lineNum + 1,  // 1-based line numbers
 				Column:    match[0] + 1, // 1-based column numbers
 				MatchText: line[match[0]:match[1]],
 			}
@@ -432,10 +432,10 @@ func (t *SearchReplaceTool) generatePreviews(filename string, pattern *regexp.Re
 		}
 
 		lineContent := lines[match.Line-1]
-		
+
 		// Apply the replacement to this line
 		newLine := pattern.ReplaceAllString(lineContent, replacement)
-		
+
 		// Find the position of the match in the original line
 		matchIndices := pattern.FindStringIndex(lineContent)
 		var matchStart, matchEnd int
@@ -502,7 +502,7 @@ func (t *SearchReplaceTool) applyReplacements(ctx context.Context, params Search
 		}
 
 		result.FilesChanged++
-		
+
 		// Mark matches as replaced
 		for _, match := range matches {
 			match.Replaced = true
@@ -578,13 +578,13 @@ func (t *SearchReplaceTool) formatResult(result *SearchReplaceResult, params Sea
 		output.WriteString("\nMatches:\n")
 		currentFile := ""
 		matchCount := 0
-		
+
 		for _, match := range result.Matches {
 			if matchCount >= 20 { // Limit output
 				output.WriteString(fmt.Sprintf("... and %d more matches\n", result.TotalMatches-20))
 				break
 			}
-			
+
 			if match.File != currentFile {
 				if currentFile != "" {
 					output.WriteString("\n")
@@ -597,10 +597,10 @@ func (t *SearchReplaceTool) formatResult(result *SearchReplaceResult, params Sea
 			if match.Replaced {
 				status = " [REPLACED]"
 			}
-			
-			output.WriteString(fmt.Sprintf("  Line %d:%d: %s%s\n", 
+
+			output.WriteString(fmt.Sprintf("  Line %d:%d: %s%s\n",
 				match.Line, match.Column, match.MatchText, status))
-			
+
 			// Show context if available
 			if len(match.ContextBefore) > 0 || len(match.ContextAfter) > 0 {
 				for _, line := range match.ContextBefore {
@@ -612,7 +612,7 @@ func (t *SearchReplaceTool) formatResult(result *SearchReplaceResult, params Sea
 					}
 				}
 			}
-			
+
 			matchCount++
 		}
 	}

@@ -9,15 +9,15 @@ import (
 
 // localDirectoryStructure defines the directory structure for a local Guild project
 var localDirectoryStructure = []string{
-	"commissions",          // User-defined objectives/goals
-	"commissions/refined",  // AI-refined versions
+	"commissions",         // User-defined objectives/goals
+	"commissions/refined", // AI-refined versions
 	"campaigns",           // Execution plans for commissions
-	"kanban",             // Task tracking
-	"corpus",             // Project documentation
-	"corpus/index",       // Vector store indices
-	"prompts",            // Custom prompt templates
-	"tools",              // Project-specific tool installations/configs
-	"workspaces",         // Temporary agent work areas
+	"kanban",              // Task tracking
+	"corpus",              // Project documentation
+	"corpus/index",        // Vector store indices
+	"prompts",             // Custom prompt templates
+	"tools",               // Project-specific tool installations/configs
+	"workspaces",          // Temporary agent work areas
 	// "archives",        // TODO: Agent memory - awaiting ChromemGo deletion support
 }
 
@@ -86,12 +86,12 @@ func InitializeLocal(projectPath string) error {
 // createDefaultLocalConfig creates the default local guild configuration
 func createDefaultLocalConfig(localDir, projectPath string) error {
 	configPath := filepath.Join(localDir, "guild.yaml")
-	
+
 	// Detect project type
 	projectType := detectProjectType(projectPath)
-	
+
 	content := generateLocalConfig(projectType)
-	
+
 	return os.WriteFile(configPath, []byte(content), 0644)
 }
 
@@ -101,7 +101,7 @@ func detectProjectType(projectPath string) string {
 	if _, err := os.Stat(filepath.Join(projectPath, "go.mod")); err == nil {
 		return "golang"
 	}
-	
+
 	// Check for Python project
 	if _, err := os.Stat(filepath.Join(projectPath, "requirements.txt")); err == nil {
 		return "python"
@@ -112,17 +112,17 @@ func detectProjectType(projectPath string) string {
 	if _, err := os.Stat(filepath.Join(projectPath, "setup.py")); err == nil {
 		return "python"
 	}
-	
+
 	// Check for TypeScript/JavaScript project
 	if _, err := os.Stat(filepath.Join(projectPath, "package.json")); err == nil {
 		return "typescript"
 	}
-	
+
 	// Check for Rust project
 	if _, err := os.Stat(filepath.Join(projectPath, "Cargo.toml")); err == nil {
 		return "rust"
 	}
-	
+
 	return "generic"
 }
 

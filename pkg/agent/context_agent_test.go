@@ -64,7 +64,7 @@ func TestNewContextAwareAgent(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			agent := newContextAwareAgent(tt.id, tt.agentName, tt.agentType, tt.capabilities)
 			require.NotNil(t, agent)
-			
+
 			if tt.validateAgent != nil {
 				tt.validateAgent(t, agent)
 			}
@@ -108,14 +108,14 @@ func TestContextAwareAgent_Execute(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			agent := tt.setupAgent()
-			
+
 			// Check initial status
 			assert.Equal(t, "idle", agent.status.State)
 			assert.Equal(t, int64(0), agent.taskCount)
-			
+
 			// Execute
 			result, err := agent.Execute(ctx, tt.request)
-			
+
 			// Check error
 			if tt.expectError {
 				assert.Error(t, err)
@@ -128,7 +128,7 @@ func TestContextAwareAgent_Execute(t *testing.T) {
 				assert.NotEmpty(t, result)
 				assert.Equal(t, int64(1), agent.status.SuccessCount)
 			}
-			
+
 			// Check status was updated
 			assert.Equal(t, int64(1), agent.taskCount)
 			assert.NotEqual(t, time.Time{}, agent.status.LastActive)
@@ -152,7 +152,7 @@ func TestContextAwareAgent_GetName(t *testing.T) {
 func TestContextAwareAgent_GetCapabilities(t *testing.T) {
 	capabilities := []string{"code", "analysis", "documentation"}
 	agent := newContextAwareAgent("test-id", "Test Agent", "worker", capabilities)
-	
+
 	agentCaps := agent.GetCapabilities()
 	assert.Equal(t, len(capabilities), len(agentCaps))
 	for i, cap := range capabilities {
@@ -171,7 +171,7 @@ func TestContextAwareAgent_GetType(t *testing.T) {
 		{"specialist", "specialist"},
 		{"", ""}, // Empty type
 	}
-	
+
 	for _, tt := range tests {
 		t.Run("type_"+tt.agentType, func(t *testing.T) {
 			agent := newContextAwareAgent("test-id", "Test Agent", tt.agentType, []string{})
@@ -183,26 +183,26 @@ func TestContextAwareAgent_GetType(t *testing.T) {
 // Test GetStatus method
 func TestContextAwareAgent_GetStatus(t *testing.T) {
 	agent := newContextAwareAgent("test-id", "Test Agent", "worker", []string{"general"})
-	
+
 	// Initial status
 	status := agent.GetStatus()
-	
+
 	assert.Equal(t, "idle", status.State)
 	assert.Equal(t, "", status.CurrentTask)
 	assert.Equal(t, int64(0), status.TaskCount)
 	assert.Equal(t, int64(0), status.SuccessCount)
 	assert.Equal(t, int64(0), status.ErrorCount)
-	
+
 	// Update some status fields
 	agent.status.State = "busy"
 	agent.status.CurrentTask = "processing request"
 	agent.status.TaskCount = 5
 	agent.status.SuccessCount = 3
 	agent.status.ErrorCount = 2
-	
+
 	// Check updated status
 	status = agent.GetStatus()
-	
+
 	assert.Equal(t, "busy", status.State)
 	assert.Equal(t, "processing request", status.CurrentTask)
 	assert.Equal(t, int64(5), status.TaskCount)
@@ -213,11 +213,11 @@ func TestContextAwareAgent_GetStatus(t *testing.T) {
 // Test AddMetadata method
 func TestContextAwareAgent_AddMetadata(t *testing.T) {
 	agent := newContextAwareAgent("test-id", "Test Agent", "worker", []string{"general"})
-	
+
 	// Add metadata
 	agent.AddMetadata("custom_field", "custom_value")
 	agent.AddMetadata("metric", 42)
-	
+
 	// Check metadata was updated
 	assert.Equal(t, "custom_value", agent.status.Metadata["custom_field"])
 	assert.Equal(t, 42, agent.status.Metadata["metric"])
@@ -226,12 +226,12 @@ func TestContextAwareAgent_AddMetadata(t *testing.T) {
 // Test AddMetadata and GetMetadata methods
 func TestContextAwareAgent_Metadata(t *testing.T) {
 	agent := newContextAwareAgent("test-id", "Test Agent", "worker", []string{"general"})
-	
+
 	// Add metadata
 	agent.AddMetadata("key1", "value1")
 	agent.AddMetadata("key2", 123)
 	agent.AddMetadata("key3", true)
-	
+
 	// Get metadata
 	assert.Equal(t, "value1", agent.GetMetadata("key1"))
 	assert.Equal(t, 123, agent.GetMetadata("key2"))
@@ -242,23 +242,23 @@ func TestContextAwareAgent_Metadata(t *testing.T) {
 // Test additional methods
 func TestContextAwareAgent_AdditionalMethods(t *testing.T) {
 	agent := newContextAwareAgent("test-id", "Test Agent", "worker", []string{"general"})
-	
+
 	// Test SetDefaultProvider
 	agent.SetDefaultProvider("openai")
 	assert.Equal(t, "openai", agent.defaultProvider)
-	
+
 	// Test SetSystemPrompt
 	agent.SetSystemPrompt("You are a helpful assistant")
 	assert.Equal(t, "You are a helpful assistant", agent.systemPrompt)
-	
+
 	// Test UpdateCapabilities
 	newCaps := []string{"coding", "testing", "documentation"}
 	agent.UpdateCapabilities(newCaps)
 	assert.Equal(t, newCaps, agent.Capabilities)
-	
+
 	// Test GetAgentType
 	assert.Equal(t, "worker", agent.GetAgentType())
-	
+
 	// Test Reset
 	agent.Reset()
 	assert.Equal(t, "idle", agent.status.State)

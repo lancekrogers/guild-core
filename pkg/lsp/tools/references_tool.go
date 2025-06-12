@@ -104,11 +104,11 @@ func (t *ReferencesTool) Execute(ctx context.Context, input string) (*tools.Tool
 
 	// Group references by file for better organization
 	fileGroups := make(map[string][]LocationResult)
-	
+
 	for _, loc := range locations {
 		// Convert URI to file path
 		filePath := strings.TrimPrefix(loc.URI, "file://")
-		
+
 		locResult := LocationResult{
 			File:      filePath,
 			Line:      loc.Range.Start.Line,
@@ -116,7 +116,7 @@ func (t *ReferencesTool) Execute(ctx context.Context, input string) (*tools.Tool
 			EndLine:   loc.Range.End.Line,
 			EndColumn: loc.Range.End.Character,
 		}
-		
+
 		result.References = append(result.References, locResult)
 		fileGroups[filePath] = append(fileGroups[filePath], locResult)
 	}

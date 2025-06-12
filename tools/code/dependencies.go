@@ -21,34 +21,34 @@ type DependenciesTool struct {
 
 // DependenciesParams represents the input parameters for dependency analysis
 type DependenciesParams struct {
-	ProjectPath  string `json:"project_path,omitempty"`   // Path to project root (auto-detect if empty)
-	ShowTree     bool   `json:"show_tree,omitempty"`      // Show dependency tree
-	CheckUpdates bool   `json:"check_updates,omitempty"`  // Check for outdated packages
-	OnlyDirect   bool   `json:"only_direct,omitempty"`    // Only show direct dependencies
-	Format       string `json:"format,omitempty"`         // Output format: text, json, summary
+	ProjectPath  string `json:"project_path,omitempty"`  // Path to project root (auto-detect if empty)
+	ShowTree     bool   `json:"show_tree,omitempty"`     // Show dependency tree
+	CheckUpdates bool   `json:"check_updates,omitempty"` // Check for outdated packages
+	OnlyDirect   bool   `json:"only_direct,omitempty"`   // Only show direct dependencies
+	Format       string `json:"format,omitempty"`        // Output format: text, json, summary
 }
 
 // DependenciesResult represents the result of dependency analysis
 type DependenciesResult struct {
-	ProjectPath      string              `json:"project_path"`
-	ProjectType      string              `json:"project_type"` // go, python, node, etc.
-	TotalDirect      int                 `json:"total_direct"`
-	TotalTransitive  int                 `json:"total_transitive"`
-	Dependencies     []*Dependency       `json:"dependencies"`
-	OutdatedCount    int                 `json:"outdated_count"`
-	SecurityIssues   int                 `json:"security_issues"`
-	Summary          *DependencySummary  `json:"summary"`
-	Errors           []string            `json:"errors,omitempty"`
+	ProjectPath     string             `json:"project_path"`
+	ProjectType     string             `json:"project_type"` // go, python, node, etc.
+	TotalDirect     int                `json:"total_direct"`
+	TotalTransitive int                `json:"total_transitive"`
+	Dependencies    []*Dependency      `json:"dependencies"`
+	OutdatedCount   int                `json:"outdated_count"`
+	SecurityIssues  int                `json:"security_issues"`
+	Summary         *DependencySummary `json:"summary"`
+	Errors          []string           `json:"errors,omitempty"`
 }
 
 // DependencySummary provides a summary of dependency analysis
 type DependencySummary struct {
-	TotalSize        int64   `json:"total_size"`
-	AverageAge       int     `json:"average_age_days"`
-	LicenseTypes     map[string]int `json:"license_types"`
-	TopCategories    map[string]int `json:"top_categories"`
-	RiskScore        float64 `json:"risk_score"` // 0-10, higher is riskier
-	Recommendations  []string `json:"recommendations"`
+	TotalSize       int64          `json:"total_size"`
+	AverageAge      int            `json:"average_age_days"`
+	LicenseTypes    map[string]int `json:"license_types"`
+	TopCategories   map[string]int `json:"top_categories"`
+	RiskScore       float64        `json:"risk_score"` // 0-10, higher is riskier
+	Recommendations []string       `json:"recommendations"`
 }
 
 // NewDependenciesTool creates a new dependencies analysis tool
@@ -395,60 +395,60 @@ func (t *DependenciesTool) analyzeRustDependencies(ctx context.Context, params D
 // parseGoListOutput parses the output of 'go list -m -json all'
 func (t *DependenciesTool) parseGoListOutput(output string, onlyDirect bool) ([]*Dependency, error) {
 	var dependencies []*Dependency
-	
+
 	// Split JSON objects (each line is a separate JSON object)
 	lines := strings.Split(strings.TrimSpace(output), "\n")
-	
+
 	for i, line := range lines {
 		if strings.TrimSpace(line) == "" {
 			continue
 		}
-		
+
 		var module map[string]interface{}
 		if err := json.Unmarshal([]byte(line), &module); err != nil {
 			continue // Skip invalid JSON
 		}
-		
+
 		path, ok := module["Path"].(string)
 		if !ok || path == "" {
 			continue
 		}
-		
+
 		// Skip the main module (first entry)
 		if i == 0 {
 			continue
 		}
-		
+
 		version, _ := module["Version"].(string)
 		indirect, _ := module["Indirect"].(bool)
-		
+
 		depType := "direct"
 		if indirect {
 			depType = "transitive"
 		}
-		
+
 		// Skip transitive dependencies if onlyDirect is true
 		if onlyDirect && depType == "transitive" {
 			continue
 		}
-		
+
 		dep := &Dependency{
 			Name:    path,
 			Version: version,
 			Type:    depType,
 			Source:  "go modules",
 		}
-		
+
 		dependencies = append(dependencies, dep)
 	}
-	
+
 	return dependencies, nil
 }
 
 // extractNodeDependencies extracts dependencies from package.json
 func (t *DependenciesTool) extractNodeDependencies(packageJson map[string]interface{}, onlyDirect bool) []*Dependency {
 	var dependencies []*Dependency
-	
+
 	// Extract direct dependencies
 	if deps, ok := packageJson["dependencies"].(map[string]interface{}); ok {
 		for name, version := range deps {
@@ -463,7 +463,7 @@ func (t *DependenciesTool) extractNodeDependencies(packageJson map[string]interf
 			}
 		}
 	}
-	
+
 	// Extract dev dependencies
 	if devDeps, ok := packageJson["devDependencies"].(map[string]interface{}); ok {
 		for name, version := range devDeps {
@@ -478,7 +478,7 @@ func (t *DependenciesTool) extractNodeDependencies(packageJson map[string]interf
 			}
 		}
 	}
-	
+
 	return dependencies
 }
 
@@ -488,19 +488,19 @@ func (t *DependenciesTool) parseRequirementsTxt(filePath string) ([]*Dependency,
 	if err != nil {
 		return nil, err
 	}
-	
+
 	var dependencies []*Dependency
 	lines := strings.Split(string(content), "\n")
-	
+
 	// Simple regex for requirement parsing (simplified)
 	reqRegex := regexp.MustCompile(`^([a-zA-Z0-9\-_]+)([><=!]+)?([0-9\.]+.*)?`)
-	
+
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue
 		}
-		
+
 		matches := reqRegex.FindStringSubmatch(line)
 		if len(matches) >= 2 {
 			name := matches[1]
@@ -508,7 +508,7 @@ func (t *DependenciesTool) parseRequirementsTxt(filePath string) ([]*Dependency,
 			if len(matches) >= 4 && matches[3] != "" {
 				version = matches[2] + matches[3]
 			}
-			
+
 			dep := &Dependency{
 				Name:    name,
 				Version: version,
@@ -518,7 +518,7 @@ func (t *DependenciesTool) parseRequirementsTxt(filePath string) ([]*Dependency,
 			dependencies = append(dependencies, dep)
 		}
 	}
-	
+
 	return dependencies, nil
 }
 
@@ -530,27 +530,27 @@ func (t *DependenciesTool) checkGoUpdates(ctx context.Context, result *Dependenc
 	if err != nil {
 		return err
 	}
-	
+
 	// Parse the output to find outdated packages
 	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
-	
+
 	for _, line := range lines {
 		if strings.TrimSpace(line) == "" {
 			continue
 		}
-		
+
 		var module map[string]interface{}
 		if err := json.Unmarshal([]byte(line), &module); err != nil {
 			continue
 		}
-		
+
 		path, _ := module["Path"].(string)
 		update, hasUpdate := module["Update"]
-		
+
 		if hasUpdate && update != nil {
 			if updateMap, ok := update.(map[string]interface{}); ok {
 				latestVersion, _ := updateMap["Version"].(string)
-				
+
 				// Find the corresponding dependency and update it
 				for _, dep := range result.Dependencies {
 					if dep.Name == path {
@@ -563,7 +563,7 @@ func (t *DependenciesTool) checkGoUpdates(ctx context.Context, result *Dependenc
 			}
 		}
 	}
-	
+
 	return nil
 }
 
@@ -578,29 +578,29 @@ func (t *DependenciesTool) checkNodeUpdates(ctx context.Context, projectPath str
 // generateSummary generates summary statistics for dependencies
 func (t *DependenciesTool) generateSummary(result *DependenciesResult) {
 	summary := result.Summary
-	
+
 	// Calculate risk score based on various factors
 	riskScore := 0.0
-	
+
 	// Factor 1: Number of dependencies (more = higher risk)
 	depCount := float64(len(result.Dependencies))
 	riskScore += (depCount / 100.0) * 2.0 // 2 points per 100 deps
-	
+
 	// Factor 2: Outdated packages
 	if result.OutdatedCount > 0 {
 		riskScore += float64(result.OutdatedCount) * 0.5
 	}
-	
+
 	// Factor 3: Security issues
 	riskScore += float64(result.SecurityIssues) * 2.0
-	
+
 	// Cap at 10
 	if riskScore > 10.0 {
 		riskScore = 10.0
 	}
-	
+
 	summary.RiskScore = riskScore
-	
+
 	// Generate recommendations
 	if result.OutdatedCount > 5 {
 		summary.Recommendations = append(summary.Recommendations, "Consider updating outdated packages")
@@ -625,10 +625,10 @@ func (t *DependenciesTool) formatResult(result *DependenciesResult, format strin
 			return "", err
 		}
 		return string(data), nil
-		
+
 	case "summary":
 		return t.formatSummary(result), nil
-		
+
 	default: // "text"
 		return t.formatText(result), nil
 	}
@@ -637,51 +637,51 @@ func (t *DependenciesTool) formatResult(result *DependenciesResult, format strin
 // formatSummary formats a summary view of dependencies
 func (t *DependenciesTool) formatSummary(result *DependenciesResult) string {
 	var output strings.Builder
-	
+
 	output.WriteString(fmt.Sprintf("Dependency Analysis Summary\n"))
 	output.WriteString(fmt.Sprintf("Project: %s (%s)\n", result.ProjectPath, result.ProjectType))
 	output.WriteString(fmt.Sprintf("Direct Dependencies: %d\n", result.TotalDirect))
 	output.WriteString(fmt.Sprintf("Transitive Dependencies: %d\n", result.TotalTransitive))
-	
+
 	if result.OutdatedCount > 0 {
 		output.WriteString(fmt.Sprintf("Outdated Packages: %d\n", result.OutdatedCount))
 	}
-	
+
 	if result.SecurityIssues > 0 {
 		output.WriteString(fmt.Sprintf("Security Issues: %d\n", result.SecurityIssues))
 	}
-	
+
 	output.WriteString(fmt.Sprintf("Risk Score: %.1f/10\n", result.Summary.RiskScore))
-	
+
 	if len(result.Summary.Recommendations) > 0 {
 		output.WriteString("\nRecommendations:\n")
 		for _, rec := range result.Summary.Recommendations {
 			output.WriteString(fmt.Sprintf("- %s\n", rec))
 		}
 	}
-	
+
 	if len(result.Errors) > 0 {
 		output.WriteString("\nWarnings:\n")
 		for _, err := range result.Errors {
 			output.WriteString(fmt.Sprintf("- %s\n", err))
 		}
 	}
-	
+
 	return output.String()
 }
 
 // formatText formats a detailed text view of dependencies
 func (t *DependenciesTool) formatText(result *DependenciesResult) string {
 	var output strings.Builder
-	
+
 	output.WriteString(fmt.Sprintf("Dependencies for %s (%s)\n", result.ProjectPath, result.ProjectType))
 	output.WriteString(fmt.Sprintf("Total: %d direct, %d transitive\n\n", result.TotalDirect, result.TotalTransitive))
-	
+
 	// Group by type
 	directDeps := []*Dependency{}
 	transitiveDeps := []*Dependency{}
 	devDeps := []*Dependency{}
-	
+
 	for _, dep := range result.Dependencies {
 		switch dep.Type {
 		case "direct":
@@ -692,7 +692,7 @@ func (t *DependenciesTool) formatText(result *DependenciesResult) string {
 			devDeps = append(devDeps, dep)
 		}
 	}
-	
+
 	// Output direct dependencies
 	if len(directDeps) > 0 {
 		output.WriteString(fmt.Sprintf("Direct Dependencies (%d):\n", len(directDeps)))
@@ -705,7 +705,7 @@ func (t *DependenciesTool) formatText(result *DependenciesResult) string {
 		}
 		output.WriteString("\n")
 	}
-	
+
 	// Output dev dependencies
 	if len(devDeps) > 0 {
 		output.WriteString(fmt.Sprintf("Development Dependencies (%d):\n", len(devDeps)))
@@ -714,7 +714,7 @@ func (t *DependenciesTool) formatText(result *DependenciesResult) string {
 		}
 		output.WriteString("\n")
 	}
-	
+
 	// Output transitive dependencies (limited)
 	if len(transitiveDeps) > 0 {
 		output.WriteString(fmt.Sprintf("Transitive Dependencies (%d):\n", len(transitiveDeps)))
@@ -727,9 +727,9 @@ func (t *DependenciesTool) formatText(result *DependenciesResult) string {
 		}
 		output.WriteString("\n")
 	}
-	
+
 	// Add summary
 	output.WriteString(t.formatSummary(result))
-	
+
 	return output.String()
 }

@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
+	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/guild-ventures/guild-core/pkg/corpus"
 )
 
 // mockCorpusDoc creates a mock corpus document for testing
@@ -20,7 +20,7 @@ func mockCorpusDoc(title, body, filePath string) *corpus.CorpusDoc {
 
 func TestSearchCorpus(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Create temporary corpus directory for testing
 	tempDir := t.TempDir()
 	corpusConfig := corpus.Config{
@@ -109,9 +109,9 @@ func TestSearchCorpus(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			results, err := SearchCorpus(ctx, tt.query, corpusConfig, tt.maxResults)
 			require.NoError(t, err)
-			
+
 			assert.Len(t, results, tt.wantCount)
-			
+
 			// Verify expected documents are found
 			if len(tt.wantDocs) > 0 {
 				foundDocs := make(map[string]bool)
@@ -122,12 +122,12 @@ func TestSearchCorpus(t *testing.T) {
 						foundDocs[doc.Title] = true
 					}
 				}
-				
+
 				for _, expectedDoc := range tt.wantDocs {
 					assert.True(t, foundDocs[expectedDoc], "Expected to find document: %s", expectedDoc)
 				}
 			}
-			
+
 			// Verify all results have high scores
 			for _, result := range results {
 				assert.Equal(t, float32(0.9), result.Score)
@@ -140,13 +140,13 @@ func TestSearchCorpus(t *testing.T) {
 
 func TestSearchCorpus_ErrorHandling(t *testing.T) {
 	ctx := context.Background()
-	
+
 	tests := []struct {
-		name         string
-		corpusConfig corpus.Config
-		query        string
-		maxResults   int
-		wantError    bool
+		name          string
+		corpusConfig  corpus.Config
+		query         string
+		maxResults    int
+		wantError     bool
 		errorContains string
 	}{
 		{
@@ -172,7 +172,7 @@ func TestSearchCorpus_ErrorHandling(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			results, err := SearchCorpus(ctx, tt.query, tt.corpusConfig, tt.maxResults)
-			
+
 			if tt.wantError {
 				assert.Error(t, err)
 				if tt.errorContains != "" && err != nil {
@@ -288,11 +288,11 @@ func TestSearchCorpus_CorruptedDocument(t *testing.T) {
 		FilePath: corruptedPath,
 		// Missing required fields to cause load failure
 	}, corpusConfig)
-	
+
 	// Search should still work and return the valid document
 	results, err := SearchCorpus(ctx, "document", corpusConfig, 10)
 	require.NoError(t, err)
-	
+
 	// Should find only the valid document
 	assert.Len(t, results, 1)
 	assert.Contains(t, results[0].Content, "valid document")

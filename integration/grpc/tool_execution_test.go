@@ -52,11 +52,11 @@ func (t *TestTool) RequiresAuth() bool {
 func TestToolExecutionViaGRPC(t *testing.T) {
 	// Create registry and register test tools
 	reg := registry.NewComponentRegistry()
-	
+
 	// Initialize registry with mock configuration
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	
+
 	err := reg.Initialize(ctx, registry.Config{
 		Agents: registry.AgentConfigYaml{
 			DefaultType: "worker",
@@ -77,7 +77,7 @@ func TestToolExecutionViaGRPC(t *testing.T) {
 		},
 	})
 	require.NoError(t, err)
-	
+
 	// Register a mock agent factory
 	agentRegistry := reg.Agents()
 	err = agentRegistry.RegisterAgentType("tool-agent", func(config registry.AgentConfig) (registry.Agent, error) {
@@ -85,20 +85,20 @@ func TestToolExecutionViaGRPC(t *testing.T) {
 			id:           config.Name,
 			name:         config.Name,
 			toolRegistry: reg.Tools(), // Pass the tool registry so it can execute tools
-			responses: map[string]string{
+			responses:    map[string]string{
 				// Remove hardcoded tool responses - let the agent execute real tools
 			},
 		}, nil
 	})
 	require.NoError(t, err)
-	
+
 	// Create test tools
 	testTool1 := &TestTool{
 		name:        "test-tool-1",
 		description: "First test tool",
 		result:      "Tool 1 executed successfully",
 	}
-	
+
 	testTool2 := &TestTool{
 		name:        "test-tool-2",
 		description: "Second test tool with cost",
@@ -171,7 +171,7 @@ func TestToolExecutionViaGRPC(t *testing.T) {
 			description: "Tool with safety checks",
 			result:      "Executed safely",
 		}
-		
+
 		err := reg.Tools().RegisterTool(safeTool.Name(), safeTool)
 		require.NoError(t, err)
 
@@ -219,7 +219,7 @@ func TestToolExecutionViaGRPC(t *testing.T) {
 		if msgResp, ok := resp.Response.(*guildpb.ChatResponse_Message); ok {
 			assert.Contains(t, msgResp.Message.Content, "cost tracking")
 		}
-		
+
 		// In a real test, we'd verify cost was recorded
 		// assert.Greater(t, resp.Cost, 0.0)
 	})
@@ -263,11 +263,11 @@ func TestToolExecutionViaGRPC(t *testing.T) {
 	t.Run("concurrent tool execution", func(t *testing.T) {
 		// Test multiple tools executing concurrently
 		sessions := []string{"concurrent-tool-1", "concurrent-tool-2", "concurrent-tool-3"}
-		
+
 		for _, sessionID := range sessions {
 			t.Run(sessionID, func(t *testing.T) {
 				t.Parallel()
-				
+
 				// Create session
 				createResp, err := client.CreateChatSession(context.Background(), &guildpb.CreateChatSessionRequest{
 					Name:       sessionID,

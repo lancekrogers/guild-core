@@ -34,7 +34,7 @@ func (m *mockCommissionPlanner) AssignTasksToArtisans(ctx context.Context, tasks
 func TestOrchestratorRegistry(t *testing.T) {
 	registry := NewOrchestratorRegistry()
 	require.NotNil(t, registry)
-	
+
 	// Verify it implements the interface
 	var _ OrchestratorRegistry = registry
 }

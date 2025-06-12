@@ -9,9 +9,9 @@ import (
 
 // LifecycleManager manages the lifecycle of language servers
 type LifecycleManager struct {
-	manager        *Manager
-	cleanupTicker  *time.Ticker
-	done           chan bool
+	manager       *Manager
+	cleanupTicker *time.Ticker
+	done          chan bool
 }
 
 // NewLifecycleManager creates a new lifecycle manager
@@ -28,9 +28,9 @@ func (l *LifecycleManager) Start(ctx context.Context, cleanupInterval time.Durat
 	logger.InfoContext(ctx, "Starting LSP lifecycle manager",
 		"cleanup_interval", cleanupInterval,
 		"idle_timeout", idleTimeout)
-	
+
 	l.cleanupTicker = time.NewTicker(cleanupInterval)
-	
+
 	go func() {
 		for {
 			select {
@@ -64,7 +64,7 @@ func (l *LifecycleManager) RestartServer(ctx context.Context, language string, w
 	logger.InfoContext(ctx, "Restarting language server",
 		"language", language,
 		"workspace", workspace)
-	
+
 	// Stop the server
 	if err := l.manager.serverManager.StopServer(ctx, language, workspace); err != nil {
 		logger.ErrorContext(ctx, "Failed to stop server for restart",
@@ -72,20 +72,20 @@ func (l *LifecycleManager) RestartServer(ctx context.Context, language string, w
 			"workspace", workspace,
 			"error", err)
 	}
-	
+
 	// Give it a moment to clean up
 	time.Sleep(100 * time.Millisecond)
-	
+
 	// Start it again
 	_, err := l.manager.serverManager.GetServer(ctx, language, workspace)
 	if err != nil {
 		return err
 	}
-	
+
 	logger.InfoContext(ctx, "Successfully restarted language server",
 		"language", language,
 		"workspace", workspace)
-	
+
 	return nil
 }
 
@@ -93,12 +93,12 @@ func (l *LifecycleManager) RestartServer(ctx context.Context, language string, w
 func (l *LifecycleManager) HealthCheck(ctx context.Context) map[string]HealthStatus {
 	logger := observability.GetLogger(ctx)
 	servers := l.manager.GetActiveServers()
-	
+
 	results := make(map[string]HealthStatus)
-	
+
 	for _, server := range servers {
 		healthy, err := l.manager.serverManager.CheckServerHealth(ctx, server.Language, server.Workspace)
-		
+
 		status := HealthStatus{
 			Language:  server.Language,
 			Workspace: server.Workspace,
@@ -106,13 +106,13 @@ func (l *LifecycleManager) HealthCheck(ctx context.Context) map[string]HealthSta
 			StartTime: server.StartTime,
 			LastUsed:  server.LastUsed,
 		}
-		
+
 		if err != nil {
 			status.Error = err.Error()
 		}
-		
+
 		results[server.Key] = status
-		
+
 		if !healthy {
 			logger.WarnContext(ctx, "Unhealthy language server detected",
 				"language", server.Language,
@@ -120,7 +120,7 @@ func (l *LifecycleManager) HealthCheck(ctx context.Context) map[string]HealthSta
 				"error", err)
 		}
 	}
-	
+
 	return results
 }
 
@@ -138,17 +138,17 @@ type HealthStatus struct {
 func (l *LifecycleManager) AutoRestart(ctx context.Context) error {
 	logger := observability.GetLogger(ctx)
 	healthStatus := l.HealthCheck(ctx)
-	
+
 	var lastErr error
 	restarted := 0
-	
+
 	for key, status := range healthStatus {
 		if !status.Healthy {
 			logger.InfoContext(ctx, "Auto-restarting unhealthy server",
 				"key", key,
 				"language", status.Language,
 				"workspace", status.Workspace)
-			
+
 			if err := l.RestartServer(ctx, status.Language, status.Workspace); err != nil {
 				logger.ErrorContext(ctx, "Failed to auto-restart server",
 					"language", status.Language,
@@ -160,12 +160,12 @@ func (l *LifecycleManager) AutoRestart(ctx context.Context) error {
 			}
 		}
 	}
-	
+
 	if restarted > 0 {
 		logger.InfoContext(ctx, "Auto-restarted servers",
 			"count", restarted)
 	}
-	
+
 	return lastErr
 }
 
@@ -174,7 +174,7 @@ func (l *LifecycleManager) MonitorServer(ctx context.Context, language string, w
 	logger := observability.GetLogger(ctx)
 	ticker := time.NewTicker(checkInterval)
 	defer ticker.Stop()
-	
+
 	for {
 		select {
 		case <-ticker.C:
@@ -184,7 +184,7 @@ func (l *LifecycleManager) MonitorServer(ctx context.Context, language string, w
 					"language", language,
 					"workspace", workspace,
 					"error", err)
-				
+
 				// Attempt restart
 				if err := l.RestartServer(ctx, language, workspace); err != nil {
 					logger.ErrorContext(ctx, "Failed to restart unhealthy server",

@@ -8,7 +8,7 @@ import (
 
 func TestDefaultConfig(t *testing.T) {
 	config := DefaultConfig()
-	
+
 	// Verify all default values
 	assert.Equal(t, "rag_embeddings", config.CollectionName)
 	assert.Equal(t, 1000, config.ChunkSize)
@@ -23,7 +23,7 @@ func TestDefaultConfig(t *testing.T) {
 
 func TestDefaultRetrievalConfig(t *testing.T) {
 	config := DefaultRetrievalConfig()
-	
+
 	// Verify all default values
 	assert.Equal(t, 5, config.MaxResults)
 	assert.Equal(t, float32(0.0), config.MinScore)
@@ -216,20 +216,20 @@ func TestConfig_DeepCopy(t *testing.T) {
 		CorpusPath:      "/original/corpus/path",
 		CorpusMaxSizeMB: 1500,
 	}
-	
+
 	// Create a copy
 	copy := original
-	
+
 	// Modify the copy
 	copy.CollectionName = "modified_collection"
 	copy.ChunkSize = 1000
 	copy.CorpusPath = "/modified/corpus/path"
-	
+
 	// Verify original is unchanged (structs are value types in Go)
 	assert.Equal(t, "original_collection", original.CollectionName)
 	assert.Equal(t, 750, original.ChunkSize)
 	assert.Equal(t, "/original/corpus/path", original.CorpusPath)
-	
+
 	// Verify copy has new values
 	assert.Equal(t, "modified_collection", copy.CollectionName)
 	assert.Equal(t, 1000, copy.ChunkSize)

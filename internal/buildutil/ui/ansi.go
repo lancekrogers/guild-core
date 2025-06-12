@@ -79,14 +79,14 @@ func TermWidth() int {
 		Ypixel uint16
 	}
 	ws := &winsize{}
-	
+
 	// Try stdout first
 	_, _, err := syscall.Syscall(syscall.SYS_IOCTL,
 		uintptr(os.Stdout.Fd()),
 		uintptr(TIOCGWINSZ),
 		uintptr(unsafe.Pointer(ws)),
 	)
-	
+
 	// If stdout fails, try stderr
 	if (err != 0 || ws.Col == 0) && isatty() {
 		_, _, err = syscall.Syscall(syscall.SYS_IOCTL,
@@ -95,7 +95,7 @@ func TermWidth() int {
 			uintptr(unsafe.Pointer(ws)),
 		)
 	}
-	
+
 	if err != 0 || ws.Col == 0 {
 		return 80
 	}
@@ -119,7 +119,7 @@ func Center(text string, width int) string {
 func visualLength(text string) int {
 	// First strip ANSI codes
 	cleaned := stripANSI(text)
-	
+
 	// Count visual width
 	width := 0
 	for len(cleaned) > 0 {

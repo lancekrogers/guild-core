@@ -196,7 +196,7 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 
 	// Create adapter to convert between registry.CommissionRepository and agent.CommissionRepository
 	commissionAdapter := newCommissionRepositoryAdapter(s.commissionRepository)
-	
+
 	// Create task bridge with commission repository instead of objective manager
 	s.taskBridge = manager.NewTaskBridgeWithCommissions(kanbanBoard, commissionAdapter)
 

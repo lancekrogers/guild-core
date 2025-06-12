@@ -3,7 +3,7 @@ package mocks
 import (
 	"context"
 	"sync"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/lsp"
 )
 
@@ -13,11 +13,11 @@ type MockLSPClient struct {
 	started      bool
 	ready        bool
 	capabilities lsp.ServerCapabilities
-	
+
 	// Error injection
 	startError      error
 	initializeError error
-	
+
 	// Response tracking
 	completionCalls int
 	hoverCalls      int
@@ -79,11 +79,11 @@ func (m *MockLSPClient) GetHoverCalls() int {
 func (m *MockLSPClient) Start(ctx context.Context) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	if m.startError != nil {
 		return m.startError
 	}
-	
+
 	m.started = true
 	return nil
 }
@@ -92,7 +92,7 @@ func (m *MockLSPClient) Start(ctx context.Context) error {
 func (m *MockLSPClient) Stop(ctx context.Context) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.started = false
 	m.ready = false
 	return nil
@@ -116,11 +116,11 @@ func (m *MockLSPClient) GetCapabilities() lsp.ServerCapabilities {
 func (m *MockLSPClient) Initialize(ctx context.Context, params lsp.InitializeParams) (*lsp.InitializeResult, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	if m.initializeError != nil {
 		return nil, m.initializeError
 	}
-	
+
 	return &lsp.InitializeResult{
 		Capabilities: m.capabilities,
 	}, nil
@@ -130,7 +130,7 @@ func (m *MockLSPClient) Initialize(ctx context.Context, params lsp.InitializePar
 func (m *MockLSPClient) Completion(ctx context.Context, params lsp.CompletionParams) (*lsp.CompletionList, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.completionCalls++
 	return &lsp.CompletionList{
 		IsIncomplete: false,
@@ -142,7 +142,7 @@ func (m *MockLSPClient) Completion(ctx context.Context, params lsp.CompletionPar
 func (m *MockLSPClient) Hover(ctx context.Context, params lsp.HoverParams) (*lsp.Hover, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.hoverCalls++
 	return &lsp.Hover{
 		Contents: "Mock hover content",
@@ -153,7 +153,7 @@ func (m *MockLSPClient) Hover(ctx context.Context, params lsp.HoverParams) (*lsp
 func (m *MockLSPClient) Definition(ctx context.Context, params lsp.DefinitionParams) ([]lsp.Location, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.definitionCalls++
 	return []lsp.Location{}, nil
 }
@@ -162,7 +162,7 @@ func (m *MockLSPClient) Definition(ctx context.Context, params lsp.DefinitionPar
 func (m *MockLSPClient) References(ctx context.Context, params lsp.ReferenceParams) ([]lsp.Location, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.referencesCalls++
 	return []lsp.Location{}, nil
 }

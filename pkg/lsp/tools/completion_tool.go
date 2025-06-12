@@ -19,27 +19,27 @@ type CompletionTool struct {
 
 // CompletionParams represents the parameters for the completion tool
 type CompletionParams struct {
-	File     string `json:"file" description:"The file path to get completions for"`
-	Line     int    `json:"line" description:"The line number (0-based)"`
-	Column   int    `json:"column" description:"The column number (0-based)"`
-	Trigger  string `json:"trigger,omitempty" description:"Optional trigger character"`
+	File    string `json:"file" description:"The file path to get completions for"`
+	Line    int    `json:"line" description:"The line number (0-based)"`
+	Column  int    `json:"column" description:"The column number (0-based)"`
+	Trigger string `json:"trigger,omitempty" description:"Optional trigger character"`
 }
 
 // CompletionResult represents the result of a completion request
 type CompletionResult struct {
-	IsIncomplete bool               `json:"is_incomplete"`
-	Items        []CompletionItem   `json:"items"`
+	IsIncomplete bool             `json:"is_incomplete"`
+	Items        []CompletionItem `json:"items"`
 }
 
 // CompletionItem represents a single completion item
 type CompletionItem struct {
-	Label       string `json:"label"`
-	Kind        string `json:"kind"`
-	Detail      string `json:"detail,omitempty"`
-	InsertText  string `json:"insert_text,omitempty"`
-	SortText    string `json:"sort_text,omitempty"`
-	FilterText  string `json:"filter_text,omitempty"`
-	Deprecated  bool   `json:"deprecated,omitempty"`
+	Label      string `json:"label"`
+	Kind       string `json:"kind"`
+	Detail     string `json:"detail,omitempty"`
+	InsertText string `json:"insert_text,omitempty"`
+	SortText   string `json:"sort_text,omitempty"`
+	FilterText string `json:"filter_text,omitempty"`
+	Deprecated bool   `json:"deprecated,omitempty"`
 }
 
 // NewCompletionTool creates a new completion tool
@@ -110,7 +110,7 @@ func (t *CompletionTool) Execute(ctx context.Context, input string) (*tools.Tool
 	for _, item := range completions.Items {
 		// Convert completion kind to string
 		kind := completionKindToString(item.Kind)
-		
+
 		// Use InsertText if available, otherwise use Label
 		insertText := item.InsertText
 		if insertText == "" {
@@ -118,13 +118,13 @@ func (t *CompletionTool) Execute(ctx context.Context, input string) (*tools.Tool
 		}
 
 		result.Items = append(result.Items, CompletionItem{
-			Label:       item.Label,
-			Kind:        kind,
-			Detail:      item.Detail,
-			InsertText:  insertText,
-			SortText:    item.SortText,
-			FilterText:  item.FilterText,
-			Deprecated:  item.Deprecated,
+			Label:      item.Label,
+			Kind:       kind,
+			Detail:     item.Detail,
+			InsertText: insertText,
+			SortText:   item.SortText,
+			FilterText: item.FilterText,
+			Deprecated: item.Deprecated,
 		})
 	}
 
@@ -137,8 +137,8 @@ func (t *CompletionTool) Execute(ctx context.Context, input string) (*tools.Tool
 	}
 
 	metadata := map[string]string{
-		"file":           params.File,
-		"position":       fmt.Sprintf("%d:%d", params.Line, params.Column),
+		"file":             params.File,
+		"position":         fmt.Sprintf("%d:%d", params.Line, params.Column),
 		"completion_count": fmt.Sprintf("%d", len(result.Items)),
 	}
 

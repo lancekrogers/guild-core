@@ -25,11 +25,11 @@ var (
 	insertModeColor  = lipgloss.Color("32")
 	visualModeColor  = lipgloss.Color("33")
 	commandModeColor = lipgloss.Color("202")
-	
+
 	modeStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("255")).
-		Bold(true).
-		Padding(0, 1)
+			Foreground(lipgloss.Color("255")).
+			Bold(true).
+			Padding(0, 1)
 )
 
 // String returns the string representation of the vim mode
@@ -79,7 +79,7 @@ type vimKeyMap struct {
 	MoveLineEnd   key.Binding
 	MoveFileStart key.Binding
 	MoveFileEnd   key.Binding
-	
+
 	// Mode switching
 	EnterInsert       key.Binding
 	EnterInsertAppend key.Binding
@@ -87,17 +87,17 @@ type vimKeyMap struct {
 	EnterVisual       key.Binding
 	EnterCommand      key.Binding
 	ExitMode          key.Binding
-	
+
 	// Scrolling
 	ScrollHalfUp   key.Binding
 	ScrollHalfDown key.Binding
-	
+
 	// Search
 	SearchForward  key.Binding
 	SearchBackward key.Binding
 	SearchNext     key.Binding
 	SearchPrev     key.Binding
-	
+
 	// Copy/paste
 	Yank   key.Binding
 	Paste  key.Binding
@@ -152,7 +152,7 @@ func newVimKeyMap() vimKeyMap {
 			key.WithKeys("G"),
 			key.WithHelp("G", "end of file"),
 		),
-		
+
 		// Mode switching
 		EnterInsert: key.NewBinding(
 			key.WithKeys("i"),
@@ -178,7 +178,7 @@ func newVimKeyMap() vimKeyMap {
 			key.WithKeys("esc"),
 			key.WithHelp("esc", "normal mode"),
 		),
-		
+
 		// Scrolling
 		ScrollHalfUp: key.NewBinding(
 			key.WithKeys("ctrl+u"),
@@ -188,7 +188,7 @@ func newVimKeyMap() vimKeyMap {
 			key.WithKeys("ctrl+d"),
 			key.WithHelp("ctrl+d", "half page down"),
 		),
-		
+
 		// Search
 		SearchForward: key.NewBinding(
 			key.WithKeys("/"),
@@ -206,7 +206,7 @@ func newVimKeyMap() vimKeyMap {
 			key.WithKeys("N"),
 			key.WithHelp("N", "previous match"),
 		),
-		
+
 		// Copy/paste
 		Yank: key.NewBinding(
 			key.WithKeys("y"),
@@ -245,7 +245,7 @@ func (v *VimState) handleNormalMode(msg tea.KeyMsg, m *ChatModel) (tea.Model, te
 		if v.RepeatCount == 0 {
 			v.RepeatCount = int(msg.String()[0] - '0')
 		} else {
-			v.RepeatCount = v.RepeatCount*10 + int(msg.String()[0] - '0')
+			v.RepeatCount = v.RepeatCount*10 + int(msg.String()[0]-'0')
 		}
 		return m, nil
 	}
@@ -287,13 +287,13 @@ func (v *VimState) handleNormalMode(msg tea.KeyMsg, m *ChatModel) (tea.Model, te
 		}
 	case key.Matches(msg, vimKeys.MoveFileEnd):
 		m.scrollToBottom()
-		
+
 	// Scrolling
 	case key.Matches(msg, vimKeys.ScrollHalfUp):
 		m.scrollHalfPageUp()
 	case key.Matches(msg, vimKeys.ScrollHalfDown):
 		m.scrollHalfPageDown()
-		
+
 	// Mode switching
 	case key.Matches(msg, vimKeys.EnterInsert):
 		v.Mode = ModeInsert
@@ -313,7 +313,7 @@ func (v *VimState) handleNormalMode(msg tea.KeyMsg, m *ChatModel) (tea.Model, te
 	case key.Matches(msg, vimKeys.EnterCommand):
 		v.Mode = ModeCommand
 		v.CommandBuffer = ":"
-		
+
 	// Search
 	case key.Matches(msg, vimKeys.SearchForward):
 		v.Mode = ModeCommand
@@ -321,7 +321,7 @@ func (v *VimState) handleNormalMode(msg tea.KeyMsg, m *ChatModel) (tea.Model, te
 	case key.Matches(msg, vimKeys.SearchBackward):
 		v.Mode = ModeCommand
 		v.CommandBuffer = "?"
-		
+
 	default:
 		// Reset last command if unrecognized
 		if v.LastCommand != "" && msg.String() != "g" {
@@ -339,7 +339,7 @@ func (v *VimState) handleInsertMode(msg tea.KeyMsg, m *ChatModel) (tea.Model, te
 		m.input.Blur()
 		return m, nil
 	}
-	
+
 	// Pass through to normal text input handling
 	return m, nil
 }
@@ -347,7 +347,7 @@ func (v *VimState) handleInsertMode(msg tea.KeyMsg, m *ChatModel) (tea.Model, te
 // handleVisualMode processes keys in visual mode
 func (v *VimState) handleVisualMode(msg tea.KeyMsg, m *ChatModel) (tea.Model, tea.Cmd) {
 	vimKeys := m.vimKeys
-	
+
 	switch {
 	case key.Matches(msg, vimKeys.ExitMode):
 		v.Mode = ModeNormal
@@ -362,7 +362,7 @@ func (v *VimState) handleVisualMode(msg tea.KeyMsg, m *ChatModel) (tea.Model, te
 		// Allow navigation in visual mode
 		return v.handleNormalMode(msg, m)
 	}
-	
+
 	return m, nil
 }
 
@@ -373,15 +373,15 @@ func (v *VimState) handleCommandMode(msg tea.KeyMsg, m *ChatModel) (tea.Model, t
 		v.Mode = ModeNormal
 		v.CommandBuffer = ""
 		return m, nil
-		
+
 	case tea.KeyEnter:
 		cmd := v.CommandBuffer
 		v.CommandBuffer = ""
 		v.Mode = ModeNormal
-		
+
 		// Execute command
 		return m, v.executeCommand(cmd, m)
-		
+
 	case tea.KeyBackspace:
 		if len(v.CommandBuffer) > 1 {
 			v.CommandBuffer = v.CommandBuffer[:len(v.CommandBuffer)-1]
@@ -389,12 +389,12 @@ func (v *VimState) handleCommandMode(msg tea.KeyMsg, m *ChatModel) (tea.Model, t
 			v.Mode = ModeNormal
 			v.CommandBuffer = ""
 		}
-		
+
 	default:
 		// Add character to command buffer
 		v.CommandBuffer += msg.String()
 	}
-	
+
 	return m, nil
 }
 
@@ -403,11 +403,11 @@ func (v *VimState) executeCommand(cmd string, m *ChatModel) tea.Cmd {
 	if len(cmd) == 0 {
 		return nil
 	}
-	
+
 	// Remove the command prefix (: or / or ?)
 	prefix := cmd[0]
 	cmd = cmd[1:]
-	
+
 	switch prefix {
 	case ':':
 		// Handle ex commands
@@ -415,7 +415,7 @@ func (v *VimState) executeCommand(cmd string, m *ChatModel) tea.Cmd {
 		if len(parts) == 0 {
 			return nil
 		}
-		
+
 		switch parts[0] {
 		case "q", "quit":
 			return tea.Quit
@@ -429,16 +429,16 @@ func (v *VimState) executeCommand(cmd string, m *ChatModel) tea.Cmd {
 				return v.handleSetCommand(parts[1:], m)
 			}
 		}
-		
+
 	case '/':
 		// Forward search
 		return m.searchForward(cmd)
-		
+
 	case '?':
 		// Backward search
 		return m.searchBackward(cmd)
 	}
-	
+
 	return nil
 }
 
@@ -462,7 +462,7 @@ func (v *VimState) handleSetCommand(args []string, m *ChatModel) tea.Cmd {
 // GetModeIndicator returns a styled mode indicator for the status line
 func (v *VimState) GetModeIndicator() string {
 	style := modeStyle
-	
+
 	switch v.Mode {
 	case ModeInsert:
 		style = style.Background(insertModeColor)
@@ -473,7 +473,7 @@ func (v *VimState) GetModeIndicator() string {
 	case ModeCommand:
 		return style.Background(commandModeColor).Render(v.CommandBuffer)
 	}
-	
+
 	return style.Render(fmt.Sprintf(" %s ", v.Mode.String()))
 }
 

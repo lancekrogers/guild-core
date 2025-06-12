@@ -57,11 +57,11 @@ func (m *MockTool) RequiresAuth() bool {
 func TestFullPipelineIntegration(t *testing.T) {
 	// Create registry with all components
 	reg := registry.NewComponentRegistry()
-	
+
 	// Initialize registry with basic configuration
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	
+
 	err := reg.Initialize(ctx, registry.Config{
 		Agents: registry.AgentConfigYaml{
 			DefaultType: "worker",
@@ -82,7 +82,7 @@ func TestFullPipelineIntegration(t *testing.T) {
 		},
 	})
 	require.NoError(t, err)
-	
+
 	// Register mock provider
 	mockProvider := mock.NewProvider()
 	mockProvider.SetResponse("*", "You asked to use the calculator tool. Let me help with that.")
@@ -92,12 +92,12 @@ func TestFullPipelineIntegration(t *testing.T) {
 	// Register tools
 	calcTool := &MockTool{name: "calculator"}
 	fileTool := &MockTool{name: "file-reader"}
-	
+
 	err = reg.Tools().RegisterTool(calcTool.Name(), calcTool)
 	require.NoError(t, err)
 	err = reg.Tools().RegisterTool(fileTool.Name(), fileTool)
 	require.NoError(t, err)
-	
+
 	// Register a mock agent factory that can handle tool commands
 	agentRegistry := reg.Agents()
 	err = agentRegistry.RegisterAgentType("pipeline-agent", func(config registry.AgentConfig) (registry.Agent, error) {
@@ -312,8 +312,8 @@ func TestFullPipelineIntegration(t *testing.T) {
 		resp, err := stream.Recv()
 		require.NoError(t, err)
 		if msgResp, ok := resp.Response.(*guildpb.ChatResponse_Message); ok {
-					assert.NotEmpty(t, msgResp.Message.Content)
-				}
+			assert.NotEmpty(t, msgResp.Message.Content)
+		}
 	})
 
 	t.Run("cost tracking through pipeline", func(t *testing.T) {
@@ -347,9 +347,9 @@ func TestFullPipelineIntegration(t *testing.T) {
 			resp, err := stream.Recv()
 			require.NoError(t, err)
 			if msgResp, ok := resp.Response.(*guildpb.ChatResponse_Message); ok {
-					assert.NotEmpty(t, msgResp.Message.Content)
-				}
-			
+				assert.NotEmpty(t, msgResp.Message.Content)
+			}
+
 			// In real implementation, check cost accumulation
 			// assert.Greater(t, resp.SessionCost, 0.0)
 		}

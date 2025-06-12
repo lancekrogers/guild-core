@@ -3,10 +3,10 @@ package lsp_test
 import (
 	"context"
 	"testing"
-	
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/lsp"
 	"github.com/guild-ventures/guild-core/pkg/lsp/mocks"
 )
@@ -15,16 +15,16 @@ import (
 // This doesn't require a real LSP server like gopls
 func TestManagerWithMocks(t *testing.T) {
 	ctx := context.Background()
-	
+
 	t.Run("MockClient_BasicOperations", func(t *testing.T) {
 		// Create a mock client
 		mockClient := mocks.NewMockLSPClient()
-		
+
 		// Test Start
 		err := mockClient.Start(ctx)
 		require.NoError(t, err)
 		assert.True(t, mockClient.IsReady())
-		
+
 		// Test Initialize
 		params := lsp.InitializeParams{
 			RootURI: "file:///test/workspace",
@@ -38,11 +38,11 @@ func TestManagerWithMocks(t *testing.T) {
 				},
 			},
 		}
-		
+
 		result, err := mockClient.Initialize(ctx, params)
 		require.NoError(t, err)
 		assert.NotNil(t, result)
-		
+
 		// Test Completion
 		completionParams := lsp.CompletionParams{
 			TextDocumentPositionParams: lsp.TextDocumentPositionParams{
@@ -55,12 +55,12 @@ func TestManagerWithMocks(t *testing.T) {
 				},
 			},
 		}
-		
+
 		completions, err := mockClient.Completion(ctx, completionParams)
 		require.NoError(t, err)
 		assert.NotNil(t, completions)
 		assert.Equal(t, 1, mockClient.GetCompletionCalls())
-		
+
 		// Test Hover
 		hoverParams := lsp.HoverParams{
 			TextDocument: lsp.TextDocumentIdentifier{
@@ -71,12 +71,12 @@ func TestManagerWithMocks(t *testing.T) {
 				Character: 5,
 			},
 		}
-		
+
 		hover, err := mockClient.Hover(ctx, hoverParams)
 		require.NoError(t, err)
 		assert.NotNil(t, hover)
 		assert.Equal(t, 1, mockClient.GetHoverCalls())
-		
+
 		// Test Definition
 		defParams := lsp.DefinitionParams{
 			TextDocument: lsp.TextDocumentIdentifier{
@@ -87,11 +87,11 @@ func TestManagerWithMocks(t *testing.T) {
 				Character: 8,
 			},
 		}
-		
+
 		locations, err := mockClient.Definition(ctx, defParams)
 		require.NoError(t, err)
 		assert.NotNil(t, locations)
-		
+
 		// Test References
 		refParams := lsp.ReferenceParams{
 			TextDocumentPositionParams: lsp.TextDocumentPositionParams{
@@ -107,30 +107,30 @@ func TestManagerWithMocks(t *testing.T) {
 				IncludeDeclaration: true,
 			},
 		}
-		
+
 		refs, err := mockClient.References(ctx, refParams)
 		require.NoError(t, err)
 		assert.NotNil(t, refs)
-		
+
 		// Test Stop
 		err = mockClient.Stop(ctx)
 		require.NoError(t, err)
 		assert.False(t, mockClient.IsReady())
 	})
-	
+
 	t.Run("MockClient_ErrorHandling", func(t *testing.T) {
 		mockClient := mocks.NewMockLSPClient()
-		
+
 		// Test start error
 		mockClient.SetStartError(assert.AnError)
 		err := mockClient.Start(ctx)
 		assert.Error(t, err)
-		
+
 		// Reset for other tests
 		mockClient.SetStartError(nil)
 		err = mockClient.Start(ctx)
 		require.NoError(t, err)
-		
+
 		// Test completion error by setting client as not ready
 		mockClient.SetReady(false)
 		completions, err := mockClient.Completion(ctx, lsp.CompletionParams{})
@@ -138,18 +138,18 @@ func TestManagerWithMocks(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, completions)
 	})
-	
+
 	t.Run("MockProcessLauncher", func(t *testing.T) {
 		launcher := mocks.NewMockProcessLauncher()
-		
+
 		// Test successful launch
 		client, err := launcher.LaunchServer(ctx, "gopls", []string{"-mode=stdio"}, "/test/workspace")
 		require.NoError(t, err)
 		assert.NotNil(t, client)
-		
+
 		// Verify the returned client is ready
 		assert.True(t, client.IsReady())
-		
+
 		// Test launch error
 		launcher.SetLaunchError(assert.AnError)
 		client, err = launcher.LaunchServer(ctx, "invalid-lsp", []string{}, "/test")
@@ -180,7 +180,7 @@ func TestLSPUtilities(t *testing.T) {
 			{"unknown.txt", ""},
 			{"", ""},
 		}
-		
+
 		for _, tt := range tests {
 			t.Run(tt.file, func(t *testing.T) {
 				result := lsp.DetectLanguage(tt.file)
@@ -188,11 +188,11 @@ func TestLSPUtilities(t *testing.T) {
 			})
 		}
 	})
-	
+
 	t.Run("DefaultConfigs", func(t *testing.T) {
 		configs := lsp.DefaultConfigs()
 		assert.NotEmpty(t, configs)
-		
+
 		// Check that common languages are configured
 		languages := []string{"go", "typescript", "python", "rust"}
 		for _, lang := range languages {

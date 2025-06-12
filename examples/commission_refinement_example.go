@@ -77,8 +77,8 @@ func main() {
 
 	// Step 7: Create a commission
 	commission := manager.Commission{
-		ID:          "example-001",
-		Title:       "Build a Task Management System",
+		ID:    "example-001",
+		Title: "Build a Task Management System",
 		Description: `Create a web-based task management system with the following features:
 		- User authentication and authorization
 		- Create, read, update, and delete tasks

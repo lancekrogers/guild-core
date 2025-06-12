@@ -23,14 +23,14 @@ func ExampleLSPUsage() {
 
 	// Example 1: Get code completions without file content
 	completionTool := lsptools.NewCompletionTool(manager)
-	
+
 	completionInput := map[string]interface{}{
-		"file":   "/path/to/main.go",
-		"line":   10,
-		"column": 15,
+		"file":    "/path/to/main.go",
+		"line":    10,
+		"column":  15,
 		"trigger": ".",
 	}
-	
+
 	inputJSON, _ := json.Marshal(completionInput)
 	result, err := completionTool.Execute(ctx, string(inputJSON))
 	if err == nil && result != nil {
@@ -39,13 +39,13 @@ func ExampleLSPUsage() {
 
 	// Example 2: Go to definition
 	definitionTool := lsptools.NewDefinitionTool(manager)
-	
+
 	defInput := map[string]interface{}{
 		"file":   "/path/to/main.go",
 		"line":   20,
 		"column": 10,
 	}
-	
+
 	inputJSON, _ = json.Marshal(defInput)
 	result, err = definitionTool.Execute(ctx, string(inputJSON))
 	if err == nil && result != nil {
@@ -56,31 +56,31 @@ func ExampleLSPUsage() {
 
 	// Example 3: Find all references
 	referencesTool := lsptools.NewReferencesTool(manager)
-	
+
 	refInput := map[string]interface{}{
-		"file":               "/path/to/types.go",
-		"line":               30,
-		"column":             5,
+		"file":                "/path/to/types.go",
+		"line":                30,
+		"column":              5,
 		"include_declaration": true,
 	}
-	
+
 	inputJSON, _ = json.Marshal(refInput)
 	result, err = referencesTool.Execute(ctx, string(inputJSON))
 	if err == nil && result != nil {
-		fmt.Printf("Found %s references across %s files\n", 
+		fmt.Printf("Found %s references across %s files\n",
 			result.Metadata["reference_count"],
 			result.Metadata["file_count"])
 	}
 
 	// Example 4: Get type information
 	hoverTool := lsptools.NewHoverTool(manager)
-	
+
 	hoverInput := map[string]interface{}{
 		"file":   "/path/to/calculator.go",
 		"line":   8,
 		"column": 10,
 	}
-	
+
 	inputJSON, _ = json.Marshal(hoverInput)
 	result, err = hoverTool.Execute(ctx, string(inputJSON))
 	if err == nil && result != nil {
@@ -98,6 +98,6 @@ func ExampleAgentIntegration() {
 	// 2. Enhance context with LSP information
 	// 3. Prefer LSP tools over regular tools when available
 	// 4. Provide 97.5% token savings on code operations
-	
+
 	fmt.Println("LSP tools are automatically available to agents!")
 }

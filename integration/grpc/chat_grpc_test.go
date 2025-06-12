@@ -18,11 +18,11 @@ func TestEndToEndChatGRPC(t *testing.T) {
 	// Create registry and event bus
 	reg := registry.NewComponentRegistry()
 	eventBus := newMockEventBus()
-	
+
 	// Initialize registry with basic configuration to prevent nil panics
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	
+
 	err := reg.Initialize(ctx, registry.Config{
 		Agents: registry.AgentConfigYaml{
 			DefaultType: "worker",
@@ -43,7 +43,7 @@ func TestEndToEndChatGRPC(t *testing.T) {
 		},
 	})
 	require.NoError(t, err)
-	
+
 	// Register a mock agent factory
 	agentRegistry := reg.Agents()
 	err = agentRegistry.RegisterAgentType("mock", func(config registry.AgentConfig) (registry.Agent, error) {
@@ -58,7 +58,7 @@ func TestEndToEndChatGRPC(t *testing.T) {
 		}, nil
 	})
 	require.NoError(t, err)
-	
+
 	// Start test gRPC server
 	server := guildgrpc.NewServer(reg, eventBus)
 
@@ -108,13 +108,13 @@ func TestEndToEndChatGRPC(t *testing.T) {
 		// Receive response
 		resp, err := stream.Recv()
 		require.NoError(t, err)
-		
+
 		// Check if we got a message response
 		if msgResp, ok := resp.Response.(*guildpb.ChatResponse_Message); ok {
 			assert.NotNil(t, msgResp.Message)
 			assert.NotEmpty(t, msgResp.Message.Content)
 		}
-		
+
 		// Close stream
 		err = stream.CloseSend()
 		require.NoError(t, err)
@@ -133,7 +133,7 @@ func TestEndToEndChatGRPC(t *testing.T) {
 		// Open chat stream
 		stream, err := client.Chat(context.Background())
 		require.NoError(t, err)
-		
+
 		// Send multiple messages
 		messages := []string{
 			"First message",
@@ -157,13 +157,13 @@ func TestEndToEndChatGRPC(t *testing.T) {
 			// Verify response
 			resp, err := stream.Recv()
 			require.NoError(t, err)
-			
+
 			if msgResp, ok := resp.Response.(*guildpb.ChatResponse_Message); ok {
 				assert.NotNil(t, msgResp.Message)
 				assert.NotEmpty(t, msgResp.Message.Content)
 			}
 		}
-		
+
 		// Close stream
 		err = stream.CloseSend()
 		require.NoError(t, err)
@@ -190,7 +190,7 @@ func TestEndToEndChatGRPC(t *testing.T) {
 		_, err = stream.Recv()
 		// Error could be in the response or as an error
 		// Implementation-specific behavior
-		
+
 		// Close stream
 		err = stream.CloseSend()
 		require.NoError(t, err)
@@ -199,11 +199,11 @@ func TestEndToEndChatGRPC(t *testing.T) {
 	t.Run("concurrent sessions", func(t *testing.T) {
 		// Create multiple sessions concurrently
 		sessionIDs := []string{"concurrent-1", "concurrent-2", "concurrent-3"}
-		
+
 		for _, sessionName := range sessionIDs {
 			t.Run(sessionName, func(t *testing.T) {
 				t.Parallel()
-				
+
 				// Create session
 				createResp, err := client.CreateChatSession(context.Background(), &guildpb.CreateChatSessionRequest{
 					Name:       sessionName,
@@ -232,12 +232,12 @@ func TestEndToEndChatGRPC(t *testing.T) {
 				// Verify response
 				resp, err := stream.Recv()
 				require.NoError(t, err)
-				
+
 				if msgResp, ok := resp.Response.(*guildpb.ChatResponse_Message); ok {
 					assert.NotNil(t, msgResp.Message)
 					assert.NotEmpty(t, msgResp.Message.Content)
 				}
-				
+
 				// Close stream
 				err = stream.CloseSend()
 				require.NoError(t, err)

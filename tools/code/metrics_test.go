@@ -79,36 +79,36 @@ func (u User) ValidateEmail() bool {
 	return strings.Contains(u.Email, "@")
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(goCode)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMetricsTool()
-	
+
 	params := MetricsParams{
-		Path:        tmpFile.Name(),
-		Metrics:     []string{"complexity", "loc"},
-		Format:      "json",
+		Path:    tmpFile.Name(),
+		Metrics: []string{"complexity", "loc"},
+		Format:  "json",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Check that metrics were calculated
 	assert.Contains(t, result.Output, "Language: go")
 	assert.Contains(t, result.Output, "Functions analyzed:")
 	assert.Contains(t, result.Output, "main")
 	assert.Contains(t, result.Output, "complexFunction")
-	
+
 	// The complex function should have higher complexity
 	assert.Contains(t, result.Output, "Complexity:")
 }
@@ -153,44 +153,44 @@ class Calculator:
         self.result *= x
         return self
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.py")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(pythonCode)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMetricsTool()
-	
+
 	params := MetricsParams{
-		Path:        tmpFile.Name(),
-		Metrics:     []string{"complexity", "loc"},
-		Format:      "summary",
+		Path:    tmpFile.Name(),
+		Metrics: []string{"complexity", "loc"},
+		Format:  "summary",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	assert.Contains(t, result.Output, "Language: python")
 	assert.Contains(t, result.Output, "Total lines:")
 }
 
 func TestMetricsTool_Execute_InvalidFile(t *testing.T) {
 	tool := NewMetricsTool()
-	
+
 	params := MetricsParams{
 		Path: "nonexistent.go",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -198,14 +198,14 @@ func TestMetricsTool_Execute_InvalidFile(t *testing.T) {
 
 func TestMetricsTool_Execute_EmptyFile(t *testing.T) {
 	tool := NewMetricsTool()
-	
+
 	params := MetricsParams{
 		Path: "",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -213,7 +213,7 @@ func TestMetricsTool_Execute_EmptyFile(t *testing.T) {
 
 func TestMetricsTool_Execute_InvalidJSON(t *testing.T) {
 	tool := NewMetricsTool()
-	
+
 	result, err := tool.Execute(context.Background(), "invalid json")
 	assert.Error(t, err)
 	assert.Nil(t, result)
@@ -224,24 +224,24 @@ func TestMetricsTool_Execute_UnsupportedLanguage(t *testing.T) {
 	tmpFile, err := os.CreateTemp("", "test_*.txt")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString("some content\nline 2\nline 3")
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMetricsTool()
-	
+
 	params := MetricsParams{
 		Path: tmpFile.Name(),
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should return basic metrics for unsupported language
 	assert.Contains(t, result.Output, "Language: unknown")
 	assert.Contains(t, result.Output, "Total lines:")
@@ -290,30 +290,30 @@ func highComplexityFunction(x int) int {
 	return result
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(goCode)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMetricsTool()
-	
+
 	params := MetricsParams{
-		Path:        tmpFile.Name(),
-		Metrics:     []string{"complexity", "loc"},
-		Format:      "text",
+		Path:    tmpFile.Name(),
+		Metrics: []string{"complexity", "loc"},
+		Format:  "text",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should identify threshold violations
 	assert.Contains(t, result.Output, "highComplexityFunction")
 	assert.Contains(t, result.Output, "Complexity:")
@@ -331,29 +331,29 @@ func helper() {
 	return
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(goCode)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMetricsTool()
-	
+
 	granularities := []string{"file", "function", "class"}
-	
+
 	for _, granularity := range granularities {
 		t.Run("granularity_"+granularity, func(t *testing.T) {
 			params := MetricsParams{
-				Path:    tmpFile.Name(),
-				Format:  "json",
+				Path:   tmpFile.Name(),
+				Format: "json",
 			}
-			
+
 			input, err := json.Marshal(params)
 			require.NoError(t, err)
-			
+
 			result, err := tool.Execute(context.Background(), string(input))
 			require.NoError(t, err)
 			assert.NotNil(t, result)
@@ -367,25 +367,25 @@ func TestMetricsTool_Execute_EmptyGoFile(t *testing.T) {
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString("package main\n")
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMetricsTool()
-	
+
 	params := MetricsParams{
-		Path:        tmpFile.Name(),
+		Path:   tmpFile.Name(),
 		Format: "function",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	// Should handle empty file gracefully
 	assert.Contains(t, result.Output, "Language: go")
 	assert.Contains(t, result.Output, "No functions found")
@@ -401,30 +401,30 @@ func main() {
 	}
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(goCode)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMetricsTool()
-	
+
 	params := MetricsParams{
 		Path:    tmpFile.Name(),
 		Metrics: []string{"complexity"},
 		Format:  "json",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	assert.Contains(t, result.Output, "Complexity:")
 	// Should not include LOC details when disabled
 }
@@ -437,30 +437,30 @@ func main() {
 	println("hello")
 }
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "test_*.go")
 	require.NoError(t, err)
 	defer os.Remove(tmpFile.Name())
-	
+
 	_, err = tmpFile.WriteString(goCode)
 	require.NoError(t, err)
 	tmpFile.Close()
 
 	tool := NewMetricsTool()
-	
+
 	params := MetricsParams{
 		Path:    tmpFile.Name(),
 		Metrics: []string{"loc"},
 		Format:  "json",
 	}
-	
+
 	input, err := json.Marshal(params)
 	require.NoError(t, err)
-	
+
 	result, err := tool.Execute(context.Background(), string(input))
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	assert.Contains(t, result.Output, "Lines:")
 	// Should not include complexity details when disabled
 }

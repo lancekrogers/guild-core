@@ -72,7 +72,7 @@ func IsProjectInitialized(projectPath string) bool {
 // initializeDatabaseRefactored creates and migrates the SQLite database
 func initializeDatabaseRefactored(dbPath string) error {
 	ctx := context.Background()
-	
+
 	// Create database connection
 	db, err := storage.DefaultDatabaseFactory(ctx, dbPath)
 	if err != nil {

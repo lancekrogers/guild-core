@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"strings"
 	"time"
-	
+
 	"github.com/guild-ventures/guild-core/internal/buildutil/ui"
 )
 
@@ -23,28 +23,28 @@ type PackageResult struct {
 // Build runs go vet and go build on all packages
 func Build(verbose bool) error {
 	ui.Section("Building Guild Framework")
-	
+
 	packages, err := discoverPackages()
 	if err != nil {
 		return fmt.Errorf("failed to discover packages: %w", err)
 	}
-	
+
 	if verbose {
 		fmt.Printf("Found %d packages\n", len(packages))
 	}
-	
+
 	results := make([]PackageResult, 0, len(packages))
 	total := len(packages)
-	
+
 	// Process each package
 	for i, pkg := range packages {
 		shortName := strings.TrimPrefix(pkg, "./")
 		if shortName == "." {
 			shortName = "root"
 		}
-		
+
 		result := PackageResult{Package: shortName}
-		
+
 		// Vet
 		ui.Progress(i+1, total, fmt.Sprintf("Vetting %s", shortName))
 		start := time.Now()
@@ -55,11 +55,11 @@ func Build(verbose bool) error {
 		}
 		result.VetPass = cmd.Run() == nil
 		result.VetTime = time.Since(start)
-		
+
 		if !result.VetPass {
 			// Don't return immediately - continue to collect all results for dashboard
 		}
-		
+
 		// Build
 		ui.Progress(i+1, total, fmt.Sprintf("Building %s", shortName))
 		start = time.Now()
@@ -70,34 +70,34 @@ func Build(verbose bool) error {
 		}
 		result.BuildPass = cmd.Run() == nil
 		result.BuildTime = time.Since(start)
-		
+
 		if !result.BuildPass {
 			// Don't return immediately - continue to collect all results for dashboard
 		}
-		
+
 		results = append(results, result)
 	}
-	
+
 	// Build main binary
 	ui.Progress(total, total, "Building main binary")
 	start := time.Now()
-	
+
 	// Create bin directory
 	os.MkdirAll("bin", 0755)
-	
+
 	cmd := exec.Command("go", "build", "-o", "bin/guild", "./cmd/guild")
 	if verbose {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 	}
-	
+
 	mainBuildSuccess := cmd.Run() == nil
 	mainBuildTime := time.Since(start)
-	
+
 	ui.ClearProgress()
-	
+
 	// Don't return immediately - add to results for dashboard display
-	
+
 	// Add main binary result
 	results = append(results, PackageResult{
 		Package:   "bin/guild",
@@ -105,22 +105,22 @@ func Build(verbose bool) error {
 		BuildPass: mainBuildSuccess,
 		BuildTime: mainBuildTime,
 	})
-	
+
 	// Calculate totals
 	var totalTime time.Duration
 	for _, r := range results {
 		totalTime += r.VetTime + r.BuildTime
 	}
-	
+
 	// Display summary - only show packages with errors
 	rows := [][]string{}
 	hasFailures := false
-	
+
 	for _, r := range results {
 		// Only include packages that have failures
 		if !r.VetPass || !r.BuildPass {
 			hasFailures = true
-			
+
 			vetStatus := "✓"
 			if !r.VetPass {
 				vetStatus = "✗"
@@ -132,7 +132,7 @@ func Build(verbose bool) error {
 					vetStatus = ui.Red + vetStatus + ui.Reset
 				}
 			}
-			
+
 			buildStatus := "✓"
 			if !r.BuildPass {
 				buildStatus = "✗"
@@ -144,7 +144,7 @@ func Build(verbose bool) error {
 					buildStatus = ui.Red + buildStatus + ui.Reset
 				}
 			}
-			
+
 			rows = append(rows, []string{
 				r.Package,
 				fmt.Sprintf("%s %.2fs", vetStatus, r.VetTime.Seconds()),
@@ -152,12 +152,12 @@ func Build(verbose bool) error {
 			})
 		}
 	}
-	
+
 	// Add header only if there are failures to show
 	if hasFailures {
 		rows = append([][]string{{"Package", "Vet", "Build"}}, rows...)
 	}
-	
+
 	// Choose appropriate title based on whether there are failures
 	title := "Build Summary"
 	if hasFailures {
@@ -165,9 +165,9 @@ func Build(verbose bool) error {
 	} else {
 		title = "Build Complete - No Errors"
 	}
-	
+
 	ui.SummaryCard(title, rows, fmt.Sprintf("%.2fs", totalTime.Seconds()), !hasFailures)
-	
+
 	// Now return error if there were any failures
 	if hasFailures {
 		failedPackages := []string{}
@@ -178,7 +178,7 @@ func Build(verbose bool) error {
 		}
 		return fmt.Errorf("build failed for packages: %s", strings.Join(failedPackages, ", "))
 	}
-	
+
 	return nil
 }
 
@@ -189,14 +189,14 @@ func discoverPackages() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
 	module := getModuleName()
-	
+
 	var packages []string
 	for _, line := range lines {
-		if line != "" && 
-			!strings.Contains(line, "/vendor/") && 
+		if line != "" &&
+			!strings.Contains(line, "/vendor/") &&
 			!strings.Contains(line, "/testdata") &&
 			!strings.Contains(line, "/integration/") &&
 			!strings.Contains(line, "_test") {
@@ -211,7 +211,7 @@ func discoverPackages() ([]string, error) {
 			}
 		}
 	}
-	
+
 	return packages, nil
 }
 
@@ -221,7 +221,7 @@ func getModuleName() string {
 	if err != nil {
 		return ""
 	}
-	
+
 	lines := strings.Split(string(data), "\n")
 	for _, line := range lines {
 		if strings.HasPrefix(line, "module ") {

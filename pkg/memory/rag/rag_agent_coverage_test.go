@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
+	"github.com/guild-ventures/guild-core/pkg/corpus"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/guild-ventures/guild-core/pkg/corpus"
 )
 
 // Test RAG agent methods that are not covered
@@ -14,7 +14,7 @@ func TestRAGAgent_Execute(t *testing.T) {
 	ctx := context.Background()
 	agent := &mockGuildArtisan{}
 	embedder := &MockEmbedder{}
-	
+
 	// Create a retriever with test config
 	config := Config{
 		CollectionName: "test_execute",
@@ -22,18 +22,18 @@ func TestRAGAgent_Execute(t *testing.T) {
 		ChunkOverlap:   20,
 		MaxResults:     3,
 	}
-	
+
 	retriever, err := newRetriever(ctx, embedder, config)
 	require.NoError(t, err)
 	defer retriever.Close()
-	
+
 	// Create wrapper
 	wrapper := NewAgentWrapper(agent, retriever, config)
-	
+
 	// Add a test document
 	err = retriever.AddDocument(ctx, "doc1", "This is test content about AI and machine learning", "test.txt")
 	assert.NoError(t, err)
-	
+
 	// Execute should enhance the request
 	result, err := wrapper.Execute(ctx, "Tell me about AI")
 	assert.NoError(t, err)
@@ -44,7 +44,7 @@ func TestRAGAgent_Execute(t *testing.T) {
 func TestRetriever_SearchCorpus(t *testing.T) {
 	ctx := context.Background()
 	tempDir := t.TempDir()
-	
+
 	// Create retriever with corpus enabled
 	retriever := &Retriever{
 		Config: Config{
@@ -54,7 +54,7 @@ func TestRetriever_SearchCorpus(t *testing.T) {
 			CorpusPath: tempDir,
 		},
 	}
-	
+
 	// Create test document
 	doc := &corpus.CorpusDoc{
 		Title:    "Test Document",
@@ -63,11 +63,11 @@ func TestRetriever_SearchCorpus(t *testing.T) {
 		Source:   "test",
 		Tags:     []string{"test", "programming"},
 	}
-	
+
 	// Save document
 	err := corpus.Save(ctx, doc, *retriever.corpusConfig)
 	require.NoError(t, err)
-	
+
 	// Search for it
 	results, err := retriever.searchCorpus(ctx, "programming", 5)
 	assert.NoError(t, err)
@@ -79,7 +79,7 @@ func TestRetriever_SearchCorpus(t *testing.T) {
 // Test calculateCorpusScore with all paths
 func TestRetriever_CalculateCorpusScore(t *testing.T) {
 	retriever := &Retriever{}
-	
+
 	tests := []struct {
 		name     string
 		doc      *corpus.CorpusDoc
@@ -154,7 +154,7 @@ func TestRetriever_CalculateCorpusScore(t *testing.T) {
 			expected: 0.0,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			score := retriever.calculateCorpusScore(tt.doc, tt.query)
@@ -167,17 +167,17 @@ func TestRetriever_CalculateCorpusScore(t *testing.T) {
 func TestRetriever_AddCorpusDocument(t *testing.T) {
 	ctx := context.Background()
 	embedder := &MockEmbedder{}
-	
+
 	config := Config{
 		CollectionName: "test_corpus_add",
 		ChunkSize:      100,
 		ChunkOverlap:   20,
 	}
-	
+
 	retriever, err := newRetriever(ctx, embedder, config)
 	require.NoError(t, err)
 	defer retriever.Close()
-	
+
 	// Create a corpus document
 	doc := &corpus.CorpusDoc{
 		Title:    "Test Document",
@@ -185,11 +185,11 @@ func TestRetriever_AddCorpusDocument(t *testing.T) {
 		FilePath: "test.md",
 		Source:   "test",
 	}
-	
+
 	// Add the document
 	err = retriever.AddCorpusDocument(ctx, doc)
 	assert.NoError(t, err)
-	
+
 	// Try with empty content
 	emptyDoc := &corpus.CorpusDoc{
 		Title:    "Empty",
@@ -204,35 +204,35 @@ func TestRetriever_AddCorpusDocument(t *testing.T) {
 func TestRetriever_EnhancePrompt_Coverage(t *testing.T) {
 	ctx := context.Background()
 	embedder := &MockEmbedder{}
-	
+
 	config := Config{
 		CollectionName: "test_enhance",
 		ChunkSize:      100,
 		ChunkOverlap:   20,
 	}
-	
+
 	retriever, err := newRetriever(ctx, embedder, config)
 	require.NoError(t, err)
 	defer retriever.Close()
-	
+
 	// Add test documents
 	err = retriever.AddDocument(ctx, "doc1", "Machine learning is a subset of AI", "ml.txt")
 	assert.NoError(t, err)
-	
+
 	err = retriever.AddDocument(ctx, "doc2", "Deep learning uses neural networks", "dl.txt")
 	assert.NoError(t, err)
-	
+
 	// Test enhancement
 	config2 := RetrievalConfig{
 		MaxResults: 2,
 		MinScore:   0.0, // Lower threshold to ensure results
 	}
-	
+
 	enhanced, err := retriever.EnhancePrompt(ctx, "Tell me about AI", config2)
 	assert.NoError(t, err)
 	assert.Contains(t, enhanced, "Tell me about AI")
 	assert.Contains(t, enhanced, "# Context")
-	
+
 	// Test with empty prompt
 	enhanced, err = retriever.EnhancePrompt(ctx, "", config2)
 	assert.Error(t, err) // Empty query should return error
@@ -243,26 +243,26 @@ func TestRetriever_EnhancePrompt_Coverage(t *testing.T) {
 func TestRetriever_RemoveDocument_Coverage(t *testing.T) {
 	ctx := context.Background()
 	embedder := &MockEmbedder{}
-	
+
 	config := Config{
 		CollectionName: "test_remove",
 		ChunkSize:      100,
 		ChunkOverlap:   20,
 	}
-	
+
 	retriever, err := newRetriever(ctx, embedder, config)
 	require.NoError(t, err)
 	defer retriever.Close()
-	
+
 	// Add and then remove a document
 	err = retriever.AddDocument(ctx, "doc1", "Test content", "test.txt")
 	assert.NoError(t, err)
-	
+
 	// Remove the document - not implemented yet
 	err = retriever.RemoveDocument(ctx, "doc1")
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "document removal not yet implemented")
-	
+
 	// Remove non-existent document - also returns not implemented error
 	err = retriever.RemoveDocument(ctx, "non-existent")
 	assert.Error(t, err)
@@ -274,24 +274,24 @@ func TestRAGAgent_GetChunker(t *testing.T) {
 	ctx := context.Background()
 	agent := &mockGuildArtisan{}
 	embedder := &MockEmbedder{}
-	
+
 	config := Config{
 		CollectionName: "test_chunker",
 		ChunkSize:      500,
 		ChunkOverlap:   50,
 		ChunkStrategy:  "sentence",
 	}
-	
+
 	retriever, err := newRetriever(ctx, embedder, config)
 	require.NoError(t, err)
 	defer retriever.Close()
-	
+
 	wrapper := NewAgentWrapper(agent, retriever, config)
-	
+
 	// Test indirect chunker usage through document addition
 	err = retriever.AddDocument(ctx, "doc1", "Test content.", "test.txt")
 	assert.NoError(t, err)
-	
+
 	// Use wrapper to avoid unused variable error
 	assert.NotNil(t, wrapper)
 }
@@ -301,7 +301,7 @@ func TestRAGAgent_EnhanceRequestWithRAG_Corpus(t *testing.T) {
 	ctx := context.Background()
 	tempDir := t.TempDir()
 	embedder := &MockEmbedder{}
-	
+
 	config := Config{
 		CollectionName: "test_enhance_corpus",
 		ChunkSize:      100,
@@ -310,16 +310,16 @@ func TestRAGAgent_EnhanceRequestWithRAG_Corpus(t *testing.T) {
 		CorpusPath:     tempDir,
 		MaxResults:     5,
 	}
-	
+
 	retriever, err := newRetriever(ctx, embedder, config)
 	require.NoError(t, err)
 	defer retriever.Close()
-	
+
 	// Set corpus config
 	retriever.corpusConfig = &corpus.Config{
 		CorpusPath: tempDir,
 	}
-	
+
 	// Create corpus document
 	doc := &corpus.CorpusDoc{
 		Title:    "AI Research",
@@ -329,10 +329,10 @@ func TestRAGAgent_EnhanceRequestWithRAG_Corpus(t *testing.T) {
 	}
 	err = corpus.Save(ctx, doc, *retriever.corpusConfig)
 	require.NoError(t, err)
-	
+
 	agent := &mockGuildArtisan{}
 	wrapper := NewAgentWrapper(agent, retriever, config)
-	
+
 	// Test enhancement
 	enhanced, err := wrapper.enhanceRequestWithRAG(ctx, "What is AI?")
 	assert.NoError(t, err)
@@ -345,7 +345,7 @@ func TestRetriever_RetrieveContext_WithCorpus(t *testing.T) {
 	ctx := context.Background()
 	tempDir := t.TempDir()
 	embedder := &MockEmbedder{}
-	
+
 	config := Config{
 		CollectionName: "test_retrieve_corpus",
 		ChunkSize:      100,
@@ -353,16 +353,16 @@ func TestRetriever_RetrieveContext_WithCorpus(t *testing.T) {
 		UseCorpus:      true,
 		CorpusPath:     tempDir,
 	}
-	
+
 	retriever, err := newRetriever(ctx, embedder, config)
 	require.NoError(t, err)
 	defer retriever.Close()
-	
+
 	// Set corpus config
 	retriever.corpusConfig = &corpus.Config{
 		CorpusPath: tempDir,
 	}
-	
+
 	// Create corpus documents
 	docs := []*corpus.CorpusDoc{
 		{
@@ -378,12 +378,12 @@ func TestRetriever_RetrieveContext_WithCorpus(t *testing.T) {
 			Source:   "research",
 		},
 	}
-	
+
 	for _, doc := range docs {
 		err = corpus.Save(ctx, doc, *retriever.corpusConfig)
 		require.NoError(t, err)
 	}
-	
+
 	// Retrieve with corpus enabled
 	config2 := RetrievalConfig{
 		MaxResults:      5,
@@ -391,7 +391,7 @@ func TestRetriever_RetrieveContext_WithCorpus(t *testing.T) {
 		UseCorpus:       true,
 		IncludeMetadata: true,
 	}
-	
+
 	results, err := retriever.RetrieveContext(ctx, "learning", config2)
 	assert.NoError(t, err)
 	assert.NotNil(t, results)
@@ -402,23 +402,23 @@ func TestRetriever_RetrieveContext_WithCorpus(t *testing.T) {
 func TestRetriever_AddDocument_VectorOperations(t *testing.T) {
 	ctx := context.Background()
 	embedder := &MockEmbedder{}
-	
+
 	config := Config{
 		CollectionName: "test_vector_ops",
 		ChunkSize:      50, // Small chunks to test multiple chunks
 		ChunkOverlap:   10,
 	}
-	
+
 	retriever, err := newRetriever(ctx, embedder, config)
 	require.NoError(t, err)
 	defer retriever.Close()
-	
+
 	// Add a document that will be chunked into multiple pieces
 	longContent := "This is the first sentence about machine learning. " +
 		"This is the second sentence about artificial intelligence. " +
 		"This is the third sentence about deep learning. " +
 		"This is the fourth sentence about neural networks."
-	
+
 	err = retriever.AddDocument(ctx, "doc-multi", longContent, "multi.txt")
 	assert.NoError(t, err)
 }
@@ -426,7 +426,7 @@ func TestRetriever_AddDocument_VectorOperations(t *testing.T) {
 // Test sortResultsByScore with various inputs
 func TestRetriever_SortResultsByScore_Edge(t *testing.T) {
 	retriever := &Retriever{}
-	
+
 	// Test with duplicate scores
 	results := []SearchResult{
 		{Score: 0.5, Content: "A"},
@@ -435,9 +435,9 @@ func TestRetriever_SortResultsByScore_Edge(t *testing.T) {
 		{Score: 0.9, Content: "D"},
 		{Score: 0.7, Content: "E"},
 	}
-	
+
 	retriever.sortResultsByScore(results)
-	
+
 	// Check order - highest scores first
 	assert.Equal(t, float32(0.9), results[0].Score)
 	assert.Equal(t, float32(0.9), results[1].Score)

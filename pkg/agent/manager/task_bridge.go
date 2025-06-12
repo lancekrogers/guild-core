@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/agent"
 )
 
 // TaskBridge converts parsed commission structures into kanban tasks

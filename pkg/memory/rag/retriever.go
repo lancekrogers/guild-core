@@ -468,7 +468,7 @@ func (r *Retriever) AddDocument(ctx context.Context, id, content, source string)
 			WithComponent("memory").
 			WithOperation("AddDocument")
 	}
-	
+
 	// Check if vector store is available
 	if r.vectorStore == nil {
 		return gerror.New(gerror.ErrCodeInternal, "vector store not initialized", nil).

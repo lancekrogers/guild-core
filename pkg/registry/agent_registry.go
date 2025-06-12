@@ -5,8 +5,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/interfaces"
 )
 

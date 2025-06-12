@@ -28,7 +28,7 @@ func TestExampleCommissionWorkflow(t *testing.T) {
 
 	// Setup mock LLM provider
 	mockProvider := testutil.NewMockLLMProvider()
-	
+
 	// Configure mock response for manager agent
 	mockProvider.SetResponse("manager", testutil.GenerateMockAgentResponse(
 		testutil.AgentResponseOptions{
@@ -119,7 +119,7 @@ func TestExampleCampaignConfig(t *testing.T) {
 	// Verify configuration
 	assert.Equal(t, "test-campaign", config.Name)
 	assert.Len(t, config.Agents, 3)
-	
+
 	// Check tools are assigned to agents
 	for _, agent := range config.Agents {
 		if len(agent.Tools) > 0 {

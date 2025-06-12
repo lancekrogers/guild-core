@@ -21,9 +21,9 @@ func TestNewAgentWrapper(t *testing.T) {
 	}
 	retriever := &Retriever{}
 	config := Config{MaxResults: 5}
-	
+
 	ragAgent := NewAgentWrapper(baseAgent, retriever, config)
-	
+
 	assert.NotNil(t, ragAgent)
 	assert.Equal(t, baseAgent, ragAgent.agent)
 	assert.Equal(t, retriever, ragAgent.retriever)
@@ -71,24 +71,24 @@ func TestAgentWrapper_Execute(t *testing.T) {
 				id:   "test-agent",
 				name: "Test Agent",
 			}
-			
+
 			// Create a retriever with nil vector store (enhancement will fail gracefully)
 			retriever := (*Retriever)(nil)
 			config := Config{MaxResults: 5}
-			
+
 			if tt.setupMocks != nil {
 				tt.setupMocks(baseAgent, retriever)
 			}
-			
+
 			wrapper := &AgentWrapper{
 				agent:     baseAgent,
 				retriever: retriever,
 				config:    config,
 			}
-			
+
 			ctx := context.Background()
 			resp, err := wrapper.Execute(ctx, tt.request)
-			
+
 			if tt.wantErr {
 				assert.Error(t, err)
 				if tt.errContains != "" {
@@ -105,37 +105,37 @@ func TestAgentWrapper_Execute(t *testing.T) {
 // Test AgentWrapper interface methods
 func TestAgentWrapper_InterfaceMethods(t *testing.T) {
 	baseAgent := &testBaseAgent{
-		id:              "test-agent",
-		name:            "Test Agent",
-		toolRegistry:    &testToolRegistry{},
-		commissionMgr:   &testCommissionManager{},
-		llmClient:       &testLLMClient{},
-		memoryManager:   &testMemoryManager{},
+		id:            "test-agent",
+		name:          "Test Agent",
+		toolRegistry:  &testToolRegistry{},
+		commissionMgr: &testCommissionManager{},
+		llmClient:     &testLLMClient{},
+		memoryManager: &testMemoryManager{},
 	}
 	retriever := &Retriever{Config: Config{MaxResults: 5}}
 	config := Config{MaxResults: 5}
-	
+
 	wrapper := &AgentWrapper{
 		agent:     baseAgent,
 		retriever: retriever,
 		config:    config,
 	}
-	
+
 	// Test GetID
 	assert.Equal(t, "test-agent", wrapper.GetID())
-	
+
 	// Test GetName
 	assert.Equal(t, "Test Agent", wrapper.GetName())
-	
+
 	// Test GetToolRegistry
 	assert.Equal(t, baseAgent.toolRegistry, wrapper.GetToolRegistry())
-	
+
 	// Test GetCommissionManager
 	assert.Equal(t, baseAgent.commissionMgr, wrapper.GetCommissionManager())
-	
+
 	// Test GetLLMClient
 	assert.Equal(t, baseAgent.llmClient, wrapper.GetLLMClient())
-	
+
 	// Test GetMemoryManager
 	assert.Equal(t, baseAgent.memoryManager, wrapper.GetMemoryManager())
 }
@@ -146,43 +146,43 @@ func TestAgentWrapper_EnhancePrompt(t *testing.T) {
 	mockStore := &mockVectorStore{}
 	mockStore.On("QueryEmbeddings", mock.Anything, "test query", 10).
 		Return([]vector.EmbeddingMatch{}, nil) // Return empty results
-	
+
 	retriever := &Retriever{
-		Config: Config{MaxResults: 5},
+		Config:      Config{MaxResults: 5},
 		vectorStore: mockStore,
 	}
 	config := Config{MaxResults: 5}
-	
+
 	wrapper := &AgentWrapper{
 		retriever: retriever,
 		config:    config,
 	}
-	
+
 	ctx := context.Background()
 	retrievalConfig := RetrievalConfig{
 		MaxResults: 5,
 		MinScore:   0.5,
 	}
-	
+
 	// Test with empty results (should return original prompt)
 	enhanced, err := wrapper.EnhancePrompt(ctx, "test prompt", "test query", retrievalConfig)
-	
+
 	assert.NoError(t, err)
 	assert.Equal(t, "test prompt", enhanced) // No enhancement with empty results
-	
+
 	mockStore.AssertExpectations(t)
 }
 
 // Test implementations
 
 type testBaseAgent struct {
-	id              string
-	name            string
-	executeFunc     func(context.Context, string) (string, error)
-	toolRegistry    tools.Registry
-	commissionMgr   commission.CommissionManager
-	llmClient       providers.LLMClient
-	memoryManager   memory.ChainManager
+	id            string
+	name          string
+	executeFunc   func(context.Context, string) (string, error)
+	toolRegistry  tools.Registry
+	commissionMgr commission.CommissionManager
+	llmClient     providers.LLMClient
+	memoryManager memory.ChainManager
 }
 
 func (t *testBaseAgent) Execute(ctx context.Context, request string) (string, error) {
@@ -192,14 +192,14 @@ func (t *testBaseAgent) Execute(ctx context.Context, request string) (string, er
 	return "default response", nil
 }
 
-func (t *testBaseAgent) GetID() string { return t.id }
-func (t *testBaseAgent) GetName() string { return t.name }
-func (t *testBaseAgent) GetToolRegistry() tools.Registry { return t.toolRegistry }
+func (t *testBaseAgent) GetID() string                                      { return t.id }
+func (t *testBaseAgent) GetName() string                                    { return t.name }
+func (t *testBaseAgent) GetToolRegistry() tools.Registry                    { return t.toolRegistry }
 func (t *testBaseAgent) GetCommissionManager() commission.CommissionManager { return t.commissionMgr }
-func (t *testBaseAgent) GetLLMClient() providers.LLMClient { return t.llmClient }
-func (t *testBaseAgent) GetMemoryManager() memory.ChainManager { return t.memoryManager }
-func (t *testBaseAgent) GetType() string { return "test" }
-func (t *testBaseAgent) GetCapabilities() []string { return []string{"testing"} }
+func (t *testBaseAgent) GetLLMClient() providers.LLMClient                  { return t.llmClient }
+func (t *testBaseAgent) GetMemoryManager() memory.ChainManager              { return t.memoryManager }
+func (t *testBaseAgent) GetType() string                                    { return "test" }
+func (t *testBaseAgent) GetCapabilities() []string                          { return []string{"testing"} }
 
 type testRetriever struct {
 	enhanceFunc func(context.Context, string) (string, error)
@@ -235,14 +235,16 @@ func (t *testRetriever) Close() error {
 // Simple test implementations for interfaces
 
 type testToolRegistry struct{}
+
 func (t *testToolRegistry) RegisterTool(name string, tool tools.Tool) error { return nil }
-func (t *testToolRegistry) GetTool(name string) (tools.Tool, error) { return nil, nil }
-func (t *testToolRegistry) ListTools() []string { return []string{} }
-func (t *testToolRegistry) HasTool(name string) bool { return false }
-func (t *testToolRegistry) UnregisterTool(name string) error { return nil }
-func (t *testToolRegistry) Clear() {}
+func (t *testToolRegistry) GetTool(name string) (tools.Tool, error)         { return nil, nil }
+func (t *testToolRegistry) ListTools() []string                             { return []string{} }
+func (t *testToolRegistry) HasTool(name string) bool                        { return false }
+func (t *testToolRegistry) UnregisterTool(name string) error                { return nil }
+func (t *testToolRegistry) Clear()                                          {}
 
 type testCommissionManager struct{}
+
 func (t *testCommissionManager) CreateCommission(ctx context.Context, commission commission.Commission) (*commission.Commission, error) {
 	return &commission, nil
 }
@@ -270,11 +272,13 @@ func (t *testCommissionManager) SetCommission(ctx context.Context, commissionID 
 }
 
 type testLLMClient struct{}
+
 func (t *testLLMClient) Complete(ctx context.Context, prompt string) (string, error) {
 	return "test response", nil
 }
 
 type testMemoryManager struct{}
+
 func (t *testMemoryManager) CreateChain(ctx context.Context, agentID, taskID string) (string, error) {
 	return "chain-id", nil
 }
