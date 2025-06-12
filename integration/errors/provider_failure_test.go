@@ -13,6 +13,8 @@ import (
 
 	"github.com/guild-ventures/guild-core/internal/testutil"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/providers"
+	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -34,7 +36,7 @@ func TestLLMProviderFailures(t *testing.T) {
 
 		// Secondary provider that works
 		secondaryProvider := testutil.NewMockLLMProvider()
-		secondaryProvider.SetResponse("fallback", "Response from secondary provider")
+		secondaryProvider.SetResponse("default", "Response from secondary provider")
 
 		// Register providers
 		err = reg.Providers().RegisterProvider("primary", primaryProvider)
@@ -364,8 +366,8 @@ type failingProvider struct {
 	errors       map[string]error // For SetError compatibility
 }
 
-// Complete implements the LLMClient interface
-func (f *failingProvider) Complete(ctx context.Context, prompt string) (string, error) {
+// ChatCompletion implements the AIProvider interface
+func (f *failingProvider) ChatCompletion(ctx context.Context, req providers.ChatRequest) (*providers.ChatResponse, error) {
 	f.mu.Lock()
 	f.attempts++
 	attempts := f.attempts
@@ -375,13 +377,19 @@ func (f *failingProvider) Complete(ctx context.Context, prompt string) (string, 
 		f.onAttempt(attempts)
 	}
 
+	// Extract prompt from messages
+	prompt := ""
+	if len(req.Messages) > 0 {
+		prompt = req.Messages[0].Content
+	}
+
 	// Check if there's a specific error set for this prompt
 	if f.errors != nil {
 		if err, ok := f.errors[prompt]; ok {
-			return "", err
+			return nil, err
 		}
 		if err, ok := f.errors["*"]; ok {
-			return "", err
+			return nil, err
 		}
 	}
 
@@ -391,9 +399,24 @@ func (f *failingProvider) Complete(ctx context.Context, prompt string) (string, 
 		time.Sleep(10 * time.Millisecond) // Simulate processing
 	}
 
+	// Handle various failure modes
 	switch f.failureMode {
 	case "success":
-		return "Success", nil
+		return &providers.ChatResponse{
+			Model: req.Model,
+			Choices: []providers.ChatChoice{{
+				Message: providers.ChatMessage{
+					Role:    "assistant",
+					Content: "Success",
+				},
+				FinishReason: "stop",
+			}},
+			Usage: interfaces.UsageInfo{
+				PromptTokens:     10,
+				CompletionTokens: 5,
+				TotalTokens:      15,
+			},
+		}, nil
 
 	case "unavailable":
 		err := gerror.New(gerror.ErrCodeProvider, f.errorMsg, nil)
@@ -401,7 +424,7 @@ func (f *failingProvider) Complete(ctx context.Context, prompt string) (string, 
 			"provider": "test",
 			"failure_mode": f.failureMode,
 		}
-		return "", err
+		return nil, err
 
 	case "rate_limit":
 		err := gerror.New(gerror.ErrCodeRateLimit, f.errorMsg, nil)
@@ -413,9 +436,9 @@ func (f *failingProvider) Complete(ctx context.Context, prompt string) (string, 
 		// Succeed after reset time
 		if attempts > 1 && time.Since(time.Now().Add(-f.resetAfter)) > 0 {
 			f.failureMode = "success"
-			return f.Complete(ctx, prompt)
+			return f.ChatCompletion(ctx, req)
 		}
-		return "", err
+		return nil, err
 
 	case "timeout":
 		// Simulate timeout by waiting
@@ -425,9 +448,9 @@ func (f *failingProvider) Complete(ctx context.Context, prompt string) (string, 
 			err.Details = map[string]interface{}{
 				"failure_mode": f.failureMode,
 			}
-			return "", err
+			return nil, err
 		case <-ctx.Done():
-			return "", ctx.Err()
+			return nil, ctx.Err()
 		}
 
 	case "auth":
@@ -436,7 +459,7 @@ func (f *failingProvider) Complete(ctx context.Context, prompt string) (string, 
 			"failure_mode": f.failureMode,
 			"help": "Please check your API key configuration",
 		}
-		return "", err
+		return nil, err
 
 	case "partial_response":
 		// Simulate partial response with token usage
@@ -446,7 +469,7 @@ func (f *failingProvider) Complete(ctx context.Context, prompt string) (string, 
 			"partial_content": "The response was truncated...",
 			"failure_mode": f.failureMode,
 		}
-		return "", err
+		return nil, err
 
 	case "server_error":
 		err := gerror.New(gerror.ErrCodeProvider, f.errorMsg, nil)
@@ -454,7 +477,7 @@ func (f *failingProvider) Complete(ctx context.Context, prompt string) (string, 
 			"status_code": 500,
 			"failure_mode": f.failureMode,
 		}
-		return "", err
+		return nil, err
 
 	case "transient":
 		err := gerror.New(gerror.ErrCodeProvider, f.errorMsg, nil)
@@ -462,23 +485,92 @@ func (f *failingProvider) Complete(ctx context.Context, prompt string) (string, 
 			"retry_after": "1s",
 			"failure_mode": f.failureMode,
 		}
-		return "", err
+		return nil, err
 
 	case "unreliable":
 		// Fails most of the time
 		if attempts%5 == 0 {
 			f.failureMode = "success"
-			return f.Complete(ctx, prompt)
+			return f.ChatCompletion(ctx, req)
 		}
 		err := gerror.New(gerror.ErrCodeProvider, f.errorMsg, nil)
 		err.Details = map[string]interface{}{
 			"failure_mode": f.failureMode,
 		}
-		return "", err
+		return nil, err
 
 	default:
-		return "", fmt.Errorf("unknown failure mode: %s", f.failureMode)
+		return nil, fmt.Errorf("unknown failure mode: %s", f.failureMode)
 	}
+}
+
+// StreamChatCompletion implements the AIProvider interface for streaming
+func (f *failingProvider) StreamChatCompletion(ctx context.Context, req providers.ChatRequest) (providers.ChatStream, error) {
+	// For testing purposes, we don't need streaming
+	return nil, fmt.Errorf("streaming not implemented for failingProvider")
+}
+
+// CreateEmbedding implements the AIProvider interface
+func (f *failingProvider) CreateEmbedding(ctx context.Context, req providers.EmbeddingRequest) (*providers.EmbeddingResponse, error) {
+	// Simple mock embedding for testing
+	return &providers.EmbeddingResponse{
+		Model: req.Model,
+		Embeddings: []providers.Embedding{{
+			Index:     0,
+			Embedding: make([]float64, 768),
+		}},
+		Usage: interfaces.UsageInfo{
+			PromptTokens:     10,
+			CompletionTokens: 0,
+			TotalTokens:      10,
+		},
+	}, nil
+}
+
+// GetCapabilities implements the AIProvider interface
+func (f *failingProvider) GetCapabilities() providers.ProviderCapabilities {
+	return providers.ProviderCapabilities{
+		MaxTokens:          4096,
+		ContextWindow:      8192,
+		SupportsVision:     false,
+		SupportsTools:      true,
+		SupportsStream:     false,
+		SupportsEmbeddings: true,
+		Models: []providers.ModelInfo{
+			{
+				ID:            "test-model",
+				Name:          "Test Model",
+				ContextWindow: 8192,
+				MaxOutput:     4096,
+			},
+		},
+	}
+}
+
+// Complete implements the LLMClient interface for backward compatibility
+func (f *failingProvider) Complete(ctx context.Context, prompt string) (string, error) {
+	// Convert to ChatRequest
+	req := providers.ChatRequest{
+		Model: "test-model",
+		Messages: []providers.ChatMessage{
+			{
+				Role:    "user",
+				Content: prompt,
+			},
+		},
+	}
+	
+	// Use ChatCompletion
+	resp, err := f.ChatCompletion(ctx, req)
+	if err != nil {
+		return "", err
+	}
+	
+	if len(resp.Choices) > 0 {
+		return resp.Choices[0].Message.Content, nil
+	}
+	
+	return "", fmt.Errorf("no response choices")
 }
 
 // SetError allows setting specific errors for testing

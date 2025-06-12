@@ -125,7 +125,9 @@ func (a *projectManagerAdapter) GetContextFromPath(path string) (*ProjectContext
 }
 
 func (a *projectManagerAdapter) Initialize(path string) error {
-	return a.manager.Initialize(path)
+	ctx := context.Background()
+	_, err := a.manager.Initialize(ctx, path, project.InitOptions{})
+	return err
 }
 
 // projectContextAdapter adapts project.Context to registry.ProjectContext

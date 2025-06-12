@@ -30,6 +30,7 @@ const (
 	ErrCodeMissingRequired ErrorCode = "GUILD-2002"
 	ErrCodeInvalidFormat   ErrorCode = "GUILD-2003"
 	ErrCodeOutOfRange      ErrorCode = "GUILD-2004"
+	ErrCodeConfiguration   ErrorCode = "GUILD-2005"
 
 	// Storage errors (3xxx)
 	ErrCodeStorage       ErrorCode = "GUILD-3000"
@@ -184,7 +185,7 @@ func New(code ErrorCode, message string, cause error) *GuildError {
 	// Set user-safe for certain error types
 	switch code {
 	case ErrCodeValidation, ErrCodeInvalidInput, ErrCodeMissingRequired,
-		ErrCodeInvalidFormat, ErrCodeOutOfRange, ErrCodeNotFound:
+		ErrCodeInvalidFormat, ErrCodeOutOfRange, ErrCodeConfiguration, ErrCodeNotFound:
 		err.UserSafe = true
 	}
 

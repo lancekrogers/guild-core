@@ -246,7 +246,31 @@ func (m *Manager) DeleteBoard(ctx context.Context, boardID string) error {
 
 // GetTask gets a task by ID, searching across all boards
 func (m *Manager) GetTask(ctx context.Context, taskID string) (*Task, error) {
-	// Try to get the task directly from the store
+	// Use SQLite-based approach when registry is available
+	if m.registry != nil {
+		// Search through all boards to find the task
+		// This is more efficient than the old memory store approach for SQLite
+		boards, err := m.ListBoards(ctx)
+		if err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list boards").
+				WithComponent("KanbanManager").
+				WithOperation("GetTask")
+		}
+		
+		for _, board := range boards {
+			task, err := board.GetTask(ctx, taskID)
+			if err == nil {
+				return task, nil
+			}
+			// Continue searching if task not found in this board
+		}
+		
+		return nil, gerror.New(gerror.ErrCodeStorage, "task not found", nil).
+			WithComponent("KanbanManager").
+			WithOperation("GetTask")
+	}
+
+	// Fallback to old memory store approach (for backward compatibility)
 	data, err := m.store.Get(ctx, "tasks", taskID)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get task").
@@ -279,6 +303,60 @@ func (m *Manager) GetTask(ctx context.Context, taskID string) (*Task, error) {
 
 	// Verify the task belongs to the board
 	return board.GetTask(ctx, taskID)
+}
+
+// convertToKanbanTask converts interface{} task data to kanban.Task
+func convertToKanbanTask(taskData interface{}) (*Task, error) {
+	// Handle different possible types from the storage layer
+	switch t := taskData.(type) {
+	case *Task:
+		return t, nil
+	case Task:
+		return &t, nil
+	case map[string]interface{}:
+		// Convert from map format
+		task := &Task{}
+		if id, ok := t["ID"].(string); ok {
+			task.ID = id
+		}
+		if title, ok := t["Title"].(string); ok {
+			task.Title = title
+		}
+		if desc, ok := t["Description"].(string); ok {
+			task.Description = desc
+		}
+		if status, ok := t["Status"].(string); ok {
+			task.Status = TaskStatus(status)
+		}
+		if boardID, ok := t["BoardID"].(string); ok {
+			if task.Metadata == nil {
+				task.Metadata = make(map[string]string)
+			}
+			task.Metadata["board_id"] = boardID
+		}
+		if metadata, ok := t["Metadata"].(map[string]interface{}); ok {
+			if task.Metadata == nil {
+				task.Metadata = make(map[string]string)
+			}
+			// Convert map[string]interface{} to map[string]string
+			for k, v := range metadata {
+				if strVal, ok := v.(string); ok {
+					task.Metadata[k] = strVal
+				}
+			}
+		}
+		if createdAt, ok := t["CreatedAt"].(time.Time); ok {
+			task.CreatedAt = createdAt
+		}
+		if updatedAt, ok := t["UpdatedAt"].(time.Time); ok {
+			task.UpdatedAt = updatedAt
+		}
+		return task, nil
+	default:
+		return nil, gerror.New(gerror.ErrCodeInternal, "unsupported task data type", nil).
+			WithComponent("KanbanManager").
+			WithOperation("convertToKanbanTask")
+	}
 }
 
 // CreateTask creates a task on the specified board

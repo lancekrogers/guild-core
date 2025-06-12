@@ -74,6 +74,12 @@ func (r *DefaultProviderRegistry) GetProvider(name string) (Provider, error) {
 	return provider, nil
 }
 
+// Get is an alias for GetProvider for backward compatibility
+// This method is expected by journey integration tests
+func (r *DefaultProviderRegistry) Get(name string) (Provider, error) {
+	return r.GetProvider(name)
+}
+
 // GetDefaultProvider returns the configured default provider
 func (r *DefaultProviderRegistry) GetDefaultProvider() (Provider, error) {
 	r.mu.RLock()

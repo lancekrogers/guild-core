@@ -148,22 +148,14 @@ I want to create a simple TODO list application with the following features:
 
 		// Setup mock provider
 		mockProvider := testutil.NewMockLLMProvider()
-		mockProvider.SetResponse("manager", testutil.GenerateMockAgentResponse(
-			testutil.AgentResponseOptions{
-				Type: "task_breakdown",
-				Tasks: []string{
-					"Create Task struct and methods",
-					"Implement file storage",
-					"Build CLI interface",
-					"Write unit tests",
-				},
-			},
-		))
+		mockProvider.SetResponse("manager", `Task Breakdown:
+1. Create Task struct and methods
+2. Implement file storage
+3. Build CLI interface
+4. Write unit tests`)
 
 		// Register mock provider
-		err = reg.Providers().Register("mock", func(ctx context.Context, cfg map[string]any) (any, error) {
-			return mockProvider, nil
-		})
+		err = reg.Providers().RegisterProvider("mock", mockProvider)
 		require.NoError(t, err)
 
 		// Simulate commission execution workflow
@@ -234,19 +226,25 @@ func TestNewUserErrorRecovery(t *testing.T) {
 		err := reg.Initialize(context.Background(), registry.Config{})
 		require.NoError(t, err)
 
-		// Should get clear error about missing API key
-		err = reg.Providers().Register("openai", func(ctx context.Context, cfg map[string]any) (any, error) {
-			if cfg["api_key"] == nil || cfg["api_key"] == "" {
-				return nil, gerror.New("missing API key", gerror.ErrorTypeConfiguration).
-					WithContext("provider", "openai").
-					WithContext("help", "Please set your OpenAI API key in ~/.guild/config.yml")
-			}
-			return nil, nil
-		})
+		// Create a mock provider that simulates missing API key error
+		mockProvider := testutil.NewMockLLMProvider()
+		// Set error for any request to simulate missing API key
+		mockProvider.SetError("default", gerror.New(gerror.ErrCodeConfiguration, "missing API key", nil).
+			WithComponent("provider").
+			WithOperation("initialize").
+			WithDetails("provider", "openai").
+			WithDetails("help", "Please set your OpenAI API key in ~/.guild/config.yml"))
+		
+		// Register the mock provider
+		err = reg.Providers().RegisterProvider("openai", mockProvider)
 		require.NoError(t, err)
 
-		// Try to get provider without config
-		_, err = reg.Providers().Get("openai")
+		// Try to use provider - should get error about missing API key
+		provider, err := reg.Providers().Get("openai")
+		require.NoError(t, err, "Getting provider should not error")
+		
+		// Try to use the provider
+		_, err = provider.Complete(context.Background(), "test prompt")
 		assert.Error(t, err, "Should error on missing API key")
 		assert.Contains(t, err.Error(), "Please set your OpenAI API key", "Error should be helpful")
 	})

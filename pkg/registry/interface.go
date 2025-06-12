@@ -140,6 +140,9 @@ type ProviderRegistry interface {
 	// GetProvider retrieves a provider by name
 	GetProvider(name string) (Provider, error)
 
+	// Get is an alias for GetProvider for backward compatibility
+	Get(name string) (Provider, error)
+
 	// GetDefaultProvider returns the configured default provider
 	GetDefaultProvider() (Provider, error)
 

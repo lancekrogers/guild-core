@@ -143,6 +143,14 @@ func GetContextFromPath(path string) (*Context, error) {
 	return NewContext(rootPath)
 }
 
+// Load loads a project context from the given path with context support
+// This is the context-aware version of GetContextFromPath for modern usage patterns
+func Load(ctx context.Context, path string) (*Context, error) {
+	// For now, we don't use the context, but having it allows for future
+	// cancellation support and timeout handling during project loading
+	return GetContextFromPath(path)
+}
+
 // GetContextWithFallback attempts to get project context, falling back to a default if not in a project
 func GetContextWithFallback(ctx context.Context, defaultPath string) (*Context, error) {
 	// Try to get project context

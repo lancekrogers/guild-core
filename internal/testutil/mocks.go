@@ -690,6 +690,60 @@ func (s *MockVectorStore) Count() int {
 	return len(s.documents)
 }
 
+// SaveEmbedding stores a vector embedding (implements VectorStore interface)
+func (s *MockVectorStore) SaveEmbedding(ctx context.Context, embedding vector.Embedding) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	
+	// Convert Embedding to Document for storage
+	doc := &vector.Document{
+		ID:       embedding.ID,
+		Content:  embedding.Text,
+		Metadata: embedding.Metadata,
+	}
+	s.documents[doc.ID] = doc
+	s.embeddings[doc.ID] = embedding.Vector
+	return nil
+}
+
+// QueryEmbeddings performs a similarity search (implements VectorStore interface)
+func (s *MockVectorStore) QueryEmbeddings(ctx context.Context, query string, limit int) ([]vector.EmbeddingMatch, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	
+	// For mock, return first N documents as matches
+	matches := make([]vector.EmbeddingMatch, 0, limit)
+	for id, doc := range s.documents {
+		if len(matches) >= limit {
+			break
+		}
+		// Convert metadata if needed
+		metadata := make(map[string]interface{})
+		if doc.Metadata != nil {
+			if m, ok := doc.Metadata.(map[string]interface{}); ok {
+				metadata = m
+			}
+		}
+		
+		matches = append(matches, vector.EmbeddingMatch{
+			ID:        id,
+			Text:      doc.Content,
+			Source:    fmt.Sprintf("mock:%s", id),
+			Score:     0.95, // Mock high similarity score
+			Timestamp: time.Now(),
+			Metadata:  metadata,
+		})
+	}
+	
+	return matches, nil
+}
+
+// Close closes the vector store (implements VectorStore interface)
+func (s *MockVectorStore) Close() error {
+	// Nothing to close in mock implementation
+	return nil
+}
+
 // Helper functions
 
 func generateMockEmbedding(content string) []float32 {

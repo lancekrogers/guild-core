@@ -11,6 +11,13 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
+// InitOptions contains options for project initialization
+type InitOptions struct {
+	Name        string `yaml:"name,omitempty"`        // Project name
+	Description string `yaml:"description,omitempty"` // Project description
+	Template    string `yaml:"template,omitempty"`    // Template to use for initialization
+}
+
 // directoryStructure defines the directory structure for a Guild project
 var directoryStructure = []string{
 	"corpus",
@@ -21,8 +28,9 @@ var directoryStructure = []string{
 	"objectives",
 }
 
-// Initialize creates a new Guild project structure at the specified path
-func Initialize(path string) error {
+// initializeProjectBasic creates a new Guild project structure at the specified path
+// This is the legacy basic initialization function
+func initializeProjectBasic(path string) error {
 	// Validate the path
 	if err := ValidateProjectPath(path); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "invalid project path").
@@ -66,6 +74,35 @@ func Initialize(path string) error {
 	}
 
 	return nil
+}
+
+// Initialize creates a new Guild project with the given options and returns the project context
+// This is the modern API that journey tests expect
+func Initialize(ctx context.Context, path string, opts InitOptions) (*Context, error) {
+	// Call the refactored initialization function (from init_refactored.go)
+	if err := InitializeProject(path); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize project").
+			WithComponent("project").
+			WithOperation("initialize").
+			WithDetails("path", path)
+	}
+
+	// Create and return the project context
+	projCtx, err := NewContext(path)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create project context").
+			WithComponent("project").
+			WithOperation("initialize").
+			WithDetails("path", path)
+	}
+
+	// TODO: Apply InitOptions (name, description, template) to the project
+	// For now, we create a default project, but in the future we could:
+	// - Set project name/description in config.yaml
+	// - Apply different templates based on opts.Template
+	// - Customize the initialization based on options
+
+	return projCtx, nil
 }
 
 // createStructure creates the directory structure and initial files
@@ -247,8 +284,8 @@ anywhere within the project directory tree.
 
 // InitializeWithConfig creates a new Guild project with custom configuration
 func InitializeWithConfig(path string, config interface{}) error {
-	// First do standard initialization
-	if err := Initialize(path); err != nil {
+	// First do standard initialization using the refactored function
+	if err := InitializeProject(path); err != nil {
 		return err
 	}
 

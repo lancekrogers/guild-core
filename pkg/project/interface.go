@@ -16,14 +16,16 @@ type ContextProvider interface {
 	GetContext() (*Context, error)
 	// GetContextFromPath returns project context from a specific path
 	GetContextFromPath(path string) (*Context, error)
+	// Load loads a project context from the given path with context support
+	Load(ctx context.Context, path string) (*Context, error)
 	// GetContextWithFallback attempts to get project context with a fallback
 	GetContextWithFallback(ctx context.Context, defaultPath string) (*Context, error)
 }
 
 // Initializer handles project initialization
 type Initializer interface {
-	// Initialize creates a new project structure
-	Initialize(path string) error
+	// Initialize creates a new project with options and returns context
+	Initialize(ctx context.Context, path string, opts InitOptions) (*Context, error)
 	// InitializeWithConfig creates a new project with custom configuration
 	InitializeWithConfig(path string, config interface{}) error
 }
@@ -70,14 +72,19 @@ func (m *defaultManager) GetContextFromPath(path string) (*Context, error) {
 	return GetContextFromPath(path)
 }
 
+// Load implements ContextProvider
+func (m *defaultManager) Load(ctx context.Context, path string) (*Context, error) {
+	return Load(ctx, path)
+}
+
 // GetContextWithFallback implements ContextProvider
 func (m *defaultManager) GetContextWithFallback(ctx context.Context, defaultPath string) (*Context, error) {
 	return GetContextWithFallback(ctx, defaultPath)
 }
 
 // Initialize implements Initializer
-func (m *defaultManager) Initialize(path string) error {
-	return Initialize(path)
+func (m *defaultManager) Initialize(ctx context.Context, path string, opts InitOptions) (*Context, error) {
+	return Initialize(ctx, path, opts)
 }
 
 // InitializeWithConfig implements Initializer

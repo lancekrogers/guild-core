@@ -47,13 +47,10 @@ func SetupTestProject(t *testing.T, opts ...TestProjectOptions) (*project.Contex
 	tempDir, err := os.MkdirTemp("", "guild-test-*")
 	require.NoError(t, err, "failed to create temp directory")
 
-	// Initialize project
-	err = project.Initialize(tempDir)
+	// Initialize project and get project context
+	ctx := context.Background()
+	projCtx, err := project.Initialize(ctx, tempDir, project.InitOptions{})
 	require.NoError(t, err, "failed to initialize project")
-
-	// Create project context
-	projCtx, err := project.NewContext(tempDir)
-	require.NoError(t, err, "failed to create project context")
 
 	// Apply custom configuration if provided
 	if options.CustomConfig != nil {

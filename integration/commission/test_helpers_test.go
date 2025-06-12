@@ -1,10 +1,9 @@
-// +build integration
+//go:build integration
 
 package commission_test
 
 import (
 	"context"
-	"path/filepath"
 	"testing"
 
 	"github.com/guild-ventures/guild-core/pkg/project"
@@ -30,8 +29,10 @@ func setupTestRegistry(t *testing.T, ctx context.Context, projCtx *project.Conte
 		memStore:   memStore,
 	}
 
-	// Set storage in registry
-	reg.SetStorageRegistry(registryStorageWrapper, &testMemoryStoreWrapper{memStore: memStore})
+	// Set storage in registry (cast to concrete type for testing)
+	if defaultReg, ok := reg.(*registry.DefaultComponentRegistry); ok {
+		defaultReg.SetStorageRegistry(registryStorageWrapper, &testMemoryStoreWrapper{memStore: memStore})
+	}
 
 	return reg
 }
@@ -106,6 +107,21 @@ func (w *testStorageRegistryWrapper) GetStorageRegistry() storage.StorageRegistr
 func (w *testStorageRegistryWrapper) GetKanbanTaskRepository() registry.KanbanTaskRepository {
 	// Return wrapper that implements the kanban interface
 	return &testKanbanTaskRepoWrapper{taskRepo: w.storageReg.GetTaskRepository()}
+}
+
+func (w *testStorageRegistryWrapper) GetBoardRepository() registry.KanbanBoardRepository {
+	// Return wrapper that implements the kanban board interface
+	return &testKanbanBoardRepoWrapper{boardRepo: w.storageReg.GetBoardRepository()}
+}
+
+func (w *testStorageRegistryWrapper) GetKanbanCampaignRepository() registry.KanbanCampaignRepository {
+	// Return wrapper that implements the kanban campaign interface
+	return &testKanbanCampaignRepoWrapper{campaignRepo: w.storageReg.GetCampaignRepository()}
+}
+
+func (w *testStorageRegistryWrapper) GetKanbanCommissionRepository() registry.KanbanCommissionRepository {
+	// Return wrapper that implements the kanban commission interface
+	return &testKanbanCommissionRepoWrapper{commissionRepo: w.storageReg.GetCommissionRepository()}
 }
 
 // Adapter implementations
@@ -372,6 +388,15 @@ func (w *testMemoryStoreWrapper) List(ctx context.Context, bucket string) ([]str
 	return nil, nil
 }
 
+func (w *testMemoryStoreWrapper) ListKeys(ctx context.Context, bucket, prefix string) ([]string, error) {
+	if ms, ok := w.memStore.(interface {
+		ListKeys(context.Context, string, string) ([]string, error)
+	}); ok {
+		return ms.ListKeys(ctx, bucket, prefix)
+	}
+	return nil, nil
+}
+
 func (w *testMemoryStoreWrapper) Close() error {
 	if closer, ok := w.memStore.(interface{ Close() error }); ok {
 		return closer.Close()
@@ -417,4 +442,87 @@ func (w *testKanbanTaskRepoWrapper) ListTasksByBoard(ctx context.Context, boardI
 		result[i] = task
 	}
 	return result, nil
+}
+
+func (w *testKanbanTaskRepoWrapper) RecordTaskEvent(ctx context.Context, event interface{}) error {
+	if e, ok := event.(*storage.TaskEvent); ok {
+		return w.taskRepo.RecordTaskEvent(ctx, e)
+	}
+	return nil
+}
+
+// Kanban repository wrappers
+type testKanbanBoardRepoWrapper struct {
+	boardRepo storage.BoardRepository
+}
+
+func (w *testKanbanBoardRepoWrapper) CreateBoard(ctx context.Context, board interface{}) error {
+	if b, ok := board.(*storage.Board); ok {
+		return w.boardRepo.CreateBoard(ctx, b)
+	}
+	return nil
+}
+
+func (w *testKanbanBoardRepoWrapper) GetBoard(ctx context.Context, id string) (interface{}, error) {
+	return w.boardRepo.GetBoard(ctx, id)
+}
+
+func (w *testKanbanBoardRepoWrapper) GetBoardByCommission(ctx context.Context, commissionID string) (interface{}, error) {
+	return w.boardRepo.GetBoardByCommission(ctx, commissionID)
+}
+
+func (w *testKanbanBoardRepoWrapper) UpdateBoard(ctx context.Context, board interface{}) error {
+	if b, ok := board.(*storage.Board); ok {
+		return w.boardRepo.UpdateBoard(ctx, b)
+	}
+	return nil
+}
+
+func (w *testKanbanBoardRepoWrapper) ListBoards(ctx context.Context) ([]interface{}, error) {
+	boards, err := w.boardRepo.ListBoards(ctx)
+	if err != nil {
+		return nil, err
+	}
+	
+	result := make([]interface{}, len(boards))
+	for i, board := range boards {
+		result[i] = board
+	}
+	return result, nil
+}
+
+func (w *testKanbanBoardRepoWrapper) DeleteBoard(ctx context.Context, id string) error {
+	// Not implemented in storage layer
+	return nil
+}
+
+type testKanbanCampaignRepoWrapper struct {
+	campaignRepo storage.CampaignRepository
+}
+
+func (w *testKanbanCampaignRepoWrapper) CreateCampaign(ctx context.Context, campaign interface{}) error {
+	if c, ok := campaign.(*storage.Campaign); ok {
+		return w.campaignRepo.CreateCampaign(ctx, c)
+	}
+	return nil
+}
+
+type testKanbanCommissionRepoWrapper struct {
+	commissionRepo storage.CommissionRepository
+}
+
+func (w *testKanbanCommissionRepoWrapper) CreateCommission(ctx context.Context, commission interface{}) error {
+	if c, ok := commission.(*storage.Commission); ok {
+		return w.commissionRepo.CreateCommission(ctx, c)
+	}
+	return nil
+}
+
+func (w *testKanbanCommissionRepoWrapper) GetCommission(ctx context.Context, id string) (interface{}, error) {
+	return w.commissionRepo.GetCommission(ctx, id)
+}
+
+// strPtr returns a pointer to a string
+func strPtr(s string) *string {
+	return &s
 }
