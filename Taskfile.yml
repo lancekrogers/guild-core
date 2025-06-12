@@ -19,7 +19,7 @@ tasks:
     desc: Build the Guild binary
     cmds:
       - mkdir -p {{.BIN_DIR}}
-      - rm -f ./guild  # Clean any binary in root directory
+      - rm -f ./guild # Clean any binary in root directory
       - go build {{.GO_FLAGS}} -ldflags "{{.LDFLAGS}}" -o {{.BIN_DIR}}/{{.MAIN_BIN}} {{.CMD_DIR}}
     sources:
       - "**/*.go"
@@ -108,7 +108,7 @@ tasks:
     cmds:
       - rm -rf {{.BIN_DIR}}
       - rm -rf ./coverage
-      - rm -f ./guild  # Remove any binary in root directory
+      - rm -f ./guild # Remove any binary in root directory
       - go clean -testcache
       - go clean -cache
 
@@ -123,7 +123,7 @@ tasks:
           exit 1
         fi
         echo "✅ Binary exists"
-        
+
         # Test that the binary runs without crashing
         if {{.BIN_DIR}}/{{.MAIN_BIN}} --help > /dev/null 2>&1; then
           echo "✅ Binary runs and shows help"
@@ -131,22 +131,14 @@ tasks:
           echo "ERROR: Binary failed to run or show help"
           exit 1
         fi
-        
+
         echo "✅ Build verification complete"
 
   deps:install:
     desc: Install required dependencies
     cmds:
       - |
-        echo "Installing build dependencies..."
-        # ZeroMQ dependency (used for communication)
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-          brew install zeromq
-        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-          sudo apt-get update && sudo apt-get install -y libzmq3-dev
-        else
-          echo "Please install ZeroMQ manually for your platform"
-        fi
+        echo "Installing Go dependencies..."
         go mod download
         go mod tidy
 
@@ -192,5 +184,6 @@ tasks:
     cmds:
       - |
         echo "Generating test report..."
-        make test-coverage || task test:coverage
+        task test:coverage
         echo "Report available at ./coverage/coverage.html"
+
