@@ -11,7 +11,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/guild-ventures/guild-core/internal/testutil"
-	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/guild-ventures/guild-core/pkg/registry"
@@ -101,8 +100,6 @@ func TestNewUserCompleteOnboarding(t *testing.T) {
 
 	t.Run("Step4_FirstCommissionCreation", func(t *testing.T) {
 		// User creates their first commission
-		projectDir := filepath.Join(homeDir, "my-first-guild-project")
-		
 		// Setup test project context
 		projCtx, cleanup := testutil.SetupTestProject(t)
 		defer cleanup()
@@ -138,7 +135,7 @@ I want to create a simple TODO list application with the following features:
 
 	t.Run("Step5_ExecuteFirstCommission", func(t *testing.T) {
 		// User runs their first commission
-		projCtx, cleanup := testutil.SetupTestProject(t)
+		_, cleanup := testutil.SetupTestProject(t)
 		defer cleanup()
 
 		// Setup registry with mock components
@@ -218,7 +215,7 @@ func TestNewUserErrorRecovery(t *testing.T) {
 
 	t.Run("MissingAPIKey", func(t *testing.T) {
 		// User tries to run commission without configuring API key
-		projCtx, cleanup := testutil.SetupTestProject(t)
+		_, cleanup := testutil.SetupTestProject(t)
 		defer cleanup()
 
 		// Attempt to create provider without API key
@@ -339,7 +336,7 @@ providers:
 
 func loadGlobalConfig(path string) (*GlobalConfig, error) {
 	// In real implementation, this would use proper YAML unmarshaling
-	data, err := os.ReadFile(path)
+	_, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}

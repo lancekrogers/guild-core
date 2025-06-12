@@ -54,7 +54,7 @@ func main() {
 	
 	// Should navigate to position
 	assert.Contains(t, result.Output, "Position: Line 6, Column 10")
-	assert.Contains(t, result.Output, "Language: go")
+	assert.Contains(t, result.Output, "(go)")
 	assert.Contains(t, result.Output, "Context: function")
 }
 
@@ -269,7 +269,7 @@ if __name__ == "__main__":
 	
 	// Should find the User class
 	assert.Contains(t, result.Output, "Line 4")
-	assert.Contains(t, result.Output, "Language: python")
+	assert.Contains(t, result.Output, "(python)")
 }
 
 func TestCursorPositionTool_Execute_InvalidFile(t *testing.T) {

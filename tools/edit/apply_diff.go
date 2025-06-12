@@ -407,6 +407,13 @@ func (t *ApplyDiffTool) applyHunk(lines []string, hunk *DiffHunk, reverse bool) 
 		startLine = hunk.NewStart - 1
 	}
 	
+	// Handle empty file case (OldStart == 0 for empty files)
+	if hunk.OldStart == 0 && !reverse {
+		startLine = 0
+	} else if hunk.NewStart == 0 && reverse {
+		startLine = 0
+	}
+	
 	// Validate startLine to prevent array bounds errors
 	if startLine < 0 {
 		return nil, gerror.New(gerror.ErrCodeInvalidInput, "invalid hunk start line", nil).

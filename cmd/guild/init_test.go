@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"testing"
@@ -55,14 +56,17 @@ func TestInitCommandAlreadyInitialized(t *testing.T) {
 	os.Chdir(tempDir)
 
 	// Initialize first time
-	project.Initialize(".")
+	_, err := project.Initialize(context.Background(), ".", project.InitOptions{})
+	if err != nil {
+		t.Fatalf("Failed to initialize project: %v", err)
+	}
 
 	// Try to initialize again
 	cmd := rootCmd
 	cmd.SetArgs([]string{"init"})
 
 	// Should not error, but should print message
-	err := cmd.Execute()
+	err = cmd.Execute()
 	if err != nil {
 		t.Fatalf("Init command failed on already initialized project: %v", err)
 	}

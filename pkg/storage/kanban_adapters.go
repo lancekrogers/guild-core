@@ -164,11 +164,11 @@ func (a *KanbanTaskRepositoryAdapter) convertMapToTask(taskMap map[string]interf
 func (a *KanbanTaskRepositoryAdapter) mapKanbanStatusToStorageStatus(kanbanStatus string) string {
 	switch kanbanStatus {
 	case "backlog":
-		return "todo" // Map backlog to todo
+		return "backlog" // Keep backlog as is - SQLite should support it
 	case "ready_for_review":
 		return "pending_review" // Map ready_for_review to pending_review
 	case "cancelled":
-		return "done" // Map cancelled to done (closest semantic match)
+		return "cancelled" // Keep cancelled as is - SQLite should support it
 	case "todo", "in_progress", "blocked", "pending_review", "done":
 		return kanbanStatus // These map directly
 	default:

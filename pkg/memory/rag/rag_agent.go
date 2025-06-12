@@ -96,9 +96,9 @@ func (w *AgentWrapper) enhanceRequestWithRAG(ctx context.Context, request string
 	// Define retrieval configuration
 	retrievalConfig := RetrievalConfig{
 		MaxResults:      w.config.MaxResults,
-		MinScore:        0.7, // Default minimum score
+		MinScore:        0.0, // Accept all results for better recall
 		IncludeMetadata: true,
-		UseCorpus:       true,
+		UseCorpus:       w.config.UseCorpus,
 	}
 
 	// Retrieve relevant context

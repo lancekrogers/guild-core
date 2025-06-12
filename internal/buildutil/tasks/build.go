@@ -57,9 +57,7 @@ func Build(verbose bool) error {
 		result.VetTime = time.Since(start)
 		
 		if !result.VetPass {
-			ui.ClearProgress()
-			ui.Status(fmt.Sprintf("Vet failed: %s", shortName), false)
-			return fmt.Errorf("go vet failed for %s", pkg)
+			// Don't return immediately - continue to collect all results for dashboard
 		}
 		
 		// Build
@@ -74,9 +72,7 @@ func Build(verbose bool) error {
 		result.BuildTime = time.Since(start)
 		
 		if !result.BuildPass {
-			ui.ClearProgress()
-			ui.Status(fmt.Sprintf("Build failed: %s", shortName), false)
-			return fmt.Errorf("go build failed for %s", pkg)
+			// Don't return immediately - continue to collect all results for dashboard
 		}
 		
 		results = append(results, result)
@@ -100,10 +96,7 @@ func Build(verbose bool) error {
 	
 	ui.ClearProgress()
 	
-	if !mainBuildSuccess {
-		ui.Status("Main binary build failed", false)
-		return fmt.Errorf("failed to build main binary")
-	}
+	// Don't return immediately - add to results for dashboard display
 	
 	// Add main binary result
 	results = append(results, PackageResult{
@@ -173,7 +166,18 @@ func Build(verbose bool) error {
 		title = "Build Complete - No Errors"
 	}
 	
-	ui.SummaryCard(title, rows, fmt.Sprintf("%.2fs", totalTime.Seconds()), true)
+	ui.SummaryCard(title, rows, fmt.Sprintf("%.2fs", totalTime.Seconds()), !hasFailures)
+	
+	// Now return error if there were any failures
+	if hasFailures {
+		failedPackages := []string{}
+		for _, r := range results {
+			if !r.VetPass || !r.BuildPass {
+				failedPackages = append(failedPackages, r.Package)
+			}
+		}
+		return fmt.Errorf("build failed for packages: %s", strings.Join(failedPackages, ", "))
+	}
 	
 	return nil
 }

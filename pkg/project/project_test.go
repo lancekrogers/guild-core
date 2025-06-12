@@ -88,19 +88,23 @@ func TestInitialize(t *testing.T) {
 	tempDir := t.TempDir()
 
 	// Test initialization
-	if err := Initialize(tempDir); err != nil {
+	ctx := context.Background()
+	if _, err := Initialize(ctx, tempDir, InitOptions{}); err != nil {
 		t.Fatalf("Initialize() failed: %v", err)
 	}
 
 	// Check that all expected directories were created
 	expectedDirs := []string{
 		".guild",
+		".guild/commissions",
+		".guild/commissions/refined",
+		".guild/campaigns",
+		".guild/kanban",
 		".guild/corpus",
-		".guild/corpus/docs",
-		".guild/corpus/.activities",
-		".guild/embeddings",
-		".guild/agents",
-		".guild/objectives",
+		".guild/corpus/index",
+		".guild/prompts",
+		".guild/tools",
+		".guild/workspaces",
 	}
 
 	for _, dir := range expectedDirs {
@@ -112,9 +116,9 @@ func TestInitialize(t *testing.T) {
 
 	// Check that expected files were created
 	expectedFiles := []string{
-		".guild/config.yaml",
+		".guild/guild.yaml",
+		".guild/memory.db",
 		".guild/.gitignore",
-		".guild/README.md",
 	}
 
 	for _, file := range expectedFiles {
@@ -124,9 +128,9 @@ func TestInitialize(t *testing.T) {
 		}
 	}
 
-	// Test that re-initialization fails
-	if err := Initialize(tempDir); err != ErrAlreadyInitialized {
-		t.Errorf("Expected ErrAlreadyInitialized, got %v", err)
+	// Test that re-initialization succeeds (idempotent)
+	if _, err := Initialize(ctx, tempDir, InitOptions{}); err != nil {
+		t.Errorf("Re-initialization failed: %v", err)
 	}
 }
 

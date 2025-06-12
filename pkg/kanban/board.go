@@ -715,11 +715,21 @@ func (b *Board) getTaskSQLite(ctx context.Context, taskID string) (*Task, error)
 
 // mapStorageStatusToKanbanStatus maps database status values back to kanban status values
 func (b *Board) mapStorageStatusToKanbanStatus(storageStatus string) TaskStatus {
+	// Note: We need to check metadata to distinguish between StatusBacklog and StatusTodo
+	// since both are stored as "todo" in the database due to constraints
 	switch storageStatus {
 	case "pending_review":
 		return StatusReadyForReview
-	case "todo", "in_progress", "blocked", "done":
-		return TaskStatus(storageStatus)
+	case "todo":
+		// This could be either StatusTodo or StatusBacklog
+		// For now, return StatusTodo - caller should check metadata if needed
+		return StatusTodo
+	case "in_progress":
+		return StatusInProgress
+	case "blocked":
+		return StatusBlocked
+	case "done":
+		return StatusDone
 	default:
 		return StatusTodo // Default fallback
 	}
@@ -729,11 +739,11 @@ func (b *Board) mapStorageStatusToKanbanStatus(storageStatus string) TaskStatus 
 func (b *Board) mapKanbanStatusToStorageStatus(kanbanStatus TaskStatus) string {
 	switch kanbanStatus {
 	case StatusBacklog:
-		return "todo" // Map backlog to todo for SQLite compatibility
+		return "todo" // Map backlog to todo - database constraint requires it
 	case StatusReadyForReview:
 		return "pending_review" // Map ready_for_review to pending_review
 	case StatusCancelled:
-		return "done" // Map cancelled to done (with metadata indicating cancellation)
+		return "done" // Map cancelled to done - database constraint requires it
 	case StatusTodo, StatusInProgress, StatusBlocked, StatusDone:
 		return string(kanbanStatus) // These map directly
 	default:
@@ -897,8 +907,9 @@ func (b *Board) GetTasksByStatus(ctx context.Context, status TaskStatus) ([]*Tas
 			continue // Skip invalid tasks
 		}
 
-		// Filter by status
-		if storageTask.Status != string(status) {
+		// Filter by status - map storage status back to kanban status for comparison
+		taskKanbanStatus := b.mapStorageStatusToKanbanStatus(storageTask.Status)
+		if taskKanbanStatus != status {
 			continue
 		}
 

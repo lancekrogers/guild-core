@@ -10,6 +10,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/internal/testutil"
 	"github.com/guild-ventures/guild-core/pkg/agent/manager"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/registry"
@@ -153,9 +154,10 @@ func TestKanbanWorkflow(t *testing.T) {
 	assert.Equal(t, kanban.StatusInProgress, task1.Status)
 
 	// List tasks by status
-	backlogTasks, err := kanbanManager.ListTasksByStatus(ctx, kanban.StatusBacklog)
+	// Note: StatusBacklog is mapped to "todo" in storage due to database constraints
+	todoTasks, err := kanbanManager.ListTasksByStatus(ctx, kanban.StatusTodo)
 	require.NoError(t, err)
-	assert.Len(t, backlogTasks, 2) // Tasks 2 and 3 (still in backlog)
+	assert.Len(t, todoTasks, 2) // Tasks 2 and 3 (still in todo/backlog)
 
 	inProgressTasks, err := kanbanManager.ListTasksByStatus(ctx, kanban.StatusInProgress)
 	require.NoError(t, err)
@@ -329,14 +331,49 @@ func (k *kanbanTaskRepoAdapter) CreateTask(ctx context.Context, task interface{}
 		storageTask.Column = "backlog"
 		return k.repo.CreateTask(ctx, storageTask)
 	}
-	return fmt.Errorf("invalid task type")
+	return gerror.New(gerror.ErrCodeValidation, "invalid task type", nil).
+		WithComponent("kanbanTaskRepoAdapter").
+		WithOperation("CreateTask")
 }
 
 func (k *kanbanTaskRepoAdapter) UpdateTask(ctx context.Context, task interface{}) error {
 	if storageTask, ok := task.(*storage.Task); ok {
 		return k.repo.UpdateTask(ctx, storageTask)
 	}
-	return fmt.Errorf("invalid task type")
+	// Handle map[string]interface{} case for kanban compatibility
+	if taskMap, ok := task.(map[string]interface{}); ok {
+		// Get the task from storage first to preserve all fields
+		taskID := taskMap["ID"].(string)
+		existingTask, err := k.repo.GetTask(ctx, taskID)
+		if err != nil {
+			return err
+		}
+		
+		// Update fields from the map
+		if title, ok := taskMap["Title"].(string); ok {
+			existingTask.Title = title
+		}
+		if status, ok := taskMap["Status"].(string); ok {
+			existingTask.Status = status
+		}
+		if agentID, ok := taskMap["AssignedAgentID"].(*string); ok {
+			existingTask.AssignedAgentID = agentID
+		}
+		if desc, ok := taskMap["Description"].(*string); ok {
+			existingTask.Description = desc
+		}
+		if metadata, ok := taskMap["Metadata"].(map[string]interface{}); ok {
+			existingTask.Metadata = metadata
+		}
+		if updatedAt, ok := taskMap["UpdatedAt"].(time.Time); ok {
+			existingTask.UpdatedAt = updatedAt
+		}
+		
+		return k.repo.UpdateTask(ctx, existingTask)
+	}
+	return gerror.New(gerror.ErrCodeValidation, "invalid task type", nil).
+		WithComponent("kanbanTaskRepoAdapter").
+		WithOperation("UpdateTask")
 }
 
 func (k *kanbanTaskRepoAdapter) DeleteTask(ctx context.Context, id string) error {
@@ -361,7 +398,9 @@ func (k *kanbanTaskRepoAdapter) RecordTaskEvent(ctx context.Context, event inter
 	if storageEvent, ok := event.(*storage.TaskEvent); ok {
 		return k.repo.RecordTaskEvent(ctx, storageEvent)
 	}
-	return fmt.Errorf("invalid event type")
+	return gerror.New(gerror.ErrCodeValidation, "invalid event type", nil).
+		WithComponent("kanbanTaskRepoAdapter").
+		WithOperation("RecordTaskEvent")
 }
 
 type kanbanBoardRepoAdapter struct {
@@ -392,7 +431,9 @@ func (k *kanbanBoardRepoAdapter) CreateBoard(ctx context.Context, board interfac
 		}
 		return k.repo.CreateBoard(ctx, storageBoard)
 	}
-	return fmt.Errorf("invalid board type")
+	return gerror.New(gerror.ErrCodeValidation, "invalid board type", nil).
+		WithComponent("kanbanBoardRepoAdapter").
+		WithOperation("CreateBoard")
 }
 
 func (k *kanbanBoardRepoAdapter) GetBoard(ctx context.Context, id string) (interface{}, error) {
@@ -407,7 +448,9 @@ func (k *kanbanBoardRepoAdapter) UpdateBoard(ctx context.Context, board interfac
 	if storageBoard, ok := board.(*storage.Board); ok {
 		return k.repo.UpdateBoard(ctx, storageBoard)
 	}
-	return fmt.Errorf("invalid board type")
+	return gerror.New(gerror.ErrCodeValidation, "invalid board type", nil).
+		WithComponent("kanbanBoardRepoAdapter").
+		WithOperation("UpdateBoard")
 }
 
 func (k *kanbanBoardRepoAdapter) ListBoards(ctx context.Context) ([]interface{}, error) {
@@ -426,7 +469,9 @@ func (k *kanbanBoardRepoAdapter) ListBoards(ctx context.Context) ([]interface{},
 
 func (k *kanbanBoardRepoAdapter) DeleteBoard(ctx context.Context, id string) error {
 	// Storage interface doesn't have DeleteBoard, so we return an error
-	return fmt.Errorf("DeleteBoard not implemented in storage layer")
+	return gerror.New(gerror.ErrCodeNotImplemented, "DeleteBoard not implemented in storage layer", nil).
+		WithComponent("kanbanBoardRepoAdapter").
+		WithOperation("DeleteBoard")
 }
 
 // kanbanCampaignRepoAdapter adapts storage.CampaignRepository to kanban.CampaignRepository
@@ -457,7 +502,9 @@ func (k *kanbanCommissionRepoAdapter) CreateCommission(ctx context.Context, comm
 		}
 		return k.repo.CreateCommission(ctx, storageCommission)
 	}
-	return fmt.Errorf("invalid commission type")
+	return gerror.New(gerror.ErrCodeValidation, "invalid commission type", nil).
+		WithComponent("kanbanCommissionRepoAdapter").
+		WithOperation("CreateCommission")
 }
 
 func (k *kanbanCommissionRepoAdapter) GetCommission(ctx context.Context, id string) (interface{}, error) {
@@ -484,7 +531,9 @@ func (k *kanbanCampaignRepoAdapter) CreateCampaign(ctx context.Context, campaign
 		}
 		return k.repo.CreateCampaign(ctx, storageCampaign)
 	}
-	return fmt.Errorf("invalid campaign type")
+	return gerror.New(gerror.ErrCodeValidation, "invalid campaign type", nil).
+		WithComponent("kanbanCampaignRepoAdapter").
+		WithOperation("CreateCampaign")
 }
 
 // memoryStoreAdapter wraps generic memory store to implement kanban.MemoryStore
@@ -494,17 +543,25 @@ type memoryStoreAdapter struct {
 
 func (m *memoryStoreAdapter) Get(ctx context.Context, bucket, key string) ([]byte, error) {
 	// This is a simplified adapter - real implementation would need to match interfaces
-	return nil, fmt.Errorf("memory store adapter not fully implemented")
+	return nil, gerror.New(gerror.ErrCodeNotImplemented, "memory store adapter not fully implemented", nil).
+		WithComponent("memoryStoreAdapter").
+		WithOperation("Get")
 }
 
 func (m *memoryStoreAdapter) Put(ctx context.Context, bucket, key string, value []byte) error {
-	return fmt.Errorf("memory store adapter not fully implemented")
+	return gerror.New(gerror.ErrCodeNotImplemented, "memory store adapter not fully implemented", nil).
+		WithComponent("memoryStoreAdapter").
+		WithOperation("Put")
 }
 
 func (m *memoryStoreAdapter) Delete(ctx context.Context, bucket, key string) error {
-	return fmt.Errorf("memory store adapter not fully implemented")
+	return gerror.New(gerror.ErrCodeNotImplemented, "memory store adapter not fully implemented", nil).
+		WithComponent("memoryStoreAdapter").
+		WithOperation("Delete")
 }
 
 func (m *memoryStoreAdapter) List(ctx context.Context, bucket string) ([]string, error) {
-	return nil, fmt.Errorf("memory store adapter not fully implemented")
+	return nil, gerror.New(gerror.ErrCodeNotImplemented, "memory store adapter not fully implemented", nil).
+		WithComponent("memoryStoreAdapter").
+		WithOperation("List")
 }

@@ -42,7 +42,7 @@ require (
 	
 	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goMod), 0644)
 	require.NoError(t, err)
-
+	
 	// Create some Go files
 	mainGo := `package main
 
@@ -75,8 +75,8 @@ func main() {
 	assert.NotNil(t, result)
 	
 	// Should detect Go project
-	assert.Contains(t, result.Output, "Project Type: go")
-	assert.Contains(t, result.Output, "Dependencies found:")
+	assert.Contains(t, result.Output, "(go)")
+	assert.Contains(t, result.Output, "Dependencies for")
 }
 
 func TestDependenciesTool_Execute_PythonRequirements(t *testing.T) {
@@ -122,7 +122,7 @@ def main():
 	assert.NotNil(t, result)
 	
 	// Should detect Python project
-	assert.Contains(t, result.Output, "Project Type: python")
+	assert.Contains(t, result.Output, "(python)")
 	assert.Contains(t, result.Output, "requests")
 	assert.Contains(t, result.Output, "flask")
 }
@@ -164,8 +164,8 @@ func TestDependenciesTool_Execute_NodeJS(t *testing.T) {
 	require.NoError(t, err)
 	assert.NotNil(t, result)
 	
-	// Should detect Node.js project
-	assert.Contains(t, result.Output, "Project Type: nodejs")
+	// Should detect Node.js project in JSON output
+	assert.Contains(t, result.Output, `"project_type": "node"`)
 	assert.Contains(t, result.Output, "express")
 	assert.Contains(t, result.Output, "lodash")
 }

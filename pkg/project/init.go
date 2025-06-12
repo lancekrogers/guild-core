@@ -28,53 +28,6 @@ var directoryStructure = []string{
 	"objectives",
 }
 
-// initializeProjectBasic creates a new Guild project structure at the specified path
-// This is the legacy basic initialization function
-func initializeProjectBasic(path string) error {
-	// Validate the path
-	if err := ValidateProjectPath(path); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "invalid project path").
-			WithComponent("project").
-			WithOperation("initialize")
-	}
-
-	// Check if already initialized
-	if IsInitialized(path) {
-		return ErrAlreadyInitialized
-	}
-
-	// Create project structure atomically
-	tempDir := filepath.Join(path, ".guild.tmp")
-	finalDir := filepath.Join(path, ".guild")
-
-	// Clean up temp directory if it exists
-	os.RemoveAll(tempDir)
-
-	// Create temporary directory
-	if err := os.MkdirAll(tempDir, 0755); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create temporary directory").
-			WithComponent("project").
-			WithOperation("initialize")
-	}
-
-	// Create structure in temp directory
-	if err := createStructure(tempDir); err != nil {
-		os.RemoveAll(tempDir) // Clean up on error
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create project structure").
-			WithComponent("project").
-			WithOperation("initialize")
-	}
-
-	// Atomic rename
-	if err := os.Rename(tempDir, finalDir); err != nil {
-		os.RemoveAll(tempDir) // Clean up on error
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to finalize project structure").
-			WithComponent("project").
-			WithOperation("initialize")
-	}
-
-	return nil
-}
 
 // Initialize creates a new Guild project with the given options and returns the project context
 // This is the modern API that journey tests expect

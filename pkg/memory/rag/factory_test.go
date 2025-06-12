@@ -19,7 +19,19 @@ func (m *MockEmbedder) Embed(ctx context.Context, text string) ([]float32, error
 	if m.embedFunc != nil {
 		return m.embedFunc(ctx, text)
 	}
-	return []float32{0.1, 0.2, 0.3}, nil
+	// Return a 768-dimensional embedding (default for ChromemGo)
+	// Use a simple hash-based approach to generate deterministic embeddings
+	embedding := make([]float32, 768)
+	hash := 0
+	for _, ch := range text {
+		hash = (hash*31 + int(ch)) % 1000
+	}
+	
+	// Fill the embedding with deterministic values based on the text
+	for i := range embedding {
+		embedding[i] = float32((hash+i)%100) / 100.0
+	}
+	return embedding, nil
 }
 
 func (m *MockEmbedder) Close() error {

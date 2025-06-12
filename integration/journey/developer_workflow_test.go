@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 	"time"
 
@@ -13,8 +12,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/guild-ventures/guild-core/internal/testutil"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -338,7 +335,7 @@ JWT service has been implemented with:
 // TestDeveloperToolIntegration tests how developers interact with Guild tools
 func TestDeveloperToolIntegration(t *testing.T) {
 	ctx := context.Background()
-	projCtx, cleanup := testutil.SetupTestProject(t)
+	_, cleanup := testutil.SetupTestProject(t)
 	defer cleanup()
 
 	// Initialize registry

@@ -1,3 +1,17 @@
+// Package project implements Guild's dual-directory architecture for the registry pattern.
+//
+// Guild uses a sophisticated initialization system that separates:
+// - Global resources (~/.guild/) - shared tools, providers, templates, LSP servers
+// - Local resources (.guild/) - project-specific data, database, corpus, workspaces
+//
+// This design enables:
+// - Component reusability across projects (registry pattern)
+// - Project isolation and portability (like .git directories)
+// - Clean separation between framework (global) and application (local) concerns
+// - Future splitting of Guild into framework library and CLI tool
+//
+// The Initialize() function provides a convenient API that handles both global
+// and local initialization while returning a project context for immediate use.
 package project
 
 import (
