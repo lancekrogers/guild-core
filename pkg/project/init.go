@@ -25,7 +25,7 @@ var directoryStructure = []string{
 	"corpus/.activities",
 	"embeddings",
 	"agents",
-	"objectives",
+	"commissions",
 }
 
 // Initialize creates a new Guild project with the given options and returns the project context
@@ -168,7 +168,7 @@ This directory contains Guild-specific files for this project.
 - ` + "`corpus/`" + ` - Project knowledge base (human-readable Markdown files)
 - ` + "`embeddings/`" + ` - Vector embeddings for semantic search (auto-generated)
 - ` + "`agents/`" + ` - Agent configurations
-- ` + "`objectives/`" + ` - Project objectives and goals
+- ` + "`commissions/`" + ` - Project commissions and goals
 - ` + "`config.yaml`" + ` - Project configuration
 - ` + "`guild.yaml`" + ` - Guild agent and provider configuration
 
@@ -216,7 +216,7 @@ anywhere within the project directory tree.
 ### Safe to Commit
 - ` + "`corpus/docs/`" + ` - Your project documentation
 - ` + "`agents/`" + ` - Agent configurations
-- ` + "`objectives/`" + ` - Project objectives
+- ` + "`commissions/`" + ` - Project commissions
 - ` + "`config.yaml`" + ` - Project configuration
 - ` + "`guild.yaml`" + ` - Guild configuration (safe to commit - no API keys stored)
 

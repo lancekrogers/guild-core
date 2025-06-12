@@ -159,6 +159,6 @@ func (a projectContextAdapter) GetAgentsPath() string {
 	return a.ctx.GetAgentsPath()
 }
 
-func (a projectContextAdapter) GetObjectivesPath() string {
-	return a.ctx.GetObjectivesPath()
+func (a projectContextAdapter) GetCommissionsPath() string {
+	return a.ctx.GetCommissionsPath()
 }

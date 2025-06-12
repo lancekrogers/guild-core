@@ -112,7 +112,7 @@ func migrateAgents(ctx context.Context, globalPath string, projCtx *Context, opt
 // migrateObjectives migrates objectives
 func migrateObjectives(ctx context.Context, globalPath string, projCtx *Context, opts MigrationOptions, result *MigrationResult) error {
 	globalObjectivesPath := filepath.Join(globalPath, "objectives")
-	projectObjectivesPath := projCtx.GetObjectivesPath()
+	projectObjectivesPath := projCtx.GetCommissionsPath()
 
 	return migrateDirectory(globalObjectivesPath, projectObjectivesPath, opts, result)
 }

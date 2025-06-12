@@ -440,7 +440,7 @@ type ProjectContext interface {
 	GetEmbeddingsPath() string
 	GetConfigPath() string
 	GetAgentsPath() string
-	GetObjectivesPath() string
+	GetCommissionsPath() string
 }
 
 // Factory function types for component creation

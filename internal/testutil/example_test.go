@@ -14,9 +14,9 @@ import (
 func TestExampleCommissionWorkflow(t *testing.T) {
 	// Setup test project with all features
 	projCtx, cleanup := testutil.SetupTestProject(t, testutil.TestProjectOptions{
-		Name:           "commission-workflow-test",
-		WithCorpus:     true,
-		WithObjectives: true,
+		Name:            "commission-workflow-test",
+		WithCorpus:      true,
+		WithCommissions: true,
 	})
 	defer cleanup()
 

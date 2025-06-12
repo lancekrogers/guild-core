@@ -15,7 +15,7 @@ import (
 // LifecycleManager handles the objective lifecycle operations
 type LifecycleManager struct {
 	manager        *Manager
-	objectivesPath string
+	commissionsPath string
 	aiDocsPath     string
 	specsPath      string
 	guildReadyFile string
@@ -35,7 +35,7 @@ func newLifecycleManager(manager *Manager, basePath string) *LifecycleManager {
 
 	return &LifecycleManager{
 		manager:        manager,
-		objectivesPath: filepath.Join(basePath, "objectives"),
+		commissionsPath: filepath.Join(basePath, "commissions"),
 		aiDocsPath:     filepath.Join(basePath, "ai_docs"),
 		specsPath:      filepath.Join(basePath, "specs"),
 		guildReadyFile: ".guildready",
@@ -50,14 +50,14 @@ func DefaultLifecycleManagerFactory(manager *Manager, basePath string) *Lifecycl
 // CreateObjectiveFromDescription creates a new objective from a natural language description
 func (l *LifecycleManager) CreateObjectiveFromDescription(ctx context.Context, description string) (*Commission, error) {
 	// First, ensure objectives directory exists
-	if err := os.MkdirAll(l.objectivesPath, 0755); err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create objectives directory").WithComponent("commission").WithOperation("CreateObjectiveFromDescription")
+	if err := os.MkdirAll(l.commissionsPath, 0755); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commissions directory").WithComponent("commission").WithOperation("CreateObjectiveFromDescription")
 	}
 
 	// Create a new objective with a title derived from the description
 	title := deriveTitle(description)
 	fileName := sanitizeFilename(title) + ".md"
-	filePath := filepath.Join(l.objectivesPath, fileName)
+	filePath := filepath.Join(l.commissionsPath, fileName)
 
 	// Create the objective object
 	obj := NewCommission(title, description)

@@ -69,7 +69,7 @@ func TestNewUserCompleteOnboarding(t *testing.T) {
 		guildDir := filepath.Join(projectDir, ".guild")
 		assert.DirExists(t, guildDir, "Project .guild directory should exist")
 		assert.FileExists(t, filepath.Join(guildDir, "guild.yaml"), "Project config should exist")
-		assert.DirExists(t, filepath.Join(guildDir, "objectives"), "Objectives directory should exist")
+		assert.DirExists(t, filepath.Join(guildDir, "commissions"), "Commissions directory should exist")
 		assert.DirExists(t, filepath.Join(guildDir, "campaigns"), "Campaigns directory should exist")
 	})
 

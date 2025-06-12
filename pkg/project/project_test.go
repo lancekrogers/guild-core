@@ -190,7 +190,7 @@ func TestContextMethods(t *testing.T) {
 		{"GetEmbeddingsPath", ctx.GetEmbeddingsPath, filepath.Join(guildDir, "embeddings")},
 		{"GetConfigPath", ctx.GetConfigPath, filepath.Join(guildDir, "config.yaml")},
 		{"GetAgentsPath", ctx.GetAgentsPath, filepath.Join(guildDir, "agents")},
-		{"GetObjectivesPath", ctx.GetObjectivesPath, filepath.Join(guildDir, "objectives")},
+		{"GetCommissionsPath", ctx.GetCommissionsPath, filepath.Join(guildDir, "commissions")},
 	}
 
 	for _, tt := range tests {

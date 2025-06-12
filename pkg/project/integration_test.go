@@ -31,7 +31,7 @@ func TestProjectIntegration(t *testing.T) {
 			".guild/corpus",
 			".guild/embeddings",
 			".guild/agents",
-			".guild/objectives",
+			".guild/commissions",
 		}
 
 		for _, dir := range expectedDirs {

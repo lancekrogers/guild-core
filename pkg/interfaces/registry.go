@@ -24,7 +24,7 @@ type ProjectContext interface {
 	GetEmbeddingsPath() string
 	GetConfigPath() string
 	GetAgentsPath() string
-	GetObjectivesPath() string
+	GetCommissionsPath() string
 }
 
 // ProjectManager provides project management capabilities

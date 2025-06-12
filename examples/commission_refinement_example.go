@@ -104,7 +104,7 @@ func main() {
 	fmt.Println()
 
 	// Add output directory to context if you want files written
-	ctx = context.WithValue(ctx, "output_dir", ".guild/objectives/refined/example-001")
+	ctx = context.WithValue(ctx, "output_dir", ".guild/commissions/refined/example-001")
 
 	result, err := integrationService.ProcessCommissionToTasks(ctx, commission, guildConfig)
 	if err != nil {

@@ -326,7 +326,7 @@ func (ce *CompletionEngine) getHelpfulSuggestions(input string) []CompletionResu
 func (ce *CompletionEngine) getCommonGuildPaths(input string) []CompletionResult {
 	commonPaths := []string{
 		".guild/",
-		".guild/objectives/",
+		".guild/commissions/",
 		".guild/campaigns/",
 		".guild/archives/",
 		"pkg/",

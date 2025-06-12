@@ -23,8 +23,8 @@ type TestProjectOptions struct {
 	CustomConfig *config.GuildConfig
 	// WithCorpus creates corpus test data
 	WithCorpus bool
-	// WithObjectives creates test objectives
-	WithObjectives bool
+	// WithCommissions creates test commissions
+	WithCommissions bool
 }
 
 // SetupTestProject creates a complete test project environment
@@ -66,9 +66,9 @@ func SetupTestProject(t *testing.T, opts ...TestProjectOptions) (*project.Contex
 		createTestCorpus(t, projCtx)
 	}
 
-	// Create objectives if requested
-	if options.WithObjectives {
-		createTestObjectives(t, projCtx)
+	// Create commissions if requested
+	if options.WithCommissions {
+		createTestCommissions(t, projCtx)
 	}
 
 	// Cleanup function
@@ -145,7 +145,7 @@ func CreateTestGuildConfig(name string) *config.GuildConfig {
 				},
 			},
 		},
-		// Objectives are stored as files, not in config
+		// Commissions are stored as files, not in config
 	}
 }
 
@@ -218,11 +218,11 @@ This is a test project for Guild Framework integration testing.
 	require.NoError(t, err)
 }
 
-// createTestObjectives creates sample objectives for testing
-func createTestObjectives(t *testing.T, projCtx *project.Context) {
+// createTestCommissions creates sample commissions for testing
+func createTestCommissions(t *testing.T, projCtx *project.Context) {
 	t.Helper()
 
-	objectivesPath := projCtx.GetObjectivesPath()
+	commissionsPath := projCtx.GetCommissionsPath()
 
 	// Sample objective
 	objective := `# User Authentication System
@@ -247,7 +247,7 @@ Implement a complete user authentication system with JWT tokens.
 - Documentation is complete
 - Security best practices followed`
 
-	err := os.WriteFile(filepath.Join(objectivesPath, "auth-system.md"), []byte(objective), 0644)
+	err := os.WriteFile(filepath.Join(commissionsPath, "auth-system.md"), []byte(objective), 0644)
 	require.NoError(t, err)
 
 	// Another objective
@@ -267,7 +267,7 @@ Create RESTful API for user management
 - Use proper HTTP status codes
 - Include OpenAPI documentation`
 
-	err = os.WriteFile(filepath.Join(objectivesPath, "rest-api.md"), []byte(apiObjective), 0644)
+	err = os.WriteFile(filepath.Join(commissionsPath, "rest-api.md"), []byte(apiObjective), 0644)
 	require.NoError(t, err)
 }
 
@@ -292,7 +292,7 @@ func AssertProjectStructure(t *testing.T, projCtx *project.Context) {
 		projCtx.GetCorpusPath(),
 		projCtx.GetEmbeddingsPath(),
 		projCtx.GetAgentsPath(),
-		projCtx.GetObjectivesPath(),
+		projCtx.GetCommissionsPath(),
 		filepath.Join(projCtx.GetCorpusPath(), "docs"),
 		filepath.Join(projCtx.GetCorpusPath(), ".activities"),
 	}

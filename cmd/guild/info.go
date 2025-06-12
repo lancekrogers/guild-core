@@ -68,9 +68,9 @@ func runInfo(cmd *cobra.Command, args []string) error {
 	fmt.Println("\nAgents:")
 	displayDirectoryInfo(projCtx.GetAgentsPath(), "*.yaml")
 
-	// Get objectives info
-	fmt.Println("\nObjectives:")
-	displayDirectoryInfo(projCtx.GetObjectivesPath(), "*.md")
+	// Get commissions info
+	fmt.Println("\nCommissions:")
+	displayDirectoryInfo(projCtx.GetCommissionsPath(), "*.md")
 
 	// Display config info
 	fmt.Println("\nConfiguration:")

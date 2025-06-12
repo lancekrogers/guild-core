@@ -102,7 +102,7 @@ The Guild Master will analyze your commission and create:
 Examples:
   guild commission refine "Build a REST API for user management"
   guild commission refine commission.md --domain web-app
-  guild commission refine "Create a CLI tool for file processing" --output ./objectives`,
+  guild commission refine "Create a CLI tool for file processing" --output ./commissions`,
 	Args: cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := cmd.Context()
@@ -126,7 +126,7 @@ func init() {
 
 	// Add refinement flags
 	commissionRefineCmd.Flags().StringVar(&domainFlag, "domain", "web-app", "Project domain (web-app, cli-tool, library, microservice)")
-	commissionRefineCmd.Flags().StringVar(&outputDirFlag, "output", "", "Output directory for refined objectives (default: .guild/objectives)")
+	commissionRefineCmd.Flags().StringVar(&outputDirFlag, "output", "", "Output directory for refined commissions (default: .guild/commissions/refined)")
 	commissionRefineCmd.Flags().BoolVar(&interactiveFlag, "interactive", false, "Interactive mode for reviewing refinements")
 	commissionRefineCmd.Flags().BoolVar(&createTasksFlag, "create-tasks", true, "Create kanban tasks from refined content")
 }
@@ -181,7 +181,7 @@ func executeRefinement(ctx context.Context, commissionContent string) error {
 	// Determine output directory
 	outputDir := outputDirFlag
 	if outputDir == "" {
-		outputDir = filepath.Join(projCtx.GetRootPath(), ".guild", "objectives", "refined")
+		outputDir = filepath.Join(projCtx.GetRootPath(), ".guild", "commissions", "refined")
 	}
 
 	// Create output directory
@@ -246,7 +246,7 @@ func executeRefinement(ctx context.Context, commissionContent string) error {
 	}
 
 	// Write files to output directory
-	fmt.Printf("💾 Writing refined objectives to %s\n", outputDir)
+	fmt.Printf("💾 Writing refined commissions to %s\n", outputDir)
 	for _, file := range files {
 		filePath := filepath.Join(outputDir, file.Path)
 

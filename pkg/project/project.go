@@ -36,7 +36,7 @@ type Context struct {
 	embeddingsPath string // .guild/embeddings
 	configPath     string // .guild/config.yaml
 	agentsPath     string // .guild/agents
-	objectivesPath string // .guild/objectives
+	commissionsPath string // .guild/commissions
 }
 
 // NewContext creates a new project context from a root path
@@ -57,7 +57,7 @@ func NewContext(rootPath string) (*Context, error) {
 		embeddingsPath: filepath.Join(guildPath, "embeddings"),
 		configPath:     filepath.Join(guildPath, "config.yaml"),
 		agentsPath:     filepath.Join(guildPath, "agents"),
-		objectivesPath: filepath.Join(guildPath, "objectives"),
+		commissionsPath: filepath.Join(guildPath, "commissions"),
 	}, nil
 }
 
@@ -91,9 +91,9 @@ func (c *Context) GetAgentsPath() string {
 	return c.agentsPath
 }
 
-// GetObjectivesPath returns the objectives directory path
-func (c *Context) GetObjectivesPath() string {
-	return c.objectivesPath
+// GetCommissionsPath returns the commissions directory path
+func (c *Context) GetCommissionsPath() string {
+	return c.commissionsPath
 }
 
 // FindProjectRoot walks up the directory tree looking for a .guild directory
