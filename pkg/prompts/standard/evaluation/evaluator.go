@@ -199,8 +199,8 @@ func (e *PromptEvaluator) GenerateReport() string {
 func simulateLLMOutput(prompt string) string {
 	// In a real implementation, this would call an actual LLM
 	// For testing, we'll return a simple response
-	if strings.Contains(prompt, "objective") {
-		return "# Goal\nTest objective\n\n# Context\nTest context\n\n# Requirements\n- Test requirement"
+	if strings.Contains(prompt, "commission") {
+		return "# Goal\nTest commission\n\n# Context\nTest context\n\n# Requirements\n- Test requirement"
 	}
 	return "Simulated response for: " + prompt[:50] + "..."
 }

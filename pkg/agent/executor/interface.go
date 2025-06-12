@@ -78,7 +78,7 @@ type ExecutionError struct {
 type ExecutionContext struct {
 	WorkspaceDir string                 // Isolated workspace directory
 	ProjectRoot  string                 // Project root directory
-	Objective    string                 // Parent objective description
+	Commission    string                 // Parent commission description
 	AgentID      string                 // Executing agent ID
 	AgentType    string                 // Agent type (manager, worker, etc)
 	Capabilities []string               // Agent capabilities

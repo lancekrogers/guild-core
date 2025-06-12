@@ -81,12 +81,12 @@ var (
 func (m CommissionChamber) View() string {
 	var b strings.Builder
 
-	// Get title based on current objective
+	// Get title based on current commission
 	var titleText string
 	if m.currentCommission != nil {
 		titleText = fmt.Sprintf(" Guild Hall - %s ", m.currentCommission.Title)
 	} else {
-		titleText = " Guild Hall - Objective Chamber "
+		titleText = " Guild Hall - Commission Chamber "
 	}
 
 	// Title banner
@@ -142,35 +142,35 @@ func (m CommissionChamber) View() string {
 	return b.String()
 }
 
-// renderViewingState renders the main objective viewing state
+// renderViewingState renders the main commission viewing state
 func (m CommissionChamber) renderViewingState() string {
 	var content string
 
-	// If we have an objective, show its details
+	// If we have a commission, show its details
 	if m.currentCommission != nil || m.commissionPreview != "" {
-		objectiveContent := m.commissionPreview
-		if objectiveContent == "" && m.currentCommission != nil {
-			objectiveContent = formatCommissionPreview(m.currentCommission)
+		commissionContent := m.commissionPreview
+		if commissionContent == "" && m.currentCommission != nil {
+			commissionContent = formatCommissionPreview(m.currentCommission)
 		}
 
-		// Render the objective in a guild chamber
+		// Render the commission in a guild chamber
 		content = chamberStyle.Copy().
 			Width(m.hallWidth - 4).
 			Render(fmt.Sprintf(
 				"%s\n\n%s",
-				manuscriptStyle.Render("Objective Scroll"),
+				manuscriptStyle.Render("Commission Scroll"),
 				m.viewport.View(),
 			))
 	} else {
-		// No objective loaded, show welcome message
+		// No commission loaded, show welcome message
 		content = chamberStyle.Copy().
 			Width(m.hallWidth - 4).
 			Render(fmt.Sprintf(
 				"%s\n\n%s",
 				manuscriptStyle.Render("Welcome to the Guild Hall"),
 				scrollStyle.Render(
-					"Press 'c' to craft a new objective\n"+
-						"Press 'tab' to view existing objectives\n"+
+					"Press 'c' to craft a new commission\n"+
+						"Press 'tab' to view existing commissions\n"+
 						"Press ':' to enter command mode",
 				),
 			))
@@ -199,7 +199,7 @@ func (m CommissionChamber) renderContextState() string {
 	// Show the scribe's text area for adding context
 	header := manuscriptStyle.Render("The Guild Scribe's Parchment")
 	instructions := scrollStyle.Render(
-		"Enter context or reference documents for your objective.\n" +
+		"Enter context or reference documents for your commission.\n" +
 			"Use @spec/path/to/file.md or @ai_docs/path/to/file.md to reference existing documents.\n" +
 			"Press Ctrl+Enter to submit or Esc to cancel.",
 	)
@@ -241,10 +241,10 @@ func (m CommissionChamber) renderCommandState() string {
 	header := manuscriptStyle.Render("Guild Master's Command Hall")
 	instructions := scrollStyle.Render(
 		"Enter a command to execute:\n" +
-			"  add-context \"<text>\" - Add context to the objective\n" +
-			"  regenerate - Rebuild documents from current objective\n" +
+			"  add-context \"<text>\" - Add context to the commission\n" +
+			"  regenerate - Rebuild documents from current commission\n" +
 			"  suggest - Request improvement suggestions\n" +
-			"  ready - Mark the objective as ready\n" +
+			"  ready - Mark the commission as ready\n" +
 			"Press Enter to execute or Esc to cancel.",
 	)
 
@@ -262,14 +262,14 @@ func (m CommissionChamber) renderCommandState() string {
 	return content
 }
 
-// renderDashboardState renders the objectives dashboard state
+// renderDashboardState renders the commissions dashboard state
 func (m CommissionChamber) renderDashboardState() string {
-	// Show the list of objectives
-	header := manuscriptStyle.Render("Guild Objective Ledger")
+	// Show the list of commissions
+	header := manuscriptStyle.Render("Guild Commission Ledger")
 
 	ledgerView := m.ledger.View()
 	if ledgerView == "" || !strings.Contains(ledgerView, "item") {
-		ledgerView = scrollStyle.Render("No objectives recorded in the Guild ledger.")
+		ledgerView = scrollStyle.Render("No commissions recorded in the Guild ledger.")
 	}
 
 	content := chamberStyle.Copy().
@@ -284,13 +284,13 @@ func (m CommissionChamber) renderDashboardState() string {
 	return content
 }
 
-// renderCreatingState renders the objective creation state
+// renderCreatingState renders the commission creation state
 func (m CommissionChamber) renderCreatingState() string {
-	// Show the textarea for creating a new objective
-	header := manuscriptStyle.Render("Crafting a New Objective")
+	// Show the textarea for creating a new commission
+	header := manuscriptStyle.Render("Crafting a New Commission")
 	instructions := scrollStyle.Render(
-		"Describe your objective in natural language.\n" +
-			"The Guild craftsmen will shape it into a proper objective structure.\n" +
+		"Describe your commission in natural language.\n" +
+			"The Guild craftsmen will shape it into a proper commission structure.\n" +
 			"Press Ctrl+Enter to submit or Esc to cancel.",
 	)
 

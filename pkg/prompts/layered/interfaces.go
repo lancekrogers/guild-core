@@ -49,7 +49,7 @@ type LayeredManager interface {
 
 // Context represents contextual information to be injected into prompts
 type Context interface {
-	// GetCommissionID returns the commission/objective ID
+	// GetCommissionID returns the commission ID
 	GetCommissionID() string
 
 	// GetCommissionTitle returns the commission title
@@ -58,7 +58,7 @@ type Context interface {
 	// GetCurrentTask returns the current task information
 	GetCurrentTask() TaskContext
 
-	// GetRelevantSections returns relevant sections from the objective hierarchy
+	// GetRelevantSections returns relevant sections from the commission hierarchy
 	GetRelevantSections() []Section
 
 	// GetRelatedTasks returns related task information
@@ -77,7 +77,7 @@ type TaskContext struct {
 	Capabilities  []string
 }
 
-// Section represents a section from the objective hierarchy
+// Section represents a section from the commission hierarchy
 type Section struct {
 	Level   int
 	Path    string

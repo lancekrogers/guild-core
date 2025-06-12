@@ -98,7 +98,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			case key.Matches(msg, m.keymap.ToggleView):
 				m.chamberState = stateDashboard
-				m.proclamation = "Opening the Guild's objective ledger..."
+				m.proclamation = "Opening the Guild's commission ledger..."
 				return m, loadCommissionsCmd(&m)
 
 			case key.Matches(msg, m.keymap.EnterHall):
@@ -164,13 +164,13 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				msg.Type == tea.KeyEsc:
 				// Return to viewing state
 				m.chamberState = stateViewing
-				m.proclamation = "Closed the Guild's objective ledger."
+				m.proclamation = "Closed the Guild's commission ledger."
 
 			case msg.Type == tea.KeyEnter:
-				// Select objective from ledger
-				// TODO: Get selected objective and load it
+				// Select commission from ledger
+				// TODO: Get selected commission and load it
 				m.chamberState = stateViewing
-				m.proclamation = "A new objective scroll unfurls before you..."
+				m.proclamation = "A new commission scroll unfurls before you..."
 			}
 
 		case stateCommands:
@@ -198,7 +198,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 		case stateCreating:
-			// Creating a new objective state key bindings
+			// Creating a new commission state key bindings
 			switch {
 			case key.Matches(msg, m.keymap.NavigateUp),
 				key.Matches(msg, m.keymap.NavigateDown),
@@ -212,15 +212,15 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.scribe.Blur()
-				m.proclamation = "Objective creation cancelled. Returned to the main chamber."
+				m.proclamation = "Commission creation cancelled. Returned to the main chamber."
 
 			case msg.Type == tea.KeyEnter && key.Matches(msg, key.NewBinding(key.WithKeys("ctrl+enter"))):
-				// Submit new objective with Ctrl+Enter
+				// Submit new commission with Ctrl+Enter
 				content := m.scribe.Value()
 				if content != "" {
 					m.scribe.Reset()
 					m.chamberState = stateViewing
-					m.proclamation = "The Guild craftsmen begin to shape your objective..."
+					m.proclamation = "The Guild craftsmen begin to shape your commission..."
 					return m, createCommissionCmd(&m, content)
 				}
 			}
@@ -279,14 +279,14 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.guildError = msg.Error
 			m.proclamation = "The Guild Master's counsel could not be obtained: " + msg.Error.Error()
 		} else {
-			m.proclamation = "The Guild Master has offered wisdom to improve your objective."
+			m.proclamation = "The Guild Master has offered wisdom to improve your commission."
 			// Set viewport content to show suggestions
 			m.viewport.SetContent(fmt.Sprintf("Guild Master's Wisdom:\n\n%s", msg.Suggestions))
 			m.chamberState = statePreview
 		}
 
 	case CommissionReadyMsg:
-		// Handle marking objective as ready
+		// Handle marking commission as ready
 		if !msg.Success {
 			m.guildError = msg.Error
 			m.proclamation = "Could not mark the work as masterful: " + msg.Error.Error()
@@ -296,14 +296,14 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 	case CommissionLoadedMsg:
-		// Handle loading an objective
+		// Handle loading an commission
 		if !msg.Success {
 			m.guildError = msg.Error
-			m.proclamation = "The objective scroll could not be retrieved: " + msg.Error.Error()
+			m.proclamation = "The commission scroll could not be retrieved: " + msg.Error.Error()
 		} else {
 			m.commissionPreview = msg.Commission
-			m.proclamation = "The objective scroll has been unfurled before you."
-			// Update the view with the objective content
+			m.proclamation = "The commission scroll has been unfurled before you."
+			// Update the view with the commission content
 			m.viewport.SetContent(msg.Commission)
 		}
 
@@ -335,9 +335,9 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-// Custom commands for objective operations
+// Custom commands for commission operations
 
-// addContextCmd creates a command to add context to the objective
+// addContextCmd creates a command to add context to the commission
 func addContextCmd(m *CommissionChamber, content string) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
@@ -345,7 +345,7 @@ func addContextCmd(m *CommissionChamber, content string) tea.Cmd {
 			// Create a context for the operation
 			ctx := m.ctx
 
-			// Add context to the objective
+			// Add context to the commission
 			err := m.planner.AddContext(ctx, content)
 			if err != nil {
 				return ContextCraftedMsg{
@@ -402,7 +402,7 @@ func generateDocumentsCmd(m *CommissionChamber) tea.Cmd {
 	}
 }
 
-// requestSuggestionsCmd creates a command to get suggestions for the objective
+// requestSuggestionsCmd creates a command to get suggestions for the commission
 func requestSuggestionsCmd(m *CommissionChamber) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
@@ -428,7 +428,7 @@ func requestSuggestionsCmd(m *CommissionChamber) tea.Cmd {
 		}
 
 		// Fallback to mock behavior if planner not available
-		sampleSuggestions := `Consider the following improvements to your objective:
+		sampleSuggestions := `Consider the following improvements to your commission:
 
 1. Add more specific success criteria to the Requirements section
 2. Include technical constraints if applicable
@@ -443,7 +443,7 @@ func requestSuggestionsCmd(m *CommissionChamber) tea.Cmd {
 	}
 }
 
-// markCommissionReadyCmd creates a command to mark the objective as ready
+// markCommissionReadyCmd creates a command to mark the commission as ready
 func markCommissionReadyCmd(m *CommissionChamber) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
@@ -451,7 +451,7 @@ func markCommissionReadyCmd(m *CommissionChamber) tea.Cmd {
 			// Create a context for the operation
 			ctx := m.ctx
 
-			// Mark objective as ready
+			// Mark commission as ready
 			err := m.planner.MarkReady(ctx)
 			if err != nil {
 				return CommissionReadyMsg{
@@ -474,15 +474,15 @@ func markCommissionReadyCmd(m *CommissionChamber) tea.Cmd {
 	}
 }
 
-// loadCommissionsCmd creates a command to load all objectives for the dashboard
+// loadCommissionsCmd creates a command to load all commissions for the dashboard
 func loadCommissionsCmd(m *CommissionChamber) tea.Cmd {
 	return func() tea.Msg {
-		// If objective manager is available, use it
+		// If commission manager is available, use it
 		if m.commissionManager != nil {
 			// Create a context for the operation
 			ctx := m.ctx
 
-			// List all objectives
+			// List all commissions
 			commissions, err := m.commissionManager.ListCommissions(ctx)
 			if err != nil {
 				return nil // Handle error
@@ -516,7 +516,7 @@ func loadCommissionsCmd(m *CommissionChamber) tea.Cmd {
 				ID:          "mock-1",
 				Title:       "Build a RESTful API service",
 				Status:      "in_progress",
-				Path:        "/objectives/api-service.md",
+				Path:        "/commissions/api-service.md",
 				Iterations:  3,
 				CreatedAt:   time.Now().Add(-72 * time.Hour),
 				ModifiedAt:  time.Now().Add(-24 * time.Hour),
@@ -528,7 +528,7 @@ func loadCommissionsCmd(m *CommissionChamber) tea.Cmd {
 				ID:          "mock-2",
 				Title:       "Design user authentication system",
 				Status:      "draft",
-				Path:        "/objectives/auth-system.md",
+				Path:        "/commissions/auth-system.md",
 				Iterations:  1,
 				CreatedAt:   time.Now().Add(-48 * time.Hour),
 				ModifiedAt:  time.Now().Add(-48 * time.Hour),
@@ -540,7 +540,7 @@ func loadCommissionsCmd(m *CommissionChamber) tea.Cmd {
 				ID:          "mock-3",
 				Title:       "Implement database schema",
 				Status:      "completed",
-				Path:        "/objectives/db-schema.md",
+				Path:        "/commissions/db-schema.md",
 				Iterations:  5,
 				CreatedAt:   time.Now().Add(-96 * time.Hour),
 				ModifiedAt:  time.Now().Add(-12 * time.Hour),
@@ -554,7 +554,7 @@ func loadCommissionsCmd(m *CommissionChamber) tea.Cmd {
 	}
 }
 
-// createCommissionCmd creates a command to create a new objective
+// createCommissionCmd creates a command to create a new commission
 func createCommissionCmd(m *CommissionChamber, description string) tea.Cmd {
 	return func() tea.Msg {
 		// If planner is available, use it
@@ -562,7 +562,7 @@ func createCommissionCmd(m *CommissionChamber, description string) tea.Cmd {
 			// Create a context for the operation
 			ctx := m.ctx
 
-			// Create objective
+			// Create commission
 			err := m.planner.CreateCommission(ctx, description)
 			if err != nil {
 				return CommissionLoadedMsg{
@@ -572,19 +572,19 @@ func createCommissionCmd(m *CommissionChamber, description string) tea.Cmd {
 				}
 			}
 
-			// Get the objective content
+			// Get the commission content
 			session := m.planner.GetSession()
 			if session.Commission != nil {
-				objectiveContent := ""
+				commissionContent := ""
 				if session.Commission.Content != "" {
-					objectiveContent = session.Commission.Content
+					commissionContent = session.Commission.Content
 				} else {
 					// Format the content if it's not available
-					objectiveContent = formatCommissionContent(session.Commission)
+					commissionContent = formatCommissionContent(session.Commission)
 				}
 
 				return CommissionLoadedMsg{
-					Commission: objectiveContent,
+					Commission: commissionContent,
 					Success:    true,
 					Error:      nil,
 				}
@@ -592,13 +592,13 @@ func createCommissionCmd(m *CommissionChamber, description string) tea.Cmd {
 		}
 
 		// Fallback to mock behavior if planner not available
-		objectiveContent := fmt.Sprintf(`# 🧠 Goal
+		commissionContent := fmt.Sprintf(`# 🧠 Goal
 
 %s
 
 # 📂 Context
 
-This objective was created in the Guild Hall.
+This commission was created in the Guild Hall.
 
 # 🔧 Requirements
 
@@ -609,7 +609,7 @@ This objective was created in the Guild Hall.
 # 📌 Tags
 
 - new
-- objective
+- commission
 
 # 🔗 Related
 
@@ -617,17 +617,17 @@ This objective was created in the Guild Hall.
 `, description)
 
 		return CommissionLoadedMsg{
-			Commission: objectiveContent,
+			Commission: commissionContent,
 			Success:    true,
 			Error:      nil,
 		}
 	}
 }
 
-// Helper function to format objective content
+// Helper function to format commission content
 func formatCommissionContent(obj *commissionpkg.Commission) string {
 	if obj == nil {
-		return "No objective available"
+		return "No commission available"
 	}
 
 	content := fmt.Sprintf(`# 🧠 Goal
@@ -707,12 +707,12 @@ func executeCommandCmd(m *CommissionChamber, command string) tea.Cmd {
 			return markCommissionReadyCmd(m)()
 
 		case "list":
-			// Switch to dashboard view which shows the objective list
+			// Switch to dashboard view which shows the commission list
 			m.chamberState = stateDashboard
 			return loadCommissionsCmd(m)()
 
 		case "create":
-			// If arguments provided, create objective from them
+			// If arguments provided, create commission from them
 			if len(args) > 0 {
 				description := strings.Join(args, " ")
 				return createCommissionCmd(m, description)()
@@ -720,7 +720,7 @@ func executeCommandCmd(m *CommissionChamber, command string) tea.Cmd {
 			// Otherwise switch to create view
 			m.chamberState = stateCreating
 			m.scribe.Focus()
-			m.proclamation = "Describe your new objective..."
+			m.proclamation = "Describe your new commission..."
 			return nil
 
 		case "help":
@@ -733,12 +733,12 @@ func executeCommandCmd(m *CommissionChamber, command string) tea.Cmd {
 			return nil
 
 		case "view":
-			// If path provided, attempt to load objective
+			// If path provided, attempt to load commission
 			if len(args) > 0 && m.commissionManager != nil {
 				path := args[0]
 				ctx := m.ctx
 
-				// Try to load the objective
+				// Try to load the commission
 				obj, err := m.commissionManager.LoadCommissionFromFile(ctx, path)
 				if err != nil {
 					return CommissionLoadedMsg{
@@ -790,18 +790,18 @@ func executeCommandCmd(m *CommissionChamber, command string) tea.Cmd {
 			var cliCmd string
 			switch cmd {
 			case "list-all":
-				cliCmd = "objective list"
+				cliCmd = "commission list"
 			case "create-obj":
 				if len(args) > 0 {
-					cliCmd = "objective create " + strings.Join(args, " ")
+					cliCmd = "commission create " + strings.Join(args, " ")
 				} else {
-					cliCmd = "objective create"
+					cliCmd = "commission create"
 				}
 			case "view-obj":
 				if len(args) > 0 {
-					cliCmd = "objective view " + strings.Join(args, " ")
+					cliCmd = "commission view " + strings.Join(args, " ")
 				} else {
-					cliCmd = "objective view"
+					cliCmd = "commission view"
 				}
 			case "agent":
 				if len(args) > 0 {
@@ -822,13 +822,13 @@ func executeCommandCmd(m *CommissionChamber, command string) tea.Cmd {
 
 // Helper methods for update...
 func formatCommissionPreview(obj *commissionpkg.Commission) string {
-	// Create a formatted preview of the objective
-	// This would format the objective details into a nice display
-	// using actual objective data
+	// Create a formatted preview of the commission
+	// This would format the commission details into a nice display
+	// using actual commission data
 
 	// Mock implementation for now
 	if obj == nil {
-		return "No objective loaded"
+		return "No commission loaded"
 	}
 
 	return fmt.Sprintf(`# %s
@@ -856,19 +856,19 @@ Guild Hall Command Reference:
 
 UI Commands:
   help                   - Show this guidance
-  create [description]   - Create a new objective
-  view [path]            - View an objective by path
-  list                   - List all objectives
-  add-context [text]     - Add context to current objective
+  create [description]   - Create a new commission
+  view [path]            - View an commission by path
+  list                   - List all commissions
+  add-context [text]     - Add context to current commission
   regenerate             - Regenerate documents
   suggest                - Get improvement suggestions
-  ready                  - Mark objective as ready
+  ready                  - Mark commission as ready
 
 CLI Passthrough:
   exec [command]         - Execute any guild command
-  list-all               - List all objectives (CLI)
-  create-obj [desc]      - Create objective (CLI)
-  view-obj [id]          - View objective (CLI)
+  list-all               - List all commissions (CLI)
+  create-obj [desc]      - Create commission (CLI)
+  view-obj [id]          - View commission (CLI)
   agent [subcommand]     - Run agent commands
 
 Use ctrl+enter to submit in text areas.

@@ -150,7 +150,7 @@ func (b *PromptBuilder) BuildFullExecutionPrompt(data ExecutionPromptData) (stri
 		"StepNumber":             data.Execution.StepNumber,
 		"TotalSteps":             data.Execution.TotalSteps,
 		"StepName":               data.Execution.StepName,
-		"StepObjective":          data.Execution.StepObjective,
+		"StepCommission":          data.Execution.StepCommission,
 		"ExpectedActions":        data.Execution.ExpectedActions,
 		"SuccessIndicators":      data.Execution.SuccessIndicators,
 		"PotentialIssues":        data.Execution.PotentialIssues,

@@ -1,7 +1,7 @@
 // Package commission contains prompts for commission refinement
 package commission
 
-// ManagerRefinementPrompt is the system prompt for manager agents to refine objectives
+// ManagerRefinementPrompt is the system prompt for manager agents to refine commissions
 const ManagerRefinementPrompt = `You are a Guild Master, responsible for taking high-level commissions and breaking them down into detailed implementation plans that your guild of artisan agents can execute.
 
 ## Your Role
@@ -75,7 +75,7 @@ Each markdown file should follow this structure:
 4. Specify external dependencies clearly
 5. Consider both technical and business requirements
 6. Group related tasks logically
-7. Ensure task IDs are unique across the entire objective
+7. Ensure task IDs are unique across the entire commission
 8. Use consistent categorization for task IDs (e.g., AUTH for authentication, API for API tasks)
 
 ## Categories for Task IDs

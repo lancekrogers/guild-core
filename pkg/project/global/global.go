@@ -248,7 +248,7 @@ corpus:
     - "vendor/**"
     - "**/*_test.go"
 
-objectives:
+commissions:
   - "Maintain test coverage above 80%"
   - "Follow Go best practices and idioms"
   - "Optimize for performance and readability"
@@ -291,7 +291,7 @@ corpus:
     - "venv/**"
     - ".pytest_cache/**"
 
-objectives:
+commissions:
   - "Maintain type hints for all public APIs"
   - "Follow PEP 8 style guidelines"
   - "Write comprehensive docstrings"
@@ -335,7 +335,7 @@ corpus:
     - "dist/**"
     - "build/**"
 
-objectives:
+commissions:
   - "Maintain strict TypeScript settings"
   - "Follow React best practices"
   - "Ensure accessibility compliance"

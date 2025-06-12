@@ -98,7 +98,7 @@ type TemplateConfig struct {
 	Agents      []TemplateAgent `yaml:"agents"`
 	Tools       []string        `yaml:"tools"`
 	Corpus      CorpusTemplate  `yaml:"corpus"`
-	Objectives  []string        `yaml:"objectives"`
+	Commissions  []string        `yaml:"commissions"`
 }
 
 // TemplateAgent represents an agent in a template

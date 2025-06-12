@@ -9,17 +9,17 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/memory"
 )
 
-// MockCommissionManager implements the objective.Manager interface for testing
+// MockCommissionManager implements the commission.Manager interface for testing
 type MockCommissionManager struct {
 	mu         sync.RWMutex
-	objectives map[string]*commission.Commission
+	commissions map[string]*commission.Commission
 	error      error
 }
 
-// NewMockCommissionManager creates a new mock objective manager
+// NewMockCommissionManager creates a new mock commission manager
 func NewMockCommissionManager() *MockCommissionManager {
 	return &MockCommissionManager{
-		objectives: make(map[string]*commission.Commission),
+		commissions: make(map[string]*commission.Commission),
 	}
 }
 
@@ -29,15 +29,15 @@ func (m *MockCommissionManager) WithError(err error) *MockCommissionManager {
 	return m
 }
 
-// WithObjective adds an objective to the manager
-func (m *MockCommissionManager) WithObjective(obj *commission.Commission) *MockCommissionManager {
+// WithCommission adds a commission to the manager
+func (m *MockCommissionManager) WithCommission(obj *commission.Commission) *MockCommissionManager {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	m.objectives[obj.ID] = obj
+	m.commissions[obj.ID] = obj
 	return m
 }
 
-// Init implements objective.Manager.Init
+// Init implements commission.Manager.Init
 func (m *MockCommissionManager) Init(ctx context.Context) error {
 	if m.error != nil {
 		return m.error
@@ -45,8 +45,8 @@ func (m *MockCommissionManager) Init(ctx context.Context) error {
 	return nil
 }
 
-// SaveObjective implements objective.Manager.SaveObjective
-func (m *MockCommissionManager) SaveObjective(ctx context.Context, obj *commission.Commission) error {
+// SaveCommission implements commission.Manager.SaveCommission
+func (m *MockCommissionManager) SaveCommission(ctx context.Context, obj *commission.Commission) error {
 	if m.error != nil {
 		return m.error
 	}
@@ -55,13 +55,13 @@ func (m *MockCommissionManager) SaveObjective(ctx context.Context, obj *commissi
 	defer m.mu.Unlock()
 
 	obj.UpdatedAt = time.Now().UTC()
-	m.objectives[obj.ID] = obj
+	m.commissions[obj.ID] = obj
 
 	return nil
 }
 
-// GetObjective implements objective.Manager.GetObjective
-func (m *MockCommissionManager) GetObjective(ctx context.Context, objectiveID string) (*commission.Commission, error) {
+// GetCommission implements commission.Manager.GetCommission
+func (m *MockCommissionManager) GetCommission(ctx context.Context, commissionID string) (*commission.Commission, error) {
 	if m.error != nil {
 		return nil, m.error
 	}
@@ -69,7 +69,7 @@ func (m *MockCommissionManager) GetObjective(ctx context.Context, objectiveID st
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
-	obj, ok := m.objectives[objectiveID]
+	obj, ok := m.commissions[commissionID]
 	if !ok {
 		return nil, memory.ErrNotFound
 	}
@@ -77,8 +77,8 @@ func (m *MockCommissionManager) GetObjective(ctx context.Context, objectiveID st
 	return obj, nil
 }
 
-// ListObjectives implements objective.Manager.ListObjectives
-func (m *MockCommissionManager) ListObjectives(ctx context.Context) ([]*commission.Commission, error) {
+// ListCommissions implements commission.Manager.ListCommissions
+func (m *MockCommissionManager) ListCommissions(ctx context.Context) ([]*commission.Commission, error) {
 	if m.error != nil {
 		return nil, m.error
 	}
@@ -86,16 +86,16 @@ func (m *MockCommissionManager) ListObjectives(ctx context.Context) ([]*commissi
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
-	var objectives []*commission.Commission
-	for _, obj := range m.objectives {
-		objectives = append(objectives, obj)
+	var commissions []*commission.Commission
+	for _, obj := range m.commissions {
+		commissions = append(commissions, obj)
 	}
 
-	return objectives, nil
+	return commissions, nil
 }
 
-// DeleteObjective implements objective.Manager.DeleteObjective
-func (m *MockCommissionManager) DeleteObjective(ctx context.Context, objectiveID string) error {
+// DeleteCommission implements commission.Manager.DeleteCommission
+func (m *MockCommissionManager) DeleteCommission(ctx context.Context, commissionID string) error {
 	if m.error != nil {
 		return m.error
 	}
@@ -103,29 +103,29 @@ func (m *MockCommissionManager) DeleteObjective(ctx context.Context, objectiveID
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	if _, ok := m.objectives[objectiveID]; !ok {
+	if _, ok := m.commissions[commissionID]; !ok {
 		return memory.ErrNotFound
 	}
 
-	delete(m.objectives, objectiveID)
+	delete(m.commissions, commissionID)
 
 	return nil
 }
 
-// LoadObjectiveFromFile implements objective.Manager.LoadObjectiveFromFile
-func (m *MockCommissionManager) LoadObjectiveFromFile(ctx context.Context, filePath string) (*commission.Commission, error) {
+// LoadCommissionFromFile implements commission.Manager.LoadCommissionFromFile
+func (m *MockCommissionManager) LoadCommissionFromFile(ctx context.Context, filePath string) (*commission.Commission, error) {
 	if m.error != nil {
 		return nil, m.error
 	}
 
-	// Just return a new objective for testing purposes
-	obj := commission.NewCommission("Test Objective", "Loaded from mock file")
+	// Just return a new commission for testing purposes
+	obj := commission.NewCommission("Test Commission", "Loaded from mock file")
 
 	return obj, nil
 }
 
-// AddTask implements objective.Manager.AddTask
-func (m *MockCommissionManager) AddTask(ctx context.Context, objectiveID string, task *commission.CommissionTask) error {
+// AddTask implements commission.Manager.AddTask
+func (m *MockCommissionManager) AddTask(ctx context.Context, commissionID string, task *commission.CommissionTask) error {
 	if m.error != nil {
 		return m.error
 	}
@@ -133,7 +133,7 @@ func (m *MockCommissionManager) AddTask(ctx context.Context, objectiveID string,
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	obj, ok := m.objectives[objectiveID]
+	obj, ok := m.commissions[commissionID]
 	if !ok {
 		return memory.ErrNotFound
 	}
@@ -144,8 +144,8 @@ func (m *MockCommissionManager) AddTask(ctx context.Context, objectiveID string,
 	return nil
 }
 
-// UpdateTaskStatus implements objective.Manager.UpdateTaskStatus
-func (m *MockCommissionManager) UpdateTaskStatus(ctx context.Context, objectiveID string, taskID string, status string) error {
+// UpdateTaskStatus implements commission.Manager.UpdateTaskStatus
+func (m *MockCommissionManager) UpdateTaskStatus(ctx context.Context, commissionID string, taskID string, status string) error {
 	if m.error != nil {
 		return m.error
 	}
@@ -153,7 +153,7 @@ func (m *MockCommissionManager) UpdateTaskStatus(ctx context.Context, objectiveI
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	obj, ok := m.objectives[objectiveID]
+	obj, ok := m.commissions[commissionID]
 	if !ok {
 		return memory.ErrNotFound
 	}
@@ -189,13 +189,8 @@ func (m *MockCommissionManager) CreateCommission(ctx context.Context, commission
 	newCommission.CreatedAt = time.Now().UTC()
 	newCommission.UpdatedAt = time.Now().UTC()
 
-	m.objectives[newCommission.ID] = &newCommission
+	m.commissions[newCommission.ID] = &newCommission
 	return &newCommission, nil
-}
-
-// GetCommission implements commission.CommissionManager.GetCommission
-func (m *MockCommissionManager) GetCommission(ctx context.Context, id string) (*commission.Commission, error) {
-	return m.GetObjective(ctx, id)
 }
 
 // UpdateCommission implements commission.CommissionManager.UpdateCommission
@@ -207,33 +202,13 @@ func (m *MockCommissionManager) UpdateCommission(ctx context.Context, commission
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	if _, ok := m.objectives[commission.ID]; !ok {
+	if _, ok := m.commissions[commission.ID]; !ok {
 		return memory.ErrNotFound
 	}
 
 	commission.UpdatedAt = time.Now().UTC()
-	m.objectives[commission.ID] = &commission
+	m.commissions[commission.ID] = &commission
 	return nil
-}
-
-// DeleteCommission implements commission.CommissionManager.DeleteCommission
-func (m *MockCommissionManager) DeleteCommission(ctx context.Context, id string) error {
-	return m.DeleteObjective(ctx, id)
-}
-
-// ListCommissions implements commission.CommissionManager.ListCommissions
-func (m *MockCommissionManager) ListCommissions(ctx context.Context) ([]*commission.Commission, error) {
-	return m.ListObjectives(ctx)
-}
-
-// SaveCommission implements commission.CommissionManager.SaveCommission
-func (m *MockCommissionManager) SaveCommission(ctx context.Context, commission *commission.Commission) error {
-	return m.SaveObjective(ctx, commission)
-}
-
-// LoadCommissionFromFile implements commission.CommissionManager.LoadCommissionFromFile
-func (m *MockCommissionManager) LoadCommissionFromFile(ctx context.Context, path string) (*commission.Commission, error) {
-	return m.LoadObjectiveFromFile(ctx, path)
 }
 
 // GetCommissionsByTag implements commission.CommissionManager.GetCommissionsByTag
@@ -246,7 +221,7 @@ func (m *MockCommissionManager) GetCommissionsByTag(ctx context.Context, tag str
 	defer m.mu.RUnlock()
 
 	var result []*commission.Commission
-	for _, obj := range m.objectives {
+	for _, obj := range m.commissions {
 		for _, objTag := range obj.Tags {
 			if objTag == tag {
 				result = append(result, obj)
@@ -267,7 +242,7 @@ func (m *MockCommissionManager) SetCommission(ctx context.Context, commissionID 
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
-	if _, ok := m.objectives[commissionID]; !ok {
+	if _, ok := m.commissions[commissionID]; !ok {
 		return memory.ErrNotFound
 	}
 

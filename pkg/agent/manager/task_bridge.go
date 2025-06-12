@@ -22,7 +22,7 @@ type TaskBridge struct {
 // NewTaskBridge creates a new task bridge (deprecated - use NewTaskBridgeWithCommissions)
 func NewTaskBridge(
 	kanbanBoard *kanban.Board,
-	objectiveManager interface{}, // Deprecated parameter - ignored
+	commissionManager interface{}, // Deprecated parameter - ignored
 ) *TaskBridge {
 	return &TaskBridge{
 		kanbanBoard:          kanbanBoard,

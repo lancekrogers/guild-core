@@ -1074,7 +1074,7 @@ func (e *BasicTaskExecutor) buildPromptData() execution.ExecutionPromptData {
 			RelatedTasks:       []execution.RelatedTask{},
 		},
 		Commission: execution.CommissionData{
-			Title:           e.execContext.Objective,
+			Title:           e.execContext.Commission,
 			Description:     "Complete the assigned commission",
 			SuccessCriteria: []string{"Task completed successfully", "Tests pass", "Documentation updated"},
 		},
@@ -1100,7 +1100,7 @@ func (e *BasicTaskExecutor) buildPromptData() execution.ExecutionPromptData {
 			StepNumber:             1,
 			TotalSteps:             4,
 			StepName:               "Current step",
-			StepObjective:          "Complete current phase",
+			StepCommission:          "Complete current phase",
 			ExpectedActions:        []string{},
 			SuccessIndicators:      []string{},
 			PotentialIssues:        []string{},

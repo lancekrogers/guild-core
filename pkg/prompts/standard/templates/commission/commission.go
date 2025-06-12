@@ -14,7 +14,7 @@ import (
 //go:embed markdown/*.md
 var promptFS embed.FS
 
-// LoadPrompts loads all objective-related prompts as templates
+// LoadPrompts loads all commission-related prompts as templates
 func LoadPrompts() (map[string]*template.Template, error) {
 	templates := make(map[string]*template.Template)
 

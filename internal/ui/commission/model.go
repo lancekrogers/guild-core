@@ -16,13 +16,13 @@ import (
 
 // Define UI states
 const (
-	stateViewing   = "viewing"   // Viewing objective details
-	stateEditing   = "editing"   // Editing objective content
-	stateCreating  = "creating"  // Creating a new objective
+	stateViewing   = "viewing"   // Viewing commission details
+	stateEditing   = "editing"   // Editing commission content
+	stateCreating  = "creating"  // Creating a new commission
 	stateContext   = "context"   // Adding context
 	statePreview   = "preview"   // Previewing generated docs
 	stateCommands  = "commands"  // Command input mode
-	stateDashboard = "dashboard" // Objectives dashboard
+	stateDashboard = "dashboard" // Commissions dashboard
 )
 
 // Define key mappings using Guild lore-inspired names
@@ -61,14 +61,14 @@ type CommissionChamber struct {
 	scribe     textarea.Model  // Text input for longer content (medieval scribe)
 	parchment  textinput.Model // Text input for commands (writing on parchment)
 	viewport   viewport.Model  // Content viewing area (viewing the scroll)
-	ledger     list.Model      // Objectives list (guild ledger)
+	ledger     list.Model      // Commissions list (guild ledger)
 	helpScroll help.Model      // Help display (instruction scroll)
 	keymap     GuildHallKeyMap // Key bindings
 
 	// UI state
 	hallWidth, hallHeight int    // Terminal dimensions (hall dimensions)
 	chamberState          string // Current UI state (which chamber we're in)
-	readyForMaster        bool   // Whether objective is ready (ready for guildmaster)
+	readyForMaster        bool   // Whether commission is ready (ready for guildmaster)
 	proclamation          string // Status message (town crier's proclamation)
 	guildError            error  // Error state
 
@@ -216,9 +216,9 @@ func NewModel(ctx context.Context, commissionPath string, manager CommissionMana
 			}
 		}
 	} else {
-		// No objective or no manager, offer to create one
+		// No commission or no manager, offer to create one
 		chamber.chamberState = stateCreating
-		chamber.proclamation = "A blank parchment awaits. Describe your objective to begin crafting."
+		chamber.proclamation = "A blank parchment awaits. Describe your commission to begin crafting."
 	}
 
 	return chamber

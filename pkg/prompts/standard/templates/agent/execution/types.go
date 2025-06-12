@@ -47,7 +47,7 @@ type RelatedTask struct {
 	Output     string
 }
 
-// CommissionData contains commission (objective) information
+// CommissionData contains commission information
 type CommissionData struct {
 	Title           string
 	Description     string
@@ -115,7 +115,7 @@ type ExecutionData struct {
 	StepNumber             int
 	TotalSteps             int
 	StepName               string
-	StepObjective          string
+	StepCommission          string
 	ExpectedActions        []string
 	SuccessIndicators      []string
 	PotentialIssues        []string

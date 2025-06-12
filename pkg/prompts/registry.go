@@ -225,7 +225,7 @@ type TaskContext struct {
 	Capabilities  []string
 }
 
-// Section represents a section from the objective hierarchy
+// Section represents a section from the commission hierarchy
 type Section struct {
 	Level   int
 	Path    string

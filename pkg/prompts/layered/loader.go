@@ -92,7 +92,7 @@ func (l *Loader) loadDeveloperPrompts() error {
 
 ## Working with Context
 You will receive context about:
-- The overall commission objectives
+- The overall commission goals
 - Your specific task details
 - Related documentation sections
 - Dependencies and related tasks
@@ -160,7 +160,7 @@ func (l *Loader) loadReviewerPrompts() error {
 
 ## Your Role
 - Review code and documentation for quality and correctness
-- Ensure alignment with commission objectives
+- Ensure alignment with commission goals
 - Verify adherence to Guild standards and practices
 - Provide constructive feedback to help artisans improve
 - Approve work that meets standards or request specific changes
