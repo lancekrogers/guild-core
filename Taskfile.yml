@@ -187,3 +187,149 @@ tasks:
         task test:coverage
         echo "Report available at ./coverage/coverage.html"
 
+  # Database management tasks
+  db:generate:
+    desc: Generate Go code from SQL queries using sqlc
+    cmds:
+      - |
+        echo "Generating Go code from SQL queries..."
+        if ! command -v sqlc >/dev/null 2>&1; then
+          echo "Installing sqlc..."
+          go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+        fi
+        sqlc generate
+        echo "✅ Database code generation complete"
+    sources:
+      - "db/queries/*.sql"
+      - "db/migrations/*.sql"
+      - "sqlc.yaml"
+    generates:
+      - "pkg/storage/db/*.go"
+
+  db:new-migration:
+    desc: Create a new database migration
+    cmds:
+      - |
+        if [ -z "{{.name}}" ]; then
+          echo "ERROR: Migration name required"
+          echo "Usage: task db:new-migration name=<migration_name>"
+          exit 1
+        fi
+        
+        # Find the highest migration number
+        LAST_NUM=$(ls -1 db/migrations/*.up.sql 2>/dev/null | sed 's/.*\/\([0-9]*\).*/\1/' | sort -n | tail -1)
+        if [ -z "$LAST_NUM" ]; then
+          NEXT_NUM="000001"
+        else
+          # Remove leading zeros, increment, and pad to 6 digits
+          NEXT_NUM=$(printf "%06d" $((10#$LAST_NUM + 1)))
+        fi
+        
+        # Create migration files
+        UP_FILE="db/migrations/${NEXT_NUM}_{{.name}}.up.sql"
+        DOWN_FILE="db/migrations/${NEXT_NUM}_{{.name}}.down.sql"
+        
+        touch "$UP_FILE"
+        touch "$DOWN_FILE"
+        
+        echo "-- Migration: {{.name}}" > "$UP_FILE"
+        echo "-- Created: $(date)" >> "$UP_FILE"
+        echo "" >> "$UP_FILE"
+        
+        echo "-- Rollback: {{.name}}" > "$DOWN_FILE"
+        echo "-- Created: $(date)" >> "$DOWN_FILE"
+        echo "" >> "$DOWN_FILE"
+        
+        echo "✅ Created migration files:"
+        echo "  - $UP_FILE"
+        echo "  - $DOWN_FILE"
+        echo ""
+        echo "Next steps:"
+        echo "  1. Edit the migration files"
+        echo "  2. Run 'task db:migrate' to apply"
+        echo "  3. Update queries in db/queries/ if needed"
+        echo "  4. Run 'task db:generate' to regenerate Go code"
+
+  db:migrate:
+    desc: Run pending database migrations
+    cmds:
+      - |
+        echo "Running database migrations..."
+        if ! command -v migrate >/dev/null 2>&1; then
+          echo "Installing golang-migrate..."
+          go install -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+        fi
+        
+        # Default to .guild/memory.db if no path specified
+        DB_PATH="${DB_PATH:-.guild/memory.db}"
+        
+        if [ ! -f "$DB_PATH" ]; then
+          echo "Creating database directory..."
+          mkdir -p $(dirname "$DB_PATH")
+        fi
+        
+        migrate -path db/migrations -database "sqlite3://$DB_PATH?_foreign_keys=on" up
+        echo "✅ Migrations complete"
+
+  db:migrate-down:
+    desc: Rollback the last database migration
+    cmds:
+      - |
+        echo "Rolling back last migration..."
+        if ! command -v migrate >/dev/null 2>&1; then
+          echo "Installing golang-migrate..."
+          go install -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+        fi
+        
+        # Default to .guild/memory.db if no path specified
+        DB_PATH="${DB_PATH:-.guild/memory.db}"
+        
+        if [ ! -f "$DB_PATH" ]; then
+          echo "ERROR: Database not found at $DB_PATH"
+          exit 1
+        fi
+        
+        migrate -path db/migrations -database "sqlite3://$DB_PATH?_foreign_keys=on" down 1
+        echo "✅ Rollback complete"
+
+  db:status:
+    desc: Show database migration status
+    cmds:
+      - |
+        echo "Checking migration status..."
+        if ! command -v migrate >/dev/null 2>&1; then
+          echo "Installing golang-migrate..."
+          go install -tags 'sqlite3' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+        fi
+        
+        # Default to .guild/memory.db if no path specified
+        DB_PATH="${DB_PATH:-.guild/memory.db}"
+        
+        if [ ! -f "$DB_PATH" ]; then
+          echo "Database not found at $DB_PATH"
+          echo "Run 'task db:migrate' to create and initialize the database"
+        else
+          migrate -path db/migrations -database "sqlite3://$DB_PATH?_foreign_keys=on" version
+        fi
+
+  db:reset:
+    desc: Drop all tables and re-run all migrations (DESTRUCTIVE)
+    cmds:
+      - |
+        echo "⚠️  WARNING: This will DELETE ALL DATA in the database!"
+        echo "Press Ctrl+C to cancel, or Enter to continue..."
+        read -r
+        
+        # Default to .guild/memory.db if no path specified
+        DB_PATH="${DB_PATH:-.guild/memory.db}"
+        
+        if [ -f "$DB_PATH" ]; then
+          echo "Removing existing database..."
+          rm "$DB_PATH"
+        fi
+        
+        echo "Running fresh migrations..."
+        task db:migrate
+        echo "✅ Database reset complete"
+    interactive: true
+
