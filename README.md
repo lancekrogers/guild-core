@@ -151,8 +151,8 @@ make clean            # Clean ALL artifacts including .test files
 
 > **Note**: Documentation is being updated for the MVP release. Current docs may describe planned features.
 
-- [GETTING_STARTED.md](GETTING_STARTED.md) - Will be updated post-MVP with demos
-- [DEV.md](DEV.md) - Developer guidelines
+- [GETTING_STARTED.md](docs/development/GETTING_STARTED.md) - Will be updated post-MVP with demos
+- [DEV.md](docs/development/DEV.md) - Developer guidelines
 - Additional documentation in `docs/` directory
 
 ## 🎯 Roadmap to MVP
