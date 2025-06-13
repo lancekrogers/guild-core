@@ -206,9 +206,7 @@ func (t *CursorPositionTool) Execute(ctx context.Context, input string) (*tools.
 	// Perform navigation
 	result, err := t.navigate(ctx, params)
 	if err != nil {
-		return tools.NewToolResult("", map[string]string{
-			"file": params.File,
-		}, err, nil), err
+		return nil, err
 	}
 
 	// Format output

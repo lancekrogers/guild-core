@@ -174,9 +174,7 @@ func (t *SearchReplaceTool) Execute(ctx context.Context, input string) (*tools.T
 	// Perform search
 	result, err := t.performSearch(ctx, params)
 	if err != nil {
-		return tools.NewToolResult("", map[string]string{
-			"pattern": params.Pattern,
-		}, err, nil), err
+		return nil, err
 	}
 
 	// If replacement is specified and not preview mode, apply changes
@@ -278,8 +276,16 @@ func (t *SearchReplaceTool) performSearch(ctx context.Context, params SearchRepl
 
 		if len(matches) > 0 {
 			filesWithMatches++
-			result.Matches = append(result.Matches, matches...)
-			matchCount += len(matches)
+			
+			// Limit matches to respect MaxResults
+			remainingSlots := params.MaxResults - matchCount
+			if remainingSlots > 0 {
+				if len(matches) > remainingSlots {
+					matches = matches[:remainingSlots]
+				}
+				result.Matches = append(result.Matches, matches...)
+				matchCount += len(matches)
+			}
 
 			// Update language breakdown
 			language := string(DetectLanguage(file))

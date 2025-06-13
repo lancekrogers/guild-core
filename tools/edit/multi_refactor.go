@@ -256,10 +256,7 @@ func (t *MultiFileRefactorTool) Execute(ctx context.Context, input string) (*too
 	// Perform refactoring
 	result, err := t.performRefactoring(ctx, params)
 	if err != nil {
-		return tools.NewToolResult("", map[string]string{
-			"type":   params.Type,
-			"source": params.Target.File,
-		}, err, nil), err
+		return nil, err
 	}
 
 	// Format output

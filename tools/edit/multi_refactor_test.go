@@ -322,9 +322,9 @@ func main() {
 	require.NoError(t, err)
 	assert.NotNil(t, result)
 
-	// Should complete successfully (conflict detection not implemented)
-	assert.Contains(t, result.Output, "Renamed")
-	assert.Contains(t, result.Output, "existingFunction")
+	// Should detect naming conflict
+	assert.Contains(t, result.Output, "Conflicts")
+	assert.Contains(t, result.Output, "name_collision")
 }
 
 func TestMultiFileRefactorTool_Execute_InvalidType(t *testing.T) {
@@ -354,10 +354,8 @@ func main() {}
 	require.NoError(t, err)
 
 	result, err := tool.Execute(context.Background(), string(input))
-	assert.NoError(t, err)
-	assert.NotNil(t, result)
-	assert.False(t, result.Success)
-	assert.Contains(t, result.Error, "type")
+	assert.Error(t, err)
+	assert.Nil(t, result)
 }
 
 func TestMultiFileRefactorTool_Execute_MissingTarget(t *testing.T) {
@@ -372,10 +370,8 @@ func TestMultiFileRefactorTool_Execute_MissingTarget(t *testing.T) {
 	require.NoError(t, err)
 
 	result, err := tool.Execute(context.Background(), string(input))
-	assert.NoError(t, err)
-	assert.NotNil(t, result)
-	assert.False(t, result.Success)
-	assert.Contains(t, result.Error, "type")
+	assert.Error(t, err)
+	assert.Nil(t, result)
 }
 
 func TestMultiFileRefactorTool_Execute_MissingFile(t *testing.T) {
@@ -392,10 +388,8 @@ func TestMultiFileRefactorTool_Execute_MissingFile(t *testing.T) {
 	require.NoError(t, err)
 
 	result, err := tool.Execute(context.Background(), string(input))
-	assert.NoError(t, err)
-	assert.NotNil(t, result)
-	assert.False(t, result.Success)
-	assert.Contains(t, result.Error, "type")
+	assert.Error(t, err)
+	assert.Nil(t, result)
 }
 
 func TestMultiFileRefactorTool_Execute_InvalidJSON(t *testing.T) {
@@ -435,10 +429,8 @@ func oldFunc() {}
 	require.NoError(t, err)
 
 	result, err := tool.Execute(context.Background(), string(input))
-	assert.NoError(t, err)
-	assert.NotNil(t, result)
-	assert.False(t, result.Success)
-	assert.Contains(t, result.Error, "type")
+	assert.Error(t, err)
+	assert.Nil(t, result)
 }
 
 func TestMultiFileRefactorTool_Execute_ExtractWithoutLines(t *testing.T) {
@@ -472,10 +464,8 @@ func main() {
 	require.NoError(t, err)
 
 	result, err := tool.Execute(context.Background(), string(input))
-	assert.NoError(t, err)
-	assert.NotNil(t, result)
-	assert.False(t, result.Success)
-	assert.Contains(t, result.Error, "type")
+	assert.Error(t, err)
+	assert.Nil(t, result)
 }
 
 func TestMultiFileRefactorTool_Execute_MoveWithoutDestination(t *testing.T) {
@@ -507,10 +497,8 @@ func testFunc() {}
 	require.NoError(t, err)
 
 	result, err := tool.Execute(context.Background(), string(input))
-	assert.NoError(t, err)
-	assert.NotNil(t, result)
-	assert.False(t, result.Success)
-	assert.Contains(t, result.Error, "type")
+	assert.Error(t, err)
+	assert.Nil(t, result)
 }
 
 func TestMultiFileRefactorTool_Execute_ScopePackage(t *testing.T) {
@@ -591,10 +579,8 @@ func main() {
 	require.NoError(t, err)
 
 	result, err := tool.Execute(context.Background(), string(input))
-	assert.NoError(t, err)
-	assert.NotNil(t, result)
-	assert.False(t, result.Success)
-	assert.Contains(t, result.Error, "type")
+	assert.Error(t, err)
+	assert.Nil(t, result)
 }
 
 func TestMultiFileRefactorTool_Execute_DefaultOptions(t *testing.T) {
