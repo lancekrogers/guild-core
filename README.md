@@ -8,9 +8,9 @@
   <br>
   <br>
 
-[![Go Version](https://img.shields.io/badge/Go-1.24-00ADD8.svg)](https://go.dev/dl/)
+[![Go Version](https://img.shields.io/badge/Go-1.23+-00ADD8.svg)](https://go.dev/dl/)
 [![License](https://img.shields.io/badge/License-Custom-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Pre--MVP-orange.svg)]()
+[![Status](https://img.shields.io/badge/Status-Beta-yellow.svg)]()
 
 </div>
 
@@ -39,19 +39,26 @@ Guild is an ambitious AI agent orchestration framework that coordinates speciali
 
 ```bash
 guild init [path]           # Initialize a new guild project
-guild chat                  # Interactive chat with AI agents
+guild chat                  # Interactive chat with AI agents (TUI)
 guild corpus scan          # Scan and index project documentation
+guild corpus query         # Query indexed documentation
 guild commission           # Create and refine work commissions
+guild commission refine    # Refine existing commission documents
 guild prompt               # Manage layered prompt system
-guild agent start         # Start agent services
+guild campaign             # Manage campaign workflows
+guild serve                # Start gRPC server (build errors present)
+guild agent start         # Start agent services (not implemented)
+guild cost                 # Cost tracking tools
+guild migrate              # Migrate from global to project configuration
 ```
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Go 1.24.3 or higher
+- Go 1.23 or higher
 - Git
+- SQLite (for storage)
 
 ### Installation
 
@@ -61,28 +68,29 @@ git clone https://github.com/guild-ventures/guild-core.git
 cd guild-core
 
 # Install dependencies
-task deps:install
+make deps
 
-# Build the CLI
-task build
+# Build the CLI (Note: some packages have build errors)
+make build
 
 # Verify installation
-./guild version
+./bin/guild version
 ```
 
 ### Create Your First Guild Project
 
 ```bash
 # Initialize a new project
-guild init my-project
+./bin/guild init my-project
 cd my-project
 
-# Set up your API keys
+# Set up your API keys (at least one required)
 export ANTHROPIC_API_KEY="your-key"
-export OPENAI_API_KEY="your-key"
+# export OPENAI_API_KEY="your-key"      # Optional
+# export OLLAMA_HOST="localhost:11434"  # Optional for local models
 
 # Start chatting with agents
-guild chat
+../bin/guild chat
 ```
 
 This creates a `.guild/` directory with:
@@ -90,12 +98,14 @@ This creates a `.guild/` directory with:
 ```
 .guild/
 ├── guild.yaml          # Main guild configuration
-├── config.yaml         # Project settings
-├── corpus/            # Knowledge base
-├── embeddings/        # Vector storage
-├── agents/            # Agent definitions
-├── objectives/        # Project goals
-└── README.md          # Project documentation
+├── memory.db          # SQLite database for state
+├── corpus/            # Knowledge base documents
+├── objectives/        # Commission documents
+│   └── refined/      # Refined commission outputs
+├── kanban/           # Task board state
+├── archives/         # Agent memory
+├── campaigns/        # Campaign definitions
+└── prompts/         # Custom prompt templates
 ```
 
 ## 🏗️ Architecture
@@ -104,10 +114,11 @@ Guild uses a sophisticated component-based architecture:
 
 - **Agents** (Artisans): LLM-powered workers with specialized capabilities
 - **Orchestrator**: Coordinates multiple agents working on shared objectives
-- **Kanban Board**: Task tracking with state management
-- **Memory Layer**: BoltDB for persistence, vector search for RAG
-- **Tool System**: Extensible tool integration with safety controls
+- **Kanban Board**: Task tracking with SQLite state management
+- **Memory Layer**: SQLite for persistence, ChromemGo for vector search
+- **Tool System**: Extensible tool integration with workspace isolation
 - **Prompt Layers**: 6-layer system for context and behavior management
+- **Registry Pattern**: Dynamic component discovery and dependency injection
 
 ## 🔨 Development
 
@@ -155,14 +166,20 @@ make clean            # Clean ALL artifacts including .test files
 - [DEV.md](docs/development/DEV.md) - Developer guidelines
 - Additional documentation in `docs/` directory
 
-## 🎯 Roadmap to MVP
+## 🎯 Current Status & Known Issues
 
-### Immediate Priorities
+### Working Features
+- ✅ Project initialization (`guild init`)
+- ✅ Interactive chat interface (`guild chat`)
+- ✅ Corpus scanning and indexing
+- ✅ Commission creation and refinement
+- ✅ Basic agent framework
 
-1. Fix current build errors in orchestrator package
-2. Complete chat → task assignment integration
-3. Enable real-time progress tracking
-4. Create end-to-end demo workflow
+### Known Issues
+- ⚠️ gRPC server has build errors (`pkg/grpc` package)
+- ⚠️ Some agent features not fully implemented
+- ⚠️ Test coverage needs improvement
+- ⚠️ Some commands show as available but aren't fully implemented
 
 ### Post-MVP Plans
 

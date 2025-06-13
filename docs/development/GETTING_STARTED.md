@@ -1,17 +1,25 @@
 # Getting Started with Guild Framework
 
-Welcome to Guild! This guide will walk you through setting up your first AI agent team and running a campaign to complete complex objectives.
+Welcome to Guild! This guide reflects the current implementation status of the Guild Framework. Many features are still in development.
 
 ## Table of Contents
 
-1. [Installation](#installation)
-2. [Quick Start](#quick-start)
-3. [Configuring Your First Guild](#configuring-your-first-guild)
-4. [Creating Objectives](#creating-objectives)
-5. [Running Campaigns](#running-campaigns)
-6. [Interacting with Agents](#interacting-with-agents)
-7. [Review Workflow](#review-workflow)
-8. [Advanced Features](#advanced-features)
+1. [Prerequisites](#prerequisites)
+2. [Installation](#installation)
+3. [Basic Usage](#basic-usage)
+4. [Available Commands](#available-commands)
+5. [Current Limitations](#current-limitations)
+6. [Troubleshooting](#troubleshooting)
+
+## Prerequisites
+
+- Go 1.23 or higher
+- Git
+- SQLite
+- At least one LLM API key:
+  - Anthropic API key (recommended)
+  - OpenAI API key
+  - Or local Ollama installation
 
 ## Installation
 
@@ -21,393 +29,155 @@ git clone https://github.com/guild-ventures/guild-core.git
 cd guild-core
 
 # Install dependencies
-task deps:install
+make deps
 
-# Build Guild
-task build
+# Build Guild (Note: Build currently has errors in some packages)
+make build
 
-# Verify installation
-./bin/guild version
+# The build will fail but some binaries may be created
+# Check if guild binary was created:
+ls bin/guild
 ```
 
-## Quick Start
+## Basic Usage
 
-![Guild Quick Start Demo](docs/gifs/quick-start.gif)
-*Starting your first campaign in under 2 minutes*
+### Initialize a Guild Project
 
 ```bash
-# Initialize a Guild project
-guild init my-project
+# Create a new guild project
+./bin/guild init my-project
 cd my-project
 
-# Commission your first strategic work
-guild commission "Build a web API with authentication" --assign
-
-# Monitor the workshop
-guild workshop
+# This creates a .guild/ directory with:
+# - guild.yaml (configuration)
+# - memory.db (SQLite database)
+# - Various subdirectories for corpus, campaigns, etc.
 ```
 
-## Configuring Your First Guild
-
-Guild uses a team of specialized AI agents to complete objectives. Each agent has specific capabilities, tools, and cost considerations.
-
-### Basic Guild Configuration
-
-![Guild Configuration Demo](docs/gifs/configure-guild.gif)
-*Setting up a development team with specialized agents*
-
-Create a `guild.yaml` file in your project root:
-
-```yaml
-name: "Development Team"
-description: "A balanced team for full-stack development"
-
-manager:
-  default: "project-manager"
-  settings:
-    model: "claude-3-sonnet-20240229"
-    provider: "anthropic"
-
-agents:
-  - id: "backend-dev"
-    role: "backend_developer"
-    capabilities: ["python", "api", "database", "testing"]
-    tools:
-      - "shell"
-      - "file_system"
-      - "http_client"
-    model: "claude-3-sonnet-20240229"
-    provider: "anthropic"
-    cost_magnitude: 0.75
-    context_window: 200000
-
-  - id: "frontend-dev"
-    role: "frontend_developer"
-    capabilities: ["javascript", "react", "css", "ui/ux"]
-    tools:
-      - "file_system"
-      - "web_scraper"
-    model: "gpt-4"
-    provider: "openai"
-    cost_magnitude: 1.0
-    context_window: 128000
-
-  - id: "researcher"
-    role: "research_analyst"
-    capabilities: ["research", "documentation", "analysis"]
-    tools:
-      - "corpus"
-      - "web_scraper"
-      - "file_system"
-    model: "claude-3-haiku-20240307"
-    provider: "anthropic"
-    cost_magnitude: 0.25  # Lower cost for research tasks
-    context_window: 200000
-```
-
-### Understanding Agent Configuration
-
-- **capabilities**: Skills the agent possesses (used for task assignment)
-- **tools**: Available tools the agent can use
-- **cost_magnitude**: Relative cost factor (lower = cheaper, preferred for suitable tasks)
-- **context_window**: Maximum tokens before context management kicks in
-
-## Commissioning Strategic Work
-
-![Commission Creation Demo](docs/gifs/create-commission.gif)
-*Commissioning and coordinating agent collaboration*
-
-### Simple Commission
+### Set Up API Keys
 
 ```bash
-guild commission "Build User Authentication" --assign
+# Required: Set at least one API key
+export ANTHROPIC_API_KEY="your-anthropic-key"
+# Optional:
+export OPENAI_API_KEY="your-openai-key"
+export OLLAMA_HOST="localhost:11434"  # For local models
 ```
 
-### Hierarchical Objectives
+### Start Chat Interface
 
-Create structured objectives for complex projects:
-
-```markdown
-# E-commerce Platform
-
-## Backend Services
-### User Management
-- [ ] Design user database schema
-- [ ] Implement registration endpoint
-- [ ] Create login with JWT tokens
-- [ ] Add password reset functionality
-
-### Product Catalog
-- [ ] Design product data model
-- [ ] Create CRUD endpoints
-- [ ] Implement search functionality
-- [ ] Add category management
-
-## Frontend Application
-### User Interface
-- [ ] Design responsive layout
-- [ ] Create product grid component
-- [ ] Build shopping cart UI
-- [ ] Implement checkout flow
-```
-
-### Monitoring Commissions
-
-![Commission Monitoring Demo](docs/gifs/monitor-commission.gif)
-*Watching the Guild workshop coordinate agents*
+The chat interface is the most functional part of Guild currently:
 
 ```bash
-# Monitor all active commissions and agent assignments
-guild workshop
-
-# Check specific commission progress
-guild commission status
-
-# List all commissions
-guild commission list
+# From your project directory
+../bin/guild chat
 ```
 
-## Running Campaigns
+This opens a terminal UI where you can:
+- Chat with AI agents
+- Use slash commands (some may not work)
+- See formatted responses with markdown support
 
-![Campaign Execution Demo](docs/gifs/run-campaign.gif)
-*Watching agents collaborate on tasks in real-time*
-
-### Creating a Campaign
+### Scan Project Documentation
 
 ```bash
-# Create a campaign from objectives
-guild campaign create \
-  --objective objectives/backend-services.md \
-  --objective objectives/frontend-app.md \
-  --name "E-commerce Development"
+# Index your project's documentation
+../bin/guild corpus scan
+
+# Query the indexed documentation
+../bin/guild corpus query "how does authentication work"
 ```
 
-### Monitoring Progress
+## Available Commands
 
-```bash
-# Start the campaign
-guild campaign start --id campaign-123
+### Working Commands
 
-# Watch real-time progress
-guild campaign watch --id campaign-123
-```
+- `guild init [path]` - Initialize a new guild project
+- `guild chat` - Interactive chat interface (most functional)
+- `guild corpus scan` - Scan and index documentation
+- `guild corpus query` - Query indexed documentation
+- `guild commission` - Create commission documents (basic functionality)
+- `guild commission refine` - Refine commission documents
+- `guild prompt` - Manage prompt templates
 
-### Kanban Board View
+### Partially Working or Not Implemented
 
-![Kanban Board Demo](docs/gifs/kanban-board.gif)
-*ASCII kanban board showing task progress*
+- `guild campaign` - Campaign management (limited functionality)
+- `guild serve` - gRPC server (has build errors)
+- `guild agent start` - Not implemented
+- `guild migrate` - Migration utilities
 
-```
-╔════════════════════════════════════════════════════════════════╗
-║                 Campaign: E-commerce Development                 ║
-╠══════════════╦══════════════╦══════════════╦══════════════════╣
-║     TODO     ║  IN PROGRESS ║    REVIEW    ║      DONE        ║
-╠══════════════╬══════════════╬══════════════╬══════════════════╣
-║ [BE-001]     ║ [FE-002]     ║ [BE-003]     ║ [BE-004]         ║
-║ User Schema  ║ Layout Design║ JWT Login    ║ Registration API ║
-║ @backend-dev ║ @frontend    ║ @backend-dev ║ @backend-dev     ║
-║              ║ 🧠 45%       ║ ⏳ Pending   ║ ✅ Completed     ║
-╚══════════════╩══════════════╩══════════════╩══════════════════╝
-```
+## Current Limitations
 
-## Interacting with Agents
+1. **Build Errors**: The project has build failures in several packages:
+   - `pkg/grpc` - Interface mismatches with Campaign/Objectives
+   - `cmd/guild` - Related to above issues
+   - `internal/chat` - Build dependencies
 
-![Agent Chat Demo](docs/gifs/agent-chat.gif)
-*Direct communication with agents during task execution*
+2. **Limited Multi-Agent Support**: While the framework is designed for multi-agent orchestration, the current implementation primarily supports single-agent chat.
 
-### Chat Commands
+3. **Missing Features**: Many advertised features are not yet implemented:
+   - Real-time task monitoring
+   - Visual kanban board
+   - Full campaign workflow
+   - Agent orchestration
 
-```bash
-# Open the Guild chat interface
-guild chat
-
-# Direct message to an agent
-> @backend-dev How's the user schema coming along?
-
-# Block an agent's current task for input
-> @block.frontend-dev
-
-# Natural language commands
-> @backend-dev get started with the login endpoint
-```
-
-### Slash Commands
-
-| Command | Description |
-|---------|-------------|
-| `/status` | Show campaign and agent status |
-| `/pause <agent-id>` | Pause a specific agent |
-| `/resume <agent-id>` | Resume a paused agent |
-| `/block <task-id>` | Block a specific task |
-| `/approve <task-id>` | Approve a task in review |
-| `/help` | Show all available commands |
-
-## Review Workflow
-
-![Review Workflow Demo](docs/gifs/review-workflow.gif)
-*Reviewing and approving agent work*
-
-### Reviewing Tasks
-
-When a task moves to review, Guild creates a markdown file:
-
-```bash
-# View tasks in review
-ls .guild/kanban/campaign-123/review/
-
-# Edit a review file
-$EDITOR .guild/kanban/campaign-123/review/BE-003.md
-```
-
-### Review File Format
-
-```markdown
-# Task: Implement JWT Login
-**ID**: BE-003
-**Assigned To**: backend-dev
-**Status**: review
-
-## Work Completed
-- Created `/api/auth/login` endpoint
-- Implemented JWT token generation
-- Added refresh token support
-
-## Code Changes
-- `src/auth/login.py`: Login endpoint implementation
-- `src/auth/tokens.py`: JWT token utilities
-- `tests/auth/test_login.py`: Unit tests
-
-## Review Notes
-<!-- Add your review comments here -->
-Looks good! Please add rate limiting before deployment.
-
-## Next Action
-move_to: in_progress  # or 'done' if approved
-```
-
-### Approving Work
-
-```bash
-# Approve and move to done
-guild chat
-> /approve BE-003
-
-# Or request changes
-> @backend-dev Please add rate limiting to the login endpoint
-```
-
-## Advanced Features
-
-### RAG Integration
-
-![RAG Integration Demo](docs/gifs/rag-integration.gif)
-*How agents decide what to store for future reference*
-
-Agents automatically determine what information to store in the RAG system:
-
-- 💾 Stored in RAG: Reusable project knowledge
-- 🧠 Context only: Temporary conversation data
-- 📊 Context meter: Visual indicator of remaining context
-
-### Context Window Management
-
-![Context Management Demo](docs/gifs/context-management.gif)
-*Automatic context window handling*
-
-Watch as agents manage their context windows:
-
-- Warning indicators when approaching limits
-- Automatic summarization or truncation
-- Seamless continuation of long tasks
-
-### Cost Optimization
-
-![Cost Optimization Demo](docs/gifs/cost-optimization.gif)
-*Task assignment based on agent capabilities and cost*
-
-Guild automatically assigns tasks to the most cost-effective capable agent:
-
-1. Filters agents by required capabilities
-2. Checks tool availability
-3. Selects lowest cost_magnitude agent
-4. Balances workload across team
-
-### Adding MCP Tools
-
-```yaml
-agents:
-  - id: "database-expert"
-    tools:
-      - "shell"
-      - "mcp://localhost:3000/postgres-tools"
-      - "mcp://localhost:3001/migration-tools"
-```
+4. **Test Coverage**: Many tests are disabled or failing.
 
 ## Troubleshooting
 
-### Common Issues
+### Build Failures
 
-1. **Import Cycle Errors**
+If you encounter build errors:
 
-   ```bash
-   # Check for build issues
-   go build ./...
+```bash
+# Clean build artifacts
+make clean
 
-   # Use the build task
-   task build
-   ```
+# Try building specific components
+make build-guild  # Build just the CLI
 
-2. **Agent Not Responding**
+# Check specific errors
+go build ./cmd/guild 2>&1 | head -20
+```
 
-   ```bash
-   # Check agent status
-   guild chat
-   > /status
+### Git Submodule Issues
 
-   # Restart specific agent
-   > /restart backend-dev
-   ```
+If working with Guild as a submodule:
 
-3. **Task Stuck in Review**
+```bash
+# Fix git configuration
+git config --file=../.git/modules/guild-core/config core.bare false
+git config --file=../.git/modules/guild-core/config core.worktree ../../../guild-core
+```
 
-   ```bash
-   # Force approve
-   guild task approve --id BE-003 --force
-   ```
+### API Key Issues
 
-## Best Practices
+Ensure your API keys are correctly set:
 
-1. **Start Small**: Begin with 2-3 agents and simple objectives
-2. **Refine Iteratively**: Use the manager agent to improve objectives
-3. **Monitor Context**: Keep an eye on context usage indicators
-4. **Review Regularly**: Don't let tasks pile up in review
-5. **Cost Awareness**: Configure cost_magnitude appropriately
+```bash
+# Check if keys are set
+echo $ANTHROPIC_API_KEY
+echo $OPENAI_API_KEY
 
-## Example Projects
-
-### 1. Simple API
-
-- 2 agents (backend, tester)
-- Single objective file
-- Basic CRUD operations
-
-### 2. Full-Stack Application
-
-- 5 agents (backend, frontend, designer, tester, devops)
-- Hierarchical objectives
-- Complete development lifecycle
-
-### 3. Research Project
-
-- 3 agents (researcher, analyst, writer)
-- Low-cost models for research
-- High-quality model for final output
+# The chat interface will show an error if no valid keys are found
+```
 
 ## Next Steps
 
-1. Join our Discord community
-2. Explore advanced agent configurations
-3. Contribute your own tools via MCP
-4. Share your Guild configurations
+1. **Use Chat Interface**: The chat functionality is the most mature feature
+2. **Explore Code**: Look at `cmd/guild/chat.go` for the implementation
+3. **Check Examples**: See `examples/commissions/` for commission templates
+4. **Monitor Development**: This is a beta project with active development
 
-Happy building with Guild! 🏰
+## Contributing
+
+Guild is in active development. Key areas needing work:
+- Fixing build errors in gRPC package
+- Implementing missing commands
+- Improving test coverage
+- Documentation updates
+
+---
+
+**Note**: This guide reflects the current state of the Guild Framework. Many planned features described in other documentation are not yet implemented. This document will be updated as features are completed.

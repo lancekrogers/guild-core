@@ -6,98 +6,108 @@ Guild uses a project-local directory structure similar to Git. When you initiali
 
 ## The .guild Directory
 
-The `.guild/` directory is the heart of a Guild project. It stores all project-local data and should be excluded from version control by adding it to `.gitignore`.
+The `.guild/` directory is the heart of a Guild project. It stores all project-local data and should typically be excluded from version control by adding it to `.gitignore`.
 
-### Directory Structure
+### Current Directory Structure
 
 ```
 .guild/
-├── config.yaml        # Project-specific configuration
+├── guild.yaml         # Main guild configuration
+├── memory.db         # SQLite database for state and memory
 ├── corpus/           # Knowledge base and documentation
-│   ├── documents/    # Source documents
-│   ├── chunks/       # Processed text chunks
-│   └── metadata/     # Document metadata
-├── embeddings/       # Vector embeddings for RAG
-│   ├── openai/       # OpenAI embeddings
-│   ├── ollama/       # Ollama embeddings
-│   └── anthropic/    # Anthropic embeddings
-├── agents/           # Agent configurations
-│   ├── templates/    # Agent templates
-│   └── instances/    # Active agent instances
-├── objectives/       # Project objectives
-│   ├── active/       # Currently active objectives
-│   ├── completed/    # Completed objectives
-│   └── templates/    # Objective templates
-├── memory/           # BoltDB storage
-│   ├── guild.db      # Main database
-│   └── backups/      # Database backups
-├── cache/            # Temporary files and caches
-│   ├── llm/          # LLM response cache
-│   └── tools/        # Tool output cache
-└── logs/             # Project logs
-    ├── agents/       # Agent activity logs
-    └── system/       # System logs
+│   └── docs/         # Indexed documents
+├── objectives/       # Commission documents (formerly objectives)
+│   └── refined/      # Refined commission outputs
+├── kanban/           # File-based task board state
+│   └── <commission_id>/
+│       ├── review/   # Tasks requiring review
+│       └── blocked/  # Blocked task details
+├── archives/         # Agent memory and context
+├── campaigns/        # Campaign definitions
+└── prompts/          # Custom prompt templates
 ```
 
 ## File Descriptions
 
-### config.yaml
+### guild.yaml
 
-Project-specific configuration that overrides global settings:
-
-- Provider configurations
+Main configuration file containing:
+- Guild name and description
+- Agent configurations
+- Provider settings
 - Model preferences
-- Tool settings
-- Cost budgets
-- Feature flags
+
+Example structure:
+```yaml
+name: "My Development Guild"
+description: "A team for building web applications"
+
+agents:
+  - id: "backend-dev"
+    name: "Backend Developer"
+    model: "claude-3-sonnet-20240229"
+    provider: "anthropic"
+    # ... other agent config
+
+providers:
+  anthropic:
+    api_key: ${ANTHROPIC_API_KEY}
+  openai:
+    api_key: ${OPENAI_API_KEY}
+```
+
+### memory.db
+
+SQLite database containing:
+- Prompt chains and conversation history
+- Task states and relationships
+- Campaign state
+- Agent session data
+
+This replaced the previous BoltDB implementation for better relational data support.
 
 ### corpus/
 
 The knowledge base for your project:
+- **docs/**: Indexed project documentation
+- Used by RAG (Retrieval-Augmented Generation) system
+- Supports markdown and text files
 
-- **documents/**: Original source documents (markdown, text, code)
-- **chunks/**: Processed chunks for efficient retrieval
-- **metadata/**: Document relationships and metadata
+### objectives/ (Commissions)
 
-### embeddings/
+Project goals and refined outputs:
+- Commission documents define work to be done
+- **refined/**: AI-refined and structured versions
+- Note: "objectives" directory name remains for compatibility
 
-Vector embeddings organized by provider:
+### kanban/
 
-- Supports multiple embedding providers
-- Automatic fallback to different providers
-- Cached to avoid recomputation
+File-based task tracking system:
+- Organized by commission ID
+- **review/**: Tasks awaiting human review
+- **blocked/**: Tasks with blockers
+- Integrates with SQLite for state persistence
 
-### agents/
+### archives/
 
-Agent configurations and state:
+Historical agent data:
+- Conversation logs
+- Context snapshots
+- Agent memory traces
 
-- **templates/**: Reusable agent configurations
-- **instances/**: Running agent instances with their state
+### campaigns/
 
-### objectives/
+Campaign workflow definitions:
+- Campaign configurations
+- State machines for campaign flow
+- Integration with orchestrator
 
-Project goals and tasks:
+### prompts/
 
-- **active/**: Currently being worked on
-- **completed/**: Historical record of completed work
-- **templates/**: Reusable objective patterns
-
-### memory/
-
-BoltDB database containing:
-
-- Task states
-- Agent conversations
-- Tool execution history
-- Cost tracking data
-
-### cache/
-
-Temporary data that can be safely deleted:
-
-- LLM responses (for retry/resume)
-- Tool outputs
-- Intermediate processing results
+Custom prompt templates:
+- Layer-specific prompts
+- Project-specific instructions
+- Agent role definitions
 
 ## Working with Project Structure
 
@@ -105,35 +115,43 @@ Temporary data that can be safely deleted:
 
 ```bash
 # Initialize in current directory
-guild init
+./bin/guild init
 
 # Initialize with a specific path
-guild init /path/to/project
+./bin/guild init /path/to/project
 
-# Initialize with template
-guild init --template webapp
+# Note: Template initialization is not yet implemented
 ```
 
 ### Project Detection
 
-Guild automatically detects project boundaries by looking for `.guild/` directories, similar to how Git works:
+Guild automatically detects project boundaries by looking for `.guild/` directories:
 
 ```bash
 # From any subdirectory, Guild finds the project root
 cd /my/project/src/components
-guild status  # Works from any subdirectory
+guild chat  # Works from any subdirectory
 ```
 
 ### Configuration Hierarchy
 
 Guild uses a hierarchical configuration system:
 
-1. **Global Config**: `~/.guild/config.yaml`
-2. **Project Config**: `.guild/config.yaml`
-3. **Environment Variables**: `GUILD_*`
-4. **Command-line flags**: `--flag value`
+1. **Environment Variables**: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, etc.
+2. **Project Config**: `.guild/guild.yaml`
+3. **Command-line flags**: `--flag value` (limited support)
 
-Each level overrides the previous, allowing fine-grained control.
+## Current Limitations
+
+Several planned features are not yet implemented:
+
+- ❌ Global configuration (`~/.guild/config.yaml`)
+- ❌ Multiple embedding providers
+- ❌ Automatic caching system
+- ❌ Export/import functionality
+- ❌ `guild clean` command
+- ❌ `guild doctor` diagnostic command
+- ❌ Template-based initialization
 
 ## Best Practices
 
@@ -144,60 +162,29 @@ Add to `.gitignore`:
 ```gitignore
 # Guild project directory
 .guild/
+
+# Or selectively ignore
+.guild/memory.db
+.guild/archives/
+.guild/kanban/
 ```
 
-However, you may want to track certain templates:
-
-```gitignore
-# Ignore all of .guild except templates
-.guild/*
-!.guild/agents/templates/
-!.guild/objectives/templates/
-```
-
-### Backup Strategy
-
-Important data to backup:
-
-- `.guild/memory/guild.db` - Your project's memory
-- `.guild/corpus/documents/` - Source documents
-- `.guild/config.yaml` - Project configuration
+You may want to track:
+- `.guild/guild.yaml` - Project configuration
+- `.guild/prompts/` - Custom prompts
+- `.guild/campaigns/` - Campaign definitions
 
 ### Security Considerations
 
 The `.guild/` directory may contain:
+- API keys (in guild.yaml via environment variables)
+- Conversation history in memory.db
+- Document content in corpus
 
-- API keys (in config.yaml)
-- Sensitive document content
-- Conversation history
-
-Always ensure proper file permissions and never commit `.guild/` to public repositories.
-
-## Migration and Portability
-
-### Exporting a Project
-
-```bash
-# Export project data (excludes cache and logs)
-guild export --output project-backup.tar.gz
-```
-
-### Importing a Project
-
-```bash
-# Import project data
-guild import project-backup.tar.gz
-```
-
-### Cleaning Up
-
-```bash
-# Remove cache and temporary files
-guild clean
-
-# Remove all project data (careful!)
-guild clean --all
-```
+Always ensure:
+- Use environment variables for API keys
+- Proper file permissions on `.guild/`
+- Never commit sensitive data
 
 ## Troubleshooting
 
@@ -207,24 +194,38 @@ guild clean --all
    - Ensure you're in a directory with `.guild/` or a parent with it
    - Run `guild init` to create a new project
 
-2. **Permission errors**
-   - Check that `.guild/` has proper write permissions
-   - Ensure your user owns the directory
+2. **Database errors**
+   - Check that SQLite is installed
+   - Ensure `.guild/memory.db` has write permissions
+   - Database migrations run automatically on init
 
-3. **Disk space issues**
-   - Run `guild clean` to remove caches
-   - Check `.guild/logs/` size
-   - Consider pruning old embeddings
+3. **Missing commands**
+   - Many commands shown in other docs are not implemented
+   - Check `guild --help` for available commands
 
-### Diagnostic Commands
+### Available Diagnostic Commands
 
 ```bash
-# Check project status
-guild status
+# Check if in a guild project (limited functionality)
+guild info
 
-# Verify project integrity
-guild doctor
-
-# Show disk usage
-guild info --disk-usage
+# View corpus statistics
+guild corpus scan --dry-run
 ```
+
+## Migration from Older Versions
+
+If you have an older Guild project structure:
+
+1. The framework has migrated from BoltDB to SQLite
+2. "Objectives" are now called "Commissions"
+3. Many planned directories (embeddings/, cache/, etc.) were never implemented
+
+Currently, there is no automated migration tool. You would need to:
+1. Back up your old `.guild/` directory
+2. Run `guild init` to create new structure
+3. Manually copy relevant files
+
+---
+
+**Note**: This document reflects the current implementation. Many features described in other documentation are planned but not yet implemented.

@@ -2,41 +2,43 @@
 
 ## 🏰 Guild Chat - Your Portal to AI Agent Communication
 
-The Guild Chat interface is now **functional** and ready for use! Here's what you can do:
+The Guild Chat interface is the most complete feature in Guild. While the project has build errors in several packages, the chat functionality demonstrates the framework's potential.
 
 ### 🚀 Launch Guild Chat
 
 ```bash
-# Start the chat interface
-./guild chat --campaign "e-commerce-demo"
+# From your guild project directory
+../bin/guild chat
 
-# Or with a specific session
-./guild chat --campaign "e-commerce-demo" --session "my-session-123"
+# Note: The --campaign and --session flags may not be fully implemented
+```
+
+**Important**: You must have at least one API key configured:
+```bash
+export ANTHROPIC_API_KEY="your-key"
+# or
+export OPENAI_API_KEY="your-key"
 ```
 
 ### 💬 Chat Features Implemented
 
 #### **Agent Communication**
 
-```
-# Message specific agents
-@backend-craftsman design the user authentication API
-@frontend-artisan create the login component
-@payment-sentinel implement secure payment processing
-
-# Broadcast to all agents
-@all what's your current status?
-```
+While the chat interface displays agent personas, the actual multi-agent orchestration is not yet fully implemented. Currently, messages are handled by a single LLM provider.
 
 #### **Slash Commands**
 
+Some slash commands are defined but may not be fully functional:
+
 ```
-/help                    # Show all available commands
+/help                    # Show available commands (may work)
+/exit                    # Exit chat (or Ctrl+C)
+/clear                   # Clear chat history
+
+# These may not be fully implemented:
 /status                  # Show campaign and agent status
 /agents                  # List all available agents
 /prompt list             # Show active prompt layers
-/prompt get --layer role # View specific prompt layer
-/exit                    # Exit chat (or Ctrl+C)
 ```
 
 #### **Keyboard Shortcuts**
@@ -107,25 +109,31 @@ The chat interface includes a preview of Guild's revolutionary layered prompt sy
 4. **Layered Prompts**: Preview of dynamic prompt management
 5. **Agent Personas**: Each agent has distinct capabilities and roles
 
-### 🔮 Coming Next
+### ⚠️ Current Limitations
 
-While we wait for the layered prompt system completion, the chat interface is ready for:
+1. **Build Errors**: The project has build failures that prevent full functionality
+2. **Single Agent**: While multiple agents are displayed, actual multi-agent orchestration is not working
+3. **gRPC Issues**: The gRPC integration has interface mismatches preventing compilation
+4. **Limited Commands**: Many slash commands are not fully implemented
 
-- gRPC integration for real agent communication
-- Tool execution visualization
-- Real-time task status updates
-- Enhanced prompt management
+### 🔮 Required for Full Functionality
 
-## 🏆 Achievement Unlocked
+To realize the chat interface's full potential, the following must be completed:
 
-**Guild Chat TUI: Phase 1 Complete!** ✅
+- Fix build errors in pkg/grpc (Campaign/Objectives interface mismatches)
+- Complete multi-agent orchestration implementation
+- Enable tool execution through gRPC
+- Implement remaining slash commands
 
-Guild now has a **functional, beautiful chat interface** that showcases:
+## 📋 Summary
 
-- Multi-agent communication patterns
-- Command system architecture
-- Medieval Guild theming
-- Layered prompt system foundation
-- Professional terminal UI
+The Guild Chat interface demonstrates strong potential with:
 
-This is **exactly** what makes Guild unique - no other AI agent framework has a visual chat interface like this!
+- ✅ Beautiful terminal UI with markdown rendering
+- ✅ Medieval theming throughout
+- ✅ Basic chat functionality with LLM providers
+- ❌ Multi-agent orchestration (not working)
+- ❌ Full command system (partially implemented)
+- ❌ gRPC integration (build errors)
+
+While impressive visually, the chat interface currently functions as a single-agent chat client rather than the envisioned multi-agent orchestration system.

@@ -286,6 +286,7 @@ func TestCursorPositionTool_Execute_InvalidFile(t *testing.T) {
 	result, err := tool.Execute(context.Background(), string(input))
 	assert.Error(t, err)
 	assert.Nil(t, result)
+	assert.Contains(t, err.Error(), "file does not exist")
 }
 
 func TestCursorPositionTool_Execute_EmptyFile(t *testing.T) {
@@ -300,8 +301,10 @@ func TestCursorPositionTool_Execute_EmptyFile(t *testing.T) {
 	require.NoError(t, err)
 
 	result, err := tool.Execute(context.Background(), string(input))
-	assert.Error(t, err)
-	assert.Nil(t, result)
+	assert.NoError(t, err)
+	assert.NotNil(t, result)
+	assert.False(t, result.Success)
+	assert.Contains(t, result.Error, "operation")
 }
 
 func TestCursorPositionTool_Execute_InvalidJSON(t *testing.T) {
@@ -337,8 +340,10 @@ func main() {}
 	require.NoError(t, err)
 
 	result, err := tool.Execute(context.Background(), string(input))
-	assert.Error(t, err)
-	assert.Nil(t, result)
+	assert.NoError(t, err)
+	assert.NotNil(t, result)
+	assert.False(t, result.Success)
+	assert.Contains(t, result.Error, "mark not found")
 }
 
 func TestCursorPositionTool_Execute_OutOfBounds(t *testing.T) {
@@ -399,8 +404,10 @@ func main() {}
 	require.NoError(t, err)
 
 	result, err := tool.Execute(context.Background(), string(input))
-	assert.Error(t, err)
-	assert.Nil(t, result)
+	assert.NoError(t, err)
+	assert.NotNil(t, result)
+	assert.False(t, result.Success)
+	assert.Contains(t, result.Error, "operation")
 }
 
 func TestCursorPositionTool_Execute_GenericSymbolSearch(t *testing.T) {

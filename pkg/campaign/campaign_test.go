@@ -274,7 +274,7 @@ func TestRepository(t *testing.T) {
 		require.NoError(t, err)
 
 		// Find campaigns with obj2
-		campaigns, err := repo.GetByObjectiveID(ctx, "obj2")
+		campaigns, err := repo.GetByCommissionID(ctx, "obj2")
 		require.NoError(t, err)
 		assert.Len(t, campaigns, 2)
 	})

@@ -301,8 +301,8 @@ func (fb *FrameBuilder) buildProgressDetails(campaign *campaign.Campaign, height
 
 	// Stats
 	stats := []string{
-		fmt.Sprintf("Total Objectives: %d", campaign.TotalObjectives),
-		fmt.Sprintf("Completed: %d", campaign.CompletedObjectives),
+		fmt.Sprintf("Total Objectives: %d", campaign.TotalCommissions),
+		fmt.Sprintf("Completed: %d", campaign.CompletedCommissions),
 		fmt.Sprintf("Progress: %.1f%%", campaign.Progress*100),
 		fmt.Sprintf("Status: %s", campaign.Status),
 	}

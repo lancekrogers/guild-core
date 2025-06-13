@@ -20,17 +20,17 @@ func TestPromptEvaluator(t *testing.T) {
 	// Register test cases
 	tests := []*PromptTest{
 		{
-			Name:     "Basic objective creation",
+			Name:     "Basic commission creation",
 			PromptID: "commission.creation",
 			TestData: map[string]interface{}{
 				"Description": "Build a web scraper",
 			},
 			ExpectedOutput: &ContainsAssertion{
-				Substring: "objective",
+				Substring: "commission",
 			},
 		},
 		{
-			Name:     "Objective with context",
+			Name:     "Commission with context",
 			PromptID: "commission.creation",
 			TestData: map[string]interface{}{
 				"Description": "Build a web scraper",
@@ -38,7 +38,7 @@ func TestPromptEvaluator(t *testing.T) {
 			},
 			ExpectedOutput: &MultiAssertion{
 				Assertions: []PromptAssertion{
-					&ContainsAssertion{Substring: "objective"},
+					&ContainsAssertion{Substring: "commission"},
 					&ContainsAssertion{Substring: "Context"},
 				},
 				RequireAll: true,
