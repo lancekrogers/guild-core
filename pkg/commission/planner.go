@@ -6,14 +6,14 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
-// Planner manages the planning process for objectives
+// Planner manages the planning process for commissions
 type Planner struct {
 	manager          *Manager
 	lifecycleManager *LifecycleManager
 	session          *PlanningSession
 }
 
-// newPlanner creates a new objective planner (private constructor)
+// newPlanner creates a new commission planner (private constructor)
 func newPlanner(manager *Manager, lifecycleManager *LifecycleManager) *Planner {
 	return &Planner{
 		manager:          manager,
@@ -48,26 +48,26 @@ func (p *Planner) SetCommission(ctx context.Context, commissionID string) error 
 	return nil
 }
 
-// CreateObjective creates a new objective from a description
-func (p *Planner) CreateObjective(ctx context.Context, description string) error {
-	// Create objective via lifecycle manager
-	obj, err := p.lifecycleManager.CreateObjectiveFromDescription(ctx, description)
+// CreateCommission creates a new commission from a description
+func (p *Planner) CreateCommission(ctx context.Context, description string) error {
+	// Create commission via lifecycle manager
+	obj, err := p.lifecycleManager.CreateCommissionFromDescription(ctx, description)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("create_objective").WithOperation("failed to create objective")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("create_commission").WithOperation("failed to create commission")
 	}
 
-	// Set the objective in the session
+	// Set the commission in the session
 	p.session = NewPlanningSession()
 	p.session.Commission = obj
-	p.session.AddActivityLog("Objective created: " + obj.Title)
+	p.session.AddActivityLog("Commission created: " + obj.Title)
 
 	return nil
 }
 
-// AddContext adds context to the current objective
+// AddContext adds context to the current commission
 func (p *Planner) AddContext(ctx context.Context, contextText string) error {
 	if p.session.Commission == nil {
-		return gerror.New(gerror.ErrCodeInvalidInput, "no objective set in the planning session", nil).
+		return gerror.New(gerror.ErrCodeInvalidInput, "no commission set in the planning session", nil).
 			WithComponent("commission").
 			WithOperation("add_context")
 	}
@@ -77,10 +77,10 @@ func (p *Planner) AddContext(ctx context.Context, contextText string) error {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("add_context").WithOperation("failed to add context")
 	}
 
-	// Refresh the objective
-	obj, err := p.manager.GetObjective(ctx, p.session.Commission.ID)
+	// Refresh the commission
+	obj, err := p.manager.GetCommission(ctx, p.session.Commission.ID)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("refresh_objective").WithOperation("failed to refresh objective")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("refresh_commission").WithOperation("failed to refresh commission")
 	}
 
 	// Update the session
@@ -91,23 +91,23 @@ func (p *Planner) AddContext(ctx context.Context, contextText string) error {
 	return nil
 }
 
-// Regenerate regenerates documents for the current objective
+// Regenerate regenerates documents for the current commission
 func (p *Planner) Regenerate(ctx context.Context) error {
 	if p.session.Commission == nil {
-		return gerror.New(gerror.ErrCodeInvalidInput, "no objective set in the planning session", nil).
+		return gerror.New(gerror.ErrCodeInvalidInput, "no commission set in the planning session", nil).
 			WithComponent("commission").
 			WithOperation("add_context")
 	}
 
 	// Generate project structure via lifecycle manager
 	if err := p.lifecycleManager.GenerateProjectStructure(ctx, p.session.Commission.ID); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("regenerate_objective").WithOperation("failed to regenerate documents")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("regenerate_commission").WithOperation("failed to regenerate documents")
 	}
 
-	// Refresh the objective
-	obj, err := p.manager.GetObjective(ctx, p.session.Commission.ID)
+	// Refresh the commission
+	obj, err := p.manager.GetCommission(ctx, p.session.Commission.ID)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("refresh_objective").WithOperation("failed to refresh objective")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("refresh_commission").WithOperation("failed to refresh commission")
 	}
 
 	// Update the session
@@ -118,50 +118,50 @@ func (p *Planner) Regenerate(ctx context.Context) error {
 	return nil
 }
 
-// MarkReady marks the current objective as ready
+// MarkReady marks the current commission as ready
 func (p *Planner) MarkReady(ctx context.Context) error {
 	if p.session.Commission == nil {
-		return gerror.New(gerror.ErrCodeInvalidInput, "no objective set in the planning session", nil).
+		return gerror.New(gerror.ErrCodeInvalidInput, "no commission set in the planning session", nil).
 			WithComponent("commission").
 			WithOperation("add_context")
 	}
 
 	// Mark as ready via lifecycle manager
-	if err := p.lifecycleManager.MarkObjectiveReady(ctx, p.session.Commission.ID); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("finalize_objective").WithOperation("failed to mark objective as ready")
+	if err := p.lifecycleManager.MarkCommissionReady(ctx, p.session.Commission.ID); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("finalize_commission").WithOperation("failed to mark commission as ready")
 	}
 
-	// Refresh the objective
-	obj, err := p.manager.GetObjective(ctx, p.session.Commission.ID)
+	// Refresh the commission
+	obj, err := p.manager.GetCommission(ctx, p.session.Commission.ID)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("refresh_objective").WithOperation("failed to refresh objective")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("refresh_commission").WithOperation("failed to refresh commission")
 	}
 
 	// Update the session
 	p.session.Commission = obj
-	p.session.AddActivityLog("Objective marked as ready")
+	p.session.AddActivityLog("Commission marked as ready")
 	p.session.IsReady = true
 
 	return nil
 }
 
-// GetSuggestions gets improvement suggestions for the objective
+// GetSuggestions gets improvement suggestions for the commission
 func (p *Planner) GetSuggestions(ctx context.Context) (string, error) {
 	if p.session.Commission == nil {
-		return "", gerror.New(gerror.ErrCodeInvalidInput, "no objective set in the planning session", nil).
+		return "", gerror.New(gerror.ErrCodeInvalidInput, "no commission set in the planning session", nil).
 			WithComponent("commission").
-			WithOperation("get_objective_status")
+			WithOperation("get_commission_status")
 	}
 
 	// In a real implementation, this would use an LLM to generate suggestions
 	// For now, we'll return some static suggestions
-	suggestions := `Based on the current objective, consider:
+	suggestions := `Based on the current commission, consider:
 
 1. Add more specific requirements to clarify the expected outcomes
 2. Include examples or use cases to illustrate your goal
 3. Consider adding technical constraints or performance targets
-4. Specify how this objective relates to other parts of the system
-5. Tag the objective with relevant categories to improve organization`
+4. Specify how this commission relates to other parts of the system
+5. Tag the commission with relevant categories to improve organization`
 
 	p.session.AddActivityLog("Suggestions requested and generated")
 	p.session.Suggestions = suggestions
@@ -169,16 +169,16 @@ func (p *Planner) GetSuggestions(ctx context.Context) (string, error) {
 	return suggestions, nil
 }
 
-// CreateTaskPlan generates a task plan for an objective
-func (p *Planner) CreateTaskPlan(ctx context.Context, objectiveID string) ([]TaskPlan, error) {
-	// Get the objective
-	obj, err := p.manager.GetObjective(ctx, objectiveID)
+// CreateTaskPlan generates a task plan for an commission
+func (p *Planner) CreateTaskPlan(ctx context.Context, commissionID string) ([]TaskPlan, error) {
+	// Get the commission
+	obj, err := p.manager.GetCommission(ctx, commissionID)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("get_all_objectives").WithOperation("failed to get objective")
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "commission").WithComponent("get_all_commissions").WithOperation("failed to get commission")
 	}
 
 	// In a real implementation, this would use an LLM to generate tasks
-	// For now, we'll generate some example tasks based on the objective
+	// For now, we'll generate some example tasks based on the commission
 	var tasks []TaskPlan
 
 	// Add a planning task
@@ -224,7 +224,7 @@ func (p *Planner) CreateTaskPlan(ctx context.Context, objectiveID string) ([]Tas
 	return tasks, nil
 }
 
-// TaskPlan represents a planned task for an objective
+// TaskPlan represents a planned task for an commission
 type TaskPlan struct {
 	Title        string
 	Description  string

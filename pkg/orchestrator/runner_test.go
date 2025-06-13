@@ -116,49 +116,49 @@ func TestOrchestratorAgentManagement(t *testing.T) {
 	assert.Contains(t, err.Error(), "not found")
 }
 
-// TestOrchestratorObjectiveManagement tests objective management
-func TestOrchestratorObjectiveManagement(t *testing.T) {
+// TestOrchestratorCommissionManagement tests commission management
+func TestOrchestratorCommissionManagement(t *testing.T) {
 	dispatcher := &simpleTestDispatcher{}
 	eventBus := &simpleTestEventBus{}
 	config := Config{}
 
 	orch := newOrchestrator(&config, dispatcher, eventBus)
 
-	// Test initial state - no objective
-	assert.Nil(t, orch.GetObjective())
+	// Test initial state - no commission
+	assert.Nil(t, orch.GetCommission())
 
-	// Test SetObjective
-	objective := &commission.Commission{
+	// Test SetCommission
+	commission := &commission.Commission{
 		ID:          "obj1",
-		Title:       "Test Objective",
+		Title:       "Test Commission",
 		Description: "Test Description",
 	}
 
-	err := orch.SetObjective(objective)
+	err := orch.SetCommission(commission)
 	assert.NoError(t, err)
 
-	// Test GetObjective
-	retrieved := orch.GetObjective()
+	// Test GetCommission
+	retrieved := orch.GetCommission()
 	assert.NotNil(t, retrieved)
-	assert.Equal(t, objective.ID, retrieved.ID)
-	assert.Equal(t, objective.Title, retrieved.Title)
+	assert.Equal(t, commission.ID, retrieved.ID)
+	assert.Equal(t, commission.Title, retrieved.Title)
 
-	// Test SetObjective while running (current implementation allows this)
+	// Test SetCommission while running (current implementation allows this)
 	ctx := context.Background()
 	err = orch.Start(ctx)
 	require.NoError(t, err)
 
-	newObjective := &commission.Commission{
+	newCommission := &commission.Commission{
 		ID:    "obj2",
-		Title: "New Objective",
+		Title: "New Commission",
 	}
-	err = orch.SetObjective(newObjective)
-	assert.NoError(t, err) // Current implementation allows setting objective while running
+	err = orch.SetCommission(newCommission)
+	assert.NoError(t, err) // Current implementation allows setting commission while running
 
-	// Verify new objective was set
-	retrieved = orch.GetObjective()
+	// Verify new commission was set
+	retrieved = orch.GetCommission()
 	assert.NotNil(t, retrieved)
-	assert.Equal(t, newObjective.ID, retrieved.ID)
+	assert.Equal(t, newCommission.ID, retrieved.ID)
 
 	// Stop orchestrator
 	err = orch.Stop(ctx)

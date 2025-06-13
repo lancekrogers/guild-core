@@ -45,6 +45,6 @@ func (g *Generator) SaveGeneratedCommission(ctx context.Context, obj *Commission
 			WithOperation("SaveGeneratedCommission")
 	}
 
-	// Save the objective using the manager
-	return g.manager.SaveObjective(ctx, obj)
+	// Save the commission using the manager
+	return g.manager.SaveCommission(ctx, obj)
 }
