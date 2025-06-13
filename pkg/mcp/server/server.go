@@ -14,6 +14,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
 	"github.com/guild-ventures/guild-core/pkg/mcp/tools"
 	"github.com/guild-ventures/guild-core/pkg/mcp/transport"
+	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
 
@@ -227,8 +228,11 @@ func (s *Server) handleMessage(ctx context.Context, msgBytes []byte) {
 	if response != nil {
 		response.ID = msg.ID // Ensure response has same ID
 		if err := s.sendMessage(ctx, response); err != nil {
-			// Log error but don't send error response (avoid loops)
-			fmt.Printf("Failed to send response: %v\n", err)
+			gerr := gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+				WithComponent("send_response").
+				WithOperation("sendMessage").
+				FromContext(ctx)
+			observability.GetLogger(ctx).WithError(gerr).ErrorContext(ctx, "failed to send response")
 		}
 	}
 }
@@ -264,23 +268,36 @@ func (s *Server) sendError(ctx context.Context, id string, code int, message str
 		}
 	}
 
+	payload, err := mustMarshal(&protocol.ErrorResponse{
+		Error: &protocol.Error{
+			Code:    code,
+			Message: message,
+			Data:    dataBytes,
+		},
+	})
+	if err != nil {
+		gerr := gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+			WithComponent("send_error").
+			WithOperation("marshal error response").
+			FromContext(ctx)
+		observability.GetLogger(ctx).WithError(gerr).ErrorContext(ctx, "failed to marshal error response")
+		return
+	}
+
 	errMsg := &protocol.MCPMessage{
 		ID:          id,
 		Version:     "1.0",
 		MessageType: protocol.ErrorMessage,
 		Timestamp:   time.Now(),
-		Payload: mustMarshal(&protocol.ErrorResponse{
-			Error: &protocol.Error{
-				Code:    code,
-				Message: message,
-				Data:    dataBytes,
-			},
-		}),
+		Payload:     payload,
 	}
 
 	if err := s.sendMessage(ctx, errMsg); err != nil {
-		// Log error but don't propagate (avoid loops)
-		fmt.Printf("Failed to send error: %v\n", err)
+		gerr := gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+			WithComponent("send_error").
+			WithOperation("sendMessage").
+			FromContext(ctx)
+		observability.GetLogger(ctx).WithError(gerr).ErrorContext(ctx, "failed to send error response")
 	}
 }
 
@@ -343,12 +360,19 @@ func (s *Server) handleToolRegister(ctx context.Context, msg *protocol.MCPMessag
 		ToolID:  req.Tool.ID,
 	}
 
+	payload, err := mustMarshal(response)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+			WithComponent("handle_tool_register").
+			WithOperation("marshal response")
+	}
+
 	return &protocol.MCPMessage{
 		Version:     msg.Version,
 		MessageType: protocol.ResponseMessage,
 		Method:      msg.Method,
 		Timestamp:   time.Now(),
-		Payload:     mustMarshal(response),
+		Payload:     payload,
 	}, nil
 }
 
@@ -371,12 +395,19 @@ func (s *Server) handleToolDeregister(ctx context.Context, msg *protocol.MCPMess
 	}
 
 	response := map[string]bool{"success": true}
+	payload, err := mustMarshal(response)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+			WithComponent("handle_tool_deregister").
+			WithOperation("marshal response")
+	}
+
 	return &protocol.MCPMessage{
 		Version:     msg.Version,
 		MessageType: protocol.ResponseMessage,
 		Method:      msg.Method,
 		Timestamp:   time.Now(),
-		Payload:     mustMarshal(response),
+		Payload:     payload,
 	}, nil
 }
 
@@ -414,12 +445,19 @@ func (s *Server) handleToolDiscover(ctx context.Context, msg *protocol.MCPMessag
 		Tools: toolInfos,
 	}
 
+	payload, err := mustMarshal(response)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+			WithComponent("handle_tool_discover").
+			WithOperation("marshal response")
+	}
+
 	return &protocol.MCPMessage{
 		Version:     msg.Version,
 		MessageType: protocol.ResponseMessage,
 		Method:      msg.Method,
 		Timestamp:   time.Now(),
-		Payload:     mustMarshal(response),
+		Payload:     payload,
 	}, nil
 }
 
@@ -486,12 +524,19 @@ func (s *Server) handleToolExecute(ctx context.Context, msg *protocol.MCPMessage
 		EndTime:     endTime,
 	}
 
+	payload, err := mustMarshal(response)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+			WithComponent("handle_tool_execute").
+			WithOperation("marshal response")
+	}
+
 	return &protocol.MCPMessage{
 		Version:     msg.Version,
 		MessageType: protocol.ResponseMessage,
 		Method:      msg.Method,
 		Timestamp:   time.Now(),
-		Payload:     mustMarshal(response),
+		Payload:     payload,
 	}, nil
 }
 
@@ -520,12 +565,19 @@ func (s *Server) handleToolHealth(ctx context.Context, msg *protocol.MCPMessage)
 		"healthy": healthy,
 	}
 
+	payload, err := mustMarshal(response)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+			WithComponent("handle_tool_health").
+			WithOperation("marshal response")
+	}
+
 	return &protocol.MCPMessage{
 		Version:     msg.Version,
 		MessageType: protocol.ResponseMessage,
 		Method:      msg.Method,
 		Timestamp:   time.Now(),
-		Payload:     mustMarshal(response),
+		Payload:     payload,
 	}, nil
 }
 
@@ -543,12 +595,19 @@ func (s *Server) handleCostReport(ctx context.Context, msg *protocol.MCPMessage)
 	s.costObserver.RecordCost(ctx, report.OperationID, report)
 
 	response := map[string]bool{"success": true}
+	payload, err := mustMarshal(response)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+			WithComponent("handle_cost_report").
+			WithOperation("marshal response")
+	}
+
 	return &protocol.MCPMessage{
 		Version:     msg.Version,
 		MessageType: protocol.ResponseMessage,
 		Method:      msg.Method,
 		Timestamp:   time.Now(),
-		Payload:     mustMarshal(response),
+		Payload:     payload,
 	}, nil
 }
 
@@ -569,12 +628,19 @@ func (s *Server) handleCostQuery(ctx context.Context, msg *protocol.MCPMessage) 
 		}
 	}
 
+	payload, err := mustMarshal(analysis)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+			WithComponent("handle_cost_query").
+			WithOperation("marshal response")
+	}
+
 	return &protocol.MCPMessage{
 		Version:     msg.Version,
 		MessageType: protocol.ResponseMessage,
 		Method:      msg.Method,
 		Timestamp:   time.Now(),
-		Payload:     mustMarshal(analysis),
+		Payload:     payload,
 	}, nil
 }
 
@@ -622,12 +688,19 @@ func (s *Server) handlePromptProcess(ctx context.Context, msg *protocol.MCPMessa
 		},
 	}
 
+	payload, err := mustMarshal(response)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+			WithComponent("handle_prompt_process").
+			WithOperation("marshal response")
+	}
+
 	return &protocol.MCPMessage{
 		Version:     msg.Version,
 		MessageType: protocol.ResponseMessage,
 		Method:      msg.Method,
 		Timestamp:   time.Now(),
-		Payload:     mustMarshal(response),
+		Payload:     payload,
 	}, nil
 }
 
@@ -658,12 +731,19 @@ func (s *Server) handlePromptAnalyze(ctx context.Context, msg *protocol.MCPMessa
 		response = s.promptAnalyzer.GetAggregateAnalysis()
 	}
 
+	payload, err := mustMarshal(response)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+			WithComponent("handle_prompt_analyze").
+			WithOperation("marshal response")
+	}
+
 	return &protocol.MCPMessage{
 		Version:     msg.Version,
 		MessageType: protocol.ResponseMessage,
 		Method:      msg.Method,
 		Timestamp:   time.Now(),
-		Payload:     mustMarshal(response),
+		Payload:     payload,
 	}, nil
 }
 
@@ -676,12 +756,19 @@ func (s *Server) handleSystemPing(ctx context.Context, msg *protocol.MCPMessage)
 		"server_id": s.config.ServerID,
 	}
 
+	payload, err := mustMarshal(response)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+			WithComponent("handle_system_ping").
+			WithOperation("marshal response")
+	}
+
 	return &protocol.MCPMessage{
 		Version:     msg.Version,
 		MessageType: protocol.ResponseMessage,
 		Method:      msg.Method,
 		Timestamp:   time.Now(),
-		Payload:     mustMarshal(response),
+		Payload:     payload,
 	}, nil
 }
 
@@ -700,12 +787,19 @@ func (s *Server) handleSystemInfo(ctx context.Context, msg *protocol.MCPMessage)
 		"tools_count": len(s.toolRegistry.ListTools()),
 	}
 
+	payload, err := mustMarshal(response)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+			WithComponent("handle_system_info").
+			WithOperation("marshal response")
+	}
+
 	return &protocol.MCPMessage{
 		Version:     msg.Version,
 		MessageType: protocol.ResponseMessage,
 		Method:      msg.Method,
 		Timestamp:   time.Now(),
-		Payload:     mustMarshal(response),
+		Payload:     payload,
 	}, nil
 }
 
@@ -752,10 +846,12 @@ func (s *Server) GetPromptAnalyzer() prompt.Analyzer {
 
 // Helper functions
 
-func mustMarshal(v interface{}) json.RawMessage {
+func mustMarshal(v interface{}) (json.RawMessage, error) {
 	data, err := json.Marshal(v)
 	if err != nil {
-		panic(fmt.Sprintf("failed to marshal: %v", err))
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "mcp_server").
+			WithComponent("marshal_payload").
+			WithOperation("json_marshal")
 	}
-	return json.RawMessage(data)
+	return json.RawMessage(data), nil
 }
