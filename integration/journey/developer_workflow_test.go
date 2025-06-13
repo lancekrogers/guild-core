@@ -67,7 +67,7 @@ project: %s
 		Also need to store user sessions in Redis.`
 
 		// Mock the AI response for commission creation
-		mockProvider.SetResponse("commission_creator", `# User Authentication System
+		mockProvider.SetResponse("default", `# User Authentication System
 
 ## Objective
 Implement a complete user authentication system for the API with JWT token support and Redis session storage.
@@ -305,19 +305,27 @@ JWT service has been implemented with:
 - User ID in claims
 - Token validation method (added based on review)
 
+## User Feedback Addressed
+- Add a ValidateToken method to the JWT service that checks expiry and signature
+
 ## Files Created/Updated
 - auth/jwt_service.go (updated with ValidateToken)
 - auth/jwt_service_test.go (added validation tests)
 `
 		kanbanPath := filepath.Join(projCtx.GetGuildPath(), "kanban", "auth-commission")
-		err := os.WriteFile(filepath.Join(kanbanPath, "done", "task-001.md"), []byte(updatedContent), 0644)
-		require.NoError(t, err)
-
+		donePath := filepath.Join(kanbanPath, "done")
+		reviewPath := filepath.Join(kanbanPath, "review")
+		
 		// Move from review back to done after updates
-		reviewPath := filepath.Join(kanbanPath, "review", "task-001.md")
-		if _, err := os.Stat(reviewPath); err == nil {
-			os.Remove(reviewPath)
-		}
+		err := os.Rename(
+			filepath.Join(reviewPath, "task-001.md"),
+			filepath.Join(donePath, "task-001.md"),
+		)
+		require.NoError(t, err)
+		
+		// Update the task with new implementation
+		err = os.WriteFile(filepath.Join(donePath, "task-001.md"), []byte(updatedContent), 0644)
+		require.NoError(t, err)
 
 		// Verify task is complete
 		doneEntries, err := os.ReadDir(filepath.Join(kanbanPath, "done"))

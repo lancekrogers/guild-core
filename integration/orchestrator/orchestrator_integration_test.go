@@ -42,7 +42,7 @@ func TestCampaignLifecycleManagement(t *testing.T) {
 		Name:        "E-commerce Platform",
 		Description: "Build a complete e-commerce platform",
 		Status:      campaign.CampaignStatusPlanning,
-		Objectives:  []string{"obj-1", "obj-2"}, // Just objective IDs
+		Commissions: []string{"obj-1", "obj-2"}, // Just commission IDs
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 	}
@@ -80,31 +80,31 @@ func TestCampaignLifecycleManagement(t *testing.T) {
 		},
 	})
 
-	// 2. Start working on objectives
-	for _, objID := range testCampaign.Objectives {
+	// 2. Start working on commissions
+	for _, objID := range testCampaign.Commissions {
 		eventBus.Publish(interfaces.Event{
 			ID:        fmt.Sprintf("evt-obj-start-%s", objID),
-			Type:      interfaces.EventTypeObjectiveStatusChanged,
+			Type:      interfaces.EventTypeCommissionStatusChanged,
 			Timestamp: time.Now(),
 			Source:    "test",
 			Data: map[string]interface{}{
 				"campaign_id":  testCampaign.ID,
-				"objective_id": objID,
+				"commission_id": objID,
 				"status":       "started",
 			},
 		})
 	}
 
-	// 3. Complete objectives
-	for _, objID := range testCampaign.Objectives {
+	// 3. Complete commissions
+	for _, objID := range testCampaign.Commissions {
 		eventBus.Publish(interfaces.Event{
 			ID:        fmt.Sprintf("evt-obj-complete-%s", objID),
-			Type:      interfaces.EventTypeObjectiveCompleted,
+			Type:      interfaces.EventTypeCommissionCompleted,
 			Timestamp: time.Now(),
 			Source:    "test",
 			Data: map[string]interface{}{
 				"campaign_id":  testCampaign.ID,
-				"objective_id": objID,
+				"commission_id": objID,
 			},
 		})
 	}

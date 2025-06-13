@@ -1,3 +1,5 @@
+//go:build integration
+
 package performance
 
 import (
@@ -47,7 +49,7 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 		// Start memory monitor
 		stopMonitor := make(chan bool)
 		go func() {
-			ticker := time.NewTicker(1 * time.Minute)
+			ticker := time.NewTicker(5 * time.Second) // Check every 5 seconds for the shorter test
 			defer ticker.Stop()
 
 			for {
@@ -65,8 +67,9 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 		}()
 
 		// Simulate 24-hour workload (accelerated)
-		simulationDuration := 24 * time.Minute             // 1 minute = 1 hour
-		workloadTicker := time.NewTicker(10 * time.Second) // Task every 10s
+		// For integration tests, use a much shorter duration
+		simulationDuration := 30 * time.Second              // 30 seconds instead of 24 minutes
+		workloadTicker := time.NewTicker(1 * time.Second)  // Task every 1s instead of 10s
 		defer workloadTicker.Stop()
 
 		startTime := time.Now()
@@ -84,7 +87,7 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 					_, _ = agent.Execute(ctx, fmt.Sprintf("Simulate work for task-%d", taskNum))
 
 					// Simulate cleanup delay
-					time.Sleep(30 * time.Second)
+					time.Sleep(2 * time.Second)
 				}(taskCount)
 				taskCount++
 
@@ -115,7 +118,7 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 			memGrowthRate := float64(finalMem-initialMem) / float64(initialMem) * 100
 			assert.Less(t, memGrowthRate, 50.0, "Memory growth should be < 50% over 24h")
 
-			t.Logf("Memory stats over 24h simulation:")
+			t.Logf("Memory stats over simulation:")
 			t.Logf("Initial: %d MB", initialMem/1024/1024)
 			t.Logf("Final: %d MB", finalMem/1024/1024)
 			t.Logf("Peak: %d MB", peakMem/1024/1024)

@@ -14,7 +14,7 @@ import (
 
 var (
 	// ErrNotInProject indicates the current directory is not within a Guild project
-	ErrNotInProject = gerror.New(gerror.ErrCodeNotFound, "not in a guild project", nil).
+	ErrNotInProject = gerror.New(gerror.ErrCodeNotFound, "not in a guild project - run 'guild init' to create one", nil).
 			WithComponent("project").
 			WithOperation("validate")
 	// ErrAlreadyInitialized indicates a project is already initialized at the given path

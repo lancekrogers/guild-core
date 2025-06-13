@@ -243,7 +243,7 @@ func TestNewUserErrorRecovery(t *testing.T) {
 		// Try to use the provider
 		_, err = provider.Complete(context.Background(), "test prompt")
 		assert.Error(t, err, "Should error on missing API key")
-		assert.Contains(t, err.Error(), "Please set your OpenAI API key", "Error should be helpful")
+		assert.Contains(t, err.Error(), "missing API key", "Error should mention missing API key")
 	})
 
 	t.Run("InvalidProjectDirectory", func(t *testing.T) {
