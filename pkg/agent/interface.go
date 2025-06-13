@@ -2,6 +2,8 @@ package agent
 
 import (
 	"context"
+
+	"github.com/guild-ventures/guild-core/pkg/interfaces"
 )
 
 // CostManagerInterface defines the interface for tracking and managing agent operation costs
@@ -54,36 +56,16 @@ type AgentRegistry interface {
 }
 
 // GuildAgentConfig represents a configured agent from guild config
-type GuildAgentConfig struct {
-	ID            string   `yaml:"id"`
-	Name          string   `yaml:"name"`
-	Type          string   `yaml:"type"`
-	Model         string   `yaml:"model"`
-	Provider      string   `yaml:"provider"`
-	SystemPrompt  string   `yaml:"system_prompt"`
-	Tools         []string `yaml:"tools"`
-	Capabilities  []string `yaml:"capabilities"`
-	CostMagnitude int      `yaml:"cost_magnitude,omitempty"`
-	ContextWindow int      `yaml:"context_window,omitempty"`
-}
+// Re-export shared agent configuration type from the interfaces package.
+type GuildAgentConfig = interfaces.GuildAgentConfig
 
 // AgentInfo holds agent information for registry operations
-type AgentInfo struct {
-	ID            string
-	Type          string
-	Name          string
-	Capabilities  []string
-	CostProfile   CostProfile
-	CostMagnitude int // For backward compatibility
-}
+// Re-export shared agent information type from the interfaces package.
+type AgentInfo = interfaces.AgentInfo
 
 // CostProfile represents the cost characteristics of an agent
-type CostProfile struct {
-	Magnitude     int    `yaml:"magnitude" json:"magnitude"`
-	ContextWindow int    `yaml:"context_window" json:"context_window"`
-	ContextReset  string `yaml:"context_reset" json:"context_reset"`
-	Available     bool   `yaml:"available" json:"available"`
-}
+// Re-export cost profile type from the interfaces package.
+type CostProfile = interfaces.CostProfile
 
 // CommissionRepository defines the interface for commission storage operations
 // This interface is defined here to avoid circular dependencies with the registry package

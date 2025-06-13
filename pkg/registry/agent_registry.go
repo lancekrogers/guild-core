@@ -5,13 +5,12 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/interfaces"
 )
 
-// CostProfile is an alias to agent.CostProfile
-type CostProfile = agent.CostProfile
+// CostProfile is an alias to interfaces.CostProfile
+type CostProfile = interfaces.CostProfile
 
 // AgentFactory creates agent instances
 type AgentFactory func(config AgentConfig) (interfaces.Agent, error)
@@ -31,11 +30,11 @@ type AgentConfig struct {
 // Agent is an alias to the shared interface
 type Agent = interfaces.Agent
 
-// AgentInfo is an alias to agent.AgentInfo
-type AgentInfo = agent.AgentInfo
+// AgentInfo is an alias to interfaces.AgentInfo
+type AgentInfo = interfaces.AgentInfo
 
-// GuildAgentConfig is an alias to agent.GuildAgentConfig
-type GuildAgentConfig = agent.GuildAgentConfig
+// GuildAgentConfig is an alias to interfaces.GuildAgentConfig
+type GuildAgentConfig = interfaces.GuildAgentConfig
 
 // DefaultAgentRegistry implements the AgentRegistry interface
 type DefaultAgentRegistry struct {
