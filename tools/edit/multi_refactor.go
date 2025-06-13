@@ -616,9 +616,16 @@ type SymbolReference struct {
 func (t *MultiFileRefactorTool) checkNamingConflicts(newName string, references []*SymbolReference, files []string) []*RefactorConflict {
 	var conflicts []*RefactorConflict
 
-	// Simple conflict detection - check if new name already exists
+	// Check if new name already exists in any of the files
 	for _, file := range files {
-		existingRefs := t.findTextReferences(file, newName, []byte{})
+		// Read the file content
+		content, err := os.ReadFile(file)
+		if err != nil {
+			continue // Skip files that can't be read
+		}
+		
+		// Find existing references to the new name
+		existingRefs := t.findTextReferences(file, newName, content)
 		if len(existingRefs) > 0 {
 			conflicts = append(conflicts, &RefactorConflict{
 				File:        file,
