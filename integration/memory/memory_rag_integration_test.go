@@ -14,8 +14,8 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/guild-ventures/guild-core/internal/testutil"
-	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/corpus"
+	"github.com/guild-ventures/guild-core/pkg/interfaces"
 	"github.com/guild-ventures/guild-core/pkg/memory/rag"
 	"github.com/guild-ventures/guild-core/pkg/memory/vector"
 	"github.com/guild-ventures/guild-core/pkg/project"
@@ -418,7 +418,7 @@ func TestContextRetrievalForAgents(t *testing.T) {
 			mockProvider.SetResponse("default", fmt.Sprintf("Based on the context: My response to '%s'", test.query))
 
 			// Create agent using the registry
-			agentConfigs := []agent.GuildAgentConfig{
+			agentConfigs := []interfaces.GuildAgentConfig{
 				{
 					ID:           test.agentType,
 					Name:         fmt.Sprintf("Test %s", test.agentType),
@@ -431,7 +431,7 @@ func TestContextRetrievalForAgents(t *testing.T) {
 
 			// Register agent configuration
 			for _, config := range agentConfigs {
-				info := agent.AgentInfo{
+				info := interfaces.AgentInfo{
 					ID:           config.ID,
 					Type:         config.Type,
 					Name:         config.Name,
