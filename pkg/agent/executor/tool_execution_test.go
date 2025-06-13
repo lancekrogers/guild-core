@@ -46,7 +46,7 @@ func TestTaskExecutor_ToolExecution(t *testing.T) {
 		AgentType:    "worker",
 		Capabilities: []string{"coding", "testing"},
 		Tools:        []string{"file", "shell"},
-		Objective:    "Test tool execution",
+		Commission:   "Test tool execution",
 	}
 
 	// Create mock agent

@@ -128,7 +128,7 @@ func TestBuildFullExecutionPrompt(t *testing.T) {
 			StepNumber:             2,
 			TotalSteps:             5,
 			StepName:               "Create interfaces",
-			StepObjective:          "Define the TaskExecutor interface",
+			StepCommission:         "Define the TaskExecutor interface",
 			ExpectedActions:        []string{"Create interface file", "Define methods"},
 			SuccessIndicators:      []string{"Interface compiles", "Methods documented"},
 			PotentialIssues:        []string{"Circular dependencies"},

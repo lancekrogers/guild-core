@@ -37,7 +37,7 @@ func (g *Generator) GenerateFromPrompt(ctx context.Context, prompt string) (*Com
 	return obj, nil
 }
 
-// SaveGeneratedObjective saves a generated objective
+// SaveGeneratedCommission saves a generated commission
 func (g *Generator) SaveGeneratedCommission(ctx context.Context, obj *Commission) error {
 	if obj == nil {
 		return gerror.New(gerror.ErrCodeInvalidInput, "commission is nil", nil).

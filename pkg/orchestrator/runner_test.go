@@ -128,20 +128,20 @@ func TestOrchestratorCommissionManagement(t *testing.T) {
 	assert.Nil(t, orch.GetCommission())
 
 	// Test SetCommission
-	commission := &commission.Commission{
+	testCommission := &commission.Commission{
 		ID:          "obj1",
 		Title:       "Test Commission",
 		Description: "Test Description",
 	}
 
-	err := orch.SetCommission(commission)
+	err := orch.SetCommission(testCommission)
 	assert.NoError(t, err)
 
 	// Test GetCommission
 	retrieved := orch.GetCommission()
 	assert.NotNil(t, retrieved)
-	assert.Equal(t, commission.ID, retrieved.ID)
-	assert.Equal(t, commission.Title, retrieved.Title)
+	assert.Equal(t, testCommission.ID, retrieved.ID)
+	assert.Equal(t, testCommission.Title, retrieved.Title)
 
 	// Test SetCommission while running (current implementation allows this)
 	ctx := context.Background()

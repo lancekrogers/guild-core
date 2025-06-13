@@ -216,7 +216,7 @@ func TestExecutionContext_Fields(t *testing.T) {
 	ctx := &ExecutionContext{
 		WorkspaceDir: "/workspace",
 		ProjectRoot:  "/project",
-		Objective:    "Test objective",
+		Commission:   "Test commission",
 		AgentID:      "agent-123",
 		AgentType:    "worker",
 		Capabilities: []string{"coding", "testing"},

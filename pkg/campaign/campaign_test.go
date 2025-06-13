@@ -85,7 +85,7 @@ func TestNewCampaign(t *testing.T) {
 	assert.Equal(t, name, campaign.Name)
 	assert.Equal(t, description, campaign.Description)
 	assert.Equal(t, CampaignStatusDream, campaign.Status) // Now starts in dream status
-	assert.Empty(t, campaign.Objectives)
+	assert.Empty(t, campaign.Commissions)
 	assert.Empty(t, campaign.Tags)
 	assert.NotNil(t, campaign.Metadata)
 	assert.False(t, campaign.CreatedAt.IsZero())
@@ -119,19 +119,19 @@ func TestCampaignEvent(t *testing.T) {
 func TestCampaignProgress(t *testing.T) {
 	progress := &CampaignProgress{
 		CampaignID:          "test-123",
-		TotalObjectives:     10,
-		CompletedObjectives: 3,
-		ActiveObjectives:    2,
-		PendingObjectives:   5,
+		TotalCommissions:     10,
+		CompletedCommissions: 3,
+		ActiveCommissions:    2,
+		PendingCommissions:   5,
 		Progress:            0.3,
 		UpdatedAt:           time.Now(),
 	}
 
 	assert.Equal(t, "test-123", progress.CampaignID)
-	assert.Equal(t, 10, progress.TotalObjectives)
-	assert.Equal(t, 3, progress.CompletedObjectives)
-	assert.Equal(t, 2, progress.ActiveObjectives)
-	assert.Equal(t, 5, progress.PendingObjectives)
+	assert.Equal(t, 10, progress.TotalCommissions)
+	assert.Equal(t, 3, progress.CompletedCommissions)
+	assert.Equal(t, 2, progress.ActiveCommissions)
+	assert.Equal(t, 5, progress.PendingCommissions)
 	assert.Equal(t, 0.3, progress.Progress)
 	assert.False(t, progress.UpdatedAt.IsZero())
 }
@@ -264,12 +264,12 @@ func TestRepository(t *testing.T) {
 	t.Run("GetByObjectiveID", func(t *testing.T) {
 		// Create campaigns with objectives
 		campaign1 := NewCampaign("Campaign 1", "Description")
-		campaign1.Objectives = []string{"obj1", "obj2"}
+		campaign1.Commissions = []string{"obj1", "obj2"}
 		err := repo.Create(ctx, campaign1)
 		require.NoError(t, err)
 
 		campaign2 := NewCampaign("Campaign 2", "Description")
-		campaign2.Objectives = []string{"obj2", "obj3"}
+		campaign2.Commissions = []string{"obj2", "obj3"}
 		err = repo.Create(ctx, campaign2)
 		require.NoError(t, err)
 
