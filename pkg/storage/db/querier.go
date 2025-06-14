@@ -11,31 +11,47 @@ import (
 type Querier interface {
 	AddPromptChainMessage(ctx context.Context, arg AddPromptChainMessageParams) error
 	AssignTaskToAgent(ctx context.Context, arg AssignTaskToAgentParams) error
+	CountMessages(ctx context.Context, sessionID string) (int64, error)
+	CountSessions(ctx context.Context) (int64, error)
 	CreateAgent(ctx context.Context, arg CreateAgentParams) error
 	CreateBoard(ctx context.Context, arg CreateBoardParams) error
+	CreateBookmark(ctx context.Context, arg CreateBookmarkParams) error
 	CreateCampaign(ctx context.Context, arg CreateCampaignParams) error
 	CreateCommission(ctx context.Context, arg CreateCommissionParams) error
+	CreateMessage(ctx context.Context, arg CreateMessageParams) error
 	CreatePromptChain(ctx context.Context, arg CreatePromptChainParams) error
+	CreateSession(ctx context.Context, arg CreateSessionParams) error
 	CreateTask(ctx context.Context, arg CreateTaskParams) error
 	DeleteAgent(ctx context.Context, id string) error
 	DeleteBoard(ctx context.Context, id string) error
+	DeleteBookmark(ctx context.Context, id string) error
 	DeleteCampaign(ctx context.Context, id string) error
 	DeleteCommission(ctx context.Context, id string) error
+	DeleteMessage(ctx context.Context, id string) error
 	DeletePromptChain(ctx context.Context, id string) error
 	DeletePromptChainMessages(ctx context.Context, chainID string) error
+	DeleteSession(ctx context.Context, id string) error
 	DeleteTask(ctx context.Context, id string) error
 	DeleteTaskEvents(ctx context.Context, taskID string) error
 	GetAgent(ctx context.Context, id string) (Agent, error)
 	GetAgentWorkload(ctx context.Context) ([]GetAgentWorkloadRow, error)
 	GetBoard(ctx context.Context, id string) (Board, error)
 	GetBoardByCommission(ctx context.Context, commissionID string) (Board, error)
+	GetBookmark(ctx context.Context, id string) (SessionBookmark, error)
+	GetBookmarks(ctx context.Context, sessionID string) ([]GetBookmarksRow, error)
+	GetBookmarksByMessage(ctx context.Context, messageID string) ([]SessionBookmark, error)
 	GetCampaign(ctx context.Context, id string) (Campaign, error)
 	GetCommission(ctx context.Context, id string) (Commission, error)
+	GetMessage(ctx context.Context, id string) (ChatMessage, error)
+	GetMessages(ctx context.Context, sessionID string) ([]ChatMessage, error)
+	GetMessagesAfter(ctx context.Context, arg GetMessagesAfterParams) ([]ChatMessage, error)
+	GetMessagesPaginated(ctx context.Context, arg GetMessagesPaginatedParams) ([]ChatMessage, error)
 	GetPromptChain(ctx context.Context, id string) (PromptChain, error)
 	GetPromptChainMessages(ctx context.Context, chainID string) ([]PromptChainMessage, error)
 	GetPromptChainMessagesWithLimit(ctx context.Context, arg GetPromptChainMessagesWithLimitParams) ([]PromptChainMessage, error)
 	GetPromptChainsByAgent(ctx context.Context, agentID string) ([]PromptChain, error)
 	GetPromptChainsByTask(ctx context.Context, taskID *string) ([]PromptChain, error)
+	GetSession(ctx context.Context, id string) (ChatSession, error)
 	GetTask(ctx context.Context, id string) (Task, error)
 	GetTaskHistory(ctx context.Context, taskID string) ([]TaskEvent, error)
 	ListAgents(ctx context.Context) ([]Agent, error)
@@ -46,18 +62,23 @@ type Querier interface {
 	ListCommissionsByCampaign(ctx context.Context, campaignID string) ([]Commission, error)
 	ListCommissionsByDomain(ctx context.Context, domain *string) ([]Commission, error)
 	ListCommissionsByStatus(ctx context.Context, status string) ([]Commission, error)
+	ListSessions(ctx context.Context, arg ListSessionsParams) ([]ChatSession, error)
+	ListSessionsByCampaign(ctx context.Context, campaignID *string) ([]ChatSession, error)
 	ListTasks(ctx context.Context) ([]Task, error)
 	ListTasksByBoard(ctx context.Context, boardID *string) ([]Task, error)
 	ListTasksByCommission(ctx context.Context, commissionID string) ([]Task, error)
 	ListTasksByStatus(ctx context.Context, status string) ([]Task, error)
 	ListTasksForKanban(ctx context.Context, boardID *string) ([]ListTasksForKanbanRow, error)
 	RecordTaskEvent(ctx context.Context, arg RecordTaskEventParams) error
+	SearchMessages(ctx context.Context, arg SearchMessagesParams) ([]SearchMessagesRow, error)
+	SearchSessions(ctx context.Context, arg SearchSessionsParams) ([]ChatSession, error)
 	SetCommissionCompleted(ctx context.Context, id string) error
 	UpdateAgent(ctx context.Context, arg UpdateAgentParams) error
 	UpdateBoard(ctx context.Context, arg UpdateBoardParams) error
 	UpdateCampaignStatus(ctx context.Context, arg UpdateCampaignStatusParams) error
 	UpdateCommission(ctx context.Context, arg UpdateCommissionParams) error
 	UpdateCommissionStatus(ctx context.Context, arg UpdateCommissionStatusParams) error
+	UpdateSession(ctx context.Context, arg UpdateSessionParams) error
 	UpdateTask(ctx context.Context, arg UpdateTaskParams) error
 	UpdateTaskColumn(ctx context.Context, arg UpdateTaskColumnParams) error
 	UpdateTaskStatus(ctx context.Context, arg UpdateTaskStatusParams) error

@@ -38,6 +38,25 @@ type Campaign struct {
 	UpdatedAt *time.Time `json:"updated_at"`
 }
 
+type ChatMessage struct {
+	ID        string      `json:"id"`
+	SessionID string      `json:"session_id"`
+	Role      string      `json:"role"`
+	Content   string      `json:"content"`
+	CreatedAt *time.Time  `json:"created_at"`
+	ToolCalls interface{} `json:"tool_calls"`
+	Metadata  interface{} `json:"metadata"`
+}
+
+type ChatSession struct {
+	ID         string      `json:"id"`
+	Name       string      `json:"name"`
+	CampaignID *string     `json:"campaign_id"`
+	CreatedAt  *time.Time  `json:"created_at"`
+	UpdatedAt  *time.Time  `json:"updated_at"`
+	Metadata   interface{} `json:"metadata"`
+}
+
 type Commission struct {
 	ID          string      `json:"id"`
 	CampaignID  string      `json:"campaign_id"`
@@ -65,6 +84,14 @@ type PromptChainMessage struct {
 	Name       *string    `json:"name"`
 	Timestamp  *time.Time `json:"timestamp"`
 	TokenUsage *int64     `json:"token_usage"`
+}
+
+type SessionBookmark struct {
+	ID        string     `json:"id"`
+	SessionID string     `json:"session_id"`
+	MessageID string     `json:"message_id"`
+	Name      string     `json:"name"`
+	CreatedAt *time.Time `json:"created_at"`
 }
 
 type Task struct {
