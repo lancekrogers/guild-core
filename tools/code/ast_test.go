@@ -10,12 +10,65 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// mockGoParser is a simple parser for testing
+type mockGoParser struct{}
+
+func (p *mockGoParser) Parse(ctx context.Context, filename string, content []byte) (*ParseResult, error) {
+	return &ParseResult{
+		Language: LanguageGo,
+		Filename: filename,
+		Content:  content,
+		AST:      "mock-ast", // Simple placeholder
+		Errors:   []ParseError{},
+		Metadata: map[string]interface{}{"parser": "mock"},
+	}, nil
+}
+
+func (p *mockGoParser) GetFunctions(result *ParseResult) ([]*Function, error) {
+	// Return mock functions based on the test content
+	return []*Function{
+		{Name: "main", StartLine: 5, EndLine: 7, Signature: "func main()"},
+		{Name: "Greet", StartLine: 15, EndLine: 17, Signature: "func (u User) Greet() string"},
+	}, nil
+}
+
+func (p *mockGoParser) GetClasses(result *ParseResult) ([]*Class, error) {
+	// Return mock classes (structs in Go)
+	return []*Class{
+		{Name: "User", StartLine: 9, EndLine: 13},
+	}, nil
+}
+
+func (p *mockGoParser) GetImports(result *ParseResult) ([]*Import, error) {
+	// Return mock imports
+	return []*Import{
+		{Path: "fmt", Line: 3},
+	}, nil
+}
+
+func (p *mockGoParser) FindSymbol(result *ParseResult, symbol string) ([]*Symbol, error) {
+	// Simple symbol finding
+	symbols := []*Symbol{}
+	if symbol == "User" {
+		symbols = append(symbols, &Symbol{Name: "User", Type: "struct", StartLine: 9, EndLine: 13})
+	}
+	return symbols, nil
+}
+
+func (p *mockGoParser) Language() Language {
+	return LanguageGo
+}
+
+func (p *mockGoParser) Extensions() []string {
+	return []string{".go"}
+}
+
 func TestASTTool_NewASTTool(t *testing.T) {
 	tool := NewASTTool()
 	assert.NotNil(t, tool)
 	assert.Equal(t, "ast", tool.Name())
 	assert.Equal(t, "code", tool.Category())
-	assert.NotNil(t, tool.parsers)
+	assert.NotNil(t, tool.registry)
 }
 
 func TestASTTool_Execute_GoFile(t *testing.T) {
@@ -47,6 +100,9 @@ func (u User) Greet() string {
 	tmpFile.Close()
 
 	tool := NewASTTool()
+	
+	// Register a mock Go parser for testing
+	tool.RegisterParser(LanguageGo, &mockGoParser{})
 
 	// Test basic analysis
 	params := ASTParams{
@@ -236,6 +292,9 @@ const MaxAge = 100
 	tmpFile.Close()
 
 	tool := NewASTTool()
+	
+	// Register a mock Go parser for testing
+	tool.RegisterParser(LanguageGo, &mockGoParser{})
 
 	targets := []string{"functions", "classes", "imports", "all"}
 

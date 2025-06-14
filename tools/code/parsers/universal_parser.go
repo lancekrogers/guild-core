@@ -162,6 +162,178 @@ func GetLanguageExtensions(language code.Language) []string {
 	return languageExtensions[language]
 }
 
+// GetFunctions extracts functions based on the language
+func (p *UniversalParser) GetFunctions(result *code.ParseResult) ([]*code.Function, error) {
+	if result.AST == nil {
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "no AST provided", nil).
+			WithComponent("universal_parser").
+			WithOperation("get_functions")
+	}
+
+	tree, ok := result.AST.(*sitter.Tree)
+	if !ok {
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "invalid AST type", nil).
+			WithComponent("universal_parser").
+			WithOperation("get_functions")
+	}
+
+	var functions []*code.Function
+	
+	// Define queries based on language
+	var queryString string
+	switch p.language {
+	case code.LanguageJavaScript, code.LanguageTypeScript:
+		queryString = `
+			(function_declaration
+				name: (identifier) @name) @function
+			(method_definition
+				name: (property_identifier) @name) @function
+			(variable_declarator
+				name: (identifier) @name
+				value: (arrow_function)) @function
+		`
+	case code.LanguagePython:
+		queryString = `
+			(function_definition
+				name: (identifier) @name) @function
+		`
+	case code.LanguageRust:
+		queryString = `
+			(function_item
+				name: (identifier) @name) @function
+		`
+	case code.LanguageGo:
+		queryString = `
+			(function_declaration
+				name: (identifier) @name) @function
+			(method_declaration
+				name: (field_identifier) @name) @function
+		`
+	default:
+		// Return empty for unsupported languages
+		return functions, nil
+	}
+
+	query, err := p.LoadQuery(QueryFunctions, queryString)
+	if err != nil {
+		return nil, err
+	}
+
+	cursor := sitter.NewQueryCursor()
+	cursor.Exec(query, tree.RootNode())
+
+	for {
+		match, ok := cursor.NextMatch()
+		if !ok {
+			break
+		}
+
+		var funcNode, nameNode *sitter.Node
+		for _, capture := range match.Captures {
+			switch query.CaptureNameForId(capture.Index) {
+			case "function":
+				funcNode = capture.Node
+			case "name":
+				nameNode = capture.Node
+			}
+		}
+
+		if funcNode != nil && nameNode != nil {
+			function := &code.Function{
+				Name:      p.nodeText(nameNode, result.Content),
+				StartLine: int(funcNode.StartPoint().Row) + 1,
+				EndLine:   int(funcNode.EndPoint().Row) + 1,
+				Signature: p.nodeText(funcNode, result.Content),
+			}
+			functions = append(functions, function)
+		}
+	}
+
+	return functions, nil
+}
+
+// GetClasses extracts classes based on the language
+func (p *UniversalParser) GetClasses(result *code.ParseResult) ([]*code.Class, error) {
+	if result.AST == nil {
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "no AST provided", nil).
+			WithComponent("universal_parser").
+			WithOperation("get_classes")
+	}
+
+	tree, ok := result.AST.(*sitter.Tree)
+	if !ok {
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "invalid AST type", nil).
+			WithComponent("universal_parser").
+			WithOperation("get_classes")
+	}
+
+	var classes []*code.Class
+
+	// Define queries based on language
+	var queryString string
+	switch p.language {
+	case code.LanguageJavaScript, code.LanguageTypeScript:
+		queryString = `
+			(class_declaration
+				name: (identifier) @name) @class
+		`
+	case code.LanguagePython:
+		queryString = `
+			(class_definition
+				name: (identifier) @name) @class
+		`
+	case code.LanguageRust:
+		queryString = `
+			(struct_item
+				name: (type_identifier) @name) @class
+		`
+	case code.LanguageJava, code.LanguageCSharp:
+		queryString = `
+			(class_declaration
+				name: (identifier) @name) @class
+		`
+	default:
+		// Return empty for unsupported languages
+		return classes, nil
+	}
+
+	query, err := p.LoadQuery(QueryClasses, queryString)
+	if err != nil {
+		return nil, err
+	}
+
+	cursor := sitter.NewQueryCursor()
+	cursor.Exec(query, tree.RootNode())
+
+	for {
+		match, ok := cursor.NextMatch()
+		if !ok {
+			break
+		}
+
+		var classNode, nameNode *sitter.Node
+		for _, capture := range match.Captures {
+			switch query.CaptureNameForId(capture.Index) {
+			case "class":
+				classNode = capture.Node
+			case "name":
+				nameNode = capture.Node
+			}
+		}
+
+		if classNode != nil && nameNode != nil {
+			class := &code.Class{
+				Name:      p.nodeText(nameNode, result.Content),
+				StartLine: int(classNode.StartPoint().Row) + 1,
+				EndLine:   int(classNode.EndPoint().Row) + 1,
+			}
+			classes = append(classes, class)
+		}
+	}
+
+	return classes, nil
+}
+
 // RegisterAllParsers registers parsers for all supported languages with an AST tool
 func RegisterAllParsers(astTool interface{ RegisterParser(code.Language, code.Parser) }) error {
 	for language := range languageGrammars {
