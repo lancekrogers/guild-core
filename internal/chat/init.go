@@ -50,6 +50,9 @@ func NewChatModel(guildConfig *config.GuildConfig, conn *grpc.ClientConn, prompt
 		historyFile = filepath.Join(homeDir, ".guild", "chat_history.txt")
 	}
 
+	// Initialize keybinding adapter
+	keyAdapter := NewKeybindingAdapter()
+	
 	// Create new model
 	m := ChatModel{
 		messages:      []Message{},
@@ -61,7 +64,8 @@ func NewChatModel(guildConfig *config.GuildConfig, conn *grpc.ClientConn, prompt
 		campaignID:    campaignID,
 		sessionID:     fmt.Sprintf("chat-%d", time.Now().Unix()),
 		guildConfig:   guildConfig,
-		keys:          newChatKeyMap(),
+		keys:          keyAdapter.GetChatKeyMap(),
+		keyAdapter:    keyAdapter,
 		help:          help.New(),
 		err:           nil,
 		width:         80,

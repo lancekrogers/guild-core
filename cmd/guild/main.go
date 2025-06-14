@@ -71,20 +71,22 @@ var agentStartCmd = &cobra.Command{
 }
 
 func init() {
-	// Register commands
+	// Register commands that are defined in this file
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(agentCmd)
-	rootCmd.AddCommand(initCmd)
-	rootCmd.AddCommand(migrateCmd)
 	rootCmd.AddCommand(chatCmd)
 	rootCmd.AddCommand(serveCmd)
-	rootCmd.AddCommand(corpusCmd)
-	rootCmd.AddCommand(commissionCmd)
-	rootCmd.AddCommand(promptCmd)
 	rootCmd.AddCommand(costCmd)
 	rootCmd.AddCommand(campaignCmd)
 	rootCmd.AddCommand(kanbanCmd)
 	rootCmd.AddCommand(kanbanDemoCmd)
+	
+	// Note: The following commands are registered in their respective files:
+	// - initCmd (init.go)
+	// - migrateCmd (migrate.go)
+	// - corpusCmd (corpus.go)
+	// - commissionCmd (commission.go)
+	// - promptCmd (prompt.go)
 
 	// Register agent subcommands
 	agentCmd.AddCommand(agentStartCmd)

@@ -117,6 +117,11 @@ func (m ChatModel) processMessage(input string) (ChatModel, tea.Cmd) {
 			Timestamp: time.Now(),
 		})
 		m.updateMessagesView()
+		
+		// Check if we should quit after processing the command
+		if m.shouldQuit {
+			return m, tea.Quit
+		}
 		return m, nil
 	}
 
@@ -184,8 +189,9 @@ func (m ChatModel) handleCommand(command string) string {
 		m.updateMessagesView()
 		return "Chat cleared"
 	case "/exit", "/quit", "/q":
-		// This should trigger tea.Quit, but we can't from here
-		return "Use Ctrl+C to exit"
+		// Set a flag to trigger quit in the main update loop
+		m.shouldQuit = true
+		return "Exiting chat..."
 	default:
 		return fmt.Sprintf("Unknown command: %s", cmd)
 	}

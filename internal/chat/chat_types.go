@@ -189,6 +189,7 @@ type ChatModel struct {
 	err          error
 	viewMode     chatViewMode
 	keys         chatKeyMap
+	keyAdapter   *KeybindingAdapter
 	focusedAgent string
 
 	// Vim mode support
@@ -246,6 +247,10 @@ type ChatModel struct {
 	
 	// Integration flags
 	integrationFlags map[string]bool
+	
+	// Additional state
+	shouldQuit bool
+	clipboard  string
 }
 
 // Test messages

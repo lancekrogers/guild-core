@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/lipgloss"
 	tea "github.com/charmbracelet/bubbletea"
 
@@ -75,10 +76,18 @@ func (m ChatModel) safeFormatContent(msgType messageType, content string, agentI
 func (m ChatModel) getHelpText() string {
 	helpStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("62"))
 	commandStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("33")).Bold(true)
+	platformStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("141")).Bold(true)
 
-	help := helpStyle.Render("🏰 Guild Chat Commands:\n\n")
+	// Add platform information header
+	var help string
+	if m.keyAdapter != nil {
+		help = platformStyle.Render(m.keyAdapter.GetPlatformHelpText()) + "\n\n"
+	}
+	
+	help += helpStyle.Render("🏰 Guild Chat Commands:\n\n")
 
-	commands := []struct {
+	// Text commands
+	textCommands := []struct {
 		cmd  string
 		desc string
 	}{
@@ -97,18 +106,66 @@ func (m ChatModel) getHelpText() string {
 		{"/exit, /quit, /q", "Exit chat"},
 		{"@agent message", "Send message to specific agent"},
 		{"@all message", "Broadcast to all agents"},
-		{"ctrl+h", "Show help"},
-		{"ctrl+p", "Toggle prompt management"},
-		{"ctrl+a", "Toggle agent status"},
-		{"ctrl+g", "Toggle global stream"},
-		{"tab", "Auto-complete commands"},
-		{"↑/↓", "Navigate history"},
 	}
 
-	for _, cmd := range commands {
-		help += fmt.Sprintf("%s - %s\n",
+	help += helpStyle.Render("Text Commands:\n")
+	for _, cmd := range textCommands {
+		help += fmt.Sprintf("  %s - %s\n",
 			commandStyle.Render(cmd.cmd),
 			helpStyle.Render(cmd.desc))
+	}
+
+	// Keyboard shortcuts
+	help += "\n" + helpStyle.Render("Keyboard Shortcuts:\n")
+	
+	// Get platform-specific keybindings
+	shortcuts := []struct {
+		binding key.Binding
+		desc    string
+	}{
+		{m.keys.Submit, "Submit message"},
+		{m.keys.NewLine, "Insert new line"},
+		{m.keys.Quit, "Quit chat"},
+		{m.keys.Help, "Toggle help"},
+		{m.keys.Prompt, "Prompt management"},
+		{m.keys.Status, "Agent status"},
+		{m.keys.Global, "Global view"},
+		{m.keys.Clear, "Clear chat"},
+		{m.keys.CommandPalette, "Command palette"},
+		{m.keys.Copy, "Copy text"},
+		{m.keys.Paste, "Paste text"},
+		{m.keys.Search, "Search"},
+		{m.keys.FuzzyFinder, "Fuzzy file finder"},
+		{m.keys.GlobalSearch, "Global search"},
+		{m.keys.ToggleVimMode, "Toggle Vim mode"},
+	}
+
+	for _, shortcut := range shortcuts {
+		help += fmt.Sprintf("  %s - %s\n",
+			commandStyle.Render(shortcut.binding.Help().Key),
+			helpStyle.Render(shortcut.desc))
+	}
+
+	// Navigation
+	help += "\n" + helpStyle.Render("Navigation:\n")
+	navKeys := []struct {
+		binding key.Binding
+		desc    string
+	}{
+		{m.keys.ScrollUp, "Scroll up"},
+		{m.keys.ScrollDown, "Scroll down"},
+		{m.keys.PageUp, "Page up"},
+		{m.keys.PageDown, "Page down"},
+		{m.keys.Home, "Go to start"},
+		{m.keys.End, "Go to end"},
+		{m.keys.PrevHistory, "Previous command"},
+		{m.keys.NextHistory, "Next command"},
+	}
+
+	for _, nav := range navKeys {
+		help += fmt.Sprintf("  %s - %s\n",
+			commandStyle.Render(nav.binding.Help().Key),
+			helpStyle.Render(nav.desc))
 	}
 
 	return help
@@ -416,15 +473,36 @@ func (m *ChatModel) handleGlobalSearch() (tea.Model, tea.Cmd) {
 
 // handleNewLine handles Shift+Enter for multiline input
 func (m ChatModel) handleNewLine() (tea.Model, tea.Cmd) {
-	// Insert a newline in the text area
+	// The textarea component already has built-in support for multiline
+	// We just need to insert a newline at the current position
 	currentValue := m.input.Value()
+	
+	// Get line info to find cursor position
 	lineInfo := m.input.LineInfo()
-	cursorPos := lineInfo.ColumnOffset
+	currentLine := m.input.Line()
+	
+	// Calculate the absolute position in the text
+	lines := strings.Split(currentValue, "\n")
+	absPos := 0
+	for i := 0; i < currentLine && i < len(lines); i++ {
+		absPos += len(lines[i]) + 1 // +1 for newline
+	}
+	absPos += lineInfo.CharOffset
 	
 	// Insert newline at cursor position
-	newValue := currentValue[:cursorPos] + "\n" + currentValue[cursorPos:]
+	before := ""
+	if absPos <= len(currentValue) {
+		before = currentValue[:absPos]
+	}
+	after := ""
+	if absPos < len(currentValue) {
+		after = currentValue[absPos:]
+	}
+	
+	newValue := before + "\n" + after
 	m.input.SetValue(newValue)
-	m.input.SetCursor(cursorPos + 1)
+	
+	// The textarea will handle cursor positioning
 	
 	return m, nil
 }
@@ -469,14 +547,25 @@ func (m ChatModel) handleToggleVimMode() (tea.Model, tea.Cmd) {
 
 // handleCopy handles copying selected text to clipboard
 func (m ChatModel) handleCopy() (tea.Model, tea.Cmd) {
-	// Get selected text from textarea
-	selectedText := m.input.Value()
+	// Get text from input area
+	textToCopy := m.input.Value()
 	
-	if selectedText == "" {
+	// If input is empty, try to copy the last message instead
+	if textToCopy == "" && len(m.messages) > 0 {
+		// Find the last non-system message
+		for i := len(m.messages) - 1; i >= 0; i-- {
+			if m.messages[i].Type != msgSystem {
+				textToCopy = m.messages[i].Content
+				break
+			}
+		}
+	}
+	
+	if textToCopy == "" {
 		// Add message indicating nothing to copy
 		msg := Message{
 			Type:      msgSystem,
-			Content:   "📋 Nothing to copy - input area is empty",
+			Content:   "📋 Nothing to copy",
 			Timestamp: time.Now(),
 		}
 		m.messages = append(m.messages, msg)
@@ -484,11 +573,12 @@ func (m ChatModel) handleCopy() (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 	
-	// In a real implementation, this would copy to system clipboard
-	// For now, we'll just indicate the copy operation
+	// Store in internal clipboard for paste operation
+	m.clipboard = textToCopy
+	
 	msg := Message{
 		Type:      msgSystem,
-		Content:   fmt.Sprintf("📋 Copied %d characters to clipboard", len(selectedText)),
+		Content:   fmt.Sprintf("📋 Copied %d characters to clipboard", len(textToCopy)),
 		Timestamp: time.Now(),
 	}
 	m.messages = append(m.messages, msg)
@@ -499,15 +589,49 @@ func (m ChatModel) handleCopy() (tea.Model, tea.Cmd) {
 
 // handlePaste handles pasting text from clipboard
 func (m ChatModel) handlePaste() (tea.Model, tea.Cmd) {
-	// In a real implementation, this would get text from system clipboard
-	// For now, we'll simulate paste operation
+	// Check if we have anything in the internal clipboard
+	if m.clipboard == "" {
+		msg := Message{
+			Type:      msgSystem,
+			Content:   "📋 Nothing to paste",
+			Timestamp: time.Now(),
+		}
+		m.messages = append(m.messages, msg)
+		m.updateMessagesView()
+		return m, nil
+	}
 	
-	// This is where you would integrate with system clipboard
-	// For example, using a library like atotto/clipboard or golang-design/clipboard
+	// Get current input value
+	currentValue := m.input.Value()
+	
+	// Get line info to find cursor position
+	lineInfo := m.input.LineInfo()
+	currentLine := m.input.Line()
+	
+	// Calculate the absolute position in the text
+	lines := strings.Split(currentValue, "\n")
+	absPos := 0
+	for i := 0; i < currentLine && i < len(lines); i++ {
+		absPos += len(lines[i]) + 1 // +1 for newline
+	}
+	absPos += lineInfo.CharOffset
+	
+	// Insert clipboard content at cursor position
+	before := ""
+	if absPos <= len(currentValue) {
+		before = currentValue[:absPos]
+	}
+	after := ""
+	if absPos < len(currentValue) {
+		after = currentValue[absPos:]
+	}
+	
+	newValue := before + m.clipboard + after
+	m.input.SetValue(newValue)
 	
 	msg := Message{
 		Type:      msgSystem,
-		Content:   "📋 Paste operation initiated (clipboard integration needed)",
+		Content:   fmt.Sprintf("📋 Pasted %d characters", len(m.clipboard)),
 		Timestamp: time.Now(),
 	}
 	m.messages = append(m.messages, msg)

@@ -76,7 +76,16 @@ func (m ChatModel) View() string {
 	} else {
 		s.WriteString("\n")
 		helpStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("241"))
-		s.WriteString(helpStyle.Render("enter: send • shift+enter: newline • ctrl+q: quit • ctrl+h: help • ctrl+alt+v: vim mode • ctrl+shift+c/v: copy/paste"))
+		// Build dynamic help text based on platform
+		helpText := fmt.Sprintf("%s: send • %s: newline • %s: quit • %s: help • %s: vim mode • %s/%s: copy/paste",
+			m.keys.Submit.Help().Key,
+			m.keys.NewLine.Help().Key,
+			m.keys.Quit.Help().Key,
+			m.keys.Help.Help().Key,
+			m.keys.ToggleVimMode.Help().Key,
+			m.keys.Copy.Help().Key,
+			m.keys.Paste.Help().Key)
+		s.WriteString(helpStyle.Render(helpText))
 	}
 
 	return s.String()
