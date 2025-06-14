@@ -469,7 +469,7 @@ func TestManager_ExportJSON(t *testing.T) {
 	err = json.Unmarshal(data, &export)
 	assert.NoError(t, err)
 	
-	assert.Equal(t, "1.0", export["version"])
+	assert.Equal(t, "2.0", export["version"])
 	assert.NotNil(t, export["session"])
 	assert.NotNil(t, export["messages"])
 	assert.NotNil(t, export["exported_at"])
@@ -515,13 +515,13 @@ func TestManager_ExportMarkdown(t *testing.T) {
 	assert.NoError(t, err)
 
 	markdown := string(data)
-	assert.Contains(t, markdown, "# Chat Session: Markdown Export Test")
+	assert.Contains(t, markdown, "# Markdown Export Test")
 	assert.Contains(t, markdown, "**Campaign:** test-campaign")
-	assert.Contains(t, markdown, "## User")
+	assert.Contains(t, markdown, "## 👤 User")
 	assert.Contains(t, markdown, "What's the weather?")
-	assert.Contains(t, markdown, "## Assistant")
-	assert.Contains(t, markdown, "**Tool Calls:**")
-	assert.Contains(t, markdown, "- get_weather")
+	assert.Contains(t, markdown, "## 🤖 Assistant")
+	assert.Contains(t, markdown, "**🔧 Tool Calls:**")
+	assert.Contains(t, markdown, "- **get_weather**")
 }
 
 func TestManager_ExportHTML(t *testing.T) {
@@ -553,7 +553,7 @@ func TestManager_ExportHTML(t *testing.T) {
 
 	html := string(data)
 	assert.Contains(t, html, "<!DOCTYPE html>")
-	assert.Contains(t, html, "<title>Chat Session: HTML Export Test</title>")
+	assert.Contains(t, html, "<title>HTML Export Test</title>")
 	assert.Contains(t, html, `class="message user"`)
 	assert.Contains(t, html, "Line 1<br>Line 2")
 }
