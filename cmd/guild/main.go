@@ -76,10 +76,8 @@ func init() {
 	rootCmd.AddCommand(agentCmd)
 	rootCmd.AddCommand(chatCmd)
 	rootCmd.AddCommand(serveCmd)
-	rootCmd.AddCommand(costCmd)
 	rootCmd.AddCommand(campaignCmd)
 	rootCmd.AddCommand(kanbanCmd)
-	rootCmd.AddCommand(kanbanDemoCmd)
 	
 	// Note: The following commands are registered in their respective files:
 	// - initCmd (init.go)
@@ -87,6 +85,10 @@ func init() {
 	// - corpusCmd (corpus.go)
 	// - commissionCmd (commission.go)
 	// - promptCmd (prompt.go)
+	
+	// Demo commands are not registered in production builds
+	// - kanbanDemoCmd (kanban_demo.go) - for testing kanban UI
+	// - costCmd (cost_demo.go) - for demonstrating cost-based selection
 
 	// Register agent subcommands
 	agentCmd.AddCommand(agentStartCmd)

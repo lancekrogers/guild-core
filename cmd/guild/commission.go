@@ -26,6 +26,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/guild-ventures/guild-core/pkg/storage"
+	"github.com/guild-ventures/guild-core/pkg/storage/promptchain"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 )
 
@@ -531,8 +532,8 @@ func setupGuildComponents(ctx context.Context) (*guildComponents, error) {
 		if underlyingStorageReg != nil {
 			promptChainRepo := underlyingStorageReg.GetPromptChainRepository()
 			if promptChainRepo != nil {
-				// TODO: Use proper chain manager from memory package
-				// memoryManager = memory.NewSQLiteChainManager(promptChainRepo)
+				// Use the promptchain package's SQLite chain manager
+				memoryManager = promptchain.NewSQLiteChainManager(promptChainRepo)
 			}
 		}
 	}
