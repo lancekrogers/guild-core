@@ -3,7 +3,9 @@ package claudecode
 import (
 	"context"
 	"testing"
+	"time"
 
+	"github.com/lancekrogers/claude-code-go/pkg/claude"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
 )
 
@@ -193,6 +195,87 @@ func TestClient_SetModel(t *testing.T) {
 	if opts.Model != "new-model" {
 		t.Errorf("Expected model in options 'new-model', got '%s'", opts.Model)
 	}
+}
+
+func TestClient_SetModelWithAlias(t *testing.T) {
+	tests := []struct {
+		name          string
+		model         string
+		expectedModel string
+		expectedAlias string
+	}{
+		{
+			name:          "Sonnet alias",
+			model:         "sonnet",
+			expectedModel: "",
+			expectedAlias: "sonnet",
+		},
+		{
+			name:          "Opus alias",
+			model:         "opus",
+			expectedModel: "",
+			expectedAlias: "opus",
+		},
+		{
+			name:          "Haiku alias",
+			model:         "haiku",
+			expectedModel: "",
+			expectedAlias: "haiku",
+		},
+		{
+			name:          "Full model name",
+			model:         "claude-3-5-sonnet-20241022",
+			expectedModel: "claude-3-5-sonnet-20241022",
+			expectedAlias: "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			client := NewClient("claude-code", "")
+			client.SetModel(tt.model)
+
+			opts := client.GetDefaultOptions()
+			if opts.Model != tt.expectedModel {
+				t.Errorf("Expected model '%s', got '%s'", tt.expectedModel, opts.Model)
+			}
+			if opts.ModelAlias != tt.expectedAlias {
+				t.Errorf("Expected alias '%s', got '%s'", tt.expectedAlias, opts.ModelAlias)
+			}
+		})
+	}
+}
+
+func TestClient_SetTimeout(t *testing.T) {
+	client := NewClient("claude-code", "")
+
+	// Set timeout
+	timeout := 30 * time.Second
+	client.SetTimeout(timeout)
+
+	// Verify timeout was set
+	opts := client.GetDefaultOptions()
+	if opts.Timeout != timeout {
+		t.Errorf("Expected timeout %v, got %v", timeout, opts.Timeout)
+	}
+}
+
+func TestClient_ValidateOptions(t *testing.T) {
+	client := NewClient("claude-code", "")
+
+	// Test with valid options
+	validOpts := &claude.RunOptions{
+		Model:  "claude-3-5-sonnet-20241022",
+		Format: claude.TextOutput,
+	}
+
+	err := client.ValidateOptions(validOpts)
+	if err != nil {
+		t.Errorf("Expected no error for valid options, got: %v", err)
+	}
+
+	// Note: We can't test invalid options without knowing what
+	// claude.ValidateOptions considers invalid
 }
 
 func TestClient_CreateEmbedding(t *testing.T) {

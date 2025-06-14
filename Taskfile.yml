@@ -40,6 +40,87 @@ tasks:
         fi
     interactive: true
 
+  install:
+    desc: Install Guild to the Go bin directory
+    deps: [build]
+    cmds:
+      - |
+        # Determine the Go bin directory
+        if [ -n "$GOPATH" ]; then
+          GO_BIN="$GOPATH/bin"
+        else
+          GO_BIN="$(go env GOPATH)/bin"
+        fi
+        
+        # Handle Windows .exe extension
+        BINARY_NAME="{{.MAIN_BIN}}"
+        if [ "$GOOS" = "windows" ] || [ "$(go env GOOS)" = "windows" ]; then
+          BINARY_NAME="${BINARY_NAME}.exe"
+        fi
+        
+        # Create bin directory if it doesn't exist
+        mkdir -p "$GO_BIN"
+        
+        echo "Installing Guild to $GO_BIN/$BINARY_NAME"
+        
+        # Copy the binary
+        cp "{{.BIN_DIR}}/{{.MAIN_BIN}}" "$GO_BIN/$BINARY_NAME"
+        
+        # Make it executable (no-op on Windows)
+        chmod +x "$GO_BIN/$BINARY_NAME" 2>/dev/null || true
+        
+        echo "✅ Guild installed successfully!"
+        echo ""
+        
+        # Check if Go bin is in PATH
+        case ":$PATH:" in
+          *":$GO_BIN:"*)
+            echo "✓ $GO_BIN is already in your PATH"
+            echo "  You can now run: guild"
+            ;;
+          *)
+            echo "⚠️  WARNING: $GO_BIN is not in your PATH"
+            echo ""
+            echo "To add it to your PATH, add one of these lines to your shell config:"
+            echo ""
+            echo "  # For bash (~/.bashrc or ~/.bash_profile):"
+            echo "  export PATH=\"\$PATH:$GO_BIN\""
+            echo ""
+            echo "  # For zsh (~/.zshrc):"
+            echo "  export PATH=\"\$PATH:$GO_BIN\""
+            echo ""
+            echo "  # For fish (~/.config/fish/config.fish):"
+            echo "  set -gx PATH \$PATH $GO_BIN"
+            echo ""
+            echo "Then reload your shell or run: source ~/.bashrc (or appropriate config file)"
+            ;;
+        esac
+
+  uninstall:
+    desc: Remove Guild from the Go bin directory
+    cmds:
+      - |
+        # Determine the Go bin directory
+        if [ -n "$GOPATH" ]; then
+          GO_BIN="$GOPATH/bin"
+        else
+          GO_BIN="$(go env GOPATH)/bin"
+        fi
+        
+        # Handle Windows .exe extension
+        BINARY_NAME="{{.MAIN_BIN}}"
+        if [ "$GOOS" = "windows" ] || [ "$(go env GOOS)" = "windows" ]; then
+          BINARY_NAME="${BINARY_NAME}.exe"
+        fi
+        
+        if [ -f "$GO_BIN/$BINARY_NAME" ]; then
+          echo "Removing Guild from $GO_BIN/$BINARY_NAME"
+          rm -f "$GO_BIN/$BINARY_NAME"
+          echo "✅ Guild uninstalled successfully!"
+        else
+          echo "Guild is not installed at $GO_BIN/$BINARY_NAME"
+        fi
+
   test:
     desc: Run all tests
     cmds:

@@ -22,6 +22,7 @@ package claudecode
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/lancekrogers/claude-code-go/pkg/claude"
 
@@ -120,10 +121,21 @@ func NewClient(binPath, model string) *Client {
 
 	// Configure model if specified
 	if model != "" {
-		// Claude Code now supports model selection via --model flag
-		defaultOpts.Model = model
+		// Support model aliases introduced in v0.1.2
+		switch model {
+		// Model aliases
+		case "sonnet", "sonnet-4":
+			defaultOpts.ModelAlias = "sonnet"
+		case "opus", "opus-4":
+			defaultOpts.ModelAlias = "opus"
+		case "haiku":
+			defaultOpts.ModelAlias = "haiku"
+		default:
+			// Use full model name
+			defaultOpts.Model = model
+		}
 
-		// Also configure model-specific system prompts based on common model names
+		// Configure model-specific system prompts based on common model names
 		switch model {
 		// Claude 4 models (Released May 2025)
 		case "claude-opus-4", "opus-4", "claude-4-opus":
@@ -173,8 +185,18 @@ func NewClient(binPath, model string) *Client {
 //
 // Get Claude Max: https://t.co/54ylwq0OPh
 func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
-	result, err := c.claudeClient.RunPrompt(prompt, c.defaultOpts)
+	// Use context-aware method introduced in v0.1.2
+	result, err := c.claudeClient.RunPromptCtx(ctx, prompt, c.defaultOpts)
 	if err != nil {
+		// Enhanced error handling with ClaudeError type detection
+		if claudeErr, ok := err.(*claude.ClaudeError); ok {
+			return "", gerror.Wrap(err, gerror.ErrCodeProviderAPI, "claude code execution failed").
+				WithComponent("providers").
+				WithOperation("Complete").
+				WithDetails("provider", "claudecode").
+				WithDetails("error_type", claudeErr.Type.String()).
+				WithDetails("retryable", fmt.Sprintf("%v", claudeErr.IsRetryable()))
+		}
 		return "", gerror.Wrap(err, gerror.ErrCodeProviderAPI, "claude code execution failed").
 			WithComponent("providers").
 			WithOperation("Complete").
@@ -190,7 +212,16 @@ func (c *Client) CompleteWithOptions(ctx context.Context, prompt string, opts *c
 		opts = c.defaultOpts
 	}
 
-	return c.claudeClient.RunPrompt(prompt, opts)
+	// Validate options before execution (v0.1.2 feature)
+	if err := claude.ValidateOptions(opts); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "invalid run options").
+			WithComponent("providers").
+			WithOperation("CompleteWithOptions").
+			WithDetails("provider", "claudecode")
+	}
+
+	// Use context-aware method
+	return c.claudeClient.RunPromptCtx(ctx, prompt, opts)
 }
 
 // StreamComplete generates a streaming completion
@@ -217,7 +248,8 @@ func (c *Client) ContinueConversation(ctx context.Context, sessionID, prompt str
 	opts.ResumeID = sessionID
 	opts.Continue = true
 
-	return c.claudeClient.RunPrompt(prompt, &opts)
+	// Use context-aware method
+	return c.claudeClient.RunPromptCtx(ctx, prompt, &opts)
 }
 
 // GetBinPath returns the Claude Code binary path
@@ -257,7 +289,111 @@ func (c *Client) GetModel() string {
 
 // SetModel sets the model to use for completions
 func (c *Client) SetModel(model string) {
-	c.defaultOpts.Model = model
+	// Support model aliases
+	switch model {
+	case "sonnet", "sonnet-4":
+		c.defaultOpts.ModelAlias = "sonnet"
+		c.defaultOpts.Model = ""
+	case "opus", "opus-4":
+		c.defaultOpts.ModelAlias = "opus"
+		c.defaultOpts.Model = ""
+	case "haiku":
+		c.defaultOpts.ModelAlias = "haiku"
+		c.defaultOpts.Model = ""
+	default:
+		c.defaultOpts.Model = model
+		c.defaultOpts.ModelAlias = ""
+	}
+}
+
+// CompleteWithRetry generates a completion with automatic retry on failure
+// This method uses the retry functionality introduced in claude-code-go v0.1.2
+func (c *Client) CompleteWithRetry(ctx context.Context, prompt string, retryPolicy *claude.RetryPolicy) (string, error) {
+	if retryPolicy == nil {
+		retryPolicy = claude.DefaultRetryPolicy()
+	}
+
+	result, err := c.claudeClient.RunPromptWithRetryCtx(ctx, prompt, c.defaultOpts, retryPolicy)
+	if err != nil {
+		// Enhanced error handling with retry information
+		if claudeErr, ok := err.(*claude.ClaudeError); ok {
+			return "", gerror.Wrap(err, gerror.ErrCodeProviderAPI, "claude code execution failed after retries").
+				WithComponent("providers").
+				WithOperation("CompleteWithRetry").
+				WithDetails("provider", "claudecode").
+				WithDetails("error_type", claudeErr.Type.String()).
+				WithDetails("retryable", fmt.Sprintf("%v", claudeErr.IsRetryable()))
+		}
+		return "", gerror.Wrap(err, gerror.ErrCodeProviderAPI, "claude code execution failed after retries").
+			WithComponent("providers").
+			WithOperation("CompleteWithRetry").
+			WithDetails("provider", "claudecode")
+	}
+
+	return result.Result, nil
+}
+
+// SetTimeout sets the timeout for completions
+// This uses the timeout support added in claude-code-go v0.1.2
+func (c *Client) SetTimeout(timeout time.Duration) {
+	c.defaultOpts.Timeout = timeout
+}
+
+// SetAllowedToolsEnhanced sets allowed tools with enhanced permission format
+// This supports the new permission format: "Bash(git log:*)" introduced in v0.1.2
+func (c *Client) SetAllowedToolsEnhanced(tools []string) error {
+	// Validate tool permissions using v0.1.2 validation
+	if err := claude.ValidateToolPermissions(tools); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "invalid tool permissions").
+			WithComponent("providers").
+			WithOperation("SetAllowedToolsEnhanced").
+			WithDetails("provider", "claudecode")
+	}
+
+	c.defaultOpts.AllowedTools = tools
+	return nil
+}
+
+// SetDisallowedToolsEnhanced sets disallowed tools with enhanced permission format
+func (c *Client) SetDisallowedToolsEnhanced(tools []string) error {
+	// Validate tool permissions
+	if err := claude.ValidateToolPermissions(tools); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "invalid tool permissions").
+			WithComponent("providers").
+			WithOperation("SetDisallowedToolsEnhanced").
+			WithDetails("provider", "claudecode")
+	}
+
+	c.defaultOpts.DisallowedTools = tools
+	return nil
+}
+
+// ValidateOptions validates RunOptions before execution
+// This uses the validation introduced in claude-code-go v0.1.2
+func (c *Client) ValidateOptions(opts *claude.RunOptions) error {
+	if err := claude.ValidateOptions(opts); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "invalid run options").
+			WithComponent("providers").
+			WithOperation("ValidateOptions").
+			WithDetails("provider", "claudecode")
+	}
+	return nil
+}
+
+// RunPromptEnhanced runs a prompt with validation, timeout, and built-in retry
+// This combines multiple v0.1.2 features for robust execution
+func (c *Client) RunPromptEnhanced(ctx context.Context, prompt string, timeout time.Duration) (*claude.ClaudeResult, error) {
+	opts := *c.defaultOpts // Copy default options
+	opts.Timeout = timeout
+
+	// Validate options first
+	if err := c.ValidateOptions(&opts); err != nil {
+		return nil, err
+	}
+
+	// Use the enhanced execution method from v0.1.2
+	// Note: RunPromptEnhanced has built-in retry with default policy
+	return c.claudeClient.RunPromptEnhancedCtx(ctx, prompt, &opts)
 }
 
 // ListSupportedFeatures returns all supported Claude Code features
@@ -317,8 +453,18 @@ func GetRecommendedConfiguration(useCase string) *claude.RunOptions {
 
 // CreateCompletion is a lower-level method to create a completion (for interface compatibility)
 func (c *Client) CreateCompletion(ctx context.Context, req *interfaces.CompletionRequest) (*interfaces.CompletionResponse, error) {
-	result, err := c.claudeClient.RunPrompt(req.Prompt, c.defaultOpts)
+	// Use context-aware method with enhanced error handling
+	result, err := c.claudeClient.RunPromptCtx(ctx, req.Prompt, c.defaultOpts)
 	if err != nil {
+		// Enhanced error handling with ClaudeError type detection
+		if claudeErr, ok := err.(*claude.ClaudeError); ok {
+			return nil, gerror.Wrap(err, gerror.ErrCodeProviderAPI, "claude code execution failed").
+				WithComponent("providers").
+				WithOperation("CreateCompletion").
+				WithDetails("provider", "claudecode").
+				WithDetails("error_type", claudeErr.Type.String()).
+				WithDetails("retryable", fmt.Sprintf("%v", claudeErr.IsRetryable()))
+		}
 		return nil, gerror.Wrap(err, gerror.ErrCodeProviderAPI, "claude code execution failed").
 			WithComponent("providers").
 			WithOperation("CreateCompletion").

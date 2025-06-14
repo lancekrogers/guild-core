@@ -26,7 +26,7 @@ func main() {
 	ui.Init(noColor)
 
 	if flag.NArg() == 0 {
-		log.Fatalf("usage: buildutil <build|test|integration|clean|all>")
+		log.Fatalf("usage: buildutil <build|test|integration|clean|all|install|uninstall>")
 	}
 
 	cmd := flag.Arg(0)
@@ -116,6 +116,12 @@ func main() {
 		noColor = true
 		ui.Init(noColor)
 		err = tasks.Build(verbose)
+
+	case "install":
+		err = tasks.Install(verbose)
+
+	case "uninstall":
+		err = tasks.Uninstall(verbose)
 
 	default:
 		log.Fatalf("unknown command %q", cmd)

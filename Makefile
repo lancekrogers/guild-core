@@ -3,7 +3,7 @@
 
 BUILDTOOL := go run ./internal/buildutil
 .DEFAULT_GOAL := help
-.PHONY: build test integration clean all quick ci-build ci-test ci-integration ci-clean help
+.PHONY: build test integration clean all quick ci-build ci-test ci-integration ci-clean install uninstall help
 
 # Primary targets (with visual output)
 build:
@@ -38,6 +38,13 @@ ci-integration:
 ci-clean:
 	@$(BUILDTOOL) --no-color clean
 
+# Install/uninstall targets
+install: build
+	@$(BUILDTOOL) install
+
+uninstall:
+	@$(BUILDTOOL) uninstall
+
 # Help target
 help:
 	@echo "Guild Framework Build System"
@@ -46,6 +53,8 @@ help:
 	@echo ""
 	@echo "Targets:"
 	@echo "  build        Build Guild with progress display"
+	@echo "  install      Install Guild to Go bin directory"
+	@echo "  uninstall    Remove Guild from Go bin directory"
 	@echo "  test         Run unit tests with visual feedback"
 	@echo "  integration  Run integration tests"
 	@echo "  clean        Remove all build artifacts"
@@ -55,5 +64,6 @@ help:
 	@echo ""
 	@echo "Examples:"
 	@echo "  make build      # Build with progress bars"
+	@echo "  make install    # Install to ~/go/bin"
 	@echo "  make test       # Run tests with feedback"
 	@echo "  make ci-build   # Build for CI (plain text)"

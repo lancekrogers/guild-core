@@ -70,11 +70,27 @@ cd guild-core
 # Install dependencies
 make deps
 
-# Build the CLI (Note: some packages have build errors)
-make build
+# Build and install to Go bin directory
+make install
+
+# Or using Task
+task install
 
 # Verify installation
-./bin/guild version
+guild version
+```
+
+The install command will:
+- Build the Guild CLI
+- Install it to `$GOPATH/bin` (or `~/go/bin` if GOPATH is not set)
+- Check if the Go bin directory is in your PATH
+- Provide instructions to add it to PATH if needed
+
+To uninstall:
+```bash
+make uninstall
+# or
+task uninstall
 ```
 
 ### Create Your First Guild Project

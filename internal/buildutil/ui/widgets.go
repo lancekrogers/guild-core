@@ -84,6 +84,60 @@ func ClearProgress() {
 	}
 }
 
+// Task displays a task in progress
+func Task(action, description string) {
+	screenMutex.Lock()
+	defer screenMutex.Unlock()
+
+	if ColourEnabled() {
+		fmt.Printf("  %s[%s]%s %s... ", Yellow, action, Reset, description)
+	} else {
+		fmt.Printf("  [%s] %s... ", action, description)
+	}
+}
+
+// TaskPass marks the current task as passed
+func TaskPass() {
+	if ColourEnabled() {
+		fmt.Printf("%s✓%s\n", Green, Reset)
+	} else {
+		fmt.Println("✓")
+	}
+}
+
+// TaskFail marks the current task as failed
+func TaskFail() {
+	if ColourEnabled() {
+		fmt.Printf("%s✗%s\n", Red, Reset)
+	} else {
+		fmt.Println("✗")
+	}
+}
+
+// Success prints a success message
+func Success(msg string) {
+	screenMutex.Lock()
+	defer screenMutex.Unlock()
+
+	if ColourEnabled() {
+		fmt.Printf("%s✓ %s%s\n", Green, msg, Reset)
+	} else {
+		fmt.Printf("✓ %s\n", msg)
+	}
+}
+
+// Warning prints a warning message
+func Warning(msg string) {
+	screenMutex.Lock()
+	defer screenMutex.Unlock()
+
+	if ColourEnabled() {
+		fmt.Printf("%s⚠ %s%s\n", Yellow, msg, Reset)
+	} else {
+		fmt.Printf("⚠ %s\n", msg)
+	}
+}
+
 // SummaryCard displays a final status card
 func SummaryCard(title string, rows [][]string, totalTime string, success bool) {
 	SummaryCardWithStatus(title, rows, totalTime, success, "", "")
