@@ -300,6 +300,11 @@ Try these commands to see visual features:
 		keys:         newChatKeyMap(),
 		focusedAgent: "",
 
+		// Vim mode components
+		vimState:       NewVimState(),
+		vimKeys:        newVimKeyMap(),
+		vimModeEnabled: false, // Start with vim mode disabled
+
 		// Visual Components
 		markdownRenderer:   markdownRenderer,
 		contentFormatter:   contentFormatter,
@@ -332,6 +337,9 @@ Try these commands to see visual features:
 		costConsent:   make(map[string]bool),
 		taskCache:     make(map[string]string),
 		blockedTools:  make(map[string]bool),
+		
+		// Integration flags for feature control
+		integrationFlags: make(map[string]bool),
 	}
 
 	// Set the command processor after model creation

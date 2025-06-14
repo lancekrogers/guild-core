@@ -55,8 +55,15 @@ func (m ChatModel) View() string {
 			s.WriteString("\n")
 		}
 
-		// Input area with campaign indicator
+		// Input area with campaign and vim mode indicators
 		inputLabel := fmt.Sprintf("📜 %s", m.getCampaignDisplay())
+		
+		// Add vim mode indicator if enabled
+		if m.vimModeEnabled && m.vimState != nil {
+			vimIndicator := m.vimState.GetModeIndicator()
+			inputLabel += " " + vimIndicator
+		}
+		
 		s.WriteString(lipgloss.NewStyle().Foreground(lipgloss.Color("62")).Render(inputLabel))
 		s.WriteString("\n")
 		s.WriteString(m.input.View())
@@ -69,7 +76,7 @@ func (m ChatModel) View() string {
 	} else {
 		s.WriteString("\n")
 		helpStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("241"))
-		s.WriteString(helpStyle.Render("ctrl+c: quit • ctrl+h: help • ctrl+o: files • ctrl+shift+f: search • ctrl+p: prompts • ctrl+a: agents"))
+		s.WriteString(helpStyle.Render("enter: send • shift+enter: newline • ctrl+q: quit • ctrl+h: help • ctrl+alt+v: vim mode • ctrl+shift+c/v: copy/paste"))
 	}
 
 	return s.String()

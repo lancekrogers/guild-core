@@ -20,8 +20,9 @@ var rootCmd = &cobra.Command{
    guild commission "Research caching strategy" --campaign performance
 
 🔨 MONITOR the workshop and artisan progress:
-   guild workshop                    # Show active work
+   guild kanban view                 # Interactive kanban board
    guild commission status           # Commission progress
+   guild campaign watch              # Watch campaign execution
 
 🎯 COORDINATE campaigns and strategy:
    guild campaign start "Q1 Goals"
@@ -82,6 +83,8 @@ func init() {
 	rootCmd.AddCommand(promptCmd)
 	rootCmd.AddCommand(costCmd)
 	rootCmd.AddCommand(campaignCmd)
+	rootCmd.AddCommand(kanbanCmd)
+	rootCmd.AddCommand(kanbanDemoCmd)
 
 	// Register agent subcommands
 	agentCmd.AddCommand(agentStartCmd)

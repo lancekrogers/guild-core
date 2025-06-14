@@ -9,12 +9,16 @@ import (
 func newChatKeyMap() chatKeyMap {
 	return chatKeyMap{
 		Submit: key.NewBinding(
-			key.WithKeys("ctrl+s"),
-			key.WithHelp("ctrl+s", "submit message"),
+			key.WithKeys("enter"),
+			key.WithHelp("enter", "submit message"),
+		),
+		NewLine: key.NewBinding(
+			key.WithKeys("shift+enter"),
+			key.WithHelp("shift+enter", "new line"),
 		),
 		Quit: key.NewBinding(
-			key.WithKeys("ctrl+c", "ctrl+q"),
-			key.WithHelp("ctrl+c/q", "quit"),
+			key.WithKeys("ctrl+q", "esc", "ctrl+d"),
+			key.WithHelp("ctrl+q/esc", "quit"),
 		),
 		Help: key.NewBinding(
 			key.WithKeys("ctrl+h"),
@@ -69,8 +73,8 @@ func newChatKeyMap() chatKeyMap {
 			key.WithHelp("ctrl+l", "clear chat"),
 		),
 		ToggleViewMode: key.NewBinding(
-			key.WithKeys("ctrl+v"),
-			key.WithHelp("ctrl+v", "toggle view mode"),
+			key.WithKeys("ctrl+t"),
+			key.WithHelp("ctrl+t", "toggle view mode"),
 		),
 		CommandPalette: key.NewBinding(
 			key.WithKeys("ctrl+k"),
@@ -97,12 +101,12 @@ func newChatKeyMap() chatKeyMap {
 			key.WithHelp("shift+tab", "previous item"),
 		),
 		Copy: key.NewBinding(
-			key.WithKeys("ctrl+c"),
-			key.WithHelp("ctrl+c", "copy"),
+			key.WithKeys("ctrl+shift+c"),
+			key.WithHelp("ctrl+shift+c", "copy"),
 		),
 		Paste: key.NewBinding(
-			key.WithKeys("ctrl+v"),
-			key.WithHelp("ctrl+v", "paste"),
+			key.WithKeys("ctrl+shift+v"),
+			key.WithHelp("ctrl+shift+v", "paste"),
 		),
 		Search: key.NewBinding(
 			key.WithKeys("ctrl+/"),
@@ -124,6 +128,10 @@ func newChatKeyMap() chatKeyMap {
 			key.WithKeys("ctrl+shift+f"),
 			key.WithHelp("ctrl+shift+f", "global search"),
 		),
+		ToggleVimMode: key.NewBinding(
+			key.WithKeys("ctrl+alt+v"),
+			key.WithHelp("ctrl+alt+v", "toggle vim mode"),
+		),
 	}
 }
 
@@ -131,6 +139,7 @@ func newChatKeyMap() chatKeyMap {
 func (k chatKeyMap) ShortHelp() []key.Binding {
 	return []key.Binding{
 		k.Submit,
+		k.NewLine,
 		k.Quit,
 		k.Help,
 		k.Prompt,
@@ -141,12 +150,13 @@ func (k chatKeyMap) ShortHelp() []key.Binding {
 // FullHelp returns a list of key bindings for the full help view
 func (k chatKeyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{k.Submit, k.Quit, k.Help, k.Clear},
+		{k.Submit, k.NewLine, k.Quit, k.Help, k.Clear},
 		{k.Prompt, k.Status, k.Global, k.CommandPalette},
 		{k.ScrollUp, k.ScrollDown, k.PageUp, k.PageDown},
 		{k.Home, k.End, k.PrevHistory, k.NextHistory},
 		{k.Search, k.NextMatch, k.PrevMatch, k.ToggleViewMode},
-		{k.FuzzyFinder, k.GlobalSearch},
+		{k.Copy, k.Paste, k.FuzzyFinder, k.GlobalSearch},
+		{k.ToggleVimMode},
 	}
 }
 

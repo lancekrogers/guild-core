@@ -174,13 +174,22 @@ func (cp *CommandProcessor) handleHelp(args []string) tea.Cmd {
   /test code <language>  - Test syntax highlighting
   /test mixed            - Test mixed content rendering
 
-**Tips:**
-  - Use Tab for auto-completion
-  - Use Ctrl+R to search command history
-  - Use Ctrl+P for prompt management interface
+**Keyboard Shortcuts:**
+  - Enter: Send message
+  - Shift+Enter: Insert new line
+  - Ctrl+Q: Quit application  
+  - Ctrl+Alt+V: Toggle vim mode
+  - Ctrl+Shift+C/V: Copy/Paste
+  - Tab: Auto-completion
+  - Ctrl+O: Fuzzy file finder
+  - Ctrl+Shift+F: Global search
+  - Ctrl+R: Search command history
+  - Ctrl+P: Prompt management interface
+  - Ctrl+A: Agent status view
+
+**Image Support:**
   - Drag & drop images or paste paths for previews
-  - Support for PNG, JPG, GIF, SVG formats
-  - Use Ctrl+A for agent status view`
+  - Support for PNG, JPG, GIF, SVG formats`
 
 	return func() tea.Msg {
 		return Message{

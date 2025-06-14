@@ -36,6 +36,11 @@ func (m ChatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 	case tea.KeyMsg:
+		// Handle vim mode first if enabled
+		if m.vimModeEnabled && m.vimState != nil {
+			return m.vimState.HandleVimKey(msg, &m)
+		}
+
 		// Handle command palette navigation first if open
 		if m.commandPalette != nil && m.commandPalette.IsOpen() {
 			return m.handleCommandPaletteKey(msg)
@@ -47,6 +52,9 @@ func (m ChatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case key.Matches(msg, m.keys.Submit):
 			return m.handleSendMessage()
+
+		case key.Matches(msg, m.keys.NewLine):
+			return m.handleNewLine()
 
 		case key.Matches(msg, m.keys.Help):
 			m.viewMode = chatModeNormal
@@ -108,6 +116,15 @@ func (m ChatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case key.Matches(msg, m.keys.CommandPalette):
 			return m.handleCommandPalette()
+
+		case key.Matches(msg, m.keys.ToggleVimMode):
+			return m.handleToggleVimMode()
+
+		case key.Matches(msg, m.keys.Copy):
+			return m.handleCopy()
+
+		case key.Matches(msg, m.keys.Paste):
+			return m.handlePaste()
 
 		case msg.String() == "tab":
 			return m.handleTabCompletion()

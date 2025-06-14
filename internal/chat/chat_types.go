@@ -145,6 +145,7 @@ type AgentStatusUpdateMsg struct {
 // chatKeyMap defines all key bindings for the chat interface
 type chatKeyMap struct {
 	Submit         key.Binding
+	NewLine        key.Binding
 	Quit           key.Binding
 	Help           key.Binding
 	Prompt         key.Binding
@@ -173,6 +174,7 @@ type chatKeyMap struct {
 	PrevMatch      key.Binding
 	FuzzyFinder    key.Binding
 	GlobalSearch   key.Binding
+	ToggleVimMode  key.Binding
 }
 
 // ChatModel represents the main chat application state

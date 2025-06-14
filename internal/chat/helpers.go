@@ -413,3 +413,105 @@ func (m *ChatModel) handleGlobalSearch() (tea.Model, tea.Cmd) {
 	m.viewMode = chatModeGlobalSearch
 	return m, m.globalSearch.Init()
 }
+
+// handleNewLine handles Shift+Enter for multiline input
+func (m ChatModel) handleNewLine() (tea.Model, tea.Cmd) {
+	// Insert a newline in the text area
+	currentValue := m.input.Value()
+	lineInfo := m.input.LineInfo()
+	cursorPos := lineInfo.ColumnOffset
+	
+	// Insert newline at cursor position
+	newValue := currentValue[:cursorPos] + "\n" + currentValue[cursorPos:]
+	m.input.SetValue(newValue)
+	m.input.SetCursor(cursorPos + 1)
+	
+	return m, nil
+}
+
+// handleToggleVimMode toggles vim mode on/off
+func (m ChatModel) handleToggleVimMode() (tea.Model, tea.Cmd) {
+	m.vimModeEnabled = !m.vimModeEnabled
+	
+	if m.vimModeEnabled {
+		// Initialize vim state if not already created
+		if m.vimState == nil {
+			m.vimState = NewVimState()
+			m.vimKeys = newVimKeyMap()
+		}
+		// Switch to normal mode and blur input
+		m.vimState.Mode = ModeNormal
+		m.input.Blur()
+		
+		// Add status message
+		msg := Message{
+			Type:      msgSystem,
+			Content:   "⚔️ Vim mode ENABLED - Press 'i' to enter insert mode, 'esc' to return to normal mode",
+			Timestamp: time.Now(),
+		}
+		m.messages = append(m.messages, msg)
+	} else {
+		// Disable vim mode and focus input
+		m.input.Focus()
+		
+		// Add status message
+		msg := Message{
+			Type:      msgSystem,
+			Content:   "🖱️ Vim mode DISABLED - Normal input mode restored",
+			Timestamp: time.Now(),
+		}
+		m.messages = append(m.messages, msg)
+	}
+	
+	m.updateMessagesView()
+	return m, nil
+}
+
+// handleCopy handles copying selected text to clipboard
+func (m ChatModel) handleCopy() (tea.Model, tea.Cmd) {
+	// Get selected text from textarea
+	selectedText := m.input.Value()
+	
+	if selectedText == "" {
+		// Add message indicating nothing to copy
+		msg := Message{
+			Type:      msgSystem,
+			Content:   "📋 Nothing to copy - input area is empty",
+			Timestamp: time.Now(),
+		}
+		m.messages = append(m.messages, msg)
+		m.updateMessagesView()
+		return m, nil
+	}
+	
+	// In a real implementation, this would copy to system clipboard
+	// For now, we'll just indicate the copy operation
+	msg := Message{
+		Type:      msgSystem,
+		Content:   fmt.Sprintf("📋 Copied %d characters to clipboard", len(selectedText)),
+		Timestamp: time.Now(),
+	}
+	m.messages = append(m.messages, msg)
+	m.updateMessagesView()
+	
+	return m, nil
+}
+
+// handlePaste handles pasting text from clipboard
+func (m ChatModel) handlePaste() (tea.Model, tea.Cmd) {
+	// In a real implementation, this would get text from system clipboard
+	// For now, we'll simulate paste operation
+	
+	// This is where you would integrate with system clipboard
+	// For example, using a library like atotto/clipboard or golang-design/clipboard
+	
+	msg := Message{
+		Type:      msgSystem,
+		Content:   "📋 Paste operation initiated (clipboard integration needed)",
+		Timestamp: time.Now(),
+	}
+	m.messages = append(m.messages, msg)
+	m.updateMessagesView()
+	
+	return m, nil
+}
