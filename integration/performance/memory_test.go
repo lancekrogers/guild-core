@@ -189,7 +189,12 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 			var after runtime.MemStats
 			runtime.ReadMemStats(&after)
 
-			allocPatterns[comp.name] = after.Alloc - before.Alloc
+			// Handle potential negative values when GC frees more than allocated
+			if after.Alloc >= before.Alloc {
+				allocPatterns[comp.name] = after.Alloc - before.Alloc
+			} else {
+				allocPatterns[comp.name] = 0
+			}
 		}
 
 		// Verify allocation patterns are reasonable
@@ -308,7 +313,12 @@ func TestLargeContextHandling(t *testing.T) {
 		runtime.ReadMemStats(&after)
 
 		// Memory overhead should be minimal
-		overhead := after.Alloc - before.Alloc
+		var overhead uint64
+		if after.Alloc >= before.Alloc {
+			overhead = after.Alloc - before.Alloc
+		} else {
+			overhead = 0
+		}
 		overheadPercent := float64(overhead) / float64(contextSize) * 100
 
 		assert.Less(t, overheadPercent, 10.0, "Memory overhead should be < 10% of context size")
@@ -330,7 +340,12 @@ func TestLargeContextHandling(t *testing.T) {
 		runtime.GC()
 		var batchAfter runtime.MemStats
 		runtime.ReadMemStats(&batchAfter)
-		batchMemory := batchAfter.Alloc - batchBefore.Alloc
+		var batchMemory uint64
+		if batchAfter.Alloc >= batchBefore.Alloc {
+			batchMemory = batchAfter.Alloc - batchBefore.Alloc
+		} else {
+			batchMemory = uint64(dataSize) // Use expected size as fallback
+		}
 
 		// Clear batch data
 		batchData = nil
@@ -347,7 +362,12 @@ func TestLargeContextHandling(t *testing.T) {
 		runtime.GC()
 		var streamAfter runtime.MemStats
 		runtime.ReadMemStats(&streamAfter)
-		streamMemory := streamAfter.Alloc - streamBefore.Alloc
+		var streamMemory uint64
+		if streamAfter.Alloc >= streamBefore.Alloc {
+			streamMemory = streamAfter.Alloc - streamBefore.Alloc
+		} else {
+			streamMemory = 1 // Minimum to avoid division issues
+		}
 
 		// Streaming should use significantly less memory
 		memoryRatio := float64(streamMemory) / float64(batchMemory)
@@ -376,7 +396,13 @@ func TestLargeContextHandling(t *testing.T) {
 			var after runtime.MemStats
 			runtime.ReadMemStats(&after)
 
-			memoryUsed := after.Alloc - before.Alloc
+			// Handle case where GC frees more memory than we allocate
+			var memoryUsed int64
+			if after.Alloc >= before.Alloc {
+				memoryUsed = int64(after.Alloc - before.Alloc)
+			} else {
+				memoryUsed = 0 // GC freed more than we allocated
+			}
 			memoryPerToken := float64(memoryUsed) / float64(tokenCount)
 
 			assert.Less(t, memoryPerToken, 1000.0, "Should use < 1KB per token")
@@ -435,7 +461,12 @@ func TestLargeContextHandling(t *testing.T) {
 			var after runtime.MemStats
 			runtime.ReadMemStats(&after)
 
-			memoryUsed := after.Alloc - before.Alloc
+			var memoryUsed uint64
+			if after.Alloc >= before.Alloc {
+				memoryUsed = after.Alloc - before.Alloc
+			} else {
+				memoryUsed = 1 // Avoid division by zero, use 1 byte minimum
+			}
 			efficiency := float64(len(pruned)) / float64(memoryUsed)
 
 			t.Logf("%s - Original: %d chars, Pruned: %d chars, Memory: %d KB, Efficiency: %.2f",

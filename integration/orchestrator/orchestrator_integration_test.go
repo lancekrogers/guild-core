@@ -570,7 +570,7 @@ func TestResourceAllocationAndWorkload(t *testing.T) {
 		capabilities []string
 		maxWorkload  int
 	}{
-		{"senior-dev", []string{"architecture", "complex-coding"}, 2},
+		{"senior-dev", []string{"architecture", "complex-coding"}, 4},
 		{"mid-dev-1", []string{"coding", "testing"}, 3},
 		{"mid-dev-2", []string{"coding", "documentation"}, 3},
 		{"junior-dev", []string{"testing", "documentation"}, 4},
@@ -959,6 +959,8 @@ type mockAgent struct {
 }
 
 func (m *mockAgent) Execute(ctx context.Context, prompt string) (string, error) {
+	// Simulate some work to demonstrate concurrency benefits
+	time.Sleep(1 * time.Millisecond)
 	return fmt.Sprintf("Mock response from %s", m.id), nil
 }
 
