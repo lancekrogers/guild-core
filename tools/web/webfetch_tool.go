@@ -78,6 +78,7 @@ type WebFetchCache struct {
 	entries map[string]*CacheEntry
 	mutex   sync.RWMutex
 	maxSize int
+	stop    chan struct{}
 }
 
 // NewWebFetchCache creates a new cache
@@ -85,6 +86,7 @@ func NewWebFetchCache(maxSize int) *WebFetchCache {
 	cache := &WebFetchCache{
 		entries: make(map[string]*CacheEntry),
 		maxSize: maxSize,
+		stop:    make(chan struct{}),
 	}
 	
 	// Start cleanup goroutine
@@ -152,16 +154,26 @@ func (c *WebFetchCache) cleanupExpired() {
 	ticker := time.NewTicker(5 * time.Minute)
 	defer ticker.Stop()
 	
-	for range ticker.C {
-		c.mutex.Lock()
-		now := time.Now()
-		for key, entry := range c.entries {
-			if now.Sub(entry.Timestamp) > entry.TTL {
-				delete(c.entries, key)
+	for {
+		select {
+		case <-ticker.C:
+			c.mutex.Lock()
+			now := time.Now()
+			for key, entry := range c.entries {
+				if now.Sub(entry.Timestamp) > entry.TTL {
+					delete(c.entries, key)
+				}
 			}
+			c.mutex.Unlock()
+		case <-c.stop:
+			return
 		}
-		c.mutex.Unlock()
 	}
+}
+
+// Stop stops the cleanup goroutine
+func (c *WebFetchCache) Stop() {
+	close(c.stop)
 }
 
 // NewWebFetchTool creates a new web fetch tool

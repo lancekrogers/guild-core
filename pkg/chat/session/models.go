@@ -80,8 +80,8 @@ func toDBSession(s *Session) db.ChatSession {
 		ID:         s.ID,
 		Name:       s.Name,
 		CampaignID: s.CampaignID,
-		CreatedAt:  s.CreatedAt,
-		UpdatedAt:  s.UpdatedAt,
+		CreatedAt:  &s.CreatedAt,
+		UpdatedAt:  &s.UpdatedAt,
 		Metadata:   metadata,
 	}
 }
@@ -92,14 +92,29 @@ func fromDBSession(dbSession db.ChatSession) *Session {
 		ID:         dbSession.ID,
 		Name:       dbSession.Name,
 		CampaignID: dbSession.CampaignID,
-		CreatedAt:  dbSession.CreatedAt,
-		UpdatedAt:  dbSession.UpdatedAt,
+		CreatedAt:  time.Now(), // Default to now if nil
+		UpdatedAt:  time.Now(), // Default to now if nil
+	}
+	
+	// Set actual timestamps if available
+	if dbSession.CreatedAt != nil {
+		s.CreatedAt = *dbSession.CreatedAt
+	}
+	if dbSession.UpdatedAt != nil {
+		s.UpdatedAt = *dbSession.UpdatedAt
 	}
 
 	if dbSession.Metadata != nil {
 		var metadata map[string]interface{}
-		if err := json.Unmarshal(dbSession.Metadata, &metadata); err == nil {
-			s.Metadata = metadata
+		switch v := dbSession.Metadata.(type) {
+		case []byte:
+			if err := json.Unmarshal(v, &metadata); err == nil {
+				s.Metadata = metadata
+			}
+		case json.RawMessage:
+			if err := json.Unmarshal(v, &metadata); err == nil {
+				s.Metadata = metadata
+			}
 		}
 	}
 
@@ -123,7 +138,7 @@ func toDBMessage(m *Message) db.ChatMessage {
 		SessionID: m.SessionID,
 		Role:      string(m.Role),
 		Content:   m.Content,
-		CreatedAt: m.CreatedAt,
+		CreatedAt: &m.CreatedAt,
 		ToolCalls: toolCalls,
 		Metadata:  metadata,
 	}
@@ -136,20 +151,38 @@ func fromDBMessage(dbMessage db.ChatMessage) *Message {
 		SessionID: dbMessage.SessionID,
 		Role:      MessageRole(dbMessage.Role),
 		Content:   dbMessage.Content,
-		CreatedAt: dbMessage.CreatedAt,
+		CreatedAt: time.Now(), // Default to now if nil
+	}
+	
+	if dbMessage.CreatedAt != nil {
+		m.CreatedAt = *dbMessage.CreatedAt
 	}
 
 	if dbMessage.ToolCalls != nil {
 		var toolCalls []ToolCall
-		if err := json.Unmarshal(dbMessage.ToolCalls, &toolCalls); err == nil {
-			m.ToolCalls = toolCalls
+		switch v := dbMessage.ToolCalls.(type) {
+		case []byte:
+			if err := json.Unmarshal(v, &toolCalls); err == nil {
+				m.ToolCalls = toolCalls
+			}
+		case json.RawMessage:
+			if err := json.Unmarshal(v, &toolCalls); err == nil {
+				m.ToolCalls = toolCalls
+			}
 		}
 	}
 
 	if dbMessage.Metadata != nil {
 		var metadata map[string]interface{}
-		if err := json.Unmarshal(dbMessage.Metadata, &metadata); err == nil {
-			m.Metadata = metadata
+		switch v := dbMessage.Metadata.(type) {
+		case []byte:
+			if err := json.Unmarshal(v, &metadata); err == nil {
+				m.Metadata = metadata
+			}
+		case json.RawMessage:
+			if err := json.Unmarshal(v, &metadata); err == nil {
+				m.Metadata = metadata
+			}
 		}
 	}
 
@@ -163,19 +196,25 @@ func toDBBookmark(b *Bookmark) db.SessionBookmark {
 		SessionID: b.SessionID,
 		MessageID: b.MessageID,
 		Name:      b.Name,
-		CreatedAt: b.CreatedAt,
+		CreatedAt: &b.CreatedAt,
 	}
 }
 
 // fromDBBookmark converts a database model to Bookmark
 func fromDBBookmark(dbBookmark db.SessionBookmark) *Bookmark {
-	return &Bookmark{
+	b := &Bookmark{
 		ID:        dbBookmark.ID,
 		SessionID: dbBookmark.SessionID,
 		MessageID: dbBookmark.MessageID,
 		Name:      dbBookmark.Name,
-		CreatedAt: dbBookmark.CreatedAt,
+		CreatedAt: time.Now(), // Default to now if nil
 	}
+	
+	if dbBookmark.CreatedAt != nil {
+		b.CreatedAt = *dbBookmark.CreatedAt
+	}
+	
+	return b
 }
 
 // sessionStats holds session statistics

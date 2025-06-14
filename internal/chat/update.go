@@ -7,6 +7,8 @@ import (
 
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
+
+	"github.com/guild-ventures/guild-core/pkg/chat/session"
 )
 
 // Update implements tea.Model
@@ -192,6 +194,16 @@ func (m *ChatModel) handleAgentStream(msg agentStreamMsg) {
 		if lastMsgIndex >= 0 {
 			// Final update to ensure complete content
 			m.messages[lastMsgIndex].Content = msg.content
+			
+			// Save complete agent message to session
+			if m.sessionManager != nil && m.currentSession != nil {
+				go func() {
+					_, err := m.sessionManager.AppendMessage(m.currentSession.ID, session.RoleAssistant, msg.content, nil)
+					if err != nil {
+						log.Printf("Failed to save agent message to session: %v", err)
+					}
+				}()
+			}
 		}
 		delete(m.activeTools, msg.agentID) // Clean up any streaming state
 	} else {

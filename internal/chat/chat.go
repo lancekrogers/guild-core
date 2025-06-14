@@ -2,9 +2,11 @@ package chat
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -15,8 +17,10 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"google.golang.org/grpc"
+	_ "modernc.org/sqlite" // SQLite driver
 
 	"github.com/guild-ventures/guild-core/internal/chat/commands"
+	"github.com/guild-ventures/guild-core/pkg/chat/session"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	guildcontext "github.com/guild-ventures/guild-core/pkg/context"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -203,6 +207,85 @@ Try these commands to see visual features:
 	statusTracker.StartTracking()
 	agentIndicators.SetupDefaultAnimations()
 
+	// Initialize session persistence
+	var sessionManager session.SessionManager
+	var currentSession *session.Session
+	var loadedMessages []Message
+	
+	// Open database connection for session store
+	dbPath := filepath.Join(".guild", "memory.db")
+	db, err := sql.Open("sqlite3", dbPath)
+	if err != nil {
+		// Continue without session persistence if database fails
+		fmt.Printf("Warning: Failed to open session database: %v\n", err)
+	} else {
+		// Create session store and manager
+		store := session.NewSQLiteStore(db)
+		sessionManager = session.NewManager(store)
+		
+		// Load or create session
+		if sessionID != "" {
+			// Try to load existing session
+			currentSession, err = sessionManager.LoadSession(sessionID)
+			if err != nil {
+				// Create new session if load fails
+				name := fmt.Sprintf("Chat Session %s", time.Now().Format("2006-01-02 15:04"))
+				currentSession, err = sessionManager.NewSession(name, &campaignID)
+				if err != nil {
+					fmt.Printf("Warning: Failed to create session: %v\n", err)
+				} else {
+					sessionID = currentSession.ID
+				}
+			}
+		} else {
+			// Create new session
+			name := fmt.Sprintf("Chat Session %s", time.Now().Format("2006-01-02 15:04"))
+			currentSession, err = sessionManager.NewSession(name, &campaignID)
+			if err != nil {
+				fmt.Printf("Warning: Failed to create session: %v\n", err)
+			} else {
+				sessionID = currentSession.ID
+			}
+		}
+		
+		// Load existing messages if we have a session
+		if currentSession != nil {
+			messages, err := sessionManager.GetContext(currentSession.ID, 50) // Load last 50 messages
+			if err == nil && len(messages) > 0 {
+				// Convert session messages to chat messages
+				for _, msg := range messages {
+					var msgType messageType
+					var agentID string
+					
+					switch msg.Role {
+					case session.RoleUser:
+						msgType = msgUser
+					case session.RoleAssistant:
+						msgType = msgAgent
+						// Extract agent ID from metadata if available
+						if msg.Metadata != nil {
+							if id, ok := msg.Metadata["agent_id"].(string); ok {
+								agentID = id
+							}
+						}
+					case session.RoleSystem:
+						msgType = msgSystem
+					default:
+						msgType = msgSystem
+					}
+					
+					loadedMessages = append(loadedMessages, Message{
+						Type:      msgType,
+						Content:   msg.Content,
+						AgentID:   agentID,
+						Timestamp: msg.CreatedAt,
+						Metadata:  make(map[string]string),
+					})
+				}
+			}
+		}
+	}
+
 	// Build the complete model
 	model := ChatModel{
 		// UI Components
@@ -235,9 +318,11 @@ Try these commands to see visual features:
 		history:        commandHistory,
 		commandPalette: commandPalette,
 		registry:       registry,
+		sessionManager: sessionManager,
+		currentSession: currentSession,
 
 		// State
-		messages:      []Message{},
+		messages:      loadedMessages, // Use loaded messages if available
 		activeTools:   make(map[string]*toolExecution),
 		agents:        []string{},
 		promptLayers:  []string{},

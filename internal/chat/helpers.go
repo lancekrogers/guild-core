@@ -87,6 +87,11 @@ func (m ChatModel) getHelpText() string {
 		{"/tools, /t", "List available tools"},
 		{"/clear, /c", "Clear chat history"},
 		{"/test", "Test visual features"},
+		{"/sessions", "List all sessions"},
+		{"/session new [name]", "Create new session"},
+		{"/session switch <id>", "Switch to different session"},
+		{"/session rename <name>", "Rename current session"},
+		{"/session export [format]", "Export current session"},
 		{"/exit, /quit, /q", "Exit chat"},
 		{"@agent message", "Send message to specific agent"},
 		{"@all message", "Broadcast to all agents"},
@@ -112,6 +117,13 @@ func (m ChatModel) getStatusText() string {
 	status := fmt.Sprintf("📊 Guild Status\n")
 	status += fmt.Sprintf("Campaign: %s\n", m.campaignID)
 	status += fmt.Sprintf("Session: %s\n", m.sessionID)
+	
+	// Add session details if available
+	if m.currentSession != nil {
+		status += fmt.Sprintf("Session Name: %s\n", m.currentSession.Name)
+		status += fmt.Sprintf("Session Created: %s\n", m.currentSession.CreatedAt.Format("2006-01-02 15:04"))
+	}
+	
 	status += fmt.Sprintf("Messages: %d\n", len(m.messages))
 	status += fmt.Sprintf("Active Tools: %d\n", len(m.activeTools))
 

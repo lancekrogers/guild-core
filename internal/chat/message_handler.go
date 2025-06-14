@@ -9,6 +9,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
+	"github.com/guild-ventures/guild-core/pkg/chat/session"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 )
@@ -96,6 +97,16 @@ func (m ChatModel) processMessage(input string) (ChatModel, tea.Cmd) {
 	}
 	m.messages = append(m.messages, userMsg)
 
+	// Save message to session if available
+	if m.sessionManager != nil && m.currentSession != nil {
+		go func() {
+			_, err := m.sessionManager.AppendMessage(m.currentSession.ID, session.RoleUser, input, nil)
+			if err != nil {
+				log.Printf("Failed to save user message to session: %v", err)
+			}
+		}()
+	}
+
 	// Check for commands
 	if strings.HasPrefix(input, "/") {
 		result := m.handleCommand(input)
@@ -163,6 +174,10 @@ func (m ChatModel) handleCommand(command string) string {
 		return m.handleToolsCommand(args)
 	case "/test":
 		return m.handleTestCommand(args)
+	case "/sessions":
+		return m.handleSessionsCommand(args)
+	case "/session":
+		return m.handleSessionCommand(args)
 	case "/clear", "/c":
 		m.messages = []Message{}
 		m.updateMessagesView()
@@ -472,4 +487,123 @@ func (m *ChatModel) addToolExecutionMessage(toolExec *pb.GuildToolExecution) {
 	}
 
 	m.addMessage(msg)
+}
+
+// handleSessionsCommand handles /sessions command
+func (m ChatModel) handleSessionsCommand(args []string) string {
+	if m.sessionManager == nil {
+		return "Session persistence is not available"
+	}
+
+	ctx := context.Background()
+	sessions, err := m.sessionManager.(*session.Manager).LoadSession(m.currentSession.ID)
+	if err != nil {
+		// If loading current session fails, try listing all sessions
+		store := m.sessionManager.(*session.Manager)
+		// We need to access the store directly for listing
+		return "Unable to list sessions (feature in development)"
+	}
+
+	// For now, show current session info
+	result := fmt.Sprintf("📚 Current Session:\n")
+	result += fmt.Sprintf("ID: %s\n", m.currentSession.ID)
+	result += fmt.Sprintf("Name: %s\n", m.currentSession.Name)
+	result += fmt.Sprintf("Created: %s\n", m.currentSession.CreatedAt.Format("2006-01-02 15:04"))
+	if m.currentSession.CampaignID != nil {
+		result += fmt.Sprintf("Campaign: %s\n", *m.currentSession.CampaignID)
+	}
+
+	return result
+}
+
+// handleSessionCommand handles /session subcommands
+func (m ChatModel) handleSessionCommand(args []string) string {
+	if m.sessionManager == nil {
+		return "Session persistence is not available"
+	}
+
+	if len(args) == 0 {
+		return `Session commands:
+  /session new [name]     - Create new session
+  /session switch <id>    - Switch to different session
+  /session rename <name>  - Rename current session
+  /session export [format] - Export current session (json, markdown, html)`
+	}
+
+	subCmd := args[0]
+	switch subCmd {
+	case "new":
+		var name string
+		if len(args) > 1 {
+			name = strings.Join(args[1:], " ")
+		} else {
+			name = fmt.Sprintf("Chat Session %s", time.Now().Format("2006-01-02 15:04"))
+		}
+
+		newSession, err := m.sessionManager.NewSession(name, m.currentSession.CampaignID)
+		if err != nil {
+			return fmt.Sprintf("Failed to create new session: %v", err)
+		}
+
+		// Note: We can't actually switch the session in the model from here
+		// as we return a string, not a new model
+		return fmt.Sprintf("Created new session: %s (ID: %s)\nNote: Restart chat to use the new session", newSession.Name, newSession.ID[:8])
+
+	case "rename":
+		if len(args) < 2 {
+			return "Usage: /session rename <new name>"
+		}
+
+		newName := strings.Join(args[1:], " ")
+		m.currentSession.Name = newName
+		
+		if err := m.sessionManager.SaveSession(m.currentSession); err != nil {
+			return fmt.Sprintf("Failed to rename session: %v", err)
+		}
+
+		return fmt.Sprintf("Session renamed to: %s", newName)
+
+	case "export":
+		format := session.ExportFormatJSON
+		if len(args) > 1 {
+			switch args[1] {
+			case "markdown", "md":
+				format = session.ExportFormatMarkdown
+			case "html":
+				format = session.ExportFormatHTML
+			case "json":
+				format = session.ExportFormatJSON
+			default:
+				return fmt.Sprintf("Unknown export format: %s (use json, markdown, or html)", args[1])
+			}
+		}
+
+		data, err := m.sessionManager.ExportSession(m.currentSession.ID, format)
+		if err != nil {
+			return fmt.Sprintf("Failed to export session: %v", err)
+		}
+
+		// Save to file
+		filename := fmt.Sprintf("session_%s_%s.%s", 
+			m.currentSession.ID[:8], 
+			time.Now().Format("20060102_150405"),
+			string(format))
+		
+		if err := os.WriteFile(filename, data, 0644); err != nil {
+			return fmt.Sprintf("Failed to save export: %v", err)
+		}
+
+		return fmt.Sprintf("Session exported to: %s", filename)
+
+	case "switch":
+		if len(args) < 2 {
+			return "Usage: /session switch <session-id>"
+		}
+		
+		// Note: We can't actually switch sessions from here
+		return "Session switching requires restarting chat with --session flag"
+
+	default:
+		return fmt.Sprintf("Unknown session subcommand: %s", subCmd)
+	}
 }

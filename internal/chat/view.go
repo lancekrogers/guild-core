@@ -215,10 +215,20 @@ func (m ChatModel) getGlobalStreamView() string {
 
 // getCampaignDisplay returns the campaign name for display
 func (m ChatModel) getCampaignDisplay() string {
+	var display string
+	
 	if m.campaignID == "" {
-		return "Guild Chat"
+		display = "Guild Chat"
+	} else {
+		display = fmt.Sprintf("Campaign: %s", m.campaignID)
 	}
-	return fmt.Sprintf("Campaign: %s", m.campaignID)
+	
+	// Add session info if available
+	if m.currentSession != nil {
+		display += fmt.Sprintf(" | Session: %s", m.currentSession.Name)
+	}
+	
+	return display
 }
 
 // renderCompletionSuggestions renders the completion popup with medieval theming
