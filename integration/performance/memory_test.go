@@ -189,12 +189,9 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 			var after runtime.MemStats
 			runtime.ReadMemStats(&after)
 
-			// Handle potential negative values when GC frees more than allocated
-			if after.Alloc >= before.Alloc {
-				allocPatterns[comp.name] = after.Alloc - before.Alloc
-			} else {
-				allocPatterns[comp.name] = 0
-			}
+			// Use TotalAlloc for accurate measurement of allocations
+			// TotalAlloc is monotonically increasing, so it won't underflow
+			allocPatterns[comp.name] = after.TotalAlloc - before.TotalAlloc
 		}
 
 		// Verify allocation patterns are reasonable

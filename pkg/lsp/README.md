@@ -1,258 +1,288 @@
-# Guild LSP Integration
+# LSP Package - Framework Infrastructure
 
-The Guild framework includes powerful Language Server Protocol (LSP) integration that provides zero-token code intelligence. This means agents can perform code completions, find definitions, locate references, and get type information without sending any file content - resulting in 97.5% token savings!
+This package provides Language Server Protocol (LSP) infrastructure for the Guild Framework. It manages language server lifecycles, connections, and protocol communication.
 
-## Key Features
+## Architecture Overview
 
-- **Universal Language Support**: Works with ANY LSP-compliant language server
-- **Zero File Content**: All operations use only file path and position
-- **97.5% Token Savings**: Dramatically reduces API costs
-- **Extensible Configuration**: Add any language server via simple YAML config
-- **Automatic Management**: Servers start/stop/restart automatically
-- **Agent Integration**: Seamlessly integrated with Guild's agent system
+The LSP package is **framework infrastructure**, not a tool. It provides:
 
-## How It Works
+- **Server Lifecycle Management**: Starting/stopping language servers
+- **Connection Management**: Maintaining persistent connections
+- **Protocol Implementation**: JSON-RPC communication with language servers
+- **State Management**: Tracking open files and server state
+- **Multi-Language Support**: Automatic language detection and server selection
 
-The LSP integration allows Guild to use the same language servers that power VS Code, Neovim, and other modern editors. If a language has an LSP server, Guild can use it!
+## Framework vs Tools
 
+### This Package (Infrastructure)
+```go
+// Long-running service with state
+type Manager struct {
+    servers map[string]*Server  // Persistent connections
+    config  *Config            // Configuration
+    mu      sync.RWMutex       // Thread safety
+}
 ```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   Guild Agent   │────▶│   LSP Manager   │────▶│ Language Server │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-                              │
-                              ├── ANY LSP Server You Install
-                              ├── gopls, rust-analyzer, pylsp...
-                              ├── clangd, typescript-language-server...
-                              └── Your custom language server!
+
+### Tools (User Actions)
+```go
+// Stateless wrappers that use the infrastructure
+type CompletionTool struct {
+    manager *lsp.Manager  // Uses the service
+}
+```
+
+## Using LSP as a Framework
+
+The LSP package is designed to be used by external projects to build their own tools:
+
+### Basic Usage
+```go
+import "github.com/guild-ventures/guild-core/pkg/lsp"
+
+// Create manager
+manager, err := lsp.NewManager(configPath)
+
+// Use for code intelligence
+completions, err := manager.GetCompletion(ctx, file, line, col)
+definition, err := manager.GetDefinition(ctx, file, line, col)
+references, err := manager.GetReferences(ctx, file, line, col, true)
+hover, err := manager.GetHover(ctx, file, line, col)
+```
+
+### Example: Custom Completion Tool
+
+```go
+// Your custom tool with caching and AI enhancement
+type SmartCompletionTool struct {
+    manager *lsp.Manager
+    cache   *CompletionCache
+    ai      *AIEnhancer
+}
+
+func (t *SmartCompletionTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
+    // Check cache first
+    if cached := t.cache.Get(input); cached != nil {
+        return cached, nil
+    }
+    
+    // Get LSP completions
+    completions, err := t.manager.GetCompletion(ctx, file, line, col)
+    if err != nil {
+        return nil, err
+    }
+    
+    // Enhance with AI
+    enhanced := t.ai.RankByContext(completions, t.getContext(file))
+    filtered := t.ai.FilterIrrelevant(enhanced)
+    
+    // Cache and return
+    result := t.formatResult(filtered)
+    t.cache.Store(input, result)
+    
+    return result, nil
+}
+```
+
+### Example: Security Analysis Tool
+
+```go
+// Domain-specific tool for security analysis
+type SecurityScanTool struct {
+    manager *lsp.Manager
+    scanner *VulnerabilityScanner
+}
+
+func (t *SecurityScanTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
+    // Use LSP to understand code structure
+    symbols, err := t.manager.GetDocumentSymbols(ctx, file)
+    if err != nil {
+        return nil, err
+    }
+    
+    // Find function definitions
+    functions := extractFunctions(symbols)
+    
+    // Security analysis
+    vulnerabilities := []Vulnerability{}
+    for _, fn := range functions {
+        // Check for SQL injection patterns
+        if vuln := t.scanner.CheckSQLInjection(fn); vuln != nil {
+            vulnerabilities = append(vulnerabilities, vuln)
+        }
+        
+        // Check for unsafe operations
+        if vuln := t.scanner.CheckUnsafeOps(fn); vuln != nil {
+            vulnerabilities = append(vulnerabilities, vuln)
+        }
+    }
+    
+    return t.formatSecurityReport(vulnerabilities), nil
+}
+```
+
+### Example: Batch Operations Tool
+
+```go
+// Different philosophy: one tool for multiple operations
+type BatchLSPTool struct {
+    manager *lsp.Manager
+}
+
+type BatchParams struct {
+    File           string `json:"file"`
+    Operations     []string `json:"operations"`
+    IncludeMetrics bool `json:"include_metrics"`
+}
+
+func (t *BatchLSPTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
+    var params BatchParams
+    json.Unmarshal([]byte(input), &params)
+    
+    results := map[string]interface{}{}
+    metrics := map[string]time.Duration{}
+    
+    for _, op := range params.Operations {
+        start := time.Now()
+        
+        switch op {
+        case "symbols":
+            results["symbols"] = t.manager.GetDocumentSymbols(ctx, params.File)
+        case "outline":
+            results["outline"] = t.buildOutline(ctx, params.File)
+        case "diagnostics":
+            results["diagnostics"] = t.getDiagnostics(ctx, params.File)
+        case "imports":
+            results["imports"] = t.analyzeImports(ctx, params.File)
+        }
+        
+        if params.IncludeMetrics {
+            metrics[op] = time.Since(start)
+        }
+    }
+    
+    return &tools.ToolResult{
+        Data: results,
+        Metadata: map[string]string{
+            "operations": strings.Join(params.Operations, ","),
+            "duration": fmt.Sprintf("%v", time.Since(start)),
+        },
+    }, nil
+}
+```
+
+### Example: Refactoring Assistant
+
+```go
+// High-level refactoring tool using LSP
+type RefactoringTool struct {
+    manager  *lsp.Manager
+    analyzer *CodeAnalyzer
+}
+
+func (t *RefactoringTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
+    var params RefactorParams
+    json.Unmarshal([]byte(input), &params)
+    
+    switch params.Type {
+    case "extract_method":
+        return t.extractMethod(ctx, params)
+    case "inline_variable":
+        return t.inlineVariable(ctx, params)
+    case "rename_safe":
+        return t.safeRename(ctx, params)
+    }
+}
+
+func (t *RefactoringTool) extractMethod(ctx context.Context, params RefactorParams) (*tools.ToolResult, error) {
+    // Use LSP to understand code structure
+    symbols := t.manager.GetDocumentSymbols(ctx, params.File)
+    
+    // Analyze selected code
+    selection := t.analyzer.AnalyzeSelection(params.StartLine, params.EndLine)
+    
+    // Find variables used
+    refs := t.manager.GetReferences(ctx, params.File, selection.Variables)
+    
+    // Generate method signature
+    signature := t.analyzer.GenerateMethodSignature(selection, refs)
+    
+    // Create refactoring plan
+    plan := RefactorPlan{
+        NewMethod: signature,
+        Replacements: t.calculateReplacements(selection, refs),
+        Imports: t.requiredImports(selection),
+    }
+    
+    return t.formatPlan(plan), nil
+}
+```
+
+## Extending the Manager
+
+To add new LSP operations, extend the Manager:
+
+```go
+// In pkg/lsp/manager.go
+
+// GetDocumentSymbols returns all symbols in a document
+func (m *Manager) GetDocumentSymbols(ctx context.Context, filePath string) ([]DocumentSymbol, error) {
+    server, err := m.GetServerForFile(ctx, filePath)
+    if err != nil {
+        return nil, err
+    }
+    
+    if err := m.ensureFileOpened(ctx, server, filePath); err != nil {
+        return nil, err
+    }
+    
+    params := &DocumentSymbolParams{
+        TextDocument: TextDocumentIdentifier{
+            URI: FilePathToURI(filePath),
+        },
+    }
+    
+    var result []DocumentSymbol
+    if err := server.Client.Request(ctx, "textDocument/documentSymbol", params, &result); err != nil {
+        return nil, err
+    }
+    
+    return result, nil
+}
 ```
 
 ## Configuration
 
-LSP servers are configured in `~/.guild/lsp/config.yaml`. The system starts with an empty configuration - you add only what you need!
-
-### Adding a Language Server
-
-To add support for any language, create or edit `~/.guild/lsp/config.yaml`:
+Language servers are configured in `~/.guild/lsp/config.yaml`:
 
 ```yaml
 servers:
-  # Example: Go with gopls
   go:
-    language: go
-    command: ["gopls", "serve"]
+    command: ["gopls"]
+    root_markers: ["go.mod"]
     file_patterns: ["*.go"]
-    root_markers: ["go.mod", "go.sum"]
-    init_options:
-      usePlaceholders: true
-      completeUnimported: true
-
-  # Example: Python with pyright
+  
   python:
-    language: python
-    command: ["pyright-langserver", "--stdio"]
-    file_patterns: ["*.py", "*.pyi"]
-    root_markers: ["pyproject.toml", "setup.py", "requirements.txt"]
-
-  # Example: Your custom language
-  my-language:
-    language: mylang
-    command: ["/path/to/my-language-server", "--lsp"]
-    file_patterns: ["*.mylang", "*.ml"]
-    root_markers: ["project.mylang"]
-    environment:
-      MYLANG_HOME: "/opt/mylang"
-```
-
-### Configuration Options
-
-- **language**: Language identifier (any string you choose)
-- **command**: Command to start the LSP server
-- **file_patterns**: Glob patterns for files this server handles
-- **root_markers**: Files that indicate project root directory
-- **init_options**: Server-specific initialization options
-- **environment**: Environment variables for the server process
-
-## Installing Language Servers
-
-You can install language servers using your preferred package manager, similar to setting up your editor:
-
-```bash
-# Examples of installing popular language servers:
-
-# Go
-go install golang.org/x/tools/gopls@latest
-
-# TypeScript/JavaScript  
-npm install -g typescript typescript-language-server
-
-# Python (multiple options)
-pip install python-lsp-server[all]  # or
-pip install pyright                  # or
-pip install jedi-language-server
-
-# Rust
-rustup component add rust-analyzer
-
-# C/C++
-# Ubuntu/Debian: apt install clangd
-# macOS: brew install llvm
-# Or download from: https://clangd.llvm.org/
-
-# Ruby
-gem install solargraph
-
-# PHP
-npm install -g intelephense
-
-# ... and many more!
-```
-
-For a comprehensive list of available language servers, see:
-- https://microsoft.github.io/language-server-protocol/implementors/servers/
-- https://langserver.org/
-
-## Usage Examples
-
-### Direct Usage
-
-```go
-import (
-    "github.com/guild-ventures/guild-core/pkg/lsp"
-    lsptools "github.com/guild-ventures/guild-core/pkg/lsp/tools"
-)
-
-// Create LSP manager (loads config from ~/.guild/lsp/config.yaml)
-manager, err := lsp.NewManager("")
-defer manager.Shutdown(context.Background())
-
-// Use any configured language server
-completionTool := lsptools.NewCompletionTool(manager)
-
-// Works with any file type you've configured!
-result, _ := completionTool.Execute(ctx, `{
-    "file": "/path/to/code.anything",
-    "line": 10,
-    "column": 15
-}`)
-```
-
-### Agent Integration
-
-Agents automatically get LSP tools for all configured languages:
-
-```go
-// The agent executor automatically detects code tasks
-// and uses LSP tools when available
-task := Task{
-    Description: "Add error handling to the parse function",
-    Tool: "lsp_hover",  // Works for ANY configured language
-    Input: map[string]interface{}{
-        "file": "/project/parser.rs",  // Or .py, .ts, .java, etc.
-        "line": 42,
-        "column": 10,
-    },
-}
-```
-
-## Token Savings Example
-
-Traditional approach (sending file content):
-```json
-{
-  "tool": "analyze_code",
-  "file_content": "// 2000 tokens of file content here...",
-  "position": {"line": 50, "column": 10}
-}
-```
-**Tokens used: ~2000**
-
-LSP approach (works with ANY language):
-```json
-{
-  "tool": "lsp_completion",
-  "file": "/path/to/any/supported/file.ext",
-  "line": 50,
-  "column": 10
-}
-```
-**Tokens used: ~50**
-
-**Savings: 97.5%!**
-
-## Available LSP Tools
-
-All tools work with ANY configured language server:
-
-1. **lsp_completion**: Get code completions at a position
-2. **lsp_definition**: Navigate to symbol definition
-3. **lsp_references**: Find all references to a symbol
-4. **lsp_hover**: Get type info and documentation
-
-## Advanced Features
-
-### Multi-Language Projects
-
-Guild automatically detects the correct language server based on file extensions:
-
-```yaml
-servers:
-  # Frontend
-  typescript:
-    file_patterns: ["*.ts", "*.tsx", "*.js", "*.jsx"]
-    
-  # Backend
-  go:
-    file_patterns: ["*.go"]
-    
-  # Scripts
-  python:
+    command: ["pylsp"]
+    root_markers: ["setup.py", "pyproject.toml"]
     file_patterns: ["*.py"]
-    
-  # Documentation
-  markdown:
-    file_patterns: ["*.md", "*.mdx"]
+  
+  typescript:
+    command: ["typescript-language-server", "--stdio"]
+    root_markers: ["package.json", "tsconfig.json"]
+    file_patterns: ["*.ts", "*.tsx", "*.js", "*.jsx"]
 ```
 
-### Custom Language Support
+## Benefits of This Architecture
 
-Have a domain-specific language? Just add its LSP server:
-
-```yaml
-servers:
-  company-dsl:
-    language: company-dsl
-    command: ["/opt/company/bin/dsl-language-server"]
-    file_patterns: ["*.dsl", "*.rules"]
-    root_markers: ["project.dsl", ".dsl-config"]
-    init_options:
-      dialect: "v2"
-      strict: true
-```
-
-## Troubleshooting
-
-### Language Not Detected
-
-1. Check that file patterns match in config.yaml
-2. Ensure the language server is configured
-3. Verify file extension is included in patterns
-
-### Server Not Starting
-
-1. Verify the language server is installed: `which <server-command>`
-2. Check the command in config.yaml matches installation
-3. Look for errors in Guild logs
-4. Test the server manually: `<server-command> --help`
-
-### Adding New Languages
-
-1. Find an LSP server for your language
-2. Install it using the recommended method
-3. Add configuration to ~/.guild/lsp/config.yaml
-4. Test with a sample file
+1. **Flexibility**: Build tools that match your workflow
+2. **Performance**: Shared language server connections
+3. **Consistency**: Single source of truth for LSP operations
+4. **Extensibility**: Easy to add new language servers
+5. **Reliability**: Managed lifecycle and error recovery
 
 ## See Also
 
-- `config_example.yaml` - Example configuration for many languages
-- Language Server Protocol: https://microsoft.github.io/language-server-protocol/
-- Available servers: https://langserver.org/
+- `tools/lsp/` - Guild's default LSP tool implementations
+- `pkg/lsp/tools/` - Core LSP tools (completion, definition, etc.)
+- Language Server Protocol specification: https://microsoft.github.io/language-server-protocol/
