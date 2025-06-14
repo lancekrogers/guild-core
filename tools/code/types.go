@@ -3,18 +3,48 @@ package code
 import (
 	"context"
 	"go/token"
+	"strings"
 )
 
 // Language represents a programming language
 type Language string
 
 const (
+	// Primary languages
 	LanguageGo         Language = "go"
 	LanguagePython     Language = "python"
 	LanguageTypeScript Language = "typescript"
 	LanguageJavaScript Language = "javascript"
 	LanguageRust       Language = "rust"
 	LanguageJava       Language = "java"
+	LanguageCSharp     Language = "csharp"
+	LanguageCpp        Language = "cpp"
+	LanguageC          Language = "c"
+	LanguageRuby       Language = "ruby"
+	LanguagePhp        Language = "php"
+	
+	// Additional languages
+	LanguageBash       Language = "bash"
+	LanguageCSS        Language = "css"
+	LanguageCue        Language = "cue"
+	LanguageDockerfile Language = "dockerfile"
+	LanguageElixir     Language = "elixir"
+	LanguageElm        Language = "elm"
+	LanguageGroovy     Language = "groovy"
+	LanguageHCL        Language = "hcl"
+	LanguageHTML       Language = "html"
+	LanguageKotlin     Language = "kotlin"
+	LanguageLua        Language = "lua"
+	LanguageMarkdown   Language = "markdown"
+	LanguageOCaml      Language = "ocaml"
+	LanguageProtobuf   Language = "protobuf"
+	LanguageScala      Language = "scala"
+	LanguageSQL        Language = "sql"
+	LanguageSvelte     Language = "svelte"
+	LanguageSwift      Language = "swift"
+	LanguageTOML       Language = "toml"
+	LanguageYAML       Language = "yaml"
+	
 	LanguageUnknown    Language = "unknown"
 )
 
@@ -239,27 +269,116 @@ func DetectLanguage(filename string) Language {
 	}
 
 	switch ext {
+	// Go
 	case ".go":
 		return LanguageGo
+	// Python
 	case ".py", ".pyx", ".pyw":
 		return LanguagePython
+	// TypeScript
 	case ".ts", ".tsx":
 		return LanguageTypeScript
+	// JavaScript
 	case ".js", ".jsx", ".mjs":
 		return LanguageJavaScript
+	// Rust
 	case ".rs":
 		return LanguageRust
+	// Java
 	case ".java":
 		return LanguageJava
+	// C#
+	case ".cs":
+		return LanguageCSharp
+	// C++
+	case ".cpp", ".cc", ".cxx", ".hpp", ".h++":
+		return LanguageCpp
+	// C
+	case ".c", ".h":
+		return LanguageC
+	// Ruby
+	case ".rb":
+		return LanguageRuby
+	// PHP
+	case ".php", ".php3", ".php4", ".php5", ".phtml":
+		return LanguagePhp
+	// Bash
+	case ".sh", ".bash":
+		return LanguageBash
+	// CSS
+	case ".css", ".scss", ".sass", ".less":
+		return LanguageCSS
+	// CUE
+	case ".cue":
+		return LanguageCue
+	// Elixir
+	case ".ex", ".exs":
+		return LanguageElixir
+	// Elm
+	case ".elm":
+		return LanguageElm
+	// Groovy
+	case ".groovy", ".gvy", ".gy", ".gsh":
+		return LanguageGroovy
+	// HCL
+	case ".hcl", ".tf":
+		return LanguageHCL
+	// HTML
+	case ".html", ".htm", ".xhtml":
+		return LanguageHTML
+	// Kotlin
+	case ".kt", ".kts":
+		return LanguageKotlin
+	// Lua
+	case ".lua":
+		return LanguageLua
+	// Markdown
+	case ".md", ".markdown", ".mdown", ".mkd":
+		return LanguageMarkdown
+	// OCaml
+	case ".ml", ".mli":
+		return LanguageOCaml
+	// Protocol Buffers
+	case ".proto":
+		return LanguageProtobuf
+	// Scala
+	case ".scala", ".sc":
+		return LanguageScala
+	// SQL
+	case ".sql":
+		return LanguageSQL
+	// Svelte
+	case ".svelte":
+		return LanguageSvelte
+	// Swift
+	case ".swift":
+		return LanguageSwift
+	// TOML
+	case ".toml":
+		return LanguageTOML
+	// YAML
+	case ".yaml", ".yml":
+		return LanguageYAML
 	default:
+		// Check for Dockerfile
+		if filename == "Dockerfile" || strings.HasSuffix(filename, ".dockerfile") {
+			return LanguageDockerfile
+		}
 		return LanguageUnknown
 	}
 }
 
 // IsSupported returns true if the language is supported by the code tools
 func (l Language) IsSupported() bool {
+	// All languages with tree-sitter support are now supported
 	switch l {
-	case LanguageGo, LanguagePython, LanguageTypeScript, LanguageJavaScript:
+	case LanguageGo, LanguagePython, LanguageTypeScript, LanguageJavaScript,
+		LanguageRust, LanguageJava, LanguageCSharp, LanguageCpp, LanguageC,
+		LanguageRuby, LanguagePhp, LanguageBash, LanguageCSS, LanguageCue,
+		LanguageDockerfile, LanguageElixir, LanguageElm, LanguageGroovy,
+		LanguageHCL, LanguageHTML, LanguageKotlin, LanguageLua, LanguageMarkdown,
+		LanguageOCaml, LanguageProtobuf, LanguageScala, LanguageSQL, LanguageSvelte,
+		LanguageSwift, LanguageTOML, LanguageYAML:
 		return true
 	default:
 		return false

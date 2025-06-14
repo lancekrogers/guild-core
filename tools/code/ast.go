@@ -15,7 +15,7 @@ import (
 // ASTTool provides abstract syntax tree parsing and analysis
 type ASTTool struct {
 	*tools.BaseTool
-	parsers map[Language]Parser
+	registry *ParserRegistry
 }
 
 // ASTParams represents the input parameters for AST analysis
@@ -51,7 +51,8 @@ type ASTSummary struct {
 	LinesAnalyzed  int  `json:"lines_analyzed"`
 }
 
-// NewASTTool creates a new AST analysis tool
+// NewASTTool creates a new AST analysis tool without parsers
+// Use NewASTToolWithParsers for a ready-to-use tool
 func NewASTTool() *ASTTool {
 	schema := map[string]interface{}{
 		"type": "object",
@@ -67,7 +68,7 @@ func NewASTTool() *ASTTool {
 			},
 			"language": map[string]interface{}{
 				"type":        "string",
-				"enum":        []string{"go", "python", "typescript", "javascript"},
+				"enum":        []string{"go", "python", "typescript", "javascript", "rust", "java", "csharp", "cpp", "ruby", "php"},
 				"description": "Programming language (auto-detected if not specified)",
 			},
 			"include_doc": map[string]interface{}{
@@ -105,25 +106,23 @@ func NewASTTool() *ASTTool {
 
 	tool := &ASTTool{
 		BaseTool: baseTool,
-		parsers:  make(map[Language]Parser),
+		registry: NewParserRegistry(),
 	}
 
-	// Register language parsers
-	tool.registerParsers()
+	// Note: Parsers must be registered externally to avoid import cycles
+	// See init.go or main.go for parser registration
 
 	return tool
 }
 
-// registerParsers sets up language-specific parsers
-func (t *ASTTool) registerParsers() {
-	// Register Go parser
-	t.parsers[LanguageGo] = NewGoParser()
+// RegisterParser adds a parser to the AST tool
+func (t *ASTTool) RegisterParser(lang Language, parser Parser) {
+	t.registry.Register(lang, parser)
+}
 
-	// Register Python parser (placeholder for now)
-	// t.parsers[LanguagePython] = NewPythonParser()
-
-	// Register TypeScript parser (placeholder for now)
-	// t.parsers[LanguageTypeScript] = NewTypeScriptParser()
+// GetRegistry returns the parser registry for external registration
+func (t *ASTTool) GetRegistry() *ParserRegistry {
+	return t.registry
 }
 
 // Execute runs the AST tool with the given input
@@ -212,7 +211,7 @@ func (t *ASTTool) analyzeFile(ctx context.Context, params ASTParams) (*ASTResult
 	}
 
 	// Get parser for the language
-	parser, exists := t.parsers[language]
+	parser, exists := t.registry.Get(language)
 	if !exists {
 		return nil, gerror.Newf(gerror.ErrCodeNotFound, "no parser available for language: %s", language).
 			WithComponent("ast_tool").

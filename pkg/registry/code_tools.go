@@ -3,6 +3,7 @@ package registry
 import (
 	"github.com/guild-ventures/guild-core/tools"
 	"github.com/guild-ventures/guild-core/tools/code"
+	"github.com/guild-ventures/guild-core/tools/code/parsers"
 	"github.com/guild-ventures/guild-core/tools/edit"
 )
 
@@ -20,6 +21,12 @@ func RegisterCodeTools(registry interface{}) error {
 
 	// Code analysis tools
 	astTool := code.NewASTTool()
+	
+	// Register all supported parsers
+	if err := parsers.RegisterAllParsers(astTool); err != nil {
+		return err
+	}
+	
 	if err := toolRegistry.RegisterTool(astTool); err != nil {
 		return err
 	}
@@ -61,6 +68,12 @@ func RegisterCodeTools(registry interface{}) error {
 func registerWithPkgRegistry(registry interface{ RegisterTool(tools.Tool) error }) error {
 	// Code analysis tools
 	astTool := code.NewASTTool()
+	
+	// Register all supported parsers
+	if err := parsers.RegisterAllParsers(astTool); err != nil {
+		return err
+	}
+	
 	if err := registry.RegisterTool(astTool); err != nil {
 		return err
 	}
