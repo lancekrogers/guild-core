@@ -57,6 +57,11 @@ func RegisterCodeTools(registry interface{}) error {
 		return err
 	}
 
+	multiEditTool := edit.NewMultiEditTool()
+	if err := toolRegistry.RegisterTool(multiEditTool); err != nil {
+		return err
+	}
+
 	multiRefactorTool := edit.NewMultiFileRefactorTool()
 	if err := toolRegistry.RegisterTool(multiRefactorTool); err != nil {
 		return err
@@ -104,6 +109,11 @@ func registerWithPkgRegistry(registry interface{ RegisterTool(tools.Tool) error 
 		return err
 	}
 
+	multiEditTool := edit.NewMultiEditTool()
+	if err := registry.RegisterTool(multiEditTool); err != nil {
+		return err
+	}
+
 	multiRefactorTool := edit.NewMultiFileRefactorTool()
 	if err := registry.RegisterTool(multiRefactorTool); err != nil {
 		return err
@@ -121,6 +131,7 @@ func GetCodeToolNames() []string {
 		"search_replace",
 		"apply_diff",
 		"cursor_position",
+		"multi_edit",
 		"multi_refactor",
 	}
 }
@@ -139,6 +150,7 @@ func GetCodeToolsByCategory() map[string][]string {
 		"code_editing": {
 			"apply_diff",
 			"cursor_position",
+			"multi_edit",
 			"multi_refactor",
 		},
 	}

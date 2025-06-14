@@ -26,7 +26,7 @@ Guild is an ambitious AI agent orchestration framework that coordinates speciali
 
 ### Core Systems
 
-- ✅ **Advanced Chat Interface**: Production-ready TUI with 1,950 lines of code
+- ✅ **Advanced Chat Interface**: Production-ready TUI
 - ✅ **Tool Execution System**: Complete with workspace isolation and safety features
 - ✅ **6-Layer Prompt Architecture**: Dynamic prompt management with token optimization
 - ✅ **Project Initialization**: Full `guild init` command with configuration templates
@@ -56,7 +56,7 @@ guild migrate              # Migrate from global to project configuration
 
 ### Prerequisites
 
-- Go 1.23 or higher
+- Go 1.24 or higher
 - Git
 - SQLite (for storage)
 
@@ -169,6 +169,7 @@ make clean            # Clean ALL artifacts including .test files
 ## 🎯 Current Status & Known Issues
 
 ### Working Features
+
 - ✅ Project initialization (`guild init`)
 - ✅ Interactive chat interface (`guild chat`)
 - ✅ Corpus scanning and indexing
@@ -176,6 +177,7 @@ make clean            # Clean ALL artifacts including .test files
 - ✅ Basic agent framework
 
 ### Known Issues
+
 - ⚠️ gRPC server has build errors (`pkg/grpc` package)
 - ⚠️ Some agent features not fully implemented
 - ⚠️ Test coverage needs improvement
@@ -201,6 +203,7 @@ If you encounter `fatal: this operation must be run in a work tree` when running
 ```
 
 Or manually fix:
+
 ```bash
 git config --file=../.git/modules/guild-core/config core.bare false
 git config --file=../.git/modules/guild-core/config core.worktree ../../../guild-core
@@ -211,6 +214,7 @@ This issue can occur when pre-commit hooks reset the git submodule configuration
 ### Pre-commit Hook Issues
 
 If pre-commit hooks fail due to VCS issues:
+
 ```bash
 # Commit without pre-commit hooks (when necessary)
 git commit --no-verify -m "Your commit message"

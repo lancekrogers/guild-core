@@ -1046,6 +1046,27 @@ func (r *DefaultComponentRegistry) initializeTools(ctx context.Context) error {
 		}
 	}
 
+	// Register filesystem tools
+	if err := RegisterFSTools(r.toolRegistry); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register filesystem tools").
+			WithComponent("registry").
+			WithOperation("initializeTools")
+	}
+
+	// Register code tools
+	if err := RegisterCodeTools(r.toolRegistry); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register code tools").
+			WithComponent("registry").
+			WithOperation("initializeTools")
+	}
+
+	// Register dev tools
+	if err := RegisterDevTools(r.toolRegistry); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register dev tools").
+			WithComponent("registry").
+			WithOperation("initializeTools")
+	}
+
 	return nil
 }
 
