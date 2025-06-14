@@ -28,6 +28,16 @@ func (m ChatModel) View() string {
 		s.WriteString(m.getAgentStatusView())
 	case chatModeGlobal:
 		s.WriteString(m.getGlobalStreamView())
+	case chatModeFuzzyFinder:
+		if m.fuzzyFinder != nil {
+			return m.fuzzyFinder.View()
+		}
+		s.WriteString("Initializing fuzzy finder...")
+	case chatModeGlobalSearch:
+		if m.globalSearch != nil {
+			return m.globalSearch.View()
+		}
+		s.WriteString("Initializing global search...")
 	default:
 		// Normal chat view
 		s.WriteString(m.viewport.View())
@@ -59,7 +69,7 @@ func (m ChatModel) View() string {
 	} else {
 		s.WriteString("\n")
 		helpStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("241"))
-		s.WriteString(helpStyle.Render("ctrl+c: quit • ctrl+h: help • ctrl+p: prompts • ctrl+a: agents"))
+		s.WriteString(helpStyle.Render("ctrl+c: quit • ctrl+h: help • ctrl+o: files • ctrl+shift+f: search • ctrl+p: prompts • ctrl+a: agents"))
 	}
 
 	return s.String()

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Test script for session persistence in Guild Chat
+
+echo "=== Guild Chat Session Persistence Test ==="
+echo ""
+echo "This script demonstrates the new session persistence features:"
+echo ""
+echo "1. Sessions are automatically created when chat starts"
+echo "2. Messages are saved to SQLite database (.guild/memory.db)"
+echo "3. Previous messages are loaded when resuming a session"
+echo "4. Session commands available:"
+echo "   - /sessions - Show current session info"
+echo "   - /session new [name] - Create new session"
+echo "   - /session rename <name> - Rename current session"
+echo "   - /session export [format] - Export session (json, markdown, html)"
+echo "   - /status - Shows session details in status display"
+echo ""
+echo "To test:"
+echo "1. Run: ./guild chat"
+echo "2. Send some messages"
+echo "3. Exit and restart with same session ID"
+echo "4. Previous messages will be loaded"
+echo ""
+echo "To resume a specific session:"
+echo "./guild chat --session <session-id>"
+echo ""

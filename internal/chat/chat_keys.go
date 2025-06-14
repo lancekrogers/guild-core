@@ -116,6 +116,14 @@ func newChatKeyMap() chatKeyMap {
 			key.WithKeys("N"),
 			key.WithHelp("N", "previous match"),
 		),
+		FuzzyFinder: key.NewBinding(
+			key.WithKeys("ctrl+o"),
+			key.WithHelp("ctrl+o", "fuzzy file finder"),
+		),
+		GlobalSearch: key.NewBinding(
+			key.WithKeys("ctrl+shift+f"),
+			key.WithHelp("ctrl+shift+f", "global search"),
+		),
 	}
 }
 
@@ -138,6 +146,7 @@ func (k chatKeyMap) FullHelp() [][]key.Binding {
 		{k.ScrollUp, k.ScrollDown, k.PageUp, k.PageDown},
 		{k.Home, k.End, k.PrevHistory, k.NextHistory},
 		{k.Search, k.NextMatch, k.PrevMatch, k.ToggleViewMode},
+		{k.FuzzyFinder, k.GlobalSearch},
 	}
 }
 

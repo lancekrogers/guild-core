@@ -6,6 +6,9 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/guild-ventures/guild-core/internal/chat/visual"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/templates"
 )
 
 // ContentFormatter provides high-level content formatting for different message types
@@ -17,10 +20,16 @@ type ContentFormatter struct {
 	// Content optimization
 	maxContentLength int  // Maximum content length before truncation
 	showMoreEnabled  bool // Whether to enable "show more" functionality
+	
+	// Enhanced visual processors
+	imageProcessor   *visual.ImageProcessor
+	codeRenderer     *visual.CodeRenderer
+	mermaidProcessor *visual.MermaidProcessor
+	templateManager  *templates.TemplateManager
 }
 
 // NewContentFormatter creates a new content formatter with medieval theming
-func NewContentFormatter(markdownRenderer *MarkdownRenderer, width int) *ContentFormatter {
+func NewContentFormatter(markdownRenderer *MarkdownRenderer, width int, projectDir string) *ContentFormatter {
 	// Medieval-themed styles for different message types
 	messageStyles := map[string]lipgloss.Style{
 		"agent": lipgloss.NewStyle().
@@ -46,30 +55,52 @@ func NewContentFormatter(markdownRenderer *MarkdownRenderer, width int) *Content
 			Bold(true),
 	}
 
+	// Initialize enhanced visual processors
+	imageProcessor := visual.NewImageProcessor()
+	imageProcessor.SetASCIISize(width-10, 30) // Adjust for chat width
+	
+	codeRenderer := visual.NewCodeRenderer()
+	codeRenderer.SetMaxWidth(width - 10)
+	
+	mermaidProcessor := visual.NewMermaidProcessor()
+	mermaidProcessor.SetASCIISize(width-10, 30)
+	
+	// Initialize template manager (best effort, don't fail if it can't be created)
+	var templateManager *templates.TemplateManager
+	if projectDir != "" {
+		templateManager, _ = templates.NewTemplateManager(projectDir)
+	}
+
 	return &ContentFormatter{
 		markdownRenderer: markdownRenderer,
 		width:            width,
 		messageStyles:    messageStyles,
 		maxContentLength: 5000, // Default max content length
 		showMoreEnabled:  true, // Enable "show more" by default
+		
+		// Enhanced visual processors
+		imageProcessor:   imageProcessor,
+		codeRenderer:     codeRenderer,
+		mermaidProcessor: mermaidProcessor,
+		templateManager:  templateManager,
 	}
 }
 
 // FormatAgentResponse formats agent responses with rich content rendering
 func (cf *ContentFormatter) FormatAgentResponse(content string, agentID string) string {
-	// Apply markdown rendering for rich content
-	renderedContent := cf.markdownRenderer.DetectAndRenderContent(content)
+	// Apply enhanced content processing
+	processedContent := cf.processEnhancedContent(content)
 
 	// Add agent-specific formatting if needed
 	if agentID != "" {
 		// Add subtle agent attribution for complex responses
 		if len(content) > 200 || strings.Contains(content, "```") {
 			attribution := cf.messageStyles["agent"].Render(fmt.Sprintf("🤖 %s", agentID))
-			renderedContent = fmt.Sprintf("%s\n%s", attribution, renderedContent)
+			processedContent = fmt.Sprintf("%s\n%s", attribution, processedContent)
 		}
 	}
 
-	return renderedContent
+	return processedContent
 }
 
 // FormatSystemMessage formats system messages with consistent styling
@@ -602,4 +633,99 @@ func (ptf *PlainTextFormatter) FormatTimestamp(timestamp time.Time) string {
 // UpdateWidth adjusts the formatter for new terminal width
 func (ptf *PlainTextFormatter) UpdateWidth(newWidth int) {
 	ptf.width = newWidth
+}
+
+// processEnhancedContent applies all visual processors to content
+func (cf *ContentFormatter) processEnhancedContent(content string) string {
+	processedContent := content
+	
+	// 1. Process images first
+	if cf.imageProcessor != nil {
+		processed, imageRefs, err := cf.imageProcessor.ProcessContent(processedContent)
+		if err == nil && len(imageRefs) > 0 {
+			processedContent = processed
+		}
+	}
+	
+	// 2. Process Mermaid diagrams
+	if cf.mermaidProcessor != nil {
+		processed, diagrams, err := cf.mermaidProcessor.ProcessContent(processedContent)
+		if err == nil && len(diagrams) > 0 {
+			processedContent = processed
+		}
+	}
+	
+	// 3. Enhance code blocks
+	if cf.codeRenderer != nil {
+		processedContent = cf.codeRenderer.ProcessCodeBlocks(processedContent)
+	}
+	
+	// 4. Apply standard markdown rendering
+	if cf.markdownRenderer != nil {
+		processedContent = cf.markdownRenderer.DetectAndRenderContent(processedContent)
+	}
+	
+	return processedContent
+}
+
+// GetTemplateSuggestions returns contextual template suggestions
+func (cf *ContentFormatter) GetTemplateSuggestions(context map[string]interface{}) ([]*templates.Template, error) {
+	if cf.templateManager == nil {
+		return nil, gerror.New(gerror.ErrCodeNotFound, "template manager not available", nil)
+	}
+	
+	return cf.templateManager.GetContextualSuggestions(context)
+}
+
+// RenderTemplate renders a template with variables
+func (cf *ContentFormatter) RenderTemplate(templateID string, variables map[string]interface{}) (string, error) {
+	if cf.templateManager == nil {
+		return "", gerror.New(gerror.ErrCodeNotFound, "template manager not available", nil)
+	}
+	
+	content, err := cf.templateManager.RenderTemplate(templateID, variables)
+	if err != nil {
+		return "", err
+	}
+	
+	// Apply enhanced content processing to the rendered template
+	return cf.processEnhancedContent(content), nil
+}
+
+// SearchTemplates searches for templates matching a query
+func (cf *ContentFormatter) SearchTemplates(query string, limit int) ([]*templates.TemplateSearchResult, error) {
+	if cf.templateManager == nil {
+		return nil, gerror.New(gerror.ErrCodeNotFound, "template manager not available", nil)
+	}
+	
+	return cf.templateManager.SearchTemplates(query, limit)
+}
+
+// ToggleCodeLineNumbers toggles line numbers in code blocks
+func (cf *ContentFormatter) ToggleCodeLineNumbers() {
+	if cf.codeRenderer != nil {
+		cf.codeRenderer.ToggleLineNumbers()
+	}
+}
+
+// SetImageASCIISize sets the size for ASCII art generation
+func (cf *ContentFormatter) SetImageASCIISize(width, height int) {
+	if cf.imageProcessor != nil {
+		cf.imageProcessor.SetASCIISize(width, height)
+	}
+}
+
+// SetExternalImageViewer sets the external image viewer command
+func (cf *ContentFormatter) SetExternalImageViewer(viewer string) {
+	if cf.imageProcessor != nil {
+		cf.imageProcessor.SetExternalViewer(viewer)
+	}
+}
+
+// GetLanguageStats returns statistics about code languages in processed content
+func (cf *ContentFormatter) GetLanguageStats(content string) map[string]int {
+	if cf.codeRenderer != nil {
+		return cf.codeRenderer.GetLanguageStats(content)
+	}
+	return make(map[string]int)
 }

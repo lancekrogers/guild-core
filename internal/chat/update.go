@@ -83,6 +83,12 @@ func (m ChatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			return m, nil
 
+		case key.Matches(msg, m.keys.FuzzyFinder):
+			return m.handleFuzzyFinder()
+
+		case key.Matches(msg, m.keys.GlobalSearch):
+			return m.handleGlobalSearch()
+
 		case key.Matches(msg, m.keys.ScrollUp):
 			m.viewport.LineUp(1)
 
@@ -167,9 +173,22 @@ func (m ChatModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 
-	// Handle text input updates
-	if m.viewMode == chatModeNormal {
+	// Handle text input updates for different modes
+	switch m.viewMode {
+	case chatModeNormal:
 		m.input, tiCmd = m.input.Update(msg)
+	case chatModeFuzzyFinder:
+		if m.fuzzyFinder != nil {
+			var cmd tea.Cmd
+			m.fuzzyFinder, cmd = m.fuzzyFinder.Update(msg)
+			return m, cmd
+		}
+	case chatModeGlobalSearch:
+		if m.globalSearch != nil {
+			var cmd tea.Cmd
+			m.globalSearch, cmd = m.globalSearch.Update(msg)
+			return m, cmd
+		}
 	}
 
 	// Update viewport

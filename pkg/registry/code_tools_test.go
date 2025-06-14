@@ -12,8 +12,8 @@ import (
 func TestGetCodeToolNames(t *testing.T) {
 	names := GetCodeToolNames()
 
-	// Should return all 7 tools
-	assert.Len(t, names, 7)
+	// Should return all 8 tools
+	assert.Len(t, names, 8)
 
 	// Check specific tools are included
 	expectedTools := []string{
@@ -23,6 +23,7 @@ func TestGetCodeToolNames(t *testing.T) {
 		"search_replace",
 		"apply_diff",
 		"cursor_position",
+		"multi_edit",
 		"multi_refactor",
 	}
 
@@ -54,6 +55,7 @@ func TestGetCodeToolsByCategory(t *testing.T) {
 	assert.True(t, exists)
 	assert.Contains(t, codeEditing, "apply_diff")
 	assert.Contains(t, codeEditing, "cursor_position")
+	assert.Contains(t, codeEditing, "multi_edit")
 	assert.Contains(t, codeEditing, "multi_refactor")
 }
 
@@ -95,6 +97,11 @@ func TestCodeToolInstantiation(t *testing.T) {
 			category: "edit",
 		},
 		{
+			name:     "Multi Edit Tool",
+			toolName: "multi_edit",
+			category: "edit",
+		},
+		{
 			name:     "Multi Refactor Tool",
 			toolName: "multi_refactor",
 			category: "edit",
@@ -124,6 +131,8 @@ func TestCodeToolInstantiation(t *testing.T) {
 					tool = edit.NewApplyDiffTool()
 				case "cursor_position":
 					tool = edit.NewCursorPositionTool()
+				case "multi_edit":
+					tool = edit.NewMultiEditTool()
 				case "multi_refactor":
 					tool = edit.NewMultiFileRefactorTool()
 				}
@@ -171,6 +180,7 @@ func TestCodeToolsExamples(t *testing.T) {
 		code.NewSearchReplaceTool(),
 		edit.NewApplyDiffTool(),
 		edit.NewCursorPositionTool(),
+		edit.NewMultiEditTool(),
 		edit.NewMultiFileRefactorTool(),
 	}
 
@@ -194,6 +204,7 @@ func TestCodeToolsJSON_Examples(t *testing.T) {
 		`{"pattern": "TODO", "files": ["*.go"]}`,                                                        // Search Replace
 		`{"diff": "--- a/file.go\n+++ b/file.go\n@@ -1,1 +1,1 @@\n-old\n+new"}`,                         // Apply Diff
 		`{"file": "main.go", "line": 10, "column": 5}`,                                                  // Cursor Position
+		`{"edits": [{"file": "main.go", "old_string": "old", "new_string": "new"}]}`,                   // Multi Edit
 		`{"type": "rename", "target": {"file": "main.go", "symbol": "oldName"}, "new_name": "newName"}`, // Multi Refactor
 	}
 
@@ -273,6 +284,15 @@ func BenchmarkToolInstantiation(b *testing.B) {
 	b.Run("CursorPosition", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			tool := edit.NewCursorPositionTool()
+			if tool == nil {
+				b.Fatal("Tool should be instantiated")
+			}
+		}
+	})
+
+	b.Run("MultiEdit", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			tool := edit.NewMultiEditTool()
 			if tool == nil {
 				b.Fatal("Tool should be instantiated")
 			}

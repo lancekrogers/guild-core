@@ -119,7 +119,7 @@ func (m *ChatModel) initializeMarkdownRenderer() error {
 	}
 
 	m.markdownRenderer = renderer
-	m.contentFormatter = NewContentFormatter(renderer, m.width)
+	m.contentFormatter = NewContentFormatter(renderer, m.width, ".")
 
 	return nil
 }

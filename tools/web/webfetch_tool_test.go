@@ -46,6 +46,7 @@ func (m *MockAIProvider) GetCapabilities() interfaces.ProviderCapabilities {
 func TestWebFetchTool_Interface(t *testing.T) {
 	mockProvider := &MockAIProvider{}
 	tool := NewWebFetchTool(mockProvider)
+	defer tool.Close()
 	
 	// Ensure it implements the Tool interface
 	var _ tools.Tool = tool
@@ -61,6 +62,7 @@ func TestWebFetchTool_Interface(t *testing.T) {
 func TestWebFetchTool_Schema(t *testing.T) {
 	mockProvider := &MockAIProvider{}
 	tool := NewWebFetchTool(mockProvider)
+	defer tool.Close()
 	schema := tool.Schema()
 	
 	assert.Equal(t, "object", schema["type"])
@@ -88,6 +90,7 @@ func TestWebFetchTool_Schema(t *testing.T) {
 func TestWebFetchTool_Execute_InvalidInput(t *testing.T) {
 	mockProvider := &MockAIProvider{}
 	tool := NewWebFetchTool(mockProvider)
+	defer tool.Close()
 	ctx := context.Background()
 	
 	tests := []struct {
@@ -175,6 +178,7 @@ func TestWebFetchTool_Execute_ValidInput(t *testing.T) {
 		}, nil)
 	
 	tool := NewWebFetchTool(mockProvider)
+	defer tool.Close()
 	ctx := context.Background()
 	
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Summarize this page"}`, server.URL)
@@ -214,6 +218,7 @@ func TestWebFetchTool_Execute_HTTPError(t *testing.T) {
 	
 	mockProvider := &MockAIProvider{}
 	tool := NewWebFetchTool(mockProvider)
+	defer tool.Close()
 	ctx := context.Background()
 	
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze this"}`, server.URL)
@@ -248,6 +253,7 @@ func TestWebFetchTool_Execute_AIProviderError(t *testing.T) {
 		(*interfaces.ChatResponse)(nil), fmt.Errorf("AI service unavailable"))
 	
 	tool := NewWebFetchTool(mockProvider)
+	defer tool.Close()
 	ctx := context.Background()
 	
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze this"}`, server.URL)
@@ -392,6 +398,7 @@ func TestWebFetchTool_ContentExtraction(t *testing.T) {
 				}, nil).Once()
 			
 			testTool := NewWebFetchTool(mockProvider)
+			defer testTool.Close()
 			ctx := context.Background()
 			
 			input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze"}`, server.URL)
@@ -453,6 +460,7 @@ func TestWebFetchTool_MetadataExtraction(t *testing.T) {
 		}, nil)
 	
 	tool := NewWebFetchTool(mockProvider)
+	defer tool.Close()
 	ctx := context.Background()
 	
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze"}`, server.URL)
@@ -504,6 +512,7 @@ func TestWebFetchTool_Cache(t *testing.T) {
 		}, nil).Once()
 	
 	tool := NewWebFetchTool(mockProvider)
+	defer tool.Close()
 	ctx := context.Background()
 	
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze this"}`, server.URL)
@@ -558,6 +567,7 @@ func TestWebFetchTool_LargeContent(t *testing.T) {
 		}, nil)
 	
 	tool := NewWebFetchTool(mockProvider)
+	defer tool.Close()
 	ctx := context.Background()
 	
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze"}`, server.URL)
@@ -598,6 +608,7 @@ func TestWebFetchTool_Redirects(t *testing.T) {
 		}, nil)
 	
 	tool := NewWebFetchTool(mockProvider)
+	defer tool.Close()
 	ctx := context.Background()
 	
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze"}`, mainServer.URL)
@@ -618,6 +629,7 @@ func TestWebFetchTool_Redirects(t *testing.T) {
 
 func TestWebFetchCache_Operations(t *testing.T) {
 	cache := NewWebFetchCache(3) // Small cache for testing
+	defer cache.Stop()
 	
 	response1 := &WebFetchResponse{URL: "http://example1.com", Analysis: "Analysis 1"}
 	response2 := &WebFetchResponse{URL: "http://example2.com", Analysis: "Analysis 2"}
@@ -655,6 +667,7 @@ func TestWebFetchCache_Operations(t *testing.T) {
 
 func TestWebFetchCache_Expiration(t *testing.T) {
 	cache := NewWebFetchCache(10)
+	defer cache.Stop()
 	
 	response := &WebFetchResponse{URL: "http://example.com", Analysis: "Analysis"}
 	
@@ -691,6 +704,7 @@ func BenchmarkWebFetchTool_Execute(b *testing.B) {
 		}, nil)
 	
 	tool := NewWebFetchTool(mockProvider)
+	defer tool.Close()
 	ctx := context.Background()
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze"}`, server.URL)
 	
@@ -706,6 +720,7 @@ func BenchmarkWebFetchTool_Execute(b *testing.B) {
 func BenchmarkWebFetchTool_ContentExtraction(b *testing.B) {
 	mockProvider := &MockAIProvider{}
 	tool := NewWebFetchTool(mockProvider)
+	defer tool.Close()
 	
 	// Create complex HTML for benchmarking
 	complexHTML := `
@@ -746,13 +761,25 @@ func BenchmarkWebFetchTool_ContentExtraction(b *testing.B) {
 func TestWebFetchTool_Timeout(t *testing.T) {
 	// Create a slow server to test timeout
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(35 * time.Second) // Longer than client timeout
-		w.WriteHeader(http.StatusOK)
+		// Wait for the context to be cancelled, which will happen after 1 second
+		select {
+		case <-r.Context().Done():
+			// Client disconnected due to timeout - this is expected
+			return
+		case <-time.After(10 * time.Second):
+			// Fallback - write response if context doesn't get cancelled
+			w.WriteHeader(http.StatusOK)
+		}
 	}))
-	defer server.Close()
+	defer func() {
+		// Close client connections first to avoid blocking
+		server.CloseClientConnections()
+		server.Close()
+	}()
 	
 	mockProvider := &MockAIProvider{}
 	tool := NewWebFetchTool(mockProvider)
+	defer tool.Close()
 	
 	// Create a context with short timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)

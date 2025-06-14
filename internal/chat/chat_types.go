@@ -10,6 +10,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/guild-ventures/guild-core/internal/chat/commands"
+	"github.com/guild-ventures/guild-core/internal/ui"
 	"github.com/guild-ventures/guild-core/pkg/chat/session"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
@@ -25,6 +26,8 @@ const (
 	chatModePrompt
 	chatModeStatus
 	chatModeGlobal
+	chatModeFuzzyFinder
+	chatModeGlobalSearch
 )
 
 // messageType represents different types of messages in the chat
@@ -168,6 +171,8 @@ type chatKeyMap struct {
 	Search         key.Binding
 	NextMatch      key.Binding
 	PrevMatch      key.Binding
+	FuzzyFinder    key.Binding
+	GlobalSearch   key.Binding
 }
 
 // ChatModel represents the main chat application state
@@ -233,6 +238,10 @@ type ChatModel struct {
 	completionResults []CompletionResult
 	completionIndex   int
 
+	// Search components
+	fuzzyFinder   *ui.FuzzyFinderModel
+	globalSearch  *ui.GlobalSearchModel
+	
 	// Integration flags
 	integrationFlags map[string]bool
 }

@@ -128,6 +128,7 @@ type SessionManager interface {
 
 	// Export/Import
 	ExportSession(sessionID string, format ExportFormat) ([]byte, error)
+	ExportSessionWithOptions(sessionID string, format ExportFormat, options *ExportOptions) ([]byte, error)
 	ImportSession(data []byte, format ExportFormat) (*Session, error)
 }
 
@@ -145,7 +146,20 @@ const (
 	ExportFormatJSON     ExportFormat = "json"
 	ExportFormatMarkdown ExportFormat = "markdown"
 	ExportFormatHTML     ExportFormat = "html"
+	ExportFormatPDF      ExportFormat = "pdf"
 )
+
+// ExportOptions defines options for session export
+type ExportOptions struct {
+	IncludeToolOutputs bool              `json:"include_tool_outputs"`
+	IncludeMetadata    bool              `json:"include_metadata"`
+	CustomCSS          string            `json:"custom_css,omitempty"`
+	Theme              string            `json:"theme,omitempty"`
+	SyntaxHighlight    bool              `json:"syntax_highlight"`
+	LineNumbers        bool              `json:"line_numbers"`
+	DateFormat         string            `json:"date_format,omitempty"`
+	Title              string            `json:"title,omitempty"`
+}
 
 // MarshalJSON implements custom JSON marshaling for ToolCall
 func (tc ToolCall) MarshalJSON() ([]byte, error) {

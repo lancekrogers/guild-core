@@ -6,7 +6,9 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
+	tea "github.com/charmbracelet/bubbletea"
 
+	"github.com/guild-ventures/guild-core/internal/ui"
 	"github.com/guild-ventures/guild-core/pkg/config"
 )
 
@@ -353,3 +355,61 @@ func (m *ChatModel) handleToolExecutionProgress(msg toolExecutionProgressMsg) {
 }
 
 // Fixed handlers are in helpers_fixed.go
+
+// handleFuzzyFinder initializes and shows the fuzzy file finder
+func (m *ChatModel) handleFuzzyFinder() (tea.Model, tea.Cmd) {
+	// Get current working directory
+	workingDir := "."
+
+	// Initialize fuzzy finder if not already created
+	if m.fuzzyFinder == nil {
+		m.fuzzyFinder = ui.NewFuzzyFinderModel(workingDir,
+			ui.WithFileSelectedCallback(func(filePath string) {
+				// Add message about file selection
+				m.messages = append(m.messages, Message{
+					Type:      msgSystem,
+					Content:   fmt.Sprintf("📁 Selected file: %s", filePath),
+					Timestamp: time.Now(),
+				})
+				m.updateMessagesView()
+				m.viewMode = chatModeNormal
+			}),
+			ui.WithCloseCallback(func() {
+				m.viewMode = chatModeNormal
+			}),
+		)
+	}
+
+	// Switch to fuzzy finder mode
+	m.viewMode = chatModeFuzzyFinder
+	return m, m.fuzzyFinder.Init()
+}
+
+// handleGlobalSearch initializes and shows the global search
+func (m *ChatModel) handleGlobalSearch() (tea.Model, tea.Cmd) {
+	// Get current working directory
+	workingDir := "."
+
+	// Initialize global search if not already created
+	if m.globalSearch == nil {
+		m.globalSearch = ui.NewGlobalSearchModel(workingDir,
+			ui.WithLocationSelectedCallback(func(filePath string, line int, column int) {
+				// Add message about location selection
+				m.messages = append(m.messages, Message{
+					Type:      msgSystem,
+					Content:   fmt.Sprintf("🔍 Jump to: %s:%d:%d", filePath, line, column),
+					Timestamp: time.Now(),
+				})
+				m.updateMessagesView()
+				m.viewMode = chatModeNormal
+			}),
+			ui.WithGlobalSearchCloseCallback(func() {
+				m.viewMode = chatModeNormal
+			}),
+		)
+	}
+
+	// Switch to global search mode
+	m.viewMode = chatModeGlobalSearch
+	return m, m.globalSearch.Init()
+}

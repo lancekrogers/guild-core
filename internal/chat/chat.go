@@ -187,11 +187,11 @@ Try these commands to see visual features:
 		// If markdown renderer fails, continue without it (graceful degradation)
 		markdownRenderer = nil
 	}
-	contentFormatter := NewContentFormatter(markdownRenderer, chatWidth)
-
 	// Initialize command completion and history
 	// Use current working directory as project root
 	projectRoot := "." // Agent 2 will improve this logic
+	
+	contentFormatter := NewContentFormatter(markdownRenderer, chatWidth, projectRoot)
 
 	completionEngine := NewCompletionEngine(guildConfig, projectRoot)
 	commandHistory := NewCommandHistory(projectRoot + "/.guild/chat_history.txt")

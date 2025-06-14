@@ -37,7 +37,7 @@ func TestChatMarkdownIntegration(t *testing.T) {
 		t.Fatalf("Failed to create markdown renderer: %v", err)
 	}
 
-	contentFormatter := NewContentFormatter(markdownRenderer, chatWidth)
+	contentFormatter := NewContentFormatter(markdownRenderer, chatWidth, ".")
 
 	// Test message formatting for different types
 	tests := []struct {

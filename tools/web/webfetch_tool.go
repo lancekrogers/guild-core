@@ -95,6 +95,13 @@ func NewWebFetchCache(maxSize int) *WebFetchCache {
 	return cache
 }
 
+// Close stops the cache cleanup goroutine
+func (t *WebFetchTool) Close() {
+	if t.cache != nil {
+		t.cache.Stop()
+	}
+}
+
 // Get retrieves a cached entry
 func (c *WebFetchCache) Get(key string) (*WebFetchResponse, bool) {
 	c.mutex.RLock()

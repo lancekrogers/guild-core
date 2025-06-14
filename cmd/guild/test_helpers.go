@@ -265,7 +265,7 @@ func setupBenchmarkEnvironment() (*chat.AgentStatusTracker, *chat.StatusDisplay,
 	tracker := chat.NewAgentStatusTracker(config)
 	display := chat.NewStatusDisplay(tracker, 80, 24)
 	renderer, _ := chat.NewMarkdownRenderer(80)
-	formatter := chat.NewContentFormatter(renderer, 80)
+	formatter := chat.NewContentFormatter(renderer, 80, ".")
 
 	// Pre-populate with test data
 	for i := 0; i < 5; i++ {

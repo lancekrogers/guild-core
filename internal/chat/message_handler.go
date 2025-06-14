@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"time"
 
@@ -495,22 +496,17 @@ func (m ChatModel) handleSessionsCommand(args []string) string {
 		return "Session persistence is not available"
 	}
 
-	ctx := context.Background()
-	sessions, err := m.sessionManager.(*session.Manager).LoadSession(m.currentSession.ID)
-	if err != nil {
-		// If loading current session fails, try listing all sessions
-		store := m.sessionManager.(*session.Manager)
-		// We need to access the store directly for listing
-		return "Unable to list sessions (feature in development)"
-	}
-
 	// For now, show current session info
 	result := fmt.Sprintf("📚 Current Session:\n")
-	result += fmt.Sprintf("ID: %s\n", m.currentSession.ID)
-	result += fmt.Sprintf("Name: %s\n", m.currentSession.Name)
-	result += fmt.Sprintf("Created: %s\n", m.currentSession.CreatedAt.Format("2006-01-02 15:04"))
-	if m.currentSession.CampaignID != nil {
-		result += fmt.Sprintf("Campaign: %s\n", *m.currentSession.CampaignID)
+	if m.currentSession != nil {
+		result += fmt.Sprintf("ID: %s\n", m.currentSession.ID)
+		result += fmt.Sprintf("Name: %s\n", m.currentSession.Name)
+		result += fmt.Sprintf("Created: %s\n", m.currentSession.CreatedAt.Format("2006-01-02 15:04"))
+		if m.currentSession.CampaignID != nil {
+			result += fmt.Sprintf("Campaign: %s\n", *m.currentSession.CampaignID)
+		}
+	} else {
+		result += "No active session\n"
 	}
 
 	return result
