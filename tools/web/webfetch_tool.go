@@ -347,7 +347,7 @@ func (t *WebFetchTool) fetchContent(ctx context.Context, urlStr string) (string,
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return "", nil, gerror.Newf(gerror.ErrCodeExternalService, "HTTP request failed with status %d", resp.StatusCode).
+		return "", nil, gerror.Newf(gerror.ErrCodeExternal, "HTTP request failed with status %d", resp.StatusCode).
 			WithComponent("web_fetch").
 			WithOperation("fetchContent").
 			WithDetails("url", urlStr).
@@ -601,13 +601,13 @@ func (t *WebFetchTool) analyzeContent(ctx context.Context, content, prompt strin
 	// Get analysis from AI
 	response, err := t.aiProvider.ChatCompletion(ctx, chatReq)
 	if err != nil {
-		return "", gerror.Wrap(err, gerror.ErrCodeExternalService, "failed to analyze content with AI").
+		return "", gerror.Wrap(err, gerror.ErrCodeExternal, "failed to analyze content with AI").
 			WithComponent("web_fetch").
 			WithOperation("analyzeContent")
 	}
 
 	if len(response.Choices) == 0 {
-		return "", gerror.New(gerror.ErrCodeExternalService, "AI provider returned no response choices").
+		return "", gerror.New(gerror.ErrCodeExternal, "AI provider returned no response choices", nil).
 			WithComponent("web_fetch").
 			WithOperation("analyzeContent")
 	}

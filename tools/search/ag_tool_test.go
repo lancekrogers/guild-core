@@ -8,9 +8,6 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
-	"time"
-
-	"github.com/guild-ventures/guild-core/tools"
 )
 
 // TestCraftAgTool tests creating a new ag tool

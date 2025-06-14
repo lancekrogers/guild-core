@@ -5,6 +5,7 @@ import (
 	"github.com/guild-ventures/guild-core/tools"
 	"github.com/guild-ventures/guild-core/tools/dev"
 	"github.com/guild-ventures/guild-core/tools/git"
+	"github.com/guild-ventures/guild-core/tools/search"
 	"github.com/guild-ventures/guild-core/tools/shell"
 )
 
@@ -40,6 +41,12 @@ func RegisterDevTools(registry interface{}, llmProvider interfaces.AIProvider) e
 		}
 	}
 
+	// Silver Searcher (ag) Tool
+	agTool := search.NewAgTool("")
+	if err := toolRegistry.RegisterTool(agTool); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -64,6 +71,12 @@ func registerDevWithPkgRegistry(registry interface{ RegisterTool(tools.Tool) err
 		}
 	}
 
+	// Silver Searcher (ag) Tool
+	agTool := search.NewAgTool("")
+	if err := registry.RegisterTool(agTool); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -73,6 +86,7 @@ func GetDevToolNames() []string {
 		"test_runner",
 		"streaming_shell",
 		"smart_commit",
+		"ag",
 	}
 }
 
@@ -87,6 +101,9 @@ func GetDevToolsByCategory() map[string][]string {
 		},
 		"git": {
 			"smart_commit",
+		},
+		"search": {
+			"ag",
 		},
 	}
 }

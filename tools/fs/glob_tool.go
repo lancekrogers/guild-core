@@ -22,9 +22,10 @@ type GlobTool struct {
 
 // GlobToolInput represents the input for glob pattern matching
 type GlobToolInput struct {
-	Pattern string   `json:"pattern"`            // Glob pattern (e.g., "**/*.go", "src/**/*.js")
-	Path    string   `json:"path,omitempty"`     // Optional directory to search in (defaults to current directory)
-	Exclude []string `json:"exclude,omitempty"`  // Optional exclusion patterns
+	Pattern         string   `json:"pattern"`                      // Glob pattern (e.g., "**/*.go", "src/**/*.js")
+	Path            string   `json:"path,omitempty"`               // Optional directory to search in (defaults to current directory)
+	Exclude         []string `json:"exclude,omitempty"`            // Optional exclusion patterns
+	IncludeDirs     bool     `json:"include_dirs,omitempty"`       // Include directories in results (default: false)
 }
 
 // FileMatch represents a matched file with metadata
@@ -73,6 +74,10 @@ func NewGlobTool(basePath string) *GlobTool {
 					"type": "string",
 				},
 				"description": "Optional exclusion patterns",
+			},
+			"include_dirs": map[string]interface{}{
+				"type":        "boolean",
+				"description": "Include directories in results (default: false)",
 			},
 		},
 		"required": []string{"pattern"},
@@ -129,7 +134,7 @@ func (t *GlobTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 	}
 
 	// Perform glob matching
-	matches, err := t.findMatches(searchDir, params.Pattern, params.Exclude)
+	matches, err := t.findMatches(searchDir, params.Pattern, params.Exclude, params.IncludeDirs)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to find matches").
 			WithComponent("glob_tool").
@@ -185,7 +190,7 @@ func (t *GlobTool) sanitizePath(path string) string {
 }
 
 // findMatches performs the actual glob pattern matching
-func (t *GlobTool) findMatches(searchDir, pattern string, excludePatterns []string) ([]FileMatch, error) {
+func (t *GlobTool) findMatches(searchDir, pattern string, excludePatterns []string, includeDirs bool) ([]FileMatch, error) {
 	var matches []FileMatch
 
 	// Check if search directory exists
@@ -235,13 +240,16 @@ func (t *GlobTool) findMatches(searchDir, pattern string, excludePatterns []stri
 				}
 
 				if !excluded {
-					matches = append(matches, FileMatch{
-						Path:         path,
-						RelativePath: relPath,
-						Size:         info.Size(),
-						ModTime:      info.ModTime(),
-						IsDir:        info.IsDir(),
-					})
+					// Filter out directories unless explicitly requested
+					if !info.IsDir() || includeDirs {
+						matches = append(matches, FileMatch{
+							Path:         path,
+							RelativePath: relPath,
+							Size:         info.Size(),
+							ModTime:      info.ModTime(),
+							IsDir:        info.IsDir(),
+						})
+					}
 				}
 			}
 
@@ -287,13 +295,16 @@ func (t *GlobTool) findMatches(searchDir, pattern string, excludePatterns []stri
 			}
 
 			if !excluded {
-				matches = append(matches, FileMatch{
-					Path:         path,
-					RelativePath: relPath,
-					Size:         info.Size(),
-					ModTime:      info.ModTime(),
-					IsDir:        info.IsDir(),
-				})
+				// Filter out directories unless explicitly requested
+				if !info.IsDir() || includeDirs {
+					matches = append(matches, FileMatch{
+						Path:         path,
+						RelativePath: relPath,
+						Size:         info.Size(),
+						ModTime:      info.ModTime(),
+						IsDir:        info.IsDir(),
+					})
+				}
 			}
 		}
 	}

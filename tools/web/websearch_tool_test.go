@@ -159,12 +159,12 @@ func TestWebSearchTool_GoogleSearch_MockServer(t *testing.T) {
 		os.Setenv("GOOGLE_SEARCH_ENGINE_ID", originalEngineID)
 	}()
 	
-	// Create tool and override the client to use our mock server
-	tool := NewWebSearchTool()
+	// Create tool
+	_ = NewWebSearchTool()
 	
 	// Override the Google API URL (this would require making the URL configurable in the real implementation)
 	// For this test, we'll test the searchGoogle method directly
-	req := WebSearchRequest{
+	_ = WebSearchRequest{
 		Query:      "test query",
 		MaxResults: 2,
 	}
@@ -218,12 +218,12 @@ func TestWebSearchTool_DuckDuckGoSearch_MockServer(t *testing.T) {
 	defer server.Close()
 	
 	// Create tool and test DuckDuckGo search directly
-	tool := NewWebSearchTool()
+	_ = NewWebSearchTool()
 	
 	// Override the client to use our mock server
-	tool.client = server.Client()
+	// tool.client = server.Client()
 	
-	req := WebSearchRequest{
+	_ = WebSearchRequest{
 		Query:      "artificial intelligence",
 		MaxResults: 5,
 	}
@@ -287,8 +287,6 @@ func TestWebSearchTool_DomainFiltering(t *testing.T) {
 }
 
 func TestWebSearchTool_ExtractTitle(t *testing.T) {
-	tool := NewWebSearchTool()
-	
 	tests := []struct {
 		name     string
 		input    string
@@ -328,7 +326,7 @@ func TestWebSearchTool_ExtractTitle(t *testing.T) {
 	
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := tool.extractTitle(tt.input)
+			result := extractTitle(tt.input)
 			assert.Equal(t, tt.expected, result)
 		})
 	}

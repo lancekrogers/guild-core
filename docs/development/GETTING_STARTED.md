@@ -110,19 +110,26 @@ This opens a terminal UI where you can:
 ## Current Limitations
 
 1. **Build Errors**: The project has build failures in several packages:
-   - `pkg/grpc` - Interface mismatches with Campaign/Objectives
-   - `cmd/guild` - Related to above issues
-   - `internal/chat` - Build dependencies
+   - `pkg/grpc` - Interface mismatches with Campaign/Objectives API
+   - `cmd/guild` - Some commands disabled due to gRPC dependencies
+   - `internal/chat` - Build dependencies (though core functionality works)
 
-2. **Limited Multi-Agent Support**: While the framework is designed for multi-agent orchestration, the current implementation primarily supports single-agent chat.
+2. **Integration Issues**: While most frameworks are implemented, integration is incomplete:
+   - Multi-agent orchestration exists but has interface mismatches
+   - Kanban board backend works but UI integration has issues
+   - Campaign workflows partially implemented
 
-3. **Missing Features**: Many advertised features are not yet implemented:
-   - Real-time task monitoring
-   - Visual kanban board
-   - Full campaign workflow
-   - Agent orchestration
+3. **Disabled Features**: Some commands are commented out in main.go:
+   - `guild serve` - gRPC server (build errors)
+   - `guild agent start` - Agent management commands
+   - `guild campaign watch` - Real-time monitoring
 
-4. **Test Coverage**: Many tests are disabled or failing.
+4. **Test Coverage**: 
+   - ~60% coverage (target: 80%+)
+   - 8 test files disabled and need migration to internal test packages
+   - Some integration tests failing due to interface changes
+
+5. **Documentation Gaps**: Some documentation describes planned features as if implemented
 
 ## Troubleshooting
 

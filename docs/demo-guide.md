@@ -1,23 +1,27 @@
-# Guild Framework Demo Guide (PLANNED FEATURES)
+# Guild Framework Demo Guide
 
-> **⚠️ IMPORTANT**: This document describes planned demo scenarios that are **NOT YET IMPLEMENTED**. The Guild Framework is in active development and most features described here do not currently work.
+> **⚠️ CURRENT STATE**: The Guild Framework is in active development with core functionality implemented but significant limitations. This guide reflects both working features and planned capabilities.
 
 ## Current Status
 
-The Guild Framework has significant functionality implemented but is not yet ready for the demos described in this document. 
+The Guild Framework has substantial infrastructure implemented but several core features have build issues or are incomplete.
 
 ### What Works Now
-- Basic project initialization (`guild init`)
-- Chat interface UI (single agent only)
-- Corpus scanning and indexing
-- Basic commission creation
+- ✅ **Project initialization** (`guild init`) - Fully functional with auto-detection
+- ✅ **Chat interface** - 1,951-line production TUI with streaming, markdown rendering, and tool execution
+- ✅ **Corpus scanning and indexing** (`guild corpus scan/query`) - RAG system working
+- ✅ **Commission creation and refinement** - Markdown parsing and objective management
+- ✅ **Prompt management** - 6-layer prompt system with template support
+- ✅ **Multiple LLM providers** - OpenAI, Anthropic, Ollama, DeepSeek, Ora support
+- ✅ **SQLite storage** - Full migration from BoltDB complete
+- ✅ **Tool execution framework** - Safe workspace isolation implemented
 
-### What Doesn't Work
-- Multi-agent orchestration
-- Campaign workflows
-- Real-time task monitoring (`guild campaign watch`)
-- Tool execution visualization
-- Most commands shown in the demos below
+### What Has Issues
+- ❌ **gRPC services** - Build failures due to interface mismatches
+- ❌ **Multi-agent orchestration** - Framework exists but integration issues
+- ⚠️ **Campaign workflows** - Core implemented but some commands disabled
+- ⚠️ **Kanban board** - Backend complete, UI has integration issues
+- ❌ **Real-time monitoring** (`guild campaign watch`) - Depends on gRPC fixes
 
 ## Planned Demo Scenarios (Future Implementation)
 
@@ -80,13 +84,49 @@ guild info
 
 ---
 
-## Alternative: Current Working Demo
+## Working Demo: Current Features
 
-For a demo with current functionality, you can:
+Here's what you can demonstrate with the current implementation:
 
-1. Initialize a project: `./bin/guild init demo-project`
-2. Start the chat interface: `./bin/guild chat`
-3. Show the terminal UI and markdown rendering
-4. Explain the vision for multi-agent orchestration
+### 1. Project Initialization Demo
+```bash
+./bin/guild init demo-project
+cd demo-project
+ls -la .guild/  # Show created structure
+```
 
-This provides a more honest demonstration of the current state while showing the potential of the framework.
+### 2. Chat Interface Demo (Main Feature)
+```bash
+../bin/guild chat
+```
+
+**Demonstrates**:
+- Professional TUI with streaming responses
+- Markdown rendering with syntax highlighting
+- Multiple LLM provider support
+- Tool execution capability
+- Session persistence
+
+### 3. Corpus Management Demo
+```bash
+../bin/guild corpus scan
+../bin/guild corpus query "authentication patterns"
+```
+
+**Demonstrates**:
+- Document indexing and RAG capabilities
+- Vector search functionality
+- Project-aware documentation retrieval
+
+### 4. Commission System Demo
+```bash
+../bin/guild commission create "Build REST API"
+../bin/guild commission refine [commission-file]
+```
+
+**Demonstrates**:
+- Markdown-based commission parsing
+- Objective hierarchy management
+- Task breakdown capabilities
+
+This provides a solid demonstration of the framework's foundation while being honest about current limitations.

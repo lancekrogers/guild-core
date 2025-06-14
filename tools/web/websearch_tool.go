@@ -266,7 +266,7 @@ func (t *WebSearchTool) searchGoogle(ctx context.Context, req WebSearchRequest) 
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
-		return nil, gerror.Newf(gerror.ErrCodeExternalService, "Google Search API returned status %d: %s", resp.StatusCode, string(body)).
+		return nil, gerror.Newf(gerror.ErrCodeExternal, "Google Search API returned status %d: %s", resp.StatusCode, string(body)).
 			WithComponent("web_search").
 			WithOperation("searchGoogle")
 	}
@@ -334,7 +334,7 @@ func (t *WebSearchTool) searchDuckDuckGo(ctx context.Context, req WebSearchReque
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
-		return nil, gerror.Newf(gerror.ErrCodeExternalService, "DuckDuckGo API returned status %d: %s", resp.StatusCode, string(body)).
+		return nil, gerror.Newf(gerror.ErrCodeExternal, "DuckDuckGo API returned status %d: %s", resp.StatusCode, string(body)).
 			WithComponent("web_search").
 			WithOperation("searchDuckDuckGo")
 	}
