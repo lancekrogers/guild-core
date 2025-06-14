@@ -68,6 +68,9 @@ type GoogleSearchResponse struct {
 
 // DuckDuckGoResponse represents DuckDuckGo Instant Answer API response
 type DuckDuckGoResponse struct {
+	Abstract      string `json:"Abstract"`
+	AbstractURL   string `json:"AbstractURL"`
+	AbstractText  string `json:"AbstractText"`
 	RelatedTopics []struct {
 		Text     string `json:"Text"`
 		FirstURL string `json:"FirstURL"`
@@ -76,10 +79,6 @@ type DuckDuckGoResponse struct {
 		Text     string `json:"Text"`
 		FirstURL string `json:"FirstURL"`
 	} `json:"Results"`
-	Abstract struct {
-		Text string `json:"Text"`
-		URL  string `json:"URL"`
-	} `json:"Abstract"`
 }
 
 // NewWebSearchTool creates a new web search tool
@@ -339,8 +338,27 @@ func (t *WebSearchTool) searchDuckDuckGo(ctx context.Context, req WebSearchReque
 			WithOperation("searchDuckDuckGo")
 	}
 
+	// Read the entire response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to read DuckDuckGo response").
+			WithComponent("web_search").
+			WithOperation("searchDuckDuckGo")
+	}
+
+	// Check if response is empty
+	if len(body) == 0 {
+		// Return empty results for queries with no matches
+		return &WebSearchResponse{
+			Query:      req.Query,
+			Results:    []SearchResult{},
+			TotalCount: 0,
+			Engine:     "duckduckgo",
+		}, nil
+	}
+
 	var ddgResp DuckDuckGoResponse
-	if err := json.NewDecoder(resp.Body).Decode(&ddgResp); err != nil {
+	if err := json.Unmarshal(body, &ddgResp); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidFormat, "failed to decode DuckDuckGo response").
 			WithComponent("web_search").
 			WithOperation("searchDuckDuckGo")
@@ -350,17 +368,17 @@ func (t *WebSearchTool) searchDuckDuckGo(ctx context.Context, req WebSearchReque
 	var results []SearchResult
 
 	// Add abstract if available
-	if ddgResp.Abstract.Text != "" && ddgResp.Abstract.URL != "" {
-		parsedURL, _ := url.Parse(ddgResp.Abstract.URL)
+	if ddgResp.Abstract != "" && ddgResp.AbstractURL != "" {
+		parsedURL, _ := url.Parse(ddgResp.AbstractURL)
 		domain := ""
 		if parsedURL != nil {
 			domain = parsedURL.Hostname()
 		}
 
 		results = append(results, SearchResult{
-			Title:   "Abstract",
-			URL:     ddgResp.Abstract.URL,
-			Snippet: ddgResp.Abstract.Text,
+			Title:   extractTitle(ddgResp.Abstract),
+			URL:     ddgResp.AbstractURL,
+			Snippet: ddgResp.Abstract,
 			Domain:  domain,
 		})
 	}
@@ -469,6 +487,9 @@ func (t *WebSearchTool) applyDomainFiltering(response *WebSearchResponse, allowe
 
 // extractTitle extracts a title from text, taking the first part before a dash or period
 func extractTitle(text string) string {
+	// Trim whitespace first
+	text = strings.TrimSpace(text)
+	
 	if len(text) == 0 {
 		return "Untitled"
 	}
@@ -476,7 +497,10 @@ func extractTitle(text string) string {
 	// Try to extract title from text
 	parts := strings.Split(text, " - ")
 	if len(parts) > 1 {
-		return strings.TrimSpace(parts[0])
+		title := strings.TrimSpace(parts[0])
+		if title != "" {
+			return title
+		}
 	}
 
 	parts = strings.Split(text, ". ")
@@ -489,8 +513,8 @@ func extractTitle(text string) string {
 
 	// Fallback to first 100 characters
 	if len(text) > 100 {
-		return strings.TrimSpace(text[:100]) + "..."
+		return text[:100] + "..."
 	}
 
-	return strings.TrimSpace(text)
+	return text
 }

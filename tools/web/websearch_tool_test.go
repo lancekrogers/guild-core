@@ -235,20 +235,23 @@ func TestWebSearchTool_DuckDuckGoSearch_MockServer(t *testing.T) {
 func TestWebSearchTool_DomainFiltering(t *testing.T) {
 	tool := NewWebSearchTool()
 	
-	// Create a mock response
-	response := &WebSearchResponse{
-		Query:      "test query",
-		Engine:     "test",
-		TotalCount: 4,
-		Results: []SearchResult{
-			{Title: "Result 1", URL: "https://example.com/1", Domain: "example.com"},
-			{Title: "Result 2", URL: "https://github.com/test", Domain: "github.com"},
-			{Title: "Result 3", URL: "https://stackoverflow.com/q/1", Domain: "stackoverflow.com"},
-			{Title: "Result 4", URL: "https://example.org/page", Domain: "example.org"},
-		},
+	// Helper function to create a fresh response for each test
+	createMockResponse := func() *WebSearchResponse {
+		return &WebSearchResponse{
+			Query:      "test query",
+			Engine:     "test",
+			TotalCount: 4,
+			Results: []SearchResult{
+				{Title: "Result 1", URL: "https://example.com/1", Domain: "example.com"},
+				{Title: "Result 2", URL: "https://github.com/test", Domain: "github.com"},
+				{Title: "Result 3", URL: "https://stackoverflow.com/q/1", Domain: "stackoverflow.com"},
+				{Title: "Result 4", URL: "https://example.org/page", Domain: "example.org"},
+			},
+		}
 	}
 	
 	t.Run("allowed domains", func(t *testing.T) {
+		response := createMockResponse()
 		allowedDomains := []string{"github.com", "stackoverflow.com"}
 		filtered := tool.applyDomainFiltering(response, allowedDomains, nil)
 		
@@ -259,6 +262,7 @@ func TestWebSearchTool_DomainFiltering(t *testing.T) {
 	})
 	
 	t.Run("blocked domains", func(t *testing.T) {
+		response := createMockResponse()
 		blockedDomains := []string{"example.com", "example.org"}
 		filtered := tool.applyDomainFiltering(response, nil, blockedDomains)
 		
@@ -269,6 +273,7 @@ func TestWebSearchTool_DomainFiltering(t *testing.T) {
 	})
 	
 	t.Run("both allowed and blocked", func(t *testing.T) {
+		response := createMockResponse()
 		allowedDomains := []string{"github.com", "example.com"}
 		blockedDomains := []string{"example.com"}
 		filtered := tool.applyDomainFiltering(response, allowedDomains, blockedDomains)
@@ -279,6 +284,7 @@ func TestWebSearchTool_DomainFiltering(t *testing.T) {
 	})
 	
 	t.Run("no filtering", func(t *testing.T) {
+		response := createMockResponse()
 		filtered := tool.applyDomainFiltering(response, nil, nil)
 		
 		assert.Len(t, filtered.Results, 4)
@@ -428,26 +434,32 @@ func TestWebSearchTool_RequestParsing(t *testing.T) {
 }
 
 func TestWebSearchTool_Timeout(t *testing.T) {
+	// This test verifies that the tool properly handles context cancellation
+	// Since we can't easily override the DuckDuckGo URL, we'll test with a very short timeout
+	// and a query that's likely to take some time
 	tool := NewWebSearchTool()
 	
-	// Create a slow server to test timeout
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(35 * time.Second) // Longer than client timeout
-		w.WriteHeader(http.StatusOK)
-	}))
-	defer server.Close()
-	
-	// Create a context with short timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	// Create a context with extremely short timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Nanosecond)
 	defer cancel()
+	
+	// Ensure context is already cancelled
+	time.Sleep(1 * time.Millisecond)
 	
 	input := `{"query": "test timeout"}`
 	
 	result, err := tool.Execute(ctx, input)
 	assert.NoError(t, err) // Tool handles errors gracefully
 	assert.NotNil(t, result)
+	
+	// The result should indicate failure due to context cancellation
 	assert.False(t, result.Success)
-	assert.Contains(t, result.Error, "context deadline exceeded")
+	
+	// The error should contain either "context deadline exceeded" or "context canceled"
+	assert.True(t, 
+		strings.Contains(result.Error, "context deadline exceeded") || 
+		strings.Contains(result.Error, "context canceled"),
+		"Expected context error but got: %s", result.Error)
 }
 
 func BenchmarkWebSearchTool_Execute(b *testing.B) {

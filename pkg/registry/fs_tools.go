@@ -37,6 +37,12 @@ func RegisterFSTools(registry interface{}) error {
 		return err
 	}
 
+	// Register grep tool
+	grepTool := fs.NewGrepTool(basePath)
+	if err := toolRegistry.RegisterTool(grepTool); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -59,6 +65,12 @@ func registerFSWithPkgRegistry(registry interface{ RegisterTool(tools.Tool) erro
 		return err
 	}
 
+	// Register grep tool
+	grepTool := fs.NewGrepTool(basePath)
+	if err := registry.RegisterTool(grepTool); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -67,6 +79,7 @@ func GetFSToolNames() []string {
 	return []string{
 		"file",
 		"glob",
+		"grep",
 	}
 }
 
@@ -76,6 +89,7 @@ func GetFSToolsByCategory() map[string][]string {
 		"filesystem": {
 			"file",
 			"glob",
+			"grep",
 		},
 	}
 }
