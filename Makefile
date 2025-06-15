@@ -3,7 +3,7 @@
 
 BUILDTOOL := go run ./internal/buildutil
 .DEFAULT_GOAL := help
-.PHONY: build test integration clean all quick ci-build ci-test ci-integration ci-clean install uninstall help
+.PHONY: build test integration clean all quick ci-build ci-test ci-integration ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion
 
 # Primary targets (with visual output)
 build:
@@ -41,9 +41,61 @@ ci-clean:
 # Install/uninstall targets
 install: build
 	@$(BUILDTOOL) install
+	@$(MAKE) install-completion
 
 uninstall:
 	@$(BUILDTOOL) uninstall
+
+# Shell completion installation
+install-completion: build
+	@echo "Installing shell completion..."
+	@if [ -n "$$BASH_VERSION" ]; then \
+		$(MAKE) install-bash-completion; \
+	elif [ -n "$$ZSH_VERSION" ]; then \
+		$(MAKE) install-zsh-completion; \
+	elif [ -n "$$FISH_VERSION" ]; then \
+		$(MAKE) install-fish-completion; \
+	else \
+		echo "Could not detect shell type. Please run one of:"; \
+		echo "  make install-bash-completion"; \
+		echo "  make install-zsh-completion"; \
+		echo "  make install-fish-completion"; \
+	fi
+
+install-bash-completion: build
+	@echo "Installing bash completion..."
+	@if [ -d /etc/bash_completion.d ]; then \
+		./bin/guild completion bash | sudo tee /etc/bash_completion.d/guild > /dev/null; \
+		echo "Bash completion installed to /etc/bash_completion.d/guild"; \
+	elif [ -d /usr/local/etc/bash_completion.d ]; then \
+		./bin/guild completion bash | sudo tee /usr/local/etc/bash_completion.d/guild > /dev/null; \
+		echo "Bash completion installed to /usr/local/etc/bash_completion.d/guild"; \
+	elif command -v brew >/dev/null 2>&1 && [ -d "$$(brew --prefix)/etc/bash_completion.d" ]; then \
+		./bin/guild completion bash > "$$(brew --prefix)/etc/bash_completion.d/guild"; \
+		echo "Bash completion installed to $$(brew --prefix)/etc/bash_completion.d/guild"; \
+	else \
+		echo "Error: bash completion directory not found"; \
+		echo "You can manually install by running:"; \
+		echo "  guild completion bash > /path/to/completion/dir/guild"; \
+		exit 1; \
+	fi
+
+install-zsh-completion: build
+	@echo "Installing zsh completion..."
+	@./bin/guild completion zsh > "$${fpath[1]}/_guild" || { \
+		echo "Error: Could not install to fpath."; \
+		echo "You can manually install by running:"; \
+		echo "  guild completion zsh > ~/.zsh/completions/_guild"; \
+		echo "And ensure ~/.zsh/completions is in your fpath"; \
+		exit 1; \
+	}
+	@echo "Zsh completion installed. Start a new shell to use it."
+
+install-fish-completion: build
+	@echo "Installing fish completion..."
+	@mkdir -p ~/.config/fish/completions
+	@./bin/guild completion fish > ~/.config/fish/completions/guild.fish
+	@echo "Fish completion installed to ~/.config/fish/completions/guild.fish"
 
 # Help target
 help:
@@ -52,15 +104,21 @@ help:
 	@echo "Usage: make [target]"
 	@echo ""
 	@echo "Targets:"
-	@echo "  build        Build Guild with progress display"
-	@echo "  install      Install Guild to Go bin directory"
-	@echo "  uninstall    Remove Guild from Go bin directory"
-	@echo "  test         Run unit tests with visual feedback"
-	@echo "  integration  Run integration tests"
-	@echo "  clean        Remove all build artifacts"
-	@echo "  all          Clean, build, test, and integration"
-	@echo "  quick        Fast build without visuals"
-	@echo "  ci-*         CI variants (no colors)"
+	@echo "  build                    Build Guild with progress display"
+	@echo "  install                  Install Guild to Go bin directory with completions"
+	@echo "  uninstall                Remove Guild from Go bin directory"
+	@echo "  test                     Run unit tests with visual feedback"
+	@echo "  integration              Run integration tests"
+	@echo "  clean                    Remove all build artifacts"
+	@echo "  all                      Clean, build, test, and integration"
+	@echo "  quick                    Fast build without visuals"
+	@echo "  ci-*                     CI variants (no colors)"
+	@echo ""
+	@echo "Completion targets:"
+	@echo "  install-completion       Auto-detect shell and install completion"
+	@echo "  install-bash-completion  Install bash completion"
+	@echo "  install-zsh-completion   Install zsh completion"
+	@echo "  install-fish-completion  Install fish completion"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make build      # Build with progress bars"

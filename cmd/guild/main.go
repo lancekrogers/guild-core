@@ -60,6 +60,7 @@ var agentStartCmd = &cobra.Command{
 	Use:   "start [agent-id]",
 	Short: "Start an agent",
 	Long:  `Start a specific agent or all agents if no ID is provided.`,
+	ValidArgsFunction: completeAgentIDs,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
 			fmt.Printf("Starting agent %s...\n", args[0])
@@ -78,6 +79,7 @@ func init() {
 	rootCmd.AddCommand(serveCmd)
 	rootCmd.AddCommand(campaignCmd)
 	rootCmd.AddCommand(kanbanCmd)
+	rootCmd.AddCommand(completionCmd)
 	
 	// Note: The following commands are registered in their respective files:
 	// - initCmd (init.go)

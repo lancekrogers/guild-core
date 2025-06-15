@@ -99,6 +99,13 @@ func init() {
 
 	campaignStatusCmd.Flags().StringVar(&campaignID, "id", "", "Campaign ID (required)")
 	campaignStatusCmd.MarkFlagRequired("id")
+
+	// Register completion functions
+	createCampaignCmd.RegisterFlagCompletionFunc("commission", completeCommissionFiles)
+	createCampaignCmd.RegisterFlagCompletionFunc("manager", completeAgentIDs)
+	startCampaignCmd.RegisterFlagCompletionFunc("id", completeCampaignIDs)
+	watchCampaignCmd.RegisterFlagCompletionFunc("id", completeCampaignIDs)
+	campaignStatusCmd.RegisterFlagCompletionFunc("id", completeCampaignIDs)
 }
 
 func createCampaign(cmd *cobra.Command, args []string) error {

@@ -25,6 +25,10 @@ var (
 func init() {
 	chatCmd.Flags().StringVar(&chatCampaignID, "campaign", "", "Campaign ID to use for the chat session")
 	chatCmd.Flags().StringVar(&chatSessionID, "session", "", "Session ID to use (defaults to new UUID)")
+	
+	// Register completion functions
+	chatCmd.RegisterFlagCompletionFunc("campaign", completeCampaignNames)
+	chatCmd.RegisterFlagCompletionFunc("session", completeSessionIDs)
 }
 
 var chatCmd = &cobra.Command{
