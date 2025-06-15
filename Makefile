@@ -3,7 +3,7 @@
 
 BUILDTOOL := go run ./internal/buildutil
 .DEFAULT_GOAL := help
-.PHONY: build test integration clean all quick ci-build ci-test ci-integration ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion
+.PHONY: build test test-pkg integration clean all quick ci-build ci-test ci-integration ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion
 
 # Primary targets (with visual output)
 build:
@@ -97,6 +97,26 @@ install-fish-completion: build
 	@./bin/guild completion fish > ~/.config/fish/completions/guild.fish
 	@echo "Fish completion installed to ~/.config/fish/completions/guild.fish"
 
+# Test specific packages helper
+test-pkg:
+	@echo "To test specific packages, use go test directly:"
+	@echo ""
+	@echo "Examples:"
+	@echo "  go test ./pkg/agent/...              # Test all agent packages"
+	@echo "  go test ./tools/jump/...             # Test jump tool"
+	@echo "  go test -v ./pkg/memory/...          # Verbose output"
+	@echo "  go test -race ./pkg/providers/...    # With race detection"
+	@echo "  go test -short ./pkg/...             # Skip long tests"
+	@echo "  go test -run TestName ./pkg/...      # Run specific test by name"
+	@echo ""
+	@echo "Multiple packages:"
+	@echo "  go test ./pkg/agent/... ./pkg/memory/..."
+	@echo ""
+	@echo "With timeout:"
+	@echo "  go test -timeout 30s ./tools/..."
+	@echo ""
+	@echo "⚠️  NEVER use 'go test -c' as it creates .test binaries in the root!"
+
 # Help target
 help:
 	@echo "Guild Framework Build System"
@@ -108,6 +128,7 @@ help:
 	@echo "  install                  Install Guild to Go bin directory with completions"
 	@echo "  uninstall                Remove Guild from Go bin directory"
 	@echo "  test                     Run unit tests with visual feedback"
+	@echo "  test-pkg                 Show examples of testing specific packages"
 	@echo "  integration              Run integration tests"
 	@echo "  clean                    Remove all build artifacts"
 	@echo "  all                      Clean, build, test, and integration"
@@ -124,4 +145,5 @@ help:
 	@echo "  make build      # Build with progress bars"
 	@echo "  make install    # Install to ~/go/bin"
 	@echo "  make test       # Run tests with feedback"
+	@echo "  make test-pkg   # Show how to test specific packages"
 	@echo "  make ci-build   # Build for CI (plain text)"
