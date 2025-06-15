@@ -1060,6 +1060,13 @@ func (r *DefaultComponentRegistry) initializeTools(ctx context.Context) error {
 			WithOperation("initializeTools")
 	}
 
+	// Register jump tools
+	if err := RegisterJumpTools(r.toolRegistry); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register jump tools").
+			WithComponent("registry").
+			WithOperation("initializeTools")
+	}
+
 	// Register dev tools - skip for now due to interface mismatch
 	// TODO: Fix RegisterDevTools to work with current provider interfaces
 	// if defaultProvider, err := r.providerRegistry.GetDefaultProvider(); err == nil {

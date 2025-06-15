@@ -99,6 +99,11 @@ func completeAgentIDs(cmd *cobra.Command, args []string, toComplete string) ([]s
 
 	// Get available agent types
 	agentTypes := agentReg.ListAgentTypes()
+	
+	// If no agents found in registry, fall back to defaults
+	if len(agentTypes) == 0 {
+		return completeDefaultAgents(toComplete)
+	}
 
 	var suggestions []string
 	for _, agentType := range agentTypes {
