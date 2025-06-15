@@ -8,7 +8,7 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/guild-ventures/guild-core/pkg/chat/session"
+	"github.com/guild-ventures/guild-core/internal/chat/session"
 )
 
 // Update implements tea.Model

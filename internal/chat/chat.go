@@ -20,7 +20,7 @@ import (
 	_ "modernc.org/sqlite" // SQLite driver
 
 	"github.com/guild-ventures/guild-core/internal/chat/commands"
-	"github.com/guild-ventures/guild-core/pkg/chat/session"
+	"github.com/guild-ventures/guild-core/internal/chat/session"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	guildcontext "github.com/guild-ventures/guild-core/pkg/context"
 	"github.com/guild-ventures/guild-core/pkg/gerror"

@@ -11,7 +11,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/guild-ventures/guild-core/internal/chat/commands"
-	"github.com/guild-ventures/guild-core/pkg/chat/session"
+	"github.com/guild-ventures/guild-core/internal/chat/session"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 )
