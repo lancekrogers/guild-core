@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 //go:build integration
 
 package performance
@@ -215,7 +218,7 @@ func TestLargeCommissionHandling(t *testing.T) {
 			wg.Add(1)
 			go func(workerID int) {
 				defer wg.Done()
-				for _ = range taskQueue {
+				for range taskQueue {
 					// Simulate task execution
 					time.Sleep(time.Duration(rand.Intn(10)) * time.Millisecond)
 					atomic.AddInt32(&completedTasks, 1)

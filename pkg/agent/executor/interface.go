@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package executor
 
 import (
@@ -78,7 +81,7 @@ type ExecutionError struct {
 type ExecutionContext struct {
 	WorkspaceDir string                 // Isolated workspace directory
 	ProjectRoot  string                 // Project root directory
-	Commission    string                 // Parent commission description
+	Commission   string                 // Parent commission description
 	AgentID      string                 // Executing agent ID
 	AgentType    string                 // Agent type (manager, worker, etc)
 	Capabilities []string               // Agent capabilities

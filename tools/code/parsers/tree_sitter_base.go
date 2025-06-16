@@ -1,12 +1,15 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package parsers
 
 import (
 	"context"
 	"fmt"
 
-	sitter "github.com/smacker/go-tree-sitter"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/tools/code"
+	sitter "github.com/smacker/go-tree-sitter"
 )
 
 // TreeSitterParser provides base functionality for all tree-sitter based parsers

@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package search
 
 import (
@@ -26,13 +29,13 @@ type FileResult struct {
 
 // FuzzyFinder provides fuzzy file finding capabilities
 type FuzzyFinder struct {
-	workingDir     string
+	workingDir      string
 	excludePatterns []string
-	recentFiles    map[string]time.Time
-	maxResults     int
-	indexCache     []string
-	lastIndexTime  time.Time
-	indexDuration  time.Duration
+	recentFiles     map[string]time.Time
+	maxResults      int
+	indexCache      []string
+	lastIndexTime   time.Time
+	indexDuration   time.Duration
 }
 
 // FuzzyFinderConfig configures the fuzzy finder
@@ -176,14 +179,14 @@ func (ff *FuzzyFinder) MarkRecentFile(filePath string) {
 	if err != nil {
 		return
 	}
-	
+
 	relPath, err := filepath.Rel(ff.workingDir, absPath)
 	if err != nil {
 		return
 	}
-	
+
 	ff.recentFiles[relPath] = time.Now()
-	
+
 	// Keep only the last 20 recent files
 	if len(ff.recentFiles) > 20 {
 		// Find oldest file and remove it
@@ -293,49 +296,49 @@ func (ff *FuzzyFinder) shouldExclude(path string) bool {
 func (ff *FuzzyFinder) fuzzyScore(filePath, pattern string) int {
 	fileName := strings.ToLower(filepath.Base(filePath))
 	fullPath := strings.ToLower(filePath)
-	
+
 	// Exact match on filename gets highest priority
 	if fileName == pattern {
 		return 0
 	}
-	
+
 	// Prefix match on filename
 	if strings.HasPrefix(fileName, pattern) {
 		return 1
 	}
-	
+
 	// Substring match on filename
 	if strings.Contains(fileName, pattern) {
 		return 2
 	}
-	
+
 	// Exact match on full path
 	if fullPath == pattern {
 		return 3
 	}
-	
+
 	// Prefix match on full path
 	if strings.HasPrefix(fullPath, pattern) {
 		return 4
 	}
-	
+
 	// Substring match on full path
 	if strings.Contains(fullPath, pattern) {
 		return 5
 	}
-	
+
 	// Fuzzy character sequence matching
 	score := ff.fuzzySequenceScore(fileName, pattern)
 	if score >= 0 {
 		return 10 + score
 	}
-	
+
 	// Try fuzzy matching on full path
 	score = ff.fuzzySequenceScore(fullPath, pattern)
 	if score >= 0 {
 		return 20 + score
 	}
-	
+
 	return -1 // No match
 }
 
@@ -344,12 +347,12 @@ func (ff *FuzzyFinder) fuzzySequenceScore(text, pattern string) int {
 	if len(pattern) == 0 {
 		return 0
 	}
-	
+
 	textIdx := 0
 	patternIdx := 0
 	score := 0
 	lastMatch := -1
-	
+
 	for patternIdx < len(pattern) && textIdx < len(text) {
 		if text[textIdx] == pattern[patternIdx] {
 			if lastMatch >= 0 {
@@ -361,29 +364,29 @@ func (ff *FuzzyFinder) fuzzySequenceScore(text, pattern string) int {
 		}
 		textIdx++
 	}
-	
+
 	// If we didn't match all pattern characters, no match
 	if patternIdx < len(pattern) {
 		return -1
 	}
-	
+
 	return score
 }
 
 // createFileResult creates a FileResult from a file path
 func (ff *FuzzyFinder) createFileResult(relPath string, score int) (FileResult, error) {
 	absPath := filepath.Join(ff.workingDir, relPath)
-	
+
 	stat, err := os.Stat(absPath)
 	if err != nil {
 		return FileResult{}, err
 	}
-	
+
 	lastAccess := stat.ModTime()
 	if recentTime, exists := ff.recentFiles[relPath]; exists {
 		lastAccess = recentTime
 	}
-	
+
 	return FileResult{
 		Path:        relPath,
 		AbsPath:     absPath,
@@ -405,7 +408,7 @@ func (ff *FuzzyFinder) isRecentFile(path string) bool {
 // getRecentFiles returns recent files as FileResults
 func (ff *FuzzyFinder) getRecentFiles() []FileResult {
 	var results []FileResult
-	
+
 	for path, accessTime := range ff.recentFiles {
 		result, err := ff.createFileResult(path, 0)
 		if err != nil {
@@ -415,12 +418,12 @@ func (ff *FuzzyFinder) getRecentFiles() []FileResult {
 		result.IsRecent = true
 		results = append(results, result)
 	}
-	
+
 	// Sort by last access time (most recent first)
 	sort.Slice(results, func(i, j int) bool {
 		return results[i].LastAccess.After(results[j].LastAccess)
 	})
-	
+
 	return results
 }
 
@@ -433,10 +436,10 @@ func (ff *FuzzyFinder) RefreshIndex(ctx context.Context) error {
 // GetIndexStats returns statistics about the file index
 func (ff *FuzzyFinder) GetIndexStats() map[string]interface{} {
 	return map[string]interface{}{
-		"total_files":    len(ff.indexCache),
-		"recent_files":   len(ff.recentFiles),
-		"last_indexed":   ff.lastIndexTime,
-		"working_dir":    ff.workingDir,
-		"exclude_count":  len(ff.excludePatterns),
+		"total_files":   len(ff.indexCache),
+		"recent_files":  len(ff.recentFiles),
+		"last_indexed":  ff.lastIndexTime,
+		"working_dir":   ff.workingDir,
+		"exclude_count": len(ff.excludePatterns),
 	}
 }

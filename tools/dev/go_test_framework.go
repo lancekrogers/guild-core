@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package dev
 
 import (
@@ -18,9 +21,9 @@ func (g *GoTestFramework) Name() string {
 
 // Detect checks if this is a Go project
 func (g *GoTestFramework) Detect(path string) bool {
-	return fileExists("go.mod") || 
-		   fileExists("go.sum") ||
-		   len(findTestFiles(path, "*_test.go")) > 0
+	return fileExists("go.mod") ||
+		fileExists("go.sum") ||
+		len(findTestFiles(path, "*_test.go")) > 0
 }
 
 // BuildCommand builds the go test command
@@ -75,7 +78,7 @@ func (g *GoTestFramework) BuildCommand(input TestRunnerInput) ([]string, error) 
 // ParseOutput parses Go test output
 func (g *GoTestFramework) ParseOutput(output string, exitCode int) (*TestResult, error) {
 	lines := strings.Split(output, "\n")
-	
+
 	var tests []TestCase
 	var currentPackage string
 	var summary TestSummary
@@ -158,10 +161,10 @@ func (g *GoTestFramework) ParseOutput(output string, exitCode int) (*TestResult,
 		}
 
 		// Failure details
-		if strings.Contains(line, "FAIL:") || 
-		   strings.Contains(line, "panic:") ||
-		   (currentTest != nil && currentTest.Status == "running" && 
-		    (strings.Contains(line, "Error:") || strings.Contains(line, "expected"))) {
+		if strings.Contains(line, "FAIL:") ||
+			strings.Contains(line, "panic:") ||
+			(currentTest != nil && currentTest.Status == "running" &&
+				(strings.Contains(line, "Error:") || strings.Contains(line, "expected"))) {
 			errorLines = append(errorLines, line)
 		}
 

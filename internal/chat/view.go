@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package chat
 
 import (
@@ -57,13 +60,13 @@ func (m ChatModel) View() string {
 
 		// Input area with campaign and vim mode indicators
 		inputLabel := fmt.Sprintf("📜 %s", m.getCampaignDisplay())
-		
+
 		// Add vim mode indicator if enabled
 		if m.vimModeEnabled && m.vimState != nil {
 			vimIndicator := m.vimState.GetModeIndicator()
 			inputLabel += " " + vimIndicator
 		}
-		
+
 		s.WriteString(lipgloss.NewStyle().Foreground(lipgloss.Color("62")).Render(inputLabel))
 		s.WriteString("\n")
 		s.WriteString(m.input.View())
@@ -242,18 +245,18 @@ func (m ChatModel) getGlobalStreamView() string {
 // getCampaignDisplay returns the campaign name for display
 func (m ChatModel) getCampaignDisplay() string {
 	var display string
-	
+
 	if m.campaignID == "" {
 		display = "Guild Chat"
 	} else {
 		display = fmt.Sprintf("Campaign: %s", m.campaignID)
 	}
-	
+
 	// Add session info if available
 	if m.currentSession != nil {
 		display += fmt.Sprintf(" | Session: %s", m.currentSession.Name)
 	}
-	
+
 	return display
 }
 
@@ -427,7 +430,7 @@ func (m ChatModel) renderAgentActivityBar() string {
 	// Get active animations
 	animations := m.agentIndicators.GetActiveAnimations()
 
-	for agentID, _ := range animations {
+	for agentID := range animations {
 		indicator := m.agentIndicators.GetCurrentIndicator(agentID)
 		context := m.agentIndicators.GetAnimationContext(agentID)
 

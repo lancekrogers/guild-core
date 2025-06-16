@@ -1,3 +1,7 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
+//go:build integration
 // +build integration
 
 package corpus_test
@@ -156,7 +160,7 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 	t.Logf("  Query returned %d results", len(results.Results))
 	for i, result := range results.Results {
 		t.Logf("    Result %d: Score=%.4f, Content=%s", i+1, result.Score,
-			strings.ReplaceAll(result.Content[:min(50, len(result.Content))], "\n", " ") + "...")
+			strings.ReplaceAll(result.Content[:min(50, len(result.Content))], "\n", " ")+"...")
 	}
 
 	// For now, skip this assertion since mock embeddings may not produce meaningful scores
@@ -279,8 +283,8 @@ func TestProviderSwitching(t *testing.T) {
 		require.NoError(t, err)
 
 		ragSystem := rag.NewRetrieverWithStore(vectorStore, rag.Config{
-			ChunkSize: 100,
-			UseCorpus: true,
+			ChunkSize:  100,
+			UseCorpus:  true,
 			CorpusPath: corpusPath,
 		})
 
@@ -311,8 +315,8 @@ func TestProviderSwitching(t *testing.T) {
 		require.NoError(t, err)
 
 		ragSystem := rag.NewRetrieverWithStore(vectorStore, rag.Config{
-			ChunkSize: 100,
-			UseCorpus: true,
+			ChunkSize:  100,
+			UseCorpus:  true,
 			CorpusPath: corpusPath,
 		})
 
@@ -477,9 +481,9 @@ func TestErrorScenarios(t *testing.T) {
 		nonExistentPath := filepath.Join(tempDir, "does-not-exist")
 
 		corpusConfig := corpus.Config{
-			CorpusPath:      nonExistentPath,
-			ActivitiesPath:  filepath.Join(nonExistentPath, ".activities"),
-			MaxSizeBytes:    100 * 1024 * 1024,
+			CorpusPath:     nonExistentPath,
+			ActivitiesPath: filepath.Join(nonExistentPath, ".activities"),
+			MaxSizeBytes:   100 * 1024 * 1024,
 		}
 
 		// List should return empty or create directory
@@ -493,9 +497,9 @@ func TestErrorScenarios(t *testing.T) {
 		require.NoError(t, os.MkdirAll(corpusPath, 0755))
 
 		corpusConfig := corpus.Config{
-			CorpusPath:      corpusPath,
-			ActivitiesPath:  filepath.Join(corpusPath, ".activities"),
-			MaxSizeBytes:    100, // Very small limit
+			CorpusPath:     corpusPath,
+			ActivitiesPath: filepath.Join(corpusPath, ".activities"),
+			MaxSizeBytes:   100, // Very small limit
 		}
 
 		largeDoc := &corpus.CorpusDoc{

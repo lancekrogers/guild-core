@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package edit
 
 import (
@@ -125,8 +128,8 @@ func TestCraftMultiEditMultipleEdits(t *testing.T) {
 		FilePath: tempFile,
 		Edits: []EditEntry{
 			{
-				OldString: "oldFunction",
-				NewString: "newFunction",
+				OldString:  "oldFunction",
+				NewString:  "newFunction",
 				ReplaceAll: true,
 			},
 			{
@@ -639,8 +642,8 @@ func TestJourneymanMultiEditSequentialEdits(t *testing.T) {
 				ReplaceAll: false, // Only first occurrence
 			},
 			{
-				OldString:  "def",
-				NewString:  "uvw",
+				OldString: "def",
+				NewString: "uvw",
 			},
 			{
 				OldString:  "abc", // Should still find remaining occurrences
@@ -722,13 +725,13 @@ func BenchmarkMultiEditSingleEdit(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		tempFile := createBenchFile(b, content)
-		
+
 		params := MultiEditParams{
 			FilePath: tempFile,
 			Edits: []EditEntry{
 				{
-					OldString: "test",
-					NewString: "demo",
+					OldString:  "test",
+					NewString:  "demo",
 					ReplaceAll: true,
 				},
 			},
@@ -750,7 +753,7 @@ func BenchmarkMultiEditMultipleEdits(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		tempFile := createBenchFile(b, content)
-		
+
 		params := MultiEditParams{
 			FilePath: tempFile,
 			Edits: []EditEntry{

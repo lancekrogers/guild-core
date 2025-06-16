@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package mock
 
 import (
@@ -22,8 +25,8 @@ type Provider struct {
 	defaultResponse string            // Default response if no match
 	delay           time.Duration     // Simulated latency
 	capabilities    interfaces.ProviderCapabilities
-	yamlResponses   ResponseSet       // YAML-based responses
-	enabled         bool              // Whether mock provider is enabled
+	yamlResponses   ResponseSet // YAML-based responses
+	enabled         bool        // Whether mock provider is enabled
 }
 
 // CallRecord records details of each API call
@@ -471,11 +474,11 @@ func NewProviderForTesting() *Provider {
 			},
 		},
 	}
-	
+
 	// Try to load YAML responses for testing
 	if yamlResponses, err := loadResponses(); err == nil {
 		provider.yamlResponses = yamlResponses
 	}
-	
+
 	return provider
 }

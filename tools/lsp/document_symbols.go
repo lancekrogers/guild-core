@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package lsp
 
 import (
@@ -24,15 +27,15 @@ type DocumentParams struct {
 
 // SymbolInfo represents information about a symbol
 type SymbolInfo struct {
-	Name           string         `json:"name"`
-	Kind           string         `json:"kind"`
-	Range          *Range         `json:"range"`
-	SelectionRange *Range         `json:"selection_range,omitempty"`
-	Detail         string         `json:"detail,omitempty"`
+	Name           string        `json:"name"`
+	Kind           string        `json:"kind"`
+	Range          *Range        `json:"range"`
+	SelectionRange *Range        `json:"selection_range,omitempty"`
+	Detail         string        `json:"detail,omitempty"`
 	Children       []*SymbolInfo `json:"children,omitempty"`
 }
 
-// Range represents a text range  
+// Range represents a text range
 type Range struct {
 	StartLine   int `json:"start_line"`
 	StartColumn int `json:"start_column"`
@@ -84,7 +87,7 @@ func (t *DocumentSymbolsTool) Execute(ctx context.Context, input string) (*tools
 
 	// For now, return a placeholder implementation
 	// This will be updated when we extend the LSP manager with document symbols support
-	
+
 	// Read file to check it exists
 	if _, err := os.Stat(params.File); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "file not found").
@@ -96,14 +99,14 @@ func (t *DocumentSymbolsTool) Execute(ctx context.Context, input string) (*tools
 	// Placeholder response showing the structure
 	symbols := []*SymbolInfo{
 		{
-			Name: "Example",
-			Kind: "Info",
+			Name:   "Example",
+			Kind:   "Info",
 			Detail: "Document symbols will be available when LSP manager is extended",
 			Range: &Range{
-				StartLine: 0,
+				StartLine:   0,
 				StartColumn: 0,
-				EndLine: 0,
-				EndColumn: 0,
+				EndLine:     0,
+				EndColumn:   0,
 			},
 		},
 	}

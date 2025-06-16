@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package edit
 
 import (
@@ -20,54 +23,54 @@ type MultiEditTool struct {
 
 // MultiEditParams represents the input parameters for multi-edit operations
 type MultiEditParams struct {
-	FilePath string      `json:"file_path"`           // Path to the file to edit
-	Edits    []EditEntry `json:"edits"`               // Array of edits to apply
-	Backup   bool        `json:"backup,omitempty"`    // Create backup before applying changes
-	DryRun   bool        `json:"dry_run,omitempty"`   // Show preview without applying changes
-	Validate bool        `json:"validate,omitempty"`  // Validate all edits before applying any
+	FilePath string      `json:"file_path"`          // Path to the file to edit
+	Edits    []EditEntry `json:"edits"`              // Array of edits to apply
+	Backup   bool        `json:"backup,omitempty"`   // Create backup before applying changes
+	DryRun   bool        `json:"dry_run,omitempty"`  // Show preview without applying changes
+	Validate bool        `json:"validate,omitempty"` // Validate all edits before applying any
 }
 
 // EditEntry represents a single find-and-replace operation
 type EditEntry struct {
-	OldString  string `json:"old_string"`                // String to find and replace
-	NewString  string `json:"new_string"`                // String to replace with
-	ReplaceAll bool   `json:"replace_all,omitempty"`     // Replace all occurrences (default: false)
+	OldString  string `json:"old_string"`            // String to find and replace
+	NewString  string `json:"new_string"`            // String to replace with
+	ReplaceAll bool   `json:"replace_all,omitempty"` // Replace all occurrences (default: false)
 }
 
 // MultiEditResult represents the result of a multi-edit operation
 type MultiEditResult struct {
-	FilePath        string            `json:"file_path"`
-	Applied         bool              `json:"applied"`
-	DryRun          bool              `json:"dry_run"`
-	TotalEdits      int               `json:"total_edits"`
-	AppliedEdits    int               `json:"applied_edits"`
-	EditsDetails    []EditResult      `json:"edits_details"`
-	BackupFile      string            `json:"backup_file,omitempty"`
-	ValidationError string            `json:"validation_error,omitempty"`
-	Errors          []string          `json:"errors,omitempty"`
-	Warnings        []string          `json:"warnings,omitempty"`
-	Preview         string            `json:"preview,omitempty"`
-	Stats           *MultiEditStats   `json:"stats"`
+	FilePath        string          `json:"file_path"`
+	Applied         bool            `json:"applied"`
+	DryRun          bool            `json:"dry_run"`
+	TotalEdits      int             `json:"total_edits"`
+	AppliedEdits    int             `json:"applied_edits"`
+	EditsDetails    []EditResult    `json:"edits_details"`
+	BackupFile      string          `json:"backup_file,omitempty"`
+	ValidationError string          `json:"validation_error,omitempty"`
+	Errors          []string        `json:"errors,omitempty"`
+	Warnings        []string        `json:"warnings,omitempty"`
+	Preview         string          `json:"preview,omitempty"`
+	Stats           *MultiEditStats `json:"stats"`
 }
 
 // EditResult represents the result of a single edit operation
 type EditResult struct {
-	Index       int    `json:"index"`                  // Index of the edit in the original array
+	Index       int    `json:"index"` // Index of the edit in the original array
 	OldString   string `json:"old_string"`
 	NewString   string `json:"new_string"`
 	ReplaceAll  bool   `json:"replace_all"`
-	Occurrences int    `json:"occurrences"`            // Number of occurrences found/replaced
+	Occurrences int    `json:"occurrences"` // Number of occurrences found/replaced
 	Applied     bool   `json:"applied"`
 	Error       string `json:"error,omitempty"`
 }
 
 // MultiEditStats provides statistics about the multi-edit operation
 type MultiEditStats struct {
-	TotalOccurrences    int     `json:"total_occurrences"`
-	ReplacedOccurrences int     `json:"replaced_occurrences"`
-	CharactersAdded     int     `json:"characters_added"`
-	CharactersRemoved   int     `json:"characters_removed"`
-	ProcessingTimeMs    int64   `json:"processing_time_ms"`
+	TotalOccurrences    int   `json:"total_occurrences"`
+	ReplacedOccurrences int   `json:"replaced_occurrences"`
+	CharactersAdded     int   `json:"characters_added"`
+	CharactersRemoved   int   `json:"characters_removed"`
+	ProcessingTimeMs    int64 `json:"processing_time_ms"`
 }
 
 // NewMultiEditTool creates a new multi-edit tool
@@ -199,12 +202,12 @@ func (t *MultiEditTool) Execute(ctx context.Context, input string) (*tools.ToolR
 	output := t.formatResult(result)
 
 	metadata := map[string]string{
-		"file_path":           params.FilePath,
-		"applied":             fmt.Sprintf("%t", result.Applied),
-		"dry_run":             fmt.Sprintf("%t", result.DryRun),
-		"total_edits":         fmt.Sprintf("%d", result.TotalEdits),
-		"applied_edits":       fmt.Sprintf("%d", result.AppliedEdits),
-		"total_occurrences":   fmt.Sprintf("%d", result.Stats.TotalOccurrences),
+		"file_path":            params.FilePath,
+		"applied":              fmt.Sprintf("%t", result.Applied),
+		"dry_run":              fmt.Sprintf("%t", result.DryRun),
+		"total_edits":          fmt.Sprintf("%d", result.TotalEdits),
+		"applied_edits":        fmt.Sprintf("%d", result.AppliedEdits),
+		"total_occurrences":    fmt.Sprintf("%d", result.Stats.TotalOccurrences),
 		"replaced_occurrences": fmt.Sprintf("%d", result.Stats.ReplacedOccurrences),
 	}
 
@@ -495,7 +498,7 @@ func (t *MultiEditTool) formatResult(result *MultiEditResult) string {
 				status = "✗"
 			}
 
-			output.WriteString(fmt.Sprintf("  %s Edit %d: '%s' → '%s' (%d occurrences", 
+			output.WriteString(fmt.Sprintf("  %s Edit %d: '%s' → '%s' (%d occurrences",
 				status, edit.Index+1, edit.OldString, edit.NewString, edit.Occurrences))
 
 			if edit.ReplaceAll {
@@ -517,7 +520,7 @@ func (t *MultiEditTool) formatResult(result *MultiEditResult) string {
 		}
 	}
 
-	// Errors  
+	// Errors
 	if len(result.Errors) > 0 {
 		output.WriteString("\nErrors:\n")
 		for _, err := range result.Errors {

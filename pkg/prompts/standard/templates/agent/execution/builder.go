@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package execution
 
 import (
@@ -150,7 +153,7 @@ func (b *PromptBuilder) BuildFullExecutionPrompt(data ExecutionPromptData) (stri
 		"StepNumber":             data.Execution.StepNumber,
 		"TotalSteps":             data.Execution.TotalSteps,
 		"StepName":               data.Execution.StepName,
-		"StepCommission":          data.Execution.StepCommission,
+		"StepCommission":         data.Execution.StepCommission,
 		"ExpectedActions":        data.Execution.ExpectedActions,
 		"SuccessIndicators":      data.Execution.SuccessIndicators,
 		"PotentialIssues":        data.Execution.PotentialIssues,

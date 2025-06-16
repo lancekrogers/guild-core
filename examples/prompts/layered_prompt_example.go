@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 //go:build example
 // +build example
 
@@ -33,7 +36,7 @@ func main() {
 		mockBaseManager,
 		store,
 		mockRegistry,
-		nil, // No RAG retriever for this example
+		nil,  // No RAG retriever for this example
 		4000, // 4k token budget
 	)
 

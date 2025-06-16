@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package lsp
 
 import (
@@ -26,7 +29,7 @@ type RenameParams struct {
 
 // RenameResult represents the result of a rename operation
 type RenameResult struct {
-	Success bool                   `json:"success"`
+	Success bool                  `json:"success"`
 	Changes map[string][]TextEdit `json:"changes"`
 	Summary struct {
 		TotalFiles   int `json:"total_files"`

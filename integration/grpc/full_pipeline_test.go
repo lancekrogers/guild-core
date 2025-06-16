@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package grpc
 
 import (
@@ -8,6 +11,7 @@ import (
 
 	guildgrpc "github.com/guild-ventures/guild-core/pkg/grpc"
 	guildpb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
+
 	// promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 	"github.com/guild-ventures/guild-core/pkg/providers/mock"
 	"github.com/guild-ventures/guild-core/pkg/registry"

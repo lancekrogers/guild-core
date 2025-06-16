@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package fs
 
 import (
@@ -7,16 +10,16 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/guild-ventures/guild-core/tools"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/guild-ventures/guild-core/tools"
 )
 
 // TestGuildGrepIntegration tests the grep tool in a realistic scenario
 func TestGuildGrepIntegration(t *testing.T) {
 	// Create a test project structure
 	testDir := t.TempDir()
-	
+
 	// Create a realistic project structure
 	projectFiles := map[string]string{
 		"README.md": `# My Project

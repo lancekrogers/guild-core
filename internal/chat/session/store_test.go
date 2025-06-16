@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package session
 
 import (
@@ -11,7 +14,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
@@ -133,7 +136,7 @@ func TestSessionStore_ListSessions(t *testing.T) {
 	sessions, err := store.ListSessions(ctx, 3, 0)
 	assert.NoError(t, err)
 	assert.Len(t, sessions, 3)
-	
+
 	// Sessions should be ordered by updated_at DESC
 	assert.Equal(t, "session-4", sessions[0].ID)
 	assert.Equal(t, "session-3", sessions[1].ID)
@@ -229,7 +232,7 @@ func TestSessionStore_SearchSessions(t *testing.T) {
 	results, err := store.SearchSessions(ctx, "Alpha", 10, 0)
 	assert.NoError(t, err)
 	assert.Len(t, results, 2)
-	
+
 	// Verify both Alpha sessions are returned
 	names := []string{results[0].Name, results[1].Name}
 	assert.Contains(t, names, "Project Alpha Development")
@@ -323,12 +326,12 @@ func TestSessionStore_MessagePagination(t *testing.T) {
 	page1, err := store.GetMessagesPaginated(ctx, session.ID, 5, 0)
 	assert.NoError(t, err)
 	assert.Len(t, page1, 5)
-	
+
 	// Debug: print message order
 	for i, msg := range page1 {
 		t.Logf("Page1[%d]: %s", i, msg.ID)
 	}
-	
+
 	// With DESC order and same timestamps, order is unpredictable
 	// Just verify we got 5 messages
 	assert.Len(t, page1, 5)
@@ -336,13 +339,13 @@ func TestSessionStore_MessagePagination(t *testing.T) {
 	page2, err := store.GetMessagesPaginated(ctx, session.ID, 5, 5)
 	assert.NoError(t, err)
 	assert.Len(t, page2, 5)
-	
+
 	// Verify no overlap between pages
 	page1IDs := make(map[string]bool)
 	for _, msg := range page1 {
 		page1IDs[msg.ID] = true
 	}
-	
+
 	for _, msg := range page2 {
 		assert.False(t, page1IDs[msg.ID], "Message %s appears in both pages", msg.ID)
 	}
@@ -365,7 +368,7 @@ func TestSessionStore_GetMessagesAfter(t *testing.T) {
 
 	// Create messages at different times
 	cutoffTime := time.Now()
-	
+
 	// Old messages
 	for i := 0; i < 3; i++ {
 		msg := &Message{
@@ -395,12 +398,12 @@ func TestSessionStore_GetMessagesAfter(t *testing.T) {
 	// Get messages after cutoff
 	messages, err := store.GetMessagesAfter(ctx, session.ID, cutoffTime)
 	assert.NoError(t, err)
-	
+
 	// Debug: print all message IDs and timestamps
 	for _, msg := range messages {
 		t.Logf("Message %s created at %v", msg.ID, msg.CreatedAt)
 	}
-	
+
 	// Filter to only new messages
 	var newMessages []*Message
 	for _, msg := range messages {
@@ -408,7 +411,7 @@ func TestSessionStore_GetMessagesAfter(t *testing.T) {
 			newMessages = append(newMessages, msg)
 		}
 	}
-	
+
 	assert.Len(t, newMessages, 2)
 	assert.Contains(t, []string{"new-msg-0", "new-msg-1"}, newMessages[0].ID)
 	assert.Contains(t, []string{"new-msg-0", "new-msg-1"}, newMessages[1].ID)
@@ -468,7 +471,7 @@ func TestSessionStore_SearchMessages(t *testing.T) {
 	results, err := store.SearchMessages(ctx, "Hello", 10, 0)
 	assert.NoError(t, err)
 	assert.Len(t, results, 2)
-	
+
 	// Verify results include session context
 	for _, result := range results {
 		assert.Contains(t, result.Content, "Hello")

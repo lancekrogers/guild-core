@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package chat
 
 import (
@@ -73,15 +76,15 @@ func (cp *CommandProcessor) registerCommands() {
 	// Clear command
 	cp.RegisterCommand("clear", cp.handleClear)
 	cp.RegisterCommand("cls", cp.handleClear)
-	
+
 	// Export commands
 	cp.RegisterCommand("export", cp.handleExport)
 	cp.RegisterCommand("save", cp.handleExport)
-	
+
 	// Template commands
 	cp.RegisterCommand("template", cp.handleTemplate)
 	cp.RegisterCommand("templates", cp.handleTemplates)
-	
+
 	// Visual enhancement commands
 	cp.RegisterCommand("image", cp.handleImage)
 	cp.RegisterCommand("mermaid", cp.handleMermaid)
@@ -1060,13 +1063,13 @@ func (cp *CommandProcessor) handleExport(args []string) tea.Cmd {
 	if len(args) == 0 {
 		return cp.errorMessage("Usage: /export <format> [filename]\nFormats: json, markdown, html, pdf")
 	}
-	
+
 	format := strings.ToLower(args[0])
 	var filename string
 	if len(args) > 1 {
 		filename = args[1]
 	}
-	
+
 	return func() tea.Msg {
 		// Get session manager
 		sessionManager := cp.model.sessionManager
@@ -1076,7 +1079,7 @@ func (cp *CommandProcessor) handleExport(args []string) tea.Cmd {
 				Content: "Session manager not available",
 			}
 		}
-		
+
 		// Export the session
 		var exportFormat session.ExportFormat
 		switch format {
@@ -1094,7 +1097,7 @@ func (cp *CommandProcessor) handleExport(args []string) tea.Cmd {
 				Content: fmt.Sprintf("Unsupported format: %s. Use: json, markdown, html, pdf", format),
 			}
 		}
-		
+
 		// Use enhanced export with options
 		options := &session.ExportOptions{
 			IncludeToolOutputs: true,
@@ -1104,7 +1107,7 @@ func (cp *CommandProcessor) handleExport(args []string) tea.Cmd {
 			Theme:              "default",
 			DateFormat:         "2006-01-02 15:04:05",
 		}
-		
+
 		data, err := sessionManager.ExportSessionWithOptions(cp.model.sessionID, exportFormat, options)
 		if err != nil {
 			return Message{
@@ -1112,7 +1115,7 @@ func (cp *CommandProcessor) handleExport(args []string) tea.Cmd {
 				Content: fmt.Sprintf("Export failed: %v", err),
 			}
 		}
-		
+
 		// Save to file if filename provided
 		if filename != "" {
 			if err := os.WriteFile(filename, data, 0644); err != nil {
@@ -1121,7 +1124,7 @@ func (cp *CommandProcessor) handleExport(args []string) tea.Cmd {
 					Content: fmt.Sprintf("Failed to save file: %v", err),
 				}
 			}
-			
+
 			return Message{
 				Type:    msgSystem,
 				Content: fmt.Sprintf("✅ Session exported to `%s` (%.1f KB)", filename, float64(len(data))/1024),
@@ -1135,7 +1138,7 @@ func (cp *CommandProcessor) handleExport(args []string) tea.Cmd {
 					Content: fmt.Sprintf("Failed to save file: %v", err),
 				}
 			}
-			
+
 			return Message{
 				Type:    msgSystem,
 				Content: fmt.Sprintf("✅ Session exported to `%s` (%.1f KB)", defaultFilename, float64(len(data))/1024),
@@ -1150,7 +1153,7 @@ func (cp *CommandProcessor) handleTemplate(args []string) tea.Cmd {
 	if len(args) == 0 {
 		return cp.errorMessage("Usage: /template <action> [args]\nActions: list, search <query>, use <id>")
 	}
-	
+
 	action := args[0]
 	switch action {
 	case "list":
@@ -1210,7 +1213,7 @@ func (cp *CommandProcessor) handleTemplateList(args []string) tea.Cmd {
 				Content: "Content formatter not available",
 			}
 		}
-		
+
 		// Get contextual suggestions (acts like a list)
 		context := make(map[string]interface{})
 		templates, err := formatter.GetTemplateSuggestions(context)
@@ -1220,22 +1223,22 @@ func (cp *CommandProcessor) handleTemplateList(args []string) tea.Cmd {
 				Content: fmt.Sprintf("Failed to get templates: %v", err),
 			}
 		}
-		
+
 		if len(templates) == 0 {
 			return Message{
 				Type:    msgSystem,
 				Content: "No templates available. Templates will be created automatically when needed.",
 			}
 		}
-		
+
 		var content strings.Builder
 		content.WriteString("# 📋 Available Templates\n\n")
-		
+
 		// Show basic template listing
 		content.WriteString("## Available Templates\n\n")
 		content.WriteString("Templates are automatically managed by the content formatter.\n")
 		content.WriteString("Use `/template search <query>` to find specific templates.\n")
-		
+
 		return Message{
 			Type:    msgSystem,
 			Content: content.String(),
@@ -1247,9 +1250,9 @@ func (cp *CommandProcessor) handleTemplateSearch(args []string) tea.Cmd {
 	if len(args) == 0 {
 		return cp.errorMessage("Usage: /template search <query>")
 	}
-	
+
 	query := strings.Join(args, " ")
-	
+
 	return func() tea.Msg {
 		formatter := cp.model.contentFormatter
 		if formatter == nil {
@@ -1258,7 +1261,7 @@ func (cp *CommandProcessor) handleTemplateSearch(args []string) tea.Cmd {
 				Content: "Content formatter not available",
 			}
 		}
-		
+
 		results, err := formatter.SearchTemplates(query, 10)
 		if err != nil {
 			return Message{
@@ -1266,17 +1269,17 @@ func (cp *CommandProcessor) handleTemplateSearch(args []string) tea.Cmd {
 				Content: fmt.Sprintf("Search failed: %v", err),
 			}
 		}
-		
+
 		if len(results) == 0 {
 			return Message{
 				Type:    msgSystem,
 				Content: fmt.Sprintf("No templates found matching '%s'", query),
 			}
 		}
-		
+
 		var content strings.Builder
 		content.WriteString(fmt.Sprintf("# 🔍 Template Search Results for '%s'\n\n", query))
-		
+
 		for i, result := range results {
 			template := result.Template
 			content.WriteString(fmt.Sprintf("## %d. %s (Score: %.1f)\n", i+1, template.Name, result.Relevance))
@@ -1285,7 +1288,7 @@ func (cp *CommandProcessor) handleTemplateSearch(args []string) tea.Cmd {
 			content.WriteString(fmt.Sprintf("**Matches:** %s  \n", strings.Join(result.Matches, ", ")))
 			content.WriteString(fmt.Sprintf("**Usage:** `/template use %s`\n\n", template.ID))
 		}
-		
+
 		return Message{
 			Type:    msgSystem,
 			Content: content.String(),
@@ -1297,9 +1300,9 @@ func (cp *CommandProcessor) handleTemplateUse(args []string) tea.Cmd {
 	if len(args) == 0 {
 		return cp.errorMessage("Usage: /template use <template-id>")
 	}
-	
+
 	templateID := args[0]
-	
+
 	return func() tea.Msg {
 		formatter := cp.model.contentFormatter
 		if formatter == nil {
@@ -1308,10 +1311,10 @@ func (cp *CommandProcessor) handleTemplateUse(args []string) tea.Cmd {
 				Content: "Content formatter not available",
 			}
 		}
-		
+
 		// For now, use empty variables - in a full implementation, this would prompt for variables
 		variables := make(map[string]interface{})
-		
+
 		content, err := formatter.RenderTemplate(templateID, variables)
 		if err != nil {
 			return Message{
@@ -1319,7 +1322,7 @@ func (cp *CommandProcessor) handleTemplateUse(args []string) tea.Cmd {
 				Content: fmt.Sprintf("Failed to render template: %v", err),
 			}
 		}
-		
+
 		// Insert the rendered template into the input area
 		// This would typically update the model's input field
 		return Message{
@@ -1335,18 +1338,18 @@ func (cp *CommandProcessor) handleImage(args []string) tea.Cmd {
 	if len(args) == 0 {
 		return cp.errorMessage("Usage: /image <path>")
 	}
-	
+
 	imagePath := strings.Join(args, " ")
-	
+
 	return func() tea.Msg {
 		// Process the image using the content formatter
 		content := fmt.Sprintf("![Image](%s)", imagePath)
-		
+
 		formatter := cp.model.contentFormatter
 		if formatter != nil {
 			content = formatter.processEnhancedContent(content)
 		}
-		
+
 		return Message{
 			Type:    msgSystem,
 			Content: content,
@@ -1399,7 +1402,7 @@ func (cp *CommandProcessor) handleCode(args []string) tea.Cmd {
 	if len(args) == 0 {
 		return cp.errorMessage("Usage: /code <action>\nActions: toggle-lines")
 	}
-	
+
 	action := args[0]
 	switch action {
 	case "toggle-lines":

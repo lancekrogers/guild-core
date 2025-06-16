@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package fs
 
 import (
@@ -22,10 +25,10 @@ type GlobTool struct {
 
 // GlobToolInput represents the input for glob pattern matching
 type GlobToolInput struct {
-	Pattern         string   `json:"pattern"`                      // Glob pattern (e.g., "**/*.go", "src/**/*.js")
-	Path            string   `json:"path,omitempty"`               // Optional directory to search in (defaults to current directory)
-	Exclude         []string `json:"exclude,omitempty"`            // Optional exclusion patterns
-	IncludeDirs     bool     `json:"include_dirs,omitempty"`       // Include directories in results (default: false)
+	Pattern     string   `json:"pattern"`                // Glob pattern (e.g., "**/*.go", "src/**/*.js")
+	Path        string   `json:"path,omitempty"`         // Optional directory to search in (defaults to current directory)
+	Exclude     []string `json:"exclude,omitempty"`      // Optional exclusion patterns
+	IncludeDirs bool     `json:"include_dirs,omitempty"` // Include directories in results (default: false)
 }
 
 // FileMatch represents a matched file with metadata
@@ -317,13 +320,13 @@ func (t *GlobTool) matchPattern(path, pattern string) (bool, error) {
 	// Convert to forward slashes for consistent matching
 	pattern = filepath.ToSlash(pattern)
 	path = filepath.ToSlash(path)
-	
+
 	// Handle simple patterns without **
 	if !strings.Contains(pattern, "**") {
 		matched, err := filepath.Match(pattern, path)
 		return matched, err
 	}
-	
+
 	// For patterns with **, use a simpler approach
 	return t.matchDoublestar(pattern, path), nil
 }
@@ -332,19 +335,19 @@ func (t *GlobTool) matchPattern(path, pattern string) (bool, error) {
 func (t *GlobTool) matchDoublestar(pattern, path string) bool {
 	// Split pattern by **
 	parts := strings.Split(pattern, "**")
-	
+
 	// If pattern starts with **, remove empty first part
 	if len(parts) > 0 && parts[0] == "" {
 		parts = parts[1:]
 		return t.matchDoublestarFromEnd(parts, path)
 	}
-	
+
 	// If pattern ends with **, remove empty last part
 	if len(parts) > 0 && parts[len(parts)-1] == "" {
 		parts = parts[:len(parts)-1]
 		return t.matchDoublestarFromStart(parts, path)
 	}
-	
+
 	// Pattern has ** in the middle
 	return t.matchDoublestarMiddle(parts, path)
 }
@@ -354,18 +357,18 @@ func (t *GlobTool) matchDoublestarFromEnd(parts []string, path string) bool {
 	if len(parts) == 0 {
 		return true // ** matches everything
 	}
-	
+
 	// Try to match the suffix
 	suffix := strings.Join(parts, "**")
 	// Remove leading / from suffix
 	if strings.HasPrefix(suffix, "/") {
 		suffix = suffix[1:]
 	}
-	
+
 	// Try all possible positions in the path
 	pathParts := strings.Split(path, "/")
 	suffixParts := strings.Split(suffix, "/")
-	
+
 	for i := 0; i <= len(pathParts)-len(suffixParts); i++ {
 		match := true
 		for j, suffixPart := range suffixParts {
@@ -390,7 +393,7 @@ func (t *GlobTool) matchDoublestarFromEnd(parts []string, path string) bool {
 			return true
 		}
 	}
-	
+
 	return false
 }
 
@@ -399,21 +402,21 @@ func (t *GlobTool) matchDoublestarFromStart(parts []string, path string) bool {
 	if len(parts) == 0 {
 		return true // ** matches everything
 	}
-	
+
 	// Match the prefix
 	prefix := strings.Join(parts, "**")
 	// Remove trailing / from prefix
 	if strings.HasSuffix(prefix, "/") {
 		prefix = prefix[:len(prefix)-1]
 	}
-	
+
 	prefixParts := strings.Split(prefix, "/")
 	pathParts := strings.Split(path, "/")
-	
+
 	if len(prefixParts) > len(pathParts) {
 		return false
 	}
-	
+
 	for i, prefixPart := range prefixParts {
 		if strings.Contains(prefixPart, "**") {
 			// Recursively handle more **
@@ -426,7 +429,7 @@ func (t *GlobTool) matchDoublestarFromStart(parts []string, path string) bool {
 			}
 		}
 	}
-	
+
 	return true
 }
 
@@ -435,32 +438,32 @@ func (t *GlobTool) matchDoublestarMiddle(parts []string, path string) bool {
 	if len(parts) < 2 {
 		return t.matchDoublestarFromStart(parts, path)
 	}
-	
+
 	// For simplicity, just check if the first and last parts match
 	// This handles most common cases like "src/**/*.js"
-	
+
 	firstPart := parts[0]
 	lastPart := parts[len(parts)-1]
-	
+
 	// Remove trailing / from first part
 	if strings.HasSuffix(firstPart, "/") {
 		firstPart = firstPart[:len(firstPart)-1]
 	}
-	
+
 	// Remove leading / from last part
 	if strings.HasPrefix(lastPart, "/") {
 		lastPart = lastPart[1:]
 	}
-	
+
 	pathParts := strings.Split(path, "/")
-	
+
 	// Check if path starts with first part
 	if firstPart != "" {
 		firstParts := strings.Split(firstPart, "/")
 		if len(firstParts) > len(pathParts) {
 			return false
 		}
-		
+
 		for i, part := range firstParts {
 			matched, _ := filepath.Match(part, pathParts[i])
 			if !matched {
@@ -468,14 +471,14 @@ func (t *GlobTool) matchDoublestarMiddle(parts []string, path string) bool {
 			}
 		}
 	}
-	
+
 	// Check if path ends with last part
 	if lastPart != "" {
 		lastParts := strings.Split(lastPart, "/")
 		if len(lastParts) > len(pathParts) {
 			return false
 		}
-		
+
 		for i, part := range lastParts {
 			pathIndex := len(pathParts) - len(lastParts) + i
 			matched, _ := filepath.Match(part, pathParts[pathIndex])
@@ -484,6 +487,6 @@ func (t *GlobTool) matchDoublestarMiddle(parts []string, path string) bool {
 			}
 		}
 	}
-	
+
 	return true
 }

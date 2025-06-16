@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package dev
 
 import (
@@ -13,10 +16,10 @@ func (j *JavaTestFramework) Name() string {
 }
 
 func (j *JavaTestFramework) Detect(path string) bool {
-	return fileExists("pom.xml") || 
-		   fileExists("build.gradle") || 
-		   fileExists("build.gradle.kts") ||
-		   len(findTestFiles(path, "*Test.java")) > 0
+	return fileExists("pom.xml") ||
+		fileExists("build.gradle") ||
+		fileExists("build.gradle.kts") ||
+		len(findTestFiles(path, "*Test.java")) > 0
 }
 
 func (j *JavaTestFramework) BuildCommand(input TestRunnerInput) ([]string, error) {
@@ -28,7 +31,7 @@ func (j *JavaTestFramework) BuildCommand(input TestRunnerInput) ([]string, error
 		}
 		return cmd, nil
 	}
-	
+
 	// Gradle
 	if fileExists("build.gradle") || fileExists("build.gradle.kts") {
 		cmd := []string{"./gradlew", "test"}
@@ -37,18 +40,18 @@ func (j *JavaTestFramework) BuildCommand(input TestRunnerInput) ([]string, error
 		}
 		return cmd, nil
 	}
-	
+
 	return nil, fmt.Errorf("no supported Java build tool found")
 }
 
 func (j *JavaTestFramework) ParseOutput(output string, exitCode int) (*TestResult, error) {
 	// Basic parsing - could be enhanced with proper JUnit XML parsing
 	lines := strings.Split(output, "\n")
-	
+
 	summary := TestSummary{
 		Success: exitCode == 0,
 	}
-	
+
 	// Count test results from Maven/Gradle output
 	for _, line := range lines {
 		if strings.Contains(line, "Tests run:") {
@@ -56,7 +59,7 @@ func (j *JavaTestFramework) ParseOutput(output string, exitCode int) (*TestResul
 			// Extract numbers...
 		}
 	}
-	
+
 	return &TestResult{
 		Summary: summary,
 		Output:  output,
@@ -83,25 +86,25 @@ func (r *RubyTestFramework) Name() string {
 
 func (r *RubyTestFramework) Detect(path string) bool {
 	return fileExists("Gemfile") ||
-		   fileExists(".rspec") ||
-		   len(findTestFiles(path, "*_spec.rb")) > 0
+		fileExists(".rspec") ||
+		len(findTestFiles(path, "*_spec.rb")) > 0
 }
 
 func (r *RubyTestFramework) BuildCommand(input TestRunnerInput) ([]string, error) {
 	cmd := []string{"rspec"}
-	
+
 	if input.Verbose {
 		cmd = append(cmd, "--format", "documentation")
 	}
-	
+
 	if input.Pattern != "" {
 		cmd = append(cmd, "--pattern", input.Pattern)
 	}
-	
+
 	if input.Path != "" {
 		cmd = append(cmd, input.Path)
 	}
-	
+
 	return cmd, nil
 }
 
@@ -109,7 +112,7 @@ func (r *RubyTestFramework) ParseOutput(output string, exitCode int) (*TestResul
 	summary := TestSummary{
 		Success: exitCode == 0,
 	}
-	
+
 	return &TestResult{
 		Summary: summary,
 		Output:  output,
@@ -140,15 +143,15 @@ func (rt *RustTestFramework) Detect(path string) bool {
 
 func (rt *RustTestFramework) BuildCommand(input TestRunnerInput) ([]string, error) {
 	cmd := []string{"cargo", "test"}
-	
+
 	if input.Verbose {
 		cmd = append(cmd, "--verbose")
 	}
-	
+
 	if input.Pattern != "" {
 		cmd = append(cmd, input.Pattern)
 	}
-	
+
 	return cmd, nil
 }
 
@@ -156,7 +159,7 @@ func (rt *RustTestFramework) ParseOutput(output string, exitCode int) (*TestResu
 	summary := TestSummary{
 		Success: exitCode == 0,
 	}
-	
+
 	return &TestResult{
 		Summary: summary,
 		Output:  output,

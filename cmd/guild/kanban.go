@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package main
 
 import (
@@ -86,7 +89,7 @@ func init() {
 	kanbanCmd.AddCommand(kanbanListCmd)
 	kanbanCmd.AddCommand(kanbanViewCmd)
 	kanbanCmd.AddCommand(kanbanCreateCmd)
-	
+
 	// Add flags
 	kanbanCmd.PersistentFlags().BoolVar(&kanbanNoDaemon, "no-daemon", false, "Don't auto-start the Guild server")
 }

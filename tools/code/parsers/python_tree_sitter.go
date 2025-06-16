@@ -1,12 +1,15 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package parsers
 
 import (
 	"strings"
 
-	sitter "github.com/smacker/go-tree-sitter"
-	python "github.com/smacker/go-tree-sitter/python"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/tools/code"
+	sitter "github.com/smacker/go-tree-sitter"
+	python "github.com/smacker/go-tree-sitter/python"
 )
 
 // PythonTreeSitterParser implements Python parsing using tree-sitter
@@ -77,7 +80,7 @@ func (p *PythonTreeSitterParser) GetFunctions(result *code.ParseResult) ([]*code
 			case "function":
 				fn.StartLine = int(node.StartPoint().Row) + 1
 				fn.EndLine = int(node.EndPoint().Row) + 1
-				
+
 				// Check if function is async
 				if node.Child(0) != nil && node.Child(0).Type() == "async" {
 					fn.IsStatic = true // Using IsStatic to indicate async
@@ -323,10 +326,10 @@ func (p *PythonTreeSitterParser) extractParameters(node *sitter.Node, content []
 				Name: p.nodeText(child, content),
 			}
 			params = append(params, param)
-			
+
 		case "typed_parameter", "typed_default_parameter", "default_parameter":
 			param := &code.Parameter{}
-			
+
 			// Find the name and type
 			for i := 0; i < int(child.ChildCount()); i++ {
 				subchild := child.Child(i)
@@ -347,9 +350,9 @@ func (p *PythonTreeSitterParser) extractParameters(node *sitter.Node, content []
 					param.IsOptional = true
 				}
 			}
-			
+
 			params = append(params, param)
-			
+
 		case "list_splat_pattern":
 			params = append(params, &code.Parameter{
 				Name:       p.nodeText(child, content),
@@ -392,7 +395,7 @@ func (p *PythonTreeSitterParser) extractMethods(classBody *sitter.Node, content 
 				EndLine:   int(child.EndPoint().Row) + 1,
 				IsMethod:  true,
 			}
-			
+
 			// Check if method is async
 			if child.Child(0) != nil && child.Child(0).Type() == "async" {
 				method.IsStatic = true // Using IsStatic to indicate async

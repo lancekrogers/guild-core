@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package campaign
 
 import (
@@ -28,7 +31,7 @@ type Campaign struct {
 	Name        string                 `json:"name"`
 	Description string                 `json:"description"`
 	Status      CampaignStatus         `json:"status"`
-	Commissions  []string               `json:"commissions"` // Commission IDs
+	Commissions []string               `json:"commissions"` // Commission IDs
 	Tags        []string               `json:"tags"`
 	Metadata    map[string]interface{} `json:"metadata"`
 	CreatedAt   time.Time              `json:"created_at"`
@@ -39,7 +42,7 @@ type Campaign struct {
 	// Progress tracking
 	TotalCommissions     int     `json:"total_commissions"`
 	CompletedCommissions int     `json:"completed_commissions"`
-	Progress            float64 `json:"progress"` // 0.0 to 1.0
+	Progress             float64 `json:"progress"` // 0.0 to 1.0
 }
 
 // CampaignEvent represents state changes in a campaign
@@ -54,13 +57,13 @@ type CampaignEvent struct {
 
 // CampaignProgress represents detailed progress information
 type CampaignProgress struct {
-	CampaignID          string    `json:"campaign_id"`
+	CampaignID           string    `json:"campaign_id"`
 	TotalCommissions     int       `json:"total_commissions"`
 	CompletedCommissions int       `json:"completed_commissions"`
 	ActiveCommissions    int       `json:"active_commissions"`
 	PendingCommissions   int       `json:"pending_commissions"`
-	Progress            float64   `json:"progress"`
-	UpdatedAt           time.Time `json:"updated_at"`
+	Progress             float64   `json:"progress"`
+	UpdatedAt            time.Time `json:"updated_at"`
 }
 
 // Event types for campaign state changes
@@ -74,8 +77,8 @@ const (
 	EventCampaignCompleted       = "campaign.completed"
 	EventCampaignCancelled       = "campaign.cancelled"
 	EventCampaignProgress        = "campaign.progress"
-	EventCommissionAdded          = "campaign.commission.added"
-	EventCommissionRemoved        = "campaign.commission.removed"
+	EventCommissionAdded         = "campaign.commission.added"
+	EventCommissionRemoved       = "campaign.commission.removed"
 )
 
 // IsTerminal returns true if the campaign is in a terminal state
@@ -108,7 +111,7 @@ func NewCampaign(name, description string) *Campaign {
 		Name:        name,
 		Description: description,
 		Status:      CampaignStatusDream, // Start in dream/idea stage
-		Commissions:  []string{},
+		Commissions: []string{},
 		Tags:        []string{},
 		Metadata:    make(map[string]interface{}),
 		CreatedAt:   now,

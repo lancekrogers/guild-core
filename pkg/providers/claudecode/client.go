@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // Package claudecode provides a client for Claude Code CLI, which is included with Claude Max subscription.
 //
 // Claude Code is a powerful CLI tool that comes bundled with the Claude Max plan, offering:

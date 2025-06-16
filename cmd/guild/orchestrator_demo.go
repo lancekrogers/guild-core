@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package main
 
 import (
@@ -38,7 +41,7 @@ Examples:
 }
 
 var (
-	orchestratorCommissionText      string
+	orchestratorCommissionText     string
 	orchestratorMaxCostFilter      int
 	orchestratorAssignmentStrategy string
 	orchestratorShowAlternatives   bool

@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package campaign
 
 import (
@@ -365,7 +368,7 @@ func (m *manager) UpdateProgress(ctx context.Context, campaignID string) error {
 		CampaignID: campaignID,
 		Timestamp:  time.Now(),
 		Data: map[string]interface{}{
-			"progress":             campaign.Progress,
+			"progress":              campaign.Progress,
 			"completed_commissions": campaign.CompletedCommissions,
 			"total_commissions":     campaign.TotalCommissions,
 		},
@@ -418,13 +421,13 @@ func (m *manager) GetProgress(ctx context.Context, campaignID string) (*Campaign
 	}
 
 	return &CampaignProgress{
-		CampaignID:          campaign.ID,
+		CampaignID:           campaign.ID,
 		TotalCommissions:     campaign.TotalCommissions,
 		CompletedCommissions: completedCount,
 		ActiveCommissions:    activeCount,
 		PendingCommissions:   pendingCount,
-		Progress:            campaign.Progress,
-		UpdatedAt:           time.Now(),
+		Progress:             campaign.Progress,
+		UpdatedAt:            time.Now(),
 	}, nil
 }
 

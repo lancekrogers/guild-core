@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 //go:build integration
 
 package commission_test
@@ -48,7 +51,7 @@ func TestCoreComponentInitialization(t *testing.T) {
 	boardRepo := storageReg.GetBoardRepository()
 	campaignRepo := storageReg.GetCampaignRepository()
 	commissionRepo := storageReg.GetCommissionRepository()
-	
+
 	require.NotNil(t, taskRepo)
 	require.NotNil(t, boardRepo)
 	require.NotNil(t, campaignRepo)
@@ -304,12 +307,12 @@ func (k *kanbanTaskRepoAdapter) CreateTask(ctx context.Context, task interface{}
 	if taskMap, ok := task.(map[string]interface{}); ok {
 		// Convert map to storage.Task
 		storageTask := &storage.Task{
-			ID:           taskMap["ID"].(string),
-			Title:        taskMap["Title"].(string),
-			Status:       taskMap["Status"].(string),
-			StoryPoints:  taskMap["StoryPoints"].(int32),
-			CreatedAt:    taskMap["CreatedAt"].(time.Time),
-			UpdatedAt:    taskMap["UpdatedAt"].(time.Time),
+			ID:          taskMap["ID"].(string),
+			Title:       taskMap["Title"].(string),
+			Status:      taskMap["Status"].(string),
+			StoryPoints: taskMap["StoryPoints"].(int32),
+			CreatedAt:   taskMap["CreatedAt"].(time.Time),
+			UpdatedAt:   taskMap["UpdatedAt"].(time.Time),
 		}
 		// Handle nullable fields
 		if boardID, ok := taskMap["BoardID"].(string); ok {
@@ -348,7 +351,7 @@ func (k *kanbanTaskRepoAdapter) UpdateTask(ctx context.Context, task interface{}
 		if err != nil {
 			return err
 		}
-		
+
 		// Update fields from the map
 		if title, ok := taskMap["Title"].(string); ok {
 			existingTask.Title = title
@@ -368,7 +371,7 @@ func (k *kanbanTaskRepoAdapter) UpdateTask(ctx context.Context, task interface{}
 		if updatedAt, ok := taskMap["UpdatedAt"].(time.Time); ok {
 			existingTask.UpdatedAt = updatedAt
 		}
-		
+
 		return k.repo.UpdateTask(ctx, existingTask)
 	}
 	return gerror.New(gerror.ErrCodeValidation, "invalid task type", nil).
@@ -385,7 +388,7 @@ func (k *kanbanTaskRepoAdapter) ListTasksByBoard(ctx context.Context, boardID st
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Convert to []interface{}
 	result := make([]interface{}, len(tasks))
 	for i, task := range tasks {
@@ -458,7 +461,7 @@ func (k *kanbanBoardRepoAdapter) ListBoards(ctx context.Context) ([]interface{},
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Convert to []interface{}
 	result := make([]interface{}, len(boards))
 	for i, board := range boards {

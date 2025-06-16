@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package journey
 
 import (
@@ -315,14 +318,14 @@ JWT service has been implemented with:
 		kanbanPath := filepath.Join(projCtx.GetGuildPath(), "kanban", "auth-commission")
 		donePath := filepath.Join(kanbanPath, "done")
 		reviewPath := filepath.Join(kanbanPath, "review")
-		
+
 		// Move from review back to done after updates
 		err := os.Rename(
 			filepath.Join(reviewPath, "task-001.md"),
 			filepath.Join(donePath, "task-001.md"),
 		)
 		require.NoError(t, err)
-		
+
 		// Update the task with new implementation
 		err = os.WriteFile(filepath.Join(donePath, "task-001.md"), []byte(updatedContent), 0644)
 		require.NoError(t, err)

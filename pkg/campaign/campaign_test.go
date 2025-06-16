@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package campaign
 
 import (
@@ -118,13 +121,13 @@ func TestCampaignEvent(t *testing.T) {
 
 func TestCampaignProgress(t *testing.T) {
 	progress := &CampaignProgress{
-		CampaignID:          "test-123",
+		CampaignID:           "test-123",
 		TotalCommissions:     10,
 		CompletedCommissions: 3,
 		ActiveCommissions:    2,
 		PendingCommissions:   5,
-		Progress:            0.3,
-		UpdatedAt:           time.Now(),
+		Progress:             0.3,
+		UpdatedAt:            time.Now(),
 	}
 
 	assert.Equal(t, "test-123", progress.CampaignID)

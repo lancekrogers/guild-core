@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package session
 
 import (
@@ -229,7 +232,7 @@ func TestManager_NewSession(t *testing.T) {
 
 	campaignID := "test-campaign"
 	session, err := manager.NewSession("Test Session", &campaignID)
-	
+
 	assert.NoError(t, err)
 	assert.NotEmpty(t, session.ID)
 	assert.Equal(t, "Test Session", session.Name)
@@ -252,7 +255,7 @@ func TestManager_LoadSession(t *testing.T) {
 
 	// Load it through manager
 	loaded, err := manager.LoadSession(session.ID)
-	
+
 	assert.NoError(t, err)
 	assert.Equal(t, session.ID, loaded.ID)
 	assert.Equal(t, session.Name, loaded.Name)
@@ -271,10 +274,10 @@ func TestManager_SaveSession(t *testing.T) {
 	// Update and save
 	session.Name = "Updated Name"
 	err := manager.SaveSession(session)
-	
+
 	assert.NoError(t, err)
 	assert.False(t, session.UpdatedAt.IsZero())
-	
+
 	// Verify in store
 	stored := store.sessions[session.ID]
 	assert.Equal(t, "Updated Name", stored.Name)
@@ -300,12 +303,12 @@ func TestManager_ForkSession(t *testing.T) {
 
 	// Fork the session
 	forked, err := manager.ForkSession(source.ID, "Forked Session")
-	
+
 	assert.NoError(t, err)
 	assert.NotEqual(t, source.ID, forked.ID)
 	assert.Equal(t, "Forked Session", forked.Name)
 	assert.Equal(t, source.ID, forked.Metadata["forked_from"])
-	
+
 	// Verify messages were copied
 	forkedMessages := store.messages[forked.ID]
 	assert.Len(t, forkedMessages, 2)
@@ -318,7 +321,7 @@ func TestManager_AppendMessage(t *testing.T) {
 	manager := NewManager(store)
 
 	sessionID := "test-session"
-	
+
 	toolCalls := []ToolCall{
 		{
 			ID:   "tool-1",
@@ -331,14 +334,14 @@ func TestManager_AppendMessage(t *testing.T) {
 	}
 
 	message, err := manager.AppendMessage(sessionID, RoleUser, "Test message", toolCalls)
-	
+
 	assert.NoError(t, err)
 	assert.NotEmpty(t, message.ID)
 	assert.Equal(t, sessionID, message.SessionID)
 	assert.Equal(t, RoleUser, message.Role)
 	assert.Equal(t, "Test message", message.Content)
 	assert.Len(t, message.ToolCalls, 1)
-	
+
 	// Verify in store
 	stored := store.messages[sessionID]
 	assert.Len(t, stored, 1)
@@ -350,7 +353,7 @@ func TestManager_StreamMessage(t *testing.T) {
 	manager := NewManager(store)
 
 	sessionID := "test-session"
-	
+
 	// Create stream
 	stream, err := manager.StreamMessage(sessionID, RoleAssistant)
 	assert.NoError(t, err)
@@ -391,7 +394,7 @@ func TestManager_GetContext(t *testing.T) {
 	manager := NewManager(store)
 
 	sessionID := "test-session"
-	
+
 	// Add multiple messages
 	for i := 0; i < 10; i++ {
 		msg := &Message{
@@ -421,7 +424,7 @@ func TestManager_ClearContext(t *testing.T) {
 	manager := NewManager(store)
 
 	sessionID := "test-session"
-	
+
 	// Add messages
 	for i := 0; i < 3; i++ {
 		msg := &Message{
@@ -468,7 +471,7 @@ func TestManager_ExportJSON(t *testing.T) {
 	var export map[string]interface{}
 	err = json.Unmarshal(data, &export)
 	assert.NoError(t, err)
-	
+
 	assert.Equal(t, "2.0", export["version"])
 	assert.NotNil(t, export["session"])
 	assert.NotNil(t, export["messages"])

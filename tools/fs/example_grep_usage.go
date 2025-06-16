@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 //go:build example
 // +build example
 
@@ -77,7 +80,7 @@ func printResult(result *tools.ToolResult) {
 		fmt.Printf("File filter: %s\n", grepResult.Include)
 	}
 	fmt.Printf("Search directory: %s\n", grepResult.SearchDir)
-	
+
 	// Show first 5 matches
 	for i, file := range grepResult.Files {
 		if i >= 5 {

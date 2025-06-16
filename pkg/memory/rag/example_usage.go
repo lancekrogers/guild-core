@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // Package rag provides example usage of the RAG system.
 // This file demonstrates how to integrate the RAG system with the Guild framework.
 // The new RAG system is provider-agnostic and supports offline operation.

@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package dev_test
 
 import (
@@ -5,9 +8,9 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/guild-ventures/guild-core/tools/dev"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/guild-ventures/guild-core/tools/dev"
 )
 
 func TestTestRunnerTool_GoFramework(t *testing.T) {
@@ -30,7 +33,7 @@ func TestTestRunnerTool_GoFramework(t *testing.T) {
 	// Check metadata
 	assert.Equal(t, "test_runner", runner.Name())
 	assert.Contains(t, runner.Description(), "Execute tests")
-	
+
 	// Parse result
 	var testResult dev.TestResult
 	err = json.Unmarshal([]byte(result.Output), &testResult)
@@ -71,7 +74,7 @@ ok      github.com/example/pkg  0.123s`
 
 	// Check individual tests
 	assert.Len(t, result.Tests, 3)
-	
+
 	// Find the failed test
 	var failedTest *dev.TestCase
 	for _, test := range result.Tests {
@@ -80,7 +83,7 @@ ok      github.com/example/pkg  0.123s`
 			break
 		}
 	}
-	
+
 	require.NotNil(t, failedTest)
 	assert.Equal(t, "TestFailure", failedTest.Name)
 	assert.NotNil(t, failedTest.Error)
@@ -166,7 +169,7 @@ func TestTestRunnerTool_FrameworkDetection(t *testing.T) {
 
 	// This should work if we're in a Go project (which we are)
 	result, err := runner.Execute(context.Background(), input)
-	
+
 	// The result might fail if no tests are found, but it shouldn't error on framework detection
 	if err != nil {
 		// Check if it's a framework detection error vs execution error
@@ -220,7 +223,7 @@ func TestTestFramework_Capabilities(t *testing.T) {
 			// Test command building with minimal input
 			input := dev.TestRunnerInput{}
 			cmd, err := framework.BuildCommand(input)
-			
+
 			// Some frameworks might fail without proper setup, but should not panic
 			if err == nil {
 				assert.NotEmpty(t, cmd)

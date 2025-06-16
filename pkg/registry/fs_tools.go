@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package registry
 
 import (
@@ -9,7 +12,7 @@ import (
 
 // RegisterFSTools registers all filesystem tools with the given tool registry
 func RegisterFSTools(registry interface{}) error {
-	// Type assert to get the tool registry  
+	// Type assert to get the tool registry
 	toolRegistry, ok := registry.(*tools.ToolRegistry)
 	if !ok {
 		// Try pkg/tools registry

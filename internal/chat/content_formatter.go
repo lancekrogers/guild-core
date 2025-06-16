@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package chat
 
 import (
@@ -20,7 +23,7 @@ type ContentFormatter struct {
 	// Content optimization
 	maxContentLength int  // Maximum content length before truncation
 	showMoreEnabled  bool // Whether to enable "show more" functionality
-	
+
 	// Enhanced visual processors
 	imageProcessor   *visual.ImageProcessor
 	codeRenderer     *visual.CodeRenderer
@@ -58,13 +61,13 @@ func NewContentFormatter(markdownRenderer *MarkdownRenderer, width int, projectD
 	// Initialize enhanced visual processors
 	imageProcessor := visual.NewImageProcessor()
 	imageProcessor.SetASCIISize(width-10, 30) // Adjust for chat width
-	
+
 	codeRenderer := visual.NewCodeRenderer()
 	codeRenderer.SetMaxWidth(width - 10)
-	
+
 	mermaidProcessor := visual.NewMermaidProcessor()
 	mermaidProcessor.SetASCIISize(width-10, 30)
-	
+
 	// Initialize template manager (best effort, don't fail if it can't be created)
 	var templateManager *templates.TemplateManager
 	if projectDir != "" {
@@ -77,7 +80,7 @@ func NewContentFormatter(markdownRenderer *MarkdownRenderer, width int, projectD
 		messageStyles:    messageStyles,
 		maxContentLength: 5000, // Default max content length
 		showMoreEnabled:  true, // Enable "show more" by default
-		
+
 		// Enhanced visual processors
 		imageProcessor:   imageProcessor,
 		codeRenderer:     codeRenderer,
@@ -638,7 +641,7 @@ func (ptf *PlainTextFormatter) UpdateWidth(newWidth int) {
 // processEnhancedContent applies all visual processors to content
 func (cf *ContentFormatter) processEnhancedContent(content string) string {
 	processedContent := content
-	
+
 	// 1. Process images first
 	if cf.imageProcessor != nil {
 		processed, imageRefs, err := cf.imageProcessor.ProcessContent(processedContent)
@@ -646,7 +649,7 @@ func (cf *ContentFormatter) processEnhancedContent(content string) string {
 			processedContent = processed
 		}
 	}
-	
+
 	// 2. Process Mermaid diagrams
 	if cf.mermaidProcessor != nil {
 		processed, diagrams, err := cf.mermaidProcessor.ProcessContent(processedContent)
@@ -654,17 +657,17 @@ func (cf *ContentFormatter) processEnhancedContent(content string) string {
 			processedContent = processed
 		}
 	}
-	
+
 	// 3. Enhance code blocks
 	if cf.codeRenderer != nil {
 		processedContent = cf.codeRenderer.ProcessCodeBlocks(processedContent)
 	}
-	
+
 	// 4. Apply standard markdown rendering
 	if cf.markdownRenderer != nil {
 		processedContent = cf.markdownRenderer.DetectAndRenderContent(processedContent)
 	}
-	
+
 	return processedContent
 }
 
@@ -673,7 +676,7 @@ func (cf *ContentFormatter) GetTemplateSuggestions(context map[string]interface{
 	if cf.templateManager == nil {
 		return nil, gerror.New(gerror.ErrCodeNotFound, "template manager not available", nil)
 	}
-	
+
 	return cf.templateManager.GetContextualSuggestions(context)
 }
 
@@ -682,12 +685,12 @@ func (cf *ContentFormatter) RenderTemplate(templateID string, variables map[stri
 	if cf.templateManager == nil {
 		return "", gerror.New(gerror.ErrCodeNotFound, "template manager not available", nil)
 	}
-	
+
 	content, err := cf.templateManager.RenderTemplate(templateID, variables)
 	if err != nil {
 		return "", err
 	}
-	
+
 	// Apply enhanced content processing to the rendered template
 	return cf.processEnhancedContent(content), nil
 }
@@ -697,7 +700,7 @@ func (cf *ContentFormatter) SearchTemplates(query string, limit int) ([]*templat
 	if cf.templateManager == nil {
 		return nil, gerror.New(gerror.ErrCodeNotFound, "template manager not available", nil)
 	}
-	
+
 	return cf.templateManager.SearchTemplates(query, limit)
 }
 

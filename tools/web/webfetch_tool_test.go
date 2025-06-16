@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package web
 
 import (
@@ -47,10 +50,10 @@ func TestWebFetchTool_Interface(t *testing.T) {
 	mockProvider := &MockAIProvider{}
 	tool := NewWebFetchTool(mockProvider)
 	defer tool.Close()
-	
+
 	// Ensure it implements the Tool interface
 	var _ tools.Tool = tool
-	
+
 	assert.Equal(t, "web_fetch", tool.Name())
 	assert.Equal(t, "web", tool.Category())
 	assert.False(t, tool.RequiresAuth())
@@ -64,22 +67,22 @@ func TestWebFetchTool_Schema(t *testing.T) {
 	tool := NewWebFetchTool(mockProvider)
 	defer tool.Close()
 	schema := tool.Schema()
-	
+
 	assert.Equal(t, "object", schema["type"])
-	
+
 	properties, ok := schema["properties"].(map[string]interface{})
 	require.True(t, ok)
-	
+
 	// Check required fields
 	url, ok := properties["url"].(map[string]interface{})
 	require.True(t, ok)
 	assert.Equal(t, "string", url["type"])
 	assert.Equal(t, "uri", url["format"])
-	
+
 	prompt, ok := properties["prompt"].(map[string]interface{})
 	require.True(t, ok)
 	assert.Equal(t, "string", prompt["type"])
-	
+
 	// Check required fields
 	required, ok := schema["required"].([]string)
 	require.True(t, ok)
@@ -92,7 +95,7 @@ func TestWebFetchTool_Execute_InvalidInput(t *testing.T) {
 	tool := NewWebFetchTool(mockProvider)
 	defer tool.Close()
 	ctx := context.Background()
-	
+
 	tests := []struct {
 		name  string
 		input string
@@ -126,7 +129,7 @@ func TestWebFetchTool_Execute_InvalidInput(t *testing.T) {
 			input: `{"url": "ftp://example.com", "prompt": "analyze"}`,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result, err := tool.Execute(ctx, tt.input)
@@ -156,14 +159,14 @@ func TestWebFetchTool_Execute_ValidInput(t *testing.T) {
 		</body>
 		</html>
 	`
-	
+
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(mockHTML))
 	}))
 	defer server.Close()
-	
+
 	// Create mock AI provider
 	mockProvider := &MockAIProvider{}
 	mockProvider.On("ChatCompletion", mock.Anything, mock.Anything).Return(
@@ -176,23 +179,23 @@ func TestWebFetchTool_Execute_ValidInput(t *testing.T) {
 				},
 			},
 		}, nil)
-	
+
 	tool := NewWebFetchTool(mockProvider)
 	defer tool.Close()
 	ctx := context.Background()
-	
+
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Summarize this page"}`, server.URL)
-	
+
 	result, err := tool.Execute(ctx, input)
 	assert.NoError(t, err)
 	assert.NotNil(t, result)
 	assert.True(t, result.Success)
-	
+
 	// Parse the response
 	var response WebFetchResponse
 	err = json.Unmarshal([]byte(result.Output), &response)
 	assert.NoError(t, err)
-	
+
 	assert.Equal(t, server.URL, response.URL)
 	assert.Equal(t, "Test Page", response.Title)
 	assert.Contains(t, response.Content, "Main Title")
@@ -204,7 +207,7 @@ func TestWebFetchTool_Execute_ValidInput(t *testing.T) {
 	assert.Equal(t, "en", response.Metadata.Language)
 	assert.GreaterOrEqual(t, response.ProcessingTime, 0.0)
 	assert.False(t, response.FromCache)
-	
+
 	mockProvider.AssertExpectations(t)
 }
 
@@ -215,24 +218,24 @@ func TestWebFetchTool_Execute_HTTPError(t *testing.T) {
 		w.Write([]byte("Not Found"))
 	}))
 	defer server.Close()
-	
+
 	mockProvider := &MockAIProvider{}
 	tool := NewWebFetchTool(mockProvider)
 	defer tool.Close()
 	ctx := context.Background()
-	
+
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze this"}`, server.URL)
-	
+
 	result, err := tool.Execute(ctx, input)
 	assert.NoError(t, err) // Tool handles errors gracefully
 	assert.NotNil(t, result)
 	assert.False(t, result.Success)
-	
+
 	// Parse the response
 	var response WebFetchResponse
 	err = json.Unmarshal([]byte(result.Output), &response)
 	assert.NoError(t, err)
-	
+
 	assert.Equal(t, server.URL, response.URL)
 	assert.Contains(t, response.Error, "HTTP request failed with status 404")
 }
@@ -246,38 +249,38 @@ func TestWebFetchTool_Execute_AIProviderError(t *testing.T) {
 		w.Write([]byte(mockHTML))
 	}))
 	defer server.Close()
-	
+
 	// Create mock AI provider that returns error
 	mockProvider := &MockAIProvider{}
 	mockProvider.On("ChatCompletion", mock.Anything, mock.Anything).Return(
 		(*interfaces.ChatResponse)(nil), fmt.Errorf("AI service unavailable"))
-	
+
 	tool := NewWebFetchTool(mockProvider)
 	defer tool.Close()
 	ctx := context.Background()
-	
+
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze this"}`, server.URL)
-	
+
 	result, err := tool.Execute(ctx, input)
 	assert.NoError(t, err) // Tool handles errors gracefully
 	assert.NotNil(t, result)
 	assert.False(t, result.Success)
-	
+
 	// Parse the response
 	var response WebFetchResponse
 	err = json.Unmarshal([]byte(result.Output), &response)
 	assert.NoError(t, err)
-	
+
 	assert.Equal(t, server.URL, response.URL)
 	assert.Contains(t, response.Error, "Analysis failed")
 	assert.Contains(t, response.Error, "AI service unavailable")
-	
+
 	mockProvider.AssertExpectations(t)
 }
 
 func TestWebFetchTool_ContentExtraction(t *testing.T) {
 	mockProvider := &MockAIProvider{}
-	
+
 	tests := []struct {
 		name     string
 		html     string
@@ -298,12 +301,12 @@ func TestWebFetchTool_ContentExtraction(t *testing.T) {
 				</html>
 			`,
 			expected: map[string]bool{
-				"# Test Title":      true,
-				"# Main Heading":    true,
-				"## Sub Heading":    true,
+				"# Test Title":        true,
+				"# Main Heading":      true,
+				"## Sub Heading":      true,
 				"This is a paragraph": true,
-				"**Bold text**":     true,
-				"*Italic text*":     true,
+				"**Bold text**":       true,
+				"*Italic text*":       true,
 			},
 		},
 		{
@@ -324,10 +327,10 @@ func TestWebFetchTool_ContentExtraction(t *testing.T) {
 				</html>
 			`,
 			expected: map[string]bool{
-				"- Item 1":        true,
-				"- Item 2":        true,
-				"1. First":        true,
-				"2. Second":       true,
+				"- Item 1":                         true,
+				"- Item 2":                         true,
+				"1. First":                         true,
+				"2. Second":                        true,
 				"[Link Text](https://example.com)": true,
 			},
 		},
@@ -345,7 +348,7 @@ func TestWebFetchTool_ContentExtraction(t *testing.T) {
 			expected: map[string]bool{
 				"```\ncode block\n```": true,
 				"`inline code`":        true,
-				"> This is a quote":     true,
+				"> This is a quote":    true,
 			},
 		},
 		{
@@ -378,7 +381,7 @@ func TestWebFetchTool_ContentExtraction(t *testing.T) {
 			},
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Create server with test HTML
@@ -388,7 +391,7 @@ func TestWebFetchTool_ContentExtraction(t *testing.T) {
 				w.Write([]byte(tt.html))
 			}))
 			defer server.Close()
-			
+
 			// Mock AI provider
 			mockProvider.On("ChatCompletion", mock.Anything, mock.Anything).Return(
 				&interfaces.ChatResponse{
@@ -396,21 +399,21 @@ func TestWebFetchTool_ContentExtraction(t *testing.T) {
 						{Message: interfaces.ChatMessage{Content: "Test analysis"}},
 					},
 				}, nil).Once()
-			
+
 			testTool := NewWebFetchTool(mockProvider)
 			defer testTool.Close()
 			ctx := context.Background()
-			
+
 			input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze"}`, server.URL)
 			result, err := testTool.Execute(ctx, input)
-			
+
 			assert.NoError(t, err)
 			assert.True(t, result.Success)
-			
+
 			var response WebFetchResponse
 			err = json.Unmarshal([]byte(result.Output), &response)
 			assert.NoError(t, err)
-			
+
 			content := response.Content
 			for expectedText, shouldBePresent := range tt.expected {
 				if shouldBePresent {
@@ -442,7 +445,7 @@ func TestWebFetchTool_MetadataExtraction(t *testing.T) {
 		</body>
 		</html>
 	`
-	
+
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.Header().Set("Last-Modified", "Wed, 21 Oct 2015 07:28:00 GMT")
@@ -450,7 +453,7 @@ func TestWebFetchTool_MetadataExtraction(t *testing.T) {
 		w.Write([]byte(mockHTML))
 	}))
 	defer server.Close()
-	
+
 	mockProvider := &MockAIProvider{}
 	mockProvider.On("ChatCompletion", mock.Anything, mock.Anything).Return(
 		&interfaces.ChatResponse{
@@ -458,21 +461,21 @@ func TestWebFetchTool_MetadataExtraction(t *testing.T) {
 				{Message: interfaces.ChatMessage{Content: "Analysis"}},
 			},
 		}, nil)
-	
+
 	tool := NewWebFetchTool(mockProvider)
 	defer tool.Close()
 	ctx := context.Background()
-	
+
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze"}`, server.URL)
 	result, err := tool.Execute(ctx, input)
-	
+
 	assert.NoError(t, err)
 	assert.True(t, result.Success)
-	
+
 	var response WebFetchResponse
 	err = json.Unmarshal([]byte(result.Output), &response)
 	assert.NoError(t, err)
-	
+
 	metadata := response.Metadata
 	assert.Equal(t, "Page Title", metadata.Title)
 	assert.Equal(t, "Page description", metadata.Description)
@@ -501,7 +504,7 @@ func TestWebFetchTool_Cache(t *testing.T) {
 		w.Write([]byte(mockHTML))
 	}))
 	defer server.Close()
-	
+
 	mockProvider := &MockAIProvider{}
 	// First call should hit the AI provider
 	mockProvider.On("ChatCompletion", mock.Anything, mock.Anything).Return(
@@ -510,35 +513,35 @@ func TestWebFetchTool_Cache(t *testing.T) {
 				{Message: interfaces.ChatMessage{Content: "Cached analysis"}},
 			},
 		}, nil).Once()
-	
+
 	tool := NewWebFetchTool(mockProvider)
 	defer tool.Close()
 	ctx := context.Background()
-	
+
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze this"}`, server.URL)
-	
+
 	// First execution - should call AI provider
 	result1, err := tool.Execute(ctx, input)
 	assert.NoError(t, err)
 	assert.True(t, result1.Success)
-	
+
 	var response1 WebFetchResponse
 	err = json.Unmarshal([]byte(result1.Output), &response1)
 	assert.NoError(t, err)
 	assert.False(t, response1.FromCache)
 	assert.Equal(t, "Cached analysis", response1.Analysis)
-	
+
 	// Second execution - should use cache (no additional AI provider call)
 	result2, err := tool.Execute(ctx, input)
 	assert.NoError(t, err)
 	assert.True(t, result2.Success)
-	
+
 	var response2 WebFetchResponse
 	err = json.Unmarshal([]byte(result2.Output), &response2)
 	assert.NoError(t, err)
 	assert.True(t, response2.FromCache)
 	assert.Equal(t, "Cached analysis", response2.Analysis)
-	
+
 	mockProvider.AssertExpectations(t)
 }
 
@@ -546,14 +549,14 @@ func TestWebFetchTool_LargeContent(t *testing.T) {
 	// Create large HTML content
 	largeContent := strings.Repeat("This is a long paragraph with lots of content. ", 1000)
 	mockHTML := fmt.Sprintf(`<html><body><p>%s</p></body></html>`, largeContent)
-	
+
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(mockHTML))
 	}))
 	defer server.Close()
-	
+
 	mockProvider := &MockAIProvider{}
 	mockProvider.On("ChatCompletion", mock.Anything, mock.MatchedBy(func(req interfaces.ChatRequest) bool {
 		// Verify that content is truncated for AI analysis
@@ -565,23 +568,23 @@ func TestWebFetchTool_LargeContent(t *testing.T) {
 				{Message: interfaces.ChatMessage{Content: "Analysis of truncated content"}},
 			},
 		}, nil)
-	
+
 	tool := NewWebFetchTool(mockProvider)
 	defer tool.Close()
 	ctx := context.Background()
-	
+
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze"}`, server.URL)
 	result, err := tool.Execute(ctx, input)
-	
+
 	assert.NoError(t, err)
 	assert.True(t, result.Success)
-	
+
 	var response WebFetchResponse
 	err = json.Unmarshal([]byte(result.Output), &response)
 	assert.NoError(t, err)
-	
+
 	assert.Equal(t, "Analysis of truncated content", response.Analysis)
-	
+
 	mockProvider.AssertExpectations(t)
 }
 
@@ -593,12 +596,12 @@ func TestWebFetchTool_Redirects(t *testing.T) {
 		w.Write([]byte(`<html><body><h1>Final Page</h1></body></html>`))
 	}))
 	defer redirectServer.Close()
-	
+
 	mainServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, redirectServer.URL, http.StatusMovedPermanently)
 	}))
 	defer mainServer.Close()
-	
+
 	mockProvider := &MockAIProvider{}
 	mockProvider.On("ChatCompletion", mock.Anything, mock.Anything).Return(
 		&interfaces.ChatResponse{
@@ -606,56 +609,56 @@ func TestWebFetchTool_Redirects(t *testing.T) {
 				{Message: interfaces.ChatMessage{Content: "Analysis of redirected content"}},
 			},
 		}, nil)
-	
+
 	tool := NewWebFetchTool(mockProvider)
 	defer tool.Close()
 	ctx := context.Background()
-	
+
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze"}`, mainServer.URL)
 	result, err := tool.Execute(ctx, input)
-	
+
 	assert.NoError(t, err)
 	assert.True(t, result.Success)
-	
+
 	var response WebFetchResponse
 	err = json.Unmarshal([]byte(result.Output), &response)
 	assert.NoError(t, err)
-	
+
 	assert.Contains(t, response.Content, "Final Page")
 	assert.Equal(t, "Analysis of redirected content", response.Analysis)
-	
+
 	mockProvider.AssertExpectations(t)
 }
 
 func TestWebFetchCache_Operations(t *testing.T) {
 	cache := NewWebFetchCache(3) // Small cache for testing
 	defer cache.Stop()
-	
+
 	response1 := &WebFetchResponse{URL: "http://example1.com", Analysis: "Analysis 1"}
 	response2 := &WebFetchResponse{URL: "http://example2.com", Analysis: "Analysis 2"}
 	response3 := &WebFetchResponse{URL: "http://example3.com", Analysis: "Analysis 3"}
 	response4 := &WebFetchResponse{URL: "http://example4.com", Analysis: "Analysis 4"}
-	
+
 	// Test setting and getting
 	cache.Set("key1", response1, 1*time.Hour)
 	cached, found := cache.Get("key1")
 	assert.True(t, found)
 	assert.Equal(t, "Analysis 1", cached.Analysis)
 	assert.True(t, cached.FromCache)
-	
+
 	// Test cache miss
 	_, found = cache.Get("nonexistent")
 	assert.False(t, found)
-	
+
 	// Test cache eviction (fill cache and add one more)
 	cache.Set("key2", response2, 1*time.Hour)
 	cache.Set("key3", response3, 1*time.Hour)
 	cache.Set("key4", response4, 1*time.Hour) // Should evict oldest
-	
+
 	// key1 should be evicted
 	_, found = cache.Get("key1")
 	assert.False(t, found)
-	
+
 	// Others should still be there
 	_, found = cache.Get("key2")
 	assert.True(t, found)
@@ -668,19 +671,19 @@ func TestWebFetchCache_Operations(t *testing.T) {
 func TestWebFetchCache_Expiration(t *testing.T) {
 	cache := NewWebFetchCache(10)
 	defer cache.Stop()
-	
+
 	response := &WebFetchResponse{URL: "http://example.com", Analysis: "Analysis"}
-	
+
 	// Set with very short TTL
 	cache.Set("key", response, 1*time.Millisecond)
-	
+
 	// Should be available immediately
 	_, found := cache.Get("key")
 	assert.True(t, found)
-	
+
 	// Wait for expiration
 	time.Sleep(2 * time.Millisecond)
-	
+
 	// Should be expired
 	_, found = cache.Get("key")
 	assert.False(t, found)
@@ -694,7 +697,7 @@ func BenchmarkWebFetchTool_Execute(b *testing.B) {
 		w.Write([]byte(mockHTML))
 	}))
 	defer server.Close()
-	
+
 	mockProvider := &MockAIProvider{}
 	mockProvider.On("ChatCompletion", mock.Anything, mock.Anything).Return(
 		&interfaces.ChatResponse{
@@ -702,12 +705,12 @@ func BenchmarkWebFetchTool_Execute(b *testing.B) {
 				{Message: interfaces.ChatMessage{Content: "Benchmark analysis"}},
 			},
 		}, nil)
-	
+
 	tool := NewWebFetchTool(mockProvider)
 	defer tool.Close()
 	ctx := context.Background()
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze"}`, server.URL)
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, err := tool.Execute(ctx, input)
@@ -721,7 +724,7 @@ func BenchmarkWebFetchTool_ContentExtraction(b *testing.B) {
 	mockProvider := &MockAIProvider{}
 	tool := NewWebFetchTool(mockProvider)
 	defer tool.Close()
-	
+
 	// Create complex HTML for benchmarking
 	complexHTML := `
 		<html>
@@ -741,14 +744,14 @@ func BenchmarkWebFetchTool_ContentExtraction(b *testing.B) {
 		</body>
 		</html>
 	`
-	
+
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(complexHTML))
 	}))
 	defer server.Close()
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, _, err := tool.fetchContent(context.Background(), server.URL)
@@ -776,25 +779,25 @@ func TestWebFetchTool_Timeout(t *testing.T) {
 		server.CloseClientConnections()
 		server.Close()
 	}()
-	
+
 	mockProvider := &MockAIProvider{}
 	tool := NewWebFetchTool(mockProvider)
 	defer tool.Close()
-	
+
 	// Create a context with short timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
-	
+
 	input := fmt.Sprintf(`{"url": "%s", "prompt": "Analyze"}`, server.URL)
-	
+
 	result, err := tool.Execute(ctx, input)
 	assert.NoError(t, err) // Tool handles errors gracefully
 	assert.NotNil(t, result)
 	assert.False(t, result.Success)
-	
+
 	var response WebFetchResponse
 	err = json.Unmarshal([]byte(result.Output), &response)
 	assert.NoError(t, err)
-	
+
 	assert.Contains(t, response.Error, "context deadline exceeded")
 }

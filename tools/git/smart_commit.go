@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package git
 
 import (
@@ -23,16 +26,16 @@ type SmartCommitTool struct {
 
 // SmartCommitInput represents input for smart git commits
 type SmartCommitInput struct {
-	Files             []string          `json:"files,omitempty"`               // Files to commit (empty for all staged)
-	Message           string            `json:"message,omitempty"`             // Override AI message
-	Conventional      bool              `json:"conventional,omitempty"`        // Use conventional commit format
-	MaxMessageLength  int               `json:"max_message_length,omitempty"`  // Max first line length
-	IncludeDetails    bool              `json:"include_details,omitempty"`     // Include detailed description
-	AutoStage         bool              `json:"auto_stage,omitempty"`          // Auto-stage files before commit
-	Push              bool              `json:"push,omitempty"`                // Push after commit
-	Amend             bool              `json:"amend,omitempty"`               // Amend last commit
-	AnalyzeContext    bool              `json:"analyze_context,omitempty"`     // Include file context in analysis
-	Environment       map[string]string `json:"environment,omitempty"`         // Environment variables for git
+	Files            []string          `json:"files,omitempty"`              // Files to commit (empty for all staged)
+	Message          string            `json:"message,omitempty"`            // Override AI message
+	Conventional     bool              `json:"conventional,omitempty"`       // Use conventional commit format
+	MaxMessageLength int               `json:"max_message_length,omitempty"` // Max first line length
+	IncludeDetails   bool              `json:"include_details,omitempty"`    // Include detailed description
+	AutoStage        bool              `json:"auto_stage,omitempty"`         // Auto-stage files before commit
+	Push             bool              `json:"push,omitempty"`               // Push after commit
+	Amend            bool              `json:"amend,omitempty"`              // Amend last commit
+	AnalyzeContext   bool              `json:"analyze_context,omitempty"`    // Include file context in analysis
+	Environment      map[string]string `json:"environment,omitempty"`        // Environment variables for git
 }
 
 // SmartCommitResult represents the result of a smart commit
@@ -52,26 +55,26 @@ type SmartCommitResult struct {
 
 // DiffAnalysis represents analysis of the changes being committed
 type DiffAnalysis struct {
-	ChangeType        string            `json:"change_type"`        // feat, fix, docs, style, refactor, test, chore
-	Scope             string            `json:"scope,omitempty"`    // Component/module affected
-	BreakingChange    bool              `json:"breaking_change"`
-	LinesAdded        int               `json:"lines_added"`
-	LinesDeleted      int               `json:"lines_deleted"`
-	FilesChanged      int               `json:"files_changed"`
-	Languages         []string          `json:"languages"`
-	TestsIncluded     bool              `json:"tests_included"`
-	DocsUpdated       bool              `json:"docs_updated"`
-	Summary           string            `json:"summary"`
-	KeyChanges        []string          `json:"key_changes"`
+	ChangeType     string   `json:"change_type"`     // feat, fix, docs, style, refactor, test, chore
+	Scope          string   `json:"scope,omitempty"` // Component/module affected
+	BreakingChange bool     `json:"breaking_change"`
+	LinesAdded     int      `json:"lines_added"`
+	LinesDeleted   int      `json:"lines_deleted"`
+	FilesChanged   int      `json:"files_changed"`
+	Languages      []string `json:"languages"`
+	TestsIncluded  bool     `json:"tests_included"`
+	DocsUpdated    bool     `json:"docs_updated"`
+	Summary        string   `json:"summary"`
+	KeyChanges     []string `json:"key_changes"`
 }
 
 // CommitStats represents statistics about the commit
 type CommitStats struct {
-	Insertions    int               `json:"insertions"`
-	Deletions     int               `json:"deletions"`
-	FilesChanged  int               `json:"files_changed"`
-	Duration      time.Duration     `json:"duration"`
-	MessageLength int               `json:"message_length"`
+	Insertions    int           `json:"insertions"`
+	Deletions     int           `json:"deletions"`
+	FilesChanged  int           `json:"files_changed"`
+	Duration      time.Duration `json:"duration"`
+	MessageLength int           `json:"message_length"`
 }
 
 // NewSmartCommitTool creates a new smart commit tool
@@ -249,12 +252,12 @@ func (t *SmartCommitTool) Execute(ctx context.Context, input string) (*tools.Too
 	// Convert result to ToolResult
 	resultJSON, _ := json.Marshal(result)
 	metadata := map[string]string{
-		"commit_hash":  commitHash,
-		"change_type":  analysis.ChangeType,
-		"files_count":  fmt.Sprintf("%d", analysis.FilesChanged),
-		"lines_added":  fmt.Sprintf("%d", analysis.LinesAdded),
+		"commit_hash":   commitHash,
+		"change_type":   analysis.ChangeType,
+		"files_count":   fmt.Sprintf("%d", analysis.FilesChanged),
+		"lines_added":   fmt.Sprintf("%d", analysis.LinesAdded),
 		"lines_deleted": fmt.Sprintf("%d", analysis.LinesDeleted),
-		"generated":    fmt.Sprintf("%t", generatedMessage),
+		"generated":     fmt.Sprintf("%t", generatedMessage),
 	}
 
 	return tools.NewToolResult(string(resultJSON), metadata, nil, nil), nil
@@ -292,7 +295,7 @@ func (t *SmartCommitTool) stageFiles(files []string) ([]string, error) {
 // getDiff gets the diff for the changes to be committed
 func (t *SmartCommitTool) getDiff(files []string, amend bool) (string, error) {
 	var cmd *exec.Cmd
-	
+
 	if amend {
 		cmd = exec.Command("git", "diff", "HEAD~1")
 	} else if len(files) > 0 {
@@ -329,7 +332,7 @@ func (t *SmartCommitTool) analyzeDiff(diff string, includeContext bool) *DiffAna
 			if strings.HasPrefix(line, "+++ b/") {
 				currentFile = strings.TrimPrefix(line, "+++ b/")
 				analysis.FilesChanged++
-				
+
 				// Detect language
 				if lang := detectLanguageFromFile(currentFile); lang != "" {
 					languageSet[lang] = true
@@ -377,7 +380,7 @@ func (t *SmartCommitTool) generateCommitMessage(ctx context.Context, diff string
 	}
 
 	prompt := t.buildCommitPrompt(diff, analysis, params)
-	
+
 	// Create a simple chat request
 	req := interfaces.ChatRequest{
 		Model: "gpt-3.5-turbo", // Default model
@@ -390,7 +393,7 @@ func (t *SmartCommitTool) generateCommitMessage(ctx context.Context, diff string
 		MaxTokens:   150,
 		Temperature: 0.3,
 	}
-	
+
 	response, err := t.llmProvider.ChatCompletion(ctx, req)
 	if err != nil {
 		// Fallback to simple message on LLM failure
@@ -403,24 +406,24 @@ func (t *SmartCommitTool) generateCommitMessage(ctx context.Context, diff string
 	} else {
 		return t.generateFallbackMessage(analysis), nil
 	}
-	
+
 	// Validate and clean up the message
 	message = t.cleanupMessage(message, params.MaxMessageLength, params.Conventional)
-	
+
 	return message, nil
 }
 
 // buildCommitPrompt creates a prompt for AI commit message generation
 func (t *SmartCommitTool) buildCommitPrompt(diff string, analysis *DiffAnalysis, params SmartCommitInput) string {
 	prompt := "Generate a concise git commit message for the following changes.\n\n"
-	
+
 	if params.Conventional {
 		prompt += "Use conventional commit format: type(scope): description\n"
 		prompt += "Types: feat, fix, docs, style, refactor, test, chore, ci, build, perf\n\n"
 	}
-	
+
 	prompt += fmt.Sprintf("Maximum first line length: %d characters\n", params.MaxMessageLength)
-	
+
 	if analysis != nil {
 		prompt += fmt.Sprintf("\nChange Analysis:\n")
 		prompt += fmt.Sprintf("- Files changed: %d\n", analysis.FilesChanged)
@@ -432,20 +435,20 @@ func (t *SmartCommitTool) buildCommitPrompt(diff string, analysis *DiffAnalysis,
 			prompt += "- BREAKING CHANGE detected\n"
 		}
 	}
-	
+
 	// Truncate diff if too long
 	if len(diff) > 2000 {
 		diff = diff[:2000] + "\n... (truncated)"
 	}
-	
+
 	prompt += fmt.Sprintf("\nGit diff:\n```\n%s\n```\n", diff)
-	
+
 	if params.IncludeDetails {
 		prompt += "\nProvide a detailed description after the first line, separated by a blank line."
 	}
-	
+
 	prompt += "\nCommit message:"
-	
+
 	return prompt
 }
 
@@ -454,17 +457,17 @@ func (t *SmartCommitTool) generateFallbackMessage(analysis *DiffAnalysis) string
 	if analysis == nil {
 		return "chore: update files"
 	}
-	
+
 	changeType := analysis.ChangeType
 	if changeType == "" {
 		changeType = "chore"
 	}
-	
+
 	scope := ""
 	if analysis.Scope != "" {
 		scope = fmt.Sprintf("(%s)", analysis.Scope)
 	}
-	
+
 	description := "update files"
 	if len(analysis.KeyChanges) > 0 {
 		description = analysis.KeyChanges[0]
@@ -473,7 +476,7 @@ func (t *SmartCommitTool) generateFallbackMessage(analysis *DiffAnalysis) string
 	} else {
 		description = fmt.Sprintf("update %d files", analysis.FilesChanged)
 	}
-	
+
 	return fmt.Sprintf("%s%s: %s", changeType, scope, description)
 }
 
@@ -483,24 +486,24 @@ func (t *SmartCommitTool) cleanupMessage(message string, maxLength int, conventi
 	if len(lines) == 0 {
 		return "chore: update files"
 	}
-	
+
 	firstLine := strings.TrimSpace(lines[0])
-	
+
 	// Remove any markdown formatting or quotes
 	firstLine = strings.Trim(firstLine, "`\"'")
-	
+
 	// Ensure conventional format if required
 	if conventional && !regexp.MustCompile(`^(feat|fix|docs|style|refactor|test|chore|ci|build|perf)(\(.+\))?: .+`).MatchString(firstLine) {
 		if !strings.Contains(firstLine, ":") {
 			firstLine = "chore: " + firstLine
 		}
 	}
-	
+
 	// Truncate if too long
 	if len(firstLine) > maxLength {
 		firstLine = firstLine[:maxLength-3] + "..."
 	}
-	
+
 	// Rebuild message
 	result := firstLine
 	if len(lines) > 1 {
@@ -512,20 +515,20 @@ func (t *SmartCommitTool) cleanupMessage(message string, maxLength int, conventi
 			}
 		}
 	}
-	
+
 	return result
 }
 
 // createCommit creates the actual git commit
 func (t *SmartCommitTool) createCommit(message string, params SmartCommitInput) (string, error) {
 	var cmd *exec.Cmd
-	
+
 	if params.Amend {
 		cmd = exec.Command("git", "commit", "--amend", "-m", message)
 	} else {
 		cmd = exec.Command("git", "commit", "-m", message)
 	}
-	
+
 	// Set environment variables if provided
 	if len(params.Environment) > 0 {
 		env := cmd.Env
@@ -534,13 +537,13 @@ func (t *SmartCommitTool) createCommit(message string, params SmartCommitInput) 
 		}
 		cmd.Env = env
 	}
-	
+
 	if err := cmd.Run(); err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create commit").
 			WithComponent("smart_commit_tool").
 			WithOperation("createCommit")
 	}
-	
+
 	// Get the commit hash
 	cmd = exec.Command("git", "rev-parse", "HEAD")
 	output, err := cmd.Output()
@@ -549,7 +552,7 @@ func (t *SmartCommitTool) createCommit(message string, params SmartCommitInput) 
 			WithComponent("smart_commit_tool").
 			WithOperation("createCommit")
 	}
-	
+
 	return strings.TrimSpace(string(output)), nil
 }
 
@@ -567,7 +570,7 @@ func (t *SmartCommitTool) pushCommit() error {
 // Helper functions for analysis
 func (t *SmartCommitTool) determineChangeType(diff string, analysis *DiffAnalysis) string {
 	diff = strings.ToLower(diff)
-	
+
 	if strings.Contains(diff, "test") || strings.Contains(diff, "spec") {
 		return "test"
 	}
@@ -586,7 +589,7 @@ func (t *SmartCommitTool) determineChangeType(diff string, analysis *DiffAnalysi
 	if analysis.LinesAdded > analysis.LinesDeleted*2 {
 		return "feat"
 	}
-	
+
 	return "chore"
 }
 
@@ -595,7 +598,7 @@ func (t *SmartCommitTool) determineScope(diff string, analysis *DiffAnalysis) st
 	if len(analysis.Languages) == 1 {
 		return analysis.Languages[0]
 	}
-	
+
 	// Look for common patterns in file paths
 	if strings.Contains(diff, "/api/") || strings.Contains(diff, "api.") {
 		return "api"
@@ -609,7 +612,7 @@ func (t *SmartCommitTool) determineScope(diff string, analysis *DiffAnalysis) st
 	if strings.Contains(diff, "/test/") || strings.Contains(diff, "test.") {
 		return "test"
 	}
-	
+
 	return ""
 }
 
@@ -622,23 +625,23 @@ func (t *SmartCommitTool) createSummary(analysis *DiffAnalysis) string {
 
 func (t *SmartCommitTool) generateSuggestions(analysis *DiffAnalysis, message string, params SmartCommitInput) []string {
 	var suggestions []string
-	
+
 	if analysis.TestsIncluded && !strings.Contains(message, "test") {
 		suggestions = append(suggestions, "Consider mentioning test changes in commit message")
 	}
-	
+
 	if analysis.BreakingChange && !strings.Contains(message, "BREAKING") {
 		suggestions = append(suggestions, "Add 'BREAKING CHANGE' to message footer for breaking changes")
 	}
-	
+
 	if len(analysis.Languages) > 1 {
 		suggestions = append(suggestions, "Consider splitting multi-language changes into separate commits")
 	}
-	
+
 	if analysis.FilesChanged > 10 {
 		suggestions = append(suggestions, "Large commit - consider splitting into smaller, focused commits")
 	}
-	
+
 	return suggestions
 }
 

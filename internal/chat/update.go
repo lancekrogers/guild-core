@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package chat
 
 import (
@@ -230,7 +233,7 @@ func (m *ChatModel) handleAgentStream(msg agentStreamMsg) {
 		if lastMsgIndex >= 0 {
 			// Final update to ensure complete content
 			m.messages[lastMsgIndex].Content = msg.content
-			
+
 			// Save complete agent message to session
 			if m.sessionManager != nil && m.currentSession != nil {
 				go func() {

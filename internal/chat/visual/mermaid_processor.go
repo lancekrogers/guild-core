@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package visual
 
 import (
@@ -20,11 +23,11 @@ type MermaidProcessor struct {
 	enablePreview bool
 	maxWidth      int
 	maxHeight     int
-	
+
 	// ASCII art generation settings
 	asciiWidth  int
 	asciiHeight int
-	
+
 	// Styling
 	diagramStyle lipgloss.Style
 	titleStyle   lipgloss.Style
@@ -33,13 +36,13 @@ type MermaidProcessor struct {
 
 // MermaidDiagram represents a detected Mermaid diagram
 type MermaidDiagram struct {
-	Type        string
-	Title       string
-	Content     string
-	StartIndex  int
-	EndIndex    int
-	IsValid     bool
-	Error       string
+	Type          string
+	Title         string
+	Content       string
+	StartIndex    int
+	EndIndex      int
+	IsValid       bool
+	Error         string
 	GeneratedPath string
 	ASCIIPreview  string
 }
@@ -54,17 +57,17 @@ func NewMermaidProcessor() *MermaidProcessor {
 		maxHeight:     600,
 		asciiWidth:    80,
 		asciiHeight:   40,
-		
+
 		diagramStyle: lipgloss.NewStyle().
 			Border(lipgloss.RoundedBorder()).
 			BorderForeground(lipgloss.Color("62")). // Purple
 			Padding(1).
 			Margin(1, 0),
-		
+
 		titleStyle: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("62")). // Purple
 			Bold(true),
-		
+
 		errorStyle: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("196")). // Red
 			Bold(true),
@@ -75,44 +78,44 @@ func NewMermaidProcessor() *MermaidProcessor {
 func (mp *MermaidProcessor) ProcessContent(content string) (string, []MermaidDiagram, error) {
 	// Detect Mermaid diagrams
 	diagrams := mp.detectMermaidDiagrams(content)
-	
+
 	// Process each diagram
 	processedDiagrams := make([]MermaidDiagram, 0, len(diagrams))
 	processedContent := content
-	
+
 	// Process from end to start to maintain string indices
 	for i := len(diagrams) - 1; i >= 0; i-- {
 		diagram := diagrams[i]
-		
+
 		// Process the diagram
 		processedDiagram := mp.processMermaidDiagram(diagram)
 		processedDiagrams = append([]MermaidDiagram{processedDiagram}, processedDiagrams...)
-		
+
 		// Replace in content
 		if processedDiagram.IsValid {
 			replacement := mp.generateDiagramReplacement(processedDiagram)
 			processedContent = processedContent[:diagram.StartIndex] + replacement + processedContent[diagram.EndIndex:]
 		}
 	}
-	
+
 	return processedContent, processedDiagrams, nil
 }
 
 // detectMermaidDiagrams finds Mermaid diagrams in content
 func (mp *MermaidProcessor) detectMermaidDiagrams(content string) []MermaidDiagram {
 	var diagrams []MermaidDiagram
-	
+
 	// Pattern for fenced Mermaid blocks
 	mermaidRegex := regexp.MustCompile("(?s)```mermaid\\s*\\n?(.*?)```")
 	matches := mermaidRegex.FindAllStringSubmatch(content, -1)
 	indices := mermaidRegex.FindAllStringIndex(content, -1)
-	
+
 	for i, match := range matches {
 		if len(match) >= 2 {
 			diagramContent := strings.TrimSpace(match[1])
 			diagramType := mp.detectDiagramType(diagramContent)
 			title := mp.extractDiagramTitle(diagramContent)
-			
+
 			diagrams = append(diagrams, MermaidDiagram{
 				Type:       diagramType,
 				Title:      title,
@@ -122,7 +125,7 @@ func (mp *MermaidProcessor) detectMermaidDiagrams(content string) []MermaidDiagr
 			})
 		}
 	}
-	
+
 	return diagrams
 }
 
@@ -134,15 +137,15 @@ func (mp *MermaidProcessor) processMermaidDiagram(diagram MermaidDiagram) Mermai
 		diagram.Error = "Invalid Mermaid syntax"
 		return diagram
 	}
-	
+
 	diagram.IsValid = true
-	
+
 	// Generate image if CLI is available and enabled
 	if mp.enableCLI {
 		imagePath, err := mp.generateMermaidImage(diagram)
 		if err == nil {
 			diagram.GeneratedPath = imagePath
-			
+
 			// Generate ASCII preview from image
 			if mp.enablePreview {
 				asciiPreview, err := mp.generateASCIIFromImage(imagePath)
@@ -158,36 +161,36 @@ func (mp *MermaidProcessor) processMermaidDiagram(diagram MermaidDiagram) Mermai
 		// Generate ASCII representation directly
 		diagram.ASCIIPreview = mp.generateASCIIRepresentation(diagram)
 	}
-	
+
 	return diagram
 }
 
 // generateDiagramReplacement creates a replacement string for a Mermaid diagram
 func (mp *MermaidProcessor) generateDiagramReplacement(diagram MermaidDiagram) string {
 	var parts []string
-	
+
 	// Title
 	title := diagram.Title
 	if title == "" {
 		title = fmt.Sprintf("%s Diagram", strings.Title(diagram.Type))
 	}
 	parts = append(parts, mp.titleStyle.Render(fmt.Sprintf("📊 %s", title)))
-	
+
 	// ASCII preview or representation
 	if diagram.ASCIIPreview != "" {
 		parts = append(parts, "```")
 		parts = append(parts, diagram.ASCIIPreview)
 		parts = append(parts, "```")
 	}
-	
+
 	// View instructions
 	if diagram.GeneratedPath != "" {
 		parts = append(parts, fmt.Sprintf("*Full diagram: `open %s`*", diagram.GeneratedPath))
 	}
-	
+
 	// Live edit instruction
 	parts = append(parts, "*Edit: Use `/mermaid` command for live preview*")
-	
+
 	return mp.diagramStyle.Render(strings.Join(parts, "\n"))
 }
 
@@ -197,27 +200,27 @@ func (mp *MermaidProcessor) validateMermaidSyntax(content string) bool {
 	if content == "" {
 		return false
 	}
-	
+
 	// Check for basic Mermaid diagram types
 	validStarts := []string{
 		"graph", "flowchart", "sequenceDiagram", "classDiagram",
 		"stateDiagram", "erDiagram", "pie", "gantt", "gitgraph",
 		"journey", "requirement", "mindmap", "timeline",
 	}
-	
+
 	for _, start := range validStarts {
 		if strings.HasPrefix(content, start) {
 			return true
 		}
 	}
-	
+
 	return false
 }
 
 // detectDiagramType detects the type of Mermaid diagram
 func (mp *MermaidProcessor) detectDiagramType(content string) string {
 	content = strings.TrimSpace(strings.ToLower(content))
-	
+
 	if strings.HasPrefix(content, "graph") {
 		return "graph"
 	}
@@ -254,7 +257,7 @@ func (mp *MermaidProcessor) detectDiagramType(content string) string {
 	if strings.HasPrefix(content, "timeline") {
 		return "timeline"
 	}
-	
+
 	return "unknown"
 }
 
@@ -265,13 +268,13 @@ func (mp *MermaidProcessor) extractDiagramTitle(content string) string {
 	if matches := titleRegex.FindStringSubmatch(content); len(matches) >= 2 {
 		return strings.TrimSpace(matches[1])
 	}
-	
+
 	// Look for graph title in graph definitions
 	graphTitleRegex := regexp.MustCompile(`(?m)^(?:graph|flowchart)\s+\w+\s*\[\s*"([^"]+)"\s*\]`)
 	if matches := graphTitleRegex.FindStringSubmatch(content); len(matches) >= 2 {
 		return strings.TrimSpace(matches[1])
 	}
-	
+
 	return ""
 }
 
@@ -281,25 +284,25 @@ func (mp *MermaidProcessor) generateMermaidImage(diagram MermaidDiagram) (string
 	if _, err := exec.LookPath("mmdc"); err != nil {
 		return "", gerror.New(gerror.ErrCodeExternal, "mermaid-cli (mmdc) not found", err)
 	}
-	
+
 	// Create temporary files
 	timestamp := time.Now().Format("20060102-150405")
 	tempFile := filepath.Join(mp.outputDir, fmt.Sprintf("mermaid-%s.mmd", timestamp))
 	outputFile := filepath.Join(mp.outputDir, fmt.Sprintf("mermaid-%s.png", timestamp))
-	
+
 	// Write Mermaid content to file
 	if err := os.WriteFile(tempFile, []byte(diagram.Content), 0644); err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to write Mermaid file")
 	}
 	defer os.Remove(tempFile)
-	
+
 	// Generate image using mermaid-cli
 	cmd := exec.Command("mmdc", "-i", tempFile, "-o", outputFile, "--width", fmt.Sprintf("%d", mp.maxWidth), "--height", fmt.Sprintf("%d", mp.maxHeight))
-	
+
 	if output, err := cmd.CombinedOutput(); err != nil {
 		return "", gerror.New(gerror.ErrCodeExternal, fmt.Sprintf("mermaid-cli failed: %s", string(output)), err)
 	}
-	
+
 	return outputFile, nil
 }
 
@@ -308,7 +311,7 @@ func (mp *MermaidProcessor) generateASCIIFromImage(imagePath string) (string, er
 	// Use image processor to generate ASCII art
 	imageProcessor := NewImageProcessor()
 	imageProcessor.SetASCIISize(mp.asciiWidth, mp.asciiHeight)
-	
+
 	return imageProcessor.generateASCIIArt(imagePath)
 }
 
@@ -332,18 +335,18 @@ func (mp *MermaidProcessor) generateASCIIRepresentation(diagram MermaidDiagram) 
 func (mp *MermaidProcessor) generateFlowchartASCII(content string) string {
 	lines := strings.Split(content, "\n")
 	var ascii []string
-	
+
 	ascii = append(ascii, "┌─────────────────────────────────────┐")
 	ascii = append(ascii, "│           FLOWCHART DIAGRAM         │")
 	ascii = append(ascii, "├─────────────────────────────────────┤")
-	
+
 	// Extract nodes and connections
 	nodeRegex := regexp.MustCompile(`(\w+)\s*\[\s*"([^"]+)"\s*\]`)
 	connectionRegex := regexp.MustCompile(`(\w+)\s*-->\s*(\w+)`)
-	
+
 	nodes := make(map[string]string)
 	connections := make([]string, 0)
-	
+
 	for _, line := range lines {
 		if matches := nodeRegex.FindStringSubmatch(line); len(matches) >= 3 {
 			nodes[matches[1]] = matches[2]
@@ -352,21 +355,21 @@ func (mp *MermaidProcessor) generateFlowchartASCII(content string) string {
 			connections = append(connections, fmt.Sprintf("%s → %s", matches[1], matches[2]))
 		}
 	}
-	
+
 	// Display nodes
 	for id, label := range nodes {
 		ascii = append(ascii, fmt.Sprintf("│ [%s] %s", id, label))
 	}
-	
+
 	ascii = append(ascii, "│")
-	
+
 	// Display connections
 	for _, conn := range connections {
 		ascii = append(ascii, fmt.Sprintf("│ %s", conn))
 	}
-	
+
 	ascii = append(ascii, "└─────────────────────────────────────┘")
-	
+
 	return strings.Join(ascii, "\n")
 }
 
@@ -374,17 +377,17 @@ func (mp *MermaidProcessor) generateFlowchartASCII(content string) string {
 func (mp *MermaidProcessor) generateSequenceASCII(content string) string {
 	lines := strings.Split(content, "\n")
 	var ascii []string
-	
+
 	ascii = append(ascii, "┌─────────────────────────────────────┐")
 	ascii = append(ascii, "│         SEQUENCE DIAGRAM            │")
 	ascii = append(ascii, "├─────────────────────────────────────┤")
-	
+
 	participantRegex := regexp.MustCompile(`participant\s+(\w+)(?:\s+as\s+(.+))?`)
 	messageRegex := regexp.MustCompile(`(\w+)\s*->>?\s*(\w+)\s*:\s*(.+)`)
-	
+
 	participants := make(map[string]string)
 	messages := make([]string, 0)
-	
+
 	for _, line := range lines {
 		if matches := participantRegex.FindStringSubmatch(line); len(matches) >= 2 {
 			name := matches[1]
@@ -398,28 +401,28 @@ func (mp *MermaidProcessor) generateSequenceASCII(content string) string {
 			messages = append(messages, fmt.Sprintf("%s → %s: %s", matches[1], matches[2], matches[3]))
 		}
 	}
-	
+
 	// Display participants
 	for _, label := range participants {
 		ascii = append(ascii, fmt.Sprintf("│ │ %s │", label))
 	}
-	
+
 	ascii = append(ascii, "│")
-	
+
 	// Display messages
 	for _, msg := range messages {
 		ascii = append(ascii, fmt.Sprintf("│ %s", msg))
 	}
-	
+
 	ascii = append(ascii, "└─────────────────────────────────────┘")
-	
+
 	return strings.Join(ascii, "\n")
 }
 
 // generatePieASCII creates a simple ASCII pie chart representation
 func (mp *MermaidProcessor) generatePieASCII(content string) string {
 	var ascii []string
-	
+
 	ascii = append(ascii, "┌─────────────────────────────────────┐")
 	ascii = append(ascii, "│            PIE CHART                │")
 	ascii = append(ascii, "├─────────────────────────────────────┤")
@@ -432,26 +435,26 @@ func (mp *MermaidProcessor) generatePieASCII(content string) string {
 	ascii = append(ascii, "│      ████         ████               │")
 	ascii = append(ascii, "│         ████████████                 │")
 	ascii = append(ascii, "│                                     │")
-	
+
 	// Extract data points
 	dataRegex := regexp.MustCompile(`"([^"]+)"\s*:\s*(\d+(?:\.\d+)?)`)
 	matches := dataRegex.FindAllStringSubmatch(content, -1)
-	
+
 	for _, match := range matches {
 		if len(match) >= 3 {
 			ascii = append(ascii, fmt.Sprintf("│ ● %s: %s", match[1], match[2]))
 		}
 	}
-	
+
 	ascii = append(ascii, "└─────────────────────────────────────┘")
-	
+
 	return strings.Join(ascii, "\n")
 }
 
 // generateGanttASCII creates a simple ASCII Gantt chart
 func (mp *MermaidProcessor) generateGanttASCII(content string) string {
 	var ascii []string
-	
+
 	ascii = append(ascii, "┌─────────────────────────────────────┐")
 	ascii = append(ascii, "│           GANTT CHART               │")
 	ascii = append(ascii, "├─────────────────────────────────────┤")
@@ -462,16 +465,16 @@ func (mp *MermaidProcessor) generateGanttASCII(content string) string {
 	ascii = append(ascii, "├─────────────────────────────────────┤")
 	ascii = append(ascii, "│ Week 1 | Week 2 | Week 3 | Week 4   │")
 	ascii = append(ascii, "└─────────────────────────────────────┘")
-	
+
 	return strings.Join(ascii, "\n")
 }
 
 // generateGenericASCII creates a generic ASCII representation
 func (mp *MermaidProcessor) generateGenericASCII(content, diagramType string) string {
 	var ascii []string
-	
+
 	title := fmt.Sprintf("%s DIAGRAM", strings.ToUpper(diagramType))
-	
+
 	ascii = append(ascii, "┌─────────────────────────────────────┐")
 	ascii = append(ascii, fmt.Sprintf("│ %-35s │", title))
 	ascii = append(ascii, "├─────────────────────────────────────┤")
@@ -482,7 +485,7 @@ func (mp *MermaidProcessor) generateGenericASCII(content, diagramType string) st
 	ascii = append(ascii, "│   mermaid-cli                       │")
 	ascii = append(ascii, "│                                     │")
 	ascii = append(ascii, "└─────────────────────────────────────┘")
-	
+
 	return strings.Join(ascii, "\n")
 }
 

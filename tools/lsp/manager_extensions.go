@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package lsp
 
 import (
@@ -15,14 +18,14 @@ import (
 // This method needs to be added to the lsp.Manager type in pkg/lsp/manager.go
 func GetDocumentSymbols(m *lsp.Manager, ctx context.Context, filePath string) ([]lsp.DocumentSymbol, error) {
 	// Example implementation showing what would be needed:
-	
+
 	// Example implementation showing what would be needed:
 	// 1. Get server for file
 	// 2. Ensure file is opened
 	// 3. Create parameters
 	// 4. Send request
 	// 5. Return results
-	
+
 	// This is just a placeholder showing the pattern
 	return nil, gerror.Newf(gerror.ErrCodeNotImplemented, "document symbols not yet implemented")
 }

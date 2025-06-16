@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package main
 
 import (
@@ -22,10 +25,10 @@ import (
 )
 
 var (
-	commissionPath string
-	campaignName  string
-	managerID     string
-	campaignID    string
+	commissionPath   string
+	campaignName     string
+	managerID        string
+	campaignID       string
 	campaignNoDaemon bool // Don't auto-start the Guild server
 )
 
@@ -257,13 +260,13 @@ func createCampaign(cmd *cobra.Command, args []string) error {
 	}
 
 	campaignModel := &campaign.Campaign{
-		ID:              fmt.Sprintf("campaign-%d", time.Now().Unix()),
-		Name:            campaignName,
-		Description:     obj.Description,
-		Status:          campaign.CampaignStatusReady,
-		Commissions:     []string{obj.ID},
-		CreatedAt:       time.Now(),
-		UpdatedAt:       time.Now(),
+		ID:               fmt.Sprintf("campaign-%d", time.Now().Unix()),
+		Name:             campaignName,
+		Description:      obj.Description,
+		Status:           campaign.CampaignStatusReady,
+		Commissions:      []string{obj.ID},
+		CreatedAt:        time.Now(),
+		UpdatedAt:        time.Now(),
 		TotalCommissions: 1,
 		Metadata: map[string]interface{}{
 			"guild_config":  guildConfig.Name,

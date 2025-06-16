@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package visual
 
 import (
@@ -23,9 +26,9 @@ type ImageProcessor struct {
 // NewImageProcessor creates a new image processor with default settings
 func NewImageProcessor() *ImageProcessor {
 	return &ImageProcessor{
-		asciiWidth:    80,  // Default ASCII width
-		asciiHeight:   40,  // Default ASCII height
-		enableColor:   true, // Enable color ASCII art
+		asciiWidth:     80,   // Default ASCII width
+		asciiHeight:    40,   // Default ASCII height
+		enableColor:    true, // Enable color ASCII art
 		externalViewer: detectDefaultViewer(),
 		supportedExts: map[string]bool{
 			".png":  true,
@@ -41,51 +44,51 @@ func NewImageProcessor() *ImageProcessor {
 
 // ImageReference represents a detected image in content
 type ImageReference struct {
-	Path        string
-	AltText     string
-	StartIndex  int
-	EndIndex    int
-	IsValid     bool
+	Path         string
+	AltText      string
+	StartIndex   int
+	EndIndex     int
+	IsValid      bool
 	IsAccessible bool
-	Error       string
+	Error        string
 }
 
 // ProcessContent detects and processes images in content
 func (ip *ImageProcessor) ProcessContent(content string) (string, []ImageReference, error) {
 	// Detect image references
 	refs := ip.detectImageReferences(content)
-	
+
 	// Process each image reference
 	processedRefs := make([]ImageReference, 0, len(refs))
 	processedContent := content
-	
+
 	// Process from end to start to maintain string indices
 	for i := len(refs) - 1; i >= 0; i-- {
 		ref := refs[i]
-		
+
 		// Validate and process the image
 		processedRef := ip.processImageReference(ref)
 		processedRefs = append([]ImageReference{processedRef}, processedRefs...)
-		
+
 		// Replace in content if valid
 		if processedRef.IsValid && processedRef.IsAccessible {
 			replacement := ip.generateImageReplacement(processedRef)
 			processedContent = processedContent[:ref.StartIndex] + replacement + processedContent[ref.EndIndex:]
 		}
 	}
-	
+
 	return processedContent, processedRefs, nil
 }
 
 // detectImageReferences finds image references in content using various patterns
 func (ip *ImageProcessor) detectImageReferences(content string) []ImageReference {
 	var refs []ImageReference
-	
+
 	// Pattern 1: Markdown image syntax ![alt](path)
 	markdownRegex := regexp.MustCompile(`!\[([^\]]*)\]\(([^)]+)\)`)
 	matches := markdownRegex.FindAllStringSubmatch(content, -1)
 	indices := markdownRegex.FindAllStringIndex(content, -1)
-	
+
 	for i, match := range matches {
 		if len(match) >= 3 {
 			refs = append(refs, ImageReference{
@@ -96,12 +99,12 @@ func (ip *ImageProcessor) detectImageReferences(content string) []ImageReference
 			})
 		}
 	}
-	
+
 	// Pattern 2: HTML img tags <img src="path" alt="alt">
 	htmlRegex := regexp.MustCompile(`<img[^>]+src=["']([^"']+)["'][^>]*(?:alt=["']([^"']*)["'])?[^>]*>`)
 	htmlMatches := htmlRegex.FindAllStringSubmatch(content, -1)
 	htmlIndices := htmlRegex.FindAllStringIndex(content, -1)
-	
+
 	for i, match := range htmlMatches {
 		if len(match) >= 2 {
 			altText := ""
@@ -116,12 +119,12 @@ func (ip *ImageProcessor) detectImageReferences(content string) []ImageReference
 			})
 		}
 	}
-	
+
 	// Pattern 3: Direct file paths (when they look like images)
 	pathRegex := regexp.MustCompile(`(?:^|\s)((?:[~/.]?[^/\s]+/)*[^/\s]+\.(?:png|jpg|jpeg|gif|bmp|webp|svg))(?:\s|$)`)
 	pathMatches := pathRegex.FindAllStringSubmatch(content, -1)
 	pathIndices := pathRegex.FindAllStringIndex(content, -1)
-	
+
 	for i, match := range pathMatches {
 		if len(match) >= 2 {
 			path := strings.TrimSpace(match[1])
@@ -143,7 +146,7 @@ func (ip *ImageProcessor) detectImageReferences(content string) []ImageReference
 			}
 		}
 	}
-	
+
 	return refs
 }
 
@@ -152,7 +155,7 @@ func (ip *ImageProcessor) processImageReference(ref ImageReference) ImageReferen
 	// Expand path
 	expandedPath := ip.expandPath(ref.Path)
 	ref.Path = expandedPath
-	
+
 	// Check if file exists and is supported
 	if _, err := os.Stat(expandedPath); err != nil {
 		ref.IsValid = false
@@ -160,7 +163,7 @@ func (ip *ImageProcessor) processImageReference(ref ImageReference) ImageReferen
 		ref.Error = fmt.Sprintf("File not found: %s", err.Error())
 		return ref
 	}
-	
+
 	// Check extension
 	ext := strings.ToLower(filepath.Ext(expandedPath))
 	if !ip.supportedExts[ext] {
@@ -169,7 +172,7 @@ func (ip *ImageProcessor) processImageReference(ref ImageReference) ImageReferen
 		ref.Error = fmt.Sprintf("Unsupported image format: %s", ext)
 		return ref
 	}
-	
+
 	ref.IsValid = true
 	ref.IsAccessible = true
 	return ref
@@ -178,7 +181,7 @@ func (ip *ImageProcessor) processImageReference(ref ImageReference) ImageReferen
 // generateImageReplacement creates a replacement string for an image reference
 func (ip *ImageProcessor) generateImageReplacement(ref ImageReference) string {
 	var parts []string
-	
+
 	// Add ASCII art if possible
 	asciiArt, err := ip.generateASCIIArt(ref.Path)
 	if err == nil && asciiArt != "" {
@@ -193,10 +196,10 @@ func (ip *ImageProcessor) generateImageReplacement(ref ImageReference) string {
 			parts = append(parts, fmt.Sprintf("**Path:** `%s`", ref.Path))
 		}
 	}
-	
+
 	// Add view instructions
 	parts = append(parts, fmt.Sprintf("*View full image: `%s %s`*", ip.externalViewer, ref.Path))
-	
+
 	return strings.Join(parts, "\n")
 }
 
@@ -206,12 +209,12 @@ func (ip *ImageProcessor) generateASCIIArt(imagePath string) (string, error) {
 	if chafaPath, err := exec.LookPath("chafa"); err == nil {
 		return ip.generateASCIIWithChafa(chafaPath, imagePath)
 	}
-	
+
 	// Fallback to jp2a (monochrome)
 	if jp2aPath, err := exec.LookPath("jp2a"); err == nil {
 		return ip.generateASCIIWithJp2a(jp2aPath, imagePath)
 	}
-	
+
 	return "", gerror.New(gerror.ErrCodeExternal, "No ASCII art tools available (chafa or jp2a required)", nil)
 }
 
@@ -222,19 +225,19 @@ func (ip *ImageProcessor) generateASCIIWithChafa(chafaPath, imagePath string) (s
 		"--size", fmt.Sprintf("%dx%d", ip.asciiWidth, ip.asciiHeight),
 		"--format", "symbols",
 	}
-	
+
 	if ip.enableColor {
 		args = append(args, "--colors", "256")
 	} else {
 		args = append(args, "--colors", "2")
 	}
-	
+
 	cmd := exec.Command(chafaPath, args...)
 	output, err := cmd.Output()
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeExternal, "chafa failed")
 	}
-	
+
 	return strings.TrimSpace(string(output)), nil
 }
 
@@ -245,13 +248,13 @@ func (ip *ImageProcessor) generateASCIIWithJp2a(jp2aPath, imagePath string) (str
 		"--height", fmt.Sprintf("%d", ip.asciiHeight),
 		imagePath,
 	}
-	
+
 	cmd := exec.Command(jp2aPath, args...)
 	output, err := cmd.Output()
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeExternal, "jp2a failed")
 	}
-	
+
 	return strings.TrimSpace(string(output)), nil
 }
 
@@ -264,14 +267,14 @@ func (ip *ImageProcessor) expandPath(path string) string {
 			path = filepath.Join(homeDir, path[2:])
 		}
 	}
-	
+
 	// Convert to absolute path
 	if !filepath.IsAbs(path) {
 		if absPath, err := filepath.Abs(path); err == nil {
 			path = absPath
 		}
 	}
-	
+
 	return path
 }
 
@@ -287,13 +290,13 @@ func detectDefaultViewer() string {
 		"gwenview", // KDE image viewer
 		"qlmanage", // macOS QuickLook
 	}
-	
+
 	for _, viewer := range viewers {
 		if _, err := exec.LookPath(viewer); err == nil {
 			return viewer
 		}
 	}
-	
+
 	return "cat" // Fallback
 }
 

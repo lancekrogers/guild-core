@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package chat
 
 import (
@@ -52,7 +55,7 @@ func NewChatModel(guildConfig *config.GuildConfig, conn *grpc.ClientConn, prompt
 
 	// Initialize keybinding adapter
 	keyAdapter := NewKeybindingAdapter()
-	
+
 	// Create new model
 	m := ChatModel{
 		messages:      []Message{},

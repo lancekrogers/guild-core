@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // internal/buildutil/main.go
 package main
 
@@ -26,7 +29,7 @@ func main() {
 	ui.Init(noColor)
 
 	if flag.NArg() == 0 {
-		log.Fatalf("usage: buildutil <build|test|integration|clean|all|install|uninstall>")
+		log.Fatalf("usage: buildutil <build|test|integration|e2e|validate-demo|clean|all|install|uninstall>")
 	}
 
 	cmd := flag.Arg(0)
@@ -49,6 +52,15 @@ func main() {
 
 	case "integration":
 		err = tasks.Integration(verbose)
+
+	case "e2e":
+		err = tasks.E2E(tasks.E2EOptions{
+			Verbose: verbose,
+			Timeout: 10 * time.Minute,
+		})
+
+	case "validate-demo":
+		err = tasks.ValidateDemo()
 
 	case "clean":
 		err = tasks.Clean(verbose)

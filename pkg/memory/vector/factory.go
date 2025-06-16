@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // Package vector provides factory functionality for creating vector stores.
 // The factory pattern allows for easy registration and creation of different
 // vector store implementations while maintaining a consistent interface.

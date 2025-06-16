@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // Package daemon provides utilities for managing the Guild gRPC server as a background daemon
 package daemon
 
@@ -32,7 +35,7 @@ func getExecutablePath() (string, error) {
 // SkipIfNoBinary skips the test if the guild binary doesn't exist
 func SkipIfNoBinary(t *testing.T) {
 	t.Helper()
-	
+
 	// Try to find guild binary in common locations
 	var guildPath string
 	possiblePaths := []string{
@@ -41,7 +44,7 @@ func SkipIfNoBinary(t *testing.T) {
 		"../../bin/guild",
 		"../../../bin/guild",
 	}
-	
+
 	for _, path := range possiblePaths {
 		if _, err := os.Stat(path); err == nil {
 			absPath, err := filepath.Abs(path)
@@ -51,11 +54,11 @@ func SkipIfNoBinary(t *testing.T) {
 			}
 		}
 	}
-	
+
 	if guildPath == "" {
 		t.Skip("Skipping test: guild binary not found (run 'make build' first)")
 	}
-	
+
 	SetTestExecutable(guildPath)
 	t.Cleanup(ResetTestExecutable)
 }

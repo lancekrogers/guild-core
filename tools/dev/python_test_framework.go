@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package dev
 
 import (
@@ -18,11 +21,11 @@ func (p *PythonTestFramework) Name() string {
 // Detect checks if this is a Python project with pytest
 func (p *PythonTestFramework) Detect(path string) bool {
 	return fileExists("pytest.ini") ||
-		   fileExists("pyproject.toml") ||
-		   fileExists("setup.py") ||
-		   fileExists("requirements.txt") ||
-		   len(findTestFiles(path, "test_*.py")) > 0 ||
-		   len(findTestFiles(path, "*_test.py")) > 0
+		fileExists("pyproject.toml") ||
+		fileExists("setup.py") ||
+		fileExists("requirements.txt") ||
+		len(findTestFiles(path, "test_*.py")) > 0 ||
+		len(findTestFiles(path, "*_test.py")) > 0
 }
 
 // BuildCommand builds the pytest command
@@ -77,7 +80,7 @@ func (p *PythonTestFramework) BuildCommand(input TestRunnerInput) ([]string, err
 // ParseOutput parses pytest output
 func (p *PythonTestFramework) ParseOutput(output string, exitCode int) (*TestResult, error) {
 	lines := strings.Split(output, "\n")
-	
+
 	var tests []TestCase
 	var summary TestSummary
 	var coverage *CoverageReport
@@ -87,7 +90,7 @@ func (p *PythonTestFramework) ParseOutput(output string, exitCode int) (*TestRes
 	summaryRegex := regexp.MustCompile(`^=+\s*(\d+)\s+failed,?\s*(\d+)\s+passed`)
 	coverageRegex := regexp.MustCompile(`^TOTAL\s+\d+\s+\d+\s+(\d+)%`)
 	failureHeaderRegex := regexp.MustCompile(`^_+\s+(.+)\s+_+$`)
-	
+
 	var currentFailure *TestCase
 	var errorLines []string
 	var inFailureSection bool
@@ -95,7 +98,7 @@ func (p *PythonTestFramework) ParseOutput(output string, exitCode int) (*TestRes
 	for _, line := range lines {
 		originalLine := line
 		line = strings.TrimSpace(line)
-		
+
 		if line == "" {
 			continue
 		}
@@ -130,7 +133,7 @@ func (p *PythonTestFramework) ParseOutput(output string, exitCode int) (*TestRes
 		if match := failureHeaderRegex.FindStringSubmatch(line); match != nil {
 			testName := match[1]
 			inFailureSection = true
-			
+
 			// Find the corresponding test
 			for i := range tests {
 				if strings.Contains(testName, tests[i].Name) {

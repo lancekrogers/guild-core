@@ -1,11 +1,14 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package registry
 
 import (
 	"testing"
 
+	"github.com/guild-ventures/guild-core/tools"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/guild-ventures/guild-core/tools"
 )
 
 func TestRegisterFSTools(t *testing.T) {
@@ -18,7 +21,7 @@ func TestRegisterFSTools(t *testing.T) {
 
 	// Verify all expected tools are registered
 	expectedTools := []string{"file", "glob", "grep"}
-	
+
 	for _, toolName := range expectedTools {
 		tool, exists := toolRegistry.GetTool(toolName)
 		assert.True(t, exists, "Tool %s should be registered", toolName)
@@ -30,10 +33,10 @@ func TestRegisterFSTools(t *testing.T) {
 
 func TestGetFSToolNames(t *testing.T) {
 	names := GetFSToolNames()
-	
+
 	// Should have exactly 3 tools
 	assert.Len(t, names, 3, "Should have 3 filesystem tools")
-	
+
 	// Check expected tools are present
 	expectedTools := []string{"file", "glob", "grep"}
 	assert.ElementsMatch(t, expectedTools, names, "Tool names should match expected")
@@ -41,14 +44,14 @@ func TestGetFSToolNames(t *testing.T) {
 
 func TestGetFSToolsByCategory(t *testing.T) {
 	toolsByCategory := GetFSToolsByCategory()
-	
+
 	// Should have filesystem category
 	fsTools, exists := toolsByCategory["filesystem"]
 	assert.True(t, exists, "Should have filesystem category")
-	
+
 	// Should have 3 tools in filesystem category
 	assert.Len(t, fsTools, 3, "Should have 3 tools in filesystem category")
-	
+
 	// Check expected tools are present
 	expectedTools := []string{"file", "glob", "grep"}
 	assert.ElementsMatch(t, expectedTools, fsTools, "Filesystem tools should match expected")
@@ -57,16 +60,16 @@ func TestGetFSToolsByCategory(t *testing.T) {
 func TestFSToolsWithPkgRegistry(t *testing.T) {
 	// Test with pkg registry interface
 	registeredTools := make([]string, 0)
-	
+
 	// Create a mock registry that implements the RegisterTool interface
 	mockRegistry := &mockPkgRegistry{
 		registeredTools: &registeredTools,
 	}
-	
+
 	// Register tools
 	err := RegisterFSTools(mockRegistry)
 	require.NoError(t, err, "Failed to register FS tools with pkg registry")
-	
+
 	// Verify all tools were registered
 	expectedTools := []string{"file", "glob", "grep"}
 	assert.ElementsMatch(t, expectedTools, registeredTools, "All FS tools should be registered")

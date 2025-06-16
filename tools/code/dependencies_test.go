@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package code
 
 import (
@@ -63,7 +66,7 @@ func main() {
 	require.NoError(t, err)
 	assert.NotNil(t, result)
 
-	// Should detect Go project  
+	// Should detect Go project
 	assert.Contains(t, result.Output, "(go)")
 	assert.Contains(t, result.Output, "Dependencies for")
 }
@@ -316,7 +319,7 @@ go 1.21
 			result, err := tool.Execute(context.Background(), string(input))
 			require.NoError(t, err)
 			assert.NotNil(t, result)
-			
+
 			if format == "json" {
 				assert.Contains(t, result.Output, `"project_type": "go"`)
 			} else {

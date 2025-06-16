@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // cmd/guild/main.go
 package main
 
@@ -57,9 +60,9 @@ var agentCmd = &cobra.Command{
 
 // agentStartCmd represents the agent start command
 var agentStartCmd = &cobra.Command{
-	Use:   "start [agent-id]",
-	Short: "Start an agent",
-	Long:  `Start a specific agent or all agents if no ID is provided.`,
+	Use:               "start [agent-id]",
+	Short:             "Start an agent",
+	Long:              `Start a specific agent or all agents if no ID is provided.`,
 	ValidArgsFunction: completeAgentIDs,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
@@ -83,21 +86,21 @@ func init() {
 	rootCmd.AddCommand(campaignCmd)
 	rootCmd.AddCommand(kanbanCmd)
 	rootCmd.AddCommand(completionCmd)
-	
+
 	// Note: The following commands are registered in their respective files:
 	// - initCmd (init.go)
 	// - migrateCmd (migrate.go)
 	// - corpusCmd (corpus.go)
 	// - commissionCmd (commission.go)
 	// - promptCmd (prompt.go)
-	
+
 	// Demo commands are not registered in production builds
 	// - kanbanDemoCmd (kanban_demo.go) - for testing kanban UI
 	// - costCmd (cost_demo.go) - for demonstrating cost-based selection
 
 	// Register agent subcommands
 	agentCmd.AddCommand(agentStartCmd)
-	
+
 	// Note: Additional agent subcommands (list, stop, status) are registered in agent.go
 }
 

@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package main
 
 import (
@@ -99,7 +102,7 @@ func completeAgentIDs(cmd *cobra.Command, args []string, toComplete string) ([]s
 
 	// Get available agent types
 	agentTypes := agentReg.ListAgentTypes()
-	
+
 	// If no agents found in registry, fall back to defaults
 	if len(agentTypes) == 0 {
 		return completeDefaultAgents(toComplete)

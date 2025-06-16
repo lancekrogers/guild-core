@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package main
 
 import (
@@ -286,7 +289,7 @@ func TestAgentListCommand(t *testing.T) {
 						Capabilities:  []string{"code-review"},
 					},
 				}
-				
+
 				ar.On("ListAgentTypes").Return([]string{"developer", "reviewer"})
 				cr.On("GetAgentsByCost", 100).Return(agents)
 				sr.On("GetAgentRepository").Return(repo)
@@ -320,7 +323,7 @@ func TestAgentListCommand(t *testing.T) {
 						Capabilities:  []string{"code-review"},
 					},
 				}
-				
+
 				ar.On("ListAgentTypes").Return([]string{"developer", "reviewer"})
 				cr.On("GetAgentsByCost", 100).Return(agents)
 				sr.On("GetAgentRepository").Return(repo)
@@ -352,7 +355,7 @@ func TestAgentListCommand(t *testing.T) {
 						Capabilities:  []string{"code-review"},
 					},
 				}
-				
+
 				ar.On("ListAgentTypes").Return([]string{"developer", "reviewer"})
 				cr.On("GetAgentsByCost", 100).Return(agents)
 				sr.On("GetAgentRepository").Return(repo)
@@ -377,7 +380,7 @@ func TestAgentListCommand(t *testing.T) {
 						Capabilities:  []string{"golang", "testing"},
 					},
 				}
-				
+
 				ar.On("ListAgentTypes").Return([]string{"developer", "reviewer"})
 				cr.On("GetAgentsByCost", 100).Return(agents)
 				sr.On("GetAgentRepository").Return(repo)
@@ -408,7 +411,7 @@ func TestAgentListCommand(t *testing.T) {
 						Capabilities:  []string{"golang"},
 					},
 				}
-				
+
 				ar.On("ListAgentTypes").Return([]string{"developer"})
 				cr.On("GetAgentsByCost", 100).Return(agents)
 				sr.On("GetAgentRepository").Return(repo)
@@ -439,10 +442,10 @@ func TestAgentListCommand(t *testing.T) {
 			agentListCmd.Flags().VisitAll(func(f *pflag.Flag) {
 				cmd.Flags().AddFlag(f)
 			})
-			
+
 			// Parse flags
 			cmd.ParseFlags(tt.args)
-			
+
 			// Capture output
 			var buf bytes.Buffer
 			cmd.SetOut(&buf)
@@ -451,7 +454,7 @@ func TestAgentListCommand(t *testing.T) {
 			// Run command with mocked registry
 			// Note: In a real test, we'd need to inject the mock registry
 			// For now, we'll test the display functions directly
-			
+
 			// Verify expectations
 			for _, expected := range tt.expectedOutput {
 				if !strings.Contains(buf.String(), expected) {
@@ -510,7 +513,7 @@ func TestDisplayCompactAgentList(t *testing.T) {
 	assert.Contains(t, output, "security")
 	assert.Contains(t, output, "3")
 	assert.Contains(t, output, "Total: 2 agents")
-	
+
 	// Check that long capabilities are truncated
 	assert.Contains(t, output, "vulnerability-scanning, penetration-te...")
 }
@@ -525,7 +528,7 @@ func TestDisplayVerboseAgentList(t *testing.T) {
 			Capabilities:  []string{"golang", "testing"},
 		},
 	}
-	
+
 	agentTypes := []string{"developer", "reviewer", "security"}
 
 	// Capture stdout

@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package main
 
 import (
@@ -30,9 +33,9 @@ var agentListCmd = &cobra.Command{
 
 // agentStopCmd represents the agent stop command
 var agentStopCmd = &cobra.Command{
-	Use:   "stop [agent-id]",
-	Short: "Stop an agent",
-	Long:  `Stop a specific agent or all agents if no ID is provided.`,
+	Use:               "stop [agent-id]",
+	Short:             "Stop an agent",
+	Long:              `Stop a specific agent or all agents if no ID is provided.`,
 	ValidArgsFunction: completeAgentIDs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 0 {
@@ -48,9 +51,9 @@ var agentStopCmd = &cobra.Command{
 
 // agentStatusCmd represents the agent status command
 var agentStatusCmd = &cobra.Command{
-	Use:   "status [agent-id]",
-	Short: "Show agent status",
-	Long:  `Display the current status of a specific agent or all agents.`,
+	Use:               "status [agent-id]",
+	Short:             "Show agent status",
+	Long:              `Display the current status of a specific agent or all agents.`,
 	ValidArgsFunction: completeAgentIDs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 0 {
@@ -69,10 +72,10 @@ func init() {
 	agentListCmd.Flags().BoolP("verbose", "v", false, "Show detailed agent information")
 	agentListCmd.Flags().StringP("type", "t", "", "Filter agents by type")
 	agentListCmd.Flags().IntP("max-cost", "c", 0, "Show only agents with cost <= value")
-	
+
 	// Add persistent flags
 	agentCmd.PersistentFlags().BoolVar(&agentNoDaemon, "no-daemon", false, "Don't auto-start the Guild server")
-	
+
 	// Register agent subcommands
 	agentCmd.AddCommand(agentListCmd)
 	agentCmd.AddCommand(agentStopCmd)
@@ -131,7 +134,7 @@ func runAgentList(cmd *cobra.Command, args []string) error {
 
 	// Get available agent types from registry
 	agentTypes := componentRegistry.Agents().ListAgentTypes()
-	
+
 	// Get configured agents from storage if available
 	var configuredAgents []registry.AgentInfo
 	if storageRegistry := componentRegistry.Storage(); storageRegistry != nil {
@@ -147,7 +150,7 @@ func runAgentList(cmd *cobra.Command, args []string) error {
 							capabilities = append(capabilities, cap)
 						}
 					}
-					
+
 					configuredAgents = append(configuredAgents, registry.AgentInfo{
 						ID:            sa.ID,
 						Name:          sa.Name,
@@ -254,7 +257,7 @@ func displayVerboseAgentList(agents []registry.AgentInfo, agentTypes []string) {
 func getAgentCostIcon(cost int) string {
 	switch {
 	case cost <= 1:
-		return "💰"  // Very cheap
+		return "💰" // Very cheap
 	case cost <= 3:
 		return "💰💰" // Moderate
 	case cost <= 5:

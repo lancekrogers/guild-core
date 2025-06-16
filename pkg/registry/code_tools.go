@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package registry
 
 import (
@@ -21,12 +24,12 @@ func RegisterCodeTools(registry interface{}) error {
 
 	// Code analysis tools
 	astTool := code.NewASTTool()
-	
+
 	// Register all supported parsers
 	if err := parsers.RegisterAllParsers(astTool); err != nil {
 		return err
 	}
-	
+
 	if err := toolRegistry.RegisterTool(astTool); err != nil {
 		return err
 	}
@@ -73,12 +76,12 @@ func RegisterCodeTools(registry interface{}) error {
 func registerWithPkgRegistry(registry interface{ RegisterTool(tools.Tool) error }) error {
 	// Code analysis tools
 	astTool := code.NewASTTool()
-	
+
 	// Register all supported parsers
 	if err := parsers.RegisterAllParsers(astTool); err != nil {
 		return err
 	}
-	
+
 	if err := registry.RegisterTool(astTool); err != nil {
 		return err
 	}

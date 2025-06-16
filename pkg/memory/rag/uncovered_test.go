@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package rag
 
 import (
@@ -195,7 +198,7 @@ func TestEnhanceRequestWithRAG_Coverage(t *testing.T) {
 
 	// This will retrieve but return no results, so returns original request
 	result, err = wrapper.enhanceRequestWithRAG(ctx, "test request")
-	assert.NoError(t, err) // Should handle gracefully
+	assert.NoError(t, err)                  // Should handle gracefully
 	assert.Equal(t, "test request", result) // Should return original request when no results
 }
 
@@ -217,6 +220,6 @@ func TestAgentWrapper_EnhancePromptMethod(t *testing.T) {
 	result, err := wrapper.EnhancePrompt(ctx, "prompt", "query", RetrievalConfig{
 		MaxResults: 3,
 	})
-	assert.NoError(t, err) // Should handle gracefully
+	assert.NoError(t, err)            // Should handle gracefully
 	assert.Equal(t, "prompt", result) // Should return original prompt when no results
 }

@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // Package vector provides vector storage and retrieval implementations for the Guild framework.
 // This file implements the Chromem-go vector store, which provides an embedded, zero-dependency
 // solution for storing and searching vector embeddings.

@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package orchestrator
 
 import (
@@ -71,7 +74,7 @@ type Config struct {
 	MaxConcurrentAgents int    `json:"max_concurrent_agents"`
 	ManagerAgentID      string `json:"manager_agent_id"`
 	KanbanBoardID       string `json:"kanban_board_id"`
-	CommissionID         string `json:"commission_id,omitempty"`
+	CommissionID        string `json:"commission_id,omitempty"`
 	ExecutionMode       string `json:"execution_mode"` // "sequential", "parallel", "managed"
 }
 

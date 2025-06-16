@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package jump
 
 import (
@@ -242,7 +245,7 @@ func TestJumpToolMetadata(t *testing.T) {
 
 // Helper function to check if a string contains a substring
 func contains(s, substr string) bool {
-	return len(s) >= len(substr) && (s == substr || len(s) > len(substr) && (s[len(s)-len(substr):] == substr || 
-		(len(substr) > 0 && len(s) > 0 && filepath.Base(s) == substr || filepath.Dir(s) == substr || 
-		 filepath.Base(filepath.Dir(s)) == substr || filepath.Base(s) == filepath.Base(substr))))
+	return len(s) >= len(substr) && (s == substr || len(s) > len(substr) && (s[len(s)-len(substr):] == substr ||
+		(len(substr) > 0 && len(s) > 0 && filepath.Base(s) == substr || filepath.Dir(s) == substr ||
+			filepath.Base(filepath.Dir(s)) == substr || filepath.Base(s) == filepath.Base(substr))))
 }

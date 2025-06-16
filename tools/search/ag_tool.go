@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package search
 
 import (
@@ -23,27 +26,27 @@ type AgTool struct {
 
 // AgToolInput represents the input for ag searches
 type AgToolInput struct {
-	Pattern        string   `json:"pattern"`                    // Search pattern
-	Path           string   `json:"path,omitempty"`             // Directory path to search (default: current working directory)
-	FileTypes      []string `json:"file_types,omitempty"`       // File types to include (e.g., ["go", "js", "py"])
-	IgnorePatterns []string `json:"ignore_patterns,omitempty"`  // Patterns to ignore
-	CaseSensitive  bool     `json:"case_sensitive,omitempty"`   // Case-sensitive search (default: false)
-	WholeWord      bool     `json:"whole_word,omitempty"`       // Match whole words only
-	Literal        bool     `json:"literal,omitempty"`          // Treat pattern as literal string, not regex
-	MaxResults     int      `json:"max_results,omitempty"`      // Maximum number of results (default: 100)
-	Context        int      `json:"context,omitempty"`          // Lines of context around matches
-	Timeout        int      `json:"timeout,omitempty"`          // Timeout in seconds (default: 30)
+	Pattern        string   `json:"pattern"`                   // Search pattern
+	Path           string   `json:"path,omitempty"`            // Directory path to search (default: current working directory)
+	FileTypes      []string `json:"file_types,omitempty"`      // File types to include (e.g., ["go", "js", "py"])
+	IgnorePatterns []string `json:"ignore_patterns,omitempty"` // Patterns to ignore
+	CaseSensitive  bool     `json:"case_sensitive,omitempty"`  // Case-sensitive search (default: false)
+	WholeWord      bool     `json:"whole_word,omitempty"`      // Match whole words only
+	Literal        bool     `json:"literal,omitempty"`         // Treat pattern as literal string, not regex
+	MaxResults     int      `json:"max_results,omitempty"`     // Maximum number of results (default: 100)
+	Context        int      `json:"context,omitempty"`         // Lines of context around matches
+	Timeout        int      `json:"timeout,omitempty"`         // Timeout in seconds (default: 30)
 }
 
 // AgSearchResult represents a single search result
 type AgSearchResult struct {
-	File     string `json:"file"`      // File path
-	Line     int    `json:"line"`      // Line number
-	Column   int    `json:"column"`    // Column number (if available)
-	Match    string `json:"match"`     // Matched text
-	Context  string `json:"context"`   // Full line containing the match
-	Before   string `json:"before"`    // Context lines before match
-	After    string `json:"after"`     // Context lines after match
+	File    string `json:"file"`    // File path
+	Line    int    `json:"line"`    // Line number
+	Column  int    `json:"column"`  // Column number (if available)
+	Match   string `json:"match"`   // Matched text
+	Context string `json:"context"` // Full line containing the match
+	Before  string `json:"before"`  // Context lines before match
+	After   string `json:"after"`   // Context lines after match
 }
 
 // AgToolResult represents the complete search results
@@ -213,11 +216,11 @@ func (t *AgTool) Execute(ctx context.Context, input string) (*tools.ToolResult, 
 	}
 
 	metadata := map[string]string{
-		"pattern":     params.Pattern,
-		"path":        searchPath,
-		"total":       strconv.Itoa(result.Total),
-		"truncated":   strconv.FormatBool(result.Truncated),
-		"duration":    result.Duration,
+		"pattern":   params.Pattern,
+		"path":      searchPath,
+		"total":     strconv.Itoa(result.Total),
+		"truncated": strconv.FormatBool(result.Truncated),
+		"duration":  result.Duration,
 	}
 
 	return tools.NewToolResult(string(resultJSON), metadata, nil, map[string]interface{}{

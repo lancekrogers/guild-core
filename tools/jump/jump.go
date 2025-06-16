@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package jump
 
 import (
@@ -143,7 +146,7 @@ func (j *Jump) Find(query string) (string, error) {
 	for i, path := range candidates {
 		baseCandidates[i] = filepath.Base(path)
 	}
-	
+
 	matches := fuzzy.Find(query, baseCandidates)
 	if len(matches) == 0 {
 		// Try full path matching as fallback

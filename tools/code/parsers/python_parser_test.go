@@ -1,12 +1,15 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package parsers_test
 
 import (
 	"context"
 	"testing"
 
+	"github.com/guild-ventures/guild-core/tools/code/parsers"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/guild-ventures/guild-core/tools/code/parsers"
 )
 
 func TestPythonParser_Functions(t *testing.T) {
@@ -44,7 +47,7 @@ def decorated_function(*args, **kwargs):
 	assert.True(t, functions[1].IsStatic) // Using IsStatic for async
 	assert.Len(t, functions[1].Parameters, 2)
 	assert.Equal(t, "param1", functions[1].Parameters[0].Name)
-	assert.Equal(t, "str", functions[1].Parameters[0].Type) 
+	assert.Equal(t, "str", functions[1].Parameters[0].Type)
 	assert.Equal(t, "param2", functions[1].Parameters[1].Name)
 	assert.Equal(t, "int", functions[1].Parameters[1].Type)
 	assert.Equal(t, "dict", functions[1].ReturnType)

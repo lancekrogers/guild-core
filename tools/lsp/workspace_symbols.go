@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package lsp
 
 import (
@@ -76,7 +79,7 @@ func (t *WorkspaceSymbolsTool) Execute(ctx context.Context, input string) (*tool
 
 	// For now, return a placeholder implementation
 	// This will be updated when we extend the LSP manager with workspace symbols support
-	
+
 	// Placeholder response showing the structure
 	symbols := []*WorkspaceSymbolInfo{
 		{

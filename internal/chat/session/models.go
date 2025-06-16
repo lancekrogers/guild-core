@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package session
 
 import (
@@ -31,7 +34,7 @@ func (m *jsonMetadata) Scan(value interface{}) error {
 	if value == nil {
 		return nil
 	}
-	
+
 	switch v := value.(type) {
 	case []byte:
 		return json.Unmarshal(v, m)
@@ -58,7 +61,7 @@ func (tc *jsonToolCalls) Scan(value interface{}) error {
 	if value == nil {
 		return nil
 	}
-	
+
 	switch v := value.(type) {
 	case []byte:
 		return json.Unmarshal(v, tc)
@@ -95,7 +98,7 @@ func fromDBSession(dbSession db.ChatSession) *Session {
 		CreatedAt:  time.Now(), // Default to now if nil
 		UpdatedAt:  time.Now(), // Default to now if nil
 	}
-	
+
 	// Set actual timestamps if available
 	if dbSession.CreatedAt != nil {
 		s.CreatedAt = *dbSession.CreatedAt
@@ -153,7 +156,7 @@ func fromDBMessage(dbMessage db.ChatMessage) *Message {
 		Content:   dbMessage.Content,
 		CreatedAt: time.Now(), // Default to now if nil
 	}
-	
+
 	if dbMessage.CreatedAt != nil {
 		m.CreatedAt = *dbMessage.CreatedAt
 	}
@@ -209,18 +212,18 @@ func fromDBBookmark(dbBookmark db.SessionBookmark) *Bookmark {
 		Name:      dbBookmark.Name,
 		CreatedAt: time.Now(), // Default to now if nil
 	}
-	
+
 	if dbBookmark.CreatedAt != nil {
 		b.CreatedAt = *dbBookmark.CreatedAt
 	}
-	
+
 	return b
 }
 
 // sessionStats holds session statistics
 type sessionStats struct {
-	MessageCount int64
-	LastMessage  *time.Time
+	MessageCount  int64
+	LastMessage   *time.Time
 	BookmarkCount int64
 }
 

@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package mock_test
 
 import (
@@ -55,7 +58,7 @@ func TestErrorConditions(t *testing.T) {
 	provider := builder.
 		WithError("error prompt", fmt.Errorf("simulated error")).
 		Build()
-	
+
 	// Force enable for testing
 	provider.SetResponse("", "") // Initialize maps
 	temp := mock.NewProviderForTesting()
@@ -154,7 +157,7 @@ func TestStreaming(t *testing.T) {
 	if len(full) == 0 {
 		t.Error("No content in streamed response")
 	}
-	
+
 	// Should contain some of the response (might be YAML pattern matched)
 	if !strings.Contains(full, "test") && !strings.Contains(full, "comprehensive") {
 		t.Logf("Received unexpected content: %s", full)

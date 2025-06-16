@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package search
 
 import (
@@ -202,14 +205,14 @@ func truncateString(s string, maxLen int) string {
 // ExampleSearchPatterns demonstrates common search patterns
 func ExampleSearchPatterns() {
 	patterns := map[string]string{
-		"Find functions":           `{"pattern": "func \\w+", "file_types": ["go"]}`,
-		"Find TODO comments":       `{"pattern": "TODO|FIXME|XXX", "case_sensitive": true}`,
-		"Find imports":             `{"pattern": "^import", "file_types": ["go", "js", "py"]}`,
-		"Find error handling":      `{"pattern": "if.*err.*!=.*nil", "file_types": ["go"]}`,
-		"Find struct definitions":  `{"pattern": "type.*struct", "file_types": ["go"], "whole_word": true}`,
-		"Find JSON files":          `{"pattern": "\\{.*\\}", "file_types": ["json"]}`,
-		"Find configuration":       `{"pattern": "config|Config", "file_types": ["go", "yaml", "json"]}`,
-		"Find test functions":      `{"pattern": "func Test", "file_types": ["go"], "path": "./test"}`,
+		"Find functions":          `{"pattern": "func \\w+", "file_types": ["go"]}`,
+		"Find TODO comments":      `{"pattern": "TODO|FIXME|XXX", "case_sensitive": true}`,
+		"Find imports":            `{"pattern": "^import", "file_types": ["go", "js", "py"]}`,
+		"Find error handling":     `{"pattern": "if.*err.*!=.*nil", "file_types": ["go"]}`,
+		"Find struct definitions": `{"pattern": "type.*struct", "file_types": ["go"], "whole_word": true}`,
+		"Find JSON files":         `{"pattern": "\\{.*\\}", "file_types": ["json"]}`,
+		"Find configuration":      `{"pattern": "config|Config", "file_types": ["go", "yaml", "json"]}`,
+		"Find test functions":     `{"pattern": "func Test", "file_types": ["go"], "path": "./test"}`,
 	}
 
 	fmt.Println("Common ag search patterns:")

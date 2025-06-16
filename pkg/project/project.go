@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // Package project provides project-local Guild management functionality.
 // It handles detection, initialization, and context management for Guild projects.
 package project
@@ -30,12 +33,12 @@ var (
 // Context represents a Guild project's context with paths and configuration.
 // It is immutable after creation to ensure thread safety.
 type Context struct {
-	rootPath       string // Project root (where .guild exists)
-	guildPath      string // .guild directory
-	corpusPath     string // .guild/corpus
-	embeddingsPath string // .guild/embeddings
-	configPath     string // .guild/config.yaml
-	agentsPath     string // .guild/agents
+	rootPath        string // Project root (where .guild exists)
+	guildPath       string // .guild directory
+	corpusPath      string // .guild/corpus
+	embeddingsPath  string // .guild/embeddings
+	configPath      string // .guild/config.yaml
+	agentsPath      string // .guild/agents
 	commissionsPath string // .guild/commissions
 }
 
@@ -51,12 +54,12 @@ func NewContext(rootPath string) (*Context, error) {
 	guildPath := filepath.Join(abs, ".guild")
 
 	return &Context{
-		rootPath:       abs,
-		guildPath:      guildPath,
-		corpusPath:     filepath.Join(guildPath, "corpus"),
-		embeddingsPath: filepath.Join(guildPath, "embeddings"),
-		configPath:     filepath.Join(guildPath, "config.yaml"),
-		agentsPath:     filepath.Join(guildPath, "agents"),
+		rootPath:        abs,
+		guildPath:       guildPath,
+		corpusPath:      filepath.Join(guildPath, "corpus"),
+		embeddingsPath:  filepath.Join(guildPath, "embeddings"),
+		configPath:      filepath.Join(guildPath, "config.yaml"),
+		agentsPath:      filepath.Join(guildPath, "agents"),
 		commissionsPath: filepath.Join(guildPath, "commissions"),
 	}, nil
 }

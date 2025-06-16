@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package main
 
 import (
@@ -175,19 +178,19 @@ func runInit(cmd *cobra.Command, args []string) error {
 
 	fmt.Println("   1. Start chatting with AI agents:")
 	fmt.Println("      guild chat")
-	
+
 	if len(docFiles) > 0 {
 		fmt.Println("   2. Index your project documentation:")
 		fmt.Println("      guild corpus scan")
 	}
-	
+
 	fmt.Println("   3. View available agents:")
 	fmt.Println("      guild agent list")
 	fmt.Println("   4. Check your configuration:")
 	fmt.Println("      guild config show")
 	fmt.Println("   5. See all available commands:")
 	fmt.Println("      guild --help")
-	
+
 	fmt.Println("\n📚 Coming Soon:")
 	fmt.Printf("   • guild commission \"Implement %s feature\" - Create AI-powered work items\n", getExampleFeature(projectType))
 	fmt.Println("   • guild kanban view - Interactive task board")

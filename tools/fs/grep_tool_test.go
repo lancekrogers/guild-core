@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package fs
 
 import (
@@ -53,7 +56,7 @@ func TestCraftGrepTool(t *testing.T) {
 			// Check schema structure
 			schema := tool.Schema()
 			assert.Equal(t, "object", schema["type"])
-			
+
 			props, ok := schema["properties"].(map[string]interface{})
 			require.True(t, ok)
 			assert.Contains(t, props, "pattern")
@@ -71,7 +74,7 @@ func TestCraftGrepTool(t *testing.T) {
 func TestJourneymanGrepExecution(t *testing.T) {
 	// Create test directory structure
 	testDir := t.TempDir()
-	
+
 	// Create test files with various content
 	testFiles := map[string]struct {
 		content string
@@ -131,8 +134,8 @@ func TestJourneymanGrepExecution(t *testing.T) {
 		validateFiles func(t *testing.T, files []GrepMatch)
 	}{
 		{
-			name: "search for TODO comments",
-			input: `{"pattern": "TODO"}`,
+			name:        "search for TODO comments",
+			input:       `{"pattern": "TODO"}`,
 			expectError: false,
 			expectCount: 3,
 			validateFiles: func(t *testing.T, files []GrepMatch) {
@@ -147,8 +150,8 @@ func TestJourneymanGrepExecution(t *testing.T) {
 			},
 		},
 		{
-			name: "search with regex pattern",
-			input: `{"pattern": "function\\s+\\w+"}`,
+			name:        "search with regex pattern",
+			input:       `{"pattern": "function\\s+\\w+"}`,
 			expectError: false,
 			expectCount: 2,
 			validateFiles: func(t *testing.T, files []GrepMatch) {
@@ -162,8 +165,8 @@ func TestJourneymanGrepExecution(t *testing.T) {
 			},
 		},
 		{
-			name: "search with file include pattern",
-			input: `{"pattern": "import", "include": "*.ts"}`,
+			name:        "search with file include pattern",
+			input:       `{"pattern": "import", "include": "*.ts"}`,
 			expectError: false,
 			expectCount: 1,
 			validateFiles: func(t *testing.T, files []GrepMatch) {
@@ -173,8 +176,8 @@ func TestJourneymanGrepExecution(t *testing.T) {
 			},
 		},
 		{
-			name: "search with brace expansion",
-			input: `{"pattern": "function|class", "include": "*.{js,ts}"}`,
+			name:        "search with brace expansion",
+			input:       `{"pattern": "function|class", "include": "*.{js,ts}"}`,
 			expectError: false,
 			expectCount: 3,
 			validateFiles: func(t *testing.T, files []GrepMatch) {
@@ -182,14 +185,14 @@ func TestJourneymanGrepExecution(t *testing.T) {
 				for _, f := range files {
 					paths[f.RelativePath] = true
 				}
-				assert.True(t, paths["code.js"])        // has function
-				assert.True(t, paths["src/utils.ts"])    // has function
-				assert.True(t, paths["src/app.ts"])      // has class
+				assert.True(t, paths["code.js"])      // has function
+				assert.True(t, paths["src/utils.ts"]) // has function
+				assert.True(t, paths["src/app.ts"])   // has class
 			},
 		},
 		{
-			name: "search in subdirectory",
-			input: `{"pattern": "Test", "path": "./test"}`,
+			name:        "search in subdirectory",
+			input:       `{"pattern": "Test", "path": "./test"}`,
 			expectError: false,
 			expectCount: 1,
 			validateFiles: func(t *testing.T, files []GrepMatch) {
@@ -197,34 +200,34 @@ func TestJourneymanGrepExecution(t *testing.T) {
 			},
 		},
 		{
-			name: "search with no matches",
-			input: `{"pattern": "NOTFOUND"}`,
+			name:        "search with no matches",
+			input:       `{"pattern": "NOTFOUND"}`,
 			expectError: false,
 			expectCount: 0,
 		},
 		{
-			name: "invalid regex pattern",
-			input: `{"pattern": "[invalid(regex"}`,
+			name:        "invalid regex pattern",
+			input:       `{"pattern": "[invalid(regex"}`,
 			expectError: true,
 		},
 		{
-			name: "empty pattern",
-			input: `{"pattern": ""}`,
+			name:        "empty pattern",
+			input:       `{"pattern": ""}`,
 			expectError: true,
 		},
 		{
-			name: "invalid JSON input",
-			input: `{invalid json}`,
+			name:        "invalid JSON input",
+			input:       `{invalid json}`,
 			expectError: true,
 		},
 		{
-			name: "path escape attempt",
-			input: `{"pattern": "test", "path": "../../../etc"}`,
+			name:        "path escape attempt",
+			input:       `{"pattern": "test", "path": "../../../etc"}`,
 			expectError: true,
 		},
 		{
-			name: "non-existent directory",
-			input: `{"pattern": "test", "path": "./nonexistent"}`,
+			name:        "non-existent directory",
+			input:       `{"pattern": "test", "path": "./nonexistent"}`,
 			expectError: true,
 		},
 	}
@@ -269,17 +272,17 @@ func TestGuildGrepBinaryExclusion(t *testing.T) {
 
 	// Create various binary files
 	binaryFiles := map[string][]byte{
-		"image.jpg":    {0xFF, 0xD8, 0xFF, 0xE0}, // JPEG header
-		"program.exe":  {0x4D, 0x5A, 0x90, 0x00}, // PE header
-		"data.bin":     {0x00, 0x01, 0x02, 0x03, 0x00, 0x00}, // Null bytes
-		"archive.zip":  {0x50, 0x4B, 0x03, 0x04}, // ZIP header
+		"image.jpg":   {0xFF, 0xD8, 0xFF, 0xE0},             // JPEG header
+		"program.exe": {0x4D, 0x5A, 0x90, 0x00},             // PE header
+		"data.bin":    {0x00, 0x01, 0x02, 0x03, 0x00, 0x00}, // Null bytes
+		"archive.zip": {0x50, 0x4B, 0x03, 0x04},             // ZIP header
 	}
 
 	// Create text files that should be searched
 	textFiles := map[string]string{
-		"readme.txt":   "This is a TODO item",
-		"script.sh":    "#!/bin/bash\n# TODO: implement",
-		"config.yaml":  "# TODO: configure\nkey: value",
+		"readme.txt":  "This is a TODO item",
+		"script.sh":   "#!/bin/bash\n# TODO: implement",
+		"config.yaml": "# TODO: configure\nkey: value",
 	}
 
 	// Create binary files
@@ -310,7 +313,7 @@ func TestGuildGrepBinaryExclusion(t *testing.T) {
 
 	// Should only find matches in text files
 	assert.Equal(t, len(textFiles), grepResult.Count)
-	
+
 	// Verify only text files are in results
 	for _, match := range grepResult.Files {
 		_, isText := textFiles[match.RelativePath]
@@ -367,7 +370,7 @@ func TestCraftGrepContextCancellation(t *testing.T) {
 	}
 
 	tool := NewGrepTool(testDir)
-	
+
 	// Create a context that we'll cancel immediately
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately
@@ -408,7 +411,7 @@ func TestJourneymanGrepEdgeCases(t *testing.T) {
 
 	// Should find matches in all files except empty.txt
 	assert.Equal(t, len(edgeCases)-1, grepResult.Count)
-	
+
 	// Verify empty file is not in results
 	for _, match := range grepResult.Files {
 		assert.NotEqual(t, "empty.txt", match.RelativePath)
@@ -418,7 +421,7 @@ func TestJourneymanGrepEdgeCases(t *testing.T) {
 // TestGuildGrepMetadata tests the metadata returned by grep
 func TestGuildGrepMetadata(t *testing.T) {
 	testDir := t.TempDir()
-	
+
 	// Create a simple test file
 	err := os.WriteFile(filepath.Join(testDir, "test.txt"), []byte("TODO: test"), 0644)
 	require.NoError(t, err)

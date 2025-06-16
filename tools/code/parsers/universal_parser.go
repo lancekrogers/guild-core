@@ -1,6 +1,11 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package parsers
 
 import (
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/tools/code"
 	sitter "github.com/smacker/go-tree-sitter"
 	"github.com/smacker/go-tree-sitter/bash"
 	"github.com/smacker/go-tree-sitter/c"
@@ -33,8 +38,6 @@ import (
 	"github.com/smacker/go-tree-sitter/toml"
 	"github.com/smacker/go-tree-sitter/typescript/typescript"
 	"github.com/smacker/go-tree-sitter/yaml"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/tools/code"
 )
 
 // languageGrammars maps language types to their tree-sitter grammars
@@ -116,7 +119,7 @@ type UniversalParser struct {
 func NewUniversalParser(language code.Language) (*UniversalParser, error) {
 	grammar, ok := languageGrammars[language]
 	if !ok {
-		return nil, gerror.New(gerror.ErrCodeInvalidInput, 
+		return nil, gerror.New(gerror.ErrCodeInvalidInput,
 			"unsupported language: "+string(language), nil).
 			WithComponent("universal_parser").
 			WithOperation("new_parser")
@@ -178,7 +181,7 @@ func (p *UniversalParser) GetFunctions(result *code.ParseResult) ([]*code.Functi
 	}
 
 	var functions []*code.Function
-	
+
 	// Define queries based on language
 	var queryString string
 	switch p.language {
@@ -335,7 +338,9 @@ func (p *UniversalParser) GetClasses(result *code.ParseResult) ([]*code.Class, e
 }
 
 // RegisterAllParsers registers parsers for all supported languages with an AST tool
-func RegisterAllParsers(astTool interface{ RegisterParser(code.Language, code.Parser) }) error {
+func RegisterAllParsers(astTool interface {
+	RegisterParser(code.Language, code.Parser)
+}) error {
 	for language := range languageGrammars {
 		parser, err := CreateParser(language)
 		if err != nil {

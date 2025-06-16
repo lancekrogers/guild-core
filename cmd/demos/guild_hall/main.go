@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package main
 
 import (
@@ -78,10 +81,10 @@ func (i item) Description() string { return i.description }
 // GuildHall is our main UI model
 type GuildHall struct {
 	commissions list.Model
-	details    viewport.Model
-	selected   string
-	width      int
-	height     int
+	details     viewport.Model
+	selected    string
+	width       int
+	height      int
 }
 
 // createDemoItems creates some demo items with Guild theme
@@ -132,8 +135,8 @@ func Initialize() *GuildHall {
 
 	return &GuildHall{
 		commissions: l,
-		details:    d,
-		selected:   "",
+		details:     d,
+		selected:    "",
 	}
 }
 

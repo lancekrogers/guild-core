@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // Package project implements Guild's dual-directory architecture for the registry pattern.
 //
 // Guild uses a sophisticated initialization system that separates:

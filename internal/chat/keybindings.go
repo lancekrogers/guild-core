@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package chat
 
 import (
@@ -311,24 +314,24 @@ func (ka *KeybindingAdapter) formatSingleKey(key string) string {
 		key = strings.ReplaceAll(key, "tab", "Tab")
 		key = strings.ReplaceAll(key, "enter", "Enter")
 		key = strings.ReplaceAll(key, "space", "Space")
-		
+
 		// Replace modifiers with macOS symbols
 		key = strings.ReplaceAll(key, "ctrl+", "⌃")
 		key = strings.ReplaceAll(key, "alt+", "⌥")
 		key = strings.ReplaceAll(key, "cmd+", "⌘")
 		key = strings.ReplaceAll(key, "shift+", "⇧")
-		
+
 		// Work with runes to handle Unicode properly
 		runes := []rune(key)
 		lastSymbolRuneIndex := -1
-		
+
 		// Find the last modifier symbol
 		for i, r := range runes {
 			if r == '⌃' || r == '⌥' || r == '⌘' || r == '⇧' {
 				lastSymbolRuneIndex = i
 			}
 		}
-		
+
 		if lastSymbolRuneIndex >= 0 && lastSymbolRuneIndex < len(runes)-1 {
 			// Capitalize the part after the last symbol
 			afterSymbol := string(runes[lastSymbolRuneIndex+1:])
@@ -344,13 +347,13 @@ func (ka *KeybindingAdapter) formatSingleKey(key string) string {
 		key = strings.ReplaceAll(key, "ctrl+", "Ctrl+")
 		key = strings.ReplaceAll(key, "alt+", "Alt+")
 		key = strings.ReplaceAll(key, "shift+", "Shift+")
-		
+
 		// Handle special keys first (before capitalization)
 		key = strings.ReplaceAll(key, "esc", "Esc")
 		key = strings.ReplaceAll(key, "tab", "Tab")
 		key = strings.ReplaceAll(key, "enter", "Enter")
 		key = strings.ReplaceAll(key, "space", "Space")
-		
+
 		// Capitalize the key part
 		parts := strings.Split(key, "+")
 		if len(parts) > 1 {
@@ -364,7 +367,7 @@ func (ka *KeybindingAdapter) formatSingleKey(key string) string {
 			key = strings.ToUpper(key)
 		}
 	}
-	
+
 	return key
 }
 
@@ -372,6 +375,6 @@ func (ka *KeybindingAdapter) formatSingleKey(key string) string {
 func (ka *KeybindingAdapter) GetPlatformHelpText() string {
 	platform := ka.platform.String()
 	modifier := ka.platform.GetModifierDisplay()
-	
+
 	return fmt.Sprintf("Platform: %s | Primary Modifier: %s", platform, modifier)
 }

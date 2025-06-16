@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package main
 
 import (
@@ -34,7 +37,7 @@ func TestCompletionFunctions(t *testing.T) {
 			toComplete:  "camp",
 			expectError: false,
 			checkResults: func(t *testing.T, suggestions []string, directive cobra.ShellCompDirective) {
-				// Without project context or with registry init failure, 
+				// Without project context or with registry init failure,
 				// it falls back to filesystem which returns NoFileComp
 				// Both ShellCompDirectiveError and ShellCompDirectiveNoFileComp are acceptable
 				acceptableDirectives := []cobra.ShellCompDirective{
@@ -74,7 +77,7 @@ func TestCompletionFunctions(t *testing.T) {
 	for _, tt := range fullTests {
 		t.Run(tt.name, func(t *testing.T) {
 			suggestions, directive := tt.function(nil, nil, tt.toComplete)
-			
+
 			if tt.expectError {
 				assert.Equal(t, cobra.ShellCompDirectiveError, directive)
 			} else if tt.checkResults != nil {
@@ -136,7 +139,7 @@ func TestCompletionCommandValidArgs(t *testing.T) {
 			break
 		}
 	}
-	
+
 	assert.NotNil(t, completionCmd)
 	assert.Equal(t, []string{"bash", "zsh", "fish", "powershell"}, completionCmd.ValidArgs)
 }

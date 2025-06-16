@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package claudecode
 
 import (
@@ -5,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/claude-code-go/pkg/claude"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/claude-code-go/pkg/claude"
 )
 
 func TestNewClient(t *testing.T) {

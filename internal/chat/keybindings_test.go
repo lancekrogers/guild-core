@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package chat
 
 import (
@@ -182,13 +185,13 @@ func TestFormatKeyBinding(t *testing.T) {
 func TestBackwardsCompatibility(t *testing.T) {
 	// Test that the deprecated newChatKeyMap still works
 	keyMap := newChatKeyMap()
-	
+
 	// Should return a valid keymap
 	assert.NotNil(t, keyMap)
 	assert.NotNil(t, keyMap.Submit)
 	assert.NotNil(t, keyMap.Quit)
 	assert.NotEmpty(t, keyMap.Submit.Keys())
-	
+
 	// Should use platform-specific bindings
 	platform := DetectPlatform()
 	if platform.IsMacOS() {

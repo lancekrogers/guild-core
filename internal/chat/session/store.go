@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package session
 
 import (
@@ -29,7 +32,7 @@ func (s *sqliteStore) CreateSession(ctx context.Context, session *Session) error
 	if session.ID == "" {
 		session.ID = uuid.New().String()
 	}
-	
+
 	if session.CreatedAt.IsZero() {
 		session.CreatedAt = time.Now()
 	}
@@ -171,7 +174,7 @@ func (s *sqliteStore) SaveMessage(ctx context.Context, message *Message) error {
 	if message.ID == "" {
 		message.ID = uuid.New().String()
 	}
-	
+
 	if message.CreatedAt.IsZero() {
 		message.CreatedAt = time.Now()
 	}
@@ -315,7 +318,7 @@ func (s *sqliteStore) SearchMessages(ctx context.Context, query string, limit, o
 			ToolCalls: row.ToolCalls,
 			Metadata:  row.Metadata,
 		})
-		
+
 		results[i] = &MessageSearchResult{
 			Message:     message,
 			SessionName: row.SessionName,
@@ -331,7 +334,7 @@ func (s *sqliteStore) CreateBookmark(ctx context.Context, bookmark *Bookmark) er
 	if bookmark.ID == "" {
 		bookmark.ID = uuid.New().String()
 	}
-	
+
 	if bookmark.CreatedAt.IsZero() {
 		bookmark.CreatedAt = time.Now()
 	}
@@ -378,7 +381,7 @@ func (s *sqliteStore) GetBookmarks(ctx context.Context, sessionID string) ([]*Bo
 			Name:      row.Name,
 			CreatedAt: row.CreatedAt,
 		})
-		
+
 		bookmarks[i] = &BookmarkWithDetails{
 			Bookmark:       bookmark,
 			MessageContent: row.MessageContent,

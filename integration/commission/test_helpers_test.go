@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 //go:build integration
 
 package commission_test
@@ -167,7 +170,7 @@ func (a *testCampaignRepoAdapter) ListCampaigns(ctx context.Context) ([]*registr
 	if err != nil {
 		return nil, err
 	}
-	
+
 	campaigns := make([]*registry.Campaign, len(storageCampaigns))
 	for i, sc := range storageCampaigns {
 		campaigns[i] = &registry.Campaign{
@@ -229,7 +232,7 @@ func (a *testCommissionRepoAdapter) ListCommissionsByCampaign(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
-	
+
 	commissions := make([]*registry.Commission, len(storageCommissions))
 	for i, sc := range storageCommissions {
 		commissions[i] = &registry.Commission{
@@ -307,7 +310,7 @@ func (a *testAgentRepoAdapter) ListAgents(ctx context.Context) ([]*registry.Stor
 	if err != nil {
 		return nil, err
 	}
-	
+
 	agents := make([]*registry.StorageAgent, len(storageAgents))
 	for i, sa := range storageAgents {
 		agents[i] = &registry.StorageAgent{
@@ -330,7 +333,7 @@ func (a *testAgentRepoAdapter) ListAgentsByType(ctx context.Context, agentType s
 	if err != nil {
 		return nil, err
 	}
-	
+
 	agents := make([]*registry.StorageAgent, len(storageAgents))
 	for i, sa := range storageAgents {
 		agents[i] = &registry.StorageAgent{
@@ -436,7 +439,7 @@ func (w *testKanbanTaskRepoWrapper) ListTasksByBoard(ctx context.Context, boardI
 	if err != nil {
 		return nil, err
 	}
-	
+
 	result := make([]interface{}, len(tasks))
 	for i, task := range tasks {
 		result[i] = task
@@ -483,7 +486,7 @@ func (w *testKanbanBoardRepoWrapper) ListBoards(ctx context.Context) ([]interfac
 	if err != nil {
 		return nil, err
 	}
-	
+
 	result := make([]interface{}, len(boards))
 	for i, board := range boards {
 		result[i] = board

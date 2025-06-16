@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package main
 
 import (
@@ -6,9 +9,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/spf13/cobra"
 	"github.com/guild-ventures/guild-core/internal/daemon"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/spf13/cobra"
 )
 
 var statusCmd = &cobra.Command{
@@ -37,16 +40,16 @@ func runStatus(cmd *cobra.Command, args []string) error {
 	// Check if running
 	if daemon.IsRunning() {
 		fmt.Printf("  Status: %sRunning%s\n", "\033[32m", "\033[0m") // Green
-		
+
 		// Read PID
 		pidFile := daemon.GetPIDFilePath()
 		if data, err := os.ReadFile(pidFile); err == nil {
 			fmt.Printf("  PID: %s\n", string(data))
 		}
-		
+
 		fmt.Printf("  Port: 9090\n")
 		fmt.Printf("  Logs: %s\n", daemon.GetLogFilePath())
-		
+
 		// Check if reachable
 		ctx := cmd.Context()
 		if ctx == nil {
@@ -59,12 +62,12 @@ func runStatus(cmd *cobra.Command, args []string) error {
 		}
 	} else {
 		fmt.Printf("  Status: %sStopped%s\n", "\033[31m", "\033[0m") // Red
-		
+
 		// Check for stale PID file
 		if _, err := os.Stat(daemon.GetPIDFilePath()); err == nil {
 			fmt.Printf("  Note: Stale PID file detected, will be cleaned on next start\n")
 		}
-		
+
 		fmt.Println("\n💡 Start the server with any of these methods:")
 		fmt.Println("   • Run any Guild command (e.g., 'guild chat')")
 		fmt.Println("   • Start manually: 'guild serve'")

@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package main
 
 import (
@@ -6,8 +9,8 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/spf13/cobra"
 	"github.com/guild-ventures/guild-core/internal/daemon"
+	"github.com/spf13/cobra"
 )
 
 var stopCmd = &cobra.Command{
@@ -105,11 +108,11 @@ func findGuildProcesses() ([]guildProcess, error) {
 			// Look for guild processes but skip our own stop command
 			if strings.Contains(line, "guild") && !strings.Contains(line, "guild stop") {
 				// Check if it's actually a guild command (serve, chat, etc.)
-				if strings.Contains(line, "guild serve") || 
-				   strings.Contains(line, "guild chat") ||
-				   strings.Contains(line, "./guild serve") ||
-				   strings.Contains(line, "./guild chat") ||
-				   strings.Contains(line, "bin/guild") {
+				if strings.Contains(line, "guild serve") ||
+					strings.Contains(line, "guild chat") ||
+					strings.Contains(line, "./guild serve") ||
+					strings.Contains(line, "./guild chat") ||
+					strings.Contains(line, "bin/guild") {
 					fields := strings.Fields(line)
 					if len(fields) >= 2 {
 						// Extract full command for display

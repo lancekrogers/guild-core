@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package chat
 
 import (
@@ -12,10 +15,10 @@ import (
 
 func TestPlatformDetection(t *testing.T) {
 	platform := DetectPlatform()
-	
+
 	// Verify we get a valid platform
 	assert.NotEqual(t, PlatformUnknown, platform, "Platform should be detected")
-	
+
 	// Verify platform matches runtime.GOOS
 	switch runtime.GOOS {
 	case "darwin":
@@ -38,31 +41,31 @@ func TestPlatformDetection(t *testing.T) {
 
 func TestPlatformModifierKeys(t *testing.T) {
 	tests := []struct {
-		platform        Platform
-		expectedPrimary string
-		expectedDisplay string
-		expectedSecondary string
+		platform           Platform
+		expectedPrimary    string
+		expectedDisplay    string
+		expectedSecondary  string
 		expectedSecDisplay string
 	}{
 		{
-			platform:        PlatformMacOS,
-			expectedPrimary: "alt",
-			expectedDisplay: "⌥",
-			expectedSecondary: "cmd",
+			platform:           PlatformMacOS,
+			expectedPrimary:    "alt",
+			expectedDisplay:    "⌥",
+			expectedSecondary:  "cmd",
 			expectedSecDisplay: "⌘",
 		},
 		{
-			platform:        PlatformLinux,
-			expectedPrimary: "ctrl",
-			expectedDisplay: "Ctrl",
-			expectedSecondary: "alt",
+			platform:           PlatformLinux,
+			expectedPrimary:    "ctrl",
+			expectedDisplay:    "Ctrl",
+			expectedSecondary:  "alt",
 			expectedSecDisplay: "Alt",
 		},
 		{
-			platform:        PlatformWindows,
-			expectedPrimary: "ctrl",
-			expectedDisplay: "Ctrl",
-			expectedSecondary: "alt",
+			platform:           PlatformWindows,
+			expectedPrimary:    "ctrl",
+			expectedDisplay:    "Ctrl",
+			expectedSecondary:  "alt",
 			expectedSecDisplay: "Alt",
 		},
 	}
@@ -82,14 +85,14 @@ func TestKeybindingAdapter(t *testing.T) {
 	t.Run("macOS keybindings", func(t *testing.T) {
 		adapter := NewKeybindingAdapterForPlatform(PlatformMacOS)
 		keyMap := adapter.GetChatKeyMap()
-		
+
 		// Check that Alt/Option is used as primary modifier
 		assert.Contains(t, keyMap.Quit.Keys(), "alt+q")
 		assert.Contains(t, keyMap.Help.Keys(), "alt+h")
 		assert.Contains(t, keyMap.Prompt.Keys(), "alt+p")
 		assert.Contains(t, keyMap.Copy.Keys(), "alt+c")
 		assert.Contains(t, keyMap.Paste.Keys(), "alt+v")
-		
+
 		// Check help text uses macOS symbols
 		assert.Contains(t, keyMap.Quit.Help().Key, "⌥")
 		assert.Contains(t, keyMap.NewLine.Help().Key, "⌥")
@@ -99,12 +102,12 @@ func TestKeybindingAdapter(t *testing.T) {
 	t.Run("Linux keybindings", func(t *testing.T) {
 		adapter := NewKeybindingAdapterForPlatform(PlatformLinux)
 		keyMap := adapter.GetChatKeyMap()
-		
+
 		// Check that Ctrl is used as primary modifier
 		assert.Contains(t, keyMap.Quit.Keys(), "ctrl+q")
 		assert.Contains(t, keyMap.Help.Keys(), "ctrl+h")
 		assert.Contains(t, keyMap.Prompt.Keys(), "ctrl+p")
-		
+
 		// Check help text uses standard notation
 		assert.Contains(t, keyMap.Quit.Help().Key, "Ctrl")
 		assert.NotContains(t, keyMap.Help.Help().Key, "⌥")
@@ -156,13 +159,13 @@ func TestKeybindingFormatting(t *testing.T) {
 func TestPlatformHelpText(t *testing.T) {
 	adapter := NewKeybindingAdapter()
 	helpText := adapter.GetPlatformHelpText()
-	
+
 	// Should contain platform name
 	assert.Contains(t, helpText, "Platform:")
-	
+
 	// Should contain modifier key info
 	assert.Contains(t, helpText, "Primary Modifier:")
-	
+
 	// Should not be empty
 	assert.NotEmpty(t, helpText)
 }
@@ -177,13 +180,13 @@ func TestChatModelWithPlatformKeybindings(t *testing.T) {
 		},
 		Agents: []config.AgentConfig{},
 	}
-	
+
 	// Create chat model
 	model := NewChatModel(cfg, nil, nil, "test-campaign")
-	
+
 	// Verify keybinding adapter is initialized
 	require.NotNil(t, model.keyAdapter)
-	
+
 	// Verify keys are set based on platform
 	platform := DetectPlatform()
 	if platform.IsMacOS() {
@@ -191,7 +194,7 @@ func TestChatModelWithPlatformKeybindings(t *testing.T) {
 	} else {
 		assert.Contains(t, model.keys.Quit.Keys(), "ctrl+q")
 	}
-	
+
 	// Test help text includes platform info
 	helpText := model.getHelpText()
 	assert.Contains(t, helpText, "Platform:")
@@ -221,7 +224,7 @@ func TestNewLineKeybinding(t *testing.T) {
 		t.Run(tt.platform.String(), func(t *testing.T) {
 			adapter := NewKeybindingAdapterForPlatform(tt.platform)
 			keyMap := adapter.GetChatKeyMap()
-			
+
 			keys := keyMap.NewLine.Keys()
 			for _, expectedKey := range tt.expected {
 				assert.Contains(t, keys, expectedKey, "NewLine should contain %s on %s", expectedKey, tt.platform)

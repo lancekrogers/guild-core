@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // Package rag implements Retrieval-Augmented Generation for the Guild framework.
 // The retriever component is responsible for finding relevant context from the
 // vector store and corpus to enhance LLM prompts with appropriate information.

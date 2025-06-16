@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // Package corpus provides functionality for storing and organizing research findings,
 // summaries, and generated insights in a structured, human-navigable format.
 package corpus

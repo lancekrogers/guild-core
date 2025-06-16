@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 //go:build ignore
 // +build ignore
 
@@ -8,8 +11,6 @@ import (
 	"log"
 	"strings"
 	"time"
-
-	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // Demo script to showcase rich content rendering

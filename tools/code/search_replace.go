@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package code
 
 import (
@@ -276,7 +279,7 @@ func (t *SearchReplaceTool) performSearch(ctx context.Context, params SearchRepl
 
 		if len(matches) > 0 {
 			filesWithMatches++
-			
+
 			// Limit matches to respect MaxResults
 			remainingSlots := params.MaxResults - matchCount
 			if remainingSlots > 0 {

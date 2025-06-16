@@ -1,3 +1,7 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
+//go:build integration
 // +build integration
 
 package rag_test
@@ -472,8 +476,8 @@ func TestRAGErrorHandling(t *testing.T) {
 
 		// Create RAG with invalid config
 		ragSystem := rag.NewRetrieverWithStore(vectorStore, rag.Config{
-			ChunkSize:    -1,    // Invalid
-			ChunkOverlap: 1000,  // Larger than chunk size
+			ChunkSize:    -1,   // Invalid
+			ChunkOverlap: 1000, // Larger than chunk size
 		})
 
 		// Should handle gracefully

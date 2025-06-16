@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package web
 
 import (
@@ -207,8 +210,8 @@ func (t *WebSearchTool) Execute(ctx context.Context, input string) (*tools.ToolR
 	}
 
 	metadata := map[string]string{
-		"engine":      response.Engine,
-		"query":       response.Query,
+		"engine":       response.Engine,
+		"query":        response.Query,
 		"result_count": fmt.Sprintf("%d", len(response.Results)),
 		"search_time":  fmt.Sprintf("%.2fms", response.SearchTime),
 	}
@@ -446,7 +449,7 @@ func (t *WebSearchTool) applyDomainFiltering(response *WebSearchResponse, allowe
 
 	for _, result := range response.Results {
 		domain := result.Domain
-		
+
 		// Check blocked domains first
 		if len(blockedDomains) > 0 {
 			blocked := false
@@ -489,7 +492,7 @@ func (t *WebSearchTool) applyDomainFiltering(response *WebSearchResponse, allowe
 func extractTitle(text string) string {
 	// Trim whitespace first
 	text = strings.TrimSpace(text)
-	
+
 	if len(text) == 0 {
 		return "Untitled"
 	}

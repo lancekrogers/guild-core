@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package executor
 
 import (
@@ -1100,7 +1103,7 @@ func (e *BasicTaskExecutor) buildPromptData() execution.ExecutionPromptData {
 			StepNumber:             1,
 			TotalSteps:             4,
 			StepName:               "Current step",
-			StepCommission:          "Complete current phase",
+			StepCommission:         "Complete current phase",
 			ExpectedActions:        []string{},
 			SuccessIndicators:      []string{},
 			PotentialIssues:        []string{},

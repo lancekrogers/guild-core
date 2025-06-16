@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package code
 
 import (
@@ -22,7 +25,7 @@ const (
 	LanguageC          Language = "c"
 	LanguageRuby       Language = "ruby"
 	LanguagePhp        Language = "php"
-	
+
 	// Additional languages
 	LanguageBash       Language = "bash"
 	LanguageCSS        Language = "css"
@@ -44,8 +47,8 @@ const (
 	LanguageSwift      Language = "swift"
 	LanguageTOML       Language = "toml"
 	LanguageYAML       Language = "yaml"
-	
-	LanguageUnknown    Language = "unknown"
+
+	LanguageUnknown Language = "unknown"
 )
 
 // Parser defines the interface for language-specific parsers

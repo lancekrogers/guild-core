@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package registry
 
 import (
@@ -204,7 +207,7 @@ func TestCodeToolsJSON_Examples(t *testing.T) {
 		`{"pattern": "TODO", "files": ["*.go"]}`,                                                        // Search Replace
 		`{"diff": "--- a/file.go\n+++ b/file.go\n@@ -1,1 +1,1 @@\n-old\n+new"}`,                         // Apply Diff
 		`{"file": "main.go", "line": 10, "column": 5}`,                                                  // Cursor Position
-		`{"edits": [{"file": "main.go", "old_string": "old", "new_string": "new"}]}`,                   // Multi Edit
+		`{"edits": [{"file": "main.go", "old_string": "old", "new_string": "new"}]}`,                    // Multi Edit
 		`{"type": "rename", "target": {"file": "main.go", "symbol": "oldName"}, "new_name": "newName"}`, // Multi Refactor
 	}
 

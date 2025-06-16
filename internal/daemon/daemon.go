@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // Package daemon provides utilities for managing the Guild gRPC server as a background daemon
 package daemon
 
@@ -305,7 +308,7 @@ func isProcessRunning(pid int) bool {
 // CleanupStaleFiles removes any stale PID files or locks
 func CleanupStaleFiles() error {
 	pidFile := GetPIDFilePath()
-	
+
 	// Check if PID file exists
 	if !pidFileExists() {
 		return nil

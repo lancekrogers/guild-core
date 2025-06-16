@@ -1,3 +1,7 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
+//go:build example
 // +build example
 
 // This file shows example implementations of the methods that need to be added

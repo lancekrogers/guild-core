@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package fs
 
 import (
@@ -360,7 +363,7 @@ func (t *GrepTool) searchFile(path string, regex *regexp.Regexp) (int, error) {
 
 	matchCount := 0
 	scanner := bufio.NewScanner(file)
-	
+
 	// Set max buffer size to handle long lines
 	const maxCapacity = 1024 * 1024 // 1MB per line
 	buf := make([]byte, maxCapacity)
@@ -389,10 +392,10 @@ func (t *GrepTool) matchFilePattern(path, pattern string) (bool, error) {
 		prefix := pattern[:strings.Index(pattern, "{")]
 		suffix := pattern[strings.Index(pattern, "}")+1:]
 		braceContent := pattern[strings.Index(pattern, "{")+1 : strings.Index(pattern, "}")]
-		
+
 		// Split the brace content
 		extensions := strings.Split(braceContent, ",")
-		
+
 		// Try each extension
 		for _, ext := range extensions {
 			fullPattern := prefix + strings.TrimSpace(ext) + suffix
@@ -414,11 +417,11 @@ func (t *GrepTool) matchFilePattern(path, pattern string) (bool, error) {
 	if matched, err := filepath.Match(pattern, filepath.Base(path)); matched || err == nil && matched {
 		return matched, err
 	}
-	
+
 	// Also try matching against the full path if pattern contains directory separator
 	if strings.Contains(pattern, "/") {
 		return filepath.Match(pattern, path)
 	}
-	
+
 	return false, nil
 }

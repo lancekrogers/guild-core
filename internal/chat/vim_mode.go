@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package chat
 
 import (
@@ -506,7 +509,7 @@ func (m *ChatModel) moveWordForward(count int) {
 	text := m.input.Value()
 	lineInfo := m.input.LineInfo()
 	pos := lineInfo.ColumnOffset
-	
+
 	for i := 0; i < count; i++ {
 		// Find next word boundary
 		for pos < len(text) && text[pos] != ' ' && text[pos] != '\n' && text[pos] != '\t' {
@@ -517,7 +520,7 @@ func (m *ChatModel) moveWordForward(count int) {
 			pos++
 		}
 	}
-	
+
 	m.input.SetCursor(pos)
 }
 
@@ -526,7 +529,7 @@ func (m *ChatModel) moveWordBackward(count int) {
 	text := m.input.Value()
 	lineInfo := m.input.LineInfo()
 	pos := lineInfo.ColumnOffset
-	
+
 	for i := 0; i < count; i++ {
 		if pos > 0 {
 			pos--
@@ -544,7 +547,7 @@ func (m *ChatModel) moveWordBackward(count int) {
 			pos--
 		}
 	}
-	
+
 	m.input.SetCursor(pos)
 }
 
@@ -553,12 +556,12 @@ func (m *ChatModel) moveCursorLineStart() {
 	text := m.input.Value()
 	lineInfo := m.input.LineInfo()
 	pos := lineInfo.ColumnOffset
-	
+
 	// Find start of current line
 	for pos > 0 && text[pos-1] != '\n' {
 		pos--
 	}
-	
+
 	m.input.SetCursor(pos)
 }
 
@@ -567,12 +570,12 @@ func (m *ChatModel) moveCursorLineEnd() {
 	text := m.input.Value()
 	lineInfo := m.input.LineInfo()
 	pos := lineInfo.ColumnOffset
-	
+
 	// Find end of current line
 	for pos < len(text) && text[pos] != '\n' {
 		pos++
 	}
-	
+
 	m.input.SetCursor(pos)
 }
 
@@ -609,7 +612,7 @@ func (m *ChatModel) insertNewLine() {
 	currentValue := m.input.Value()
 	lineInfo := m.input.LineInfo()
 	cursorPos := lineInfo.ColumnOffset
-	
+
 	newValue := currentValue[:cursorPos] + "\n" + currentValue[cursorPos:]
 	m.input.SetValue(newValue)
 	m.input.SetCursor(cursorPos + 1)
@@ -672,7 +675,7 @@ func (m *ChatModel) searchForward(pattern string) tea.Cmd {
 				matches++
 			}
 		}
-		
+
 		responseMsg := Message{
 			Type:      msgSystem,
 			Content:   fmt.Sprintf("🔍 Forward search for '%s': found %d matches", pattern, matches),
@@ -692,7 +695,7 @@ func (m *ChatModel) searchBackward(pattern string) tea.Cmd {
 				matches++
 			}
 		}
-		
+
 		responseMsg := Message{
 			Type:      msgSystem,
 			Content:   fmt.Sprintf("🔍 Backward search for '%s': found %d matches", pattern, matches),

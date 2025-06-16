@@ -1,3 +1,7 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
+//go:build example
 // +build example
 
 // This file shows the additional protocol types that would need to be added
@@ -12,11 +16,11 @@ type WorkspaceSymbolParams struct {
 
 // SymbolInformation represents information about a symbol
 type SymbolInformation struct {
-	Name          string   `json:"name"`
+	Name          string     `json:"name"`
 	Kind          SymbolKind `json:"kind"`
-	Deprecated    bool     `json:"deprecated,omitempty"`
-	Location      Location `json:"location"`
-	ContainerName string   `json:"containerName,omitempty"`
+	Deprecated    bool       `json:"deprecated,omitempty"`
+	Location      Location   `json:"location"`
+	ContainerName string     `json:"containerName,omitempty"`
 }
 
 // CodeActionContext contains additional information about the context in which a code action is run
@@ -27,12 +31,12 @@ type CodeActionContext struct {
 
 // Diagnostic represents a diagnostic, such as a compiler error or warning
 type Diagnostic struct {
-	Range            Range              `json:"range"`
-	Severity         DiagnosticSeverity `json:"severity,omitempty"`
-	Code             interface{}        `json:"code,omitempty"`
-	Source           string             `json:"source,omitempty"`
-	Message          string             `json:"message"`
-	RelatedInfo      []DiagnosticRelatedInformation `json:"relatedInformation,omitempty"`
+	Range       Range                          `json:"range"`
+	Severity    DiagnosticSeverity             `json:"severity,omitempty"`
+	Code        interface{}                    `json:"code,omitempty"`
+	Source      string                         `json:"source,omitempty"`
+	Message     string                         `json:"message"`
+	RelatedInfo []DiagnosticRelatedInformation `json:"relatedInformation,omitempty"`
 }
 
 // DiagnosticSeverity represents the severity of a diagnostic
@@ -99,11 +103,11 @@ type DocumentFormattingParams struct {
 
 // FormattingOptions represents formatting options
 type FormattingOptions struct {
-	TabSize                int    `json:"tabSize"`
-	InsertSpaces           bool   `json:"insertSpaces"`
-	TrimTrailingWhitespace bool   `json:"trimTrailingWhitespace,omitempty"`
-	InsertFinalNewline     bool   `json:"insertFinalNewline,omitempty"`
-	TrimFinalNewlines      bool   `json:"trimFinalNewlines,omitempty"`
+	TabSize                int  `json:"tabSize"`
+	InsertSpaces           bool `json:"insertSpaces"`
+	TrimTrailingWhitespace bool `json:"trimTrailingWhitespace,omitempty"`
+	InsertFinalNewline     bool `json:"insertFinalNewline,omitempty"`
+	TrimFinalNewlines      bool `json:"trimFinalNewlines,omitempty"`
 }
 
 // Common SymbolKind values

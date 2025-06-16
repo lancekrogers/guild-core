@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package main
 
 import (
@@ -86,7 +89,7 @@ func init() {
 	configShowCmd.Flags().BoolP("global", "g", false, "Show only global configuration")
 	configShowCmd.Flags().BoolP("local", "l", false, "Show only local configuration")
 	configShowCmd.Flags().BoolP("raw", "r", false, "Show raw YAML without formatting")
-	
+
 	configValidateCmd.Flags().BoolP("fix", "f", false, "Attempt to fix common issues")
 
 	// Register subcommands
@@ -96,7 +99,7 @@ func init() {
 	configCmd.AddCommand(configEditCmd)
 	configCmd.AddCommand(configProvidersCmd)
 	configCmd.AddCommand(configAgentsCmd)
-	
+
 	// Register config command
 	rootCmd.AddCommand(configCmd)
 }
@@ -157,7 +160,7 @@ func showMergedConfig(raw bool) error {
 func showGlobalConfig(raw bool) error {
 	globalDir := global.GlobalGuildDir()
 	configPath := filepath.Join(globalDir, "config.yaml")
-	
+
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		fmt.Println("No global configuration found at:", configPath)
 		fmt.Println("Run 'guild init --global' to create one.")
@@ -180,7 +183,7 @@ func showGlobalConfig(raw bool) error {
 				WithComponent("config").
 				WithOperation("show")
 		}
-		
+
 		fmt.Println("🌍 Global Configuration")
 		fmt.Println("═════════════════════")
 		fmt.Printf("Path: %s\n\n", configPath)
@@ -193,7 +196,7 @@ func showGlobalConfig(raw bool) error {
 // showLocalConfig displays only the local project configuration
 func showLocalConfig(raw bool) error {
 	configPath := filepath.Join(".guild", "guild.yaml")
-	
+
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		fmt.Println("No local configuration found at:", configPath)
 		fmt.Println("Run 'guild init' in your project directory to create one.")
@@ -216,7 +219,7 @@ func showLocalConfig(raw bool) error {
 				WithComponent("config").
 				WithOperation("show")
 		}
-		
+
 		fmt.Println("📁 Local Configuration")
 		fmt.Println("════════════════════")
 		fmt.Printf("Path: %s\n\n", configPath)
@@ -233,7 +236,7 @@ func displayFormattedConfig(cfg *config.GuildConfig) {
 		fmt.Println("🤖 Agents:")
 		for _, agent := range cfg.Agents {
 			fmt.Printf("  • %s (%s)\n", agent.Name, agent.ID)
-			fmt.Printf("    Type: %s | Provider: %s | Model: %s\n", 
+			fmt.Printf("    Type: %s | Provider: %s | Model: %s\n",
 				agent.Type, agent.Provider, agent.Model)
 			if len(agent.Capabilities) > 0 {
 				fmt.Printf("    Capabilities: %s\n", strings.Join(agent.Capabilities, ", "))
@@ -245,7 +248,7 @@ func displayFormattedConfig(cfg *config.GuildConfig) {
 	// Display providers
 	fmt.Println("🔌 Providers:")
 	hasProviders := false
-	
+
 	if cfg.Providers.OpenAI.BaseURL != "" || len(cfg.Providers.OpenAI.Settings) > 0 {
 		fmt.Printf("  • OpenAI\n")
 		if cfg.Providers.OpenAI.BaseURL != "" {
@@ -253,7 +256,7 @@ func displayFormattedConfig(cfg *config.GuildConfig) {
 		}
 		hasProviders = true
 	}
-	
+
 	if cfg.Providers.Anthropic.BaseURL != "" || len(cfg.Providers.Anthropic.Settings) > 0 {
 		fmt.Printf("  • Anthropic\n")
 		if cfg.Providers.Anthropic.BaseURL != "" {
@@ -261,7 +264,7 @@ func displayFormattedConfig(cfg *config.GuildConfig) {
 		}
 		hasProviders = true
 	}
-	
+
 	if cfg.Providers.Ollama.BaseURL != "" || len(cfg.Providers.Ollama.Settings) > 0 {
 		fmt.Printf("  • Ollama\n")
 		if cfg.Providers.Ollama.BaseURL != "" {
@@ -269,7 +272,7 @@ func displayFormattedConfig(cfg *config.GuildConfig) {
 		}
 		hasProviders = true
 	}
-	
+
 	if !hasProviders {
 		fmt.Println("  No providers configured")
 	}
@@ -327,7 +330,7 @@ func runConfigPath(cmd *cobra.Command, args []string) error {
 		"DEEPSEEK_API_KEY",
 		"OLLAMA_HOST",
 	}
-	
+
 	for _, env := range providers {
 		if os.Getenv(env) != "" {
 			fmt.Printf("  %s: [SET]\n", env)
@@ -342,7 +345,7 @@ func runConfigPath(cmd *cobra.Command, args []string) error {
 // runConfigValidate validates configuration files
 func runConfigValidate(cmd *cobra.Command, args []string) error {
 	attemptFix, _ := cmd.Flags().GetBool("fix")
-	
+
 	fmt.Println("🔍 Validating Configuration")
 	fmt.Println("═════════════════════════")
 	fmt.Println()
@@ -352,7 +355,7 @@ func runConfigValidate(cmd *cobra.Command, args []string) error {
 	// Check global config
 	homeDir, _ := os.UserHomeDir()
 	globalConfigPath := filepath.Join(homeDir, ".guild", "config.yaml")
-	
+
 	if _, err := os.Stat(globalConfigPath); err == nil {
 		data, err := os.ReadFile(globalConfigPath)
 		if err != nil {
@@ -371,7 +374,7 @@ func runConfigValidate(cmd *cobra.Command, args []string) error {
 
 	// Check local config
 	localConfigPath := filepath.Join(".guild", "guild.yaml")
-	
+
 	if _, err := os.Stat(localConfigPath); err == nil {
 		data, err := os.ReadFile(localConfigPath)
 		if err != nil {
@@ -382,7 +385,7 @@ func runConfigValidate(cmd *cobra.Command, args []string) error {
 				issues = append(issues, fmt.Sprintf("Invalid YAML in local config: %v", err))
 			} else {
 				fmt.Println("✅ Local config: Valid")
-				
+
 				// Validate agent configurations
 				for _, agent := range cfg.Agents {
 					if agent.ID == "" {
@@ -404,20 +407,20 @@ func runConfigValidate(cmd *cobra.Command, args []string) error {
 	// Check for required environment variables based on configured providers
 	fmt.Println()
 	fmt.Println("🔐 Checking API Keys:")
-	
+
 	requiredEnvs := map[string]string{
 		"openai":    "OPENAI_API_KEY",
 		"anthropic": "ANTHROPIC_API_KEY",
 		"deepseek":  "DEEPSEEK_API_KEY",
 	}
-	
+
 	// Load config to check which providers are used
 	cfg, err := config.LoadGuildConfig(".")
 	if err == nil && cfg != nil {
 		for _, agent := range cfg.Agents {
 			if envVar, ok := requiredEnvs[agent.Provider]; ok {
 				if os.Getenv(envVar) == "" {
-					issues = append(issues, fmt.Sprintf("Provider %s used by agent %s but %s not set", 
+					issues = append(issues, fmt.Sprintf("Provider %s used by agent %s but %s not set",
 						agent.Provider, agent.ID, envVar))
 				} else {
 					fmt.Printf("  ✅ %s: Set\n", envVar)
@@ -435,7 +438,7 @@ func runConfigValidate(cmd *cobra.Command, args []string) error {
 		for i, issue := range issues {
 			fmt.Printf("  %d. %s\n", i+1, issue)
 		}
-		
+
 		if attemptFix {
 			fmt.Println("\n🔧 Attempting to fix issues...")
 			// TODO: Implement auto-fix logic for common issues
@@ -449,7 +452,7 @@ func runConfigValidate(cmd *cobra.Command, args []string) error {
 // runConfigEdit opens configuration in editor
 func runConfigEdit(cmd *cobra.Command, args []string) error {
 	var configPath string
-	
+
 	if len(args) == 0 || args[0] == "local" {
 		configPath = filepath.Join(".guild", "guild.yaml")
 		if _, err := os.Stat(configPath); os.IsNotExist(err) {
@@ -493,7 +496,7 @@ func runConfigEdit(cmd *cobra.Command, args []string) error {
 		if editor == "" {
 			continue
 		}
-		
+
 		cmd := exec.Command(editor, configPath)
 		cmd.Stdin = os.Stdin
 		cmd.Stdout = os.Stdout
@@ -613,12 +616,12 @@ func runConfigAgents(cmd *cobra.Command, args []string) error {
 		fmt.Printf("   ID: %s\n", agent.ID)
 		fmt.Printf("   Type: %s\n", agent.Type)
 		fmt.Printf("   Provider: %s | Model: %s\n", agent.Provider, agent.Model)
-		
+
 		if agent.CostMagnitude > 0 {
 			var costIcon string
 			switch {
 			case agent.CostMagnitude <= 1:
-				costIcon = "💰"  // Very cheap
+				costIcon = "💰" // Very cheap
 			case agent.CostMagnitude <= 3:
 				costIcon = "💰💰" // Moderate
 			case agent.CostMagnitude <= 5:
@@ -628,15 +631,15 @@ func runConfigAgents(cmd *cobra.Command, args []string) error {
 			}
 			fmt.Printf("   Cost: %s %d\n", costIcon, agent.CostMagnitude)
 		}
-		
+
 		if len(agent.Capabilities) > 0 {
 			fmt.Printf("   Capabilities: %s\n", strings.Join(agent.Capabilities, ", "))
 		}
-		
+
 		if len(agent.Tools) > 0 {
 			fmt.Printf("   Tools: %s\n", strings.Join(agent.Tools, ", "))
 		}
-		
+
 		if agent.SystemPrompt != "" {
 			preview := agent.SystemPrompt
 			if len(preview) > 60 {
@@ -644,7 +647,7 @@ func runConfigAgents(cmd *cobra.Command, args []string) error {
 			}
 			fmt.Printf("   System Prompt: %s\n", preview)
 		}
-		
+
 		fmt.Println()
 	}
 

@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package edit
 
 import (
@@ -623,7 +626,7 @@ func (t *MultiFileRefactorTool) checkNamingConflicts(newName string, references 
 		if err != nil {
 			continue // Skip files that can't be read
 		}
-		
+
 		// Find existing references to the new name
 		existingRefs := t.findTextReferences(file, newName, content)
 		if len(existingRefs) > 0 {

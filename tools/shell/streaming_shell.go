@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package shell
 
 import (
@@ -27,27 +30,27 @@ type StreamingShellTool struct {
 
 // StreamingShellInput represents input for streaming shell commands
 type StreamingShellInput struct {
-	Command       string            `json:"command"`                  // Command to execute
-	Args          []string          `json:"args,omitempty"`           // Command arguments
-	Timeout       int               `json:"timeout,omitempty"`        // Timeout in seconds
-	WorkingDir    string            `json:"working_dir,omitempty"`    // Working directory
-	StreamOutput  bool              `json:"stream_output,omitempty"`  // Enable real-time streaming
-	BufferSize    int               `json:"buffer_size,omitempty"`    // Output buffer size
-	Environment   map[string]string `json:"environment,omitempty"`    // Environment variables
-	InteractiveMode bool            `json:"interactive,omitempty"`    // Support interactive commands
+	Command         string            `json:"command"`                 // Command to execute
+	Args            []string          `json:"args,omitempty"`          // Command arguments
+	Timeout         int               `json:"timeout,omitempty"`       // Timeout in seconds
+	WorkingDir      string            `json:"working_dir,omitempty"`   // Working directory
+	StreamOutput    bool              `json:"stream_output,omitempty"` // Enable real-time streaming
+	BufferSize      int               `json:"buffer_size,omitempty"`   // Output buffer size
+	Environment     map[string]string `json:"environment,omitempty"`   // Environment variables
+	InteractiveMode bool              `json:"interactive,omitempty"`   // Support interactive commands
 }
 
 // StreamingShellResult represents the result of a streaming command
 type StreamingShellResult struct {
-	Command      string             `json:"command"`
-	Args         []string           `json:"args"`
-	ExitCode     int                `json:"exit_code"`
-	Duration     time.Duration      `json:"duration"`
-	Output       string             `json:"output"`        // Complete output
-	OutputChunks []OutputChunk      `json:"output_chunks"` // Streaming chunks
-	Error        string             `json:"error,omitempty"`
-	ProcessID    int                `json:"process_id,omitempty"`
-	Metadata     map[string]string  `json:"metadata"`
+	Command      string            `json:"command"`
+	Args         []string          `json:"args"`
+	ExitCode     int               `json:"exit_code"`
+	Duration     time.Duration     `json:"duration"`
+	Output       string            `json:"output"`        // Complete output
+	OutputChunks []OutputChunk     `json:"output_chunks"` // Streaming chunks
+	Error        string            `json:"error,omitempty"`
+	ProcessID    int               `json:"process_id,omitempty"`
+	Metadata     map[string]string `json:"metadata"`
 }
 
 // OutputChunk represents a chunk of streaming output
@@ -201,12 +204,12 @@ func (t *StreamingShellTool) Execute(ctx context.Context, input string) (*tools.
 	// Convert result to ToolResult
 	resultJSON, _ := json.Marshal(result)
 	metadata := map[string]string{
-		"command":        result.Command,
-		"args":           strings.Join(result.Args, " "),
-		"exit_code":      fmt.Sprintf("%d", result.ExitCode),
-		"duration":       result.Duration.String(),
-		"streaming":      fmt.Sprintf("%t", params.StreamOutput),
-		"chunks_count":   fmt.Sprintf("%d", len(result.OutputChunks)),
+		"command":      result.Command,
+		"args":         strings.Join(result.Args, " "),
+		"exit_code":    fmt.Sprintf("%d", result.ExitCode),
+		"duration":     result.Duration.String(),
+		"streaming":    fmt.Sprintf("%t", params.StreamOutput),
+		"chunks_count": fmt.Sprintf("%d", len(result.OutputChunks)),
 	}
 
 	var toolErr error
@@ -370,7 +373,7 @@ func (t *StreamingShellTool) streamOutput(handle *ProcessHandle, pipe io.ReadClo
 		lineNo++
 
 		handle.mutex.Lock()
-		
+
 		// Add to complete output
 		handle.output.WriteString(line + "\n")
 

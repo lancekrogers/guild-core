@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package chat
 
 import (
@@ -117,7 +120,7 @@ func (m ChatModel) processMessage(input string) (ChatModel, tea.Cmd) {
 			Timestamp: time.Now(),
 		})
 		m.updateMessagesView()
-		
+
 		// Check if we should quit after processing the command
 		if m.shouldQuit {
 			return m, tea.Quit
@@ -558,7 +561,7 @@ func (m ChatModel) handleSessionCommand(args []string) string {
 
 		newName := strings.Join(args[1:], " ")
 		m.currentSession.Name = newName
-		
+
 		if err := m.sessionManager.SaveSession(m.currentSession); err != nil {
 			return fmt.Sprintf("Failed to rename session: %v", err)
 		}
@@ -586,11 +589,11 @@ func (m ChatModel) handleSessionCommand(args []string) string {
 		}
 
 		// Save to file
-		filename := fmt.Sprintf("session_%s_%s.%s", 
-			m.currentSession.ID[:8], 
+		filename := fmt.Sprintf("session_%s_%s.%s",
+			m.currentSession.ID[:8],
 			time.Now().Format("20060102_150405"),
 			string(format))
-		
+
 		if err := os.WriteFile(filename, data, 0644); err != nil {
 			return fmt.Sprintf("Failed to save export: %v", err)
 		}
@@ -601,7 +604,7 @@ func (m ChatModel) handleSessionCommand(args []string) string {
 		if len(args) < 2 {
 			return "Usage: /session switch <session-id>"
 		}
-		
+
 		// Note: We can't actually switch sessions from here
 		return "Session switching requires restarting chat with --session flag"
 

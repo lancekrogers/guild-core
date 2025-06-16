@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package dev
 
 import (
@@ -36,38 +39,38 @@ type TestRunnerInput struct {
 
 // TestResult represents the complete result of test execution
 type TestResult struct {
-	Framework    string            `json:"framework"`
-	Summary      TestSummary       `json:"summary"`
-	Tests        []TestCase        `json:"tests"`
-	Coverage     *CoverageReport   `json:"coverage,omitempty"`
-	Duration     time.Duration     `json:"duration"`
-	Output       string            `json:"output"`
-	Command      string            `json:"command"`
-	ExitCode     int               `json:"exit_code"`
-	Suggestions  []TestSuggestion  `json:"suggestions,omitempty"`
-	Metadata     map[string]string `json:"metadata"`
+	Framework   string            `json:"framework"`
+	Summary     TestSummary       `json:"summary"`
+	Tests       []TestCase        `json:"tests"`
+	Coverage    *CoverageReport   `json:"coverage,omitempty"`
+	Duration    time.Duration     `json:"duration"`
+	Output      string            `json:"output"`
+	Command     string            `json:"command"`
+	ExitCode    int               `json:"exit_code"`
+	Suggestions []TestSuggestion  `json:"suggestions,omitempty"`
+	Metadata    map[string]string `json:"metadata"`
 }
 
 // TestSummary provides high-level test statistics
 type TestSummary struct {
-	Total         int     `json:"total"`
-	Passed        int     `json:"passed"`
-	Failed        int     `json:"failed"`
-	Skipped       int     `json:"skipped"`
-	Success       bool    `json:"success"`
+	Total           int     `json:"total"`
+	Passed          int     `json:"passed"`
+	Failed          int     `json:"failed"`
+	Skipped         int     `json:"skipped"`
+	Success         bool    `json:"success"`
 	CoveragePercent float64 `json:"coverage_percent,omitempty"`
 }
 
 // TestCase represents a single test case
 type TestCase struct {
-	Name      string        `json:"name"`
-	Package   string        `json:"package,omitempty"`
-	Status    string        `json:"status"` // passed, failed, skipped
-	Duration  time.Duration `json:"duration"`
-	Error     *TestError    `json:"error,omitempty"`
-	Output    string        `json:"output,omitempty"`
-	File      string        `json:"file,omitempty"`
-	Line      int           `json:"line,omitempty"`
+	Name     string        `json:"name"`
+	Package  string        `json:"package,omitempty"`
+	Status   string        `json:"status"` // passed, failed, skipped
+	Duration time.Duration `json:"duration"`
+	Error    *TestError    `json:"error,omitempty"`
+	Output   string        `json:"output,omitempty"`
+	File     string        `json:"file,omitempty"`
+	Line     int           `json:"line,omitempty"`
 }
 
 // TestError represents test failure information
@@ -82,12 +85,12 @@ type TestError struct {
 
 // CoverageReport represents code coverage information
 type CoverageReport struct {
-	TotalLines    int                    `json:"total_lines"`
-	CoveredLines  int                    `json:"covered_lines"`
-	Percentage    float64                `json:"percentage"`
-	Files         []FileCoverage         `json:"files,omitempty"`
-	Uncovered     []UncoveredLine        `json:"uncovered,omitempty"`
-	Metadata      map[string]interface{} `json:"metadata,omitempty"`
+	TotalLines   int                    `json:"total_lines"`
+	CoveredLines int                    `json:"covered_lines"`
+	Percentage   float64                `json:"percentage"`
+	Files        []FileCoverage         `json:"files,omitempty"`
+	Uncovered    []UncoveredLine        `json:"uncovered,omitempty"`
+	Metadata     map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // FileCoverage represents coverage for a single file
@@ -108,7 +111,7 @@ type UncoveredLine struct {
 
 // TestSuggestion represents AI-generated suggestions for test improvements
 type TestSuggestion struct {
-	Type        string `json:"type"`        // fix, improvement, coverage
+	Type        string `json:"type"` // fix, improvement, coverage
 	Message     string `json:"message"`
 	File        string `json:"file,omitempty"`
 	Line        int    `json:"line,omitempty"`
@@ -256,13 +259,13 @@ func (t *TestRunnerTool) Execute(ctx context.Context, input string) (*tools.Tool
 	// Convert result to ToolResult
 	resultJSON, _ := json.Marshal(result)
 	metadata := map[string]string{
-		"framework":     result.Framework,
-		"total_tests":   fmt.Sprintf("%d", result.Summary.Total),
-		"passed":        fmt.Sprintf("%d", result.Summary.Passed),
-		"failed":        fmt.Sprintf("%d", result.Summary.Failed),
-		"success":       fmt.Sprintf("%t", result.Summary.Success),
-		"duration":      result.Duration.String(),
-		"coverage":      fmt.Sprintf("%.2f%%", result.Summary.CoveragePercent),
+		"framework":   result.Framework,
+		"total_tests": fmt.Sprintf("%d", result.Summary.Total),
+		"passed":      fmt.Sprintf("%d", result.Summary.Passed),
+		"failed":      fmt.Sprintf("%d", result.Summary.Failed),
+		"success":     fmt.Sprintf("%t", result.Summary.Success),
+		"duration":    result.Duration.String(),
+		"coverage":    fmt.Sprintf("%.2f%%", result.Summary.CoveragePercent),
 	}
 
 	var toolErr error

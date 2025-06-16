@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package dev
 
 import (
@@ -19,18 +22,18 @@ func (j *JavaScriptTestFramework) Name() string {
 // Detect checks if this is a JavaScript project with Jest
 func (j *JavaScriptTestFramework) Detect(path string) bool {
 	return fileExists("package.json") ||
-		   fileExists("jest.config.js") ||
-		   fileExists("jest.config.json") ||
-		   len(findTestFiles(path, "*.test.js")) > 0 ||
-		   len(findTestFiles(path, "*.test.ts")) > 0 ||
-		   len(findTestFiles(path, "*.spec.js")) > 0 ||
-		   len(findTestFiles(path, "*.spec.ts")) > 0
+		fileExists("jest.config.js") ||
+		fileExists("jest.config.json") ||
+		len(findTestFiles(path, "*.test.js")) > 0 ||
+		len(findTestFiles(path, "*.test.ts")) > 0 ||
+		len(findTestFiles(path, "*.spec.js")) > 0 ||
+		len(findTestFiles(path, "*.spec.ts")) > 0
 }
 
 // BuildCommand builds the Jest command
 func (j *JavaScriptTestFramework) BuildCommand(input TestRunnerInput) ([]string, error) {
 	cmd := []string{"npm", "test"}
-	
+
 	// Alternative: use jest directly if available
 	// cmd := []string{"jest"}
 
@@ -85,7 +88,7 @@ func (j *JavaScriptTestFramework) BuildCommand(input TestRunnerInput) ([]string,
 // ParseOutput parses Jest output
 func (j *JavaScriptTestFramework) ParseOutput(output string, exitCode int) (*TestResult, error) {
 	lines := strings.Split(output, "\n")
-	
+
 	var tests []TestCase
 	var summary TestSummary
 	var coverage *CoverageReport
@@ -95,7 +98,7 @@ func (j *JavaScriptTestFramework) ParseOutput(output string, exitCode int) (*Tes
 	testCaseRegex := regexp.MustCompile(`^\s*[✓×✗]\s+(.+)\s+\((\d+)\s*ms\)`)
 	summaryRegex := regexp.MustCompile(`Tests:\s+(\d+)\s+failed,\s+(\d+)\s+passed,\s+(\d+)\s+total`)
 	coverageRegex := regexp.MustCompile(`All files\s+\|\s+([0-9.]+)\s+\|`)
-	
+
 	var currentSuite string
 	var errorLines []string
 	var inErrorSection bool
@@ -103,7 +106,7 @@ func (j *JavaScriptTestFramework) ParseOutput(output string, exitCode int) (*Tes
 	for _, line := range lines {
 		originalLine := line
 		line = strings.TrimSpace(line)
-		
+
 		if line == "" {
 			continue
 		}
@@ -113,9 +116,9 @@ func (j *JavaScriptTestFramework) ParseOutput(output string, exitCode int) (*Tes
 			status := strings.ToLower(match[1])
 			suiteName := match[2]
 			duration, _ := time.ParseDuration(match[3] + "s")
-			
+
 			currentSuite = suiteName
-			
+
 			// Create a test case for the suite
 			test := TestCase{
 				Name:     suiteName,
@@ -123,14 +126,14 @@ func (j *JavaScriptTestFramework) ParseOutput(output string, exitCode int) (*Tes
 				Status:   status,
 				Duration: duration,
 			}
-			
+
 			if status == "fail" {
 				summary.Failed++
 			} else {
 				summary.Passed++
 			}
 			summary.Total++
-			
+
 			tests = append(tests, test)
 		}
 
@@ -138,7 +141,7 @@ func (j *JavaScriptTestFramework) ParseOutput(output string, exitCode int) (*Tes
 		if match := testCaseRegex.FindStringSubmatch(line); match != nil {
 			testName := match[1]
 			duration, _ := time.ParseDuration(match[2] + "ms")
-			
+
 			status := "passed"
 			if strings.Contains(line, "×") || strings.Contains(line, "✗") {
 				status = "failed"
@@ -150,7 +153,7 @@ func (j *JavaScriptTestFramework) ParseOutput(output string, exitCode int) (*Tes
 				Status:   status,
 				Duration: duration,
 			}
-			
+
 			tests = append(tests, test)
 		}
 
@@ -181,7 +184,7 @@ func (j *JavaScriptTestFramework) ParseOutput(output string, exitCode int) (*Tes
 			failed, _ := strconv.Atoi(match[1])
 			passed, _ := strconv.Atoi(match[2])
 			total, _ := strconv.Atoi(match[3])
-			
+
 			summary.Failed = failed
 			summary.Passed = passed
 			summary.Total = total

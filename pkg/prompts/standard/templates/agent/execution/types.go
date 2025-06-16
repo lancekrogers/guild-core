@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package execution
 
 import "time"
@@ -115,7 +118,7 @@ type ExecutionData struct {
 	StepNumber             int
 	TotalSteps             int
 	StepName               string
-	StepCommission          string
+	StepCommission         string
 	ExpectedActions        []string
 	SuccessIndicators      []string
 	PotentialIssues        []string

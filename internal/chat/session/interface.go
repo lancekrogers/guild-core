@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package session
 
 import (
@@ -69,10 +72,10 @@ const (
 
 // ToolCall represents a tool invocation in a message
 type ToolCall struct {
-	ID       string                 `json:"id"`
-	Type     string                 `json:"type"`
-	Function ToolFunction           `json:"function"`
-	Result   *ToolResult            `json:"result,omitempty"`
+	ID       string       `json:"id"`
+	Type     string       `json:"type"`
+	Function ToolFunction `json:"function"`
+	Result   *ToolResult  `json:"result,omitempty"`
 }
 
 // ToolFunction represents the function called by a tool
@@ -83,8 +86,8 @@ type ToolFunction struct {
 
 // ToolResult represents the result of a tool execution
 type ToolResult struct {
-	Content string                 `json:"content"`
-	Error   *string                `json:"error,omitempty"`
+	Content string  `json:"content"`
+	Error   *string `json:"error,omitempty"`
 }
 
 // Bookmark represents a marked message for easy retrieval
@@ -151,14 +154,14 @@ const (
 
 // ExportOptions defines options for session export
 type ExportOptions struct {
-	IncludeToolOutputs bool              `json:"include_tool_outputs"`
-	IncludeMetadata    bool              `json:"include_metadata"`
-	CustomCSS          string            `json:"custom_css,omitempty"`
-	Theme              string            `json:"theme,omitempty"`
-	SyntaxHighlight    bool              `json:"syntax_highlight"`
-	LineNumbers        bool              `json:"line_numbers"`
-	DateFormat         string            `json:"date_format,omitempty"`
-	Title              string            `json:"title,omitempty"`
+	IncludeToolOutputs bool   `json:"include_tool_outputs"`
+	IncludeMetadata    bool   `json:"include_metadata"`
+	CustomCSS          string `json:"custom_css,omitempty"`
+	Theme              string `json:"theme,omitempty"`
+	SyntaxHighlight    bool   `json:"syntax_highlight"`
+	LineNumbers        bool   `json:"line_numbers"`
+	DateFormat         string `json:"date_format,omitempty"`
+	Title              string `json:"title,omitempty"`
 }
 
 // MarshalJSON implements custom JSON marshaling for ToolCall

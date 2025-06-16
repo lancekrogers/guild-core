@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package mocks
 
 import (
@@ -11,9 +14,9 @@ import (
 
 // MockCommissionManager implements the commission.Manager interface for testing
 type MockCommissionManager struct {
-	mu         sync.RWMutex
+	mu          sync.RWMutex
 	commissions map[string]*commission.Commission
-	error      error
+	error       error
 }
 
 // NewMockCommissionManager creates a new mock commission manager

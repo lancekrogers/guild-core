@@ -3,7 +3,7 @@
 
 BUILDTOOL := go run ./internal/buildutil
 .DEFAULT_GOAL := help
-.PHONY: build test test-pkg integration clean all quick ci-build ci-test ci-integration ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion
+.PHONY: build test test-pkg integration e2e validate-demo clean all quick ci-build ci-test ci-integration ci-e2e ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion
 
 # Primary targets (with visual output)
 build:
@@ -14,6 +14,12 @@ test:
 
 integration:
 	@$(BUILDTOOL) integration
+
+e2e:
+	@$(BUILDTOOL) e2e
+
+validate-demo:
+	@$(BUILDTOOL) validate-demo
 
 clean:
 	@$(BUILDTOOL) clean
@@ -34,6 +40,9 @@ ci-test:
 
 ci-integration:
 	@$(BUILDTOOL) --no-color integration
+
+ci-e2e:
+	@$(BUILDTOOL) --no-color e2e
 
 ci-clean:
 	@$(BUILDTOOL) --no-color clean
@@ -130,6 +139,8 @@ help:
 	@echo "  test                     Run unit tests with visual feedback"
 	@echo "  test-pkg                 Show examples of testing specific packages"
 	@echo "  integration              Run integration tests"
+	@echo "  e2e                      Run end-to-end tests"
+	@echo "  validate-demo            Validate demo scripts and functionality"
 	@echo "  clean                    Remove all build artifacts"
 	@echo "  all                      Clean, build, test, and integration"
 	@echo "  quick                    Fast build without visuals"

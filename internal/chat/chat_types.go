@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package chat
 
 import (
@@ -10,8 +13,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/guild-ventures/guild-core/internal/chat/commands"
-	"github.com/guild-ventures/guild-core/internal/ui"
 	"github.com/guild-ventures/guild-core/internal/chat/session"
+	"github.com/guild-ventures/guild-core/internal/ui"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
@@ -242,12 +245,12 @@ type ChatModel struct {
 	completionIndex   int
 
 	// Search components
-	fuzzyFinder   *ui.FuzzyFinderModel
-	globalSearch  *ui.GlobalSearchModel
-	
+	fuzzyFinder  *ui.FuzzyFinderModel
+	globalSearch *ui.GlobalSearchModel
+
 	// Integration flags
 	integrationFlags map[string]bool
-	
+
 	// Additional state
 	shouldQuit bool
 	clipboard  string

@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // Package rag provides configuration structures for the Retrieval-Augmented Generation system.
 // These configurations control how documents are chunked, stored, and retrieved.
 package rag

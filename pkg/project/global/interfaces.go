@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package global
 
 // GlobalConfig represents the global Guild configuration
@@ -98,7 +101,7 @@ type TemplateConfig struct {
 	Agents      []TemplateAgent `yaml:"agents"`
 	Tools       []string        `yaml:"tools"`
 	Corpus      CorpusTemplate  `yaml:"corpus"`
-	Commissions  []string        `yaml:"commissions"`
+	Commissions []string        `yaml:"commissions"`
 }
 
 // TemplateAgent represents an agent in a template

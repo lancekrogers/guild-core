@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package integration
 
 import (
@@ -47,7 +50,7 @@ func TestMockProviderIntegration(t *testing.T) {
 	t.Run("Provider Registry Integration", func(t *testing.T) {
 		// Test with legacy factory and registry
 		factory := providers.NewFactory()
-		
+
 		// Create mock registry
 		registry := &mockProviderRegistry{providers: make(map[string]providers.LLMClient)}
 
@@ -132,7 +135,7 @@ func TestMockProviderCommandLineIntegration(t *testing.T) {
 		// Run guild init
 		cmd := exec.Command("guild", "init", "--name", "test-project")
 		output, err := cmd.CombinedOutput()
-		
+
 		if err != nil {
 			t.Logf("Guild init output: %s", string(output))
 			// If init fails, it might be due to missing dependencies

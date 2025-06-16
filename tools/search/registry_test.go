@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package search
 
 import (
@@ -207,7 +210,7 @@ func TestCraftInvalidCostRegistry(t *testing.T) {
 // TestGuildValidateAgInstallation tests ag installation validation
 func TestGuildValidateAgInstallation(t *testing.T) {
 	err := ValidateAgInstallation()
-	
+
 	// This test will pass if ag is installed, or fail with a specific error if not
 	// We can't assert the exact result since it depends on the system
 	if err != nil {

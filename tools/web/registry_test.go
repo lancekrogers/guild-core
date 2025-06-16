@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package web
 
 import (
@@ -13,16 +16,16 @@ import (
 func TestRegisterWebTools(t *testing.T) {
 	toolRegistry := tools.NewToolRegistry()
 	mockProvider := &MockAIProvider{}
-	
+
 	err := RegisterWebTools(toolRegistry, mockProvider)
 	assert.NoError(t, err)
-	
+
 	// Verify both tools are registered
 	webSearchTool, exists := toolRegistry.GetTool("web_search")
 	assert.True(t, exists)
 	assert.NotNil(t, webSearchTool)
 	assert.Equal(t, "web_search", webSearchTool.Name())
-	
+
 	webFetchTool, exists := toolRegistry.GetTool("web_fetch")
 	assert.True(t, exists)
 	assert.NotNil(t, webFetchTool)
@@ -32,23 +35,23 @@ func TestRegisterWebTools(t *testing.T) {
 func TestRegisterWebToolsWithRegistry(t *testing.T) {
 	mockRegistry := &MockToolRegistry{}
 	mockProvider := &MockAIProvider{}
-	
+
 	// Set up expectations for tool registration
-	mockRegistry.On("RegisterToolWithCost", 
-		"web_search", 
-		mock.AnythingOfType("*web.WebSearchTool"), 
-		1, 
+	mockRegistry.On("RegisterToolWithCost",
+		"web_search",
+		mock.AnythingOfType("*web.WebSearchTool"),
+		1,
 		[]string{"web", "search", "information_gathering"}).Return(nil)
-	
-	mockRegistry.On("RegisterToolWithCost", 
-		"web_fetch", 
-		mock.AnythingOfType("*web.WebFetchTool"), 
-		2, 
+
+	mockRegistry.On("RegisterToolWithCost",
+		"web_fetch",
+		mock.AnythingOfType("*web.WebFetchTool"),
+		2,
 		[]string{"web", "fetch", "analysis", "content_extraction"}).Return(nil)
-	
+
 	err := RegisterWebToolsWithRegistry(mockRegistry, mockProvider)
 	assert.NoError(t, err)
-	
+
 	mockRegistry.AssertExpectations(t)
 }
 
@@ -78,7 +81,7 @@ func TestListWebTools(t *testing.T) {
 func TestGetWebToolsInfo(t *testing.T) {
 	info := GetWebToolsInfo()
 	assert.Len(t, info, 2)
-	
+
 	// Check WebSearch tool info
 	webSearchInfo, exists := info["web_search"]
 	assert.True(t, exists)
@@ -89,7 +92,7 @@ func TestGetWebToolsInfo(t *testing.T) {
 	assert.False(t, webSearchInfo.RequiresAI)
 	assert.Contains(t, webSearchInfo.Capabilities, "web")
 	assert.Contains(t, webSearchInfo.Capabilities, "search")
-	
+
 	// Check WebFetch tool info
 	webFetchInfo, exists := info["web_fetch"]
 	assert.True(t, exists)

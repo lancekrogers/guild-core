@@ -1,13 +1,16 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package parsers_test
 
 import (
 	"context"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/guild-ventures/guild-core/tools/code"
 	"github.com/guild-ventures/guild-core/tools/code/parsers"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestUniversalParser_JavaScript(t *testing.T) {
@@ -165,7 +168,7 @@ setup
 			name:     "SQL Query",
 			language: code.LanguageSQL,
 			filename: "test.sql",
-			content: `SELECT name, age FROM users WHERE age > 18 ORDER BY name;`,
+			content:  `SELECT name, age FROM users WHERE age > 18 ORDER BY name;`,
 		},
 		{
 			name:     "YAML Config",
@@ -226,7 +229,7 @@ func TestCreateParser_SpecialCases(t *testing.T) {
 func TestGetSupportedLanguages(t *testing.T) {
 	languages := parsers.GetSupportedLanguages()
 	assert.GreaterOrEqual(t, len(languages), 30, "Should support at least 30 languages")
-	
+
 	// Check some key languages are present
 	hasGo, hasPython, hasJS, hasRust := false, false, false, false
 	for _, lang := range languages {
@@ -241,7 +244,7 @@ func TestGetSupportedLanguages(t *testing.T) {
 			hasRust = true
 		}
 	}
-	
+
 	assert.True(t, hasGo, "Should support Go")
 	assert.True(t, hasPython, "Should support Python")
 	assert.True(t, hasJS, "Should support JavaScript")

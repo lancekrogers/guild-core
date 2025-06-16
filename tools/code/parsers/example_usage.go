@@ -1,4 +1,8 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // Package parsers_example demonstrates how to use the universal tree-sitter parser
+//go:build ignore
 // +build ignore
 
 package main

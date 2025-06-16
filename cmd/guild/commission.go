@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // cmd/guild/commission.go
 //
 // Commission-based workflow for Guild agent coordination
@@ -33,11 +36,11 @@ import (
 
 var (
 	// Commission flags
-	assignFlag        bool   // Auto-assign agents to tasks
-	dryRunFlag        bool   // Show what would be done without executing
-	campaignIDFlag    string // Associate with campaign
-	priorityFlag      string // Commission priority (high, medium, low)
-	managerFlag       string // Override default manager agent
+	assignFlag         bool   // Auto-assign agents to tasks
+	dryRunFlag         bool   // Show what would be done without executing
+	campaignIDFlag     string // Associate with campaign
+	priorityFlag       string // Commission priority (high, medium, low)
+	managerFlag        string // Override default manager agent
 	commissionNoDaemon bool   // Don't auto-start the Guild server
 )
 

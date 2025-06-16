@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package daemon
 
 import (
@@ -130,7 +133,7 @@ func TestPIDFileHandling(t *testing.T) {
 
 func TestPortChecking(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Test that port checking works
 	assert.False(t, isPortListening(ctx, "99999"), "Port 99999 should not be listening")
 

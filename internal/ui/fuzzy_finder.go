@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package ui
 
 import (
@@ -18,13 +21,13 @@ import (
 
 // FuzzyFinderKeyMap defines key bindings for the fuzzy finder
 type FuzzyFinderKeyMap struct {
-	Up       key.Binding
-	Down     key.Binding
-	Enter    key.Binding
-	Escape   key.Binding
-	Tab      key.Binding
-	Preview  key.Binding
-	Refresh  key.Binding
+	Up      key.Binding
+	Down    key.Binding
+	Enter   key.Binding
+	Escape  key.Binding
+	Tab     key.Binding
+	Preview key.Binding
+	Refresh key.Binding
 }
 
 // DefaultFuzzyFinderKeyMap returns the default key bindings
@@ -64,31 +67,31 @@ func DefaultFuzzyFinderKeyMap() FuzzyFinderKeyMap {
 // FuzzyFinderModel represents the fuzzy finder UI state
 type FuzzyFinderModel struct {
 	// UI components
-	input      textinput.Model
-	keyMap     FuzzyFinderKeyMap
-	width      int
-	height     int
-	
+	input  textinput.Model
+	keyMap FuzzyFinderKeyMap
+	width  int
+	height int
+
 	// State
-	fuzzyFinder   *search.FuzzyFinder
-	results       []search.FileResult
-	selectedIndex int
-	showPreview   bool
+	fuzzyFinder    *search.FuzzyFinder
+	results        []search.FileResult
+	selectedIndex  int
+	showPreview    bool
 	previewContent string
-	loading       bool
-	err           error
-	
+	loading        bool
+	err            error
+
 	// Callbacks
 	onFileSelected func(filePath string)
 	onClose        func()
-	
+
 	// Styles
-	listStyle       lipgloss.Style
-	selectedStyle   lipgloss.Style
-	previewStyle    lipgloss.Style
-	headerStyle     lipgloss.Style
-	footerStyle     lipgloss.Style
-	errorStyle      lipgloss.Style
+	listStyle     lipgloss.Style
+	selectedStyle lipgloss.Style
+	previewStyle  lipgloss.Style
+	headerStyle   lipgloss.Style
+	footerStyle   lipgloss.Style
+	errorStyle    lipgloss.Style
 }
 
 // FuzzyFinderOption configures the fuzzy finder model
@@ -128,33 +131,33 @@ func NewFuzzyFinderModel(workingDir string, opts ...FuzzyFinderOption) *FuzzyFin
 		keyMap:      DefaultFuzzyFinderKeyMap(),
 		fuzzyFinder: fuzzyFinder,
 		showPreview: true,
-		
+
 		// Default styles
 		listStyle: lipgloss.NewStyle().
 			Border(lipgloss.RoundedBorder()).
 			BorderForeground(lipgloss.Color("62")).
 			Padding(1).
 			MarginRight(1),
-		
+
 		selectedStyle: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("0")).
 			Background(lipgloss.Color("13")).
 			Bold(true),
-		
+
 		previewStyle: lipgloss.NewStyle().
 			Border(lipgloss.RoundedBorder()).
 			BorderForeground(lipgloss.Color("240")).
 			Padding(1),
-		
+
 		headerStyle: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("13")).
 			Bold(true).
 			MarginBottom(1),
-		
+
 		footerStyle: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("240")).
 			MarginTop(1),
-		
+
 		errorStyle: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("9")).
 			Bold(true),
@@ -185,7 +188,7 @@ func (m *FuzzyFinderModel) Update(msg tea.Msg) (*FuzzyFinderModel, tea.Cmd) {
 		m.width = msg.Width
 		m.height = msg.Height
 		m.updateLayout()
-		
+
 	case tea.KeyMsg:
 		switch {
 		case key.Matches(msg, m.keyMap.Escape):
@@ -193,7 +196,7 @@ func (m *FuzzyFinderModel) Update(msg tea.Msg) (*FuzzyFinderModel, tea.Cmd) {
 				m.onClose()
 			}
 			return m, nil
-			
+
 		case key.Matches(msg, m.keyMap.Enter):
 			if len(m.results) > 0 && m.selectedIndex < len(m.results) {
 				selectedFile := m.results[m.selectedIndex]
@@ -203,39 +206,39 @@ func (m *FuzzyFinderModel) Update(msg tea.Msg) (*FuzzyFinderModel, tea.Cmd) {
 				}
 			}
 			return m, nil
-			
+
 		case key.Matches(msg, m.keyMap.Up):
 			if m.selectedIndex > 0 {
 				m.selectedIndex--
 				return m, m.updatePreview()
 			}
-			
+
 		case key.Matches(msg, m.keyMap.Down):
 			if m.selectedIndex < len(m.results)-1 {
 				m.selectedIndex++
 				return m, m.updatePreview()
 			}
-			
+
 		case key.Matches(msg, m.keyMap.Tab, m.keyMap.Preview):
 			m.showPreview = !m.showPreview
 			if m.showPreview {
 				return m, m.updatePreview()
 			}
-			
+
 		case key.Matches(msg, m.keyMap.Refresh):
 			return m, m.refreshIndex()
-			
+
 		default:
 			// Update input and trigger search
 			var cmd tea.Cmd
 			m.input, cmd = m.input.Update(msg)
 			cmds = append(cmds, cmd)
-			
+
 			// Reset selection when search changes
 			m.selectedIndex = 0
 			cmds = append(cmds, m.searchFiles())
 		}
-		
+
 	case searchResultsMsg:
 		m.results = msg.results
 		m.err = msg.err
@@ -243,14 +246,14 @@ func (m *FuzzyFinderModel) Update(msg tea.Msg) (*FuzzyFinderModel, tea.Cmd) {
 		if m.showPreview && len(m.results) > 0 {
 			cmds = append(cmds, m.updatePreview())
 		}
-		
+
 	case previewContentMsg:
 		m.previewContent = string(msg)
-		
+
 	case indexRefreshedMsg:
 		m.loading = false
 		cmds = append(cmds, m.searchFiles())
-		
+
 	case errorMsg:
 		m.err = error(msg)
 		m.loading = false
@@ -300,15 +303,15 @@ func (m *FuzzyFinderModel) View() string {
 func (m *FuzzyFinderModel) renderSplitView() string {
 	listWidth := m.width/2 - 2
 	previewWidth := m.width/2 - 2
-	
+
 	// File list
 	fileList := m.renderFileListWithWidth(listWidth)
 	styledList := m.listStyle.Width(listWidth).Render(fileList)
-	
+
 	// Preview
 	preview := m.renderPreviewWithWidth(previewWidth)
 	styledPreview := m.previewStyle.Width(previewWidth).Render(preview)
-	
+
 	return lipgloss.JoinHorizontal(lipgloss.Top, styledList, styledPreview)
 }
 
@@ -332,10 +335,10 @@ func (m *FuzzyFinderModel) renderFileListWithWidth(width int) string {
 
 	var lines []string
 	maxVisible := m.height - 8 // Account for header, input, footer
-	
+
 	start := 0
 	end := len(m.results)
-	
+
 	// Scroll to keep selected item visible
 	if len(m.results) > maxVisible {
 		if m.selectedIndex >= maxVisible/2 {
@@ -356,11 +359,11 @@ func (m *FuzzyFinderModel) renderFileListWithWidth(width int) string {
 	for i := start; i < end; i++ {
 		result := m.results[i]
 		line := m.formatFileResult(result, width-2)
-		
+
 		if i == m.selectedIndex {
 			line = m.selectedStyle.Render(line)
 		}
-		
+
 		lines = append(lines, line)
 	}
 
@@ -380,28 +383,28 @@ func (m *FuzzyFinderModel) renderPreviewWithWidth(width int) string {
 	}
 
 	selectedFile := m.results[m.selectedIndex]
-	
+
 	var content strings.Builder
 	content.WriteString(fmt.Sprintf("📄 %s\n", selectedFile.Name))
 	content.WriteString(fmt.Sprintf("📁 %s\n", selectedFile.Path))
 	content.WriteString(fmt.Sprintf("📊 %s\n", formatFileSize(selectedFile.Size)))
-	
+
 	if selectedFile.IsRecent {
 		content.WriteString("⭐ Recent file\n")
 	}
-	
+
 	content.WriteString("\n")
-	
+
 	if m.previewContent != "" {
 		// Limit preview content to available space
 		lines := strings.Split(m.previewContent, "\n")
 		maxLines := m.height - 12 // Account for file info and other UI elements
-		
+
 		if len(lines) > maxLines {
 			lines = lines[:maxLines]
 			lines = append(lines, "...")
 		}
-		
+
 		for _, line := range lines {
 			// Truncate long lines
 			if len(line) > width-4 {
@@ -425,56 +428,56 @@ func (m *FuzzyFinderModel) renderFooter() string {
 		"Ctrl+R: refresh",
 		"Esc: close",
 	}
-	
+
 	stats := m.fuzzyFinder.GetIndexStats()
 	totalFiles := stats["total_files"].(int)
 	recentFiles := stats["recent_files"].(int)
-	
-	statusInfo := fmt.Sprintf("Files: %d | Recent: %d | Results: %d", 
+
+	statusInfo := fmt.Sprintf("Files: %d | Recent: %d | Results: %d",
 		totalFiles, recentFiles, len(m.results))
-	
+
 	helpText := strings.Join(help, " • ")
-	
+
 	return m.footerStyle.Render(helpText + "\n" + statusInfo)
 }
 
 // formatFileResult formats a file result for display
 func (m *FuzzyFinderModel) formatFileResult(result search.FileResult, width int) string {
 	var parts []string
-	
+
 	// File icon
 	icon := "📄"
 	if result.IsDirectory {
 		icon = "📁"
 	}
-	
+
 	// Recent indicator
 	if result.IsRecent {
 		icon = "⭐"
 	}
-	
+
 	// Format path
 	displayPath := result.Path
 	maxPathLength := width - 20 // Reserve space for icon, size, etc.
 	if len(displayPath) > maxPathLength {
 		displayPath = "..." + displayPath[len(displayPath)-maxPathLength+3:]
 	}
-	
+
 	parts = append(parts, icon, displayPath)
-	
+
 	// Add size for files
 	if !result.IsDirectory {
 		size := formatFileSize(result.Size)
 		parts = append(parts, fmt.Sprintf("(%s)", size))
 	}
-	
+
 	line := strings.Join(parts, " ")
-	
+
 	// Ensure line doesn't exceed width
 	if len(line) > width {
 		line = line[:width-3] + "..."
 	}
-	
+
 	return line
 }
 
@@ -506,10 +509,10 @@ func (m *FuzzyFinderModel) searchFiles() tea.Cmd {
 		m.loading = true
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
-		
+
 		pattern := m.input.Value()
 		results, err := m.fuzzyFinder.Search(ctx, pattern)
-		
+
 		return searchResultsMsg{
 			results: results,
 			err:     err,
@@ -522,20 +525,20 @@ func (m *FuzzyFinderModel) updatePreview() tea.Cmd {
 	if len(m.results) == 0 || m.selectedIndex >= len(m.results) {
 		return nil
 	}
-	
+
 	selectedFile := m.results[m.selectedIndex]
-	
+
 	return func() tea.Msg {
 		// Don't preview directories or very large files
 		if selectedFile.IsDirectory || selectedFile.Size > 1024*1024 {
 			return previewContentMsg("Directory or file too large to preview")
 		}
-		
+
 		content, err := readFilePreview(selectedFile.AbsPath, 50) // First 50 lines
 		if err != nil {
 			return previewContentMsg(fmt.Sprintf("Cannot preview file: %v", err))
 		}
-		
+
 		return previewContentMsg(content)
 	}
 }
@@ -546,12 +549,12 @@ func (m *FuzzyFinderModel) refreshIndex() tea.Cmd {
 		m.loading = true
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
-		
+
 		err := m.fuzzyFinder.RefreshIndex(ctx)
 		if err != nil {
 			return errorMsg(err)
 		}
-		
+
 		return indexRefreshedMsg{}
 	}
 }
@@ -585,7 +588,7 @@ func readFilePreview(filePath string, maxLines int) (string, error) {
 
 	var lines []string
 	content := string(buffer[:n])
-	
+
 	for _, line := range strings.Split(content, "\n") {
 		if len(lines) >= maxLines {
 			break

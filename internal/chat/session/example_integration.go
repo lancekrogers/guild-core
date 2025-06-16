@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package session
 
 import (
@@ -37,7 +40,7 @@ func ExampleChatIntegration() {
 		// Load existing session
 		session = sessions[0]
 		fmt.Printf("Loaded session: %s\n", session.Name)
-		
+
 		// Show recent messages
 		messages, err := manager.GetContext(session.ID, 5)
 		if err == nil {
@@ -108,7 +111,7 @@ func ExampleSessionCommands() {
 	sessions, _ := store.ListSessions(ctx, 10, 0)
 	fmt.Println("Available sessions:")
 	for i, s := range sessions {
-		fmt.Printf("%d. %s (ID: %s, Updated: %s)\n", 
+		fmt.Printf("%d. %s (ID: %s, Updated: %s)\n",
 			i+1, s.Name, s.ID, s.UpdatedAt.Format("2006-01-02 15:04"))
 	}
 

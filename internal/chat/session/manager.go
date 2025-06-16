@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package session
 
 import (
@@ -21,7 +24,7 @@ import (
 type manager struct {
 	store SessionStore
 	mu    sync.RWMutex
-	
+
 	// Active message streams
 	streams map[string]*messageStream
 }
@@ -37,7 +40,7 @@ func NewManager(store SessionStore) SessionManager {
 // NewSession creates a new chat session
 func (m *manager) NewSession(name string, campaignID *string) (*Session, error) {
 	ctx := context.Background()
-	
+
 	session := &Session{
 		ID:         uuid.New().String(),
 		Name:       name,
@@ -45,7 +48,7 @@ func (m *manager) NewSession(name string, campaignID *string) (*Session, error) 
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
 		Metadata: map[string]interface{}{
-			"version": "1.0",
+			"version":    "1.0",
 			"created_by": "guild-chat",
 		},
 	}
@@ -60,7 +63,7 @@ func (m *manager) NewSession(name string, campaignID *string) (*Session, error) 
 // LoadSession loads an existing session
 func (m *manager) LoadSession(id string) (*Session, error) {
 	ctx := context.Background()
-	
+
 	session, err := m.store.GetSession(ctx, id)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to load session")
@@ -72,7 +75,7 @@ func (m *manager) LoadSession(id string) (*Session, error) {
 // SaveSession updates an existing session
 func (m *manager) SaveSession(session *Session) error {
 	ctx := context.Background()
-	
+
 	session.UpdatedAt = time.Now()
 	if err := m.store.UpdateSession(ctx, session); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save session")
@@ -84,7 +87,7 @@ func (m *manager) SaveSession(session *Session) error {
 // ForkSession creates a new session branching from an existing one
 func (m *manager) ForkSession(sourceID string, newName string) (*Session, error) {
 	ctx := context.Background()
-	
+
 	// Load source session
 	source, err := m.store.GetSession(ctx, sourceID)
 	if err != nil {
@@ -127,7 +130,7 @@ func (m *manager) ForkSession(sourceID string, newName string) (*Session, error)
 			ToolCalls: msg.ToolCalls,
 			Metadata:  msg.Metadata,
 		}
-		
+
 		if err := m.store.SaveMessage(ctx, forkedMsg); err != nil {
 			// Log error but continue copying
 			continue
@@ -140,7 +143,7 @@ func (m *manager) ForkSession(sourceID string, newName string) (*Session, error)
 // AppendMessage adds a new message to a session
 func (m *manager) AppendMessage(sessionID string, role MessageRole, content string, toolCalls []ToolCall) (*Message, error) {
 	ctx := context.Background()
-	
+
 	message := &Message{
 		ID:        uuid.New().String(),
 		SessionID: sessionID,
@@ -160,7 +163,7 @@ func (m *manager) AppendMessage(sessionID string, role MessageRole, content stri
 // StreamMessage creates a message stream for progressive content
 func (m *manager) StreamMessage(sessionID string, role MessageRole) (MessageStream, error) {
 	streamID := uuid.New().String()
-	
+
 	stream := &messageStream{
 		id:        streamID,
 		sessionID: sessionID,
@@ -180,7 +183,7 @@ func (m *manager) StreamMessage(sessionID string, role MessageRole) (MessageStre
 // GetContext retrieves recent messages for context
 func (m *manager) GetContext(sessionID string, messageCount int) ([]*Message, error) {
 	ctx := context.Background()
-	
+
 	// Get all messages (they're already ordered by created_at ASC)
 	messages, err := m.store.GetMessages(ctx, sessionID)
 	if err != nil {
@@ -191,14 +194,14 @@ func (m *manager) GetContext(sessionID string, messageCount int) ([]*Message, er
 	if len(messages) > messageCount {
 		return messages[len(messages)-messageCount:], nil
 	}
-	
+
 	return messages, nil
 }
 
 // ClearContext removes all messages from a session
 func (m *manager) ClearContext(sessionID string) error {
 	ctx := context.Background()
-	
+
 	// Get all messages
 	messages, err := m.store.GetMessages(ctx, sessionID)
 	if err != nil {
@@ -233,7 +236,7 @@ func (m *manager) ExportSession(sessionID string, format ExportFormat) ([]byte, 
 // ExportSessionWithOptions exports a session with custom options
 func (m *manager) ExportSessionWithOptions(sessionID string, format ExportFormat, options *ExportOptions) ([]byte, error) {
 	ctx := context.Background()
-	
+
 	// Load session
 	session, err := m.store.GetSession(ctx, sessionID)
 	if err != nil {
@@ -359,10 +362,10 @@ func (s *messageStream) Close() (*Message, error) {
 
 func (m *manager) exportJSON(session *Session, messages []*Message) ([]byte, error) {
 	export := map[string]interface{}{
-		"session":  session,
-		"messages": messages,
+		"session":     session,
+		"messages":    messages,
 		"exported_at": time.Now().Format(time.RFC3339),
-		"version": "1.0",
+		"version":     "1.0",
 	}
 
 	data, err := json.MarshalIndent(export, "", "  ")
@@ -376,7 +379,7 @@ func (m *manager) exportJSON(session *Session, messages []*Message) ([]byte, err
 func (m *manager) exportJSONWithOptions(session *Session, messages []*Message, options *ExportOptions) ([]byte, error) {
 	// Filter messages based on options
 	filteredMessages := m.filterMessages(messages, options)
-	
+
 	export := map[string]interface{}{
 		"session":     session,
 		"messages":    filteredMessages,
@@ -387,9 +390,9 @@ func (m *manager) exportJSONWithOptions(session *Session, messages []*Message, o
 
 	if options.IncludeMetadata {
 		export["metadata"] = map[string]interface{}{
-			"total_messages":   len(messages),
+			"total_messages":    len(messages),
 			"filtered_messages": len(filteredMessages),
-			"export_settings":  options,
+			"export_settings":   options,
 		}
 	}
 
@@ -426,7 +429,7 @@ func (m *manager) exportMarkdownWithOptions(session *Session, messages []*Messag
 	fmt.Fprintf(&buf, "**Session ID:** %s  \n", session.ID)
 	fmt.Fprintf(&buf, "**Created:** %s  \n", session.CreatedAt.Format(options.DateFormat))
 	fmt.Fprintf(&buf, "**Updated:** %s  \n", session.UpdatedAt.Format(options.DateFormat))
-	
+
 	if session.CampaignID != nil {
 		fmt.Fprintf(&buf, "**Campaign:** %s  \n", *session.CampaignID)
 	}
@@ -458,13 +461,13 @@ func (m *manager) exportMarkdownWithOptions(session *Session, messages []*Messag
 
 		fmt.Fprintf(&buf, "## %s\n", roleTitle)
 		fmt.Fprintf(&buf, "*%s*\n\n", msg.CreatedAt.Format(options.DateFormat))
-		
+
 		// Process content with syntax highlighting
 		content := msg.Content
 		if options.SyntaxHighlight {
 			content = m.enhanceMarkdownCodeBlocks(content, options.LineNumbers)
 		}
-		
+
 		fmt.Fprintf(&buf, "%s\n\n", content)
 
 		// Tool calls
@@ -556,7 +559,7 @@ func (m *manager) exportHTMLWithOptions(session *Session, messages []*Message, o
 	fmt.Fprintf(&buf, "<p><strong>Session ID:</strong> %s<br>\n", session.ID)
 	fmt.Fprintf(&buf, "<strong>Created:</strong> %s<br>\n", session.CreatedAt.Format(options.DateFormat))
 	fmt.Fprintf(&buf, "<strong>Updated:</strong> %s</p>\n", session.UpdatedAt.Format(options.DateFormat))
-	
+
 	if session.CampaignID != nil {
 		fmt.Fprintf(&buf, "<p><strong>Campaign:</strong> %s</p>\n", *session.CampaignID)
 	}
@@ -580,13 +583,13 @@ func (m *manager) exportHTMLWithOptions(session *Session, messages []*Message, o
 	for _, msg := range filteredMessages {
 		roleClass := string(msg.Role)
 		roleIcon := m.getRoleIcon(msg.Role)
-		
+
 		fmt.Fprintf(&buf, `<div class="message %s">`, roleClass)
 		fmt.Fprintf(&buf, `<div class="message-header">`)
 		fmt.Fprintf(&buf, `<span class="role">%s %s</span>`, roleIcon, strings.Title(string(msg.Role)))
 		fmt.Fprintf(&buf, `<span class="timestamp">%s</span>`, msg.CreatedAt.Format(options.DateFormat))
 		fmt.Fprintf(&buf, `</div>`)
-		
+
 		// Content with syntax highlighting
 		content := msg.Content
 		if options.SyntaxHighlight {
@@ -594,7 +597,7 @@ func (m *manager) exportHTMLWithOptions(session *Session, messages []*Message, o
 		} else {
 			content = strings.ReplaceAll(content, "\n", "<br>")
 		}
-		
+
 		fmt.Fprintf(&buf, `<div class="content">%s</div>`, content)
 
 		// Tool calls
@@ -631,7 +634,7 @@ func (m *manager) exportHTMLWithOptions(session *Session, messages []*Message, o
 			fmt.Fprintf(&buf, `</ul>`)
 			fmt.Fprintf(&buf, `</div>`)
 		}
-		
+
 		fmt.Fprintf(&buf, "</div>\n")
 	}
 	fmt.Fprintf(&buf, "</div>\n")
@@ -678,8 +681,8 @@ func (m *manager) importJSON(data []byte) (*Session, error) {
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
 		Metadata: map[string]interface{}{
-			"imported_from": export.Session.ID,
-			"imported_at":   time.Now().Format(time.RFC3339),
+			"imported_from":    export.Session.ID,
+			"imported_at":      time.Now().Format(time.RFC3339),
 			"original_created": export.Session.CreatedAt.Format(time.RFC3339),
 		},
 	}
@@ -777,16 +780,16 @@ func (m *manager) exportPDF(session *Session, messages []*Message, options *Expo
 // filterMessages filters messages based on export options
 func (m *manager) filterMessages(messages []*Message, options *ExportOptions) []*Message {
 	filtered := make([]*Message, 0, len(messages))
-	
+
 	for _, msg := range messages {
 		// Skip tool messages if not including tool outputs
 		if msg.Role == RoleTool && !options.IncludeToolOutputs {
 			continue
 		}
-		
+
 		filtered = append(filtered, msg)
 	}
-	
+
 	return filtered
 }
 
@@ -794,22 +797,22 @@ func (m *manager) filterMessages(messages []*Message, options *ExportOptions) []
 func (m *manager) enhanceMarkdownCodeBlocks(content string, lineNumbers bool) string {
 	// Enhanced regex to capture code blocks with optional language
 	codeBlockRegex := regexp.MustCompile("(?s)```(\\w*)?\\n?(.*?)```")
-	
+
 	return codeBlockRegex.ReplaceAllStringFunc(content, func(match string) string {
 		// Extract language and code
 		parts := codeBlockRegex.FindStringSubmatch(match)
 		if len(parts) < 3 {
 			return match
 		}
-		
+
 		lang := parts[1]
 		code := parts[2]
-		
+
 		// Default language detection
 		if lang == "" {
 			lang = m.detectLanguage(code)
 		}
-		
+
 		// Add line numbers if requested
 		if lineNumbers {
 			lines := strings.Split(code, "\n")
@@ -819,7 +822,7 @@ func (m *manager) enhanceMarkdownCodeBlocks(content string, lineNumbers bool) st
 			}
 			code = strings.Join(numberedLines, "\n")
 		}
-		
+
 		return fmt.Sprintf("```%s\n%s\n```", lang, code)
 	})
 }
@@ -828,39 +831,39 @@ func (m *manager) enhanceMarkdownCodeBlocks(content string, lineNumbers bool) st
 func (m *manager) enhanceHTMLCodeBlocks(content string, lineNumbers bool) string {
 	// Convert markdown to HTML with syntax highlighting
 	codeBlockRegex := regexp.MustCompile("(?s)```(\\w*)?\\n?(.*?)```")
-	
+
 	content = codeBlockRegex.ReplaceAllStringFunc(content, func(match string) string {
 		parts := codeBlockRegex.FindStringSubmatch(match)
 		if len(parts) < 3 {
 			return match
 		}
-		
+
 		lang := parts[1]
 		code := parts[2]
-		
+
 		if lang == "" {
 			lang = m.detectLanguage(code)
 		}
-		
+
 		// Add line numbers class if requested
 		lineNumClass := ""
 		if lineNumbers {
 			lineNumClass = " line-numbers"
 		}
-		
+
 		return fmt.Sprintf(`<pre><code class="language-%s%s">%s</code></pre>`, lang, lineNumClass, code)
 	})
-	
+
 	// Convert other markdown elements
 	content = strings.ReplaceAll(content, "\n", "<br>")
-	
+
 	return content
 }
 
 // detectLanguage performs simple language detection based on content
 func (m *manager) detectLanguage(code string) string {
 	code = strings.TrimSpace(strings.ToLower(code))
-	
+
 	// Simple heuristics for language detection
 	if strings.Contains(code, "package main") || strings.Contains(code, "func ") {
 		return "go"
@@ -883,7 +886,7 @@ func (m *manager) detectLanguage(code string) string {
 	if strings.Contains(code, "SELECT ") || strings.Contains(code, "select ") {
 		return "sql"
 	}
-	
+
 	return "text"
 }
 
@@ -998,11 +1001,11 @@ func (m *manager) getHTMLStyles(options *ExportOptions) string {
         }
         pre code { background: none; padding: 0; }
     `
-	
+
 	// Merge with custom CSS if provided
 	if options.CustomCSS != "" {
 		return baseStyles + "\n" + options.CustomCSS
 	}
-	
+
 	return baseStyles
 }

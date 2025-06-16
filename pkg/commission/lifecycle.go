@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package commission
 
 import (
@@ -14,11 +17,11 @@ import (
 
 // LifecycleManager handles the commission lifecycle operations
 type LifecycleManager struct {
-	manager        *Manager
+	manager         *Manager
 	commissionsPath string
-	aiDocsPath     string
-	specsPath      string
-	guildReadyFile string
+	aiDocsPath      string
+	specsPath       string
+	guildReadyFile  string
 }
 
 // newLifecycleManager creates a new lifecycle manager (private constructor)
@@ -34,11 +37,11 @@ func newLifecycleManager(manager *Manager, basePath string) *LifecycleManager {
 	}
 
 	return &LifecycleManager{
-		manager:        manager,
+		manager:         manager,
 		commissionsPath: filepath.Join(basePath, "commissions"),
-		aiDocsPath:     filepath.Join(basePath, "ai_docs"),
-		specsPath:      filepath.Join(basePath, "specs"),
-		guildReadyFile: ".guildready",
+		aiDocsPath:      filepath.Join(basePath, "ai_docs"),
+		specsPath:       filepath.Join(basePath, "specs"),
+		guildReadyFile:  ".guildready",
 	}
 }
 

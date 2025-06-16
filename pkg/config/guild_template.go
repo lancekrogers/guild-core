@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package config
 
 // DefaultGuildTemplate returns a default guild configuration template
@@ -139,7 +142,7 @@ func ExampleGuildTemplates() map[string]*GuildConfig {
 	return map[string]*GuildConfig{
 		"default": DefaultGuildTemplate(),
 		"minimal": MinimalGuildTemplate(),
-		"web_dev": &GuildConfig{
+		"web_dev": {
 			Name:        "WebDevGuild",
 			Description: "Guild specialized for web development projects",
 			Manager: ManagerConfig{
@@ -198,7 +201,7 @@ func ExampleGuildTemplates() map[string]*GuildConfig {
 				},
 			},
 		},
-		"data_science": &GuildConfig{
+		"data_science": {
 			Name:        "DataScienceGuild",
 			Description: "Guild specialized for data science and ML projects",
 			Manager: ManagerConfig{

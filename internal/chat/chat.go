@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package chat
 
 import (
@@ -190,7 +193,7 @@ Try these commands to see visual features:
 	// Initialize command completion and history
 	// Use current working directory as project root
 	projectRoot := "." // Agent 2 will improve this logic
-	
+
 	contentFormatter := NewContentFormatter(markdownRenderer, chatWidth, projectRoot)
 
 	completionEngine := NewCompletionEngine(guildConfig, projectRoot)
@@ -211,7 +214,7 @@ Try these commands to see visual features:
 	var sessionManager session.SessionManager
 	var currentSession *session.Session
 	var loadedMessages []Message
-	
+
 	// Open database connection for session store
 	dbPath := filepath.Join(".guild", "memory.db")
 	db, err := sql.Open("sqlite3", dbPath)
@@ -222,7 +225,7 @@ Try these commands to see visual features:
 		// Create session store and manager
 		store := session.NewSQLiteStore(db)
 		sessionManager = session.NewManager(store)
-		
+
 		// Load or create session
 		if sessionID != "" {
 			// Try to load existing session
@@ -247,7 +250,7 @@ Try these commands to see visual features:
 				sessionID = currentSession.ID
 			}
 		}
-		
+
 		// Load existing messages if we have a session
 		if currentSession != nil {
 			messages, err := sessionManager.GetContext(currentSession.ID, 50) // Load last 50 messages
@@ -256,7 +259,7 @@ Try these commands to see visual features:
 				for _, msg := range messages {
 					var msgType messageType
 					var agentID string
-					
+
 					switch msg.Role {
 					case session.RoleUser:
 						msgType = msgUser
@@ -273,7 +276,7 @@ Try these commands to see visual features:
 					default:
 						msgType = msgSystem
 					}
-					
+
 					loadedMessages = append(loadedMessages, Message{
 						Type:      msgType,
 						Content:   msg.Content,
@@ -337,7 +340,7 @@ Try these commands to see visual features:
 		costConsent:   make(map[string]bool),
 		taskCache:     make(map[string]string),
 		blockedTools:  make(map[string]bool),
-		
+
 		// Integration flags for feature control
 		integrationFlags: make(map[string]bool),
 	}

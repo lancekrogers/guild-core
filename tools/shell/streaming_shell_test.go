@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package shell_test
 
 import (
@@ -6,9 +9,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/guild-ventures/guild-core/tools/shell"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/guild-ventures/guild-core/tools/shell"
 )
 
 func TestStreamingShellTool_Basic(t *testing.T) {

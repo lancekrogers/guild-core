@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package main
 
 import (
@@ -29,7 +32,7 @@ func init() {
 	chatCmd.Flags().StringVar(&chatCampaignID, "campaign", "", "Campaign ID to use for the chat session")
 	chatCmd.Flags().StringVar(&chatSessionID, "session", "", "Session ID to use (defaults to new UUID)")
 	chatCmd.Flags().BoolVar(&chatNoDaemon, "no-daemon", false, "Don't auto-start the Guild server")
-	
+
 	// Register completion functions
 	chatCmd.RegisterFlagCompletionFunc("campaign", completeCampaignNames)
 	chatCmd.RegisterFlagCompletionFunc("session", completeSessionIDs)

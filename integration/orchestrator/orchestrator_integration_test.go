@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package orchestrator
 
 import (
@@ -88,9 +91,9 @@ func TestCampaignLifecycleManagement(t *testing.T) {
 			Timestamp: time.Now(),
 			Source:    "test",
 			Data: map[string]interface{}{
-				"campaign_id":  testCampaign.ID,
+				"campaign_id":   testCampaign.ID,
 				"commission_id": objID,
-				"status":       "started",
+				"status":        "started",
 			},
 		})
 	}
@@ -103,7 +106,7 @@ func TestCampaignLifecycleManagement(t *testing.T) {
 			Timestamp: time.Now(),
 			Source:    "test",
 			Data: map[string]interface{}{
-				"campaign_id":  testCampaign.ID,
+				"campaign_id":   testCampaign.ID,
 				"commission_id": objID,
 			},
 		})

@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package main
 
 import (
@@ -32,7 +35,7 @@ func TestConfigShowCommand(t *testing.T) {
 				tmpDir := t.TempDir()
 				globalDir := filepath.Join(tmpDir, ".guild")
 				require.NoError(t, os.MkdirAll(globalDir, 0755))
-				
+
 				cfg := &config.GuildConfig{
 					Name:        "Test Guild",
 					Description: "Test Description",
@@ -44,11 +47,11 @@ func TestConfigShowCommand(t *testing.T) {
 						},
 					},
 				}
-				
+
 				data, err := yaml.Marshal(cfg)
 				require.NoError(t, err)
 				require.NoError(t, os.WriteFile(filepath.Join(globalDir, "config.yaml"), data, 0644))
-				
+
 				// Mock home directory
 				os.Setenv("HOME", tmpDir)
 				return tmpDir
@@ -66,7 +69,7 @@ func TestConfigShowCommand(t *testing.T) {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".guild")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
-				
+
 				cfg := &config.GuildConfig{
 					Name: "Local Project",
 					Agents: []config.AgentConfig{
@@ -77,16 +80,16 @@ func TestConfigShowCommand(t *testing.T) {
 						},
 					},
 				}
-				
+
 				data, err := yaml.Marshal(cfg)
 				require.NoError(t, err)
 				require.NoError(t, os.WriteFile(filepath.Join(guildDir, "guild.yaml"), data, 0644))
-				
+
 				// Change to temp dir so it finds local config
 				oldWd, _ := os.Getwd()
 				os.Chdir(tmpDir)
 				t.Cleanup(func() { os.Chdir(oldWd) })
-				
+
 				return tmpDir
 			},
 			expectedOutput: []string{
@@ -102,19 +105,19 @@ func TestConfigShowCommand(t *testing.T) {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".guild")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
-				
+
 				cfg := &config.GuildConfig{
 					Name: "Raw Test",
 				}
-				
+
 				data, err := yaml.Marshal(cfg)
 				require.NoError(t, err)
 				require.NoError(t, os.WriteFile(filepath.Join(guildDir, "guild.yaml"), data, 0644))
-				
+
 				oldWd, _ := os.Getwd()
 				os.Chdir(tmpDir)
 				t.Cleanup(func() { os.Chdir(oldWd) })
-				
+
 				return tmpDir
 			},
 			expectedOutput: []string{
@@ -249,7 +252,7 @@ agents:
   - id: agent1
     name: Agent One
   type: worker`
-				
+
 				require.NoError(t, os.WriteFile(filepath.Join(guildDir, "guild.yaml"), []byte(invalidYAML), 0644))
 
 				oldWd, _ := os.Getwd()

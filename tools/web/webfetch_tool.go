@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package web
 
 import (
@@ -13,7 +16,7 @@ import (
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
@@ -23,11 +26,11 @@ import (
 // WebFetchTool implements web content fetching and AI-powered analysis
 type WebFetchTool struct {
 	*tools.BaseTool
-	client       *http.Client
-	aiProvider   providers.AIProvider
-	cache        *WebFetchCache
-	userAgent    string
-	maxBodySize  int64
+	client      *http.Client
+	aiProvider  providers.AIProvider
+	cache       *WebFetchCache
+	userAgent   string
+	maxBodySize int64
 }
 
 // WebFetchRequest represents the input parameters for web fetch
@@ -38,32 +41,32 @@ type WebFetchRequest struct {
 
 // WebFetchResponse represents the response from web fetch
 type WebFetchResponse struct {
-	URL           string            `json:"url"`
-	Title         string            `json:"title"`
-	Content       string            `json:"content"`
-	Analysis      string            `json:"analysis"`
-	Metadata      WebPageMetadata   `json:"metadata"`
-	ProcessingTime float64          `json:"processing_time_ms"`
-	FromCache     bool              `json:"from_cache"`
-	Error         string            `json:"error,omitempty"`
+	URL            string          `json:"url"`
+	Title          string          `json:"title"`
+	Content        string          `json:"content"`
+	Analysis       string          `json:"analysis"`
+	Metadata       WebPageMetadata `json:"metadata"`
+	ProcessingTime float64         `json:"processing_time_ms"`
+	FromCache      bool            `json:"from_cache"`
+	Error          string          `json:"error,omitempty"`
 }
 
 // WebPageMetadata contains extracted metadata from the web page
 type WebPageMetadata struct {
-	Title           string            `json:"title"`
-	Description     string            `json:"description"`
-	Keywords        string            `json:"keywords"`
-	Author          string            `json:"author"`
-	Language        string            `json:"language"`
-	ContentType     string            `json:"content_type"`
-	ContentLength   int               `json:"content_length"`
-	LastModified    string            `json:"last_modified"`
-	StatusCode      int               `json:"status_code"`
-	Headers         map[string]string `json:"headers"`
-	Links           []string          `json:"links"`
-	Images          []string          `json:"images"`
-	WordCount       int               `json:"word_count"`
-	ReadingTimeMin  int               `json:"reading_time_minutes"`
+	Title          string            `json:"title"`
+	Description    string            `json:"description"`
+	Keywords       string            `json:"keywords"`
+	Author         string            `json:"author"`
+	Language       string            `json:"language"`
+	ContentType    string            `json:"content_type"`
+	ContentLength  int               `json:"content_length"`
+	LastModified   string            `json:"last_modified"`
+	StatusCode     int               `json:"status_code"`
+	Headers        map[string]string `json:"headers"`
+	Links          []string          `json:"links"`
+	Images         []string          `json:"images"`
+	WordCount      int               `json:"word_count"`
+	ReadingTimeMin int               `json:"reading_time_minutes"`
 }
 
 // CacheEntry represents a cached web fetch result
@@ -88,10 +91,10 @@ func NewWebFetchCache(maxSize int) *WebFetchCache {
 		maxSize: maxSize,
 		stop:    make(chan struct{}),
 	}
-	
+
 	// Start cleanup goroutine
 	go cache.cleanupExpired()
-	
+
 	return cache
 }
 
@@ -106,16 +109,16 @@ func (t *WebFetchTool) Close() {
 func (c *WebFetchCache) Get(key string) (*WebFetchResponse, bool) {
 	c.mutex.RLock()
 	defer c.mutex.RUnlock()
-	
+
 	entry, exists := c.entries[key]
 	if !exists {
 		return nil, false
 	}
-	
+
 	if time.Since(entry.Timestamp) > entry.TTL {
 		return nil, false
 	}
-	
+
 	// Mark as from cache
 	response := *entry.Response
 	response.FromCache = true
@@ -126,12 +129,12 @@ func (c *WebFetchCache) Get(key string) (*WebFetchResponse, bool) {
 func (c *WebFetchCache) Set(key string, response *WebFetchResponse, ttl time.Duration) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
-	
+
 	// Remove oldest entries if cache is full
 	if len(c.entries) >= c.maxSize {
 		c.evictOldest()
 	}
-	
+
 	c.entries[key] = &CacheEntry{
 		Response:  response,
 		Timestamp: time.Now(),
@@ -143,14 +146,14 @@ func (c *WebFetchCache) Set(key string, response *WebFetchResponse, ttl time.Dur
 func (c *WebFetchCache) evictOldest() {
 	var oldestKey string
 	var oldestTime time.Time
-	
+
 	for key, entry := range c.entries {
 		if oldestKey == "" || entry.Timestamp.Before(oldestTime) {
 			oldestKey = key
 			oldestTime = entry.Timestamp
 		}
 	}
-	
+
 	if oldestKey != "" {
 		delete(c.entries, oldestKey)
 	}
@@ -160,7 +163,7 @@ func (c *WebFetchCache) evictOldest() {
 func (c *WebFetchCache) cleanupExpired() {
 	ticker := time.NewTicker(5 * time.Minute)
 	defer ticker.Stop()
-	
+
 	for {
 		select {
 		case <-ticker.C:
@@ -218,7 +221,7 @@ func NewWebFetchTool(aiProvider providers.AIProvider) *WebFetchTool {
 	)
 
 	return &WebFetchTool{
-		BaseTool:  baseTool,
+		BaseTool:   baseTool,
 		aiProvider: aiProvider,
 		client: &http.Client{
 			Timeout: 30 * time.Second,
@@ -269,7 +272,7 @@ func (t *WebFetchTool) Execute(ctx context.Context, input string) (*tools.ToolRe
 	if cachedResponse, found := t.cache.Get(cacheKey); found {
 		// Update processing time for cache hit
 		cachedResponse.ProcessingTime = float64(time.Since(startTime).Nanoseconds()) / 1e6
-		
+
 		outputJSON, err := json.MarshalIndent(cachedResponse, "", "  ")
 		if err != nil {
 			return tools.NewToolResult("", nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal cached response"), nil), nil
@@ -412,7 +415,7 @@ func (t *WebFetchTool) extractContent(doc *goquery.Document) string {
 
 	// Extract main content
 	mainSelectors := []string{
-		"main", "article", "[role='main']", ".content", ".post-content", 
+		"main", "article", "[role='main']", ".content", ".post-content",
 		".entry-content", ".article-content", "#content", ".main-content",
 	}
 
@@ -452,7 +455,7 @@ func (t *WebFetchTool) processElement(s *goquery.Selection, content *strings.Bui
 	}
 
 	tagName := goquery.NodeName(s)
-	
+
 	switch strings.ToLower(tagName) {
 	case "h1":
 		content.WriteString("\n\n# " + strings.TrimSpace(s.Text()) + "\n\n")

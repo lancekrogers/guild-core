@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 //go:build integration
 
 package performance
@@ -68,8 +71,8 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 
 		// Simulate 24-hour workload (accelerated)
 		// For integration tests, use a much shorter duration
-		simulationDuration := 30 * time.Second              // 30 seconds instead of 24 minutes
-		workloadTicker := time.NewTicker(1 * time.Second)  // Task every 1s instead of 10s
+		simulationDuration := 30 * time.Second            // 30 seconds instead of 24 minutes
+		workloadTicker := time.NewTicker(1 * time.Second) // Task every 1s instead of 10s
 		defer workloadTicker.Stop()
 
 		startTime := time.Now()

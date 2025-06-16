@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // Package workspace provides git worktree isolation for AI agents working on the same repository.
 //
 // The workspace package addresses the challenge of multiple AI agents working concurrently

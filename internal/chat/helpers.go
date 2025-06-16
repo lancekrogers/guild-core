@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package chat
 
 import (
@@ -6,8 +9,8 @@ import (
 	"time"
 
 	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/lipgloss"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 
 	"github.com/guild-ventures/guild-core/internal/ui"
 	"github.com/guild-ventures/guild-core/pkg/config"
@@ -83,7 +86,7 @@ func (m ChatModel) getHelpText() string {
 	if m.keyAdapter != nil {
 		help = platformStyle.Render(m.keyAdapter.GetPlatformHelpText()) + "\n\n"
 	}
-	
+
 	help += helpStyle.Render("🏰 Guild Chat Commands:\n\n")
 
 	// Text commands
@@ -117,7 +120,7 @@ func (m ChatModel) getHelpText() string {
 
 	// Keyboard shortcuts
 	help += "\n" + helpStyle.Render("Keyboard Shortcuts:\n")
-	
+
 	// Get platform-specific keybindings
 	shortcuts := []struct {
 		binding key.Binding
@@ -176,13 +179,13 @@ func (m ChatModel) getStatusText() string {
 	status := fmt.Sprintf("📊 Guild Status\n")
 	status += fmt.Sprintf("Campaign: %s\n", m.campaignID)
 	status += fmt.Sprintf("Session: %s\n", m.sessionID)
-	
+
 	// Add session details if available
 	if m.currentSession != nil {
 		status += fmt.Sprintf("Session Name: %s\n", m.currentSession.Name)
 		status += fmt.Sprintf("Session Created: %s\n", m.currentSession.CreatedAt.Format("2006-01-02 15:04"))
 	}
-	
+
 	status += fmt.Sprintf("Messages: %d\n", len(m.messages))
 	status += fmt.Sprintf("Active Tools: %d\n", len(m.activeTools))
 
@@ -476,11 +479,11 @@ func (m ChatModel) handleNewLine() (tea.Model, tea.Cmd) {
 	// The textarea component already has built-in support for multiline
 	// We just need to insert a newline at the current position
 	currentValue := m.input.Value()
-	
+
 	// Get line info to find cursor position
 	lineInfo := m.input.LineInfo()
 	currentLine := m.input.Line()
-	
+
 	// Calculate the absolute position in the text
 	lines := strings.Split(currentValue, "\n")
 	absPos := 0
@@ -488,7 +491,7 @@ func (m ChatModel) handleNewLine() (tea.Model, tea.Cmd) {
 		absPos += len(lines[i]) + 1 // +1 for newline
 	}
 	absPos += lineInfo.CharOffset
-	
+
 	// Insert newline at cursor position
 	before := ""
 	if absPos <= len(currentValue) {
@@ -498,19 +501,19 @@ func (m ChatModel) handleNewLine() (tea.Model, tea.Cmd) {
 	if absPos < len(currentValue) {
 		after = currentValue[absPos:]
 	}
-	
+
 	newValue := before + "\n" + after
 	m.input.SetValue(newValue)
-	
+
 	// The textarea will handle cursor positioning
-	
+
 	return m, nil
 }
 
 // handleToggleVimMode toggles vim mode on/off
 func (m ChatModel) handleToggleVimMode() (tea.Model, tea.Cmd) {
 	m.vimModeEnabled = !m.vimModeEnabled
-	
+
 	if m.vimModeEnabled {
 		// Initialize vim state if not already created
 		if m.vimState == nil {
@@ -520,7 +523,7 @@ func (m ChatModel) handleToggleVimMode() (tea.Model, tea.Cmd) {
 		// Switch to normal mode and blur input
 		m.vimState.Mode = ModeNormal
 		m.input.Blur()
-		
+
 		// Add status message
 		msg := Message{
 			Type:      msgSystem,
@@ -531,7 +534,7 @@ func (m ChatModel) handleToggleVimMode() (tea.Model, tea.Cmd) {
 	} else {
 		// Disable vim mode and focus input
 		m.input.Focus()
-		
+
 		// Add status message
 		msg := Message{
 			Type:      msgSystem,
@@ -540,7 +543,7 @@ func (m ChatModel) handleToggleVimMode() (tea.Model, tea.Cmd) {
 		}
 		m.messages = append(m.messages, msg)
 	}
-	
+
 	m.updateMessagesView()
 	return m, nil
 }
@@ -549,7 +552,7 @@ func (m ChatModel) handleToggleVimMode() (tea.Model, tea.Cmd) {
 func (m ChatModel) handleCopy() (tea.Model, tea.Cmd) {
 	// Get text from input area
 	textToCopy := m.input.Value()
-	
+
 	// If input is empty, try to copy the last message instead
 	if textToCopy == "" && len(m.messages) > 0 {
 		// Find the last non-system message
@@ -560,7 +563,7 @@ func (m ChatModel) handleCopy() (tea.Model, tea.Cmd) {
 			}
 		}
 	}
-	
+
 	if textToCopy == "" {
 		// Add message indicating nothing to copy
 		msg := Message{
@@ -572,10 +575,10 @@ func (m ChatModel) handleCopy() (tea.Model, tea.Cmd) {
 		m.updateMessagesView()
 		return m, nil
 	}
-	
+
 	// Store in internal clipboard for paste operation
 	m.clipboard = textToCopy
-	
+
 	msg := Message{
 		Type:      msgSystem,
 		Content:   fmt.Sprintf("📋 Copied %d characters to clipboard", len(textToCopy)),
@@ -583,7 +586,7 @@ func (m ChatModel) handleCopy() (tea.Model, tea.Cmd) {
 	}
 	m.messages = append(m.messages, msg)
 	m.updateMessagesView()
-	
+
 	return m, nil
 }
 
@@ -600,14 +603,14 @@ func (m ChatModel) handlePaste() (tea.Model, tea.Cmd) {
 		m.updateMessagesView()
 		return m, nil
 	}
-	
+
 	// Get current input value
 	currentValue := m.input.Value()
-	
+
 	// Get line info to find cursor position
 	lineInfo := m.input.LineInfo()
 	currentLine := m.input.Line()
-	
+
 	// Calculate the absolute position in the text
 	lines := strings.Split(currentValue, "\n")
 	absPos := 0
@@ -615,7 +618,7 @@ func (m ChatModel) handlePaste() (tea.Model, tea.Cmd) {
 		absPos += len(lines[i]) + 1 // +1 for newline
 	}
 	absPos += lineInfo.CharOffset
-	
+
 	// Insert clipboard content at cursor position
 	before := ""
 	if absPos <= len(currentValue) {
@@ -625,10 +628,10 @@ func (m ChatModel) handlePaste() (tea.Model, tea.Cmd) {
 	if absPos < len(currentValue) {
 		after = currentValue[absPos:]
 	}
-	
+
 	newValue := before + m.clipboard + after
 	m.input.SetValue(newValue)
-	
+
 	msg := Message{
 		Type:      msgSystem,
 		Content:   fmt.Sprintf("📋 Pasted %d characters", len(m.clipboard)),
@@ -636,6 +639,6 @@ func (m ChatModel) handlePaste() (tea.Model, tea.Cmd) {
 	}
 	m.messages = append(m.messages, msg)
 	m.updateMessagesView()
-	
+
 	return m, nil
 }

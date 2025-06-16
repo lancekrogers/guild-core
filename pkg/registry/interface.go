@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 // Package registry provides component registration and discovery for the Guild framework.
 // It implements the registry pattern for dynamic component management.
 package registry

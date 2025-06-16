@@ -1,3 +1,6 @@
+// Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
+// SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
+
 package code
 
 import (
@@ -100,7 +103,7 @@ func (u User) Greet() string {
 	tmpFile.Close()
 
 	tool := NewASTTool()
-	
+
 	// Register a mock Go parser for testing
 	tool.RegisterParser(LanguageGo, &mockGoParser{})
 
@@ -292,7 +295,7 @@ const MaxAge = 100
 	tmpFile.Close()
 
 	tool := NewASTTool()
-	
+
 	// Register a mock Go parser for testing
 	tool.RegisterParser(LanguageGo, &mockGoParser{})
 
