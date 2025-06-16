@@ -17,6 +17,9 @@ func TestDaemonLifecycle(t *testing.T) {
 		t.Skip("Skipping daemon lifecycle test in short mode")
 	}
 
+	// Skip if guild binary doesn't exist
+	SkipIfNoBinary(t)
+
 	// Clean up any existing daemon
 	_ = Stop()
 	_ = CleanupStaleFiles()
@@ -31,7 +34,7 @@ func TestDaemonLifecycle(t *testing.T) {
 
 	// Verify it's running
 	assert.True(t, IsRunning(), "Daemon should be running")
-	assert.True(t, IsReachable(), "Daemon should be reachable")
+	assert.True(t, IsReachable(ctx), "Daemon should be reachable")
 
 	// Test idempotency - starting again should fail
 	err = Start(ctx)
@@ -52,7 +55,7 @@ func TestDaemonLifecycle(t *testing.T) {
 
 	// Verify it stopped
 	assert.False(t, IsRunning(), "Daemon should not be running")
-	assert.False(t, IsReachable(), "Daemon should not be reachable")
+	assert.False(t, IsReachable(ctx), "Daemon should not be reachable")
 
 	// Test status when stopped
 	status, err = Status()
@@ -65,6 +68,9 @@ func TestEnsureRunning(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping ensure running test in short mode")
 	}
+
+	// Skip if guild binary doesn't exist
+	SkipIfNoBinary(t)
 
 	// Ensure daemon is stopped
 	_ = Stop()
@@ -123,11 +129,13 @@ func TestPIDFileHandling(t *testing.T) {
 }
 
 func TestPortChecking(t *testing.T) {
+	ctx := context.Background()
+	
 	// Test that port checking works
-	assert.False(t, isPortListening("99999"), "Port 99999 should not be listening")
+	assert.False(t, isPortListening(ctx, "99999"), "Port 99999 should not be listening")
 
 	// Test with a port that's likely to be free
-	assert.False(t, isPortListening("54321"), "Random high port should not be listening")
+	assert.False(t, isPortListening(ctx, "54321"), "Random high port should not be listening")
 }
 
 func TestProcessChecking(t *testing.T) {

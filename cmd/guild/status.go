@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -47,7 +48,11 @@ func runStatus(cmd *cobra.Command, args []string) error {
 		fmt.Printf("  Logs: %s\n", daemon.GetLogFilePath())
 		
 		// Check if reachable
-		if daemon.IsReachable() {
+		ctx := cmd.Context()
+		if ctx == nil {
+			ctx = context.Background()
+		}
+		if daemon.IsReachable(ctx) {
 			fmt.Printf("  Reachable: %sYes%s\n", "\033[32m", "\033[0m") // Green
 		} else {
 			fmt.Printf("  Reachable: %sNo%s (process exists but not responding)\n", "\033[31m", "\033[0m") // Red

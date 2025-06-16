@@ -9,6 +9,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/guild-ventures/guild-core/internal/daemon"
 	"github.com/guild-ventures/guild-core/pkg/campaign"
 	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/config"
@@ -25,6 +26,7 @@ var (
 	campaignName  string
 	managerID     string
 	campaignID    string
+	campaignNoDaemon bool // Don't auto-start the Guild server
 )
 
 // campaignCmd represents the campaign command group
@@ -100,6 +102,9 @@ func init() {
 	campaignStatusCmd.Flags().StringVar(&campaignID, "id", "", "Campaign ID (required)")
 	campaignStatusCmd.MarkFlagRequired("id")
 
+	// Add persistent flags
+	campaignCmd.PersistentFlags().BoolVar(&campaignNoDaemon, "no-daemon", false, "Don't auto-start the Guild server")
+
 	// Register completion functions
 	createCampaignCmd.RegisterFlagCompletionFunc("commission", completeCommissionFiles)
 	createCampaignCmd.RegisterFlagCompletionFunc("manager", completeAgentIDs)
@@ -110,6 +115,28 @@ func init() {
 
 func createCampaign(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
+
+	// Auto-start daemon unless --no-daemon flag is set
+	if !campaignNoDaemon {
+		if !daemon.IsReachable(ctx) {
+			fmt.Println("🚀 Starting Guild server...")
+			if err := daemon.EnsureRunning(ctx); err != nil {
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
+					WithComponent("cli").
+					WithOperation("campaign.create.daemon_start")
+			}
+			// Give the server a moment to fully initialize
+			time.Sleep(500 * time.Millisecond)
+		}
+	}
+
+	// Check if server is reachable
+	if !daemon.IsReachable(ctx) {
+		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
+			WithComponent("cli").
+			WithOperation("campaign.create").
+			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
+	}
 
 	// Get project context
 	projCtx, err := project.GetContext()
@@ -277,6 +304,30 @@ func startCampaign(cmd *cobra.Command, args []string) error {
 }
 
 func watchCampaign(cmd *cobra.Command, args []string) error {
+	ctx := context.Background()
+
+	// Auto-start daemon unless --no-daemon flag is set
+	if !campaignNoDaemon {
+		if !daemon.IsReachable(ctx) {
+			fmt.Println("🚀 Starting Guild server...")
+			if err := daemon.EnsureRunning(ctx); err != nil {
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
+					WithComponent("cli").
+					WithOperation("campaign.watch.daemon_start")
+			}
+			// Give the server a moment to fully initialize
+			time.Sleep(500 * time.Millisecond)
+		}
+	}
+
+	// Check if server is reachable
+	if !daemon.IsReachable(ctx) {
+		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
+			WithComponent("cli").
+			WithOperation("campaign.watch").
+			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
+	}
+
 	// TODO: Connect to campaign gRPC stream
 	// TODO: Display real-time updates
 

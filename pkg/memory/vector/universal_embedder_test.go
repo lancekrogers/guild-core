@@ -75,6 +75,12 @@ func TestUniversalEmbedder_NewUniversalEmbedder(t *testing.T) {
 func TestUniversalEmbedder_Embed(t *testing.T) {
 	ctx := context.Background()
 
+	// Create mock providers for tests
+	mockProvider1, err := mock.NewProvider()
+	require.NoError(t, err)
+	mockProvider2, err := mock.NewProvider()
+	require.NoError(t, err)
+
 	tests := []struct {
 		name        string
 		text        string
@@ -87,14 +93,14 @@ func TestUniversalEmbedder_Embed(t *testing.T) {
 			name:        "successful dedicated embedding",
 			text:        "test text",
 			strategy:    StrategyDedicated,
-			provider:    mock.NewProvider(),
+			provider:    mockProvider1,
 			expectError: false,
 		},
 		{
 			name:      "graceful degradation with none strategy",
 			text:      "test text",
 			strategy:  StrategyNone,
-			provider:  mock.NewProvider(),
+			provider:  mockProvider2,
 			expectNil: true,
 		},
 		{
@@ -133,7 +139,8 @@ func TestUniversalEmbedder_Embed(t *testing.T) {
 func TestUniversalEmbedder_GetEmbeddings(t *testing.T) {
 	ctx := context.Background()
 
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
 	embedder := NewUniversalEmbedder(mockProvider, WithStrategy(StrategyDedicated))
 
 	texts := []string{"text1", "text2", "text3"}

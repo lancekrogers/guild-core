@@ -64,17 +64,20 @@ func IsRunning() bool {
 	}
 
 	// Also check if port is actually listening
-	return isPortListening(defaultPort)
+	// Use a short timeout context for this check
+	checkCtx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	return isPortListening(checkCtx, defaultPort)
 }
 
 // IsReachable checks if the gRPC server is reachable on the configured port
-func IsReachable() bool {
-	return isPortListening(defaultPort)
+func IsReachable(ctx context.Context) bool {
+	return isPortListening(ctx, defaultPort)
 }
 
 // EnsureRunning starts the daemon if not already running
 func EnsureRunning(ctx context.Context) error {
-	if IsReachable() {
+	if IsReachable(ctx) {
 		return nil // Already running
 	}
 
@@ -100,7 +103,7 @@ func Start(ctx context.Context) error {
 	}
 
 	// Get guild executable path
-	guildPath, err := os.Executable()
+	guildPath, err := getExecutablePath()
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to find guild executable").
 			WithComponent("daemon").
@@ -178,7 +181,7 @@ func Start(ctx context.Context) error {
 				WithOperation("Start").
 				WithDetails("timeout", maxStartupWait.String())
 		case <-ticker.C:
-			if IsReachable() {
+			if IsReachable(waitCtx) {
 				return nil // Success!
 			}
 		}
@@ -262,7 +265,9 @@ func Status() (string, error) {
 	port := defaultPort
 
 	// Check if actually reachable
-	if IsReachable() {
+	checkCtx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	if IsReachable(checkCtx) {
 		return fmt.Sprintf("Guild server is running (PID: %s, Port: %s)", pid, port), nil
 	}
 
@@ -271,8 +276,10 @@ func Status() (string, error) {
 
 // Helper functions
 
-func isPortListening(port string) bool {
-	conn, err := net.DialTimeout("tcp", "localhost:"+port, time.Second)
+func isPortListening(ctx context.Context, port string) bool {
+	// Create a context-aware dialer
+	var d net.Dialer
+	conn, err := d.DialContext(ctx, "tcp", "localhost:"+port)
 	if err != nil {
 		return false
 	}

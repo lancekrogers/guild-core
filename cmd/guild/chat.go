@@ -74,7 +74,7 @@ func runChat(cmd *cobra.Command, args []string) error {
 
 	// Auto-start daemon unless --no-daemon flag is set
 	if !chatNoDaemon {
-		if !daemon.IsReachable() {
+		if !daemon.IsReachable(ctx) {
 			fmt.Println("🚀 Starting Guild server...")
 			if err := daemon.EnsureRunning(ctx); err != nil {
 				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
@@ -87,7 +87,7 @@ func runChat(cmd *cobra.Command, args []string) error {
 	}
 
 	// Check if server is reachable
-	if !daemon.IsReachable() {
+	if !daemon.IsReachable(ctx) {
 		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
 			WithComponent("cli").
 			WithOperation("chat.run").

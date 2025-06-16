@@ -15,6 +15,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/guild-ventures/guild-core/internal/daemon"
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/config"
@@ -32,11 +33,12 @@ import (
 
 var (
 	// Commission flags
-	assignFlag     bool   // Auto-assign agents to tasks
-	dryRunFlag     bool   // Show what would be done without executing
-	campaignIDFlag string // Associate with campaign
-	priorityFlag   string // Commission priority (high, medium, low)
-	managerFlag    string // Override default manager agent
+	assignFlag        bool   // Auto-assign agents to tasks
+	dryRunFlag        bool   // Show what would be done without executing
+	campaignIDFlag    string // Associate with campaign
+	priorityFlag      string // Commission priority (high, medium, low)
+	managerFlag       string // Override default manager agent
+	commissionNoDaemon bool   // Don't auto-start the Guild server
 )
 
 // commissionCmd represents the commission command group
@@ -130,11 +132,34 @@ func init() {
 	commissionCmd.Flags().StringVar(&campaignIDFlag, "campaign", "", "Associate with campaign ID")
 	commissionCmd.Flags().StringVar(&priorityFlag, "priority", "medium", "Commission priority (high, medium, low)")
 	commissionCmd.Flags().StringVar(&managerFlag, "manager", "", "Override default manager agent")
+	commissionCmd.Flags().BoolVar(&commissionNoDaemon, "no-daemon", false, "Don't auto-start the Guild server")
 }
 
 // executeCommission creates and executes a commission using the orchestrator
 func executeCommission(ctx context.Context, description string) error {
 	fmt.Printf("📜 Commissioning Guild work: %s\n\n", description)
+
+	// Auto-start daemon unless --no-daemon flag is set
+	if !commissionNoDaemon {
+		if !daemon.IsReachable(ctx) {
+			fmt.Println("🚀 Starting Guild server...")
+			if err := daemon.EnsureRunning(ctx); err != nil {
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
+					WithComponent("cli").
+					WithOperation("commission.daemon_start")
+			}
+			// Give the server a moment to fully initialize
+			time.Sleep(500 * time.Millisecond)
+		}
+	}
+
+	// Check if server is reachable
+	if !daemon.IsReachable(ctx) {
+		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
+			WithComponent("cli").
+			WithOperation("commission.execute").
+			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
+	}
 
 	// Setup Guild context and components
 	components, err := setupGuildComponents(ctx)
@@ -255,6 +280,28 @@ func planAndAssignTasks(ctx context.Context, components *guildComponents, obj *c
 
 // showCommissionStatus displays the status of active commissions
 func showCommissionStatus(ctx context.Context) error {
+	// Auto-start daemon unless --no-daemon flag is set
+	if !commissionNoDaemon {
+		if !daemon.IsReachable(ctx) {
+			fmt.Println("🚀 Starting Guild server...")
+			if err := daemon.EnsureRunning(ctx); err != nil {
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
+					WithComponent("cli").
+					WithOperation("commission.status.daemon_start")
+			}
+			// Give the server a moment to fully initialize
+			time.Sleep(500 * time.Millisecond)
+		}
+	}
+
+	// Check if server is reachable
+	if !daemon.IsReachable(ctx) {
+		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
+			WithComponent("cli").
+			WithOperation("commission.status").
+			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
+	}
+
 	components, err := setupGuildComponents(ctx)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to setup Guild components").
@@ -299,6 +346,28 @@ func showCommissionStatus(ctx context.Context) error {
 
 // listCommissions lists all commissions
 func listCommissions(ctx context.Context) error {
+	// Auto-start daemon unless --no-daemon flag is set
+	if !commissionNoDaemon {
+		if !daemon.IsReachable(ctx) {
+			fmt.Println("🚀 Starting Guild server...")
+			if err := daemon.EnsureRunning(ctx); err != nil {
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
+					WithComponent("cli").
+					WithOperation("commission.list.daemon_start")
+			}
+			// Give the server a moment to fully initialize
+			time.Sleep(500 * time.Millisecond)
+		}
+	}
+
+	// Check if server is reachable
+	if !daemon.IsReachable(ctx) {
+		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
+			WithComponent("cli").
+			WithOperation("commission.list").
+			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
+	}
+
 	components, err := setupGuildComponents(ctx)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to setup Guild components").

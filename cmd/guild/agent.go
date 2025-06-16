@@ -6,12 +6,18 @@ import (
 	"os"
 	"strings"
 	"text/tabwriter"
+	"time"
 
 	"github.com/spf13/cobra"
 
+	"github.com/guild-ventures/guild-core/internal/daemon"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/guild-ventures/guild-core/pkg/registry"
+)
+
+var (
+	agentNoDaemon bool // Don't auto-start the Guild server
 )
 
 // agentListCmd represents the agent list command
@@ -64,6 +70,9 @@ func init() {
 	agentListCmd.Flags().StringP("type", "t", "", "Filter agents by type")
 	agentListCmd.Flags().IntP("max-cost", "c", 0, "Show only agents with cost <= value")
 	
+	// Add persistent flags
+	agentCmd.PersistentFlags().BoolVar(&agentNoDaemon, "no-daemon", false, "Don't auto-start the Guild server")
+	
 	// Register agent subcommands
 	agentCmd.AddCommand(agentListCmd)
 	agentCmd.AddCommand(agentStopCmd)
@@ -73,6 +82,31 @@ func init() {
 // runAgentList handles the agent list command
 func runAgentList(cmd *cobra.Command, args []string) error {
 	ctx := cmd.Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	// Auto-start daemon unless --no-daemon flag is set
+	if !agentNoDaemon {
+		if !daemon.IsReachable(ctx) {
+			fmt.Println("🚀 Starting Guild server...")
+			if err := daemon.EnsureRunning(ctx); err != nil {
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
+					WithComponent("cli").
+					WithOperation("agent.list.daemon_start")
+			}
+			// Give the server a moment to fully initialize
+			time.Sleep(500 * time.Millisecond)
+		}
+	}
+
+	// Check if server is reachable
+	if !daemon.IsReachable(ctx) {
+		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
+			WithComponent("cli").
+			WithOperation("agent.list").
+			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
+	}
 
 	// Get flags
 	verbose, _ := cmd.Flags().GetBool("verbose")

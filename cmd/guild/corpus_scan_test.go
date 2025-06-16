@@ -87,7 +87,7 @@ func TestPerformCorpusScan(t *testing.T) {
 	}
 
 	// Run initial scan first to create metadata
-	initialProvider := mock.NewProvider()
+	initialProvider := mock.NewProviderForTesting()
 	initialVectorConfig := &vector.StoreConfig{
 		Type:              vector.StoreTypeChromem,
 		EmbeddingProvider: initialProvider,
@@ -114,7 +114,7 @@ func TestPerformCorpusScan(t *testing.T) {
 			require.NoError(t, os.MkdirAll(testTempDir, 0755))
 
 			// Create mock RAG system
-			mockProvider := mock.NewProvider()
+			mockProvider := mock.NewProviderForTesting()
 			vectorConfig := &vector.StoreConfig{
 				Type:              vector.StoreTypeChromem,
 				EmbeddingProvider: mockProvider,

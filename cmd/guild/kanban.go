@@ -3,16 +3,22 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 
+	"github.com/guild-ventures/guild-core/internal/daemon"
 	kanbanui "github.com/guild-ventures/guild-core/internal/ui/kanban"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/project/local"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/guild-ventures/guild-core/pkg/storage"
+)
+
+var (
+	kanbanNoDaemon bool // Don't auto-start the Guild server
 )
 
 // kanbanCmd represents the kanban command group
@@ -80,6 +86,9 @@ func init() {
 	kanbanCmd.AddCommand(kanbanListCmd)
 	kanbanCmd.AddCommand(kanbanViewCmd)
 	kanbanCmd.AddCommand(kanbanCreateCmd)
+	
+	// Add flags
+	kanbanCmd.PersistentFlags().BoolVar(&kanbanNoDaemon, "no-daemon", false, "Don't auto-start the Guild server")
 }
 
 // initializeKanbanManager creates a properly initialized kanban manager with SQLite storage
@@ -116,6 +125,28 @@ func initializeKanbanManager(ctx context.Context) (*kanban.Manager, error) {
 // listKanbanBoards lists all available kanban boards
 func listKanbanBoards(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
+
+	// Auto-start daemon unless --no-daemon flag is set
+	if !kanbanNoDaemon {
+		if !daemon.IsReachable(ctx) {
+			fmt.Println("🚀 Starting Guild server...")
+			if err := daemon.EnsureRunning(ctx); err != nil {
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
+					WithComponent("cli").
+					WithOperation("kanban.list.daemon_start")
+			}
+			// Give the server a moment to fully initialize
+			time.Sleep(500 * time.Millisecond)
+		}
+	}
+
+	// Check if server is reachable
+	if !daemon.IsReachable(ctx) {
+		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
+			WithComponent("cli").
+			WithOperation("kanban.list").
+			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
+	}
 
 	// Initialize kanban manager with storage
 	kanbanMgr, err := initializeKanbanManager(ctx)
@@ -175,6 +206,28 @@ func listKanbanBoards(cmd *cobra.Command, args []string) error {
 func viewKanbanBoard(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
 
+	// Auto-start daemon unless --no-daemon flag is set
+	if !kanbanNoDaemon {
+		if !daemon.IsReachable(ctx) {
+			fmt.Println("🚀 Starting Guild server...")
+			if err := daemon.EnsureRunning(ctx); err != nil {
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
+					WithComponent("cli").
+					WithOperation("kanban.view.daemon_start")
+			}
+			// Give the server a moment to fully initialize
+			time.Sleep(500 * time.Millisecond)
+		}
+	}
+
+	// Check if server is reachable
+	if !daemon.IsReachable(ctx) {
+		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
+			WithComponent("cli").
+			WithOperation("kanban.view").
+			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
+	}
+
 	// Determine board ID
 	boardID := "main-board" // Default board
 	if len(args) > 0 {
@@ -222,6 +275,28 @@ func viewKanbanBoard(cmd *cobra.Command, args []string) error {
 // createKanbanBoard creates a new kanban board
 func createKanbanBoard(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
+
+	// Auto-start daemon unless --no-daemon flag is set
+	if !kanbanNoDaemon {
+		if !daemon.IsReachable(ctx) {
+			fmt.Println("🚀 Starting Guild server...")
+			if err := daemon.EnsureRunning(ctx); err != nil {
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
+					WithComponent("cli").
+					WithOperation("kanban.create.daemon_start")
+			}
+			// Give the server a moment to fully initialize
+			time.Sleep(500 * time.Millisecond)
+		}
+	}
+
+	// Check if server is reachable
+	if !daemon.IsReachable(ctx) {
+		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
+			WithComponent("cli").
+			WithOperation("kanban.create").
+			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
+	}
 
 	name := args[0]
 	description := "Kanban board for tracking tasks"

@@ -26,7 +26,8 @@ func TestCommissionIntegrationService_FullPipeline(t *testing.T) {
 	reg := registry.NewComponentRegistry()
 
 	// Set up mock provider with realistic LLM response following Guild refinement format
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
 	mockProvider.SetDefaultResponse(`## File: commission_refined.md
 
 # 🧠 Goal
@@ -145,7 +146,7 @@ Build a modern web application for task management using React frontend and Node
 ## Getting Started
 See the implementation plans in the implementation/ directory for detailed technical specifications.`)
 
-	err := reg.Providers().RegisterProvider("mock", mockProvider)
+	err = reg.Providers().RegisterProvider("mock", mockProvider)
 	require.NoError(t, err)
 	reg.Providers().SetDefaultProvider("mock")
 
@@ -361,7 +362,8 @@ func setupTestRegistry(t *testing.T) registry.ComponentRegistry {
 	reg := registry.NewComponentRegistry()
 
 	// Mock provider
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
 	mockProvider.SetDefaultResponse(`Create a REST API for user management with proper authentication and CRUD operations`)
 	require.NoError(t, reg.Providers().RegisterProvider("mock", mockProvider))
 	reg.Providers().SetDefaultProvider("mock")

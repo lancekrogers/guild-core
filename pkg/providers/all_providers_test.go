@@ -5,6 +5,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/providers/anthropic"
 	"github.com/guild-ventures/guild-core/pkg/providers/deepinfra"
@@ -30,6 +32,13 @@ func TestAllProvidersImplementInterface(t *testing.T) {
 
 // TestAllProvidersBasicFunctionality tests basic functionality across all providers
 func TestAllProvidersBasicFunctionality(t *testing.T) {
+	// Create mock provider
+	mockBuilder, err := mock.NewBuilder()
+	require.NoError(t, err)
+	mockProvider := mockBuilder.
+		WithDefaultResponse("Test response").
+		Build()
+
 	// Create all providers with mock/test configurations
 	providers := map[string]interfaces.AIProvider{
 		"openai":    openai.NewClient("test-key"),
@@ -38,9 +47,7 @@ func TestAllProvidersBasicFunctionality(t *testing.T) {
 		"deepinfra": deepinfra.NewClient("test-key"),
 		"ollama":    ollama.NewClient("http://localhost:11434"),
 		"ora":       ora.NewClient("test-key"),
-		"mock": mock.NewBuilder().
-			WithDefaultResponse("Test response").
-			Build(),
+		"mock":      mockProvider,
 	}
 
 	for name, provider := range providers {

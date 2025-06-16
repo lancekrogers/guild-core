@@ -10,6 +10,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/providers/deepinfra"
 	"github.com/guild-ventures/guild-core/pkg/providers/deepseek"
 	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/guild-ventures/guild-core/pkg/providers/mock"
 	"github.com/guild-ventures/guild-core/pkg/providers/ollama"
 	"github.com/guild-ventures/guild-core/pkg/providers/openai"
 	"github.com/guild-ventures/guild-core/pkg/providers/ora"
@@ -25,6 +26,17 @@ func NewFactoryV2() *FactoryV2 {
 
 // CreateAIProvider creates a new AI provider based on the provider type
 func (f *FactoryV2) CreateAIProvider(providerType ProviderType, apiKey string) (interfaces.AIProvider, error) {
+	// Check for mock provider override first
+	if os.Getenv("GUILD_MOCK_PROVIDER") == "true" {
+		mockProvider, err := mock.NewProvider()
+		if err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeProvider, "failed to create mock provider").
+				WithComponent("providers").
+				WithOperation("CreateAIProvider")
+		}
+		return mockProvider, nil
+	}
+
 	switch providerType {
 	case ProviderOpenAI:
 		return openai.NewClient(apiKey), nil

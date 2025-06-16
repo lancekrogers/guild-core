@@ -17,7 +17,8 @@ import (
 
 func TestNewCorpusAgent(t *testing.T) {
 	// Create mock dependencies
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
 	vectorConfig := &vector.StoreConfig{
 		Type:              vector.StoreTypeChromem,
 		EmbeddingProvider: mockProvider,
@@ -62,7 +63,8 @@ func TestCorpusAgent_Execute(t *testing.T) {
 	ctx := context.Background()
 
 	// Create mock provider with predefined response
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
 	mockProvider.SetResponse("What are agents called in Guild?",
 		"Based on the documentation, agents in the Guild framework are called 'Artisans'. They work together in teams called 'Guilds'.")
 
@@ -117,7 +119,8 @@ func TestCorpusAgent_GenerateDocument(t *testing.T) {
 	ctx := context.Background()
 
 	// Create mock provider
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
 	mockProvider.SetResponse("Explain the Guild architecture",
 		"The Guild Framework uses a modular architecture with agents (Artisans), orchestrators, and a task management system.")
 
@@ -174,7 +177,8 @@ func TestCorpusAgent_SaveGeneratedDocument(t *testing.T) {
 	tempDir := t.TempDir()
 	corpusPath := tempDir + "/corpus"
 
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
 	vectorStore, _ := vector.NewVectorStore(ctx, &vector.StoreConfig{
 		Type:              vector.StoreTypeChromem,
 		EmbeddingProvider: mockProvider,
@@ -204,7 +208,7 @@ func TestCorpusAgent_SaveGeneratedDocument(t *testing.T) {
 		UpdatedAt: time.Now(),
 	}
 
-	err := agent.SaveGeneratedDocument(ctx, doc)
+	err = agent.SaveGeneratedDocument(ctx, doc)
 	require.NoError(t, err)
 
 	// Verify file was saved
@@ -228,7 +232,8 @@ func TestCorpusAgent_ConversationHistory(t *testing.T) {
 	ctx := context.Background()
 
 	// Create mock provider with default response
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
 	mockProvider.SetDefaultResponse("This is a response from the AI provider.")
 
 	// Create minimal setup
@@ -288,7 +293,8 @@ func TestCorpusAgent_ClearHistory(t *testing.T) {
 func TestCorpusAgent_ExtractTags(t *testing.T) {
 	ctx := context.Background()
 
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
 
 	// Create minimal setup
 	vectorStore, _ := vector.NewVectorStore(ctx, &vector.StoreConfig{
@@ -367,7 +373,8 @@ func TestCorpusAgent_ErrorHandling(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Create mock provider
-			mockProvider := mock.NewProvider()
+			mockProvider, err := mock.NewProvider()
+			require.NoError(t, err)
 			if tt.setupMock != nil {
 				tt.setupMock(mockProvider)
 			}
@@ -386,7 +393,7 @@ func TestCorpusAgent_ErrorHandling(t *testing.T) {
 			agent := NewCorpusAgent(ragSystem, mockProvider, corpus.Config{})
 
 			// Test execute
-			_, err := agent.Execute(ctx, tt.query)
+			_, err = agent.Execute(ctx, tt.query)
 			require.Error(t, err)
 			assert.Contains(t, err.Error(), tt.expectError)
 		})
