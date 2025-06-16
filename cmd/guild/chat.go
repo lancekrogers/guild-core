@@ -3,12 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/guild-ventures/guild-core/internal/chat"
+	"github.com/guild-ventures/guild-core/internal/daemon"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
@@ -20,11 +22,13 @@ import (
 var (
 	chatCampaignID string
 	chatSessionID  string
+	chatNoDaemon   bool
 )
 
 func init() {
 	chatCmd.Flags().StringVar(&chatCampaignID, "campaign", "", "Campaign ID to use for the chat session")
 	chatCmd.Flags().StringVar(&chatSessionID, "session", "", "Session ID to use (defaults to new UUID)")
+	chatCmd.Flags().BoolVar(&chatNoDaemon, "no-daemon", false, "Don't auto-start the Guild server")
 	
 	// Register completion functions
 	chatCmd.RegisterFlagCompletionFunc("campaign", completeCampaignNames)
@@ -66,6 +70,28 @@ func runChat(cmd *cobra.Command, args []string) error {
 	// Generate session ID if not provided
 	if chatSessionID == "" {
 		chatSessionID = generateUUID()
+	}
+
+	// Auto-start daemon unless --no-daemon flag is set
+	if !chatNoDaemon {
+		if !daemon.IsReachable() {
+			fmt.Println("🚀 Starting Guild server...")
+			if err := daemon.EnsureRunning(ctx); err != nil {
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
+					WithComponent("cli").
+					WithOperation("chat.daemon_start")
+			}
+			// Give the server a moment to fully initialize
+			time.Sleep(500 * time.Millisecond)
+		}
+	}
+
+	// Check if server is reachable
+	if !daemon.IsReachable() {
+		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
+			WithComponent("cli").
+			WithOperation("chat.run").
+			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
 	}
 
 	// Connect to gRPC server

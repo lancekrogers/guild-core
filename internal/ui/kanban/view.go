@@ -129,6 +129,26 @@ func (m *Model) renderTaskColumns() string {
 		colWidth = 15
 	}
 
+	// Check if board is empty
+	totalTasks := 0
+	for _, col := range m.columns {
+		totalTasks += col.TotalTasks
+	}
+
+	// If board is empty, show helpful workshop content
+	if totalTasks == 0 {
+		emptyMsg := headerStyle.Render("🏗️  The workshop board is empty") + "\n\n" +
+			"Start by creating a commission:\n" +
+			"  guild commission create \"Build a REST API\"\n\n" +
+			"Or import existing tasks:\n" +
+			"  guild kanban import\n"
+		return lipgloss.NewStyle().
+			Width(m.viewport.Width - 4).
+			Align(lipgloss.Center).
+			MarginTop(2).
+			Render(emptyMsg)
+	}
+
 	// Build each column
 	var columns []string
 

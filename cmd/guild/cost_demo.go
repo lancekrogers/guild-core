@@ -231,7 +231,7 @@ func showAgentsList(componentRegistry registry.ComponentRegistry, maxCost int) e
 	}
 
 	for _, agent := range agents {
-		costIcon := getCostIcon(agent.CostMagnitude)
+		costIcon := getDemoCostIcon(agent.CostMagnitude)
 		fmt.Printf("%s %s (ID: %s)\n", costIcon, agent.Name, agent.ID)
 		fmt.Printf("   Cost: %d | Type: %s\n", agent.CostMagnitude, agent.Type)
 		fmt.Printf("   Capabilities: %v\n", agent.Capabilities)
@@ -253,7 +253,7 @@ func showToolsList(componentRegistry registry.ComponentRegistry, maxCost int) er
 	}
 
 	for _, tool := range tools {
-		costIcon := getCostIcon(tool.CostMagnitude)
+		costIcon := getDemoCostIcon(tool.CostMagnitude)
 		fmt.Printf("%s %s\n", costIcon, tool.Name)
 		fmt.Printf("   Cost: %d | Available: %t\n", tool.CostMagnitude, tool.Available)
 		fmt.Printf("   Capabilities: %v\n", tool.Capabilities)
@@ -295,7 +295,7 @@ func showCapabilitySelection(componentRegistry registry.ComponentRegistry, capab
 	for _, alt := range allAgents {
 		if alt.ID != agent.ID && hasCapability(alt.Capabilities, capability) {
 			alternativeCount++
-			costIcon := getCostIcon(alt.CostMagnitude)
+			costIcon := getDemoCostIcon(alt.CostMagnitude)
 			fmt.Printf("   %s %s (Cost: %d)\n", costIcon, alt.Name, alt.CostMagnitude)
 		}
 	}
@@ -361,7 +361,7 @@ func simulateTaskAssignment(componentRegistry registry.ComponentRegistry, taskTy
 		fmt.Printf("   No tools available within remaining budget\n")
 	} else {
 		for _, tool := range tools {
-			costIcon := getCostIcon(tool.CostMagnitude)
+			costIcon := getDemoCostIcon(tool.CostMagnitude)
 			fmt.Printf("   %s %s (Cost: %d)\n", costIcon, tool.Name, tool.CostMagnitude)
 		}
 	}
@@ -404,7 +404,7 @@ func showOverview(componentRegistry registry.ComponentRegistry, budget int) erro
 			}
 		}
 		if countAtThisCost > 0 {
-			costIcon := getCostIcon(cost)
+			costIcon := getDemoCostIcon(cost)
 			fmt.Printf("   %s Cost %d: %d agents\n", costIcon, cost, countAtThisCost)
 		}
 	}
@@ -422,7 +422,7 @@ func showOverview(componentRegistry registry.ComponentRegistry, budget int) erro
 			}
 		}
 		if countAtThisCost > 0 {
-			costIcon := getCostIcon(cost)
+			costIcon := getDemoCostIcon(cost)
 			fmt.Printf("   %s Cost %d: %d tools\n", costIcon, cost, countAtThisCost)
 		}
 	}
@@ -443,7 +443,7 @@ func showOverview(componentRegistry registry.ComponentRegistry, budget int) erro
 }
 
 // Helper functions
-func getCostIcon(cost int) string {
+func getDemoCostIcon(cost int) string {
 	switch cost {
 	case 0:
 		return "🆓" // Free

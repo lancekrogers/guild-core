@@ -67,7 +67,10 @@ var agentStartCmd = &cobra.Command{
 		} else {
 			fmt.Println("Starting all agents...")
 		}
-		fmt.Println("This feature is not yet implemented.")
+		// TODO: Implement actual start functionality when agent orchestration is ready
+		fmt.Println("Agent orchestration functionality coming soon.")
+		fmt.Println("\nFor now, agents are automatically managed by the orchestrator when running commissions.")
+		fmt.Println("Try: guild commission create \"Build a REST API\"")
 	},
 }
 
@@ -94,6 +97,8 @@ func init() {
 
 	// Register agent subcommands
 	agentCmd.AddCommand(agentStartCmd)
+	
+	// Note: Additional agent subcommands (list, stop, status) are registered in agent.go
 }
 
 // Execute summons the Guild and its artisans (standard: launches the CLI application)

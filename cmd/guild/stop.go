@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/guild-ventures/guild-core/internal/daemon"
 )
 
 var stopCmd = &cobra.Command{
@@ -33,13 +34,23 @@ func init() {
 func runStop(cmd *cobra.Command, args []string) error {
 	fmt.Println("🛑 Stopping Guild processes...")
 
-	// Get list of guild processes
+	// First try to stop the daemon if it's managed by our daemon package
+	if daemon.IsRunning() {
+		fmt.Print("  • Stopping managed Guild server... ")
+		if err := daemon.Stop(); err != nil {
+			fmt.Printf("❌ %v\n", err)
+		} else {
+			fmt.Println("✅")
+		}
+	}
+
+	// Then look for any other guild processes
 	processes, err := findGuildProcesses()
 	if err != nil {
 		return fmt.Errorf("failed to find guild processes: %w", err)
 	}
 
-	if len(processes) == 0 {
+	if len(processes) == 0 && !daemon.IsRunning() {
 		fmt.Println("⚠️  No Guild processes found running")
 		return nil
 	}

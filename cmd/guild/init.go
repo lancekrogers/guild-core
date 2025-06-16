@@ -173,17 +173,25 @@ func runInit(cmd *cobra.Command, args []string) error {
 		fmt.Println("      export OPENAI_API_KEY=\"your-openai-api-key\"")
 	}
 
-	fmt.Println("   1. Start coding with agents:")
+	fmt.Println("   1. Start chatting with AI agents:")
 	fmt.Println("      guild chat")
-	fmt.Println("   2. Create your first commission:")
-	fmt.Printf("      guild commission \"Implement %s feature\"\n", getExampleFeature(projectType))
-	fmt.Println("   3. Monitor agent progress:")
-	fmt.Println("      guild campaign watch")
-
+	
 	if len(docFiles) > 0 {
-		fmt.Println("   4. Add documentation to corpus:")
-		fmt.Println("      guild corpus add README.md")
+		fmt.Println("   2. Index your project documentation:")
+		fmt.Println("      guild corpus scan")
 	}
+	
+	fmt.Println("   3. View available agents:")
+	fmt.Println("      guild agent list")
+	fmt.Println("   4. Check your configuration:")
+	fmt.Println("      guild config show")
+	fmt.Println("   5. See all available commands:")
+	fmt.Println("      guild --help")
+	
+	fmt.Println("\n📚 Coming Soon:")
+	fmt.Printf("   • guild commission \"Implement %s feature\" - Create AI-powered work items\n", getExampleFeature(projectType))
+	fmt.Println("   • guild kanban view - Interactive task board")
+	fmt.Println("   • guild campaign watch - Monitor multi-agent workflows")
 
 	return nil
 }

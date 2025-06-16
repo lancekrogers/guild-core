@@ -3,12 +3,15 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 
 	"github.com/spf13/cobra"
 
+	"github.com/guild-ventures/guild-core/internal/daemon"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	grpcpkg "github.com/guild-ventures/guild-core/pkg/grpc"
 	"github.com/guild-ventures/guild-core/pkg/project"
@@ -16,13 +19,15 @@ import (
 )
 
 var (
-	servePort string
-	serveHost string
+	servePort   string
+	serveHost   string
+	serveDaemon bool
 )
 
 func init() {
 	serveCmd.Flags().StringVar(&servePort, "port", "9090", "Port to serve gRPC on")
 	serveCmd.Flags().StringVar(&serveHost, "host", "localhost", "Host to serve gRPC on")
+	serveCmd.Flags().BoolVar(&serveDaemon, "daemon", false, "Run as background daemon")
 }
 
 var serveCmd = &cobra.Command{
@@ -46,6 +51,30 @@ Usage:
 
 func runServe(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
+
+	// If running as daemon, set up logging to file
+	if serveDaemon {
+		logPath := daemon.GetLogFilePath()
+		logDir := filepath.Dir(logPath)
+		if err := os.MkdirAll(logDir, 0755); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create log directory").
+				WithComponent("cli").
+				WithOperation("serve.daemon")
+		}
+
+		logFile, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+		if err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeIO, "failed to open log file").
+				WithComponent("cli").
+				WithOperation("serve.daemon")
+		}
+		defer logFile.Close()
+
+		// Redirect stdout and stderr to log file
+		log.SetOutput(logFile)
+		os.Stdout = logFile
+		os.Stderr = logFile
+	}
 
 	// Initialize project
 	_, err := project.GetContext()
@@ -119,18 +148,26 @@ func runServe(cmd *cobra.Command, args []string) error {
 
 	go func() {
 		<-sigChan
-		fmt.Println("\n🛑 Shutting down gRPC server...")
+		if !serveDaemon {
+			fmt.Println("\n🛑 Shutting down gRPC server...")
+		}
 		cancel()
 	}()
 
-	fmt.Printf("🏰 Guild gRPC server running at %s\n", serverAddr)
-	fmt.Println("📡 Registered gRPC services:")
-	fmt.Println("   ✅ Guild Service (campaigns, agents, commissions)")
-	fmt.Println("   ✅ Chat Service (interactive agent communication)")
-	fmt.Println("   ✅ Prompt Service (prompt management)")
-	fmt.Println()
-	fmt.Println("💡 Use 'guild chat' in another terminal to connect")
-	fmt.Println("🛑 Press Ctrl+C to stop the server")
+	// Log startup information
+	if serveDaemon {
+		log.Printf("Guild gRPC server (daemon) starting at %s\n", serverAddr)
+		log.Println("Running in daemon mode - output redirected to:", daemon.GetLogFilePath())
+	} else {
+		fmt.Printf("🏰 Guild gRPC server running at %s\n", serverAddr)
+		fmt.Println("📡 Registered gRPC services:")
+		fmt.Println("   ✅ Guild Service (campaigns, agents, commissions)")
+		fmt.Println("   ✅ Chat Service (interactive agent communication)")
+		fmt.Println("   ✅ Prompt Service (prompt management)")
+		fmt.Println()
+		fmt.Println("💡 Use 'guild chat' in another terminal to connect")
+		fmt.Println("🛑 Press Ctrl+C to stop the server")
+	}
 
 	// Start the server (this blocks until context is cancelled)
 	if err := server.Start(ctx, serverAddr); err != nil {
@@ -140,7 +177,11 @@ func runServe(cmd *cobra.Command, args []string) error {
 			WithDetails("server_address", serverAddr)
 	}
 
-	fmt.Println("✨ Guild server stopped gracefully...done.")
+	if !serveDaemon {
+		fmt.Println("✨ Guild server stopped gracefully...done.")
+	} else {
+		log.Println("Guild server stopped gracefully")
+	}
 	return nil
 }
 
