@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -14,12 +16,14 @@ import (
 // Provider is a mock AI provider for testing
 type Provider struct {
 	mu              sync.Mutex
-	responses       map[string]string // Predefined responses by prompt
+	responses       map[string]string // Predefined responses by prompt (legacy)
 	errors          map[string]error  // Predefined errors by prompt
 	calls           []CallRecord      // Record of all calls
 	defaultResponse string            // Default response if no match
 	delay           time.Duration     // Simulated latency
 	capabilities    interfaces.ProviderCapabilities
+	yamlResponses   ResponseSet       // YAML-based responses
+	enabled         bool              // Whether mock provider is enabled
 }
 
 // CallRecord records details of each API call
@@ -32,12 +36,16 @@ type CallRecord struct {
 }
 
 // NewProvider creates a new mock provider
-func NewProvider() *Provider {
-	return &Provider{
+func NewProvider() (*Provider, error) {
+	// Only enable if environment variable is set
+	enabled := os.Getenv("GUILD_MOCK_PROVIDER") == "true"
+
+	provider := &Provider{
 		responses:       make(map[string]string),
 		errors:          make(map[string]error),
 		calls:           make([]CallRecord, 0),
 		defaultResponse: "Mock response",
+		enabled:         enabled,
 		capabilities: interfaces.ProviderCapabilities{
 			MaxTokens:          4096,
 			ContextWindow:      8192,
@@ -47,16 +55,45 @@ func NewProvider() *Provider {
 			SupportsEmbeddings: true,
 			Models: []interfaces.ModelInfo{
 				{
-					ID:            "mock-model",
-					Name:          "Mock Model",
+					ID:            "mock-model-v1",
+					Name:          "Mock Model v1",
 					ContextWindow: 8192,
 					MaxOutput:     4096,
+					InputCost:     0,
+					OutputCost:    0,
+				},
+				{
+					ID:            "mock-model-fast",
+					Name:          "Mock Model Fast",
+					ContextWindow: 4096,
+					MaxOutput:     2048,
+					InputCost:     0,
+					OutputCost:    0,
+				},
+				{
+					ID:            "mock-model-smart",
+					Name:          "Mock Model Smart",
+					ContextWindow: 16384,
+					MaxOutput:     8192,
 					InputCost:     0,
 					OutputCost:    0,
 				},
 			},
 		},
 	}
+
+	if enabled {
+		// Load YAML responses
+		yamlResponses, err := loadResponses()
+		if err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load mock responses").
+				WithComponent("providers").
+				WithOperation("NewProvider")
+		}
+		provider.yamlResponses = yamlResponses
+	}
+
+	return provider, nil
 }
 
 // SetResponse sets a predefined response for a specific prompt
@@ -103,28 +140,25 @@ func (p *Provider) ResetCalls() {
 
 // ChatCompletion implements the AIProvider interface
 func (p *Provider) ChatCompletion(ctx context.Context, req interfaces.ChatRequest) (*interfaces.ChatResponse, error) {
+	if !p.enabled {
+		return nil, gerror.New(gerror.ErrCodeProvider, "mock provider not enabled", nil).
+			WithComponent("providers").
+			WithOperation("ChatCompletion")
+	}
+
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
-	// Simulate latency with context awareness
-	if p.delay > 0 {
-		select {
-		case <-time.After(p.delay):
-			// Delay completed
-		case <-ctx.Done():
-			// Context cancelled or timed out
-			return nil, ctx.Err()
-		}
-	}
-
 	// Extract user message for matching
 	userMessage := ""
+	allMessages := make([]string, 0, len(req.Messages))
 	for _, msg := range req.Messages {
+		allMessages = append(allMessages, msg.Content)
 		if msg.Role == "user" {
 			userMessage = msg.Content
-			break
 		}
 	}
+	fullContext := strings.ToLower(strings.Join(allMessages, " "))
 
 	// Record the call
 	call := CallRecord{
@@ -140,10 +174,41 @@ func (p *Provider) ChatCompletion(ctx context.Context, req interfaces.ChatReques
 		return nil, err
 	}
 
-	// Get response
-	response := p.defaultResponse
-	if resp, exists := p.responses[userMessage]; exists {
-		response = resp
+	// Try to find YAML-based response first
+	var responseContent string
+	var delay time.Duration
+	tokens := 50 // Default token count
+
+	if yamlResponse := p.findYAMLResponse(fullContext); yamlResponse != nil {
+		// Use YAML response
+		responseContent = strings.Join(yamlResponse.Messages, "")
+		if yamlResponse.Delay > 0 {
+			delay = time.Duration(yamlResponse.Delay) * time.Millisecond
+		} else {
+			delay = p.delay
+		}
+		if yamlResponse.Tokens > 0 {
+			tokens = yamlResponse.Tokens
+		}
+	} else if resp, exists := p.responses[userMessage]; exists {
+		// Use legacy string response
+		responseContent = resp
+		delay = p.delay
+	} else {
+		// Use default response
+		responseContent = p.getGuildDefaultResponse()
+		delay = p.delay
+	}
+
+	// Simulate latency with context awareness
+	if delay > 0 {
+		select {
+		case <-time.After(delay):
+			// Delay completed
+		case <-ctx.Done():
+			// Context cancelled or timed out
+			return nil, ctx.Err()
+		}
 	}
 
 	// Build response
@@ -155,15 +220,15 @@ func (p *Provider) ChatCompletion(ctx context.Context, req interfaces.ChatReques
 				Index: 0,
 				Message: interfaces.ChatMessage{
 					Role:    "assistant",
-					Content: response,
+					Content: responseContent,
 				},
 				FinishReason: "stop",
 			},
 		},
 		Usage: interfaces.UsageInfo{
 			PromptTokens:     len(userMessage) / 4, // Rough estimate
-			CompletionTokens: len(response) / 4,
-			TotalTokens:      (len(userMessage) + len(response)) / 4,
+			CompletionTokens: tokens,
+			TotalTokens:      len(userMessage)/4 + tokens,
 		},
 	}
 
@@ -171,6 +236,35 @@ func (p *Provider) ChatCompletion(ctx context.Context, req interfaces.ChatReques
 	p.calls = append(p.calls, call)
 
 	return result, nil
+}
+
+// findYAMLResponse searches for a matching YAML response pattern
+func (p *Provider) findYAMLResponse(fullContext string) *Response {
+	// Search for matching patterns
+	for _, resp := range p.yamlResponses.Responses {
+		for _, pattern := range resp.Patterns {
+			if strings.Contains(fullContext, strings.ToLower(pattern)) {
+				return &resp
+			}
+		}
+	}
+	return nil
+}
+
+// getGuildDefaultResponse returns a Guild-specific default response
+func (p *Provider) getGuildDefaultResponse() string {
+	return `I understand your request. Let me help you with that.
+
+Based on the context, I'll proceed with the implementation.
+
+**Analysis:**
+- Task type: Development request
+- Complexity: Standard
+- Approach: Systematic implementation
+
+I'll work through this step by step to ensure quality results.
+
+*Note: This is a mock response for testing purposes.*`
 }
 
 // StreamChatCompletion implements streaming (returns simple mock stream)
@@ -310,10 +404,14 @@ type Builder struct {
 }
 
 // NewBuilder creates a new mock provider builder
-func NewBuilder() *Builder {
-	return &Builder{
-		provider: NewProvider(),
+func NewBuilder() (*Builder, error) {
+	provider, err := NewProvider()
+	if err != nil {
+		return nil, err
 	}
+	return &Builder{
+		provider: provider,
+	}, nil
 }
 
 // WithResponse adds a response mapping
@@ -343,4 +441,41 @@ func (b *Builder) WithDelay(delay time.Duration) *Builder {
 // Build returns the configured mock provider
 func (b *Builder) Build() *Provider {
 	return b.provider
+}
+
+// NewProviderForTesting creates a new mock provider for testing (legacy interface)
+func NewProviderForTesting() *Provider {
+	// Create a provider without environment variable check for testing
+	provider := &Provider{
+		responses:       make(map[string]string),
+		errors:          make(map[string]error),
+		calls:           make([]CallRecord, 0),
+		defaultResponse: "Mock response",
+		enabled:         true, // Always enabled for testing
+		capabilities: interfaces.ProviderCapabilities{
+			MaxTokens:          4096,
+			ContextWindow:      8192,
+			SupportsVision:     false,
+			SupportsTools:      false,
+			SupportsStream:     true,
+			SupportsEmbeddings: true,
+			Models: []interfaces.ModelInfo{
+				{
+					ID:            "mock-model",
+					Name:          "Mock Model",
+					ContextWindow: 8192,
+					MaxOutput:     4096,
+					InputCost:     0,
+					OutputCost:    0,
+				},
+			},
+		},
+	}
+	
+	// Try to load YAML responses for testing
+	if yamlResponses, err := loadResponses(); err == nil {
+		provider.yamlResponses = yamlResponses
+	}
+	
+	return provider
 }

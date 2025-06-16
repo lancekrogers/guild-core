@@ -72,7 +72,7 @@ func init() {
 
 // runAgentList handles the agent list command
 func runAgentList(cmd *cobra.Command, args []string) error {
-	ctx := context.Background()
+	ctx := cmd.Context()
 
 	// Get flags
 	verbose, _ := cmd.Flags().GetBool("verbose")

@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
@@ -132,7 +133,7 @@ func TestConfigShowCommand(t *testing.T) {
 			// Capture output
 			var buf bytes.Buffer
 			cmd := &cobra.Command{}
-			configShowCmd.Flags().VisitAll(func(f *cobra.Flag) {
+			configShowCmd.Flags().VisitAll(func(f *pflag.Flag) {
 				cmd.Flags().AddFlag(f)
 			})
 			cmd.SetOut(&buf)
@@ -313,7 +314,7 @@ agents:
 			// Capture output
 			var buf bytes.Buffer
 			cmd := &cobra.Command{}
-			configValidateCmd.Flags().VisitAll(func(f *cobra.Flag) {
+			configValidateCmd.Flags().VisitAll(func(f *pflag.Flag) {
 				cmd.Flags().AddFlag(f)
 			})
 			cmd.SetOut(&buf)
@@ -435,7 +436,6 @@ func TestDisplayFormattedConfig(t *testing.T) {
 				Providers: config.ProvidersConfig{
 					OpenAI: config.ProviderSettings{
 						BaseURL: "https://api.openai.com",
-						Models:  []string{"gpt-4", "gpt-3.5-turbo"},
 					},
 				},
 			},
@@ -443,7 +443,6 @@ func TestDisplayFormattedConfig(t *testing.T) {
 				"🔌 Providers:",
 				"openai",
 				"Base URL: https://api.openai.com",
-				"Models: gpt-4, gpt-3.5-turbo",
 			},
 		},
 		{

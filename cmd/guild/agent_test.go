@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/pkg/interfaces"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -168,30 +168,6 @@ func (m *MockStorageRegistry) RegisterAgentRepository(repo registry.AgentReposit
 
 func (m *MockStorageRegistry) RegisterPromptChainRepository(repo registry.PromptChainRepository) error {
 	return nil
-}
-
-func (m *MockStorageRegistry) RegisterMemoryStore(name string, store registry.MemoryStore) error {
-	return nil
-}
-
-func (m *MockStorageRegistry) GetMemoryStore(name string) (registry.MemoryStore, error) {
-	return nil, nil
-}
-
-func (m *MockStorageRegistry) RegisterVectorStore(name string, store registry.VectorStore) error {
-	return nil
-}
-
-func (m *MockStorageRegistry) GetVectorStore(name string) (registry.VectorStore, error) {
-	return nil, nil
-}
-
-func (m *MockStorageRegistry) RegisterChainManager(name string, manager registry.ChainManager) error {
-	return nil
-}
-
-func (m *MockStorageRegistry) GetChainManager(name string) (registry.ChainManager, error) {
-	return nil, nil
 }
 
 func (m *MockStorageRegistry) GetBoardRepository() registry.KanbanBoardRepository {
@@ -398,9 +374,7 @@ func TestAgentListCommand(t *testing.T) {
 						Name:          "Code Writer",
 						Type:          "developer",
 						CostMagnitude: 2,
-						Provider:      "openai",
 						Capabilities:  []string{"golang", "testing"},
-						Description:   "Writes high-quality Go code",
 					},
 				}
 				
@@ -414,11 +388,9 @@ func TestAgentListCommand(t *testing.T) {
 				"Code Writer (ID: agent1)",
 				"Type: developer",
 				"Cost: 2",
-				"Provider: openai",
 				"Capabilities:",
 				"• golang",
 				"• testing",
-				"Description: Writes high-quality Go code",
 				"Total: 1 agents",
 				"Available Types: developer, reviewer",
 			},
@@ -464,7 +436,7 @@ func TestAgentListCommand(t *testing.T) {
 
 			// Create command and capture output
 			cmd := &cobra.Command{}
-			agentListCmd.Flags().VisitAll(func(f *cobra.Flag) {
+			agentListCmd.Flags().VisitAll(func(f *pflag.Flag) {
 				cmd.Flags().AddFlag(f)
 			})
 			
@@ -550,9 +522,7 @@ func TestDisplayVerboseAgentList(t *testing.T) {
 			Name:          "Code Writer",
 			Type:          "developer",
 			CostMagnitude: 2,
-			Provider:      "openai",
 			Capabilities:  []string{"golang", "testing"},
-			Description:   "Specializes in writing high-quality Go code",
 		},
 	}
 	
@@ -577,11 +547,9 @@ func TestDisplayVerboseAgentList(t *testing.T) {
 	assert.Contains(t, output, "Code Writer (ID: agent1)")
 	assert.Contains(t, output, "Type: developer")
 	assert.Contains(t, output, "Cost: 2")
-	assert.Contains(t, output, "Provider: openai")
 	assert.Contains(t, output, "Capabilities:")
 	assert.Contains(t, output, "• golang")
 	assert.Contains(t, output, "• testing")
-	assert.Contains(t, output, "Description: Specializes in writing high-quality Go code")
 	assert.Contains(t, output, "Total: 1 agents")
 	assert.Contains(t, output, "Available Types: developer, reviewer, security")
 }

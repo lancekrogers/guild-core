@@ -1,0 +1,150 @@
+# Default mock responses for Guild testing
+responses:
+  # Commission Analysis
+  - name: "commission_analysis"
+    patterns:
+      - "commission"
+      - "build.*api"
+      - "create.*service"
+    messages:
+      - "I'll analyze this commission and break it down into actionable tasks.\n\n"
+      - "📋 **Commission Analysis:**\n"
+      - "- Type: Software Development\n"
+      - "- Complexity: Medium\n"
+      - "- Estimated Tasks: 5-7\n\n"
+      - "Let me create a detailed task breakdown for efficient implementation.\n\n"
+      - "**Task Breakdown:**\n\n"
+      - "1. **Architecture Design** - Define system structure and components\n"
+      - "2. **Data Model Creation** - Design database schema and models\n"
+      - "3. **API Implementation** - Build REST endpoints with validation\n"
+      - "4. **Business Logic** - Implement core functionality\n"
+      - "5. **Testing Suite** - Unit and integration tests\n"
+      - "6. **Documentation** - API docs and usage examples\n\n"
+      - "I'll coordinate with specialized agents to implement each component."
+    delay_ms: 30
+    tokens: 250
+
+  # Code Implementation
+  - name: "code_implementation"
+    patterns:
+      - "implement"
+      - "create.*function"
+      - "write.*code"
+    messages:
+      - "I'll implement this with clean, production-ready code.\n\n"
+      - "```go\n"
+      - "package main\n\n"
+      - "import (\n"
+      - "    \"fmt\"\n"
+      - "    \"time\"\n"
+      - ")\n\n"
+      - "// Implementation based on requirements\n"
+      - "func ProcessRequest(data interface{}) error {\n"
+      - "    // Validate input\n"
+      - "    if data == nil {\n"
+      - "        return fmt.Errorf(\"data cannot be nil\")\n"
+      - "    }\n\n"
+      - "    // Process data\n"
+      - "    result := transform(data)\n"
+      - "    \n"
+      - "    // Return result\n"
+      - "    return nil\n"
+      - "}\n"
+      - "```\n\n"
+      - "✅ Implementation complete with error handling and validation."
+    delay_ms: 40
+    tokens: 180
+
+  # Architecture Design
+  - name: "architecture"
+    patterns:
+      - "design.*system"
+      - "architecture"
+      - "structure"
+    messages:
+      - "I'll design a scalable architecture for this system.\n\n"
+      - "## System Architecture\n\n"
+      - "### Components:\n"
+      - "1. **API Gateway** - Request routing and authentication\n"
+      - "2. **Service Layer** - Business logic and processing\n"
+      - "3. **Data Layer** - Persistence and caching\n"
+      - "4. **Message Queue** - Async task processing\n\n"
+      - "### Design Principles:\n"
+      - "- Microservices architecture for scalability\n"
+      - "- Event-driven communication\n"
+      - "- Horizontal scaling capability\n"
+      - "- Fault tolerance and resilience\n\n"
+      - "This design ensures maintainability and performance at scale."
+    delay_ms: 35
+    tokens: 200
+
+  # Error Analysis
+  - name: "error_analysis"
+    patterns:
+      - "error"
+      - "bug"
+      - "issue"
+      - "problem"
+    messages:
+      - "I'll analyze this error and provide a solution.\n\n"
+      - "**Error Analysis:**\n"
+      - "- Type: Runtime exception\n"
+      - "- Likely cause: Invalid state or missing validation\n\n"
+      - "**Recommended Fix:**\n"
+      - "1. Add input validation\n"
+      - "2. Implement proper error handling\n"
+      - "3. Add logging for debugging\n"
+      - "4. Write tests to prevent regression\n\n"
+      - "This should resolve the issue and prevent future occurrences."
+    delay_ms: 25
+    tokens: 150
+
+  # Testing
+  - name: "testing"
+    patterns:
+      - "test"
+      - "unit test"
+      - "integration test"
+    messages:
+      - "I'll create comprehensive tests for this functionality.\n\n"
+      - "```go\n"
+      - "func TestProcessRequest(t *testing.T) {\n"
+      - "    tests := []struct {\n"
+      - "        name    string\n"
+      - "        input   interface{}\n"
+      - "        wantErr bool\n"
+      - "    }{\n"
+      - "        {\"valid input\", \"data\", false},\n"
+      - "        {\"nil input\", nil, true},\n"
+      - "    }\n\n"
+      - "    for _, tt := range tests {\n"
+      - "        t.Run(tt.name, func(t *testing.T) {\n"
+      - "            err := ProcessRequest(tt.input)\n"
+      - "            if (err != nil) != tt.wantErr {\n"
+      - "                t.Errorf(\"got error = %v, want %v\", err, tt.wantErr)\n"
+      - "            }\n"
+      - "        })\n"
+      - "    }\n"
+      - "}\n"
+      - "```\n\n"
+      - "✅ Test coverage ensures reliability and catches edge cases."
+    delay_ms: 30
+    tokens: 220
+
+  # General Help
+  - name: "general_help"
+    patterns:
+      - "help"
+      - "assist"
+      - "guide"
+    messages:
+      - "I'm here to help! Let me understand what you need.\n\n"
+      - "I can assist with:\n"
+      - "- Software architecture and design\n"
+      - "- Code implementation and refactoring\n"
+      - "- Testing and quality assurance\n"
+      - "- Performance optimization\n"
+      - "- Documentation and best practices\n\n"
+      - "What specific aspect would you like help with?"
+    delay_ms: 20
+    tokens: 100
