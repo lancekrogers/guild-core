@@ -12,7 +12,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/internal/chat"
 	"github.com/guild-ventures/guild-core/internal/chat/session"
-	"github.com/guild-ventures/guild-core/pkg/ui/progress"
+	"github.com/guild-ventures/guild-core/internal/ui/progress"
 )
 
 // TestProgressIndicators tests the progress indicator system

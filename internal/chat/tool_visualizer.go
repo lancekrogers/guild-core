@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/guild-ventures/guild-core/pkg/ui/progress"
+	"github.com/guild-ventures/guild-core/internal/ui/progress"
 )
 
 // ToolVisualizer provides enhanced visualization for tool execution
