@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	yaml "gopkg.in/yaml.v3"
 
@@ -86,6 +87,11 @@ type AgentConfig struct {
 	ContextWindow int    `yaml:"context_window,omitempty"` // Context window size in tokens (auto-detected if 0)
 	ContextReset  string `yaml:"context_reset,omitempty"`  // "truncate" or "summarize" when context exceeds window
 
+	// Agent personality and backstory (Step 7 enhancement)
+	Backstory      *Backstory      `yaml:"backstory,omitempty"`
+	Personality    *Personality    `yaml:"personality,omitempty"`
+	Specialization *Specialization `yaml:"specialization,omitempty"`
+
 	Settings map[string]string `yaml:"settings,omitempty"` // Provider-specific settings
 }
 
@@ -97,6 +103,87 @@ type Metadata struct {
 	Tags        []string `yaml:"tags,omitempty"`
 	Version     string   `yaml:"version,omitempty"`
 	Description string   `yaml:"description,omitempty"`
+}
+
+// Backstory contains the professional background and narrative for an agent
+type Backstory struct {
+	// Professional background
+	Experience      string   `yaml:"experience"`       // "15 years in distributed systems"
+	PreviousRoles   []string `yaml:"previous_roles"`   // ["CTO at startup", "Google SRE"]
+	Expertise       string   `yaml:"expertise"`        // Core expertise description
+	Achievements    []string `yaml:"achievements"`     // Notable accomplishments
+	
+	// Personal touches
+	Philosophy      string   `yaml:"philosophy"`       // Engineering philosophy
+	Interests       []string `yaml:"interests"`        // Technical interests
+	Background      string   `yaml:"background"`       // Educational/cultural background
+	
+	// Communication style
+	CommunicationStyle string `yaml:"communication_style"` // How they communicate
+	TeachingStyle      string `yaml:"teaching_style"`      // How they explain things
+	
+	// Medieval guild identity
+	GuildRank       string   `yaml:"guild_rank"`       // "Master Artisan", "Journeyman", "Apprentice"
+	Specialties     []string `yaml:"specialties"`      // ["Cryptography", "Performance"]
+	
+	// Generated dynamically
+	CurrentMood     string    `yaml:"-"` // Changes based on context
+	LastUpdated     time.Time `yaml:"-"`
+}
+
+// Personality defines the behavioral traits and communication patterns of an agent
+type Personality struct {
+	// Core traits
+	Traits []PersonalityTrait `yaml:"traits"`
+	
+	// Communication preferences
+	Formality       string `yaml:"formality"`        // formal, casual, adaptive
+	DetailLevel     string `yaml:"detail_level"`     // concise, detailed, adaptive
+	HumorLevel      string `yaml:"humor_level"`      // none, occasional, frequent
+	
+	// Working style
+	ApproachStyle   string `yaml:"approach_style"`   // methodical, creative, balanced
+	RiskTolerance   string `yaml:"risk_tolerance"`   // conservative, moderate, aggressive
+	DecisionMaking  string `yaml:"decision_making"`  // data-driven, intuitive, hybrid
+	
+	// Interaction patterns
+	Assertiveness   int    `yaml:"assertiveness"`    // 1-10 scale
+	Empathy         int    `yaml:"empathy"`          // 1-10 scale
+	Patience        int    `yaml:"patience"`         // 1-10 scale
+	
+	// Medieval personality traits
+	Honor           int    `yaml:"honor"`            // 1-10 scale
+	Wisdom          int    `yaml:"wisdom"`           // 1-10 scale
+	Craftsmanship   int    `yaml:"craftsmanship"`    // 1-10 scale
+}
+
+// PersonalityTrait represents a specific behavioral trait
+type PersonalityTrait struct {
+	Name        string  `yaml:"name"`
+	Strength    float64 `yaml:"strength"`    // 0.0-1.0
+	Description string  `yaml:"description"`
+}
+
+// Specialization defines the domain expertise and technical focus of an agent
+type Specialization struct {
+	Domain          string   `yaml:"domain"`           // fintech, healthcare, etc
+	SubDomains      []string `yaml:"sub_domains"`      // payment processing, compliance
+	ExpertiseLevel  string   `yaml:"expertise_level"`  // novice, intermediate, expert, master
+	
+	// Knowledge areas
+	CoreKnowledge   []string `yaml:"core_knowledge"`   // Deep expertise areas
+	Familiar        []string `yaml:"familiar"`         // Working knowledge
+	Learning        []string `yaml:"learning"`         // Currently learning
+	
+	// Preferred approaches
+	Methodologies   []string `yaml:"methodologies"`    // Agile, TDD, DDD
+	Technologies    []string `yaml:"technologies"`     // Go, K8s, PostgreSQL
+	Principles      []string `yaml:"principles"`       // SOLID, 12-factor
+	
+	// Medieval specialization
+	Craft           string   `yaml:"craft"`            // "Blacksmithing", "Woodworking"
+	Tools           []string `yaml:"tools"`            // Medieval tools they use
+	Materials       []string `yaml:"materials"`        // What they work with
 }
 
 // LoadGuildConfig loads guild configuration with global -> project hierarchy
