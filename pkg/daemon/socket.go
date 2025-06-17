@@ -5,7 +5,6 @@
 package daemon
 
 import (
-	"fmt"
 	"net"
 	"os"
 	"path/filepath"
@@ -99,7 +98,7 @@ func FindAvailableSession(campaign string) (int, string, error) {
 		}
 	}
 
-	return 0, "", gerror.New(gerror.ErrCodeResourceExhausted, "maximum sessions reached").
+	return 0, "", gerror.New(gerror.ErrCodeInternal, "maximum sessions reached", nil).
 		WithComponent("daemon").
 		WithOperation("FindAvailableSession").
 		WithDetails("campaign", campaign).
@@ -294,7 +293,7 @@ func GetCampaignFromSocketPath(socketPath string) (string, int, error) {
 // StopSession sends a shutdown signal to a specific daemon session
 func StopSession(socketPath string) error {
 	if !CanConnect(socketPath) {
-		return gerror.New(gerror.ErrCodeNotFound, "daemon session not running").
+		return gerror.New(gerror.ErrCodeNotFound, "daemon session not running", nil).
 			WithComponent("daemon").
 			WithOperation("StopSession").
 			WithDetails("socket", socketPath)

@@ -49,7 +49,7 @@ func DetectCampaign(cwd string, flagValue string) (string, error) {
 	if err != nil {
 		// No campaign found - this is not an error in the new architecture
 		// Users should run 'guild init' to create a campaign
-		return "", gerror.New(gerror.ErrCodeNotFound, "no campaign found").
+		return "", gerror.New(gerror.ErrCodeNotFound, "no campaign found", nil).
 			WithComponent("campaign").
 			WithOperation("DetectCampaign").
 			WithDetails("directory", cwd).
@@ -83,7 +83,7 @@ func findCampaignReference(cwd string) (*CampaignReference, error) {
 			}
 
 			if ref.Campaign == "" {
-				return nil, gerror.New(gerror.ErrCodeInvalidFormat, "campaign reference missing campaign name").
+				return nil, gerror.New(gerror.ErrCodeInvalidFormat, "campaign reference missing campaign name", nil).
 					WithComponent("campaign").
 					WithOperation("findCampaignReference").
 					WithDetails("file", guildFile)
@@ -100,7 +100,7 @@ func findCampaignReference(cwd string) (*CampaignReference, error) {
 		currentDir = parent
 	}
 
-	return nil, gerror.New(gerror.ErrCodeNotFound, "no campaign reference found").
+	return nil, gerror.New(gerror.ErrCodeNotFound, "no campaign reference found", nil).
 		WithComponent("campaign").
 		WithOperation("findCampaignReference")
 }
@@ -116,7 +116,7 @@ func GetCampaignRoot(cwd string) (string, error) {
 
 		parent := filepath.Dir(currentDir)
 		if parent == currentDir {
-			return "", gerror.New(gerror.ErrCodeNotFound, "no campaign root found").
+			return "", gerror.New(gerror.ErrCodeNotFound, "no campaign root found", nil).
 				WithComponent("campaign").
 				WithOperation("GetCampaignRoot").
 				WithDetails("directory", cwd)
@@ -168,7 +168,7 @@ func LoadGlobalCampaignConfig(campaignName string) (*CampaignConfig, error) {
 
 	configPath := filepath.Join(campaignDir, "config.yaml")
 	if !fileExists(configPath) {
-		return nil, gerror.New(gerror.ErrCodeNotFound, "campaign config not found").
+		return nil, gerror.New(gerror.ErrCodeNotFound, "campaign config not found", nil).
 			WithComponent("campaign").
 			WithOperation("LoadGlobalCampaignConfig").
 			WithDetails("campaign", campaignName).
@@ -260,7 +260,7 @@ func ValidateCampaign(campaignName string) error {
 	}
 
 	if !dirExists(campaignDir) {
-		return gerror.New(gerror.ErrCodeNotFound, "campaign directory does not exist").
+		return gerror.New(gerror.ErrCodeNotFound, "campaign directory does not exist", nil).
 			WithComponent("campaign").
 			WithOperation("ValidateCampaign").
 			WithDetails("campaign", campaignName).
@@ -270,7 +270,7 @@ func ValidateCampaign(campaignName string) error {
 	// Check if config file exists
 	configPath := filepath.Join(campaignDir, "config.yaml")
 	if !fileExists(configPath) {
-		return gerror.New(gerror.ErrCodeNotFound, "campaign missing config file").
+		return gerror.New(gerror.ErrCodeNotFound, "campaign missing config file", nil).
 			WithComponent("campaign").
 			WithOperation("ValidateCampaign").
 			WithDetails("campaign", campaignName).
