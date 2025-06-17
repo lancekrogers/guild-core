@@ -19,10 +19,7 @@ type DaemonConfig struct {
 	Session      int    `json:"session"`
 
 	// Transport configuration
-	UseSocket    bool   `json:"use_socket"`     // true for Unix sockets, false for TCP
 	SocketPath   string `json:"socket_path"`   // Unix socket path
-	Port         int    `json:"port"`          // TCP port (fallback)
-	Host         string `json:"host"`          // TCP host (fallback)
 
 	// Logging and process management
 	LogFile    string        `json:"log_file"`
@@ -39,9 +36,6 @@ func GetDaemonConfig(campaign string, requestedSession int) (*DaemonConfig, erro
 	config := &DaemonConfig{
 		Campaign:     campaign,
 		CampaignHash: paths.GetCampaignHash(campaign),
-		UseSocket:    true, // Default to Unix sockets
-		Host:         "localhost",
-		Port:         9090, // Default TCP port for fallback
 		IdleTimeout:  30 * time.Minute,
 		NiceLevel:    5, // Lower priority
 	}
@@ -73,30 +67,9 @@ func GetDaemonConfig(campaign string, requestedSession int) (*DaemonConfig, erro
 	return config, nil
 }
 
-// GetLegacyDaemonConfig creates a configuration compatible with the existing single-instance daemon
-func GetLegacyDaemonConfig() *DaemonConfig {
-	return &DaemonConfig{
-		Campaign:    "default",
-		Session:     0,
-		UseSocket:   false, // Use TCP for backward compatibility
-		Host:        "localhost",
-		Port:        9090,
-		LogFile:     GetLogFilePath(),
-		PIDFile:     GetPIDFilePath(),
-		IdleTimeout: 0, // No idle timeout for legacy mode
-		NiceLevel:   0, // Normal priority
-	}
-}
 
 // setupFilePaths configures log and PID file paths based on campaign and session
 func (c *DaemonConfig) setupFilePaths() error {
-	if c.Campaign == "" || c.Campaign == "default" {
-		// Legacy mode - use existing paths
-		c.LogFile = GetLogFilePath()
-		c.PIDFile = GetPIDFilePath()
-		return nil
-	}
-
 	// Campaign-specific paths
 	campaignDir, err := paths.GetCampaignDir(c.Campaign)
 	if err != nil {
@@ -122,18 +95,11 @@ func (c *DaemonConfig) setupFilePaths() error {
 
 // GetServerAddress returns the address string for the daemon
 func (c *DaemonConfig) GetServerAddress() string {
-	if c.UseSocket {
-		return fmt.Sprintf("unix://%s", c.SocketPath)
-	}
-	return fmt.Sprintf("tcp://%s:%d", c.Host, c.Port)
+	return fmt.Sprintf("unix://%s", c.SocketPath)
 }
 
 // GetDisplayName returns a human-readable name for the daemon instance
 func (c *DaemonConfig) GetDisplayName() string {
-	if c.Campaign == "" || c.Campaign == "default" {
-		return "Guild Daemon"
-	}
-
 	if c.Session == 0 {
 		return fmt.Sprintf("Guild Daemon (%s)", c.Campaign)
 	}
@@ -141,10 +107,6 @@ func (c *DaemonConfig) GetDisplayName() string {
 	return fmt.Sprintf("Guild Daemon (%s-session-%d)", c.Campaign, c.Session)
 }
 
-// IsLegacy returns true if this is a legacy single-instance configuration
-func (c *DaemonConfig) IsLegacy() bool {
-	return !c.UseSocket || c.Campaign == "" || c.Campaign == "default"
-}
 
 // findAvailableSession finds the next available session for a campaign
 // This is a simplified version that will be replaced by the socket registry implementation

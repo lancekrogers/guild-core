@@ -6,6 +6,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -14,7 +15,9 @@ import (
 
 	"github.com/guild-ventures/guild-core/internal/chat"
 	"github.com/guild-ventures/guild-core/internal/daemon"
+	"github.com/guild-ventures/guild-core/pkg/campaign"
 	"github.com/guild-ventures/guild-core/pkg/config"
+	pkgDaemon "github.com/guild-ventures/guild-core/pkg/daemon"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
@@ -47,12 +50,41 @@ This opens a terminal-based chat interface where you can:
 - Send messages to all agents or specific agents using @mentions
 - View agent responses with rich markdown formatting
 - Execute tools with agent assistance
-- Manage prompts and view agent status`,
+- Manage prompts and view agent status
+
+Campaign Support:
+- Use --campaign to specify which campaign to connect to
+- Without --campaign, detects campaign from current directory
+- Auto-starts the appropriate daemon if not running
+- Use --no-daemon to prevent auto-starting the server
+
+Examples:
+  guild chat                         # Auto-detect campaign, start chat
+  guild chat --campaign e-commerce   # Chat with specific campaign
+  guild chat --no-daemon             # Connect without auto-starting daemon
+  guild chat --session my-session    # Use specific session ID`,
 	RunE: runChat,
 }
 
 func runChat(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
+
+	// Detect campaign for current working directory
+	cwd, err := os.Getwd()
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get current directory").
+			WithComponent("cli").
+			WithOperation("chat.run")
+	}
+
+	// Use campaign detection logic
+	campaignName, err := campaign.DetectCampaign(cwd, chatCampaignID)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to detect campaign").
+			WithComponent("cli").
+			WithOperation("chat.run").
+			WithDetails("help", "Make sure you're in a campaign directory or specify --campaign")
+	}
 
 	// Load configuration
 	guildConfig, err := loadGuildConfig()
@@ -76,35 +108,48 @@ func runChat(cmd *cobra.Command, args []string) error {
 	}
 
 	// Auto-start daemon unless --no-daemon flag is set
+	var daemonConfig *daemon.DaemonConfig
 	if !chatNoDaemon {
-		if !daemon.IsReachable(ctx) {
-			fmt.Println("🚀 Starting Guild server...")
-			if err := daemon.EnsureRunning(ctx); err != nil {
-				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
-					WithComponent("cli").
-					WithOperation("chat.daemon_start")
-			}
-			// Give the server a moment to fully initialize
-			time.Sleep(500 * time.Millisecond)
+		// Use the new multi-instance daemon manager
+		manager := daemon.DefaultManager
+		// Campaign-specific daemon
+		config, err := manager.EnsureDaemonRunning(ctx, campaignName, 0)
+		if err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start campaign daemon").
+				WithComponent("cli").
+				WithOperation("chat.daemon_start")
 		}
+		daemonConfig = config
+		// Give the server a moment to fully initialize
+		time.Sleep(500 * time.Millisecond)
+	} else {
+		// No auto-start, but we still need daemon config for connection
+		config, err := daemon.GetDaemonConfig(campaignName, 0)
+		if err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get daemon config").
+				WithComponent("cli").
+				WithOperation("chat.run")
+		}
+		daemonConfig = config
 	}
 
 	// Check if server is reachable
-	if !daemon.IsReachable(ctx) {
+	isReachable := pkgDaemon.CanConnect(daemonConfig.SocketPath)
+
+	if !isReachable {
 		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
 			WithComponent("cli").
 			WithOperation("chat.run").
-			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
+			WithDetails("help", "Try running 'guild serve --campaign "+campaignName+"' manually or check 'guild status'")
 	}
 
 	// Connect to gRPC server
-	serverAddr := "localhost:9090" // Default gRPC server port
-	conn, err := grpc.Dial(serverAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial("unix://"+daemonConfig.SocketPath, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to connect to Guild server").
 			WithComponent("cli").
 			WithOperation("chat.run").
-			WithDetails("server_address", serverAddr)
+			WithDetails("daemon_config", daemonConfig.GetServerAddress())
 	}
 	defer conn.Close()
 
@@ -126,7 +171,7 @@ func runChat(cmd *cobra.Command, args []string) error {
 
 	// Create and run chat interface
 	return chat.Run(ctx, guildConfig, conn, guildClient, promptClient, reg,
-		chat.WithCampaign(chatCampaignID),
+		chat.WithCampaign(campaignName),
 		chat.WithSession(chatSessionID))
 }
 

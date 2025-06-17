@@ -174,11 +174,10 @@ func runInitCampaign(cmd *cobra.Command, args []string) error {
 	}
 
 	// Update guild config with campaign information
-	if guildConfig.Campaign == nil {
-		guildConfig.Campaign = make(map[string]interface{})
-	}
-	guildConfig.Campaign["name"] = campaignName
-	guildConfig.Campaign["project"] = projectName
+	// Campaign metadata is now stored separately in campaign reference and global config
+	// The project-level guild config focuses on agents and local settings
+	guildConfig.Name = projectName
+	guildConfig.Description = fmt.Sprintf("Project %s in campaign %s", projectName, campaignName)
 
 	// Write guild.yaml (this overwrites the campaign reference, so we need to be careful)
 	// Actually, let's write it to a different file to avoid conflicts
@@ -203,7 +202,7 @@ func runInitCampaign(cmd *cobra.Command, args []string) error {
 	
 	// This would integrate with the existing database initialization
 	// For now, we'll create a placeholder database file
-	campaignDir, err := campaign.LoadGlobalCampaignConfig(campaignName)
+	_, err = campaign.LoadGlobalCampaignConfig(campaignName)
 	if err == nil {
 		// Database initialization would go here
 		// This should integrate with the existing SQLite setup

@@ -95,7 +95,7 @@ func NewServer(
 	}
 }
 
-// Start starts the gRPC server
+// Start starts the gRPC server on TCP
 func (s *Server) Start(ctx context.Context, address string) error {
 	var err error
 	s.listener, err = net.Listen("tcp", address)
@@ -107,6 +107,26 @@ func (s *Server) Start(ctx context.Context, address string) error {
 			FromContext(ctx)
 	}
 
+	return s.startServer(ctx, address)
+}
+
+// StartUnix starts the gRPC server on Unix socket
+func (s *Server) StartUnix(ctx context.Context, socketPath string) error {
+	var err error
+	s.listener, err = net.Listen("unix", socketPath)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to listen on Unix socket").
+			WithComponent("grpc").
+			WithOperation("StartUnix").
+			WithDetails("socket_path", socketPath).
+			FromContext(ctx)
+	}
+
+	return s.startServer(ctx, socketPath)
+}
+
+// startServer contains the common server startup logic
+func (s *Server) startServer(ctx context.Context, address string) error {
 	s.grpcServer = grpc.NewServer()
 	pb.RegisterGuildServer(s.grpcServer, s)
 	pb.RegisterChatServiceServer(s.grpcServer, s.chatService)
@@ -118,7 +138,7 @@ func (s *Server) Start(ctx context.Context, address string) error {
 			// Log server error with proper context
 			observability.GetLogger(ctx).
 				WithComponent("grpc").
-				WithOperation("Start").
+				WithOperation("startServer").
 				WithError(err).
 				Error("gRPC server encountered an error during serving",
 					"address", address,

@@ -30,7 +30,7 @@ func NewManager() *Manager {
 }
 
 // EnsureDaemonRunning starts a daemon for the specified campaign if not already running
-func (m *Manager) EnsureDaemonRunning(campaign string, preferredSession int) (*DaemonConfig, error) {
+func (m *Manager) EnsureDaemonRunning(ctx context.Context, campaign string, preferredSession int) (*DaemonConfig, error) {
 	// Clean up any stale sockets first
 	if err := daemonPkg.CleanupStaleSessionSockets(campaign); err != nil {
 		// Log warning but don't fail
@@ -41,25 +41,18 @@ func (m *Manager) EnsureDaemonRunning(campaign string, preferredSession int) (*D
 		return nil, err
 	}
 
-	if config.UseSocket {
-		// Check if socket exists and is responsive
-		if daemonPkg.CanConnect(config.SocketPath) {
-			return config, nil // Already running
-		}
+	// Check if socket exists and is responsive
+	if daemonPkg.CanConnect(config.SocketPath) {
+		return config, nil // Already running
+	}
 
-		// Clean any stale socket
-		if err := daemonPkg.UnlinkIfStale(config.SocketPath); err != nil {
-			return nil, err
-		}
-	} else {
-		// TCP mode - check if already running (legacy compatibility)
-		if IsRunning() {
-			return config, nil
-		}
+	// Clean any stale socket
+	if err := daemonPkg.UnlinkIfStale(config.SocketPath); err != nil {
+		return nil, err
 	}
 
 	// Start new daemon
-	if err := m.startCampaignDaemon(config); err != nil {
+	if err := m.startCampaignDaemon(ctx, config); err != nil {
 		return nil, err
 	}
 
@@ -70,40 +63,22 @@ func (m *Manager) EnsureDaemonRunning(campaign string, preferredSession int) (*D
 	return config, nil
 }
 
-// EnsureLegacyDaemonRunning ensures the legacy single-instance daemon is running
-func (m *Manager) EnsureLegacyDaemonRunning(ctx context.Context) error {
-	if IsRunning() {
-		return nil // Already running
-	}
-
-	// Use the existing Start function for legacy compatibility
-	return Start(ctx)
-}
 
 // startCampaignDaemon starts a new daemon instance for a campaign
-func (m *Manager) startCampaignDaemon(config *DaemonConfig) error {
+func (m *Manager) startCampaignDaemon(ctx context.Context, config *DaemonConfig) error {
 	// Build command arguments
 	args := []string{"serve", "--daemon"}
 
-	// Add campaign if not legacy
-	if !config.IsLegacy() {
-		args = append(args, "--campaign", config.Campaign)
-	}
+	// Add campaign
+	args = append(args, "--campaign", config.Campaign)
 
 	// Add session if not primary
 	if config.Session > 0 {
 		args = append(args, "--session", strconv.Itoa(config.Session))
 	}
 
-	// Add transport configuration
-	if config.UseSocket {
-		args = append(args, "--socket", config.SocketPath)
-	} else {
-		args = append(args, "--tcp", "--port", strconv.Itoa(config.Port))
-		if config.Host != "localhost" {
-			args = append(args, "--host", config.Host)
-		}
-	}
+	// Add socket path
+	args = append(args, "--socket", config.SocketPath)
 
 	// Get guild executable path
 	guildPath, err := getExecutablePath()
@@ -184,49 +159,34 @@ func (m *Manager) startCampaignDaemon(config *DaemonConfig) error {
 	}
 
 	// Wait for daemon to be ready
-	if config.UseSocket {
-		return m.waitForSocket(config.SocketPath, 10*time.Second)
-	} else {
-		return m.waitForTCP(config.Host, config.Port, 10*time.Second)
-	}
+	return m.waitForSocket(ctx, config.SocketPath, 10*time.Second)
 }
 
 // waitForSocket waits for a Unix socket to become responsive
-func (m *Manager) waitForSocket(socketPath string, timeout time.Duration) error {
-	deadline := time.Now().Add(timeout)
-	for time.Now().Before(deadline) {
-		if daemonPkg.CanConnect(socketPath) {
-			return nil
+func (m *Manager) waitForSocket(ctx context.Context, socketPath string, timeout time.Duration) error {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+	
+	ticker := time.NewTicker(100 * time.Millisecond)
+	defer ticker.Stop()
+	
+	for {
+		select {
+		case <-ctx.Done():
+			return gerror.New(gerror.ErrCodeTimeout, "daemon failed to start within timeout", nil).
+				WithComponent("daemon").
+				WithOperation("waitForSocket").
+				WithDetails("socket", socketPath).
+				WithDetails("timeout", timeout.String()).
+				FromContext(ctx)
+		case <-ticker.C:
+			if daemonPkg.CanConnect(socketPath) {
+				return nil
+			}
 		}
-		time.Sleep(100 * time.Millisecond)
 	}
-
-	return gerror.New(gerror.ErrCodeTimeout, "daemon failed to start within timeout").
-		WithComponent("daemon").
-		WithOperation("waitForSocket").
-		WithDetails("socket", socketPath).
-		WithDetails("timeout", timeout.String())
 }
 
-// waitForTCP waits for a TCP port to become responsive
-func (m *Manager) waitForTCP(host string, port int, timeout time.Duration) error {
-	deadline := time.Now().Add(timeout)
-	for time.Now().Before(deadline) {
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		if isPortListening(ctx, strconv.Itoa(port)) {
-			cancel()
-			return nil
-		}
-		cancel()
-		time.Sleep(100 * time.Millisecond)
-	}
-
-	return gerror.New(gerror.ErrCodeTimeout, "daemon failed to start within timeout").
-		WithComponent("daemon").
-		WithOperation("waitForTCP").
-		WithDetails("address", host+":"+strconv.Itoa(port)).
-		WithDetails("timeout", timeout.String())
-}
 
 // StopCampaign stops all sessions for a campaign
 func (m *Manager) StopCampaign(campaign string) error {
@@ -236,7 +196,7 @@ func (m *Manager) StopCampaign(campaign string) error {
 	}
 
 	if len(sessions) == 0 {
-		return gerror.New(gerror.ErrCodeNotFound, "no running sessions for campaign").
+		return gerror.New(gerror.ErrCodeNotFound, "no running sessions for campaign", nil).
 			WithComponent("daemon").
 			WithOperation("StopCampaign").
 			WithDetails("campaign", campaign)
@@ -250,7 +210,7 @@ func (m *Manager) StopCampaign(campaign string) error {
 	}
 
 	if len(errors) > 0 {
-		return gerror.New(gerror.ErrCodePartialFailure, "failed to stop some sessions").
+		return gerror.New(gerror.ErrCodeInternal, "failed to stop some sessions", nil).
 			WithComponent("daemon").
 			WithOperation("StopCampaign").
 			WithDetails("campaign", campaign).
@@ -276,15 +236,8 @@ func (m *Manager) StopAll() error {
 		}
 	}
 
-	// Also stop legacy daemon if running
-	if IsRunning() {
-		if err := Stop(); err != nil {
-			errors = append(errors, err)
-		}
-	}
-
 	if len(errors) > 0 {
-		return gerror.New(gerror.ErrCodePartialFailure, "failed to stop some daemons").
+		return gerror.New(gerror.ErrCodeInternal, "failed to stop some daemons", nil).
 			WithComponent("daemon").
 			WithOperation("StopAll").
 			WithDetails("error_count", len(errors))
