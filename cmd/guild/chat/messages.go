@@ -5,8 +5,6 @@ package chat
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
-
-	"github.com/guild-ventures/guild-core/cmd/guild/chat/common"
 )
 
 // Bubble Tea messages for event-driven communication between components

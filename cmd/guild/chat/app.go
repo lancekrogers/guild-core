@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 	"google.golang.org/grpc"
 	_ "modernc.org/sqlite" // SQLite driver
@@ -391,17 +392,28 @@ func (app *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	
 	// Update panes
 	var paneCmd tea.Cmd
-	app.outputPane, paneCmd = app.outputPane.Update(msg)
+	var updatedModel tea.Model
+	
+	updatedModel, paneCmd = app.outputPane.Update(msg)
+	if outputPane, ok := updatedModel.(panes.OutputPane); ok {
+		app.outputPane = outputPane
+	}
 	if paneCmd != nil {
 		cmds = append(cmds, paneCmd)
 	}
 	
-	app.inputPane, paneCmd = app.inputPane.Update(msg)
+	updatedModel, paneCmd = app.inputPane.Update(msg)
+	if inputPane, ok := updatedModel.(panes.InputPane); ok {
+		app.inputPane = inputPane
+	}
 	if paneCmd != nil {
 		cmds = append(cmds, paneCmd)
 	}
 	
-	app.statusPane, paneCmd = app.statusPane.Update(msg)
+	updatedModel, paneCmd = app.statusPane.Update(msg)
+	if statusPane, ok := updatedModel.(panes.StatusPane); ok {
+		app.statusPane = statusPane
+	}
 	if paneCmd != nil {
 		cmds = append(cmds, paneCmd)
 	}
@@ -492,27 +504,30 @@ func (app *App) handleWindowSize(msg tea.WindowSizeMsg) (tea.Model, tea.Cmd) {
 func (app *App) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	// Handle global shortcuts first
 	switch {
-	case app.keys.Quit.Matches(msg):
+	case key.Matches(msg, app.keys.Quit):
 		app.shouldQuit = true
 		return app, tea.Quit
 		
-	case app.keys.Submit.Matches(msg):
+	case key.Matches(msg, app.keys.Submit):
 		return app.handleSubmit()
 		
-	case app.keys.CommandPalette.Matches(msg):
+	case key.Matches(msg, app.keys.CommandPalette):
 		return app.handleCommandPalette()
 		
-	case app.keys.GlobalSearch.Matches(msg):
+	case key.Matches(msg, app.keys.GlobalSearch):
 		return app.handleGlobalSearch()
 		
-	case app.keys.Help.Matches(msg):
+	case key.Matches(msg, app.keys.Help):
 		return app.handleHelp()
 	}
 	
 	// Let the currently focused pane handle the key
 	// For now, assume input pane is always focused
 	var cmd tea.Cmd
-	app.inputPane, cmd = app.inputPane.Update(msg)
+	updatedModel, cmd := app.inputPane.Update(msg)
+	if inputPane, ok := updatedModel.(panes.InputPane); ok {
+		app.inputPane = inputPane
+	}
 	
 	return app, cmd
 }
@@ -557,7 +572,7 @@ func (app *App) handleGlobalSearch() (tea.Model, tea.Cmd) {
 }
 
 func (app *App) handleHelp() (tea.Model, tea.Cmd) {
-	return app.commandProcessor.processCommand("help"), nil
+	return app, app.commandProcessor.processCommand("help")
 }
 
 func (app *App) handleAgentStream(msg AgentStreamMsg) (tea.Model, tea.Cmd) {
@@ -616,7 +631,7 @@ func (app *App) handleToolExecutionStart(msg ToolExecutionStartMsg) (tea.Model, 
 		AgentID:     msg.AgentID,
 		StartTime:   app.GetCurrentTime(),
 		Status:      "starting",
-		Parameters:  msg.Parameters,
+		Metadata:    map[string]string{"parameters": fmt.Sprintf("%v", msg.Parameters)},
 	}
 	app.activeTools[msg.ExecutionID] = execution
 	

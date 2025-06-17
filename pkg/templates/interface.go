@@ -48,6 +48,11 @@ type TemplateManager interface {
 	// Built-in templates
 	InstallBuiltInTemplates(ctx context.Context) error
 	GetBuiltInTemplates() []*Template
+
+	// Extended functionality for content formatting
+	GetContextualSuggestions(context map[string]interface{}) ([]*Template, error)
+	RenderTemplate(templateID string, variables map[string]interface{}) (string, error)
+	SearchTemplates(query string, limit int) ([]*TemplateSearchResult, error)
 }
 
 // Template represents a reusable template with variables
@@ -123,6 +128,14 @@ type ImportResult struct {
 	ErrorCount     int      `json:"error_count"`
 	ImportedIDs    []string `json:"imported_ids"`
 	Errors         []string `json:"errors,omitempty"`
+}
+
+// TemplateSearchResult represents a search result for templates
+type TemplateSearchResult struct {
+	Template    *Template `json:"template"`
+	Relevance   float64   `json:"relevance"`
+	MatchedTags []string  `json:"matched_tags,omitempty"`
+	Matches     []string  `json:"matches,omitempty"`
 }
 
 // ConvertFromDB converts database model to domain model

@@ -10,8 +10,6 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-
-	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // CommandProcessor handles command parsing and execution

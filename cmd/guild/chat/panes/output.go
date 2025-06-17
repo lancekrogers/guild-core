@@ -348,33 +348,33 @@ func (op *outputPaneImpl) formatMessage(msg common.ChatMessage, index int) strin
 	// Format agent/user prefix
 	var prefix string
 	switch msg.Type {
-	case MsgUser:
+	case common.MsgUser:
 		prefix = "👤 You"
-	case MsgAgent:
+	case common.MsgAgent:
 		if msg.AgentID != "" {
 			prefix = fmt.Sprintf("🤖 %s", msg.AgentID)
 		} else {
 			prefix = "🤖 Agent"
 		}
-	case MsgSystem:
+	case common.MsgSystem:
 		prefix = "🏰 System"
-	case MsgError:
+	case common.MsgError:
 		prefix = "❌ Error"
-	case MsgToolStart:
+	case common.MsgToolStart:
 		prefix = "🔨 Tool"
-	case MsgToolProgress:
+	case common.MsgToolProgress:
 		prefix = "⚙️ Tool"
-	case MsgToolComplete:
+	case common.MsgToolComplete:
 		prefix = "✅ Tool"
-	case MsgAgentThinking:
+	case common.MsgAgentThinking:
 		prefix = "🤔 Agent"
-	case MsgAgentWorking:
+	case common.MsgAgentWorking:
 		prefix = "⚙️ Agent"
-	case MsgPrompt:
+	case common.MsgPrompt:
 		prefix = "📜 Prompt"
-	case MsgToolError:
+	case common.MsgToolError:
 		prefix = "❌ Tool"
-	case MsgToolAuth:
+	case common.MsgToolAuth:
 		prefix = "🔐 Auth"
 	default:
 		prefix = "📝 Message"

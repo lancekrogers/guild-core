@@ -12,7 +12,7 @@ type MessageType = common.MessageType
 type ChatMessage = common.ChatMessage
 type ToolExecution = common.ToolExecution
 type ViewMode = common.ViewMode
-type ChatConfig = common.ChatConfig
+type CompletionResult = common.CompletionResult
 
 // Re-export constants
 const (
@@ -31,8 +31,9 @@ const (
 )
 
 const (
-	ViewChat     = common.ViewChat
-	ViewSearch   = common.ViewSearch
-	ViewHelp     = common.ViewHelp
-	ViewSettings = common.ViewSettings
+	ViewChat        = common.ViewChat
+	ViewSearch      = common.ViewSearch
+	ViewHelp        = common.ViewHelp
+	ViewSettings    = common.ViewSettings
+	ViewModeNormal  = common.ViewChat  // Alias for compatibility
 )

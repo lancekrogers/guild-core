@@ -75,7 +75,7 @@ func (cm *ConfigManager) LoadChatConfig(campaignID, sessionID string) (*ChatConf
 		CampaignID:  campaignID,
 		SessionID:   sessionID,
 		GuildConfig: guildConfig,
-		ProjectRoot: projCtx.Root,
+		ProjectRoot: projCtx.GetRootPath(),
 		
 		// UI defaults
 		Width:           80,

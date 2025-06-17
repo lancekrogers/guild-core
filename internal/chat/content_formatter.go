@@ -28,7 +28,7 @@ type ContentFormatter struct {
 	imageProcessor   *visual.ImageProcessor
 	codeRenderer     *visual.CodeRenderer
 	mermaidProcessor *visual.MermaidProcessor
-	templateManager  *templates.TemplateManager
+	templateManager  templates.TemplateManager
 }
 
 // NewContentFormatter creates a new content formatter with medieval theming
@@ -69,7 +69,7 @@ func NewContentFormatter(markdownRenderer *MarkdownRenderer, width int, projectD
 	mermaidProcessor.SetASCIISize(width-10, 30)
 
 	// Initialize template manager (best effort, don't fail if it can't be created)
-	var templateManager *templates.TemplateManager
+	var templateManager templates.TemplateManager
 	if projectDir != "" {
 		templateManager, _ = templates.NewTemplateManager(projectDir)
 	}

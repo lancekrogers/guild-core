@@ -27,6 +27,15 @@ func NewSQLTemplateManager(queries *db.Queries) TemplateManager {
 	}
 }
 
+// NewTemplateManager creates a new template manager from project directory
+func NewTemplateManager(projectDir string) (TemplateManager, error) {
+	// For now, return nil - this would require database setup
+	// This is a placeholder for compatibility
+	return nil, gerror.New(gerror.ErrCodeNotImplemented, "NewTemplateManager not implemented - use NewSQLTemplateManager with database connection", nil).
+		WithComponent("templates").
+		WithOperation("NewTemplateManager")
+}
+
 // Create creates a new template
 func (m *SQLTemplateManager) Create(ctx context.Context, template *Template) error {
 	if template.ID == "" {
@@ -668,4 +677,58 @@ func (m *SQLTemplateManager) InstallBuiltInTemplates(ctx context.Context) error 
 // GetBuiltInTemplates returns the default built-in templates
 func (m *SQLTemplateManager) GetBuiltInTemplates() []*Template {
 	return GetDefaultTemplates()
+}
+
+// GetContextualSuggestions returns contextual template suggestions
+func (m *SQLTemplateManager) GetContextualSuggestions(contextMap map[string]interface{}) ([]*Template, error) {
+	// Simple implementation - return most used templates
+	ctx, ok := contextMap["ctx"].(context.Context)
+	if !ok {
+		ctx = context.Background()
+	}
+	return m.GetMostUsed(ctx, 5)
+}
+
+// RenderTemplate renders a template with variables (convenience method)
+func (m *SQLTemplateManager) RenderTemplate(templateID string, variables map[string]interface{}) (string, error) {
+	ctx := context.Background()
+	return m.Render(ctx, templateID, variables)
+}
+
+// SearchTemplates searches for templates matching a query
+func (m *SQLTemplateManager) SearchTemplates(query string, limit int) ([]*TemplateSearchResult, error) {
+	ctx := context.Background()
+	templates, err := m.Search(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	
+	// Convert to search results with basic relevance scoring
+	results := make([]*TemplateSearchResult, 0, len(templates))
+	for i, template := range templates {
+		if limit > 0 && i >= limit {
+			break
+		}
+		
+		// Simple matching to populate Matches field
+		var matches []string
+		queryLower := strings.ToLower(query)
+		if strings.Contains(strings.ToLower(template.Name), queryLower) {
+			matches = append(matches, "name")
+		}
+		if strings.Contains(strings.ToLower(template.Description), queryLower) {
+			matches = append(matches, "description")
+		}
+		if strings.Contains(strings.ToLower(template.Category), queryLower) {
+			matches = append(matches, "category")
+		}
+		
+		results = append(results, &TemplateSearchResult{
+			Template:  template,
+			Relevance: 1.0 - (float64(i) / float64(len(templates))), // Simple relevance scoring
+			Matches:   matches,
+		})
+	}
+	
+	return results, nil
 }

@@ -22,9 +22,9 @@ type VariableSubstitution struct {
 // NewVariableSubstitution creates a new substitution engine
 func NewVariableSubstitution() *VariableSubstitution {
 	return &VariableSubstitution{
-		basicPattern:       regexp.MustCompile(`\{\{([^}:|\s]+)\}\}`),
-		defaultPattern:     regexp.MustCompile(`\{\{([^}:|\s]+):([^}|]*)\}\}`),
-		conditionalPattern: regexp.MustCompile(`\{\{([^}:|\s]+)\|([^}]*)\}\}`),
+		basicPattern:       regexp.MustCompile(`\{\{\s*([^}:|\s]+)\s*\}\}`),
+		defaultPattern:     regexp.MustCompile(`\{\{\s*([^}:|\s]+)\s*:\s*([^}|]*)\s*\}\}`),
+		conditionalPattern: regexp.MustCompile(`\{\{\s*([^}:|\s]+)\s*\|\s*([^}]*)\s*\}\}`),
 	}
 }
 
@@ -150,7 +150,8 @@ func (vs *VariableSubstitution) ValidateTemplate(content string, variables []*Te
 	}
 
 	if len(undefinedVars) > 0 {
-		return gerror.New(gerror.ErrCodeInvalidInput, "template contains undefined variables", nil).
+		message := fmt.Sprintf("template contains undefined variables: %s", strings.Join(undefinedVars, ", "))
+		return gerror.New(gerror.ErrCodeInvalidInput, message, nil).
 			WithComponent("templates").
 			WithOperation("ValidateTemplate").
 			WithDetails("undefined_variables", strings.Join(undefinedVars, ", "))
