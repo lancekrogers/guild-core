@@ -4,7 +4,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -198,8 +197,6 @@ func runStatusAll(cmd *cobra.Command) error {
 }
 
 func getTransportType(config *daemon.DaemonConfig) string {
-	if config.UseSocket {
-		return "Unix Socket"
-	}
-	return "TCP"
+	// All new daemons use Unix sockets
+	return "Unix Socket"
 }

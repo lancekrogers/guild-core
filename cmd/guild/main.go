@@ -83,6 +83,8 @@ func init() {
 	rootCmd.AddCommand(agentCmd)
 	rootCmd.AddCommand(chatCmd)
 	rootCmd.AddCommand(serveCmd)
+	rootCmd.AddCommand(stopCmd)
+	rootCmd.AddCommand(statusCmd)
 	rootCmd.AddCommand(campaignCmd)
 	rootCmd.AddCommand(kanbanCmd)
 	rootCmd.AddCommand(completionCmd)

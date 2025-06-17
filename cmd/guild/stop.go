@@ -4,191 +4,200 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"os/exec"
-	"runtime"
-	"strings"
+	"os"
+	"time"
+
+	"github.com/spf13/cobra"
 
 	"github.com/guild-ventures/guild-core/internal/daemon"
-	"github.com/spf13/cobra"
+	"github.com/guild-ventures/guild-core/pkg/campaign"
+	pkgDaemon "github.com/guild-ventures/guild-core/pkg/daemon"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 )
 
-var stopCmd = &cobra.Command{
-	Use:   "stop",
-	Short: "Stop all Guild servers and processes",
-	Long: `Terminate all running Guild servers and chat sessions.
-	
-This command will:
-- Stop the Guild gRPC server (guild serve)
-- Terminate all active chat sessions (guild chat)
-- Kill any other guild-related processes`,
-	RunE: runStop,
-}
-
 var (
-	forceKill bool
+	stopCampaignID string
+	stopAll        bool
+	stopSession    int
+	stopForce      bool
+	stopTimeout    time.Duration
 )
 
 func init() {
-	stopCmd.Flags().BoolVarP(&forceKill, "force", "f", false, "Force kill processes (SIGKILL instead of SIGTERM)")
-	rootCmd.AddCommand(stopCmd)
+	stopCmd.Flags().StringVar(&stopCampaignID, "campaign", "", "Stop specific campaign daemon")
+	stopCmd.Flags().BoolVar(&stopAll, "all", false, "Stop all running daemons")
+	stopCmd.Flags().IntVar(&stopSession, "session", -1, "Stop specific session (default: all sessions for campaign)")
+	stopCmd.Flags().BoolVarP(&stopForce, "force", "f", false, "Force kill processes (SIGKILL instead of SIGTERM)")
+	stopCmd.Flags().DurationVar(&stopTimeout, "timeout", 5*time.Second, "Timeout for graceful shutdown")
+
+	// Register completion functions
+	stopCmd.RegisterFlagCompletionFunc("campaign", completeCampaignNames)
+	stopCmd.RegisterFlagCompletionFunc("session", completeSessionIDs)
+}
+
+var stopCmd = &cobra.Command{
+	Use:   "stop",
+	Short: "Stop Guild daemon instances",
+	Long: `Stop running Guild daemon instances.
+
+By default, stops the daemon for the current campaign.
+Use --campaign to stop a specific campaign's daemon.
+Use --all to stop all running daemons.
+
+Examples:
+  guild stop                     # Stop daemon for current campaign
+  guild stop --campaign shop     # Stop the 'shop' campaign daemon
+  guild stop --session 2         # Stop session 2 of current campaign
+  guild stop --all               # Stop all running daemons
+  guild stop --all --force       # Force kill all daemons`,
+	RunE: runStop,
 }
 
 func runStop(cmd *cobra.Command, args []string) error {
-	fmt.Println("🛑 Stopping Guild processes...")
+	ctx := context.Background()
 
-	// First try to stop the daemon if it's managed by our daemon package
-	if daemon.IsRunning() {
-		fmt.Print("  • Stopping managed Guild server... ")
-		if err := daemon.Stop(); err != nil {
-			fmt.Printf("❌ %v\n", err)
-		} else {
-			fmt.Println("✅")
+	// Determine what to stop
+	if stopAll {
+		return stopAllDaemons(ctx)
+	}
+
+	// Detect campaign if not specified
+	if stopCampaignID == "" {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get current directory").
+				WithComponent("cli").
+				WithOperation("stop.run")
+		}
+
+		detectedCampaign, err := campaign.DetectCampaign(cwd, "")
+		if err != nil {
+			// If no campaign detected and no --all flag, show error
+			return gerror.New(gerror.ErrCodeInvalidInput, "no campaign detected", nil).
+				WithComponent("cli").
+				WithOperation("stop.run").
+				WithDetails("help", "Use --campaign to specify a campaign or --all to stop all daemons")
+		}
+		stopCampaignID = detectedCampaign
+	}
+
+	// Stop specific campaign
+	return stopCampaignDaemons(ctx, stopCampaignID)
+}
+
+func stopAllDaemons(ctx context.Context) error {
+	fmt.Println("🛑 Stopping all Guild daemons...")
+
+	// Use lifecycle manager for graceful shutdown
+	lifecycleManager := daemon.DefaultLifecycleManager
+	if err := lifecycleManager.ShutdownAll(ctx, stopTimeout); err != nil {
+		// If graceful shutdown failed, try using daemon manager
+		manager := daemon.DefaultManager
+		if err := manager.StopAll(); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to stop all daemons").
+				WithComponent("cli").
+				WithOperation("stop.stopAllDaemons")
 		}
 	}
 
-	// Then look for any other guild processes
-	processes, err := findGuildProcesses()
+	// Also discover and stop any unmanaged sessions
+	allSessions, err := pkgDaemon.DiscoverAllRunningSessions()
 	if err != nil {
-		return fmt.Errorf("failed to find guild processes: %w", err)
-	}
-
-	if len(processes) == 0 && !daemon.IsRunning() {
-		fmt.Println("⚠️  No Guild processes found running")
-		return nil
-	}
-
-	// Display found processes
-	fmt.Printf("\nFound %d Guild process(es):\n", len(processes))
-	for _, proc := range processes {
-		fmt.Printf("  • PID %s: %s\n", proc.pid, proc.command)
-	}
-
-	// Kill each process
-	killedCount := 0
-	for _, proc := range processes {
-		if err := killProcess(proc.pid, forceKill); err != nil {
-			fmt.Printf("❌ Failed to stop PID %s: %v\n", proc.pid, err)
-		} else {
-			fmt.Printf("✅ Stopped PID %s\n", proc.pid)
-			killedCount++
+		fmt.Printf("⚠️  Warning: Failed to discover sessions: %v\n", err)
+	} else {
+		stoppedCount := 0
+		for campaignHash, sessions := range allSessions {
+			for _, session := range sessions {
+				fmt.Printf("  • Stopping %s (session %d)... ", campaignHash, session.Session)
+				if err := pkgDaemon.StopSession(session.Socket); err != nil {
+					if stopForce {
+						// Force remove socket
+						os.Remove(session.Socket)
+						fmt.Println("✅ (forced)")
+					} else {
+						fmt.Printf("❌ %v\n", err)
+					}
+				} else {
+					fmt.Println("✅")
+					stoppedCount++
+				}
+			}
 		}
-	}
-
-	// Summary
-	fmt.Printf("\n✨ Stopped %d of %d process(es)\n", killedCount, len(processes))
-
-	// Check if gRPC server port is still in use
-	if isPortInUse("9090") {
-		fmt.Println("⚠️  Port 9090 may still be in use. You might need to wait a moment or use --force")
+		
+		if stoppedCount > 0 {
+			fmt.Printf("\n✨ Stopped %d daemon(s)\n", stoppedCount)
+		} else if len(allSessions) == 0 {
+			fmt.Println("ℹ️  No running daemons found")
+		}
 	}
 
 	return nil
 }
 
-type guildProcess struct {
-	pid     string
-	command string
-}
+func stopCampaignDaemons(ctx context.Context, campaignName string) error {
+	fmt.Printf("🛑 Stopping Guild daemon for campaign '%s'...\n", campaignName)
 
-func findGuildProcesses() ([]guildProcess, error) {
-	var processes []guildProcess
-
-	switch runtime.GOOS {
-	case "darwin", "linux":
-		// Use ps to find guild processes
-		cmd := exec.Command("ps", "aux")
-		output, err := cmd.Output()
-		if err != nil {
-			return nil, err
-		}
-
-		lines := strings.Split(string(output), "\n")
-		for _, line := range lines {
-			// Look for guild processes but skip our own stop command
-			if strings.Contains(line, "guild") && !strings.Contains(line, "guild stop") {
-				// Check if it's actually a guild command (serve, chat, etc.)
-				if strings.Contains(line, "guild serve") ||
-					strings.Contains(line, "guild chat") ||
-					strings.Contains(line, "./guild serve") ||
-					strings.Contains(line, "./guild chat") ||
-					strings.Contains(line, "bin/guild") {
-					fields := strings.Fields(line)
-					if len(fields) >= 2 {
-						// Extract full command for display
-						cmdStart := strings.Index(line, fields[10])
-						if cmdStart > 0 {
-							processes = append(processes, guildProcess{
-								pid:     fields[1],
-								command: strings.TrimSpace(line[cmdStart:]),
-							})
-						}
-					}
-				}
-			}
-		}
-	case "windows":
-		// Use tasklist for Windows
-		cmd := exec.Command("tasklist", "/FI", "IMAGENAME eq guild.exe")
-		output, err := cmd.Output()
-		if err != nil {
-			return nil, err
-		}
-
-		lines := strings.Split(string(output), "\n")
-		for i, line := range lines {
-			if i < 3 { // Skip header lines
-				continue
-			}
-			if strings.Contains(line, "guild.exe") {
-				fields := strings.Fields(line)
-				if len(fields) >= 2 {
-					processes = append(processes, guildProcess{
-						pid:     fields[1],
-						command: "guild.exe",
-					})
-				}
-			}
-		}
-	default:
-		return nil, fmt.Errorf("unsupported operating system: %s", runtime.GOOS)
+	// If specific session requested
+	if stopSession >= 0 {
+		return stopSpecificSession(ctx, campaignName, stopSession)
 	}
 
-	return processes, nil
+	// Stop all sessions for the campaign
+	manager := daemon.DefaultManager
+	if err := manager.StopCampaign(campaignName); err != nil {
+		gerr, ok := err.(*gerror.GuildError)
+		if ok && gerr.Code == gerror.ErrCodeNotFound {
+			fmt.Printf("ℹ️  No running sessions found for campaign '%s'\n", campaignName)
+			return nil
+		}
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to stop campaign").
+			WithComponent("cli").
+			WithOperation("stop.stopCampaignDaemons").
+			WithDetails("campaign", campaignName)
+	}
+
+	fmt.Printf("✨ Successfully stopped all sessions for campaign '%s'\n", campaignName)
+	return nil
 }
 
-func killProcess(pid string, force bool) error {
-	switch runtime.GOOS {
-	case "darwin", "linux":
-		signal := "-TERM"
-		if force {
-			signal = "-KILL"
-		}
-		cmd := exec.Command("kill", signal, pid)
-		return cmd.Run()
-	case "windows":
-		flag := ""
-		if force {
-			flag = "/F"
-		}
-		cmd := exec.Command("taskkill", flag, "/PID", pid)
-		return cmd.Run()
-	default:
-		return fmt.Errorf("unsupported operating system: %s", runtime.GOOS)
-	}
-}
+func stopSpecificSession(ctx context.Context, campaignName string, session int) error {
+	fmt.Printf("🛑 Stopping session %d for campaign '%s'...\n", session, campaignName)
 
-func isPortInUse(port string) bool {
-	switch runtime.GOOS {
-	case "darwin", "linux":
-		cmd := exec.Command("lsof", "-i", ":"+port)
-		output, _ := cmd.Output()
-		return len(output) > 0
-	case "windows":
-		cmd := exec.Command("netstat", "-an")
-		output, _ := cmd.Output()
-		return strings.Contains(string(output), ":"+port)
-	default:
-		return false
+	// Get socket path for the session
+	socketPath, err := paths.GetCampaignSocket(campaignName, session)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get socket path").
+			WithComponent("cli").
+			WithOperation("stop.stopSpecificSession").
+			WithDetails("campaign", campaignName).
+			WithDetails("session", session)
 	}
+
+	// Check if session is running
+	if !pkgDaemon.CanConnect(socketPath) {
+		fmt.Printf("ℹ️  Session %d is not running\n", session)
+		return nil
+	}
+
+	// Stop the session
+	if err := pkgDaemon.StopSession(socketPath); err != nil {
+		if stopForce {
+			// Force remove socket
+			os.Remove(socketPath)
+			fmt.Printf("✅ Forcefully stopped session %d\n", session)
+		} else {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to stop session").
+				WithComponent("cli").
+				WithOperation("stop.stopSpecificSession").
+				WithDetails("campaign", campaignName).
+				WithDetails("session", session)
+		}
+	} else {
+		fmt.Printf("✅ Successfully stopped session %d\n", session)
+	}
+
+	return nil
 }

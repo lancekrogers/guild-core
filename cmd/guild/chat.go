@@ -110,10 +110,9 @@ func runChat(cmd *cobra.Command, args []string) error {
 	// Auto-start daemon unless --no-daemon flag is set
 	var daemonConfig *daemon.DaemonConfig
 	if !chatNoDaemon {
-		// Use the new multi-instance daemon manager
-		manager := daemon.DefaultManager
-		// Campaign-specific daemon
-		config, err := manager.EnsureDaemonRunning(ctx, campaignName, 0)
+		// Use the lifecycle manager for auto-start with session management
+		lifecycleManager := daemon.DefaultLifecycleManager
+		config, err := lifecycleManager.AutoStartDaemon(ctx, campaignName)
 		if err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start campaign daemon").
 				WithComponent("cli").
@@ -122,6 +121,9 @@ func runChat(cmd *cobra.Command, args []string) error {
 		daemonConfig = config
 		// Give the server a moment to fully initialize
 		time.Sleep(500 * time.Millisecond)
+		
+		// Start monitoring for idle timeout and crashes
+		lifecycleManager.MonitorSessions(ctx)
 	} else {
 		// No auto-start, but we still need daemon config for connection
 		config, err := daemon.GetDaemonConfig(campaignName, 0)

@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
+	daemonPkg "github.com/guild-ventures/guild-core/pkg/daemon"
 	"github.com/guild-ventures/guild-core/pkg/paths"
 )
 
@@ -27,8 +28,9 @@ type DaemonConfig struct {
 	IdleTimeout time.Duration `json:"idle_timeout"`
 
 	// Resource limits
-	NiceLevel    int   `json:"nice_level"`     // Process priority adjustment
-	MemoryLimit  int64 `json:"memory_limit"`  // Memory limit in bytes
+	NiceLevel      int   `json:"nice_level"`       // Process priority adjustment
+	MemoryLimit    int64 `json:"memory_limit"`    // Memory limit in bytes
+	MemoryLimitMB  int   `json:"memory_limit_mb"` // Memory limit in MB (for easier config)
 }
 
 // GetDaemonConfig creates a daemon configuration for a campaign and session
@@ -109,15 +111,6 @@ func (c *DaemonConfig) GetDisplayName() string {
 
 
 // findAvailableSession finds the next available session for a campaign
-// This is a simplified version that will be replaced by the socket registry implementation
 func findAvailableSession(campaign string) (int, string, error) {
-	// Try primary session first
-	socketPath, err := paths.GetCampaignSocket(campaign, 0)
-	if err != nil {
-		return 0, "", err
-	}
-
-	// For now, just return session 0
-	// This will be replaced by proper session discovery
-	return 0, socketPath, nil
+	return daemonPkg.FindAvailableSession(campaign)
 }
