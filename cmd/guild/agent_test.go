@@ -515,7 +515,7 @@ func TestDisplayCompactAgentList(t *testing.T) {
 	assert.Contains(t, output, "Total: 2 agents")
 
 	// Check that long capabilities are truncated
-	assert.Contains(t, output, "vulnerability-scanning, penetration-te...")
+	assert.Contains(t, output, "vulnerability-scanning, penetration-t...")
 }
 
 func TestDisplayVerboseAgentList(t *testing.T) {

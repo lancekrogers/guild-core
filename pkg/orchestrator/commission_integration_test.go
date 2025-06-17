@@ -31,6 +31,7 @@ func TestCommissionIntegrationService_FullPipeline(t *testing.T) {
 	// Set up mock provider with realistic LLM response following Guild refinement format
 	mockProvider, err := mock.NewProvider()
 	require.NoError(t, err)
+	mockProvider.Enable()
 	mockProvider.SetDefaultResponse(`## File: commission_refined.md
 
 # 🧠 Goal
@@ -367,6 +368,7 @@ func setupTestRegistry(t *testing.T) registry.ComponentRegistry {
 	// Mock provider
 	mockProvider, err := mock.NewProvider()
 	require.NoError(t, err)
+	mockProvider.Enable()
 	mockProvider.SetDefaultResponse(`Create a REST API for user management with proper authentication and CRUD operations`)
 	require.NoError(t, reg.Providers().RegisterProvider("mock", mockProvider))
 	reg.Providers().SetDefaultProvider("mock")

@@ -70,7 +70,7 @@ func BenchmarkConcurrentStatusUpdates(b *testing.B) {
 
 func BenchmarkContentFormatting(b *testing.B) {
 	renderer, _ := chat.NewMarkdownRenderer(80)
-	formatter := chat.NewContentFormatter(renderer, 80)
+	formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 
 	// Various content types
 	contents := []struct {
@@ -135,7 +135,7 @@ func BenchmarkCachePerformance(b *testing.B) {
 
 func BenchmarkLanguageDetection(b *testing.B) {
 	renderer, _ := chat.NewMarkdownRenderer(80)
-	formatter := chat.NewContentFormatter(renderer, 80)
+	formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 
 	// Various code samples
 	codeSamples := []string{
@@ -230,7 +230,7 @@ func BenchmarkMemoryAllocation(b *testing.B) {
 		renderer, _ := chat.NewMarkdownRenderer(80)
 		b.ReportAllocs()
 		for i := 0; i < b.N; i++ {
-			formatter := chat.NewContentFormatter(renderer, 80)
+			formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 			_ = formatter.FormatMessage("agent", "test", nil)
 		}
 	})
@@ -276,7 +276,7 @@ func BenchmarkSummary(b *testing.B) {
 		tracker := chat.NewAgentStatusTracker(guildConfig)
 		display := chat.NewStatusDisplay(tracker, 80, 24)
 		renderer, _ := chat.NewMarkdownRenderer(80)
-		formatter := chat.NewContentFormatter(renderer, 80)
+		formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 		indicators := chat.NewAgentIndicators()
 
 		// Pre-populate

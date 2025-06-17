@@ -37,7 +37,7 @@ func TestNewContentFormatter(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			formatter := chat.NewContentFormatter(renderer, tt.width)
+			formatter := chat.NewContentFormatter(renderer, tt.width, "/tmp")
 			if formatter == nil {
 				t.Error("NewContentFormatter() returned nil")
 			}
@@ -52,7 +52,7 @@ func TestContentFormatter_FormatAgentResponse(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create markdown renderer: %v", err)
 	}
-	formatter := chat.NewContentFormatter(renderer, 80)
+	formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 
 	tests := []struct {
 		name     string
@@ -148,7 +148,7 @@ func TestContentFormatter_FormatSystemMessage(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create markdown renderer: %v", err)
 	}
-	formatter := chat.NewContentFormatter(renderer, 80)
+	formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 
 	tests := []struct {
 		name     string
@@ -223,7 +223,7 @@ func TestContentFormatter_FormatErrorMessage(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create markdown renderer: %v", err)
 	}
-	formatter := chat.NewContentFormatter(renderer, 80)
+	formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 
 	tests := []struct {
 		name     string
@@ -290,7 +290,7 @@ func TestContentFormatter_FormatToolOutput(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create markdown renderer: %v", err)
 	}
-	formatter := chat.NewContentFormatter(renderer, 80)
+	formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 
 	tests := []struct {
 		name     string
@@ -372,7 +372,7 @@ func TestContentFormatter_FormatThinkingMessage(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create markdown renderer: %v", err)
 	}
-	formatter := chat.NewContentFormatter(renderer, 80)
+	formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 
 	tests := []struct {
 		name     string
@@ -445,7 +445,7 @@ func TestContentFormatter_FormatWorkingMessage(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create markdown renderer: %v", err)
 	}
-	formatter := chat.NewContentFormatter(renderer, 80)
+	formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 
 	tests := []struct {
 		name     string
@@ -517,7 +517,7 @@ func TestContentFormatter_FormatUserMessage(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create markdown renderer: %v", err)
 	}
-	formatter := chat.NewContentFormatter(renderer, 80)
+	formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 
 	tests := []struct {
 		name     string
@@ -587,7 +587,7 @@ func TestContentFormatter_FormatTimestamp(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create markdown renderer: %v", err)
 	}
-	formatter := chat.NewContentFormatter(renderer, 80)
+	formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 
 	tests := []struct {
 		name      string
@@ -639,7 +639,7 @@ func TestContentFormatter_UpdateWidth(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create markdown renderer: %v", err)
 	}
-	formatter := chat.NewContentFormatter(renderer, 80)
+	formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 
 	tests := []struct {
 		name     string
@@ -685,7 +685,7 @@ func TestContentFormatter_SetTheme(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create markdown renderer: %v", err)
 	}
-	formatter := chat.NewContentFormatter(renderer, 80)
+	formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 
 	tests := []struct {
 		name  string

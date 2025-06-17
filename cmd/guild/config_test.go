@@ -128,23 +128,34 @@ func TestConfigShowCommand(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// Setup test environment
+			// Setup test environment FIRST
 			if tt.setupFunc != nil {
 				tt.setupFunc(t)
 			}
 
-			// Capture output
-			var buf bytes.Buffer
+			// Create command and parse flags BEFORE capturing stdout
 			cmd := &cobra.Command{}
 			configShowCmd.Flags().VisitAll(func(f *pflag.Flag) {
 				cmd.Flags().AddFlag(f)
 			})
-			cmd.SetOut(&buf)
-			cmd.SetErr(&buf)
 			cmd.ParseFlags(tt.args)
+
+			// Capture stdout AFTER environment setup
+			old := os.Stdout
+			r, w, _ := os.Pipe()
+			os.Stdout = w
 
 			// Execute command
 			err := runConfigShow(cmd, []string{})
+
+			// Restore stdout
+			w.Close()
+			os.Stdout = old
+
+			// Read output
+			var buf bytes.Buffer
+			io.Copy(&buf, r)
+			output := buf.String()
 
 			// Check error
 			if tt.expectError {
@@ -152,9 +163,6 @@ func TestConfigShowCommand(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 			}
-
-			// Check output
-			output := buf.String()
 			for _, expected := range tt.expectedOutput {
 				assert.Contains(t, output, expected)
 			}
@@ -176,17 +184,23 @@ func TestConfigPathCommand(t *testing.T) {
 	os.Setenv("HOME", testHome)
 	os.Setenv("USERPROFILE", testHome)
 
-	// Capture output
-	var buf bytes.Buffer
-	cmd := &cobra.Command{}
-	cmd.SetOut(&buf)
-	cmd.SetErr(&buf)
+	// Capture stdout
+	old := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
 
 	// Execute command
+	cmd := &cobra.Command{}
 	err := runConfigPath(cmd, []string{})
 	assert.NoError(t, err)
 
-	// Check output contains expected paths
+	// Restore stdout
+	w.Close()
+	os.Stdout = old
+
+	// Read output
+	var buf bytes.Buffer
+	io.Copy(&buf, r)
 	output := buf.String()
 	assert.Contains(t, output, "Configuration File Locations")
 	assert.Contains(t, output, "Global:")
@@ -314,19 +328,27 @@ agents:
 				tt.setupFunc(t)
 			}
 
-			// Capture output
-			var buf bytes.Buffer
+			// Capture stdout
+			old := os.Stdout
+			r, w, _ := os.Pipe()
+			os.Stdout = w
+
+			// Create command and flags
 			cmd := &cobra.Command{}
 			configValidateCmd.Flags().VisitAll(func(f *pflag.Flag) {
 				cmd.Flags().AddFlag(f)
 			})
-			cmd.SetOut(&buf)
-			cmd.SetErr(&buf)
 
 			// Execute command
 			_ = runConfigValidate(cmd, []string{})
 
-			// Check output
+			// Restore stdout
+			w.Close()
+			os.Stdout = old
+
+			// Read output
+			var buf bytes.Buffer
+			io.Copy(&buf, r)
 			output := buf.String()
 			for _, expected := range tt.expectedOutput {
 				assert.Contains(t, output, expected)

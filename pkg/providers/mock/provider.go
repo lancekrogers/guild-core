@@ -47,7 +47,7 @@ func NewProvider() (*Provider, error) {
 		responses:       make(map[string]string),
 		errors:          make(map[string]error),
 		calls:           make([]CallRecord, 0),
-		defaultResponse: "Mock response",
+		defaultResponse: "This is a mock provider response for testing purposes. Analysis: The system is functioning correctly and ready for development tasks.",
 		enabled:         enabled,
 		capabilities: interfaces.ProviderCapabilities{
 			MaxTokens:          4096,
@@ -141,6 +141,15 @@ func (p *Provider) ResetCalls() {
 	p.calls = make([]CallRecord, 0)
 }
 
+// Enable allows the mock provider to be programmatically enabled for testing
+func (p *Provider) Enable() {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	p.enabled = true
+	// Clear YAML responses to allow programmatic responses to take precedence
+	p.yamlResponses = ResponseSet{}
+}
+
 // ChatCompletion implements the AIProvider interface
 func (p *Provider) ChatCompletion(ctx context.Context, req interfaces.ChatRequest) (*interfaces.ChatResponse, error) {
 	if !p.enabled {
@@ -199,7 +208,7 @@ func (p *Provider) ChatCompletion(ctx context.Context, req interfaces.ChatReques
 		delay = p.delay
 	} else {
 		// Use default response
-		responseContent = p.getGuildDefaultResponse()
+		responseContent = p.defaultResponse
 		delay = p.delay
 	}
 
@@ -412,6 +421,8 @@ func NewBuilder() (*Builder, error) {
 	if err != nil {
 		return nil, err
 	}
+	// Enable the provider for builder pattern usage (typically in tests)
+	provider.Enable()
 	return &Builder{
 		provider: provider,
 	}, nil

@@ -64,7 +64,7 @@ func TestRichContentIntegration(t *testing.T) {
 		renderer, err := chat.NewMarkdownRenderer(80)
 		require.NoError(t, err)
 
-		formatter := chat.NewContentFormatter(renderer, 80)
+		formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 		require.NotNil(t, formatter)
 
 		// Test different message types
@@ -184,7 +184,7 @@ func TestComponentInteraction(t *testing.T) {
 		renderer, err := chat.NewMarkdownRenderer(80)
 		require.NoError(t, err)
 
-		formatter := chat.NewContentFormatter(renderer, 80)
+		formatter := chat.NewContentFormatter(renderer, 80, "/tmp")
 		require.NotNil(t, formatter)
 
 		// Test that they work together without conflicts

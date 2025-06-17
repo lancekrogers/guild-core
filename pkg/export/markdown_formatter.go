@@ -23,7 +23,7 @@ func (f *MarkdownFormatter) Format(ctx context.Context, content ExportContent) (
 	var builder strings.Builder
 	
 	// Write header with metadata
-	f.writeHeader(&builder, content.Metadata)
+	f.writeHeader(&builder, content.Metadata, content.Options)
 	
 	// Write messages
 	messages := f.getSelectedMessages(content)
@@ -131,34 +131,36 @@ func (f *MarkdownFormatter) getSelectedMessages(content ExportContent) []ChatMes
 }
 
 // writeHeader writes the document header
-func (f *MarkdownFormatter) writeHeader(builder *strings.Builder, metadata ExportMetadata) {
+func (f *MarkdownFormatter) writeHeader(builder *strings.Builder, metadata ExportMetadata, options ExportOptions) {
 	builder.WriteString(fmt.Sprintf("# %s\n\n", metadata.Title))
 	
 	if metadata.Description != "" {
 		builder.WriteString(fmt.Sprintf("%s\n\n", metadata.Description))
 	}
 	
-	// Metadata table
-	builder.WriteString("## Export Information\n\n")
-	builder.WriteString("| Field | Value |\n")
-	builder.WriteString("|-------|-------|\n")
-	
-	if metadata.Author != "" {
-		builder.WriteString(fmt.Sprintf("| Author | %s |\n", metadata.Author))
+	// Metadata table (only if enabled)
+	if options.IncludeMetadata {
+		builder.WriteString("## Export Information\n\n")
+		builder.WriteString("| Field | Value |\n")
+		builder.WriteString("|-------|-------|\n")
+		
+		if metadata.Author != "" {
+			builder.WriteString(fmt.Sprintf("| Author | %s |\n", metadata.Author))
+		}
+		if metadata.Campaign != "" {
+			builder.WriteString(fmt.Sprintf("| Campaign | %s |\n", metadata.Campaign))
+		}
+		builder.WriteString(fmt.Sprintf("| Exported | %s |\n", metadata.ExportedAt.Format("2006-01-02 15:04:05 MST")))
+		if metadata.Version != "" {
+			builder.WriteString(fmt.Sprintf("| Version | %s |\n", metadata.Version))
+		}
+		
+		if len(metadata.Tags) > 0 {
+			builder.WriteString(fmt.Sprintf("| Tags | %s |\n", strings.Join(metadata.Tags, ", ")))
+		}
+		
+		builder.WriteString("\n---\n\n")
 	}
-	if metadata.Campaign != "" {
-		builder.WriteString(fmt.Sprintf("| Campaign | %s |\n", metadata.Campaign))
-	}
-	builder.WriteString(fmt.Sprintf("| Exported | %s |\n", metadata.ExportedAt.Format("2006-01-02 15:04:05 MST")))
-	if metadata.Version != "" {
-		builder.WriteString(fmt.Sprintf("| Version | %s |\n", metadata.Version))
-	}
-	
-	if len(metadata.Tags) > 0 {
-		builder.WriteString(fmt.Sprintf("| Tags | %s |\n", strings.Join(metadata.Tags, ", ")))
-	}
-	
-	builder.WriteString("\n---\n\n")
 }
 
 // writeMessage writes a single message

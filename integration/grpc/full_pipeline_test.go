@@ -88,7 +88,9 @@ func TestFullPipelineIntegration(t *testing.T) {
 	require.NoError(t, err)
 
 	// Register mock provider
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
+	mockProvider.Enable()
 	mockProvider.SetResponse("*", "You asked to use the calculator tool. Let me help with that.")
 	err = reg.Providers().RegisterProvider("mock", mockProvider)
 	require.NoError(t, err)

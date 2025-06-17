@@ -283,7 +283,7 @@ func displayFormattedConfig(cfg *config.GuildConfig) {
 	// Display storage
 	if cfg.Storage.Backend != "" {
 		fmt.Println("💾 Storage:")
-		fmt.Printf("  Backend: %s\n", cfg.Storage.Backend)
+		fmt.Printf("  Type: %s\n", cfg.Storage.Backend)
 		if cfg.Storage.SQLite.Path != "" {
 			fmt.Printf("  Path: %s\n", cfg.Storage.SQLite.Path)
 		}
