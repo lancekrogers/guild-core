@@ -13,7 +13,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/guild-ventures/guild-core/internal/chat"
+	chatv1 "github.com/guild-ventures/guild-core/internal/chat"
+	chatv2 "github.com/guild-ventures/guild-core/internal/chat/v2"
 	"github.com/guild-ventures/guild-core/internal/daemon"
 	"github.com/guild-ventures/guild-core/pkg/campaign"
 	"github.com/guild-ventures/guild-core/pkg/config"
@@ -172,9 +173,19 @@ func runChat(cmd *cobra.Command, args []string) error {
 	}
 
 	// Create and run chat interface
-	return chat.Run(ctx, guildConfig, conn, guildClient, promptClient, reg,
-		chat.WithCampaign(campaignName),
-		chat.WithSession(chatSessionID))
+	// TODO: Feature flag to switch between v1 and v2
+	useV2 := os.Getenv("GUILD_CHAT_V2") == "true"
+	
+	if useV2 {
+		// Use new modular v2 implementation
+		app := chatv2.NewApp(ctx, guildConfig, conn, guildClient, promptClient, reg)
+		return app.Run()
+	} else {
+		// Use existing v1 implementation
+		return chatv1.Run(ctx, guildConfig, conn, guildClient, promptClient, reg,
+			chatv1.WithCampaign(campaignName),
+			chatv1.WithSession(chatSessionID))
+	}
 }
 
 // loadGuildConfig loads the guild configuration from the project

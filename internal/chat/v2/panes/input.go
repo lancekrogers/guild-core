@@ -12,8 +12,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/guild-ventures/guild-core/cmd/guild/chat/common"
-	"github.com/guild-ventures/guild-core/cmd/guild/chat/layout"
+	"github.com/guild-ventures/guild-core/internal/chat/v2/common"
+	"github.com/guild-ventures/guild-core/internal/chat/v2/layout"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
@@ -408,17 +408,25 @@ func (ip *inputPaneImpl) requestCompletions() (tea.Model, tea.Cmd) {
 	if strings.HasPrefix(currentValue, "/") {
 		// Command completions
 		return ip, func() tea.Msg {
-			return CompletionRequestMsg{
+			// Using anonymous struct to avoid import dependencies
+			return struct {
+				Type  string
+				Input string
+			}{
+				Type:  "completion_request",
 				Input: currentValue,
-				Type:  "command",
 			}
 		}
 	} else if strings.HasPrefix(currentValue, "@") {
 		// Agent completions
 		return ip, func() tea.Msg {
-			return CompletionRequestMsg{
+			// Using anonymous struct to avoid import dependencies
+			return struct {
+				Type  string
+				Input string
+			}{
+				Type:  "completion_request", 
 				Input: currentValue,
-				Type:  "agent",
 			}
 		}
 	}
@@ -601,11 +609,6 @@ func getCompletionIcon(completionType string) string {
 	}
 }
 
-// CompletionRequestMsg represents a request for completions
-type CompletionRequestMsg struct {
-	Input string
-	Type  string
-}
 
 // GetStats returns statistics about the input pane
 func (ip *inputPaneImpl) GetStats() map[string]interface{} {

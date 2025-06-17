@@ -1,7 +1,7 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
-package chat
+package v2
 
 import (
 	"context"
@@ -14,16 +14,17 @@ import (
 	"google.golang.org/grpc"
 	_ "modernc.org/sqlite" // SQLite driver
 
-	"github.com/guild-ventures/guild-core/cmd/guild/chat/layout"
-	"github.com/guild-ventures/guild-core/cmd/guild/chat/panes"
-	"github.com/guild-ventures/guild-core/cmd/guild/chat/services"
-	"github.com/guild-ventures/guild-core/cmd/guild/chat/utils"
+	"github.com/guild-ventures/guild-core/internal/chat/v2/layout"
+	"github.com/guild-ventures/guild-core/internal/chat/v2/panes"
+	"github.com/guild-ventures/guild-core/internal/chat/v2/services"
+	"github.com/guild-ventures/guild-core/internal/chat/v2/utils"
 	"github.com/guild-ventures/guild-core/internal/chat/session"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
 	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/guild-ventures/guild-core/pkg/templates"
 )
 
 // App represents the main chat application
@@ -69,6 +70,8 @@ type App struct {
 	// Command processing
 	commandProcessor *CommandProcessor
 	commandHistory   *CommandHistory
+	templateManager  templates.TemplateManager
+	completionEngine *CompletionEngine
 	
 	// Feature flags
 	initialized bool
@@ -77,50 +80,53 @@ type App struct {
 	errorState  error
 }
 
-// NewApp creates a new chat application
+// NewApp creates a new chat application (simplified wrapper)
 func NewApp(ctx context.Context, guildConfig *config.GuildConfig, 
 	conn *grpc.ClientConn, guildClient pb.GuildClient, 
 	promptsClient promptspb.PromptServiceClient, 
-	registry registry.ComponentRegistry, campaignID, sessionID string) (*App, error) {
+	registry registry.ComponentRegistry) *App {
 	
-	// Create configuration manager and load config
-	configManager := NewConfigManager(ctx)
-	chatConfig, err := configManager.LoadChatConfig(campaignID, sessionID)
-	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to load chat configuration").
-			WithComponent("chat.app").
-			WithOperation("NewApp")
-	}
-	
-	// Validate configuration
-	if err := configManager.ValidateConfig(chatConfig); err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidInput, "invalid chat configuration").
-			WithComponent("chat.app").
-			WithOperation("NewApp")
-	}
-	
-	// Initialize application
+	// Create basic app structure
 	app := &App{
-		ctx:         ctx,
-		config:      chatConfig,
-		grpcConn:    conn,
-		guildClient: guildClient,
+		ctx:           ctx,
+		grpcConn:      conn,
+		guildClient:   guildClient,
 		promptsClient: promptsClient,
-		registry:    registry,
-		messages:    make([]ChatMessage, 0),
-		activeTools: make(map[string]*ToolExecution),
-		agents:      make([]string, 0),
-		currentView: ViewModeNormal,
+		registry:      registry,
+		messages:      make([]ChatMessage, 0),
+		activeTools:   make(map[string]*ToolExecution),
+		agents:        make([]string, 0),
+		currentView:   ViewModeNormal,
 	}
 	
-	// Initialize components
+	// Store guild config for later initialization
+	app.config = &ChatConfig{
+		GuildConfig: guildConfig,
+		Width:       80,
+		Height:      24,
+	}
+	
+	return app
+}
+
+// Run starts the chat application
+func (app *App) Run() error {
+	// Initialize components during run
 	if err := app.initializeComponents(); err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize components").
-			WithComponent("chat.app").
-			WithOperation("NewApp")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize chat").
+			WithComponent("chat.v2").
+			WithOperation("Run")
 	}
 	
-	return app, nil
+	// Create and run the Bubble Tea program
+	p := tea.NewProgram(app, tea.WithAltScreen())
+	if _, err := p.Run(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run chat interface").
+			WithComponent("chat.v2").
+			WithOperation("Run")
+	}
+	
+	return nil
 }
 
 // initializeComponents initializes all application components
@@ -132,15 +138,26 @@ func (app *App) initializeComponents() error {
 	// Initialize command history
 	app.commandHistory = NewCommandHistory(1000)
 	
-	// Initialize command processor
-	app.commandProcessor = NewCommandProcessor(app.ctx, app.config, app.commandHistory)
-	
-	// Initialize session management
+	// Initialize session management first
 	if err := app.initializeSessionManagement(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize session management").
 			WithComponent("chat.app").
 			WithOperation("initializeComponents")
 	}
+	
+	// Initialize template manager (for now, nil - would need database setup)
+	app.templateManager = nil
+	
+	// Initialize completion engine
+	projectRoot := "." // TODO: Get actual project root
+	app.completionEngine = NewCompletionEngine(app.config.GuildConfig, projectRoot)
+	if app.registry != nil {
+		app.completionEngine.SetRegistry(app.registry)
+	}
+	
+	// Initialize command processor with session manager and template manager
+	app.commandProcessor = NewCommandProcessor(app.ctx, app.config, app.commandHistory, 
+		app.sessionManager, app.currentSession, app.templateManager)
 	
 	// Initialize services
 	if err := app.initializeServices(); err != nil {
@@ -382,6 +399,14 @@ func (app *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		
 	case ToolExecutionCompleteMsg:
 		return app.handleToolExecutionComplete(msg)
+		
+	case struct {
+		Type  string
+		Input string
+	}:
+		if msg.Type == "completion_request" {
+			return app.handleCompletionRequestAnon(msg.Input)
+		}
 		
 	case CompletionResultMsg:
 		return app.handleCompletionResult(msg)
@@ -676,6 +701,20 @@ func (app *App) handleToolExecutionComplete(msg ToolExecutionCompleteMsg) (tea.M
 		// Remove from active tools
 		delete(app.activeTools, msg.ExecutionID)
 	}
+	return app, nil
+}
+
+func (app *App) handleCompletionRequestAnon(input string) (tea.Model, tea.Cmd) {
+	// Use completion engine to generate suggestions
+	if app.completionEngine != nil {
+		results := app.completionEngine.Complete(input, len(input))
+		return app, func() tea.Msg {
+			return CompletionResultMsg{
+				Results: results,
+			}
+		}
+	}
+	
 	return app, nil
 }
 

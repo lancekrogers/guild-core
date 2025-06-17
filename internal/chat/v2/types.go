@@ -1,10 +1,10 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
-package chat
+package v2
 
 import (
-	"github.com/guild-ventures/guild-core/cmd/guild/chat/common"
+	"github.com/guild-ventures/guild-core/internal/chat/v2/common"
 )
 
 // Re-export common types for convenience

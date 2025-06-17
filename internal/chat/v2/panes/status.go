@@ -12,7 +12,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/guild-ventures/guild-core/cmd/guild/chat/layout"
+	"github.com/guild-ventures/guild-core/internal/chat/v2/layout"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 

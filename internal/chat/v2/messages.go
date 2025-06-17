@@ -1,7 +1,7 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
-package chat
+package v2
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
@@ -59,6 +59,12 @@ type ToolAuthRequiredMsg struct {
 	ToolName string
 	AuthURL  string
 	Message  string
+}
+
+// CompletionRequestMsg represents a request for completions
+type CompletionRequestMsg struct {
+	Input string
+	Type  string
 }
 
 // CompletionResultMsg represents completion results
