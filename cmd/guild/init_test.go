@@ -35,16 +35,32 @@ func TestInitCommand(t *testing.T) {
 		t.Error("Project was not initialized")
 	}
 
-	// Check expected files exist
+	// Check expected Phase 0 hierarchical configuration files exist
 	expectedFiles := []string{
-		".guild/guild.yaml",
-		".guild/corpus.yaml",
-		".guild/.gitignore",
+		".guild/campaign.yml",       // Phase 0 campaign configuration
+		".guild/guild.yml",          // Phase 0 guild definitions
+		".guild/project.yaml",       // Provider and agent configuration from wizard
+		".guild/memory.db",          // SQLite database
+		".guild/.gitignore",         // Git ignore rules
 	}
 
 	for _, file := range expectedFiles {
 		if _, err := os.Stat(file); os.IsNotExist(err) {
-			t.Errorf("Expected file %s was not created", file)
+			t.Errorf("Expected Phase 0 file %s was not created", file)
+		}
+	}
+
+	// Check that agents directory exists and has agent files
+	agentsDir := ".guild/agents"
+	if _, err := os.Stat(agentsDir); os.IsNotExist(err) {
+		t.Errorf("Expected agents directory %s was not created", agentsDir)
+	} else {
+		// Check that at least one agent file exists
+		entries, err := os.ReadDir(agentsDir)
+		if err != nil {
+			t.Errorf("Failed to read agents directory: %v", err)
+		} else if len(entries) == 0 {
+			t.Error("Expected agent files in agents directory, but found none")
 		}
 	}
 }

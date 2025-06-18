@@ -13,8 +13,10 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	yaml "gopkg.in/yaml.v3"
 
 	"github.com/guild-ventures/guild-core/pkg/campaign"
+	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/daemon"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/project"
@@ -63,7 +65,10 @@ func init() {
 }
 
 func runUnifiedInit(cmd *cobra.Command, args []string) error {
-	ctx := context.Background()
+	ctx := cmd.Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
 	// Determine project path
 	projectPath := "."
@@ -78,6 +83,12 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 			WithComponent("cli").WithOperation("runUnifiedInit").WithDetails("path", projectPath)
 	}
 
+	// Check for context cancellation early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "initialization cancelled").
+			WithComponent("cli").WithOperation("runUnifiedInit")
+	}
+
 	// Welcome message
 	if !initQuickMode {
 		fmt.Println("🏰 Welcome to Guild Framework!")
@@ -86,7 +97,7 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 	}
 
 	// Step 1: Campaign Setup
-	campaignName, projectName, err := setupCampaign(absPath)
+	campaignName, projectName, err := setupCampaign(ctx, absPath)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to setup campaign").
 			WithComponent("cli").WithOperation("runUnifiedInit")
@@ -122,6 +133,12 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 			fmt.Print("📁 Creating project directory structure... ")
 		}
 
+		// Check for cancellation before project initialization
+		if err := ctx.Err(); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeCancelled, "initialization cancelled before project setup").
+				WithComponent("cli").WithOperation("runUnifiedInit")
+		}
+
 		if err := project.InitializeProject(absPath); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize project structure").
 				WithComponent("cli").WithOperation("runUnifiedInit").WithDetails("path", absPath)
@@ -132,13 +149,19 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	// Step 4: Create global campaign config (but not local reference yet)
+	// Step 4: Create Phase 0 hierarchical configuration
 	if !initQuickMode {
-		fmt.Print("🎯 Creating global campaign... ")
+		fmt.Print("🎯 Creating Phase 0 configuration... ")
 	}
 
-	if err := createGlobalCampaignConfig(absPath, campaignName, projectName); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create global campaign config").
+	// Check for cancellation before config creation
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "initialization cancelled before config creation").
+			WithComponent("cli").WithOperation("runUnifiedInit")
+	}
+
+	if err := createPhase0Configuration(ctx, absPath, campaignName, projectName); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create Phase 0 configuration").
 			WithComponent("cli").WithOperation("runUnifiedInit")
 	}
 
@@ -146,9 +169,15 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 		fmt.Println("✅")
 	}
 
-	// Step 5: Run provider setup wizard (but save to project.yaml to preserve campaign reference)
+	// Step 5: Run provider setup wizard and integrate with Phase 0
 	if !initQuickMode {
 		fmt.Println("⚙️  Setting up AI providers and agents...")
+	}
+
+	// Check for cancellation before wizard
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "initialization cancelled before wizard").
+			WithComponent("cli").WithOperation("runUnifiedInit")
 	}
 
 	if err := wizard.Run(ctx); err != nil {
@@ -156,22 +185,22 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 			WithComponent("cli").WithOperation("runUnifiedInit")
 	}
 
-	// Step 5.1: Move guild config from guild.yaml to project.yaml to preserve campaign reference
-	if err := moveGuildConfigToProject(absPath); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to move guild config").
+	// Step 5.1: Integrate with Phase 0 hierarchical config
+	if err := integrateWithPhase0Config(ctx, absPath, campaignName, projectName); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to integrate with Phase 0 config").
 			WithComponent("cli").WithOperation("runUnifiedInit")
 	}
 
-	// Step 5.2: Now create the campaign reference and socket registry
-	if err := createLocalCampaignReference(absPath, campaignName, projectName); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create campaign reference").
+	// Step 5.2: Create socket registry for daemon support
+	if err := createSocketRegistry(ctx, absPath, campaignName); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create socket registry").
 			WithComponent("cli").WithOperation("runUnifiedInit")
 	}
 
 	// Step 6: Create demo commission (optional)
 	if !initQuickMode {
-		if askYesNo("🎯 Create a demo commission to get started?", true) {
-			if err := createDemoCommission(absPath, campaignName); err != nil {
+		if askYesNo(ctx, "🎯 Create a demo commission to get started?", true) {
+			if err := createDemoCommission(ctx, absPath, campaignName); err != nil {
 				fmt.Printf("⚠️  Warning: Could not create demo commission: %v\n", err)
 			} else {
 				fmt.Println("✅ Demo commission created")
@@ -179,7 +208,7 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 		}
 	} else {
 		// In quick mode, always create demo commission
-		if err := createDemoCommission(absPath, campaignName); err != nil {
+		if err := createDemoCommission(ctx, absPath, campaignName); err != nil {
 			// Don't fail the whole setup for demo commission
 			fmt.Printf("⚠️  Warning: Could not create demo commission: %v\n", err)
 		}
@@ -217,8 +246,14 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-// setupCampaign handles interactive campaign configuration
-func setupCampaign(projectPath string) (campaignName, projectName string, err error) {
+// setupCampaign handles interactive campaign configuration with context support
+func setupCampaign(ctx context.Context, projectPath string) (campaignName, projectName string, err error) {
+	// Check for context cancellation
+	if err := ctx.Err(); err != nil {
+		return "", "", gerror.Wrap(err, gerror.ErrCodeCancelled, "campaign setup cancelled").
+			WithComponent("cli").WithOperation("setupCampaign")
+	}
+
 	// Check if already in a campaign
 	if _, err := campaign.DetectCampaign(projectPath, ""); err == nil {
 		if !initForce {
@@ -231,16 +266,22 @@ func setupCampaign(projectPath string) (campaignName, projectName string, err er
 	defaultCampaign := "guild-demo"
 	if !initQuickMode {
 		fmt.Printf("Campaign name [%s]: ", defaultCampaign)
-		campaignName = readInput(defaultCampaign)
+		campaignName = readInputWithContext(ctx, defaultCampaign)
 	} else {
 		campaignName = defaultCampaign
+	}
+
+	// Check for cancellation after user input
+	if err := ctx.Err(); err != nil {
+		return "", "", gerror.Wrap(err, gerror.ErrCodeCancelled, "campaign setup cancelled after name input").
+			WithComponent("cli").WithOperation("setupCampaign")
 	}
 
 	// Default project name
 	defaultProject := filepath.Base(projectPath)
 	if !initQuickMode {
 		fmt.Printf("Project name [%s]: ", defaultProject)
-		projectName = readInput(defaultProject)
+		projectName = readInputWithContext(ctx, defaultProject)
 	} else {
 		projectName = defaultProject
 	}
@@ -248,71 +289,173 @@ func setupCampaign(projectPath string) (campaignName, projectName string, err er
 	return campaignName, projectName, nil
 }
 
-// createGlobalCampaignConfig creates the global campaign configuration
-func createGlobalCampaignConfig(projectPath, campaignName, projectName string) error {
-	// Create or update global campaign config
-	var globalConfig *campaign.CampaignConfig
-
-	// Check if campaign already exists
-	existingConfig, err := campaign.LoadGlobalCampaignConfig(campaignName)
-	if err != nil {
-		// Campaign doesn't exist, create new one
-		globalConfig = &campaign.CampaignConfig{
-			Name:        campaignName,
-			Description: fmt.Sprintf("Campaign %s", campaignName),
-			Created:     time.Now().Format(time.RFC3339),
-			Settings:    make(map[string]string),
-		}
-	} else {
-		// Campaign exists, update it
-		globalConfig = existingConfig
+// createPhase0Configuration creates the Phase 0 hierarchical configuration structure
+func createPhase0Configuration(ctx context.Context, projectPath, campaignName, projectName string) error {
+	// Check for context cancellation
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "Phase 0 configuration creation cancelled").
+			WithComponent("cli").WithOperation("createPhase0Configuration")
 	}
 
-	// Add project to campaign if not already present
-	absPath, _ := filepath.Abs(projectPath)
-	projectExists := false
-	for _, proj := range globalConfig.Projects {
-		if proj.Path == absPath {
-			projectExists = true
-			break
-		}
+	// Step 1: Create campaign.yml (Phase 0 campaign configuration)
+	campaignConfig := &config.CampaignConfig{
+		Name:        campaignName,
+		Description: fmt.Sprintf("Campaign %s - automated multi-agent development", campaignName),
+		ProjectSettings: map[string]interface{}{
+			"project_name": projectName,
+			"created_at":   time.Now().Format(time.RFC3339),
+			"version":      "1.0.0",
+		},
+		CommissionMappings: make(map[string][]string),
+		LastSelectedGuild:  "default", // Will be created next
 	}
 
-	if !projectExists {
-		globalConfig.Projects = append(globalConfig.Projects, campaign.ProjectInfo{
-			Name: projectName,
-			Path: absPath,
-		})
+	if err := config.SaveCampaignConfig(ctx, projectPath, campaignConfig); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save campaign configuration").
+			WithComponent("cli").WithOperation("createPhase0Configuration").WithDetails("campaign", campaignName)
 	}
 
-	// Save global campaign config
-	if err := campaign.SaveGlobalCampaignConfig(campaignName, globalConfig); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save global campaign config").
-			WithComponent("cli").WithOperation("createGlobalCampaignConfig")
+	// Step 2: Create default guild.yml structure
+	guildConfig := &config.GuildConfigFile{
+		Guilds: map[string]config.GuildDefinition{
+			"default": {
+				Purpose:     "General development tasks and project management",
+				Description: "Default guild for handling various development tasks, code generation, testing, and project coordination",
+				Agents:      []string{"manager", "developer", "tester"}, // Will be created in agents/
+				Coordination: &config.CoordinationSettings{
+					MaxParallelTasks: 3,
+					ReviewRequired:   false,
+					AutoHandoff:      true,
+				},
+			},
+		},
+	}
+
+	if err := config.SaveGuildConfigFile(ctx, projectPath, guildConfig); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save guild configuration").
+			WithComponent("cli").WithOperation("createPhase0Configuration").WithDetails("guild_file", "guild.yml")
+	}
+
+	// Step 3: Create agents directory structure
+	agentsDir := filepath.Join(projectPath, ".guild", "agents")
+	if err := os.MkdirAll(agentsDir, 0755); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
+			WithComponent("cli").WithOperation("createPhase0Configuration").WithDetails("dir", agentsDir)
 	}
 
 	return nil
 }
 
-// createLocalCampaignReference creates the local campaign reference and socket registry
-func createLocalCampaignReference(projectPath, campaignName, projectName string) error {
-	// Create local campaign reference
-	if err := campaign.CreateCampaignReference(projectPath, campaignName, projectName); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign reference").
-			WithComponent("cli").WithOperation("createLocalCampaignReference")
+// integrateWithPhase0Config integrates setup wizard results with Phase 0 hierarchical configuration
+func integrateWithPhase0Config(ctx context.Context, projectPath, campaignName, projectName string) error {
+	// Check for context cancellation
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "Phase 0 integration cancelled").
+			WithComponent("cli").WithOperation("integrateWithPhase0Config")
+	}
+
+	// Load the guild config created by the setup wizard
+	guildConfigPath := filepath.Join(projectPath, ".guild", "guild.yaml")
+	if _, err := os.Stat(guildConfigPath); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeNotFound, "guild config from wizard not found").
+			WithComponent("cli").WithOperation("integrateWithPhase0Config").WithDetails("path", guildConfigPath)
+	}
+
+	// Read the wizard-generated config
+	wizardConfigData, err := os.ReadFile(guildConfigPath)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read wizard config").
+			WithComponent("cli").WithOperation("integrateWithPhase0Config")
+	}
+
+	// Parse the wizard config to extract agent configurations
+	var wizardConfig config.GuildConfig
+	if err := yaml.Unmarshal(wizardConfigData, &wizardConfig); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "failed to parse wizard config").
+			WithComponent("cli").WithOperation("integrateWithPhase0Config")
+	}
+
+	// Create individual agent files in agents/ directory
+	for _, agent := range wizardConfig.Agents {
+		if err := createAgentConfig(ctx, projectPath, &agent); err != nil {
+			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to create agent config for %s", agent.Name).
+				WithComponent("cli").WithOperation("integrateWithPhase0Config")
+		}
+	}
+
+	// Move the wizard config to project.yaml to preserve it
+	projectConfigPath := filepath.Join(projectPath, ".guild", "project.yaml")
+	if err := os.WriteFile(projectConfigPath, wizardConfigData, 0644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save project config").
+			WithComponent("cli").WithOperation("integrateWithPhase0Config")
+	}
+
+	// Remove the old guild.yaml since we now use the hierarchical structure
+	if err := os.Remove(guildConfigPath); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to remove old guild config").
+			WithComponent("cli").WithOperation("integrateWithPhase0Config")
+	}
+
+	return nil
+}
+
+// createAgentConfig creates an individual agent configuration file
+func createAgentConfig(ctx context.Context, projectPath string, agent *config.AgentConfig) error {
+	// Check for context cancellation
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "agent config creation cancelled").
+			WithComponent("cli").WithOperation("createAgentConfig").WithDetails("agent", agent.Name)
+	}
+
+	agentPath := filepath.Join(projectPath, ".guild", "agents", agent.Name+".yml")
+
+	// Validate agent config
+	if err := agent.Validate(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "invalid agent configuration").
+			WithComponent("cli").WithOperation("createAgentConfig").WithDetails("agent", agent.Name)
+	}
+
+	// Convert to YAML
+	agentData, err := yaml.Marshal(agent)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal agent config").
+			WithComponent("cli").WithOperation("createAgentConfig").WithDetails("agent", agent.Name)
+	}
+
+	// Write agent file
+	if err := os.WriteFile(agentPath, agentData, 0644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent config").
+			WithComponent("cli").WithOperation("createAgentConfig").WithDetails("path", agentPath)
+	}
+
+	return nil
+}
+
+// createSocketRegistry creates the socket registry for daemon support
+func createSocketRegistry(ctx context.Context, projectPath, campaignName string) error {
+	// Check for context cancellation
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "socket registry creation cancelled").
+			WithComponent("cli").WithOperation("createSocketRegistry")
 	}
 
 	// Create socket registry
 	if err := daemon.SaveSocketRegistry(projectPath, campaignName); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save socket registry").
-			WithComponent("cli").WithOperation("createLocalCampaignReference")
+			WithComponent("cli").WithOperation("createSocketRegistry")
 	}
 
 	return nil
 }
 
-// createDemoCommission creates a sample commission for new users
-func createDemoCommission(projectPath, campaignName string) error {
+// createDemoCommission creates a sample commission for new users with context support
+func createDemoCommission(ctx context.Context, projectPath, campaignName string) error {
+	// Check for context cancellation
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "demo commission creation cancelled").
+			WithComponent("cli").WithOperation("createDemoCommission")
+	}
+
 	commissionsDir := filepath.Join(projectPath, ".guild", "objectives", "refined")
 	if err := os.MkdirAll(commissionsDir, 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commissions directory").
@@ -370,31 +513,12 @@ This is a demo commission designed to showcase Guild's multi-agent development w
 	return nil
 }
 
-// moveGuildConfigToProject moves the guild config to project.yaml to preserve campaign reference
-func moveGuildConfigToProject(projectPath string) error {
-	guildYaml := filepath.Join(projectPath, ".guild", "guild.yaml") 
-	projectYaml := filepath.Join(projectPath, ".guild", "project.yaml")
-	
-	// Read the guild config that was just created
-	guildData, err := os.ReadFile(guildYaml)
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read guild config").
-			WithComponent("cli").WithOperation("moveGuildConfigToProject")
-	}
-	
-	// Write it to project.yaml
-	if err := os.WriteFile(projectYaml, guildData, 0644); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write project config").
-			WithComponent("cli").WithOperation("moveGuildConfigToProject")
-	}
-	
-	// Remove the guild.yaml file so it can be replaced with campaign reference
-	if err := os.Remove(guildYaml); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to remove guild config").
-			WithComponent("cli").WithOperation("moveGuildConfigToProject")
-	}
-	
-	return nil
+// readInputWithContext reads user input with context cancellation support
+func readInputWithContext(ctx context.Context, defaultValue string) string {
+	// For now, we don't implement actual cancellation in user input
+	// but having the context parameter allows for future enhancement
+	// where we could use a separate goroutine to handle cancellation
+	return readInput(defaultValue)
 }
 
 // Helper functions for user interaction
@@ -415,8 +539,14 @@ func readInput(defaultValue string) string {
 	return input
 }
 
-// askYesNo asks a yes/no question with a default
-func askYesNo(question string, defaultYes bool) bool {
+// askYesNo asks a yes/no question with a default and context support
+func askYesNo(ctx context.Context, question string, defaultYes bool) bool {
+	// Check for cancellation
+	if err := ctx.Err(); err != nil {
+		// If cancelled, return the default
+		return defaultYes
+	}
+
 	if initQuickMode {
 		return defaultYes
 	}
@@ -427,7 +557,7 @@ func askYesNo(question string, defaultYes bool) bool {
 	}
 
 	fmt.Printf("%s [%s]: ", question, defaultStr)
-	input := readInput("")
+	input := readInputWithContext(ctx, "")
 
 	switch strings.ToLower(input) {
 	case "y", "yes":
