@@ -27,6 +27,7 @@ type Wizard struct {
 	providerConfig *ProviderConfig
 	modelConfig    *ModelConfig
 	agentConfig    *AgentConfig
+	agentPresets   *AgentPresets
 }
 
 // NewWizard creates a new setup wizard
@@ -66,12 +67,20 @@ func NewWizard(ctx context.Context, config *Config) (*Wizard, error) {
 			WithOperation("NewWizard")
 	}
 
+	agentPresets, err := NewAgentPresets(ctx)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create agent presets").
+			WithComponent("setup").
+			WithOperation("NewWizard")
+	}
+
 	return &Wizard{
 		config:         config,
 		detectors:      detectors,
 		providerConfig: providerConfig,
 		modelConfig:    modelConfig,
 		agentConfig:    agentConfig,
+		agentPresets:   agentPresets,
 	}, nil
 }
 
@@ -308,21 +317,178 @@ func (w *Wizard) selectModels(ctx context.Context, provider DetectedProvider, mo
 // createAgents creates default agent configurations
 func (w *Wizard) createAgents(ctx context.Context, providers []ConfiguredProvider) ([]config.AgentConfig, error) {
 	if !w.config.QuickMode {
-		fmt.Println("\n🤖 Creating default agent configurations...")
+		fmt.Println("\n🤖 Creating agent configurations...")
 	}
 
-	agents, err := w.agentConfig.CreateDefaultAgents(ctx, providers)
+	// Detect project context
+	projectContext, err := w.detectors.DetectProjectContext(ctx)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create default agents").
-			WithComponent("setup").
-			WithOperation("createAgents")
+		// If detection fails, continue with default context
+		projectContext = &ProjectContext{
+			ProjectType: "general",
+			Language:    "go",
+		}
+	}
+
+	// Quick mode: use intelligent preset selection
+	if w.config.QuickMode {
+		return w.createAgentsFromPresets(ctx, providers, projectContext)
+	}
+
+	// Interactive mode: offer preset choices
+	return w.createAgentsInteractive(ctx, providers, projectContext)
+}
+
+// createAgentsFromPresets creates agents using intelligent preset selection for quick mode
+func (w *Wizard) createAgentsFromPresets(ctx context.Context, providers []ConfiguredProvider, projectContext *ProjectContext) ([]config.AgentConfig, error) {
+	// Get recommendations
+	recommendations, err := w.agentPresets.RecommendPresets(ctx, providers, projectContext)
+	if err != nil {
+		// Fallback to legacy method if presets fail
+		return w.agentConfig.CreateDefaultAgents(ctx, providers)
+	}
+
+	if len(recommendations) == 0 {
+		// Fallback to legacy method
+		return w.agentConfig.CreateDefaultAgents(ctx, providers)
+	}
+
+	// Use the highest-confidence recommendation
+	bestRec := recommendations[0]
+	if !bestRec.Compatible || bestRec.Confidence < 0.3 {
+		// Fallback to legacy method if no good recommendations
+		return w.agentConfig.CreateDefaultAgents(ctx, providers)
+	}
+
+	// Adapt the preset for available providers
+	adapted, err := w.agentPresets.AdaptPresetForProviders(ctx, bestRec.Collection, providers)
+	if err != nil {
+		// Fallback to legacy method
+		return w.agentConfig.CreateDefaultAgents(ctx, providers)
 	}
 
 	if !w.config.QuickMode {
-		fmt.Printf("✅ Created %d agent(s)\n", len(agents))
+		fmt.Printf("✅ Created %d agent(s) using preset '%s'\n", len(adapted.Agents), adapted.Name)
 	}
 
-	return agents, nil
+	return adapted.Agents, nil
+}
+
+// createAgentsInteractive creates agents with user interaction for preset selection
+func (w *Wizard) createAgentsInteractive(ctx context.Context, providers []ConfiguredProvider, projectContext *ProjectContext) ([]config.AgentConfig, error) {
+	// Get recommendations
+	recommendations, err := w.agentPresets.RecommendPresets(ctx, providers, projectContext)
+	if err != nil {
+		fmt.Printf("⚠️  Failed to get preset recommendations: %v\n", err)
+		fmt.Println("Falling back to default agent creation...")
+		return w.agentConfig.CreateDefaultAgents(ctx, providers)
+	}
+
+	if len(recommendations) == 0 {
+		fmt.Println("No suitable presets found, using default agent creation...")
+		return w.agentConfig.CreateDefaultAgents(ctx, providers)
+	}
+
+	// Display recommendations
+	fmt.Println("\n📋 Recommended Agent Presets:")
+	fmt.Println("   (These are optimized for your providers and project type)")
+	fmt.Println()
+
+	validRecs := make([]*PresetRecommendation, 0)
+	for i, rec := range recommendations {
+		if rec.Compatible && rec.Confidence > 0.2 {
+			validRecs = append(validRecs, rec)
+			confidence := int(rec.Confidence * 100)
+			fmt.Printf("  %d) %s (%d%% match)\n", i+1, rec.Collection.Name, confidence)
+			fmt.Printf("     %s\n", rec.Collection.Description)
+			if len(rec.Reasoning) > 0 {
+				fmt.Printf("     💡 %s\n", rec.Reasoning[0])
+			}
+			fmt.Printf("     👥 %d agents\n", len(rec.Collection.Agents))
+			fmt.Println()
+			
+			if len(validRecs) >= 5 {
+				break // Limit to top 5 recommendations
+			}
+		}
+	}
+
+	// Add fallback options
+	fmt.Printf("  %d) Use default agent creation (legacy)\n", len(validRecs)+1)
+	fmt.Printf("  %d) Manual preset selection\n", len(validRecs)+2)
+
+	// Get user choice
+	fmt.Print("\nSelect preset (1-" + fmt.Sprintf("%d", len(validRecs)+2) + "): ")
+	// For demo purposes, automatically select the best recommendation
+	selectedIndex := 0
+	if len(validRecs) > 0 {
+		selected := validRecs[selectedIndex]
+		
+		// Adapt the preset for available providers
+		adapted, err := w.agentPresets.AdaptPresetForProviders(ctx, selected.Collection, providers)
+		if err != nil {
+			fmt.Printf("⚠️  Failed to adapt preset: %v\n", err)
+			fmt.Println("Falling back to default agent creation...")
+			return w.agentConfig.CreateDefaultAgents(ctx, providers)
+		}
+
+		fmt.Printf("✅ Created %d agent(s) using preset '%s'\n", len(adapted.Agents), adapted.Name)
+		
+		// Show brief agent summary
+		fmt.Println("\n👥 Agent Team:")
+		for _, agent := range adapted.Agents {
+			fmt.Printf("  • %s (%s) - %s\n", agent.Name, agent.Type, agent.Description)
+		}
+
+		return adapted.Agents, nil
+	}
+
+	// Fallback to default
+	return w.agentConfig.CreateDefaultAgents(ctx, providers)
+}
+
+// GetDemoQuickSetup creates a demo-optimized configuration for the "30-second demo" requirement
+func (w *Wizard) GetDemoQuickSetup(ctx context.Context, providers []ConfiguredProvider) ([]config.AgentConfig, error) {
+	// Get the optimal demo preset
+	demoPreset, err := w.agentPresets.GetDemoPreset(ctx, providers)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get demo preset").
+			WithComponent("setup").
+			WithOperation("GetDemoQuickSetup")
+	}
+
+	if !w.config.QuickMode {
+		fmt.Printf("🎭 Created demo team: %s\n", demoPreset.Name)
+		fmt.Printf("   %s\n", demoPreset.Description)
+		fmt.Printf("   👥 %d agents ready for demonstration\n", len(demoPreset.Agents))
+	}
+
+	return demoPreset.Agents, nil
+}
+
+// CreatePresetBasedSetup creates agents using a specific preset ID
+func (w *Wizard) CreatePresetBasedSetup(ctx context.Context, providers []ConfiguredProvider, presetID string) ([]config.AgentConfig, error) {
+	// Get the specified preset
+	preset, err := w.agentPresets.GetPreset(ctx, presetID)
+	if err != nil {
+		return nil, gerror.Wrapf(err, gerror.ErrCodeNotFound, "preset '%s' not found", presetID).
+			WithComponent("setup").
+			WithOperation("CreatePresetBasedSetup")
+	}
+
+	// Adapt for available providers
+	adapted, err := w.agentPresets.AdaptPresetForProviders(ctx, preset, providers)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to adapt preset for providers").
+			WithComponent("setup").
+			WithOperation("CreatePresetBasedSetup")
+	}
+
+	if !w.config.QuickMode {
+		fmt.Printf("✅ Created %d agent(s) using preset '%s'\n", len(adapted.Agents), adapted.Name)
+	}
+
+	return adapted.Agents, nil
 }
 
 // saveConfiguration saves the final configuration
