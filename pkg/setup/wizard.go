@@ -4,9 +4,13 @@
 package setup
 
 import (
+	"bufio"
 	"context"
 	"fmt"
+	"os"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -28,6 +32,9 @@ type Wizard struct {
 	modelConfig    *ModelConfig
 	agentConfig    *AgentConfig
 	agentPresets   *AgentPresets
+	reader         *bufio.Reader // For interactive input
+	inputTimeout   time.Duration // Timeout for user input
+	ui             *WizardUI     // UI helper for enhanced display
 }
 
 // NewWizard creates a new setup wizard
@@ -74,19 +81,37 @@ func NewWizard(ctx context.Context, config *Config) (*Wizard, error) {
 			WithOperation("NewWizard")
 	}
 
-	return &Wizard{
+	wizard := &Wizard{
 		config:         config,
 		detectors:      detectors,
 		providerConfig: providerConfig,
 		modelConfig:    modelConfig,
 		agentConfig:    agentConfig,
 		agentPresets:   agentPresets,
-	}, nil
+		reader:         bufio.NewReader(os.Stdin),
+		inputTimeout:   30 * time.Second, // Default 30 second timeout for user input
+	}
+	
+	// Create UI helper
+	wizard.ui = NewWizardUI(wizard)
+	
+	return wizard, nil
 }
 
 // Run executes the setup wizard
 func (w *Wizard) Run(ctx context.Context) error {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled before wizard execution").
+			WithComponent("SetupWizard").
+			WithOperation("Run")
+	}
+
+	// Show welcome screen
+	w.ui.ShowWelcomeScreen()
+
 	// Step 1: Detect available providers
+	w.ui.ShowSection("Provider Detection")
 	if !w.config.QuickMode {
 		fmt.Println("🔍 Detecting available providers...")
 	}
@@ -94,7 +119,7 @@ func (w *Wizard) Run(ctx context.Context) error {
 	detection, err := w.detectors.DetectProviders(ctx)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to detect providers").
-			WithComponent("setup").
+			WithComponent("SetupWizard").
 			WithOperation("Run")
 	}
 
@@ -102,51 +127,93 @@ func (w *Wizard) Run(ctx context.Context) error {
 		w.displayDetectionResults(detection)
 	}
 
+	// Check context between steps
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled after provider detection").
+			WithComponent("SetupWizard").
+			WithOperation("Run")
+	}
+
 	// Step 2: Select providers to configure
+	w.ui.ShowSection("Provider Selection")
 	selectedProviders, err := w.selectProviders(ctx, detection)
 	if err != nil {
+		w.ui.ShowError(err, "Provider selection failed")
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to select providers").
-			WithComponent("setup").
+			WithComponent("SetupWizard").
 			WithOperation("Run")
 	}
 
 	if len(selectedProviders) == 0 {
+		w.ui.ShowError(gerror.New(gerror.ErrCodeValidation, "no providers selected", nil), "Setup cannot continue")
 		return gerror.New(gerror.ErrCodeValidation, "no providers selected", nil).
-			WithComponent("setup").
+			WithComponent("SetupWizard").
 			WithOperation("Run")
 	}
 
 	// Step 3: Configure each selected provider
+	w.ui.ShowSection("Provider Configuration")
 	configuredProviders := make([]ConfiguredProvider, 0, len(selectedProviders))
+	
+	// Show progress bar for provider configuration
+	progress := w.ui.ShowProgressBar(ctx, "Configuring providers", len(selectedProviders))
+	configuredCount := 0
+	
 	for _, provider := range selectedProviders {
+		// Check context in loop
+		if err := ctx.Err(); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider configuration").
+				WithComponent("SetupWizard").
+				WithOperation("Run").
+				WithDetails("provider", provider.Name)
+		}
 		configured, err := w.configureProvider(ctx, provider)
 		if err != nil {
 			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to configure provider %s", provider.Name).
-				WithComponent("setup").
+				WithComponent("SetupWizard").
 				WithOperation("Run")
 		}
 		if configured != nil {
 			configuredProviders = append(configuredProviders, *configured)
 		}
+		
+		// Update progress
+		configuredCount++
+		select {
+		case progress <- configuredCount:
+		default:
+		}
+	}
+	close(progress)
+
+	// Check context before agent creation
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled before agent creation").
+			WithComponent("SetupWizard").
+			WithOperation("Run")
 	}
 
 	// Step 4: Create agent configurations
+	w.ui.ShowSection("Agent Creation")
 	agents, err := w.createAgents(ctx, configuredProviders)
 	if err != nil {
+		w.ui.ShowError(err, "Agent creation failed")
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create agents").
-			WithComponent("setup").
+			WithComponent("SetupWizard").
 			WithOperation("Run")
 	}
 
 	// Step 5: Save configuration
+	w.ui.ShowSection("Saving Configuration")
 	if err := w.saveConfiguration(ctx, configuredProviders, agents); err != nil {
+		w.ui.ShowError(err, "Configuration save failed")
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to save configuration").
-			WithComponent("setup").
+			WithComponent("SetupWizard").
 			WithOperation("Run")
 	}
 
 	// Step 6: Display summary
-	w.displaySummary(configuredProviders, agents)
+	w.ui.ShowCompletionSummary(configuredProviders, agents)
 
 	return nil
 }
@@ -174,6 +241,13 @@ func (w *Wizard) displayDetectionResults(detection *DetectionResult) {
 
 // selectProviders handles provider selection
 func (w *Wizard) selectProviders(ctx context.Context, detection *DetectionResult) ([]DetectedProvider, error) {
+	// Check context at start
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider selection").
+			WithComponent("SetupWizard").
+			WithOperation("selectProviders")
+	}
+
 	// If specific provider requested, use only that
 	if w.config.ProviderOnly != "" {
 		for _, provider := range detection.Available {
@@ -182,7 +256,7 @@ func (w *Wizard) selectProviders(ctx context.Context, detection *DetectionResult
 			}
 		}
 		return nil, gerror.Newf(gerror.ErrCodeNotFound, "requested provider %s not found", w.config.ProviderOnly).
-			WithComponent("setup").
+			WithComponent("SetupWizard").
 			WithOperation("selectProviders")
 	}
 
@@ -192,40 +266,91 @@ func (w *Wizard) selectProviders(ctx context.Context, detection *DetectionResult
 	}
 
 	// Interactive mode: let user select
+	w.ui.ShowProviderSelectionHelp()
 	fmt.Println("🤖 Select providers to configure:")
-	fmt.Println("   (Enter numbers separated by spaces, or 'all' for all providers)")
 	fmt.Println()
 
 	for i, provider := range detection.Available {
 		fmt.Printf("  %d) %s", i+1, provider.Name)
 		if provider.HasCredentials {
-			fmt.Print(" ✅")
+			fmt.Print(" ✅ (credentials detected)")
 		}
 		if provider.IsLocal {
-			fmt.Print(" 🏠")
+			fmt.Print(" 🏠 (local)")
 		}
 		fmt.Println()
 	}
 
-	fmt.Print("\nSelection: ")
-	var input string
-	fmt.Scanln(&input)
+	fmt.Print("\nSelection (default: all): ")
+	
+	// Read user input with timeout
+	input, err := w.readLineWithTimeout(ctx, w.inputTimeout)
+	if err != nil {
+		// If timeout or cancellation, use all providers
+		if gerror.Is(err, gerror.ErrCodeTimeout) || gerror.Is(err, gerror.ErrCodeCancelled) {
+			fmt.Println("\n⌚ Using all detected providers (timeout/cancelled)")
+			return detection.Available, nil
+		}
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to read user input").
+			WithComponent("SetupWizard").
+			WithOperation("selectProviders")
+	}
 
-	if strings.TrimSpace(input) == "all" {
+	// Handle empty input (default to all)
+	input = strings.TrimSpace(input)
+	if input == "" || strings.EqualFold(input, "all") {
 		return detection.Available, nil
 	}
 
-	// Parse selection (simplified for now - in real implementation would be more robust)
-	if input == "1" && len(detection.Available) > 0 {
-		return []DetectedProvider{detection.Available[0]}, nil
+	// Parse selection
+	selected := []DetectedProvider{}
+	parts := strings.Fields(input)
+	
+	for _, part := range parts {
+		num, err := strconv.Atoi(part)
+		if err != nil {
+			fmt.Printf("⚠️  Invalid selection '%s', skipping\n", part)
+			continue
+		}
+		
+		if num < 1 || num > len(detection.Available) {
+			fmt.Printf("⚠️  Selection %d out of range, skipping\n", num)
+			continue
+		}
+		
+		// Add to selected (avoiding duplicates)
+		provider := detection.Available[num-1]
+		alreadySelected := false
+		for _, s := range selected {
+			if s.Name == provider.Name {
+				alreadySelected = true
+				break
+			}
+		}
+		if !alreadySelected {
+			selected = append(selected, provider)
+		}
 	}
 
-	// Default to first available provider
-	return []DetectedProvider{detection.Available[0]}, nil
+	// If no valid selections, default to all
+	if len(selected) == 0 {
+		fmt.Println("⚠️  No valid selections, using all detected providers")
+		return detection.Available, nil
+	}
+
+	return selected, nil
 }
 
 // configureProvider configures a specific provider
 func (w *Wizard) configureProvider(ctx context.Context, provider DetectedProvider) (*ConfiguredProvider, error) {
+	// Check context at start
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider configuration").
+			WithComponent("SetupWizard").
+			WithOperation("configureProvider").
+			WithDetails("provider", provider.Name)
+	}
+
 	if !w.config.QuickMode {
 		fmt.Printf("\n⚙️  Configuring %s...\n", provider.Name)
 	}
@@ -234,22 +359,28 @@ func (w *Wizard) configureProvider(ctx context.Context, provider DetectedProvide
 	validated, err := w.providerConfig.ValidateProvider(ctx, provider)
 	if err != nil {
 		return nil, gerror.Wrapf(err, gerror.ErrCodeValidation, "failed to validate provider %s", provider.Name).
-			WithComponent("setup").
+			WithComponent("SetupWizard").
 			WithOperation("configureProvider")
 	}
 
 	if !validated.IsValid {
-		if !w.config.QuickMode {
-			fmt.Printf("❌ %s validation failed: %s\n", provider.Name, validated.Error)
-		}
+		w.ui.ShowWarning(fmt.Sprintf("%s validation failed: %s", provider.Name, validated.Error))
 		return nil, nil
+	}
+
+	// Check context before model retrieval
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled before model retrieval").
+			WithComponent("SetupWizard").
+			WithOperation("configureProvider").
+			WithDetails("provider", provider.Name)
 	}
 
 	// Get available models for this provider
 	models, err := w.modelConfig.GetModelsForProvider(ctx, provider.Name)
 	if err != nil {
 		return nil, gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to get models for provider %s", provider.Name).
-			WithComponent("setup").
+			WithComponent("SetupWizard").
 			WithOperation("configureProvider")
 	}
 
@@ -257,13 +388,11 @@ func (w *Wizard) configureProvider(ctx context.Context, provider DetectedProvide
 	selectedModels, err := w.selectModels(ctx, provider, models)
 	if err != nil {
 		return nil, gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to select models for provider %s", provider.Name).
-			WithComponent("setup").
+			WithComponent("SetupWizard").
 			WithOperation("configureProvider")
 	}
 
-	if !w.config.QuickMode {
-		fmt.Printf("✅ %s configured with %d model(s)\n", provider.Name, len(selectedModels))
-	}
+	w.ui.ShowSuccess(fmt.Sprintf("%s configured with %d model(s)", provider.Name, len(selectedModels)))
 
 	return &ConfiguredProvider{
 		Name:     provider.Name,
@@ -277,7 +406,7 @@ func (w *Wizard) configureProvider(ctx context.Context, provider DetectedProvide
 func (w *Wizard) selectModels(ctx context.Context, provider DetectedProvider, models []ModelInfo) ([]ModelInfo, error) {
 	if len(models) == 0 {
 		return nil, gerror.Newf(gerror.ErrCodeNotFound, "no models available for provider %s", provider.Name).
-			WithComponent("setup").
+			WithComponent("SetupWizard").
 			WithOperation("selectModels")
 	}
 
@@ -297,7 +426,8 @@ func (w *Wizard) selectModels(ctx context.Context, provider DetectedProvider, mo
 	}
 
 	// Interactive mode: show models with costs
-	fmt.Printf("\n💰 Available models for %s:\n", provider.Name)
+	w.ui.ShowModelSelectionHelp(provider.Name)
+	fmt.Printf("💰 Available models for %s:\n", provider.Name)
 	for i, model := range models {
 		fmt.Printf("  %d) %s", i+1, model.Name)
 		if model.CostPerInputToken > 0 {
@@ -390,8 +520,8 @@ func (w *Wizard) createAgentsInteractive(ctx context.Context, providers []Config
 	}
 
 	// Display recommendations
-	fmt.Println("\n📋 Recommended Agent Presets:")
-	fmt.Println("   (These are optimized for your providers and project type)")
+	w.ui.ShowPresetSelectionHelp()
+	fmt.Println("📋 Recommended Agent Presets:")
 	fmt.Println()
 
 	validRecs := make([]*PresetRecommendation, 0)
@@ -494,7 +624,12 @@ func (w *Wizard) CreatePresetBasedSetup(ctx context.Context, providers []Configu
 // saveConfiguration saves the final configuration
 func (w *Wizard) saveConfiguration(ctx context.Context, providers []ConfiguredProvider, agents []config.AgentConfig) error {
 	if !w.config.QuickMode {
-		fmt.Println("\n💾 Saving configuration...")
+		done := make(chan struct{})
+		go w.displayProgressIndicator("Saving configuration", done)
+		defer func() {
+			close(done)
+			time.Sleep(100 * time.Millisecond) // Let progress indicator finish
+		}()
 	}
 
 	// Load existing configuration if it exists
@@ -527,6 +662,34 @@ func (w *Wizard) saveConfiguration(ctx context.Context, providers []ConfiguredPr
 		} else {
 			// Merge agents
 			guildConfig.Agents = append(guildConfig.Agents, agents...)
+		}
+	}
+
+	// Update manager default if needed
+	if guildConfig.Manager.Default != "" {
+		// Check if the default manager exists in the agents list
+		managerFound := false
+		for _, agent := range guildConfig.Agents {
+			if agent.ID == guildConfig.Manager.Default {
+				managerFound = true
+				break
+			}
+		}
+		
+		// If not found, try to find a manager agent
+		if !managerFound {
+			for _, agent := range guildConfig.Agents {
+				if agent.Type == "manager" {
+					guildConfig.Manager.Default = agent.ID
+					managerFound = true
+					break
+				}
+			}
+		}
+		
+		// If still not found, clear the default
+		if !managerFound {
+			guildConfig.Manager.Default = ""
 		}
 	}
 
@@ -568,31 +731,85 @@ func (w *Wizard) saveConfiguration(ctx context.Context, providers []ConfiguredPr
 			WithOperation("saveConfiguration")
 	}
 
-	if !w.config.QuickMode {
-		fmt.Println("✅ Configuration saved")
-	}
+	w.ui.ShowSuccess("Configuration saved successfully")
 
 	return nil
 }
 
-// displaySummary shows the final setup summary
+// displaySummary shows the final setup summary (deprecated - use UI component)
 func (w *Wizard) displaySummary(providers []ConfiguredProvider, agents []config.AgentConfig) {
+	w.ui.ShowCompletionSummary(providers, agents)
+}
+
+// readLineWithTimeout reads a line from stdin with a timeout
+func (w *Wizard) readLineWithTimeout(ctx context.Context, timeout time.Duration) (string, error) {
+	// Create a channel to receive the result
+	type result struct {
+		line string
+		err  error
+	}
+	resultCh := make(chan result, 1)
+
+	// Start goroutine to read input
+	go func() {
+		line, err := w.reader.ReadString('\n')
+		if err != nil {
+			resultCh <- result{err: err}
+			return
+		}
+		// Trim the newline
+		line = strings.TrimSuffix(line, "\n")
+		line = strings.TrimSuffix(line, "\r")
+		resultCh <- result{line: line}
+	}()
+
+	// Create timeout context if not already limited
+	timeoutCtx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	// Wait for result or timeout
+	select {
+	case <-timeoutCtx.Done():
+		if ctx.Err() != nil {
+			// Original context was cancelled
+			return "", gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled while reading input").
+				WithComponent("SetupWizard").
+				WithOperation("readLineWithTimeout")
+		}
+		// Timeout occurred
+		return "", gerror.New(gerror.ErrCodeTimeout, "input timeout exceeded", nil).
+			WithComponent("SetupWizard").
+			WithOperation("readLineWithTimeout").
+			WithDetails("timeout", timeout.String())
+	case res := <-resultCh:
+		if res.err != nil {
+			return "", gerror.Wrap(res.err, gerror.ErrCodeInternal, "failed to read input").
+				WithComponent("SetupWizard").
+				WithOperation("readLineWithTimeout")
+		}
+		return res.line, nil
+	}
+}
+
+// displayProgressIndicator shows progress for long-running operations
+func (w *Wizard) displayProgressIndicator(message string, done <-chan struct{}) {
 	if w.config.QuickMode {
 		return
 	}
 
-	fmt.Println("\n📋 Setup Summary")
-	fmt.Println("═══════════════")
+	spinner := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
+	i := 0
 
-	fmt.Printf("🔌 Providers: %d\n", len(providers))
-	for _, provider := range providers {
-		fmt.Printf("  • %s (%d models)\n", provider.Name, len(provider.Models))
-	}
-
-	fmt.Printf("\n🤖 Agents: %d\n", len(agents))
-	for _, agent := range agents {
-		fmt.Printf("  • %s (%s) - %s/%s\n", 
-			agent.Name, agent.Type, agent.Provider, agent.Model)
+	for {
+		select {
+		case <-done:
+			fmt.Printf("\r%s... Done! ✓\n", message)
+			return
+		default:
+			fmt.Printf("\r%s %s...", spinner[i%len(spinner)], message)
+			i++
+			time.Sleep(100 * time.Millisecond)
+		}
 	}
 }
 
