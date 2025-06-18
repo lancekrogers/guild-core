@@ -23,6 +23,18 @@ type ProviderConfig struct {
 
 // NewProviderConfig creates a new provider configuration handler
 func NewProviderConfig(ctx context.Context, projectPath string) (*ProviderConfig, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider config creation").
+			WithComponent("ProviderConfiguration").
+			WithOperation("NewProviderConfig")
+	}
+
+	if projectPath == "" {
+		return nil, gerror.New(gerror.ErrCodeValidation, "project path cannot be empty", nil).
+			WithComponent("ProviderConfiguration").
+			WithOperation("NewProviderConfig")
+	}
+
 	return &ProviderConfig{
 		projectPath: projectPath,
 		factory:     providers.NewFactory(),
@@ -40,6 +52,13 @@ type ProviderValidation struct {
 
 // ValidateProvider validates a detected provider's configuration
 func (pc *ProviderConfig) ValidateProvider(ctx context.Context, provider DetectedProvider) (*ProviderValidation, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider validation").
+			WithComponent("ProviderConfiguration").
+			WithOperation("ValidateProvider").
+			WithDetails("provider", provider.Name)
+	}
+
 	switch provider.Name {
 	case "claude_code":
 		return pc.validateClaudeCode(ctx, provider)
@@ -57,13 +76,20 @@ func (pc *ProviderConfig) ValidateProvider(ctx context.Context, provider Detecte
 		return pc.validateOra(ctx, provider)
 	default:
 		return nil, gerror.Newf(gerror.ErrCodeValidation, "unsupported provider: %s", provider.Name).
-			WithComponent("setup").
-			WithOperation("ValidateProvider")
+			WithComponent("ProviderConfiguration").
+			WithOperation("ValidateProvider").
+			WithDetails("provider", provider.Name)
 	}
 }
 
 // validateClaudeCode validates Claude Code configuration
 func (pc *ProviderConfig) validateClaudeCode(ctx context.Context, provider DetectedProvider) (*ProviderValidation, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during Claude Code validation").
+			WithComponent("ProviderConfiguration").
+			WithOperation("validateClaudeCode")
+	}
+
 	// Claude Code is always valid if detected
 	settings := map[string]string{
 		"type":        "claude_code",
@@ -86,6 +112,12 @@ func (pc *ProviderConfig) validateClaudeCode(ctx context.Context, provider Detec
 
 // validateOllama validates Ollama configuration
 func (pc *ProviderConfig) validateOllama(ctx context.Context, provider DetectedProvider) (*ProviderValidation, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during Ollama validation").
+			WithComponent("ProviderConfiguration").
+			WithOperation("validateOllama")
+	}
+
 	settings := map[string]string{
 		"type": "ollama",
 	}
@@ -107,6 +139,13 @@ func (pc *ProviderConfig) validateOllama(ctx context.Context, provider DetectedP
 	// Test connection and get models
 	models, err := pc.getOllamaModels(ctx, provider.Endpoint)
 	if err != nil {
+		// Check if it's a gerror already
+		if _, ok := err.(*gerror.GuildError); !ok {
+			err = gerror.Wrap(err, gerror.ErrCodeConnection, "failed to get Ollama models").
+				WithComponent("ProviderConfiguration").
+				WithOperation("validateOllama").
+				WithDetails("endpoint", provider.Endpoint)
+		}
 		return &ProviderValidation{
 			IsValid:  false,
 			Error:    fmt.Sprintf("Failed to get models: %v", err),
@@ -137,6 +176,12 @@ func (pc *ProviderConfig) validateOllama(ctx context.Context, provider DetectedP
 
 // validateOpenAI validates OpenAI configuration
 func (pc *ProviderConfig) validateOpenAI(ctx context.Context, provider DetectedProvider) (*ProviderValidation, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during OpenAI validation").
+			WithComponent("ProviderConfiguration").
+			WithOperation("validateOpenAI")
+	}
+
 	apiKey := os.Getenv("OPENAI_API_KEY")
 	if apiKey == "" {
 		return &ProviderValidation{
@@ -188,6 +233,12 @@ func (pc *ProviderConfig) validateOpenAI(ctx context.Context, provider DetectedP
 
 // validateAnthropic validates Anthropic configuration
 func (pc *ProviderConfig) validateAnthropic(ctx context.Context, provider DetectedProvider) (*ProviderValidation, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during Anthropic validation").
+			WithComponent("ProviderConfiguration").
+			WithOperation("validateAnthropic")
+	}
+
 	apiKey := os.Getenv("ANTHROPIC_API_KEY")
 	if apiKey == "" {
 		return &ProviderValidation{
@@ -233,6 +284,12 @@ func (pc *ProviderConfig) validateAnthropic(ctx context.Context, provider Detect
 
 // validateDeepSeek validates DeepSeek configuration
 func (pc *ProviderConfig) validateDeepSeek(ctx context.Context, provider DetectedProvider) (*ProviderValidation, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during DeepSeek validation").
+			WithComponent("ProviderConfiguration").
+			WithOperation("validateDeepSeek")
+	}
+
 	apiKey := os.Getenv("DEEPSEEK_API_KEY")
 	if apiKey == "" {
 		return &ProviderValidation{
@@ -265,6 +322,12 @@ func (pc *ProviderConfig) validateDeepSeek(ctx context.Context, provider Detecte
 
 // validateDeepInfra validates DeepInfra configuration
 func (pc *ProviderConfig) validateDeepInfra(ctx context.Context, provider DetectedProvider) (*ProviderValidation, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during DeepInfra validation").
+			WithComponent("ProviderConfiguration").
+			WithOperation("validateDeepInfra")
+	}
+
 	apiKey := os.Getenv("DEEPINFRA_API_KEY")
 	if apiKey == "" {
 		return &ProviderValidation{
@@ -298,6 +361,12 @@ func (pc *ProviderConfig) validateDeepInfra(ctx context.Context, provider Detect
 
 // validateOra validates Ora configuration
 func (pc *ProviderConfig) validateOra(ctx context.Context, provider DetectedProvider) (*ProviderValidation, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during Ora validation").
+			WithComponent("ProviderConfiguration").
+			WithOperation("validateOra")
+	}
+
 	apiKey := os.Getenv("ORA_API_KEY")
 	if apiKey == "" {
 		return &ProviderValidation{
@@ -331,26 +400,47 @@ func (pc *ProviderConfig) validateOra(ctx context.Context, provider DetectedProv
 
 // getOllamaModels retrieves the list of available models from Ollama
 func (pc *ProviderConfig) getOllamaModels(ctx context.Context, endpoint string) ([]string, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during Ollama models request").
+			WithComponent("ProviderConfiguration").
+			WithOperation("getOllamaModels")
+	}
+
+	// Create timeout context for the request
+	timeoutCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
 	client := &http.Client{Timeout: 10 * time.Second}
-	req, err := http.NewRequestWithContext(ctx, "GET", endpoint+"/api/tags", nil)
+	req, err := http.NewRequestWithContext(timeoutCtx, "GET", endpoint+"/api/tags", nil)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to create request").
-			WithComponent("setup").
-			WithOperation("getOllamaModels")
+			WithComponent("ProviderConfiguration").
+			WithOperation("getOllamaModels").
+			WithDetails("endpoint", endpoint)
 	}
 
 	resp, err := client.Do(req)
 	if err != nil {
+		// Check if error is due to context cancellation/timeout
+		if timeoutCtx.Err() != nil {
+			return nil, gerror.Wrap(timeoutCtx.Err(), gerror.ErrCodeTimeout, "timeout during Ollama models request").
+				WithComponent("ProviderConfiguration").
+				WithOperation("getOllamaModels").
+				WithDetails("endpoint", endpoint)
+		}
 		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to connect to Ollama").
-			WithComponent("setup").
-			WithOperation("getOllamaModels")
+			WithComponent("ProviderConfiguration").
+			WithOperation("getOllamaModels").
+			WithDetails("endpoint", endpoint)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		return nil, gerror.Newf(gerror.ErrCodeConnection, "Ollama API returned status: %d", resp.StatusCode).
-			WithComponent("setup").
-			WithOperation("getOllamaModels")
+			WithComponent("ProviderConfiguration").
+			WithOperation("getOllamaModels").
+			WithDetails("endpoint", endpoint).
+			WithDetails("status_code", resp.StatusCode)
 	}
 
 	// For now, return common models (in real implementation, parse JSON response)
@@ -368,6 +458,13 @@ func (pc *ProviderConfig) getOllamaModels(ctx context.Context, endpoint string) 
 
 // TestProviderConnection performs a real test of the provider connection
 func (pc *ProviderConfig) TestProviderConnection(ctx context.Context, provider DetectedProvider) (*ConnectionTest, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider connection test").
+			WithComponent("ProviderConfiguration").
+			WithOperation("TestProviderConnection").
+			WithDetails("provider", provider.Name)
+	}
+
 	// Create a test client
 	var providerType providers.ProviderType
 	switch provider.Name {
@@ -424,6 +521,14 @@ func (pc *ProviderConfig) TestProviderConnection(ctx context.Context, provider D
 		}, nil
 	}
 
+	// Check for cancellation before test
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled before connection test").
+			WithComponent("ProviderConfiguration").
+			WithOperation("TestProviderConnection").
+			WithDetails("provider", provider.Name)
+	}
+
 	// Test with a simple completion
 	testCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
@@ -432,6 +537,14 @@ func (pc *ProviderConfig) TestProviderConnection(ctx context.Context, provider D
 	latency := time.Since(start)
 
 	if err != nil {
+		// Check if error is due to context cancellation/timeout
+		if testCtx.Err() != nil {
+			return &ConnectionTest{
+				Success: false,
+				Error:   fmt.Sprintf("Connection test timeout: %v", testCtx.Err()),
+				Latency: latency,
+			}, nil
+		}
 		return &ConnectionTest{
 			Success: false,
 			Error:   fmt.Sprintf("Connection test failed: %v", err),
@@ -455,6 +568,12 @@ type ConnectionTest struct {
 
 // GetProviderRecommendations returns recommendations for provider setup
 func (pc *ProviderConfig) GetProviderRecommendations(ctx context.Context, providers []DetectedProvider) (*ProviderRecommendations, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider recommendations").
+			WithComponent("ProviderConfiguration").
+			WithOperation("GetProviderRecommendations")
+	}
+
 	recs := &ProviderRecommendations{
 		Primary:     "",
 		Secondary:   "",
@@ -468,6 +587,14 @@ func (pc *ProviderConfig) GetProviderRecommendations(ctx context.Context, provid
 
 	// Categorize providers
 	for _, provider := range providers {
+		// Check for cancellation in loop
+		if err := ctx.Err(); err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider categorization").
+				WithComponent("ProviderConfiguration").
+				WithOperation("GetProviderRecommendations").
+				WithDetails("provider", provider.Name)
+		}
+
 		if !provider.HasCredentials {
 			continue
 		}

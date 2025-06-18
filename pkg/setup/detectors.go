@@ -12,6 +12,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // Detectors handles provider detection
@@ -21,6 +23,18 @@ type Detectors struct {
 
 // NewDetectors creates a new detector instance
 func NewDetectors(ctx context.Context, projectPath string) (*Detectors, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during detector creation").
+			WithComponent("ProviderDetection").
+			WithOperation("NewDetectors")
+	}
+
+	if projectPath == "" {
+		return nil, gerror.New(gerror.ErrCodeValidation, "project path cannot be empty", nil).
+			WithComponent("ProviderDetection").
+			WithOperation("NewDetectors")
+	}
+
 	return &Detectors{
 		projectPath: projectPath,
 	}, nil
@@ -45,6 +59,12 @@ type DetectedProvider struct {
 
 // DetectProviders scans for available providers
 func (d *Detectors) DetectProviders(ctx context.Context) (*DetectionResult, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider detection").
+			WithComponent("ProviderDetection").
+			WithOperation("DetectProviders")
+	}
+
 	result := &DetectionResult{
 		Available: []DetectedProvider{},
 		Missing:   []string{},
@@ -65,8 +85,23 @@ func (d *Detectors) DetectProviders(ctx context.Context) (*DetectionResult, erro
 	}
 
 	for _, p := range providers {
+		// Check for cancellation before each provider
+		if err := ctx.Err(); err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider detection loop").
+				WithComponent("ProviderDetection").
+				WithOperation("DetectProviders").
+				WithDetails("provider", p.name)
+		}
+
 		provider, err := p.detector(ctx)
 		if err != nil {
+			// Convert to gerror if not already
+			if _, ok := err.(*gerror.GuildError); !ok {
+				err = gerror.Wrap(err, gerror.ErrCodeProvider, "provider detection failed").
+					WithComponent("ProviderDetection").
+					WithOperation("DetectProviders").
+					WithDetails("provider", p.name)
+			}
 			// Log error but continue with other providers
 			result.Missing = append(result.Missing, fmt.Sprintf("%s (error: %v)", p.name, err))
 			continue
@@ -84,6 +119,12 @@ func (d *Detectors) DetectProviders(ctx context.Context) (*DetectionResult, erro
 
 // detectClaudeCode checks for Claude Code availability
 func (d *Detectors) detectClaudeCode(ctx context.Context) (*DetectedProvider, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during Claude Code detection").
+			WithComponent("ProviderDetection").
+			WithOperation("detectClaudeCode")
+	}
+
 	// Check if we're running in Claude Code environment
 	if os.Getenv("CLAUDE_CODE_SESSION") != "" || os.Getenv("ANTHROPIC_CLAUDE_CODE") != "" {
 		return &DetectedProvider{
@@ -95,6 +136,13 @@ func (d *Detectors) detectClaudeCode(ctx context.Context) (*DetectedProvider, er
 			Endpoint:       "claude.ai/code",
 			Notes:          "Running in Claude Code environment",
 		}, nil
+	}
+
+	// Check for cancellation before executing command
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled before CLI check").
+			WithComponent("ProviderDetection").
+			WithOperation("detectClaudeCode")
 	}
 
 	// Check for Claude Code CLI tools (if any)
@@ -116,13 +164,29 @@ func (d *Detectors) detectClaudeCode(ctx context.Context) (*DetectedProvider, er
 
 // detectOllama checks for Ollama availability
 func (d *Detectors) detectOllama(ctx context.Context) (*DetectedProvider, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during Ollama detection").
+			WithComponent("ProviderDetection").
+			WithOperation("detectOllama")
+	}
+
 	// Check if ollama is installed
 	ollamaPath, err := exec.LookPath("ollama")
 	if err != nil {
 		return nil, nil
 	}
 
-	// Check if Ollama service is running
+	// Check for cancellation before network calls
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled before Ollama service check").
+			WithComponent("ProviderDetection").
+			WithOperation("detectOllama")
+	}
+
+	// Check if Ollama service is running with proper timeout
+	timeoutCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
 	client := &http.Client{Timeout: 5 * time.Second}
 	endpoints := []string{
 		"http://localhost:11434",
@@ -131,7 +195,15 @@ func (d *Detectors) detectOllama(ctx context.Context) (*DetectedProvider, error)
 
 	var workingEndpoint string
 	for _, endpoint := range endpoints {
-		req, err := http.NewRequestWithContext(ctx, "GET", endpoint+"/api/tags", nil)
+		// Check for cancellation in loop
+		if err := timeoutCtx.Err(); err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeTimeout, "timeout during Ollama endpoint check").
+				WithComponent("ProviderDetection").
+				WithOperation("detectOllama").
+				WithDetails("endpoint", endpoint)
+		}
+
+		req, err := http.NewRequestWithContext(timeoutCtx, "GET", endpoint+"/api/tags", nil)
 		if err != nil {
 			continue
 		}
@@ -160,9 +232,19 @@ func (d *Detectors) detectOllama(ctx context.Context) (*DetectedProvider, error)
 		}, nil
 	}
 
-	// Get version information
+	// Check for cancellation before version check
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled before version check").
+			WithComponent("ProviderDetection").
+			WithOperation("detectOllama")
+	}
+
+	// Get version information with timeout
+	versionCtx, versionCancel := context.WithTimeout(ctx, 3*time.Second)
+	defer versionCancel()
+
 	version := "unknown"
-	if cmd := exec.CommandContext(ctx, "ollama", "--version"); cmd != nil {
+	if cmd := exec.CommandContext(versionCtx, "ollama", "--version"); cmd != nil {
 		if output, err := cmd.Output(); err == nil {
 			version = strings.TrimSpace(string(output))
 		}
@@ -181,6 +263,12 @@ func (d *Detectors) detectOllama(ctx context.Context) (*DetectedProvider, error)
 
 // detectOpenAI checks for OpenAI API credentials
 func (d *Detectors) detectOpenAI(ctx context.Context) (*DetectedProvider, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during OpenAI detection").
+			WithComponent("ProviderDetection").
+			WithOperation("detectOpenAI")
+	}
+
 	apiKey := os.Getenv("OPENAI_API_KEY")
 	orgID := os.Getenv("OPENAI_ORG_ID")
 
@@ -220,6 +308,12 @@ func (d *Detectors) detectOpenAI(ctx context.Context) (*DetectedProvider, error)
 
 // detectAnthropic checks for Anthropic API credentials
 func (d *Detectors) detectAnthropic(ctx context.Context) (*DetectedProvider, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during Anthropic detection").
+			WithComponent("ProviderDetection").
+			WithOperation("detectAnthropic")
+	}
+
 	apiKey := os.Getenv("ANTHROPIC_API_KEY")
 
 	if apiKey == "" {
@@ -252,6 +346,12 @@ func (d *Detectors) detectAnthropic(ctx context.Context) (*DetectedProvider, err
 
 // detectDeepSeek checks for DeepSeek API credentials
 func (d *Detectors) detectDeepSeek(ctx context.Context) (*DetectedProvider, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during DeepSeek detection").
+			WithComponent("ProviderDetection").
+			WithOperation("detectDeepSeek")
+	}
+
 	apiKey := os.Getenv("DEEPSEEK_API_KEY")
 
 	if apiKey == "" {
@@ -271,6 +371,12 @@ func (d *Detectors) detectDeepSeek(ctx context.Context) (*DetectedProvider, erro
 
 // detectDeepInfra checks for DeepInfra API credentials
 func (d *Detectors) detectDeepInfra(ctx context.Context) (*DetectedProvider, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during DeepInfra detection").
+			WithComponent("ProviderDetection").
+			WithOperation("detectDeepInfra")
+	}
+
 	apiKey := os.Getenv("DEEPINFRA_API_KEY")
 
 	if apiKey == "" {
@@ -290,6 +396,12 @@ func (d *Detectors) detectDeepInfra(ctx context.Context) (*DetectedProvider, err
 
 // detectOra checks for Ora API credentials
 func (d *Detectors) detectOra(ctx context.Context) (*DetectedProvider, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during Ora detection").
+			WithComponent("ProviderDetection").
+			WithOperation("detectOra")
+	}
+
 	apiKey := os.Getenv("ORA_API_KEY")
 
 	if apiKey == "" {
@@ -309,6 +421,13 @@ func (d *Detectors) detectOra(ctx context.Context) (*DetectedProvider, error) {
 
 // ValidateProviderConnection performs a deeper validation of provider availability
 func (d *Detectors) ValidateProviderConnection(ctx context.Context, provider DetectedProvider) (*ValidationResult, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider validation").
+			WithComponent("ProviderDetection").
+			WithOperation("ValidateProviderConnection").
+			WithDetails("provider", provider.Name)
+	}
+
 	switch provider.Name {
 	case "ollama":
 		return d.validateOllamaConnection(ctx, provider)
@@ -337,6 +456,12 @@ type ValidationResult struct {
 
 // validateOllamaConnection tests Ollama connectivity
 func (d *Detectors) validateOllamaConnection(ctx context.Context, provider DetectedProvider) (*ValidationResult, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during Ollama validation").
+			WithComponent("ProviderDetection").
+			WithOperation("validateOllamaConnection")
+	}
+
 	if provider.Endpoint == "" {
 		return &ValidationResult{
 			IsValid: false,
@@ -345,19 +470,29 @@ func (d *Detectors) validateOllamaConnection(ctx context.Context, provider Detec
 		}, nil
 	}
 
+	// Create timeout context for validation
+	timeoutCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
 	// Try to get model list
 	client := &http.Client{Timeout: 10 * time.Second}
-	req, err := http.NewRequestWithContext(ctx, "GET", provider.Endpoint+"/api/tags", nil)
+	req, err := http.NewRequestWithContext(timeoutCtx, "GET", provider.Endpoint+"/api/tags", nil)
 	if err != nil {
-		return &ValidationResult{
-			IsValid: false,
-			Error:   fmt.Sprintf("Failed to create request: %v", err),
-			Models:  []string{},
-		}, nil
+		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to create validation request").
+			WithComponent("ProviderDetection").
+			WithOperation("validateOllamaConnection").
+			WithDetails("endpoint", provider.Endpoint)
 	}
 
 	resp, err := client.Do(req)
 	if err != nil {
+		// Check if error is due to context cancellation/timeout
+		if timeoutCtx.Err() != nil {
+			return nil, gerror.Wrap(timeoutCtx.Err(), gerror.ErrCodeTimeout, "timeout during Ollama validation").
+				WithComponent("ProviderDetection").
+				WithOperation("validateOllamaConnection").
+				WithDetails("endpoint", provider.Endpoint)
+		}
 		return &ValidationResult{
 			IsValid: false,
 			Error:   fmt.Sprintf("Connection failed: %v", err),
@@ -384,6 +519,12 @@ func (d *Detectors) validateOllamaConnection(ctx context.Context, provider Detec
 
 // validateOpenAIConnection tests OpenAI API connectivity
 func (d *Detectors) validateOpenAIConnection(ctx context.Context, provider DetectedProvider) (*ValidationResult, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during OpenAI validation").
+			WithComponent("ProviderDetection").
+			WithOperation("validateOpenAIConnection")
+	}
+
 	apiKey := os.Getenv("OPENAI_API_KEY")
 	if apiKey == "" {
 		return &ValidationResult{
@@ -403,6 +544,12 @@ func (d *Detectors) validateOpenAIConnection(ctx context.Context, provider Detec
 
 // validateAnthropicConnection tests Anthropic API connectivity
 func (d *Detectors) validateAnthropicConnection(ctx context.Context, provider DetectedProvider) (*ValidationResult, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during Anthropic validation").
+			WithComponent("ProviderDetection").
+			WithOperation("validateAnthropicConnection")
+	}
+
 	apiKey := os.Getenv("ANTHROPIC_API_KEY")
 	if apiKey == "" {
 		return &ValidationResult{
@@ -422,6 +569,12 @@ func (d *Detectors) validateAnthropicConnection(ctx context.Context, provider De
 
 // validateClaudeCodeConnection tests Claude Code connectivity
 func (d *Detectors) validateClaudeCodeConnection(ctx context.Context, provider DetectedProvider) (*ValidationResult, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during Claude Code validation").
+			WithComponent("ProviderDetection").
+			WithOperation("validateClaudeCodeConnection")
+	}
+
 	// Claude Code is always valid if detected
 	return &ValidationResult{
 		IsValid: true,
@@ -432,6 +585,18 @@ func (d *Detectors) validateClaudeCodeConnection(ctx context.Context, provider D
 
 // DetectProjectContext analyzes the project to suggest appropriate configurations
 func (d *Detectors) DetectProjectContext(ctx context.Context) (*ProjectContext, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during project context detection").
+			WithComponent("ProviderDetection").
+			WithOperation("DetectProjectContext")
+	}
+
+	if d.projectPath == "" {
+		return nil, gerror.New(gerror.ErrCodeValidation, "project path is empty", nil).
+			WithComponent("ProviderDetection").
+			WithOperation("DetectProjectContext")
+	}
+
 	context := &ProjectContext{
 		Language:     "unknown",
 		Framework:    "unknown",
@@ -473,6 +638,14 @@ func (d *Detectors) DetectProjectContext(ctx context.Context) (*ProjectContext, 
 	}
 
 	for _, file := range files {
+		// Check for cancellation in loop
+		if err := ctx.Err(); err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during file check").
+				WithComponent("ProviderDetection").
+				WithOperation("DetectProjectContext").
+				WithDetails("file", file.name)
+		}
+
 		if _, err := os.Stat(filepath.Join(d.projectPath, file.name)); err == nil {
 			file.indicates(context)
 		}
