@@ -19,12 +19,17 @@ import (
 	"github.com/guild-ventures/guild-core/internal/chat/v2/services"
 	"github.com/guild-ventures/guild-core/internal/chat/v2/utils"
 	"github.com/guild-ventures/guild-core/internal/chat/session"
+	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
+	"github.com/guild-ventures/guild-core/pkg/memory"
+	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/guild-ventures/guild-core/pkg/templates"
+	"github.com/guild-ventures/guild-core/pkg/tools"
 )
 
 // App represents the main chat application
@@ -72,6 +77,11 @@ type App struct {
 	commandHistory   *CommandHistory
 	templateManager  templates.TemplateManager
 	completionEngine *CompletionEngine
+
+	// NEW: Suggestion system integration
+	suggestionFactory *agent.SuggestionAwareAgentFactory
+	chatHandler       *agent.ChatSuggestionHandler
+	enhancedAgent     agent.EnhancedGuildArtisan
 	
 	// Feature flags
 	initialized bool
@@ -148,9 +158,28 @@ func (app *App) initializeComponents() error {
 	// Initialize template manager (for now, nil - would need database setup)
 	app.templateManager = nil
 	
-	// Initialize completion engine
+	// Initialize suggestion-aware agent system
+	if err := app.initializeSuggestionSystem(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize suggestion system").
+			WithComponent("chat.app").
+			WithOperation("initializeComponents")
+	}
+
+	// Initialize completion engine with suggestion support
 	projectRoot := "." // TODO: Get actual project root
-	app.completionEngine = NewCompletionEngine(app.config.GuildConfig, projectRoot)
+	if app.suggestionFactory != nil && app.chatHandler != nil {
+		// Create enhanced completion engine with suggestions
+		app.completionEngine = NewCompletionEngineWithSuggestions(
+			app.config.GuildConfig, 
+			projectRoot,
+			app.enhancedAgent.GetSuggestionManager(),
+			app.chatHandler,
+		)
+	} else {
+		// Fall back to basic completion engine
+		app.completionEngine = NewCompletionEngine(app.config.GuildConfig, projectRoot)
+	}
+	
 	if app.registry != nil {
 		app.completionEngine.SetRegistry(app.registry)
 	}
@@ -751,4 +780,133 @@ func (app *App) GetError() error {
 
 func (app *App) SetError(err error) {
 	app.errorState = err
+}
+
+// initializeSuggestionSystem initializes the suggestion-aware agent system
+func (app *App) initializeSuggestionSystem() error {
+	// Get components from registry
+	if app.registry == nil {
+		// Graceful fallback - continue without suggestions
+		return nil
+	}
+
+	// Get LLM client
+	llmClient, err := app.getLLMClient()
+	if err != nil {
+		// Continue without suggestions if LLM client fails
+		fmt.Printf("Warning: Failed to get LLM client for suggestions: %v\n", err)
+		return nil
+	}
+
+	// Get memory manager
+	memoryManager, err := app.getMemoryManager()
+	if err != nil {
+		// Continue without suggestions if memory manager fails
+		fmt.Printf("Warning: Failed to get memory manager for suggestions: %v\n", err)
+		return nil
+	}
+
+	// Get tool registry
+	toolRegistry, err := app.getToolRegistry()
+	if err != nil {
+		// Continue without suggestions if tool registry fails
+		fmt.Printf("Warning: Failed to get tool registry for suggestions: %v\n", err)
+		return nil
+	}
+
+	// Get commission manager
+	commissionManager, err := app.getCommissionManager()
+	if err != nil {
+		// Continue without suggestions if commission manager fails
+		fmt.Printf("Warning: Failed to get commission manager for suggestions: %v\n", err)
+		return nil
+	}
+
+	// Get cost manager (placeholder for now)
+	costManager := &SimpleCostManager{}
+
+	// Create suggestion-aware agent factory
+	app.suggestionFactory = agent.NewSuggestionAwareAgentFactory(
+		llmClient,
+		memoryManager,
+		toolRegistry,
+		commissionManager,
+		costManager,
+	)
+
+	// Create enhanced agent for chat
+	app.enhancedAgent = app.suggestionFactory.CreateWorkerAgent("chat-agent", "Chat Assistant")
+
+	// Create chat suggestion handler
+	app.chatHandler = agent.NewChatSuggestionHandler(app.enhancedAgent)
+
+	return nil
+}
+
+// Helper methods to get components from registry
+func (app *App) getLLMClient() (providers.LLMClient, error) {
+	// Registry access needs to be updated to use the actual registry interface
+	// For now, return an error to gracefully fallback
+	return nil, gerror.New(gerror.ErrCodeNotFound, "LLM client not available in this registry implementation", nil)
+}
+
+func (app *App) getMemoryManager() (memory.ChainManager, error) {
+	// Registry access needs to be updated to use the actual registry interface
+	// For now, return an error to gracefully fallback
+	return nil, gerror.New(gerror.ErrCodeNotFound, "memory chain manager not available in this registry implementation", nil)
+}
+
+func (app *App) getToolRegistry() (tools.Registry, error) {
+	// Registry access needs to be updated to use the actual registry interface
+	// For now, return an error to gracefully fallback
+	return nil, gerror.New(gerror.ErrCodeNotFound, "tool registry not available in this registry implementation", nil)
+}
+
+func (app *App) getCommissionManager() (commission.CommissionManager, error) {
+	// Registry access needs to be updated to use the actual registry interface
+	// For now, return an error to gracefully fallback
+	return nil, gerror.New(gerror.ErrCodeNotFound, "commission manager not available in this registry implementation", nil)
+}
+
+// SimpleCostManager is a placeholder cost manager for suggestion system
+type SimpleCostManager struct{}
+
+func (scm *SimpleCostManager) TrackCost(costType agent.CostType, amount float64) error {
+	return nil // Placeholder implementation
+}
+
+func (scm *SimpleCostManager) GetCostReport() map[string]interface{} {
+	return map[string]interface{}{} // Placeholder implementation
+}
+
+func (scm *SimpleCostManager) SetBudget(costType agent.CostType, amount float64) {
+	// Placeholder implementation
+}
+
+func (scm *SimpleCostManager) GetBudgetRemaining(costType agent.CostType) float64 {
+	return 0.0 // Placeholder implementation
+}
+
+func (scm *SimpleCostManager) GetTotalCost() float64 {
+	return 0.0 // Placeholder implementation
+}
+
+func (scm *SimpleCostManager) Reset() {
+	// Placeholder implementation
+}
+
+func (scm *SimpleCostManager) CanAfford(costType agent.CostType, amount float64) bool {
+	return true // Placeholder implementation - always return true
+}
+
+func (scm *SimpleCostManager) EstimateLLMCost(model string, estimatedTokens int) float64 {
+	return 0.0 // Placeholder implementation
+}
+
+func (scm *SimpleCostManager) ExceedsBudget(costType agent.CostType, amount float64) bool {
+	return false // Placeholder implementation
+}
+
+func (scm *SimpleCostManager) RecordLLMCost(model string, promptTokens, completionTokens int, metadata map[string]string) error {
+	return nil // Placeholder implementation
 }

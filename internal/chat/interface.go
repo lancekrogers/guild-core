@@ -32,6 +32,13 @@ func WithSession(id string) Option {
 	}
 }
 
+// WithGuild sets the selected guild
+func WithGuild(guildName string) Option {
+	return func(m *ChatModel) {
+		m.selectedGuild = guildName
+	}
+}
+
 // New creates a new chat model with the given configuration
 func New(ctx context.Context, cfg *config.GuildConfig, conn *grpc.ClientConn,
 	guildClient pb.GuildClient, promptsClient promptspb.PromptServiceClient,

@@ -103,6 +103,17 @@ func runChat(cmd *cobra.Command, args []string) error {
 			WithOperation("chat.run")
 	}
 
+	// Run guild selector to let user choose which guild to work with
+	selectedGuild, err := chatv1.RunGuildSelector(ctx)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to select guild").
+			WithComponent("cli").
+			WithOperation("chat.run")
+	}
+
+	// Store selected guild for future use
+	fmt.Printf("Selected guild: %s\n", selectedGuild)
+
 	// Generate session ID if not provided
 	if chatSessionID == "" {
 		chatSessionID = generateUUID()
@@ -184,7 +195,8 @@ func runChat(cmd *cobra.Command, args []string) error {
 		// Use existing v1 implementation
 		return chatv1.Run(ctx, guildConfig, conn, guildClient, promptClient, reg,
 			chatv1.WithCampaign(campaignName),
-			chatv1.WithSession(chatSessionID))
+			chatv1.WithSession(chatSessionID),
+			chatv1.WithGuild(selectedGuild))
 	}
 }
 

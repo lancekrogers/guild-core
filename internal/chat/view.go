@@ -252,6 +252,11 @@ func (m ChatModel) getCampaignDisplay() string {
 		display = fmt.Sprintf("Campaign: %s", m.campaignID)
 	}
 
+	// Add selected guild if available
+	if m.selectedGuild != "" {
+		display += fmt.Sprintf(" | Guild: %s", m.selectedGuild)
+	}
+
 	// Add session info if available
 	if m.currentSession != nil {
 		display += fmt.Sprintf(" | Session: %s", m.currentSession.Name)

@@ -102,6 +102,7 @@ func init() {
 
 	// Register agent subcommands
 	agentCmd.AddCommand(agentStartCmd)
+	agentCmd.AddCommand(newAgentTemplateCmd())
 
 	// Note: Additional agent subcommands (list, stop, status) are registered in agent.go
 }

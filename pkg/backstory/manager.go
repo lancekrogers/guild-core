@@ -174,6 +174,18 @@ func (m *BackstoryManager) buildIdentityLayer(agent *EnhancedAgent) string {
 		return ""
 	}
 
+	// Check if we have any meaningful content
+	hasContent := backstory.GuildRank != "" ||
+		backstory.Experience != "" ||
+		len(backstory.PreviousRoles) > 0 ||
+		backstory.Expertise != "" ||
+		backstory.Philosophy != "" ||
+		len(backstory.Specialties) > 0
+
+	if !hasContent {
+		return ""
+	}
+
 	var layer strings.Builder
 
 	layer.WriteString("# Your Identity and Background\n\n")
@@ -223,13 +235,30 @@ func (m *BackstoryManager) buildExpertiseLayer(agent *EnhancedAgent) string {
 		return ""
 	}
 
+	// Check if we have any meaningful content
+	hasContent := spec.Domain != "" ||
+		spec.ExpertiseLevel != "" ||
+		spec.Craft != "" ||
+		len(spec.CoreKnowledge) > 0 ||
+		len(spec.Technologies) > 0 ||
+		len(spec.Methodologies) > 0 ||
+		len(spec.Principles) > 0
+
+	if !hasContent {
+		return ""
+	}
+
 	var layer strings.Builder
 
 	layer.WriteString("# Your Craft and Expertise\n\n")
 
 	// Domain specialization
-	layer.WriteString(fmt.Sprintf("You are a %s-level practitioner in the craft of %s.\n",
-		spec.ExpertiseLevel, spec.Domain))
+	if spec.Domain != "" && spec.ExpertiseLevel != "" {
+		layer.WriteString(fmt.Sprintf("You are a %s-level practitioner in the craft of %s.\n",
+			spec.ExpertiseLevel, spec.Domain))
+	} else if spec.Domain != "" {
+		layer.WriteString(fmt.Sprintf("You specialize in the craft of %s.\n", spec.Domain))
+	}
 
 	if spec.Craft != "" {
 		layer.WriteString(fmt.Sprintf("Your primary craft: %s\n", spec.Craft))
@@ -358,25 +387,40 @@ func (m *BackstoryManager) buildCommunicationStyleLayer(agent *EnhancedAgent) st
 	}
 
 	var layer strings.Builder
-
-	layer.WriteString("# Your Communication Style\n\n")
+	hasContent := false
 
 	// Communication preferences from backstory
 	if backstory != nil {
 		if backstory.CommunicationStyle != "" {
+			if !hasContent {
+				layer.WriteString("# Your Communication Style\n\n")
+				hasContent = true
+			}
 			layer.WriteString(fmt.Sprintf("Communication approach: %s\n", backstory.CommunicationStyle))
 		}
 		if backstory.TeachingStyle != "" {
+			if !hasContent {
+				layer.WriteString("# Your Communication Style\n\n")
+				hasContent = true
+			}
 			layer.WriteString(fmt.Sprintf("Teaching style: %s\n", backstory.TeachingStyle))
 		}
 	}
 
 	// Personality-driven communication
 	if personality != nil {
-		layer.WriteString(fmt.Sprintf("Formality: %s\n", personality.Formality))
-		layer.WriteString(fmt.Sprintf("Detail level: %s\n", personality.DetailLevel))
+		if personality.Formality != "" {
+			if !hasContent {
+				layer.WriteString("# Your Communication Style\n\n")
+				hasContent = true
+			}
+			layer.WriteString(fmt.Sprintf("Formality: %s\n", personality.Formality))
+		}
+		if personality.DetailLevel != "" {
+			layer.WriteString(fmt.Sprintf("Detail level: %s\n", personality.DetailLevel))
+		}
 		
-		if personality.HumorLevel != "none" {
+		if personality.HumorLevel != "" && personality.HumorLevel != "none" {
 			layer.WriteString(fmt.Sprintf("Humor: %s\n", personality.HumorLevel))
 		}
 
@@ -401,6 +445,11 @@ func (m *BackstoryManager) buildCommunicationStyleLayer(agent *EnhancedAgent) st
 		if personality.Craftsmanship > 7 {
 			layer.WriteString("- Master craftsman - takes pride in quality and attention to detail\n")
 		}
+	}
+
+	// Return empty string if no content was added
+	if !hasContent {
+		return ""
 	}
 
 	return layer.String()
@@ -449,18 +498,20 @@ func (m *BackstoryManager) determineInitialMood(agentConfig *config.AgentConfig)
 		return "caring"
 	}
 
-	// Check for dominant traits
-	for _, trait := range personality.Traits {
-		if trait.Strength > 0.8 {
-			switch strings.ToLower(trait.Name) {
-			case "excited", "enthusiastic":
-				return "excited"
-			case "analytical", "methodical":
-				return "focused"
-			case "creative":
-				return "inspired"
-			case "protective", "caring":
-				return "protective"
+	// Check for dominant traits (handle nil traits gracefully)
+	if personality.Traits != nil {
+		for _, trait := range personality.Traits {
+			if trait.Strength > 0.8 {
+				switch strings.ToLower(trait.Name) {
+				case "excited", "enthusiastic":
+					return "excited"
+				case "analytical", "methodical":
+					return "focused"
+				case "creative":
+					return "inspired"
+				case "protective", "caring":
+					return "protective"
+				}
 			}
 		}
 	}
@@ -557,29 +608,37 @@ func (m *BackstoryManager) findRelevantInteractions(memory *AgentMemory, turnCon
 
 // registerPersonalityLayers registers personality-specific prompt layers
 func (m *BackstoryManager) registerPersonalityLayers(agent *EnhancedAgent) error {
+	// Skip if no backstory or personality is configured
 	if agent.Config.Backstory == nil && agent.Config.Personality == nil {
 		return nil
 	}
 
-	// Register role layer with personality
+	// Build role personality prompt
 	rolePrompt := m.buildRolePersonalityPrompt(agent)
-	if rolePrompt != "" {
-		prompt := layered.SystemPrompt{
-			Layer:     layered.LayerRole,
-			ArtisanID: agent.Config.ID,
-			Content:   rolePrompt,
-			Version:   1,
-			Priority:  100,
-			Updated:   time.Now(),
-			Metadata: map[string]interface{}{
-				"backstory_enabled": true,
-				"personality_version": 1,
-			},
-		}
+	
+	// Only register if we have actual content
+	if rolePrompt == "" {
+		return nil
+	}
 
-		if err := m.promptRegistry.RegisterLayeredPrompt(layered.LayerRole, agent.Config.ID, prompt); err != nil {
-			return err
-		}
+	prompt := layered.SystemPrompt{
+		Layer:     layered.LayerRole,
+		ArtisanID: agent.Config.ID,
+		Content:   rolePrompt,
+		Version:   1,
+		Priority:  100,
+		Updated:   time.Now(),
+		Metadata: map[string]interface{}{
+			"backstory_enabled": true,
+			"personality_version": 1,
+		},
+	}
+
+	if err := m.promptRegistry.RegisterLayeredPrompt(layered.LayerRole, agent.Config.ID, prompt); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register personality prompt layer").
+			WithComponent("BackstoryManager").
+			WithOperation("registerPersonalityLayers").
+			WithDetails("agent_id", agent.Config.ID)
 	}
 
 	return nil

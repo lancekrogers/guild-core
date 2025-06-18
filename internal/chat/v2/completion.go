@@ -4,15 +4,19 @@
 package v2
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/guild-ventures/guild-core/internal/chat/v2/common"
+	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/guild-ventures/guild-core/pkg/suggestions"
 )
 
 // CompletionEngine provides intelligent command and agent auto-completion for V2
@@ -22,14 +26,39 @@ type CompletionEngine struct {
 	commands    map[string]Command
 	taskIDs     []string                   // Cache of task IDs for completion
 	registry    registry.ComponentRegistry // Access to kanban for task completion
+	
+	// NEW: Suggestion system integration
+	suggestionManager suggestions.SuggestionManager
+	chatHandler       *agent.ChatSuggestionHandler
+	conversationHist  []suggestions.ChatMessage // Context cache
+	lastSuggestionUpdate time.Time               // Performance optimization
 }
 
 // NewCompletionEngine creates a new completion engine with full functionality
 func NewCompletionEngine(guildConfig *config.GuildConfig, projectRoot string) *CompletionEngine {
 	engine := &CompletionEngine{
-		guildConfig: guildConfig,
-		projectRoot: projectRoot,
-		commands:    make(map[string]Command),
+		guildConfig:      guildConfig,
+		projectRoot:      projectRoot,
+		commands:         make(map[string]Command),
+		conversationHist: make([]suggestions.ChatMessage, 0),
+	}
+
+	// Register built-in commands with medieval theming
+	engine.registerCommands()
+	return engine
+}
+
+// NewCompletionEngineWithSuggestions creates a completion engine with suggestion system integration
+func NewCompletionEngineWithSuggestions(guildConfig *config.GuildConfig, projectRoot string, 
+	suggestionManager suggestions.SuggestionManager, chatHandler *agent.ChatSuggestionHandler) *CompletionEngine {
+	
+	engine := &CompletionEngine{
+		guildConfig:       guildConfig,
+		projectRoot:       projectRoot,
+		commands:          make(map[string]Command),
+		suggestionManager: suggestionManager,
+		chatHandler:       chatHandler,
+		conversationHist:  make([]suggestions.ChatMessage, 0),
 	}
 
 	// Register built-in commands with medieval theming
@@ -66,8 +95,33 @@ func (ce *CompletionEngine) registerCommands() {
 	}
 }
 
-// Complete provides intelligent completion suggestions
+// Complete provides intelligent completion suggestions enhanced with context-aware suggestions
 func (ce *CompletionEngine) Complete(input string, cursorPos int) []common.CompletionResult {
+	var results []common.CompletionResult
+
+	// Get traditional completions first
+	traditionalResults := ce.getTraditionalCompletions(input, cursorPos)
+	results = append(results, traditionalResults...)
+
+	// NEW: Add context-aware suggestions if suggestion system is available
+	if ce.hasSuggestionSystem() && len(strings.TrimSpace(input)) > 2 {
+		suggestionResults := ce.getSuggestions(input)
+		results = append(results, suggestionResults...)
+	}
+
+	// Merge, rank, and deduplicate results
+	results = ce.mergeAndRankResults(results, input)
+
+	// If still no results, provide helpful suggestions based on context
+	if len(results) == 0 {
+		results = ce.getHelpfulSuggestions(input)
+	}
+
+	return results
+}
+
+// getTraditionalCompletions handles the original completion logic
+func (ce *CompletionEngine) getTraditionalCompletions(input string, cursorPos int) []common.CompletionResult {
 	var results []common.CompletionResult
 
 	// Handle different completion types based on input context
@@ -86,11 +140,6 @@ func (ce *CompletionEngine) Complete(input string, cursorPos int) []common.Compl
 	} else {
 		// File path completion or general text
 		results = append(results, ce.completeFilePaths(input)...)
-	}
-
-	// If no results, provide helpful suggestions based on context
-	if len(results) == 0 {
-		results = ce.getHelpfulSuggestions(input)
 	}
 
 	return results
@@ -409,4 +458,210 @@ func fuzzyMatch(text, pattern string) bool {
 	// Simple contains match for now
 	// TODO: Implement more sophisticated fuzzy matching
 	return strings.Contains(text, pattern)
+}
+
+// =====================================================
+// NEW: Suggestion System Integration Methods
+// =====================================================
+
+// hasSuggestionSystem checks if the suggestion system is available
+func (ce *CompletionEngine) hasSuggestionSystem() bool {
+	return ce.suggestionManager != nil && ce.chatHandler != nil
+}
+
+// getSuggestions gets context-aware suggestions from the suggestion system
+func (ce *CompletionEngine) getSuggestions(input string) []common.CompletionResult {
+	if !ce.hasSuggestionSystem() {
+		return []common.CompletionResult{}
+	}
+
+	// Performance optimization: avoid too frequent suggestion requests
+	now := time.Now()
+	if now.Sub(ce.lastSuggestionUpdate) < 300*time.Millisecond {
+		return []common.CompletionResult{}
+	}
+	ce.lastSuggestionUpdate = now
+
+	// Build suggestion request
+	request := agent.SuggestionRequest{
+		Message:        input,
+		MaxSuggestions: 3, // Limit for performance in real-time
+		MinConfidence:  0.5,
+		Filter: &suggestions.SuggestionFilter{
+			MaxResults: 3,
+		},
+	}
+
+	// Get suggestions with timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 200*time.Millisecond)
+	defer cancel()
+
+	response, err := ce.chatHandler.GetSuggestions(ctx, request)
+	if err != nil {
+		// Graceful fallback - don't block completions if suggestions fail
+		return []common.CompletionResult{}
+	}
+
+	// Convert suggestions to completion results
+	return ce.convertSuggestionsToCompletions(response.Suggestions)
+}
+
+// convertSuggestionsToCompletions converts suggestion results to completion format
+func (ce *CompletionEngine) convertSuggestionsToCompletions(suggestions []suggestions.Suggestion) []common.CompletionResult {
+	results := make([]common.CompletionResult, 0, len(suggestions))
+
+	for _, suggestion := range suggestions {
+		result := common.CompletionResult{
+			Content: suggestion.Content,
+			AgentID: "suggestion-system",
+		}
+
+		// Add metadata for suggestion tracking
+		if result.Metadata == nil {
+			result.Metadata = make(map[string]string)
+		}
+		result.Metadata["type"] = "suggestion"
+		result.Metadata["suggestion_id"] = suggestion.ID
+		result.Metadata["suggestion_source"] = suggestion.Source
+		result.Metadata["description"] = suggestion.Description
+		result.Metadata["icon"] = ce.getSuggestionIcon(suggestion.Type)
+		result.Metadata["category"] = string(suggestion.Type)
+
+		results = append(results, result)
+	}
+
+	return results
+}
+
+// getSuggestionIcon returns an appropriate icon for the suggestion type
+func (ce *CompletionEngine) getSuggestionIcon(suggestionType suggestions.SuggestionType) string {
+	switch suggestionType {
+	case suggestions.SuggestionTypeCommand:
+		return "⚡" // Command suggestions
+	case suggestions.SuggestionTypeTool:
+		return "🔧" // Tool suggestions
+	case suggestions.SuggestionTypeTemplate:
+		return "📝" // Template suggestions
+	case suggestions.SuggestionTypeFollowUp:
+		return "💡" // Follow-up suggestions
+	case suggestions.SuggestionTypeCode:
+		return "💻" // Code suggestions
+	default:
+		return "✨" // Generic suggestion
+	}
+}
+
+// mergeAndRankResults combines traditional completions with suggestions and ranks them
+func (ce *CompletionEngine) mergeAndRankResults(results []common.CompletionResult, input string) []common.CompletionResult {
+	if len(results) == 0 {
+		return results
+	}
+
+	// Deduplicate by content
+	seen := make(map[string]bool)
+	deduplicated := make([]common.CompletionResult, 0, len(results))
+
+	for _, result := range results {
+		key := strings.ToLower(result.Content)
+		if !seen[key] {
+			seen[key] = true
+			deduplicated = append(deduplicated, result)
+		}
+	}
+
+	// Sort by relevance: exact matches first, then alphabetically 
+	sort.Slice(deduplicated, func(i, j int) bool {
+		a, b := deduplicated[i], deduplicated[j]
+
+		// Exact matches go first
+		inputLower := strings.ToLower(input)
+		aExact := strings.HasPrefix(strings.ToLower(a.Content), inputLower)
+		bExact := strings.HasPrefix(strings.ToLower(b.Content), inputLower)
+
+		if aExact && !bExact {
+			return true
+		}
+		if !aExact && bExact {
+			return false
+		}
+
+		// Then sort alphabetically for consistent ordering
+		return a.Content < b.Content
+	})
+
+	// Limit total results for performance
+	if len(deduplicated) > 8 {
+		deduplicated = deduplicated[:8]
+	}
+
+	return deduplicated
+}
+
+// UpdateConversationHistory updates the conversation context for better suggestions
+func (ce *CompletionEngine) UpdateConversationHistory(messages []suggestions.ChatMessage) {
+	if !ce.hasSuggestionSystem() {
+		return
+	}
+
+	// Keep recent history for context (last 10 messages for performance)
+	if len(messages) > 10 {
+		ce.conversationHist = messages[len(messages)-10:]
+	} else {
+		ce.conversationHist = messages
+	}
+}
+
+// buildProjectContext creates project context for suggestions
+func (ce *CompletionEngine) buildProjectContext() suggestions.ProjectContext {
+	return suggestions.ProjectContext{
+		ProjectPath: ce.projectRoot,
+		ProjectType: ce.detectProjectType(),
+		Language:    ce.detectPrimaryLanguage(),
+	}
+}
+
+// detectProjectType analyzes the project to determine its type
+func (ce *CompletionEngine) detectProjectType() string {
+	if ce.projectRoot == "" {
+		return "unknown"
+	}
+
+	// Check for common project indicators
+	if _, err := os.Stat(filepath.Join(ce.projectRoot, "go.mod")); err == nil {
+		return "go-library"
+	}
+	if _, err := os.Stat(filepath.Join(ce.projectRoot, "package.json")); err == nil {
+		return "javascript"
+	}
+	if _, err := os.Stat(filepath.Join(ce.projectRoot, "Cargo.toml")); err == nil {
+		return "rust"
+	}
+	if _, err := os.Stat(filepath.Join(ce.projectRoot, "requirements.txt")); err == nil {
+		return "python"
+	}
+
+	return "general"
+}
+
+// detectPrimaryLanguage analyzes the project to determine the primary language
+func (ce *CompletionEngine) detectPrimaryLanguage() string {
+	if ce.projectRoot == "" {
+		return ""
+	}
+
+	// Simple language detection based on file extensions
+	if _, err := os.Stat(filepath.Join(ce.projectRoot, "go.mod")); err == nil {
+		return "go"
+	}
+	if _, err := os.Stat(filepath.Join(ce.projectRoot, "package.json")); err == nil {
+		return "javascript"
+	}
+	if _, err := os.Stat(filepath.Join(ce.projectRoot, "Cargo.toml")); err == nil {
+		return "rust"
+	}
+	if _, err := os.Stat(filepath.Join(ce.projectRoot, "requirements.txt")); err == nil {
+		return "python"
+	}
+
+	return ""
 }

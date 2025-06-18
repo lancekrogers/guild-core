@@ -212,6 +212,7 @@ type ChatModel struct {
 	promptsClient  promptspb.PromptServiceClient
 	sessionID      string
 	campaignID     string
+	selectedGuild  string
 	guildConfig    *config.GuildConfig
 	commandProc    *CommandProcessor
 	completionEng  *CompletionEngine

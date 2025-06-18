@@ -4,213 +4,437 @@
 package main
 
 import (
+	"bufio"
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
-	yaml "gopkg.in/yaml.v3"
 
+	"github.com/guild-ventures/guild-core/pkg/campaign"
+	"github.com/guild-ventures/guild-core/pkg/daemon"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/project"
+	"github.com/guild-ventures/guild-core/pkg/setup"
 )
 
+var (
+	initQuickMode    bool
+	initForce        bool
+	initProviderOnly string
+)
+
+// initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init [path]",
-	Short: "Initialize a Guild project",
-	Long: `Creates both global (~/.guild) and local (.guild) directory structures.
+	Short: "Initialize Guild project with complete setup",
+	Long: `Initialize a complete Guild project ready for immediate use.
 
-Global directory (~/.guild) contains:
-- Provider configurations
-- Tool installations  
-- LSP servers
-- Project templates
-- Shared cache
+This command creates a unified setup experience that gets you from zero 
+to working Guild chat in under 30 seconds.
 
-Local directory (.guild) contains:
-- Project configuration (guild.yaml)
-- SQLite database (memory.db)
-- Corpus and RAG vector stores  
-- Commissions (user objectives/goals)
-- Project-specific tools
-- Agent workspaces
-- Task tracking (Kanban)`,
+The setup process includes:
+- Campaign architecture and configuration
+- AI provider detection and selection
+- Agent configuration with smart defaults
+- Optional demo commission creation
+
+After running 'guild init', you can immediately use 'guild chat'.
+
+Examples:
+  guild init                    # Initialize current directory
+  guild init ./my-project       # Initialize specific directory
+  guild init --quick            # Use defaults for everything
+  guild init --provider ollama  # Setup only Ollama provider`,
 	Args: cobra.MaximumNArgs(1),
-	RunE: runInit,
+	RunE: runUnifiedInit,
 }
 
 func init() {
 	rootCmd.AddCommand(initCmd)
+
+	// Add flags
+	initCmd.Flags().BoolVar(&initQuickMode, "quick", false, "Quick setup with automatic defaults")
+	initCmd.Flags().BoolVar(&initForce, "force", false, "Force setup even if already configured")
+	initCmd.Flags().StringVar(&initProviderOnly, "provider", "", "Setup only this provider (openai, anthropic, ollama, claude_code)")
 }
 
-func runInit(cmd *cobra.Command, args []string) error {
-	path := "."
+func runUnifiedInit(cmd *cobra.Command, args []string) error {
+	ctx := context.Background()
+
+	// Determine project path
+	projectPath := "."
 	if len(args) > 0 {
-		path = args[0]
+		projectPath = args[0]
 	}
 
 	// Get absolute path for display
-	absPath, err := filepath.Abs(path)
+	absPath, err := filepath.Abs(projectPath)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to resolve path").
-			WithComponent("cli").WithOperation("runInit").WithDetails("path", path)
+			WithComponent("cli").WithOperation("runUnifiedInit").WithDetails("path", projectPath)
 	}
 
-	// Check if already initialized
-	if project.IsProjectInitialized(path) {
-		fmt.Fprintf(os.Stderr, "Error: Project already initialized at %s\n", absPath)
-		fmt.Fprintln(os.Stderr, "The .guild directory already exists.")
-		return nil
+	// Welcome message
+	if !initQuickMode {
+		fmt.Println("🏰 Welcome to Guild Framework!")
+		fmt.Println("Let's set up your first campaign to get started.")
+		fmt.Println()
 	}
 
-	fmt.Printf("🏰 Initializing Guild Framework at %s...\n", absPath)
-
-	// Step 1: Detect project type
-	fmt.Print("📜 Analyzing project structure... ")
-	detector := project.NewProjectDetector()
-	projectType, err := detector.DetectProjectType(path)
+	// Step 1: Campaign Setup
+	campaignName, projectName, err := setupCampaign(absPath)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to detect project type").
-			WithComponent("cli").WithOperation("runInit").WithDetails("path", path)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to setup campaign").
+			WithComponent("cli").WithOperation("runUnifiedInit")
 	}
-	fmt.Printf("✅ Detected: %s\n", projectType.Description)
 
-	// Step 2: Generate intelligent configuration
-	fmt.Print("🎯 Generating Guild configuration... ")
-	guildConfig, err := detector.GenerateGuildConfig(projectType, path)
+	if !initQuickMode {
+		fmt.Printf("✅ Campaign: %s\n", campaignName)
+		fmt.Printf("✅ Project: %s\n", projectName)
+		fmt.Println()
+	}
+
+	// Step 2: Provider Detection and Selection
+	if !initQuickMode {
+		fmt.Println("🔍 Detecting available AI providers...")
+	}
+
+	setupConfig := &setup.Config{
+		ProjectPath:  absPath,
+		QuickMode:    initQuickMode,
+		Force:        initForce,
+		ProviderOnly: initProviderOnly,
+	}
+
+	wizard, err := setup.NewWizard(ctx, setupConfig)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to generate guild config").
-			WithComponent("cli").WithOperation("runInit").WithDetails("project_type", projectType.Description)
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create setup wizard").
+			WithComponent("cli").WithOperation("runUnifiedInit")
 	}
 
-	corpusConfig := detector.GenerateCorpusConfig(projectType, path)
-	fmt.Println("✅")
+	// Step 3: Initialize project structure first
+	if !project.IsProjectInitialized(absPath) {
+		if !initQuickMode {
+			fmt.Print("📁 Creating project directory structure... ")
+		}
 
-	// Step 3: Create directory structure (both global and local)
-	fmt.Print("📁 Creating directory structure... ")
-	if err := project.InitializeProject(path); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize project structure").
-			WithComponent("cli").WithOperation("runInit").WithDetails("path", path)
-	}
-	fmt.Println("✅")
+		if err := project.InitializeProject(absPath); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize project structure").
+				WithComponent("cli").WithOperation("runUnifiedInit").WithDetails("path", absPath)
+		}
 
-	// Step 4: Write intelligent configuration files
-	fmt.Print("⚙️  Writing configuration files... ")
-
-	// Write guild.yaml
-	guildConfigPath := filepath.Join(path, ".guild", "guild.yaml")
-	guildConfigData, err := yaml.Marshal(guildConfig)
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild config").
-			WithComponent("cli").WithOperation("runInit")
-	}
-	if err := os.WriteFile(guildConfigPath, guildConfigData, 0644); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
-			WithComponent("cli").WithOperation("runInit").
-			WithDetails("config_path", guildConfigPath)
-	}
-
-	// Write corpus.yaml
-	corpusConfigPath := filepath.Join(path, ".guild", "corpus.yaml")
-	corpusConfigData, err := yaml.Marshal(corpusConfig)
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal corpus config").
-			WithComponent("cli").WithOperation("runInit")
-	}
-	if err := os.WriteFile(corpusConfigPath, corpusConfigData, 0644); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write corpus config").
-			WithComponent("cli").WithOperation("runInit").
-			WithDetails("config_path", corpusConfigPath)
-	}
-	fmt.Println("✅")
-
-	// Step 5: Scan for documentation to seed corpus
-	fmt.Print("📚 Scanning for documentation... ")
-	docFiles, err := detector.SeedCorpusFromProject(projectType, path)
-	if err != nil {
-		fmt.Printf("⚠️  Warning: %v\n", err)
-	} else {
-		fmt.Printf("✅ Found %d documents\n", len(docFiles))
-
-		if len(docFiles) > 0 {
-			fmt.Println("\n📋 Suggested files for corpus:")
-			for i, file := range docFiles {
-				if i >= 5 { // Limit to first 5 suggestions
-					fmt.Printf("   ... and %d more\n", len(docFiles)-5)
-					break
-				}
-				fmt.Printf("   • %s\n", file)
-			}
+		if !initQuickMode {
+			fmt.Println("✅")
 		}
 	}
 
-	// Step 6: Check provider configuration
-	fmt.Print("🔑 Checking API key configuration... ")
-	var availableProviders []string
-	if os.Getenv("ANTHROPIC_API_KEY") != "" {
-		availableProviders = append(availableProviders, "Anthropic")
-	}
-	if os.Getenv("OPENAI_API_KEY") != "" {
-		availableProviders = append(availableProviders, "OpenAI")
+	// Step 4: Create global campaign config (but not local reference yet)
+	if !initQuickMode {
+		fmt.Print("🎯 Creating global campaign... ")
 	}
 
-	if len(availableProviders) > 0 {
-		fmt.Printf("✅ Found: %v\n", availableProviders)
+	if err := createGlobalCampaignConfig(absPath, campaignName, projectName); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create global campaign config").
+			WithComponent("cli").WithOperation("runUnifiedInit")
+	}
+
+	if !initQuickMode {
+		fmt.Println("✅")
+	}
+
+	// Step 5: Run provider setup wizard (but save to project.yaml to preserve campaign reference)
+	if !initQuickMode {
+		fmt.Println("⚙️  Setting up AI providers and agents...")
+	}
+
+	if err := wizard.Run(ctx); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run setup wizard").
+			WithComponent("cli").WithOperation("runUnifiedInit")
+	}
+
+	// Step 5.1: Move guild config from guild.yaml to project.yaml to preserve campaign reference
+	if err := moveGuildConfigToProject(absPath); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to move guild config").
+			WithComponent("cli").WithOperation("runUnifiedInit")
+	}
+
+	// Step 5.2: Now create the campaign reference and socket registry
+	if err := createLocalCampaignReference(absPath, campaignName, projectName); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create campaign reference").
+			WithComponent("cli").WithOperation("runUnifiedInit")
+	}
+
+	// Step 6: Create demo commission (optional)
+	if !initQuickMode {
+		if askYesNo("🎯 Create a demo commission to get started?", true) {
+			if err := createDemoCommission(absPath, campaignName); err != nil {
+				fmt.Printf("⚠️  Warning: Could not create demo commission: %v\n", err)
+			} else {
+				fmt.Println("✅ Demo commission created")
+			}
+		}
 	} else {
-		fmt.Println("⚠️  No API keys found")
+		// In quick mode, always create demo commission
+		if err := createDemoCommission(absPath, campaignName); err != nil {
+			// Don't fail the whole setup for demo commission
+			fmt.Printf("⚠️  Warning: Could not create demo commission: %v\n", err)
+		}
 	}
 
-	// Success summary
-	fmt.Printf("\n🎉 Successfully initialized Guild project!\n")
-	fmt.Printf("   Project type: %s\n", projectType.Description)
-	fmt.Printf("   Location: %s\n", absPath)
-	fmt.Printf("   Global config: ~/.guild/\n")
-	fmt.Printf("   Agents configured: %d\n", len(guildConfig.Agents))
-
-	// Display next steps
-	fmt.Println("\n🚀 Next steps:")
-
-	if len(availableProviders) == 0 {
-		fmt.Println("   1. Set up your API keys:")
-		fmt.Println("      export ANTHROPIC_API_KEY=\"your-anthropic-api-key\"")
-		fmt.Println("      export OPENAI_API_KEY=\"your-openai-api-key\"")
+	// Step 7: Success summary
+	if !initQuickMode {
+		fmt.Println()
 	}
+	fmt.Println("🎉 Guild is ready!")
+	fmt.Println()
+	fmt.Printf("✅ Campaign: %s\n", campaignName)
+	fmt.Printf("✅ Project: %s\n", projectName)
+	fmt.Printf("✅ Location: %s\n", absPath)
+	fmt.Printf("✅ Database: Initialized (.guild/memory.db)\n")
+	fmt.Printf("✅ Daemon: Ready to start\n")
+	fmt.Println()
 
-	fmt.Println("   1. Start chatting with AI agents:")
-	fmt.Println("      guild chat")
-
-	if len(docFiles) > 0 {
-		fmt.Println("   2. Index your project documentation:")
-		fmt.Println("      guild corpus scan")
-	}
-
-	fmt.Println("   3. View available agents:")
-	fmt.Println("      guild agent list")
-	fmt.Println("   4. Check your configuration:")
-	fmt.Println("      guild config show")
-	fmt.Println("   5. See all available commands:")
-	fmt.Println("      guild --help")
-
-	fmt.Println("\n📚 Coming Soon:")
-	fmt.Printf("   • guild commission \"Implement %s feature\" - Create AI-powered work items\n", getExampleFeature(projectType))
-	fmt.Println("   • guild kanban view - Interactive task board")
-	fmt.Println("   • guild campaign watch - Monitor multi-agent workflows")
+	// Step 8: Next steps
+	fmt.Println("🚀 Try these commands:")
+	fmt.Println()
+	fmt.Println("  guild chat          # Start chatting with your agents")
+	fmt.Println("  guild status        # Check system status")
+	fmt.Println("  guild serve         # Start daemon manually (auto-starts with chat)")
+	fmt.Println("  guild commission list # See your commissions")
+	fmt.Println()
+	fmt.Println("📚 Learn more:")
+	fmt.Println()
+	fmt.Println("  guild help          # See all commands")
+	fmt.Println("  guild agent list    # View your agents")
+	fmt.Println("  guild campaign list # See your campaigns")
+	fmt.Println()
+	fmt.Printf("Ready to start? Run: guild chat\n")
 
 	return nil
 }
 
-// getExampleFeature returns an appropriate example feature for the project type
-func getExampleFeature(projectType *project.ProjectType) string {
-	switch projectType.Language {
-	case "go":
-		return "user authentication API"
-	case "javascript":
-		return "user dashboard"
-	case "python":
-		return "data processing pipeline"
-	case "rust":
-		return "concurrent task processor"
+// setupCampaign handles interactive campaign configuration
+func setupCampaign(projectPath string) (campaignName, projectName string, err error) {
+	// Check if already in a campaign
+	if _, err := campaign.DetectCampaign(projectPath, ""); err == nil {
+		if !initForce {
+			return "", "", gerror.New(gerror.ErrCodeValidation, "already in a campaign - use --force to reinitialize", nil).
+				WithComponent("cli").WithOperation("setupCampaign")
+		}
+	}
+
+	// Default campaign name
+	defaultCampaign := "guild-demo"
+	if !initQuickMode {
+		fmt.Printf("Campaign name [%s]: ", defaultCampaign)
+		campaignName = readInput(defaultCampaign)
+	} else {
+		campaignName = defaultCampaign
+	}
+
+	// Default project name
+	defaultProject := filepath.Base(projectPath)
+	if !initQuickMode {
+		fmt.Printf("Project name [%s]: ", defaultProject)
+		projectName = readInput(defaultProject)
+	} else {
+		projectName = defaultProject
+	}
+
+	return campaignName, projectName, nil
+}
+
+// createGlobalCampaignConfig creates the global campaign configuration
+func createGlobalCampaignConfig(projectPath, campaignName, projectName string) error {
+	// Create or update global campaign config
+	var globalConfig *campaign.CampaignConfig
+
+	// Check if campaign already exists
+	existingConfig, err := campaign.LoadGlobalCampaignConfig(campaignName)
+	if err != nil {
+		// Campaign doesn't exist, create new one
+		globalConfig = &campaign.CampaignConfig{
+			Name:        campaignName,
+			Description: fmt.Sprintf("Campaign %s", campaignName),
+			Created:     time.Now().Format(time.RFC3339),
+			Settings:    make(map[string]string),
+		}
+	} else {
+		// Campaign exists, update it
+		globalConfig = existingConfig
+	}
+
+	// Add project to campaign if not already present
+	absPath, _ := filepath.Abs(projectPath)
+	projectExists := false
+	for _, proj := range globalConfig.Projects {
+		if proj.Path == absPath {
+			projectExists = true
+			break
+		}
+	}
+
+	if !projectExists {
+		globalConfig.Projects = append(globalConfig.Projects, campaign.ProjectInfo{
+			Name: projectName,
+			Path: absPath,
+		})
+	}
+
+	// Save global campaign config
+	if err := campaign.SaveGlobalCampaignConfig(campaignName, globalConfig); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save global campaign config").
+			WithComponent("cli").WithOperation("createGlobalCampaignConfig")
+	}
+
+	return nil
+}
+
+// createLocalCampaignReference creates the local campaign reference and socket registry
+func createLocalCampaignReference(projectPath, campaignName, projectName string) error {
+	// Create local campaign reference
+	if err := campaign.CreateCampaignReference(projectPath, campaignName, projectName); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign reference").
+			WithComponent("cli").WithOperation("createLocalCampaignReference")
+	}
+
+	// Create socket registry
+	if err := daemon.SaveSocketRegistry(projectPath, campaignName); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save socket registry").
+			WithComponent("cli").WithOperation("createLocalCampaignReference")
+	}
+
+	return nil
+}
+
+// createDemoCommission creates a sample commission for new users
+func createDemoCommission(projectPath, campaignName string) error {
+	commissionsDir := filepath.Join(projectPath, ".guild", "objectives", "refined")
+	if err := os.MkdirAll(commissionsDir, 0755); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commissions directory").
+			WithComponent("cli").WithOperation("createDemoCommission")
+	}
+
+	demoCommission := `# Simple API Development Task
+
+## Objective
+Create a basic REST API with essential endpoints to demonstrate Guild's code generation and testing capabilities.
+
+## Requirements
+
+### Core API Features
+- Create a simple Go HTTP server
+- Implement basic CRUD operations for a "tasks" resource
+- Add proper error handling and HTTP status codes
+- Include basic logging
+
+### Technical Specifications
+- Use Go's standard library (net/http)
+- Implement JSON request/response handling
+- Add input validation
+- Follow REST conventions
+
+### Endpoints Required
+1. GET /tasks - List all tasks
+2. POST /tasks - Create a new task  
+3. GET /tasks/{id} - Get specific task
+4. PUT /tasks/{id} - Update task
+5. DELETE /tasks/{id} - Delete task
+
+### Testing Requirements
+- Write unit tests for each endpoint
+- Include integration tests
+- Test error scenarios
+- Achieve >80% test coverage
+
+## Success Criteria
+- All endpoints respond correctly
+- Tests pass and have good coverage
+- Code follows Go best practices
+- API is well-documented
+
+## Notes
+This is a demo commission designed to showcase Guild's multi-agent development workflow. The Manager will break this down into smaller tasks and assign them to appropriate specialized agents.
+`
+
+	commissionPath := filepath.Join(commissionsDir, "demo-api-development.md")
+	if err := os.WriteFile(commissionPath, []byte(demoCommission), 0644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write demo commission").
+			WithComponent("cli").WithOperation("createDemoCommission")
+	}
+
+	return nil
+}
+
+// moveGuildConfigToProject moves the guild config to project.yaml to preserve campaign reference
+func moveGuildConfigToProject(projectPath string) error {
+	guildYaml := filepath.Join(projectPath, ".guild", "guild.yaml") 
+	projectYaml := filepath.Join(projectPath, ".guild", "project.yaml")
+	
+	// Read the guild config that was just created
+	guildData, err := os.ReadFile(guildYaml)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read guild config").
+			WithComponent("cli").WithOperation("moveGuildConfigToProject")
+	}
+	
+	// Write it to project.yaml
+	if err := os.WriteFile(projectYaml, guildData, 0644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write project config").
+			WithComponent("cli").WithOperation("moveGuildConfigToProject")
+	}
+	
+	// Remove the guild.yaml file so it can be replaced with campaign reference
+	if err := os.Remove(guildYaml); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to remove guild config").
+			WithComponent("cli").WithOperation("moveGuildConfigToProject")
+	}
+	
+	return nil
+}
+
+// Helper functions for user interaction
+
+// readInput reads user input with a default value
+func readInput(defaultValue string) string {
+	reader := bufio.NewReader(os.Stdin)
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		return defaultValue
+	}
+
+	input = strings.TrimSpace(input)
+	if input == "" {
+		return defaultValue
+	}
+
+	return input
+}
+
+// askYesNo asks a yes/no question with a default
+func askYesNo(question string, defaultYes bool) bool {
+	if initQuickMode {
+		return defaultYes
+	}
+
+	defaultStr := "Y/n"
+	if !defaultYes {
+		defaultStr = "y/N"
+	}
+
+	fmt.Printf("%s [%s]: ", question, defaultStr)
+	input := readInput("")
+
+	switch strings.ToLower(input) {
+	case "y", "yes":
+		return true
+	case "n", "no":
+		return false
 	default:
-		return "core functionality"
+		return defaultYes
 	}
 }

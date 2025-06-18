@@ -15,8 +15,10 @@ import (
 
 	"github.com/guild-ventures/guild-core/internal/chat/commands"
 	"github.com/guild-ventures/guild-core/internal/chat/session"
+	"github.com/guild-ventures/guild-core/pkg/config"
 	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
+	"github.com/guild-ventures/guild-core/pkg/project"
 )
 
 // CommandProcessor handles command execution for the chat interface
@@ -58,6 +60,10 @@ func (cp *CommandProcessor) registerCommands() {
 	cp.RegisterCommand("agents", cp.handleAgents)
 	cp.RegisterCommand("status", cp.handleStatus)
 
+	// Guild commands
+	cp.RegisterCommand("guild", cp.handleGuild)
+	cp.RegisterCommand("guilds", cp.handleGuilds)
+
 	// Prompt commands
 	cp.RegisterCommand("prompt", cp.handlePrompt)
 
@@ -89,6 +95,9 @@ func (cp *CommandProcessor) registerCommands() {
 	cp.RegisterCommand("image", cp.handleImage)
 	cp.RegisterCommand("mermaid", cp.handleMermaid)
 	cp.RegisterCommand("code", cp.handleCode)
+
+	// Configuration commands
+	cp.RegisterCommand("configrefresh", cp.handleConfigRefresh)
 }
 
 // RegisterCommand registers a new command handler
@@ -144,6 +153,11 @@ func (cp *CommandProcessor) handleHelp(args []string) tea.Cmd {
   @agent-name <message>  - Send message to specific agent
   @all <message>         - Broadcast to all agents
 
+**Guild Commands:**
+  /guilds                - List all available guilds
+  /guild                 - Show current guild
+  /guild <name>          - Switch to a different guild
+
 **Prompt Management:**
   /prompt list           - List all prompt layers
   /prompt get <layer>    - Get content of a prompt layer
@@ -171,6 +185,9 @@ func (cp *CommandProcessor) handleHelp(args []string) tea.Cmd {
   /image <path>          - Show image with ASCII preview
   /mermaid               - Render Mermaid diagram
   /code toggle-lines     - Toggle line numbers in code blocks
+
+**Configuration Commands:**
+  /configrefresh         - Reload all configurations without restarting
 
 **Test Commands:**
   /test markdown         - Test markdown rendering
@@ -260,6 +277,7 @@ func (cp *CommandProcessor) handleStatus(args []string) tea.Cmd {
 
 **Session:** %s
 **Campaign:** %s
+**Selected Guild:** %s
 **Connected Agents:** %d
 **Active Tools:** %d
 **Prompt Layers:** %d
@@ -267,6 +285,7 @@ func (cp *CommandProcessor) handleStatus(args []string) tea.Cmd {
 Use /agents to see detailed agent status.`,
 			cp.model.sessionID,
 			cp.model.campaignID,
+			cp.model.selectedGuild,
 			len(cp.model.agents),
 			len(cp.model.activeTools),
 			len(cp.model.promptLayers),
@@ -275,6 +294,161 @@ Use /agents to see detailed agent status.`,
 		return Message{
 			Type:    msgSystem,
 			Content: status,
+		}
+	}
+}
+
+func (cp *CommandProcessor) handleGuilds(args []string) tea.Cmd {
+	return func() tea.Msg {
+		// Load guild configuration
+		ctx, err := project.GetContext()
+		if err != nil {
+			return Message{
+				Type:    msgError,
+				Content: fmt.Sprintf("Failed to get project context: %v", err),
+			}
+		}
+
+		guildConfig, err := config.LoadGuildConfigFile(context.Background(), ctx.GetRootPath())
+		if err != nil {
+			return Message{
+				Type:    msgError,
+				Content: fmt.Sprintf("Failed to load guild configuration: %v", err),
+			}
+		}
+
+		// Build guild list
+		var content strings.Builder
+		content.WriteString("🏰 **Available Guilds**\n\n")
+
+		guildNames := guildConfig.ListGuildNames()
+		if len(guildNames) == 0 {
+			content.WriteString("No guilds configured. Use 'guild init' to create default guilds.\n")
+		} else {
+			for _, name := range guildNames {
+				guild, _ := guildConfig.GetGuild(name)
+				isSelected := name == cp.model.selectedGuild
+				
+				if isSelected {
+					content.WriteString(fmt.Sprintf("→ **%s** (current)\n", name))
+				} else {
+					content.WriteString(fmt.Sprintf("  %s\n", name))
+				}
+				
+				content.WriteString(fmt.Sprintf("   📜 %s\n", guild.Purpose))
+				content.WriteString(fmt.Sprintf("   👥 %d agents\n\n", len(guild.Agents)))
+			}
+		}
+
+		content.WriteString("\nUse `/guild <name>` to switch to a different guild.")
+
+		return Message{
+			Type:    msgSystem,
+			Content: content.String(),
+		}
+	}
+}
+
+func (cp *CommandProcessor) handleGuild(args []string) tea.Cmd {
+	if len(args) == 0 {
+		// Show current guild
+		return func() tea.Msg {
+			if cp.model.selectedGuild == "" {
+				return Message{
+					Type:    msgSystem,
+					Content: "No guild selected. Use `/guilds` to see available guilds.",
+				}
+			}
+
+			// Load guild details
+			ctx, err := project.GetContext()
+			if err != nil {
+				return Message{
+					Type:    msgError,
+					Content: fmt.Sprintf("Failed to get project context: %v", err),
+				}
+			}
+
+			guildConfig, err := config.LoadGuildConfigFile(context.Background(), ctx.GetRootPath())
+			if err != nil {
+				return Message{
+					Type:    msgError,
+					Content: fmt.Sprintf("Failed to load guild configuration: %v", err),
+				}
+			}
+
+			guild, err := guildConfig.GetGuild(cp.model.selectedGuild)
+			if err != nil {
+				return Message{
+					Type:    msgError,
+					Content: fmt.Sprintf("Failed to get guild details: %v", err),
+				}
+			}
+
+			// Format guild details
+			var content strings.Builder
+			content.WriteString(fmt.Sprintf("🏰 **Current Guild: %s**\n\n", cp.model.selectedGuild))
+			content.WriteString(fmt.Sprintf("📜 **Purpose:** %s\n", guild.Purpose))
+			content.WriteString(fmt.Sprintf("📝 **Description:** %s\n\n", guild.Description))
+			content.WriteString("👥 **Agents:**\n")
+			for _, agent := range guild.Agents {
+				content.WriteString(fmt.Sprintf("   - %s\n", agent))
+			}
+
+			if guild.Coordination != nil {
+				content.WriteString("\n⚙️ **Coordination Settings:**\n")
+				content.WriteString(fmt.Sprintf("   - Max Parallel Tasks: %d\n", guild.Coordination.MaxParallelTasks))
+				content.WriteString(fmt.Sprintf("   - Review Required: %v\n", guild.Coordination.ReviewRequired))
+				content.WriteString(fmt.Sprintf("   - Auto Handoff: %v\n", guild.Coordination.AutoHandoff))
+			}
+
+			return Message{
+				Type:    msgSystem,
+				Content: content.String(),
+			}
+		}
+	}
+
+	// Switch to a different guild
+	guildName := strings.Join(args, " ")
+	return func() tea.Msg {
+		// Load guild configuration to validate
+		ctx, err := project.GetContext()
+		if err != nil {
+			return Message{
+				Type:    msgError,
+				Content: fmt.Sprintf("Failed to get project context: %v", err),
+			}
+		}
+
+		guildConfig, err := config.LoadGuildConfigFile(context.Background(), ctx.GetRootPath())
+		if err != nil {
+			return Message{
+				Type:    msgError,
+				Content: fmt.Sprintf("Failed to load guild configuration: %v", err),
+			}
+		}
+
+		// Check if guild exists
+		if _, err := guildConfig.GetGuild(guildName); err != nil {
+			return Message{
+				Type:    msgError,
+				Content: fmt.Sprintf("Guild '%s' not found. Use `/guilds` to see available guilds.", guildName),
+			}
+		}
+
+		// Update selected guild
+		cp.model.selectedGuild = guildName
+
+		// Update campaign config with last selected guild
+		campaignConfig, err := config.LoadCampaignConfig(context.Background(), ctx.GetRootPath())
+		if err == nil {
+			campaignConfig.UpdateLastSelectedGuild(context.Background(), ctx.GetRootPath(), guildName)
+		}
+
+		return Message{
+			Type:    msgSystem,
+			Content: fmt.Sprintf("✅ Switched to guild: %s", guildName),
 		}
 	}
 }
@@ -1422,5 +1596,121 @@ func (cp *CommandProcessor) handleCode(args []string) tea.Cmd {
 		}
 	default:
 		return cp.errorMessage(fmt.Sprintf("Unknown code action: %s", action))
+	}
+}
+
+// Configuration command handlers
+
+func (cp *CommandProcessor) handleConfigRefresh(args []string) tea.Cmd {
+	return func() tea.Msg {
+		// Get project context
+		ctx, err := project.GetContext()
+		if err != nil {
+			return Message{
+				Type:    msgError,
+				Content: fmt.Sprintf("Failed to get project context: %v", err),
+			}
+		}
+
+		projectPath := ctx.GetRootPath()
+		var errors []string
+		var successes []string
+
+		// 1. Reload campaign configuration
+		campaignConfig, err := config.LoadCampaignConfig(context.Background(), projectPath)
+		if err != nil {
+			errors = append(errors, fmt.Sprintf("Campaign config: %v", err))
+		} else {
+			// Update campaign ID if changed
+			if cp.model.campaignID != "" && campaignConfig.Name != cp.model.campaignID {
+				successes = append(successes, fmt.Sprintf("Campaign updated: %s → %s", cp.model.campaignID, campaignConfig.Name))
+				cp.model.campaignID = campaignConfig.Name
+			} else {
+				successes = append(successes, "Campaign config reloaded")
+			}
+		}
+
+		// 2. Reload guild configuration (using the traditional config loader)
+		guildConfig, err := config.LoadGuildConfig(projectPath)
+		if err != nil {
+			errors = append(errors, fmt.Sprintf("Guild config: %v", err))
+		} else {
+			cp.model.guildConfig = guildConfig
+			
+			// Guild config successfully reloaded
+			successes = append(successes, "Guild config reloaded")
+			
+			// Update agent count from guild config
+			agentCount := len(guildConfig.Agents)
+			if agentCount > 0 {
+				var newAgents []string
+				for _, agent := range guildConfig.Agents {
+					newAgents = append(newAgents, agent.ID)
+				}
+				cp.model.agents = newAgents
+				successes = append(successes, fmt.Sprintf("Agent list updated: %d agents", agentCount))
+			}
+		}
+
+		// 3. Reload hierarchical configuration (includes agents)
+		loader := config.NewHierarchicalLoader()
+		hierarchicalConfig, err := loader.LoadHierarchicalConfig(context.Background(), projectPath)
+		if err != nil {
+			// Non-fatal - log but continue
+			errors = append(errors, fmt.Sprintf("Warning: Hierarchical config: %v", err))
+		} else {
+			// Count and validate agents from hierarchical config
+			hierarchicalAgentCount := len(hierarchicalConfig.Agents)
+			if hierarchicalAgentCount > 0 {
+				successes = append(successes, fmt.Sprintf("Hierarchical agent configs loaded: %d agent files", hierarchicalAgentCount))
+			}
+		}
+
+		// 4. Reload prompt layers if grpc client is available
+		if cp.model.promptsClient != nil {
+			ctx := context.Background()
+			resp, err := cp.model.promptsClient.ListPromptLayers(ctx, &promptspb.ListPromptLayersRequest{})
+			if err != nil {
+				errors = append(errors, fmt.Sprintf("Prompt layers: %v", err))
+			} else {
+				var layers []string
+				for _, prompt := range resp.Prompts {
+					layers = append(layers, prompt.Layer.String())
+				}
+				cp.model.promptLayers = layers
+				successes = append(successes, fmt.Sprintf("Prompt layers reloaded: %d layers", len(layers)))
+			}
+		}
+
+		// Build result message
+		var content strings.Builder
+		content.WriteString("🔄 **Configuration Refresh Results**\n\n")
+
+		if len(successes) > 0 {
+			content.WriteString("✅ **Successfully Reloaded:**\n")
+			for _, success := range successes {
+				content.WriteString(fmt.Sprintf("  • %s\n", success))
+			}
+		}
+
+		if len(errors) > 0 {
+			if len(successes) > 0 {
+				content.WriteString("\n")
+			}
+			content.WriteString("❌ **Errors:**\n")
+			for _, err := range errors {
+				content.WriteString(fmt.Sprintf("  • %s\n", err))
+			}
+			content.WriteString("\n⚠️ **Note:** The chat will continue with partially loaded configurations.")
+		}
+
+		if len(successes) == 0 && len(errors) == 0 {
+			content.WriteString("No configuration changes detected.")
+		}
+
+		return Message{
+			Type:    msgSystem,
+			Content: content.String(),
+		}
 	}
 }

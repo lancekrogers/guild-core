@@ -320,6 +320,7 @@ Try these commands to see visual features:
 		promptsClient:  promptClient,
 		sessionID:      sessionID,
 		campaignID:     campaignID,
+		selectedGuild:  "", // Will be set by WithGuild option
 		guildConfig:    guildConfig,
 		commandProc:    nil, // Set after model is created
 		completionEng:  completionEngine,
