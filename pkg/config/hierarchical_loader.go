@@ -5,7 +5,6 @@ package config
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"path/filepath"
 	"sync"
@@ -374,18 +373,24 @@ func (c *HierarchicalConfig) ValidateAll() error {
 
 	// Validate campaign
 	if err := c.Campaign.Validate(); err != nil {
-		return fmt.Errorf("campaign validation failed: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "campaign validation failed").
+			WithComponent("HierarchicalConfig").
+			WithOperation("ValidateAll")
 	}
 
 	// Validate guilds
 	if err := c.Guilds.Validate(); err != nil {
-		return fmt.Errorf("guild validation failed: %w", err)
+		return gerror.Wrap(err, gerror.ErrCodeValidation, "guild validation failed").
+			WithComponent("HierarchicalConfig").
+			WithOperation("ValidateAll")
 	}
 
 	// Validate each agent
 	for name, agent := range c.Agents {
 		if err := agent.Validate(); err != nil {
-			return fmt.Errorf("agent '%s' validation failed: %w", name, err)
+			return gerror.Wrapf(err, gerror.ErrCodeValidation, "agent '%s' validation failed", name).
+				WithComponent("HierarchicalConfig").
+				WithOperation("ValidateAll")
 		}
 	}
 
