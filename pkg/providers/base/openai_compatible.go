@@ -264,7 +264,9 @@ func (p *OpenAICompatibleProvider) makeRequest(ctx context.Context, endpoint str
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {

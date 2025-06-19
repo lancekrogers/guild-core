@@ -238,7 +238,9 @@ func (c *Client) IsHealthy(ctx context.Context) bool {
 	if err != nil {
 		return false
 	}
-	defer resp.Body.Close()
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
 
 	return resp.StatusCode == http.StatusOK
 }

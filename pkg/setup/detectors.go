@@ -219,7 +219,9 @@ func (d *Detectors) detectOllama(ctx context.Context) (*DetectedProvider, error)
 		if err != nil {
 			continue
 		}
-		resp.Body.Close()
+		if resp != nil && resp.Body != nil {
+			resp.Body.Close()
+		}
 
 		if resp.StatusCode == http.StatusOK {
 			workingEndpoint = endpoint
@@ -506,7 +508,9 @@ func (d *Detectors) validateOllamaConnection(ctx context.Context, provider Detec
 			Models:  []string{},
 		}, nil
 	}
-	defer resp.Body.Close()
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
 
 	if resp.StatusCode != http.StatusOK {
 		return &ValidationResult{

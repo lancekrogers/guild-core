@@ -137,7 +137,9 @@ func (t *HTTPTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "http_tool").WithComponent("execute").WithOperation("request failed")
 	}
-	defer resp.Body.Close()
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
 
 	// Read response body
 	body, err := ioutil.ReadAll(resp.Body)

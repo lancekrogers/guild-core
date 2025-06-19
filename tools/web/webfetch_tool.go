@@ -366,7 +366,9 @@ func (t *WebFetchTool) fetchContent(ctx context.Context, urlStr string) (string,
 			WithOperation("fetchContent").
 			WithDetails("url", urlStr)
 	}
-	defer resp.Body.Close()
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
 
 	if resp.StatusCode != http.StatusOK {
 		return "", nil, gerror.Newf(gerror.ErrCodeExternal, "HTTP request failed with status %d", resp.StatusCode).

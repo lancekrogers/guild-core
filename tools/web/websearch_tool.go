@@ -264,7 +264,9 @@ func (t *WebSearchTool) searchGoogle(ctx context.Context, req WebSearchRequest) 
 			WithComponent("web_search").
 			WithOperation("searchGoogle")
 	}
-	defer resp.Body.Close()
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
@@ -332,7 +334,9 @@ func (t *WebSearchTool) searchDuckDuckGo(ctx context.Context, req WebSearchReque
 			WithComponent("web_search").
 			WithOperation("searchDuckDuckGo")
 	}
-	defer resp.Body.Close()
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)

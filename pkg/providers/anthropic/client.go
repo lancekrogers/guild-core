@@ -262,7 +262,9 @@ func (c *Client) makeRequest(ctx context.Context, endpoint string, payload inter
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	if resp != nil && resp.Body != nil {
+		defer resp.Body.Close()
+	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
