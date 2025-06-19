@@ -56,15 +56,6 @@ func TestDeprecatedMethods(t *testing.T) {
 		}
 	})
 
-	t.Run("getOllamaModels backward compatibility", func(t *testing.T) {
-		config, err := NewProviderConfig(ctx, "/tmp/test")
-		if err != nil {
-			t.Fatalf("Failed to create provider config: %v", err)
-		}
-
-		// This is a private method, but we can test it exists by calling the deprecated version
-		// The test will compile if the deprecated method exists
-		models, _ := config.getOllamaModels(ctx, "http://localhost:11434")
-		_ = models // avoid unused variable error
-	})
+	// Note: getOllamaModels method was removed as it's no longer needed
+	// The Ollama integration now works through the standard provider interface
 }

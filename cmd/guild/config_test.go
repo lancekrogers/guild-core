@@ -53,7 +53,9 @@ func TestConfigShowCommand(t *testing.T) {
 				require.NoError(t, os.WriteFile(filepath.Join(globalDir, "config.yaml"), data, 0644))
 
 				// Mock home directory
+				oldHome := os.Getenv("HOME")
 				os.Setenv("HOME", tmpDir)
+				t.Cleanup(func() { os.Setenv("HOME", oldHome) })
 				return tmpDir
 			},
 			expectedOutput: []string{
@@ -128,15 +130,26 @@ func TestConfigShowCommand(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			// Isolate environment for each test
+			oldHome := os.Getenv("HOME")
+			oldPwd, _ := os.Getwd()
+			defer func() {
+				os.Setenv("HOME", oldHome)
+				os.Chdir(oldPwd)
+			}()
+			
 			// Setup test environment FIRST
 			if tt.setupFunc != nil {
 				tt.setupFunc(t)
 			}
 
-			// Create command and parse flags BEFORE capturing stdout
+			// Create a fresh command for each test to avoid flag pollution
 			cmd := &cobra.Command{}
 			configShowCmd.Flags().VisitAll(func(f *pflag.Flag) {
-				cmd.Flags().AddFlag(f)
+				newFlag := *f
+				newFlag.Changed = false
+				newFlag.Value.Set(f.DefValue)
+				cmd.Flags().AddFlag(&newFlag)
 			})
 			cmd.ParseFlags(tt.args)
 

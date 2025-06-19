@@ -8,12 +8,9 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/guild-ventures/guild-core/pkg/registry"
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -262,208 +259,21 @@ func (m *MockAgentRepository) ListAgentsByType(ctx context.Context, agentType st
 }
 
 func TestAgentListCommand(t *testing.T) {
-	tests := []struct {
-		name           string
-		args           []string
-		setupMocks     func(*MockComponentRegistry, *MockAgentRegistry, *MockStorageRegistry, *MockAgentRepository)
-		expectedOutput []string
-		expectError    bool
-	}{
-		{
-			name: "list agents with no flags",
-			args: []string{},
-			setupMocks: func(cr *MockComponentRegistry, ar *MockAgentRegistry, sr *MockStorageRegistry, repo *MockAgentRepository) {
-				agents := []registry.AgentInfo{
-					{
-						ID:            "agent1",
-						Name:          "Code Writer",
-						Type:          "developer",
-						CostMagnitude: 2,
-						Capabilities:  []string{"golang", "testing"},
-					},
-					{
-						ID:            "agent2",
-						Name:          "Reviewer",
-						Type:          "reviewer",
-						CostMagnitude: 1,
-						Capabilities:  []string{"code-review"},
-					},
-				}
+	// Test that the command structure and flags are correct
+	t.Run("command structure", func(t *testing.T) {
+		assert.NotNil(t, agentListCmd)
+		assert.Equal(t, "list", agentListCmd.Use)
+		assert.Contains(t, agentListCmd.Short, "List all available agents")
+		assert.NotNil(t, agentListCmd.RunE)
 
-				ar.On("ListAgentTypes").Return([]string{"developer", "reviewer"})
-				cr.On("GetAgentsByCost", 100).Return(agents)
-				sr.On("GetAgentRepository").Return(repo)
-				repo.On("ListAgents", mock.Anything).Return([]*registry.StorageAgent{}, nil)
-			},
-			expectedOutput: []string{
-				"Guild Agents",
-				"ID", "NAME", "TYPE", "COST",
-				"agent1", "Code Writer", "developer", "2",
-				"agent2", "Reviewer", "reviewer", "1",
-				"Total: 2 agents",
-			},
-		},
-		{
-			name: "list agents with type filter",
-			args: []string{"--type", "developer"},
-			setupMocks: func(cr *MockComponentRegistry, ar *MockAgentRegistry, sr *MockStorageRegistry, repo *MockAgentRepository) {
-				agents := []registry.AgentInfo{
-					{
-						ID:            "agent1",
-						Name:          "Code Writer",
-						Type:          "developer",
-						CostMagnitude: 2,
-						Capabilities:  []string{"golang", "testing"},
-					},
-					{
-						ID:            "agent2",
-						Name:          "Reviewer",
-						Type:          "reviewer",
-						CostMagnitude: 1,
-						Capabilities:  []string{"code-review"},
-					},
-				}
+		// Check flags exist
+		assert.NotNil(t, agentListCmd.Flags().Lookup("verbose"))
+		assert.NotNil(t, agentListCmd.Flags().Lookup("type"))
+		assert.NotNil(t, agentListCmd.Flags().Lookup("max-cost"))
+	})
 
-				ar.On("ListAgentTypes").Return([]string{"developer", "reviewer"})
-				cr.On("GetAgentsByCost", 100).Return(agents)
-				sr.On("GetAgentRepository").Return(repo)
-				repo.On("ListAgents", mock.Anything).Return([]*registry.StorageAgent{}, nil)
-			},
-			expectedOutput: []string{
-				"Guild Agents",
-				"agent1", "Code Writer", "developer",
-				"Total: 1 agents",
-			},
-		},
-		{
-			name: "list agents with cost filter",
-			args: []string{"--max-cost", "1"},
-			setupMocks: func(cr *MockComponentRegistry, ar *MockAgentRegistry, sr *MockStorageRegistry, repo *MockAgentRepository) {
-				agents := []registry.AgentInfo{
-					{
-						ID:            "agent1",
-						Name:          "Code Writer",
-						Type:          "developer",
-						CostMagnitude: 2,
-						Capabilities:  []string{"golang", "testing"},
-					},
-					{
-						ID:            "agent2",
-						Name:          "Reviewer",
-						Type:          "reviewer",
-						CostMagnitude: 1,
-						Capabilities:  []string{"code-review"},
-					},
-				}
-
-				ar.On("ListAgentTypes").Return([]string{"developer", "reviewer"})
-				cr.On("GetAgentsByCost", 100).Return(agents)
-				sr.On("GetAgentRepository").Return(repo)
-				repo.On("ListAgents", mock.Anything).Return([]*registry.StorageAgent{}, nil)
-			},
-			expectedOutput: []string{
-				"Guild Agents",
-				"agent2", "Reviewer", "reviewer", "1",
-				"Total: 1 agents",
-			},
-		},
-		{
-			name: "list agents verbose mode",
-			args: []string{"--verbose"},
-			setupMocks: func(cr *MockComponentRegistry, ar *MockAgentRegistry, sr *MockStorageRegistry, repo *MockAgentRepository) {
-				agents := []registry.AgentInfo{
-					{
-						ID:            "agent1",
-						Name:          "Code Writer",
-						Type:          "developer",
-						CostMagnitude: 2,
-						Capabilities:  []string{"golang", "testing"},
-					},
-				}
-
-				ar.On("ListAgentTypes").Return([]string{"developer", "reviewer"})
-				cr.On("GetAgentsByCost", 100).Return(agents)
-				sr.On("GetAgentRepository").Return(repo)
-				repo.On("ListAgents", mock.Anything).Return([]*registry.StorageAgent{}, nil)
-			},
-			expectedOutput: []string{
-				"Guild Agents (Detailed View)",
-				"Code Writer (ID: agent1)",
-				"Type: developer",
-				"Cost: 2",
-				"Capabilities:",
-				"• golang",
-				"• testing",
-				"Total: 1 agents",
-				"Available Types: developer, reviewer",
-			},
-		},
-		{
-			name: "no agents found",
-			args: []string{"--type", "nonexistent"},
-			setupMocks: func(cr *MockComponentRegistry, ar *MockAgentRegistry, sr *MockStorageRegistry, repo *MockAgentRepository) {
-				agents := []registry.AgentInfo{
-					{
-						ID:            "agent1",
-						Name:          "Code Writer",
-						Type:          "developer",
-						CostMagnitude: 2,
-						Capabilities:  []string{"golang"},
-					},
-				}
-
-				ar.On("ListAgentTypes").Return([]string{"developer"})
-				cr.On("GetAgentsByCost", 100).Return(agents)
-				sr.On("GetAgentRepository").Return(repo)
-				repo.On("ListAgents", mock.Anything).Return([]*registry.StorageAgent{}, nil)
-			},
-			expectedOutput: []string{
-				"No agents found matching the criteria.",
-			},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			// Create mocks
-			mockAgentRepo := new(MockAgentRepository)
-			mockStorageReg := new(MockStorageRegistry)
-			mockAgentReg := new(MockAgentRegistry)
-			mockCompReg := &MockComponentRegistry{
-				agentRegistry:   mockAgentReg,
-				storageRegistry: mockStorageReg,
-			}
-
-			// Setup mocks
-			tt.setupMocks(mockCompReg, mockAgentReg, mockStorageReg, mockAgentRepo)
-
-			// Create command and capture output
-			cmd := &cobra.Command{}
-			agentListCmd.Flags().VisitAll(func(f *pflag.Flag) {
-				cmd.Flags().AddFlag(f)
-			})
-
-			// Parse flags
-			cmd.ParseFlags(tt.args)
-
-			// Capture output
-			var buf bytes.Buffer
-			cmd.SetOut(&buf)
-			cmd.SetErr(&buf)
-
-			// Run command with mocked registry
-			// Note: In a real test, we'd need to inject the mock registry
-			// For now, we'll test the display functions directly
-
-			// Verify expectations
-			for _, expected := range tt.expectedOutput {
-				if !strings.Contains(buf.String(), expected) {
-					t.Logf("Output: %s", buf.String())
-					t.Logf("Expected to contain: %s", expected)
-				}
-			}
-		})
-	}
+	// The actual display logic is tested in TestDisplayCompactAgentList and TestDisplayVerboseAgentList
+	// The command integration requires a real registry, so we test the display functions directly
 }
 
 func TestDisplayCompactAgentList(t *testing.T) {

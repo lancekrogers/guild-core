@@ -241,9 +241,10 @@ func (m *GuildSelectorModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 		case key.Matches(msg, guildSelectorKeys.Down):
-			maxCursor := len(m.guilds) - 1
+			// maxCursor is the index of the "Create New Guild" option
+			maxCursor := len(m.guilds) // "Create New Guild" is at position len(guilds)
 			if len(m.guilds) == 0 {
-				maxCursor = 0 // For "Create New Guild" option
+				maxCursor = 0 // When no guilds, "Create New Guild" is at position 0
 			}
 			if m.cursor < maxCursor {
 				m.cursor++

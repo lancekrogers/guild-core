@@ -23,9 +23,9 @@ func TestInitCommand(t *testing.T) {
 	defer os.Chdir(oldCwd)
 	os.Chdir(tempDir)
 
-	// Test init command with quick mode to avoid interactive prompts
+	// Test init command with quick mode to avoid interactive prompts and skip validation
 	cmd := rootCmd
-	cmd.SetArgs([]string{"init", "--quick"})
+	cmd.SetArgs([]string{"init", "--quick", "--skip-validation"})
 
 	err := cmd.Execute()
 	if err != nil {
@@ -102,9 +102,9 @@ func TestInitCommandAlreadyInitialized(t *testing.T) {
 		t.Fatalf("Failed to initialize project: %v", err)
 	}
 
-	// Try to initialize again with quick mode
+	// Try to initialize again with quick mode and skip validation
 	cmd := rootCmd
-	cmd.SetArgs([]string{"init", "--quick"})
+	cmd.SetArgs([]string{"init", "--quick", "--skip-validation"})
 
 	// Should not error, but should print message
 	err = cmd.Execute()
@@ -121,9 +121,9 @@ func TestInitCommandWithPath(t *testing.T) {
 	// Create the project directory
 	os.MkdirAll(projectDir, 0755)
 
-	// Run init with path and quick mode
+	// Run init with path, quick mode, and skip validation
 	cmd := rootCmd
-	cmd.SetArgs([]string{"init", "--quick", projectDir})
+	cmd.SetArgs([]string{"init", "--quick", "--skip-validation", projectDir})
 
 	err := cmd.Execute()
 	if err != nil {

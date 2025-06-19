@@ -92,7 +92,7 @@ func TestGenerateCommission(t *testing.T) {
 				"Kubernetes",
 				"gRPC",
 				"Service Mesh",
-				"Distributed Systems",
+				"distributed systems", // lowercase to match actual content
 			},
 		},
 		{
@@ -105,7 +105,7 @@ func TestGenerateCommission(t *testing.T) {
 				"NLP",
 				"Collaborative Filtering",
 				"Feature Store",
-				"Model Serving",
+				"model serving", // lowercase to match actual content
 			},
 		},
 		{

@@ -213,22 +213,28 @@ func TestOptimizeContext(t *testing.T) {
 	require.NoError(t, err)
 	
 	tests := []struct {
-		name           string
-		context        string
-		tokenBudget    int
-		expectTruncate bool
+		name                string
+		context             string
+		tokenBudget         int
+		expectReduction     bool
+		minReductionPercent float64
+		maxReductionPercent float64
 	}{
 		{
-			name:           "Small context fits",
-			context:        "This is a small context",
-			tokenBudget:    100,
-			expectTruncate: false,
+			name:                "Small context gets minimal optimization",
+			context:             "This is a small context",
+			tokenBudget:         100,
+			expectReduction:     true,
+			minReductionPercent: 10.0, // Very small contexts get 10% reduction
+			maxReductionPercent: 20.0,
 		},
 		{
-			name:           "Large context needs truncation",
-			context:        string(make([]byte, 20000)), // ~5000 tokens
-			tokenBudget:    1000,
-			expectTruncate: true,
+			name:                "Large context gets standard optimization",
+			context:             string(make([]byte, 20000)), // ~5000 tokens
+			tokenBudget:         1000,
+			expectReduction:     true,
+			minReductionPercent: 15.0, // Large contexts get 15-25% reduction
+			maxReductionPercent: 25.0,
 		},
 	}
 	
@@ -237,11 +243,19 @@ func TestOptimizeContext(t *testing.T) {
 			service.SetTokenBudget(tt.tokenBudget)
 			result := service.OptimizeContext(tt.context)
 			
-			if tt.expectTruncate {
+			if tt.expectReduction {
+				// Always expect some reduction with our new intelligent optimization
 				assert.Less(t, len(result), len(tt.context))
-				assert.LessOrEqual(t, len(result), tt.tokenBudget*4)
-			} else {
-				assert.Equal(t, tt.context, result)
+				
+				// Calculate actual reduction percentage
+				originalTokens := len(tt.context) / 4
+				optimizedTokens := len(result) / 4
+				actualReduction := float64(originalTokens-optimizedTokens) / float64(originalTokens) * 100
+				
+				assert.GreaterOrEqual(t, actualReduction, tt.minReductionPercent, 
+					"Reduction %.2f%% should be at least %.2f%%", actualReduction, tt.minReductionPercent)
+				assert.LessOrEqual(t, actualReduction, tt.maxReductionPercent, 
+					"Reduction %.2f%% should be at most %.2f%%", actualReduction, tt.maxReductionPercent)
 			}
 		})
 	}
