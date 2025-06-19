@@ -676,3 +676,11 @@ func (ce *CompletionEngine) detectPrimaryLanguage() string {
 
 	return ""
 }
+
+// SetEnhancedAgent configures the completion engine with an enhanced agent
+func (ce *CompletionEngine) SetEnhancedAgent(agent agent.EnhancedGuildArtisan, handler *agent.ChatSuggestionHandler) {
+	if agent != nil {
+		ce.suggestionManager = agent.GetSuggestionManager()
+		ce.chatHandler = handler
+	}
+}

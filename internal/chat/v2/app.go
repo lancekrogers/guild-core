@@ -185,13 +185,10 @@ func (app *App) initializeComponents() error {
 		app.completionEngine = NewCompletionEngine(app.config.GuildConfig, projectRoot)
 	}
 	
-	// Also try to use the agent-based suggestion system if available
-	if app.suggestionFactory != nil && app.chatHandler != nil && app.enhancedAgent != nil {
-		// Update the completion engine with agent-based suggestions
-		if suggestionManager := app.enhancedAgent.GetSuggestionManager(); suggestionManager != nil {
-			app.completionEngine.suggestionManager = suggestionManager
-			app.completionEngine.chatHandler = app.chatHandler
-		}
+	// Integrate agent-based suggestion system if available
+	if app.enhancedAgent != nil {
+		// Set the enhanced agent directly on the completion engine
+		app.completionEngine.SetEnhancedAgent(app.enhancedAgent, app.chatHandler)
 	}
 	
 	if app.registry != nil {
@@ -271,8 +268,23 @@ func (app *App) initializeSessionManagement() error {
 
 // initializeServices initializes the service layer
 func (app *App) initializeServices() error {
-	// Initialize chat service
-	chatService, err := services.NewChatService(app.ctx, app.guildClient, app.registry)
+	// Initialize chat service with suggestion support if available
+	var chatService *services.ChatService
+	var err error
+	
+	if app.enhancedAgent != nil {
+		// Create chat service with suggestion support
+		chatService, err = services.NewChatServiceWithSuggestions(
+			app.ctx, 
+			app.guildClient, 
+			app.registry,
+			app.enhancedAgent,
+		)
+	} else {
+		// Create regular chat service
+		chatService, err = services.NewChatService(app.ctx, app.guildClient, app.registry)
+	}
+	
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create chat service").
 			WithComponent("chat.app").
@@ -956,10 +968,25 @@ func (app *App) getToolRegistry() (tools.Registry, error) {
 			WithOperation("getToolRegistry")
 	}
 	
-	// The component registry Tools() returns a ToolRegistry, not tools.Registry
-	// We need to create an adapter or return the underlying implementation
-	// For now, return an error as the types don't match
-	return nil, gerror.New(gerror.ErrCodeNotFound, "tool registry type mismatch", nil).
+	// The component registry Tools() returns a registry.ToolRegistry interface
+	// We need to get the actual tools from it and create a new tools.Registry
+	if app.registry.Tools() != nil {
+		// Create a new tool registry that implements tools.Registry
+		toolRegistry := tools.NewToolRegistry()
+		
+		// Get all tools from the component registry and register them
+		for _, toolName := range app.registry.Tools().ListTools() {
+			tool, err := app.registry.Tools().GetTool(toolName)
+			if err == nil && tool != nil {
+				// Register the tool in our local registry
+				_ = toolRegistry.RegisterTool(toolName, tool)
+			}
+		}
+		
+		return toolRegistry, nil
+	}
+	
+	return nil, gerror.New(gerror.ErrCodeNotFound, "tool registry not available", nil).
 		WithComponent("chat.app").
 		WithOperation("getToolRegistry")
 }
@@ -972,17 +999,9 @@ func (app *App) getCommissionManager() (commission.CommissionManager, error) {
 	}
 	
 	// Commission manager is not directly available in the registry interface
-	// It would need to be added or accessed through Storage registry
-	if app.registry.Storage() != nil {
-		if repo := app.registry.Storage().GetCommissionRepository(); repo != nil {
-			// We have a repository but need a manager - would need to create one
-			// For now, return not found
-		}
-	}
-	
-	return nil, gerror.New(gerror.ErrCodeNotFound, "commission manager not available", nil).
-		WithComponent("chat.app").
-		WithOperation("getCommissionManager")
+	// Create a minimal implementation that satisfies the interface
+	// This is a placeholder that allows the suggestion system to work
+	return &MinimalCommissionManager{}, nil
 }
 
 // SimpleCostManager is a placeholder cost manager for suggestion system
@@ -1026,4 +1045,43 @@ func (scm *SimpleCostManager) ExceedsBudget(costType agent.CostType, amount floa
 
 func (scm *SimpleCostManager) RecordLLMCost(model string, promptTokens, completionTokens int, metadata map[string]string) error {
 	return nil // Placeholder implementation
+}
+
+// MinimalCommissionManager is a placeholder commission manager for suggestion system
+type MinimalCommissionManager struct{}
+
+func (m *MinimalCommissionManager) CreateCommission(ctx context.Context, commission commission.Commission) (*commission.Commission, error) {
+	return nil, gerror.New(gerror.ErrCodeNotImplemented, "commission creation not implemented", nil)
+}
+
+func (m *MinimalCommissionManager) GetCommission(ctx context.Context, id string) (*commission.Commission, error) {
+	return nil, gerror.New(gerror.ErrCodeNotFound, "commission not found", nil)
+}
+
+func (m *MinimalCommissionManager) UpdateCommission(ctx context.Context, commission commission.Commission) error {
+	return gerror.New(gerror.ErrCodeNotImplemented, "commission update not implemented", nil)
+}
+
+func (m *MinimalCommissionManager) DeleteCommission(ctx context.Context, id string) error {
+	return gerror.New(gerror.ErrCodeNotImplemented, "commission deletion not implemented", nil)
+}
+
+func (m *MinimalCommissionManager) ListCommissions(ctx context.Context) ([]*commission.Commission, error) {
+	return []*commission.Commission{}, nil
+}
+
+func (m *MinimalCommissionManager) SaveCommission(ctx context.Context, commission *commission.Commission) error {
+	return gerror.New(gerror.ErrCodeNotImplemented, "commission save not implemented", nil)
+}
+
+func (m *MinimalCommissionManager) LoadCommissionFromFile(ctx context.Context, path string) (*commission.Commission, error) {
+	return nil, gerror.New(gerror.ErrCodeNotImplemented, "commission load not implemented", nil)
+}
+
+func (m *MinimalCommissionManager) GetCommissionsByTag(ctx context.Context, tag string) ([]*commission.Commission, error) {
+	return []*commission.Commission{}, nil
+}
+
+func (m *MinimalCommissionManager) SetCommission(ctx context.Context, commissionID string) error {
+	return gerror.New(gerror.ErrCodeNotImplemented, "set commission not implemented", nil)
 }
