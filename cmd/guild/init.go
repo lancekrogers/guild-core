@@ -191,7 +191,13 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 			WithComponent("cli").WithOperation("runUnifiedInit")
 	}
 
-	// Step 5.2: Create socket registry for daemon support
+	// Step 5.2: Create campaign reference for detection system
+	if err := createCampaignReference(ctx, absPath, campaignName, projectName); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create campaign reference").
+			WithComponent("cli").WithOperation("runUnifiedInit")
+	}
+
+	// Step 5.3: Create socket registry for daemon support
 	if err := createSocketRegistry(ctx, absPath, campaignName); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create socket registry").
 			WithComponent("cli").WithOperation("runUnifiedInit")
@@ -390,11 +396,8 @@ func integrateWithPhase0Config(ctx context.Context, projectPath, campaignName, p
 			WithComponent("cli").WithOperation("integrateWithPhase0Config")
 	}
 
-	// Remove the old guild.yaml since we now use the hierarchical structure
-	if err := os.Remove(guildConfigPath); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to remove old guild config").
-			WithComponent("cli").WithOperation("integrateWithPhase0Config")
-	}
+	// Note: We do NOT remove guild.yaml here as it may contain the campaign reference
+	// The campaign reference will be created in a separate step
 
 	return nil
 }
@@ -426,6 +429,41 @@ func createAgentConfig(ctx context.Context, projectPath string, agent *config.Ag
 	if err := os.WriteFile(agentPath, agentData, 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent config").
 			WithComponent("cli").WithOperation("createAgentConfig").WithDetails("path", agentPath)
+	}
+
+	return nil
+}
+
+// createCampaignReference creates the campaign reference file for detection system
+func createCampaignReference(ctx context.Context, projectPath, campaignName, projectName string) error {
+	// Check for context cancellation
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "campaign reference creation cancelled").
+			WithComponent("cli").WithOperation("createCampaignReference")
+	}
+
+	// Create campaign reference structure
+	ref := campaign.CampaignReference{
+		Campaign:    campaignName,
+		Project:     projectName,
+		Description: fmt.Sprintf("Project %s in campaign %s", projectName, campaignName),
+	}
+
+	// Create the reference file path (.guild/guild.yaml - note .yaml extension)
+	refPath := filepath.Join(projectPath, ".guild", "guild.yaml")
+	
+	// Marshal to YAML
+	refData, err := yaml.Marshal(ref)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal campaign reference").
+			WithComponent("cli").WithOperation("createCampaignReference")
+	}
+
+	// Write the reference file
+	if err := os.WriteFile(refPath, refData, 0644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write campaign reference").
+			WithComponent("cli").WithOperation("createCampaignReference").
+			WithDetails("path", refPath)
 	}
 
 	return nil

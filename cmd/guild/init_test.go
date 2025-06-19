@@ -9,7 +9,9 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/guild-ventures/guild-core/pkg/campaign"
 	"github.com/guild-ventures/guild-core/pkg/project"
+	"gopkg.in/yaml.v3"
 )
 
 func TestInitCommand(t *testing.T) {
@@ -21,9 +23,9 @@ func TestInitCommand(t *testing.T) {
 	defer os.Chdir(oldCwd)
 	os.Chdir(tempDir)
 
-	// Test init command
+	// Test init command with quick mode to avoid interactive prompts
 	cmd := rootCmd
-	cmd.SetArgs([]string{"init"})
+	cmd.SetArgs([]string{"init", "--quick"})
 
 	err := cmd.Execute()
 	if err != nil {
@@ -39,6 +41,7 @@ func TestInitCommand(t *testing.T) {
 	expectedFiles := []string{
 		".guild/campaign.yml",       // Phase 0 campaign configuration
 		".guild/guild.yml",          // Phase 0 guild definitions
+		".guild/guild.yaml",         // Campaign reference for detection system
 		".guild/project.yaml",       // Provider and agent configuration from wizard
 		".guild/memory.db",          // SQLite database
 		".guild/.gitignore",         // Git ignore rules
@@ -63,6 +66,25 @@ func TestInitCommand(t *testing.T) {
 			t.Error("Expected agent files in agents directory, but found none")
 		}
 	}
+
+	// Verify campaign reference structure
+	campaignRefPath := ".guild/guild.yaml"
+	data, err := os.ReadFile(campaignRefPath)
+	if err != nil {
+		t.Errorf("Failed to read campaign reference file: %v", err)
+	} else {
+		var ref campaign.CampaignReference
+		if err := yaml.Unmarshal(data, &ref); err != nil {
+			t.Errorf("Failed to parse campaign reference: %v", err)
+		} else {
+			if ref.Campaign == "" {
+				t.Error("Campaign reference missing campaign name")
+			}
+			if ref.Project == "" {
+				t.Error("Campaign reference missing project name")
+			}
+		}
+	}
 }
 
 func TestInitCommandAlreadyInitialized(t *testing.T) {
@@ -80,9 +102,9 @@ func TestInitCommandAlreadyInitialized(t *testing.T) {
 		t.Fatalf("Failed to initialize project: %v", err)
 	}
 
-	// Try to initialize again
+	// Try to initialize again with quick mode
 	cmd := rootCmd
-	cmd.SetArgs([]string{"init"})
+	cmd.SetArgs([]string{"init", "--quick"})
 
 	// Should not error, but should print message
 	err = cmd.Execute()
@@ -99,9 +121,9 @@ func TestInitCommandWithPath(t *testing.T) {
 	// Create the project directory
 	os.MkdirAll(projectDir, 0755)
 
-	// Run init with path
+	// Run init with path and quick mode
 	cmd := rootCmd
-	cmd.SetArgs([]string{"init", projectDir})
+	cmd.SetArgs([]string{"init", "--quick", projectDir})
 
 	err := cmd.Execute()
 	if err != nil {
