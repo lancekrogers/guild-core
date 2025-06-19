@@ -17,6 +17,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/daemon"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/paths"
+	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
@@ -321,23 +322,39 @@ func (v *InitValidator) validateProviderConfiguration(ctx context.Context) InitV
 			return result
 		}
 
-		switch provider {
-		case "openai":
-			if os.Getenv("OPENAI_API_KEY") == "" {
-				missingCreds = append(missingCreds, "OPENAI_API_KEY")
+		// Normalize provider name
+		normalizedProvider := providers.NormalizeProviderName(provider)
+		
+		switch normalizedProvider {
+		case providers.ProviderNameOpenAI:
+			if os.Getenv(providers.EnvOpenAIKey) == "" {
+				missingCreds = append(missingCreds, providers.EnvOpenAIKey)
 			}
-		case "anthropic":
-			if os.Getenv("ANTHROPIC_API_KEY") == "" {
-				missingCreds = append(missingCreds, "ANTHROPIC_API_KEY")
+		case providers.ProviderNameAnthropic:
+			if os.Getenv(providers.EnvAnthropicKey) == "" {
+				missingCreds = append(missingCreds, providers.EnvAnthropicKey)
 			}
-		case "deepseek":
-			if os.Getenv("DEEPSEEK_API_KEY") == "" {
-				missingCreds = append(missingCreds, "DEEPSEEK_API_KEY")
+		case providers.ProviderNameDeepSeek:
+			if os.Getenv(providers.EnvDeepSeekKey) == "" {
+				missingCreds = append(missingCreds, providers.EnvDeepSeekKey)
 			}
-		case "ollama":
+		case providers.ProviderNameDeepInfra:
+			if os.Getenv(providers.EnvDeepInfraKey) == "" {
+				missingCreds = append(missingCreds, providers.EnvDeepInfraKey)
+			}
+		case providers.ProviderNameOra:
+			if os.Getenv(providers.EnvOraKey) == "" {
+				missingCreds = append(missingCreds, providers.EnvOraKey)
+			}
+		case providers.ProviderNameClaude:
+			// Claude Code doesn't need API key in Claude Code environment
+			if os.Getenv("CLAUDE_CODE_SESSION") == "" && os.Getenv(providers.EnvAnthropicKey) == "" {
+				missingCreds = append(missingCreds, providers.EnvAnthropicKey)
+			}
+		case providers.ProviderNameOllama:
 			// For Ollama, just check if it's configured
 			// The actual connectivity check would require provider initialization
-			result.Details["ollama"] = "configured"
+			result.Details[providers.ProviderNameOllama] = "configured"
 		}
 	}
 

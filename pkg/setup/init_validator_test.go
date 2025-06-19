@@ -358,9 +358,12 @@ func TestProviderValidation(t *testing.T) {
 					Name: "test",
 					Agents: []config.AgentConfig{
 						{
-							ID:       "test-agent",
-							Provider: "openai",
-							Model:    "gpt-4",
+							ID:           "test-agent",
+							Name:         "Test Agent",
+							Type:         "worker",
+							Provider:     "openai",
+							Model:        "gpt-4",
+							Capabilities: []string{"general"},
 						},
 					},
 				}
@@ -385,9 +388,12 @@ func TestProviderValidation(t *testing.T) {
 					Name: "test",
 					Agents: []config.AgentConfig{
 						{
-							ID:       "test-agent",
-							Provider: "openai",
-							Model:    "gpt-4",
+							ID:           "test-agent",
+							Name:         "Test Agent",
+							Type:         "worker",
+							Provider:     "openai",
+							Model:        "gpt-4",
+							Capabilities: []string{"general"},
 						},
 					},
 				}
@@ -411,7 +417,10 @@ func TestProviderValidation(t *testing.T) {
 			result := validator.validateProviderConfiguration(context.Background())
 
 			assert.Equal(t, "Provider Configuration", result.Name)
-			assert.Equal(t, tt.expectSuccess, result.Success)
+			if !assert.Equal(t, tt.expectSuccess, result.Success) {
+				t.Logf("Validation failed: %v", result.Error)
+				t.Logf("Details: %v", result.Details)
+			}
 		})
 	}
 }

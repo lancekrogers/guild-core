@@ -77,19 +77,18 @@ func (f *Factory) CreateClientFromConfig(providerType ProviderType, config map[s
 func (f *Factory) RegisterProvidersWithRegistry(registry ProviderRegistry, providersConfig map[string]interface{}) error {
 	for providerName, providerConfigRaw := range providersConfig {
 		// Convert provider name to ProviderType
-		var providerType ProviderType
-		switch providerName {
-		case "openai":
-			providerType = ProviderOpenAI
-		case "anthropic":
-			providerType = ProviderAnthropic
-		case "ollama":
-			providerType = ProviderOllama
-		case "google":
-			providerType = ProviderGoogle
-		case "claudecode":
-			providerType = ProviderClaudeCode
-		default:
+		providerType := ConvertToProviderType(providerName)
+		if providerType == ProviderGoogle {
+			// Special case for Google which isn't in our constants yet
+			// Keep the error for now
+			return gerror.Newf(gerror.ErrCodeProvider, "unknown provider type: %s", providerName).
+				WithComponent("providers").
+				WithOperation("RegisterProvidersWithRegistry").
+				WithDetails("provider_name", providerName)
+		}
+		
+		// Validate provider
+		if !IsValidProvider(providerName) && providerName != "google" {
 			return gerror.Newf(gerror.ErrCodeProvider, "unknown provider type: %s", providerName).
 				WithComponent("providers").
 				WithOperation("RegisterProvidersWithRegistry").

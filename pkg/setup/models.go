@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
 // ModelConfig handles model selection and cost estimation
@@ -47,10 +48,10 @@ func NewModelConfig(ctx context.Context) (*ModelConfig, error) {
 // initializeModels sets up the model database with current pricing and capabilities
 func (mc *ModelConfig) initializeModels() {
 	// OpenAI Models (as of 2024)
-	mc.models["openai"] = []ModelInfo{
+	mc.models[providers.ProviderNameOpenAI] = []ModelInfo{
 		{
 			Name:               "gpt-4-turbo-preview",
-			Provider:           "openai",
+			Provider:           providers.ProviderNameOpenAI,
 			DisplayName:        "GPT-4 Turbo",
 			Description:        "Most capable GPT-4 model with latest improvements",
 			CostPerInputToken:  0.00001, // $0.01 per 1K tokens
@@ -64,7 +65,7 @@ func (mc *ModelConfig) initializeModels() {
 		},
 		{
 			Name:               "gpt-4",
-			Provider:           "openai",
+			Provider:           providers.ProviderNameOpenAI,
 			DisplayName:        "GPT-4",
 			Description:        "Original GPT-4 model with excellent reasoning",
 			CostPerInputToken:  0.00003, // $0.03 per 1K tokens
@@ -78,7 +79,7 @@ func (mc *ModelConfig) initializeModels() {
 		},
 		{
 			Name:               "gpt-3.5-turbo",
-			Provider:           "openai",
+			Provider:           providers.ProviderNameOpenAI,
 			DisplayName:        "GPT-3.5 Turbo",
 			Description:        "Fast and efficient model for most tasks",
 			CostPerInputToken:  0.0000005, // $0.0005 per 1K tokens
@@ -92,7 +93,7 @@ func (mc *ModelConfig) initializeModels() {
 		},
 		{
 			Name:               "gpt-3.5-turbo-16k",
-			Provider:           "openai",
+			Provider:           providers.ProviderNameOpenAI,
 			DisplayName:        "GPT-3.5 Turbo 16K",
 			Description:        "GPT-3.5 with larger context window",
 			CostPerInputToken:  0.000001, // $0.001 per 1K tokens
@@ -107,10 +108,10 @@ func (mc *ModelConfig) initializeModels() {
 	}
 
 	// Anthropic Models
-	mc.models["anthropic"] = []ModelInfo{
+	mc.models[providers.ProviderNameAnthropic] = []ModelInfo{
 		{
 			Name:               "claude-3-5-sonnet-20241022",
-			Provider:           "anthropic",
+			Provider:           providers.ProviderNameAnthropic,
 			DisplayName:        "Claude 3.5 Sonnet",
 			Description:        "Most advanced Claude model with excellent reasoning",
 			CostPerInputToken:  0.000003, // $3 per 1M tokens
@@ -124,7 +125,7 @@ func (mc *ModelConfig) initializeModels() {
 		},
 		{
 			Name:               "claude-3-opus-20240229",
-			Provider:           "anthropic",
+			Provider:           providers.ProviderNameAnthropic,
 			DisplayName:        "Claude 3 Opus",
 			Description:        "Most powerful Claude model for complex tasks",
 			CostPerInputToken:  0.000015, // $15 per 1M tokens
@@ -138,7 +139,7 @@ func (mc *ModelConfig) initializeModels() {
 		},
 		{
 			Name:               "claude-3-sonnet-20240229",
-			Provider:           "anthropic",
+			Provider:           providers.ProviderNameAnthropic,
 			DisplayName:        "Claude 3 Sonnet",
 			Description:        "Balanced model for most use cases",
 			CostPerInputToken:  0.000003, // $3 per 1M tokens
@@ -152,7 +153,7 @@ func (mc *ModelConfig) initializeModels() {
 		},
 		{
 			Name:               "claude-3-haiku-20240307",
-			Provider:           "anthropic",
+			Provider:           providers.ProviderNameAnthropic,
 			DisplayName:        "Claude 3 Haiku",
 			Description:        "Fast and efficient model for simple tasks",
 			CostPerInputToken:  0.00000025, // $0.25 per 1M tokens
@@ -167,10 +168,10 @@ func (mc *ModelConfig) initializeModels() {
 	}
 
 	// Ollama Models (local, free)
-	mc.models["ollama"] = []ModelInfo{
+	mc.models[providers.ProviderNameOllama] = []ModelInfo{
 		{
 			Name:               "llama2",
-			Provider:           "ollama",
+			Provider:           providers.ProviderNameOllama,
 			DisplayName:        "Llama 2",
 			Description:        "Meta's open-source language model",
 			CostPerInputToken:  0, // Free local model
@@ -184,7 +185,7 @@ func (mc *ModelConfig) initializeModels() {
 		},
 		{
 			Name:               "codellama",
-			Provider:           "ollama",
+			Provider:           providers.ProviderNameOllama,
 			DisplayName:        "Code Llama",
 			Description:        "Specialized version of Llama 2 for code generation",
 			CostPerInputToken:  0, // Free local model
@@ -198,7 +199,7 @@ func (mc *ModelConfig) initializeModels() {
 		},
 		{
 			Name:               "mistral",
-			Provider:           "ollama",
+			Provider:           providers.ProviderNameOllama,
 			DisplayName:        "Mistral",
 			Description:        "Efficient open-source model from Mistral AI",
 			CostPerInputToken:  0, // Free local model
@@ -212,7 +213,7 @@ func (mc *ModelConfig) initializeModels() {
 		},
 		{
 			Name:               "neural-chat",
-			Provider:           "ollama",
+			Provider:           providers.ProviderNameOllama,
 			DisplayName:        "Neural Chat",
 			Description:        "Intel's optimized chat model",
 			CostPerInputToken:  0, // Free local model
@@ -227,10 +228,10 @@ func (mc *ModelConfig) initializeModels() {
 	}
 
 	// Claude Code (special case)
-	mc.models["claude_code"] = []ModelInfo{
+	mc.models[providers.ProviderNameClaude] = []ModelInfo{
 		{
 			Name:               "claude-3-5-sonnet-20241022",
-			Provider:           "claude_code",
+			Provider:           providers.ProviderNameClaude,
 			DisplayName:        "Claude 3.5 Sonnet (Code)",
 			Description:        "Claude 3.5 Sonnet optimized for coding in Claude Code environment",
 			CostPerInputToken:  0, // Included in Claude Code subscription
@@ -245,10 +246,10 @@ func (mc *ModelConfig) initializeModels() {
 	}
 
 	// DeepSeek Models
-	mc.models["deepseek"] = []ModelInfo{
+	mc.models[providers.ProviderNameDeepSeek] = []ModelInfo{
 		{
 			Name:               "deepseek-chat",
-			Provider:           "deepseek",
+			Provider:           providers.ProviderNameDeepSeek,
 			DisplayName:        "DeepSeek Chat",
 			Description:        "General purpose model from DeepSeek",
 			CostPerInputToken:  0.0000014, // $0.14 per 1M tokens
@@ -262,7 +263,7 @@ func (mc *ModelConfig) initializeModels() {
 		},
 		{
 			Name:               "deepseek-coder",
-			Provider:           "deepseek",
+			Provider:           providers.ProviderNameDeepSeek,
 			DisplayName:        "DeepSeek Coder",
 			Description:        "Specialized coding model from DeepSeek",
 			CostPerInputToken:  0.0000014, // $0.14 per 1M tokens
@@ -277,10 +278,10 @@ func (mc *ModelConfig) initializeModels() {
 	}
 
 	// DeepInfra Models (hosting various open-source models)
-	mc.models["deepinfra"] = []ModelInfo{
+	mc.models[providers.ProviderNameDeepInfra] = []ModelInfo{
 		{
 			Name:               "meta-llama/Llama-2-70b-chat-hf",
-			Provider:           "deepinfra",
+			Provider:           providers.ProviderNameDeepInfra,
 			DisplayName:        "Llama 2 70B Chat",
 			Description:        "Large Llama 2 model hosted on DeepInfra",
 			CostPerInputToken:  0.0000007, // $0.70 per 1M tokens
@@ -294,7 +295,7 @@ func (mc *ModelConfig) initializeModels() {
 		},
 		{
 			Name:               "codellama/CodeLlama-34b-Instruct-hf",
-			Provider:           "deepinfra",
+			Provider:           providers.ProviderNameDeepInfra,
 			DisplayName:        "Code Llama 34B",
 			Description:        "Large Code Llama model for complex coding tasks",
 			CostPerInputToken:  0.0000006, // $0.60 per 1M tokens
@@ -309,10 +310,10 @@ func (mc *ModelConfig) initializeModels() {
 	}
 
 	// Ora Models (aggregated access to multiple providers)
-	mc.models["ora"] = []ModelInfo{
+	mc.models[providers.ProviderNameOra] = []ModelInfo{
 		{
 			Name:               "gpt-4",
-			Provider:           "ora",
+			Provider:           providers.ProviderNameOra,
 			DisplayName:        "GPT-4 (via Ora)",
 			Description:        "OpenAI GPT-4 accessed through Ora",
 			CostPerInputToken:  0.00002, // Varies by Ora pricing
@@ -326,7 +327,7 @@ func (mc *ModelConfig) initializeModels() {
 		},
 		{
 			Name:               "claude-3-sonnet",
-			Provider:           "ora",
+			Provider:           providers.ProviderNameOra,
 			DisplayName:        "Claude 3 Sonnet (via Ora)",
 			Description:        "Anthropic Claude accessed through Ora",
 			CostPerInputToken:  0.000004, // Varies by Ora pricing

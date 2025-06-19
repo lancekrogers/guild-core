@@ -59,20 +59,23 @@ func (pc *ProviderConfig) ValidateProvider(ctx context.Context, provider Detecte
 			WithDetails("provider", provider.Name)
 	}
 
-	switch provider.Name {
-	case "claude_code":
+	// Normalize provider name
+	normalizedName := providers.NormalizeProviderName(provider.Name)
+	
+	switch normalizedName {
+	case providers.ProviderNameClaude:
 		return pc.validateClaudeCode(ctx, provider)
-	case "ollama":
+	case providers.ProviderNameOllama:
 		return pc.validateOllama(ctx, provider)
-	case "openai":
+	case providers.ProviderNameOpenAI:
 		return pc.validateOpenAI(ctx, provider)
-	case "anthropic":
+	case providers.ProviderNameAnthropic:
 		return pc.validateAnthropic(ctx, provider)
-	case "deepseek":
+	case providers.ProviderNameDeepSeek:
 		return pc.validateDeepSeek(ctx, provider)
-	case "deepinfra":
+	case providers.ProviderNameDeepInfra:
 		return pc.validateDeepInfra(ctx, provider)
-	case "ora":
+	case providers.ProviderNameOra:
 		return pc.validateOra(ctx, provider)
 	default:
 		return nil, gerror.Newf(gerror.ErrCodeValidation, "unsupported provider: %s", provider.Name).
@@ -92,7 +95,7 @@ func (pc *ProviderConfig) validateClaudeCode(ctx context.Context, provider Detec
 
 	// Claude Code is always valid if detected
 	settings := map[string]string{
-		"type":        "claude_code",
+		"type":        providers.ProviderNameClaude,
 		"environment": "claude_code_session",
 	}
 
@@ -119,7 +122,7 @@ func (pc *ProviderConfig) validateOllama(ctx context.Context, provider DetectedP
 	}
 
 	settings := map[string]string{
-		"type": "ollama",
+		"type": providers.ProviderNameOllama,
 	}
 
 	// If Ollama is not running, provide guidance
@@ -182,14 +185,14 @@ func (pc *ProviderConfig) validateOpenAI(ctx context.Context, provider DetectedP
 			WithOperation("validateOpenAI")
 	}
 
-	apiKey := os.Getenv("OPENAI_API_KEY")
+	apiKey := os.Getenv(providers.EnvOpenAIKey)
 	if apiKey == "" {
 		return &ProviderValidation{
 			IsValid:  false,
-			Error:    "OPENAI_API_KEY environment variable not set",
+			Error:    fmt.Sprintf("%s environment variable not set", providers.EnvOpenAIKey),
 			Settings: map[string]string{},
 			Models:   []string{},
-			Warning:  "Set your OpenAI API key: export OPENAI_API_KEY=sk-...",
+			Warning:  fmt.Sprintf("Set your OpenAI API key: export %s=sk-...", providers.EnvOpenAIKey),
 		}, nil
 	}
 
@@ -205,8 +208,8 @@ func (pc *ProviderConfig) validateOpenAI(ctx context.Context, provider DetectedP
 	}
 
 	settings := map[string]string{
-		"type":     "openai",
-		"base_url": "https://api.openai.com/v1",
+		"type":     providers.ProviderNameOpenAI,
+		"base_url": providers.EndpointOpenAI,
 	}
 
 	// Add organization ID if available
@@ -239,14 +242,14 @@ func (pc *ProviderConfig) validateAnthropic(ctx context.Context, provider Detect
 			WithOperation("validateAnthropic")
 	}
 
-	apiKey := os.Getenv("ANTHROPIC_API_KEY")
+	apiKey := os.Getenv(providers.EnvAnthropicKey)
 	if apiKey == "" {
 		return &ProviderValidation{
 			IsValid:  false,
-			Error:    "ANTHROPIC_API_KEY environment variable not set",
+			Error:    fmt.Sprintf("%s environment variable not set", providers.EnvAnthropicKey),
 			Settings: map[string]string{},
 			Models:   []string{},
-			Warning:  "Set your Anthropic API key: export ANTHROPIC_API_KEY=sk-ant-...",
+			Warning:  fmt.Sprintf("Set your Anthropic API key: export %s=sk-ant-...", providers.EnvAnthropicKey),
 		}, nil
 	}
 
@@ -262,8 +265,8 @@ func (pc *ProviderConfig) validateAnthropic(ctx context.Context, provider Detect
 	}
 
 	settings := map[string]string{
-		"type":     "anthropic",
-		"base_url": "https://api.anthropic.com",
+		"type":     providers.ProviderNameAnthropic,
+		"base_url": providers.EndpointAnthropic,
 	}
 
 	models := []string{
@@ -290,20 +293,20 @@ func (pc *ProviderConfig) validateDeepSeek(ctx context.Context, provider Detecte
 			WithOperation("validateDeepSeek")
 	}
 
-	apiKey := os.Getenv("DEEPSEEK_API_KEY")
+	apiKey := os.Getenv(providers.EnvDeepSeekKey)
 	if apiKey == "" {
 		return &ProviderValidation{
 			IsValid:  false,
-			Error:    "DEEPSEEK_API_KEY environment variable not set",
+			Error:    fmt.Sprintf("%s environment variable not set", providers.EnvDeepSeekKey),
 			Settings: map[string]string{},
 			Models:   []string{},
-			Warning:  "Set your DeepSeek API key: export DEEPSEEK_API_KEY=<your-key>",
+			Warning:  fmt.Sprintf("Set your DeepSeek API key: export %s=<your-key>", providers.EnvDeepSeekKey),
 		}, nil
 	}
 
 	settings := map[string]string{
-		"type":     "deepseek",
-		"base_url": "https://api.deepseek.com",
+		"type":     providers.ProviderNameDeepSeek,
+		"base_url": providers.EndpointDeepSeek,
 	}
 
 	models := []string{
@@ -328,20 +331,20 @@ func (pc *ProviderConfig) validateDeepInfra(ctx context.Context, provider Detect
 			WithOperation("validateDeepInfra")
 	}
 
-	apiKey := os.Getenv("DEEPINFRA_API_KEY")
+	apiKey := os.Getenv(providers.EnvDeepInfraKey)
 	if apiKey == "" {
 		return &ProviderValidation{
 			IsValid:  false,
-			Error:    "DEEPINFRA_API_KEY environment variable not set",
+			Error:    fmt.Sprintf("%s environment variable not set", providers.EnvDeepInfraKey),
 			Settings: map[string]string{},
 			Models:   []string{},
-			Warning:  "Set your DeepInfra API key: export DEEPINFRA_API_KEY=<your-key>",
+			Warning:  fmt.Sprintf("Set your DeepInfra API key: export %s=<your-key>", providers.EnvDeepInfraKey),
 		}, nil
 	}
 
 	settings := map[string]string{
-		"type":     "deepinfra",
-		"base_url": "https://api.deepinfra.com/v1/openai",
+		"type":     providers.ProviderNameDeepInfra,
+		"base_url": providers.EndpointDeepInfra,
 	}
 
 	models := []string{
@@ -367,20 +370,20 @@ func (pc *ProviderConfig) validateOra(ctx context.Context, provider DetectedProv
 			WithOperation("validateOra")
 	}
 
-	apiKey := os.Getenv("ORA_API_KEY")
+	apiKey := os.Getenv(providers.EnvOraKey)
 	if apiKey == "" {
 		return &ProviderValidation{
 			IsValid:  false,
-			Error:    "ORA_API_KEY environment variable not set",
+			Error:    fmt.Sprintf("%s environment variable not set", providers.EnvOraKey),
 			Settings: map[string]string{},
 			Models:   []string{},
-			Warning:  "Set your Ora API key: export ORA_API_KEY=<your-key>",
+			Warning:  fmt.Sprintf("Set your Ora API key: export %s=<your-key>", providers.EnvOraKey),
 		}, nil
 	}
 
 	settings := map[string]string{
-		"type":     "ora",
-		"base_url": "https://api.ora.sh/v1",
+		"type":     providers.ProviderNameOra,
+		"base_url": providers.EndpointOra,
 	}
 
 	models := []string{

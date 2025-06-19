@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
 // Detectors handles provider detection
@@ -75,13 +76,13 @@ func (d *Detectors) Providers(ctx context.Context) (*DetectionResult, error) {
 		name     string
 		detector func(ctx context.Context) (*DetectedProvider, error)
 	}{
-		{"claude_code", d.detectClaudeCode},
-		{"ollama", d.detectOllama},
-		{"openai", d.detectOpenAI},
-		{"anthropic", d.detectAnthropic},
-		{"deepseek", d.detectDeepSeek},
-		{"deepinfra", d.detectDeepInfra},
-		{"ora", d.detectOra},
+		{providers.ProviderNameClaude, d.detectClaudeCode},
+		{providers.ProviderNameOllama, d.detectOllama},
+		{providers.ProviderNameOpenAI, d.detectOpenAI},
+		{providers.ProviderNameAnthropic, d.detectAnthropic},
+		{providers.ProviderNameDeepSeek, d.detectDeepSeek},
+		{providers.ProviderNameDeepInfra, d.detectDeepInfra},
+		{providers.ProviderNameOra, d.detectOra},
 	}
 
 	for _, p := range providers {
@@ -134,7 +135,7 @@ func (d *Detectors) detectClaudeCode(ctx context.Context) (*DetectedProvider, er
 	// Check if we're running in Claude Code environment
 	if os.Getenv("CLAUDE_CODE_SESSION") != "" || os.Getenv("ANTHROPIC_CLAUDE_CODE") != "" {
 		return &DetectedProvider{
-			Name:           "claude_code",
+			Name:           providers.ProviderNameClaude,
 			Type:           "cloud",
 			HasCredentials: true,
 			IsLocal:        false,
@@ -155,7 +156,7 @@ func (d *Detectors) detectClaudeCode(ctx context.Context) (*DetectedProvider, er
 	claudeCodePath, err := exec.LookPath("claude-code")
 	if err == nil {
 		return &DetectedProvider{
-			Name:           "claude_code",
+			Name:           providers.ProviderNameClaude,
 			Type:           "cli",
 			HasCredentials: true,
 			IsLocal:        false,
@@ -275,7 +276,7 @@ func (d *Detectors) detectOpenAI(ctx context.Context) (*DetectedProvider, error)
 			WithOperation("detectOpenAI")
 	}
 
-	apiKey := os.Getenv("OPENAI_API_KEY")
+	apiKey := os.Getenv(providers.EnvOpenAIKey)
 	orgID := os.Getenv("OPENAI_ORG_ID")
 
 	if apiKey == "" {
@@ -320,7 +321,7 @@ func (d *Detectors) detectAnthropic(ctx context.Context) (*DetectedProvider, err
 			WithOperation("detectAnthropic")
 	}
 
-	apiKey := os.Getenv("ANTHROPIC_API_KEY")
+	apiKey := os.Getenv(providers.EnvAnthropicKey)
 
 	if apiKey == "" {
 		return nil, nil
@@ -329,12 +330,12 @@ func (d *Detectors) detectAnthropic(ctx context.Context) (*DetectedProvider, err
 	// Validate API key format (basic check)
 	if !strings.HasPrefix(apiKey, "sk-ant-") {
 		return &DetectedProvider{
-			Name:           "anthropic",
+			Name:           providers.ProviderNameAnthropic,
 			Type:           "cloud",
 			HasCredentials: false,
 			IsLocal:        false,
 			Version:        "api",
-			Endpoint:       "https://api.anthropic.com",
+			Endpoint:       providers.EndpointAnthropic,
 			Notes:          "Invalid API key format",
 		}, nil
 	}
@@ -358,19 +359,19 @@ func (d *Detectors) detectDeepSeek(ctx context.Context) (*DetectedProvider, erro
 			WithOperation("detectDeepSeek")
 	}
 
-	apiKey := os.Getenv("DEEPSEEK_API_KEY")
+	apiKey := os.Getenv(providers.EnvDeepSeekKey)
 
 	if apiKey == "" {
 		return nil, nil
 	}
 
 	return &DetectedProvider{
-		Name:           "deepseek",
+		Name:           providers.ProviderNameDeepSeek,
 		Type:           "cloud",
 		HasCredentials: true,
 		IsLocal:        false,
 		Version:        "api",
-		Endpoint:       "https://api.deepseek.com",
+		Endpoint:       providers.EndpointDeepSeek,
 		Notes:          "API key available",
 	}, nil
 }
@@ -383,19 +384,19 @@ func (d *Detectors) detectDeepInfra(ctx context.Context) (*DetectedProvider, err
 			WithOperation("detectDeepInfra")
 	}
 
-	apiKey := os.Getenv("DEEPINFRA_API_KEY")
+	apiKey := os.Getenv(providers.EnvDeepInfraKey)
 
 	if apiKey == "" {
 		return nil, nil
 	}
 
 	return &DetectedProvider{
-		Name:           "deepinfra",
+		Name:           providers.ProviderNameDeepInfra,
 		Type:           "cloud",
 		HasCredentials: true,
 		IsLocal:        false,
 		Version:        "api",
-		Endpoint:       "https://api.deepinfra.com",
+		Endpoint:       providers.EndpointDeepInfra,
 		Notes:          "API key available",
 	}, nil
 }
@@ -408,19 +409,19 @@ func (d *Detectors) detectOra(ctx context.Context) (*DetectedProvider, error) {
 			WithOperation("detectOra")
 	}
 
-	apiKey := os.Getenv("ORA_API_KEY")
+	apiKey := os.Getenv(providers.EnvOraKey)
 
 	if apiKey == "" {
 		return nil, nil
 	}
 
 	return &DetectedProvider{
-		Name:           "ora",
+		Name:           providers.ProviderNameOra,
 		Type:           "cloud",
 		HasCredentials: true,
 		IsLocal:        false,
 		Version:        "api",
-		Endpoint:       "https://api.ora.sh",
+		Endpoint:       providers.EndpointOra,
 		Notes:          "API key available",
 	}, nil
 }
