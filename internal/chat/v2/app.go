@@ -167,17 +167,28 @@ func (app *App) initializeComponents() error {
 
 	// Initialize completion engine with suggestion support
 	projectRoot := "." // TODO: Get actual project root
-	if app.suggestionFactory != nil && app.chatHandler != nil {
-		// Create enhanced completion engine with suggestions
-		app.completionEngine = NewCompletionEngineWithSuggestions(
-			app.config.GuildConfig, 
-			projectRoot,
-			app.enhancedAgent.GetSuggestionManager(),
-			app.chatHandler,
-		)
+	
+	// Try to get project root from registry if available
+	// Note: There's a type mismatch between registry.ProjectContext interface
+	// and the actual project.Context implementation, so we'll skip this for now
+	// and use the default project root
+	
+	// Create enhanced completion engine with direct suggestion provider integration
+	enhancedEngine, err := NewCompletionEngineEnhanced(app.config.GuildConfig, projectRoot)
+	if err == nil {
+		app.completionEngine = enhancedEngine.CompletionEngine
 	} else {
-		// Fall back to basic completion engine
+		// Fall back to basic completion engine if enhanced fails
 		app.completionEngine = NewCompletionEngine(app.config.GuildConfig, projectRoot)
+	}
+	
+	// Also try to use the agent-based suggestion system if available
+	if app.suggestionFactory != nil && app.chatHandler != nil && app.enhancedAgent != nil {
+		// Update the completion engine with agent-based suggestions
+		if suggestionManager := app.enhancedAgent.GetSuggestionManager(); suggestionManager != nil {
+			app.completionEngine.suggestionManager = suggestionManager
+			app.completionEngine.chatHandler = app.chatHandler
+		}
 	}
 	
 	if app.registry != nil {
@@ -845,27 +856,79 @@ func (app *App) initializeSuggestionSystem() error {
 
 // Helper methods to get components from registry
 func (app *App) getLLMClient() (providers.LLMClient, error) {
-	// Registry access needs to be updated to use the actual registry interface
-	// For now, return an error to gracefully fallback
-	return nil, gerror.New(gerror.ErrCodeNotFound, "LLM client not available in this registry implementation", nil)
+	if app.registry == nil {
+		return nil, gerror.New(gerror.ErrCodeNotFound, "registry not available", nil).
+			WithComponent("chat.app").
+			WithOperation("getLLMClient")
+	}
+	
+	// Try to get default provider from registry
+	if app.registry.Providers() != nil {
+		provider, err := app.registry.Providers().GetDefaultProvider()
+		if err == nil && provider != nil {
+			return provider, nil
+		}
+	}
+	
+	return nil, gerror.New(gerror.ErrCodeNotFound, "LLM client not available", nil).
+		WithComponent("chat.app").
+		WithOperation("getLLMClient")
 }
 
 func (app *App) getMemoryManager() (memory.ChainManager, error) {
-	// Registry access needs to be updated to use the actual registry interface
-	// For now, return an error to gracefully fallback
-	return nil, gerror.New(gerror.ErrCodeNotFound, "memory chain manager not available in this registry implementation", nil)
+	if app.registry == nil {
+		return nil, gerror.New(gerror.ErrCodeNotFound, "registry not available", nil).
+			WithComponent("chat.app").
+			WithOperation("getMemoryManager")
+	}
+	
+	// Try to get default chain manager from registry
+	if app.registry.Memory() != nil {
+		manager, err := app.registry.Memory().GetDefaultChainManager()
+		if err == nil && manager != nil {
+			return manager, nil
+		}
+	}
+	
+	return nil, gerror.New(gerror.ErrCodeNotFound, "memory chain manager not available", nil).
+		WithComponent("chat.app").
+		WithOperation("getMemoryManager")
 }
 
 func (app *App) getToolRegistry() (tools.Registry, error) {
-	// Registry access needs to be updated to use the actual registry interface
-	// For now, return an error to gracefully fallback
-	return nil, gerror.New(gerror.ErrCodeNotFound, "tool registry not available in this registry implementation", nil)
+	if app.registry == nil {
+		return nil, gerror.New(gerror.ErrCodeNotFound, "registry not available", nil).
+			WithComponent("chat.app").
+			WithOperation("getToolRegistry")
+	}
+	
+	// The component registry Tools() returns a ToolRegistry, not tools.Registry
+	// We need to create an adapter or return the underlying implementation
+	// For now, return an error as the types don't match
+	return nil, gerror.New(gerror.ErrCodeNotFound, "tool registry type mismatch", nil).
+		WithComponent("chat.app").
+		WithOperation("getToolRegistry")
 }
 
 func (app *App) getCommissionManager() (commission.CommissionManager, error) {
-	// Registry access needs to be updated to use the actual registry interface
-	// For now, return an error to gracefully fallback
-	return nil, gerror.New(gerror.ErrCodeNotFound, "commission manager not available in this registry implementation", nil)
+	if app.registry == nil {
+		return nil, gerror.New(gerror.ErrCodeNotFound, "registry not available", nil).
+			WithComponent("chat.app").
+			WithOperation("getCommissionManager")
+	}
+	
+	// Commission manager is not directly available in the registry interface
+	// It would need to be added or accessed through Storage registry
+	if app.registry.Storage() != nil {
+		if repo := app.registry.Storage().GetCommissionRepository(); repo != nil {
+			// We have a repository but need a manager - would need to create one
+			// For now, return not found
+		}
+	}
+	
+	return nil, gerror.New(gerror.ErrCodeNotFound, "commission manager not available", nil).
+		WithComponent("chat.app").
+		WithOperation("getCommissionManager")
 }
 
 // SimpleCostManager is a placeholder cost manager for suggestion system

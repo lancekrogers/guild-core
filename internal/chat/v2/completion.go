@@ -99,6 +99,11 @@ func (ce *CompletionEngine) registerCommands() {
 func (ce *CompletionEngine) Complete(input string, cursorPos int) []common.CompletionResult {
 	var results []common.CompletionResult
 
+	// For empty input, provide helpful suggestions immediately
+	if strings.TrimSpace(input) == "" {
+		return ce.getHelpfulSuggestions(input)
+	}
+
 	// Get traditional completions first
 	traditionalResults := ce.getTraditionalCompletions(input, cursorPos)
 	results = append(results, traditionalResults...)
@@ -511,8 +516,14 @@ func (ce *CompletionEngine) convertSuggestionsToCompletions(suggestions []sugges
 	results := make([]common.CompletionResult, 0, len(suggestions))
 
 	for _, suggestion := range suggestions {
+		// Use Display if available, otherwise Content
+		content := suggestion.Content
+		if suggestion.Display != "" {
+			content = suggestion.Display
+		}
+		
 		result := common.CompletionResult{
-			Content: suggestion.Content,
+			Content: content,
 			AgentID: "suggestion-system",
 		}
 
