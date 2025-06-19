@@ -137,7 +137,7 @@ func (pc *ProviderConfig) validateOllama(ctx context.Context, provider DetectedP
 	settings["base_url"] = provider.Endpoint
 
 	// Test connection and get models
-	models, err := pc.getOllamaModels(ctx, provider.Endpoint)
+	models, err := pc.ollamaModels(ctx, provider.Endpoint)
 	if err != nil {
 		// Check if it's a gerror already
 		if _, ok := err.(*gerror.GuildError); !ok {
@@ -398,12 +398,12 @@ func (pc *ProviderConfig) validateOra(ctx context.Context, provider DetectedProv
 	}, nil
 }
 
-// getOllamaModels retrieves the list of available models from Ollama
-func (pc *ProviderConfig) getOllamaModels(ctx context.Context, endpoint string) ([]string, error) {
+// ollamaModels retrieves the list of available models from Ollama
+func (pc *ProviderConfig) ollamaModels(ctx context.Context, endpoint string) ([]string, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during Ollama models request").
 			WithComponent("ProviderConfiguration").
-			WithOperation("getOllamaModels")
+			WithOperation("ollamaModels")
 	}
 
 	// Create timeout context for the request
@@ -415,7 +415,7 @@ func (pc *ProviderConfig) getOllamaModels(ctx context.Context, endpoint string) 
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to create request").
 			WithComponent("ProviderConfiguration").
-			WithOperation("getOllamaModels").
+			WithOperation("ollamaModels").
 			WithDetails("endpoint", endpoint)
 	}
 
@@ -425,12 +425,12 @@ func (pc *ProviderConfig) getOllamaModels(ctx context.Context, endpoint string) 
 		if timeoutCtx.Err() != nil {
 			return nil, gerror.Wrap(timeoutCtx.Err(), gerror.ErrCodeTimeout, "timeout during Ollama models request").
 				WithComponent("ProviderConfiguration").
-				WithOperation("getOllamaModels").
+				WithOperation("ollamaModels").
 				WithDetails("endpoint", endpoint)
 		}
 		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to connect to Ollama").
 			WithComponent("ProviderConfiguration").
-			WithOperation("getOllamaModels").
+			WithOperation("ollamaModels").
 			WithDetails("endpoint", endpoint)
 	}
 	defer resp.Body.Close()
@@ -438,7 +438,7 @@ func (pc *ProviderConfig) getOllamaModels(ctx context.Context, endpoint string) 
 	if resp.StatusCode != http.StatusOK {
 		return nil, gerror.Newf(gerror.ErrCodeConnection, "Ollama API returned status: %d", resp.StatusCode).
 			WithComponent("ProviderConfiguration").
-			WithOperation("getOllamaModels").
+			WithOperation("ollamaModels").
 			WithDetails("endpoint", endpoint).
 			WithDetails("status_code", resp.StatusCode)
 	}
@@ -566,12 +566,12 @@ type ConnectionTest struct {
 	Latency time.Duration
 }
 
-// GetProviderRecommendations returns recommendations for provider setup
-func (pc *ProviderConfig) GetProviderRecommendations(ctx context.Context, providers []DetectedProvider) (*ProviderRecommendations, error) {
+// ProviderRecommendations returns recommendations for provider setup
+func (pc *ProviderConfig) ProviderRecommendations(ctx context.Context, providers []DetectedProvider) (*ProviderRecommendations, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider recommendations").
 			WithComponent("ProviderConfiguration").
-			WithOperation("GetProviderRecommendations")
+			WithOperation("ProviderRecommendations")
 	}
 
 	recs := &ProviderRecommendations{
@@ -591,7 +591,7 @@ func (pc *ProviderConfig) GetProviderRecommendations(ctx context.Context, provid
 		if err := ctx.Err(); err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider categorization").
 				WithComponent("ProviderConfiguration").
-				WithOperation("GetProviderRecommendations").
+				WithOperation("ProviderRecommendations").
 				WithDetails("provider", provider.Name)
 		}
 
@@ -659,6 +659,18 @@ func (pc *ProviderConfig) GetProviderRecommendations(ctx context.Context, provid
 	}
 
 	return recs, nil
+}
+
+// GetProviderRecommendations returns recommendations for provider setup
+// Deprecated: Use ProviderRecommendations instead
+func (pc *ProviderConfig) GetProviderRecommendations(ctx context.Context, providers []DetectedProvider) (*ProviderRecommendations, error) {
+	return pc.ProviderRecommendations(ctx, providers)
+}
+
+// getOllamaModels retrieves the list of available models from Ollama
+// Deprecated: Use ollamaModels instead
+func (pc *ProviderConfig) getOllamaModels(ctx context.Context, endpoint string) ([]string, error) {
+	return pc.ollamaModels(ctx, endpoint)
 }
 
 // ProviderRecommendations contains setup recommendations

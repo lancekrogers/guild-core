@@ -34,7 +34,7 @@ func TestDetectProviders(t *testing.T) {
 	ctx := context.Background()
 	detectors := &Detectors{projectPath: "/tmp"}
 
-	result, err := detectors.DetectProviders(ctx)
+	result, err := detectors.Providers(ctx)
 	if err != nil {
 		t.Fatalf("Failed to detect providers: %v", err)
 	}
@@ -330,7 +330,7 @@ func TestDetectProvidersContextCancellation(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately
 
-	_, err := detectors.DetectProviders(ctx)
+	_, err := detectors.Providers(ctx)
 	if err == nil {
 		t.Fatal("Expected error when context is cancelled")
 	}
@@ -359,7 +359,7 @@ func TestDetectProvidersTimeout(t *testing.T) {
 	// Give time for context to timeout
 	time.Sleep(1 * time.Millisecond)
 
-	_, err := detectors.DetectProviders(ctx)
+	_, err := detectors.Providers(ctx)
 	if err == nil {
 		t.Fatal("Expected error when context times out")
 	}
@@ -482,7 +482,7 @@ func TestDetectAllProviderTypes(t *testing.T) {
 	os.Setenv("ORA_API_KEY", "test123")
 	os.Setenv("CLAUDE_CODE_SESSION", "test-session")
 
-	result, err := detectors.DetectProviders(ctx)
+	result, err := detectors.Providers(ctx)
 	if err != nil {
 		t.Fatalf("Failed to detect providers: %v", err)
 	}

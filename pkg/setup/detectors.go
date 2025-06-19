@@ -57,8 +57,8 @@ type DetectedProvider struct {
 	Notes          string
 }
 
-// DetectProviders scans for available providers
-func (d *Detectors) DetectProviders(ctx context.Context) (*DetectionResult, error) {
+// Providers scans for available providers
+func (d *Detectors) Providers(ctx context.Context) (*DetectionResult, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider detection").
 			WithComponent("ProviderDetection").
@@ -89,7 +89,7 @@ func (d *Detectors) DetectProviders(ctx context.Context) (*DetectionResult, erro
 		if err := ctx.Err(); err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during provider detection loop").
 				WithComponent("ProviderDetection").
-				WithOperation("DetectProviders").
+				WithOperation("Providers").
 				WithDetails("provider", p.name)
 		}
 
@@ -99,7 +99,7 @@ func (d *Detectors) DetectProviders(ctx context.Context) (*DetectionResult, erro
 			if _, ok := err.(*gerror.GuildError); !ok {
 				err = gerror.Wrap(err, gerror.ErrCodeProvider, "provider detection failed").
 					WithComponent("ProviderDetection").
-					WithOperation("DetectProviders").
+					WithOperation("Providers").
 					WithDetails("provider", p.name)
 			}
 			// Log error but continue with other providers
@@ -115,6 +115,12 @@ func (d *Detectors) DetectProviders(ctx context.Context) (*DetectionResult, erro
 	}
 
 	return result, nil
+}
+
+// DetectProviders scans for available providers
+// Deprecated: Use Providers instead
+func (d *Detectors) DetectProviders(ctx context.Context) (*DetectionResult, error) {
+	return d.Providers(ctx)
 }
 
 // detectClaudeCode checks for Claude Code availability

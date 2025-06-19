@@ -369,7 +369,7 @@ func TestGetProviderRecommendations(t *testing.T) {
 	config := &ProviderConfig{projectPath: "/tmp"}
 
 	// Test with no providers
-	recommendations, err := config.GetProviderRecommendations(ctx, []DetectedProvider{})
+	recommendations, err := config.ProviderRecommendations(ctx, []DetectedProvider{})
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
@@ -406,7 +406,7 @@ func TestGetProviderRecommendations(t *testing.T) {
 		},
 	}
 
-	recommendations, err = config.GetProviderRecommendations(ctx, providers)
+	recommendations, err = config.ProviderRecommendations(ctx, providers)
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
@@ -436,7 +436,7 @@ func TestGetProviderRecommendationsContextCancellation(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
 
-	_, err := config.GetProviderRecommendations(ctx, []DetectedProvider{})
+	_, err := config.ProviderRecommendations(ctx, []DetectedProvider{})
 	if err == nil {
 		t.Fatal("Expected error when context is cancelled")
 	}

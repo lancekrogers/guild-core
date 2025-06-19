@@ -116,7 +116,7 @@ func (w *Wizard) Run(ctx context.Context) error {
 		fmt.Println("🔍 Detecting available providers...")
 	}
 
-	detection, err := w.detectors.DetectProviders(ctx)
+	detection, err := w.detectors.Providers(ctx)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to detect providers").
 			WithComponent("SetupWizard").
