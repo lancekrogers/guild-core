@@ -27,6 +27,7 @@ var (
 	initQuickMode    bool
 	initForce        bool
 	initProviderOnly string
+	initSkipValidation bool
 )
 
 // initCmd represents the init command
@@ -62,6 +63,7 @@ func init() {
 	initCmd.Flags().BoolVar(&initQuickMode, "quick", false, "Quick setup with automatic defaults")
 	initCmd.Flags().BoolVar(&initForce, "force", false, "Force setup even if already configured")
 	initCmd.Flags().StringVar(&initProviderOnly, "provider", "", "Setup only this provider (openai, anthropic, ollama, claude_code)")
+	initCmd.Flags().BoolVar(&initSkipValidation, "skip-validation", false, "Skip post-init validation")
 }
 
 func runUnifiedInit(cmd *cobra.Command, args []string) error {
@@ -220,7 +222,37 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	// Step 7: Success summary
+	// Step 7: Run post-init validation
+	if !initSkipValidation {
+		if !initQuickMode {
+			fmt.Println()
+			fmt.Println("🔍 Validating setup...")
+		}
+
+		// Check for cancellation before validation
+		if err := ctx.Err(); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeCancelled, "initialization cancelled before validation").
+				WithComponent("cli").WithOperation("runUnifiedInit")
+		}
+
+		validator := setup.NewInitValidator(absPath)
+		if err := validator.Validate(ctx); err != nil {
+			// Validation failed - show results anyway
+			validator.PrintResults()
+			return gerror.Wrap(err, gerror.ErrCodeValidation, "post-init validation failed").
+				WithComponent("cli").WithOperation("runUnifiedInit")
+		}
+
+		// Show validation results if not in quick mode
+		if !initQuickMode {
+			validator.PrintResults()
+		} else if validator.HasFailures() {
+			// In quick mode, only show if there are failures
+			validator.PrintResults()
+		}
+	}
+
+	// Step 8: Success summary
 	if !initQuickMode {
 		fmt.Println()
 	}
@@ -233,7 +265,7 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 	fmt.Printf("✅ Daemon: Ready to start\n")
 	fmt.Println()
 
-	// Step 8: Next steps
+	// Step 9: Next steps
 	fmt.Println("🚀 Try these commands:")
 	fmt.Println()
 	fmt.Println("  guild chat          # Start chatting with your agents")

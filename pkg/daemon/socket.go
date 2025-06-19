@@ -169,6 +169,12 @@ func CanConnect(socketPath string) bool {
 	return true
 }
 
+// IsDaemonRunning checks if a daemon is running on the given socket path
+// This is an alias for CanConnect for semantic clarity
+func IsDaemonRunning(socketPath string) bool {
+	return CanConnect(socketPath)
+}
+
 // UnlinkIfStale removes a socket file if it's not connected to a running process
 func UnlinkIfStale(socketPath string) error {
 	// Check if socket file exists
