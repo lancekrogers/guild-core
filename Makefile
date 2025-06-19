@@ -3,7 +3,7 @@
 
 BUILDTOOL := go run ./internal/buildutil
 .DEFAULT_GOAL := help
-.PHONY: build test test-pkg integration e2e validate-demo clean all quick ci-build ci-test ci-integration ci-e2e ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion
+.PHONY: build test test-pkg integration e2e validate-demo clean all quick ci-build ci-test ci-integration ci-e2e ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion benchmark benchmark-suggestions
 
 # Primary targets (with visual output)
 build:
@@ -20,6 +20,15 @@ e2e:
 
 validate-demo:
 	@$(BUILDTOOL) validate-demo
+
+# Performance benchmarks
+benchmark:
+	@echo "🚀 Running comprehensive performance benchmarks..."
+	@go run benchmarks/run_benchmarks.go
+
+benchmark-suggestions:
+	@echo "🚀 Running suggestion system benchmarks..."
+	@go test -bench=BenchmarkSuggestion -benchmem -benchtime=10s ./benchmarks
 
 clean:
 	@$(BUILDTOOL) clean
@@ -141,6 +150,8 @@ help:
 	@echo "  integration              Run integration tests"
 	@echo "  e2e                      Run end-to-end tests"
 	@echo "  validate-demo            Validate demo scripts and functionality"
+	@echo "  benchmark                Run comprehensive performance benchmarks"
+	@echo "  benchmark-suggestions    Run suggestion system benchmarks only"
 	@echo "  clean                    Remove all build artifacts"
 	@echo "  all                      Clean, build, test, and integration"
 	@echo "  quick                    Fast build without visuals"
