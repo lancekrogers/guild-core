@@ -9,10 +9,12 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
+	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/project"
-	"github.com/guild-ventures/guild-core/pkg/setup"
+	"github.com/guild-ventures/guild-core/internal/setup"
+	uisetup "github.com/guild-ventures/guild-core/internal/ui/setup"
 )
 
 var setupCmd = &cobra.Command{
@@ -105,7 +107,7 @@ func runSetup(cmd *cobra.Command, args []string) error {
 		fmt.Println()
 	}
 
-	// Run the interactive wizard
+	// Create wizard
 	wizard, err := setup.NewWizard(ctx, setupConfig)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create setup wizard").
@@ -113,10 +115,24 @@ func runSetup(cmd *cobra.Command, args []string) error {
 			WithOperation("runSetup")
 	}
 
-	if err := wizard.Run(ctx); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "setup wizard failed").
-			WithComponent("setup").
-			WithOperation("runSetup")
+	// Run appropriate mode
+	if setupQuickMode {
+		// Run in quick mode without TUI
+		if err := wizard.RunQuickMode(ctx); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "quick setup failed").
+				WithComponent("setup").
+				WithOperation("runSetup")
+		}
+	} else {
+		// Run interactive TUI
+		model := uisetup.NewWizardTUIModel(ctx, wizard)
+		program := tea.NewProgram(model, tea.WithAltScreen())
+		
+		if _, err := program.Run(); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "setup wizard failed").
+				WithComponent("setup").
+				WithOperation("runSetup")
+		}
 	}
 
 	// Success message

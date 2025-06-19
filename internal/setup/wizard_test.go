@@ -97,12 +97,6 @@ func TestNewWizard(t *testing.T) {
 					if wizard.config != tt.config {
 						t.Errorf("NewWizard() config mismatch")
 					}
-					if wizard.reader == nil {
-						t.Errorf("NewWizard() reader not initialized")
-					}
-					if wizard.inputTimeout != 30*time.Second {
-						t.Errorf("NewWizard() inputTimeout = %v, want %v", wizard.inputTimeout, 30*time.Second)
-					}
 				}
 			}
 		})
@@ -139,8 +133,8 @@ func TestWizardContextCancellation(t *testing.T) {
 		// Cancel context immediately
 		cancel()
 
-		// Run should fail with cancelled error
-		err = wizard.Run(ctx)
+		// RunQuickMode should fail with cancelled error
+		err = wizard.RunQuickMode(ctx)
 		if err == nil {
 			t.Error("Expected error for cancelled context")
 		}
@@ -149,26 +143,7 @@ func TestWizardContextCancellation(t *testing.T) {
 		}
 	})
 
-	// Test timeout during input
-	t.Run("input timeout", func(t *testing.T) {
-		ctx := context.Background()
-		wizard, err := NewWizard(ctx, config)
-		if err != nil {
-			t.Fatalf("Failed to create wizard: %v", err)
-		}
-
-		// Set very short timeout for testing
-		wizard.inputTimeout = 1 * time.Millisecond
-
-		// Try to read input with timeout
-		_, err = wizard.readLineWithTimeout(ctx, wizard.inputTimeout)
-		if err == nil {
-			t.Error("Expected timeout error")
-		}
-		if !gerror.Is(err, gerror.ErrCodeTimeout) && !gerror.Is(err, gerror.ErrCodeInternal) {
-			t.Errorf("Expected timeout or internal error, got: %v", err)
-		}
-	})
+	// Test timeout during input - removed as we no longer have direct input reading
 }
 
 func TestIsProjectSetup(t *testing.T) {
@@ -241,7 +216,7 @@ func TestWizardQuickMode(t *testing.T) {
 	runCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	err = wizard.Run(runCtx)
+	err = wizard.RunQuickMode(runCtx)
 	// We expect an error because we don't have real providers configured
 	// But the test verifies it doesn't hang waiting for user input
 	if err == nil {
@@ -253,143 +228,23 @@ func TestWizardQuickMode(t *testing.T) {
 	}
 }
 
+// TestWizardProviderSelection has been removed as selectProviders is no longer
+// a method on Wizard - provider selection is now handled through the Bubble Tea UI
+/*
 func TestWizardProviderSelection(t *testing.T) {
-	// Create temporary directory
-	tempDir, err := os.MkdirTemp("", "guild-setup-test")
-	if err != nil {
-		t.Fatalf("Failed to create temp dir: %v", err)
-	}
-	defer os.RemoveAll(tempDir)
-
-	// Initialize project
-	if err := project.InitializeProject(tempDir); err != nil {
-		t.Fatalf("Failed to initialize project: %v", err)
-	}
-
-	tests := []struct {
-		name           string
-		providerOnly   string
-		detectedProviders []DetectedProvider
-		expectedCount  int
-		wantErr        bool
-	}{
-		{
-			name:         "specific provider found",
-			providerOnly: "openai",
-			detectedProviders: []DetectedProvider{
-				{Name: "openai", HasCredentials: true},
-				{Name: "anthropic", HasCredentials: true},
-			},
-			expectedCount: 1,
-			wantErr:       false,
-		},
-		{
-			name:         "specific provider not found",
-			providerOnly: "ollama",
-			detectedProviders: []DetectedProvider{
-				{Name: "openai", HasCredentials: true},
-				{Name: "anthropic", HasCredentials: true},
-			},
-			expectedCount: 0,
-			wantErr:       true,
-		},
-		{
-			name:         "all providers in quick mode",
-			providerOnly: "",
-			detectedProviders: []DetectedProvider{
-				{Name: "openai", HasCredentials: true},
-				{Name: "anthropic", HasCredentials: true},
-				{Name: "ollama", HasCredentials: true, IsLocal: true},
-			},
-			expectedCount: 3,
-			wantErr:       false,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			config := &Config{
-				ProjectPath:  tempDir,
-				QuickMode:    true,
-				Force:        false,
-				ProviderOnly: tt.providerOnly,
-			}
-
-			ctx := context.Background()
-			wizard, err := NewWizard(ctx, config)
-			if err != nil {
-				t.Fatalf("Failed to create wizard: %v", err)
-			}
-
-			detection := &DetectionResult{
-				Available: tt.detectedProviders,
-				Missing:   []string{},
-			}
-
-			selected, err := wizard.selectProviders(ctx, detection)
-
-			if tt.wantErr {
-				if err == nil {
-					t.Error("Expected error but got none")
-				}
-			} else {
-				if err != nil {
-					t.Errorf("Unexpected error: %v", err)
-				}
-				if len(selected) != tt.expectedCount {
-					t.Errorf("Expected %d providers, got %d", tt.expectedCount, len(selected))
-				}
-			}
-		})
-	}
+	// This test was for the old text-based UI and is no longer applicable
+	// with the Bubble Tea implementation
 }
+*/
 
+// TestWizardDemoSetup has been removed as GetDemoQuickSetup is no longer
+// a method on Wizard - demo setup is now handled through the Bubble Tea UI
+/*
 func TestWizardDemoSetup(t *testing.T) {
-	// Create temporary directory
-	tempDir, err := os.MkdirTemp("", "guild-setup-test")
-	if err != nil {
-		t.Fatalf("Failed to create temp dir: %v", err)
-	}
-	defer os.RemoveAll(tempDir)
-
-	// Initialize project
-	if err := project.InitializeProject(tempDir); err != nil {
-		t.Fatalf("Failed to initialize project: %v", err)
-	}
-
-	config := &Config{
-		ProjectPath: tempDir,
-		QuickMode:   true,
-		Force:       false,
-	}
-
-	ctx := context.Background()
-	wizard, err := NewWizard(ctx, config)
-	if err != nil {
-		t.Fatalf("Failed to create wizard: %v", err)
-	}
-
-	// Test demo setup
-	configuredProviders := []ConfiguredProvider{
-		{
-			Name: "openai",
-			Type: "cloud",
-			Models: []ModelInfo{
-				{Name: "gpt-4", Recommended: true},
-			},
-		},
-	}
-
-	agents, err := wizard.GetDemoQuickSetup(ctx, configuredProviders)
-	if err != nil {
-		// This might fail if presets aren't available, which is okay for unit test
-		t.Logf("Demo setup failed (expected in unit test): %v", err)
-	} else {
-		if len(agents) == 0 {
-			t.Error("Expected at least one agent from demo setup")
-		}
-	}
+	// This test was for the old text-based UI and is no longer applicable
+	// with the Bubble Tea implementation
 }
+*/
 
 func TestSaveConfiguration(t *testing.T) {
 	// Create temporary directory
@@ -452,7 +307,7 @@ func TestSaveConfiguration(t *testing.T) {
 	}
 
 	// Save configuration
-	err = wizard.saveConfiguration(ctx, providers, agents)
+	err = wizard.SaveConfiguration(ctx, providers, agents)
 	if err != nil {
 		t.Fatalf("Failed to save configuration: %v", err)
 	}

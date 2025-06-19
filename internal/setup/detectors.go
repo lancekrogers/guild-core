@@ -20,6 +20,7 @@ import (
 // Detectors handles provider detection
 type Detectors struct {
 	projectPath string
+	registry    *ProviderRegistry
 }
 
 // NewDetectors creates a new detector instance
@@ -38,6 +39,7 @@ func NewDetectors(ctx context.Context, projectPath string) (*Detectors, error) {
 
 	return &Detectors{
 		projectPath: projectPath,
+		registry:    NewProviderRegistry(),
 	}, nil
 }
 
@@ -124,6 +126,15 @@ func (d *Detectors) DetectProviders(ctx context.Context) (*DetectionResult, erro
 	return d.Providers(ctx)
 }
 
+// getProviderDescription gets the description from the registry or returns a default
+func (d *Detectors) getProviderDescription(providerName string) string {
+	if provider, exists := d.registry.Get(providerName); exists {
+		return provider.Description
+	}
+	// Default description if not in registry
+	return "AI model provider"
+}
+
 // detectClaudeCode checks for Claude Code availability
 func (d *Detectors) detectClaudeCode(ctx context.Context) (*DetectedProvider, error) {
 	if err := ctx.Err(); err != nil {
@@ -141,7 +152,7 @@ func (d *Detectors) detectClaudeCode(ctx context.Context) (*DetectedProvider, er
 			IsLocal:        false,
 			Version:        "current",
 			Endpoint:       "claude.ai/code",
-			Notes:          "Running in Claude Code environment",
+			Notes:          d.getProviderDescription("claude_code"),
 		}, nil
 	}
 
@@ -162,7 +173,7 @@ func (d *Detectors) detectClaudeCode(ctx context.Context) (*DetectedProvider, er
 			IsLocal:        false,
 			Version:        "cli",
 			Endpoint:       claudeCodePath,
-			Notes:          "Claude Code CLI available",
+			Notes:          d.getProviderDescription("claude_code"),
 		}, nil
 	}
 
@@ -266,7 +277,7 @@ func (d *Detectors) detectOllama(ctx context.Context) (*DetectedProvider, error)
 		IsLocal:        true,
 		Version:        version,
 		Endpoint:       workingEndpoint,
-		Notes:          "Ollama running and accessible",
+		Notes:          d.getProviderDescription("ollama"),
 	}, nil
 }
 
@@ -299,9 +310,9 @@ func (d *Detectors) detectOpenAI(ctx context.Context) (*DetectedProvider, error)
 	}
 
 	// Test API connection (optional quick test)
-	notes := "API key available"
+	notes := d.getProviderDescription("openai")
 	if orgID != "" {
-		notes += " with organization ID"
+		notes += " (with organization ID)"
 	}
 
 	return &DetectedProvider{
@@ -349,7 +360,7 @@ func (d *Detectors) detectAnthropic(ctx context.Context) (*DetectedProvider, err
 		IsLocal:        false,
 		Version:        "api",
 		Endpoint:       "https://api.anthropic.com",
-		Notes:          "API key available",
+		Notes:          d.getProviderDescription("anthropic"),
 	}, nil
 }
 
@@ -374,7 +385,7 @@ func (d *Detectors) detectDeepSeek(ctx context.Context) (*DetectedProvider, erro
 		IsLocal:        false,
 		Version:        "api",
 		Endpoint:       providers.EndpointDeepSeek,
-		Notes:          "API key available",
+		Notes:          d.getProviderDescription("deepseek"),
 	}, nil
 }
 
