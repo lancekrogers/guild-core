@@ -38,7 +38,8 @@ type SuggestionService struct {
 	maxSuggestions  int
 	minConfidence   float64
 	
-	// Statistics
+	// Statistics (protected by statsMu)
+	statsMu         sync.RWMutex
 	totalRequests   int
 	cacheHits       int
 	cacheMisses     int
@@ -91,12 +92,20 @@ func (s *SuggestionService) Start() tea.Cmd {
 func (s *SuggestionService) GetSuggestions(message string, context *SuggestionContext) tea.Cmd {
 	return func() tea.Msg {
 		start := time.Now()
+		
+		// Update total requests counter
+		s.statsMu.Lock()
 		s.totalRequests++
+		s.statsMu.Unlock()
 		
 		// Check cache first
 		cacheKey := s.buildCacheKey(message, context)
 		if cached := s.getFromCache(cacheKey); cached != nil {
+			// Update cache hit counter
+			s.statsMu.Lock()
 			s.cacheHits++
+			s.statsMu.Unlock()
+			
 			return SuggestionsReceivedMsg{
 				Suggestions: cached.suggestions,
 				Metadata:    cached.metadata,
@@ -105,7 +114,10 @@ func (s *SuggestionService) GetSuggestions(message string, context *SuggestionCo
 			}
 		}
 		
+		// Update cache miss counter
+		s.statsMu.Lock()
 		s.cacheMisses++
+		s.statsMu.Unlock()
 		
 		// Build optimized request
 		request := s.buildOptimizedRequest(message, context)
@@ -121,15 +133,17 @@ func (s *SuggestionService) GetSuggestions(message string, context *SuggestionCo
 		
 		// Calculate token usage
 		tokenCost := s.estimateTokenCost(request, response)
-		s.tokenUsed += tokenCost
 		
 		// Cache the result
 		s.putInCache(cacheKey, response.Suggestions, response.Metadata, tokenCost)
 		
 		// Update statistics
 		latency := time.Since(start)
-		s.updateLatency(latency)
+		s.statsMu.Lock()
+		s.tokenUsed += tokenCost
+		s.updateLatencyUnsafe(latency)
 		s.lastRequest = time.Now()
+		s.statsMu.Unlock()
 		
 		return SuggestionsReceivedMsg{
 			Suggestions: response.Suggestions,
@@ -371,27 +385,38 @@ func (s *SuggestionService) SetConfig(config agent.ChatSuggestionConfig) {
 
 // GetStats returns statistics about the suggestion service
 func (s *SuggestionService) GetStats() map[string]interface{} {
+	// Get cache size
 	s.cacheMu.RLock()
 	cacheSize := len(s.cache)
 	s.cacheMu.RUnlock()
 	
+	// Get all statistics under lock
+	s.statsMu.RLock()
+	totalRequests := s.totalRequests
+	cacheHits := s.cacheHits
+	cacheMisses := s.cacheMisses
+	tokenUsed := s.tokenUsed
+	avgLatency := s.avgLatency
+	lastRequest := s.lastRequest
+	s.statsMu.RUnlock()
+	
 	hitRate := float64(0)
-	if s.totalRequests > 0 {
-		hitRate = float64(s.cacheHits) / float64(s.totalRequests) * 100
+	if totalRequests > 0 {
+		hitRate = float64(cacheHits) / float64(totalRequests) * 100
 	}
 	
 	stats := map[string]interface{}{
-		"total_requests":   s.totalRequests,
-		"cache_hits":       s.cacheHits,
-		"cache_misses":     s.cacheMisses,
+		"total_requests":   totalRequests,
+		"cache_hits":       cacheHits,
+		"cache_misses":     cacheMisses,
 		"cache_hit_rate":   fmt.Sprintf("%.2f%%", hitRate),
 		"cache_size":       cacheSize,
 		"cache_ttl":        s.cacheTTL.String(),
 		"token_limit":      s.tokenLimit,
 		"token_budget":     s.tokenBudget,
-		"token_used":       s.tokenUsed,
-		"avg_latency":      s.avgLatency.String(),
-		"last_request":     s.lastRequest.Format(time.RFC3339),
+		"token_used":       tokenUsed,
+		"avg_latency":      avgLatency.String(),
+		"last_request":     lastRequest.Format(time.RFC3339),
 	}
 	
 	return stats
@@ -515,8 +540,15 @@ func (s *SuggestionService) estimateTokenCost(request agent.SuggestionRequest, r
 	return cost
 }
 
-// updateLatency updates the average latency calculation
+// updateLatency updates the average latency calculation (thread-safe)
 func (s *SuggestionService) updateLatency(latency time.Duration) {
+	s.statsMu.Lock()
+	defer s.statsMu.Unlock()
+	s.updateLatencyUnsafe(latency)
+}
+
+// updateLatencyUnsafe updates the average latency calculation (caller must hold statsMu)
+func (s *SuggestionService) updateLatencyUnsafe(latency time.Duration) {
 	if s.avgLatency == 0 {
 		s.avgLatency = latency
 	} else {
