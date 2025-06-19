@@ -4,6 +4,8 @@
 package v2
 
 import (
+	"time"
+	
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -69,7 +71,14 @@ type CompletionRequestMsg struct {
 
 // CompletionResultMsg represents completion results
 type CompletionResultMsg struct {
-	Results []CompletionResult
+	Results   []CompletionResult
+	ForInput  string    // The input this completion is for
+	Timestamp time.Time // When the completion was generated
+}
+
+// GetForInput returns the input this completion is for
+func (msg CompletionResultMsg) GetForInput() string {
+	return msg.ForInput
 }
 
 // LayoutUpdateMsg represents layout dimension changes

@@ -77,6 +77,9 @@ type App struct {
 	commandHistory   *CommandHistory
 	templateManager  templates.TemplateManager
 	completionEngine *CompletionEngine
+	
+	// Real-time suggestions
+	suggestionManager *InputSuggestionManager
 
 	// NEW: Suggestion system integration
 	suggestionFactory *agent.SuggestionAwareAgentFactory
@@ -323,6 +326,9 @@ func (app *App) initializePanes() error {
 	}
 	app.inputPane = inputPane
 	
+	// Set up input callbacks
+	app.setupInputCallbacks()
+	
 	// Initialize status pane
 	statusPane, err := panes.NewStatusPane(statusRect.Width, statusRect.Height)
 	if err != nil {
@@ -333,6 +339,24 @@ func (app *App) initializePanes() error {
 	app.statusPane = statusPane
 	
 	return nil
+}
+
+// setupInputCallbacks sets up callbacks for the input pane
+func (app *App) setupInputCallbacks() {
+	// Initialize suggestion manager with 300ms debounce
+	app.suggestionManager = NewInputSuggestionManager(app, 300*time.Millisecond)
+	
+	// Set up OnChange callback for real-time suggestions
+	app.inputPane.OnChange(func(input string) {
+		// This will be called from the input pane's Update method
+		// We'll handle the actual suggestion request in the main Update loop
+	})
+	
+	// Set up OnSubmit callback
+	app.inputPane.OnSubmit(func(input string) {
+		// Hide suggestions when submitting
+		app.inputPane.HideCompletions()
+	})
 }
 
 // convertSessionMessage converts a session message to a chat message
@@ -448,6 +472,9 @@ func (app *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return app.handleCompletionRequestAnon(msg.Input)
 		}
 		
+	case SuggestionRequestMsg:
+		return app.handleSuggestionRequest(msg)
+		
 	case CompletionResultMsg:
 		return app.handleCompletionResult(msg)
 		
@@ -467,12 +494,23 @@ func (app *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmds = append(cmds, paneCmd)
 	}
 	
+	// Store old input value before update
+	oldInputValue := app.inputPane.GetValue()
+	
 	updatedModel, paneCmd = app.inputPane.Update(msg)
 	if inputPane, ok := updatedModel.(panes.InputPane); ok {
 		app.inputPane = inputPane
 	}
 	if paneCmd != nil {
 		cmds = append(cmds, paneCmd)
+	}
+	
+	// Check if input changed and trigger suggestions
+	newInputValue := app.inputPane.GetValue()
+	if oldInputValue != newInputValue && app.suggestionManager != nil {
+		if suggestionCmd := app.suggestionManager.HandleInputChange(newInputValue); suggestionCmd != nil {
+			cmds = append(cmds, suggestionCmd)
+		}
 	}
 	
 	updatedModel, paneCmd = app.statusPane.Update(msg)
@@ -759,8 +797,24 @@ func (app *App) handleCompletionRequestAnon(input string) (tea.Model, tea.Cmd) {
 }
 
 func (app *App) handleCompletionResult(msg CompletionResultMsg) (tea.Model, tea.Cmd) {
+	// Only show completions if they're for the current input
+	currentInput := app.inputPane.GetValue()
+	
+	// Check if the suggestions are stale (ForInput field was added to CompletionResultMsg)
+	if msg.ForInput != "" && msg.ForInput != currentInput {
+		return app, nil // Stale suggestions, ignore
+	}
+	
 	app.completions = msg.Results
 	app.inputPane.ShowCompletions(msg.Results)
+	return app, nil
+}
+
+// handleSuggestionRequest processes a suggestion request
+func (app *App) handleSuggestionRequest(msg SuggestionRequestMsg) (tea.Model, tea.Cmd) {
+	if app.suggestionManager != nil {
+		return app, app.suggestionManager.ProcessSuggestionRequest(msg.Input)
+	}
 	return app, nil
 }
 
