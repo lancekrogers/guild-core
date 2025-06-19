@@ -500,50 +500,70 @@ func createDemoCommission(ctx context.Context, projectPath, campaignName string)
 			WithComponent("cli").WithOperation("createDemoCommission")
 	}
 
-	demoCommission := `# Simple API Development Task
+	// Create demo commission generator
+	generator := setup.NewDemoCommissionGenerator()
 
-## Objective
-Create a basic REST API with essential endpoints to demonstrate Guild's code generation and testing capabilities.
+	// Gather project info for recommendation
+	projectInfo := map[string]interface{}{
+		"project_name": filepath.Base(projectPath),
+		"campaign_name": campaignName,
+	}
 
-## Requirements
+	// Get recommended demo type
+	recommendedType, reason := generator.GetRecommendedDemo(ctx, projectInfo)
 
-### Core API Features
-- Create a simple Go HTTP server
-- Implement basic CRUD operations for a "tasks" resource
-- Add proper error handling and HTTP status codes
-- Include basic logging
+	// In quick mode, use the recommended type directly
+	demoType := recommendedType
+	if !initQuickMode {
+		fmt.Printf("\n🎯 Selecting demo commission type...\n")
+		fmt.Printf("   Recommendation: %s (%s)\n\n", recommendedType, reason)
 
-### Technical Specifications
-- Use Go's standard library (net/http)
-- Implement JSON request/response handling
-- Add input validation
-- Follow REST conventions
+		// Show available options
+		fmt.Println("Available demo types:")
+		fmt.Println("  1. api         - RESTful API with testing and documentation")
+		fmt.Println("  2. webapp      - Modern web dashboard with real-time features")
+		fmt.Println("  3. cli         - Developer productivity CLI tool")
+		fmt.Println("  4. data        - Data pipeline and analytics platform")
+		fmt.Println("  5. microservices - Cloud-native e-commerce platform")
+		fmt.Println("  6. ai          - AI-powered recommendation system")
+		fmt.Printf("\nSelect demo type [%s]: ", recommendedType)
 
-### Endpoints Required
-1. GET /tasks - List all tasks
-2. POST /tasks - Create a new task  
-3. GET /tasks/{id} - Get specific task
-4. PUT /tasks/{id} - Update task
-5. DELETE /tasks/{id} - Delete task
+		input := readInputWithContext(ctx, string(recommendedType))
+		// Map user input to demo type
+		switch strings.ToLower(input) {
+		case "1", "api":
+			demoType = setup.DemoTypeAPIService
+		case "2", "webapp", "web":
+			demoType = setup.DemoTypeWebApp
+		case "3", "cli":
+			demoType = setup.DemoTypeCLITool
+		case "4", "data", "analytics":
+			demoType = setup.DemoTypeDataAnalysis
+		case "5", "microservices", "micro":
+			demoType = setup.DemoTypeMicroservices
+		case "6", "ai", "ml":
+			demoType = setup.DemoTypeAI
+		default:
+			// Use recommended if input is invalid
+			demoType = recommendedType
+		}
+	}
 
-### Testing Requirements
-- Write unit tests for each endpoint
-- Include integration tests
-- Test error scenarios
-- Achieve >80% test coverage
+	// Generate the commission content
+	demoContent, err := generator.GenerateCommission(ctx, demoType)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to generate demo commission").
+			WithComponent("cli").WithOperation("createDemoCommission")
+	}
 
-## Success Criteria
-- All endpoints respond correctly
-- Tests pass and have good coverage
-- Code follows Go best practices
-- API is well-documented
+	// Create filename based on demo type
+	fileName := fmt.Sprintf("demo-%s.md", string(demoType))
+	if demoType == setup.DemoTypeDefault {
+		fileName = "demo-api-development.md"
+	}
 
-## Notes
-This is a demo commission designed to showcase Guild's multi-agent development workflow. The Manager will break this down into smaller tasks and assign them to appropriate specialized agents.
-`
-
-	commissionPath := filepath.Join(commissionsDir, "demo-api-development.md")
-	if err := os.WriteFile(commissionPath, []byte(demoCommission), 0644); err != nil {
+	commissionPath := filepath.Join(commissionsDir, fileName)
+	if err := os.WriteFile(commissionPath, []byte(demoContent), 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write demo commission").
 			WithComponent("cli").WithOperation("createDemoCommission")
 	}
