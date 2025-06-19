@@ -474,8 +474,10 @@ func setupSuggestionService(b *testing.B) *mockSuggestionService {
 // mockSuggestionService provides a simple mock implementation for testing
 type mockSuggestionService struct {
 	cache         map[string]*mockCachedSuggestion
+	cacheMu       sync.RWMutex
 	cacheTTL      time.Duration
 	tokenBudget   int
+	statsMu       sync.RWMutex
 	cacheHits     int
 	cacheMisses   int
 	totalRequests int
@@ -489,7 +491,11 @@ type mockCachedSuggestion struct {
 func (m *mockSuggestionService) GetSuggestions(message string, context *services.SuggestionContext) func() services.SuggestionsReceivedMsg {
 	return func() services.SuggestionsReceivedMsg {
 		start := time.Now()
+		
+		// Update total requests counter
+		m.statsMu.Lock()
 		m.totalRequests++
+		m.statsMu.Unlock()
 		
 		// Simple cache key
 		cacheKey := message
@@ -498,19 +504,28 @@ func (m *mockSuggestionService) GetSuggestions(message string, context *services
 		}
 		
 		// Check cache
-		if cached, exists := m.cache[cacheKey]; exists {
-			if time.Since(cached.timestamp) < m.cacheTTL {
-				m.cacheHits++
-				return services.SuggestionsReceivedMsg{
-					Suggestions: cached.suggestions,
-					Metadata:    map[string]interface{}{"mock": true},
-					FromCache:   true,
-					Latency:     time.Since(start),
-				}
+		m.cacheMu.RLock()
+		cached, exists := m.cache[cacheKey]
+		m.cacheMu.RUnlock()
+		
+		if exists && time.Since(cached.timestamp) < m.cacheTTL {
+			// Update cache hit counter
+			m.statsMu.Lock()
+			m.cacheHits++
+			m.statsMu.Unlock()
+			
+			return services.SuggestionsReceivedMsg{
+				Suggestions: cached.suggestions,
+				Metadata:    map[string]interface{}{"mock": true},
+				FromCache:   true,
+				Latency:     time.Since(start),
 			}
 		}
 		
+		// Update cache miss counter
+		m.statsMu.Lock()
 		m.cacheMisses++
+		m.statsMu.Unlock()
 		
 		// Simulate processing time
 		time.Sleep(10 * time.Millisecond)
@@ -548,10 +563,12 @@ func (m *mockSuggestionService) GetSuggestions(message string, context *services
 		}
 		
 		// Cache the result
+		m.cacheMu.Lock()
 		m.cache[cacheKey] = &mockCachedSuggestion{
 			suggestions: suggestionsData,
 			timestamp:   time.Now(),
 		}
+		m.cacheMu.Unlock()
 		
 		return services.SuggestionsReceivedMsg{
 			Suggestions: suggestionsData,
@@ -628,21 +645,35 @@ func (m *mockSuggestionService) SetCacheTTL(ttl time.Duration) {
 }
 
 func (m *mockSuggestionService) ClearCache() {
+	m.cacheMu.Lock()
+	defer m.cacheMu.Unlock()
 	m.cache = make(map[string]*mockCachedSuggestion)
 }
 
 func (m *mockSuggestionService) GetStats() map[string]interface{} {
+	// Get cache size
+	m.cacheMu.RLock()
+	cacheSize := len(m.cache)
+	m.cacheMu.RUnlock()
+	
+	// Get all statistics under lock
+	m.statsMu.RLock()
+	totalRequests := m.totalRequests
+	cacheHits := m.cacheHits
+	cacheMisses := m.cacheMisses
+	m.statsMu.RUnlock()
+	
 	hitRate := float64(0)
-	if m.totalRequests > 0 {
-		hitRate = float64(m.cacheHits) / float64(m.totalRequests) * 100
+	if totalRequests > 0 {
+		hitRate = float64(cacheHits) / float64(totalRequests) * 100
 	}
 	
 	return map[string]interface{}{
-		"total_requests": m.totalRequests,
-		"cache_hits":     m.cacheHits,
-		"cache_misses":   m.cacheMisses,
+		"total_requests": totalRequests,
+		"cache_hits":     cacheHits,
+		"cache_misses":   cacheMisses,
 		"cache_hit_rate": fmt.Sprintf("%.2f%%", hitRate),
-		"cache_size":     len(m.cache),
+		"cache_size":     cacheSize,
 		"token_budget":   m.tokenBudget,
 	}
 }
