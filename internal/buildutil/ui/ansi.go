@@ -28,6 +28,11 @@ const (
 	ShowCursor = "\033[?25h"
 	ClearLine  = "\033[2K"
 	MoveUp     = "\033[A"
+	// Terminal control
+	ClearScreen = "\033[2J"
+	ResetTerminal = "\033c"
+	ExitAltScreen = "\033[?1049l"
+	EnterAltScreen = "\033[?1049h"
 )
 
 // Init initializes the UI package based on environment
@@ -150,4 +155,22 @@ func stripANSI(text string) string {
 		result = strings.ReplaceAll(result, code, "")
 	}
 	return result
+}
+
+// RestoreTerminal resets terminal to a clean state
+func RestoreTerminal() {
+	if !isatty() {
+		return
+	}
+	
+	// Exit alternate screen buffer
+	fmt.Print(ExitAltScreen)
+	// Show cursor
+	fmt.Print(ShowCursor)
+	// Reset all attributes
+	fmt.Print(Reset)
+	// Clear screen
+	fmt.Print(ClearScreen)
+	// Move cursor to top
+	fmt.Print("\033[H")
 }

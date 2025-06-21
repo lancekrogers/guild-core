@@ -49,6 +49,9 @@ type App struct {
 	daemonService   *services.DaemonService
 	providerService *services.ProviderService
 	
+	// Agent communication
+	agentRouter     *AgentRouter
+	
 	// Utilities
 	styles *utils.Styles
 	keys   *utils.KeyBindings
@@ -205,6 +208,9 @@ func (app *App) initializeComponents() error {
 			WithComponent("chat.app").
 			WithOperation("initializeComponents")
 	}
+	
+	// Initialize agent router
+	app.agentRouter = NewAgentRouter(app.ctx, app.guildClient)
 	
 	// Initialize layout manager
 	app.layoutManager = layout.NewManager(app.config.Width, app.config.Height)
@@ -433,6 +439,11 @@ func (app *App) Init() tea.Cmd {
 		cmds = append(cmds, app.providerService.Start())
 	}
 	
+	// Start agent router by refreshing agent list
+	if app.agentRouter != nil {
+		cmds = append(cmds, app.agentRouter.RefreshAgentList())
+	}
+	
 	// Show welcome message
 	welcomeMsg := app.generateWelcomeMessage()
 	app.outputPane.AddMessage(welcomeMsg)
@@ -492,6 +503,21 @@ func (app *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		
 	case SearchMsg:
 		return app.handleSearch(msg)
+		
+	case AgentResponseMsg:
+		return app.handleAgentResponse(msg)
+		
+	case BroadcastResponseMsg:
+		return app.handleBroadcastResponse(msg)
+		
+	case AgentErrorMsg:
+		return app.handleAgentError(msg)
+		
+	case AgentListUpdatedMsg:
+		return app.handleAgentListUpdated(msg)
+		
+	case AgentStatusMsg:
+		return app.handleAgentStatusUpdated(msg)
 	}
 	
 	// Update panes
@@ -658,11 +684,26 @@ func (app *App) handleSubmit() (tea.Model, tea.Cmd) {
 	// Clear input
 	app.inputPane.SetValue("")
 	
-	// Process input through command processor
+	// 1. Check for slash commands first
 	isCommand, cmd := app.commandProcessor.ProcessInput(input)
+	if isCommand {
+		return app, cmd
+	}
 	
-	// Add user message to output if it's not a command
-	if !isCommand {
+	// 2. Check for agent mentions (@agent message)
+	if agentTarget, err := app.agentRouter.ParseInput(input); err != nil {
+		// Show error for invalid agent mention
+		errorMsg := ChatMessage{
+			Type:      MsgSystem,
+			Content:   fmt.Sprintf("❌ %s", err.Error()),
+			AgentID:   "system",
+			Timestamp: app.GetCurrentTime(),
+			Metadata:  make(map[string]string),
+		}
+		app.outputPane.AddMessage(errorMsg)
+		return app, nil
+	} else if agentTarget != nil {
+		// Valid agent mention - add user message and route to agent
 		userMsg := ChatMessage{
 			Type:      MsgUser,
 			Content:   input,
@@ -671,9 +712,26 @@ func (app *App) handleSubmit() (tea.Model, tea.Cmd) {
 			Metadata:  make(map[string]string),
 		}
 		app.outputPane.AddMessage(userMsg)
+		
+		// Route to agent or broadcast
+		if agentTarget.IsBroadcast {
+			return app, app.agentRouter.BroadcastToAll(agentTarget.Message)
+		} else {
+			return app, app.agentRouter.SendToAgent(agentTarget.ID, agentTarget.Message)
+		}
 	}
 	
-	return app, cmd
+	// 3. Default: treat as general message to all agents
+	userMsg := ChatMessage{
+		Type:      MsgUser,
+		Content:   input,
+		AgentID:   "user",
+		Timestamp: app.GetCurrentTime(),
+		Metadata:  make(map[string]string),
+	}
+	app.outputPane.AddMessage(userMsg)
+	
+	return app, app.agentRouter.BroadcastToAll(input)
 }
 
 func (app *App) handleCommandPalette() (tea.Model, tea.Cmd) {
@@ -857,6 +915,74 @@ func (app *App) GetError() error {
 
 func (app *App) SetError(err error) {
 	app.errorState = err
+}
+
+// Agent message handlers
+
+func (app *App) handleAgentResponse(msg AgentResponseMsg) (tea.Model, tea.Cmd) {
+	// Add agent response to output
+	agentMsg := ChatMessage{
+		Type:      MsgAgent,
+		Content:   msg.Content,
+		AgentID:   msg.AgentID,
+		Timestamp: msg.Timestamp,
+		Metadata:  map[string]string{"message_id": msg.MessageID},
+	}
+	app.outputPane.AddMessage(agentMsg)
+	
+	// Save to session if available
+	if app.sessionManager != nil && app.currentSession != nil {
+		app.sessionManager.AppendMessage(app.currentSession.ID, session.RoleAssistant, msg.Content, nil)
+	}
+	
+	return app, nil
+}
+
+func (app *App) handleBroadcastResponse(msg BroadcastResponseMsg) (tea.Model, tea.Cmd) {
+	// Add responses from all agents
+	for _, response := range msg.Responses {
+		agentMsg := ChatMessage{
+			Type:      MsgAgent,
+			Content:   response.Response,
+			AgentID:   response.AgentId,
+			Timestamp: msg.Timestamp,
+			Metadata:  map[string]string{"message_id": msg.MessageID},
+		}
+		app.outputPane.AddMessage(agentMsg)
+	}
+	
+	return app, nil
+}
+
+func (app *App) handleAgentError(msg AgentErrorMsg) (tea.Model, tea.Cmd) {
+	// Display error message
+	errorMsg := ChatMessage{
+		Type:      MsgSystem,
+		Content:   fmt.Sprintf("❌ Agent %s error: %s", msg.AgentID, msg.Error.Error()),
+		AgentID:   "system",
+		Timestamp: app.GetCurrentTime(),
+		Metadata:  make(map[string]string),
+	}
+	app.outputPane.AddMessage(errorMsg)
+	
+	return app, nil
+}
+
+func (app *App) handleAgentListUpdated(msg AgentListUpdatedMsg) (tea.Model, tea.Cmd) {
+	// Update agent list in status pane or show notification
+	statusMsg := fmt.Sprintf("🔄 Agent list updated: %d agents available", len(msg.Agents))
+	app.statusPane.UpdateStatus(statusMsg, "info")
+	
+	return app, nil
+}
+
+func (app *App) handleAgentStatusUpdated(msg AgentStatusMsg) (tea.Model, tea.Cmd) {
+	// Update agent status display
+	statusIcon := getStatusIcon(msg.Status.State)
+	statusMsg := fmt.Sprintf("%s Agent %s: %s", statusIcon, msg.AgentID, msg.Status.CurrentTask)
+	app.statusPane.UpdateStatus(statusMsg, "info")
+	
+	return app, nil
 }
 
 // initializeSuggestionSystem initializes the suggestion-aware agent system

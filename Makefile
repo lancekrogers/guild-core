@@ -18,6 +18,30 @@ integration:
 e2e:
 	@$(BUILDTOOL) e2e
 
+# TUI tests with proper terminal cleanup
+test-teatest:
+	@echo "🧪 Running TUI tests with terminal protection..."
+	@trap 'printf "\033c" && echo "✅ Terminal restored"' EXIT && \
+		go test -v -timeout 30s ./internal/chat/commands/... ./internal/chat/... ./internal/ui/init/... -run "Tea|TUI" 2>&1 | \
+		grep -E "(PASS|FAIL|ok|^---)" || true
+	@printf "\033c"
+	@echo "✅ TUI tests completed - terminal restored"
+
+# Fix terminal after test corruption
+fix-terminal:
+	@if [ -f scripts/fix-terminal.sh ]; then \
+		bash scripts/fix-terminal.sh; \
+	else \
+		printf "\033c\033[?1049l\033[?25h\033[0m"; \
+		stty sane 2>/dev/null || true; \
+		reset; \
+		echo "✅ Terminal restored"; \
+	fi
+
+# Show project dashboard
+dashboard:
+	@$(BUILDTOOL) dashboard
+
 validate-demo:
 	@$(BUILDTOOL) validate-demo
 
@@ -29,6 +53,12 @@ benchmark:
 benchmark-suggestions:
 	@echo "🚀 Running suggestion system benchmarks..."
 	@go test -bench=BenchmarkSuggestion -benchmem -benchtime=10s ./benchmarks
+
+
+test-cleanup-verify:
+	@echo "🔍 Verifying terminal cleanup helpers..."
+	@go test -v ./internal/testing/... -run TestTerminalCleanup
+	@echo "✅ Cleanup verification complete"
 
 clean:
 	@$(BUILDTOOL) clean
@@ -147,6 +177,7 @@ help:
 	@echo "  uninstall                Remove Guild from Go bin directory"
 	@echo "  test                     Run unit tests with visual feedback"
 	@echo "  test-pkg                 Show examples of testing specific packages"
+	@echo "  test-teatest             Run TUI tests with proper terminal cleanup"
 	@echo "  integration              Run integration tests"
 	@echo "  e2e                      Run end-to-end tests"
 	@echo "  validate-demo            Validate demo scripts and functionality"
@@ -156,6 +187,8 @@ help:
 	@echo "  all                      Clean, build, test, and integration"
 	@echo "  quick                    Fast build without visuals"
 	@echo "  ci-*                     CI variants (no colors)"
+	@echo "  fix-terminal             Fix terminal after test corruption"
+	@echo "  dashboard                Show project status dashboard"
 	@echo ""
 	@echo "Completion targets:"
 	@echo "  install-completion       Auto-detect shell and install completion"

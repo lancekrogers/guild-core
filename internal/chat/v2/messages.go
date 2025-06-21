@@ -18,17 +18,7 @@ type AgentStreamMsg struct {
 	Done    bool
 }
 
-// AgentStatusMsg represents agent status changes
-type AgentStatusMsg struct {
-	AgentID string
-	Status  string
-}
-
-// AgentErrorMsg represents agent errors
-type AgentErrorMsg struct {
-	AgentID string
-	Err     error
-}
+// Note: AgentStatusMsg and AgentErrorMsg are defined in agents.go to avoid conflicts
 
 // ToolExecutionStartMsg represents the start of tool execution
 type ToolExecutionStartMsg struct {
