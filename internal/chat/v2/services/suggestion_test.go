@@ -130,7 +130,7 @@ func TestNewSuggestionService(t *testing.T) {
 				assert.NotNil(t, service.cache)
 				assert.Equal(t, 5*time.Minute, service.cacheTTL)
 				assert.Equal(t, 8192, service.tokenLimit)
-				assert.Equal(t, 4096, service.tokenBudget)
+				assert.Equal(t, 8192, service.tokenLimit)
 			}
 		})
 	}
@@ -215,7 +215,7 @@ func TestOptimizeContext(t *testing.T) {
 	tests := []struct {
 		name                string
 		context             string
-		tokenBudget         int
+		tokenLimit          int
 		expectReduction     bool
 		minReductionPercent float64
 		maxReductionPercent float64
@@ -223,7 +223,7 @@ func TestOptimizeContext(t *testing.T) {
 		{
 			name:                "Small context gets minimal optimization",
 			context:             "This is a small context",
-			tokenBudget:         100,
+			tokenLimit:          100,
 			expectReduction:     true,
 			minReductionPercent: 10.0, // Very small contexts get 10% reduction
 			maxReductionPercent: 20.0,
@@ -231,7 +231,7 @@ func TestOptimizeContext(t *testing.T) {
 		{
 			name:                "Large context gets standard optimization",
 			context:             string(make([]byte, 20000)), // ~5000 tokens
-			tokenBudget:         1000,
+			tokenLimit:          1000,
 			expectReduction:     true,
 			minReductionPercent: 15.0, // Large contexts get 15-25% reduction
 			maxReductionPercent: 25.0,
@@ -240,7 +240,7 @@ func TestOptimizeContext(t *testing.T) {
 	
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			service.SetTokenBudget(tt.tokenBudget)
+			service.SetTokenLimit(tt.tokenLimit)
 			result := service.OptimizeContext(tt.context)
 			
 			if tt.expectReduction {
@@ -421,8 +421,8 @@ func TestSuggestionContext(t *testing.T) {
 	assert.NotNil(t, suggestionsMsg.Suggestions)
 }
 
-// TestTokenBudgetManagement tests token budget tracking
-func TestTokenBudgetManagement(t *testing.T) {
+// TestTokenLimitManagement tests token limit tracking
+func TestTokenLimitManagement(t *testing.T) {
 	ctx := context.Background()
 	
 	mockAgent := &mockAgent{
@@ -436,8 +436,8 @@ func TestTokenBudgetManagement(t *testing.T) {
 	service, err := NewSuggestionService(ctx, handler)
 	require.NoError(t, err)
 	
-	// Set low token budget
-	service.SetTokenBudget(100)
+	// Set low token limit
+	service.SetTokenLimit(100)
 	
 	// Make request with large message
 	largeMessage := string(make([]byte, 1000))

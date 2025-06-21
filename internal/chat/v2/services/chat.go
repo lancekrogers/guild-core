@@ -35,10 +35,6 @@ type ChatService struct {
 	suggestionService *SuggestionService
 	suggestionMode    SuggestionMode
 	enableSuggestions bool
-	
-	// Token optimization
-	tokenBudget      int
-	tokenUsed        int
 }
 
 // NewChatService creates a new chat service
@@ -64,7 +60,6 @@ func NewChatService(ctx context.Context, client pb.GuildClient, registry registr
 		timeout:       30 * time.Second,
 		suggestionMode: SuggestionModeBoth,
 		enableSuggestions: true,
-		tokenBudget:   4096,
 	}, nil
 }
 
@@ -131,7 +126,7 @@ func (cs *ChatService) SendMessage(agentID, message string) tea.Cmd {
 		optimizedMessage := message
 		if cs.enableSuggestions && cs.suggestionService != nil {
 			optimizedMessage = cs.suggestionService.OptimizeContext(message)
-			cs.tokenUsed += len(optimizedMessage) / 4 // Rough token estimate
+			// Message optimized for better efficiency
 		}
 		
 		if agentID == "all" {
@@ -250,7 +245,7 @@ func (cs *ChatService) sendToAgent(ctx context.Context, agentID, message string)
 		logger.Debug("Message sent with token optimization",
 			"agent_id", agentID,
 			"original_length", len(message),
-			"tokens_used", cs.tokenUsed)
+			"message_sent", true)
 	}
 	
 	return AgentResponseMsg{
@@ -366,7 +361,7 @@ func (cs *ChatService) ProcessAgentResponse(response AgentResponseMsg, originalM
 						Content:     response.Content,
 						Done:        response.Done,
 						Suggestions: sugMsg.Suggestions,
-						TokensUsed:  cs.tokenUsed,
+						TokensUsed:  0,
 					}
 				}
 			}
@@ -377,12 +372,9 @@ func (cs *ChatService) ProcessAgentResponse(response AgentResponseMsg, originalM
 	}
 }
 
-// SetTokenBudget sets the token budget for message optimization
-func (cs *ChatService) SetTokenBudget(budget int) {
-	cs.tokenBudget = budget
-	if cs.suggestionService != nil {
-		cs.suggestionService.SetTokenBudget(budget)
-	}
+// ConfigureSuggestions enables or disables the suggestion system
+func (cs *ChatService) ConfigureSuggestions(enabled bool) {
+	cs.enableSuggestions = enabled
 }
 
 // GetStats returns statistics about the chat service
@@ -404,8 +396,6 @@ func (cs *ChatService) GetStats() map[string]interface{} {
 	if cs.enableSuggestions {
 		stats["suggestions_enabled"] = true
 		stats["suggestion_mode"] = string(cs.suggestionMode)
-		stats["token_budget"] = cs.tokenBudget
-		stats["token_used"] = cs.tokenUsed
 		
 		// Include suggestion service stats if available
 		if cs.suggestionService != nil {

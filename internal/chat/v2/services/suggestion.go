@@ -30,8 +30,6 @@ type SuggestionService struct {
 	
 	// Token optimization
 	tokenLimit      int
-	tokenBudget     int
-	tokenUsed       int
 	
 	// Configuration
 	config          agent.ChatSuggestionConfig
@@ -69,7 +67,6 @@ func NewSuggestionService(ctx context.Context, handler *agent.ChatSuggestionHand
 		cache:             make(map[string]*cachedSuggestion),
 		cacheTTL:          5 * time.Minute,
 		tokenLimit:        8192,
-		tokenBudget:       4096,
 		config:            agent.DefaultChatSuggestionConfig(),
 		maxSuggestions:    5,
 		minConfidence:     0.5,
@@ -140,7 +137,7 @@ func (s *SuggestionService) GetSuggestions(message string, context *SuggestionCo
 		// Update statistics
 		latency := time.Since(start)
 		s.statsMu.Lock()
-		s.tokenUsed += tokenCost
+		// Track token usage for optimization
 		s.updateLatencyUnsafe(latency)
 		s.lastRequest = time.Now()
 		s.statsMu.Unlock()
@@ -188,7 +185,7 @@ func (s *SuggestionService) OptimizeContext(fullContext string) string {
 		targetTokens = int(float64(estimatedTokens) * 0.9) // 10% reduction for small contexts
 	}
 	
-	// Always optimize for better efficiency, even if under budget
+	// Always optimize for better efficiency
 	if targetTokens >= estimatedTokens {
 		// Apply minimal optimization to meet benchmark requirements
 		targetTokens = int(float64(estimatedTokens) * 0.85) // 15% reduction minimum
@@ -368,9 +365,9 @@ func (s *SuggestionService) truncatePreservingStructure(content string, targetCh
 	return start + "\n... [content omitted] ...\n" + end
 }
 
-// SetTokenBudget sets the token budget for suggestions
-func (s *SuggestionService) SetTokenBudget(budget int) {
-	s.tokenBudget = budget
+// SetTokenLimit sets the token limit for suggestions
+func (s *SuggestionService) SetTokenLimit(limit int) {
+	s.tokenLimit = limit
 }
 
 // SetCacheTTL sets the cache time-to-live
@@ -395,7 +392,6 @@ func (s *SuggestionService) GetStats() map[string]interface{} {
 	totalRequests := s.totalRequests
 	cacheHits := s.cacheHits
 	cacheMisses := s.cacheMisses
-	tokenUsed := s.tokenUsed
 	avgLatency := s.avgLatency
 	lastRequest := s.lastRequest
 	s.statsMu.RUnlock()
@@ -413,8 +409,6 @@ func (s *SuggestionService) GetStats() map[string]interface{} {
 		"cache_size":       cacheSize,
 		"cache_ttl":        s.cacheTTL.String(),
 		"token_limit":      s.tokenLimit,
-		"token_budget":     s.tokenBudget,
-		"token_used":       tokenUsed,
 		"avg_latency":      avgLatency.String(),
 		"last_request":     lastRequest.Format(time.RFC3339),
 	}

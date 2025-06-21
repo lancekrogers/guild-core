@@ -34,7 +34,7 @@ func ExampleChatWithSuggestions() {
 	
 	// Configure suggestion behavior
 	chatService.SetSuggestionMode(SuggestionModeBoth) // Get suggestions before and after
-	chatService.SetTokenBudget(4096)                  // Set token limit
+	chatService.ConfigureSuggestions(true)            // Enable suggestions
 	
 	// Example 1: Send message with pre-execution suggestions
 	conversationID := "conv-123"
@@ -93,7 +93,7 @@ func ExampleChatWithSuggestions() {
 	fmt.Printf("\nChat Service Statistics:\n")
 	fmt.Printf("Suggestions enabled: %v\n", stats["suggestions_enabled"])
 	fmt.Printf("Suggestion mode: %s\n", stats["suggestion_mode"])
-	fmt.Printf("Token budget: %d\n", stats["token_budget"])
+	fmt.Printf("Suggestions enabled: %v\n", stats["suggestions_enabled"])
 	fmt.Printf("Token used: %d\n", stats["token_used"])
 	
 	// Print suggestion service stats if available
@@ -203,8 +203,10 @@ func DemonstrateSuggestionModes(chatService *ChatService) {
 func DemonstrateTokenOptimization(chatService *ChatService) {
 	fmt.Println("\n=== Token Optimization Demo ===")
 	
-	// Set a small token budget
-	chatService.SetTokenBudget(100)
+	// Configure suggestions with limits
+	if chatService.suggestionService != nil {
+		chatService.suggestionService.SetTokenLimit(100)
+	}
 	
 	// Create a very long message
 	longMessage := ""
@@ -220,10 +222,9 @@ func DemonstrateTokenOptimization(chatService *ChatService) {
 	
 	// Check token usage
 	stats := chatService.GetStats()
-	fmt.Printf("Tokens used: %d\n", stats["token_used"])
-	fmt.Printf("Token budget: %d\n", stats["token_budget"])
+	fmt.Printf("Suggestions enabled: %v\n", stats["suggestions_enabled"])
 	
-	// The message was automatically truncated to fit the token budget
+	// The message was automatically optimized for better efficiency
 	if agentResp, ok := msg.(AgentResponseMsg); ok {
 		fmt.Printf("Message was sent successfully to %s\n", agentResp.AgentID)
 	}
