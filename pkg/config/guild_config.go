@@ -11,10 +11,11 @@ import (
 	yaml "gopkg.in/yaml.v3"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 )
 
 // GuildConfigFile represents the guild configuration file structure
-// This is stored in .guild/guild.yml
+// This is stored in .campaign/guild.yml
 type GuildConfigFile struct {
 	// Map of guild name to guild definition
 	Guilds map[string]GuildDefinition `yaml:"guilds"`
@@ -45,7 +46,7 @@ func LoadGuildConfigFile(ctx context.Context, projectPath string) (*GuildConfigF
 			WithComponent("GuildConfigFile").
 			WithOperation("LoadGuildConfigFile")
 	}
-	configPath := filepath.Join(projectPath, ".guild", "guild.yml")
+	configPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "guild.yml")
 
 	// Check if file exists
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
@@ -88,7 +89,7 @@ func SaveGuildConfigFile(ctx context.Context, projectPath string, config *GuildC
 			WithComponent("GuildConfigFile").
 			WithOperation("SaveGuildConfigFile")
 	}
-	configPath := filepath.Join(projectPath, ".guild", "guild.yml")
+	configPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "guild.yml")
 
 	// Ensure directory exists
 	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {

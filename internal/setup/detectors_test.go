@@ -32,7 +32,10 @@ func TestNewDetectors(t *testing.T) {
 
 func TestDetectProviders(t *testing.T) {
 	ctx := context.Background()
-	detectors := &Detectors{projectPath: "/tmp"}
+	detectors := &Detectors{
+		projectPath: "/tmp",
+		registry:    NewProviderRegistry(),
+	}
 
 	result, err := detectors.Providers(ctx)
 	if err != nil {
@@ -61,7 +64,10 @@ func TestDetectProviders(t *testing.T) {
 
 func TestDetectClaudeCode(t *testing.T) {
 	ctx := context.Background()
-	detectors := &Detectors{projectPath: "/tmp"}
+	detectors := &Detectors{
+		projectPath: "/tmp",
+		registry:    NewProviderRegistry(),
+	}
 
 	// Save original values
 	originalSession := os.Getenv("CLAUDE_CODE_SESSION")

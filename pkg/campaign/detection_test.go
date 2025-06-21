@@ -27,7 +27,7 @@ func TestDetectCampaign(t *testing.T) {
 			name: "detects campaign from local guild.yaml",
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 				
 				// Create campaign reference
@@ -50,7 +50,7 @@ func TestDetectCampaign(t *testing.T) {
 			name: "detects campaign from parent directory guild.yaml",
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 				
 				// Create campaign reference in parent
@@ -77,7 +77,7 @@ func TestDetectCampaign(t *testing.T) {
 			name: "uses explicit campaign name when provided",
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 				
 				// Create campaign reference that should be ignored
@@ -112,7 +112,7 @@ func TestDetectCampaign(t *testing.T) {
 			name: "handles invalid guild.yaml gracefully",
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 				
 				// Create invalid guild.yaml
@@ -129,7 +129,7 @@ func TestDetectCampaign(t *testing.T) {
 			name: "handles missing campaign name in guild.yaml",
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 				
 				// Create guild.yaml without campaign name

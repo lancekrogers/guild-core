@@ -284,7 +284,7 @@ func (w *Wizard) SaveConfiguration(ctx context.Context, providers []ConfiguredPr
 			Storage: config.StorageConfig{
 				Backend: "sqlite",
 				SQLite: config.SQLiteConfig{
-					Path: ".guild/memory.db",
+					Path: ".campaign/memory.db",
 				},
 			},
 			Providers: config.ProvidersConfig{},

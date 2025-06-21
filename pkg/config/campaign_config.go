@@ -11,10 +11,11 @@ import (
 	yaml "gopkg.in/yaml.v3"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 )
 
 // CampaignConfig represents the campaign-level configuration
-// This is stored in .guild/campaign.yml
+// This is stored in .campaign/campaign.yml
 type CampaignConfig struct {
 	// Campaign identity
 	Name        string `yaml:"name"`
@@ -39,7 +40,7 @@ func LoadCampaignConfig(ctx context.Context, projectPath string) (*CampaignConfi
 			WithComponent("CampaignConfig").
 			WithOperation("LoadCampaignConfig")
 	}
-	configPath := filepath.Join(projectPath, ".guild", "campaign.yml")
+	configPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "campaign.yml")
 
 	// Check if file exists
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
@@ -82,7 +83,7 @@ func SaveCampaignConfig(ctx context.Context, projectPath string, config *Campaig
 			WithComponent("CampaignConfig").
 			WithOperation("SaveCampaignConfig")
 	}
-	configPath := filepath.Join(projectPath, ".guild", "campaign.yml")
+	configPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "campaign.yml")
 
 	// Ensure directory exists
 	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {

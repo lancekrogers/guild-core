@@ -146,7 +146,7 @@ func TestAgentTemplateGenerator_GenerateAgentFile(t *testing.T) {
 	require.NoError(t, err)
 	
 	// Verify file exists
-	expectedPath := filepath.Join(tmpDir, ".guild", "agents", "file-test-agent.yml")
+	expectedPath := filepath.Join(tmpDir, ".campaign", "agents", "file-test-agent.yml")
 	assert.FileExists(t, expectedPath)
 	
 	// Read and validate the file
@@ -220,7 +220,7 @@ func TestAgentTemplateGenerator_QuickSetup(t *testing.T) {
 	require.NoError(t, err)
 	
 	// Verify manager file
-	managerPath := filepath.Join(tmpDir, ".guild", "agents", "manager.yml")
+	managerPath := filepath.Join(tmpDir, ".campaign", "agents", "manager.yml")
 	assert.FileExists(t, managerPath)
 	
 	managerData, err := os.ReadFile(managerPath)
@@ -237,7 +237,7 @@ func TestAgentTemplateGenerator_QuickSetup(t *testing.T) {
 	assert.Equal(t, "gpt-4", managerConfig.Model)
 	
 	// Verify worker file
-	workerPath := filepath.Join(tmpDir, ".guild", "agents", "worker-1.yml")
+	workerPath := filepath.Join(tmpDir, ".campaign", "agents", "worker-1.yml")
 	assert.FileExists(t, workerPath)
 	
 	workerData, err := os.ReadFile(workerPath)

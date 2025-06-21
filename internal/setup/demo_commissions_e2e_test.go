@@ -39,7 +39,7 @@ func TestDemoCommissionEndToEnd(t *testing.T) {
 	ctx := context.Background()
 
 	// Test each demo type creates a valid commission in the right location
-	commissionsDir := filepath.Join(tempDir, ".guild", "objectives", "refined")
+	commissionsDir := filepath.Join(tempDir, ".campaign", "objectives", "refined")
 	err = os.MkdirAll(commissionsDir, 0755)
 	require.NoError(t, err)
 

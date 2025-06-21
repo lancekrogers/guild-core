@@ -54,7 +54,7 @@ func TestSaveSocketRegistry(t *testing.T) {
 			require.NoError(t, err)
 			
 			// Verify the file was created
-			registryPath := filepath.Join(tt.projectRoot, ".guild", "socket-registry.yaml")
+			registryPath := filepath.Join(tt.projectRoot, ".campaign", "socket-registry.yaml")
 			assert.FileExists(t, registryPath)
 			
 			// Verify the content
@@ -156,7 +156,7 @@ func TestCleanupStaleSessionSockets(t *testing.T) {
 				t.Setenv("HOME", homeDir)
 				
 				campaign := "test-campaign"
-				campaignDir := filepath.Join(homeDir, ".guild", "campaigns", campaign)
+				campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
 				require.NoError(t, os.MkdirAll(campaignDir, 0755))
 				
 				// Create stale socket files
@@ -187,7 +187,7 @@ func TestCleanupStaleSessionSockets(t *testing.T) {
 				t.Setenv("HOME", homeDir)
 				
 				campaign := "active-campaign"
-				campaignDir := filepath.Join(homeDir, ".guild", "campaigns", campaign)
+				campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
 				require.NoError(t, os.MkdirAll(campaignDir, 0755))
 				
 				// Create active socket
@@ -227,7 +227,7 @@ func TestCleanupStaleSessionSockets(t *testing.T) {
 			setupFunc: func(t *testing.T) (string, string) {
 				homeDir := t.TempDir()
 				t.Setenv("HOME", homeDir)
-				return "nonexistent-campaign", filepath.Join(homeDir, ".guild", "campaigns", "nonexistent-campaign")
+				return "nonexistent-campaign", filepath.Join(homeDir, ".campaign", "campaigns", "nonexistent-campaign")
 			},
 			validate: func(t *testing.T, campaignDir string) {
 				// Should not create the directory
@@ -338,7 +338,7 @@ func TestListCampaignSessions(t *testing.T) {
 			setupFunc: func(t *testing.T) (string, string) {
 				homeDir := t.TempDir()
 				campaign := "multi-session"
-				campaignDir := filepath.Join(homeDir, ".guild", "campaigns", campaign)
+				campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
 				require.NoError(t, os.MkdirAll(campaignDir, 0755))
 				
 				// Create multiple active sockets
@@ -376,7 +376,7 @@ func TestListCampaignSessions(t *testing.T) {
 			setupFunc: func(t *testing.T) (string, string) {
 				homeDir := t.TempDir()
 				campaign := "empty-campaign"
-				campaignDir := filepath.Join(homeDir, ".guild", "campaigns", campaign)
+				campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
 				require.NoError(t, os.MkdirAll(campaignDir, 0755))
 				return campaign, homeDir
 			},
@@ -387,7 +387,7 @@ func TestListCampaignSessions(t *testing.T) {
 			setupFunc: func(t *testing.T) (string, string) {
 				homeDir := t.TempDir()
 				campaign := "mixed-campaign"
-				campaignDir := filepath.Join(homeDir, ".guild", "campaigns", campaign)
+				campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
 				require.NoError(t, os.MkdirAll(campaignDir, 0755))
 				
 				// Create one active socket
@@ -458,7 +458,7 @@ func TestDiscoverAllRunningSessions(t *testing.T) {
 	}
 	
 	for campaign, sessions := range campaigns {
-		campaignDir := filepath.Join(homeDir, ".guild", "campaigns", campaign)
+		campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
 		require.NoError(t, os.MkdirAll(campaignDir, 0755))
 		
 		for _, session := range sessions {

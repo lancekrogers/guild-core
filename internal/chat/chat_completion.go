@@ -328,10 +328,10 @@ func (ce *CompletionEngine) getHelpfulSuggestions(input string) []CompletionResu
 // getCommonGuildPaths returns common Guild project paths as fallback
 func (ce *CompletionEngine) getCommonGuildPaths(input string) []CompletionResult {
 	commonPaths := []string{
-		".guild/",
-		".guild/commissions/",
-		".guild/campaigns/",
-		".guild/archives/",
+		".campaign/",
+		".campaign/commissions/",
+		".campaign/campaigns/",
+		".campaign/archives/",
 		"pkg/",
 		"cmd/",
 		"internal/",

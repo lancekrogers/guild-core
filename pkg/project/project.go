@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 )
 
 var (
@@ -33,13 +34,13 @@ var (
 // Context represents a Guild project's context with paths and configuration.
 // It is immutable after creation to ensure thread safety.
 type Context struct {
-	rootPath        string // Project root (where .guild exists)
-	guildPath       string // .guild directory
-	corpusPath      string // .guild/corpus
-	embeddingsPath  string // .guild/embeddings
-	configPath      string // .guild/config.yaml
-	agentsPath      string // .guild/agents
-	commissionsPath string // .guild/commissions
+	rootPath        string // Project root (where .campaign exists)
+	guildPath       string // .campaign directory
+	corpusPath      string // .campaign/corpus
+	embeddingsPath  string // .campaign/embeddings
+	configPath      string // .campaign/config.yaml
+	agentsPath      string // .campaign/agents
+	commissionsPath string // .campaign/commissions
 }
 
 // NewContext creates a new project context from a root path
@@ -51,7 +52,7 @@ func NewContext(rootPath string) (*Context, error) {
 			WithOperation("new_context")
 	}
 
-	guildPath := filepath.Join(abs, ".guild")
+	guildPath := filepath.Join(abs, paths.DefaultCampaignDir)
 
 	return &Context{
 		rootPath:        abs,
@@ -69,7 +70,7 @@ func (c *Context) GetRootPath() string {
 	return c.rootPath
 }
 
-// GetGuildPath returns the .guild directory path
+// GetGuildPath returns the .campaign directory path
 func (c *Context) GetGuildPath() string {
 	return c.guildPath
 }
@@ -99,7 +100,7 @@ func (c *Context) GetCommissionsPath() string {
 	return c.commissionsPath
 }
 
-// FindProjectRoot walks up the directory tree looking for a .guild directory
+// FindProjectRoot walks up the directory tree looking for a campaign directory
 func FindProjectRoot(startPath string) (string, error) {
 	abs, err := filepath.Abs(startPath)
 	if err != nil {
@@ -110,7 +111,7 @@ func FindProjectRoot(startPath string) (string, error) {
 
 	current := abs
 	for {
-		guildPath := filepath.Join(current, ".guild")
+		guildPath := filepath.Join(current, paths.DefaultCampaignDir)
 		if info, err := os.Stat(guildPath); err == nil && info.IsDir() {
 			return current, nil
 		}
@@ -172,7 +173,7 @@ func GetContextWithFallback(ctx context.Context, defaultPath string) (*Context, 
 
 // IsInitialized checks if a Guild project exists at the given path
 func IsInitialized(path string) bool {
-	guildPath := filepath.Join(path, ".guild")
+	guildPath := filepath.Join(path, paths.DefaultCampaignDir)
 	info, err := os.Stat(guildPath)
 	return err == nil && info.IsDir()
 }
@@ -186,8 +187,8 @@ func ValidateProjectPath(path string) error {
 			WithOperation("validate_project_path")
 	}
 
-	// Ensure .guild would be within the resolved path
-	guildPath := filepath.Join(abs, ".guild")
+	// Ensure campaign directory would be within the resolved path
+	guildPath := filepath.Join(abs, paths.DefaultCampaignDir)
 	if !strings.HasPrefix(guildPath, abs) {
 		return ErrInvalidPath
 	}

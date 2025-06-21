@@ -18,6 +18,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 	"github.com/guild-ventures/guild-core/pkg/project"
 )
 
@@ -403,7 +404,7 @@ func (m *GuildSelectorModel) createDefaultGuild() tea.Msg {
 	agentPrefix := "claude"
 	
 	// Check if Ollama is available by looking at the main guild.yaml
-	mainConfigPath := filepath.Join(m.projectPath, ".guild", "guild.yaml")
+	mainConfigPath := filepath.Join(m.projectPath, paths.DefaultCampaignDir, "guild.yaml")
 	if data, err := os.ReadFile(mainConfigPath); err == nil {
 		if strings.Contains(string(data), "ollama:") {
 			// Ollama is configured, create Ollama-based guild

@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 )
 
 // localDirectoryStructure defines the directory structure for a local Guild project
@@ -26,7 +27,7 @@ var localDirectoryStructure = []string{
 
 // LocalGuildDir returns the path to the local Guild directory
 func LocalGuildDir(projectPath string) string {
-	return filepath.Join(projectPath, ".guild")
+	return filepath.Join(projectPath, paths.DefaultCampaignDir)
 }
 
 // InitializeLocal creates the local Guild directory structure for a project

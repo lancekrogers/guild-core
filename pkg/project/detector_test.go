@@ -156,8 +156,8 @@ func TestProjectDetector_GenerateCorpusConfig(t *testing.T) {
 
 	config := detector.GenerateCorpusConfig(projectType, tmpDir)
 
-	expectedCorpusPath := filepath.Join(tmpDir, ".guild", "corpus")
-	expectedActivitiesPath := filepath.Join(tmpDir, ".guild", "corpus", ".activities")
+	expectedCorpusPath := filepath.Join(tmpDir, ".campaign", "corpus")
+	expectedActivitiesPath := filepath.Join(tmpDir, ".campaign", "corpus", ".activities")
 
 	assert.Equal(t, expectedCorpusPath, config.CorpusPath)
 	assert.Equal(t, expectedActivitiesPath, config.ActivitiesPath)

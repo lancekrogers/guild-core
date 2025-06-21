@@ -102,14 +102,14 @@ func (v *InitValidator) Validate(ctx context.Context) error {
 func (v *InitValidator) validateProjectStructure(ctx context.Context) InitValidationResult {
 	result := InitValidationResult{
 		Name:        "Project Structure",
-		Description: "Checking .guild directory and subdirectories",
+		Description: "Checking campaign directory and subdirectories",
 		Details:     make(map[string]string),
 	}
 
-	// Check main .guild directory
-	guildDir := filepath.Join(v.projectPath, ".guild")
+	// Check main campaign directory
+	guildDir := filepath.Join(v.projectPath, paths.DefaultCampaignDir)
 	if info, err := os.Stat(guildDir); err != nil || !info.IsDir() {
-		result.Error = gerror.New(gerror.ErrCodeNotFound, ".guild directory not found", nil).
+		result.Error = gerror.New(gerror.ErrCodeNotFound, "campaign directory not found", nil).
 			WithComponent("InitValidator").
 			WithOperation("validateProjectStructure")
 		return result
@@ -181,7 +181,7 @@ func (v *InitValidator) validateCampaignConfiguration(ctx context.Context) InitV
 	}
 
 	// Check local campaign reference
-	guildYaml := filepath.Join(v.projectPath, ".guild", "guild.yaml")
+	guildYaml := filepath.Join(v.projectPath, paths.DefaultCampaignDir, "guild.yaml")
 	if _, err := os.Stat(guildYaml); err != nil {
 		result.Warning = "Local guild.yaml missing - campaign detection may fail"
 		result.Details["guild_yaml"] = "missing"
@@ -380,7 +380,7 @@ func (v *InitValidator) validateDatabaseInitialization(ctx context.Context) Init
 	}
 
 	// Check database file
-	dbPath := filepath.Join(v.projectPath, ".guild", "memory.db")
+	dbPath := filepath.Join(v.projectPath, paths.DefaultCampaignDir, "memory.db")
 	if info, err := os.Stat(dbPath); err != nil {
 		result.Error = gerror.New(gerror.ErrCodeNotFound, "database file not found", nil).
 			WithComponent("InitValidator").
@@ -414,7 +414,7 @@ func (v *InitValidator) validateSocketRegistry(ctx context.Context) InitValidati
 	}
 
 	// Check registry file
-	registryPath := filepath.Join(v.projectPath, ".guild", "socket-registry.yaml")
+	registryPath := filepath.Join(v.projectPath, paths.DefaultCampaignDir, "socket-registry.yaml")
 	if _, err := os.Stat(registryPath); err != nil {
 		result.Warning = "Socket registry not found - daemon auto-start may not work"
 		result.Details["registry"] = "missing"

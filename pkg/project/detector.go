@@ -11,6 +11,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 )
 
 // ProjectType represents different types of projects that can be detected
@@ -328,7 +329,7 @@ type CorpusConfig struct {
 // GenerateCorpusConfig creates appropriate corpus configuration for the detected project type
 func (d *ProjectDetector) GenerateCorpusConfig(projectType *ProjectType, projectPath string) CorpusConfig {
 	// Update paths to be project-relative
-	guildPath := filepath.Join(projectPath, ".guild")
+	guildPath := filepath.Join(projectPath, paths.DefaultCampaignDir)
 
 	corpusConfig := CorpusConfig{
 		CorpusPath:      filepath.Join(guildPath, "corpus"),

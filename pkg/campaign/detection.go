@@ -37,7 +37,7 @@ type ProjectInfo struct {
 }
 
 // DetectCampaign finds the campaign for the current working directory
-// Uses file-based detection by walking up the directory tree looking for .guild/guild.yaml
+// Uses file-based detection by walking up the directory tree looking for campaign/guild.yaml
 func DetectCampaign(cwd string, flagValue string) (string, error) {
 	// 1. Explicit flag takes precedence
 	if flagValue != "" {
@@ -63,7 +63,7 @@ func DetectCampaign(cwd string, flagValue string) (string, error) {
 func findCampaignReference(cwd string) (*CampaignReference, error) {
 	currentDir := cwd
 	for {
-		guildFile := filepath.Join(currentDir, ".guild", "guild.yaml")
+		guildFile := filepath.Join(currentDir, paths.DefaultCampaignDir, "guild.yaml")
 		if fileExists(guildFile) {
 			// Found campaign reference
 			data, err := os.ReadFile(guildFile)
@@ -109,7 +109,7 @@ func findCampaignReference(cwd string) (*CampaignReference, error) {
 func GetCampaignRoot(cwd string) (string, error) {
 	currentDir := cwd
 	for {
-		guildDir := filepath.Join(currentDir, ".guild")
+		guildDir := filepath.Join(currentDir, paths.DefaultCampaignDir)
 		if dirExists(guildDir) {
 			return currentDir, nil
 		}
@@ -127,9 +127,9 @@ func GetCampaignRoot(cwd string) (string, error) {
 
 // CreateCampaignReference creates a local campaign reference file
 func CreateCampaignReference(projectDir string, campaignName string, projectName string) error {
-	localGuildDir := filepath.Join(projectDir, ".guild")
+	localGuildDir := filepath.Join(projectDir, paths.DefaultCampaignDir)
 	if err := os.MkdirAll(localGuildDir, 0700); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create .guild directory").
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign directory").
 			WithComponent("campaign").
 			WithOperation("CreateCampaignReference").
 			WithDetails("directory", localGuildDir)

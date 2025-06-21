@@ -69,7 +69,7 @@ func TestConfigShowCommand(t *testing.T) {
 			args: []string{"--local"},
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 
 				cfg := &config.GuildConfig{
@@ -105,7 +105,7 @@ func TestConfigShowCommand(t *testing.T) {
 			args: []string{"--local", "--raw"},
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 
 				cfg := &config.GuildConfig{
@@ -234,7 +234,7 @@ func TestConfigValidateCommand(t *testing.T) {
 			name: "valid configuration",
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 
 				cfg := &config.GuildConfig{
@@ -270,7 +270,7 @@ func TestConfigValidateCommand(t *testing.T) {
 			name: "invalid yaml",
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 
 				// Write invalid YAML
@@ -298,7 +298,7 @@ agents:
 			name: "missing required fields",
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 
 				cfg := &config.GuildConfig{
@@ -489,14 +489,14 @@ func TestDisplayFormattedConfig(t *testing.T) {
 				Storage: config.StorageConfig{
 					Backend: "sqlite",
 					SQLite: config.SQLiteConfig{
-						Path: ".guild/memory.db",
+						Path: ".campaign/memory.db",
 					},
 				},
 			},
 			expectedOutput: []string{
 				"💾 Storage:",
 				"Type: sqlite",
-				"Path: .guild/memory.db",
+				"Path: .campaign/memory.db",
 			},
 		},
 	}

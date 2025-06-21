@@ -113,7 +113,7 @@ func TestLoadCampaignConfig(t *testing.T) {
 		{
 			name: "valid campaign config",
 			setup: func() error {
-				guildDir := filepath.Join(tempDir, ".guild")
+				guildDir := filepath.Join(tempDir, ".campaign")
 				if err := os.MkdirAll(guildDir, 0755); err != nil {
 					return err
 				}
@@ -140,7 +140,7 @@ func TestLoadCampaignConfig(t *testing.T) {
 		{
 			name: "missing campaign config",
 			setup: func() error {
-				return os.MkdirAll(filepath.Join(tempDir, ".guild"), 0755)
+				return os.MkdirAll(filepath.Join(tempDir, ".campaign"), 0755)
 			},
 			wantErr: true,
 			errCode: gerror.ErrCodeNotFound,
@@ -148,7 +148,7 @@ func TestLoadCampaignConfig(t *testing.T) {
 		{
 			name: "invalid yaml",
 			setup: func() error {
-				guildDir := filepath.Join(tempDir, ".guild")
+				guildDir := filepath.Join(tempDir, ".campaign")
 				if err := os.MkdirAll(guildDir, 0755); err != nil {
 					return err
 				}
@@ -160,7 +160,7 @@ func TestLoadCampaignConfig(t *testing.T) {
 		{
 			name: "invalid campaign data",
 			setup: func() error {
-				guildDir := filepath.Join(tempDir, ".guild")
+				guildDir := filepath.Join(tempDir, ".campaign")
 				if err := os.MkdirAll(guildDir, 0755); err != nil {
 					return err
 				}
@@ -175,7 +175,7 @@ func TestLoadCampaignConfig(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Clean up before each test
-			os.RemoveAll(filepath.Join(tempDir, ".guild"))
+			os.RemoveAll(filepath.Join(tempDir, ".campaign"))
 			
 			if err := tt.setup(); err != nil {
 				t.Fatalf("Setup failed: %v", err)
@@ -210,7 +210,7 @@ func TestLoadCampaignConfig_ContextCancellation(t *testing.T) {
 	defer os.RemoveAll(tempDir)
 
 	// Create a valid config
-	guildDir := filepath.Join(tempDir, ".guild")
+	guildDir := filepath.Join(tempDir, ".campaign")
 	os.MkdirAll(guildDir, 0755)
 	config := &CampaignConfig{
 		Name:        "test",
@@ -265,7 +265,7 @@ func TestSaveCampaignConfig(t *testing.T) {
 				Description: "Testing save with existing directory",
 			},
 			setup: func() error {
-				return os.MkdirAll(filepath.Join(tempDir, ".guild"), 0755)
+				return os.MkdirAll(filepath.Join(tempDir, ".campaign"), 0755)
 			},
 			wantErr: false,
 		},
@@ -283,7 +283,7 @@ func TestSaveCampaignConfig(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Clean up before each test
-			os.RemoveAll(filepath.Join(tempDir, ".guild"))
+			os.RemoveAll(filepath.Join(tempDir, ".campaign"))
 			
 			if tt.setup != nil {
 				if err := tt.setup(); err != nil {
@@ -350,7 +350,7 @@ func TestUpdateLastSelectedGuild(t *testing.T) {
 	ctx := context.Background()
 
 	// Create initial config
-	guildDir := filepath.Join(tempDir, ".guild")
+	guildDir := filepath.Join(tempDir, ".campaign")
 	os.MkdirAll(guildDir, 0755)
 	
 	config := &CampaignConfig{

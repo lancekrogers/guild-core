@@ -41,7 +41,7 @@ func TestCommissionCommandValidation(t *testing.T) {
 	defer os.RemoveAll(tempDir)
 
 	// Create a basic guild.yaml
-	guildDir := filepath.Join(tempDir, ".guild")
+	guildDir := filepath.Join(tempDir, ".campaign")
 	err = os.MkdirAll(guildDir, 0755)
 	require.NoError(t, err)
 

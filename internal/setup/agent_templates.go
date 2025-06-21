@@ -14,6 +14,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 )
 
 // AgentTemplate defines a lightweight template for generating agent configurations
@@ -132,7 +133,7 @@ func (g *AgentTemplateGenerator) GenerateAgentFile(ctx context.Context, projectP
 	}
 
 	// Ensure agents directory exists
-	agentsDir := filepath.Join(projectPath, ".guild", "agents")
+	agentsDir := filepath.Join(projectPath, paths.DefaultCampaignDir, "agents")
 	if err := os.MkdirAll(agentsDir, 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
 			WithComponent("AgentTemplateGenerator").

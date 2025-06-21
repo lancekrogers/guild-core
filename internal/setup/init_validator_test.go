@@ -43,7 +43,7 @@ func TestValidateProjectStructure(t *testing.T) {
 		{
 			name: "complete structure",
 			setup: func(tmpDir string) error {
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				dirs := []string{
 					"agents", "archives", "campaigns", "corpus",
 					"guilds", "kanban", "objectives", "prompts",
@@ -61,7 +61,7 @@ func TestValidateProjectStructure(t *testing.T) {
 		{
 			name: "missing some directories",
 			setup: func(tmpDir string) error {
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				// Only create some directories
 				dirs := []string{"agents", "archives", "campaigns"}
 				for _, dir := range dirs {
@@ -118,7 +118,7 @@ func TestValidateGuildConfiguration(t *testing.T) {
 		{
 			name: "valid guild config",
 			setup: func(tmpDir string) error {
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				if err := os.MkdirAll(guildDir, 0755); err != nil {
 					return err
 				}
@@ -141,7 +141,7 @@ func TestValidateGuildConfiguration(t *testing.T) {
 		{
 			name: "guild with no agents",
 			setup: func(tmpDir string) error {
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				if err := os.MkdirAll(guildDir, 0755); err != nil {
 					return err
 				}
@@ -164,7 +164,7 @@ func TestValidateGuildConfiguration(t *testing.T) {
 		{
 			name: "no guild config file",
 			setup: func(tmpDir string) error {
-				return os.MkdirAll(filepath.Join(tmpDir, ".guild"), 0755)
+				return os.MkdirAll(filepath.Join(tmpDir, ".campaign"), 0755)
 			},
 			expectSuccess: false,
 			expectWarning: false,
@@ -260,7 +260,7 @@ func TestSocketRegistryValidation(t *testing.T) {
 			name: "valid socket registry",
 			setup: func(tmpDir string) error {
 				// Create .guild directory
-				if err := os.MkdirAll(filepath.Join(tmpDir, ".guild"), 0755); err != nil {
+				if err := os.MkdirAll(filepath.Join(tmpDir, ".campaign"), 0755); err != nil {
 					return err
 				}
 				// Save socket registry
@@ -272,7 +272,7 @@ func TestSocketRegistryValidation(t *testing.T) {
 		{
 			name: "missing socket registry",
 			setup: func(tmpDir string) error {
-				return os.MkdirAll(filepath.Join(tmpDir, ".guild"), 0755)
+				return os.MkdirAll(filepath.Join(tmpDir, ".campaign"), 0755)
 			},
 			expectSuccess: true,
 			expectWarning: true,
@@ -308,7 +308,7 @@ func TestDatabaseValidation(t *testing.T) {
 		{
 			name: "missing database",
 			setup: func(tmpDir string) error {
-				return os.MkdirAll(filepath.Join(tmpDir, ".guild"), 0755)
+				return os.MkdirAll(filepath.Join(tmpDir, ".campaign"), 0755)
 			},
 			expectSuccess: false,
 		},
@@ -348,7 +348,7 @@ func TestProviderValidation(t *testing.T) {
 		{
 			name: "providers with credentials",
 			setup: func(tmpDir string) error {
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				if err := os.MkdirAll(guildDir, 0755); err != nil {
 					return err
 				}
@@ -378,7 +378,7 @@ func TestProviderValidation(t *testing.T) {
 		{
 			name: "missing credentials",
 			setup: func(tmpDir string) error {
-				guildDir := filepath.Join(tmpDir, ".guild")
+				guildDir := filepath.Join(tmpDir, ".campaign")
 				if err := os.MkdirAll(guildDir, 0755); err != nil {
 					return err
 				}

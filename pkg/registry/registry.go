@@ -10,6 +10,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 	"github.com/guild-ventures/guild-core/pkg/storage"
@@ -1123,7 +1124,7 @@ func (r *DefaultComponentRegistry) initializeStorage(ctx context.Context) error 
 	projectCtx, err := r.projectRegistry.GetCurrentContext(ctx)
 	if err != nil {
 		// No project context available, use default SQLite backend
-		return r.initializeSQLiteStorage(ctx, ".guild/guild.db")
+		return r.initializeSQLiteStorage(ctx, filepath.Join(paths.DefaultCampaignDir, "guild.db"))
 	}
 
 	// Load guild configuration to determine storage backend

@@ -15,14 +15,14 @@ func TestFindProjectRoot(t *testing.T) {
 	tempDir := t.TempDir()
 	projectDir := filepath.Join(tempDir, "myproject")
 	subDir := filepath.Join(projectDir, "subdir", "deep")
-	guildDir := filepath.Join(projectDir, ".guild")
+	guildDir := filepath.Join(projectDir, ".campaign")
 
 	// Create directories
 	if err := os.MkdirAll(subDir, 0755); err != nil {
 		t.Fatalf("Failed to create test directories: %v", err)
 	}
 	if err := os.MkdirAll(guildDir, 0755); err != nil {
-		t.Fatalf("Failed to create .guild directory: %v", err)
+		t.Fatalf("Failed to create .campaign directory: %v", err)
 	}
 
 	tests := []struct {
@@ -75,10 +75,10 @@ func TestIsInitialized(t *testing.T) {
 		t.Error("IsInitialized() returned true for non-initialized directory")
 	}
 
-	// Create .guild directory
-	guildDir := filepath.Join(tempDir, ".guild")
+	// Create .campaign directory
+	guildDir := filepath.Join(tempDir, ".campaign")
 	if err := os.MkdirAll(guildDir, 0755); err != nil {
-		t.Fatalf("Failed to create .guild directory: %v", err)
+		t.Fatalf("Failed to create .campaign directory: %v", err)
 	}
 
 	// Test initialized directory
@@ -98,16 +98,16 @@ func TestInitialize(t *testing.T) {
 
 	// Check that all expected directories were created
 	expectedDirs := []string{
-		".guild",
-		".guild/commissions",
-		".guild/commissions/refined",
-		".guild/campaigns",
-		".guild/kanban",
-		".guild/corpus",
-		".guild/corpus/index",
-		".guild/prompts",
-		".guild/tools",
-		".guild/workspaces",
+		".campaign",
+		".campaign/commissions",
+		".campaign/commissions/refined",
+		".campaign/campaigns",
+		".campaign/kanban",
+		".campaign/corpus",
+		".campaign/corpus/index",
+		".campaign/prompts",
+		".campaign/tools",
+		".campaign/workspaces",
 	}
 
 	for _, dir := range expectedDirs {
@@ -119,9 +119,9 @@ func TestInitialize(t *testing.T) {
 
 	// Check that expected files were created
 	expectedFiles := []string{
-		".guild/guild.yaml",
-		".guild/memory.db",
-		".guild/.gitignore",
+		".campaign/guild.yaml",
+		".campaign/memory.db",
+		".campaign/.gitignore",
 	}
 
 	for _, file := range expectedFiles {
@@ -174,7 +174,7 @@ func TestValidateProjectPath(t *testing.T) {
 
 func TestContextMethods(t *testing.T) {
 	tempDir := t.TempDir()
-	guildDir := filepath.Join(tempDir, ".guild")
+	guildDir := filepath.Join(tempDir, ".campaign")
 
 	ctx, err := NewContext(tempDir)
 	if err != nil {

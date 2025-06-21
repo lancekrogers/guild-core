@@ -65,7 +65,7 @@ func TestHierarchicalLoader_LoadHierarchicalConfig(t *testing.T) {
 			name: "missing campaign config",
 			setup: func() error {
 				// Only create guild config, no campaign
-				guildDir := filepath.Join(tempDir, ".guild")
+				guildDir := filepath.Join(tempDir, ".campaign")
 				os.MkdirAll(guildDir, 0755)
 				return saveGuildConfigYAML(filepath.Join(guildDir, "guild.yml"), &GuildConfigFile{
 					Guilds: map[string]GuildDefinition{
@@ -84,7 +84,7 @@ func TestHierarchicalLoader_LoadHierarchicalConfig(t *testing.T) {
 			name: "missing guild config",
 			setup: func() error {
 				// Only create campaign config, no guild
-				guildDir := filepath.Join(tempDir, ".guild")
+				guildDir := filepath.Join(tempDir, ".campaign")
 				os.MkdirAll(guildDir, 0755)
 				return saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yml"), &CampaignConfig{
 					Name:        "test",
@@ -97,7 +97,7 @@ func TestHierarchicalLoader_LoadHierarchicalConfig(t *testing.T) {
 		{
 			name: "missing agent files",
 			setup: func() error {
-				guildDir := filepath.Join(tempDir, ".guild")
+				guildDir := filepath.Join(tempDir, ".campaign")
 				os.MkdirAll(guildDir, 0755)
 				
 				// Create campaign
@@ -125,7 +125,7 @@ func TestHierarchicalLoader_LoadHierarchicalConfig(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Clean up before each test
-			os.RemoveAll(filepath.Join(tempDir, ".guild"))
+			os.RemoveAll(filepath.Join(tempDir, ".campaign"))
 			loader.cache = make(map[string]*HierarchicalConfig) // Clear cache
 			
 			if err := tt.setup(); err != nil {
@@ -238,7 +238,7 @@ func TestHierarchicalLoader_RefreshConfig(t *testing.T) {
 	}
 
 	// Modify campaign config
-	campaignPath := filepath.Join(tempDir, ".guild", "campaign.yml")
+	campaignPath := filepath.Join(tempDir, ".campaign", "campaign.yml")
 	updatedCampaign := &CampaignConfig{
 		Name:              "updated-campaign",
 		Description:       "Updated description",
@@ -286,7 +286,7 @@ func TestHierarchicalLoader_RefreshConfig_ValidationFailure(t *testing.T) {
 	originalCampaignName := config1.Campaign.Name
 
 	// Create invalid campaign config
-	campaignPath := filepath.Join(tempDir, ".guild", "campaign.yml")
+	campaignPath := filepath.Join(tempDir, ".campaign", "campaign.yml")
 	invalidCampaign := `name: ""  # Invalid - empty name
 description: "test"`
 	os.WriteFile(campaignPath, []byte(invalidCampaign), 0644)
@@ -657,7 +657,7 @@ func TestHierarchicalConfig_SaveAgentConfig(t *testing.T) {
 	}
 
 	// Create agents directory
-	agentsDir := filepath.Join(tempDir, ".guild", "agents")
+	agentsDir := filepath.Join(tempDir, ".campaign", "agents")
 	os.MkdirAll(agentsDir, 0755)
 
 	newAgent := &AgentConfig{
@@ -868,7 +868,7 @@ func TestHierarchicalConfig_ValidateAll(t *testing.T) {
 
 // Helper function to setup a complete valid hierarchy
 func setupCompleteHierarchy(tempDir string) error {
-	guildDir := filepath.Join(tempDir, ".guild")
+	guildDir := filepath.Join(tempDir, ".campaign")
 	agentsDir := filepath.Join(guildDir, "agents")
 	
 	// Create directories
@@ -1105,7 +1105,7 @@ func TestHierarchicalLoader_RealWorldScenarios(t *testing.T) {
 
 // Helper to setup a complex hierarchy for real-world testing
 func setupComplexHierarchy(tempDir string) error {
-	guildDir := filepath.Join(tempDir, ".guild")
+	guildDir := filepath.Join(tempDir, ".campaign")
 	agentsDir := filepath.Join(guildDir, "agents")
 	
 	if err := os.MkdirAll(agentsDir, 0755); err != nil {

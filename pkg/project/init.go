@@ -159,7 +159,7 @@ corpus/.activities/
 	return os.WriteFile(gitignorePath, []byte(content), 0644)
 }
 
-// createReadme creates a README for the .guild directory
+// createReadme creates a README for the campaign directory
 func createReadme(baseDir string) error {
 	readmePath := filepath.Join(baseDir, "README.md")
 	content := `# Guild Project
@@ -255,7 +255,7 @@ func createDefaultGuildConfig(baseDir string) error {
 	// Get the default template
 	guildConfig := DefaultGuildTemplate()
 
-	// Save it to the .guild directory
+	// Save it to the campaign directory
 	guildPath := filepath.Join(baseDir, "guild.yaml")
 	data, err := yaml.Marshal(guildConfig)
 	if err != nil {

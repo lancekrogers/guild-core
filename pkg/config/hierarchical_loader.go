@@ -12,6 +12,7 @@ import (
 	yaml "gopkg.in/yaml.v3"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 )
 
 // HierarchicalConfig represents the complete hierarchical configuration
@@ -169,7 +170,7 @@ func (l *HierarchicalLoader) loadAgentConfigs(ctx context.Context, projectPath s
 	agents := make(map[string]*AgentConfig)
 	loaded := make(map[string]bool) // Track loaded agents to avoid duplicates
 
-	agentsDir := filepath.Join(projectPath, ".guild", "agents")
+	agentsDir := filepath.Join(projectPath, paths.DefaultCampaignDir, "agents")
 
 	// Load all agents referenced by all guilds
 	for guildName, guild := range guilds.Guilds {
@@ -330,7 +331,7 @@ func (c *HierarchicalConfig) SaveAgentConfig(ctx context.Context, agentName stri
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	agentPath := filepath.Join(c.projectPath, ".guild", "agents", agentName+".yml")
+	agentPath := filepath.Join(c.projectPath, paths.DefaultCampaignDir, "agents", agentName+".yml")
 
 	// Ensure directory exists
 	if err := os.MkdirAll(filepath.Dir(agentPath), 0755); err != nil {

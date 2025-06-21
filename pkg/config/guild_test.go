@@ -309,7 +309,7 @@ func TestLoadSaveGuildConfig(t *testing.T) {
 	}()
 
 	// Create .guild directory
-	guildDir := filepath.Join(tempDir, ".guild")
+	guildDir := filepath.Join(tempDir, ".campaign")
 	if err := os.MkdirAll(guildDir, 0755); err != nil {
 		t.Fatalf("Failed to create .guild dir: %v", err)
 	}

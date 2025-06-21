@@ -16,6 +16,7 @@ import (
 	"golang.org/x/term"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 	"github.com/guild-ventures/guild-core/pkg/project"
 )
 
@@ -137,7 +138,7 @@ func (dv *DemoValidator) checkGuildProject() {
 	}
 
 	// Check .guild directory
-	guildDir := filepath.Join(projCtx.GetRootPath(), ".guild")
+	guildDir := filepath.Join(projCtx.GetRootPath(), paths.DefaultCampaignDir)
 	if !dv.fileExists(guildDir) {
 		dv.errors = append(dv.errors, "Guild not initialized - run 'guild init'")
 		return

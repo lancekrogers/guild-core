@@ -18,7 +18,7 @@ import (
 // setupTestProjectContext creates .guild directory to make path appear as a project
 func setupTestProjectContext(t *testing.T, tempDir string) {
 	// Create .guild directory to make it a valid project
-	guildDir := filepath.Join(tempDir, ".guild")
+	guildDir := filepath.Join(tempDir, ".campaign")
 	if err := os.MkdirAll(guildDir, 0755); err != nil {
 		t.Fatalf("Failed to create .guild directory: %v", err)
 	}
@@ -58,7 +58,7 @@ func TestNewGuildSelector(t *testing.T) {
 		{
 			name: "with existing guilds",
 			setup: func() error {
-				guildDir := filepath.Join(tempDir, ".guild")
+				guildDir := filepath.Join(tempDir, ".campaign")
 				os.MkdirAll(guildDir, 0755)
 				
 				// Create guild config
@@ -92,7 +92,7 @@ func TestNewGuildSelector(t *testing.T) {
 			name: "with no guilds",
 			setup: func() error {
 				// Just create the .guild directory, no config files
-				return os.MkdirAll(filepath.Join(tempDir, ".guild"), 0755)
+				return os.MkdirAll(filepath.Join(tempDir, ".campaign"), 0755)
 			},
 			wantErr: false,
 			verify: func(t *testing.T, m *GuildSelectorModel) {
@@ -104,7 +104,7 @@ func TestNewGuildSelector(t *testing.T) {
 		{
 			name: "with campaign config and last selected",
 			setup: func() error {
-				guildDir := filepath.Join(tempDir, ".guild")
+				guildDir := filepath.Join(tempDir, ".campaign")
 				os.MkdirAll(guildDir, 0755)
 				
 				// Create guild config
@@ -150,7 +150,7 @@ func TestNewGuildSelector(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Clean up before each test
-			os.RemoveAll(filepath.Join(tempDir, ".guild"))
+			os.RemoveAll(filepath.Join(tempDir, ".campaign"))
 			
 			if err := tt.setup(); err != nil {
 				t.Fatalf("Setup failed: %v", err)
@@ -261,7 +261,7 @@ func TestGuildSelectorModel_Update_Selection(t *testing.T) {
 	}
 
 	// Create .guild directory
-	os.MkdirAll(filepath.Join(tempDir, ".guild"), 0755)
+	os.MkdirAll(filepath.Join(tempDir, ".campaign"), 0755)
 
 	// Test selecting a guild
 	model, cmd := m.Update(tea.KeyMsg{Type: tea.KeyEnter})
@@ -334,8 +334,8 @@ func TestGuildSelectorModel_Update_CreateNew(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Clean up before each test
-			os.RemoveAll(filepath.Join(tempDir, ".guild"))
-			os.MkdirAll(filepath.Join(tempDir, ".guild"), 0755)
+			os.RemoveAll(filepath.Join(tempDir, ".campaign"))
+			os.MkdirAll(filepath.Join(tempDir, ".campaign"), 0755)
 
 			m := &GuildSelectorModel{
 				guilds:      tt.initialGuilds,
@@ -352,7 +352,7 @@ func TestGuildSelectorModel_Update_CreateNew(t *testing.T) {
 providers:
   openai:
     settings: {}`
-			os.WriteFile(filepath.Join(tempDir, ".guild", "guild.yaml"), []byte(mainConfig), 0644)
+			os.WriteFile(filepath.Join(tempDir, ".campaign", "guild.yaml"), []byte(mainConfig), 0644)
 
 			_, cmd := m.Update(tt.keyMsg)
 			
@@ -587,12 +587,12 @@ providers:
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Clean up before test
-			os.RemoveAll(filepath.Join(tempDir, ".guild"))
-			os.MkdirAll(filepath.Join(tempDir, ".guild"), 0755)
+			os.RemoveAll(filepath.Join(tempDir, ".campaign"))
+			os.MkdirAll(filepath.Join(tempDir, ".campaign"), 0755)
 
 			// Write main config
 			os.WriteFile(
-				filepath.Join(tempDir, ".guild", "guild.yaml"),
+				filepath.Join(tempDir, ".campaign", "guild.yaml"),
 				[]byte(tt.mainConfigContent),
 				0644,
 			)
@@ -652,7 +652,7 @@ func TestGuildSelectorModel_SaveSelection(t *testing.T) {
 	defer os.RemoveAll(tempDir)
 
 	ctx := context.Background()
-	os.MkdirAll(filepath.Join(tempDir, ".guild"), 0755)
+	os.MkdirAll(filepath.Join(tempDir, ".campaign"), 0755)
 
 	m := &GuildSelectorModel{
 		projectPath: tempDir,
@@ -708,7 +708,7 @@ func TestGuildSelectorModel_StateTransitions(t *testing.T) {
 	setupTestProjectContext(t, tempDir)
 
 	// Create initial guild config
-	guildDir := filepath.Join(tempDir, ".guild")
+	guildDir := filepath.Join(tempDir, ".campaign")
 	os.MkdirAll(guildDir, 0755)
 	
 	guilds := &config.GuildConfigFile{

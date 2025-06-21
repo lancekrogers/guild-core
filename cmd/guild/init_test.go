@@ -39,12 +39,12 @@ func TestInitCommand(t *testing.T) {
 
 	// Check expected Phase 0 hierarchical configuration files exist
 	expectedFiles := []string{
-		".guild/campaign.yml",       // Phase 0 campaign configuration
-		".guild/guild.yml",          // Phase 0 guild definitions
-		".guild/guild.yaml",         // Campaign reference for detection system
-		".guild/project.yaml",       // Provider and agent configuration from wizard
-		".guild/memory.db",          // SQLite database
-		".guild/.gitignore",         // Git ignore rules
+		".campaign/campaign.yml",       // Phase 0 campaign configuration
+		".campaign/guild.yml",          // Phase 0 guild definitions
+		".campaign/guild.yaml",         // Campaign reference for detection system
+		".campaign/project.yaml",       // Provider and agent configuration from wizard
+		".campaign/memory.db",          // SQLite database
+		".campaign/.gitignore",         // Git ignore rules
 	}
 
 	for _, file := range expectedFiles {
@@ -54,7 +54,7 @@ func TestInitCommand(t *testing.T) {
 	}
 
 	// Check that agents directory exists and has agent files
-	agentsDir := ".guild/agents"
+	agentsDir := ".campaign/agents"
 	if _, err := os.Stat(agentsDir); os.IsNotExist(err) {
 		t.Errorf("Expected agents directory %s was not created", agentsDir)
 	} else {
@@ -68,7 +68,7 @@ func TestInitCommand(t *testing.T) {
 	}
 
 	// Verify campaign reference structure
-	campaignRefPath := ".guild/guild.yaml"
+	campaignRefPath := ".campaign/guild.yaml"
 	data, err := os.ReadFile(campaignRefPath)
 	if err != nil {
 		t.Errorf("Failed to read campaign reference file: %v", err)

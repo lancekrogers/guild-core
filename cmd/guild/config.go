@@ -15,6 +15,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 	"github.com/guild-ventures/guild-core/pkg/project/global"
 )
 
@@ -26,7 +27,7 @@ var configCmd = &cobra.Command{
 
 Guild uses a hierarchical configuration system:
 - Global config: ~/.guild/config.yaml
-- Project config: .guild/guild.yaml
+- Project config: .campaign/guild.yaml
 - Provider configs: ~/.guild/providers/*.yaml
 
 API keys are read from environment variables for security.`,
@@ -195,7 +196,7 @@ func showGlobalConfig(raw bool) error {
 
 // showLocalConfig displays only the local project configuration
 func showLocalConfig(raw bool) error {
-	configPath := filepath.Join(".guild", "guild.yaml")
+	configPath := filepath.Join(paths.DefaultCampaignDir, "guild.yaml")
 
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		fmt.Println("No local configuration found at:", configPath)
@@ -316,10 +317,10 @@ func runConfigPath(cmd *cobra.Command, args []string) error {
 
 	// Local paths
 	fmt.Println("📁 Local (Project):")
-	fmt.Printf("  Config:    %s\n", filepath.Join(".guild", "guild.yaml"))
-	fmt.Printf("  Database:  %s\n", filepath.Join(".guild", "memory.db"))
-	fmt.Printf("  Corpus:    %s\n", filepath.Join(".guild", "corpus.yaml"))
-	fmt.Printf("  Archives:  %s\n", filepath.Join(".guild", "archives"))
+	fmt.Printf("  Config:    %s\n", filepath.Join(paths.DefaultCampaignDir, "guild.yaml"))
+	fmt.Printf("  Database:  %s\n", filepath.Join(paths.DefaultCampaignDir, "memory.db"))
+	fmt.Printf("  Corpus:    %s\n", filepath.Join(paths.DefaultCampaignDir, "corpus.yaml"))
+	fmt.Printf("  Archives:  %s\n", filepath.Join(paths.DefaultCampaignDir, "archives"))
 	fmt.Println()
 
 	// Environment variables
@@ -373,7 +374,7 @@ func runConfigValidate(cmd *cobra.Command, args []string) error {
 	}
 
 	// Check local config
-	localConfigPath := filepath.Join(".guild", "guild.yaml")
+	localConfigPath := filepath.Join(paths.DefaultCampaignDir, "guild.yaml")
 
 	if _, err := os.Stat(localConfigPath); err == nil {
 		data, err := os.ReadFile(localConfigPath)
@@ -454,7 +455,7 @@ func runConfigEdit(cmd *cobra.Command, args []string) error {
 	var configPath string
 
 	if len(args) == 0 || args[0] == "local" {
-		configPath = filepath.Join(".guild", "guild.yaml")
+		configPath = filepath.Join(paths.DefaultCampaignDir, "guild.yaml")
 		if _, err := os.Stat(configPath); os.IsNotExist(err) {
 			return gerror.New(gerror.ErrCodeNotFound, "no local configuration found", nil).
 				WithComponent("config").
@@ -603,7 +604,7 @@ func runConfigAgents(cmd *cobra.Command, args []string) error {
 
 	if cfg == nil || len(cfg.Agents) == 0 {
 		fmt.Println("No agents configured in this project.")
-		fmt.Println("\nTo configure agents, edit .guild/guild.yaml")
+		fmt.Println("\nTo configure agents, edit", filepath.Join(paths.DefaultCampaignDir, "guild.yaml"))
 		return nil
 	}
 

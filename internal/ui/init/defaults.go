@@ -16,6 +16,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/daemon"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 	"github.com/guild-ventures/guild-core/pkg/project"
 )
 
@@ -84,7 +85,7 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 	}
 
 	// Step 3: Create agents directory
-	agentsDir := filepath.Join(projectPath, ".guild", "agents")
+	agentsDir := filepath.Join(projectPath, paths.DefaultCampaignDir, "agents")
 	if err := os.MkdirAll(agentsDir, 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
 			WithComponent("DefaultConfigManager").
@@ -123,7 +124,7 @@ func (d *DefaultConfigManager) CreateCampaignReference(ctx context.Context, proj
 		Description: "Project " + projectName + " in campaign " + campaignName,
 	}
 
-	refPath := filepath.Join(projectPath, ".guild", "guild.yaml")
+	refPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "guild.yaml")
 	refData, err := yaml.Marshal(ref)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal campaign reference").

@@ -16,6 +16,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	promptcontext "github.com/guild-ventures/guild-core/pkg/prompts/layered/context"
@@ -129,7 +130,7 @@ func init() {
 
 	// Add refinement flags
 	commissionRefineCmd.Flags().StringVar(&domainFlag, "domain", "web-app", "Project domain (web-app, cli-tool, library, microservice)")
-	commissionRefineCmd.Flags().StringVar(&outputDirFlag, "output", "", "Output directory for refined commissions (default: .guild/commissions/refined)")
+	commissionRefineCmd.Flags().StringVar(&outputDirFlag, "output", "", "Output directory for refined commissions (default: .campaign/commissions/refined)")
 	commissionRefineCmd.Flags().BoolVar(&interactiveFlag, "interactive", false, "Interactive mode for reviewing refinements")
 	commissionRefineCmd.Flags().BoolVar(&createTasksFlag, "create-tasks", true, "Create kanban tasks from refined content")
 }
@@ -184,7 +185,7 @@ func executeRefinement(ctx context.Context, commissionContent string) error {
 	// Determine output directory
 	outputDir := outputDirFlag
 	if outputDir == "" {
-		outputDir = filepath.Join(projCtx.GetRootPath(), ".guild", "commissions", "refined")
+		outputDir = filepath.Join(projCtx.GetRootPath(), paths.DefaultCampaignDir, "commissions", "refined")
 	}
 
 	// Create output directory
@@ -285,7 +286,7 @@ func executeRefinement(ctx context.Context, commissionContent string) error {
 // setupRefiner creates and configures the GuildMasterRefiner
 func setupRefiner(ctx context.Context, projCtx *project.Context, guildConfig *config.GuildConfig) (*manager.GuildMasterRefiner, error) {
 	// Setup data directory
-	dataDir := filepath.Join(projCtx.GetRootPath(), ".guild")
+	dataDir := filepath.Join(projCtx.GetRootPath(), paths.DefaultCampaignDir)
 	if err := os.MkdirAll(dataDir, 0755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create data directory").
 			WithComponent("cli").
