@@ -103,8 +103,16 @@ func runChat(cmd *cobra.Command, args []string) error {
 			WithOperation("chat.run")
 	}
 
+	// Determine which version to use before guild selection
+	useV2 := os.Getenv("GUILD_CHAT_V2") == "true"
+	
 	// Run guild selector to let user choose which guild to work with
-	selectedGuild, err := chatv1.RunGuildSelector(ctx)
+	var selectedGuild string
+	if useV2 {
+		selectedGuild, err = chatv2.RunGuildSelector(ctx)
+	} else {
+		selectedGuild, err = chatv1.RunGuildSelector(ctx)
+	}
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to select guild").
 			WithComponent("cli").
@@ -184,12 +192,10 @@ func runChat(cmd *cobra.Command, args []string) error {
 	}
 
 	// Create and run chat interface
-	// TODO: Feature flag to switch between v1 and v2
-	useV2 := os.Getenv("GUILD_CHAT_V2") == "true"
-	
 	if useV2 {
 		// Use new modular v2 implementation
 		app := chatv2.NewApp(ctx, guildConfig, conn, guildClient, promptClient, reg)
+		app.SetSelectedGuild(selectedGuild)
 		return app.Run()
 	} else {
 		// Use existing v1 implementation

@@ -89,6 +89,9 @@ type App struct {
 	chatHandler       *agent.ChatSuggestionHandler
 	enhancedAgent     agent.EnhancedGuildArtisan
 
+	// Guild selection
+	selectedGuild string
+
 	// Feature flags
 	initialized bool
 	ready       bool
@@ -1195,4 +1198,30 @@ func (mcm *MinimalCostManager) EstimateLLMCost(model string, estimatedTokens int
 
 func (mcm *MinimalCostManager) RecordLLMCost(model string, promptTokens, completionTokens int, metadata map[string]string) error {
 	return nil // Placeholder implementation
+}
+
+func (mcm *MinimalCostManager) SetBudget(costType agent.CostType, amount float64) {
+	// Placeholder implementation
+}
+
+func (mcm *MinimalCostManager) GetBudgetRemaining(costType agent.CostType) float64 {
+	return 0.0 // Placeholder implementation
+}
+
+func (mcm *MinimalCostManager) ExceedsBudget(costType agent.CostType, amount float64) bool {
+	return false // Placeholder implementation
+}
+
+func (mcm *MinimalCostManager) CanAfford(costType agent.CostType, amount float64) bool {
+	return true // Placeholder implementation - always return true for testing
+}
+
+// SetSelectedGuild sets the selected guild for the chat session
+func (app *App) SetSelectedGuild(guildName string) {
+	app.selectedGuild = guildName
+}
+
+// GetSelectedGuild returns the selected guild for the chat session
+func (app *App) GetSelectedGuild() string {
+	return app.selectedGuild
 }
