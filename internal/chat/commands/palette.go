@@ -424,3 +424,8 @@ func (cp *CommandPalette) GetCommands() []PaletteCommand {
 func (cp *CommandPalette) GetFilteredCommands() []PaletteCommand {
 	return cp.filteredCmds
 }
+
+// GetSearchQuery returns the current search query
+func (cp *CommandPalette) GetSearchQuery() string {
+	return cp.searchQuery
+}

@@ -4,13 +4,21 @@
 package chat
 
 import (
+	"bytes"
 	"context"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/bubbles/help"
+	"github.com/charmbracelet/x/exp/teatest"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
@@ -874,4 +882,436 @@ func TestGuildSelectorModel_EdgeCases(t *testing.T) {
 		<-done
 		<-done
 	})
+}
+
+// =============================================================================
+// Integration Tests using teatest
+// =============================================================================
+
+// Helper functions for integration tests
+
+// createTestGuildSelector creates a GuildSelectorModel with test data for integration testing
+func createTestGuildSelector(t *testing.T, withGuilds bool) *GuildSelectorModel {
+	tempDir, err := os.MkdirTemp("", "guild-selector-integration")
+	require.NoError(t, err)
+	t.Cleanup(func() { os.RemoveAll(tempDir) })
+	
+	// Create .campaign directory
+	campaignDir := filepath.Join(tempDir, ".campaign")
+	require.NoError(t, os.MkdirAll(campaignDir, 0755))
+	
+	model := &GuildSelectorModel{
+		help:        help.New(),
+		width:       80,
+		height:      24,
+		projectPath: tempDir,
+		ctx:         context.Background(),
+	}
+	
+	if withGuilds {
+		model.guilds = []GuildInfo{
+			{Name: "web-dev", Description: "Web development guild", AgentCount: 3},
+			{Name: "api-services", Description: "API and microservices", AgentCount: 2},
+			{Name: "data-analysis", Description: "Data science and analytics", AgentCount: 4},
+		}
+	}
+	
+	return model
+}
+
+// containsBytes checks if bytes contain a string (case-insensitive)
+func containsBytes(data []byte, s string) bool {
+	return bytes.Contains(bytes.ToLower(data), bytes.ToLower([]byte(s)))
+}
+
+// Integration Tests
+
+func TestGuildSelector_Integration_BasicNavigation(t *testing.T) {
+	model := createTestGuildSelector(t, true)
+	
+	tm := teatest.NewTestModel(
+		t,
+		model,
+		teatest.WithInitialTermSize(80, 24),
+	)
+	
+	// Wait for initial render with guilds
+	teatest.WaitFor(
+		t,
+		tm.Output(),
+		func(bts []byte) bool {
+			return containsBytes(bts, "web-dev") && containsBytes(bts, "Select Guild")
+		},
+		teatest.WithCheckInterval(50*time.Millisecond),
+		teatest.WithDuration(2*time.Second),
+	)
+	
+	// Navigate down twice
+	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+	
+	// Wait a moment for navigation to process
+	time.Sleep(100 * time.Millisecond)
+	
+	// Navigate up once
+	tm.Send(tea.KeyMsg{Type: tea.KeyUp})
+	
+	// Wait and then quit
+	time.Sleep(100 * time.Millisecond)
+	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+	
+	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
+	
+	// Verify model state
+	finalModel := tm.FinalModel(t)
+	if selectorModel, ok := finalModel.(*GuildSelectorModel); ok {
+		assert.True(t, selectorModel.quit, "Model should be in quit state")
+		assert.Equal(t, 1, selectorModel.cursor, "Cursor should be at position 1 after navigation")
+	}
+}
+
+func TestGuildSelector_Integration_VimKeybindings(t *testing.T) {
+	model := createTestGuildSelector(t, true)
+	
+	tm := teatest.NewTestModel(
+		t,
+		model,
+		teatest.WithInitialTermSize(80, 24),
+	)
+	
+	// Wait for initial render
+	teatest.WaitFor(
+		t,
+		tm.Output(),
+		func(bts []byte) bool {
+			return containsBytes(bts, "web-dev")
+		},
+		teatest.WithCheckInterval(50*time.Millisecond),
+		teatest.WithDuration(2*time.Second),
+	)
+	
+	// Use vim keybindings for navigation
+	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("j")}) // down
+	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("j")}) // down
+	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("k")}) // up
+	
+	// Wait and quit
+	time.Sleep(100 * time.Millisecond)
+	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+	
+	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
+	
+	finalModel := tm.FinalModel(t)
+	if selectorModel, ok := finalModel.(*GuildSelectorModel); ok {
+		assert.Equal(t, 1, selectorModel.cursor, "Cursor should be at position 1 after vim navigation")
+	}
+}
+
+func TestGuildSelector_Integration_GuildSelection(t *testing.T) {
+	model := createTestGuildSelector(t, true)
+	
+	tm := teatest.NewTestModel(
+		t,
+		model,
+		teatest.WithInitialTermSize(80, 24),
+	)
+	
+	// Wait for initial render
+	teatest.WaitFor(
+		t,
+		tm.Output(),
+		func(bts []byte) bool {
+			return containsBytes(bts, "web-dev")
+		},
+		teatest.WithCheckInterval(50*time.Millisecond),
+		teatest.WithDuration(2*time.Second),
+	)
+	
+	// Navigate to second guild and select it
+	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+	time.Sleep(50 * time.Millisecond)
+	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	
+	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
+	
+	// Verify selection
+	finalModel := tm.FinalModel(t)
+	if selectorModel, ok := finalModel.(*GuildSelectorModel); ok {
+		assert.Equal(t, "api-services", selectorModel.selected, "Should have selected api-services guild")
+		assert.Equal(t, 1, selectorModel.cursor, "Cursor should be at position 1")
+	}
+}
+
+func TestGuildSelector_Integration_CreateNewGuild(t *testing.T) {
+	model := createTestGuildSelector(t, true)
+	
+	tm := teatest.NewTestModel(
+		t,
+		model,
+		teatest.WithInitialTermSize(80, 24),
+	)
+	
+	// Wait for initial render
+	teatest.WaitFor(
+		t,
+		tm.Output(),
+		func(bts []byte) bool {
+			return containsBytes(bts, "Create New Guild") && containsBytes(bts, "web-dev")
+		},
+		teatest.WithCheckInterval(50*time.Millisecond),
+		teatest.WithDuration(2*time.Second),
+	)
+	
+	// Press 'n' to create new guild
+	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("n")})
+	
+	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
+	
+	// Note: We can't easily test the actual guild creation process in teatest
+	// since it involves file operations, but we can verify the command was triggered
+	finalOutput := tm.FinalOutput(t)
+	outputBytes, err := io.ReadAll(finalOutput)
+	require.NoError(t, err)
+	
+	t.Logf("Create new guild output: %s", string(outputBytes))
+}
+
+func TestGuildSelector_Integration_CreateNewGuildByNavigation(t *testing.T) {
+	model := createTestGuildSelector(t, true)
+	
+	tm := teatest.NewTestModel(
+		t,
+		model,
+		teatest.WithInitialTermSize(80, 24),
+	)
+	
+	// Wait for initial render
+	teatest.WaitFor(
+		t,
+		tm.Output(),
+		func(bts []byte) bool {
+			return containsBytes(bts, "Create New Guild")
+		},
+		teatest.WithCheckInterval(50*time.Millisecond),
+		teatest.WithDuration(2*time.Second),
+	)
+	
+	// Navigate to "Create New Guild" option and select it
+	tm.Send(tea.KeyMsg{Type: tea.KeyDown}) // go to position 1
+	tm.Send(tea.KeyMsg{Type: tea.KeyDown}) // go to position 2  
+	tm.Send(tea.KeyMsg{Type: tea.KeyDown}) // go to position 3 (Create New Guild)
+	time.Sleep(50 * time.Millisecond)
+	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	
+	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
+	
+	finalOutput := tm.FinalOutput(t)
+	outputBytes, err := io.ReadAll(finalOutput)
+	require.NoError(t, err)
+	
+	t.Logf("Navigate to create new guild output: %s", string(outputBytes))
+}
+
+func TestGuildSelector_Integration_HelpToggle(t *testing.T) {
+	model := createTestGuildSelector(t, true)
+	
+	tm := teatest.NewTestModel(
+		t,
+		model,
+		teatest.WithInitialTermSize(80, 24),
+	)
+	
+	// Wait for initial render
+	teatest.WaitFor(
+		t,
+		tm.Output(),
+		func(bts []byte) bool {
+			return containsBytes(bts, "web-dev")
+		},
+		teatest.WithCheckInterval(50*time.Millisecond),
+		teatest.WithDuration(2*time.Second),
+	)
+	
+	// Toggle help on
+	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("?")})
+	
+	// Wait for help to appear
+	teatest.WaitFor(
+		t,
+		tm.Output(),
+		func(bts []byte) bool {
+			return containsBytes(bts, "↑/k up") && containsBytes(bts, "select")
+		},
+		teatest.WithCheckInterval(50*time.Millisecond),
+		teatest.WithDuration(2*time.Second),
+	)
+	
+	// Toggle help off
+	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("?")})
+	
+	// Wait a moment and quit
+	time.Sleep(100 * time.Millisecond)
+	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+	
+	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
+	
+	finalModel := tm.FinalModel(t)
+	if selectorModel, ok := finalModel.(*GuildSelectorModel); ok {
+		assert.False(t, selectorModel.showHelp, "Help should be hidden after toggle")
+	}
+}
+
+func TestGuildSelector_Integration_EmptyGuildList(t *testing.T) {
+	model := createTestGuildSelector(t, false) // No guilds
+	
+	tm := teatest.NewTestModel(
+		t,
+		model,
+		teatest.WithInitialTermSize(80, 24),
+	)
+	
+	// Wait for initial render with empty state
+	teatest.WaitFor(
+		t,
+		tm.Output(),
+		func(bts []byte) bool {
+			return containsBytes(bts, "No guilds found") || containsBytes(bts, "Create New Guild")
+		},
+		teatest.WithCheckInterval(50*time.Millisecond),
+		teatest.WithDuration(2*time.Second),
+	)
+	
+	// In empty state, enter should create new guild
+	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	
+	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
+	
+	finalOutput := tm.FinalOutput(t)
+	outputBytes, err := io.ReadAll(finalOutput)
+	require.NoError(t, err)
+	
+	t.Logf("Empty guild list output: %s", string(outputBytes))
+}
+
+func TestGuildSelector_Integration_WindowResize(t *testing.T) {
+	model := createTestGuildSelector(t, true)
+	
+	tm := teatest.NewTestModel(
+		t,
+		model,
+		teatest.WithInitialTermSize(80, 24),
+	)
+	
+	// Wait for initial render
+	teatest.WaitFor(
+		t,
+		tm.Output(),
+		func(bts []byte) bool {
+			return containsBytes(bts, "web-dev")
+		},
+		teatest.WithCheckInterval(50*time.Millisecond),
+		teatest.WithDuration(2*time.Second),
+	)
+	
+	// Send window resize event
+	tm.Send(tea.WindowSizeMsg{Width: 120, Height: 30})
+	
+	// Wait a moment for resize to process
+	time.Sleep(100 * time.Millisecond)
+	
+	// Quit
+	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+	
+	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
+	
+	finalModel := tm.FinalModel(t)
+	if selectorModel, ok := finalModel.(*GuildSelectorModel); ok {
+		assert.Equal(t, 120, selectorModel.width, "Width should be updated to 120")
+		assert.Equal(t, 30, selectorModel.height, "Height should be updated to 30")
+	}
+}
+
+func TestGuildSelector_Integration_QuitWithCtrlC(t *testing.T) {
+	model := createTestGuildSelector(t, true)
+	
+	tm := teatest.NewTestModel(
+		t,
+		model,
+		teatest.WithInitialTermSize(80, 24),
+	)
+	
+	// Wait for initial render
+	teatest.WaitFor(
+		t,
+		tm.Output(),
+		func(bts []byte) bool {
+			return containsBytes(bts, "web-dev")
+		},
+		teatest.WithCheckInterval(50*time.Millisecond),
+		teatest.WithDuration(2*time.Second),
+	)
+	
+	// Quit with Ctrl+C
+	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlC})
+	
+	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
+	
+	finalModel := tm.FinalModel(t)
+	if selectorModel, ok := finalModel.(*GuildSelectorModel); ok {
+		assert.True(t, selectorModel.quit, "Model should be in quit state")
+	}
+}
+
+// Benchmarks for performance testing
+
+func BenchmarkGuildSelector_Navigation(b *testing.B) {
+	model := &GuildSelectorModel{
+		guilds: []GuildInfo{
+			{Name: "guild1", Description: "First guild"},
+			{Name: "guild2", Description: "Second guild"},
+			{Name: "guild3", Description: "Third guild"},
+		},
+		cursor: 0,
+		help:   help.New(),
+	}
+	
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		// Simulate navigation
+		model.Update(tea.KeyMsg{Type: tea.KeyDown})
+		model.Update(tea.KeyMsg{Type: tea.KeyUp})
+	}
+}
+
+func BenchmarkGuildSelector_View(b *testing.B) {
+	model := &GuildSelectorModel{
+		guilds: []GuildInfo{
+			{Name: "guild1", Description: "First guild", AgentCount: 3},
+			{Name: "guild2", Description: "Second guild", AgentCount: 5},
+			{Name: "guild3", Description: "Third guild", AgentCount: 2},
+		},
+		cursor: 1,
+		width:  80,
+		height: 24,
+		help:   help.New(),
+	}
+	
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = model.View()
+	}
+}
+
+func BenchmarkGuildSelector_HelpToggle(b *testing.B) {
+	model := &GuildSelectorModel{
+		guilds: []GuildInfo{
+			{Name: "guild1", Description: "First guild"},
+		},
+		help: help.New(),
+	}
+	
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		model.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("?")})
+	}
 }
