@@ -62,11 +62,16 @@ func (m *InitTUIModelV2) doInitialization() tea.Cmd {
 			return errMsg{err: err}
 		}
 		
-		// Progress update
+		// Check context after configuration
+		if err := ctx.Err(); err != nil {
+			return errMsg{err: gerror.Wrap(err, gerror.ErrCodeCancelled, "cancelled after config creation")}
+		}
+		
+		// Complete initialization
 		return initProgressMsg{
-			phase:   "initialization",
-			percent: 0.5,
-			message: "Project structure created",
+			phase:   "complete",
+			percent: 1.0,
+			message: "Initialization complete",
 		}
 	}
 }

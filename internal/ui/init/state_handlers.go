@@ -85,6 +85,15 @@ func (m *InitTUIModelV2) updateInitializing(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case initProgressMsg:
 		m.progress.SetPercent(msg.percent)
 		if msg.phase == "complete" {
+			// In quick mode, skip demo question and go straight to validation
+			if m.config.QuickMode {
+				m.state = StateValidating
+				return m, tea.Batch(
+					m.spinner.Tick,
+					m.doValidation(),
+				)
+			}
+			// In interactive mode, ask about demo
 			m.state = StateDemoQuestion
 			return m, nil
 		}
