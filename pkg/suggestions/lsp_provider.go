@@ -80,7 +80,7 @@ func (p *LSPSuggestionProvider) getCompletionSuggestions(ctx context.Context, co
 	}
 
 	suggestions := make([]Suggestion, 0)
-	
+
 	// Convert top completions to suggestions
 	maxCompletions := 5
 	if len(completions.Items) < maxCompletions {
@@ -89,10 +89,10 @@ func (p *LSPSuggestionProvider) getCompletionSuggestions(ctx context.Context, co
 
 	for i := 0; i < maxCompletions; i++ {
 		item := completions.Items[i]
-		
+
 		// Calculate confidence based on sort text and kind
 		confidence := p.calculateCompletionConfidence(item)
-		
+
 		// Skip low confidence items
 		if confidence < 0.3 {
 			continue
@@ -100,7 +100,7 @@ func (p *LSPSuggestionProvider) getCompletionSuggestions(ctx context.Context, co
 
 		// Determine icon based on completion kind
 		icon := p.getCompletionIcon(item.Kind)
-		
+
 		suggestion := Suggestion{
 			Type:        SuggestionTypeCode,
 			Content:     item.InsertText,
@@ -113,15 +113,15 @@ func (p *LSPSuggestionProvider) getCompletionSuggestions(ctx context.Context, co
 				Target: item.InsertText,
 				Parameters: map[string]interface{}{
 					"completion_kind": item.Kind,
-					"file":           context.FileContext.FilePath,
-					"position":       fmt.Sprintf("%d:%d", context.FileContext.Line, context.FileContext.Column),
+					"file":            context.FileContext.FilePath,
+					"position":        fmt.Sprintf("%d:%d", context.FileContext.Line, context.FileContext.Column),
 				},
 			},
 			Tags: []string{"completion", strings.ToLower(p.getKindName(item.Kind))},
 			Metadata: map[string]interface{}{
 				"lsp_provider": true,
-				"kind":        item.Kind,
-				"deprecated":  item.Deprecated,
+				"kind":         item.Kind,
+				"deprecated":   item.Deprecated,
 			},
 		}
 
@@ -209,7 +209,7 @@ func (p *LSPSuggestionProvider) getWorkspaceSuggestions(ctx context.Context, con
 
 	// Extract potential symbol names from the message
 	symbols := p.extractSymbolsFromMessage(context.CurrentMessage)
-	
+
 	for _, symbol := range symbols {
 		// Suggest workspace symbol search
 		suggestion := Suggestion{
@@ -456,29 +456,29 @@ func (p *LSPSuggestionProvider) extractSymbolsFromMessage(message string) []stri
 	// Simple heuristic to extract potential symbol names
 	symbols := []string{}
 	words := strings.Fields(message)
-	
+
 	// Common English words to skip
 	commonWords := map[string]bool{
-		"The": true, "Where": true, "Find": true, "Look": true, 
-		"Get": true, "Set": true, "For": true, "And": true, 
+		"The": true, "Where": true, "Find": true, "Look": true,
+		"Get": true, "Set": true, "For": true, "And": true,
 		"Or": true, "In": true, "Is": true, "Are": true,
 		"Can": true, "How": true, "What": true, "When": true,
 		"Show": true, "List": true, "Check": true, "Search": true,
 	}
-	
+
 	for _, word := range words {
 		// Clean up common punctuation first
 		cleaned := strings.Trim(word, ".,!?()[]{}\"'")
 		if cleaned == "" || len(cleaned) <= 2 {
 			continue
 		}
-		
+
 		// Look for snake_case patterns
 		if strings.Contains(cleaned, "_") {
 			symbols = append(symbols, cleaned)
 			continue
 		}
-		
+
 		// Look for PascalCase or camelCase patterns
 		if cleaned[0] >= 'A' && cleaned[0] <= 'Z' {
 			// Check if it has more capitals (like HTTPClient)
@@ -490,7 +490,7 @@ func (p *LSPSuggestionProvider) extractSymbolsFromMessage(message string) []stri
 			}
 		}
 	}
-	
+
 	return symbols
 }
 

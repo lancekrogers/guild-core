@@ -41,7 +41,7 @@ func (tc *TeaTestCleanup) Add(f func()) {
 func (tc *TeaTestCleanup) RunAll() {
 	tc.mu.Lock()
 	defer tc.mu.Unlock()
-	
+
 	// Run in reverse order (LIFO)
 	for i := len(tc.cleanup) - 1; i >= 0; i-- {
 		if tc.cleanup[i] != nil {
@@ -54,24 +54,24 @@ func (tc *TeaTestCleanup) RunAll() {
 // SafeTeaTest wraps teatest with proper cleanup and signal handling
 func SafeTeaTest(t *testing.T, model tea.Model, opts ...teatest.TestOption) *teatest.TestModel {
 	t.Helper()
-	
+
 	// Create cleanup manager
 	cleanup := NewTeaTestCleanup()
-	
+
 	// Save terminal state before test
 	oldState := saveTerminalState()
 	cleanup.Add(func() {
 		restoreTerminalState(oldState)
 	})
-	
+
 	// Set up signal handler to restore terminal on interrupt
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
-	
+
 	// Context for cancellation
 	ctx, cancel := context.WithCancel(context.Background())
 	cleanup.Add(cancel)
-	
+
 	// Start signal handler
 	go func() {
 		select {
@@ -83,27 +83,27 @@ func SafeTeaTest(t *testing.T, model tea.Model, opts ...teatest.TestOption) *tea
 			// Normal cleanup path
 		}
 	}()
-	
+
 	// Register test cleanup
 	t.Cleanup(func() {
 		// Stop signal handler
 		signal.Stop(sigChan)
 		close(sigChan)
-		
+
 		// Run all cleanup functions
 		cleanup.RunAll()
-		
+
 		// Give terminal a moment to settle
 		time.Sleep(50 * time.Millisecond)
 	})
-	
+
 	// Create the test model with cleanup-aware options
 	allOpts := append([]teatest.TestOption{
 		teatest.WithInitialTermSize(80, 24),
 	}, opts...)
-	
+
 	tm := teatest.NewTestModel(t, model, allOpts...)
-	
+
 	// Ensure WaitFinished is called on cleanup
 	cleanup.Add(func() {
 		// Use a short timeout to avoid hanging tests
@@ -112,7 +112,7 @@ func SafeTeaTest(t *testing.T, model tea.Model, opts ...teatest.TestOption) *tea
 			tm.WaitFinished(t, teatest.WithFinalTimeout(100*time.Millisecond))
 			close(done)
 		}()
-		
+
 		select {
 		case <-done:
 			// Finished normally
@@ -121,7 +121,7 @@ func SafeTeaTest(t *testing.T, model tea.Model, opts ...teatest.TestOption) *tea
 			tm.Send(tea.QuitMsg{})
 		}
 	})
-	
+
 	return tm
 }
 
@@ -147,13 +147,13 @@ func restoreTerminalState(state *TerminalState) {
 	if state == nil || !state.saved {
 		return
 	}
-	
+
 	// In a real implementation, this would:
 	// 1. Exit alternate screen if needed
 	// 2. Show cursor
 	// 3. Reset terminal mode
 	// 4. Clear any partial escape sequences
-	
+
 	// For now, we'll use ANSI escape sequences to reset common issues
 	os.Stdout.Write([]byte("\033[?1049l")) // Exit alternate screen
 	os.Stdout.Write([]byte("\033[?25h"))   // Show cursor
@@ -166,10 +166,10 @@ func restoreTerminalState(state *TerminalState) {
 func ExampleSafeTeaTest(t *testing.T) {
 	// Create a simple test model
 	model := &simpleModel{}
-	
+
 	// Use SafeTeaTest instead of direct teatest
 	tm := SafeTeaTest(t, model)
-	
+
 	// Wait for initial render
 	teatest.WaitFor(
 		t,
@@ -180,10 +180,10 @@ func ExampleSafeTeaTest(t *testing.T) {
 		teatest.WithCheckInterval(50*time.Millisecond),
 		teatest.WithDuration(time.Second),
 	)
-	
+
 	// Send quit command
 	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlC})
-	
+
 	// SafeTeaTest will handle cleanup automatically
 }
 

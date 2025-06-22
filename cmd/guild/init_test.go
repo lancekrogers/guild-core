@@ -39,12 +39,12 @@ func TestInitCommand(t *testing.T) {
 
 	// Check expected Phase 0 hierarchical configuration files exist
 	expectedFiles := []string{
-		".campaign/campaign.yml",       // Phase 0 campaign configuration
-		".campaign/guild.yml",          // Phase 0 guild definitions
-		".campaign/guild.yaml",         // Campaign reference for detection system
-		".campaign/project.yaml",       // Provider and agent configuration from wizard
-		".campaign/memory.db",          // SQLite database
-		".campaign/.gitignore",         // Git ignore rules
+		".campaign/campaign.yml", // Phase 0 campaign configuration
+		".campaign/guild.yml",    // Phase 0 guild definitions
+		".campaign/guild.yaml",   // Campaign reference for detection system
+		".campaign/project.yaml", // Provider and agent configuration from wizard
+		".campaign/memory.db",    // SQLite database
+		".campaign/.gitignore",   // Git ignore rules
 	}
 
 	for _, file := range expectedFiles {

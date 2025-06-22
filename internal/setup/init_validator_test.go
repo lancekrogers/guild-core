@@ -122,7 +122,7 @@ func TestValidateGuildConfiguration(t *testing.T) {
 				if err := os.MkdirAll(guildDir, 0755); err != nil {
 					return err
 				}
-				
+
 				guildConfig := &config.GuildConfigFile{
 					Guilds: map[string]config.GuildDefinition{
 						"test-guild": {
@@ -132,7 +132,7 @@ func TestValidateGuildConfiguration(t *testing.T) {
 						},
 					},
 				}
-				
+
 				return config.SaveGuildConfigFile(context.Background(), tmpDir, guildConfig)
 			},
 			expectSuccess: true,
@@ -145,7 +145,7 @@ func TestValidateGuildConfiguration(t *testing.T) {
 				if err := os.MkdirAll(guildDir, 0755); err != nil {
 					return err
 				}
-				
+
 				guildConfig := &config.GuildConfigFile{
 					Guilds: map[string]config.GuildDefinition{
 						"empty-guild": {
@@ -155,7 +155,7 @@ func TestValidateGuildConfiguration(t *testing.T) {
 						},
 					},
 				}
-				
+
 				return config.SaveGuildConfigFile(context.Background(), tmpDir, guildConfig)
 			},
 			expectSuccess: false, // Updated to match actual behavior - config loading might fail
@@ -213,7 +213,7 @@ func TestValidateFullSuccess(t *testing.T) {
 // TestInitValidationResultsDisplay tests the display functionality
 func TestInitValidationResultsDisplay(t *testing.T) {
 	validator := NewInitValidator("/test/path")
-	
+
 	// Add some test results
 	validator.results = []InitValidationResult{
 		{
@@ -352,7 +352,7 @@ func TestProviderValidation(t *testing.T) {
 				if err := os.MkdirAll(guildDir, 0755); err != nil {
 					return err
 				}
-				
+
 				// Create guild config with OpenAI agent
 				guildConfig := &config.GuildConfig{
 					Name: "test",
@@ -367,7 +367,7 @@ func TestProviderValidation(t *testing.T) {
 						},
 					},
 				}
-				
+
 				return config.SaveGuildConfig(tmpDir, guildConfig)
 			},
 			envSetup: func() {
@@ -382,7 +382,7 @@ func TestProviderValidation(t *testing.T) {
 				if err := os.MkdirAll(guildDir, 0755); err != nil {
 					return err
 				}
-				
+
 				// Create guild config with OpenAI agent
 				guildConfig := &config.GuildConfig{
 					Name: "test",
@@ -397,7 +397,7 @@ func TestProviderValidation(t *testing.T) {
 						},
 					},
 				}
-				
+
 				return config.SaveGuildConfig(tmpDir, guildConfig)
 			},
 			envSetup: func() {

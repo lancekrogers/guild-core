@@ -34,16 +34,16 @@ func NewCommandSuggestionProvider() *CommandSuggestionProvider {
 // GetSuggestions returns command suggestions based on context
 func (p *CommandSuggestionProvider) GetSuggestions(ctx context.Context, context SuggestionContext) ([]Suggestion, error) {
 	suggestions := make([]Suggestion, 0)
-	
+
 	// Analyze current message for command intent
 	currentMsg := strings.ToLower(context.CurrentMessage)
-	
+
 	// Check recent conversation for context
 	recentContext := p.getRecentContext(context.ConversationHistory, 3)
-	
+
 	for _, cmd := range p.commands {
 		confidence := p.calculateCommandConfidence(cmd, currentMsg, recentContext, context)
-		
+
 		if confidence > 0.3 { // Threshold for showing suggestion
 			suggestion := Suggestion{
 				Type:        SuggestionTypeCommand,
@@ -58,11 +58,11 @@ func (p *CommandSuggestionProvider) GetSuggestions(ctx context.Context, context 
 				},
 				Tags: append([]string{cmd.Category}, cmd.Keywords...),
 			}
-			
+
 			suggestions = append(suggestions, suggestion)
 		}
 	}
-	
+
 	return suggestions, nil
 }
 
@@ -94,13 +94,13 @@ func (p *CommandSuggestionProvider) GetMetadata() ProviderMetadata {
 // calculateCommandConfidence calculates how relevant a command is to the current context
 func (p *CommandSuggestionProvider) calculateCommandConfidence(cmd CommandDefinition, currentMsg string, recentContext string, context SuggestionContext) float64 {
 	confidence := 0.0
-	
+
 	// Check for exact command mention
 	if strings.Contains(currentMsg, cmd.Name) {
 		confidence = 0.9
 		return confidence
 	}
-	
+
 	// Check for pattern matches
 	for _, pattern := range cmd.Patterns {
 		if strings.Contains(currentMsg, pattern) {
@@ -110,7 +110,7 @@ func (p *CommandSuggestionProvider) calculateCommandConfidence(cmd CommandDefini
 			confidence = maxFloat(confidence, 0.6)
 		}
 	}
-	
+
 	// Check for keyword matches
 	keywordMatches := 0
 	for _, keyword := range cmd.Keywords {
@@ -121,12 +121,12 @@ func (p *CommandSuggestionProvider) calculateCommandConfidence(cmd CommandDefini
 			keywordMatches++
 		}
 	}
-	
+
 	if keywordMatches > 0 {
 		keywordConfidence := float64(keywordMatches) / float64(len(cmd.Keywords)*2) // *2 for current + recent
 		confidence = maxFloat(confidence, keywordConfidence*0.7)
 	}
-	
+
 	// Boost confidence based on project context
 	if p.isRelevantToProject(cmd, context.ProjectContext) {
 		confidence *= 1.2
@@ -134,13 +134,13 @@ func (p *CommandSuggestionProvider) calculateCommandConfidence(cmd CommandDefini
 			confidence = 1.0
 		}
 	}
-	
+
 	// Adjust by command priority
 	confidence *= (1.0 + float64(cmd.Priority)*0.1)
 	if confidence > 1.0 {
 		confidence = 1.0
 	}
-	
+
 	return confidence
 }
 
@@ -149,18 +149,18 @@ func (p *CommandSuggestionProvider) getRecentContext(history []ChatMessage, limi
 	if len(history) == 0 {
 		return ""
 	}
-	
+
 	start := len(history) - limit
 	if start < 0 {
 		start = 0
 	}
-	
+
 	var context strings.Builder
 	for i := start; i < len(history); i++ {
 		context.WriteString(strings.ToLower(history[i].Content))
 		context.WriteString(" ")
 	}
-	
+
 	return context.String()
 }
 
@@ -177,12 +177,12 @@ func (p *CommandSuggestionProvider) isRelevantToProject(cmd CommandDefinition, p
 			return strings.Contains(cmd.Name, "js") || strings.Contains(cmd.Name, "ts") || cmd.Category == "javascript"
 		}
 	}
-	
+
 	// Framework-specific commands
 	if project.Framework != "" && strings.Contains(strings.ToLower(cmd.Description), strings.ToLower(project.Framework)) {
 		return true
 	}
-	
+
 	return false
 }
 
@@ -230,7 +230,7 @@ func getDefaultCommands() []CommandDefinition {
 			Patterns:    []string{"new campaign", "switch project", "list campaigns"},
 			Priority:    7,
 		},
-		
+
 		// Development commands
 		{
 			Name:        "build",
@@ -256,7 +256,7 @@ func getDefaultCommands() []CommandDefinition {
 			Patterns:    []string{"debug this", "start debugger", "set breakpoint"},
 			Priority:    5,
 		},
-		
+
 		// File and search commands
 		{
 			Name:        "search",
@@ -274,7 +274,7 @@ func getDefaultCommands() []CommandDefinition {
 			Patterns:    []string{"open file", "show me", "edit file"},
 			Priority:    7,
 		},
-		
+
 		// Git commands
 		{
 			Name:        "git",
@@ -284,7 +284,7 @@ func getDefaultCommands() []CommandDefinition {
 			Patterns:    []string{"git commit", "push changes", "create branch"},
 			Priority:    6,
 		},
-		
+
 		// Template commands
 		{
 			Name:        "template",

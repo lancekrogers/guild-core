@@ -127,7 +127,7 @@ func TestLifecycleManager_SessionManagement(t *testing.T) {
 
 func TestLifecycleManager_IdleTimeout(t *testing.T) {
 	lm := NewLifecycleManager()
-	
+
 	// Configure short idle timeout for testing
 	lm.SetIdleTimeout(100 * time.Millisecond)
 
@@ -197,8 +197,8 @@ func TestLifecycleManager_ResourceLimits(t *testing.T) {
 
 	t.Run("memory limits", func(t *testing.T) {
 		config := &DaemonConfig{
-			Campaign:     "test-campaign",
-			Session:      0,
+			Campaign:      "test-campaign",
+			Session:       0,
 			MemoryLimitMB: 512,
 		}
 
@@ -214,7 +214,7 @@ func TestLifecycleManager_CrashRecovery(t *testing.T) {
 	// Simulate a crashed session (PID file exists but process doesn't)
 	tmpDir := t.TempDir()
 	pidFile := filepath.Join(tmpDir, "test.pid")
-	
+
 	// Write invalid PID
 	err := os.WriteFile(pidFile, []byte("99999"), 0644)
 	require.NoError(t, err)
@@ -237,8 +237,8 @@ func TestLifecycleManager_SessionSwitching(t *testing.T) {
 	// Create multiple sessions for same campaign
 	session1 := &SessionState{
 		Config: &DaemonConfig{
-			Campaign: "test-campaign", 
-			Session: 0,
+			Campaign: "test-campaign",
+			Session:  0,
 		},
 		StartedAt:  time.Now(),
 		LastActive: time.Now(),
@@ -247,7 +247,7 @@ func TestLifecycleManager_SessionSwitching(t *testing.T) {
 	session2 := &SessionState{
 		Config: &DaemonConfig{
 			Campaign: "test-campaign",
-			Session: 1,
+			Session:  1,
 		},
 		StartedAt:  time.Now(),
 		LastActive: time.Now(),

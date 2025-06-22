@@ -75,11 +75,11 @@ func NewTestEnvironment(t *testing.T) *TestEnvironment {
 		workDir:  workDir,
 		guildBin: guildBin,
 		env: []string{
-			"GUILD_MOCK_PROVIDER=true",    // Enable mock provider
-			"GUILD_TEST_MODE=true",        // Enable test mode features
-			"NO_COLOR=1",                  // Disable colors for easier assertions
-			"GUILD_LOG_LEVEL=warn",        // Reduce log noise
-			"HOME=" + workDir,             // Isolate home directory
+			"GUILD_MOCK_PROVIDER=true", // Enable mock provider
+			"GUILD_TEST_MODE=true",     // Enable test mode features
+			"NO_COLOR=1",               // Disable colors for easier assertions
+			"GUILD_LOG_LEVEL=warn",     // Reduce log noise
+			"HOME=" + workDir,          // Isolate home directory
 		},
 	}
 
@@ -164,7 +164,7 @@ func (e *TestEnvironment) RunGuildWithTimeout(timeout time.Duration, args ...str
 func (e *TestEnvironment) StartGuildInteractive(args ...string) (*InteractiveSession, error) {
 	// Add --no-tui flag for text-mode testing
 	fullArgs := append(args, "--no-tui")
-	
+
 	cmd := exec.Command(e.guildBin, fullArgs...)
 	cmd.Dir = e.workDir
 	cmd.Env = e.env
@@ -216,7 +216,7 @@ func (e *TestEnvironment) StartGuildInteractive(args ...string) (*InteractiveSes
 func (e *TestEnvironment) CreateFile(relativePath, content string) error {
 	fullPath := filepath.Join(e.workDir, relativePath)
 	dir := filepath.Dir(fullPath)
-	
+
 	if err := os.MkdirAll(dir, 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create directory").
 			WithComponent("e2e").
@@ -365,7 +365,7 @@ func (s *InteractiveSession) Stop() {
 // AssertSuccess asserts that the command succeeded
 func (r *CommandResult) AssertSuccess(t *testing.T) {
 	if r.Error != nil {
-		t.Fatalf("Command failed: %v\nExit Code: %d\nStderr: %s\nStdout: %s", 
+		t.Fatalf("Command failed: %v\nExit Code: %d\nStderr: %s\nStdout: %s",
 			r.Error, r.ExitCode, r.Stderr, r.Stdout)
 	}
 	assert.Equal(t, 0, r.ExitCode, "Command should exit with code 0")

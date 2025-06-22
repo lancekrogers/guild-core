@@ -182,7 +182,7 @@ func (l *HierarchicalLoader) loadAgentConfigs(ctx context.Context, projectPath s
 			agentPath := filepath.Join(agentsDir, agentName+".yml")
 			agent, err := l.loadAgentConfig(ctx, agentPath)
 			if err != nil {
-				return nil, gerror.Wrapf(err, gerror.ErrCodeInternal, 
+				return nil, gerror.Wrapf(err, gerror.ErrCodeInternal,
 					"failed to load agent '%s' for guild '%s'", agentName, guildName).
 					WithComponent("HierarchicalLoader").
 					WithOperation("loadAgentConfigs")
@@ -249,7 +249,7 @@ func (l *HierarchicalLoader) validateCrossReferences(campaign *CampaignConfig, g
 	if campaign.CommissionMappings != nil {
 		for guildName := range campaign.CommissionMappings {
 			if _, err := guilds.GetGuild(guildName); err != nil {
-				return gerror.Newf(gerror.ErrCodeValidation, 
+				return gerror.Newf(gerror.ErrCodeValidation,
 					"commission mapping references non-existent guild '%s'", guildName).
 					WithComponent("HierarchicalLoader").
 					WithOperation("validateCrossReferences")
@@ -261,7 +261,7 @@ func (l *HierarchicalLoader) validateCrossReferences(campaign *CampaignConfig, g
 	for guildName, guild := range guilds.Guilds {
 		for _, agentName := range guild.Agents {
 			if _, exists := agents[agentName]; !exists {
-				return gerror.Newf(gerror.ErrCodeValidation, 
+				return gerror.Newf(gerror.ErrCodeValidation,
 					"guild '%s' references non-existent agent '%s'", guildName, agentName).
 					WithComponent("HierarchicalLoader").
 					WithOperation("validateCrossReferences")
@@ -310,7 +310,7 @@ func (c *HierarchicalConfig) GetGuildAgents(guildName string) ([]*AgentConfig, e
 		if agent, exists := c.Agents[agentName]; exists {
 			agents = append(agents, agent)
 		} else {
-			return nil, gerror.Newf(gerror.ErrCodeInternal, 
+			return nil, gerror.Newf(gerror.ErrCodeInternal,
 				"guild '%s' references non-existent agent '%s'", guildName, agentName).
 				WithComponent("HierarchicalConfig").
 				WithOperation("GetGuildAgents")

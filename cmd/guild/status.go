@@ -39,7 +39,7 @@ Multi-Instance Support:
 Examples:
   guild status          # Show status for current campaign
   guild status --all    # Show all running daemon instances`,
-	RunE:  runStatus,
+	RunE: runStatus,
 }
 
 func init() {
@@ -63,7 +63,7 @@ func runStatusSingle(cmd *cobra.Command) error {
 	if err != nil {
 		cwd = "."
 	}
-	
+
 	campaignName, err := campaign.DetectCampaign(cwd, "")
 	if err != nil {
 		fmt.Println("  Campaign: Not in a campaign directory")

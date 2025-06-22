@@ -20,80 +20,80 @@ func TestProgressIndicators(t *testing.T) {
 	t.Run("Basic Spinner", func(t *testing.T) {
 		indicator := progress.NewIndicator()
 		require.NotNil(t, indicator)
-		
+
 		// Test initialization
 		cmd := indicator.Init()
 		assert.NotNil(t, cmd)
-		
+
 		// Test spinner message
 		spinnerCmd := indicator.ShowSpinner("Processing...")
 		msg := spinnerCmd()
-		
+
 		spinnerMsg, ok := msg.(progress.SpinnerMsg)
 		assert.True(t, ok)
 		assert.Equal(t, "Processing...", spinnerMsg.Message)
-		
+
 		// Test update
 		updated, _ := indicator.Update(spinnerMsg)
 		assert.NotNil(t, updated)
-		
+
 		// Test view
 		view := updated.View()
 		assert.Contains(t, view, "Processing...")
 	})
-	
+
 	t.Run("Progress Bar", func(t *testing.T) {
 		indicator := progress.NewIndicator()
-		
+
 		// Test progress update
 		progressCmd := indicator.ShowProgress("Loading", 5, 10)
 		msg := progressCmd()
-		
+
 		progressMsg, ok := msg.(progress.ProgressMsg)
 		assert.True(t, ok)
 		assert.Equal(t, "Loading", progressMsg.Message)
 		assert.Equal(t, 5, progressMsg.Current)
 		assert.Equal(t, 10, progressMsg.Total)
-		
+
 		// Test update
 		updated, _ := indicator.Update(progressMsg)
 		assert.NotNil(t, updated)
-		
+
 		// Test view contains progress bar
 		view := updated.View()
 		assert.Contains(t, view, "Loading")
 		assert.Contains(t, view, "50%")
 	})
-	
+
 	t.Run("Multi-Stage Progress", func(t *testing.T) {
 		stages := []string{"Stage 1", "Stage 2", "Stage 3"}
 		multiProgress := progress.NewMultiStageProgress(stages)
 		require.NotNil(t, multiProgress)
-		
+
 		// Test initialization
 		cmd := multiProgress.Init()
 		assert.NotNil(t, cmd)
-		
+
 		// Test starting a stage
 		startCmd := multiProgress.StartStage(0)
 		msg := startCmd()
-		
+
 		startMsg, ok := msg.(progress.StageStartMsg)
 		assert.True(t, ok)
 		assert.Equal(t, 0, startMsg.StageIndex)
-		
+
 		// Test update
 		updated, updateCmd := multiProgress.Update(startMsg)
 		assert.NotNil(t, updated)
 		assert.NotNil(t, updateCmd)
-		
+
 		// Test stage progress
 		assert.Equal(t, 0, updated.GetCurrentStage())
-		
+
 		// Test completion
 		completeCmd := updated.CompleteStage(0, true, nil)
 		completeMsg := completeCmd()
-		
+
 		stageCompleteMsg, ok := completeMsg.(progress.StageCompleteMsg)
 		assert.True(t, ok)
 		assert.True(t, stageCompleteMsg.Success)
@@ -105,7 +105,7 @@ func TestProgressIndicators(t *testing.T) {
 func TestToolVisualization(t *testing.T) {
 	visualizer := chat.NewToolVisualizer()
 	require.NotNil(t, visualizer)
-	
+
 	t.Run("Tool Execution Display", func(t *testing.T) {
 		// Start tool execution
 		opID := visualizer.StartToolExecution("multi_edit_tool", map[string]interface{}{
@@ -113,28 +113,28 @@ func TestToolVisualization(t *testing.T) {
 			"edits": 3,
 		})
 		assert.NotEmpty(t, opID)
-		
+
 		// Update progress
 		visualizer.UpdateToolProgress(opID, "Validating", 0.5)
-		
+
 		// Complete execution
 		visualizer.CompleteToolExecution(opID, true, "3 edits applied", nil)
-		
+
 		// Check statistics
 		stats := visualizer.GetStats()
 		assert.Equal(t, 1, stats.TotalExecutions)
 		assert.Equal(t, 1, stats.SuccessfulOps)
 		assert.Equal(t, 0, stats.FailedOps)
 	})
-	
+
 	t.Run("Statistics", func(t *testing.T) {
 		// Execute some operations to generate stats
 		opID1 := visualizer.StartToolExecution("test_tool", map[string]interface{}{})
 		visualizer.CompleteToolExecution(opID1, true, "success", nil)
-		
+
 		opID2 := visualizer.StartToolExecution("test_tool", map[string]interface{}{})
 		visualizer.CompleteToolExecution(opID2, false, nil, assert.AnError)
-		
+
 		stats := visualizer.GetStats()
 		assert.GreaterOrEqual(t, stats.TotalExecutions, 2)
 		assert.GreaterOrEqual(t, stats.SuccessfulOps, 1)
@@ -152,7 +152,7 @@ func TestSessionExport(t *testing.T) {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	
+
 	// Create test messages
 	testMessages := []*session.Message{
 		{
@@ -170,12 +170,12 @@ func TestSessionExport(t *testing.T) {
 			CreatedAt: time.Now().Add(1 * time.Second),
 		},
 	}
-	
+
 	t.Run("Markdown Export", func(t *testing.T) {
 		exporter := chat.NewSessionExporter(testSession, testMessages)
-		
+
 		markdown := exporter.ExportToMarkdown()
-		
+
 		assert.Contains(t, markdown, "# 🏰 Guild Chat Session")
 		assert.Contains(t, markdown, "Test Chat Session")
 		assert.Contains(t, markdown, "Hello, how are you?")
@@ -183,12 +183,12 @@ func TestSessionExport(t *testing.T) {
 		assert.Contains(t, markdown, "👤 User")
 		assert.Contains(t, markdown, "🤖 Assistant")
 	})
-	
+
 	t.Run("HTML Export", func(t *testing.T) {
 		exporter := chat.NewSessionExporter(testSession, testMessages)
-		
+
 		html := exporter.ExportToHTML()
-		
+
 		assert.Contains(t, html, "<!DOCTYPE html>")
 		assert.Contains(t, html, "<title>Guild Chat Session")
 		assert.Contains(t, html, "Test Chat Session")
@@ -202,7 +202,7 @@ func TestSessionExport(t *testing.T) {
 func TestKanbanVisualization(t *testing.T) {
 	visualizer := chat.NewKanbanVisualizer()
 	require.NotNil(t, visualizer)
-	
+
 	t.Run("Board Rendering", func(t *testing.T) {
 		board := &chat.TaskBoard{
 			Name: "Test Board",
@@ -230,9 +230,9 @@ func TestKanbanVisualization(t *testing.T) {
 				},
 			},
 		}
-		
+
 		view := visualizer.RenderBoard(board)
-		
+
 		assert.Contains(t, view, "📋 Test Board")
 		assert.Contains(t, view, "Complete feature A")
 		assert.Contains(t, view, "Fix bug B")
@@ -241,7 +241,7 @@ func TestKanbanVisualization(t *testing.T) {
 		assert.Contains(t, view, "🔄 In Progress")
 		assert.Contains(t, view, "✅ Done")
 	})
-	
+
 	t.Run("Statistics", func(t *testing.T) {
 		board := &chat.TaskBoard{
 			Name: "Test Board",
@@ -252,14 +252,14 @@ func TestKanbanVisualization(t *testing.T) {
 				{Status: chat.StatusDone},
 			},
 		}
-		
+
 		stats := visualizer.GetBoardStats(board)
-		
+
 		assert.Equal(t, 4, stats["total"])
 		assert.Equal(t, 1, stats["todo"])
 		assert.Equal(t, 1, stats["in_progress"])
 		assert.Equal(t, 2, stats["done"])
-		
+
 		statsView := visualizer.RenderStats(board)
 		assert.Contains(t, statsView, "Total: 4")
 		assert.Contains(t, statsView, "Todo: 1")
@@ -272,11 +272,11 @@ func TestKanbanVisualization(t *testing.T) {
 func TestCampaignProgress(t *testing.T) {
 	tracker := chat.NewCampaignProgressTracker("Test Campaign")
 	require.NotNil(t, tracker)
-	
+
 	t.Run("Progress Calculation", func(t *testing.T) {
 		// Initially no progress
 		assert.Equal(t, 0.0, tracker.GetProgress())
-		
+
 		// Add some tasks
 		tracker.AddTask(chat.SimpleTask{
 			ID:     "task1",
@@ -293,15 +293,15 @@ func TestCampaignProgress(t *testing.T) {
 			Title:  "Task 3",
 			Status: chat.StatusDone,
 		})
-		
+
 		// Should be 2/3 = 0.67 progress
 		progress := tracker.GetProgress()
 		assert.InDelta(t, 0.67, progress, 0.01)
 	})
-	
+
 	t.Run("Progress Rendering", func(t *testing.T) {
 		view := tracker.RenderProgress()
-		
+
 		assert.Contains(t, view, "🎯 Campaign: Test Campaign")
 		assert.Contains(t, view, "📊 Progress:")
 		assert.Contains(t, view, "⏱️  Duration:")
@@ -312,9 +312,9 @@ func TestCampaignProgress(t *testing.T) {
 func TestPerformance(t *testing.T) {
 	t.Run("Progress Indicator Performance", func(t *testing.T) {
 		indicator := progress.NewIndicator()
-		
+
 		start := time.Now()
-		
+
 		// Simulate rapid updates
 		for i := 0; i < 100; i++ {
 			progressCmd := indicator.ShowProgress("Testing", i, 100)
@@ -322,35 +322,35 @@ func TestPerformance(t *testing.T) {
 			indicator.Update(msg)
 			indicator.View() // Render view
 		}
-		
+
 		duration := time.Since(start)
-		
+
 		// Should complete quickly (less than 100ms for 100 updates)
 		assert.Less(t, duration, 100*time.Millisecond)
 	})
-	
+
 	t.Run("Tool Visualizer Performance", func(t *testing.T) {
 		visualizer := chat.NewToolVisualizer()
-		
+
 		start := time.Now()
-		
+
 		// Simulate multiple concurrent tool executions
 		opIDs := make([]string, 10)
 		for i := 0; i < 10; i++ {
-			opIDs[i] = visualizer.StartToolExecution("tool", 
+			opIDs[i] = visualizer.StartToolExecution("tool",
 				map[string]interface{}{"test": true})
 		}
-		
+
 		// Complete all operations
 		for _, opID := range opIDs {
 			visualizer.CompleteToolExecution(opID, true, "success", nil)
 		}
-		
+
 		duration := time.Since(start)
-		
+
 		// Should handle multiple operations efficiently
 		assert.Less(t, duration, 50*time.Millisecond)
-		
+
 		// Check statistics
 		stats := visualizer.GetStats()
 		assert.GreaterOrEqual(t, stats.TotalExecutions, 10)
@@ -361,9 +361,9 @@ func TestPerformance(t *testing.T) {
 // BenchmarkProgressIndicator benchmarks progress indicator performance
 func BenchmarkProgressIndicator(b *testing.B) {
 	indicator := progress.NewIndicator()
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		progressCmd := indicator.ShowProgress("Benchmark", i%100, 100)
 		msg := progressCmd()
@@ -375,9 +375,9 @@ func BenchmarkProgressIndicator(b *testing.B) {
 // BenchmarkToolVisualizer benchmarks tool visualizer performance
 func BenchmarkToolVisualizer(b *testing.B) {
 	visualizer := chat.NewToolVisualizer()
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		opID := visualizer.StartToolExecution("benchmark_tool", map[string]interface{}{
 			"iteration": i,

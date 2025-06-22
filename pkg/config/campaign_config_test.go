@@ -104,11 +104,11 @@ func TestLoadCampaignConfig(t *testing.T) {
 	ctx := context.Background()
 
 	tests := []struct {
-		name        string
-		setup       func() error
-		wantErr     bool
-		errCode     gerror.ErrorCode
-		wantConfig  *CampaignConfig
+		name       string
+		setup      func() error
+		wantErr    bool
+		errCode    gerror.ErrorCode
+		wantConfig *CampaignConfig
 	}{
 		{
 			name: "valid campaign config",
@@ -118,8 +118,8 @@ func TestLoadCampaignConfig(t *testing.T) {
 					return err
 				}
 				config := &CampaignConfig{
-					Name:        "test-campaign",
-					Description: "Test campaign description",
+					Name:              "test-campaign",
+					Description:       "Test campaign description",
 					LastSelectedGuild: "backend-guild",
 					CommissionMappings: map[string][]string{
 						"backend-guild": {"commission1", "commission2"},
@@ -129,8 +129,8 @@ func TestLoadCampaignConfig(t *testing.T) {
 			},
 			wantErr: false,
 			wantConfig: &CampaignConfig{
-				Name:        "test-campaign",
-				Description: "Test campaign description",
+				Name:              "test-campaign",
+				Description:       "Test campaign description",
 				LastSelectedGuild: "backend-guild",
 				CommissionMappings: map[string][]string{
 					"backend-guild": {"commission1", "commission2"},
@@ -176,7 +176,7 @@ func TestLoadCampaignConfig(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Clean up before each test
 			os.RemoveAll(filepath.Join(tempDir, ".campaign"))
-			
+
 			if err := tt.setup(); err != nil {
 				t.Fatalf("Setup failed: %v", err)
 			}
@@ -284,7 +284,7 @@ func TestSaveCampaignConfig(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Clean up before each test
 			os.RemoveAll(filepath.Join(tempDir, ".campaign"))
-			
+
 			if tt.setup != nil {
 				if err := tt.setup(); err != nil {
 					t.Fatalf("Setup failed: %v", err)
@@ -352,10 +352,10 @@ func TestUpdateLastSelectedGuild(t *testing.T) {
 	// Create initial config
 	guildDir := filepath.Join(tempDir, ".campaign")
 	os.MkdirAll(guildDir, 0755)
-	
+
 	config := &CampaignConfig{
-		Name:        "update-test",
-		Description: "Testing update functionality",
+		Name:              "update-test",
+		Description:       "Testing update functionality",
 		LastSelectedGuild: "initial-guild",
 	}
 
@@ -386,10 +386,10 @@ func TestUpdateLastSelectedGuild(t *testing.T) {
 
 func TestCampaignConfig_GetMappedCommissions(t *testing.T) {
 	tests := []struct {
-		name       string
-		config     *CampaignConfig
-		guildName  string
-		want       []string
+		name      string
+		config    *CampaignConfig
+		guildName string
+		want      []string
 	}{
 		{
 			name: "existing guild with commissions",
@@ -591,7 +591,7 @@ func TestCampaignConfig_RealWorldScenarios(t *testing.T) {
 			ProjectSettings: map[string]interface{}{
 				"environment": "production",
 				"version":     "2.0",
-				"features": []string{"api-gateway", "service-mesh", "monitoring"},
+				"features":    []string{"api-gateway", "service-mesh", "monitoring"},
 			},
 		}
 
@@ -647,7 +647,7 @@ func TestCampaignConfig_RealWorldScenarios(t *testing.T) {
 			Name:        "concurrent-test",
 			Description: "Test concurrent updates",
 		}
-		
+
 		if err := SaveCampaignConfig(ctx, tempDir, config); err != nil {
 			t.Fatalf("Failed to save initial config: %v", err)
 		}
@@ -696,7 +696,7 @@ func TestCampaignConfig_RealWorldScenarios(t *testing.T) {
 func BenchmarkCampaignConfig_LoadSave(b *testing.B) {
 	tempDir, _ := os.MkdirTemp("", "campaign-bench")
 	defer os.RemoveAll(tempDir)
-	
+
 	ctx := context.Background()
 	config := &CampaignConfig{
 		Name:        "benchmark-campaign",
@@ -727,7 +727,7 @@ func BenchmarkCampaignConfig_GetMappedCommissions(b *testing.B) {
 	config := &CampaignConfig{
 		CommissionMappings: make(map[string][]string),
 	}
-	
+
 	// Create many guilds with commissions
 	for i := 0; i < 100; i++ {
 		guildName := "guild" + string(rune(i))

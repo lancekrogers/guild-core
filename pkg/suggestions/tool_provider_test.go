@@ -7,9 +7,9 @@ import (
 	"context"
 	"testing"
 
+	"github.com/guild-ventures/guild-core/tools"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/guild-ventures/guild-core/tools"
 )
 
 // MockTool implements the Tool interface for testing
@@ -21,12 +21,12 @@ type MockTool struct {
 	schema      map[string]interface{}
 }
 
-func (m *MockTool) Name() string        { return m.name }
-func (m *MockTool) Description() string { return m.description }
-func (m *MockTool) Category() string    { return m.category }
-func (m *MockTool) Examples() []string  { return m.examples }
+func (m *MockTool) Name() string                   { return m.name }
+func (m *MockTool) Description() string            { return m.description }
+func (m *MockTool) Category() string               { return m.category }
+func (m *MockTool) Examples() []string             { return m.examples }
 func (m *MockTool) Schema() map[string]interface{} { return m.schema }
-func (m *MockTool) RequiresAuth() bool  { return false }
+func (m *MockTool) RequiresAuth() bool             { return false }
 func (m *MockTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	return tools.NewToolResult("mock output", nil, nil, nil), nil
 }
@@ -71,10 +71,10 @@ func TestToolSuggestionProvider_GetSuggestions(t *testing.T) {
 	ctx := context.Background()
 
 	tests := []struct {
-		name           string
-		context        SuggestionContext
-		expectedTools  []string
-		minConfidence  float64
+		name          string
+		context       SuggestionContext
+		expectedTools []string
+		minConfidence float64
 	}{
 		{
 			name: "file search context",
@@ -141,7 +141,7 @@ func TestToolSuggestionProvider_GetSuggestions(t *testing.T) {
 				assert.Equal(t, SuggestionTypeTool, s.Type)
 				assert.Contains(t, s.Display, "🔧")
 				suggestedTools[s.Content] = true
-				
+
 				// Check confidence
 				if tt.minConfidence > 0 {
 					assert.GreaterOrEqual(t, s.Confidence, tt.minConfidence)
@@ -150,7 +150,7 @@ func TestToolSuggestionProvider_GetSuggestions(t *testing.T) {
 
 			// Verify expected tools are present
 			for _, expectedTool := range tt.expectedTools {
-				assert.True(t, suggestedTools[expectedTool], 
+				assert.True(t, suggestedTools[expectedTool],
 					"Expected tool %s not found in suggestions", expectedTool)
 			}
 		})
@@ -159,7 +159,7 @@ func TestToolSuggestionProvider_GetSuggestions(t *testing.T) {
 
 func TestToolSuggestionProvider_CustomKeywords(t *testing.T) {
 	registry := tools.NewToolRegistry()
-	
+
 	// Register a custom tool
 	customTool := &MockTool{
 		name:        "my_custom_analyzer",
@@ -240,7 +240,7 @@ func TestToolSuggestionProvider_ExtractSignificantWords(t *testing.T) {
 	// Should exclude common words like "the", "over"
 	assert.NotContains(t, words, "the")
 	assert.NotContains(t, words, "over")
-	
+
 	// Should include significant words
 	assert.Contains(t, words, "quick")
 	assert.Contains(t, words, "brown")
@@ -254,7 +254,7 @@ func TestToolSuggestionProvider_MatchesExamples(t *testing.T) {
 	provider := NewToolSuggestionProvider(nil)
 
 	tool := &MockTool{
-		name:     "test_tool",
+		name: "test_tool",
 		examples: []string{
 			`{"pattern": "*.go", "path": "/src"}`,
 			`{"query": "SELECT * FROM users"}`,
@@ -288,7 +288,7 @@ func TestToolSuggestionProvider_MatchesExamples(t *testing.T) {
 
 func TestToolSuggestionProvider_Priority(t *testing.T) {
 	registry := tools.NewToolRegistry()
-	
+
 	// Create tools with different categories
 	tools := []tools.Tool{
 		&MockTool{name: "search_tool", category: "search"},
@@ -307,7 +307,7 @@ func TestToolSuggestionProvider_Priority(t *testing.T) {
 	// Test priority calculation
 	for _, tool := range tools {
 		priority := provider.calculatePriority(tool, SuggestionContext{})
-		
+
 		switch tool.Category() {
 		case "search":
 			assert.Equal(t, 8, priority) // Search tools have high priority
@@ -347,7 +347,7 @@ func TestToolSuggestionProvider_NilRegistry(t *testing.T) {
 	suggestions, err := provider.GetSuggestions(ctx, SuggestionContext{
 		CurrentMessage: "find files",
 	})
-	
+
 	require.NoError(t, err)
 	assert.Empty(t, suggestions)
 }

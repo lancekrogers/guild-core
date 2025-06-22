@@ -45,26 +45,26 @@ func TestSaveSocketRegistry(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := SaveSocketRegistry(tt.projectRoot, tt.campaign)
-			
+
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
-			
+
 			require.NoError(t, err)
-			
+
 			// Verify the file was created
 			registryPath := filepath.Join(tt.projectRoot, ".campaign", "socket-registry.yaml")
 			assert.FileExists(t, registryPath)
-			
+
 			// Verify the content
 			data, err := os.ReadFile(registryPath)
 			require.NoError(t, err)
-			
+
 			var registry SocketRegistry
 			err = yaml.Unmarshal(data, &registry)
 			require.NoError(t, err)
-			
+
 			assert.Equal(t, tt.campaign, registry.CampaignName)
 			assert.NotEmpty(t, registry.CampaignHash)
 		})
@@ -83,14 +83,14 @@ func TestCanConnect(t *testing.T) {
 			setupFunc: func(t *testing.T) string {
 				// Use a shorter path to avoid socket path length limit
 				socketPath := filepath.Join("/tmp", "guild-test.sock")
-				
+
 				// Clean up any existing socket
 				os.Remove(socketPath)
-				
+
 				// Create a listener
 				listener, err := net.Listen("unix", socketPath)
 				require.NoError(t, err)
-				
+
 				// Accept connections in background
 				go func() {
 					for {
@@ -101,11 +101,11 @@ func TestCanConnect(t *testing.T) {
 						conn.Close()
 					}
 				}()
-				
+
 				t.Cleanup(func() {
 					listener.Close()
 				})
-				
+
 				return socketPath
 			},
 			wantResult: true,
@@ -122,10 +122,10 @@ func TestCanConnect(t *testing.T) {
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
 				socketPath := filepath.Join(tmpDir, "stale.sock")
-				
+
 				// Create an empty file to simulate stale socket
 				require.NoError(t, os.WriteFile(socketPath, []byte{}, 0600))
-				
+
 				return socketPath
 			},
 			wantResult: false,
@@ -135,7 +135,7 @@ func TestCanConnect(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			socketPath := tt.setupFunc(t)
-			
+
 			result := CanConnect(socketPath)
 			assert.Equal(t, tt.wantResult, result)
 		})
@@ -154,11 +154,11 @@ func TestCleanupStaleSessionSockets(t *testing.T) {
 			setupFunc: func(t *testing.T) (string, string) {
 				homeDir := t.TempDir()
 				t.Setenv("HOME", homeDir)
-				
+
 				campaign := "test-campaign"
 				campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
 				require.NoError(t, os.MkdirAll(campaignDir, 0755))
-				
+
 				// Create stale socket files
 				for i := 0; i < 3; i++ {
 					socketPath := filepath.Join(campaignDir, "guild.sock")
@@ -167,14 +167,14 @@ func TestCleanupStaleSessionSockets(t *testing.T) {
 					}
 					require.NoError(t, os.WriteFile(socketPath, []byte{}, 0600))
 				}
-				
+
 				return campaign, campaignDir
 			},
 			validate: func(t *testing.T, campaignDir string) {
 				// All stale sockets should be removed
 				entries, err := os.ReadDir(campaignDir)
 				require.NoError(t, err)
-				
+
 				for _, entry := range entries {
 					assert.False(t, filepath.Ext(entry.Name()) == ".sock")
 				}
@@ -185,11 +185,11 @@ func TestCleanupStaleSessionSockets(t *testing.T) {
 			setupFunc: func(t *testing.T) (string, string) {
 				homeDir := t.TempDir()
 				t.Setenv("HOME", homeDir)
-				
+
 				campaign := "active-campaign"
 				campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
 				require.NoError(t, os.MkdirAll(campaignDir, 0755))
-				
+
 				// Create active socket
 				activeSocket := filepath.Join(campaignDir, "guild.sock")
 				listener, err := net.Listen("unix", activeSocket)
@@ -197,7 +197,7 @@ func TestCleanupStaleSessionSockets(t *testing.T) {
 				t.Cleanup(func() {
 					listener.Close()
 				})
-				
+
 				// Accept connections in background
 				go func() {
 					for {
@@ -208,11 +208,11 @@ func TestCleanupStaleSessionSockets(t *testing.T) {
 						conn.Close()
 					}
 				}()
-				
+
 				// Create stale socket
 				staleSocket := filepath.Join(campaignDir, "guild-1.sock")
 				require.NoError(t, os.WriteFile(staleSocket, []byte{}, 0600))
-				
+
 				return campaign, campaignDir
 			},
 			validate: func(t *testing.T, campaignDir string) {
@@ -239,10 +239,10 @@ func TestCleanupStaleSessionSockets(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			campaign, campaignDir := tt.setupFunc(t)
-			
+
 			err := CleanupStaleSessionSockets(campaign)
 			require.NoError(t, err)
-			
+
 			tt.validate(t, campaignDir)
 		})
 	}
@@ -271,14 +271,14 @@ func TestUnlinkIfStale(t *testing.T) {
 				// Use short path
 				socketPath := filepath.Join("/tmp", "guild-unlinkactive.sock")
 				os.Remove(socketPath)
-				
+
 				listener, err := net.Listen("unix", socketPath)
 				require.NoError(t, err)
 				t.Cleanup(func() {
 					listener.Close()
 					os.Remove(socketPath)
 				})
-				
+
 				// Accept connections in background
 				go func() {
 					for {
@@ -289,7 +289,7 @@ func TestUnlinkIfStale(t *testing.T) {
 						conn.Close()
 					}
 				}()
-				
+
 				return socketPath
 			},
 			wantRemove: false,
@@ -306,16 +306,16 @@ func TestUnlinkIfStale(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			socketPath := tt.setupFunc(t)
-			
+
 			err := UnlinkIfStale(socketPath)
-			
+
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
-			
+
 			require.NoError(t, err)
-			
+
 			if tt.wantRemove {
 				assert.NoFileExists(t, socketPath)
 			} else if _, err := os.Stat(socketPath); err == nil {
@@ -340,7 +340,7 @@ func TestListCampaignSessions(t *testing.T) {
 				campaign := "multi-session"
 				campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
 				require.NoError(t, os.MkdirAll(campaignDir, 0755))
-				
+
 				// Create multiple active sockets
 				for i := 0; i < 3; i++ {
 					var socketPath string
@@ -349,13 +349,13 @@ func TestListCampaignSessions(t *testing.T) {
 					} else {
 						socketPath = filepath.Join(campaignDir, "guild-"+string(rune('0'+i))+".sock")
 					}
-					
+
 					listener, err := net.Listen("unix", socketPath)
 					require.NoError(t, err)
 					t.Cleanup(func() {
 						listener.Close()
 					})
-					
+
 					go func() {
 						for {
 							conn, err := listener.Accept()
@@ -366,7 +366,7 @@ func TestListCampaignSessions(t *testing.T) {
 						}
 					}()
 				}
-				
+
 				return campaign, homeDir
 			},
 			wantSessions: []int{0, 1, 2},
@@ -389,7 +389,7 @@ func TestListCampaignSessions(t *testing.T) {
 				campaign := "mixed-campaign"
 				campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
 				require.NoError(t, os.MkdirAll(campaignDir, 0755))
-				
+
 				// Create one active socket
 				activeSocket := filepath.Join(campaignDir, "guild.sock")
 				listener, err := net.Listen("unix", activeSocket)
@@ -397,7 +397,7 @@ func TestListCampaignSessions(t *testing.T) {
 				t.Cleanup(func() {
 					listener.Close()
 				})
-				
+
 				go func() {
 					for {
 						conn, err := listener.Accept()
@@ -407,13 +407,13 @@ func TestListCampaignSessions(t *testing.T) {
 						conn.Close()
 					}
 				}()
-				
+
 				// Create stale sockets
 				for i := 1; i < 3; i++ {
 					staleSocket := filepath.Join(campaignDir, "guild-"+string(rune('0'+i))+".sock")
 					require.NoError(t, os.WriteFile(staleSocket, []byte{}, 0600))
 				}
-				
+
 				return campaign, homeDir
 			},
 			wantSessions: []int{0},
@@ -424,22 +424,22 @@ func TestListCampaignSessions(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			campaign, homeDir := tt.setupFunc(t)
 			t.Setenv("HOME", homeDir)
-			
+
 			sessions, err := ListCampaignSessions(campaign)
-			
+
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
-			
+
 			require.NoError(t, err)
-			
+
 			// Extract session numbers
 			gotSessions := make([]int, len(sessions))
 			for i, s := range sessions {
 				gotSessions[i] = s.Session
 			}
-			
+
 			assert.ElementsMatch(t, tt.wantSessions, gotSessions)
 		})
 	}
@@ -449,18 +449,18 @@ func TestDiscoverAllRunningSessions(t *testing.T) {
 	t.Skip("Skipping test that requires daemon environment setup")
 	homeDir := t.TempDir()
 	t.Setenv("HOME", homeDir)
-	
+
 	// Set up multiple campaigns with sessions
 	campaigns := map[string][]int{
 		"campaign-a": {0, 1},
 		"campaign-b": {0},
 		"campaign-c": {}, // No active sessions
 	}
-	
+
 	for campaign, sessions := range campaigns {
 		campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
 		require.NoError(t, os.MkdirAll(campaignDir, 0755))
-		
+
 		for _, session := range sessions {
 			var socketPath string
 			if session == 0 {
@@ -468,13 +468,13 @@ func TestDiscoverAllRunningSessions(t *testing.T) {
 			} else {
 				socketPath = filepath.Join(campaignDir, "guild-"+string(rune('0'+session))+".sock")
 			}
-			
+
 			listener, err := net.Listen("unix", socketPath)
 			require.NoError(t, err)
 			t.Cleanup(func() {
 				listener.Close()
 			})
-			
+
 			go func() {
 				for {
 					conn, err := listener.Accept()
@@ -486,14 +486,14 @@ func TestDiscoverAllRunningSessions(t *testing.T) {
 			}()
 		}
 	}
-	
+
 	// Discover all sessions
 	allSessions, err := DiscoverAllRunningSessions()
 	require.NoError(t, err)
-	
+
 	// Verify results
 	assert.Len(t, allSessions, 2) // Only campaigns with active sessions
-	
+
 	// Check campaign-a
 	if sessions, ok := allSessions["campaign-a"]; ok {
 		assert.Len(t, sessions, 2)
@@ -502,7 +502,7 @@ func TestDiscoverAllRunningSessions(t *testing.T) {
 	} else {
 		t.Error("Expected campaign-a in results")
 	}
-	
+
 	// Check campaign-b
 	if sessions, ok := allSessions["campaign-b"]; ok {
 		assert.Len(t, sessions, 1)
@@ -510,7 +510,7 @@ func TestDiscoverAllRunningSessions(t *testing.T) {
 	} else {
 		t.Error("Expected campaign-b in results")
 	}
-	
+
 	// Check campaign-c is not included
 	_, ok := allSessions["campaign-c"]
 	assert.False(t, ok)
@@ -529,16 +529,16 @@ func TestStopSession(t *testing.T) {
 				// Use short path
 				socketPath := filepath.Join("/tmp", "guild-stop.sock")
 				os.Remove(socketPath)
-				
+
 				listener, err := net.Listen("unix", socketPath)
 				require.NoError(t, err)
-				
+
 				// Set up cleanup
 				t.Cleanup(func() {
 					listener.Close()
 					os.Remove(socketPath)
 				})
-				
+
 				// Handle shutdown command
 				go func() {
 					conn, err := listener.Accept()
@@ -553,10 +553,10 @@ func TestStopSession(t *testing.T) {
 					}
 					conn.Close()
 				}()
-				
+
 				// Give listener time to start
 				time.Sleep(10 * time.Millisecond)
-				
+
 				return socketPath
 			},
 			wantErr: false,
@@ -573,19 +573,19 @@ func TestStopSession(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			socketPath := tt.setupFunc(t)
-			
+
 			err := StopSession(socketPath)
-			
+
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
-			
+
 			require.NoError(t, err)
-			
+
 			// Give time for socket to be closed
 			time.Sleep(200 * time.Millisecond)
-			
+
 			// The socket file might still exist but should not be connectable
 			if CanConnect(socketPath) {
 				t.Logf("Socket at %s is still connectable after StopSession", socketPath)

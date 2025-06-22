@@ -134,7 +134,7 @@ func NewVimEnabledInputPane(width, height int, completionEnabled bool, vimModeMa
 
 	// Wrap with vim adapter
 	vimAdapter := NewVimInputAdapter(inputPaneImpl, vimModeManager)
-	
+
 	// Return as InputPane interface
 	return vimAdapter, nil
 }

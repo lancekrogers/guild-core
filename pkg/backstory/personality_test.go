@@ -17,16 +17,15 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 )
 
-
 func TestPersonalityConsistency(t *testing.T) {
 	registry := NewMockLayeredRegistry()
 	manager := NewBackstoryManager(registry)
 
 	testCases := []struct {
-		name         string
-		agentTemplate string
-		prompts      []string
-		shouldContain []string
+		name             string
+		agentTemplate    string
+		prompts          []string
+		shouldContain    []string
 		shouldNotContain []string
 	}{
 		{
@@ -38,7 +37,7 @@ func TestPersonalityConsistency(t *testing.T) {
 				"How should we handle user authentication?",
 			},
 			shouldContain: []string{
-				"security", "secure", "protection", "never", "absolutely not", 
+				"security", "secure", "protection", "never", "absolutely not",
 				"vulnerability", "breach", "encryption", "guardian", "fortress",
 			},
 			shouldNotContain: []string{
@@ -46,7 +45,7 @@ func TestPersonalityConsistency(t *testing.T) {
 			},
 		},
 		{
-			name:          "Performance Expert - Data Driven and Enthusiastic", 
+			name:          "Performance Expert - Data Driven and Enthusiastic",
 			agentTemplate: "performance-artisan",
 			prompts: []string{
 				"This feels slow, should we optimize?",
@@ -54,7 +53,7 @@ func TestPersonalityConsistency(t *testing.T) {
 				"How do we improve our system performance?",
 			},
 			shouldContain: []string{
-				"measure", "benchmark", "profile", "metrics", "data", 
+				"measure", "benchmark", "profile", "metrics", "data",
 				"optimization", "performance", "velocity", "speed",
 			},
 			shouldNotContain: []string{
@@ -63,7 +62,7 @@ func TestPersonalityConsistency(t *testing.T) {
 		},
 		{
 			name:          "Frontend Artist - User Focused and Empathetic",
-			agentTemplate: "frontend-artist", 
+			agentTemplate: "frontend-artist",
 			prompts: []string{
 				"Should we add more features to this screen?",
 				"The loading time is 5 seconds",
@@ -130,8 +129,8 @@ func TestPersonalityConsistency(t *testing.T) {
 						break
 					}
 				}
-				assert.True(t, foundExpected, 
-					"Prompt for %s should contain personality-appropriate language. Got: %s", 
+				assert.True(t, foundExpected,
+					"Prompt for %s should contain personality-appropriate language. Got: %s",
 					tc.agentTemplate, enhancedPrompt)
 
 				// Check for inappropriate language
@@ -141,11 +140,11 @@ func TestPersonalityConsistency(t *testing.T) {
 				}
 
 				// Verify medieval guild theming is present
-				assert.True(t, 
+				assert.True(t,
 					strings.Contains(enhancedLower, "guild") ||
-					strings.Contains(enhancedLower, "artisan") ||
-					strings.Contains(enhancedLower, "master") ||
-					strings.Contains(enhancedLower, "craft"),
+						strings.Contains(enhancedLower, "artisan") ||
+						strings.Contains(enhancedLower, "master") ||
+						strings.Contains(enhancedLower, "craft"),
 					"Should contain medieval guild theming")
 			}
 		})
@@ -175,7 +174,7 @@ func TestPersonalityLayerGeneration(t *testing.T) {
 
 	// Verify all personality layers are included
 	assert.Contains(t, enhancedPrompt, "Your Identity and Background")
-	assert.Contains(t, enhancedPrompt, "Your Craft and Expertise") 
+	assert.Contains(t, enhancedPrompt, "Your Craft and Expertise")
 	assert.Contains(t, enhancedPrompt, "Current Context")
 	assert.Contains(t, enhancedPrompt, "Your Communication Style")
 	assert.Contains(t, enhancedPrompt, "Base prompt content.")
@@ -342,13 +341,13 @@ func TestGuildMasterPersonality(t *testing.T) {
 	assert.Contains(t, enhancedPrompt, "Master Aldric the Wise")
 	assert.Contains(t, enhancedPrompt, "Grand Master")
 	assert.Contains(t, enhancedPrompt, "Guild Leadership")
-	
+
 	// Should emphasize leadership and wisdom
 	promptLower := strings.ToLower(enhancedPrompt)
-	assert.True(t, 
+	assert.True(t,
 		strings.Contains(promptLower, "wisdom") ||
-		strings.Contains(promptLower, "leadership") ||
-		strings.Contains(promptLower, "team"),
+			strings.Contains(promptLower, "leadership") ||
+			strings.Contains(promptLower, "team"),
 		"Guild master should emphasize leadership qualities")
 }
 

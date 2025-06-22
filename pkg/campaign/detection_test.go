@@ -17,7 +17,7 @@ func TestDetectCampaign(t *testing.T) {
 	tests := []struct {
 		name          string
 		setupFunc     func(t *testing.T) string // returns test directory
-		workingDir    string                     // relative to test directory
+		workingDir    string                    // relative to test directory
 		explicitName  string
 		wantCampaign  string
 		wantErr       bool
@@ -29,7 +29,7 @@ func TestDetectCampaign(t *testing.T) {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
-				
+
 				// Create campaign reference
 				refPath := filepath.Join(guildDir, "guild.yaml")
 				ref := CampaignReference{
@@ -40,7 +40,7 @@ func TestDetectCampaign(t *testing.T) {
 				data, err := yaml.Marshal(ref)
 				require.NoError(t, err)
 				require.NoError(t, os.WriteFile(refPath, data, 0644))
-				
+
 				return tmpDir
 			},
 			workingDir:   ".",
@@ -52,7 +52,7 @@ func TestDetectCampaign(t *testing.T) {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
-				
+
 				// Create campaign reference in parent
 				refPath := filepath.Join(guildDir, "guild.yaml")
 				ref := CampaignReference{
@@ -63,11 +63,11 @@ func TestDetectCampaign(t *testing.T) {
 				data, err := yaml.Marshal(ref)
 				require.NoError(t, err)
 				require.NoError(t, os.WriteFile(refPath, data, 0644))
-				
+
 				// Create subdirectory
 				subDir := filepath.Join(tmpDir, "src", "components")
 				require.NoError(t, os.MkdirAll(subDir, 0755))
-				
+
 				return tmpDir
 			},
 			workingDir:   "src/components",
@@ -79,7 +79,7 @@ func TestDetectCampaign(t *testing.T) {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
-				
+
 				// Create campaign reference that should be ignored
 				refPath := filepath.Join(guildDir, "guild.yaml")
 				ref := CampaignReference{
@@ -90,7 +90,7 @@ func TestDetectCampaign(t *testing.T) {
 				data, err := yaml.Marshal(ref)
 				require.NoError(t, err)
 				require.NoError(t, os.WriteFile(refPath, data, 0644))
-				
+
 				return tmpDir
 			},
 			workingDir:   ".",
@@ -114,11 +114,11 @@ func TestDetectCampaign(t *testing.T) {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
-				
+
 				// Create invalid guild.yaml
 				refPath := filepath.Join(guildDir, "guild.yaml")
 				require.NoError(t, os.WriteFile(refPath, []byte("invalid yaml content {"), 0644))
-				
+
 				return tmpDir
 			},
 			workingDir:    ".",
@@ -131,7 +131,7 @@ func TestDetectCampaign(t *testing.T) {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
-				
+
 				// Create guild.yaml without campaign name
 				refPath := filepath.Join(guildDir, "guild.yaml")
 				ref := CampaignReference{
@@ -141,7 +141,7 @@ func TestDetectCampaign(t *testing.T) {
 				data, err := yaml.Marshal(ref)
 				require.NoError(t, err)
 				require.NoError(t, os.WriteFile(refPath, data, 0644))
-				
+
 				return tmpDir
 			},
 			workingDir:    ".",
@@ -178,13 +178,13 @@ func TestDetectCampaign(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Set up test directory
 			testDir := tt.setupFunc(t)
-			
+
 			// Change to working directory
 			fullWorkingDir := filepath.Join(testDir, tt.workingDir)
-			
+
 			// Call DetectCampaign
 			gotCampaign, err := DetectCampaign(fullWorkingDir, tt.explicitName)
-			
+
 			// Check error
 			if tt.wantErr {
 				require.Error(t, err)
@@ -193,7 +193,7 @@ func TestDetectCampaign(t *testing.T) {
 				}
 				return
 			}
-			
+
 			require.NoError(t, err)
 			assert.Equal(t, tt.wantCampaign, gotCampaign)
 		})

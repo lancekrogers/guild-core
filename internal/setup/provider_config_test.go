@@ -482,12 +482,12 @@ func TestValidateAllProviderTypes(t *testing.T) {
 
 	// Save all original environment variables
 	envVars := map[string]string{
-		"OPENAI_API_KEY":        os.Getenv("OPENAI_API_KEY"),
-		"ANTHROPIC_API_KEY":     os.Getenv("ANTHROPIC_API_KEY"),
-		"DEEPSEEK_API_KEY":      os.Getenv("DEEPSEEK_API_KEY"),
-		"DEEPINFRA_API_KEY":     os.Getenv("DEEPINFRA_API_KEY"),
-		"ORA_API_KEY":           os.Getenv("ORA_API_KEY"),
-		"CLAUDE_CODE_SESSION":   os.Getenv("CLAUDE_CODE_SESSION"),
+		"OPENAI_API_KEY":      os.Getenv("OPENAI_API_KEY"),
+		"ANTHROPIC_API_KEY":   os.Getenv("ANTHROPIC_API_KEY"),
+		"DEEPSEEK_API_KEY":    os.Getenv("DEEPSEEK_API_KEY"),
+		"DEEPINFRA_API_KEY":   os.Getenv("DEEPINFRA_API_KEY"),
+		"ORA_API_KEY":         os.Getenv("ORA_API_KEY"),
+		"CLAUDE_CODE_SESSION": os.Getenv("CLAUDE_CODE_SESSION"),
 	}
 
 	// Restore environment after test
@@ -512,7 +512,7 @@ func TestValidateAllProviderTypes(t *testing.T) {
 	// Test all provider types for basic validation functionality
 	providerTypes := []string{
 		"claude_code",
-		"ollama", 
+		"ollama",
 		"openai",
 		"anthropic",
 		"deepseek",

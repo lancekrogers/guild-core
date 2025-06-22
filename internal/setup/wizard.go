@@ -82,7 +82,7 @@ func NewWizard(ctx context.Context, config *Config) (*Wizard, error) {
 		agentPresets:   agentPresets,
 		registry:       NewProviderRegistry(),
 	}
-	
+
 	return wizard, nil
 }
 
@@ -144,12 +144,12 @@ func (w *Wizard) DetectProviders(ctx context.Context) ([]DetectedProvider, error
 			WithComponent("SetupWizard").
 			WithOperation("detectProviders")
 	}
-	
+
 	var providers []DetectedProvider
 	for _, p := range detection.Available {
 		providers = append(providers, p)
 	}
-	
+
 	return providers, nil
 }
 
@@ -205,12 +205,12 @@ func (w *Wizard) selectRecommendedModels(models []ModelInfo) []ModelInfo {
 			selected = append(selected, model)
 		}
 	}
-	
+
 	// If no recommended models, select the first one
 	if len(selected) == 0 && len(models) > 0 {
 		selected = append(selected, models[0])
 	}
-	
+
 	return selected
 }
 
@@ -240,7 +240,7 @@ func (w *Wizard) createAgentsFromPresets(ctx context.Context, providers []Config
 			WithComponent("SetupWizard").
 			WithOperation("createAgentsFromPresets")
 	}
-	
+
 	if len(recommendations) == 0 {
 		return nil, gerror.New(gerror.ErrCodeNotFound, "no suitable agent presets found", nil).
 			WithComponent("SetupWizard").
@@ -249,7 +249,7 @@ func (w *Wizard) createAgentsFromPresets(ctx context.Context, providers []Config
 
 	// Use the top recommendation
 	recommendation := recommendations[0]
-	
+
 	// Adapt the preset for available providers
 	adaptedPreset, err := w.agentPresets.AdaptPresetForProviders(ctx, recommendation.Collection, providers)
 	if err != nil {
@@ -312,7 +312,7 @@ func (w *Wizard) SaveConfiguration(ctx context.Context, providers []ConfiguredPr
 				break
 			}
 		}
-		
+
 		// If not found, try to find a manager agent
 		if !managerFound {
 			for _, agent := range guildConfig.Agents {
@@ -323,7 +323,7 @@ func (w *Wizard) SaveConfiguration(ctx context.Context, providers []ConfiguredPr
 				}
 			}
 		}
-		
+
 		// If still not found, clear the default
 		if !managerFound {
 			guildConfig.Manager.Default = ""
@@ -336,7 +336,7 @@ func (w *Wizard) SaveConfiguration(ctx context.Context, providers []ConfiguredPr
 			BaseURL:  provider.Settings["base_url"],
 			Settings: provider.Settings,
 		}
-		
+
 		// Use registry to apply settings dynamically
 		if err := w.registry.ApplyProviderSettings(&guildConfig.Providers, provider.Name, settings); err != nil {
 			// Log warning but continue - provider might be new/custom
@@ -363,7 +363,7 @@ func IsProjectSetup(ctx context.Context, projectPath string) (bool, error) {
 		// If config doesn't exist, project is not setup
 		return false, nil
 	}
-	
+
 	// TODO: Could check if providers are configured
 	return true, nil
 }
@@ -399,20 +399,20 @@ func GetSetupStatus(ctx context.Context, projectPath string) (*SetupStatus, erro
 		Agents:       []AgentStatus{},
 		AgentCount:   0,
 	}
-	
+
 	// Try to load config
 	guildConfig, err := config.LoadGuildConfig(projectPath)
 	if err != nil {
 		// Not configured
 		return status, nil
 	}
-	
+
 	status.IsConfigured = true
-	
+
 	// Use registry to check providers dynamically
 	registry := NewProviderRegistry()
 	status.Providers = registry.GetConfiguredProviders(&guildConfig.Providers)
-	
+
 	// Get agent details
 	for _, agent := range guildConfig.Agents {
 		status.Agents = append(status.Agents, AgentStatus{
@@ -422,9 +422,9 @@ func GetSetupStatus(ctx context.Context, projectPath string) (*SetupStatus, erro
 			Model:    agent.Model,
 		})
 	}
-	
+
 	// Count agents
 	status.AgentCount = len(guildConfig.Agents)
-	
+
 	return status, nil
 }

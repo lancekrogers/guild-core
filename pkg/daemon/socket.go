@@ -34,7 +34,7 @@ type SessionInfo struct {
 // SaveSocketRegistry creates a local socket registry file for efficient socket discovery
 func SaveSocketRegistry(projectRoot string, campaign string) error {
 	guildDir := filepath.Join(projectRoot, paths.DefaultCampaignDir)
-	
+
 	// Ensure campaign directory exists
 	if err := os.MkdirAll(guildDir, 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign directory").
@@ -42,7 +42,7 @@ func SaveSocketRegistry(projectRoot string, campaign string) error {
 			WithOperation("SaveSocketRegistry").
 			WithDetails("directory", guildDir)
 	}
-	
+
 	registryPath := filepath.Join(guildDir, "socket-registry.yaml")
 
 	registry := SocketRegistry{

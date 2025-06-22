@@ -368,10 +368,10 @@ func (m *SQLTemplateManager) SetVariables(ctx context.Context, templateID string
 		variable.TemplateID = templateID
 
 		params := db.CreateTemplateVariableParams{
-			ID:           variable.ID,
-			TemplateID:   templateID,
-			Name:         variable.Name,
-			Required:     &variable.Required,
+			ID:         variable.ID,
+			TemplateID: templateID,
+			Name:       variable.Name,
+			Required:   &variable.Required,
 		}
 
 		if variable.Description != "" {
@@ -504,10 +504,10 @@ func (m *SQLTemplateManager) GetUsageStats(ctx context.Context, templateID strin
 	}
 
 	stats := &UsageStats{
-		TemplateID:  templateID,
-		TotalUsage:  totalUsage,
+		TemplateID: templateID,
+		TotalUsage: totalUsage,
 		// TODO: Add more detailed stats queries
-		RecentUsage: 0,
+		RecentUsage:    0,
 		AveragePerWeek: 0,
 	}
 
@@ -702,14 +702,14 @@ func (m *SQLTemplateManager) SearchTemplates(query string, limit int) ([]*Templa
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Convert to search results with basic relevance scoring
 	results := make([]*TemplateSearchResult, 0, len(templates))
 	for i, template := range templates {
 		if limit > 0 && i >= limit {
 			break
 		}
-		
+
 		// Simple matching to populate Matches field
 		var matches []string
 		queryLower := strings.ToLower(query)
@@ -722,13 +722,13 @@ func (m *SQLTemplateManager) SearchTemplates(query string, limit int) ([]*Templa
 		if strings.Contains(strings.ToLower(template.Category), queryLower) {
 			matches = append(matches, "category")
 		}
-		
+
 		results = append(results, &TemplateSearchResult{
 			Template:  template,
 			Relevance: 1.0 - (float64(i) / float64(len(templates))), // Simple relevance scoring
 			Matches:   matches,
 		})
 	}
-	
+
 	return results, nil
 }

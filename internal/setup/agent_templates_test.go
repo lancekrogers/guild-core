@@ -40,9 +40,9 @@ func TestAgentTemplateGenerator_GenerateAgentConfig(t *testing.T) {
 				assert.Equal(t, "test-agent", cfg.ID)
 				assert.Equal(t, "Test Agent", cfg.Name)
 				assert.Equal(t, "worker", cfg.Type)
-				assert.Equal(t, 3000, cfg.MaxTokens) // Default for worker
+				assert.Equal(t, 3000, cfg.MaxTokens)  // Default for worker
 				assert.Equal(t, 0.4, cfg.Temperature) // Default for worker
-				assert.Nil(t, cfg.Backstory) // No backstory fields provided
+				assert.Nil(t, cfg.Backstory)          // No backstory fields provided
 			},
 		},
 		{
@@ -83,7 +83,7 @@ func TestAgentTemplateGenerator_GenerateAgentConfig(t *testing.T) {
 				ContextWindow: 128000,
 			},
 			validate: func(t *testing.T, cfg *config.AgentConfig) {
-				assert.Equal(t, 5000, cfg.MaxTokens) // Custom value
+				assert.Equal(t, 5000, cfg.MaxTokens)  // Custom value
 				assert.Equal(t, 0.2, cfg.Temperature) // Custom value
 				assert.Equal(t, 5, cfg.CostMagnitude)
 				assert.Equal(t, 128000, cfg.ContextWindow)
@@ -111,11 +111,11 @@ func TestAgentTemplateGenerator_GenerateAgentConfig(t *testing.T) {
 			}
 			require.NoError(t, err)
 			require.NotNil(t, cfg)
-			
+
 			// Validate system prompt is generated
 			assert.NotEmpty(t, cfg.SystemPrompt)
 			assert.Contains(t, cfg.SystemPrompt, cfg.Name)
-			
+
 			if tt.validate != nil {
 				tt.validate(t, cfg)
 			}
@@ -126,9 +126,9 @@ func TestAgentTemplateGenerator_GenerateAgentConfig(t *testing.T) {
 func TestAgentTemplateGenerator_GenerateAgentFile(t *testing.T) {
 	// Create temporary directory
 	tmpDir := t.TempDir()
-	
+
 	generator := NewAgentTemplateGenerator()
-	
+
 	template := AgentTemplate{
 		ID:           "file-test-agent",
 		Name:         "File Test Agent",
@@ -139,24 +139,24 @@ func TestAgentTemplateGenerator_GenerateAgentFile(t *testing.T) {
 		Capabilities: []string{"testing", "validation"},
 		Experience:   "Fresh out of training",
 	}
-	
+
 	// Generate the file
 	ctx := context.Background()
 	err := generator.GenerateAgentFile(ctx, tmpDir, template)
 	require.NoError(t, err)
-	
+
 	// Verify file exists
 	expectedPath := filepath.Join(tmpDir, ".campaign", "agents", "file-test-agent.yml")
 	assert.FileExists(t, expectedPath)
-	
+
 	// Read and validate the file
 	data, err := os.ReadFile(expectedPath)
 	require.NoError(t, err)
-	
+
 	var loadedConfig config.AgentConfig
 	err = yaml.Unmarshal(data, &loadedConfig)
 	require.NoError(t, err)
-	
+
 	// Validate content
 	assert.Equal(t, "file-test-agent", loadedConfig.ID)
 	assert.Equal(t, "File Test Agent", loadedConfig.Name)
@@ -167,20 +167,20 @@ func TestAgentTemplateGenerator_GenerateAgentFile(t *testing.T) {
 
 func TestAgentTemplateGenerator_BuiltInTemplates(t *testing.T) {
 	generator := NewAgentTemplateGenerator()
-	
+
 	// Test listing templates
 	templates := generator.ListTemplates()
 	assert.NotEmpty(t, templates)
 	assert.Contains(t, templates, "claude-code-manager")
 	assert.Contains(t, templates, "ollama-coder")
 	assert.Contains(t, templates, "openai-developer")
-	
+
 	// Test getting specific template
 	claudeTemplate, exists := generator.GetTemplate("claude-code-developer")
 	assert.True(t, exists)
 	assert.Equal(t, "claude-developer", claudeTemplate.ID)
 	assert.Equal(t, "claude_code", claudeTemplate.Provider)
-	
+
 	// Test provider filtering
 	ollamaTemplates := generator.ProviderTemplates("ollama")
 	assert.NotEmpty(t, ollamaTemplates)
@@ -191,7 +191,7 @@ func TestAgentTemplateGenerator_BuiltInTemplates(t *testing.T) {
 
 func TestAgentTemplateGenerator_CreateCustomTemplate(t *testing.T) {
 	generator := NewAgentTemplateGenerator()
-	
+
 	custom := generator.CreateCustomTemplate(
 		"my-agent",
 		"My Custom Agent",
@@ -201,7 +201,7 @@ func TestAgentTemplateGenerator_CreateCustomTemplate(t *testing.T) {
 		"A custom specialist agent",
 		[]string{"custom_capability", "special_skill"},
 	)
-	
+
 	assert.Equal(t, "my-agent", custom.ID)
 	assert.Equal(t, "My Custom Agent", custom.Name)
 	assert.Equal(t, "specialist", custom.Type)
@@ -213,40 +213,40 @@ func TestAgentTemplateGenerator_CreateCustomTemplate(t *testing.T) {
 func TestAgentTemplateGenerator_QuickSetup(t *testing.T) {
 	tmpDir := t.TempDir()
 	generator := NewAgentTemplateGenerator()
-	
+
 	// Run quick setup
 	ctx := context.Background()
 	err := generator.QuickSetup(ctx, tmpDir, "openai", "gpt-4", "gpt-3.5-turbo")
 	require.NoError(t, err)
-	
+
 	// Verify manager file
 	managerPath := filepath.Join(tmpDir, ".campaign", "agents", "manager.yml")
 	assert.FileExists(t, managerPath)
-	
+
 	managerData, err := os.ReadFile(managerPath)
 	require.NoError(t, err)
-	
+
 	var managerConfig config.AgentConfig
 	err = yaml.Unmarshal(managerData, &managerConfig)
 	require.NoError(t, err)
-	
+
 	assert.Equal(t, "manager", managerConfig.ID)
 	assert.Equal(t, "Guild Manager", managerConfig.Name)
 	assert.Equal(t, "manager", managerConfig.Type)
 	assert.Equal(t, "openai", managerConfig.Provider)
 	assert.Equal(t, "gpt-4", managerConfig.Model)
-	
+
 	// Verify worker file
 	workerPath := filepath.Join(tmpDir, ".campaign", "agents", "worker-1.yml")
 	assert.FileExists(t, workerPath)
-	
+
 	workerData, err := os.ReadFile(workerPath)
 	require.NoError(t, err)
-	
+
 	var workerConfig config.AgentConfig
 	err = yaml.Unmarshal(workerData, &workerConfig)
 	require.NoError(t, err)
-	
+
 	assert.Equal(t, "worker-1", workerConfig.ID)
 	assert.Equal(t, "Primary Worker", workerConfig.Name)
 	assert.Equal(t, "worker", workerConfig.Type)
@@ -256,11 +256,11 @@ func TestAgentTemplateGenerator_QuickSetup(t *testing.T) {
 
 func TestAgentTemplateGenerator_SystemPromptGeneration(t *testing.T) {
 	generator := NewAgentTemplateGenerator()
-	
+
 	tests := []struct {
-		name           string
-		template       AgentTemplate
-		wantContains   []string
+		name         string
+		template     AgentTemplate
+		wantContains []string
 	}{
 		{
 			name: "basic prompt",
@@ -300,12 +300,12 @@ func TestAgentTemplateGenerator_SystemPromptGeneration(t *testing.T) {
 			},
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			cfg, err := generator.GenerateAgentConfig(tt.template)
 			require.NoError(t, err)
-			
+
 			for _, want := range tt.wantContains {
 				assert.Contains(t, cfg.SystemPrompt, want)
 			}

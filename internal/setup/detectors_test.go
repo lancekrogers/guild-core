@@ -287,7 +287,7 @@ func TestDetectAnthropic(t *testing.T) {
 
 func TestDetectProjectContext(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Create temporary directory with go.mod file
 	tempDir, err := os.MkdirTemp("", "guild-setup-test")
 	if err != nil {

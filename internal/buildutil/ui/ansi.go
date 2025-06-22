@@ -29,9 +29,9 @@ const (
 	ClearLine  = "\033[2K"
 	MoveUp     = "\033[A"
 	// Terminal control
-	ClearScreen = "\033[2J"
-	ResetTerminal = "\033c"
-	ExitAltScreen = "\033[?1049l"
+	ClearScreen    = "\033[2J"
+	ResetTerminal  = "\033c"
+	ExitAltScreen  = "\033[?1049l"
 	EnterAltScreen = "\033[?1049h"
 )
 
@@ -162,7 +162,7 @@ func RestoreTerminal() {
 	if !isatty() {
 		return
 	}
-	
+
 	// Exit alternate screen buffer
 	fmt.Print(ExitAltScreen)
 	// Show cursor

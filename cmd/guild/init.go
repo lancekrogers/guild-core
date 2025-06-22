@@ -9,21 +9,21 @@ import (
 	"os"
 	"time"
 
-	"github.com/spf13/cobra"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/spf13/cobra"
 
 	"github.com/guild-ventures/guild-core/internal/daemon"
+	uiinit "github.com/guild-ventures/guild-core/internal/ui/init"
 	"github.com/guild-ventures/guild-core/pkg/campaign"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	uiinit "github.com/guild-ventures/guild-core/internal/ui/init"
 )
 
 var (
-	initQuickMode    bool
-	initForce        bool
-	initProviderOnly string
+	initQuickMode      bool
+	initForce          bool
+	initProviderOnly   string
 	initSkipValidation bool
-	initNoDaemon     bool
+	initNoDaemon       bool
 )
 
 // initCmd represents the init command
@@ -86,10 +86,10 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 
 	// Create configuration
 	config := uiinit.Config{
-		ProjectPath:  projectPath,
-		QuickMode:    initQuickMode,
-		Force:        initForce,
-		ProviderOnly: initProviderOnly,
+		ProjectPath:    projectPath,
+		QuickMode:      initQuickMode,
+		Force:          initForce,
+		ProviderOnly:   initProviderOnly,
 		SkipValidation: initSkipValidation,
 	}
 
@@ -108,7 +108,7 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 		ttyFile.Close() // Just testing availability
 		ttyAvailable = true
 	}
-	
+
 	// Create the improved TUI model with TTY awareness
 	model, err := uiinit.NewInitTUIModelV2(ctx, config, deps, ttyAvailable)
 	if err != nil {
@@ -122,7 +122,7 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 	opts := []tea.ProgramOption{
 		tea.WithContext(ctx), // Pass context to Bubble Tea
 	}
-	
+
 	// Configure program based on TTY availability
 	if ttyAvailable {
 		opts = append(opts, tea.WithInputTTY())
@@ -162,7 +162,7 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 	// Auto-start daemon unless --no-daemon flag is set
 	if !initNoDaemon {
 		fmt.Println("🚀 Starting Guild daemon...")
-		
+
 		// Detect the campaign we just created
 		cwd, err := os.Getwd()
 		if err != nil {

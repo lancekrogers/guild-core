@@ -32,10 +32,10 @@ func NewSuggestionAwareAgentFactory(
 	commissionManager commission.CommissionManager,
 	costManager CostManagerInterface,
 ) *SuggestionAwareAgentFactory {
-	
+
 	// Create suggestion manager with all providers
 	suggestionManager := createDefaultSuggestionManager(toolRegistry)
-	
+
 	return &SuggestionAwareAgentFactory{
 		llmClient:         llmClient,
 		memoryManager:     memoryManager,
@@ -89,10 +89,10 @@ func (f *SuggestionAwareAgentFactory) CreateWorkerAgentWithCapabilities(id, name
 		f.costManager,
 		f.suggestionManager,
 	)
-	
+
 	// Set capabilities on the base worker agent
 	agent.WorkerAgent.capabilities = capabilities
-	
+
 	return agent
 }
 
@@ -102,10 +102,10 @@ func (f *SuggestionAwareAgentFactory) ConfigureSuggestionProviders(
 	lspManager *lsp.Manager,
 	customProviders ...suggestions.SuggestionProvider,
 ) error {
-	
+
 	// Create new suggestion manager with custom configuration
 	manager := suggestions.NewSuggestionManager()
-	
+
 	// Register core providers
 	commandProvider := suggestions.NewCommandSuggestionProvider()
 	if err := manager.RegisterProvider(commandProvider); err != nil {
@@ -113,14 +113,14 @@ func (f *SuggestionAwareAgentFactory) ConfigureSuggestionProviders(
 			WithComponent("agent.suggestion_factory").
 			WithOperation("ConfigureSuggestionProviders")
 	}
-	
+
 	followUpProvider := suggestions.NewFollowUpSuggestionProvider()
 	if err := manager.RegisterProvider(followUpProvider); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register follow-up provider").
 			WithComponent("agent.suggestion_factory").
 			WithOperation("ConfigureSuggestionProviders")
 	}
-	
+
 	// Register template provider if available
 	if templateManager != nil {
 		templateProvider := suggestions.NewTemplateSuggestionProvider(templateManager)
@@ -130,7 +130,7 @@ func (f *SuggestionAwareAgentFactory) ConfigureSuggestionProviders(
 				WithOperation("ConfigureSuggestionProviders")
 		}
 	}
-	
+
 	// Register LSP provider if available
 	if lspManager != nil {
 		lspProvider := suggestions.NewLSPSuggestionProvider(lspManager)
@@ -140,7 +140,7 @@ func (f *SuggestionAwareAgentFactory) ConfigureSuggestionProviders(
 				WithOperation("ConfigureSuggestionProviders")
 		}
 	}
-	
+
 	// Register tool provider if tool registry is available
 	if f.toolRegistry != nil {
 		// Cast to pkg/tools.ToolRegistry which embeds the concrete ToolRegistry
@@ -154,7 +154,7 @@ func (f *SuggestionAwareAgentFactory) ConfigureSuggestionProviders(
 			}
 		}
 	}
-	
+
 	// Register custom providers
 	for _, provider := range customProviders {
 		if err := manager.RegisterProvider(provider); err != nil {
@@ -164,7 +164,7 @@ func (f *SuggestionAwareAgentFactory) ConfigureSuggestionProviders(
 				WithDetails("provider", provider.GetMetadata().Name)
 		}
 	}
-	
+
 	f.suggestionManager = manager
 	return nil
 }
@@ -177,14 +177,14 @@ func (f *SuggestionAwareAgentFactory) GetSuggestionManager() suggestions.Suggest
 // createDefaultSuggestionManager creates a suggestion manager with default providers
 func createDefaultSuggestionManager(toolRegistry tools.Registry) suggestions.SuggestionManager {
 	manager := suggestions.NewSuggestionManager()
-	
+
 	// Register core providers
 	commandProvider := suggestions.NewCommandSuggestionProvider()
 	_ = manager.RegisterProvider(commandProvider)
-	
+
 	followUpProvider := suggestions.NewFollowUpSuggestionProvider()
 	_ = manager.RegisterProvider(followUpProvider)
-	
+
 	// Register tool provider if tool registry is available
 	if toolRegistry != nil {
 		if pkgReg, ok := toolRegistry.(*tools.ToolRegistry); ok {
@@ -192,6 +192,6 @@ func createDefaultSuggestionManager(toolRegistry tools.Registry) suggestions.Sug
 			_ = manager.RegisterProvider(toolProvider)
 		}
 	}
-	
+
 	return manager
 }

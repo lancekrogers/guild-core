@@ -7,18 +7,18 @@ import (
 	"context"
 	"testing"
 
+	"github.com/guild-ventures/guild-core/pkg/lsp"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/guild-ventures/guild-core/pkg/lsp"
 )
 
 // MockLSPManager implements a minimal LSP manager for testing
 type MockLSPManager struct {
-	completions     *lsp.CompletionList
-	symbols         []lsp.DocumentSymbol
-	definitions     []lsp.Location
+	completions      *lsp.CompletionList
+	symbols          []lsp.DocumentSymbol
+	definitions      []lsp.Location
 	workspaceSymbols []lsp.SymbolInformation
-	err             error
+	err              error
 }
 
 func (m *MockLSPManager) GetCompletion(ctx context.Context, file string, line, column int, trigger string) (*lsp.CompletionList, error) {
@@ -52,7 +52,7 @@ func (m *MockLSPManager) GetWorkspaceSymbol(ctx context.Context, query string) (
 func TestLSPSuggestionProvider_GetCompletions(t *testing.T) {
 	// We'll test the logic separately since we need a real LSP manager
 	provider := NewLSPSuggestionProvider(nil)
-	
+
 	// Test confidence calculation
 	confidence := provider.calculateCompletionConfidence(lsp.CompletionItem{
 		Kind:   lsp.CompletionItemKindMethod,
@@ -72,30 +72,30 @@ func TestLSPSuggestionProvider_NavigationSuggestions(t *testing.T) {
 	// Test with symbol at cursor
 	fileContext := &FileContext{
 		FilePath:       "/path/to/main.go",
-		Line:          20,
-		Column:        10,
+		Line:           20,
+		Column:         10,
 		SymbolAtCursor: "ProcessData",
 	}
 
 	// Since we have nil manager, we test the logic directly
 	suggestions := make([]Suggestion, 0)
-	
+
 	// Manually create what getNavigationSuggestions would create
 	if fileContext != nil && fileContext.SymbolAtCursor != "" {
 		suggestions = append(suggestions, Suggestion{
-			Type:        SuggestionTypeCommand,
-			Content:     "Go to definition of 'ProcessData'",
-			Display:     "📍 Go to definition of 'ProcessData'",
-			Confidence:  0.9,
-			Priority:    8,
+			Type:       SuggestionTypeCommand,
+			Content:    "Go to definition of 'ProcessData'",
+			Display:    "📍 Go to definition of 'ProcessData'",
+			Confidence: 0.9,
+			Priority:   8,
 		})
-		
+
 		suggestions = append(suggestions, Suggestion{
-			Type:        SuggestionTypeCommand,
-			Content:     "Find all references to 'ProcessData'",
-			Display:     "🔍 Find references to 'ProcessData'",
-			Confidence:  0.8,
-			Priority:    7,
+			Type:       SuggestionTypeCommand,
+			Content:    "Find all references to 'ProcessData'",
+			Display:    "🔍 Find references to 'ProcessData'",
+			Confidence: 0.8,
+			Priority:   7,
 		})
 	}
 
@@ -157,7 +157,7 @@ func TestLSPSuggestionProvider_LanguageSpecific(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			suggestions := provider.getLanguageSpecificSuggestions(tt.context)
-			
+
 			if len(tt.expected) > 0 {
 				assert.NotEmpty(t, suggestions)
 				for _, exp := range tt.expected {
@@ -232,10 +232,10 @@ func TestLSPSuggestionProvider_Priority(t *testing.T) {
 	// Methods and functions should have high priority
 	assert.Equal(t, 8, provider.getCompletionPriority(lsp.CompletionItemKindMethod))
 	assert.Equal(t, 8, provider.getCompletionPriority(lsp.CompletionItemKindFunction))
-	
+
 	// Variables and fields medium priority
 	assert.Equal(t, 7, provider.getCompletionPriority(lsp.CompletionItemKindVariable))
-	
+
 	// Classes and interfaces
 	assert.Equal(t, 6, provider.getCompletionPriority(lsp.CompletionItemKindClass))
 }

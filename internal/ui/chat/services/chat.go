@@ -228,7 +228,7 @@ func (cs *ChatService) discoverAgents() ([]string, error) {
 	// Use gRPC to list available agents
 	ctx, cancel := context.WithTimeout(cs.ctx, 5*time.Second)
 	defer cancel()
-	
+
 	resp, err := cs.client.ListAvailableAgents(ctx, &pb.ListAgentsRequest{
 		IncludeStatus: true,
 	})
@@ -237,12 +237,12 @@ func (cs *ChatService) discoverAgents() ([]string, error) {
 			WithComponent("services.chat").
 			WithOperation("discoverAgents")
 	}
-	
+
 	agents := make([]string, 0, len(resp.Agents))
 	for _, agent := range resp.Agents {
 		agents = append(agents, agent.Id)
 	}
-	
+
 	return agents, nil
 }
 
@@ -302,7 +302,7 @@ func (cs *ChatService) broadcastMessage(ctx context.Context, message string) tea
 				WithDetails("agent_id", agentID))
 			continue
 		}
-		
+
 		responses = append(responses, AgentResponseMsg{
 			AgentID: agentID,
 			Content: resp.Response,

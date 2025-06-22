@@ -103,7 +103,7 @@ func TestVimInputAdapter_InsertModeTyping(t *testing.T) {
 	// Type some text
 	adapter.SetValue("")
 	_, _ = adapter.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'h', 'e', 'l', 'l', 'o'}})
-	
+
 	// The text should be passed through to the input pane
 	// Note: In this test, we're not actually simulating the full textarea behavior,
 	// but we're verifying that the adapter passes through the keys in insert mode

@@ -46,7 +46,7 @@ func (s *ModelQueryService) GetModelCount(ctx context.Context, providerName stri
 
 	// Query provider (would be implemented with actual provider APIs)
 	count := s.queryProviderModels(ctx, providerName)
-	
+
 	// Update cache
 	s.cacheMutex.Lock()
 	// Handle dynamic counts (like -1 for Ollama)
@@ -60,7 +60,7 @@ func (s *ModelQueryService) GetModelCount(ctx context.Context, providerName stri
 		QueryTime:    time.Now(),
 	}
 	s.cacheMutex.Unlock()
-	
+
 	// Return 0 for dynamic/unknown counts
 	if count < 0 {
 		return 0
@@ -81,10 +81,10 @@ func (s *ModelQueryService) queryProviderModels(ctx context.Context, providerNam
 		"deepseek":    3,  // DeepSeek models
 		"deepinfra":   10, // Various open models
 	}
-	
+
 	if count, exists := defaults[providerName]; exists {
 		return count
 	}
-	
+
 	return 0
 }

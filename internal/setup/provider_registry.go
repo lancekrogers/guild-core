@@ -35,10 +35,10 @@ func NewProviderRegistry() *ProviderRegistry {
 		providers:    make(map[string]*ProviderDefinition),
 		modelService: NewModelQueryService(),
 	}
-	
+
 	// Register default providers
 	r.registerDefaultProviders()
-	
+
 	return r
 }
 
@@ -58,7 +58,7 @@ func (r *ProviderRegistry) registerDefaultProviders() {
 			return cfg.OpenAI
 		},
 	})
-	
+
 	// Anthropic
 	r.Register(&ProviderDefinition{
 		Name:        "anthropic",
@@ -73,7 +73,7 @@ func (r *ProviderRegistry) registerDefaultProviders() {
 			return cfg.Anthropic
 		},
 	})
-	
+
 	// Ollama
 	r.Register(&ProviderDefinition{
 		Name:        "ollama",
@@ -88,7 +88,7 @@ func (r *ProviderRegistry) registerDefaultProviders() {
 			return cfg.Ollama
 		},
 	})
-	
+
 	// Claude Code
 	r.Register(&ProviderDefinition{
 		Name:        "claude_code",
@@ -103,7 +103,7 @@ func (r *ProviderRegistry) registerDefaultProviders() {
 			return cfg.ClaudeCode
 		},
 	})
-	
+
 	// DeepSeek
 	r.Register(&ProviderDefinition{
 		Name:        "deepseek",
@@ -118,7 +118,7 @@ func (r *ProviderRegistry) registerDefaultProviders() {
 			return cfg.DeepSeek
 		},
 	})
-	
+
 	// Add more providers as needed...
 }
 
@@ -126,13 +126,13 @@ func (r *ProviderRegistry) registerDefaultProviders() {
 func (r *ProviderRegistry) Register(provider *ProviderDefinition) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	if provider.Name == "" {
 		return gerror.New(gerror.ErrCodeValidation, "provider name is required", nil).
 			WithComponent("ProviderRegistry").
 			WithOperation("Register")
 	}
-	
+
 	r.providers[provider.Name] = provider
 	return nil
 }
@@ -141,7 +141,7 @@ func (r *ProviderRegistry) Register(provider *ProviderDefinition) error {
 func (r *ProviderRegistry) Get(name string) (*ProviderDefinition, bool) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	provider, exists := r.providers[name]
 	return provider, exists
 }
@@ -150,7 +150,7 @@ func (r *ProviderRegistry) Get(name string) (*ProviderDefinition, bool) {
 func (r *ProviderRegistry) List() []*ProviderDefinition {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	providers := make([]*ProviderDefinition, 0, len(r.providers))
 	for _, p := range r.providers {
 		providers = append(providers, p)
@@ -166,7 +166,7 @@ func (r *ProviderRegistry) ApplyProviderSettings(cfg *config.ProvidersConfig, pr
 			WithComponent("ProviderRegistry").
 			WithOperation("ApplyProviderSettings")
 	}
-	
+
 	provider.SetConfig(cfg, settings)
 	return nil
 }
@@ -179,7 +179,7 @@ func (r *ProviderRegistry) GetProviderSettings(cfg *config.ProvidersConfig, prov
 			WithComponent("ProviderRegistry").
 			WithOperation("GetProviderSettings")
 	}
-	
+
 	return provider.GetConfig(cfg), nil
 }
 
@@ -187,16 +187,16 @@ func (r *ProviderRegistry) GetProviderSettings(cfg *config.ProvidersConfig, prov
 func (r *ProviderRegistry) GetConfiguredProviders(cfg *config.ProvidersConfig) []ProviderStatus {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	var configured []ProviderStatus
 	ctx := context.Background() // Could be passed in if needed
-	
+
 	for _, provider := range r.providers {
 		settings := provider.GetConfig(cfg)
 		if settings.BaseURL != "" {
 			// Query model count dynamically
 			modelCount := r.modelService.GetModelCount(ctx, provider.Name)
-			
+
 			configured = append(configured, ProviderStatus{
 				Name:      provider.Name,
 				Available: true,
@@ -204,6 +204,6 @@ func (r *ProviderRegistry) GetConfiguredProviders(cfg *config.ProvidersConfig) [
 			})
 		}
 	}
-	
+
 	return configured
 }

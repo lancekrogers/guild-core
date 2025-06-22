@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"io"
 
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/bubbles/list"
+	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/internal/setup"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // handleKeyPress handles key press events based on current state
@@ -275,14 +275,14 @@ func (p ProviderItem) Title() string {
 	if p.IsLocal {
 		status += "🏠 "
 	}
-	
+
 	selected := ""
 	if p.Selected {
 		selected = "☑️ "
 	} else {
 		selected = "☐ "
 	}
-	
+
 	return selected + status + p.Name
 }
 
@@ -319,7 +319,7 @@ func (d ProviderDelegate) Height() int {
 	return 2
 }
 
-// Spacing returns the spacing between list items  
+// Spacing returns the spacing between list items
 func (d ProviderDelegate) Spacing() int {
 	return 1
 }

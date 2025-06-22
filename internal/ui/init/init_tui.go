@@ -23,41 +23,41 @@ import (
 // InitTUIModelV2 represents the improved initialization TUI with better practices
 type InitTUIModelV2 struct {
 	// Core dependencies
-	ctx              context.Context
-	configManager    ConfigurationManager
-	projectInit      ProjectInitializer
-	demoGen          DemoGenerator
-	validator        Validator
-	daemonManager    DaemonManager
-	
+	ctx           context.Context
+	configManager ConfigurationManager
+	projectInit   ProjectInitializer
+	demoGen       DemoGenerator
+	validator     Validator
+	daemonManager DaemonManager
+
 	// Configuration
 	config Config
-	
+
 	// UI state
-	state        InitState
-	styles       *Styles
-	
+	state  InitState
+	styles *Styles
+
 	// Input components
-	inputs       map[string]textinput.Model
-	activeInput  string
-	
+	inputs      map[string]textinput.Model
+	activeInput string
+
 	// Display components
-	spinner      spinner.Model
-	progress     progress.Model
-	help         help.Model
-	renderer     *glamour.TermRenderer
-	
+	spinner  spinner.Model
+	progress progress.Model
+	help     help.Model
+	renderer *glamour.TermRenderer
+
 	// Data
 	campaignName string
 	projectName  string
 	demoType     setup.DemoCommissionType
 	demoOptions  []setup.DemoCommissionType
 	selectedDemo int
-	
+
 	// Results
 	validationResults []ValidationResult
-	err              error
-	
+	err               error
+
 	// UI dimensions
 	width  int
 	height int
@@ -80,7 +80,7 @@ func NewInitTUIModelV2(ctx context.Context, cfg Config, deps InitDependencies, t
 			WithComponent("InitTUIV2").
 			WithOperation("NewInitTUIModelV2")
 	}
-	
+
 	// Resolve absolute path
 	absPath, err := filepath.Abs(cfg.ProjectPath)
 	if err != nil {
@@ -90,10 +90,10 @@ func NewInitTUIModelV2(ctx context.Context, cfg Config, deps InitDependencies, t
 			WithDetails("path", cfg.ProjectPath)
 	}
 	cfg.ProjectPath = absPath
-	
+
 	// Create glamour renderer for markdown based on TTY availability
 	var renderer *glamour.TermRenderer
-	
+
 	if ttyAvailable {
 		renderer, err = glamour.NewTermRenderer(
 			glamour.WithAutoStyle(),
@@ -115,25 +115,25 @@ func NewInitTUIModelV2(ctx context.Context, cfg Config, deps InitDependencies, t
 			renderer = nil
 		}
 	}
-	
+
 	// Initialize components
 	styles := NewStyles()
 	inputs := createInputs(absPath)
-	
+
 	// Create spinner with medieval theme
 	s := spinner.New()
 	s.Spinner = spinner.Points
 	s.Style = styles.Spinner
-	
+
 	// Create progress bar
 	p := progress.New(
 		progress.WithDefaultGradient(),
 		progress.WithWidth(60),
 	)
-	
+
 	// Get demo options
 	demoOptions := deps.DemoGen.GetAvailableTypes()
-	
+
 	return &InitTUIModelV2{
 		ctx:           ctx,
 		configManager: deps.ConfigManager,
@@ -166,11 +166,11 @@ func (m *InitTUIModelV2) Init() tea.Cmd {
 		m.state = StateError
 		return nil
 	}
-	
+
 	if m.config.QuickMode {
 		return m.runQuickMode()
 	}
-	
+
 	return textinput.Blink
 }
 
@@ -184,7 +184,7 @@ func (m *InitTUIModelV2) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.state = StateError
 		return m, nil
 	}
-	
+
 	// Handle window resize
 	if msg, ok := msg.(tea.WindowSizeMsg); ok {
 		m.width = msg.Width
@@ -192,7 +192,7 @@ func (m *InitTUIModelV2) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.progress.Width = min(msg.Width-10, 60)
 		return m, nil
 	}
-	
+
 	// Route to state-specific handlers
 	switch m.state {
 	case StateWelcome:
@@ -224,7 +224,7 @@ func (m *InitTUIModelV2) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m *InitTUIModelV2) View() string {
 	// Always use lipgloss for consistent rendering
 	content := m.renderCurrentState()
-	
+
 	// Apply container styling
 	return lipgloss.Place(
 		m.width, m.height,
@@ -242,7 +242,7 @@ func (m *InitTUIModelV2) GetError() error {
 
 func createInputs(projectPath string) map[string]textinput.Model {
 	inputs := make(map[string]textinput.Model)
-	
+
 	// Campaign input
 	campaign := textinput.New()
 	campaign.Placeholder = "guild-demo"
@@ -250,7 +250,7 @@ func createInputs(projectPath string) map[string]textinput.Model {
 	campaign.Width = 40
 	campaign.Prompt = "📋 "
 	inputs["campaign"] = campaign
-	
+
 	// Project input
 	project := textinput.New()
 	project.Placeholder = filepath.Base(projectPath)
@@ -258,7 +258,7 @@ func createInputs(projectPath string) map[string]textinput.Model {
 	project.Width = 40
 	project.Prompt = "📁 "
 	inputs["project"] = project
-	
+
 	return inputs
 }
 
@@ -268,7 +268,7 @@ func (m *InitTUIModelV2) runQuickMode() tea.Cmd {
 		m.campaignName = "guild-demo"
 		m.projectName = filepath.Base(m.config.ProjectPath)
 		m.state = StateInitializing
-		
+
 		// Start initialization
 		return m.doInitialization()()
 	}
@@ -292,7 +292,7 @@ func (m *InitTUIModelV2) updateWelcome(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m *InitTUIModelV2) updateCampaignInput(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
-	
+
 	if k, ok := msg.(tea.KeyMsg); ok {
 		switch {
 		case key.Matches(k, keys.Enter):
@@ -313,7 +313,7 @@ func (m *InitTUIModelV2) updateCampaignInput(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 	}
-	
+
 	m.inputs["campaign"], cmd = m.inputs["campaign"].Update(msg)
 	return m, cmd
 }
@@ -350,7 +350,7 @@ func (m *InitTUIModelV2) renderWelcome() string {
 		"Welcome to Guild Framework",
 		"Let's forge your development guild together",
 	)
-	
+
 	// Add medieval-themed introduction
 	intro := `
 The Guild awaits your command, Master Artisan.
@@ -363,9 +363,9 @@ Together, we shall establish:
 
 Press Enter to begin your journey...
 `
-	
+
 	rendered, _ := m.renderer.Render(intro)
-	
+
 	return lipgloss.JoinVertical(
 		lipgloss.Center,
 		content,

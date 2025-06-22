@@ -53,7 +53,7 @@ func E2E(opts E2EOptions) error {
 
 	// Run E2E tests
 	ui.Status("Running E2E test suite...", true)
-	
+
 	args := []string{
 		"test",
 		"-timeout", opts.Timeout.String(),
@@ -129,7 +129,7 @@ func ValidateDemo() error {
 	)
 
 	start := time.Now()
-	
+
 	// For demo validation, we want to see the output
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

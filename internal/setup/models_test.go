@@ -175,7 +175,7 @@ func TestGetModelRecommendations(t *testing.T) {
 	// Check that recommendations respect budget constraints
 	for _, rec := range recommendations.Recommendations {
 		if rec.Model.CostMagnitude > 1 { // "low" budget should have cost magnitude <= 1
-			t.Errorf("Model '%s' exceeds low budget constraint (cost magnitude %d)", 
+			t.Errorf("Model '%s' exceeds low budget constraint (cost magnitude %d)",
 				rec.Model.Name, rec.Model.CostMagnitude)
 		}
 	}

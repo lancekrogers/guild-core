@@ -17,10 +17,10 @@ func TestFollowUpSuggestionProvider_GetSuggestions(t *testing.T) {
 	ctx := context.Background()
 
 	tests := []struct {
-		name           string
-		context        SuggestionContext
-		expectedCount  int
-		expectedTypes  []string
+		name          string
+		context       SuggestionContext
+		expectedCount int
+		expectedTypes []string
 	}{
 		{
 			name: "after assistant provides solution",

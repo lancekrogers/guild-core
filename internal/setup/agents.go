@@ -72,9 +72,9 @@ type ProviderAnalysis struct {
 
 // ModelSelection represents a selected model with its provider
 type ModelSelection struct {
-	Provider     string
-	Model        ModelInfo
-	Available    bool
+	Provider      string
+	Model         ModelInfo
+	Available     bool
 	CostEffective bool
 }
 
@@ -227,12 +227,12 @@ func (ac *AgentConfig) createManagerAgent(analysis *ProviderAnalysis) config.Age
 	}
 
 	return config.AgentConfig{
-		ID:           "manager",
-		Name:         "Guild Master",
-		Type:         "manager",
-		Provider:     manager.Provider,
-		Model:        manager.Model.Name,
-		Description:  "The Guild Master coordinates and manages all artisans, breaking down complex commissions into manageable tasks.",
+		ID:          "manager",
+		Name:        "Guild Master",
+		Type:        "manager",
+		Provider:    manager.Provider,
+		Model:       manager.Model.Name,
+		Description: "The Guild Master coordinates and manages all artisans, breaking down complex commissions into manageable tasks.",
 		Capabilities: []string{
 			"task_decomposition",
 			"agent_coordination",
@@ -268,12 +268,12 @@ func (ac *AgentConfig) createWorkerAgents(analysis *ProviderAnalysis) []config.A
 	}
 
 	workers = append(workers, config.AgentConfig{
-		ID:           "primary-artisan",
-		Name:         "Primary Artisan",
-		Type:         "worker",
-		Provider:     primary.Provider,
-		Model:        primary.Model.Name,
-		Description:  "A versatile artisan capable of handling most general tasks including coding, analysis, and content creation.",
+		ID:          "primary-artisan",
+		Name:        "Primary Artisan",
+		Type:        "worker",
+		Provider:    primary.Provider,
+		Model:       primary.Model.Name,
+		Description: "A versatile artisan capable of handling most general tasks including coding, analysis, and content creation.",
 		Capabilities: []string{
 			"general_coding",
 			"text_analysis",
@@ -306,12 +306,12 @@ func (ac *AgentConfig) createWorkerAgents(analysis *ProviderAnalysis) []config.A
 		}
 
 		workers = append(workers, config.AgentConfig{
-			ID:           "secondary-artisan",
-			Name:         "Secondary Artisan",
-			Type:         "worker",
-			Provider:     secondary.Provider,
-			Model:        secondary.Model.Name,
-			Description:  "A secondary artisan for parallel task execution and different perspectives on problems.",
+			ID:          "secondary-artisan",
+			Name:        "Secondary Artisan",
+			Type:        "worker",
+			Provider:    secondary.Provider,
+			Model:       secondary.Model.Name,
+			Description: "A secondary artisan for parallel task execution and different perspectives on problems.",
 			Capabilities: []string{
 				"parallel_processing",
 				"alternative_solutions",
@@ -352,12 +352,12 @@ func (ac *AgentConfig) createSpecialistAgents(analysis *ProviderAnalysis) []conf
 	// Code Specialist
 	if analysis.BestCoding.Available {
 		specialists = append(specialists, config.AgentConfig{
-			ID:           "code-specialist",
-			Name:         "Master Coder",
-			Type:         "specialist",
-			Provider:     analysis.BestCoding.Provider,
-			Model:        analysis.BestCoding.Model.Name,
-			Description:  "A master artisan specializing in complex code generation, debugging, and architectural design.",
+			ID:          "code-specialist",
+			Name:        "Master Coder",
+			Type:        "specialist",
+			Provider:    analysis.BestCoding.Provider,
+			Model:       analysis.BestCoding.Model.Name,
+			Description: "A master artisan specializing in complex code generation, debugging, and architectural design.",
 			Capabilities: []string{
 				"advanced_coding",
 				"code_review",
@@ -383,12 +383,12 @@ func (ac *AgentConfig) createSpecialistAgents(analysis *ProviderAnalysis) []conf
 	// Analysis Specialist (if we have a good reasoning model)
 	if analysis.BestReasoning.Available && analysis.BestReasoning.Model.CostMagnitude >= 2 {
 		specialists = append(specialists, config.AgentConfig{
-			ID:           "analysis-specialist",
-			Name:         "Master Analyst",
-			Type:         "specialist",
-			Provider:     analysis.BestReasoning.Provider,
-			Model:        analysis.BestReasoning.Model.Name,
-			Description:  "A master artisan specializing in deep analysis, research, and strategic thinking.",
+			ID:          "analysis-specialist",
+			Name:        "Master Analyst",
+			Type:        "specialist",
+			Provider:    analysis.BestReasoning.Provider,
+			Model:       analysis.BestReasoning.Model.Name,
+			Description: "A master artisan specializing in deep analysis, research, and strategic thinking.",
 			Capabilities: []string{
 				"deep_analysis",
 				"research",
@@ -415,12 +415,12 @@ func (ac *AgentConfig) createSpecialistAgents(analysis *ProviderAnalysis) []conf
 		for _, model := range analysis.AllModels {
 			if model.Model.CostMagnitude == 0 {
 				specialists = append(specialists, config.AgentConfig{
-					ID:           "local-artisan",
-					Name:         "Local Artisan",
-					Type:         "specialist",
-					Provider:     model.Provider,
-					Model:        model.Model.Name,
-					Description:  "A local artisan for privacy-sensitive tasks and offline work.",
+					ID:          "local-artisan",
+					Name:        "Local Artisan",
+					Type:        "specialist",
+					Provider:    model.Provider,
+					Model:       model.Model.Name,
+					Description: "A local artisan for privacy-sensitive tasks and offline work.",
 					Capabilities: []string{
 						"privacy_tasks",
 						"offline_processing",
@@ -527,7 +527,7 @@ You prioritize privacy and security while maintaining effectiveness in your work
 // GetAgentRecommendations provides recommendations for agent configuration
 func (ac *AgentConfig) GetAgentRecommendations(ctx context.Context, providers []ConfiguredProvider, projectContext *ProjectContext) (*AgentRecommendations, error) {
 	analysis := ac.analyzeProviders(providers)
-	
+
 	recommendations := &AgentRecommendations{
 		MinimalSetup:     ac.getMinimalAgentSetup(analysis),
 		RecommendedSetup: ac.getRecommendedAgentSetup(analysis),
@@ -557,19 +557,19 @@ func (ac *AgentConfig) getMinimalAgentSetup(analysis *ProviderAnalysis) []string
 // getRecommendedAgentSetup returns a recommended agent setup
 func (ac *AgentConfig) getRecommendedAgentSetup(analysis *ProviderAnalysis) []string {
 	agents := []string{"manager", "primary-artisan"}
-	
+
 	if len(analysis.AllModels) > 1 {
 		agents = append(agents, "secondary-artisan")
 	}
-	
+
 	if analysis.BestCoding.Available {
 		agents = append(agents, "code-specialist")
 	}
-	
+
 	if analysis.HasLocal {
 		agents = append(agents, "local-artisan")
 	}
-	
+
 	return agents
 }
 

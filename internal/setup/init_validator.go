@@ -265,7 +265,7 @@ func (v *InitValidator) validateAgentConfiguration(ctx context.Context) InitVali
 	// Check for manager agent
 	hasManager := false
 	providerTypes := make(map[string]int)
-	
+
 	for _, agent := range guildConfig.Agents {
 		if agent.Type == "manager" {
 			hasManager = true
@@ -324,7 +324,7 @@ func (v *InitValidator) validateProviderConfiguration(ctx context.Context) InitV
 
 		// Normalize provider name
 		normalizedProvider := providers.NormalizeProviderName(provider)
-		
+
 		switch normalizedProvider {
 		case providers.ProviderNameOpenAI:
 			if os.Getenv(providers.EnvOpenAIKey) == "" {

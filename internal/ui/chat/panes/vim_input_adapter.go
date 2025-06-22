@@ -54,7 +54,7 @@ func (v *VimInputAdapter) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// Handle key messages through vim mode
 	if keyMsg, ok := msg.(tea.KeyMsg); ok {
 		currentMode := v.vimModeManager.GetState().Mode
-		
+
 		// In insert mode, pass most keys to the input pane first
 		if currentMode == vim.ModeInsert {
 			// Only let vim handle the escape key in insert mode
@@ -65,16 +65,16 @@ func (v *VimInputAdapter) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// All other keys go to the input pane
 			return v.inputPane.Update(msg)
 		}
-		
+
 		// In other modes (normal, visual, command), vim handles the key first
 		_, cmd := v.vimModeManager.HandleVimKey(keyMsg, v)
-		
+
 		// If vim switched to insert mode, we might need to update the input
 		if v.vimModeManager.GetState().Mode == vim.ModeInsert && currentMode != vim.ModeInsert {
 			// Focus the textarea
 			v.inputPane.textarea.Focus()
 		}
-		
+
 		return v, cmd
 	}
 
@@ -85,14 +85,14 @@ func (v *VimInputAdapter) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // View delegates to the input pane's view with vim mode indicator
 func (v *VimInputAdapter) View() string {
 	baseView := v.inputPane.View()
-	
+
 	// If vim mode is enabled and we're not in insert mode, add a mode indicator
 	if v.enabled && v.vimModeManager.GetState().Mode != vim.ModeInsert {
 		modeIndicator := v.vimModeManager.GetModeIndicator()
 		// Prepend the mode indicator to the view
 		return modeIndicator + "\n" + baseView
 	}
-	
+
 	return baseView
 }
 

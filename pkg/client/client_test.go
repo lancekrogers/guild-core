@@ -90,7 +90,7 @@ func TestClient_HTTPMethods(t *testing.T) {
 		if r.Header.Get("Content-Type") != "" {
 			w.Header().Set("X-Content-Type", r.Header.Get("Content-Type"))
 		}
-		
+
 		body, _ := io.ReadAll(r.Body)
 		w.WriteHeader(http.StatusOK)
 		w.Write(body)
@@ -277,7 +277,7 @@ func TestClient_IsHealthy(t *testing.T) {
 func TestClient_ErrorWrapping(t *testing.T) {
 	// Test with non-existent socket
 	socketPath := "/tmp/nonexistent.sock"
-	
+
 	client, err := NewClient(socketPath)
 	require.NoError(t, err)
 	defer client.Close()

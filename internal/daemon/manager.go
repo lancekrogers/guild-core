@@ -63,7 +63,6 @@ func (m *Manager) EnsureDaemonRunning(ctx context.Context, campaign string, pref
 	return config, nil
 }
 
-
 // startCampaignDaemon starts a new daemon instance for a campaign
 func (m *Manager) startCampaignDaemon(ctx context.Context, config *DaemonConfig) error {
 	// Build command arguments
@@ -93,8 +92,8 @@ func (m *Manager) startCampaignDaemon(ctx context.Context, config *DaemonConfig)
 
 	// Set process to run with lower priority and in a new session
 	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Setsid:  true,  // New session
-		Setpgid: true,  // New process group
+		Setsid:  true, // New session
+		Setpgid: true, // New process group
 	}
 
 	// Set up environment for resource limits
@@ -166,10 +165,10 @@ func (m *Manager) startCampaignDaemon(ctx context.Context, config *DaemonConfig)
 func (m *Manager) waitForSocket(ctx context.Context, socketPath string, timeout time.Duration) error {
 	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
-	
+
 	ticker := time.NewTicker(100 * time.Millisecond)
 	defer ticker.Stop()
-	
+
 	for {
 		select {
 		case <-ctx.Done():
@@ -186,7 +185,6 @@ func (m *Manager) waitForSocket(ctx context.Context, socketPath string, timeout 
 		}
 	}
 }
-
 
 // StopCampaign stops all sessions for a campaign
 func (m *Manager) StopCampaign(campaign string) error {

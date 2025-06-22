@@ -99,13 +99,13 @@ func TestHierarchicalLoader_LoadHierarchicalConfig(t *testing.T) {
 			setup: func() error {
 				guildDir := filepath.Join(tempDir, ".campaign")
 				os.MkdirAll(guildDir, 0755)
-				
+
 				// Create campaign
 				saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yml"), &CampaignConfig{
 					Name:        "test",
 					Description: "test",
 				})
-				
+
 				// Create guild referencing non-existent agent
 				return saveGuildConfigYAML(filepath.Join(guildDir, "guild.yml"), &GuildConfigFile{
 					Guilds: map[string]GuildDefinition{
@@ -127,7 +127,7 @@ func TestHierarchicalLoader_LoadHierarchicalConfig(t *testing.T) {
 			// Clean up before each test
 			os.RemoveAll(filepath.Join(tempDir, ".campaign"))
 			loader.cache = make(map[string]*HierarchicalConfig) // Clear cache
-			
+
 			if err := tt.setup(); err != nil {
 				t.Fatalf("Setup failed: %v", err)
 			}
@@ -184,7 +184,7 @@ func TestHierarchicalLoader_LoadHierarchicalConfig_Caching(t *testing.T) {
 	loader.mu.RLock()
 	cached, exists := loader.cache[tempDir]
 	loader.mu.RUnlock()
-	
+
 	if !exists {
 		t.Error("Cache does not contain loaded config")
 	}
@@ -384,7 +384,7 @@ func TestHierarchicalLoader_ValidateCrossReferences(t *testing.T) {
 			errCode: gerror.ErrCodeValidation,
 		},
 		{
-			name: "guild references non-existent agent",
+			name:     "guild references non-existent agent",
 			campaign: &CampaignConfig{},
 			guilds: &GuildConfigFile{
 				Guilds: map[string]GuildDefinition{
@@ -485,19 +485,19 @@ func TestHierarchicalConfig_GetAgentByName(t *testing.T) {
 	config := &HierarchicalConfig{
 		Agents: map[string]*AgentConfig{
 			"agent1": {
-				Name:        "Agent One",
-				ID:          "agent1",
-				Type:        "worker",
-				Provider:    "openai",
-				Model:       "gpt-4",
+				Name:         "Agent One",
+				ID:           "agent1",
+				Type:         "worker",
+				Provider:     "openai",
+				Model:        "gpt-4",
 				Capabilities: []string{"coding"},
 			},
 			"agent2": {
-				Name:        "Agent Two",
-				ID:          "agent2",
-				Type:        "specialist",
-				Provider:    "anthropic",
-				Model:       "claude-3",
+				Name:         "Agent Two",
+				ID:           "agent2",
+				Type:         "specialist",
+				Provider:     "anthropic",
+				Model:        "claude-3",
 				Capabilities: []string{"analysis"},
 			},
 		},
@@ -650,7 +650,7 @@ func TestHierarchicalConfig_SaveAgentConfig(t *testing.T) {
 	defer os.RemoveAll(tempDir)
 
 	ctx := context.Background()
-	
+
 	config := &HierarchicalConfig{
 		Agents:      make(map[string]*AgentConfig),
 		projectPath: tempDir,
@@ -843,11 +843,11 @@ func TestHierarchicalConfig_ValidateAll(t *testing.T) {
 				},
 				Agents: map[string]*AgentConfig{
 					"agent1": {
-						ID:       "agent1",
-						Name:     "Agent",
-						Type:     "invalid-type", // Invalid
-						Provider: "openai",
-						Model:    "gpt-4",
+						ID:           "agent1",
+						Name:         "Agent",
+						Type:         "invalid-type", // Invalid
+						Provider:     "openai",
+						Model:        "gpt-4",
 						Capabilities: []string{"coding"},
 					},
 				},
@@ -870,7 +870,7 @@ func TestHierarchicalConfig_ValidateAll(t *testing.T) {
 func setupCompleteHierarchy(tempDir string) error {
 	guildDir := filepath.Join(tempDir, ".campaign")
 	agentsDir := filepath.Join(guildDir, "agents")
-	
+
 	// Create directories
 	if err := os.MkdirAll(agentsDir, 0755); err != nil {
 		return err
@@ -1107,7 +1107,7 @@ func TestHierarchicalLoader_RealWorldScenarios(t *testing.T) {
 func setupComplexHierarchy(tempDir string) error {
 	guildDir := filepath.Join(tempDir, ".campaign")
 	agentsDir := filepath.Join(guildDir, "agents")
-	
+
 	if err := os.MkdirAll(agentsDir, 0755); err != nil {
 		return err
 	}
@@ -1142,7 +1142,7 @@ func setupComplexHierarchy(tempDir string) error {
 		},
 		LastSelectedGuild: "backend-microservices",
 	}
-	
+
 	if err := saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yml"), campaign); err != nil {
 		return err
 	}
@@ -1209,142 +1209,142 @@ func setupComplexHierarchy(tempDir string) error {
 	agentConfigs := map[string]*AgentConfig{
 		// Backend agents
 		"api-architect": {
-			ID:           "api-architect",
-			Name:         "API Architecture Specialist",
-			Type:         "specialist",
-			Provider:     "anthropic",
-			Model:        "claude-3-opus",
-			Capabilities: []string{"api-design", "architecture", "documentation"},
+			ID:            "api-architect",
+			Name:          "API Architecture Specialist",
+			Type:          "specialist",
+			Provider:      "anthropic",
+			Model:         "claude-3-opus",
+			Capabilities:  []string{"api-design", "architecture", "documentation"},
 			CostMagnitude: 8,
 			ContextWindow: 200000,
 		},
 		"microservice-expert": {
-			ID:           "microservice-expert",
-			Name:         "Microservices Developer",
-			Type:         "worker",
-			Provider:     "openai",
-			Model:        "gpt-4",
-			Capabilities: []string{"coding", "microservices", "distributed-systems"},
+			ID:            "microservice-expert",
+			Name:          "Microservices Developer",
+			Type:          "worker",
+			Provider:      "openai",
+			Model:         "gpt-4",
+			Capabilities:  []string{"coding", "microservices", "distributed-systems"},
 			CostMagnitude: 5,
 			ContextWindow: 32000,
 		},
 		"database-specialist": {
-			ID:           "database-specialist",
-			Name:         "Database Architecture Expert",
-			Type:         "specialist",
-			Provider:     "openai",
-			Model:        "gpt-4",
-			Capabilities: []string{"database", "sql", "nosql", "optimization"},
+			ID:            "database-specialist",
+			Name:          "Database Architecture Expert",
+			Type:          "specialist",
+			Provider:      "openai",
+			Model:         "gpt-4",
+			Capabilities:  []string{"database", "sql", "nosql", "optimization"},
 			CostMagnitude: 5,
 		},
 		"message-broker-expert": {
-			ID:           "message-broker-expert",
-			Name:         "Message Queue Specialist",
-			Type:         "specialist",
-			Provider:     "anthropic",
-			Model:        "claude-3-sonnet",
-			Capabilities: []string{"kafka", "rabbitmq", "event-driven"},
+			ID:            "message-broker-expert",
+			Name:          "Message Queue Specialist",
+			Type:          "specialist",
+			Provider:      "anthropic",
+			Model:         "claude-3-sonnet",
+			Capabilities:  []string{"kafka", "rabbitmq", "event-driven"},
 			CostMagnitude: 3,
 		},
 		"cache-specialist": {
-			ID:           "cache-specialist",
-			Name:         "Caching Strategy Expert",
-			Type:         "specialist",
-			Provider:     "openai",
-			Model:        "gpt-3.5-turbo",
-			Capabilities: []string{"redis", "memcached", "caching-strategies"},
+			ID:            "cache-specialist",
+			Name:          "Caching Strategy Expert",
+			Type:          "specialist",
+			Provider:      "openai",
+			Model:         "gpt-3.5-turbo",
+			Capabilities:  []string{"redis", "memcached", "caching-strategies"},
 			CostMagnitude: 2,
 		},
 		// Frontend agents
 		"react-expert": {
-			ID:           "react-expert",
-			Name:         "React Development Specialist",
-			Type:         "worker",
-			Provider:     "openai",
-			Model:        "gpt-4",
-			Capabilities: []string{"react", "redux", "frontend", "typescript"},
+			ID:            "react-expert",
+			Name:          "React Development Specialist",
+			Type:          "worker",
+			Provider:      "openai",
+			Model:         "gpt-4",
+			Capabilities:  []string{"react", "redux", "frontend", "typescript"},
 			CostMagnitude: 5,
 		},
 		"vue-specialist": {
-			ID:           "vue-specialist",
-			Name:         "Vue.js Developer",
-			Type:         "worker",
-			Provider:     "anthropic",
-			Model:        "claude-3-haiku",
-			Capabilities: []string{"vue", "vuex", "frontend", "javascript"},
+			ID:            "vue-specialist",
+			Name:          "Vue.js Developer",
+			Type:          "worker",
+			Provider:      "anthropic",
+			Model:         "claude-3-haiku",
+			Capabilities:  []string{"vue", "vuex", "frontend", "javascript"},
 			CostMagnitude: 1,
 		},
 		"mobile-developer": {
-			ID:           "mobile-developer",
-			Name:         "Mobile App Developer",
-			Type:         "worker",
-			Provider:     "openai",
-			Model:        "gpt-4",
-			Capabilities: []string{"react-native", "flutter", "mobile"},
+			ID:            "mobile-developer",
+			Name:          "Mobile App Developer",
+			Type:          "worker",
+			Provider:      "openai",
+			Model:         "gpt-4",
+			Capabilities:  []string{"react-native", "flutter", "mobile"},
 			CostMagnitude: 5,
 		},
 		"ux-designer": {
-			ID:           "ux-designer",
-			Name:         "UX/UI Design Specialist",
-			Type:         "specialist",
-			Provider:     "anthropic",
-			Model:        "claude-3-sonnet",
-			Capabilities: []string{"ui-design", "ux", "figma", "accessibility"},
+			ID:            "ux-designer",
+			Name:          "UX/UI Design Specialist",
+			Type:          "specialist",
+			Provider:      "anthropic",
+			Model:         "claude-3-sonnet",
+			Capabilities:  []string{"ui-design", "ux", "figma", "accessibility"},
 			CostMagnitude: 3,
 		},
 		"accessibility-expert": {
-			ID:           "accessibility-expert",
-			Name:         "Accessibility Specialist",
-			Type:         "specialist",
-			Provider:     "openai",
-			Model:        "gpt-3.5-turbo",
-			Capabilities: []string{"wcag", "aria", "accessibility-testing"},
+			ID:            "accessibility-expert",
+			Name:          "Accessibility Specialist",
+			Type:          "specialist",
+			Provider:      "openai",
+			Model:         "gpt-3.5-turbo",
+			Capabilities:  []string{"wcag", "aria", "accessibility-testing"},
 			CostMagnitude: 2,
 		},
 		// Infrastructure agents
 		"kubernetes-expert": {
-			ID:           "kubernetes-expert",
-			Name:         "Kubernetes Platform Engineer",
-			Type:         "specialist",
-			Provider:     "openai",
-			Model:        "gpt-4",
-			Capabilities: []string{"kubernetes", "helm", "container-orchestration"},
+			ID:            "kubernetes-expert",
+			Name:          "Kubernetes Platform Engineer",
+			Type:          "specialist",
+			Provider:      "openai",
+			Model:         "gpt-4",
+			Capabilities:  []string{"kubernetes", "helm", "container-orchestration"},
 			CostMagnitude: 5,
 		},
 		"terraform-specialist": {
-			ID:           "terraform-specialist",
-			Name:         "Infrastructure as Code Expert",
-			Type:         "worker",
-			Provider:     "anthropic",
-			Model:        "claude-3-sonnet",
-			Capabilities: []string{"terraform", "cloudformation", "iac"},
+			ID:            "terraform-specialist",
+			Name:          "Infrastructure as Code Expert",
+			Type:          "worker",
+			Provider:      "anthropic",
+			Model:         "claude-3-sonnet",
+			Capabilities:  []string{"terraform", "cloudformation", "iac"},
 			CostMagnitude: 3,
 		},
 		"ci-cd-engineer": {
-			ID:           "ci-cd-engineer",
-			Name:         "CI/CD Pipeline Engineer",
-			Type:         "worker",
-			Provider:     "openai",
-			Model:        "gpt-3.5-turbo",
-			Capabilities: []string{"jenkins", "github-actions", "gitlab-ci"},
+			ID:            "ci-cd-engineer",
+			Name:          "CI/CD Pipeline Engineer",
+			Type:          "worker",
+			Provider:      "openai",
+			Model:         "gpt-3.5-turbo",
+			Capabilities:  []string{"jenkins", "github-actions", "gitlab-ci"},
 			CostMagnitude: 2,
 		},
 		"monitoring-expert": {
-			ID:           "monitoring-expert",
-			Name:         "Observability Engineer",
-			Type:         "specialist",
-			Provider:     "openai",
-			Model:        "gpt-4",
-			Capabilities: []string{"prometheus", "grafana", "elk-stack", "tracing"},
+			ID:            "monitoring-expert",
+			Name:          "Observability Engineer",
+			Type:          "specialist",
+			Provider:      "openai",
+			Model:         "gpt-4",
+			Capabilities:  []string{"prometheus", "grafana", "elk-stack", "tracing"},
 			CostMagnitude: 5,
 		},
 		"security-specialist": {
-			ID:           "security-specialist",
-			Name:         "Security Engineer",
-			Type:         "specialist",
-			Provider:     "anthropic",
-			Model:        "claude-3-opus",
-			Capabilities: []string{"security", "penetration-testing", "compliance"},
+			ID:            "security-specialist",
+			Name:          "Security Engineer",
+			Type:          "specialist",
+			Provider:      "anthropic",
+			Model:         "claude-3-opus",
+			Capabilities:  []string{"security", "penetration-testing", "compliance"},
 			CostMagnitude: 8,
 		},
 	}
@@ -1363,7 +1363,7 @@ func setupComplexHierarchy(tempDir string) error {
 func BenchmarkHierarchicalLoader_LoadHierarchicalConfig(b *testing.B) {
 	tempDir, _ := os.MkdirTemp("", "hierarchical-bench")
 	defer os.RemoveAll(tempDir)
-	
+
 	setupComplexHierarchy(tempDir)
 	loader := NewHierarchicalLoader()
 	ctx := context.Background()
@@ -1374,7 +1374,7 @@ func BenchmarkHierarchicalLoader_LoadHierarchicalConfig(b *testing.B) {
 		loader.mu.Lock()
 		delete(loader.cache, tempDir)
 		loader.mu.Unlock()
-		
+
 		_, _ = loader.LoadHierarchicalConfig(ctx, tempDir)
 	}
 }
@@ -1382,11 +1382,11 @@ func BenchmarkHierarchicalLoader_LoadHierarchicalConfig(b *testing.B) {
 func BenchmarkHierarchicalLoader_LoadHierarchicalConfig_Cached(b *testing.B) {
 	tempDir, _ := os.MkdirTemp("", "hierarchical-bench-cached")
 	defer os.RemoveAll(tempDir)
-	
+
 	setupComplexHierarchy(tempDir)
 	loader := NewHierarchicalLoader()
 	ctx := context.Background()
-	
+
 	// Prime the cache
 	loader.LoadHierarchicalConfig(ctx, tempDir)
 
@@ -1399,11 +1399,11 @@ func BenchmarkHierarchicalLoader_LoadHierarchicalConfig_Cached(b *testing.B) {
 func BenchmarkHierarchicalConfig_GetGuildAgents(b *testing.B) {
 	tempDir, _ := os.MkdirTemp("", "hierarchical-bench-agents")
 	defer os.RemoveAll(tempDir)
-	
+
 	setupComplexHierarchy(tempDir)
 	loader := NewHierarchicalLoader()
 	ctx := context.Background()
-	
+
 	config, _ := loader.LoadHierarchicalConfig(ctx, tempDir)
 
 	b.ResetTimer()

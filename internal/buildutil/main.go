@@ -136,7 +136,7 @@ func main() {
 
 	case "uninstall":
 		err = tasks.Uninstall(verbose)
-		
+
 	case "dashboard":
 		// Show project dashboard
 		showDashboard()
@@ -161,10 +161,10 @@ func showDashboard() {
 	// Full terminal reset
 	fmt.Print("\033c")
 	defer fmt.Print("\033[0m")
-	
+
 	// Get terminal width
 	cols := termSize()
-	
+
 	// Project header
 	drawBox("🏰 Guild Framework Status", []string{
 		fmt.Sprintf("Version:     %s", getVersion()),
@@ -172,15 +172,15 @@ func showDashboard() {
 		fmt.Sprintf("Last commit: %s", getLastCommit()),
 		fmt.Sprintf("Time:        %s", time.Now().Format("15:04:05 MST")),
 	}, cols)
-	
+
 	// Build status
 	buildStatus := getBuildStatus()
 	drawBox("🔨 Build Status", buildStatus, cols)
-	
+
 	// Test status
 	testStatus := getTestStatus()
 	drawBox("🧪 Test Status", testStatus, cols)
-	
+
 	// Quick commands
 	drawBox("⚡ Quick Commands", []string{
 		"make build         - Build all binaries",
@@ -211,12 +211,12 @@ func drawBox(title string, content []string, width int) {
 		bold  = "\033[1m"
 		cyan  = "\033[36m"
 	)
-	
+
 	line := strings.Repeat("─", width-2)
 	fmt.Printf("┌%s┐\n", line)
 	fmt.Printf("│ %s%-*s%s │\n", bold+cyan, width-4, title, reset)
 	fmt.Printf("├%s┤\n", line)
-	
+
 	for _, c := range content {
 		if len(c) > width-4 {
 			c = c[:width-7] + "…"
@@ -262,13 +262,13 @@ func getBuildStatus() []string {
 		red   = "\033[31m"
 		reset = "\033[0m"
 	)
-	
+
 	// Check if binaries exist
 	status := []string{}
-	
+
 	if _, err := os.Stat("bin/guild"); err == nil {
 		status = append(status, green+"✓"+reset+" Guild CLI built")
-		
+
 		// Check last build time
 		if stat, err := os.Stat("bin/guild"); err == nil {
 			modTime := stat.ModTime()
@@ -277,10 +277,10 @@ func getBuildStatus() []string {
 	} else {
 		status = append(status, red+"✗"+reset+" Guild CLI not built")
 	}
-	
+
 	// Count packages
 	status = append(status, "", "Packages: 137 total")
-	
+
 	return status
 }
 
@@ -291,11 +291,11 @@ func getTestStatus() []string {
 		red    = "\033[31m"
 		reset  = "\033[0m"
 	)
-	
+
 	// This would check actual test results in a real implementation
 	return []string{
 		green + "✓" + reset + " Unit tests: 342 passed",
-		yellow + "⚠" + reset + " Integration tests: 8 skipped", 
+		yellow + "⚠" + reset + " Integration tests: 8 skipped",
 		red + "✗" + reset + " E2E tests: 2 failed",
 		"",
 		"Coverage: 72.4%",

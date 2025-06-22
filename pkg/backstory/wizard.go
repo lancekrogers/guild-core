@@ -27,9 +27,9 @@ func NewAgentCreationWizard() *AgentCreationWizard {
 
 // WizardResult contains the result of the wizard
 type WizardResult struct {
-	Agent       *config.AgentConfig
-	IsTemplate  bool
-	Customized  bool
+	Agent      *config.AgentConfig
+	IsTemplate bool
+	Customized bool
 }
 
 // RunInteractiveWizard runs the full interactive agent creation process
@@ -126,7 +126,7 @@ func (w *AgentCreationWizard) browseTemplates() {
 		fmt.Printf("   Name: %s\n", template.Name)
 		fmt.Printf("   Role: %s\n", template.Type)
 		fmt.Printf("   Description: %s\n", template.Description)
-		
+
 		if template.Backstory != nil {
 			fmt.Printf("   Rank: %s\n", template.Backstory.GuildRank)
 			if len(template.Backstory.Specialties) > 0 {
@@ -187,7 +187,7 @@ func (w *AgentCreationWizard) selectAndCustomizeTemplate() (*config.AgentConfig,
 
 		// Make a copy of the template for customization
 		agent := w.copyAgentConfig(selectedTemplate.agent)
-		
+
 		// Ask if they want to customize
 		if w.shouldCustomizeTemplate() {
 			return w.customizeTemplate(agent)
@@ -203,10 +203,10 @@ func (w *AgentCreationWizard) createFromScratch() (*config.AgentConfig, error) {
 	fmt.Println("=============================")
 
 	agent := &config.AgentConfig{
-		Provider: "mock", // Default for development
-		Model:    "claude-3-sonnet-20240229",
+		Provider:      "mock", // Default for development
+		Model:         "claude-3-sonnet-20240229",
 		CostMagnitude: 3,
-		Capabilities: []string{"general_assistance"},
+		Capabilities:  []string{"general_assistance"},
 	}
 
 	// Basic information
@@ -264,7 +264,7 @@ func (w *AgentCreationWizard) promptForYesNo(question string) bool {
 		fmt.Printf("%s (y/n): ", question)
 		var response string
 		fmt.Scanln(&response)
-		
+
 		response = strings.ToLower(strings.TrimSpace(response))
 		if response == "y" || response == "yes" {
 			return true
@@ -280,7 +280,7 @@ func (w *AgentCreationWizard) promptForString(prompt, defaultValue string) strin
 	fmt.Printf("%s [%s]: ", prompt, defaultValue)
 	var response string
 	fmt.Scanln(&response)
-	
+
 	if strings.TrimSpace(response) == "" {
 		return defaultValue
 	}
@@ -316,7 +316,7 @@ func (w *AgentCreationWizard) createBackstory() *config.Backstory {
 	fmt.Println("=============================")
 
 	backstory := &config.Backstory{}
-	
+
 	backstory.Experience = w.promptForString("Years of experience:", "5 years in software development")
 	backstory.Expertise = w.promptForString("Core expertise:", "Building reliable systems")
 	backstory.Philosophy = w.promptForString("Professional philosophy:", "Quality and user focus")
@@ -331,11 +331,11 @@ func (w *AgentCreationWizard) createPersonality() *config.Personality {
 	fmt.Println("==============================")
 
 	personality := &config.Personality{}
-	
+
 	personality.Formality = w.promptForFormality()
 	personality.DetailLevel = w.promptForDetailLevel()
 	personality.ApproachStyle = w.promptForApproachStyle()
-	
+
 	// Simple trait scoring
 	personality.Assertiveness = w.promptForScale("Assertiveness (1-10):", 5)
 	personality.Empathy = w.promptForScale("Empathy (1-10):", 7)
@@ -349,7 +349,7 @@ func (w *AgentCreationWizard) createSpecialization() *config.Specialization {
 	fmt.Println("===========================")
 
 	spec := &config.Specialization{}
-	
+
 	spec.Domain = w.promptForString("Domain (e.g., 'web-development'):", "general")
 	spec.ExpertiseLevel = w.promptForExpertiseLevel()
 	spec.Craft = w.promptForString("Medieval craft equivalent:", "Digital Crafting")

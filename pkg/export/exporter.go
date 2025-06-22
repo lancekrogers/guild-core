@@ -31,7 +31,7 @@ func NewMultiFormatExporter() *MultiFormatExporter {
 	exporter := &MultiFormatExporter{
 		formatters: make(map[ExportFormat]Formatter),
 	}
-	
+
 	// Register all format handlers
 	exporter.formatters[FormatMarkdown] = NewMarkdownFormatter()
 	exporter.formatters[FormatHTML] = NewHTMLFormatter()
@@ -39,7 +39,7 @@ func NewMultiFormatExporter() *MultiFormatExporter {
 	exporter.formatters[FormatPlainText] = NewPlainTextFormatter()
 	exporter.formatters[FormatCSV] = NewCSVFormatter()
 	// PDF formatter would require additional dependencies
-	
+
 	return exporter
 }
 
@@ -52,14 +52,14 @@ func (e *MultiFormatExporter) Export(ctx context.Context, content ExportContent,
 			WithOperation("Export").
 			WithDetails("format", string(format))
 	}
-	
+
 	// Validate content
 	if err := e.ValidateContent(content); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidInput, "content validation failed").
 			WithComponent("export").
 			WithOperation("Export")
 	}
-	
+
 	// Validate format-specific options
 	if err := formatter.ValidateOptions(content.Options); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidInput, "options validation failed").
@@ -67,7 +67,7 @@ func (e *MultiFormatExporter) Export(ctx context.Context, content ExportContent,
 			WithOperation("Export").
 			WithDetails("format", string(format))
 	}
-	
+
 	// Set default metadata if not provided
 	if content.Metadata.ExportedAt.IsZero() {
 		content.Metadata.ExportedAt = time.Now()
@@ -75,7 +75,7 @@ func (e *MultiFormatExporter) Export(ctx context.Context, content ExportContent,
 	if content.Metadata.Version == "" {
 		content.Metadata.Version = "1.0"
 	}
-	
+
 	// Perform the export
 	data, err := formatter.Format(ctx, content)
 	if err != nil {
@@ -84,7 +84,7 @@ func (e *MultiFormatExporter) Export(ctx context.Context, content ExportContent,
 			WithOperation("Export").
 			WithDetails("format", string(format))
 	}
-	
+
 	return data, nil
 }
 
@@ -104,13 +104,13 @@ func (e *MultiFormatExporter) ValidateContent(content ExportContent) error {
 			WithComponent("export").
 			WithOperation("ValidateContent")
 	}
-	
+
 	if content.Metadata.Title == "" {
 		return gerror.New(gerror.ErrCodeInvalidInput, "export title is required", nil).
 			WithComponent("export").
 			WithOperation("ValidateContent")
 	}
-	
+
 	// Validate selection if provided
 	if content.Selection != nil {
 		if content.Selection.StartIndex < 0 || content.Selection.EndIndex >= len(content.Messages) {
@@ -126,7 +126,7 @@ func (e *MultiFormatExporter) ValidateContent(content ExportContent) error {
 				WithOperation("ValidateContent")
 		}
 	}
-	
+
 	// Validate messages
 	for i, msg := range content.Messages {
 		if msg.Content == "" {
@@ -142,7 +142,7 @@ func (e *MultiFormatExporter) ValidateContent(content ExportContent) error {
 				WithDetails("message_index", fmt.Sprintf("%d", i))
 		}
 	}
-	
+
 	return nil
 }
 
@@ -166,10 +166,10 @@ func (e *MultiFormatExporter) ExportToResult(ctx context.Context, content Export
 	if err != nil {
 		return nil, err
 	}
-	
+
 	formatter := e.formatters[format]
 	filename := generateFilename(content.Metadata.Title, formatter.GetFileExtension())
-	
+
 	return &ExportResult{
 		Data:       data,
 		Format:     format,
@@ -179,8 +179,8 @@ func (e *MultiFormatExporter) ExportToResult(ctx context.Context, content Export
 		ExportedAt: time.Now(),
 		Metadata: map[string]interface{}{
 			"message_count": len(content.Messages),
-			"title":        content.Metadata.Title,
-			"campaign":     content.Metadata.Campaign,
+			"title":         content.Metadata.Title,
+			"campaign":      content.Metadata.Campaign,
 		},
 	}, nil
 }
@@ -198,16 +198,16 @@ func generateFilename(title, extension string) string {
 	filename = strings.ReplaceAll(filename, "<", "-")
 	filename = strings.ReplaceAll(filename, ">", "-")
 	filename = strings.ReplaceAll(filename, "|", "-")
-	
+
 	// Limit length
 	if len(filename) > 50 {
 		filename = filename[:50]
 	}
-	
+
 	// Add timestamp if no meaningful title
 	if filename == "" || filename == "_" {
 		filename = fmt.Sprintf("export_%s", time.Now().Format("2006-01-02_15-04-05"))
 	}
-	
+
 	return fmt.Sprintf("%s.%s", filename, extension)
 }

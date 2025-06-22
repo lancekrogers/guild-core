@@ -331,7 +331,7 @@ func (mc *ModelConfig) initializeModels() {
 			DisplayName:        "Claude 3 Sonnet (via Ora)",
 			Description:        "Anthropic Claude accessed through Ora",
 			CostPerInputToken:  0.000004, // Varies by Ora pricing
-			CostPerOutputToken: 0.00002, // Varies by Ora pricing
+			CostPerOutputToken: 0.00002,  // Varies by Ora pricing
 			ContextWindow:      200000,
 			CostMagnitude:      3, // Mid cost
 			Recommended:        false,
@@ -441,16 +441,16 @@ func (mc *ModelConfig) EstimateMonthlyCost(ctx context.Context, model ModelInfo,
 	totalCostPerDay := inputCostPerDay + outputCostPerDay
 
 	return &CostEstimate{
-		Model:           model.Name,
-		Provider:        model.Provider,
-		InputTokens:     inputTokensPerDay * 30,
-		OutputTokens:    outputTokensPerDay * 30,
-		InputCost:       inputCostPerDay * 30,
-		OutputCost:      outputCostPerDay * 30,
-		TotalCost:       totalCostPerDay * 30,
-		CostMagnitude:   model.CostMagnitude,
-		IsLocal:         model.CostMagnitude == 0,
-		UsageLevel:      mc.categorizeUsage(inputTokensPerDay + outputTokensPerDay),
+		Model:         model.Name,
+		Provider:      model.Provider,
+		InputTokens:   inputTokensPerDay * 30,
+		OutputTokens:  outputTokensPerDay * 30,
+		InputCost:     inputCostPerDay * 30,
+		OutputCost:    outputCostPerDay * 30,
+		TotalCost:     totalCostPerDay * 30,
+		CostMagnitude: model.CostMagnitude,
+		IsLocal:       model.CostMagnitude == 0,
+		UsageLevel:    mc.categorizeUsage(inputTokensPerDay + outputTokensPerDay),
 	}
 }
 
@@ -487,12 +487,12 @@ func (mc *ModelConfig) GetCostComparison(ctx context.Context, capability string,
 	})
 
 	return &CostComparison{
-		Capability: capability,
-		Usage:      estimates[0].UsageLevel,
-		Estimates:  estimates,
-		Cheapest:   estimates[0].Model,
+		Capability:    capability,
+		Usage:         estimates[0].UsageLevel,
+		Estimates:     estimates,
+		Cheapest:      estimates[0].Model,
 		MostExpensive: estimates[len(estimates)-1].Model,
-		Savings:    estimates[len(estimates)-1].TotalCost - estimates[0].TotalCost,
+		Savings:       estimates[len(estimates)-1].TotalCost - estimates[0].TotalCost,
 	}, nil
 }
 

@@ -20,17 +20,17 @@ type DaemonConfig struct {
 	Session      int    `json:"session"`
 
 	// Transport configuration
-	SocketPath   string `json:"socket_path"`   // Unix socket path
+	SocketPath string `json:"socket_path"` // Unix socket path
 
 	// Logging and process management
-	LogFile    string        `json:"log_file"`
-	PIDFile    string        `json:"pid_file"`
+	LogFile     string        `json:"log_file"`
+	PIDFile     string        `json:"pid_file"`
 	IdleTimeout time.Duration `json:"idle_timeout"`
 
 	// Resource limits
-	NiceLevel      int   `json:"nice_level"`       // Process priority adjustment
-	MemoryLimit    int64 `json:"memory_limit"`    // Memory limit in bytes
-	MemoryLimitMB  int   `json:"memory_limit_mb"` // Memory limit in MB (for easier config)
+	NiceLevel     int   `json:"nice_level"`      // Process priority adjustment
+	MemoryLimit   int64 `json:"memory_limit"`    // Memory limit in bytes
+	MemoryLimitMB int   `json:"memory_limit_mb"` // Memory limit in MB (for easier config)
 }
 
 // GetDaemonConfig creates a daemon configuration for a campaign and session
@@ -68,7 +68,6 @@ func GetDaemonConfig(campaign string, requestedSession int) (*DaemonConfig, erro
 
 	return config, nil
 }
-
 
 // setupFilePaths configures log and PID file paths based on campaign and session
 func (c *DaemonConfig) setupFilePaths() error {
@@ -108,7 +107,6 @@ func (c *DaemonConfig) GetDisplayName() string {
 
 	return fmt.Sprintf("Guild Daemon (%s-session-%d)", c.Campaign, c.Session)
 }
-
 
 // findAvailableSession finds the next available session for a campaign
 func findAvailableSession(campaign string) (int, string, error) {

@@ -66,11 +66,11 @@ func TestDemoConsistency(t *testing.T) {
 
 func TestDemoScenarios(t *testing.T) {
 	scenarios := []struct {
-		name         string
-		args         []string
-		expected     []string
-		maxDuration  time.Duration
-		description  string
+		name        string
+		args        []string
+		expected    []string
+		maxDuration time.Duration
+		description string
 	}{
 		{
 			name:        "Quick Demo",
@@ -92,7 +92,7 @@ func TestDemoScenarios(t *testing.T) {
 		t.Run(sc.name, func(t *testing.T) {
 			env := NewTestEnvironment(t)
 			result := env.RunGuildWithTimeout(sc.maxDuration+10*time.Second, sc.args...)
-			
+
 			if strings.Contains(strings.Join(sc.args, " "), "--help") {
 				// Help commands should succeed
 				result.AssertSuccess(t)
@@ -150,7 +150,7 @@ func TestDemoContentValidation(t *testing.T) {
 
 	t.Run("Demo Output Quality", func(t *testing.T) {
 		result := env.RunGuildWithTimeout(60*time.Second, "demo-check")
-		
+
 		if result.ExitCode == 0 {
 			// If demo works, validate output quality
 			output := result.Stdout
@@ -180,11 +180,11 @@ func TestDemoContentValidation(t *testing.T) {
 	t.Run("Demo Resource Cleanup", func(t *testing.T) {
 		// Run demo and ensure it cleans up after itself
 		result := env.RunGuildWithTimeout(60*time.Second, "demo-check")
-		
+
 		if result.ExitCode == 0 {
 			// Check that no temporary files are left in work directory
 			workDir := env.GetWorkDir()
-			
+
 			// Demo shouldn't create unexpected files
 			unexpectedPatterns := []string{
 				"*.tmp",
@@ -207,7 +207,7 @@ func TestDemoInterruption(t *testing.T) {
 	t.Run("Demo Timeout Handling", func(t *testing.T) {
 		// Test with very short timeout to simulate interruption
 		result := env.RunGuildWithTimeout(100*time.Millisecond, "demo-check")
-		
+
 		// Command might timeout or complete quickly
 		if result.Error != nil && strings.Contains(result.Error.Error(), "context deadline exceeded") {
 			// Timeout occurred - this is expected for this test
@@ -225,10 +225,10 @@ func TestDemoRecovery(t *testing.T) {
 	t.Run("Demo After Failed Init", func(t *testing.T) {
 		// Try to create invalid project first
 		env.RunGuild("init")
-		
+
 		// Demo should still work even if previous commands failed
 		result := env.RunGuildWithTimeout(60*time.Second, "demo-check")
-		
+
 		if result.ExitCode == 0 {
 			result.AssertContains(t, "Demo")
 		}
@@ -239,10 +239,10 @@ func TestDemoRecovery(t *testing.T) {
 	t.Run("Demo With Corrupted Config", func(t *testing.T) {
 		// Create invalid guild.yaml
 		env.CreateFile(".guild/guild.yaml", "invalid: yaml: content: [")
-		
+
 		// Demo should handle corrupted config gracefully
 		result := env.RunGuildWithTimeout(60*time.Second, "demo-check")
-		
+
 		// Should either work or fail gracefully
 		result.AssertNotContains(t, "panic")
 		result.AssertNotContains(t, "fatal")
@@ -252,11 +252,11 @@ func TestDemoRecovery(t *testing.T) {
 func TestDemoMetrics(t *testing.T) {
 	const numRuns = 5
 	durations := make([]time.Duration, numRuns)
-	
+
 	for i := 0; i < numRuns; i++ {
 		env := NewTestEnvironment(t)
 		result := env.RunGuildWithTimeout(60*time.Second, "demo-check")
-		
+
 		if result.ExitCode == 0 {
 			durations[i] = result.Duration
 		} else {
@@ -268,7 +268,7 @@ func TestDemoMetrics(t *testing.T) {
 	// Calculate performance metrics
 	var totalDuration time.Duration
 	var minDuration, maxDuration time.Duration = durations[0], durations[0]
-	
+
 	for _, d := range durations {
 		totalDuration += d
 		if d < minDuration {
@@ -278,19 +278,19 @@ func TestDemoMetrics(t *testing.T) {
 			maxDuration = d
 		}
 	}
-	
+
 	avgDuration := totalDuration / time.Duration(numRuns)
-	
+
 	t.Logf("Demo Performance Metrics:")
 	t.Logf("  Average: %v", avgDuration)
 	t.Logf("  Min: %v", minDuration)
 	t.Logf("  Max: %v", maxDuration)
 	t.Logf("  Variance: %v", maxDuration-minDuration)
-	
+
 	// Performance assertions
 	assert.Less(t, avgDuration, 30*time.Second, "Average demo time should be reasonable")
 	assert.Less(t, maxDuration, 60*time.Second, "Max demo time should not exceed limit")
-	
+
 	// Consistency check - max shouldn't be more than 3x min
 	if minDuration > 0 {
 		ratio := float64(maxDuration) / float64(minDuration)

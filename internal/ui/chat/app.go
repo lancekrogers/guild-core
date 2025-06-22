@@ -365,7 +365,7 @@ func (app *App) initializePanes() error {
 			WithOperation("initializePanes")
 	}
 	app.outputPane = outputPane
-	
+
 	// Set content formatter on output pane if available
 	if app.contentFormatter != nil {
 		app.outputPane.SetContentFormatter(app.contentFormatter)
@@ -960,7 +960,7 @@ func (app *App) handleVimModeToggle(msg messages.VimModeToggleMsg) (tea.Model, t
 			// Toggle vim mode state
 			isEnabled := vimAdapter.IsEnabled()
 			vimAdapter.SetEnabled(!isEnabled)
-			
+
 			// Update status
 			if !isEnabled {
 				app.statusPane.UpdateStatus("Vim mode enabled (NORMAL)", "info")

@@ -14,13 +14,13 @@ import (
 
 // agentStatusTracker implements the StatusTracker interface
 type agentStatusTracker struct {
-	mu             sync.RWMutex
-	agents         map[string]*AgentInfo
-	activities     map[string][]AgentActivity
-	statusUpdates  map[string]*StatusUpdate
-	stats          TrackerStats
-	maxActivities  int
-	ctx            context.Context
+	mu            sync.RWMutex
+	agents        map[string]*AgentInfo
+	activities    map[string][]AgentActivity
+	statusUpdates map[string]*StatusUpdate
+	stats         TrackerStats
+	maxActivities int
+	ctx           context.Context
 }
 
 // NewStatusTracker creates a new agent status tracker

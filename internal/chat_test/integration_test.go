@@ -205,50 +205,50 @@ func TestComponentInteraction(t *testing.T) {
 
 	// TODO: Re-enable this test once AgentStatusTracker and StatusDisplay are integrated
 	/*
-	t.Run("status_tracking_with_multiple_agents", func(t *testing.T) {
-		guildConfig := createTestConfig()
-		tracker := chat.NewAgentStatusTracker(guildConfig)
-		display := chat.NewStatusDisplay(tracker, 60, 25)
+		t.Run("status_tracking_with_multiple_agents", func(t *testing.T) {
+			guildConfig := createTestConfig()
+			tracker := chat.NewAgentStatusTracker(guildConfig)
+			display := chat.NewStatusDisplay(tracker, 60, 25)
 
-		// Simulate realistic agent workflow
-		workflow := []struct {
-			agentID string
-			state   chat.AgentState
-			task    string
-		}{
-			{"manager", chat.AgentThinking, "Planning project structure"},
-			{"developer", chat.AgentWorking, "Implementing core features"},
-			{"reviewer", chat.AgentIdle, ""},
-			{"manager", chat.AgentWorking, "Coordinating team efforts"},
-			{"developer", chat.AgentThinking, "Debugging test failures"},
-		}
-
-		for _, step := range workflow {
-			status := &chat.AgentStatus{
-				ID:           step.agentID,
-				Name:         strings.Title(step.agentID) + " Agent",
-				State:        step.state,
-				CurrentTask:  step.task,
-				LastActivity: time.Now(),
+			// Simulate realistic agent workflow
+			workflow := []struct {
+				agentID string
+				state   chat.AgentState
+				task    string
+			}{
+				{"manager", chat.AgentThinking, "Planning project structure"},
+				{"developer", chat.AgentWorking, "Implementing core features"},
+				{"reviewer", chat.AgentIdle, ""},
+				{"manager", chat.AgentWorking, "Coordinating team efforts"},
+				{"developer", chat.AgentThinking, "Debugging test failures"},
 			}
-			tracker.UpdateAgentStatus(step.agentID, status)
-		}
 
-		// Verify final states
-		managerStatus := tracker.GetAgentStatus("manager")
-		assert.Equal(t, chat.AgentWorking, managerStatus.State)
-		assert.Equal(t, "Coordinating team efforts", managerStatus.CurrentTask)
+			for _, step := range workflow {
+				status := &chat.AgentStatus{
+					ID:           step.agentID,
+					Name:         strings.Title(step.agentID) + " Agent",
+					State:        step.state,
+					CurrentTask:  step.task,
+					LastActivity: time.Now(),
+				}
+				tracker.UpdateAgentStatus(step.agentID, status)
+			}
 
-		developerStatus := tracker.GetAgentStatus("developer")
-		assert.Equal(t, chat.AgentThinking, developerStatus.State)
+			// Verify final states
+			managerStatus := tracker.GetAgentStatus("manager")
+			assert.Equal(t, chat.AgentWorking, managerStatus.State)
+			assert.Equal(t, "Coordinating team efforts", managerStatus.CurrentTask)
 
-		// Render status display
-		statusView := display.RenderStatusPanel()
-		assert.NotEmpty(t, statusView)
-		assert.Contains(t, statusView, "manager")
-		assert.Contains(t, statusView, "developer")
-		assert.Contains(t, statusView, "reviewer")
-	})
+			developerStatus := tracker.GetAgentStatus("developer")
+			assert.Equal(t, chat.AgentThinking, developerStatus.State)
+
+			// Render status display
+			statusView := display.RenderStatusPanel()
+			assert.NotEmpty(t, statusView)
+			assert.Contains(t, statusView, "manager")
+			assert.Contains(t, statusView, "developer")
+			assert.Contains(t, statusView, "reviewer")
+		})
 	*/
 }
 
@@ -306,53 +306,52 @@ func TestErrorHandling(t *testing.T) {
 			})
 		}
 	})
-	*/
 
 	// TODO: Re-enable this test once AgentStatusTracker is integrated
 	/*
-	t.Run("concurrent_access_safety", func(t *testing.T) {
-		// Test thread safety of components
-		guildConfig := createTestConfig()
-		tracker := chat.NewAgentStatusTracker(guildConfig)
+		t.Run("concurrent_access_safety", func(t *testing.T) {
+			// Test thread safety of components
+			guildConfig := createTestConfig()
+			tracker := chat.NewAgentStatusTracker(guildConfig)
 
-		// Test concurrent status updates
-		done := make(chan bool, 10)
+			// Test concurrent status updates
+			done := make(chan bool, 10)
 
-		for i := 0; i < 10; i++ {
-			go func(agentNum int) {
-				defer func() { done <- true }()
+			for i := 0; i < 10; i++ {
+				go func(agentNum int) {
+					defer func() { done <- true }()
 
-				agentID := fmt.Sprintf("agent-%d", agentNum)
-				for j := 0; j < 50; j++ {
-					status := &chat.AgentStatus{
-						ID:    agentID,
-						State: chat.AgentState(j % 4),
+					agentID := fmt.Sprintf("agent-%d", agentNum)
+					for j := 0; j < 50; j++ {
+						status := &chat.AgentStatus{
+							ID:    agentID,
+							State: chat.AgentState(j % 4),
+						}
+						tracker.UpdateAgentStatus(agentID, status)
+
+						// Brief pause to allow interleaving
+						time.Sleep(time.Microsecond)
 					}
-					tracker.UpdateAgentStatus(agentID, status)
-
-					// Brief pause to allow interleaving
-					time.Sleep(time.Microsecond)
-				}
-			}(i)
-		}
-
-		// Wait for all goroutines to complete
-		for i := 0; i < 10; i++ {
-			select {
-			case <-done:
-				// Success
-			case <-time.After(5 * time.Second):
-				t.Fatal("Timeout waiting for concurrent operations")
+				}(i)
 			}
-		}
 
-		// Should not have crashed and should have some final states
-		for i := 0; i < 10; i++ {
-			agentID := fmt.Sprintf("agent-%d", i)
-			status := tracker.GetAgentStatus(agentID)
-			assert.NotNil(t, status, "Agent %s should have a status", agentID)
-		}
-	})
+			// Wait for all goroutines to complete
+			for i := 0; i < 10; i++ {
+				select {
+				case <-done:
+					// Success
+				case <-time.After(5 * time.Second):
+					t.Fatal("Timeout waiting for concurrent operations")
+				}
+			}
+
+			// Should not have crashed and should have some final states
+			for i := 0; i < 10; i++ {
+				agentID := fmt.Sprintf("agent-%d", i)
+				status := tracker.GetAgentStatus(agentID)
+				assert.NotNil(t, status, "Agent %s should have a status", agentID)
+			}
+		})
 	*/
 }
 
@@ -401,37 +400,37 @@ func TestPerformanceBaseline(t *testing.T) {
 
 	// TODO: Re-enable this test once AgentStatusTracker is integrated
 	/*
-	t.Run("status_update_performance", func(t *testing.T) {
-		guildConfig := createTestConfig()
-		tracker := chat.NewAgentStatusTracker(guildConfig)
+		t.Run("status_update_performance", func(t *testing.T) {
+			guildConfig := createTestConfig()
+			tracker := chat.NewAgentStatusTracker(guildConfig)
 
-		// Measure status update performance
-		agentCount := 100
-		updatesPerAgent := 100
+			// Measure status update performance
+			agentCount := 100
+			updatesPerAgent := 100
 
-		start := time.Now()
-		for i := 0; i < agentCount; i++ {
-			agentID := fmt.Sprintf("agent-%d", i)
-			for j := 0; j < updatesPerAgent; j++ {
-				status := &chat.AgentStatus{
-					ID:    agentID,
-					State: chat.AgentState(j % 4),
+			start := time.Now()
+			for i := 0; i < agentCount; i++ {
+				agentID := fmt.Sprintf("agent-%d", i)
+				for j := 0; j < updatesPerAgent; j++ {
+					status := &chat.AgentStatus{
+						ID:    agentID,
+						State: chat.AgentState(j % 4),
+					}
+					tracker.UpdateAgentStatus(agentID, status)
 				}
-				tracker.UpdateAgentStatus(agentID, status)
 			}
-		}
-		duration := time.Since(start)
+			duration := time.Since(start)
 
-		totalUpdates := agentCount * updatesPerAgent
-		updatesPerSecond := float64(totalUpdates) / duration.Seconds()
+			totalUpdates := agentCount * updatesPerAgent
+			updatesPerSecond := float64(totalUpdates) / duration.Seconds()
 
-		t.Logf("Performed %d status updates in %v (%.0f updates/sec)",
-			totalUpdates, duration, updatesPerSecond)
+			t.Logf("Performed %d status updates in %v (%.0f updates/sec)",
+				totalUpdates, duration, updatesPerSecond)
 
-		// Should handle at least 10000 updates per second
-		assert.Greater(t, updatesPerSecond, 10000.0,
-			"Status updates should be fast enough for real-time use")
-	})
+			// Should handle at least 10000 updates per second
+			assert.Greater(t, updatesPerSecond, 10000.0,
+				"Status updates should be fast enough for real-time use")
+		})
 	*/
 }
 
@@ -535,48 +534,48 @@ func TestVisualComponentsIntegration(t *testing.T) {
 		// Test image processor initialization and basic functionality
 		imageProcessor := visual.NewImageProcessor()
 		require.NotNil(t, imageProcessor)
-		
+
 		// Set ASCII art size
 		imageProcessor.SetASCIISize(80, 24)
-		
+
 		// Test processing content with image references
 		content := "Here's an image: ![test](./test.png)"
 		processed, refs, err := imageProcessor.ProcessContent(content)
-		
+
 		// Should not error on processing
 		assert.NoError(t, err)
 		assert.NotEmpty(t, processed)
 		assert.NotNil(t, refs)
 	})
-	
+
 	t.Run("code_renderer", func(t *testing.T) {
 		// Test code renderer initialization
 		codeRenderer := visual.NewCodeRenderer()
 		require.NotNil(t, codeRenderer)
-		
+
 		// Set max width
 		codeRenderer.SetMaxWidth(80)
-		
+
 		// Test processing code blocks
 		content := "```go\nfunc main() {\n    fmt.Println(\"Hello\")\n}\n```"
 		processed := codeRenderer.ProcessCodeBlocks(content)
-		
+
 		assert.NotEmpty(t, processed)
 		assert.Contains(t, processed, "func main")
 	})
-	
+
 	t.Run("mermaid_processor", func(t *testing.T) {
 		// Test mermaid diagram processor
 		mermaidProcessor := visual.NewMermaidProcessor()
 		require.NotNil(t, mermaidProcessor)
-		
+
 		// Set ASCII size for diagrams
 		mermaidProcessor.SetASCIISize(80, 30)
-		
+
 		// Test processing mermaid content
 		content := "```mermaid\ngraph TD\n    A[Start] --> B[End]\n```"
 		processed, diagrams, err := mermaidProcessor.ProcessContent(content)
-		
+
 		// Should handle mermaid content gracefully
 		assert.NoError(t, err)
 		assert.NotEmpty(t, processed)
@@ -590,19 +589,19 @@ func TestProgressIndicators(t *testing.T) {
 		// Test progress indicator initialization
 		indicators := progress.NewProgressIndicators()
 		require.NotNil(t, indicators)
-		
+
 		// Test starting and stopping indicators
 		indicators.Start("test-task", "Processing...")
-		
+
 		// Update progress
 		indicators.Update("test-task", 50, "Halfway done")
-		
+
 		// Complete the task
 		indicators.Complete("test-task", "Task completed")
-		
+
 		// Stop indicators
 		indicators.Stop("test-task")
-		
+
 		// Should handle all operations without panic
 		assert.True(t, true, "Progress indicators handled all operations")
 	})

@@ -405,7 +405,7 @@ func (h *StatusHandler) Usage() string {
 }
 
 // AgentsHandler lists available agents
-type AgentsHandler struct{
+type AgentsHandler struct {
 	guildClient pb.GuildClient
 }
 
@@ -432,7 +432,7 @@ func (h *AgentsHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 		// Build agents text
 		var agentsText strings.Builder
 		agentsText.WriteString("🏰 **Available Guild Artisans**\n\n")
-		
+
 		for _, agent := range resp.Agents {
 			// Get status icon
 			statusIcon := "⚪"
@@ -456,14 +456,14 @@ func (h *AgentsHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 					statusName = "OFFLINE"
 				}
 			}
-			
+
 			agentsText.WriteString(fmt.Sprintf("%s **@%s** - %s\n", statusIcon, agent.Id, agent.Name))
 			if len(agent.Capabilities) > 0 {
 				agentsText.WriteString(fmt.Sprintf("   🛡️ Skills: %s\n", strings.Join(agent.Capabilities, ", ")))
 			}
 			agentsText.WriteString(fmt.Sprintf("   📍 Status: %s\n\n", statusName))
 		}
-		
+
 		agentsText.WriteString(`**Usage:**
 @developer help me fix this bug
 @writer create documentation for this feature

@@ -15,8 +15,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/internal/setup"
+	"github.com/guild-ventures/guild-core/pkg/config"
 )
 
 // WizardInterface defines the interface for the setup wizard
@@ -33,7 +33,7 @@ type WizardState int
 const (
 	stateWelcome WizardState = iota
 	stateProviderDetection
-	stateProviderSelection  
+	stateProviderSelection
 	stateModelSelection
 	stateAgentCreation
 	stateProgress
@@ -53,11 +53,11 @@ type WizardTUIModel struct {
 	totalSteps  int
 
 	// UI Components
-	list           list.Model
-	textInput      textinput.Model
-	progressBar    progress.Model
-	help           help.Model
-	keys           WizardKeyMap
+	list        list.Model
+	textInput   textinput.Model
+	progressBar progress.Model
+	help        help.Model
+	keys        WizardKeyMap
 
 	// Data
 	detectedProviders    []setup.DetectedProvider
@@ -350,54 +350,54 @@ func (m *WizardTUIModel) View() string {
 // Styling
 var (
 	titleStyle = lipgloss.NewStyle().
-		Bold(true).
-		Foreground(lipgloss.Color("#7D56F4")).
-		Background(lipgloss.Color("#282828")).
-		Padding(0, 1).
-		MarginBottom(1)
+			Bold(true).
+			Foreground(lipgloss.Color("#7D56F4")).
+			Background(lipgloss.Color("#282828")).
+			Padding(0, 1).
+			MarginBottom(1)
 
 	headerStyle = lipgloss.NewStyle().
-		Bold(true).
-		Foreground(lipgloss.Color("#FAFAFA")).
-		Background(lipgloss.Color("#7D56F4")).
-		Padding(0, 1).
-		Margin(1, 0)
+			Bold(true).
+			Foreground(lipgloss.Color("#FAFAFA")).
+			Background(lipgloss.Color("#7D56F4")).
+			Padding(0, 1).
+			Margin(1, 0)
 
 	contentStyle = lipgloss.NewStyle().
-		Padding(1, 2).
-		Border(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color("#7D56F4"))
+			Padding(1, 2).
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("#7D56F4"))
 
 	successStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#04B575")).
-		Bold(true)
+			Foreground(lipgloss.Color("#04B575")).
+			Bold(true)
 
 	errorStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#FF4757")).
-		Bold(true)
+			Foreground(lipgloss.Color("#FF4757")).
+			Bold(true)
 
 	warningStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#FFA726")).
-		Bold(true)
+			Foreground(lipgloss.Color("#FFA726")).
+			Bold(true)
 
 	paginationStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#626262"))
+			Foreground(lipgloss.Color("#626262"))
 
 	helpStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#626262"))
+			Foreground(lipgloss.Color("#626262"))
 
 	helpKeyStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#7D56F4")).
-		Bold(true)
+			Foreground(lipgloss.Color("#7D56F4")).
+			Bold(true)
 
 	helpDescStyle = lipgloss.NewStyle().
-		Foreground(lipgloss.Color("#FAFAFA"))
+			Foreground(lipgloss.Color("#FAFAFA"))
 
 	boxStyle = lipgloss.NewStyle().
-		Border(lipgloss.RoundedBorder()).
-		BorderForeground(lipgloss.Color("#7D56F4")).
-		Padding(1, 2).
-		Margin(1, 0)
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("#7D56F4")).
+			Padding(1, 2).
+			Margin(1, 0)
 )
 
 // Helper methods will be implemented in the next part...

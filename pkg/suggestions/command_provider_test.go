@@ -16,56 +16,56 @@ func TestCommandSuggestionProvider_GetSuggestions(t *testing.T) {
 	ctx := context.Background()
 
 	tests := []struct {
-		name           string
-		context        SuggestionContext
-		expectedCount  int
-		expectedFirst  string
-		minConfidence  float64
+		name          string
+		context       SuggestionContext
+		expectedCount int
+		expectedFirst string
+		minConfidence float64
 	}{
 		{
 			name: "help command match",
 			context: SuggestionContext{
 				CurrentMessage: "how do i use this?",
 			},
-			expectedCount:  1,
-			expectedFirst:  "help",
-			minConfidence:  0.7,
+			expectedCount: 1,
+			expectedFirst: "help",
+			minConfidence: 0.7,
 		},
 		{
 			name: "init command match",
 			context: SuggestionContext{
 				CurrentMessage: "create a new project",
 			},
-			expectedCount:  1,
-			expectedFirst:  "init",
-			minConfidence:  0.6,
+			expectedCount: 1,
+			expectedFirst: "init",
+			minConfidence: 0.6,
 		},
 		{
 			name: "multiple matches",
 			context: SuggestionContext{
 				CurrentMessage: "i want to test my code",
 			},
-			expectedCount:  1,
-			expectedFirst:  "test",
-			minConfidence:  0.5,
+			expectedCount: 1,
+			expectedFirst: "test",
+			minConfidence: 0.5,
 		},
 		{
 			name: "search command match",
 			context: SuggestionContext{
 				CurrentMessage: "where is the config file?",
 			},
-			expectedCount:  1,
-			expectedFirst:  "search",
-			minConfidence:  0.6,
+			expectedCount: 1,
+			expectedFirst: "search",
+			minConfidence: 0.6,
 		},
 		{
 			name: "template command match",
 			context: SuggestionContext{
 				CurrentMessage: "I need a template for this",
 			},
-			expectedCount:  1,
-			expectedFirst:  "template",
-			minConfidence:  0.5,
+			expectedCount: 1,
+			expectedFirst: "template",
+			minConfidence: 0.5,
 		},
 		{
 			name: "no matches",
@@ -85,9 +85,9 @@ func TestCommandSuggestionProvider_GetSuggestions(t *testing.T) {
 					},
 				},
 			},
-			expectedCount:  1,
-			expectedFirst:  "debug",
-			minConfidence:  0.4,
+			expectedCount: 1,
+			expectedFirst: "debug",
+			minConfidence: 0.4,
 		},
 	}
 

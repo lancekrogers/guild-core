@@ -978,7 +978,7 @@ func (g *DemoCommissionGenerator) GetRecommendedDemo(ctx context.Context, projec
 	// Simple heuristics for demo recommendation
 	if projectName, ok := projectInfo["project_name"].(string); ok {
 		projectNameLower := strings.ToLower(projectName)
-		
+
 		// Check project name for hints
 		switch {
 		case strings.Contains(projectNameLower, "api") || strings.Contains(projectNameLower, "service"):

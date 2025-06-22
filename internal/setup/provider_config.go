@@ -61,7 +61,7 @@ func (pc *ProviderConfig) ValidateProvider(ctx context.Context, provider Detecte
 
 	// Normalize provider name
 	normalizedName := providers.NormalizeProviderName(provider.Name)
-	
+
 	switch normalizedName {
 	case providers.ProviderNameClaude:
 		return pc.validateClaudeCode(ctx, provider)

@@ -7,9 +7,9 @@ import (
 	"context"
 	"testing"
 
+	"github.com/guild-ventures/guild-core/pkg/templates"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/guild-ventures/guild-core/pkg/templates"
 )
 
 // MockTemplateManager implements templates.TemplateManager for testing
@@ -172,38 +172,38 @@ func TestTemplateSuggestionProvider_GetSuggestions(t *testing.T) {
 	ctx := context.Background()
 
 	tests := []struct {
-		name            string
-		context         SuggestionContext
-		expectedCount   int
-		expectedFirst   string
-		minConfidence   float64
+		name          string
+		context       SuggestionContext
+		expectedCount int
+		expectedFirst string
+		minConfidence float64
 	}{
 		{
 			name: "code review context",
 			context: SuggestionContext{
 				CurrentMessage: "can you review this code?",
 			},
-			expectedCount:  1, // Only one matches with high enough confidence
-			expectedFirst:  "Code Review",
-			minConfidence:  0.2,
+			expectedCount: 1, // Only one matches with high enough confidence
+			expectedFirst: "Code Review",
+			minConfidence: 0.2,
 		},
 		{
 			name: "debugging context",
 			context: SuggestionContext{
 				CurrentMessage: "help me debug this error",
 			},
-			expectedCount:  0, // No contextual suggestions returned, confidence too low
-			expectedFirst:  "",
-			minConfidence:  0.2,
+			expectedCount: 0, // No contextual suggestions returned, confidence too low
+			expectedFirst: "",
+			minConfidence: 0.2,
 		},
 		{
 			name: "documentation context",
 			context: SuggestionContext{
 				CurrentMessage: "write some docs",
 			},
-			expectedCount:  0, // No contextual suggestions returned, confidence too low
-			expectedFirst:  "",
-			minConfidence:  0.2,
+			expectedCount: 0, // No contextual suggestions returned, confidence too low
+			expectedFirst: "",
+			minConfidence: 0.2,
 		},
 		{
 			name: "empty context",
@@ -345,7 +345,7 @@ func TestTemplateSuggestionProvider_ProjectContext(t *testing.T) {
 
 	// Should have at least one suggestion
 	assert.NotEmpty(t, suggestions)
-	
+
 	// Go template should have higher priority/confidence
 	found := false
 	for _, s := range suggestions {

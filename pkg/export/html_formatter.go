@@ -22,19 +22,19 @@ func NewHTMLFormatter() *HTMLFormatter {
 // Format exports content as HTML
 func (f *HTMLFormatter) Format(ctx context.Context, content ExportContent) ([]byte, error) {
 	var builder strings.Builder
-	
+
 	// Write HTML document structure
 	f.writeHTMLHeader(&builder, content.Metadata)
 	f.writeStyles(&builder, content.Options)
 	builder.WriteString("</head><body>\n")
-	
+
 	// Write content
 	f.writeContentHeader(&builder, content.Metadata)
 	f.writeMessages(&builder, content)
 	f.writeFooter(&builder, content.Metadata)
-	
+
 	builder.WriteString("</body></html>")
-	
+
 	return []byte(builder.String()), nil
 }
 
@@ -91,7 +91,7 @@ func (f *HTMLFormatter) writeHTMLHeader(builder *strings.Builder, metadata Expor
 	builder.WriteString("<meta charset=\"UTF-8\">\n")
 	builder.WriteString("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n")
 	builder.WriteString(fmt.Sprintf("<title>%s</title>\n", html.EscapeString(metadata.Title)))
-	
+
 	if metadata.Description != "" {
 		builder.WriteString(fmt.Sprintf("<meta name=\"description\" content=\"%s\">\n", html.EscapeString(metadata.Description)))
 	}
@@ -103,7 +103,7 @@ func (f *HTMLFormatter) writeHTMLHeader(builder *strings.Builder, metadata Expor
 // writeStyles writes CSS styles
 func (f *HTMLFormatter) writeStyles(builder *strings.Builder, options ExportOptions) {
 	theme := f.getTheme(options)
-	
+
 	builder.WriteString("<style>\n")
 	builder.WriteString(f.getCSS(theme))
 	builder.WriteString("</style>\n")
@@ -113,11 +113,11 @@ func (f *HTMLFormatter) writeStyles(builder *strings.Builder, options ExportOpti
 func (f *HTMLFormatter) writeContentHeader(builder *strings.Builder, metadata ExportMetadata) {
 	builder.WriteString("<div class=\"container\">\n")
 	builder.WriteString(fmt.Sprintf("<h1>%s</h1>\n", html.EscapeString(metadata.Title)))
-	
+
 	if metadata.Description != "" {
 		builder.WriteString(fmt.Sprintf("<p class=\"description\">%s</p>\n", html.EscapeString(metadata.Description)))
 	}
-	
+
 	// Metadata info
 	builder.WriteString("<div class=\"metadata\">\n")
 	if metadata.Campaign != "" {
@@ -133,7 +133,7 @@ func (f *HTMLFormatter) writeContentHeader(builder *strings.Builder, metadata Ex
 // writeMessages writes all messages
 func (f *HTMLFormatter) writeMessages(builder *strings.Builder, content ExportContent) {
 	messages := f.getSelectedMessages(content)
-	
+
 	builder.WriteString("<div class=\"messages\">\n")
 	for _, msg := range messages {
 		f.writeMessage(builder, msg, content.Options)
@@ -144,25 +144,25 @@ func (f *HTMLFormatter) writeMessages(builder *strings.Builder, content ExportCo
 // writeMessage writes a single message
 func (f *HTMLFormatter) writeMessage(builder *strings.Builder, msg ChatMessage, options ExportOptions) {
 	roleClass := f.getRoleClass(msg.Role)
-	
+
 	builder.WriteString(fmt.Sprintf("<div class=\"message %s\">\n", roleClass))
-	
+
 	// Message header
 	builder.WriteString("<div class=\"message-header\">\n")
 	builder.WriteString(fmt.Sprintf("<span class=\"role\">%s</span>\n", f.formatRole(msg.Role)))
-	
+
 	if options.IncludeTimestamps {
 		builder.WriteString(fmt.Sprintf("<span class=\"timestamp\">%s</span>\n", msg.Timestamp.Format("2006-01-02 15:04:05")))
 	}
-	
+
 	builder.WriteString("</div>\n")
-	
+
 	// Message content
 	builder.WriteString("<div class=\"message-content\">\n")
 	content := f.formatContent(msg.Content)
 	builder.WriteString(content)
 	builder.WriteString("</div>\n")
-	
+
 	builder.WriteString("</div>\n")
 }
 
@@ -181,14 +181,14 @@ func (f *HTMLFormatter) getSelectedMessages(content ExportContent) []ChatMessage
 	if content.Selection == nil {
 		return content.Messages
 	}
-	
+
 	if len(content.Selection.MessageIDs) > 0 {
 		selected := make([]ChatMessage, 0)
 		idSet := make(map[string]bool)
 		for _, id := range content.Selection.MessageIDs {
 			idSet[id] = true
 		}
-		
+
 		for _, msg := range content.Messages {
 			if idSet[msg.ID] {
 				selected = append(selected, msg)
@@ -196,7 +196,7 @@ func (f *HTMLFormatter) getSelectedMessages(content ExportContent) []ChatMessage
 		}
 		return selected
 	}
-	
+
 	start := content.Selection.StartIndex
 	end := content.Selection.EndIndex
 	if start < 0 {
@@ -205,7 +205,7 @@ func (f *HTMLFormatter) getSelectedMessages(content ExportContent) []ChatMessage
 	if end >= len(content.Messages) {
 		end = len(content.Messages) - 1
 	}
-	
+
 	return content.Messages[start : end+1]
 }
 
@@ -213,13 +213,13 @@ func (f *HTMLFormatter) getTheme(options ExportOptions) string {
 	if options.FormatSpecific == nil {
 		return "guild"
 	}
-	
+
 	if theme, exists := options.FormatSpecific["theme"]; exists {
 		if t, ok := theme.(string); ok {
 			return t
 		}
 	}
-	
+
 	return "guild"
 }
 
@@ -243,16 +243,16 @@ func (f *HTMLFormatter) formatRole(role string) string {
 func (f *HTMLFormatter) formatContent(content string) string {
 	// Basic HTML escaping
 	escaped := html.EscapeString(content)
-	
+
 	// Convert newlines to <br>
 	escaped = strings.ReplaceAll(escaped, "\n", "<br>\n")
-	
+
 	// Simple code block detection and formatting
 	if strings.Contains(escaped, "```") {
 		escaped = strings.ReplaceAll(escaped, "```", "<pre><code>")
 		escaped = strings.ReplaceAll(escaped, "</code>", "</code></pre>")
 	}
-	
+
 	return escaped
 }
 
@@ -347,7 +347,7 @@ pre {
 	font-size: 0.9em;
 }
 `
-	
+
 	switch theme {
 	case "dark":
 		return base + `

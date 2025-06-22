@@ -56,31 +56,31 @@ func createDisplayStyles() map[string]lipgloss.Style {
 func (d *agentDisplay) FormatAgentStatus(info AgentInfo) string {
 	style := d.getStyleForStatus(info.Status)
 	icon := d.GetStatusIcon(info.Status)
-	
+
 	var parts []string
-	
+
 	// Agent identifier
-	parts = append(parts, fmt.Sprintf("%s %s (%s)", 
-		icon, 
+	parts = append(parts, fmt.Sprintf("%s %s (%s)",
+		icon,
 		d.styles["header"].Render(info.Name),
 		d.styles["dim"].Render(info.Type)))
-	
+
 	// Status
 	statusText := style.Render(string(info.Status))
 	parts = append(parts, fmt.Sprintf("Status: %s", statusText))
-	
+
 	// Current task
 	if info.CurrentTask != "" {
-		parts = append(parts, fmt.Sprintf("Task: %s", 
+		parts = append(parts, fmt.Sprintf("Task: %s",
 			d.styles["task"].Render(info.CurrentTask)))
 	}
-	
+
 	// Task count
 	if info.TaskCount > 0 {
-		parts = append(parts, fmt.Sprintf("Tasks: %s", 
+		parts = append(parts, fmt.Sprintf("Tasks: %s",
 			d.styles["count"].Render(fmt.Sprintf("%d", info.TaskCount))))
 	}
-	
+
 	// Error info
 	if info.ErrorCount > 0 {
 		errorText := d.styles["error"].Render(fmt.Sprintf("%d errors", info.ErrorCount))
@@ -89,14 +89,14 @@ func (d *agentDisplay) FormatAgentStatus(info AgentInfo) string {
 		}
 		parts = append(parts, errorText)
 	}
-	
+
 	// Last seen
 	idleTime := time.Since(info.LastSeen)
 	if idleTime > time.Minute {
 		parts = append(parts, d.styles["dim"].Render(
 			fmt.Sprintf("Last seen: %s ago", formatDuration(idleTime))))
 	}
-	
+
 	return strings.Join(parts, " | ")
 }
 
@@ -104,19 +104,19 @@ func (d *agentDisplay) FormatAgentStatus(info AgentInfo) string {
 func (d *agentDisplay) FormatAgentCompact(info AgentInfo) string {
 	style := d.getStyleForStatus(info.Status)
 	icon := d.GetStatusIcon(info.Status)
-	
+
 	base := fmt.Sprintf("%s %s", icon, info.Name)
-	
+
 	// Add status if not idle
 	if info.Status != StatusIdle {
 		base += fmt.Sprintf(" [%s]", style.Render(string(info.Status)))
 	}
-	
+
 	// Add task count if any
 	if info.TaskCount > 0 {
 		base += fmt.Sprintf(" (%d)", info.TaskCount)
 	}
-	
+
 	return base
 }
 
@@ -125,40 +125,40 @@ func (d *agentDisplay) FormatAgentList(agents []AgentInfo) string {
 	if len(agents) == 0 {
 		return d.styles["dim"].Render("No agents registered")
 	}
-	
+
 	var lines []string
-	
+
 	// Group by status
 	statusGroups := make(map[AgentStatus][]AgentInfo)
 	for _, agent := range agents {
 		statusGroups[agent.Status] = append(statusGroups[agent.Status], agent)
 	}
-	
+
 	// Format each status group
 	statusOrder := []AgentStatus{
-		StatusWorking, StatusThinking, StatusIdle, 
+		StatusWorking, StatusThinking, StatusIdle,
 		StatusStarting, StatusStopping, StatusError, StatusOffline,
 	}
-	
+
 	for _, status := range statusOrder {
 		agentList := statusGroups[status]
 		if len(agentList) == 0 {
 			continue
 		}
-		
+
 		// Status header
 		style := d.getStyleForStatus(status)
-		header := style.Render(fmt.Sprintf("%s %s (%d)", 
+		header := style.Render(fmt.Sprintf("%s %s (%d)",
 			d.GetStatusIcon(status), string(status), len(agentList)))
 		lines = append(lines, header)
-		
+
 		// Agent details
 		for _, agent := range agentList {
 			detail := fmt.Sprintf("  %s", d.FormatAgentCompact(agent))
 			lines = append(lines, detail)
 		}
 	}
-	
+
 	return strings.Join(lines, "\n")
 }
 
@@ -167,26 +167,26 @@ func (d *agentDisplay) FormatAgentSummary(agents []AgentInfo) string {
 	if len(agents) == 0 {
 		return d.styles["dim"].Render("No agents")
 	}
-	
+
 	// Count by status
 	statusCounts := make(map[AgentStatus]int)
 	for _, agent := range agents {
 		statusCounts[agent.Status]++
 	}
-	
+
 	var parts []string
-	
+
 	// Format counts
 	if count := statusCounts[StatusWorking]; count > 0 {
-		parts = append(parts, fmt.Sprintf("%s%d", 
+		parts = append(parts, fmt.Sprintf("%s%d",
 			d.GetStatusIcon(StatusWorking), count))
 	}
 	if count := statusCounts[StatusThinking]; count > 0 {
-		parts = append(parts, fmt.Sprintf("%s%d", 
+		parts = append(parts, fmt.Sprintf("%s%d",
 			d.GetStatusIcon(StatusThinking), count))
 	}
 	if count := statusCounts[StatusIdle]; count > 0 {
-		parts = append(parts, fmt.Sprintf("%s%d", 
+		parts = append(parts, fmt.Sprintf("%s%d",
 			d.GetStatusIcon(StatusIdle), count))
 	}
 	if count := statusCounts[StatusError]; count > 0 {
@@ -197,7 +197,7 @@ func (d *agentDisplay) FormatAgentSummary(agents []AgentInfo) string {
 		parts = append(parts, d.styles["dim"].Render(
 			fmt.Sprintf("%s%d", d.GetStatusIcon(StatusOffline), count)))
 	}
-	
+
 	summary := fmt.Sprintf("Agents (%d): %s", len(agents), strings.Join(parts, " "))
 	return summary
 }

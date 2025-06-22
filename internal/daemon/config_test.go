@@ -19,11 +19,11 @@ func TestGetDaemonConfig(t *testing.T) {
 	t.Setenv("HOME", homeDir)
 
 	tests := []struct {
-		name              string
-		campaign          string
-		requestedSession  int
-		wantSession       int
-		wantErr           bool
+		name             string
+		campaign         string
+		requestedSession int
+		wantSession      int
+		wantErr          bool
 	}{
 		{
 			name:             "creates config for primary session",
@@ -94,11 +94,11 @@ func TestSetupFilePaths(t *testing.T) {
 	t.Setenv("HOME", homeDir)
 
 	tests := []struct {
-		name      string
-		config    *DaemonConfig
-		wantLog   string
-		wantPID   string
-		wantErr   bool
+		name    string
+		config  *DaemonConfig
+		wantLog string
+		wantPID string
+		wantErr bool
 	}{
 		{
 			name: "sets up paths for primary session",
@@ -212,12 +212,12 @@ func TestFindAvailableSession(t *testing.T) {
 	t.Skip("Skipping test that requires daemon environment setup")
 	// This is a simple test since the current implementation is simplified
 	// In the future, this would test actual session discovery logic
-	
+
 	homeDir := t.TempDir()
 	t.Setenv("HOME", homeDir)
 
 	session, socketPath, err := findAvailableSession("test-campaign")
-	
+
 	require.NoError(t, err)
 	assert.Equal(t, 0, session)
 	assert.NotEmpty(t, socketPath)

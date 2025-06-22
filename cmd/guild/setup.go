@@ -8,13 +8,13 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/spf13/cobra"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/spf13/cobra"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/guild-ventures/guild-core/internal/setup"
 	uisetup "github.com/guild-ventures/guild-core/internal/ui/setup"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/project"
 )
 
 var setupCmd = &cobra.Command{
@@ -43,7 +43,7 @@ func init() {
 	setupCmd.Flags().BoolVar(&setupQuickMode, "quick", false, "Quick setup with sensible defaults")
 	setupCmd.Flags().BoolVar(&setupForce, "force", false, "Force setup even if already configured")
 	setupCmd.Flags().StringVar(&setupProvider, "provider", "", "Setup specific provider only (openai, anthropic, ollama, etc.)")
-	
+
 	// Register the setup command
 	rootCmd.AddCommand(setupCmd)
 }
@@ -127,7 +127,7 @@ func runSetup(cmd *cobra.Command, args []string) error {
 		// Run interactive TUI
 		model := uisetup.NewWizardTUIModel(ctx, wizard)
 		program := tea.NewProgram(model, tea.WithAltScreen())
-		
+
 		if _, err := program.Run(); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "setup wizard failed").
 				WithComponent("setup").
@@ -164,7 +164,7 @@ func runSetupList(cmd *cobra.Command, args []string) error {
 	}
 
 	path := "."
-	
+
 	// Check if project is initialized
 	if !project.IsProjectInitialized(path) {
 		fmt.Println("❌ No Guild project found in current directory")
@@ -190,7 +190,7 @@ func runSetupList(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	fmt.Printf("✅ Configured (%d providers, %d agents)\n\n", 
+	fmt.Printf("✅ Configured (%d providers, %d agents)\n\n",
 		len(status.Providers), len(status.Agents))
 
 	// Show providers
@@ -210,7 +210,7 @@ func runSetupList(cmd *cobra.Command, args []string) error {
 	// Show agents
 	fmt.Println("\n🤖 Agents:")
 	for _, agent := range status.Agents {
-		fmt.Printf("  • %s (%s) - %s/%s\n", 
+		fmt.Printf("  • %s (%s) - %s/%s\n",
 			agent.Name, agent.Type, agent.Provider, agent.Model)
 	}
 

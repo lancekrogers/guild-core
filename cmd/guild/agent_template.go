@@ -9,8 +9,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/internal/setup"
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // newAgentTemplateCmd creates the agent template subcommand
@@ -134,7 +134,7 @@ the required fields.`,
 
 			// Prompt for minimal fields
 			fmt.Println("Creating custom agent template...")
-			
+
 			if provider == "" {
 				return gerror.New(gerror.ErrCodeValidation, "provider required (use --provider flag)", nil).
 					WithComponent("agent-template").
@@ -176,10 +176,10 @@ the required fields.`,
 // newAgentTemplateQuickCmd creates a minimal guild setup
 func newAgentTemplateQuickCmd() *cobra.Command {
 	var (
-		projectPath   string
-		provider      string
-		managerModel  string
-		workerModel   string
+		projectPath  string
+		provider     string
+		managerModel string
+		workerModel  string
 	)
 
 	cmd := &cobra.Command{

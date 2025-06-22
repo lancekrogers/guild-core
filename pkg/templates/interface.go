@@ -57,30 +57,30 @@ type TemplateManager interface {
 
 // Template represents a reusable template with variables
 type Template struct {
-	ID          string                 `json:"id"`
-	Name        string                 `json:"name"`
-	Description string                 `json:"description,omitempty"`
-	Category    string                 `json:"category"`
-	Content     string                 `json:"content"`
-	Language    string                 `json:"language,omitempty"`
-	UseCount    int64                  `json:"use_count"`
-	IsBuiltIn   bool                   `json:"is_built_in"`
-	CreatedAt   time.Time              `json:"created_at"`
-	UpdatedAt   time.Time              `json:"updated_at"`
-	Variables   []*TemplateVariable    `json:"variables,omitempty"`
+	ID          string              `json:"id"`
+	Name        string              `json:"name"`
+	Description string              `json:"description,omitempty"`
+	Category    string              `json:"category"`
+	Content     string              `json:"content"`
+	Language    string              `json:"language,omitempty"`
+	UseCount    int64               `json:"use_count"`
+	IsBuiltIn   bool                `json:"is_built_in"`
+	CreatedAt   time.Time           `json:"created_at"`
+	UpdatedAt   time.Time           `json:"updated_at"`
+	Variables   []*TemplateVariable `json:"variables,omitempty"`
 }
 
 // TemplateVariable represents a variable placeholder in a template
 type TemplateVariable struct {
-	ID           string                 `json:"id"`
-	TemplateID   string                 `json:"template_id"`
-	Name         string                 `json:"name"`
-	Description  string                 `json:"description,omitempty"`
-	DefaultValue string                 `json:"default_value,omitempty"`
-	Required     bool                   `json:"required"`
-	Type         VariableType           `json:"type"`
-	Options      []string               `json:"options,omitempty"`
-	CreatedAt    time.Time              `json:"created_at"`
+	ID           string       `json:"id"`
+	TemplateID   string       `json:"template_id"`
+	Name         string       `json:"name"`
+	Description  string       `json:"description,omitempty"`
+	DefaultValue string       `json:"default_value,omitempty"`
+	Required     bool         `json:"required"`
+	Type         VariableType `json:"type"`
+	Options      []string     `json:"options,omitempty"`
+	CreatedAt    time.Time    `json:"created_at"`
 }
 
 // TemplateCategory represents a template category for organization
@@ -105,29 +105,29 @@ const (
 
 // TemplateFilter provides filtering options for template listing
 type TemplateFilter struct {
-	Category   string `json:"category,omitempty"`
-	Language   string `json:"language,omitempty"`
-	IsBuiltIn  *bool  `json:"is_built_in,omitempty"`
-	Limit      int    `json:"limit,omitempty"`
-	Offset     int    `json:"offset,omitempty"`
+	Category  string `json:"category,omitempty"`
+	Language  string `json:"language,omitempty"`
+	IsBuiltIn *bool  `json:"is_built_in,omitempty"`
+	Limit     int    `json:"limit,omitempty"`
+	Offset    int    `json:"offset,omitempty"`
 }
 
 // UsageStats provides usage statistics for a template
 type UsageStats struct {
-	TemplateID     string    `json:"template_id"`
-	TotalUsage     int64     `json:"total_usage"`
-	RecentUsage    int64     `json:"recent_usage_30d"`
+	TemplateID     string     `json:"template_id"`
+	TotalUsage     int64      `json:"total_usage"`
+	RecentUsage    int64      `json:"recent_usage_30d"`
 	LastUsed       *time.Time `json:"last_used,omitempty"`
-	AveragePerWeek float64   `json:"average_per_week"`
+	AveragePerWeek float64    `json:"average_per_week"`
 }
 
 // ImportResult provides information about template import operation
 type ImportResult struct {
-	ImportedCount  int      `json:"imported_count"`
-	SkippedCount   int      `json:"skipped_count"`
-	ErrorCount     int      `json:"error_count"`
-	ImportedIDs    []string `json:"imported_ids"`
-	Errors         []string `json:"errors,omitempty"`
+	ImportedCount int      `json:"imported_count"`
+	SkippedCount  int      `json:"skipped_count"`
+	ErrorCount    int      `json:"error_count"`
+	ImportedIDs   []string `json:"imported_ids"`
+	Errors        []string `json:"errors,omitempty"`
 }
 
 // TemplateSearchResult represents a search result for templates

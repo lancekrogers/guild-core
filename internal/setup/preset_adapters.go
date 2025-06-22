@@ -64,7 +64,7 @@ func (ap *AgentPresets) adaptAgentForProviders(ctx context.Context, agent config
 	}
 
 	adapted := agent // Copy the agent
-	
+
 	// If agent already has a specific provider that's available, keep it
 	if agent.Provider != "auto" {
 		for _, provider := range providers {
@@ -81,7 +81,7 @@ func (ap *AgentPresets) adaptAgentForProviders(ctx context.Context, agent config
 
 	// Need to adapt - find best matching provider and model
 	caps := ap.analyzeProviderCapabilities(providers)
-	
+
 	var selectedModel ModelSelection
 	switch agent.Type {
 	case "manager":

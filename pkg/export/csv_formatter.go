@@ -22,13 +22,13 @@ func NewCSVFormatter() *CSVFormatter {
 func (f *CSVFormatter) Format(ctx context.Context, content ExportContent) ([]byte, error) {
 	var builder strings.Builder
 	writer := csv.NewWriter(&builder)
-	
+
 	// Write header row
 	headers := f.getHeaders(content.Options)
 	if err := writer.Write(headers); err != nil {
 		return nil, fmt.Errorf("failed to write CSV headers: %w", err)
 	}
-	
+
 	// Write data rows
 	messages := f.getSelectedMessages(content)
 	for _, msg := range messages {
@@ -37,12 +37,12 @@ func (f *CSVFormatter) Format(ctx context.Context, content ExportContent) ([]byt
 			return nil, fmt.Errorf("failed to write CSV row: %w", err)
 		}
 	}
-	
+
 	writer.Flush()
 	if err := writer.Error(); err != nil {
 		return nil, fmt.Errorf("CSV writer error: %w", err)
 	}
-	
+
 	return []byte(builder.String()), nil
 }
 
@@ -104,14 +104,14 @@ func (f *CSVFormatter) getSelectedMessages(content ExportContent) []ChatMessage 
 	if content.Selection == nil {
 		return content.Messages
 	}
-	
+
 	if len(content.Selection.MessageIDs) > 0 {
 		selected := make([]ChatMessage, 0)
 		idSet := make(map[string]bool)
 		for _, id := range content.Selection.MessageIDs {
 			idSet[id] = true
 		}
-		
+
 		for _, msg := range content.Messages {
 			if idSet[msg.ID] {
 				selected = append(selected, msg)
@@ -119,7 +119,7 @@ func (f *CSVFormatter) getSelectedMessages(content ExportContent) []ChatMessage 
 		}
 		return selected
 	}
-	
+
 	start := content.Selection.StartIndex
 	end := content.Selection.EndIndex
 	if start < 0 {
@@ -128,22 +128,22 @@ func (f *CSVFormatter) getSelectedMessages(content ExportContent) []ChatMessage 
 	if end >= len(content.Messages) {
 		end = len(content.Messages) - 1
 	}
-	
+
 	return content.Messages[start : end+1]
 }
 
 // getHeaders returns the CSV column headers based on options
 func (f *CSVFormatter) getHeaders(options ExportOptions) []string {
 	headers := []string{"ID", "Role", "Content"}
-	
+
 	if f.shouldIncludeTimestamps(options) {
 		headers = append(headers, "Timestamp")
 	}
-	
+
 	if f.shouldIncludeMetadata(options) {
 		headers = append(headers, "Metadata")
 	}
-	
+
 	return headers
 }
 
@@ -154,35 +154,35 @@ func (f *CSVFormatter) messageToRow(msg ChatMessage, options ExportOptions) []st
 		msg.Role,
 		f.formatContent(msg.Content, options),
 	}
-	
+
 	if f.shouldIncludeTimestamps(options) {
 		row = append(row, msg.Timestamp.Format("2006-01-02 15:04:05"))
 	}
-	
+
 	if f.shouldIncludeMetadata(options) {
 		metadata := f.formatMetadata(msg.Metadata)
 		row = append(row, metadata)
 	}
-	
+
 	return row
 }
 
 // formatContent formats message content for CSV
 func (f *CSVFormatter) formatContent(content string, options ExportOptions) string {
 	result := content
-	
+
 	// Escape newlines if requested
 	if f.shouldEscapeNewlines(options) {
 		result = strings.ReplaceAll(result, "\n", "\\n")
 		result = strings.ReplaceAll(result, "\r", "\\r")
 	}
-	
+
 	// Truncate if requested
 	maxLength := f.getTruncateLength(options)
 	if maxLength > 0 && len(result) > maxLength {
 		result = result[:maxLength-3] + "..."
 	}
-	
+
 	return result
 }
 
@@ -191,12 +191,12 @@ func (f *CSVFormatter) formatMetadata(metadata map[string]interface{}) string {
 	if len(metadata) == 0 {
 		return ""
 	}
-	
+
 	parts := make([]string, 0, len(metadata))
 	for key, value := range metadata {
 		parts = append(parts, fmt.Sprintf("%s=%v", key, value))
 	}
-	
+
 	return strings.Join(parts, ";")
 }
 
@@ -206,13 +206,13 @@ func (f *CSVFormatter) shouldIncludeTimestamps(options ExportOptions) bool {
 	if options.FormatSpecific == nil {
 		return true
 	}
-	
+
 	if include, exists := options.FormatSpecific["include_timestamps"]; exists {
 		if b, ok := include.(bool); ok {
 			return b
 		}
 	}
-	
+
 	return options.IncludeTimestamps
 }
 
@@ -220,13 +220,13 @@ func (f *CSVFormatter) shouldIncludeMetadata(options ExportOptions) bool {
 	if options.FormatSpecific == nil {
 		return false
 	}
-	
+
 	if include, exists := options.FormatSpecific["include_metadata"]; exists {
 		if b, ok := include.(bool); ok {
 			return b
 		}
 	}
-	
+
 	return options.IncludeMetadata
 }
 
@@ -234,13 +234,13 @@ func (f *CSVFormatter) shouldEscapeNewlines(options ExportOptions) bool {
 	if options.FormatSpecific == nil {
 		return true
 	}
-	
+
 	if escape, exists := options.FormatSpecific["escape_newlines"]; exists {
 		if b, ok := escape.(bool); ok {
 			return b
 		}
 	}
-	
+
 	return true
 }
 
@@ -248,7 +248,7 @@ func (f *CSVFormatter) getTruncateLength(options ExportOptions) int {
 	if options.FormatSpecific == nil {
 		return 0
 	}
-	
+
 	if length, exists := options.FormatSpecific["truncate_content"]; exists {
 		if l, ok := length.(float64); ok {
 			return int(l)
@@ -257,6 +257,6 @@ func (f *CSVFormatter) getTruncateLength(options ExportOptions) int {
 			return l
 		}
 	}
-	
+
 	return 0
 }

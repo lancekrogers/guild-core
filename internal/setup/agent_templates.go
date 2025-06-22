@@ -27,17 +27,17 @@ type AgentTemplate struct {
 	Description  string   `yaml:"description"`
 	Capabilities []string `yaml:"capabilities"`
 	Tools        []string `yaml:"tools,omitempty"`
-	
+
 	// Optional fields with defaults
 	MaxTokens     int     `yaml:"max_tokens,omitempty"`
 	Temperature   float64 `yaml:"temperature,omitempty"`
 	CostMagnitude int     `yaml:"cost_magnitude,omitempty"`
 	ContextWindow int     `yaml:"context_window,omitempty"`
-	
+
 	// Simple backstory fields - all optional
-	Experience   string `yaml:"experience,omitempty"`
-	Expertise    string `yaml:"expertise,omitempty"`
-	Philosophy   string `yaml:"philosophy,omitempty"`
+	Experience string `yaml:"experience,omitempty"`
+	Expertise  string `yaml:"expertise,omitempty"`
+	Philosophy string `yaml:"philosophy,omitempty"`
 }
 
 // AgentTemplateGenerator handles generation of agent configuration files from templates
@@ -299,24 +299,24 @@ func getBuiltInTemplates() map[string]AgentTemplate {
 
 		// Ollama templates
 		"ollama-coder": {
-			ID:           "local-coder",
-			Name:         "Local Code Assistant",
-			Type:         "worker",
-			Provider:     "ollama",
-			Model:        "deepseek-coder:latest",
-			Description:  "Local model for privacy-sensitive coding tasks",
-			Capabilities: []string{"coding", "code_review", "refactoring"},
-			Tools:        []string{"code_executor", "file_manager"},
+			ID:            "local-coder",
+			Name:          "Local Code Assistant",
+			Type:          "worker",
+			Provider:      "ollama",
+			Model:         "deepseek-coder:latest",
+			Description:   "Local model for privacy-sensitive coding tasks",
+			Capabilities:  []string{"coding", "code_review", "refactoring"},
+			Tools:         []string{"code_executor", "file_manager"},
 			CostMagnitude: 0, // Free local model
 		},
 		"ollama-analyst": {
-			ID:           "local-analyst",
-			Name:         "Local Analyst",
-			Type:         "specialist",
-			Provider:     "ollama",
-			Model:        "llama3:latest",
-			Description:  "Local model for data analysis and research",
-			Capabilities: []string{"data_analysis", "research", "summarization"},
+			ID:            "local-analyst",
+			Name:          "Local Analyst",
+			Type:          "specialist",
+			Provider:      "ollama",
+			Model:         "llama3:latest",
+			Description:   "Local model for data analysis and research",
+			Capabilities:  []string{"data_analysis", "research", "summarization"},
 			CostMagnitude: 0,
 		},
 
@@ -406,7 +406,7 @@ func (g *AgentTemplateGenerator) QuickSetup(ctx context.Context, projectPath, pr
 		"Manages tasks and coordinates agent work",
 		[]string{"task_decomposition", "agent_coordination", "planning"},
 	)
-	
+
 	if err := g.GenerateAgentFile(ctx, projectPath, managerTemplate); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create manager agent").
 			WithComponent("AgentTemplateGenerator").
@@ -423,7 +423,7 @@ func (g *AgentTemplateGenerator) QuickSetup(ctx context.Context, projectPath, pr
 		"Executes tasks assigned by the manager",
 		[]string{"coding", "testing", "documentation", "general_tasks"},
 	)
-	
+
 	if err := g.GenerateAgentFile(ctx, projectPath, workerTemplate); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create worker agent").
 			WithComponent("AgentTemplateGenerator").

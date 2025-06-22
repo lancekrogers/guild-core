@@ -21,7 +21,7 @@ func TestFirstTimeUserJourney(t *testing.T) {
 		result.AssertContains(t, "Available Commands")
 		result.AssertFasterThan(t, 5*time.Second)
 
-		// Step 2: Check version command  
+		// Step 2: Check version command
 		result = env.RunGuild("version")
 		result.AssertSuccess(t)
 		result.AssertContains(t, "Guild")
@@ -50,7 +50,7 @@ func TestFirstTimeUserJourney(t *testing.T) {
 		// User explores available commands
 		result := env.RunGuild("help")
 		result.AssertSuccess(t)
-		
+
 		// Should show main command categories
 		result.AssertContains(t, "agent")
 		result.AssertContains(t, "commission")
@@ -67,13 +67,13 @@ func TestFirstTimeUserJourney(t *testing.T) {
 		// User runs quick demo to see what Guild can do
 		result := env.RunGuildWithTimeout(60*time.Second, "demo-check")
 		result.AssertSuccess(t)
-		
+
 		// Verify demo shows key features
 		result.AssertContains(t, "Demo")
 		result.AssertContains(t, "Creating")
 		result.AssertNotContains(t, "panic")
 		result.AssertNotContains(t, "fatal")
-		
+
 		// Should complete within reasonable time
 		result.AssertFasterThan(t, 45*time.Second)
 	})
@@ -106,7 +106,7 @@ func TestDeveloperWorkflow(t *testing.T) {
 
 	t.Run("Create Commission", func(t *testing.T) {
 		// Create a commission using command line
-		result := env.RunGuild("commission", "create", 
+		result := env.RunGuild("commission", "create",
 			"--title", "REST API Development",
 			"--description", "Build a REST API for user management with authentication")
 		result.AssertSuccess(t)
@@ -168,7 +168,7 @@ func TestCommandValidation(t *testing.T) {
 		result := env.RunGuild("invalid-command")
 		result.AssertFailure(t)
 		result.AssertStderrContains(t, "unknown command")
-		
+
 		// Should suggest help
 		result.AssertStderrContains(t, "help")
 	})
@@ -303,7 +303,7 @@ func TestMockProviderIntegration(t *testing.T) {
 		// Run the same command multiple times
 		responses := make([]string, 3)
 		for i := 0; i < 3; i++ {
-			result := env.RunGuild("commission", "create", 
+			result := env.RunGuild("commission", "create",
 				"--title", "Test Commission",
 				"--description", "Create a simple test API")
 			result.AssertSuccess(t)

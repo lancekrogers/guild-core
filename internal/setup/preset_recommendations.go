@@ -26,7 +26,7 @@ func (ap *AgentPresets) RecommendPresets(ctx context.Context, providers []Config
 	}
 
 	recommendations := make([]*PresetRecommendation, 0)
-	
+
 	// Analyze provider capabilities
 	analysis := ap.analyzeProviderCapabilities(providers)
 
@@ -50,7 +50,7 @@ func (ap *AgentPresets) analyzeProviderCapabilities(providers []ConfiguredProvid
 
 	for _, provider := range providers {
 		caps.ModelCount += len(provider.Models)
-		
+
 		for _, model := range provider.Models {
 			// Analyze model characteristics
 			if model.CostMagnitude == 0 {
@@ -58,31 +58,31 @@ func (ap *AgentPresets) analyzeProviderCapabilities(providers []ConfiguredProvid
 			} else {
 				caps.HasCloud = true
 			}
-			
+
 			if model.CostMagnitude >= 5 {
 				caps.HasHighEnd = true
 			}
-			
+
 			if model.CostMagnitude <= 2 {
 				caps.HasCheap = true
 			}
-			
+
 			// Find best models for different roles
 			selection := ModelSelection{
-				Provider: provider.Name,
-				Model: model,
-				Available: true,
+				Provider:      provider.Name,
+				Model:         model,
+				Available:     true,
 				CostEffective: model.CostMagnitude <= 3,
 			}
-			
+
 			if caps.BestManager.Provider == "" || ap.isBetterManagerModel(selection, caps.BestManager) {
 				caps.BestManager = selection
 			}
-			
+
 			if caps.BestWorker.Provider == "" || ap.isBetterWorkerModel(selection, caps.BestWorker) {
 				caps.BestWorker = selection
 			}
-			
+
 			if caps.BestSpecialist.Provider == "" || ap.isBetterSpecialistModel(selection, caps.BestSpecialist) {
 				caps.BestSpecialist = selection
 			}
@@ -103,7 +103,7 @@ func (ap *AgentPresets) evaluatePreset(ctx context.Context, collection *PresetCo
 
 	// Check basic compatibility
 	if caps.ModelCount < collection.MinModels {
-		recommendation.Reasoning = append(recommendation.Reasoning, 
+		recommendation.Reasoning = append(recommendation.Reasoning,
 			fmt.Sprintf("Requires %d models, only %d available", collection.MinModels, caps.ModelCount))
 		return recommendation
 	}

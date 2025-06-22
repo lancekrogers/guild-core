@@ -16,9 +16,9 @@ type FollowUpSuggestionProvider struct {
 
 // FollowUpPattern defines a pattern for follow-up suggestions
 type FollowUpPattern struct {
-	TriggerRole    string   // Role that triggers this pattern (user/assistant)
+	TriggerRole     string   // Role that triggers this pattern (user/assistant)
 	TriggerKeywords []string // Keywords in the trigger message
-	Suggestions    []FollowUpSuggestion
+	Suggestions     []FollowUpSuggestion
 }
 
 // FollowUpSuggestion defines a specific follow-up suggestion
@@ -40,28 +40,28 @@ func NewFollowUpSuggestionProvider() *FollowUpSuggestionProvider {
 // GetSuggestions returns follow-up suggestions based on conversation flow
 func (p *FollowUpSuggestionProvider) GetSuggestions(ctx context.Context, context SuggestionContext) ([]Suggestion, error) {
 	suggestions := make([]Suggestion, 0)
-	
+
 	// Need conversation history for follow-ups
 	if len(context.ConversationHistory) == 0 {
 		return suggestions, nil
 	}
-	
+
 	// Get the last message
 	lastMessage := context.ConversationHistory[len(context.ConversationHistory)-1]
-	
+
 	// Check patterns based on last message role and content
 	for _, pattern := range p.patterns {
 		if pattern.TriggerRole != "" && pattern.TriggerRole != lastMessage.Role {
 			continue
 		}
-		
+
 		// Check if keywords match
 		if p.matchesKeywords(lastMessage.Content, pattern.TriggerKeywords) {
 			// Add all suggestions from this pattern
 			for _, followUp := range pattern.Suggestions {
 				// Adjust confidence based on context
 				confidence := p.adjustConfidence(followUp.Confidence, context)
-				
+
 				if confidence > 0.3 {
 					suggestion := Suggestion{
 						Type:        SuggestionTypeFollowUp,
@@ -79,17 +79,17 @@ func (p *FollowUpSuggestionProvider) GetSuggestions(ctx context.Context, context
 							"pattern_type": pattern.TriggerRole,
 						},
 					}
-					
+
 					suggestions = append(suggestions, suggestion)
 				}
 			}
 		}
 	}
-	
+
 	// Add dynamic suggestions based on conversation analysis
 	dynamicSuggestions := p.generateDynamicSuggestions(context)
 	suggestions = append(suggestions, dynamicSuggestions...)
-	
+
 	return suggestions, nil
 }
 
@@ -121,51 +121,51 @@ func (p *FollowUpSuggestionProvider) GetMetadata() ProviderMetadata {
 // matchesKeywords checks if content contains any of the keywords
 func (p *FollowUpSuggestionProvider) matchesKeywords(content string, keywords []string) bool {
 	contentLower := strings.ToLower(content)
-	
+
 	for _, keyword := range keywords {
 		if strings.Contains(contentLower, strings.ToLower(keyword)) {
 			return true
 		}
 	}
-	
+
 	return false
 }
 
 // adjustConfidence adjusts confidence based on additional context
 func (p *FollowUpSuggestionProvider) adjustConfidence(baseConfidence float64, context SuggestionContext) float64 {
 	confidence := baseConfidence
-	
+
 	// Boost confidence if user preferences indicate they like follow-ups
 	if context.UserPreferences.SuggestionFrequency == "always" {
 		confidence *= 1.2
 	} else if context.UserPreferences.SuggestionFrequency == "minimal" {
 		confidence *= 0.8
 	}
-	
+
 	// Adjust based on conversation length
 	if len(context.ConversationHistory) > 10 {
 		// In longer conversations, be more selective
 		confidence *= 0.9
 	}
-	
+
 	// Cap at 1.0
 	if confidence > 1.0 {
 		confidence = 1.0
 	}
-	
+
 	return confidence
 }
 
 // generateDynamicSuggestions generates context-specific follow-up suggestions
 func (p *FollowUpSuggestionProvider) generateDynamicSuggestions(context SuggestionContext) []Suggestion {
 	suggestions := make([]Suggestion, 0)
-	
+
 	if len(context.ConversationHistory) < 2 {
 		return suggestions
 	}
-	
+
 	lastMessage := context.ConversationHistory[len(context.ConversationHistory)-1]
-	
+
 	// If assistant just provided code, suggest testing or running it
 	if lastMessage.Role == "assistant" && p.containsCode(lastMessage.Content) {
 		suggestions = append(suggestions, Suggestion{
@@ -181,7 +181,7 @@ func (p *FollowUpSuggestionProvider) generateDynamicSuggestions(context Suggesti
 			},
 			Tags: []string{"testing", "code"},
 		})
-		
+
 		suggestions = append(suggestions, Suggestion{
 			Type:        SuggestionTypeFollowUp,
 			Content:     "How do I run this?",
@@ -196,7 +196,7 @@ func (p *FollowUpSuggestionProvider) generateDynamicSuggestions(context Suggesti
 			Tags: []string{"execution", "code"},
 		})
 	}
-	
+
 	// If discussing an error, suggest debugging steps
 	if p.discussingError(context) {
 		suggestions = append(suggestions, Suggestion{
@@ -213,7 +213,7 @@ func (p *FollowUpSuggestionProvider) generateDynamicSuggestions(context Suggesti
 			Tags: []string{"debugging", "error"},
 		})
 	}
-	
+
 	// If discussing implementation, suggest next steps
 	if p.discussingImplementation(context) {
 		suggestions = append(suggestions, Suggestion{
@@ -230,7 +230,7 @@ func (p *FollowUpSuggestionProvider) generateDynamicSuggestions(context Suggesti
 			Tags: []string{"planning", "implementation"},
 		})
 	}
-	
+
 	return suggestions
 }
 
@@ -251,26 +251,26 @@ func (p *FollowUpSuggestionProvider) containsCode(content string) bool {
 		"let ",
 		"var ",
 	}
-	
+
 	for _, indicator := range codeIndicators {
 		if strings.Contains(content, indicator) {
 			return true
 		}
 	}
-	
+
 	return false
 }
 
 // discussingError checks if the conversation is about an error
 func (p *FollowUpSuggestionProvider) discussingError(context SuggestionContext) bool {
 	errorKeywords := []string{"error", "exception", "fail", "crash", "bug", "issue", "problem"}
-	
+
 	// Check last few messages
 	checkCount := 3
 	if len(context.ConversationHistory) < checkCount {
 		checkCount = len(context.ConversationHistory)
 	}
-	
+
 	for i := len(context.ConversationHistory) - checkCount; i < len(context.ConversationHistory); i++ {
 		msg := context.ConversationHistory[i]
 		for _, keyword := range errorKeywords {
@@ -279,20 +279,20 @@ func (p *FollowUpSuggestionProvider) discussingError(context SuggestionContext) 
 			}
 		}
 	}
-	
+
 	return false
 }
 
 // discussingImplementation checks if the conversation is about implementation
 func (p *FollowUpSuggestionProvider) discussingImplementation(context SuggestionContext) bool {
 	implKeywords := []string{"implement", "build", "create", "develop", "feature", "function", "method"}
-	
+
 	// Check last few messages
 	checkCount := 2
 	if len(context.ConversationHistory) < checkCount {
 		checkCount = len(context.ConversationHistory)
 	}
-	
+
 	for i := len(context.ConversationHistory) - checkCount; i < len(context.ConversationHistory); i++ {
 		msg := context.ConversationHistory[i]
 		for _, keyword := range implKeywords {
@@ -301,7 +301,7 @@ func (p *FollowUpSuggestionProvider) discussingImplementation(context Suggestion
 			}
 		}
 	}
-	
+
 	return false
 }
 

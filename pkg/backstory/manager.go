@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 )
 
 // BackstoryManager manages agent personalities and integrates them with the layered prompt system
@@ -22,10 +22,10 @@ type BackstoryManager struct {
 
 // EnhancedAgent represents an agent with full personality and context
 type EnhancedAgent struct {
-	Config    *config.AgentConfig
-	Context   *AgentContext
-	Memory    *AgentMemory
-	LastSeen  time.Time
+	Config   *config.AgentConfig
+	Context  *AgentContext
+	Memory   *AgentMemory
+	LastSeen time.Time
 }
 
 // AgentContext holds current situational information for an agent
@@ -35,25 +35,25 @@ type AgentContext struct {
 	TeamMembers     []string
 	ProjectContext  map[string]interface{}
 	RecentDecisions []Decision
-	WorkingState    string  // "focused", "collaborating", "teaching", "debugging"
-	Mood           string   // "determined", "patient", "excited", "concerned"
+	WorkingState    string // "focused", "collaborating", "teaching", "debugging"
+	Mood            string // "determined", "patient", "excited", "concerned"
 }
 
 // AgentMemory stores learned patterns and preferences
 type AgentMemory struct {
-	Interactions    []Interaction
-	LearnedPatterns map[string]Pattern
-	Preferences     map[string]interface{}
-	SuccessfulApproaches map[string]int  // Track what works
+	Interactions         []Interaction
+	LearnedPatterns      map[string]Pattern
+	Preferences          map[string]interface{}
+	SuccessfulApproaches map[string]int // Track what works
 }
 
 // Decision represents a decision made by the agent
 type Decision struct {
-	Type        string    `json:"type"`
-	Summary     string    `json:"summary"`
-	Reasoning   string    `json:"reasoning"`
-	Outcome     string    `json:"outcome"`
-	Timestamp   time.Time `json:"timestamp"`
+	Type      string    `json:"type"`
+	Summary   string    `json:"summary"`
+	Reasoning string    `json:"reasoning"`
+	Outcome   string    `json:"outcome"`
+	Timestamp time.Time `json:"timestamp"`
 }
 
 // Interaction represents a past interaction
@@ -67,9 +67,9 @@ type Interaction struct {
 
 // Pattern represents a learned behavior pattern
 type Pattern struct {
-	Description string  `json:"description"`
-	Confidence  float64 `json:"confidence"`
-	UseCount    int     `json:"use_count"`
+	Description string    `json:"description"`
+	Confidence  float64   `json:"confidence"`
+	UseCount    int       `json:"use_count"`
 	LastUsed    time.Time `json:"last_used"`
 }
 
@@ -89,12 +89,12 @@ func (m *BackstoryManager) RegisterAgent(agentConfig *config.AgentConfig) error 
 			ProjectContext:  make(map[string]interface{}),
 			RecentDecisions: make([]Decision, 0),
 			WorkingState:    "ready",
-			Mood:           m.determineInitialMood(agentConfig),
+			Mood:            m.determineInitialMood(agentConfig),
 		},
 		Memory: &AgentMemory{
-			Interactions:    make([]Interaction, 0),
-			LearnedPatterns: make(map[string]Pattern),
-			Preferences:     make(map[string]interface{}),
+			Interactions:         make([]Interaction, 0),
+			LearnedPatterns:      make(map[string]Pattern),
+			Preferences:          make(map[string]interface{}),
 			SuccessfulApproaches: make(map[string]int),
 		},
 		LastSeen: time.Now(),
@@ -126,7 +126,7 @@ func (m *BackstoryManager) BuildPersonalityPrompt(
 	}
 
 	agent.LastSeen = time.Now()
-	
+
 	// Update agent context based on current situation
 	m.updateAgentContext(agent, turnContext)
 
@@ -381,7 +381,7 @@ func (m *BackstoryManager) buildMemoryLayer(agent *EnhancedAgent, turnContext *l
 func (m *BackstoryManager) buildCommunicationStyleLayer(agent *EnhancedAgent) string {
 	backstory := agent.Config.Backstory
 	personality := agent.Config.Personality
-	
+
 	if backstory == nil && personality == nil {
 		return ""
 	}
@@ -419,7 +419,7 @@ func (m *BackstoryManager) buildCommunicationStyleLayer(agent *EnhancedAgent) st
 		if personality.DetailLevel != "" {
 			layer.WriteString(fmt.Sprintf("Detail level: %s\n", personality.DetailLevel))
 		}
-		
+
 		if personality.HumorLevel != "" && personality.HumorLevel != "none" {
 			layer.WriteString(fmt.Sprintf("Humor: %s\n", personality.HumorLevel))
 		}
@@ -525,15 +525,15 @@ func (m *BackstoryManager) determineContextualMood(agent *EnhancedAgent, turnCon
 	if turnContext.UserMessage != "" {
 		message := strings.ToLower(turnContext.UserMessage)
 		if strings.Contains(message, "error") || strings.Contains(message, "broken") ||
-		   strings.Contains(message, "problem") || strings.Contains(message, "failing") {
+			strings.Contains(message, "problem") || strings.Contains(message, "failing") {
 			return "concerned"
 		}
 		if strings.Contains(message, "help") || strings.Contains(message, "how") ||
-		   strings.Contains(message, "explain") {
+			strings.Contains(message, "explain") {
 			return "helpful"
 		}
 		if strings.Contains(message, "new") || strings.Contains(message, "create") ||
-		   strings.Contains(message, "build") {
+			strings.Contains(message, "build") {
 			return "excited"
 		}
 	}
@@ -615,7 +615,7 @@ func (m *BackstoryManager) registerPersonalityLayers(agent *EnhancedAgent) error
 
 	// Build role personality prompt
 	rolePrompt := m.buildRolePersonalityPrompt(agent)
-	
+
 	// Only register if we have actual content
 	if rolePrompt == "" {
 		return nil
@@ -629,7 +629,7 @@ func (m *BackstoryManager) registerPersonalityLayers(agent *EnhancedAgent) error
 		Priority:  100,
 		Updated:   time.Now(),
 		Metadata: map[string]interface{}{
-			"backstory_enabled": true,
+			"backstory_enabled":   true,
 			"personality_version": 1,
 		},
 	}
@@ -659,15 +659,15 @@ func (m *BackstoryManager) buildRolePersonalityPrompt(agent *EnhancedAgent) stri
 	// Add personality-driven role interpretation
 	if agent.Config.Personality != nil {
 		prompt.WriteString("\nYour approach to this role:\n")
-		
+
 		if agent.Config.Personality.ApproachStyle != "" {
 			prompt.WriteString(fmt.Sprintf("- Work style: %s\n", agent.Config.Personality.ApproachStyle))
 		}
-		
+
 		if agent.Config.Personality.DecisionMaking != "" {
 			prompt.WriteString(fmt.Sprintf("- Decision making: %s\n", agent.Config.Personality.DecisionMaking))
 		}
-		
+
 		if agent.Config.Personality.RiskTolerance != "" {
 			prompt.WriteString(fmt.Sprintf("- Risk tolerance: %s\n", agent.Config.Personality.RiskTolerance))
 		}

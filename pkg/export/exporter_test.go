@@ -15,10 +15,10 @@ import (
 
 func TestMultiFormatExporter_SupportedFormats(t *testing.T) {
 	exporter := NewMultiFormatExporter()
-	
+
 	formats := exporter.SupportedFormats()
 	assert.NotEmpty(t, formats)
-	
+
 	expectedFormats := []ExportFormat{
 		FormatMarkdown,
 		FormatHTML,
@@ -26,7 +26,7 @@ func TestMultiFormatExporter_SupportedFormats(t *testing.T) {
 		FormatPlainText,
 		FormatCSV,
 	}
-	
+
 	for _, expected := range expectedFormats {
 		assert.Contains(t, formats, expected)
 	}
@@ -35,19 +35,19 @@ func TestMultiFormatExporter_SupportedFormats(t *testing.T) {
 func TestMultiFormatExporter_Export_AllFormats(t *testing.T) {
 	exporter := NewMultiFormatExporter()
 	ctx := context.Background()
-	
+
 	content := createTestContent()
-	
+
 	formats := exporter.SupportedFormats()
 	for _, format := range formats {
 		t.Run(string(format), func(t *testing.T) {
 			data, err := exporter.Export(ctx, content, format)
 			assert.NoError(t, err)
 			assert.NotEmpty(t, data)
-			
+
 			// Basic content validation
 			dataStr := string(data)
-			
+
 			// CSV format doesn't include title in content, only message data
 			if format != FormatCSV {
 				assert.Contains(t, dataStr, "Test Chat Session")
@@ -59,7 +59,7 @@ func TestMultiFormatExporter_Export_AllFormats(t *testing.T) {
 
 func TestMultiFormatExporter_ValidateContent(t *testing.T) {
 	exporter := NewMultiFormatExporter()
-	
+
 	tests := []struct {
 		name        string
 		content     ExportContent
@@ -123,7 +123,7 @@ func TestMultiFormatExporter_ValidateContent(t *testing.T) {
 			expectError: true,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := exporter.ValidateContent(tt.content)
@@ -139,19 +139,19 @@ func TestMultiFormatExporter_ValidateContent(t *testing.T) {
 func TestMultiFormatExporter_ExportToResult(t *testing.T) {
 	exporter := NewMultiFormatExporter()
 	ctx := context.Background()
-	
+
 	content := createTestContent()
-	
+
 	result, err := exporter.ExportToResult(ctx, content, FormatJSON)
 	require.NoError(t, err)
 	assert.NotNil(t, result)
-	
+
 	assert.Equal(t, FormatJSON, result.Format)
 	assert.Equal(t, "application/json", result.MimeType)
 	assert.True(t, strings.HasSuffix(result.Filename, ".json"))
 	assert.Greater(t, result.Size, int64(0))
 	assert.NotZero(t, result.ExportedAt)
-	
+
 	// Check metadata
 	assert.Contains(t, result.Metadata, "message_count")
 	assert.Contains(t, result.Metadata, "title")
@@ -160,9 +160,9 @@ func TestMultiFormatExporter_ExportToResult(t *testing.T) {
 func TestMultiFormatExporter_UnsupportedFormat(t *testing.T) {
 	exporter := NewMultiFormatExporter()
 	ctx := context.Background()
-	
+
 	content := createTestContent()
-	
+
 	_, err := exporter.Export(ctx, content, "unsupported")
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "unsupported export format")
@@ -170,16 +170,16 @@ func TestMultiFormatExporter_UnsupportedFormat(t *testing.T) {
 
 func TestMultiFormatExporter_GetFormatOptions(t *testing.T) {
 	exporter := NewMultiFormatExporter()
-	
+
 	options := exporter.GetFormatOptions(FormatMarkdown)
 	assert.NotEmpty(t, options)
-	
+
 	// Check that we have expected options
 	optionKeys := make([]string, len(options))
 	for i, opt := range options {
 		optionKeys[i] = opt.Key
 	}
-	
+
 	assert.Contains(t, optionKeys, "include_metadata")
 	assert.Contains(t, optionKeys, "include_timestamps")
 }
@@ -187,18 +187,18 @@ func TestMultiFormatExporter_GetFormatOptions(t *testing.T) {
 func TestMultiFormatExporter_MessageSelection(t *testing.T) {
 	exporter := NewMultiFormatExporter()
 	ctx := context.Background()
-	
+
 	content := createTestContent()
-	
+
 	// Test range selection
 	content.Selection = &ContentSelection{
 		StartIndex: 0,
 		EndIndex:   0, // Only first message
 	}
-	
+
 	data, err := exporter.Export(ctx, content, FormatJSON)
 	require.NoError(t, err)
-	
+
 	// Should only contain first message
 	dataStr := string(data)
 	assert.Contains(t, dataStr, "Hello, how can I help?")
@@ -232,11 +232,11 @@ func TestGenerateFilename(t *testing.T) {
 			expected:  strings.Repeat("a", 50) + ".html",
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.title, func(t *testing.T) {
 			result := generateFilename(tt.title, tt.extension)
-			
+
 			if tt.title == "" {
 				assert.True(t, strings.HasPrefix(result, tt.expected))
 				assert.True(t, strings.HasSuffix(result, "."+tt.extension))

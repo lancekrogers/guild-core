@@ -23,7 +23,7 @@ type PerformanceReport struct {
 	Sprint76Goals Sprint76Goals          `json:"sprint_76_goals"`
 	Results       map[string]BenchResult `json:"results"`
 	Summary       Summary                `json:"summary"`
-	Bottlenecks   []Bottleneck          `json:"bottlenecks"`
+	Bottlenecks   []Bottleneck           `json:"bottlenecks"`
 	Optimizations []Optimization         `json:"optimizations"`
 }
 
@@ -79,11 +79,11 @@ type Bottleneck struct {
 
 // Optimization suggests performance improvements
 type Optimization struct {
-	Area            string `json:"area"`
-	Suggestion      string `json:"suggestion"`
-	ExpectedImpact  string `json:"expected_impact"`
-	Implementation  string `json:"implementation"`
-	Priority        string `json:"priority"`
+	Area           string `json:"area"`
+	Suggestion     string `json:"suggestion"`
+	ExpectedImpact string `json:"expected_impact"`
+	Implementation string `json:"implementation"`
+	Priority       string `json:"priority"`
 }
 
 // GeneratePerformanceReport runs benchmarks and generates a comprehensive report
@@ -413,7 +413,7 @@ func GenerateMarkdownReport(report *PerformanceReport) string {
 
 	fmt.Fprintf(&buf, "## Sprint 7.6 Performance Targets\n\n")
 	fmt.Fprintf(&buf, "- **Max Latency**: %s\n", report.Sprint76Goals.MaxLatency)
-	fmt.Fprintf(&buf, "- **Token Reduction**: %.0f%% - %.0f%%\n", 
+	fmt.Fprintf(&buf, "- **Token Reduction**: %.0f%% - %.0f%%\n",
 		report.Sprint76Goals.MinTokenReduction, report.Sprint76Goals.MaxTokenReduction)
 	fmt.Fprintf(&buf, "- **Cache Hit Rate**: ≥%.0f%%\n", report.Sprint76Goals.MinCacheHitRate)
 	fmt.Fprintf(&buf, "- **Memory per Service**: %s\n\n", report.Sprint76Goals.MaxMemoryPerService)

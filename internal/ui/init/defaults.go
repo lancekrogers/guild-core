@@ -273,7 +273,7 @@ func (d *DefaultProjectInitializer) InitializeProject(ctx context.Context, proje
 			WithComponent("DefaultProjectInitializer").
 			WithOperation("InitializeProject")
 	}
-	
+
 	return project.InitializeProject(projectPath)
 }
 

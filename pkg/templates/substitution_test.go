@@ -265,12 +265,12 @@ func TestVariableSubstitution_ComplexTemplate(t *testing.T) {
 
 	result, err := vs.SubstituteVariables(content, variables, templateVars)
 	assert.NoError(t, err)
-	
+
 	assert.Contains(t, result, "# Api Documentation") // title case
 	assert.Contains(t, result, "REST API documentation")
-	assert.Contains(t, result, "**Author:** Unknown") // default value used
+	assert.Contains(t, result, "**Author:** Unknown")         // default value used
 	assert.Contains(t, result, "**Environment:** PRODUCTION") // uppercase
-	assert.Contains(t, result, "```go") // overridden language
+	assert.Contains(t, result, "```go")                       // overridden language
 	assert.Contains(t, result, "fmt.Println")
 	assert.Contains(t, result, "No additional notes") // default value
 }

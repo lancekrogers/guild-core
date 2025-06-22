@@ -86,7 +86,7 @@ func (f *Factory) RegisterProvidersWithRegistry(registry ProviderRegistry, provi
 				WithOperation("RegisterProvidersWithRegistry").
 				WithDetails("provider_name", providerName)
 		}
-		
+
 		// Validate provider
 		if !IsValidProvider(providerName) && providerName != "google" {
 			return gerror.Newf(gerror.ErrCodeProvider, "unknown provider type: %s", providerName).

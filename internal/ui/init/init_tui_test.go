@@ -13,7 +13,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/x/exp/teatest"
-	
+
 	"github.com/guild-ventures/guild-core/internal/setup"
 	uiinit "github.com/guild-ventures/guild-core/internal/ui/init"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -22,10 +22,10 @@ import (
 // Mock implementations for testing
 
 type mockConfigManager struct {
-	createPhase0Err     error
-	integrateErr        error
-	createReferenceErr  error
-	callCount           map[string]int
+	createPhase0Err    error
+	integrateErr       error
+	createReferenceErr error
+	callCount          map[string]int
 }
 
 func newMockConfigManager() *mockConfigManager {
@@ -53,8 +53,8 @@ func (m *mockConfigManager) CreateCampaignReference(ctx context.Context, project
 }
 
 type mockProjectInit struct {
-	initErr        error
-	isInitialized  bool
+	initErr       error
+	isInitialized bool
 }
 
 func (m *mockProjectInit) InitializeProject(ctx context.Context, projectPath string) error {
@@ -176,7 +176,7 @@ func TestNewInitTUIModelV2(t *testing.T) {
 			}
 
 			model, err := uiinit.NewInitTUIModelV2(tt.ctx, tt.config, deps, true)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Error("expected error but got none")
@@ -198,7 +198,7 @@ func TestNewInitTUIModelV2(t *testing.T) {
 func TestInitTUIModelV2_QuickMode(t *testing.T) {
 	ctx := context.Background()
 	configMgr := newMockConfigManager()
-	
+
 	deps := uiinit.InitDependencies{
 		ConfigManager: configMgr,
 		ProjectInit:   &mockProjectInit{isInitialized: false},
@@ -233,7 +233,7 @@ func TestInitTUIModelV2_QuickMode(t *testing.T) {
 
 func TestInitTUIModelV2_ContextCancellation(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
-	
+
 	deps := uiinit.InitDependencies{
 		ConfigManager: newMockConfigManager(),
 		ProjectInit:   &mockProjectInit{},
@@ -257,7 +257,7 @@ func TestInitTUIModelV2_ContextCancellation(t *testing.T) {
 
 	// Update should detect cancellation
 	_, _ = model.Update(tea.KeyMsg{Type: tea.KeyEnter})
-	
+
 	if model.GetError() == nil {
 		t.Error("expected error for cancelled context")
 	} else if !gerror.Is(model.GetError(), gerror.ErrCodeCancelled) {
@@ -276,7 +276,7 @@ func TestInitTUIModelV2_ErrorHandling(t *testing.T) {
 			setupDeps: func() uiinit.InitDependencies {
 				configMgr := newMockConfigManager()
 				configMgr.createPhase0Err = errors.New("config error")
-				
+
 				return uiinit.InitDependencies{
 					ConfigManager: configMgr,
 					ProjectInit:   &mockProjectInit{},
@@ -319,7 +319,7 @@ func TestInitTUIModelV2_ErrorHandling(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			deps := tt.setupDeps()
-			
+
 			config := uiinit.Config{
 				ProjectPath: ".",
 				QuickMode:   true, // Use quick mode to trigger initialization
@@ -342,22 +342,22 @@ func TestInitTUIModelV2_ErrorHandling(t *testing.T) {
 func TestInitTUIModelV2_Styling(t *testing.T) {
 	// Test that styles are properly initialized
 	styles := uiinit.NewStyles()
-	
+
 	if styles == nil {
 		t.Fatal("expected styles but got nil")
 	}
-	
+
 	// Test some key style properties
 	if styles.Title.GetBold() != true {
 		t.Error("expected title to be bold")
 	}
-	
+
 	// Test helper methods
 	header := styles.RenderHeader("Test Title", "Test Subtitle")
 	if header == "" {
 		t.Error("expected header content")
 	}
-	
+
 	success := styles.RenderSuccess("Success message")
 	if success == "" {
 		t.Error("expected success message")
@@ -370,25 +370,25 @@ func TestDemoRenderer(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create demo renderer: %v", err)
 	}
-	
+
 	// Test demo info
 	demos := uiinit.GetDemoInfo()
 	if len(demos) == 0 {
 		t.Error("expected demo info")
 	}
-	
+
 	// Test rendering
 	output := renderer.RenderDemoSelection(demos, 0)
 	if output == "" {
 		t.Error("expected demo selection output")
 	}
-	
+
 	// Test validation results rendering
 	results := []uiinit.ValidationResult{
 		{Name: "Test Pass", Passed: true, Message: "All good"},
 		{Name: "Test Fail", Passed: false, Message: "Something wrong"},
 	}
-	
+
 	validationOutput := renderer.RenderValidationResults(results)
 	if validationOutput == "" {
 		t.Error("expected validation output")
@@ -406,12 +406,12 @@ func BenchmarkNewInitTUIModelV2(b *testing.B) {
 		Validator:     &mockValidator{},
 		DaemonManager: &mockDaemonManager{},
 	}
-	
+
 	config := uiinit.Config{
 		ProjectPath: ".",
 		QuickMode:   false,
 	}
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, err := uiinit.NewInitTUIModelV2(ctx, config, deps, true)
@@ -425,7 +425,7 @@ func BenchmarkDemoRendering(b *testing.B) {
 	styles := uiinit.NewStyles()
 	renderer, _ := uiinit.NewDemoRenderer(80, styles)
 	demos := uiinit.GetDemoInfo()
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = renderer.RenderDemoSelection(demos, 0)
@@ -437,7 +437,7 @@ func BenchmarkDemoRendering(b *testing.B) {
 func TestInitTUIModel_Integration_QuickMode(t *testing.T) {
 	// Create mocks that simulate quick successful initialization
 	configMgr := newMockConfigManager()
-	
+
 	deps := uiinit.InitDependencies{
 		ConfigManager: configMgr,
 		ProjectInit:   &mockProjectInit{isInitialized: false},
@@ -478,7 +478,7 @@ func TestInitTUIModel_Integration_QuickMode(t *testing.T) {
 
 	// Send quit to exit the program since it doesn't auto-quit
 	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
-	
+
 	// Now it should finish
 	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
 
@@ -488,7 +488,7 @@ func TestInitTUIModel_Integration_QuickMode(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to read final output: %v", err)
 	}
-	
+
 	t.Logf("Final output: %s", string(outputBytes))
 
 	// Check that there were no errors
@@ -510,7 +510,7 @@ func TestInitTUIModel_Integration_QuickModeFullFlow(t *testing.T) {
 			{Name: "Config Check", Passed: true, Message: "Guild configuration valid"},
 		},
 	}
-	
+
 	deps := uiinit.InitDependencies{
 		ConfigManager: configMgr,
 		ProjectInit:   &mockProjectInit{isInitialized: false},
@@ -543,9 +543,9 @@ func TestInitTUIModel_Integration_QuickModeFullFlow(t *testing.T) {
 		tm.Output(),
 		func(bts []byte) bool {
 			// Look for completion indicators in the final success screen
-			return (contains(bts, "Guild Successfully Established") || 
-					contains(bts, "Press Enter to exit") ||
-					contains(bts, "guild chat"))
+			return (contains(bts, "Guild Successfully Established") ||
+				contains(bts, "Press Enter to exit") ||
+				contains(bts, "guild chat"))
 		},
 		teatest.WithCheckInterval(100*time.Millisecond),
 		teatest.WithDuration(5*time.Second), // Longer timeout for full flow
@@ -553,7 +553,7 @@ func TestInitTUIModel_Integration_QuickModeFullFlow(t *testing.T) {
 
 	// Send quit to exit the program
 	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
-	
+
 	// Should finish quickly now
 	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
 
@@ -563,7 +563,7 @@ func TestInitTUIModel_Integration_QuickModeFullFlow(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to read final output: %v", err)
 	}
-	
+
 	outputStr := string(outputBytes)
 	t.Logf("Final full flow output: %s", outputStr)
 
@@ -589,7 +589,7 @@ func TestInitTUIModel_Integration_QuickModeFullFlow(t *testing.T) {
 
 func TestInitTUIModel_Integration_InteractiveCancel(t *testing.T) {
 	t.Skip("Interactive test - demonstrates pattern but skipped for CI")
-	
+
 	// This test demonstrates how we would test interactive behavior
 	deps := uiinit.InitDependencies{
 		ConfigManager: newMockConfigManager(),

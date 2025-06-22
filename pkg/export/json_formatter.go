@@ -27,27 +27,27 @@ func (f *JSONFormatter) Format(ctx context.Context, content ExportContent) ([]by
 		Metadata: content.Metadata,
 		Messages: f.getSelectedMessages(content),
 	}
-	
+
 	// Calculate stats
 	export.Stats = f.calculateStats(export.Messages)
-	
+
 	// Marshal with indentation for readability
 	if f.shouldPrettyPrint(content.Options) {
 		return json.MarshalIndent(export, "", "  ")
 	}
-	
+
 	return json.Marshal(export)
 }
 
 // ExportStats provides statistics about the export
 type ExportStats struct {
-	MessageCount int                    `json:"message_count"`
-	UserMessages int                    `json:"user_messages"`
-	AssistantMessages int               `json:"assistant_messages"`
-	SystemMessages int                  `json:"system_messages"`
-	TotalCharacters int                 `json:"total_characters"`
+	MessageCount         int            `json:"message_count"`
+	UserMessages         int            `json:"user_messages"`
+	AssistantMessages    int            `json:"assistant_messages"`
+	SystemMessages       int            `json:"system_messages"`
+	TotalCharacters      int            `json:"total_characters"`
 	AverageMessageLength float64        `json:"average_message_length"`
-	RoleCounts map[string]int          `json:"role_counts"`
+	RoleCounts           map[string]int `json:"role_counts"`
 }
 
 // GetMimeType returns the MIME type for JSON
@@ -109,7 +109,7 @@ func (f *JSONFormatter) getSelectedMessages(content ExportContent) []ChatMessage
 	if content.Selection == nil {
 		return content.Messages
 	}
-	
+
 	if len(content.Selection.MessageIDs) > 0 {
 		// Select by message IDs
 		selected := make([]ChatMessage, 0)
@@ -117,7 +117,7 @@ func (f *JSONFormatter) getSelectedMessages(content ExportContent) []ChatMessage
 		for _, id := range content.Selection.MessageIDs {
 			idSet[id] = true
 		}
-		
+
 		for _, msg := range content.Messages {
 			if idSet[msg.ID] {
 				selected = append(selected, msg)
@@ -125,7 +125,7 @@ func (f *JSONFormatter) getSelectedMessages(content ExportContent) []ChatMessage
 		}
 		return selected
 	}
-	
+
 	// Select by range
 	start := content.Selection.StartIndex
 	end := content.Selection.EndIndex
@@ -135,7 +135,7 @@ func (f *JSONFormatter) getSelectedMessages(content ExportContent) []ChatMessage
 	if end >= len(content.Messages) {
 		end = len(content.Messages) - 1
 	}
-	
+
 	return content.Messages[start : end+1]
 }
 
@@ -144,16 +144,16 @@ func (f *JSONFormatter) shouldPrettyPrint(options ExportOptions) bool {
 	if options.FormatSpecific == nil {
 		return true // Default to pretty print
 	}
-	
+
 	prettyPrint, exists := options.FormatSpecific["pretty_print"]
 	if !exists {
 		return true
 	}
-	
+
 	if b, ok := prettyPrint.(bool); ok {
 		return b
 	}
-	
+
 	return true
 }
 
@@ -163,13 +163,13 @@ func (f *JSONFormatter) calculateStats(messages []ChatMessage) ExportStats {
 		MessageCount: len(messages),
 		RoleCounts:   make(map[string]int),
 	}
-	
+
 	totalChars := 0
-	
+
 	for _, msg := range messages {
 		// Count by role
 		stats.RoleCounts[msg.Role]++
-		
+
 		// Count specific roles
 		switch msg.Role {
 		case "user":
@@ -179,16 +179,16 @@ func (f *JSONFormatter) calculateStats(messages []ChatMessage) ExportStats {
 		case "system":
 			stats.SystemMessages++
 		}
-		
+
 		// Character count
 		totalChars += len(msg.Content)
 	}
-	
+
 	stats.TotalCharacters = totalChars
-	
+
 	if len(messages) > 0 {
 		stats.AverageMessageLength = float64(totalChars) / float64(len(messages))
 	}
-	
+
 	return stats
 }

@@ -31,32 +31,32 @@ func NewTeaTestHelper(t *testing.T) *TeaTestHelper {
 // RunTeaTest runs a teatest with proper cleanup
 func (h *TeaTestHelper) RunTeaTest(model tea.Model, testFunc func(*teatest.TestModel)) {
 	h.t.Helper()
-	
+
 	// Save terminal state before test
 	h.saveTerminal()
-	
+
 	// Ensure cleanup happens
 	defer h.restoreTerminal()
-	
+
 	// Create test model
 	tm := teatest.NewTestModel(
 		h.t,
 		model,
 		teatest.WithInitialTermSize(80, 24),
 	)
-	
+
 	// Ensure the test model is properly terminated
 	defer func() {
 		// Try to gracefully quit first
 		tm.Send(tea.QuitMsg{})
-		
+
 		// Wait briefly for quit to process
 		done := make(chan struct{})
 		go func() {
 			tm.WaitFinished(h.t, teatest.WithFinalTimeout(100*time.Millisecond))
 			close(done)
 		}()
-		
+
 		select {
 		case <-done:
 			// Finished gracefully
@@ -65,7 +65,7 @@ func (h *TeaTestHelper) RunTeaTest(model tea.Model, testFunc func(*teatest.TestM
 			h.forceTerminalReset()
 		}
 	}()
-	
+
 	// Run the actual test
 	testFunc(tm)
 }
@@ -86,7 +86,7 @@ func (h *TeaTestHelper) saveTerminal() {
 func (h *TeaTestHelper) restoreTerminal() {
 	// Always perform basic cleanup
 	h.cleanupTerminal()
-	
+
 	// Additional restoration for Unix-like systems
 	if runtime.GOOS != "windows" && h.terminalSaved {
 		// Reset terminal to sane defaults
@@ -98,19 +98,19 @@ func (h *TeaTestHelper) restoreTerminal() {
 func (h *TeaTestHelper) cleanupTerminal() {
 	// Exit alternate screen buffer
 	fmt.Fprint(os.Stdout, "\033[?1049l")
-	
+
 	// Show cursor
 	fmt.Fprint(os.Stdout, "\033[?25h")
-	
+
 	// Reset all text attributes
 	fmt.Fprint(os.Stdout, "\033[0m")
-	
+
 	// Clear any remaining content
 	fmt.Fprint(os.Stdout, "\033[2J")
-	
+
 	// Move cursor to top-left
 	fmt.Fprint(os.Stdout, "\033[H")
-	
+
 	// Flush output
 	os.Stdout.Sync()
 }
@@ -118,14 +118,14 @@ func (h *TeaTestHelper) cleanupTerminal() {
 // forceTerminalReset performs a more aggressive terminal reset
 func (h *TeaTestHelper) forceTerminalReset() {
 	h.t.Logf("Forcing terminal reset due to incomplete teatest cleanup")
-	
+
 	// Send interrupt sequences
-	fmt.Fprint(os.Stdout, "\033c")        // Full reset
-	fmt.Fprint(os.Stdout, "\033[!p")       // Soft reset
-	
+	fmt.Fprint(os.Stdout, "\033c")   // Full reset
+	fmt.Fprint(os.Stdout, "\033[!p") // Soft reset
+
 	// Cleanup
 	h.cleanupTerminal()
-	
+
 	// On Unix-like systems, use reset command
 	if runtime.GOOS != "windows" {
 		if err := exec.Command("reset").Run(); err != nil {
@@ -155,19 +155,19 @@ func (m *TestModelWithCleanup) Init() tea.Cmd {
 
 func (m *TestModelWithCleanup) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	model, cmd := m.inner.Update(msg)
-	
+
 	// Check if we're quitting
 	if cmd != nil {
 		if _, ok := cmd().(tea.QuitMsg); ok && m.cleanup != nil {
 			m.cleanup()
 		}
 	}
-	
+
 	// Update inner model reference
 	if newInner, ok := model.(tea.Model); ok && newInner != m.inner {
 		m.inner = newInner
 	}
-	
+
 	return m, cmd
 }
 
@@ -178,7 +178,7 @@ func (m *TestModelWithCleanup) View() string {
 // WaitForOutput is a helper that waits for specific output with cleanup
 func WaitForOutput(t *testing.T, tm *teatest.TestModel, match func([]byte) bool, timeout time.Duration) {
 	t.Helper()
-	
+
 	teatest.WaitFor(
 		t,
 		tm.Output(),
@@ -199,16 +199,16 @@ func SendAndWait(tm *teatest.TestModel, msg tea.Msg, wait time.Duration) {
 // func TestMyComponent(t *testing.T) {
 //     helper := NewTeaTestHelper(t)
 //     model := NewMyModel()
-//     
+//
 //     helper.RunTeaTest(model, func(tm *teatest.TestModel) {
 //         // Wait for initial render
 //         WaitForOutput(t, tm, func(b []byte) bool {
 //             return bytes.Contains(b, []byte("Ready"))
 //         }, 2*time.Second)
-//         
+//
 //         // Send input
 //         SendAndWait(tm, tea.KeyMsg{Type: tea.KeyEnter}, 100*time.Millisecond)
-//         
+//
 //         // Test will cleanup automatically
 //     })
 // }

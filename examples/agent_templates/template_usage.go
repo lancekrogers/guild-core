@@ -69,7 +69,7 @@ func quickSetupExample(generator *setup.AgentTemplateGenerator, projectPath stri
 		log.Printf("Quick setup failed: %v", err)
 		return
 	}
-	
+
 	fmt.Println("✓ Created manager.yml and worker-1.yml in .guild/agents/")
 	fmt.Println("  These agents are ready to use with minimal configuration")
 }
@@ -100,14 +100,14 @@ func customMinimalExample(generator *setup.AgentTemplateGenerator, projectPath s
 		"A minimal local agent",
 		[]string{"general_tasks"},
 	)
-	
+
 	ctx := context.Background()
 	err := generator.GenerateAgentFile(ctx, projectPath, minimal)
 	if err != nil {
 		log.Printf("Failed to generate minimal bot: %v", err)
 		return
 	}
-	
+
 	fmt.Println("✓ Created minimal-bot.yml with just required fields")
 	fmt.Println("  This agent has no backstory or personality - just functionality")
 }
@@ -123,20 +123,20 @@ func optionalBackstoryExample(generator *setup.AgentTemplateGenerator, projectPa
 		Description:  "Experienced developer with practical wisdom",
 		Capabilities: []string{"coding", "code_review", "mentoring", "architecture"},
 		Tools:        []string{"code_executor", "git_tools", "test_runner"},
-		
+
 		// Optional fields - add just what makes sense
 		Experience: "20 years across startups and Fortune 500",
 		Philosophy: "Code is read more often than written - optimize for clarity",
 		// Expertise left empty - not needed for this agent
 	}
-	
+
 	ctx := context.Background()
 	err := generator.GenerateAgentFile(ctx, projectPath, seasoned)
 	if err != nil {
 		log.Printf("Failed to generate seasoned developer: %v", err)
 		return
 	}
-	
+
 	fmt.Println("✓ Created seasoned-dev.yml with selective backstory elements")
 	fmt.Println("  Only included experience and philosophy - no forced fields")
 }
@@ -144,13 +144,13 @@ func optionalBackstoryExample(generator *setup.AgentTemplateGenerator, projectPa
 func providerTeamExample(generator *setup.AgentTemplateGenerator, projectPath string) {
 	// Create a team optimized for a specific provider (Ollama for local/private work)
 	ollamaTemplates := generator.ProviderTemplates("ollama")
-	
+
 	fmt.Printf("Creating local Ollama team with %d agents:\n", len(ollamaTemplates))
-	
+
 	for _, template := range ollamaTemplates {
 		if template.Provider == "ollama" { // Skip generic templates
 			ctx := context.Background()
-		err := generator.GenerateAgentFile(ctx, projectPath, template)
+			err := generator.GenerateAgentFile(ctx, projectPath, template)
 			if err != nil {
 				log.Printf("Failed to generate %s: %v", template.ID, err)
 				continue
@@ -158,7 +158,7 @@ func providerTeamExample(generator *setup.AgentTemplateGenerator, projectPath st
 			fmt.Printf("  ✓ %s - %s\n", template.ID, template.Description)
 		}
 	}
-	
+
 	// Add a custom local agent for the team
 	customLocal := setup.AgentTemplate{
 		ID:            "local-security",
@@ -168,10 +168,10 @@ func providerTeamExample(generator *setup.AgentTemplateGenerator, projectPath st
 		Model:         "codellama:latest",
 		Description:   "Privacy-focused security analysis",
 		Capabilities:  []string{"security_review", "vulnerability_scan", "privacy_audit"},
-		CostMagnitude: 0, // Free local model
+		CostMagnitude: 0,   // Free local model
 		Temperature:   0.1, // Low temperature for consistent security analysis
 	}
-	
+
 	ctx := context.Background()
 	err := generator.GenerateAgentFile(ctx, projectPath, customLocal)
 	if err != nil {
@@ -179,14 +179,14 @@ func providerTeamExample(generator *setup.AgentTemplateGenerator, projectPath st
 		return
 	}
 	fmt.Printf("  ✓ %s - %s\n", customLocal.ID, customLocal.Description)
-	
+
 	fmt.Println("\nLocal team ready for privacy-sensitive development!")
 }
 
 // Example showing how to programmatically work with generated configs
 func demonstrateConfigGeneration() {
 	generator := setup.NewAgentTemplateGenerator()
-	
+
 	// Create a template
 	template := setup.AgentTemplate{
 		ID:           "example",
@@ -197,13 +197,13 @@ func demonstrateConfigGeneration() {
 		Description:  "Example for documentation",
 		Capabilities: []string{"examples", "documentation"},
 	}
-	
+
 	// Generate config (without writing file)
 	config, err := generator.GenerateAgentConfig(template)
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	// The config is now a full agent configuration
 	fmt.Printf("Generated config:\n")
 	fmt.Printf("  ID: %s\n", config.ID)

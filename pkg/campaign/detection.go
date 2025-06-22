@@ -326,7 +326,7 @@ func readBinaryHash(cwd string) string {
 				return hash // For now return hash, implement mapping later
 			}
 		}
-		
+
 		// Move up one directory
 		parent := filepath.Dir(currentDir)
 		if parent == currentDir {
@@ -351,7 +351,7 @@ func readSocketRegistry(cwd string) *SocketRegistry {
 				}
 			}
 		}
-		
+
 		// Move up one directory
 		parent := filepath.Dir(currentDir)
 		if parent == currentDir {
@@ -371,7 +371,7 @@ func WriteCampaignHash(projectPath, campaignName string) error {
 			WithComponent("campaign").
 			WithOperation("WriteCampaignHash")
 	}
-	
+
 	hashFile := filepath.Join(projectPath, paths.DefaultCampaignDir, paths.CampaignHashFile)
 	if err := os.WriteFile(hashFile, hashBytes, 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write campaign hash").
@@ -379,7 +379,7 @@ func WriteCampaignHash(projectPath, campaignName string) error {
 			WithOperation("WriteCampaignHash").
 			WithDetails("file", hashFile)
 	}
-	
+
 	return nil
 }
 
@@ -389,14 +389,14 @@ func WriteSocketRegistry(projectPath, campaignName string) error {
 		CampaignHash: GenerateCampaignHash(campaignName),
 		CampaignName: campaignName,
 	}
-	
+
 	registryData, err := yaml.Marshal(registry)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal socket registry").
 			WithComponent("campaign").
 			WithOperation("WriteSocketRegistry")
 	}
-	
+
 	registryFile := filepath.Join(projectPath, paths.DefaultCampaignDir, paths.SocketRegistryFile)
 	if err := os.WriteFile(registryFile, registryData, 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write socket registry").
@@ -404,7 +404,7 @@ func WriteSocketRegistry(projectPath, campaignName string) error {
 			WithOperation("WriteSocketRegistry").
 			WithDetails("file", registryFile)
 	}
-	
+
 	return nil
 }
 

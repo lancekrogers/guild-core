@@ -21,21 +21,21 @@ func NewMarkdownFormatter() *MarkdownFormatter {
 // Format exports content as Markdown
 func (f *MarkdownFormatter) Format(ctx context.Context, content ExportContent) ([]byte, error) {
 	var builder strings.Builder
-	
+
 	// Write header with metadata
 	f.writeHeader(&builder, content.Metadata, content.Options)
-	
+
 	// Write messages
 	messages := f.getSelectedMessages(content)
 	for i, msg := range messages {
 		f.writeMessage(&builder, msg, i, content.Options)
 	}
-	
+
 	// Write footer if metadata enabled
 	if content.Options.IncludeMetadata {
 		f.writeFooter(&builder, content.Metadata)
 	}
-	
+
 	return []byte(builder.String()), nil
 }
 
@@ -100,7 +100,7 @@ func (f *MarkdownFormatter) getSelectedMessages(content ExportContent) []ChatMes
 	if content.Selection == nil {
 		return content.Messages
 	}
-	
+
 	if len(content.Selection.MessageIDs) > 0 {
 		// Select by message IDs
 		selected := make([]ChatMessage, 0)
@@ -108,7 +108,7 @@ func (f *MarkdownFormatter) getSelectedMessages(content ExportContent) []ChatMes
 		for _, id := range content.Selection.MessageIDs {
 			idSet[id] = true
 		}
-		
+
 		for _, msg := range content.Messages {
 			if idSet[msg.ID] {
 				selected = append(selected, msg)
@@ -116,7 +116,7 @@ func (f *MarkdownFormatter) getSelectedMessages(content ExportContent) []ChatMes
 		}
 		return selected
 	}
-	
+
 	// Select by range
 	start := content.Selection.StartIndex
 	end := content.Selection.EndIndex
@@ -126,24 +126,24 @@ func (f *MarkdownFormatter) getSelectedMessages(content ExportContent) []ChatMes
 	if end >= len(content.Messages) {
 		end = len(content.Messages) - 1
 	}
-	
+
 	return content.Messages[start : end+1]
 }
 
 // writeHeader writes the document header
 func (f *MarkdownFormatter) writeHeader(builder *strings.Builder, metadata ExportMetadata, options ExportOptions) {
 	builder.WriteString(fmt.Sprintf("# %s\n\n", metadata.Title))
-	
+
 	if metadata.Description != "" {
 		builder.WriteString(fmt.Sprintf("%s\n\n", metadata.Description))
 	}
-	
+
 	// Metadata table (only if enabled)
 	if options.IncludeMetadata {
 		builder.WriteString("## Export Information\n\n")
 		builder.WriteString("| Field | Value |\n")
 		builder.WriteString("|-------|-------|\n")
-		
+
 		if metadata.Author != "" {
 			builder.WriteString(fmt.Sprintf("| Author | %s |\n", metadata.Author))
 		}
@@ -154,11 +154,11 @@ func (f *MarkdownFormatter) writeHeader(builder *strings.Builder, metadata Expor
 		if metadata.Version != "" {
 			builder.WriteString(fmt.Sprintf("| Version | %s |\n", metadata.Version))
 		}
-		
+
 		if len(metadata.Tags) > 0 {
 			builder.WriteString(fmt.Sprintf("| Tags | %s |\n", strings.Join(metadata.Tags, ", ")))
 		}
-		
+
 		builder.WriteString("\n---\n\n")
 	}
 }
@@ -168,17 +168,17 @@ func (f *MarkdownFormatter) writeMessage(builder *strings.Builder, msg ChatMessa
 	// Message header
 	roleTitle := f.formatRole(msg.Role)
 	builder.WriteString(fmt.Sprintf("## %s\n\n", roleTitle))
-	
+
 	// Timestamp if enabled
 	if options.IncludeTimestamps {
 		builder.WriteString(fmt.Sprintf("*%s*\n\n", msg.Timestamp.Format("2006-01-02 15:04:05 MST")))
 	}
-	
+
 	// Message content
 	content := f.formatContent(msg.Content, options)
 	builder.WriteString(content)
 	builder.WriteString("\n\n")
-	
+
 	// Separator between messages
 	if index > 0 {
 		builder.WriteString("---\n\n")
@@ -210,7 +210,7 @@ func (f *MarkdownFormatter) formatRole(role string) string {
 func (f *MarkdownFormatter) formatContent(content string, options ExportOptions) string {
 	// Basic content formatting
 	result := content
-	
+
 	// Ensure code blocks are properly formatted
 	if !strings.Contains(result, "```") && strings.Contains(result, "\n") {
 		// Check if content looks like code (simple heuristic)
@@ -218,18 +218,18 @@ func (f *MarkdownFormatter) formatContent(content string, options ExportOptions)
 		codeLines := 0
 		for _, line := range lines {
 			line = strings.TrimSpace(line)
-			if strings.Contains(line, "{") || strings.Contains(line, "}") || 
-			   strings.Contains(line, "func ") || strings.Contains(line, "import ") ||
-			   strings.Contains(line, "def ") || strings.Contains(line, "class ") {
+			if strings.Contains(line, "{") || strings.Contains(line, "}") ||
+				strings.Contains(line, "func ") || strings.Contains(line, "import ") ||
+				strings.Contains(line, "def ") || strings.Contains(line, "class ") {
 				codeLines++
 			}
 		}
-		
+
 		// If more than 30% of lines look like code, wrap in code block
 		if codeLines > len(lines)/3 {
 			result = fmt.Sprintf("```\n%s\n```", result)
 		}
 	}
-	
+
 	return result
 }

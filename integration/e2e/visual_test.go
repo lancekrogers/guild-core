@@ -143,7 +143,7 @@ func TestUIElementRendering(t *testing.T) {
 
 		// Check that any progress indicators don't leave artifacts
 		output := result.Stdout
-		
+
 		// Should not contain raw progress characters
 		progressChars := []string{"\r", "\b", "\x08"}
 		for _, char := range progressChars {
@@ -155,7 +155,7 @@ func TestUIElementRendering(t *testing.T) {
 	t.Run("Unicode Handling", func(t *testing.T) {
 		// Test with unicode in project name
 		result := env.RunGuild("init")
-		
+
 		if result.ExitCode == 0 {
 			// If unicode is supported, output should handle it properly
 			result.AssertNotContains(t, "�") // replacement character
@@ -190,7 +190,7 @@ func TestOutputFormats(t *testing.T) {
 	t.Run("Machine Readable Output", func(t *testing.T) {
 		// Test if there are machine-readable output options
 		result := env.RunGuild("status", "--format", "json")
-		
+
 		if result.ExitCode == 0 {
 			// If JSON format is supported, validate it's proper JSON
 			output := strings.TrimSpace(result.Stdout)
@@ -229,7 +229,7 @@ func TestAccessibilityFeatures(t *testing.T) {
 	t.Run("Keyboard Navigation Hints", func(t *testing.T) {
 		// Check if help mentions keyboard shortcuts
 		result := env.RunGuild("help", "chat")
-		
+
 		if result.ExitCode == 0 {
 			output := strings.ToLower(result.Stdout)
 			// If chat help exists, it might mention keyboard shortcuts
@@ -255,7 +255,7 @@ func TestLongRunningCommandDisplay(t *testing.T) {
 	t.Run("Command Timeout Display", func(t *testing.T) {
 		// Test very short timeout to see how timeout is displayed
 		result := env.RunGuildWithTimeout(50*time.Millisecond, "demo", "--quick")
-		
+
 		// Command might timeout or complete quickly
 		if result.Error != nil && strings.Contains(result.Error.Error(), "context deadline exceeded") {
 			// Timeout behavior is correct
@@ -293,7 +293,7 @@ func TestVisualRegressionReference(t *testing.T) {
 			if result.ExitCode == 0 {
 				filename := strings.Join(cmd, "_") + ".txt"
 				filepath := filepath.Join(referencesDir, filename)
-				
+
 				err := os.WriteFile(filepath, []byte(result.Stdout), 0644)
 				if err == nil {
 					t.Logf("Saved reference output: %s", filepath)

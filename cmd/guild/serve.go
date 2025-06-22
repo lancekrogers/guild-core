@@ -240,14 +240,14 @@ func runServe(cmd *cobra.Command, args []string) error {
 			WithComponent("cli").
 			WithOperation("serve.run")
 	}
-	
+
 	// Remove stale socket file if it exists
 	if _, err := os.Stat(daemonConfig.SocketPath); err == nil {
 		os.Remove(daemonConfig.SocketPath)
 	}
-	
+
 	startErr := server.StartUnix(ctx, daemonConfig.SocketPath)
-	
+
 	if startErr != nil {
 		return gerror.Wrap(startErr, gerror.ErrCodeConnection, "failed to start gRPC server").
 			WithComponent("cli").

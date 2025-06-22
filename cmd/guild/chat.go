@@ -13,8 +13,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	chatui "github.com/guild-ventures/guild-core/internal/ui/chat"
 	"github.com/guild-ventures/guild-core/internal/daemon"
+	chatui "github.com/guild-ventures/guild-core/internal/ui/chat"
 	"github.com/guild-ventures/guild-core/pkg/campaign"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	pkgDaemon "github.com/guild-ventures/guild-core/pkg/daemon"
@@ -132,7 +132,7 @@ func runChat(cmd *cobra.Command, args []string) error {
 		daemonConfig = config
 		// Give the server a moment to fully initialize
 		time.Sleep(500 * time.Millisecond)
-		
+
 		// Start monitoring for idle timeout and crashes
 		lifecycleManager.MonitorSessions(ctx)
 	} else {

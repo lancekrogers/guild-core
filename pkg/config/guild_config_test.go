@@ -280,7 +280,7 @@ func TestLoadGuildConfigFile(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Clean up before each test
 			os.RemoveAll(filepath.Join(tempDir, ".campaign"))
-			
+
 			if err := tt.setup(); err != nil {
 				t.Fatalf("Setup failed: %v", err)
 			}
@@ -410,7 +410,7 @@ func TestSaveGuildConfigFile(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Clean up before each test
 			os.RemoveAll(filepath.Join(tempDir, ".campaign"))
-			
+
 			if tt.setup != nil {
 				if err := tt.setup(); err != nil {
 					t.Fatalf("Setup failed: %v", err)
@@ -659,7 +659,7 @@ func TestGuildConfigFile_ListGuildNames(t *testing.T) {
 			names := tt.config.ListGuildNames()
 			sort.Strings(names) // Sort for consistent comparison
 			sort.Strings(tt.expected)
-			
+
 			if len(names) != len(tt.expected) {
 				t.Errorf("ListGuildNames() returned %d names, want %d", len(names), len(tt.expected))
 			}
@@ -741,11 +741,11 @@ func TestGuildConfigFile_GetGuildForAgent(t *testing.T) {
 	}
 
 	tests := []struct {
-		name       string
-		agentName  string
-		wantGuild  string
-		wantErr    bool
-		errCode    gerror.ErrorCode
+		name      string
+		agentName string
+		wantGuild string
+		wantErr   bool
+		errCode   gerror.ErrorCode
 	}{
 		{
 			name:      "agent in backend guild",
@@ -969,14 +969,14 @@ func TestGuildConfigFile_RealWorldScenarios(t *testing.T) {
 func BenchmarkGuildConfigFile_LoadSave(b *testing.B) {
 	tempDir, _ := os.MkdirTemp("", "guild-bench")
 	defer os.RemoveAll(tempDir)
-	
+
 	ctx := context.Background()
-	
+
 	// Create a moderately complex config
 	config := &GuildConfigFile{
 		Guilds: make(map[string]GuildDefinition),
 	}
-	
+
 	for i := 0; i < 10; i++ {
 		guildName := "guild" + string(rune(i))
 		agents := make([]string, 5)
@@ -1016,7 +1016,7 @@ func BenchmarkGuildConfigFile_HasAgent(b *testing.B) {
 	config := &GuildConfigFile{
 		Guilds: make(map[string]GuildDefinition),
 	}
-	
+
 	// Create many guilds with many agents
 	for i := 0; i < 50; i++ {
 		guildName := "guild" + string(rune(i))
@@ -1040,7 +1040,7 @@ func BenchmarkGuildConfigFile_GetGuildForAgent(b *testing.B) {
 	config := &GuildConfigFile{
 		Guilds: make(map[string]GuildDefinition),
 	}
-	
+
 	// Create many guilds with many agents
 	for i := 0; i < 50; i++ {
 		guildName := "guild" + string(rune(i))

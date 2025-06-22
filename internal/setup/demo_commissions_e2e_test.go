@@ -1,6 +1,7 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
 // +build integration
 
 package setup
@@ -58,7 +59,7 @@ func TestDemoCommissionEndToEnd(t *testing.T) {
 	// Verify content structure
 	savedContent, err := os.ReadFile(commissionPath)
 	require.NoError(t, err)
-	
+
 	contentStr := string(savedContent)
 	assert.Contains(t, contentStr, "RESTful Task Management API")
 	assert.Contains(t, contentStr, "Project Objective")
@@ -69,7 +70,7 @@ func TestDemoCommissionEndToEnd(t *testing.T) {
 	parser := commission.NewMarkdownParser(commission.DefaultParseOptions())
 	parsedCommission, err := parser.ParseFile(commissionPath)
 	require.NoError(t, err)
-	
+
 	assert.NotNil(t, parsedCommission)
 	assert.NotEmpty(t, parsedCommission.Title)
 	assert.NotEmpty(t, parsedCommission.Parts)
@@ -141,7 +142,7 @@ func TestDemoCommissionRecommendationFlow(t *testing.T) {
 
 			// Get recommendation
 			recommendedType, reason := generator.GetRecommendedDemo(ctx, projectInfo)
-			
+
 			assert.Equal(t, tt.expectedType, recommendedType)
 			assert.Contains(t, reason, tt.expectedReason)
 
@@ -156,26 +157,26 @@ func TestDemoCommissionRecommendationFlow(t *testing.T) {
 // TestDemoCommissionSelection tests the selection logic for different scenarios
 func TestDemoCommissionSelection(t *testing.T) {
 	generator := NewDemoCommissionGenerator()
-	
+
 	// Test that all demo types are available
 	availableTypes := generator.GetAvailableTypes()
 	assert.GreaterOrEqual(t, len(availableTypes), 6, "Should have at least 6 demo types")
-	
+
 	// Verify each type has a description
 	for _, demoType := range availableTypes {
 		desc := generator.GetDemoDescription(demoType)
 		assert.NotEmpty(t, desc)
 		assert.NotEqual(t, "Unknown demo type", desc)
 	}
-	
+
 	// Test that each type generates unique content
 	ctx := context.Background()
 	contentMap := make(map[string]DemoCommissionType)
-	
+
 	for _, demoType := range availableTypes {
 		content, err := generator.GenerateCommission(ctx, demoType)
 		require.NoError(t, err)
-		
+
 		// Check for duplicate content
 		if existingType, exists := contentMap[content]; exists {
 			t.Errorf("Demo type %s has identical content to %s", demoType, existingType)

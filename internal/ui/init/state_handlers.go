@@ -10,7 +10,7 @@ import (
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
@@ -35,7 +35,7 @@ const (
 
 func (m *InitTUIModelV2) updateProjectInput(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
-	
+
 	if k, ok := msg.(tea.KeyMsg); ok {
 		switch {
 		case key.Matches(k, keys.Enter):
@@ -52,7 +52,7 @@ func (m *InitTUIModelV2) updateProjectInput(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 	}
-	
+
 	m.inputs["project"], cmd = m.inputs["project"].Update(msg)
 	return m, cmd
 }
@@ -98,18 +98,18 @@ func (m *InitTUIModelV2) updateInitializing(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		return m, m.spinner.Tick
-		
+
 	case spinner.TickMsg:
 		var cmd tea.Cmd
 		m.spinner, cmd = m.spinner.Update(msg)
 		return m, cmd
-		
+
 	case errMsg:
 		m.err = msg.err
 		m.state = StateError
 		return m, nil
 	}
-	
+
 	return m, nil
 }
 
@@ -185,38 +185,34 @@ func (m *InitTUIModelV2) updateValidating(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.inputs[key] = input
 		}
 		return m, nil
-		
+
 	case spinner.TickMsg:
 		var cmd tea.Cmd
 		m.spinner, cmd = m.spinner.Update(msg)
 		return m, cmd
-		
+
 	case errMsg:
 		m.err = msg.err
 		m.state = StateError
 		return m, nil
-		
+
 	case warnMsg:
 		// Log warning but continue
 		return m, nil
 	}
-	
+
 	return m, nil
 }
 
 func (m *InitTUIModelV2) updateComplete(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if k, ok := msg.(tea.KeyMsg); ok {
-		// Debug: log what key was pressed
-		// In production, remove this debug line
 		switch k.Type {
 		case tea.KeyEnter:
 			return m, tea.Quit
 		case tea.KeyCtrlC, tea.KeyEsc:
 			return m, tea.Quit
-		}
-		
-		// Alternative key checking
-		if key.Matches(k, keys.Quit) {
+		default:
+			// For any other key, also quit to make it easier to exit
 			return m, tea.Quit
 		}
 	}
@@ -239,12 +235,12 @@ func (m *InitTUIModelV2) renderCampaignInput() string {
 		"Campaign Configuration",
 		"Choose a name for your development campaign",
 	)
-	
+
 	help := `A campaign organizes related projects and guilds.
 Think of it as your overarching development initiative.`
-	
+
 	helpRendered, _ := m.renderer.Render(help)
-	
+
 	inputBox := m.styles.InputBox.Render(
 		lipgloss.JoinVertical(
 			lipgloss.Left,
@@ -252,7 +248,7 @@ Think of it as your overarching development initiative.`
 			m.inputs["campaign"].View(),
 		),
 	)
-	
+
 	return lipgloss.JoinVertical(
 		lipgloss.Center,
 		title,
@@ -267,12 +263,12 @@ func (m *InitTUIModelV2) renderProjectInput() string {
 		"Project Configuration",
 		"Name your project within the campaign",
 	)
-	
+
 	help := `A project is a specific codebase or application.
 Multiple projects can exist within a single campaign.`
-	
+
 	helpRendered, _ := m.renderer.Render(help)
-	
+
 	inputBox := m.styles.InputBox.Render(
 		lipgloss.JoinVertical(
 			lipgloss.Left,
@@ -280,7 +276,7 @@ Multiple projects can exist within a single campaign.`
 			m.inputs["project"].View(),
 		),
 	)
-	
+
 	return lipgloss.JoinVertical(
 		lipgloss.Center,
 		title,
@@ -295,7 +291,7 @@ func (m *InitTUIModelV2) renderConfirmation() string {
 		"Confirm Your Settings",
 		"Review your guild configuration",
 	)
-	
+
 	settings := m.styles.Section.Border(m.styles.BorderStyle).Render(
 		lipgloss.JoinVertical(
 			lipgloss.Left,
@@ -304,9 +300,9 @@ func (m *InitTUIModelV2) renderConfirmation() string {
 			m.styles.RenderLabelValue("Location", m.config.ProjectPath),
 		),
 	)
-	
+
 	prompt := m.styles.Info.Render("Continue with these settings? (Y/n)")
-	
+
 	return lipgloss.JoinVertical(
 		lipgloss.Center,
 		title,
@@ -321,14 +317,14 @@ func (m *InitTUIModelV2) renderInitializing() string {
 		"Forging Your Guild",
 		"Setting up your development environment",
 	)
-	
+
 	status := lipgloss.JoinVertical(
 		lipgloss.Center,
 		m.spinner.View()+" Initializing project structure...",
 		"",
 		m.progress.View(),
 	)
-	
+
 	return lipgloss.JoinVertical(
 		lipgloss.Center,
 		title,
@@ -341,16 +337,16 @@ func (m *InitTUIModelV2) renderDemoQuestion() string {
 		"Demo Commission",
 		"Start with a sample quest?",
 	)
-	
+
 	content := `Would you like to create a demo commission?
 
 This will give you a ready-to-use example showcasing
 Guild's capabilities with your chosen technologies.
 
 Create demo commission? (Y/n)`
-	
+
 	rendered, _ := m.renderer.Render(content)
-	
+
 	return lipgloss.JoinVertical(
 		lipgloss.Center,
 		title,
@@ -361,19 +357,19 @@ Create demo commission? (Y/n)`
 func (m *InitTUIModelV2) renderDemoSelection() string {
 	// Use the demo renderer if available
 	demos := GetDemoInfo()
-	
+
 	// For now, skip the demo renderer which might be causing issues
 	// renderer, err := NewDemoRenderer(m.width-4, m.styles)
 	// if err == nil {
 	//	return renderer.RenderDemoSelection(demos, m.selectedDemo)
 	// }
-	
+
 	// Fallback to simple rendering
 	title := m.styles.RenderHeader(
 		"Choose Your Quest",
 		"Select a demo commission",
 	)
-	
+
 	var items []string
 	for i, demo := range demos {
 		prefix := "  "
@@ -384,9 +380,9 @@ func (m *InitTUIModelV2) renderDemoSelection() string {
 		}
 		items = append(items, style.Render(fmt.Sprintf("%s%s", prefix, demo.Title)))
 	}
-	
+
 	list := lipgloss.JoinVertical(lipgloss.Left, items...)
-	
+
 	return lipgloss.JoinVertical(
 		lipgloss.Center,
 		title,
@@ -400,12 +396,12 @@ func (m *InitTUIModelV2) renderValidating() string {
 		"Validating Setup",
 		"Ensuring everything is properly configured",
 	)
-	
+
 	status := lipgloss.JoinVertical(
 		lipgloss.Center,
 		m.spinner.View()+" Running validation checks...",
 	)
-	
+
 	return lipgloss.JoinVertical(
 		lipgloss.Center,
 		title,
@@ -416,12 +412,12 @@ func (m *InitTUIModelV2) renderValidating() string {
 func (m *InitTUIModelV2) renderComplete() string {
 	// Use demo renderer for rich results
 	renderer, _ := NewDemoRenderer(m.width-4, m.styles)
-	
+
 	title := m.styles.RenderHeader(
 		"Guild Successfully Established!",
 		"Your development environment is ready",
 	)
-	
+
 	// Summary
 	summary := m.styles.Section.Border(m.styles.BorderStyle).Render(
 		lipgloss.JoinVertical(
@@ -433,13 +429,13 @@ func (m *InitTUIModelV2) renderComplete() string {
 			m.styles.RenderSuccess("Daemon: Ready to start"),
 		),
 	)
-	
+
 	// Validation results (if any)
 	var validation string
 	if len(m.validationResults) > 0 && renderer != nil {
 		validation = renderer.RenderValidationResults(m.validationResults)
 	}
-	
+
 	// Next steps
 	nextSteps := m.styles.Section.Render(`🚀 **Try these commands:**
 
@@ -448,16 +444,16 @@ func (m *InitTUIModelV2) renderComplete() string {
     guild commission list   # See your commissions
 
 Ready to start? Run: **guild chat**`)
-	
+
 	nextStepsRendered, _ := m.renderer.Render(nextSteps)
-	
+
 	sections := []string{title, summary}
 	if validation != "" {
 		sections = append(sections, validation)
 	}
 	sections = append(sections, nextStepsRendered)
 	sections = append(sections, m.styles.Info.Render("Press Enter to exit..."))
-	
+
 	return lipgloss.JoinVertical(lipgloss.Center, sections...)
 }
 
@@ -466,9 +462,9 @@ func (m *InitTUIModelV2) renderError() string {
 		"Initialization Failed",
 		"An error occurred during setup",
 	)
-	
+
 	errMsg := m.styles.RenderError(m.err.Error())
-	
+
 	// Try to provide helpful context
 	var help string
 	if gerror.Is(m.err, gerror.ErrCodeCancelled) {
@@ -478,12 +474,12 @@ func (m *InitTUIModelV2) renderError() string {
 	} else if gerror.Is(m.err, gerror.ErrCodeValidation) {
 		help = "Configuration validation failed. Check your settings and try again."
 	}
-	
+
 	sections := []string{title, errMsg}
 	if help != "" {
 		sections = append(sections, "", m.styles.Info.Render(help))
 	}
 	sections = append(sections, "", m.styles.Info.Render("Press Enter to exit..."))
-	
+
 	return lipgloss.JoinVertical(lipgloss.Center, sections...)
 }

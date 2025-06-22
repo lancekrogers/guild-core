@@ -109,7 +109,7 @@ func (lm *LifecycleManager) findAvailableSession(ctx context.Context, campaign s
 	for session := 0; session < 10; session++ {
 		key := lm.getSessionKey(campaign, session)
 		state, exists := lm.sessions[key]
-		
+
 		// Slot is available if:
 		// 1. No session exists
 		// 2. Session is inactive
@@ -392,7 +392,7 @@ func (lm *LifecycleManager) stopSessionInternal(session *SessionState) error {
 			if err := process.Signal(syscall.SIGTERM); err == nil {
 				// Wait a bit for graceful shutdown
 				time.Sleep(2 * time.Second)
-				
+
 				// Check if still running
 				if lm.isProcessRunning(session.ProcessID) {
 					// Force kill
@@ -404,7 +404,7 @@ func (lm *LifecycleManager) stopSessionInternal(session *SessionState) error {
 
 	// Clean up socket file
 	os.Remove(session.Config.SocketPath)
-	
+
 	// Clean up PID file
 	if session.Config.PIDFile != "" {
 		os.Remove(session.Config.PIDFile)

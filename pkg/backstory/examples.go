@@ -28,7 +28,6 @@ func NewPersonalityDemo() *PersonalityDemo {
 	}
 }
 
-
 // DemoSamePromptDifferentPersonalities shows how the same prompt gets different personality treatments
 func (demo *PersonalityDemo) DemoSamePromptDifferentPersonalities() {
 	fmt.Println("🎭 GUILD AGENT PERSONALITY DEMONSTRATION")
@@ -214,7 +213,7 @@ func (demo *PersonalityDemo) DemoLearningAndMemory() {
 			UserRating: 9,
 		},
 		{
-			Type:       "usability_test", 
+			Type:       "usability_test",
 			Summary:    "Users struggled with complex multi-step form - too many fields at once",
 			Outcome:    "needs_improvement",
 			UserRating: 4,
@@ -281,7 +280,7 @@ func (demo *PersonalityDemo) showAgentResponse(agentID, agentName, role, prompt 
 	}
 
 	fmt.Printf("🗣️  **%s** (%s):\n", agentName, role)
-	
+
 	// Extract key personality elements from the prompt
 	if strings.Contains(enhancedPrompt, "Your Identity and Background") {
 		// Show the personality is active

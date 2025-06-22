@@ -100,7 +100,7 @@ func runInitCampaign(cmd *cobra.Command, args []string) error {
 
 	// Step 3: Create campaign structure
 	fmt.Print("📁 Creating campaign directory structure... ")
-	
+
 	// Initialize the traditional project structure first
 	if err := project.InitializeProject(path); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize project structure").
@@ -125,7 +125,7 @@ func runInitCampaign(cmd *cobra.Command, args []string) error {
 	fmt.Print("⚙️  Setting up global campaign... ")
 
 	var globalConfig *campaign.CampaignConfig
-	
+
 	// Check if campaign already exists
 	existingConfig, err := campaign.LoadGlobalCampaignConfig(campaignName)
 	if err != nil {
@@ -199,7 +199,7 @@ func runInitCampaign(cmd *cobra.Command, args []string) error {
 
 	// Step 6: Initialize campaign database in global location
 	fmt.Print("🗄️  Initializing campaign database... ")
-	
+
 	// This would integrate with the existing database initialization
 	// For now, we'll create a placeholder database file
 	_, err = campaign.LoadGlobalCampaignConfig(campaignName)
@@ -273,6 +273,6 @@ func writeYAMLFile(path string, data interface{}) error {
 	// In practice, you'd want to use yaml.Marshal and proper error handling
 	fmt.Fprintf(file, "# Generated Guild configuration\n")
 	fmt.Fprintf(file, "# Path: %s\n", path)
-	
+
 	return nil
 }

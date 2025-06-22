@@ -8,9 +8,9 @@ import (
 	"database/sql"
 	"testing"
 
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/guild-ventures/guild-core/pkg/storage/db"
 )
@@ -69,7 +69,7 @@ func setupTestDB(t *testing.T) (*db.Queries, func()) {
 	require.NoError(t, err)
 
 	queries := db.New(database)
-	
+
 	cleanup := func() {
 		database.Close()
 	}
@@ -125,7 +125,7 @@ func TestSQLTemplateManager_Get(t *testing.T) {
 			},
 		},
 	}
-	
+
 	err := manager.Create(ctx, template)
 	require.NoError(t, err)
 
@@ -150,7 +150,7 @@ func TestSQLTemplateManager_GetByName(t *testing.T) {
 		Category: "testing",
 		Content:  "Test content",
 	}
-	
+
 	err := manager.Create(ctx, template)
 	require.NoError(t, err)
 
@@ -201,14 +201,14 @@ func TestSQLTemplateManager_Update(t *testing.T) {
 		Category: "testing",
 		Content:  "Original content",
 	}
-	
+
 	err := manager.Create(ctx, template)
 	require.NoError(t, err)
 
 	// Update template
 	template.Name = "Updated Name"
 	template.Content = "Updated content"
-	
+
 	err = manager.Update(ctx, template)
 	assert.NoError(t, err)
 
@@ -231,7 +231,7 @@ func TestSQLTemplateManager_Delete(t *testing.T) {
 		Category: "testing",
 		Content:  "Will be deleted",
 	}
-	
+
 	err := manager.Create(ctx, template)
 	require.NoError(t, err)
 
@@ -299,7 +299,7 @@ func TestSQLTemplateManager_Render(t *testing.T) {
 			},
 		},
 	}
-	
+
 	err := manager.Create(ctx, template)
 	require.NoError(t, err)
 
@@ -308,7 +308,7 @@ func TestSQLTemplateManager_Render(t *testing.T) {
 		"name":    "Alice",
 		"project": "Guild Framework",
 	}
-	
+
 	result, err := manager.Render(ctx, template.ID, variables)
 	assert.NoError(t, err)
 	assert.Equal(t, "Hello Alice, welcome to Guild Framework!", result)
@@ -326,14 +326,14 @@ func TestSQLTemplateManager_RecordUsage(t *testing.T) {
 		Category: "testing",
 		Content:  "Test content",
 	}
-	
+
 	err := manager.Create(ctx, template)
 	require.NoError(t, err)
 
 	variables := map[string]interface{}{
 		"test": "value",
 	}
-	
+
 	err = manager.RecordUsage(ctx, template.ID, nil, variables, "test context")
 	assert.NoError(t, err)
 
@@ -463,7 +463,7 @@ func TestSQLTemplateManager_Variables(t *testing.T) {
 		Category: "testing",
 		Content:  "Test with {{var1}} and {{var2}}",
 	}
-	
+
 	err := manager.Create(ctx, template)
 	require.NoError(t, err)
 
@@ -476,11 +476,11 @@ func TestSQLTemplateManager_Variables(t *testing.T) {
 			DefaultValue: "default1",
 		},
 		{
-			Name:         "var2",
-			Description:  "Second variable",
-			Required:     false,
-			Type:         VariableTypeSelect,
-			Options:      []string{"option1", "option2", "option3"},
+			Name:        "var2",
+			Description: "Second variable",
+			Required:    false,
+			Type:        VariableTypeSelect,
+			Options:     []string{"option1", "option2", "option3"},
 		},
 	}
 

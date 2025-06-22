@@ -1,6 +1,7 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build ignore
 // +build ignore
 
 package main
@@ -62,7 +63,7 @@ func main() {
 	// Print summary to console
 	fmt.Println("\n📊 Performance Summary")
 	fmt.Println("=====================")
-	
+
 	status := "✅ PASS"
 	if !report.Summary.MeetsTargets {
 		status = "❌ FAIL"
@@ -81,7 +82,7 @@ func main() {
 		fmt.Println("\n⚠️  Bottlenecks Identified")
 		fmt.Println("========================")
 		for _, b := range report.Bottlenecks {
-			fmt.Printf("- %s: %s (current: %.2f, target: %.2f)\n", 
+			fmt.Printf("- %s: %s (current: %.2f, target: %.2f)\n",
 				b.Component, b.Issue, b.CurrentPerf, b.Target)
 		}
 	}

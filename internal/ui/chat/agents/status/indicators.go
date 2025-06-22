@@ -93,7 +93,7 @@ func (m *IndicatorManager) GetIndicator(agentID string) string {
 func (m *IndicatorManager) getSpinnerFrame(indicator *AgentIndicator) string {
 	frames := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
 	frame := frames[indicator.Frame%len(frames)]
-	
+
 	style := m.getStyleForStatus(indicator.Status)
 	return style.Render(frame)
 }
@@ -102,7 +102,7 @@ func (m *IndicatorManager) getSpinnerFrame(indicator *AgentIndicator) string {
 func (m *IndicatorManager) getPulseFrame(indicator *AgentIndicator) string {
 	frames := []string{"◯", "◉", "●", "◉"}
 	frame := frames[indicator.Frame%len(frames)]
-	
+
 	style := m.getStyleForStatus(indicator.Status)
 	return style.Render(frame)
 }
@@ -111,13 +111,13 @@ func (m *IndicatorManager) getPulseFrame(indicator *AgentIndicator) string {
 func (m *IndicatorManager) getProgressFrame(indicator *AgentIndicator) string {
 	width := 10
 	position := indicator.Frame % (width * 2)
-	
+
 	if position >= width {
 		position = (width * 2) - position - 1
 	}
-	
+
 	bar := strings.Repeat("─", position) + "●" + strings.Repeat("─", width-position-1)
-	
+
 	style := m.getStyleForStatus(indicator.Status)
 	return fmt.Sprintf("[%s]", style.Render(bar))
 }
@@ -127,7 +127,7 @@ func (m *IndicatorManager) getDotsFrame(indicator *AgentIndicator) string {
 	dots := (indicator.Frame % 4)
 	text := strings.Repeat(".", dots)
 	padding := strings.Repeat(" ", 3-dots)
-	
+
 	style := m.getStyleForStatus(indicator.Status)
 	return style.Render(text + padding)
 }
@@ -153,20 +153,20 @@ func (m *IndicatorManager) FormatAgentWithIndicator(info AgentInfo, display Agen
 		// No indicator, use static icon
 		return display.FormatAgentCompact(info)
 	}
-	
+
 	// Replace icon with animated indicator
 	base := fmt.Sprintf("%s %s", indicator, info.Name)
-	
+
 	// Add status if not idle
 	if info.Status != StatusIdle {
 		base += fmt.Sprintf(" [%s]", info.Status)
 	}
-	
+
 	// Add task count if any
 	if info.TaskCount > 0 {
 		base += fmt.Sprintf(" (%d)", info.TaskCount)
 	}
-	
+
 	return base
 }
 
@@ -175,30 +175,30 @@ func (m *IndicatorManager) AnimatedAgentList(agents []AgentInfo, display AgentDi
 	if len(agents) == 0 {
 		return "No active agents"
 	}
-	
+
 	var lines []string
-	
+
 	// Active agents with indicators
 	for _, agent := range agents {
 		if agent.Status == StatusWorking || agent.Status == StatusThinking {
 			lines = append(lines, m.FormatAgentWithIndicator(agent, display))
 		}
 	}
-	
+
 	// Idle agents without indicators
 	for _, agent := range agents {
 		if agent.Status == StatusIdle {
 			lines = append(lines, display.FormatAgentCompact(agent))
 		}
 	}
-	
+
 	// Error/offline agents
 	for _, agent := range agents {
 		if agent.Status == StatusError || agent.Status == StatusOffline {
 			lines = append(lines, display.FormatAgentCompact(agent))
 		}
 	}
-	
+
 	return strings.Join(lines, "\n")
 }
 

@@ -3,16 +3,16 @@ package providers
 // Provider constants - Use these instead of magic strings
 const (
 	// Provider Names (string representations)
-	ProviderNameClaude    = "claude_code"  // Used in config files
-	ProviderNameClaudeAlt = "claude-code"  // Alternative format
+	ProviderNameClaude     = "claude_code" // Used in config files
+	ProviderNameClaudeAlt  = "claude-code" // Alternative format
 	ProviderNameClaudeCode = "claudecode"  // Used in some places
-	ProviderNameOllama    = "ollama"
-	ProviderNameOpenAI    = "openai"
-	ProviderNameAnthropic = "anthropic"
-	ProviderNameDeepSeek  = "deepseek"
-	ProviderNameDeepInfra = "deepinfra"
-	ProviderNameOra       = "ora"
-	
+	ProviderNameOllama     = "ollama"
+	ProviderNameOpenAI     = "openai"
+	ProviderNameAnthropic  = "anthropic"
+	ProviderNameDeepSeek   = "deepseek"
+	ProviderNameDeepInfra  = "deepinfra"
+	ProviderNameOra        = "ora"
+
 	// Default Models
 	DefaultClaudeModel    = "claude-3-5-sonnet-20241022"
 	DefaultOllamaModel    = "llama3.2"
@@ -21,7 +21,7 @@ const (
 	DefaultDeepSeekModel  = "deepseek-chat"
 	DefaultDeepInfraModel = "meta-llama/Llama-3.3-70B-Instruct-Turbo"
 	DefaultOraModel       = "gpt-4-turbo"
-	
+
 	// Provider Display Names
 	DisplayNameClaude    = "Claude Code"
 	DisplayNameOllama    = "Ollama"
@@ -30,7 +30,7 @@ const (
 	DisplayNameDeepSeek  = "DeepSeek"
 	DisplayNameDeepInfra = "DeepInfra"
 	DisplayNameOra       = "Ora"
-	
+
 	// API Endpoints
 	EndpointOpenAI    = "https://api.openai.com/v1"
 	EndpointAnthropic = "https://api.anthropic.com"
@@ -38,19 +38,19 @@ const (
 	EndpointDeepInfra = "https://api.deepinfra.com/v1/openai"
 	EndpointOra       = "https://ora.ai/api"
 	EndpointOllama    = "http://localhost:11434"
-	
+
 	// Environment Variable Names
 	EnvOpenAIKey    = "OPENAI_API_KEY"
 	EnvAnthropicKey = "ANTHROPIC_API_KEY"
 	EnvDeepSeekKey  = "DEEPSEEK_API_KEY"
 	EnvDeepInfraKey = "DEEPINFRA_API_KEY"
 	EnvOraKey       = "ORA_API_KEY"
-	
+
 	// Provider Categories
-	CategoryLocalProvider  = "local"
-	CategoryCloudProvider  = "cloud"
-	CategoryOpenSource     = "opensource"
-	CategoryProprietary    = "proprietary"
+	CategoryLocalProvider = "local"
+	CategoryCloudProvider = "cloud"
+	CategoryOpenSource    = "opensource"
+	CategoryProprietary   = "proprietary"
 )
 
 // ProviderList returns all available provider names

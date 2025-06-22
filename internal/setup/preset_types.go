@@ -42,20 +42,20 @@ type PresetCollection struct {
 
 // PresetRecommendation contains recommendations for preset selection
 type PresetRecommendation struct {
-	Collection  *PresetCollection
-	Confidence  float64 // 0.0-1.0 confidence score
-	Reasoning   []string
-	Compatible  bool // Whether current providers support this preset
+	Collection *PresetCollection
+	Confidence float64 // 0.0-1.0 confidence score
+	Reasoning  []string
+	Compatible bool // Whether current providers support this preset
 }
 
 // ProviderCapabilities contains analysis of provider capabilities
 type ProviderCapabilities struct {
-	HasLocal      bool
-	HasCloud      bool
-	HasHighEnd    bool
-	HasCheap      bool
-	ModelCount    int
-	BestManager   ModelSelection
-	BestWorker    ModelSelection
+	HasLocal       bool
+	HasCloud       bool
+	HasHighEnd     bool
+	HasCheap       bool
+	ModelCount     int
+	BestManager    ModelSelection
+	BestWorker     ModelSelection
 	BestSpecialist ModelSelection
 }

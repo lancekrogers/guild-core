@@ -47,10 +47,10 @@ func (m *DefaultSuggestionManager) RegisterProvider(provider SuggestionProvider)
 			WithComponent("suggestions").
 			WithOperation("RegisterProvider")
 	}
-	
+
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	// Check for duplicate providers
 	metadata := provider.GetMetadata()
 	for _, p := range m.providers {
@@ -61,7 +61,7 @@ func (m *DefaultSuggestionManager) RegisterProvider(provider SuggestionProvider)
 				WithDetails("provider_name", metadata.Name)
 		}
 	}
-	
+
 	m.providers = append(m.providers, provider)
 	return nil
 }
@@ -72,20 +72,20 @@ func (m *DefaultSuggestionManager) GetSuggestions(ctx context.Context, context S
 	providers := make([]SuggestionProvider, len(m.providers))
 	copy(providers, m.providers)
 	m.mu.RUnlock()
-	
+
 	if len(providers) == 0 {
 		return []Suggestion{}, nil
 	}
-	
+
 	// Collect suggestions from all providers concurrently
 	type result struct {
 		suggestions []Suggestion
 		err         error
 		source      string
 	}
-	
+
 	results := make(chan result, len(providers))
-	
+
 	for _, provider := range providers {
 		go func(p SuggestionProvider) {
 			suggestions, err := p.GetSuggestions(ctx, context)
@@ -96,18 +96,18 @@ func (m *DefaultSuggestionManager) GetSuggestions(ctx context.Context, context S
 			}
 		}(provider)
 	}
-	
+
 	// Collect results
 	allSuggestions := make([]Suggestion, 0)
 	errors := make([]error, 0)
-	
+
 	for i := 0; i < len(providers); i++ {
 		res := <-results
 		if res.err != nil {
 			errors = append(errors, res.err)
 			continue
 		}
-		
+
 		// Add source to each suggestion and generate IDs if needed
 		for _, suggestion := range res.suggestions {
 			if suggestion.ID == "" {
@@ -118,10 +118,10 @@ func (m *DefaultSuggestionManager) GetSuggestions(ctx context.Context, context S
 			allSuggestions = append(allSuggestions, suggestion)
 		}
 	}
-	
+
 	// Apply filters
 	filtered := m.applyFilters(allSuggestions, filter)
-	
+
 	// Sort by priority and confidence
 	sort.Slice(filtered, func(i, j int) bool {
 		// First by priority (higher is better)
@@ -131,21 +131,21 @@ func (m *DefaultSuggestionManager) GetSuggestions(ctx context.Context, context S
 		// Then by confidence (higher is better)
 		return filtered[i].Confidence > filtered[j].Confidence
 	})
-	
+
 	// Cache suggestions for later reference
 	m.mu.Lock()
 	for _, s := range filtered {
 		m.suggestions[s.ID] = s
 	}
 	m.mu.Unlock()
-	
+
 	// Return errors if all providers failed
 	if len(errors) == len(providers) && len(errors) > 0 {
 		return nil, gerror.New(gerror.ErrCodeInternal, "all providers failed", errors[0]).
 			WithComponent("suggestions").
 			WithOperation("GetSuggestions")
 	}
-	
+
 	return filtered, nil
 }
 
@@ -153,7 +153,7 @@ func (m *DefaultSuggestionManager) GetSuggestions(ctx context.Context, context S
 func (m *DefaultSuggestionManager) RecordUsage(ctx context.Context, suggestionID string, accepted bool) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	suggestion, exists := m.suggestions[suggestionID]
 	if !exists {
 		return gerror.New(gerror.ErrCodeNotFound, "suggestion not found", nil).
@@ -161,7 +161,7 @@ func (m *DefaultSuggestionManager) RecordUsage(ctx context.Context, suggestionID
 			WithOperation("RecordUsage").
 			WithDetails("suggestion_id", suggestionID)
 	}
-	
+
 	history := SuggestionHistory{
 		ID:           uuid.New().String(),
 		SuggestionID: suggestionID,
@@ -171,9 +171,9 @@ func (m *DefaultSuggestionManager) RecordUsage(ctx context.Context, suggestionID
 		UsedAt:       time.Now(),
 		Metadata:     suggestion.Metadata,
 	}
-	
+
 	m.history = append(m.history, history)
-	
+
 	return nil
 }
 
@@ -181,7 +181,7 @@ func (m *DefaultSuggestionManager) RecordUsage(ctx context.Context, suggestionID
 func (m *DefaultSuggestionManager) GetHistory(ctx context.Context, sessionID string, limit int) ([]SuggestionHistory, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	// Filter by session if provided
 	filtered := make([]SuggestionHistory, 0)
 	for _, h := range m.history {
@@ -189,17 +189,17 @@ func (m *DefaultSuggestionManager) GetHistory(ctx context.Context, sessionID str
 			filtered = append(filtered, h)
 		}
 	}
-	
+
 	// Sort by most recent first
 	sort.Slice(filtered, func(i, j int) bool {
 		return filtered[i].UsedAt.After(filtered[j].UsedAt)
 	})
-	
+
 	// Apply limit
 	if limit > 0 && len(filtered) > limit {
 		filtered = filtered[:limit]
 	}
-	
+
 	return filtered, nil
 }
 
@@ -207,7 +207,7 @@ func (m *DefaultSuggestionManager) GetHistory(ctx context.Context, sessionID str
 func (m *DefaultSuggestionManager) ProvideFeedback(ctx context.Context, historyID string, feedback UserFeedback) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	for i, h := range m.history {
 		if h.ID == historyID {
 			feedback.ReportedAt = time.Now()
@@ -215,7 +215,7 @@ func (m *DefaultSuggestionManager) ProvideFeedback(ctx context.Context, historyI
 			return nil
 		}
 	}
-	
+
 	return gerror.New(gerror.ErrCodeNotFound, "history item not found", nil).
 		WithComponent("suggestions").
 		WithOperation("ProvideFeedback").
@@ -226,42 +226,42 @@ func (m *DefaultSuggestionManager) ProvideFeedback(ctx context.Context, historyI
 func (m *DefaultSuggestionManager) GetAnalytics(ctx context.Context) (*SuggestionAnalytics, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	analytics := &SuggestionAnalytics{
 		TypeBreakdown:     make(map[SuggestionType]int64),
 		ProviderBreakdown: make(map[string]int64),
 		TopSuggestions:    make([]SuggestionStat, 0),
 	}
-	
+
 	// Calculate basic metrics
 	acceptedCount := int64(0)
 	totalRating := 0
 	ratingCount := 0
-	
+
 	// Track suggestion patterns
 	patternStats := make(map[string]*SuggestionStat)
-	
+
 	for _, h := range m.history {
 		analytics.TotalSuggestions++
-		
+
 		if h.Accepted {
 			acceptedCount++
 		}
-		
+
 		// Type breakdown
 		analytics.TypeBreakdown[h.Type]++
-		
+
 		// Provider breakdown (from cached suggestion)
 		if s, exists := m.suggestions[h.SuggestionID]; exists {
 			analytics.ProviderBreakdown[s.Source]++
 		}
-		
+
 		// User satisfaction
 		if h.UserFeedback != nil && h.UserFeedback.Rating > 0 {
 			totalRating += h.UserFeedback.Rating
 			ratingCount++
 		}
-		
+
 		// Pattern tracking
 		pattern := fmt.Sprintf("%s:%s", h.Type, h.Content)
 		if stat, exists := patternStats[pattern]; exists {
@@ -288,32 +288,32 @@ func (m *DefaultSuggestionManager) GetAnalytics(ctx context.Context) (*Suggestio
 			}
 		}
 	}
-	
+
 	// Calculate rates
 	if analytics.TotalSuggestions > 0 {
 		analytics.AcceptedSuggestions = acceptedCount
 		analytics.AcceptanceRate = float64(acceptedCount) / float64(analytics.TotalSuggestions)
 	}
-	
+
 	if ratingCount > 0 {
 		analytics.UserSatisfaction = float64(totalRating) / float64(ratingCount)
 	}
-	
+
 	// Get top suggestions
 	for _, stat := range patternStats {
 		analytics.TopSuggestions = append(analytics.TopSuggestions, *stat)
 	}
-	
+
 	// Sort by usage count
 	sort.Slice(analytics.TopSuggestions, func(i, j int) bool {
 		return analytics.TopSuggestions[i].UsageCount > analytics.TopSuggestions[j].UsageCount
 	})
-	
+
 	// Limit to top 10
 	if len(analytics.TopSuggestions) > 10 {
 		analytics.TopSuggestions = analytics.TopSuggestions[:10]
 	}
-	
+
 	return analytics, nil
 }
 
@@ -322,9 +322,9 @@ func (m *DefaultSuggestionManager) applyFilters(suggestions []Suggestion, filter
 	if filter == nil {
 		return suggestions
 	}
-	
+
 	filtered := make([]Suggestion, 0, len(suggestions))
-	
+
 	for _, s := range suggestions {
 		// Type filter
 		if len(filter.Types) > 0 {
@@ -339,12 +339,12 @@ func (m *DefaultSuggestionManager) applyFilters(suggestions []Suggestion, filter
 				continue
 			}
 		}
-		
+
 		// Confidence filter
 		if filter.MinConfidence > 0 && s.Confidence < filter.MinConfidence {
 			continue
 		}
-		
+
 		// Source filter
 		if len(filter.Sources) > 0 {
 			sourceMatch := false
@@ -358,7 +358,7 @@ func (m *DefaultSuggestionManager) applyFilters(suggestions []Suggestion, filter
 				continue
 			}
 		}
-		
+
 		// Tag filter
 		if len(filter.Tags) > 0 {
 			tagMatch := false
@@ -377,14 +377,14 @@ func (m *DefaultSuggestionManager) applyFilters(suggestions []Suggestion, filter
 				continue
 			}
 		}
-		
+
 		filtered = append(filtered, s)
 	}
-	
+
 	// Apply max results limit
 	if filter.MaxResults > 0 && len(filtered) > filter.MaxResults {
 		filtered = filtered[:filter.MaxResults]
 	}
-	
+
 	return filtered
 }

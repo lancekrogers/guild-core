@@ -59,11 +59,11 @@ type AgentActivity struct {
 
 // StatusUpdate represents a status change event
 type StatusUpdate struct {
-	AgentID      string
+	AgentID        string
 	PreviousStatus AgentStatus
-	NewStatus    AgentStatus
-	Timestamp    time.Time
-	Reason       string
+	NewStatus      AgentStatus
+	Timestamp      time.Time
+	Reason         string
 }
 
 // TrackerStats provides statistics about agent activity
@@ -86,24 +86,24 @@ type StatusTracker interface {
 	RegisterAgent(info AgentInfo) error
 	UnregisterAgent(agentID string) error
 	UpdateAgentStatus(agentID string, status AgentStatus, reason string) error
-	
+
 	// Agent information retrieval
 	GetAgentInfo(agentID string) (*AgentInfo, error)
 	GetAllAgents() ([]AgentInfo, error)
 	GetAgentsByStatus(status AgentStatus) ([]AgentInfo, error)
-	
+
 	// Activity tracking
 	LogActivity(activity AgentActivity) error
 	GetAgentActivity(agentID string, limit int) ([]AgentActivity, error)
-	
+
 	// Statistics
 	GetStats() TrackerStats
 	GetAgentStats(agentID string) (map[string]interface{}, error)
-	
+
 	// Monitoring
 	IsAgentActive(agentID string) bool
 	GetLastStatusUpdate(agentID string) (*StatusUpdate, error)
-	
+
 	// Cleanup
 	PurgeInactiveAgents(threshold time.Duration) ([]string, error)
 }
@@ -113,11 +113,11 @@ type AgentDisplay interface {
 	// Format single agent status
 	FormatAgentStatus(info AgentInfo) string
 	FormatAgentCompact(info AgentInfo) string
-	
+
 	// Format multiple agents
 	FormatAgentList(agents []AgentInfo) string
 	FormatAgentSummary(agents []AgentInfo) string
-	
+
 	// Format with indicators
 	GetStatusIcon(status AgentStatus) string
 	GetStatusColor(status AgentStatus) string
@@ -128,17 +128,17 @@ type AgentDisplay interface {
 type IndicatorType string
 
 const (
-	IndicatorSpinner IndicatorType = "spinner"
-	IndicatorPulse   IndicatorType = "pulse"
+	IndicatorSpinner  IndicatorType = "spinner"
+	IndicatorPulse    IndicatorType = "pulse"
 	IndicatorProgress IndicatorType = "progress"
-	IndicatorDots    IndicatorType = "dots"
+	IndicatorDots     IndicatorType = "dots"
 )
 
 // AgentIndicator represents an animated indicator for agent activity
 type AgentIndicator struct {
-	Type      IndicatorType
-	AgentID   string
-	Status    AgentStatus
-	Frame     int
+	Type       IndicatorType
+	AgentID    string
+	Status     AgentStatus
+	Frame      int
 	LastUpdate time.Time
 }

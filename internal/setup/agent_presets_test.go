@@ -31,7 +31,7 @@ func TestNewAgentPresets(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			presets, err := NewAgentPresets(tt.ctx)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Error("NewAgentPresets() expected error but got none")
@@ -41,33 +41,33 @@ func TestNewAgentPresets(t *testing.T) {
 				}
 				return
 			}
-			
+
 			if err != nil {
 				t.Errorf("NewAgentPresets() unexpected error: %v", err)
 				return
 			}
-			
+
 			if presets == nil {
 				t.Error("NewAgentPresets() returned nil presets")
 				return
 			}
-			
+
 			// Verify presets were initialized
 			presetList := presets.ListPresets(context.Background())
 			if len(presetList) == 0 {
 				t.Error("NewAgentPresets() no presets were initialized")
 			}
-			
+
 			// Verify expected presets exist
 			expectedPresets := []string{
 				"demo-minimal",
-				"demo-comprehensive", 
+				"demo-comprehensive",
 				"dev-team",
 				"production-team",
 				"claude-code-optimized",
 				"ollama-local",
 			}
-			
+
 			for _, expected := range expectedPresets {
 				_, err := presets.GetPreset(context.Background(), expected)
 				if err != nil {
@@ -86,11 +86,11 @@ func TestGetPreset(t *testing.T) {
 	}
 
 	tests := []struct {
-		name      string
-		ctx       context.Context
-		presetID  string
-		wantErr   bool
-		errCode   gerror.ErrorCode
+		name     string
+		ctx      context.Context
+		presetID string
+		wantErr  bool
+		errCode  gerror.ErrorCode
 	}{
 		{
 			name:     "valid preset",
@@ -117,7 +117,7 @@ func TestGetPreset(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			collection, err := presets.GetPreset(tt.ctx, tt.presetID)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Error("GetPreset() expected error but got none")
@@ -127,17 +127,17 @@ func TestGetPreset(t *testing.T) {
 				}
 				return
 			}
-			
+
 			if err != nil {
 				t.Errorf("GetPreset() unexpected error: %v", err)
 				return
 			}
-			
+
 			if collection == nil {
 				t.Error("GetPreset() returned nil collection")
 				return
 			}
-			
+
 			if collection.ID != tt.presetID {
 				t.Errorf("GetPreset() collection ID = %v, want %v", collection.ID, tt.presetID)
 			}
@@ -184,27 +184,27 @@ func TestGetPresetsByType(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			collections, err := presets.GetPresetsByType(tt.ctx, tt.presetType)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Error("GetPresetsByType() expected error but got none")
 				}
 				return
 			}
-			
+
 			if err != nil {
 				t.Errorf("GetPresetsByType() unexpected error: %v", err)
 				return
 			}
-			
+
 			if len(collections) != tt.expectCount {
 				t.Errorf("GetPresetsByType() got %d collections, want %d", len(collections), tt.expectCount)
 			}
-			
+
 			// Verify all collections have correct type
 			for _, collection := range collections {
 				if collection.Type != tt.presetType {
-					t.Errorf("GetPresetsByType() collection '%s' has type %v, want %v", 
+					t.Errorf("GetPresetsByType() collection '%s' has type %v, want %v",
 						collection.ID, collection.Type, tt.presetType)
 				}
 			}
@@ -251,27 +251,27 @@ func TestGetPresetsByCategory(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			collections, err := presets.GetPresetsByCategory(tt.ctx, tt.category)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Error("GetPresetsByCategory() expected error but got none")
 				}
 				return
 			}
-			
+
 			if err != nil {
 				t.Errorf("GetPresetsByCategory() unexpected error: %v", err)
 				return
 			}
-			
+
 			if len(collections) < tt.expectMinCount {
 				t.Errorf("GetPresetsByCategory() got %d collections, want at least %d", len(collections), tt.expectMinCount)
 			}
-			
+
 			// Verify all collections have correct category
 			for _, collection := range collections {
 				if collection.Category != tt.category {
-					t.Errorf("GetPresetsByCategory() collection '%s' has category %v, want %v", 
+					t.Errorf("GetPresetsByCategory() collection '%s' has category %v, want %v",
 						collection.ID, collection.Category, tt.category)
 				}
 			}
@@ -351,7 +351,7 @@ func TestRecommendPresets(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			recommendations, err := presets.RecommendPresets(tt.ctx, tt.providers, tt.projectContext)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Error("RecommendPresets() expected error but got none")
@@ -361,28 +361,28 @@ func TestRecommendPresets(t *testing.T) {
 				}
 				return
 			}
-			
+
 			if err != nil {
 				t.Errorf("RecommendPresets() unexpected error: %v", err)
 				return
 			}
-			
+
 			if len(recommendations) < tt.expectMinCount {
-				t.Errorf("RecommendPresets() got %d recommendations, want at least %d", 
+				t.Errorf("RecommendPresets() got %d recommendations, want at least %d",
 					len(recommendations), tt.expectMinCount)
 			}
-			
+
 			// Verify recommendations are sorted by confidence
 			for i := 1; i < len(recommendations); i++ {
 				if recommendations[i-1].Confidence < recommendations[i].Confidence {
 					t.Error("RecommendPresets() recommendations not sorted by confidence")
 				}
 			}
-			
+
 			// Verify confidence values are valid
 			for _, rec := range recommendations {
 				if rec.Confidence < 0 || rec.Confidence > 1 {
-					t.Errorf("RecommendPresets() invalid confidence %f for preset %s", 
+					t.Errorf("RecommendPresets() invalid confidence %f for preset %s",
 						rec.Confidence, rec.Collection.ID)
 				}
 			}
@@ -463,7 +463,7 @@ func TestAdaptPresetForProviders(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			adapted, err := presets.AdaptPresetForProviders(tt.ctx, tt.collection, tt.providers)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Error("AdaptPresetForProviders() expected error but got none")
@@ -473,27 +473,27 @@ func TestAdaptPresetForProviders(t *testing.T) {
 				}
 				return
 			}
-			
+
 			if err != nil {
 				t.Errorf("AdaptPresetForProviders() unexpected error: %v", err)
 				return
 			}
-			
+
 			if adapted == nil {
 				t.Error("AdaptPresetForProviders() returned nil collection")
 				return
 			}
-			
+
 			// Verify adaptation
 			if adapted.ID == original.ID {
 				t.Error("AdaptPresetForProviders() didn't change collection ID")
 			}
-			
+
 			if len(adapted.Agents) != len(original.Agents) {
-				t.Errorf("AdaptPresetForProviders() agent count changed: got %d, want %d", 
+				t.Errorf("AdaptPresetForProviders() agent count changed: got %d, want %d",
 					len(adapted.Agents), len(original.Agents))
 			}
-			
+
 			// Verify agents were adapted
 			for _, agent := range adapted.Agents {
 				if agent.Provider == "auto" {
@@ -554,7 +554,7 @@ func TestGetDemoPreset(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			demo, err := presets.GetDemoPreset(tt.ctx, tt.providers)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Error("GetDemoPreset() expected error but got none")
@@ -564,22 +564,22 @@ func TestGetDemoPreset(t *testing.T) {
 				}
 				return
 			}
-			
+
 			if err != nil {
 				t.Errorf("GetDemoPreset() unexpected error: %v", err)
 				return
 			}
-			
+
 			if demo == nil {
 				t.Error("GetDemoPreset() returned nil collection")
 				return
 			}
-			
+
 			// Verify it's a demo preset
 			if demo.Type != PresetTypeDemo {
 				t.Errorf("GetDemoPreset() returned type %v, want %v", demo.Type, PresetTypeDemo)
 			}
-			
+
 			// Verify agents are adapted
 			for _, agent := range demo.Agents {
 				if agent.Provider == "auto" {
@@ -605,7 +605,7 @@ func TestPresetCollectionValidation(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to get preset %s: %v", presetID, err)
 			}
-			
+
 			// Validate collection structure
 			if collection.ID == "" {
 				t.Error("Preset collection has empty ID")
@@ -622,7 +622,7 @@ func TestPresetCollectionValidation(t *testing.T) {
 			if collection.MinModels < 1 {
 				t.Error("Preset collection MinModels must be >= 1")
 			}
-			
+
 			// Validate agents
 			agentIDs := make(map[string]bool)
 			for i, agent := range collection.Agents {
@@ -631,7 +631,7 @@ func TestPresetCollectionValidation(t *testing.T) {
 					t.Errorf("Preset collection has duplicate agent ID: %s", agent.ID)
 				}
 				agentIDs[agent.ID] = true
-				
+
 				// Validate agent structure
 				if agent.ID == "" {
 					t.Errorf("Agent[%d] has empty ID", i)
@@ -645,7 +645,7 @@ func TestPresetCollectionValidation(t *testing.T) {
 				if len(agent.Capabilities) == 0 {
 					t.Errorf("Agent[%d] has no capabilities", i)
 				}
-				
+
 				// Validate agent type
 				validTypes := map[string]bool{
 					"manager": true, "worker": true, "specialist": true,
@@ -654,7 +654,7 @@ func TestPresetCollectionValidation(t *testing.T) {
 					t.Errorf("Agent[%d] has invalid type: %s", i, agent.Type)
 				}
 			}
-			
+
 			// Ensure at least one manager exists
 			hasManager := false
 			for _, agent := range collection.Agents {
@@ -691,7 +691,7 @@ func TestPresetBackstoryAndPersonality(t *testing.T) {
 					t.Errorf("Demo agent '%s' should have backstory", agent.ID)
 					continue
 				}
-				
+
 				if agent.Backstory.Experience == "" {
 					t.Errorf("Demo agent '%s' should have experience", agent.ID)
 				}
@@ -701,28 +701,28 @@ func TestPresetBackstoryAndPersonality(t *testing.T) {
 				if agent.Backstory.GuildRank == "" {
 					t.Errorf("Demo agent '%s' should have guild rank", agent.ID)
 				}
-				
+
 				// Check personality for demo agents
 				if agent.Personality == nil {
 					t.Errorf("Demo agent '%s' should have personality", agent.ID)
 					continue
 				}
-				
+
 				if len(agent.Personality.Traits) == 0 {
 					t.Errorf("Demo agent '%s' should have personality traits", agent.ID)
 				}
-				
+
 				// Validate trait values
 				for _, trait := range agent.Personality.Traits {
 					if trait.Strength < 0 || trait.Strength > 1 {
-						t.Errorf("Demo agent '%s' trait '%s' has invalid strength: %f", 
+						t.Errorf("Demo agent '%s' trait '%s' has invalid strength: %f",
 							agent.ID, trait.Name, trait.Strength)
 					}
 				}
-				
+
 				// Validate scale values
 				if agent.Personality.Assertiveness < 1 || agent.Personality.Assertiveness > 10 {
-					t.Errorf("Demo agent '%s' assertiveness out of range: %d", 
+					t.Errorf("Demo agent '%s' assertiveness out of range: %d",
 						agent.ID, agent.Personality.Assertiveness)
 				}
 			}
@@ -738,7 +738,7 @@ func TestProviderSpecificPresets(t *testing.T) {
 	}
 
 	tests := []struct {
-		presetID       string
+		presetID         string
 		expectedProvider string
 	}{
 		{"claude-code-optimized", "claude_code"},
@@ -751,11 +751,11 @@ func TestProviderSpecificPresets(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to get preset %s: %v", tt.presetID, err)
 			}
-			
+
 			// Verify all agents use the expected provider
 			for _, agent := range collection.Agents {
 				if agent.Provider != tt.expectedProvider {
-					t.Errorf("Agent '%s' in preset '%s' has provider '%s', want '%s'", 
+					t.Errorf("Agent '%s' in preset '%s' has provider '%s', want '%s'",
 						agent.ID, tt.presetID, agent.Provider, tt.expectedProvider)
 				}
 			}
@@ -771,25 +771,25 @@ func TestContextCancellation(t *testing.T) {
 	}
 
 	cancelledCtx := cancelledContext()
-	
+
 	// Test GetPreset with cancelled context
 	_, err = presets.GetPreset(cancelledCtx, "demo-minimal")
 	if err == nil || !gerror.Is(err, gerror.ErrCodeCancelled) {
 		t.Error("GetPreset should return cancelled error with cancelled context")
 	}
-	
-	// Test GetPresetsByType with cancelled context  
+
+	// Test GetPresetsByType with cancelled context
 	_, err = presets.GetPresetsByType(cancelledCtx, PresetTypeDemo)
 	if err == nil || !gerror.Is(err, gerror.ErrCodeCancelled) {
 		t.Error("GetPresetsByType should return cancelled error with cancelled context")
 	}
-	
+
 	// Test GetPresetsByCategory with cancelled context
 	_, err = presets.GetPresetsByCategory(cancelledCtx, PresetCategoryWeb)
 	if err == nil || !gerror.Is(err, gerror.ErrCodeCancelled) {
 		t.Error("GetPresetsByCategory should return cancelled error with cancelled context")
 	}
-	
+
 	// Test RecommendPresets with cancelled context
 	providers := []ConfiguredProvider{
 		{Name: "test", Models: []ModelInfo{{Name: "test", CostMagnitude: 1}}},
@@ -823,26 +823,26 @@ func TestPresetAgentConfigValidation(t *testing.T) {
 			if err != nil {
 				t.Fatalf("Failed to get preset %s: %v", presetID, err)
 			}
-			
+
 			for _, agent := range collection.Agents {
 				// Test that the agent config can be validated
 				if err := agent.Validate(); err != nil {
 					// Only fail if it's not about missing provider/model (these are "auto" in presets)
 					if !isAutoProviderError(err) {
-						t.Errorf("Agent '%s' in preset '%s' failed validation: %v", 
+						t.Errorf("Agent '%s' in preset '%s' failed validation: %v",
 							agent.ID, presetID, err)
 					}
 				}
-				
+
 				// Test specific agent configuration requirements
 				if agent.MaxTokens <= 0 {
 					t.Errorf("Agent '%s' should have positive MaxTokens", agent.ID)
 				}
-				
+
 				if agent.Temperature < 0 || agent.Temperature > 1 {
 					t.Errorf("Agent '%s' should have Temperature between 0 and 1", agent.ID)
 				}
-				
+
 				if agent.CostMagnitude < 0 || agent.CostMagnitude > 8 {
 					t.Errorf("Agent '%s' should have valid CostMagnitude", agent.ID)
 				}
@@ -857,15 +857,15 @@ func isAutoProviderError(err error) bool {
 		return false
 	}
 	errStr := err.Error()
-	return gerror.Is(err, gerror.ErrCodeValidation) && 
-		   (containsString(errStr, "provider") || containsString(errStr, "model"))
+	return gerror.Is(err, gerror.ErrCodeValidation) &&
+		(containsString(errStr, "provider") || containsString(errStr, "model"))
 }
 
 func containsString(s, substr string) bool {
-	return len(s) >= len(substr) && 
-		   (s == substr || (len(s) > len(substr) && 
-		   (s[:len(substr)] == substr || s[len(s)-len(substr):] == substr || 
-		   containsSubstring(s, substr))))
+	return len(s) >= len(substr) &&
+		(s == substr || (len(s) > len(substr) &&
+			(s[:len(substr)] == substr || s[len(s)-len(substr):] == substr ||
+				containsSubstring(s, substr))))
 }
 
 func containsSubstring(s, substr string) bool {
@@ -939,18 +939,18 @@ func TestPresetRecommendationScoring(t *testing.T) {
 			if err != nil {
 				t.Fatalf("RecommendPresets failed: %v", err)
 			}
-			
+
 			if len(recommendations) == 0 {
 				t.Fatal("No recommendations returned")
 			}
-			
+
 			// Check that highest confidence recommendation matches expectation
 			highest := recommendations[0]
 			if !containsString(highest.Collection.ID, tt.expectHighest) {
-				t.Errorf("Expected highest recommendation to contain '%s', got '%s'", 
+				t.Errorf("Expected highest recommendation to contain '%s', got '%s'",
 					tt.expectHighest, highest.Collection.ID)
 			}
-			
+
 			// Verify confidence is reasonable
 			if highest.Confidence <= 0.1 {
 				t.Errorf("Highest recommendation confidence too low: %f", highest.Confidence)

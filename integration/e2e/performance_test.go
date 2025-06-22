@@ -69,9 +69,9 @@ func TestPerformanceMetrics(t *testing.T) {
 
 		// Test various command speeds
 		commands := []struct {
-			name     string
-			cmd      []string
-			maxTime  time.Duration
+			name    string
+			cmd     []string
+			maxTime time.Duration
 		}{
 			{"status", []string{"status"}, 5 * time.Second},
 			{"config", []string{"config", "show"}, 3 * time.Second},
@@ -102,7 +102,7 @@ func TestConcurrentOperations(t *testing.T) {
 	const numConcurrent = 5
 
 	results := make(chan *CommandResult, numConcurrent)
-	
+
 	for i := 0; i < numConcurrent; i++ {
 		go func(index int) {
 			env := NewTestEnvironment(t)
@@ -131,7 +131,7 @@ func TestScalabilityLimits(t *testing.T) {
 	t.Run("Large Command Line Args", func(t *testing.T) {
 		// Test with very long arguments
 		longString := strings.Repeat("a", 1000)
-		
+
 		result := env.RunGuild("init", longString)
 		// Should either succeed or fail gracefully
 		if result.ExitCode != 0 {
@@ -143,7 +143,7 @@ func TestScalabilityLimits(t *testing.T) {
 	t.Run("Many Quick Commands", func(t *testing.T) {
 		// Run many quick commands in sequence
 		const numCommands = 20
-		
+
 		start := time.Now()
 		for i := 0; i < numCommands; i++ {
 			result := env.RunGuild("version")
@@ -166,9 +166,9 @@ func TestResourceConstraints(t *testing.T) {
 	t.Run("Low Memory Simulation", func(t *testing.T) {
 		// We can't actually limit memory, but we can test behavior
 		// under simulated constraints by running many operations
-		
+
 		var results []*CommandResult
-		
+
 		// Run commands until we see consistent performance
 		for i := 0; i < 10; i++ {
 			result := env.RunGuild("help")
@@ -179,7 +179,7 @@ func TestResourceConstraints(t *testing.T) {
 		// Check that performance doesn't degrade significantly
 		firstTime := results[0].Duration
 		lastTime := results[len(results)-1].Duration
-		
+
 		// Last command shouldn't be more than 3x slower than first
 		if firstTime > 0 {
 			ratio := float64(lastTime) / float64(firstTime)
@@ -192,7 +192,7 @@ func TestResourceConstraints(t *testing.T) {
 		// Create many files and then run commands
 		for i := 0; i < 100; i++ {
 			env.CreateFile(
-				strings.Repeat("x", 10) + "_file_" + string(rune(i)) + ".txt",
+				strings.Repeat("x", 10)+"_file_"+string(rune(i))+".txt",
 				"test content")
 		}
 
@@ -239,7 +239,7 @@ func BenchmarkProjectOperations(b *testing.B) {
 	}
 
 	env := NewTestEnvironment(&testing.T{})
-	
+
 	// Initialize project once
 	result := env.RunGuild("init")
 	if result.ExitCode != 0 {
@@ -285,7 +285,7 @@ func TestPerformanceRegression(t *testing.T) {
 	for cmdName, maxDuration := range performanceTargets {
 		t.Run(cmdName+"_performance", func(t *testing.T) {
 			var result *CommandResult
-			
+
 			switch cmdName {
 			case "version":
 				result = env.RunGuild("version")
@@ -323,7 +323,7 @@ func TestMemoryLeaks(t *testing.T) {
 	for i := 0; i < 50; i++ {
 		env.RunGuild("version").AssertSuccess(t)
 		env.RunGuild("help").AssertSuccess(t)
-		
+
 		// Force GC every 10 iterations
 		if i%10 == 0 {
 			runtime.GC()
@@ -334,7 +334,7 @@ func TestMemoryLeaks(t *testing.T) {
 	runtime.ReadMemStats(&finalMem)
 
 	memoryIncrease := finalMem.Alloc - initialMem.Alloc
-	
+
 	// Memory increase should be minimal (less than 10MB)
 	maxIncrease := uint64(10 * 1024 * 1024)
 	assert.Less(t, memoryIncrease, maxIncrease,

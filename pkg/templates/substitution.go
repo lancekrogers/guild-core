@@ -14,8 +14,8 @@ import (
 // VariableSubstitution provides advanced variable substitution capabilities
 type VariableSubstitution struct {
 	// Pattern matching for variables: {{variable}}, {{variable:default}}, {{variable|filter}}
-	basicPattern    *regexp.Regexp
-	defaultPattern  *regexp.Regexp
+	basicPattern       *regexp.Regexp
+	defaultPattern     *regexp.Regexp
 	conditionalPattern *regexp.Regexp
 }
 
@@ -52,7 +52,7 @@ func (vs *VariableSubstitution) SubstituteVariables(content string, variables ma
 		if len(matches) == 3 {
 			varName := strings.TrimSpace(matches[1])
 			defaultValue := strings.TrimSpace(matches[2])
-			
+
 			if value, exists := varMap[varName]; exists && value != nil {
 				return fmt.Sprintf("%v", value)
 			}
@@ -67,7 +67,7 @@ func (vs *VariableSubstitution) SubstituteVariables(content string, variables ma
 		if len(matches) == 3 {
 			varName := strings.TrimSpace(matches[1])
 			format := strings.TrimSpace(matches[2])
-			
+
 			if value, exists := varMap[varName]; exists && value != nil {
 				return vs.applyFormat(fmt.Sprintf("%v", value), format)
 			}
@@ -81,11 +81,11 @@ func (vs *VariableSubstitution) SubstituteVariables(content string, variables ma
 		matches := vs.basicPattern.FindStringSubmatch(match)
 		if len(matches) == 2 {
 			varName := strings.TrimSpace(matches[1])
-			
+
 			if value, exists := varMap[varName]; exists && value != nil {
 				return fmt.Sprintf("%v", value)
 			}
-			
+
 			// Check if this is a required variable
 			for _, templateVar := range templateVars {
 				if templateVar.Name == varName && templateVar.Required {
@@ -96,7 +96,7 @@ func (vs *VariableSubstitution) SubstituteVariables(content string, variables ma
 					return match
 				}
 			}
-			
+
 			return match // Leave unreplaced if not required
 		}
 		return match
@@ -134,7 +134,7 @@ func (vs *VariableSubstitution) applyFormat(value, format string) string {
 func (vs *VariableSubstitution) ValidateTemplate(content string, variables []*TemplateVariable) error {
 	// Find all variable references in content
 	varRefs := vs.extractVariableReferences(content)
-	
+
 	// Build map of defined variables
 	definedVars := make(map[string]*TemplateVariable)
 	for _, templateVar := range variables {
@@ -257,7 +257,7 @@ func (vs *VariableSubstitution) GetVariableReferences(content string) map[string
 // VariableReference represents a variable reference found in template content
 type VariableReference struct {
 	Name         string `json:"name"`
-	Type         string `json:"type"`         // "basic", "default", "conditional"
+	Type         string `json:"type"` // "basic", "default", "conditional"
 	DefaultValue string `json:"default_value,omitempty"`
 	Format       string `json:"format,omitempty"`
 	Required     bool   `json:"required"`
@@ -294,17 +294,17 @@ func (vs *VariableSubstitution) PreviewSubstitution(content string, variables ma
 	}
 
 	return &SubstitutionPreview{
-		Result:            result,
-		UsedVariables:     usedVars,
-		MissingVariables:  missingVars,
+		Result:             result,
+		UsedVariables:      usedVars,
+		MissingVariables:   missingVars,
 		VariableReferences: varRefs,
 	}, nil
 }
 
 // SubstitutionPreview provides a preview of template substitution
 type SubstitutionPreview struct {
-	Result             string                           `json:"result"`
-	UsedVariables      map[string]interface{}           `json:"used_variables"`
-	MissingVariables   []string                         `json:"missing_variables"`
-	VariableReferences map[string]*VariableReference    `json:"variable_references"`
+	Result             string                        `json:"result"`
+	UsedVariables      map[string]interface{}        `json:"used_variables"`
+	MissingVariables   []string                      `json:"missing_variables"`
+	VariableReferences map[string]*VariableReference `json:"variable_references"`
 }

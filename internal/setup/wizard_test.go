@@ -33,10 +33,10 @@ func TestNewWizard(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:     "nil config",
-			config:   nil,
-			ctx:      context.Background(),
-			wantErr:  true,
+			name:    "nil config",
+			config:  nil,
+			ctx:     context.Background(),
+			wantErr: true,
 			errCode: gerror.ErrCodeInvalidInput,
 		},
 		{
@@ -50,7 +50,7 @@ func TestNewWizard(t *testing.T) {
 				cancel()
 				return ctx
 			}(),
-			wantErr: true, // NewWizard now checks context during component creation
+			wantErr: true,                   // NewWizard now checks context during component creation
 			errCode: gerror.ErrCodeInternal, // The cancelled error is wrapped
 		},
 	}
@@ -148,7 +148,7 @@ func TestWizardContextCancellation(t *testing.T) {
 
 func TestIsProjectSetup(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Test with non-existent project
 	isSetup, err := IsProjectSetup(ctx, "/non/existent/path")
 	if err != nil {
@@ -161,13 +161,13 @@ func TestIsProjectSetup(t *testing.T) {
 
 func TestGetSetupStatus(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Test with non-existent project
 	status, err := GetSetupStatus(ctx, "/non/existent/path")
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
-	
+
 	if status == nil {
 		t.Fatal("Status is nil")
 	}
@@ -287,21 +287,21 @@ func TestSaveConfiguration(t *testing.T) {
 
 	agents := []guildconfig.AgentConfig{
 		{
-			ID:          "manager", // Must match default manager ID
-			Name:        "Test Manager",
-			Type:        "manager",
-			Provider:    "openai",
-			Model:       "gpt-4",
-			Description: "Test manager agent",
+			ID:           "manager", // Must match default manager ID
+			Name:         "Test Manager",
+			Type:         "manager",
+			Provider:     "openai",
+			Model:        "gpt-4",
+			Description:  "Test manager agent",
 			Capabilities: []string{"task-planning", "coordination"},
 		},
 		{
-			ID:          "test-agent",
-			Name:        "Test Agent",
-			Type:        "worker",
-			Provider:    "openai",
-			Model:       "gpt-4",
-			Description: "Test agent for unit tests",
+			ID:           "test-agent",
+			Name:         "Test Agent",
+			Type:         "worker",
+			Provider:     "openai",
+			Model:        "gpt-4",
+			Description:  "Test agent for unit tests",
 			Capabilities: []string{"coding", "testing"},
 		},
 	}

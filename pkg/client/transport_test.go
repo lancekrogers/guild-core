@@ -43,7 +43,7 @@ func TestNewUnixSocketTransport(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			transport, err := NewUnixSocketTransport(tt.socketPath)
-			
+
 			if tt.wantErr {
 				require.Error(t, err)
 				gerr, ok := err.(*gerror.GuildError)
@@ -92,9 +92,9 @@ func TestUnixSocketTransport_RoundTrip(t *testing.T) {
 	require.NoError(t, err)
 
 	tests := []struct {
-		name           string
-		setupRequest   func() *http.Request
-		checkResponse  func(*testing.T, *http.Response, error)
+		name          string
+		setupRequest  func() *http.Request
+		checkResponse func(*testing.T, *http.Response, error)
 	}{
 		{
 			name: "successful GET request",
@@ -155,19 +155,19 @@ func TestUnixSocketTransport_RoundTrip(t *testing.T) {
 func TestUnixSocketTransport_NonExistentSocket(t *testing.T) {
 	// Use a socket path that doesn't exist
 	socketPath := "/tmp/guild-test-nonexistent.sock"
-	
+
 	// Ensure socket doesn't exist
 	os.Remove(socketPath)
-	
+
 	transport, err := NewUnixSocketTransport(socketPath)
 	require.NoError(t, err)
-	
+
 	req, _ := http.NewRequest("GET", "http://unix/test", nil)
 	resp, err := transport.RoundTrip(req)
-	
+
 	require.Error(t, err)
 	assert.Nil(t, resp)
-	
+
 	// Check that error is properly wrapped
 	gerr, ok := err.(*gerror.GuildError)
 	require.True(t, ok, "expected gerror.Error")
@@ -204,7 +204,7 @@ func TestUnixSocketTransport_ConnectionPooling(t *testing.T) {
 
 	// Make multiple requests to test connection pooling
 	client := &http.Client{Transport: transport}
-	
+
 	for i := 0; i < 5; i++ {
 		resp, err := client.Get("http://unix/test")
 		require.NoError(t, err)

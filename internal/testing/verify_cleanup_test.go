@@ -18,28 +18,28 @@ func TestTerminalCleanup(t *testing.T) {
 	t.Run("normal completion", func(t *testing.T) {
 		helper := testingpkg.NewTeaTestHelper(t)
 		model := &testModel{shouldQuit: true}
-		
+
 		helper.RunTeaTest(model, func(tm *teatest.TestModel) {
 			// Send any key to trigger quit
 			tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
 			// Helper will handle cleanup
 		})
-		
+
 		// Terminal should be clean after this
 		t.Log("Test completed - terminal should be clean")
 	})
-	
+
 	t.Run("model doesn't quit properly", func(t *testing.T) {
 		helper := testingpkg.NewTeaTestHelper(t)
 		model := &testModel{shouldQuit: false} // Won't quit on its own
-		
+
 		helper.RunTeaTest(model, func(tm *teatest.TestModel) {
 			// Send keys that model ignores
 			tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
 			time.Sleep(50 * time.Millisecond)
 			// Helper will force cleanup after timeout
 		})
-		
+
 		// Terminal should still be clean
 		t.Log("Test completed with forced cleanup - terminal should be clean")
 	})
@@ -67,7 +67,7 @@ func (m *testModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *testModel) View() string {
-	return fmt.Sprintf("Test Model (counter: %d)\nPress Enter to %s\n", 
+	return fmt.Sprintf("Test Model (counter: %d)\nPress Enter to %s\n",
 		m.counter,
 		map[bool]string{true: "quit", false: "increment counter"}[m.shouldQuit])
 }
@@ -75,20 +75,20 @@ func (m *testModel) View() string {
 // TestInterruptHandling simulates Ctrl-C during test
 func TestInterruptHandling(t *testing.T) {
 	t.Skip("Manual test - uncomment to test Ctrl-C handling")
-	
+
 	helper := testingpkg.NewTeaTestHelper(t)
 	model := &slowModel{}
-	
+
 	helper.RunTeaTest(model, func(tm *teatest.TestModel) {
 		t.Log("Press Ctrl-C within 5 seconds to test interrupt handling...")
-		
+
 		// Simulate a long-running test
 		time.Sleep(5 * time.Second)
-		
+
 		// If we get here without interrupt, quit normally
 		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
 	})
-	
+
 	t.Log("Test completed - terminal should be clean even if interrupted")
 }
 

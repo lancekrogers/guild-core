@@ -17,13 +17,13 @@ import (
 // EnhancedGuildArtisan extends GuildArtisan with suggestion capabilities
 type EnhancedGuildArtisan interface {
 	GuildArtisan
-	
+
 	// GetSuggestionManager returns the suggestion manager for context-aware suggestions
 	GetSuggestionManager() suggestions.SuggestionManager
-	
+
 	// GetSuggestionsForContext provides suggestions for the current context
 	GetSuggestionsForContext(ctx context.Context, message string, filter *suggestions.SuggestionFilter) ([]suggestions.Suggestion, error)
-	
+
 	// ExecuteWithSuggestions executes a task with suggestion assistance
 	ExecuteWithSuggestions(ctx context.Context, request string, enableSuggestions bool) (*EnhancedExecutionResult, error)
 }
@@ -53,9 +53,9 @@ func NewSuggestionAwareWorkerAgent(
 	costManager CostManagerInterface,
 	suggestionManager suggestions.SuggestionManager,
 ) *SuggestionAwareWorkerAgent {
-	
+
 	baseAgent := newWorkerAgent(id, name, llmClient, memoryManager, toolRegistry, commissionManager, costManager)
-	
+
 	return &SuggestionAwareWorkerAgent{
 		WorkerAgent:       baseAgent,
 		suggestionManager: suggestionManager,
@@ -72,10 +72,10 @@ func (a *SuggestionAwareWorkerAgent) GetSuggestionsForContext(ctx context.Contex
 	if a.suggestionManager == nil {
 		return []suggestions.Suggestion{}, nil
 	}
-	
+
 	// Build suggestion context from agent state
 	suggestionContext := a.buildSuggestionContext(ctx, message)
-	
+
 	return a.suggestionManager.GetSuggestions(ctx, suggestionContext, filter)
 }
 
@@ -85,24 +85,24 @@ func (a *SuggestionAwareWorkerAgent) ExecuteWithSuggestions(ctx context.Context,
 		WithComponent("agent.suggestion_aware").
 		WithOperation("ExecuteWithSuggestions").
 		With("agent_id", a.ID, "enable_suggestions", enableSuggestions)
-	
+
 	// Execute the base request
 	response, err := a.Execute(ctx, request)
-	
+
 	result := &EnhancedExecutionResult{
 		Response: response,
 		Success:  err == nil,
 		Metadata: make(map[string]interface{}),
 	}
-	
+
 	if err != nil {
 		result.Error = err.Error()
 	}
-	
+
 	// Get suggestions if enabled
 	if enableSuggestions && a.suggestionManager != nil {
 		logger.DebugContext(ctx, "Getting suggestions for executed task")
-		
+
 		suggestions, sugErr := a.GetSuggestionsForContext(ctx, request, nil)
 		if sugErr != nil {
 			logger.WarnContext(ctx, "Failed to get suggestions", "error", sugErr)
@@ -110,12 +110,12 @@ func (a *SuggestionAwareWorkerAgent) ExecuteWithSuggestions(ctx context.Context,
 		} else {
 			result.Suggestions = suggestions
 			result.Metadata["suggestion_count"] = len(suggestions)
-			
-			logger.InfoContext(ctx, "Added suggestions to execution result", 
+
+			logger.InfoContext(ctx, "Added suggestions to execution result",
 				"suggestion_count", len(suggestions))
 		}
 	}
-	
+
 	return result, err
 }
 
@@ -126,14 +126,14 @@ func (a *SuggestionAwareWorkerAgent) buildSuggestionContext(ctx context.Context,
 		AvailableTools: a.getAvailableTools(),
 		ProjectContext: a.getProjectContext(ctx),
 	}
-	
+
 	// Get conversation history from memory manager if available
 	if a.MemoryManager != nil {
 		if history, err := a.getConversationHistory(ctx); err == nil {
 			context.ConversationHistory = history
 		}
 	}
-	
+
 	return context
 }
 
@@ -142,12 +142,12 @@ func (a *SuggestionAwareWorkerAgent) getAvailableTools() []suggestions.Tool {
 	if a.ToolRegistry == nil {
 		return []suggestions.Tool{}
 	}
-	
+
 	tools := []suggestions.Tool{}
-	
+
 	// Get tools from registry (this would need the registry interface to be extended)
 	// For now, return empty slice - this would be implemented when integrating with tool registry
-	
+
 	return tools
 }
 
@@ -155,7 +155,7 @@ func (a *SuggestionAwareWorkerAgent) getAvailableTools() []suggestions.Tool {
 func (a *SuggestionAwareWorkerAgent) getProjectContext(ctx context.Context) suggestions.ProjectContext {
 	// This would extract project information from the current context
 	// Implementation would depend on how project context is stored
-	
+
 	return suggestions.ProjectContext{
 		// Would populate with actual project detection logic
 	}
@@ -165,6 +165,6 @@ func (a *SuggestionAwareWorkerAgent) getProjectContext(ctx context.Context) sugg
 func (a *SuggestionAwareWorkerAgent) getConversationHistory(ctx context.Context) ([]suggestions.ChatMessage, error) {
 	// This would integrate with the memory manager to get recent conversations
 	// Implementation depends on the memory manager interface
-	
+
 	return []suggestions.ChatMessage{}, nil
 }

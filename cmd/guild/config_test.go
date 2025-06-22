@@ -137,7 +137,7 @@ func TestConfigShowCommand(t *testing.T) {
 				os.Setenv("HOME", oldHome)
 				os.Chdir(oldPwd)
 			}()
-			
+
 			// Setup test environment FIRST
 			if tt.setupFunc != nil {
 				tt.setupFunc(t)

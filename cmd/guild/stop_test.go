@@ -16,25 +16,25 @@ func TestStopCommand(t *testing.T) {
 		assert.Equal(t, "stop", stopCmd.Use)
 		assert.NotEmpty(t, stopCmd.Short)
 		assert.NotEmpty(t, stopCmd.Long)
-		
+
 		// Check flags
 		flag := stopCmd.Flag("campaign")
 		require.NotNil(t, flag)
 		assert.Equal(t, "string", flag.Value.Type())
-		
+
 		flag = stopCmd.Flag("all")
 		require.NotNil(t, flag)
 		assert.Equal(t, "bool", flag.Value.Type())
-		
+
 		flag = stopCmd.Flag("session")
 		require.NotNil(t, flag)
 		assert.Equal(t, "int", flag.Value.Type())
-		
+
 		flag = stopCmd.Flag("force")
 		require.NotNil(t, flag)
 		assert.Equal(t, "bool", flag.Value.Type())
 		assert.Equal(t, "f", flag.Shorthand)
-		
+
 		flag = stopCmd.Flag("timeout")
 		require.NotNil(t, flag)
 		assert.Equal(t, "duration", flag.Value.Type())
@@ -47,7 +47,7 @@ func TestStatusCommand(t *testing.T) {
 		assert.Equal(t, "status", statusCmd.Use)
 		assert.NotEmpty(t, statusCmd.Short)
 		assert.NotEmpty(t, statusCmd.Long)
-		
+
 		// Check flags
 		flag := statusCmd.Flag("all")
 		require.NotNil(t, flag)

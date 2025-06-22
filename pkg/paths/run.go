@@ -62,7 +62,7 @@ func GetCampaignSocket(campaign string, session int) (string, error) {
 	}
 
 	socketPath := filepath.Join(runDir, socketName+".sock")
-	
+
 	// Verify the path isn't too long (Unix socket limit is 108 bytes)
 	if len(socketPath) > 100 { // Leave some safety margin
 		return "", gerror.New(gerror.ErrCodeInvalidInput, "socket path too long", nil).
@@ -93,7 +93,7 @@ func GetGuildConfigDir() (string, error) {
 	}
 
 	configDir := filepath.Join(homeDir, ".guild")
-	
+
 	// Ensure directory exists
 	if err := os.MkdirAll(configDir, 0755); err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create config directory").

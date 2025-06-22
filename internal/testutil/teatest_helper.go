@@ -25,17 +25,17 @@ type TeaTestHelper struct {
 // NewTeaTestHelper creates a helper that ensures proper terminal cleanup
 func NewTeaTestHelper(tb testing.TB) *TeaTestHelper {
 	tb.Helper()
-	
+
 	helper := &TeaTestHelper{
 		tb:   tb,
 		done: make(chan struct{}),
 	}
-	
+
 	// Register cleanup immediately
 	tb.Cleanup(func() {
 		helper.Cleanup()
 	})
-	
+
 	// Handle interrupt signals to ensure cleanup
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
@@ -48,23 +48,23 @@ func NewTeaTestHelper(tb testing.TB) *TeaTestHelper {
 			// Test completed normally
 		}
 	}()
-	
+
 	return helper
 }
 
 // RunModel runs a Bubble Tea model with automatic cleanup
 func (h *TeaTestHelper) RunModel(model tea.Model, options ...teatest.TestOption) *teatest.TestModel {
 	h.tb.Helper()
-	
+
 	// Default options for safety
 	defaultOpts := []teatest.TestOption{
 		teatest.WithInitialTermSize(80, 24),
 	}
 	options = append(defaultOpts, options...)
-	
+
 	// Create test model
 	h.testModel = teatest.NewTestModel(h.tb, model, options...)
-	
+
 	return h.testModel
 }
 
@@ -74,13 +74,13 @@ func (h *TeaTestHelper) Cleanup() {
 		return
 	}
 	h.cleanupDone = true
-	
+
 	// Signal that we're done
 	close(h.done)
-	
+
 	// Restore terminal state
 	restoreTerminal()
-	
+
 	// Give terminal time to restore
 	time.Sleep(10 * time.Millisecond)
 }
@@ -89,16 +89,16 @@ func (h *TeaTestHelper) Cleanup() {
 func restoreTerminal() {
 	// Exit alternate screen buffer
 	os.Stdout.WriteString("\033[?1049l")
-	
+
 	// Show cursor
 	os.Stdout.WriteString("\033[?25h")
-	
+
 	// Reset all attributes
 	os.Stdout.WriteString("\033[0m")
-	
+
 	// Reset terminal mode (this fixes the box drawing issues)
 	os.Stdout.WriteString("\033c")
-	
+
 	// Ensure output is flushed
 	os.Stdout.Sync()
 }
@@ -106,13 +106,13 @@ func restoreTerminal() {
 // SafeWaitFinished waits for the model to finish with a timeout
 func SafeWaitFinished(tb testing.TB, tm *teatest.TestModel, timeout time.Duration) {
 	tb.Helper()
-	
+
 	done := make(chan struct{})
 	go func() {
 		tm.WaitFinished(tb, teatest.WithFinalTimeout(timeout))
 		close(done)
 	}()
-	
+
 	select {
 	case <-done:
 		// Normal completion
@@ -124,7 +124,7 @@ func SafeWaitFinished(tb testing.TB, tm *teatest.TestModel, timeout time.Duratio
 // SendQuit sends the quit message and waits safely
 func SendQuit(tb testing.TB, tm *teatest.TestModel) {
 	tb.Helper()
-	
+
 	tm.Send(tea.QuitMsg{})
 	SafeWaitFinished(tb, tm, 2*time.Second)
 }

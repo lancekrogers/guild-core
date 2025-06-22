@@ -18,7 +18,7 @@ import (
 
 func TestNewManager(t *testing.T) {
 	manager := NewManager()
-	
+
 	assert.NotNil(t, manager)
 	assert.NotNil(t, manager.configs)
 	assert.Empty(t, manager.configs)

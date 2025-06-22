@@ -68,7 +68,7 @@ func TestEndToEndSuggestionFlow(t *testing.T) {
 		suggestions, err := engine.GetDirectSuggestions(ctx, "How do I read a file?")
 		assert.NoError(t, err)
 		assert.NotNil(t, suggestions)
-		
+
 		// Should get at least command suggestions
 		assert.NotEmpty(t, suggestions, "Should get suggestions for file reading query")
 	})
@@ -85,7 +85,7 @@ func TestEndToEndSuggestionFlow(t *testing.T) {
 		suggestions, err := engine.GetDirectSuggestions(ctx, "Can you show me an example?")
 		assert.NoError(t, err)
 		assert.NotNil(t, suggestions)
-		
+
 		// Verify we get suggestions related to the context
 		assert.NotEmpty(t, suggestions, "Should get context-aware suggestions")
 	})
@@ -176,7 +176,7 @@ func TestSuggestionProviderChain(t *testing.T) {
 	// Register multiple providers
 	commandProvider := suggestions.NewCommandSuggestionProvider()
 	followUpProvider := suggestions.NewFollowUpSuggestionProvider()
-	
+
 	err := manager.RegisterProvider(commandProvider)
 	require.NoError(t, err)
 	err = manager.RegisterProvider(followUpProvider)
@@ -205,7 +205,7 @@ func TestSuggestionProviderChain(t *testing.T) {
 	assert.True(t, types[suggestions.SuggestionTypeCommand], "Should have command suggestions")
 	// Follow-up suggestions may not always be generated depending on context
 	// assert.True(t, types[suggestions.SuggestionTypeFollowUp], "Should have follow-up suggestions")
-	
+
 	// Just verify we got suggestions from at least one provider
 	assert.NotEmpty(t, allSuggestions, "Should have at least some suggestions")
 }
@@ -217,10 +217,10 @@ type mockEnhancedAgent struct {
 	suggestions []suggestions.Suggestion
 }
 
-func (m *mockEnhancedAgent) GetID() string                              { return m.id }
-func (m *mockEnhancedAgent) GetName() string                            { return m.name }
-func (m *mockEnhancedAgent) GetType() string                            { return "mock" }
-func (m *mockEnhancedAgent) GetCapabilities() []string                  { return []string{"suggestions"} }
+func (m *mockEnhancedAgent) GetID() string             { return m.id }
+func (m *mockEnhancedAgent) GetName() string           { return m.name }
+func (m *mockEnhancedAgent) GetType() string           { return "mock" }
+func (m *mockEnhancedAgent) GetCapabilities() []string { return []string{"suggestions"} }
 func (m *mockEnhancedAgent) Execute(ctx context.Context, task string) (string, error) {
 	return "mock response", nil
 }
@@ -241,7 +241,7 @@ func (m *mockEnhancedAgent) GetSuggestionManager() suggestions.SuggestionManager
 }
 
 // Implement remaining GuildArtisan methods
-func (m *mockEnhancedAgent) GetToolRegistry() tools.Registry             { return nil }
+func (m *mockEnhancedAgent) GetToolRegistry() tools.Registry                    { return nil }
 func (m *mockEnhancedAgent) GetCommissionManager() commission.CommissionManager { return nil }
-func (m *mockEnhancedAgent) GetLLMClient() providers.LLMClient          { return nil }
-func (m *mockEnhancedAgent) GetMemoryManager() memory.ChainManager      { return nil }
+func (m *mockEnhancedAgent) GetLLMClient() providers.LLMClient                  { return nil }
+func (m *mockEnhancedAgent) GetMemoryManager() memory.ChainManager              { return nil }

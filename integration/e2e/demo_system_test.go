@@ -73,7 +73,7 @@ func testDemoMasterOrchestration(t *testing.T, env *TestEnvironment) {
 	// Test help functionality by checking if file is readable
 	data, err := os.ReadFile(masterScript)
 	require.NoError(t, err, "Should be able to read demo master script")
-	
+
 	content := string(data)
 	assert.Contains(t, content, "Demo Master", "Should contain demo master content")
 	assert.Contains(t, content, "DEMO_SCRIPTS", "Should contain demo scripts configuration")
@@ -94,7 +94,7 @@ func testInteractiveDemoSystem(t *testing.T, env *TestEnvironment) {
 	// Test script content for key features
 	data, err := os.ReadFile(interactiveScript)
 	require.NoError(t, err, "Should be able to read interactive demo script")
-	
+
 	content := string(data)
 	assert.Contains(t, content, "tutorial", "Should contain tutorial functionality")
 	assert.Contains(t, content, "step", "Should contain step-by-step functionality")
@@ -112,7 +112,7 @@ func testValidationFramework(t *testing.T, env *TestEnvironment) {
 	// Test validation script exists and has correct structure
 	data, err := os.ReadFile(validationScript)
 	require.NoError(t, err, "Should be able to read validation script")
-	
+
 	content := string(data)
 	assert.Contains(t, content, "validate_environment", "Should contain environment validation")
 	assert.Contains(t, content, "validate_demo_scripts", "Should contain script validation")
@@ -125,7 +125,7 @@ func testValidationFramework(t *testing.T, env *TestEnvironment) {
 
 	utilsData, err := os.ReadFile(recordingUtils)
 	require.NoError(t, err, "Should be able to read recording utilities")
-	
+
 	utilsContent := string(utilsData)
 	assert.Contains(t, utilsContent, "recording_init", "Should contain recording initialization")
 	assert.Contains(t, utilsContent, "generate_gif", "Should contain GIF generation")
@@ -146,7 +146,7 @@ func testCIIntegration(t *testing.T, env *TestEnvironment) {
 	// Test script content for CI features
 	data, err := os.ReadFile(ciScript)
 	require.NoError(t, err, "Should be able to read CI integration script")
-	
+
 	content := string(data)
 	assert.Contains(t, content, "CI_MODE", "Should contain CI mode support")
 	assert.Contains(t, content, "GITHUB_ACTIONS", "Should contain GitHub Actions support")
@@ -264,7 +264,7 @@ func testScriptIntegrity(t *testing.T, env *TestEnvironment) {
 	// Check that all required demo scripts exist
 	requiredScripts := []string{
 		"01-quick-start-demo.sh",
-		"02-complete-workflow-demo.sh", 
+		"02-complete-workflow-demo.sh",
 		"03-feature-showcase-demo.sh",
 		"interactive-demo.sh",
 		"demo-master.sh",
@@ -287,7 +287,7 @@ func testScriptIntegrity(t *testing.T, env *TestEnvironment) {
 			// Basic syntax check - ensure it's a valid shell script
 			data, err := os.ReadFile(scriptPath)
 			require.NoError(t, err, "Should be able to read script: %s", script)
-			
+
 			content := string(data)
 			assert.True(t, strings.HasPrefix(content, "#!/bin/bash"), "Script should have bash shebang: %s", script)
 		}
@@ -354,7 +354,7 @@ func TestDemoSystemPerformance(t *testing.T) {
 	result.AssertSuccess(t)
 	assert.Less(t, statusDuration, 3*time.Second, "Status check should be very fast")
 
-	t.Logf("Performance results - Init: %v, Agents: %v, Status: %v", 
+	t.Logf("Performance results - Init: %v, Agents: %v, Status: %v",
 		initDuration, agentsDuration, statusDuration)
 
 	t.Log("Demo system performance test completed")

@@ -133,18 +133,18 @@ func TestGenerateCommission(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			content, err := generator.GenerateCommission(ctx, tt.demoType)
-			
+
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {
 				require.NoError(t, err)
 				assert.NotEmpty(t, content)
-				
+
 				// Check that all expected strings are present
 				for _, expected := range tt.checkFor {
 					assert.Contains(t, content, expected, "Content should contain: %s", expected)
 				}
-				
+
 				// Verify it's valid markdown
 				assert.True(t, strings.HasPrefix(content, "#"), "Content should start with markdown header")
 				assert.Contains(t, content, "## ", "Content should have section headers")
@@ -155,7 +155,7 @@ func TestGenerateCommission(t *testing.T) {
 
 func TestGenerateCommissionWithCancellation(t *testing.T) {
 	generator := NewDemoCommissionGenerator()
-	
+
 	// Create a cancelled context
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
@@ -167,15 +167,15 @@ func TestGenerateCommissionWithCancellation(t *testing.T) {
 
 func TestGetAvailableTypes(t *testing.T) {
 	generator := NewDemoCommissionGenerator()
-	
+
 	types := generator.GetAvailableTypes()
 	assert.NotEmpty(t, types)
-	
+
 	// Should not include default in the list
 	for _, demoType := range types {
 		assert.NotEqual(t, DemoTypeDefault, demoType)
 	}
-	
+
 	// Should include all main types
 	expectedTypes := []DemoCommissionType{
 		DemoTypeAPIService,
@@ -185,7 +185,7 @@ func TestGetAvailableTypes(t *testing.T) {
 		DemoTypeMicroservices,
 		DemoTypeAI,
 	}
-	
+
 	for _, expected := range expectedTypes {
 		found := false
 		for _, actual := range types {
@@ -200,7 +200,7 @@ func TestGetAvailableTypes(t *testing.T) {
 
 func TestGetDemoDescription(t *testing.T) {
 	generator := NewDemoCommissionGenerator()
-	
+
 	tests := []struct {
 		demoType DemoCommissionType
 		contains string
@@ -213,7 +213,7 @@ func TestGetDemoDescription(t *testing.T) {
 		{DemoTypeAI, "AI-powered"},
 		{DemoCommissionType("unknown"), "Unknown"},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(string(tt.demoType), func(t *testing.T) {
 			desc := generator.GetDemoDescription(tt.demoType)
@@ -225,7 +225,7 @@ func TestGetDemoDescription(t *testing.T) {
 func TestInferDemoType(t *testing.T) {
 	generator := NewDemoCommissionGenerator()
 	ctx := context.Background()
-	
+
 	// Currently returns default, but test the interface
 	demoType, err := generator.InferDemoType(ctx, "/test/project")
 	assert.NoError(t, err)
@@ -234,10 +234,10 @@ func TestInferDemoType(t *testing.T) {
 
 func TestInferDemoTypeWithCancellation(t *testing.T) {
 	generator := NewDemoCommissionGenerator()
-	
+
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
-	
+
 	_, err := generator.InferDemoType(ctx, "/test/project")
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "cancelled")
@@ -246,7 +246,7 @@ func TestInferDemoTypeWithCancellation(t *testing.T) {
 func TestGetRecommendedDemo(t *testing.T) {
 	generator := NewDemoCommissionGenerator()
 	ctx := context.Background()
-	
+
 	tests := []struct {
 		name         string
 		projectInfo  map[string]interface{}
@@ -296,7 +296,7 @@ func TestGetRecommendedDemo(t *testing.T) {
 		{
 			name: "React detected",
 			projectInfo: map[string]interface{}{
-				"project_name": "my-project",
+				"project_name":  "my-project",
 				"detected_tech": []string{"React", "Node.js"},
 			},
 			expectedType: DemoTypeWebApp,
@@ -305,7 +305,7 @@ func TestGetRecommendedDemo(t *testing.T) {
 		{
 			name: "TensorFlow detected",
 			projectInfo: map[string]interface{}{
-				"project_name": "my-project",
+				"project_name":  "my-project",
 				"detected_tech": []string{"TensorFlow", "Python"},
 			},
 			expectedType: DemoTypeAI,
@@ -314,7 +314,7 @@ func TestGetRecommendedDemo(t *testing.T) {
 		{
 			name: "Pandas detected",
 			projectInfo: map[string]interface{}{
-				"project_name": "my-project",
+				"project_name":  "my-project",
 				"detected_tech": []string{"pandas", "jupyter"},
 			},
 			expectedType: DemoTypeDataAnalysis,
@@ -335,7 +335,7 @@ func TestGetRecommendedDemo(t *testing.T) {
 			reasonCheck:  "No specific project type detected",
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			demoType, reason := generator.GetRecommendedDemo(ctx, tt.projectInfo)
@@ -347,10 +347,10 @@ func TestGetRecommendedDemo(t *testing.T) {
 
 func TestGetRecommendedDemoWithCancellation(t *testing.T) {
 	generator := NewDemoCommissionGenerator()
-	
+
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
-	
+
 	demoType, reason := generator.GetRecommendedDemo(ctx, map[string]interface{}{})
 	assert.Equal(t, DemoTypeDefault, demoType)
 	assert.Contains(t, reason, "cancellation")
@@ -359,29 +359,29 @@ func TestGetRecommendedDemoWithCancellation(t *testing.T) {
 func TestDemoCommissionContent(t *testing.T) {
 	generator := NewDemoCommissionGenerator()
 	ctx := context.Background()
-	
+
 	// Test that each demo has substantial content
 	types := generator.GetAvailableTypes()
 	for _, demoType := range types {
 		t.Run(string(demoType), func(t *testing.T) {
 			content, err := generator.GenerateCommission(ctx, demoType)
 			require.NoError(t, err)
-			
+
 			// Check content quality
 			assert.Greater(t, len(content), 1000, "Demo should have substantial content")
 			assert.Contains(t, content, "## ", "Should have section headers")
 			assert.Contains(t, content, "Project Objective", "Should have objective")
 			assert.Contains(t, content, "Technical", "Should have technical details")
-			
+
 			// Check for success/goals/metrics criteria (different demos use different terms)
-			hasSuccessCriteria := strings.Contains(content, "Success") || 
-				strings.Contains(content, "Goals") || 
+			hasSuccessCriteria := strings.Contains(content, "Success") ||
+				strings.Contains(content, "Goals") ||
 				strings.Contains(content, "Metrics") ||
 				strings.Contains(content, "Deliverables")
 			assert.True(t, hasSuccessCriteria, "Should have success criteria, goals, metrics, or deliverables")
-			
+
 			assert.Contains(t, content, "Demonstration", "Should explain demonstration value")
-			
+
 			// Check for task lists
 			assert.Contains(t, content, "- [ ]", "Should have task checkboxes")
 		})
@@ -391,12 +391,12 @@ func TestDemoCommissionContent(t *testing.T) {
 func TestDemoCommissionTags(t *testing.T) {
 	// Verify each template has appropriate tags
 	templates := initializeDemoTemplates()
-	
+
 	for demoType, template := range templates {
 		t.Run(string(demoType), func(t *testing.T) {
 			assert.NotEmpty(t, template.Tags, "Demo should have tags")
 			assert.Contains(t, template.Tags, "demo", "All demos should have 'demo' tag")
-			
+
 			// Type-specific tag checks
 			switch demoType {
 			case DemoTypeAPIService:
@@ -419,11 +419,11 @@ func TestDemoCommissionTags(t *testing.T) {
 func TestConcurrentCommissionGeneration(t *testing.T) {
 	generator := NewDemoCommissionGenerator()
 	ctx := context.Background()
-	
+
 	// Test concurrent access
 	done := make(chan bool, 6)
 	errors := make(chan error, 6)
-	
+
 	types := []DemoCommissionType{
 		DemoTypeAPIService,
 		DemoTypeWebApp,
@@ -432,7 +432,7 @@ func TestConcurrentCommissionGeneration(t *testing.T) {
 		DemoTypeMicroservices,
 		DemoTypeAI,
 	}
-	
+
 	for _, demoType := range types {
 		go func(dt DemoCommissionType) {
 			_, err := generator.GenerateCommission(ctx, dt)
@@ -442,7 +442,7 @@ func TestConcurrentCommissionGeneration(t *testing.T) {
 			done <- true
 		}(demoType)
 	}
-	
+
 	// Wait for all goroutines with timeout
 	timeout := time.After(5 * time.Second)
 	for i := 0; i < 6; i++ {

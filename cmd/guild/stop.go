@@ -126,7 +126,7 @@ func stopAllDaemons(ctx context.Context) error {
 				}
 			}
 		}
-		
+
 		if stoppedCount > 0 {
 			fmt.Printf("\n✨ Stopped %d daemon(s)\n", stoppedCount)
 		} else if len(allSessions) == 0 {

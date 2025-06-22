@@ -7,16 +7,16 @@ package paths
 const (
 	// DefaultCampaignDir is the default directory name for campaign-specific data
 	DefaultCampaignDir = ".campaign"
-	
+
 	// DefaultGuildConfigFile is the default configuration file name
 	DefaultGuildConfigFile = "guild.yaml"
-	
+
 	// DefaultMemoryDB is the default database file name
 	DefaultMemoryDB = "memory.db"
-	
+
 	// CampaignHashFile is the binary hash file for ultra-fast detection
 	CampaignHashFile = ".hash"
-	
+
 	// SocketRegistryFile contains campaign hash and metadata
 	SocketRegistryFile = "socket-registry.yaml"
 )
