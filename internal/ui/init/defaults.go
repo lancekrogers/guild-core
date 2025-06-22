@@ -7,13 +7,11 @@ import (
 	"context"
 	"os"
 	"path/filepath"
-	"time"
 
 	yaml "gopkg.in/yaml.v3"
 
 	"github.com/guild-ventures/guild-core/internal/setup"
 	"github.com/guild-ventures/guild-core/pkg/campaign"
-	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/daemon"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/paths"
@@ -36,20 +34,32 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 			WithOperation("CreatePhase0Configuration")
 	}
 
-	// Step 1: Create campaign.yml
-	campaignConfig := &config.CampaignConfig{
-		Name:        campaignName,
-		Description: "Campaign " + campaignName + " - automated multi-agent development",
-		ProjectSettings: map[string]interface{}{
-			"project_name": projectName,
-			"created_at":   time.Now().Format(time.RFC3339),
-			"version":      "1.0.0",
-		},
-		CommissionMappings: make(map[string][]string),
-		LastSelectedGuild:  "default",
+	// Step 0: Ensure campaign directory exists
+	campaignDir := filepath.Join(projectPath, paths.DefaultCampaignDir)
+	if err := os.MkdirAll(campaignDir, 0755); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign directory").
+			WithComponent("DefaultConfigManager").
+			WithOperation("CreatePhase0Configuration").
+			WithDetails("dir", campaignDir)
 	}
 
-	if err := config.SaveCampaignConfig(ctx, projectPath, campaignConfig); err != nil {
+	// Step 1: Create campaign.yaml with CampaignReference structure for detection
+	campaignRef := map[string]interface{}{
+		"campaign":    campaignName,
+		"project":     projectName,
+		"description": "Project " + projectName + " in campaign " + campaignName,
+	}
+
+	// Marshal and save campaign reference for detection
+	campaignData, err := yaml.Marshal(campaignRef)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal campaign reference").
+			WithComponent("DefaultConfigManager").
+			WithOperation("CreatePhase0Configuration")
+	}
+
+	campaignPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "campaign.yaml")
+	if err := os.WriteFile(campaignPath, campaignData, 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save campaign configuration").
 			WithComponent("DefaultConfigManager").
 			WithOperation("CreatePhase0Configuration").
@@ -62,35 +72,127 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 			WithComponent("DefaultConfigManager")
 	}
 
-	// Step 2: Create default guild.yml structure
-	guildConfig := &config.GuildConfigFile{
-		Guilds: map[string]config.GuildDefinition{
-			"default": {
-				Purpose:     "General development tasks and project management",
-				Description: "Default guild for handling various development tasks",
-				Agents:      []string{"manager", "developer", "tester"},
-				Coordination: &config.CoordinationSettings{
-					MaxParallelTasks: 3,
-					ReviewRequired:   false,
-					AutoHandoff:      true,
-				},
-			},
+	// Step 2: Create guilds directory and default guild config
+	guildsDir := filepath.Join(projectPath, paths.DefaultCampaignDir, "guilds")
+	if err := os.MkdirAll(guildsDir, 0755); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create guilds directory").
+			WithComponent("DefaultConfigManager").
+			WithOperation("CreatePhase0Configuration").
+			WithDetails("dir", guildsDir)
+	}
+
+	// Create default guild configuration
+	defaultGuild := map[string]interface{}{
+		"name":        "default",
+		"purpose":     "General development tasks and project management",
+		"description": "Default guild for handling various development tasks",
+		"agents":      []string{"manager", "developer", "tester"},
+		"coordination": map[string]interface{}{
+			"max_parallel_tasks": 3,
+			"review_required":    false,
+			"auto_handoff":       true,
 		},
 	}
 
-	if err := config.SaveGuildConfigFile(ctx, projectPath, guildConfig); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save guild configuration").
+	guildData, err := yaml.Marshal(defaultGuild)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild config").
 			WithComponent("DefaultConfigManager").
 			WithOperation("CreatePhase0Configuration")
 	}
 
-	// Step 3: Create agents directory
+	guildPath := filepath.Join(guildsDir, "default_guild.yaml")
+	if err := os.WriteFile(guildPath, guildData, 0644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
+			WithComponent("DefaultConfigManager").
+			WithOperation("CreatePhase0Configuration").
+			WithDetails("path", guildPath)
+	}
+
+	// Step 3: Create agents directory and agent configs
 	agentsDir := filepath.Join(projectPath, paths.DefaultCampaignDir, "agents")
 	if err := os.MkdirAll(agentsDir, 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
 			WithComponent("DefaultConfigManager").
 			WithOperation("CreatePhase0Configuration").
 			WithDetails("dir", agentsDir)
+	}
+
+	// Create default agent configurations
+	agents := map[string]map[string]interface{}{
+		"manager": {
+			"name":        "manager",
+			"type":        "manager",
+			"description": "Orchestrates tasks and coordinates between agents",
+			"capabilities": []string{
+				"task_breakdown",
+				"agent_assignment",
+				"progress_tracking",
+			},
+		},
+		"developer": {
+			"name":        "developer",
+			"type":        "worker",
+			"description": "Handles development tasks and code generation",
+			"capabilities": []string{
+				"code_generation",
+				"code_review",
+				"debugging",
+				"refactoring",
+			},
+		},
+		"tester": {
+			"name":        "tester",
+			"type":        "worker",
+			"description": "Performs testing and quality assurance",
+			"capabilities": []string{
+				"test_generation",
+				"test_execution",
+				"bug_detection",
+				"performance_testing",
+			},
+		},
+	}
+
+	// Write each agent configuration
+	for agentName, agentConfig := range agents {
+		agentData, err := yaml.Marshal(agentConfig)
+		if err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal agent config").
+				WithComponent("DefaultConfigManager").
+				WithOperation("CreatePhase0Configuration").
+				WithDetails("agent", agentName)
+		}
+
+		agentPath := filepath.Join(agentsDir, agentName+"_agent.yaml")
+		if err := os.WriteFile(agentPath, agentData, 0644); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent config").
+				WithComponent("DefaultConfigManager").
+				WithOperation("CreatePhase0Configuration").
+				WithDetails("path", agentPath)
+		}
+	}
+
+	// Step 4: Create other required directories
+	directories := []string{
+		"commissions",
+		"commissions/refined",
+		"corpus",
+		"corpus/index",
+		"kanban",
+		"prompts",
+		"tools",
+		"workspaces",
+	}
+
+	for _, dir := range directories {
+		dirPath := filepath.Join(projectPath, paths.DefaultCampaignDir, dir)
+		if err := os.MkdirAll(dirPath, 0755); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create directory").
+				WithComponent("DefaultConfigManager").
+				WithOperation("CreatePhase0Configuration").
+				WithDetails("dir", dirPath)
+		}
 	}
 
 	return nil
@@ -117,7 +219,7 @@ func (d *DefaultConfigManager) CreateCampaignReference(ctx context.Context, proj
 			WithOperation("CreateCampaignReference")
 	}
 
-	// Create campaign reference
+	// Create minimal campaign reference for detection
 	ref := campaign.CampaignReference{
 		Campaign:    campaignName,
 		Project:     projectName,

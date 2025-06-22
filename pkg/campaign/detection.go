@@ -44,7 +44,7 @@ func DetectCampaign(cwd string, flagValue string) (string, error) {
 		return flagValue, nil
 	}
 
-	// 2. Walk up directory tree looking for .guild/guild.yaml
+	// 2. Walk up directory tree looking for .campaign/campaign.yaml
 	campaignRef, err := findCampaignReference(cwd)
 	if err != nil {
 		// No campaign found - this is not an error in the new architecture
@@ -63,15 +63,15 @@ func DetectCampaign(cwd string, flagValue string) (string, error) {
 func findCampaignReference(cwd string) (*CampaignReference, error) {
 	currentDir := cwd
 	for {
-		guildFile := filepath.Join(currentDir, paths.DefaultCampaignDir, "guild.yaml")
-		if fileExists(guildFile) {
+		campaignFile := filepath.Join(currentDir, paths.DefaultCampaignDir, "campaign.yaml")
+		if fileExists(campaignFile) {
 			// Found campaign reference
-			data, err := os.ReadFile(guildFile)
+			data, err := os.ReadFile(campaignFile)
 			if err != nil {
 				return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read campaign reference").
 					WithComponent("campaign").
 					WithOperation("findCampaignReference").
-					WithDetails("file", guildFile)
+					WithDetails("file", campaignFile)
 			}
 
 			var ref CampaignReference
@@ -79,14 +79,14 @@ func findCampaignReference(cwd string) (*CampaignReference, error) {
 				return nil, gerror.Wrap(err, gerror.ErrCodeInvalidFormat, "invalid campaign reference format").
 					WithComponent("campaign").
 					WithOperation("findCampaignReference").
-					WithDetails("file", guildFile)
+					WithDetails("file", campaignFile)
 			}
 
 			if ref.Campaign == "" {
 				return nil, gerror.New(gerror.ErrCodeInvalidFormat, "campaign reference missing campaign name", nil).
 					WithComponent("campaign").
 					WithOperation("findCampaignReference").
-					WithDetails("file", guildFile)
+					WithDetails("file", campaignFile)
 			}
 
 			return &ref, nil

@@ -14,6 +14,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/internal/ui/chat/common"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/common/layout"
+	"github.com/guild-ventures/guild-core/internal/ui/formatting"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
@@ -33,6 +34,7 @@ type OutputPane interface {
 	// Content formatting
 	SetMarkdownEnabled(enabled bool)
 	SetRichContentEnabled(enabled bool)
+	SetContentFormatter(formatter *formatting.ContentFormatter)
 
 	// Scrolling
 	ScrollToBottom()
@@ -62,6 +64,9 @@ type outputPaneImpl struct {
 
 	// Styling
 	messageStyles map[common.MessageType]lipgloss.Style
+
+	// Visual components
+	contentFormatter *formatting.ContentFormatter
 
 	// Context
 	ctx context.Context
@@ -96,6 +101,11 @@ func NewOutputPane(width, height int, richContentEnabled bool) (OutputPane, erro
 	}
 
 	return pane, nil
+}
+
+// SetContentFormatter sets the content formatter for rich content rendering
+func (op *outputPaneImpl) SetContentFormatter(formatter *formatting.ContentFormatter) {
+	op.contentFormatter = formatter
 }
 
 // createMessageStyles creates styled message formatting
@@ -346,37 +356,45 @@ func (op *outputPaneImpl) formatMessage(msg common.ChatMessage, index int) strin
 
 	// Format agent/user prefix
 	var prefix string
+	var messageType string
 	switch msg.Type {
 	case common.MsgUser:
 		prefix = "👤 You"
+		messageType = "user"
 	case common.MsgAgent:
 		if msg.AgentID != "" {
 			prefix = fmt.Sprintf("🤖 %s", msg.AgentID)
 		} else {
 			prefix = "🤖 Agent"
 		}
+		messageType = "agent"
 	case common.MsgSystem:
 		prefix = "🏰 System"
+		messageType = "system"
 	case common.MsgError:
 		prefix = "❌ Error"
-	case common.MsgToolStart:
+		messageType = "error"
+	case common.MsgToolStart, common.MsgToolProgress, common.MsgToolComplete:
 		prefix = "🔨 Tool"
-	case common.MsgToolProgress:
-		prefix = "⚙️ Tool"
-	case common.MsgToolComplete:
-		prefix = "✅ Tool"
+		messageType = "tool"
 	case common.MsgAgentThinking:
 		prefix = "🤔 Agent"
+		messageType = "thinking"
 	case common.MsgAgentWorking:
 		prefix = "⚙️ Agent"
+		messageType = "working"
 	case common.MsgPrompt:
 		prefix = "📜 Prompt"
+		messageType = "system"
 	case common.MsgToolError:
 		prefix = "❌ Tool"
+		messageType = "error"
 	case common.MsgToolAuth:
 		prefix = "🔐 Auth"
+		messageType = "system"
 	default:
 		prefix = "📝 Message"
+		messageType = "agent"
 	}
 
 	// Format the complete message
@@ -385,7 +403,7 @@ func (op *outputPaneImpl) formatMessage(msg common.ChatMessage, index int) strin
 		Render(fmt.Sprintf("[%s] %s", timestamp, prefix))
 
 	// Process content based on rich content settings
-	content := op.processContent(msg.Content)
+	content := op.processContentWithType(msg.Content, messageType, msg.Metadata)
 
 	// Apply message style to content
 	styledContent := style.Render(content)
@@ -395,15 +413,19 @@ func (op *outputPaneImpl) formatMessage(msg common.ChatMessage, index int) strin
 
 // processContent processes message content based on enabled features
 func (op *outputPaneImpl) processContent(content string) string {
+	return op.processContentWithType(content, "agent", nil)
+}
+
+// processContentWithType processes message content with specific type
+func (op *outputPaneImpl) processContentWithType(content string, messageType string, metadata map[string]string) string {
 	if !op.richContentEnabled {
 		return content
 	}
 
-	// TODO: Implement markdown rendering when available
-	if op.markdownEnabled {
-		// For now, just return the content as-is
-		// In a full implementation, this would use a markdown renderer
-		return content
+	// Use ContentFormatter if available for rich content rendering
+	if op.contentFormatter != nil && op.markdownEnabled {
+		formatted := op.contentFormatter.FormatMessage(messageType, content, metadata)
+		return formatted
 	}
 
 	return content

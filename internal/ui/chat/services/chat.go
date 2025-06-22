@@ -225,9 +225,25 @@ func (cs *ChatService) StopStream(agentID string) tea.Cmd {
 
 // discoverAgents discovers available agents from the registry
 func (cs *ChatService) discoverAgents() ([]string, error) {
-	// TODO: Implement agent discovery when gRPC interface is available
-	// For now, return mock agents
-	return []string{"developer", "writer", "researcher", "tester"}, nil
+	// Use gRPC to list available agents
+	ctx, cancel := context.WithTimeout(cs.ctx, 5*time.Second)
+	defer cancel()
+	
+	resp, err := cs.client.ListAvailableAgents(ctx, &pb.ListAgentsRequest{
+		IncludeStatus: true,
+	})
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to list agents").
+			WithComponent("services.chat").
+			WithOperation("discoverAgents")
+	}
+	
+	agents := make([]string, 0, len(resp.Agents))
+	for _, agent := range resp.Agents {
+		agents = append(agents, agent.Id)
+	}
+	
+	return agents, nil
 }
 
 // sendToAgent sends a message to a specific agent
@@ -236,8 +252,22 @@ func (cs *ChatService) sendToAgent(ctx context.Context, agentID, message string)
 		WithComponent("services.chat").
 		WithOperation("sendToAgent")
 
-	// TODO: Implement actual message sending when gRPC interface is available
-	response := fmt.Sprintf("Agent %s received: %s", agentID, message)
+	// Use gRPC to send message to agent
+	resp, err := cs.client.SendMessageToAgent(ctx, &pb.AgentMessageRequest{
+		AgentId: agentID,
+		Message: message,
+	})
+	if err != nil {
+		logger.WithError(err).Error("Failed to send message to agent",
+			"agent_id", agentID)
+		return ChatServiceErrorMsg{
+			Operation: "send_message",
+			Error: gerror.Wrap(err, gerror.ErrCodeConnection, "failed to send message to agent").
+				WithComponent("services.chat").
+				WithOperation("sendToAgent").
+				WithDetails("agent_id", agentID),
+		}
+	}
 
 	// Log token usage for analytics
 	if cs.enableSuggestions {
@@ -249,7 +279,7 @@ func (cs *ChatService) sendToAgent(ctx context.Context, agentID, message string)
 
 	return AgentResponseMsg{
 		AgentID: agentID,
-		Content: response,
+		Content: resp.Response,
 		Done:    true,
 	}
 }
@@ -257,18 +287,32 @@ func (cs *ChatService) sendToAgent(ctx context.Context, agentID, message string)
 // broadcastMessage sends a message to all available agents
 func (cs *ChatService) broadcastMessage(ctx context.Context, message string) tea.Msg {
 	responses := make([]AgentResponseMsg, 0)
+	errors := make([]error, 0)
 
+	// Send message to each agent
 	for _, agentID := range cs.agents {
+		resp, err := cs.client.SendMessageToAgent(ctx, &pb.AgentMessageRequest{
+			AgentId: agentID,
+			Message: message,
+		})
+		if err != nil {
+			errors = append(errors, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to send to agent").
+				WithComponent("services.chat").
+				WithOperation("broadcastMessage").
+				WithDetails("agent_id", agentID))
+			continue
+		}
+		
 		responses = append(responses, AgentResponseMsg{
 			AgentID: agentID,
-			Content: fmt.Sprintf("Agent %s received broadcast: %s", agentID, message),
+			Content: resp.Response,
 			Done:    true,
 		})
 	}
 
 	return BroadcastResponseMsg{
 		Responses: responses,
-		Errors:    []error{},
+		Errors:    errors,
 	}
 }
 

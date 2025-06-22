@@ -13,6 +13,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/common/layout"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/completion"
+	"github.com/guild-ventures/guild-core/internal/ui/vim"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
@@ -113,6 +114,29 @@ func NewInputPane(width, height int, completionEnabled bool) (InputPane, error) 
 	}
 
 	return pane, nil
+}
+
+// NewVimEnabledInputPane creates a new input pane with vim mode support
+func NewVimEnabledInputPane(width, height int, completionEnabled bool, vimModeManager *vim.VimModeManager) (InputPane, error) {
+	// Create the base input pane
+	basePane, err := NewInputPane(width, height, completionEnabled)
+	if err != nil {
+		return nil, err
+	}
+
+	// Cast to implementation type
+	inputPaneImpl, ok := basePane.(*inputPaneImpl)
+	if !ok {
+		return nil, gerror.New(gerror.ErrCodeInternal, "failed to cast input pane to implementation type", nil).
+			WithComponent("panes.input").
+			WithOperation("NewVimEnabledInputPane")
+	}
+
+	// Wrap with vim adapter
+	vimAdapter := NewVimInputAdapter(inputPaneImpl, vimModeManager)
+	
+	// Return as InputPane interface
+	return vimAdapter, nil
 }
 
 // createInputStyle creates the normal input styling

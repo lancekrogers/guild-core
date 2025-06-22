@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/internal/chat"
+	"github.com/guild-ventures/guild-core/internal/ui/chat"
 )
 
 // DemoScenario represents a demo test case

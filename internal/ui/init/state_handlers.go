@@ -118,9 +118,24 @@ func (m *InitTUIModelV2) updateDemoQuestion(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch k.String() {
 		case "y", "Y":
 			m.state = StateDemoSelection
+			// Initialize demo selection
+			if len(m.demoOptions) == 0 {
+				m.demoOptions = m.demoGen.GetAvailableTypes()
+			}
+			m.selectedDemo = 0
+			// CRITICAL: Blur all text inputs to ensure keyboard events work
+			for key, input := range m.inputs {
+				input.Blur()
+				m.inputs[key] = input
+			}
 			return m, nil
 		case "n", "N", "enter":
 			m.state = StateValidating
+			// CRITICAL: Blur all text inputs to ensure keyboard events work
+			for key, input := range m.inputs {
+				input.Blur()
+				m.inputs[key] = input
+			}
 			return m, tea.Batch(
 				m.spinner.Tick,
 				m.doValidation(),
@@ -163,6 +178,12 @@ func (m *InitTUIModelV2) updateValidating(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case validationResultsMsg:
 		m.validationResults = msg.results
 		m.state = StateComplete
+		// CRITICAL: Blur all text inputs and force them to lose focus
+		for key, input := range m.inputs {
+			input.Blur()
+			input.SetValue("") // Clear value to ensure no residual state
+			m.inputs[key] = input
+		}
 		return m, nil
 		
 	case spinner.TickMsg:
@@ -185,7 +206,17 @@ func (m *InitTUIModelV2) updateValidating(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m *InitTUIModelV2) updateComplete(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if k, ok := msg.(tea.KeyMsg); ok {
-		if k.Type == tea.KeyEnter || key.Matches(k, keys.Quit) {
+		// Debug: log what key was pressed
+		// In production, remove this debug line
+		switch k.Type {
+		case tea.KeyEnter:
+			return m, tea.Quit
+		case tea.KeyCtrlC, tea.KeyEsc:
+			return m, tea.Quit
+		}
+		
+		// Alternative key checking
+		if key.Matches(k, keys.Quit) {
 			return m, tea.Quit
 		}
 	}
@@ -330,10 +361,12 @@ Create demo commission? (Y/n)`
 func (m *InitTUIModelV2) renderDemoSelection() string {
 	// Use the demo renderer if available
 	demos := GetDemoInfo()
-	renderer, err := NewDemoRenderer(m.width-4, m.styles)
-	if err == nil {
-		return renderer.RenderDemoSelection(demos, m.selectedDemo)
-	}
+	
+	// For now, skip the demo renderer which might be causing issues
+	// renderer, err := NewDemoRenderer(m.width-4, m.styles)
+	// if err == nil {
+	//	return renderer.RenderDemoSelection(demos, m.selectedDemo)
+	// }
 	
 	// Fallback to simple rendering
 	title := m.styles.RenderHeader(

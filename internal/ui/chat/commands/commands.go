@@ -17,6 +17,7 @@ import (
 	toolmsg "github.com/guild-ventures/guild-core/internal/ui/chat/messages/tools"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/panes"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/session"
+	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
 	"github.com/guild-ventures/guild-core/pkg/templates"
 )
 
@@ -29,6 +30,7 @@ type CommandProcessor struct {
 	sessionManager  session.SessionManager
 	currentSession  *session.Session
 	templateManager templates.TemplateManager
+	guildClient     pb.GuildClient
 }
 
 // CommandHandler defines the interface for command handlers
@@ -48,7 +50,7 @@ type CommandResult struct {
 // NewCommandProcessor creates a new command processor
 func NewCommandProcessor(ctx context.Context, config *common.ChatConfig, history *CommandHistory,
 	sessionManager session.SessionManager, currentSession *session.Session,
-	templateManager templates.TemplateManager,
+	templateManager templates.TemplateManager, guildClient pb.GuildClient,
 ) *CommandProcessor {
 	cp := &CommandProcessor{
 		ctx:             ctx,
@@ -58,6 +60,7 @@ func NewCommandProcessor(ctx context.Context, config *common.ChatConfig, history
 		sessionManager:  sessionManager,
 		currentSession:  currentSession,
 		templateManager: templateManager,
+		guildClient:     guildClient,
 	}
 
 	// Register built-in command handlers
@@ -190,7 +193,7 @@ func (cp *CommandProcessor) registerBuiltinHandlers() {
 	cp.handlers["configrefresh"] = &ConfigRefreshHandler{}
 
 	// Agent commands
-	cp.handlers["agents"] = &AgentsHandler{}
+	cp.handlers["agents"] = NewAgentsHandler(cp.guildClient)
 	cp.handlers["status"] = &StatusHandler{}
 
 	// Guild commands
@@ -216,6 +219,7 @@ func (cp *CommandProcessor) registerBuiltinHandlers() {
 	cp.handlers["image"] = &ImageHandler{}
 	cp.handlers["mermaid"] = &MermaidHandler{}
 	cp.handlers["code"] = &CodeHandler{}
+	cp.handlers["vim"] = &VimHandler{}
 
 	// Test commands
 	cp.handlers["test"] = &TestHandler{}
@@ -280,6 +284,7 @@ func (h *HelpHandler) Handle(ctx context.Context, args []string) tea.Cmd {
   /image <path>          - Show image with ASCII preview
   /mermaid              - Show Mermaid diagram help/examples
   /code toggle-lines     - Toggle line numbers in code blocks
+  /vim                   - Toggle vim mode for input
 
 **Test Commands:**
   /test markdown         - Test markdown rendering
@@ -400,45 +405,76 @@ func (h *StatusHandler) Usage() string {
 }
 
 // AgentsHandler lists available agents
-type AgentsHandler struct{}
+type AgentsHandler struct{
+	guildClient pb.GuildClient
+}
+
+// NewAgentsHandler creates a new agents handler with gRPC client
+func NewAgentsHandler(guildClient pb.GuildClient) *AgentsHandler {
+	return &AgentsHandler{
+		guildClient: guildClient,
+	}
+}
 
 func (h *AgentsHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	return func() tea.Msg {
-		// TODO: Get real agent data from gRPC service
-		// For now, use sample data that matches V1 format
-		agentsText := `🏰 **Available Guild Artisans**
+		// Get real agent data from gRPC service
+		resp, err := h.guildClient.ListAvailableAgents(ctx, &pb.ListAgentsRequest{
+			IncludeStatus: true,
+		})
+		if err != nil {
+			return panes.StatusUpdateMsg{
+				Message: fmt.Sprintf("Failed to list agents: %v", err),
+				Level:   "error",
+			}
+		}
 
-🟢 **@manager** - Guild Manager
-   🛡️ Skills: planning, coordination, delegation
-   📍 Status: IDLE
-
-🟡 **@developer** - Code Developer  
-   🛡️ Skills: coding, implementation, testing
-   📍 Status: WORKING
-
-🟢 **@writer** - Documentation Writer
-   🛡️ Skills: documentation, content creation
-   📍 Status: IDLE
-
-🟢 **@researcher** - Information Researcher
-   🛡️ Skills: information gathering, analysis
-   📍 Status: IDLE
-
-🔴 **@tester** - Quality Tester
-   🛡️ Skills: testing, quality assurance
-   📍 Status: ERROR
-
-**Usage:**
+		// Build agents text
+		var agentsText strings.Builder
+		agentsText.WriteString("🏰 **Available Guild Artisans**\n\n")
+		
+		for _, agent := range resp.Agents {
+			// Get status icon
+			statusIcon := "⚪"
+			statusName := "UNKNOWN"
+			if agent.Status != nil {
+				switch agent.Status.State {
+				case pb.AgentStatus_IDLE:
+					statusIcon = "🟢"
+					statusName = "IDLE"
+				case pb.AgentStatus_THINKING:
+					statusIcon = "🤔"
+					statusName = "THINKING"
+				case pb.AgentStatus_WORKING:
+					statusIcon = "🟡"
+					statusName = "WORKING"
+				case pb.AgentStatus_ERROR:
+					statusIcon = "🔴"
+					statusName = "ERROR"
+				case pb.AgentStatus_OFFLINE:
+					statusIcon = "⚫"
+					statusName = "OFFLINE"
+				}
+			}
+			
+			agentsText.WriteString(fmt.Sprintf("%s **@%s** - %s\n", statusIcon, agent.Id, agent.Name))
+			if len(agent.Capabilities) > 0 {
+				agentsText.WriteString(fmt.Sprintf("   🛡️ Skills: %s\n", strings.Join(agent.Capabilities, ", ")))
+			}
+			agentsText.WriteString(fmt.Sprintf("   📍 Status: %s\n\n", statusName))
+		}
+		
+		agentsText.WriteString(`**Usage:**
 @developer help me fix this bug
 @writer create documentation for this feature
 @all let's work on this together
 
 **Status Icons:**
-🟢 IDLE    🤔 THINKING    🟡 WORKING    🔴 ERROR    ⚫ OFFLINE`
+🟢 IDLE    🤔 THINKING    🟡 WORKING    🔴 ERROR    ⚫ OFFLINE`)
 
 		return panes.PaneUpdateMsg{
 			PaneID:  "output",
-			Content: agentsText,
+			Content: agentsText.String(),
 		}
 	}
 }
@@ -2136,4 +2172,22 @@ func (ch *CommandHistory) Search(pattern string) []string {
 	}
 
 	return matches
+}
+
+// VimHandler handles vim mode toggling
+type VimHandler struct{}
+
+func (h *VimHandler) Handle(ctx context.Context, args []string) tea.Cmd {
+	return func() tea.Msg {
+		// Toggle vim mode
+		return messages.VimModeToggleMsg{}
+	}
+}
+
+func (h *VimHandler) Description() string {
+	return "Toggle vim mode for input"
+}
+
+func (h *VimHandler) Usage() string {
+	return "/vim - Toggle vim mode"
 }

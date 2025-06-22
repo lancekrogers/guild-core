@@ -178,6 +178,13 @@ func (app *App) initializeComponents() error {
 	// Initialize command history
 	app.commandHistory = commands.NewCommandHistory(1000)
 
+	// Initialize visual components
+	if err := app.initializeVisualComponents(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize visual components").
+			WithComponent("chat.app").
+			WithOperation("initializeComponents")
+	}
+
 	// Initialize session management first
 	if err := app.initializeSessionManagement(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize session management").
@@ -224,7 +231,7 @@ func (app *App) initializeComponents() error {
 
 	// Initialize command processor with session manager and template manager
 	app.commandProcessor = commands.NewCommandProcessor(app.ctx, app.config, app.commandHistory,
-		app.sessionManager, app.currentSession, app.templateManager)
+		app.sessionManager, app.currentSession, app.templateManager, app.guildClient)
 
 	// Initialize services
 	if err := app.initializeServices(); err != nil {
@@ -358,9 +365,14 @@ func (app *App) initializePanes() error {
 			WithOperation("initializePanes")
 	}
 	app.outputPane = outputPane
+	
+	// Set content formatter on output pane if available
+	if app.contentFormatter != nil {
+		app.outputPane.SetContentFormatter(app.contentFormatter)
+	}
 
-	// Initialize input pane
-	inputPane, err := panes.NewInputPane(inputRect.Width, inputRect.Height, app.config.EnableCompletion)
+	// Initialize input pane with vim support
+	inputPane, err := panes.NewVimEnabledInputPane(inputRect.Width, inputRect.Height, app.config.EnableCompletion, app.vimModeManager)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create input pane").
 			WithComponent("chat.app").
@@ -528,6 +540,9 @@ func (app *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case messages.SearchMsg:
 		return app.handleSearch(msg)
 
+	case messages.VimModeToggleMsg:
+		return app.handleVimModeToggle(msg)
+
 	case agents.AgentResponseMsg:
 		return app.handleAgentResponse(msg)
 
@@ -662,6 +677,24 @@ func (app *App) handleWindowSize(msg tea.WindowSizeMsg) (tea.Model, tea.Cmd) {
 	app.outputPane.Resize(outputRect.Width, outputRect.Height)
 	app.inputPane.Resize(inputRect.Width, inputRect.Height)
 	app.statusPane.Resize(statusRect.Width, statusRect.Height)
+
+	// Update visual components with new width
+	// Note: MarkdownRenderer doesn't have a SetWidth method - would need to recreate it
+	// if app.markdownRenderer != nil {
+	//     app.markdownRenderer.SetWidth(msg.Width)
+	// }
+	if app.contentFormatter != nil {
+		app.contentFormatter.UpdateWidth(msg.Width)
+	}
+	if app.imageProcessor != nil {
+		app.imageProcessor.SetASCIISize(msg.Width-10, 30)
+	}
+	if app.codeRenderer != nil {
+		app.codeRenderer.SetMaxWidth(msg.Width - 10)
+	}
+	if app.mermaidProcessor != nil {
+		app.mermaidProcessor.SetASCIISize(msg.Width-10, 30)
+	}
 
 	return app, tea.Batch(cmds...)
 }
@@ -919,6 +952,28 @@ func (app *App) handleSearch(msg messages.SearchMsg) (tea.Model, tea.Cmd) {
 	return app, nil
 }
 
+func (app *App) handleVimModeToggle(msg messages.VimModeToggleMsg) (tea.Model, tea.Cmd) {
+	// Toggle vim mode on the vim manager and input adapter
+	if app.vimModeManager != nil && app.inputPane != nil {
+		// Check if the input pane is a vim adapter
+		if vimAdapter, ok := app.inputPane.(*panes.VimInputAdapter); ok {
+			// Toggle vim mode state
+			isEnabled := vimAdapter.IsEnabled()
+			vimAdapter.SetEnabled(!isEnabled)
+			
+			// Update status
+			if !isEnabled {
+				app.statusPane.UpdateStatus("Vim mode enabled (NORMAL)", "info")
+			} else {
+				app.statusPane.UpdateStatus("Vim mode disabled (INSERT)", "info")
+			}
+		} else {
+			app.statusPane.UpdateStatus("Vim mode not available", "warning")
+		}
+	}
+	return app, nil
+}
+
 // Utility methods
 
 func (app *App) GetCurrentTime() time.Time {
@@ -1162,4 +1217,48 @@ func (app *App) SetSelectedGuild(guildName string) {
 // GetSelectedGuild returns the selected guild for the chat session
 func (app *App) GetSelectedGuild() string {
 	return app.selectedGuild
+}
+
+// initializeVisualComponents initializes all visual and formatting utilities
+func (app *App) initializeVisualComponents() error {
+	// Initialize markdown renderer with current terminal width
+	width := app.config.Width
+	if width == 0 {
+		width = 80 // Default width
+	}
+
+	// Create markdown renderer
+	markdownRenderer, err := formatting.NewMarkdownRenderer(width)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create markdown renderer").
+			WithComponent("chat.app").
+			WithOperation("initializeVisualComponents")
+	}
+	app.markdownRenderer = markdownRenderer
+
+	// Get project workspace path
+	workspacePath := "."
+	// TODO: Get actual project workspace path from registry or config
+	// For now, use current directory as workspace
+
+	// Initialize content formatter with markdown renderer
+	app.contentFormatter = formatting.NewContentFormatter(markdownRenderer, width, workspacePath)
+
+	// Initialize tool visualizer
+	app.toolVisualizer = uitools.NewToolVisualizer()
+
+	// Initialize vim mode manager
+	app.vimModeManager = vim.NewVimModeManager()
+
+	// Initialize visual processors
+	app.imageProcessor = visual.NewImageProcessor()
+	app.imageProcessor.SetASCIISize(width-10, 30) // Adjust for chat width
+
+	app.codeRenderer = visual.NewCodeRenderer()
+	app.codeRenderer.SetMaxWidth(width - 10)
+
+	app.mermaidProcessor = visual.NewMermaidProcessor()
+	app.mermaidProcessor.SetASCIISize(width-10, 30)
+
+	return nil
 }

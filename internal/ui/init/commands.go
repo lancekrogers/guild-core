@@ -83,7 +83,7 @@ func (m *InitTUIModelV2) createDemoCommission() tea.Cmd {
 		defer cancel()
 		
 		// Create commission directory
-		commissionsDir := filepath.Join(m.config.ProjectPath, ".guild", "objectives", "refined")
+		commissionsDir := filepath.Join(m.config.ProjectPath, ".campaign", "commissions")
 		if err := os.MkdirAll(commissionsDir, 0755); err != nil {
 			return errMsg{err: gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commissions directory").
 				WithComponent("InitTUIV2").
@@ -132,10 +132,7 @@ func (m *InitTUIModelV2) doValidation() tea.Cmd {
 			return errMsg{err: gerror.Wrap(err, gerror.ErrCodeCancelled, "cancelled during config integration")}
 		}
 		
-		// Create campaign reference
-		if err := m.configManager.CreateCampaignReference(ctx, m.config.ProjectPath, m.campaignName, m.projectName); err != nil {
-			return errMsg{err: err}
-		}
+		// Campaign reference already created in CreatePhase0Configuration
 		
 		// Socket registry
 		if err := m.daemonManager.SaveSocketRegistry(m.config.ProjectPath, m.campaignName); err != nil {

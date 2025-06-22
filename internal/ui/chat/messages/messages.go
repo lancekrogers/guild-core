@@ -23,3 +23,6 @@ type Command struct {
 	Action      func() tea.Cmd
 	Shortcut    string
 }
+
+// VimModeToggleMsg is sent when vim mode should be toggled
+type VimModeToggleMsg struct{}
