@@ -14,12 +14,16 @@ import (
 	"google.golang.org/grpc"
 	_ "modernc.org/sqlite" // SQLite driver
 
+	"github.com/guild-ventures/guild-core/internal/ui/chat/agents"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/commands"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/common"
+	cfig "github.com/guild-ventures/guild-core/internal/ui/chat/common/config"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/common/layout"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/common/utils"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/completion"
-	"github.com/guild-ventures/guild-core/internal/ui/chat/messages/tools"
+	"github.com/guild-ventures/guild-core/internal/ui/chat/managers"
+	"github.com/guild-ventures/guild-core/internal/ui/chat/messages"
+	toolmsg "github.com/guild-ventures/guild-core/internal/ui/chat/messages/tools"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/panes"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/services"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/session"
@@ -44,7 +48,7 @@ import (
 type App struct {
 	// Core configuration
 	ctx    context.Context
-	config *ChatConfig
+	config *common.ChatConfig
 
 	// Layout and panes
 	layoutManager *layout.Manager
@@ -58,7 +62,7 @@ type App struct {
 	providerService *services.ProviderService
 
 	// Agent communication
-	agentRouter *AgentRouter
+	agentRouter *agents.AgentRouter
 
 	// Utilities
 	styles *utils.Styles
@@ -76,7 +80,7 @@ type App struct {
 
 	// Application state
 	messages      []common.ChatMessage
-	activeTools   map[string]*commands.ToolExecution
+	activeTools   map[string]*common.ToolExecution
 	agents        []string
 	currentView   common.ViewMode
 	searchResults []int
@@ -87,7 +91,7 @@ type App struct {
 	commandProcessor *commands.CommandProcessor
 	commandHistory   *commands.CommandHistory
 	templateManager  templates.TemplateManager
-	completionEngine *commands.CompletionEngine
+	completionEngine *completion.CompletionEngine
 
 	// Real-time suggestions
 	suggestionManager *InputSuggestionManager
@@ -129,14 +133,14 @@ func NewApp(ctx context.Context, guildConfig *config.GuildConfig,
 		guildClient:   guildClient,
 		promptsClient: promptsClient,
 		registry:      registry,
-		messages:      make([]ChatMessage, 0),
-		activeTools:   make(map[string]*ToolExecution),
+		messages:      make([]common.ChatMessage, 0),
+		activeTools:   make(map[string]*common.ToolExecution),
 		agents:        make([]string, 0),
-		currentView:   ViewModeNormal,
+		currentView:   common.ViewModeNormal,
 	}
 
 	// Store guild config for later initialization
-	app.config = &ChatConfig{
+	app.config = &common.ChatConfig{
 		GuildConfig: guildConfig,
 		Width:       80,
 		Height:      24,
@@ -172,7 +176,7 @@ func (app *App) initializeComponents() error {
 	app.keys = utils.NewKeyBindings()
 
 	// Initialize command history
-	app.commandHistory = NewCommandHistory(1000)
+	app.commandHistory = commands.NewCommandHistory(1000)
 
 	// Initialize session management first
 	if err := app.initializeSessionManagement(); err != nil {
@@ -200,12 +204,12 @@ func (app *App) initializeComponents() error {
 	// and use the default project root
 
 	// Create enhanced completion engine with direct suggestion provider integration
-	enhancedEngine, err := NewCompletionEngineEnhanced(app.config.GuildConfig, projectRoot)
+	enhancedEngine, err := completion.NewCompletionEngineEnhanced(app.config.GuildConfig, projectRoot)
 	if err == nil {
 		app.completionEngine = enhancedEngine.CompletionEngine
 	} else {
 		// Fall back to basic completion engine if enhanced fails
-		app.completionEngine = NewCompletionEngine(app.config.GuildConfig, projectRoot)
+		app.completionEngine = completion.NewCompletionEngine(app.config.GuildConfig, projectRoot)
 	}
 
 	// Integrate agent-based suggestion system if available
@@ -219,7 +223,7 @@ func (app *App) initializeComponents() error {
 	}
 
 	// Initialize command processor with session manager and template manager
-	app.commandProcessor = NewCommandProcessor(app.ctx, app.config, app.commandHistory,
+	app.commandProcessor = commands.NewCommandProcessor(app.ctx, app.config, app.commandHistory,
 		app.sessionManager, app.currentSession, app.templateManager)
 
 	// Initialize services
@@ -230,7 +234,7 @@ func (app *App) initializeComponents() error {
 	}
 
 	// Initialize agent router
-	app.agentRouter = NewAgentRouter(app.ctx, app.guildClient)
+	app.agentRouter = agents.NewAgentRouter(app.ctx, app.guildClient)
 
 	// Initialize layout manager
 	app.layoutManager = layout.NewManager(app.config.Width, app.config.Height)
@@ -398,15 +402,15 @@ func (app *App) setupInputCallbacks() {
 }
 
 // convertSessionMessage converts a session message to a chat message
-func (app *App) convertSessionMessage(msg *session.Message) ChatMessage {
-	var msgType MessageType
+func (app *App) convertSessionMessage(msg *session.Message) common.ChatMessage {
+	var msgType common.MessageType
 	var agentID string
 
 	switch msg.Role {
 	case session.RoleUser:
-		msgType = MsgUser
+		msgType = common.MsgUser
 	case session.RoleAssistant:
-		msgType = MsgAgent
+		msgType = common.MsgAgent
 		// Extract agent ID from metadata if available
 		if msg.Metadata != nil {
 			if id, ok := msg.Metadata["agent_id"].(string); ok {
@@ -414,12 +418,12 @@ func (app *App) convertSessionMessage(msg *session.Message) ChatMessage {
 			}
 		}
 	case session.RoleSystem:
-		msgType = MsgSystem
+		msgType = common.MsgSystem
 	default:
-		msgType = MsgSystem
+		msgType = common.MsgSystem
 	}
 
-	return ChatMessage{
+	return common.ChatMessage{
 		Type:      msgType,
 		Content:   msg.Content,
 		AgentID:   agentID,
@@ -434,7 +438,7 @@ func (app *App) convertSessionMessage(msg *session.Message) ChatMessage {
 func (app *App) Init() tea.Cmd {
 	if !app.initialized {
 		return func() tea.Msg {
-			return StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Application not properly initialized",
 				Level:   "error",
 			}
@@ -483,28 +487,28 @@ func (app *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		return app.handleKeyPress(msg)
 
-	case AgentStreamMsg:
+	case agents.AgentStreamMsg:
 		return app.handleAgentStream(msg)
 
-	case StatusUpdateMsg:
+	case panes.StatusUpdateMsg:
 		return app.handleStatusUpdate(msg)
 
-	case LayoutUpdateMsg:
+	case panes.LayoutUpdateMsg:
 		return app.handleLayoutUpdate(msg)
 
-	case PaneUpdateMsg:
+	case panes.PaneUpdateMsg:
 		return app.handlePaneUpdate(msg)
 
-	case ViewModeChangeMsg:
+	case panes.ViewModeChangeMsg:
 		return app.handleViewModeChange(msg)
 
-	case ToolExecutionStartMsg:
+	case toolmsg.ToolExecutionStartMsg:
 		return app.handleToolExecutionStart(msg)
 
-	case ToolExecutionProgressMsg:
+	case toolmsg.ToolExecutionProgressMsg:
 		return app.handleToolExecutionProgress(msg)
 
-	case ToolExecutionCompleteMsg:
+	case toolmsg.ToolExecutionCompleteMsg:
 		return app.handleToolExecutionComplete(msg)
 
 	case struct {
@@ -515,28 +519,28 @@ func (app *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return app.handleCompletionRequestAnon(msg.Input)
 		}
 
-	case SuggestionRequestMsg:
+	case completion.SuggestionRequestMsg:
 		return app.handleSuggestionRequest(msg)
 
-	case CompletionResultMsg:
+	case completion.CompletionResultMsg:
 		return app.handleCompletionResult(msg)
 
-	case SearchMsg:
+	case messages.SearchMsg:
 		return app.handleSearch(msg)
 
-	case AgentResponseMsg:
+	case agents.AgentResponseMsg:
 		return app.handleAgentResponse(msg)
 
-	case BroadcastResponseMsg:
+	case agents.BroadcastResponseMsg:
 		return app.handleBroadcastResponse(msg)
 
-	case AgentErrorMsg:
+	case agents.AgentErrorMsg:
 		return app.handleAgentError(msg)
 
-	case AgentListUpdatedMsg:
+	case agents.AgentListUpdatedMsg:
 		return app.handleAgentListUpdated(msg)
 
-	case AgentStatusMsg:
+	case agents.AgentStatusMsg:
 		return app.handleAgentStatusUpdated(msg)
 	}
 
@@ -610,7 +614,7 @@ func (app *App) View() string {
 }
 
 // generateWelcomeMessage creates the welcome message for new sessions
-func (app *App) generateWelcomeMessage() ChatMessage {
+func (app *App) generateWelcomeMessage() common.ChatMessage {
 	content := `🏰 ═══════════════════════════════════════════ 🏰
    Welcome to the Guild Chat Chamber!
 
@@ -628,8 +632,8 @@ Try these commands to see visual features:
 • /test code go - View syntax highlighted code
 • /status - View real-time agent status panel`
 
-	return ChatMessage{
-		Type:      MsgSystem,
+	return common.ChatMessage{
+		Type:      common.MsgSystem,
 		Content:   content,
 		AgentID:   "system",
 		Timestamp: app.GetCurrentTime(),
@@ -641,7 +645,7 @@ Try these commands to see visual features:
 
 func (app *App) handleWindowSize(msg tea.WindowSizeMsg) (tea.Model, tea.Cmd) {
 	// Update config dimensions
-	configManager := NewConfigManager(app.ctx)
+	configManager := cfig.NewConfigManager(app.ctx)
 	configManager.UpdateDimensions(app.config, msg.Width, msg.Height)
 
 	// Update layout manager
@@ -713,8 +717,8 @@ func (app *App) handleSubmit() (tea.Model, tea.Cmd) {
 	// 2. Check for agent mentions (@agent message)
 	if agentTarget, err := app.agentRouter.ParseInput(input); err != nil {
 		// Show error for invalid agent mention
-		errorMsg := ChatMessage{
-			Type:      MsgSystem,
+		errorMsg := common.ChatMessage{
+			Type:      common.MsgSystem,
 			Content:   fmt.Sprintf("❌ %s", err.Error()),
 			AgentID:   "system",
 			Timestamp: app.GetCurrentTime(),
@@ -724,8 +728,8 @@ func (app *App) handleSubmit() (tea.Model, tea.Cmd) {
 		return app, nil
 	} else if agentTarget != nil {
 		// Valid agent mention - add user message and route to agent
-		userMsg := ChatMessage{
-			Type:      MsgUser,
+		userMsg := common.ChatMessage{
+			Type:      common.MsgUser,
 			Content:   input,
 			AgentID:   "user",
 			Timestamp: app.GetCurrentTime(),
@@ -742,7 +746,7 @@ func (app *App) handleSubmit() (tea.Model, tea.Cmd) {
 	}
 
 	// 3. Default: treat as general message to all agents
-	userMsg := ChatMessage{
+	userMsg := common.ChatMessage{
 		Type:      MsgUser,
 		Content:   input,
 		AgentID:   "user",
@@ -765,13 +769,13 @@ func (app *App) handleGlobalSearch() (tea.Model, tea.Cmd) {
 }
 
 func (app *App) handleHelp() (tea.Model, tea.Cmd) {
-	return app, app.commandProcessor.processCommand("help")
+	return app, app.commandProcessor.ProcessCommand("help")
 }
 
-func (app *App) handleAgentStream(msg AgentStreamMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleAgentStream(msg agents.AgentStreamMsg) (tea.Model, tea.Cmd) {
 	// Add agent message to output
-	chatMsg := ChatMessage{
-		Type:      MsgAgent,
+	chatMsg := common.ChatMessage{
+		Type:      common.MsgAgent,
 		Content:   msg.Content,
 		AgentID:   msg.AgentID,
 		Timestamp: app.GetCurrentTime(),
@@ -782,24 +786,24 @@ func (app *App) handleAgentStream(msg AgentStreamMsg) (tea.Model, tea.Cmd) {
 	return app, nil
 }
 
-func (app *App) handleStatusUpdate(msg StatusUpdateMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleStatusUpdate(msg panes.StatusUpdateMsg) (tea.Model, tea.Cmd) {
 	app.statusPane.UpdateStatus(msg.Message, msg.Level)
 	return app, nil
 }
 
-func (app *App) handleLayoutUpdate(msg LayoutUpdateMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleLayoutUpdate(msg panes.LayoutUpdateMsg) (tea.Model, tea.Cmd) {
 	app.layoutManager.Resize(msg.Width, msg.Height)
 	return app, nil
 }
 
-func (app *App) handlePaneUpdate(msg PaneUpdateMsg) (tea.Model, tea.Cmd) {
+func (app *App) handlePaneUpdate(msg panes.PaneUpdateMsg) (tea.Model, tea.Cmd) {
 	switch msg.PaneID {
 	case "output":
 		if msg.Data == "clear" {
 			app.outputPane.Clear()
 		} else if msg.Content != "" {
-			systemMsg := ChatMessage{
-				Type:      MsgSystem,
+			systemMsg := common.ChatMessage{
+				Type:      common.MsgSystem,
 				Content:   msg.Content,
 				AgentID:   "system",
 				Timestamp: app.GetCurrentTime(),
@@ -811,14 +815,14 @@ func (app *App) handlePaneUpdate(msg PaneUpdateMsg) (tea.Model, tea.Cmd) {
 	return app, nil
 }
 
-func (app *App) handleViewModeChange(msg ViewModeChangeMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleViewModeChange(msg panes.ViewModeChangeMsg) (tea.Model, tea.Cmd) {
 	app.currentView = msg.Mode
 	return app, nil
 }
 
-func (app *App) handleToolExecutionStart(msg ToolExecutionStartMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleToolExecutionStart(msg toolmsg.ToolExecutionStartMsg) (tea.Model, tea.Cmd) {
 	// Track tool execution
-	execution := &ToolExecution{
+	execution := &common.ToolExecution{
 		ID:        msg.ExecutionID,
 		ToolName:  msg.ToolName,
 		AgentID:   msg.AgentID,
@@ -829,8 +833,8 @@ func (app *App) handleToolExecutionStart(msg ToolExecutionStartMsg) (tea.Model, 
 	app.activeTools[msg.ExecutionID] = execution
 
 	// Add tool start message
-	toolMsg := ChatMessage{
-		Type:      MsgToolStart,
+	toolMsg := common.ChatMessage{
+		Type:      common.MsgToolStart,
 		Content:   fmt.Sprintf("🔨 Starting tool: %s", msg.ToolName),
 		AgentID:   msg.AgentID,
 		Timestamp: app.GetCurrentTime(),
@@ -841,7 +845,7 @@ func (app *App) handleToolExecutionStart(msg ToolExecutionStartMsg) (tea.Model, 
 	return app, nil
 }
 
-func (app *App) handleToolExecutionProgress(msg ToolExecutionProgressMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleToolExecutionProgress(msg toolmsg.ToolExecutionProgressMsg) (tea.Model, tea.Cmd) {
 	if execution, exists := app.activeTools[msg.ExecutionID]; exists {
 		execution.Progress = msg.Progress
 		execution.Status = "running"
@@ -849,7 +853,7 @@ func (app *App) handleToolExecutionProgress(msg ToolExecutionProgressMsg) (tea.M
 	return app, nil
 }
 
-func (app *App) handleToolExecutionComplete(msg ToolExecutionCompleteMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleToolExecutionComplete(msg toolmsg.ToolExecutionCompleteMsg) (tea.Model, tea.Cmd) {
 	if execution, exists := app.activeTools[msg.ExecutionID]; exists {
 		now := app.GetCurrentTime()
 		execution.EndTime = &now
@@ -857,8 +861,8 @@ func (app *App) handleToolExecutionComplete(msg ToolExecutionCompleteMsg) (tea.M
 		execution.Result = msg.Result
 
 		// Add completion message
-		toolMsg := ChatMessage{
-			Type:      MsgToolComplete,
+		toolMsg := common.ChatMessage{
+			Type:      common.MsgToolComplete,
 			Content:   fmt.Sprintf("✅ Tool completed: %s\n%s", execution.ToolName, msg.Result),
 			AgentID:   execution.AgentID,
 			Timestamp: now,
@@ -877,7 +881,7 @@ func (app *App) handleCompletionRequestAnon(input string) (tea.Model, tea.Cmd) {
 	if app.completionEngine != nil {
 		results := app.completionEngine.Complete(input, len(input))
 		return app, func() tea.Msg {
-			return CompletionResultMsg{
+			return completion.CompletionResultMsg{
 				Results: results,
 			}
 		}
@@ -886,7 +890,7 @@ func (app *App) handleCompletionRequestAnon(input string) (tea.Model, tea.Cmd) {
 	return app, nil
 }
 
-func (app *App) handleCompletionResult(msg CompletionResultMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleCompletionResult(msg completion.CompletionResultMsg) (tea.Model, tea.Cmd) {
 	// Only show completions if they're for the current input
 	currentInput := app.inputPane.GetValue()
 
@@ -901,14 +905,14 @@ func (app *App) handleCompletionResult(msg CompletionResultMsg) (tea.Model, tea.
 }
 
 // handleSuggestionRequest processes a suggestion request
-func (app *App) handleSuggestionRequest(msg SuggestionRequestMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleSuggestionRequest(msg completion.SuggestionRequestMsg) (tea.Model, tea.Cmd) {
 	if app.suggestionManager != nil {
 		return app, app.suggestionManager.ProcessSuggestionRequest(msg.Input)
 	}
 	return app, nil
 }
 
-func (app *App) handleSearch(msg SearchMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleSearch(msg messages.SearchMsg) (tea.Model, tea.Cmd) {
 	app.searchPattern = msg.Pattern
 	app.searchResults = msg.Results
 	// TODO: Update UI to show search results
@@ -939,10 +943,10 @@ func (app *App) SetError(err error) {
 
 // Agent message handlers
 
-func (app *App) handleAgentResponse(msg AgentResponseMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleAgentResponse(msg agents.AgentResponseMsg) (tea.Model, tea.Cmd) {
 	// Add agent response to output
-	agentMsg := ChatMessage{
-		Type:      MsgAgent,
+	agentMsg := common.ChatMessage{
+		Type:      common.MsgAgent,
 		Content:   msg.Content,
 		AgentID:   msg.AgentID,
 		Timestamp: msg.Timestamp,
@@ -958,11 +962,11 @@ func (app *App) handleAgentResponse(msg AgentResponseMsg) (tea.Model, tea.Cmd) {
 	return app, nil
 }
 
-func (app *App) handleBroadcastResponse(msg BroadcastResponseMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleBroadcastResponse(msg agents.BroadcastResponseMsg) (tea.Model, tea.Cmd) {
 	// Add responses from all agents
 	for _, response := range msg.Responses {
-		agentMsg := ChatMessage{
-			Type:      MsgAgent,
+		agentMsg := common.ChatMessage{
+			Type:      common.MsgAgent,
 			Content:   response.Response,
 			AgentID:   response.AgentId,
 			Timestamp: msg.Timestamp,
@@ -974,10 +978,10 @@ func (app *App) handleBroadcastResponse(msg BroadcastResponseMsg) (tea.Model, te
 	return app, nil
 }
 
-func (app *App) handleAgentError(msg AgentErrorMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleAgentError(msg agents.AgentErrorMsg) (tea.Model, tea.Cmd) {
 	// Display error message
-	errorMsg := ChatMessage{
-		Type:      MsgSystem,
+	errorMsg := common.ChatMessage{
+		Type:      common.MsgSystem,
 		Content:   fmt.Sprintf("❌ Agent %s error: %s", msg.AgentID, msg.Error.Error()),
 		AgentID:   "system",
 		Timestamp: app.GetCurrentTime(),
@@ -988,7 +992,7 @@ func (app *App) handleAgentError(msg AgentErrorMsg) (tea.Model, tea.Cmd) {
 	return app, nil
 }
 
-func (app *App) handleAgentListUpdated(msg AgentListUpdatedMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleAgentListUpdated(msg agents.AgentListUpdatedMsg) (tea.Model, tea.Cmd) {
 	// Update agent list in status pane or show notification
 	statusMsg := fmt.Sprintf("🔄 Agent list updated: %d agents available", len(msg.Agents))
 	app.statusPane.UpdateStatus(statusMsg, "info")
@@ -996,9 +1000,9 @@ func (app *App) handleAgentListUpdated(msg AgentListUpdatedMsg) (tea.Model, tea.
 	return app, nil
 }
 
-func (app *App) handleAgentStatusUpdated(msg AgentStatusMsg) (tea.Model, tea.Cmd) {
+func (app *App) handleAgentStatusUpdated(msg agents.AgentStatusMsg) (tea.Model, tea.Cmd) {
 	// Update agent status display
-	statusIcon := getStatusIcon(msg.Status.State)
+	statusIcon := agents.GetStatusIcon(msg.Status.State)
 	statusMsg := fmt.Sprintf("%s Agent %s: %s", statusIcon, msg.AgentID, msg.Status.CurrentTask)
 	app.statusPane.UpdateStatus(statusMsg, "info")
 
@@ -1046,7 +1050,7 @@ func (app *App) initializeSuggestionSystem() error {
 	}
 
 	// Get cost manager (placeholder for now)
-	costManager := &MinimalCostManager{}
+	costManager := &managers.MinimalCostManager{}
 
 	// Create suggestion-aware agent factory
 	app.suggestionFactory = agent.NewSuggestionAwareAgentFactory(
@@ -1147,90 +1151,7 @@ func (app *App) getCommissionManager() (commission.CommissionManager, error) {
 	// Commission manager is not directly available in the registry interface
 	// Create a minimal implementation that satisfies the interface
 	// This is a placeholder that allows the suggestion system to work
-	return &MinimalCommissionManager{}, nil
-}
-
-// MinimalCommissionManager is a placeholder commission manager for suggestion system
-type MinimalCommissionManager struct{}
-
-func (m *MinimalCommissionManager) CreateCommission(ctx context.Context, commission commission.Commission) (*commission.Commission, error) {
-	return nil, gerror.New(gerror.ErrCodeNotImplemented, "commission creation not implemented", nil)
-}
-
-func (m *MinimalCommissionManager) GetCommission(ctx context.Context, id string) (*commission.Commission, error) {
-	return nil, gerror.New(gerror.ErrCodeNotFound, "commission not found", nil)
-}
-
-func (m *MinimalCommissionManager) UpdateCommission(ctx context.Context, commission commission.Commission) error {
-	return gerror.New(gerror.ErrCodeNotImplemented, "commission update not implemented", nil)
-}
-
-func (m *MinimalCommissionManager) DeleteCommission(ctx context.Context, id string) error {
-	return gerror.New(gerror.ErrCodeNotImplemented, "commission deletion not implemented", nil)
-}
-
-func (m *MinimalCommissionManager) ListCommissions(ctx context.Context) ([]*commission.Commission, error) {
-	return []*commission.Commission{}, nil
-}
-
-func (m *MinimalCommissionManager) SaveCommission(ctx context.Context, commission *commission.Commission) error {
-	return gerror.New(gerror.ErrCodeNotImplemented, "commission save not implemented", nil)
-}
-
-func (m *MinimalCommissionManager) LoadCommissionFromFile(ctx context.Context, path string) (*commission.Commission, error) {
-	return nil, gerror.New(gerror.ErrCodeNotImplemented, "commission load not implemented", nil)
-}
-
-func (m *MinimalCommissionManager) GetCommissionsByTag(ctx context.Context, tag string) ([]*commission.Commission, error) {
-	return []*commission.Commission{}, nil
-}
-
-func (m *MinimalCommissionManager) SetCommission(ctx context.Context, commissionID string) error {
-	return gerror.New(gerror.ErrCodeNotImplemented, "set commission not implemented", nil)
-}
-
-// MinimalCostManager provides cost tracking for the chat system without budget enforcement
-// This supports the cost magnitude system used by the manager agent for resource selection
-type MinimalCostManager struct{}
-
-func (mcm *MinimalCostManager) TrackCost(costType agent.CostType, amount float64) error {
-	return nil // Placeholder implementation
-}
-
-func (mcm *MinimalCostManager) GetCostReport() map[string]interface{} {
-	return map[string]interface{}{} // Placeholder implementation
-}
-
-func (mcm *MinimalCostManager) GetTotalCost() float64 {
-	return 0.0 // Placeholder implementation
-}
-
-func (mcm *MinimalCostManager) Reset() {
-	// Placeholder implementation
-}
-
-func (mcm *MinimalCostManager) EstimateLLMCost(model string, estimatedTokens int) float64 {
-	return 0.0 // Placeholder implementation
-}
-
-func (mcm *MinimalCostManager) RecordLLMCost(model string, promptTokens, completionTokens int, metadata map[string]string) error {
-	return nil // Placeholder implementation
-}
-
-func (mcm *MinimalCostManager) SetBudget(costType agent.CostType, amount float64) {
-	// Placeholder implementation
-}
-
-func (mcm *MinimalCostManager) GetBudgetRemaining(costType agent.CostType) float64 {
-	return 0.0 // Placeholder implementation
-}
-
-func (mcm *MinimalCostManager) ExceedsBudget(costType agent.CostType, amount float64) bool {
-	return false // Placeholder implementation
-}
-
-func (mcm *MinimalCostManager) CanAfford(costType agent.CostType, amount float64) bool {
-	return true // Placeholder implementation - always return true for testing
+	return &managers.MinimalCommissionManager{}, nil
 }
 
 // SetSelectedGuild sets the selected guild for the chat session

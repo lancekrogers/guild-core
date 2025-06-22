@@ -117,7 +117,7 @@ func (ar *AgentRouter) SendToAgent(agentID, message string) tea.Cmd {
 		return AgentResponseMsg{
 			AgentID:   agentID,
 			Content:   resp.Response,
-			MessageID: generateMessageID(), // Generate our own ID since proto doesn't have one
+			MessageID: GenerateMessageID(), // Generate our own ID since proto doesn't have one
 			Timestamp: time.Now(),
 		}
 	}
@@ -155,7 +155,7 @@ func (ar *AgentRouter) BroadcastToAll(message string) tea.Cmd {
 
 		return BroadcastResponseMsg{
 			Responses: responses,
-			MessageID: generateMessageID(),
+			MessageID: GenerateMessageID(),
 			Timestamp: time.Now(),
 		}
 	}
@@ -245,7 +245,7 @@ func (ar *AgentRouter) GetAgentInfo(agentID string) *AgentInfo {
 // FormatAgentMention creates a formatted agent mention for display
 func (ar *AgentRouter) FormatAgentMention(agentID string) string {
 	if info, exists := ar.agents[agentID]; exists {
-		status := getStatusIcon(info.Status)
+		status := GetStatusIcon(info.Status)
 		return fmt.Sprintf("%s @%s", status, agentID)
 	}
 	return fmt.Sprintf("@%s", agentID)
@@ -283,13 +283,13 @@ func (ar *AgentRouter) StartAgentStream(agentID string) tea.Cmd {
 
 // Helper functions
 
-// generateMessageID creates a unique message ID
-func generateMessageID() string {
+// GenerateMessageID creates a unique message ID
+func GenerateMessageID() string {
 	return fmt.Sprintf("msg_%d", time.Now().UnixNano())
 }
 
-// getStatusIcon returns an emoji icon for agent status (copied from V1)
-func getStatusIcon(status pb.AgentStatus_State) string {
+// GetStatusIcon returns an emoji icon for agent status (copied from V1)
+func GetStatusIcon(status pb.AgentStatus_State) string {
 	switch status {
 	case pb.AgentStatus_IDLE:
 		return "🟢"

@@ -11,7 +11,6 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-
 	"github.com/guild-ventures/guild-core/internal/ui/chat/agents"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/common"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/messages"
@@ -82,7 +81,7 @@ func (cp *CommandProcessor) ProcessInput(input string) (isCommand bool, cmd tea.
 
 	// Check if it's a command (starts with /)
 	if strings.HasPrefix(input, "/") {
-		return true, cp.processCommand(input[1:]) // Remove the leading /
+		return true, cp.ProcessCommand(input[1:]) // Remove the leading /
 	}
 
 	// Check if it's an agent mention (@agent-name message)
@@ -94,8 +93,8 @@ func (cp *CommandProcessor) ProcessInput(input string) (isCommand bool, cmd tea.
 	return false, cp.processBroadcastMessage(input)
 }
 
-// processCommand processes slash commands
-func (cp *CommandProcessor) processCommand(cmdText string) tea.Cmd {
+// ProcessCommand processes slash commands
+func (cp *CommandProcessor) ProcessCommand(cmdText string) tea.Cmd {
 	parts := strings.Fields(cmdText)
 	if len(parts) == 0 {
 		return func() tea.Msg {
