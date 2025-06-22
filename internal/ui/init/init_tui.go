@@ -58,6 +58,7 @@ type InitTUIModelV2 struct {
 	// Results
 	validationResults   []ValidationResult
 	providerResults     []providers.DetectionResult
+	bestProvider        *providers.DetectionResult
 	enhancedAgentCount  int
 	err                 error
 

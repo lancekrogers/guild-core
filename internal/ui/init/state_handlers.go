@@ -425,40 +425,68 @@ func (m *InitTUIModelV2) renderComplete() string {
 	}
 
 	providerCount := 0
+	var detectedProviders []string
 	for _, result := range m.providerResults {
 		if result.Available {
 			providerCount++
+			providerName := string(result.Provider)
+			if result.Version != "" {
+				providerName += fmt.Sprintf(" (%s)", result.Version)
+			}
+			detectedProviders = append(detectedProviders, providerName)
 		}
+	}
+
+	// Provider status for summary
+	providerStatus := fmt.Sprintf("%d AI providers detected and configured", providerCount)
+	if providerCount > 0 && m.bestProvider != nil {
+		providerStatus += fmt.Sprintf(" (primary: %s)", string(m.bestProvider.Provider))
 	}
 
 	summary := m.styles.Section.Border(m.styles.BorderStyle).Render(
 		lipgloss.JoinVertical(
 			lipgloss.Left,
-			m.styles.RenderSuccess("Campaign: "+m.campaignName),
-			m.styles.RenderSuccess("Project: "+m.projectName),
-			m.styles.RenderSuccess("Location: "+m.config.ProjectPath),
-			m.styles.RenderSuccess(fmt.Sprintf("Agents Created: %d skilled artisans", agentCount)),
-			m.styles.RenderSuccess(fmt.Sprintf("AI Providers: %d detected and configured", providerCount)),
-			m.styles.RenderSuccess("Database: Initialized and ready"),
-			m.styles.RenderSuccess("Daemon: Ready to start"),
+			m.styles.RenderSuccess("✅ Campaign: "+m.campaignName),
+			m.styles.RenderSuccess("✅ Project: "+m.projectName),
+			m.styles.RenderSuccess("✅ Location: "+m.config.ProjectPath),
+			m.styles.RenderSuccess(fmt.Sprintf("✅ Guild Members: %d skilled artisans ready to serve", agentCount)),
+			m.styles.RenderSuccess("✅ "+providerStatus),
+			m.styles.RenderSuccess("✅ Database: SQLite initialized with agent profiles"),
+			m.styles.RenderSuccess("✅ Daemon: Auto-start enabled for instant chat"),
 		),
 	)
 
-	// Elena introduction
-	elenaIntro := m.styles.Section.Render(`🧙 **Meet Your Guild Master - Elena**
+	// Elena introduction with provider context
+	providerContext := ""
+	if m.bestProvider != nil {
+		switch m.bestProvider.Provider {
+		case "claude_code":
+			providerContext = "\n\n*Elena is powered by Claude Code, giving her exceptional abilities in code review, debugging, and development workflow orchestration.*"
+		case "anthropic":
+			providerContext = "\n\n*Elena is powered by Anthropic's Claude, providing her with deep reasoning capabilities and thoughtful project guidance.*"
+		default:
+			providerContext = fmt.Sprintf("\n\n*Elena is powered by %s, optimized for your development environment.*", m.bestProvider.Provider)
+		}
+	}
 
-Elena the Guild Master is now ready to coordinate your development projects. 
-She brings 18 years of experience in leading diverse teams of digital artisans 
-to create legendary software works.
+	elenaIntro := m.styles.Section.Render(`🧙‍♀️ **Your Guild Master - Elena the Wise**
 
-Elena specializes in:
-  • **Project Orchestration** - Breaking down complex tasks into manageable work
-  • **Team Coordination** - Ensuring your AI specialists work together harmoniously  
-  • **Strategic Vision** - Guiding projects from conception to completion
-  • **Artisan Development** - Helping each team member grow and excel
+Elena has established your development guild and stands ready to lead your team to greatness. 
+With 18 years of experience orchestrating legendary software projects, she brings both wisdom 
+and grace to every development challenge.
 
-Your guild also includes **Marcus the Code Artisan** and **Vera the Quality Guardian**, 
-each with their own rich personalities and specialized expertise.`)
+**Elena's Guild Leadership:**
+  🎯 **Strategic Vision** - Transforms requirements into actionable development plans
+  ⚖️  **Team Harmony** - Coordinates Marcus and Vera to work as a unified force  
+  🔍 **Quality Focus** - Ensures every deliverable meets the highest standards
+  🌱 **Continuous Growth** - Helps each artisan reach their full potential
+
+**Your Complete Guild:**
+  👑 **Elena the Guild Master** - Project coordination and strategic leadership
+  ⚔️  **Marcus the Code Artisan** - Master craftsman of elegant, scalable solutions
+  🛡️  **Vera the Quality Guardian** - Protector of software excellence and user experience` + providerContext + `
+
+*Each guild member has a rich personality, specialized expertise, and is configured to use your best available AI providers for optimal performance.*`)
 
 	elenaRendered, _ := m.renderer.Render(elenaIntro)
 
@@ -468,21 +496,29 @@ each with their own rich personalities and specialized expertise.`)
 		validation = renderer.RenderValidationResults(m.validationResults)
 	}
 
-	// Enhanced next steps
-	nextSteps := m.styles.Section.Render(`🚀 **Ready to Begin Your Quest?**
+	// Enhanced next steps with immediate actions
+	nextSteps := m.styles.Section.Render(`🚀 **Your Guild Awaits Your Command!**
 
-Start chatting with Elena and your team:
+**Start Your Adventure Immediately:**
 
-    guild chat              # Begin conversation with Elena
-    guild chat --agent elena-guild-master  # Talk directly to Elena
-    guild status            # Check your guild's status  
-    guild commission list   # View your available quests
+    guild chat                           # Meet Elena and begin your first quest
+    guild chat --agent elena-guild-master  # Strategy session with Elena directly  
+    guild status                         # View your guild's current status
+    guild commission create             # Elena will help you design your first project
 
-Elena is waiting to help you plan your first development project. She'll guide 
-you through creating commissions, coordinating tasks, and building exceptional 
-software with your new guild of AI artisans.
+**What Elena Can Help You With:**
+  📋 **Project Planning** - "Elena, help me break down this feature into manageable tasks"
+  🏗️  **Architecture Guidance** - "What's the best approach for building a REST API?"
+  👥 **Team Coordination** - "Assign Marcus to handle the backend and Vera to test it"
+  🔍 **Code Review** - "Please review this code and suggest improvements"
 
-**Your legendary development guild is now ready!**`)
+**Pro Tips:**
+  • Elena understands natural language - just describe what you want to build
+  • She'll automatically coordinate Marcus and Vera when needed
+  • Your guild learns from each project, getting better over time
+  • The daemon auto-starts, so chat is always ready
+
+**Ready to build something legendary? Elena is waiting for your first command...**`)
 
 	nextStepsRendered, _ := m.renderer.Render(nextSteps)
 
@@ -491,7 +527,7 @@ software with your new guild of AI artisans.
 		sections = append(sections, validation)
 	}
 	sections = append(sections, nextStepsRendered)
-	sections = append(sections, m.styles.Info.Render("Press Enter to exit and start your adventure..."))
+	sections = append(sections, m.styles.Info.Render("Press Enter to begin your legendary development journey..."))
 
 	return lipgloss.JoinVertical(lipgloss.Center, sections...)
 }

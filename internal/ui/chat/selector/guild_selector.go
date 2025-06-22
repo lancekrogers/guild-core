@@ -414,15 +414,15 @@ func (m *GuildSelectorModel) createDefaultGuild() tea.Msg {
 		}
 	}
 
-	// Create default guild
-	defaultGuildName := fmt.Sprintf("default-%s-guild", provider)
+	// Create Elena-focused guild with enhanced agents
+	defaultGuildName := "elena-development-guild"
 	defaultGuild := config.GuildDefinition{
-		Purpose:     fmt.Sprintf("General purpose development guild using %s", provider),
-		Description: fmt.Sprintf("A versatile guild for software development tasks using %s models", provider),
+		Purpose:     "Elena's elite software development guild with Marcus and Vera",
+		Description: "A distinguished guild led by Elena the Guild Master, featuring Marcus the Code Artisan and Vera the Quality Guardian",
 		Agents: []string{
-			fmt.Sprintf("%s-manager", agentPrefix),
-			fmt.Sprintf("%s-developer", agentPrefix),
-			fmt.Sprintf("%s-tester", agentPrefix),
+			"elena-guild-master",
+			"marcus-developer",
+			"vera-tester",
 		},
 		Coordination: &config.CoordinationSettings{
 			MaxParallelTasks: 3,

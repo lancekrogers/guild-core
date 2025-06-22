@@ -32,6 +32,7 @@ import (
 	"github.com/guild-ventures/guild-core/internal/ui/vim"
 	"github.com/guild-ventures/guild-core/internal/ui/visual"
 	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/guild-ventures/guild-core/pkg/campaign"
 	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -630,7 +631,15 @@ func (app *App) View() string {
 
 // generateWelcomeMessage creates the welcome message for new sessions
 func (app *App) generateWelcomeMessage() common.ChatMessage {
-	content := `🏰 ═══════════════════════════════════════════ 🏰
+	var content string
+
+	// Check if we have a campaign and should show Elena's welcome
+	if app.config != nil && app.config.CampaignID != "" {
+		// Use Elena's welcome for campaign-based sessions
+		content = app.getElenaWelcomeMessage()
+	} else {
+		// Use the default welcome message for non-campaign sessions
+		content = `🏰 ═══════════════════════════════════════════ 🏰
    Welcome to the Guild Chat Chamber!
 
    ⚔️  Your agents await your commands
@@ -646,6 +655,7 @@ Try these commands to see visual features:
 • /test markdown - See styled headers and formatting
 • /test code go - View syntax highlighted code
 • /status - View real-time agent status panel`
+	}
 
 	return common.ChatMessage{
 		Type:      common.MsgSystem,
@@ -654,6 +664,12 @@ Try these commands to see visual features:
 		Timestamp: app.GetCurrentTime(),
 		Metadata:  make(map[string]string),
 	}
+}
+
+// getElenaWelcomeMessage returns Elena's personalized welcome message
+func (app *App) getElenaWelcomeMessage() string {
+	// Get Elena's welcome from the campaign defaults
+	return campaign.GetDefaultElenaWelcome()
 }
 
 // Event handlers - these will be implemented as the components are built

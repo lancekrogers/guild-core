@@ -88,11 +88,26 @@ func (m *InitTUIModelV2) doInitialization() tea.Cmd {
 			return errMsg{err: gerror.Wrap(err, gerror.ErrCodeCancelled, "cancelled after config creation")}
 		}
 
-		// Complete initialization
+		// Complete initialization with enhanced messaging
+		agentCount := m.enhancedAgentCount
+		if agentCount == 0 {
+			agentCount = 3 // Default expected count
+		}
+		
+		providerCount := 0
+		for _, result := range m.providerResults {
+			if result.Available {
+				providerCount++
+			}
+		}
+		
+		completeMessage := fmt.Sprintf("🏰 Guild established! Elena + %d artisans ready with %d AI providers", 
+			agentCount-1, providerCount) // -1 because Elena is separate from other artisans
+		
 		return initProgressMsg{
 			phase:   "complete",
 			percent: 1.0,
-			message: "Guild established with Elena and specialists ready",
+			message: completeMessage,
 		}
 	}
 }
@@ -208,18 +223,30 @@ func (m *InitTUIModelV2) detectProviders(ctx context.Context) error {
 	// Store detection results for later use
 	m.providerResults = results
 
-	// Log what we found for user feedback
+	// Enhanced provider analysis for intelligent agent mapping
 	availableCount := 0
+	var bestProvider providers.DetectionResult
+	highestConfidence := 0.0
+	
 	for _, result := range results {
 		if result.Available {
 			availableCount++
+			if result.Confidence > highestConfidence {
+				highestConfidence = result.Confidence
+				bestProvider = result
+			}
 		}
 	}
 
+	// Store best provider for agent optimization
+	if availableCount > 0 {
+		m.bestProvider = &bestProvider
+	}
+
+	// Provider detection failure is not fatal - we'll use defaults
 	if availableCount == 0 {
-		return gerror.New(gerror.ErrCodeProvider, "no AI providers detected - you may need to configure providers manually", nil).
-			WithComponent("InitTUIV2").
-			WithOperation("detectProviders")
+		// Log a warning but continue - the system can work with manual configuration
+		return nil // Don't fail initialization, just proceed with defaults
 	}
 
 	return nil
@@ -244,6 +271,9 @@ func (m *InitTUIModelV2) createEnhancedAgents(ctx context.Context) error {
 			WithOperation("createEnhancedAgents")
 	}
 
+	// Optimize agent providers based on detection results
+	m.optimizeAgentProviders(agentConfigs)
+
 	// Ensure agents directory exists
 	agentsDir := filepath.Join(m.config.ProjectPath, ".campaign", "agents")
 	if err := os.MkdirAll(agentsDir, 0755); err != nil {
@@ -267,6 +297,70 @@ func (m *InitTUIModelV2) createEnhancedAgents(ctx context.Context) error {
 	m.enhancedAgentCount = len(agentConfigs)
 
 	return nil
+}
+
+// optimizeAgentProviders intelligently maps agents to detected providers
+func (m *InitTUIModelV2) optimizeAgentProviders(agentConfigs []*config.AgentConfig) {
+	// If no providers detected, use defaults
+	if len(m.providerResults) == 0 {
+		return
+	}
+
+	// Create provider availability map
+	availableProviders := make(map[string]providers.DetectionResult)
+	for _, result := range m.providerResults {
+		if result.Available {
+			availableProviders[string(result.Provider)] = result
+		}
+	}
+
+	// If no providers available, use defaults
+	if len(availableProviders) == 0 {
+		return
+	}
+
+	// Intelligent provider mapping for each agent
+	for _, agent := range agentConfigs {
+		originalProvider := agent.Provider
+		
+		// Try to find the best provider for this agent
+		switch agent.Type {
+		case "manager":
+			// Elena (manager) benefits most from Claude Code's planning capabilities
+			if claudeCode, exists := availableProviders["claude_code"]; exists && claudeCode.Confidence > 0.7 {
+				agent.Provider = "claude_code"
+			} else if _, exists := availableProviders["anthropic"]; exists {
+				agent.Provider = "anthropic"
+			}
+		case "worker":
+			// Marcus (developer) benefits from Claude Code's coding features
+			if agent.ID == "marcus-developer" {
+				if claudeCode, exists := availableProviders["claude_code"]; exists && claudeCode.Confidence > 0.7 {
+					agent.Provider = "claude_code"
+				} else if _, exists := availableProviders["anthropic"]; exists {
+					agent.Provider = "anthropic"
+				}
+			}
+		case "specialist":
+			// Vera (tester) can use any high-quality provider
+			if _, exists := availableProviders["anthropic"]; exists {
+				agent.Provider = "anthropic"
+			} else if _, exists := availableProviders["claude_code"]; exists {
+				agent.Provider = "claude_code"
+			}
+		}
+
+		// If best provider is unavailable, fall back to any available provider
+		if _, exists := availableProviders[agent.Provider]; !exists {
+			// Use the provider with highest confidence as fallback
+			if m.bestProvider != nil {
+				agent.Provider = string(m.bestProvider.Provider)
+			} else {
+				// Restore original if no good options
+				agent.Provider = originalProvider
+			}
+		}
+	}
 }
 
 // saveAgentConfig saves an agent configuration to disk

@@ -7,6 +7,8 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -77,21 +79,89 @@ func runChat(cmd *cobra.Command, args []string) error {
 			WithOperation("chat.run")
 	}
 
+	// Check if guild is initialized first
+	guildConfig, err := loadGuildConfig()
+	if err != nil {
+		// Check if it's a "not found" error indicating guild is not initialized
+		if gerror.GetCode(err) == gerror.ErrCodeNotFound {
+			// Offer to initialize guild
+			fmt.Println("🏰 Guild not initialized in this directory.")
+			fmt.Println()
+			fmt.Println("The Guild Framework needs to be initialized before you can chat with Elena and the specialists.")
+			fmt.Println()
+			fmt.Println("Would you like to initialize Guild now? This will:")
+			fmt.Println("  ✨ Set up your Guild with Elena as Guild Master")
+			fmt.Println("  🤖 Detect available AI providers automatically")
+			fmt.Println("  👥 Create Marcus (backend) and Vera (frontend) specialists")
+			fmt.Println("  🚀 Get you chatting in under 30 seconds")
+			fmt.Println()
+			fmt.Print("Initialize Guild? [Y/n]: ")
+			
+			// Read user input
+			var response string
+			fmt.Scanln(&response)
+			
+			// Default to yes if empty or starts with y/Y
+			if response == "" || strings.ToLower(response)[0] == 'y' {
+				fmt.Println()
+				fmt.Println("🎯 Starting Guild initialization...")
+				fmt.Println()
+				
+				// Run guild init in quick mode
+				initCmd := exec.Command(os.Args[0], "init", "--quick")
+				initCmd.Stdout = os.Stdout
+				initCmd.Stderr = os.Stderr
+				initCmd.Stdin = os.Stdin
+				
+				if err := initCmd.Run(); err != nil {
+					return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run guild init").
+						WithComponent("cli").
+						WithOperation("chat.run")
+				}
+				
+				// After successful init, reload config and continue
+				guildConfig, err = loadGuildConfig()
+				if err != nil {
+					return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to load guild configuration after init").
+						WithComponent("cli").
+						WithOperation("chat.run")
+				}
+				
+				fmt.Println()
+				fmt.Println("✅ Guild initialized! Continuing to chat...")
+				fmt.Println()
+				
+				// Small pause for user to see the message
+				time.Sleep(1 * time.Second)
+			} else {
+				fmt.Println()
+				fmt.Println("To initialize Guild manually, run:")
+				fmt.Println("  guild init")
+				fmt.Println()
+				return gerror.New(gerror.ErrCodeCancelled, "user cancelled guild initialization", nil).
+					WithComponent("cli").
+					WithOperation("chat.run")
+			}
+		} else {
+			// Other error loading config
+			return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to load guild configuration").
+				WithComponent("cli").
+				WithOperation("chat.run")
+		}
+	}
+
 	// Use campaign detection logic
 	campaignName, err := campaign.DetectCampaign(cwd, chatCampaignID)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to detect campaign").
-			WithComponent("cli").
-			WithOperation("chat.run").
-			WithDetails("help", "Make sure you're in a campaign directory or specify --campaign")
-	}
-
-	// Load configuration
-	guildConfig, err := loadGuildConfig()
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to load guild configuration").
-			WithComponent("cli").
-			WithOperation("chat.run")
+		// If no campaign detected after initialization, use a default
+		if gerror.GetCode(err) == gerror.ErrCodeNotFound {
+			campaignName = "guild-demo" // Use default campaign name
+		} else {
+			return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to detect campaign").
+				WithComponent("cli").
+				WithOperation("chat.run").
+				WithDetails("help", "Make sure you're in a campaign directory or specify --campaign")
+		}
 	}
 
 	// Initialize project
