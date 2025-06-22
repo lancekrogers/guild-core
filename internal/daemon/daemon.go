@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"syscall"
 	"time"
@@ -126,8 +127,12 @@ func Start(ctx context.Context) error {
 	cmd := exec.Command(guildPath, "serve", "--daemon")
 
 	// Set up for background execution
-	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Setsid: true, // New session
+	// On macOS, setting Setsid can cause "operation not permitted" errors
+	// when the binary is executed from certain locations
+	if runtime.GOOS != "darwin" {
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			Setsid: true, // New session
+		}
 	}
 
 	// Redirect output to log file

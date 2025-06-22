@@ -91,9 +91,13 @@ func (m *Manager) startCampaignDaemon(ctx context.Context, config *DaemonConfig)
 	cmd := exec.Command(guildPath, args...)
 
 	// Set process to run with lower priority and in a new session
-	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Setsid:  true, // New session
-		Setpgid: true, // New process group
+	// On macOS, setting Setsid/Setpgid can cause "operation not permitted" errors
+	// when the binary is executed from certain locations
+	if runtime.GOOS != "darwin" {
+		cmd.SysProcAttr = &syscall.SysProcAttr{
+			Setsid:  true, // New session
+			Setpgid: true, // New process group
+		}
 	}
 
 	// Set up environment for resource limits
