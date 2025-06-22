@@ -29,7 +29,22 @@ func getExecutablePath() (string, error) {
 	if testExecutablePath != "" {
 		return testExecutablePath, nil
 	}
-	return os.Executable()
+	
+	// Get the executable path
+	execPath, err := os.Executable()
+	if err != nil {
+		return "", err
+	}
+	
+	// Resolve any symlinks and clean up the path
+	realPath, err := filepath.EvalSymlinks(execPath)
+	if err != nil {
+		// If we can't resolve symlinks, at least clean the path
+		return filepath.Clean(execPath), nil
+	}
+	
+	// Return the absolute, cleaned path
+	return filepath.Abs(realPath)
 }
 
 // SkipIfNoBinary skips the test if the guild binary doesn't exist

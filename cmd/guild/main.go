@@ -109,6 +109,10 @@ func init() {
 
 // Execute summons the Guild and its artisans (standard: launches the CLI application)
 func Execute() {
+	// Suppress default error printing for better UX
+	rootCmd.SilenceErrors = true
+	rootCmd.SilenceUsage = true
+	
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "The Guild regrets to inform you of an error: %v\n", err)
 		os.Exit(1)

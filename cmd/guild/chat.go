@@ -68,19 +68,9 @@ Examples:
 	RunE: runChat,
 }
 
-func runChat(cmd *cobra.Command, args []string) error {
-	ctx := context.Background()
-
-	// Detect campaign for current working directory
-	cwd, err := os.Getwd()
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get current directory").
-			WithComponent("cli").
-			WithOperation("chat.run")
-	}
-
+func checkGuildInitialized(cmd *cobra.Command, args []string) error {
 	// Check if guild is initialized first
-	guildConfig, err := loadGuildConfig()
+	_, err := loadGuildConfig()
 	if err != nil {
 		// Check if it's a "not found" error indicating guild is not initialized
 		if gerror.GetCode(err) == gerror.ErrCodeNotFound {
@@ -102,7 +92,7 @@ func runChat(cmd *cobra.Command, args []string) error {
 			fmt.Scanln(&response)
 			
 			// Default to yes if empty or starts with y/Y
-			if response == "" || strings.ToLower(response)[0] == 'y' {
+			if response == "" || (len(response) > 0 && strings.ToLower(response)[0] == 'y') {
 				fmt.Println()
 				fmt.Println("🎯 Starting Guild initialization...")
 				fmt.Println()
@@ -116,15 +106,7 @@ func runChat(cmd *cobra.Command, args []string) error {
 				if err := initCmd.Run(); err != nil {
 					return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run guild init").
 						WithComponent("cli").
-						WithOperation("chat.run")
-				}
-				
-				// After successful init, reload config and continue
-				guildConfig, err = loadGuildConfig()
-				if err != nil {
-					return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to load guild configuration after init").
-						WithComponent("cli").
-						WithOperation("chat.run")
+						WithOperation("checkGuildInitialized")
 				}
 				
 				fmt.Println()
@@ -133,21 +115,51 @@ func runChat(cmd *cobra.Command, args []string) error {
 				
 				// Small pause for user to see the message
 				time.Sleep(1 * time.Second)
+				
+				// Return nil to continue to runChat
+				return nil
 			} else {
 				fmt.Println()
 				fmt.Println("To initialize Guild manually, run:")
 				fmt.Println("  guild init")
 				fmt.Println()
-				return gerror.New(gerror.ErrCodeCancelled, "user cancelled guild initialization", nil).
+				// Return the error which will prevent runChat from executing
+				return gerror.New(gerror.ErrCodeCancelled, "guild initialization required", nil).
 					WithComponent("cli").
-					WithOperation("chat.run")
+					WithOperation("checkGuildInitialized")
 			}
-		} else {
-			// Other error loading config
-			return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to load guild configuration").
-				WithComponent("cli").
-				WithOperation("chat.run")
 		}
+		// Other errors pass through
+		return err
+	}
+	// Guild is initialized, continue
+	return nil
+}
+
+func runChat(cmd *cobra.Command, args []string) error {
+	ctx := context.Background()
+
+	// First check if guild is initialized
+	if err := checkGuildInitialized(cmd, args); err != nil {
+		// If checkGuildInitialized returns an error, it means user cancelled
+		// The function already printed the message, so just return nil
+		return nil
+	}
+
+	// Detect campaign for current working directory
+	cwd, err := os.Getwd()
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get current directory").
+			WithComponent("cli").
+			WithOperation("chat.run")
+	}
+
+	// Load configuration (now we know it exists)
+	guildConfig, err := loadGuildConfig()
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to load guild configuration").
+			WithComponent("cli").
+			WithOperation("chat.run")
 	}
 
 	// Use campaign detection logic
