@@ -6,6 +6,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 	tea "github.com/charmbracelet/bubbletea"
@@ -94,8 +95,15 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 		DaemonManager: uiinit.NewDefaultDaemonManager(),
 	}
 
-	// Create the improved TUI model
-	model, err := uiinit.NewInitTUIModelV2(ctx, config, deps)
+	// Check TTY availability before creating model
+	ttyAvailable := false
+	if ttyFile, err := os.OpenFile("/dev/tty", os.O_RDWR, 0); err == nil {
+		ttyFile.Close() // Just testing availability
+		ttyAvailable = true
+	}
+	
+	// Create the improved TUI model with TTY awareness
+	model, err := uiinit.NewInitTUIModelV2(ctx, config, deps, ttyAvailable)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create init UI").
 			WithComponent("cli").
@@ -108,10 +116,23 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 		tea.WithContext(ctx), // Pass context to Bubble Tea
 	}
 	
-	// Use alt screen for interactive mode
-	if !initQuickMode {
-		opts = append(opts, tea.WithAltScreen())
-		opts = append(opts, tea.WithMouseCellMotion()) // Enable mouse support
+	// Check if TTY is available for proper TUI mode
+	ttyAvailable := false
+	if ttyFile, err := os.OpenFile("/dev/tty", os.O_RDWR, 0); err == nil {
+		ttyFile.Close() // Just testing availability
+		ttyAvailable = true
+		opts = append(opts, tea.WithInputTTY())
+	}
+	
+	// If no TTY available, use no-renderer mode for simple output
+	if !ttyAvailable {
+		opts = append(opts, tea.WithoutRenderer())
+	} else {
+		// Use alt screen for interactive mode
+		if !initQuickMode {
+			opts = append(opts, tea.WithAltScreen())
+			opts = append(opts, tea.WithMouseCellMotion()) // Enable mouse support
+		}
 	}
 
 	// Create and run the program

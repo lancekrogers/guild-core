@@ -19,6 +19,10 @@ import (
 	"github.com/guild-ventures/guild-core/internal/chat/v2/panes"
 	"github.com/guild-ventures/guild-core/internal/chat/v2/services"
 	"github.com/guild-ventures/guild-core/internal/chat/v2/utils"
+	"github.com/guild-ventures/guild-core/internal/ui/formatting"
+	uitools "github.com/guild-ventures/guild-core/internal/ui/tools"
+	"github.com/guild-ventures/guild-core/internal/ui/vim"
+	"github.com/guild-ventures/guild-core/internal/ui/visual"
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/config"
@@ -91,6 +95,15 @@ type App struct {
 
 	// Guild selection
 	selectedGuild string
+
+	// Migrated V1 utilities
+	contentFormatter *formatting.ContentFormatter
+	markdownRenderer *formatting.MarkdownRenderer
+	toolVisualizer   *uitools.ToolVisualizer
+	vimModeManager   *vim.VimModeManager
+	imageProcessor   *visual.ImageProcessor
+	codeRenderer     *visual.CodeRenderer
+	mermaidProcessor *visual.MermaidProcessor
 
 	// Feature flags
 	initialized bool

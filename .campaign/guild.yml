@@ -1,0 +1,11 @@
+guilds:
+    default:
+        purpose: General development tasks and project management
+        description: Default guild for handling various development tasks, code generation, testing, and project coordination
+        agents:
+            - manager
+            - developer
+            - tester
+        coordination:
+            max_parallel_tasks: 3
+            auto_handoff: true

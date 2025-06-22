@@ -99,6 +99,7 @@ github.com/
 ### Guild-Specific ###
 # Guild project-local directory (runtime data)
 .guild/
+.campagain/
 
 # Claude AI configuration (if present)
 .claude/

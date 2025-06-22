@@ -1,7 +1,7 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
-package chat
+package formatting
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/guild-ventures/guild-core/internal/chat/visual"
+	"github.com/guild-ventures/guild-core/internal/ui/visual"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/templates"
 )

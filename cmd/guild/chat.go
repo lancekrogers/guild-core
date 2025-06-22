@@ -13,7 +13,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	chatv1 "github.com/guild-ventures/guild-core/internal/chat"
 	chatv2 "github.com/guild-ventures/guild-core/internal/chat/v2"
 	"github.com/guild-ventures/guild-core/internal/daemon"
 	"github.com/guild-ventures/guild-core/pkg/campaign"
@@ -103,16 +102,8 @@ func runChat(cmd *cobra.Command, args []string) error {
 			WithOperation("chat.run")
 	}
 
-	// Determine which version to use before guild selection
-	useV2 := os.Getenv("GUILD_CHAT_V2") == "true"
-	
 	// Run guild selector to let user choose which guild to work with
-	var selectedGuild string
-	if useV2 {
-		selectedGuild, err = chatv2.RunGuildSelector(ctx)
-	} else {
-		selectedGuild, err = chatv1.RunGuildSelector(ctx)
-	}
+	selectedGuild, err := chatv2.RunGuildSelector(ctx)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to select guild").
 			WithComponent("cli").
@@ -191,19 +182,10 @@ func runChat(cmd *cobra.Command, args []string) error {
 			WithOperation("chat.run")
 	}
 
-	// Create and run chat interface
-	if useV2 {
-		// Use new modular v2 implementation
-		app := chatv2.NewApp(ctx, guildConfig, conn, guildClient, promptClient, reg)
-		app.SetSelectedGuild(selectedGuild)
-		return app.Run()
-	} else {
-		// Use existing v1 implementation
-		return chatv1.Run(ctx, guildConfig, conn, guildClient, promptClient, reg,
-			chatv1.WithCampaign(campaignName),
-			chatv1.WithSession(chatSessionID),
-			chatv1.WithGuild(selectedGuild))
-	}
+	// Create and run chat interface using v2 implementation
+	app := chatv2.NewApp(ctx, guildConfig, conn, guildClient, promptClient, reg)
+	app.SetSelectedGuild(selectedGuild)
+	return app.Run()
 }
 
 // loadGuildConfig loads the guild configuration from the project

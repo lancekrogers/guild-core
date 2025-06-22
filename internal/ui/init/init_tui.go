@@ -73,7 +73,7 @@ type Config struct {
 }
 
 // NewInitTUIModelV2 creates an improved initialization TUI
-func NewInitTUIModelV2(ctx context.Context, cfg Config, deps InitDependencies) (*InitTUIModelV2, error) {
+func NewInitTUIModelV2(ctx context.Context, cfg Config, deps InitDependencies, ttyAvailable bool) (*InitTUIModelV2, error) {
 	// Check context early
 	if err := ctx.Err(); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during initialization").

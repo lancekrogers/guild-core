@@ -1,7 +1,7 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
-package chat
+package tools
 
 import (
 	"encoding/json"

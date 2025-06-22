@@ -1,0 +1,13 @@
+id: test-scribe
+name: Test Scribe
+type: specialist
+provider: openai
+model: gpt-4-turbo-preview
+description: Writes comprehensive tests
+capabilities:
+    - testing
+    - benchmarking
+    - coverage
+tools:
+    - code
+    - shell
