@@ -209,22 +209,40 @@ func ExampleSpecialistEnhancement() {
 // mockPromptRegistry provides a simple mock for examples
 type mockPromptRegistry struct{}
 
-func (m *mockPromptRegistry) RegisterLayeredPrompt(layer layered.PromptLayer, artisanID string, prompt layered.SystemPrompt) error {
+// Registry interface methods
+func (m *mockPromptRegistry) RegisterPrompt(role, domain, prompt string) error {
 	return nil
 }
 
-func (m *mockPromptRegistry) GetLayeredPrompt(layer layered.PromptLayer, artisanID string) (layered.SystemPrompt, error) {
-	return layered.SystemPrompt{}, nil
+func (m *mockPromptRegistry) RegisterTemplate(name, template string) error {
+	return nil
 }
 
-func (m *mockPromptRegistry) ListPrompts(layer layered.PromptLayer) ([]layered.SystemPrompt, error) {
+func (m *mockPromptRegistry) GetPrompt(role, domain string) (string, error) {
+	return "", nil
+}
+
+func (m *mockPromptRegistry) GetTemplate(name string) (string, error) {
+	return "", nil
+}
+
+// LayeredRegistry interface methods
+func (m *mockPromptRegistry) RegisterLayeredPrompt(layer layered.PromptLayer, identifier string, prompt layered.SystemPrompt) error {
+	return nil
+}
+
+func (m *mockPromptRegistry) GetLayeredPrompt(layer layered.PromptLayer, identifier string) (*layered.SystemPrompt, error) {
+	return &layered.SystemPrompt{}, nil
+}
+
+func (m *mockPromptRegistry) ListLayeredPrompts(layer layered.PromptLayer) ([]layered.SystemPrompt, error) {
 	return nil, nil
 }
 
-func (m *mockPromptRegistry) DeletePrompt(layer layered.PromptLayer, artisanID string) error {
+func (m *mockPromptRegistry) DeleteLayeredPrompt(layer layered.PromptLayer, identifier string) error {
 	return nil
 }
 
-func (m *mockPromptRegistry) RegisterAgentSpecificPrompts(agentID string, prompts map[layered.PromptLayer]layered.SystemPrompt) error {
-	return nil
+func (m *mockPromptRegistry) GetDefaultPrompts(layer layered.PromptLayer) ([]layered.SystemPrompt, error) {
+	return nil, nil
 }

@@ -330,6 +330,17 @@ func (ai *AgentInitializer) UpgradeExistingGuild(ctx context.Context, guildConfi
 			WithOperation("UpgradeExistingGuild")
 	}
 
+	// Ensure campaign directory structure exists
+	campaignDir := filepath.Join(projectPath, paths.DefaultCampaignDir)
+	agentsDir := filepath.Join(campaignDir, "agents")
+	
+	if err := os.MkdirAll(agentsDir, 0755); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
+			WithComponent("AgentInitializer").
+			WithOperation("UpgradeExistingGuild").
+			WithDetails("dir", agentsDir)
+	}
+
 	// Create Elena if missing
 	if err := ai.CreateElenaIfMissing(ctx, guildConfig, projectPath); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create Elena").

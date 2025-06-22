@@ -11,8 +11,12 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	yaml "gopkg.in/yaml.v3"
 
+	"github.com/guild-ventures/guild-core/pkg/agents"
+	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
 // doInitialization performs the main initialization with proper context handling
@@ -57,9 +61,26 @@ func (m *InitTUIModelV2) doInitialization() tea.Cmd {
 			return errMsg{err: gerror.Wrap(err, gerror.ErrCodeCancelled, "cancelled after project init")}
 		}
 
-		// Step 3: Create Phase 0 configuration
+		// Step 3: Detect available providers
+		if err := m.detectProviders(ctx); err != nil {
+			// Provider detection failure is not fatal, continue with defaults
+			return warnMsg{message: fmt.Sprintf("Provider detection warning: %v", err)}
+		}
+
+		// Check context after provider detection
+		if err := ctx.Err(); err != nil {
+			return errMsg{err: gerror.Wrap(err, gerror.ErrCodeCancelled, "cancelled after provider detection")}
+		}
+
+		// Step 4: Create Phase 0 configuration with enhanced agents
 		if err := m.configManager.CreatePhase0Configuration(ctx, m.config.ProjectPath, m.campaignName, m.projectName); err != nil {
 			return errMsg{err: err}
+		}
+
+		// Step 5: Create Elena and specialist agents
+		if err := m.createEnhancedAgents(ctx); err != nil {
+			// Enhanced agent creation failure is not fatal, continue with defaults
+			return warnMsg{message: fmt.Sprintf("Enhanced agent creation warning: %v", err)}
 		}
 
 		// Check context after configuration
@@ -71,7 +92,7 @@ func (m *InitTUIModelV2) doInitialization() tea.Cmd {
 		return initProgressMsg{
 			phase:   "complete",
 			percent: 1.0,
-			message: "Initialization complete",
+			message: "Guild established with Elena and specialists ready",
 		}
 	}
 }
@@ -162,6 +183,161 @@ func (m *InitTUIModelV2) doValidation() tea.Cmd {
 func (m *InitTUIModelV2) checkExistingCampaign(ctx context.Context) error {
 	// This would check for existing campaign
 	// For now, just a placeholder
+	return nil
+}
+
+// detectProviders detects available AI providers for optimal configuration
+func (m *InitTUIModelV2) detectProviders(ctx context.Context) error {
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "provider detection cancelled").
+			WithComponent("InitTUIV2").
+			WithOperation("detectProviders")
+	}
+
+	// Create auto-detector with reasonable timeout
+	detector := providers.NewAutoDetector(10 * time.Second)
+
+	// Detect all available providers
+	results, err := detector.DetectAll(ctx)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeProvider, "failed to detect providers").
+			WithComponent("InitTUIV2").
+			WithOperation("detectProviders")
+	}
+
+	// Store detection results for later use
+	m.providerResults = results
+
+	// Log what we found for user feedback
+	availableCount := 0
+	for _, result := range results {
+		if result.Available {
+			availableCount++
+		}
+	}
+
+	if availableCount == 0 {
+		return gerror.New(gerror.ErrCodeProvider, "no AI providers detected - you may need to configure providers manually", nil).
+			WithComponent("InitTUIV2").
+			WithOperation("detectProviders")
+	}
+
+	return nil
+}
+
+// createEnhancedAgents creates Elena and specialist agents with rich backstories
+func (m *InitTUIModelV2) createEnhancedAgents(ctx context.Context) error {
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "enhanced agent creation cancelled").
+			WithComponent("InitTUIV2").
+			WithOperation("createEnhancedAgents")
+	}
+
+	// Create the enhanced agent creator
+	creator := agents.NewDefaultAgentCreator()
+
+	// Create the default agent set (Elena + specialists)
+	agentConfigs, err := creator.CreateDefaultAgentSet(ctx)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create enhanced agent set").
+			WithComponent("InitTUIV2").
+			WithOperation("createEnhancedAgents")
+	}
+
+	// Ensure agents directory exists
+	agentsDir := filepath.Join(m.config.ProjectPath, ".campaign", "agents")
+	if err := os.MkdirAll(agentsDir, 0755); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
+			WithComponent("InitTUIV2").
+			WithOperation("createEnhancedAgents").
+			WithDetails("dir", agentsDir)
+	}
+
+	// Save each agent configuration
+	for _, agentConfig := range agentConfigs {
+		if err := m.saveAgentConfig(ctx, agentsDir, agentConfig); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save agent configuration").
+				WithComponent("InitTUIV2").
+				WithOperation("createEnhancedAgents").
+				WithDetails("agent", agentConfig.Name)
+		}
+	}
+
+	// Store agent count for success messaging
+	m.enhancedAgentCount = len(agentConfigs)
+
+	return nil
+}
+
+// saveAgentConfig saves an agent configuration to disk
+func (m *InitTUIModelV2) saveAgentConfig(ctx context.Context, agentsDir string, agentConfig *config.AgentConfig) error {
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "agent config save cancelled").
+			WithComponent("InitTUIV2").
+			WithOperation("saveAgentConfig")
+	}
+
+	// Convert to YAML-friendly format
+	configData := map[string]interface{}{
+		"id":            agentConfig.ID,
+		"name":          agentConfig.Name,
+		"type":          agentConfig.Type,
+		"description":   agentConfig.Description,
+		"provider":      agentConfig.Provider,
+		"model":         agentConfig.Model,
+		"capabilities":  agentConfig.Capabilities,
+		"tools":         agentConfig.Tools,
+	}
+
+	// Add backstory information if available
+	if agentConfig.Backstory != nil {
+		configData["backstory"] = map[string]interface{}{
+			"experience":      agentConfig.Backstory.Experience,
+			"previous_roles":  agentConfig.Backstory.PreviousRoles,
+			"expertise":       agentConfig.Backstory.Expertise,
+			"achievements":    agentConfig.Backstory.Achievements,
+			"philosophy":      agentConfig.Backstory.Philosophy,
+			"guild_rank":      agentConfig.Backstory.GuildRank,
+			"specialties":     agentConfig.Backstory.Specialties,
+		}
+	}
+
+	// Add personality information if available
+	if agentConfig.Personality != nil {
+		configData["personality"] = map[string]interface{}{
+			"formality":       agentConfig.Personality.Formality,
+			"detail_level":    agentConfig.Personality.DetailLevel,
+			"humor_level":     agentConfig.Personality.HumorLevel,
+			"approach_style":  agentConfig.Personality.ApproachStyle,
+			"assertiveness":   agentConfig.Personality.Assertiveness,
+			"empathy":         agentConfig.Personality.Empathy,
+			"patience":        agentConfig.Personality.Patience,
+			"honor":           agentConfig.Personality.Honor,
+			"wisdom":          agentConfig.Personality.Wisdom,
+			"craftsmanship":   agentConfig.Personality.Craftsmanship,
+		}
+	}
+
+	// Marshal to YAML
+	yamlData, err := yaml.Marshal(configData)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal agent config").
+			WithComponent("InitTUIV2").
+			WithOperation("saveAgentConfig").
+			WithDetails("agent", agentConfig.Name)
+	}
+
+	// Save to file
+	filename := fmt.Sprintf("%s.yaml", agentConfig.ID)
+	filepath := filepath.Join(agentsDir, filename)
+	
+	if err := os.WriteFile(filepath, yamlData, 0644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent config file").
+			WithComponent("InitTUIV2").
+			WithOperation("saveAgentConfig").
+			WithDetails("path", filepath)
+	}
+
 	return nil
 }
 

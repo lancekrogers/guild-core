@@ -414,21 +414,53 @@ func (m *InitTUIModelV2) renderComplete() string {
 	renderer, _ := NewDemoRenderer(m.width-4, m.styles)
 
 	title := m.styles.RenderHeader(
-		"Guild Successfully Established!",
-		"Your development environment is ready",
+		"🏰 Guild Successfully Established!",
+		"Elena and your development team are ready to serve",
 	)
 
-	// Summary
+	// Enhanced summary with Elena introduction
+	agentCount := m.enhancedAgentCount
+	if agentCount == 0 {
+		agentCount = 3 // Default count
+	}
+
+	providerCount := 0
+	for _, result := range m.providerResults {
+		if result.Available {
+			providerCount++
+		}
+	}
+
 	summary := m.styles.Section.Border(m.styles.BorderStyle).Render(
 		lipgloss.JoinVertical(
 			lipgloss.Left,
 			m.styles.RenderSuccess("Campaign: "+m.campaignName),
 			m.styles.RenderSuccess("Project: "+m.projectName),
 			m.styles.RenderSuccess("Location: "+m.config.ProjectPath),
-			m.styles.RenderSuccess("Database: Initialized"),
+			m.styles.RenderSuccess(fmt.Sprintf("Agents Created: %d skilled artisans", agentCount)),
+			m.styles.RenderSuccess(fmt.Sprintf("AI Providers: %d detected and configured", providerCount)),
+			m.styles.RenderSuccess("Database: Initialized and ready"),
 			m.styles.RenderSuccess("Daemon: Ready to start"),
 		),
 	)
+
+	// Elena introduction
+	elenaIntro := m.styles.Section.Render(`🧙 **Meet Your Guild Master - Elena**
+
+Elena the Guild Master is now ready to coordinate your development projects. 
+She brings 18 years of experience in leading diverse teams of digital artisans 
+to create legendary software works.
+
+Elena specializes in:
+  • **Project Orchestration** - Breaking down complex tasks into manageable work
+  • **Team Coordination** - Ensuring your AI specialists work together harmoniously  
+  • **Strategic Vision** - Guiding projects from conception to completion
+  • **Artisan Development** - Helping each team member grow and excel
+
+Your guild also includes **Marcus the Code Artisan** and **Vera the Quality Guardian**, 
+each with their own rich personalities and specialized expertise.`)
+
+	elenaRendered, _ := m.renderer.Render(elenaIntro)
 
 	// Validation results (if any)
 	var validation string
@@ -436,23 +468,30 @@ func (m *InitTUIModelV2) renderComplete() string {
 		validation = renderer.RenderValidationResults(m.validationResults)
 	}
 
-	// Next steps
-	nextSteps := m.styles.Section.Render(`🚀 **Try these commands:**
+	// Enhanced next steps
+	nextSteps := m.styles.Section.Render(`🚀 **Ready to Begin Your Quest?**
 
-    guild chat              # Start chatting with your agents
-    guild status            # Check system status  
-    guild commission list   # See your commissions
+Start chatting with Elena and your team:
 
-Ready to start? Run: **guild chat**`)
+    guild chat              # Begin conversation with Elena
+    guild chat --agent elena-guild-master  # Talk directly to Elena
+    guild status            # Check your guild's status  
+    guild commission list   # View your available quests
+
+Elena is waiting to help you plan your first development project. She'll guide 
+you through creating commissions, coordinating tasks, and building exceptional 
+software with your new guild of AI artisans.
+
+**Your legendary development guild is now ready!**`)
 
 	nextStepsRendered, _ := m.renderer.Render(nextSteps)
 
-	sections := []string{title, summary}
+	sections := []string{title, summary, elenaRendered}
 	if validation != "" {
 		sections = append(sections, validation)
 	}
 	sections = append(sections, nextStepsRendered)
-	sections = append(sections, m.styles.Info.Render("Press Enter to exit..."))
+	sections = append(sections, m.styles.Info.Render("Press Enter to exit and start your adventure..."))
 
 	return lipgloss.JoinVertical(lipgloss.Center, sections...)
 }

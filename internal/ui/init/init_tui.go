@@ -18,6 +18,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/internal/setup"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
 // InitTUIModelV2 represents the improved initialization TUI with better practices
@@ -55,8 +56,10 @@ type InitTUIModelV2 struct {
 	selectedDemo int
 
 	// Results
-	validationResults []ValidationResult
-	err               error
+	validationResults   []ValidationResult
+	providerResults     []providers.DetectionResult
+	enhancedAgentCount  int
+	err                 error
 
 	// UI dimensions
 	width  int
@@ -351,17 +354,33 @@ func (m *InitTUIModelV2) renderWelcome() string {
 		"Let's forge your development guild together",
 	)
 
-	// Add medieval-themed introduction
+	// Enhanced medieval-themed introduction featuring Elena
 	intro := `
-The Guild awaits your command, Master Artisan.
+🏰 **Welcome to the Guild Framework**
+
+The Guild awaits your command, Master Artisan. You are about to establish 
+a legendary development guild that will transform how you create software.
+
+**Meet Elena, Your Guild Master:**
+Elena the Guild Master will be your trusted coordinator - a wise and experienced 
+leader who specializes in orchestrating teams of AI specialists. With 18 years 
+of experience guiding diverse teams to create legendary software works, Elena 
+will help you organize, plan, and execute your development projects with grace 
+and efficiency.
+
+**Your Guild Will Include:**
+  🧙 **Elena the Guild Master** - Project coordination and team leadership
+  ⚔️  **Marcus the Code Artisan** - Master craftsman of digital logic
+  🛡️  **Vera the Quality Guardian** - Protector of software excellence
+  🎯 **Smart AI Provider Detection** - Automatic setup of available AI services
 
 Together, we shall establish:
-  ⚔️  A mighty Campaign to guide our quest
-  🛡️  A stalwart Project to house our works  
-  🧙 Wise AI Providers to counsel our artisans
-  👥 Skilled Agents to carry out our commissions
+  📋 A mighty **Campaign** to guide your quest
+  🏗️  A stalwart **Project** to house your works  
+  🤖 Wise **AI Providers** automatically detected and configured
+  👥 Skilled **Agents** with rich personalities and expertise
 
-Press Enter to begin your journey...
+Press Enter to begin forging your legendary development guild...
 `
 
 	rendered, _ := m.renderer.Render(intro)
