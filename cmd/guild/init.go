@@ -7,10 +7,13 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/spf13/cobra"
 	tea "github.com/charmbracelet/bubbletea"
 
+	"github.com/guild-ventures/guild-core/internal/daemon"
+	"github.com/guild-ventures/guild-core/pkg/campaign"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	uiinit "github.com/guild-ventures/guild-core/internal/ui/init"
 )
@@ -38,13 +41,15 @@ The setup process includes:
 - Agent configuration with smart defaults
 - Optional demo commission creation
 
-After running 'guild init', you can immediately use 'guild chat'.
+After running 'guild init', the daemon starts automatically and you can 
+immediately use 'guild chat' without any additional setup.
 
 Examples:
-  guild init                    # Initialize current directory
-  guild init ./my-project       # Initialize specific directory
+  guild init                    # Initialize current directory and start daemon
+  guild init ./my-project       # Initialize specific directory  
   guild init --quick            # Use defaults for everything
-  guild init --provider ollama  # Setup only Ollama provider`,
+  guild init --provider ollama  # Setup only Ollama provider
+  guild init --no-daemon        # Initialize without starting daemon`,
 	Args: cobra.MaximumNArgs(1),
 	RunE: runUnifiedInit,
 }
@@ -151,6 +156,35 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 	if initModel, ok := finalModel.(*uiinit.InitTUIModelV2); ok {
 		if initModel.GetError() != nil {
 			return initModel.GetError()
+		}
+	}
+
+	// Auto-start daemon unless --no-daemon flag is set
+	if !initNoDaemon {
+		fmt.Println("🚀 Starting Guild daemon...")
+		
+		// Detect the campaign we just created
+		cwd, err := os.Getwd()
+		if err != nil {
+			fmt.Printf("⚠️  Warning: Could not start daemon - failed to get working directory: %v\n", err)
+		} else {
+			campaignName, err := campaign.DetectCampaign(cwd, "")
+			if err != nil {
+				fmt.Printf("⚠️  Warning: Could not start daemon - failed to detect campaign: %v\n", err)
+			} else {
+				// Use the lifecycle manager for auto-start
+				lifecycleManager := daemon.DefaultLifecycleManager
+				_, err := lifecycleManager.AutoStartDaemon(ctx, campaignName)
+				if err != nil {
+					fmt.Printf("⚠️  Warning: Failed to start daemon: %v\n", err)
+					fmt.Printf("💡 You can start it manually with: guild serve --campaign %s --daemon\n", campaignName)
+				} else {
+					// Give the server a moment to fully initialize
+					time.Sleep(500 * time.Millisecond)
+					fmt.Printf("✅ Guild daemon started successfully for campaign '%s'\n", campaignName)
+					fmt.Printf("💬 You can now run: guild chat\n")
+				}
+			}
 		}
 	}
 
