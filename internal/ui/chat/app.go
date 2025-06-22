@@ -747,7 +747,7 @@ func (app *App) handleSubmit() (tea.Model, tea.Cmd) {
 
 	// 3. Default: treat as general message to all agents
 	userMsg := common.ChatMessage{
-		Type:      MsgUser,
+		Type:      common.MsgUser,
 		Content:   input,
 		AgentID:   "user",
 		Timestamp: app.GetCurrentTime(),
