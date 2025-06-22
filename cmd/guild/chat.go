@@ -39,8 +39,9 @@ func init() {
 	chatCmd.Flags().BoolVar(&chatNoDaemon, "no-daemon", false, "Don't auto-start the Guild server")
 
 	// Register completion functions
-	chatCmd.RegisterFlagCompletionFunc("campaign", completeCampaignNames)
-	chatCmd.RegisterFlagCompletionFunc("session", completeSessionIDs)
+	// Temporarily disabled to avoid early config loading
+	// chatCmd.RegisterFlagCompletionFunc("campaign", completeCampaignNames)
+	// chatCmd.RegisterFlagCompletionFunc("session", completeSessionIDs)
 }
 
 var chatCmd = &cobra.Command{
