@@ -48,23 +48,14 @@ func NewStyles() *Styles {
 	mutedColor := lipgloss.Color("241")     // Gray
 	accentColor := lipgloss.Color("99")     // Purple
 	
-	// Medieval-themed border
-	medievalBorder := lipgloss.Border{
-		Top:         "═",
-		Bottom:      "═",
-		Left:        "║",
-		Right:       "║",
-		TopLeft:     "╔",
-		TopRight:    "╗",
-		BottomLeft:  "╚",
-		BottomRight: "╝",
-	}
+	// Use modern rounded border for a cleaner look
+	modernBorder := lipgloss.RoundedBorder()
 	
 	return &Styles{
 		// Layout
 		Container: lipgloss.NewStyle().
 			Padding(1, 2).
-			Border(medievalBorder).
+			Border(modernBorder).
 			BorderForeground(primaryColor),
 			
 		Section: lipgloss.NewStyle().
@@ -108,8 +99,9 @@ func NewStyles() *Styles {
 		// Components
 		InputBox: lipgloss.NewStyle().
 			Border(lipgloss.RoundedBorder()).
-			BorderForeground(mutedColor).
-			Padding(0, 1),
+			BorderForeground(accentColor).
+			Padding(0, 1).
+			Width(60),
 			
 		ProgressBar: lipgloss.NewStyle().
 			Foreground(primaryColor),
@@ -136,7 +128,7 @@ func NewStyles() *Styles {
 			Foreground(mutedColor).
 			PaddingLeft(4),
 			
-		BorderStyle: medievalBorder,
+		BorderStyle: modernBorder,
 	}
 }
 
