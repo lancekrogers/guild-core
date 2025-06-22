@@ -13,7 +13,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	chatv2 "github.com/guild-ventures/guild-core/internal/chat/v2"
+	chatui "github.com/guild-ventures/guild-core/internal/ui/chat"
 	"github.com/guild-ventures/guild-core/internal/daemon"
 	"github.com/guild-ventures/guild-core/pkg/campaign"
 	"github.com/guild-ventures/guild-core/pkg/config"
@@ -103,7 +103,7 @@ func runChat(cmd *cobra.Command, args []string) error {
 	}
 
 	// Run guild selector to let user choose which guild to work with
-	selectedGuild, err := chatv2.RunGuildSelector(ctx)
+	selectedGuild, err := chatui.RunGuildSelector(ctx)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to select guild").
 			WithComponent("cli").
@@ -183,7 +183,7 @@ func runChat(cmd *cobra.Command, args []string) error {
 	}
 
 	// Create and run chat interface using v2 implementation
-	app := chatv2.NewApp(ctx, guildConfig, conn, guildClient, promptClient, reg)
+	app := chatui.NewApp(ctx, guildConfig, conn, guildClient, promptClient, reg)
 	app.SetSelectedGuild(selectedGuild)
 	return app.Run()
 }

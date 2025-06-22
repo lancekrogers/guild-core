@@ -13,35 +13,35 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-ventures/guild-core/internal/chat/v2/services"
+	"github.com/guild-ventures/guild-core/internal/ui/chat/services"
 )
 
 // LoadTestConfig defines the parameters for load testing
 type LoadTestConfig struct {
-	Duration       time.Duration
-	Concurrency    int
-	RampUpTime     time.Duration
-	ThinkTime      time.Duration
-	QueryPool      []string
-	TargetLatency  time.Duration
-	TargetTPS      float64
+	Duration      time.Duration
+	Concurrency   int
+	RampUpTime    time.Duration
+	ThinkTime     time.Duration
+	QueryPool     []string
+	TargetLatency time.Duration
+	TargetTPS     float64
 }
 
 // LoadTestResult contains the results of a load test
 type LoadTestResult struct {
-	TotalRequests     int64         `json:"total_requests"`
-	SuccessfulRequests int64        `json:"successful_requests"`
-	FailedRequests    int64         `json:"failed_requests"`
-	AverageLatency    time.Duration `json:"average_latency"`
-	P50Latency        time.Duration `json:"p50_latency"`
-	P95Latency        time.Duration `json:"p95_latency"`
-	P99Latency        time.Duration `json:"p99_latency"`
-	MaxLatency        time.Duration `json:"max_latency"`
-	MinLatency        time.Duration `json:"min_latency"`
-	TPS               float64       `json:"transactions_per_second"`
-	CacheHitRate      float64       `json:"cache_hit_rate"`
-	ErrorRate         float64       `json:"error_rate"`
-	MemoryUsage       int64         `json:"memory_usage_bytes"`
+	TotalRequests      int64         `json:"total_requests"`
+	SuccessfulRequests int64         `json:"successful_requests"`
+	FailedRequests     int64         `json:"failed_requests"`
+	AverageLatency     time.Duration `json:"average_latency"`
+	P50Latency         time.Duration `json:"p50_latency"`
+	P95Latency         time.Duration `json:"p95_latency"`
+	P99Latency         time.Duration `json:"p99_latency"`
+	MaxLatency         time.Duration `json:"max_latency"`
+	MinLatency         time.Duration `json:"min_latency"`
+	TPS                float64       `json:"transactions_per_second"`
+	CacheHitRate       float64       `json:"cache_hit_rate"`
+	ErrorRate          float64       `json:"error_rate"`
+	MemoryUsage        int64         `json:"memory_usage_bytes"`
 }
 
 // BenchmarkLoadTestSuggestions performs comprehensive load testing
@@ -77,7 +77,7 @@ func BenchmarkLoadTestSuggestions(b *testing.B) {
 		config.QueryPool = generateQueryPool()
 		b.Run(fmt.Sprintf("LoadTest_%d_users_%ds", config.Concurrency, int(config.Duration.Seconds())), func(b *testing.B) {
 			result := runLoadTest(b, config)
-			
+
 			// Report metrics
 			b.ReportMetric(float64(result.TotalRequests), "total_requests")
 			b.ReportMetric(float64(result.SuccessfulRequests), "successful_requests")
@@ -87,7 +87,7 @@ func BenchmarkLoadTestSuggestions(b *testing.B) {
 			b.ReportMetric(result.TPS, "tps")
 			b.ReportMetric(result.CacheHitRate*100, "cache_hit_rate_%")
 			b.ReportMetric(result.ErrorRate*100, "error_rate_%")
-			
+
 			// Validate against targets
 			if result.P95Latency > config.TargetLatency {
 				b.Errorf("P95 latency %v exceeds target %v", result.P95Latency, config.TargetLatency)
@@ -105,15 +105,15 @@ func BenchmarkLoadTestSuggestions(b *testing.B) {
 // runLoadTest executes a load test with the given configuration
 func runLoadTest(b *testing.B, config LoadTestConfig) LoadTestResult {
 	service := setupSuggestionService(b)
-	
+
 	// Results tracking
 	var (
-		totalRequests     int64
-		successfulReqs    int64
-		failedReqs        int64
-		cacheHits         int64
-		latencies         = make(chan time.Duration, 10000)
-		done              = make(chan struct{})
+		totalRequests  int64
+		successfulReqs int64
+		failedReqs     int64
+		cacheHits      int64
+		latencies      = make(chan time.Duration, 10000)
+		done           = make(chan struct{})
 	)
 
 	// Start latency collector
@@ -134,7 +134,7 @@ func runLoadTest(b *testing.B, config LoadTestConfig) LoadTestResult {
 		// Ramp up delay
 		rampDelay := time.Duration(float64(config.RampUpTime) * float64(workerID) / float64(config.Concurrency))
 		time.Sleep(rampDelay)
-		
+
 		// Main load testing loop
 		endTime := startTime.Add(config.Duration)
 		for time.Now().Before(endTime) {
@@ -143,22 +143,22 @@ func runLoadTest(b *testing.B, config LoadTestConfig) LoadTestResult {
 			context := &services.SuggestionContext{
 				ConversationID: fmt.Sprintf("worker_%d", workerID),
 			}
-			
+
 			// Execute request
 			start := time.Now()
 			cmd := service.GetSuggestions(query, context)
 			result := cmd()
 			latency := time.Since(start)
-			
+
 			atomic.AddInt64(&totalRequests, 1)
-			
+
 			// Check result
 			atomic.AddInt64(&successfulReqs, 1)
 			if result.FromCache {
 				atomic.AddInt64(&cacheHits, 1)
 			}
 			latencies <- latency
-			
+
 			// Think time
 			if config.ThinkTime > 0 {
 				time.Sleep(config.ThinkTime)
@@ -169,7 +169,7 @@ func runLoadTest(b *testing.B, config LoadTestConfig) LoadTestResult {
 	// Start workers
 	var wg sync.WaitGroup
 	startTime := time.Now()
-	
+
 	for i := 0; i < config.Concurrency; i++ {
 		wg.Add(1)
 		go func(workerID int) {
@@ -194,9 +194,9 @@ func runLoadTest(b *testing.B, config LoadTestConfig) LoadTestResult {
 		TotalRequests:      totalRequests,
 		SuccessfulRequests: successfulReqs,
 		FailedRequests:     failedReqs,
-		TPS:               float64(totalRequests) / config.Duration.Seconds(),
-		CacheHitRate:      float64(cacheHits) / float64(successfulReqs),
-		ErrorRate:         float64(failedReqs) / float64(totalRequests),
+		TPS:                float64(totalRequests) / config.Duration.Seconds(),
+		CacheHitRate:       float64(cacheHits) / float64(successfulReqs),
+		ErrorRate:          float64(failedReqs) / float64(totalRequests),
 	}
 
 	if len(allLatencies) > 0 {
@@ -214,7 +214,7 @@ func runLoadTest(b *testing.B, config LoadTestConfig) LoadTestResult {
 // BenchmarkStressTest pushes the system to its limits
 func BenchmarkStressTest(b *testing.B) {
 	service := setupSuggestionService(b)
-	
+
 	// Stress test configuration
 	stressLevels := []struct {
 		name        string
@@ -232,12 +232,12 @@ func BenchmarkStressTest(b *testing.B) {
 		b.Run(fmt.Sprintf("StressTest_%s", level.name), func(b *testing.B) {
 			// Clear cache for consistent testing
 			service.ClearCache()
-			
+
 			var (
-				totalRequests  int64
+				totalRequests   int64
 				successRequests int64
-				errors         int64
-				timeouts       int64
+				errors          int64
+				timeouts        int64
 			)
 
 			// Worker function
@@ -258,15 +258,15 @@ func BenchmarkStressTest(b *testing.B) {
 
 						// Set timeout for each request
 						reqCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
-						
+
 						atomic.AddInt64(&totalRequests, 1)
-						
+
 						go func() {
 							defer cancel()
-							
+
 							cmd := service.GetSuggestions(query, suggestionCtx)
 							_ = cmd()
-							
+
 							atomic.AddInt64(&successRequests, 1)
 						}()
 
@@ -333,30 +333,30 @@ func BenchmarkStressTest(b *testing.B) {
 // BenchmarkMemoryPressure tests performance under memory pressure
 func BenchmarkMemoryPressure(b *testing.B) {
 	service := setupSuggestionService(b)
-	
+
 	// Create memory pressure by holding large objects
 	var memoryBallast [][]byte
 	ballastSize := 100 * 1024 * 1024 // 100MB
-	
+
 	for i := 0; i < 10; i++ {
 		ballast := make([]byte, ballastSize/10)
 		memoryBallast = append(memoryBallast, ballast)
 	}
 
 	b.ResetTimer()
-	
+
 	// Run normal benchmark under memory pressure
 	for i := 0; i < b.N; i++ {
 		query := fmt.Sprintf("Memory pressure test query %d", i)
 		context := &services.SuggestionContext{
 			ConversationID: "memory_test",
 		}
-		
+
 		cmd := service.GetSuggestions(query, context)
 		_ = cmd()
-		
+
 		// For our mock, requests don't fail
-		
+
 		// Force garbage collection periodically
 		if i%100 == 0 {
 			runtime.GC()
@@ -395,7 +395,7 @@ func calculateMax(durations []time.Duration) time.Duration {
 	if len(durations) == 0 {
 		return 0
 	}
-	
+
 	max := durations[0]
 	for _, d := range durations[1:] {
 		if d > max {
@@ -409,7 +409,7 @@ func calculateMin(durations []time.Duration) time.Duration {
 	if len(durations) == 0 {
 		return 0
 	}
-	
+
 	min := durations[0]
 	for _, d := range durations[1:] {
 		if d < min {

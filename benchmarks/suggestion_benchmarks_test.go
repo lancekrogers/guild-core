@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-ventures/guild-core/internal/chat/v2/services"
+	"github.com/guild-ventures/guild-core/internal/ui/chat/services"
 	"github.com/guild-ventures/guild-core/pkg/suggestions"
 )
 
