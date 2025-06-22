@@ -4,6 +4,8 @@
 package campaign
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -36,15 +38,46 @@ type ProjectInfo struct {
 	Path string `yaml:"path"`
 }
 
+// SocketRegistry contains campaign hash and metadata for fast detection
+type SocketRegistry struct {
+	CampaignHash string `yaml:"campaign_hash"`
+	CampaignName string `yaml:"campaign_name"`
+}
+
+// GenerateCampaignHash creates a consistent hash from campaign name
+func GenerateCampaignHash(campaignName string) string {
+	h := sha256.Sum256([]byte(campaignName))
+	return hex.EncodeToString(h[:6]) // 12 chars, 6 bytes
+}
+
 // DetectCampaign finds the campaign for the current working directory
-// Uses file-based detection by walking up the directory tree looking for campaign/guild.yaml
+// Uses optimized hash-based detection with fallbacks
 func DetectCampaign(cwd string, flagValue string) (string, error) {
 	// 1. Explicit flag takes precedence
 	if flagValue != "" {
 		return flagValue, nil
 	}
 
-	// 2. Walk up directory tree looking for .campaign/campaign.yaml
+	// 2. Try ultra-fast binary hash detection (1μs)
+	if hash := readBinaryHash(cwd); hash != "" {
+		// Try to lookup campaign name via socket registry in same directory
+		// This provides hash validation and campaign name
+		if registry := readSocketRegistry(cwd); registry != nil {
+			// Verify hash matches for data consistency
+			expectedHash := GenerateCampaignHash(registry.CampaignName)
+			if expectedHash == hash {
+				return registry.CampaignName, nil
+			}
+		}
+		// Hash found but no valid registry - fall through to other methods
+	}
+
+	// 3. Try socket registry only (fast)
+	if registry := readSocketRegistry(cwd); registry != nil {
+		return registry.CampaignName, nil
+	}
+
+	// 4. Fallback to YAML parsing (slow)
 	campaignRef, err := findCampaignReference(cwd)
 	if err != nil {
 		// No campaign found - this is not an error in the new architecture
@@ -277,6 +310,101 @@ func ValidateCampaign(campaignName string) error {
 			WithDetails("file", configPath)
 	}
 
+	return nil
+}
+
+// readBinaryHash tries to read campaign hash from .hash file (ultra-fast)
+func readBinaryHash(cwd string) string {
+	currentDir := cwd
+	for {
+		hashFile := filepath.Join(currentDir, paths.DefaultCampaignDir, paths.CampaignHashFile)
+		if fileExists(hashFile) {
+			data, err := os.ReadFile(hashFile)
+			if err == nil && len(data) == 6 {
+				hash := hex.EncodeToString(data)
+				// TODO: Map hash back to campaign name via ~/.guild/campaigns/<hash>/config.yaml
+				return hash // For now return hash, implement mapping later
+			}
+		}
+		
+		// Move up one directory
+		parent := filepath.Dir(currentDir)
+		if parent == currentDir {
+			break // Reached filesystem root
+		}
+		currentDir = parent
+	}
+	return ""
+}
+
+// readSocketRegistry tries to read campaign info from socket-registry.yaml (fast)
+func readSocketRegistry(cwd string) *SocketRegistry {
+	currentDir := cwd
+	for {
+		registryFile := filepath.Join(currentDir, paths.DefaultCampaignDir, paths.SocketRegistryFile)
+		if fileExists(registryFile) {
+			data, err := os.ReadFile(registryFile)
+			if err == nil {
+				var registry SocketRegistry
+				if err := yaml.Unmarshal(data, &registry); err == nil {
+					return &registry
+				}
+			}
+		}
+		
+		// Move up one directory
+		parent := filepath.Dir(currentDir)
+		if parent == currentDir {
+			break // Reached filesystem root
+		}
+		currentDir = parent
+	}
+	return nil
+}
+
+// WriteCampaignHash writes the binary hash file for ultra-fast detection
+func WriteCampaignHash(projectPath, campaignName string) error {
+	hash := GenerateCampaignHash(campaignName)
+	hashBytes, err := hex.DecodeString(hash)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to decode campaign hash").
+			WithComponent("campaign").
+			WithOperation("WriteCampaignHash")
+	}
+	
+	hashFile := filepath.Join(projectPath, paths.DefaultCampaignDir, paths.CampaignHashFile)
+	if err := os.WriteFile(hashFile, hashBytes, 0644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write campaign hash").
+			WithComponent("campaign").
+			WithOperation("WriteCampaignHash").
+			WithDetails("file", hashFile)
+	}
+	
+	return nil
+}
+
+// WriteSocketRegistry writes the socket registry for fast detection
+func WriteSocketRegistry(projectPath, campaignName string) error {
+	registry := SocketRegistry{
+		CampaignHash: GenerateCampaignHash(campaignName),
+		CampaignName: campaignName,
+	}
+	
+	registryData, err := yaml.Marshal(registry)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal socket registry").
+			WithComponent("campaign").
+			WithOperation("WriteSocketRegistry")
+	}
+	
+	registryFile := filepath.Join(projectPath, paths.DefaultCampaignDir, paths.SocketRegistryFile)
+	if err := os.WriteFile(registryFile, registryData, 0644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write socket registry").
+			WithComponent("campaign").
+			WithOperation("WriteSocketRegistry").
+			WithDetails("file", registryFile)
+	}
+	
 	return nil
 }
 

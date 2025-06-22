@@ -43,14 +43,28 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 			WithDetails("dir", campaignDir)
 	}
 
-	// Step 1: Create campaign.yaml with CampaignReference structure for detection
+	// Step 1: Create optimized detection files
+	// 1a. Create binary hash file for ultra-fast detection
+	if err := campaign.WriteCampaignHash(projectPath, campaignName); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write campaign hash").
+			WithComponent("DefaultConfigManager").
+			WithOperation("CreatePhase0Configuration")
+	}
+
+	// 1b. Create socket registry for fast detection with metadata
+	if err := campaign.WriteSocketRegistry(projectPath, campaignName); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write socket registry").
+			WithComponent("DefaultConfigManager").
+			WithOperation("CreatePhase0Configuration")
+	}
+
+	// 1c. Create campaign.yaml for backward compatibility
 	campaignRef := map[string]interface{}{
 		"campaign":    campaignName,
 		"project":     projectName,
 		"description": "Project " + projectName + " in campaign " + campaignName,
 	}
 
-	// Marshal and save campaign reference for detection
 	campaignData, err := yaml.Marshal(campaignRef)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal campaign reference").

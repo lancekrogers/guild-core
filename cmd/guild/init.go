@@ -20,6 +20,7 @@ var (
 	initForce        bool
 	initProviderOnly string
 	initSkipValidation bool
+	initNoDaemon     bool
 )
 
 // initCmd represents the init command
@@ -56,6 +57,7 @@ func init() {
 	initCmd.Flags().BoolVar(&initForce, "force", false, "Force setup even if already configured")
 	initCmd.Flags().StringVar(&initProviderOnly, "provider", "", "Setup only this provider (openai, anthropic, ollama, claude_code)")
 	initCmd.Flags().BoolVar(&initSkipValidation, "skip-validation", false, "Skip post-init validation")
+	initCmd.Flags().BoolVar(&initNoDaemon, "no-daemon", false, "Don't auto-start the Guild server after initialization")
 }
 
 func runUnifiedInit(cmd *cobra.Command, args []string) error {

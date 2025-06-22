@@ -15,7 +15,7 @@ import (
 )
 
 // CampaignConfig represents the campaign-level configuration
-// This is stored in .campaign/campaign.yml
+// This is stored in .campaign/campaign.yaml
 type CampaignConfig struct {
 	// Campaign identity
 	Name        string `yaml:"name"`
@@ -40,7 +40,7 @@ func LoadCampaignConfig(ctx context.Context, projectPath string) (*CampaignConfi
 			WithComponent("CampaignConfig").
 			WithOperation("LoadCampaignConfig")
 	}
-	configPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "campaign.yml")
+	configPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "campaign.yaml")
 
 	// Check if file exists
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
@@ -83,7 +83,7 @@ func SaveCampaignConfig(ctx context.Context, projectPath string, config *Campaig
 			WithComponent("CampaignConfig").
 			WithOperation("SaveCampaignConfig")
 	}
-	configPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "campaign.yml")
+	configPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "campaign.yaml")
 
 	// Ensure directory exists
 	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {

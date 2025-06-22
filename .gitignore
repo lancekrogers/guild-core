@@ -46,6 +46,7 @@ test_results/
 testdata/output/
 .test-project*/
 .test-guild*/
+manual-test/
 
 # Test artifacts
 .test-results.tmp
@@ -99,7 +100,7 @@ github.com/
 ### Guild-Specific ###
 # Guild project-local directory (runtime data)
 .guild/
-.campagain/
+.campaign/
 
 # Claude AI configuration (if present)
 .claude/
