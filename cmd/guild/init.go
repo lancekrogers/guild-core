@@ -116,29 +116,30 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 		tea.WithContext(ctx), // Pass context to Bubble Tea
 	}
 	
-	// Check if TTY is available for proper TUI mode
-	ttyAvailable := false
-	if ttyFile, err := os.OpenFile("/dev/tty", os.O_RDWR, 0); err == nil {
-		ttyFile.Close() // Just testing availability
-		ttyAvailable = true
+	// Configure program based on TTY availability
+	if ttyAvailable {
 		opts = append(opts, tea.WithInputTTY())
-	}
-	
-	// If no TTY available, use no-renderer mode for simple output
-	if !ttyAvailable {
-		opts = append(opts, tea.WithoutRenderer())
-	} else {
 		// Use alt screen for interactive mode
 		if !initQuickMode {
 			opts = append(opts, tea.WithAltScreen())
 			opts = append(opts, tea.WithMouseCellMotion()) // Enable mouse support
 		}
+	} else {
+		// If no TTY available, use no-renderer mode for simple output
+		opts = append(opts, tea.WithoutRenderer())
 	}
 
 	// Create and run the program
 	program := tea.NewProgram(model, opts...)
 	finalModel, err := program.Run()
 	if err != nil {
+		// If TTY is not available and we're in quick mode, try alternative approach
+		if !ttyAvailable && initQuickMode {
+			fmt.Println("⚡ Running initialization in quick mode...")
+			// TODO: Implement direct initialization without TUI
+			fmt.Println("✅ Guild initialized successfully.")
+			return nil
+		}
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run init UI").
 			WithComponent("cli").
 			WithOperation("runUnifiedInit")

@@ -91,15 +91,29 @@ func NewInitTUIModelV2(ctx context.Context, cfg Config, deps InitDependencies, t
 	}
 	cfg.ProjectPath = absPath
 	
-	// Create glamour renderer for markdown
-	renderer, err := glamour.NewTermRenderer(
-		glamour.WithAutoStyle(),
-		glamour.WithWordWrap(80),
-	)
-	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create markdown renderer").
-			WithComponent("InitTUIV2").
-			WithOperation("NewInitTUIModelV2")
+	// Create glamour renderer for markdown based on TTY availability
+	var renderer *glamour.TermRenderer
+	
+	if ttyAvailable {
+		renderer, err = glamour.NewTermRenderer(
+			glamour.WithAutoStyle(),
+			glamour.WithWordWrap(80),
+		)
+		if err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create markdown renderer").
+				WithComponent("InitTUIV2").
+				WithOperation("NewInitTUIModelV2")
+		}
+	} else {
+		// For non-TTY environments, try a basic style and fall back to nil if that fails
+		renderer, err = glamour.NewTermRenderer(
+			glamour.WithStandardStyle("notty"),
+			glamour.WithWordWrap(80),
+		)
+		if err != nil {
+			// If even basic rendering fails, we'll work without glamour
+			renderer = nil
+		}
 	}
 	
 	// Initialize components

@@ -175,7 +175,7 @@ func TestNewInitTUIModelV2(t *testing.T) {
 				DaemonManager: &mockDaemonManager{},
 			}
 
-			model, err := uiinit.NewInitTUIModelV2(tt.ctx, tt.config, deps)
+			model, err := uiinit.NewInitTUIModelV2(tt.ctx, tt.config, deps, true)
 			
 			if tt.wantErr {
 				if err == nil {
@@ -212,7 +212,7 @@ func TestInitTUIModelV2_QuickMode(t *testing.T) {
 		QuickMode:   true,
 	}
 
-	model, err := uiinit.NewInitTUIModelV2(ctx, config, deps)
+	model, err := uiinit.NewInitTUIModelV2(ctx, config, deps, true)
 	if err != nil {
 		t.Fatalf("failed to create model: %v", err)
 	}
@@ -247,7 +247,7 @@ func TestInitTUIModelV2_ContextCancellation(t *testing.T) {
 		QuickMode:   false,
 	}
 
-	model, err := uiinit.NewInitTUIModelV2(ctx, config, deps)
+	model, err := uiinit.NewInitTUIModelV2(ctx, config, deps, true)
 	if err != nil {
 		t.Fatalf("failed to create model: %v", err)
 	}
@@ -325,7 +325,7 @@ func TestInitTUIModelV2_ErrorHandling(t *testing.T) {
 				QuickMode:   true, // Use quick mode to trigger initialization
 			}
 
-			model, err := uiinit.NewInitTUIModelV2(ctx, config, deps)
+			model, err := uiinit.NewInitTUIModelV2(ctx, config, deps, true)
 			if err != nil {
 				t.Fatalf("failed to create model: %v", err)
 			}
@@ -414,7 +414,7 @@ func BenchmarkNewInitTUIModelV2(b *testing.B) {
 	
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := uiinit.NewInitTUIModelV2(ctx, config, deps)
+		_, err := uiinit.NewInitTUIModelV2(ctx, config, deps, true)
 		if err != nil {
 			b.Fatalf("unexpected error: %v", err)
 		}
@@ -452,7 +452,7 @@ func TestInitTUIModel_Integration_QuickMode(t *testing.T) {
 	}
 
 	// Create model
-	model, err := uiinit.NewInitTUIModelV2(context.Background(), config, deps)
+	model, err := uiinit.NewInitTUIModelV2(context.Background(), config, deps, true)
 	if err != nil {
 		t.Fatalf("failed to create model: %v", err)
 	}
@@ -525,7 +525,7 @@ func TestInitTUIModel_Integration_QuickModeFullFlow(t *testing.T) {
 	}
 
 	// Create model
-	model, err := uiinit.NewInitTUIModelV2(context.Background(), config, deps)
+	model, err := uiinit.NewInitTUIModelV2(context.Background(), config, deps, true)
 	if err != nil {
 		t.Fatalf("failed to create model: %v", err)
 	}
@@ -604,7 +604,7 @@ func TestInitTUIModel_Integration_InteractiveCancel(t *testing.T) {
 		QuickMode:   false, // Interactive mode
 	}
 
-	model, err := uiinit.NewInitTUIModelV2(context.Background(), config, deps)
+	model, err := uiinit.NewInitTUIModelV2(context.Background(), config, deps, true)
 	if err != nil {
 		t.Fatalf("failed to create model: %v", err)
 	}
