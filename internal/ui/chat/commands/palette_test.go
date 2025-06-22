@@ -11,10 +11,9 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/x/exp/teatest"
+	"github.com/guild-ventures/guild-core/internal/ui/chat/commands"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/guild-ventures/guild-core/internal/chat/commands"
 )
 
 // testPaletteModel wraps CommandPalette to make it a proper Bubble Tea model for testing
@@ -135,20 +134,20 @@ func (m *testPaletteModel) GetSearchQuery() string {
 
 func TestNewCommandPalette(t *testing.T) {
 	palette := commands.NewCommandPalette()
-	
+
 	assert.NotNil(t, palette)
 	assert.False(t, palette.IsOpen())
-	
+
 	// Should have default commands registered
 	commands := palette.GetCommands()
 	assert.Greater(t, len(commands), 0, "Should have default commands")
-	
+
 	// Check for some expected commands
 	commandNames := make(map[string]bool)
 	for _, cmd := range commands {
 		commandNames[cmd.Name] = true
 	}
-	
+
 	assert.True(t, commandNames["Show Help"], "Should have Show Help command")
 	assert.True(t, commandNames["List Agents"], "Should have List Agents command")
 	assert.True(t, commandNames["Clear Chat"], "Should have Clear Chat command")
@@ -156,15 +155,15 @@ func TestNewCommandPalette(t *testing.T) {
 
 func TestCommandPaletteOpenClose(t *testing.T) {
 	palette := commands.NewCommandPalette()
-	
+
 	// Initially closed
 	assert.False(t, palette.IsOpen())
-	
+
 	// Open
 	palette.Open()
 	assert.True(t, palette.IsOpen())
 	assert.Equal(t, "", palette.GetSearchQuery())
-	
+
 	// Close
 	palette.Close()
 	assert.False(t, palette.IsOpen())
@@ -174,16 +173,16 @@ func TestCommandPaletteOpenClose(t *testing.T) {
 func TestCommandPaletteSearch(t *testing.T) {
 	palette := commands.NewCommandPalette()
 	palette.Open()
-	
+
 	// Initially shows all commands
 	allCmds := palette.GetFilteredCommands()
 	assert.Equal(t, len(palette.GetCommands()), len(allCmds))
-	
+
 	// Search for "help"
 	palette.UpdateSearch("help")
 	filtered := palette.GetFilteredCommands()
 	assert.Less(t, len(filtered), len(allCmds), "Should filter commands")
-	
+
 	// All filtered commands should match "help"
 	for _, cmd := range filtered {
 		matched := false
@@ -195,7 +194,7 @@ func TestCommandPaletteSearch(t *testing.T) {
 		}
 		assert.True(t, matched, "Command %s should match 'help'", cmd.Name)
 	}
-	
+
 	// Clear search
 	palette.UpdateSearch("")
 	cleared := palette.GetFilteredCommands()
@@ -205,22 +204,22 @@ func TestCommandPaletteSearch(t *testing.T) {
 func TestCommandPaletteNavigation(t *testing.T) {
 	palette := commands.NewCommandPalette()
 	palette.Open()
-	
+
 	// Should start at index 0
 	selected := palette.GetSelectedCommand()
 	require.NotNil(t, selected)
-	
+
 	firstCmd := palette.GetFilteredCommands()[0]
 	assert.Equal(t, firstCmd.Name, selected.Name)
-	
+
 	// Move down
 	palette.MoveDown()
 	selected = palette.GetSelectedCommand()
 	require.NotNil(t, selected)
-	
+
 	secondCmd := palette.GetFilteredCommands()[1]
 	assert.Equal(t, secondCmd.Name, selected.Name)
-	
+
 	// Move up (should wrap to first)
 	palette.MoveUp()
 	selected = palette.GetSelectedCommand()
@@ -231,25 +230,25 @@ func TestCommandPaletteNavigation(t *testing.T) {
 func TestCommandPaletteWrapping(t *testing.T) {
 	palette := commands.NewCommandPalette()
 	palette.Open()
-	
+
 	commands := palette.GetFilteredCommands()
 	if len(commands) < 2 {
 		t.Skip("Need at least 2 commands for wrapping test")
 	}
-	
+
 	// Move up from first position should wrap to last
 	palette.MoveUp()
 	selected := palette.GetSelectedCommand()
 	require.NotNil(t, selected)
-	
+
 	lastCmd := commands[len(commands)-1]
 	assert.Equal(t, lastCmd.Name, selected.Name)
-	
+
 	// Move down should wrap to first
 	palette.MoveDown()
 	selected = palette.GetSelectedCommand()
 	require.NotNil(t, selected)
-	
+
 	firstCmd := commands[0]
 	assert.Equal(t, firstCmd.Name, selected.Name)
 }
@@ -258,13 +257,13 @@ func TestCommandPaletteWrapping(t *testing.T) {
 
 func TestCommandPalette_Integration_BasicOpen(t *testing.T) {
 	model := newTestPaletteModel()
-	
+
 	tm := teatest.NewTestModel(
 		t,
 		model,
 		teatest.WithInitialTermSize(80, 24),
 	)
-	
+
 	// Wait for palette to open and render
 	teatest.WaitFor(
 		t,
@@ -275,35 +274,35 @@ func TestCommandPalette_Integration_BasicOpen(t *testing.T) {
 		teatest.WithCheckInterval(50*time.Millisecond),
 		teatest.WithDuration(2*time.Second),
 	)
-	
+
 	// Send escape to close palette first, then q to quit the model
 	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
-	
+
 	// Wait a moment for the escape to be processed
 	time.Sleep(100 * time.Millisecond)
-	
+
 	// Send 'q' to quit the application
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
-	
+
 	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
-	
+
 	// Verify final output
 	finalOutput := tm.FinalOutput(t)
 	outputBytes, err := io.ReadAll(finalOutput)
 	require.NoError(t, err)
-	
+
 	t.Logf("Final output: %s", string(outputBytes))
 }
 
 func TestCommandPalette_Integration_SearchAndFilter(t *testing.T) {
 	model := newTestPaletteModel()
-	
+
 	tm := teatest.NewTestModel(
 		t,
 		model,
 		teatest.WithInitialTermSize(80, 24),
 	)
-	
+
 	// Wait for initial render
 	teatest.WaitFor(
 		t,
@@ -314,13 +313,13 @@ func TestCommandPalette_Integration_SearchAndFilter(t *testing.T) {
 		teatest.WithCheckInterval(50*time.Millisecond),
 		teatest.WithDuration(2*time.Second),
 	)
-	
+
 	// Type "help" to search
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("h")})
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("e")})
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("l")})
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("p")})
-	
+
 	// Wait for search results
 	teatest.WaitFor(
 		t,
@@ -331,29 +330,29 @@ func TestCommandPalette_Integration_SearchAndFilter(t *testing.T) {
 		teatest.WithCheckInterval(50*time.Millisecond),
 		teatest.WithDuration(2*time.Second),
 	)
-	
+
 	// Exit - first escape to close palette, then 'q' to quit
 	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
 	time.Sleep(50 * time.Millisecond)
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
 	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
-	
+
 	finalOutput := tm.FinalOutput(t)
 	outputBytes, err := io.ReadAll(finalOutput)
 	require.NoError(t, err)
-	
+
 	t.Logf("Search test output: %s", string(outputBytes))
 }
 
 func TestCommandPalette_Integration_NavigationAndSelection(t *testing.T) {
 	model := newTestPaletteModel()
-	
+
 	tm := teatest.NewTestModel(
 		t,
 		model,
 		teatest.WithInitialTermSize(80, 24),
 	)
-	
+
 	// Wait for initial render
 	teatest.WaitFor(
 		t,
@@ -364,20 +363,20 @@ func TestCommandPalette_Integration_NavigationAndSelection(t *testing.T) {
 		teatest.WithCheckInterval(50*time.Millisecond),
 		teatest.WithDuration(2*time.Second),
 	)
-	
+
 	// Navigate down a few items
 	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
 	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
-	
+
 	// Wait a bit for navigation to process
 	time.Sleep(100 * time.Millisecond)
-	
+
 	// Select current item
 	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
-	
+
 	// The enter key should execute the command and quit automatically
 	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
-	
+
 	// Verify command was executed
 	finalModel := tm.FinalModel(t)
 	if testModel, ok := finalModel.(*testPaletteModel); ok {
@@ -388,13 +387,13 @@ func TestCommandPalette_Integration_NavigationAndSelection(t *testing.T) {
 
 func TestCommandPalette_Integration_BackspaceInSearch(t *testing.T) {
 	model := newTestPaletteModel()
-	
+
 	tm := teatest.NewTestModel(
 		t,
 		model,
 		teatest.WithInitialTermSize(80, 24),
 	)
-	
+
 	// Wait for initial render
 	teatest.WaitFor(
 		t,
@@ -405,13 +404,13 @@ func TestCommandPalette_Integration_BackspaceInSearch(t *testing.T) {
 		teatest.WithCheckInterval(50*time.Millisecond),
 		teatest.WithDuration(2*time.Second),
 	)
-	
+
 	// Type some text
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("a")})
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("g")})
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("e")})
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("n")})
-	
+
 	// Wait for search to show "agen"
 	teatest.WaitFor(
 		t,
@@ -422,11 +421,11 @@ func TestCommandPalette_Integration_BackspaceInSearch(t *testing.T) {
 		teatest.WithCheckInterval(50*time.Millisecond),
 		teatest.WithDuration(2*time.Second),
 	)
-	
+
 	// Use backspace to remove characters
 	tm.Send(tea.KeyMsg{Type: tea.KeyBackspace})
 	tm.Send(tea.KeyMsg{Type: tea.KeyBackspace})
-	
+
 	// Wait for search to show "ag"
 	teatest.WaitFor(
 		t,
@@ -437,7 +436,7 @@ func TestCommandPalette_Integration_BackspaceInSearch(t *testing.T) {
 		teatest.WithCheckInterval(50*time.Millisecond),
 		teatest.WithDuration(2*time.Second),
 	)
-	
+
 	// Exit - first escape to close palette, then 'q' to quit
 	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
 	time.Sleep(50 * time.Millisecond)
@@ -447,13 +446,13 @@ func TestCommandPalette_Integration_BackspaceInSearch(t *testing.T) {
 
 func TestCommandPalette_Integration_EmptySearchResults(t *testing.T) {
 	model := newTestPaletteModel()
-	
+
 	tm := teatest.NewTestModel(
 		t,
 		model,
 		teatest.WithInitialTermSize(80, 24),
 	)
-	
+
 	// Wait for initial render
 	teatest.WaitFor(
 		t,
@@ -464,14 +463,14 @@ func TestCommandPalette_Integration_EmptySearchResults(t *testing.T) {
 		teatest.WithCheckInterval(50*time.Millisecond),
 		teatest.WithDuration(2*time.Second),
 	)
-	
+
 	// Type a search that won't match anything
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("x")})
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("y")})
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("z")})
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
 	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("w")})
-	
+
 	// Wait for "No commands found"
 	teatest.WaitFor(
 		t,
@@ -482,7 +481,7 @@ func TestCommandPalette_Integration_EmptySearchResults(t *testing.T) {
 		teatest.WithCheckInterval(50*time.Millisecond),
 		teatest.WithDuration(2*time.Second),
 	)
-	
+
 	// Exit - first escape to close palette, then 'q' to quit
 	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
 	time.Sleep(50 * time.Millisecond)
@@ -495,7 +494,7 @@ func TestCommandPalette_Integration_EmptySearchResults(t *testing.T) {
 func BenchmarkCommandPaletteSearch(b *testing.B) {
 	palette := commands.NewCommandPalette()
 	palette.Open()
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		palette.UpdateSearch("help")
@@ -508,7 +507,7 @@ func BenchmarkCommandPaletteSearch(b *testing.B) {
 func BenchmarkCommandPaletteNavigation(b *testing.B) {
 	palette := commands.NewCommandPalette()
 	palette.Open()
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		palette.MoveDown()
@@ -522,7 +521,7 @@ func BenchmarkCommandPaletteView(b *testing.B) {
 	palette := commands.NewCommandPalette()
 	palette.Open()
 	palette.SetDimensions(80, 24)
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = palette.View()
