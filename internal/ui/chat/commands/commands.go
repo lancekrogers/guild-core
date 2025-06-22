@@ -12,8 +12,11 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
+	"github.com/guild-ventures/guild-core/internal/ui/chat/agents"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/common"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/messages"
+	toolmsg "github.com/guild-ventures/guild-core/internal/ui/chat/messages/tools"
+	"github.com/guild-ventures/guild-core/internal/ui/chat/panes"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/session"
 	"github.com/guild-ventures/guild-core/pkg/templates"
 )
@@ -96,7 +99,7 @@ func (cp *CommandProcessor) processCommand(cmdText string) tea.Cmd {
 	parts := strings.Fields(cmdText)
 	if len(parts) == 0 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Empty command",
 				Level:   "error",
 			}
@@ -113,7 +116,7 @@ func (cp *CommandProcessor) processCommand(cmdText string) tea.Cmd {
 
 	// Unknown command
 	return func() tea.Msg {
-		return messages.StatusUpdateMsg{
+		return panes.StatusUpdateMsg{
 			Message: fmt.Sprintf("Unknown command: %s. Type /help for available commands.", cmdName),
 			Level:   "error",
 		}
@@ -126,7 +129,7 @@ func (cp *CommandProcessor) processAgentMention(input string) tea.Cmd {
 	parts := strings.SplitN(input, " ", 2)
 	if len(parts) < 2 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: @agent-name your message",
 				Level:   "error",
 			}
@@ -138,7 +141,7 @@ func (cp *CommandProcessor) processAgentMention(input string) tea.Cmd {
 
 	// Create agent-specific message
 	return func() tea.Msg {
-		return AgentStreamMsg{
+		return agents.AgentStreamMsg{
 			AgentID: agentID,
 			Content: message,
 			Done:    false,
@@ -149,7 +152,7 @@ func (cp *CommandProcessor) processAgentMention(input string) tea.Cmd {
 // processBroadcastMessage processes messages to all agents
 func (cp *CommandProcessor) processBroadcastMessage(message string) tea.Cmd {
 	return func() tea.Msg {
-		return AgentStreamMsg{
+		return agents.AgentStreamMsg{
 			AgentID: "all",
 			Content: message,
 			Done:    false,
@@ -158,11 +161,11 @@ func (cp *CommandProcessor) processBroadcastMessage(message string) tea.Cmd {
 }
 
 // GetAvailableCommands returns a list of all available commands
-func (cp *CommandProcessor) GetAvailableCommands() []Command {
-	var commands []Command
+func (cp *CommandProcessor) GetAvailableCommands() []messages.Command {
+	var commands []messages.Command
 
 	for name, handler := range cp.handlers {
-		commands = append(commands, Command{
+		commands = append(commands, messages.Command{
 			Name:        name,
 			Description: handler.Description(),
 			Category:    "built-in",
@@ -297,7 +300,7 @@ func (h *HelpHandler) Handle(ctx context.Context, args []string) tea.Cmd {
   Tab                   - Auto-completion
   Esc                   - Cancel current operation`
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: helpText,
 		}
@@ -317,7 +320,7 @@ type ClearHandler struct{}
 
 func (h *ClearHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	return func() tea.Msg {
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID: "output",
 			Data:   "clear",
 		}
@@ -382,7 +385,7 @@ func (h *StatusHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 			"45.2 MB",        // TODO: Get memory usage
 			time.Now().Add(-2*time.Hour-35*time.Minute).Format("15:04:05")) // TODO: Get session start time
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: statusText,
 		}
@@ -434,7 +437,7 @@ func (h *AgentsHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 **Status Icons:**
 🟢 IDLE    🤔 THINKING    🟡 WORKING    🔴 ERROR    ⚫ OFFLINE`
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: agentsText,
 		}
@@ -470,7 +473,7 @@ func (h *ToolsHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 		return h.handleStatus(ctx, args[1:])
 	default:
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /tools [list|search|info|status]",
 				Level:   "error",
 			}
@@ -519,7 +522,7 @@ func (h *ToolsHandler) handleList(ctx context.Context, args []string) tea.Cmd {
 /tools info <tool-id>    - Get detailed tool information
 /tool <tool-id> [params] - Execute tool directly`
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: toolsText,
 		}
@@ -529,7 +532,7 @@ func (h *ToolsHandler) handleList(ctx context.Context, args []string) tea.Cmd {
 func (h *ToolsHandler) handleSearch(ctx context.Context, args []string) tea.Cmd {
 	if len(args) == 0 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /tools search <query>",
 				Level:   "error",
 			}
@@ -559,7 +562,7 @@ func (h *ToolsHandler) handleSearch(ctx context.Context, args []string) tea.Cmd 
 /tools info shell-exec   - Get detailed information
 /tool shell-exec --help  - Execute with help flag`, query)
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: searchText,
 		}
@@ -569,7 +572,7 @@ func (h *ToolsHandler) handleSearch(ctx context.Context, args []string) tea.Cmd 
 func (h *ToolsHandler) handleInfo(ctx context.Context, args []string) tea.Cmd {
 	if len(args) == 0 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /tools info <tool-id>",
 				Level:   "error",
 			}
@@ -605,7 +608,7 @@ func (h *ToolsHandler) handleInfo(ctx context.Context, args []string) tea.Cmd {
 /tool %s --command "ls -la"
 /tool %s --command "git status" --workdir ./project`, toolID, toolID, toolID)
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: infoText,
 		}
@@ -642,7 +645,7 @@ func (h *ToolsHandler) handleStatus(ctx context.Context, args []string) tea.Cmd 
 • Active executions: 2
 • Queue length: 0`
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: statusText,
 		}
@@ -663,7 +666,7 @@ type ToolExecuteHandler struct{}
 func (h *ToolExecuteHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	if len(args) == 0 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /tool <tool-name> [parameters]",
 				Level:   "error",
 			}
@@ -671,7 +674,7 @@ func (h *ToolExecuteHandler) Handle(ctx context.Context, args []string) tea.Cmd 
 	}
 
 	return func() tea.Msg {
-		return ToolExecutionStartMsg{
+		return toolmsg.ToolExecutionStartMsg{
 			ExecutionID: fmt.Sprintf("exec-%d", time.Now().UnixNano()),
 			ToolName:    args[0],
 			AgentID:     "chat-user",
@@ -707,7 +710,7 @@ func (h *TestHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 		return h.handleMixed(ctx, args[1:])
 	default:
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /test [markdown|code|mixed]\n/test code <language> - Test syntax highlighting",
 				Level:   "error",
 			}
@@ -760,7 +763,7 @@ Inline code: ` + "`fmt.Println(\"Hello Guild!\")`" + `
 
 **Test Status:** ✅ Markdown rendering working correctly!`
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: testContent,
 		}
@@ -1007,7 +1010,7 @@ example();
 **Supported Languages:** go, python, javascript, typescript, rust, java, cpp, c, bash, sql, yaml, json, html, css`, language, language, language, language)
 		}
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: testContent,
 		}
@@ -1123,7 +1126,7 @@ guild tool file-reader --path ./README.md
 - ✅ Emoji and Unicode characters
 - ✅ Horizontal rules and separators`
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: testContent,
 		}
@@ -1159,7 +1162,7 @@ func (h *PromptHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 		return h.handleDelete(ctx, args[1:])
 	default:
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /prompt [list|get|set|delete] [args]",
 				Level:   "error",
 			}
@@ -1211,7 +1214,7 @@ func (h *PromptHandler) handleList(ctx context.Context, args []string) tea.Cmd {
 
 **Note:** PLATFORM and GUILD layers are protected and cannot be modified.`
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: promptText,
 		}
@@ -1221,7 +1224,7 @@ func (h *PromptHandler) handleList(ctx context.Context, args []string) tea.Cmd {
 func (h *PromptHandler) handleGet(ctx context.Context, args []string) tea.Cmd {
 	if len(args) == 0 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /prompt get <layer>\nLayers: PLATFORM, GUILD, ROLE, DOMAIN, SESSION, TURN",
 				Level:   "error",
 			}
@@ -1246,7 +1249,7 @@ func (h *PromptHandler) handleGet(ctx context.Context, args []string) tea.Cmd {
 		case "TURN":
 			content = "Current turn: User requested command system implementation..."
 		default:
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Unknown layer: %s. Valid layers: PLATFORM, GUILD, ROLE, DOMAIN, SESSION, TURN", layer),
 				Level:   "error",
 			}
@@ -1273,7 +1276,7 @@ func (h *PromptHandler) handleGet(ctx context.Context, args []string) tea.Cmd {
 			}[layer],
 			"2 hours ago") // TODO: Get real timestamp
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: promptContent,
 		}
@@ -1283,7 +1286,7 @@ func (h *PromptHandler) handleGet(ctx context.Context, args []string) tea.Cmd {
 func (h *PromptHandler) handleSet(ctx context.Context, args []string) tea.Cmd {
 	if len(args) < 2 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /prompt set <layer> <content>\nLayers: ROLE, DOMAIN, SESSION, TURN",
 				Level:   "error",
 			}
@@ -1296,14 +1299,14 @@ func (h *PromptHandler) handleSet(ctx context.Context, args []string) tea.Cmd {
 	return func() tea.Msg {
 		// Check if layer is protected
 		if layer == "PLATFORM" || layer == "GUILD" {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Cannot modify protected layer: %s", layer),
 				Level:   "error",
 			}
 		}
 
 		// TODO: Implement actual prompt setting
-		return messages.StatusUpdateMsg{
+		return panes.StatusUpdateMsg{
 			Message: fmt.Sprintf("✅ Prompt layer '%s' updated (%d characters)", layer, len(content)),
 			Level:   "success",
 		}
@@ -1313,7 +1316,7 @@ func (h *PromptHandler) handleSet(ctx context.Context, args []string) tea.Cmd {
 func (h *PromptHandler) handleDelete(ctx context.Context, args []string) tea.Cmd {
 	if len(args) == 0 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /prompt delete <layer>\nLayers: ROLE, DOMAIN, SESSION, TURN",
 				Level:   "error",
 			}
@@ -1325,14 +1328,14 @@ func (h *PromptHandler) handleDelete(ctx context.Context, args []string) tea.Cmd
 	return func() tea.Msg {
 		// Check if layer is protected
 		if layer == "PLATFORM" || layer == "GUILD" {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Cannot delete protected layer: %s", layer),
 				Level:   "error",
 			}
 		}
 
 		// TODO: Implement actual prompt deletion
-		return messages.StatusUpdateMsg{
+		return panes.StatusUpdateMsg{
 			Message: fmt.Sprintf("✅ Prompt layer '%s' cleared", layer),
 			Level:   "success",
 		}
@@ -1353,7 +1356,7 @@ type SearchHandler struct{}
 func (h *SearchHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	if len(args) == 0 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /search <pattern>",
 				Level:   "error",
 			}
@@ -1361,7 +1364,7 @@ func (h *SearchHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	}
 
 	return func() tea.Msg {
-		return SearchMsg{
+		return messages.SearchMsg{
 			Pattern: strings.Join(args, " "),
 		}
 	}
@@ -1391,7 +1394,7 @@ func NewExportHandler(sessionManager session.SessionManager, currentSession *ses
 func (h *ExportHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	if len(args) == 0 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /export <format> [filename]\nFormats: json, markdown, html, pdf",
 				Level:   "error",
 			}
@@ -1407,7 +1410,7 @@ func (h *ExportHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	return func() tea.Msg {
 		// Check if session manager is available
 		if h.sessionManager == nil {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Session manager not available",
 				Level:   "error",
 			}
@@ -1425,7 +1428,7 @@ func (h *ExportHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 		case "pdf":
 			exportFormat = session.ExportFormatPDF
 		default:
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Unsupported format: %s. Use: json, markdown, html, pdf", format),
 				Level:   "error",
 			}
@@ -1450,7 +1453,7 @@ func (h *ExportHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 		// Export the session
 		data, err := h.sessionManager.ExportSessionWithOptions(sessionID, exportFormat, options)
 		if err != nil {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Export failed: %v", err),
 				Level:   "error",
 			}
@@ -1463,13 +1466,13 @@ func (h *ExportHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 		}
 
 		if err := os.WriteFile(filename, data, 0o644); err != nil {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Failed to save file: %v", err),
 				Level:   "error",
 			}
 		}
 
-		return messages.StatusUpdateMsg{
+		return panes.StatusUpdateMsg{
 			Message: fmt.Sprintf("✅ Session exported to `%s` (%.1f KB)", filename, float64(len(data))/1024),
 			Level:   "success",
 		}
@@ -1507,7 +1510,7 @@ func (h *SaveHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	return func() tea.Msg {
 		// Check if session manager is available
 		if h.sessionManager == nil {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Session manager not available",
 				Level:   "error",
 			}
@@ -1532,7 +1535,7 @@ func (h *SaveHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 		// Export the session as markdown
 		data, err := h.sessionManager.ExportSessionWithOptions(sessionID, session.ExportFormatMarkdown, options)
 		if err != nil {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Save failed: %v", err),
 				Level:   "error",
 			}
@@ -1545,13 +1548,13 @@ func (h *SaveHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 		}
 
 		if err := os.WriteFile(filename, data, 0o644); err != nil {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Failed to save file: %v", err),
 				Level:   "error",
 			}
 		}
 
-		return messages.StatusUpdateMsg{
+		return panes.StatusUpdateMsg{
 			Message: fmt.Sprintf("💾 Chat saved to `%s` (%.1f KB)", filename, float64(len(data))/1024),
 			Level:   "success",
 		}
@@ -1571,7 +1574,7 @@ type SessionHandler struct{}
 
 func (h *SessionHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	return func() tea.Msg {
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: "Session management - Coming soon!",
 		}
@@ -1600,7 +1603,7 @@ func NewTemplateHandler(templateManager templates.TemplateManager) *TemplateHand
 func (h *TemplateHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	if len(args) == 0 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /template <action> [args]\nActions: list, search <query>, use <id>",
 				Level:   "error",
 			}
@@ -1617,7 +1620,7 @@ func (h *TemplateHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 		return h.handleUse(ctx, args[1:])
 	default:
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Unknown template action: %s", action),
 				Level:   "error",
 			}
@@ -1628,7 +1631,7 @@ func (h *TemplateHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 func (h *TemplateHandler) handleList(ctx context.Context, args []string) tea.Cmd {
 	return func() tea.Msg {
 		if h.templateManager == nil {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Template manager not available",
 				Level:   "error",
 			}
@@ -1638,14 +1641,14 @@ func (h *TemplateHandler) handleList(ctx context.Context, args []string) tea.Cmd
 		context := make(map[string]interface{})
 		templates, err := h.templateManager.GetContextualSuggestions(context)
 		if err != nil {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Failed to get templates: %v", err),
 				Level:   "error",
 			}
 		}
 
 		if len(templates) == 0 {
-			return PaneUpdateMsg{
+			return panes.PaneUpdateMsg{
 				PaneID:  "output",
 				Content: "📋 No templates available. Templates will be created automatically when needed.",
 			}
@@ -1656,7 +1659,7 @@ func (h *TemplateHandler) handleList(ctx context.Context, args []string) tea.Cmd
 		content += "Templates are automatically managed by the content formatter.\n"
 		content += "Use `/template search <query>` to find specific templates.\n"
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: content,
 		}
@@ -1666,7 +1669,7 @@ func (h *TemplateHandler) handleList(ctx context.Context, args []string) tea.Cmd
 func (h *TemplateHandler) handleSearch(ctx context.Context, args []string) tea.Cmd {
 	if len(args) == 0 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /template search <query>",
 				Level:   "error",
 			}
@@ -1677,7 +1680,7 @@ func (h *TemplateHandler) handleSearch(ctx context.Context, args []string) tea.C
 
 	return func() tea.Msg {
 		if h.templateManager == nil {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Template manager not available",
 				Level:   "error",
 			}
@@ -1685,14 +1688,14 @@ func (h *TemplateHandler) handleSearch(ctx context.Context, args []string) tea.C
 
 		results, err := h.templateManager.SearchTemplates(query, 10)
 		if err != nil {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Search failed: %v", err),
 				Level:   "error",
 			}
 		}
 
 		if len(results) == 0 {
-			return PaneUpdateMsg{
+			return panes.PaneUpdateMsg{
 				PaneID:  "output",
 				Content: fmt.Sprintf("🔍 No templates found matching '%s'", query),
 			}
@@ -1708,7 +1711,7 @@ func (h *TemplateHandler) handleSearch(ctx context.Context, args []string) tea.C
 			content += fmt.Sprintf("**Usage:** `/template use %s`\n\n", template.ID)
 		}
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: content,
 		}
@@ -1718,7 +1721,7 @@ func (h *TemplateHandler) handleSearch(ctx context.Context, args []string) tea.C
 func (h *TemplateHandler) handleUse(ctx context.Context, args []string) tea.Cmd {
 	if len(args) == 0 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /template use <template-id>",
 				Level:   "error",
 			}
@@ -1729,7 +1732,7 @@ func (h *TemplateHandler) handleUse(ctx context.Context, args []string) tea.Cmd 
 
 	return func() tea.Msg {
 		if h.templateManager == nil {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Template manager not available",
 				Level:   "error",
 			}
@@ -1740,7 +1743,7 @@ func (h *TemplateHandler) handleUse(ctx context.Context, args []string) tea.Cmd 
 
 		content, err := h.templateManager.RenderTemplate(templateID, variables)
 		if err != nil {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Failed to render template: %v", err),
 				Level:   "error",
 			}
@@ -1748,7 +1751,7 @@ func (h *TemplateHandler) handleUse(ctx context.Context, args []string) tea.Cmd 
 
 		// Show the rendered template
 		output := fmt.Sprintf("📋 Template '%s' rendered:\n\n%s", templateID, content)
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: output,
 		}
@@ -1803,7 +1806,7 @@ func (h *TemplatesHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 
 💡 **Tip:** Templates support variable substitution and context-aware suggestions!`
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: content,
 		}
@@ -1824,7 +1827,7 @@ type ImageHandler struct{}
 func (h *ImageHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	if len(args) == 0 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /image <path>",
 				Level:   "error",
 			}
@@ -1839,7 +1842,7 @@ func (h *ImageHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 
 		// TODO: Add image processing with ASCII art when visual processors are integrated
 		// For now, show the markdown image reference
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: fmt.Sprintf("🖼️ Image: %s\n\n%s", imagePath, content),
 		}
@@ -1890,7 +1893,7 @@ graph TD
 
 💡 **Tip:** Diagrams are automatically detected and rendered in chat messages!`
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: content,
 		}
@@ -1911,7 +1914,7 @@ type CodeHandler struct{}
 func (h *CodeHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	if len(args) == 0 {
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: "Usage: /code <action>\nActions: toggle-lines",
 				Level:   "error",
 			}
@@ -1923,14 +1926,14 @@ func (h *CodeHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	case "toggle-lines":
 		return func() tea.Msg {
 			// TODO: Integrate with code renderer when visual processors are added
-			return PaneUpdateMsg{
+			return panes.PaneUpdateMsg{
 				PaneID:  "output",
 				Content: "✅ Code line numbers toggled",
 			}
 		}
 	default:
 		return func() tea.Msg {
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Unknown code action: %s", action),
 				Level:   "error",
 			}
@@ -1952,7 +1955,7 @@ type ConfigRefreshHandler struct{}
 func (h *ConfigRefreshHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	return func() tea.Msg {
 		// TODO: Implement actual config refresh
-		return messages.StatusUpdateMsg{
+		return panes.StatusUpdateMsg{
 			Message: "✅ Configuration reloaded successfully",
 			Level:   "success",
 		}
@@ -1994,7 +1997,7 @@ func (h *GuildsHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 /guild development     - Switch to development guild
 /guild                - Show current guild details`
 
-		return PaneUpdateMsg{
+		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: guildsText,
 		}
@@ -2034,7 +2037,7 @@ file-reader, shell-exec, git-commit, code-analyzer, test-runner,
 docker-build, api-client, database-query, log-parser, 
 documentation-generator, code-formatter, security-scanner`
 
-			return PaneUpdateMsg{
+			return panes.PaneUpdateMsg{
 				PaneID:  "output",
 				Content: guildText,
 			}
@@ -2044,7 +2047,7 @@ documentation-generator, code-formatter, security-scanner`
 		guildName := args[0]
 		return func() tea.Msg {
 			// TODO: Implement actual guild switching
-			return messages.StatusUpdateMsg{
+			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("✅ Switched to guild: %s", guildName),
 				Level:   "success",
 			}

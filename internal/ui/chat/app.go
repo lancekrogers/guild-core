@@ -15,8 +15,11 @@ import (
 	_ "modernc.org/sqlite" // SQLite driver
 
 	"github.com/guild-ventures/guild-core/internal/ui/chat/commands"
+	"github.com/guild-ventures/guild-core/internal/ui/chat/common"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/common/layout"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/common/utils"
+	"github.com/guild-ventures/guild-core/internal/ui/chat/completion"
+	"github.com/guild-ventures/guild-core/internal/ui/chat/messages/tools"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/panes"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/services"
 	"github.com/guild-ventures/guild-core/internal/ui/chat/session"
@@ -72,13 +75,13 @@ type App struct {
 	currentSession *session.Session
 
 	// Application state
-	messages      []ChatMessage
-	activeTools   map[string]*ToolExecution
+	messages      []common.ChatMessage
+	activeTools   map[string]*commands.ToolExecution
 	agents        []string
-	currentView   ViewMode
+	currentView   common.ViewMode
 	searchResults []int
 	searchPattern string
-	completions   []CompletionResult
+	completions   []completion.CompletionResult
 
 	// Command processing
 	commandProcessor *commands.CommandProcessor

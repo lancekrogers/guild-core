@@ -18,31 +18,31 @@ import (
 // ExampleChatWithSuggestions demonstrates how to use the integrated chat service
 func ExampleChatWithSuggestions() {
 	ctx := context.Background()
-	
+
 	// Create dependencies
 	client := &mockGuildClient{} // In production, use real gRPC client
 	reg := registry.NewComponentRegistry()
-	
+
 	// Create an enhanced agent (in production, get from registry)
 	enhancedAgent := createMockEnhancedAgent()
-	
+
 	// Create chat service with integrated suggestions
 	chatService, err := NewChatServiceWithSuggestions(ctx, client, reg, enhancedAgent)
 	if err != nil {
 		panic(err)
 	}
-	
+
 	// Configure suggestion behavior
 	chatService.SetSuggestionMode(SuggestionModeBoth) // Get suggestions before and after
 	chatService.ConfigureSuggestions(true)            // Enable suggestions
-	
+
 	// Example 1: Send message with pre-execution suggestions
 	conversationID := "conv-123"
 	cmd := chatService.SendMessageWithSuggestions("developer", "How do I implement a REST API?", conversationID)
-	
+
 	// Execute the command (in a real Bubble Tea app, this would be handled by the runtime)
 	msg := cmd()
-	
+
 	// Handle different message types
 	switch m := msg.(type) {
 	case SuggestionsReceivedMsg:
@@ -53,13 +53,13 @@ func ExampleChatWithSuggestions() {
 	case AgentResponseMsg:
 		fmt.Printf("Agent response: %s\n", m.Content)
 	}
-	
+
 	// Example 2: Get follow-up suggestions after response
 	followUpCmd := chatService.GetPostExecutionSuggestions(
 		"How do I implement a REST API?",
 		"To implement a REST API, you should start with...",
 	)
-	
+
 	if followUpCmd != nil {
 		followUpMsg := followUpCmd()
 		if sugMsg, ok := followUpMsg.(SuggestionsReceivedMsg); ok {
@@ -69,14 +69,14 @@ func ExampleChatWithSuggestions() {
 			}
 		}
 	}
-	
+
 	// Example 3: Process agent response with automatic suggestion generation
 	response := AgentResponseMsg{
 		AgentID: "developer",
 		Content: "Here's how to implement a REST API...",
 		Done:    true,
 	}
-	
+
 	processCmd := chatService.ProcessAgentResponse(response, "How do I implement a REST API?")
 	if processCmd != nil {
 		processMsg := processCmd()
@@ -87,7 +87,7 @@ func ExampleChatWithSuggestions() {
 			fmt.Printf("Tokens used: %d\n", respWithSuggestions.TokensUsed)
 		}
 	}
-	
+
 	// Example 4: Get statistics
 	stats := chatService.GetStats()
 	fmt.Printf("\nChat Service Statistics:\n")
@@ -95,7 +95,7 @@ func ExampleChatWithSuggestions() {
 	fmt.Printf("Suggestion mode: %s\n", stats["suggestion_mode"])
 	fmt.Printf("Suggestions enabled: %v\n", stats["suggestions_enabled"])
 	fmt.Printf("Token used: %d\n", stats["token_used"])
-	
+
 	// Print suggestion service stats if available
 	if cacheHitRate, ok := stats["suggestion_cache_hit_rate"]; ok {
 		fmt.Printf("Cache hit rate: %s\n", cacheHitRate)
@@ -129,7 +129,7 @@ func createMockEnhancedAgent() agent.EnhancedGuildArtisan {
 					},
 				}, nil
 			}
-			
+
 			// Default suggestions
 			return []suggestions.Suggestion{
 				{
@@ -145,11 +145,11 @@ func createMockEnhancedAgent() agent.EnhancedGuildArtisan {
 
 // contains is a simple helper to check if a string contains a substring
 func contains(s, substr string) bool {
-	return len(s) > 0 && len(substr) > 0 && 
-		   (s == substr || len(s) > len(substr) && 
-		    (s[:len(substr)] == substr || 
-		     s[len(s)-len(substr):] == substr ||
-		     containsMiddle(s, substr)))
+	return len(s) > 0 && len(substr) > 0 &&
+		(s == substr || len(s) > len(substr) &&
+			(s[:len(substr)] == substr ||
+				s[len(s)-len(substr):] == substr ||
+				containsMiddle(s, substr)))
 }
 
 // containsMiddle checks if substr appears in the middle of s
@@ -176,11 +176,11 @@ func DemonstrateSuggestionModes(chatService *ChatService) {
 		{SuggestionModePost, "Post-execution suggestions only"},
 		{SuggestionModeBoth, "Both pre and post suggestions"},
 	}
-	
+
 	for _, m := range modes {
 		fmt.Printf("\n=== %s ===\n", m.description)
 		chatService.SetSuggestionMode(m.mode)
-		
+
 		// Test pre-execution suggestions
 		preCmd := chatService.GetPreExecutionSuggestions("test message", "conv-123")
 		if preCmd != nil {
@@ -188,7 +188,7 @@ func DemonstrateSuggestionModes(chatService *ChatService) {
 		} else {
 			fmt.Println("✗ Pre-execution suggestions not available")
 		}
-		
+
 		// Test post-execution suggestions
 		postCmd := chatService.GetPostExecutionSuggestions("original", "response")
 		if postCmd != nil {
@@ -202,28 +202,28 @@ func DemonstrateSuggestionModes(chatService *ChatService) {
 // DemonstrateTokenOptimization shows how token optimization works
 func DemonstrateTokenOptimization(chatService *ChatService) {
 	fmt.Println("\n=== Token Optimization Demo ===")
-	
+
 	// Configure suggestions with limits
 	if chatService.suggestionService != nil {
 		chatService.suggestionService.SetTokenLimit(100)
 	}
-	
+
 	// Create a very long message
 	longMessage := ""
 	for i := 0; i < 1000; i++ {
 		longMessage += fmt.Sprintf("This is sentence %d. ", i)
 	}
-	
+
 	fmt.Printf("Original message length: %d characters\n", len(longMessage))
-	
+
 	// Send the message - it will be optimized automatically
 	cmd := chatService.SendMessage("test-agent", longMessage)
 	msg := cmd()
-	
+
 	// Check token usage
 	stats := chatService.GetStats()
 	fmt.Printf("Suggestions enabled: %v\n", stats["suggestions_enabled"])
-	
+
 	// The message was automatically optimized for better efficiency
 	if agentResp, ok := msg.(AgentResponseMsg); ok {
 		fmt.Printf("Message was sent successfully to %s\n", agentResp.AgentID)

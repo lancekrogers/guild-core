@@ -34,8 +34,8 @@ func (ci *CompletionIntegration) SetSuggestionSystem(manager suggestions.Suggest
 
 	// Also update the completion engine
 	if ci.completionEngine != nil {
-		ci.completionEngine.suggestionManager = manager
-		ci.completionEngine.chatHandler = handler
+		ci.completionEngine.SuggestionManager = manager
+		ci.completionEngine.ChatHandler = handler
 	}
 }
 

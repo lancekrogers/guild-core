@@ -104,7 +104,7 @@ func (ce *CompletionEngineEnhanced) initializeProviders(guildConfig *config.Guil
 	// ce.providers["lsp"] = lspProvider
 
 	// Update the base engine's suggestion manager
-	ce.suggestionManager = ce.directManager
+	ce.SuggestionManager = ce.directManager
 
 	return nil
 }
@@ -122,7 +122,7 @@ func (ce *CompletionEngineEnhanced) GetDirectSuggestions(ctx context.Context, in
 		CurrentMessage:      input,
 		SessionID:           "chat-session", // Would come from actual session
 		ProjectContext:      ce.buildProjectContext(),
-		ConversationHistory: ce.conversationHist,
+		ConversationHistory: ce.ConversationHist,
 	}
 
 	// Create filter
@@ -196,7 +196,7 @@ func (ce *CompletionEngineEnhanced) DisableProvider(providerName string) error {
 
 // UpdateProjectContext updates the project context for better suggestions
 func (ce *CompletionEngineEnhanced) UpdateProjectContext(projectPath string) {
-	ce.projectRoot = projectPath
+	ce.ProjectRoot = projectPath
 
 	// Update LSP provider if it exists
 	// Note: LSP provider would need methods to update project path

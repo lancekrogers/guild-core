@@ -35,10 +35,10 @@ type CompletionEngine struct {
 }
 
 // NewCompletionEngine creates a new completion engine with full functionality
-func NewCompletionEngine(guildConfig *config.GuildConfig, projectRoot string) *CompletionEngine {
+func NewCompletionEngine(guildConfig *config.GuildConfig, ProjectRoot string) *CompletionEngine {
 	engine := &CompletionEngine{
 		GuildConfig:      guildConfig,
-		ProjectRoot:      projectRoot,
+		ProjectRoot:      ProjectRoot,
 		Commands:         make(map[string]messages.Command),
 		ConversationHist: make([]suggestions.ChatMessage, 0),
 	}
@@ -49,15 +49,15 @@ func NewCompletionEngine(guildConfig *config.GuildConfig, projectRoot string) *C
 }
 
 // NewCompletionEngineWithSuggestions creates a completion engine with suggestion system integration
-func NewCompletionEngineWithSuggestions(guildConfig *config.GuildConfig, projectRoot string,
-	suggestionManager suggestions.SuggestionManager, chatHandler *agent.ChatSuggestionHandler,
+func NewCompletionEngineWithSuggestions(guildConfig *config.GuildConfig, ProjectRoot string,
+	SuggestionManager suggestions.SuggestionManager, ChatHandler *agent.ChatSuggestionHandler,
 ) *CompletionEngine {
 	engine := &CompletionEngine{
 		GuildConfig:       guildConfig,
-		ProjectRoot:       projectRoot,
+		ProjectRoot:       ProjectRoot,
 		Commands:          make(map[string]messages.Command),
-		SuggestionManager: suggestionManager,
-		ChatHandler:       chatHandler,
+		SuggestionManager: SuggestionManager,
+		ChatHandler:       ChatHandler,
 		ConversationHist:  make([]suggestions.ChatMessage, 0),
 	}
 
@@ -423,7 +423,7 @@ func (ce *CompletionEngine) getCommonGuildPaths(input string) []CompletionResult
 
 // UpdateTaskCache updates the cached task IDs for completion
 func (ce *CompletionEngine) UpdateTaskCache(taskIDs []string) {
-	ce.taskIDs = taskIDs
+	ce.TaskIDs = taskIDs
 }
 
 // SetRegistry sets the component registry for advanced completions
@@ -434,7 +434,7 @@ func (ce *CompletionEngine) SetRegistry(reg registry.ComponentRegistry) {
 // GetAllCommands returns all registered command names for testing/debugging
 func (ce *CompletionEngine) GetAllCommands() []string {
 	var commands []string
-	for name := range ce.commands {
+	for name := range ce.Commands {
 		commands = append(commands, name)
 	}
 	return commands
@@ -443,8 +443,8 @@ func (ce *CompletionEngine) GetAllCommands() []string {
 // GetAllAgents returns all registered agent IDs for testing/debugging
 func (ce *CompletionEngine) GetAllAgents() []string {
 	var agents []string
-	if ce.guildConfig != nil {
-		for _, agent := range ce.guildConfig.Agents {
+	if ce.GuildConfig != nil {
+		for _, agent := range ce.GuildConfig.Agents {
 			agents = append(agents, "@"+agent.ID)
 		}
 	}
@@ -471,7 +471,7 @@ func fuzzyMatch(text, pattern string) bool {
 
 // hasSuggestionSystem checks if the suggestion system is available
 func (ce *CompletionEngine) hasSuggestionSystem() bool {
-	return ce.suggestionManager != nil && ce.chatHandler != nil
+	return ce.SuggestionManager != nil && ce.ChatHandler != nil
 }
 
 // getSuggestions gets context-aware suggestions from the suggestion system
@@ -482,10 +482,10 @@ func (ce *CompletionEngine) getSuggestions(input string) []CompletionResult {
 
 	// Performance optimization: avoid too frequent suggestion requests
 	now := time.Now()
-	if now.Sub(ce.lastSuggestionUpdate) < 300*time.Millisecond {
+	if now.Sub(ce.LastSuggestionUpdate) < 300*time.Millisecond {
 		return []CompletionResult{}
 	}
-	ce.lastSuggestionUpdate = now
+	ce.LastSuggestionUpdate = now
 
 	// Build suggestion request
 	request := agent.SuggestionRequest{
@@ -501,7 +501,7 @@ func (ce *CompletionEngine) getSuggestions(input string) []CompletionResult {
 	ctx, cancel := context.WithTimeout(context.Background(), 200*time.Millisecond)
 	defer cancel()
 
-	response, err := ce.chatHandler.GetSuggestions(ctx, request)
+	response, err := ce.ChatHandler.GetSuggestions(ctx, request)
 	if err != nil {
 		// Graceful fallback - don't block completions if suggestions fail
 		return []CompletionResult{}
@@ -616,16 +616,16 @@ func (ce *CompletionEngine) UpdateConversationHistory(messages []suggestions.Cha
 
 	// Keep recent history for context (last 10 messages for performance)
 	if len(messages) > 10 {
-		ce.conversationHist = messages[len(messages)-10:]
+		ce.ConversationHist = messages[len(messages)-10:]
 	} else {
-		ce.conversationHist = messages
+		ce.ConversationHist = messages
 	}
 }
 
 // buildProjectContext creates project context for suggestions
 func (ce *CompletionEngine) buildProjectContext() suggestions.ProjectContext {
 	return suggestions.ProjectContext{
-		ProjectPath: ce.projectRoot,
+		ProjectPath: ce.ProjectRoot,
 		ProjectType: ce.detectProjectType(),
 		Language:    ce.detectPrimaryLanguage(),
 	}
@@ -633,21 +633,21 @@ func (ce *CompletionEngine) buildProjectContext() suggestions.ProjectContext {
 
 // detectProjectType analyzes the project to determine its type
 func (ce *CompletionEngine) detectProjectType() string {
-	if ce.projectRoot == "" {
+	if ce.ProjectRoot == "" {
 		return "unknown"
 	}
 
 	// Check for common project indicators
-	if _, err := os.Stat(filepath.Join(ce.projectRoot, "go.mod")); err == nil {
+	if _, err := os.Stat(filepath.Join(ce.ProjectRoot, "go.mod")); err == nil {
 		return "go-library"
 	}
-	if _, err := os.Stat(filepath.Join(ce.projectRoot, "package.json")); err == nil {
+	if _, err := os.Stat(filepath.Join(ce.ProjectRoot, "package.json")); err == nil {
 		return "javascript"
 	}
-	if _, err := os.Stat(filepath.Join(ce.projectRoot, "Cargo.toml")); err == nil {
+	if _, err := os.Stat(filepath.Join(ce.ProjectRoot, "Cargo.toml")); err == nil {
 		return "rust"
 	}
-	if _, err := os.Stat(filepath.Join(ce.projectRoot, "requirements.txt")); err == nil {
+	if _, err := os.Stat(filepath.Join(ce.ProjectRoot, "requirements.txt")); err == nil {
 		return "python"
 	}
 
@@ -656,21 +656,21 @@ func (ce *CompletionEngine) detectProjectType() string {
 
 // detectPrimaryLanguage analyzes the project to determine the primary language
 func (ce *CompletionEngine) detectPrimaryLanguage() string {
-	if ce.projectRoot == "" {
+	if ce.ProjectRoot == "" {
 		return ""
 	}
 
 	// Simple language detection based on file extensions
-	if _, err := os.Stat(filepath.Join(ce.projectRoot, "go.mod")); err == nil {
+	if _, err := os.Stat(filepath.Join(ce.ProjectRoot, "go.mod")); err == nil {
 		return "go"
 	}
-	if _, err := os.Stat(filepath.Join(ce.projectRoot, "package.json")); err == nil {
+	if _, err := os.Stat(filepath.Join(ce.ProjectRoot, "package.json")); err == nil {
 		return "javascript"
 	}
-	if _, err := os.Stat(filepath.Join(ce.projectRoot, "Cargo.toml")); err == nil {
+	if _, err := os.Stat(filepath.Join(ce.ProjectRoot, "Cargo.toml")); err == nil {
 		return "rust"
 	}
-	if _, err := os.Stat(filepath.Join(ce.projectRoot, "requirements.txt")); err == nil {
+	if _, err := os.Stat(filepath.Join(ce.ProjectRoot, "requirements.txt")); err == nil {
 		return "python"
 	}
 
@@ -680,7 +680,7 @@ func (ce *CompletionEngine) detectPrimaryLanguage() string {
 // SetEnhancedAgent configures the completion engine with an enhanced agent
 func (ce *CompletionEngine) SetEnhancedAgent(agent agent.EnhancedGuildArtisan, handler *agent.ChatSuggestionHandler) {
 	if agent != nil {
-		ce.suggestionManager = agent.GetSuggestionManager()
-		ce.chatHandler = handler
+		ce.SuggestionManager = agent.GetSuggestionManager()
+		ce.ChatHandler = handler
 	}
 }

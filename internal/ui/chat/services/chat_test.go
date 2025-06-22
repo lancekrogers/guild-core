@@ -34,8 +34,8 @@ func (m *mockGuildClient) GetAgentStatus(ctx context.Context, req *pb.GetAgentSt
 		return m.getAgentStatusFunc(ctx, req, opts...)
 	}
 	return &pb.AgentStatus{
-		State: pb.AgentStatus_IDLE,
-		CurrentTask: "idle",
+		State:        pb.AgentStatus_IDLE,
+		CurrentTask:  "idle",
 		LastActivity: time.Now().Unix(),
 	}, nil
 }
@@ -88,14 +88,14 @@ func (m *mockEnhancedGuildArtisan) GetSuggestionManager() suggestions.Suggestion
 func (m *mockEnhancedGuildArtisan) GetSuggestionsForContext(ctx context.Context, message string, filter *suggestions.SuggestionFilter) ([]suggestions.Suggestion, error) {
 	return m.GenerateSuggestions(ctx, agent.SuggestionRequest{
 		Message: message,
-		Filter: filter,
+		Filter:  filter,
 	})
 }
 
 func (m *mockEnhancedGuildArtisan) ExecuteWithSuggestions(ctx context.Context, request string, enableSuggestions bool) (*agent.EnhancedExecutionResult, error) {
 	return &agent.EnhancedExecutionResult{
 		Response: "Mock response with suggestions",
-		Success: true,
+		Success:  true,
 	}, nil
 }
 
@@ -201,7 +201,7 @@ func TestNewChatServiceWithSuggestions(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 				assert.NotNil(t, cs)
-				
+
 				if tt.agent != nil {
 					assert.NotNil(t, cs.suggestionService)
 					assert.True(t, cs.enableSuggestions)
@@ -244,7 +244,7 @@ func TestChatServiceSuggestionIntegration(t *testing.T) {
 	t.Run("SendMessageWithSuggestions", func(t *testing.T) {
 		cmd := cs.SendMessageWithSuggestions("test-agent", "How do I read a config file?", "conv-123")
 		assert.NotNil(t, cmd)
-		
+
 		// Execute the command
 		msg := cmd()
 		assert.NotNil(t, msg)
@@ -255,11 +255,11 @@ func TestChatServiceSuggestionIntegration(t *testing.T) {
 		longMessage := string(make([]byte, 20000)) // Very long message
 		cmd := cs.SendMessage("test-agent", longMessage)
 		assert.NotNil(t, cmd)
-		
+
 		// Execute the command to trigger token tracking
 		msg := cmd()
 		assert.NotNil(t, msg)
-		
+
 		// Check token usage is tracked
 		assert.True(t, cs.enableSuggestions)
 	})
@@ -277,7 +277,7 @@ func TestChatServiceSuggestionIntegration(t *testing.T) {
 			cs.SetSuggestionMode(mode)
 			assert.Equal(t, mode, cs.suggestionMode)
 			assert.Equal(t, mode != SuggestionModeNone, cs.enableSuggestions)
-			
+
 			// Test pre-execution suggestions
 			preCmd := cs.GetPreExecutionSuggestions("test message", "conv-123")
 			if mode == SuggestionModePre || mode == SuggestionModeBoth {
@@ -285,7 +285,7 @@ func TestChatServiceSuggestionIntegration(t *testing.T) {
 			} else {
 				assert.Nil(t, preCmd)
 			}
-			
+
 			// Test post-execution suggestions
 			postCmd := cs.GetPostExecutionSuggestions("original", "response")
 			if mode == SuggestionModePost || mode == SuggestionModeBoth {
@@ -298,16 +298,16 @@ func TestChatServiceSuggestionIntegration(t *testing.T) {
 
 	t.Run("ProcessAgentResponse", func(t *testing.T) {
 		cs.SetSuggestionMode(SuggestionModeBoth)
-		
+
 		response := AgentResponseMsg{
 			AgentID: "test-agent",
 			Content: "Here's how to read a config file...",
 			Done:    true,
 		}
-		
+
 		cmd := cs.ProcessAgentResponse(response, "How do I read a config file?")
 		assert.NotNil(t, cmd)
-		
+
 		// Execute and check result
 		msg := cmd()
 		assert.NotNil(t, msg)
@@ -315,14 +315,14 @@ func TestChatServiceSuggestionIntegration(t *testing.T) {
 
 	t.Run("Statistics", func(t *testing.T) {
 		stats := cs.GetStats()
-		
+
 		// Check basic stats
 		assert.Contains(t, stats, "agent_count")
 		assert.Contains(t, stats, "suggestions_enabled")
 		assert.Contains(t, stats, "suggestion_mode")
 		assert.Contains(t, stats, "suggestions_enabled")
 		assert.Contains(t, stats, "stream_count")
-		
+
 		// Check suggestion service stats are included
 		assert.Contains(t, stats, "suggestion_total_requests")
 		assert.Contains(t, stats, "suggestion_cache_hits")
@@ -331,7 +331,7 @@ func TestChatServiceSuggestionIntegration(t *testing.T) {
 	t.Run("ConfigureSuggestions", func(t *testing.T) {
 		cs.ConfigureSuggestions(false)
 		assert.Equal(t, false, cs.enableSuggestions)
-		
+
 		// Verify suggestion service is still available
 		assert.NotNil(t, cs.suggestionService)
 	})
@@ -340,14 +340,14 @@ func TestChatServiceSuggestionIntegration(t *testing.T) {
 		// Create service without suggestions
 		cs2, err := NewChatService(ctx, client, reg)
 		require.NoError(t, err)
-		
+
 		// These should not panic with nil suggestion service
 		cmd := cs2.GetPreExecutionSuggestions("test", "conv-123")
 		assert.Nil(t, cmd)
-		
+
 		cmd = cs2.GetPostExecutionSuggestions("original", "response")
 		assert.Nil(t, cmd)
-		
+
 		response := AgentResponseMsg{
 			AgentID: "test-agent",
 			Content: "response",
@@ -362,14 +362,14 @@ func TestChatServiceCommands(t *testing.T) {
 	ctx := context.Background()
 	client := &mockGuildClient{}
 	reg := registry.NewComponentRegistry()
-	
+
 	cs, err := NewChatService(ctx, client, reg)
 	require.NoError(t, err)
 
 	t.Run("Start", func(t *testing.T) {
 		cmd := cs.Start()
 		assert.NotNil(t, cmd)
-		
+
 		msg := cmd()
 		assert.IsType(t, ChatServiceStartedMsg{}, msg)
 	})
@@ -377,7 +377,7 @@ func TestChatServiceCommands(t *testing.T) {
 	t.Run("GetAgentStatus", func(t *testing.T) {
 		cmd := cs.GetAgentStatus("test-agent")
 		assert.NotNil(t, cmd)
-		
+
 		msg := cmd()
 		assert.IsType(t, AgentStatusUpdateMsg{}, msg)
 	})
@@ -388,7 +388,7 @@ func TestChatServiceCommands(t *testing.T) {
 		}
 		cmd := cs.ExecuteTool("test-tool", params)
 		assert.NotNil(t, cmd)
-		
+
 		msg := cmd()
 		assert.IsType(t, ToolExecutionCompleteMsg{}, msg)
 	})
@@ -396,7 +396,7 @@ func TestChatServiceCommands(t *testing.T) {
 	t.Run("StreamChat", func(t *testing.T) {
 		cmd := cs.StreamChat("test-agent")
 		assert.NotNil(t, cmd)
-		
+
 		msg := cmd()
 		assert.IsType(t, ChatStreamStartedMsg{}, msg)
 	})
@@ -404,13 +404,13 @@ func TestChatServiceCommands(t *testing.T) {
 	t.Run("StopStream", func(t *testing.T) {
 		// Start a stream first
 		cs.activeStreams["test-agent"] = struct{}{}
-		
+
 		cmd := cs.StopStream("test-agent")
 		assert.NotNil(t, cmd)
-		
+
 		msg := cmd()
 		assert.IsType(t, ChatStreamStoppedMsg{}, msg)
-		
+
 		// Verify stream was removed
 		assert.False(t, cs.IsStreamActive("test-agent"))
 	})
@@ -420,7 +420,7 @@ func TestChatServiceConfiguration(t *testing.T) {
 	ctx := context.Background()
 	client := &mockGuildClient{}
 	reg := registry.NewComponentRegistry()
-	
+
 	cs, err := NewChatService(ctx, client, reg)
 	require.NoError(t, err)
 
@@ -434,11 +434,11 @@ func TestChatServiceConfiguration(t *testing.T) {
 		handler := agent.NewChatSuggestionHandler(mockAgent)
 		suggestionService, err := NewSuggestionService(ctx, handler)
 		require.NoError(t, err)
-		
+
 		err = cs.SetSuggestionService(suggestionService)
 		assert.NoError(t, err)
 		assert.Equal(t, suggestionService, cs.suggestionService)
-		
+
 		// Test nil service
 		err = cs.SetSuggestionService(nil)
 		assert.Error(t, err)
@@ -454,7 +454,7 @@ func TestChatServiceConfiguration(t *testing.T) {
 		// Add some streams
 		cs.activeStreams["agent1"] = struct{}{}
 		cs.activeStreams["agent2"] = struct{}{}
-		
+
 		assert.Equal(t, 2, cs.GetActiveStreams())
 		assert.True(t, cs.IsStreamActive("agent1"))
 		assert.True(t, cs.IsStreamActive("agent2"))
@@ -468,18 +468,18 @@ func TestChatServiceMessageBatching(t *testing.T) {
 	client := &mockGuildClient{}
 	reg := registry.NewComponentRegistry()
 	mockAgent := &mockEnhancedGuildArtisan{}
-	
+
 	// No need to set up mock - our mock returns capabilities by default
-	
+
 	cs, err := NewChatServiceWithSuggestions(ctx, client, reg, mockAgent)
 	require.NoError(t, err)
-	
+
 	// Enable pre-suggestions
 	cs.SetSuggestionMode(SuggestionModePre)
-	
+
 	cmd := cs.SendMessageWithSuggestions("test-agent", "test message", "conv-123")
 	assert.NotNil(t, cmd)
-	
+
 	// The command should be a batch when suggestions are enabled
 	// This tests that multiple commands are properly batched together
 }
@@ -493,14 +493,14 @@ func TestChatServiceErrorHandling(t *testing.T) {
 		},
 	}
 	reg := registry.NewComponentRegistry()
-	
+
 	cs, err := NewChatService(ctx, client, reg)
 	require.NoError(t, err)
-	
+
 	t.Run("GetAgentStatusError", func(t *testing.T) {
 		cmd := cs.GetAgentStatus("test-agent")
 		msg := cmd()
-		
+
 		errMsg, ok := msg.(ChatServiceErrorMsg)
 		assert.True(t, ok)
 		assert.Equal(t, "get_agent_status", errMsg.Operation)
