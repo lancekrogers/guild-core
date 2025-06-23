@@ -141,29 +141,34 @@ func (d *AutoDetector) detectClaudeCode(ctx context.Context) (DetectionResult, e
 		DetectedAt: time.Now(),
 	}
 
-	// Try common binary names and paths
-	candidatePaths := d.getClaudeCodeCandidates()
+	// Simple detection using 'which claude'
+	cmdCtx, cancel := context.WithTimeout(ctx, 2*time.Second)
+	defer cancel()
 
-	for _, path := range candidatePaths {
-		if err := ctx.Err(); err != nil {
-			return result, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during detection").
-				WithComponent("providers").
-				WithOperation("detectClaudeCode")
-		}
+	cmd := exec.CommandContext(cmdCtx, "which", "claude")
+	output, err := cmd.Output()
+	if err != nil {
+		// Claude CLI not found - this is expected, not an error
+		result.Available = false
+		result.Error = "Claude CLI not found (which claude failed)"
+		result.Confidence = 0.0
+		// Don't wrap with gerror - this is an expected case, not an error
+		return result, nil
+	}
 
-		// Test if binary exists and is executable
-		if available, version, err := d.testClaudeCodeBinary(ctx, path); err == nil && available {
-			result.Available = true
-			result.Path = path
-			result.Version = version
-			result.Confidence = d.calculateClaudeCodeConfidence(path, version)
-			result.Capabilities = d.capabilities[ProviderClaudeCode]
-			return result, nil
-		}
+	// Claude found
+	claudePath := strings.TrimSpace(string(output))
+	if claudePath != "" {
+		result.Available = true
+		result.Path = claudePath
+		result.Version = "Claude CLI"
+		result.Confidence = 1.0
+		result.Capabilities = d.capabilities[ProviderClaudeCode]
+		return result, nil
 	}
 
 	result.Available = false
-	result.Error = "Claude Code CLI not found in PATH or common locations"
+	result.Error = "Claude CLI not found in PATH"
 	result.Confidence = 0.0
 
 	return result, nil
@@ -207,9 +212,7 @@ func (d *AutoDetector) detectOllama(ctx context.Context) (DetectionResult, error
 // getClaudeCodeCandidates returns potential Claude Code binary locations
 func (d *AutoDetector) getClaudeCodeCandidates() []string {
 	candidates := []string{
-		"claude", // Standard PATH lookup
-		"claude-code",
-		"claude_code",
+		"claude", // Standard PATH lookup - this is the correct Claude CLI binary
 	}
 
 	// Add platform-specific paths
@@ -229,7 +232,6 @@ func (d *AutoDetector) getClaudeCodeCandidates() []string {
 	case "windows":
 		candidates = append(candidates,
 			"claude.exe",
-			"claude-code.exe",
 			"C:\\Program Files\\Claude\\claude.exe",
 			"C:\\Program Files (x86)\\Claude\\claude.exe",
 		)

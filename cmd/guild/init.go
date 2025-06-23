@@ -136,7 +136,7 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 
 	// Step 2: Auto-detect AI providers
 	fmt.Print("🤖 Detecting AI providers... ")
-	detector := providers.NewAutoDetector(10 * time.Second)
+	detector := providers.NewAutoDetector(5 * time.Second) // Reduced timeout
 	providerResults, err := detector.DetectAll(ctx)
 	if err != nil {
 		fmt.Printf("⚠️ (continuing with defaults)\n")
