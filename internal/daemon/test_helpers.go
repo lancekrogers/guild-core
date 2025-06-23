@@ -5,7 +5,9 @@
 package daemon
 
 import (
+	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"testing"
 )
@@ -30,10 +32,34 @@ func getExecutablePath() (string, error) {
 		return testExecutablePath, nil
 	}
 	
-	// Get the executable path
+	// First, check standard installation locations
+	standardPaths := []string{
+		"/usr/local/bin/guild",
+		"/usr/bin/guild",
+		filepath.Join(os.Getenv("HOME"), ".guild", "bin", "guild"),
+		filepath.Join(os.Getenv("HOME"), ".local", "bin", "guild"),
+	}
+	
+	for _, path := range standardPaths {
+		if _, err := os.Stat(path); err == nil {
+			return path, nil
+		}
+	}
+	
+	// Second, try to find guild in PATH
+	if guildPath, err := exec.LookPath("guild"); err == nil {
+		// Resolve to absolute path
+		if absPath, err := filepath.Abs(guildPath); err == nil {
+			return absPath, nil
+		}
+		return guildPath, nil
+	}
+	
+	// Last resort: use the current executable path
+	// This might fail on macOS due to security restrictions
 	execPath, err := os.Executable()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("guild not found in standard locations or PATH, and could not determine current executable: %w", err)
 	}
 	
 	// Resolve any symlinks and clean up the path
@@ -44,7 +70,11 @@ func getExecutablePath() (string, error) {
 	}
 	
 	// Return the absolute, cleaned path
-	return filepath.Abs(realPath)
+	absPath, err := filepath.Abs(realPath)
+	if err != nil {
+		return realPath, nil
+	}
+	return absPath, nil
 }
 
 // SkipIfNoBinary skips the test if the guild binary doesn't exist
