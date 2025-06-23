@@ -87,7 +87,9 @@ ci-clean:
 	@$(BUILDTOOL) --no-color clean
 
 # Install/uninstall targets
-install: build
+install:
+	@echo "🏗️  Building Guild binary for installation..."
+	@go build -o bin/guild ./cmd/guild
 	@$(BUILDTOOL) install
 	@$(MAKE) install-completion
 

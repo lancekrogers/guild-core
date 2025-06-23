@@ -10,67 +10,53 @@ import (
 	"path/filepath"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v3"
 
 	"github.com/guild-ventures/guild-core/internal/daemon"
 	uiinit "github.com/guild-ventures/guild-core/internal/ui/init"
 	"github.com/guild-ventures/guild-core/pkg/agents"
-	"github.com/guild-ventures/guild-core/pkg/campaign"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
 var (
-	initQuickMode      bool
-	initForce          bool
-	initProviderOnly   string
-	initSkipValidation bool
-	initNoDaemon       bool
+	fastInitForce    bool
+	fastInitNoDaemon bool
 )
 
-// initCmd represents the init command
+// initCmd represents the fast init command
 var initCmd = &cobra.Command{
 	Use:   "init [path]",
-	Short: "Initialize Guild project with complete setup",
-	Long: `Initialize a complete Guild project ready for immediate use.
+	Short: "Fast initialization of Guild project",
+	Long: `Initialize a Guild project quickly with sensible defaults.
 
-This command creates a unified setup experience that gets you from zero 
-to working Guild chat in under 30 seconds.
+This command provides a fast, non-interactive setup that:
+- Auto-detects available AI providers
+- Creates Elena (Guild Master) and specialist agents
+- Generates optimized configuration
+- Starts the daemon automatically
 
-The setup process includes:
-- Campaign architecture and configuration
-- AI provider detection and selection
-- Agent configuration with smart defaults
-- Optional demo commission creation
-
-After running 'guild init', the daemon starts automatically and you can 
-immediately use 'guild chat' without any additional setup.
+For an interactive setup experience with more control, use 'guild setup-wizard'.
 
 Examples:
-  guild init                    # Initialize current directory and start daemon
+  guild init                    # Initialize current directory
   guild init ./my-project       # Initialize specific directory  
-  guild init --quick            # Use defaults for everything
-  guild init --provider ollama  # Setup only Ollama provider
   guild init --no-daemon        # Initialize without starting daemon`,
 	Args: cobra.MaximumNArgs(1),
-	RunE: runUnifiedInit,
+	RunE: runFastInit,
 }
 
 func init() {
 	rootCmd.AddCommand(initCmd)
 
 	// Add flags
-	initCmd.Flags().BoolVar(&initQuickMode, "quick", false, "Quick setup with automatic defaults")
-	initCmd.Flags().BoolVar(&initForce, "force", false, "Force setup even if already configured")
-	initCmd.Flags().StringVar(&initProviderOnly, "provider", "", "Setup only this provider (openai, anthropic, ollama, claude_code)")
-	initCmd.Flags().BoolVar(&initSkipValidation, "skip-validation", false, "Skip post-init validation")
-	initCmd.Flags().BoolVar(&initNoDaemon, "no-daemon", false, "Don't auto-start the Guild server after initialization")
+	initCmd.Flags().BoolVar(&fastInitForce, "force", false, "Force initialization even if already configured")
+	initCmd.Flags().BoolVar(&fastInitNoDaemon, "no-daemon", false, "Don't auto-start the Guild server after initialization")
 }
 
-func runUnifiedInit(cmd *cobra.Command, args []string) error {
+func runFastInit(cmd *cobra.Command, args []string) error {
 	ctx := cmd.Context()
 	if ctx == nil {
 		ctx = context.Background()
@@ -80,7 +66,7 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 	if err := ctx.Err(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeCancelled, "init command cancelled").
 			WithComponent("cli").
-			WithOperation("runUnifiedInit")
+			WithOperation("runFastInit")
 	}
 
 	// Determine project path
@@ -89,16 +75,38 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 		projectPath = args[0]
 	}
 
-	// Create configuration
-	config := uiinit.Config{
-		ProjectPath:    projectPath,
-		QuickMode:      initQuickMode,
-		Force:          initForce,
-		ProviderOnly:   initProviderOnly,
-		SkipValidation: initSkipValidation,
+	// Get absolute path
+	absPath, err := filepath.Abs(projectPath)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get absolute path").
+			WithComponent("cli").
+			WithOperation("runFastInit").
+			WithDetails("path", projectPath)
+	}
+	projectPath = absPath
+
+	// Check if already initialized (unless --force)
+	if !fastInitForce {
+		campaignPath := filepath.Join(projectPath, ".campaign", "campaign.yaml")
+		guildPath := filepath.Join(projectPath, ".guild", "guild.yaml")
+		
+		if _, err := os.Stat(campaignPath); err == nil {
+			return gerror.New(gerror.ErrCodeAlreadyExists, "project already initialized", nil).
+				WithComponent("cli").
+				WithOperation("runFastInit").
+				WithDetails("path", projectPath).
+				WithDetails("hint", "use --force to reinitialize")
+		}
+		if _, err := os.Stat(guildPath); err == nil {
+			return gerror.New(gerror.ErrCodeAlreadyExists, "project already initialized", nil).
+				WithComponent("cli").
+				WithOperation("runFastInit").
+				WithDetails("path", projectPath).
+				WithDetails("hint", "use --force to reinitialize")
+		}
 	}
 
-	// Create dependencies (these would be injected in production)
+	// Create dependencies
 	deps := uiinit.InitDependencies{
 		ConfigManager: uiinit.NewDefaultConfigManager(),
 		ProjectInit:   uiinit.NewDefaultProjectInitializer(),
@@ -107,160 +115,44 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 		DaemonManager: uiinit.NewDefaultDaemonManager(),
 	}
 
-	// Check TTY availability before creating model
-	ttyAvailable := false
-	if ttyFile, err := os.OpenFile("/dev/tty", os.O_RDWR, 0); err == nil {
-		ttyFile.Close() // Just testing availability
-		ttyAvailable = true
-	}
-
-	// Create the improved TUI model with TTY awareness
-	model, err := uiinit.NewInitTUIModelV2(ctx, config, deps, ttyAvailable)
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create init UI").
-			WithComponent("cli").
-			WithOperation("runUnifiedInit").
-			WithDetails("path", projectPath)
-	}
-
-	// Configure tea program options
-	opts := []tea.ProgramOption{
-		tea.WithContext(ctx), // Pass context to Bubble Tea
-	}
-
-	// Configure program based on TTY availability
-	if ttyAvailable {
-		opts = append(opts, tea.WithInputTTY())
-		// Use alt screen for interactive mode
-		if !initQuickMode {
-			opts = append(opts, tea.WithAltScreen())
-			opts = append(opts, tea.WithMouseCellMotion()) // Enable mouse support
-		}
-	} else {
-		// If no TTY available, use no-renderer mode for simple output
-		opts = append(opts, tea.WithoutRenderer())
-	}
-
-	// Create and run the program
-	program := tea.NewProgram(model, opts...)
-	finalModel, err := program.Run()
-	if err != nil {
-		// If TTY is not available and we're in quick mode, try alternative approach
-		if !ttyAvailable && initQuickMode {
-			fmt.Println("⚡ Running initialization in quick mode...")
-			
-			// Perform direct initialization with all enhancements
-			if err := runDirectInitialization(ctx, config, deps); err != nil {
-				return gerror.Wrap(err, gerror.ErrCodeInternal, "direct initialization failed").
-					WithComponent("cli").
-					WithOperation("runUnifiedInit")
-			}
-			
-			fmt.Println("✅ Guild initialized successfully with Elena and enhanced agents!")
-			return nil
-		}
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run init UI").
-			WithComponent("cli").
-			WithOperation("runUnifiedInit")
-	}
-
-	// Check if there was an error in the final model
-	if initModel, ok := finalModel.(*uiinit.InitTUIModelV2); ok {
-		if initModel.GetError() != nil {
-			return initModel.GetError()
-		}
-		// In quick mode, ensure files were created
-		if initQuickMode {
-			// Check if .guild or .campaign directory exists
-			guildPath := filepath.Join(config.ProjectPath, ".guild")
-			campaignPath := filepath.Join(config.ProjectPath, ".campaign")
-			
-			if _, err := os.Stat(guildPath); os.IsNotExist(err) {
-				if _, err := os.Stat(campaignPath); os.IsNotExist(err) {
-					// Neither directory exists, initialization failed silently
-					fmt.Println("⚠️  Warning: Initialization completed but no directories were created")
-					fmt.Println("Running direct initialization as fallback...")
-					
-					// Run direct initialization
-					if err := runDirectInitialization(ctx, config, deps); err != nil {
-						return gerror.Wrap(err, gerror.ErrCodeInternal, "fallback initialization failed").
-							WithComponent("cli").
-							WithOperation("runUnifiedInit")
-					}
-				}
-			}
-		}
-	}
-
-	// Auto-start daemon unless --no-daemon flag is set
-	if !initNoDaemon {
-		fmt.Println("🚀 Starting Guild daemon...")
-
-		// Detect the campaign we just created
-		cwd, err := os.Getwd()
-		if err != nil {
-			fmt.Printf("⚠️  Warning: Could not start daemon - failed to get working directory: %v\n", err)
-		} else {
-			campaignName, err := campaign.DetectCampaign(cwd, "")
-			if err != nil {
-				fmt.Printf("⚠️  Warning: Could not start daemon - failed to detect campaign: %v\n", err)
-			} else {
-				// Use the lifecycle manager for auto-start
-				lifecycleManager := daemon.DefaultLifecycleManager
-				_, err := lifecycleManager.AutoStartDaemon(ctx, campaignName)
-				if err != nil {
-					fmt.Printf("⚠️  Warning: Failed to start daemon: %v\n", err)
-					fmt.Printf("💡 You can start it manually with: guild serve --campaign %s --daemon\n", campaignName)
-				} else {
-					// Give the server a moment to fully initialize
-					time.Sleep(500 * time.Millisecond)
-					fmt.Printf("✅ Guild daemon started successfully for campaign '%s'\n", campaignName)
-					fmt.Printf("💬 You can now run: guild chat\n")
-				}
-			}
-		}
-	}
-
-	// In quick mode, print minimal summary
-	if initQuickMode {
-		fmt.Println("✅ Guild initialized successfully.")
-	}
-
-	return nil
-}
-
-// runDirectInitialization performs enhanced initialization without TUI for non-TTY environments
-func runDirectInitialization(ctx context.Context, config uiinit.Config, deps uiinit.InitDependencies) error {
 	// Use default campaign and project names
 	campaignName := "guild-demo"
-	projectName := filepath.Base(config.ProjectPath)
-	if projectName == "." {
-		projectName = "my-project"
+	projectName := filepath.Base(projectPath)
+	if projectName == "." || projectName == "/" {
+		// If we're in the root or current directory, use a better name
+		if cwd, err := os.Getwd(); err == nil {
+			projectName = filepath.Base(cwd)
+		} else {
+			projectName = "my-project"
+		}
 	}
 
+	fmt.Println("🏰 Guild Fast Initialization")
+	fmt.Println("━━━━━━━━━━━━━━━━━━━━━━━━━━")
 	fmt.Printf("📋 Campaign: %s\n", campaignName)
 	fmt.Printf("📁 Project: %s\n", projectName)
-	fmt.Printf("📍 Location: %s\n", config.ProjectPath)
+	fmt.Printf("📍 Location: %s\n", projectPath)
 	fmt.Println()
 
 	// Step 1: Initialize project structure
-	fmt.Print("🏗️  Initializing project structure... ")
-	if !deps.ProjectInit.IsProjectInitialized(config.ProjectPath) {
-		if err := deps.ProjectInit.InitializeProject(ctx, config.ProjectPath); err != nil {
+	fmt.Print("🏗️  Creating project structure... ")
+	if !deps.ProjectInit.IsProjectInitialized(projectPath) {
+		if err := deps.ProjectInit.InitializeProject(ctx, projectPath); err != nil {
+			fmt.Println("❌")
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize project").
-				WithComponent("directInit").
-				WithOperation("runDirectInitialization")
+				WithComponent("cli").
+				WithOperation("runFastInit")
 		}
 	}
 	fmt.Println("✅")
 
-	// Step 2: Detect AI providers
+	// Step 2: Auto-detect AI providers
 	fmt.Print("🤖 Detecting AI providers... ")
 	detector := providers.NewAutoDetector(10 * time.Second)
 	providerResults, err := detector.DetectAll(ctx)
 	if err != nil {
 		fmt.Printf("⚠️ (continuing with defaults)\n")
-		providerResults = []providers.DetectionResult{} // Empty results, will use defaults
+		providerResults = []providers.DetectionResult{}
 	} else {
 		availableCount := 0
 		for _, result := range providerResults {
@@ -277,57 +169,81 @@ func runDirectInitialization(ctx context.Context, config uiinit.Config, deps uii
 
 	// Step 3: Create configuration
 	fmt.Print("⚙️  Creating configuration... ")
-	if err := deps.ConfigManager.CreatePhase0Configuration(ctx, config.ProjectPath, campaignName, projectName); err != nil {
+	if err := deps.ConfigManager.CreatePhase0Configuration(ctx, projectPath, campaignName, projectName); err != nil {
+		fmt.Println("❌")
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create configuration").
-			WithComponent("directInit").
-			WithOperation("runDirectInitialization")
+			WithComponent("cli").
+			WithOperation("runFastInit")
 	}
 	fmt.Println("✅")
 
 	// Step 4: Create Elena and enhanced agents
 	fmt.Print("👥 Creating Elena and specialist agents... ")
-	agentCount, err := createDirectEnhancedAgents(ctx, config.ProjectPath, providerResults)
+	agentCount, err := createEnhancedAgents(ctx, projectPath, providerResults)
 	if err != nil {
-		fmt.Printf("⚠️ (using basic agents: %v)\n", err)
-		agentCount = 3 // Default count
-	} else {
-		fmt.Printf("✅ (%d agents)\n", agentCount)
+		fmt.Printf("❌\n")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create agents").
+			WithComponent("cli").
+			WithOperation("runFastInit")
 	}
+	fmt.Printf("✅ (%d agents)\n", agentCount)
 
 	// Step 5: Integration and validation
 	fmt.Print("🔗 Integrating configuration... ")
-	if err := deps.ConfigManager.IntegrateWithPhase0Config(ctx, config.ProjectPath, campaignName, projectName); err != nil {
+	if err := deps.ConfigManager.IntegrateWithPhase0Config(ctx, projectPath, campaignName, projectName); err != nil {
+		fmt.Println("❌")
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to integrate configuration").
-			WithComponent("directInit").
-			WithOperation("runDirectInitialization")
+			WithComponent("cli").
+			WithOperation("runFastInit")
 	}
 	fmt.Println("✅")
 
 	// Step 6: Socket registry
 	fmt.Print("🔧 Setting up daemon registry... ")
-	if err := deps.DaemonManager.SaveSocketRegistry(config.ProjectPath, campaignName); err != nil {
+	if err := deps.DaemonManager.SaveSocketRegistry(projectPath, campaignName); err != nil {
 		fmt.Printf("⚠️ (manual start required)\n")
 	} else {
 		fmt.Println("✅")
 	}
 
+	// Step 7: Auto-start daemon unless --no-daemon flag is set
+	if !fastInitNoDaemon {
+		fmt.Print("🚀 Starting Guild daemon... ")
+		
+		// Use the lifecycle manager for auto-start
+		lifecycleManager := daemon.DefaultLifecycleManager
+		_, err := lifecycleManager.AutoStartDaemon(ctx, campaignName)
+		if err != nil {
+			fmt.Printf("⚠️\n")
+			fmt.Printf("   Failed to start daemon: %v\n", err)
+			fmt.Printf("   💡 You can start it manually with: guild serve --campaign %s --daemon\n", campaignName)
+		} else {
+			// Give the server a moment to fully initialize
+			time.Sleep(500 * time.Millisecond)
+			fmt.Println("✅")
+		}
+	}
+
 	fmt.Println()
-	fmt.Println("🏰 Guild successfully established!")
-	fmt.Printf("👑 Elena the Guild Master is ready to lead your team\n")
-	fmt.Printf("⚔️  Marcus the Code Artisan stands ready to craft solutions\n")
-	fmt.Printf("🛡️  Vera the Quality Guardian protects your software excellence\n")
+	fmt.Println("🏰 Guild successfully initialized!")
+	fmt.Println()
+	fmt.Println("👑 Elena the Guild Master is ready to lead your team")
+	fmt.Println("⚔️  Marcus the Code Artisan stands ready to craft solutions")
+	fmt.Println("🛡️  Vera the Quality Guardian protects your software excellence")
 	fmt.Println()
 	fmt.Println("🚀 Start your adventure:")
-	fmt.Printf("   guild chat                # Meet Elena and begin\n")
-	fmt.Printf("   guild chat --agent elena-guild-master  # Talk to Elena directly\n")
-	fmt.Printf("   guild status              # Check guild status\n")
+	fmt.Println("   guild chat                           # Meet Elena and begin")
+	fmt.Println("   guild chat --agent elena-guild-master  # Talk to Elena directly")
+	fmt.Println("   guild status                         # Check guild status")
+	fmt.Println()
+	fmt.Println("💡 For more control over setup, use: guild setup-wizard")
 	fmt.Println()
 
 	return nil
 }
 
-// createDirectEnhancedAgents creates enhanced agents for direct initialization
-func createDirectEnhancedAgents(ctx context.Context, projectPath string, providerResults []providers.DetectionResult) (int, error) {
+// createEnhancedAgents creates enhanced agents with optimized provider selection
+func createEnhancedAgents(ctx context.Context, projectPath string, providerResults []providers.DetectionResult) (int, error) {
 	// Create enhanced agent creator
 	creator := agents.NewDefaultAgentCreator()
 
@@ -335,35 +251,36 @@ func createDirectEnhancedAgents(ctx context.Context, projectPath string, provide
 	agentConfigs, err := creator.CreateDefaultAgentSet(ctx)
 	if err != nil {
 		return 0, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create agent set").
-			WithComponent("directInit").
-			WithOperation("createDirectEnhancedAgents")
+			WithComponent("cli").
+			WithOperation("createEnhancedAgents")
 	}
 
 	// Optimize providers based on detection results
-	optimizeAgentProvidersForDirect(agentConfigs, providerResults)
+	optimizeAgentProviders(agentConfigs, providerResults)
 
 	// Ensure agents directory exists
 	agentsDir := filepath.Join(projectPath, ".campaign", "agents")
 	if err := os.MkdirAll(agentsDir, 0755); err != nil {
 		return 0, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
-			WithComponent("directInit").
-			WithOperation("createDirectEnhancedAgents")
+			WithComponent("cli").
+			WithOperation("createEnhancedAgents")
 	}
 
 	// Save each agent configuration
 	for _, agentConfig := range agentConfigs {
-		if err := saveDirectAgentConfig(ctx, agentsDir, agentConfig); err != nil {
+		if err := saveAgentConfig(ctx, agentsDir, agentConfig); err != nil {
 			return 0, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save agent config").
-				WithComponent("directInit").
-				WithOperation("createDirectEnhancedAgents")
+				WithComponent("cli").
+				WithOperation("createEnhancedAgents").
+				WithDetails("agent", agentConfig.ID)
 		}
 	}
 
 	return len(agentConfigs), nil
 }
 
-// optimizeAgentProvidersForDirect optimizes agent providers for direct init
-func optimizeAgentProvidersForDirect(agentConfigs []*config.AgentConfig, providerResults []providers.DetectionResult) {
+// optimizeAgentProviders intelligently assigns providers to agents based on availability
+func optimizeAgentProviders(agentConfigs []*config.AgentConfig, providerResults []providers.DetectionResult) {
 	// Create provider availability map
 	availableProviders := make(map[string]providers.DetectionResult)
 	var bestProvider *providers.DetectionResult
@@ -384,7 +301,7 @@ func optimizeAgentProvidersForDirect(agentConfigs []*config.AgentConfig, provide
 		return
 	}
 
-	// Apply the same intelligent mapping logic
+	// Apply intelligent provider mapping
 	for _, agent := range agentConfigs {
 		originalProvider := agent.Provider
 
@@ -425,9 +342,9 @@ func optimizeAgentProvidersForDirect(agentConfigs []*config.AgentConfig, provide
 	}
 }
 
-// saveDirectAgentConfig saves agent config for direct initialization
-func saveDirectAgentConfig(ctx context.Context, agentsDir string, agentConfig *config.AgentConfig) error {
-	// Convert to YAML-friendly format (reuse the same logic from TUI version)
+// saveAgentConfig saves agent configuration to YAML file
+func saveAgentConfig(ctx context.Context, agentsDir string, agentConfig *config.AgentConfig) error {
+	// Convert to YAML-friendly format
 	configData := map[string]interface{}{
 		"id":           agentConfig.ID,
 		"name":         agentConfig.Name,
@@ -472,8 +389,8 @@ func saveDirectAgentConfig(ctx context.Context, agentsDir string, agentConfig *c
 	yamlData, err := yaml.Marshal(configData)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal agent config").
-			WithComponent("directInit").
-			WithOperation("saveDirectAgentConfig")
+			WithComponent("cli").
+			WithOperation("saveAgentConfig")
 	}
 
 	// Save to file
@@ -482,11 +399,10 @@ func saveDirectAgentConfig(ctx context.Context, agentsDir string, agentConfig *c
 
 	if err := os.WriteFile(filepath, yamlData, 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent config file").
-			WithComponent("directInit").
-			WithOperation("saveDirectAgentConfig")
+			WithComponent("cli").
+			WithOperation("saveAgentConfig").
+			WithDetails("file", filepath)
 	}
 
 	return nil
 }
-
-// All helper functions have been moved to internal/ui/init/init_tui.go
