@@ -5,6 +5,8 @@ package completion
 
 import (
 	"context"
+	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -148,7 +150,11 @@ func TestCompletionEngine_ProjectContext(t *testing.T) {
 	}{
 		{
 			name:         "go project",
-			projectRoot:  "../../..", // Point to guild-core root which has go.mod
+			projectRoot:  func() string {
+				// Get absolute path to guild-core root
+				wd, _ := os.Getwd()
+				return filepath.Join(wd, "../../..")
+			}(),
 			wantType:     "go-library",
 			wantLanguage: "go",
 		},
