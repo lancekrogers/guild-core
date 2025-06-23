@@ -13,7 +13,6 @@ import (
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/guild-ventures/guild-core/internal/daemon"
 	uiinit "github.com/guild-ventures/guild-core/internal/ui/init"
 	"github.com/guild-ventures/guild-core/pkg/agents"
 	"github.com/guild-ventures/guild-core/pkg/config"
@@ -22,8 +21,7 @@ import (
 )
 
 var (
-	fastInitForce    bool
-	fastInitNoDaemon bool
+	fastInitForce bool
 )
 
 // initCmd represents the fast init command
@@ -36,14 +34,13 @@ This command provides a fast, non-interactive setup that:
 - Auto-detects available AI providers
 - Creates Elena (Guild Master) and specialist agents
 - Generates optimized configuration
-- Starts the daemon automatically
+- Sets up daemon registry for automatic startup
 
 For an interactive setup experience with more control, use 'guild setup-wizard'.
 
 Examples:
   guild init                    # Initialize current directory
-  guild init ./my-project       # Initialize specific directory  
-  guild init --no-daemon        # Initialize without starting daemon`,
+  guild init ./my-project       # Initialize specific directory`,
 	Args: cobra.MaximumNArgs(1),
 	RunE: runFastInit,
 }
@@ -53,7 +50,6 @@ func init() {
 
 	// Add flags
 	initCmd.Flags().BoolVar(&fastInitForce, "force", false, "Force initialization even if already configured")
-	initCmd.Flags().BoolVar(&fastInitNoDaemon, "no-daemon", false, "Don't auto-start the Guild server after initialization")
 }
 
 func runFastInit(cmd *cobra.Command, args []string) error {
@@ -198,45 +194,7 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 		fmt.Println("✅")
 	}
 
-	// Step 7: Auto-start daemon unless --no-daemon flag is set
-	if !fastInitNoDaemon {
-		fmt.Print("🚀 Starting Guild daemon")
-		
-		// Show progress during daemon startup
-		done := make(chan struct{})
-		go func() {
-			for i := 0; i < 10; i++ {
-				select {
-				case <-done:
-					return
-				case <-time.After(300 * time.Millisecond):
-					fmt.Print(".")
-				}
-			}
-		}()
-		
-		// Use the lifecycle manager for auto-start with timeout context
-		daemonCtx, cancel := context.WithTimeout(ctx, 35*time.Second)
-		defer cancel()
-		
-		lifecycleManager := daemon.DefaultLifecycleManager
-		_, err := lifecycleManager.AutoStartDaemon(daemonCtx, campaignName)
-		close(done) // Stop progress dots
-		
-		if err != nil {
-			fmt.Printf(" ⚠️\n")
-			fmt.Printf("   Failed to start daemon: %v\n", err)
-			fmt.Printf("   💡 Manual start: guild serve --campaign %s --daemon\n", campaignName)
-			fmt.Printf("   🔍 Check logs: tail ~/.guild/logs/%s.log\n", campaignName)
-			fmt.Printf("   🛠️  Debug mode: guild serve --campaign %s --debug\n", campaignName)
-		} else {
-			// Verify daemon is fully ready
-			fmt.Print(" ✅")
-			// Give the server a moment to fully initialize
-			time.Sleep(500 * time.Millisecond)
-			fmt.Println(" (ready)")
-		}
-	}
+	// Daemon will start automatically when needed (e.g., guild chat)
 
 	fmt.Println()
 	fmt.Println("🏰 Guild successfully initialized!")
@@ -246,13 +204,8 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 	fmt.Println("🛡️  Vera the Quality Guardian protects your software excellence")
 	fmt.Println()
 	fmt.Println("🚀 Start your adventure:")
-	if !fastInitNoDaemon {
-		fmt.Println("   guild chat                           # Meet Elena and begin")
-		fmt.Println("   guild chat --agent elena-guild-master  # Talk to Elena directly")
-	} else {
-		fmt.Println("   guild serve --campaign guild-demo --daemon  # Start the daemon first")
-		fmt.Println("   guild chat                           # Then meet Elena and begin")
-	}
+	fmt.Println("   guild chat                           # Meet Elena and begin (daemon starts automatically)")
+	fmt.Println("   guild chat --agent elena-guild-master  # Talk to Elena directly")
 	fmt.Println("   guild status                         # Check guild status")
 	fmt.Println()
 	fmt.Println("💡 For more control over setup, use: guild setup-wizard")
