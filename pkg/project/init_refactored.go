@@ -37,34 +37,30 @@ func InitializeProject(projectPath string) error {
 			WithOperation("initialize_project")
 	}
 
-	// Initialize local project directory
-	if err := local.InitializeLocal(projectPath); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize local Guild").
-			WithComponent("project").
-			WithOperation("initialize_project")
-	}
-
-	// Initialize the database
-	dbPath := local.LocalDatabasePath(projectPath)
-	if err := initializeDatabaseRefactored(dbPath); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize database").
-			WithComponent("project").
-			WithOperation("initialize_project")
-	}
+	// Note: We're not calling local.InitializeLocal anymore since
+	// the new campaign architecture uses .campaign/ directory
+	// which is created by CreatePhase0Configuration
 
 	return nil
 }
 
 // IsProjectInitialized checks if a project is initialized
 func IsProjectInitialized(projectPath string) bool {
-	localDir := local.LocalGuildDir(projectPath)
-	configPath := filepath.Join(localDir, "guild.yaml")
-	dbPath := filepath.Join(localDir, "memory.db")
+	// Check for campaign directory structure
+	campaignDir := filepath.Join(projectPath, ".campaign")
+	configPath := filepath.Join(campaignDir, "campaign.yaml")
+	guildPath := filepath.Join(campaignDir, "guild.yaml")
+	dbPath := filepath.Join(campaignDir, "memory.db")
 
-	// Check both config and database exist
+	// Check campaign config exists
 	if _, err := os.Stat(configPath); err != nil {
 		return false
 	}
+	// Check guild config exists
+	if _, err := os.Stat(guildPath); err != nil {
+		return false
+	}
+	// Check database exists
 	if _, err := os.Stat(dbPath); err != nil {
 		return false
 	}

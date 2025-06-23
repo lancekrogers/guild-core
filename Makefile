@@ -6,6 +6,8 @@ BUILDTOOL := go run ./internal/buildutil
 .PHONY: build test test-pkg integration e2e validate-demo clean all quick ci-build ci-test ci-integration ci-e2e ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion benchmark benchmark-suggestions
 
 # Primary targets (with visual output)
+# DEVELOPER TARGET: Full build with go vet validation and visual feedback
+# Use this when developing to ensure code quality
 build:
 	@$(BUILDTOOL) build
 
@@ -87,12 +89,15 @@ ci-clean:
 	@$(BUILDTOOL) --no-color clean
 
 # Install/uninstall targets
+# USER TARGET: Fast installation without development checks
+# This is the primary installation method for end users who want to get productive quickly
 install:
 	@echo "🏗️  Building Guild binary for installation..."
 	@go build -o bin/guild ./cmd/guild
 	@$(BUILDTOOL) install
 	@$(MAKE) install-completion
 
+# DEVELOPER TARGET: Remove Guild from system
 uninstall:
 	@$(BUILDTOOL) uninstall
 
@@ -173,10 +178,12 @@ help:
 	@echo ""
 	@echo "Usage: make [target]"
 	@echo ""
-	@echo "Targets:"
-	@echo "  build                    Build Guild with progress display"
-	@echo "  install                  Install Guild to Go bin directory with completions"
+	@echo "=== USER TARGETS ==="
+	@echo "  install                  Fast install Guild (no go vet, for users)"
 	@echo "  uninstall                Remove Guild from Go bin directory"
+	@echo ""
+	@echo "=== DEVELOPER TARGETS ==="
+	@echo "  build                    Full build with go vet validation"
 	@echo "  test                     Run unit tests with visual feedback"
 	@echo "  test-pkg                 Show examples of testing specific packages"
 	@echo "  test-teatest             Run TUI tests with proper terminal cleanup"
@@ -192,15 +199,18 @@ help:
 	@echo "  fix-terminal             Fix terminal after test corruption"
 	@echo "  dashboard                Show project status dashboard"
 	@echo ""
-	@echo "Completion targets:"
+	@echo "=== COMPLETION TARGETS ==="
 	@echo "  install-completion       Auto-detect shell and install completion"
 	@echo "  install-bash-completion  Install bash completion"
 	@echo "  install-zsh-completion   Install zsh completion"
 	@echo "  install-fish-completion  Install fish completion"
 	@echo ""
-	@echo "Examples:"
-	@echo "  make build      # Build with progress bars"
-	@echo "  make install    # Install to ~/go/bin"
-	@echo "  make test       # Run tests with feedback"
-	@echo "  make test-pkg   # Show how to test specific packages"
-	@echo "  make ci-build   # Build for CI (plain text)"
+	@echo "=== QUICK START FOR USERS ==="
+	@echo "  make install      # Fast install (30 seconds)"
+	@echo "  guild init        # Create workspace with Elena agent"
+	@echo "  guild chat        # Start chatting immediately"
+	@echo ""
+	@echo "=== DEVELOPMENT WORKFLOW ==="
+	@echo "  make build        # Full validation build"
+	@echo "  make test         # Run all tests properly"
+	@echo "  make ci-build     # Build for CI (plain text)"

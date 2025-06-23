@@ -88,16 +88,8 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 	// Check if already initialized (unless --force)
 	if !fastInitForce {
 		campaignPath := filepath.Join(projectPath, ".campaign", "campaign.yaml")
-		guildPath := filepath.Join(projectPath, ".guild", "guild.yaml")
 		
 		if _, err := os.Stat(campaignPath); err == nil {
-			return gerror.New(gerror.ErrCodeAlreadyExists, "project already initialized", nil).
-				WithComponent("cli").
-				WithOperation("runFastInit").
-				WithDetails("path", projectPath).
-				WithDetails("hint", "use --force to reinitialize")
-		}
-		if _, err := os.Stat(guildPath); err == nil {
 			return gerror.New(gerror.ErrCodeAlreadyExists, "project already initialized", nil).
 				WithComponent("cli").
 				WithOperation("runFastInit").

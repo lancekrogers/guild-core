@@ -239,11 +239,12 @@ func LoadGuildConfig(projectPath string) (*GuildConfig, error) {
 
 // SaveGuildConfig saves guild configuration to a project directory
 func SaveGuildConfig(projectPath string, config *GuildConfig) error {
-	configPath := filepath.Join(projectPath, ".guild", "guild.yaml")
+	// Save to campaign directory
+	configPath := filepath.Join(projectPath, ".campaign", "guild.yaml")
 
 	// Ensure directory exists
 	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create guild directory").
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign directory").
 			WithComponent("GuildConfig").
 			WithOperation("SaveGuildConfig")
 	}

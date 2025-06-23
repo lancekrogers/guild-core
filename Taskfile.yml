@@ -15,8 +15,10 @@ tasks:
     cmds:
       - task: build
 
+  # Note: This build task includes go vet validation
+  # For users who want a fast install, use 'make install' instead
   build:
-    desc: Build the Guild binary
+    desc: Build the Guild binary (includes validation)
     cmds:
       - mkdir -p {{.BIN_DIR}}
       - rm -f ./guild # Clean any binary in root directory

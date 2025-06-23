@@ -60,53 +60,64 @@ guild migrate              # Migrate from global to project configuration
 - Git
 - SQLite (for storage)
 
-### Installation
+### Installation (30 Seconds to Productive!)
 
 ```bash
 # Clone the repository
 git clone https://github.com/guild-ventures/guild-core.git
 cd guild-core
 
-# Install dependencies
-make deps
-
-# Build and install to Go bin directory
+# Fast install for users (no go vet delays)
 make install
-
-# Or using Task
-task install
 
 # Verify installation
 guild version
 ```
 
 The install command will:
-- Build the Guild CLI
+- Build the Guild CLI quickly (no go vet)
 - Install it to `$GOPATH/bin` (or `~/go/bin` if GOPATH is not set)
+- Install shell completions automatically
 - Check if the Go bin directory is in your PATH
-- Provide instructions to add it to PATH if needed
 
-To uninstall:
-```bash
-make uninstall
-# or
-task uninstall
-```
-
-### Create Your First Guild Project
+### Get Started in 30 Seconds
 
 ```bash
-# Initialize a new project
-./bin/guild init my-project
+# 1. Initialize your workspace (creates Elena agent instantly)
+guild init my-project
 cd my-project
 
-# Set up your API keys (at least one required)
+# 2. Set up your API key (at least one required)
 export ANTHROPIC_API_KEY="your-key"
 # export OPENAI_API_KEY="your-key"      # Optional
 # export OLLAMA_HOST="localhost:11434"  # Optional for local models
 
-# Start chatting with agents
-../bin/guild chat
+# 3. Start chatting immediately!
+guild chat
+```
+
+That's it! You're now chatting with Elena, your AI assistant.
+
+### Advanced Configuration (Optional)
+
+For detailed configuration control:
+```bash
+# Run the interactive setup wizard
+guild setup-wizard
+```
+
+This TUI provides:
+- Agent selection and customization
+- Provider configuration
+- Advanced settings
+- Import/export capabilities
+
+### Uninstall
+
+```bash
+make uninstall
+# or
+task uninstall
 ```
 
 This creates a `.guild/` directory with:
@@ -138,6 +149,20 @@ Guild uses a sophisticated component-based architecture:
 
 ## 🔨 Development
 
+### Developer vs User Workflows
+
+Guild provides two distinct workflows:
+
+**For Users (Fast Path):**
+- `make install` - Quick build without go vet (30 seconds)
+- `guild init` - Instant workspace with Elena agent
+- `guild chat` - Start being productive immediately
+
+**For Developers (Full Validation):**
+- `make build` - Full build with go vet and visual feedback
+- `make test` - Comprehensive test suite
+- Full validation and quality checks
+
 ### 🚨 CRITICAL: Test Execution Rules
 
 **NEVER run `go test` directly** - it creates `.test` binaries that pollute the repository!
@@ -159,7 +184,8 @@ Guild uses both Makefile and [Taskfile](https://taskfile.dev/) for development:
 
 ```bash
 # Build commands (ALWAYS use make/task)
-make build            # Build with visual progress
+make build            # Full build with go vet validation
+make quick            # Fast build without visual feedback
 task build            # Alternative build command
 
 # Test commands (NEVER use go test directly)

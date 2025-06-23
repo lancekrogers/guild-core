@@ -175,10 +175,10 @@ func runServe(cmd *cobra.Command, args []string) error {
 			DefaultVectorStore: "chromem",
 			Stores: map[string]interface{}{
 				"sqlite": map[string]interface{}{
-					"path": "./.guild/memory.db",
+					"path": "./.campaign/memory.db",
 				},
 				"chromem": map[string]interface{}{
-					"persistence_path": "./.guild/vectors",
+					"persistence_path": "./.campaign/vectors",
 					"dimension":        1536,
 				},
 			},

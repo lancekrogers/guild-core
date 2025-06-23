@@ -1,15 +1,35 @@
 # Getting Started with Guild Framework
 
-Welcome to Guild! This guide reflects the current implementation status of the Guild Framework. Many features are still in development.
+Welcome to Guild! This guide will help you get productive with Guild in just 30 seconds.
 
 ## Table of Contents
 
-1. [Prerequisites](#prerequisites)
-2. [Installation](#installation)
-3. [Basic Usage](#basic-usage)
-4. [Available Commands](#available-commands)
-5. [Current Limitations](#current-limitations)
-6. [Troubleshooting](#troubleshooting)
+1. [Quick Start (30 Seconds)](#quick-start-30-seconds)
+2. [Prerequisites](#prerequisites)
+3. [Installation Options](#installation-options)
+4. [Basic Usage](#basic-usage)
+5. [Available Commands](#available-commands)
+6. [Advanced Configuration](#advanced-configuration)
+7. [Developer Workflow](#developer-workflow)
+8. [Troubleshooting](#troubleshooting)
+
+## Quick Start (30 Seconds)
+
+Get productive with Guild in 3 simple steps:
+
+```bash
+# 1. Install Guild (fast, no go vet)
+cd guild-core && make install
+
+# 2. Initialize your workspace with Elena
+guild init my-project && cd my-project
+
+# 3. Set API key and start chatting
+export ANTHROPIC_API_KEY="your-key"
+guild chat
+```
+
+That's it! You're now chatting with Elena, your AI assistant.
 
 ## Prerequisites
 
@@ -21,22 +41,34 @@ Welcome to Guild! This guide reflects the current implementation status of the G
   - OpenAI API key
   - Or local Ollama installation
 
-## Installation
+## Installation Options
+
+### For Users (Fast Path)
 
 ```bash
 # Clone the repository
 git clone https://github.com/guild-ventures/guild-core.git
 cd guild-core
 
-# Install dependencies
-make deps
+# Fast install without go vet (30 seconds)
+make install
 
-# Build Guild (Note: Build currently has errors in some packages)
+# Verify installation
+guild version
+```
+
+### For Developers (Full Validation)
+
+```bash
+# Clone the repository
+git clone https://github.com/guild-ventures/guild-core.git
+cd guild-core
+
+# Full build with go vet validation
 make build
 
-# The build will fail but some binaries may be created
-# Check if guild binary was created:
-ls bin/guild
+# Run tests
+make test
 ```
 
 ## Basic Usage
@@ -44,14 +76,14 @@ ls bin/guild
 ### Initialize a Guild Project
 
 ```bash
-# Create a new guild project
-./bin/guild init my-project
+# Fast initialization with Elena agent
+guild init my-project
 cd my-project
 
 # This creates a .guild/ directory with:
-# - guild.yaml (configuration)
+# - guild.yaml (configuration with Elena)
 # - memory.db (SQLite database)
-# - Various subdirectories for corpus, campaigns, etc.
+# - Various subdirectories for organization
 ```
 
 ### Set Up API Keys
@@ -66,46 +98,92 @@ export OLLAMA_HOST="localhost:11434"  # For local models
 
 ### Start Chat Interface
 
-The chat interface is the most functional part of Guild currently:
-
 ```bash
-# From your project directory
-../bin/guild chat
+# Start chatting immediately
+guild chat
 ```
 
-This opens a terminal UI where you can:
-- Chat with AI agents
-- Use slash commands (some may not work)
-- See formatted responses with markdown support
+This opens a production-ready terminal UI where you can:
+- Chat with Elena or other AI agents
+- Use slash commands for advanced features
+- See beautifully formatted responses with markdown support
+- Execute tools and commands safely
 
 ### Scan Project Documentation
 
 ```bash
 # Index your project's documentation
-../bin/guild corpus scan
+guild corpus scan
 
 # Query the indexed documentation
-../bin/guild corpus query "how does authentication work"
+guild corpus query "how does authentication work"
 ```
 
 ## Available Commands
 
-### Working Commands
+### Core Commands (Production Ready)
 
-- `guild init [path]` - Initialize a new guild project
-- `guild chat` - Interactive chat interface (most functional)
+- `guild init [path]` - Fast initialization with Elena agent
+- `guild chat` - Production-ready interactive chat interface
+- `guild setup-wizard` - Advanced TUI configuration interface
 - `guild corpus scan` - Scan and index documentation
 - `guild corpus query` - Query indexed documentation
-- `guild commission` - Create commission documents (basic functionality)
+- `guild commission` - Create commission documents
 - `guild commission refine` - Refine commission documents
 - `guild prompt` - Manage prompt templates
 
-### Partially Working or Not Implemented
+### Additional Commands
 
-- `guild campaign` - Campaign management (limited functionality)
-- `guild serve` - gRPC server (has build errors)
-- `guild agent start` - Not implemented
+- `guild campaign` - Campaign management
+- `guild cost` - Cost tracking tools
 - `guild migrate` - Migration utilities
+- `guild serve` - gRPC server (development)
+- `guild agent start` - Agent management (development)
+
+## Advanced Configuration
+
+For users who want more control than the default Elena setup:
+
+```bash
+# Launch the interactive setup wizard
+guild setup-wizard
+```
+
+The setup wizard provides:
+- **Agent Selection**: Choose from multiple pre-configured agents
+- **Custom Agents**: Create your own agent configurations
+- **Provider Settings**: Configure multiple LLM providers
+- **Advanced Options**: Token limits, temperature, and more
+- **Import/Export**: Share configurations between projects
+
+## Developer Workflow
+
+If you're contributing to Guild or need full validation:
+
+```bash
+# Use the developer build workflow
+make build    # Full build with go vet
+make test     # Run comprehensive test suite
+make clean    # Clean all artifacts
+
+# Development helpers
+make quick    # Fast build without validation
+make dashboard # Show project status
+```
+
+### Testing Rules
+
+**CRITICAL**: Never use `go test` directly!
+
+```bash
+# ❌ WRONG - Creates .test binaries
+go test ./...
+
+# ✅ CORRECT - Use make
+make test
+make unit-test
+make integration
+```
 
 ## Current Limitations
 
