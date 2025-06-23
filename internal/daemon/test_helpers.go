@@ -5,11 +5,12 @@
 package daemon
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"testing"
+	
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 // testExecutablePath allows tests to override the executable path
@@ -32,39 +33,22 @@ func getExecutablePath() (string, error) {
 		return testExecutablePath, nil
 	}
 	
-	// First, try to find guild in PATH (equivalent to 'which guild')
+	// Try to find guild in PATH (equivalent to 'which guild')
 	if guildPath, err := exec.LookPath("guild"); err == nil {
 		return guildPath, nil
 	}
 	
-	// Check GOPATH/bin if GOPATH is set
-	if gopath := os.Getenv("GOPATH"); gopath != "" {
-		gopathBin := filepath.Join(gopath, "bin", "guild")
-		if _, err := os.Stat(gopathBin); err == nil {
-			return gopathBin, nil
-		}
-	}
-	
-	// Check ~/go/bin (default GOPATH location)
-	defaultGoBin := filepath.Join(os.Getenv("HOME"), "go", "bin", "guild")
-	if _, err := os.Stat(defaultGoBin); err == nil {
-		return defaultGoBin, nil
-	}
-	
-	// Check ~/.guild/bin (guild's own bin directory)
-	guildBin := filepath.Join(os.Getenv("HOME"), ".guild", "bin", "guild")
-	if _, err := os.Stat(guildBin); err == nil {
-		return guildBin, nil
-	}
-	
-	// Last resort: use the current executable path
-	// This might fail on macOS due to security restrictions
+	// Fallback to current executable
+	// Note: This may fail on macOS with "operation not permitted" when running
+	// from non-standard locations. Install guild properly to avoid this issue.
 	execPath, err := os.Executable()
 	if err != nil {
-		return "", fmt.Errorf("guild not found in PATH, GOPATH/bin, or ~/.guild/bin: %w", err)
+		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "guild not found in PATH").
+			WithComponent("daemon").
+			WithOperation("getExecutablePath").
+			WithDetails("help", "Run 'make install' to install guild properly")
 	}
 	
-	// Clean and return the path
 	return filepath.Clean(execPath), nil
 }
 
