@@ -276,7 +276,7 @@ func TestWaitForSocketContextCancellation(t *testing.T) {
 	// Should return error when context is cancelled
 	err := manager.waitForSocket(ctx, socketPath, 1*time.Second)
 	require.Error(t, err)
-	assert.Contains(t, err.Error(), "timeout")
+	assert.Contains(t, err.Error(), "context cancelled")
 }
 
 func TestStopCampaign(t *testing.T) {

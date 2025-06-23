@@ -86,7 +86,7 @@ func TestHierarchicalLoader_LoadHierarchicalConfig(t *testing.T) {
 				// Only create campaign config, no guild
 				guildDir := filepath.Join(tempDir, ".campaign")
 				os.MkdirAll(guildDir, 0755)
-				return saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yml"), &CampaignConfig{
+				return saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yaml"), &CampaignConfig{
 					Name:        "test",
 					Description: "test",
 				})
@@ -101,7 +101,7 @@ func TestHierarchicalLoader_LoadHierarchicalConfig(t *testing.T) {
 				os.MkdirAll(guildDir, 0755)
 
 				// Create campaign
-				saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yml"), &CampaignConfig{
+				saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yaml"), &CampaignConfig{
 					Name:        "test",
 					Description: "test",
 				})
@@ -238,7 +238,7 @@ func TestHierarchicalLoader_RefreshConfig(t *testing.T) {
 	}
 
 	// Modify campaign config
-	campaignPath := filepath.Join(tempDir, ".campaign", "campaign.yml")
+	campaignPath := filepath.Join(tempDir, ".campaign", "campaign.yaml")
 	updatedCampaign := &CampaignConfig{
 		Name:              "updated-campaign",
 		Description:       "Updated description",
@@ -286,7 +286,7 @@ func TestHierarchicalLoader_RefreshConfig_ValidationFailure(t *testing.T) {
 	originalCampaignName := config1.Campaign.Name
 
 	// Create invalid campaign config
-	campaignPath := filepath.Join(tempDir, ".campaign", "campaign.yml")
+	campaignPath := filepath.Join(tempDir, ".campaign", "campaign.yaml")
 	invalidCampaign := `name: ""  # Invalid - empty name
 description: "test"`
 	os.WriteFile(campaignPath, []byte(invalidCampaign), 0644)
@@ -884,7 +884,7 @@ func setupCompleteHierarchy(tempDir string) error {
 			"backend-guild": {"commission1", "commission2"},
 		},
 	}
-	if err := saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yml"), campaign); err != nil {
+	if err := saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yaml"), campaign); err != nil {
 		return err
 	}
 
@@ -1143,7 +1143,7 @@ func setupComplexHierarchy(tempDir string) error {
 		LastSelectedGuild: "backend-microservices",
 	}
 
-	if err := saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yml"), campaign); err != nil {
+	if err := saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yaml"), campaign); err != nil {
 		return err
 	}
 

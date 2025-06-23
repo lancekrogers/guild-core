@@ -117,9 +117,8 @@ func TestInitialize(t *testing.T) {
 		}
 	}
 
-	// Check that expected files were created
+	// Check that expected files were created (but NOT guild.yaml)
 	expectedFiles := []string{
-		".campaign/guild.yaml",
 		".campaign/memory.db",
 		".campaign/.gitignore",
 	}
@@ -129,6 +128,11 @@ func TestInitialize(t *testing.T) {
 		if _, err := os.Stat(path); os.IsNotExist(err) {
 			t.Errorf("Expected file %s was not created", file)
 		}
+	}
+
+	// Verify project is considered initialized
+	if !IsInitialized(tempDir) {
+		t.Error("Project should be initialized after calling Initialize()")
 	}
 
 	// Test that re-initialization succeeds (idempotent)

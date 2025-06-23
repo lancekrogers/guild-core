@@ -98,31 +98,11 @@ func findCampaignReference(cwd string) (*CampaignReference, error) {
 	for {
 		campaignFile := filepath.Join(currentDir, paths.DefaultCampaignDir, "campaign.yaml")
 		if fileExists(campaignFile) {
-			// Found campaign reference
-			data, err := os.ReadFile(campaignFile)
+			ref, err := parseCampaignReference(campaignFile)
 			if err != nil {
-				return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read campaign reference").
-					WithComponent("campaign").
-					WithOperation("findCampaignReference").
-					WithDetails("file", campaignFile)
+				return nil, err
 			}
-
-			var ref CampaignReference
-			if err := yaml.Unmarshal(data, &ref); err != nil {
-				return nil, gerror.Wrap(err, gerror.ErrCodeInvalidFormat, "invalid campaign reference format").
-					WithComponent("campaign").
-					WithOperation("findCampaignReference").
-					WithDetails("file", campaignFile)
-			}
-
-			if ref.Campaign == "" {
-				return nil, gerror.New(gerror.ErrCodeInvalidFormat, "campaign reference missing campaign name", nil).
-					WithComponent("campaign").
-					WithOperation("findCampaignReference").
-					WithDetails("file", campaignFile)
-			}
-
-			return &ref, nil
+			return ref, nil
 		}
 
 		// Move up one directory
@@ -136,6 +116,34 @@ func findCampaignReference(cwd string) (*CampaignReference, error) {
 	return nil, gerror.New(gerror.ErrCodeNotFound, "no campaign reference found", nil).
 		WithComponent("campaign").
 		WithOperation("findCampaignReference")
+}
+
+// parseCampaignReference reads and parses a campaign reference file
+func parseCampaignReference(filePath string) (*CampaignReference, error) {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read campaign reference").
+			WithComponent("campaign").
+			WithOperation("parseCampaignReference").
+			WithDetails("file", filePath)
+	}
+
+	var ref CampaignReference
+	if err := yaml.Unmarshal(data, &ref); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidFormat, "invalid campaign reference format").
+			WithComponent("campaign").
+			WithOperation("parseCampaignReference").
+			WithDetails("file", filePath)
+	}
+
+	if ref.Campaign == "" {
+		return nil, gerror.New(gerror.ErrCodeInvalidFormat, "campaign reference missing campaign name", nil).
+			WithComponent("campaign").
+			WithOperation("parseCampaignReference").
+			WithDetails("file", filePath)
+	}
+
+	return &ref, nil
 }
 
 // GetCampaignRoot finds the root directory of the current campaign

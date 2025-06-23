@@ -134,7 +134,10 @@ func TestDetectClaudeCode(t *testing.T) {
 
 func TestDetectOpenAI(t *testing.T) {
 	ctx := context.Background()
-	detectors := &Detectors{projectPath: "/tmp"}
+	detectors, err := NewDetectors(ctx, "/tmp")
+	if err != nil {
+		t.Fatalf("Failed to create detectors: %v", err)
+	}
 
 	// Save original value
 	originalKey := os.Getenv("OPENAI_API_KEY")
@@ -197,8 +200,9 @@ func TestDetectOpenAI(t *testing.T) {
 	if !provider.HasCredentials {
 		t.Error("Expected provider to have credentials")
 	}
-	if provider.Notes != "API key available with organization ID" {
-		t.Errorf("Expected notes about organization ID, got '%s'", provider.Notes)
+	expectedNotes := "GPT-4, GPT-3.5 and other OpenAI models (with organization ID)"
+	if provider.Notes != expectedNotes {
+		t.Errorf("Expected notes '%s', got '%s'", expectedNotes, provider.Notes)
 	}
 
 	// Test with invalid API key format
@@ -221,7 +225,10 @@ func TestDetectOpenAI(t *testing.T) {
 
 func TestDetectAnthropic(t *testing.T) {
 	ctx := context.Background()
-	detectors := &Detectors{projectPath: "/tmp"}
+	detectors, err := NewDetectors(ctx, "/tmp")
+	if err != nil {
+		t.Fatalf("Failed to create detectors: %v", err)
+	}
 
 	// Save original value
 	originalKey := os.Getenv("ANTHROPIC_API_KEY")
@@ -264,8 +271,9 @@ func TestDetectAnthropic(t *testing.T) {
 	if provider.Endpoint != "https://api.anthropic.com" {
 		t.Errorf("Expected endpoint 'https://api.anthropic.com', got '%s'", provider.Endpoint)
 	}
-	if provider.Notes != "API key available" {
-		t.Errorf("Expected notes 'API key available', got '%s'", provider.Notes)
+	expectedNotes := "Claude 3 Opus, Sonnet, and Haiku models"
+	if provider.Notes != expectedNotes {
+		t.Errorf("Expected notes '%s', got '%s'", expectedNotes, provider.Notes)
 	}
 
 	// Test with invalid API key format
@@ -295,7 +303,10 @@ func TestDetectProjectContext(t *testing.T) {
 	}
 	defer os.RemoveAll(tempDir)
 
-	detectors := &Detectors{projectPath: tempDir}
+	detectors, err := NewDetectors(ctx, tempDir)
+	if err != nil {
+		t.Fatalf("Failed to create detectors: %v", err)
+	}
 
 	// Test with no project files
 	context, err := detectors.DetectProjectContext(ctx)
@@ -330,13 +341,17 @@ func TestDetectProjectContext(t *testing.T) {
 
 // TestDetectProvidersContextCancellation tests context cancellation handling
 func TestDetectProvidersContextCancellation(t *testing.T) {
-	detectors := &Detectors{projectPath: "/tmp"}
+	baseCtx := context.Background()
+	detectors, err := NewDetectors(baseCtx, "/tmp")
+	if err != nil {
+		t.Fatalf("Failed to create detectors: %v", err)
+	}
 
 	// Create a context that's already cancelled
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately
 
-	_, err := detectors.Providers(ctx)
+	_, err = detectors.Providers(ctx)
 	if err == nil {
 		t.Fatal("Expected error when context is cancelled")
 	}
@@ -356,7 +371,11 @@ func TestDetectProvidersContextCancellation(t *testing.T) {
 
 // TestDetectProvidersTimeout tests timeout scenarios
 func TestDetectProvidersTimeout(t *testing.T) {
-	detectors := &Detectors{projectPath: "/tmp"}
+	baseCtx := context.Background()
+	detectors, err := NewDetectors(baseCtx, "/tmp")
+	if err != nil {
+		t.Fatalf("Failed to create detectors: %v", err)
+	}
 
 	// Create a context with very short timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Nanosecond)
@@ -365,7 +384,7 @@ func TestDetectProvidersTimeout(t *testing.T) {
 	// Give time for context to timeout
 	time.Sleep(1 * time.Millisecond)
 
-	_, err := detectors.Providers(ctx)
+	_, err = detectors.Providers(ctx)
 	if err == nil {
 		t.Fatal("Expected error when context times out")
 	}
@@ -419,7 +438,10 @@ func TestNewDetectorsValidation(t *testing.T) {
 // TestDetectOllamaFunctionality tests Ollama detection scenarios
 func TestDetectOllamaFunctionality(t *testing.T) {
 	ctx := context.Background()
-	detectors := &Detectors{projectPath: "/tmp"}
+	detectors, err := NewDetectors(ctx, "/tmp")
+	if err != nil {
+		t.Fatalf("Failed to create detectors: %v", err)
+	}
 
 	// This test will pass regardless of whether Ollama is installed
 	// It tests the detection logic functionality
@@ -456,7 +478,10 @@ func TestDetectOllamaFunctionality(t *testing.T) {
 // TestDetectAllProviderTypes tests detection of all provider types
 func TestDetectAllProviderTypes(t *testing.T) {
 	ctx := context.Background()
-	detectors := &Detectors{projectPath: "/tmp"}
+	detectors, err := NewDetectors(ctx, "/tmp")
+	if err != nil {
+		t.Fatalf("Failed to create detectors: %v", err)
+	}
 
 	// Save all original environment variables
 	envVars := map[string]string{

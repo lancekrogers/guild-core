@@ -70,12 +70,9 @@ func InitializeLocal(projectPath string) error {
 			WithOperation("initialize_local")
 	}
 
-	// Create default local config
-	if err := createDefaultLocalConfig(localDir, projectPath); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create local config").
-			WithComponent("project").
-			WithOperation("initialize_local")
-	}
+	// Note: We don't create a guild.yaml file here because that should contain
+	// the campaign reference and be created by campaign initialization.
+	// Local project initialization only creates directory structure and database.
 
 	// Create .gitignore
 	if err := createGitIgnore(localDir); err != nil {

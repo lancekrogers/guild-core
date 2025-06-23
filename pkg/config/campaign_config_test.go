@@ -125,7 +125,7 @@ func TestLoadCampaignConfig(t *testing.T) {
 						"backend-guild": {"commission1", "commission2"},
 					},
 				}
-				return saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yml"), config)
+				return saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yaml"), config)
 			},
 			wantErr: false,
 			wantConfig: &CampaignConfig{
@@ -152,7 +152,7 @@ func TestLoadCampaignConfig(t *testing.T) {
 				if err := os.MkdirAll(guildDir, 0755); err != nil {
 					return err
 				}
-				return os.WriteFile(filepath.Join(guildDir, "campaign.yml"), []byte("invalid: yaml: content:"), 0644)
+				return os.WriteFile(filepath.Join(guildDir, "campaign.yaml"), []byte("invalid: yaml: content:"), 0644)
 			},
 			wantErr: true,
 			errCode: gerror.ErrCodeValidation,
@@ -165,7 +165,7 @@ func TestLoadCampaignConfig(t *testing.T) {
 					return err
 				}
 				// Missing required fields
-				return os.WriteFile(filepath.Join(guildDir, "campaign.yml"), []byte("name: test\n"), 0644)
+				return os.WriteFile(filepath.Join(guildDir, "campaign.yaml"), []byte("name: test\n"), 0644)
 			},
 			wantErr: true,
 			errCode: gerror.ErrCodeValidation,
@@ -216,7 +216,7 @@ func TestLoadCampaignConfig_ContextCancellation(t *testing.T) {
 		Name:        "test",
 		Description: "test",
 	}
-	saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yml"), config)
+	saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yaml"), config)
 
 	// Test with cancelled context
 	ctx, cancel := context.WithCancel(context.Background())

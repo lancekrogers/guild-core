@@ -159,68 +159,10 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 			WithDetails("dir", agentsDir)
 	}
 
-	// Step 4: Create guild.yaml configuration file
-	guildConfig := map[string]interface{}{
-		"name":        "Elena's Digital Artisans Guild",
-		"description": "Elite team of AI specialists led by Guild Master Elena",
-		"version":     "1.0.0",
-		"manager": map[string]interface{}{
-			"default": "elena-guild-master",
-		},
-		"storage": map[string]interface{}{
-			"backend": "sqlite",
-			"sqlite": map[string]interface{}{
-				"path": ".campaign/memory.db",
-			},
-		},
-		"providers": map[string]interface{}{},
-		"agents": []map[string]interface{}{
-			{
-				"id":          "elena-guild-master",
-				"name":        "Elena the Guild Master",
-				"type":        "manager",
-				"provider":    "anthropic",
-				"model":       "claude-3-sonnet-20240229",
-				"description": "Master Coordinator of the Digital Artisans Guild",
-				"capabilities": []string{"task_breakdown", "agent_assignment", "project_management"},
-			},
-			{
-				"id":          "marcus-developer",
-				"name":        "Marcus the Code Artisan",
-				"type":        "worker",
-				"provider":    "anthropic",
-				"model":       "claude-3-sonnet-20240229",
-				"description": "Master Craftsman of Digital Logic",
-				"capabilities": []string{"code_generation", "architecture", "debugging"},
-			},
-			{
-				"id":          "vera-tester",
-				"name":        "Vera the Quality Guardian",
-				"type":        "specialist",
-				"provider":    "anthropic",
-				"model":       "claude-3-haiku-20240307",
-				"description": "Master Guardian of Software Quality",
-				"capabilities": []string{"testing", "quality_assurance", "user_experience"},
-			},
-		},
-	}
+	// Step 4: Guild configuration is now consolidated in guilds/elena_guild.yaml
+	// No redundant guild.yaml creation needed - all guild config is in the guilds/ directory
 
-	guildConfigData, err := yaml.Marshal(guildConfig)
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild config").
-			WithComponent("DefaultConfigManager").
-			WithOperation("CreatePhase0Configuration")
-	}
-
-	guildConfigPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "guild.yaml")
-	if err := os.WriteFile(guildConfigPath, guildConfigData, 0644); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
-			WithComponent("DefaultConfigManager").
-			WithOperation("CreatePhase0Configuration").
-			WithDetails("path", guildConfigPath)
-	}
-
-	// Step 5: Create other required directories
+	// Step 4: Create other required directories
 	directories := []string{
 		"commissions",
 		"commissions/refined",
@@ -242,7 +184,7 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 		}
 	}
 
-	// Step 6: Create memory database file
+	// Step 5: Create memory database file
 	dbPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "memory.db")
 	if _, err := os.Create(dbPath); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create database file").
@@ -251,7 +193,7 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 			WithDetails("path", dbPath)
 	}
 
-	// Step 7: Register campaign in global registry (~/.guild/campaigns/{hash}/)
+	// Step 6: Register campaign in global registry (~/.guild/campaigns/{hash}/)
 	if err := d.registerCampaignGlobally(ctx, campaignName, projectPath); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to register campaign globally").
 			WithComponent("DefaultConfigManager").
@@ -347,28 +289,8 @@ func (d *DefaultConfigManager) CreateCampaignReference(ctx context.Context, proj
 			WithOperation("CreateCampaignReference")
 	}
 
-	// Create minimal campaign reference for detection
-	ref := campaign.CampaignReference{
-		Campaign:    campaignName,
-		Project:     projectName,
-		Description: "Project " + projectName + " in campaign " + campaignName,
-	}
-
-	refPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "guild.yaml")
-	refData, err := yaml.Marshal(ref)
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal campaign reference").
-			WithComponent("DefaultConfigManager").
-			WithOperation("CreateCampaignReference")
-	}
-
-	if err := os.WriteFile(refPath, refData, 0644); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write campaign reference").
-			WithComponent("DefaultConfigManager").
-			WithOperation("CreateCampaignReference").
-			WithDetails("path", refPath)
-	}
-
+	// Campaign reference is now handled by campaign.yaml and guild registry system
+	// No need to create a separate guild.yaml file - the campaign structure is sufficient
 	return nil
 }
 

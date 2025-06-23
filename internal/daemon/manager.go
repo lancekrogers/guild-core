@@ -5,6 +5,7 @@ package daemon
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -130,10 +131,14 @@ func (m *Manager) startCampaignDaemon(ctx context.Context, config *DaemonConfig)
 
 	// Start the process
 	if err := cmd.Start(); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start daemon").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start daemon process").
 			WithComponent("daemon").
 			WithOperation("startCampaignDaemon").
-			WithDetails("campaign", config.Campaign)
+			WithDetails("campaign", config.Campaign).
+			WithDetails("socket_path", config.SocketPath).
+			WithDetails("session", config.Session).
+			WithDetails("command", guildPath).
+			WithDetails("args", fmt.Sprintf("%v", args))
 	}
 
 	// Write PID file if configured
@@ -161,30 +166,58 @@ func (m *Manager) startCampaignDaemon(ctx context.Context, config *DaemonConfig)
 		// Log warning but don't fail - process might still work
 	}
 
-	// Wait for daemon to be ready
-	return m.waitForSocket(ctx, config.SocketPath, 10*time.Second)
+	// Wait for daemon to be ready with improved reliability
+	return m.waitForSocket(ctx, config.SocketPath, 30*time.Second)
 }
 
-// waitForSocket waits for a Unix socket to become responsive
+// waitForSocket waits for a Unix socket to become responsive with exponential backoff
 func (m *Manager) waitForSocket(ctx context.Context, socketPath string, timeout time.Duration) error {
 	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
-	ticker := time.NewTicker(100 * time.Millisecond)
-	defer ticker.Stop()
+	// Add initial delay to allow daemon to initialize
+	select {
+	case <-ctx.Done():
+		return gerror.New(gerror.ErrCodeTimeout, "context cancelled during initial wait", nil).
+			WithComponent("daemon").
+			WithOperation("waitForSocket").
+			WithDetails("socket", socketPath).
+			FromContext(ctx)
+	case <-time.After(500 * time.Millisecond):
+		// Continue to connection checks
+	}
+
+	// Exponential backoff: start with 100ms, max 2s
+	backoff := 100 * time.Millisecond
+	maxBackoff := 2 * time.Second
+	attempts := 0
 
 	for {
 		select {
 		case <-ctx.Done():
-			return gerror.New(gerror.ErrCodeTimeout, "daemon failed to start within timeout", nil).
+			ctxErr := ctx.Err()
+			errorMsg := "daemon failed to start within timeout"
+			if ctxErr == context.Canceled {
+				errorMsg = "daemon startup was cancelled"
+			}
+			return gerror.New(gerror.ErrCodeTimeout, errorMsg, nil).
 				WithComponent("daemon").
 				WithOperation("waitForSocket").
 				WithDetails("socket", socketPath).
 				WithDetails("timeout", timeout.String()).
+				WithDetails("attempts", attempts).
+				WithDetails("last_backoff_ms", backoff.Milliseconds()).
 				FromContext(ctx)
-		case <-ticker.C:
+		case <-time.After(backoff):
+			attempts++
 			if daemonPkg.CanConnect(socketPath) {
 				return nil
+			}
+			
+			// Exponential backoff with jitter
+			backoff = time.Duration(float64(backoff) * 1.5)
+			if backoff > maxBackoff {
+				backoff = maxBackoff
 			}
 		}
 	}

@@ -122,6 +122,14 @@ func (s *Server) StartUnix(ctx context.Context, socketPath string) error {
 			FromContext(ctx)
 	}
 
+	// Log that Unix socket is successfully bound
+	observability.GetLogger(ctx).
+		WithComponent("grpc").
+		WithOperation("StartUnix").
+		Info("gRPC server bound to Unix socket",
+			"socket_path", socketPath,
+		)
+
 	return s.startServer(ctx, socketPath)
 }
 
@@ -132,8 +140,23 @@ func (s *Server) startServer(ctx context.Context, address string) error {
 	pb.RegisterChatServiceServer(s.grpcServer, s.chatService)
 	promptspb.RegisterPromptServiceServer(s.grpcServer, s.promptServer)
 
+	// Create a channel to signal when server is ready
+	serverReady := make(chan struct{})
+	
 	// Start server in goroutine
 	go func() {
+		// Signal that server is about to start serving
+		close(serverReady)
+		
+		// Log that server is starting to serve
+		observability.GetLogger(ctx).
+			WithComponent("grpc").
+			WithOperation("startServer").
+			Info("gRPC server is ready and serving requests",
+				"address", address,
+				"listener_type", s.listener.Addr().Network(),
+			)
+		
 		if err := s.grpcServer.Serve(s.listener); err != nil {
 			// Log server error with proper context
 			observability.GetLogger(ctx).
@@ -146,8 +169,23 @@ func (s *Server) startServer(ctx context.Context, address string) error {
 		}
 	}()
 
+	// Wait for server to be ready before returning
+	<-serverReady
+	
+	// Add a small delay to ensure the socket is fully bound and ready
+	time.Sleep(100 * time.Millisecond)
+
 	// Wait for context cancellation
 	<-ctx.Done()
+	
+	// Log graceful shutdown
+	observability.GetLogger(ctx).
+		WithComponent("grpc").
+		WithOperation("startServer").
+		Info("gRPC server shutting down gracefully",
+			"address", address,
+		)
+	
 	s.grpcServer.GracefulStop()
 
 	return nil

@@ -24,14 +24,14 @@ func TestDetectCampaign(t *testing.T) {
 		errorContains string
 	}{
 		{
-			name: "detects campaign from local guild.yaml",
+			name: "detects campaign from local campaign.yaml",
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 
 				// Create campaign reference
-				refPath := filepath.Join(guildDir, "guild.yaml")
+				refPath := filepath.Join(guildDir, "campaign.yaml")
 				ref := CampaignReference{
 					Campaign:    "e-commerce",
 					Project:     "frontend",
@@ -47,14 +47,14 @@ func TestDetectCampaign(t *testing.T) {
 			wantCampaign: "e-commerce",
 		},
 		{
-			name: "detects campaign from parent directory guild.yaml",
+			name: "detects campaign from parent directory campaign.yaml",
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 
 				// Create campaign reference in parent
-				refPath := filepath.Join(guildDir, "guild.yaml")
+				refPath := filepath.Join(guildDir, "campaign.yaml")
 				ref := CampaignReference{
 					Campaign:    "task-manager",
 					Project:     "api",
@@ -81,7 +81,7 @@ func TestDetectCampaign(t *testing.T) {
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 
 				// Create campaign reference that should be ignored
-				refPath := filepath.Join(guildDir, "guild.yaml")
+				refPath := filepath.Join(guildDir, "campaign.yaml")
 				ref := CampaignReference{
 					Campaign:    "ignored-campaign",
 					Project:     "test",
@@ -109,14 +109,14 @@ func TestDetectCampaign(t *testing.T) {
 			errorContains: "no campaign found",
 		},
 		{
-			name: "handles invalid guild.yaml gracefully",
+			name: "handles invalid campaign.yaml gracefully",
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 
-				// Create invalid guild.yaml
-				refPath := filepath.Join(guildDir, "guild.yaml")
+				// Create invalid campaign.yaml
+				refPath := filepath.Join(guildDir, "campaign.yaml")
 				require.NoError(t, os.WriteFile(refPath, []byte("invalid yaml content {"), 0644))
 
 				return tmpDir
@@ -126,14 +126,14 @@ func TestDetectCampaign(t *testing.T) {
 			errorContains: "no campaign found",
 		},
 		{
-			name: "handles missing campaign name in guild.yaml",
+			name: "handles missing campaign name in campaign.yaml",
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".campaign")
 				require.NoError(t, os.MkdirAll(guildDir, 0755))
 
-				// Create guild.yaml without campaign name
-				refPath := filepath.Join(guildDir, "guild.yaml")
+				// Create campaign.yaml without campaign name
+				refPath := filepath.Join(guildDir, "campaign.yaml")
 				ref := CampaignReference{
 					Project:     "test",
 					Description: "Missing campaign name",

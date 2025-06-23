@@ -200,19 +200,41 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 
 	// Step 7: Auto-start daemon unless --no-daemon flag is set
 	if !fastInitNoDaemon {
-		fmt.Print("🚀 Starting Guild daemon... ")
+		fmt.Print("🚀 Starting Guild daemon")
 		
-		// Use the lifecycle manager for auto-start
+		// Show progress during daemon startup
+		done := make(chan struct{})
+		go func() {
+			for i := 0; i < 10; i++ {
+				select {
+				case <-done:
+					return
+				case <-time.After(300 * time.Millisecond):
+					fmt.Print(".")
+				}
+			}
+		}()
+		
+		// Use the lifecycle manager for auto-start with timeout context
+		daemonCtx, cancel := context.WithTimeout(ctx, 35*time.Second)
+		defer cancel()
+		
 		lifecycleManager := daemon.DefaultLifecycleManager
-		_, err := lifecycleManager.AutoStartDaemon(ctx, campaignName)
+		_, err := lifecycleManager.AutoStartDaemon(daemonCtx, campaignName)
+		close(done) // Stop progress dots
+		
 		if err != nil {
-			fmt.Printf("⚠️\n")
+			fmt.Printf(" ⚠️\n")
 			fmt.Printf("   Failed to start daemon: %v\n", err)
-			fmt.Printf("   💡 You can start it manually with: guild serve --campaign %s --daemon\n", campaignName)
+			fmt.Printf("   💡 Manual start: guild serve --campaign %s --daemon\n", campaignName)
+			fmt.Printf("   🔍 Check logs: tail ~/.guild/logs/%s.log\n", campaignName)
+			fmt.Printf("   🛠️  Debug mode: guild serve --campaign %s --debug\n", campaignName)
 		} else {
+			// Verify daemon is fully ready
+			fmt.Print(" ✅")
 			// Give the server a moment to fully initialize
 			time.Sleep(500 * time.Millisecond)
-			fmt.Println("✅")
+			fmt.Println(" (ready)")
 		}
 	}
 
@@ -224,8 +246,13 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 	fmt.Println("🛡️  Vera the Quality Guardian protects your software excellence")
 	fmt.Println()
 	fmt.Println("🚀 Start your adventure:")
-	fmt.Println("   guild chat                           # Meet Elena and begin")
-	fmt.Println("   guild chat --agent elena-guild-master  # Talk to Elena directly")
+	if !fastInitNoDaemon {
+		fmt.Println("   guild chat                           # Meet Elena and begin")
+		fmt.Println("   guild chat --agent elena-guild-master  # Talk to Elena directly")
+	} else {
+		fmt.Println("   guild serve --campaign guild-demo --daemon  # Start the daemon first")
+		fmt.Println("   guild chat                           # Then meet Elena and begin")
+	}
 	fmt.Println("   guild status                         # Check guild status")
 	fmt.Println()
 	fmt.Println("💡 For more control over setup, use: guild setup-wizard")

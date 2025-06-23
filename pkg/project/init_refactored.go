@@ -28,7 +28,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/storage"
 )
 
-// InitializeProject creates both global and local Guild structures
+// InitializeProject creates both global and campaign structures
 func InitializeProject(projectPath string) error {
 	// Ensure global Guild directory exists
 	if err := global.InitializeGlobal(); err != nil {
@@ -37,9 +37,12 @@ func InitializeProject(projectPath string) error {
 			WithOperation("initialize_project")
 	}
 
-	// Note: We're not calling local.InitializeLocal anymore since
-	// the new campaign architecture uses .campaign/ directory
-	// which is created by CreatePhase0Configuration
+	// Initialize campaign project structure (formerly called "local")
+	if err := local.InitializeLocal(projectPath); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize campaign project").
+			WithComponent("project").
+			WithOperation("initialize_project")
+	}
 
 	return nil
 }
@@ -48,19 +51,13 @@ func InitializeProject(projectPath string) error {
 func IsProjectInitialized(projectPath string) bool {
 	// Check for campaign directory structure
 	campaignDir := filepath.Join(projectPath, ".campaign")
-	configPath := filepath.Join(campaignDir, "campaign.yaml")
-	guildPath := filepath.Join(campaignDir, "guild.yaml")
 	dbPath := filepath.Join(campaignDir, "memory.db")
 
-	// Check campaign config exists
-	if _, err := os.Stat(configPath); err != nil {
+	// Check that .campaign directory exists
+	if _, err := os.Stat(campaignDir); err != nil {
 		return false
 	}
-	// Check guild config exists
-	if _, err := os.Stat(guildPath); err != nil {
-		return false
-	}
-	// Check database exists
+	// Check database exists (created by campaign initialization)
 	if _, err := os.Stat(dbPath); err != nil {
 		return false
 	}
