@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/paths"
 )
 
 // LogLevel represents logging levels
@@ -143,10 +144,17 @@ func setupLogOutput(consoleOutput io.Writer) io.Writer {
 	return io.MultiWriter(writers...)
 }
 
-// createLogFile creates a log file in .guild/logs/ directory
+// createLogFile creates a log file in ~/.guild/logs/ directory
 func createLogFile() io.Writer {
-	// Create .guild/logs directory
-	logDir := filepath.Join(".guild", "logs")
+	// Get global Guild config directory
+	guildDir, err := paths.GetGuildConfigDir()
+	if err != nil {
+		// If we can't get the Guild directory, skip file logging silently
+		return nil
+	}
+	
+	// Create logs subdirectory
+	logDir := filepath.Join(guildDir, "logs")
 	if err := os.MkdirAll(logDir, 0755); err != nil {
 		// If we can't create the directory, skip file logging silently
 		return nil

@@ -5,10 +5,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"path/filepath"
 
+	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
+
+	"github.com/guild-ventures/guild-core/pkg/observability"
 )
 
 // rootCmd represents the Great Hall command (root command in standard terminology)
@@ -119,7 +124,58 @@ func Execute() {
 	}
 }
 
+// initializeGuild sets up environment and logging for Guild
+func initializeGuild() context.Context {
+	// Load .env file if it exists (for local development)
+	if err := loadEnvironment(); err != nil {
+		// Not a fatal error - continue without .env
+		fmt.Fprintf(os.Stderr, "Note: Could not load .env file: %v\n", err)
+	}
+
+	// Initialize observability system
+	logger := observability.NewLogger(nil)
+	ctx := context.Background()
+	ctx = observability.WithLogger(ctx, logger)
+	
+	// Set up request context for tracing
+	ctx = observability.EnsureRequestContext(ctx)
+	ctx = observability.WithComponent(ctx, "guild-cli")
+	
+	logger.InfoContext(ctx, "Guild CLI starting", 
+		"version", "dev-local",
+		"log_file_enabled", os.Getenv("GUILD_LOG_FILE") == "true",
+	)
+	
+	return ctx
+}
+
+// loadEnvironment attempts to load .env files in order of preference
+func loadEnvironment() error {
+	// Try loading .env from current directory first (for development)
+	if err := godotenv.Load(); err != nil {
+		// Try loading from the executable's directory
+		if execPath, err := os.Executable(); err == nil {
+			envPath := filepath.Join(filepath.Dir(execPath), ".env")
+			if err := godotenv.Load(envPath); err != nil {
+				// Try loading from home directory
+				if homeDir, err := os.UserHomeDir(); err == nil {
+					envPath := filepath.Join(homeDir, ".guild", ".env")
+					return godotenv.Load(envPath)
+				}
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 func main() {
+	// Initialize Guild environment and logging
+	ctx := initializeGuild()
+	
+	// Store context for use in commands (you might want to pass this through somehow)
+	_ = ctx
+	
 	// Assemble the Guild teams (standard: start the application)
 	Execute()
 }
