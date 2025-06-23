@@ -169,6 +169,27 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 		if initModel.GetError() != nil {
 			return initModel.GetError()
 		}
+		// In quick mode, ensure files were created
+		if initQuickMode {
+			// Check if .guild or .campaign directory exists
+			guildPath := filepath.Join(config.ProjectPath, ".guild")
+			campaignPath := filepath.Join(config.ProjectPath, ".campaign")
+			
+			if _, err := os.Stat(guildPath); os.IsNotExist(err) {
+				if _, err := os.Stat(campaignPath); os.IsNotExist(err) {
+					// Neither directory exists, initialization failed silently
+					fmt.Println("⚠️  Warning: Initialization completed but no directories were created")
+					fmt.Println("Running direct initialization as fallback...")
+					
+					// Run direct initialization
+					if err := runDirectInitialization(ctx, config, deps); err != nil {
+						return gerror.Wrap(err, gerror.ErrCodeInternal, "fallback initialization failed").
+							WithComponent("cli").
+							WithOperation("runUnifiedInit")
+					}
+				}
+			}
+		}
 	}
 
 	// Auto-start daemon unless --no-daemon flag is set

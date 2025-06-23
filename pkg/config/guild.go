@@ -188,24 +188,29 @@ type Specialization struct {
 
 // LoadGuildConfig loads guild configuration with global -> project hierarchy
 func LoadGuildConfig(projectPath string) (*GuildConfig, error) {
-	// Ensure local config exists (global is handled by enhanced loader)
-	if err := ensureLocalConfig(projectPath); err != nil {
-		return nil, err
+	// Try multiple locations for guild config
+	possiblePaths := []string{
+		// Legacy/expected location
+		filepath.Join(projectPath, ".guild", "guild.yaml"),
+		filepath.Join(projectPath, ".guild", "guild.yml"),
+		// New campaign-based location
+		filepath.Join(projectPath, ".campaign", "guild.yaml"),
+		filepath.Join(projectPath, ".campaign", "guild.yml"),
 	}
 
-	configPath := filepath.Join(projectPath, ".guild", "guild.yaml")
-
-	// Check if file exists
-	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		// Also check for guild.yml
-		altPath := filepath.Join(projectPath, ".guild", "guild.yml")
-		if _, err := os.Stat(altPath); err == nil {
-			configPath = altPath
-		} else {
-			return nil, gerror.Newf(gerror.ErrCodeNotFound, "guild configuration not found at %s", configPath).
-				WithComponent("GuildConfig").
-				WithOperation("LoadGuildConfig")
+	var configPath string
+	for _, path := range possiblePaths {
+		if _, err := os.Stat(path); err == nil {
+			configPath = path
+			break
 		}
+	}
+
+	if configPath == "" {
+		return nil, gerror.New(gerror.ErrCodeNotFound, "guild configuration not found", nil).
+			WithComponent("GuildConfig").
+			WithOperation("LoadGuildConfig").
+			WithDetails("searched", possiblePaths)
 	}
 
 	data, err := os.ReadFile(configPath)
@@ -627,17 +632,28 @@ func (g *GuildConfig) IsUsingSQLite() bool {
 
 // ensureLocalConfig ensures the local Guild configuration exists
 func ensureLocalConfig(projectPath string) error {
-	localDir := filepath.Join(projectPath, ".guild")
-	configPath := filepath.Join(localDir, "guild.yaml")
+	// Check both .guild and .campaign directories
+	locations := []struct {
+		dir  string
+		file string
+	}{
+		{filepath.Join(projectPath, ".guild"), "guild.yaml"},
+		{filepath.Join(projectPath, ".guild"), "guild.yml"},
+		{filepath.Join(projectPath, ".campaign"), "guild.yaml"},
+		{filepath.Join(projectPath, ".campaign"), "guild.yml"},
+	}
 
-	// Check if already initialized
-	if _, err := os.Stat(configPath); err == nil {
-		return nil
+	for _, loc := range locations {
+		configPath := filepath.Join(loc.dir, loc.file)
+		if _, err := os.Stat(configPath); err == nil {
+			return nil
+		}
 	}
 
 	return gerror.New(gerror.ErrCodeNotFound, "local guild config not found", nil).
 		WithComponent("config").
-		WithOperation("ensureLocalConfig")
+		WithOperation("ensureLocalConfig").
+		WithDetails("info", "Run 'guild init' to create a new Guild project")
 }
 
 // LoadGlobalConfig is deprecated - use enhanced_loader.go instead

@@ -5,6 +5,7 @@ package init
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -220,8 +221,69 @@ func (d *DefaultConfigManager) IntegrateWithPhase0Config(ctx context.Context, pr
 			WithOperation("IntegrateWithPhase0Config")
 	}
 
-	// Implementation would integrate wizard results with Phase 0 config
-	// For now, this is a simplified version
+	// Create .guild directory for compatibility with chat command
+	guildDir := filepath.Join(projectPath, ".guild")
+	if err := os.MkdirAll(guildDir, 0755); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create .guild directory").
+			WithComponent("DefaultConfigManager").
+			WithOperation("IntegrateWithPhase0Config").
+			WithDetails("dir", guildDir)
+	}
+
+	// Create a minimal guild.yaml in .guild directory
+	guildConfig := map[string]interface{}{
+		"name":        "Development Guild",
+		"description": fmt.Sprintf("Guild for %s project", projectName),
+		"version":     "1.0.0",
+		"manager": map[string]interface{}{
+			"default": "elena-guild-master",
+		},
+		"agents": []map[string]interface{}{
+			{
+				"id":          "elena-guild-master",
+				"name":        "Elena the Guild Master",
+				"type":        "manager",
+				"provider":    "anthropic",
+				"model":       "claude-3-sonnet-20240229",
+				"description": "Guild Master who coordinates specialists and ensures project success",
+				"capabilities": []string{"task_breakdown", "agent_assignment", "project_management"},
+			},
+			{
+				"id":          "marcus-developer",
+				"name":        "Marcus the Code Artisan",
+				"type":        "worker",
+				"provider":    "anthropic",
+				"model":       "claude-3-sonnet-20240229",
+				"description": "Backend specialist focused on architecture and implementation",
+				"capabilities": []string{"code_generation", "architecture", "debugging"},
+			},
+			{
+				"id":          "vera-tester",
+				"name":        "Vera the Quality Guardian",
+				"type":        "specialist",
+				"provider":    "anthropic",
+				"model":       "claude-3-haiku-20240307",
+				"description": "Frontend and quality specialist ensuring excellent user experiences",
+				"capabilities": []string{"ui_development", "testing", "user_experience"},
+			},
+		},
+	}
+
+	guildData, err := yaml.Marshal(guildConfig)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild config").
+			WithComponent("DefaultConfigManager").
+			WithOperation("IntegrateWithPhase0Config")
+	}
+
+	guildPath := filepath.Join(guildDir, "guild.yaml")
+	if err := os.WriteFile(guildPath, guildData, 0644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
+			WithComponent("DefaultConfigManager").
+			WithOperation("IntegrateWithPhase0Config").
+			WithDetails("path", guildPath)
+	}
+
 	return nil
 }
 

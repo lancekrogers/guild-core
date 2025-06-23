@@ -633,29 +633,8 @@ func (app *App) View() string {
 func (app *App) generateWelcomeMessage() common.ChatMessage {
 	var content string
 
-	// Check if we have a campaign and should show Elena's welcome
-	if app.config != nil && app.config.CampaignID != "" {
-		// Use Elena's welcome for campaign-based sessions
-		content = app.getElenaWelcomeMessage()
-	} else {
-		// Use the default welcome message for non-campaign sessions
-		content = `🏰 ═══════════════════════════════════════════ 🏰
-   Welcome to the Guild Chat Chamber!
-
-   ⚔️  Your agents await your commands
-   🛡️  Type /help to see available commands
-   👑  Use @agent-name to message specific agents
-   📜  Use @all to broadcast to all agents
-
-   Ready to craft great software together!
-🏰 ═══════════════════════════════════════════ 🏰
-
-Rich content rendering is ACTIVE! ✨
-Try these commands to see visual features:
-• /test markdown - See styled headers and formatting
-• /test code go - View syntax highlighted code
-• /status - View real-time agent status panel`
-	}
+	// Always show Elena's welcome for a rich experience
+	content = app.getElenaWelcomeMessage()
 
 	return common.ChatMessage{
 		Type:      common.MsgSystem,
