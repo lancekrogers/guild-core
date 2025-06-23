@@ -92,8 +92,7 @@ ci-clean:
 # USER TARGET: Fast installation without development checks
 # This is the primary installation method for end users who want to get productive quickly
 install:
-	@echo "🏗️  Building Guild binary for installation..."
-	@go build -o bin/guild ./cmd/guild
+	@$(BUILDTOOL) build-only
 	@$(BUILDTOOL) install
 	@$(MAKE) install-completion
 

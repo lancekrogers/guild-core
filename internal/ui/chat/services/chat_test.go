@@ -26,7 +26,9 @@ import (
 // mockGuildClient implements pb.GuildClient for testing
 type mockGuildClient struct {
 	pb.GuildClient
-	getAgentStatusFunc func(ctx context.Context, req *pb.GetAgentStatusRequest, opts ...grpc.CallOption) (*pb.AgentStatus, error)
+	getAgentStatusFunc      func(ctx context.Context, req *pb.GetAgentStatusRequest, opts ...grpc.CallOption) (*pb.AgentStatus, error)
+	sendMessageToAgentFunc  func(ctx context.Context, req *pb.AgentMessageRequest, opts ...grpc.CallOption) (*pb.AgentMessageResponse, error)
+	listAvailableAgentsFunc func(ctx context.Context, req *pb.ListAgentsRequest, opts ...grpc.CallOption) (*pb.ListAgentsResponse, error)
 }
 
 func (m *mockGuildClient) GetAgentStatus(ctx context.Context, req *pb.GetAgentStatusRequest, opts ...grpc.CallOption) (*pb.AgentStatus, error) {
@@ -37,6 +39,44 @@ func (m *mockGuildClient) GetAgentStatus(ctx context.Context, req *pb.GetAgentSt
 		State:        pb.AgentStatus_IDLE,
 		CurrentTask:  "idle",
 		LastActivity: time.Now().Unix(),
+	}, nil
+}
+
+func (m *mockGuildClient) SendMessageToAgent(ctx context.Context, req *pb.AgentMessageRequest, opts ...grpc.CallOption) (*pb.AgentMessageResponse, error) {
+	if m.sendMessageToAgentFunc != nil {
+		return m.sendMessageToAgentFunc(ctx, req, opts...)
+	}
+	return &pb.AgentMessageResponse{
+		AgentId:   req.AgentId,
+		Response:  "Mock response from agent " + req.AgentId,
+		Timestamp: time.Now().Unix(),
+		Metadata:  make(map[string]string),
+		Status: &pb.AgentStatus{
+			State:        pb.AgentStatus_IDLE,
+			CurrentTask:  "idle",
+			LastActivity: time.Now().Unix(),
+		},
+	}, nil
+}
+
+func (m *mockGuildClient) ListAvailableAgents(ctx context.Context, req *pb.ListAgentsRequest, opts ...grpc.CallOption) (*pb.ListAgentsResponse, error) {
+	if m.listAvailableAgentsFunc != nil {
+		return m.listAvailableAgentsFunc(ctx, req, opts...)
+	}
+	return &pb.ListAgentsResponse{
+		Agents: []*pb.AgentInfo{
+			{
+				Id:   "test-agent",
+				Name: "Test Agent",
+				Type: "worker",
+				Status: &pb.AgentStatus{
+					State:        pb.AgentStatus_IDLE,
+					CurrentTask:  "idle",
+					LastActivity: time.Now().Unix(),
+				},
+				Capabilities: []string{"test"},
+			},
+		},
 	}, nil
 }
 
@@ -321,7 +361,7 @@ func TestChatServiceSuggestionIntegration(t *testing.T) {
 		assert.Contains(t, stats, "suggestions_enabled")
 		assert.Contains(t, stats, "suggestion_mode")
 		assert.Contains(t, stats, "suggestions_enabled")
-		assert.Contains(t, stats, "stream_count")
+		assert.Contains(t, stats, "active_streams")
 
 		// Check suggestion service stats are included
 		assert.Contains(t, stats, "suggestion_total_requests")

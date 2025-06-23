@@ -38,7 +38,6 @@ func TestInitCommand(t *testing.T) {
 	// Check expected files exist (based on actual init command behavior)
 	expectedFiles := []string{
 		".campaign/campaign.yaml", // Campaign configuration
-		".campaign/guild.yaml",    // Guild definitions and campaign reference
 		".campaign/memory.db",     // SQLite database
 	}
 
@@ -62,14 +61,14 @@ func TestInitCommand(t *testing.T) {
 		}
 	}
 
-	// Verify campaign reference structure exists
-	campaignRefPath := ".campaign/guild.yaml"
-	if _, err := os.Stat(campaignRefPath); err != nil {
-		t.Errorf("Campaign reference file %s was not created: %v", campaignRefPath, err)
+	// Verify guild configuration exists in guilds directory (new architecture)
+	guildConfigPath := ".campaign/guilds/elena_guild.yaml"
+	if _, err := os.Stat(guildConfigPath); err != nil {
+		t.Errorf("Guild configuration file %s was not created: %v", guildConfigPath, err)
 	} else {
-		// The guild.yaml file exists and contains guild configuration
+		// The elena_guild.yaml file exists and contains guild configuration
 		// Just verify it can be read (structure may vary)
-		if data, err := os.ReadFile(campaignRefPath); err != nil {
+		if data, err := os.ReadFile(guildConfigPath); err != nil {
 			t.Errorf("Failed to read guild configuration file: %v", err)
 		} else if len(data) == 0 {
 			t.Error("Guild configuration file is empty")

@@ -234,3 +234,42 @@ func getModuleName() string {
 	}
 	return ""
 }
+
+// BuildOnly builds the main guild binary without running go vet (fast user installation)
+func BuildOnly(verbose bool) error {
+	ui.Section("Building Guild Framework")
+
+	// Create bin directory
+	if err := os.MkdirAll("bin", 0755); err != nil {
+		return fmt.Errorf("failed to create bin directory: %w", err)
+	}
+
+	ui.Task("Building", "guild binary")
+	
+	// Build main binary only
+	cmd := exec.Command("go", "build", "-o", "bin/guild", "./cmd/guild")
+	if verbose {
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+	}
+
+	if err := cmd.Run(); err != nil {
+		ui.TaskFail()
+		return fmt.Errorf("failed to build guild binary: %w", err)
+	}
+
+	ui.TaskPass()
+
+	// Show summary
+	ui.SummaryCard(
+		"Build Complete - No Errors",
+		[][]string{
+			{"Task", "Status"},
+			{"Binary Build", ui.Green + "✓ Complete" + ui.Reset},
+		},
+		"< 5s",
+		true,
+	)
+
+	return nil
+}

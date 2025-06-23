@@ -31,7 +31,7 @@ func main() {
 	ui.Init(noColor)
 
 	if flag.NArg() == 0 {
-		log.Fatalf("usage: buildutil <build|test|integration|e2e|validate-demo|clean|all|install|uninstall>")
+		log.Fatalf("usage: buildutil <build|build-only|test|integration|e2e|validate-demo|clean|all|install|uninstall>")
 	}
 
 	cmd := flag.Arg(0)
@@ -48,6 +48,9 @@ func main() {
 	switch cmd {
 	case "build":
 		err = tasks.Build(verbose)
+
+	case "build-only":
+		err = tasks.BuildOnly(verbose)
 
 	case "test":
 		err = tasks.Test(verbose)
