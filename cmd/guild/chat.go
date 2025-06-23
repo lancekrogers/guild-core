@@ -30,13 +30,11 @@ import (
 var (
 	chatCampaignID string
 	chatSessionID  string
-	chatNoDaemon   bool
 )
 
 func init() {
 	chatCmd.Flags().StringVar(&chatCampaignID, "campaign", "", "Campaign ID to use for the chat session")
 	chatCmd.Flags().StringVar(&chatSessionID, "session", "", "Session ID to use (defaults to new UUID)")
-	chatCmd.Flags().BoolVar(&chatNoDaemon, "no-daemon", false, "Don't auto-start the Guild server")
 
 	// Register completion functions
 	// Temporarily disabled to avoid early config loading
@@ -58,13 +56,12 @@ This opens a terminal-based chat interface where you can:
 Campaign Support:
 - Use --campaign to specify which campaign to connect to
 - Without --campaign, detects campaign from current directory
-- Auto-starts the appropriate daemon if not running
-- Use --no-daemon to prevent auto-starting the server
+- Requires Guild daemon to be running (use 'guild serve')
 
 Examples:
-  guild chat                         # Auto-detect campaign, start chat
+  guild serve                        # Start daemon in background (separate terminal)
+  guild chat                         # Connect to running daemon
   guild chat --campaign e-commerce   # Chat with specific campaign
-  guild chat --no-daemon             # Connect without auto-starting daemon
   guild chat --session my-session    # Use specific session ID`,
 	RunE: runChat,
 }
@@ -201,42 +198,30 @@ func runChat(cmd *cobra.Command, args []string) error {
 		chatSessionID = generateUUID()
 	}
 
-	// Auto-start daemon unless --no-daemon flag is set
-	var daemonConfig *daemon.DaemonConfig
-	if !chatNoDaemon {
-		// Use the lifecycle manager for auto-start with session management
-		lifecycleManager := daemon.DefaultLifecycleManager
-		config, err := lifecycleManager.AutoStartDaemon(ctx, campaignName)
-		if err != nil {
-			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start campaign daemon").
-				WithComponent("cli").
-				WithOperation("chat.daemon_start")
-		}
-		daemonConfig = config
-		// Give the server a moment to fully initialize
-		time.Sleep(500 * time.Millisecond)
-
-		// Start monitoring for idle timeout and crashes
-		lifecycleManager.MonitorSessions(ctx)
-	} else {
-		// No auto-start, but we still need daemon config for connection
-		config, err := daemon.GetDaemonConfig(campaignName, 0)
-		if err != nil {
-			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get daemon config").
-				WithComponent("cli").
-				WithOperation("chat.run")
-		}
-		daemonConfig = config
+	// Get daemon config for connection (no auto-start)
+	daemonConfig, err := daemon.GetDaemonConfig(campaignName, 0)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get daemon config").
+			WithComponent("cli").
+			WithOperation("chat.run")
 	}
 
 	// Check if server is reachable
 	isReachable := pkgDaemon.CanConnect(daemonConfig.SocketPath)
 
 	if !isReachable {
-		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
-			WithComponent("cli").
-			WithOperation("chat.run").
-			WithDetails("help", "Try running 'guild serve --campaign "+campaignName+"' manually or check 'guild status'")
+		fmt.Println("🚨 Guild daemon is not running")
+		fmt.Println()
+		fmt.Println("The Guild daemon must be running to start a chat session.")
+		fmt.Println()
+		fmt.Println("To start the daemon, run:")
+		fmt.Printf("  guild serve --campaign %s\n", campaignName)
+		fmt.Println()
+		fmt.Println("Then start chat again:")
+		fmt.Println("  guild chat")
+		fmt.Println()
+		fmt.Println("💡 Pro tip: Run 'guild serve' in a separate terminal to keep it running in the background")
+		return nil // Don't return error, just exit cleanly with instructions
 	}
 
 	// Connect to gRPC server

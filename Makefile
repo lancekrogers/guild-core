@@ -223,6 +223,7 @@ help:
 	@echo "=== QUICK START FOR USERS ==="
 	@echo "  make install      # Fast install (30 seconds)"
 	@echo "  guild init        # Create workspace with Elena agent"
+	@echo "  guild serve       # Start daemon (separate terminal)"
 	@echo "  guild chat        # Start chatting immediately"
 	@echo ""
 	@echo "=== DEVELOPMENT WORKFLOW ==="
