@@ -102,8 +102,12 @@ uninstall:
 	@$(BUILDTOOL) uninstall
 
 # Shell completion installation
-install-completion: build
+install-completion:
 	@echo "Installing shell completion..."
+	@if [ ! -f ./bin/guild ]; then \
+		echo "Error: guild binary not found. Run 'make install' first."; \
+		exit 1; \
+	fi
 	@if [ -n "$$BASH_VERSION" ]; then \
 		$(MAKE) install-bash-completion; \
 	elif [ -n "$$ZSH_VERSION" ]; then \
@@ -117,8 +121,12 @@ install-completion: build
 		echo "  make install-fish-completion"; \
 	fi
 
-install-bash-completion: build
+install-bash-completion:
 	@echo "Installing bash completion..."
+	@if [ ! -f ./bin/guild ]; then \
+		echo "Error: guild binary not found. Run 'make install' first."; \
+		exit 1; \
+	fi
 	@if [ -d /etc/bash_completion.d ]; then \
 		./bin/guild completion bash | sudo tee /etc/bash_completion.d/guild > /dev/null; \
 		echo "Bash completion installed to /etc/bash_completion.d/guild"; \
@@ -135,8 +143,12 @@ install-bash-completion: build
 		exit 1; \
 	fi
 
-install-zsh-completion: build
+install-zsh-completion:
 	@echo "Installing zsh completion..."
+	@if [ ! -f ./bin/guild ]; then \
+		echo "Error: guild binary not found. Run 'make install' first."; \
+		exit 1; \
+	fi
 	@./bin/guild completion zsh > "$${fpath[1]}/_guild" || { \
 		echo "Error: Could not install to fpath."; \
 		echo "You can manually install by running:"; \
@@ -146,8 +158,12 @@ install-zsh-completion: build
 	}
 	@echo "Zsh completion installed. Start a new shell to use it."
 
-install-fish-completion: build
+install-fish-completion:
 	@echo "Installing fish completion..."
+	@if [ ! -f ./bin/guild ]; then \
+		echo "Error: guild binary not found. Run 'make install' first."; \
+		exit 1; \
+	fi
 	@mkdir -p ~/.config/fish/completions
 	@./bin/guild completion fish > ~/.config/fish/completions/guild.fish
 	@echo "Fish completion installed to ~/.config/fish/completions/guild.fish"
