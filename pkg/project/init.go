@@ -273,7 +273,7 @@ func initializeDatabase(baseDir string) error {
 	ctx := context.Background()
 
 	// Create database path
-	dbPath := filepath.Join(baseDir, "guild.db")
+	dbPath := filepath.Join(baseDir, "memory.db")
 
 	// Create database
 	db, err := storage.DefaultDatabaseFactory(ctx, dbPath)

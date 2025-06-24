@@ -45,7 +45,7 @@ type StorageConfig struct {
 
 // SQLiteConfig configures SQLite storage backend
 type SQLiteConfig struct {
-	Path string `yaml:"path,omitempty"` // Path to SQLite database file (default: ".guild/guild.db")
+	Path string `yaml:"path,omitempty"` // Path to SQLite database file (default: "memory.db")
 }
 
 // ProvidersConfig contains settings for each provider (no API keys - use environment variables)
@@ -769,7 +769,7 @@ func (g *GuildConfig) GetEffectiveSQLitePath() string {
 	if g.Storage.SQLite.Path != "" {
 		return g.Storage.SQLite.Path
 	}
-	return ".guild/guild.db" // Default path
+	return "memory.db" // Default path
 }
 
 // IsUsingSQLite returns true if the configuration is set to use SQLite storage

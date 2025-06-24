@@ -1124,14 +1124,14 @@ func (r *DefaultComponentRegistry) initializeStorage(ctx context.Context) error 
 	projectCtx, err := r.projectRegistry.GetCurrentContext(ctx)
 	if err != nil {
 		// No project context available, use default SQLite backend
-		return r.initializeSQLiteStorage(ctx, filepath.Join(paths.DefaultCampaignDir, "guild.db"))
+		return r.initializeSQLiteStorage(ctx, filepath.Join(paths.DefaultCampaignDir, "memory.db"))
 	}
 
 	// Load guild configuration to determine storage backend
 	guildConfig, err := config.LoadGuildConfig(ctx, (*projectCtx).GetRootPath())
 	if err != nil {
 		// If guild config fails to load, default to SQLite
-		return r.initializeSQLiteStorage(ctx, filepath.Join((*projectCtx).GetGuildPath(), "guild.db"))
+		return r.initializeSQLiteStorage(ctx, filepath.Join((*projectCtx).GetGuildPath(), "memory.db"))
 	}
 
 	// Initialize SQLite storage (BoltDB no longer supported)

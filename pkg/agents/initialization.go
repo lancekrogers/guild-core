@@ -313,7 +313,7 @@ func (ai *AgentInitializer) CreateGuildConfigWithElena(ctx context.Context, guil
 		Storage: config.StorageConfig{
 			Backend: "sqlite",
 			SQLite: config.SQLiteConfig{
-				Path: ".guild/guild.db",
+				Path: "memory.db",
 			},
 		},
 		Agents: agentConfigs,
