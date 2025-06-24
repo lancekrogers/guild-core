@@ -382,6 +382,21 @@ func (m *InitTUIModelV2) saveAgentConfig(ctx context.Context, agentsDir string, 
 		"capabilities": agentConfig.Capabilities,
 		"tools":        agentConfig.Tools,
 	}
+	
+	// Add context window if set
+	if agentConfig.ContextWindow > 0 {
+		configData["context_window"] = agentConfig.ContextWindow
+	}
+	
+	// Add cost magnitude if set
+	if agentConfig.CostMagnitude > 0 {
+		configData["cost_magnitude"] = agentConfig.CostMagnitude
+	}
+	
+	// Add context reset if set
+	if agentConfig.ContextReset != "" {
+		configData["context_reset"] = agentConfig.ContextReset
+	}
 
 	// Add backstory information if available
 	if agentConfig.Backstory != nil {
