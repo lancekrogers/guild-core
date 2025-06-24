@@ -150,6 +150,20 @@ func NewApp(ctx context.Context, guildConfig *config.GuildConfig,
 	return app
 }
 
+// SetCampaignID sets the campaign ID for the chat session
+func (app *App) SetCampaignID(campaignID string) {
+	if app.config != nil {
+		app.config.CampaignID = campaignID
+	}
+}
+
+// SetSessionID sets the session ID for the chat session
+func (app *App) SetSessionID(sessionID string) {
+	if app.config != nil {
+		app.config.SessionID = sessionID
+	}
+}
+
 // Run starts the chat application
 func (app *App) Run() error {
 	// Initialize components during run

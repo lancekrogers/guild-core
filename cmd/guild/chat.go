@@ -255,6 +255,8 @@ func runChat(cmd *cobra.Command, args []string) error {
 	// Create and run chat interface using v2 implementation
 	app := chatui.NewApp(ctx, guildConfig, conn, guildClient, promptClient, reg)
 	app.SetSelectedGuild(selectedGuild)
+	app.SetCampaignID(campaignName)
+	app.SetSessionID(chatSessionID)
 	return app.Run()
 }
 
