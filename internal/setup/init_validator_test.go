@@ -348,15 +348,22 @@ func TestProviderValidation(t *testing.T) {
 		{
 			name: "providers with credentials",
 			setup: func(tmpDir string) error {
-				guildDir := filepath.Join(tmpDir, ".campaign")
-				if err := os.MkdirAll(guildDir, 0755); err != nil {
-					return err
-				}
-
 				// Create guild config with OpenAI agent
 				guildConfig := &config.GuildConfig{
-					Name: "test",
+					Name:        "test",
+					Description: "Test guild for provider validation",
+					Manager: config.ManagerConfig{
+						Default: "test-manager",
+					},
 					Agents: []config.AgentConfig{
+						{
+							ID:           "test-manager",
+							Name:         "Test Manager",
+							Type:         "manager",
+							Provider:     "openai",
+							Model:        "gpt-4",
+							Capabilities: []string{"task-planning", "coordination"},
+						},
 						{
 							ID:           "test-agent",
 							Name:         "Test Agent",
@@ -368,7 +375,7 @@ func TestProviderValidation(t *testing.T) {
 					},
 				}
 
-				return config.SaveGuildConfig(context.Background(), tmpDir, guildConfig)
+				return setupCampaignStructure(t, tmpDir, guildConfig)
 			},
 			envSetup: func() {
 				os.Setenv("OPENAI_API_KEY", "test-key")
@@ -378,15 +385,22 @@ func TestProviderValidation(t *testing.T) {
 		{
 			name: "missing credentials",
 			setup: func(tmpDir string) error {
-				guildDir := filepath.Join(tmpDir, ".campaign")
-				if err := os.MkdirAll(guildDir, 0755); err != nil {
-					return err
-				}
-
 				// Create guild config with OpenAI agent
 				guildConfig := &config.GuildConfig{
-					Name: "test",
+					Name:        "test",
+					Description: "Test guild for missing credentials",
+					Manager: config.ManagerConfig{
+						Default: "test-manager",
+					},
 					Agents: []config.AgentConfig{
+						{
+							ID:           "test-manager",
+							Name:         "Test Manager",
+							Type:         "manager",
+							Provider:     "openai",
+							Model:        "gpt-4",
+							Capabilities: []string{"task-planning", "coordination"},
+						},
 						{
 							ID:           "test-agent",
 							Name:         "Test Agent",
@@ -398,7 +412,7 @@ func TestProviderValidation(t *testing.T) {
 					},
 				}
 
-				return config.SaveGuildConfig(context.Background(), tmpDir, guildConfig)
+				return setupCampaignStructure(t, tmpDir, guildConfig)
 			},
 			envSetup: func() {
 				os.Unsetenv("OPENAI_API_KEY")

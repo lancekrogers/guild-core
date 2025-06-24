@@ -37,6 +37,15 @@ type StatusPane interface {
 	SetCompactMode(compact bool)
 	SetShowAgents(show bool)
 	SetShowStats(show bool)
+	
+	// Completions display
+	ShowCompletions(completions []string, selectedIndex int)
+	HideCompletions()
+	
+	// Mode indicators
+	SetVimMode(mode string)
+	SetAutoAcceptMode(enabled bool)
+	SetInputMode(mode string) // normal, insert, visual, etc.
 }
 
 // SystemStats represents system statistics
@@ -93,6 +102,16 @@ type statusPaneImpl struct {
 
 	// Context
 	ctx context.Context
+	
+	// Completions
+	showingCompletions bool
+	completions        []string
+	completionIndex    int
+	
+	// Mode indicators
+	vimMode        string
+	autoAcceptMode bool
+	inputMode      string
 }
 
 // NewStatusPane creates a new status pane
@@ -231,6 +250,35 @@ func (sp *statusPaneImpl) SetShowStats(show bool) {
 	sp.showStats = show
 }
 
+// ShowCompletions shows completion suggestions
+func (sp *statusPaneImpl) ShowCompletions(completions []string, selectedIndex int) {
+	sp.showingCompletions = true
+	sp.completions = completions
+	sp.completionIndex = selectedIndex
+}
+
+// HideCompletions hides completion suggestions
+func (sp *statusPaneImpl) HideCompletions() {
+	sp.showingCompletions = false
+	sp.completions = []string{}
+	sp.completionIndex = 0
+}
+
+// SetVimMode sets the current vim mode
+func (sp *statusPaneImpl) SetVimMode(mode string) {
+	sp.vimMode = mode
+}
+
+// SetAutoAcceptMode sets the auto-accept mode
+func (sp *statusPaneImpl) SetAutoAcceptMode(enabled bool) {
+	sp.autoAcceptMode = enabled
+}
+
+// SetInputMode sets the current input mode
+func (sp *statusPaneImpl) SetInputMode(mode string) {
+	sp.inputMode = mode
+}
+
 // Update handles Bubble Tea messages
 func (sp *statusPaneImpl) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// Update base pane first
@@ -323,26 +371,45 @@ func (sp *statusPaneImpl) renderCompactStatus(width int) string {
 func (sp *statusPaneImpl) renderDetailedStatus(width int) string {
 	var lines []string
 
+	// Completions (top priority, shows at the top of status area)
+	if sp.showingCompletions && len(sp.completions) > 0 {
+		completionLines := sp.renderCompletions(width)
+		lines = append(lines, completionLines...)
+	}
+
+	// Mode indicators line
+	modeLine := sp.renderModeLine(width)
+	lines = append(lines, modeLine)
+
 	// Main status line
 	statusLine := sp.renderCompactStatus(width)
 	lines = append(lines, statusLine)
 
-	// Agent details
-	if sp.showAgents && len(sp.agentStatuses) > 0 {
-		agentLines := sp.renderAgentDetails(width)
-		lines = append(lines, agentLines...)
-	}
+	// Only show other details if we have space and no completions
+	if !sp.showingCompletions {
+		// Agent details
+		if sp.showAgents && len(sp.agentStatuses) > 0 && len(lines) < 3 {
+			agentLines := sp.renderAgentDetails(width)
+			if len(lines)+len(agentLines) <= 4 {
+				lines = append(lines, agentLines...)
+			}
+		}
 
-	// System stats
-	if sp.showStats {
-		statsLines := sp.renderSystemStats(width)
-		lines = append(lines, statsLines...)
-	}
+		// System stats
+		if sp.showStats && len(lines) < 3 {
+			statsLines := sp.renderSystemStats(width)
+			if len(lines)+len(statsLines) <= 4 {
+				lines = append(lines, statsLines...)
+			}
+		}
 
-	// Recent notifications
-	if len(sp.notifications) > 0 {
-		notificationLines := sp.renderNotifications(width)
-		lines = append(lines, notificationLines...)
+		// Recent notifications
+		if len(sp.notifications) > 0 && len(lines) < 3 {
+			notificationLines := sp.renderNotifications(width)
+			if len(lines)+len(notificationLines) <= 4 {
+				lines = append(lines, notificationLines...)
+			}
+		}
 	}
 
 	return strings.Join(lines, "\n")
@@ -570,4 +637,106 @@ func createMinimalStatusStyles() map[string]lipgloss.Style {
 			Foreground(lipgloss.Color("254")),
 		// All minimal - same color
 	}
+}
+
+// renderCompletions renders completion suggestions
+func (sp *statusPaneImpl) renderCompletions(width int) []string {
+	var lines []string
+	
+	// Show up to 3 completions
+	maxCompletions := 3
+	if len(sp.completions) < maxCompletions {
+		maxCompletions = len(sp.completions)
+	}
+	
+	completionStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("247")) // Gray
+	selectedStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("82")). // Green
+		Bold(true)
+	
+	for i := 0; i < maxCompletions; i++ {
+		prefix := "  "
+		if i == sp.completionIndex {
+			prefix = "▸ "
+		}
+		
+		completion := sp.completions[i]
+		if len(completion) > width-4 {
+			completion = completion[:width-7] + "..."
+		}
+		
+		var line string
+		if i == sp.completionIndex {
+			line = selectedStyle.Render(prefix + completion)
+		} else {
+			line = completionStyle.Render(prefix + completion)
+		}
+		
+		lines = append(lines, line)
+	}
+	
+	// Add indicator if there are more completions
+	if len(sp.completions) > maxCompletions {
+		moreText := fmt.Sprintf("  ... %d more", len(sp.completions)-maxCompletions)
+		lines = append(lines, completionStyle.Render(moreText))
+	}
+	
+	return lines
+}
+
+// renderModeLine renders the mode indicators line
+func (sp *statusPaneImpl) renderModeLine(width int) string {
+	var parts []string
+	
+	// Left side: Input mode and vim mode
+	if sp.inputMode != "" {
+		modeStyle := lipgloss.NewStyle().
+			Foreground(lipgloss.Color("141")). // Purple
+			Bold(true)
+		
+		modeText := sp.inputMode
+		if sp.vimMode != "" && sp.vimMode != "normal" {
+			modeText = fmt.Sprintf("%s:%s", sp.inputMode, sp.vimMode)
+		}
+		
+		parts = append(parts, modeStyle.Render(modeText))
+	}
+	
+	// Center: Auto-accept indicator
+	if sp.autoAcceptMode {
+		autoStyle := lipgloss.NewStyle().
+			Foreground(lipgloss.Color("82")). // Green
+			Bold(true)
+		parts = append(parts, autoStyle.Render("AUTO"))
+	}
+	
+	// Right side: Status messages (aligned to right)
+	rightParts := []string{}
+	
+	// Add any additional status indicators here
+	if sp.connectionStatus {
+		rightParts = append(rightParts, "Connected")
+	}
+	
+	// Join left parts
+	leftContent := strings.Join(parts, " | ")
+	rightContent := strings.Join(rightParts, " | ")
+	
+	// Calculate padding
+	totalLen := len(leftContent) + len(rightContent)
+	if totalLen < width {
+		padding := width - totalLen - 2
+		if padding > 0 {
+			leftContent = leftContent + strings.Repeat(" ", padding) + rightContent
+		}
+	}
+	
+	// Apply background style
+	lineStyle := lipgloss.NewStyle().
+		Background(lipgloss.Color("237")). // Slightly lighter than status bar
+		Foreground(lipgloss.Color("254")).
+		Width(width)
+	
+	return lineStyle.Render(leftContent)
 }

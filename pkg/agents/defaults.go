@@ -38,8 +38,9 @@ func (c *DefaultAgentCreator) CreateElenaGuildMaster(ctx context.Context) (*conf
 		Type:          "manager",
 		Description:   "Master Coordinator of the Digital Artisans Guild - Elena brings wisdom and grace to project leadership",
 		Provider:      "claude_code", // Prefer Claude Code for management tasks
-		Model:         "claude-3.5-sonnet-20241022",
-		CostMagnitude: 5, // High-quality responses for management decisions
+		Model:         "sonnet",       // Use alias for latest Sonnet model
+		CostMagnitude: 5,              // High-quality responses for management decisions
+		ContextWindow: 200000,         // Large context window for complex coordination
 
 		Backstory: &config.Backstory{
 			Experience: "18 years leading diverse teams of digital artisans to create legendary software works",
@@ -198,8 +199,9 @@ func (c *DefaultAgentCreator) CreateDefaultDeveloper(ctx context.Context) (*conf
 		Type:          "worker",
 		Description:   "Master Craftsman of Digital Logic - Marcus combines technical excellence with creative problem-solving",
 		Provider:      "claude_code", // Prefer Claude Code for development tasks
-		Model:         "claude-3.5-sonnet-20241022",
-		CostMagnitude: 3, // Balanced cost for development work
+		Model:         "sonnet",       // Use alias for latest Sonnet model
+		CostMagnitude: 3,              // Balanced cost for development work
+		ContextWindow: 200000,         // Large context window for code analysis
 
 		Backstory: &config.Backstory{
 			Experience: "12 years forging elegant solutions to complex digital challenges",
@@ -298,9 +300,10 @@ func (c *DefaultAgentCreator) CreateDefaultTester(ctx context.Context) (*config.
 		Name:          "Vera the Quality Guardian",
 		Type:          "specialist",
 		Description:   "Master Guardian of Software Quality - Vera ensures excellence through comprehensive testing",
-		Provider:      "anthropic", // Good for analytical testing work
-		Model:         "claude-3-sonnet-20240229",
-		CostMagnitude: 2, // Moderate cost for testing tasks
+		Provider:      "claude_code", // Use Claude Code for consistent experience
+		Model:         "sonnet",       // Use alias for latest Sonnet model
+		CostMagnitude: 2,              // Moderate cost for testing tasks
+		ContextWindow: 200000,         // Large context window for test analysis
 
 		Backstory: &config.Backstory{
 			Experience: "10 years protecting software quality across diverse domains",

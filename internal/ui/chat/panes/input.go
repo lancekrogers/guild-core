@@ -266,6 +266,50 @@ func (ip *inputPaneImpl) OnChange(callback func(string)) {
 	ip.onChange = callback
 }
 
+// GetPreferredHeight calculates the preferred height based on content
+func (ip *inputPaneImpl) GetPreferredHeight() int {
+	content := ip.GetValue()
+	if content == "" {
+		return 3 // Minimum height for empty input
+	}
+	
+	// Count lines in content
+	lines := strings.Count(content, "\n") + 1
+	
+	// Add height for borders (2) and padding
+	preferredHeight := lines + 2
+	
+	// Limit to reasonable maximum (1/3 of typical terminal height)
+	maxHeight := 15
+	if preferredHeight > maxHeight {
+		preferredHeight = maxHeight
+	}
+	
+	// Ensure minimum height
+	if preferredHeight < 3 {
+		preferredHeight = 3
+	}
+	
+	return preferredHeight
+}
+
+// UpdateConstraints updates the pane's layout constraints based on content
+func (ip *inputPaneImpl) UpdateConstraints() {
+	constraints := ip.GetConstraints()
+	constraints.PreferredHeight = ip.GetPreferredHeight()
+	ip.SetConstraints(constraints)
+}
+
+// triggerOnChange calls the onChange callback if set and updates layout
+func (ip *inputPaneImpl) triggerOnChange() {
+	// Update layout constraints based on new content
+	ip.UpdateConstraints()
+	
+	if ip.onChange != nil {
+		ip.onChange(ip.GetValue())
+	}
+}
+
 // Resize updates the pane dimensions
 func (ip *inputPaneImpl) Resize(width, height int) {
 	ip.BasePane.Resize(width, height)
@@ -493,12 +537,6 @@ func (ip *inputPaneImpl) cycleNextCompletion() {
 	}
 }
 
-// triggerOnChange calls the onChange callback
-func (ip *inputPaneImpl) triggerOnChange() {
-	if ip.onChange != nil {
-		ip.onChange(ip.GetValue())
-	}
-}
 
 // View renders the input pane
 func (ip *inputPaneImpl) View() string {

@@ -199,6 +199,29 @@ func TestWizardQuickMode(t *testing.T) {
 	os.Setenv("OPENAI_API_KEY", "sk-test-key")
 	defer os.Unsetenv("OPENAI_API_KEY")
 
+	// Create a basic guild config using the campaign-first structure
+	testGuildConfig := &guildconfig.GuildConfig{
+		Name:        "test-guild",
+		Description: "Test guild for quick mode",
+		Manager: guildconfig.ManagerConfig{
+			Default: "test-manager",
+		},
+		Agents: []guildconfig.AgentConfig{
+			{
+				ID:           "test-manager",
+				Name:         "Test Manager",
+				Type:         "manager",
+				Provider:     "openai",
+				Model:        "gpt-4",
+				Description:  "Test manager agent",
+				Capabilities: []string{"task-planning", "coordination"},
+			},
+		},
+	}
+	if err := setupCampaignStructure(t, tempDir, testGuildConfig); err != nil {
+		t.Fatalf("Failed to set up campaign structure: %v", err)
+	}
+
 	config := &Config{
 		ProjectPath: tempDir,
 		QuickMode:   true,
@@ -257,6 +280,29 @@ func TestSaveConfiguration(t *testing.T) {
 	// Initialize project
 	if err := project.InitializeProject(tempDir); err != nil {
 		t.Fatalf("Failed to initialize project: %v", err)
+	}
+
+	// First create the campaign structure
+	initialGuildConfig := &guildconfig.GuildConfig{
+		Name:        "test-guild",
+		Description: "Test guild for save configuration",
+		Manager: guildconfig.ManagerConfig{
+			Default: "manager",
+		},
+		Agents: []guildconfig.AgentConfig{
+			{
+				ID:           "manager",
+				Name:         "Initial Manager",
+				Type:         "manager",
+				Provider:     "openai",
+				Model:        "gpt-4",
+				Description:  "Initial manager agent",
+				Capabilities: []string{"task-planning"},
+			},
+		},
+	}
+	if err := setupCampaignStructure(t, tempDir, initialGuildConfig); err != nil {
+		t.Fatalf("Failed to set up campaign structure: %v", err)
 	}
 
 	config := &Config{

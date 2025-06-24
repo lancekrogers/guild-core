@@ -709,7 +709,68 @@ func (app *App) handleWindowSize(msg tea.WindowSizeMsg) (tea.Model, tea.Cmd) {
 }
 
 func (app *App) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
-	// Handle global shortcuts first
+	// Handle completion navigation if completions are showing
+	if len(app.completions) > 0 {
+		switch msg.String() {
+		case "up", "ctrl+p":
+			// Navigate up in completions
+			currentIndex := 0
+			for i, comp := range app.completions {
+				if comp.Content == app.inputPane.GetCurrentCompletion() {
+					currentIndex = i
+					break
+				}
+			}
+			if currentIndex > 0 {
+				currentIndex--
+			} else {
+				currentIndex = len(app.completions) - 1
+			}
+			app.statusPane.ShowCompletions(getCompletionStrings(app.completions), currentIndex)
+			return app, nil
+			
+		case "down", "ctrl+n":
+			// Navigate down in completions
+			currentIndex := 0
+			for i, comp := range app.completions {
+				if comp.Content == app.inputPane.GetCurrentCompletion() {
+					currentIndex = i
+					break
+				}
+			}
+			if currentIndex < len(app.completions)-1 {
+				currentIndex++
+			} else {
+				currentIndex = 0
+			}
+			app.statusPane.ShowCompletions(getCompletionStrings(app.completions), currentIndex)
+			return app, nil
+			
+		case "tab", "enter":
+			// Accept current completion
+			if len(app.completions) > 0 {
+				currentIndex := 0
+				for i, comp := range app.completions {
+					if comp.Content == app.inputPane.GetCurrentCompletion() {
+						currentIndex = i
+						break
+					}
+				}
+				app.inputPane.SetValue(app.completions[currentIndex].Content)
+				app.completions = []completion.CompletionResult{}
+				app.statusPane.HideCompletions()
+				return app, nil
+			}
+			
+		case "esc":
+			// Hide completions
+			app.completions = []completion.CompletionResult{}
+			app.statusPane.HideCompletions()
+			return app, nil
+		}
+	}
+
+	// Handle global shortcuts
 	switch {
 	case key.Matches(msg, app.keys.Quit):
 		app.shouldQuit = true
@@ -942,7 +1003,19 @@ func (app *App) handleCompletionResult(msg completion.CompletionResultMsg) (tea.
 	}
 
 	app.completions = msg.Results
-	app.inputPane.ShowCompletions(msg.Results)
+	
+	// Show completions in status pane
+	if len(msg.Results) > 0 {
+		// Extract completion strings
+		completionStrings := make([]string, len(msg.Results))
+		for i, result := range msg.Results {
+			completionStrings[i] = result.Content
+		}
+		app.statusPane.ShowCompletions(completionStrings, 0)
+	} else {
+		app.statusPane.HideCompletions()
+	}
+	
 	return app, nil
 }
 
@@ -973,8 +1046,12 @@ func (app *App) handleVimModeToggle(msg messages.VimModeToggleMsg) (tea.Model, t
 			// Update status
 			if !isEnabled {
 				app.statusPane.UpdateStatus("Vim mode enabled (NORMAL)", "info")
+				app.statusPane.SetVimMode("NORMAL")
+				app.statusPane.SetInputMode("vim")
 			} else {
 				app.statusPane.UpdateStatus("Vim mode disabled (INSERT)", "info")
+				app.statusPane.SetVimMode("")
+				app.statusPane.SetInputMode("insert")
 			}
 		} else {
 			app.statusPane.UpdateStatus("Vim mode not available", "warning")
@@ -1270,4 +1347,13 @@ func (app *App) initializeVisualComponents() error {
 	app.mermaidProcessor.SetASCIISize(width-10, 30)
 
 	return nil
+}
+
+// getCompletionStrings extracts string content from completion results
+func getCompletionStrings(completions []completion.CompletionResult) []string {
+	strings := make([]string, len(completions))
+	for i, comp := range completions {
+		strings[i] = comp.Content
+	}
+	return strings
 }

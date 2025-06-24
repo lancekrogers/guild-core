@@ -5,6 +5,10 @@ package setup
 
 import (
 	"context"
+	"os"
+	"path/filepath"
+
+	yaml "gopkg.in/yaml.v3"
 
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -274,67 +278,44 @@ func (w *Wizard) createAgentsFromPresets(ctx context.Context, providers []Config
 	return agents, nil
 }
 
-// SaveConfiguration saves the wizard configuration
+// SaveConfiguration saves the wizard configuration using the campaign-first structure
 func (w *Wizard) SaveConfiguration(ctx context.Context, providers []ConfiguredProvider, agents []config.AgentConfig) error {
-	// Load existing configuration if it exists
-	var guildConfig *config.GuildConfig
+	// Determine guild name - try to load existing or use default
+	guildName := "default-guild"
 	existingConfig, err := config.LoadGuildConfig(ctx, w.config.ProjectPath)
-	if err != nil {
-		// Create new configuration
-		guildConfig = &config.GuildConfig{
-			Name:        "My Guild",
-			Description: "A team of specialized AI agents",
-			Version:     "1.0.0",
-			Manager: config.ManagerConfig{
-				Default: "manager",
-			},
-			Storage: config.StorageConfig{
-				Backend: "sqlite",
-				SQLite: config.SQLiteConfig{
-					Path: ".campaign/memory.db",
-				},
-			},
-			Providers: config.ProvidersConfig{},
-			Agents:    agents,
-		}
-	} else {
-		// Update existing configuration
-		guildConfig = existingConfig
-		if w.config.Force {
-			// Replace agents if force mode
-			guildConfig.Agents = agents
-		} else {
-			// Merge agents
-			guildConfig.Agents = append(guildConfig.Agents, agents...)
-		}
+	if err == nil && existingConfig != nil {
+		guildName = existingConfig.Name
 	}
 
-	// Update manager default if needed
-	if guildConfig.Manager.Default != "" {
-		// Check if the default manager exists in the agents list
-		managerFound := false
-		for _, agent := range guildConfig.Agents {
-			if agent.ID == guildConfig.Manager.Default {
-				managerFound = true
-				break
-			}
+	// Find or set manager agent
+	managerID := ""
+	for _, agent := range agents {
+		if agent.Type == "manager" {
+			managerID = agent.ID
+			break
 		}
+	}
+	if managerID == "" && len(agents) > 0 {
+		// No manager found, use first agent
+		managerID = agents[0].ID
+	}
 
-		// If not found, try to find a manager agent
-		if !managerFound {
-			for _, agent := range guildConfig.Agents {
-				if agent.Type == "manager" {
-					guildConfig.Manager.Default = agent.ID
-					managerFound = true
-					break
-				}
-			}
-		}
-
-		// If still not found, clear the default
-		if !managerFound {
-			guildConfig.Manager.Default = ""
-		}
+	// Create guild config for the campaign structure
+	guildConfig := &config.GuildConfig{
+		Name:        guildName,
+		Description: "A team of specialized AI agents",
+		Version:     "1.0.0",
+		Manager: config.ManagerConfig{
+			Default: managerID,
+		},
+		Storage: config.StorageConfig{
+			Backend: "sqlite",
+			SQLite: config.SQLiteConfig{
+				Path: ".campaign/memory.db",
+			},
+		},
+		Providers: config.ProvidersConfig{},
+		Agents:    agents,
 	}
 
 	// Update provider configurations using the registry
@@ -352,11 +333,103 @@ func (w *Wizard) SaveConfiguration(ctx context.Context, providers []ConfiguredPr
 		}
 	}
 
-	// Save the configuration
-	if err := config.SaveGuildConfig(ctx, w.config.ProjectPath, guildConfig); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save guild config").
+	// Save using the campaign-first structure
+	if err := saveCampaignStructure(ctx, w.config.ProjectPath, guildConfig); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save campaign structure").
 			WithComponent("setup").
 			WithOperation("saveConfiguration")
+	}
+
+	return nil
+}
+
+// saveCampaignStructure saves the configuration in the campaign-first structure
+func saveCampaignStructure(ctx context.Context, projectPath string, guildConfig *config.GuildConfig) error {
+	// Create directory structure
+	dirs := []string{
+		filepath.Join(projectPath, ".campaign"),
+		filepath.Join(projectPath, ".campaign", "guilds"),
+		filepath.Join(projectPath, ".campaign", "agents"),
+	}
+	for _, dir := range dirs {
+		if err := os.MkdirAll(dir, 0755); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create directories").
+				WithComponent("setup").
+				WithOperation("saveCampaignStructure").
+				WithDetails("dir", dir)
+		}
+	}
+
+	// Create campaign.yaml
+	campaignData := map[string]interface{}{
+		"name":        "default-campaign",
+		"description": "Default campaign for Guild setup",
+		"guilds":      []string{guildConfig.Name},
+		"settings": map[string]interface{}{
+			"default_guild": guildConfig.Name,
+		},
+	}
+	campaignYAML, err := yaml.Marshal(campaignData)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal campaign data").
+			WithComponent("setup").
+			WithOperation("saveCampaignStructure")
+	}
+	campaignPath := filepath.Join(projectPath, ".campaign", "campaign.yaml")
+	if err := os.WriteFile(campaignPath, campaignYAML, 0644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write campaign.yaml").
+			WithComponent("setup").
+			WithOperation("saveCampaignStructure").
+			WithDetails("path", campaignPath)
+	}
+
+	// Create guild definition
+	guildDef := map[string]interface{}{
+		"name":        guildConfig.Name,
+		"description": guildConfig.Description,
+		"purpose":     "AI-powered development assistance",
+		"manager":     guildConfig.Manager.Default,
+		"agents":      []string{},
+		"coordination": map[string]interface{}{
+			"max_parallel_tasks": 3,
+			"review_required":    false,
+			"auto_handoff":       true,
+		},
+	}
+	// Collect agent IDs
+	for _, agent := range guildConfig.Agents {
+		guildDef["agents"] = append(guildDef["agents"].([]string), agent.ID)
+	}
+	guildYAML, err := yaml.Marshal(guildDef)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild data").
+			WithComponent("setup").
+			WithOperation("saveCampaignStructure")
+	}
+	guildPath := filepath.Join(projectPath, ".campaign", "guilds", guildConfig.Name+".yaml")
+	if err := os.WriteFile(guildPath, guildYAML, 0644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild.yaml").
+			WithComponent("setup").
+			WithOperation("saveCampaignStructure").
+			WithDetails("path", guildPath)
+	}
+
+	// Create agent files
+	for _, agent := range guildConfig.Agents {
+		agentYAML, err := yaml.Marshal(agent)
+		if err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal agent data").
+				WithComponent("setup").
+				WithOperation("saveCampaignStructure").
+				WithDetails("agent", agent.ID)
+		}
+		agentPath := filepath.Join(projectPath, ".campaign", "agents", agent.ID+".yaml")
+		if err := os.WriteFile(agentPath, agentYAML, 0644); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent.yaml").
+				WithComponent("setup").
+				WithOperation("saveCampaignStructure").
+				WithDetails("path", agentPath)
+		}
 	}
 
 	return nil

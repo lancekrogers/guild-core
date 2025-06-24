@@ -9,14 +9,15 @@ import (
 
 // LayoutConstraints define how panes should be arranged and sized
 type LayoutConstraints struct {
-	MinWidth   int
-	MinHeight  int
-	MaxWidth   int     // 0 means no limit
-	MaxHeight  int     // 0 means no limit
-	FlexGrow   float64 // How much extra space this pane should consume
-	FlexShrink float64 // How much this pane should shrink when space is limited
-	Padding    Padding
-	Margin     Margin
+	MinWidth       int
+	MinHeight      int
+	MaxWidth       int     // 0 means no limit
+	MaxHeight      int     // 0 means no limit
+	FlexGrow       float64 // How much extra space this pane should consume
+	FlexShrink     float64 // How much this pane should shrink when space is limited
+	Padding        Padding
+	Margin         Margin
+	PreferredHeight int    // Preferred height (for dynamic sizing)
 }
 
 // Padding defines internal spacing for a pane
@@ -78,7 +79,8 @@ func DefaultConstraints() LayoutConstraints {
 func OutputPaneConstraints() LayoutConstraints {
 	constraints := DefaultConstraints()
 	constraints.MinHeight = 10
-	constraints.FlexGrow = 2.0 // Take most of the space
+	constraints.FlexGrow = 1.0   // Take all available space after fixed panes
+	constraints.FlexShrink = 1.0 // Allow shrinking if window is small
 	constraints.Padding = Padding{Top: 1, Right: 1, Bottom: 1, Left: 1}
 	return constraints
 }
@@ -87,9 +89,9 @@ func OutputPaneConstraints() LayoutConstraints {
 func InputPaneConstraints() LayoutConstraints {
 	constraints := DefaultConstraints()
 	constraints.MinHeight = 3
-	constraints.MaxHeight = 10   // Limit input area height
-	constraints.FlexGrow = 0.0   // Don't grow
-	constraints.FlexShrink = 0.0 // Don't shrink
+	constraints.MaxHeight = 0     // No limit - allow dynamic sizing
+	constraints.FlexGrow = 0.0   // Don't grow with available space
+	constraints.FlexShrink = 1.0 // Allow shrinking if needed
 	constraints.Padding = Padding{Top: 0, Right: 1, Bottom: 0, Left: 1}
 	return constraints
 }
@@ -97,8 +99,8 @@ func InputPaneConstraints() LayoutConstraints {
 // StatusPaneConstraints returns constraints optimized for the status bar
 func StatusPaneConstraints() LayoutConstraints {
 	constraints := DefaultConstraints()
-	constraints.MinHeight = 1
-	constraints.MaxHeight = 1    // Fixed height status bar
+	constraints.MinHeight = 4
+	constraints.MaxHeight = 4    // Fixed height for completions, modes, and status
 	constraints.FlexGrow = 0.0   // Don't grow
 	constraints.FlexShrink = 0.0 // Don't shrink
 	constraints.Padding = Padding{Top: 0, Right: 1, Bottom: 0, Left: 1}
@@ -147,17 +149,30 @@ func calculateColumnLayout(config LayoutConfig, paneConstraints map[string]Layou
 	var paneOrder []string
 	totalMinHeight := 0
 	totalFlexGrow := 0.0
+	totalPreferredHeight := 0
 
-	for paneID, constraints := range paneConstraints {
-		paneOrder = append(paneOrder, paneID)
+	// Define a specific order for panes (output, input, status)
+	orderedPanes := []string{"output", "input", "status"}
+	for _, paneID := range orderedPanes {
+		if constraints, exists := paneConstraints[paneID]; exists {
+			paneOrder = append(paneOrder, paneID)
 
-		// Account for margins and padding in height calculation
-		marginHeight := constraints.Margin.Top + constraints.Margin.Bottom
-		paddingHeight := constraints.Padding.Top + constraints.Padding.Bottom
-		totalMinHeight += constraints.MinHeight + marginHeight + paddingHeight
+			// Account for margins and padding in height calculation
+			marginHeight := constraints.Margin.Top + constraints.Margin.Bottom
+			paddingHeight := constraints.Padding.Top + constraints.Padding.Bottom
+			
+			// Use preferred height if set, otherwise use min height
+			preferredHeight := constraints.MinHeight
+			if constraints.PreferredHeight > 0 {
+				preferredHeight = constraints.PreferredHeight
+			}
+			
+			totalMinHeight += constraints.MinHeight + marginHeight + paddingHeight
+			totalPreferredHeight += preferredHeight + marginHeight + paddingHeight
 
-		if constraints.FlexGrow > 0 {
-			totalFlexGrow += constraints.FlexGrow
+			if constraints.FlexGrow > 0 {
+				totalFlexGrow += constraints.FlexGrow
+			}
 		}
 	}
 
@@ -169,7 +184,6 @@ func calculateColumnLayout(config LayoutConfig, paneConstraints map[string]Layou
 	}
 
 	// Second pass: distribute remaining space based on flex-grow
-	remainingHeight := availableHeight - totalMinHeight
 	currentY := 0
 
 	for _, paneID := range paneOrder {
@@ -181,13 +195,32 @@ func calculateColumnLayout(config LayoutConfig, paneConstraints map[string]Layou
 		marginWidth := constraints.Margin.Left + constraints.Margin.Right
 		paddingWidth := constraints.Padding.Left + constraints.Padding.Right
 
-		// Start with minimum height
+		// Start with preferred height if set, otherwise minimum height
 		paneHeight := constraints.MinHeight
+		if constraints.PreferredHeight > 0 && constraints.PreferredHeight > constraints.MinHeight {
+			// Use preferred height if we have space
+			if totalPreferredHeight <= availableHeight {
+				paneHeight = constraints.PreferredHeight
+			}
+		}
 
-		// Add flex space if applicable
+		// Add flex space if applicable (only for flexible panes)
 		if constraints.FlexGrow > 0 && totalFlexGrow > 0 {
-			flexSpace := int(float64(remainingHeight) * (constraints.FlexGrow / totalFlexGrow))
-			paneHeight += flexSpace
+			// Calculate remaining space after allocating preferred heights
+			allocatedHeight := 0
+			for _, pid := range paneOrder {
+				c := paneConstraints[pid]
+				if c.PreferredHeight > 0 && c.FlexGrow == 0 {
+					allocatedHeight += c.PreferredHeight + c.Margin.Top + c.Margin.Bottom + c.Padding.Top + c.Padding.Bottom
+				} else if c.FlexGrow == 0 {
+					allocatedHeight += c.MinHeight + c.Margin.Top + c.Margin.Bottom + c.Padding.Top + c.Padding.Bottom
+				}
+			}
+			flexRemainingHeight := availableHeight - allocatedHeight
+			if flexRemainingHeight > 0 {
+				flexSpace := int(float64(flexRemainingHeight) * (constraints.FlexGrow / totalFlexGrow))
+				paneHeight = flexSpace
+			}
 		}
 
 		// Apply maximum height constraint if set
