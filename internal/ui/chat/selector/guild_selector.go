@@ -15,6 +15,8 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"gopkg.in/yaml.v3"
+	
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/paths"
@@ -181,6 +183,15 @@ func NewGuildSelector(ctx context.Context) (*GuildSelectorModel, error) {
 
 // loadGuilds loads the guild configuration and populates the guild list
 func (m *GuildSelectorModel) loadGuilds() error {
+	// Try to load from modular structure first
+	guildConfigs, err := m.loadModularGuilds()
+	if err == nil && len(guildConfigs) > 0 {
+		// Successfully loaded from modular structure
+		m.guilds = guildConfigs
+		return nil
+	}
+
+	// Fall back to loading from guild.yml if modular loading failed
 	guildConfig, err := config.LoadGuildConfigFile(m.ctx, m.projectPath)
 	if err != nil {
 		return err
@@ -204,6 +215,59 @@ func (m *GuildSelectorModel) loadGuilds() error {
 	})
 
 	return nil
+}
+
+// loadModularGuilds loads guilds from the modular structure (.campaign/guilds/*.yaml)
+func (m *GuildSelectorModel) loadModularGuilds() ([]GuildInfo, error) {
+	guildsDir := filepath.Join(m.projectPath, paths.DefaultCampaignDir, "guilds")
+	
+	// Check if guilds directory exists
+	if _, err := os.Stat(guildsDir); os.IsNotExist(err) {
+		return nil, gerror.New(gerror.ErrCodeNotFound, "guilds directory not found", nil)
+	}
+
+	// Read all yaml files in guilds directory
+	files, err := os.ReadDir(guildsDir)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read guilds directory")
+	}
+
+	var guilds []GuildInfo
+	for _, file := range files {
+		if file.IsDir() || !strings.HasSuffix(file.Name(), ".yaml") {
+			continue
+		}
+
+		// Read guild file
+		guildPath := filepath.Join(guildsDir, file.Name())
+		data, err := os.ReadFile(guildPath)
+		if err != nil {
+			continue // Skip files we can't read
+		}
+
+		// Parse guild definition
+		var guild config.GuildDefinition
+		if err := yaml.Unmarshal(data, &guild); err != nil {
+			continue // Skip invalid files
+		}
+
+		// Extract guild name from filename (remove .yaml extension)
+		guildName := strings.TrimSuffix(file.Name(), ".yaml")
+
+		guilds = append(guilds, GuildInfo{
+			Name:        guildName,
+			Description: guild.Description,
+			Purpose:     guild.Purpose,
+			AgentCount:  len(guild.Agents),
+		})
+	}
+
+	// Sort guilds alphabetically
+	sort.Slice(guilds, func(i, j int) bool {
+		return guilds[i].Name < guilds[j].Name
+	})
+
+	return guilds, nil
 }
 
 // setCursorToGuild sets the cursor to the specified guild if it exists
@@ -391,29 +455,6 @@ type (
 
 // createDefaultGuild creates a default guild configuration
 func (m *GuildSelectorModel) createDefaultGuild() tea.Msg {
-	// Check if we need to create guild.yml first
-	guildConfigPath := filepath.Join(m.projectPath, ".guild", "guild.yml")
-	if _, err := os.Stat(guildConfigPath); os.IsNotExist(err) {
-		// Create initial guild config
-		m.guildConfig = &config.GuildConfigFile{
-			Guilds: make(map[string]config.GuildDefinition),
-		}
-	}
-
-	// Determine which provider is available
-	provider := "claude"
-	agentPrefix := "claude"
-
-	// Check if Ollama is available by looking at the main guild.yaml
-	mainConfigPath := filepath.Join(m.projectPath, paths.DefaultCampaignDir, "guild.yaml")
-	if data, err := os.ReadFile(mainConfigPath); err == nil {
-		if strings.Contains(string(data), "ollama:") {
-			// Ollama is configured, create Ollama-based guild
-			provider = "ollama"
-			agentPrefix = "local"
-		}
-	}
-
 	// Create Elena-focused guild with enhanced agents
 	defaultGuildName := "elena-development-guild"
 	defaultGuild := config.GuildDefinition{
@@ -431,30 +472,35 @@ func (m *GuildSelectorModel) createDefaultGuild() tea.Msg {
 		},
 	}
 
-	// Add guild to config
-	if err := m.guildConfig.AddGuild(defaultGuildName, defaultGuild); err != nil {
-		return errMsg{err}
+	// Create guilds directory if it doesn't exist
+	guildsDir := filepath.Join(m.projectPath, paths.DefaultCampaignDir, "guilds")
+	if err := os.MkdirAll(guildsDir, 0755); err != nil {
+		return errMsg{gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create guilds directory")}
 	}
 
-	// Save the configuration
-	if err := config.SaveGuildConfigFile(m.ctx, m.projectPath, m.guildConfig); err != nil {
-		return errMsg{err}
+	// Save guild to modular structure
+	guildPath := filepath.Join(guildsDir, defaultGuildName+".yaml")
+	data, err := yaml.Marshal(defaultGuild)
+	if err != nil {
+		return errMsg{gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild definition")}
 	}
 
-	// Also ensure we have the corresponding agents in guild.yaml
-	// This would typically be done by the init command, but we'll add basic ones
-	if err := m.ensureDefaultAgents(provider, agentPrefix); err != nil {
+	if err := os.WriteFile(guildPath, data, 0644); err != nil {
+		return errMsg{gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save guild file")}
+	}
+
+	// Also ensure we have the corresponding agents
+	if err := m.ensureDefaultAgents(); err != nil {
 		return errMsg{err}
 	}
 
 	return guildCreatedMsg(defaultGuildName)
 }
 
-// ensureDefaultAgents ensures the default agents exist in guild.yaml
-func (m *GuildSelectorModel) ensureDefaultAgents(provider, agentPrefix string) error {
-	// This is a simplified version - in production, you'd want to properly
-	// update the guild.yaml file with the agent definitions
-	// For now, we assume the agents exist or will be created by the system
+// ensureDefaultAgents ensures the default agents exist
+func (m *GuildSelectorModel) ensureDefaultAgents() error {
+	// In the modular structure, agents should already exist in .campaign/agents/
+	// This is a simplified version - the init command should have created them
 	return nil
 }
 
