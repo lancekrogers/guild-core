@@ -93,6 +93,7 @@ func init() {
 	rootCmd.AddCommand(campaignCmd)
 	rootCmd.AddCommand(kanbanCmd)
 	rootCmd.AddCommand(completionCmd)
+	rootCmd.AddCommand(cleanupCmd)
 
 	// Note: The following commands are registered in their respective files:
 	// - initCmd (init.go)

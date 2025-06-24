@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"gopkg.in/yaml.v3"
 
@@ -308,6 +309,8 @@ func GetCampaignFromSocketPath(socketPath string) (string, int, error) {
 // StopSession sends a shutdown signal to a specific daemon session
 func StopSession(socketPath string) error {
 	if !CanConnect(socketPath) {
+		// If already not running, just clean up the socket file
+		os.Remove(socketPath)
 		return gerror.New(gerror.ErrCodeNotFound, "daemon session not running", nil).
 			WithComponent("daemon").
 			WithOperation("StopSession").
@@ -332,6 +335,13 @@ func StopSession(socketPath string) error {
 			WithOperation("StopSession").
 			WithDetails("socket", socketPath)
 	}
+
+	// Wait a bit for graceful shutdown
+	time.Sleep(100 * time.Millisecond)
+
+	// Clean up socket file after shutdown
+	// The daemon should clean it up, but ensure it's removed
+	os.Remove(socketPath)
 
 	return nil
 }

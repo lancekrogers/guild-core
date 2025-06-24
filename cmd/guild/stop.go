@@ -75,11 +75,32 @@ func runStop(cmd *cobra.Command, args []string) error {
 
 		detectedCampaign, err := campaign.DetectCampaign(cwd, "")
 		if err != nil {
-			// If no campaign detected and no --all flag, show error
-			return gerror.New(gerror.ErrCodeInvalidInput, "no campaign detected", nil).
-				WithComponent("cli").
-				WithOperation("stop.run").
-				WithDetails("help", "Use --campaign to specify a campaign or --all to stop all daemons")
+			// If no campaign detected, try to find any running daemons
+			allSessions, err := pkgDaemon.DiscoverAllRunningSessions()
+			if err != nil || len(allSessions) == 0 {
+				// No running daemons found
+				fmt.Println("ℹ️  No running Guild daemons found")
+				fmt.Println()
+				fmt.Println("💡 Tips:")
+				fmt.Println("  • Use 'guild status' to see running daemons")
+				fmt.Println("  • Use 'guild stop --all' to stop all daemons")
+				fmt.Println("  • Use 'guild stop --campaign <name>' to stop a specific campaign")
+				return nil
+			}
+
+			// Show running daemons and suggest using --all
+			fmt.Println("🔍 No campaign detected in current directory")
+			fmt.Println()
+			fmt.Printf("Found %d running daemon(s):\n", len(allSessions))
+			for hash, sessions := range allSessions {
+				for _, session := range sessions {
+					fmt.Printf("  • %s (session %d)\n", hash, session.Session)
+				}
+			}
+			fmt.Println()
+			fmt.Println("💡 Use 'guild stop --all' to stop all daemons")
+			fmt.Println("   or navigate to a campaign directory and run 'guild stop'")
+			return nil
 		}
 		stopCampaignID = detectedCampaign
 	}

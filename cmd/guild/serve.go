@@ -296,6 +296,14 @@ func runServe(cmd *cobra.Command, args []string) error {
 	}
 
 	// In foreground mode, start the server directly
+	// Ensure socket cleanup on exit
+	defer func() {
+		// Clean up socket file
+		if err := os.Remove(daemonConfig.SocketPath); err != nil && !os.IsNotExist(err) {
+			logger.ErrorContext(ctx, "Failed to remove socket file", "socket", daemonConfig.SocketPath, "error", err)
+		}
+	}()
+
 	startErr := server.StartUnix(ctx, daemonConfig.SocketPath)
 
 	if startErr != nil {
