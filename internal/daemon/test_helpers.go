@@ -9,7 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"testing"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
@@ -32,12 +32,12 @@ func getExecutablePath() (string, error) {
 	if testExecutablePath != "" {
 		return testExecutablePath, nil
 	}
-	
+
 	// Try to find guild in PATH (equivalent to 'which guild')
 	if guildPath, err := exec.LookPath("guild"); err == nil {
 		return guildPath, nil
 	}
-	
+
 	// Fallback to current executable
 	// Note: This may fail on macOS with "operation not permitted" when running
 	// from non-standard locations. Install guild properly to avoid this issue.
@@ -48,7 +48,7 @@ func getExecutablePath() (string, error) {
 			WithOperation("getExecutablePath").
 			WithDetails("help", "Run 'make install' to install guild properly")
 	}
-	
+
 	return filepath.Clean(execPath), nil
 }
 

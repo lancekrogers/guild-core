@@ -75,14 +75,22 @@ type Config struct {
 
 // DefaultConfig returns default logger configuration
 func DefaultConfig() *Config {
+	// For CLI tools, logs should go to files only, not console
+	// Use /dev/null as default output to avoid console pollution
+	var defaultOutput io.Writer = os.Stdout
+	if devNull, err := os.OpenFile(os.DevNull, os.O_WRONLY, 0); err == nil {
+		defaultOutput = devNull
+	}
+
 	return &Config{
 		Level:       LevelInfo,
 		Format:      "json",
-		Output:      os.Stdout,
+		Output:      defaultOutput,
 		AddSource:   true,
 		Environment: getEnv("GUILD_ENV", "development"),
 		Service:     getEnv("GUILD_SERVICE", "guild"),
 		Version:     getEnv("GUILD_VERSION", "unknown"),
+		EnableFile:  true, // Enable file logging by default for CLI
 	}
 }
 
@@ -129,19 +137,23 @@ func NewLogger(config *Config) Logger {
 	}
 }
 
-// setupLogOutput creates a multi-writer that logs to both console and .guild/logs/
+// setupLogOutput creates a writer that logs only to .guild/logs/ for CLI tools
 func setupLogOutput(consoleOutput io.Writer) io.Writer {
-	var writers []io.Writer
-	writers = append(writers, consoleOutput)
+	// For CLI tools, system logs should only go to files
+	// User-facing messages are handled via fmt.Print* functions
 
-	// Add file logging to .guild/logs/ if enabled
-	if getEnv("GUILD_LOG_FILE", "false") == "true" {
-		if fileWriter := createLogFile(); fileWriter != nil {
-			writers = append(writers, fileWriter)
-		}
+	// Try to create log file
+	if fileWriter := createLogFile(); fileWriter != nil {
+		return fileWriter
 	}
 
-	return io.MultiWriter(writers...)
+	// If file logging fails, use /dev/null to avoid console pollution
+	if devNull, err := os.OpenFile(os.DevNull, os.O_WRONLY, 0); err == nil {
+		return devNull
+	}
+
+	// Last resort fallback (should rarely happen)
+	return consoleOutput
 }
 
 // createLogFile creates a log file in ~/.guild/logs/ directory
@@ -152,7 +164,7 @@ func createLogFile() io.Writer {
 		// If we can't get the Guild directory, skip file logging silently
 		return nil
 	}
-	
+
 	// Create logs subdirectory
 	logDir := filepath.Join(guildDir, "logs")
 	if err := os.MkdirAll(logDir, 0755); err != nil {

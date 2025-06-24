@@ -12,6 +12,13 @@ import (
 // InitializeSQLiteStorageForRegistry initializes SQLite storage and returns configured components
 // This function is designed to be called by the registry to avoid circular imports
 func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (StorageRegistry, interface{}, error) {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return nil, nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("InitializeSQLiteStorageForRegistry").
+			WithOperation("Initialize")
+	}
+
 	// Create database connection
 	database, err := DefaultDatabaseFactory(ctx, dbPath)
 	if err != nil {
@@ -19,6 +26,14 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 			WithComponent("InitializeSQLiteStorageForRegistry").
 			WithOperation("DefaultDatabaseFactory").
 			WithDetails("db_path", dbPath)
+	}
+
+	// Check context before migrations
+	if err := ctx.Err(); err != nil {
+		database.Close()
+		return nil, nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled before migration").
+			WithComponent("InitializeSQLiteStorageForRegistry").
+			WithOperation("Migrate")
 	}
 
 	// Run migrations
@@ -60,6 +75,13 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 // InitializeSQLiteStorageForTests initializes SQLite storage without migrations for testing
 // This creates an in-memory database and manually creates the schema
 func InitializeSQLiteStorageForTests(ctx context.Context) (StorageRegistry, interface{}, error) {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return nil, nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("InitializeSQLiteStorageForTests").
+			WithOperation("Initialize")
+	}
+
 	// Use in-memory SQLite database for tests
 	database, err := DefaultDatabaseFactory(ctx, ":memory:")
 	if err != nil {

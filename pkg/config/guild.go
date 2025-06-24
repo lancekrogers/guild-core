@@ -4,6 +4,7 @@
 package config
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"strings"
@@ -12,6 +13,7 @@ import (
 	yaml "gopkg.in/yaml.v3"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/pkg/project/global"
 )
 
@@ -186,46 +188,151 @@ type Specialization struct {
 	Materials []string `yaml:"materials"` // What they work with
 }
 
-// LoadGuildConfig loads guild configuration with global -> project hierarchy
-func LoadGuildConfig(projectPath string) (*GuildConfig, error) {
-	// Try multiple locations for guild config
-	possiblePaths := []string{
-		// Legacy/expected location
-		filepath.Join(projectPath, ".guild", "guild.yaml"),
-		filepath.Join(projectPath, ".guild", "guild.yml"),
-		// New campaign-based location
-		filepath.Join(projectPath, ".campaign", "guild.yaml"),
-		filepath.Join(projectPath, ".campaign", "guild.yml"),
+// LoadGuildConfig loads modular guild configuration created by guild init
+// This loads from the new modular structure:
+// - .campaign/campaign.yaml (campaign metadata)
+// - .campaign/guilds/*.yaml (guild definitions)
+// - .campaign/agents/*.yaml (agent configurations)
+func LoadGuildConfig(ctx context.Context, projectPath string) (*GuildConfig, error) {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("GuildConfig").
+			WithOperation("LoadGuildConfig")
 	}
 
-	var configPath string
-	for _, path := range possiblePaths {
-		if _, err := os.Stat(path); err == nil {
-			configPath = path
-			break
-		}
-	}
+	// Set up logging
+	logger := observability.GetLogger(ctx)
+	ctx = observability.WithComponent(ctx, "GuildConfig")
+	ctx = observability.WithOperation(ctx, "LoadGuildConfig")
 
-	if configPath == "" {
-		return nil, gerror.New(gerror.ErrCodeNotFound, "guild configuration not found", nil).
+	logger.InfoContext(ctx, "Loading modular guild configuration", "project_path", projectPath)
+
+	// Step 1: Load campaign configuration
+	campaignPath := filepath.Join(projectPath, ".campaign", "campaign.yaml")
+	if _, err := os.Stat(campaignPath); os.IsNotExist(err) {
+		logger.WarnContext(ctx, "Campaign configuration not found", "path", campaignPath)
+		return nil, gerror.New(gerror.ErrCodeNotFound, "campaign not initialized - run 'guild init' first", nil).
 			WithComponent("GuildConfig").
 			WithOperation("LoadGuildConfig").
-			WithDetails("searched", possiblePaths)
+			WithDetails("path", campaignPath)
 	}
 
-	data, err := os.ReadFile(configPath)
+	// Read campaign.yaml
+	campaignData, err := os.ReadFile(campaignPath)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read campaign config").
+			WithComponent("GuildConfig").
+			WithOperation("LoadGuildConfig").
+			WithDetails("path", campaignPath)
+	}
+
+	// Parse campaign.yaml to get guild info
+	var campaignInfo struct {
+		Name     string   `yaml:"name"`
+		Guilds   []string `yaml:"guilds"`
+		Settings struct {
+			DefaultGuild string `yaml:"default_guild"`
+		} `yaml:"settings"`
+	}
+	if err := yaml.Unmarshal(campaignData, &campaignInfo); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "failed to parse campaign config").
+			WithComponent("GuildConfig").
+			WithOperation("LoadGuildConfig").
+			WithDetails("path", campaignPath)
+	}
+
+	// Determine which guild to load
+	guildName := campaignInfo.Settings.DefaultGuild
+	if guildName == "" && len(campaignInfo.Guilds) > 0 {
+		guildName = campaignInfo.Guilds[0]
+	}
+	if guildName == "" {
+		return nil, gerror.New(gerror.ErrCodeValidation, "no guild found in campaign", nil).
+			WithComponent("GuildConfig").
+			WithOperation("LoadGuildConfig")
+	}
+
+	logger.InfoContext(ctx, "Loading guild", "guild_name", guildName)
+
+	// Step 2: Load guild definition
+	guildPath := filepath.Join(projectPath, ".campaign", "guilds", guildName+".yaml")
+	guildData, err := os.ReadFile(guildPath)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read guild config").
 			WithComponent("GuildConfig").
-			WithOperation("LoadGuildConfig")
+			WithOperation("LoadGuildConfig").
+			WithDetails("path", guildPath)
 	}
 
-	var config GuildConfig
-	if err := yaml.Unmarshal(data, &config); err != nil {
+	// Parse guild definition
+	var guildDef struct {
+		Name         string   `yaml:"name"`
+		Description  string   `yaml:"description"`
+		Purpose      string   `yaml:"purpose"`
+		Manager      string   `yaml:"manager"`
+		Agents       []string `yaml:"agents"`
+		Coordination struct {
+			MaxParallelTasks int  `yaml:"max_parallel_tasks"`
+			ReviewRequired   bool `yaml:"review_required"`
+			AutoHandoff      bool `yaml:"auto_handoff"`
+		} `yaml:"coordination"`
+	}
+	if err := yaml.Unmarshal(guildData, &guildDef); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "failed to parse guild config").
 			WithComponent("GuildConfig").
-			WithOperation("LoadGuildConfig")
+			WithOperation("LoadGuildConfig").
+			WithDetails("path", guildPath)
 	}
+
+	// Step 3: Load agent configurations
+	agents := make([]AgentConfig, 0, len(guildDef.Agents))
+	for _, agentID := range guildDef.Agents {
+		// Check context in loop
+		if err := ctx.Err(); err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled during agent loading").
+				WithComponent("GuildConfig").
+				WithOperation("LoadGuildConfig")
+		}
+
+		agentPath := filepath.Join(projectPath, ".campaign", "agents", agentID+".yaml")
+		agentData, err := os.ReadFile(agentPath)
+		if err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read agent config").
+				WithComponent("GuildConfig").
+				WithOperation("LoadGuildConfig").
+				WithDetails("agent_id", agentID).
+				WithDetails("path", agentPath)
+		}
+
+		var agent AgentConfig
+		if err := yaml.Unmarshal(agentData, &agent); err != nil {
+			return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "failed to parse agent config").
+				WithComponent("GuildConfig").
+				WithOperation("LoadGuildConfig").
+				WithDetails("agent_id", agentID).
+				WithDetails("path", agentPath)
+		}
+
+		agents = append(agents, agent)
+	}
+
+	// Step 4: Construct GuildConfig from the loaded data
+	config := &GuildConfig{
+		Name:        guildDef.Name,
+		Description: guildDef.Description,
+		Manager: ManagerConfig{
+			Default: guildDef.Manager,
+		},
+		Agents: agents,
+		Metadata: Metadata{
+			CreatedAt: time.Now().Format(time.RFC3339),
+			UpdatedAt: time.Now().Format(time.RFC3339),
+			Version:   "1.0",
+		},
+	}
+
+	logger.InfoContext(ctx, "Parsing configuration completed", "agents_count", len(config.Agents), "name", config.Name)
 
 	// Validate the configuration
 	if err := config.Validate(); err != nil {
@@ -234,11 +341,27 @@ func LoadGuildConfig(projectPath string) (*GuildConfig, error) {
 			WithOperation("LoadGuildConfig")
 	}
 
-	return &config, nil
+	logger.InfoContext(ctx, "Guild configuration loaded successfully", "name", config.Name)
+
+	return config, nil
 }
 
 // SaveGuildConfig saves guild configuration to a project directory
-func SaveGuildConfig(projectPath string, config *GuildConfig) error {
+func SaveGuildConfig(ctx context.Context, projectPath string, config *GuildConfig) error {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("GuildConfig").
+			WithOperation("SaveGuildConfig")
+	}
+
+	// Set up logging
+	logger := observability.GetLogger(ctx)
+	ctx = observability.WithComponent(ctx, "GuildConfig")
+	ctx = observability.WithOperation(ctx, "SaveGuildConfig")
+
+	logger.InfoContext(ctx, "Saving guild configuration", "project_path", projectPath, "config_name", config.Name)
+
 	// Save to campaign directory
 	configPath := filepath.Join(projectPath, ".campaign", "guild.yaml")
 
@@ -246,21 +369,44 @@ func SaveGuildConfig(projectPath string, config *GuildConfig) error {
 	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign directory").
 			WithComponent("GuildConfig").
+			WithOperation("SaveGuildConfig").
+			WithDetails("path", configPath)
+	}
+
+	// Check context before marshaling
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled before marshal").
+			WithComponent("GuildConfig").
 			WithOperation("SaveGuildConfig")
 	}
+
+	logger.InfoContext(ctx, "Marshaling configuration to YAML")
 
 	data, err := yaml.Marshal(config)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild config").
 			WithComponent("GuildConfig").
+			WithOperation("SaveGuildConfig").
+			WithDetails("path", configPath)
+	}
+
+	// Check context before file write
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled before file write").
+			WithComponent("GuildConfig").
 			WithOperation("SaveGuildConfig")
 	}
+
+	logger.InfoContext(ctx, "Writing configuration file", "path", configPath)
 
 	if err := os.WriteFile(configPath, data, 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
 			WithComponent("GuildConfig").
-			WithOperation("SaveGuildConfig")
+			WithOperation("SaveGuildConfig").
+			WithDetails("path", configPath)
 	}
+
+	logger.InfoContext(ctx, "Guild configuration saved successfully", "path", configPath)
 
 	return nil
 }

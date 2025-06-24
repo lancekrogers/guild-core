@@ -28,12 +28,12 @@ func NewDefaultConfigManager() ConfigurationManager {
 	return &DefaultConfigManager{}
 }
 
-func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, projectPath, campaignName, projectName string) error {
+func (d *DefaultConfigManager) EstablishGuildFoundation(ctx context.Context, projectPath, campaignName, projectName string) error {
 	// Check for context cancellation
 	if err := ctx.Err(); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeCancelled, "Phase 0 configuration creation cancelled").
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "guild foundation establishment cancelled").
 			WithComponent("DefaultConfigManager").
-			WithOperation("CreatePhase0Configuration")
+			WithOperation("EstablishGuildFoundation")
 	}
 
 	// Step 0: Ensure campaign directory exists
@@ -41,7 +41,7 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 	if err := os.MkdirAll(campaignDir, 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign directory").
 			WithComponent("DefaultConfigManager").
-			WithOperation("CreatePhase0Configuration").
+			WithOperation("EstablishGuildFoundation").
 			WithDetails("dir", campaignDir)
 	}
 
@@ -74,7 +74,7 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 		},
 		"guilds": []string{"elena_guild"},
 		"settings": map[string]interface{}{
-			"default_guild": "elena_guild",
+			"default_guild":     "elena_guild",
 			"auto_start_daemon": true,
 		},
 	}
@@ -90,7 +90,7 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 	if err := os.WriteFile(campaignPath, campaignData, 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save campaign configuration").
 			WithComponent("DefaultConfigManager").
-			WithOperation("CreatePhase0Configuration").
+			WithOperation("EstablishGuildFoundation").
 			WithDetails("campaign", campaignName)
 	}
 
@@ -105,7 +105,7 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 	if err := os.MkdirAll(guildsDir, 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create guilds directory").
 			WithComponent("DefaultConfigManager").
-			WithOperation("CreatePhase0Configuration").
+			WithOperation("EstablishGuildFoundation").
 			WithDetails("dir", guildsDir)
 	}
 
@@ -121,9 +121,9 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 			"vera-tester",
 		},
 		"coordination": map[string]interface{}{
-			"max_parallel_tasks": 3,
-			"review_required":    true,
-			"auto_handoff":       true,
+			"max_parallel_tasks":  3,
+			"review_required":     true,
+			"auto_handoff":        true,
 			"communication_style": "collaborative",
 		},
 		"specialties": []string{
@@ -145,7 +145,7 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 	if err := os.WriteFile(guildPath, guildData, 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
 			WithComponent("DefaultConfigManager").
-			WithOperation("CreatePhase0Configuration").
+			WithOperation("EstablishGuildFoundation").
 			WithDetails("path", guildPath)
 	}
 
@@ -155,7 +155,7 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 	if err := os.MkdirAll(agentsDir, 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
 			WithComponent("DefaultConfigManager").
-			WithOperation("CreatePhase0Configuration").
+			WithOperation("EstablishGuildFoundation").
 			WithDetails("dir", agentsDir)
 	}
 
@@ -179,7 +179,7 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 		if err := os.MkdirAll(dirPath, 0755); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create directory").
 				WithComponent("DefaultConfigManager").
-				WithOperation("CreatePhase0Configuration").
+				WithOperation("EstablishGuildFoundation").
 				WithDetails("dir", dirPath)
 		}
 	}
@@ -189,7 +189,7 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 	if _, err := os.Create(dbPath); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create database file").
 			WithComponent("DefaultConfigManager").
-			WithOperation("CreatePhase0Configuration").
+			WithOperation("EstablishGuildFoundation").
 			WithDetails("path", dbPath)
 	}
 
@@ -206,7 +206,7 @@ func (d *DefaultConfigManager) CreatePhase0Configuration(ctx context.Context, pr
 func (d *DefaultConfigManager) registerCampaignGlobally(ctx context.Context, campaignName, projectPath string) error {
 	// Get campaign hash for directory name
 	hash := campaign.GenerateCampaignHash(campaignName)
-	
+
 	// Get global config directory
 	configDir, err := paths.GetGuildConfigDir()
 	if err != nil {
@@ -214,7 +214,7 @@ func (d *DefaultConfigManager) registerCampaignGlobally(ctx context.Context, cam
 			WithComponent("DefaultConfigManager").
 			WithOperation("registerCampaignGlobally")
 	}
-	
+
 	// Create campaign registry directory
 	campaignRegistryDir := filepath.Join(configDir, "campaigns", hash)
 	if err := os.MkdirAll(campaignRegistryDir, 0755); err != nil {
@@ -223,21 +223,21 @@ func (d *DefaultConfigManager) registerCampaignGlobally(ctx context.Context, cam
 			WithOperation("registerCampaignGlobally").
 			WithDetails("dir", campaignRegistryDir)
 	}
-	
+
 	// Create minimal campaign registry file
 	registryData := map[string]interface{}{
 		"name":     campaignName,
 		"location": projectPath,
 		"created":  time.Now().Format(time.RFC3339),
 	}
-	
+
 	registryYaml, err := yaml.Marshal(registryData)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal campaign registry").
 			WithComponent("DefaultConfigManager").
 			WithOperation("registerCampaignGlobally")
 	}
-	
+
 	registryPath := filepath.Join(campaignRegistryDir, "campaign.yaml")
 	if err := os.WriteFile(registryPath, registryYaml, 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write campaign registry").
@@ -245,27 +245,27 @@ func (d *DefaultConfigManager) registerCampaignGlobally(ctx context.Context, cam
 			WithOperation("registerCampaignGlobally").
 			WithDetails("path", registryPath)
 	}
-	
+
 	return nil
 }
 
-func (d *DefaultConfigManager) IntegrateWithPhase0Config(ctx context.Context, projectPath, campaignName, projectName string) error {
+func (d *DefaultConfigManager) FinalizeGuildCharter(ctx context.Context, projectPath, campaignName, projectName string) error {
 	// Check for context cancellation
 	if err := ctx.Err(); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeCancelled, "Phase 0 integration cancelled").
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "guild charter finalization cancelled").
 			WithComponent("DefaultConfigManager").
-			WithOperation("IntegrateWithPhase0Config")
+			WithOperation("FinalizeGuildCharter")
 	}
 
-	// Phase 0 integration is now complete - all configuration is in .campaign/
+	// Guild charter finalization is now complete - all configuration is in .campaign/
 	// No need for .guild/ directory anymore
-	
+
 	// Verify campaign structure was created correctly
 	campaignDir := filepath.Join(projectPath, paths.DefaultCampaignDir)
 	if _, err := os.Stat(campaignDir); os.IsNotExist(err) {
 		return gerror.New(gerror.ErrCodeNotFound, "campaign directory not found after creation", nil).
 			WithComponent("DefaultConfigManager").
-			WithOperation("IntegrateWithPhase0Config").
+			WithOperation("FinalizeGuildCharter").
 			WithDetails("dir", campaignDir)
 	}
 
@@ -274,7 +274,7 @@ func (d *DefaultConfigManager) IntegrateWithPhase0Config(ctx context.Context, pr
 	if _, err := os.Stat(guildPath); os.IsNotExist(err) {
 		return gerror.New(gerror.ErrCodeNotFound, "guild configuration not found", nil).
 			WithComponent("DefaultConfigManager").
-			WithOperation("IntegrateWithPhase0Config").
+			WithOperation("FinalizeGuildCharter").
 			WithDetails("path", guildPath)
 	}
 

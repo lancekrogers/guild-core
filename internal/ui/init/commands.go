@@ -73,7 +73,7 @@ func (m *InitTUIModelV2) doInitialization() tea.Cmd {
 		}
 
 		// Step 4: Create Phase 0 configuration with enhanced agents
-		if err := m.configManager.CreatePhase0Configuration(ctx, m.config.ProjectPath, m.campaignName, m.projectName); err != nil {
+		if err := m.configManager.EstablishGuildFoundation(ctx, m.config.ProjectPath, m.campaignName, m.projectName); err != nil {
 			return errMsg{err: err}
 		}
 
@@ -93,17 +93,17 @@ func (m *InitTUIModelV2) doInitialization() tea.Cmd {
 		if agentCount == 0 {
 			agentCount = 3 // Default expected count
 		}
-		
+
 		providerCount := 0
 		for _, result := range m.providerResults {
 			if result.Available {
 				providerCount++
 			}
 		}
-		
-		completeMessage := fmt.Sprintf("🏰 Guild established! Elena + %d artisans ready with %d AI providers", 
+
+		completeMessage := fmt.Sprintf("🏰 Guild established! Elena + %d artisans ready with %d AI providers",
 			agentCount-1, providerCount) // -1 because Elena is separate from other artisans
-		
+
 		return initProgressMsg{
 			phase:   "complete",
 			percent: 1.0,
@@ -159,7 +159,7 @@ func (m *InitTUIModelV2) doValidation() tea.Cmd {
 		defer cancel()
 
 		// Phase 0 integration
-		if err := m.configManager.IntegrateWithPhase0Config(ctx, m.config.ProjectPath, m.campaignName, m.projectName); err != nil {
+		if err := m.configManager.FinalizeGuildCharter(ctx, m.config.ProjectPath, m.campaignName, m.projectName); err != nil {
 			return errMsg{err: err}
 		}
 
@@ -227,7 +227,7 @@ func (m *InitTUIModelV2) detectProviders(ctx context.Context) error {
 	availableCount := 0
 	var bestProvider providers.DetectionResult
 	highestConfidence := 0.0
-	
+
 	for _, result := range results {
 		if result.Available {
 			availableCount++
@@ -322,7 +322,7 @@ func (m *InitTUIModelV2) optimizeAgentProviders(agentConfigs []*config.AgentConf
 	// Intelligent provider mapping for each agent
 	for _, agent := range agentConfigs {
 		originalProvider := agent.Provider
-		
+
 		// Try to find the best provider for this agent
 		switch agent.Type {
 		case "manager":
@@ -373,42 +373,42 @@ func (m *InitTUIModelV2) saveAgentConfig(ctx context.Context, agentsDir string, 
 
 	// Convert to YAML-friendly format
 	configData := map[string]interface{}{
-		"id":            agentConfig.ID,
-		"name":          agentConfig.Name,
-		"type":          agentConfig.Type,
-		"description":   agentConfig.Description,
-		"provider":      agentConfig.Provider,
-		"model":         agentConfig.Model,
-		"capabilities":  agentConfig.Capabilities,
-		"tools":         agentConfig.Tools,
+		"id":           agentConfig.ID,
+		"name":         agentConfig.Name,
+		"type":         agentConfig.Type,
+		"description":  agentConfig.Description,
+		"provider":     agentConfig.Provider,
+		"model":        agentConfig.Model,
+		"capabilities": agentConfig.Capabilities,
+		"tools":        agentConfig.Tools,
 	}
 
 	// Add backstory information if available
 	if agentConfig.Backstory != nil {
 		configData["backstory"] = map[string]interface{}{
-			"experience":      agentConfig.Backstory.Experience,
-			"previous_roles":  agentConfig.Backstory.PreviousRoles,
-			"expertise":       agentConfig.Backstory.Expertise,
-			"achievements":    agentConfig.Backstory.Achievements,
-			"philosophy":      agentConfig.Backstory.Philosophy,
-			"guild_rank":      agentConfig.Backstory.GuildRank,
-			"specialties":     agentConfig.Backstory.Specialties,
+			"experience":     agentConfig.Backstory.Experience,
+			"previous_roles": agentConfig.Backstory.PreviousRoles,
+			"expertise":      agentConfig.Backstory.Expertise,
+			"achievements":   agentConfig.Backstory.Achievements,
+			"philosophy":     agentConfig.Backstory.Philosophy,
+			"guild_rank":     agentConfig.Backstory.GuildRank,
+			"specialties":    agentConfig.Backstory.Specialties,
 		}
 	}
 
 	// Add personality information if available
 	if agentConfig.Personality != nil {
 		configData["personality"] = map[string]interface{}{
-			"formality":       agentConfig.Personality.Formality,
-			"detail_level":    agentConfig.Personality.DetailLevel,
-			"humor_level":     agentConfig.Personality.HumorLevel,
-			"approach_style":  agentConfig.Personality.ApproachStyle,
-			"assertiveness":   agentConfig.Personality.Assertiveness,
-			"empathy":         agentConfig.Personality.Empathy,
-			"patience":        agentConfig.Personality.Patience,
-			"honor":           agentConfig.Personality.Honor,
-			"wisdom":          agentConfig.Personality.Wisdom,
-			"craftsmanship":   agentConfig.Personality.Craftsmanship,
+			"formality":      agentConfig.Personality.Formality,
+			"detail_level":   agentConfig.Personality.DetailLevel,
+			"humor_level":    agentConfig.Personality.HumorLevel,
+			"approach_style": agentConfig.Personality.ApproachStyle,
+			"assertiveness":  agentConfig.Personality.Assertiveness,
+			"empathy":        agentConfig.Personality.Empathy,
+			"patience":       agentConfig.Personality.Patience,
+			"honor":          agentConfig.Personality.Honor,
+			"wisdom":         agentConfig.Personality.Wisdom,
+			"craftsmanship":  agentConfig.Personality.Craftsmanship,
 		}
 	}
 
@@ -424,7 +424,7 @@ func (m *InitTUIModelV2) saveAgentConfig(ctx context.Context, agentsDir string, 
 	// Save to file
 	filename := fmt.Sprintf("%s.yaml", agentConfig.ID)
 	filepath := filepath.Join(agentsDir, filename)
-	
+
 	if err := os.WriteFile(filepath, yamlData, 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent config file").
 			WithComponent("InitTUIV2").

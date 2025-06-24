@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -67,11 +68,15 @@ Examples:
 }
 
 func checkGuildInitialized(cmd *cobra.Command, args []string) error {
-	// Check if guild is initialized first
-	_, err := loadGuildConfig()
-	if err != nil {
-		// Check if it's a "not found" error indicating guild is not initialized
-		if gerror.GetCode(err) == gerror.ErrCodeNotFound {
+	ctx := cmd.Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	// Check if campaign is initialized by looking for .campaign directory
+	campaignDir := filepath.Join(".", ".campaign")
+	if _, err := os.Stat(campaignDir); os.IsNotExist(err) {
+		// Campaign not initialized
 			// Offer to initialize guild
 			fmt.Println("🏰 Guild not initialized in this directory.")
 			fmt.Println()
@@ -84,36 +89,36 @@ func checkGuildInitialized(cmd *cobra.Command, args []string) error {
 			fmt.Println("  🚀 Get you chatting in under 30 seconds")
 			fmt.Println()
 			fmt.Print("Initialize Guild? [Y/n]: ")
-			
+
 			// Read user input
 			var response string
 			fmt.Scanln(&response)
-			
+
 			// Default to yes if empty or starts with y/Y
 			if response == "" || (len(response) > 0 && strings.ToLower(response)[0] == 'y') {
 				fmt.Println()
 				fmt.Println("🎯 Starting Guild initialization...")
 				fmt.Println()
-				
+
 				// Run guild init in quick mode
 				initCmd := exec.Command(os.Args[0], "init", "--quick")
 				initCmd.Stdout = os.Stdout
 				initCmd.Stderr = os.Stderr
 				initCmd.Stdin = os.Stdin
-				
+
 				if err := initCmd.Run(); err != nil {
 					return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run guild init").
 						WithComponent("cli").
 						WithOperation("checkGuildInitialized")
 				}
-				
+
 				fmt.Println()
 				fmt.Println("✅ Guild initialized! Continuing to chat...")
 				fmt.Println()
-				
+
 				// Small pause for user to see the message
 				time.Sleep(1 * time.Second)
-				
+
 				// Return nil to continue to runChat
 				return nil
 			} else {
@@ -126,11 +131,8 @@ func checkGuildInitialized(cmd *cobra.Command, args []string) error {
 					WithComponent("cli").
 					WithOperation("checkGuildInitialized")
 			}
-		}
-		// Other errors pass through
-		return err
 	}
-	// Guild is initialized, continue
+	// Campaign is initialized, continue
 	return nil
 }
 
@@ -153,7 +155,7 @@ func runChat(cmd *cobra.Command, args []string) error {
 	}
 
 	// Load configuration (now we know it exists)
-	guildConfig, err := loadGuildConfig()
+	guildConfig, err := loadGuildConfig(ctx)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to load guild configuration").
 			WithComponent("cli").
@@ -257,9 +259,9 @@ func runChat(cmd *cobra.Command, args []string) error {
 }
 
 // loadGuildConfig loads the guild configuration from the project
-func loadGuildConfig() (*config.GuildConfig, error) {
+func loadGuildConfig(ctx context.Context) (*config.GuildConfig, error) {
 	// Load from current directory (LoadGuildConfig will add .guild/guild.yaml)
-	return config.LoadGuildConfig(".")
+	return config.LoadGuildConfig(ctx, ".")
 }
 
 // generateUUID generates a new UUID for session ID

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/internal/chat"
+	"github.com/guild-ventures/guild-core/internal/ui/chat"
 )
 
 func BenchmarkStatusPanelUpdate(b *testing.B) {

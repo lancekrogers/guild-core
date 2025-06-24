@@ -163,7 +163,7 @@ func createCampaign(cmd *cobra.Command, args []string) error {
 	}
 
 	// Load guild configuration
-	guildConfig, err := config.LoadGuildConfig(projCtx.GetRootPath())
+	guildConfig, err := config.LoadGuildConfig(ctx, projCtx.GetRootPath())
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load guild config").
 			WithComponent("cli").

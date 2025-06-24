@@ -4,6 +4,7 @@
 package config
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 
@@ -28,7 +29,13 @@ type EnhancedGuildConfig struct {
 }
 
 // LoadEnhancedConfig loads both global and local configurations and merges them
-func LoadEnhancedConfig(projectPath string) (*EnhancedGuildConfig, error) {
+func LoadEnhancedConfig(ctx context.Context, projectPath string) (*EnhancedGuildConfig, error) {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("config").
+			WithOperation("load_enhanced")
+	}
 	// Ensure global config exists
 	if err := global.EnsureGlobalInitialized(); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to ensure global config").
@@ -52,7 +59,7 @@ func LoadEnhancedConfig(projectPath string) (*EnhancedGuildConfig, error) {
 	}
 
 	// Load local configuration
-	localConfig, err := LoadGuildConfig(projectPath)
+	localConfig, err := LoadGuildConfig(ctx, projectPath)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load local config").
 			WithComponent("config").

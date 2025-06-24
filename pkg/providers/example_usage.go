@@ -39,12 +39,12 @@ func ExampleAutoDetection() {
 	// Find the best provider with preferences
 	fmt.Println("\n🎯 Finding best provider (preferring Claude Code, then Ollama)...")
 	preferences := []ProviderType{ProviderClaudeCode, ProviderOllama}
-	
+
 	best, err := detector.GetBestProvider(ctx, preferences)
 	if err != nil {
 		fmt.Printf("❌ No suitable provider found: %v\n", err)
 	} else {
-		fmt.Printf("✅ Best provider: %s (confidence: %.1f%%)\n", 
+		fmt.Printf("✅ Best provider: %s (confidence: %.1f%%)\n",
 			GetProviderDisplayName(string(best.Provider)), best.Confidence*100)
 		if best.Path != "" {
 			fmt.Printf("   📍 Path: %s\n", best.Path)
@@ -57,10 +57,10 @@ func ExampleAutoDetection() {
 
 	// Validate specific providers
 	fmt.Println("\n🔒 Validating provider availability...")
-	
+
 	for _, providerType := range []ProviderType{ProviderClaudeCode, ProviderOllama} {
 		fmt.Printf("Checking %s... ", GetProviderDisplayName(string(providerType)))
-		
+
 		err := detector.ValidateProvider(ctx, providerType)
 		if err != nil {
 			fmt.Printf("❌ Not available (%v)\n", err)
@@ -75,19 +75,19 @@ func ExampleAutoDetection() {
 // displayProviderResult formats and displays a detection result
 func displayProviderResult(result DetectionResult) {
 	displayName := GetProviderDisplayName(string(result.Provider))
-	
+
 	if result.Available {
 		fmt.Printf("✅ %s\n", displayName)
 		fmt.Printf("   🔧 Version: %s\n", getVersionDisplay(result.Version))
 		fmt.Printf("   📈 Confidence: %.1f%%\n", result.Confidence*100)
-		
+
 		if result.Path != "" {
 			fmt.Printf("   📍 Binary: %s\n", result.Path)
 		}
 		if result.Endpoint != "" {
 			fmt.Printf("   🌐 Service: %s\n", result.Endpoint)
 		}
-		
+
 		if len(result.Capabilities) > 0 {
 			fmt.Printf("   🎯 Features: %s\n", formatCapabilities(result.Capabilities))
 		}
@@ -110,12 +110,12 @@ func formatCapabilities(capabilities []string) string {
 	if len(capabilities) == 0 {
 		return "None"
 	}
-	
+
 	// Limit display to first few capabilities
 	if len(capabilities) <= 3 {
 		return fmt.Sprintf("%v", capabilities)
 	}
-	
+
 	return fmt.Sprintf("%v... (%d total)", capabilities[:3], len(capabilities))
 }
 
@@ -123,26 +123,26 @@ func formatCapabilities(capabilities []string) string {
 func ExampleQuickSetup() {
 	fmt.Println("🚀 Quick Setup Example")
 	fmt.Println("======================")
-	
+
 	ctx := context.Background()
 	detector := NewAutoDetector(3 * time.Second)
-	
+
 	// Try to get Claude Code first, fallback to Ollama
 	preferences := []ProviderType{ProviderClaudeCode, ProviderOllama}
-	
+
 	provider, err := detector.GetBestProvider(ctx, preferences)
 	if err != nil {
 		fmt.Printf("❌ Setup failed: %v\n", err)
 		fmt.Println("💡 Try installing Claude Code CLI or running Ollama service")
 		return
 	}
-	
+
 	fmt.Printf("✅ Using %s provider\n", GetProviderDisplayName(string(provider.Provider)))
-	
+
 	// Note: In real usage, you would use the factory to create a client:
 	// factory := NewFactory()
 	// client, err := factory.CreateClient(provider.Provider, apiKey, model)
-	
+
 	fmt.Println("🎉 Setup complete!")
 }
 
@@ -150,10 +150,10 @@ func ExampleQuickSetup() {
 func ExampleAdvancedDetection() {
 	fmt.Println("🔬 Advanced Detection Example")
 	fmt.Println("=============================")
-	
+
 	ctx := context.Background()
 	detector := NewAutoDetector(2 * time.Second)
-	
+
 	// Detect Claude Code specifically
 	fmt.Println("🔍 Checking Claude Code CLI installation...")
 	claudeResult, err := detector.DetectClaudeCode(ctx)
@@ -167,7 +167,7 @@ func ExampleAdvancedDetection() {
 			fmt.Printf("❌ Not found - %s\n", claudeResult.Error)
 		}
 	}
-	
+
 	// Detect Ollama specifically
 	fmt.Println("\n🔍 Checking Ollama service...")
 	ollamaResult, err := detector.DetectOllama(ctx)
@@ -181,7 +181,7 @@ func ExampleAdvancedDetection() {
 			fmt.Printf("❌ Not running - %s\n", ollamaResult.Error)
 		}
 	}
-	
+
 	fmt.Println("\n🔬 Advanced detection complete!")
 }
 
@@ -189,19 +189,19 @@ func ExampleAdvancedDetection() {
 func ExampleIntegrationWithGuild() {
 	fmt.Println("🏰 Guild Integration Example")
 	fmt.Println("===========================")
-	
+
 	ctx := context.Background()
 	detector := NewAutoDetector(5 * time.Second)
-	
+
 	// This is how you might integrate auto-detection with Guild's existing systems
 	fmt.Println("1. 🔍 Auto-detecting available providers...")
-	
+
 	results, err := detector.DetectAll(ctx)
 	if err != nil {
 		fmt.Printf("❌ Detection failed: %v\n", err)
 		return
 	}
-	
+
 	// Filter to available providers only
 	var available []DetectionResult
 	for _, result := range results {
@@ -209,25 +209,25 @@ func ExampleIntegrationWithGuild() {
 			available = append(available, result)
 		}
 	}
-	
+
 	if len(available) == 0 {
 		fmt.Println("❌ No providers available")
 		fmt.Println("💡 Install Claude Code CLI or start Ollama service")
 		return
 	}
-	
+
 	fmt.Printf("2. ✅ Found %d available provider(s)\n", len(available))
-	
+
 	// In a real Guild integration, you would:
 	// - Register detected providers with the registry
 	// - Set up fallback chains based on detection results
 	// - Update configuration with auto-detected settings
-	
+
 	fmt.Println("3. 🔧 Integration points:")
 	fmt.Println("   - Register with provider registry")
 	fmt.Println("   - Configure fallback chains")
 	fmt.Println("   - Update runtime configuration")
 	fmt.Println("   - Enable hot-swapping based on availability")
-	
+
 	fmt.Println("\n🏰 Integration planning complete!")
 }

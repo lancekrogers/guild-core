@@ -245,7 +245,7 @@ func BuildOnly(verbose bool) error {
 	}
 
 	ui.Task("Building", "guild binary")
-	
+
 	// Build main binary only
 	cmd := exec.Command("go", "build", "-o", "bin/guild", "./cmd/guild")
 	if verbose {

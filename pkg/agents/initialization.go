@@ -19,15 +19,15 @@ import (
 
 // AgentInitializer manages the creation and initialization of enhanced agents
 type AgentInitializer struct {
-	creator           *DefaultAgentCreator
-	backstoryManager  *backstory.BackstoryManager
-	promptRegistry    layered.LayeredRegistry
+	creator          *DefaultAgentCreator
+	backstoryManager *backstory.BackstoryManager
+	promptRegistry   layered.LayeredRegistry
 }
 
 // NewAgentInitializer creates a new agent initializer
 func NewAgentInitializer(promptRegistry layered.LayeredRegistry) *AgentInitializer {
 	backstoryManager := backstory.NewBackstoryManager(promptRegistry)
-	
+
 	return &AgentInitializer{
 		creator:          NewDefaultAgentCreator(),
 		backstoryManager: backstoryManager,
@@ -99,7 +99,7 @@ func (ai *AgentInitializer) LoadAndEnhanceAgents(ctx context.Context, guildConfi
 	// Register each agent with the backstory manager
 	for _, agent := range guildConfig.Agents {
 		agentCopy := agent // Create copy to avoid pointer issues
-		
+
 		if err := ai.backstoryManager.RegisterAgent(&agentCopy); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register agent with backstory manager").
 				WithComponent("AgentInitializer").
@@ -307,7 +307,7 @@ func (ai *AgentInitializer) CreateGuildConfigWithElena(ctx context.Context, guil
 		Description: "Enhanced guild with Elena the Guild Master and rich agent personalities",
 		Version:     "1.0",
 		Manager: config.ManagerConfig{
-			Default: "elena-guild-master", // Elena is the default manager
+			Default:  "elena-guild-master",         // Elena is the default manager
 			Fallback: []string{"marcus-developer"}, // Marcus as fallback
 		},
 		Storage: config.StorageConfig{
@@ -333,7 +333,7 @@ func (ai *AgentInitializer) UpgradeExistingGuild(ctx context.Context, guildConfi
 	// Ensure campaign directory structure exists
 	campaignDir := filepath.Join(projectPath, paths.DefaultCampaignDir)
 	agentsDir := filepath.Join(campaignDir, "agents")
-	
+
 	if err := os.MkdirAll(agentsDir, 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
 			WithComponent("AgentInitializer").

@@ -213,7 +213,7 @@ func (m *Manager) waitForSocket(ctx context.Context, socketPath string, timeout 
 			if daemonPkg.CanConnect(socketPath) {
 				return nil
 			}
-			
+
 			// Exponential backoff with jitter
 			backoff = time.Duration(float64(backoff) * 1.5)
 			if backoff > maxBackoff {

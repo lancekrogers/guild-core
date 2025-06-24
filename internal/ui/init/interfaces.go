@@ -11,8 +11,8 @@ import (
 
 // ConfigurationManager handles all configuration operations
 type ConfigurationManager interface {
-	CreatePhase0Configuration(ctx context.Context, projectPath, campaignName, projectName string) error
-	IntegrateWithPhase0Config(ctx context.Context, projectPath, campaignName, projectName string) error
+	EstablishGuildFoundation(ctx context.Context, projectPath, campaignName, projectName string) error
+	FinalizeGuildCharter(ctx context.Context, projectPath, campaignName, projectName string) error
 	CreateCampaignReference(ctx context.Context, projectPath, campaignName, projectName string) error
 }
 

@@ -221,7 +221,7 @@ See the implementation plans in the implementation/ directory for detailed techn
 	// promptRegistry.RegisterPrompt("manager", "web-app", guildMasterPrompt)
 
 	// Create integration service
-	service, err := DefaultCommissionIntegrationServiceFactory(reg)
+	service, err := DefaultCommissionIntegrationServiceFactory(ctx, reg)
 	require.NoError(t, err)
 
 	// Create test guild config
@@ -307,7 +307,7 @@ func TestCommissionIntegrationService_DirectRefiner(t *testing.T) {
 
 	// Set up test infrastructure
 	reg := setupTestRegistry(t)
-	service, err := DefaultCommissionIntegrationServiceFactory(reg)
+	service, err := DefaultCommissionIntegrationServiceFactory(ctx, reg)
 	require.NoError(t, err)
 
 	// Get the guild master factory
@@ -339,7 +339,7 @@ func TestCommissionIntegrationService_TaskBridge(t *testing.T) {
 
 	// Set up test infrastructure
 	reg := setupTestRegistry(t)
-	service, err := DefaultCommissionIntegrationServiceFactory(reg)
+	service, err := DefaultCommissionIntegrationServiceFactory(ctx, reg)
 	require.NoError(t, err)
 
 	// Get task bridge

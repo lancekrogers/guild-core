@@ -15,38 +15,38 @@ import (
 // ExampleCreateEnhancedGuild demonstrates creating a guild with Elena and rich agents
 func ExampleCreateEnhancedGuild() {
 	ctx := context.Background()
-	
+
 	// Create a mock prompt registry for this example
 	promptRegistry := &mockPromptRegistry{}
-	
+
 	// Create agent initializer
 	initializer := NewAgentInitializer(promptRegistry)
-	
+
 	// Create a new guild with Elena as the manager
 	guildConfig, err := initializer.CreateGuildConfigWithElena(ctx, "example-guild")
 	if err != nil {
 		log.Fatalf("Failed to create guild: %v", err)
 	}
-	
+
 	fmt.Printf("Created guild '%s' with %d agents\n", guildConfig.Name, len(guildConfig.Agents))
 	fmt.Printf("Default manager: %s\n", guildConfig.Manager.Default)
-	
+
 	// Show agent details
 	for _, agent := range guildConfig.Agents {
 		fmt.Printf("\n--- Agent: %s ---\n", agent.Name)
 		fmt.Printf("Type: %s\n", agent.Type)
 		fmt.Printf("Provider: %s\n", agent.Provider)
-		
+
 		if agent.Backstory != nil {
 			fmt.Printf("Guild Rank: %s\n", agent.Backstory.GuildRank)
 			fmt.Printf("Experience: %s\n", agent.Backstory.Experience)
 		}
-		
+
 		if agent.Personality != nil {
 			fmt.Printf("Communication Style: %s\n", agent.Personality.Formality)
 			fmt.Printf("Empathy Level: %d/10\n", agent.Personality.Empathy)
 		}
-		
+
 		fmt.Printf("Capabilities: %v\n", agent.Capabilities)
 	}
 }
@@ -55,7 +55,7 @@ func ExampleCreateEnhancedGuild() {
 func ExampleUpgradeExistingGuild() {
 	ctx := context.Background()
 	projectPath := "/tmp/example-project"
-	
+
 	// Start with a simple guild config (like current defaults)
 	simpleGuild := &config.GuildConfig{
 		Name:        "simple-guild",
@@ -72,7 +72,7 @@ func ExampleUpgradeExistingGuild() {
 			},
 			{
 				ID:           "developer",
-				Name:         "developer", 
+				Name:         "developer",
 				Type:         "worker",
 				Description:  "Basic developer",
 				Provider:     "anthropic",
@@ -81,22 +81,22 @@ func ExampleUpgradeExistingGuild() {
 			},
 		},
 	}
-	
-	fmt.Printf("Before upgrade: %d agents, manager is '%s'\n", 
+
+	fmt.Printf("Before upgrade: %d agents, manager is '%s'\n",
 		len(simpleGuild.Agents), simpleGuild.Manager.Default)
-		
+
 	// Create initializer
 	promptRegistry := &mockPromptRegistry{}
 	initializer := NewAgentInitializer(promptRegistry)
-	
+
 	// Upgrade the guild
 	if err := initializer.UpgradeExistingGuild(ctx, simpleGuild, projectPath); err != nil {
 		log.Fatalf("Failed to upgrade guild: %v", err)
 	}
-	
-	fmt.Printf("After upgrade: %d agents, manager is '%s'\n", 
+
+	fmt.Printf("After upgrade: %d agents, manager is '%s'\n",
 		len(simpleGuild.Agents), simpleGuild.Manager.Default)
-		
+
 	// Find Elena
 	for _, agent := range simpleGuild.Agents {
 		if agent.ID == "elena-guild-master" {
@@ -113,40 +113,40 @@ func ExampleUpgradeExistingGuild() {
 // ExamplePersonalityPromptGeneration shows how to use the backstory system
 func ExamplePersonalityPromptGeneration() {
 	ctx := context.Background()
-	
+
 	// Create initializer
 	promptRegistry := &mockPromptRegistry{}
 	initializer := NewAgentInitializer(promptRegistry)
-	
+
 	// Create Elena
 	creator := NewDefaultAgentCreator()
 	elena, err := creator.CreateElenaGuildMaster(ctx)
 	if err != nil {
 		log.Fatalf("Failed to create Elena: %v", err)
 	}
-	
+
 	// Register Elena with backstory manager
 	backstoryManager := initializer.GetBackstoryManager()
 	if err := backstoryManager.RegisterAgent(elena); err != nil {
 		log.Fatalf("Failed to register Elena: %v", err)
 	}
-	
+
 	// Create a turn context
 	turnContext := &layered.TurnContext{
 		UserMessage: "I need help organizing this complex project with multiple teams",
 		TaskID:      "project-organization",
 		Urgency:     "high",
 	}
-	
+
 	basePrompt := "Please help the user with their request."
-	
+
 	// Generate personality-enhanced prompt
 	enhancedPrompt, err := initializer.GeneratePersonalityPrompt(
 		ctx, elena.ID, basePrompt, turnContext)
 	if err != nil {
 		log.Fatalf("Failed to generate personality prompt: %v", err)
 	}
-	
+
 	fmt.Printf("Base prompt: %s\n\n", basePrompt)
 	fmt.Printf("Enhanced prompt:\n%s\n", enhancedPrompt)
 }
@@ -155,7 +155,7 @@ func ExamplePersonalityPromptGeneration() {
 func ExampleSpecialistEnhancement() {
 	ctx := context.Background()
 	projectPath := "/tmp/example-project"
-	
+
 	// Start with basic guild
 	guildConfig := &config.GuildConfig{
 		Name: "specialist-guild",
@@ -170,35 +170,35 @@ func ExampleSpecialistEnhancement() {
 			},
 		},
 	}
-	
+
 	// Create initializer
 	promptRegistry := &mockPromptRegistry{}
 	initializer := NewAgentInitializer(promptRegistry)
-	
+
 	// List available specialists
 	specialists := initializer.GetAvailableSpecialists()
 	fmt.Printf("Available specialist templates: %v\n", specialists)
-	
+
 	// Enhance the basic agent with security specialist template
 	if len(specialists) > 0 {
 		specialistID := specialists[0] // Use first available specialist
-		
+
 		fmt.Printf("\nEnhancing agent with specialist: %s\n", specialistID)
-		
+
 		err := initializer.EnhanceExistingAgent(ctx, "basic-agent", specialistID, guildConfig, projectPath)
 		if err != nil {
 			log.Fatalf("Failed to enhance agent: %v", err)
 		}
-		
+
 		// Show enhanced agent
 		enhancedAgent := &guildConfig.Agents[0]
 		fmt.Printf("Enhanced agent name: %s\n", enhancedAgent.Name)
-		
+
 		if enhancedAgent.Backstory != nil {
 			fmt.Printf("Guild rank: %s\n", enhancedAgent.Backstory.GuildRank)
 			fmt.Printf("Specialties: %v\n", enhancedAgent.Backstory.Specialties)
 		}
-		
+
 		if enhancedAgent.Specialization != nil {
 			fmt.Printf("Domain: %s\n", enhancedAgent.Specialization.Domain)
 			fmt.Printf("Expertise level: %s\n", enhancedAgent.Specialization.ExpertiseLevel)

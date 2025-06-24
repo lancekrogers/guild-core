@@ -34,16 +34,16 @@ func newMockConfigManager() *mockConfigManager {
 	}
 }
 
-func (m *mockConfigManager) CreatePhase0Configuration(ctx context.Context, projectPath, campaignName, projectName string) error {
-	m.callCount["CreatePhase0Configuration"]++
+func (m *mockConfigManager) EstablishGuildFoundation(ctx context.Context, projectPath, campaignName, projectName string) error {
+	m.callCount["EstablishGuildFoundation"]++
 	if err := ctx.Err(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeCancelled, "mock cancelled")
 	}
 	return m.createPhase0Err
 }
 
-func (m *mockConfigManager) IntegrateWithPhase0Config(ctx context.Context, projectPath, campaignName, projectName string) error {
-	m.callCount["IntegrateWithPhase0Config"]++
+func (m *mockConfigManager) FinalizeGuildCharter(ctx context.Context, projectPath, campaignName, projectName string) error {
+	m.callCount["FinalizeGuildCharter"]++
 	return m.integrateErr
 }
 
@@ -576,11 +576,11 @@ func TestInitTUIModel_Integration_QuickModeFullFlow(t *testing.T) {
 	}
 
 	// Verify that all mock methods were called (indicating full flow)
-	if configMgr.callCount["CreatePhase0Configuration"] == 0 {
-		t.Error("Expected CreatePhase0Configuration to be called")
+	if configMgr.callCount["EstablishGuildFoundation"] == 0 {
+		t.Error("Expected EstablishGuildFoundation to be called")
 	}
-	if configMgr.callCount["IntegrateWithPhase0Config"] == 0 {
-		t.Error("Expected IntegrateWithPhase0Config to be called")
+	if configMgr.callCount["FinalizeGuildCharter"] == 0 {
+		t.Error("Expected FinalizeGuildCharter to be called")
 	}
 	if configMgr.callCount["CreateCampaignReference"] == 0 {
 		t.Error("Expected CreateCampaignReference to be called")

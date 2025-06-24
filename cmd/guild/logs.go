@@ -39,7 +39,7 @@ var logsViewCmd = &cobra.Command{
 				os.Exit(1)
 			}
 		}
-		
+
 		viewLogs(lines)
 	},
 }
@@ -78,28 +78,28 @@ func viewLogs(lines int) {
 		fmt.Fprintf(os.Stderr, "Failed to get Guild directory: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	latestLog := filepath.Join(guildDir, "logs", "latest.log")
-	
+
 	// Check if log file exists
 	if _, err := os.Stat(latestLog); os.IsNotExist(err) {
 		fmt.Println("No log files found. Try running a Guild command to generate logs.")
 		fmt.Printf("Expected log location: %s\n", latestLog)
 		return
 	}
-	
+
 	// Read the log file
 	content, err := os.ReadFile(latestLog)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to read log file: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	if len(content) == 0 {
 		fmt.Println("Log file is empty.")
 		return
 	}
-	
+
 	// Split into lines and show last N lines
 	logLines := []string{}
 	current := ""
@@ -116,17 +116,17 @@ func viewLogs(lines int) {
 	if current != "" {
 		logLines = append(logLines, current)
 	}
-	
+
 	start := 0
 	if len(logLines) > lines {
 		start = len(logLines) - lines
 	}
-	
+
 	fmt.Printf("📋 Last %d log entries:\n\n", len(logLines)-start)
 	for i := start; i < len(logLines); i++ {
 		fmt.Println(logLines[i])
 	}
-	
+
 	fmt.Printf("\n💡 Log file: %s\n", latestLog)
 }
 
@@ -136,47 +136,47 @@ func listLogFiles() {
 		fmt.Fprintf(os.Stderr, "Failed to get Guild directory: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	logsDir := filepath.Join(guildDir, "logs")
-	
+
 	entries, err := os.ReadDir(logsDir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to read logs directory: %v\n", err)
 		fmt.Printf("Expected logs directory: %s\n", logsDir)
 		return
 	}
-	
+
 	if len(entries) == 0 {
 		fmt.Println("No log files found.")
 		return
 	}
-	
+
 	fmt.Printf("📂 Guild log files in %s:\n\n", logsDir)
-	
+
 	var logFiles []os.DirEntry
 	for _, entry := range entries {
 		if !entry.IsDir() && (entry.Name() == "latest.log" || filepath.Ext(entry.Name()) == ".log") {
 			logFiles = append(logFiles, entry)
 		}
 	}
-	
+
 	// Sort by modification time (newest first)
 	sort.Slice(logFiles, func(i, j int) bool {
 		infoI, _ := logFiles[i].Info()
 		infoJ, _ := logFiles[j].Info()
 		return infoI.ModTime().After(infoJ.ModTime())
 	})
-	
+
 	for _, entry := range logFiles {
 		info, _ := entry.Info()
 		size := info.Size()
 		modTime := info.ModTime().Format("2006-01-02 15:04:05")
-		
+
 		sizeStr := fmt.Sprintf("%d bytes", size)
 		if size > 1024 {
 			sizeStr = fmt.Sprintf("%.1f KB", float64(size)/1024)
 		}
-		
+
 		fmt.Printf("  %s  %s  %s\n", entry.Name(), modTime, sizeStr)
 	}
 }
@@ -187,30 +187,30 @@ func clearLogs() {
 		fmt.Fprintf(os.Stderr, "Failed to get Guild directory: %v\n", err)
 		os.Exit(1)
 	}
-	
+
 	logsDir := filepath.Join(guildDir, "logs")
-	
+
 	entries, err := os.ReadDir(logsDir)
 	if err != nil {
 		fmt.Printf("No logs directory found at %s\n", logsDir)
 		return
 	}
-	
+
 	today := time.Now().Format("2006-01-02")
 	todayLog := fmt.Sprintf("guild-%s.log", today)
-	
+
 	deleted := 0
 	for _, entry := range entries {
 		if entry.IsDir() {
 			continue
 		}
-		
+
 		name := entry.Name()
 		// Don't delete today's log or the latest symlink
 		if name == todayLog || name == "latest.log" {
 			continue
 		}
-		
+
 		filePath := filepath.Join(logsDir, name)
 		if err := os.Remove(filePath); err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to delete %s: %v\n", name, err)
@@ -219,7 +219,7 @@ func clearLogs() {
 			deleted++
 		}
 	}
-	
+
 	if deleted == 0 {
 		fmt.Println("No old log files to delete.")
 	} else {

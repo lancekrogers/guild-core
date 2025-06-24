@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/internal/chat"
+	"github.com/guild-ventures/guild-core/internal/ui/formatting"
 )
 
 func TestNewMarkdownRenderer(t *testing.T) {
@@ -35,7 +35,7 @@ func TestNewMarkdownRenderer(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			renderer, err := chat.NewMarkdownRenderer(tt.width)
+			renderer, err := formatting.NewMarkdownRenderer(tt.width)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewMarkdownRenderer() error = %v, wantErr %v", err, tt.wantErr)
 				return

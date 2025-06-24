@@ -278,7 +278,7 @@ func (w *Wizard) createAgentsFromPresets(ctx context.Context, providers []Config
 func (w *Wizard) SaveConfiguration(ctx context.Context, providers []ConfiguredProvider, agents []config.AgentConfig) error {
 	// Load existing configuration if it exists
 	var guildConfig *config.GuildConfig
-	existingConfig, err := config.LoadGuildConfig(w.config.ProjectPath)
+	existingConfig, err := config.LoadGuildConfig(ctx, w.config.ProjectPath)
 	if err != nil {
 		// Create new configuration
 		guildConfig = &config.GuildConfig{
@@ -353,7 +353,7 @@ func (w *Wizard) SaveConfiguration(ctx context.Context, providers []ConfiguredPr
 	}
 
 	// Save the configuration
-	if err := config.SaveGuildConfig(w.config.ProjectPath, guildConfig); err != nil {
+	if err := config.SaveGuildConfig(ctx, w.config.ProjectPath, guildConfig); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save guild config").
 			WithComponent("setup").
 			WithOperation("saveConfiguration")
@@ -365,7 +365,7 @@ func (w *Wizard) SaveConfiguration(ctx context.Context, providers []ConfiguredPr
 // IsProjectSetup checks if the project has been set up with providers
 func IsProjectSetup(ctx context.Context, projectPath string) (bool, error) {
 	// Check if guild config exists
-	_, err := config.LoadGuildConfig(projectPath)
+	_, err := config.LoadGuildConfig(ctx, projectPath)
 	if err != nil {
 		// If config doesn't exist, project is not setup
 		return false, nil
@@ -408,7 +408,7 @@ func GetSetupStatus(ctx context.Context, projectPath string) (*SetupStatus, erro
 	}
 
 	// Try to load config
-	guildConfig, err := config.LoadGuildConfig(projectPath)
+	guildConfig, err := config.LoadGuildConfig(ctx, projectPath)
 	if err != nil {
 		// Not configured
 		return status, nil

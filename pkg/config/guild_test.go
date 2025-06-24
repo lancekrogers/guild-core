@@ -4,9 +4,13 @@
 package config
 
 import (
+	"context"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
+
+	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
 func TestGuildConfig_Validate(t *testing.T) {
@@ -296,44 +300,202 @@ func TestGuildConfig_GetAgentsByCapability(t *testing.T) {
 	}
 }
 
-func TestLoadSaveGuildConfig(t *testing.T) {
+// TestLoadGuildConfig_ModularStructure tests the new modular config loading
+// that reads from campaign.yaml + guilds/*.yaml + agents/*.yaml
+func TestLoadGuildConfig_ModularStructure(t *testing.T) {
 	// Create temp directory
-	tempDir, err := os.MkdirTemp("", "guild-test")
+	tempDir, err := os.MkdirTemp("", "guild-modular-test")
 	if err != nil {
 		t.Fatalf("Failed to create temp dir: %v", err)
 	}
-	defer func() {
-		if rmErr := os.RemoveAll(tempDir); rmErr != nil {
-			t.Logf("Failed to cleanup temp dir: %v", rmErr)
-		}
-	}()
+	defer os.RemoveAll(tempDir)
 
-	// Create .guild directory
-	guildDir := filepath.Join(tempDir, ".campaign")
-	if err := os.MkdirAll(guildDir, 0755); err != nil {
-		t.Fatalf("Failed to create .guild dir: %v", err)
+	// Create .campaign directory structure
+	campaignDir := filepath.Join(tempDir, ".campaign")
+	guildsDir := filepath.Join(campaignDir, "guilds")
+	agentsDir := filepath.Join(campaignDir, "agents")
+
+	if err := os.MkdirAll(guildsDir, 0755); err != nil {
+		t.Fatalf("Failed to create guilds dir: %v", err)
+	}
+	if err := os.MkdirAll(agentsDir, 0755); err != nil {
+		t.Fatalf("Failed to create agents dir: %v", err)
 	}
 
-	// Test config
-	config := DefaultGuildTemplate()
-
-	// Save config
-	if err := SaveGuildConfig(tempDir, config); err != nil {
-		t.Fatalf("SaveGuildConfig() error = %v", err)
+	// Create campaign.yaml
+	campaignContent := `name: test-campaign
+description: Test campaign for modular config
+guilds:
+  - test_guild
+settings:
+  default_guild: test_guild
+`
+	if err := os.WriteFile(filepath.Join(campaignDir, "campaign.yaml"), []byte(campaignContent), 0644); err != nil {
+		t.Fatalf("Failed to write campaign.yaml: %v", err)
 	}
 
-	// Load config
-	loaded, err := LoadGuildConfig(tempDir)
+	// Create guild yaml
+	guildContent := `name: test_guild
+description: Test guild for unit testing
+purpose: Testing modular config loading
+manager: manager-agent
+agents:
+  - manager-agent
+  - worker-agent
+coordination:
+  max_parallel_tasks: 3
+  review_required: true
+  auto_handoff: false
+`
+	if err := os.WriteFile(filepath.Join(guildsDir, "test_guild.yaml"), []byte(guildContent), 0644); err != nil {
+		t.Fatalf("Failed to write guild yaml: %v", err)
+	}
+
+	// Create manager agent yaml
+	managerContent := `id: manager-agent
+name: Test Manager
+type: manager
+provider: anthropic
+model: claude-3-sonnet
+description: Test manager agent
+capabilities:
+  - project-management
+  - team-coordination
+temperature: 0.1
+backstory:
+  experience: "10 years managing teams"
+  guild_rank: "Guild Master"
+  philosophy: "Lead by example"
+personality:
+  assertiveness: 8
+  empathy: 9
+  patience: 8
+`
+	if err := os.WriteFile(filepath.Join(agentsDir, "manager-agent.yaml"), []byte(managerContent), 0644); err != nil {
+		t.Fatalf("Failed to write manager agent yaml: %v", err)
+	}
+
+	// Create worker agent yaml
+	workerContent := `id: worker-agent
+name: Test Worker
+type: worker
+provider: openai
+model: gpt-4
+description: Test worker agent
+capabilities:
+  - coding
+  - testing
+temperature: 0.2
+backstory:
+  experience: "5 years coding"
+  guild_rank: "Journeyman"
+`
+	if err := os.WriteFile(filepath.Join(agentsDir, "worker-agent.yaml"), []byte(workerContent), 0644); err != nil {
+		t.Fatalf("Failed to write worker agent yaml: %v", err)
+	}
+
+	// Test loading the modular config
+	ctx := context.Background()
+	config, err := LoadGuildConfig(ctx, tempDir)
 	if err != nil {
 		t.Fatalf("LoadGuildConfig() error = %v", err)
 	}
 
 	// Verify loaded config
-	if loaded.Name != config.Name {
-		t.Errorf("Loaded name = %s, want %s", loaded.Name, config.Name)
+	if config.Name != "test_guild" {
+		t.Errorf("Expected guild name 'test_guild', got '%s'", config.Name)
 	}
-	if len(loaded.Agents) != len(config.Agents) {
-		t.Errorf("Loaded agents = %d, want %d", len(loaded.Agents), len(config.Agents))
+
+	if config.Description != "Test guild for unit testing" {
+		t.Errorf("Expected guild description 'Test guild for unit testing', got '%s'", config.Description)
+	}
+
+	if config.Manager.Default != "manager-agent" {
+		t.Errorf("Expected manager 'manager-agent', got '%s'", config.Manager.Default)
+	}
+
+	if len(config.Agents) != 2 {
+		t.Fatalf("Expected 2 agents, got %d", len(config.Agents))
+	}
+
+	// Verify manager agent
+	managerFound := false
+	workerFound := false
+	for _, agent := range config.Agents {
+		switch agent.ID {
+		case "manager-agent":
+			managerFound = true
+			if agent.Name != "Test Manager" {
+				t.Errorf("Expected manager name 'Test Manager', got '%s'", agent.Name)
+			}
+			if agent.Type != "manager" {
+				t.Errorf("Expected manager type 'manager', got '%s'", agent.Type)
+			}
+			if agent.Backstory == nil {
+				t.Error("Expected manager to have backstory")
+			} else if agent.Backstory.Experience != "10 years managing teams" {
+				t.Errorf("Expected manager experience '10 years managing teams', got '%s'", agent.Backstory.Experience)
+			}
+			if agent.Personality == nil {
+				t.Error("Expected manager to have personality")
+			} else if agent.Personality.Empathy != 9 {
+				t.Errorf("Expected manager empathy 9, got %d", agent.Personality.Empathy)
+			}
+		case "worker-agent":
+			workerFound = true
+			if agent.Name != "Test Worker" {
+				t.Errorf("Expected worker name 'Test Worker', got '%s'", agent.Name)
+			}
+			if agent.Provider != "openai" {
+				t.Errorf("Expected worker provider 'openai', got '%s'", agent.Provider)
+			}
+		}
+	}
+
+	if !managerFound {
+		t.Error("Manager agent not found in loaded config")
+	}
+	if !workerFound {
+		t.Error("Worker agent not found in loaded config")
+	}
+}
+
+// TestLoadGuildConfig_MissingCampaign tests error when campaign.yaml is missing
+func TestLoadGuildConfig_MissingCampaign(t *testing.T) {
+	tempDir, err := os.MkdirTemp("", "guild-test-missing")
+	if err != nil {
+		t.Fatalf("Failed to create temp dir: %v", err)
+	}
+	defer os.RemoveAll(tempDir)
+
+	ctx := context.Background()
+	_, err = LoadGuildConfig(ctx, tempDir)
+	if err == nil {
+		t.Fatal("Expected error when campaign.yaml is missing")
+	}
+
+	if !strings.Contains(err.Error(), "campaign not initialized") {
+		t.Errorf("Expected error about campaign not initialized, got: %v", err)
+	}
+}
+
+// TestLoadGuildConfig_ContextCancellation tests context cancellation handling
+func TestLoadGuildConfig_ContextCancellation(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel() // Cancel immediately
+
+	_, err := LoadGuildConfig(ctx, ".")
+	if err == nil {
+		t.Fatal("Expected error when context is cancelled")
+	}
+
+	gerr, ok := err.(*gerror.GuildError)
+	if !ok {
+		t.Fatalf("Expected GuildError, got %T", err)
+	}
+
+	if gerr.Code != gerror.ErrCodeCancelled {
+		t.Errorf("Expected error code %s, got %s", gerror.ErrCodeCancelled, gerr.Code)
 	}
 }
 

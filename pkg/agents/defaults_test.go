@@ -251,7 +251,7 @@ func TestGuildOptimalProvider_Mapping(t *testing.T) {
 	for _, tc := range testCases {
 		result := creator.GetOptimalProvider(tc.agentType, tc.agentID)
 		if result != tc.expected {
-			t.Errorf("For %s/%s, expected provider '%s', got '%s'", 
+			t.Errorf("For %s/%s, expected provider '%s', got '%s'",
 				tc.agentType, tc.agentID, tc.expected, result)
 		}
 	}
@@ -287,7 +287,7 @@ func TestGuildSpecialistTemplates_Access(t *testing.T) {
 
 func TestCraftAgentContext_Cancellation(t *testing.T) {
 	creator := NewDefaultAgentCreator()
-	
+
 	// Test with cancelled context
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately

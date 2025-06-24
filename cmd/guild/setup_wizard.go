@@ -147,14 +147,14 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 		// If TTY is not available and we're in quick mode, try alternative approach
 		if !ttyAvailable && initQuickMode {
 			fmt.Println("⚡ Running initialization in quick mode...")
-			
+
 			// Perform direct initialization with all enhancements
 			if err := runDirectInitialization(ctx, config, deps); err != nil {
 				return gerror.Wrap(err, gerror.ErrCodeInternal, "direct initialization failed").
 					WithComponent("cli").
 					WithOperation("runUnifiedInit")
 			}
-			
+
 			fmt.Println("✅ Guild initialized successfully with Elena and enhanced agents!")
 			return nil
 		}
@@ -173,13 +173,13 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 			// Check if .guild or .campaign directory exists
 			guildPath := filepath.Join(config.ProjectPath, ".guild")
 			campaignPath := filepath.Join(config.ProjectPath, ".campaign")
-			
+
 			if _, err := os.Stat(guildPath); os.IsNotExist(err) {
 				if _, err := os.Stat(campaignPath); os.IsNotExist(err) {
 					// Neither directory exists, initialization failed silently
 					fmt.Println("⚠️  Warning: Initialization completed but no directories were created")
 					fmt.Println("Running direct initialization as fallback...")
-					
+
 					// Run direct initialization
 					if err := runDirectInitialization(ctx, config, deps); err != nil {
 						return gerror.Wrap(err, gerror.ErrCodeInternal, "fallback initialization failed").
@@ -276,7 +276,7 @@ func runDirectInitialization(ctx context.Context, config uiinit.Config, deps uii
 
 	// Step 3: Create configuration
 	fmt.Print("⚙️  Creating configuration... ")
-	if err := deps.ConfigManager.CreatePhase0Configuration(ctx, config.ProjectPath, campaignName, projectName); err != nil {
+	if err := deps.ConfigManager.EstablishGuildFoundation(ctx, config.ProjectPath, campaignName, projectName); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create configuration").
 			WithComponent("directInit").
 			WithOperation("runDirectInitialization")
@@ -295,7 +295,7 @@ func runDirectInitialization(ctx context.Context, config uiinit.Config, deps uii
 
 	// Step 5: Integration and validation
 	fmt.Print("🔗 Integrating configuration... ")
-	if err := deps.ConfigManager.IntegrateWithPhase0Config(ctx, config.ProjectPath, campaignName, projectName); err != nil {
+	if err := deps.ConfigManager.FinalizeGuildCharter(ctx, config.ProjectPath, campaignName, projectName); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to integrate configuration").
 			WithComponent("directInit").
 			WithOperation("runDirectInitialization")

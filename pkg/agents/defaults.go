@@ -5,7 +5,7 @@ package agents
 
 import (
 	"context"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/backstory/templates"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
@@ -160,7 +160,7 @@ in growing people through challenging but achievable stretch assignments.`,
 
 		Capabilities: []string{
 			"project_management",
-			"team_coordination", 
+			"team_coordination",
 			"strategic_planning",
 			"stakeholder_management",
 			"quality_assurance",
@@ -215,7 +215,7 @@ for his ability to bridge the gap between theoretical computer science and pract
 
 			Achievements: []string{
 				"Architected the High-Performance Trading Engine serving millions of requests",
-				"Created the Elegant Authentication Framework adopted across the kingdom", 
+				"Created the Elegant Authentication Framework adopted across the kingdom",
 				"Led the Great Refactoring that improved system performance by 300%",
 				"Mentored 15 junior developers to mastery level",
 			},
@@ -252,8 +252,8 @@ feel like a natural extension of human thought."`,
 		},
 
 		Specialization: &config.Specialization{
-			Domain: "software development",
-			ExpertiseLevel: "master", 
+			Domain:         "software development",
+			ExpertiseLevel: "master",
 			CoreKnowledge: []string{
 				"Multiple programming languages and paradigms",
 				"System design and architecture patterns",
@@ -276,7 +276,7 @@ feel like a natural extension of human thought."`,
 
 		Tools: []string{
 			"code_generator",
-			"code_analyzer", 
+			"code_analyzer",
 			"test_runner",
 			"performance_profiler",
 		},
@@ -344,7 +344,7 @@ better software. Every bug found in testing is a potential disaster prevented in
 		},
 
 		Specialization: &config.Specialization{
-			Domain: "quality assurance and testing",
+			Domain:         "quality assurance and testing",
 			ExpertiseLevel: "master",
 			CoreKnowledge: []string{
 				"Test strategy and planning",

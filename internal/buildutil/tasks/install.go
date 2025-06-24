@@ -61,13 +61,13 @@ func Install(verbose bool) error {
 	// Code sign the binary on macOS to prevent Gatekeeper issues
 	if runtime.GOOS == "darwin" {
 		ui.Task("Signing", "guild binary for macOS security")
-		
+
 		cmd := exec.Command("codesign", "--force", "--sign", "-", destPath)
 		if err := cmd.Run(); err != nil {
 			ui.TaskFail()
 			return fmt.Errorf("failed to sign binary for macOS: %w", err)
 		}
-		
+
 		ui.TaskPass()
 	}
 

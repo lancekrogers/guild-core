@@ -23,10 +23,10 @@ func GetDefaultCampaign() *Campaign {
 			"version":    "1.0",
 			"created_by": "guild_init",
 		},
-		CreatedAt:   now,
-		UpdatedAt:   now,
-		StartedAt:   &now,
-		Progress:    0.0,
+		CreatedAt: now,
+		UpdatedAt: now,
+		StartedAt: &now,
+		Progress:  0.0,
 	}
 }
 

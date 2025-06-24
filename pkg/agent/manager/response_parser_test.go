@@ -4,6 +4,7 @@
 package manager
 
 import (
+	"context"
 	"strings"
 	"testing"
 
@@ -132,7 +133,7 @@ Task: Configure CI/CD pipeline`,
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			structure, err := parser.ParseResponse(tt.response)
+			structure, err := parser.ParseResponse(context.Background(), tt.response)
 
 			if tt.expectedError {
 				assert.Error(t, err)

@@ -63,7 +63,7 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 	logger := observability.GetLogger(ctx)
 	ctx = observability.WithComponent(ctx, "guild-init")
 	ctx = observability.WithOperation(ctx, "runFastInit")
-	
+
 	logger.InfoContext(ctx, "Starting Guild fast initialization",
 		"args", args,
 		"force", fastInitForce,
@@ -96,7 +96,7 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 	// Check if already initialized (unless --force)
 	if !fastInitForce {
 		campaignPath := filepath.Join(projectPath, ".campaign", "campaign.yaml")
-		
+
 		if _, err := os.Stat(campaignPath); err == nil {
 			return gerror.New(gerror.ErrCodeAlreadyExists, "project already initialized", nil).
 				WithComponent("cli").
@@ -169,7 +169,7 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 
 	// Step 3: Create configuration
 	fmt.Print("⚙️  Creating configuration... ")
-	if err := deps.ConfigManager.CreatePhase0Configuration(ctx, projectPath, campaignName, projectName); err != nil {
+	if err := deps.ConfigManager.EstablishGuildFoundation(ctx, projectPath, campaignName, projectName); err != nil {
 		fmt.Println("❌")
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create configuration").
 			WithComponent("cli").
@@ -190,7 +190,7 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 
 	// Step 5: Integration and validation
 	fmt.Print("🔗 Integrating configuration... ")
-	if err := deps.ConfigManager.IntegrateWithPhase0Config(ctx, projectPath, campaignName, projectName); err != nil {
+	if err := deps.ConfigManager.FinalizeGuildCharter(ctx, projectPath, campaignName, projectName); err != nil {
 		fmt.Println("❌")
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to integrate configuration").
 			WithComponent("cli").

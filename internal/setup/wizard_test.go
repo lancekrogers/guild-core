@@ -50,8 +50,8 @@ func TestNewWizard(t *testing.T) {
 				cancel()
 				return ctx
 			}(),
-			wantErr: true,                   // NewWizard now checks context during component creation
-			errCode: gerror.ErrCodeInternal, // The cancelled error is wrapped
+			wantErr: true,                    // NewWizard now checks context during component creation
+			errCode: gerror.ErrCodeCancelled, // The cancelled error is now properly detected
 		},
 	}
 
@@ -316,7 +316,7 @@ func TestSaveConfiguration(t *testing.T) {
 	// Just verify the configuration was saved correctly
 
 	// Load and verify configuration
-	loadedConfig, err := guildconfig.LoadGuildConfig(tempDir)
+	loadedConfig, err := guildconfig.LoadGuildConfig(context.Background(), tempDir)
 	if err != nil {
 		t.Fatalf("Failed to load saved config: %v", err)
 	}

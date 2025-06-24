@@ -57,14 +57,14 @@ func completeCampaignIDsFromFS(guildPath string, toComplete string) ([]string, c
 // completeDefaultCampaignIDs provides default campaign ID suggestions
 func completeDefaultCampaignIDs(toComplete string) ([]string, cobra.ShellCompDirective) {
 	defaults := []string{"guild-demo", "default", "e-commerce", "api-development", "performance", "testing"}
-	
+
 	var suggestions []string
 	for _, id := range defaults {
 		if strings.HasPrefix(id, toComplete) {
 			suggestions = append(suggestions, id)
 		}
 	}
-	
+
 	return suggestions, cobra.ShellCompDirectiveNoFileComp
 }
 
@@ -228,7 +228,7 @@ func completeCampaignNames(cmd *cobra.Command, args []string, toComplete string)
 		// Convert filename to readable name (basic transformation)
 		name = strings.ReplaceAll(name, "-", " ")
 		name = strings.ReplaceAll(name, "_", " ")
-		
+
 		if strings.Contains(strings.ToLower(name), strings.ToLower(toComplete)) {
 			suggestions = append(suggestions, name)
 		}

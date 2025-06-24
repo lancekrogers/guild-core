@@ -1128,7 +1128,7 @@ func (r *DefaultComponentRegistry) initializeStorage(ctx context.Context) error 
 	}
 
 	// Load guild configuration to determine storage backend
-	guildConfig, err := config.LoadGuildConfig((*projectCtx).GetRootPath())
+	guildConfig, err := config.LoadGuildConfig(ctx, (*projectCtx).GetRootPath())
 	if err != nil {
 		// If guild config fails to load, default to SQLite
 		return r.initializeSQLiteStorage(ctx, filepath.Join((*projectCtx).GetGuildPath(), "guild.db"))
@@ -1248,7 +1248,7 @@ func (r *DefaultComponentRegistry) loadGuildAgents(ctx context.Context, agentReg
 	}
 
 	// Load guild configuration
-	guildConfig, err := config.LoadGuildConfig((*projectCtx).GetRootPath())
+	guildConfig, err := config.LoadGuildConfig(ctx, (*projectCtx).GetRootPath())
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load guild config").
 			WithComponent("registry").

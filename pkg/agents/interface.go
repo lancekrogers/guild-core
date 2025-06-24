@@ -19,7 +19,7 @@ type AgentCreator interface {
 	// CreateDefaultDeveloper creates an enhanced developer agent
 	CreateDefaultDeveloper(ctx context.Context) (*config.AgentConfig, error)
 
-	// CreateDefaultTester creates an enhanced tester agent  
+	// CreateDefaultTester creates an enhanced tester agent
 	CreateDefaultTester(ctx context.Context) (*config.AgentConfig, error)
 
 	// CreateDefaultAgentSet creates a complete set of default agents

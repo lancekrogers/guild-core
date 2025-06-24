@@ -117,15 +117,15 @@ func Execute(ctx context.Context) {
 	// Suppress default error printing for better UX
 	rootCmd.SilenceErrors = true
 	rootCmd.SilenceUsage = true
-	
+
 	if err := rootCmd.ExecuteContext(ctx); err != nil {
 		// Log the error through our observability system
 		logger := observability.GetLogger(ctx)
-		logger.ErrorContext(ctx, "Guild command failed", 
+		logger.ErrorContext(ctx, "Guild command failed",
 			"error", err.Error(),
 			"error_type", fmt.Sprintf("%T", err),
 		)
-		
+
 		fmt.Fprintf(os.Stderr, "The Guild regrets to inform you of an error: %v\n", err)
 		os.Exit(1)
 	}
@@ -143,16 +143,18 @@ func initializeGuild() context.Context {
 	logger := observability.NewLogger(nil)
 	ctx := context.Background()
 	ctx = observability.WithLogger(ctx, logger)
-	
+
 	// Set up request context for tracing
 	ctx = observability.EnsureRequestContext(ctx)
 	ctx = observability.WithComponent(ctx, "guild-cli")
-	
-	logger.InfoContext(ctx, "Guild CLI starting", 
+
+	// Only log startup for long-running commands, not simple ones like version/help
+	// This keeps the console clean for users while still logging to files
+	logger.DebugContext(ctx, "Guild CLI starting",
 		"version", "dev-local",
-		"log_file_enabled", os.Getenv("GUILD_LOG_FILE") == "true",
+		"log_file_enabled", true,
 	)
-	
+
 	return ctx
 }
 
@@ -179,7 +181,7 @@ func loadEnvironment() error {
 func main() {
 	// Initialize Guild environment and logging
 	ctx := initializeGuild()
-	
+
 	// Assemble the Guild teams (standard: start the application)
 	Execute(ctx)
 }

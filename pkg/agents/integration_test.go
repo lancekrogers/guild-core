@@ -21,7 +21,7 @@ func TestGuildBackstoryIntegration(t *testing.T) {
 
 	// Create a mock prompt registry
 	promptRegistry := &mockLayeredRegistry{}
-	
+
 	// Create agent initializer with backstory integration
 	initializer := NewAgentInitializer(promptRegistry)
 
@@ -250,7 +250,7 @@ func TestGuildAgentPersistence(t *testing.T) {
 
 	// Verify agent files were created
 	agentsDir := filepath.Join(tempDir, ".campaign", "agents")
-	
+
 	// Check if agents directory exists
 	if _, err := os.Stat(agentsDir); os.IsNotExist(err) {
 		t.Fatal("Agents directory should be created")
@@ -318,12 +318,12 @@ func (m *mockLayeredRegistry) GetDefaultPrompts(layer layered.PromptLayer) ([]la
 
 // Helper function to check if string contains substring (case-insensitive)
 func contains(s, substr string) bool {
-	return len(s) >= len(substr) && 
-		   (s == substr || 
-		    len(s) > len(substr) && 
-		    (s[:len(substr)] == substr || 
-		     s[len(s)-len(substr):] == substr ||
-		     findInString(s, substr)))
+	return len(s) >= len(substr) &&
+		(s == substr ||
+			len(s) > len(substr) &&
+				(s[:len(substr)] == substr ||
+					s[len(s)-len(substr):] == substr ||
+					findInString(s, substr)))
 }
 
 func findInString(s, substr string) bool {

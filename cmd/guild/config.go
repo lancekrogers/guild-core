@@ -4,6 +4,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -15,6 +16,7 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/pkg/paths"
 	"github.com/guild-ventures/guild-core/pkg/project/global"
 )
@@ -107,35 +109,69 @@ func init() {
 
 // runConfigShow displays the current configuration
 func runConfigShow(cmd *cobra.Command, args []string) error {
+	ctx := cmd.Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "config show cancelled").
+			WithComponent("cli").
+			WithOperation("config.show")
+	}
+
+	// Set up logging
+	logger := observability.GetLogger(ctx)
+	ctx = observability.WithComponent(ctx, "config")
+	ctx = observability.WithOperation(ctx, "show")
+
 	showGlobal, _ := cmd.Flags().GetBool("global")
 	showLocal, _ := cmd.Flags().GetBool("local")
 	showRaw, _ := cmd.Flags().GetBool("raw")
 
+	logger.InfoContext(ctx, "Displaying configuration",
+		"show_global", showGlobal,
+		"show_local", showLocal,
+		"raw_format", showRaw,
+	)
+
 	// If neither flag is set, show merged config
 	if !showGlobal && !showLocal {
-		return showMergedConfig(showRaw)
+		return showMergedConfig(ctx, showRaw)
 	}
 
 	if showGlobal {
-		return showGlobalConfig(showRaw)
+		return showGlobalConfig(ctx, showRaw)
 	}
 
 	if showLocal {
-		return showLocalConfig(showRaw)
+		return showLocalConfig(ctx, showRaw)
 	}
 
 	return nil
 }
 
 // showMergedConfig displays the merged configuration
-func showMergedConfig(raw bool) error {
+func showMergedConfig(ctx context.Context, raw bool) error {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("config").
+			WithOperation("showMergedConfig")
+	}
+
+	// Set up logging
+	logger := observability.GetLogger(ctx)
+
+	logger.InfoContext(ctx, "Loading merged guild configuration")
 
 	// Load the guild configuration
-	cfg, err := config.LoadGuildConfig(".")
+	cfg, err := config.LoadGuildConfig(ctx, ".")
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load configuration").
 			WithComponent("config").
-			WithOperation("show")
+			WithOperation("showMergedConfig")
 	}
 
 	if raw {
@@ -158,9 +194,21 @@ func showMergedConfig(raw bool) error {
 }
 
 // showGlobalConfig displays only the global configuration
-func showGlobalConfig(raw bool) error {
+func showGlobalConfig(ctx context.Context, raw bool) error {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("config").
+			WithOperation("showGlobalConfig")
+	}
+
+	// Set up logging
+	logger := observability.GetLogger(ctx)
+
 	globalDir := global.GlobalGuildDir()
 	configPath := filepath.Join(globalDir, "config.yaml")
+
+	logger.InfoContext(ctx, "Loading global configuration", "path", configPath)
 
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		fmt.Println("No global configuration found at:", configPath)
@@ -195,8 +243,20 @@ func showGlobalConfig(raw bool) error {
 }
 
 // showLocalConfig displays only the local project configuration
-func showLocalConfig(raw bool) error {
+func showLocalConfig(ctx context.Context, raw bool) error {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("config").
+			WithOperation("showLocalConfig")
+	}
+
+	// Set up logging
+	logger := observability.GetLogger(ctx)
+
 	configPath := filepath.Join(paths.DefaultCampaignDir, "guild.yaml")
+
+	logger.InfoContext(ctx, "Loading local configuration", "path", configPath)
 
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		fmt.Println("No local configuration found at:", configPath)
@@ -296,6 +356,25 @@ func displayFormattedConfig(cfg *config.GuildConfig) {
 
 // runConfigPath shows configuration file paths
 func runConfigPath(cmd *cobra.Command, args []string) error {
+	ctx := cmd.Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "config path cancelled").
+			WithComponent("cli").
+			WithOperation("config.path")
+	}
+
+	// Set up logging
+	logger := observability.GetLogger(ctx)
+	ctx = observability.WithComponent(ctx, "config")
+	ctx = observability.WithOperation(ctx, "path")
+
+	logger.InfoContext(ctx, "Displaying configuration paths")
+
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get home directory").
@@ -345,7 +424,26 @@ func runConfigPath(cmd *cobra.Command, args []string) error {
 
 // runConfigValidate validates configuration files
 func runConfigValidate(cmd *cobra.Command, args []string) error {
+	ctx := cmd.Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "config validate cancelled").
+			WithComponent("cli").
+			WithOperation("config.validate")
+	}
+
+	// Set up logging
+	logger := observability.GetLogger(ctx)
+	ctx = observability.WithComponent(ctx, "config")
+	ctx = observability.WithOperation(ctx, "validate")
+
 	attemptFix, _ := cmd.Flags().GetBool("fix")
+
+	logger.InfoContext(ctx, "Validating configuration files", "attempt_fix", attemptFix)
 
 	fmt.Println("🔍 Validating Configuration")
 	fmt.Println("═════════════════════════")
@@ -416,7 +514,7 @@ func runConfigValidate(cmd *cobra.Command, args []string) error {
 	}
 
 	// Load config to check which providers are used
-	cfg, err := config.LoadGuildConfig(".")
+	cfg, err := config.LoadGuildConfig(ctx, ".")
 	if err == nil && cfg != nil {
 		for _, agent := range cfg.Agents {
 			if envVar, ok := requiredEnvs[agent.Provider]; ok {
@@ -452,6 +550,23 @@ func runConfigValidate(cmd *cobra.Command, args []string) error {
 
 // runConfigEdit opens configuration in editor
 func runConfigEdit(cmd *cobra.Command, args []string) error {
+	ctx := cmd.Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "config edit cancelled").
+			WithComponent("cli").
+			WithOperation("config.edit")
+	}
+
+	// Set up logging
+	logger := observability.GetLogger(ctx)
+	ctx = observability.WithComponent(ctx, "config")
+	ctx = observability.WithOperation(ctx, "edit")
+
 	var configPath string
 
 	if len(args) == 0 || args[0] == "local" {
@@ -493,16 +608,21 @@ func runConfigEdit(cmd *cobra.Command, args []string) error {
 		"code", // VS Code
 	}
 
+	logger.InfoContext(ctx, "Attempting to open config in editor", "path", configPath)
+
 	for _, editor := range editors {
 		if editor == "" {
 			continue
 		}
+
+		logger.InfoContext(ctx, "Trying editor", "editor", editor)
 
 		cmd := exec.Command(editor, configPath)
 		cmd.Stdin = os.Stdin
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		if err := cmd.Run(); err == nil {
+			logger.InfoContext(ctx, "Successfully opened config with editor", "editor", editor)
 			return nil
 		}
 	}
@@ -515,8 +635,26 @@ func runConfigEdit(cmd *cobra.Command, args []string) error {
 
 // runConfigProviders lists configured providers
 func runConfigProviders(cmd *cobra.Command, args []string) error {
+	ctx := cmd.Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
-	cfg, err := config.LoadGuildConfig(".")
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "config providers cancelled").
+			WithComponent("cli").
+			WithOperation("config.providers")
+	}
+
+	// Set up logging
+	logger := observability.GetLogger(ctx)
+	ctx = observability.WithComponent(ctx, "config")
+	ctx = observability.WithOperation(ctx, "providers")
+
+	logger.InfoContext(ctx, "Loading configuration to list providers")
+
+	cfg, err := config.LoadGuildConfig(ctx, ".")
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load configuration").
 			WithComponent("config").
@@ -594,8 +732,26 @@ func runConfigProviders(cmd *cobra.Command, args []string) error {
 
 // runConfigAgents lists configured agents
 func runConfigAgents(cmd *cobra.Command, args []string) error {
+	ctx := cmd.Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
-	cfg, err := config.LoadGuildConfig(".")
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "config agents cancelled").
+			WithComponent("cli").
+			WithOperation("config.agents")
+	}
+
+	// Set up logging
+	logger := observability.GetLogger(ctx)
+	ctx = observability.WithComponent(ctx, "config")
+	ctx = observability.WithOperation(ctx, "agents")
+
+	logger.InfoContext(ctx, "Loading configuration to list agents")
+
+	cfg, err := config.LoadGuildConfig(ctx, ".")
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load configuration").
 			WithComponent("config").

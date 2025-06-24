@@ -6,6 +6,7 @@ package storage
 import (
 	"context"
 	"database/sql"
+	"embed"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -13,12 +14,15 @@ import (
 
 	migrate "github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
-	"github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/golang-migrate/migrate/v4/source/iofs"
 	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/storage/db"
 )
+
+//go:embed all:migrations/*.sql
+var migrations embed.FS
 
 // Database represents a SQLite database connection with migrations
 // Following Guild's pattern of encapsulating database operations
@@ -31,12 +35,26 @@ type Database struct {
 // newDatabase creates a new database connection and runs migrations (private constructor)
 // Following Guild's constructor pattern with proper error wrapping
 func newDatabase(ctx context.Context, dbPath string) (*Database, error) {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("Database").
+			WithOperation("newDatabase")
+	}
+
 	// Ensure directory exists
 	if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create database directory").
 			WithComponent("Database").
 			WithOperation("newDatabase").
 			WithDetails("db_path", dbPath)
+	}
+
+	// Check context before opening database
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled before database open").
+			WithComponent("Database").
+			WithOperation("newDatabase")
 	}
 
 	// Open SQLite database
@@ -73,6 +91,13 @@ func DefaultDatabaseFactory(ctx context.Context, dbPath string) (*Database, erro
 
 // Migrate runs database migrations following Guild's error handling patterns
 func (d *Database) Migrate(ctx context.Context) error {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("Database").
+			WithOperation("Migrate")
+	}
+
 	// Create migration driver
 	driver, err := sqlite3.WithInstance(d.db, &sqlite3.Config{})
 	if err != nil {
@@ -81,79 +106,25 @@ func (d *Database) Migrate(ctx context.Context) error {
 			WithOperation("Migrate")
 	}
 
-	// Get migrations directory - try multiple locations
-	var migrationsPath string
-
-	// 1. Try current working directory
-	if _, err := os.Stat("db/migrations"); err == nil {
-		migrationsPath = "file://db/migrations"
-	} else {
-		// 2. Try walking up from current directory to find db/migrations
-		currentDir, err := os.Getwd()
-		if err == nil {
-			for i := 0; i < 10; i++ { // Try up to 10 levels up
-				potentialPath := filepath.Join(currentDir, "db", "migrations")
-				if _, err := os.Stat(potentialPath); err == nil {
-					migrationsPath = fmt.Sprintf("file://%s", potentialPath)
-					break
-				}
-				parentDir := filepath.Dir(currentDir)
-				if parentDir == currentDir {
-					break // Reached filesystem root
-				}
-				currentDir = parentDir
-			}
-		}
-
-		// 3. Try relative to executable as fallback
-		if migrationsPath == "" {
-			execPath, err := os.Executable()
-			if err == nil {
-				execDir := filepath.Dir(execPath)
-				potentialPath := filepath.Join(execDir, "db", "migrations")
-				if _, err := os.Stat(potentialPath); err == nil {
-					migrationsPath = fmt.Sprintf("file://%s", potentialPath)
-				} else {
-					// Try going up from executable to find db/migrations
-					for i := 0; i < 5; i++ { // Try up to 5 levels up
-						execDir = filepath.Dir(execDir)
-						potentialPath = filepath.Join(execDir, "db", "migrations")
-						if _, err := os.Stat(potentialPath); err == nil {
-							migrationsPath = fmt.Sprintf("file://%s", potentialPath)
-							break
-						}
-					}
-				}
-			}
-		}
+	// Check if we're in a test environment
+	if os.Getenv("GUILD_SKIP_MIGRATIONS") == "true" {
+		// Skip migrations in test environments
+		return nil
 	}
 
-	if migrationsPath == "" {
-		// Check if we're in a test environment
-		if os.Getenv("GUILD_SKIP_MIGRATIONS") == "true" {
-			// Skip migrations in test environments
-			return nil
-		}
+	// Also skip if we're in a temporary directory (likely a test)
+	cwd, _ := os.Getwd()
+	if strings.Contains(cwd, "Test") || strings.Contains(cwd, "/T/") {
+		// We're likely in a Go test temporary directory
+		return nil
+	}
 
-		// Also skip if we're in a temporary directory (likely a test)
-		cwd, _ := os.Getwd()
-		if strings.Contains(cwd, "Test") || strings.Contains(cwd, "/T/") {
-			// We're likely in a Go test temporary directory
-			return nil
-		}
-
-		return gerror.New(gerror.ErrCodeNotFound, "could not find database migrations directory", nil).
+	// Create migration source from embedded filesystem
+	source, err := iofs.New(migrations, "migrations")
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create embedded migrations source").
 			WithComponent("Database").
 			WithOperation("Migrate")
-	}
-
-	// Create file source
-	source, err := (&file.File{}).Open(migrationsPath)
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to open migrations source").
-			WithComponent("Database").
-			WithOperation("Migrate").
-			WithDetails("migrations_path", migrationsPath)
 	}
 
 	// Create migrate instance

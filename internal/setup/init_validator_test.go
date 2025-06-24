@@ -368,7 +368,7 @@ func TestProviderValidation(t *testing.T) {
 					},
 				}
 
-				return config.SaveGuildConfig(tmpDir, guildConfig)
+				return config.SaveGuildConfig(context.Background(), tmpDir, guildConfig)
 			},
 			envSetup: func() {
 				os.Setenv("OPENAI_API_KEY", "test-key")
@@ -398,7 +398,7 @@ func TestProviderValidation(t *testing.T) {
 					},
 				}
 
-				return config.SaveGuildConfig(tmpDir, guildConfig)
+				return config.SaveGuildConfig(context.Background(), tmpDir, guildConfig)
 			},
 			envSetup: func() {
 				os.Unsetenv("OPENAI_API_KEY")

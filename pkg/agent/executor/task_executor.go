@@ -105,6 +105,14 @@ func NewBasicTaskExecutor(
 
 // Execute runs the task execution loop
 func (e *BasicTaskExecutor) Execute(ctx context.Context, task *kanban.Task) (*ExecutionResult, error) {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "task execution cancelled").
+			WithComponent("executor").
+			WithOperation("Execute").
+			WithDetails("task_id", task.ID)
+	}
+
 	// Initialize observability for task execution with full context
 	logger := observability.GetLogger(ctx).
 		WithComponent("executor").
@@ -662,6 +670,13 @@ func (e *BasicTaskExecutor) phasePlan(ctx context.Context) error {
 
 // phaseExecute performs the actual task work
 func (e *BasicTaskExecutor) phaseExecute(ctx context.Context) error {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "task execution phase cancelled").
+			WithComponent("executor").
+			WithOperation("phaseExecute")
+	}
+
 	// Get execution plan from metadata
 	plan, _ := e.result.Metadata["execution_plan"].(string)
 

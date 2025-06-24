@@ -53,9 +53,9 @@ func NewConfigManager(ctx context.Context) *ConfigManager {
 }
 
 // LoadChatConfig loads and validates the chat configuration
-func (cm *ConfigManager) LoadChatConfig(campaignID, sessionID string) (*ChatConfig, error) {
+func (cm *ConfigManager) LoadChatConfig(ctx context.Context, campaignID, sessionID string) (*ChatConfig, error) {
 	// Load guild configuration
-	guildConfig, err := cm.loadGuildConfig()
+	guildConfig, err := cm.loadGuildConfig(ctx)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to load guild configuration").
 			WithComponent("chat.config").
@@ -183,9 +183,9 @@ func (cm *ConfigManager) GetCampaignDisplay(config *ChatConfig) string {
 }
 
 // loadGuildConfig loads the guild configuration from the project
-func (cm *ConfigManager) loadGuildConfig() (*config.GuildConfig, error) {
+func (cm *ConfigManager) loadGuildConfig(ctx context.Context) (*config.GuildConfig, error) {
 	// Load from current directory (LoadGuildConfig will add .guild/guild.yaml)
-	return config.LoadGuildConfig(".")
+	return config.LoadGuildConfig(ctx, ".")
 }
 
 // applyConfigOverrides applies any overrides from the guild configuration

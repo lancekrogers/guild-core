@@ -499,7 +499,7 @@ func setupGuildComponents(ctx context.Context) (*guildComponents, error) {
 	}
 
 	// Load guild configuration
-	guildConfig, err := config.LoadGuildConfig(projCtx.GetRootPath())
+	guildConfig, err := config.LoadGuildConfig(ctx, projCtx.GetRootPath())
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load guild config").
 			WithComponent("cli").

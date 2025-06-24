@@ -85,6 +85,13 @@ func NewClient(apiKey string) *Client {
 
 // ChatCompletion implements the AIProvider interface
 func (c *Client) ChatCompletion(ctx context.Context, req interfaces.ChatRequest) (*interfaces.ChatResponse, error) {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "chat completion cancelled").
+			WithComponent("providers.anthropic").
+			WithOperation("ChatCompletion")
+	}
+
 	logger := observability.GetLogger(ctx).
 		WithComponent("providers.anthropic").
 		WithOperation("ChatCompletion").
@@ -242,6 +249,14 @@ func (c *Client) GetCapabilities() interfaces.ProviderCapabilities {
 
 // makeRequest makes an HTTP request to the Anthropic API
 func (c *Client) makeRequest(ctx context.Context, endpoint string, payload interface{}) ([]byte, error) {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "API request cancelled").
+			WithComponent("providers.anthropic").
+			WithOperation("makeRequest").
+			WithDetails("endpoint", endpoint)
+	}
+
 	data, err := json.Marshal(payload)
 	if err != nil {
 		return nil, err

@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
 	"os/signal"
 	"path/filepath"
 	"strconv"
@@ -24,14 +25,14 @@ import (
 )
 
 var (
-	serveDaemon   bool
-	serveCampaign string
-	serveSession  string
-	serveSocket   string
+	serveForeground bool
+	serveCampaign   string
+	serveSession    string
+	serveSocket     string
 )
 
 func init() {
-	serveCmd.Flags().BoolVar(&serveDaemon, "daemon", false, "Run as background daemon")
+	serveCmd.Flags().BoolVar(&serveForeground, "foreground", false, "Run in foreground (default: background)")
 	serveCmd.Flags().StringVar(&serveCampaign, "campaign", "", "Campaign to serve (uses detection if not specified)")
 	serveCmd.Flags().StringVar(&serveSession, "session", "0", "Session number for multi-session campaigns")
 	serveCmd.Flags().StringVar(&serveSocket, "socket", "", "Unix socket path (overrides auto-generated path)")
@@ -51,6 +52,8 @@ This starts a gRPC server that provides:
 - Agent status and control
 - Prompt management services
 
+The server runs in the background by default. Use --foreground to run interactively.
+
 Campaign Architecture:
 - Use --campaign to specify which campaign to serve
 - Without --campaign, detects campaign from current directory
@@ -58,9 +61,9 @@ Campaign Architecture:
 - Supports multiple concurrent sessions per campaign
 
 Examples:
-  guild serve                           # Auto-detect campaign, start server
+  guild serve                           # Auto-detect campaign, start background server
+  guild serve --foreground              # Run in foreground with output
   guild serve --campaign e-commerce     # Serve specific campaign
-  guild serve --daemon                  # Run as background daemon
   guild serve --session 1               # Start additional session`,
 	RunE: runServe,
 }
@@ -84,7 +87,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 	ctx = observability.WithOperation(ctx, "runServe")
 
 	logger.InfoContext(ctx, "Starting Guild gRPC server",
-		"daemon", serveDaemon,
+		"foreground", serveForeground,
 		"campaign", serveCampaign,
 		"session", serveSession,
 		"socket", serveSocket,
@@ -135,8 +138,8 @@ func runServe(cmd *cobra.Command, args []string) error {
 		daemonConfig.SocketPath = serveSocket
 	}
 
-	// If running as daemon, set up logging to file
-	if serveDaemon {
+	// If running in background, set up logging to file
+	if !serveForeground {
 		logPath := daemonConfig.LogFile
 		if logPath == "" {
 			logPath = daemon.GetLogFilePath()
@@ -232,14 +235,15 @@ func runServe(cmd *cobra.Command, args []string) error {
 
 	go func() {
 		<-sigChan
-		if !serveDaemon {
+		if serveForeground {
 			fmt.Println("\n🛑 Shutting down gRPC server...")
 		}
 		cancel()
 	}()
 
 	// Log startup information
-	if serveDaemon {
+	if !serveForeground {
+		// Background mode - just log
 		logger.InfoContext(ctx, "Guild daemon starting",
 			"display_name", daemonConfig.GetDisplayName(),
 			"server_addr", serverAddr,
@@ -247,7 +251,12 @@ func runServe(cmd *cobra.Command, args []string) error {
 			"session", sessionNum,
 			"log_file", daemonConfig.LogFile,
 		)
+		fmt.Printf("🏰 Guild server started in background\n")
+		fmt.Printf("📋 Campaign: %s (session %d)\n", campaignName, sessionNum)
+		fmt.Printf("🔌 Socket: %s\n", daemonConfig.SocketPath)
+		fmt.Printf("💡 Use 'guild chat' to connect\n")
 	} else {
+		// Foreground mode - show detailed output
 		fmt.Printf("🏰 %s running at %s\n", daemonConfig.GetDisplayName(), serverAddr)
 		fmt.Printf("📋 Campaign: %s (session %d)\n", campaignName, sessionNum)
 		fmt.Println("📡 Registered gRPC services:")
@@ -274,6 +283,19 @@ func runServe(cmd *cobra.Command, args []string) error {
 		os.Remove(daemonConfig.SocketPath)
 	}
 
+	// If running in background mode, fork and return
+	if !serveForeground {
+		// Fork the process to run in background
+		if err := forkDaemon(daemonConfig); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start background daemon").
+				WithComponent("cli").
+				WithOperation("serve.run")
+		}
+		// Parent process returns successfully
+		return nil
+	}
+
+	// In foreground mode, start the server directly
 	startErr := server.StartUnix(ctx, daemonConfig.SocketPath)
 
 	if startErr != nil {
@@ -283,7 +305,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 			WithDetails("server_address", serverAddr)
 	}
 
-	if !serveDaemon {
+	if serveForeground {
 		fmt.Printf("✨ %s stopped gracefully...done.\n", daemonConfig.GetDisplayName())
 	} else {
 		logger.InfoContext(ctx, "Guild daemon stopped gracefully", "display_name", daemonConfig.GetDisplayName())
@@ -297,6 +319,78 @@ type memoryEventBus struct{}
 func (m *memoryEventBus) Publish(event interface{}) {
 	// Simple no-op implementation for now
 	// In a real implementation, this would broadcast events to subscribers
+}
+
+// forkDaemon starts the guild serve process in the background
+func forkDaemon(daemonConfig *daemon.DaemonConfig) error {
+	// Get the current executable path
+	executable, err := os.Executable()
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get executable path").
+			WithComponent("cli").
+			WithOperation("forkDaemon")
+	}
+
+	// Build the command arguments for the child process
+	args := []string{"serve", "--foreground"}
+
+	// Add the campaign flag if specified
+	if serveCampaign != "" {
+		args = append(args, "--campaign", serveCampaign)
+	}
+
+	// Add the session flag if specified
+	if serveSession != "0" {
+		args = append(args, "--session", serveSession)
+	}
+
+	// Add the socket flag if specified
+	if serveSocket != "" {
+		args = append(args, "--socket", serveSocket)
+	}
+
+	// Create the command
+	cmd := exec.Command(executable, args...)
+
+	// Detach from parent process
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Setpgid: true,
+		Pgid:    0,
+	}
+
+	// Redirect output to log file
+	logFile, err := os.OpenFile(daemonConfig.LogFile, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to open log file").
+			WithComponent("cli").
+			WithOperation("forkDaemon").
+			WithDetails("log_file", daemonConfig.LogFile)
+	}
+	defer logFile.Close()
+
+	cmd.Stdout = logFile
+	cmd.Stderr = logFile
+
+	// Start the process
+	if err := cmd.Start(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start daemon process").
+			WithComponent("cli").
+			WithOperation("forkDaemon")
+	}
+
+	// Write PID file
+	pidFile := filepath.Join(filepath.Dir(daemonConfig.SocketPath), fmt.Sprintf("guild-%s.pid", daemonConfig.Campaign))
+	if err := os.WriteFile(pidFile, []byte(strconv.Itoa(cmd.Process.Pid)), 0644); err != nil {
+		// Non-fatal error - just log it
+		fmt.Printf("⚠️  Warning: Could not write PID file: %v\n", err)
+	}
+
+	fmt.Printf("✅ Guild daemon started (PID: %d)\n", cmd.Process.Pid)
+
+	// Release the process so it continues running after parent exits
+	cmd.Process.Release()
+
+	return nil
 }
 
 func (m *memoryEventBus) Subscribe(eventType string, handler func(event interface{})) {

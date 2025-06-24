@@ -56,11 +56,11 @@ type InitTUIModelV2 struct {
 	selectedDemo int
 
 	// Results
-	validationResults   []ValidationResult
-	providerResults     []providers.DetectionResult
-	bestProvider        *providers.DetectionResult
-	enhancedAgentCount  int
-	err                 error
+	validationResults  []ValidationResult
+	providerResults    []providers.DetectionResult
+	bestProvider       *providers.DetectionResult
+	enhancedAgentCount int
+	err                error
 
 	// UI dimensions
 	width  int

@@ -73,6 +73,14 @@ func newWorkerAgent(id, name string, llmClient providers.LLMClient,
 
 // Execute runs a task with full tool support
 func (a *WorkerAgent) Execute(ctx context.Context, request string) (string, error) {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return "", gerror.Wrap(err, gerror.ErrCodeCancelled, "agent execution cancelled").
+			WithComponent("agent").
+			WithOperation("Execute").
+			WithDetails("agent_id", a.ID)
+	}
+
 	// Initialize observability
 	logger := observability.GetLogger(ctx).
 		WithComponent("agent").

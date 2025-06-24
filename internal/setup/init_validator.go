@@ -244,7 +244,7 @@ func (v *InitValidator) validateAgentConfiguration(ctx context.Context) InitVali
 	}
 
 	// Load main guild config
-	guildConfig, err := config.LoadGuildConfig(v.projectPath)
+	guildConfig, err := config.LoadGuildConfig(ctx, v.projectPath)
 	if err != nil {
 		result.Error = gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to load guild configuration").
 			WithComponent("InitValidator").
@@ -297,7 +297,7 @@ func (v *InitValidator) validateProviderConfiguration(ctx context.Context) InitV
 	}
 
 	// Load guild config to get providers in use
-	guildConfig, err := config.LoadGuildConfig(v.projectPath)
+	guildConfig, err := config.LoadGuildConfig(ctx, v.projectPath)
 	if err != nil {
 		result.Error = gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to load configuration").
 			WithComponent("InitValidator").

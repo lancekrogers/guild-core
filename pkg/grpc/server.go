@@ -142,12 +142,12 @@ func (s *Server) startServer(ctx context.Context, address string) error {
 
 	// Create a channel to signal when server is ready
 	serverReady := make(chan struct{})
-	
+
 	// Start server in goroutine
 	go func() {
 		// Signal that server is about to start serving
 		close(serverReady)
-		
+
 		// Log that server is starting to serve
 		observability.GetLogger(ctx).
 			WithComponent("grpc").
@@ -156,7 +156,7 @@ func (s *Server) startServer(ctx context.Context, address string) error {
 				"address", address,
 				"listener_type", s.listener.Addr().Network(),
 			)
-		
+
 		if err := s.grpcServer.Serve(s.listener); err != nil {
 			// Log server error with proper context
 			observability.GetLogger(ctx).
@@ -171,13 +171,13 @@ func (s *Server) startServer(ctx context.Context, address string) error {
 
 	// Wait for server to be ready before returning
 	<-serverReady
-	
+
 	// Add a small delay to ensure the socket is fully bound and ready
 	time.Sleep(100 * time.Millisecond)
 
 	// Wait for context cancellation
 	<-ctx.Done()
-	
+
 	// Log graceful shutdown
 	observability.GetLogger(ctx).
 		WithComponent("grpc").
@@ -185,7 +185,7 @@ func (s *Server) startServer(ctx context.Context, address string) error {
 		Info("gRPC server shutting down gracefully",
 			"address", address,
 		)
-	
+
 	s.grpcServer.GracefulStop()
 
 	return nil

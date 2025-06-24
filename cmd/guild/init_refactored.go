@@ -4,6 +4,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -38,6 +39,11 @@ Local (.guild):
 }
 
 func runInitRefactored(cmd *cobra.Command, args []string) error {
+	ctx := cmd.Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	path := "."
 	if len(args) > 0 {
 		path = args[0]
@@ -93,7 +99,7 @@ func runInitRefactored(cmd *cobra.Command, args []string) error {
 	fmt.Printf("   └── 📁 workspaces/ (agent work areas)\n")
 
 	// Load and display configuration summary
-	enhancedConfig, err := config.LoadEnhancedConfig(path)
+	enhancedConfig, err := config.LoadEnhancedConfig(ctx, path)
 	if err == nil {
 		fmt.Printf("\n📋 Project Configuration:\n")
 		fmt.Printf("   Name: %s\n", enhancedConfig.Name)
