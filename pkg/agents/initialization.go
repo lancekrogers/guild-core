@@ -252,6 +252,16 @@ func (ai *AgentInitializer) saveAgentConfig(ctx context.Context, agentsDir strin
 		agentFileConfig["cost_magnitude"] = agent.CostMagnitude
 	}
 
+	// Add context window if set
+	if agent.ContextWindow > 0 {
+		agentFileConfig["context_window"] = agent.ContextWindow
+	}
+
+	// Add context reset if set
+	if agent.ContextReset != "" {
+		agentFileConfig["context_reset"] = agent.ContextReset
+	}
+
 	// Add backstory, personality, and specialization if present
 	if agent.Backstory != nil {
 		agentFileConfig["backstory"] = agent.Backstory
