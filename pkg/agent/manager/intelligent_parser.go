@@ -75,7 +75,7 @@ func NewIntelligentParser(config IntelligentParserConfig) *IntelligentParser {
 // ParseResponse implements the ResponseParser interface with intelligent routing
 func (ip *IntelligentParser) ParseResponse(ctx context.Context, response *ArtisanResponse) (*FileStructure, error) {
 	// First try pattern-based parsing for structure
-	structure, err := ip.patternParser.ParseResponse(response)
+	structure, err := ip.patternParser.ParseResponse(ctx, response)
 	if err != nil && !ip.useExtractor {
 		return nil, err
 	}

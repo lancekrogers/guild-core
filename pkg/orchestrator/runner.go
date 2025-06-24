@@ -42,6 +42,13 @@ func DefaultOrchestratorFactory(config *Config, dispatcher TaskDispatcher, event
 
 // Start starts the orchestrator
 func (o *BaseOrchestrator) Start(ctx context.Context) error {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("orchestrator").
+			WithOperation("Start")
+	}
+
 	o.mu.Lock()
 	defer o.mu.Unlock()
 
@@ -73,6 +80,13 @@ func (o *BaseOrchestrator) Start(ctx context.Context) error {
 
 // Stop stops the orchestrator
 func (o *BaseOrchestrator) Stop(ctx context.Context) error {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("orchestrator").
+			WithOperation("Stop")
+	}
+
 	o.mu.Lock()
 	defer o.mu.Unlock()
 
@@ -103,6 +117,13 @@ func (o *BaseOrchestrator) Stop(ctx context.Context) error {
 
 // Pause pauses the orchestrator
 func (o *BaseOrchestrator) Pause(ctx context.Context) error {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("orchestrator").
+			WithOperation("Pause")
+	}
+
 	o.mu.Lock()
 	defer o.mu.Unlock()
 

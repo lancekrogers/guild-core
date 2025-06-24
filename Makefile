@@ -107,14 +107,15 @@ install-completion:
 		echo "Error: guild binary not found. Run 'make install' first."; \
 		exit 1; \
 	fi
-	@if [ -n "$$BASH_VERSION" ]; then \
+	@# Detect shell by checking SHELL environment variable
+	@if echo "$$SHELL" | grep -q bash; then \
 		$(MAKE) install-bash-completion; \
-	elif [ -n "$$ZSH_VERSION" ]; then \
+	elif echo "$$SHELL" | grep -q zsh; then \
 		$(MAKE) install-zsh-completion; \
-	elif [ -n "$$FISH_VERSION" ]; then \
+	elif echo "$$SHELL" | grep -q fish; then \
 		$(MAKE) install-fish-completion; \
 	else \
-		echo "Could not detect shell type. Please run one of:"; \
+		echo "Could not detect shell type from $$SHELL. Please run one of:"; \
 		echo "  make install-bash-completion"; \
 		echo "  make install-zsh-completion"; \
 		echo "  make install-fish-completion"; \
@@ -148,14 +149,22 @@ install-zsh-completion:
 		echo "Error: guild binary not found. Run 'make install' first."; \
 		exit 1; \
 	fi
-	@./bin/guild completion zsh > "$${fpath[1]}/_guild" || { \
-		echo "Error: Could not install to fpath."; \
-		echo "You can manually install by running:"; \
-		echo "  guild completion zsh > ~/.zsh/completions/_guild"; \
-		echo "And ensure ~/.zsh/completions is in your fpath"; \
-		exit 1; \
-	}
-	@echo "Zsh completion installed. Start a new shell to use it."
+	@# Try standard zsh completion locations in order
+	@if [ -d /opt/homebrew/share/zsh/site-functions ] && [ -w /opt/homebrew/share/zsh/site-functions ]; then \
+		./bin/guild completion zsh > /opt/homebrew/share/zsh/site-functions/_guild; \
+		echo "Zsh completion installed to /opt/homebrew/share/zsh/site-functions/_guild"; \
+	elif [ -d /usr/local/share/zsh/site-functions ] && [ -w /usr/local/share/zsh/site-functions ]; then \
+		./bin/guild completion zsh > /usr/local/share/zsh/site-functions/_guild; \
+		echo "Zsh completion installed to /usr/local/share/zsh/site-functions/_guild"; \
+	else \
+		mkdir -p ~/.zsh/completions; \
+		./bin/guild completion zsh > ~/.zsh/completions/_guild; \
+		echo "Zsh completion installed to ~/.zsh/completions/_guild"; \
+		echo "Add this to your ~/.zshrc if not already present:"; \
+		echo "  fpath=(~/.zsh/completions \$$fpath)"; \
+		echo "  autoload -U compinit && compinit"; \
+	fi
+	@echo "Start a new shell or run 'source ~/.zshrc' to use completion."
 
 install-fish-completion:
 	@echo "Installing fish completion..."

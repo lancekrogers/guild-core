@@ -17,6 +17,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/agents"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
@@ -58,8 +59,19 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 		ctx = context.Background()
 	}
 
+	// Get logger from context
+	logger := observability.GetLogger(ctx)
+	ctx = observability.WithComponent(ctx, "guild-init")
+	ctx = observability.WithOperation(ctx, "runFastInit")
+	
+	logger.InfoContext(ctx, "Starting Guild fast initialization",
+		"args", args,
+		"force", fastInitForce,
+	)
+
 	// Check context early
 	if err := ctx.Err(); err != nil {
+		logger.ErrorContext(ctx, "Context cancelled during init", "error", err)
 		return gerror.Wrap(err, gerror.ErrCodeCancelled, "init command cancelled").
 			WithComponent("cli").
 			WithOperation("runFastInit")

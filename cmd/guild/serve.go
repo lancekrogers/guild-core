@@ -6,7 +6,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -19,6 +18,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/campaign"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	grpcpkg "github.com/guild-ventures/guild-core/pkg/grpc"
+	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/guild-ventures/guild-core/pkg/registry"
 )
@@ -66,11 +66,34 @@ Examples:
 }
 
 func runServe(cmd *cobra.Command, args []string) error {
-	ctx := context.Background()
+	ctx := cmd.Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "serve command cancelled").
+			WithComponent("cli").
+			WithOperation("serve.run")
+	}
+
+	// Set up logging
+	logger := observability.GetLogger(ctx)
+	ctx = observability.WithComponent(ctx, "guild-serve")
+	ctx = observability.WithOperation(ctx, "runServe")
+
+	logger.InfoContext(ctx, "Starting Guild gRPC server",
+		"daemon", serveDaemon,
+		"campaign", serveCampaign,
+		"session", serveSession,
+		"socket", serveSocket,
+	)
 
 	// Detect campaign if not explicitly provided
 	cwd, err := os.Getwd()
 	if err != nil {
+		logger.ErrorContext(ctx, "Failed to get current directory", "error", err)
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get current directory").
 			WithComponent("cli").
 			WithOperation("serve.run")
@@ -78,11 +101,14 @@ func runServe(cmd *cobra.Command, args []string) error {
 
 	campaignName, err := campaign.DetectCampaign(cwd, serveCampaign)
 	if err != nil {
+		logger.ErrorContext(ctx, "Failed to detect campaign", "error", err, "cwd", cwd, "specified_campaign", serveCampaign)
 		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to detect campaign").
 			WithComponent("cli").
 			WithOperation("serve.run").
 			WithDetails("help", "Make sure you're in a campaign directory or specify --campaign")
 	}
+
+	logger.InfoContext(ctx, "Detected campaign", "campaign", campaignName, "cwd", cwd)
 
 	// Parse session number
 	sessionNum := 0
@@ -130,10 +156,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 		}
 		defer logFile.Close()
 
-		// Redirect stdout and stderr to log file
-		log.SetOutput(logFile)
-		os.Stdout = logFile
-		os.Stderr = logFile
+		logger.InfoContext(ctx, "Running as daemon, logs redirected to file", "log_path", logPath)
 	}
 
 	// Initialize project
@@ -146,6 +169,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 
 	// Initialize registry with minimal working configuration
 	reg := registry.NewComponentRegistry()
+	logger.InfoContext(ctx, "Initializing component registry")
 	registryConfig := &registry.Config{
 		Agents: registry.AgentConfigYaml{
 			DefaultType: "worker",
@@ -185,7 +209,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 		},
 	}
 
-	if err := reg.Initialize(context.Background(), *registryConfig); err != nil {
+	if err := reg.Initialize(ctx, *registryConfig); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize registry").
 			WithComponent("cli").
 			WithOperation("serve.run")
@@ -216,9 +240,13 @@ func runServe(cmd *cobra.Command, args []string) error {
 
 	// Log startup information
 	if serveDaemon {
-		log.Printf("%s starting at %s\n", daemonConfig.GetDisplayName(), serverAddr)
-		log.Printf("Campaign: %s, Session: %d\n", campaignName, sessionNum)
-		log.Println("Running in daemon mode - output redirected to:", daemonConfig.LogFile)
+		logger.InfoContext(ctx, "Guild daemon starting",
+			"display_name", daemonConfig.GetDisplayName(),
+			"server_addr", serverAddr,
+			"campaign", campaignName,
+			"session", sessionNum,
+			"log_file", daemonConfig.LogFile,
+		)
 	} else {
 		fmt.Printf("🏰 %s running at %s\n", daemonConfig.GetDisplayName(), serverAddr)
 		fmt.Printf("📋 Campaign: %s (session %d)\n", campaignName, sessionNum)
@@ -258,7 +286,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 	if !serveDaemon {
 		fmt.Printf("✨ %s stopped gracefully...done.\n", daemonConfig.GetDisplayName())
 	} else {
-		log.Printf("%s stopped gracefully\n", daemonConfig.GetDisplayName())
+		logger.InfoContext(ctx, "Guild daemon stopped gracefully", "display_name", daemonConfig.GetDisplayName())
 	}
 	return nil
 }

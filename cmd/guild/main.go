@@ -113,12 +113,19 @@ func init() {
 }
 
 // Execute summons the Guild and its artisans (standard: launches the CLI application)
-func Execute() {
+func Execute(ctx context.Context) {
 	// Suppress default error printing for better UX
 	rootCmd.SilenceErrors = true
 	rootCmd.SilenceUsage = true
 	
-	if err := rootCmd.Execute(); err != nil {
+	if err := rootCmd.ExecuteContext(ctx); err != nil {
+		// Log the error through our observability system
+		logger := observability.GetLogger(ctx)
+		logger.ErrorContext(ctx, "Guild command failed", 
+			"error", err.Error(),
+			"error_type", fmt.Sprintf("%T", err),
+		)
+		
 		fmt.Fprintf(os.Stderr, "The Guild regrets to inform you of an error: %v\n", err)
 		os.Exit(1)
 	}
@@ -173,9 +180,6 @@ func main() {
 	// Initialize Guild environment and logging
 	ctx := initializeGuild()
 	
-	// Store context for use in commands (you might want to pass this through somehow)
-	_ = ctx
-	
 	// Assemble the Guild teams (standard: start the application)
-	Execute()
+	Execute(ctx)
 }

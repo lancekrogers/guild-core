@@ -31,6 +31,13 @@ type Wizard struct {
 
 // NewWizard creates a new setup wizard
 func NewWizard(ctx context.Context, config *Config) (*Wizard, error) {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("setup").
+			WithOperation("NewWizard")
+	}
+
 	if config == nil {
 		return nil, gerror.New(gerror.ErrCodeInvalidInput, "config is required", nil).
 			WithComponent("setup").

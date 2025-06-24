@@ -45,8 +45,8 @@ func NewResponseParser() *ResponseParserImpl {
 }
 
 // ParseResponse implements the ResponseParser interface
-func (p *ResponseParserImpl) ParseResponse(response *ArtisanResponse) (*FileStructure, error) {
-	return p.ParseResponseWithContext(context.Background(), response)
+func (p *ResponseParserImpl) ParseResponse(ctx context.Context, response *ArtisanResponse) (*FileStructure, error) {
+	return p.ParseResponseWithContext(ctx, response)
 }
 
 // ParseResponseWithContext implements parsing with context support

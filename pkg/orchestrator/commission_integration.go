@@ -6,7 +6,6 @@ package orchestrator
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 	"time"
 
@@ -15,6 +14,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/pkg/prompts"
 	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
 	"github.com/guild-ventures/guild-core/pkg/providers"
@@ -36,13 +36,20 @@ type CommissionIntegrationService struct {
 }
 
 // newCommissionIntegrationService creates a new integration service with full wiring (private constructor)
-func newCommissionIntegrationService(registry registry.ComponentRegistry) (*CommissionIntegrationService, error) {
+func newCommissionIntegrationService(ctx context.Context, registry registry.ComponentRegistry) (*CommissionIntegrationService, error) {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("orchestrator").
+			WithOperation("newCommissionIntegrationService")
+	}
+
 	service := &CommissionIntegrationService{
 		registry: registry,
 	}
 
 	// Initialize components from registry
-	if err := service.initializeFromRegistry(); err != nil {
+	if err := service.initializeFromRegistry(ctx); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to initialize from registry").
 			WithComponent("orchestrator").
 			WithOperation("NewCommissionIntegrationService")
@@ -52,12 +59,26 @@ func newCommissionIntegrationService(registry registry.ComponentRegistry) (*Comm
 }
 
 // DefaultCommissionIntegrationServiceFactory creates a commission integration service factory for registry use
-func DefaultCommissionIntegrationServiceFactory(registry registry.ComponentRegistry) (*CommissionIntegrationService, error) {
-	return newCommissionIntegrationService(registry)
+func DefaultCommissionIntegrationServiceFactory(ctx context.Context, registry registry.ComponentRegistry) (*CommissionIntegrationService, error) {
+	return newCommissionIntegrationService(ctx, registry)
 }
 
 // initializeFromRegistry sets up all components from the registry
-func (s *CommissionIntegrationService) initializeFromRegistry() error {
+func (s *CommissionIntegrationService) initializeFromRegistry(ctx context.Context) error {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("orchestrator").
+			WithOperation("initializeFromRegistry")
+	}
+
+	// Set up logging
+	logger := observability.GetLogger(ctx)
+	ctx = observability.WithComponent(ctx, "orchestrator")
+	ctx = observability.WithOperation(ctx, "initializeFromRegistry")
+
+	logger.InfoContext(ctx, "Initializing commission integration service from registry")
+
 	// Get providers from registry
 	providerRegistry := s.registry.Providers()
 	providers := make(map[string]interfaces.AIProvider)
@@ -97,7 +118,7 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 
 		// Create a standard prompt manager
 		var err error
-		promptManager, err = promptRegistry.GetDefaultManager(context.Background())
+		promptManager, err = promptRegistry.GetDefaultManager(ctx)
 		if err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create prompt manager").
 				WithComponent("orchestrator").
@@ -107,7 +128,7 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 		// Fallback to creating a new one
 		promptRegistry := prompts.GetRegistry()
 		var err error
-		promptManager, err = promptRegistry.GetDefaultManager(context.Background())
+		promptManager, err = promptRegistry.GetDefaultManager(ctx)
 		if err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create prompt manager").
 				WithComponent("orchestrator").
@@ -137,7 +158,7 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 	// Create kanban manager using SQLite storage via registry
 	// First create a custom adapter for kanban that implements their ComponentRegistry interface
 	kanbanAdapter := &kanbanRegistryAdapter{registry: s.registry}
-	kanbanMgr, err := kanban.NewManagerWithRegistry(context.Background(), kanbanAdapter)
+	kanbanMgr, err := kanban.NewManagerWithRegistry(ctx, kanbanAdapter)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to create kanban manager with SQLite storage").
 			WithComponent("orchestrator").
@@ -145,7 +166,7 @@ func (s *CommissionIntegrationService) initializeFromRegistry() error {
 	}
 
 	// Create a board using the SQLite-enabled manager
-	kanbanBoard, err := kanbanMgr.CreateBoard(context.Background(), "commission-board", "Board for commission tasks")
+	kanbanBoard, err := kanbanMgr.CreateBoard(ctx, "commission-board", "Board for commission tasks")
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to create kanban board").
 			WithComponent("orchestrator").
@@ -237,6 +258,18 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 	commission manager.Commission,
 	guildConfig *config.GuildConfig,
 ) (*CommissionProcessingResult, error) {
+	// Check context early
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("orchestrator").
+			WithOperation("ProcessCommissionToTasks")
+	}
+
+	// Set up logging
+	logger := observability.GetLogger(ctx)
+	ctx = observability.WithComponent(ctx, "orchestrator")
+	ctx = observability.WithOperation(ctx, "ProcessCommissionToTasks")
+
 	// Validate dependencies
 	if err := s.validateDependencies(); err != nil {
 		return nil, err
@@ -246,7 +279,7 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 	ctx = s.addCommissionContext(ctx, commission)
 
 	// Step 1: Refine the commission using IntelligentParser
-	log.Printf("Refining commission: %s", commission.Title)
+	logger.InfoContext(ctx, "Refining commission", "title", commission.Title, "id", commission.ID)
 	refined, err := s.commissionRefiner.RefineCommission(ctx, commission)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeTaskFailed, "failed to refine commission").
@@ -254,10 +287,10 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 			WithOperation("ProcessCommissionToTasks").
 			WithDetails("commissionID", commission.ID)
 	}
-	log.Printf("Commission refined successfully, found %d files", len(refined.Structure.Files))
+	logger.InfoContext(ctx, "Commission refined successfully", "files_found", len(refined.Structure.Files))
 
 	// Step 2: Convert refined commission to kanban tasks
-	log.Printf("Planning tasks from refined commission")
+	logger.InfoContext(ctx, "Planning tasks from refined commission")
 	tasks, err := s.commissionPlanner.PlanFromRefinedCommission(ctx, refined, guildConfig)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeTaskFailed, "failed to plan tasks from commission").
@@ -265,19 +298,19 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 			WithOperation("ProcessCommissionToTasks").
 			WithDetails("commissionID", commission.ID)
 	}
-	log.Printf("Created %d tasks from commission", len(tasks))
+	logger.InfoContext(ctx, "Created tasks from commission", "task_count", len(tasks))
 
 	// Step 3: Use task bridge to create tasks in kanban
 	if s.taskBridge != nil {
-		log.Printf("Creating tasks in kanban system")
+		logger.InfoContext(ctx, "Creating tasks in kanban system")
 		if err := s.taskBridge.CreateTasksFromRefinedCommission(ctx, refined); err != nil {
-			log.Printf("Warning: failed to create tasks via bridge: %v", err)
+			logger.WarnContext(ctx, "Failed to create tasks via bridge", "error", err)
 			// Don't fail - tasks were already created by planner
 		}
 	}
 
 	// Step 4: Assign tasks to artisans
-	log.Printf("Assigning tasks to artisans")
+	logger.InfoContext(ctx, "Assigning tasks to artisans")
 	if err := s.commissionPlanner.AssignTasksToArtisans(ctx, tasks, guildConfig); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeTaskFailed, "failed to assign tasks to artisans").
 			WithComponent("orchestrator").
@@ -287,7 +320,7 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 
 	// Step 5: Log commission completion with task information
 	if s.commissionRepository != nil {
-		log.Printf("Commission %s completed with %d tasks", commission.ID, len(tasks))
+		logger.InfoContext(ctx, "Commission completed", "commission_id", commission.ID, "task_count", len(tasks))
 		// TODO: Implement commission metadata updates if needed
 	}
 
@@ -296,9 +329,9 @@ func (s *CommissionIntegrationService) ProcessCommissionToTasks(
 
 	// Step 7: Write refined files if output directory is configured
 	if outputDir, ok := ctx.Value("output_dir").(string); ok && outputDir != "" {
-		log.Printf("Writing refined files to: %s", outputDir)
+		logger.InfoContext(ctx, "Writing refined files", "output_dir", outputDir)
 		if err := s.taskBridge.WriteRefinedFiles(refined, outputDir); err != nil {
-			log.Printf("Warning: failed to write refined files: %v", err)
+			logger.WarnContext(ctx, "Failed to write refined files", "error", err)
 		}
 	}
 

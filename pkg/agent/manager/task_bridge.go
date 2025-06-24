@@ -162,7 +162,7 @@ func (tb *TaskBridge) CreateTasksFromRefinedContent(ctx context.Context, commiss
 		},
 	}
 
-	structure, err := tb.parser.ParseResponse(response)
+	structure, err := tb.parser.ParseResponse(ctx, response)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to parse refined content").
 			WithComponent("manager").

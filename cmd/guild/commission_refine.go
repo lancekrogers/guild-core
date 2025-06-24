@@ -296,7 +296,7 @@ func setupRefiner(ctx context.Context, projCtx *project.Context, guildConfig *co
 
 	// Initialize component registry with SQLite storage
 	reg := registry.NewComponentRegistry()
-	if err := reg.Initialize(context.Background(), registry.Config{}); err != nil {
+	if err := reg.Initialize(ctx, registry.Config{}); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize registry").
 			WithComponent("cli").
 			WithOperation("commission.refine.setupRefiner")
