@@ -16,6 +16,7 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/guild-ventures/guild-core/pkg/search"
 	"github.com/guild-ventures/guild-core/pkg/suggestions"
 )
 
@@ -27,11 +28,22 @@ type CompletionEngine struct {
 	TaskIDs     []string                   // Cache of task IDs for completion
 	registry    registry.ComponentRegistry // Access to kanban for task completion
 
+	// NEW: Command processor integration
+	CommandProcessor CommandProcessorInterface // Interface to get commands from command processor
+
+	// NEW: File search integration  
+	FuzzyFinder *search.FuzzyFinder // For @file completions
+
 	// NEW: Suggestion system integration
 	SuggestionManager    suggestions.SuggestionManager
 	ChatHandler          *agent.ChatSuggestionHandler
 	ConversationHist     []suggestions.ChatMessage // Context cache
 	LastSuggestionUpdate time.Time                 // Performance optimization
+}
+
+// CommandProcessorInterface defines the interface for getting commands from command processor
+type CommandProcessorInterface interface {
+	GetAvailableCommands() []messages.Command
 }
 
 // NewCompletionEngine creates a new completion engine with full functionality
@@ -41,6 +53,17 @@ func NewCompletionEngine(guildConfig *config.GuildConfig, ProjectRoot string) *C
 		ProjectRoot:      ProjectRoot,
 		Commands:         make(map[string]messages.Command),
 		ConversationHist: make([]suggestions.ChatMessage, 0),
+	}
+
+	// Initialize fuzzy finder for file completions
+	if ProjectRoot != "" {
+		config := search.FuzzyFinderConfig{
+			WorkingDir:      ProjectRoot,
+			ExcludePatterns: search.DefaultExcludePatterns(),
+			MaxResults:      10,
+			IndexTimeout:    5 * time.Second,
+		}
+		engine.FuzzyFinder = search.NewFuzzyFinder(config)
 	}
 
 	// Register built-in commands with medieval theming
@@ -68,6 +91,16 @@ func NewCompletionEngineWithSuggestions(guildConfig *config.GuildConfig, Project
 
 // registerCommands registers all available commands for completion
 func (ce *CompletionEngine) registerCommands() {
+	// If we have a command processor, get commands from it
+	if ce.CommandProcessor != nil {
+		commands := ce.CommandProcessor.GetAvailableCommands()
+		for _, cmd := range commands {
+			ce.Commands[cmd.Name] = cmd
+		}
+		return
+	}
+
+	// Fallback: use static commands if no command processor available
 	commands := []messages.Command{
 		{Name: "/help", Description: "Show available commands"},
 		{Name: "/status", Description: "Show campaign status"},
@@ -88,6 +121,10 @@ func (ce *CompletionEngine) registerCommands() {
 		{Name: "/exit", Description: "Exit Guild Chat"},
 		{Name: "/quit", Description: "Exit Guild Chat"},
 		{Name: "/clear", Description: "Clear chat history"},
+		{Name: "/guilds", Description: "List all available guilds"},
+		{Name: "/guild", Description: "Show current guild details or switch guild"},
+		{Name: "/configrefresh", Description: "Reload configurations"},
+		{Name: "/vim", Description: "Toggle vim mode for input"},
 	}
 
 	for _, cmd := range commands {
@@ -133,6 +170,9 @@ func (ce *CompletionEngine) getTraditionalCompletions(input string, cursorPos in
 	if strings.HasPrefix(input, "/") {
 		// Command completion
 		results = append(results, ce.completeCommands(input)...)
+	} else if strings.HasPrefix(input, "@") && strings.Contains(input, ":") {
+		// @file:path/to/file completion (like Claude Code)
+		results = append(results, ce.completeFileSelection(input)...)
 	} else if strings.HasPrefix(input, "@") {
 		// Agent mention completion
 		results = append(results, ce.completeAgents(input)...)
@@ -351,6 +391,71 @@ func (ce *CompletionEngine) completeTaskIDs(input string) []CompletionResult {
 	return results
 }
 
+// completeFileSelection handles @file: completions like Claude Code
+func (ce *CompletionEngine) completeFileSelection(input string) []CompletionResult {
+	var results []CompletionResult
+
+	if ce.FuzzyFinder == nil {
+		return results
+	}
+
+	// Parse @file:pattern format
+	if !strings.Contains(input, ":") {
+		// Show @file: suggestion if just typing @file
+		if fuzzyMatch("@file:", input) {
+			results = append(results, CompletionResult{
+				Content: "@file:",
+				AgentID: "system",
+				Metadata: map[string]string{
+					"type":        "file",
+					"description": "Select file to include in message",
+				},
+			})
+		}
+		return results
+	}
+
+	// Extract the file pattern after @file:
+	parts := strings.SplitN(input, ":", 2)
+	if len(parts) != 2 {
+		return results
+	}
+
+	filePattern := parts[1]
+
+	// Use fuzzy finder to search for files
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+
+	fileResults, err := ce.FuzzyFinder.Search(ctx, filePattern)
+	if err != nil {
+		return results
+	}
+
+	// Convert file results to completion results
+	for _, fileResult := range fileResults {
+		// Format as @file:path/to/file
+		content := "@file:" + fileResult.Path
+		description := fmt.Sprintf("%s (%s)", fileResult.Name, fileResult.Path)
+		if fileResult.IsDirectory {
+			description += " [directory]"
+		}
+
+		results = append(results, CompletionResult{
+			Content: content,
+			AgentID: "system",
+			Metadata: map[string]string{
+				"type":        "file",
+				"description": description,
+				"file_path":   fileResult.AbsPath,
+				"file_size":   fmt.Sprintf("%d", fileResult.Size),
+			},
+		})
+	}
+
+	return results
+}
+
 // getHelpfulSuggestions provides context-aware suggestions when no matches found
 func (ce *CompletionEngine) getHelpfulSuggestions(input string) []CompletionResult {
 	var results []CompletionResult
@@ -360,16 +465,26 @@ func (ce *CompletionEngine) getHelpfulSuggestions(input string) []CompletionResu
 		results = append(results,
 			CompletionResult{Content: "/help", AgentID: "system", Metadata: map[string]string{"type": "suggestion", "description": "Show available commands"}},
 			CompletionResult{Content: "@", AgentID: "system", Metadata: map[string]string{"type": "suggestion", "description": "Mention an agent"}},
+			CompletionResult{Content: "@file:", AgentID: "system", Metadata: map[string]string{"type": "suggestion", "description": "Include file in message"}},
 			CompletionResult{Content: "/prompt", AgentID: "system", Metadata: map[string]string{"type": "suggestion", "description": "Manage prompts"}},
 		)
 	} else if strings.HasPrefix(input, "@") && len(input) == 1 {
-		// Show all available agents when just @ is typed
+		// Show all available agents and @file: when just @ is typed
 		results = append(results, CompletionResult{
 			Content: "@all",
 			AgentID: "system",
 			Metadata: map[string]string{
 				"type":        "agent",
 				"description": "Broadcast to all agents",
+			},
+		})
+
+		results = append(results, CompletionResult{
+			Content: "@file:",
+			AgentID: "system",
+			Metadata: map[string]string{
+				"type":        "file",
+				"description": "Include file in message",
 			},
 		})
 
@@ -675,6 +790,13 @@ func (ce *CompletionEngine) detectPrimaryLanguage() string {
 	}
 
 	return ""
+}
+
+// SetCommandProcessor sets the command processor to get live commands from
+func (ce *CompletionEngine) SetCommandProcessor(processor CommandProcessorInterface) {
+	ce.CommandProcessor = processor
+	// Re-register commands to get latest from processor
+	ce.registerCommands()
 }
 
 // SetEnhancedAgent configures the completion engine with an enhanced agent

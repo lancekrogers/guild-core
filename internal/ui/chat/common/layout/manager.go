@@ -136,9 +136,49 @@ func (m *Manager) SetPaneConstraints(paneID string, constraints LayoutConstraint
 			WithDetails("pane_id", paneID)
 	}
 
-	// This will be used when we have actual panes managed
-	// For now, store in the manager for future use
+	// Store updated constraints in pane manager if available
+	if m.paneManager != nil {
+		m.paneManager.UpdatePaneConstraints(paneID, constraints)
+	}
+	
+	// Recalculate layout with new constraints
 	return m.RecalculateLayout()
+}
+
+// UpdateInputHeight dynamically updates the input pane height based on content
+func (m *Manager) UpdateInputHeight(contentLines int) error {
+	// Calculate new preferred height (1-8 lines)
+	newHeight := contentLines
+	if newHeight < 1 {
+		newHeight = 1
+	}
+	if newHeight > 8 {
+		newHeight = 8
+	}
+	
+	// Update input pane constraints
+	constraints := InputPaneConstraints()
+	constraints.PreferredHeight = newHeight
+	
+	return m.SetPaneConstraints("input", constraints)
+}
+
+// UpdateStatusHeight dynamically updates the status pane height based on content
+func (m *Manager) UpdateStatusHeight(contentLines int) error {
+	// Use the new function to get constraints with content
+	constraints := StatusPaneConstraintsWithContent(contentLines)
+	return m.SetPaneConstraints("status", constraints)
+}
+
+// HideStatusPane hides the status pane by setting height to 0
+func (m *Manager) HideStatusPane() error {
+	constraints := StatusPaneConstraints() // This returns 0 height constraints
+	return m.SetPaneConstraints("status", constraints)
+}
+
+// ShowStatusPane shows the status pane with content
+func (m *Manager) ShowStatusPane(contentLines int) error {
+	return m.UpdateStatusHeight(contentLines)
 }
 
 // Render composites the views from all panes into the final layout
@@ -158,7 +198,7 @@ func (m *Manager) Render(paneViews map[string]string) string {
 	}
 
 	// Render each pane into the canvas
-	paneOrder := []string{"status", "output", "input"} // Bottom to top for proper layering
+	paneOrder := []string{"output", "input", "status"} // Output first, then input, status last for overlay effect
 
 	for _, paneID := range paneOrder {
 		rect, exists := m.currentLayout[paneID]
@@ -166,8 +206,18 @@ func (m *Manager) Render(paneViews map[string]string) string {
 			continue
 		}
 
+		// Skip rendering status pane if it has 0 height (hidden)
+		if paneID == "status" && rect.Height == 0 {
+			continue
+		}
+
 		view, exists := paneViews[paneID]
 		if !exists {
+			continue
+		}
+
+		// Skip rendering if view is empty and pane is status
+		if paneID == "status" && strings.TrimSpace(view) == "" {
 			continue
 		}
 

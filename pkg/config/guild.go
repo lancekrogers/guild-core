@@ -5,6 +5,7 @@ package config
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -212,7 +213,25 @@ func LoadGuildConfig(ctx context.Context, projectPath string) (*GuildConfig, err
 	campaignPath := filepath.Join(projectPath, ".campaign", "campaign.yaml")
 	if _, err := os.Stat(campaignPath); os.IsNotExist(err) {
 		logger.WarnContext(ctx, "Campaign configuration not found", "path", campaignPath)
-		return nil, gerror.New(gerror.ErrCodeNotFound, "campaign not initialized - run 'guild init' first", nil).
+		
+		// Check if .guild directory exists (old format)
+		legacyGuildPath := filepath.Join(projectPath, ".guild", "guild.yaml")
+		if _, err := os.Stat(legacyGuildPath); err == nil {
+			return nil, gerror.New(gerror.ErrCodeNotFound, "legacy .guild/guild.yaml found - please run 'guild migrate' to upgrade to the new campaign format", nil).
+				WithComponent("GuildConfig").
+				WithOperation("LoadGuildConfig").
+				WithDetails("legacy_path", legacyGuildPath).
+				WithDetails("expected_path", campaignPath)
+		}
+		
+		// Check current directory for obvious indicators
+		currentDir := filepath.Base(projectPath)
+		helpMsg := "Guild campaign not initialized. Run 'guild init' to set up a new Guild project.\n\n" +
+			"Current directory: " + currentDir + "\n" +
+			"Expected file: " + campaignPath + "\n\n" +
+			"If you're in the wrong directory, navigate to your project root first."
+			
+		return nil, gerror.New(gerror.ErrCodeNotFound, helpMsg, nil).
 			WithComponent("GuildConfig").
 			WithOperation("LoadGuildConfig").
 			WithDetails("path", campaignPath)
@@ -248,9 +267,26 @@ func LoadGuildConfig(ctx context.Context, projectPath string) (*GuildConfig, err
 		guildName = campaignInfo.Guilds[0]
 	}
 	if guildName == "" {
-		return nil, gerror.New(gerror.ErrCodeValidation, "no guild found in campaign", nil).
+		// Provide detailed error about what's missing
+		var errorMsg string
+		if len(campaignInfo.Guilds) == 0 {
+			errorMsg = "campaign.yaml is missing guilds list - expected format:\n" +
+				"name: my-campaign\n" +
+				"guilds:\n" +
+				"  - my-guild\n" +
+				"settings:\n" +
+				"  default_guild: my-guild"
+		} else {
+			errorMsg = "campaign.yaml is missing settings.default_guild - expected format:\n" +
+				"settings:\n" +
+				"  default_guild: " + campaignInfo.Guilds[0]
+		}
+		
+		return nil, gerror.New(gerror.ErrCodeValidation, errorMsg, nil).
 			WithComponent("GuildConfig").
-			WithOperation("LoadGuildConfig")
+			WithOperation("LoadGuildConfig").
+			WithDetails("campaign_path", campaignPath).
+			WithDetails("available_guilds", strings.Join(campaignInfo.Guilds, ", "))
 	}
 
 	logger.InfoContext(ctx, "Loading guild", "guild_name", guildName)
@@ -259,6 +295,36 @@ func LoadGuildConfig(ctx context.Context, projectPath string) (*GuildConfig, err
 	guildPath := filepath.Join(projectPath, ".campaign", "guilds", guildName+".yaml")
 	guildData, err := os.ReadFile(guildPath)
 	if err != nil {
+		if os.IsNotExist(err) {
+			// List available guild files to help user
+			guildsDir := filepath.Join(projectPath, ".campaign", "guilds")
+			availableGuilds := []string{}
+			if entries, dirErr := os.ReadDir(guildsDir); dirErr == nil {
+				for _, entry := range entries {
+					if strings.HasSuffix(entry.Name(), ".yaml") || strings.HasSuffix(entry.Name(), ".yml") {
+						name := strings.TrimSuffix(strings.TrimSuffix(entry.Name(), ".yaml"), ".yml")
+						availableGuilds = append(availableGuilds, name)
+					}
+				}
+			}
+			
+			errorMsg := fmt.Sprintf("guild file '%s.yaml' not found in .campaign/guilds/\n\n", guildName)
+			if len(availableGuilds) > 0 {
+				errorMsg += "Available guilds: " + strings.Join(availableGuilds, ", ") + "\n\n"
+				errorMsg += "To fix: Update campaign.yaml settings.default_guild to one of the available guilds"
+			} else {
+				errorMsg += "No guild files found in .campaign/guilds/\n\n"
+				errorMsg += "To fix: Run 'guild init' to create guild configuration files"
+			}
+			
+			return nil, gerror.New(gerror.ErrCodeNotFound, errorMsg, nil).
+				WithComponent("GuildConfig").
+				WithOperation("LoadGuildConfig").
+				WithDetails("guild_name", guildName).
+				WithDetails("path", guildPath).
+				WithDetails("available_guilds", strings.Join(availableGuilds, ", "))
+		}
+		
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read guild config").
 			WithComponent("GuildConfig").
 			WithOperation("LoadGuildConfig").
@@ -298,6 +364,36 @@ func LoadGuildConfig(ctx context.Context, projectPath string) (*GuildConfig, err
 		agentPath := filepath.Join(projectPath, ".campaign", "agents", agentID+".yaml")
 		agentData, err := os.ReadFile(agentPath)
 		if err != nil {
+			if os.IsNotExist(err) {
+				// List available agent files to help user
+				agentsDir := filepath.Join(projectPath, ".campaign", "agents")
+				availableAgents := []string{}
+				if entries, dirErr := os.ReadDir(agentsDir); dirErr == nil {
+					for _, entry := range entries {
+						if strings.HasSuffix(entry.Name(), ".yaml") || strings.HasSuffix(entry.Name(), ".yml") {
+							name := strings.TrimSuffix(strings.TrimSuffix(entry.Name(), ".yaml"), ".yml")
+							availableAgents = append(availableAgents, name)
+						}
+					}
+				}
+				
+				errorMsg := fmt.Sprintf("agent file '%s.yaml' not found in .campaign/agents/\n\n", agentID)
+				if len(availableAgents) > 0 {
+					errorMsg += "Available agents: " + strings.Join(availableAgents, ", ") + "\n\n"
+					errorMsg += "To fix: Update guild file to reference existing agents, or create missing agent files"
+				} else {
+					errorMsg += "No agent files found in .campaign/agents/\n\n"
+					errorMsg += "To fix: Run 'guild init' to create agent configuration files"
+				}
+				
+				return nil, gerror.New(gerror.ErrCodeNotFound, errorMsg, nil).
+					WithComponent("GuildConfig").
+					WithOperation("LoadGuildConfig").
+					WithDetails("agent_id", agentID).
+					WithDetails("path", agentPath).
+					WithDetails("available_agents", strings.Join(availableAgents, ", "))
+			}
+			
 			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read agent config").
 				WithComponent("GuildConfig").
 				WithOperation("LoadGuildConfig").

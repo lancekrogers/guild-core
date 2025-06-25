@@ -518,3 +518,16 @@ func (pm *PaneManager) UpdateAll(msg tea.Msg) []tea.Cmd {
 
 	return cmds
 }
+
+// UpdatePaneConstraints updates the constraints for a specific pane
+func (pm *PaneManager) UpdatePaneConstraints(paneID string, constraints LayoutConstraints) error {
+	pane, exists := pm.panes[paneID]
+	if !exists {
+		return gerror.Newf(gerror.ErrCodeNotFound, "pane with ID %s not found", paneID).
+			WithComponent("layout.pane").
+			WithOperation("UpdatePaneConstraints")
+	}
+
+	pane.SetConstraints(constraints)
+	return nil
+}

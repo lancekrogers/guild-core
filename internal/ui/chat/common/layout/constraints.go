@@ -88,10 +88,11 @@ func OutputPaneConstraints() LayoutConstraints {
 // InputPaneConstraints returns constraints optimized for the input pane
 func InputPaneConstraints() LayoutConstraints {
 	constraints := DefaultConstraints()
-	constraints.MinHeight = 3
-	constraints.MaxHeight = 0     // No limit - allow dynamic sizing
-	constraints.FlexGrow = 0.0   // Don't grow with available space
-	constraints.FlexShrink = 1.0 // Allow shrinking if needed
+	constraints.MinHeight = 1
+	constraints.MaxHeight = 8        // Allow up to 8 lines for multi-line input
+	constraints.PreferredHeight = 3  // Start with 3 lines  
+	constraints.FlexGrow = 0.0       // Don't grow with available space
+	constraints.FlexShrink = 0.0     // Don't shrink - maintain preferred height
 	constraints.Padding = Padding{Top: 0, Right: 1, Bottom: 0, Left: 1}
 	return constraints
 }
@@ -99,10 +100,11 @@ func InputPaneConstraints() LayoutConstraints {
 // StatusPaneConstraints returns constraints optimized for the status bar
 func StatusPaneConstraints() LayoutConstraints {
 	constraints := DefaultConstraints()
-	constraints.MinHeight = 4
-	constraints.MaxHeight = 4    // Fixed height for completions, modes, and status
-	constraints.FlexGrow = 0.0   // Don't grow
-	constraints.FlexShrink = 0.0 // Don't shrink
+	constraints.MinHeight = 0        // Can be hidden when empty
+	constraints.MaxHeight = 10       // Allow up to 10 lines for completions
+	constraints.PreferredHeight = 0  // Start hidden (0 height)
+	constraints.FlexGrow = 0.0       // Don't grow
+	constraints.FlexShrink = 0.0     // Don't shrink
 	constraints.Padding = Padding{Top: 0, Right: 1, Bottom: 0, Left: 1}
 	return constraints
 }
@@ -130,6 +132,24 @@ func CalculateLayout(config LayoutConfig, paneConstraints map[string]LayoutConst
 			WithComponent("layout.constraints").
 			WithOperation("CalculateLayout")
 	}
+}
+
+// StatusPaneConstraintsWithContent returns constraints when status pane has content
+func StatusPaneConstraintsWithContent(contentLines int) LayoutConstraints {
+	constraints := StatusPaneConstraints()
+	
+	// Calculate height based on content (1-10 lines)
+	height := contentLines
+	if height < 1 {
+		height = 1
+	}
+	if height > 10 {
+		height = 10
+	}
+	
+	constraints.PreferredHeight = height
+	constraints.MinHeight = height
+	return constraints
 }
 
 // calculateColumnLayout calculates layout for vertical stacking

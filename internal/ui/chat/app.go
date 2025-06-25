@@ -7,6 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/charmbracelet/bubbles/key"
@@ -248,6 +249,11 @@ func (app *App) initializeComponents() error {
 	app.commandProcessor = commands.NewCommandProcessor(app.ctx, app.config, app.commandHistory,
 		app.sessionManager, app.currentSession, app.templateManager, app.guildClient)
 
+	// Connect completion engine to command processor for live command updates
+	if app.completionEngine != nil && app.commandProcessor != nil {
+		app.completionEngine.SetCommandProcessor(app.commandProcessor)
+	}
+
 	// Initialize services
 	if err := app.initializeServices(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize services").
@@ -260,6 +266,11 @@ func (app *App) initializeComponents() error {
 
 	// Initialize layout manager
 	app.layoutManager = layout.NewManager(app.config.Width, app.config.Height)
+	if err := app.layoutManager.Initialize(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize layout manager").
+			WithComponent("chat.app").
+			WithOperation("initializeComponents")
+	}
 
 	// Initialize panes
 	if err := app.initializePanes(); err != nil {
@@ -415,16 +426,83 @@ func (app *App) setupInputCallbacks() {
 	// Initialize suggestion manager with 300ms debounce
 	app.suggestionManager = NewInputSuggestionManager(app, 300*time.Millisecond)
 
-	// Set up OnChange callback for real-time suggestions
+	// Set up OnChange callback for dynamic resizing and suggestions
 	app.inputPane.OnChange(func(input string) {
-		// This will be called from the input pane's Update method
-		// We'll handle the actual suggestion request in the main Update loop
+		// Update dynamic height based on content
+		lines := strings.Count(input, "\n") + 1
+		if lines < 1 {
+			lines = 1
+		}
+		
+		// Update layout manager with new input height
+		if app.layoutManager != nil {
+			if err := app.layoutManager.UpdateInputHeight(lines); err == nil {
+				// Resize panes based on new layout
+				inputRect := app.layoutManager.GetPaneRect("input")
+				app.inputPane.Resize(inputRect.Width, inputRect.Height)
+				
+				// Update other panes that might be affected
+				outputRect := app.layoutManager.GetPaneRect("output") 
+				app.outputPane.Resize(outputRect.Width, outputRect.Height)
+				
+				statusRect := app.layoutManager.GetPaneRect("status")
+				app.statusPane.Resize(statusRect.Width, statusRect.Height)
+			}
+		}
+		
+		// Trigger suggestion request
+		if app.suggestionManager != nil {
+			// This will be handled in the main Update loop to avoid blocking
+		}
 	})
 
 	// Set up OnSubmit callback
 	app.inputPane.OnSubmit(func(input string) {
 		// Hide suggestions when submitting
 		app.inputPane.HideCompletions()
+		app.statusPane.HideCompletions()
+		
+		// Process the input through command processor
+		if app.commandProcessor != nil {
+			isCommand, cmd := app.commandProcessor.ProcessInput(input)
+			if isCommand {
+				// Execute command and get result
+				if cmd != nil {
+					// We can't execute the command directly here since we're in a callback
+					// Instead, add to output pane indicating command was processed
+					userMsg := common.ChatMessage{
+						Type:      common.MsgUser,
+						Content:   input,
+						Timestamp: time.Now(),
+					}
+					app.outputPane.AddMessage(userMsg)
+				}
+			} else {
+				// Regular message - should be sent to agents
+				userMsg := common.ChatMessage{
+					Type:      common.MsgUser,
+					Content:   input,
+					Timestamp: time.Now(),
+				}
+				app.outputPane.AddMessage(userMsg)
+				
+				// Send to agent router for processing
+				if app.agentRouter != nil {
+					// This is where real agent communication should happen
+					// For now, create a mock response
+					go func() {
+						time.Sleep(500 * time.Millisecond) // Simulate processing time
+						response := common.ChatMessage{
+							Type:      common.MsgAgent,
+							Content:   fmt.Sprintf("I understand you said: %s\n\nThis is currently a mock response. Real agent integration needs to be connected through the gRPC client and agent router.", input),
+							AgentID:   "elena",
+							Timestamp: time.Now(),
+						}
+						app.outputPane.AddMessage(response)
+					}()
+				}
+			}
+		}
 	})
 }
 
@@ -597,11 +675,36 @@ func (app *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmds = append(cmds, paneCmd)
 	}
 
-	// Check if input changed and trigger suggestions
+	// Check if input changed and trigger suggestions and dynamic resize
 	newInputValue := app.inputPane.GetValue()
-	if oldInputValue != newInputValue && app.suggestionManager != nil {
-		if suggestionCmd := app.suggestionManager.HandleInputChange(newInputValue); suggestionCmd != nil {
-			cmds = append(cmds, suggestionCmd)
+	if oldInputValue != newInputValue {
+		// Handle dynamic input resizing
+		lines := strings.Count(newInputValue, "\n") + 1
+		if lines < 1 {
+			lines = 1
+		}
+		
+		// Update layout manager with new input height
+		if app.layoutManager != nil {
+			if err := app.layoutManager.UpdateInputHeight(lines); err == nil {
+				// Resize panes based on new layout
+				inputRect := app.layoutManager.GetPaneRect("input")
+				app.inputPane.Resize(inputRect.Width, inputRect.Height)
+				
+				// Update other panes that might be affected
+				outputRect := app.layoutManager.GetPaneRect("output") 
+				app.outputPane.Resize(outputRect.Width, outputRect.Height)
+				
+				statusRect := app.layoutManager.GetPaneRect("status")
+				app.statusPane.Resize(statusRect.Width, statusRect.Height)
+			}
+		}
+		
+		// Handle suggestions
+		if app.suggestionManager != nil {
+			if suggestionCmd := app.suggestionManager.HandleInputChange(newInputValue); suggestionCmd != nil {
+				cmds = append(cmds, suggestionCmd)
+			}
 		}
 	}
 
@@ -1012,8 +1115,44 @@ func (app *App) handleCompletionResult(msg completion.CompletionResultMsg) (tea.
 			completionStrings[i] = result.Content
 		}
 		app.statusPane.ShowCompletions(completionStrings, 0)
+		
+		// Dynamically size status pane for completions (2 lines header + number of results, max 8)
+		statusHeight := 2 + len(msg.Results)
+		if statusHeight > 8 {
+			statusHeight = 8
+		}
+		if app.layoutManager != nil {
+			app.layoutManager.ShowStatusPane(statusHeight)
+			
+			// Update pane sizes based on new layout
+			statusRect := app.layoutManager.GetPaneRect("status")
+			app.statusPane.Resize(statusRect.Width, statusRect.Height)
+			
+			// Update other panes that might be affected
+			outputRect := app.layoutManager.GetPaneRect("output") 
+			app.outputPane.Resize(outputRect.Width, outputRect.Height)
+			
+			inputRect := app.layoutManager.GetPaneRect("input")
+			app.inputPane.Resize(inputRect.Width, inputRect.Height)
+		}
 	} else {
 		app.statusPane.HideCompletions()
+		
+		// Hide status pane when no completions
+		if app.layoutManager != nil {
+			app.layoutManager.HideStatusPane()
+			
+			// Update pane sizes based on new layout
+			statusRect := app.layoutManager.GetPaneRect("status")
+			app.statusPane.Resize(statusRect.Width, statusRect.Height)
+			
+			// Update other panes that might be affected
+			outputRect := app.layoutManager.GetPaneRect("output") 
+			app.outputPane.Resize(outputRect.Width, outputRect.Height)
+			
+			inputRect := app.layoutManager.GetPaneRect("input")
+			app.inputPane.Resize(inputRect.Width, inputRect.Height)
+		}
 	}
 	
 	return app, nil
