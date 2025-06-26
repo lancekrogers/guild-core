@@ -44,6 +44,8 @@ import (
 	"github.com/guild-ventures/guild-core/pkg/registry"
 	"github.com/guild-ventures/guild-core/pkg/templates"
 	"github.com/guild-ventures/guild-core/pkg/tools"
+
+	"github.com/guild-ventures/guild-core/tools/search"
 )
 
 // App represents the main chat application
@@ -965,13 +967,79 @@ func (app *App) handleSubmit() (tea.Model, tea.Cmd) {
 }
 
 func (app *App) handleCommandPalette() (tea.Model, tea.Cmd) {
-	// TODO: Implement command palette
+	if app.commandProcessor == nil || app.outputPane == nil {
+		return app, nil
+	}
+
+	commands := app.commandProcessor.GetAvailableCommands()
+	if len(commands) == 0 {
+		msg := common.ChatMessage{
+			Type:      common.MsgSystem,
+			Content:   "No commands available",
+			Timestamp: app.GetCurrentTime(),
+			Metadata:  map[string]string{"source": "palette"},
+		}
+		app.outputPane.AddMessage(msg)
+		return app, nil
+	}
+
+	var b strings.Builder
+	b.WriteString("\u2728 Available Commands:\n")
+	for _, c := range commands {
+		b.WriteString(fmt.Sprintf(" • /%s - %s\n", c.Name, c.Description))
+	}
+
+	msg := common.ChatMessage{
+		Type:      common.MsgSystem,
+		Content:   b.String(),
+		Timestamp: app.GetCurrentTime(),
+		Metadata:  map[string]string{"source": "palette"},
+	}
+	app.outputPane.AddMessage(msg)
 	return app, nil
 }
 
 func (app *App) handleGlobalSearch() (tea.Model, tea.Cmd) {
-	// TODO: Implement global search
-	return app, nil
+	if app.inputPane == nil || app.outputPane == nil {
+		return app, nil
+	}
+
+	pattern := strings.TrimSpace(app.inputPane.GetValue())
+	if pattern == "" {
+		app.statusPane.UpdateStatus("Enter a search pattern first", "warning")
+		return app, nil
+	}
+
+	ag := search.NewAgTool(app.config.ProjectRoot)
+	input := fmt.Sprintf(`{"pattern": "%s"}`, pattern)
+	result, err := ag.Execute(app.ctx, input)
+	if err != nil {
+		app.statusPane.UpdateStatus("search failed", "error")
+		return app, nil
+	}
+	if result.Metadata["error"] == "ag_not_installed" {
+		app.statusPane.UpdateStatus("ag tool not installed", "error")
+		return app, nil
+	}
+
+	var indices []int
+	if res, ok := result.ExtraData["structured_results"].(*search.AgToolResult); ok {
+		for _, r := range res.Results {
+			line := fmt.Sprintf("%s:%d:%s", r.File, r.Line, strings.TrimSpace(r.Match))
+			msg := common.ChatMessage{
+				Type:      common.MsgSystem,
+				Content:   line,
+				Timestamp: app.GetCurrentTime(),
+				Metadata:  map[string]string{"source": "search"},
+			}
+			app.outputPane.AddMessage(msg)
+			indices = append(indices, r.Line)
+		}
+	}
+
+	return app, func() tea.Msg {
+		return messages.SearchMsg{Pattern: pattern, Results: indices}
+	}
 }
 
 func (app *App) handleHelp() (tea.Model, tea.Cmd) {
