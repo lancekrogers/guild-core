@@ -433,23 +433,23 @@ func (app *App) setupInputCallbacks() {
 		if lines < 1 {
 			lines = 1
 		}
-		
+
 		// Update layout manager with new input height
 		if app.layoutManager != nil {
 			if err := app.layoutManager.UpdateInputHeight(lines); err == nil {
 				// Resize panes based on new layout
 				inputRect := app.layoutManager.GetPaneRect("input")
 				app.inputPane.Resize(inputRect.Width, inputRect.Height)
-				
+
 				// Update other panes that might be affected
-				outputRect := app.layoutManager.GetPaneRect("output") 
+				outputRect := app.layoutManager.GetPaneRect("output")
 				app.outputPane.Resize(outputRect.Width, outputRect.Height)
-				
+
 				statusRect := app.layoutManager.GetPaneRect("status")
 				app.statusPane.Resize(statusRect.Width, statusRect.Height)
 			}
 		}
-		
+
 		// Trigger suggestion request
 		if app.suggestionManager != nil {
 			// This will be handled in the main Update loop to avoid blocking
@@ -461,7 +461,7 @@ func (app *App) setupInputCallbacks() {
 		// Hide suggestions when submitting
 		app.inputPane.HideCompletions()
 		app.statusPane.HideCompletions()
-		
+
 		// Process the input through command processor
 		if app.commandProcessor != nil {
 			isCommand, cmd := app.commandProcessor.ProcessInput(input)
@@ -485,7 +485,7 @@ func (app *App) setupInputCallbacks() {
 					Timestamp: time.Now(),
 				}
 				app.outputPane.AddMessage(userMsg)
-				
+
 				// Send to agent router for processing
 				if app.agentRouter != nil {
 					// This is where real agent communication should happen
@@ -683,23 +683,23 @@ func (app *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if lines < 1 {
 			lines = 1
 		}
-		
+
 		// Update layout manager with new input height
 		if app.layoutManager != nil {
 			if err := app.layoutManager.UpdateInputHeight(lines); err == nil {
 				// Resize panes based on new layout
 				inputRect := app.layoutManager.GetPaneRect("input")
 				app.inputPane.Resize(inputRect.Width, inputRect.Height)
-				
+
 				// Update other panes that might be affected
-				outputRect := app.layoutManager.GetPaneRect("output") 
+				outputRect := app.layoutManager.GetPaneRect("output")
 				app.outputPane.Resize(outputRect.Width, outputRect.Height)
-				
+
 				statusRect := app.layoutManager.GetPaneRect("status")
 				app.statusPane.Resize(statusRect.Width, statusRect.Height)
 			}
 		}
-		
+
 		// Handle suggestions
 		if app.suggestionManager != nil {
 			if suggestionCmd := app.suggestionManager.HandleInputChange(newInputValue); suggestionCmd != nil {
@@ -831,7 +831,7 @@ func (app *App) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			}
 			app.statusPane.ShowCompletions(getCompletionStrings(app.completions), currentIndex)
 			return app, nil
-			
+
 		case "down", "ctrl+n":
 			// Navigate down in completions
 			currentIndex := 0
@@ -848,7 +848,7 @@ func (app *App) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			}
 			app.statusPane.ShowCompletions(getCompletionStrings(app.completions), currentIndex)
 			return app, nil
-			
+
 		case "tab", "enter":
 			// Accept current completion
 			if len(app.completions) > 0 {
@@ -864,7 +864,7 @@ func (app *App) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 				app.statusPane.HideCompletions()
 				return app, nil
 			}
-			
+
 		case "esc":
 			// Hide completions
 			app.completions = []completion.CompletionResult{}
@@ -1106,7 +1106,7 @@ func (app *App) handleCompletionResult(msg completion.CompletionResultMsg) (tea.
 	}
 
 	app.completions = msg.Results
-	
+
 	// Show completions in status pane
 	if len(msg.Results) > 0 {
 		// Extract completion strings
@@ -1115,7 +1115,7 @@ func (app *App) handleCompletionResult(msg completion.CompletionResultMsg) (tea.
 			completionStrings[i] = result.Content
 		}
 		app.statusPane.ShowCompletions(completionStrings, 0)
-		
+
 		// Dynamically size status pane for completions (2 lines header + number of results, max 8)
 		statusHeight := 2 + len(msg.Results)
 		if statusHeight > 8 {
@@ -1123,38 +1123,38 @@ func (app *App) handleCompletionResult(msg completion.CompletionResultMsg) (tea.
 		}
 		if app.layoutManager != nil {
 			app.layoutManager.ShowStatusPane(statusHeight)
-			
+
 			// Update pane sizes based on new layout
 			statusRect := app.layoutManager.GetPaneRect("status")
 			app.statusPane.Resize(statusRect.Width, statusRect.Height)
-			
+
 			// Update other panes that might be affected
-			outputRect := app.layoutManager.GetPaneRect("output") 
+			outputRect := app.layoutManager.GetPaneRect("output")
 			app.outputPane.Resize(outputRect.Width, outputRect.Height)
-			
+
 			inputRect := app.layoutManager.GetPaneRect("input")
 			app.inputPane.Resize(inputRect.Width, inputRect.Height)
 		}
 	} else {
 		app.statusPane.HideCompletions()
-		
+
 		// Hide status pane when no completions
 		if app.layoutManager != nil {
 			app.layoutManager.HideStatusPane()
-			
+
 			// Update pane sizes based on new layout
 			statusRect := app.layoutManager.GetPaneRect("status")
 			app.statusPane.Resize(statusRect.Width, statusRect.Height)
-			
+
 			// Update other panes that might be affected
-			outputRect := app.layoutManager.GetPaneRect("output") 
+			outputRect := app.layoutManager.GetPaneRect("output")
 			app.outputPane.Resize(outputRect.Width, outputRect.Height)
-			
+
 			inputRect := app.layoutManager.GetPaneRect("input")
 			app.inputPane.Resize(inputRect.Width, inputRect.Height)
 		}
 	}
-	
+
 	return app, nil
 }
 

@@ -4,12 +4,32 @@
 package chat_test
 
 import (
+	"regexp"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/guild-ventures/guild-core/internal/ui/formatting"
 )
+
+// stripANSI removes ANSI escape sequences from text for content validation
+func stripANSI(text string) string {
+	// Remove all ANSI escape sequences including complex color codes
+	// This regex covers:
+	// - \x1b[...m (color codes)
+	// - \x1b[...J (erase display)
+	// - \x1b[...K (erase line)
+	// - \x1b[...H (cursor position)
+	// - \x1b[...A-Z (other control sequences)
+	ansiRegex := regexp.MustCompile(`\x1b\[[0-9;:]*[a-zA-Z]`)
+	return ansiRegex.ReplaceAllString(text, "")
+}
+
+// validateContentContains checks if the content (with ANSI codes stripped) contains the expected text
+func validateContentContains(output, expected string) bool {
+	cleanOutput := stripANSI(output)
+	return strings.Contains(cleanOutput, expected)
+}
 
 func TestNewContentFormatter(t *testing.T) {
 	renderer, err := formatting.NewMarkdownRenderer(80)
@@ -65,7 +85,7 @@ func TestContentFormatter_FormatAgentResponse(t *testing.T) {
 			content: "Task completed successfully",
 			agentID: "worker-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "Task completed successfully")
+				return validateContentContains(output, "Task completed successfully")
 			},
 		},
 		{
@@ -74,7 +94,7 @@ func TestContentFormatter_FormatAgentResponse(t *testing.T) {
 			agentID: "coder-1",
 			validate: func(output string) bool {
 				// Should include agent attribution for complex responses
-				return strings.Contains(output, "coder-1") && strings.Contains(output, "func test")
+				return validateContentContains(output, "coder-1") && validateContentContains(output, "func test")
 			},
 		},
 		{
@@ -83,7 +103,7 @@ func TestContentFormatter_FormatAgentResponse(t *testing.T) {
 			agentID: "analyzer-1",
 			validate: func(output string) bool {
 				// Long responses should show agent attribution
-				return strings.Contains(output, "analyzer-1") && strings.Contains(output, "long response")
+				return validateContentContains(output, "analyzer-1") && validateContentContains(output, "long response")
 			},
 		},
 		{
@@ -92,7 +112,7 @@ func TestContentFormatter_FormatAgentResponse(t *testing.T) {
 			agentID: "",
 			validate: func(output string) bool {
 				// Should not include agent attribution
-				return strings.Contains(output, "Response without agent ID") && !strings.Contains(output, "🤖")
+				return validateContentContains(output, "Response without agent ID") && !validateContentContains(output, "🤖")
 			},
 		},
 		{
@@ -100,9 +120,9 @@ func TestContentFormatter_FormatAgentResponse(t *testing.T) {
 			content: "# Analysis Results\n\n- **Item 1**: Passed\n- **Item 2**: Failed",
 			agentID: "tester-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "Analysis Results") &&
-					strings.Contains(output, "Item 1") &&
-					strings.Contains(output, "Item 2")
+				return validateContentContains(output, "Analysis Results") &&
+					validateContentContains(output, "Item 1") &&
+					validateContentContains(output, "Item 2")
 			},
 		},
 		{
@@ -110,7 +130,7 @@ func TestContentFormatter_FormatAgentResponse(t *testing.T) {
 			content: "Use `guild chat` to start",
 			agentID: "helper-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "guild chat")
+				return validateContentContains(output, "guild chat")
 			},
 		},
 		{
@@ -126,9 +146,9 @@ func TestContentFormatter_FormatAgentResponse(t *testing.T) {
 			content: "Medieval theming with emojis: 🏰 ⚔️ 🛡️",
 			agentID: "theme-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "🏰") &&
-					strings.Contains(output, "⚔️") &&
-					strings.Contains(output, "🛡️")
+				return validateContentContains(output, "🏰") &&
+					validateContentContains(output, "⚔️") &&
+					validateContentContains(output, "🛡️")
 			},
 		},
 	}
@@ -159,7 +179,7 @@ func TestContentFormatter_FormatSystemMessage(t *testing.T) {
 			name:    "simple system message",
 			content: "System initialized",
 			validate: func(output string) bool {
-				return strings.Contains(output, "System initialized")
+				return validateContentContains(output, "System initialized")
 			},
 		},
 		{
@@ -167,7 +187,7 @@ func TestContentFormatter_FormatSystemMessage(t *testing.T) {
 			content: "Connection error: timeout",
 			validate: func(output string) bool {
 				// Should be highlighted with border
-				return strings.Contains(output, "Connection error")
+				return validateContentContains(output, "Connection error")
 			},
 		},
 		{
@@ -175,35 +195,35 @@ func TestContentFormatter_FormatSystemMessage(t *testing.T) {
 			content: "Task completed successfully",
 			validate: func(output string) bool {
 				// Should be highlighted
-				return strings.Contains(output, "Task completed")
+				return validateContentContains(output, "Task completed")
 			},
 		},
 		{
 			name:    "warning message",
 			content: "Warning: low memory",
 			validate: func(output string) bool {
-				return strings.Contains(output, "Warning: low memory")
+				return validateContentContains(output, "Warning: low memory")
 			},
 		},
 		{
 			name:    "status update",
 			content: "Agent started processing",
 			validate: func(output string) bool {
-				return strings.Contains(output, "Agent started")
+				return validateContentContains(output, "Agent started")
 			},
 		},
 		{
 			name:    "markdown in system message",
 			content: "System status:\n- **CPU**: 45%\n- **Memory**: 2GB",
 			validate: func(output string) bool {
-				return strings.Contains(output, "CPU") && strings.Contains(output, "Memory")
+				return validateContentContains(output, "CPU") && validateContentContains(output, "Memory")
 			},
 		},
 		{
 			name:    "disconnection message",
 			content: "Agent disconnected from server",
 			validate: func(output string) bool {
-				return strings.Contains(output, "disconnected")
+				return validateContentContains(output, "disconnected")
 			},
 		},
 	}
@@ -235,25 +255,25 @@ func TestContentFormatter_FormatErrorMessage(t *testing.T) {
 			content: "File not found",
 			validate: func(output string) bool {
 				// Should contain error icon and message
-				return strings.Contains(output, "❌") && strings.Contains(output, "File not found")
+				return validateContentContains(output, "❌") && validateContentContains(output, "File not found")
 			},
 		},
 		{
 			name:    "error with details",
 			content: "Compilation failed:\n```\nundefined: fmt.Printlnn\n```",
 			validate: func(output string) bool {
-				return strings.Contains(output, "❌") &&
-					strings.Contains(output, "Compilation failed") &&
-					strings.Contains(output, "undefined")
+				return validateContentContains(output, "❌") &&
+					validateContentContains(output, "Compilation failed") &&
+					validateContentContains(output, "undefined")
 			},
 		},
 		{
 			name:    "error with markdown",
 			content: "**Critical Error**: Database connection lost\n- Retry count: 3\n- Last attempt: failed",
 			validate: func(output string) bool {
-				return strings.Contains(output, "Critical Error") &&
-					strings.Contains(output, "Retry count") &&
-					strings.Contains(output, "Last attempt")
+				return validateContentContains(output, "Critical Error") &&
+					validateContentContains(output, "Retry count") &&
+					validateContentContains(output, "Last attempt")
 			},
 		},
 		{
@@ -261,16 +281,16 @@ func TestContentFormatter_FormatErrorMessage(t *testing.T) {
 			content: "",
 			validate: func(output string) bool {
 				// Should still have error formatting
-				return strings.Contains(output, "❌")
+				return validateContentContains(output, "❌")
 			},
 		},
 		{
 			name:    "multi-line error",
 			content: "Stack trace:\n  at main.go:42\n  at handler.go:15\n  at server.go:200",
 			validate: func(output string) bool {
-				return strings.Contains(output, "Stack trace") &&
-					strings.Contains(output, "main.go:42") &&
-					strings.Contains(output, "handler.go:15")
+				return validateContentContains(output, "Stack trace") &&
+					validateContentContains(output, "main.go:42") &&
+					validateContentContains(output, "handler.go:15")
 			},
 		},
 	}
@@ -303,9 +323,9 @@ func TestContentFormatter_FormatToolOutput(t *testing.T) {
 			content:  "File created successfully",
 			toolName: "FileWriter",
 			validate: func(output string) bool {
-				return strings.Contains(output, "🔧") &&
-					strings.Contains(output, "FileWriter") &&
-					strings.Contains(output, "File created successfully")
+				return validateContentContains(output, "🔧") &&
+					validateContentContains(output, "FileWriter") &&
+					validateContentContains(output, "File created successfully")
 			},
 		},
 		{
@@ -313,8 +333,8 @@ func TestContentFormatter_FormatToolOutput(t *testing.T) {
 			content:  "Generated code:\n```go\ntype Config struct {}\n```",
 			toolName: "CodeGenerator",
 			validate: func(output string) bool {
-				return strings.Contains(output, "CodeGenerator") &&
-					strings.Contains(output, "type Config")
+				return validateContentContains(output, "CodeGenerator") &&
+					validateContentContains(output, "type Config")
 			},
 		},
 		{
@@ -322,9 +342,9 @@ func TestContentFormatter_FormatToolOutput(t *testing.T) {
 			content:  "[INFO] Starting process\n[DEBUG] Loading config\n[INFO] Process complete",
 			toolName: "ShellExecutor",
 			validate: func(output string) bool {
-				return strings.Contains(output, "ShellExecutor") &&
-					strings.Contains(output, "[INFO]") &&
-					strings.Contains(output, "[DEBUG]")
+				return validateContentContains(output, "ShellExecutor") &&
+					validateContentContains(output, "[INFO]") &&
+					validateContentContains(output, "[DEBUG]")
 			},
 		},
 		{
@@ -332,7 +352,7 @@ func TestContentFormatter_FormatToolOutput(t *testing.T) {
 			content:  "",
 			toolName: "EmptyTool",
 			validate: func(output string) bool {
-				return strings.Contains(output, "🔧") && strings.Contains(output, "EmptyTool")
+				return validateContentContains(output, "🔧") && validateContentContains(output, "EmptyTool")
 			},
 		},
 		{
@@ -340,9 +360,9 @@ func TestContentFormatter_FormatToolOutput(t *testing.T) {
 			content:  "Results:\n- Test 1: PASS\n- Test 2: PASS\n- Test 3: FAIL",
 			toolName: "TestRunner",
 			validate: func(output string) bool {
-				return strings.Contains(output, "TestRunner") &&
-					strings.Contains(output, "PASS") &&
-					strings.Contains(output, "FAIL")
+				return validateContentContains(output, "TestRunner") &&
+					validateContentContains(output, "PASS") &&
+					validateContentContains(output, "FAIL")
 			},
 		},
 		{
@@ -350,9 +370,9 @@ func TestContentFormatter_FormatToolOutput(t *testing.T) {
 			content:  `{"status": "success", "files": ["main.go", "test.go"]}`,
 			toolName: "JSONParser",
 			validate: func(output string) bool {
-				return strings.Contains(output, "JSONParser") &&
-					strings.Contains(output, "status") &&
-					strings.Contains(output, "success")
+				return validateContentContains(output, "JSONParser") &&
+					validateContentContains(output, "status") &&
+					validateContentContains(output, "success")
 			},
 		},
 	}
@@ -385,9 +405,9 @@ func TestContentFormatter_FormatThinkingMessage(t *testing.T) {
 			content: "Analyzing the request...",
 			agentID: "analyzer-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "🤔") &&
-					strings.Contains(output, "analyzer-1") &&
-					strings.Contains(output, "Analyzing")
+				return validateContentContains(output, "🤔") &&
+					validateContentContains(output, "analyzer-1") &&
+					validateContentContains(output, "Analyzing")
 			},
 		},
 		{
@@ -395,9 +415,9 @@ func TestContentFormatter_FormatThinkingMessage(t *testing.T) {
 			content: "Processing information...",
 			agentID: "",
 			validate: func(output string) bool {
-				return strings.Contains(output, "🤔") &&
-					strings.Contains(output, "Processing") &&
-					!strings.Contains(output, "🤔 ")
+				return validateContentContains(output, "🤔") &&
+					validateContentContains(output, "Processing") &&
+					!validateContentContains(output, "🤔 ")
 			},
 		},
 		{
@@ -405,9 +425,9 @@ func TestContentFormatter_FormatThinkingMessage(t *testing.T) {
 			content: "Considering options:\n- **Option A**: Fast but risky\n- **Option B**: Slow but safe",
 			agentID: "planner-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "planner-1") &&
-					strings.Contains(output, "Option A") &&
-					strings.Contains(output, "Option B")
+				return validateContentContains(output, "planner-1") &&
+					validateContentContains(output, "Option A") &&
+					validateContentContains(output, "Option B")
 			},
 		},
 		{
@@ -415,7 +435,7 @@ func TestContentFormatter_FormatThinkingMessage(t *testing.T) {
 			content: "",
 			agentID: "thinker-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "🤔") && strings.Contains(output, "thinker-1")
+				return validateContentContains(output, "🤔") && validateContentContains(output, "thinker-1")
 			},
 		},
 		{
@@ -423,9 +443,9 @@ func TestContentFormatter_FormatThinkingMessage(t *testing.T) {
 			content: "The function `processData()` appears to have a complexity of O(n²)",
 			agentID: "reviewer-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "reviewer-1") &&
-					strings.Contains(output, "processData") &&
-					strings.Contains(output, "O(n²)")
+				return validateContentContains(output, "reviewer-1") &&
+					validateContentContains(output, "processData") &&
+					validateContentContains(output, "O(n²)")
 			},
 		},
 	}
@@ -458,9 +478,9 @@ func TestContentFormatter_FormatWorkingMessage(t *testing.T) {
 			content: "Executing task...",
 			agentID: "worker-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "⚙️") &&
-					strings.Contains(output, "worker-1") &&
-					strings.Contains(output, "Executing task")
+				return validateContentContains(output, "⚙️") &&
+					validateContentContains(output, "worker-1") &&
+					validateContentContains(output, "Executing task")
 			},
 		},
 		{
@@ -468,8 +488,8 @@ func TestContentFormatter_FormatWorkingMessage(t *testing.T) {
 			content: "Building project...",
 			agentID: "",
 			validate: func(output string) bool {
-				return strings.Contains(output, "⚙️") &&
-					strings.Contains(output, "Building project")
+				return validateContentContains(output, "⚙️") &&
+					validateContentContains(output, "Building project")
 			},
 		},
 		{
@@ -477,9 +497,9 @@ func TestContentFormatter_FormatWorkingMessage(t *testing.T) {
 			content: "Processing files: 10/100 (10%)",
 			agentID: "processor-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "processor-1") &&
-					strings.Contains(output, "10/100") &&
-					strings.Contains(output, "10%")
+				return validateContentContains(output, "processor-1") &&
+					validateContentContains(output, "10/100") &&
+					validateContentContains(output, "10%")
 			},
 		},
 		{
@@ -487,9 +507,9 @@ func TestContentFormatter_FormatWorkingMessage(t *testing.T) {
 			content: "Running tests:\n- ✓ Test 1\n- ✓ Test 2\n- ⏳ Test 3",
 			agentID: "tester-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "tester-1") &&
-					strings.Contains(output, "✓") &&
-					strings.Contains(output, "⏳")
+				return validateContentContains(output, "tester-1") &&
+					validateContentContains(output, "✓") &&
+					validateContentContains(output, "⏳")
 			},
 		},
 		{
@@ -497,7 +517,7 @@ func TestContentFormatter_FormatWorkingMessage(t *testing.T) {
 			content: "",
 			agentID: "worker-1",
 			validate: func(output string) bool {
-				return strings.Contains(output, "⚙️") && strings.Contains(output, "worker-1")
+				return validateContentContains(output, "⚙️") && validateContentContains(output, "worker-1")
 			},
 		},
 	}
@@ -535,23 +555,23 @@ func TestContentFormatter_FormatUserMessage(t *testing.T) {
 			name:    "user message with command",
 			content: "@worker-1 implement the login system",
 			validate: func(output string) bool {
-				return strings.Contains(output, "@worker-1") &&
-					strings.Contains(output, "implement the login system")
+				return validateContentContains(output, "@worker-1") &&
+					validateContentContains(output, "implement the login system")
 			},
 		},
 		{
 			name:    "user message with markdown",
 			content: "Please create a function that:\n- Takes **two** parameters\n- Returns a `string`",
 			validate: func(output string) bool {
-				return strings.Contains(output, "two") && strings.Contains(output, "string")
+				return validateContentContains(output, "two") && validateContentContains(output, "string")
 			},
 		},
 		{
 			name:    "user message with code",
 			content: "Fix this code:\n```go\nfmt.Printlnn(\"typo\")\n```",
 			validate: func(output string) bool {
-				return strings.Contains(output, "Fix this code") &&
-					strings.Contains(output, "fmt.Printlnn")
+				return validateContentContains(output, "Fix this code") &&
+					validateContentContains(output, "fmt.Printlnn")
 			},
 		},
 		{
@@ -565,9 +585,9 @@ func TestContentFormatter_FormatUserMessage(t *testing.T) {
 			name:    "user message with special characters",
 			content: "What does `x && !y || z` mean?",
 			validate: func(output string) bool {
-				return strings.Contains(output, "&&") &&
-					strings.Contains(output, "!y") &&
-					strings.Contains(output, "||")
+				return validateContentContains(output, "&&") &&
+					validateContentContains(output, "!y") &&
+					validateContentContains(output, "||")
 			},
 		},
 	}
@@ -598,28 +618,28 @@ func TestContentFormatter_FormatTimestamp(t *testing.T) {
 			name:      "morning timestamp",
 			timestamp: time.Date(2025, 1, 1, 9, 30, 45, 0, time.UTC),
 			validate: func(output string) bool {
-				return strings.Contains(output, "09:30:45")
+				return validateContentContains(output, "09:30:45")
 			},
 		},
 		{
 			name:      "afternoon timestamp",
 			timestamp: time.Date(2025, 1, 1, 15, 45, 30, 0, time.UTC),
 			validate: func(output string) bool {
-				return strings.Contains(output, "15:45:30")
+				return validateContentContains(output, "15:45:30")
 			},
 		},
 		{
 			name:      "midnight timestamp",
 			timestamp: time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC),
 			validate: func(output string) bool {
-				return strings.Contains(output, "00:00:00")
+				return validateContentContains(output, "00:00:00")
 			},
 		},
 		{
 			name:      "single digit time",
 			timestamp: time.Date(2025, 1, 1, 1, 2, 3, 0, time.UTC),
 			validate: func(output string) bool {
-				return strings.Contains(output, "01:02:03")
+				return validateContentContains(output, "01:02:03")
 			},
 		},
 	}
@@ -673,7 +693,7 @@ func TestContentFormatter_UpdateWidth(t *testing.T) {
 			// We can't directly check the width field, but we can test that
 			// the method doesn't panic and subsequent formatting works
 			output := formatter.FormatUserMessage("test message")
-			if !strings.Contains(output, "test message") {
+			if !validateContentContains(output, "test message") {
 				t.Error("UpdateWidth() affected basic message formatting")
 			}
 		})
@@ -720,7 +740,7 @@ func TestContentFormatter_SetTheme(t *testing.T) {
 
 			// Test that formatting still works after theme change
 			output := formatter.FormatSystemMessage("test message")
-			if !strings.Contains(output, "test message") {
+			if !validateContentContains(output, "test message") {
 				t.Error("SetTheme() broke basic message formatting")
 			}
 		})

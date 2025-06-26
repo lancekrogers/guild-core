@@ -37,11 +37,11 @@ type StatusPane interface {
 	SetCompactMode(compact bool)
 	SetShowAgents(show bool)
 	SetShowStats(show bool)
-	
+
 	// Completions display
 	ShowCompletions(completions []string, selectedIndex int)
 	HideCompletions()
-	
+
 	// Mode indicators
 	SetVimMode(mode string)
 	SetAutoAcceptMode(enabled bool)
@@ -102,12 +102,12 @@ type statusPaneImpl struct {
 
 	// Context
 	ctx context.Context
-	
+
 	// Completions
 	showingCompletions bool
 	completions        []string
 	completionIndex    int
-	
+
 	// Mode indicators
 	vimMode        string
 	autoAcceptMode bool
@@ -642,67 +642,67 @@ func createMinimalStatusStyles() map[string]lipgloss.Style {
 // renderCompletions renders completion suggestions
 func (sp *statusPaneImpl) renderCompletions(width int) []string {
 	var lines []string
-	
+
 	// Show up to 3 completions
 	maxCompletions := 3
 	if len(sp.completions) < maxCompletions {
 		maxCompletions = len(sp.completions)
 	}
-	
+
 	completionStyle := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("247")) // Gray
 	selectedStyle := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("82")). // Green
 		Bold(true)
-	
+
 	for i := 0; i < maxCompletions; i++ {
 		prefix := "  "
 		if i == sp.completionIndex {
 			prefix = "▸ "
 		}
-		
+
 		completion := sp.completions[i]
 		if len(completion) > width-4 {
 			completion = completion[:width-7] + "..."
 		}
-		
+
 		var line string
 		if i == sp.completionIndex {
 			line = selectedStyle.Render(prefix + completion)
 		} else {
 			line = completionStyle.Render(prefix + completion)
 		}
-		
+
 		lines = append(lines, line)
 	}
-	
+
 	// Add indicator if there are more completions
 	if len(sp.completions) > maxCompletions {
 		moreText := fmt.Sprintf("  ... %d more", len(sp.completions)-maxCompletions)
 		lines = append(lines, completionStyle.Render(moreText))
 	}
-	
+
 	return lines
 }
 
 // renderModeLine renders the mode indicators line
 func (sp *statusPaneImpl) renderModeLine(width int) string {
 	var parts []string
-	
+
 	// Left side: Input mode and vim mode
 	if sp.inputMode != "" {
 		modeStyle := lipgloss.NewStyle().
 			Foreground(lipgloss.Color("141")). // Purple
 			Bold(true)
-		
+
 		modeText := sp.inputMode
 		if sp.vimMode != "" && sp.vimMode != "normal" {
 			modeText = fmt.Sprintf("%s:%s", sp.inputMode, sp.vimMode)
 		}
-		
+
 		parts = append(parts, modeStyle.Render(modeText))
 	}
-	
+
 	// Center: Auto-accept indicator
 	if sp.autoAcceptMode {
 		autoStyle := lipgloss.NewStyle().
@@ -710,19 +710,19 @@ func (sp *statusPaneImpl) renderModeLine(width int) string {
 			Bold(true)
 		parts = append(parts, autoStyle.Render("AUTO"))
 	}
-	
+
 	// Right side: Status messages (aligned to right)
 	rightParts := []string{}
-	
+
 	// Add any additional status indicators here
 	if sp.connectionStatus {
 		rightParts = append(rightParts, "Connected")
 	}
-	
+
 	// Join left parts
 	leftContent := strings.Join(parts, " | ")
 	rightContent := strings.Join(rightParts, " | ")
-	
+
 	// Calculate padding
 	totalLen := len(leftContent) + len(rightContent)
 	if totalLen < width {
@@ -731,12 +731,12 @@ func (sp *statusPaneImpl) renderModeLine(width int) string {
 			leftContent = leftContent + strings.Repeat(" ", padding) + rightContent
 		}
 	}
-	
+
 	// Apply background style
 	lineStyle := lipgloss.NewStyle().
 		Background(lipgloss.Color("237")). // Slightly lighter than status bar
 		Foreground(lipgloss.Color("254")).
 		Width(width)
-	
+
 	return lineStyle.Render(leftContent)
 }

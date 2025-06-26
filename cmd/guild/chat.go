@@ -77,60 +77,60 @@ func checkGuildInitialized(cmd *cobra.Command, args []string) error {
 	campaignDir := filepath.Join(".", ".campaign")
 	if _, err := os.Stat(campaignDir); os.IsNotExist(err) {
 		// Campaign not initialized
-			// Offer to initialize guild
-			fmt.Println("🏰 Guild not initialized in this directory.")
+		// Offer to initialize guild
+		fmt.Println("🏰 Guild not initialized in this directory.")
+		fmt.Println()
+		fmt.Println("The Guild Framework needs to be initialized before you can chat with Elena and the specialists.")
+		fmt.Println()
+		fmt.Println("Would you like to initialize Guild now? This will:")
+		fmt.Println("  ✨ Set up your Guild with Elena as Guild Master")
+		fmt.Println("  🤖 Detect available AI providers automatically")
+		fmt.Println("  👥 Create Marcus (backend) and Vera (frontend) specialists")
+		fmt.Println("  🚀 Get you chatting in under 30 seconds")
+		fmt.Println()
+		fmt.Print("Initialize Guild? [Y/n]: ")
+
+		// Read user input
+		var response string
+		fmt.Scanln(&response)
+
+		// Default to yes if empty or starts with y/Y
+		if response == "" || (len(response) > 0 && strings.ToLower(response)[0] == 'y') {
 			fmt.Println()
-			fmt.Println("The Guild Framework needs to be initialized before you can chat with Elena and the specialists.")
+			fmt.Println("🎯 Starting Guild initialization...")
 			fmt.Println()
-			fmt.Println("Would you like to initialize Guild now? This will:")
-			fmt.Println("  ✨ Set up your Guild with Elena as Guild Master")
-			fmt.Println("  🤖 Detect available AI providers automatically")
-			fmt.Println("  👥 Create Marcus (backend) and Vera (frontend) specialists")
-			fmt.Println("  🚀 Get you chatting in under 30 seconds")
-			fmt.Println()
-			fmt.Print("Initialize Guild? [Y/n]: ")
 
-			// Read user input
-			var response string
-			fmt.Scanln(&response)
+			// Run guild init in quick mode
+			initCmd := exec.Command(os.Args[0], "init", "--quick")
+			initCmd.Stdout = os.Stdout
+			initCmd.Stderr = os.Stderr
+			initCmd.Stdin = os.Stdin
 
-			// Default to yes if empty or starts with y/Y
-			if response == "" || (len(response) > 0 && strings.ToLower(response)[0] == 'y') {
-				fmt.Println()
-				fmt.Println("🎯 Starting Guild initialization...")
-				fmt.Println()
-
-				// Run guild init in quick mode
-				initCmd := exec.Command(os.Args[0], "init", "--quick")
-				initCmd.Stdout = os.Stdout
-				initCmd.Stderr = os.Stderr
-				initCmd.Stdin = os.Stdin
-
-				if err := initCmd.Run(); err != nil {
-					return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run guild init").
-						WithComponent("cli").
-						WithOperation("checkGuildInitialized")
-				}
-
-				fmt.Println()
-				fmt.Println("✅ Guild initialized! Continuing to chat...")
-				fmt.Println()
-
-				// Small pause for user to see the message
-				time.Sleep(1 * time.Second)
-
-				// Return nil to continue to runChat
-				return nil
-			} else {
-				fmt.Println()
-				fmt.Println("To initialize Guild manually, run:")
-				fmt.Println("  guild init")
-				fmt.Println()
-				// Return the error which will prevent runChat from executing
-				return gerror.New(gerror.ErrCodeCancelled, "guild initialization required", nil).
+			if err := initCmd.Run(); err != nil {
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run guild init").
 					WithComponent("cli").
 					WithOperation("checkGuildInitialized")
 			}
+
+			fmt.Println()
+			fmt.Println("✅ Guild initialized! Continuing to chat...")
+			fmt.Println()
+
+			// Small pause for user to see the message
+			time.Sleep(1 * time.Second)
+
+			// Return nil to continue to runChat
+			return nil
+		} else {
+			fmt.Println()
+			fmt.Println("To initialize Guild manually, run:")
+			fmt.Println("  guild init")
+			fmt.Println()
+			// Return the error which will prevent runChat from executing
+			return gerror.New(gerror.ErrCodeCancelled, "guild initialization required", nil).
+				WithComponent("cli").
+				WithOperation("checkGuildInitialized")
+		}
 	}
 	// Campaign is initialized, continue
 	return nil

@@ -31,7 +31,7 @@ type CompletionEngine struct {
 	// NEW: Command processor integration
 	CommandProcessor CommandProcessorInterface // Interface to get commands from command processor
 
-	// NEW: File search integration  
+	// NEW: File search integration
 	FuzzyFinder *search.FuzzyFinder // For @file completions
 
 	// NEW: Suggestion system integration

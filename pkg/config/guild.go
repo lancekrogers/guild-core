@@ -213,7 +213,7 @@ func LoadGuildConfig(ctx context.Context, projectPath string) (*GuildConfig, err
 	campaignPath := filepath.Join(projectPath, ".campaign", "campaign.yaml")
 	if _, err := os.Stat(campaignPath); os.IsNotExist(err) {
 		logger.WarnContext(ctx, "Campaign configuration not found", "path", campaignPath)
-		
+
 		// Check if .guild directory exists (old format)
 		legacyGuildPath := filepath.Join(projectPath, ".guild", "guild.yaml")
 		if _, err := os.Stat(legacyGuildPath); err == nil {
@@ -223,14 +223,14 @@ func LoadGuildConfig(ctx context.Context, projectPath string) (*GuildConfig, err
 				WithDetails("legacy_path", legacyGuildPath).
 				WithDetails("expected_path", campaignPath)
 		}
-		
+
 		// Check current directory for obvious indicators
 		currentDir := filepath.Base(projectPath)
 		helpMsg := "Guild campaign not initialized. Run 'guild init' to set up a new Guild project.\n\n" +
 			"Current directory: " + currentDir + "\n" +
 			"Expected file: " + campaignPath + "\n\n" +
 			"If you're in the wrong directory, navigate to your project root first."
-			
+
 		return nil, gerror.New(gerror.ErrCodeNotFound, helpMsg, nil).
 			WithComponent("GuildConfig").
 			WithOperation("LoadGuildConfig").
@@ -281,7 +281,7 @@ func LoadGuildConfig(ctx context.Context, projectPath string) (*GuildConfig, err
 				"settings:\n" +
 				"  default_guild: " + campaignInfo.Guilds[0]
 		}
-		
+
 		return nil, gerror.New(gerror.ErrCodeValidation, errorMsg, nil).
 			WithComponent("GuildConfig").
 			WithOperation("LoadGuildConfig").
@@ -307,7 +307,7 @@ func LoadGuildConfig(ctx context.Context, projectPath string) (*GuildConfig, err
 					}
 				}
 			}
-			
+
 			errorMsg := fmt.Sprintf("guild file '%s.yaml' not found in .campaign/guilds/\n\n", guildName)
 			if len(availableGuilds) > 0 {
 				errorMsg += "Available guilds: " + strings.Join(availableGuilds, ", ") + "\n\n"
@@ -316,7 +316,7 @@ func LoadGuildConfig(ctx context.Context, projectPath string) (*GuildConfig, err
 				errorMsg += "No guild files found in .campaign/guilds/\n\n"
 				errorMsg += "To fix: Run 'guild init' to create guild configuration files"
 			}
-			
+
 			return nil, gerror.New(gerror.ErrCodeNotFound, errorMsg, nil).
 				WithComponent("GuildConfig").
 				WithOperation("LoadGuildConfig").
@@ -324,7 +324,7 @@ func LoadGuildConfig(ctx context.Context, projectPath string) (*GuildConfig, err
 				WithDetails("path", guildPath).
 				WithDetails("available_guilds", strings.Join(availableGuilds, ", "))
 		}
-		
+
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read guild config").
 			WithComponent("GuildConfig").
 			WithOperation("LoadGuildConfig").
@@ -376,7 +376,7 @@ func LoadGuildConfig(ctx context.Context, projectPath string) (*GuildConfig, err
 						}
 					}
 				}
-				
+
 				errorMsg := fmt.Sprintf("agent file '%s.yaml' not found in .campaign/agents/\n\n", agentID)
 				if len(availableAgents) > 0 {
 					errorMsg += "Available agents: " + strings.Join(availableAgents, ", ") + "\n\n"
@@ -385,7 +385,7 @@ func LoadGuildConfig(ctx context.Context, projectPath string) (*GuildConfig, err
 					errorMsg += "No agent files found in .campaign/agents/\n\n"
 					errorMsg += "To fix: Run 'guild init' to create agent configuration files"
 				}
-				
+
 				return nil, gerror.New(gerror.ErrCodeNotFound, errorMsg, nil).
 					WithComponent("GuildConfig").
 					WithOperation("LoadGuildConfig").
@@ -393,7 +393,7 @@ func LoadGuildConfig(ctx context.Context, projectPath string) (*GuildConfig, err
 					WithDetails("path", agentPath).
 					WithDetails("available_agents", strings.Join(availableAgents, ", "))
 			}
-			
+
 			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to read agent config").
 				WithComponent("GuildConfig").
 				WithOperation("LoadGuildConfig").

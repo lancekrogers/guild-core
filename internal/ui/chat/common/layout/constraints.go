@@ -9,15 +9,15 @@ import (
 
 // LayoutConstraints define how panes should be arranged and sized
 type LayoutConstraints struct {
-	MinWidth       int
-	MinHeight      int
-	MaxWidth       int     // 0 means no limit
-	MaxHeight      int     // 0 means no limit
-	FlexGrow       float64 // How much extra space this pane should consume
-	FlexShrink     float64 // How much this pane should shrink when space is limited
-	Padding        Padding
-	Margin         Margin
-	PreferredHeight int    // Preferred height (for dynamic sizing)
+	MinWidth        int
+	MinHeight       int
+	MaxWidth        int     // 0 means no limit
+	MaxHeight       int     // 0 means no limit
+	FlexGrow        float64 // How much extra space this pane should consume
+	FlexShrink      float64 // How much this pane should shrink when space is limited
+	Padding         Padding
+	Margin          Margin
+	PreferredHeight int // Preferred height (for dynamic sizing)
 }
 
 // Padding defines internal spacing for a pane
@@ -89,10 +89,10 @@ func OutputPaneConstraints() LayoutConstraints {
 func InputPaneConstraints() LayoutConstraints {
 	constraints := DefaultConstraints()
 	constraints.MinHeight = 1
-	constraints.MaxHeight = 8        // Allow up to 8 lines for multi-line input
-	constraints.PreferredHeight = 3  // Start with 3 lines  
-	constraints.FlexGrow = 0.0       // Don't grow with available space
-	constraints.FlexShrink = 0.0     // Don't shrink - maintain preferred height
+	constraints.MaxHeight = 8       // Allow up to 8 lines for multi-line input
+	constraints.PreferredHeight = 3 // Start with 3 lines
+	constraints.FlexGrow = 0.0      // Don't grow with available space
+	constraints.FlexShrink = 0.0    // Don't shrink - maintain preferred height
 	constraints.Padding = Padding{Top: 0, Right: 1, Bottom: 0, Left: 1}
 	return constraints
 }
@@ -100,11 +100,11 @@ func InputPaneConstraints() LayoutConstraints {
 // StatusPaneConstraints returns constraints optimized for the status bar
 func StatusPaneConstraints() LayoutConstraints {
 	constraints := DefaultConstraints()
-	constraints.MinHeight = 0        // Can be hidden when empty
-	constraints.MaxHeight = 10       // Allow up to 10 lines for completions
-	constraints.PreferredHeight = 0  // Start hidden (0 height)
-	constraints.FlexGrow = 0.0       // Don't grow
-	constraints.FlexShrink = 0.0     // Don't shrink
+	constraints.MinHeight = 0       // Can be hidden when empty
+	constraints.MaxHeight = 10      // Allow up to 10 lines for completions
+	constraints.PreferredHeight = 0 // Start hidden (0 height)
+	constraints.FlexGrow = 0.0      // Don't grow
+	constraints.FlexShrink = 0.0    // Don't shrink
 	constraints.Padding = Padding{Top: 0, Right: 1, Bottom: 0, Left: 1}
 	return constraints
 }
@@ -137,7 +137,7 @@ func CalculateLayout(config LayoutConfig, paneConstraints map[string]LayoutConst
 // StatusPaneConstraintsWithContent returns constraints when status pane has content
 func StatusPaneConstraintsWithContent(contentLines int) LayoutConstraints {
 	constraints := StatusPaneConstraints()
-	
+
 	// Calculate height based on content (1-10 lines)
 	height := contentLines
 	if height < 1 {
@@ -146,7 +146,7 @@ func StatusPaneConstraintsWithContent(contentLines int) LayoutConstraints {
 	if height > 10 {
 		height = 10
 	}
-	
+
 	constraints.PreferredHeight = height
 	constraints.MinHeight = height
 	return constraints
@@ -180,13 +180,13 @@ func calculateColumnLayout(config LayoutConfig, paneConstraints map[string]Layou
 			// Account for margins and padding in height calculation
 			marginHeight := constraints.Margin.Top + constraints.Margin.Bottom
 			paddingHeight := constraints.Padding.Top + constraints.Padding.Bottom
-			
+
 			// Use preferred height if set, otherwise use min height
 			preferredHeight := constraints.MinHeight
 			if constraints.PreferredHeight > 0 {
 				preferredHeight = constraints.PreferredHeight
 			}
-			
+
 			totalMinHeight += constraints.MinHeight + marginHeight + paddingHeight
 			totalPreferredHeight += preferredHeight + marginHeight + paddingHeight
 

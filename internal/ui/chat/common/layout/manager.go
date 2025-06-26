@@ -140,7 +140,7 @@ func (m *Manager) SetPaneConstraints(paneID string, constraints LayoutConstraint
 	if m.paneManager != nil {
 		m.paneManager.UpdatePaneConstraints(paneID, constraints)
 	}
-	
+
 	// Recalculate layout with new constraints
 	return m.RecalculateLayout()
 }
@@ -155,11 +155,11 @@ func (m *Manager) UpdateInputHeight(contentLines int) error {
 	if newHeight > 8 {
 		newHeight = 8
 	}
-	
+
 	// Update input pane constraints
 	constraints := InputPaneConstraints()
 	constraints.PreferredHeight = newHeight
-	
+
 	return m.SetPaneConstraints("input", constraints)
 }
 

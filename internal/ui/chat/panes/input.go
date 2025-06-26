@@ -272,24 +272,24 @@ func (ip *inputPaneImpl) GetPreferredHeight() int {
 	if content == "" {
 		return 3 // Minimum height for empty input
 	}
-	
+
 	// Count lines in content
 	lines := strings.Count(content, "\n") + 1
-	
+
 	// Add height for borders (2) and padding
 	preferredHeight := lines + 2
-	
+
 	// Limit to reasonable maximum (1/3 of typical terminal height)
 	maxHeight := 15
 	if preferredHeight > maxHeight {
 		preferredHeight = maxHeight
 	}
-	
+
 	// Ensure minimum height
 	if preferredHeight < 3 {
 		preferredHeight = 3
 	}
-	
+
 	return preferredHeight
 }
 
@@ -304,7 +304,7 @@ func (ip *inputPaneImpl) UpdateConstraints() {
 func (ip *inputPaneImpl) triggerOnChange() {
 	// Update layout constraints based on new content
 	ip.UpdateConstraints()
-	
+
 	if ip.onChange != nil {
 		ip.onChange(ip.GetValue())
 	}
@@ -536,7 +536,6 @@ func (ip *inputPaneImpl) cycleNextCompletion() {
 		ip.textarea.CursorEnd()
 	}
 }
-
 
 // View renders the input pane
 func (ip *inputPaneImpl) View() string {

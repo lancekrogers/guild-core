@@ -150,6 +150,31 @@ func TestChatServiceBasicsFixed(t *testing.T) {
 	err = reg.Providers().RegisterProvider("mock", mockProvider)
 	require.NoError(t, err)
 
+	// Register some test agents so they are available for ListAvailableAgents
+	testAgents := []registry.GuildAgentConfig{
+		{
+			ID:           "test-worker",
+			Name:         "Test Worker Agent",
+			Type:         "worker",
+			Provider:     "mock",
+			Model:        "test-model",
+			Capabilities: []string{"coding", "analysis"},
+		},
+		{
+			ID:           "test-manager",
+			Name:         "Test Manager Agent", 
+			Type:         "manager",
+			Provider:     "mock",
+			Model:        "test-model",
+			Capabilities: []string{"planning", "coordination"},
+		},
+	}
+	
+	for _, agent := range testAgents {
+		err = reg.Agents().RegisterGuildAgent(agent)
+		require.NoError(t, err)
+	}
+
 	// Create event bus adapter
 	mockEventBus := testutil.NewMockEventBus()
 	eventBusAdapter := &eventBusAdapter{mock: mockEventBus}

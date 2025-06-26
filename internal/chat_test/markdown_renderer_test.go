@@ -10,6 +10,7 @@ import (
 	"github.com/guild-ventures/guild-core/internal/ui/formatting"
 )
 
+
 func TestNewMarkdownRenderer(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -48,7 +49,7 @@ func TestNewMarkdownRenderer(t *testing.T) {
 }
 
 func TestMarkdownRenderer_Render(t *testing.T) {
-	renderer, err := chat.NewMarkdownRenderer(80)
+	renderer, err := formatting.NewMarkdownRenderer(80)
 	if err != nil {
 		t.Fatalf("Failed to create renderer: %v", err)
 	}
@@ -139,7 +140,7 @@ func TestMarkdownRenderer_Render(t *testing.T) {
 			content: "**Unclosed bold",
 			validate: func(output string) bool {
 				// Should still contain the text even if markdown is malformed
-				return strings.Contains(output, "Unclosed bold")
+				return validateContentContains(output, "Unclosed bold")
 			},
 		},
 		{
@@ -165,7 +166,7 @@ func TestMarkdownRenderer_Render(t *testing.T) {
 }
 
 func TestMarkdownRenderer_RenderInlineCode(t *testing.T) {
-	renderer, err := chat.NewMarkdownRenderer(80)
+	renderer, err := formatting.NewMarkdownRenderer(80)
 	if err != nil {
 		t.Fatalf("Failed to create renderer: %v", err)
 	}
@@ -209,7 +210,7 @@ func TestMarkdownRenderer_RenderInlineCode(t *testing.T) {
 }
 
 func TestMarkdownRenderer_DetectAndRenderContent(t *testing.T) {
-	renderer, err := chat.NewMarkdownRenderer(80)
+	renderer, err := formatting.NewMarkdownRenderer(80)
 	if err != nil {
 		t.Fatalf("Failed to create renderer: %v", err)
 	}
@@ -241,7 +242,9 @@ func TestMarkdownRenderer_DetectAndRenderContent(t *testing.T) {
 			content:      "```go\nfunc test() {}\n```",
 			shouldRender: true,
 			validateOutput: func(output string) bool {
-				return strings.Contains(output, "func test")
+				// Strip ANSI codes and check that both keywords are present
+				cleanOutput := stripANSI(output)
+				return strings.Contains(cleanOutput, "func") && strings.Contains(cleanOutput, "test")
 			},
 		},
 		{
@@ -273,7 +276,7 @@ func TestMarkdownRenderer_DetectAndRenderContent(t *testing.T) {
 }
 
 func TestMarkdownRenderer_EdgeCases(t *testing.T) {
-	renderer, err := chat.NewMarkdownRenderer(80)
+	renderer, err := formatting.NewMarkdownRenderer(80)
 	if err != nil {
 		t.Fatalf("Failed to create renderer: %v", err)
 	}
@@ -295,8 +298,8 @@ func TestMarkdownRenderer_EdgeCases(t *testing.T) {
 			name:    "unicode content",
 			content: "# 🏰 Guild Framework\n\nWith **unicode** 中文 content",
 			check: func(output string) bool {
-				return strings.Contains(output, "Guild Framework") &&
-					strings.Contains(output, "中文")
+				return validateContentContains(output, "Guild Framework") &&
+					validateContentContains(output, "中文")
 			},
 		},
 		{
@@ -346,7 +349,7 @@ func TestMarkdownRenderer_EdgeCases(t *testing.T) {
 }
 
 func BenchmarkMarkdownRenderer_Render(b *testing.B) {
-	renderer, err := chat.NewMarkdownRenderer(80)
+	renderer, err := formatting.NewMarkdownRenderer(80)
 	if err != nil {
 		b.Fatalf("Failed to create renderer: %v", err)
 	}

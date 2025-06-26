@@ -262,3 +262,12 @@ env/
 !examples/**/*.yaml
 !examples/**/*.yml
 !examples/**/*.json
+test-*/
+hash-test/
+
+# Coverage files
+
+# Build artifacts
+bin/guild
+.test-*.tmp
+

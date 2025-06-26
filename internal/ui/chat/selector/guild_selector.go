@@ -16,7 +16,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"gopkg.in/yaml.v3"
-	
+
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/paths"
@@ -220,7 +220,7 @@ func (m *GuildSelectorModel) loadGuilds() error {
 // loadModularGuilds loads guilds from the modular structure (.campaign/guilds/*.yaml)
 func (m *GuildSelectorModel) loadModularGuilds() ([]GuildInfo, error) {
 	guildsDir := filepath.Join(m.projectPath, paths.DefaultCampaignDir, "guilds")
-	
+
 	// Check if guilds directory exists
 	if _, err := os.Stat(guildsDir); os.IsNotExist(err) {
 		return nil, gerror.New(gerror.ErrCodeNotFound, "guilds directory not found", nil)

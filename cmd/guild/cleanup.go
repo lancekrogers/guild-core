@@ -87,7 +87,7 @@ func cleanupSockets(ctx context.Context) error {
 
 	for _, socketFile := range socketFiles {
 		basename := filepath.Base(socketFile)
-		
+
 		if cleanupAll || cleanupForce {
 			// Remove all sockets
 			fmt.Printf("  • Removing %s... ", basename)

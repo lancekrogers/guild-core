@@ -13,7 +13,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/internal/ui/chat"
 	"github.com/guild-ventures/guild-core/internal/ui/formatting"
 )
 
@@ -287,7 +286,7 @@ func TestDemoPerformance(t *testing.T) {
 func TestVisualComponentCompatibility(t *testing.T) {
 	t.Run("markdown_and_status_display", func(t *testing.T) {
 		// Test that markdown renderer and status display work together
-		// renderer, err := chat.NewMarkdownRenderer(80)
+		// renderer, err := formatting.NewMarkdownRenderer(80)
 		// Use the correct import path for NewMarkdownRenderer
 		renderer, err := formatting.NewMarkdownRenderer(80)
 		require.NoError(t, err)
@@ -319,7 +318,7 @@ func TestVisualComponentCompatibility(t *testing.T) {
 			CurrentTask  string
 			LastActivity time.Time
 		}
-		status := &AgentStatus2{
+		_ = &AgentStatus2{
 			ID:           "test-agent",
 			Name:         "Test Agent",
 			State:        "working", // chat.AgentWorking,
@@ -338,15 +337,15 @@ func TestVisualComponentCompatibility(t *testing.T) {
 
 // TestErrorHandlingInDemos tests graceful error handling during demos
 func TestErrorHandlingInDemos(t *testing.T) {
-	model := createTestChatModel(t)
+	_ = createTestChatModel(t)
 
 	t.Run("component_failure_graceful_degradation", func(t *testing.T) {
 		// Test with invalid renderer width
-		_, err := chat.NewMarkdownRenderer(0) // Invalid width
-		assert.NoError(t, err)                // Should handle gracefully
+		_, err := formatting.NewMarkdownRenderer(0) // Invalid width
+		assert.NoError(t, err)                      // Should handle gracefully
 
 		// Test with very large width
-		renderer, err := chat.NewMarkdownRenderer(10000)
+		renderer, err := formatting.NewMarkdownRenderer(10000)
 		assert.NoError(t, err)
 
 		// Should still render content
@@ -356,7 +355,7 @@ func TestErrorHandlingInDemos(t *testing.T) {
 	})
 
 	t.Run("invalid_demo_commands", func(t *testing.T) {
-		validator := NewDemoScenarioValidator(model, false)
+		validator := NewDemoScenarioValidator(false)
 
 		// Test with invalid commands
 		invalidCommands := []string{
@@ -374,7 +373,7 @@ func TestErrorHandlingInDemos(t *testing.T) {
 
 	t.Run("stress_test_many_operations", func(t *testing.T) {
 		// Test with many operations quickly (stress test)
-		renderer, err := chat.NewMarkdownRenderer(80)
+		renderer, err := formatting.NewMarkdownRenderer(80)
 		require.NoError(t, err)
 
 		// Should handle without crashing
