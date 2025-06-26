@@ -4,6 +4,7 @@
 package base
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -327,13 +328,64 @@ func (p *OpenAICompatibleProvider) parseError(statusCode int, body []byte) error
 // openAIStream implements ChatStream for OpenAI SSE format
 type openAIStream struct {
 	reader   io.ReadCloser
-	scanner  *json.Decoder
+	scanner  *bufio.Scanner
 	provider string
 }
 
 func (s *openAIStream) Next() (interfaces.ChatStreamChunk, error) {
-	// TODO: Implement SSE parsing for streaming
-	// For now, return EOF to indicate no streaming support
+	if s.scanner == nil {
+		s.scanner = bufio.NewScanner(s.reader)
+	}
+
+	for s.scanner.Scan() {
+		line := strings.TrimSpace(s.scanner.Text())
+		if line == "" {
+			continue
+		}
+		if !strings.HasPrefix(line, "data:") {
+			continue
+		}
+
+		payload := strings.TrimSpace(strings.TrimPrefix(line, "data:"))
+		if payload == "[DONE]" {
+			return interfaces.ChatStreamChunk{}, io.EOF
+		}
+
+		var resp struct {
+			Choices []struct {
+				Delta struct {
+					Role    string `json:"role,omitempty"`
+					Content string `json:"content,omitempty"`
+				} `json:"delta"`
+				FinishReason string `json:"finish_reason"`
+			} `json:"choices"`
+		}
+
+		if err := json.Unmarshal([]byte(payload), &resp); err != nil {
+			return interfaces.ChatStreamChunk{}, gerror.Wrap(err, gerror.ErrCodeParsing, "invalid SSE chunk").
+				WithComponent("providers").
+				WithOperation("openAIStream.Next")
+		}
+
+		if len(resp.Choices) == 0 {
+			continue
+		}
+
+		chunk := interfaces.ChatStreamChunk{
+			Delta: interfaces.ChatMessage{
+				Role:    resp.Choices[0].Delta.Role,
+				Content: resp.Choices[0].Delta.Content,
+			},
+			FinishReason: resp.Choices[0].FinishReason,
+		}
+
+		return chunk, nil
+	}
+
+	if err := s.scanner.Err(); err != nil {
+		return interfaces.ChatStreamChunk{}, err
+	}
+
 	return interfaces.ChatStreamChunk{}, io.EOF
 }
 
