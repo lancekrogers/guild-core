@@ -162,14 +162,14 @@ func TestChatServiceBasicsFixed(t *testing.T) {
 		},
 		{
 			ID:           "test-manager",
-			Name:         "Test Manager Agent", 
+			Name:         "Test Manager Agent",
 			Type:         "manager",
 			Provider:     "mock",
 			Model:        "test-model",
 			Capabilities: []string{"planning", "coordination"},
 		},
 	}
-	
+
 	for _, agent := range testAgents {
 		err = reg.Agents().RegisterGuildAgent(agent)
 		require.NoError(t, err)

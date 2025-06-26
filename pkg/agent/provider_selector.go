@@ -60,8 +60,8 @@ func (ps *ProviderSelector) SelectProvider(ctx context.Context, config *config.E
 	ctx = observability.WithComponent(ctx, "ProviderSelector")
 	ctx = observability.WithOperation(ctx, "SelectProvider")
 
-	logger.InfoContext(ctx, "Selecting provider for agent", 
-		"agent_id", config.ID, 
+	logger.InfoContext(ctx, "Selecting provider for agent",
+		"agent_id", config.ID,
 		"model", config.Model,
 		"preferred_provider", config.GetEffectiveProvider())
 
@@ -79,13 +79,13 @@ func (ps *ProviderSelector) SelectProvider(ctx context.Context, config *config.E
 	// Attempt to create client with preferred provider
 	client, err := ps.createClient(ctx, provider, model)
 	if err == nil {
-		logger.InfoContext(ctx, "Successfully selected preferred provider", 
-			"agent_id", config.ID, 
-			"provider", provider, 
+		logger.InfoContext(ctx, "Successfully selected preferred provider",
+			"agent_id", config.ID,
+			"provider", provider,
 			"model", model)
 
 		costProfile := ps.estimateCost(provider, model, config.GetEffectiveContextWindow())
-		
+
 		return &ProviderSelection{
 			Provider:    provider,
 			Model:       model,
@@ -95,9 +95,9 @@ func (ps *ProviderSelector) SelectProvider(ctx context.Context, config *config.E
 		}, nil
 	}
 
-	logger.WarnContext(ctx, "Preferred provider failed, trying fallbacks", 
-		"agent_id", config.ID, 
-		"preferred_provider", provider, 
+	logger.WarnContext(ctx, "Preferred provider failed, trying fallbacks",
+		"agent_id", config.ID,
+		"preferred_provider", provider,
 		"error", err)
 
 	// Try fallback providers
@@ -116,17 +116,17 @@ func (ps *ProviderSelector) SelectProvider(ctx context.Context, config *config.E
 
 		// Map original model to fallback provider's equivalent
 		fallbackModel := ps.mapModelToProvider(model, fallbackProvider)
-		
+
 		client, err := ps.createClient(ctx, fallbackProvider, fallbackModel)
 		if err == nil {
-			logger.InfoContext(ctx, "Successfully selected fallback provider", 
-				"agent_id", config.ID, 
-				"provider", fallbackProvider, 
+			logger.InfoContext(ctx, "Successfully selected fallback provider",
+				"agent_id", config.ID,
+				"provider", fallbackProvider,
 				"model", fallbackModel,
 				"original_model", model)
 
 			costProfile := ps.estimateCost(fallbackProvider, fallbackModel, config.GetEffectiveContextWindow())
-			
+
 			return &ProviderSelection{
 				Provider:    fallbackProvider,
 				Model:       fallbackModel,
@@ -136,9 +136,9 @@ func (ps *ProviderSelector) SelectProvider(ctx context.Context, config *config.E
 			}, nil
 		}
 
-		logger.WarnContext(ctx, "Fallback provider failed", 
-			"agent_id", config.ID, 
-			"fallback_provider", fallbackProvider, 
+		logger.WarnContext(ctx, "Fallback provider failed",
+			"agent_id", config.ID,
+			"fallback_provider", fallbackProvider,
 			"error", err)
 	}
 
@@ -153,7 +153,8 @@ func (ps *ProviderSelector) SelectProvider(ctx context.Context, config *config.E
 
 // parseModelString parses a model string to extract provider and model name
 // Examples: "anthropic/claude-3-sonnet" -> "anthropic", "claude-3-sonnet"
-//           "claude-3-sonnet" -> "", "claude-3-sonnet"
+//
+//	"claude-3-sonnet" -> "", "claude-3-sonnet"
 func (ps *ProviderSelector) parseModelString(model string) (string, string) {
 	if strings.Contains(model, "/") {
 		parts := strings.SplitN(model, "/", 2)
@@ -167,7 +168,7 @@ func (ps *ProviderSelector) parseModelString(model string) (string, string) {
 // mapModelToProvider maps a model name to an equivalent model for a different provider
 func (ps *ProviderSelector) mapModelToProvider(originalModel, targetProvider string) string {
 	originalModel = strings.ToLower(originalModel)
-	
+
 	switch targetProvider {
 	case "anthropic":
 		switch {
@@ -233,7 +234,7 @@ func (ps *ProviderSelector) createClient(ctx context.Context, provider, model st
 // estimateCost estimates the cost profile for a provider and model
 func (ps *ProviderSelector) estimateCost(provider, model string, contextWindow int) CostEstimate {
 	modelLower := strings.ToLower(model)
-	
+
 	// Default cost estimate
 	estimate := CostEstimate{
 		Magnitude:       1,
@@ -304,7 +305,7 @@ func (ps *ProviderSelector) GetAvailableProviders(ctx context.Context) ([]string
 	// If not available, return the standard list
 	return []string{
 		"anthropic",
-		"openai", 
+		"openai",
 		"ollama",
 		"deepseek",
 		"deepinfra",

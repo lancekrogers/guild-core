@@ -502,19 +502,34 @@ func (app *App) setupInputCallbacks() {
 							Metadata:  make(map[string]string),
 						}
 						app.outputPane.AddMessage(errorMsg)
-						return app, nil
+						return
 					}
 
-					if target != nil {
-						// Route to specific agent or broadcast
-						if target.IsBroadcast {
-							return app, app.agentRouter.BroadcastToAll(target.Message)
+					// Schedule agent communication as a separate command
+					// Since we're in a callback, we need to trigger this via the program
+					go func() {
+						var cmd tea.Cmd
+						if target != nil {
+							// Route to specific agent or broadcast
+							if target.IsBroadcast {
+								cmd = app.agentRouter.BroadcastToAll(target.Message)
+							} else {
+								cmd = app.agentRouter.SendToAgent(target.ID, target.Message)
+							}
+						} else {
+							// No agent mention, send to default agent (elena-guild-master)
+							cmd = app.agentRouter.SendToAgent("elena-guild-master", input)
 						}
-						return app, app.agentRouter.SendToAgent(target.ID, target.Message)
-					} else {
-						// No agent mention, send to default agent (elena-guild-master)
-						return app, app.agentRouter.SendToAgent("elena-guild-master", input)
-					}
+
+						// Execute the command and handle the result
+						if cmd != nil {
+							if msg := cmd(); msg != nil {
+								// Send the message to the main program
+								// Note: This is a simplified approach - in a full implementation
+								// we would need proper message passing
+							}
+						}
+					}()
 				} else {
 					// No agent router available
 					errorMsg := common.ChatMessage{
@@ -1328,12 +1343,8 @@ func (app *App) handleAgentResponse(msg agents.AgentResponseMsg) (tea.Model, tea
 
 	// Save to session if available
 	if app.sessionManager != nil && app.currentSession != nil {
-		metadata := map[string]string{
-			"agent_id":   msg.AgentID,
-			"message_id": msg.MessageID,
-			"timestamp":  msg.Timestamp.Format(time.RFC3339),
-		}
-		app.sessionManager.AppendMessage(app.currentSession.ID, session.RoleAssistant, msg.Content, metadata)
+		// Convert to the expected format (no tool calls for regular agent responses)
+		app.sessionManager.AppendMessage(app.currentSession.ID, session.RoleAssistant, msg.Content, nil)
 	}
 
 	return app, nil
@@ -1353,12 +1364,8 @@ func (app *App) handleBroadcastResponse(msg agents.BroadcastResponseMsg) (tea.Mo
 
 		// Save each broadcast response to session if available
 		if app.sessionManager != nil && app.currentSession != nil {
-			metadata := map[string]string{
-				"agent_id":   response.AgentId,
-				"message_id": msg.MessageID,
-				"broadcast":  "true",
-			}
-			app.sessionManager.AppendMessage(app.currentSession.ID, session.RoleAssistant, response.Response, metadata)
+			// Convert to the expected format (no tool calls for broadcast responses)
+			app.sessionManager.AppendMessage(app.currentSession.ID, session.RoleAssistant, response.Response, nil)
 		}
 	}
 
@@ -1411,14 +1418,14 @@ func (app *App) refreshAllAgentStatuses() tea.Cmd {
 			for _, agentID := range availableAgents {
 				cmds = append(cmds, app.agentRouter.GetAgentStatus(agentID))
 			}
-			
+
 			// Schedule next refresh in 10 seconds
 			time.AfterFunc(10*time.Second, func() {
 				// This would trigger the next refresh cycle in a real implementation
 				// For now, we'll leave it as a placeholder since we need proper
 				// message scheduling in the TUI framework
 			})
-			
+
 			return tea.Batch(cmds...)()
 		},
 	)

@@ -12,7 +12,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	uiinit "github.com/guild-ventures/guild-core/internal/ui/init"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/pkg/project"
@@ -104,15 +103,6 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	// Create dependencies
-	deps := uiinit.InitDependencies{
-		ConfigManager: uiinit.NewDefaultConfigManager(),
-		ProjectInit:   uiinit.NewDefaultProjectInitializer(),
-		DemoGen:       uiinit.NewDefaultDemoGenerator(),
-		Validator:     uiinit.NewDefaultValidator(),
-		DaemonManager: uiinit.NewDefaultDaemonManager(),
-	}
-
 	// Use default campaign and project names
 	campaignName := "guild-demo"
 	projectName := filepath.Base(projectPath)
@@ -149,7 +139,7 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		fmt.Printf("⚠️ (using generic)\n")
 		projectType = &project.ProjectType{
-			Type:        "generic",
+			Name:        "generic",
 			Language:    "multiple",
 			Framework:   "",
 			Description: "Generic project",
@@ -182,7 +172,7 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 	// Step 4: Create campaign configuration
 	fmt.Print("⚙️  Creating campaign configuration... ")
 	campaignHash := generateCampaignHash(projectPath)
-	if err := createCampaignConfig(ctx, projectPath, campaignName, projectName, projectType.Type); err != nil {
+	if err := createCampaignConfig(ctx, projectPath, campaignName, projectName, projectType.Name); err != nil {
 		fmt.Println("❌")
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create campaign config").
 			WithComponent("cli").
@@ -198,7 +188,7 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 			WithComponent("cli").
 			WithOperation("runFastInit")
 	}
-	
+
 	// Adapt agents to project type
 	if err := adaptAgentConfigsToProjectType(ctx, projectPath, projectType); err != nil {
 		logger.WarnContext(ctx, "Failed to adapt agent configs", "error", err)
@@ -252,4 +242,3 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 
 	return nil
 }
-

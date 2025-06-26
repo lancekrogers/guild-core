@@ -72,7 +72,7 @@ func (ca *ConfigBasedAgent) Execute(ctx context.Context, prompt string) (string,
 	ctx = observability.WithComponent(ctx, "ConfigBasedAgent")
 	ctx = observability.WithOperation(ctx, "Execute")
 
-	logger.InfoContext(ctx, "Executing task", 
+	logger.InfoContext(ctx, "Executing task",
 		"agent_id", ca.id,
 		"agent_type", ca.agentType,
 		"prompt_length", len(prompt))
@@ -106,7 +106,7 @@ func (ca *ConfigBasedAgent) Execute(ctx context.Context, prompt string) (string,
 	// Update cost tracking (simplified - would need token counts from LLM client)
 	ca.contextManager.UpdateCost(ctx, len(contextPrompt)/4, len(response)/4)
 
-	logger.InfoContext(ctx, "Task execution completed", 
+	logger.InfoContext(ctx, "Task execution completed",
 		"agent_id", ca.id,
 		"response_length", len(response))
 
@@ -125,14 +125,14 @@ func (ca *ConfigBasedAgent) ExecuteWithTools(ctx context.Context, prompt string,
 	ctx = observability.WithComponent(ctx, "ConfigBasedAgent")
 	ctx = observability.WithOperation(ctx, "ExecuteWithTools")
 
-	logger.InfoContext(ctx, "Executing task with tools", 
+	logger.InfoContext(ctx, "Executing task with tools",
 		"agent_id", ca.id,
 		"available_tools_count", len(availableTools))
 
 	// Filter tools based on agent's access control
 	allowedTools := ca.toolFilter.FilterTools(ctx, availableTools)
 
-	logger.InfoContext(ctx, "Tools filtered for agent", 
+	logger.InfoContext(ctx, "Tools filtered for agent",
 		"agent_id", ca.id,
 		"requested_tools", len(availableTools),
 		"allowed_tools", len(allowedTools))
@@ -174,22 +174,22 @@ func (ca *ConfigBasedAgent) GetAgentInfo(ctx context.Context) map[string]interfa
 	toolSummary := ca.toolFilter.GetToolAccessSummary(ctx)
 
 	return map[string]interface{}{
-		"id":               ca.id,
-		"name":             ca.name,
-		"type":             ca.agentType,
-		"role":             ca.role,
-		"specialty":        ca.specialty,
-		"backstory":        ca.backstory,
-		"capabilities":     ca.capabilities,
-		"provider":         ca.providerSelection.Provider,
-		"model":            ca.providerSelection.Model,
-		"cost_magnitude":   ca.providerSelection.CostProfile.Magnitude,
-		"context":          contextSummary,
-		"tools":            toolSummary,
-		"languages":        ca.config.Languages,
-		"frameworks":       ca.config.Frameworks,
-		"prompts":          ca.prompts,
-		"metadata":         ca.metadata,
+		"id":             ca.id,
+		"name":           ca.name,
+		"type":           ca.agentType,
+		"role":           ca.role,
+		"specialty":      ca.specialty,
+		"backstory":      ca.backstory,
+		"capabilities":   ca.capabilities,
+		"provider":       ca.providerSelection.Provider,
+		"model":          ca.providerSelection.Model,
+		"cost_magnitude": ca.providerSelection.CostProfile.Magnitude,
+		"context":        contextSummary,
+		"tools":          toolSummary,
+		"languages":      ca.config.Languages,
+		"frameworks":     ca.config.Frameworks,
+		"prompts":        ca.prompts,
+		"metadata":       ca.metadata,
 	}
 }
 

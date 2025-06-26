@@ -203,7 +203,9 @@ func discoverPackages() ([]string, error) {
 			!strings.Contains(line, "/testdata") &&
 			!strings.Contains(line, "/integration") &&
 			!strings.HasSuffix(line, "/integration") &&
-			!strings.Contains(line, "_test") {
+			!strings.Contains(line, "_test") &&
+			!strings.HasSuffix(line, "/test/benchmark") &&
+			!strings.HasSuffix(line, "/test/e2e") {
 			// Convert full module paths to relative paths
 			if module != "" && strings.HasPrefix(line, module) {
 				relativePath := strings.TrimPrefix(line, module)

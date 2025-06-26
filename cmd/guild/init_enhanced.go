@@ -24,7 +24,7 @@ import (
 // campaignDirectoryStructure defines the complete campaign directory structure
 var campaignDirectoryStructure = []string{
 	"agents",
-	"guilds", 
+	"guilds",
 	"memory",
 	"prompts",
 	"tools",
@@ -64,7 +64,7 @@ func createEnhancedCampaignStructure(ctx context.Context, projectPath string) er
 	// Create user-facing directories (outside .campaign)
 	userDirs := []string{
 		"commissions",
-		"commissions/refined", 
+		"commissions/refined",
 		"corpus",
 		"corpus/index",
 		"kanban",
@@ -77,6 +77,15 @@ func createEnhancedCampaignStructure(ctx context.Context, projectPath string) er
 				WithComponent("cli").
 				WithOperation("createEnhancedCampaignStructure").
 				WithDetails("dir", dir)
+		}
+		
+		// Create .gitkeep file in empty directories to ensure they're tracked by git
+		gitkeepPath := filepath.Join(dirPath, ".gitkeep")
+		if err := os.WriteFile(gitkeepPath, []byte(""), 0644); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create .gitkeep file").
+				WithComponent("cli").
+				WithOperation("createEnhancedCampaignStructure").
+				WithDetails("path", gitkeepPath)
 		}
 	}
 
@@ -100,7 +109,7 @@ func createCampaignConfig(ctx context.Context, projectPath, campaignName, projec
 	}
 
 	campaignHash := generateCampaignHash(projectPath)
-	
+
 	// Create campaign configuration
 	campaignConfig := map[string]interface{}{
 		"campaign": map[string]interface{}{
@@ -169,9 +178,9 @@ func createSocketRegistry(ctx context.Context, projectPath, campaignName, campai
 		"socket_path":   fmt.Sprintf("/tmp/guild-%s.sock", campaignHash),
 		"created_at":    time.Now().Format(time.RFC3339),
 		"daemon": map[string]interface{}{
-			"status":      "stopped",
-			"last_start":  nil,
-			"pid":         0,
+			"status":     "stopped",
+			"last_start": nil,
+			"pid":        0,
 		},
 	}
 
@@ -214,7 +223,7 @@ func createDefaultGuildConfig(ctx context.Context, projectPath, projectName stri
 		},
 		"agents": []string{
 			"elena-guild-master",
-			"marcus-developer", 
+			"marcus-developer",
 			"vera-tester",
 		},
 		"workflows": map[string]interface{}{
@@ -226,15 +235,15 @@ func createDefaultGuildConfig(ctx context.Context, projectPath, projectName stri
 			},
 		},
 		"cost_optimization": map[string]interface{}{
-			"enabled":     true,
-			"max_cost":    100.0,
-			"alert_at":    80.0,
-			"currency":    "USD",
+			"enabled":  true,
+			"max_cost": 100.0,
+			"alert_at": 80.0,
+			"currency": "USD",
 		},
 	}
 
-	guildPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "guilds", "default-guild.yaml")
-	
+	guildPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "guilds", "elena_guild.yaml")
+
 	// Ensure guilds directory exists
 	guildsDir := filepath.Join(projectPath, paths.DefaultCampaignDir, "guilds")
 	if err := os.MkdirAll(guildsDir, 0755); err != nil {
@@ -368,11 +377,11 @@ func createEnhancedAgentConfigs(ctx context.Context, projectPath string, project
 
 	// Write agent configurations
 	agents := []*config.AgentConfig{elenaConfig, marcusConfig, veraConfig}
-	
+
 	for _, agent := range agents {
 		filename := fmt.Sprintf("%s.yaml", agent.ID)
 		filepath := filepath.Join(agentsDir, filename)
-		
+
 		data, err := yaml.Marshal(agent)
 		if err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal agent config").
@@ -420,7 +429,7 @@ func initializeCampaignDatabase(ctx context.Context, projectPath, campaignName s
 	}
 
 	dbPath := filepath.Join(projectPath, paths.DefaultCampaignDir, paths.DefaultMemoryDB)
-	
+
 	// Create database connection
 	db, err := storage.DefaultDatabaseFactory(ctx, dbPath)
 	if err != nil {
@@ -456,10 +465,10 @@ func adaptAgentConfigsToProjectType(ctx context.Context, projectPath string, pro
 	}
 
 	agentsDir := filepath.Join(projectPath, paths.DefaultCampaignDir, "agents")
-	
+
 	// Update Marcus's configuration based on project type
 	marcusPath := filepath.Join(agentsDir, "marcus-developer.yaml")
-	
+
 	// Read existing config
 	data, err := os.ReadFile(marcusPath)
 	if err != nil {

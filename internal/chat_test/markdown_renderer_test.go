@@ -10,7 +10,6 @@ import (
 	"github.com/guild-ventures/guild-core/internal/ui/formatting"
 )
 
-
 func TestNewMarkdownRenderer(t *testing.T) {
 	tests := []struct {
 		name    string

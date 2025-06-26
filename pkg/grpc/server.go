@@ -761,7 +761,7 @@ func (s *Server) SendMessageToAgent(ctx context.Context, req *pb.AgentMessageReq
 	// If no direct agent or execution failed, try orchestrator
 	if response == "" && s.orchestrator != nil {
 		logger.Debug("Attempting execution via orchestrator", "agent_id", req.AgentId)
-		
+
 		// Get agent from orchestrator and execute
 		if orchAgent, found := s.orchestrator.GetAgent(req.AgentId); found {
 			if orchResponse, orchErr := orchAgent.Execute(ctx, req.Message); orchErr == nil {
@@ -778,7 +778,7 @@ func (s *Server) SendMessageToAgent(ctx context.Context, req *pb.AgentMessageReq
 	// Fallback to a structured response if no execution succeeded
 	if response == "" {
 		logger.Warn("No agent execution path succeeded, using fallback response", "agent_id", req.AgentId)
-		response = fmt.Sprintf("I'm %s. I received your message but agent execution is not fully configured yet. Please check the guild daemon setup.\n\nMessage: %s", 
+		response = fmt.Sprintf("I'm %s. I received your message but agent execution is not fully configured yet. Please check the guild daemon setup.\n\nMessage: %s",
 			agentConfig.Name, req.Message)
 	}
 

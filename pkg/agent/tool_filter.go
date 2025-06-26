@@ -40,16 +40,16 @@ func (tf *ToolFilter) CanUseTool(ctx context.Context, toolName string) bool {
 	ctx = observability.WithComponent(ctx, "ToolFilter")
 	ctx = observability.WithOperation(ctx, "CanUseTool")
 
-	logger.DebugContext(ctx, "Checking tool access", 
-		"agent_id", tf.agentID, 
+	logger.DebugContext(ctx, "Checking tool access",
+		"agent_id", tf.agentID,
 		"tool_name", toolName,
 		"allow_all", tf.config.AllowAll)
 
 	// First check if the tool is explicitly blocked
 	for _, blocked := range tf.config.Blocked {
 		if strings.EqualFold(blocked, toolName) || blocked == "*" {
-			logger.DebugContext(ctx, "Tool access denied - explicitly blocked", 
-				"agent_id", tf.agentID, 
+			logger.DebugContext(ctx, "Tool access denied - explicitly blocked",
+				"agent_id", tf.agentID,
 				"tool_name", toolName)
 			return false
 		}
@@ -57,8 +57,8 @@ func (tf *ToolFilter) CanUseTool(ctx context.Context, toolName string) bool {
 
 	// If allow_all is true, permit unless blocked (already checked above)
 	if tf.config.AllowAll {
-		logger.DebugContext(ctx, "Tool access granted - allow_all enabled", 
-			"agent_id", tf.agentID, 
+		logger.DebugContext(ctx, "Tool access granted - allow_all enabled",
+			"agent_id", tf.agentID,
 			"tool_name", toolName)
 		return true
 	}
@@ -66,15 +66,15 @@ func (tf *ToolFilter) CanUseTool(ctx context.Context, toolName string) bool {
 	// Check allowed list
 	for _, allowed := range tf.config.Allowed {
 		if strings.EqualFold(allowed, toolName) || allowed == "*" {
-			logger.DebugContext(ctx, "Tool access granted - explicitly allowed", 
-				"agent_id", tf.agentID, 
+			logger.DebugContext(ctx, "Tool access granted - explicitly allowed",
+				"agent_id", tf.agentID,
 				"tool_name", toolName)
 			return true
 		}
 	}
 
-	logger.DebugContext(ctx, "Tool access denied - not in allowed list", 
-		"agent_id", tf.agentID, 
+	logger.DebugContext(ctx, "Tool access denied - not in allowed list",
+		"agent_id", tf.agentID,
 		"tool_name", toolName)
 	return false
 }
@@ -89,8 +89,8 @@ func (tf *ToolFilter) FilterTools(ctx context.Context, available []string) []str
 	ctx = observability.WithComponent(ctx, "ToolFilter")
 	ctx = observability.WithOperation(ctx, "FilterTools")
 
-	logger.DebugContext(ctx, "Filtering tools", 
-		"agent_id", tf.agentID, 
+	logger.DebugContext(ctx, "Filtering tools",
+		"agent_id", tf.agentID,
 		"available_count", len(available))
 
 	filtered := make([]string, 0, len(available))
@@ -109,8 +109,8 @@ func (tf *ToolFilter) FilterTools(ctx context.Context, available []string) []str
 		}
 	}
 
-	logger.InfoContext(ctx, "Tool filtering completed", 
-		"agent_id", tf.agentID, 
+	logger.InfoContext(ctx, "Tool filtering completed",
+		"agent_id", tf.agentID,
 		"available_count", len(available),
 		"allowed_count", len(filtered),
 		"blocked_count", blocked_count)
@@ -151,7 +151,7 @@ func (tf *ToolFilter) GetAllowedTools(ctx context.Context) ([]string, error) {
 		if len(availableTools) == 0 {
 			// Common tools that are typically available
 			availableTools = []string{
-				"file_tool", "grep_tool", "glob_tool", "shell_tool", 
+				"file_tool", "grep_tool", "glob_tool", "shell_tool",
 				"git_tool", "http_tool", "web_search", "web_fetch",
 			}
 		}
@@ -161,8 +161,8 @@ func (tf *ToolFilter) GetAllowedTools(ctx context.Context) ([]string, error) {
 
 	filtered := tf.FilterTools(ctx, availableTools)
 
-	logger.InfoContext(ctx, "Retrieved allowed tools", 
-		"agent_id", tf.agentID, 
+	logger.InfoContext(ctx, "Retrieved allowed tools",
+		"agent_id", tf.agentID,
 		"allowed_count", len(filtered))
 
 	return filtered, nil
@@ -214,10 +214,10 @@ func (tf *ToolFilter) GetToolAccessSummary(ctx context.Context) map[string]inter
 	logger.DebugContext(ctx, "Generating tool access summary", "agent_id", tf.agentID)
 
 	summary := map[string]interface{}{
-		"agent_id":    tf.agentID,
-		"allow_all":   tf.config.AllowAll,
-		"allowed":     tf.config.Allowed,
-		"blocked":     tf.config.Blocked,
+		"agent_id":     tf.agentID,
+		"allow_all":    tf.config.AllowAll,
+		"allowed":      tf.config.Allowed,
+		"blocked":      tf.config.Blocked,
 		"has_registry": tf.registry != nil,
 	}
 
@@ -254,7 +254,7 @@ func (tf *ToolFilter) UpdateToolAccess(ctx context.Context, newConfig config.Too
 	oldConfig := tf.config
 	tf.config = newConfig
 
-	logger.InfoContext(ctx, "Tool access configuration updated", 
+	logger.InfoContext(ctx, "Tool access configuration updated",
 		"agent_id", tf.agentID,
 		"old_allow_all", oldConfig.AllowAll,
 		"new_allow_all", newConfig.AllowAll,

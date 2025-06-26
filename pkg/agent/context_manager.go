@@ -19,19 +19,19 @@ type ContextManager struct {
 	maxTokens     int
 	currentTokens int
 	resetStrategy string // "truncate" or "summarize"
-	
+
 	// Message history
-	messages      []ContextMessage
-	compressions  int // Number of times context has been compressed
-	
+	messages     []ContextMessage
+	compressions int // Number of times context has been compressed
+
 	// Token tracking
-	totalTokensUsed   int64
-	avgTokensPerMsg   int
-	lastCompression   time.Time
-	
+	totalTokensUsed int64
+	avgTokensPerMsg int
+	lastCompression time.Time
+
 	// Cost tracking
-	totalCost         float64
-	costProfile       CostEstimate
+	totalCost   float64
+	costProfile CostEstimate
 }
 
 // ContextMessage represents a message in the context window
@@ -58,14 +58,14 @@ func NewContextManager(config *config.EnhancedAgentConfig, costProfile CostEstim
 	}
 
 	return &ContextManager{
-		agentID:       config.ID,
-		maxTokens:     config.GetEffectiveContextWindow(),
-		currentTokens: 0,
-		resetStrategy: resetStrategy,
-		messages:      make([]ContextMessage, 0),
-		compressions:  0,
+		agentID:         config.ID,
+		maxTokens:       config.GetEffectiveContextWindow(),
+		currentTokens:   0,
+		resetStrategy:   resetStrategy,
+		messages:        make([]ContextMessage, 0),
+		compressions:    0,
 		lastCompression: time.Time{},
-		costProfile:   costProfile,
+		costProfile:     costProfile,
 	}
 }
 
@@ -83,8 +83,8 @@ func (cm *ContextManager) AddMessage(ctx context.Context, role, content string, 
 
 	// Estimate tokens for the message
 	tokens := cm.estimateTokens(content)
-	
-	logger.DebugContext(ctx, "Adding message to context", 
+
+	logger.DebugContext(ctx, "Adding message to context",
 		"agent_id", cm.agentID,
 		"role", role,
 		"tokens", tokens,
@@ -104,7 +104,7 @@ func (cm *ContextManager) AddMessage(ctx context.Context, role, content string, 
 
 	// Check if adding this message would exceed the context window
 	if cm.currentTokens+tokens > cm.maxTokens {
-		logger.InfoContext(ctx, "Context window limit reached, applying reset strategy", 
+		logger.InfoContext(ctx, "Context window limit reached, applying reset strategy",
 			"agent_id", cm.agentID,
 			"strategy", cm.resetStrategy,
 			"current_tokens", cm.currentTokens,
@@ -129,7 +129,7 @@ func (cm *ContextManager) AddMessage(ctx context.Context, role, content string, 
 		cm.avgTokensPerMsg = int(cm.totalTokensUsed) / len(cm.messages)
 	}
 
-	logger.DebugContext(ctx, "Message added to context", 
+	logger.DebugContext(ctx, "Message added to context",
 		"agent_id", cm.agentID,
 		"message_id", message.ID,
 		"new_current_tokens", cm.currentTokens)
@@ -139,7 +139,7 @@ func (cm *ContextManager) AddMessage(ctx context.Context, role, content string, 
 
 // manageContextOverflow handles context window overflow
 func (cm *ContextManager) manageContextOverflow(ctx context.Context, newMessageTokens int) error {
-	
+
 	switch cm.resetStrategy {
 	case "truncate":
 		return cm.truncateContext(ctx, newMessageTokens)
@@ -153,8 +153,8 @@ func (cm *ContextManager) manageContextOverflow(ctx context.Context, newMessageT
 // truncateContext removes old messages to make room for new ones
 func (cm *ContextManager) truncateContext(ctx context.Context, newMessageTokens int) error {
 	logger := observability.GetLogger(ctx)
-	
-	logger.InfoContext(ctx, "Truncating context window", 
+
+	logger.InfoContext(ctx, "Truncating context window",
 		"agent_id", cm.agentID,
 		"target_free_tokens", newMessageTokens)
 
@@ -197,7 +197,7 @@ func (cm *ContextManager) truncateContext(ctx context.Context, newMessageTokens 
 	cm.compressions++
 	cm.lastCompression = time.Now()
 
-	logger.InfoContext(ctx, "Context truncation completed", 
+	logger.InfoContext(ctx, "Context truncation completed",
 		"agent_id", cm.agentID,
 		"freed_tokens", freedTokens,
 		"remaining_messages", len(cm.messages),
@@ -209,25 +209,25 @@ func (cm *ContextManager) truncateContext(ctx context.Context, newMessageTokens 
 // summarizeContext compresses old messages into a summary
 func (cm *ContextManager) summarizeContext(ctx context.Context, newMessageTokens int) error {
 	logger := observability.GetLogger(ctx)
-	
-	logger.InfoContext(ctx, "Summarizing context window", 
+
+	logger.InfoContext(ctx, "Summarizing context window",
 		"agent_id", cm.agentID,
 		"target_free_tokens", newMessageTokens)
 
 	// For now, implement a simple form of summarization by keeping only recent and high-priority messages
 	// In a full implementation, this would use an LLM to generate a summary
-	
+
 	// Calculate how many messages to keep
 	_ = newMessageTokens // Reserve space for new message
-	
+
 	// Keep system messages, high-priority messages, and recent messages
 	preservedMessages := make([]ContextMessage, 0)
 	recentMessages := make([]ContextMessage, 0)
 	summaryContent := make([]string, 0)
-	
+
 	now := time.Now()
 	recentThreshold := now.Add(-30 * time.Minute) // Keep messages from last 30 minutes
-	
+
 	for _, msg := range cm.messages {
 		if msg.Role == "system" || msg.Priority >= 8 {
 			preservedMessages = append(preservedMessages, msg)
@@ -238,7 +238,7 @@ func (cm *ContextManager) summarizeContext(ctx context.Context, newMessageTokens
 			summaryContent = append(summaryContent, msg.Content)
 		}
 	}
-	
+
 	// Create summary message if we have content to summarize
 	finalMessages := preservedMessages
 	if len(summaryContent) > 0 {
@@ -246,7 +246,7 @@ func (cm *ContextManager) summarizeContext(ctx context.Context, newMessageTokens
 		if len(summary) > 1000 {
 			summary = summary[:1000] + "..."
 		}
-		
+
 		summaryMessage := ContextMessage{
 			ID:        generateMessageID(),
 			Role:      "system",
@@ -258,22 +258,22 @@ func (cm *ContextManager) summarizeContext(ctx context.Context, newMessageTokens
 		}
 		finalMessages = append(finalMessages, summaryMessage)
 	}
-	
+
 	// Add recent messages
 	finalMessages = append(finalMessages, recentMessages...)
-	
+
 	// Recalculate tokens
 	newTokenCount := 0
 	for _, msg := range finalMessages {
 		newTokenCount += msg.Tokens
 	}
-	
+
 	cm.messages = finalMessages
 	cm.currentTokens = newTokenCount
 	cm.compressions++
 	cm.lastCompression = time.Now()
 
-	logger.InfoContext(ctx, "Context summarization completed", 
+	logger.InfoContext(ctx, "Context summarization completed",
 		"agent_id", cm.agentID,
 		"summary_created", len(summaryContent) > 0,
 		"remaining_messages", len(cm.messages),
@@ -314,7 +314,7 @@ func (cm *ContextManager) UpdateCost(ctx context.Context, promptTokens, completi
 	cm.totalCost += promptCost + completionCost
 
 	logger := observability.GetLogger(ctx)
-	logger.DebugContext(ctx, "Updated context cost", 
+	logger.DebugContext(ctx, "Updated context cost",
 		"agent_id", cm.agentID,
 		"prompt_tokens", promptTokens,
 		"completion_tokens", completionTokens,

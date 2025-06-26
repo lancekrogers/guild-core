@@ -73,9 +73,9 @@ func LoadAgentConfig(ctx context.Context, path string) (*EnhancedAgentConfig, er
 			WithDetails("agent_id", config.ID)
 	}
 
-	logger.InfoContext(ctx, "Agent configuration loaded successfully", 
-		"agent_id", config.ID, 
-		"agent_name", config.Name, 
+	logger.InfoContext(ctx, "Agent configuration loaded successfully",
+		"agent_id", config.ID,
+		"agent_name", config.Name,
 		"agent_type", config.Type,
 		"provider", config.GetEffectiveProvider(),
 		"cost_magnitude", config.GetEffectiveCostMagnitude())
@@ -220,8 +220,8 @@ func LoadAgentConfigsFromDirectory(ctx context.Context, dirPath string) ([]*Enha
 
 	// If we have some configs but also errors, log warnings but continue
 	if len(loadErrors) > 0 && len(configs) > 0 {
-		logger.WarnContext(ctx, "Some agent configurations failed to load", 
-			"successful_count", len(configs), 
+		logger.WarnContext(ctx, "Some agent configurations failed to load",
+			"successful_count", len(configs),
 			"failed_count", len(loadErrors))
 	}
 
@@ -234,8 +234,8 @@ func LoadAgentConfigsFromDirectory(ctx context.Context, dirPath string) ([]*Enha
 			WithDetails("error_count", len(loadErrors))
 	}
 
-	logger.InfoContext(ctx, "Agent configurations loaded from directory", 
-		"dir_path", dirPath, 
+	logger.InfoContext(ctx, "Agent configurations loaded from directory",
+		"dir_path", dirPath,
 		"config_count", len(configs))
 
 	return configs, nil

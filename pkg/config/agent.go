@@ -15,16 +15,16 @@ import (
 // This extends the base AgentConfig with additional fields for comprehensive agent management
 type EnhancedAgentConfig struct {
 	// Core identification
-	ID            string `yaml:"id"`
-	Name          string `yaml:"name"`
-	Type          string `yaml:"type"`
-	Role          string `yaml:"role"`
-	Specialty     string `yaml:"specialty,omitempty"`
-	Backstory     string `yaml:"backstory"`
+	ID        string `yaml:"id"`
+	Name      string `yaml:"name"`
+	Type      string `yaml:"type"`
+	Role      string `yaml:"role"`
+	Specialty string `yaml:"specialty,omitempty"`
+	Backstory string `yaml:"backstory"`
 
 	// Model and provider configuration
 	Model         string  `yaml:"model"`
-	Provider      string  `yaml:"provider,omitempty"`      // Auto-detected from model if not specified
+	Provider      string  `yaml:"provider,omitempty"` // Auto-detected from model if not specified
 	ContextWindow int     `yaml:"context_window"`
 	Temperature   float64 `yaml:"temperature"`
 	CostMagnitude int     `yaml:"cost_magnitude"`
@@ -284,7 +284,8 @@ func (c *EnhancedAgentConfig) GetEffectiveTemperature() float64 {
 
 // IsToolOnlyAgent returns true if this agent only uses tools (no LLM calls)
 func (c *EnhancedAgentConfig) IsToolOnlyAgent() bool {
-	return c.GetEffectiveCostMagnitude() == 0
+	// Check if CostMagnitude is explicitly set to 0
+	return c.CostMagnitude == 0
 }
 
 // HasCapability checks if an agent has a specific capability
@@ -307,16 +308,16 @@ func (c *EnhancedAgentConfig) ToBaseAgentConfig() AgentConfig {
 	}
 
 	return AgentConfig{
-		ID:           c.ID,
-		Name:         c.Name,
-		Type:         c.Type,
-		Provider:     c.GetEffectiveProvider(),
-		Model:        c.Model,
-		Description:  c.Backstory,
-		Capabilities: c.Capabilities,
-		Tools:        tools,
-		MaxTokens:    c.GetEffectiveContextWindow(),
-		Temperature:  c.GetEffectiveTemperature(),
+		ID:            c.ID,
+		Name:          c.Name,
+		Type:          c.Type,
+		Provider:      c.GetEffectiveProvider(),
+		Model:         c.Model,
+		Description:   c.Backstory,
+		Capabilities:  c.Capabilities,
+		Tools:         tools,
+		MaxTokens:     c.GetEffectiveContextWindow(),
+		Temperature:   c.GetEffectiveTemperature(),
 		CostMagnitude: c.GetEffectiveCostMagnitude(),
 		ContextWindow: c.GetEffectiveContextWindow(),
 		Settings:      make(map[string]string),

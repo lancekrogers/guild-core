@@ -136,12 +136,12 @@ cost_optimization:
 func ExampleProjectTypeAdaptation() {
 	fmt.Println("Agent adaptations by project type:")
 	fmt.Println()
-	
+
 	projectTypes := []struct {
-		Language    string
-		Tools       []string
+		Language     string
+		Tools        []string
 		Capabilities []string
-		Expertise   string
+		Expertise    string
 	}{
 		{
 			Language:     "go",

@@ -17,13 +17,13 @@ import (
 
 // EnhancedFactory creates agent instances using the enhanced configuration system
 type EnhancedFactory struct {
-	providerFactory    *providers.Factory
-	toolRegistry       tools.Registry
-	memoryManager      memory.ChainManager
-	commissionManager  commission.CommissionManager
-	costManager        CostManagerInterface
-	providerSelector   *ProviderSelector
-	toolFilterFactory  *ToolFilterFactory
+	providerFactory   *providers.Factory
+	toolRegistry      tools.Registry
+	memoryManager     memory.ChainManager
+	commissionManager commission.CommissionManager
+	costManager       CostManagerInterface
+	providerSelector  *ProviderSelector
+	toolFilterFactory *ToolFilterFactory
 }
 
 // NewEnhancedFactory creates a new enhanced agent factory
@@ -57,7 +57,7 @@ func (f *EnhancedFactory) CreateFromConfig(ctx context.Context, config *config.E
 	ctx = observability.WithComponent(ctx, "EnhancedFactory")
 	ctx = observability.WithOperation(ctx, "CreateFromConfig")
 
-	logger.InfoContext(ctx, "Creating agent from enhanced configuration", 
+	logger.InfoContext(ctx, "Creating agent from enhanced configuration",
 		"agent_id", config.ID,
 		"agent_type", config.Type,
 		"model", config.Model)
@@ -79,7 +79,7 @@ func (f *EnhancedFactory) CreateFromConfig(ctx context.Context, config *config.E
 			WithDetails("agent_id", config.ID)
 	}
 
-	logger.InfoContext(ctx, "Provider selected successfully", 
+	logger.InfoContext(ctx, "Provider selected successfully",
 		"agent_id", config.ID,
 		"provider", providerSelection.Provider,
 		"model", providerSelection.Model,
@@ -292,7 +292,7 @@ func (f *EnhancedFactory) CreateMultipleFromDirectory(ctx context.Context, confi
 			WithDetails("error_count", len(creationErrors))
 	}
 
-	logger.InfoContext(ctx, "Multiple agents created", 
+	logger.InfoContext(ctx, "Multiple agents created",
 		"config_dir", configDir,
 		"successful_count", len(agents),
 		"failed_count", len(creationErrors))

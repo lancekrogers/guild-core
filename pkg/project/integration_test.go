@@ -23,7 +23,8 @@ func TestProjectIntegration(t *testing.T) {
 
 	// Test 1: Initialize project
 	t.Run("Initialize", func(t *testing.T) {
-		err := project.Initialize(tempDir)
+		ctx := context.Background()
+		_, err := project.Initialize(ctx, tempDir, project.InitOptions{})
 		if err != nil {
 			t.Fatalf("Failed to initialize project: %v", err)
 		}
@@ -187,12 +188,12 @@ func TestProjectMigration(t *testing.T) {
 	}
 
 	// Initialize project
-	if err := project.Initialize(projectDir); err != nil {
+	ctx := context.Background()
+	if _, err := project.Initialize(ctx, projectDir, project.InitOptions{}); err != nil {
 		t.Fatalf("Failed to initialize project: %v", err)
 	}
 
 	// Run migration
-	ctx := context.Background()
 	opts := project.MigrationOptions{
 		IncludeEmbeddings: false,
 		OverwriteExisting: false,
