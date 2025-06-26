@@ -253,6 +253,67 @@ func (d *agentDisplay) FormatWithIndicator(info AgentInfo) string {
 	return d.FormatAgentCompact(info)
 }
 
+// FormatWithProcessingIndicator formats agent info with detailed processing state
+func (d *agentDisplay) FormatWithProcessingIndicator(info AgentInfo, animated bool) string {
+	style := d.getStyleForStatus(info.Status)
+	icon := d.GetStatusIcon(info.Status)
+
+	base := fmt.Sprintf("%s %s", icon, info.Name)
+
+	// Add processing state if not idle
+	if info.ProcessingState != ProcessingIdle {
+		processingDisplay := d.GetProcessingStateDisplay(info.ProcessingState)
+		
+		if animated {
+			// Add animated indicator for active processing
+			animationFrames := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
+			// Use current time to cycle through frames
+			frame := int(time.Now().UnixNano()/100000000) % len(animationFrames)
+			processingDisplay = fmt.Sprintf("%s %s", animationFrames[frame], processingDisplay)
+		}
+		
+		base += fmt.Sprintf(" [%s]", style.Render(processingDisplay))
+		
+		// Add elapsed time if processing for a while
+		if !info.ProcessingStart.IsZero() {
+			elapsed := time.Since(info.ProcessingStart)
+			if elapsed > 5*time.Second {
+				base += fmt.Sprintf(" (%ds)", int(elapsed.Seconds()))
+			}
+		}
+	} else if info.Status != StatusIdle {
+		// Show basic status if not idle but no specific processing state
+		base += fmt.Sprintf(" [%s]", style.Render(string(info.Status)))
+	}
+
+	// Add task count if any
+	if info.TaskCount > 0 {
+		base += fmt.Sprintf(" (%d tasks)", info.TaskCount)
+	}
+
+	return base
+}
+
+// GetProcessingStateDisplay returns a display string for processing states
+func (d *agentDisplay) GetProcessingStateDisplay(state ProcessingState) string {
+	displays := map[ProcessingState]string{
+		ProcessingIdle:       "idle",
+		ProcessingListening:  "🎧 listening",
+		ProcessingAnalyzing:  "🔍 analyzing",
+		ProcessingGenerating: "📝 generating",
+		ProcessingRefining:   "✨ refining",
+		ProcessingValidating: "🔍 validating",
+		ProcessingCompleting: "✅ completing",
+	}
+	
+	display, exists := displays[state]
+	if !exists {
+		display = "processing"
+	}
+	
+	return display
+}
+
 // getStyleForStatus returns the lipgloss style for a status
 func (d *agentDisplay) getStyleForStatus(status AgentStatus) lipgloss.Style {
 	style, exists := d.styles[string(status)]

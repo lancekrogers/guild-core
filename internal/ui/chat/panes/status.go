@@ -13,6 +13,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 
 	"github.com/guild-ventures/guild-core/internal/ui/chat/common/layout"
+	"github.com/guild-ventures/guild-core/internal/ui/chat/components"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 )
 
@@ -46,6 +47,11 @@ type StatusPane interface {
 	SetVimMode(mode string)
 	SetAutoAcceptMode(enabled bool)
 	SetInputMode(mode string) // normal, insert, visual, etc.
+
+	// Commission progress
+	ShowCommissionProgress(progress *CommissionProgress)
+	HideCommissionProgress()
+	UpdateCommissionProgress(stage PlanningStage, progress float64, status string)
 }
 
 // SystemStats represents system statistics
@@ -71,6 +77,58 @@ type AgentStatus struct {
 	Status    string // idle, thinking, working, error, offline
 	LastSeen  time.Time
 	TaskCount int
+}
+
+// PlanningStage represents commission planning stages
+type PlanningStage int
+
+const (
+	StageIntroduction PlanningStage = iota
+	StageProjectType
+	StageRequirements
+	StageTechnology
+	StageConstraints
+	StageSummary
+)
+
+// CommissionProgress represents commission planning progress
+type CommissionProgress struct {
+	Stage    PlanningStage
+	Progress float64
+	Status   string
+	Details  map[string]interface{}
+}
+
+// String returns a human-readable stage name
+func (ps PlanningStage) String() string {
+	stages := []string{
+		"Introduction",
+		"Project Type",
+		"Requirements",
+		"Technology",
+		"Constraints",
+		"Summary",
+	}
+	if int(ps) < len(stages) {
+		return stages[ps]
+	}
+	return "Unknown"
+}
+
+// Icon returns an emoji icon for the stage
+func (ps PlanningStage) Icon() string {
+	icons := []string{
+		"📋", // Introduction
+		"🎯", // Project Type
+		"📝", // Requirements
+		"⚙️", // Technology
+		"⚠️", // Constraints
+		"✅", // Summary
+	}
+	if int(ps) < len(icons) {
+		return icons[ps]
+	}
+	return "❓"
 }
 
 // statusPaneImpl implements the StatusPane interface
@@ -112,6 +170,14 @@ type statusPaneImpl struct {
 	vimMode        string
 	autoAcceptMode bool
 	inputMode      string
+
+	// Commission progress
+	showingCommissionProgress bool
+	commissionProgress        *CommissionProgress
+
+	// Status transitions
+	statusAnimator     *components.StatusAnimator
+	transitionManager  *components.TransitionManager
 }
 
 // NewStatusPane creates a new status pane
@@ -140,6 +206,8 @@ func NewStatusPane(width, height int) (StatusPane, error) {
 		lastUpdate:       time.Now(),
 		statusStyles:     createStatusStyles(),
 		ctx:              ctx,
+		statusAnimator:   components.NewStatusAnimator(ctx),
+		transitionManager: components.NewTransitionManager(ctx),
 	}
 
 	return pane, nil
@@ -173,17 +241,32 @@ func createStatusStyles() map[string]lipgloss.Style {
 	}
 }
 
-// UpdateStatus updates the main status message
+// UpdateStatus updates the main status message with smooth transitions
 func (sp *statusPaneImpl) UpdateStatus(message, level string) {
-	sp.currentStatus = message
+	// Start transition if status actually changed
+	if sp.currentStatus != message {
+		// Trigger smooth transition to new status
+		if err := sp.statusAnimator.TransitionTo(message, 300*time.Millisecond); err != nil {
+			// If transition fails, just update directly
+			sp.currentStatus = message
+		}
+	}
+	
 	sp.currentLevel = level
 	sp.lastUpdate = time.Now()
 }
 
-// SetAgentStatus updates the status of a specific agent
+// SetAgentStatus updates the status of a specific agent with smooth transitions
 func (sp *statusPaneImpl) SetAgentStatus(agentID, status string) {
 	existing, exists := sp.agentStatuses[agentID]
 	if exists {
+		// Start transition for agent status change
+		if existing.Status != status {
+			transitionKey := fmt.Sprintf("agent_%s", agentID)
+			if err := sp.transitionManager.StartTransition(transitionKey, existing.Status, status, 250*time.Millisecond); err != nil {
+				// If transition fails, update directly
+			}
+		}
 		existing.Status = status
 		existing.LastSeen = time.Now()
 		sp.agentStatuses[agentID] = existing
@@ -284,6 +367,18 @@ func (sp *statusPaneImpl) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// Update base pane first
 	_, cmd := sp.BasePane.Update(msg)
 
+	// Update transitions and animations
+	if sp.statusAnimator != nil {
+		if err := sp.statusAnimator.Update(); err != nil {
+			// Log error but continue
+		}
+	}
+	if sp.transitionManager != nil {
+		if err := sp.transitionManager.UpdateAll(); err != nil {
+			// Log error but continue
+		}
+	}
+
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		sp.Resize(msg.Width, msg.Height)
@@ -325,12 +420,18 @@ func (sp *statusPaneImpl) renderCompactStatus(width int) string {
 		parts = append(parts, indicator)
 	}
 
-	// Main status
+	// Main status with smooth transitions
+	statusText := sp.currentStatus
+	if sp.statusAnimator != nil && sp.statusAnimator.IsTransitioning() {
+		// Use animated status if transitioning
+		statusText = sp.statusAnimator.View()
+	}
+	
 	statusStyle, exists := sp.statusStyles[sp.currentLevel]
 	if !exists {
 		statusStyle = sp.statusStyles["info"]
 	}
-	parts = append(parts, statusStyle.Render(sp.currentStatus))
+	parts = append(parts, statusStyle.Render(statusText))
 
 	// Agent summary
 	if sp.showAgents && len(sp.agentStatuses) > 0 {
@@ -371,8 +472,14 @@ func (sp *statusPaneImpl) renderCompactStatus(width int) string {
 func (sp *statusPaneImpl) renderDetailedStatus(width int) string {
 	var lines []string
 
-	// Completions (top priority, shows at the top of status area)
-	if sp.showingCompletions && len(sp.completions) > 0 {
+	// Commission progress (highest priority, shows at the top)
+	if sp.showingCommissionProgress && sp.commissionProgress != nil {
+		progressLines := sp.renderCommissionProgress(width)
+		lines = append(lines, progressLines...)
+	}
+
+	// Completions (second priority, shows at the top of status area)
+	if sp.showingCompletions && len(sp.completions) > 0 && !sp.showingCommissionProgress {
 		completionLines := sp.renderCompletions(width)
 		lines = append(lines, completionLines...)
 	}
@@ -435,7 +542,7 @@ func (sp *statusPaneImpl) getAgentSummary() string {
 	return fmt.Sprintf("Agents: %s", strings.Join(parts, " "))
 }
 
-// renderAgentDetails renders detailed agent information
+// renderAgentDetails renders detailed agent information with smooth transitions
 func (sp *statusPaneImpl) renderAgentDetails(width int) []string {
 	var lines []string
 
@@ -446,7 +553,16 @@ func (sp *statusPaneImpl) renderAgentDetails(width int) []string {
 			style = sp.statusStyles["info"]
 		}
 
-		agentLine := fmt.Sprintf("%s %s: %s", icon, agent.ID, agent.Status)
+		// Check for agent status transition
+		statusText := agent.Status
+		if sp.transitionManager != nil {
+			transitionKey := fmt.Sprintf("agent_%s", agent.ID)
+			if sp.transitionManager.IsTransitioning(transitionKey) {
+				statusText = sp.transitionManager.GetTransition(transitionKey)
+			}
+		}
+
+		agentLine := fmt.Sprintf("%s %s: %s", icon, agent.ID, statusText)
 		if agent.TaskCount > 0 {
 			agentLine += fmt.Sprintf(" (%d tasks)", agent.TaskCount)
 		}
@@ -739,4 +855,122 @@ func (sp *statusPaneImpl) renderModeLine(width int) string {
 		Width(width)
 
 	return lineStyle.Render(leftContent)
+}
+
+// renderCommissionProgress renders commission planning progress
+func (sp *statusPaneImpl) renderCommissionProgress(width int) []string {
+	if sp.commissionProgress == nil {
+		return []string{}
+	}
+
+	var lines []string
+	cp := sp.commissionProgress
+
+	// Header
+	headerStyle := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.Color("141")) // Purple
+	headerLine := headerStyle.Render("📋 Commission Planning")
+	lines = append(lines, headerLine)
+
+	// Progress bar
+	progressWidth := width - 4 // Account for padding
+	if progressWidth < 10 {
+		progressWidth = 10
+	}
+	
+	filled := int(cp.Progress * float64(progressWidth))
+	if filled < 0 {
+		filled = 0
+	} else if filled > progressWidth {
+		filled = progressWidth
+	}
+
+	progressBar := "["
+	for i := 0; i < progressWidth; i++ {
+		if i < filled {
+			progressBar += "█"
+		} else {
+			progressBar += "░"
+		}
+	}
+	progressBar += fmt.Sprintf("] %.0f%%", cp.Progress*100)
+
+	progressStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("82")) // Green
+	lines = append(lines, progressStyle.Render(progressBar))
+
+	// Stage indicators
+	stages := []PlanningStage{
+		StageIntroduction, StageProjectType, StageRequirements,
+		StageTechnology, StageConstraints, StageSummary,
+	}
+
+	var stageLines []string
+	for _, stage := range stages {
+		icon := "○"
+		style := lipgloss.NewStyle().Foreground(lipgloss.Color("240")) // Gray
+
+		if stage < cp.Stage {
+			icon = "✓"
+			style = lipgloss.NewStyle().Foreground(lipgloss.Color("82")) // Green
+		} else if stage == cp.Stage {
+			icon = "▶"
+			style = lipgloss.NewStyle().Foreground(lipgloss.Color("226")) // Yellow
+		}
+
+		stageLine := fmt.Sprintf("%s %s %s", icon, stage.Icon(), stage.String())
+		stageLines = append(stageLines, style.Render(stageLine))
+	}
+
+	// Only show 3 stages at a time for space efficiency
+	startIdx := int(cp.Stage) - 1
+	if startIdx < 0 {
+		startIdx = 0
+	}
+	endIdx := startIdx + 3
+	if endIdx > len(stageLines) {
+		endIdx = len(stageLines)
+		startIdx = endIdx - 3
+		if startIdx < 0 {
+			startIdx = 0
+		}
+	}
+
+	for i := startIdx; i < endIdx; i++ {
+		lines = append(lines, stageLines[i])
+	}
+
+	// Current status
+	if cp.Status != "" {
+		statusStyle := lipgloss.NewStyle().
+			Foreground(lipgloss.Color("147")) // Light purple
+		statusLine := statusStyle.Render(fmt.Sprintf("Status: %s", cp.Status))
+		lines = append(lines, statusLine)
+	}
+
+	return lines
+}
+
+// ShowCommissionProgress shows commission planning progress
+func (sp *statusPaneImpl) ShowCommissionProgress(progress *CommissionProgress) {
+	sp.showingCommissionProgress = true
+	sp.commissionProgress = progress
+}
+
+// HideCommissionProgress hides commission planning progress
+func (sp *statusPaneImpl) HideCommissionProgress() {
+	sp.showingCommissionProgress = false
+	sp.commissionProgress = nil
+}
+
+// UpdateCommissionProgress updates commission planning progress
+func (sp *statusPaneImpl) UpdateCommissionProgress(stage PlanningStage, progress float64, status string) {
+	if sp.commissionProgress == nil {
+		sp.commissionProgress = &CommissionProgress{}
+	}
+	sp.commissionProgress.Stage = stage
+	sp.commissionProgress.Progress = progress
+	sp.commissionProgress.Status = status
+	sp.showingCommissionProgress = true
 }

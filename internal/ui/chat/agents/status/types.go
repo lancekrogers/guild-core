@@ -35,18 +35,33 @@ const (
 
 // AgentInfo represents detailed information about an agent
 type AgentInfo struct {
-	ID          string
-	Name        string
-	Type        string // manager, developer, reviewer, etc.
-	Status      AgentStatus
-	CurrentTask string
-	TaskCount   int
-	LastSeen    time.Time
-	StartTime   time.Time
-	ErrorCount  int
-	LastError   string
-	Metadata    map[string]interface{}
+	ID             string
+	Name           string
+	Type           string // manager, developer, reviewer, etc.
+	Status         AgentStatus
+	CurrentTask    string
+	TaskCount      int
+	LastSeen       time.Time
+	StartTime      time.Time
+	ErrorCount     int
+	LastError      string
+	Metadata       map[string]interface{}
+	ProcessingState ProcessingState // New field for detailed processing state
+	ProcessingStart time.Time       // When current processing started
 }
+
+// ProcessingState represents detailed agent processing states
+type ProcessingState string
+
+const (
+	ProcessingIdle       ProcessingState = "idle"
+	ProcessingListening  ProcessingState = "listening"
+	ProcessingAnalyzing  ProcessingState = "analyzing"
+	ProcessingGenerating ProcessingState = "generating"
+	ProcessingRefining   ProcessingState = "refining"
+	ProcessingValidating ProcessingState = "validating"
+	ProcessingCompleting ProcessingState = "completing"
+)
 
 // AgentActivity represents a single activity log entry
 type AgentActivity struct {
@@ -86,6 +101,7 @@ type StatusTracker interface {
 	RegisterAgent(info AgentInfo) error
 	UnregisterAgent(agentID string) error
 	UpdateAgentStatus(agentID string, status AgentStatus, reason string) error
+	UpdateProcessingState(agentID string, state ProcessingState) error
 
 	// Agent information retrieval
 	GetAgentInfo(agentID string) (*AgentInfo, error)
@@ -122,6 +138,8 @@ type AgentDisplay interface {
 	GetStatusIcon(status AgentStatus) string
 	GetStatusColor(status AgentStatus) string
 	FormatWithIndicator(info AgentInfo) string
+	FormatWithProcessingIndicator(info AgentInfo, animated bool) string
+	GetProcessingStateDisplay(state ProcessingState) string
 }
 
 // IndicatorType represents different visual indicators
