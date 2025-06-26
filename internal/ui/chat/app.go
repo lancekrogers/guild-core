@@ -488,18 +488,41 @@ func (app *App) setupInputCallbacks() {
 
 				// Send to agent router for processing
 				if app.agentRouter != nil {
-					// This is where real agent communication should happen
-					// For now, create a mock response
-					go func() {
-						time.Sleep(500 * time.Millisecond) // Simulate processing time
-						response := common.ChatMessage{
-							Type:      common.MsgAgent,
-							Content:   fmt.Sprintf("I understand you said: %s\n\nThis is currently a mock response. Real agent integration needs to be connected through the gRPC client and agent router.", input),
-							AgentID:   "elena",
+					// Parse input for agent mentions
+					target, err := app.agentRouter.ParseInput(input)
+					if err != nil {
+						// Handle parse error
+						errorMsg := common.ChatMessage{
+							Type:      common.MsgSystem,
+							Content:   fmt.Sprintf("❌ Error parsing agent mention: %s", err.Error()),
+							AgentID:   "system",
 							Timestamp: time.Now(),
+							Metadata:  make(map[string]string),
 						}
-						app.outputPane.AddMessage(response)
-					}()
+						app.outputPane.AddMessage(errorMsg)
+						return app, nil
+					}
+
+					if target != nil {
+						// Route to specific agent or broadcast
+						if target.IsBroadcast {
+							return app, app.agentRouter.BroadcastToAll(target.Message)
+						}
+						return app, app.agentRouter.SendToAgent(target.ID, target.Message)
+					} else {
+						// No agent mention, send to default agent (elena-guild-master)
+						return app, app.agentRouter.SendToAgent("elena-guild-master", input)
+					}
+				} else {
+					// No agent router available
+					errorMsg := common.ChatMessage{
+						Type:      common.MsgSystem,
+						Content:   "❌ Agent router not available. Please check guild daemon connection.",
+						AgentID:   "system",
+						Timestamp: time.Now(),
+						Metadata:  make(map[string]string),
+					}
+					app.outputPane.AddMessage(errorMsg)
 				}
 			}
 		}
@@ -568,9 +591,10 @@ func (app *App) Init() tea.Cmd {
 		cmds = append(cmds, app.providerService.Start())
 	}
 
-	// Start agent router by refreshing agent list
+	// Start agent router by refreshing agent list and status updates
 	if app.agentRouter != nil {
 		cmds = append(cmds, app.agentRouter.RefreshAgentList())
+		cmds = append(cmds, app.startPeriodicStatusUpdates())
 	}
 
 	// Show welcome message
@@ -1236,7 +1260,12 @@ func (app *App) handleAgentResponse(msg agents.AgentResponseMsg) (tea.Model, tea
 
 	// Save to session if available
 	if app.sessionManager != nil && app.currentSession != nil {
-		app.sessionManager.AppendMessage(app.currentSession.ID, session.RoleAssistant, msg.Content, nil)
+		metadata := map[string]string{
+			"agent_id":   msg.AgentID,
+			"message_id": msg.MessageID,
+			"timestamp":  msg.Timestamp.Format(time.RFC3339),
+		}
+		app.sessionManager.AppendMessage(app.currentSession.ID, session.RoleAssistant, msg.Content, metadata)
 	}
 
 	return app, nil
@@ -1253,6 +1282,16 @@ func (app *App) handleBroadcastResponse(msg agents.BroadcastResponseMsg) (tea.Mo
 			Metadata:  map[string]string{"message_id": msg.MessageID},
 		}
 		app.outputPane.AddMessage(agentMsg)
+
+		// Save each broadcast response to session if available
+		if app.sessionManager != nil && app.currentSession != nil {
+			metadata := map[string]string{
+				"agent_id":   response.AgentId,
+				"message_id": msg.MessageID,
+				"broadcast":  "true",
+			}
+			app.sessionManager.AppendMessage(app.currentSession.ID, session.RoleAssistant, response.Response, metadata)
+		}
 	}
 
 	return app, nil
@@ -1287,6 +1326,39 @@ func (app *App) handleAgentStatusUpdated(msg agents.AgentStatusMsg) (tea.Model, 
 	app.statusPane.UpdateStatus(statusMsg, "info")
 
 	return app, nil
+}
+
+// refreshAllAgentStatuses refreshes the status of all available agents
+func (app *App) refreshAllAgentStatuses() tea.Cmd {
+	if app.agentRouter == nil {
+		return nil
+	}
+
+	return tea.Batch(
+		app.agentRouter.RefreshAgentList(),
+		func() tea.Msg {
+			// Get status for all known agents
+			availableAgents := app.agentRouter.GetAvailableAgents()
+			var cmds []tea.Cmd
+			for _, agentID := range availableAgents {
+				cmds = append(cmds, app.agentRouter.GetAgentStatus(agentID))
+			}
+			
+			// Schedule next refresh in 10 seconds
+			time.AfterFunc(10*time.Second, func() {
+				// This would trigger the next refresh cycle in a real implementation
+				// For now, we'll leave it as a placeholder since we need proper
+				// message scheduling in the TUI framework
+			})
+			
+			return tea.Batch(cmds...)()
+		},
+	)
+}
+
+// startPeriodicStatusUpdates initiates periodic agent status updates
+func (app *App) startPeriodicStatusUpdates() tea.Cmd {
+	return app.refreshAllAgentStatuses()
 }
 
 // initializeSuggestionSystem initializes the suggestion-aware agent system

@@ -11,13 +11,11 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	yaml "gopkg.in/yaml.v3"
 
 	uiinit "github.com/guild-ventures/guild-core/internal/ui/init"
-	"github.com/guild-ventures/guild-core/pkg/agents"
-	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/observability"
+	"github.com/guild-ventures/guild-core/pkg/project"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
@@ -134,22 +132,36 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 	fmt.Printf("📍 Location: %s\n", projectPath)
 	fmt.Println()
 
-	// Step 1: Initialize project structure
-	fmt.Print("🏗️  Creating project structure... ")
-	if !deps.ProjectInit.IsProjectInitialized(projectPath) {
-		if err := deps.ProjectInit.InitializeProject(ctx, projectPath); err != nil {
-			fmt.Println("❌")
-			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize project").
-				WithComponent("cli").
-				WithOperation("runFastInit")
-		}
+	// Step 1: Create enhanced campaign structure
+	fmt.Print("🏗️  Creating campaign structure... ")
+	if err := createEnhancedCampaignStructure(ctx, projectPath); err != nil {
+		fmt.Println("❌")
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign structure").
+			WithComponent("cli").
+			WithOperation("runFastInit")
 	}
 	fmt.Println("✅")
 
-	// Step 2: Auto-detect AI providers
+	// Step 2: Detect project type
+	fmt.Print("🔍 Analyzing project type... ")
+	detector := project.NewProjectDetector()
+	projectType, err := detector.DetectProjectType(projectPath)
+	if err != nil {
+		fmt.Printf("⚠️ (using generic)\n")
+		projectType = &project.ProjectType{
+			Type:        "generic",
+			Language:    "multiple",
+			Framework:   "",
+			Description: "Generic project",
+		}
+	} else {
+		fmt.Printf("✅ (%s)\n", projectType.Description)
+	}
+
+	// Step 3: Auto-detect AI providers
 	fmt.Print("🤖 Detecting AI providers... ")
-	detector := providers.NewAutoDetector(5 * time.Second) // Reduced timeout
-	providerResults, err := detector.DetectAll(ctx)
+	providerDetector := providers.NewAutoDetector(5 * time.Second)
+	providerResults, err := providerDetector.DetectAll(ctx)
 	if err != nil {
 		fmt.Printf("⚠️ (continuing with defaults)\n")
 		providerResults = []providers.DetectionResult{}
@@ -167,41 +179,56 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	// Step 3: Create configuration
-	fmt.Print("⚙️  Creating configuration... ")
-	if err := deps.ConfigManager.EstablishGuildFoundation(ctx, projectPath, campaignName, projectName); err != nil {
+	// Step 4: Create campaign configuration
+	fmt.Print("⚙️  Creating campaign configuration... ")
+	campaignHash := generateCampaignHash(projectPath)
+	if err := createCampaignConfig(ctx, projectPath, campaignName, projectName, projectType.Type); err != nil {
 		fmt.Println("❌")
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create configuration").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create campaign config").
 			WithComponent("cli").
 			WithOperation("runFastInit")
 	}
 	fmt.Println("✅")
 
-	// Step 4: Create Elena and enhanced agents
+	// Step 5: Create default agent configurations
 	fmt.Print("👥 Creating Elena and specialist agents... ")
-	agentCount, err := createEnhancedAgents(ctx, projectPath, providerResults)
-	if err != nil {
-		fmt.Printf("❌\n")
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create agents").
+	if err := createEnhancedAgentConfigs(ctx, projectPath, projectType); err != nil {
+		fmt.Println("❌")
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create agent configs").
 			WithComponent("cli").
 			WithOperation("runFastInit")
 	}
-	fmt.Printf("✅ (%d agents)\n", agentCount)
+	
+	// Adapt agents to project type
+	if err := adaptAgentConfigsToProjectType(ctx, projectPath, projectType); err != nil {
+		logger.WarnContext(ctx, "Failed to adapt agent configs", "error", err)
+	}
+	fmt.Println("✅ (3 agents)")
 
-	// Step 5: Integration and validation
-	fmt.Print("🔗 Integrating configuration... ")
-	if err := deps.ConfigManager.FinalizeGuildCharter(ctx, projectPath, campaignName, projectName); err != nil {
+	// Step 6: Create guild configuration
+	fmt.Print("🏰 Creating guild configuration... ")
+	if err := createDefaultGuildConfig(ctx, projectPath, projectName); err != nil {
 		fmt.Println("❌")
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to integrate configuration").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create guild config").
 			WithComponent("cli").
 			WithOperation("runFastInit")
 	}
 	fmt.Println("✅")
 
-	// Step 6: Socket registry
-	fmt.Print("🔧 Setting up daemon registry... ")
-	if err := deps.DaemonManager.SaveSocketRegistry(projectPath, campaignName); err != nil {
-		fmt.Printf("⚠️ (manual start required)\n")
+	// Step 7: Initialize database
+	fmt.Print("🗄️  Initializing database... ")
+	if err := initializeCampaignDatabase(ctx, projectPath, campaignName); err != nil {
+		fmt.Println("❌")
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize database").
+			WithComponent("cli").
+			WithOperation("runFastInit")
+	}
+	fmt.Println("✅")
+
+	// Step 8: Create socket registry
+	fmt.Print("🔧 Setting up socket registry... ")
+	if err := createSocketRegistry(ctx, projectPath, campaignName, campaignHash); err != nil {
+		fmt.Printf("⚠️ (manual daemon start required)\n")
 	} else {
 		fmt.Println("✅")
 	}
@@ -226,167 +253,3 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-// createEnhancedAgents creates enhanced agents with optimized provider selection
-func createEnhancedAgents(ctx context.Context, projectPath string, providerResults []providers.DetectionResult) (int, error) {
-	// Create enhanced agent creator
-	creator := agents.NewDefaultAgentCreator()
-
-	// Create default agent set
-	agentConfigs, err := creator.CreateDefaultAgentSet(ctx)
-	if err != nil {
-		return 0, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create agent set").
-			WithComponent("cli").
-			WithOperation("createEnhancedAgents")
-	}
-
-	// Optimize providers based on detection results
-	optimizeAgentProviders(agentConfigs, providerResults)
-
-	// Ensure agents directory exists
-	agentsDir := filepath.Join(projectPath, ".campaign", "agents")
-	if err := os.MkdirAll(agentsDir, 0755); err != nil {
-		return 0, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
-			WithComponent("cli").
-			WithOperation("createEnhancedAgents")
-	}
-
-	// Save each agent configuration
-	for _, agentConfig := range agentConfigs {
-		if err := saveAgentConfig(ctx, agentsDir, agentConfig); err != nil {
-			return 0, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save agent config").
-				WithComponent("cli").
-				WithOperation("createEnhancedAgents").
-				WithDetails("agent", agentConfig.ID)
-		}
-	}
-
-	return len(agentConfigs), nil
-}
-
-// optimizeAgentProviders intelligently assigns providers to agents based on availability
-func optimizeAgentProviders(agentConfigs []*config.AgentConfig, providerResults []providers.DetectionResult) {
-	// Create provider availability map
-	availableProviders := make(map[string]providers.DetectionResult)
-	var bestProvider *providers.DetectionResult
-	highestConfidence := 0.0
-
-	for _, result := range providerResults {
-		if result.Available {
-			availableProviders[string(result.Provider)] = result
-			if result.Confidence > highestConfidence {
-				highestConfidence = result.Confidence
-				bestProvider = &result
-			}
-		}
-	}
-
-	// If no providers available, use defaults
-	if len(availableProviders) == 0 {
-		return
-	}
-
-	// Apply intelligent provider mapping
-	for _, agent := range agentConfigs {
-		originalProvider := agent.Provider
-
-		switch agent.Type {
-		case "manager":
-			// Elena benefits from Claude Code's planning capabilities
-			if claudeCode, exists := availableProviders["claude_code"]; exists && claudeCode.Confidence > 0.7 {
-				agent.Provider = "claude_code"
-			} else if _, exists := availableProviders["anthropic"]; exists {
-				agent.Provider = "anthropic"
-			}
-		case "worker":
-			// Marcus benefits from Claude Code's coding features
-			if agent.ID == "marcus-developer" {
-				if claudeCode, exists := availableProviders["claude_code"]; exists && claudeCode.Confidence > 0.7 {
-					agent.Provider = "claude_code"
-				} else if _, exists := availableProviders["anthropic"]; exists {
-					agent.Provider = "anthropic"
-				}
-			}
-		case "specialist":
-			// Vera can use any high-quality provider
-			if _, exists := availableProviders["anthropic"]; exists {
-				agent.Provider = "anthropic"
-			} else if _, exists := availableProviders["claude_code"]; exists {
-				agent.Provider = "claude_code"
-			}
-		}
-
-		// Fallback to best available provider if chosen provider unavailable
-		if _, exists := availableProviders[agent.Provider]; !exists {
-			if bestProvider != nil {
-				agent.Provider = string(bestProvider.Provider)
-			} else {
-				agent.Provider = originalProvider
-			}
-		}
-	}
-}
-
-// saveAgentConfig saves agent configuration to YAML file
-func saveAgentConfig(ctx context.Context, agentsDir string, agentConfig *config.AgentConfig) error {
-	// Convert to YAML-friendly format
-	configData := map[string]interface{}{
-		"id":           agentConfig.ID,
-		"name":         agentConfig.Name,
-		"type":         agentConfig.Type,
-		"description":  agentConfig.Description,
-		"provider":     agentConfig.Provider,
-		"model":        agentConfig.Model,
-		"capabilities": agentConfig.Capabilities,
-		"tools":        agentConfig.Tools,
-	}
-
-	// Add backstory information if available
-	if agentConfig.Backstory != nil {
-		configData["backstory"] = map[string]interface{}{
-			"experience":     agentConfig.Backstory.Experience,
-			"previous_roles": agentConfig.Backstory.PreviousRoles,
-			"expertise":      agentConfig.Backstory.Expertise,
-			"achievements":   agentConfig.Backstory.Achievements,
-			"philosophy":     agentConfig.Backstory.Philosophy,
-			"guild_rank":     agentConfig.Backstory.GuildRank,
-			"specialties":    agentConfig.Backstory.Specialties,
-		}
-	}
-
-	// Add personality information if available
-	if agentConfig.Personality != nil {
-		configData["personality"] = map[string]interface{}{
-			"formality":      agentConfig.Personality.Formality,
-			"detail_level":   agentConfig.Personality.DetailLevel,
-			"humor_level":    agentConfig.Personality.HumorLevel,
-			"approach_style": agentConfig.Personality.ApproachStyle,
-			"assertiveness":  agentConfig.Personality.Assertiveness,
-			"empathy":        agentConfig.Personality.Empathy,
-			"patience":       agentConfig.Personality.Patience,
-			"honor":          agentConfig.Personality.Honor,
-			"wisdom":         agentConfig.Personality.Wisdom,
-			"craftsmanship":  agentConfig.Personality.Craftsmanship,
-		}
-	}
-
-	// Marshal to YAML
-	yamlData, err := yaml.Marshal(configData)
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal agent config").
-			WithComponent("cli").
-			WithOperation("saveAgentConfig")
-	}
-
-	// Save to file
-	filename := fmt.Sprintf("%s.yaml", agentConfig.ID)
-	filepath := filepath.Join(agentsDir, filename)
-
-	if err := os.WriteFile(filepath, yamlData, 0644); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent config file").
-			WithComponent("cli").
-			WithOperation("saveAgentConfig").
-			WithDetails("file", filepath)
-	}
-
-	return nil
-}

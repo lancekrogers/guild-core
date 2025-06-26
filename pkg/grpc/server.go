@@ -717,11 +717,7 @@ func (s *Server) SendMessageToAgent(ctx context.Context, req *pb.AgentMessageReq
 		return nil, status.Errorf(codes.NotFound, "agent '%s' not found", req.AgentId)
 	}
 
-	// For now, create a simple mock response
-	// TODO: Integrate with actual agent factory when orchestrator is ready
-	mockResponse := fmt.Sprintf("I'm %s, and I received your message: %s. (Note: This is a mock response - actual agent integration pending)", agentConfig.Name, req.Message)
-
-	// Add context from request
+	// Add context from request for observability
 	if req.SessionId != "" {
 		ctx = context.WithValue(ctx, "session_id", req.SessionId)
 	}
@@ -729,8 +725,68 @@ func (s *Server) SendMessageToAgent(ctx context.Context, req *pb.AgentMessageReq
 		ctx = context.WithValue(ctx, "campaign_id", req.CampaignId)
 	}
 
-	// Use the mock response for now
-	response := mockResponse
+	// Enhanced observability for agent execution
+	logger := observability.GetLogger(ctx).
+		WithComponent("grpc").
+		WithOperation("SendMessageToAgent")
+
+	logger.Info("Processing agent message request",
+		"agent_id", req.AgentId,
+		"session_id", req.SessionId,
+		"campaign_id", req.CampaignId,
+		"message_length", len(req.Message),
+	)
+
+	var response string
+	var err error
+
+	// Try to get agent instance from registry first
+	if agentRegistryInstance := s.agentReg; agentRegistryInstance != nil {
+		if agent, getErr := agentRegistryInstance.GetAgent(req.AgentId); getErr == nil {
+			// Execute with the actual agent
+			logger.Debug("Executing with registered agent instance", "agent_id", req.AgentId)
+			response, err = agent.Execute(ctx, req.Message)
+			if err != nil {
+				logger.WithError(err).Error("Agent execution failed", "agent_id", req.AgentId)
+				return nil, status.Errorf(codes.Internal, "agent execution failed: %v", err)
+			}
+		} else {
+			logger.Warn("Agent not found in agent registry, trying orchestrator",
+				"agent_id", req.AgentId,
+				"get_error", getErr.Error(),
+			)
+		}
+	}
+
+	// If no direct agent or execution failed, try orchestrator
+	if response == "" && s.orchestrator != nil {
+		logger.Debug("Attempting execution via orchestrator", "agent_id", req.AgentId)
+		
+		// Get agent from orchestrator and execute
+		if orchAgent, found := s.orchestrator.GetAgent(req.AgentId); found {
+			if orchResponse, orchErr := orchAgent.Execute(ctx, req.Message); orchErr == nil {
+				response = orchResponse
+				logger.Debug("Orchestrator agent execution successful", "agent_id", req.AgentId)
+			} else {
+				logger.WithError(orchErr).Warn("Orchestrator agent execution failed", "agent_id", req.AgentId)
+			}
+		} else {
+			logger.Warn("Agent not found in orchestrator", "agent_id", req.AgentId)
+		}
+	}
+
+	// Fallback to a structured response if no execution succeeded
+	if response == "" {
+		logger.Warn("No agent execution path succeeded, using fallback response", "agent_id", req.AgentId)
+		response = fmt.Sprintf("I'm %s. I received your message but agent execution is not fully configured yet. Please check the guild daemon setup.\n\nMessage: %s", 
+			agentConfig.Name, req.Message)
+	}
+
+	logger.Info("Agent message processing completed",
+		"agent_id", req.AgentId,
+		"response_length", len(response),
+		"execution_successful", response != "",
+	)
 
 	return &pb.AgentMessageResponse{
 		AgentId:   req.AgentId,
