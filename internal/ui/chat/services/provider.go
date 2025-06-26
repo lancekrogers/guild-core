@@ -6,11 +6,15 @@ package services
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"os"
+	"strings"
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/guild-ventures/guild-core/pkg/providers"
 )
 
 // ProviderService monitors AI provider status and health
@@ -362,20 +366,128 @@ func (ps *ProviderService) performHealthCheck(providerName string) (bool, error)
 
 // checkOpenAIHealth checks OpenAI provider health
 func (ps *ProviderService) checkOpenAIHealth(providerName string) (bool, error) {
-	// TODO: Implement actual OpenAI health check
-	// For now, just return true as a placeholder
+	baseURL := providers.EndpointOpenAI
+	if ps.guildConfig != nil && ps.guildConfig.Providers.OpenAI.BaseURL != "" {
+		baseURL = ps.guildConfig.Providers.OpenAI.BaseURL
+	}
+	url := strings.TrimSuffix(baseURL, "/") + "/models"
+
+	ctx, cancel := context.WithTimeout(ps.ctx, 5*time.Second)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return false, gerror.Wrap(err, gerror.ErrCodeConnection, "request failed").
+			WithComponent("services.provider").
+			WithOperation("checkOpenAIHealth")
+	}
+
+	if apiKey := os.Getenv(providers.EnvOpenAIKey); apiKey != "" {
+		req.Header.Set("Authorization", "Bearer "+apiKey)
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		if ctx.Err() != nil {
+			return false, gerror.Wrap(ctx.Err(), gerror.ErrCodeTimeout, "timeout").
+				WithComponent("services.provider").
+				WithOperation("checkOpenAIHealth")
+		}
+		return false, gerror.Wrap(err, gerror.ErrCodeConnection, "health request failed").
+			WithComponent("services.provider").
+			WithOperation("checkOpenAIHealth")
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return false, gerror.Newf(gerror.ErrCodeProviderAPI, "status %d", resp.StatusCode).
+			WithComponent("services.provider").
+			WithOperation("checkOpenAIHealth")
+	}
+
 	return true, nil
 }
 
 // checkAnthropicHealth checks Anthropic provider health
 func (ps *ProviderService) checkAnthropicHealth(providerName string) (bool, error) {
-	// TODO: Implement actual Anthropic health check
+	baseURL := providers.EndpointAnthropic
+	if ps.guildConfig != nil && ps.guildConfig.Providers.Anthropic.BaseURL != "" {
+		baseURL = ps.guildConfig.Providers.Anthropic.BaseURL
+	}
+	url := strings.TrimSuffix(baseURL, "/") + "/v1/models"
+
+	ctx, cancel := context.WithTimeout(ps.ctx, 5*time.Second)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return false, gerror.Wrap(err, gerror.ErrCodeConnection, "request failed").
+			WithComponent("services.provider").
+			WithOperation("checkAnthropicHealth")
+	}
+	if apiKey := os.Getenv(providers.EnvAnthropicKey); apiKey != "" {
+		req.Header.Set("x-api-key", apiKey)
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		if ctx.Err() != nil {
+			return false, gerror.Wrap(ctx.Err(), gerror.ErrCodeTimeout, "timeout").
+				WithComponent("services.provider").
+				WithOperation("checkAnthropicHealth")
+		}
+		return false, gerror.Wrap(err, gerror.ErrCodeConnection, "health request failed").
+			WithComponent("services.provider").
+			WithOperation("checkAnthropicHealth")
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return false, gerror.Newf(gerror.ErrCodeProviderAPI, "status %d", resp.StatusCode).
+			WithComponent("services.provider").
+			WithOperation("checkAnthropicHealth")
+	}
+
 	return true, nil
 }
 
 // checkOllamaHealth checks Ollama provider health
 func (ps *ProviderService) checkOllamaHealth(providerName string) (bool, error) {
-	// TODO: Implement actual Ollama health check
+	baseURL := providers.EndpointOllama
+	if ps.guildConfig != nil && ps.guildConfig.Providers.Ollama.BaseURL != "" {
+		baseURL = ps.guildConfig.Providers.Ollama.BaseURL
+	}
+	url := strings.TrimSuffix(baseURL, "/") + "/api/tags"
+
+	ctx, cancel := context.WithTimeout(ps.ctx, 5*time.Second)
+	defer cancel()
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return false, gerror.Wrap(err, gerror.ErrCodeConnection, "request failed").
+			WithComponent("services.provider").
+			WithOperation("checkOllamaHealth")
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		if ctx.Err() != nil {
+			return false, gerror.Wrap(ctx.Err(), gerror.ErrCodeTimeout, "timeout").
+				WithComponent("services.provider").
+				WithOperation("checkOllamaHealth")
+		}
+		return false, gerror.Wrap(err, gerror.ErrCodeConnection, "health request failed").
+			WithComponent("services.provider").
+			WithOperation("checkOllamaHealth")
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return false, gerror.Newf(gerror.ErrCodeProviderAPI, "status %d", resp.StatusCode).
+			WithComponent("services.provider").
+			WithOperation("checkOllamaHealth")
+	}
+
 	return true, nil
 }
 
