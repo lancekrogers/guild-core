@@ -52,7 +52,7 @@ Guild is in **pre-MVP development**. Core infrastructure is in place, but many c
 
 Guild is **not open source**.
 
-It is licensed under the [Angry Goat License v0.2](LICENSE), which means:
+It is licensed under a custom [Angry Goat License](LICENSE), which means:
 
 - ✅ Personal, educational, and non-commercial use is allowed
 - ❌ Commercial use (SaaS, resale, internal enterprise, etc.) is **prohibited** without a commercial license
@@ -83,6 +83,67 @@ If you’d like to follow development, feel free to:
 - Watch for updates
 - Open issues for feedback or discussion
 - Contact: [lance@blockhead.consulting](mailto:lance@blockhead.consulting)
+
+---
+
+## 🏗️ Architecture Overview
+
+Guild is built as a modular, extensible framework for orchestrating multiple AI agents working together on complex tasks. The architecture emphasizes:
+
+**Core Components:**
+
+- **Agent Framework**: Flexible system for defining AI agents with specialized capabilities, tools, and behaviors
+- **Orchestration Engine**: Coordinates multiple agents, managing task dependencies and inter-agent communication via gRPC
+- **Memory Layer**: SQLite-based persistence with vector search capabilities for maintaining context across sessions
+- **Tool Execution System**: Sandboxed environments for agents to safely execute code and interact with external systems
+- **Prompt Management**: Multi-layer prompt system enabling dynamic behavior customization while maintaining efficiency
+- **Task Management**: Kanban-style board for tracking work items and managing human review requirements
+
+**Technology Stack:**
+
+- **Go**: Chosen for performance, strong concurrency primitives, and type safety
+- **SQLite**: Production-ready relational database for state management
+- **gRPC**: High-performance RPC framework for inter-component communication
+- **Bubble Tea**: Modern TUI framework for rich terminal interfaces
+
+---
+
+## 🎯 Technical Philosophy
+
+**Why Go?**
+Guild is built in Go rather than Python (the typical choice for AI projects) for several deliberate reasons:
+
+- **Performance**: Go's compiled nature and efficient runtime make it ideal for orchestrating multiple concurrent agents
+- **Type Safety**: Strong typing catches errors at compile time, crucial for a complex multi-agent system
+- **Concurrency**: Go's goroutines and channels provide elegant patterns for coordinating parallel agent operations
+- **Single Binary**: Easy deployment without dependency management headaches
+
+**Developer-First Design**
+
+- **Modularity**: Every major system is behind an interface, allowing easy extension and testing
+- **Registry Pattern**: Components are discoverable and loosely coupled through a central registry
+- **Progressive Disclosure**: Start simple with one agent, scale up to complex multi-agent workflows
+- **Local-First**: Everything runs on your machine - no cloud dependencies unless you want them
+
+**The Guild Metaphor**
+While not yet consistently implemented, the medieval guild theme serves a purpose beyond aesthetics:
+
+- Makes complex multi-agent concepts more intuitive
+- Provides a consistent mental model for system components
+- Adds personality to what could be a dry technical framework
+
+The goal is serious engineering wrapped in an approachable, memorable package.
+
+---
+
+## 🙏 Acknowledgments
+
+Guild draws inspiration from:
+
+- [CrewAI](https://github.com/joaomdmoura/crewAI) - Multi-agent orchestration patterns
+- [LangChain](https://github.com/langchain-ai/langchain) - LLM application framework concepts
+- [Aider](https://github.com/paul-gauthier/aider) - AI pair programming interactions
+- Medieval guild structures and master-apprentice relationships
 
 ---
 
