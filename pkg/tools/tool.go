@@ -7,8 +7,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/tools"
 )
 
 // Re-export the Tool interface from the tools package

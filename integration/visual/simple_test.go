@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/internal/ui/chat/session"
-	"github.com/guild-ventures/guild-core/internal/ui/progress"
-	"github.com/guild-ventures/guild-core/internal/ui/tools"
+	"github.com/lancekrogers/guild/internal/ui/chat/session"
+	"github.com/lancekrogers/guild/internal/ui/progress"
+	"github.com/lancekrogers/guild/internal/ui/tools"
 )
 
 // TestProgressIndicators tests the progress indicator system

@@ -6,11 +6,11 @@ package registry
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/commission"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/interfaces"
-	"github.com/guild-ventures/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/commission"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/interfaces"
+	"github.com/lancekrogers/guild/pkg/tools"
 )
 
 // createAgentFactory creates an agent factory with all required dependencies

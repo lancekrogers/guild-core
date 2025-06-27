@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // FileResult represents a file search result with fuzzy matching score

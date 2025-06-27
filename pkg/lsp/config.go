@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 	"gopkg.in/yaml.v3"
 )
 

@@ -6,7 +6,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/guild-ventures/guild-core/pkg/memory/rag"
+	"github.com/lancekrogers/guild/pkg/memory/rag"
 )
 
 func main() {

@@ -9,7 +9,7 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // PromptMetadata contains metadata for a prompt template

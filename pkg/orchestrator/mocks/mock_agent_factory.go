@@ -6,7 +6,7 @@ package mocks
 import (
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agent"
 )
 
 // MockAgentFactory is a mock implementation of the agent.Factory

@@ -14,7 +14,7 @@ import (
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 
-	commissionpkg "github.com/guild-ventures/guild-core/pkg/commission"
+	commissionpkg "github.com/lancekrogers/guild/pkg/commission"
 )
 
 // Define UI states

@@ -6,7 +6,7 @@ package providers
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
 )
 
 // LLMClient defines the interface for LLM clients (legacy - will be deprecated)

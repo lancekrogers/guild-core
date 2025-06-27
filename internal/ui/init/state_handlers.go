@@ -11,7 +11,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // InitState represents different stages of the initialization process

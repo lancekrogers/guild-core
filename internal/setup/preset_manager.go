@@ -6,7 +6,7 @@ package setup
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // AgentPresets manages pre-configured agent collections for quick setup

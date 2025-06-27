@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/lsp"
-	lsptools "github.com/guild-ventures/guild-core/pkg/lsp/tools"
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/pkg/lsp"
+	lsptools "github.com/lancekrogers/guild/pkg/lsp/tools"
+	"github.com/lancekrogers/guild/tools"
 )
 
 func TestRegistryAdapter(t *testing.T) {

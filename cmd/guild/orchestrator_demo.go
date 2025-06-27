@@ -10,13 +10,13 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/guild-ventures/guild-core/pkg/commission"
-	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/orchestrator"
-	"github.com/guild-ventures/guild-core/pkg/registry"
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/pkg/commission"
+	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild/pkg/orchestrator"
+	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild/tools"
 )
 
 // orchestratorCmd demonstrates the cost-aware orchestrator in action

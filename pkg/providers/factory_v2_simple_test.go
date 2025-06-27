@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
 	"github.com/stretchr/testify/assert"
 )
 

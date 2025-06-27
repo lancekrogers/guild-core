@@ -13,8 +13,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/tools"
 )
 
 // DependenciesTool analyzes project dependencies

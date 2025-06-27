@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // RegistryProvider defines the interface for accessing registry from context

@@ -29,8 +29,8 @@ import (
 
 	"github.com/lancekrogers/claude-code-go/pkg/claude"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
 )
 
 // Claude 4 model constants (Released May 2025)

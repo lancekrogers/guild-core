@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/lsp"
-	"github.com/guild-ventures/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild/pkg/lsp"
+	"github.com/lancekrogers/guild/pkg/observability"
 )
 
 // LSPContextEnhancer enhances agent context with LSP-derived information

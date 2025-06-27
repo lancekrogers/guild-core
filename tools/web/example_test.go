@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/tools"
 )
 
 // ExampleWebSearchTool demonstrates basic usage of the WebSearch tool

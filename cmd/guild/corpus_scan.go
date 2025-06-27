@@ -13,12 +13,12 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/guild-ventures/guild-core/pkg/corpus"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/memory/rag"
-	"github.com/guild-ventures/guild-core/pkg/memory/vector"
-	"github.com/guild-ventures/guild-core/pkg/providers"
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/pkg/corpus"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/memory/rag"
+	"github.com/lancekrogers/guild/pkg/memory/vector"
+	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
 )
 
 // corpusScanCmd represents the corpus scan command

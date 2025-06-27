@@ -7,8 +7,8 @@ import (
 	"context"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/observability"
 )
 
 // EnhancedAgentConfig represents the enhanced configuration for a single agent

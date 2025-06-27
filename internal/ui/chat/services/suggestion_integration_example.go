@@ -9,10 +9,10 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/observability"
-	"github.com/guild-ventures/guild-core/pkg/suggestions"
+	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild/pkg/suggestions"
 )
 
 // ChatWithSuggestions demonstrates how to integrate SuggestionService with ChatService

@@ -9,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts/layered/commission"
+	"github.com/lancekrogers/guild/pkg/prompts/layered/commission"
 )
 
 func TestManagerRefinementPrompt(t *testing.T) {

@@ -8,15 +8,15 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/commission"
-	"github.com/guild-ventures/guild-core/pkg/lsp"
-	"github.com/guild-ventures/guild-core/pkg/memory"
-	"github.com/guild-ventures/guild-core/pkg/providers"
-	"github.com/guild-ventures/guild-core/pkg/suggestions"
-	"github.com/guild-ventures/guild-core/pkg/templates"
-	"github.com/guild-ventures/guild-core/pkg/tools"
-	fsTool "github.com/guild-ventures/guild-core/tools/fs"
+	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/commission"
+	"github.com/lancekrogers/guild/pkg/lsp"
+	"github.com/lancekrogers/guild/pkg/memory"
+	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/lancekrogers/guild/pkg/suggestions"
+	"github.com/lancekrogers/guild/pkg/templates"
+	"github.com/lancekrogers/guild/pkg/tools"
+	fsTool "github.com/lancekrogers/guild/tools/fs"
 )
 
 func main() {

@@ -8,15 +8,15 @@ import (
 	"os"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/providers/anthropic"
-	"github.com/guild-ventures/guild-core/pkg/providers/deepinfra"
-	"github.com/guild-ventures/guild-core/pkg/providers/deepseek"
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
-	"github.com/guild-ventures/guild-core/pkg/providers/mock"
-	"github.com/guild-ventures/guild-core/pkg/providers/ollama"
-	"github.com/guild-ventures/guild-core/pkg/providers/openai"
-	"github.com/guild-ventures/guild-core/pkg/providers/ora"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/providers/anthropic"
+	"github.com/lancekrogers/guild/pkg/providers/deepinfra"
+	"github.com/lancekrogers/guild/pkg/providers/deepseek"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/pkg/providers/mock"
+	"github.com/lancekrogers/guild/pkg/providers/ollama"
+	"github.com/lancekrogers/guild/pkg/providers/openai"
+	"github.com/lancekrogers/guild/pkg/providers/ora"
 )
 
 // FactoryV2 creates AI providers using the new AIProvider interface

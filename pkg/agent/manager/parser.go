@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // ArchiveParser implements the ResponseParser interface for Guild Archives

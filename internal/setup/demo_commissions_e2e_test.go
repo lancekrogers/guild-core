@@ -16,8 +16,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/commission"
-	"github.com/guild-ventures/guild-core/pkg/project"
+	"github.com/lancekrogers/guild/pkg/commission"
+	"github.com/lancekrogers/guild/pkg/project"
 )
 
 // TestDemoCommissionEndToEnd tests the complete flow from generation to usage

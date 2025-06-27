@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 func TestGuildConfig_Validate(t *testing.T) {

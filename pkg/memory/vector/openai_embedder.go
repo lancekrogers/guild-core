@@ -8,7 +8,7 @@ import (
 
 	openai "github.com/sashabaranov/go-openai"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // OpenAIEmbedder implements the Embedder interface using OpenAI

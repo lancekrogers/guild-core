@@ -7,8 +7,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // ProviderDefinition defines a provider's metadata and configuration

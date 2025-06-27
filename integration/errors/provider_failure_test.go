@@ -14,11 +14,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/internal/testutil"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/providers"
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
-	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild/internal/testutil"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/pkg/registry"
 )
 
 // TestLLMProviderFailures tests various provider failure scenarios

@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/tools"
 )
 
 // ApplyDiffTool applies unified diff patches to files

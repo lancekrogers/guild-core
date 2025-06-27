@@ -4,14 +4,14 @@
 package agent
 
 import (
-	"github.com/guild-ventures/guild-core/pkg/commission"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/lsp"
-	"github.com/guild-ventures/guild-core/pkg/memory"
-	"github.com/guild-ventures/guild-core/pkg/providers"
-	"github.com/guild-ventures/guild-core/pkg/suggestions"
-	"github.com/guild-ventures/guild-core/pkg/templates"
-	"github.com/guild-ventures/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild/pkg/commission"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/lsp"
+	"github.com/lancekrogers/guild/pkg/memory"
+	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/lancekrogers/guild/pkg/suggestions"
+	"github.com/lancekrogers/guild/pkg/templates"
+	"github.com/lancekrogers/guild/pkg/tools"
 )
 
 // SuggestionAwareAgentFactory creates agents with suggestion capabilities

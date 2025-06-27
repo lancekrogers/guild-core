@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/templates"
+	"github.com/lancekrogers/guild/pkg/templates"
 )
 
 // TemplateSuggestionProvider suggests relevant templates based on context

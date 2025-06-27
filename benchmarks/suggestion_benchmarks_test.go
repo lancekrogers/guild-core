@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-ventures/guild-core/internal/ui/chat/services"
-	"github.com/guild-ventures/guild-core/pkg/suggestions"
+	"github.com/lancekrogers/guild/internal/ui/chat/services"
+	"github.com/lancekrogers/guild/pkg/suggestions"
 )
 
 // Sprint 7.6 Performance Targets

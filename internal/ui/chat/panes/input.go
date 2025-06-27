@@ -11,10 +11,10 @@ import (
 	"github.com/charmbracelet/bubbles/textarea"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/guild-ventures/guild-core/internal/ui/chat/common/layout"
-	"github.com/guild-ventures/guild-core/internal/ui/chat/completion"
-	"github.com/guild-ventures/guild-core/internal/ui/vim"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/internal/ui/chat/common/layout"
+	"github.com/lancekrogers/guild/internal/ui/chat/completion"
+	"github.com/lancekrogers/guild/internal/ui/vim"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // InputPane handles user input with auto-completion and history

@@ -10,7 +10,7 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/guild-ventures/guild-core/pkg/config"
+	"github.com/lancekrogers/guild/pkg/config"
 )
 
 // setupCampaignStructure creates the proper campaign-first directory structure for tests

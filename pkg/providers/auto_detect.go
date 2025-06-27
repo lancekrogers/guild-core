@@ -15,8 +15,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
 )
 
 // DetectionResult contains information about a detected provider
@@ -458,7 +458,7 @@ func (d *AutoDetector) CreateClientFromDetection(result DetectionResult) (interf
 			WithDetails("provider", string(result.Provider))
 
 	case ProviderOllama:
-		// Import would be needed here: "github.com/guild-ventures/guild-core/pkg/providers/ollama"
+		// Import would be needed here: "github.com/lancekrogers/guild/pkg/providers/ollama"
 		// For now, return instruction to use factory
 		return nil, gerror.New(gerror.ErrCodeNotImplemented, "use FactoryV2.CreateAIProvider for Ollama client creation", nil).
 			WithComponent("providers").

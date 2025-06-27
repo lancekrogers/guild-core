@@ -6,9 +6,9 @@ package agents
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/backstory"
-	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
+	"github.com/lancekrogers/guild/pkg/backstory"
+	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild/pkg/prompts/layered"
 )
 
 // AgentCreator defines the interface for creating enhanced agents

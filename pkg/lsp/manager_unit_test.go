@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/lsp"
-	"github.com/guild-ventures/guild-core/pkg/lsp/mocks"
+	"github.com/lancekrogers/guild/pkg/lsp"
+	"github.com/lancekrogers/guild/pkg/lsp/mocks"
 )
 
 // TestManagerWithMocks tests the LSP manager functionality using mocks

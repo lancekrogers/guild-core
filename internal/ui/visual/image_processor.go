@@ -11,7 +11,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // ImageProcessor handles image detection, processing, and ASCII art rendering

@@ -4,8 +4,8 @@
 package common
 
 import (
-	"github.com/guild-ventures/guild-core/internal/ui/chat/common/config"
-	"github.com/guild-ventures/guild-core/internal/ui/chat/common/types"
+	"github.com/lancekrogers/guild/internal/ui/chat/common/config"
+	"github.com/lancekrogers/guild/internal/ui/chat/common/types"
 )
 
 // Re-export types types for convenience

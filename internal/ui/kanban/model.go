@@ -12,7 +12,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild/pkg/kanban"
 )
 
 // Column represents a kanban board column

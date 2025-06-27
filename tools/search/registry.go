@@ -4,8 +4,8 @@
 package search
 
 import (
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/tools"
 )
 
 // RegisterSearchTools registers all search tools with the provided registry

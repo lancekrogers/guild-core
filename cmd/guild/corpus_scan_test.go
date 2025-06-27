@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/corpus"
-	"github.com/guild-ventures/guild-core/pkg/memory/rag"
-	"github.com/guild-ventures/guild-core/pkg/memory/vector"
-	"github.com/guild-ventures/guild-core/pkg/providers/mock"
+	"github.com/lancekrogers/guild/pkg/corpus"
+	"github.com/lancekrogers/guild/pkg/memory/rag"
+	"github.com/lancekrogers/guild/pkg/memory/vector"
+	"github.com/lancekrogers/guild/pkg/providers/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

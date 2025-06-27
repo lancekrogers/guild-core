@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // fsm implements the FSM interface for campaign state transitions

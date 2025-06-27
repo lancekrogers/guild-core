@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // MultiFormatExporter implements the Exporter interface with support for multiple formats

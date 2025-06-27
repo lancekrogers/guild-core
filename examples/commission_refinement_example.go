@@ -12,13 +12,13 @@ import (
 	"log"
 	"os"
 
-	"github.com/guild-ventures/guild-core/pkg/agent/manager"
-	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/orchestrator"
-	"github.com/guild-ventures/guild-core/pkg/providers/anthropic"
-	"github.com/guild-ventures/guild-core/pkg/providers/openai"
-	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild/pkg/agent/manager"
+	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/orchestrator"
+	"github.com/lancekrogers/guild/pkg/providers/anthropic"
+	"github.com/lancekrogers/guild/pkg/providers/openai"
+	"github.com/lancekrogers/guild/pkg/registry"
 )
 
 // Example of using the complete commission refinement pipeline

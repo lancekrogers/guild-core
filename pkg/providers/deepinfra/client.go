@@ -7,8 +7,8 @@ import (
 	"context"
 	"os"
 
-	"github.com/guild-ventures/guild-core/pkg/providers/base"
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/pkg/providers/base"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
 )
 
 // Popular DeepInfra models

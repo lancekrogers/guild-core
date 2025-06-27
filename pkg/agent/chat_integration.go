@@ -6,8 +6,8 @@ package agent
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/observability"
-	"github.com/guild-ventures/guild-core/pkg/suggestions"
+	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild/pkg/suggestions"
 )
 
 // ChatSuggestionHandler provides suggestion integration for chat interfaces

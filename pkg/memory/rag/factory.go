@@ -6,7 +6,7 @@ package rag
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild/pkg/memory/vector"
 )
 
 // Factory creates RAG components

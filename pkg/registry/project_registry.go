@@ -7,8 +7,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/project"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/project"
 )
 
 // DefaultProjectRegistry is the default implementation of ProjectRegistry

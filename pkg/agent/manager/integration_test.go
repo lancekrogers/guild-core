@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
-	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/lancekrogers/guild/pkg/registry"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"

@@ -19,9 +19,9 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	guildv1 "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
-	"github.com/guild-ventures/guild-core/pkg/project"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	guildv1 "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild/pkg/project"
 )
 
 // E2ETestSuite provides utilities for end-to-end testing

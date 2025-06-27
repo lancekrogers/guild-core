@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
+	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild/pkg/prompts/layered"
 )
 
 // Integration test showing how enhanced agents work with Guild's backstory system

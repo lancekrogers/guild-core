@@ -13,9 +13,9 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/observability"
-	"github.com/guild-ventures/guild-core/pkg/project/global"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild/pkg/project/global"
 )
 
 // GuildConfig represents the configuration for a Guild (team of agents)

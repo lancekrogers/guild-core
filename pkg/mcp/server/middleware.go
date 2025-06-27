@@ -10,7 +10,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
+	"github.com/lancekrogers/guild/pkg/mcp/protocol"
 )
 
 // loggingMiddleware logs requests and responses

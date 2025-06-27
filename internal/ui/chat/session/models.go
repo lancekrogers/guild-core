@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/storage/db"
+	"github.com/lancekrogers/guild/pkg/storage/db"
 )
 
 // Ensure our models implement the necessary interfaces

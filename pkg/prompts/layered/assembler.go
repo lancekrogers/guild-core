@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // LayeredPromptAssembler implements the core Guild layered prompt system

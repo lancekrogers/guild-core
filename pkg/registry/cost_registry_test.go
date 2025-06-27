@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/tools"
 )
 
 func TestCostBasedAgentSelection(t *testing.T) {

@@ -20,11 +20,11 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/guild-ventures/guild-core/internal/daemon"
-	"github.com/guild-ventures/guild-core/pkg/client"
-	daemonPkg "github.com/guild-ventures/guild-core/pkg/daemon"
-	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
-	"github.com/guild-ventures/guild-core/pkg/paths"
+	"github.com/lancekrogers/guild/internal/daemon"
+	"github.com/lancekrogers/guild/pkg/client"
+	daemonPkg "github.com/lancekrogers/guild/pkg/daemon"
+	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild/pkg/paths"
 )
 
 // TestMultiDaemonLifecycle tests the full lifecycle of multiple daemon instances

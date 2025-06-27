@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/guild-ventures/guild-core/internal/buildutil/ui"
+	"github.com/lancekrogers/guild/internal/buildutil/ui"
 )
 
 // Uninstall removes the guild binary from the user's Go bin directory

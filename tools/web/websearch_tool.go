@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/tools"
 )
 
 // WebSearchTool implements web search functionality with multiple backends

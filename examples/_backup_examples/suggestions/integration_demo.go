@@ -7,9 +7,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/guild-ventures/guild-core/pkg/suggestions"
-	"github.com/guild-ventures/guild-core/pkg/tools"
-	fsTool "github.com/guild-ventures/guild-core/tools/fs"
+	"github.com/lancekrogers/guild/pkg/suggestions"
+	"github.com/lancekrogers/guild/pkg/tools"
+	fsTool "github.com/lancekrogers/guild/tools/fs"
 )
 
 func main() {

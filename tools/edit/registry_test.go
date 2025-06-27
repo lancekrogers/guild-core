@@ -6,7 +6,7 @@ package edit
 import (
 	"testing"
 
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/tools"
 )
 
 func TestCraftEditToolsRegistry(t *testing.T) {

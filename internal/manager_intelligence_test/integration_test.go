@@ -12,10 +12,10 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 
-	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/agent/manager"
-	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agent/manager"
+	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild/pkg/kanban"
 )
 
 // TestScenario represents a complete integration test scenario

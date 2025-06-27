@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // MarkdownParser implements ObjectiveParser for markdown files

@@ -13,8 +13,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/providers"
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
 )
 
 func TestMockProviderIntegration(t *testing.T) {

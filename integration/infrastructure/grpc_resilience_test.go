@@ -20,10 +20,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/guild-ventures/guild-core/internal/testutil"
-	grpcserver "github.com/guild-ventures/guild-core/pkg/grpc"
-	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
-	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild/internal/testutil"
+	grpcserver "github.com/lancekrogers/guild/pkg/grpc"
+	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild/pkg/registry"
 )
 
 // Simple in-memory event bus for testing

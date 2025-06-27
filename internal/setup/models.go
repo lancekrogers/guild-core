@@ -8,8 +8,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/providers"
 )
 
 // ModelConfig handles model selection and cost estimation

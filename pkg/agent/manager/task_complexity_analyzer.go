@@ -10,9 +10,9 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
+	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/prompts/layered"
 )
 
 // TaskComplexityAnalyzer analyzes task complexity with proper error handling,

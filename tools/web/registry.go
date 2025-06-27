@@ -4,10 +4,10 @@
 package web
 
 import (
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/providers"
-	"github.com/guild-ventures/guild-core/pkg/registry"
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild/tools"
 )
 
 // RegisterWebTools registers all web-related tools with the given registry

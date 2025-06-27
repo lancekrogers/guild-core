@@ -8,7 +8,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // ProviderExample demonstrates how to use the integrated provider system

@@ -10,8 +10,8 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/guild-ventures/guild-core/internal/setup"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/internal/setup"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // handleKeyPress handles key press events based on current state

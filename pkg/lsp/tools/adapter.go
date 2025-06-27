@@ -6,7 +6,7 @@ package tools
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/tools"
 )
 
 // LSPTool interface that all LSP tools implement

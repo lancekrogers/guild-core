@@ -15,9 +15,9 @@ import (
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/paths"
-	"github.com/guild-ventures/guild-core/pkg/project"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/paths"
+	"github.com/lancekrogers/guild/pkg/project"
 )
 
 // DemoValidator performs pre-flight checks for demo environment

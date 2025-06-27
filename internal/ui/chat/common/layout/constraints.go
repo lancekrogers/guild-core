@@ -4,7 +4,7 @@
 package layout
 
 import (
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // LayoutConstraints define how panes should be arranged and sized

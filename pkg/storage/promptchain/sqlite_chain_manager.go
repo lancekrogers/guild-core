@@ -9,9 +9,9 @@ import (
 	"sort"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/memory"
-	"github.com/guild-ventures/guild-core/pkg/storage"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/memory"
+	"github.com/lancekrogers/guild/pkg/storage"
 )
 
 // sqliteChainManager implements ChainManager using SQLite storage

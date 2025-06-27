@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
-	"github.com/guild-ventures/guild-core/pkg/prompts/standard/templates/agent/extraction"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/lancekrogers/guild/pkg/prompts/standard/templates/agent/extraction"
 )
 
 // TaskExtractor uses layered prompts and LLM intelligence to extract tasks from refined content

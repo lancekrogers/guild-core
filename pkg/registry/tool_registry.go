@@ -7,9 +7,9 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/tools"
-	basetools "github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/tools"
+	basetools "github.com/lancekrogers/guild/tools"
 )
 
 // DefaultToolRegistry implements the ToolRegistry interface by wrapping the existing tool registry

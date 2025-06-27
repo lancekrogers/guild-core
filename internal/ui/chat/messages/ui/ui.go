@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 package ui
 
-import "github.com/guild-ventures/guild-core/internal/ui/chat/common"
+import "github.com/lancekrogers/guild/internal/ui/chat/common"
 
 // LayoutUpdateMsg represents layout dimension changes
 type LayoutUpdateMsg struct {

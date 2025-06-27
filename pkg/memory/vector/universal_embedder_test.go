@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
-	"github.com/guild-ventures/guild-core/pkg/providers/mock"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/pkg/providers/mock"
 )
 
 func TestUniversalEmbedder_NewUniversalEmbedder(t *testing.T) {

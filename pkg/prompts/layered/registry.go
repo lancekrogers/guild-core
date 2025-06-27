@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // GuildLayeredRegistry implements LayeredRegistry interface with Guild Archives integration

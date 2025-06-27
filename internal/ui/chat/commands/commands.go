@@ -11,14 +11,14 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/guild-ventures/guild-core/internal/ui/chat/agents"
-	"github.com/guild-ventures/guild-core/internal/ui/chat/common"
-	"github.com/guild-ventures/guild-core/internal/ui/chat/messages"
-	toolmsg "github.com/guild-ventures/guild-core/internal/ui/chat/messages/tools"
-	"github.com/guild-ventures/guild-core/internal/ui/chat/panes"
-	"github.com/guild-ventures/guild-core/internal/ui/chat/session"
-	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
-	"github.com/guild-ventures/guild-core/pkg/templates"
+	"github.com/lancekrogers/guild/internal/ui/chat/agents"
+	"github.com/lancekrogers/guild/internal/ui/chat/common"
+	"github.com/lancekrogers/guild/internal/ui/chat/messages"
+	toolmsg "github.com/lancekrogers/guild/internal/ui/chat/messages/tools"
+	"github.com/lancekrogers/guild/internal/ui/chat/panes"
+	"github.com/lancekrogers/guild/internal/ui/chat/session"
+	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild/pkg/templates"
 )
 
 // CommandProcessor handles command parsing and execution
@@ -762,7 +762,7 @@ This demonstrates **Guild's markdown rendering capabilities**:
 ## Text Formatting
 - **Bold text** and *italic text*
 - ~~Strikethrough text~~ and ` + "`inline code`" + `
-- [Links to resources](https://github.com/guild-ventures/guild-core)
+- [Links to resources](https://github.com/lancekrogers/guild)
 
 ## Lists and Structure
 
@@ -826,8 +826,8 @@ import (
 	"fmt"
 	"log"
 	
-	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/providers"
 )
 
 // GuildExample demonstrates Guild framework usage

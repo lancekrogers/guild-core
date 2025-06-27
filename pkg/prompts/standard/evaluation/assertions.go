@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // ContainsAssertion checks if the output contains a substring

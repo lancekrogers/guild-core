@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
-	"github.com/guild-ventures/guild-core/pkg/providers/mock"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/pkg/providers/mock"
 )
 
 // Example shows basic mock provider usage

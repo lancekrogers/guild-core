@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/corpus"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/memory/rag"
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/pkg/corpus"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/memory/rag"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
 )
 
 // CorpusAgent is a specialized agent that provides an intelligent interface

@@ -12,12 +12,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-ventures/guild-core/internal/ui/chat/messages"
-	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/registry"
-	"github.com/guild-ventures/guild-core/pkg/search"
-	"github.com/guild-ventures/guild-core/pkg/suggestions"
+	"github.com/lancekrogers/guild/internal/ui/chat/messages"
+	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild/pkg/search"
+	"github.com/lancekrogers/guild/pkg/suggestions"
 )
 
 // CompletionEngine provides intelligent command and agent auto-completion for core

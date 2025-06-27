@@ -11,9 +11,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
-	"github.com/guild-ventures/guild-core/pkg/mcp/transport"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/mcp/protocol"
+	"github.com/lancekrogers/guild/pkg/mcp/transport"
 )
 
 // Client represents an MCP client

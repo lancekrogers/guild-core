@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // GuildArchiveWriter implements the ArchiveWriter interface with Guild safety protocols

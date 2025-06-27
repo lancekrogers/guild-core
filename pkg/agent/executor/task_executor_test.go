@@ -10,7 +10,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild/pkg/kanban"
 )
 
 // mockAgent is a simple mock implementation for testing

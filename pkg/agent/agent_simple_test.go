@@ -8,9 +8,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/pkg/commission"
-	"github.com/guild-ventures/guild-core/pkg/memory"
-	"github.com/guild-ventures/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild/pkg/commission"
+	"github.com/lancekrogers/guild/pkg/memory"
+	"github.com/lancekrogers/guild/pkg/tools"
 	"github.com/stretchr/testify/assert"
 )
 

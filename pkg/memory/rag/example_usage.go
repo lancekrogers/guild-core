@@ -11,9 +11,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/guild-ventures/guild-core/pkg/corpus"
-	"github.com/guild-ventures/guild-core/pkg/memory/vector"
-	"github.com/guild-ventures/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild/pkg/corpus"
+	"github.com/lancekrogers/guild/pkg/memory/vector"
+	"github.com/lancekrogers/guild/pkg/providers"
 )
 
 // ExampleBasicUsage demonstrates basic RAG system usage with the new provider-agnostic design

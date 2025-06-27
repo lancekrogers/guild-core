@@ -12,7 +12,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/prompts"
+	"github.com/lancekrogers/guild/pkg/prompts"
 )
 
 // Example demonstrating the Guild layered prompt system

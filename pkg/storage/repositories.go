@@ -9,8 +9,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/storage/db"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/storage/db"
 )
 
 // SQLiteTaskRepository implements TaskRepository using SQLite

@@ -7,7 +7,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild/pkg/memory/vector"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

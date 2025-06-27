@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-ventures/guild-core/internal/ui/chat/services"
+	"github.com/lancekrogers/guild/internal/ui/chat/services"
 )
 
 // LoadTestConfig defines the parameters for load testing

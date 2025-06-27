@@ -10,7 +10,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/guild-ventures/guild-core/pkg/project"
+	"github.com/lancekrogers/guild/pkg/project"
 )
 
 // completeCampaignIDs provides completion for campaign IDs (lazy filesystem-only approach)

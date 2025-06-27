@@ -6,8 +6,8 @@ package registry
 import (
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/prompts/standard"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/prompts/standard"
 )
 
 // PromptProvider defines the interface for prompt providers

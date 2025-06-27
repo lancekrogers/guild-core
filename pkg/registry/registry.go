@@ -8,12 +8,12 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/paths"
-	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
-	"github.com/guild-ventures/guild-core/pkg/providers"
-	"github.com/guild-ventures/guild-core/pkg/storage"
+	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/paths"
+	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/lancekrogers/guild/pkg/storage"
 )
 
 // layeredManagerWrapper wraps a basic manager to implement LayeredManager interface

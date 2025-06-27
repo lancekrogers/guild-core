@@ -10,7 +10,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/x/exp/teatest"
-	testingpkg "github.com/guild-ventures/guild-core/internal/testing"
+	testingpkg "github.com/lancekrogers/guild/internal/testing"
 )
 
 // TestTerminalCleanup verifies that terminal cleanup works correctly

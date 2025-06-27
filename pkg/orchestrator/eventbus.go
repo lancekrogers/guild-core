@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/orchestrator/interfaces"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/orchestrator/interfaces"
 )
 
 // Re-export event types

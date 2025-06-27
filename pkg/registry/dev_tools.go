@@ -4,12 +4,12 @@
 package registry
 
 import (
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
-	"github.com/guild-ventures/guild-core/tools"
-	"github.com/guild-ventures/guild-core/tools/dev"
-	"github.com/guild-ventures/guild-core/tools/git"
-	"github.com/guild-ventures/guild-core/tools/search"
-	"github.com/guild-ventures/guild-core/tools/shell"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/tools"
+	"github.com/lancekrogers/guild/tools/dev"
+	"github.com/lancekrogers/guild/tools/git"
+	"github.com/lancekrogers/guild/tools/search"
+	"github.com/lancekrogers/guild/tools/shell"
 )
 
 // RegisterDevTools registers development workflow tools with the given tool registry

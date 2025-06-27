@@ -11,15 +11,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/observability"
-	"github.com/guild-ventures/guild-core/pkg/prompts/standard/templates/agent/execution"
-	"github.com/guild-ventures/guild-core/pkg/tools"
-	"github.com/guild-ventures/guild-core/pkg/workspace"
-	"github.com/guild-ventures/guild-core/tools/fs"
-	"github.com/guild-ventures/guild-core/tools/shell"
+	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild/pkg/prompts/standard/templates/agent/execution"
+	"github.com/lancekrogers/guild/pkg/tools"
+	"github.com/lancekrogers/guild/pkg/workspace"
+	"github.com/lancekrogers/guild/tools/fs"
+	"github.com/lancekrogers/guild/tools/shell"
 )
 
 // BasicTaskExecutor implements the TaskExecutor interface

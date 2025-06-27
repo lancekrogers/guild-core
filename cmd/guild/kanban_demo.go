@@ -13,11 +13,11 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 
-	kanbanui "github.com/guild-ventures/guild-core/internal/ui/kanban"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/registry"
-	"github.com/guild-ventures/guild-core/pkg/storage"
+	kanbanui "github.com/lancekrogers/guild/internal/ui/kanban"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild/pkg/storage"
 )
 
 // kanbanDemoCmd demonstrates the 5-column kanban board UI

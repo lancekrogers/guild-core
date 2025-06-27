@@ -12,7 +12,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/internal/buildutil/ui"
+	"github.com/lancekrogers/guild/internal/buildutil/ui"
 )
 
 // Install installs the guild binary to the user's Go bin directory

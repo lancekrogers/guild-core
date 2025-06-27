@@ -9,9 +9,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/lsp"
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/lsp"
+	"github.com/lancekrogers/guild/tools"
 )
 
 // DefinitionTool provides "go to definition" functionality using LSP

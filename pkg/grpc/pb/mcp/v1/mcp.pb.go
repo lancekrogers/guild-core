@@ -1573,7 +1573,7 @@ const file_proto_mcp_v1_mcp_proto_rawDesc = "" +
 	"\n" +
 	"QueryCosts\x12\x18.mcp.v1.CostQueryRequest\x1a\x19.mcp.v1.CostQueryResponse\x121\n" +
 	"\x04Ping\x12\x13.mcp.v1.PingRequest\x1a\x14.mcp.v1.PingResponse\x12F\n" +
-	"\rGetSystemInfo\x12\x19.mcp.v1.SystemInfoRequest\x1a\x1a.mcp.v1.SystemInfoResponseB9Z7github.com/guild-ventures/guild-core/pkg/grpc/pb/mcp/v1b\x06proto3"
+	"\rGetSystemInfo\x12\x19.mcp.v1.SystemInfoRequest\x1a\x1a.mcp.v1.SystemInfoResponseB9Z7github.com/lancekrogers/guild/pkg/grpc/pb/mcp/v1b\x06proto3"
 
 var (
 	file_proto_mcp_v1_mcp_proto_rawDescOnce sync.Once

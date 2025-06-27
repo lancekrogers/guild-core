@@ -12,7 +12,7 @@ import (
 	"sync"
 	"text/template"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 //go:embed templates/commission/markdown/*.md templates/commission/markdown/lite/*.md

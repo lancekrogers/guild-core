@@ -18,7 +18,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/guild-ventures/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild/pkg/corpus"
 )
 
 // UI modes

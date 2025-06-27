@@ -6,7 +6,7 @@ package kanban
 import (
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild/pkg/kanban"
 )
 
 // Commands for kanban board operations

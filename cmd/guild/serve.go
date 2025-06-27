@@ -15,13 +15,13 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/guild-ventures/guild-core/internal/daemon"
-	"github.com/guild-ventures/guild-core/pkg/campaign"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	grpcpkg "github.com/guild-ventures/guild-core/pkg/grpc"
-	"github.com/guild-ventures/guild-core/pkg/observability"
-	"github.com/guild-ventures/guild-core/pkg/project"
-	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild/internal/daemon"
+	"github.com/lancekrogers/guild/pkg/campaign"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	grpcpkg "github.com/lancekrogers/guild/pkg/grpc"
+	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/lancekrogers/guild/pkg/registry"
 )
 
 var (

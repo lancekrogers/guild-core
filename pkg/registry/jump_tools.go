@@ -4,9 +4,9 @@
 package registry
 
 import (
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/tools"
-	"github.com/guild-ventures/guild-core/tools/jump"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/tools"
+	"github.com/lancekrogers/guild/tools/jump"
 )
 
 // RegisterJumpTools registers the jump navigation tool with the given tool registry

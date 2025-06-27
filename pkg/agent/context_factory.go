@@ -6,8 +6,8 @@ package agent
 import (
 	"context"
 
-	guildcontext "github.com/guild-ventures/guild-core/pkg/context"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	guildcontext "github.com/lancekrogers/guild/pkg/context"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // ContextAgentFactory creates agents with context-aware capabilities

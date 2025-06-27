@@ -10,11 +10,11 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/guild-ventures/guild-core/pkg/backstory"
-	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/paths"
-	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
+	"github.com/lancekrogers/guild/pkg/backstory"
+	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/paths"
+	"github.com/lancekrogers/guild/pkg/prompts/layered"
 )
 
 // AgentInitializer manages the creation and initialization of enhanced agents

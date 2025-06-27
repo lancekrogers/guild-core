@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/tools"
 )
 
 // ToolSuggestionProvider suggests relevant tools based on context

@@ -12,8 +12,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/guild-ventures/guild-core/tools"
-	"github.com/guild-ventures/guild-core/tools/fs"
+	"github.com/lancekrogers/guild/tools"
+	"github.com/lancekrogers/guild/tools/fs"
 )
 
 // This example demonstrates how to use the grep tool

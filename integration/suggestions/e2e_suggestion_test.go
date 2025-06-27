@@ -11,15 +11,15 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/internal/ui/chat/completion"
-	"github.com/guild-ventures/guild-core/internal/ui/chat/services"
-	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/commission"
-	"github.com/guild-ventures/guild-core/pkg/config"
-	"github.com/guild-ventures/guild-core/pkg/memory"
-	"github.com/guild-ventures/guild-core/pkg/providers"
-	"github.com/guild-ventures/guild-core/pkg/suggestions"
-	"github.com/guild-ventures/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild/internal/ui/chat/completion"
+	"github.com/lancekrogers/guild/internal/ui/chat/services"
+	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/commission"
+	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild/pkg/memory"
+	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/lancekrogers/guild/pkg/suggestions"
+	"github.com/lancekrogers/guild/pkg/tools"
 )
 
 // TestEndToEndSuggestionFlow tests the complete suggestion flow from user input to suggestion display

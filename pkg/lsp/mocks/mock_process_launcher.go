@@ -6,7 +6,7 @@ package mocks
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/lsp"
+	"github.com/lancekrogers/guild/pkg/lsp"
 )
 
 // MockProcessLauncher is a mock implementation of ProcessLauncherInterface

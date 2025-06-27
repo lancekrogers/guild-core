@@ -11,8 +11,8 @@ import (
 	"os/exec"
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/observability"
 )
 
 // Client represents an LSP client that communicates with a language server

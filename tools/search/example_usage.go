@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/tools"
 )
 
 // ExampleAgToolUsage demonstrates how to use the Silver Searcher (ag) tool

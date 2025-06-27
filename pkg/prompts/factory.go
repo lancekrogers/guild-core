@@ -6,9 +6,9 @@ package prompts
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
-	"github.com/guild-ventures/guild-core/pkg/prompts/standard"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/lancekrogers/guild/pkg/prompts/standard"
 )
 
 // ManagerType defines the type of prompt manager

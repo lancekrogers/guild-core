@@ -4,7 +4,7 @@
 package setup
 
 import (
-	"github.com/guild-ventures/guild-core/pkg/config"
+	"github.com/lancekrogers/guild/pkg/config"
 )
 
 // createDevelopmentTeamPreset creates a preset for development work

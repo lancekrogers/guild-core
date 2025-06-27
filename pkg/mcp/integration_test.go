@@ -12,11 +12,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/mcp/client"
-	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
-	"github.com/guild-ventures/guild-core/pkg/mcp/server"
-	"github.com/guild-ventures/guild-core/pkg/mcp/transport"
-	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild/pkg/mcp/client"
+	"github.com/lancekrogers/guild/pkg/mcp/protocol"
+	"github.com/lancekrogers/guild/pkg/mcp/server"
+	"github.com/lancekrogers/guild/pkg/mcp/transport"
+	"github.com/lancekrogers/guild/pkg/registry"
 )
 
 func TestMCPIntegration(t *testing.T) {

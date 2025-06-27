@@ -6,7 +6,7 @@ package manager
 import (
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // ComponentRegistry manages registration and retrieval of manager components

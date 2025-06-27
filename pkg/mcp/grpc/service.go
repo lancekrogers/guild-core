@@ -13,10 +13,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/mcp/v1"
-	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
-	"github.com/guild-ventures/guild-core/pkg/mcp/server"
-	"github.com/guild-ventures/guild-core/pkg/mcp/tools"
+	pb "github.com/lancekrogers/guild/pkg/grpc/pb/mcp/v1"
+	"github.com/lancekrogers/guild/pkg/mcp/protocol"
+	"github.com/lancekrogers/guild/pkg/mcp/server"
+	"github.com/lancekrogers/guild/pkg/mcp/tools"
 )
 
 // MCPService implements the gRPC service for MCP

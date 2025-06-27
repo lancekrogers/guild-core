@@ -16,7 +16,7 @@ import (
 	"github.com/google/uuid"
 	chromem "github.com/philippgille/chromem-go"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // ChromemStore implements the VectorStore interface using Chromem-go.

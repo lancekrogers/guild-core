@@ -10,7 +10,7 @@ import (
 	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/guild-ventures/guild-core/internal/setup"
+	"github.com/lancekrogers/guild/internal/setup"
 )
 
 // DemoRenderer handles rich rendering of demo commissions

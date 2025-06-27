@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/commission"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild/pkg/commission"
+	"github.com/lancekrogers/guild/pkg/kanban"
 )
 
 func TestConvertRefinedCommissionToKanbanTasks(t *testing.T) {

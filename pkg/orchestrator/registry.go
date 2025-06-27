@@ -6,7 +6,7 @@ package orchestrator
 import (
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // OrchestratorRegistry manages orchestrator components for task planning and assignment

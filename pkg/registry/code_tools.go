@@ -4,10 +4,10 @@
 package registry
 
 import (
-	"github.com/guild-ventures/guild-core/tools"
-	"github.com/guild-ventures/guild-core/tools/code"
-	"github.com/guild-ventures/guild-core/tools/code/parsers"
-	"github.com/guild-ventures/guild-core/tools/edit"
+	"github.com/lancekrogers/guild/tools"
+	"github.com/lancekrogers/guild/tools/code"
+	"github.com/lancekrogers/guild/tools/code/parsers"
+	"github.com/lancekrogers/guild/tools/edit"
 )
 
 // RegisterCodeTools registers all code analysis and editing tools with the given tool registry

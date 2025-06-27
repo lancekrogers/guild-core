@@ -6,7 +6,7 @@ package transport
 import (
 	"context"
 
-	"github.com/guild-ventures/guild-core/pkg/comms"
+	"github.com/lancekrogers/guild/pkg/comms"
 )
 
 // Transport defines a communication transport mechanism

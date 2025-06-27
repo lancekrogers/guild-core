@@ -7,7 +7,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // MemoryTransport implements an in-memory transport for testing

@@ -7,9 +7,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/pkg/providers/base"
-	"github.com/guild-ventures/guild-core/pkg/providers/interfaces"
-	providertesting "github.com/guild-ventures/guild-core/pkg/providers/testing"
+	"github.com/lancekrogers/guild/pkg/providers/base"
+	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	providertesting "github.com/lancekrogers/guild/pkg/providers/testing"
 )
 
 func TestOpenAIProvider(t *testing.T) {

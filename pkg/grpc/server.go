@@ -14,16 +14,16 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/guild-ventures/guild-core/pkg/campaign"
-	"github.com/guild-ventures/guild-core/pkg/commission"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
-	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
-	"github.com/guild-ventures/guild-core/pkg/observability"
-	"github.com/guild-ventures/guild-core/pkg/orchestrator"
-	"github.com/guild-ventures/guild-core/pkg/prompts/layered"
-	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild/pkg/campaign"
+	"github.com/lancekrogers/guild/pkg/commission"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	promptspb "github.com/lancekrogers/guild/pkg/grpc/pb/prompts/v1"
+	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild/pkg/orchestrator"
+	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/lancekrogers/guild/pkg/registry"
 )
 
 // Server implements the Guild gRPC service

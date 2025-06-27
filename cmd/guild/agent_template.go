@@ -9,8 +9,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/guild-ventures/guild-core/internal/setup"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/internal/setup"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // newAgentTemplateCmd creates the agent template subcommand

@@ -10,7 +10,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // Context interface is used by formatters (defined in parent package)

@@ -1,4 +1,4 @@
-module github.com/guild-ventures/guild-core
+module github.com/lancekrogers/guild
 
 go 1.24.2
 
@@ -38,7 +38,6 @@ require (
 	google.golang.org/grpc v1.69.0-dev
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.5.1
 	google.golang.org/protobuf v1.36.6
-	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
 	modernc.org/sqlite v1.37.0
 )

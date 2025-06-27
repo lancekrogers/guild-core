@@ -11,11 +11,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
-	"github.com/guild-ventures/guild-core/pkg/mcp/tools"
-	"github.com/guild-ventures/guild-core/pkg/registry"
-	basetools "github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/mcp/protocol"
+	"github.com/lancekrogers/guild/pkg/mcp/tools"
+	"github.com/lancekrogers/guild/pkg/registry"
+	basetools "github.com/lancekrogers/guild/tools"
 )
 
 // ToolBridge synchronizes tools between MCP and Guild registries

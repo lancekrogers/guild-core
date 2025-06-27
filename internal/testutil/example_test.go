@@ -7,8 +7,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/internal/testutil"
-	"github.com/guild-ventures/guild-core/pkg/project"
+	"github.com/lancekrogers/guild/internal/testutil"
+	"github.com/lancekrogers/guild/pkg/project"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

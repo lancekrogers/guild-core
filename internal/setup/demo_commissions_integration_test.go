@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild/pkg/commission"
 )
 
 // TestDemoCommissionIntegration tests that generated demo commissions can be parsed

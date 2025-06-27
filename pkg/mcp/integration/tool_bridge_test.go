@@ -12,10 +12,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/mcp/protocol"
-	"github.com/guild-ventures/guild-core/pkg/mcp/tools"
-	"github.com/guild-ventures/guild-core/pkg/registry"
-	basetools "github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/pkg/mcp/protocol"
+	"github.com/lancekrogers/guild/pkg/mcp/tools"
+	"github.com/lancekrogers/guild/pkg/registry"
+	basetools "github.com/lancekrogers/guild/tools"
 )
 
 // MockGuildTool implements the Guild Tool interface

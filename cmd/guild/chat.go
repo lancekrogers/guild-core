@@ -16,16 +16,16 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/guild-ventures/guild-core/internal/daemon"
-	chatui "github.com/guild-ventures/guild-core/internal/ui/chat"
-	"github.com/guild-ventures/guild-core/pkg/campaign"
-	"github.com/guild-ventures/guild-core/pkg/config"
-	pkgDaemon "github.com/guild-ventures/guild-core/pkg/daemon"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	pb "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
-	promptspb "github.com/guild-ventures/guild-core/pkg/grpc/pb/prompts/v1"
-	"github.com/guild-ventures/guild-core/pkg/project"
-	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild/internal/daemon"
+	chatui "github.com/lancekrogers/guild/internal/ui/chat"
+	"github.com/lancekrogers/guild/pkg/campaign"
+	"github.com/lancekrogers/guild/pkg/config"
+	pkgDaemon "github.com/lancekrogers/guild/pkg/daemon"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	promptspb "github.com/lancekrogers/guild/pkg/grpc/pb/prompts/v1"
+	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/lancekrogers/guild/pkg/registry"
 )
 
 var (

@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-ventures/guild-core/pkg/storage/db"
+	"github.com/lancekrogers/guild/pkg/storage/db"
 )
 
 func setupTestDB(t *testing.T) (*db.Queries, func()) {

@@ -6,8 +6,8 @@ package providers
 import (
 	"os"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/providers/claudecode"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/providers/claudecode"
 )
 
 // Factory creates LLM clients

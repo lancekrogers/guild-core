@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // AgentClient represents a context-aware agent

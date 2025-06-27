@@ -4,8 +4,8 @@
 package git
 
 import (
-	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/tools"
+	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/tools"
 )
 
 // RegisterGitTools registers all git tools with the provided registry

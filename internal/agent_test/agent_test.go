@@ -7,10 +7,10 @@ import (
 	"context"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/pkg/agent"
-	"github.com/guild-ventures/guild-core/pkg/agent/mocks"
-	"github.com/guild-ventures/guild-core/pkg/tools"
-	toolmocks "github.com/guild-ventures/guild-core/tools/mocks"
+	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agent/mocks"
+	"github.com/lancekrogers/guild/pkg/tools"
+	toolmocks "github.com/lancekrogers/guild/tools/mocks"
 )
 
 // TestWorkerAgentImplementsAgent tests that WorkerAgent implements the Agent interface

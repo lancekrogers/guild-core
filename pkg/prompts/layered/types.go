@@ -6,7 +6,7 @@ package layered
 import (
 	"time"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // Sentinel errors for common cases

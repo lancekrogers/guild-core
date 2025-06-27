@@ -12,7 +12,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/guild-ventures/guild-core/pkg/paths"
+	"github.com/lancekrogers/guild/pkg/paths"
 )
 
 // logsCmd represents the logs command for viewing Guild debug logs

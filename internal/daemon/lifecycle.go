@@ -12,8 +12,8 @@ import (
 	"syscall"
 	"time"
 
-	daemonPkg "github.com/guild-ventures/guild-core/pkg/daemon"
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	daemonPkg "github.com/lancekrogers/guild/pkg/daemon"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // SessionState tracks the state of a daemon session

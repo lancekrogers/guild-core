@@ -6,7 +6,7 @@ package commission
 import (
 	"context"
 
-	commissionpkg "github.com/guild-ventures/guild-core/pkg/commission"
+	commissionpkg "github.com/lancekrogers/guild/pkg/commission"
 )
 
 // CommissionManager interface abstracts commission management operations

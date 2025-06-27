@@ -19,12 +19,12 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/guild-ventures/guild-core/internal/testutil"
-	"github.com/guild-ventures/guild-core/pkg/config"
-	grpcpkg "github.com/guild-ventures/guild-core/pkg/grpc"
-	guildv1 "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1"
-	"github.com/guild-ventures/guild-core/pkg/project"
-	"github.com/guild-ventures/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild/internal/testutil"
+	"github.com/lancekrogers/guild/pkg/config"
+	grpcpkg "github.com/lancekrogers/guild/pkg/grpc"
+	guildv1 "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/lancekrogers/guild/pkg/registry"
 )
 
 // eventBusAdapter wraps MockEventBus to match the gRPC EventBus interface

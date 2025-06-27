@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/guild-ventures/guild-core/pkg/workspace"
+	"github.com/lancekrogers/guild/pkg/workspace"
 )
 
 func Example_basicUsage() {

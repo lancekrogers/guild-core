@@ -10,7 +10,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/guild-ventures/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 func TestNewHierarchicalLoader(t *testing.T) {
