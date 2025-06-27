@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package guild.v1;
 
-option go_package = "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1";
+option go_package = "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1";
 
 // ChatService provides real-time interactive communication with Guild agents
 service ChatService {

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package mcp.v1;
 
-option go_package = "github.com/guild-ventures/guild-core/pkg/grpc/pb/mcp/v1";
+option go_package = "github.com/lancekrogers/guild/pkg/grpc/pb/mcp/v1";
 
 // MCPService provides gRPC interface for Meta-Coordination Protocol
 service MCPService {
