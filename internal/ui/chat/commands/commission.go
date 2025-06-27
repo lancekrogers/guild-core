@@ -15,11 +15,11 @@ import (
 
 // CommissionCommand handles /commission commands
 type CommissionCommand struct {
-	manager commission.Manager
+	manager commission.CommissionManager
 }
 
 // NewCommissionCommand creates a new commission command handler
-func NewCommissionCommand(manager commission.Manager) *CommissionCommand {
+func NewCommissionCommand(manager commission.CommissionManager) *CommissionCommand {
 	return &CommissionCommand{
 		manager: manager,
 	}

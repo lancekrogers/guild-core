@@ -280,6 +280,15 @@ func TestGetCompletions(t *testing.T) {
 	cmd := NewCommissionCommand(mockManager)
 	ctx := context.Background()
 	
+	// Set up test commissions
+	testCommissions := []*commission.Commission{
+		{ID: "comm_123", Title: "Test Commission"},
+		{ID: "comm_456", Title: "Another Commission"},
+	}
+	
+	// Set up mock to return commissions for all calls
+	mockManager.On("ListCommissions", ctx).Return(testCommissions, nil)
+	
 	// Test base completions
 	completions := cmd.GetCompletions(ctx, []string{})
 	assert.Contains(t, completions, "new")
@@ -294,12 +303,6 @@ func TestGetCompletions(t *testing.T) {
 	assert.NotContains(t, completions, "new")
 	
 	// Test commission ID completion
-	testCommissions := []*commission.Commission{
-		{ID: "comm_123", Title: "Test Commission"},
-		{ID: "comm_456", Title: "Another Commission"},
-	}
-	
-	mockManager.On("ListCommissions", ctx).Return(testCommissions, nil)
 	
 	completions = cmd.GetCompletions(ctx, []string{"comm"})
 	assert.Contains(t, completions, "comm_123")

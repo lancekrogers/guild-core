@@ -118,12 +118,12 @@ func (ps PlanningStage) String() string {
 // Icon returns an emoji icon for the stage
 func (ps PlanningStage) Icon() string {
 	icons := []string{
-		"📋", // Introduction
-		"🎯", // Project Type
-		"📝", // Requirements
+		"📋",  // Introduction
+		"🎯",  // Project Type
+		"📝",  // Requirements
 		"⚙️", // Technology
 		"⚠️", // Constraints
-		"✅", // Summary
+		"✅",  // Summary
 	}
 	if int(ps) < len(icons) {
 		return icons[ps]
@@ -176,8 +176,8 @@ type statusPaneImpl struct {
 	commissionProgress        *CommissionProgress
 
 	// Status transitions
-	statusAnimator     *components.StatusAnimator
-	transitionManager  *components.TransitionManager
+	statusAnimator    *components.StatusAnimator
+	transitionManager *components.TransitionManager
 }
 
 // NewStatusPane creates a new status pane
@@ -194,19 +194,19 @@ func NewStatusPane(width, height int) (StatusPane, error) {
 	basePane.ApplyMinimalStyling() // Status bar doesn't need borders
 
 	pane := &statusPaneImpl{
-		BasePane:         basePane,
-		currentStatus:    "Ready",
-		currentLevel:     "info",
-		notifications:    make([]Notification, 0),
-		agentStatuses:    make(map[string]AgentStatus),
-		connectionStatus: true,
-		compactMode:      true,
-		showAgents:       true,
-		showStats:        false,
-		lastUpdate:       time.Now(),
-		statusStyles:     createStatusStyles(),
-		ctx:              ctx,
-		statusAnimator:   components.NewStatusAnimator(ctx),
+		BasePane:          basePane,
+		currentStatus:     "Ready",
+		currentLevel:      "info",
+		notifications:     make([]Notification, 0),
+		agentStatuses:     make(map[string]AgentStatus),
+		connectionStatus:  true,
+		compactMode:       true,
+		showAgents:        true,
+		showStats:         false,
+		lastUpdate:        time.Now(),
+		statusStyles:      createStatusStyles(),
+		ctx:               ctx,
+		statusAnimator:    components.NewStatusAnimator(ctx),
 		transitionManager: components.NewTransitionManager(ctx),
 	}
 
@@ -251,7 +251,7 @@ func (sp *statusPaneImpl) UpdateStatus(message, level string) {
 			sp.currentStatus = message
 		}
 	}
-	
+
 	sp.currentLevel = level
 	sp.lastUpdate = time.Now()
 }
@@ -426,7 +426,7 @@ func (sp *statusPaneImpl) renderCompactStatus(width int) string {
 		// Use animated status if transitioning
 		statusText = sp.statusAnimator.View()
 	}
-	
+
 	statusStyle, exists := sp.statusStyles[sp.currentLevel]
 	if !exists {
 		statusStyle = sp.statusStyles["info"]
@@ -878,7 +878,7 @@ func (sp *statusPaneImpl) renderCommissionProgress(width int) []string {
 	if progressWidth < 10 {
 		progressWidth = 10
 	}
-	
+
 	filled := int(cp.Progress * float64(progressWidth))
 	if filled < 0 {
 		filled = 0

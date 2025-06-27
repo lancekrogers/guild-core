@@ -346,6 +346,44 @@ func (t *agentStatusTracker) GetLastStatusUpdate(agentID string) (*StatusUpdate,
 	return &updateCopy, nil
 }
 
+// UpdateProcessingState updates the processing state of an agent
+func (t *agentStatusTracker) UpdateProcessingState(agentID string, state ProcessingState) error {
+	if err := t.ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("AgentStatusTracker").
+			WithOperation("UpdateProcessingState")
+	}
+
+	t.mu.Lock()
+	defer t.mu.Unlock()
+
+	agent, exists := t.agents[agentID]
+	if !exists {
+		return gerror.Newf(gerror.ErrCodeNotFound, "agent %s not found", agentID).
+			WithComponent("AgentStatusTracker").
+			WithOperation("UpdateProcessingState")
+	}
+
+	// Update processing state
+	previousState := agent.ProcessingState
+	agent.ProcessingState = state
+	agent.LastSeen = time.Now()
+
+	// If moving from idle to active processing, record start time
+	if previousState == ProcessingIdle && state != ProcessingIdle {
+		agent.ProcessingStart = time.Now()
+	}
+
+	// Log activity for state change
+	return t.logActivityLocked(AgentActivity{
+		AgentID:   agentID,
+		Timestamp: time.Now(),
+		Status:    agent.Status,
+		Message:   fmt.Sprintf("Processing state changed from %s to %s", previousState, state),
+		TaskID:    agent.CurrentTask,
+	})
+}
+
 // PurgeInactiveAgents removes agents that haven't been seen within the threshold
 func (t *agentStatusTracker) PurgeInactiveAgents(threshold time.Duration) ([]string, error) {
 	if err := t.ctx.Err(); err != nil {

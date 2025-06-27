@@ -11,7 +11,6 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/config"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
-	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/pkg/providers"
 )
@@ -576,44 +575,6 @@ func (r *Refiner) loadAgentResources(ctx context.Context) (*AgentResourceSummary
 	}, nil
 }
 
-// ToKanbanTasks converts refined tasks to kanban tasks for database storage
-func (r *RefinedCommission) ToKanbanTasks() []*kanban.Task {
-	tasks := make([]*kanban.Task, len(r.Tasks))
-	
-	for i, refinedTask := range r.Tasks {
-		task := kanban.NewTask(refinedTask.Title, refinedTask.Description)
-		task.ID = refinedTask.ID
-		task.Status = kanban.StatusTodo // Default to todo
-		task.AssignedTo = refinedTask.AssignedAgent
-		task.EstimatedHours = refinedTask.EstimatedHours
-		task.Dependencies = refinedTask.Dependencies
-		task.CreatedAt = refinedTask.CreatedAt
-		task.UpdatedAt = refinedTask.UpdatedAt
-		
-		// Set priority based on complexity
-		switch {
-		case refinedTask.Complexity >= 6:
-			task.Priority = kanban.PriorityHigh
-		case refinedTask.Complexity >= 3:
-			task.Priority = kanban.PriorityMedium
-		default:
-			task.Priority = kanban.PriorityLow
-		}
-		
-		// Add metadata
-		task.Metadata = make(map[string]string)
-		task.Metadata["commission_id"] = refinedTask.CommissionID
-		task.Metadata["task_type"] = refinedTask.Type
-		task.Metadata["complexity"] = fmt.Sprintf("%d", refinedTask.Complexity)
-		for k, v := range refinedTask.Metadata {
-			task.Metadata[k] = v
-		}
-		
-		tasks[i] = task
-	}
-	
-	return tasks
-}
 
 // Utility functions
 

@@ -22,10 +22,10 @@ type CommissionFormatter struct {
 
 // CommissionStyles defines styling for different commission elements
 type CommissionStyles struct {
-	Header    lipgloss.Style
-	Subtitle  lipgloss.Style
-	Box       lipgloss.Style
-	Metadata  lipgloss.Style
+	Header      lipgloss.Style
+	Subtitle    lipgloss.Style
+	Box         lipgloss.Style
+	Metadata    lipgloss.Style
 	Requirement lipgloss.Style
 	Technology  lipgloss.Style
 	Status      lipgloss.Style
@@ -61,50 +61,50 @@ func createCommissionStyles() CommissionStyles {
 			Bold(true).
 			Foreground(lipgloss.Color("141")). // Purple
 			MarginBottom(1),
-			
+
 		Subtitle: lipgloss.NewStyle().
 			Bold(true).
 			Foreground(lipgloss.Color("208")). // Orange
 			MarginTop(1).
 			MarginBottom(1),
-			
+
 		Box: lipgloss.NewStyle().
 			BorderStyle(lipgloss.RoundedBorder()).
 			BorderForeground(lipgloss.Color("240")). // Gray
 			Padding(1, 2).
 			MarginBottom(1),
-			
+
 		Metadata: lipgloss.NewStyle().
 			Background(lipgloss.Color("236")). // Dark gray
 			Foreground(lipgloss.Color("254")). // Light gray
 			Padding(1, 2).
 			MarginBottom(1),
-			
+
 		Requirement: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("82")). // Green
 			PaddingLeft(2),
-			
+
 		Technology: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("111")). // Blue
 			PaddingLeft(2),
-			
+
 		Status: lipgloss.NewStyle().
 			Bold(true).
 			Foreground(lipgloss.Color("226")), // Yellow
-			
+
 		Warning: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("226")). // Yellow
 			Bold(true),
-			
+
 		Success: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("82")). // Green
 			Bold(true),
-			
+
 		Separator: lipgloss.NewStyle().
 			Foreground(lipgloss.Color("240")). // Gray
 			MarginTop(1).
 			MarginBottom(1),
-			
+
 		Highlight: lipgloss.NewStyle().
 			Background(lipgloss.Color("208")). // Orange
 			Foreground(lipgloss.Color("0")).   // Black
@@ -132,7 +132,7 @@ func (cf *CommissionFormatter) FormatDraft(commission *commission.Commission) (s
 	// Header with icon
 	header := cf.styles.Header.Render("📋 Commission Draft")
 	b.WriteString(header + "\n")
-	
+
 	// Separator line
 	separator := cf.createSeparatorLine(cf.maxWidth - 4)
 	b.WriteString(cf.styles.Separator.Render(separator) + "\n\n")
@@ -213,7 +213,7 @@ func (cf *CommissionFormatter) FormatSummary(commission *commission.Commission) 
 	if title == "" {
 		title = commission.ID
 	}
-	
+
 	header := cf.styles.Header.Render(fmt.Sprintf("📋 %s", title))
 	b.WriteString(header + "\n")
 
@@ -343,7 +343,7 @@ func (cf *CommissionFormatter) formatActionFooter() string {
 
 	// Action options
 	b.WriteString(cf.styles.Subtitle.Render("💡 Review Options") + "\n")
-	
+
 	options := []string{
 		"✅ Type 'yes' or 'save' to save this commission",
 		"✏️  Type 'edit' to modify sections",
@@ -447,30 +447,30 @@ func (cf *CommissionFormatter) SetTheme(theme string) {
 // createMedievalCommissionStyles creates medieval-themed styles
 func createMedievalCommissionStyles() CommissionStyles {
 	styles := createCommissionStyles()
-	
+
 	// Override with medieval colors
 	medievalGold := lipgloss.Color("220")
 	medievalBronze := lipgloss.Color("172")
-	
+
 	styles.Header = styles.Header.Foreground(medievalGold)
 	styles.Subtitle = styles.Subtitle.Foreground(medievalBronze)
 	styles.Highlight = styles.Highlight.Background(medievalGold)
-	
+
 	return styles
 }
 
 // createMinimalCommissionStyles creates minimal-themed styles
 func createMinimalCommissionStyles() CommissionStyles {
 	styles := createCommissionStyles()
-	
+
 	// Override with minimal colors
 	lightGray := lipgloss.Color("254")
 	mediumGray := lipgloss.Color("245")
-	
+
 	styles.Header = styles.Header.Foreground(lightGray)
 	styles.Subtitle = styles.Subtitle.Foreground(mediumGray)
 	styles.Requirement = styles.Requirement.Foreground(lightGray)
 	styles.Technology = styles.Technology.Foreground(mediumGray)
-	
+
 	return styles
 }

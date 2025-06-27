@@ -16,12 +16,12 @@ import (
 
 // StatusTransition manages smooth transitions between status states
 type StatusTransition struct {
-	from     string
-	to       string
-	progress float64
-	duration time.Duration
+	from      string
+	to        string
+	progress  float64
+	duration  time.Duration
 	startTime time.Time
-	ctx      context.Context
+	ctx       context.Context
 }
 
 // NewStatusTransition creates a new status transition
@@ -78,7 +78,7 @@ func (st *StatusTransition) renderFadeTransition() string {
 	// Use different fade characters for visual effect
 	fadeChars := []string{"█", "▓", "▒", "░", " "}
 	fadeIndex := int(st.progress * float64(len(fadeChars)-1))
-	
+
 	if fadeIndex >= len(fadeChars) {
 		fadeIndex = len(fadeChars) - 1
 	}
@@ -284,7 +284,7 @@ func (at *AnimatedText) renderTypewriter() string {
 func (at *AnimatedText) renderFade() string {
 	// Cycle through different opacity levels
 	cycle := at.frame % 20
-	
+
 	var style lipgloss.Style
 	if cycle < 10 {
 		// Fading in
@@ -305,7 +305,7 @@ func (at *AnimatedText) renderFade() string {
 func (at *AnimatedText) renderPulse() string {
 	// Pulse between normal and bold
 	cycle := at.frame % 10
-	
+
 	if cycle < 5 {
 		return at.style.Copy().Bold(true).Render(at.text)
 	} else {
@@ -316,7 +316,7 @@ func (at *AnimatedText) renderPulse() string {
 // renderBounce renders bouncing effect (simulated with spacing)
 func (at *AnimatedText) renderBounce() string {
 	cycle := at.frame % 8
-	
+
 	// Add varying amounts of vertical "bounce" using line breaks
 	switch cycle {
 	case 0, 4:
@@ -350,14 +350,14 @@ func (at *AnimatedText) SetText(text string) {
 func interpolateColor(fromColor, toColor string, progress float64) string {
 	// Simple interpolation between gray scale colors
 	// This is a simplified version - full implementation would handle RGB
-	
+
 	if progress <= 0 {
 		return fromColor
 	}
 	if progress >= 1 {
 		return toColor
 	}
-	
+
 	// For simplicity, just return the target color at 50% progress
 	if progress >= 0.5 {
 		return toColor
@@ -367,12 +367,12 @@ func interpolateColor(fromColor, toColor string, progress float64) string {
 
 // ProgressIndicator provides animated progress visualization
 type ProgressIndicator struct {
-	progress   float64
-	total      float64
-	width      int
-	style      lipgloss.Style
+	progress       float64
+	total          float64
+	width          int
+	style          lipgloss.Style
 	showPercentage bool
-	ctx        context.Context
+	ctx            context.Context
 }
 
 // NewProgressIndicator creates a new progress indicator
@@ -422,13 +422,13 @@ func (pi *ProgressIndicator) View() string {
 	if pi.showPercentage {
 		barWidth -= 6 // For " 100%"
 	}
-	
+
 	if barWidth < 1 {
 		barWidth = 1
 	}
 
 	filled := int(ratio * float64(barWidth))
-	
+
 	// Build progress bar
 	bar := "["
 	for i := 0; i < barWidth; i++ {

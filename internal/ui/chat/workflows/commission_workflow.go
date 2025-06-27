@@ -22,7 +22,7 @@ type CommissionWorkflow struct {
 	ctx         context.Context
 	dialogue    *elena.PlanningDialogue
 	generator   *commission.Generator
-	manager     commission.Manager
+	manager     commission.CommissionManager
 	commission  *commission.Commission
 	state       WorkflowState
 	editMode    bool
@@ -40,7 +40,7 @@ const (
 )
 
 // NewCommissionWorkflow creates a new commission workflow
-func NewCommissionWorkflow(ctx context.Context, generator *commission.Generator, manager commission.Manager) *CommissionWorkflow {
+func NewCommissionWorkflow(ctx context.Context, generator *commission.Generator, manager commission.CommissionManager) *CommissionWorkflow {
 	// Create formatter with reasonable default width
 	formatter, err := components.NewCommissionFormatter(ctx, 80)
 	if err != nil {
@@ -330,51 +330,26 @@ func (cw *CommissionWorkflow) calculateProgress() (PlanningStage, float64) {
 		return StageIntroduction, 0.0
 	}
 
-	// Get current stage from dialogue
-	dialogueStage := cw.dialogue.GetCurrentStage()
-	
-	// Map dialogue stage to planning stage
+	// Use response count to estimate progress since dialogue doesn't expose current stage
+	responseCount := len(cw.dialogue.GetResponses())
 	var stage PlanningStage
 	var progress float64
-
-	switch dialogueStage {
-	case "introduction":
+	
+	if responseCount == 0 {
 		stage = StageIntroduction
-		progress = 0.1
-	case "project_type":
-		stage = StageProjectType  
+		progress = 0.0
+	} else if responseCount <= 2 {
+		stage = StageProjectType
 		progress = 0.25
-	case "requirements":
+	} else if responseCount <= 4 {
 		stage = StageRequirements
 		progress = 0.5
-	case "technology":
+	} else if responseCount <= 6 {
 		stage = StageTechnology
 		progress = 0.75
-	case "constraints":
+	} else {
 		stage = StageConstraints
 		progress = 0.9
-	case "summary":
-		stage = StageSummary
-		progress = 1.0
-	default:
-		// Use response count to estimate progress
-		responseCount := len(cw.dialogue.GetResponses())
-		if responseCount == 0 {
-			stage = StageIntroduction
-			progress = 0.0
-		} else if responseCount <= 2 {
-			stage = StageProjectType
-			progress = 0.25
-		} else if responseCount <= 4 {
-			stage = StageRequirements
-			progress = 0.5
-		} else if responseCount <= 6 {
-			stage = StageTechnology
-			progress = 0.75
-		} else {
-			stage = StageConstraints
-			progress = 0.9
-		}
 	}
 
 	return stage, progress
@@ -406,6 +381,22 @@ const (
 	StageConstraints
 	StageSummary
 )
+
+// String returns a human-readable stage name
+func (ps PlanningStage) String() string {
+	stages := []string{
+		"Introduction",
+		"Project Type",
+		"Requirements",
+		"Technology",
+		"Constraints",
+		"Summary",
+	}
+	if int(ps) < len(stages) {
+		return stages[ps]
+	}
+	return "Unknown"
+}
 
 // Styling helpers
 

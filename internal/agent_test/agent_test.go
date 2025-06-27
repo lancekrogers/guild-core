@@ -9,7 +9,6 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/agent/mocks"
-	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 	toolmocks "github.com/guild-ventures/guild-core/tools/mocks"
 )
@@ -226,7 +225,7 @@ func TestWorkerAgentWithMockedLLMResponse(t *testing.T) {
 
 	// Create mock memory manager
 	memoryManager := mocks.NewMockChainManager()
-	commissionManager := &commission.Manager{}
+	commissionManager := mocks.NewMockCommissionManager()
 
 	// Create cost manager mock
 	costManager := mocks.NewMockCostManager()
@@ -278,7 +277,7 @@ func TestWorkerAgentWithTools(t *testing.T) {
 		t.Fatalf("Failed to register tool: %v", err)
 	}
 
-	commissionManager := &commission.Manager{}
+	commissionManager := mocks.NewMockCommissionManager()
 
 	// Create cost manager mock
 	costManager := mocks.NewMockCostManager()
@@ -335,7 +334,7 @@ func TestAgentInterfaceCompliance(t *testing.T) {
 		llmClient := mocks.NewMockLLMClient()
 		memoryManager := mocks.NewMockChainManager()
 		toolRegistry := tools.NewToolRegistry()
-		commissionManager := &commission.Manager{}
+		commissionManager := mocks.NewMockCommissionManager()
 
 		costManager := mocks.NewMockCostManager()
 
@@ -379,7 +378,7 @@ func TestAgentCreationEdgeCases(t *testing.T) {
 		llmClient := &mocks.MockLLMClient{}
 		memoryManager := mocks.NewMockChainManager()
 		toolRegistry := tools.NewToolRegistry()
-		commissionManager := &commission.Manager{}
+		commissionManager := mocks.NewMockCommissionManager()
 
 		// Should not panic with minimal setup
 		costManager := mocks.NewMockCostManager()
@@ -414,7 +413,7 @@ func TestAgentCreationEdgeCases(t *testing.T) {
 		llmClient := &mocks.MockLLMClient{}
 		memoryManager := mocks.NewMockChainManager()
 		toolRegistry := tools.NewToolRegistry()
-		commissionManager := &commission.Manager{}
+		commissionManager := mocks.NewMockCommissionManager()
 
 		costManager := mocks.NewMockCostManager()
 
@@ -455,7 +454,7 @@ func BenchmarkAgentCreation(b *testing.B) {
 	llmClient := &mocks.MockLLMClient{}
 	memoryManager := mocks.NewMockChainManager()
 	toolRegistry := tools.NewToolRegistry()
-	commissionManager := &commission.Manager{}
+	commissionManager := mocks.NewMockCommissionManager()
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory once

@@ -12,7 +12,6 @@ import (
 
 	"github.com/guild-ventures/guild-core/pkg/agent"
 	"github.com/guild-ventures/guild-core/pkg/agent/mocks"
-	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/memory"
 	"github.com/guild-ventures/guild-core/pkg/tools"
 	toolmocks "github.com/guild-ventures/guild-core/tools/mocks"
@@ -24,7 +23,7 @@ func TestWorkerAgentWithContext(t *testing.T) {
 	llmClient := mocks.NewMockLLMClient()
 	memoryManager := mocks.NewMockChainManager()
 	toolRegistry := tools.NewToolRegistry()
-	commissionManager := &commission.Manager{}
+	commissionManager := mocks.NewMockCommissionManager()
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
@@ -74,7 +73,7 @@ func TestWorkerAgentCostTracking(t *testing.T) {
 	llmClient := mocks.NewMockLLMClient()
 	memoryManager := mocks.NewMockChainManager()
 	toolRegistry := tools.NewToolRegistry()
-	commissionManager := &commission.Manager{}
+	commissionManager := mocks.NewMockCommissionManager()
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
@@ -115,7 +114,7 @@ func TestManagerAgentInheritance(t *testing.T) {
 	llmClient := mocks.NewMockLLMClient()
 	memoryManager := mocks.NewMockChainManager()
 	toolRegistry := tools.NewToolRegistry()
-	commissionManager := &commission.Manager{}
+	commissionManager := mocks.NewMockCommissionManager()
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
@@ -181,7 +180,7 @@ func TestWorkerAgentWithFullMemoryContext(t *testing.T) {
 	// Create mock dependencies
 	llmClient := mocks.NewMockLLMClient()
 	toolRegistry := tools.NewToolRegistry()
-	commissionManager := &commission.Manager{}
+	commissionManager := mocks.NewMockCommissionManager()
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
@@ -228,7 +227,7 @@ func TestWorkerAgentWithCommissionManager(t *testing.T) {
 	llmClient := mocks.NewMockLLMClient()
 	memoryManager := mocks.NewMockChainManager()
 	toolRegistry := tools.NewToolRegistry()
-	commissionManager := &commission.Manager{}
+	commissionManager := mocks.NewMockCommissionManager()
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
@@ -291,7 +290,7 @@ func TestWorkerAgentToolExecution(t *testing.T) {
 	// Create mock dependencies
 	llmClient := mocks.NewMockLLMClient()
 	memoryManager := mocks.NewMockChainManager()
-	commissionManager := &commission.Manager{}
+	commissionManager := mocks.NewMockCommissionManager()
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
@@ -374,7 +373,7 @@ func TestWorkerAgentIntegration(t *testing.T) {
 		t.Fatalf("Failed to register tool: %v", err)
 	}
 
-	commissionManager := &commission.Manager{}
+	commissionManager := mocks.NewMockCommissionManager()
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
@@ -435,7 +434,7 @@ func TestWorkerAgentErrorHandling(t *testing.T) {
 		// Create mock dependencies
 		memoryManager := mocks.NewMockChainManager()
 		toolRegistry := tools.NewToolRegistry()
-		commissionManager := &commission.Manager{}
+		commissionManager := mocks.NewMockCommissionManager()
 		costManager := mocks.NewMockCostManager()
 
 		// Create factory
@@ -507,7 +506,7 @@ func TestWorkerAgentConcurrency(t *testing.T) {
 	llmClient := mocks.NewMockLLMClient()
 	memoryManager := mocks.NewMockChainManager()
 	toolRegistry := tools.NewToolRegistry()
-	commissionManager := &commission.Manager{}
+	commissionManager := mocks.NewMockCommissionManager()
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
@@ -564,7 +563,7 @@ func BenchmarkWorkerAgentExecution(b *testing.B) {
 	llmClient := mocks.NewMockLLMClient()
 	memoryManager := mocks.NewMockChainManager()
 	toolRegistry := tools.NewToolRegistry()
-	commissionManager := &commission.Manager{}
+	commissionManager := mocks.NewMockCommissionManager()
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory

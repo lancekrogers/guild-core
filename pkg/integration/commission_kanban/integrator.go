@@ -1,7 +1,7 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
-package commission
+package commission_kanban
 
 import (
 	"context"
@@ -10,14 +10,15 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/guild-ventures/guild-core/pkg/commission"
 	"github.com/guild-ventures/guild-core/pkg/gerror"
 	"github.com/guild-ventures/guild-core/pkg/kanban"
 	"github.com/guild-ventures/guild-core/pkg/observability"
 	"github.com/guild-ventures/guild-core/pkg/storage/db"
 )
 
-// KanbanIntegrator provides integration between commission refinement and kanban tasks
-type KanbanIntegrator struct {
+// Integrator provides integration between commission refinement and kanban tasks
+type Integrator struct {
 	queries     *db.Queries
 	kanbanMgr   *kanban.Manager
 }
@@ -32,24 +33,24 @@ type TaskCreationResult struct {
 	Errors           []string  `json:"errors,omitempty"`
 }
 
-// NewKanbanIntegrator creates a new kanban integrator
-func NewKanbanIntegrator(queries *db.Queries, kanbanMgr *kanban.Manager) *KanbanIntegrator {
-	return &KanbanIntegrator{
+// NewIntegrator creates a new commission-kanban integrator
+func NewIntegrator(queries *db.Queries, kanbanMgr *kanban.Manager) *Integrator {
+	return &Integrator{
 		queries:   queries,
 		kanbanMgr: kanbanMgr,
 	}
 }
 
 // CreateTasksFromRefinedCommission creates kanban tasks from a refined commission
-func (ki *KanbanIntegrator) CreateTasksFromRefinedCommission(ctx context.Context, refined *RefinedCommission) (*TaskCreationResult, error) {
+func (i *Integrator) CreateTasksFromRefinedCommission(ctx context.Context, refined *commission.RefinedCommission) (*TaskCreationResult, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
-			WithComponent("commission.kanban_integrator").
+			WithComponent("commission_kanban.integrator").
 			WithOperation("CreateTasksFromRefinedCommission")
 	}
 
 	logger := observability.GetLogger(ctx)
-	ctx = observability.WithComponent(ctx, "commission.kanban_integrator")
+	ctx = observability.WithComponent(ctx, "commission_kanban.integrator")
 	ctx = observability.WithOperation(ctx, "CreateTasksFromRefinedCommission")
 
 	startTime := time.Now()
@@ -58,10 +59,10 @@ func (ki *KanbanIntegrator) CreateTasksFromRefinedCommission(ctx context.Context
 		"tasks_to_create", len(refined.Tasks))
 
 	// Create or get board for this commission
-	boardID, err := ki.ensureBoardExists(ctx, refined.Original)
+	boardID, err := i.ensureBoardExists(ctx, refined.Original)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to ensure board exists").
-			WithComponent("commission.kanban_integrator").
+			WithComponent("commission_kanban.integrator").
 			WithOperation("CreateTasksFromRefinedCommission").
 			WithDetails("commission_id", refined.Original.ID)
 	}
@@ -77,7 +78,7 @@ func (ki *KanbanIntegrator) CreateTasksFromRefinedCommission(ctx context.Context
 
 	// Create tasks in batch
 	for _, refinedTask := range refined.Tasks {
-		err := ki.createTask(ctx, refinedTask, boardID)
+		err := i.createTask(ctx, refinedTask, boardID)
 		if err != nil {
 			errMsg := fmt.Sprintf("Failed to create task %s: %v", refinedTask.ID, err)
 			result.Errors = append(result.Errors, errMsg)
@@ -95,7 +96,7 @@ func (ki *KanbanIntegrator) CreateTasksFromRefinedCommission(ctx context.Context
 	}
 
 	// Record task relationships and dependencies
-	err = ki.recordTaskDependencies(ctx, refined.Tasks)
+	err = i.recordTaskDependencies(ctx, refined.Tasks)
 	if err != nil {
 		logger.WarnContext(ctx, "Failed to record some task dependencies",
 			"error", err.Error())
@@ -114,9 +115,9 @@ func (ki *KanbanIntegrator) CreateTasksFromRefinedCommission(ctx context.Context
 }
 
 // ensureBoardExists creates or retrieves a board for the commission
-func (ki *KanbanIntegrator) ensureBoardExists(ctx context.Context, commission *Commission) (string, error) {
+func (i *Integrator) ensureBoardExists(ctx context.Context, comm *commission.Commission) (string, error) {
 	// Try to find existing board for this commission
-	board, err := ki.queries.GetBoardByCommission(ctx, commission.ID)
+	board, err := i.queries.GetBoardByCommission(ctx, comm.ID)
 	if err == nil {
 		// Board exists, return it
 		return board.ID, nil
@@ -126,19 +127,19 @@ func (ki *KanbanIntegrator) ensureBoardExists(ctx context.Context, commission *C
 	// If it's not a not-found error, return the error
 	if !isNotFoundError(err) {
 		return "", gerror.Wrap(err, gerror.ErrCodeStorage, "failed to query existing board").
-			WithComponent("commission.kanban_integrator").
+			WithComponent("commission_kanban.integrator").
 			WithOperation("ensureBoardExists").
-			WithDetails("commission_id", commission.ID)
+			WithDetails("commission_id", comm.ID)
 	}
 
 	// Create new board
-	boardID := fmt.Sprintf("board-%s", commission.ID)
-	boardName := fmt.Sprintf("%s - Task Board", commission.Title)
-	description := fmt.Sprintf("Kanban board for commission: %s", commission.Description)
+	boardID := fmt.Sprintf("board-%s", comm.ID)
+	boardName := fmt.Sprintf("%s - Task Board", comm.Title)
+	description := fmt.Sprintf("Kanban board for commission: %s", comm.Description)
 
-	err = ki.queries.CreateBoard(ctx, db.CreateBoardParams{
+	err = i.queries.CreateBoard(ctx, db.CreateBoardParams{
 		ID:           boardID,
-		CommissionID: commission.ID,
+		CommissionID: comm.ID,
 		Name:         boardName,
 		Description:  &description,
 		Status:       "active",
@@ -146,9 +147,9 @@ func (ki *KanbanIntegrator) ensureBoardExists(ctx context.Context, commission *C
 
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create board").
-			WithComponent("commission.kanban_integrator").
+			WithComponent("commission_kanban.integrator").
 			WithOperation("ensureBoardExists").
-			WithDetails("commission_id", commission.ID).
+			WithDetails("commission_id", comm.ID).
 			WithDetails("board_id", boardID)
 	}
 
@@ -156,7 +157,7 @@ func (ki *KanbanIntegrator) ensureBoardExists(ctx context.Context, commission *C
 }
 
 // createTask creates a single kanban task from a refined task
-func (ki *KanbanIntegrator) createTask(ctx context.Context, refinedTask *RefinedTask, boardID string) error {
+func (i *Integrator) createTask(ctx context.Context, refinedTask *commission.RefinedTask, boardID string) error {
 	// Prepare metadata
 	metadata := make(map[string]interface{})
 	metadata["task_type"] = refinedTask.Type
@@ -177,7 +178,7 @@ func (ki *KanbanIntegrator) createTask(ctx context.Context, refinedTask *Refined
 	metadataJSON, err := json.Marshal(metadata)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeParsing, "failed to serialize task metadata").
-			WithComponent("commission.kanban_integrator").
+			WithComponent("commission_kanban.integrator").
 			WithOperation("createTask").
 			WithDetails("task_id", refinedTask.ID)
 	}
@@ -186,10 +187,10 @@ func (ki *KanbanIntegrator) createTask(ctx context.Context, refinedTask *Refined
 	storyPoints := int64(refinedTask.Complexity)
 
 	// Determine initial column based on task type and status
-	column := ki.determineInitialColumn(refinedTask)
+	column := i.determineInitialColumn(refinedTask)
 
 	// Create the task
-	err = ki.queries.CreateTask(ctx, db.CreateTaskParams{
+	err = i.queries.CreateTask(ctx, db.CreateTaskParams{
 		ID:           refinedTask.ID,
 		CommissionID: refinedTask.CommissionID,
 		BoardID:      &boardID,
@@ -203,7 +204,7 @@ func (ki *KanbanIntegrator) createTask(ctx context.Context, refinedTask *Refined
 
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create task in database").
-			WithComponent("commission.kanban_integrator").
+			WithComponent("commission_kanban.integrator").
 			WithOperation("createTask").
 			WithDetails("task_id", refinedTask.ID).
 			WithDetails("board_id", boardID)
@@ -211,7 +212,7 @@ func (ki *KanbanIntegrator) createTask(ctx context.Context, refinedTask *Refined
 
 	// Assign task to agent if specified
 	if refinedTask.AssignedAgent != "" {
-		err = ki.queries.AssignTaskToAgent(ctx, db.AssignTaskToAgentParams{
+		err = i.queries.AssignTaskToAgent(ctx, db.AssignTaskToAgentParams{
 			AssignedAgentID: &refinedTask.AssignedAgent,
 			ID:              refinedTask.ID,
 		})
@@ -230,7 +231,7 @@ func (ki *KanbanIntegrator) createTask(ctx context.Context, refinedTask *Refined
 }
 
 // determineInitialColumn determines the initial kanban column for a task
-func (ki *KanbanIntegrator) determineInitialColumn(task *RefinedTask) string {
+func (i *Integrator) determineInitialColumn(task *commission.RefinedTask) string {
 	// Map task status to kanban columns
 	statusToColumn := map[string]string{
 		"todo":        "todo",
@@ -263,11 +264,11 @@ func (ki *KanbanIntegrator) determineInitialColumn(task *RefinedTask) string {
 }
 
 // recordTaskDependencies records task dependencies in metadata and events
-func (ki *KanbanIntegrator) recordTaskDependencies(ctx context.Context, tasks []*RefinedTask) error {
+func (i *Integrator) recordTaskDependencies(ctx context.Context, tasks []*commission.RefinedTask) error {
 	logger := observability.GetLogger(ctx)
 
 	// Create a map of task IDs for validation
-	taskMap := make(map[string]*RefinedTask)
+	taskMap := make(map[string]*commission.RefinedTask)
 	for _, task := range tasks {
 		taskMap[task.ID] = task
 	}
@@ -293,7 +294,7 @@ func (ki *KanbanIntegrator) recordTaskDependencies(ctx context.Context, tasks []
 		if len(validDependencies) > 0 {
 			dependencyJSON, _ := json.Marshal(validDependencies)
 			
-			err := ki.queries.RecordTaskEvent(ctx, db.RecordTaskEventParams{
+			err := i.queries.RecordTaskEvent(ctx, db.RecordTaskEventParams{
 				TaskID:    task.ID,
 				AgentID:   nil, // System event
 				EventType: "dependencies_set",
@@ -314,10 +315,10 @@ func (ki *KanbanIntegrator) recordTaskDependencies(ctx context.Context, tasks []
 }
 
 // GetTasksForCommission retrieves all kanban tasks for a commission
-func (ki *KanbanIntegrator) GetTasksForCommission(ctx context.Context, commissionID string) ([]*kanban.Task, error) {
+func (i *Integrator) GetTasksForCommission(ctx context.Context, commissionID string) ([]*kanban.Task, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
-			WithComponent("commission.kanban_integrator").
+			WithComponent("commission_kanban.integrator").
 			WithOperation("GetTasksForCommission")
 	}
 
@@ -325,25 +326,25 @@ func (ki *KanbanIntegrator) GetTasksForCommission(ctx context.Context, commissio
 	logger.DebugContext(ctx, "Retrieving tasks for commission", "commission_id", commissionID)
 
 	// Get tasks from database
-	dbTasks, err := ki.queries.ListTasksByCommission(ctx, commissionID)
+	dbTasks, err := i.queries.ListTasksByCommission(ctx, commissionID)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to retrieve tasks from database").
-			WithComponent("commission.kanban_integrator").
+			WithComponent("commission_kanban.integrator").
 			WithOperation("GetTasksForCommission").
 			WithDetails("commission_id", commissionID)
 	}
 
 	// Convert to kanban tasks
 	kanbanTasks := make([]*kanban.Task, len(dbTasks))
-	for i, dbTask := range dbTasks {
-		kanbanTask, err := ki.convertDBTaskToKanban(dbTask)
+	for idx, dbTask := range dbTasks {
+		kanbanTask, err := i.convertDBTaskToKanban(dbTask)
 		if err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeParsing, "failed to convert database task to kanban task").
-				WithComponent("commission.kanban_integrator").
+				WithComponent("commission_kanban.integrator").
 				WithOperation("GetTasksForCommission").
 				WithDetails("task_id", dbTask.ID)
 		}
-		kanbanTasks[i] = kanbanTask
+		kanbanTasks[idx] = kanbanTask
 	}
 
 	logger.InfoContext(ctx, "Retrieved tasks for commission",
@@ -354,7 +355,7 @@ func (ki *KanbanIntegrator) GetTasksForCommission(ctx context.Context, commissio
 }
 
 // convertDBTaskToKanban converts a database task to a kanban task
-func (ki *KanbanIntegrator) convertDBTaskToKanban(dbTask db.Task) (*kanban.Task, error) {
+func (i *Integrator) convertDBTaskToKanban(dbTask db.Task) (*kanban.Task, error) {
 	task := kanban.NewTask(dbTask.Title, "")
 	task.ID = dbTask.ID
 	
@@ -364,7 +365,7 @@ func (ki *KanbanIntegrator) convertDBTaskToKanban(dbTask db.Task) (*kanban.Task,
 	}
 
 	// Convert status to kanban status
-	task.Status = ki.convertStatusToKanban(dbTask.Status)
+	task.Status = i.convertStatusToKanban(dbTask.Status)
 
 	// Set assigned agent
 	if dbTask.AssignedAgentID != nil {
@@ -433,7 +434,7 @@ func (ki *KanbanIntegrator) convertDBTaskToKanban(dbTask db.Task) (*kanban.Task,
 }
 
 // convertStatusToKanban converts database status to kanban status
-func (ki *KanbanIntegrator) convertStatusToKanban(dbStatus string) kanban.TaskStatus {
+func (i *Integrator) convertStatusToKanban(dbStatus string) kanban.TaskStatus {
 	statusMap := map[string]kanban.TaskStatus{
 		"todo":        kanban.StatusTodo,
 		"in_progress": kanban.StatusInProgress,
@@ -452,10 +453,10 @@ func (ki *KanbanIntegrator) convertStatusToKanban(dbStatus string) kanban.TaskSt
 }
 
 // UpdateTaskFromKanban updates a database task from kanban task changes
-func (ki *KanbanIntegrator) UpdateTaskFromKanban(ctx context.Context, kanbanTask *kanban.Task) error {
+func (i *Integrator) UpdateTaskFromKanban(ctx context.Context, kanbanTask *kanban.Task) error {
 	if err := ctx.Err(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
-			WithComponent("commission.kanban_integrator").
+			WithComponent("commission_kanban.integrator").
 			WithOperation("UpdateTaskFromKanban")
 	}
 
@@ -476,7 +477,7 @@ func (ki *KanbanIntegrator) UpdateTaskFromKanban(ctx context.Context, kanbanTask
 	metadataJSON, err := json.Marshal(metadata)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeParsing, "failed to serialize task metadata").
-			WithComponent("commission.kanban_integrator").
+			WithComponent("commission_kanban.integrator").
 			WithOperation("UpdateTaskFromKanban").
 			WithDetails("task_id", kanbanTask.ID)
 	}
@@ -496,10 +497,10 @@ func (ki *KanbanIntegrator) UpdateTaskFromKanban(ctx context.Context, kanbanTask
 	}
 
 	// Determine column from status
-	column := ki.convertKanbanStatusToColumn(kanbanTask.Status)
+	column := i.convertKanbanStatusToColumn(kanbanTask.Status)
 
 	// Update the task
-	err = ki.queries.UpdateTask(ctx, db.UpdateTaskParams{
+	err = i.queries.UpdateTask(ctx, db.UpdateTaskParams{
 		Title:       kanbanTask.Title,
 		Description: &kanbanTask.Description,
 		Status:      string(kanbanTask.Status),
@@ -511,14 +512,14 @@ func (ki *KanbanIntegrator) UpdateTaskFromKanban(ctx context.Context, kanbanTask
 
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task in database").
-			WithComponent("commission.kanban_integrator").
+			WithComponent("commission_kanban.integrator").
 			WithOperation("UpdateTaskFromKanban").
 			WithDetails("task_id", kanbanTask.ID)
 	}
 
 	// Update agent assignment if changed
 	if kanbanTask.AssignedTo != "" {
-		err = ki.queries.AssignTaskToAgent(ctx, db.AssignTaskToAgentParams{
+		err = i.queries.AssignTaskToAgent(ctx, db.AssignTaskToAgentParams{
 			AssignedAgentID: &kanbanTask.AssignedTo,
 			ID:              kanbanTask.ID,
 		})
@@ -535,7 +536,7 @@ func (ki *KanbanIntegrator) UpdateTaskFromKanban(ctx context.Context, kanbanTask
 }
 
 // convertKanbanStatusToColumn converts kanban status to database column
-func (ki *KanbanIntegrator) convertKanbanStatusToColumn(status kanban.TaskStatus) string {
+func (i *Integrator) convertKanbanStatusToColumn(status kanban.TaskStatus) string {
 	statusToColumn := map[kanban.TaskStatus]string{
 		kanban.StatusBacklog:         "backlog",
 		kanban.StatusTodo:            "todo",
@@ -554,10 +555,10 @@ func (ki *KanbanIntegrator) convertKanbanStatusToColumn(status kanban.TaskStatus
 }
 
 // DeleteTasksForCommission deletes all tasks associated with a commission
-func (ki *KanbanIntegrator) DeleteTasksForCommission(ctx context.Context, commissionID string) error {
+func (i *Integrator) DeleteTasksForCommission(ctx context.Context, commissionID string) error {
 	if err := ctx.Err(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
-			WithComponent("commission.kanban_integrator").
+			WithComponent("commission_kanban.integrator").
 			WithOperation("DeleteTasksForCommission")
 	}
 
@@ -565,10 +566,10 @@ func (ki *KanbanIntegrator) DeleteTasksForCommission(ctx context.Context, commis
 	logger.InfoContext(ctx, "Deleting all tasks for commission", "commission_id", commissionID)
 
 	// Get all tasks for the commission
-	tasks, err := ki.queries.ListTasksByCommission(ctx, commissionID)
+	tasks, err := i.queries.ListTasksByCommission(ctx, commissionID)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list tasks for deletion").
-			WithComponent("commission.kanban_integrator").
+			WithComponent("commission_kanban.integrator").
 			WithOperation("DeleteTasksForCommission").
 			WithDetails("commission_id", commissionID)
 	}
@@ -576,7 +577,7 @@ func (ki *KanbanIntegrator) DeleteTasksForCommission(ctx context.Context, commis
 	// Delete each task and its events
 	for _, task := range tasks {
 		// Delete task events first
-		err = ki.queries.DeleteTaskEvents(ctx, task.ID)
+		err = i.queries.DeleteTaskEvents(ctx, task.ID)
 		if err != nil {
 			logger.WarnContext(ctx, "Failed to delete task events",
 				"task_id", task.ID,
@@ -584,7 +585,7 @@ func (ki *KanbanIntegrator) DeleteTasksForCommission(ctx context.Context, commis
 		}
 
 		// Delete the task
-		err = ki.queries.DeleteTask(ctx, task.ID)
+		err = i.queries.DeleteTask(ctx, task.ID)
 		if err != nil {
 			logger.WarnContext(ctx, "Failed to delete task",
 				"task_id", task.ID,
@@ -603,6 +604,45 @@ func (ki *KanbanIntegrator) DeleteTasksForCommission(ctx context.Context, commis
 
 func stringPtr(s string) *string {
 	return &s
+}
+
+// ConvertRefinedCommissionToKanbanTasks converts refined tasks to kanban tasks for database storage
+func (i *Integrator) ConvertRefinedCommissionToKanbanTasks(refinedCommission *commission.RefinedCommission) []*kanban.Task {
+	tasks := make([]*kanban.Task, len(refinedCommission.Tasks))
+	
+	for idx, refinedTask := range refinedCommission.Tasks {
+		task := kanban.NewTask(refinedTask.Title, refinedTask.Description)
+		task.ID = refinedTask.ID
+		task.Status = kanban.StatusTodo // Default to todo
+		task.AssignedTo = refinedTask.AssignedAgent
+		task.EstimatedHours = refinedTask.EstimatedHours
+		task.Dependencies = refinedTask.Dependencies
+		task.CreatedAt = refinedTask.CreatedAt
+		task.UpdatedAt = refinedTask.UpdatedAt
+		
+		// Set priority based on complexity
+		switch {
+		case refinedTask.Complexity >= 6:
+			task.Priority = kanban.PriorityHigh
+		case refinedTask.Complexity >= 3:
+			task.Priority = kanban.PriorityMedium
+		default:
+			task.Priority = kanban.PriorityLow
+		}
+		
+		// Add metadata
+		task.Metadata = make(map[string]string)
+		task.Metadata["commission_id"] = refinedTask.CommissionID
+		task.Metadata["task_type"] = refinedTask.Type
+		task.Metadata["complexity"] = fmt.Sprintf("%d", refinedTask.Complexity)
+		for k, v := range refinedTask.Metadata {
+			task.Metadata[k] = v
+		}
+		
+		tasks[idx] = task
+	}
+	
+	return tasks
 }
 
 // isNotFoundError checks if an error is a "not found" error
