@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package guild.v1;
+
+option go_package = "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// EventService provides real-time event streaming for the Guild system
+service EventService {
+  // StreamEvents streams all events matching the filter
+  rpc StreamEvents(StreamEventsRequest) returns (stream Event);
+  
+  // PublishEvent publishes a single event to the system
+  rpc PublishEvent(PublishEventRequest) returns (PublishEventResponse);
+}
+
+// Event represents a system event
+message Event {
+  string id = 1;
+  string type = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  string source = 4;
+  google.protobuf.Struct data = 5;
+}
+
+// StreamEventsRequest configures event streaming
+message StreamEventsRequest {
+  // Event type patterns to subscribe to (e.g., "task.*", "agent.*")
+  repeated string event_types = 1;
+  
+  // If true, subscribe to all events
+  bool subscribe_all = 2;
+  
+  // Optional: only events after this timestamp
+  optional google.protobuf.Timestamp since = 3;
+}
+
+// PublishEventRequest publishes an event
+message PublishEventRequest {
+  Event event = 1;
+}
+
+// PublishEventResponse confirms event publication
+message PublishEventResponse {
+  bool success = 1;
+  string message = 2;
+}

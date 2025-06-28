@@ -174,7 +174,7 @@ func (rw *RefinementWriter) writeAnalysis(ctx context.Context, filepath string, 
 		content.WriteString(fmt.Sprintf("### Requirement %d: %s\n\n", i+1, req.Type))
 		content.WriteString(fmt.Sprintf("**Priority:** %s\n\n", req.Priority))
 		content.WriteString(fmt.Sprintf("**Description:** %s\n\n", req.Description))
-		
+
 		if len(req.Acceptance) > 0 {
 			content.WriteString("**Acceptance Criteria:**\n")
 			for _, criterion := range req.Acceptance {
@@ -245,7 +245,7 @@ func (rw *RefinementWriter) writeTasks(ctx context.Context, filepath string, ref
 		for _, task := range tasks {
 			totalComplexity += task.Complexity
 		}
-		content.WriteString(fmt.Sprintf("- **%s**: %d tasks (%d complexity points)\n", 
+		content.WriteString(fmt.Sprintf("- **%s**: %d tasks (%d complexity points)\n",
 			strings.Title(taskType), len(tasks), totalComplexity))
 	}
 	content.WriteString("\n")
@@ -275,14 +275,14 @@ func (rw *RefinementWriter) writeTasks(ctx context.Context, filepath string, ref
 		content.WriteString(fmt.Sprintf("#### %s\n\n", task.Title))
 		content.WriteString(fmt.Sprintf("- **ID:** %s\n", task.ID))
 		content.WriteString(fmt.Sprintf("- **Type:** %s\n", task.Type))
-		content.WriteString(fmt.Sprintf("- **Complexity:** %d points (%s)\n", 
+		content.WriteString(fmt.Sprintf("- **Complexity:** %d points (%s)\n",
 			task.Complexity, getComplexityLabel(task.Complexity)))
 		content.WriteString(fmt.Sprintf("- **Estimated Hours:** %.1f\n", task.EstimatedHours))
-		
+
 		if task.AssignedAgent != "" {
 			content.WriteString(fmt.Sprintf("- **Assigned Agent:** %s\n", task.AssignedAgent))
 		}
-		
+
 		if len(task.Dependencies) > 0 {
 			content.WriteString(fmt.Sprintf("- **Dependencies:** %s\n", strings.Join(task.Dependencies, ", ")))
 		}
@@ -316,7 +316,7 @@ func (rw *RefinementWriter) writePlan(ctx context.Context, filepath string, refi
 	// Project Overview
 	content.WriteString("## Project Overview\n\n")
 	content.WriteString(fmt.Sprintf("**Scope:** %s\n", refined.Analysis.Scope))
-	content.WriteString(fmt.Sprintf("**Estimated Duration:** %.1f hours (%.1f days)\n", 
+	content.WriteString(fmt.Sprintf("**Estimated Duration:** %.1f hours (%.1f days)\n",
 		refined.EstimatedDuration.Hours(), refined.EstimatedDuration.Hours()/8))
 	content.WriteString(fmt.Sprintf("**Start Date:** %s\n", refined.Timeline.StartDate.Format("2006-01-02")))
 	content.WriteString(fmt.Sprintf("**End Date:** %s\n\n", refined.Timeline.EndDate.Format("2006-01-02")))
@@ -339,7 +339,7 @@ func (rw *RefinementWriter) writePlan(ctx context.Context, filepath string, refi
 		}
 
 		content.WriteString(fmt.Sprintf("### Phase: %s\n\n", strings.Title(phase)))
-		
+
 		totalHours := 0.0
 		totalComplexity := 0
 		for _, task := range phaseTasks {
@@ -353,7 +353,7 @@ func (rw *RefinementWriter) writePlan(ctx context.Context, filepath string, refi
 
 		content.WriteString("**Tasks in this phase:**\n")
 		for _, task := range phaseTasks {
-			content.WriteString(fmt.Sprintf("- %s (%d points, %.1fh)\n", 
+			content.WriteString(fmt.Sprintf("- %s (%d points, %.1fh)\n",
 				task.Title, task.Complexity, task.EstimatedHours))
 		}
 		content.WriteString("\n")
@@ -378,7 +378,7 @@ func (rw *RefinementWriter) writePlan(ctx context.Context, filepath string, refi
 			// Find the task
 			for _, task := range refined.Tasks {
 				if task.ID == taskID {
-					content.WriteString(fmt.Sprintf("- **%s** (%d points, %.1fh)\n", 
+					content.WriteString(fmt.Sprintf("- **%s** (%d points, %.1fh)\n",
 						task.Title, task.Complexity, task.EstimatedHours))
 					break
 				}
@@ -433,19 +433,19 @@ func (rw *RefinementWriter) writeAssignments(ctx context.Context, filepath strin
 			content.WriteString(fmt.Sprintf("- **Specialty:** %s\n", agent.Specialty))
 			content.WriteString(fmt.Sprintf("- **Cost Magnitude:** %d\n", agent.CostMagnitude))
 			content.WriteString(fmt.Sprintf("- **Availability:** %s\n", agent.Availability))
-			
+
 			if len(agent.Capabilities) > 0 {
 				content.WriteString(fmt.Sprintf("- **Capabilities:** %s\n", strings.Join(agent.Capabilities, ", ")))
 			}
-			
+
 			if len(agent.Languages) > 0 {
 				content.WriteString(fmt.Sprintf("- **Languages:** %s\n", strings.Join(agent.Languages, ", ")))
 			}
-			
+
 			if len(agent.Frameworks) > 0 {
 				content.WriteString(fmt.Sprintf("- **Frameworks:** %s\n", strings.Join(agent.Frameworks, ", ")))
 			}
-			
+
 			content.WriteString("\n")
 		}
 	}
@@ -466,7 +466,7 @@ func (rw *RefinementWriter) writeAssignments(ctx context.Context, filepath strin
 				totalHours += task.EstimatedHours
 				totalComplexity += task.Complexity
 			}
-			
+
 			// Find agent name
 			agentName := agentID
 			if refined.AgentResources != nil {
@@ -477,12 +477,12 @@ func (rw *RefinementWriter) writeAssignments(ctx context.Context, filepath strin
 					}
 				}
 			}
-			
+
 			content.WriteString(fmt.Sprintf("- **%s** (%s): %d tasks, %.1f hours, %d complexity points\n",
 				agentName, agentID, len(tasks), totalHours, totalComplexity))
 			totalAssignedTasks += len(tasks)
 		}
-		
+
 		unassignedTasks := len(refined.Tasks) - totalAssignedTasks
 		if unassignedTasks > 0 {
 			content.WriteString(fmt.Sprintf("- **Unassigned**: %d tasks\n", unassignedTasks))
@@ -536,7 +536,7 @@ func (rw *RefinementWriter) writeAssignments(ctx context.Context, filepath strin
 			assignedTaskIDs[task.ID] = true
 		}
 	}
-	
+
 	for _, task := range refined.Tasks {
 		if !assignedTaskIDs[task.ID] {
 			unassignedTasks = append(unassignedTasks, task)
@@ -546,7 +546,7 @@ func (rw *RefinementWriter) writeAssignments(ctx context.Context, filepath strin
 	if len(unassignedTasks) > 0 {
 		content.WriteString("## Unassigned Tasks\n\n")
 		content.WriteString("The following tasks still need agent assignment:\n\n")
-		
+
 		for _, task := range unassignedTasks {
 			content.WriteString(fmt.Sprintf("- **%s** (%s, %d points, %.1fh)\n",
 				task.Title, task.Type, task.Complexity, task.EstimatedHours))
@@ -570,7 +570,7 @@ func (rw *RefinementWriter) writeTimeline(ctx context.Context, filepath string, 
 	content.WriteString("## Timeline Overview\n\n")
 	content.WriteString(fmt.Sprintf("- **Start Date:** %s\n", refined.Timeline.StartDate.Format("2006-01-02")))
 	content.WriteString(fmt.Sprintf("- **End Date:** %s\n", refined.Timeline.EndDate.Format("2006-01-02")))
-	
+
 	duration := refined.Timeline.EndDate.Sub(refined.Timeline.StartDate)
 	content.WriteString(fmt.Sprintf("- **Duration:** %.0f days\n", duration.Hours()/24))
 	content.WriteString(fmt.Sprintf("- **Buffer Days:** %d\n", refined.Timeline.BufferDays))
@@ -579,7 +579,7 @@ func (rw *RefinementWriter) writeTimeline(ctx context.Context, filepath string, 
 	// Milestones
 	if len(refined.Timeline.Milestones) > 0 {
 		content.WriteString("## Milestones\n\n")
-		
+
 		// Sort milestones by date
 		milestones := make([]Milestone, len(refined.Timeline.Milestones))
 		copy(milestones, refined.Timeline.Milestones)
@@ -590,7 +590,7 @@ func (rw *RefinementWriter) writeTimeline(ctx context.Context, filepath string, 
 		for i, milestone := range milestones {
 			daysFromStart := milestone.TargetDate.Sub(refined.Timeline.StartDate).Hours() / 24
 			content.WriteString(fmt.Sprintf("### %d. %s\n\n", i+1, milestone.Name))
-			content.WriteString(fmt.Sprintf("- **Date:** %s (Day %.0f)\n", 
+			content.WriteString(fmt.Sprintf("- **Date:** %s (Day %.0f)\n",
 				milestone.TargetDate.Format("2006-01-02"), daysFromStart))
 			content.WriteString(fmt.Sprintf("- **Description:** %s\n", milestone.Description))
 			content.WriteString(fmt.Sprintf("- **Associated Tasks:** %d\n\n", len(milestone.TaskIDs)))
@@ -614,7 +614,7 @@ func (rw *RefinementWriter) writeTimeline(ctx context.Context, filepath string, 
 
 	// Weekly Breakdown
 	content.WriteString("## Weekly Breakdown\n\n")
-	
+
 	// Calculate weekly distribution
 	weeks := int(duration.Hours()/24/7) + 1
 	if weeks > 4 { // Don't generate excessive weeks for large projects
@@ -625,15 +625,15 @@ func (rw *RefinementWriter) writeTimeline(ctx context.Context, filepath string, 
 	for week := 1; week <= weeks; week++ {
 		weekStart := refined.Timeline.StartDate.AddDate(0, 0, (week-1)*7)
 		weekEnd := weekStart.AddDate(0, 0, 6)
-		
-		content.WriteString(fmt.Sprintf("### Week %d (%s - %s)\n\n", 
+
+		content.WriteString(fmt.Sprintf("### Week %d (%s - %s)\n\n",
 			week, weekStart.Format("Jan 2"), weekEnd.Format("Jan 2")))
 
 		// Find tasks that should be worked on this week
 		weekTasks := 0
 		weekHours := 0.0
 		content.WriteString("**Recommended focus:**\n")
-		
+
 		// Simple heuristic: distribute tasks evenly across weeks
 		tasksPerWeek := len(refined.Tasks) / weeks
 		startIdx := (week - 1) * tasksPerWeek
@@ -644,7 +644,7 @@ func (rw *RefinementWriter) writeTimeline(ctx context.Context, filepath string, 
 
 		for i := startIdx; i < endIdx && i < len(refined.Tasks); i++ {
 			task := refined.Tasks[i]
-			content.WriteString(fmt.Sprintf("- %s (%d points, %.1fh)\n", 
+			content.WriteString(fmt.Sprintf("- %s (%d points, %.1fh)\n",
 				task.Title, task.Complexity, task.EstimatedHours))
 			weekTasks++
 			weekHours += task.EstimatedHours
@@ -695,7 +695,7 @@ func (rw *RefinementWriter) writeReadme(ctx context.Context, filepath string, re
 	content.WriteString(fmt.Sprintf("- **Scope:** %s\n", refined.Analysis.Scope))
 	content.WriteString(fmt.Sprintf("- **Total Tasks:** %d\n", len(refined.Tasks)))
 	content.WriteString(fmt.Sprintf("- **Complexity Points:** %d\n", refined.TotalComplexity))
-	content.WriteString(fmt.Sprintf("- **Estimated Duration:** %.1f hours (%.1f days)\n", 
+	content.WriteString(fmt.Sprintf("- **Estimated Duration:** %.1f hours (%.1f days)\n",
 		refined.EstimatedDuration.Hours(), refined.EstimatedDuration.Hours()/8))
 	content.WriteString(fmt.Sprintf("- **Agent Assignments:** %d agents\n\n", len(refined.Assignments)))
 
@@ -738,19 +738,18 @@ func writeFile(filepath, content string) error {
 	return os.WriteFile(filepath, []byte(content), 0644)
 }
 
-
 func getComplexityLabel(complexity int) string {
 	labels := map[int]string{
 		1: "Very Simple",
-		2: "Simple", 
+		2: "Simple",
 		3: "Medium-Simple",
 		5: "Medium-Complex",
 		8: "Very Complex",
 	}
-	
+
 	if label, exists := labels[complexity]; exists {
 		return label
 	}
-	
+
 	return "Unknown"
 }

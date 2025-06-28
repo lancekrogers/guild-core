@@ -63,7 +63,7 @@ func (c *CommissionCommand) startNewCommission() tea.Cmd {
 			Type:    "start_new",
 			Message: "Starting new commission creation with Elena...",
 			Data: map[string]interface{}{
-				"mode": "planning",
+				"mode":  "planning",
 				"agent": "elena-guild-master",
 			},
 		}
@@ -76,7 +76,7 @@ func (c *CommissionCommand) listCommissions(ctx context.Context) tea.Cmd {
 		commissions, err := c.manager.ListCommissions(ctx)
 		if err != nil {
 			return CommissionCommandResult{
-				Type:  "error",
+				Type: "error",
 				Error: gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list commissions").
 					WithComponent("chat.commands").
 					WithOperation("listCommissions"),
@@ -104,13 +104,13 @@ func (c *CommissionCommand) listCommissions(ctx context.Context) tea.Cmd {
 			case commission.CommissionStatusCancelled:
 				status = "❌"
 			}
-			
+
 			sb.WriteString(fmt.Sprintf("%d. %s %s - %s\n", i+1, status, comm.Title, comm.ID))
 			if comm.Description != "" {
 				sb.WriteString(fmt.Sprintf("   %s\n", comm.Description))
 			}
 		}
-		
+
 		sb.WriteString("\nUse '/commission <id>' to resume a commission.")
 
 		return CommissionCommandResult{
@@ -144,12 +144,12 @@ func (c *CommissionCommand) triggerRefinement(ctx context.Context, args []string
 		}
 
 		commissionID := args[0]
-		
+
 		// Load the commission
 		comm, err := c.manager.GetCommission(ctx, commissionID)
 		if err != nil {
 			return CommissionCommandResult{
-				Type:  "error",
+				Type: "error",
 				Error: gerror.Wrap(err, gerror.ErrCodeNotFound, "commission not found").
 					WithComponent("chat.commands").
 					WithOperation("triggerRefinement").
@@ -178,12 +178,12 @@ func (c *CommissionCommand) resumeCommission(ctx context.Context, commissionID s
 					suggestions = append(suggestions, c.ID)
 				}
 			}
-			
+
 			errMsg := fmt.Sprintf("Commission '%s' not found.", commissionID)
 			if len(suggestions) > 0 {
 				errMsg += fmt.Sprintf(" Did you mean: %s?", strings.Join(suggestions, ", "))
 			}
-			
+
 			return CommissionCommandResult{
 				Type:    "error",
 				Message: errMsg,

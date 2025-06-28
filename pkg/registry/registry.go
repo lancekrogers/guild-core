@@ -7,6 +7,7 @@ import (
 	"context"
 	"path/filepath"
 	"sync"
+	"time"
 
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/gerror"
@@ -339,6 +340,226 @@ func (a *promptChainRepositoryAdapter) GetChainsByTask(ctx context.Context, task
 
 func (a *promptChainRepositoryAdapter) DeleteChain(ctx context.Context, id string) error {
 	return a.repo.DeleteChain(ctx, id)
+}
+
+// sessionRepositoryAdapter adapts storage.SessionRepository to registry.SessionRepository
+type sessionRepositoryAdapter struct {
+	repo storage.SessionRepository
+}
+
+func (a *sessionRepositoryAdapter) CreateSession(ctx context.Context, session *ChatSession) error {
+	// Convert registry.ChatSession to storage.ChatSession
+	storageSession := &storage.ChatSession{
+		ID:         session.ID,
+		Name:       session.Name,
+		CampaignID: session.CampaignID,
+		CreatedAt:  session.CreatedAt,
+		UpdatedAt:  session.UpdatedAt,
+		Metadata:   session.Metadata,
+	}
+	return a.repo.CreateSession(ctx, storageSession)
+}
+
+func (a *sessionRepositoryAdapter) GetSession(ctx context.Context, id string) (*ChatSession, error) {
+	storageSession, err := a.repo.GetSession(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	// Convert storage.ChatSession to registry.ChatSession
+	return &ChatSession{
+		ID:         storageSession.ID,
+		Name:       storageSession.Name,
+		CampaignID: storageSession.CampaignID,
+		CreatedAt:  storageSession.CreatedAt,
+		UpdatedAt:  storageSession.UpdatedAt,
+		Metadata:   storageSession.Metadata,
+	}, nil
+}
+
+func (a *sessionRepositoryAdapter) ListSessions(ctx context.Context, limit, offset int32) ([]*ChatSession, error) {
+	storageSessions, err := a.repo.ListSessions(ctx, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+	sessions := make([]*ChatSession, len(storageSessions))
+	for i, s := range storageSessions {
+		sessions[i] = &ChatSession{
+			ID:         s.ID,
+			Name:       s.Name,
+			CampaignID: s.CampaignID,
+			CreatedAt:  s.CreatedAt,
+			UpdatedAt:  s.UpdatedAt,
+			Metadata:   s.Metadata,
+		}
+	}
+	return sessions, nil
+}
+
+func (a *sessionRepositoryAdapter) ListSessionsByCampaign(ctx context.Context, campaignID string) ([]*ChatSession, error) {
+	storageSessions, err := a.repo.ListSessionsByCampaign(ctx, campaignID)
+	if err != nil {
+		return nil, err
+	}
+	sessions := make([]*ChatSession, len(storageSessions))
+	for i, s := range storageSessions {
+		sessions[i] = &ChatSession{
+			ID:         s.ID,
+			Name:       s.Name,
+			CampaignID: s.CampaignID,
+			CreatedAt:  s.CreatedAt,
+			UpdatedAt:  s.UpdatedAt,
+			Metadata:   s.Metadata,
+		}
+	}
+	return sessions, nil
+}
+
+func (a *sessionRepositoryAdapter) UpdateSession(ctx context.Context, session *ChatSession) error {
+	storageSession := &storage.ChatSession{
+		ID:         session.ID,
+		Name:       session.Name,
+		CampaignID: session.CampaignID,
+		CreatedAt:  session.CreatedAt,
+		UpdatedAt:  session.UpdatedAt,
+		Metadata:   session.Metadata,
+	}
+	return a.repo.UpdateSession(ctx, storageSession)
+}
+
+func (a *sessionRepositoryAdapter) DeleteSession(ctx context.Context, id string) error {
+	return a.repo.DeleteSession(ctx, id)
+}
+
+func (a *sessionRepositoryAdapter) CountSessions(ctx context.Context) (int64, error) {
+	return a.repo.CountSessions(ctx)
+}
+
+func (a *sessionRepositoryAdapter) SaveMessage(ctx context.Context, message *ChatMessage) error {
+	storageMessage := &storage.ChatMessage{
+		ID:        message.ID,
+		SessionID: message.SessionID,
+		Role:      message.Role,
+		Content:   message.Content,
+		CreatedAt: message.CreatedAt,
+		ToolCalls: message.ToolCalls,
+		Metadata:  message.Metadata,
+	}
+	return a.repo.SaveMessage(ctx, storageMessage)
+}
+
+func (a *sessionRepositoryAdapter) GetMessage(ctx context.Context, id string) (*ChatMessage, error) {
+	storageMessage, err := a.repo.GetMessage(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return &ChatMessage{
+		ID:        storageMessage.ID,
+		SessionID: storageMessage.SessionID,
+		Role:      storageMessage.Role,
+		Content:   storageMessage.Content,
+		CreatedAt: storageMessage.CreatedAt,
+		ToolCalls: storageMessage.ToolCalls,
+		Metadata:  storageMessage.Metadata,
+	}, nil
+}
+
+func (a *sessionRepositoryAdapter) GetMessages(ctx context.Context, sessionID string) ([]*ChatMessage, error) {
+	storageMessages, err := a.repo.GetMessages(ctx, sessionID)
+	if err != nil {
+		return nil, err
+	}
+	messages := make([]*ChatMessage, len(storageMessages))
+	for i, m := range storageMessages {
+		messages[i] = &ChatMessage{
+			ID:        m.ID,
+			SessionID: m.SessionID,
+			Role:      m.Role,
+			Content:   m.Content,
+			CreatedAt: m.CreatedAt,
+			ToolCalls: m.ToolCalls,
+			Metadata:  m.Metadata,
+		}
+	}
+	return messages, nil
+}
+
+func (a *sessionRepositoryAdapter) GetMessagesPaginated(ctx context.Context, sessionID string, limit, offset int32) ([]*ChatMessage, error) {
+	storageMessages, err := a.repo.GetMessagesPaginated(ctx, sessionID, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+	messages := make([]*ChatMessage, len(storageMessages))
+	for i, m := range storageMessages {
+		messages[i] = &ChatMessage{
+			ID:        m.ID,
+			SessionID: m.SessionID,
+			Role:      m.Role,
+			Content:   m.Content,
+			CreatedAt: m.CreatedAt,
+			ToolCalls: m.ToolCalls,
+			Metadata:  m.Metadata,
+		}
+	}
+	return messages, nil
+}
+
+func (a *sessionRepositoryAdapter) GetMessagesAfter(ctx context.Context, sessionID string, after time.Time) ([]*ChatMessage, error) {
+	storageMessages, err := a.repo.GetMessagesAfter(ctx, sessionID, after)
+	if err != nil {
+		return nil, err
+	}
+	messages := make([]*ChatMessage, len(storageMessages))
+	for i, m := range storageMessages {
+		messages[i] = &ChatMessage{
+			ID:        m.ID,
+			SessionID: m.SessionID,
+			Role:      m.Role,
+			Content:   m.Content,
+			CreatedAt: m.CreatedAt,
+			ToolCalls: m.ToolCalls,
+			Metadata:  m.Metadata,
+		}
+	}
+	return messages, nil
+}
+
+func (a *sessionRepositoryAdapter) CountMessages(ctx context.Context, sessionID string) (int64, error) {
+	return a.repo.CountMessages(ctx, sessionID)
+}
+
+func (a *sessionRepositoryAdapter) DeleteMessage(ctx context.Context, id string) error {
+	return a.repo.DeleteMessage(ctx, id)
+}
+
+func (a *sessionRepositoryAdapter) StreamMessages(ctx context.Context, sessionID string, since time.Time) (<-chan *ChatMessage, error) {
+	storageChan, err := a.repo.StreamMessages(ctx, sessionID, since)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convert storage messages to registry messages
+	messageChan := make(chan *ChatMessage, 100)
+	go func() {
+		defer close(messageChan)
+		for storageMessage := range storageChan {
+			registryMessage := &ChatMessage{
+				ID:        storageMessage.ID,
+				SessionID: storageMessage.SessionID,
+				Role:      storageMessage.Role,
+				Content:   storageMessage.Content,
+				CreatedAt: storageMessage.CreatedAt,
+				ToolCalls: storageMessage.ToolCalls,
+				Metadata:  storageMessage.Metadata,
+			}
+			select {
+			case messageChan <- registryMessage:
+			case <-ctx.Done():
+				return
+			}
+		}
+	}()
+
+	return messageChan, nil
 }
 
 // taskRepositoryAdapter adapts storage.TaskRepository to registry.TaskRepository
@@ -775,6 +996,24 @@ func (s *SQLiteStorageRegistry) GetPromptChainRepository() PromptChainRepository
 		if storageRepo != nil {
 			// Wrap the storage repository with an adapter
 			return &promptChainRepositoryAdapter{repo: storageRepo}
+		}
+	}
+	return nil
+}
+
+func (s *SQLiteStorageRegistry) RegisterSessionRepository(repo SessionRepository) error {
+	// Session repository registration is handled through the underlying storage registry
+	// This method is a no-op since we use the storage.StorageRegistry's session repository directly
+	return nil
+}
+
+func (s *SQLiteStorageRegistry) GetSessionRepository() SessionRepository {
+	// Get the session repository from the underlying storage registry
+	if s.registry != nil {
+		storageRepo := s.registry.GetSessionRepository()
+		if storageRepo != nil {
+			// Wrap the storage repository with an adapter
+			return &sessionRepositoryAdapter{repo: storageRepo}
 		}
 	}
 	return nil

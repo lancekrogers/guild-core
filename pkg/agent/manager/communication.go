@@ -17,16 +17,16 @@ import (
 
 // CommunicationOrchestrator manages inter-agent communication and coordination
 type CommunicationOrchestrator struct {
-	messageQueue     chan AgentMessage
-	routing          map[string]MessageHandler
-	agents           map[string]agent.Agent
-	corpus           CorpusUpdater
-	db               *sql.DB
-	messageHistory   []AgentMessage
-	subscriptions    map[string][]MessageSubscription
-	filters          []MessageFilter
-	enrichers        []MessageEnricher
-	isRunning        bool
+	messageQueue   chan AgentMessage
+	routing        map[string]MessageHandler
+	agents         map[string]agent.Agent
+	corpus         CorpusUpdater
+	db             *sql.DB
+	messageHistory []AgentMessage
+	subscriptions  map[string][]MessageSubscription
+	filters        []MessageFilter
+	enrichers      []MessageEnricher
+	isRunning      bool
 }
 
 // AgentMessage represents a message between agents
@@ -34,15 +34,15 @@ type AgentMessage struct {
 	ID          string                 `json:"id"`
 	Type        MessageType            `json:"type"`
 	From        string                 `json:"from"`
-	To          string                 `json:"to"`          // Empty for broadcast messages
+	To          string                 `json:"to"` // Empty for broadcast messages
 	Content     string                 `json:"content"`
 	Context     MessageContext         `json:"context"`
 	Metadata    map[string]interface{} `json:"metadata"`
 	Timestamp   time.Time              `json:"timestamp"`
 	Priority    MessagePriority        `json:"priority"`
 	Tags        []string               `json:"tags"`
-	ThreadID    string                 `json:"thread_id,omitempty"`    // For threaded conversations
-	ReplyTo     string                 `json:"reply_to,omitempty"`     // For replies
+	ThreadID    string                 `json:"thread_id,omitempty"` // For threaded conversations
+	ReplyTo     string                 `json:"reply_to,omitempty"`  // For replies
 	Attachments []MessageAttachment    `json:"attachments,omitempty"`
 }
 
@@ -88,7 +88,7 @@ type MessageContext struct {
 type MessageAttachment struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
-	Type     string `json:"type"`     // file, image, data, link
+	Type     string `json:"type"` // file, image, data, link
 	Size     int64  `json:"size"`
 	URL      string `json:"url"`
 	MimeType string `json:"mime_type"`
@@ -135,21 +135,21 @@ func NewCommunicationOrchestrator(
 	db *sql.DB,
 ) *CommunicationOrchestrator {
 	co := &CommunicationOrchestrator{
-		messageQueue:    make(chan AgentMessage, 1000),
-		routing:         make(map[string]MessageHandler),
-		agents:          agents,
-		corpus:          corpus,
-		db:              db,
-		messageHistory:  []AgentMessage{},
-		subscriptions:   make(map[string][]MessageSubscription),
-		filters:         []MessageFilter{},
-		enrichers:       []MessageEnricher{},
-		isRunning:       false,
+		messageQueue:   make(chan AgentMessage, 1000),
+		routing:        make(map[string]MessageHandler),
+		agents:         agents,
+		corpus:         corpus,
+		db:             db,
+		messageHistory: []AgentMessage{},
+		subscriptions:  make(map[string][]MessageSubscription),
+		filters:        []MessageFilter{},
+		enrichers:      []MessageEnricher{},
+		isRunning:      false,
 	}
 
 	// Initialize default handlers
 	co.initializeHandlers()
-	
+
 	// Initialize default enrichers
 	co.initializeEnrichers()
 
@@ -333,7 +333,7 @@ func (co *CommunicationOrchestrator) RequestHelp(ctx context.Context, agentID st
 
 	// Create help request message
 	content := fmt.Sprintf("Help requested for task %s. Type: %s", taskID, helpType)
-	
+
 	// Send to capable agents
 	for _, capableAgentID := range capableAgents {
 		if capableAgentID == agentID {
@@ -402,7 +402,7 @@ func (co *CommunicationOrchestrator) CoordinateAgents(ctx context.Context, from,
 
 	// Elena mediates the communication by enriching the message
 	enrichedContent := co.enrichMessageContent(message, from, to)
-	
+
 	return co.SendMessageWithType(ctx, from, to, enrichedContent, MessageTypeCoordination, PriorityNormal)
 }
 
@@ -520,25 +520,25 @@ func (co *CommunicationOrchestrator) enrichMessageContent(message, from, to stri
 
 func (co *CommunicationOrchestrator) findCapableAgents(helpType string) []string {
 	var capable []string
-	
+
 	// Simple capability matching - would be more sophisticated in practice
 	for agentID := range co.agents {
 		// Would check agent capabilities against help type
 		capable = append(capable, agentID)
 	}
-	
+
 	return capable
 }
 
 func (co *CommunicationOrchestrator) findHandlers(messageType MessageType) []MessageHandler {
 	var handlers []MessageHandler
-	
+
 	for _, handler := range co.routing {
 		if handler.CanHandle(messageType) {
 			handlers = append(handlers, handler)
 		}
 	}
-	
+
 	return handlers
 }
 
@@ -576,7 +576,7 @@ func (h *TaskUpdateHandler) CanHandle(messageType MessageType) bool {
 func (h *TaskUpdateHandler) Handle(ctx context.Context, message AgentMessage) error {
 	logger := observability.GetLogger(ctx)
 	logger.InfoContext(ctx, "Handling task update message", "message_id", message.ID)
-	
+
 	// Would update task status and notify interested parties
 	return nil
 }
@@ -593,7 +593,7 @@ func (h *HelpRequestHandler) CanHandle(messageType MessageType) bool {
 func (h *HelpRequestHandler) Handle(ctx context.Context, message AgentMessage) error {
 	logger := observability.GetLogger(ctx)
 	logger.InfoContext(ctx, "Handling help request message", "message_id", message.ID)
-	
+
 	// Would route help request to capable agents
 	return nil
 }
@@ -610,7 +610,7 @@ func (h *KnowledgeShareHandler) CanHandle(messageType MessageType) bool {
 func (h *KnowledgeShareHandler) Handle(ctx context.Context, message AgentMessage) error {
 	logger := observability.GetLogger(ctx)
 	logger.InfoContext(ctx, "Handling knowledge share message", "message_id", message.ID)
-	
+
 	// Would update knowledge base and notify relevant agents
 	return nil
 }
@@ -627,7 +627,7 @@ func (h *StatusReportHandler) CanHandle(messageType MessageType) bool {
 func (h *StatusReportHandler) Handle(ctx context.Context, message AgentMessage) error {
 	logger := observability.GetLogger(ctx)
 	logger.InfoContext(ctx, "Handling status report message", "message_id", message.ID)
-	
+
 	// Would process status report and update dashboards
 	return nil
 }
@@ -665,13 +665,13 @@ type PriorityEnricher struct{}
 func (e *PriorityEnricher) Enrich(ctx context.Context, message AgentMessage) (AgentMessage, error) {
 	// Analyze content for priority indicators
 	content := strings.ToLower(message.Content)
-	
+
 	if strings.Contains(content, "urgent") || strings.Contains(content, "critical") {
 		message.Priority = PriorityCritical
 	} else if strings.Contains(content, "important") || strings.Contains(content, "asap") {
 		message.Priority = PriorityHigh
 	}
-	
+
 	return message, nil
 }
 

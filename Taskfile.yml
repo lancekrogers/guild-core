@@ -140,6 +140,19 @@ tasks:
         echo "Running integration tests..."
         go test -v ./integration/...
 
+  daemon-test:
+    desc: Run daemon integration tests and benchmarks
+    cmds:
+      - |
+        echo "Running daemon integration tests..."
+        echo "Note: These tests require a running daemon or will start one automatically"
+        go test -v ./integration/daemon/
+        echo ""
+        echo "Running daemon benchmarks..."
+        go test -bench=. -benchmem ./integration/daemon/
+        echo ""
+        echo "✅ Daemon tests and benchmarks complete"
+
   test:coverage:
     desc: Run tests with coverage analysis
     cmds:

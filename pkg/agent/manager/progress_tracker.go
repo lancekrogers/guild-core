@@ -27,32 +27,32 @@ type ProgressTracker struct {
 
 // TaskProgress represents the progress state of a single task
 type TaskProgress struct {
-	TaskID         string                 `json:"task_id"`
-	Status         kanban.TaskStatus      `json:"status"`
-	StartTime      *time.Time             `json:"start_time,omitempty"`
-	UpdatedAt      time.Time              `json:"updated_at"`
-	BlockedInfo    *BlockedInfo           `json:"blocked_info,omitempty"`
-	Completion     float64                `json:"completion"`     // 0.0-1.0
-	EstimatedTime  time.Duration          `json:"estimated_time"`
-	ActualTime     time.Duration          `json:"actual_time"`
-	AssignedAgent  string                 `json:"assigned_agent"`
-	Dependencies   []string               `json:"dependencies"`
-	Dependents     []string               `json:"dependents"`     // Tasks that depend on this one
-	Velocity       float64                `json:"velocity"`       // Progress per hour
-	Metadata       map[string]interface{} `json:"metadata"`
+	TaskID        string                 `json:"task_id"`
+	Status        kanban.TaskStatus      `json:"status"`
+	StartTime     *time.Time             `json:"start_time,omitempty"`
+	UpdatedAt     time.Time              `json:"updated_at"`
+	BlockedInfo   *BlockedInfo           `json:"blocked_info,omitempty"`
+	Completion    float64                `json:"completion"` // 0.0-1.0
+	EstimatedTime time.Duration          `json:"estimated_time"`
+	ActualTime    time.Duration          `json:"actual_time"`
+	AssignedAgent string                 `json:"assigned_agent"`
+	Dependencies  []string               `json:"dependencies"`
+	Dependents    []string               `json:"dependents"` // Tasks that depend on this one
+	Velocity      float64                `json:"velocity"`   // Progress per hour
+	Metadata      map[string]interface{} `json:"metadata"`
 }
 
 // AgentProgress represents the progress state of an agent
 type AgentProgress struct {
-	AgentID       string        `json:"agent_id"`
-	ActiveTasks   []string      `json:"active_tasks"`
-	TasksToday    int           `json:"tasks_today"`
-	HoursWorked   float64       `json:"hours_worked"`
-	Efficiency    float64       `json:"efficiency"`    // Tasks completed vs estimated
-	CurrentLoad   float64       `json:"current_load"`  // 0.0-1.0
-	LastActivity  time.Time     `json:"last_activity"`
-	BlockedTasks  []string      `json:"blocked_tasks"`
-	Status        string        `json:"status"`        // active, idle, blocked, offline
+	AgentID      string    `json:"agent_id"`
+	ActiveTasks  []string  `json:"active_tasks"`
+	TasksToday   int       `json:"tasks_today"`
+	HoursWorked  float64   `json:"hours_worked"`
+	Efficiency   float64   `json:"efficiency"`   // Tasks completed vs estimated
+	CurrentLoad  float64   `json:"current_load"` // 0.0-1.0
+	LastActivity time.Time `json:"last_activity"`
+	BlockedTasks []string  `json:"blocked_tasks"`
+	Status       string    `json:"status"` // active, idle, blocked, offline
 }
 
 // BlockedInfo contains information about why a task is blocked
@@ -60,70 +60,70 @@ type BlockedInfo struct {
 	Reason         string    `json:"reason"`
 	BlockedSince   time.Time `json:"blocked_since"`
 	BlockingTasks  []string  `json:"blocking_tasks"`
-	Resolution     string    `json:"resolution,omitempty"`  // Suggested resolution
-	Severity       string    `json:"severity"`              // low, medium, high, critical
+	Resolution     string    `json:"resolution,omitempty"` // Suggested resolution
+	Severity       string    `json:"severity"`             // low, medium, high, critical
 	AutoResolvable bool      `json:"auto_resolvable"`
 }
 
 // Timeline represents the project timeline with milestones and predictions
 type Timeline struct {
-	StartTime           time.Time            `json:"start_time"`
-	EstimatedCompletion time.Time            `json:"estimated_completion"`
-	OriginalEstimate    time.Time            `json:"original_estimate"`
-	Milestones          []Milestone          `json:"milestones"`
-	CriticalPath        []string             `json:"critical_path"`        // Task IDs on critical path
-	ProjectionAccuracy  float64              `json:"projection_accuracy"`  // How accurate our estimates have been
-	Confidence          float64              `json:"confidence"`           // Confidence in current projection
+	StartTime           time.Time   `json:"start_time"`
+	EstimatedCompletion time.Time   `json:"estimated_completion"`
+	OriginalEstimate    time.Time   `json:"original_estimate"`
+	Milestones          []Milestone `json:"milestones"`
+	CriticalPath        []string    `json:"critical_path"`       // Task IDs on critical path
+	ProjectionAccuracy  float64     `json:"projection_accuracy"` // How accurate our estimates have been
+	Confidence          float64     `json:"confidence"`          // Confidence in current projection
 }
 
 // Milestone represents a significant point in the project
 type Milestone struct {
-	ID              string    `json:"id"`
-	Name            string    `json:"name"`
-	TargetDate      time.Time `json:"target_date"`
-	CompletionDate  *time.Time `json:"completion_date,omitempty"`
-	DependentTasks  []string  `json:"dependent_tasks"`
-	Status          string    `json:"status"`     // upcoming, at_risk, completed, overdue
-	CriticalLevel   int       `json:"critical_level"` // 1-5, how critical this milestone is
+	ID             string     `json:"id"`
+	Name           string     `json:"name"`
+	TargetDate     time.Time  `json:"target_date"`
+	CompletionDate *time.Time `json:"completion_date,omitempty"`
+	DependentTasks []string   `json:"dependent_tasks"`
+	Status         string     `json:"status"`         // upcoming, at_risk, completed, overdue
+	CriticalLevel  int        `json:"critical_level"` // 1-5, how critical this milestone is
 }
 
 // Risk represents a potential risk to project completion
 type Risk struct {
-	ID          string    `json:"id"`
-	Type        string    `json:"type"`        // delay, quality, resource, dependency
-	Severity    string    `json:"severity"`    // low, medium, high, critical
-	Probability float64   `json:"probability"` // 0.0-1.0
-	Impact      string    `json:"impact"`      // Description of potential impact
-	AffectedTasks []string `json:"affected_tasks"`
-	Mitigation  string    `json:"mitigation"`  // Suggested mitigation strategy
-	DetectedAt  time.Time `json:"detected_at"`
-	Status      string    `json:"status"`      // active, mitigated, resolved
+	ID            string    `json:"id"`
+	Type          string    `json:"type"`        // delay, quality, resource, dependency
+	Severity      string    `json:"severity"`    // low, medium, high, critical
+	Probability   float64   `json:"probability"` // 0.0-1.0
+	Impact        string    `json:"impact"`      // Description of potential impact
+	AffectedTasks []string  `json:"affected_tasks"`
+	Mitigation    string    `json:"mitigation"` // Suggested mitigation strategy
+	DetectedAt    time.Time `json:"detected_at"`
+	Status        string    `json:"status"` // active, mitigated, resolved
 }
 
 // StatusReport provides a comprehensive status overview
 type StatusReport struct {
-	OverallProgress     float64            `json:"overall_progress"`     // 0.0-1.0
-	TasksComplete       int                `json:"tasks_complete"`
-	TasksInProgress     int                `json:"tasks_in_progress"`
-	TasksBlocked        int                `json:"tasks_blocked"`
-	TasksBacklog        int                `json:"tasks_backlog"`
-	EstimatedComplete   time.Time          `json:"estimated_complete"`
-	Risks               []Risk             `json:"risks"`
-	AgentUtilization    map[string]float64 `json:"agent_utilization"`    // agentID -> utilization
-	CriticalPathStatus  string             `json:"critical_path_status"` // on_track, at_risk, delayed
-	Velocity            float64            `json:"velocity"`             // Tasks completed per day
-	QualityMetrics      QualityMetrics     `json:"quality_metrics"`
-	Recommendations     []string           `json:"recommendations"`
-	GeneratedAt         time.Time          `json:"generated_at"`
+	OverallProgress    float64            `json:"overall_progress"` // 0.0-1.0
+	TasksComplete      int                `json:"tasks_complete"`
+	TasksInProgress    int                `json:"tasks_in_progress"`
+	TasksBlocked       int                `json:"tasks_blocked"`
+	TasksBacklog       int                `json:"tasks_backlog"`
+	EstimatedComplete  time.Time          `json:"estimated_complete"`
+	Risks              []Risk             `json:"risks"`
+	AgentUtilization   map[string]float64 `json:"agent_utilization"`    // agentID -> utilization
+	CriticalPathStatus string             `json:"critical_path_status"` // on_track, at_risk, delayed
+	Velocity           float64            `json:"velocity"`             // Tasks completed per day
+	QualityMetrics     QualityMetrics     `json:"quality_metrics"`
+	Recommendations    []string           `json:"recommendations"`
+	GeneratedAt        time.Time          `json:"generated_at"`
 }
 
 // QualityMetrics tracks quality-related metrics
 type QualityMetrics struct {
-	DefectRate        float64 `json:"defect_rate"`         // Defects per task
-	ReworkRate        float64 `json:"rework_rate"`         // Tasks requiring rework
-	ReviewPassRate    float64 `json:"review_pass_rate"`    // Tasks passing first review
-	TestCoverage      float64 `json:"test_coverage"`       // Test coverage percentage
-	CodeQualityScore  float64 `json:"code_quality_score"`  // Overall code quality (0-100)
+	DefectRate       float64 `json:"defect_rate"`        // Defects per task
+	ReworkRate       float64 `json:"rework_rate"`        // Tasks requiring rework
+	ReviewPassRate   float64 `json:"review_pass_rate"`   // Tasks passing first review
+	TestCoverage     float64 `json:"test_coverage"`      // Test coverage percentage
+	CodeQualityScore float64 `json:"code_quality_score"` // Overall code quality (0-100)
 }
 
 // ProgressUpdate represents an update to task progress
@@ -294,19 +294,19 @@ func (pt *ProgressTracker) GetStatusReport(ctx context.Context) (*StatusReport, 
 	logger.DebugContext(ctx, "Generating status report", "commission_id", pt.commissionID)
 
 	report := &StatusReport{
-		OverallProgress:     pt.calculateOverallProgress(),
-		TasksComplete:       pt.countByStatus(kanban.StatusDone),
-		TasksInProgress:     pt.countByStatus(kanban.StatusInProgress),
-		TasksBlocked:        pt.countByStatus(kanban.StatusBlocked),
-		TasksBacklog:        pt.countByStatus(kanban.StatusBacklog),
-		EstimatedComplete:   pt.timeline.EstimatedCompletion,
-		Risks:               pt.risks,
-		AgentUtilization:    pt.calculateAgentUtilization(),
-		CriticalPathStatus:  pt.assessCriticalPathStatus(),
-		Velocity:            pt.calculateVelocity(),
-		QualityMetrics:      pt.calculateQualityMetrics(),
-		Recommendations:     pt.generateRecommendations(ctx),
-		GeneratedAt:         time.Now(),
+		OverallProgress:    pt.calculateOverallProgress(),
+		TasksComplete:      pt.countByStatus(kanban.StatusDone),
+		TasksInProgress:    pt.countByStatus(kanban.StatusInProgress),
+		TasksBlocked:       pt.countByStatus(kanban.StatusBlocked),
+		TasksBacklog:       pt.countByStatus(kanban.StatusBacklog),
+		EstimatedComplete:  pt.timeline.EstimatedCompletion,
+		Risks:              pt.risks,
+		AgentUtilization:   pt.calculateAgentUtilization(),
+		CriticalPathStatus: pt.assessCriticalPathStatus(),
+		Velocity:           pt.calculateVelocity(),
+		QualityMetrics:     pt.calculateQualityMetrics(),
+		Recommendations:    pt.generateRecommendations(ctx),
+		GeneratedAt:        time.Now(),
 	}
 
 	logger.InfoContext(ctx, "Status report generated",
@@ -420,10 +420,10 @@ func (pt *ProgressTracker) isDelayed(taskID string) bool {
 // notifyDelay handles notification when a task is delayed
 func (pt *ProgressTracker) notifyDelay(ctx context.Context, taskID string) {
 	logger := observability.GetLogger(ctx)
-	
+
 	task := pt.tasks[taskID]
 	delay := time.Since(*task.StartTime) - task.EstimatedTime
-	
+
 	logger.WarnContext(ctx, "Task delay detected",
 		"task_id", taskID,
 		"assigned_agent", task.AssignedAgent,
@@ -471,13 +471,13 @@ func (pt *ProgressTracker) updateTimeline(ctx context.Context) {
 	remainingTasks := totalTasks - completedTasks
 	estimatedDays := float64(remainingTasks) / avgVelocity
 
-	pt.timeline.EstimatedCompletion = time.Now().Add(time.Duration(estimatedDays * 24) * time.Hour)
+	pt.timeline.EstimatedCompletion = time.Now().Add(time.Duration(estimatedDays*24) * time.Hour)
 
 	// Update projection accuracy
 	if !pt.timeline.OriginalEstimate.IsZero() {
 		originalDays := pt.timeline.OriginalEstimate.Sub(pt.timeline.StartTime).Hours() / 24
 		currentDays := pt.timeline.EstimatedCompletion.Sub(pt.timeline.StartTime).Hours() / 24
-		
+
 		if originalDays > 0 {
 			pt.timeline.ProjectionAccuracy = 1.0 - math.Abs(currentDays-originalDays)/originalDays
 		}
@@ -551,11 +551,11 @@ func (pt *ProgressTracker) detectRisks(ctx context.Context) {
 // calculateAgentUtilization calculates utilization for each agent
 func (pt *ProgressTracker) calculateAgentUtilization() map[string]float64 {
 	utilization := make(map[string]float64)
-	
+
 	for agentID, agent := range pt.agents {
 		utilization[agentID] = agent.CurrentLoad
 	}
-	
+
 	return utilization
 }
 
@@ -575,7 +575,7 @@ func (pt *ProgressTracker) assessCriticalPathStatus() string {
 	}
 
 	delayRatio := float64(delayedTasks) / float64(totalTasks)
-	
+
 	if delayRatio == 0 {
 		return "on_track"
 	} else if delayRatio < 0.3 {
@@ -588,14 +588,14 @@ func (pt *ProgressTracker) assessCriticalPathStatus() string {
 // calculateVelocity calculates the team's velocity (tasks per day)
 func (pt *ProgressTracker) calculateVelocity() float64 {
 	completedTasks := pt.countByStatus(kanban.StatusDone)
-	
+
 	if completedTasks == 0 || pt.timeline.StartTime.IsZero() {
 		return 0.0
 	}
 
 	elapsed := time.Since(pt.timeline.StartTime)
 	days := elapsed.Hours() / 24.0
-	
+
 	if days <= 0 {
 		return 0.0
 	}
@@ -622,7 +622,7 @@ func (pt *ProgressTracker) generateRecommendations(ctx context.Context) []string
 	// Check for blocked tasks
 	blockedCount := pt.countByStatus(kanban.StatusBlocked)
 	if blockedCount > 0 {
-		recommendations = append(recommendations, 
+		recommendations = append(recommendations,
 			"Address blocked tasks to prevent further delays")
 	}
 
@@ -633,7 +633,7 @@ func (pt *ProgressTracker) generateRecommendations(ctx context.Context) []string
 			overloadedCount++
 		}
 	}
-	
+
 	if overloadedCount > 0 {
 		recommendations = append(recommendations,
 			"Rebalance workload among team members")

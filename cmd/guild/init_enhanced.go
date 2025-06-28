@@ -78,7 +78,7 @@ func createEnhancedCampaignStructure(ctx context.Context, projectPath string) er
 				WithOperation("createEnhancedCampaignStructure").
 				WithDetails("dir", dir)
 		}
-		
+
 		// Create .gitkeep file in empty directories to ensure they're tracked by git
 		gitkeepPath := filepath.Join(dirPath, ".gitkeep")
 		if err := os.WriteFile(gitkeepPath, []byte(""), 0644); err != nil {

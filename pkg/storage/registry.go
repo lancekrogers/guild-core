@@ -15,6 +15,7 @@ type DefaultStorageRegistry struct {
 	boardRepo       BoardRepository
 	agentRepo       AgentRepository
 	promptChainRepo PromptChainRepository
+	sessionRepo     SessionRepository
 	memoryStore     interface{} // Can be memory.Store or MemoryStoreAdapter
 	mu              sync.RWMutex
 }
@@ -72,6 +73,13 @@ func (r *DefaultStorageRegistry) RegisterPromptChainRepository(repo PromptChainR
 	r.promptChainRepo = repo
 }
 
+// RegisterSessionRepository registers a session repository
+func (r *DefaultStorageRegistry) RegisterSessionRepository(repo SessionRepository) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.sessionRepo = repo
+}
+
 // GetTaskRepository returns the registered task repository
 func (r *DefaultStorageRegistry) GetTaskRepository() TaskRepository {
 	r.mu.RLock()
@@ -112,6 +120,13 @@ func (r *DefaultStorageRegistry) GetPromptChainRepository() PromptChainRepositor
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	return r.promptChainRepo
+}
+
+// GetSessionRepository returns the registered session repository
+func (r *DefaultStorageRegistry) GetSessionRepository() SessionRepository {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	return r.sessionRepo
 }
 
 // RegisterMemoryStore registers a memory store

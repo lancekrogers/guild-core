@@ -263,7 +263,7 @@ func (d *agentDisplay) FormatWithProcessingIndicator(info AgentInfo, animated bo
 	// Add processing state if not idle
 	if info.ProcessingState != ProcessingIdle {
 		processingDisplay := d.GetProcessingStateDisplay(info.ProcessingState)
-		
+
 		if animated {
 			// Add animated indicator for active processing
 			animationFrames := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
@@ -271,9 +271,9 @@ func (d *agentDisplay) FormatWithProcessingIndicator(info AgentInfo, animated bo
 			frame := int(time.Now().UnixNano()/100000000) % len(animationFrames)
 			processingDisplay = fmt.Sprintf("%s %s", animationFrames[frame], processingDisplay)
 		}
-		
+
 		base += fmt.Sprintf(" [%s]", style.Render(processingDisplay))
-		
+
 		// Add elapsed time if processing for a while
 		if !info.ProcessingStart.IsZero() {
 			elapsed := time.Since(info.ProcessingStart)
@@ -305,12 +305,12 @@ func (d *agentDisplay) GetProcessingStateDisplay(state ProcessingState) string {
 		ProcessingValidating: "🔍 validating",
 		ProcessingCompleting: "✅ completing",
 	}
-	
+
 	display, exists := displays[state]
 	if !exists {
 		display = "processing"
 	}
-	
+
 	return display
 }
 

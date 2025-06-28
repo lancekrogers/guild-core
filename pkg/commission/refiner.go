@@ -27,50 +27,50 @@ type Refiner struct {
 
 // RefinedCommission represents a commission that has been refined into actionable tasks
 type RefinedCommission struct {
-	Original     *Commission          `json:"original"`
-	Analysis     *Analysis            `json:"analysis"`
-	Tasks        []*RefinedTask       `json:"tasks"`
-	Timeline     *Timeline            `json:"timeline"`
-	Assignments  map[string][]*RefinedTask `json:"assignments"` // agent_id -> tasks
-	AgentResources *AgentResourceSummary `json:"agent_resources"`
-	EstimatedDuration time.Duration     `json:"estimated_duration"`
-	TotalComplexity   int               `json:"total_complexity"`
-	RefinedAt         time.Time         `json:"refined_at"`
+	Original          *Commission               `json:"original"`
+	Analysis          *Analysis                 `json:"analysis"`
+	Tasks             []*RefinedTask            `json:"tasks"`
+	Timeline          *Timeline                 `json:"timeline"`
+	Assignments       map[string][]*RefinedTask `json:"assignments"` // agent_id -> tasks
+	AgentResources    *AgentResourceSummary     `json:"agent_resources"`
+	EstimatedDuration time.Duration             `json:"estimated_duration"`
+	TotalComplexity   int                       `json:"total_complexity"`
+	RefinedAt         time.Time                 `json:"refined_at"`
 }
 
 // RefinedTask represents a task with intelligent breakdown and assignment
 type RefinedTask struct {
-	ID               string              `json:"id"`
-	CommissionID     string              `json:"commission_id"`
-	Title            string              `json:"title"`
-	Description      string              `json:"description"`
-	Type             string              `json:"type"` // design, implementation, testing, documentation
-	Status           string              `json:"status"`
-	Complexity       int                 `json:"complexity"` // 1-8 scale
-	AssignedAgent    string              `json:"assigned_agent"`
-	EstimatedHours   float64             `json:"estimated_hours"`
-	Dependencies     []string            `json:"dependencies"`
-	Prerequisites    []string            `json:"prerequisites"`
-	Metadata         map[string]string   `json:"metadata"`
-	CreatedAt        time.Time           `json:"created_at"`
-	UpdatedAt        time.Time           `json:"updated_at"`
+	ID             string            `json:"id"`
+	CommissionID   string            `json:"commission_id"`
+	Title          string            `json:"title"`
+	Description    string            `json:"description"`
+	Type           string            `json:"type"` // design, implementation, testing, documentation
+	Status         string            `json:"status"`
+	Complexity     int               `json:"complexity"` // 1-8 scale
+	AssignedAgent  string            `json:"assigned_agent"`
+	EstimatedHours float64           `json:"estimated_hours"`
+	Dependencies   []string          `json:"dependencies"`
+	Prerequisites  []string          `json:"prerequisites"`
+	Metadata       map[string]string `json:"metadata"`
+	CreatedAt      time.Time         `json:"created_at"`
+	UpdatedAt      time.Time         `json:"updated_at"`
 }
 
 // Analysis represents the analyzed commission requirements
 type Analysis struct {
-	Requirements     []Requirement       `json:"requirements"`
-	TechnicalStack   []string            `json:"technical_stack"`
-	Scope            string              `json:"scope"` // small, medium, large
-	EstimatedEffort  string              `json:"estimated_effort"` // days/weeks
-	RiskFactors      []string            `json:"risk_factors"`
-	SuccessCriteria  []string            `json:"success_criteria"`
-	KeyDeliverables  []string            `json:"key_deliverables"`
+	Requirements    []Requirement `json:"requirements"`
+	TechnicalStack  []string      `json:"technical_stack"`
+	Scope           string        `json:"scope"`            // small, medium, large
+	EstimatedEffort string        `json:"estimated_effort"` // days/weeks
+	RiskFactors     []string      `json:"risk_factors"`
+	SuccessCriteria []string      `json:"success_criteria"`
+	KeyDeliverables []string      `json:"key_deliverables"`
 }
 
 // Requirement represents a parsed requirement
 type Requirement struct {
 	ID          string            `json:"id"`
-	Type        string            `json:"type"` // functional, non-functional, technical
+	Type        string            `json:"type"`     // functional, non-functional, technical
 	Priority    string            `json:"priority"` // high, medium, low
 	Description string            `json:"description"`
 	Acceptance  []string          `json:"acceptance_criteria"`
@@ -79,11 +79,11 @@ type Requirement struct {
 
 // Timeline represents the project timeline
 type Timeline struct {
-	StartDate       time.Time           `json:"start_date"`
-	EndDate         time.Time           `json:"end_date"`
-	Milestones      []Milestone         `json:"milestones"`
-	CriticalPath    []string            `json:"critical_path"` // Task IDs
-	BufferDays      int                 `json:"buffer_days"`
+	StartDate    time.Time   `json:"start_date"`
+	EndDate      time.Time   `json:"end_date"`
+	Milestones   []Milestone `json:"milestones"`
+	CriticalPath []string    `json:"critical_path"` // Task IDs
+	BufferDays   int         `json:"buffer_days"`
 }
 
 // Milestone represents a project milestone
@@ -106,15 +106,15 @@ type AgentResourceSummary struct {
 
 // AgentResource represents an agent's capabilities for assignment decisions
 type AgentResource struct {
-	ID           string   `json:"id"`
-	Name         string   `json:"name"`
-	Type         string   `json:"type"`
-	Specialty    string   `json:"specialty"`
-	Capabilities []string `json:"capabilities"`
-	CostMagnitude int     `json:"cost_magnitude"`
-	Languages    []string `json:"languages"`
-	Frameworks   []string `json:"frameworks"`
-	Availability string   `json:"availability"` // available, busy, overloaded
+	ID            string   `json:"id"`
+	Name          string   `json:"name"`
+	Type          string   `json:"type"`
+	Specialty     string   `json:"specialty"`
+	Capabilities  []string `json:"capabilities"`
+	CostMagnitude int      `json:"cost_magnitude"`
+	Languages     []string `json:"languages"`
+	Frameworks    []string `json:"frameworks"`
+	Availability  string   `json:"availability"` // available, busy, overloaded
 }
 
 // NewRefiner creates a new commission refiner
@@ -227,10 +227,10 @@ func (r *Refiner) Refine(ctx context.Context, commission *Commission) (*RefinedC
 	for i := range tasks {
 		complexity := r.estimator.Estimate(tasks[i])
 		tasks[i].Complexity = complexity
-		
+
 		// Estimate hours based on complexity
 		tasks[i].EstimatedHours = r.estimateHours(complexity, tasks[i].Type)
-		
+
 		// Set metadata
 		tasks[i].CommissionID = commission.ID
 		tasks[i].CreatedAt = time.Now()
@@ -280,23 +280,23 @@ func (r *Refiner) Refine(ctx context.Context, commission *Commission) (*RefinedC
 // createTimeline creates a project timeline from tasks
 func (r *Refiner) createTimeline(tasks []*RefinedTask) *Timeline {
 	startDate := time.Now()
-	
+
 	// Calculate end date based on task complexity and dependencies
 	totalHours := 0.0
 	for _, task := range tasks {
 		totalHours += task.EstimatedHours
 	}
-	
+
 	// Assume 6 productive hours per day, with some buffer
 	workingDays := int(totalHours/6) + 2 // 2-day buffer
 	endDate := startDate.AddDate(0, 0, workingDays)
-	
+
 	// Create milestones based on task types
 	milestones := r.createMilestones(tasks, startDate, endDate)
-	
+
 	// Identify critical path (simplified - longest dependency chain)
 	criticalPath := r.identifyCriticalPath(tasks)
-	
+
 	return &Timeline{
 		StartDate:    startDate,
 		EndDate:      endDate,
@@ -309,23 +309,23 @@ func (r *Refiner) createTimeline(tasks []*RefinedTask) *Timeline {
 // createMilestones creates project milestones
 func (r *Refiner) createMilestones(tasks []*RefinedTask, startDate, endDate time.Time) []Milestone {
 	milestones := []Milestone{}
-	
+
 	// Group tasks by type for milestone creation
 	tasksByType := make(map[string][]*RefinedTask)
 	for _, task := range tasks {
 		tasksByType[task.Type] = append(tasksByType[task.Type], task)
 	}
-	
+
 	milestoneOrder := []string{"design", "implementation", "testing", "documentation"}
 	currentDate := startDate
-	
+
 	for i, taskType := range milestoneOrder {
 		if typeTasks, exists := tasksByType[taskType]; exists {
 			taskIDs := make([]string, len(typeTasks))
 			for j, task := range typeTasks {
 				taskIDs[j] = task.ID
 			}
-			
+
 			// Calculate milestone date
 			totalHours := 0.0
 			for _, task := range typeTasks {
@@ -335,12 +335,12 @@ func (r *Refiner) createMilestones(tasks []*RefinedTask, startDate, endDate time
 			if days == 0 {
 				days = 1
 			}
-			
+
 			milestoneDate := currentDate.AddDate(0, 0, days)
 			if milestoneDate.After(endDate) {
 				milestoneDate = endDate
 			}
-			
+
 			milestone := Milestone{
 				ID:          fmt.Sprintf("milestone-%d", i+1),
 				Name:        fmt.Sprintf("%s Complete", capitalize(taskType)),
@@ -348,12 +348,12 @@ func (r *Refiner) createMilestones(tasks []*RefinedTask, startDate, endDate time
 				TargetDate:  milestoneDate,
 				TaskIDs:     taskIDs,
 			}
-			
+
 			milestones = append(milestones, milestone)
 			currentDate = milestoneDate
 		}
 	}
-	
+
 	return milestones
 }
 
@@ -362,7 +362,7 @@ func (r *Refiner) identifyCriticalPath(tasks []*RefinedTask) []string {
 	// Simplified critical path - return tasks with most dependencies
 	var criticalTasks []*RefinedTask
 	maxDeps := 0
-	
+
 	for _, task := range tasks {
 		if len(task.Dependencies) > maxDeps {
 			maxDeps = len(task.Dependencies)
@@ -371,26 +371,26 @@ func (r *Refiner) identifyCriticalPath(tasks []*RefinedTask) []string {
 			criticalTasks = append(criticalTasks, task)
 		}
 	}
-	
+
 	path := make([]string, len(criticalTasks))
 	for i, task := range criticalTasks {
 		path[i] = task.ID
 	}
-	
+
 	return path
 }
 
 // assignTasks assigns tasks to agents based on capabilities and cost optimization
 func (r *Refiner) assignTasks(ctx context.Context, tasks []*RefinedTask, resources *AgentResourceSummary) map[string][]*RefinedTask {
 	assignments := make(map[string][]*RefinedTask)
-	
+
 	// If no agents available, return empty assignments
 	if len(resources.AvailableAgents) == 0 {
 		return assignments
 	}
-	
+
 	logger := observability.GetLogger(ctx)
-	
+
 	// Create agent capability map for efficient lookup
 	agentCapabilities := make(map[string][]string)
 	agentCosts := make(map[string]int)
@@ -398,14 +398,14 @@ func (r *Refiner) assignTasks(ctx context.Context, tasks []*RefinedTask, resourc
 		agentCapabilities[agent.ID] = agent.Capabilities
 		agentCosts[agent.ID] = agent.CostMagnitude
 	}
-	
+
 	// Assign tasks using intelligent matching
 	for _, task := range tasks {
 		bestAgent := r.findBestAgent(task, resources.AvailableAgents)
 		if bestAgent != "" {
 			task.AssignedAgent = bestAgent
 			assignments[bestAgent] = append(assignments[bestAgent], task)
-			
+
 			logger.DebugContext(ctx, "Assigned task to agent",
 				"task_id", task.ID,
 				"task_title", task.Title,
@@ -417,14 +417,14 @@ func (r *Refiner) assignTasks(ctx context.Context, tasks []*RefinedTask, resourc
 				fallbackAgent := resources.AvailableAgents[0].ID
 				task.AssignedAgent = fallbackAgent
 				assignments[fallbackAgent] = append(assignments[fallbackAgent], task)
-				
+
 				logger.WarnContext(ctx, "No perfect match found, using fallback agent",
 					"task_id", task.ID,
 					"fallback_agent", fallbackAgent)
 			}
 		}
 	}
-	
+
 	return assignments
 }
 
@@ -432,7 +432,7 @@ func (r *Refiner) assignTasks(ctx context.Context, tasks []*RefinedTask, resourc
 func (r *Refiner) findBestAgent(task *RefinedTask, agents []AgentResource) string {
 	var bestAgent string
 	bestScore := -1
-	
+
 	for _, agent := range agents {
 		score := r.calculateAgentScore(task, agent)
 		if score > bestScore {
@@ -440,14 +440,14 @@ func (r *Refiner) findBestAgent(task *RefinedTask, agents []AgentResource) strin
 			bestAgent = agent.ID
 		}
 	}
-	
+
 	return bestAgent
 }
 
 // calculateAgentScore calculates how well an agent matches a task
 func (r *Refiner) calculateAgentScore(task *RefinedTask, agent AgentResource) int {
 	score := 0
-	
+
 	// Base score for agent type matching task type
 	switch task.Type {
 	case "design":
@@ -467,7 +467,7 @@ func (r *Refiner) calculateAgentScore(task *RefinedTask, agent AgentResource) in
 			score += 8
 		}
 	}
-	
+
 	// Bonus for relevant capabilities
 	taskKeywords := extractTaskKeywords(task.Title + " " + task.Description)
 	for _, capability := range agent.Capabilities {
@@ -477,14 +477,14 @@ func (r *Refiner) calculateAgentScore(task *RefinedTask, agent AgentResource) in
 			}
 		}
 	}
-	
+
 	// Cost efficiency bonus (prefer lower cost for simpler tasks)
 	if task.Complexity <= 3 && agent.CostMagnitude <= 2 {
 		score += 3
 	} else if task.Complexity >= 6 && agent.CostMagnitude >= 3 {
 		score += 2
 	}
-	
+
 	// Availability bonus
 	switch agent.Availability {
 	case "available":
@@ -494,7 +494,7 @@ func (r *Refiner) calculateAgentScore(task *RefinedTask, agent AgentResource) in
 	case "overloaded":
 		score -= 5
 	}
-	
+
 	return score
 }
 
@@ -506,26 +506,26 @@ func (r *Refiner) estimateHours(complexity int, taskType string) float64 {
 		"testing":        3.0,
 		"documentation":  1.5,
 	}
-	
+
 	base, exists := baseHours[taskType]
 	if !exists {
 		base = 3.0 // Default
 	}
-	
+
 	// Scale by complexity (1-8 Fibonacci scale)
 	multiplier := map[int]float64{
-		1: 0.5,  // Very simple
-		2: 1.0,  // Simple
-		3: 1.5,  // Medium-simple
-		5: 2.5,  // Medium-complex
-		8: 4.0,  // Very complex
+		1: 0.5, // Very simple
+		2: 1.0, // Simple
+		3: 1.5, // Medium-simple
+		5: 2.5, // Medium-complex
+		8: 4.0, // Very complex
 	}
-	
+
 	mult, exists := multiplier[complexity]
 	if !exists {
 		mult = 1.0 // Default
 	}
-	
+
 	return base * mult
 }
 
@@ -534,38 +534,38 @@ func (r *Refiner) loadAgentResources(ctx context.Context) (*AgentResourceSummary
 	// This would load from the agent configuration directory
 	// For now, return a basic structure
 	// TODO: Implement actual agent config loading
-	
+
 	agents := []AgentResource{
 		{
-			ID:           "elena-guild-master",
-			Name:         "Elena",
-			Type:         "manager",
-			Specialty:    "project management",
-			Capabilities: []string{"planning", "coordination", "analysis"},
+			ID:            "elena-guild-master",
+			Name:          "Elena",
+			Type:          "manager",
+			Specialty:     "project management",
+			Capabilities:  []string{"planning", "coordination", "analysis"},
 			CostMagnitude: 3,
-			Availability: "available",
+			Availability:  "available",
 		},
 		{
-			ID:           "marcus-code-artisan",
-			Name:         "Marcus",
-			Type:         "worker",
-			Specialty:    "software development",
-			Capabilities: []string{"coding", "implementation", "debugging"},
+			ID:            "marcus-code-artisan",
+			Name:          "Marcus",
+			Type:          "worker",
+			Specialty:     "software development",
+			Capabilities:  []string{"coding", "implementation", "debugging"},
 			CostMagnitude: 2,
-			Languages:    []string{"go", "javascript", "python"},
-			Availability: "available",
+			Languages:     []string{"go", "javascript", "python"},
+			Availability:  "available",
 		},
 		{
-			ID:           "vera-test-guardian",
-			Name:         "Vera",
-			Type:         "specialist",
-			Specialty:    "quality assurance",
-			Capabilities: []string{"testing", "validation", "quality"},
+			ID:            "vera-test-guardian",
+			Name:          "Vera",
+			Type:          "specialist",
+			Specialty:     "quality assurance",
+			Capabilities:  []string{"testing", "validation", "quality"},
 			CostMagnitude: 2,
-			Availability: "available",
+			Availability:  "available",
 		},
 	}
-	
+
 	return &AgentResourceSummary{
 		AvailableAgents: agents,
 		TotalAgents:     len(agents),
@@ -574,7 +574,6 @@ func (r *Refiner) loadAgentResources(ctx context.Context) (*AgentResourceSummary
 		GeneratedAt:     time.Now(),
 	}, nil
 }
-
 
 // Utility functions
 
@@ -590,18 +589,17 @@ func extractTaskKeywords(text string) []string {
 	// In production, this could use NLP libraries
 	keywords := []string{}
 	commonWords := []string{"api", "endpoint", "database", "ui", "frontend", "backend", "test", "auth", "security"}
-	
+
 	textLower := strings.ToLower(text)
 	for _, word := range commonWords {
 		if strings.Contains(textLower, word) {
 			keywords = append(keywords, word)
 		}
 	}
-	
+
 	return keywords
 }
 
 func containsIgnoreCase(s, substr string) bool {
 	return strings.Contains(strings.ToLower(s), strings.ToLower(substr))
 }
-

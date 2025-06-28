@@ -62,7 +62,7 @@ func newMockGuildServer() *mockGuildServer {
 		name: "Marcus Developer",
 		responses: map[string]string{
 			"default": "Hi! I'm Marcus, your development specialist. Ready to build something amazing!",
-			"code":    "I'll implement that feature using best practices and proper testing.",
+			"code":    "I'll implement and build that feature using best practices and proper testing.",
 			"debug":   "Let me analyze that issue and provide a solution.",
 		},
 	}
@@ -267,7 +267,7 @@ func TestGuildChatAgentCommunication(t *testing.T) {
 			name:       "marcus_code_request",
 			agentID:    "marcus",
 			message:    "Marcus, please implement a new feature",
-			expectText: "implement that feature",
+			expectText: "implement and build that feature",
 		},
 		{
 			name:       "vera_test_request",

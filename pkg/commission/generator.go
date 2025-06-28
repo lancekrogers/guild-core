@@ -70,13 +70,13 @@ func (g *Generator) GenerateFromDialogue(ctx context.Context, dialogue *elena.Pl
 
 	// Determine project type for template selection
 	projectType := g.determineProjectType(responses, dialogueCtx)
-	
+
 	// Select appropriate template
 	tmpl := g.selectTemplate(projectType)
-	
+
 	// Prepare template data
 	templateData := g.prepareTemplateData(responses, dialogueCtx)
-	
+
 	// Generate commission content
 	var buf bytes.Buffer
 	if err := tmpl.Execute(&buf, templateData); err != nil {
@@ -126,10 +126,10 @@ func (g *Generator) SaveGeneratedCommission(ctx context.Context, obj *Commission
 func (g *Generator) initTemplates() {
 	// Software project template
 	g.templates["software"] = template.Must(template.New("software").Parse(softwareCommissionTemplate))
-	
+
 	// Research project template
 	g.templates["research"] = template.Must(template.New("research").Parse(researchCommissionTemplate))
-	
+
 	// Default template
 	g.templates["default"] = template.Must(template.New("default").Parse(defaultCommissionTemplate))
 }
@@ -138,13 +138,13 @@ func (g *Generator) initTemplates() {
 
 func (g *Generator) determineProjectType(responses map[string]string, ctx map[string]interface{}) string {
 	purpose := responses["project_purpose"]
-	
+
 	if strings.Contains(strings.ToLower(purpose), "build") || strings.Contains(strings.ToLower(purpose), "software") {
 		return "software"
 	} else if strings.Contains(strings.ToLower(purpose), "research") {
 		return "research"
 	}
-	
+
 	return "default"
 }
 
@@ -157,20 +157,20 @@ func (g *Generator) selectTemplate(projectType string) *template.Template {
 
 func (g *Generator) prepareTemplateData(responses map[string]string, ctx map[string]interface{}) map[string]interface{} {
 	data := make(map[string]interface{})
-	
+
 	// Copy all responses
 	for k, v := range responses {
 		data[k] = v
 	}
-	
+
 	// Add context
 	data["context"] = ctx
-	
+
 	// Add formatted sections
 	data["formatted_requirements"] = g.formatRequirements(responses["requirements"])
 	data["formatted_technology"] = g.formatTechnology(responses["technology"])
 	data["formatted_constraints"] = g.formatConstraints(responses["constraints"])
-	
+
 	return data
 }
 
@@ -191,26 +191,26 @@ func (g *Generator) generateRandomSuffix(length int) string {
 
 func (g *Generator) generateTitle(responses map[string]string) string {
 	desc := responses["project_description"]
-	
+
 	// Extract key words for title
 	words := strings.Fields(desc)
 	if len(words) > 8 {
 		return strings.Join(words[:8], " ")
 	}
-	
+
 	return desc
 }
 
 func (g *Generator) generateDescription(responses map[string]string) string {
 	purpose := responses["project_purpose"]
 	projectType := responses["project_type"]
-	
+
 	return fmt.Sprintf("%s - %s", purpose, projectType)
 }
 
 func (g *Generator) generateTags(responses map[string]string, ctx map[string]interface{}) []string {
 	tags := []string{}
-	
+
 	// Add purpose tag
 	if purpose, ok := ctx["purpose_category"].(string); ok {
 		switch purpose {
@@ -222,7 +222,7 @@ func (g *Generator) generateTags(responses map[string]string, ctx map[string]int
 			tags = append(tags, "refactoring", "optimization")
 		}
 	}
-	
+
 	// Add technology tags
 	tech := strings.ToLower(responses["technology"])
 	if strings.Contains(tech, "go") || strings.Contains(tech, "golang") {
@@ -240,7 +240,7 @@ func (g *Generator) generateTags(responses map[string]string, ctx map[string]int
 	if strings.Contains(tech, "web") {
 		tags = append(tags, "web")
 	}
-	
+
 	return tags
 }
 
@@ -251,7 +251,7 @@ func (g *Generator) extractGoal(responses map[string]string) string {
 func (g *Generator) extractRequirements(responses map[string]string) []string {
 	reqs := responses["requirements"]
 	lines := strings.Split(reqs, "\n")
-	
+
 	requirements := []string{}
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
@@ -261,25 +261,25 @@ func (g *Generator) extractRequirements(responses map[string]string) []string {
 			requirements = append(requirements, line)
 		}
 	}
-	
+
 	return requirements
 }
 
 func (g *Generator) determinePriority(responses map[string]string) string {
 	timeline := strings.ToLower(responses["timeline"])
-	
+
 	if strings.Contains(timeline, "urgent") || strings.Contains(timeline, "asap") || strings.Contains(timeline, "week") {
 		return "high"
 	} else if strings.Contains(timeline, "month") {
 		return "medium"
 	}
-	
+
 	return "low"
 }
 
 func (g *Generator) generateParts(responses map[string]string, ctx map[string]interface{}) []*CommissionPart {
 	parts := []*CommissionPart{}
-	
+
 	// Context part
 	parts = append(parts, &CommissionPart{
 		Title: "Context",
@@ -294,7 +294,7 @@ Timeline: %s`,
 			responses["team_size"],
 			responses["timeline"]),
 	})
-	
+
 	// Requirements part
 	if reqs := responses["requirements"]; reqs != "" {
 		parts = append(parts, &CommissionPart{
@@ -302,7 +302,7 @@ Timeline: %s`,
 			Content: g.formatRequirements(reqs),
 		})
 	}
-	
+
 	// Technology part
 	if tech := responses["technology"]; tech != "" {
 		parts = append(parts, &CommissionPart{
@@ -310,7 +310,7 @@ Timeline: %s`,
 			Content: g.formatTechnology(tech),
 		})
 	}
-	
+
 	// Constraints part
 	if constraints := responses["constraints"]; constraints != "" {
 		parts = append(parts, &CommissionPart{
@@ -318,7 +318,7 @@ Timeline: %s`,
 			Content: g.formatConstraints(constraints),
 		})
 	}
-	
+
 	return parts
 }
 
@@ -326,10 +326,10 @@ func (g *Generator) formatRequirements(reqs string) string {
 	if reqs == "" {
 		return "No specific requirements defined yet."
 	}
-	
+
 	lines := strings.Split(reqs, "\n")
 	var formatted []string
-	
+
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if line != "" {
@@ -339,7 +339,7 @@ func (g *Generator) formatRequirements(reqs string) string {
 			formatted = append(formatted, line)
 		}
 	}
-	
+
 	return strings.Join(formatted, "\n")
 }
 
@@ -347,7 +347,7 @@ func (g *Generator) formatTechnology(tech string) string {
 	if tech == "" {
 		return "Technology stack to be determined."
 	}
-	
+
 	// Similar formatting to requirements
 	return g.formatRequirements(tech)
 }
@@ -356,7 +356,7 @@ func (g *Generator) formatConstraints(constraints string) string {
 	if constraints == "" {
 		return "No specific constraints identified."
 	}
-	
+
 	return g.formatRequirements(constraints)
 }
 

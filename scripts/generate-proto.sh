@@ -91,6 +91,14 @@ generate_proto "proto/guild/v1/guild.proto" "pkg/grpc/pb/guild/v1"
 echo "=== Generating Chat Service ==="
 generate_proto "proto/guild/v1/chat.proto" "pkg/grpc/pb/guild/v1"
 
+# Generate Session service proto
+echo "=== Generating Session Service ==="
+generate_proto "proto/guild/v1/session.proto" "pkg/grpc/pb/guild/v1"
+
+# Generate Events service proto
+echo "=== Generating Events Service ==="
+generate_proto "proto/guild/v1/events.proto" "pkg/grpc/pb/guild/v1"
+
 # Generate MCP service proto
 echo "=== Generating MCP Service ==="
 generate_proto "proto/mcp/v1/mcp.proto" "pkg/grpc/pb/mcp/v1"
@@ -106,6 +114,10 @@ echo "  - pkg/grpc/pb/guild/v1/guild.pb.go"
 echo "  - pkg/grpc/pb/guild/v1/guild_grpc.pb.go"
 echo "  - pkg/grpc/pb/guild/v1/chat.pb.go"
 echo "  - pkg/grpc/pb/guild/v1/chat_grpc.pb.go"
+echo "  - pkg/grpc/pb/guild/v1/session.pb.go"
+echo "  - pkg/grpc/pb/guild/v1/session_grpc.pb.go"
+echo "  - pkg/grpc/pb/guild/v1/events.pb.go"
+echo "  - pkg/grpc/pb/guild/v1/events_grpc.pb.go"
 echo "  - pkg/grpc/pb/mcp/v1/mcp.pb.go"
 echo "  - pkg/grpc/pb/mcp/v1/mcp_grpc.pb.go"
 echo "  - pkg/grpc/pb/prompts/v1/prompts.pb.go"

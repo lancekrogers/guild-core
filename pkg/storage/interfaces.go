@@ -167,6 +167,51 @@ type PromptChainRepository interface {
 	DeleteChain(ctx context.Context, id string) error
 }
 
+// ChatSession represents a chat conversation for repository operations
+type ChatSession struct {
+	ID         string                 `json:"id"`
+	Name       string                 `json:"name"`
+	CampaignID *string                `json:"campaign_id,omitempty"`
+	CreatedAt  time.Time              `json:"created_at"`
+	UpdatedAt  time.Time              `json:"updated_at"`
+	Metadata   map[string]interface{} `json:"metadata,omitempty"`
+}
+
+// ChatMessage represents a message in a chat session
+type ChatMessage struct {
+	ID        string                 `json:"id"`
+	SessionID string                 `json:"session_id"`
+	Role      string                 `json:"role"`
+	Content   string                 `json:"content"`
+	CreatedAt time.Time              `json:"created_at"`
+	ToolCalls map[string]interface{} `json:"tool_calls,omitempty"`
+	Metadata  map[string]interface{} `json:"metadata,omitempty"`
+}
+
+// SessionRepository provides chat session persistence
+type SessionRepository interface {
+	// Session operations
+	CreateSession(ctx context.Context, session *ChatSession) error
+	GetSession(ctx context.Context, id string) (*ChatSession, error)
+	ListSessions(ctx context.Context, limit, offset int32) ([]*ChatSession, error)
+	ListSessionsByCampaign(ctx context.Context, campaignID string) ([]*ChatSession, error)
+	UpdateSession(ctx context.Context, session *ChatSession) error
+	DeleteSession(ctx context.Context, id string) error
+	CountSessions(ctx context.Context) (int64, error)
+
+	// Message operations
+	SaveMessage(ctx context.Context, message *ChatMessage) error
+	GetMessage(ctx context.Context, id string) (*ChatMessage, error)
+	GetMessages(ctx context.Context, sessionID string) ([]*ChatMessage, error)
+	GetMessagesPaginated(ctx context.Context, sessionID string, limit, offset int32) ([]*ChatMessage, error)
+	GetMessagesAfter(ctx context.Context, sessionID string, after time.Time) ([]*ChatMessage, error)
+	CountMessages(ctx context.Context, sessionID string) (int64, error)
+	DeleteMessage(ctx context.Context, id string) error
+
+	// Streaming operations for daemon
+	StreamMessages(ctx context.Context, sessionID string, since time.Time) (<-chan *ChatMessage, error)
+}
+
 // StorageRegistry follows Guild's registry pattern
 type StorageRegistry interface {
 	RegisterTaskRepository(repo TaskRepository)
@@ -175,6 +220,7 @@ type StorageRegistry interface {
 	RegisterBoardRepository(repo BoardRepository)
 	RegisterAgentRepository(repo AgentRepository)
 	RegisterPromptChainRepository(repo PromptChainRepository)
+	RegisterSessionRepository(repo SessionRepository)
 	RegisterMemoryStore(store interface{})
 
 	GetTaskRepository() TaskRepository
@@ -183,5 +229,6 @@ type StorageRegistry interface {
 	GetBoardRepository() BoardRepository
 	GetAgentRepository() AgentRepository
 	GetPromptChainRepository() PromptChainRepository
+	GetSessionRepository() SessionRepository
 	GetMemoryStore() interface{}
 }

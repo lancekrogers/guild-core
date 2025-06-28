@@ -84,7 +84,7 @@ func (m *MockCommissionManager) SetCommission(ctx context.Context, commissionID 
 func TestNewCommissionCommand(t *testing.T) {
 	mockManager := &MockCommissionManager{}
 	cmd := NewCommissionCommand(mockManager)
-	
+
 	assert.NotNil(t, cmd)
 	assert.Equal(t, mockManager, cmd.manager)
 }
@@ -93,17 +93,17 @@ func TestExecute_ShowHelp(t *testing.T) {
 	mockManager := &MockCommissionManager{}
 	cmd := NewCommissionCommand(mockManager)
 	ctx := context.Background()
-	
+
 	// Test with no args
 	teaCmd := cmd.Execute(ctx, []string{})
 	require.NotNil(t, teaCmd)
-	
+
 	result := teaCmd()
 	cmdResult, ok := result.(CommissionCommandResult)
 	require.True(t, ok)
 	assert.Equal(t, "help", cmdResult.Type)
 	assert.Contains(t, cmdResult.Message, "Commission Commands")
-	
+
 	// Test with explicit help
 	teaCmd = cmd.Execute(ctx, []string{"help"})
 	result = teaCmd()
@@ -116,16 +116,16 @@ func TestExecute_StartNew(t *testing.T) {
 	mockManager := &MockCommissionManager{}
 	cmd := NewCommissionCommand(mockManager)
 	ctx := context.Background()
-	
+
 	teaCmd := cmd.Execute(ctx, []string{"new"})
 	require.NotNil(t, teaCmd)
-	
+
 	result := teaCmd()
 	cmdResult, ok := result.(CommissionCommandResult)
 	require.True(t, ok)
 	assert.Equal(t, "start_new", cmdResult.Type)
 	assert.Contains(t, cmdResult.Message, "Starting new commission creation with Elena")
-	
+
 	data, ok := cmdResult.Data.(map[string]interface{})
 	require.True(t, ok)
 	assert.Equal(t, "planning", data["mode"])
@@ -136,17 +136,17 @@ func TestExecute_ListCommissions(t *testing.T) {
 	mockManager := &MockCommissionManager{}
 	cmd := NewCommissionCommand(mockManager)
 	ctx := context.Background()
-	
+
 	// Test empty list
 	mockManager.On("ListCommissions", ctx).Return([]*commission.Commission{}, nil).Once()
-	
+
 	teaCmd := cmd.Execute(ctx, []string{"list"})
 	result := teaCmd()
 	cmdResult, ok := result.(CommissionCommandResult)
 	require.True(t, ok)
 	assert.Equal(t, "list", cmdResult.Type)
 	assert.Contains(t, cmdResult.Message, "No commissions found")
-	
+
 	// Test with commissions
 	testCommissions := []*commission.Commission{
 		{
@@ -162,9 +162,9 @@ func TestExecute_ListCommissions(t *testing.T) {
 			Status:      commission.CommissionStatusCompleted,
 		},
 	}
-	
+
 	mockManager.On("ListCommissions", ctx).Return(testCommissions, nil).Once()
-	
+
 	teaCmd = cmd.Execute(ctx, []string{"list"})
 	result = teaCmd()
 	cmdResult, ok = result.(CommissionCommandResult)
@@ -173,10 +173,10 @@ func TestExecute_ListCommissions(t *testing.T) {
 	assert.Contains(t, cmdResult.Message, "Available Commissions")
 	assert.Contains(t, cmdResult.Message, "Test Commission")
 	assert.Contains(t, cmdResult.Message, "Another Commission")
-	
+
 	// Test with error
 	mockManager.On("ListCommissions", ctx).Return(nil, errors.New("storage error")).Once()
-	
+
 	teaCmd = cmd.Execute(ctx, []string{"list"})
 	result = teaCmd()
 	cmdResult, ok = result.(CommissionCommandResult)
@@ -189,7 +189,7 @@ func TestExecute_ShowStatus(t *testing.T) {
 	mockManager := &MockCommissionManager{}
 	cmd := NewCommissionCommand(mockManager)
 	ctx := context.Background()
-	
+
 	teaCmd := cmd.Execute(ctx, []string{"status"})
 	result := teaCmd()
 	cmdResult, ok := result.(CommissionCommandResult)
@@ -202,7 +202,7 @@ func TestExecute_TriggerRefinement(t *testing.T) {
 	mockManager := &MockCommissionManager{}
 	cmd := NewCommissionCommand(mockManager)
 	ctx := context.Background()
-	
+
 	// Test without ID
 	teaCmd := cmd.Execute(ctx, []string{"refine"})
 	result := teaCmd()
@@ -210,15 +210,15 @@ func TestExecute_TriggerRefinement(t *testing.T) {
 	require.True(t, ok)
 	assert.Equal(t, "error", cmdResult.Type)
 	assert.Contains(t, cmdResult.Message, "specify a commission ID")
-	
+
 	// Test with valid ID
 	testCommission := &commission.Commission{
 		ID:    "comm_123",
 		Title: "Test Commission",
 	}
-	
+
 	mockManager.On("GetCommission", ctx, "comm_123").Return(testCommission, nil).Once()
-	
+
 	teaCmd = cmd.Execute(ctx, []string{"refine", "comm_123"})
 	result = teaCmd()
 	cmdResult, ok = result.(CommissionCommandResult)
@@ -226,10 +226,10 @@ func TestExecute_TriggerRefinement(t *testing.T) {
 	assert.Equal(t, "refine", cmdResult.Type)
 	assert.Contains(t, cmdResult.Message, "Starting refinement")
 	assert.Equal(t, testCommission, cmdResult.Data)
-	
+
 	// Test with invalid ID
 	mockManager.On("GetCommission", ctx, "invalid").Return(nil, gerror.New(gerror.ErrCodeNotFound, "not found", nil)).Once()
-	
+
 	teaCmd = cmd.Execute(ctx, []string{"refine", "invalid"})
 	result = teaCmd()
 	cmdResult, ok = result.(CommissionCommandResult)
@@ -242,15 +242,15 @@ func TestExecute_ResumeCommission(t *testing.T) {
 	mockManager := &MockCommissionManager{}
 	cmd := NewCommissionCommand(mockManager)
 	ctx := context.Background()
-	
+
 	// Test with valid commission ID
 	testCommission := &commission.Commission{
 		ID:    "comm_123",
 		Title: "Test Commission",
 	}
-	
+
 	mockManager.On("GetCommission", ctx, "comm_123").Return(testCommission, nil).Once()
-	
+
 	teaCmd := cmd.Execute(ctx, []string{"comm_123"})
 	result := teaCmd()
 	cmdResult, ok := result.(CommissionCommandResult)
@@ -258,14 +258,14 @@ func TestExecute_ResumeCommission(t *testing.T) {
 	assert.Equal(t, "resume", cmdResult.Type)
 	assert.Contains(t, cmdResult.Message, "Resuming commission")
 	assert.Equal(t, testCommission, cmdResult.Data)
-	
+
 	// Test with invalid ID and suggestions
 	mockManager.On("GetCommission", ctx, "comm").Return(nil, errors.New("not found")).Once()
 	mockManager.On("ListCommissions", ctx).Return([]*commission.Commission{
 		{ID: "comm_123", Title: "Test Commission"},
 		{ID: "comm_456", Title: "Another Commission"},
 	}, nil).Once()
-	
+
 	teaCmd = cmd.Execute(ctx, []string{"comm"})
 	result = teaCmd()
 	cmdResult, ok = result.(CommissionCommandResult)
@@ -279,16 +279,16 @@ func TestGetCompletions(t *testing.T) {
 	mockManager := &MockCommissionManager{}
 	cmd := NewCommissionCommand(mockManager)
 	ctx := context.Background()
-	
+
 	// Set up test commissions
 	testCommissions := []*commission.Commission{
 		{ID: "comm_123", Title: "Test Commission"},
 		{ID: "comm_456", Title: "Another Commission"},
 	}
-	
+
 	// Set up mock to return commissions for all calls
 	mockManager.On("ListCommissions", ctx).Return(testCommissions, nil)
-	
+
 	// Test base completions
 	completions := cmd.GetCompletions(ctx, []string{})
 	assert.Contains(t, completions, "new")
@@ -296,18 +296,18 @@ func TestGetCompletions(t *testing.T) {
 	assert.Contains(t, completions, "status")
 	assert.Contains(t, completions, "refine")
 	assert.Contains(t, completions, "help")
-	
+
 	// Test partial command completion
 	completions = cmd.GetCompletions(ctx, []string{"li"})
 	assert.Contains(t, completions, "list")
 	assert.NotContains(t, completions, "new")
-	
+
 	// Test commission ID completion
-	
+
 	completions = cmd.GetCompletions(ctx, []string{"comm"})
 	assert.Contains(t, completions, "comm_123")
 	assert.Contains(t, completions, "comm_456")
-	
+
 	// Test refine completion
 	completions = cmd.GetCompletions(ctx, []string{"refine", "comm"})
 	assert.Contains(t, completions, "comm_123")

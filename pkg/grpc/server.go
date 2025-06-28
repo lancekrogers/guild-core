@@ -41,10 +41,11 @@ type Server struct {
 	watchers     map[string]*watcher
 	watchersMu   sync.RWMutex
 
-	grpcServer   *grpc.Server
-	listener     net.Listener
-	promptServer *PromptsServer // Added for prompt service
-	chatService  *ChatService   // Added for real-time chat
+	grpcServer     *grpc.Server
+	listener       net.Listener
+	promptServer   *PromptsServer          // Added for prompt service
+	chatService    *ChatService            // Added for real-time chat
+	sessionService pb.SessionServiceServer // Added for session persistence
 }
 
 // watcher represents an active campaign watcher
@@ -81,17 +82,21 @@ func NewServer(
 	promptServer := NewPromptsServer(promptManager)
 	chatService := NewChatService(registry, eventBus)
 
+	// Create session service with storage registry
+	sessionService := getSessionService(registry)
+
 	return &Server{
-		campaignMgr:   campaignMgr,
-		commissionMgr: commissionMgr,
-		kanbanMgr:     kanbanMgr,
-		agentReg:      agentReg,
-		orchestrator:  orchestrator,
-		promptManager: promptManager,
-		frameBuilder:  NewFrameBuilder(campaignMgr, commissionMgr, kanbanMgr, agentReg),
-		watchers:      make(map[string]*watcher),
-		promptServer:  promptServer,
-		chatService:   chatService,
+		campaignMgr:    campaignMgr,
+		commissionMgr:  commissionMgr,
+		kanbanMgr:      kanbanMgr,
+		agentReg:       agentReg,
+		orchestrator:   orchestrator,
+		promptManager:  promptManager,
+		frameBuilder:   NewFrameBuilder(campaignMgr, commissionMgr, kanbanMgr, agentReg),
+		watchers:       make(map[string]*watcher),
+		promptServer:   promptServer,
+		chatService:    chatService,
+		sessionService: sessionService,
 	}
 }
 
@@ -138,6 +143,7 @@ func (s *Server) startServer(ctx context.Context, address string) error {
 	s.grpcServer = grpc.NewServer()
 	pb.RegisterGuildServer(s.grpcServer, s)
 	pb.RegisterChatServiceServer(s.grpcServer, s.chatService)
+	pb.RegisterSessionServiceServer(s.grpcServer, s.sessionService)
 	promptspb.RegisterPromptServiceServer(s.grpcServer, s.promptServer)
 
 	// Create a channel to signal when server is ready
@@ -1174,6 +1180,16 @@ func getPromptManager(registry registry.ComponentRegistry) layered.LayeredManage
 		nil, // RAG retriever - optional for now
 		tokenBudget,
 	)
+}
+
+// getSessionService creates a session service with proper storage backend
+func getSessionService(registry registry.ComponentRegistry) pb.SessionServiceServer {
+	// For now, always use memory service until we fix the interface mismatch
+	observability.GetLogger(context.Background()).
+		WithComponent("grpc").
+		WithOperation("getSessionService").
+		Info("Using memory-based session service")
+	return NewMemorySessionService()
 }
 
 // formatterAwareManager wraps a Manager and implements both Manager and Formatter interfaces

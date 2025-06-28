@@ -19,7 +19,7 @@ import (
 // AgentCapabilityModel represents the intelligence profile of an agent
 type AgentCapabilityModel struct {
 	AgentID      string                      `json:"agent_id"`
-	Capabilities map[string]float64          `json:"capabilities"`    // capability -> proficiency (0.0-1.0)
+	Capabilities map[string]float64          `json:"capabilities"` // capability -> proficiency (0.0-1.0)
 	Performance  PerformanceMetrics          `json:"performance"`
 	Availability AgentAvailability           `json:"availability"`
 	Specialties  map[string]SpecialtyMetrics `json:"specialties"`
@@ -37,30 +37,30 @@ type PerformanceMetrics struct {
 
 // SpecialtyMetrics tracks performance in specific domains
 type SpecialtyMetrics struct {
-	Proficiency     float64 `json:"proficiency"`      // 0.0-1.0
-	TasksCompleted  int     `json:"tasks_completed"`
-	SuccessRate     float64 `json:"success_rate"`     // 0.0-1.0
+	Proficiency     float64   `json:"proficiency"` // 0.0-1.0
+	TasksCompleted  int       `json:"tasks_completed"`
+	SuccessRate     float64   `json:"success_rate"` // 0.0-1.0
 	LastImprovement time.Time `json:"last_improvement"`
 }
 
 // AgentAvailability tracks current workload and capacity
 type AgentAvailability struct {
-	CurrentLoad         float64   `json:"current_load"`          // 0.0-1.0
-	ActiveTasks         int       `json:"active_tasks"`
-	MaxConcurrentTasks  int       `json:"max_concurrent_tasks"`
-	LastAssignment      time.Time `json:"last_assignment"`
-	Status              string    `json:"status"` // available, busy, offline
+	CurrentLoad        float64   `json:"current_load"` // 0.0-1.0
+	ActiveTasks        int       `json:"active_tasks"`
+	MaxConcurrentTasks int       `json:"max_concurrent_tasks"`
+	LastAssignment     time.Time `json:"last_assignment"`
+	Status             string    `json:"status"` // available, busy, offline
 }
 
 // TaskRequirements represents what a task needs from an agent
 type TaskRequirements struct {
-	RequiredCapabilities []string  `json:"required_capabilities"`
-	PreferredSpecialties []string  `json:"preferred_specialties"`
-	Complexity           int       `json:"complexity"`           // 1-10
-	Priority             string    `json:"priority"`             // high, medium, low
-	EstimatedHours       float64   `json:"estimated_hours"`
+	RequiredCapabilities []string   `json:"required_capabilities"`
+	PreferredSpecialties []string   `json:"preferred_specialties"`
+	Complexity           int        `json:"complexity"` // 1-10
+	Priority             string     `json:"priority"`   // high, medium, low
+	EstimatedHours       float64    `json:"estimated_hours"`
 	Deadline             *time.Time `json:"deadline,omitempty"`
-	TaskType             string    `json:"task_type"`            // coding, testing, documentation, etc.
+	TaskType             string     `json:"task_type"` // coding, testing, documentation, etc.
 }
 
 // CapabilityModelManager manages agent capability models
@@ -107,7 +107,7 @@ func (cmm *CapabilityModelManager) LoadAgentModel(ctx context.Context, agentID s
 	// Cache the model
 	cmm.models[agentID] = model
 
-	logger.InfoContext(ctx, "Loaded agent capability model", 
+	logger.InfoContext(ctx, "Loaded agent capability model",
 		"agent_id", agentID,
 		"capabilities_count", len(model.Capabilities),
 		"specialties_count", len(model.Specialties),
@@ -130,10 +130,10 @@ func (acm *AgentCapabilityModel) ScoreForTask(ctx context.Context, task *kanban.
 
 	// Extract requirements from task
 	requirements := acm.extractTaskRequirements(task)
-	
+
 	score := 0.0
 	maxScore := 1.0
-	
+
 	logger.DebugContext(ctx, "Calculating task score",
 		"agent_id", acm.AgentID,
 		"task_id", task.ID,
@@ -200,7 +200,7 @@ func (acm *AgentCapabilityModel) UpdatePerformance(ctx context.Context, taskID s
 	if success {
 		successValue = 1.0
 	}
-	
+
 	if acm.Performance.TasksCompleted == 1 {
 		acm.Performance.SuccessRate = successValue
 	} else {
@@ -247,19 +247,19 @@ func (acm *AgentCapabilityModel) extractTaskRequirements(task *kanban.Task) Task
 	// Extract from tags
 	for _, tag := range task.Tags {
 		tagLower := strings.ToLower(tag)
-		
+
 		// Capability tags
 		if strings.HasPrefix(tagLower, "cap:") {
 			cap := strings.TrimPrefix(tagLower, "cap:")
 			requirements.RequiredCapabilities = append(requirements.RequiredCapabilities, cap)
 		}
-		
-		// Specialty tags  
+
+		// Specialty tags
 		if strings.HasPrefix(tagLower, "spec:") {
 			spec := strings.TrimPrefix(tagLower, "spec:")
 			requirements.PreferredSpecialties = append(requirements.PreferredSpecialties, spec)
 		}
-		
+
 		// Task type inference
 		switch tagLower {
 		case "backend", "api", "database":
@@ -354,10 +354,10 @@ func (acm *AgentCapabilityModel) calculateSpecialtyScore(requirements TaskRequir
 // calculateComplexityScore calculates how well the agent matches the task complexity
 func (acm *AgentCapabilityModel) calculateComplexityScore(requirements TaskRequirements) float64 {
 	complexityDiff := math.Abs(float64(requirements.Complexity) - acm.Performance.ComplexityHandle)
-	
+
 	// Normalize the difference (0 = perfect match, 9 = maximum mismatch)
 	normalizedDiff := complexityDiff / 9.0
-	
+
 	// Convert to score (0 diff = 1.0 score, max diff = 0.1 score)
 	return 1.0 - (normalizedDiff * 0.9)
 }
@@ -424,7 +424,7 @@ func (cmm *CapabilityModelManager) loadPerformanceMetrics(ctx context.Context, m
 			ComplexityHandle: 1.0,
 			LastUpdated:      time.Now(),
 		}
-		
+
 		// Insert default record
 		return cmm.createDefaultPerformanceRecord(ctx, model.AgentID)
 	}
@@ -533,7 +533,7 @@ func (cmm *CapabilityModelManager) loadAvailability(ctx context.Context, model *
 			MaxConcurrentTasks: 3,
 			Status:             "available",
 		}
-		
+
 		// Insert default record
 		return cmm.createDefaultAvailabilityRecord(ctx, model.AgentID)
 	}

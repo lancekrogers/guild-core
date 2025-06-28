@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/lancekrogers/guild/internal/ui/chat/session"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/storage/db"
 )
@@ -1012,4 +1013,18 @@ func (r *SQLiteTaskRepository) convertDBKanbanTaskToTask(dbTask db.ListTasksForK
 	}
 
 	return task, nil
+}
+
+// newSQLiteSessionStore creates a session store using the existing session package
+func newSQLiteSessionStore(database *Database) session.SessionStore {
+	return session.NewSQLiteStore(database.DB())
+}
+
+// DefaultSessionRepositoryFactory creates a session repository for registry use
+func DefaultSessionRepositoryFactory(database *Database) SessionRepository {
+	// Create the session store from the existing session package
+	sessionStore := newSQLiteSessionStore(database)
+
+	// Create the repository adapter that bridges to our new interface
+	return NewSQLiteSessionRepository(sessionStore)
 }

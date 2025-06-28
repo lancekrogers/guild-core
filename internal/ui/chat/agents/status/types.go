@@ -35,17 +35,17 @@ const (
 
 // AgentInfo represents detailed information about an agent
 type AgentInfo struct {
-	ID             string
-	Name           string
-	Type           string // manager, developer, reviewer, etc.
-	Status         AgentStatus
-	CurrentTask    string
-	TaskCount      int
-	LastSeen       time.Time
-	StartTime      time.Time
-	ErrorCount     int
-	LastError      string
-	Metadata       map[string]interface{}
+	ID              string
+	Name            string
+	Type            string // manager, developer, reviewer, etc.
+	Status          AgentStatus
+	CurrentTask     string
+	TaskCount       int
+	LastSeen        time.Time
+	StartTime       time.Time
+	ErrorCount      int
+	LastError       string
+	Metadata        map[string]interface{}
 	ProcessingState ProcessingState // New field for detailed processing state
 	ProcessingStart time.Time       // When current processing started
 }

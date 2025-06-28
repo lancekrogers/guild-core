@@ -19,14 +19,14 @@ import (
 
 // CommissionWorkflow manages the commission creation and refinement workflow
 type CommissionWorkflow struct {
-	ctx         context.Context
-	dialogue    *elena.PlanningDialogue
-	generator   *commission.Generator
-	manager     commission.CommissionManager
-	commission  *commission.Commission
-	state       WorkflowState
-	editMode    bool
-	formatter   *components.CommissionFormatter
+	ctx        context.Context
+	dialogue   *elena.PlanningDialogue
+	generator  *commission.Generator
+	manager    commission.CommissionManager
+	commission *commission.Commission
+	state      WorkflowState
+	editMode   bool
+	formatter  *components.CommissionFormatter
 }
 
 // WorkflowState represents the current state of the commission workflow
@@ -168,11 +168,11 @@ func (cw *CommissionWorkflow) processDraftReviewInput(input string) tea.Cmd {
 	lower := strings.ToLower(strings.TrimSpace(input))
 
 	// Check various approval phrases
-	if lower == "yes" || lower == "y" || 
-	   strings.Contains(lower, "looks good") || 
-	   strings.Contains(lower, "proceed") ||
-	   strings.Contains(lower, "save") ||
-	   lower == "1" {
+	if lower == "yes" || lower == "y" ||
+		strings.Contains(lower, "looks good") ||
+		strings.Contains(lower, "proceed") ||
+		strings.Contains(lower, "save") ||
+		lower == "1" {
 		// Save the commission
 		return cw.saveCommission()
 	}
@@ -227,7 +227,7 @@ func (cw *CommissionWorkflow) saveCommission() tea.Cmd {
 		// Save via manager
 		if err := cw.manager.SaveCommission(cw.ctx, cw.commission); err != nil {
 			return CommissionWorkflowMsg{
-				Type:  "error",
+				Type: "error",
 				Error: gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save commission").
 					WithComponent("commission.workflow").
 					WithOperation("saveCommission"),
@@ -249,7 +249,7 @@ You can now:
 - View the commission in your project's commissions directory
 - Continue with other tasks
 
-The Guild stands ready to execute this commission!`, 
+The Guild stands ready to execute this commission!`,
 				cw.commission.ID,
 				cw.commission.Title,
 				cw.commission.ID,
@@ -284,7 +284,7 @@ func (cw *CommissionWorkflow) formatCommissionBasic(comm *commission.Commission)
 
 	// Use the commission's Format method to get markdown
 	sb.WriteString(comm.Format())
-	
+
 	// Add the generated content if available
 	if comm.Content != "" {
 		sb.WriteString("\n---\n\n")
@@ -334,7 +334,7 @@ func (cw *CommissionWorkflow) calculateProgress() (PlanningStage, float64) {
 	responseCount := len(cw.dialogue.GetResponses())
 	var stage PlanningStage
 	var progress float64
-	
+
 	if responseCount == 0 {
 		stage = StageIntroduction
 		progress = 0.0

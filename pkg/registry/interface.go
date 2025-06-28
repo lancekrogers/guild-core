@@ -230,6 +230,12 @@ type StorageRegistry interface {
 	// GetPromptChainRepository retrieves the registered prompt chain repository
 	GetPromptChainRepository() PromptChainRepository
 
+	// RegisterSessionRepository registers a session repository implementation
+	RegisterSessionRepository(repo SessionRepository) error
+
+	// GetSessionRepository retrieves the registered session repository
+	GetSessionRepository() SessionRepository
+
 	// GetMemoryStore returns the configured memory store adapter
 	GetMemoryStore() MemoryStore
 
@@ -324,6 +330,29 @@ type PromptChainRepository interface {
 	DeleteChain(ctx context.Context, id string) error
 }
 
+type SessionRepository interface {
+	// Session operations
+	CreateSession(ctx context.Context, session *ChatSession) error
+	GetSession(ctx context.Context, id string) (*ChatSession, error)
+	ListSessions(ctx context.Context, limit, offset int32) ([]*ChatSession, error)
+	ListSessionsByCampaign(ctx context.Context, campaignID string) ([]*ChatSession, error)
+	UpdateSession(ctx context.Context, session *ChatSession) error
+	DeleteSession(ctx context.Context, id string) error
+	CountSessions(ctx context.Context) (int64, error)
+
+	// Message operations
+	SaveMessage(ctx context.Context, message *ChatMessage) error
+	GetMessage(ctx context.Context, id string) (*ChatMessage, error)
+	GetMessages(ctx context.Context, sessionID string) ([]*ChatMessage, error)
+	GetMessagesPaginated(ctx context.Context, sessionID string, limit, offset int32) ([]*ChatMessage, error)
+	GetMessagesAfter(ctx context.Context, sessionID string, after time.Time) ([]*ChatMessage, error)
+	CountMessages(ctx context.Context, sessionID string) (int64, error)
+	DeleteMessage(ctx context.Context, id string) error
+
+	// Streaming operations for daemon
+	StreamMessages(ctx context.Context, sessionID string, since time.Time) (<-chan *ChatMessage, error)
+}
+
 // Storage model forward declarations
 type StorageTask struct {
 	ID              string                 `json:"id"`
@@ -407,6 +436,27 @@ type PromptChainMessage struct {
 	Name       *string   `json:"name,omitempty"`
 	Timestamp  time.Time `json:"timestamp"`
 	TokenUsage int32     `json:"token_usage"`
+}
+
+// ChatSession represents a chat conversation for repository operations
+type ChatSession struct {
+	ID         string                 `json:"id"`
+	Name       string                 `json:"name"`
+	CampaignID *string                `json:"campaign_id,omitempty"`
+	CreatedAt  time.Time              `json:"created_at"`
+	UpdatedAt  time.Time              `json:"updated_at"`
+	Metadata   map[string]interface{} `json:"metadata,omitempty"`
+}
+
+// ChatMessage represents a message in a chat session
+type ChatMessage struct {
+	ID        string                 `json:"id"`
+	SessionID string                 `json:"session_id"`
+	Role      string                 `json:"role"`
+	Content   string                 `json:"content"`
+	CreatedAt time.Time              `json:"created_at"`
+	ToolCalls map[string]interface{} `json:"tool_calls,omitempty"`
+	Metadata  map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // Forward declarations for orchestrator interfaces to avoid import cycles

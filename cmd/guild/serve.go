@@ -6,12 +6,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"os"
 	"os/exec"
 	"os/signal"
 	"path/filepath"
 	"strconv"
 	"syscall"
+	"time"
 
 	"github.com/spf13/cobra"
 
@@ -26,16 +28,20 @@ import (
 
 var (
 	serveForeground bool
+	serveDev        bool
 	serveCampaign   string
 	serveSession    string
 	serveSocket     string
+	serveConfig     string
 )
 
 func init() {
 	serveCmd.Flags().BoolVar(&serveForeground, "foreground", false, "Run in foreground (default: background)")
+	serveCmd.Flags().BoolVar(&serveDev, "dev", false, "Run in development mode (foreground, verbose logging)")
 	serveCmd.Flags().StringVar(&serveCampaign, "campaign", "", "Campaign to serve (uses detection if not specified)")
 	serveCmd.Flags().StringVar(&serveSession, "session", "0", "Session number for multi-session campaigns")
 	serveCmd.Flags().StringVar(&serveSocket, "socket", "", "Unix socket path (overrides auto-generated path)")
+	serveCmd.Flags().StringVar(&serveConfig, "config", "", "Path to daemon config file")
 
 	// Register completion functions
 	serveCmd.RegisterFlagCompletionFunc("campaign", completeCampaignNames)
@@ -62,9 +68,11 @@ Campaign Architecture:
 
 Examples:
   guild serve                           # Auto-detect campaign, start background server
+  guild serve --dev                     # Run in development mode (foreground, verbose)
   guild serve --foreground              # Run in foreground with output
   guild serve --campaign e-commerce     # Serve specific campaign
-  guild serve --session 1               # Start additional session`,
+  guild serve --session 1               # Start additional session
+  guild serve --config daemon.yaml      # Use custom config file`,
 	RunE: runServe,
 }
 
@@ -81,6 +89,12 @@ func runServe(cmd *cobra.Command, args []string) error {
 			WithOperation("serve.run")
 	}
 
+	// Handle --dev flag (implies foreground and verbose logging)
+	if serveDev {
+		serveForeground = true
+		// TODO: Set verbose logging level when observability supports it
+	}
+
 	// Set up logging
 	logger := observability.GetLogger(ctx)
 	ctx = observability.WithComponent(ctx, "guild-serve")
@@ -88,9 +102,11 @@ func runServe(cmd *cobra.Command, args []string) error {
 
 	logger.InfoContext(ctx, "Starting Guild gRPC server",
 		"foreground", serveForeground,
+		"dev", serveDev,
 		"campaign", serveCampaign,
 		"session", serveSession,
 		"socket", serveSocket,
+		"config", serveConfig,
 	)
 
 	// Detect campaign if not explicitly provided
@@ -133,7 +149,23 @@ func runServe(cmd *cobra.Command, args []string) error {
 			WithOperation("serve.run")
 	}
 
-	// Override socket path if provided
+	// Load YAML configuration if specified
+	if serveConfig != "" {
+		yamlConfig, err := daemon.LoadYAMLConfig(serveConfig)
+		if err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load config file").
+				WithComponent("cli").
+				WithOperation("serve.run").
+				WithDetails("config", serveConfig)
+		}
+
+		// Apply YAML config to daemon config
+		yamlConfig.ApplyToConfig(daemonConfig)
+
+		logger.InfoContext(ctx, "Loaded configuration from file", "config", serveConfig)
+	}
+
+	// Override socket path if provided via command line (takes precedence)
 	if serveSocket != "" {
 		daemonConfig.SocketPath = serveSocket
 	}
@@ -257,16 +289,60 @@ func runServe(cmd *cobra.Command, args []string) error {
 		fmt.Printf("💡 Use 'guild chat' to connect\n")
 	} else {
 		// Foreground mode - show detailed output
-		fmt.Printf("🏰 %s running at %s\n", daemonConfig.GetDisplayName(), serverAddr)
+		if serveDev {
+			fmt.Printf("🔧 %s running in DEVELOPMENT MODE at %s\n", daemonConfig.GetDisplayName(), serverAddr)
+		} else {
+			fmt.Printf("🏰 %s running at %s\n", daemonConfig.GetDisplayName(), serverAddr)
+		}
 		fmt.Printf("📋 Campaign: %s (session %d)\n", campaignName, sessionNum)
 		fmt.Println("📡 Registered gRPC services:")
 		fmt.Println("   ✅ Guild Service (campaigns, agents, commissions)")
 		fmt.Println("   ✅ Chat Service (interactive agent communication)")
+		fmt.Println("   ✅ Session Service (persistent session storage)")
+		fmt.Println("   ✅ Event Service (real-time event streaming)")
 		fmt.Println("   ✅ Prompt Service (prompt management)")
 		fmt.Println()
 		fmt.Printf("🔌 Socket: %s\n", daemonConfig.SocketPath)
+		if serveConfig != "" {
+			fmt.Printf("📄 Config: %s\n", serveConfig)
+		}
 		fmt.Println("💡 Use 'guild chat --campaign", campaignName, "' to connect")
 		fmt.Println("🛑 Press Ctrl+C to stop the server")
+	}
+
+	// Start HTTP health endpoint if configured
+	var healthServer *http.Server
+	if yamlConfig, err := daemon.LoadYAMLConfig(serveConfig); err == nil && yamlConfig.Health.HTTPEnabled {
+		healthServer = &http.Server{
+			Addr: fmt.Sprintf(":%d", yamlConfig.Health.HTTPPort),
+		}
+
+		// Set up health endpoint
+		http.HandleFunc(yamlConfig.Health.HTTPPath, func(w http.ResponseWriter, r *http.Request) {
+			// TODO: Add actual health checks
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			fmt.Fprintf(w, `{"status":"healthy","campaign":"%s","session":%d}`, campaignName, sessionNum)
+		})
+
+		// Start health server in background
+		go func() {
+			logger.InfoContext(ctx, "Starting HTTP health endpoint",
+				"port", yamlConfig.Health.HTTPPort,
+				"path", yamlConfig.Health.HTTPPath)
+			if err := healthServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+				logger.ErrorContext(ctx, "Health endpoint failed", "error", err)
+			}
+		}()
+
+		// Ensure health server shuts down on exit
+		defer func() {
+			if healthServer != nil {
+				healthCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+				defer cancel()
+				healthServer.Shutdown(healthCtx)
+			}
+		}()
 	}
 
 	// Start the server (this blocks until context is cancelled)

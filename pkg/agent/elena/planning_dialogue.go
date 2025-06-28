@@ -253,7 +253,7 @@ Think carefully about:
 - **Integration points** - What must it connect with?
 - **Success criteria** - How will we know 'tis complete?
 
-List thy requirements, and be as specific as thy vision allows. I shall help organize them into a proper structure.`, 
+List thy requirements, and be as specific as thy vision allows. I shall help organize them into a proper structure.`,
 		pd.getProjectReference())
 }
 
@@ -305,43 +305,43 @@ func (pd *PlanningDialogue) showSummary() string {
 	var sb strings.Builder
 	sb.WriteString("📜 **Commission Summary**\n\n")
 	sb.WriteString("Based on our discourse, here is what I have gleaned:\n\n")
-	
+
 	// Project overview
 	sb.WriteString("**🎯 Project Vision:**\n")
 	sb.WriteString(fmt.Sprintf("- Description: %s\n", pd.responses["project_description"]))
 	sb.WriteString(fmt.Sprintf("- Purpose: %s\n", pd.responses["project_purpose"]))
 	sb.WriteString(fmt.Sprintf("- Type: %s\n", pd.responses["project_type"]))
 	sb.WriteString("\n")
-	
+
 	// Technology
 	if tech, ok := pd.responses["technology"]; ok && tech != "" {
 		sb.WriteString("**🛠 Technology Stack:**\n")
 		sb.WriteString(fmt.Sprintf("%s\n\n", pd.formatList(tech)))
 	}
-	
+
 	// Requirements
 	if reqs, ok := pd.responses["requirements"]; ok && reqs != "" {
 		sb.WriteString("**📋 Key Requirements:**\n")
 		sb.WriteString(fmt.Sprintf("%s\n\n", pd.formatList(reqs)))
 	}
-	
+
 	// Constraints
 	if constraints, ok := pd.responses["constraints"]; ok && constraints != "" {
 		sb.WriteString("**⚠️ Constraints:**\n")
 		sb.WriteString(fmt.Sprintf("%s\n\n", pd.formatList(constraints)))
 	}
-	
+
 	// Team and Timeline
 	sb.WriteString("**👥 Team & Timeline:**\n")
 	sb.WriteString(fmt.Sprintf("- Team Size: %s\n", pd.responses["team_size"]))
 	sb.WriteString(fmt.Sprintf("- Timeline: %s\n", pd.responses["timeline"]))
 	sb.WriteString("\n")
-	
+
 	sb.WriteString("---\n\n")
 	sb.WriteString("Dost this summary capture thy vision accurately? \n\n")
 	sb.WriteString("- Type **'yes'** to proceed with commission generation\n")
 	sb.WriteString("- Or tell me what needs adjustment, and I shall revise accordingly")
-	
+
 	return sb.String()
 }
 
@@ -350,7 +350,7 @@ func (pd *PlanningDialogue) showSummary() string {
 func (pd *PlanningDialogue) getCurrentQuestionID() string {
 	stageNames := []string{
 		"introduction",
-		"project_purpose", 
+		"project_purpose",
 		"project_type",
 		"technology",
 		"requirements",
@@ -360,7 +360,7 @@ func (pd *PlanningDialogue) getCurrentQuestionID() string {
 		"summary",
 		"complete",
 	}
-	
+
 	if int(pd.stage) < len(stageNames) {
 		return stageNames[pd.stage]
 	}
@@ -419,7 +419,7 @@ func (pd *PlanningDialogue) processProjectType(response string) {
 
 func (pd *PlanningDialogue) handleSummaryEdit(response string) {
 	lower := strings.ToLower(response)
-	
+
 	// Check what they want to edit
 	if strings.Contains(lower, "tech") || strings.Contains(lower, "language") {
 		pd.stage = StageTechnology

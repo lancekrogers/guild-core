@@ -301,9 +301,9 @@ func (c *DefaultAgentCreator) CreateDefaultTester(ctx context.Context) (*config.
 		Type:          "specialist",
 		Description:   "Master Guardian of Software Quality - Vera ensures excellence through comprehensive testing",
 		Provider:      c.GetOptimalProvider("specialist", "vera-tester"), // Use optimal provider for specialists
-		Model:         "sonnet",      // Use alias for latest Sonnet model
-		CostMagnitude: 2,             // Moderate cost for testing tasks
-		ContextWindow: 200000,        // Large context window for test analysis
+		Model:         "sonnet",                                          // Use alias for latest Sonnet model
+		CostMagnitude: 2,                                                 // Moderate cost for testing tasks
+		ContextWindow: 200000,                                            // Large context window for test analysis
 
 		Backstory: &config.Backstory{
 			Experience: "10 years protecting software quality across diverse domains",

@@ -22,34 +22,34 @@ func TestConvertRefinedCommissionToKanbanTasks(t *testing.T) {
 		},
 		Tasks: []*commission.RefinedTask{
 			{
-				ID:               "task-1",
-				CommissionID:     "test-commission", 
-				Title:            "High Complexity Task",
-				Description:      "A complex task",
-				Type:             "implementation",
-				Status:           "todo",
-				Complexity:       8,
-				EstimatedHours:   16.0,
-				AssignedAgent:    "agent-1",
-				Dependencies:     []string{"task-2"},
-				CreatedAt:        time.Now(),
-				UpdatedAt:        time.Now(),
-				Metadata:         map[string]string{"phase": "development"},
+				ID:             "task-1",
+				CommissionID:   "test-commission",
+				Title:          "High Complexity Task",
+				Description:    "A complex task",
+				Type:           "implementation",
+				Status:         "todo",
+				Complexity:     8,
+				EstimatedHours: 16.0,
+				AssignedAgent:  "agent-1",
+				Dependencies:   []string{"task-2"},
+				CreatedAt:      time.Now(),
+				UpdatedAt:      time.Now(),
+				Metadata:       map[string]string{"phase": "development"},
 			},
 			{
-				ID:               "task-2", 
-				CommissionID:     "test-commission",
-				Title:            "Medium Complexity Task",
-				Description:      "A medium task",
-				Type:             "design",
-				Status:           "todo",
-				Complexity:       4,
-				EstimatedHours:   8.0,
-				AssignedAgent:    "agent-2", 
-				Dependencies:     []string{},
-				CreatedAt:        time.Now(),
-				UpdatedAt:        time.Now(),
-				Metadata:         map[string]string{"phase": "planning"},
+				ID:             "task-2",
+				CommissionID:   "test-commission",
+				Title:          "Medium Complexity Task",
+				Description:    "A medium task",
+				Type:           "design",
+				Status:         "todo",
+				Complexity:     4,
+				EstimatedHours: 8.0,
+				AssignedAgent:  "agent-2",
+				Dependencies:   []string{},
+				CreatedAt:      time.Now(),
+				UpdatedAt:      time.Now(),
+				Metadata:       map[string]string{"phase": "planning"},
 			},
 		},
 	}
@@ -111,8 +111,8 @@ func TestDetermineInitialColumn(t *testing.T) {
 	integrator := &Integrator{}
 
 	tests := []struct {
-		name         string
-		task         *commission.RefinedTask
+		name           string
+		task           *commission.RefinedTask
 		expectedColumn string
 	}{
 		{

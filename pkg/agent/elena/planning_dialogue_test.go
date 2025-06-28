@@ -14,7 +14,7 @@ import (
 
 func TestNewPlanningDialogue(t *testing.T) {
 	dialogue := NewPlanningDialogue("test-dialogue-123")
-	
+
 	assert.NotNil(t, dialogue)
 	assert.Equal(t, "test-dialogue-123", dialogue.ID)
 	assert.Equal(t, StageIntroduction, dialogue.stage)
@@ -84,7 +84,7 @@ func TestGetNextQuestion_AllStages(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			dialogue := NewPlanningDialogue("test")
 			dialogue.stage = tt.stage
-			
+
 			// Add some test responses for summary stage
 			if tt.stage == StageSummary {
 				dialogue.responses["project_description"] = "Test project"
@@ -93,7 +93,7 @@ func TestGetNextQuestion_AllStages(t *testing.T) {
 				dialogue.responses["team_size"] = "Small team"
 				dialogue.responses["timeline"] = "1 month"
 			}
-			
+
 			question := dialogue.GetNextQuestion()
 			assert.Contains(t, question, tt.contains)
 		})
@@ -103,24 +103,24 @@ func TestGetNextQuestion_AllStages(t *testing.T) {
 func TestProcessResponse_StageTransitions(t *testing.T) {
 	ctx := context.Background()
 	dialogue := NewPlanningDialogue("test")
-	
+
 	// Test introduction -> project purpose
 	assert.Equal(t, StageIntroduction, dialogue.stage)
 	err := dialogue.ProcessResponse(ctx, "Hello")
 	require.NoError(t, err)
 	assert.Equal(t, StageProjectPurpose, dialogue.stage)
-	
+
 	// Test project purpose -> project type
 	err = dialogue.ProcessResponse(ctx, "Build software")
 	require.NoError(t, err)
 	assert.Equal(t, StageProjectType, dialogue.stage)
 	assert.Equal(t, "build_software", dialogue.context["purpose_category"])
-	
+
 	// Test project type -> technology
 	err = dialogue.ProcessResponse(ctx, "REST API")
 	require.NoError(t, err)
 	assert.Equal(t, StageTechnology, dialogue.stage)
-	
+
 	// Continue through remaining stages
 	stages := []PlanningStage{
 		StageRequirements,
@@ -129,13 +129,13 @@ func TestProcessResponse_StageTransitions(t *testing.T) {
 		StageTimeline,
 		StageSummary,
 	}
-	
+
 	for _, expectedStage := range stages {
 		err = dialogue.ProcessResponse(ctx, "Test response")
 		require.NoError(t, err)
 		assert.Equal(t, expectedStage, dialogue.stage)
 	}
-	
+
 	// Test summary -> complete
 	err = dialogue.ProcessResponse(ctx, "yes")
 	require.NoError(t, err)
@@ -145,10 +145,10 @@ func TestProcessResponse_StageTransitions(t *testing.T) {
 func TestProcessResponse_ContextCancelled(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately
-	
+
 	dialogue := NewPlanningDialogue("test")
 	err := dialogue.ProcessResponse(ctx, "any response")
-	
+
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "context cancelled")
 }
@@ -158,7 +158,7 @@ func TestDynamicQuestions_APIProject(t *testing.T) {
 	dialogue.stage = StageProjectType
 	dialogue.responses["project_purpose"] = "Build software"
 	dialogue.responses["project_description"] = "I want to build a REST API for managing tasks"
-	
+
 	question := dialogue.GetNextQuestion()
 	assert.Contains(t, question, "API")
 	assert.Contains(t, question, "REST")
@@ -170,7 +170,7 @@ func TestDynamicQuestions_WebProject(t *testing.T) {
 	dialogue.stage = StageProjectType
 	dialogue.responses["project_purpose"] = "Build software"
 	dialogue.responses["project_description"] = "I need a web application for e-commerce"
-	
+
 	question := dialogue.GetNextQuestion()
 	assert.Contains(t, question, "web application")
 	assert.Contains(t, question, "Frontend")
@@ -182,7 +182,7 @@ func TestDynamicQuestions_ResearchProject(t *testing.T) {
 	dialogue.stage = StageProjectType
 	dialogue.responses["project_purpose"] = "Conduct deep research"
 	dialogue.responses["project_description"] = "Research microservices patterns"
-	
+
 	question := dialogue.GetNextQuestion()
 	assert.Contains(t, question, "research")
 	assert.Contains(t, question, "investigation")
@@ -191,11 +191,11 @@ func TestDynamicQuestions_ResearchProject(t *testing.T) {
 func TestGetResponses(t *testing.T) {
 	dialogue := NewPlanningDialogue("test")
 	ctx := context.Background()
-	
+
 	// Add some responses
 	dialogue.ProcessResponse(ctx, "Introduction response")
 	dialogue.ProcessResponse(ctx, "Build software")
-	
+
 	responses := dialogue.GetResponses()
 	assert.NotEmpty(t, responses)
 	assert.Equal(t, "Introduction response", responses["introduction"])
@@ -204,19 +204,19 @@ func TestGetResponses(t *testing.T) {
 
 func TestIsComplete(t *testing.T) {
 	dialogue := NewPlanningDialogue("test")
-	
+
 	assert.False(t, dialogue.IsComplete())
-	
+
 	dialogue.stage = StageComplete
 	assert.True(t, dialogue.IsComplete())
 }
 
 func TestSetProjectContext(t *testing.T) {
 	dialogue := NewPlanningDialogue("test")
-	
+
 	dialogue.SetProjectContext("detected_technology", "Go")
 	dialogue.SetProjectContext("project_path", "/home/user/project")
-	
+
 	assert.Equal(t, "Go", dialogue.context["detected_technology"])
 	assert.Equal(t, "/home/user/project", dialogue.context["project_path"])
 }
@@ -224,7 +224,7 @@ func TestSetProjectContext(t *testing.T) {
 func TestSummaryEditHandling(t *testing.T) {
 	ctx := context.Background()
 	dialogue := NewPlanningDialogue("test")
-	
+
 	// Set up dialogue in summary stage
 	dialogue.stage = StageSummary
 	dialogue.responses["project_description"] = "Test project"
@@ -232,15 +232,15 @@ func TestSummaryEditHandling(t *testing.T) {
 	dialogue.responses["project_type"] = "API"
 	dialogue.responses["team_size"] = "Small team"
 	dialogue.responses["timeline"] = "1 month"
-	
+
 	// Test editing technology
 	err := dialogue.ProcessResponse(ctx, "change technology")
 	require.NoError(t, err)
 	assert.Equal(t, StageTechnology, dialogue.stage)
-	
+
 	// Reset to summary
 	dialogue.stage = StageSummary
-	
+
 	// Test editing requirements
 	err = dialogue.ProcessResponse(ctx, "update requirements")
 	require.NoError(t, err)
@@ -249,11 +249,11 @@ func TestSummaryEditHandling(t *testing.T) {
 
 func TestFormatHelpers(t *testing.T) {
 	dialogue := NewPlanningDialogue("test")
-	
+
 	// Test formatList
 	input := "item1\n\nitem2\n- item3\n* item4"
 	formatted := dialogue.formatList(input)
-	
+
 	lines := strings.Split(formatted, "\n")
 	assert.Equal(t, "- item1", lines[0])
 	assert.Equal(t, "- item2", lines[1])

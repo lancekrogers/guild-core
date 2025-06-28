@@ -1,0 +1,184 @@
+syntax = "proto3";
+
+package guild.v1;
+
+option go_package = "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1";
+
+import "google/protobuf/timestamp.proto";
+
+// SessionService provides persistent session storage for the Guild daemon
+service SessionService {
+  // Session management
+  rpc CreateSession(CreateSessionRequest) returns (Session);
+  rpc GetSession(GetSessionRequest) returns (Session);
+  rpc ListSessions(ListSessionsRequest) returns (ListSessionsResponse);
+  rpc UpdateSession(UpdateSessionRequest) returns (Session);
+  rpc DeleteSession(DeleteSessionRequest) returns (DeleteSessionResponse);
+  
+  // Message management
+  rpc SaveMessage(SaveMessageRequest) returns (SaveMessageResponse);
+  rpc GetMessage(GetMessageRequest) returns (Message);
+  rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse);
+  rpc GetMessagesPaginated(GetMessagesPaginatedRequest) returns (GetMessagesResponse);
+  rpc GetMessagesAfter(GetMessagesAfterRequest) returns (GetMessagesResponse);
+  rpc DeleteMessage(DeleteMessageRequest) returns (DeleteMessageResponse);
+  
+  // Streaming for real-time updates
+  rpc StreamMessages(StreamMessagesRequest) returns (stream Message);
+  rpc StreamSessionEvents(StreamSessionEventsRequest) returns (stream SessionEvent);
+}
+
+// Session represents a persistent chat session
+message Session {
+  string id = 1;
+  string name = 2;
+  optional string campaign_id = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+  map<string, string> metadata = 6;
+}
+
+// Message represents a persistent chat message
+message Message {
+  string id = 1;
+  string session_id = 2;
+  MessageRole role = 3;
+  string content = 4;
+  google.protobuf.Timestamp created_at = 5;
+  repeated ToolCall tool_calls = 6;
+  map<string, string> metadata = 7;
+  
+  enum MessageRole {
+    SYSTEM = 0;
+    USER = 1;
+    ASSISTANT = 2;
+    TOOL = 3;
+  }
+}
+
+// ToolCall represents a tool invocation in a message
+message ToolCall {
+  string id = 1;
+  string type = 2;
+  ToolFunction function = 3;
+  optional ToolResult result = 4;
+}
+
+// ToolFunction represents the function called by a tool
+message ToolFunction {
+  string name = 1;
+  map<string, string> arguments = 2;
+}
+
+// ToolResult represents the result of a tool execution
+message ToolResult {
+  string content = 1;
+  optional string error = 2;
+}
+
+// SessionEvent represents events that happen to sessions
+message SessionEvent {
+  string session_id = 1;
+  SessionEventType type = 2;
+  string description = 3;
+  map<string, string> data = 4;
+  google.protobuf.Timestamp timestamp = 5;
+  
+  enum SessionEventType {
+    SESSION_CREATED = 0;
+    SESSION_UPDATED = 1;
+    SESSION_DELETED = 2;
+    MESSAGE_ADDED = 3;
+    MESSAGE_DELETED = 4;
+  }
+}
+
+// Request/Response messages for session operations
+message CreateSessionRequest {
+  string name = 1;
+  optional string campaign_id = 2;
+  map<string, string> metadata = 3;
+}
+
+message GetSessionRequest {
+  string id = 1;
+}
+
+message ListSessionsRequest {
+  int32 limit = 1;
+  int32 offset = 2;
+  optional string campaign_id = 3;
+}
+
+message ListSessionsResponse {
+  repeated Session sessions = 1;
+  int64 total_count = 2;
+}
+
+message UpdateSessionRequest {
+  string id = 1;
+  string name = 2;
+  map<string, string> metadata = 3;
+}
+
+message DeleteSessionRequest {
+  string id = 1;
+}
+
+message DeleteSessionResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Request/Response messages for message operations
+message SaveMessageRequest {
+  Message message = 1;
+}
+
+message SaveMessageResponse {
+  bool success = 1;
+  string message_id = 2;
+}
+
+message GetMessageRequest {
+  string id = 1;
+}
+
+message GetMessagesRequest {
+  string session_id = 1;
+}
+
+message GetMessagesPaginatedRequest {
+  string session_id = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+message GetMessagesAfterRequest {
+  string session_id = 1;
+  google.protobuf.Timestamp after = 2;
+}
+
+message GetMessagesResponse {
+  repeated Message messages = 1;
+  int64 total_count = 2;
+  bool has_more = 3;
+}
+
+message DeleteMessageRequest {
+  string id = 1;
+}
+
+message DeleteMessageResponse {
+  bool success = 1;
+}
+
+// Streaming requests
+message StreamMessagesRequest {
+  string session_id = 1;
+  google.protobuf.Timestamp since = 2;
+}
+
+message StreamSessionEventsRequest {
+  optional string session_id = 1; // If empty, stream events for all sessions
+}

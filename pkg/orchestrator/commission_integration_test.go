@@ -543,6 +543,14 @@ func (t *testSQLiteStorageRegistry) GetPromptChainRepository() registry.PromptCh
 	return nil
 }
 
+func (t *testSQLiteStorageRegistry) RegisterSessionRepository(repo registry.SessionRepository) error {
+	return nil // Not needed for SQLite
+}
+
+func (t *testSQLiteStorageRegistry) GetSessionRepository() registry.SessionRepository {
+	return nil // Components should use type assertions to get the actual storage repos
+}
+
 // testCommissionRepositoryAdapter adapts storage.CommissionRepository to registry.CommissionRepository
 type testCommissionRepositoryAdapter struct {
 	storageRepo storage.CommissionRepository

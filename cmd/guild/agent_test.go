@@ -214,6 +214,14 @@ func (m *MockStorageRegistry) GetKanbanCommissionRepository() registry.KanbanCom
 	return nil
 }
 
+func (m *MockStorageRegistry) RegisterSessionRepository(repo registry.SessionRepository) error {
+	return nil
+}
+
+func (m *MockStorageRegistry) GetSessionRepository() registry.SessionRepository {
+	return nil
+}
+
 // MockAgentRepository for testing
 type MockAgentRepository struct {
 	mock.Mock

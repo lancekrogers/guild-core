@@ -23,23 +23,23 @@ type TaskAssigner struct {
 
 // AssignmentConstraints defines rules for task assignment
 type AssignmentConstraints struct {
-	MaxTasksPerAgent   int     `json:"max_tasks_per_agent"`
-	PreferSpecialists  bool    `json:"prefer_specialists"`
-	BalanceWorkload    bool    `json:"balance_workload"`
-	CostOptimization   bool    `json:"cost_optimization"`
-	MinScoreThreshold  float64 `json:"min_score_threshold"`  // Minimum score to consider assignment
-	MaxWorkloadRatio   float64 `json:"max_workload_ratio"`   // Maximum workload before agent is considered overloaded
+	MaxTasksPerAgent  int     `json:"max_tasks_per_agent"`
+	PreferSpecialists bool    `json:"prefer_specialists"`
+	BalanceWorkload   bool    `json:"balance_workload"`
+	CostOptimization  bool    `json:"cost_optimization"`
+	MinScoreThreshold float64 `json:"min_score_threshold"` // Minimum score to consider assignment
+	MaxWorkloadRatio  float64 `json:"max_workload_ratio"`  // Maximum workload before agent is considered overloaded
 }
 
 // TaskAssignment represents an assignment of a task to an agent
 type TaskAssignment struct {
-	TaskID           string    `json:"task_id"`
-	AgentID          string    `json:"agent_id"`
-	Score            float64   `json:"score"`
-	Confidence       float64   `json:"confidence"`       // How confident we are in this assignment
-	Reasoning        string    `json:"reasoning"`        // Why this agent was chosen
-	EstimatedTime    time.Duration `json:"estimated_time"`
-	AssignedAt       time.Time `json:"assigned_at"`
+	TaskID        string        `json:"task_id"`
+	AgentID       string        `json:"agent_id"`
+	Score         float64       `json:"score"`
+	Confidence    float64       `json:"confidence"` // How confident we are in this assignment
+	Reasoning     string        `json:"reasoning"`  // Why this agent was chosen
+	EstimatedTime time.Duration `json:"estimated_time"`
+	AssignedAt    time.Time     `json:"assigned_at"`
 }
 
 // AssignmentPlan represents a complete assignment plan for multiple tasks
@@ -58,12 +58,12 @@ func NewTaskAssigner(capabilityManager *CapabilityModelManager, db *sql.DB) *Tas
 		capabilityManager: capabilityManager,
 		db:                db,
 		constraints: AssignmentConstraints{
-			MaxTasksPerAgent:   5,
-			PreferSpecialists:  true,
-			BalanceWorkload:    true,
-			CostOptimization:   false,
-			MinScoreThreshold:  0.3,
-			MaxWorkloadRatio:   0.8,
+			MaxTasksPerAgent:  5,
+			PreferSpecialists: true,
+			BalanceWorkload:   true,
+			CostOptimization:  false,
+			MinScoreThreshold: 0.3,
+			MaxWorkloadRatio:  0.8,
 		},
 	}
 }
@@ -146,7 +146,7 @@ func (ta *TaskAssigner) AssignTasks(ctx context.Context, tasks []*kanban.Task, a
 		if assignment != nil {
 			plan.Assignments = append(plan.Assignments, *assignment)
 			agentAssignments[assignment.AgentID] = append(agentAssignments[assignment.AgentID], *assignment)
-			
+
 			logger.InfoContext(ctx, "Task assigned successfully",
 				"task_id", task.ID,
 				"agent_id", assignment.AgentID,
@@ -159,10 +159,10 @@ func (ta *TaskAssigner) AssignTasks(ctx context.Context, tasks []*kanban.Task, a
 
 	// Identify overloaded agents
 	plan.OverloadedAgents = ta.identifyOverloadedAgents(agentModels, agentAssignments)
-	
+
 	// Calculate total plan score
 	plan.TotalScore = ta.calculatePlanScore(plan.Assignments)
-	
+
 	// Record applied constraints
 	plan.ConstraintsApplied = ta.getAppliedConstraints()
 
@@ -194,14 +194,14 @@ func (ta *TaskAssigner) assignSingleTask(ctx context.Context, task *kanban.Task,
 
 		score, err := model.ScoreForTask(ctx, task)
 		if err != nil {
-			logger.WarnContext(ctx, "Failed to score task for agent", 
+			logger.WarnContext(ctx, "Failed to score task for agent",
 				"agent_id", agentID, "task_id", task.ID, "error", err)
 			continue
 		}
 
 		// Apply constraints to adjust score
 		adjustedScore := ta.applyConstraintsToScore(score, agentID, model, currentAssignments)
-		
+
 		if adjustedScore >= ta.constraints.MinScoreThreshold {
 			scores[agentID] = adjustedScore
 			reasonings[agentID] = ta.generateReasoning(score, adjustedScore, model, task)
@@ -221,7 +221,7 @@ func (ta *TaskAssigner) assignSingleTask(ctx context.Context, task *kanban.Task,
 
 	// Select best agent
 	bestAgentID, bestScore := ta.selectBestAgent(scores)
-	
+
 	// Create assignment
 	assignment := &TaskAssignment{
 		TaskID:        task.ID,
@@ -318,7 +318,7 @@ func (ta *TaskAssigner) topologicalSort(ctx context.Context, tasks []*kanban.Tas
 // canAssignToAgent checks if an agent can take another task
 func (ta *TaskAssigner) canAssignToAgent(agentID string, model *AgentCapabilityModel, currentAssignments map[string][]TaskAssignment) bool {
 	currentTasks := len(currentAssignments[agentID])
-	
+
 	// Check max tasks per agent
 	if currentTasks >= ta.constraints.MaxTasksPerAgent {
 		return false
@@ -412,7 +412,7 @@ func (ta *TaskAssigner) calculateConfidence(bestScore float64, allScores map[str
 	// Confidence is based on the gap between best and second best
 	gap := bestScore - secondBest
 	confidence := bestScore + (gap * 0.5) // Boost confidence with larger gaps
-	
+
 	if confidence > 1.0 {
 		confidence = 1.0
 	}
@@ -460,7 +460,7 @@ func (ta *TaskAssigner) estimateTaskTime(task *kanban.Task, model *AgentCapabili
 	// Start with task's estimated hours
 	if task.EstimatedHours > 0 {
 		baseTime := time.Duration(task.EstimatedHours * float64(time.Hour))
-		
+
 		// Adjust based on agent's historical performance
 		if model.Performance.TasksCompleted > 0 && model.Performance.AverageTime > 0 {
 			// Use average time as a factor
@@ -476,7 +476,7 @@ func (ta *TaskAssigner) estimateTaskTime(task *kanban.Task, model *AgentCapabili
 				return time.Duration(float64(baseTime) * factor)
 			}
 		}
-		
+
 		return baseTime
 	}
 
@@ -510,7 +510,7 @@ func (ta *TaskAssigner) identifyOverloadedAgents(agentModels map[string]*AgentCa
 	for agentID, model := range agentModels {
 		currentAssignments := len(assignments[agentID])
 		projectedLoad := model.Availability.CurrentLoad + float64(currentAssignments)/float64(model.Availability.MaxConcurrentTasks)
-		
+
 		if projectedLoad > ta.constraints.MaxWorkloadRatio {
 			overloaded = append(overloaded, agentID)
 		}
@@ -536,7 +536,7 @@ func (ta *TaskAssigner) calculatePlanScore(assignments []TaskAssignment) float64
 	// Average score weighted by confidence
 	avgScore := totalScore / float64(len(assignments))
 	avgConfidence := totalConfidence / float64(len(assignments))
-	
+
 	return (avgScore + avgConfidence) / 2.0
 }
 

@@ -19,18 +19,18 @@ import (
 
 // Integrator provides integration between commission refinement and kanban tasks
 type Integrator struct {
-	queries     *db.Queries
-	kanbanMgr   *kanban.Manager
+	queries   *db.Queries
+	kanbanMgr *kanban.Manager
 }
 
 // TaskCreationResult contains the result of task creation
 type TaskCreationResult struct {
-	TasksCreated     int       `json:"tasks_created"`
-	BoardID          string    `json:"board_id"`
-	CommissionID     string    `json:"commission_id"`
-	TaskIDs          []string  `json:"task_ids"`
-	CreatedAt        time.Time `json:"created_at"`
-	Errors           []string  `json:"errors,omitempty"`
+	TasksCreated int       `json:"tasks_created"`
+	BoardID      string    `json:"board_id"`
+	CommissionID string    `json:"commission_id"`
+	TaskIDs      []string  `json:"task_ids"`
+	CreatedAt    time.Time `json:"created_at"`
+	Errors       []string  `json:"errors,omitempty"`
 }
 
 // NewIntegrator creates a new commission-kanban integrator
@@ -122,7 +122,7 @@ func (i *Integrator) ensureBoardExists(ctx context.Context, comm *commission.Com
 		// Board exists, return it
 		return board.ID, nil
 	}
-	
+
 	// Check if it's a "not found" error vs a real database error
 	// If it's not a not-found error, return the error
 	if !isNotFoundError(err) {
@@ -163,12 +163,12 @@ func (i *Integrator) createTask(ctx context.Context, refinedTask *commission.Ref
 	metadata["task_type"] = refinedTask.Type
 	metadata["complexity"] = refinedTask.Complexity
 	metadata["estimated_hours"] = refinedTask.EstimatedHours
-	
+
 	// Add dependencies if they exist
 	if len(refinedTask.Dependencies) > 0 {
 		metadata["dependencies"] = refinedTask.Dependencies
 	}
-	
+
 	// Add original task metadata
 	for k, v := range refinedTask.Metadata {
 		metadata[k] = v
@@ -216,7 +216,7 @@ func (i *Integrator) createTask(ctx context.Context, refinedTask *commission.Ref
 			AssignedAgentID: &refinedTask.AssignedAgent,
 			ID:              refinedTask.ID,
 		})
-		
+
 		if err != nil {
 			// Log warning but don't fail the task creation
 			logger := observability.GetLogger(ctx)
@@ -236,7 +236,7 @@ func (i *Integrator) determineInitialColumn(task *commission.RefinedTask) string
 	statusToColumn := map[string]string{
 		"todo":        "todo",
 		"ready":       "todo",
-		"in_progress": "in_progress", 
+		"in_progress": "in_progress",
 		"blocked":     "blocked",
 		"review":      "review",
 		"done":        "done",
@@ -293,7 +293,7 @@ func (i *Integrator) recordTaskDependencies(ctx context.Context, tasks []*commis
 		// Record dependency creation event
 		if len(validDependencies) > 0 {
 			dependencyJSON, _ := json.Marshal(validDependencies)
-			
+
 			err := i.queries.RecordTaskEvent(ctx, db.RecordTaskEventParams{
 				TaskID:    task.ID,
 				AgentID:   nil, // System event
@@ -358,7 +358,7 @@ func (i *Integrator) GetTasksForCommission(ctx context.Context, commissionID str
 func (i *Integrator) convertDBTaskToKanban(dbTask db.Task) (*kanban.Task, error) {
 	task := kanban.NewTask(dbTask.Title, "")
 	task.ID = dbTask.ID
-	
+
 	// Set description
 	if dbTask.Description != nil {
 		task.Description = *dbTask.Description
@@ -469,7 +469,7 @@ func (i *Integrator) UpdateTaskFromKanban(ctx context.Context, kanbanTask *kanba
 	for k, v := range kanbanTask.Metadata {
 		metadata[k] = v
 	}
-	
+
 	// Add kanban-specific fields
 	metadata["dependencies"] = kanbanTask.Dependencies
 	metadata["estimated_hours"] = kanbanTask.EstimatedHours
@@ -523,7 +523,7 @@ func (i *Integrator) UpdateTaskFromKanban(ctx context.Context, kanbanTask *kanba
 			AssignedAgentID: &kanbanTask.AssignedTo,
 			ID:              kanbanTask.ID,
 		})
-		
+
 		if err != nil {
 			logger.WarnContext(ctx, "Failed to update task assignment",
 				"task_id", kanbanTask.ID,
@@ -538,13 +538,13 @@ func (i *Integrator) UpdateTaskFromKanban(ctx context.Context, kanbanTask *kanba
 // convertKanbanStatusToColumn converts kanban status to database column
 func (i *Integrator) convertKanbanStatusToColumn(status kanban.TaskStatus) string {
 	statusToColumn := map[kanban.TaskStatus]string{
-		kanban.StatusBacklog:         "backlog",
-		kanban.StatusTodo:            "todo",
-		kanban.StatusInProgress:      "in_progress",
-		kanban.StatusBlocked:         "blocked",
-		kanban.StatusReadyForReview:  "review",
-		kanban.StatusDone:            "done",
-		kanban.StatusCancelled:       "cancelled",
+		kanban.StatusBacklog:        "backlog",
+		kanban.StatusTodo:           "todo",
+		kanban.StatusInProgress:     "in_progress",
+		kanban.StatusBlocked:        "blocked",
+		kanban.StatusReadyForReview: "review",
+		kanban.StatusDone:           "done",
+		kanban.StatusCancelled:      "cancelled",
 	}
 
 	if column, exists := statusToColumn[status]; exists {
@@ -609,7 +609,7 @@ func stringPtr(s string) *string {
 // ConvertRefinedCommissionToKanbanTasks converts refined tasks to kanban tasks for database storage
 func (i *Integrator) ConvertRefinedCommissionToKanbanTasks(refinedCommission *commission.RefinedCommission) []*kanban.Task {
 	tasks := make([]*kanban.Task, len(refinedCommission.Tasks))
-	
+
 	for idx, refinedTask := range refinedCommission.Tasks {
 		task := kanban.NewTask(refinedTask.Title, refinedTask.Description)
 		task.ID = refinedTask.ID
@@ -619,7 +619,7 @@ func (i *Integrator) ConvertRefinedCommissionToKanbanTasks(refinedCommission *co
 		task.Dependencies = refinedTask.Dependencies
 		task.CreatedAt = refinedTask.CreatedAt
 		task.UpdatedAt = refinedTask.UpdatedAt
-		
+
 		// Set priority based on complexity
 		switch {
 		case refinedTask.Complexity >= 6:
@@ -629,7 +629,7 @@ func (i *Integrator) ConvertRefinedCommissionToKanbanTasks(refinedCommission *co
 		default:
 			task.Priority = kanban.PriorityLow
 		}
-		
+
 		// Add metadata
 		task.Metadata = make(map[string]string)
 		task.Metadata["commission_id"] = refinedTask.CommissionID
@@ -638,10 +638,10 @@ func (i *Integrator) ConvertRefinedCommissionToKanbanTasks(refinedCommission *co
 		for k, v := range refinedTask.Metadata {
 			task.Metadata[k] = v
 		}
-		
+
 		tasks[idx] = task
 	}
-	
+
 	return tasks
 }
 

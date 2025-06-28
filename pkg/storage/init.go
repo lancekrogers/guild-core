@@ -54,6 +54,7 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 	boardRepo := DefaultBoardRepositoryFactory(database)
 	agentRepo := DefaultAgentRepositoryFactory(database)
 	promptChainRepo := DefaultPromptChainRepositoryFactory(database.DB())
+	sessionRepo := DefaultSessionRepositoryFactory(database)
 
 	storageRegistry.RegisterTaskRepository(taskRepo)
 	storageRegistry.RegisterCampaignRepository(campaignRepo)
@@ -61,6 +62,7 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 	storageRegistry.RegisterBoardRepository(boardRepo)
 	storageRegistry.RegisterAgentRepository(agentRepo)
 	storageRegistry.RegisterPromptChainRepository(promptChainRepo)
+	storageRegistry.RegisterSessionRepository(sessionRepo)
 
 	// Create memory store adapter that implements memory.Store interface
 	memoryStoreAdapter := NewMemoryStoreAdapter(database)
@@ -108,6 +110,7 @@ func InitializeSQLiteStorageForTests(ctx context.Context) (StorageRegistry, inte
 	boardRepo := DefaultBoardRepositoryFactory(database)
 	agentRepo := DefaultAgentRepositoryFactory(database)
 	promptChainRepo := DefaultPromptChainRepositoryFactory(database.DB())
+	sessionRepo := DefaultSessionRepositoryFactory(database)
 
 	storageRegistry.RegisterTaskRepository(taskRepo)
 	storageRegistry.RegisterCampaignRepository(campaignRepo)
@@ -115,6 +118,7 @@ func InitializeSQLiteStorageForTests(ctx context.Context) (StorageRegistry, inte
 	storageRegistry.RegisterBoardRepository(boardRepo)
 	storageRegistry.RegisterAgentRepository(agentRepo)
 	storageRegistry.RegisterPromptChainRepository(promptChainRepo)
+	storageRegistry.RegisterSessionRepository(sessionRepo)
 
 	// Create memory store adapter that implements memory.Store interface
 	memoryStoreAdapter := NewMemoryStoreAdapter(database)

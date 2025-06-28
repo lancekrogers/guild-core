@@ -47,8 +47,8 @@ func (ti *TypingIndicator) View() string {
 	}
 
 	dots := strings.Repeat(".", (ti.frame/3)%4)
-	
-	return ti.style.Render(fmt.Sprintf("%s %s is thinking%s", 
+
+	return ti.style.Render(fmt.Sprintf("%s %s is thinking%s",
 		ti.animation[ti.frame%len(ti.animation)],
 		ti.agent,
 		dots))
@@ -81,7 +81,7 @@ func (ps ProcessingState) String() string {
 	states := []string{
 		"Listening",
 		"Analyzing",
-		"Generating", 
+		"Generating",
 		"Refining",
 		"Validating",
 		"Completing",
@@ -102,12 +102,12 @@ func (ps ProcessingState) Display() string {
 		StateValidating: "🔍 Validating results...",
 		StateCompleting: "✅ Completing task...",
 	}
-	
+
 	display, exists := displays[ps]
 	if !exists {
 		display = "⚙️ Processing..."
 	}
-	
+
 	return display
 }
 
@@ -115,18 +115,18 @@ func (ps ProcessingState) Display() string {
 func (ps ProcessingState) Icon() string {
 	icons := map[ProcessingState]string{
 		StateListening:  "🎧",
-		StateAnalyzing:  "🔍", 
+		StateAnalyzing:  "🔍",
 		StateGenerating: "📝",
 		StateRefining:   "✨",
 		StateValidating: "🔍",
 		StateCompleting: "✅",
 	}
-	
+
 	icon, exists := icons[ps]
 	if !exists {
 		icon = "⚙️"
 	}
-	
+
 	return icon
 }
 
@@ -170,10 +170,10 @@ func (pi *ProcessingIndicator) View() string {
 
 	// Use typing indicator animation with processing state
 	animation := pi.typingIndicator.animation[pi.typingIndicator.frame%len(pi.typingIndicator.animation)]
-	
+
 	// Calculate elapsed time
 	elapsed := time.Since(pi.startTime)
-	
+
 	// Style based on how long it's been processing
 	style := pi.typingIndicator.style
 	if elapsed > 30*time.Second {
@@ -182,9 +182,9 @@ func (pi *ProcessingIndicator) View() string {
 		style = style.Foreground(lipgloss.Color("208")) // Orange for medium operations
 	}
 
-	baseText := fmt.Sprintf("%s %s %s", 
-		animation, 
-		pi.agent, 
+	baseText := fmt.Sprintf("%s %s %s",
+		animation,
+		pi.agent,
 		pi.state.Display())
 
 	// Add elapsed time for long operations

@@ -1,0 +1,81 @@
+# Guild Daemon Configuration Example
+# This file demonstrates all available configuration options
+
+# Server configuration
+server:
+  # Unix socket path (default: auto-generated based on campaign)
+  # socket: /tmp/guild.sock
+  
+  # TCP address for network binding (future use)
+  # address: 0.0.0.0
+  
+  # Port for TCP binding (future use)
+  # port: 7600
+  
+  # Maximum concurrent streams (default: 100)
+  max_concurrent_streams: 100
+  
+  # Connection timeout in seconds (default: 300)
+  connection_timeout: 300
+
+# Logging configuration
+logging:
+  # Log level: debug, info, warn, error (default: info)
+  level: info
+  
+  # Log format: json, text (default: text)
+  format: text
+  
+  # Log file path (default: auto-generated)
+  # file: /var/log/guild/daemon.log
+  
+  # Maximum log file size in MB (default: 100)
+  max_size: 100
+  
+  # Maximum number of log files to keep (default: 3)
+  max_backups: 3
+  
+  # Maximum age of log files in days (default: 7)
+  max_age: 7
+
+# Storage configuration
+storage:
+  # Database type: sqlite, postgres, mysql (default: sqlite)
+  type: sqlite
+  
+  # Database connection string or path (default: .guild/memory.db)
+  dsn: .guild/memory.db
+  
+  # Maximum open connections (default: 25)
+  max_open_conns: 25
+  
+  # Maximum idle connections (default: 5)
+  max_idle_conns: 5
+  
+  # Connection maximum lifetime in minutes (default: 5)
+  conn_max_lifetime: 5
+
+# Health check configuration
+health:
+  # Enable HTTP health endpoint (default: false)
+  http_enabled: true
+  
+  # HTTP health endpoint port (default: 8080)
+  http_port: 8080
+  
+  # HTTP health endpoint path (default: /healthz)
+  http_path: /healthz
+  
+  # Enable gRPC health service (default: false)
+  grpc_enabled: false
+
+# Environment variable overrides:
+# - GUILD_DAEMON_SOCKET: Override socket path
+# - GUILD_DAEMON_PORT: Override server port
+# - GUILD_LOG_LEVEL: Override log level
+# - GUILD_LOG_FORMAT: Override log format
+# - GUILD_LOG_FILE: Override log file path
+# - GUILD_DB_TYPE: Override database type
+# - GUILD_DB_DSN: Override database DSN
+# - GUILD_HEALTH_HTTP_ENABLED: Enable HTTP health endpoint
+# - GUILD_HEALTH_HTTP_PORT: Override health endpoint port

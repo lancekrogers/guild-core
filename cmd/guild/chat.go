@@ -13,17 +13,11 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/lancekrogers/guild/internal/daemon"
 	chatui "github.com/lancekrogers/guild/internal/ui/chat"
 	"github.com/lancekrogers/guild/pkg/campaign"
 	"github.com/lancekrogers/guild/pkg/config"
-	pkgDaemon "github.com/lancekrogers/guild/pkg/daemon"
 	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	promptspb "github.com/lancekrogers/guild/pkg/grpc/pb/prompts/v1"
 	"github.com/lancekrogers/guild/pkg/project"
 	"github.com/lancekrogers/guild/pkg/registry"
 )
@@ -200,45 +194,7 @@ func runChat(cmd *cobra.Command, args []string) error {
 		chatSessionID = generateUUID()
 	}
 
-	// Get daemon config for connection (no auto-start)
-	daemonConfig, err := daemon.GetDaemonConfig(campaignName, 0)
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get daemon config").
-			WithComponent("cli").
-			WithOperation("chat.run")
-	}
-
-	// Check if server is reachable
-	isReachable := pkgDaemon.CanConnect(daemonConfig.SocketPath)
-
-	if !isReachable {
-		fmt.Println("🚨 Guild daemon is not running")
-		fmt.Println()
-		fmt.Println("The Guild daemon must be running to start a chat session.")
-		fmt.Println()
-		fmt.Println("To start the daemon, run:")
-		fmt.Printf("  guild serve --campaign %s\n", campaignName)
-		fmt.Println()
-		fmt.Println("Then start chat again:")
-		fmt.Println("  guild chat")
-		fmt.Println()
-		fmt.Println("💡 Pro tip: Run 'guild serve' in a separate terminal to keep it running in the background")
-		return nil // Don't return error, just exit cleanly with instructions
-	}
-
-	// Connect to gRPC server
-	conn, err := grpc.Dial("unix://"+daemonConfig.SocketPath, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to connect to Guild server").
-			WithComponent("cli").
-			WithOperation("chat.run").
-			WithDetails("daemon_config", daemonConfig.GetServerAddress())
-	}
-	defer conn.Close()
-
-	// Create gRPC clients
-	guildClient := pb.NewGuildClient(conn)
-	promptClient := promptspb.NewPromptServiceClient(conn)
+	// Note: Daemon connection is now handled inside the chat app
 
 	// Initialize registry
 	reg := registry.NewComponentRegistry()
@@ -252,8 +208,8 @@ func runChat(cmd *cobra.Command, args []string) error {
 			WithOperation("chat.run")
 	}
 
-	// Create and run chat interface using v2 implementation
-	app := chatui.NewApp(ctx, guildConfig, conn, guildClient, promptClient, reg)
+	// Create and run chat interface with daemon connection management
+	app := chatui.NewApp(ctx, guildConfig, reg)
 	app.SetSelectedGuild(selectedGuild)
 	app.SetCampaignID(campaignName)
 	app.SetSessionID(chatSessionID)

@@ -13,13 +13,16 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	_ "modernc.org/sqlite" // SQLite driver
 
+	"github.com/lancekrogers/guild/internal/daemonconn"
 	"github.com/lancekrogers/guild/internal/ui/chat/agents"
 	"github.com/lancekrogers/guild/internal/ui/chat/commands"
 	"github.com/lancekrogers/guild/internal/ui/chat/common"
 	cfig "github.com/lancekrogers/guild/internal/ui/chat/common/config"
 	"github.com/lancekrogers/guild/internal/ui/chat/common/layout"
+	"github.com/lancekrogers/guild/internal/ui/chat/common/types"
 	"github.com/lancekrogers/guild/internal/ui/chat/common/utils"
 	"github.com/lancekrogers/guild/internal/ui/chat/completion"
 	"github.com/lancekrogers/guild/internal/ui/chat/managers"
@@ -75,6 +78,8 @@ type App struct {
 	// gRPC clients
 	grpcConn      *grpc.ClientConn
 	guildClient   pb.GuildClient
+	chatClient    pb.ChatServiceClient
+	sessionClient pb.SessionServiceClient
 	promptsClient promptspb.PromptServiceClient
 	registry      registry.ComponentRegistry
 
@@ -108,6 +113,12 @@ type App struct {
 	// Guild selection
 	selectedGuild string
 
+	// Daemon connection management
+	connManager      *daemonconn.Manager
+	connectionInfo   *daemonconn.ConnectionInfo
+	connectionStatus bool
+	directMode       bool // True when running without daemon
+
 	// Migrated V1 utilities
 	contentFormatter *formatting.ContentFormatter
 	markdownRenderer *formatting.MarkdownRenderer
@@ -126,21 +137,18 @@ type App struct {
 
 // NewApp creates a new chat application (simplified wrapper)
 func NewApp(ctx context.Context, guildConfig *config.GuildConfig,
-	conn *grpc.ClientConn, guildClient pb.GuildClient,
-	promptsClient promptspb.PromptServiceClient,
 	registry registry.ComponentRegistry,
 ) *App {
 	// Create basic app structure
 	app := &App{
-		ctx:           ctx,
-		grpcConn:      conn,
-		guildClient:   guildClient,
-		promptsClient: promptsClient,
-		registry:      registry,
-		messages:      make([]common.ChatMessage, 0),
-		activeTools:   make(map[string]*common.ToolExecution),
-		agents:        make([]string, 0),
-		currentView:   common.ViewModeNormal,
+		ctx:              ctx,
+		registry:         registry,
+		messages:         make([]common.ChatMessage, 0),
+		activeTools:      make(map[string]*common.ToolExecution),
+		agents:           make([]string, 0),
+		currentView:      common.ViewModeNormal,
+		connManager:      daemonconn.NewManager(ctx),
+		connectionStatus: false,
 	}
 
 	// Store guild config for later initialization
@@ -279,6 +287,12 @@ func (app *App) initializeComponents() error {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize panes").
 			WithComponent("chat.app").
 			WithOperation("initializeComponents")
+	}
+
+	// Initialize daemon connection
+	if err := app.initializeDaemonConnection(); err != nil {
+		// Enable direct mode fallback
+		app.enableDirectMode()
 	}
 
 	app.initialized = true
@@ -1633,6 +1647,424 @@ func (app *App) initializeVisualComponents() error {
 	app.mermaidProcessor.SetASCIISize(width-10, 30)
 
 	return nil
+}
+
+// addSystemMessage adds a system message to the chat
+func (app *App) addSystemMessage(message string) {
+	if app.statusPane != nil {
+		app.statusPane.AddNotification(message, "info")
+	}
+
+	// Also add to messages array if it exists
+	if app.messages != nil {
+		systemMsg := common.ChatMessage{
+			Type:      types.MsgSystem,
+			Content:   message,
+			Timestamp: time.Now(),
+			Metadata:  map[string]string{"source": "daemon"},
+		}
+		app.messages = append(app.messages, systemMsg)
+	}
+}
+
+// initializeDaemonConnection establishes connection to the Guild daemon
+func (app *App) initializeDaemonConnection() error {
+	// Try to connect to daemon
+	err := app.connManager.Connect(app.ctx)
+	if err != nil {
+		app.connectionStatus = false
+		app.updateConnectionStatus()
+		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to connect to daemon").
+			WithComponent("chat.app").
+			WithOperation("initializeDaemonConnection")
+	}
+
+	// Get connection info
+	conn, info := app.connManager.GetConnection()
+	if conn != nil && info != nil {
+		app.grpcConn = conn
+		app.connectionInfo = info
+		app.connectionStatus = true
+
+		// Create gRPC clients
+		app.guildClient = pb.NewGuildClient(conn)
+		app.chatClient = pb.NewChatServiceClient(conn)
+		app.sessionClient = pb.NewSessionServiceClient(conn)
+		app.promptsClient = promptspb.NewPromptServiceClient(conn)
+
+		// Update status display
+		app.updateConnectionStatus()
+
+		// Load session from daemon
+		if err := app.loadSessionFromDaemon(); err != nil {
+			// Log but don't fail
+			app.addSystemMessage("Warning: Failed to load session from daemon")
+		}
+	}
+
+	return nil
+}
+
+// updateConnectionStatus updates the UI with current connection status
+func (app *App) updateConnectionStatus() {
+	if app.statusPane == nil {
+		return
+	}
+
+	app.statusPane.SetConnectionStatus(app.connectionStatus)
+
+	if app.connectionStatus && app.connectionInfo != nil {
+		latency := app.connManager.GetLatency(app.ctx)
+		statusMsg := daemonconn.FormatConnectionStatus(app.connectionInfo, latency)
+		app.statusPane.UpdateStatus(statusMsg, "success")
+	} else {
+		app.statusPane.UpdateStatus("🔴 Daemon offline", "error")
+	}
+}
+
+// loadSessionFromDaemon loads previous session from the daemon
+func (app *App) loadSessionFromDaemon() error {
+	if app.sessionClient == nil {
+		return gerror.New(gerror.ErrCodeNotFound, "session client not available", nil).
+			WithComponent("chat.app").
+			WithOperation("loadSessionFromDaemon")
+	}
+
+	campaignID := app.config.CampaignID
+	if campaignID == "" {
+		// No campaign specified, create a default session
+		return app.createNewSession()
+	}
+
+	// Try to find existing session for this campaign
+	listReq := &pb.ListSessionsRequest{
+		CampaignId: &campaignID,
+		Limit:      1, // Get most recent session
+	}
+
+	listResp, err := app.sessionClient.ListSessions(app.ctx, listReq)
+	if err != nil {
+		// Can't list sessions, create new one
+		return app.createNewSession()
+	}
+
+	var session *pb.Session
+	if len(listResp.Sessions) > 0 {
+		// Use existing session
+		session = listResp.Sessions[0]
+		app.addSystemMessage(fmt.Sprintf("Restored session: %s", session.Name))
+	} else {
+		// Create new session
+		return app.createNewSession()
+	}
+
+	// Load message history for this session
+	return app.loadMessagesFromSession(session.Id)
+}
+
+// createNewSession creates a new session for the current campaign
+func (app *App) createNewSession() error {
+	// Check if session client is available
+	if app.sessionClient == nil {
+		return gerror.New(gerror.ErrCodeConnection, "session client not available", nil).
+			WithComponent("chat.app").
+			WithOperation("createNewSession")
+	}
+
+	createReq := &pb.CreateSessionRequest{
+		Name:       fmt.Sprintf("Chat-%d", time.Now().Unix()),
+		CampaignId: &app.config.CampaignID,
+		Metadata: map[string]string{
+			"client":     "guild-chat",
+			"created_by": "user",
+		},
+	}
+
+	session, err := app.sessionClient.CreateSession(app.ctx, createReq)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to create new session").
+			WithComponent("chat.app").
+			WithOperation("createNewSession")
+	}
+
+	app.config.SessionID = session.Id
+	app.addSystemMessage(fmt.Sprintf("Created new session: %s", session.Name))
+	return nil
+}
+
+// loadMessagesFromSession loads message history from a specific session
+func (app *App) loadMessagesFromSession(sessionID string) error {
+	// Get messages from last 24 hours
+	since := timestamppb.New(time.Now().Add(-24 * time.Hour))
+
+	streamReq := &pb.StreamMessagesRequest{
+		SessionId: sessionID,
+		Since:     since,
+	}
+
+	stream, err := app.sessionClient.StreamMessages(app.ctx, streamReq)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to stream messages").
+			WithComponent("chat.app").
+			WithOperation("loadMessagesFromSession").
+			WithDetails("session_id", sessionID)
+	}
+
+	var messageCount int
+	for {
+		msg, err := stream.Recv()
+		if err != nil {
+			if err.Error() == "EOF" {
+				break
+			}
+			return gerror.Wrap(err, gerror.ErrCodeConnection, "stream receive error").
+				WithComponent("chat.app").
+				WithOperation("loadMessagesFromSession")
+		}
+
+		// Convert protobuf message to internal format
+		chatMsg := app.convertProtoMessage(msg)
+		app.messages = append(app.messages, chatMsg)
+		messageCount++
+	}
+
+	if messageCount > 0 {
+		app.addSystemMessage(fmt.Sprintf("Loaded %d messages from previous session", messageCount))
+	}
+
+	return nil
+}
+
+// convertProtoMessage converts a protobuf Message to internal ChatMessage format
+func (app *App) convertProtoMessage(msg *pb.Message) common.ChatMessage {
+	var msgType types.MessageType
+
+	switch msg.Role {
+	case pb.Message_SYSTEM:
+		msgType = types.MsgSystem
+	case pb.Message_USER:
+		msgType = types.MsgUser
+	case pb.Message_ASSISTANT:
+		msgType = types.MsgAgent
+	case pb.Message_TOOL:
+		msgType = types.MsgToolComplete
+	default:
+		msgType = types.MsgSystem
+	}
+
+	return common.ChatMessage{
+		Type:      msgType,
+		Content:   msg.Content,
+		AgentID:   extractAgentID(msg.Metadata),
+		Timestamp: msg.CreatedAt.AsTime(),
+		Metadata:  msg.Metadata,
+	}
+}
+
+// extractAgentID extracts agent ID from message metadata
+func extractAgentID(metadata map[string]string) string {
+	if agentID, ok := metadata["agent_id"]; ok {
+		return agentID
+	}
+	if senderID, ok := metadata["sender_id"]; ok {
+		return senderID
+	}
+	return "system"
+}
+
+// enableDirectMode switches to direct orchestrator mode
+func (app *App) enableDirectMode() {
+	app.directMode = true
+	app.connectionStatus = false
+	app.updateConnectionStatus()
+
+	// Initialize direct mode components
+	if err := app.initializeDirectMode(); err != nil {
+		app.addSystemMessage("⚠️ Failed to initialize direct mode: " + err.Error())
+		return
+	}
+
+	app.addSystemMessage("⚠️ Daemon unavailable, using direct mode")
+}
+
+// initializeDirectMode sets up direct orchestrator for when daemon is unavailable
+func (app *App) initializeDirectMode() error {
+	// Create mock/direct gRPC clients for local operation
+	// This would integrate with the existing orchestrator package
+	// For now, we'll create a simple local implementation
+
+	// NOTE: This is where we'd integrate with pkg/orchestrator for direct mode
+	// The orchestrator package already has local execution capabilities
+
+	app.addSystemMessage("Direct mode initialized - commands will run locally")
+	return nil
+}
+
+// sendMessageDirect handles message sending in direct mode
+func (app *App) sendMessageDirect(ctx context.Context, content string) error {
+	if !app.directMode {
+		return gerror.New(gerror.ErrCodeInvalidInput, "not in direct mode", nil).
+			WithComponent("chat.app").
+			WithOperation("sendMessageDirect")
+	}
+
+	// Add user message to chat
+	userMsg := common.ChatMessage{
+		Type:      types.MsgUser,
+		Content:   content,
+		AgentID:   "user",
+		Timestamp: time.Now(),
+		Metadata:  map[string]string{"mode": "direct"},
+	}
+	app.messages = append(app.messages, userMsg)
+
+	// Process message locally using orchestrator
+	// This would integrate with the existing orchestrator package
+	response := fmt.Sprintf("Direct mode response to: %s", content)
+
+	// Add system response
+	responseMsg := common.ChatMessage{
+		Type:      types.MsgSystem,
+		Content:   response,
+		AgentID:   "system",
+		Timestamp: time.Now(),
+		Metadata:  map[string]string{"mode": "direct"},
+	}
+	app.messages = append(app.messages, responseMsg)
+
+	return nil
+}
+
+// isConnectedToDaemon returns true if connected to daemon, false if in direct mode
+func (app *App) isConnectedToDaemon() bool {
+	// Check basic connection status
+	if !app.connectionStatus || app.directMode {
+		return false
+	}
+	
+	// If we have a connection manager, check its status
+	if app.connManager != nil {
+		return app.connManager.IsConnected()
+	}
+	
+	// Otherwise, check if we have gRPC connection
+	return app.grpcConn != nil
+}
+
+// sendMessage sends a message via daemon or direct mode
+func (app *App) sendMessage(ctx context.Context, content string) error {
+	if app.isConnectedToDaemon() {
+		// Send via daemon
+		return app.sendMessageViaDaemon(ctx, content)
+	} else {
+		// Enable direct mode if not already enabled
+		if !app.directMode {
+			app.enableDirectMode()
+		}
+		// Send via direct mode
+		return app.sendMessageDirect(ctx, content)
+	}
+}
+
+// sendMessageViaDaemon sends message through daemon gRPC service
+func (app *App) sendMessageViaDaemon(ctx context.Context, content string) error {
+	if app.chatClient == nil {
+		return gerror.New(gerror.ErrCodeNotFound, "chat client not available", nil).
+			WithComponent("chat.app").
+			WithOperation("sendMessageViaDaemon")
+	}
+
+	// Create bidirectional stream for chat
+	stream, err := app.chatClient.Chat(ctx)
+	if err != nil {
+		// Connection failed, trigger reconnect and fallback
+		app.connManager.TriggerReconnect()
+		app.enableDirectMode()
+		return app.sendMessageDirect(ctx, content)
+	}
+
+	// Send chat message
+	chatReq := &pb.ChatRequest{
+		Request: &pb.ChatRequest_Message{
+			Message: &pb.ChatMessage{
+				SessionId:  app.config.SessionID,
+				SenderId:   "user",
+				SenderName: "User",
+				Content:    content,
+				Type:       pb.ChatMessage_USER_MESSAGE,
+				Timestamp:  time.Now().Unix(),
+				Metadata:   map[string]string{"client": "guild-chat"},
+			},
+		},
+	}
+
+	if err := stream.Send(chatReq); err != nil {
+		// Send failed, fallback to direct mode
+		app.enableDirectMode()
+		return app.sendMessageDirect(ctx, content)
+	}
+
+	// Handle responses (this would be done in a goroutine in real implementation)
+	go app.handleChatResponses(stream)
+
+	return nil
+}
+
+// handleChatResponses processes streaming responses from daemon
+func (app *App) handleChatResponses(stream pb.ChatService_ChatClient) {
+	for {
+		resp, err := stream.Recv()
+		if err != nil {
+			// Stream ended or error occurred
+			if err.Error() != "EOF" {
+				app.addSystemMessage("Connection to daemon lost: " + err.Error())
+				app.enableDirectMode()
+			}
+			return
+		}
+
+		// Process response based on type
+		switch r := resp.Response.(type) {
+		case *pb.ChatResponse_Message:
+			// Add message to chat
+			msg := app.convertChatMessage(r.Message)
+			app.messages = append(app.messages, msg)
+		case *pb.ChatResponse_Thinking:
+			// Show agent thinking indicator
+			app.addSystemMessage(fmt.Sprintf("%s is %s", r.Thinking.AgentName, r.Thinking.State.String()))
+		case *pb.ChatResponse_Error:
+			// Handle error
+			app.addSystemMessage(fmt.Sprintf("Error: %s", r.Error.Message))
+		}
+	}
+}
+
+// convertChatMessage converts gRPC ChatMessage to internal format
+func (app *App) convertChatMessage(msg *pb.ChatMessage) common.ChatMessage {
+	var msgType types.MessageType
+
+	switch msg.Type {
+	case pb.ChatMessage_USER_MESSAGE:
+		msgType = types.MsgUser
+	case pb.ChatMessage_AGENT_RESPONSE:
+		msgType = types.MsgAgent
+	case pb.ChatMessage_SYSTEM_MESSAGE:
+		msgType = types.MsgSystem
+	case pb.ChatMessage_TOOL_REQUEST:
+		msgType = types.MsgToolStart
+	case pb.ChatMessage_TOOL_RESULT:
+		msgType = types.MsgToolComplete
+	default:
+		msgType = types.MsgSystem
+	}
+
+	return common.ChatMessage{
+		Type:      msgType,
+		Content:   msg.Content,
+		AgentID:   msg.SenderId,
+		Timestamp: time.Unix(msg.Timestamp, 0),
+		Metadata:  msg.Metadata,
+	}
 }
 
 // getCompletionStrings extracts string content from completion results

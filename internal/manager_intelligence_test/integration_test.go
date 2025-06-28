@@ -29,10 +29,10 @@ type TestScenario struct {
 
 // ExpectedOutcome defines what we expect from the scenario
 type ExpectedOutcome struct {
-	AssignmentEfficiency   float64 // Expected assignment quality score
-	TaskCompletionRate     float64 // Expected percentage of tasks completed
-	WorkloadBalance        float64 // Expected workload balance (0-1, higher is better)
-	CommunicationMessages  int     // Expected number of coordination messages
+	AssignmentEfficiency  float64 // Expected assignment quality score
+	TaskCompletionRate    float64 // Expected percentage of tasks completed
+	WorkloadBalance       float64 // Expected workload balance (0-1, higher is better)
+	CommunicationMessages int     // Expected number of coordination messages
 	RisksDetected         int     // Expected number of risks detected
 	BottlenecksResolved   int     // Expected number of bottlenecks resolved
 }
@@ -50,8 +50,8 @@ func TestGuildElenaManagerIntelligence_CompleteScenarios(t *testing.T) {
 				TaskCompletionRate:    0.9,
 				WorkloadBalance:       0.7,
 				CommunicationMessages: 5,
-				RisksDetected:        2,
-				BottlenecksResolved:  1,
+				RisksDetected:         2,
+				BottlenecksResolved:   1,
 			},
 		},
 		{
@@ -64,8 +64,8 @@ func TestGuildElenaManagerIntelligence_CompleteScenarios(t *testing.T) {
 				TaskCompletionRate:    0.8,
 				WorkloadBalance:       0.6, // Lower due to deadline pressure
 				CommunicationMessages: 8,
-				RisksDetected:        3,
-				BottlenecksResolved:  2,
+				RisksDetected:         3,
+				BottlenecksResolved:   2,
 			},
 		},
 		{
@@ -78,8 +78,8 @@ func TestGuildElenaManagerIntelligence_CompleteScenarios(t *testing.T) {
 				TaskCompletionRate:    0.9,
 				WorkloadBalance:       0.8,
 				CommunicationMessages: 6,
-				RisksDetected:        1,
-				BottlenecksResolved:  1,
+				RisksDetected:         1,
+				BottlenecksResolved:   1,
 			},
 		},
 	}
@@ -87,7 +87,7 @@ func TestGuildElenaManagerIntelligence_CompleteScenarios(t *testing.T) {
 	for _, scenario := range scenarios {
 		t.Run(scenario.Name, func(t *testing.T) {
 			ctx := context.Background()
-			
+
 			// Set up test environment
 			testDB := setupTestDatabase(t)
 			defer cleanupTestDatabase(t, testDB)
@@ -165,7 +165,7 @@ func TestGuildAgentCapabilityModeling_AccuracyAndLearning(t *testing.T) {
 
 	t.Run("performance_learning", func(t *testing.T) {
 		capManager := manager.NewCapabilityModelManager(testDB)
-		
+
 		model, err := capManager.LoadAgentModel(ctx, "learning-agent")
 		if err != nil {
 			t.Fatalf("Failed to load agent model: %v", err)
@@ -178,7 +178,7 @@ func TestGuildAgentCapabilityModeling_AccuracyAndLearning(t *testing.T) {
 		success := true
 
 		initialSuccessRate := model.Performance.SuccessRate
-		
+
 		err = model.UpdatePerformance(ctx, taskID, success, duration, complexity)
 		if err != nil {
 			t.Fatalf("Failed to update performance: %v", err)
@@ -186,14 +186,14 @@ func TestGuildAgentCapabilityModeling_AccuracyAndLearning(t *testing.T) {
 
 		// Success rate should improve or stay high
 		if model.Performance.SuccessRate < initialSuccessRate && model.Performance.TasksCompleted > 1 {
-			t.Errorf("Success rate decreased unexpectedly: %f -> %f", 
+			t.Errorf("Success rate decreased unexpectedly: %f -> %f",
 				initialSuccessRate, model.Performance.SuccessRate)
 		}
 
 		// Tasks completed should increment
 		expectedTasks := 1
 		if model.Performance.TasksCompleted < expectedTasks {
-			t.Errorf("Expected tasks completed to be at least %d, got %d", 
+			t.Errorf("Expected tasks completed to be at least %d, got %d",
 				expectedTasks, model.Performance.TasksCompleted)
 		}
 	})
@@ -259,7 +259,7 @@ func TestGuildTaskAssignment_IntelligentDistribution(t *testing.T) {
 		}
 
 		frontendTask := &kanban.Task{
-			ID:    "frontend-specialist-task", 
+			ID:    "frontend-specialist-task",
 			Title: "UI component design",
 			Tags:  []string{"frontend", "ui"},
 		}
@@ -287,7 +287,7 @@ func TestGuildTaskAssignment_IntelligentDistribution(t *testing.T) {
 		// Should have high confidence in specialist assignments
 		for _, assignment := range plan.Assignments {
 			if assignment.Confidence < 0.5 {
-				t.Errorf("Low confidence in assignment: %f for task %s to agent %s", 
+				t.Errorf("Low confidence in assignment: %f for task %s to agent %s",
 					assignment.Confidence, assignment.TaskID, assignment.AgentID)
 			}
 		}
@@ -302,7 +302,7 @@ func TestGuildProgressTracking_RealTimeMonitoring(t *testing.T) {
 
 	t.Run("progress_calculation", func(t *testing.T) {
 		tracker := manager.NewProgressTracker(testDB, "test-commission")
-		
+
 		err := tracker.Initialize(ctx)
 		if err != nil {
 			t.Fatalf("Failed to initialize progress tracker: %v", err)
@@ -355,7 +355,7 @@ func TestGuildProgressTracking_RealTimeMonitoring(t *testing.T) {
 
 	t.Run("risk_detection", func(t *testing.T) {
 		tracker := manager.NewProgressTracker(testDB, "test-commission-2")
-		
+
 		err := tracker.Initialize(ctx)
 		if err != nil {
 			t.Fatalf("Failed to initialize progress tracker: %v", err)
@@ -672,7 +672,7 @@ func createMixedTasks() []*kanban.Task {
 		Tags:  []string{"frontend", "react", "ui"},
 	})
 	tasks = append(tasks, &kanban.Task{
-		ID:    "mixed-2", 
+		ID:    "mixed-2",
 		Title: "User interface design",
 		Tags:  []string{"frontend", "design", "ux"},
 	})
@@ -698,8 +698,8 @@ func runScenario(t *testing.T, ctx context.Context, db *sql.DB, scenario TestSce
 		TaskCompletionRate:    0.9,
 		WorkloadBalance:       0.8,
 		CommunicationMessages: 6,
-		RisksDetected:        1,
-		BottlenecksResolved:  1,
+		RisksDetected:         1,
+		BottlenecksResolved:   1,
 	}
 }
 
@@ -707,7 +707,7 @@ func verifyOutcome(t *testing.T, expected ExpectedOutcome, actual ScenarioResult
 	tolerance := 0.1 // 10% tolerance
 
 	if abs(actual.AssignmentEfficiency-expected.AssignmentEfficiency) > tolerance {
-		t.Errorf("Assignment efficiency mismatch: expected %f, got %f", 
+		t.Errorf("Assignment efficiency mismatch: expected %f, got %f",
 			expected.AssignmentEfficiency, actual.AssignmentEfficiency)
 	}
 
@@ -732,8 +732,8 @@ type ScenarioResult struct {
 	TaskCompletionRate    float64
 	WorkloadBalance       float64
 	CommunicationMessages int
-	RisksDetected        int
-	BottlenecksResolved  int
+	RisksDetected         int
+	BottlenecksResolved   int
 }
 
 // Mock implementations

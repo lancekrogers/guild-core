@@ -36,55 +36,55 @@ type Coordinator struct {
 type CoordinationStrategy interface {
 	// ShouldApply determines if this strategy should be applied given the current context
 	ShouldApply(ctx context.Context, context CoordinationContext) bool
-	
+
 	// Apply executes the coordination strategy
 	Apply(ctx context.Context, coordinator *Coordinator) error
-	
+
 	// GetPriority returns the priority of this strategy (higher number = higher priority)
 	GetPriority() int
-	
+
 	// GetName returns a human-readable name for this strategy
 	GetName() string
 }
 
 // CoordinationContext provides context for strategy decision making
 type CoordinationContext struct {
-	TotalTasks         int                                `json:"total_tasks"`
-	CompletedTasks     int                                `json:"completed_tasks"`
-	BlockedTasks       int                                `json:"blocked_tasks"`
-	AgentUtilization   map[string]float64                 `json:"agent_utilization"`
-	CriticalPathStatus string                             `json:"critical_path_status"`
-	RecentBottlenecks  []Bottleneck                       `json:"recent_bottlenecks"`
-	TimeToDeadline     time.Duration                      `json:"time_to_deadline"`
-	QualityIssues      int                                `json:"quality_issues"`
-	TeamMorale         float64                            `json:"team_morale"`
-	Risks              []Risk                             `json:"risks"`
+	TotalTasks         int                `json:"total_tasks"`
+	CompletedTasks     int                `json:"completed_tasks"`
+	BlockedTasks       int                `json:"blocked_tasks"`
+	AgentUtilization   map[string]float64 `json:"agent_utilization"`
+	CriticalPathStatus string             `json:"critical_path_status"`
+	RecentBottlenecks  []Bottleneck       `json:"recent_bottlenecks"`
+	TimeToDeadline     time.Duration      `json:"time_to_deadline"`
+	QualityIssues      int                `json:"quality_issues"`
+	TeamMorale         float64            `json:"team_morale"`
+	Risks              []Risk             `json:"risks"`
 }
 
 // CoordinationEvent records a coordination action taken
 type CoordinationEvent struct {
-	ID          string    `json:"id"`
-	Timestamp   time.Time `json:"timestamp"`
-	Strategy    string    `json:"strategy"`
-	Action      string    `json:"action"`
-	AffectedTasks []string `json:"affected_tasks"`
-	AffectedAgents []string `json:"affected_agents"`
-	Reasoning   string    `json:"reasoning"`
-	Outcome     string    `json:"outcome"`
-	Success     bool      `json:"success"`
+	ID             string    `json:"id"`
+	Timestamp      time.Time `json:"timestamp"`
+	Strategy       string    `json:"strategy"`
+	Action         string    `json:"action"`
+	AffectedTasks  []string  `json:"affected_tasks"`
+	AffectedAgents []string  `json:"affected_agents"`
+	Reasoning      string    `json:"reasoning"`
+	Outcome        string    `json:"outcome"`
+	Success        bool      `json:"success"`
 }
 
 // Bottleneck represents a coordination bottleneck
 type Bottleneck struct {
-	ID           string    `json:"id"`
-	Type         string    `json:"type"`          // resource, dependency, approval, technical
-	Location     string    `json:"location"`      // Where the bottleneck is occurring
-	AffectedTasks []string `json:"affected_tasks"`
-	Impact       string    `json:"impact"`        // Description of impact
-	Severity     int       `json:"severity"`      // 1-5 severity rating
-	DetectedAt   time.Time `json:"detected_at"`
-	Duration     time.Duration `json:"duration"`  // How long it's been a bottleneck
-	AutoResolve  bool      `json:"auto_resolve"` // Can this be automatically resolved
+	ID            string        `json:"id"`
+	Type          string        `json:"type"`     // resource, dependency, approval, technical
+	Location      string        `json:"location"` // Where the bottleneck is occurring
+	AffectedTasks []string      `json:"affected_tasks"`
+	Impact        string        `json:"impact"`   // Description of impact
+	Severity      int           `json:"severity"` // 1-5 severity rating
+	DetectedAt    time.Time     `json:"detected_at"`
+	Duration      time.Duration `json:"duration"`     // How long it's been a bottleneck
+	AutoResolve   bool          `json:"auto_resolve"` // Can this be automatically resolved
 }
 
 // CommunicationChannel defines interface for agent communication
@@ -152,7 +152,7 @@ func (c *Coordinator) CoordinateAgents(ctx context.Context) error {
 
 	// Apply strategies in priority order
 	applicableStrategies := c.getApplicableStrategies(ctx, context)
-	
+
 	logger.InfoContext(ctx, "Applying coordination strategies",
 		"applicable_count", len(applicableStrategies),
 		"context", context)
@@ -236,7 +236,7 @@ func (c *Coordinator) gatherCoordinationContext(ctx context.Context) (Coordinati
 		AgentUtilization:   statusReport.AgentUtilization,
 		CriticalPathStatus: statusReport.CriticalPathStatus,
 		RecentBottlenecks:  bottlenecks,
-		QualityIssues:      0, // Would be calculated from quality metrics
+		QualityIssues:      0,   // Would be calculated from quality metrics
 		TeamMorale:         0.8, // Would be calculated from performance data
 		Risks:              statusReport.Risks,
 	}
@@ -276,14 +276,14 @@ func (c *Coordinator) detectBottlenecks(ctx context.Context) []Bottleneck {
 	for agentID, utilization := range c.getAgentUtilization() {
 		if utilization > 0.9 {
 			bottleneck := Bottleneck{
-				ID:           generateID(),
-				Type:         "resource",
-				Location:     fmt.Sprintf("Agent: %s", agentID),
+				ID:            generateID(),
+				Type:          "resource",
+				Location:      fmt.Sprintf("Agent: %s", agentID),
 				AffectedTasks: c.getAgentTasks(agentID),
-				Impact:       "Agent overload may cause delays and quality issues",
-				Severity:     4,
-				DetectedAt:   time.Now(),
-				AutoResolve:  true,
+				Impact:        "Agent overload may cause delays and quality issues",
+				Severity:      4,
+				DetectedAt:    time.Now(),
+				AutoResolve:   true,
 			}
 			bottlenecks = append(bottlenecks, bottleneck)
 		}
@@ -293,14 +293,14 @@ func (c *Coordinator) detectBottlenecks(ctx context.Context) []Bottleneck {
 	for taskID, task := range c.tasks {
 		if task.Status == kanban.StatusBlocked && len(task.Dependencies) > 0 {
 			bottleneck := Bottleneck{
-				ID:           generateID(),
-				Type:         "dependency",
-				Location:     fmt.Sprintf("Task: %s", taskID),
+				ID:            generateID(),
+				Type:          "dependency",
+				Location:      fmt.Sprintf("Task: %s", taskID),
 				AffectedTasks: append([]string{taskID}, c.getDependentTasks(taskID)...),
-				Impact:       "Blocked task is preventing dependent work",
-				Severity:     3,
-				DetectedAt:   time.Now(),
-				AutoResolve:  false,
+				Impact:        "Blocked task is preventing dependent work",
+				Severity:      3,
+				DetectedAt:    time.Now(),
+				AutoResolve:   false,
 			}
 			bottlenecks = append(bottlenecks, bottleneck)
 		}
@@ -331,7 +331,7 @@ func (ps *ParallelizationStrategy) Apply(ctx context.Context, coordinator *Coord
 
 	// Find independent tasks that can be parallelized
 	independentTasks := coordinator.findIndependentTasks()
-	
+
 	// Get available agents
 	availableAgents := coordinator.getAvailableAgents()
 
@@ -361,7 +361,7 @@ func (ps *ParallelizationStrategy) Apply(ctx context.Context, coordinator *Coord
 }
 
 func (ps *ParallelizationStrategy) GetPriority() int { return 8 }
-func (ps *ParallelizationStrategy) GetName() string { return "Parallelization" }
+func (ps *ParallelizationStrategy) GetName() string  { return "Parallelization" }
 
 // BottleneckMitigationStrategy addresses identified bottlenecks
 type BottleneckMitigationStrategy struct{}
@@ -395,7 +395,7 @@ func (bms *BottleneckMitigationStrategy) Apply(ctx context.Context, coordinator 
 }
 
 func (bms *BottleneckMitigationStrategy) GetPriority() int { return 9 }
-func (bms *BottleneckMitigationStrategy) GetName() string { return "BottleneckMitigation" }
+func (bms *BottleneckMitigationStrategy) GetName() string  { return "BottleneckMitigation" }
 
 // WorkloadBalancingStrategy balances work across agents
 type WorkloadBalancingStrategy struct{}
@@ -425,13 +425,13 @@ func (wbs *WorkloadBalancingStrategy) Apply(ctx context.Context, coordinator *Co
 	logger.InfoContext(ctx, "Applying workload balancing strategy")
 
 	balanced := coordinator.balanceWorkload(ctx)
-	
+
 	logger.InfoContext(ctx, "Workload balancing completed", "tasks_rebalanced", balanced)
 	return nil
 }
 
 func (wbs *WorkloadBalancingStrategy) GetPriority() int { return 6 }
-func (wbs *WorkloadBalancingStrategy) GetName() string { return "WorkloadBalancing" }
+func (wbs *WorkloadBalancingStrategy) GetName() string  { return "WorkloadBalancing" }
 
 // QualityAssuranceStrategy ensures quality standards
 type QualityAssuranceStrategy struct{}
@@ -446,13 +446,13 @@ func (qas *QualityAssuranceStrategy) Apply(ctx context.Context, coordinator *Coo
 
 	// Implement quality improvements
 	improved := coordinator.implementQualityMeasures(ctx)
-	
+
 	logger.InfoContext(ctx, "Quality assurance completed", "measures_implemented", improved)
 	return nil
 }
 
 func (qas *QualityAssuranceStrategy) GetPriority() int { return 7 }
-func (qas *QualityAssuranceStrategy) GetName() string { return "QualityAssurance" }
+func (qas *QualityAssuranceStrategy) GetName() string  { return "QualityAssurance" }
 
 // DeadlineManagementStrategy manages deadline pressures
 type DeadlineManagementStrategy struct{}
@@ -462,10 +462,10 @@ func (dms *DeadlineManagementStrategy) ShouldApply(ctx context.Context, context 
 	if context.TimeToDeadline <= 0 {
 		return false
 	}
-	
+
 	expectedProgress := 1.0 - (context.TimeToDeadline.Hours() / (7 * 24)) // Assuming 1 week projects
 	actualProgress := float64(context.CompletedTasks) / float64(context.TotalTasks)
-	
+
 	return actualProgress < expectedProgress
 }
 
@@ -474,13 +474,13 @@ func (dms *DeadlineManagementStrategy) Apply(ctx context.Context, coordinator *C
 	logger.InfoContext(ctx, "Applying deadline management strategy")
 
 	actions := coordinator.implementDeadlineActions(ctx)
-	
+
 	logger.InfoContext(ctx, "Deadline management completed", "actions_taken", actions)
 	return nil
 }
 
 func (dms *DeadlineManagementStrategy) GetPriority() int { return 10 }
-func (dms *DeadlineManagementStrategy) GetName() string { return "DeadlineManagement" }
+func (dms *DeadlineManagementStrategy) GetName() string  { return "DeadlineManagement" }
 
 // CommunicationOptimizationStrategy optimizes team communication
 type CommunicationOptimizationStrategy struct{}
@@ -495,44 +495,44 @@ func (cos *CommunicationOptimizationStrategy) Apply(ctx context.Context, coordin
 	logger.InfoContext(ctx, "Applying communication optimization strategy")
 
 	improvements := coordinator.optimizeCommunication(ctx)
-	
+
 	logger.InfoContext(ctx, "Communication optimization completed", "improvements_made", improvements)
 	return nil
 }
 
 func (cos *CommunicationOptimizationStrategy) GetPriority() int { return 5 }
-func (cos *CommunicationOptimizationStrategy) GetName() string { return "CommunicationOptimization" }
+func (cos *CommunicationOptimizationStrategy) GetName() string  { return "CommunicationOptimization" }
 
 // Helper methods for coordinator operations
 
 func (c *Coordinator) findIndependentTasks() []*kanban.Task {
 	var independent []*kanban.Task
-	
+
 	for _, task := range c.tasks {
 		if task.Status == kanban.StatusTodo && len(task.Dependencies) == 0 && task.AssignedTo == "" {
 			independent = append(independent, task)
 		}
 	}
-	
+
 	return independent
 }
 
 func (c *Coordinator) getAvailableAgents() []string {
 	var available []string
-	
+
 	utilization := c.getAgentUtilization()
 	for agentID, util := range utilization {
 		if util < 0.7 { // Consider agents with <70% utilization as available
 			available = append(available, agentID)
 		}
 	}
-	
+
 	return available
 }
 
 func (c *Coordinator) getAgentUtilization() map[string]float64 {
 	utilization := make(map[string]float64)
-	
+
 	// Count tasks per agent
 	taskCounts := make(map[string]int)
 	for _, task := range c.tasks {
@@ -540,13 +540,13 @@ func (c *Coordinator) getAgentUtilization() map[string]float64 {
 			taskCounts[task.AssignedTo]++
 		}
 	}
-	
+
 	// Calculate utilization (assuming max 5 concurrent tasks)
 	for agentID := range c.agents {
 		count := taskCounts[agentID]
 		utilization[agentID] = float64(count) / 5.0
 	}
-	
+
 	return utilization
 }
 
@@ -575,40 +575,40 @@ func (c *Coordinator) getDependentTasks(taskID string) []string {
 
 func (c *Coordinator) assignTaskToAgent(ctx context.Context, taskID, agentID, reason string) error {
 	logger := observability.GetLogger(ctx)
-	
+
 	task, exists := c.tasks[taskID]
 	if !exists {
 		return gerror.New(gerror.ErrCodeValidation, "task not found", nil).
 			WithDetails("task_id", taskID)
 	}
-	
+
 	task.AssignedTo = agentID
 	task.UpdatedAt = time.Now()
-	
+
 	logger.InfoContext(ctx, "Task assigned to agent",
 		"task_id", taskID,
 		"agent_id", agentID,
 		"reason", reason)
-	
+
 	return nil
 }
 
 func (c *Coordinator) redistributeTasksFromOverloadedAgent(ctx context.Context, location string) bool {
 	// Extract agent ID from location string
 	agentID := strings.TrimPrefix(location, "Agent: ")
-	
+
 	// Find tasks that can be redistributed
 	redistributableTasks := c.getRedistributableTasks(agentID)
 	if len(redistributableTasks) == 0 {
 		return false
 	}
-	
+
 	// Find available agents
 	availableAgents := c.getAvailableAgents()
 	if len(availableAgents) == 0 {
 		return false
 	}
-	
+
 	// Redistribute tasks
 	for i, taskID := range redistributableTasks {
 		if i >= len(availableAgents) {
@@ -616,21 +616,21 @@ func (c *Coordinator) redistributeTasksFromOverloadedAgent(ctx context.Context, 
 		}
 		c.assignTaskToAgent(ctx, taskID, availableAgents[i], "load_balancing")
 	}
-	
+
 	return true
 }
 
 func (c *Coordinator) getRedistributableTasks(agentID string) []string {
 	var redistributable []string
-	
+
 	for taskID, task := range c.tasks {
-		if task.AssignedTo == agentID && 
-		   task.Status == kanban.StatusTodo && 
-		   len(task.Dependencies) == 0 {
+		if task.AssignedTo == agentID &&
+			task.Status == kanban.StatusTodo &&
+			len(task.Dependencies) == 0 {
 			redistributable = append(redistributable, taskID)
 		}
 	}
-	
+
 	return redistributable
 }
 

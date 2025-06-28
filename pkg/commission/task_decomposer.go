@@ -23,12 +23,12 @@ type TaskDecomposer struct {
 
 // TaskPattern defines a pattern for generating tasks from requirements
 type TaskPattern struct {
-	Name        string          `json:"name"`
-	Description string          `json:"description"`
-	Matcher     PatternMatcher  `json:"-"` // Not serialized
-	Templates   []TaskTemplate  `json:"templates"`
-	Priority    int             `json:"priority"`
-	Category    string          `json:"category"`
+	Name        string         `json:"name"`
+	Description string         `json:"description"`
+	Matcher     PatternMatcher `json:"-"` // Not serialized
+	Templates   []TaskTemplate `json:"templates"`
+	Priority    int            `json:"priority"`
+	Category    string         `json:"category"`
 }
 
 // PatternMatcher is a function that determines if a requirement matches a pattern
@@ -36,12 +36,12 @@ type PatternMatcher func(requirement Requirement) bool
 
 // TaskTemplate defines a template for creating tasks
 type TaskTemplate struct {
-	Name         string            `json:"name"`
-	Type         string            `json:"type"` // design, implementation, testing, documentation
-	Description  string            `json:"description"`
-	Prerequisites []string         `json:"prerequisites"`
-	Complexity   int               `json:"base_complexity"`
-	Metadata     map[string]string `json:"metadata"`
+	Name          string            `json:"name"`
+	Type          string            `json:"type"` // design, implementation, testing, documentation
+	Description   string            `json:"description"`
+	Prerequisites []string          `json:"prerequisites"`
+	Complexity    int               `json:"base_complexity"`
+	Metadata      map[string]string `json:"metadata"`
 }
 
 // RequirementAnalyzer analyzes commission content and extracts structured requirements
@@ -55,7 +55,7 @@ func NewTaskDecomposer(llmClient providers.LLMClient) *TaskDecomposer {
 		patterns:  make(map[string]*TaskPattern),
 		llmClient: llmClient,
 	}
-	
+
 	td.initializePatterns()
 	return td
 }
@@ -94,13 +94,13 @@ func (td *TaskDecomposer) Decompose(ctx context.Context, analysis *Analysis, age
 
 		// Find matching patterns
 		matchingPatterns := td.findMatchingPatterns(requirement)
-		
+
 		if len(matchingPatterns) > 0 {
 			// Use the highest priority pattern
 			bestPattern := td.selectBestPattern(matchingPatterns)
 			tasks := td.applyPattern(bestPattern, requirement, &taskCounter)
 			allTasks = append(allTasks, tasks...)
-			
+
 			logger.DebugContext(ctx, "Applied pattern to requirement",
 				"requirement_id", requirement.ID,
 				"pattern_name", bestPattern.Name,
@@ -109,7 +109,7 @@ func (td *TaskDecomposer) Decompose(ctx context.Context, analysis *Analysis, age
 			// Use generic decomposition
 			tasks := td.genericDecompose(requirement, &taskCounter)
 			allTasks = append(allTasks, tasks...)
-			
+
 			logger.DebugContext(ctx, "Applied generic decomposition",
 				"requirement_id", requirement.ID,
 				"tasks_generated", len(tasks))
@@ -122,7 +122,7 @@ func (td *TaskDecomposer) Decompose(ctx context.Context, analysis *Analysis, age
 	// Generate additional tasks for project setup and completion
 	setupTasks := td.generateSetupTasks(&taskCounter)
 	completionTasks := td.generateCompletionTasks(&taskCounter)
-	
+
 	allTasks = append(setupTasks, allTasks...)
 	allTasks = append(allTasks, completionTasks...)
 
@@ -183,7 +183,7 @@ func (ra *RequirementAnalyzer) Analyze(ctx context.Context, commission *Commissi
 	analysis := &Analysis{
 		Requirements:    requirements,
 		TechnicalStack:  technicalStack,
-		Scope:          scope,
+		Scope:           scope,
 		EstimatedEffort: effort,
 		RiskFactors:     riskFactors,
 		SuccessCriteria: successCriteria,
@@ -218,28 +218,28 @@ func (td *TaskDecomposer) initializePatterns() {
 				Metadata:    map[string]string{"phase": "design"},
 			},
 			{
-				Name:        "Implement {endpoint} handler",
-				Type:        "implementation",
-				Description: "Implement the API endpoint handler and business logic",
+				Name:          "Implement {endpoint} handler",
+				Type:          "implementation",
+				Description:   "Implement the API endpoint handler and business logic",
 				Prerequisites: []string{"Design {endpoint} API schema"},
-				Complexity:  5,
-				Metadata:    map[string]string{"phase": "implementation"},
+				Complexity:    5,
+				Metadata:      map[string]string{"phase": "implementation"},
 			},
 			{
-				Name:        "Write {endpoint} tests",
-				Type:        "testing",
-				Description: "Write unit and integration tests for the endpoint",
+				Name:          "Write {endpoint} tests",
+				Type:          "testing",
+				Description:   "Write unit and integration tests for the endpoint",
 				Prerequisites: []string{"Implement {endpoint} handler"},
-				Complexity:  3,
-				Metadata:    map[string]string{"phase": "testing"},
+				Complexity:    3,
+				Metadata:      map[string]string{"phase": "testing"},
 			},
 			{
-				Name:        "Document {endpoint} API",
-				Type:        "documentation",
-				Description: "Create API documentation and usage examples",
+				Name:          "Document {endpoint} API",
+				Type:          "documentation",
+				Description:   "Create API documentation and usage examples",
 				Prerequisites: []string{"Write {endpoint} tests"},
-				Complexity:  2,
-				Metadata:    map[string]string{"phase": "documentation"},
+				Complexity:    2,
+				Metadata:      map[string]string{"phase": "documentation"},
 			},
 		},
 	}
@@ -260,20 +260,20 @@ func (td *TaskDecomposer) initializePatterns() {
 				Metadata:    map[string]string{"phase": "design"},
 			},
 			{
-				Name:        "Create {entity} migrations",
-				Type:        "implementation",
-				Description: "Create database migration scripts",
+				Name:          "Create {entity} migrations",
+				Type:          "implementation",
+				Description:   "Create database migration scripts",
 				Prerequisites: []string{"Design {entity} database schema"},
-				Complexity:  3,
-				Metadata:    map[string]string{"phase": "implementation"},
+				Complexity:    3,
+				Metadata:      map[string]string{"phase": "implementation"},
 			},
 			{
-				Name:        "Implement {entity} repository",
-				Type:        "implementation",
-				Description: "Implement data access layer and repository pattern",
+				Name:          "Implement {entity} repository",
+				Type:          "implementation",
+				Description:   "Implement data access layer and repository pattern",
 				Prerequisites: []string{"Create {entity} migrations"},
-				Complexity:  5,
-				Metadata:    map[string]string{"phase": "implementation"},
+				Complexity:    5,
+				Metadata:      map[string]string{"phase": "implementation"},
 			},
 		},
 	}
@@ -294,20 +294,20 @@ func (td *TaskDecomposer) initializePatterns() {
 				Metadata:    map[string]string{"phase": "design"},
 			},
 			{
-				Name:        "Implement {component} component",
-				Type:        "implementation",
-				Description: "Develop the UI component with styling",
+				Name:          "Implement {component} component",
+				Type:          "implementation",
+				Description:   "Develop the UI component with styling",
 				Prerequisites: []string{"Design {component} mockups"},
-				Complexity:  5,
-				Metadata:    map[string]string{"phase": "implementation"},
+				Complexity:    5,
+				Metadata:      map[string]string{"phase": "implementation"},
 			},
 			{
-				Name:        "Test {component} interactions",
-				Type:        "testing",
-				Description: "Write interaction and accessibility tests",
+				Name:          "Test {component} interactions",
+				Type:          "testing",
+				Description:   "Write interaction and accessibility tests",
 				Prerequisites: []string{"Implement {component} component"},
-				Complexity:  3,
-				Metadata:    map[string]string{"phase": "testing"},
+				Complexity:    3,
+				Metadata:      map[string]string{"phase": "testing"},
 			},
 		},
 	}
@@ -328,28 +328,28 @@ func (td *TaskDecomposer) initializePatterns() {
 				Metadata:    map[string]string{"phase": "design", "security": "high"},
 			},
 			{
-				Name:        "Implement user registration",
-				Type:        "implementation",
-				Description: "Implement user registration with validation",
+				Name:          "Implement user registration",
+				Type:          "implementation",
+				Description:   "Implement user registration with validation",
 				Prerequisites: []string{"Design authentication architecture"},
-				Complexity:  5,
-				Metadata:    map[string]string{"phase": "implementation"},
+				Complexity:    5,
+				Metadata:      map[string]string{"phase": "implementation"},
 			},
 			{
-				Name:        "Implement user login",
-				Type:        "implementation",
-				Description: "Implement login with session management",
+				Name:          "Implement user login",
+				Type:          "implementation",
+				Description:   "Implement login with session management",
 				Prerequisites: []string{"Implement user registration"},
-				Complexity:  5,
-				Metadata:    map[string]string{"phase": "implementation"},
+				Complexity:    5,
+				Metadata:      map[string]string{"phase": "implementation"},
 			},
 			{
-				Name:        "Add password security",
-				Type:        "implementation",
-				Description: "Implement password hashing and security features",
+				Name:          "Add password security",
+				Type:          "implementation",
+				Description:   "Implement password hashing and security features",
 				Prerequisites: []string{"Implement user login"},
-				Complexity:  3,
-				Metadata:    map[string]string{"phase": "implementation", "security": "high"},
+				Complexity:    3,
+				Metadata:      map[string]string{"phase": "implementation", "security": "high"},
 			},
 		},
 	}
@@ -370,20 +370,20 @@ func (td *TaskDecomposer) initializePatterns() {
 				Metadata:    map[string]string{"phase": "setup"},
 			},
 			{
-				Name:        "Write unit test suite",
-				Type:        "testing",
-				Description: "Create comprehensive unit tests",
+				Name:          "Write unit test suite",
+				Type:          "testing",
+				Description:   "Create comprehensive unit tests",
 				Prerequisites: []string{"Setup testing framework"},
-				Complexity:  8,
-				Metadata:    map[string]string{"phase": "testing"},
+				Complexity:    8,
+				Metadata:      map[string]string{"phase": "testing"},
 			},
 			{
-				Name:        "Setup integration tests",
-				Type:        "testing",
-				Description: "Create integration test framework",
+				Name:          "Setup integration tests",
+				Type:          "testing",
+				Description:   "Create integration test framework",
 				Prerequisites: []string{"Setup testing framework"},
-				Complexity:  5,
-				Metadata:    map[string]string{"phase": "testing"},
+				Complexity:    5,
+				Metadata:      map[string]string{"phase": "testing"},
 			},
 		},
 	}
@@ -420,13 +420,13 @@ func (td *TaskDecomposer) testingFrameworkMatcher(req Requirement) bool {
 
 func (td *TaskDecomposer) findMatchingPatterns(requirement Requirement) []*TaskPattern {
 	var matches []*TaskPattern
-	
+
 	for _, pattern := range td.patterns {
 		if pattern.Matcher(requirement) {
 			matches = append(matches, pattern)
 		}
 	}
-	
+
 	return matches
 }
 
@@ -434,7 +434,7 @@ func (td *TaskDecomposer) selectBestPattern(patterns []*TaskPattern) *TaskPatter
 	if len(patterns) == 0 {
 		return nil
 	}
-	
+
 	// Return the pattern with highest priority
 	bestPattern := patterns[0]
 	for _, pattern := range patterns[1:] {
@@ -442,36 +442,36 @@ func (td *TaskDecomposer) selectBestPattern(patterns []*TaskPattern) *TaskPatter
 			bestPattern = pattern
 		}
 	}
-	
+
 	return bestPattern
 }
 
 func (td *TaskDecomposer) applyPattern(pattern *TaskPattern, requirement Requirement, taskCounter *int) []*RefinedTask {
 	var tasks []*RefinedTask
-	
+
 	// Extract entity name from requirement
 	entityName := td.extractEntityName(requirement.Description)
-	
+
 	for _, template := range pattern.Templates {
 		task := td.createTaskFromTemplate(template, requirement, entityName, taskCounter)
 		tasks = append(tasks, task)
 	}
-	
+
 	return tasks
 }
 
 func (td *TaskDecomposer) createTaskFromTemplate(template TaskTemplate, requirement Requirement, entityName string, taskCounter *int) *RefinedTask {
 	*taskCounter++
-	
+
 	// Replace placeholders in template
 	title := strings.ReplaceAll(template.Name, "{endpoint}", entityName)
 	title = strings.ReplaceAll(title, "{entity}", entityName)
 	title = strings.ReplaceAll(title, "{component}", entityName)
-	
+
 	description := strings.ReplaceAll(template.Description, "{endpoint}", entityName)
 	description = strings.ReplaceAll(description, "{entity}", entityName)
 	description = strings.ReplaceAll(description, "{component}", entityName)
-	
+
 	task := &RefinedTask{
 		ID:            fmt.Sprintf("task-%03d", *taskCounter),
 		Title:         title,
@@ -485,33 +485,33 @@ func (td *TaskDecomposer) createTaskFromTemplate(template TaskTemplate, requirem
 		CreatedAt:     time.Now(),
 		UpdatedAt:     time.Now(),
 	}
-	
+
 	// Copy template metadata
 	for k, v := range template.Metadata {
 		task.Metadata[k] = v
 	}
-	
+
 	// Add requirement metadata
 	task.Metadata["requirement_id"] = requirement.ID
 	task.Metadata["requirement_type"] = requirement.Type
 	task.Metadata["requirement_priority"] = requirement.Priority
-	
+
 	return task
 }
 
 func (td *TaskDecomposer) genericDecompose(requirement Requirement, taskCounter *int) []*RefinedTask {
 	*taskCounter++
-	
+
 	// Create a generic implementation task
 	task := &RefinedTask{
-		ID:          fmt.Sprintf("task-%03d", *taskCounter),
-		Title:       fmt.Sprintf("Implement %s", requirement.Description),
-		Description: fmt.Sprintf("Implement the requirement: %s", requirement.Description),
-		Type:        "implementation",
-		Status:      "todo",
-		Complexity:  3, // Default complexity
+		ID:           fmt.Sprintf("task-%03d", *taskCounter),
+		Title:        fmt.Sprintf("Implement %s", requirement.Description),
+		Description:  fmt.Sprintf("Implement the requirement: %s", requirement.Description),
+		Type:         "implementation",
+		Status:       "todo",
+		Complexity:   3, // Default complexity
 		Dependencies: make([]string, 0),
-		Metadata:    map[string]string{
+		Metadata: map[string]string{
 			"requirement_id":       requirement.ID,
 			"requirement_type":     requirement.Type,
 			"requirement_priority": requirement.Priority,
@@ -520,7 +520,7 @@ func (td *TaskDecomposer) genericDecompose(requirement Requirement, taskCounter 
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	
+
 	return []*RefinedTask{task}
 }
 
@@ -530,20 +530,20 @@ func (td *TaskDecomposer) addDependencies(tasks []*RefinedTask) {
 	for _, task := range tasks {
 		taskMap[task.Title] = task
 	}
-	
+
 	// Process prerequisites into dependencies
 	for _, task := range tasks {
 		for _, prereq := range task.Prerequisites {
 			// Find matching task by title pattern
 			for _, otherTask := range tasks {
-				if strings.Contains(prereq, otherTask.Title) || 
-				   strings.Contains(otherTask.Title, prereq) {
+				if strings.Contains(prereq, otherTask.Title) ||
+					strings.Contains(otherTask.Title, prereq) {
 					task.Dependencies = append(task.Dependencies, otherTask.ID)
 					break
 				}
 			}
 		}
-		
+
 		// Clear prerequisites as they're now converted to dependencies
 		task.Prerequisites = []string{}
 	}
@@ -551,48 +551,48 @@ func (td *TaskDecomposer) addDependencies(tasks []*RefinedTask) {
 
 func (td *TaskDecomposer) generateSetupTasks(taskCounter *int) []*RefinedTask {
 	tasks := []*RefinedTask{}
-	
+
 	*taskCounter++
 	setupTask := &RefinedTask{
-		ID:          fmt.Sprintf("task-%03d", *taskCounter),
-		Title:       "Project setup and initialization",
-		Description: "Set up development environment, dependencies, and project structure",
-		Type:        "implementation",
-		Status:      "todo",
-		Complexity:  2,
+		ID:           fmt.Sprintf("task-%03d", *taskCounter),
+		Title:        "Project setup and initialization",
+		Description:  "Set up development environment, dependencies, and project structure",
+		Type:         "implementation",
+		Status:       "todo",
+		Complexity:   2,
 		Dependencies: make([]string, 0),
 		Metadata: map[string]string{
-			"phase": "setup",
+			"phase":    "setup",
 			"category": "infrastructure",
 		},
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	
+
 	tasks = append(tasks, setupTask)
 	return tasks
 }
 
 func (td *TaskDecomposer) generateCompletionTasks(taskCounter *int) []*RefinedTask {
 	tasks := []*RefinedTask{}
-	
+
 	*taskCounter++
 	deployTask := &RefinedTask{
-		ID:          fmt.Sprintf("task-%03d", *taskCounter),
-		Title:       "Deployment and final validation",
-		Description: "Deploy the solution and perform final integration testing",
-		Type:        "implementation",
-		Status:      "todo",
-		Complexity:  3,
+		ID:           fmt.Sprintf("task-%03d", *taskCounter),
+		Title:        "Deployment and final validation",
+		Description:  "Deploy the solution and perform final integration testing",
+		Type:         "implementation",
+		Status:       "todo",
+		Complexity:   3,
 		Dependencies: make([]string, 0), // Will depend on all other tasks
 		Metadata: map[string]string{
-			"phase": "completion",
+			"phase":    "completion",
 			"category": "deployment",
 		},
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	
+
 	tasks = append(tasks, deployTask)
 	return tasks
 }
@@ -602,7 +602,7 @@ func (td *TaskDecomposer) generateCompletionTasks(taskCounter *int) []*RefinedTa
 func (ra *RequirementAnalyzer) extractBasicRequirements(commission *Commission) []Requirement {
 	requirements := []Requirement{}
 	reqCounter := 0
-	
+
 	// Extract from commission description
 	if commission.Description != "" {
 		reqCounter++
@@ -616,7 +616,7 @@ func (ra *RequirementAnalyzer) extractBasicRequirements(commission *Commission) 
 		}
 		requirements = append(requirements, req)
 	}
-	
+
 	// Extract from commission parts
 	for _, part := range commission.Parts {
 		if part.Type == "goal" || part.Type == "acceptance" || part.Type == "implementation" {
@@ -628,15 +628,15 @@ func (ra *RequirementAnalyzer) extractBasicRequirements(commission *Commission) 
 				Description: part.Content,
 				Acceptance:  ra.extractAcceptanceCriteria(part.Content),
 				Metadata: map[string]string{
-					"source": "part",
-					"part_type": part.Type,
+					"source":     "part",
+					"part_type":  part.Type,
 					"part_title": part.Title,
 				},
 			}
 			requirements = append(requirements, req)
 		}
 	}
-	
+
 	// Extract from existing commission requirements field
 	for _, reqText := range commission.Requirements {
 		reqCounter++
@@ -650,7 +650,7 @@ func (ra *RequirementAnalyzer) extractBasicRequirements(commission *Commission) 
 		}
 		requirements = append(requirements, req)
 	}
-	
+
 	return requirements
 }
 
@@ -670,12 +670,12 @@ func (ra *RequirementAnalyzer) mergeRequirements(basic, enhanced []Requirement) 
 func (ra *RequirementAnalyzer) extractTechnicalStack(commission *Commission) []string {
 	stack := []string{}
 	content := strings.ToLower(commission.Description + " " + commission.Goal)
-	
+
 	// Add commission content from all parts
 	for _, part := range commission.Parts {
 		content += " " + strings.ToLower(part.Content)
 	}
-	
+
 	// Common technology keywords
 	technologies := map[string]string{
 		"go":         "Go",
@@ -698,13 +698,13 @@ func (ra *RequirementAnalyzer) extractTechnicalStack(commission *Commission) []s
 		"gcp":        "Google Cloud",
 		"azure":      "Azure",
 	}
-	
+
 	for keyword, tech := range technologies {
 		if strings.Contains(content, keyword) {
 			stack = append(stack, tech)
 		}
 	}
-	
+
 	return stack
 }
 
@@ -712,7 +712,7 @@ func (ra *RequirementAnalyzer) determineScope(commission *Commission, requiremen
 	// Simple heuristic based on requirement count and content
 	reqCount := len(requirements)
 	contentLength := len(commission.Description)
-	
+
 	if reqCount <= 3 && contentLength < 500 {
 		return "small"
 	} else if reqCount <= 8 && contentLength < 1500 {
@@ -737,30 +737,30 @@ func (ra *RequirementAnalyzer) estimateEffort(scope string, reqCount int) string
 
 func (ra *RequirementAnalyzer) extractSuccessCriteria(commission *Commission) []string {
 	criteria := []string{}
-	
+
 	// Look for acceptance criteria in parts
 	for _, part := range commission.Parts {
 		if part.Type == "acceptance" || strings.Contains(strings.ToLower(part.Title), "acceptance") {
 			criteria = append(criteria, part.Content)
 		}
 	}
-	
+
 	// Default criteria if none found
 	if len(criteria) == 0 {
 		criteria = append(criteria, "All functional requirements implemented and tested")
 		criteria = append(criteria, "Code passes quality review and testing")
 		criteria = append(criteria, "Documentation is complete and accurate")
 	}
-	
+
 	return criteria
 }
 
 func (ra *RequirementAnalyzer) extractDeliverables(commission *Commission) []string {
 	deliverables := []string{}
-	
+
 	// Extract from goal and description
 	content := strings.ToLower(commission.Goal + " " + commission.Description)
-	
+
 	commonDeliverables := map[string]string{
 		"api":           "REST API implementation",
 		"database":      "Database schema and data layer",
@@ -769,52 +769,52 @@ func (ra *RequirementAnalyzer) extractDeliverables(commission *Commission) []str
 		"tests":         "Test suite and quality assurance",
 		"deployment":    "Deployment configuration",
 	}
-	
+
 	for keyword, deliverable := range commonDeliverables {
 		if strings.Contains(content, keyword) {
 			deliverables = append(deliverables, deliverable)
 		}
 	}
-	
+
 	// Default deliverables
 	if len(deliverables) == 0 {
 		deliverables = append(deliverables, "Working software implementation")
 		deliverables = append(deliverables, "Source code and documentation")
 	}
-	
+
 	return deliverables
 }
 
 func (ra *RequirementAnalyzer) identifyRiskFactors(commission *Commission, requirements []Requirement) []string {
 	risks := []string{}
-	
+
 	// Analyze complexity
 	if len(requirements) > 10 {
 		risks = append(risks, "High complexity - many requirements to coordinate")
 	}
-	
+
 	// Check for technology risks
 	content := strings.ToLower(commission.Description)
 	if strings.Contains(content, "new") || strings.Contains(content, "experimental") {
 		risks = append(risks, "Technology risk - new or experimental technologies")
 	}
-	
+
 	// Check for integration risks
 	if strings.Contains(content, "integrate") || strings.Contains(content, "third-party") {
 		risks = append(risks, "Integration risk - external dependencies")
 	}
-	
+
 	// Check for security requirements
 	if strings.Contains(content, "security") || strings.Contains(content, "auth") {
 		risks = append(risks, "Security requirements - additional validation needed")
 	}
-	
+
 	return risks
 }
 
 func (ra *RequirementAnalyzer) determineRequirementType(content string) string {
 	contentLower := strings.ToLower(content)
-	
+
 	if containsAny(contentLower, []string{"performance", "scalability", "security", "reliability"}) {
 		return "non-functional"
 	} else if containsAny(contentLower, []string{"technology", "framework", "database", "architecture"}) {
@@ -826,7 +826,7 @@ func (ra *RequirementAnalyzer) determineRequirementType(content string) string {
 
 func (ra *RequirementAnalyzer) determinePriority(content string) string {
 	contentLower := strings.ToLower(content)
-	
+
 	if containsAny(contentLower, []string{"critical", "essential", "must", "required"}) {
 		return "high"
 	} else if containsAny(contentLower, []string{"should", "important", "preferred"}) {
@@ -838,28 +838,28 @@ func (ra *RequirementAnalyzer) determinePriority(content string) string {
 
 func (ra *RequirementAnalyzer) extractAcceptanceCriteria(content string) []string {
 	criteria := []string{}
-	
+
 	// Look for bullet points or numbered lists
 	lines := strings.Split(content, "\n")
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
-		if strings.HasPrefix(trimmed, "-") || strings.HasPrefix(trimmed, "*") || 
-		   regexp.MustCompile(`^\d+\.`).MatchString(trimmed) {
+		if strings.HasPrefix(trimmed, "-") || strings.HasPrefix(trimmed, "*") ||
+			regexp.MustCompile(`^\d+\.`).MatchString(trimmed) {
 			criteria = append(criteria, strings.TrimSpace(strings.TrimPrefix(
 				strings.TrimPrefix(trimmed, "-"), "*")))
 		}
 	}
-	
+
 	return criteria
 }
 
 func (td *TaskDecomposer) extractEntityName(description string) string {
 	// Simple entity name extraction - look for key nouns
 	words := strings.Fields(strings.ToLower(description))
-	
+
 	// Common entity patterns
 	entities := []string{"user", "product", "order", "payment", "account", "task", "project"}
-	
+
 	for _, word := range words {
 		for _, entity := range entities {
 			if strings.Contains(word, entity) {
@@ -867,7 +867,7 @@ func (td *TaskDecomposer) extractEntityName(description string) string {
 			}
 		}
 	}
-	
+
 	// Default to "item" if no entity found
 	return "item"
 }

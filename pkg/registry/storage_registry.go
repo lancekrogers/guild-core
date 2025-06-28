@@ -15,6 +15,7 @@ type DefaultStorageRegistry struct {
 	commissionRepo  CommissionRepository
 	agentRepo       AgentRepository
 	promptChainRepo PromptChainRepository
+	sessionRepo     SessionRepository
 	memoryStore     MemoryStore
 	mu              sync.RWMutex
 }
@@ -97,6 +98,21 @@ func (r *DefaultStorageRegistry) GetPromptChainRepository() PromptChainRepositor
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	return r.promptChainRepo
+}
+
+// RegisterSessionRepository registers a session repository implementation
+func (r *DefaultStorageRegistry) RegisterSessionRepository(repo SessionRepository) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.sessionRepo = repo
+	return nil
+}
+
+// GetSessionRepository retrieves the registered session repository
+func (r *DefaultStorageRegistry) GetSessionRepository() SessionRepository {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	return r.sessionRepo
 }
 
 // GetMemoryStore returns the configured memory store adapter
