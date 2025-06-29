@@ -23,6 +23,7 @@ type Manager struct {
 	boards       map[string]*Board
 	eventStream  chan BoardEvent
 	eventManager *EventManager
+	taskEventPublisher *TaskEventPublisher
 	pubsub       comms.PubSub
 	mu           sync.RWMutex
 	ctx          context.Context
@@ -167,6 +168,11 @@ func (m *Manager) CreateBoard(ctx context.Context, name, description string) (*B
 		board.SetEventManager(m.eventManager)
 	}
 
+	// Set the task event publisher on the new board
+	if m.taskEventPublisher != nil {
+		board.SetTaskEventPublisher(m.taskEventPublisher)
+	}
+
 	m.mu.Lock()
 	m.boards[board.ID] = board
 	m.mu.Unlock()
@@ -200,6 +206,11 @@ func (m *Manager) GetBoard(ctx context.Context, boardID string) (*Board, error) 
 	// Set the event manager on the loaded board
 	if m.eventManager != nil {
 		board.SetEventManager(m.eventManager)
+	}
+
+	// Set the task event publisher on the loaded board
+	if m.taskEventPublisher != nil {
+		board.SetTaskEventPublisher(m.taskEventPublisher)
 	}
 
 	m.mu.Lock()
@@ -579,4 +590,17 @@ func (m *Manager) Close() error {
 	close(m.eventStream)
 
 	return nil
+}
+
+// SetTaskEventPublisher sets the task event publisher for this manager
+func (m *Manager) SetTaskEventPublisher(publisher *TaskEventPublisher) {
+	m.taskEventPublisher = publisher
+
+	// Set the publisher on all existing boards
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	
+	for _, board := range m.boards {
+		board.SetTaskEventPublisher(publisher)
+	}
 }

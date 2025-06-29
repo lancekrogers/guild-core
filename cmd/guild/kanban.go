@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/lancekrogers/guild/internal/daemon"
+	"github.com/lancekrogers/guild/internal/daemonconn"
 	kanbanui "github.com/lancekrogers/guild/internal/ui/kanban"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/kanban"
@@ -263,13 +264,29 @@ func viewKanbanBoard(cmd *cobra.Command, args []string) error {
 	fmt.Printf("🚀 Opening kanban board: %s\n", board.Name)
 	fmt.Println("   Press ? for help, q to quit")
 
-	// Create and run the UI
-	model := kanbanui.New(ctx, kanbanMgr, board.ID)
+	// Try to connect to daemon for event streaming
+	var model *kanbanui.Model
+	conn, _, err := daemonconn.Discover(ctx)
+	if err != nil {
+		// No daemon connection, use basic model without events
+		fmt.Println("   ⚠️  Running without event stream (daemon not available)")
+		model = kanbanui.New(ctx, kanbanMgr, board.ID)
+	} else {
+		// Use model with event streaming
+		fmt.Println("   🟢 Connected to event stream for real-time updates")
+		model = kanbanui.NewWithEventClient(ctx, kanbanMgr, board.ID, conn)
+	}
+
 	p := tea.NewProgram(model, tea.WithAltScreen())
 
 	if _, err := p.Run(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run kanban UI").
 			WithComponent("cli").WithOperation("viewKanbanBoard")
+	}
+
+	// Clean up connection if exists
+	if conn != nil {
+		conn.Close()
 	}
 
 	return nil

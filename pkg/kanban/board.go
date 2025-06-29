@@ -13,6 +13,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/observability"
 	"github.com/lancekrogers/guild/pkg/storage"
 )
 
@@ -71,8 +72,9 @@ type Board struct {
 	Metadata    map[string]string `json:"metadata,omitempty"`
 
 	// Storage - SQLite only via registry
-	registry     ComponentRegistry
-	eventManager *EventManager
+	registry         ComponentRegistry
+	eventManager     *EventManager
+	taskEventPublisher *TaskEventPublisher
 }
 
 // EventType represents the type of event that occurred
@@ -135,6 +137,7 @@ func NewBoardWithRegistry(ctx context.Context, registry ComponentRegistry, name,
 		Metadata:     make(map[string]string),
 		registry:     registry,
 		eventManager: nil, // Will be set by SetEventManager
+		taskEventPublisher: nil, // Will be set by SetTaskEventPublisher
 	}
 
 	// Save the board to SQLite (boards are stored as campaign records)
@@ -254,6 +257,11 @@ func (b *Board) getCampaignName(campaignID string) string {
 // SetEventManager sets the event manager for this board
 func (b *Board) SetEventManager(em *EventManager) {
 	b.eventManager = em
+}
+
+// SetTaskEventPublisher sets the task event publisher for this board
+func (b *Board) SetTaskEventPublisher(publisher *TaskEventPublisher) {
+	b.taskEventPublisher = publisher
 }
 
 // LoadBoard loads a board from SQLite using the board ID
@@ -527,10 +535,19 @@ func (b *Board) createTaskSQLite(ctx context.Context, title, description string)
 			WithOperation("createTaskSQLite")
 	}
 
-	// Record task creation event
+	// Publish task creation event using new event publisher
+	if b.taskEventPublisher != nil {
+		if err := b.taskEventPublisher.PublishTaskCreated(ctx, task, b.ID, "system"); err != nil {
+			// Log but don't fail the operation
+			logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("createTaskSQLite")
+			logger.WithError(err).Warn("Failed to publish task created event", "task_id", task.ID)
+		}
+	}
+
+	// Also record legacy task creation event for backward compatibility
 	if err := b.recordTaskEvent(ctx, task.ID, "created", "", string(task.Status), "Task created on board"); err != nil {
 		// Log but don't fail
-		fmt.Printf("warning: failed to record task event: %v\n", err)
+		fmt.Printf("warning: failed to record legacy task event: %v\n", err)
 	}
 
 	// Update the board's last updated time
@@ -861,10 +878,18 @@ func (b *Board) DeleteTask(ctx context.Context, taskID string) error {
 			WithOperation("DeleteTask")
 	}
 
-	// Record task deletion event
+	// Publish task deletion event using new event publisher
+	if b.taskEventPublisher != nil {
+		if err := b.taskEventPublisher.PublishTaskDeleted(ctx, taskID, b.ID, "system", "Task deleted from kanban board"); err != nil {
+			logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("DeleteTask")
+			logger.WithError(err).Warn("Failed to publish task deleted event", "task_id", taskID)
+		}
+	}
+
+	// Record legacy task deletion event for backward compatibility
 	if err := b.recordTaskEvent(ctx, taskID, "deleted", string(task.Status), "", "Task deleted from kanban board"); err != nil {
 		// Log but don't fail
-		fmt.Printf("warning: failed to record task event: %v\n", err)
+		fmt.Printf("warning: failed to record legacy task event: %v\n", err)
 	}
 
 	// Update the board's last updated time
@@ -1048,6 +1073,9 @@ func (b *Board) UpdateTaskStatus(ctx context.Context, taskID string, newStatus T
 			WithComponent("Board")
 	}
 
+	// Capture old status for event publishing
+	oldStatus := task.Status
+
 	// Update the status
 	if err := task.UpdateStatus(newStatus, changedBy, comment); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeValidation, "failed to update status").
@@ -1056,7 +1084,30 @@ func (b *Board) UpdateTaskStatus(ctx context.Context, taskID string, newStatus T
 	}
 
 	// Save the task
-	return b.UpdateTask(ctx, task)
+	if err := b.UpdateTask(ctx, task); err != nil {
+		return err
+	}
+
+	// Publish task moved event if status actually changed
+	if oldStatus != newStatus && b.taskEventPublisher != nil {
+		if err := b.taskEventPublisher.PublishTaskMoved(ctx, task, b.ID, string(oldStatus), string(newStatus), changedBy, comment); err != nil {
+			logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("UpdateTaskStatus")
+			logger.WithError(err).Warn("Failed to publish task moved event", 
+				"task_id", taskID, 
+				"from_status", string(oldStatus), 
+				"to_status", string(newStatus))
+		}
+
+		// Check for completion event
+		if newStatus == StatusDone && b.taskEventPublisher != nil {
+			if err := b.taskEventPublisher.PublishTaskCompleted(ctx, task, b.ID, changedBy, comment); err != nil {
+				logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("UpdateTaskStatus")
+				logger.WithError(err).Warn("Failed to publish task completed event", "task_id", taskID)
+			}
+		}
+	}
+
+	return nil
 }
 
 // AssignTask assigns a task to a user
@@ -1073,6 +1124,9 @@ func (b *Board) AssignTask(ctx context.Context, taskID, assignee, changedBy, com
 			WithComponent("Board")
 	}
 
+	// Capture old assignee for event publishing
+	oldAssignee := task.AssignedTo
+
 	// Update the assignee
 	task.UpdateAssignee(assignee, changedBy, comment)
 
@@ -1083,7 +1137,18 @@ func (b *Board) AssignTask(ctx context.Context, taskID, assignee, changedBy, com
 			WithOperation("AssignTask")
 	}
 
-	// Emit task assigned event
+	// Publish task updated event using new event publisher
+	if b.taskEventPublisher != nil {
+		changes := map[string]string{
+			"assignee": fmt.Sprintf("%s -> %s", oldAssignee, assignee),
+		}
+		if err := b.taskEventPublisher.PublishTaskUpdated(ctx, task, b.ID, changedBy, changes); err != nil {
+			logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("AssignTask")
+			logger.WithError(err).Warn("Failed to publish task updated event", "task_id", taskID, "new_assignee", assignee)
+		}
+	}
+
+	// Emit legacy task assigned event for backward compatibility
 	event := BoardEvent{
 		EventType:  EventTaskAssigned,
 		BoardID:    b.ID,
@@ -1096,7 +1161,7 @@ func (b *Board) AssignTask(ctx context.Context, taskID, assignee, changedBy, com
 	}
 	if err := b.emitEvent(ctx, event); err != nil {
 		// Log but don't fail
-		fmt.Printf("warning: failed to emit event: %v\n", err)
+		fmt.Printf("warning: failed to emit legacy event: %v\n", err)
 	}
 
 	return nil
@@ -1126,7 +1191,15 @@ func (b *Board) AddTaskBlocker(ctx context.Context, taskID, blockerID, changedBy
 			WithOperation("AddTaskBlocker")
 	}
 
-	// Emit task blocked event
+	// Publish task blocked event using new event publisher
+	if b.taskEventPublisher != nil {
+		if err := b.taskEventPublisher.PublishTaskBlocked(ctx, task, b.ID, changedBy, comment, []string{blockerID}); err != nil {
+			logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("AddTaskBlocker")
+			logger.WithError(err).Warn("Failed to publish task blocked event", "task_id", taskID, "blocker_id", blockerID)
+		}
+	}
+
+	// Emit legacy task blocked event for backward compatibility
 	event := BoardEvent{
 		EventType:  EventTaskBlocked,
 		BoardID:    b.ID,
@@ -1139,7 +1212,7 @@ func (b *Board) AddTaskBlocker(ctx context.Context, taskID, blockerID, changedBy
 	}
 	if err := b.emitEvent(ctx, event); err != nil {
 		// Log but don't fail
-		fmt.Printf("warning: failed to emit event: %v\n", err)
+		fmt.Printf("warning: failed to emit legacy event: %v\n", err)
 	}
 
 	return nil
@@ -1169,7 +1242,15 @@ func (b *Board) RemoveTaskBlocker(ctx context.Context, taskID, blockerID, change
 			WithOperation("RemoveTaskBlocker")
 	}
 
-	// Emit task unblocked event
+	// Publish task unblocked event using new event publisher
+	if b.taskEventPublisher != nil {
+		if err := b.taskEventPublisher.PublishTaskUnblocked(ctx, task, b.ID, changedBy, comment, blockerID); err != nil {
+			logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("RemoveTaskBlocker")
+			logger.WithError(err).Warn("Failed to publish task unblocked event", "task_id", taskID, "resolved_blocker_id", blockerID)
+		}
+	}
+
+	// Emit legacy task unblocked event for backward compatibility
 	event := BoardEvent{
 		EventType:  EventTaskUnblocked,
 		BoardID:    b.ID,
@@ -1182,7 +1263,7 @@ func (b *Board) RemoveTaskBlocker(ctx context.Context, taskID, blockerID, change
 	}
 	if err := b.emitEvent(ctx, event); err != nil {
 		// Log but don't fail
-		fmt.Printf("warning: failed to emit event: %v\n", err)
+		fmt.Printf("warning: failed to emit legacy event: %v\n", err)
 	}
 
 	return nil

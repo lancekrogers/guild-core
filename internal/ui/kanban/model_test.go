@@ -201,8 +201,8 @@ func TestScribeModel_New(t *testing.T) {
 	assert.NotNil(t, model)
 	assert.Equal(t, board.ID, model.boardID)
 	assert.Equal(t, 5, len(model.columns))
-	assert.Equal(t, 0, model.viewport.FocusedColumn)
-	assert.False(t, model.viewport.SearchMode)
+	assert.Equal(t, 0, model.viewportState.FocusedColumn)
+	assert.False(t, model.viewportState.SearchMode)
 }
 
 func TestScribeModel_Init(t *testing.T) {
@@ -237,12 +237,12 @@ func TestScribeModel_ColumnNavigation(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Reset to column 1 for left movement test
 			if tt.key == "h" {
-				model.viewport.FocusedColumn = 1
+				model.viewportState.FocusedColumn = 1
 			}
 
 			updatedModel, _ := model.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune(tt.key)})
 			m := updatedModel.(*Model)
-			assert.Equal(t, tt.expected, m.viewport.FocusedColumn)
+			assert.Equal(t, tt.expected, m.viewportState.FocusedColumn)
 		})
 	}
 }
@@ -256,8 +256,8 @@ func TestScribeModel_SearchMode(t *testing.T) {
 	// Enter search mode
 	updatedModel, _ := model.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("/")})
 	m := updatedModel.(*Model)
-	assert.True(t, m.viewport.SearchMode)
-	assert.Equal(t, "", m.viewport.SearchFilter)
+	assert.True(t, m.viewportState.SearchMode)
+	assert.Equal(t, "", m.viewportState.SearchFilter)
 
 	// Type search term
 	searchTerm := "test"
@@ -265,13 +265,13 @@ func TestScribeModel_SearchMode(t *testing.T) {
 		updatedModel, _ = m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{ch}})
 		m = updatedModel.(*Model)
 	}
-	assert.Equal(t, searchTerm, m.viewport.SearchFilter)
+	assert.Equal(t, searchTerm, m.viewportState.SearchFilter)
 
 	// Exit search mode
 	updatedModel, _ = m.Update(tea.KeyMsg{Type: tea.KeyEscape})
 	m = updatedModel.(*Model)
-	assert.False(t, m.viewport.SearchMode)
-	assert.Equal(t, "", m.viewport.SearchFilter)
+	assert.False(t, m.viewportState.SearchMode)
+	assert.Equal(t, "", m.viewportState.SearchFilter)
 }
 
 func TestScribeModel_TaskSorting(t *testing.T) {
@@ -315,7 +315,7 @@ func TestScribeModel_ViewportScrolling(t *testing.T) {
 	defer cleanup()
 
 	model := New(context.Background(), mgr, board.ID)
-	model.viewport.VisibleRows = 5
+	model.viewportState.VisibleRows = 5
 
 	// Set up column with many tasks
 	model.columns[0].TotalTasks = 20
@@ -358,10 +358,10 @@ func TestScribeModel_WindowResize(t *testing.T) {
 	})
 	m := updatedModel.(*Model)
 
-	assert.Equal(t, newWidth, m.viewport.Width)
-	assert.Equal(t, newHeight, m.viewport.Height)
+	assert.Equal(t, newWidth, m.viewportState.Width)
+	assert.Equal(t, newHeight, m.viewportState.Height)
 
 	// Check visible rows calculation
 	expectedRows := newHeight - 4 - 3 - 2 // header - columns - bottom
-	assert.Equal(t, expectedRows, m.viewport.VisibleRows)
+	assert.Equal(t, expectedRows, m.viewportState.VisibleRows)
 }

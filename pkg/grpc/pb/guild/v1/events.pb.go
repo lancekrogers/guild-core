@@ -262,6 +262,836 @@ func (x *PublishEventResponse) GetMessage() string {
 	return ""
 }
 
+// TaskEvent represents task-specific events for Kanban board operations
+type TaskEvent struct {
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	Id        string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Type      string                 `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"` // task.created, task.updated, task.moved, task.completed, task.blocked, task.unblocked, task.deleted
+	Timestamp *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Source    string                 `protobuf:"bytes,4,opt,name=source,proto3" json:"source,omitempty"`
+	// Types that are valid to be assigned to Payload:
+	//
+	//	*TaskEvent_Created
+	//	*TaskEvent_Updated
+	//	*TaskEvent_Moved
+	//	*TaskEvent_Completed
+	//	*TaskEvent_Blocked
+	//	*TaskEvent_Unblocked
+	//	*TaskEvent_Deleted
+	Payload       isTaskEvent_Payload `protobuf_oneof:"payload"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TaskEvent) Reset() {
+	*x = TaskEvent{}
+	mi := &file_proto_guild_v1_events_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TaskEvent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TaskEvent) ProtoMessage() {}
+
+func (x *TaskEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_guild_v1_events_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TaskEvent.ProtoReflect.Descriptor instead.
+func (*TaskEvent) Descriptor() ([]byte, []int) {
+	return file_proto_guild_v1_events_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *TaskEvent) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *TaskEvent) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *TaskEvent) GetTimestamp() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Timestamp
+	}
+	return nil
+}
+
+func (x *TaskEvent) GetSource() string {
+	if x != nil {
+		return x.Source
+	}
+	return ""
+}
+
+func (x *TaskEvent) GetPayload() isTaskEvent_Payload {
+	if x != nil {
+		return x.Payload
+	}
+	return nil
+}
+
+func (x *TaskEvent) GetCreated() *TaskCreated {
+	if x != nil {
+		if x, ok := x.Payload.(*TaskEvent_Created); ok {
+			return x.Created
+		}
+	}
+	return nil
+}
+
+func (x *TaskEvent) GetUpdated() *TaskUpdated {
+	if x != nil {
+		if x, ok := x.Payload.(*TaskEvent_Updated); ok {
+			return x.Updated
+		}
+	}
+	return nil
+}
+
+func (x *TaskEvent) GetMoved() *TaskMoved {
+	if x != nil {
+		if x, ok := x.Payload.(*TaskEvent_Moved); ok {
+			return x.Moved
+		}
+	}
+	return nil
+}
+
+func (x *TaskEvent) GetCompleted() *TaskCompleted {
+	if x != nil {
+		if x, ok := x.Payload.(*TaskEvent_Completed); ok {
+			return x.Completed
+		}
+	}
+	return nil
+}
+
+func (x *TaskEvent) GetBlocked() *TaskBlocked {
+	if x != nil {
+		if x, ok := x.Payload.(*TaskEvent_Blocked); ok {
+			return x.Blocked
+		}
+	}
+	return nil
+}
+
+func (x *TaskEvent) GetUnblocked() *TaskUnblocked {
+	if x != nil {
+		if x, ok := x.Payload.(*TaskEvent_Unblocked); ok {
+			return x.Unblocked
+		}
+	}
+	return nil
+}
+
+func (x *TaskEvent) GetDeleted() *TaskDeleted {
+	if x != nil {
+		if x, ok := x.Payload.(*TaskEvent_Deleted); ok {
+			return x.Deleted
+		}
+	}
+	return nil
+}
+
+type isTaskEvent_Payload interface {
+	isTaskEvent_Payload()
+}
+
+type TaskEvent_Created struct {
+	Created *TaskCreated `protobuf:"bytes,5,opt,name=created,proto3,oneof"`
+}
+
+type TaskEvent_Updated struct {
+	Updated *TaskUpdated `protobuf:"bytes,6,opt,name=updated,proto3,oneof"`
+}
+
+type TaskEvent_Moved struct {
+	Moved *TaskMoved `protobuf:"bytes,7,opt,name=moved,proto3,oneof"`
+}
+
+type TaskEvent_Completed struct {
+	Completed *TaskCompleted `protobuf:"bytes,8,opt,name=completed,proto3,oneof"`
+}
+
+type TaskEvent_Blocked struct {
+	Blocked *TaskBlocked `protobuf:"bytes,9,opt,name=blocked,proto3,oneof"`
+}
+
+type TaskEvent_Unblocked struct {
+	Unblocked *TaskUnblocked `protobuf:"bytes,10,opt,name=unblocked,proto3,oneof"`
+}
+
+type TaskEvent_Deleted struct {
+	Deleted *TaskDeleted `protobuf:"bytes,11,opt,name=deleted,proto3,oneof"`
+}
+
+func (*TaskEvent_Created) isTaskEvent_Payload() {}
+
+func (*TaskEvent_Updated) isTaskEvent_Payload() {}
+
+func (*TaskEvent_Moved) isTaskEvent_Payload() {}
+
+func (*TaskEvent_Completed) isTaskEvent_Payload() {}
+
+func (*TaskEvent_Blocked) isTaskEvent_Payload() {}
+
+func (*TaskEvent_Unblocked) isTaskEvent_Payload() {}
+
+func (*TaskEvent_Deleted) isTaskEvent_Payload() {}
+
+// TaskCreated event payload
+type TaskCreated struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TaskId        string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	BoardId       string                 `protobuf:"bytes,2,opt,name=board_id,json=boardId,proto3" json:"board_id,omitempty"`
+	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	Status        string                 `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"` // Column name: backlog, todo, in_progress, ready_for_review, done
+	Assignee      string                 `protobuf:"bytes,6,opt,name=assignee,proto3" json:"assignee,omitempty"`
+	CreatedBy     string                 `protobuf:"bytes,7,opt,name=created_by,json=createdBy,proto3" json:"created_by,omitempty"`
+	Metadata      *structpb.Struct       `protobuf:"bytes,8,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TaskCreated) Reset() {
+	*x = TaskCreated{}
+	mi := &file_proto_guild_v1_events_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TaskCreated) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TaskCreated) ProtoMessage() {}
+
+func (x *TaskCreated) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_guild_v1_events_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TaskCreated.ProtoReflect.Descriptor instead.
+func (*TaskCreated) Descriptor() ([]byte, []int) {
+	return file_proto_guild_v1_events_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *TaskCreated) GetTaskId() string {
+	if x != nil {
+		return x.TaskId
+	}
+	return ""
+}
+
+func (x *TaskCreated) GetBoardId() string {
+	if x != nil {
+		return x.BoardId
+	}
+	return ""
+}
+
+func (x *TaskCreated) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *TaskCreated) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *TaskCreated) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *TaskCreated) GetAssignee() string {
+	if x != nil {
+		return x.Assignee
+	}
+	return ""
+}
+
+func (x *TaskCreated) GetCreatedBy() string {
+	if x != nil {
+		return x.CreatedBy
+	}
+	return ""
+}
+
+func (x *TaskCreated) GetMetadata() *structpb.Struct {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
+// TaskUpdated event payload
+type TaskUpdated struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TaskId        string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	BoardId       string                 `protobuf:"bytes,2,opt,name=board_id,json=boardId,proto3" json:"board_id,omitempty"`
+	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	Assignee      string                 `protobuf:"bytes,5,opt,name=assignee,proto3" json:"assignee,omitempty"`
+	UpdatedBy     string                 `protobuf:"bytes,6,opt,name=updated_by,json=updatedBy,proto3" json:"updated_by,omitempty"`
+	Changes       *structpb.Struct       `protobuf:"bytes,7,opt,name=changes,proto3" json:"changes,omitempty"` // Fields that changed
+	Metadata      *structpb.Struct       `protobuf:"bytes,8,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TaskUpdated) Reset() {
+	*x = TaskUpdated{}
+	mi := &file_proto_guild_v1_events_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TaskUpdated) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TaskUpdated) ProtoMessage() {}
+
+func (x *TaskUpdated) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_guild_v1_events_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TaskUpdated.ProtoReflect.Descriptor instead.
+func (*TaskUpdated) Descriptor() ([]byte, []int) {
+	return file_proto_guild_v1_events_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *TaskUpdated) GetTaskId() string {
+	if x != nil {
+		return x.TaskId
+	}
+	return ""
+}
+
+func (x *TaskUpdated) GetBoardId() string {
+	if x != nil {
+		return x.BoardId
+	}
+	return ""
+}
+
+func (x *TaskUpdated) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *TaskUpdated) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *TaskUpdated) GetAssignee() string {
+	if x != nil {
+		return x.Assignee
+	}
+	return ""
+}
+
+func (x *TaskUpdated) GetUpdatedBy() string {
+	if x != nil {
+		return x.UpdatedBy
+	}
+	return ""
+}
+
+func (x *TaskUpdated) GetChanges() *structpb.Struct {
+	if x != nil {
+		return x.Changes
+	}
+	return nil
+}
+
+func (x *TaskUpdated) GetMetadata() *structpb.Struct {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
+// TaskMoved event payload
+type TaskMoved struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TaskId        string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	BoardId       string                 `protobuf:"bytes,2,opt,name=board_id,json=boardId,proto3" json:"board_id,omitempty"`
+	FromStatus    string                 `protobuf:"bytes,3,opt,name=from_status,json=fromStatus,proto3" json:"from_status,omitempty"` // Previous column
+	ToStatus      string                 `protobuf:"bytes,4,opt,name=to_status,json=toStatus,proto3" json:"to_status,omitempty"`       // New column
+	MovedBy       string                 `protobuf:"bytes,5,opt,name=moved_by,json=movedBy,proto3" json:"moved_by,omitempty"`
+	Reason        string                 `protobuf:"bytes,6,opt,name=reason,proto3" json:"reason,omitempty"` // Optional reason for move
+	Metadata      *structpb.Struct       `protobuf:"bytes,7,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TaskMoved) Reset() {
+	*x = TaskMoved{}
+	mi := &file_proto_guild_v1_events_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TaskMoved) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TaskMoved) ProtoMessage() {}
+
+func (x *TaskMoved) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_guild_v1_events_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TaskMoved.ProtoReflect.Descriptor instead.
+func (*TaskMoved) Descriptor() ([]byte, []int) {
+	return file_proto_guild_v1_events_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *TaskMoved) GetTaskId() string {
+	if x != nil {
+		return x.TaskId
+	}
+	return ""
+}
+
+func (x *TaskMoved) GetBoardId() string {
+	if x != nil {
+		return x.BoardId
+	}
+	return ""
+}
+
+func (x *TaskMoved) GetFromStatus() string {
+	if x != nil {
+		return x.FromStatus
+	}
+	return ""
+}
+
+func (x *TaskMoved) GetToStatus() string {
+	if x != nil {
+		return x.ToStatus
+	}
+	return ""
+}
+
+func (x *TaskMoved) GetMovedBy() string {
+	if x != nil {
+		return x.MovedBy
+	}
+	return ""
+}
+
+func (x *TaskMoved) GetReason() string {
+	if x != nil {
+		return x.Reason
+	}
+	return ""
+}
+
+func (x *TaskMoved) GetMetadata() *structpb.Struct {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
+// TaskCompleted event payload
+type TaskCompleted struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	TaskId          string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	BoardId         string                 `protobuf:"bytes,2,opt,name=board_id,json=boardId,proto3" json:"board_id,omitempty"`
+	CompletedBy     string                 `protobuf:"bytes,3,opt,name=completed_by,json=completedBy,proto3" json:"completed_by,omitempty"`
+	CompletedAt     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=completed_at,json=completedAt,proto3" json:"completed_at,omitempty"`
+	CompletionNotes string                 `protobuf:"bytes,5,opt,name=completion_notes,json=completionNotes,proto3" json:"completion_notes,omitempty"`
+	Metadata        *structpb.Struct       `protobuf:"bytes,6,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *TaskCompleted) Reset() {
+	*x = TaskCompleted{}
+	mi := &file_proto_guild_v1_events_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TaskCompleted) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TaskCompleted) ProtoMessage() {}
+
+func (x *TaskCompleted) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_guild_v1_events_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TaskCompleted.ProtoReflect.Descriptor instead.
+func (*TaskCompleted) Descriptor() ([]byte, []int) {
+	return file_proto_guild_v1_events_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *TaskCompleted) GetTaskId() string {
+	if x != nil {
+		return x.TaskId
+	}
+	return ""
+}
+
+func (x *TaskCompleted) GetBoardId() string {
+	if x != nil {
+		return x.BoardId
+	}
+	return ""
+}
+
+func (x *TaskCompleted) GetCompletedBy() string {
+	if x != nil {
+		return x.CompletedBy
+	}
+	return ""
+}
+
+func (x *TaskCompleted) GetCompletedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CompletedAt
+	}
+	return nil
+}
+
+func (x *TaskCompleted) GetCompletionNotes() string {
+	if x != nil {
+		return x.CompletionNotes
+	}
+	return ""
+}
+
+func (x *TaskCompleted) GetMetadata() *structpb.Struct {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
+// TaskBlocked event payload
+type TaskBlocked struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TaskId        string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	BoardId       string                 `protobuf:"bytes,2,opt,name=board_id,json=boardId,proto3" json:"board_id,omitempty"`
+	BlockedBy     string                 `protobuf:"bytes,3,opt,name=blocked_by,json=blockedBy,proto3" json:"blocked_by,omitempty"`
+	BlockerReason string                 `protobuf:"bytes,4,opt,name=blocker_reason,json=blockerReason,proto3" json:"blocker_reason,omitempty"`
+	BlockerIds    []string               `protobuf:"bytes,5,rep,name=blocker_ids,json=blockerIds,proto3" json:"blocker_ids,omitempty"` // IDs of blocking tasks/issues
+	Metadata      *structpb.Struct       `protobuf:"bytes,6,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TaskBlocked) Reset() {
+	*x = TaskBlocked{}
+	mi := &file_proto_guild_v1_events_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TaskBlocked) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TaskBlocked) ProtoMessage() {}
+
+func (x *TaskBlocked) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_guild_v1_events_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TaskBlocked.ProtoReflect.Descriptor instead.
+func (*TaskBlocked) Descriptor() ([]byte, []int) {
+	return file_proto_guild_v1_events_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *TaskBlocked) GetTaskId() string {
+	if x != nil {
+		return x.TaskId
+	}
+	return ""
+}
+
+func (x *TaskBlocked) GetBoardId() string {
+	if x != nil {
+		return x.BoardId
+	}
+	return ""
+}
+
+func (x *TaskBlocked) GetBlockedBy() string {
+	if x != nil {
+		return x.BlockedBy
+	}
+	return ""
+}
+
+func (x *TaskBlocked) GetBlockerReason() string {
+	if x != nil {
+		return x.BlockerReason
+	}
+	return ""
+}
+
+func (x *TaskBlocked) GetBlockerIds() []string {
+	if x != nil {
+		return x.BlockerIds
+	}
+	return nil
+}
+
+func (x *TaskBlocked) GetMetadata() *structpb.Struct {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
+// TaskUnblocked event payload
+type TaskUnblocked struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	TaskId            string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	BoardId           string                 `protobuf:"bytes,2,opt,name=board_id,json=boardId,proto3" json:"board_id,omitempty"`
+	UnblockedBy       string                 `protobuf:"bytes,3,opt,name=unblocked_by,json=unblockedBy,proto3" json:"unblocked_by,omitempty"`
+	UnblockReason     string                 `protobuf:"bytes,4,opt,name=unblock_reason,json=unblockReason,proto3" json:"unblock_reason,omitempty"`
+	ResolvedBlockerId string                 `protobuf:"bytes,5,opt,name=resolved_blocker_id,json=resolvedBlockerId,proto3" json:"resolved_blocker_id,omitempty"` // ID of resolved blocker
+	Metadata          *structpb.Struct       `protobuf:"bytes,6,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *TaskUnblocked) Reset() {
+	*x = TaskUnblocked{}
+	mi := &file_proto_guild_v1_events_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TaskUnblocked) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TaskUnblocked) ProtoMessage() {}
+
+func (x *TaskUnblocked) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_guild_v1_events_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TaskUnblocked.ProtoReflect.Descriptor instead.
+func (*TaskUnblocked) Descriptor() ([]byte, []int) {
+	return file_proto_guild_v1_events_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *TaskUnblocked) GetTaskId() string {
+	if x != nil {
+		return x.TaskId
+	}
+	return ""
+}
+
+func (x *TaskUnblocked) GetBoardId() string {
+	if x != nil {
+		return x.BoardId
+	}
+	return ""
+}
+
+func (x *TaskUnblocked) GetUnblockedBy() string {
+	if x != nil {
+		return x.UnblockedBy
+	}
+	return ""
+}
+
+func (x *TaskUnblocked) GetUnblockReason() string {
+	if x != nil {
+		return x.UnblockReason
+	}
+	return ""
+}
+
+func (x *TaskUnblocked) GetResolvedBlockerId() string {
+	if x != nil {
+		return x.ResolvedBlockerId
+	}
+	return ""
+}
+
+func (x *TaskUnblocked) GetMetadata() *structpb.Struct {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
+// TaskDeleted event payload
+type TaskDeleted struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	TaskId         string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	BoardId        string                 `protobuf:"bytes,2,opt,name=board_id,json=boardId,proto3" json:"board_id,omitempty"`
+	DeletedBy      string                 `protobuf:"bytes,3,opt,name=deleted_by,json=deletedBy,proto3" json:"deleted_by,omitempty"`
+	DeletedAt      *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
+	DeletionReason string                 `protobuf:"bytes,5,opt,name=deletion_reason,json=deletionReason,proto3" json:"deletion_reason,omitempty"`
+	Metadata       *structpb.Struct       `protobuf:"bytes,6,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *TaskDeleted) Reset() {
+	*x = TaskDeleted{}
+	mi := &file_proto_guild_v1_events_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TaskDeleted) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TaskDeleted) ProtoMessage() {}
+
+func (x *TaskDeleted) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_guild_v1_events_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TaskDeleted.ProtoReflect.Descriptor instead.
+func (*TaskDeleted) Descriptor() ([]byte, []int) {
+	return file_proto_guild_v1_events_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *TaskDeleted) GetTaskId() string {
+	if x != nil {
+		return x.TaskId
+	}
+	return ""
+}
+
+func (x *TaskDeleted) GetBoardId() string {
+	if x != nil {
+		return x.BoardId
+	}
+	return ""
+}
+
+func (x *TaskDeleted) GetDeletedBy() string {
+	if x != nil {
+		return x.DeletedBy
+	}
+	return ""
+}
+
+func (x *TaskDeleted) GetDeletedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.DeletedAt
+	}
+	return nil
+}
+
+func (x *TaskDeleted) GetDeletionReason() string {
+	if x != nil {
+		return x.DeletionReason
+	}
+	return ""
+}
+
+func (x *TaskDeleted) GetMetadata() *structpb.Struct {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
 var File_proto_guild_v1_events_proto protoreflect.FileDescriptor
 
 const file_proto_guild_v1_events_proto_rawDesc = "" +
@@ -283,7 +1113,82 @@ const file_proto_guild_v1_events_proto_rawDesc = "" +
 	"\x05event\x18\x01 \x01(\v2\x0f.guild.v1.EventR\x05event\"J\n" +
 	"\x14PublishEventResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage2\x9f\x01\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"\xf7\x03\n" +
+	"\tTaskEvent\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04type\x18\x02 \x01(\tR\x04type\x128\n" +
+	"\ttimestamp\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x16\n" +
+	"\x06source\x18\x04 \x01(\tR\x06source\x121\n" +
+	"\acreated\x18\x05 \x01(\v2\x15.guild.v1.TaskCreatedH\x00R\acreated\x121\n" +
+	"\aupdated\x18\x06 \x01(\v2\x15.guild.v1.TaskUpdatedH\x00R\aupdated\x12+\n" +
+	"\x05moved\x18\a \x01(\v2\x13.guild.v1.TaskMovedH\x00R\x05moved\x127\n" +
+	"\tcompleted\x18\b \x01(\v2\x17.guild.v1.TaskCompletedH\x00R\tcompleted\x121\n" +
+	"\ablocked\x18\t \x01(\v2\x15.guild.v1.TaskBlockedH\x00R\ablocked\x127\n" +
+	"\tunblocked\x18\n" +
+	" \x01(\v2\x17.guild.v1.TaskUnblockedH\x00R\tunblocked\x121\n" +
+	"\adeleted\x18\v \x01(\v2\x15.guild.v1.TaskDeletedH\x00R\adeletedB\t\n" +
+	"\apayload\"\x81\x02\n" +
+	"\vTaskCreated\x12\x17\n" +
+	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x19\n" +
+	"\bboard_id\x18\x02 \x01(\tR\aboardId\x12\x14\n" +
+	"\x05title\x18\x03 \x01(\tR\x05title\x12 \n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x16\n" +
+	"\x06status\x18\x05 \x01(\tR\x06status\x12\x1a\n" +
+	"\bassignee\x18\x06 \x01(\tR\bassignee\x12\x1d\n" +
+	"\n" +
+	"created_by\x18\a \x01(\tR\tcreatedBy\x123\n" +
+	"\bmetadata\x18\b \x01(\v2\x17.google.protobuf.StructR\bmetadata\"\x9c\x02\n" +
+	"\vTaskUpdated\x12\x17\n" +
+	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x19\n" +
+	"\bboard_id\x18\x02 \x01(\tR\aboardId\x12\x14\n" +
+	"\x05title\x18\x03 \x01(\tR\x05title\x12 \n" +
+	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1a\n" +
+	"\bassignee\x18\x05 \x01(\tR\bassignee\x12\x1d\n" +
+	"\n" +
+	"updated_by\x18\x06 \x01(\tR\tupdatedBy\x121\n" +
+	"\achanges\x18\a \x01(\v2\x17.google.protobuf.StructR\achanges\x123\n" +
+	"\bmetadata\x18\b \x01(\v2\x17.google.protobuf.StructR\bmetadata\"\xe5\x01\n" +
+	"\tTaskMoved\x12\x17\n" +
+	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x19\n" +
+	"\bboard_id\x18\x02 \x01(\tR\aboardId\x12\x1f\n" +
+	"\vfrom_status\x18\x03 \x01(\tR\n" +
+	"fromStatus\x12\x1b\n" +
+	"\tto_status\x18\x04 \x01(\tR\btoStatus\x12\x19\n" +
+	"\bmoved_by\x18\x05 \x01(\tR\amovedBy\x12\x16\n" +
+	"\x06reason\x18\x06 \x01(\tR\x06reason\x123\n" +
+	"\bmetadata\x18\a \x01(\v2\x17.google.protobuf.StructR\bmetadata\"\x85\x02\n" +
+	"\rTaskCompleted\x12\x17\n" +
+	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x19\n" +
+	"\bboard_id\x18\x02 \x01(\tR\aboardId\x12!\n" +
+	"\fcompleted_by\x18\x03 \x01(\tR\vcompletedBy\x12=\n" +
+	"\fcompleted_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt\x12)\n" +
+	"\x10completion_notes\x18\x05 \x01(\tR\x0fcompletionNotes\x123\n" +
+	"\bmetadata\x18\x06 \x01(\v2\x17.google.protobuf.StructR\bmetadata\"\xdd\x01\n" +
+	"\vTaskBlocked\x12\x17\n" +
+	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x19\n" +
+	"\bboard_id\x18\x02 \x01(\tR\aboardId\x12\x1d\n" +
+	"\n" +
+	"blocked_by\x18\x03 \x01(\tR\tblockedBy\x12%\n" +
+	"\x0eblocker_reason\x18\x04 \x01(\tR\rblockerReason\x12\x1f\n" +
+	"\vblocker_ids\x18\x05 \x03(\tR\n" +
+	"blockerIds\x123\n" +
+	"\bmetadata\x18\x06 \x01(\v2\x17.google.protobuf.StructR\bmetadata\"\xf2\x01\n" +
+	"\rTaskUnblocked\x12\x17\n" +
+	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x19\n" +
+	"\bboard_id\x18\x02 \x01(\tR\aboardId\x12!\n" +
+	"\funblocked_by\x18\x03 \x01(\tR\vunblockedBy\x12%\n" +
+	"\x0eunblock_reason\x18\x04 \x01(\tR\runblockReason\x12.\n" +
+	"\x13resolved_blocker_id\x18\x05 \x01(\tR\x11resolvedBlockerId\x123\n" +
+	"\bmetadata\x18\x06 \x01(\v2\x17.google.protobuf.StructR\bmetadata\"\xf9\x01\n" +
+	"\vTaskDeleted\x12\x17\n" +
+	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x19\n" +
+	"\bboard_id\x18\x02 \x01(\tR\aboardId\x12\x1d\n" +
+	"\n" +
+	"deleted_by\x18\x03 \x01(\tR\tdeletedBy\x129\n" +
+	"\n" +
+	"deleted_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\x12'\n" +
+	"\x0fdeletion_reason\x18\x05 \x01(\tR\x0edeletionReason\x123\n" +
+	"\bmetadata\x18\x06 \x01(\v2\x17.google.protobuf.StructR\bmetadata2\x9f\x01\n" +
 	"\fEventService\x12@\n" +
 	"\fStreamEvents\x12\x1d.guild.v1.StreamEventsRequest\x1a\x0f.guild.v1.Event0\x01\x12M\n" +
 	"\fPublishEvent\x12\x1d.guild.v1.PublishEventRequest\x1a\x1e.guild.v1.PublishEventResponseB4Z2github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1b\x06proto3"
@@ -300,29 +1205,55 @@ func file_proto_guild_v1_events_proto_rawDescGZIP() []byte {
 	return file_proto_guild_v1_events_proto_rawDescData
 }
 
-var file_proto_guild_v1_events_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_proto_guild_v1_events_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_proto_guild_v1_events_proto_goTypes = []any{
 	(*Event)(nil),                 // 0: guild.v1.Event
 	(*StreamEventsRequest)(nil),   // 1: guild.v1.StreamEventsRequest
 	(*PublishEventRequest)(nil),   // 2: guild.v1.PublishEventRequest
 	(*PublishEventResponse)(nil),  // 3: guild.v1.PublishEventResponse
-	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
-	(*structpb.Struct)(nil),       // 5: google.protobuf.Struct
+	(*TaskEvent)(nil),             // 4: guild.v1.TaskEvent
+	(*TaskCreated)(nil),           // 5: guild.v1.TaskCreated
+	(*TaskUpdated)(nil),           // 6: guild.v1.TaskUpdated
+	(*TaskMoved)(nil),             // 7: guild.v1.TaskMoved
+	(*TaskCompleted)(nil),         // 8: guild.v1.TaskCompleted
+	(*TaskBlocked)(nil),           // 9: guild.v1.TaskBlocked
+	(*TaskUnblocked)(nil),         // 10: guild.v1.TaskUnblocked
+	(*TaskDeleted)(nil),           // 11: guild.v1.TaskDeleted
+	(*timestamppb.Timestamp)(nil), // 12: google.protobuf.Timestamp
+	(*structpb.Struct)(nil),       // 13: google.protobuf.Struct
 }
 var file_proto_guild_v1_events_proto_depIdxs = []int32{
-	4, // 0: guild.v1.Event.timestamp:type_name -> google.protobuf.Timestamp
-	5, // 1: guild.v1.Event.data:type_name -> google.protobuf.Struct
-	4, // 2: guild.v1.StreamEventsRequest.since:type_name -> google.protobuf.Timestamp
-	0, // 3: guild.v1.PublishEventRequest.event:type_name -> guild.v1.Event
-	1, // 4: guild.v1.EventService.StreamEvents:input_type -> guild.v1.StreamEventsRequest
-	2, // 5: guild.v1.EventService.PublishEvent:input_type -> guild.v1.PublishEventRequest
-	0, // 6: guild.v1.EventService.StreamEvents:output_type -> guild.v1.Event
-	3, // 7: guild.v1.EventService.PublishEvent:output_type -> guild.v1.PublishEventResponse
-	6, // [6:8] is the sub-list for method output_type
-	4, // [4:6] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	12, // 0: guild.v1.Event.timestamp:type_name -> google.protobuf.Timestamp
+	13, // 1: guild.v1.Event.data:type_name -> google.protobuf.Struct
+	12, // 2: guild.v1.StreamEventsRequest.since:type_name -> google.protobuf.Timestamp
+	0,  // 3: guild.v1.PublishEventRequest.event:type_name -> guild.v1.Event
+	12, // 4: guild.v1.TaskEvent.timestamp:type_name -> google.protobuf.Timestamp
+	5,  // 5: guild.v1.TaskEvent.created:type_name -> guild.v1.TaskCreated
+	6,  // 6: guild.v1.TaskEvent.updated:type_name -> guild.v1.TaskUpdated
+	7,  // 7: guild.v1.TaskEvent.moved:type_name -> guild.v1.TaskMoved
+	8,  // 8: guild.v1.TaskEvent.completed:type_name -> guild.v1.TaskCompleted
+	9,  // 9: guild.v1.TaskEvent.blocked:type_name -> guild.v1.TaskBlocked
+	10, // 10: guild.v1.TaskEvent.unblocked:type_name -> guild.v1.TaskUnblocked
+	11, // 11: guild.v1.TaskEvent.deleted:type_name -> guild.v1.TaskDeleted
+	13, // 12: guild.v1.TaskCreated.metadata:type_name -> google.protobuf.Struct
+	13, // 13: guild.v1.TaskUpdated.changes:type_name -> google.protobuf.Struct
+	13, // 14: guild.v1.TaskUpdated.metadata:type_name -> google.protobuf.Struct
+	13, // 15: guild.v1.TaskMoved.metadata:type_name -> google.protobuf.Struct
+	12, // 16: guild.v1.TaskCompleted.completed_at:type_name -> google.protobuf.Timestamp
+	13, // 17: guild.v1.TaskCompleted.metadata:type_name -> google.protobuf.Struct
+	13, // 18: guild.v1.TaskBlocked.metadata:type_name -> google.protobuf.Struct
+	13, // 19: guild.v1.TaskUnblocked.metadata:type_name -> google.protobuf.Struct
+	12, // 20: guild.v1.TaskDeleted.deleted_at:type_name -> google.protobuf.Timestamp
+	13, // 21: guild.v1.TaskDeleted.metadata:type_name -> google.protobuf.Struct
+	1,  // 22: guild.v1.EventService.StreamEvents:input_type -> guild.v1.StreamEventsRequest
+	2,  // 23: guild.v1.EventService.PublishEvent:input_type -> guild.v1.PublishEventRequest
+	0,  // 24: guild.v1.EventService.StreamEvents:output_type -> guild.v1.Event
+	3,  // 25: guild.v1.EventService.PublishEvent:output_type -> guild.v1.PublishEventResponse
+	24, // [24:26] is the sub-list for method output_type
+	22, // [22:24] is the sub-list for method input_type
+	22, // [22:22] is the sub-list for extension type_name
+	22, // [22:22] is the sub-list for extension extendee
+	0,  // [0:22] is the sub-list for field type_name
 }
 
 func init() { file_proto_guild_v1_events_proto_init() }
@@ -331,13 +1262,22 @@ func file_proto_guild_v1_events_proto_init() {
 		return
 	}
 	file_proto_guild_v1_events_proto_msgTypes[1].OneofWrappers = []any{}
+	file_proto_guild_v1_events_proto_msgTypes[4].OneofWrappers = []any{
+		(*TaskEvent_Created)(nil),
+		(*TaskEvent_Updated)(nil),
+		(*TaskEvent_Moved)(nil),
+		(*TaskEvent_Completed)(nil),
+		(*TaskEvent_Blocked)(nil),
+		(*TaskEvent_Unblocked)(nil),
+		(*TaskEvent_Deleted)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_guild_v1_events_proto_rawDesc), len(file_proto_guild_v1_events_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

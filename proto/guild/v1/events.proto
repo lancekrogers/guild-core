@@ -47,3 +47,96 @@ message PublishEventResponse {
   bool success = 1;
   string message = 2;
 }
+
+// TaskEvent represents task-specific events for Kanban board operations
+message TaskEvent {
+  string id = 1;
+  string type = 2; // task.created, task.updated, task.moved, task.completed, task.blocked, task.unblocked, task.deleted
+  google.protobuf.Timestamp timestamp = 3;
+  string source = 4;
+  
+  oneof payload {
+    TaskCreated created = 5;
+    TaskUpdated updated = 6;
+    TaskMoved moved = 7;
+    TaskCompleted completed = 8;
+    TaskBlocked blocked = 9;
+    TaskUnblocked unblocked = 10;
+    TaskDeleted deleted = 11;
+  }
+}
+
+// TaskCreated event payload
+message TaskCreated {
+  string task_id = 1;
+  string board_id = 2;
+  string title = 3;
+  string description = 4;
+  string status = 5; // Column name: backlog, todo, in_progress, ready_for_review, done
+  string assignee = 6;
+  string created_by = 7;
+  google.protobuf.Struct metadata = 8;
+}
+
+// TaskUpdated event payload  
+message TaskUpdated {
+  string task_id = 1;
+  string board_id = 2;
+  string title = 3;
+  string description = 4;
+  string assignee = 5;
+  string updated_by = 6;
+  google.protobuf.Struct changes = 7; // Fields that changed
+  google.protobuf.Struct metadata = 8;
+}
+
+// TaskMoved event payload
+message TaskMoved {
+  string task_id = 1;
+  string board_id = 2;
+  string from_status = 3; // Previous column
+  string to_status = 4;   // New column  
+  string moved_by = 5;
+  string reason = 6; // Optional reason for move
+  google.protobuf.Struct metadata = 7;
+}
+
+// TaskCompleted event payload
+message TaskCompleted {
+  string task_id = 1;
+  string board_id = 2;
+  string completed_by = 3;
+  google.protobuf.Timestamp completed_at = 4;
+  string completion_notes = 5;
+  google.protobuf.Struct metadata = 6;
+}
+
+// TaskBlocked event payload
+message TaskBlocked {
+  string task_id = 1;
+  string board_id = 2;
+  string blocked_by = 3;
+  string blocker_reason = 4;
+  repeated string blocker_ids = 5; // IDs of blocking tasks/issues
+  google.protobuf.Struct metadata = 6;
+}
+
+// TaskUnblocked event payload
+message TaskUnblocked {
+  string task_id = 1;
+  string board_id = 2;
+  string unblocked_by = 3;
+  string unblock_reason = 4;
+  string resolved_blocker_id = 5; // ID of resolved blocker
+  google.protobuf.Struct metadata = 6;
+}
+
+// TaskDeleted event payload
+message TaskDeleted {
+  string task_id = 1;
+  string board_id = 2;
+  string deleted_by = 3;
+  google.protobuf.Timestamp deleted_at = 4;
+  string deletion_reason = 5;
+  google.protobuf.Struct metadata = 6;
+}

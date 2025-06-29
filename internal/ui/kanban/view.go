@@ -14,6 +14,22 @@ import (
 
 // View renders the kanban board
 func (m *Model) View() string {
+	// Start profiling if enabled
+	var profilingDone func()
+	if m.profiler != nil && m.profiler.IsEnabled() {
+		profilingDone = m.profiler.StartFrame(m.ctx)
+		defer profilingDone()
+	}
+
+	// Check if we should reduce quality for performance
+	if m.renderer != nil && m.profiler != nil {
+		shouldReduce := m.profiler.ShouldReduceQuality(m.ctx)
+		if shouldReduce != m.lowQualityMode {
+			m.lowQualityMode = shouldReduce
+			m.renderer.SetLowQualityMode(m.ctx, shouldReduce)
+		}
+	}
+
 	if m.error != nil {
 		return m.renderError()
 	}
@@ -35,8 +51,8 @@ func (m *Model) View() string {
 	// Column headers
 	sections = append(sections, m.renderColumnHeaders())
 
-	// Task columns
-	sections = append(sections, m.renderTaskColumns())
+	// Task columns (now optimized)
+	sections = append(sections, m.renderTaskColumnsOptimized())
 
 	// Status bar
 	sections = append(sections, m.renderStatusBar())
@@ -65,7 +81,7 @@ func (m *Model) renderHeader() string {
 		totalTasks, activeTasks, blockedTasks, m.fps,
 	)
 
-	width := m.viewport.Width
+	width := m.viewportState.Width
 	if width < 80 {
 		width = 80
 	}
@@ -83,7 +99,7 @@ func (m *Model) renderHeader() string {
 
 // renderColumnHeaders renders the column headers
 func (m *Model) renderColumnHeaders() string {
-	colWidth := (m.viewport.Width - 6) / 5 // -6 for borders and padding
+	colWidth := (m.viewportState.Width - 6) / 5 // -6 for borders and padding
 	if colWidth < 15 {
 		colWidth = 15
 	}
@@ -97,7 +113,7 @@ func (m *Model) renderColumnHeaders() string {
 		// Style based on focus and status
 		style := columnHeaderStyle.Copy().Width(colWidth)
 
-		if i == m.viewport.FocusedColumn {
+		if i == m.viewportState.FocusedColumn {
 			style = style.
 				Background(lipgloss.Color("237")).
 				BorderStyle(lipgloss.NormalBorder()).
@@ -127,7 +143,7 @@ func (m *Model) renderColumnHeaders() string {
 
 // renderTaskColumns renders the task columns
 func (m *Model) renderTaskColumns() string {
-	colWidth := (m.viewport.Width - 6) / 5
+	colWidth := (m.viewportState.Width - 6) / 5
 	if colWidth < 15 {
 		colWidth = 15
 	}
@@ -146,7 +162,7 @@ func (m *Model) renderTaskColumns() string {
 			"Or import existing tasks:\n" +
 			"  guild kanban import\n"
 		return lipgloss.NewStyle().
-			Width(m.viewport.Width - 4).
+			Width(m.viewportState.Width - 4).
 			Align(lipgloss.Center).
 			MarginTop(2).
 			Render(emptyMsg)
@@ -178,10 +194,10 @@ func (m *Model) renderColumn(colIndex int, col Column, width int) string {
 	}
 
 	// Render visible tasks
-	for i := 0; i < m.viewport.VisibleRows; i++ {
+	for i := 0; i < m.viewportState.VisibleRows; i++ {
 		if i < len(col.Tasks) {
 			task := col.Tasks[i]
-			taskView := m.renderTask(task, width, colIndex == m.viewport.FocusedColumn && i == 0)
+			taskView := m.renderTask(task, width, colIndex == m.viewportState.FocusedColumn && i == 0)
 			rows = append(rows, taskView)
 		} else {
 			// Empty row
@@ -202,14 +218,14 @@ func (m *Model) renderColumn(colIndex int, col Column, width int) string {
 	// Create column with border
 	columnStyle := lipgloss.NewStyle().
 		Width(width).
-		Height(m.viewport.VisibleRows + 2). // +2 for scroll indicators
+		Height(m.viewportState.VisibleRows + 2). // +2 for scroll indicators
 		BorderStyle(lipgloss.NormalBorder()).
 		BorderLeft(colIndex > 0).
 		BorderRight(colIndex < 4).
 		BorderTop(false).
 		BorderBottom(false)
 
-	if colIndex == m.viewport.FocusedColumn {
+	if colIndex == m.viewportState.FocusedColumn {
 		columnStyle = columnStyle.BorderForeground(lipgloss.Color("12"))
 	} else {
 		columnStyle = columnStyle.BorderForeground(lipgloss.Color("240"))
@@ -297,21 +313,41 @@ func (m *Model) renderTask(task *kanban.Task, width int, selected bool) string {
 func (m *Model) renderStatusBar() string {
 	var status string
 
-	if m.viewport.SearchMode {
-		status = fmt.Sprintf("🔍 Search: %s", m.viewport.SearchFilter)
+	if m.viewportState.SearchMode {
+		status = fmt.Sprintf("🔍 Search: %s", m.viewportState.SearchFilter)
 	} else if m.statusMessage != "" {
 		status = m.statusMessage
 	} else {
 		status = "[j/k] scroll | [h/l] columns | [1-5] jump | [/] search | [?] help | [q] quit"
 	}
 
+	// Add event stream indicator on the right
+	streamIndicator := ""
+	if m.eventClient != nil && m.eventStream != nil {
+		streamIndicator = " 🟢 Live"
+	} else if m.eventClient != nil {
+		streamIndicator = " 🔴 Offline"
+	}
+
+	// Calculate available width for status
+	indicatorWidth := lipgloss.Width(streamIndicator)
+	statusWidth := m.viewportState.Width - indicatorWidth - 2
+
+	// Truncate status if needed
+	if lipgloss.Width(status) > statusWidth {
+		status = status[:statusWidth-3] + "..."
+	}
+
+	// Pad status to fill available width
+	status = lipgloss.NewStyle().Width(statusWidth).Render(status)
+
 	style := lipgloss.NewStyle().
-		Width(m.viewport.Width).
+		Width(m.viewportState.Width).
 		Foreground(lipgloss.Color("241")).
 		Background(lipgloss.Color("235")).
 		Padding(0, 1)
 
-	return style.Render(status)
+	return style.Render(status + streamIndicator)
 }
 
 // renderHelp renders the help screen
@@ -343,8 +379,8 @@ Press any key to return to the board...
 `
 
 	style := lipgloss.NewStyle().
-		Width(m.viewport.Width).
-		Height(m.viewport.Height).
+		Width(m.viewportState.Width).
+		Height(m.viewportState.Height).
 		Align(lipgloss.Center, lipgloss.Center).
 		Padding(2)
 
@@ -354,8 +390,8 @@ Press any key to return to the board...
 // renderLoading renders the loading screen
 func (m *Model) renderLoading() string {
 	style := lipgloss.NewStyle().
-		Width(m.viewport.Width).
-		Height(m.viewport.Height).
+		Width(m.viewportState.Width).
+		Height(m.viewportState.Height).
 		Align(lipgloss.Center, lipgloss.Center)
 
 	return style.Render("⏳ Loading tasks...")
@@ -364,10 +400,153 @@ func (m *Model) renderLoading() string {
 // renderError renders the error screen
 func (m *Model) renderError() string {
 	style := lipgloss.NewStyle().
-		Width(m.viewport.Width).
-		Height(m.viewport.Height).
+		Width(m.viewportState.Width).
+		Height(m.viewportState.Height).
 		Align(lipgloss.Center, lipgloss.Center).
 		Foreground(lipgloss.Color("9"))
 
 	return style.Render(fmt.Sprintf("❌ Error: %v\n\nPress 'r' to retry or 'q' to quit", m.error))
+}
+
+// renderTaskColumnsOptimized renders task columns using viewport culling and optimized rendering
+func (m *Model) renderTaskColumnsOptimized() string {
+	colWidth := (m.viewportState.Width - 6) / 5
+	if colWidth < 15 {
+		colWidth = 15
+	}
+
+	// Check if board is empty
+	totalTasks := 0
+	for _, col := range m.columns {
+		totalTasks += col.TotalTasks
+	}
+
+	// If board is empty, show helpful workshop content
+	if totalTasks == 0 {
+		emptyMsg := headerStyle.Render("🏗️  The workshop board is empty") + "\n\n" +
+			"Start by creating a commission:\n" +
+			"  guild commission create \"Build a REST API\"\n\n" +
+			"Or import existing tasks:\n" +
+			"  guild kanban import\n"
+		return lipgloss.NewStyle().
+			Width(m.viewportState.Width - 4).
+			Align(lipgloss.Center).
+			MarginTop(2).
+			Render(emptyMsg)
+	}
+
+	// Use viewport culling if available
+	if m.viewport != nil {
+		return m.renderColumnsWithViewportCulling(colWidth)
+	}
+
+	// Fallback to original rendering
+	return m.renderTaskColumns()
+}
+
+// renderColumnsWithViewportCulling renders columns using viewport culling for performance
+func (m *Model) renderColumnsWithViewportCulling(colWidth int) string {
+	// Convert model columns to viewport format
+	columns := make([]*Column, len(m.columns))
+	for i := range m.columns {
+		columns[i] = &m.columns[i]
+	}
+
+	// Get visible cards using viewport culling
+	visibleCards, err := m.viewport.VisibleCards(m.ctx, columns)
+	if err != nil {
+		// Fall back to original rendering on error
+		return m.renderTaskColumns()
+	}
+
+	// Group visible cards by column
+	columnCards := make(map[int][]CardRenderInfo)
+	for _, card := range visibleCards {
+		columnCards[card.ColumnIdx] = append(columnCards[card.ColumnIdx], card)
+	}
+
+	// Render each column
+	var columnViews []string
+	for i := range m.columns {
+		columnContent := m.renderColumnOptimized(i, m.columns[i], colWidth, columnCards[i])
+		columnViews = append(columnViews, columnContent)
+	}
+
+	return lipgloss.JoinHorizontal(lipgloss.Top, columnViews...)
+}
+
+// renderColumnOptimized renders a single column with optimizations
+func (m *Model) renderColumnOptimized(colIndex int, col Column, width int, visibleCards []CardRenderInfo) string {
+	var rows []string
+
+	// Scroll indicator (top)
+	if col.ScrollOffset > 0 {
+		indicator := fmt.Sprintf("↑ %d more", col.ScrollOffset)
+		style := scrollIndicatorStyle.Copy().Width(width).Align(lipgloss.Center)
+		rows = append(rows, style.Render(indicator))
+	} else {
+		rows = append(rows, strings.Repeat(" ", width))
+	}
+
+	// Render visible tasks using optimized renderer
+	for i := 0; i < m.viewportState.VisibleRows; i++ {
+		if i < len(visibleCards) {
+			cardInfo := visibleCards[i]
+			if cardInfo.Visible || cardInfo.InBuffer {
+				selected := colIndex == m.viewportState.FocusedColumn && i == 0
+				
+				var taskView string
+				if m.renderer != nil {
+					// Use optimized renderer with caching
+					rendered, err := m.renderer.RenderCard(m.ctx, cardInfo.Card, width, selected)
+					if err != nil {
+						// Fall back to direct rendering
+						taskView = m.renderTask(cardInfo.Card, width, selected)
+					} else {
+						taskView = rendered
+					}
+				} else {
+					// Fall back to direct rendering
+					taskView = m.renderTask(cardInfo.Card, width, selected)
+				}
+				
+				rows = append(rows, taskView)
+			} else {
+				// Empty row for non-visible cards
+				rows = append(rows, strings.Repeat(" ", width))
+			}
+		} else {
+			// Empty row
+			rows = append(rows, strings.Repeat(" ", width))
+		}
+	}
+
+	// Scroll indicator (bottom)
+	remainingTasks := col.TotalTasks - col.ScrollOffset - len(visibleCards)
+	if remainingTasks > 0 {
+		indicator := fmt.Sprintf("↓ %d more", remainingTasks)
+		style := scrollIndicatorStyle.Copy().Width(width).Align(lipgloss.Center)
+		rows = append(rows, style.Render(indicator))
+	} else {
+		rows = append(rows, strings.Repeat(" ", width))
+	}
+
+	// Create column with border
+	columnStyle := lipgloss.NewStyle().
+		Width(width).
+		Height(m.viewportState.VisibleRows + 2). // +2 for scroll indicators
+		BorderStyle(lipgloss.NormalBorder()).
+		BorderLeft(colIndex > 0).
+		BorderRight(colIndex < 4).
+		BorderTop(false).
+		BorderBottom(false)
+
+	if colIndex == m.viewportState.FocusedColumn {
+		columnStyle = columnStyle.BorderForeground(lipgloss.Color("12"))
+	} else {
+		columnStyle = columnStyle.BorderForeground(lipgloss.Color("240"))
+	}
+
+	content := lipgloss.JoinVertical(lipgloss.Left, rows...)
+	return columnStyle.Render(content)
 }
