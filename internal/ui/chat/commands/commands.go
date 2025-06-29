@@ -224,8 +224,14 @@ func (cp *CommandProcessor) registerBuiltinHandlers() {
 	// Test commands
 	cp.handlers["test"] = &TestHandler{}
 
-	// Search commands
-	cp.handlers["search"] = &SearchHandler{}
+	// Corpus commands (create first for search integration)
+	corpusHandler := NewCorpusHandler(cp.config, cp.guildClient)
+	cp.handlers["corpus"] = corpusHandler
+	cp.handlers["knowledge"] = NewKnowledgeHandler()
+	cp.handlers["index"] = NewIndexHandler()
+
+	// Search commands (integrated with corpus)
+	cp.handlers["search"] = NewSearchHandler(corpusHandler)
 
 	// Session commands
 	cp.handlers["session"] = &SessionHandler{}
@@ -293,6 +299,15 @@ func (h *HelpHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 
 **Search Commands:**
   /search <pattern>      - Search message history
+
+**Corpus Commands:**
+  /corpus list           - List all corpus documents
+  /corpus search <query> - Search corpus content
+  /corpus add <type> <content> - Add knowledge to corpus
+  /corpus stats          - Show corpus statistics
+  /knowledge browse      - Browse knowledge graph
+  /knowledge validate    - Validate knowledge entries
+  /index rebuild         - Rebuild corpus index
 
 **Session Commands:**
   /session [list|load|save] - Session management
@@ -1385,32 +1400,102 @@ func (h *PromptHandler) Usage() string {
 	return "/prompt [get|set|list]"
 }
 
-// SearchHandler searches message history
-type SearchHandler struct{}
+// SearchHandler provides integrated search across message history and corpus
+type SearchHandler struct {
+	corpusHandler *CorpusHandler
+}
+
+// NewSearchHandler creates a new search handler with corpus integration
+func NewSearchHandler(corpusHandler *CorpusHandler) *SearchHandler {
+	return &SearchHandler{
+		corpusHandler: corpusHandler,
+	}
+}
 
 func (h *SearchHandler) Handle(ctx context.Context, args []string) tea.Cmd {
+	ctx = observability.WithComponent(ctx, "search.unified")
+	ctx = observability.WithOperation(ctx, "Handle")
+	
 	if len(args) == 0 {
 		return func() tea.Msg {
 			return panes.StatusUpdateMsg{
-				Message: "Usage: /search <pattern>",
+				Message: "Usage: /search <query> - Searches both message history and corpus knowledge",
 				Level:   "error",
 			}
 		}
 	}
 
+	query := strings.Join(args, " ")
+	
 	return func() tea.Msg {
-		return messages.SearchMsg{
-			Pattern: strings.Join(args, " "),
+		// Perform unified search across both message history and corpus
+		var content strings.Builder
+		content.WriteString(fmt.Sprintf("🔍 **Unified Search Results for \"%s\"**\n\n", query))
+		
+		// First, search corpus knowledge
+		content.WriteString("## 📚 Knowledge Base Results\n\n")
+		
+		// Use corpus handler to search
+		corpusCmd := h.corpusHandler.handleSearch(ctx, args)
+		if corpusCmd != nil {
+			corpusMsg := corpusCmd()
+			if paneMsg, ok := corpusMsg.(panes.PaneUpdateMsg); ok {
+				// Extract just the results part, skip the header
+				corpusContent := paneMsg.Content
+				if lines := strings.Split(corpusContent, "\n"); len(lines) > 2 {
+					// Skip the header line and add the results
+					resultsStart := false
+					for _, line := range lines {
+						if strings.Contains(line, "No results found") || strings.Contains(line, "Found") || resultsStart {
+							resultsStart = true
+							content.WriteString(line + "\n")
+						}
+					}
+				}
+			}
 		}
+		
+		content.WriteString("\n## 💬 Chat History Results\n\n")
+		content.WriteString("_Searching message history..._\n\n")
+		
+		// Add instruction for message search
+		content.WriteString("**Note**: For detailed message history search, the system will also trigger a background search.\n")
+		content.WriteString("**Tip**: Use `/corpus search --type pattern` to search only design patterns, or `/corpus search --from elena` to search by author.\n\n")
+		
+		content.WriteString("---\n\n")
+		content.WriteString("**Advanced Options**:\n")
+		content.WriteString("- `/corpus search` - Search knowledge base with advanced filters\n")
+		content.WriteString("- Message history search is also triggered automatically\n")
+		
+		// Also trigger the original message search
+		go func() {
+			// This would trigger the message search in the background
+			// For now, we'll keep the original behavior by sending the SearchMsg
+		}()
+		
+		// Send both the unified results and trigger message search
+		return tea.Batch(
+			func() tea.Msg {
+				return panes.PaneUpdateMsg{
+					PaneID:  "output",
+					Content: content.String(),
+				}
+			},
+			func() tea.Msg {
+				return messages.SearchMsg{
+					Pattern: query,
+				}
+			},
+		)
 	}
 }
 
 func (h *SearchHandler) Description() string {
-	return "Search message history"
+	return "Search both message history and knowledge corpus"
 }
 
 func (h *SearchHandler) Usage() string {
-	return "/search <pattern>"
+	return "/search <query> - Unified search across chat and corpus"
 }
 
 // ExportHandler exports chat history with full Sprint 7 functionality
