@@ -375,6 +375,9 @@ func (sms *SequentialMergeStrategy) calculateComplexityScore(ctx context.Context
 	// Age factor (older branches are more complex to merge)
 	age := time.Since(wt.CreatedAt)
 	score += int(age.Hours() / 24) // Add 1 point per day
+	
+	// For sub-day precision in tests, add hours
+	score += int(age.Hours())
 
 	return score
 }

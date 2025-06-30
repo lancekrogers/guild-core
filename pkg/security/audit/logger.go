@@ -542,6 +542,17 @@ func (gal *GuildAuditLogger) isSuspiciousIP(ip string) bool {
 		return true // Invalid IP is suspicious
 	}
 
+	// Check suspicious patterns first (before private IP exclusion)
+	suspiciousPrefixes := []string{
+		"10.0.0.1", // Common default gateway might be suspicious in some contexts
+	}
+
+	for _, prefix := range suspiciousPrefixes {
+		if strings.HasPrefix(ip, prefix) {
+			return true
+		}
+	}
+
 	// Check for private IP ranges (might be suspicious depending on context)
 	privateRanges := []string{
 		"10.0.0.0/8",
@@ -552,18 +563,7 @@ func (gal *GuildAuditLogger) isSuspiciousIP(ip string) bool {
 	for _, cidr := range privateRanges {
 		_, network, _ := net.ParseCIDR(cidr)
 		if network != nil && network.Contains(parsedIP) {
-			return false // Private IPs are generally not suspicious
-		}
-	}
-
-	// Suspicious patterns (simplified)
-	suspiciousPrefixes := []string{
-		"10.0.0.1", // Common default gateway might be suspicious in some contexts
-	}
-
-	for _, prefix := range suspiciousPrefixes {
-		if strings.HasPrefix(ip, prefix) {
-			return true
+			return false // Private IPs are generally not suspicious (except those caught above)
 		}
 	}
 

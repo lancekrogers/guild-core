@@ -78,7 +78,7 @@ func TestProgressAggregator_UpdateTaskStatus(t *testing.T) {
 	assert.Equal(t, 1, progress.CompletedTasks)
 	assert.Equal(t, 1, progress.RunningTasks)
 	assert.Equal(t, 1, progress.PendingTasks)
-	assert.Equal(t, float64(100.0/3.0), progress.OverallProgress)
+	assert.InDelta(t, float64(100.0/3.0), progress.OverallProgress, 0.0000001)
 }
 
 func TestProgressAggregator_Subscribe(t *testing.T) {

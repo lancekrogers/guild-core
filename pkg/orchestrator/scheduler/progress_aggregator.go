@@ -136,7 +136,6 @@ func (pa *ProgressAggregator) RegisterCommission(ctx context.Context, commission
 func (pa *ProgressAggregator) UpdateTaskProgress(update ProgressUpdate) error {
 	// Progress updates are time-sensitive, so we don't check context to avoid dropping updates
 	pa.mu.Lock()
-	defer pa.mu.Unlock()
 
 	// Update task progress
 	task, exists := pa.tasks[update.TaskID]
@@ -159,7 +158,9 @@ func (pa *ProgressAggregator) UpdateTaskProgress(update ProgressUpdate) error {
 		}
 	}
 
-	// Notify subscribers
+	pa.mu.Unlock()
+
+	// Notify subscribers after releasing lock to avoid deadlock
 	pa.notifySubscribers()
 
 	return nil
@@ -172,16 +173,24 @@ func (pa *ProgressAggregator) UpdateTaskStatus(taskID, commissionID string, stat
 	// First update task status
 	pa.mu.Lock()
 	task, exists := pa.tasks[taskID]
+	var previousStatus TaskStatus
+	var isNewTask bool
 	if !exists {
 		task = &TaskProgress{
 			TaskID:   taskID,
+			Status:   TaskStatusPending, // New tasks start as pending
 			SubTasks: make(map[string]*SubTaskProgress),
 		}
 		pa.tasks[taskID] = task
+		previousStatus = TaskStatusPending
+		isNewTask = true
+	} else {
+		previousStatus = task.Status
+		isNewTask = false
 	}
 
-	previousStatus := task.Status
 	task.Status = status
+	task.LastUpdate = time.Now()
 
 	// Update start time
 	if status == TaskStatusRunning && task.StartTime == nil {
@@ -197,18 +206,27 @@ func (pa *ProgressAggregator) UpdateTaskStatus(taskID, commissionID string, stat
 	if commission != nil {
 		commission.mu.Lock()
 		
-		// Update task counts based on status change
-		switch previousStatus {
-		case TaskStatusPending:
-			commission.PendingTasks--
-		case TaskStatusRunning:
-			commission.RunningTasks--
-		case TaskStatusCompleted:
-			commission.CompletedTasks--
-		case TaskStatusFailed:
-			commission.FailedTasks--
+		// For new tasks, we "consume" one pending task from the commission pool
+		if isNewTask {
+			// New task consumes one pending task slot
+			if commission.PendingTasks > 0 {
+				commission.PendingTasks--
+			}
+		} else {
+			// Update task counts based on status change for existing tasks
+			switch previousStatus {
+			case TaskStatusPending:
+				commission.PendingTasks--
+			case TaskStatusRunning:
+				commission.RunningTasks--
+			case TaskStatusCompleted:
+				commission.CompletedTasks--
+			case TaskStatusFailed:
+				commission.FailedTasks--
+			}
 		}
 
+		// Always update the new status count
 		switch status {
 		case TaskStatusPending:
 			commission.PendingTasks++

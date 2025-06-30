@@ -551,11 +551,11 @@ type NoSecretRule struct {
 func (nsr *NoSecretRule) Validate(ctx context.Context, changes []Change) []ValidationIssue {
 	if nsr.patterns == nil {
 		nsr.patterns = []*regexp.Regexp{
-			regexp.MustCompile(`(?i)(api[_-]?key|apikey).*[:=]\s*['"]?\w{20,}`),
-			regexp.MustCompile(`(?i)(secret|password|passwd|pwd).*[:=]\s*['"]?\w+`),
-			regexp.MustCompile(`(?i)aws[_-]?(access[_-]?key|secret).*[:=]\s*['"]?\w+`),
-			regexp.MustCompile(`(?i)private[_-]?key.*[:=]\s*['"]?-----BEGIN`),
-			regexp.MustCompile(`sk-[a-zA-Z0-9]{48,}`),                      // OpenAI API keys
+			regexp.MustCompile(`(?i)(api[_-]?key|apikey)\s*[:=]\s*['"]?\w{20,}`),
+			regexp.MustCompile(`(?i)(secret|password|passwd|pwd)\s*[:=]\s*['"]?\w+`),
+			regexp.MustCompile(`(?i)aws[_-]?(access[_-]?key|secret)\s*[:=]\s*['"]?\w+`),
+			regexp.MustCompile(`(?i)private[_-]?key\s*[:=]\s*['"]?-----BEGIN`),
+			regexp.MustCompile(`sk-[a-zA-Z0-9]{20,}`),                      // OpenAI-style API keys
 			regexp.MustCompile(`xoxb-[0-9]{12}-[0-9]{12}-[a-zA-Z0-9]{24}`), // Slack tokens
 		}
 	}

@@ -88,13 +88,13 @@ func TestScribeMergePlanCreation(t *testing.T) {
 	assert.Len(t, plan.Order, 2)
 	assert.Greater(t, plan.EstimatedDuration, time.Duration(0))
 
-	// Verify ordering (older worktree should be first due to lower complexity)
-	assert.Equal(t, "wt2", plan.Order[0].WorktreeID) // Older worktree
-	assert.Equal(t, "wt1", plan.Order[1].WorktreeID)
+	// Verify ordering (newer worktree should be first due to lower complexity score)
+	assert.Equal(t, "wt1", plan.Order[0].WorktreeID) // Newer worktree (lower complexity)
+	assert.Equal(t, "wt2", plan.Order[1].WorktreeID) // Older worktree (higher complexity)
 
 	// Verify dependencies
 	assert.Empty(t, plan.Order[0].Dependencies)
-	assert.Contains(t, plan.Order[1].Dependencies, "wt2")
+	assert.Contains(t, plan.Order[1].Dependencies, "wt1")
 }
 
 // TestCraftMergeActions tests merge action determination

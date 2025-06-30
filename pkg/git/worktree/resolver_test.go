@@ -357,6 +357,7 @@ func TestJourneymanManualResolver(t *testing.T) {
 
 	// Test request ID generation
 	id1 := resolver.generateRequestID()
+	time.Sleep(1 * time.Microsecond) // Ensure different timestamp
 	id2 := resolver.generateRequestID()
 	assert.NotEqual(t, id1, id2)
 	assert.Contains(t, id1, "req_")

@@ -93,11 +93,22 @@ func (m *MockAuditEnricher) AddComplianceTags(ctx context.Context, entry AuditEn
 	return args.Get(0).([]string), args.Error(1)
 }
 
+// Test helper functions
+
+func setupMockStorage() *MockAuditStorage {
+	mockStorage := &MockAuditStorage{}
+	// Allow any Store calls that might happen during logger initialization or async processing
+	mockStorage.On("Store", mock.Anything, mock.Anything).Return(nil).Maybe()
+	// Allow Health calls for stats gathering
+	mockStorage.On("Health", mock.Anything).Return(nil).Maybe()
+	return mockStorage
+}
+
 // Test cases
 
 func TestCraftGuildAuditLogger_NewGuildAuditLogger(t *testing.T) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	config := DefaultAuditConfig()
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
@@ -122,7 +133,7 @@ func TestGuildGuildAuditLogger_NewGuildAuditLogger_NilStorage(t *testing.T) {
 
 func TestJourneymanGuildAuditLogger_LogEntry_Success(t *testing.T) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	config := DefaultAuditConfig()
 	config.QueueSize = 1000 // Ensure queue doesn't fill up
 
@@ -154,7 +165,7 @@ func TestJourneymanGuildAuditLogger_LogEntry_Success(t *testing.T) {
 
 func TestCraftGuildAuditLogger_LogEntry_WithEnricher(t *testing.T) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	mockEnricher := &MockAuditEnricher{}
 
 	config := DefaultAuditConfig()
@@ -204,7 +215,7 @@ func TestCraftGuildAuditLogger_LogEntry_WithEnricher(t *testing.T) {
 
 func TestGuildGuildAuditLogger_LogEntry_WithStreamer(t *testing.T) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	mockStreamer := &MockAuditStreamer{}
 
 	config := DefaultAuditConfig()
@@ -241,7 +252,7 @@ func TestGuildGuildAuditLogger_LogEntry_WithStreamer(t *testing.T) {
 
 func TestJourneymanGuildAuditLogger_LogEntry_Validation(t *testing.T) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	config := DefaultAuditConfig()
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
@@ -311,7 +322,8 @@ func TestJourneymanGuildAuditLogger_LogEntry_Validation(t *testing.T) {
 
 func TestCraftGuildAuditLogger_Query(t *testing.T) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
+	
 	config := DefaultAuditConfig()
 	config.QueueSize = 0 // Force synchronous processing
 
@@ -341,7 +353,7 @@ func TestCraftGuildAuditLogger_Query(t *testing.T) {
 
 func TestGuildGuildAuditLogger_Query_Limits(t *testing.T) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	config := DefaultAuditConfig()
 	config.QueueSize = 0 // Force synchronous processing
 
@@ -377,7 +389,7 @@ func TestGuildGuildAuditLogger_Query_Limits(t *testing.T) {
 
 func TestJourneymanGuildAuditLogger_GetStats(t *testing.T) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	config := DefaultAuditConfig()
 	config.QueueSize = 0 // Force synchronous processing
 
@@ -403,7 +415,7 @@ func TestJourneymanGuildAuditLogger_GetStats(t *testing.T) {
 
 func TestCraftGuildAuditLogger_GenerateReport(t *testing.T) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	config := DefaultAuditConfig()
 	config.QueueSize = 0 // Force synchronous processing
 
@@ -445,7 +457,7 @@ func TestCraftGuildAuditLogger_GenerateReport(t *testing.T) {
 
 func TestGuildGuildAuditLogger_Archive(t *testing.T) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	config := DefaultAuditConfig()
 	config.QueueSize = 0 // Force synchronous processing
 
@@ -469,7 +481,7 @@ func TestGuildGuildAuditLogger_Archive(t *testing.T) {
 
 func TestJourneymanGuildAuditLogger_Close(t *testing.T) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	config := DefaultAuditConfig()
 	config.QueueSize = 10
 
@@ -495,7 +507,7 @@ func TestJourneymanGuildAuditLogger_Close(t *testing.T) {
 
 func TestCraftGuildAuditLogger_ViolationDetection(t *testing.T) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	config := DefaultAuditConfig()
 	config.QueueSize = 0 // Force synchronous processing
 
@@ -532,7 +544,7 @@ func TestCraftGuildAuditLogger_ViolationDetection(t *testing.T) {
 
 func TestGuildGuildAuditLogger_RecommendationGeneration(t *testing.T) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	config := DefaultAuditConfig()
 	config.QueueSize = 0 // Force synchronous processing
 
@@ -570,7 +582,7 @@ func TestGuildGuildAuditLogger_RecommendationGeneration(t *testing.T) {
 
 func TestJourneymanGuildAuditLogger_ContextCancellation(t *testing.T) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	config := DefaultAuditConfig()
 	config.QueueSize = 0 // Force synchronous processing
 
@@ -611,7 +623,7 @@ func TestCraftGuildAuditLogger_DefaultConfig(t *testing.T) {
 
 func BenchmarkCraftGuildAuditLogger_LogEntry(b *testing.B) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	config := DefaultAuditConfig()
 	config.QueueSize = 100000 // Large queue to avoid blocking
 
@@ -638,7 +650,7 @@ func BenchmarkCraftGuildAuditLogger_LogEntry(b *testing.B) {
 
 func BenchmarkGuildGuildAuditLogger_GenerateReport(b *testing.B) {
 	ctx := context.Background()
-	mockStorage := &MockAuditStorage{}
+	mockStorage := setupMockStorage()
 	config := DefaultAuditConfig()
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)

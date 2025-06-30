@@ -269,7 +269,23 @@ type mockWorktreeManager struct {
 }
 
 func (m *mockWorktreeManager) CreateWorktree(ctx context.Context, req CreateWorktreeRequest) (*Worktree, error) {
-	return nil, nil
+	// Create a mock worktree for testing
+	wt := &Worktree{
+		ID:         "mock-wt-" + req.TaskID,
+		AgentID:    req.AgentID,
+		TaskID:     req.TaskID,
+		Path:       "/tmp/mock-" + req.TaskID,
+		Branch:     "agent/" + req.AgentID + "/" + req.TaskID,
+		BaseBranch: req.BaseBranch,
+		Status:     WorktreeActive,
+		CreatedAt:  time.Now(),
+		LastSync:   time.Now(),
+		Metadata:   req.Metadata,
+	}
+	if m.worktrees != nil {
+		m.worktrees[wt.ID] = wt
+	}
+	return wt, nil
 }
 
 func (m *mockWorktreeManager) SyncWorktree(ctx context.Context, worktreeID string) (*SyncResult, error) {

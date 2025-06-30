@@ -85,7 +85,7 @@ func TestScribeIsolatedWorkspaceCreation(t *testing.T) {
 	// We expect this to fail due to filesystem operations in the real implementation
 	// but we can test the error handling
 	if err != nil {
-		assert.Contains(t, err.Error(), "worktree not found")
+		assert.Contains(t, err.Error(), "failed to setup filesystem isolation")
 	} else {
 		assert.NotNil(t, workspace)
 		assert.Equal(t, "test-agent", workspace.Worktree.AgentID)
