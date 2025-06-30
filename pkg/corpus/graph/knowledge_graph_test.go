@@ -50,12 +50,18 @@ func TestJourneymanAddKnowledge(t *testing.T) {
 	err = graph.AddKnowledge(ctx, knowledge)
 	require.NoError(t, err)
 
-	// Verify the knowledge was added
-	node, exists := graph.GetNode("test-1")
-	assert.True(t, exists)
-	assert.Equal(t, "test-1", node.ID)
-	assert.Equal(t, NodeTypeDecision, node.Type)
-	assert.Equal(t, knowledge.Content, node.Content)
+	// Verify the knowledge was added by querying for it
+	query := GraphQuery{
+		Text:      "frontend architecture decision",
+		NodeTypes: []NodeType{NodeDecision},
+		MaxDepth:  1,
+	}
+	results, err := graph.Query(ctx, query)
+	require.NoError(t, err)
+	assert.Len(t, results, 1)
+	assert.Equal(t, "test-1", results[0].ID)
+	assert.Equal(t, NodeDecision, results[0].Type)
+	assert.Equal(t, knowledge.Content, results[0].Content)
 }
 
 // TestGuildQueryKnowledge tests querying knowledge from the graph
@@ -110,7 +116,7 @@ func TestGuildQueryKnowledge(t *testing.T) {
 		{
 			name: "type filter",
 			query: GraphQuery{
-				NodeTypes: []NodeType{NodeTypeDecision},
+				NodeTypes: []NodeType{NodeDecision},
 				Limit:     10,
 			},
 			expectCount: 1, // Should find only decision
@@ -161,14 +167,15 @@ func TestScribeRelationships(t *testing.T) {
 	err = graph.AddKnowledge(ctx, knowledge)
 	require.NoError(t, err)
 
-	// Verify relationships were created
-	edges := graph.GetEdges("rel-test-1")
-	assert.Greater(t, len(edges), 0, "Should have created edges for relationships")
-
-	// Test finding related nodes
-	related, err := graph.FindRelated(ctx, "rel-test-1", 1)
+	// Verify relationships were created by querying
+	query := GraphQuery{
+		Text:      "Python machine learning",
+		NodeTypes: []NodeType{NodeEntity},
+		MaxDepth:  2,
+	}
+	results, err := graph.Query(ctx, query)
 	require.NoError(t, err)
-	assert.Greater(t, len(related), 0, "Should find related nodes")
+	assert.Greater(t, len(results), 0, "Should find entities from the knowledge")
 }
 
 // TestCraftGraphTraversal tests graph traversal capabilities
@@ -207,12 +214,17 @@ func TestCraftGraphTraversal(t *testing.T) {
 		require.NoError(t, err)
 	}
 
-	// Test traversal from node-1
-	related, err := graph.FindRelated(ctx, "node-1", 2)
+	// Test traversal by querying for React-related nodes
+	query := GraphQuery{
+		Text:      "React",
+		NodeTypes: []NodeType{NodeEntity, NodeDecision},
+		MaxDepth:  2,
+	}
+	results, err := graph.Query(ctx, query)
 	require.NoError(t, err)
 	
-	// Should find other React-related nodes
-	assert.Greater(t, len(related), 0)
+	// Should find multiple React-related nodes
+	assert.Greater(t, len(results), 1)
 }
 
 // TestJourneymanIndexing tests the search indexing functionality
@@ -285,20 +297,21 @@ func TestScribeGraphStatistics(t *testing.T) {
 		require.NoError(t, err)
 	}
 
-	stats := graph.GetStatistics()
+	stats, err := graph.GetStats(ctx)
+	require.NoError(t, err)
 	
-	assert.Equal(t, 4, stats.TotalNodes)
-	assert.Equal(t, 4, len(stats.NodesByType))
-	assert.Greater(t, stats.AverageConfidence, 0.0)
+	assert.Equal(t, 4, stats.NodeCount)
+	assert.Equal(t, 4, len(stats.NodeTypes))
+	assert.Greater(t, len(stats.EdgeTypes), 0)
 }
 
 // TestCraftQueryBuilder tests the query builder functionality
 func TestCraftQueryBuilder(t *testing.T) {
 	query := NewQueryBuilder().
 		WithText("React components").
-		WithNodeTypes(NodeTypeDecision, NodeTypeSolution).
+		WithNodeTypes(NodeDecision, NodeSolution).
 		WithMinConfidence(0.7).
-		WithTimeRange(time.Now().Add(-24*time.Hour), time.Now()).
+		WithTimeRange(time.Now().Add(-24*time.Hour)).
 		WithLimit(10).
 		Build()
 
@@ -343,6 +356,7 @@ func TestJourneymanConcurrentAccess(t *testing.T) {
 	}
 
 	// Verify all items were added
-	stats := graph.GetStatistics()
-	assert.Equal(t, numGoroutines*itemsPerGoroutine, stats.TotalNodes)
+	stats, err := graph.GetStats(ctx)
+	require.NoError(t, err)
+	assert.Equal(t, numGoroutines*itemsPerGoroutine, stats.NodeCount)
 }

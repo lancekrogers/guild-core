@@ -17,9 +17,12 @@ import (
 // TestCraftKnowledgeValidator tests the creation of a new knowledge validator
 func TestCraftKnowledgeValidator(t *testing.T) {
 	ctx := context.Background()
-	config := DefaultValidationConfig()
 	
-	validator, err := NewKnowledgeValidator(ctx, config)
+	// Create a knowledge graph first
+	knowledgeGraph, err := graph.NewKnowledgeGraph(ctx)
+	require.NoError(t, err)
+	
+	validator, err := NewKnowledgeValidator(ctx, knowledgeGraph)
 	require.NoError(t, err)
 	assert.NotNil(t, validator)
 	assert.NotNil(t, validator.rules)
@@ -30,8 +33,12 @@ func TestCraftKnowledgeValidator(t *testing.T) {
 // TestJourneymanValidation tests the core validation functionality
 func TestJourneymanValidation(t *testing.T) {
 	ctx := context.Background()
-	config := DefaultValidationConfig()
-	validator, err := NewKnowledgeValidator(ctx, config)
+	
+	// Create a knowledge graph first
+	knowledgeGraph, err := graph.NewKnowledgeGraph(ctx)
+	require.NoError(t, err)
+	
+	validator, err := NewKnowledgeValidator(ctx, knowledgeGraph)
 	require.NoError(t, err)
 
 	tests := []struct {
@@ -127,8 +134,7 @@ func TestScribeConflictDetection(t *testing.T) {
 	require.NoError(t, err)
 	
 	// Create validator with the knowledge graph
-	config := DefaultValidationConfig()
-	validator, err := NewKnowledgeValidatorWithGraph(ctx, config, knowledgeGraph)
+	validator, err := NewKnowledgeValidator(ctx, knowledgeGraph)
 	require.NoError(t, err)
 
 	// Test conflicting knowledge
@@ -157,8 +163,12 @@ func TestScribeConflictDetection(t *testing.T) {
 // TestGuildFactChecking tests fact checking functionality  
 func TestGuildFactChecking(t *testing.T) {
 	ctx := context.Background()
-	config := DefaultValidationConfig()
-	validator, err := NewKnowledgeValidator(ctx, config)
+	
+	// Create a knowledge graph first
+	knowledgeGraph, err := graph.NewKnowledgeGraph(ctx)
+	require.NoError(t, err)
+	
+	validator, err := NewKnowledgeValidator(ctx, knowledgeGraph)
 	require.NoError(t, err)
 
 	tests := []struct {
@@ -228,8 +238,8 @@ func TestCraftValidationRules(t *testing.T) {
 		expectValid bool
 	}{
 		{
-			name: "content completeness rule",
-			rule: &ContentCompletenessRule{},
+			name: "completeness rule",
+			rule: &CompletenessRule{},
 			knowledge: extraction.ExtractedKnowledge{
 				Content: "Use PostgreSQL for persistence",
 				Type:    extraction.KnowledgeDecision,
@@ -238,7 +248,7 @@ func TestCraftValidationRules(t *testing.T) {
 		},
 		{
 			name: "confidence threshold rule",
-			rule: &ConfidenceThresholdRule{MinConfidence: 0.5},
+			rule: &ConfidenceThresholdRule{threshold: 0.5},
 			knowledge: extraction.ExtractedKnowledge{
 				Content:    "Test knowledge",
 				Type:       extraction.KnowledgeDecision,
@@ -247,13 +257,13 @@ func TestCraftValidationRules(t *testing.T) {
 			expectValid: false,
 		},
 		{
-			name: "metadata consistency rule",
-			rule: &MetadataConsistencyRule{},
+			name: "relevance rule",
+			rule: &RelevanceRule{},
 			knowledge: extraction.ExtractedKnowledge{
 				Content: "Test knowledge",
 				Type:    extraction.KnowledgeDecision,
-				Metadata: map[string]interface{}{
-					"valid_field": "valid_value",
+				Source: extraction.Source{
+					Type: "documentation",
 				},
 			},
 			expectValid: true,
@@ -271,10 +281,12 @@ func TestCraftValidationRules(t *testing.T) {
 // TestJourneymanBatchValidation tests batch validation functionality
 func TestJourneymanBatchValidation(t *testing.T) {
 	ctx := context.Background()
-	config := DefaultValidationConfig()
-	config.BatchSize = 3
 	
-	validator, err := NewKnowledgeValidator(ctx, config)
+	// Create a knowledge graph first
+	knowledgeGraph, err := graph.NewKnowledgeGraph(ctx)
+	require.NoError(t, err)
+	
+	validator, err := NewKnowledgeValidator(ctx, knowledgeGraph)
 	require.NoError(t, err)
 
 	// Create batch of knowledge items
@@ -298,10 +310,12 @@ func TestJourneymanBatchValidation(t *testing.T) {
 // TestScribeValidationCaching tests validation result caching
 func TestScribeValidationCaching(t *testing.T) {
 	ctx := context.Background()
-	config := DefaultValidationConfig()
-	config.CacheResults = true
 	
-	validator, err := NewKnowledgeValidator(ctx, config)
+	// Create a knowledge graph first
+	knowledgeGraph, err := graph.NewKnowledgeGraph(ctx)
+	require.NoError(t, err)
+	
+	validator, err := NewKnowledgeValidator(ctx, knowledgeGraph)
 	require.NoError(t, err)
 
 	knowledge := extraction.ExtractedKnowledge{
@@ -336,8 +350,11 @@ func TestGuildContextCancellation(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately
 	
-	config := DefaultValidationConfig()
-	validator, err := NewKnowledgeValidator(context.Background(), config)
+	// Create a knowledge graph first
+	knowledgeGraph, err := graph.NewKnowledgeGraph(context.Background())
+	require.NoError(t, err)
+	
+	validator, err := NewKnowledgeValidator(context.Background(), knowledgeGraph)
 	require.NoError(t, err)
 	
 	knowledge := extraction.ExtractedKnowledge{
@@ -355,8 +372,12 @@ func TestGuildContextCancellation(t *testing.T) {
 // TestCraftValidationStatistics tests validation statistics tracking
 func TestCraftValidationStatistics(t *testing.T) {
 	ctx := context.Background()
-	config := DefaultValidationConfig()
-	validator, err := NewKnowledgeValidator(ctx, config)
+	
+	// Create a knowledge graph first
+	knowledgeGraph, err := graph.NewKnowledgeGraph(ctx)
+	require.NoError(t, err)
+	
+	validator, err := NewKnowledgeValidator(ctx, knowledgeGraph)
 	require.NoError(t, err)
 
 	// Validate multiple items
@@ -371,7 +392,8 @@ func TestCraftValidationStatistics(t *testing.T) {
 		require.NoError(t, err)
 	}
 
-	stats := validator.GetStatistics()
+	stats, err := validator.GetValidationStats(ctx)
+	require.NoError(t, err)
 	
 	assert.Equal(t, 3, stats.TotalValidated)
 	assert.Equal(t, 2, stats.PassedValidation)
@@ -383,8 +405,12 @@ func TestCraftValidationStatistics(t *testing.T) {
 // TestJourneymanQualityMetrics tests quality metrics calculation
 func TestJourneymanQualityMetrics(t *testing.T) {
 	ctx := context.Background()
-	config := DefaultValidationConfig()
-	validator, err := NewKnowledgeValidator(ctx, config)
+	
+	// Create a knowledge graph first
+	knowledgeGraph, err := graph.NewKnowledgeGraph(ctx)
+	require.NoError(t, err)
+	
+	validator, err := NewKnowledgeValidator(ctx, knowledgeGraph)
 	require.NoError(t, err)
 
 	knowledge := extraction.ExtractedKnowledge{
@@ -402,12 +428,8 @@ func TestJourneymanQualityMetrics(t *testing.T) {
 	result, err := validator.Validate(ctx, knowledge)
 	require.NoError(t, err)
 
-	metrics := validator.calculateQualityMetrics(ctx, knowledge, result)
-	
-	// Should have reasonable quality scores
-	assert.Greater(t, metrics.Completeness, 0.5)
-	assert.Greater(t, metrics.Accuracy, 0.5)
-	assert.Greater(t, metrics.Relevance, 0.5)
-	assert.Greater(t, metrics.Freshness, 0.5)
-	assert.Greater(t, metrics.OverallQuality, 0.5)
+	// Should have good validation result
+	assert.True(t, result.Valid)
+	assert.Greater(t, result.Confidence, 0.7)
+	assert.Empty(t, result.Issues) // No validation issues for high-quality knowledge
 }

@@ -19,13 +19,15 @@ type ErrorCode string
 
 const (
 	// System errors (1xxx)
-	ErrCodeInternal       ErrorCode = "GUILD-1000"
-	ErrCodePanic          ErrorCode = "GUILD-1001"
-	ErrCodeTimeout        ErrorCode = "GUILD-1002"
-	ErrCodeCancelled      ErrorCode = "GUILD-1003"
-	ErrCodeRateLimit      ErrorCode = "GUILD-1004"
-	ErrCodeResourceLimit  ErrorCode = "GUILD-1005"
-	ErrCodeNotImplemented ErrorCode = "GUILD-1006"
+	ErrCodeInternal         ErrorCode = "GUILD-1000"
+	ErrCodePanic            ErrorCode = "GUILD-1001"
+	ErrCodeTimeout          ErrorCode = "GUILD-1002"
+	ErrCodeCancelled        ErrorCode = "GUILD-1003"
+	ErrCodeRateLimit        ErrorCode = "GUILD-1004"
+	ErrCodeResourceLimit    ErrorCode = "GUILD-1005"
+	ErrCodeNotImplemented   ErrorCode = "GUILD-1006"
+	ErrCodeResourceExhausted ErrorCode = "GUILD-1007"
+	ErrCodeConflict         ErrorCode = "GUILD-1008"
 
 	// Validation errors (2xxx)
 	ErrCodeValidation      ErrorCode = "GUILD-2000"
@@ -72,6 +74,21 @@ const (
 	// I/O errors (8xxx)
 	ErrCodeIO      ErrorCode = "GUILD-8000"
 	ErrCodeParsing ErrorCode = "GUILD-8001"
+
+	// Security errors (9xxx)
+	ErrCodeSecurity           ErrorCode = "GUILD-9000"
+	ErrCodePermissionDenied   ErrorCode = "GUILD-9001"
+	ErrCodeSecurityViolation  ErrorCode = "GUILD-9002"
+	ErrCodeUnauthorized       ErrorCode = "GUILD-9003"
+	ErrCodeInsufficientRights ErrorCode = "GUILD-9004"
+	ErrCodeSandboxFailure     ErrorCode = "GUILD-9005"
+	ErrCodeNetworkIsolation   ErrorCode = "GUILD-9006"
+	ErrCodeAuditFailure       ErrorCode = "GUILD-9007"
+
+	// Optimization errors (10xxx)
+	ErrCodeOptimization       ErrorCode = "GUILD-10000"
+	ErrCodeOptimizationFailed ErrorCode = "GUILD-10001"
+	ErrCodeModelSelection     ErrorCode = "GUILD-10002"
 )
 
 // GuildError is the standard error type for the Guild framework
@@ -180,8 +197,9 @@ func New(code ErrorCode, message string, cause error) *GuildError {
 
 	// Set retryable based on error code
 	switch code {
-	case ErrCodeTimeout, ErrCodeCancelled, ErrCodeRateLimit,
-		ErrCodeConnection, ErrCodeAgentTimeout, ErrCodeProviderTimeout:
+	case ErrCodeTimeout, ErrCodeCancelled, ErrCodeRateLimit, ErrCodeResourceExhausted,
+		ErrCodeConnection, ErrCodeAgentTimeout, ErrCodeProviderTimeout,
+		ErrCodeOptimizationFailed:
 		err.Retryable = true
 	}
 
@@ -278,8 +296,15 @@ var (
 	ErrAgentNotFound    = New(ErrCodeAgentNotFound, "agent not found", nil)
 
 	// System errors
-	ErrTimeout   = New(ErrCodeTimeout, "operation timed out", nil)
-	ErrCancelled = New(ErrCodeCancelled, "operation cancelled", nil)
+	ErrTimeout           = New(ErrCodeTimeout, "operation timed out", nil)
+	ErrCancelled         = New(ErrCodeCancelled, "operation cancelled", nil)
+	ErrResourceExhausted = New(ErrCodeResourceExhausted, "resource exhausted", nil)
+	ErrConflict          = New(ErrCodeConflict, "operation conflict", nil)
+
+	// Security errors
+	ErrSandboxFailure   = New(ErrCodeSandboxFailure, "sandbox operation failed", nil)
+	ErrNetworkIsolation = New(ErrCodeNetworkIsolation, "network isolation violation", nil)
+	ErrAuditFailure     = New(ErrCodeAuditFailure, "audit logging failed", nil)
 )
 
 // Is checks if an error matches a target error or error code

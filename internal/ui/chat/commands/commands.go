@@ -18,6 +18,7 @@ import (
 	"github.com/lancekrogers/guild/internal/ui/chat/panes"
 	"github.com/lancekrogers/guild/internal/ui/chat/session"
 	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild/pkg/observability"
 	"github.com/lancekrogers/guild/pkg/templates"
 )
 

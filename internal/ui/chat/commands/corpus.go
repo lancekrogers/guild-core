@@ -839,7 +839,7 @@ func (h *CorpusHandler) handleConfig(ctx context.Context) tea.Cmd {
 	return func() tea.Msg {
 		ctx = observability.WithOperation(ctx, "handleConfig")
 		
-		cfg, err := corpus.GetConfigWithFallback()
+		cfg, err := corpus.GetConfigWithFallback(ctx)
 		if err != nil {
 			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Failed to get corpus config: %v", err),
@@ -1150,7 +1150,7 @@ func (h *KnowledgeHandler) handleValidate(ctx context.Context) tea.Cmd {
 			if len(doc.Tags) == 0 {
 				issues = append(issues, fmt.Sprintf("⚠️  **%s**: No tags assigned", filepath.Base(docPath)))
 			}
-			if doc.Guild == "" {
+			if doc.GuildID == "" {
 				issues = append(issues, fmt.Sprintf("⚠️  **%s**: Missing guild association", filepath.Base(docPath)))
 			}
 			
@@ -1255,7 +1255,7 @@ func (h *KnowledgeHandler) handleExport(ctx context.Context) tea.Cmd {
 			
 			for _, doc := range docs {
 				export.WriteString(fmt.Sprintf("### %s\n\n", doc.Title))
-				export.WriteString(fmt.Sprintf("**Source:** %s | **Guild:** %s | **Agent:** %s\n\n", doc.Source, doc.Guild, doc.Agent))
+				export.WriteString(fmt.Sprintf("**Source:** %s | **Guild:** %s | **Agent:** %s\n\n", doc.Source, doc.GuildID, doc.AgentID))
 				export.WriteString(fmt.Sprintf("%s\n\n", doc.Body))
 				
 				if len(doc.Tags) > 1 {
