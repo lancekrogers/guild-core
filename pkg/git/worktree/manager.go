@@ -14,8 +14,6 @@ import (
 	"time"
 
 	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing"
-	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
@@ -32,7 +30,7 @@ type WorktreeManager struct {
 // NewWorktreeManager creates a new worktree manager
 func NewWorktreeManager(ctx context.Context, repoPath string, basePath string) (*WorktreeManager, error) {
 	if ctx.Err() != nil {
-		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled", nil).
+		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("git.worktree").
 			WithOperation("NewWorktreeManager")
 	}
@@ -40,7 +38,7 @@ func NewWorktreeManager(ctx context.Context, repoPath string, basePath string) (
 	// Open the base repository
 	repo, err := git.PlainOpen(repoPath)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to open git repository", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to open git repository").
 			WithComponent("git.worktree").
 			WithOperation("NewWorktreeManager").
 			WithDetails("repo_path", repoPath)
@@ -48,7 +46,7 @@ func NewWorktreeManager(ctx context.Context, repoPath string, basePath string) (
 
 	// Ensure worktrees base path exists
 	if err := os.MkdirAll(basePath, 0755); err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create worktrees base path", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create worktrees base path").
 			WithComponent("git.worktree").
 			WithOperation("NewWorktreeManager").
 			WithDetails("base_path", basePath)
@@ -75,7 +73,7 @@ func NewWorktreeManager(ctx context.Context, repoPath string, basePath string) (
 // CreateWorktree creates a new isolated worktree for an agent
 func (wm *WorktreeManager) CreateWorktree(ctx context.Context, req CreateWorktreeRequest) (*Worktree, error) {
 	if ctx.Err() != nil {
-		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled", nil).
+		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("git.worktree").
 			WithOperation("CreateWorktree")
 	}
@@ -85,13 +83,13 @@ func (wm *WorktreeManager) CreateWorktree(ctx context.Context, req CreateWorktre
 
 	// Validate request
 	if req.AgentID == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument, "agent_id is required", nil).
+		return nil, gerror.New(gerror.ErrCodeValidation, "agent_id is required", nil).
 			WithComponent("git.worktree").
 			WithOperation("CreateWorktree")
 	}
 
 	if req.TaskID == "" {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument, "task_id is required", nil).
+		return nil, gerror.New(gerror.ErrCodeValidation, "task_id is required", nil).
 			WithComponent("git.worktree").
 			WithOperation("CreateWorktree")
 	}
@@ -108,7 +106,7 @@ func (wm *WorktreeManager) CreateWorktree(ctx context.Context, req CreateWorktre
 	
 	// Ensure base branch is up to date
 	if err := wm.fetchLatest(ctx, req.BaseBranch); err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to fetch latest", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to fetch latest").
 			WithComponent("git.worktree").
 			WithOperation("CreateWorktree").
 			WithDetails("branch", req.BaseBranch)
@@ -116,7 +114,7 @@ func (wm *WorktreeManager) CreateWorktree(ctx context.Context, req CreateWorktre
 
 	// Ensure parent directory exists
 	if err := os.MkdirAll(filepath.Dir(worktreePath), 0755); err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create worktree parent directory", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create worktree parent directory").
 			WithComponent("git.worktree").
 			WithOperation("CreateWorktree").
 			WithDetails("path", filepath.Dir(worktreePath))
@@ -124,10 +122,11 @@ func (wm *WorktreeManager) CreateWorktree(ctx context.Context, req CreateWorktre
 
 	// Create worktree with new branch using git command
 	if err := wm.executeGitCommand(ctx, "worktree", "add", "-b", branchName, worktreePath, req.BaseBranch); err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create worktree", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create worktree").
 			WithComponent("git.worktree").
 			WithOperation("CreateWorktree").
-			WithDetails("branch", branchName, "path", worktreePath)
+			WithDetails("branch", branchName).
+			WithDetails("path", worktreePath)
 	}
 
 	// Open repository in worktree
@@ -135,7 +134,7 @@ func (wm *WorktreeManager) CreateWorktree(ctx context.Context, req CreateWorktre
 	if err != nil {
 		// Cleanup failed worktree
 		wm.executeGitCommand(ctx, "worktree", "remove", "--force", worktreePath)
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to open worktree repository", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to open worktree repository").
 			WithComponent("git.worktree").
 			WithOperation("CreateWorktree").
 			WithDetails("path", worktreePath)
@@ -160,7 +159,7 @@ func (wm *WorktreeManager) CreateWorktree(ctx context.Context, req CreateWorktre
 	// Configure worktree
 	if err := wm.configureWorktree(ctx, worktree); err != nil {
 		wm.cleanupWorktree(ctx, worktree)
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to configure worktree", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to configure worktree").
 			WithComponent("git.worktree").
 			WithOperation("CreateWorktree").
 			WithDetails("worktree_id", worktreeID)
@@ -180,7 +179,7 @@ func (wm *WorktreeManager) configureWorktree(ctx context.Context, wt *Worktree) 
 
 	// Configure git user for the worktree
 	if err := wm.executeInWorktree(ctx, wt, "config", "user.name", wt.AgentID); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to set git user name", nil).
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to set git user name").
 			WithComponent("git.worktree").
 			WithOperation("configureWorktree").
 			WithDetails("worktree_id", wt.ID)
@@ -188,7 +187,7 @@ func (wm *WorktreeManager) configureWorktree(ctx context.Context, wt *Worktree) 
 
 	email := fmt.Sprintf("%s@guild.local", wt.AgentID)
 	if err := wm.executeInWorktree(ctx, wt, "config", "user.email", email); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to set git user email", nil).
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to set git user email").
 			WithComponent("git.worktree").
 			WithOperation("configureWorktree").
 			WithDetails("worktree_id", wt.ID)
@@ -197,10 +196,11 @@ func (wm *WorktreeManager) configureWorktree(ctx context.Context, wt *Worktree) 
 	// Configure hooks directory
 	hooksPath := filepath.Join(wt.Path, ".git", "hooks")
 	if err := os.MkdirAll(hooksPath, 0755); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create hooks directory", nil).
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create hooks directory").
 			WithComponent("git.worktree").
 			WithOperation("configureWorktree").
-			WithDetails("worktree_id", wt.ID, "hooks_path", hooksPath)
+			WithDetails("worktree_id", wt.ID).
+			WithDetails("hooks_path", hooksPath)
 	}
 
 	// Create pre-commit hook for validation
@@ -215,10 +215,11 @@ exit 0
 
 	hookPath := filepath.Join(hooksPath, "pre-commit")
 	if err := os.WriteFile(hookPath, []byte(preCommitHook), 0755); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create pre-commit hook", nil).
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create pre-commit hook").
 			WithComponent("git.worktree").
 			WithOperation("configureWorktree").
-			WithDetails("worktree_id", wt.ID, "hook_path", hookPath)
+			WithDetails("worktree_id", wt.ID).
+			WithDetails("hook_path", hookPath)
 	}
 
 	return nil
@@ -227,7 +228,7 @@ exit 0
 // SyncWorktree synchronizes a worktree with its base branch
 func (wm *WorktreeManager) SyncWorktree(ctx context.Context, worktreeID string) (*SyncResult, error) {
 	if ctx.Err() != nil {
-		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled", nil).
+		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("git.worktree").
 			WithOperation("SyncWorktree")
 	}
@@ -298,12 +299,12 @@ func (wm *WorktreeManager) rebaseWorktree(ctx context.Context, wt *Worktree) err
 	if err != nil {
 		// Check if it's a conflict
 		if wm.hasRebaseConflicts(ctx, wt) {
-			return gerror.Wrap(err, gerror.ErrCodeConflict, "rebase conflict detected", nil).
+			return gerror.Wrap(err, gerror.ErrCodeConflict, "rebase conflict detected").
 				WithComponent("git.worktree").
 				WithOperation("rebaseWorktree").
 				WithDetails("worktree_id", wt.ID)
 		}
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "rebase failed", nil).
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "rebase failed").
 			WithComponent("git.worktree").
 			WithOperation("rebaseWorktree").
 			WithDetails("worktree_id", wt.ID)
@@ -320,7 +321,7 @@ func (wm *WorktreeManager) rebaseWorktree(ctx context.Context, wt *Worktree) err
 // RemoveWorktree removes a worktree and cleans up resources
 func (wm *WorktreeManager) RemoveWorktree(ctx context.Context, worktreeID string) error {
 	if ctx.Err() != nil {
-		return gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled", nil).
+		return gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("git.worktree").
 			WithOperation("RemoveWorktree")
 	}
@@ -336,7 +337,7 @@ func (wm *WorktreeManager) RemoveWorktree(ctx context.Context, worktreeID string
 	// Check for uncommitted changes
 	hasChanges, err := wm.hasUncommittedChanges(ctx, wt)
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to check for uncommitted changes", nil).
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to check for uncommitted changes").
 			WithComponent("git.worktree").
 			WithOperation("RemoveWorktree").
 			WithDetails("worktree_id", worktreeID)
@@ -350,10 +351,11 @@ func (wm *WorktreeManager) RemoveWorktree(ctx context.Context, worktreeID string
 
 	// Remove worktree
 	if err := wm.executeGitCommand(ctx, "worktree", "remove", "--force", wt.Path); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to remove worktree", nil).
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to remove worktree").
 			WithComponent("git.worktree").
 			WithOperation("RemoveWorktree").
-			WithDetails("worktree_id", worktreeID, "path", wt.Path)
+			WithDetails("worktree_id", worktreeID).
+			WithDetails("path", wt.Path)
 	}
 
 	// Delete branch if it's fully merged
@@ -407,7 +409,7 @@ func (wm *WorktreeManager) GetWorktreesByAgent(agentID string) []*Worktree {
 // GetStats returns usage statistics for worktrees
 func (wm *WorktreeManager) GetStats(ctx context.Context) (*WorktreeStats, error) {
 	if ctx.Err() != nil {
-		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled", nil).
+		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("git.worktree").
 			WithOperation("GetStats")
 	}

@@ -27,13 +27,13 @@ type MergeCoordinator struct {
 // NewMergeCoordinator creates a new merge coordinator
 func NewMergeCoordinator(ctx context.Context, manager Manager, strategy MergeStrategy) (*MergeCoordinator, error) {
 	if ctx.Err() != nil {
-		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled", nil).
+		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("git.worktree.merge").
 			WithOperation("NewMergeCoordinator")
 	}
 
 	if manager == nil {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument, "manager is required", nil).
+		return nil, gerror.New(gerror.ErrCodeValidation, "manager is required", nil).
 			WithComponent("git.worktree.merge").
 			WithOperation("NewMergeCoordinator")
 	}
@@ -53,7 +53,7 @@ func NewMergeCoordinator(ctx context.Context, manager Manager, strategy MergeStr
 // PlanMerge creates a merge plan for the given worktrees
 func (mc *MergeCoordinator) PlanMerge(ctx context.Context, worktreeIDs []string, targetBranch string) (*MergePlan, error) {
 	if ctx.Err() != nil {
-		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled", nil).
+		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("git.worktree.merge").
 			WithOperation("PlanMerge")
 	}
@@ -80,7 +80,7 @@ func (mc *MergeCoordinator) PlanMerge(ctx context.Context, worktreeIDs []string,
 	
 	// Validate plan
 	if err := mc.validatePlan(ctx, plan); err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidArgument, "merge plan validation failed", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "merge plan validation failed").
 			WithComponent("git.worktree.merge").
 			WithOperation("PlanMerge")
 	}
@@ -91,7 +91,7 @@ func (mc *MergeCoordinator) PlanMerge(ctx context.Context, worktreeIDs []string,
 // ExecuteMerge executes a merge plan
 func (mc *MergeCoordinator) ExecuteMerge(ctx context.Context, plan *MergePlan) (*MergeResult, error) {
 	if ctx.Err() != nil {
-		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled", nil).
+		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("git.worktree.merge").
 			WithOperation("ExecuteMerge")
 	}
@@ -111,7 +111,7 @@ func (mc *MergeCoordinator) ExecuteMerge(ctx context.Context, plan *MergePlan) (
 		result.Completed = time.Now()
 		result.Error = err.Error()
 		mc.notifier.NotifyMergeComplete(plan, *result)
-		return result, gerror.Wrap(err, gerror.ErrCodeInternal, "merge execution failed", nil).
+		return result, gerror.Wrap(err, gerror.ErrCodeInternal, "merge execution failed").
 			WithComponent("git.worktree.merge").
 			WithOperation("ExecuteMerge").
 			WithDetails("plan_id", plan.ID)
@@ -128,7 +128,7 @@ func (mc *MergeCoordinator) ExecuteMerge(ctx context.Context, plan *MergePlan) (
 func (mc *MergeCoordinator) validatePlan(ctx context.Context, plan *MergePlan) error {
 	// Check for circular dependencies
 	if mc.hasCircularDependencies(plan) {
-		return gerror.New(gerror.ErrCodeInvalidArgument, "merge plan has circular dependencies", nil)
+		return gerror.New(gerror.ErrCodeValidation, "merge plan has circular dependencies", nil)
 	}
 
 	// Check that all dependencies exist
@@ -140,8 +140,9 @@ func (mc *MergeCoordinator) validatePlan(ctx context.Context, plan *MergePlan) e
 	for _, step := range plan.Order {
 		for _, dep := range step.Dependencies {
 			if !worktreeMap[dep] {
-				return gerror.New(gerror.ErrCodeInvalidArgument, "dependency not found in plan", nil).
-					WithDetails("step", step.WorktreeID, "dependency", dep)
+				return gerror.New(gerror.ErrCodeValidation, "dependency not found in plan", nil).
+					WithDetails("step", step.WorktreeID).
+					WithDetails("dependency", dep)
 			}
 		}
 	}
@@ -319,13 +320,14 @@ func (sms *SequentialMergeStrategy) Execute(ctx context.Context, plan *MergePlan
 				return gerror.New(gerror.ErrCodeInternal, "dependency not satisfied", nil).
 					WithComponent("git.worktree.merge").
 					WithOperation("Execute").
-					WithDetails("step", step.WorktreeID, "dependency", dep)
+					WithDetails("step", step.WorktreeID).
+					WithDetails("dependency", dep)
 			}
 		}
 
 		// Execute merge step
 		if err := sms.executeMergeStep(ctx, step, plan.Target); err != nil {
-			return gerror.Wrap(err, gerror.ErrCodeInternal, "merge step failed", nil).
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "merge step failed").
 				WithComponent("git.worktree.merge").
 				WithOperation("Execute").
 				WithDetails("step", step.WorktreeID)
@@ -504,7 +506,7 @@ func (sms *SequentialMergeStrategy) executeMergeStep(ctx context.Context, step M
 	case MergeActionCherry:
 		return sms.cherryPickMerge(ctx, wt, targetBranch)
 	default:
-		return gerror.New(gerror.ErrCodeInvalidArgument, "unknown merge action", nil).
+		return gerror.New(gerror.ErrCodeValidation, "unknown merge action", nil).
 			WithDetails("action", string(step.Action))
 	}
 }
@@ -531,7 +533,7 @@ func (sms *SequentialMergeStrategy) rebaseAndMerge(ctx context.Context, wt *Work
 
 	// Merge the worktree branch
 	if err := sms.executeCommand(ctx, baseRepoPath, "git", "merge", "--no-ff", wt.Branch); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "merge failed", nil).
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "merge failed").
 			WithDetails("branch", wt.Branch)
 	}
 
@@ -551,7 +553,7 @@ func (sms *SequentialMergeStrategy) mergeDirectly(ctx context.Context, wt *Workt
 	if err := sms.executeCommand(ctx, baseRepoPath, "git", "merge", "--no-ff", "-m", 
 		fmt.Sprintf("Merge branch '%s' (Agent: %s, Task: %s)", wt.Branch, wt.AgentID, wt.TaskID), 
 		wt.Branch); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "direct merge failed", nil).
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "direct merge failed").
 			WithDetails("branch", wt.Branch)
 	}
 
@@ -569,7 +571,7 @@ func (sms *SequentialMergeStrategy) squashAndMerge(ctx context.Context, wt *Work
 
 	// Squash merge
 	if err := sms.executeCommand(ctx, baseRepoPath, "git", "merge", "--squash", wt.Branch); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "squash merge failed", nil).
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "squash merge failed").
 			WithDetails("branch", wt.Branch)
 	}
 
@@ -578,7 +580,7 @@ func (sms *SequentialMergeStrategy) squashAndMerge(ctx context.Context, wt *Work
 		wt.Branch, wt.AgentID, wt.TaskID)
 	
 	if err := sms.executeCommand(ctx, baseRepoPath, "git", "commit", "-m", commitMsg); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "squash commit failed", nil).
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "squash commit failed").
 			WithDetails("branch", wt.Branch)
 	}
 
@@ -609,7 +611,7 @@ func (sms *SequentialMergeStrategy) cherryPickMerge(ctx context.Context, wt *Wor
 	for _, commit := range commits {
 		if commit != "" {
 			if err := sms.executeCommand(ctx, baseRepoPath, "git", "cherry-pick", commit); err != nil {
-				return gerror.Wrap(err, gerror.ErrCodeInternal, "cherry-pick failed", nil).
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "cherry-pick failed").
 					WithDetails("commit", commit)
 			}
 		}

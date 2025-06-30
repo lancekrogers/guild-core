@@ -38,7 +38,7 @@ func NewConflictMonitor(manager Manager) *ConflictMonitor {
 // Start begins monitoring worktrees for conflicts
 func (cm *ConflictMonitor) Start(ctx context.Context) error {
 	if ctx.Err() != nil {
-		return gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled", nil).
+		return gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("git.worktree.monitor").
 			WithOperation("Start")
 	}
@@ -46,7 +46,7 @@ func (cm *ConflictMonitor) Start(ctx context.Context) error {
 	cm.mu.Lock()
 	if cm.running {
 		cm.mu.Unlock()
-		return gerror.New(gerror.ErrCodeInvalidState, "monitor already running", nil).
+		return gerror.New(gerror.ErrCodeConflict, "monitor already running", nil).
 			WithComponent("git.worktree.monitor").
 			WithOperation("Start")
 	}

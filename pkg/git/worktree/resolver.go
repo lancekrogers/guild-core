@@ -6,7 +6,6 @@ package worktree
 import (
 	"context"
 	"fmt"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -29,7 +28,7 @@ type ConflictResolver struct {
 // NewConflictResolver creates a new conflict resolver
 func NewConflictResolver(ctx context.Context) (*ConflictResolver, error) {
 	if ctx.Err() != nil {
-		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled", nil).
+		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("git.worktree.resolver").
 			WithOperation("NewConflictResolver")
 	}
@@ -69,7 +68,7 @@ func NewConflictResolver(ctx context.Context) (*ConflictResolver, error) {
 // ResolveConflict attempts to resolve a conflict automatically
 func (cr *ConflictResolver) ResolveConflict(ctx context.Context, conflict Conflict) (*Resolution, error) {
 	if ctx.Err() != nil {
-		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled", nil).
+		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("git.worktree.resolver").
 			WithOperation("ResolveConflict")
 	}
@@ -919,14 +918,14 @@ func (mr *ManualResolver) RequestManualResolution(ctx context.Context, conflict 
 	// Wait for resolution with timeout
 	resolution, err := mr.waitForResolution(ctx, request.ID, 30*time.Minute)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeTimeout, "manual resolution timeout", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeTimeout, "manual resolution timeout").
 			WithComponent("git.worktree.resolver").
 			WithOperation("RequestManualResolution")
 	}
 
 	// Validate resolution
 	if err := mr.reviewer.ValidateResolution(ctx, conflict, resolution); err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInvalidArgument, "resolution validation failed", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "resolution validation failed").
 			WithComponent("git.worktree.resolver").
 			WithOperation("RequestManualResolution")
 	}
@@ -979,14 +978,14 @@ func NewCodeReviewer() *CodeReviewer {
 func (cr *CodeReviewer) ValidateResolution(ctx context.Context, conflict Conflict, resolution *Resolution) error {
 	// Basic validation of manual resolution
 	if resolution.Content == "" {
-		return gerror.New(gerror.ErrCodeInvalidArgument, "resolution content is empty", nil)
+		return gerror.New(gerror.ErrCodeValidation, "resolution content is empty", nil)
 	}
 	
 	// Check for remaining conflict markers
 	if strings.Contains(resolution.Content, "<<<<<<<") ||
 	   strings.Contains(resolution.Content, "=======") ||
 	   strings.Contains(resolution.Content, ">>>>>>>") {
-		return gerror.New(gerror.ErrCodeInvalidArgument, "resolution contains conflict markers", nil)
+		return gerror.New(gerror.ErrCodeValidation, "resolution contains conflict markers", nil)
 	}
 	
 	return nil

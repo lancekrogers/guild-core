@@ -13,11 +13,11 @@ import (
 
 	"github.com/lancekrogers/guild/pkg/agent"
 	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/git/worktree"
 	"github.com/lancekrogers/guild/pkg/kanban"
 	"github.com/lancekrogers/guild/pkg/observability"
 	"github.com/lancekrogers/guild/pkg/prompts/standard/templates/agent/execution"
 	"github.com/lancekrogers/guild/pkg/tools"
-	"github.com/lancekrogers/guild/pkg/workspace"
 	"github.com/lancekrogers/guild/tools/fs"
 	"github.com/lancekrogers/guild/tools/shell"
 )
@@ -29,8 +29,8 @@ type BasicTaskExecutor struct {
 	toolRegistry     *tools.ToolRegistry
 	execContext      *ExecutionContext
 	promptBuilder    *execution.CachedPromptBuilder
-	workspaceManager workspace.Manager
-	workspace        workspace.Workspace
+	worktreeManager worktree.Manager
+	currentWorktree *worktree.Worktree
 
 	// Execution state
 	status      ExecutionStatus
@@ -50,7 +50,7 @@ func NewBasicTaskExecutor(
 	kanbanBoard *kanban.Board,
 	toolRegistry *tools.ToolRegistry,
 	execContext *ExecutionContext,
-	workspaceManager workspace.Manager,
+	worktreeManager worktree.Manager,
 ) (*BasicTaskExecutor, error) {
 	// Initialize observability for task executor creation
 	logger := observability.GetLogger(context.Background()).
@@ -62,7 +62,7 @@ func NewBasicTaskExecutor(
 		"agent_name", agent.GetName(),
 		"has_kanban_board", kanbanBoard != nil,
 		"has_tool_registry", toolRegistry != nil,
-		"has_workspace_manager", workspaceManager != nil,
+		"has_worktree_manager", worktreeManager != nil,
 		"project_root", execContext.ProjectRoot,
 	)
 
@@ -88,7 +88,7 @@ func NewBasicTaskExecutor(
 		toolRegistry:     toolRegistry,
 		execContext:      execContext,
 		promptBuilder:    promptBuilder,
-		workspaceManager: workspaceManager,
+		worktreeManager: worktreeManager,
 		status:           StatusInitializing,
 		progress:         0.0,
 		stopChan:         make(chan struct{}),
@@ -127,7 +127,7 @@ func (e *BasicTaskExecutor) Execute(ctx context.Context, task *kanban.Task) (*Ex
 		"agent_name", e.agent.GetName(),
 		"has_kanban_board", e.kanbanBoard != nil,
 		"has_tool_registry", e.toolRegistry != nil,
-		"has_workspace_manager", e.workspaceManager != nil,
+		"has_worktree_manager", e.worktreeManager != nil,
 	)
 
 	e.mu.Lock()
@@ -463,7 +463,7 @@ func (e *BasicTaskExecutor) phaseInitialize(ctx context.Context) error {
 		With("agent_id", e.agent.GetID())
 
 	logger.Debug("Starting initialization phase",
-		"has_workspace_manager", e.workspaceManager != nil,
+		"has_worktree_manager", e.worktreeManager != nil,
 		"has_tool_registry", e.toolRegistry != nil,
 		"project_root", e.execContext.ProjectRoot,
 	)
@@ -472,59 +472,67 @@ func (e *BasicTaskExecutor) phaseInitialize(ctx context.Context) error {
 	e.status = StatusRunning
 	e.mu.Unlock()
 
-	// Set up workspace isolation if manager is available with enhanced error observability
-	if e.workspaceManager != nil {
-		workspaceStart := time.Now()
-		opts := workspace.CreateOptions{
-			AgentID:      e.agent.GetID(),
-			BranchPrefix: "agent",
-			WorkDir:      e.execContext.ProjectRoot,
+	// Set up worktree isolation if manager is available with enhanced error observability
+	if e.worktreeManager != nil {
+		worktreeStart := time.Now()
+		req := worktree.CreateWorktreeRequest{
+			AgentID:     e.agent.GetID(),
+			TaskID:      e.currentTask.ID,
+			BaseBranch:  "main", // TODO: make configurable
+			Description: fmt.Sprintf("Task execution for %s", e.currentTask.Title),
+			Metadata: map[string]interface{}{
+				"task_id":    e.currentTask.ID,
+				"agent_name": e.agent.GetName(),
+				"project":    e.execContext.ProjectRoot,
+			},
 		}
 
-		logger.Debug("Creating isolated workspace",
+		logger.Debug("Creating isolated worktree",
 			"agent_id", e.agent.GetID(),
-			"branch_prefix", opts.BranchPrefix,
-			"work_dir", opts.WorkDir,
+			"task_id", e.currentTask.ID,
+			"base_branch", req.BaseBranch,
 		)
 
-		ws, err := e.workspaceManager.CreateWorkspace(ctx, opts)
-		workspaceDuration := time.Since(workspaceStart)
+		wt, err := e.worktreeManager.CreateWorktree(ctx, req)
+		worktreeDuration := time.Since(worktreeStart)
 
 		if err != nil {
-			// Enhanced error observability for workspace creation failure
-			logger.WithError(err).Error("Failed to create isolated workspace",
+			// Enhanced error observability for worktree creation failure
+			logger.WithError(err).Error("Failed to create isolated worktree",
 				"agent_id", e.agent.GetID(),
 				"agent_name", e.agent.GetName(),
+				"task_id", e.currentTask.ID,
 				"project_root", e.execContext.ProjectRoot,
-				"branch_prefix", opts.BranchPrefix,
-				"workspace_creation_duration_ms", workspaceDuration.Milliseconds(),
+				"worktree_creation_duration_ms", worktreeDuration.Milliseconds(),
 			)
 
-			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create workspace").
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create worktree").
 				WithComponent("executor").
 				WithOperation("phaseInitialize").
 				WithDetails("agent_id", e.agent.GetID()).
+				WithDetails("task_id", e.currentTask.ID).
 				WithDetails("project_root", e.execContext.ProjectRoot).
-				WithDetails("workspace_creation_duration_ms", workspaceDuration.Milliseconds())
+				WithDetails("worktree_creation_duration_ms", worktreeDuration.Milliseconds())
 		}
 
 		e.mu.Lock()
-		e.workspace = ws
-		e.execContext.WorkspaceDir = ws.Path()
+		e.currentWorktree = wt
+		e.execContext.WorkspaceDir = wt.Path
 		e.mu.Unlock()
 
-		logger.Info("Isolated workspace created successfully",
-			"workspace_path", ws.Path(),
-			"workspace_branch", ws.Branch(),
-			"workspace_creation_duration_ms", workspaceDuration.Milliseconds(),
+		logger.Info("Isolated worktree created successfully",
+			"worktree_path", wt.Path,
+			"worktree_branch", wt.Branch,
+			"worktree_creation_duration_ms", worktreeDuration.Milliseconds(),
 		)
 
-		e.addExecutionLog("Created isolated workspace", map[string]interface{}{
-			"path":   ws.Path(),
-			"branch": ws.Branch(),
+		e.addExecutionLog("Created isolated worktree", map[string]interface{}{
+			"path":   wt.Path,
+			"branch": wt.Branch,
+			"id":     wt.ID,
 		})
 	} else {
-		logger.Debug("No workspace manager available, skipping workspace isolation")
+		logger.Debug("No worktree manager available, skipping worktree isolation")
 	}
 
 	// Initialize tools if registry is available with enhanced error observability
@@ -751,43 +759,41 @@ func (e *BasicTaskExecutor) phaseExecute(ctx context.Context) error {
 
 // phaseFinalize cleans up and prepares results
 func (e *BasicTaskExecutor) phaseFinalize(ctx context.Context) error {
-	// Collect workspace artifacts if available
-	if e.workspace != nil {
-		// Check for uncommitted changes if using git workspace
-		if gitWs, ok := e.workspace.(*workspace.GitWorkspace); ok {
-			if err := gitWs.UpdateGitInfo(); err != nil {
-				// Log git update error but don't fail the finalization
-				_ = gerror.Wrap(err, gerror.ErrCodeInternal, "failed to update git info").
-					WithComponent("TaskExecutor").
+	// Collect worktree artifacts if available
+	if e.currentWorktree != nil {
+		// Sync worktree changes (this handles commits and merging)
+		if e.worktreeManager != nil {
+			syncResult, err := e.worktreeManager.SyncWorktree(ctx, e.currentWorktree.ID)
+			if err != nil {
+				// Log sync error but don't fail the finalization
+				logger := observability.GetLogger(ctx).
+					WithComponent("executor").
 					WithOperation("phaseFinalize")
-			}
-			gitInfo := gitWs.GetGitInfo()
-			if gitInfo.IsDirty {
-				// Get diff for logging
-				diff, _ := gitWs.GetDiff()
-				e.addExecutionLog("Uncommitted changes detected", map[string]interface{}{
-					"diff_size": len(diff),
+				
+				logger.WithError(err).Warn("Failed to sync worktree changes",
+					"worktree_id", e.currentWorktree.ID,
+					"agent_id", e.agent.GetID(),
+				)
+				
+				e.addExecutionLog("Failed to sync worktree changes", map[string]interface{}{
+					"error": err.Error(),
+					"worktree_id": e.currentWorktree.ID,
 				})
-
-				// Commit changes
-				commitMsg := fmt.Sprintf("Task %s: Auto-commit by agent %s", e.currentTask.ID, e.agent.GetID())
-				if err := gitWs.CommitChanges(commitMsg); err != nil {
-					e.addExecutionLog("Failed to commit changes", map[string]interface{}{
-						"error": err.Error(),
-					})
-				} else {
-					gitWs.UpdateGitInfo()
-					e.addExecutionLog("Committed workspace changes", map[string]interface{}{
-						"commit": gitWs.GetGitInfo().CommitHash,
-					})
-				}
+			} else {
+				e.addExecutionLog("Synced worktree changes", map[string]interface{}{
+					"worktree_id": e.currentWorktree.ID,
+					"ahead": syncResult.Divergence.Ahead,
+					"behind": syncResult.Divergence.Behind,
+					"success": syncResult.Success,
+				})
 			}
 		}
 
-		// Store workspace info in result
+		// Store worktree info in result
 		e.mu.Lock()
-		e.result.Metadata["workspace_path"] = e.workspace.Path()
-		e.result.Metadata["workspace_branch"] = e.workspace.Branch()
+		e.result.Metadata["worktree_path"] = e.currentWorktree.Path
+		e.result.Metadata["worktree_branch"] = e.currentWorktree.Branch
+		e.result.Metadata["worktree_id"] = e.currentWorktree.ID
 		e.mu.Unlock()
 	}
 

@@ -5,6 +5,7 @@ package worktree
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 

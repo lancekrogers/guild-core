@@ -19,15 +19,15 @@ type ErrorCode string
 
 const (
 	// System errors (1xxx)
-	ErrCodeInternal         ErrorCode = "GUILD-1000"
-	ErrCodePanic            ErrorCode = "GUILD-1001"
-	ErrCodeTimeout          ErrorCode = "GUILD-1002"
-	ErrCodeCancelled        ErrorCode = "GUILD-1003"
-	ErrCodeRateLimit        ErrorCode = "GUILD-1004"
-	ErrCodeResourceLimit    ErrorCode = "GUILD-1005"
-	ErrCodeNotImplemented   ErrorCode = "GUILD-1006"
+	ErrCodeInternal          ErrorCode = "GUILD-1000"
+	ErrCodePanic             ErrorCode = "GUILD-1001"
+	ErrCodeTimeout           ErrorCode = "GUILD-1002"
+	ErrCodeCancelled         ErrorCode = "GUILD-1003"
+	ErrCodeRateLimit         ErrorCode = "GUILD-1004"
+	ErrCodeResourceLimit     ErrorCode = "GUILD-1005"
+	ErrCodeNotImplemented    ErrorCode = "GUILD-1006"
 	ErrCodeResourceExhausted ErrorCode = "GUILD-1007"
-	ErrCodeConflict         ErrorCode = "GUILD-1008"
+	ErrCodeConflict          ErrorCode = "GUILD-1008"
 
 	// Validation errors (2xxx)
 	ErrCodeValidation      ErrorCode = "GUILD-2000"

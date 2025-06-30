@@ -171,12 +171,18 @@ func TestGuildError_Retryable(t *testing.T) {
 		{ErrCodeTimeout, true},
 		{ErrCodeCancelled, true},
 		{ErrCodeRateLimit, true},
+		{ErrCodeResourceExhausted, true},
 		{ErrCodeConnection, true},
 		{ErrCodeAgentTimeout, true},
 		{ErrCodeProviderTimeout, true},
+		{ErrCodeOptimizationFailed, true},
 		{ErrCodeInternal, false},
 		{ErrCodeValidation, false},
 		{ErrCodeNotFound, false},
+		{ErrCodeConflict, false},
+		{ErrCodeSandboxFailure, false},
+		{ErrCodeNetworkIsolation, false},
+		{ErrCodeAuditFailure, false},
 	}
 
 	for _, tt := range tests {
@@ -294,5 +300,23 @@ func TestHelperFunctions(t *testing.T) {
 
 		assert.True(t, IsUserSafe(userSafe))
 		assert.False(t, IsUserSafe(notUserSafe))
+	})
+}
+
+func TestNewSentinelErrors(t *testing.T) {
+	t.Run("New sentinel errors have correct codes", func(t *testing.T) {
+		assert.Equal(t, ErrCodeResourceExhausted, ErrResourceExhausted.Code)
+		assert.Equal(t, ErrCodeConflict, ErrConflict.Code)
+		assert.Equal(t, ErrCodeSandboxFailure, ErrSandboxFailure.Code)
+		assert.Equal(t, ErrCodeNetworkIsolation, ErrNetworkIsolation.Code)
+		assert.Equal(t, ErrCodeAuditFailure, ErrAuditFailure.Code)
+	})
+
+	t.Run("New sentinel errors have expected retryable status", func(t *testing.T) {
+		assert.True(t, ErrResourceExhausted.Retryable)
+		assert.False(t, ErrConflict.Retryable)
+		assert.False(t, ErrSandboxFailure.Retryable)
+		assert.False(t, ErrNetworkIsolation.Retryable)
+		assert.False(t, ErrAuditFailure.Retryable)
 	})
 }

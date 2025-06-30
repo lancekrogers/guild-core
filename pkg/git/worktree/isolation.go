@@ -27,13 +27,13 @@ type IsolationFramework struct {
 // NewIsolationFramework creates a new isolation framework
 func NewIsolationFramework(ctx context.Context, manager Manager) (*IsolationFramework, error) {
 	if ctx.Err() != nil {
-		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled", nil).
+		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("git.worktree.isolation").
 			WithOperation("NewIsolationFramework")
 	}
 
 	if manager == nil {
-		return nil, gerror.New(gerror.ErrCodeInvalidArgument, "manager is required", nil).
+		return nil, gerror.New(gerror.ErrCodeValidation, "manager is required", nil).
 			WithComponent("git.worktree.isolation").
 			WithOperation("NewIsolationFramework")
 	}
@@ -50,13 +50,13 @@ func NewIsolationFramework(ctx context.Context, manager Manager) (*IsolationFram
 
 // IsolatedWorkspace represents a completely isolated workspace for an agent
 type IsolatedWorkspace struct {
-	Worktree    *Worktree              `json:"worktree"`
-	Environment map[string]string      `json:"environment"`
-	Mounts      []Mount                `json:"mounts"`
-	Limits      ResourceLimits         `json:"limits"`
-	Isolation   IsolationConfig        `json:"isolation"`
-	CreatedAt   time.Time              `json:"created_at"`
-	LastAccess  time.Time              `json:"last_access"`
+	Worktree    *Worktree         `json:"worktree"`
+	Environment map[string]string `json:"environment"`
+	Mounts      []Mount           `json:"mounts"`
+	Limits      ResourceLimits    `json:"limits"`
+	Isolation   IsolationConfig   `json:"isolation"`
+	CreatedAt   time.Time         `json:"created_at"`
+	LastAccess  time.Time         `json:"last_access"`
 }
 
 // Mount represents a filesystem mount for isolation
@@ -86,16 +86,16 @@ type IsolationConfig struct {
 
 // Task represents a task that requires workspace isolation
 type Task struct {
-	ID          string                 `json:"id"`
-	Type        string                 `json:"type"`
-	Description string                 `json:"description"`
+	ID           string                 `json:"id"`
+	Type         string                 `json:"type"`
+	Description  string                 `json:"description"`
 	Requirements map[string]interface{} `json:"requirements"`
 }
 
 // CreateIsolatedWorkspace creates a fully isolated workspace for an agent
 func (i *IsolationFramework) CreateIsolatedWorkspace(ctx context.Context, agentID string, task Task) (*IsolatedWorkspace, error) {
 	if ctx.Err() != nil {
-		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled", nil).
+		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("git.worktree.isolation").
 			WithOperation("CreateIsolatedWorkspace")
 	}
@@ -107,18 +107,19 @@ func (i *IsolationFramework) CreateIsolatedWorkspace(ctx context.Context, agentI
 		BaseBranch:  i.determineBaseBranch(task),
 		Description: task.Description,
 		Metadata: map[string]interface{}{
-			"task_type":        task.Type,
-			"isolation_level":  "high",
-			"created_by":       "isolation_framework",
+			"task_type":       task.Type,
+			"isolation_level": "high",
+			"created_by":      "isolation_framework",
 		},
 	}
 
 	wt, err := i.manager.CreateWorktree(ctx, worktreeReq)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create worktree", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create worktree").
 			WithComponent("git.worktree.isolation").
 			WithOperation("CreateIsolatedWorkspace").
-			WithDetails("agent_id", agentID, "task_id", task.ID)
+			WithDetails("agent_id", agentID).
+			WithDetails("task_id", task.ID)
 	}
 
 	// Create isolated workspace
@@ -135,7 +136,7 @@ func (i *IsolationFramework) CreateIsolatedWorkspace(ctx context.Context, agentI
 	// Set up file system isolation
 	if err := i.setupFilesystemIsolation(ctx, workspace); err != nil {
 		i.manager.RemoveWorktree(ctx, wt.ID)
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to setup filesystem isolation", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to setup filesystem isolation").
 			WithComponent("git.worktree.isolation").
 			WithOperation("CreateIsolatedWorkspace").
 			WithDetails("worktree_id", wt.ID)
@@ -144,7 +145,7 @@ func (i *IsolationFramework) CreateIsolatedWorkspace(ctx context.Context, agentI
 	// Configure network isolation
 	if err := i.setupNetworkIsolation(ctx, workspace); err != nil {
 		i.cleanup(ctx, workspace)
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to setup network isolation", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to setup network isolation").
 			WithComponent("git.worktree.isolation").
 			WithOperation("CreateIsolatedWorkspace").
 			WithDetails("worktree_id", wt.ID)
@@ -168,8 +169,8 @@ func (i *IsolationFramework) setupFilesystemIsolation(ctx context.Context, ws *I
 	}
 
 	for _, dir := range dirs {
-		if err := os.MkdirAll(dir, 0755); err != nil {
-			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create overlay directory", nil).
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create overlay directory").
 				WithComponent("git.worktree.isolation").
 				WithOperation("setupFilesystemIsolation").
 				WithDetails("directory", dir)
@@ -180,10 +181,11 @@ func (i *IsolationFramework) setupFilesystemIsolation(ctx context.Context, ws *I
 	for _, mount := range ws.Mounts {
 		if mount.ReadOnly {
 			if err := i.mountReadOnly(ctx, mount.Source, mount.Target); err != nil {
-				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to setup read-only mount", nil).
+				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to setup read-only mount").
 					WithComponent("git.worktree.isolation").
 					WithOperation("setupFilesystemIsolation").
-					WithDetails("source", mount.Source, "target", mount.Target)
+					WithDetails("source", mount.Source).
+					WithDetails("target", mount.Target)
 			}
 		}
 	}
@@ -214,8 +216,8 @@ func (i *IsolationFramework) setupFilesystemIsolation(ctx context.Context, ws *I
 .workspace/
 `
 	gitignorePath := filepath.Join(ws.Worktree.Path, ".gitignore.isolation")
-	if err := os.WriteFile(gitignorePath, []byte(gitignore), 0644); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create isolation gitignore", nil).
+	if err := os.WriteFile(gitignorePath, []byte(gitignore), 0o644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create isolation gitignore").
 			WithComponent("git.worktree.isolation").
 			WithOperation("setupFilesystemIsolation").
 			WithDetails("path", gitignorePath)
@@ -237,9 +239,9 @@ func (i *IsolationFramework) setupNetworkIsolation(ctx context.Context, ws *Isol
 	// Create network namespace configuration (would require privileged access)
 	// This is a simplified implementation - real network isolation would require
 	// container runtime or network namespace support
-	
+
 	isolationConfig := filepath.Join(ws.Worktree.Path, ".isolation", "network.conf")
-	if err := os.MkdirAll(filepath.Dir(isolationConfig), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(isolationConfig), 0o755); err != nil {
 		return err
 	}
 
@@ -265,7 +267,7 @@ allowed_ports:
   - 9418  # Git protocol
 `, ws.Worktree.ID, ws.Worktree.AgentID, time.Now().Format(time.RFC3339))
 
-	return os.WriteFile(isolationConfig, []byte(networkConfig), 0644)
+	return os.WriteFile(isolationConfig, []byte(networkConfig), 0o644)
 }
 
 // Helper methods
@@ -279,34 +281,34 @@ func (i *IsolationFramework) determineBaseBranch(task Task) string {
 
 func (i *IsolationFramework) buildEnvironment(agentID string, wt *Worktree) map[string]string {
 	env := make(map[string]string)
-	
+
 	// Agent-specific environment
 	env["GUILD_AGENT_ID"] = agentID
 	env["GUILD_WORKTREE_ID"] = wt.ID
 	env["GUILD_WORKTREE_PATH"] = wt.Path
 	env["GUILD_BRANCH"] = wt.Branch
 	env["GUILD_BASE_BRANCH"] = wt.BaseBranch
-	
+
 	// Isolation-specific environment
 	env["GUILD_ISOLATED"] = "true"
 	env["GUILD_WORKSPACE_TYPE"] = "isolated"
-	
+
 	// Git configuration
 	env["GIT_AUTHOR_NAME"] = agentID
 	env["GIT_AUTHOR_EMAIL"] = fmt.Sprintf("%s@guild.local", agentID)
 	env["GIT_COMMITTER_NAME"] = agentID
 	env["GIT_COMMITTER_EMAIL"] = fmt.Sprintf("%s@guild.local", agentID)
-	
+
 	// Working directory
 	env["PWD"] = wt.Path
 	env["OLDPWD"] = wt.Path
-	
+
 	return env
 }
 
 func (i *IsolationFramework) configureMounts(wt *Worktree) []Mount {
 	var mounts []Mount
-	
+
 	// Common read-only mounts for shared resources
 	commonMounts := []Mount{
 		{
@@ -322,9 +324,9 @@ func (i *IsolationFramework) configureMounts(wt *Worktree) []Mount {
 			Type:     "bind",
 		},
 	}
-	
+
 	mounts = append(mounts, commonMounts...)
-	
+
 	return mounts
 }
 
@@ -366,21 +368,21 @@ func (i *IsolationFramework) getIsolationConfig(task Task) IsolationConfig {
 			"*_TOKEN",
 		},
 	}
-	
+
 	// Override based on task requirements
 	if isolated, ok := task.Requirements["network_isolation"].(bool); ok {
 		config.NetworkIsolation = isolated
 	}
-	
+
 	return config
 }
 
 func (i *IsolationFramework) mountReadOnly(ctx context.Context, source, target string) error {
 	// Ensure target directory exists
-	if err := os.MkdirAll(target, 0755); err != nil {
+	if err := os.MkdirAll(target, 0o755); err != nil {
 		return err
 	}
-	
+
 	// Create symlink for read-only access (simplified implementation)
 	// In a real implementation, this would use mount syscalls or containers
 	return os.Symlink(source, target+"_link")
@@ -389,13 +391,13 @@ func (i *IsolationFramework) mountReadOnly(ctx context.Context, source, target s
 func (i *IsolationFramework) restrictAccess(ctx context.Context, workspacePath, restrictedPath string) error {
 	// Create .workspace-restrictions file to document restricted paths
 	restrictionsFile := filepath.Join(workspacePath, ".workspace", "restrictions.txt")
-	if err := os.MkdirAll(filepath.Dir(restrictionsFile), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(restrictionsFile), 0o755); err != nil {
 		return err
 	}
-	
-	restriction := fmt.Sprintf("# Access restricted to: %s\n# Timestamp: %s\n", 
+
+	restriction := fmt.Sprintf("# Access restricted to: %s\n# Timestamp: %s\n",
 		restrictedPath, time.Now().Format(time.RFC3339))
-	
+
 	return appendToFile(restrictionsFile, restriction)
 }
 
@@ -415,7 +417,7 @@ type ChangeValidator struct {
 // NewChangeValidator creates a new change validator
 func NewChangeValidator() *ChangeValidator {
 	return &ChangeValidator{
-		rules:    []ValidationRule{
+		rules: []ValidationRule{
 			&NoSecretRule{},
 			&FileSizeRule{maxSize: 10 * 1024 * 1024}, // 10MB
 			&PathValidationRule{},
@@ -440,14 +442,14 @@ type ValidationResult struct {
 
 // ValidationIssue represents a validation problem
 type ValidationIssue struct {
-	File        string                 `json:"file"`
-	Line        int                    `json:"line,omitempty"`
-	Column      int                    `json:"column,omitempty"`
-	Severity    Severity               `json:"severity"`
-	Message     string                 `json:"message"`
-	Rule        string                 `json:"rule"`
-	Suggestion  string                 `json:"suggestion,omitempty"`
-	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+	File       string                 `json:"file"`
+	Line       int                    `json:"line,omitempty"`
+	Column     int                    `json:"column,omitempty"`
+	Severity   Severity               `json:"severity"`
+	Message    string                 `json:"message"`
+	Rule       string                 `json:"rule"`
+	Suggestion string                 `json:"suggestion,omitempty"`
+	Metadata   map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // Severity levels for validation issues
@@ -483,7 +485,7 @@ func (cv *ChangeValidator) ValidateChanges(ctx context.Context, wt *Worktree) (*
 	// Get changes in worktree
 	changes, err := cv.getChanges(ctx, wt)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get changes", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get changes").
 			WithComponent("git.worktree.isolation").
 			WithOperation("ValidateChanges").
 			WithDetails("worktree_id", wt.ID)
@@ -531,7 +533,7 @@ func (cv *ChangeValidator) getChanges(ctx context.Context, wt *Worktree) ([]Chan
 	// Use git to get changed files
 	// This is a simplified implementation
 	var changes []Change
-	
+
 	// For now, return empty changes - real implementation would parse git status
 	return changes, nil
 }
@@ -553,7 +555,7 @@ func (nsr *NoSecretRule) Validate(ctx context.Context, changes []Change) []Valid
 			regexp.MustCompile(`(?i)(secret|password|passwd|pwd).*[:=]\s*['"]?\w+`),
 			regexp.MustCompile(`(?i)aws[_-]?(access[_-]?key|secret).*[:=]\s*['"]?\w+`),
 			regexp.MustCompile(`(?i)private[_-]?key.*[:=]\s*['"]?-----BEGIN`),
-			regexp.MustCompile(`sk-[a-zA-Z0-9]{48,}`), // OpenAI API keys
+			regexp.MustCompile(`sk-[a-zA-Z0-9]{48,}`),                      // OpenAI API keys
 			regexp.MustCompile(`xoxb-[0-9]{12}-[0-9]{12}-[a-zA-Z0-9]{24}`), // Slack tokens
 		}
 	}
@@ -566,11 +568,11 @@ func (nsr *NoSecretRule) Validate(ctx context.Context, changes []Change) []Valid
 			for _, pattern := range nsr.patterns {
 				if matches := pattern.FindAllString(line, -1); len(matches) > 0 {
 					issues = append(issues, ValidationIssue{
-						File:     change.File,
-						Line:     lineNum + 1,
-						Severity: SeverityError,
-						Message:  fmt.Sprintf("Potential secret detected: %s", matches[0]),
-						Rule:     "no-secrets",
+						File:       change.File,
+						Line:       lineNum + 1,
+						Severity:   SeverityError,
+						Message:    fmt.Sprintf("Potential secret detected: %s", matches[0]),
+						Rule:       "no-secrets",
 						Suggestion: "Remove sensitive data and use environment variables or secure vaults",
 					})
 				}
@@ -592,10 +594,10 @@ func (fsr *FileSizeRule) Validate(ctx context.Context, changes []Change) []Valid
 	for _, change := range changes {
 		if int64(len(change.Content)) > fsr.maxSize {
 			issues = append(issues, ValidationIssue{
-				File:     change.File,
-				Severity: SeverityWarning,
-				Message:  fmt.Sprintf("File size exceeds limit: %d bytes (max: %d)", len(change.Content), fsr.maxSize),
-				Rule:     "file-size",
+				File:       change.File,
+				Severity:   SeverityWarning,
+				Message:    fmt.Sprintf("File size exceeds limit: %d bytes (max: %d)", len(change.Content), fsr.maxSize),
+				Rule:       "file-size",
 				Suggestion: "Consider breaking large files into smaller modules",
 			})
 		}
@@ -623,10 +625,10 @@ func (pvr *PathValidationRule) Validate(ctx context.Context, changes []Change) [
 		for _, pattern := range restrictedPatterns {
 			if matched, _ := regexp.MatchString(pattern, change.File); matched {
 				issues = append(issues, ValidationIssue{
-					File:     change.File,
-					Severity: SeverityError,
-					Message:  "File path contains sensitive patterns",
-					Rule:     "path-validation",
+					File:       change.File,
+					Severity:   SeverityError,
+					Message:    "File path contains sensitive patterns",
+					Rule:       "path-validation",
 					Suggestion: "Move sensitive files outside the repository or add to .gitignore",
 				})
 			}
@@ -648,13 +650,13 @@ func (ss *SecurityScanner) Scan(ctx context.Context, changes []Change) []Validat
 
 	// Simple security patterns
 	dangerousPatterns := map[string]string{
-		`eval\s*\(`:              "Use of eval() is dangerous",
-		`exec\s*\(`:              "Use of exec() can be dangerous",
-		`__import__\s*\(`:        "Dynamic imports can be dangerous",
-		`subprocess\.call`:       "Subprocess calls should be carefully reviewed",
-		`os\.system`:             "Direct system calls should be avoided",
-		`\.innerHTML\s*=`:        "Setting innerHTML can lead to XSS",
-		`document\.write\s*\(`:   "document.write can be dangerous",
+		`eval\s*\(`:            "Use of eval() is dangerous",
+		`exec\s*\(`:            "Use of exec() can be dangerous",
+		`__import__\s*\(`:      "Dynamic imports can be dangerous",
+		`subprocess\.call`:     "Subprocess calls should be carefully reviewed",
+		`os\.system`:           "Direct system calls should be avoided",
+		`\.innerHTML\s*=`:      "Setting innerHTML can lead to XSS",
+		`document\.write\s*\(`: "document.write can be dangerous",
 	}
 
 	for _, change := range changes {
@@ -663,11 +665,11 @@ func (ss *SecurityScanner) Scan(ctx context.Context, changes []Change) []Validat
 			for pattern, message := range dangerousPatterns {
 				if matched, _ := regexp.MatchString(pattern, line); matched {
 					issues = append(issues, ValidationIssue{
-						File:     change.File,
-						Line:     lineNum + 1,
-						Severity: SeverityWarning,
-						Message:  message,
-						Rule:     "security-scan",
+						File:       change.File,
+						Line:       lineNum + 1,
+						Severity:   SeverityWarning,
+						Message:    message,
+						Rule:       "security-scan",
 						Suggestion: "Review for security implications",
 					})
 				}
@@ -681,7 +683,7 @@ func (ss *SecurityScanner) Scan(ctx context.Context, changes []Change) []Validat
 // Helper functions
 
 func appendToFile(filename, content string) error {
-	f, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
 	if err != nil {
 		return err
 	}

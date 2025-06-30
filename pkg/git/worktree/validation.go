@@ -32,7 +32,7 @@ func NewMergeValidator() *MergeValidator {
 // ValidateMerge validates a worktree before merging
 func (mv *MergeValidator) ValidateMerge(ctx context.Context, wt *Worktree) (*MergeValidation, error) {
 	if ctx.Err() != nil {
-		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled", nil).
+		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("git.worktree.validation").
 			WithOperation("ValidateMerge")
 	}
@@ -46,7 +46,7 @@ func (mv *MergeValidator) ValidateMerge(ctx context.Context, wt *Worktree) (*Mer
 	// Run tests
 	testResult, err := mv.testRunner.RunTests(ctx, wt.Path)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run tests", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run tests").
 			WithComponent("git.worktree.validation").
 			WithOperation("ValidateMerge").
 			WithDetails("worktree_id", wt.ID)
@@ -66,7 +66,7 @@ func (mv *MergeValidator) ValidateMerge(ctx context.Context, wt *Worktree) (*Mer
 	// Check code quality
 	qualityResult, err := mv.codeQuality.Check(ctx, wt.Path)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to check code quality", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to check code quality").
 			WithComponent("git.worktree.validation").
 			WithOperation("ValidateMerge").
 			WithDetails("worktree_id", wt.ID)
@@ -86,7 +86,7 @@ func (mv *MergeValidator) ValidateMerge(ctx context.Context, wt *Worktree) (*Mer
 	// Check for merge artifacts
 	artifacts, err := mv.checkMergeArtifacts(ctx, wt)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to check merge artifacts", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to check merge artifacts").
 			WithComponent("git.worktree.validation").
 			WithOperation("ValidateMerge").
 			WithDetails("worktree_id", wt.ID)
@@ -105,7 +105,7 @@ func (mv *MergeValidator) ValidateMerge(ctx context.Context, wt *Worktree) (*Mer
 	// Check for security issues
 	securityIssues, err := mv.checkSecurity(ctx, wt)
 	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to check security", nil).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to check security").
 			WithComponent("git.worktree.validation").
 			WithOperation("ValidateMerge").
 			WithDetails("worktree_id", wt.ID)
@@ -289,7 +289,7 @@ func (tr *TestRunner) RunTests(ctx context.Context, path string) (*TestResult, e
 	}
 
 	// Parse test statistics if available
-	result.Total, result.Passed = tr.parseTestStats(string(output), testCmd[0])
+	result.Total, _ = tr.parseTestStats(string(output), testCmd[0])
 
 	return result, nil
 }
@@ -454,7 +454,7 @@ func (qc *QualityChecker) runLinter(ctx context.Context, path string, linterCmd 
 	cmd := exec.CommandContext(ctx, linterCmd[0], linterCmd[1:]...)
 	cmd.Dir = path
 	
-	output, err := cmd.CombinedOutput()
+	output, _ := cmd.CombinedOutput()
 	
 	// Many linters return non-zero exit codes when issues are found
 	// Don't treat this as an error unless the command truly failed
