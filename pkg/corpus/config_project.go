@@ -47,6 +47,20 @@ func GetProjectConfig(ctx context.Context) (Config, error) {
 
 // GetGlobalConfig returns the global corpus configuration (for backward compatibility)
 func GetGlobalConfig() (Config, error) {
+	// Check for environment variable first
+	if envPath := os.Getenv("GUILD_CORPUS_PATH"); envPath != "" {
+		corpusPath := envPath
+		return Config{
+			CorpusPath:      corpusPath,
+			ActivitiesPath:  filepath.Join(corpusPath, ".activities"),
+			MaxSizeBytes:    10 * 1024 * 1024, // 10MB for global
+			DefaultTags:     []string{},
+			DefaultCategory: "general",
+			Location:        corpusPath,
+			MaxSizeMB:       10,
+		}, nil
+	}
+
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return DefaultConfig(), gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get home directory").

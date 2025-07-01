@@ -39,7 +39,7 @@ func NewFileAuditStorage(ctx context.Context, baseDir string, maxEntries int) (*
 	}
 
 	// Create base directory if it doesn't exist
-	if err := os.MkdirAll(baseDir, 0755); err != nil {
+	if err := os.MkdirAll(baseDir, 0o750); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create audit directory").
 			WithComponent("FileAuditStorage").
 			WithOperation("NewFileAuditStorage").
@@ -199,7 +199,7 @@ func (fas *FileAuditStorage) Backup(ctx context.Context, destination string) err
 
 	// Create backup directory
 	backupDir := filepath.Dir(destination)
-	if err := os.MkdirAll(backupDir, 0755); err != nil {
+	if err := os.MkdirAll(backupDir, 0o750); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create backup directory").
 			WithComponent("FileAuditStorage").
 			WithOperation("Backup")
@@ -213,7 +213,7 @@ func (fas *FileAuditStorage) Backup(ctx context.Context, destination string) err
 			WithOperation("Backup")
 	}
 
-	if err := os.WriteFile(destination, data, 0644); err != nil {
+	if err := os.WriteFile(destination, data, 0o600); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to write backup file").
 			WithComponent("FileAuditStorage").
 			WithOperation("Backup").
@@ -245,14 +245,17 @@ func (fas *FileAuditStorage) Health(ctx context.Context) error {
 
 	// Check if we can write to the directory
 	testFile := filepath.Join(fas.baseDir, ".health_check")
-	if err := os.WriteFile(testFile, []byte("health_check"), 0644); err != nil {
+	if err := os.WriteFile(testFile, []byte("health_check"), 0o600); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "cannot write to audit storage directory").
 			WithComponent("FileAuditStorage").
 			WithOperation("Health")
 	}
 
 	// Clean up test file
-	os.Remove(testFile)
+	if err := os.Remove(testFile); err != nil {
+		// Log but don't fail health check for cleanup issues
+		fas.logger.WithError(err).Debug("Failed to remove health check test file")
+	}
 
 	return nil
 }
@@ -262,7 +265,7 @@ func (fas *FileAuditStorage) Health(ctx context.Context) error {
 func (fas *FileAuditStorage) loadEntries(ctx context.Context) error {
 	auditFile := filepath.Join(fas.baseDir, "audit.json")
 
-	data, err := os.ReadFile(auditFile)
+	data, err := os.ReadFile(auditFile) // #nosec G304 - auditFile is constructed from validated baseDir
 	if err != nil {
 		if os.IsNotExist(err) {
 			return nil // No existing file, start fresh
@@ -287,7 +290,7 @@ func (fas *FileAuditStorage) persistEntries(ctx context.Context) error {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal audit entries")
 	}
 
-	if err := os.WriteFile(auditFile, data, 0644); err != nil {
+	if err := os.WriteFile(auditFile, data, 0o600); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to write audit file")
 	}
 

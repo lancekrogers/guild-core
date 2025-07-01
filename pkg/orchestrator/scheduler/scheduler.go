@@ -302,10 +302,15 @@ func (ts *TaskScheduler) getAvailableExecutors() []interfaces.AgentExecutor {
 	var available []interfaces.AgentExecutor
 
 	for agentID, executor := range ts.executors {
-		// Check if executor is already running a task
+		// First check if the executor reports itself as available
+		if !executor.IsAvailable() {
+			continue
+		}
+
+		// Also check if executor is already running a task
 		busy := false
 		for _, rt := range ts.runningTasks {
-			if rt.Task.Agent == agentID {
+			if rt.Executor.GetAgentID() == agentID {
 				busy = true
 				break
 			}
@@ -351,14 +356,20 @@ func (ts *TaskScheduler) getReadyTasks() []*SchedulableTask {
 func (ts *TaskScheduler) matchTasksToExecutors(tasks []*SchedulableTask, executors []interfaces.AgentExecutor) map[*SchedulableTask]interfaces.AgentExecutor {
 	assignments := make(map[*SchedulableTask]interfaces.AgentExecutor)
 
-	// Simple assignment for now - can be made more sophisticated
+	// Simple round-robin assignment for now - can be made more sophisticated
 	for i, task := range tasks {
 		if i < len(executors) {
-			// Find executor for the agent
-			for _, executor := range executors {
-				// TODO: Match based on agent capabilities
-				assignments[task] = executor
-				break
+			// If task specifies an agent, try to find that executor
+			if task.Agent != "" {
+				for _, executor := range executors {
+					if executor.GetAgentID() == task.Agent {
+						assignments[task] = executor
+						break
+					}
+				}
+			} else {
+				// Otherwise, assign to available executor by index
+				assignments[task] = executors[i]
 			}
 		}
 	}

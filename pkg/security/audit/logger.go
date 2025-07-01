@@ -5,7 +5,7 @@ package audit
 
 import (
 	"context"
-	"crypto/md5"
+	"crypto/sha256"
 	"fmt"
 	"net"
 	"strings"
@@ -23,7 +23,6 @@ type GuildAuditLogger struct {
 	enricher     AuditEnricher
 	retention    RetentionPolicy
 	logger       observability.Logger
-	mu           sync.RWMutex
 	stats        *AuditStats
 	statsMu      sync.RWMutex
 	processQueue chan AuditEntry
@@ -385,13 +384,15 @@ func (gal *GuildAuditLogger) refreshStats() {
 func (gal *GuildAuditLogger) generateEntryID(entry AuditEntry) string {
 	data := fmt.Sprintf("%s:%s:%s:%d",
 		entry.AgentID, entry.Resource, entry.Action, entry.Timestamp.UnixNano())
-	return fmt.Sprintf("%x", md5.Sum([]byte(data)))
+	hash := sha256.Sum256([]byte(data))
+	return fmt.Sprintf("%x", hash)
 }
 
 func (gal *GuildAuditLogger) generateReportID(period ReportPeriod, standard ComplianceStandard) string {
 	data := fmt.Sprintf("%s:%s:%s",
 		standard.String(), period.Start.Format("2006-01-02"), period.End.Format("2006-01-02"))
-	return fmt.Sprintf("rpt_%x", md5.Sum([]byte(data)))
+	hash := sha256.Sum256([]byte(data))
+	return fmt.Sprintf("rpt_%x", hash)
 }
 
 func (gal *GuildAuditLogger) validateEntry(entry AuditEntry) error {

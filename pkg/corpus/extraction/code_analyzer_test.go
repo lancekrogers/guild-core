@@ -5,6 +5,8 @@ package extraction
 
 import (
 	"context"
+	"os"
+	"os/exec"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -15,7 +17,16 @@ import (
 func TestCraftCodeAnalyzer(t *testing.T) {
 	ctx := context.Background()
 	
-	analyzer, err := NewCodeAnalyzer(ctx, "/tmp/test-repo")
+	// Create a temporary directory for testing
+	tempDir, err := os.MkdirTemp("", "test-repo-*")
+	require.NoError(t, err)
+	defer os.RemoveAll(tempDir)
+	
+	// Initialize a git repository in the temp directory
+	err = exec.Command("git", "init", tempDir).Run()
+	require.NoError(t, err)
+	
+	analyzer, err := NewCodeAnalyzer(ctx, tempDir)
 	require.NoError(t, err)
 	assert.NotNil(t, analyzer)
 	assert.NotNil(t, analyzer.gitClient)

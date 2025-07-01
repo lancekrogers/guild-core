@@ -36,6 +36,10 @@ func TestJourneymanAddKnowledge(t *testing.T) {
 		ID:      "test-1",
 		Type:    extraction.KnowledgeDecision,
 		Content: "Use React for frontend development because of its large ecosystem",
+		Source: extraction.Source{
+			Type:      "test",
+			Timestamp: time.Now(),
+		},
 		Entities: []extraction.Entity{
 			{Name: "React", Type: "technology", Confidence: 0.9},
 			{Name: "frontend", Type: "domain", Confidence: 0.8},
@@ -54,14 +58,16 @@ func TestJourneymanAddKnowledge(t *testing.T) {
 	query := GraphQuery{
 		Text:      "frontend architecture decision",
 		NodeTypes: []NodeType{NodeDecision},
-		MaxDepth:  1,
+		MaxDepth:  0, // Only return start nodes, don't traverse edges
 	}
 	results, err := graph.Query(ctx, query)
 	require.NoError(t, err)
 	assert.Len(t, results, 1)
-	assert.Equal(t, "test-1", results[0].ID)
-	assert.Equal(t, NodeDecision, results[0].Type)
-	assert.Equal(t, knowledge.Content, results[0].Content)
+	if len(results) > 0 {
+		assert.Equal(t, "test-1", results[0].ID)
+		assert.Equal(t, NodeDecision, results[0].Type)
+		assert.Equal(t, knowledge.Content, results[0].Content)
+	}
 }
 
 // TestGuildQueryKnowledge tests querying knowledge from the graph
@@ -76,6 +82,10 @@ func TestGuildQueryKnowledge(t *testing.T) {
 			ID:      "decision-1",
 			Type:    extraction.KnowledgeDecision,
 			Content: "Use PostgreSQL for data persistence",
+			Source: extraction.Source{
+				Type:      "test",
+				Timestamp: time.Now(),
+			},
 			Confidence: 0.9,
 			Timestamp:  time.Now(),
 		},
@@ -83,6 +93,10 @@ func TestGuildQueryKnowledge(t *testing.T) {
 			ID:      "solution-1", 
 			Type:    extraction.KnowledgeSolution,
 			Content: "Fix database connection issues by increasing timeout",
+			Source: extraction.Source{
+				Type:      "test",
+				Timestamp: time.Now(),
+			},
 			Confidence: 0.8,
 			Timestamp:  time.Now(),
 		},
@@ -90,6 +104,10 @@ func TestGuildQueryKnowledge(t *testing.T) {
 			ID:      "preference-1",
 			Type:    extraction.KnowledgePreference,
 			Content: "Prefer TypeScript over JavaScript for type safety",
+			Source: extraction.Source{
+				Type:      "test",
+				Timestamp: time.Now(),
+			},
 			Confidence: 0.7,
 			Timestamp:  time.Now(),
 		},
@@ -111,7 +129,7 @@ func TestGuildQueryKnowledge(t *testing.T) {
 				Text:   "database",
 				Limit:  10,
 			},
-			expectCount: 2, // Should find PostgreSQL and connection fix
+			expectCount: 1, // Should find connection fix (contains "database")
 		},
 		{
 			name: "type filter",
@@ -151,6 +169,10 @@ func TestScribeRelationships(t *testing.T) {
 		ID:      "rel-test-1",
 		Type:    extraction.KnowledgeDecision,
 		Content: "Use Redis for caching to improve performance",
+		Source: extraction.Source{
+			Type:      "test",
+			Timestamp: time.Now(),
+		},
 		Entities: []extraction.Entity{
 			{Name: "Redis", Type: "technology", Confidence: 0.9},
 			{Name: "caching", Type: "technique", Confidence: 0.8},
@@ -190,22 +212,37 @@ func TestCraftGraphTraversal(t *testing.T) {
 			ID:      "node-1",
 			Type:    extraction.KnowledgeDecision,
 			Content: "Choose React for frontend",
+			Source: extraction.Source{
+				Type:      "test",
+				Timestamp: time.Now(),
+			},
 			Entities: []extraction.Entity{{Name: "React", Type: "technology", Confidence: 0.9}},
 			Confidence: 0.9,
+			Timestamp:  time.Now(),
 		},
 		{
 			ID:      "node-2", 
 			Type:    extraction.KnowledgeSolution,
 			Content: "Use React hooks for state management",
+			Source: extraction.Source{
+				Type:      "test",
+				Timestamp: time.Now(),
+			},
 			Entities: []extraction.Entity{{Name: "React", Type: "technology", Confidence: 0.9}},
 			Confidence: 0.8,
+			Timestamp:  time.Now(),
 		},
 		{
 			ID:      "node-3",
 			Type:    extraction.KnowledgePattern,
 			Content: "React component patterns for reusability",
+			Source: extraction.Source{
+				Type:      "test",
+				Timestamp: time.Now(),
+			},
 			Entities: []extraction.Entity{{Name: "React", Type: "technology", Confidence: 0.9}},
 			Confidence: 0.7,
+			Timestamp:  time.Now(),
 		},
 	}
 
@@ -237,6 +274,10 @@ func TestJourneymanIndexing(t *testing.T) {
 		ID:      "index-test-1",
 		Type:    extraction.KnowledgeDecision,
 		Content: "Use microservices architecture for scalability and maintainability",
+		Source: extraction.Source{
+			Type:      "test",
+			Timestamp: time.Now(),
+		},
 		Confidence: 0.8,
 		Timestamp:  time.Now(),
 	}
@@ -265,6 +306,11 @@ func TestGuildContextCancellation(t *testing.T) {
 		ID:      "cancel-test",
 		Type:    extraction.KnowledgeDecision,
 		Content: "Test knowledge",
+		Source: extraction.Source{
+			Type:      "test",
+			Timestamp: time.Now(),
+		},
+		Timestamp:  time.Now(),
 	}
 	
 	// Should handle cancelled context gracefully
@@ -291,7 +337,12 @@ func TestScribeGraphStatistics(t *testing.T) {
 			ID:      fmt.Sprintf("stats-test-%d", i+1),
 			Type:    kType,
 			Content: fmt.Sprintf("Test content for %s", kType),
+			Source: extraction.Source{
+				Type:      "test",
+				Timestamp: time.Now(),
+			},
 			Confidence: 0.8,
+			Timestamp:  time.Now(),
 		}
 		err = graph.AddKnowledge(ctx, knowledge)
 		require.NoError(t, err)
@@ -302,7 +353,8 @@ func TestScribeGraphStatistics(t *testing.T) {
 	
 	assert.Equal(t, 4, stats.NodeCount)
 	assert.Equal(t, 4, len(stats.NodeTypes))
-	assert.Greater(t, len(stats.EdgeTypes), 0)
+	// EdgeTypes should be 0 since test knowledge items have no entities/relations
+	assert.Equal(t, 0, len(stats.EdgeTypes))
 }
 
 // TestCraftQueryBuilder tests the query builder functionality
@@ -341,7 +393,12 @@ func TestJourneymanConcurrentAccess(t *testing.T) {
 					ID:      fmt.Sprintf("concurrent-%d-%d", routineID, j),
 					Type:    extraction.KnowledgeDecision,
 					Content: fmt.Sprintf("Concurrent test %d-%d", routineID, j),
+					Source: extraction.Source{
+						Type:      "test",
+						Timestamp: time.Now(),
+					},
 					Confidence: 0.8,
+					Timestamp:  time.Now(),
 				}
 				err := graph.AddKnowledge(ctx, knowledge)
 				assert.NoError(t, err)

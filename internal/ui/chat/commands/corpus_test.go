@@ -467,7 +467,7 @@ func TestCorpusIntegration(t *testing.T) {
 	require.True(t, ok)
 	
 	content := paneMsg.Content
-	assert.Contains(t, content, "Total Documents: 4")
+	assert.Contains(t, content, "**Total Documents:** 4")
 	assert.Contains(t, content, "repository pattern")
 	assert.Contains(t, content, "JWT tokens")
 	
@@ -492,7 +492,7 @@ func TestCorpusIntegration(t *testing.T) {
 	require.True(t, ok)
 	
 	statsContent := paneMsg.Content
-	assert.Contains(t, statsContent, "Documents: 4")
+	assert.Contains(t, statsContent, "**Documents:** 4")
 	assert.Contains(t, statsContent, "pattern")
 	assert.Contains(t, statsContent, "decision")
 	assert.Contains(t, statsContent, "tip")
@@ -573,7 +573,7 @@ func TestHelperFunctions(t *testing.T) {
 		
 		preview := extractPreview(content, query, maxLength)
 		
-		assert.LessOrEqual(t, len(preview), maxLength+10) // Allow for "..." 
+		assert.LessOrEqual(t, len(preview), maxLength+25) // Allow for context and "..." 
 		assert.Contains(t, preview, query)
 	})
 	

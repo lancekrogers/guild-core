@@ -233,7 +233,7 @@ func TestCraftFileAuditStorage_Backup(t *testing.T) {
 	_, err = os.Stat(backupPath)
 	require.NoError(t, err)
 
-	data, err := os.ReadFile(backupPath)
+	data, err := os.ReadFile(backupPath) // #nosec G304 - backupPath is test-controlled path in tempDir
 	require.NoError(t, err)
 	assert.Contains(t, string(data), "backup-test")
 	assert.Contains(t, string(data), "agent1")
@@ -250,7 +250,8 @@ func TestGuildFileAuditStorage_Health(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Remove directory and health check should fail
-	os.RemoveAll(tempDir)
+	err = os.RemoveAll(tempDir)
+	assert.NoError(t, err)
 	err = storage.Health(ctx)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "not accessible")
@@ -403,7 +404,10 @@ func BenchmarkCraftFileAuditStorage_Store(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		entry.ID = string(rune(i))
-		storage.Store(ctx, entry)
+		err := storage.Store(ctx, entry)
+		if err != nil {
+			b.Fatalf("Store failed: %v", err)
+		}
 	}
 }
 
@@ -423,7 +427,10 @@ func BenchmarkJourneymanFileAuditStorage_Retrieve(b *testing.B) {
 			Result:    ResultAllowed,
 			Timestamp: time.Now(),
 		}
-		storage.Store(ctx, entry)
+		err := storage.Store(ctx, entry)
+		if err != nil {
+			b.Fatalf("Store failed: %v", err)
+		}
 	}
 
 	filter := AuditFilter{
@@ -433,6 +440,9 @@ func BenchmarkJourneymanFileAuditStorage_Retrieve(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		storage.Retrieve(ctx, filter)
+		_, err := storage.Retrieve(ctx, filter)
+		if err != nil {
+			b.Fatalf("Retrieve failed: %v", err)
+		}
 	}
 }

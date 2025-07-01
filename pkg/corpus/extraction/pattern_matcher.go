@@ -17,7 +17,7 @@ type PatternMatcher struct {
 func NewPatternMatcher() *PatternMatcher {
 	patterns := map[string]*regexp.Regexp{
 		"decision": regexp.MustCompile(`(?i)(decided to|will use|going with|chose|selected|let's go with|we'll use|I recommend|the best option is|should use)`),
-		"solution": regexp.MustCompile(`(?i)(fixed by|solved with|works when|solution is|to fix this|the fix is|resolved by|you can solve|try this|here's how)`),
+		"solution": regexp.MustCompile(`(?i)(fixed by|solved with|works when|solution is|to fix this|the fix is|resolved by|you can solve|try this|try starting|try running|here's how|here's the|typically occurs|usually happens)`),
 		"preference": regexp.MustCompile(`(?i)(prefer|always|never|should|shouldn't|best practice|avoid|recommend|suggest|better to|it's better|I like)`),
 		"problem": regexp.MustCompile(`(?i)(error|issue|problem|failing|broken|not working|doesn't work|won't work|bug|exception|crash)`),
 		"certainty": regexp.MustCompile(`(?i)(definitely|certainly|absolutely|sure|confirmed|verified|tested|proven|guaranteed)`),

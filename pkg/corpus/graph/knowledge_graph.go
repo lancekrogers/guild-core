@@ -57,12 +57,17 @@ func (kg *KnowledgeGraph) AddKnowledge(ctx context.Context, knowledge extraction
 	defer kg.mu.Unlock()
 
 	// Create or update the main knowledge node
+	createdAt := knowledge.Timestamp
+	if createdAt.IsZero() {
+		createdAt = time.Now() // Use current time if timestamp is missing
+	}
+	
 	node := &KnowledgeNode{
 		ID:         knowledge.ID,
 		Type:       kg.mapKnowledgeType(knowledge.Type),
 		Content:    knowledge.Content,
 		Properties: kg.buildNodeProperties(knowledge),
-		CreatedAt:  knowledge.Timestamp,
+		CreatedAt:  createdAt,
 		UpdatedAt:  time.Now(),
 		Confidence: knowledge.Confidence,
 	}
@@ -126,7 +131,10 @@ func (kg *KnowledgeGraph) AddKnowledge(ctx context.Context, knowledge extraction
 
 	// Update the index
 	if err := kg.index.UpdateNode(ctx, node); err != nil {
-		// Log error but don't fail the entire operation
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to update graph index").
+			WithComponent("corpus.graph").
+			WithOperation("AddKnowledge").
+			WithDetails("node_id", node.ID)
 	}
 
 	return nil
@@ -206,6 +214,10 @@ func (kg *KnowledgeGraph) traverse(ctx context.Context, node *KnowledgeNode, que
 		}
 
 		// Check maximum depth
+		if query.MaxDepth == 0 {
+			// MaxDepth 0 means no traversal - only return start nodes
+			continue
+		}
 		if query.MaxDepth > 0 && kg.getDepthFromQuery(query, edge) > query.MaxDepth {
 			continue
 		}
@@ -217,80 +229,195 @@ func (kg *KnowledgeGraph) traverse(ctx context.Context, node *KnowledgeNode, que
 	}
 }
 
-// findStartNodes identifies nodes to begin traversal from
+// findStartNodes identifies nodes to begin traversal from using OR semantics for combining filters
 func (kg *KnowledgeGraph) findStartNodes(ctx context.Context, query GraphQuery) ([]*KnowledgeNode, error) {
-	var startNodes []*KnowledgeNode
+	if ctx.Err() != nil {
+		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("corpus.graph").
+			WithOperation("findStartNodes")
+	}
 
-	// Use index for text-based queries
+	candidateMap := make(map[string]*candidateNode)
+	
+	// Collect text-based candidates
 	if query.Text != "" {
-		indexResults, err := kg.index.Search(ctx, query.Text, 20) // Get more candidates
-		if err == nil {
-			for _, result := range indexResults {
-				if node, exists := kg.nodes[result.NodeID]; exists {
-					startNodes = append(startNodes, node)
+		if err := kg.addTextCandidates(ctx, query.Text, candidateMap); err != nil {
+			// Log error but continue - don't fail the entire query for text search issues
+		}
+	}
+	
+	// Collect type-based candidates (OR semantics, not AND)
+	if query.NodeTypes != nil {
+		kg.addTypeCandidates(query.NodeTypes, candidateMap)
+	}
+	
+	// Convert candidates to slice and apply additional filters
+	var startNodes []*KnowledgeNode
+	for _, candidate := range candidateMap {
+		node := candidate.node
+		
+		// Apply confidence filter
+		if node.Confidence < query.MinConfidence {
+			continue
+		}
+		
+		// Apply time range filter
+		if !query.TimeRange.IsZero() && node.CreatedAt.Before(query.TimeRange) {
+			continue
+		}
+		
+		startNodes = append(startNodes, node)
+	}
+	
+	// If no candidates found, apply progressive fallback strategy
+	if len(startNodes) == 0 {
+		startNodes = kg.applyFallbackStrategy(ctx, query)
+	}
+	
+	return startNodes, nil
+}
+
+// candidateNode tracks potential starting nodes with metadata for ranking
+type candidateNode struct {
+	node       *KnowledgeNode
+	textScore  float64
+	typeMatch  bool
+	source     string // "text", "type", "fallback"
+}
+
+// addTextCandidates adds nodes that match text criteria
+func (kg *KnowledgeGraph) addTextCandidates(ctx context.Context, text string, candidates map[string]*candidateNode) error {
+	indexResults, err := kg.index.Search(ctx, text, 50) // Increased limit for better recall
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "text search failed").
+			WithComponent("corpus.graph").
+			WithOperation("addTextCandidates")
+	}
+	
+	for _, result := range indexResults {
+		if node, exists := kg.nodes[result.NodeID]; exists {
+			if existing, found := candidates[result.NodeID]; found {
+				// Update existing candidate with better text score
+				if result.Score > existing.textScore {
+					existing.textScore = result.Score
+				}
+			} else {
+				candidates[result.NodeID] = &candidateNode{
+					node:      node,
+					textScore: result.Score,
+					typeMatch: false,
+					source:    "text",
 				}
 			}
 		}
 	}
-
-	// Filter by node types if specified
-	if query.NodeTypes != nil {
-		var filteredNodes []*KnowledgeNode
-		for _, node := range startNodes {
-			if kg.containsNodeType(query.NodeTypes, node.Type) {
-				filteredNodes = append(filteredNodes, node)
-			}
-		}
-		startNodes = filteredNodes
-	}
-
-	// If no text query, use type-based starting points
-	if query.Text == "" && query.NodeTypes != nil {
-		for _, node := range kg.nodes {
-			if kg.containsNodeType(query.NodeTypes, node.Type) {
-				startNodes = append(startNodes, node)
-			}
-		}
-	}
-
-	// Fallback: use high-confidence nodes
-	if len(startNodes) == 0 {
-		for _, node := range kg.nodes {
-			if node.Confidence >= 0.8 {
-				startNodes = append(startNodes, node)
-			}
-		}
-	}
-
-	return startNodes, nil
+	
+	return nil
 }
 
-// matchesQuery checks if a node matches the query criteria
-func (kg *KnowledgeGraph) matchesQuery(node *KnowledgeNode, query GraphQuery) bool {
-	// Type filter
-	if query.NodeTypes != nil && !kg.containsNodeType(query.NodeTypes, node.Type) {
-		return false
+// addTypeCandidates adds nodes that match type criteria
+func (kg *KnowledgeGraph) addTypeCandidates(nodeTypes []NodeType, candidates map[string]*candidateNode) {
+	for _, node := range kg.nodes {
+		if kg.containsNodeType(nodeTypes, node.Type) {
+			if existing, found := candidates[node.ID]; found {
+				// Mark existing candidate as also matching type
+				existing.typeMatch = true
+			} else {
+				candidates[node.ID] = &candidateNode{
+					node:      node,
+					textScore: 0.0,
+					typeMatch: true,
+					source:    "type",
+				}
+			}
+		}
 	}
+}
 
-	// Confidence filter
+// applyFallbackStrategy implements progressive fallback when no candidates found
+func (kg *KnowledgeGraph) applyFallbackStrategy(ctx context.Context, query GraphQuery) []*KnowledgeNode {
+	var fallbackNodes []*KnowledgeNode
+	
+	// Strategy 1: High-confidence nodes
+	if len(fallbackNodes) == 0 {
+		for _, node := range kg.nodes {
+			if node.Confidence >= 0.8 {
+				fallbackNodes = append(fallbackNodes, node)
+			}
+		}
+	}
+	
+	// Strategy 2: Any nodes matching partial criteria (relaxed confidence)
+	if len(fallbackNodes) == 0 && query.NodeTypes != nil {
+		for _, node := range kg.nodes {
+			if kg.containsNodeType(query.NodeTypes, node.Type) && node.Confidence >= 0.5 {
+				fallbackNodes = append(fallbackNodes, node)
+			}
+		}
+	}
+	
+	// Strategy 3: Recent nodes (last resort)
+	if len(fallbackNodes) == 0 {
+		cutoff := time.Now().Add(-24 * time.Hour)
+		for _, node := range kg.nodes {
+			if node.CreatedAt.After(cutoff) {
+				fallbackNodes = append(fallbackNodes, node)
+			}
+		}
+	}
+	
+	return fallbackNodes
+}
+
+// matchesQuery checks if a node matches the query criteria using OR semantics for primary filters
+func (kg *KnowledgeGraph) matchesQuery(node *KnowledgeNode, query GraphQuery) bool {
+	// Always apply confidence and time range filters (these are constraints, not search criteria)
 	if node.Confidence < query.MinConfidence {
 		return false
 	}
 
-	// Text filter (if specified)
-	if query.Text != "" {
-		contentLower := strings.ToLower(node.Content)
-		textLower := strings.ToLower(query.Text)
-		if !strings.Contains(contentLower, textLower) {
-			return false
-		}
-	}
-
-	// Time range filter
 	if !query.TimeRange.IsZero() && node.CreatedAt.Before(query.TimeRange) {
 		return false
 	}
 
+	// Use OR semantics for text and type filters when both are specified
+	hasTextFilter := query.Text != ""
+	hasTypeFilter := query.NodeTypes != nil
+	
+	if hasTextFilter && hasTypeFilter {
+		// OR logic: match if either text OR type matches
+		textMatches := false
+		typeMatches := kg.containsNodeType(query.NodeTypes, node.Type)
+		
+		if hasTextFilter {
+			contentLower := strings.ToLower(node.Content)
+			// Split query text into words and check if any word matches (more flexible than full string match)
+			queryWords := strings.Fields(strings.ToLower(query.Text))
+			for _, word := range queryWords {
+				if strings.Contains(contentLower, word) {
+					textMatches = true
+					break
+				}
+			}
+		}
+		
+		return textMatches || typeMatches
+	} else if hasTypeFilter {
+		// Type filter only
+		return kg.containsNodeType(query.NodeTypes, node.Type)
+	} else if hasTextFilter {
+		// Text filter only
+		contentLower := strings.ToLower(node.Content)
+		queryWords := strings.Fields(strings.ToLower(query.Text))
+		for _, word := range queryWords {
+			if strings.Contains(contentLower, word) {
+				return true
+			}
+		}
+		return false
+	}
+
+	// No text or type filters specified
 	return true
 }
 
@@ -424,7 +551,11 @@ func (kg *KnowledgeGraph) buildNodeProperties(knowledge extraction.ExtractedKnow
 	}
 
 	// Add knowledge-specific properties
-	properties["source_type"] = knowledge.Source.Type
+	sourceType := knowledge.Source.Type
+	if sourceType == "" {
+		sourceType = "unknown" // Graceful fallback for missing source
+	}
+	properties["source_type"] = sourceType
 	properties["entity_count"] = len(knowledge.Entities)
 	properties["relation_count"] = len(knowledge.Relations)
 	properties["confidence"] = knowledge.Confidence

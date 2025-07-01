@@ -97,7 +97,7 @@ func NewCorpusVectorStore(config VectorStoreConfig) (*CorpusVectorStore, error) 
 	if config.ChunkSize <= 0 {
 		config.ChunkSize = DefaultChunkSize
 	}
-	if config.ChunkOverlap < 0 {
+	if config.ChunkOverlap <= 0 {
 		config.ChunkOverlap = DefaultChunkOverlap
 	}
 	if config.ChunkOverlap >= config.ChunkSize {
@@ -225,8 +225,37 @@ func (vs *CorpusVectorStore) SearchDocuments(ctx context.Context, query string, 
 		limit = 10
 	}
 
-	// Search in the corpus collection
-	matches, err := vs.store.QueryCollection(ctx, vs.collectionName, query, limit*2) // Get more to deduplicate
+	// Search in the corpus collection with adaptive limit
+	// Try with limit*2 first for better deduplication, then fall back to smaller limits
+	var matches []vector.EmbeddingMatch
+	var err error
+	
+	searchLimits := []int{limit * 2, limit, max(limit/2, 1)}
+	for _, searchLimit := range searchLimits {
+		matches, err = vs.store.QueryCollection(ctx, vs.collectionName, query, searchLimit)
+		if err == nil {
+			break
+		}
+		// Check if this is the specific "nResults must be <= the number of documents" error
+		if !strings.Contains(err.Error(), "nResults must be") {
+			// This is a different error, don't retry
+			break
+		}
+	}
+	
+	// If all attempts failed due to limit being too high, try with progressively smaller limits
+	if err != nil && strings.Contains(err.Error(), "nResults must be") {
+		for tryLimit := max(limit/2, 1); tryLimit >= 1; tryLimit-- {
+			matches, err = vs.store.QueryCollection(ctx, vs.collectionName, query, tryLimit)
+			if err == nil {
+				break
+			}
+			if !strings.Contains(err.Error(), "nResults must be") {
+				break
+			}
+		}
+	}
+	
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to query vector store").
 			WithComponent("corpus.vector").
@@ -729,6 +758,13 @@ func (vs *CorpusVectorStore) createChunkMetadata(doc *ScannedDocument, chunkInde
 }
 
 // Helper functions
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
 
 func getStringFromMetadata(metadata map[string]interface{}, key string) string {
 	if val, ok := metadata[key].(string); ok {

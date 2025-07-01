@@ -46,13 +46,13 @@ type SearchResult struct {
 
 // SearchFilters contains filtering options for search
 type SearchFilters struct {
-	Types            []string    `json:"types,omitempty"`
-	Tags             []string    `json:"tags,omitempty"`
-	Sources          []string    `json:"sources,omitempty"`
-	MinScore         float64     `json:"min_score,omitempty"`
-	DateRange        *DateRange  `json:"date_range,omitempty"`
-	InCurrentProject bool        `json:"in_current_project,omitempty"`
-	Author           string      `json:"author,omitempty"`
+	Types            []string   `json:"types,omitempty"`
+	Tags             []string   `json:"tags,omitempty"`
+	Sources          []string   `json:"sources,omitempty"`
+	MinScore         float64    `json:"min_score,omitempty"`
+	DateRange        *DateRange `json:"date_range,omitempty"`
+	InCurrentProject bool       `json:"in_current_project,omitempty"`
+	Author           string     `json:"author,omitempty"`
 }
 
 // DateRange represents a time range filter
@@ -69,23 +69,23 @@ type SearchMsg struct {
 
 // SearchResultsMsg represents search results
 type SearchResultsMsg struct {
-	Query     string
-	Results   []SearchResult
-	Total     int
-	Duration  time.Duration
-	Error     error
+	Query    string
+	Results  []SearchResult
+	Total    int
+	Duration time.Duration
+	Error    error
 }
 
 // NewSearchInterface creates a new search interface
 func NewSearchInterface(ctx context.Context) *SearchInterface {
 	ctx = observability.WithComponent(ctx, "search_interface")
-	
+
 	return &SearchInterface{
-		ctx:       ctx,
-		selected:  0,
-		filters:   SearchFilters{MinScore: 0.5},
-		width:     80,
-		height:    24,
+		ctx:      ctx,
+		selected: 0,
+		filters:  SearchFilters{MinScore: 0.5},
+		width:    80,
+		height:   24,
 	}
 }
 
@@ -125,25 +125,25 @@ func (si *SearchInterface) GetFilters() SearchFilters {
 // View renders the search interface
 func (si *SearchInterface) View() string {
 	_ = observability.WithOperation(si.ctx, "View")
-	
+
 	var b strings.Builder
-	
+
 	// Header
 	b.WriteString(si.renderHeader())
 	b.WriteString("\n")
-	
+
 	// Search box
 	searchBox := si.renderSearchBox()
 	b.WriteString(searchBox)
 	b.WriteString("\n\n")
-	
+
 	// Active filters
 	if si.hasActiveFilters() {
 		filters := si.renderActiveFilters()
 		b.WriteString(filters)
 		b.WriteString("\n\n")
 	}
-	
+
 	// Results
 	if len(si.results) > 0 {
 		results := si.renderResults()
@@ -153,19 +153,19 @@ func (si *SearchInterface) View() string {
 	} else {
 		b.WriteString(si.renderWelcome())
 	}
-	
+
 	// Footer help
 	b.WriteString("\n")
 	help := si.renderHelp()
 	b.WriteString(help)
-	
+
 	return b.String()
 }
 
 // Update handles input events
 func (si *SearchInterface) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	ctx := observability.WithOperation(si.ctx, "Update")
-	
+
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		return si.handleKeyMsg(ctx, msg)
@@ -174,7 +174,7 @@ func (si *SearchInterface) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		si.SetSize(msg.Width, msg.Height)
 	}
-	
+
 	return si, nil
 }
 
@@ -188,35 +188,35 @@ func (si *SearchInterface) handleKeyMsg(ctx context.Context, msg tea.KeyMsg) (te
 	if si.inputMode {
 		return si.handleInputMode(ctx, msg)
 	}
-	
+
 	switch msg.String() {
 	case "q", "esc":
 		return si, tea.Quit
-		
+
 	case "enter", "/":
 		si.inputMode = true
 		return si, nil
-		
+
 	case "j", "down":
 		si.moveSelection(1)
-		
+
 	case "k", "up":
 		si.moveSelection(-1)
-		
+
 	case "space", "tab":
 		si.toggleDetails()
-		
+
 	case "f":
 		return si, si.showFilterHelp()
-		
+
 	case "c":
 		si.clearFilters()
-		
+
 	case "r":
 		if si.query != "" {
 			return si, si.performSearch()
 		}
-		
+
 	case "1", "2", "3", "4", "5", "6", "7", "8", "9":
 		idx, _ := strconv.Atoi(msg.String())
 		if idx > 0 && idx <= len(si.results) {
@@ -224,7 +224,7 @@ func (si *SearchInterface) handleKeyMsg(ctx context.Context, msg tea.KeyMsg) (te
 			si.showDetails = true
 		}
 	}
-	
+
 	return si, nil
 }
 
@@ -236,22 +236,22 @@ func (si *SearchInterface) handleInputMode(ctx context.Context, msg tea.KeyMsg) 
 		if si.query != "" {
 			return si, si.performSearch()
 		}
-		
+
 	case "esc":
 		si.inputMode = false
-		
+
 	case "backspace":
 		if len(si.query) > 0 {
 			si.query = si.query[:len(si.query)-1]
 		}
-		
+
 	default:
 		// Add character to query
 		if len(msg.String()) == 1 {
 			si.query += msg.String()
 		}
 	}
-	
+
 	return si, nil
 }
 
@@ -261,7 +261,7 @@ func (si *SearchInterface) handleSearchResults(ctx context.Context, msg SearchRe
 		// Handle error - could show an error message
 		return si, nil
 	}
-	
+
 	si.SetResults(msg.Results)
 	return si, nil
 }
@@ -271,7 +271,7 @@ func (si *SearchInterface) moveSelection(delta int) {
 	if len(si.results) == 0 {
 		return
 	}
-	
+
 	si.selected += delta
 	if si.selected < 0 {
 		si.selected = len(si.results) - 1
@@ -320,12 +320,12 @@ func (si *SearchInterface) renderHeader() string {
 		Bold(true).
 		Foreground(lipgloss.Color("69")).
 		Padding(0, 1)
-	
+
 	title := "🔍 Guild Corpus Search"
 	if len(si.results) > 0 {
 		title += fmt.Sprintf(" (%d results)", len(si.results))
 	}
-	
+
 	return style.Render(title)
 }
 
@@ -336,72 +336,72 @@ func (si *SearchInterface) renderSearchBox() string {
 		BorderForeground(lipgloss.Color("240")).
 		Padding(0, 1).
 		Width(si.width - 4)
-	
+
 	if si.inputMode {
 		style = style.BorderForeground(lipgloss.Color("69"))
 	}
-	
+
 	query := si.query
 	if si.inputMode {
 		query += "█" // Cursor
 	}
-	
+
 	if query == "" {
 		query = "Type to search corpus..."
 		style = style.Foreground(lipgloss.Color("240"))
 	}
-	
+
 	return style.Render("Search: " + query)
 }
 
 // renderActiveFilters renders active search filters
 func (si *SearchInterface) renderActiveFilters() string {
 	var filters []string
-	
+
 	if len(si.filters.Types) > 0 {
 		filters = append(filters, fmt.Sprintf("types:%s", strings.Join(si.filters.Types, ",")))
 	}
-	
+
 	if len(si.filters.Tags) > 0 {
 		filters = append(filters, fmt.Sprintf("tags:%s", strings.Join(si.filters.Tags, ",")))
 	}
-	
+
 	if len(si.filters.Sources) > 0 {
 		filters = append(filters, fmt.Sprintf("sources:%s", strings.Join(si.filters.Sources, ",")))
 	}
-	
+
 	if si.filters.MinScore > 0.5 {
 		filters = append(filters, fmt.Sprintf("score:>%.1f", si.filters.MinScore))
 	}
-	
+
 	if si.filters.Author != "" {
 		filters = append(filters, fmt.Sprintf("author:%s", si.filters.Author))
 	}
-	
+
 	if si.filters.InCurrentProject {
 		filters = append(filters, "scope:current-project")
 	}
-	
+
 	if len(filters) == 0 {
 		return ""
 	}
-	
+
 	style := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("243")).
 		Italic(true)
-	
+
 	return style.Render("Active filters: " + strings.Join(filters, " | "))
 }
 
 // renderResults renders the search results
 func (si *SearchInterface) renderResults() string {
 	var b strings.Builder
-	
+
 	b.WriteString(fmt.Sprintf("Found %d results:\n\n", len(si.results)))
-	
+
 	visibleStart := 0
 	visibleEnd := len(si.results)
-	
+
 	// Implement pagination if needed
 	maxVisible := si.height - 10 // Reserve space for header/footer
 	if maxVisible > 0 && len(si.results) > maxVisible {
@@ -420,30 +420,30 @@ func (si *SearchInterface) renderResults() string {
 			}
 		}
 	}
-	
+
 	for i := visibleStart; i < visibleEnd; i++ {
 		result := si.results[i]
 		selected := i == si.selected
-		
+
 		// Result card
 		card := si.renderResultCard(result, selected, i+1)
 		b.WriteString(card)
-		
+
 		// Show details if selected and expanded
 		if selected && si.showDetails {
 			details := si.renderResultDetails(result)
 			b.WriteString(details)
 		}
-		
+
 		b.WriteString("\n")
 	}
-	
+
 	// Show pagination info if needed
 	if visibleEnd < len(si.results) {
 		remaining := len(si.results) - visibleEnd
 		b.WriteString(fmt.Sprintf("... and %d more results\n", remaining))
 	}
-	
+
 	return b.String()
 }
 
@@ -453,18 +453,18 @@ func (si *SearchInterface) renderResultCard(result SearchResult, selected bool, 
 		Border(lipgloss.RoundedBorder()).
 		Padding(0, 1).
 		Width(si.width - 6)
-	
+
 	if selected {
 		style = style.BorderForeground(lipgloss.Color("69"))
 	} else {
 		style = style.BorderForeground(lipgloss.Color("240"))
 	}
-	
+
 	// Build content
 	var content strings.Builder
-	
+
 	// Index and title with score
-	title := fmt.Sprintf("%d. %s (%.0f%%)", 
+	title := fmt.Sprintf("%d. %s (%.0f%%)",
 		index, result.Title, result.Score*100)
 	titleStyle := lipgloss.NewStyle().Bold(true)
 	if selected {
@@ -472,7 +472,7 @@ func (si *SearchInterface) renderResultCard(result SearchResult, selected bool, 
 	}
 	content.WriteString(titleStyle.Render(title))
 	content.WriteString("\n")
-	
+
 	// Preview
 	preview := si.truncate(result.Preview, 80)
 	if result.Highlighted != "" {
@@ -480,20 +480,21 @@ func (si *SearchInterface) renderResultCard(result SearchResult, selected bool, 
 	}
 	content.WriteString(preview)
 	content.WriteString("\n")
-	
-	// Metadata line
-	meta := fmt.Sprintf("📁 %s · %s · %s",
+
+	// Metadata line - include path for better visibility
+	meta := fmt.Sprintf("📁 %s · %s · %s · %s",
 		result.Type,
 		result.Source,
-		si.formatTime(result.UpdatedAt))
-	
+		si.formatTime(result.UpdatedAt),
+		result.Path)
+
 	if len(result.Tags) > 0 {
 		meta += fmt.Sprintf(" · `%s`", strings.Join(result.Tags, "` `"))
 	}
-	
+
 	metaStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("241"))
 	content.WriteString(metaStyle.Render(meta))
-	
+
 	return style.Render(content.String())
 }
 
@@ -505,23 +506,23 @@ func (si *SearchInterface) renderResultDetails(result SearchResult) string {
 		Padding(1).
 		Width(si.width - 6).
 		MarginLeft(2)
-	
+
 	var content strings.Builder
-	
+
 	content.WriteString("📄 **Full Details**\n\n")
-	
+
 	// Path and metadata
 	content.WriteString(fmt.Sprintf("**Path:** %s\n", result.Path))
 	content.WriteString(fmt.Sprintf("**Updated:** %s\n", result.UpdatedAt.Format("January 2, 2006 at 15:04")))
 	content.WriteString(fmt.Sprintf("**Score:** %.2f (%.0f%%)\n\n", result.Score, result.Score*100))
-	
-	// Extended preview
-	if len(result.Preview) > 80 {
+
+	// Extended preview - always show if we have a preview
+	if result.Preview != "" {
 		content.WriteString("**Extended Preview:**\n")
 		content.WriteString(result.Preview)
 		content.WriteString("\n\n")
 	}
-	
+
 	// Metadata
 	if len(result.Metadata) > 0 {
 		content.WriteString("**Metadata:**\n")
@@ -530,9 +531,9 @@ func (si *SearchInterface) renderResultDetails(result SearchResult) string {
 		}
 		content.WriteString("\n")
 	}
-	
+
 	content.WriteString("_Press [space] to collapse details_")
-	
+
 	return style.Render(content.String())
 }
 
@@ -542,7 +543,7 @@ func (si *SearchInterface) renderNoResults() string {
 		Foreground(lipgloss.Color("243")).
 		Italic(true).
 		Padding(1)
-	
+
 	content := `No results found for your search.
 
 **Suggestions:**
@@ -556,7 +557,7 @@ func (si *SearchInterface) renderNoResults() string {
 • [c] Clear filters
 • [f] Configure filters  
 • [/] New search`
-	
+
 	return style.Render(content)
 }
 
@@ -565,7 +566,7 @@ func (si *SearchInterface) renderWelcome() string {
 	style := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("69")).
 		Padding(1)
-	
+
 	content := `Welcome to Guild Corpus Search!
 
 **Getting Started:**
@@ -585,14 +586,14 @@ func (si *SearchInterface) renderWelcome() string {
 • "JWT token validation"  
 • "repository pattern"
 • "testing strategies"`
-	
+
 	return style.Render(content)
 }
 
 // renderHelp renders the help footer
 func (si *SearchInterface) renderHelp() string {
 	var helpItems []string
-	
+
 	if si.inputMode {
 		helpItems = []string{
 			"[enter] Search",
@@ -610,11 +611,11 @@ func (si *SearchInterface) renderHelp() string {
 			"[q] Quit",
 		}
 	}
-	
+
 	style := lipgloss.NewStyle().
 		Foreground(lipgloss.Color("241")).
 		Italic(true)
-	
+
 	return style.Render(strings.Join(helpItems, " | "))
 }
 
@@ -636,32 +637,32 @@ func (si *SearchInterface) truncate(text string, maxLength int) string {
 	if len(text) <= maxLength {
 		return text
 	}
-	
+
 	// Find last space before cutoff
 	cutoff := maxLength - 3
 	for cutoff > 0 && text[cutoff] != ' ' {
 		cutoff--
 	}
-	
+
 	if cutoff == 0 {
 		cutoff = maxLength - 3
 	}
-	
+
 	return text[:cutoff] + "..."
 }
 
 // formatTime formats a time for display
 func (si *SearchInterface) formatTime(t time.Time) string {
 	now := time.Now()
-	
+
 	if t.Year() != now.Year() {
 		return t.Format("Jan 2, 2006")
 	}
-	
+
 	if t.YearDay() != now.YearDay() {
 		return t.Format("Jan 2")
 	}
-	
+
 	return t.Format("15:04")
 }
 
@@ -678,7 +679,7 @@ func (si *SearchInterface) SetInputMode(inputMode bool) {
 	si.inputMode = inputMode
 }
 
-// IsInputMode returns whether the interface is in input mode  
+// IsInputMode returns whether the interface is in input mode
 func (si *SearchInterface) IsInputMode() bool {
 	return si.inputMode
 }
@@ -686,7 +687,7 @@ func (si *SearchInterface) IsInputMode() bool {
 // AddFilter adds a filter to the current filters
 func (si *SearchInterface) AddFilter(filterType, value string) error {
 	_ = observability.WithOperation(si.ctx, "AddFilter")
-	
+
 	switch filterType {
 	case "type":
 		if !contains(si.filters.Types, value) {
@@ -720,7 +721,7 @@ func (si *SearchInterface) AddFilter(filterType, value string) error {
 			WithOperation("AddFilter").
 			WithDetails("filter_type", filterType)
 	}
-	
+
 	return nil
 }
 

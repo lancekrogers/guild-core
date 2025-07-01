@@ -93,6 +93,11 @@ func (m *MockAuditEnricher) AddComplianceTags(ctx context.Context, entry AuditEn
 	return args.Get(0).([]string), args.Error(1)
 }
 
+// Test constants
+const (
+	testAgentID = "agent1"
+)
+
 // Test helper functions
 
 func setupMockStorage() *MockAuditStorage {
@@ -118,7 +123,8 @@ func TestCraftGuildAuditLogger_NewGuildAuditLogger(t *testing.T) {
 	assert.Equal(t, config.QueueSize, cap(logger.processQueue))
 
 	// Clean up
-	logger.Close()
+	err = logger.Close()
+	assert.NoError(t, err)
 }
 
 func TestGuildGuildAuditLogger_NewGuildAuditLogger_NilStorage(t *testing.T) {
@@ -139,16 +145,19 @@ func TestJourneymanGuildAuditLogger_LogEntry_Success(t *testing.T) {
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
 	require.NoError(t, err)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		assert.NoError(t, err)
+	}()
 
 	// Set up mock expectations
 	mockStorage.On("Store", mock.Anything, mock.MatchedBy(func(entry AuditEntry) bool {
-		return entry.AgentID == "agent1" && entry.Resource == "file:/test" && entry.Action == "read"
+		return entry.AgentID == testAgentID && entry.Resource == "file:/test" && entry.Action == "read"
 	})).Return(nil)
 
 	// Log entry
 	entry := AuditEntry{
-		AgentID:   "agent1",
+		AgentID:   testAgentID,
 		Resource:  "file:/test",
 		Action:    "read",
 		Result:    ResultAllowed,
@@ -174,7 +183,10 @@ func TestCraftGuildAuditLogger_LogEntry_WithEnricher(t *testing.T) {
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
 	require.NoError(t, err)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		assert.NoError(t, err)
+	}()
 
 	// Set up enricher expectations
 	enrichedEntry := AuditEntry{
@@ -188,7 +200,7 @@ func TestCraftGuildAuditLogger_LogEntry_WithEnricher(t *testing.T) {
 	}
 
 	mockEnricher.On("Enrich", mock.Anything, mock.MatchedBy(func(entry AuditEntry) bool {
-		return entry.AgentID == "agent1"
+		return entry.AgentID == testAgentID
 	})).Return(enrichedEntry, nil)
 
 	mockStorage.On("Store", mock.Anything, mock.MatchedBy(func(entry AuditEntry) bool {
@@ -197,7 +209,7 @@ func TestCraftGuildAuditLogger_LogEntry_WithEnricher(t *testing.T) {
 
 	// Log entry
 	entry := AuditEntry{
-		AgentID:   "agent1",
+		AgentID:   testAgentID,
 		Resource:  "file:/test",
 		Action:    "read",
 		Result:    ResultAllowed,
@@ -224,17 +236,20 @@ func TestGuildGuildAuditLogger_LogEntry_WithStreamer(t *testing.T) {
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
 	require.NoError(t, err)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		assert.NoError(t, err)
+	}()
 
 	// Set up expectations
 	mockStorage.On("Store", mock.Anything, mock.Anything).Return(nil)
 	mockStreamer.On("Stream", mock.Anything, mock.MatchedBy(func(entry AuditEntry) bool {
-		return entry.AgentID == "agent1"
+		return entry.AgentID == testAgentID
 	})).Return(nil)
 
 	// Log entry
 	entry := AuditEntry{
-		AgentID:   "agent1",
+		AgentID:   testAgentID,
 		Resource:  "file:/test",
 		Action:    "read",
 		Result:    ResultAllowed,
@@ -257,7 +272,10 @@ func TestJourneymanGuildAuditLogger_LogEntry_Validation(t *testing.T) {
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
 	require.NoError(t, err)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		assert.NoError(t, err)
+	}()
 
 	tests := []struct {
 		name    string
@@ -323,13 +341,16 @@ func TestJourneymanGuildAuditLogger_LogEntry_Validation(t *testing.T) {
 func TestCraftGuildAuditLogger_Query(t *testing.T) {
 	ctx := context.Background()
 	mockStorage := setupMockStorage()
-	
+
 	config := DefaultAuditConfig()
 	config.QueueSize = 0 // Force synchronous processing
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
 	require.NoError(t, err)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		assert.NoError(t, err)
+	}()
 
 	expectedEntries := []AuditEntry{
 		{ID: "1", AgentID: "agent1", Resource: "file:/test", Action: "read", Result: ResultAllowed},
@@ -359,7 +380,10 @@ func TestGuildGuildAuditLogger_Query_Limits(t *testing.T) {
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
 	require.NoError(t, err)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		assert.NoError(t, err)
+	}()
 
 	tests := []struct {
 		name        string
@@ -395,7 +419,10 @@ func TestJourneymanGuildAuditLogger_GetStats(t *testing.T) {
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
 	require.NoError(t, err)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		assert.NoError(t, err)
+	}()
 
 	// Update stats by logging some entries
 	logger.updateStats(func(stats *AuditStats) {
@@ -421,7 +448,10 @@ func TestCraftGuildAuditLogger_GenerateReport(t *testing.T) {
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
 	require.NoError(t, err)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		assert.NoError(t, err)
+	}()
 
 	// Mock audit entries for report generation
 	entries := []AuditEntry{
@@ -463,7 +493,10 @@ func TestGuildGuildAuditLogger_Archive(t *testing.T) {
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
 	require.NoError(t, err)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		assert.NoError(t, err)
+	}()
 
 	archiveTime := time.Now().Add(-90 * 24 * time.Hour)
 
@@ -492,13 +525,14 @@ func TestJourneymanGuildAuditLogger_Close(t *testing.T) {
 	mockStorage.On("Store", mock.Anything, mock.Anything).Return(nil).Maybe()
 
 	entry := AuditEntry{
-		AgentID:  "agent1",
+		AgentID:  testAgentID,
 		Resource: "file:/test",
 		Action:   "read",
 		Result:   ResultAllowed,
 	}
 
-	logger.LogEntry(ctx, entry)
+	err = logger.LogEntry(ctx, entry)
+	assert.NoError(t, err)
 
 	// Close should process remaining entries
 	err = logger.Close()
@@ -513,7 +547,10 @@ func TestCraftGuildAuditLogger_ViolationDetection(t *testing.T) {
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
 	require.NoError(t, err)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		assert.NoError(t, err)
+	}()
 
 	// Test high-risk violation detection
 	entries := []AuditEntry{
@@ -550,7 +587,10 @@ func TestGuildGuildAuditLogger_RecommendationGeneration(t *testing.T) {
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
 	require.NoError(t, err)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		assert.NoError(t, err)
+	}()
 
 	// Test with high denial rate
 	entries := make([]AuditEntry, 100)
@@ -588,7 +628,10 @@ func TestJourneymanGuildAuditLogger_ContextCancellation(t *testing.T) {
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
 	require.NoError(t, err)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		assert.NoError(t, err)
+	}()
 
 	// Create cancelled context
 	cancelledCtx, cancel := context.WithCancel(ctx)
@@ -629,13 +672,16 @@ func BenchmarkCraftGuildAuditLogger_LogEntry(b *testing.B) {
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
 	require.NoError(b, err)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		require.NoError(b, err)
+	}()
 
 	// Mock storage to avoid actual I/O
 	mockStorage.On("Store", mock.Anything, mock.Anything).Return(nil)
 
 	entry := AuditEntry{
-		AgentID:  "agent1",
+		AgentID:  testAgentID,
 		Resource: "file:/project/main.go",
 		Action:   "read",
 		Result:   ResultAllowed,
@@ -644,7 +690,10 @@ func BenchmarkCraftGuildAuditLogger_LogEntry(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		entry.ID = fmt.Sprintf("entry-%d", i)
-		logger.LogEntry(ctx, entry)
+		err := logger.LogEntry(ctx, entry)
+		if err != nil {
+			b.Fatalf("LogEntry failed: %v", err)
+		}
 	}
 }
 
@@ -655,7 +704,10 @@ func BenchmarkGuildGuildAuditLogger_GenerateReport(b *testing.B) {
 
 	logger, err := NewGuildAuditLogger(ctx, mockStorage, config)
 	require.NoError(b, err)
-	defer logger.Close()
+	defer func() {
+		err := logger.Close()
+		require.NoError(b, err)
+	}()
 
 	// Create sample entries for report generation
 	entries := make([]AuditEntry, 1000)
@@ -678,6 +730,9 @@ func BenchmarkGuildGuildAuditLogger_GenerateReport(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		logger.GenerateReport(ctx, period, ComplianceSOC2)
+		_, err := logger.GenerateReport(ctx, period, ComplianceSOC2)
+		if err != nil {
+			b.Fatalf("GenerateReport failed: %v", err)
+		}
 	}
 }
