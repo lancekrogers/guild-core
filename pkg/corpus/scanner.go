@@ -398,9 +398,12 @@ func (s *DocumentScanner) extractMarkdownMetadata(metadata *DocumentMetadata, co
 	}
 
 	// Count various elements
+	inCodeBlock := false
 	for _, line := range lines {
-		// Count headings
-		if strings.HasPrefix(line, "#") {
+		// Count headings (must have space after # to distinguish from hashtags)
+		if strings.HasPrefix(line, "# ") || strings.HasPrefix(line, "## ") || 
+		   strings.HasPrefix(line, "### ") || strings.HasPrefix(line, "#### ") ||
+		   strings.HasPrefix(line, "##### ") || strings.HasPrefix(line, "###### ") {
 			metadata.HeadingCount++
 		}
 
@@ -409,12 +412,18 @@ func (s *DocumentScanner) extractMarkdownMetadata(metadata *DocumentMetadata, co
 			metadata.TODOCount++
 		}
 
-		// Count code blocks
+		// Count code blocks (track opening/closing properly)
 		if strings.HasPrefix(line, "```") {
-			metadata.CodeBlockCount++
+			if !inCodeBlock {
+				// Opening a new code block
+				metadata.CodeBlockCount++
+				inCodeBlock = true
+			} else {
+				// Closing a code block
+				inCodeBlock = false
+			}
 		}
 	}
-	metadata.CodeBlockCount /= 2 // Each code block has opening and closing ```
 
 	// Count links
 	metadata.LinkCount = len(ExtractLinks(text))
@@ -428,11 +437,9 @@ func (s *DocumentScanner) extractMarkdownMetadata(metadata *DocumentMetadata, co
 			var frontmatter map[string]interface{}
 			yamlContent := text[4 : endIdx+4]
 			if err := yaml.Unmarshal([]byte(yamlContent), &frontmatter); err == nil {
-				// Extract title from frontmatter if not found
-				if metadata.Title == "" {
-					if title, ok := frontmatter["title"].(string); ok {
-						metadata.Title = title
-					}
+				// Extract title from frontmatter (overrides heading title)
+				if title, ok := frontmatter["title"].(string); ok {
+					metadata.Title = title
 				}
 				// Extract description
 				if desc, ok := frontmatter["description"].(string); ok {

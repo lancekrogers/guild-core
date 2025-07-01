@@ -128,7 +128,7 @@ func (tfc *TechnicalFactChecker) Check(ctx context.Context, knowledge extraction
 
 	content := strings.ToLower(knowledge.Content)
 
-	// Check for common technical inaccuracies
+	// Check for common technical inaccuracies and unrealistic claims
 	inaccuracies := []struct {
 		pattern string
 		message string
@@ -139,6 +139,8 @@ func (tfc *TechnicalFactChecker) Check(ctx context.Context, knowledge extraction
 		{"zero overhead", "Claims of zero performance impact are usually incorrect"},
 		{"infinitely scalable", "Infinite scalability claims are technically impossible"},
 		{"no bugs", "Claims of bug-free software are unrealistic"},
+		{"this solution always works", "Absolute technical claims are unrealistic"},
+		{"never fails", "Claims of infallibility are unrealistic"},
 	}
 
 	for _, check := range inaccuracies {
@@ -164,7 +166,8 @@ func (tfc *TechnicalFactChecker) Check(ctx context.Context, knowledge extraction
 	}
 
 	if vagueCount > 2 {
-		result.Confidence = 0.7
+		result.Verified = false
+		result.Confidence = 0.4
 		result.Explanation = "Contains multiple vague or absolute technical claims"
 	}
 
@@ -256,8 +259,8 @@ func (sc *SyntaxChecker) Check(ctx context.Context, knowledge extraction.Extract
 		// Basic syntax validation
 		if sc.hasBasicSyntaxErrors(block) {
 			result.Verified = false
-			result.Confidence = 0.5
-			result.Explanation = "Code examples may contain syntax errors"
+			result.Confidence = 0.3
+			result.Explanation = "Code examples contain syntax errors"
 			return result
 		}
 	}
@@ -282,26 +285,29 @@ func (sc *SyntaxChecker) Check(ctx context.Context, knowledge extraction.Extract
 }
 
 func (sc *SyntaxChecker) hasBasicSyntaxErrors(codeBlock string) bool {
-	// Very basic syntax checking
-	lines := strings.Split(codeBlock, "\n")
+	// Check for obvious syntax errors like incomplete function declarations
+	content := strings.ToLower(codeBlock)
 	
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if line == "" || strings.HasPrefix(line, "//") {
-			continue
-		}
-
-		// Check for unmatched brackets (very basic)
-		openBrackets := strings.Count(line, "{") + strings.Count(line, "(") + strings.Count(line, "[")
-		closeBrackets := strings.Count(line, "}") + strings.Count(line, ")") + strings.Count(line, "]")
-		
-		// If line has significant bracket imbalance, it might be incomplete
-		if absInt(openBrackets-closeBrackets) > 2 {
+	// Look for common syntax error patterns
+	errorPatterns := []string{
+		"func( {",     // Missing function name and parameters
+		"func() {",    // Missing function name
+		"return\n}",  // Missing return value
+		"}\n```",     // Incomplete code block
+	}
+	
+	for _, pattern := range errorPatterns {
+		if strings.Contains(content, pattern) {
 			return true
 		}
 	}
-
-	return false
+	
+	// Check for unbalanced brackets across the entire block
+	openBrackets := strings.Count(codeBlock, "{") + strings.Count(codeBlock, "(") + strings.Count(codeBlock, "[")
+	closeBrackets := strings.Count(codeBlock, "}") + strings.Count(codeBlock, ")") + strings.Count(codeBlock, "]")
+	
+	// Significant imbalance suggests syntax errors
+	return absInt(openBrackets-closeBrackets) > 1
 }
 
 func absInt(x int) int {

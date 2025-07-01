@@ -20,6 +20,7 @@ type KnowledgeValidator struct {
 	conflictDetector *ConflictDetector
 	factChecker     *FactChecker
 	knowledgeGraph  *graph.KnowledgeGraph
+	stats           *ValidationStats
 }
 
 // NewKnowledgeValidator creates a new knowledge validator with default rules
@@ -32,6 +33,9 @@ func NewKnowledgeValidator(ctx context.Context, knowledgeGraph *graph.KnowledgeG
 
 	validator := &KnowledgeValidator{
 		knowledgeGraph: knowledgeGraph,
+		stats: &ValidationStats{
+			CommonIssues: make(map[string]int),
+		},
 	}
 
 	// Initialize validation rules
@@ -81,6 +85,10 @@ func (kv *KnowledgeValidator) Validate(ctx context.Context, knowledge extraction
 		ValidatedAt: time.Now(),
 	}
 
+	// Update statistics
+	kv.stats.TotalValidated++
+	kv.stats.LastValidated = time.Now()
+
 	// Apply all validation rules
 	for _, rule := range kv.rules {
 		if ctx.Err() != nil {
@@ -114,11 +122,12 @@ func (kv *KnowledgeValidator) Validate(ctx context.Context, knowledge extraction
 		}
 	}
 
-	// Fact checking for high-confidence items
-	if knowledge.Confidence > 0.8 {
+	// Fact checking for all items with sufficient confidence
+	if knowledge.Confidence > 0.5 {
 		factResult, err := kv.factChecker.Check(ctx, knowledge)
 		if err == nil && !factResult.Verified {
-			result.Confidence *= 0.7
+			result.Valid = false
+			result.Confidence *= 0.3
 			result.Suggestions = append(result.Suggestions, 
 				"Consider manual verification due to fact-checking concerns")
 			
@@ -126,7 +135,7 @@ func (kv *KnowledgeValidator) Validate(ctx context.Context, knowledge extraction
 				result.Issues = append(result.Issues, ValidationIssue{
 					Type:        "fact_check",
 					Description: factResult.Explanation,
-					Severity:    "warning",
+					Severity:    "error",
 				})
 			}
 		}
@@ -136,6 +145,21 @@ func (kv *KnowledgeValidator) Validate(ctx context.Context, knowledge extraction
 	if result.Confidence < 0.1 {
 		result.Confidence = 0.1
 	}
+
+	// Update final statistics
+	if result.Valid {
+		kv.stats.PassedValidation++
+	} else {
+		kv.stats.FailedValidation++
+		// Track common issues
+		for _, issue := range result.Issues {
+			kv.stats.CommonIssues[issue.Type]++
+		}
+	}
+
+	// Update average confidence
+	totalConfidenceSum := kv.stats.AverageConfidence * float64(kv.stats.TotalValidated-1)
+	kv.stats.AverageConfidence = (totalConfidenceSum + result.Confidence) / float64(kv.stats.TotalValidated)
 
 	return result, nil
 }
@@ -192,15 +216,20 @@ func (kv *KnowledgeValidator) GetValidationStats(ctx context.Context) (*Validati
 		return nil, ctx.Err()
 	}
 
-	// This would typically be persisted and tracked over time
-	// For now, return basic statistics
+	// Return current statistics
 	stats := &ValidationStats{
-		TotalValidated:   0,
-		PassedValidation: 0,
-		FailedValidation: 0,
-		AverageConfidence: 0.0,
-		CommonIssues:     make(map[string]int),
-		ValidationRules:  len(kv.rules),
+		TotalValidated:    kv.stats.TotalValidated,
+		PassedValidation:  kv.stats.PassedValidation,
+		FailedValidation:  kv.stats.FailedValidation,
+		AverageConfidence: kv.stats.AverageConfidence,
+		CommonIssues:      make(map[string]int),
+		ValidationRules:   len(kv.rules),
+		LastValidated:     kv.stats.LastValidated,
+	}
+
+	// Copy common issues to avoid sharing the map
+	for issueType, count := range kv.stats.CommonIssues {
+		stats.CommonIssues[issueType] = count
 	}
 
 	return stats, nil
@@ -214,7 +243,13 @@ type CompletenessRule struct{}
 func (cr *CompletenessRule) GetType() string { return "completeness" }
 
 func (cr *CompletenessRule) Validate(ctx context.Context, k extraction.ExtractedKnowledge) ValidationResult {
-	result := ValidationResult{Valid: true, Confidence: 1.0}
+	result := ValidationResult{
+		Valid:       true, 
+		Confidence:  1.0,
+		Issues:      []ValidationIssue{},
+		Suggestions: []string{},
+		ValidatedAt: time.Now(),
+	}
 
 	if k.Content == "" {
 		result.Valid = false

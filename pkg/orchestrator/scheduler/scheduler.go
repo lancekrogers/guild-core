@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/kanban"
 	"github.com/lancekrogers/guild/pkg/orchestrator/interfaces"
 )
 
@@ -78,13 +79,13 @@ type TaskResult struct {
 
 // TaskScheduler manages concurrent task execution with dependencies and resource allocation
 type TaskScheduler struct {
-	executors    map[string]interfaces.AgentExecutor
-	taskQueue    *PriorityQueue
-	runningTasks map[string]*RunningTask
-	dependencies *DependencyGraph
-	resources    *ResourceManager
-	progress     *ProgressAggregator
-	config       *SchedulerConfig
+	orchestrator  *AgentOrchestrator
+	kanbanClient  KanbanClient
+	taskQueue     *PriorityQueue
+	runningTasks  map[string]*RunningTask
+	dependencies  *DependencyGraph
+	progress      *ProgressAggregator
+	config        *SchedulerConfig
 	
 	// Progress tracking
 	progressChan chan ProgressUpdate
@@ -115,8 +116,8 @@ func DefaultSchedulerConfig() *SchedulerConfig {
 	}
 }
 
-// NewTaskScheduler creates a new task scheduler
-func NewTaskScheduler(ctx context.Context, config *SchedulerConfig) (*TaskScheduler, error) {
+// NewTaskScheduler creates a new task scheduler with agent orchestration
+func NewTaskScheduler(ctx context.Context, config *SchedulerConfig, managerAgent ManagerAgentClient, kanbanClient KanbanClient) (*TaskScheduler, error) {
 	if ctx.Err() != nil {
 		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("orchestrator.scheduler").
@@ -127,14 +128,42 @@ func NewTaskScheduler(ctx context.Context, config *SchedulerConfig) (*TaskSchedu
 		config = DefaultSchedulerConfig()
 	}
 
+	if managerAgent == nil {
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "managerAgent cannot be nil", nil).
+			WithComponent("orchestrator.scheduler").
+			WithOperation("NewTaskScheduler")
+	}
+
+	if kanbanClient == nil {
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "kanbanClient cannot be nil", nil).
+			WithComponent("orchestrator.scheduler").
+			WithOperation("NewTaskScheduler")
+	}
+
+	// Create orchestrator config from scheduler config
+	orchConfig := &OrchestratorConfig{
+		MaxConcurrentTasks:  config.MaxConcurrentTasks,
+		DefaultTaskTimeout:  config.DefaultTimeout,
+		ManagerAgentTimeout: 5 * time.Second,
+		EnableAutoRetry:     true,
+		MaxRetries:          3,
+	}
+
+	orchestrator, err := NewAgentOrchestrator(ctx, orchConfig, managerAgent, kanbanClient)
+	if err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create agent orchestrator").
+			WithComponent("orchestrator.scheduler").
+			WithOperation("NewTaskScheduler")
+	}
+
 	schedCtx, cancel := context.WithCancel(ctx)
 
 	scheduler := &TaskScheduler{
-		executors:    make(map[string]interfaces.AgentExecutor),
+		orchestrator: orchestrator,
+		kanbanClient: kanbanClient,
 		taskQueue:    NewPriorityQueue(),
 		runningTasks: make(map[string]*RunningTask),
 		dependencies: NewDependencyGraph(),
-		resources:    NewResourceManager(config.MaxConcurrentTasks),
 		progress:     NewProgressAggregator(),
 		config:       config,
 		progressChan: make(chan ProgressUpdate, 1000),
@@ -146,19 +175,15 @@ func NewTaskScheduler(ctx context.Context, config *SchedulerConfig) (*TaskSchedu
 	return scheduler, nil
 }
 
-// RegisterExecutor adds an agent executor to the scheduler
-func (ts *TaskScheduler) RegisterExecutor(agentID string, executor interfaces.AgentExecutor) error {
-	ts.mu.Lock()
-	defer ts.mu.Unlock()
-
+// RegisterAgent registers an agent with the scheduler
+func (ts *TaskScheduler) RegisterAgent(ctx context.Context, agentID string, executor interfaces.AgentExecutor, capabilities []AgentCapability) error {
 	if executor == nil {
 		return gerror.New(gerror.ErrCodeInvalidInput, "executor cannot be nil", nil).
 			WithComponent("orchestrator.scheduler").
-			WithOperation("RegisterExecutor")
+			WithOperation("RegisterAgent")
 	}
 
-	ts.executors[agentID] = executor
-	return nil
+	return ts.orchestrator.RegisterAgent(ctx, agentID, executor, capabilities)
 }
 
 // SubmitTask adds a task to the scheduler queue
@@ -208,9 +233,9 @@ func (ts *TaskScheduler) Start(ctx context.Context) error {
 	ts.wg.Add(1)
 	go ts.progressAggregator()
 
-	// Start resource monitor
+	// Start agent monitor
 	ts.wg.Add(1)
-	go ts.resourceMonitor()
+	go ts.agentMonitor()
 
 	return nil
 }
@@ -276,52 +301,77 @@ func (ts *TaskScheduler) scheduleNext() {
 		return
 	}
 
-	// Get available executors
-	available := ts.getAvailableExecutors()
-	if len(available) == 0 {
-		return
-	}
-
-	// Get ready tasks
+	// Get ready tasks from the queue
 	readyTasks := ts.getReadyTasks()
 	if len(readyTasks) == 0 {
 		return
 	}
 
-	// Match tasks to executors
-	assignments := ts.matchTasksToExecutors(readyTasks, available)
+	// Process each ready task
+	for _, task := range readyTasks {
+		// Convert to kanban task for assignment
+		kanbanTask := &kanban.Task{
+			ID:          task.ID,
+			Title:       "Task " + task.ID,
+			Description: "Commission task",
+			ParentID:    task.CommissionID,
+			Priority:    ts.mapPriority(task.Priority),
+		}
 
-	// Start executions
-	for task, executor := range assignments {
-		ts.startTaskExecution(task, executor)
-	}
-}
-
-// getAvailableExecutors returns executors that can accept tasks
-func (ts *TaskScheduler) getAvailableExecutors() []interfaces.AgentExecutor {
-	var available []interfaces.AgentExecutor
-
-	for agentID, executor := range ts.executors {
-		// First check if the executor reports itself as available
-		if !executor.IsAvailable() {
+		// Request assignment from orchestrator
+		assignment, err := ts.orchestrator.RequestTaskAssignment(ts.ctx, kanbanTask)
+		if err != nil {
+			// Log error but continue with other tasks
+			wrappedErr := gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get task assignment").
+				WithComponent("orchestrator.scheduler").
+				WithOperation("scheduleNext").
+				WithDetails("task_id", task.ID)
+			_ = wrappedErr // TODO: Log when observability is ready
 			continue
 		}
 
-		// Also check if executor is already running a task
-		busy := false
-		for _, rt := range ts.runningTasks {
-			if rt.Executor.GetAgentID() == agentID {
-				busy = true
-				break
-			}
+		// Assign task atomically
+		if err := ts.orchestrator.AssignTask(ts.ctx, assignment); err != nil {
+			wrappedErr := gerror.Wrap(err, gerror.ErrCodeInternal, "failed to assign task").
+				WithComponent("orchestrator.scheduler").
+				WithOperation("scheduleNext").
+				WithDetails("task_id", task.ID)
+			_ = wrappedErr // TODO: Log when observability is ready
+			continue
 		}
 
-		if !busy {
-			available = append(available, executor)
+		// Get executor for assigned agent
+		executor, err := ts.orchestrator.GetAgentExecutor(assignment.AgentID)
+		if err != nil {
+			wrappedErr := gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get agent executor").
+				WithComponent("orchestrator.scheduler").
+				WithOperation("scheduleNext").
+				WithDetails("agent_id", assignment.AgentID)
+			_ = wrappedErr // TODO: Log when observability is ready
+			continue
+		}
+
+		// Update task with assignment info
+		task.Agent = assignment.AgentID
+
+		// Start execution
+		ts.startTaskExecution(task, executor)
+
+		// Check if we've hit our limit
+		if len(ts.runningTasks) >= ts.config.MaxConcurrentTasks {
+			break
 		}
 	}
+}
 
-	return available
+// mapPriority converts scheduler priority to kanban priority
+func (ts *TaskScheduler) mapPriority(priority int) kanban.TaskPriority {
+	if priority >= 80 {
+		return kanban.PriorityHigh
+	} else if priority >= 40 {
+		return kanban.PriorityMedium
+	}
+	return kanban.PriorityLow
 }
 
 // getReadyTasks returns tasks that are ready to execute
@@ -335,10 +385,7 @@ func (ts *TaskScheduler) getReadyTasks() []*SchedulableTask {
 			return true // continue
 		}
 
-		// Check resources
-		if !ts.resources.CanAllocate(ts.ctx, task.Resources) {
-			return true // continue
-		}
+		// With orchestrator, resource checking happens during assignment
 
 		ready = append(ready, task)
 		return true
@@ -352,41 +399,14 @@ func (ts *TaskScheduler) getReadyTasks() []*SchedulableTask {
 	return ready
 }
 
-// matchTasksToExecutors assigns tasks to available executors
-func (ts *TaskScheduler) matchTasksToExecutors(tasks []*SchedulableTask, executors []interfaces.AgentExecutor) map[*SchedulableTask]interfaces.AgentExecutor {
-	assignments := make(map[*SchedulableTask]interfaces.AgentExecutor)
-
-	// Simple round-robin assignment for now - can be made more sophisticated
-	for i, task := range tasks {
-		if i < len(executors) {
-			// If task specifies an agent, try to find that executor
-			if task.Agent != "" {
-				for _, executor := range executors {
-					if executor.GetAgentID() == task.Agent {
-						assignments[task] = executor
-						break
-					}
-				}
-			} else {
-				// Otherwise, assign to available executor by index
-				assignments[task] = executors[i]
-			}
-		}
-	}
-
-	return assignments
-}
+// Task assignment is now handled by the orchestrator via RequestTaskAssignment
 
 // startTaskExecution begins executing a task
 func (ts *TaskScheduler) startTaskExecution(task *SchedulableTask, executor interfaces.AgentExecutor) {
 	// Remove from queue
 	ts.taskQueue.Remove(task.ID)
 
-	// Allocate resources
-	if err := ts.resources.Allocate(ts.ctx, task.ID, task.Resources); err != nil {
-		ts.handleTaskError(task, err)
-		return
-	}
+	// Resources are already allocated by the orchestrator during assignment
 
 	// Create context with timeout
 	timeout := task.Estimated * 2
@@ -429,8 +449,12 @@ func (ts *TaskScheduler) executeTask(rt *RunningTask) {
 		if rt != nil && rt.Task != nil {
 			ts.mu.Lock()
 			delete(ts.runningTasks, rt.Task.ID)
-			_ = ts.resources.Release(ts.ctx, rt.Task.ID) // Ignore error during cleanup
 			ts.mu.Unlock()
+			
+			// Release agent
+			if rt.Task.Agent != "" {
+				_ = ts.orchestrator.ReleaseAgent(ts.ctx, rt.Task.Agent, true)
+			}
 		}
 
 		if rt != nil && rt.Cancel != nil {
@@ -510,17 +534,25 @@ func (ts *TaskScheduler) handleTaskError(task *SchedulableTask, err error) {
 	// Mark dependencies as blocked
 	ts.dependencies.MarkFailed(task.ID)
 	
-	// TODO: Implement retry logic based on error type
-	// TODO: Notify orchestrator of failure for human intervention
-	_ = wrappedErr // Use the error for logging when observability is ready
+	// Release agent with failure status
+	if task.Agent != "" {
+		_ = ts.orchestrator.ReleaseAgent(ts.ctx, task.Agent, false)
+	}
+	
+	// Update kanban task status
+	if ts.kanbanClient != nil {
+		_ = ts.kanbanClient.UpdateTaskStatusAtomic(ts.ctx, task.ID, kanban.StatusBlocked)
+	}
+	
+	_ = wrappedErr // TODO: Send to observability when ready
 }
 
 // handleTaskSuccess processes successful task completion  
 func (ts *TaskScheduler) handleTaskSuccess(task *SchedulableTask, result interface{}) {
-	// Store result for dependent tasks
-	ts.mu.Lock()
-	// TODO: Implement result storage when memory layer is ready
-	ts.mu.Unlock()
+	// Update kanban task status
+	if ts.kanbanClient != nil {
+		_ = ts.kanbanClient.UpdateTaskStatusAtomic(ts.ctx, task.ID, kanban.StatusDone)
+	}
 	
 	// Re-evaluate ready tasks now that dependencies may be satisfied
 	go ts.scheduleNext()
@@ -550,8 +582,8 @@ func (ts *TaskScheduler) progressAggregator() {
 	}
 }
 
-// resourceMonitor tracks resource usage
-func (ts *TaskScheduler) resourceMonitor() {
+// agentMonitor tracks agent health and availability
+func (ts *TaskScheduler) agentMonitor() {
 	defer ts.wg.Done()
 
 	ticker := time.NewTicker(30 * time.Second)
@@ -563,8 +595,20 @@ func (ts *TaskScheduler) resourceMonitor() {
 			return
 
 		case <-ticker.C:
-			// Monitor resource usage
-			// TODO: Implement resource monitoring
+			// Check agent health
+			metrics := ts.orchestrator.GetMetrics()
+			
+			// Check for high failure rates
+			for agentID, utilization := range metrics.AgentUtilization {
+				if utilization < 0.5 { // Less than 50% success rate
+					wrappedErr := gerror.New(gerror.ErrCodeInternal, "agent has high failure rate", nil).
+						WithComponent("orchestrator.scheduler").
+						WithOperation("agentMonitor").
+						WithDetails("agent_id", agentID).
+						WithDetails("utilization", utilization)
+					_ = wrappedErr // TODO: Alert when observability is ready
+				}
+			}
 		}
 	}
 }
@@ -636,11 +680,16 @@ func (ts *TaskScheduler) GetSchedulerStats() map[string]interface{} {
 	ts.mu.RLock()
 	defer ts.mu.RUnlock()
 
+	metrics := ts.orchestrator.GetMetrics()
+	
 	return map[string]interface{}{
-		"running_tasks":   len(ts.runningTasks),
-		"queued_tasks":    ts.taskQueue.Len(),
-		"total_executors": len(ts.executors),
-		"resource_usage":  ts.resources.GetUsage(),
+		"running_tasks":     len(ts.runningTasks),
+		"queued_tasks":      ts.taskQueue.Len(),
+		"agents_available":  len(ts.orchestrator.getAvailableAgents()),
+		"tasks_assigned":    metrics.TasksAssigned,
+		"tasks_completed":   metrics.TasksCompleted,
+		"tasks_failed":      metrics.TasksFailed,
+		"agent_utilization": metrics.AgentUtilization,
 	}
 }
 

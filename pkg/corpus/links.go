@@ -11,19 +11,33 @@ import (
 // WikiLinkPattern is a regex to match wikilinks in markdown
 var WikiLinkPattern = regexp.MustCompile(`\[\[([^\]]+)\]\]`)
 
-// ExtractLinks extracts wikilinks from markdown content
+// MarkdownLinkPattern is a regex to match regular markdown links
+var MarkdownLinkPattern = regexp.MustCompile(`\[([^\]]+)\]\(([^)]+)\)`)
+
+// ExtractLinks extracts both wikilinks and regular markdown links from content
 func ExtractLinks(content string) []string {
 	if content == "" {
 		return []string{}
 	}
 
-	matches := WikiLinkPattern.FindAllStringSubmatch(content, -1)
 	var links []string
 
-	for _, match := range matches {
+	// Extract WikiLinks
+	wikiMatches := WikiLinkPattern.FindAllStringSubmatch(content, -1)
+	for _, match := range wikiMatches {
 		if len(match) > 1 {
 			link := strings.TrimSpace(match[1])
-			// Check if the link is not empty and not already added
+			if link != "" && !contains(links, link) {
+				links = append(links, link)
+			}
+		}
+	}
+
+	// Extract regular markdown links
+	markdownMatches := MarkdownLinkPattern.FindAllStringSubmatch(content, -1)
+	for _, match := range markdownMatches {
+		if len(match) > 1 {
+			link := strings.TrimSpace(match[1]) // Use link text, not URL
 			if link != "" && !contains(links, link) {
 				links = append(links, link)
 			}

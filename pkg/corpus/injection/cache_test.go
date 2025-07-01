@@ -4,6 +4,7 @@
 package injection
 
 import (
+	"strconv"
 	"testing"
 	"time"
 
@@ -171,8 +172,8 @@ func TestGuildContextCache_Stats(t *testing.T) {
 
 	// Add some entries
 	for i := 0; i < 5; i++ {
-		key := "key" + string(rune(i))
-		value := &InjectedPrompt{SystemPrompt: "Prompt " + string(rune(i))}
+		key := "key" + strconv.Itoa(i)
+		value := &InjectedPrompt{SystemPrompt: "Prompt " + strconv.Itoa(i)}
 		cache.Set(key, value)
 	}
 

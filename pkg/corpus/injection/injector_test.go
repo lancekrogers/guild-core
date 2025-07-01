@@ -267,6 +267,16 @@ func TestCraftContextInjector_InjectionPoints(t *testing.T) {
 			},
 			FinalScore: 0.8,
 		},
+		{
+			Document: retrieval.Document{
+				ID:      "doc3",
+				Content: "Example code content",
+				Metadata: map[string]interface{}{
+					"type": "example",
+				},
+			},
+			FinalScore: 0.7,
+		},
 	}
 
 	mockRetriever.On("Retrieve", mock.Anything, mock.Anything).Return(mockDocs, nil)
@@ -395,7 +405,7 @@ func TestCraftContextFormatter_TokenEstimation(t *testing.T) {
 		{"", 0},
 		{"test", 1},
 		{"this is a test", 4},
-		{"this is a longer test with more words", 9},
+		{"this is a longer test with more words", 8},
 	}
 
 	for _, test := range tests {

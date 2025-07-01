@@ -230,11 +230,21 @@ func main() {}`,
 	assert.NoError(t, err)
 	assert.NotNil(t, documents)
 
-	// Verify results
-	assert.Len(t, documents, 4) // Should not include .tmp file
+	// Verify results (4 main files + 1 subdirectory file, excluding .tmp)
+	assert.Len(t, documents, 5)
+
+	// Track expected files
+	expectedFiles := make(map[string]string)
+	for name, content := range testFiles {
+		if name != "ignore.tmp" { // Exclude ignored file
+			expectedFiles[name] = content
+		}
+	}
+	expectedFiles["sub.md"] = "# Subdirectory Document" // Add subdirectory file
 
 	// Check document properties
 	foundTypes := make(map[ContentType]bool)
+	foundFiles := make(map[string]bool)
 	for _, doc := range documents {
 		assert.NotEmpty(t, doc.ID)
 		assert.NotEmpty(t, doc.Path)
@@ -244,7 +254,14 @@ func main() {}`,
 
 		// Verify content was read
 		assert.NotEmpty(t, doc.Content)
-		assert.Contains(t, testFiles, filepath.Base(doc.Path))
+		basename := filepath.Base(doc.Path)
+		assert.Contains(t, expectedFiles, basename)
+		foundFiles[basename] = true
+	}
+
+	// Verify all expected files were found
+	for expectedFile := range expectedFiles {
+		assert.True(t, foundFiles[expectedFile], "Expected file %s not found", expectedFile)
 	}
 
 	// Should have found different content types

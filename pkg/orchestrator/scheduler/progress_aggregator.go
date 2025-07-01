@@ -11,6 +11,13 @@ import (
 	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
+// ResourceUsage is a placeholder for metrics - replaced by agent metrics
+type ResourceUsage struct {
+	AgentsAvailable int                    `json:"agents_available"`
+	TasksRunning    int                    `json:"tasks_running"`
+	AgentMetrics    map[string]interface{} `json:"agent_metrics"`
+}
+
 // CommissionProgress tracks overall progress for a commission
 type CommissionProgress struct {
 	CommissionID    string

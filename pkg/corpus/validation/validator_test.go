@@ -71,6 +71,10 @@ func TestJourneymanValidation(t *testing.T) {
 				Content: "Maybe use some database",
 				Confidence: 0.2, // Below minimum threshold
 				Timestamp:  time.Now(),
+				Source: extraction.Source{
+					Type: "documentation",
+					Timestamp: time.Now(),
+				},
 			},
 			expectValid: false,
 			expectIssues: 1,
@@ -83,6 +87,10 @@ func TestJourneymanValidation(t *testing.T) {
 				Content: "", // Empty content
 				Confidence: 0.8,
 				Timestamp:  time.Now(),
+				Source: extraction.Source{
+					Type: "documentation",
+					Timestamp: time.Now(),
+				},
 			},
 			expectValid: false,
 			expectIssues: 1,
@@ -95,6 +103,10 @@ func TestJourneymanValidation(t *testing.T) {
 				Content: "This solution always works and never fails", // Absolute claims
 				Confidence: 0.8,
 				Timestamp:  time.Now(),
+				Source: extraction.Source{
+					Type: "documentation",
+					Timestamp: time.Now(),
+				},
 			},
 			expectValid: false,
 			expectIssues: 1,
@@ -241,8 +253,14 @@ func TestCraftValidationRules(t *testing.T) {
 			name: "completeness rule",
 			rule: &CompletenessRule{},
 			knowledge: extraction.ExtractedKnowledge{
+				ID:      "completeness-test-1",
 				Content: "Use PostgreSQL for persistence",
 				Type:    extraction.KnowledgeDecision,
+				Source: extraction.Source{
+					Type: "documentation",
+					Timestamp: time.Now(),
+				},
+				Timestamp: time.Now(),
 			},
 			expectValid: true,
 		},
@@ -250,9 +268,15 @@ func TestCraftValidationRules(t *testing.T) {
 			name: "confidence threshold rule",
 			rule: &ConfidenceThresholdRule{threshold: 0.5},
 			knowledge: extraction.ExtractedKnowledge{
+				ID:        "confidence-test-1",
 				Content:    "Test knowledge",
 				Type:       extraction.KnowledgeDecision,
 				Confidence: 0.3, // Below threshold
+				Source: extraction.Source{
+					Type: "documentation",
+					Timestamp: time.Now(),
+				},
+				Timestamp: time.Now(),
 			},
 			expectValid: false,
 		},
@@ -260,11 +284,14 @@ func TestCraftValidationRules(t *testing.T) {
 			name: "relevance rule",
 			rule: &RelevanceRule{},
 			knowledge: extraction.ExtractedKnowledge{
+				ID:      "relevance-test-1",
 				Content: "Test knowledge",
 				Type:    extraction.KnowledgeDecision,
 				Source: extraction.Source{
 					Type: "documentation",
+					Timestamp: time.Now(),
 				},
+				Timestamp: time.Now(),
 			},
 			expectValid: true,
 		},
@@ -382,9 +409,30 @@ func TestCraftValidationStatistics(t *testing.T) {
 
 	// Validate multiple items
 	knowledgeItems := []extraction.ExtractedKnowledge{
-		{ID: "stats-1", Type: extraction.KnowledgeDecision, Content: "Valid 1", Confidence: 0.8},
-		{ID: "stats-2", Type: extraction.KnowledgeSolution, Content: "Valid 2", Confidence: 0.9},
-		{ID: "stats-3", Type: extraction.KnowledgePreference, Content: "", Confidence: 0.7}, // Invalid
+		{
+			ID: "stats-1", 
+			Type: extraction.KnowledgeDecision, 
+			Content: "Valid 1", 
+			Confidence: 0.8,
+			Source: extraction.Source{Type: "documentation", Timestamp: time.Now()},
+			Timestamp: time.Now(),
+		},
+		{
+			ID: "stats-2", 
+			Type: extraction.KnowledgeSolution, 
+			Content: "Valid 2", 
+			Confidence: 0.9,
+			Source: extraction.Source{Type: "documentation", Timestamp: time.Now()},
+			Timestamp: time.Now(),
+		},
+		{
+			ID: "stats-3", 
+			Type: extraction.KnowledgePreference, 
+			Content: "", 
+			Confidence: 0.7, // Invalid due to empty content
+			Source: extraction.Source{Type: "documentation", Timestamp: time.Now()},
+			Timestamp: time.Now(),
+		},
 	}
 
 	for _, k := range knowledgeItems {

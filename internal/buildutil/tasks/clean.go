@@ -99,7 +99,7 @@ func Clean(verbose bool) error {
 		{"Clean workspace", cleanStatus},
 	}
 
-	ui.SummaryCard("Clean Summary", rows, "< 1s", true)
+	ui.SummaryCardWithStatus("Clean Summary", rows, "< 1s", true, "✓ CLEAN SUCCESSFUL", "✗ CLEAN FAILED")
 
 	return nil
 }
