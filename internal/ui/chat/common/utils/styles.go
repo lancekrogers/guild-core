@@ -280,6 +280,168 @@ func NewMinimalStyles() *Styles {
 	return styles
 }
 
+// NewClaudeCodeStyles creates styles matching Claude Code's visual quality
+func NewClaudeCodeStyles() *Styles {
+	// Claude Code color palette
+	var (
+		_ = lipgloss.Color("#1e1e1e") // VS Code dark background (ccBackground - reserved for future use)
+		ccSurface       = lipgloss.Color("#252526") // Surface/panel color
+		ccPrimary       = lipgloss.Color("#007acc") // VS Code blue
+		ccSecondary     = lipgloss.Color("#3794ff") // Lighter blue
+		ccText          = lipgloss.Color("#d4d4d4") // Primary text
+		ccTextMuted     = lipgloss.Color("#858585") // Muted text
+		ccTextDimmed    = lipgloss.Color("#5a5a5a") // Dimmed text
+		ccSuccess       = lipgloss.Color("#89d185") // Success green
+		ccWarning       = lipgloss.Color("#e9c46a") // Warning yellow
+		ccError         = lipgloss.Color("#f48771") // Error red
+		ccInfo          = lipgloss.Color("#75beff") // Info blue
+		
+		// Agent colors matching Claude Code
+		ccAgentGreen    = lipgloss.Color("#6a9955") // Green for Vera
+	)
+
+	s := &Styles{}
+
+	// Base styles
+	s.Base = lipgloss.NewStyle().
+		Foreground(ccText)
+
+	s.Container = lipgloss.NewStyle().
+		Padding(0, 1)
+
+	// Pane styles with Claude Code aesthetics
+	s.OutputPane = lipgloss.NewStyle().
+		BorderStyle(lipgloss.RoundedBorder()).
+		BorderForeground(ccTextDimmed).
+		Padding(0, 1)
+
+	s.InputPane = lipgloss.NewStyle().
+		BorderStyle(lipgloss.RoundedBorder()).
+		BorderForeground(ccPrimary).
+		Padding(0, 1)
+
+	s.StatusPane = lipgloss.NewStyle().
+		Background(ccSurface).
+		Foreground(ccText).
+		Padding(0, 1)
+
+	// Focus states
+	s.FocusedPane = lipgloss.NewStyle().
+		BorderStyle(lipgloss.RoundedBorder()).
+		BorderForeground(ccPrimary).
+		Bold(true)
+
+	s.UnfocusedPane = lipgloss.NewStyle().
+		BorderStyle(lipgloss.RoundedBorder()).
+		BorderForeground(ccTextDimmed)
+
+	// Message styles with agent-specific colors
+	s.UserMessage = lipgloss.NewStyle().
+		Foreground(ccPrimary).
+		Bold(true)
+
+	s.AgentMessage = lipgloss.NewStyle().
+		Foreground(ccText)
+
+	s.SystemMessage = lipgloss.NewStyle().
+		Foreground(ccTextMuted).
+		Italic(true)
+
+	s.ErrorMessage = lipgloss.NewStyle().
+		Foreground(ccError).
+		Bold(true)
+
+	// Status styles
+	s.StatusInfo = lipgloss.NewStyle().
+		Foreground(ccInfo)
+
+	s.StatusSuccess = lipgloss.NewStyle().
+		Foreground(ccSuccess)
+
+	s.StatusWarning = lipgloss.NewStyle().
+		Foreground(ccWarning)
+
+	s.StatusError = lipgloss.NewStyle().
+		Foreground(ccError)
+
+	// Interactive elements
+	s.Button = lipgloss.NewStyle().
+		BorderStyle(lipgloss.RoundedBorder()).
+		BorderForeground(ccTextDimmed).
+		Padding(0, 2).
+		Foreground(ccText)
+
+	s.ButtonFocused = s.Button.Copy().
+		BorderForeground(ccPrimary).
+		Background(ccPrimary).
+		Foreground(lipgloss.Color("#ffffff")). // Pure white text
+		Bold(true)
+
+	s.Link = lipgloss.NewStyle().
+		Foreground(ccInfo).
+		Underline(true)
+
+	// Code and syntax with VS Code styling
+	s.CodeBlock = lipgloss.NewStyle().
+		Background(ccSurface).
+		Foreground(ccText).
+		Padding(1, 2).
+		BorderStyle(lipgloss.RoundedBorder()).
+		BorderForeground(ccTextDimmed)
+
+	s.InlineCode = lipgloss.NewStyle().
+		Background(ccSurface).
+		Foreground(ccSecondary).
+		Padding(0, 1)
+
+	s.SyntaxKeyword = lipgloss.NewStyle().
+		Foreground(ccPrimary).
+		Bold(true)
+
+	s.SyntaxString = lipgloss.NewStyle().
+		Foreground(ccSuccess)
+
+	s.SyntaxComment = lipgloss.NewStyle().
+		Foreground(ccAgentGreen).
+		Italic(true)
+
+	// Theme elements
+	s.Banner = lipgloss.NewStyle().
+		Foreground(ccPrimary).
+		Bold(true).
+		Align(lipgloss.Center)
+
+	s.Separator = lipgloss.NewStyle().
+		Foreground(ccTextDimmed)
+
+	s.Highlight = lipgloss.NewStyle().
+		Background(ccPrimary).
+		Foreground(lipgloss.Color("#ffffff")).
+		Bold(true)
+
+	// Completion and search
+	s.CompletionItem = lipgloss.NewStyle().
+		Foreground(ccText).
+		Padding(0, 1)
+
+	s.CompletionItemSelected = lipgloss.NewStyle().
+		Background(ccPrimary).
+		Foreground(lipgloss.Color("#ffffff")).
+		Bold(true).
+		Padding(0, 1)
+
+	s.SearchMatch = lipgloss.NewStyle().
+		Background(ccWarning).
+		Foreground(lipgloss.Color("#1e1e1e")) // Dark text on yellow
+
+	s.SearchMatchCurrent = lipgloss.NewStyle().
+		Background(ccSecondary).
+		Foreground(lipgloss.Color("#ffffff")).
+		Bold(true)
+
+	return s
+}
+
 // ApplyTheme applies a theme to existing styles
 func (s *Styles) ApplyTheme(theme string) {
 	switch theme {
@@ -287,6 +449,8 @@ func (s *Styles) ApplyTheme(theme string) {
 		*s = *NewMedievalStyles()
 	case "minimal":
 		*s = *NewMinimalStyles()
+	case "claude-code":
+		*s = *NewClaudeCodeStyles()
 	case "default":
 		*s = *NewStyles()
 	}
@@ -431,7 +595,32 @@ func (s *Styles) FormatTimestamp(timestamp string) string {
 
 // FormatAgentName formats an agent name with styling
 func (s *Styles) FormatAgentName(name string) string {
+	// Use agent-specific colors when available
+	agentColor := s.GetAgentColor(name)
+	if agentColor != "" {
+		return lipgloss.NewStyle().
+			Foreground(agentColor).
+			Bold(true).
+			Render(name)
+	}
 	return s.AgentMessage.Bold(true).Render(name)
+}
+
+// GetAgentColor returns the color for a specific agent
+func (s *Styles) GetAgentColor(agentName string) lipgloss.Color {
+	// Define agent-specific colors that work across themes
+	switch agentName {
+	case "elena", "Elena":
+		return lipgloss.Color("#c586c0") // Purple
+	case "marcus", "Marcus":
+		return lipgloss.Color("#569cd6") // Blue
+	case "vera", "Vera":
+		return lipgloss.Color("#6a9955") // Green
+	case "system", "System":
+		return lipgloss.Color("#858585") // Gray
+	default:
+		return ""
+	}
 }
 
 // FormatCommand formats a command with styling

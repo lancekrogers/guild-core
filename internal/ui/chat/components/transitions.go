@@ -547,3 +547,188 @@ func (sa *StatusAnimator) GetCurrentStatus() string {
 func (sa *StatusAnimator) IsTransitioning() bool {
 	return sa.transitionMgr.IsTransitioning("main")
 }
+
+// EasingFunc defines a function that modifies animation progress
+type EasingFunc func(t float64) float64
+
+// Common easing functions for smooth 60 FPS animations
+var (
+	// Linear - no easing, constant speed
+	EaseLinear = func(t float64) float64 { return t }
+	
+	// Quadratic easing functions
+	EaseInQuad = func(t float64) float64 { return t * t }
+	EaseOutQuad = func(t float64) float64 { return t * (2 - t) }
+	EaseInOutQuad = func(t float64) float64 {
+		if t < 0.5 {
+			return 2 * t * t
+		}
+		return -1 + (4-2*t)*t
+	}
+	
+	// Cubic easing functions
+	EaseInCubic = func(t float64) float64 { return t * t * t }
+	EaseOutCubic = func(t float64) float64 { return 1 + (t-1)*(t-1)*(t-1) }
+	EaseInOutCubic = func(t float64) float64 {
+		if t < 0.5 {
+			return 4 * t * t * t
+		}
+		return 1 + (t-1)*(2*(t-2))*(2*(t-2))
+	}
+	
+	// Sine easing functions
+	EaseInSine = func(t float64) float64 { return 1 - math.Cos(t*math.Pi/2) }
+	EaseOutSine = func(t float64) float64 { return math.Sin(t * math.Pi / 2) }
+	EaseInOutSine = func(t float64) float64 { return 0.5 * (1 - math.Cos(math.Pi*t)) }
+	
+	// Elastic easing - spring effect
+	EaseOutElastic = func(t float64) float64 {
+		if t == 0 || t == 1 {
+			return t
+		}
+		p := 0.3
+		return math.Pow(2, -10*t) * math.Sin((t-p/4)*(2*math.Pi)/p) + 1
+	}
+	
+	// Bounce easing
+	EaseOutBounce = func(t float64) float64 {
+		if t < 1/2.75 {
+			return 7.5625 * t * t
+		} else if t < 2/2.75 {
+			t -= 1.5 / 2.75
+			return 7.5625*t*t + 0.75
+		} else if t < 2.5/2.75 {
+			t -= 2.25 / 2.75
+			return 7.5625*t*t + 0.9375
+		}
+		t -= 2.625 / 2.75
+		return 7.5625*t*t + 0.984375
+	}
+	
+	// Back easing - overshoot effect
+	EaseInBack = func(t float64) float64 {
+		s := 1.70158
+		return t * t * ((s+1)*t - s)
+	}
+	EaseOutBack = func(t float64) float64 {
+		s := 1.70158
+		t = t - 1
+		return t*t*((s+1)*t+s) + 1
+	}
+)
+
+// Animation represents a single animation with easing
+type Animation struct {
+	ID         string
+	StartValue float64
+	EndValue   float64
+	Current    float64
+	Duration   time.Duration
+	StartTime  time.Time
+	Easing     EasingFunc
+	OnUpdate   func(float64)
+	OnComplete func()
+	ctx        context.Context
+}
+
+// AnimationManager manages multiple animations for 60 FPS rendering
+type AnimationManager struct {
+	animations map[string]*Animation
+	ticker     *time.Ticker
+	fps        int
+	ctx        context.Context
+}
+
+// NewAnimationManager creates a new animation manager for 60 FPS animations
+func NewAnimationManager(ctx context.Context) *AnimationManager {
+	return &AnimationManager{
+		animations: make(map[string]*Animation),
+		fps:        60,
+		ctx:        ctx,
+	}
+}
+
+// Start begins the animation loop at 60 FPS
+func (am *AnimationManager) Start() {
+	am.ticker = time.NewTicker(time.Second / time.Duration(am.fps))
+	
+	go func() {
+		for {
+			select {
+			case <-am.ticker.C:
+				am.update()
+			case <-am.ctx.Done():
+				am.ticker.Stop()
+				return
+			}
+		}
+	}()
+}
+
+// Stop halts the animation loop
+func (am *AnimationManager) Stop() {
+	if am.ticker != nil {
+		am.ticker.Stop()
+	}
+}
+
+// Animate adds a new animation
+func (am *AnimationManager) Animate(anim *Animation) {
+	if anim.Easing == nil {
+		anim.Easing = EaseInOutQuad
+	}
+	anim.StartTime = time.Now()
+	anim.ctx = am.ctx
+	am.animations[anim.ID] = anim
+}
+
+// update processes all active animations
+func (am *AnimationManager) update() {
+	now := time.Now()
+	completed := []string{}
+	
+	for id, anim := range am.animations {
+		elapsed := now.Sub(anim.StartTime)
+		progress := float64(elapsed) / float64(anim.Duration)
+		
+		if progress >= 1.0 {
+			// Animation complete
+			anim.Current = anim.EndValue
+			if anim.OnUpdate != nil {
+				anim.OnUpdate(anim.Current)
+			}
+			if anim.OnComplete != nil {
+				anim.OnComplete()
+			}
+			completed = append(completed, id)
+			continue
+		}
+		
+		// Apply easing
+		easedProgress := anim.Easing(progress)
+		
+		// Interpolate value
+		anim.Current = anim.StartValue + (anim.EndValue-anim.StartValue)*easedProgress
+		
+		// Callback
+		if anim.OnUpdate != nil {
+			anim.OnUpdate(anim.Current)
+		}
+	}
+	
+	// Remove completed animations
+	for _, id := range completed {
+		delete(am.animations, id)
+	}
+}
+
+// HasAnimation checks if an animation is active
+func (am *AnimationManager) HasAnimation(id string) bool {
+	_, exists := am.animations[id]
+	return exists
+}
+
+// StopAnimation stops a specific animation
+func (am *AnimationManager) StopAnimation(id string) {
+	delete(am.animations, id)
+}

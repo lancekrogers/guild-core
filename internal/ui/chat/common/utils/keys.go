@@ -6,7 +6,9 @@ package utils
 import (
 	"fmt"
 	"strings"
+	"time"
 
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/bubbles/key"
 )
 
@@ -72,6 +74,22 @@ type KeyBindings struct {
 	DebugInfo       key.Binding
 	RefreshAgents   key.Binding
 	ReconnectDaemon key.Binding
+
+	// Chord shortcuts
+	ChordPrefix    key.Binding
+	MentionElena   key.Binding
+	MentionMarcus  key.Binding
+	MentionVera    key.Binding
+	MentionAll     key.Binding
+	
+	// View shortcuts
+	ViewChat   key.Binding
+	ViewKanban key.Binding
+	ViewCorpus key.Binding
+	
+	// Quick actions
+	SaveSession  key.Binding
+	UndoMessage  key.Binding
 }
 
 // NewKeyBindings creates the default key bindings for Guild Chat
@@ -259,6 +277,52 @@ func NewKeyBindings() *KeyBindings {
 		ReconnectDaemon: key.NewBinding(
 			key.WithKeys("ctrl+shift+c"),
 			key.WithHelp("ctrl+shift+c", "reconnect daemon"),
+		),
+
+		// Chord shortcuts
+		ChordPrefix: key.NewBinding(
+			key.WithKeys("@"),
+			key.WithHelp("@", "chord prefix"),
+		),
+		MentionElena: key.NewBinding(
+			key.WithKeys("e"),
+			key.WithHelp("@e", "mention Elena"),
+		),
+		MentionMarcus: key.NewBinding(
+			key.WithKeys("m"),
+			key.WithHelp("@m", "mention Marcus"),
+		),
+		MentionVera: key.NewBinding(
+			key.WithKeys("v"),
+			key.WithHelp("@v", "mention Vera"),
+		),
+		MentionAll: key.NewBinding(
+			key.WithKeys("a"),
+			key.WithHelp("@a", "mention all agents"),
+		),
+		
+		// View shortcuts
+		ViewChat: key.NewBinding(
+			key.WithKeys("ctrl+1"),
+			key.WithHelp("ctrl+1", "chat view"),
+		),
+		ViewKanban: key.NewBinding(
+			key.WithKeys("ctrl+2"),
+			key.WithHelp("ctrl+2", "kanban view"),
+		),
+		ViewCorpus: key.NewBinding(
+			key.WithKeys("ctrl+3"),
+			key.WithHelp("ctrl+3", "corpus view"),
+		),
+		
+		// Quick actions
+		SaveSession: key.NewBinding(
+			key.WithKeys("ctrl+s"),
+			key.WithHelp("ctrl+s", "save session"),
+		),
+		UndoMessage: key.NewBinding(
+			key.WithKeys("ctrl+z"),
+			key.WithHelp("ctrl+z", "undo last message"),
 		),
 	}
 }
@@ -529,4 +593,129 @@ func (k KeyBindings) CreateHelpText(context string) string {
 	}
 
 	return strings.Join(sections, "\n\n")
+}
+
+// ChordManager handles multi-key chord sequences
+type ChordManager struct {
+	activeChord   string
+	chordTimeout  time.Duration
+	lastKeyTime   time.Time
+	chordBindings map[string]func() tea.Cmd
+}
+
+// NewChordManager creates a new chord manager
+func NewChordManager() *ChordManager {
+	cm := &ChordManager{
+		chordTimeout:  2 * time.Second,
+		chordBindings: make(map[string]func() tea.Cmd),
+	}
+	
+	// Register default chord bindings
+	cm.RegisterChordBindings()
+	
+	return cm
+}
+
+// RegisterChordBindings registers all chord sequences
+func (cm *ChordManager) RegisterChordBindings() {
+	// Agent mention chords
+	cm.chordBindings["@e"] = func() tea.Cmd {
+		return func() tea.Msg {
+			return InsertTextMsg{Text: "@elena "}
+		}
+	}
+	cm.chordBindings["@m"] = func() tea.Cmd {
+		return func() tea.Msg {
+			return InsertTextMsg{Text: "@marcus "}
+		}
+	}
+	cm.chordBindings["@v"] = func() tea.Cmd {
+		return func() tea.Msg {
+			return InsertTextMsg{Text: "@vera "}
+		}
+	}
+	cm.chordBindings["@a"] = func() tea.Cmd {
+		return func() tea.Msg {
+			return InsertTextMsg{Text: "@all "}
+		}
+	}
+	
+	// Window management chords
+	cm.chordBindings["gw"] = func() tea.Cmd {
+		return func() tea.Msg {
+			return SwitchWindowMsg{Window: "next"}
+		}
+	}
+	cm.chordBindings["gW"] = func() tea.Cmd {
+		return func() tea.Msg {
+			return SwitchWindowMsg{Window: "prev"}
+		}
+	}
+}
+
+// HandleKey processes a key press for chord sequences
+func (cm *ChordManager) HandleKey(key string) (tea.Cmd, bool) {
+	now := time.Now()
+	
+	// Check if chord has timed out
+	if cm.activeChord != "" && now.Sub(cm.lastKeyTime) > cm.chordTimeout {
+		cm.activeChord = ""
+	}
+	
+	// Build potential chord
+	potentialChord := cm.activeChord + key
+	
+	// Check if this completes a chord
+	if action, exists := cm.chordBindings[potentialChord]; exists {
+		cm.activeChord = ""
+		return action(), true
+	}
+	
+	// Check if this could be the start of a chord
+	for chord := range cm.chordBindings {
+		if strings.HasPrefix(chord, potentialChord) {
+			cm.activeChord = potentialChord
+			cm.lastKeyTime = now
+			return ShowChordPromptCmd(potentialChord), true
+		}
+	}
+	
+	// Not a chord
+	cm.activeChord = ""
+	return nil, false
+}
+
+// IsChordActive returns true if a chord sequence is in progress
+func (cm *ChordManager) IsChordActive() bool {
+	return cm.activeChord != ""
+}
+
+// GetActiveChord returns the current chord sequence
+func (cm *ChordManager) GetActiveChord() string {
+	return cm.activeChord
+}
+
+// CancelChord cancels the current chord sequence
+func (cm *ChordManager) CancelChord() {
+	cm.activeChord = ""
+}
+
+// Message types for chord actions
+type InsertTextMsg struct {
+	Text string
+}
+
+type SwitchWindowMsg struct {
+	Window string
+}
+
+// ShowChordPromptCmd shows the chord sequence in progress
+func ShowChordPromptCmd(chord string) tea.Cmd {
+	return func() tea.Msg {
+		return ChordPromptMsg{Chord: chord}
+	}
+}
+
+type ChordPromptMsg struct {
+	Chord string
 }
