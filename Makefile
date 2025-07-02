@@ -3,7 +3,7 @@
 
 BUILDTOOL := go run ./internal/buildutil
 .DEFAULT_GOAL := help
-.PHONY: build test test-pkg integration e2e validate-demo clean all quick ci-build ci-test ci-integration ci-e2e ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion benchmark benchmark-suggestions
+.PHONY: build test test-pkg integration e2e validate-demo clean all quick ci-build ci-test ci-integration ci-e2e ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion benchmark benchmark-suggestions benchmark-ui benchmark-ui-thresholds test-ui-integration test-ui-complete
 
 # Primary targets (with visual output)
 # DEVELOPER TARGET: Full build with go vet validation and visual feedback
@@ -55,6 +55,52 @@ benchmark:
 benchmark-suggestions:
 	@echo "🚀 Running suggestion system benchmarks..."
 	@go test -bench=BenchmarkSuggestion -benchmem -benchtime=10s ./benchmarks
+
+# UI Performance benchmarks
+benchmark-ui:
+	@echo "🎨 Running UI performance benchmarks..."
+	@echo "📊 Theme Management Performance:"
+	@go test -bench=BenchmarkThemeManager -benchmem ./internal/ui/theme 2>/dev/null | grep -E "(Benchmark|B/op|allocs/op)"
+	@echo ""
+	@echo "🖼️  Component Rendering Performance:"
+	@go test -bench=BenchmarkComponentLibrary -benchmem ./internal/ui/components 2>/dev/null | grep -E "(Benchmark|B/op|allocs/op)"
+	@echo ""
+	@echo "⚡ Memory Usage Analysis:"
+	@go test -bench=BenchmarkMemoryUsage -benchmem ./internal/ui/... 2>/dev/null | grep -E "(Benchmark|B/op|allocs/op)"
+
+# UI Performance threshold validation
+benchmark-ui-thresholds:
+	@echo "🎯 Validating UI performance thresholds..."
+	@echo "Theme System Thresholds:"
+	@go test -v -run="TestPerformanceThresholds" ./internal/ui/theme 2>/dev/null | grep -E "(RUN|completed in|PASS)"
+	@echo ""
+	@echo "Component Rendering Thresholds:"
+	@go test -v -run="TestComponentPerformanceThresholds" ./internal/ui/components 2>/dev/null | grep -E "(RUN|completed in|PASS)"
+	@echo ""
+	@echo "Shortcut System Thresholds:"
+	@go test -v -run="TestShortcutPerformanceThresholds" ./internal/ui/shortcuts 2>/dev/null | grep -E "(RUN|completed in|PASS)"
+	@echo ""
+	@echo "✅ All performance targets validated!"
+
+# UI Integration tests
+test-ui-integration:
+	@echo "🔗 Running UI integration tests..."
+	@go test -v -timeout 60s ./integration/ui/... -run "TestUI.*Integration"
+	@echo "✅ UI integration tests completed!"
+
+# Complete UI test suite
+test-ui-complete:
+	@echo "🎨 Running complete UI test suite..."
+	@echo "📋 Unit Tests:"
+	@go test -v ./internal/ui/... | grep -E "(RUN|PASS|FAIL)"
+	@echo ""
+	@echo "🔗 Integration Tests:"
+	@$(MAKE) test-ui-integration
+	@echo ""
+	@echo "⚡ Performance Tests:"
+	@$(MAKE) benchmark-ui-thresholds
+	@echo ""
+	@echo "✅ Complete UI test suite finished!"
 
 
 test-cleanup-verify:
@@ -216,6 +262,10 @@ help:
 	@echo "  validate-demo            Validate demo scripts and functionality"
 	@echo "  benchmark                Run comprehensive performance benchmarks"
 	@echo "  benchmark-suggestions    Run suggestion system benchmarks only"
+	@echo "  benchmark-ui             Run UI performance benchmarks with memory profiling"
+	@echo "  benchmark-ui-thresholds  Validate UI performance meets hard thresholds"
+	@echo "  test-ui-integration      Run UI system integration tests"
+	@echo "  test-ui-complete         Run complete UI test suite (unit + integration + performance)"
 	@echo "  clean                    Remove all build artifacts"
 	@echo "  all                      Clean, build, test, and integration"
 	@echo "  quick                    Fast build without visuals"

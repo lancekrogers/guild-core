@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Guild Framework provides a streamlined initialization process that automatically detects your project type and sets up appropriate agent configurations. This guide covers the new enhanced init process introduced in Sprint 1.
+The Guild Framework provides a streamlined initialization process that automatically detects your project type and sets up appropriate agent configurations. This guide covers the new enhanced init process introduced in development phase
 
 ## Quick Start (30 Seconds to Productive)
 

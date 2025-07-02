@@ -1,8 +1,8 @@
 # Suggestion System Performance Benchmarks
 
-This directory contains comprehensive performance benchmarks for the Guild Framework's suggestion system, designed to validate Sprint 7.6 performance targets.
+This directory contains comprehensive performance benchmarks for the Guild Framework's suggestion system, designed to validate production enhancement performance targets.
 
-## Sprint 7.6 Performance Targets
+## production enhancement Performance Targets
 
 - **Latency**: <100ms average response time
 - **Token Reduction**: 15-25% context optimization
@@ -143,7 +143,7 @@ Human-readable performance summary with:
 - `KB/service`: Memory usage per service
 
 ### Pass/Fail Criteria
-Benchmarks automatically validate against Sprint 7.6 targets:
+Benchmarks automatically validate against production enhancement targets:
 - ✅ **PASS**: Meets all performance targets
 - ❌ **FAIL**: One or more targets not met
 

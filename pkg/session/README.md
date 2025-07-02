@@ -1,6 +1,6 @@
 # Session Management Package
 
-This package implements comprehensive session management for Guild Framework, fulfilling the requirements for Product Vision Sprint 6, Agent 2 task.
+This package implements comprehensive session management for Guild Framework, fulfilling the requirements for Product Vision performance optimization, Agent 2 task.
 
 ## Overview
 

@@ -17,7 +17,7 @@ import (
 	"github.com/lancekrogers/guild/pkg/suggestions"
 )
 
-// Sprint 7.6 Performance Targets
+// production enhancement Performance Targets
 const (
 	TargetLatency        = 100 * time.Millisecond
 	TargetTokenReduction = 0.15 // 15% minimum reduction

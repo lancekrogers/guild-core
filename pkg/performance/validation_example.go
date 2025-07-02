@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
 // Package performance provides validation examples demonstrating that the performance
-// optimization system achieves the target SLOs for Sprint 6.
+// optimization system achieves the target SLOs for performance optimization
 package performance
 
 import (

@@ -3,7 +3,7 @@
 
 // Package session provides comprehensive session management for Guild Framework
 //
-// This package implements the session management requirements for Product Vision Sprint 6,
+// This package implements the session management requirements for Product Vision performance optimization,
 // Agent 2 task, providing:
 //   - Session persistence with encryption, compression, and auto-save
 //   - Conversation resume functionality with UI state restoration

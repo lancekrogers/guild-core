@@ -1499,7 +1499,7 @@ func (h *SearchHandler) Usage() string {
 	return "/search <query> - Unified search across chat and corpus"
 }
 
-// ExportHandler exports chat history with full Sprint 7 functionality
+// ExportHandler exports chat history with full production enhancement functionality
 type ExportHandler struct {
 	sessionManager session.SessionManager
 	currentSession *session.Session

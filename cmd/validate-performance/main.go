@@ -1,12 +1,12 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
-// validate-performance validates all Sprint 6 performance targets
+// validate-performance validates all performance optimization performance targets
 //
-// This command implements the performance validation requirements identified in Sprint 6.5,
+// This command implements the performance validation requirements identified in performance optimization,
 // Agent 3 task, providing:
 //   - Comprehensive benchmark suite for all performance components
-//   - Target validation against Sprint 6 performance requirements
+//   - Target validation against performance optimization performance requirements
 //   - Load testing with realistic workloads
 //   - Performance regression detection
 //
@@ -20,13 +20,13 @@
 //
 //	# Run basic validation
 //	validate-performance
-//	
+//
 //	# Run with load testing
 //	validate-performance --load --concurrent-users=50
-//	
+//
 //	# Run continuous validation
 //	validate-performance --continuous --interval=30s
-//	
+//
 //	# Generate detailed report
 //	validate-performance --report=reports/performance-validation.json --verbose
 package main
@@ -39,14 +39,13 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"runtime"
 	"time"
 
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"go.uber.org/zap"
 )
 
-// PerformanceValidator validates all Sprint 6 performance targets
+// PerformanceValidator validates all performance optimization performance targets
 type PerformanceValidator struct {
 	logger           *zap.Logger
 	sessionBenchmark *SessionBenchmark
@@ -61,80 +60,80 @@ type PerformanceValidator struct {
 
 // PerformanceTargets defines all performance requirements
 type PerformanceTargets struct {
-	UIResponseTimeP99       time.Duration `json:"ui_response_time_p99"`       // < 100ms
-	AgentResponseTimeP95    time.Duration `json:"agent_response_time_p95"`    // < 1s
-	MemoryUsageMax          int64         `json:"memory_usage_max"`           // < 500MB
-	CacheHitRateMin         float64       `json:"cache_hit_rate_min"`         // > 90%
-	SessionRestorationRate  float64       `json:"session_restoration_rate"`   // > 99%
-	ThroughputMin           float64       `json:"throughput_min"`             // requests/second
-	ConcurrentUsersMax      int           `json:"concurrent_users_max"`       // max concurrent users
+	UIResponseTimeP99      time.Duration `json:"ui_response_time_p99"`     // < 100ms
+	AgentResponseTimeP95   time.Duration `json:"agent_response_time_p95"`  // < 1s
+	MemoryUsageMax         int64         `json:"memory_usage_max"`         // < 500MB
+	CacheHitRateMin        float64       `json:"cache_hit_rate_min"`       // > 90%
+	SessionRestorationRate float64       `json:"session_restoration_rate"` // > 99%
+	ThroughputMin          float64       `json:"throughput_min"`           // requests/second
+	ConcurrentUsersMax     int           `json:"concurrent_users_max"`     // max concurrent users
 }
 
 // ValidationResult contains the results of performance validation
 type ValidationResult struct {
-	Timestamp        time.Time                 `json:"timestamp"`
-	Duration         time.Duration             `json:"duration"`
-	OverallSuccess   bool                      `json:"overall_success"`
-	TargetsMet       int                       `json:"targets_met"`
-	TotalTargets     int                       `json:"total_targets"`
+	Timestamp        time.Time                   `json:"timestamp"`
+	Duration         time.Duration               `json:"duration"`
+	OverallSuccess   bool                        `json:"overall_success"`
+	TargetsMet       int                         `json:"targets_met"`
+	TotalTargets     int                         `json:"total_targets"`
 	ComponentResults map[string]*ComponentResult `json:"component_results"`
-	Summary          *ValidationSummary        `json:"summary"`
-	Recommendations  []string                  `json:"recommendations"`
+	Summary          *ValidationSummary          `json:"summary"`
+	Recommendations  []string                    `json:"recommendations"`
 }
 
 // ComponentResult contains results for a specific component
 type ComponentResult struct {
-	ComponentName    string                    `json:"component_name"`
-	Success          bool                      `json:"success"`
-	Metrics          map[string]interface{}    `json:"metrics"`
-	TargetsMet       map[string]bool           `json:"targets_met"`
-	BenchmarkResults []*BenchmarkResult        `json:"benchmark_results"`
-	Errors           []string                  `json:"errors"`
+	ComponentName    string                 `json:"component_name"`
+	Success          bool                   `json:"success"`
+	Metrics          map[string]interface{} `json:"metrics"`
+	TargetsMet       map[string]bool        `json:"targets_met"`
+	BenchmarkResults []*BenchmarkResult     `json:"benchmark_results"`
+	Errors           []string               `json:"errors"`
 }
 
 // BenchmarkResult contains individual benchmark results
 type BenchmarkResult struct {
-	Name            string        `json:"name"`
-	Duration        time.Duration `json:"duration"`
-	Iterations      int           `json:"iterations"`
-	MetricsPerOp    float64       `json:"metrics_per_op"`
-	MemoryPerOp     int64         `json:"memory_per_op"`
-	AllocsPerOp     int64         `json:"allocs_per_op"`
-	Success         bool          `json:"success"`
-	TargetMet       bool          `json:"target_met"`
-	ActualValue     interface{}   `json:"actual_value"`
-	TargetValue     interface{}   `json:"target_value"`
+	Name         string        `json:"name"`
+	Duration     time.Duration `json:"duration"`
+	Iterations   int           `json:"iterations"`
+	MetricsPerOp float64       `json:"metrics_per_op"`
+	MemoryPerOp  int64         `json:"memory_per_op"`
+	AllocsPerOp  int64         `json:"allocs_per_op"`
+	Success      bool          `json:"success"`
+	TargetMet    bool          `json:"target_met"`
+	ActualValue  interface{}   `json:"actual_value"`
+	TargetValue  interface{}   `json:"target_value"`
 }
 
 // ValidationSummary provides high-level validation results
 type ValidationSummary struct {
-	UIPerformance     *PerformanceSummary `json:"ui_performance"`
-	AgentPerformance  *PerformanceSummary `json:"agent_performance"`
-	CachePerformance  *PerformanceSummary `json:"cache_performance"`
+	UIPerformance      *PerformanceSummary `json:"ui_performance"`
+	AgentPerformance   *PerformanceSummary `json:"agent_performance"`
+	CachePerformance   *PerformanceSummary `json:"cache_performance"`
 	SessionPerformance *PerformanceSummary `json:"session_performance"`
-	IntegrationHealth *PerformanceSummary `json:"integration_health"`
+	IntegrationHealth  *PerformanceSummary `json:"integration_health"`
 }
 
 // PerformanceSummary summarizes performance for a category
 type PerformanceSummary struct {
-	Category        string    `json:"category"`
-	Score           float64   `json:"score"`           // 0-100
-	Grade           string    `json:"grade"`           // A, B, C, D, F
-	TargetsMet      int       `json:"targets_met"`
-	TotalTargets    int       `json:"total_targets"`
-	KeyMetrics      []Metric  `json:"key_metrics"`
-	Issues          []string  `json:"issues"`
-	Recommendations []string  `json:"recommendations"`
+	Category        string   `json:"category"`
+	Score           float64  `json:"score"` // 0-100
+	Grade           string   `json:"grade"` // A, B, C, D, F
+	TargetsMet      int      `json:"targets_met"`
+	TotalTargets    int      `json:"total_targets"`
+	KeyMetrics      []Metric `json:"key_metrics"`
+	Issues          []string `json:"issues"`
+	Recommendations []string `json:"recommendations"`
 }
 
 // Metric represents a performance metric
 type Metric struct {
-	Name         string      `json:"name"`
-	Value        interface{} `json:"value"`
-	Unit         string      `json:"unit"`
-	Target       interface{} `json:"target"`
-	TargetMet    bool        `json:"target_met"`
-	Importance   string      `json:"importance"` // critical, high, medium, low
+	Name       string      `json:"name"`
+	Value      interface{} `json:"value"`
+	Unit       string      `json:"unit"`
+	Target     interface{} `json:"target"`
+	TargetMet  bool        `json:"target_met"`
+	Importance string      `json:"importance"` // critical, high, medium, low
 }
 
 func main() {
@@ -161,7 +160,7 @@ func main() {
 	defer logger.Sync()
 
 	ctx := context.Background()
-	logger.Info("Starting performance validation", 
+	logger.Info("Starting performance validation",
 		zap.String("config", *configPath),
 		zap.String("report", *reportPath))
 
@@ -226,19 +225,19 @@ func NewPerformanceValidator(config *PerformanceConfig, logger *zap.Logger) (*Pe
 	validator := &PerformanceValidator{
 		logger: logger.Named("performance-validator"),
 		targets: &PerformanceTargets{
-			UIResponseTimeP99:       100 * time.Millisecond,
-			AgentResponseTimeP95:    1 * time.Second,
-			MemoryUsageMax:          500 * 1024 * 1024, // 500MB
-			CacheHitRateMin:         0.90,              // 90%
-			SessionRestorationRate:  0.99,              // 99%
-			ThroughputMin:           100.0,             // 100 req/s
-			ConcurrentUsersMax:      50,                // 50 users
+			UIResponseTimeP99:      100 * time.Millisecond,
+			AgentResponseTimeP95:   1 * time.Second,
+			MemoryUsageMax:         500 * 1024 * 1024, // 500MB
+			CacheHitRateMin:        0.90,              // 90%
+			SessionRestorationRate: 0.99,              // 99%
+			ThroughputMin:          100.0,             // 100 req/s
+			ConcurrentUsersMax:     50,                // 50 users
 		},
 	}
 
 	// Initialize benchmark components
 	var err error
-	
+
 	validator.sessionBenchmark, err = NewSessionBenchmark(logger)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize session benchmark")
@@ -270,7 +269,7 @@ func NewPerformanceValidator(config *PerformanceConfig, logger *zap.Logger) (*Pe
 // runValidation executes the complete validation suite
 func runValidation(ctx context.Context, validator *PerformanceValidator, options ValidationOptions) (*ValidationResult, error) {
 	startTime := time.Now()
-	
+
 	validator.logger.Info("Starting performance validation suite")
 
 	result := &ValidationResult{
@@ -344,7 +343,7 @@ func runValidation(ctx context.Context, validator *PerformanceValidator, options
 	// Generate recommendations
 	result.Recommendations = validator.generateRecommendations(result)
 
-	validator.logger.Info("Performance validation completed", 
+	validator.logger.Info("Performance validation completed",
 		zap.Duration("duration", result.Duration),
 		zap.Bool("success", result.OverallSuccess),
 		zap.Int("targets_met", result.TargetsMet),
@@ -631,140 +630,7 @@ func (v *PerformanceValidator) generateRecommendations(result *ValidationResult)
 	return recommendations
 }
 
-// Benchmark implementation stubs (these would be implemented in separate files)
-
-type SessionBenchmark struct{ logger *zap.Logger }
-type UIBenchmark struct{ logger *zap.Logger }
-type AgentBenchmark struct{ logger *zap.Logger }
-type CacheBenchmark struct{ logger *zap.Logger }
-type IntegrationTest struct{ logger *zap.Logger }
-
-func NewSessionBenchmark(logger *zap.Logger) (*SessionBenchmark, error) {
-	return &SessionBenchmark{logger: logger}, nil
-}
-
-func NewUIBenchmark(logger *zap.Logger) (*UIBenchmark, error) {
-	return &UIBenchmark{logger: logger}, nil
-}
-
-func NewAgentBenchmark(logger *zap.Logger) (*AgentBenchmark, error) {
-	return &AgentBenchmark{logger: logger}, nil
-}
-
-func NewCacheBenchmark(logger *zap.Logger) (*CacheBenchmark, error) {
-	return &CacheBenchmark{logger: logger}, nil
-}
-
-func NewIntegrationTest(logger *zap.Logger) (*IntegrationTest, error) {
-	return &IntegrationTest{logger: logger}, nil
-}
-
-// Stub implementations (would be expanded in real implementation)
-func (sb *SessionBenchmark) BenchmarkSessionCreation(ctx context.Context, iterations int) (*BenchmarkResult, error) {
-	return &BenchmarkResult{
-		Name:         "Session Creation",
-		Duration:     30 * time.Millisecond,
-		Iterations:   iterations,
-		MetricsPerOp: 30.0,
-		Success:      true,
-		TargetMet:    true,
-		ActualValue:  30 * time.Millisecond,
-		TargetValue:  50 * time.Millisecond,
-	}, nil
-}
-
-func (sb *SessionBenchmark) BenchmarkSessionRestoration(ctx context.Context, iterations int) (*BenchmarkResult, error) {
-	return &BenchmarkResult{
-		Name:        "Session Restoration",
-		Success:     true,
-		TargetMet:   true,
-		ActualValue: 0.995, // 99.5% success rate
-		TargetValue: 0.99,  // 99% target
-	}, nil
-}
-
-func (ub *UIBenchmark) BenchmarkUIResponseTime(ctx context.Context, iterations int) (*BenchmarkResult, error) {
-	return &BenchmarkResult{
-		Name:        "UI Response Time P99",
-		Success:     true,
-		TargetMet:   true,
-		ActualValue: 85 * time.Millisecond,
-		TargetValue: 100 * time.Millisecond,
-	}, nil
-}
-
-func (ub *UIBenchmark) BenchmarkAnimationFrameRate(ctx context.Context, targetFPS int) (*BenchmarkResult, error) {
-	return &BenchmarkResult{
-		Name:        "Animation Frame Rate",
-		Success:     true,
-		TargetMet:   true,
-		ActualValue: 59.2, // FPS
-		TargetValue: 58.0,
-	}, nil
-}
-
-func (ab *AgentBenchmark) BenchmarkAgentResponseTime(ctx context.Context, iterations int) (*BenchmarkResult, error) {
-	return &BenchmarkResult{
-		Name:        "Agent Response Time P95",
-		Success:     true,
-		TargetMet:   true,
-		ActualValue: 850 * time.Millisecond,
-		TargetValue: 1 * time.Second,
-	}, nil
-}
-
-func (ab *AgentBenchmark) BenchmarkMultiAgentCoordination(ctx context.Context, iterations int) (*BenchmarkResult, error) {
-	return &BenchmarkResult{
-		Name:        "Multi-Agent Throughput",
-		Success:     true,
-		TargetMet:   true,
-		ActualValue: 125.0, // req/s
-		TargetValue: 100.0,
-	}, nil
-}
-
-func (cb *CacheBenchmark) BenchmarkCacheHitRate(ctx context.Context, iterations int) (*BenchmarkResult, error) {
-	return &BenchmarkResult{
-		Name:        "Cache Hit Rate",
-		Success:     true,
-		TargetMet:   true,
-		ActualValue: 0.92, // 92%
-		TargetValue: 0.90,
-	}, nil
-}
-
-func (cb *CacheBenchmark) BenchmarkCacheMemoryUsage(ctx context.Context, iterations int) (*BenchmarkResult, error) {
-	return &BenchmarkResult{
-		Name:        "Cache Memory Usage",
-		Success:     true,
-		TargetMet:   true,
-		ActualValue: int64(100 * 1024 * 1024), // 100MB
-		TargetValue: int64(125 * 1024 * 1024), // 125MB limit
-	}, nil
-}
-
-func (it *IntegrationTest) BenchmarkSystemMemoryUsage(ctx context.Context, duration time.Duration) (*BenchmarkResult, error) {
-	var m runtime.MemStats
-	runtime.ReadMemStats(&m)
-	
-	return &BenchmarkResult{
-		Name:        "System Memory Usage",
-		Success:     true,
-		TargetMet:   true,
-		ActualValue: int64(m.HeapAlloc),
-		TargetValue: int64(500 * 1024 * 1024), // 500MB
-	}, nil
-}
-
-func (it *IntegrationTest) BenchmarkConcurrentLoad(ctx context.Context, users int, duration time.Duration) (*BenchmarkResult, error) {
-	return &BenchmarkResult{
-		Name:        "Concurrent Users Load",
-		Success:     true,
-		TargetMet:   true,
-		ActualValue: users,
-		TargetValue: 50,
-	}, nil
-}
+// Benchmark implementations are in benchmarks.go
 
 // Utility functions
 
@@ -801,7 +667,7 @@ func runContinuousValidation(ctx context.Context, validator *PerformanceValidato
 
 			timestamp := time.Now().Format("20060102-150405")
 			continuousReportPath := fmt.Sprintf("%s.%s", reportPath, timestamp)
-			
+
 			if err := generateReport(result, continuousReportPath, logger); err != nil {
 				logger.Error("Failed to generate continuous report", zap.Error(err))
 			}
@@ -826,7 +692,7 @@ func generateReport(result *ValidationResult, reportPath string, logger *zap.Log
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to write report file")
 	}
 
-	logger.Info("Performance validation report generated", 
+	logger.Info("Performance validation report generated",
 		zap.String("path", reportPath),
 		zap.Int("size_bytes", len(data)))
 
@@ -835,14 +701,14 @@ func generateReport(result *ValidationResult, reportPath string, logger *zap.Log
 
 func printValidationSummary(result *ValidationResult, logger *zap.Logger) {
 	logger.Info("=== PERFORMANCE VALIDATION SUMMARY ===")
-	logger.Info("Overall Result", 
+	logger.Info("Overall Result",
 		zap.Bool("success", result.OverallSuccess),
 		zap.Int("targets_met", result.TargetsMet),
 		zap.Int("total_targets", result.TotalTargets),
 		zap.Duration("duration", result.Duration))
 
 	for componentName, componentResult := range result.ComponentResults {
-		logger.Info("Component Result", 
+		logger.Info("Component Result",
 			zap.String("component", componentName),
 			zap.Bool("success", componentResult.Success),
 			zap.Int("benchmarks", len(componentResult.BenchmarkResults)),
@@ -851,7 +717,7 @@ func printValidationSummary(result *ValidationResult, logger *zap.Logger) {
 
 	if result.Summary != nil {
 		if result.Summary.UIPerformance != nil {
-			logger.Info("UI Performance", 
+			logger.Info("UI Performance",
 				zap.Float64("score", result.Summary.UIPerformance.Score),
 				zap.String("grade", result.Summary.UIPerformance.Grade))
 		}

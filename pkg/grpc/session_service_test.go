@@ -19,8 +19,8 @@ import (
 
 // TestSessionService_CreateSession_Validation tests comprehensive input validation
 func TestSessionService_CreateSession_Validation(t *testing.T) {
-	// Skip validation tests - not required for Sprint 3a memory service
-	t.Skip("Validation not implemented in Sprint 3a memory session service")
+	// Skip validation tests - not required for development phasea memory service
+	t.Skip("Validation not implemented in development phasea memory session service")
 	tests := []struct {
 		name        string
 		request     *v1.CreateSessionRequest
@@ -137,8 +137,8 @@ func TestSessionService_CreateSession_Validation(t *testing.T) {
 
 // TestSessionService_MessageContent_Validation tests message content validation
 func TestSessionService_MessageContent_Validation(t *testing.T) {
-	// Skip validation tests - not required for Sprint 3a memory service
-	t.Skip("Validation not implemented in Sprint 3a memory session service")
+	// Skip validation tests - not required for development phasea memory service
+	t.Skip("Validation not implemented in development phasea memory session service")
 	service := NewMemorySessionService()
 	ctx := context.Background()
 
@@ -207,8 +207,8 @@ func TestSessionService_MessageContent_Validation(t *testing.T) {
 
 // TestSessionService_ContextCancellation tests proper context handling
 func TestSessionService_ContextCancellation(t *testing.T) {
-	// Skip context cancellation test - not required for Sprint 3a
-	t.Skip("Context cancellation handling not required for Sprint 3a")
+	// Skip context cancellation test - not required for development phasea
+	t.Skip("Context cancellation handling not required for development phasea")
 	service := NewMemorySessionService()
 
 	// Create a cancelled context

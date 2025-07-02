@@ -3,7 +3,7 @@
 
 // Package theme provides comprehensive theme management for Guild Framework UI
 //
-// This package implements the theme management requirements identified in Sprint 6.5,
+// This package implements the theme management requirements identified in performance optimization,
 // Agent 1 task, providing:
 //   - Centralized theme management with hot-swapping capabilities
 //   - Claude Code visual parity with professional styling
@@ -41,6 +41,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/lancekrogers/guild/internal/ui"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"go.uber.org/zap"
 )
@@ -96,8 +97,8 @@ type ColorScheme struct {
 	Border     Color `json:"border"`     // Border colors
 	Text       Text  `json:"text"`       // Text color variants
 
-	// Agent-specific colors (Guild feature)
-	AgentColors map[string]Color `json:"agent_colors"` // Per-agent identification
+	// Agent-specific colors (Guild feature) - dynamically generated
+	AgentColors map[string]Color `json:"agent_colors"` // Per-agent identification, auto-generated
 }
 
 // Color represents a color with various shades
@@ -314,12 +315,18 @@ func NewThemeManager() *ThemeManager {
 
 // ApplyTheme applies a theme by name
 func (tm *ThemeManager) ApplyTheme(ctx context.Context, themeName string) error {
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("theme-manager").
+			WithOperation("ApplyTheme")
+	}
+
 	tm.mu.Lock()
 	defer tm.mu.Unlock()
 
 	theme, exists := tm.themes[themeName]
 	if !exists {
-		return gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("theme '%s' not found", themeName), nil).
+		return gerror.New(ui.ErrCodeUIThemeNotFound, fmt.Sprintf("theme '%s' not found", themeName), nil).
 			WithComponent("theme-manager").
 			WithOperation("ApplyTheme")
 	}
@@ -372,7 +379,7 @@ func (tm *ThemeManager) GetComponent(componentName string) lipgloss.Style {
 	}
 }
 
-// GetAgentStyle returns agent-specific styling
+// GetAgentStyle returns agent-specific styling, generating colors dynamically
 func (tm *ThemeManager) GetAgentStyle(agentID string) lipgloss.Style {
 	tm.mu.RLock()
 	defer tm.mu.RUnlock()
@@ -381,17 +388,128 @@ func (tm *ThemeManager) GetAgentStyle(agentID string) lipgloss.Style {
 		return lipgloss.NewStyle()
 	}
 
-	// Get agent color or use default
-	agentColor, exists := tm.currentTheme.Colors.AgentColors[agentID]
-	if !exists {
-		agentColor = tm.currentTheme.Colors.Primary
-	}
+	// Get or generate agent color
+	agentColor := tm.getOrGenerateAgentColor(agentID)
 
 	return lipgloss.NewStyle().
 		Foreground(lipgloss.Color(agentColor.Base)).
 		Background(lipgloss.Color(agentColor.Light)).
 		Border(lipgloss.NormalBorder()).
 		BorderForeground(lipgloss.Color(agentColor.Dark))
+}
+
+// getOrGenerateAgentColor gets existing agent color or generates a new one
+func (tm *ThemeManager) getOrGenerateAgentColor(agentID string) Color {
+	// Check if color already exists
+	if agentColor, exists := tm.currentTheme.Colors.AgentColors[agentID]; exists {
+		return agentColor
+	}
+
+	// Generate new color based on agent ID
+	agentColor := tm.generateAgentColor(agentID)
+	
+	// Store for future use
+	if tm.currentTheme.Colors.AgentColors == nil {
+		tm.currentTheme.Colors.AgentColors = make(map[string]Color)
+	}
+	tm.currentTheme.Colors.AgentColors[agentID] = agentColor
+
+	return agentColor
+}
+
+// generateAgentColor generates a unique color for an agent based on their ID
+func (tm *ThemeManager) generateAgentColor(agentID string) Color {
+	// Use a deterministic hash-based approach for consistent colors
+	hash := tm.hashString(agentID)
+	
+	// Generate hue based on hash (0-360 degrees)
+	hue := float64(hash % 360)
+	
+	// Use theme-appropriate saturation and lightness
+	var saturation, lightness float64
+	if tm.isDarkTheme() {
+		saturation = 0.7
+		lightness = 0.6
+	} else {
+		saturation = 0.6
+		lightness = 0.5
+	}
+
+	baseColor := tm.hslToHex(hue, saturation, lightness)
+	lightColor := tm.hslToHex(hue, saturation*0.8, lightness+0.2)
+	darkColor := tm.hslToHex(hue, saturation*1.2, lightness-0.2)
+
+	return Color{
+		Base:  baseColor,
+		Light: lightColor,
+		Dark:  darkColor,
+		Muted: tm.hslToHex(hue, saturation*0.5, lightness),
+		Inverse: tm.getContrastColor(baseColor),
+	}
+}
+
+// hashString creates a simple hash from a string
+func (tm *ThemeManager) hashString(s string) uint32 {
+	hash := uint32(2166136261)
+	for _, b := range []byte(s) {
+		hash ^= uint32(b)
+		hash *= 16777619
+	}
+	return hash
+}
+
+// isDarkTheme determines if current theme is dark
+func (tm *ThemeManager) isDarkTheme() bool {
+	if tm.currentTheme == nil {
+		return false
+	}
+	// Simple heuristic: check if background is darker than text
+	return tm.currentTheme.Colors.Background.Base < tm.currentTheme.Colors.Text.Primary
+}
+
+// hslToHex converts HSL values to hex color
+func (tm *ThemeManager) hslToHex(h, s, l float64) string {
+	h = h / 360.0
+	
+	var r, g, b float64
+	
+	if s == 0 {
+		r, g, b = l, l, l
+	} else {
+		hue2rgb := func(p, q, t float64) float64 {
+			if t < 0 { t += 1 }
+			if t > 1 { t -= 1 }
+			if t < 1.0/6.0 { return p + (q-p)*6*t }
+			if t < 1.0/2.0 { return q }
+			if t < 2.0/3.0 { return p + (q-p)*(2.0/3.0-t)*6 }
+			return p
+		}
+		
+		var q float64
+		if l < 0.5 {
+			q = l * (1 + s)
+		} else {
+			q = l + s - l*s
+		}
+		p := 2*l - q
+		
+		r = hue2rgb(p, q, h+1.0/3.0)
+		g = hue2rgb(p, q, h)
+		b = hue2rgb(p, q, h-1.0/3.0)
+	}
+	
+	return fmt.Sprintf("#%02x%02x%02x", 
+		int(r*255+0.5), 
+		int(g*255+0.5), 
+		int(b*255+0.5))
+}
+
+// getContrastColor returns black or white based on background
+func (tm *ThemeManager) getContrastColor(bgColor string) string {
+	if tm.isDarkTheme() {
+		return "#ffffff"
+	}
+	return "#000000"
 }
 
 // AddObserver adds a theme change observer
@@ -437,7 +555,7 @@ func (tm *ThemeManager) ExportTheme(ctx context.Context, themeName, outputPath s
 	tm.mu.RUnlock()
 
 	if !exists {
-		return gerror.New(gerror.ErrCodeNotFound, fmt.Sprintf("theme '%s' not found", themeName), nil).
+		return gerror.New(ui.ErrCodeUIThemeNotFound, fmt.Sprintf("theme '%s' not found", themeName), nil).
 			WithComponent("theme-manager").
 			WithOperation("ExportTheme")
 	}
@@ -533,12 +651,7 @@ func (tm *ThemeManager) registerBuiltinThemes() {
 				Inverse:   "#ffffff",
 				Link:      "#2563eb",
 			},
-			AgentColors: map[string]Color{
-				"agent-1": {Base: "#7c3aed", Light: "#a78bfa", Dark: "#5b21b6"},
-				"agent-2": {Base: "#059669", Light: "#34d399", Dark: "#047857"},
-				"agent-3": {Base: "#dc2626", Light: "#f87171", Dark: "#991b1b"},
-				"agent-4": {Base: "#d97706", Light: "#fbbf24", Dark: "#92400e"},
-			},
+			AgentColors: make(map[string]Color), // Will be populated dynamically
 		},
 		Typography: Typography{
 			FontFamily: "SF Mono, Monaco, Consolas, monospace",
@@ -614,6 +727,7 @@ func (tm *ThemeManager) registerBuiltinThemes() {
 				Inverse:   "#1e293b",
 				Link:      "#60a5fa",
 			},
+			AgentColors: make(map[string]Color), // Will be populated dynamically
 		},
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),

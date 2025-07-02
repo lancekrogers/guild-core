@@ -1,11 +1,11 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
-// Package integration provides the critical integration layer connecting Sprint 6 components
+// Package integration provides the critical integration layer connecting performance optimization components
 //
-// This package implements the integration requirements identified in Sprint 6.5,
+// This package implements the integration requirements identified in performance optimization,
 // Agent 2 task, providing:
-//   - Unified event bus integration for all Sprint 6 components
+//   - Unified event bus integration for all performance optimization components
 //   - Registry pattern implementation for component discovery
 //   - Database schema integration for persistence
 //   - gRPC service coordination for distributed operations
@@ -20,13 +20,13 @@
 //
 //	// Create event bus integrator
 //	integrator := NewEventBusIntegrator(orchestratorBus, logger)
-//	
-//	// Register all Sprint 6 components
+//
+//	// Register all performance optimization components
 //	err := integrator.RegisterAllComponents(ctx)
-//	
+//
 //	// Publish session event
 //	err = integrator.PublishSessionEvent(ctx, "session.created", sessionData)
-//	
+//
 //	// Subscribe to performance events
 //	err = integrator.SubscribeToPerformanceEvents(ctx, performanceHandler)
 package integration
@@ -50,7 +50,7 @@ const (
 	PackageName = "integration"
 )
 
-// EventBusIntegrator connects all Sprint 6 components to Guild's orchestrator event bus
+// EventBusIntegrator connects all performance optimization components to Guild's orchestrator event bus
 type EventBusIntegrator struct {
 	orchestratorBus orchestrator.EventBus
 	logger          *zap.Logger
@@ -61,19 +61,19 @@ type EventBusIntegrator struct {
 	monitoringAdapter  *MonitoringEventAdapter
 
 	// Event routing and filtering
-	eventRouter    *EventRouter
-	eventFilters   []EventFilter
-	eventHandlers  map[string][]EventHandler
-	subscriptions  map[string][]Subscription
-	mu             sync.RWMutex
+	eventRouter   *EventRouter
+	eventFilters  []EventFilter
+	eventHandlers map[string][]EventHandler
+	subscriptions map[string][]Subscription
+	mu            sync.RWMutex
 }
 
 // EventRouter manages event routing between components
 type EventRouter struct {
-	routes      map[string][]RouteTarget
-	middleware  []RouteMiddleware
-	logger      *zap.Logger
-	mu          sync.RWMutex
+	routes     map[string][]RouteTarget
+	middleware []RouteMiddleware
+	logger     *zap.Logger
+	mu         sync.RWMutex
 }
 
 // RouteTarget defines where an event should be routed
@@ -87,41 +87,41 @@ type RouteTarget struct {
 
 // Event represents a system event
 type Event struct {
-	ID          string                 `json:"id"`
-	Type        string                 `json:"type"`
-	Source      string                 `json:"source"`
-	Target      string                 `json:"target"`
-	Timestamp   time.Time              `json:"timestamp"`
-	Data        map[string]interface{} `json:"data"`
-	Metadata    map[string]interface{} `json:"metadata"`
-	Context     context.Context        `json:"-"`
+	ID        string                 `json:"id"`
+	Type      string                 `json:"type"`
+	Source    string                 `json:"source"`
+	Target    string                 `json:"target"`
+	Timestamp time.Time              `json:"timestamp"`
+	Data      map[string]interface{} `json:"data"`
+	Metadata  map[string]interface{} `json:"metadata"`
+	Context   context.Context        `json:"-"`
 }
 
 // Subscription represents an event subscription
 type Subscription struct {
-	ID          string      `json:"id"`
-	EventType   string      `json:"event_type"`
-	Handler     EventHandler `json:"-"`
-	Filter      EventFilter  `json:"-"`
-	Active      bool        `json:"active"`
-	CreatedAt   time.Time   `json:"created_at"`
+	ID        string       `json:"id"`
+	EventType string       `json:"event_type"`
+	Handler   EventHandler `json:"-"`
+	Filter    EventFilter  `json:"-"`
+	Active    bool         `json:"active"`
+	CreatedAt time.Time    `json:"created_at"`
 }
 
-// Event types for Sprint 6 components
+// Event types for performance optimization components
 const (
 	// Session events
-	EventTypeSessionCreated   = "session.created"
-	EventTypeSessionResumed   = "session.resumed"
-	EventTypeSessionSaved     = "session.saved"
-	EventTypeSessionExported  = "session.exported"
-	EventTypeSessionAnalyzed  = "session.analyzed"
+	EventTypeSessionCreated  = "session.created"
+	EventTypeSessionResumed  = "session.resumed"
+	EventTypeSessionSaved    = "session.saved"
+	EventTypeSessionExported = "session.exported"
+	EventTypeSessionAnalyzed = "session.analyzed"
 
 	// Performance events
-	EventTypePerformanceProfiled     = "performance.profiled"
-	EventTypePerformanceOptimized    = "performance.optimized"
-	EventTypePerformanceCacheHit     = "performance.cache.hit"
-	EventTypePerformanceCacheMiss    = "performance.cache.miss"
-	EventTypePerformanceMemoryOptim  = "performance.memory.optimized"
+	EventTypePerformanceProfiled    = "performance.profiled"
+	EventTypePerformanceOptimized   = "performance.optimized"
+	EventTypePerformanceCacheHit    = "performance.cache.hit"
+	EventTypePerformanceCacheMiss   = "performance.cache.miss"
+	EventTypePerformanceMemoryOptim = "performance.memory.optimized"
 
 	// Monitoring events
 	EventTypeMonitoringAlertTriggered = "monitoring.alert.triggered"
@@ -140,7 +140,7 @@ type EventFilter func(event *Event) bool
 type EventTransformer func(event *Event) (*Event, error)
 type RouteMiddleware func(ctx context.Context, event *Event, next func() error) error
 
-// NewEventBusIntegrator creates integration layer for all Sprint 6 components
+// NewEventBusIntegrator creates integration layer for all performance optimization components
 func NewEventBusIntegrator(bus orchestrator.EventBus, logger *zap.Logger) *EventBusIntegrator {
 	ebi := &EventBusIntegrator{
 		orchestratorBus: bus,
@@ -164,9 +164,9 @@ func NewEventBusIntegrator(bus orchestrator.EventBus, logger *zap.Logger) *Event
 	return ebi
 }
 
-// RegisterAllComponents connects all Sprint 6 components to the event bus
+// RegisterAllComponents connects all performance optimization components to the event bus
 func (ebi *EventBusIntegrator) RegisterAllComponents(ctx context.Context) error {
-	ebi.logger.Info("Registering all Sprint 6 components with event bus")
+	ebi.logger.Info("Registering all performance optimization components with event bus")
 
 	// Register session events
 	if err := ebi.sessionAdapter.Register(ctx); err != nil {
@@ -205,7 +205,7 @@ func (ebi *EventBusIntegrator) RegisterAllComponents(ctx context.Context) error 
 		ebi.logger.Warn("Failed to publish integration registered event", zap.Error(err))
 	}
 
-	ebi.logger.Info("All Sprint 6 components registered with event bus successfully")
+	ebi.logger.Info("All performance optimization components registered with event bus successfully")
 	return nil
 }
 
@@ -214,7 +214,7 @@ func (ebi *EventBusIntegrator) PublishEvent(ctx context.Context, event *Event) e
 	// Apply event filters
 	for _, filter := range ebi.eventFilters {
 		if !filter(event) {
-			ebi.logger.Debug("Event filtered out", 
+			ebi.logger.Debug("Event filtered out",
 				zap.String("event_type", event.Type),
 				zap.String("event_id", event.ID))
 			return nil
@@ -252,9 +252,8 @@ func (ebi *EventBusIntegrator) PublishEvent(ctx context.Context, event *Event) e
 	}
 
 	ebi.orchestratorBus.Publish(orchestratorEvent)
-	return nil
-
-	ebi.logger.Debug("Event published successfully", 
+	
+	ebi.logger.Debug("Event published successfully",
 		zap.String("event_type", event.Type),
 		zap.String("event_id", event.ID))
 
@@ -281,41 +280,108 @@ func (ebi *EventBusIntegrator) Subscribe(ctx context.Context, eventType string, 
 	ebi.subscriptions[eventType] = append(ebi.subscriptions[eventType], subscription)
 	ebi.mu.Unlock()
 
-	// Subscribe to orchestrator bus
+	// Subscribe to orchestrator bus with comprehensive error handling
 	orchestratorHandler := func(orchestratorEvent orchestrator.Event) {
-		// Convert Data back to JSON bytes for unmarshaling
+		// Create context for event processing with timeout for observability
+		eventCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+		defer cancel()
+		
+		// Convert Data back to JSON bytes for unmarshaling with proper error handling
 		eventData, err := json.Marshal(orchestratorEvent.Data)
 		if err != nil {
-			ebi.logger.Error("Failed to marshal event data", zap.Error(err))
+			gErr := gerror.Wrap(err, gerror.ErrCodeParsing, "failed to marshal orchestrator event data").
+				FromContext(eventCtx).
+				WithComponent("eventbus-integrator").
+				WithOperation("Subscribe.orchestratorHandler").
+				WithDetails("event_type", string(orchestratorEvent.Type)).
+				WithDetails("subscription_id", subscriptionID)
+			ebi.logger.Error("Failed to marshal event data", zap.Error(gErr))
 			return
 		}
 
 		var event Event
 		if err := json.Unmarshal(eventData, &event); err != nil {
-			ebi.logger.Error("Failed to unmarshal event", zap.Error(err))
+			gErr := gerror.Wrap(err, gerror.ErrCodeParsing, "failed to unmarshal event data to integration event").
+				FromContext(eventCtx).
+				WithComponent("eventbus-integrator").
+				WithOperation("Subscribe.orchestratorHandler").
+				WithDetails("event_type", string(orchestratorEvent.Type)).
+				WithDetails("data_size", len(eventData)).
+				WithDetails("subscription_id", subscriptionID)
+			ebi.logger.Error("Failed to unmarshal event", zap.Error(gErr))
 			return
 		}
+		
+		// Set context in event for downstream processing
+		event.Context = eventCtx
 
-		// Apply filter if provided
-		if filter != nil && !filter(&event) {
-			return
+		// Apply filter if provided with panic recovery
+		if filter != nil {
+			filterPassed := false
+			func() {
+				defer func() {
+					if r := recover(); r != nil {
+						gErr := gerror.New(gerror.ErrCodeInternal, "event filter panicked", nil).
+							FromContext(eventCtx).
+							WithComponent("eventbus-integrator").
+							WithOperation("Subscribe.filter").
+							WithDetails("event_type", event.Type).
+							WithDetails("subscription_id", subscriptionID).
+							WithDetails("panic_value", fmt.Sprintf("%v", r))
+						ebi.logger.Error("Event filter panicked", zap.Error(gErr))
+					}
+				}()
+				filterPassed = filter(&event)
+			}()
+			
+			if !filterPassed {
+				ebi.logger.Debug("Event filtered out", 
+					zap.String("event_type", event.Type),
+					zap.String("event_id", event.ID),
+					zap.String("subscription_id", subscriptionID))
+				return
+			}
 		}
 
-		// Call handler - note: EventHandler signature doesn't include context
-		if err := handler(context.Background(), &event); err != nil {
-			ebi.logger.Error("Event handler failed", zap.Error(err))
-		}
+		// Call handler with comprehensive error handling and panic recovery
+		func() {
+			defer func() {
+				if r := recover(); r != nil {
+					gErr := gerror.New(gerror.ErrCodeInternal, "event handler panicked", nil).
+						FromContext(eventCtx).
+						WithComponent("eventbus-integrator").
+						WithOperation("Subscribe.handler").
+						WithDetails("event_type", event.Type).
+						WithDetails("subscription_id", subscriptionID).
+						WithDetails("panic_value", fmt.Sprintf("%v", r))
+					ebi.logger.Error("Event handler panicked", zap.Error(gErr))
+				}
+			}()
+			
+			if err := handler(eventCtx, &event); err != nil {
+				gErr := gerror.Wrap(err, gerror.ErrCodeInternal, "event handler failed").
+					FromContext(eventCtx).
+					WithComponent("eventbus-integrator").
+					WithOperation("Subscribe.handler").
+					WithDetails("event_type", event.Type).
+					WithDetails("subscription_id", subscriptionID)
+				ebi.logger.Error("Event handler failed", zap.Error(gErr))
+			} else {
+				ebi.logger.Debug("Event processed successfully",
+					zap.String("event_type", event.Type),
+					zap.String("event_id", event.ID),
+					zap.String("subscription_id", subscriptionID))
+			}
+		}()
 	}
 
 	ebi.orchestratorBus.Subscribe(orchestrator.EventType(eventType), orchestratorHandler)
 
-	return subscription.ID, nil
-
-	ebi.logger.Info("Subscribed to event type", 
+	ebi.logger.Info("Subscribed to event type",
 		zap.String("event_type", eventType),
 		zap.String("subscription_id", subscriptionID))
 
-	return subscriptionID, nil
+	return subscription.ID, nil
 }
 
 // SessionEventAdapter converts session events to orchestrator events
@@ -344,11 +410,30 @@ func (sea *SessionEventAdapter) Register(ctx context.Context) error {
 	for _, eventType := range sessionEvents {
 		handler := func(eventType string) func(ctx context.Context, event orchestrator.Event) error {
 			return func(ctx context.Context, event orchestrator.Event) error {
-				sea.logger.Debug("Processing session event", 
+				// Check for context cancellation early
+				if err := ctx.Err(); err != nil {
+					return gerror.Wrap(err, gerror.ErrCodeCancelled, "session event processing cancelled").
+						FromContext(ctx).
+						WithComponent("session-event-adapter").
+						WithOperation("Register.handler").
+						WithDetails("event_type", eventType)
+				}
+
+				sea.logger.Debug("Processing session event",
 					zap.String("event_type", eventType),
 					zap.String("source", event.Source))
 
-				// Convert orchestrator event to integration event
+				// Validate event data
+				if event.Data == nil {
+					return gerror.New(gerror.ErrCodeInvalidInput, "session event data is nil", nil).
+						FromContext(ctx).
+						WithComponent("session-event-adapter").
+						WithOperation("Register.handler").
+						WithDetails("event_type", eventType).
+						WithDetails("event_source", event.Source)
+				}
+
+				// Convert orchestrator event to integration event with error handling
 				integrationEvent := &Event{
 					ID:        fmt.Sprintf("session-%d", time.Now().UnixNano()),
 					Type:      eventType,
@@ -359,23 +444,41 @@ func (sea *SessionEventAdapter) Register(ctx context.Context) error {
 					Context:   ctx,
 				}
 
-				// Copy event data (already a map)
-				integrationEvent.Data = event.Data
+				// Safely copy event data with validation
+				for key, value := range event.Data {
+					integrationEvent.Data[key] = value
+				}
 
 				// Add session-specific metadata
 				integrationEvent.Metadata = map[string]interface{}{
 					"component":     "session",
 					"adapter":       "session-event-adapter",
 					"original_type": event.Type,
+					"processed_at":  time.Now().Unix(),
 				}
+
+				sea.logger.Debug("Session event processed successfully",
+					zap.String("event_type", eventType),
+					zap.String("integration_event_id", integrationEvent.ID))
 
 				return nil
 			}
 		}(eventType)
 
 		sea.bus.Subscribe(orchestrator.EventType(eventType), func(event orchestrator.Event) {
-			if err := handler(ctx, event); err != nil {
-				sea.logger.Error("Session event handler failed", zap.Error(err))
+			// Create timeout context for event processing
+			eventCtx, cancel := context.WithTimeout(ctx, 15*time.Second)
+			defer cancel()
+
+			// Process with proper error handling
+			if err := handler(eventCtx, event); err != nil {
+				gErr := gerror.Wrap(err, gerror.ErrCodeInternal, "session event handler failed").
+					FromContext(eventCtx).
+					WithComponent("session-event-adapter").
+					WithOperation("Register.Subscribe").
+					WithDetails("event_type", eventType).
+					WithDetails("event_source", event.Source)
+				sea.logger.Error("Session event handler failed", zap.Error(gErr))
 			}
 		})
 	}
@@ -409,7 +512,7 @@ func (pea *PerformanceEventAdapter) Register(ctx context.Context) error {
 	for _, eventType := range performanceEvents {
 		handler := func(eventType string) func(ctx context.Context, event orchestrator.Event) error {
 			return func(ctx context.Context, event orchestrator.Event) error {
-				pea.logger.Debug("Processing performance event", 
+				pea.logger.Debug("Processing performance event",
 					zap.String("event_type", eventType),
 					zap.String("source", event.Source))
 
@@ -430,9 +533,9 @@ func (pea *PerformanceEventAdapter) Register(ctx context.Context) error {
 
 				// Add performance-specific metadata
 				integrationEvent.Metadata = map[string]interface{}{
-					"component":     "performance",
-					"adapter":       "performance-event-adapter",
-					"metrics_type":  extractMetricsType(eventType),
+					"component":    "performance",
+					"adapter":      "performance-event-adapter",
+					"metrics_type": extractMetricsType(eventType),
 				}
 
 				return nil
@@ -473,7 +576,7 @@ func (mea *MonitoringEventAdapter) Register(ctx context.Context) error {
 	for _, eventType := range monitoringEvents {
 		handler := func(eventType string) func(ctx context.Context, event orchestrator.Event) error {
 			return func(ctx context.Context, event orchestrator.Event) error {
-				mea.logger.Debug("Processing monitoring event", 
+				mea.logger.Debug("Processing monitoring event",
 					zap.String("event_type", eventType),
 					zap.String("source", event.Source))
 
@@ -494,9 +597,9 @@ func (mea *MonitoringEventAdapter) Register(ctx context.Context) error {
 
 				// Add monitoring-specific metadata
 				integrationEvent.Metadata = map[string]interface{}{
-					"component":      "monitoring",
-					"adapter":        "monitoring-event-adapter",
-					"severity":       extractSeverity(eventType),
+					"component": "monitoring",
+					"adapter":   "monitoring-event-adapter",
+					"severity":  extractSeverity(eventType),
 				}
 
 				return nil
@@ -546,7 +649,7 @@ func (er *EventRouter) RouteEvent(ctx context.Context, event *Event) error {
 			var err error
 			routedEvent, err = target.Transform(event)
 			if err != nil {
-				er.logger.Warn("Event transformation failed", 
+				er.logger.Warn("Event transformation failed",
 					zap.String("target", target.ComponentID),
 					zap.Error(err))
 				continue
@@ -554,7 +657,7 @@ func (er *EventRouter) RouteEvent(ctx context.Context, event *Event) error {
 		}
 
 		// Route to target component
-		er.logger.Debug("Routing event to target", 
+		er.logger.Debug("Routing event to target",
 			zap.String("event_type", routedEvent.Type),
 			zap.String("target", target.ComponentID))
 	}

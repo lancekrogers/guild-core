@@ -1,6 +1,6 @@
 # Chat Session Store
 
-The session package provides persistent storage and management for chat conversations in the Guild Framework. It implements the session persistence layer described in Sprint 3, enabling chat history, session management, and rich export capabilities.
+The session package provides persistent storage and management for chat conversations in the Guild Framework. It implements the session persistence layer described in development phase, enabling chat history, session management, and rich export capabilities.
 
 ## Architecture
 

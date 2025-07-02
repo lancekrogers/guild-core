@@ -1,0 +1,223 @@
+{
+  "timestamp": "2025-07-02T17:47:31.276279-06:00",
+  "duration": 97614144292,
+  "overall_success": false,
+  "targets_met": 6,
+  "total_targets": 8,
+  "component_results": {
+    "agent": {
+      "component_name": "agent",
+      "success": true,
+      "metrics": {},
+      "targets_met": {
+        "agent_response_time_p95": true,
+        "agent_throughput": false
+      },
+      "benchmark_results": [
+        {
+          "name": "Agent Response Time P95",
+          "duration": 58378146542,
+          "iterations": 500,
+          "metrics_per_op": 117.102208,
+          "memory_per_op": 0,
+          "allocs_per_op": 0,
+          "success": true,
+          "target_met": true,
+          "actual_value": 117102208,
+          "target_value": 1000000000
+        },
+        {
+          "name": "Multi-Agent Throughput",
+          "duration": 7096713583,
+          "iterations": 100,
+          "metrics_per_op": 14.091029436434846,
+          "memory_per_op": 0,
+          "allocs_per_op": 0,
+          "success": false,
+          "target_met": false,
+          "actual_value": 14.091029436434846,
+          "target_value": 100
+        }
+      ],
+      "errors": []
+    },
+    "cache": {
+      "component_name": "cache",
+      "success": true,
+      "metrics": {},
+      "targets_met": {
+        "cache_hit_rate": false,
+        "cache_memory_usage": true
+      },
+      "benchmark_results": [
+        {
+          "name": "Cache Hit Rate",
+          "duration": 8215208,
+          "iterations": 10000,
+          "metrics_per_op": 50,
+          "memory_per_op": 0,
+          "allocs_per_op": 0,
+          "success": false,
+          "target_met": false,
+          "actual_value": 0.5,
+          "target_value": 0.9
+        },
+        {
+          "name": "Cache Memory Usage",
+          "duration": 1224916,
+          "iterations": 1000,
+          "metrics_per_op": 1244.888,
+          "memory_per_op": 0,
+          "allocs_per_op": 0,
+          "success": true,
+          "target_met": true,
+          "actual_value": 1244888,
+          "target_value": 131072000
+        }
+      ],
+      "errors": []
+    },
+    "integration": {
+      "component_name": "integration",
+      "success": true,
+      "metrics": {},
+      "targets_met": {
+        "system_memory_usage": true
+      },
+      "benchmark_results": [
+        {
+          "name": "System Memory Usage",
+          "duration": 30000344625,
+          "iterations": 1,
+          "metrics_per_op": 13.005859375,
+          "memory_per_op": 0,
+          "allocs_per_op": 0,
+          "success": true,
+          "target_met": true,
+          "actual_value": 13637632,
+          "target_value": 524288000
+        }
+      ],
+      "errors": []
+    },
+    "session": {
+      "component_name": "session",
+      "success": false,
+      "metrics": {},
+      "targets_met": {
+        "session_creation": true
+      },
+      "benchmark_results": [
+        {
+          "name": "Session Creation",
+          "duration": 55996792,
+          "iterations": 1000,
+          "metrics_per_op": 0.010759,
+          "memory_per_op": 0,
+          "allocs_per_op": 0,
+          "success": false,
+          "target_met": true,
+          "actual_value": 10759,
+          "target_value": 50000000
+        }
+      ],
+      "errors": [
+        "Session restoration benchmark failed: [GUILD-2001] no test sessions available for restoration benchmark"
+      ]
+    },
+    "ui": {
+      "component_name": "ui",
+      "success": true,
+      "metrics": {},
+      "targets_met": {
+        "animation_frame_rate": true,
+        "ui_response_time_p99": true
+      },
+      "benchmark_results": [
+        {
+          "name": "UI Response Time P99",
+          "duration": 62540125,
+          "iterations": 1000,
+          "metrics_per_op": 0.06916699999999999,
+          "memory_per_op": 0,
+          "allocs_per_op": 0,
+          "success": true,
+          "target_met": true,
+          "actual_value": 69167,
+          "target_value": 100000000
+        },
+        {
+          "name": "Animation Frame Rate",
+          "duration": 2001023042,
+          "iterations": 120,
+          "metrics_per_op": 0.0006630000000000001,
+          "memory_per_op": 0,
+          "allocs_per_op": 0,
+          "success": true,
+          "target_met": true,
+          "actual_value": 59.969324431197634,
+          "target_value": 60
+        }
+      ],
+      "errors": []
+    }
+  },
+  "summary": {
+    "ui_performance": {
+      "category": "UI",
+      "score": 100,
+      "grade": "A",
+      "targets_met": 2,
+      "total_targets": 2,
+      "key_metrics": [],
+      "issues": [],
+      "recommendations": []
+    },
+    "agent_performance": {
+      "category": "Agent",
+      "score": 50,
+      "grade": "F",
+      "targets_met": 1,
+      "total_targets": 2,
+      "key_metrics": [],
+      "issues": [],
+      "recommendations": []
+    },
+    "cache_performance": {
+      "category": "Cache",
+      "score": 50,
+      "grade": "F",
+      "targets_met": 1,
+      "total_targets": 2,
+      "key_metrics": [],
+      "issues": [],
+      "recommendations": []
+    },
+    "session_performance": {
+      "category": "Session",
+      "score": 100,
+      "grade": "A",
+      "targets_met": 1,
+      "total_targets": 1,
+      "key_metrics": [],
+      "issues": [
+        "Session restoration benchmark failed: [GUILD-2001] no test sessions available for restoration benchmark"
+      ],
+      "recommendations": []
+    },
+    "integration_health": {
+      "category": "Integration",
+      "score": 100,
+      "grade": "A",
+      "targets_met": 1,
+      "total_targets": 1,
+      "key_metrics": [],
+      "issues": [],
+      "recommendations": []
+    }
+  },
+  "recommendations": [
+    "Optimize session restoration by implementing incremental state loading",
+    "Improve cache hit rate by tuning cache size and implementing better eviction policies"
+  ]
+}

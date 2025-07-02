@@ -3,7 +3,7 @@
 
 // Package animation provides comprehensive animation framework for Guild Framework UI
 //
-// This package implements the animation requirements identified in Sprint 6.5,
+// This package implements the animation requirements identified in performance optimization,
 // Agent 1 task, providing:
 //   - Smooth transitions and animations for UI components
 //   - Performance-optimized animation system with 60fps targeting
