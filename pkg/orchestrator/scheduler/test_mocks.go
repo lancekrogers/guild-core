@@ -18,11 +18,11 @@ type MockManagerAgentClient struct {
 	assignments      map[string]*TaskAssignment
 	requestsReceived []AssignmentRequest
 	mu               sync.Mutex
-	
+
 	// Control behavior
-	shouldFail       bool
-	failMessage      string
-	assignmentDelay  time.Duration
+	shouldFail      bool
+	failMessage     string
+	assignmentDelay time.Duration
 }
 
 // AssignmentRequest tracks requests made to the mock
@@ -78,7 +78,7 @@ func (m *MockManagerAgentClient) RequestAssignment(ctx context.Context, task *ka
 
 	// Pick first available agent
 	selectedAgent := availableAgents[0]
-	
+
 	assignment := &TaskAssignment{
 		TaskID:      task.ID,
 		AgentID:     selectedAgent.AgentID,
@@ -133,7 +133,7 @@ type MockKanbanClient struct {
 	assignmentCalls []AssignmentCall
 	statusUpdates   []StatusUpdate
 	mu              sync.Mutex
-	
+
 	// Control behavior
 	shouldFailGet    bool
 	shouldFailAssign bool

@@ -5,6 +5,7 @@ package scheduler
 
 import (
 	"context"
+	"fmt"
 	"sort"
 	"sync"
 	"time"
@@ -28,10 +29,10 @@ const (
 
 // ResourceRequirements defines what resources a task needs
 type ResourceRequirements struct {
-	CPUCores    float64           `json:"cpu_cores"`
-	MemoryMB    int64             `json:"memory_mb"`
-	GPURequired bool              `json:"gpu_required"`
-	APIQuotas   map[string]int    `json:"api_quotas"` // provider -> requests/min
+	CPUCores    float64                `json:"cpu_cores"`
+	MemoryMB    int64                  `json:"memory_mb"`
+	GPURequired bool                   `json:"gpu_required"`
+	APIQuotas   map[string]int         `json:"api_quotas"` // provider -> requests/min
 	Custom      map[string]interface{} `json:"custom"`
 }
 
@@ -59,11 +60,11 @@ type RunningTask struct {
 
 // ProgressUpdate represents progress information from a running task
 type ProgressUpdate struct {
-	TaskID      string
-	Percentage  float64
-	Message     string
-	Details     map[string]interface{}
-	Timestamp   time.Time
+	TaskID     string
+	Percentage float64
+	Message    string
+	Details    map[string]interface{}
+	Timestamp  time.Time
 }
 
 // TaskResult represents the outcome of a task execution
@@ -79,18 +80,25 @@ type TaskResult struct {
 
 // TaskScheduler manages concurrent task execution with dependencies and resource allocation
 type TaskScheduler struct {
-	orchestrator  *AgentOrchestrator
-	kanbanClient  KanbanClient
-	taskQueue     *PriorityQueue
-	runningTasks  map[string]*RunningTask
-	dependencies  *DependencyGraph
-	progress      *ProgressAggregator
-	config        *SchedulerConfig
-	
+	orchestrator *AgentOrchestrator
+	kanbanClient KanbanClient
+	taskQueue    *PriorityQueue
+	runningTasks map[string]*RunningTask
+	dependencies *DependencyGraph
+	progress     *ProgressAggregator
+	config       *SchedulerConfig
+
 	// Progress tracking
 	progressChan chan ProgressUpdate
 	resultChan   chan TaskResult
-	
+
+	// Production features
+	healthMonitor    *HealthMonitor
+	taskRecovery     *TaskRecovery
+	metricsCollector *MetricsCollector
+	spanRecorder     SpanRecorder
+	eventLogger      EventLogger
+
 	// Lifecycle
 	ctx    context.Context
 	cancel context.CancelFunc
@@ -100,19 +108,29 @@ type TaskScheduler struct {
 
 // SchedulerConfig contains configuration for the task scheduler
 type SchedulerConfig struct {
-	MaxConcurrentTasks int
-	ScheduleInterval   time.Duration
-	DefaultTimeout     time.Duration
-	EnableMetrics      bool
+	MaxConcurrentTasks      int
+	ScheduleInterval        time.Duration
+	DefaultTimeout          time.Duration
+	EnableMetrics           bool
+	EnableTracing           bool
+	MaxTaskRetries          int
+	HealthCheckWindow       time.Duration
+	CircuitBreakerThreshold int
+	CircuitBreakerTimeout   time.Duration
 }
 
 // DefaultSchedulerConfig returns default scheduler configuration
 func DefaultSchedulerConfig() *SchedulerConfig {
 	return &SchedulerConfig{
-		MaxConcurrentTasks: 10,
-		ScheduleInterval:   100 * time.Millisecond,
-		DefaultTimeout:     30 * time.Minute,
-		EnableMetrics:      true,
+		MaxConcurrentTasks:      10,
+		ScheduleInterval:        100 * time.Millisecond,
+		DefaultTimeout:          30 * time.Minute,
+		EnableMetrics:           true,
+		EnableTracing:           false,
+		MaxTaskRetries:          3,
+		HealthCheckWindow:       5 * time.Minute,
+		CircuitBreakerThreshold: 5,
+		CircuitBreakerTimeout:   30 * time.Second,
 	}
 }
 
@@ -172,6 +190,22 @@ func NewTaskScheduler(ctx context.Context, config *SchedulerConfig, managerAgent
 		cancel:       cancel,
 	}
 
+	// Initialize production features
+	if config.EnableMetrics {
+		scheduler.metricsCollector = NewMetricsCollector()
+		scheduler.healthMonitor = NewHealthMonitor(config.HealthCheckWindow)
+	}
+
+	scheduler.taskRecovery = NewTaskRecovery(config.MaxTaskRetries)
+
+	// Default to no-op implementations if not provided
+	if scheduler.spanRecorder == nil {
+		scheduler.spanRecorder = &NoOpSpanRecorder{}
+	}
+	if scheduler.eventLogger == nil {
+		scheduler.eventLogger = &NoOpEventLogger{}
+	}
+
 	return scheduler, nil
 }
 
@@ -188,24 +222,37 @@ func (ts *TaskScheduler) RegisterAgent(ctx context.Context, agentID string, exec
 
 // SubmitTask adds a task to the scheduler queue
 func (ts *TaskScheduler) SubmitTask(ctx context.Context, task *SchedulableTask) error {
+	spanCtx, endSpan := ts.spanRecorder.StartSpan(ctx, "SubmitTask", map[string]interface{}{
+		"task_id":       task.ID,
+		"commission_id": task.CommissionID,
+		"priority":      task.Priority,
+	})
+	defer endSpan()
+
 	if ctx.Err() != nil {
-		return gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
+		err := gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("orchestrator.scheduler").
 			WithOperation("SubmitTask")
+		ts.spanRecorder.RecordError(spanCtx, err)
+		return err
 	}
 
 	if task == nil {
-		return gerror.New(gerror.ErrCodeInvalidInput, "task cannot be nil", nil).
+		err := gerror.New(gerror.ErrCodeInvalidInput, "task cannot be nil", nil).
 			WithComponent("orchestrator.scheduler").
 			WithOperation("SubmitTask")
+		ts.spanRecorder.RecordError(spanCtx, err)
+		return err
 	}
 
 	// Add to dependency graph
 	if err := ts.dependencies.AddTask(task.ID, task.Dependencies); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to add task to dependency graph").
+		wrappedErr := gerror.Wrap(err, gerror.ErrCodeInternal, "failed to add task to dependency graph").
 			WithComponent("orchestrator.scheduler").
 			WithOperation("SubmitTask").
 			WithDetails("task_id", task.ID)
+		ts.spanRecorder.RecordError(spanCtx, wrappedErr)
+		return wrappedErr
 	}
 
 	// Add to priority queue
@@ -213,6 +260,23 @@ func (ts *TaskScheduler) SubmitTask(ctx context.Context, task *SchedulableTask) 
 
 	// Update progress tracking
 	ts.progress.UpdateTaskStatus(task.ID, task.CommissionID, TaskStatusPending)
+
+	// Record metrics
+	if ts.metricsCollector != nil {
+		ts.metricsCollector.RecordTaskSubmitted()
+	}
+
+	// Log event
+	ts.eventLogger.LogEvent(spanCtx, Event{
+		Type:      EventTaskSubmitted,
+		Timestamp: time.Now(),
+		TaskID:    task.ID,
+		Attributes: map[string]interface{}{
+			"commission_id": task.CommissionID,
+			"priority":      task.Priority,
+			"dependencies":  len(task.Dependencies),
+		},
+	})
 
 	return nil
 }
@@ -252,6 +316,11 @@ func (ts *TaskScheduler) Stop(ctx context.Context) error {
 	// Cancel scheduler context
 	ts.cancel()
 
+	// Stop health monitor
+	if ts.healthMonitor != nil {
+		ts.healthMonitor.Stop()
+	}
+
 	// Wait for goroutines with timeout
 	done := make(chan struct{})
 	go func() {
@@ -261,6 +330,19 @@ func (ts *TaskScheduler) Stop(ctx context.Context) error {
 
 	select {
 	case <-done:
+		// Log final metrics if available
+		if ts.metricsCollector != nil {
+			metrics := ts.metricsCollector.GetMetrics()
+			ts.eventLogger.LogEvent(ctx, Event{
+				Type:      "scheduler.stopped",
+				Timestamp: time.Now(),
+				Attributes: map[string]interface{}{
+					"tasks_completed": metrics.Tasks.Completed,
+					"tasks_failed":    metrics.Tasks.Failed,
+					"tasks_in_queue":  metrics.Tasks.InQueue,
+				},
+			})
+		}
 		return nil
 	case <-ctx.Done():
 		return gerror.Wrap(ctx.Err(), gerror.ErrCodeTimeout, "timeout waiting for scheduler shutdown").
@@ -430,6 +512,23 @@ func (ts *TaskScheduler) startTaskExecution(task *SchedulableTask, executor inte
 	// Update progress tracking
 	ts.progress.UpdateTaskStatus(task.ID, task.CommissionID, TaskStatusRunning)
 
+	// Record metrics
+	if ts.metricsCollector != nil {
+		queueTime := time.Since(running.StartTime) // This would be more accurate with task creation time
+		ts.metricsCollector.RecordTaskStarted(task.ID, task.Agent, queueTime)
+	}
+
+	// Log event
+	ts.eventLogger.LogEvent(ctx, Event{
+		Type:      EventTaskStarted,
+		Timestamp: time.Now(),
+		TaskID:    task.ID,
+		AgentID:   task.Agent,
+		Attributes: map[string]interface{}{
+			"commission_id": task.CommissionID,
+		},
+	})
+
 	// Start execution in goroutine
 	ts.wg.Add(1)
 	go ts.executeTask(running)
@@ -438,19 +537,19 @@ func (ts *TaskScheduler) startTaskExecution(task *SchedulableTask, executor inte
 // executeTask runs a task to completion
 func (ts *TaskScheduler) executeTask(rt *RunningTask) {
 	defer ts.wg.Done()
-	
+
 	// Check context at start
 	if err := rt.Context.Err(); err != nil {
 		return
 	}
-	
+
 	defer func() {
 		// Cleanup - safely handle nil checks
 		if rt != nil && rt.Task != nil {
 			ts.mu.Lock()
 			delete(ts.runningTasks, rt.Task.ID)
 			ts.mu.Unlock()
-			
+
 			// Release agent
 			if rt.Task.Agent != "" {
 				_ = ts.orchestrator.ReleaseAgent(ts.ctx, rt.Task.Agent, true)
@@ -460,7 +559,7 @@ func (ts *TaskScheduler) executeTask(rt *RunningTask) {
 		if rt != nil && rt.Cancel != nil {
 			rt.Cancel()
 		}
-		
+
 		// Safe channel close
 		if rt != nil && rt.Progress != nil {
 			select {
@@ -483,10 +582,55 @@ func (ts *TaskScheduler) executeTask(rt *RunningTask) {
 		}
 	}()
 
-	// Execute the task
+	// Get circuit breaker if available
+	var circuitBreaker *CircuitBreaker
+	if ts.healthMonitor != nil {
+		circuitBreaker = ts.healthMonitor.GetCircuitBreaker(rt.Task.Agent)
+	}
+
+	// Execute the task with circuit breaker and retry logic
 	startTime := time.Now()
-	result, err := rt.Executor.Execute(rt.Context, rt.Task.ID, rt.Task.Payload)
+	var result interface{}
+	var err error
+
+	executeFunc := func() error {
+		if circuitBreaker != nil {
+			return circuitBreaker.Call(rt.Context, func() error {
+				result, err = rt.Executor.Execute(rt.Context, rt.Task.ID, rt.Task.Payload)
+				return err
+			})
+		}
+		result, err = rt.Executor.Execute(rt.Context, rt.Task.ID, rt.Task.Payload)
+		return err
+	}
+
+	// Use retry policy if configured
+	if ts.taskRecovery != nil && ts.taskRecovery.retryPolicy != nil {
+		err = ts.taskRecovery.retryPolicy.Retry(rt.Context, fmt.Sprintf("execute-task-%s", rt.Task.ID), executeFunc)
+	} else {
+		err = executeFunc()
+	}
+
 	endTime := time.Now()
+	executionTime := endTime.Sub(startTime)
+
+	// Record metrics
+	if ts.metricsCollector != nil {
+		if err != nil {
+			ts.metricsCollector.RecordTaskFailed(rt.Task.ID, rt.Task.Agent, err, executionTime)
+		} else {
+			ts.metricsCollector.RecordTaskCompleted(rt.Task.ID, rt.Task.Agent, executionTime)
+		}
+	}
+
+	// Record health metrics
+	if ts.healthMonitor != nil {
+		if err != nil {
+			ts.healthMonitor.RecordFailure(rt.Task.Agent, rt.Task.ID, err)
+		} else {
+			ts.healthMonitor.RecordSuccess(rt.Task.Agent, executionTime)
+		}
+	}
 
 	// Update dependency graph
 	if err == nil {
@@ -527,33 +671,71 @@ func (ts *TaskScheduler) handleTaskError(task *SchedulableTask, err error) {
 		WithOperation("handleTaskError").
 		WithDetails("task_id", task.ID).
 		WithDetails("commission_id", task.CommissionID)
-	
+
 	// Update progress tracking
 	ts.progress.UpdateTaskStatus(task.ID, task.CommissionID, TaskStatusFailed)
-	
-	// Mark dependencies as blocked
-	ts.dependencies.MarkFailed(task.ID)
-	
+
+	// Check if task should be retried or sent to dead letter queue
+	failureCount := 1 // TODO: Track actual failure count per task
+	shouldRetry := false
+
+	if ts.taskRecovery != nil {
+		shouldRetry = ts.taskRecovery.HandleFailedTask(task, task.Agent, err, failureCount)
+	}
+
+	if shouldRetry {
+		// Log retry event
+		ts.eventLogger.LogEvent(ts.ctx, Event{
+			Type:      EventTaskRetried,
+			Timestamp: time.Now(),
+			TaskID:    task.ID,
+			AgentID:   task.Agent,
+			Attributes: map[string]interface{}{
+				"failure_count": failureCount,
+				"error":         err.Error(),
+			},
+		})
+
+		// Re-queue the task for retry
+		ts.taskQueue.Push(task)
+		ts.progress.UpdateTaskStatus(task.ID, task.CommissionID, TaskStatusPending)
+	} else {
+		// Task won't be retried, mark dependencies as blocked
+		ts.dependencies.MarkFailed(task.ID)
+
+		// Update kanban task status
+		if ts.kanbanClient != nil {
+			_ = ts.kanbanClient.UpdateTaskStatusAtomic(ts.ctx, task.ID, kanban.StatusBlocked)
+		}
+
+		// Log dead letter event
+		ts.eventLogger.LogEvent(ts.ctx, Event{
+			Type:      EventTaskDeadLettered,
+			Timestamp: time.Now(),
+			TaskID:    task.ID,
+			AgentID:   task.Agent,
+			Attributes: map[string]interface{}{
+				"failure_count": failureCount,
+				"error":         err.Error(),
+			},
+		})
+	}
+
 	// Release agent with failure status
 	if task.Agent != "" {
 		_ = ts.orchestrator.ReleaseAgent(ts.ctx, task.Agent, false)
 	}
-	
-	// Update kanban task status
-	if ts.kanbanClient != nil {
-		_ = ts.kanbanClient.UpdateTaskStatusAtomic(ts.ctx, task.ID, kanban.StatusBlocked)
-	}
-	
+
 	_ = wrappedErr // TODO: Send to observability when ready
 }
 
-// handleTaskSuccess processes successful task completion  
+// handleTaskSuccess processes successful task completion
 func (ts *TaskScheduler) handleTaskSuccess(task *SchedulableTask, result interface{}) {
 	// Update kanban task status
 	if ts.kanbanClient != nil {
 		_ = ts.kanbanClient.UpdateTaskStatusAtomic(ts.ctx, task.ID, kanban.StatusDone)
 	}
-	
+
 	// Re-evaluate ready tasks now that dependencies may be satisfied
 	go ts.scheduleNext()
 }
@@ -597,7 +779,7 @@ func (ts *TaskScheduler) agentMonitor() {
 		case <-ticker.C:
 			// Check agent health
 			metrics := ts.orchestrator.GetMetrics()
-			
+
 			// Check for high failure rates
 			for agentID, utilization := range metrics.AgentUtilization {
 				if utilization < 0.5 { // Less than 50% success rate
@@ -681,7 +863,7 @@ func (ts *TaskScheduler) GetSchedulerStats() map[string]interface{} {
 	defer ts.mu.RUnlock()
 
 	metrics := ts.orchestrator.GetMetrics()
-	
+
 	return map[string]interface{}{
 		"running_tasks":     len(ts.runningTasks),
 		"queued_tasks":      ts.taskQueue.Len(),
@@ -711,4 +893,72 @@ func (ts *TaskScheduler) GetProgressSnapshot() ProgressSnapshot {
 // SubscribeToProgress subscribes to progress updates
 func (ts *TaskScheduler) SubscribeToProgress(ctx context.Context) <-chan ProgressSnapshot {
 	return ts.progress.Subscribe(ctx)
+}
+
+// GetHealthReport returns health metrics for all agents
+func (ts *TaskScheduler) GetHealthReport() map[string]HealthMetrics {
+	if ts.healthMonitor == nil {
+		return nil
+	}
+	return ts.healthMonitor.GetHealthReport()
+}
+
+// GetMetricsSnapshot returns current metrics snapshot
+func (ts *TaskScheduler) GetMetricsSnapshot() *MetricsSnapshot {
+	if ts.metricsCollector == nil {
+		return nil
+	}
+	return ts.metricsCollector.GetMetrics()
+}
+
+// GetDeadLetterQueue returns tasks that failed all retry attempts
+func (ts *TaskScheduler) GetDeadLetterQueue() []*DeadLetterTask {
+	if ts.taskRecovery == nil {
+		return nil
+	}
+	return ts.taskRecovery.GetDeadLetterQueue()
+}
+
+// ResubmitDeadLetterTask attempts to resubmit a task from the dead letter queue
+func (ts *TaskScheduler) ResubmitDeadLetterTask(ctx context.Context, index int) error {
+	if ts.taskRecovery == nil {
+		return gerror.New(gerror.ErrCodeResourceExhausted, "task recovery not configured", nil).
+			WithComponent("orchestrator.scheduler").
+			WithOperation("ResubmitDeadLetterTask")
+	}
+
+	task, err := ts.taskRecovery.ResubmitDeadLetterTask(index)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to resubmit dead letter task").
+			WithComponent("orchestrator.scheduler").
+			WithOperation("ResubmitDeadLetterTask").
+			WithDetails("index", index)
+	}
+
+	// Re-submit the task
+	return ts.SubmitTask(ctx, task)
+}
+
+// SetSpanRecorder sets the span recorder for distributed tracing
+func (ts *TaskScheduler) SetSpanRecorder(recorder SpanRecorder) {
+	if recorder != nil {
+		ts.spanRecorder = recorder
+	}
+}
+
+// SetEventLogger sets the event logger
+func (ts *TaskScheduler) SetEventLogger(logger EventLogger) {
+	if logger != nil {
+		ts.eventLogger = logger
+	}
+}
+
+// ExportMetrics exports metrics to the provided exporter
+func (ts *TaskScheduler) ExportMetrics(ctx context.Context, exporter MetricsExporter) error {
+	if ts.metricsCollector == nil || exporter == nil {
+		return nil
+	}
+
+	metrics := ts.metricsCollector.GetMetrics()
+	return exporter.Export(ctx, metrics)
 }

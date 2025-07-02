@@ -35,15 +35,15 @@ type CommissionProgress struct {
 
 // TaskProgress tracks progress for an individual task
 type TaskProgress struct {
-	TaskID          string
-	Status          TaskStatus
-	Percentage      float64
-	Message         string
-	StartTime       *time.Time
-	LastUpdate      time.Time
-	EstimatedEnd    *time.Time
-	SubTasks        map[string]*SubTaskProgress
-	ResourceUsage   *ResourceUsage
+	TaskID        string
+	Status        TaskStatus
+	Percentage    float64
+	Message       string
+	StartTime     *time.Time
+	LastUpdate    time.Time
+	EstimatedEnd  *time.Time
+	SubTasks      map[string]*SubTaskProgress
+	ResourceUsage *ResourceUsage
 }
 
 // SubTaskProgress tracks progress for sub-tasks
@@ -73,11 +73,11 @@ type ProgressSnapshot struct {
 
 // CommissionSummary summarizes progress for a commission
 type CommissionSummary struct {
-	CommissionID    string
-	Title           string
-	OverallProgress float64
-	TaskCounts      TaskCounts
-	Duration        time.Duration
+	CommissionID       string
+	Title              string
+	OverallProgress    float64
+	TaskCounts         TaskCounts
+	Duration           time.Duration
 	EstimatedRemaining time.Duration
 }
 
@@ -92,21 +92,21 @@ type TaskCounts struct {
 
 // TaskSummary summarizes a running task
 type TaskSummary struct {
-	TaskID      string
-	Agent       string
-	Progress    float64
-	Message     string
-	Duration    time.Duration
+	TaskID        string
+	Agent         string
+	Progress      float64
+	Message       string
+	Duration      time.Duration
 	ResourceUsage ResourceUsage
 }
 
 // ProgressMetrics contains aggregate metrics
 type ProgressMetrics struct {
-	TotalTasksProcessed   int
-	AverageTaskDuration   time.Duration
-	TasksPerMinute        float64
-	SuccessRate           float64
-	ResourceUtilization   float64
+	TotalTasksProcessed int
+	AverageTaskDuration time.Duration
+	TasksPerMinute      float64
+	SuccessRate         float64
+	ResourceUtilization float64
 }
 
 // NewProgressAggregator creates a new progress aggregator
@@ -176,7 +176,7 @@ func (pa *ProgressAggregator) UpdateTaskProgress(update ProgressUpdate) error {
 // UpdateTaskStatus updates the status of a task
 func (pa *ProgressAggregator) UpdateTaskStatus(taskID, commissionID string, status TaskStatus) {
 	// Status updates are critical for correctness, so we don't check context
-	
+
 	// First update task status
 	pa.mu.Lock()
 	task, exists := pa.tasks[taskID]
@@ -204,7 +204,7 @@ func (pa *ProgressAggregator) UpdateTaskStatus(taskID, commissionID string, stat
 		now := time.Now()
 		task.StartTime = &now
 	}
-	
+
 	// Get commission reference while holding lock
 	commission := pa.commissions[commissionID]
 	pa.mu.Unlock()
@@ -212,7 +212,7 @@ func (pa *ProgressAggregator) UpdateTaskStatus(taskID, commissionID string, stat
 	// Update commission progress without holding pa.mu
 	if commission != nil {
 		commission.mu.Lock()
-		
+
 		// For new tasks, we "consume" one pending task from the commission pool
 		if isNewTask {
 			// New task consumes one pending task slot
@@ -275,7 +275,7 @@ func (pa *ProgressAggregator) GetProgressSnapshot() ProgressSnapshot {
 	// Build commission summaries
 	for id, commission := range pa.commissions {
 		commission.mu.RLock()
-		
+
 		summary := CommissionSummary{
 			CommissionID:    id,
 			OverallProgress: commission.OverallProgress,

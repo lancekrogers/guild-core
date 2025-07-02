@@ -16,11 +16,11 @@ import (
 func TestProgressAggregator_RegisterCommission(t *testing.T) {
 	pa := NewProgressAggregator()
 	ctx := context.Background()
-	
+
 	// Register commission
 	err := pa.RegisterCommission(ctx, "commission-1", 10)
 	require.NoError(t, err)
-	
+
 	// Verify commission was registered
 	progress, err := pa.GetCommissionProgress("commission-1")
 	require.NoError(t, err)
@@ -33,7 +33,7 @@ func TestProgressAggregator_RegisterCommission(t *testing.T) {
 
 func TestProgressAggregator_UpdateTaskProgress(t *testing.T) {
 	pa := NewProgressAggregator()
-	
+
 	// Update task progress
 	update := ProgressUpdate{
 		TaskID:     "task-1",
@@ -47,10 +47,10 @@ func TestProgressAggregator_UpdateTaskProgress(t *testing.T) {
 			},
 		},
 	}
-	
+
 	err := pa.UpdateTaskProgress(update)
 	assert.NoError(t, err)
-	
+
 	// Verify task progress
 	task, err := pa.GetTaskProgress("task-1")
 	require.NoError(t, err)
@@ -62,16 +62,16 @@ func TestProgressAggregator_UpdateTaskProgress(t *testing.T) {
 func TestProgressAggregator_UpdateTaskStatus(t *testing.T) {
 	pa := NewProgressAggregator()
 	ctx := context.Background()
-	
+
 	// Register commission
 	err := pa.RegisterCommission(ctx, "commission-1", 3)
 	require.NoError(t, err)
-	
+
 	// Update task statuses
 	pa.UpdateTaskStatus("task-1", "commission-1", TaskStatusRunning)
 	pa.UpdateTaskStatus("task-2", "commission-1", TaskStatusRunning)
 	pa.UpdateTaskStatus("task-1", "commission-1", TaskStatusCompleted)
-	
+
 	// Verify commission progress
 	progress, err := pa.GetCommissionProgress("commission-1")
 	require.NoError(t, err)
@@ -84,12 +84,12 @@ func TestProgressAggregator_UpdateTaskStatus(t *testing.T) {
 func TestProgressAggregator_Subscribe(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	
+
 	pa := NewProgressAggregator()
-	
+
 	// Subscribe to updates
 	ch := pa.Subscribe(ctx)
-	
+
 	// Should receive initial snapshot
 	select {
 	case snapshot := <-ch:
@@ -98,12 +98,12 @@ func TestProgressAggregator_Subscribe(t *testing.T) {
 	case <-time.After(100 * time.Millisecond):
 		t.Fatal("timeout waiting for initial snapshot")
 	}
-	
+
 	// Register commission and update task
 	err := pa.RegisterCommission(ctx, "commission-1", 1)
 	require.NoError(t, err)
 	pa.UpdateTaskStatus("task-1", "commission-1", TaskStatusRunning)
-	
+
 	// Should receive update
 	select {
 	case snapshot := <-ch:
@@ -112,11 +112,11 @@ func TestProgressAggregator_Subscribe(t *testing.T) {
 	case <-time.After(100 * time.Millisecond):
 		t.Fatal("timeout waiting for update")
 	}
-	
+
 	// Cancel context should close channel
 	cancel()
 	time.Sleep(50 * time.Millisecond)
-	
+
 	// Channel should be closed
 	_, ok := <-ch
 	assert.False(t, ok)
@@ -125,11 +125,11 @@ func TestProgressAggregator_Subscribe(t *testing.T) {
 func TestProgressAggregator_ProgressSnapshot(t *testing.T) {
 	pa := NewProgressAggregator()
 	ctx := context.Background()
-	
+
 	// Set up test data
 	err := pa.RegisterCommission(ctx, "commission-1", 10)
 	require.NoError(t, err)
-	
+
 	// Add some completed tasks
 	for i := 1; i <= 5; i++ {
 		taskID := "task-" + string(rune('0'+i))
@@ -137,7 +137,7 @@ func TestProgressAggregator_ProgressSnapshot(t *testing.T) {
 		time.Sleep(10 * time.Millisecond)
 		pa.UpdateTaskStatus(taskID, "commission-1", TaskStatusCompleted)
 	}
-	
+
 	// Add running tasks
 	pa.UpdateTaskStatus("task-6", "commission-1", TaskStatusRunning)
 	pa.UpdateTaskProgress(ProgressUpdate{
@@ -146,26 +146,26 @@ func TestProgressAggregator_ProgressSnapshot(t *testing.T) {
 		Message:    "Processing",
 		Timestamp:  time.Now(),
 	})
-	
+
 	// Get snapshot
 	snapshot := pa.GetProgressSnapshot()
-	
+
 	// Verify snapshot
 	assert.NotZero(t, snapshot.Timestamp)
 	assert.Len(t, snapshot.Commissions, 1)
 	assert.Len(t, snapshot.RunningTasks, 1)
-	
+
 	commission := snapshot.Commissions["commission-1"]
 	assert.Equal(t, 50.0, commission.OverallProgress)
 	assert.Equal(t, 5, commission.TaskCounts.Completed)
 	assert.Equal(t, 1, commission.TaskCounts.Running)
 	assert.Equal(t, 4, commission.TaskCounts.Pending)
-	
+
 	task := snapshot.RunningTasks[0]
 	assert.Equal(t, "task-6", task.TaskID)
 	assert.Equal(t, 75.0, task.Progress)
 	assert.Equal(t, "Processing", task.Message)
-	
+
 	// Verify metrics
 	assert.Equal(t, 5, snapshot.Metrics.TotalTasksProcessed)
 	assert.Equal(t, 100.0, snapshot.Metrics.SuccessRate)
@@ -175,11 +175,11 @@ func TestProgressAggregator_ProgressSnapshot(t *testing.T) {
 func TestProgressAggregator_EstimatedCompletion(t *testing.T) {
 	pa := NewProgressAggregator()
 	ctx := context.Background()
-	
+
 	// Register commission
 	err := pa.RegisterCommission(ctx, "commission-1", 10)
 	require.NoError(t, err)
-	
+
 	// Complete tasks with consistent timing
 	for i := 1; i <= 5; i++ {
 		taskID := "task-" + string(rune('0'+i))
@@ -187,7 +187,7 @@ func TestProgressAggregator_EstimatedCompletion(t *testing.T) {
 		time.Sleep(50 * time.Millisecond)
 		pa.UpdateTaskStatus(taskID, "commission-1", TaskStatusCompleted)
 	}
-	
+
 	// Check estimated end time
 	progress, err := pa.GetCommissionProgress("commission-1")
 	require.NoError(t, err)
@@ -198,33 +198,33 @@ func TestProgressAggregator_EstimatedCompletion(t *testing.T) {
 func TestProgressAggregator_ConcurrentUpdates(t *testing.T) {
 	pa := NewProgressAggregator()
 	ctx := context.Background()
-	
+
 	// Register commission
 	err := pa.RegisterCommission(ctx, "commission-1", 100)
 	require.NoError(t, err)
-	
+
 	// Subscribe to updates
 	ch := pa.Subscribe(ctx)
-	
+
 	// Drain initial snapshot
 	<-ch
-	
+
 	// Concurrent updates
 	var wg sync.WaitGroup
 	numGoroutines := 10
 	tasksPerGoroutine := 10
-	
+
 	for g := 0; g < numGoroutines; g++ {
 		wg.Add(1)
 		go func(goroutine int) {
 			defer wg.Done()
-			
+
 			for i := 0; i < tasksPerGoroutine; i++ {
 				taskID := "task-" + string(rune('0'+goroutine)) + "-" + string(rune('0'+i))
-				
+
 				// Update status
 				pa.UpdateTaskStatus(taskID, "commission-1", TaskStatusRunning)
-				
+
 				// Update progress
 				pa.UpdateTaskProgress(ProgressUpdate{
 					TaskID:     taskID,
@@ -232,17 +232,17 @@ func TestProgressAggregator_ConcurrentUpdates(t *testing.T) {
 					Message:    "Processing",
 					Timestamp:  time.Now(),
 				})
-				
+
 				// Complete task
 				pa.UpdateTaskStatus(taskID, "commission-1", TaskStatusCompleted)
 			}
 		}(g)
 	}
-	
+
 	// Collect updates
 	updateCount := 0
 	done := make(chan struct{})
-	
+
 	go func() {
 		for {
 			select {
@@ -253,12 +253,12 @@ func TestProgressAggregator_ConcurrentUpdates(t *testing.T) {
 			}
 		}
 	}()
-	
+
 	// Wait for all updates
 	wg.Wait()
 	time.Sleep(100 * time.Millisecond)
 	close(done)
-	
+
 	// Verify final state
 	progress, err := pa.GetCommissionProgress("commission-1")
 	require.NoError(t, err)
@@ -270,26 +270,26 @@ func TestProgressAggregator_ConcurrentUpdates(t *testing.T) {
 func TestProgressAggregator_Clear(t *testing.T) {
 	pa := NewProgressAggregator()
 	ctx := context.Background()
-	
+
 	// Add data
 	err := pa.RegisterCommission(ctx, "commission-1", 10)
 	require.NoError(t, err)
 	pa.UpdateTaskStatus("task-1", "commission-1", TaskStatusRunning)
-	
+
 	// Clear
 	pa.Clear()
-	
+
 	// Verify cleared
 	_, err = pa.GetCommissionProgress("commission-1")
 	assert.Error(t, err)
-	
+
 	_, err = pa.GetTaskProgress("task-1")
 	assert.Error(t, err)
 }
 
 func TestProgressAggregator_SubTasks(t *testing.T) {
 	pa := NewProgressAggregator()
-	
+
 	// Create task with subtasks
 	update := ProgressUpdate{
 		TaskID:     "main-task",
@@ -304,10 +304,10 @@ func TestProgressAggregator_SubTasks(t *testing.T) {
 			},
 		},
 	}
-	
+
 	err := pa.UpdateTaskProgress(update)
 	require.NoError(t, err)
-	
+
 	// Update subtasks progressively
 	subtaskUpdates := []struct {
 		percentage float64
@@ -338,7 +338,7 @@ func TestProgressAggregator_SubTasks(t *testing.T) {
 			},
 		},
 	}
-	
+
 	for _, update := range subtaskUpdates {
 		err := pa.UpdateTaskProgress(ProgressUpdate{
 			TaskID:     "main-task",
@@ -350,7 +350,7 @@ func TestProgressAggregator_SubTasks(t *testing.T) {
 			},
 		})
 		require.NoError(t, err)
-		
+
 		// Verify subtask state
 		task, err := pa.GetTaskProgress("main-task")
 		require.NoError(t, err)
@@ -362,37 +362,37 @@ func TestProgressAggregator_SubTasks(t *testing.T) {
 func TestProgressAggregator_Metrics(t *testing.T) {
 	pa := NewProgressAggregator()
 	ctx := context.Background()
-	
+
 	// Create multiple commissions
 	err := pa.RegisterCommission(ctx, "commission-1", 10)
 	require.NoError(t, err)
 	err = pa.RegisterCommission(ctx, "commission-2", 5)
 	require.NoError(t, err)
-	
+
 	// Complete tasks with various outcomes
 	for i := 1; i <= 10; i++ {
 		taskID := "task-1-" + string(rune('0'+i))
 		pa.UpdateTaskStatus(taskID, "commission-1", TaskStatusRunning)
 		time.Sleep(10 * time.Millisecond)
-		
+
 		if i <= 8 {
 			pa.UpdateTaskStatus(taskID, "commission-1", TaskStatusCompleted)
 		} else {
 			pa.UpdateTaskStatus(taskID, "commission-1", TaskStatusFailed)
 		}
 	}
-	
+
 	for i := 1; i <= 5; i++ {
 		taskID := "task-2-" + string(rune('0'+i))
 		pa.UpdateTaskStatus(taskID, "commission-2", TaskStatusRunning)
 		time.Sleep(10 * time.Millisecond)
 		pa.UpdateTaskStatus(taskID, "commission-2", TaskStatusCompleted)
 	}
-	
+
 	// Get snapshot and verify metrics
 	snapshot := pa.GetProgressSnapshot()
-	
-	assert.Equal(t, 15, snapshot.Metrics.TotalTasksProcessed) // 10 + 5
+
+	assert.Equal(t, 15, snapshot.Metrics.TotalTasksProcessed)    // 10 + 5
 	assert.Equal(t, 13.0/15.0*100, snapshot.Metrics.SuccessRate) // 13 completed / 15 total
 	assert.Greater(t, snapshot.Metrics.TasksPerMinute, 0.0)
 	assert.Greater(t, snapshot.Metrics.AverageTaskDuration, time.Duration(0))
@@ -400,11 +400,11 @@ func TestProgressAggregator_Metrics(t *testing.T) {
 
 func TestProgressAggregator_ContextCancellation(t *testing.T) {
 	pa := NewProgressAggregator()
-	
+
 	// Test with cancelled context
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
-	
+
 	// RegisterCommission should fail with cancelled context
 	err := pa.RegisterCommission(ctx, "commission-1", 10)
 	assert.Error(t, err)

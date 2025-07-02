@@ -37,7 +37,7 @@ type AgentInfo struct {
 type ManagerAgentClient interface {
 	// RequestAssignment asks the manager agent to assign a task
 	RequestAssignment(ctx context.Context, task *kanban.Task, availableAgents []*AgentInfo) (*TaskAssignment, error)
-	
+
 	// ReviewProgress asks the manager to review current progress
 	ReviewProgress(ctx context.Context, progress map[string]*CommissionProgress) ([]string, error)
 }
@@ -56,25 +56,25 @@ type TaskAssignment struct {
 type KanbanClient interface {
 	// GetTaskForUpdate retrieves a task with row-level lock
 	GetTaskForUpdate(ctx context.Context, taskID string) (*kanban.Task, error)
-	
+
 	// AssignTaskAtomic atomically assigns a task to an agent
 	AssignTaskAtomic(ctx context.Context, taskID, agentID string) error
-	
+
 	// UpdateTaskStatusAtomic atomically updates task status
 	UpdateTaskStatusAtomic(ctx context.Context, taskID string, status kanban.TaskStatus) error
-	
+
 	// WithTransaction runs operations in a database transaction
 	WithTransaction(ctx context.Context, fn func(ctx context.Context) error) error
 }
 
 // OrchestratorConfig configures the agent orchestrator
 type OrchestratorConfig struct {
-	MaxConcurrentTasks   int
-	DefaultTaskTimeout   time.Duration
-	ManagerAgentTimeout  time.Duration
-	EnableAutoRetry      bool
-	MaxRetries           int
-	RateLimitConfigs     map[string]RateLimitConfig
+	MaxConcurrentTasks  int
+	DefaultTaskTimeout  time.Duration
+	ManagerAgentTimeout time.Duration
+	EnableAutoRetry     bool
+	MaxRetries          int
+	RateLimitConfigs    map[string]RateLimitConfig
 }
 
 // RateLimitConfig defines rate limiting for an API provider
@@ -86,11 +86,11 @@ type RateLimitConfig struct {
 
 // OrchestratorMetrics tracks orchestrator performance
 type OrchestratorMetrics struct {
-	TasksAssigned      int64
-	TasksCompleted     int64
-	TasksFailed        int64
-	AssignmentTime     time.Duration
-	AverageWaitTime    time.Duration
-	AgentUtilization   map[string]float64
-	mu                 sync.RWMutex
+	TasksAssigned    int64
+	TasksCompleted   int64
+	TasksFailed      int64
+	AssignmentTime   time.Duration
+	AverageWaitTime  time.Duration
+	AgentUtilization map[string]float64
+	mu               sync.RWMutex
 }

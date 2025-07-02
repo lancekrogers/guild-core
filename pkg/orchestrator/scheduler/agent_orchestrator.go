@@ -35,20 +35,20 @@ type AgentPool struct {
 
 // AgentOrchestrator replaces ResourceManager with Guild-specific orchestration
 type AgentOrchestrator struct {
-	managerAgent  ManagerAgentClient
-	agentPool     *AgentPool
-	kanbanClient  KanbanClient
-	rateLimiters  map[string]*RateLimiter
-	
+	managerAgent ManagerAgentClient
+	agentPool    *AgentPool
+	kanbanClient KanbanClient
+	rateLimiters map[string]*RateLimiter
+
 	// Assignment tracking
 	assignments   map[string]*TaskAssignment
 	assignmentsMu sync.RWMutex
-	
+
 	// Metrics
-	metrics       *OrchestratorMetrics
-	
+	metrics *OrchestratorMetrics
+
 	// Configuration
-	config        *OrchestratorConfig
+	config *OrchestratorConfig
 }
 
 // Config and metrics types moved to types.go
@@ -85,7 +85,7 @@ func NewAgentOrchestrator(ctx context.Context, config *OrchestratorConfig, manag
 			agents:    make(map[string]*AgentInfo),
 			executors: make(map[string]interfaces.AgentExecutor),
 		},
-		kanbanClient:  kanbanClient,
+		kanbanClient: kanbanClient,
 		rateLimiters: make(map[string]*RateLimiter),
 		assignments:  make(map[string]*TaskAssignment),
 		metrics: &OrchestratorMetrics{

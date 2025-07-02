@@ -271,7 +271,8 @@ func TestIntegrationSchedulerWithFailures(t *testing.T) {
 		isAvailable: true,
 		executeFunc: func(ctx context.Context, taskID string, payload interface{}) (interface{}, error) {
 			failureCount.Add(1)
-			return nil, gerror.New(gerror.ErrCodeInternal, "simulated failure", nil).
+			// Use a non-retryable error code
+			return nil, gerror.New(gerror.ErrCodeInvalidInput, "simulated permanent failure", nil).
 				WithComponent("test").
 				WithOperation("execute")
 		},
@@ -338,7 +339,7 @@ func TestIntegrationSchedulerWithFailures(t *testing.T) {
 	// Collect results
 	results := make(map[string]*TaskResult)
 	resultChan := scheduler.GetResults()
-	
+
 	done := make(chan struct{})
 	go func() {
 		timeout := time.After(5 * time.Second)
@@ -431,7 +432,7 @@ func TestIntegrationSchedulerConcurrency(t *testing.T) {
 			executeFunc: func(ctx context.Context, taskID string, payload interface{}) (interface{}, error) {
 				// Increment concurrent count
 				current := currentConcurrent.Add(1)
-				
+
 				// Update max if needed
 				for {
 					max := maxConcurrent.Load()
@@ -535,7 +536,7 @@ func TestIntegrationSchedulerRaceConditions(t *testing.T) {
 		go func(id int) {
 			defer wg.Done()
 			taskID := fmt.Sprintf("task-%d", id)
-			
+
 			// Configure assignment
 			managerAgent.SetAssignment(taskID, &TaskAssignment{
 				TaskID:  taskID,
@@ -566,7 +567,7 @@ func TestIntegrationSchedulerRaceConditions(t *testing.T) {
 
 	// Create a done channel to coordinate goroutines
 	done := make(chan struct{})
-	
+
 	// Query status concurrently
 	for i := 0; i < 10; i++ {
 		wg.Add(1)
@@ -579,11 +580,11 @@ func TestIntegrationSchedulerRaceConditions(t *testing.T) {
 				default:
 					stats := scheduler.GetSchedulerStats()
 					_ = stats // Use stats
-					
+
 					// Get random task status
 					taskID := fmt.Sprintf("task-%d", (j%taskCount)+1)
 					_, _ = scheduler.GetTaskStatus(taskID)
-					
+
 					time.Sleep(time.Millisecond)
 				}
 			}
@@ -702,11 +703,11 @@ func TestIntegrationSchedulerManagerAgentIntegration(t *testing.T) {
 	assignments := managerAgent.GetAssignments()
 	for taskID, assignment := range assignments {
 		t.Logf("Task %s assigned to %s: %s", taskID, assignment.AgentID, assignment.Reasoning)
-		
+
 		// Verify critical tasks got assigned to high-performance agents
 		for _, task := range tasks {
 			if task.id == taskID && task.priority >= 90 {
-				assert.Contains(t, []string{"expert-coder", "senior-tester", "versatile-agent"}, 
+				assert.Contains(t, []string{"expert-coder", "senior-tester", "versatile-agent"},
 					assignment.AgentID, "High priority task should go to reliable agent")
 			}
 		}
@@ -718,7 +719,6 @@ func TestIntegrationSchedulerManagerAgentIntegration(t *testing.T) {
 	err = scheduler.Stop(stopCtx)
 	require.NoError(t, err)
 }
-
 
 // smartMockManagerAgent extends MockManagerAgentClient with intelligent assignment logic
 type smartMockManagerAgent struct {
@@ -746,13 +746,13 @@ func (s *smartMockManagerAgent) RequestAssignment(ctx context.Context, task *kan
 
 	for _, agent := range availableAgents {
 		load := s.agentLoad[agent.AgentID]
-		
+
 		// Prefer agents with lower load
 		if load < minLoad {
 			bestAgent = agent
 			minLoad = load
 		}
-		
+
 		// Special handling for high priority tasks
 		if task.Priority == kanban.PriorityHigh {
 			// Prefer "expert" or "senior" agents
@@ -787,14 +787,14 @@ func (s *smartMockManagerAgent) RequestAssignment(ctx context.Context, task *kan
 	s.MockManagerAgentClient.mu.Lock()
 	s.MockManagerAgentClient.assignments[task.ID] = assignment
 	s.MockManagerAgentClient.mu.Unlock()
-	
+
 	return assignment, nil
 }
 
 func (s *smartMockManagerAgent) GetAssignments() map[string]*TaskAssignment {
 	s.MockManagerAgentClient.mu.Lock()
 	defer s.MockManagerAgentClient.mu.Unlock()
-	
+
 	result := make(map[string]*TaskAssignment)
 	for k, v := range s.MockManagerAgentClient.assignments {
 		result[k] = v

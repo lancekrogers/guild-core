@@ -69,7 +69,6 @@ func (m *mockAgentExecutor) Execute(ctx context.Context, taskID string, payload 
 	}
 }
 
-
 // TestHarness provides utilities for testing the scheduler
 type TestHarness struct {
 	Scheduler    *TaskScheduler
@@ -84,12 +83,12 @@ type TestHarness struct {
 // NewTestHarness creates a new test harness
 func NewTestHarness(t interface{ Helper() }, config *SchedulerConfig) *TestHarness {
 	t.Helper()
-	
+
 	ctx, cancel := context.WithCancel(context.Background())
-	
+
 	managerAgent := NewMockManagerAgentClient()
 	kanbanClient := NewMockKanbanClient()
-	
+
 	if config == nil {
 		config = &SchedulerConfig{
 			MaxConcurrentTasks: 5,
@@ -98,12 +97,12 @@ func NewTestHarness(t interface{ Helper() }, config *SchedulerConfig) *TestHarne
 			EnableMetrics:      true,
 		}
 	}
-	
+
 	scheduler, err := NewTaskScheduler(ctx, config, managerAgent, kanbanClient)
 	if err != nil {
 		panic(err)
 	}
-	
+
 	return &TestHarness{
 		Scheduler:    scheduler,
 		ManagerAgent: managerAgent,
@@ -118,16 +117,16 @@ func NewTestHarness(t interface{ Helper() }, config *SchedulerConfig) *TestHarne
 func (th *TestHarness) RegisterAgent(agentID string, capabilities []AgentCapability, executeFunc func(context.Context, string, interface{}) (interface{}, error)) error {
 	th.mu.Lock()
 	defer th.mu.Unlock()
-	
+
 	executor := &mockAgentExecutor{
 		agentID:      agentID,
 		capabilities: convertCapabilities(capabilities),
 		isAvailable:  true,
 		executeFunc:  executeFunc,
 	}
-	
+
 	th.Agents[agentID] = executor
-	
+
 	return th.Scheduler.RegisterAgent(th.ctx, agentID, executor, capabilities)
 }
 
@@ -135,7 +134,7 @@ func (th *TestHarness) RegisterAgent(agentID string, capabilities []AgentCapabil
 func (th *TestHarness) SubmitTask(task *SchedulableTask, assignment *TaskAssignment) error {
 	// Configure assignment
 	th.ManagerAgent.SetAssignment(task.ID, assignment)
-	
+
 	// Add to kanban
 	th.KanbanClient.AddTask(&kanban.Task{
 		ID:       task.ID,
@@ -143,7 +142,7 @@ func (th *TestHarness) SubmitTask(task *SchedulableTask, assignment *TaskAssignm
 		Status:   kanban.StatusTodo,
 		Priority: mapToKanbanPriority(task.Priority),
 	})
-	
+
 	// Submit to scheduler
 	return th.Scheduler.SubmitTask(th.ctx, task)
 }
@@ -152,7 +151,7 @@ func (th *TestHarness) SubmitTask(task *SchedulableTask, assignment *TaskAssignm
 func (th *TestHarness) WaitForTasks(expectedCount int, timeout time.Duration) map[string]*TaskResult {
 	results := make(map[string]*TaskResult)
 	resultChan := th.Scheduler.GetResults()
-	
+
 	timeoutChan := time.After(timeout)
 	for len(results) < expectedCount {
 		select {
@@ -162,17 +161,17 @@ func (th *TestHarness) WaitForTasks(expectedCount int, timeout time.Duration) ma
 			return results
 		}
 	}
-	
+
 	return results
 }
 
 // Cleanup stops the scheduler and cleans up resources
 func (th *TestHarness) Cleanup() error {
 	th.cancel()
-	
+
 	stopCtx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
-	
+
 	return th.Scheduler.Stop(stopCtx)
 }
 
@@ -196,41 +195,41 @@ func NewConcurrentTaskGenerator(harness *TestHarness, taskCount int, commissionI
 // GenerateTasks creates and submits tasks concurrently
 func (ctg *ConcurrentTaskGenerator) GenerateTasks(concurrency int) {
 	taskChan := make(chan int, ctg.taskCount)
-	
+
 	// Fill task channel
 	for i := 1; i <= ctg.taskCount; i++ {
 		taskChan <- i
 	}
 	close(taskChan)
-	
+
 	// Start workers
 	for i := 0; i < concurrency; i++ {
 		ctg.wg.Add(1)
 		go ctg.taskWorker(taskChan)
 	}
-	
+
 	ctg.wg.Wait()
 }
 
 func (ctg *ConcurrentTaskGenerator) taskWorker(taskChan <-chan int) {
 	defer ctg.wg.Done()
-	
+
 	for taskNum := range taskChan {
 		taskID := generateTaskID(taskNum)
 		agentID := selectAgent(taskNum, len(ctg.harness.Agents))
-		
+
 		task := &SchedulableTask{
 			ID:           taskID,
 			CommissionID: ctg.commissionID,
 			Priority:     calculatePriority(taskNum),
 			Dependencies: generateDependencies(taskNum, ctg.taskCount),
 		}
-		
+
 		assignment := &TaskAssignment{
 			TaskID:  taskID,
 			AgentID: agentID,
 		}
-		
+
 		_ = ctg.harness.SubmitTask(task, assignment)
 	}
 }
@@ -254,43 +253,43 @@ func calculatePriority(taskNum int) int {
 
 func generateDependencies(taskNum, totalTasks int) []string {
 	var deps []string
-	
+
 	// Create dependency chains and DAG structure
 	if taskNum > 1 && taskNum%3 == 0 {
 		// Depends on previous task
 		deps = append(deps, generateTaskID(taskNum-1))
 	}
-	
+
 	if taskNum > 5 && taskNum%5 == 0 {
 		// Depends on earlier task
 		deps = append(deps, generateTaskID(taskNum-5))
 	}
-	
+
 	return deps
 }
 
-// MetricsCollector collects and analyzes scheduler metrics
-type MetricsCollector struct {
-	scheduler         *TaskScheduler
-	collectionPeriod  time.Duration
-	samples           []SchedulerMetricsSample
-	mu                sync.Mutex
-	stopChan          chan struct{}
+// TestMetricsCollector collects and analyzes scheduler metrics for testing
+type TestMetricsCollector struct {
+	scheduler        *TaskScheduler
+	collectionPeriod time.Duration
+	samples          []SchedulerMetricsSample
+	mu               sync.Mutex
+	stopChan         chan struct{}
 }
 
 // SchedulerMetricsSample represents a point-in-time metrics sample
 type SchedulerMetricsSample struct {
-	Timestamp         time.Time
-	RunningTasks      int
-	QueuedTasks       int
-	CompletedTasks    int64
-	FailedTasks       int64
-	AgentUtilization  map[string]float64
+	Timestamp        time.Time
+	RunningTasks     int
+	QueuedTasks      int
+	CompletedTasks   int64
+	FailedTasks      int64
+	AgentUtilization map[string]float64
 }
 
-// NewMetricsCollector creates a new metrics collector
-func NewMetricsCollector(scheduler *TaskScheduler, period time.Duration) *MetricsCollector {
-	return &MetricsCollector{
+// NewTestMetricsCollector creates a new test metrics collector
+func NewTestMetricsCollector(scheduler *TaskScheduler, period time.Duration) *TestMetricsCollector {
+	return &TestMetricsCollector{
 		scheduler:        scheduler,
 		collectionPeriod: period,
 		samples:          make([]SchedulerMetricsSample, 0),
@@ -299,19 +298,19 @@ func NewMetricsCollector(scheduler *TaskScheduler, period time.Duration) *Metric
 }
 
 // Start begins collecting metrics
-func (mc *MetricsCollector) Start() {
+func (mc *TestMetricsCollector) Start() {
 	go mc.collectLoop()
 }
 
 // Stop stops collecting metrics
-func (mc *MetricsCollector) Stop() {
+func (mc *TestMetricsCollector) Stop() {
 	close(mc.stopChan)
 }
 
-func (mc *MetricsCollector) collectLoop() {
+func (mc *TestMetricsCollector) collectLoop() {
 	ticker := time.NewTicker(mc.collectionPeriod)
 	defer ticker.Stop()
-	
+
 	for {
 		select {
 		case <-ticker.C:
@@ -322,9 +321,9 @@ func (mc *MetricsCollector) collectLoop() {
 	}
 }
 
-func (mc *MetricsCollector) collectSample() {
+func (mc *TestMetricsCollector) collectSample() {
 	stats := mc.scheduler.GetSchedulerStats()
-	
+
 	sample := SchedulerMetricsSample{
 		Timestamp:        time.Now(),
 		RunningTasks:     stats["running_tasks"].(int),
@@ -333,21 +332,21 @@ func (mc *MetricsCollector) collectSample() {
 		FailedTasks:      stats["tasks_failed"].(int64),
 		AgentUtilization: stats["agent_utilization"].(map[string]float64),
 	}
-	
+
 	mc.mu.Lock()
 	mc.samples = append(mc.samples, sample)
 	mc.mu.Unlock()
 }
 
 // GetAnalysis returns analysis of collected metrics
-func (mc *MetricsCollector) GetAnalysis() MetricsAnalysis {
+func (mc *TestMetricsCollector) GetAnalysis() MetricsAnalysis {
 	mc.mu.Lock()
 	defer mc.mu.Unlock()
-	
+
 	if len(mc.samples) == 0 {
 		return MetricsAnalysis{}
 	}
-	
+
 	analysis := MetricsAnalysis{
 		TotalSamples:       len(mc.samples),
 		Duration:           mc.samples[len(mc.samples)-1].Timestamp.Sub(mc.samples[0].Timestamp),
@@ -356,7 +355,7 @@ func (mc *MetricsCollector) GetAnalysis() MetricsAnalysis {
 		ThroughputPerMin:   mc.calculateThroughput(),
 		AgentEfficiency:    mc.calculateAgentEfficiency(),
 	}
-	
+
 	return analysis
 }
 
@@ -370,20 +369,20 @@ type MetricsAnalysis struct {
 	AgentEfficiency    map[string]float64
 }
 
-func (mc *MetricsCollector) calculateAverageQueueDepth() float64 {
+func (mc *TestMetricsCollector) calculateAverageQueueDepth() float64 {
 	if len(mc.samples) == 0 {
 		return 0
 	}
-	
+
 	total := 0
 	for _, sample := range mc.samples {
 		total += sample.QueuedTasks
 	}
-	
+
 	return float64(total) / float64(len(mc.samples))
 }
 
-func (mc *MetricsCollector) findMaxConcurrentTasks() int {
+func (mc *TestMetricsCollector) findMaxConcurrentTasks() int {
 	max := 0
 	for _, sample := range mc.samples {
 		if sample.RunningTasks > max {
@@ -393,44 +392,44 @@ func (mc *MetricsCollector) findMaxConcurrentTasks() int {
 	return max
 }
 
-func (mc *MetricsCollector) calculateThroughput() float64 {
+func (mc *TestMetricsCollector) calculateThroughput() float64 {
 	if len(mc.samples) < 2 {
 		return 0
 	}
-	
+
 	first := mc.samples[0]
 	last := mc.samples[len(mc.samples)-1]
-	
+
 	completedDelta := last.CompletedTasks - first.CompletedTasks
 	duration := last.Timestamp.Sub(first.Timestamp)
-	
+
 	if duration == 0 {
 		return 0
 	}
-	
+
 	return float64(completedDelta) / duration.Minutes()
 }
 
-func (mc *MetricsCollector) calculateAgentEfficiency() map[string]float64 {
+func (mc *TestMetricsCollector) calculateAgentEfficiency() map[string]float64 {
 	efficiency := make(map[string]float64)
-	
+
 	// Aggregate utilization across all samples
 	utilizationSums := make(map[string]float64)
 	utilizationCounts := make(map[string]int)
-	
+
 	for _, sample := range mc.samples {
 		for agentID, utilization := range sample.AgentUtilization {
 			utilizationSums[agentID] += utilization
 			utilizationCounts[agentID]++
 		}
 	}
-	
+
 	// Calculate average utilization as efficiency
 	for agentID, sum := range utilizationSums {
 		if count := utilizationCounts[agentID]; count > 0 {
 			efficiency[agentID] = sum / float64(count)
 		}
 	}
-	
+
 	return efficiency
 }

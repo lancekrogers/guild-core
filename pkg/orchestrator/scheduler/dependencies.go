@@ -139,7 +139,7 @@ func (dg *DependencyGraph) MarkComplete(taskID string) {
 	defer dg.mu.Unlock()
 
 	dg.completed[taskID] = true
-	
+
 	if node, exists := dg.nodes[taskID]; exists {
 		node.Status = TaskStatusCompleted
 		now := time.Now()
@@ -151,14 +151,14 @@ func (dg *DependencyGraph) MarkComplete(taskID string) {
 func (dg *DependencyGraph) MarkFailed(taskID string) {
 	dg.mu.Lock()
 	defer dg.mu.Unlock()
-	
+
 	// Mark as failed (not completed)
 	dg.completed[taskID] = false
-	
+
 	if node, exists := dg.nodes[taskID]; exists {
 		node.Status = TaskStatusFailed
 	}
-	
+
 	// TODO: Track failed status separately when needed for retry logic
 }
 

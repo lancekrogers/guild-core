@@ -185,7 +185,7 @@ func (as *AtomicScheduler) AssignTaskAtomic(ctx context.Context, taskID, agentID
 			INSERT INTO task_history (task_id, timestamp, changed_by, to_status, to_assignee, comment)
 			VALUES ($1, $2, $3, $4, $5, $6)`
 
-		_, err = tx.Exec(historyQuery, taskID, time.Now().UTC(), "scheduler", 
+		_, err = tx.Exec(historyQuery, taskID, time.Now().UTC(), "scheduler",
 			kanban.StatusInProgress, agentID, "Task assigned by orchestrator")
 		if err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to add history entry").
@@ -244,7 +244,7 @@ func (as *AtomicScheduler) UpdateTaskStatusAtomic(ctx context.Context, taskID st
 			INSERT INTO task_history (task_id, timestamp, changed_by, from_status, to_status, comment)
 			VALUES ($1, $2, $3, $4, $5, $6)`
 
-		_, err = tx.Exec(historyQuery, taskID, time.Now().UTC(), "scheduler", 
+		_, err = tx.Exec(historyQuery, taskID, time.Now().UTC(), "scheduler",
 			task.Status, status, comment)
 		if err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to add history entry").
@@ -330,13 +330,13 @@ func (as *AtomicScheduler) WithTransaction(ctx context.Context, fn func(ctx cont
 // isValidStatusTransition checks if a status transition is allowed
 func isValidStatusTransition(from, to kanban.TaskStatus) bool {
 	validTransitions := map[kanban.TaskStatus][]kanban.TaskStatus{
-		kanban.StatusBacklog:     {kanban.StatusTodo, kanban.StatusCancelled},
-		kanban.StatusTodo:        {kanban.StatusInProgress, kanban.StatusBacklog, kanban.StatusCancelled},
-		kanban.StatusInProgress:  {kanban.StatusBlocked, kanban.StatusReadyForReview, kanban.StatusTodo, kanban.StatusCancelled},
-		kanban.StatusBlocked:     {kanban.StatusInProgress, kanban.StatusCancelled},
+		kanban.StatusBacklog:        {kanban.StatusTodo, kanban.StatusCancelled},
+		kanban.StatusTodo:           {kanban.StatusInProgress, kanban.StatusBacklog, kanban.StatusCancelled},
+		kanban.StatusInProgress:     {kanban.StatusBlocked, kanban.StatusReadyForReview, kanban.StatusTodo, kanban.StatusCancelled},
+		kanban.StatusBlocked:        {kanban.StatusInProgress, kanban.StatusCancelled},
 		kanban.StatusReadyForReview: {kanban.StatusDone, kanban.StatusInProgress},
-		kanban.StatusDone:        {}, // Terminal state
-		kanban.StatusCancelled:   {}, // Terminal state
+		kanban.StatusDone:           {}, // Terminal state
+		kanban.StatusCancelled:      {}, // Terminal state
 	}
 
 	allowed, exists := validTransitions[from]
