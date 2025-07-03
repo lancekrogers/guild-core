@@ -9,12 +9,13 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"go.uber.org/zap"
 )
 
 // BenchmarkShortcutManager_HandleKeyPress benchmarks key press handling
 // Target: <10ms for key handling operations
 func BenchmarkShortcutManager_HandleKeyPress(b *testing.B) {
-	sm := NewShortcutManager()
+	sm := NewShortcutManagerWithLogger(zap.NewNop())
 	ctx := context.Background()
 	
 	keys := []string{
@@ -38,7 +39,7 @@ func BenchmarkShortcutManager_RegisterShortcut(b *testing.B) {
 	b.ReportAllocs()
 	
 	for i := 0; i < b.N; i++ {
-		sm := NewShortcutManager()
+		sm := NewShortcutManagerWithLogger(zap.NewNop())
 		
 		shortcut := &Shortcut{
 			ID:          "benchmark_shortcut",
@@ -98,7 +99,7 @@ func BenchmarkCommandPalette_Navigation(b *testing.B) {
 
 // BenchmarkShortcutManager_SetContext benchmarks context switching
 func BenchmarkShortcutManager_SetContext(b *testing.B) {
-	sm := NewShortcutManager()
+	sm := NewShortcutManagerWithLogger(zap.NewNop())
 	ctx := context.Background()
 	
 	contexts := []string{"global", "chat", "kanban", "modal", "search"}
@@ -117,7 +118,7 @@ func BenchmarkShortcutManager_SetContext(b *testing.B) {
 
 // BenchmarkShortcutManager_ThreadSafety benchmarks concurrent shortcut operations
 func BenchmarkShortcutManager_ThreadSafety(b *testing.B) {
-	sm := NewShortcutManager()
+	sm := NewShortcutManagerWithLogger(zap.NewNop())
 	
 	b.ResetTimer()
 	b.ReportAllocs()
@@ -146,7 +147,7 @@ func BenchmarkShortcutManager_ThreadSafety(b *testing.B) {
 
 // BenchmarkKeyNormalization benchmarks key combination normalization
 func BenchmarkKeyNormalization(b *testing.B) {
-	sm := NewShortcutManager()
+	sm := NewShortcutManagerWithLogger(zap.NewNop())
 	
 	keys := []string{
 		"CTRL+SHIFT+P", "ctrl+alt+d", "command+k", "option+cmd+r",
@@ -165,7 +166,7 @@ func BenchmarkKeyNormalization(b *testing.B) {
 
 // TestShortcutPerformanceThresholds validates shortcut system performance
 func TestShortcutPerformanceThresholds(t *testing.T) {
-	sm := NewShortcutManager()
+	sm := NewShortcutManagerWithLogger(zap.NewNop())
 	ctx := context.Background()
 	
 	t.Run("KeyHandlingThreshold", func(t *testing.T) {
@@ -251,7 +252,7 @@ func BenchmarkMemoryUsage(b *testing.B) {
 		b.ReportAllocs()
 		
 		for i := 0; i < b.N; i++ {
-			sm := NewShortcutManager()
+			sm := NewShortcutManagerWithLogger(zap.NewNop())
 			ctx := context.Background()
 			
 			// Register multiple shortcuts to test memory usage
@@ -294,7 +295,7 @@ func BenchmarkMemoryUsage(b *testing.B) {
 	})
 	
 	b.Run("ShortcutCachingMemory", func(b *testing.B) {
-		sm := NewShortcutManager()
+		sm := NewShortcutManagerWithLogger(zap.NewNop())
 		ctx := context.Background()
 		
 		b.ReportAllocs()

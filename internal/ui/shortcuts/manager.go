@@ -145,7 +145,14 @@ type CommandHandler func(ctx context.Context, args map[string]interface{}) tea.C
 
 // NewShortcutManager creates a new shortcut manager with built-in shortcuts
 func NewShortcutManager() *ShortcutManager {
-	logger, _ := zap.NewDevelopment()
+	return NewShortcutManagerWithLogger(nil)
+}
+
+// NewShortcutManagerWithLogger creates a new shortcut manager with a specific logger
+func NewShortcutManagerWithLogger(logger *zap.Logger) *ShortcutManager {
+	if logger == nil {
+		logger, _ = zap.NewDevelopment()
+	}
 
 	sm := &ShortcutManager{
 		shortcuts: make(map[string]*Shortcut),

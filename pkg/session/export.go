@@ -313,6 +313,9 @@ func (se *SessionExporter) exportHTML(data *ExportData, opts ExportOptions) ([]b
 		"formatContent": func(content string) template.HTML {
 			return template.HTML(se.formatHTMLContent(content, opts))
 		},
+		"safeCSS": func(css string) template.CSS {
+			return template.CSS(css)
+		},
 	}).Parse(tmplStr)
 
 	if err != nil {
@@ -348,9 +351,9 @@ func (se *SessionExporter) getHTMLTemplate(opts ExportOptions) string {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        {{.CSS}}
+        {{safeCSS .CSS}}
     </style>
-    {{if .CustomCSS}}<style>{{.CustomCSS}}</style>{{end}}
+    {{if .CustomCSS}}<style>{{safeCSS .CustomCSS}}</style>{{end}}
 </head>
 <body>
     <div class="container">

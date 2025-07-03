@@ -220,6 +220,7 @@ func (sm *SessionManager) SaveSession(ctx context.Context, session *Session) err
 			"session_context":  session.Context,
 			"variables":        session.State.Variables,
 			"status":           string(session.State.Status),
+			"state_data":       string(stateData), // Store serialized state data
 		},
 	}
 
@@ -264,8 +265,19 @@ func (sm *SessionManager) LoadSession(ctx context.Context, sessionID string) (*S
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get session")
 	}
 
-	// Extract state data from metadata (simplified for demo)
-	stateData := []byte("{}") // This would be extracted from the actual storage
+	// Extract state data from metadata
+	var stateData []byte
+	if stateDataStr, exists := sessionData.Metadata["state_data"]; exists {
+		if str, ok := stateDataStr.(string); ok {
+			stateData = []byte(str)
+		} else {
+			// Fallback for empty state
+			stateData = []byte("{}")
+		}
+	} else {
+		// Fallback for missing state data
+		stateData = []byte("{}")
+	}
 	
 	// Decrypt if needed
 	if sm.encryptor != nil {

@@ -134,8 +134,8 @@ type MemoryStats struct {
 
 // OptimizeMemoryUsage performs comprehensive memory optimization
 func (mo *MemoryOptimizer) OptimizeMemoryUsage(ctx context.Context) (*OptimizationReport, error) {
-	mo.mu.Lock()
-	defer mo.mu.Unlock()
+	// Note: Removed broad mutex lock to prevent deadlock
+	// Individual operations are protected by their own locks
 
 	report := &OptimizationReport{
 		StartTime:       time.Now(),
@@ -340,7 +340,8 @@ func (mo *MemoryOptimizer) compactObjects(ctx context.Context) *Optimization {
 
 // detectMemoryLeaks analyzes allocations to detect potential memory leaks
 func (mo *MemoryOptimizer) detectMemoryLeaks(allocations []Allocation) []MemoryLeak {
-	var leaks []MemoryLeak
+	// Initialize as empty slice, not nil slice
+	leaks := make([]MemoryLeak, 0)
 
 	for _, alloc := range allocations {
 		// Detect potential leaks based on allocation patterns

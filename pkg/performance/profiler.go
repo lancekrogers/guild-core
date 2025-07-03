@@ -946,22 +946,41 @@ func (pp *PerformanceProfiler) RunBenchmark(name string, fn func(*testing.B)) *B
 	pp.mu.Lock()
 	defer pp.mu.Unlock()
 
-	benchmark := &Benchmark{
-		Name:     name,
-		Function: fn,
+	// Get existing benchmark or create new one
+	benchmark, exists := pp.benchmarks[name]
+	if !exists {
+		benchmark = &Benchmark{
+			Name:     name,
+			Function: fn,
+		}
+	} else {
+		// Update function in case it changed
+		benchmark.Function = fn
 	}
 
 	result := testing.Benchmark(fn)
 
+	// Handle zero nanoseconds per operation for very fast benchmarks
+	nsPerOp := result.NsPerOp()
+	if nsPerOp <= 0 && result.N > 0 {
+		// Calculate manual timing if benchmark is too fast
+		nsPerOp = int64(result.T.Nanoseconds() / int64(result.N))
+	}
+	if nsPerOp <= 0 {
+		// Ensure minimum measurable value for very fast operations
+		nsPerOp = 1
+	}
+
 	benchmarkResult := &BenchmarkResult{
 		N:           result.N,
-		NsPerOp:     result.NsPerOp(),
+		NsPerOp:     nsPerOp,
 		BytesPerOp:  result.AllocedBytesPerOp(),
 		AllocsPerOp: result.AllocsPerOp(),
 		MBPerSec:    0, // MBPerSec not available in standard testing package
 		Duration:    result.T,
 	}
 
+	// Update current result while preserving baseline
 	benchmark.Current = benchmarkResult
 	pp.benchmarks[name] = benchmark
 
@@ -979,8 +998,9 @@ func (pp *PerformanceProfiler) CompareBenchmarks(name string) *BenchmarkComparis
 	}
 
 	comparison := &BenchmarkComparison{
-		Name:    name,
-		Current: benchmark.Current,
+		Name:     name,
+		Current:  benchmark.Current,
+		Baseline: benchmark.Baseline, // Explicitly set baseline (can be nil)
 	}
 
 	if benchmark.Baseline != nil {
@@ -1071,7 +1091,8 @@ type OptimizationResult struct {
 
 // OptimizeHotPaths analyzes hotspots and applies optimizations
 func (hpo *HotPathOptimizer) OptimizeHotPaths(ctx context.Context, hotspots []Hotspot) ([]OptimizationResult, error) {
-	var results []OptimizationResult
+	// Initialize as empty slice, not nil slice
+	results := make([]OptimizationResult, 0, len(hotspots))
 
 	for _, hotspot := range hotspots {
 		// Check context for cancellation

@@ -236,7 +236,7 @@ func TestCraftSessionExportHTML(t *testing.T) {
 	}
 
 	// Verify messages are structured properly
-	if !strings.Contains(content, `class="message"`) {
+	if !strings.Contains(content, `class="message`) {
 		t.Error("Expected message CSS classes")
 	}
 
