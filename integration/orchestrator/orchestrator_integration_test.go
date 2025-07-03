@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/campaign"
 	"github.com/lancekrogers/guild/pkg/kanban"
 	"github.com/lancekrogers/guild/pkg/orchestrator"
@@ -483,7 +483,7 @@ func TestConcurrentAgentExecution(t *testing.T) {
 			start := time.Now()
 
 			// Execute task (mock agents always succeed)
-			_, err := agent.Execute(ctx, fmt.Sprintf("Execute %s", taskID))
+			_, err := core.Execute(ctx, fmt.Sprintf("Execute %s", taskID))
 			if err != nil {
 				t.Logf("Agent %s failed task %s: %v", agentID, taskID, err)
 				continue
@@ -946,12 +946,12 @@ func (m *mockKanbanManager) CreateTask(ctx context.Context, title, description s
 
 type mockAgentRegistry struct{}
 
-func (m *mockAgentRegistry) GetAgent(id string) (agent.Agent, error) {
+func (m *mockAgentRegistry) GetAgent(id string) (core.Agent, error) {
 	return &mockAgent{id: id}, nil
 }
 
-func (m *mockAgentRegistry) ListAgents() []agent.Agent {
-	return []agent.Agent{
+func (m *mockAgentRegistry) ListAgents() []core.Agent {
+	return []core.Agent{
 		&mockAgent{id: "agent-1"},
 		&mockAgent{id: "agent-2"},
 	}
@@ -1002,7 +1002,7 @@ func (d *mockDispatcherWithWorkload) Dispatch(ctx context.Context, task *kanban.
 
 type mockAgentFactory struct{}
 
-func (f *mockAgentFactory) CreateAgent(agentType, name string, options ...interface{}) (agent.Agent, error) {
+func (f *mockAgentFactory) CreateAgent(agentType, name string, options ...interface{}) (core.Agent, error) {
 	return &mockAgent{id: name}, nil
 }
 

@@ -103,7 +103,7 @@ func (x *Event) GetData() *structpb.Struct {
 // StreamEventsRequest configures event streaming
 type StreamEventsRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// Event type patterns to subscribe to (e.g., "task.*", "agent.*")
+	// Event type patterns to subscribe to (e.g., "task.*", "core.*")
 	EventTypes []string `protobuf:"bytes,1,rep,name=event_types,json=eventTypes,proto3" json:"event_types,omitempty"`
 	// If true, subscribe to all events
 	SubscribeAll bool `protobuf:"varint,2,opt,name=subscribe_all,json=subscribeAll,proto3" json:"subscribe_all,omitempty"`

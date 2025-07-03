@@ -110,7 +110,7 @@ func init() {
 	agentCmd.AddCommand(agentStartCmd)
 	agentCmd.AddCommand(newAgentTemplateCmd())
 
-	// Note: Additional agent subcommands (list, stop, status) are registered in agent.go
+	// Note: Additional agent subcommands (list, stop, status) are registered in core.go
 }
 
 // Execute summons the Guild and its artisans (standard: launches the CLI application)

@@ -130,7 +130,7 @@ Implement a complete user authentication system for the API with JWT token suppo
 10. Create API documentation`)
 
 		// TODO: In a real implementation, this would use the actual task extraction
-		// from the manager agent. For now, we simulate the task creation.
+		// from the manager core. For now, we simulate the task creation.
 		tasks := []string{
 			"Create JWT token service",
 			"Implement login endpoint",

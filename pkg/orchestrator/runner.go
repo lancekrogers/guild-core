@@ -7,7 +7,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
 	"github.com/lancekrogers/guild/pkg/gerror"
 )
@@ -15,7 +15,7 @@ import (
 // BaseOrchestrator implements the Orchestrator interface
 type BaseOrchestrator struct {
 	status            Status
-	agents            map[string]agent.Agent
+	agents            map[string]core.Agent
 	eventBus          EventBus
 	dispatcher        TaskDispatcher
 	currentCommission *commission.Commission
@@ -28,7 +28,7 @@ type BaseOrchestrator struct {
 func newOrchestrator(config *Config, dispatcher TaskDispatcher, eventBus EventBus) *BaseOrchestrator {
 	return &BaseOrchestrator{
 		status:     StatusIdle,
-		agents:     make(map[string]agent.Agent),
+		agents:     make(map[string]core.Agent),
 		eventBus:   eventBus,
 		dispatcher: dispatcher,
 		config:     config,
@@ -179,7 +179,7 @@ func (o *BaseOrchestrator) Status() Status {
 }
 
 // AddAgent adds an agent to the orchestrator
-func (o *BaseOrchestrator) AddAgent(agent agent.Agent) error {
+func (o *BaseOrchestrator) AddAgent(agent core.Agent) error {
 	o.mu.Lock()
 	defer o.mu.Unlock()
 
@@ -223,7 +223,7 @@ func (o *BaseOrchestrator) RemoveAgent(agentID string) error {
 }
 
 // GetAgent gets an agent by ID
-func (o *BaseOrchestrator) GetAgent(agentID string) (agent.Agent, bool) {
+func (o *BaseOrchestrator) GetAgent(agentID string) (core.Agent, bool) {
 	o.mu.RLock()
 	defer o.mu.RUnlock()
 

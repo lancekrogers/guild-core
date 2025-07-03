@@ -255,15 +255,15 @@ type testAgentRepoAdapter struct {
 
 func (a *testAgentRepoAdapter) CreateAgent(ctx context.Context, agent *registry.StorageAgent) error {
 	storageAgent := &storage.Agent{
-		ID:            agent.ID,
-		Name:          agent.Name,
-		Type:          agent.Type,
-		Provider:      agent.Provider,
-		Model:         agent.Model,
-		Capabilities:  agent.Capabilities,
-		Tools:         agent.Tools,
-		CostMagnitude: agent.CostMagnitude,
-		CreatedAt:     agent.CreatedAt,
+		ID:            core.ID,
+		Name:          core.Name,
+		Type:          core.Type,
+		Provider:      core.Provider,
+		Model:         core.Model,
+		Capabilities:  core.Capabilities,
+		Tools:         core.Tools,
+		CostMagnitude: core.CostMagnitude,
+		CreatedAt:     core.CreatedAt,
 	}
 	return a.repo.CreateAgent(ctx, storageAgent)
 }
@@ -288,15 +288,15 @@ func (a *testAgentRepoAdapter) GetAgent(ctx context.Context, id string) (*regist
 
 func (a *testAgentRepoAdapter) UpdateAgent(ctx context.Context, agent *registry.StorageAgent) error {
 	storageAgent := &storage.Agent{
-		ID:            agent.ID,
-		Name:          agent.Name,
-		Type:          agent.Type,
-		Provider:      agent.Provider,
-		Model:         agent.Model,
-		Capabilities:  agent.Capabilities,
-		Tools:         agent.Tools,
-		CostMagnitude: agent.CostMagnitude,
-		CreatedAt:     agent.CreatedAt,
+		ID:            core.ID,
+		Name:          core.Name,
+		Type:          core.Type,
+		Provider:      core.Provider,
+		Model:         core.Model,
+		Capabilities:  core.Capabilities,
+		Tools:         core.Tools,
+		CostMagnitude: core.CostMagnitude,
+		CreatedAt:     core.CreatedAt,
 	}
 	return a.repo.UpdateAgent(ctx, storageAgent)
 }

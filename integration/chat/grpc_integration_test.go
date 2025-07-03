@@ -248,7 +248,7 @@ func TestAgentExecution(t *testing.T) {
 	}
 
 	// Test agent execution
-	response, err := agent.Execute(ctx, "Create a simple task breakdown for user authentication")
+	response, err := core.Execute(ctx, "Create a simple task breakdown for user authentication")
 
 	// Should not fail outright
 	if err != nil {
@@ -352,7 +352,7 @@ func TestToolExecution(t *testing.T) {
 	}
 
 	// Test agent has access to tools
-	if guildAgent, ok := agent.(interface{ GetToolRegistry() any }); ok {
+	if guildAgent, ok := core.(interface{ GetToolRegistry() any }); ok {
 		toolReg := guildAgent.GetToolRegistry()
 		assert.NotNil(t, toolReg, "Agent should have access to tool registry")
 	}
@@ -426,7 +426,7 @@ func TestMemoryUsage(t *testing.T) {
 
 		// Execute something to trigger memory allocation
 		if agent != nil {
-			_, _ = agent.Execute(ctx, fmt.Sprintf("Memory test operation %d", i))
+			_, _ = core.Execute(ctx, fmt.Sprintf("Memory test operation %d", i))
 		}
 	}
 

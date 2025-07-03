@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/suggestions"
 )
@@ -17,7 +17,7 @@ import (
 type CompletionIntegration struct {
 	completionEngine  *CompletionEngine
 	suggestionManager suggestions.SuggestionManager
-	chatHandler       *agent.ChatSuggestionHandler
+	chatHandler       *core.ChatSuggestionHandler
 }
 
 // NewCompletionIntegration creates a new completion integration
@@ -28,7 +28,7 @@ func NewCompletionIntegration(engine *CompletionEngine) *CompletionIntegration {
 }
 
 // SetSuggestionSystem wires up the suggestion system
-func (ci *CompletionIntegration) SetSuggestionSystem(manager suggestions.SuggestionManager, handler *agent.ChatSuggestionHandler) {
+func (ci *CompletionIntegration) SetSuggestionSystem(manager suggestions.SuggestionManager, handler *core.ChatSuggestionHandler) {
 	ci.suggestionManager = manager
 	ci.chatHandler = handler
 
@@ -76,7 +76,7 @@ func (ci *CompletionIntegration) hasSuggestionSystem() bool {
 func (ci *CompletionIntegration) getSuggestionsWithContext(ctx context.Context, input string) ([]CompletionResult, error) {
 	// Try chat handler first (if available)
 	if ci.chatHandler != nil {
-		request := agent.SuggestionRequest{
+		request := core.SuggestionRequest{
 			Message:        input,
 			MaxSuggestions: 3,
 			MinConfidence:  0.5,

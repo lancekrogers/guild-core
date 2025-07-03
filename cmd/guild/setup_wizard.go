@@ -16,7 +16,7 @@ import (
 
 	"github.com/lancekrogers/guild/internal/daemon"
 	uiinit "github.com/lancekrogers/guild/internal/ui/init"
-	"github.com/lancekrogers/guild/pkg/agents"
+	"github.com/lancekrogers/guild/pkg/agents/creation"
 	"github.com/lancekrogers/guild/pkg/campaign"
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/gerror"
@@ -328,7 +328,7 @@ func runDirectInitialization(ctx context.Context, config uiinit.Config, deps uii
 // createDirectEnhancedAgents creates enhanced agents for direct initialization
 func createDirectEnhancedAgents(ctx context.Context, projectPath string, providerResults []providers.DetectionResult) (int, error) {
 	// Create enhanced agent creator
-	creator := agents.NewDefaultAgentCreator()
+	creator := creation.NewDefaultAgentCreator()
 
 	// Create default agent set
 	agentConfigs, err := creator.CreateDefaultAgentSet(ctx)

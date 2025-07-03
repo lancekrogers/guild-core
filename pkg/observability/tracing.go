@@ -263,9 +263,9 @@ func attributeFromValue(key string, value interface{}) attribute.KeyValue {
 
 // StartAgentSpan starts a span for agent operations
 func StartAgentSpan(ctx context.Context, agentID, operation string) (context.Context, trace.Span) {
-	return StartSpanWithAttributes(ctx, fmt.Sprintf("agent.%s", operation), map[string]interface{}{
-		"agent.id":        agentID,
-		"agent.operation": operation,
+	return StartSpanWithAttributes(ctx, fmt.Sprintf("core.%s", operation), map[string]interface{}{
+		"core.id":        agentID,
+		"core.operation": operation,
 	})
 }
 

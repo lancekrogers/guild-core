@@ -7,20 +7,20 @@ import (
 	"context"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/agent"
-	"github.com/lancekrogers/guild/pkg/agent/mocks"
+	"github.com/lancekrogers/guild/pkg/agents/core"
+	"github.com/lancekrogers/guild/pkg/agents/core/mocks"
 	"github.com/lancekrogers/guild/pkg/tools"
 	toolmocks "github.com/lancekrogers/guild/tools/mocks"
 )
 
 // TestWorkerAgentImplementsAgent tests that WorkerAgent implements the Agent interface
 func TestWorkerAgentImplementsAgent(t *testing.T) {
-	var _ agent.Agent = &agent.WorkerAgent{}
+	var _ core.Agent = &core.WorkerAgent{}
 }
 
 // TestWorkerAgentImplementsGuildArtisan tests that WorkerAgent implements the GuildArtisan interface
 func TestWorkerAgentImplementsGuildArtisan(t *testing.T) {
-	var _ agent.GuildArtisan = &agent.WorkerAgent{}
+	var _ core.GuildArtisan = &core.WorkerAgent{}
 }
 
 // TestCreateWorkerAgent tests creating a new worker agent via factory
@@ -37,7 +37,7 @@ func TestCreateWorkerAgent(t *testing.T) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
@@ -53,12 +53,12 @@ func TestCreateWorkerAgent(t *testing.T) {
 	}
 
 	// Cast to GuildArtisan to access extended methods
-	workerAgent, ok := createdAgent.(agent.Agent)
+	workerAgent, ok := createdAgent.(core.Agent)
 	if !ok {
 		t.Fatal("Agent should implement Agent interface")
 	}
 
-	guildArtisan, ok := createdAgent.(agent.GuildArtisan)
+	guildArtisan, ok := createdAgent.(core.GuildArtisan)
 	if !ok {
 		t.Fatal("Worker agent should implement GuildArtisan interface")
 	}
@@ -104,7 +104,7 @@ func TestWorkerAgentExecute(t *testing.T) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
@@ -142,7 +142,7 @@ func TestWorkerAgentCostManagement(t *testing.T) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
@@ -178,7 +178,7 @@ func TestManagerAgentCreation(t *testing.T) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
@@ -203,10 +203,10 @@ func TestManagerAgentCreation(t *testing.T) {
 	}
 
 	// Verify it implements the Agent interface
-	var _ agent.Agent = createdAgent
+	var _ core.Agent = createdAgent
 
 	// Verify it implements the GuildArtisan interface
-	if guildArtisan, ok := createdAgent.(agent.GuildArtisan); !ok {
+	if guildArtisan, ok := createdAgent.(core.GuildArtisan); !ok {
 		t.Error("Manager agent should implement GuildArtisan interface")
 	} else {
 		// Verify GuildArtisan methods are accessible
@@ -231,7 +231,7 @@ func TestWorkerAgentWithMockedLLMResponse(t *testing.T) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		tools.NewToolRegistry(),
@@ -247,7 +247,7 @@ func TestWorkerAgentWithMockedLLMResponse(t *testing.T) {
 	}
 
 	// Cast to GuildArtisan to access dependencies
-	guildArtisan, ok := workerAgent.(agent.GuildArtisan)
+	guildArtisan, ok := workerAgent.(core.GuildArtisan)
 	if !ok {
 		t.Fatal("Worker agent should implement GuildArtisan interface")
 	}
@@ -283,7 +283,7 @@ func TestWorkerAgentWithTools(t *testing.T) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		&mocks.MockLLMClient{},
 		mocks.NewMockChainManager(),
 		toolRegistry,
@@ -299,7 +299,7 @@ func TestWorkerAgentWithTools(t *testing.T) {
 	}
 
 	// Cast to GuildArtisan to access tool registry
-	guildArtisan, ok := workerAgent.(agent.GuildArtisan)
+	guildArtisan, ok := workerAgent.(core.GuildArtisan)
 	if !ok {
 		t.Fatal("Worker agent should implement GuildArtisan interface")
 	}
@@ -325,8 +325,8 @@ func TestWorkerAgentWithTools(t *testing.T) {
 func TestAgentInterfaceCompliance(t *testing.T) {
 	t.Run("worker_agent_interfaces", func(t *testing.T) {
 		// Test that WorkerAgent implements all required interfaces
-		var _ agent.Agent = &agent.WorkerAgent{}
-		var _ agent.GuildArtisan = &agent.WorkerAgent{}
+		var _ core.Agent = &core.WorkerAgent{}
+		var _ core.GuildArtisan = &core.WorkerAgent{}
 	})
 
 	t.Run("manager_agent_interfaces", func(t *testing.T) {
@@ -339,7 +339,7 @@ func TestAgentInterfaceCompliance(t *testing.T) {
 		costManager := mocks.NewMockCostManager()
 
 		// Create factory
-		factory := agent.DefaultFactoryFactory(
+		factory := core.DefaultFactoryFactory(
 			llmClient,
 			memoryManager,
 			toolRegistry,
@@ -355,14 +355,14 @@ func TestAgentInterfaceCompliance(t *testing.T) {
 		}
 
 		// Verify interface implementations
-		var _ agent.Agent = managerAgent
+		var _ core.Agent = managerAgent
 
 		// Cast to GuildArtisan to verify implementation
-		guildArtisan, ok := managerAgent.(agent.GuildArtisan)
+		guildArtisan, ok := managerAgent.(core.GuildArtisan)
 		if !ok {
 			t.Fatal("Manager agent should implement GuildArtisan interface")
 		}
-		var _ agent.GuildArtisan = guildArtisan
+		var _ core.GuildArtisan = guildArtisan
 
 		// Test basic functionality
 		if managerAgent.GetID() != "interface-test-manager" {
@@ -384,7 +384,7 @@ func TestAgentCreationEdgeCases(t *testing.T) {
 		costManager := mocks.NewMockCostManager()
 
 		// Create factory
-		factory := agent.DefaultFactoryFactory(
+		factory := core.DefaultFactoryFactory(
 			llmClient,
 			memoryManager,
 			toolRegistry,
@@ -418,7 +418,7 @@ func TestAgentCreationEdgeCases(t *testing.T) {
 		costManager := mocks.NewMockCostManager()
 
 		// Create factory
-		factory := agent.DefaultFactoryFactory(
+		factory := core.DefaultFactoryFactory(
 			llmClient,
 			memoryManager,
 			toolRegistry,
@@ -458,7 +458,7 @@ func BenchmarkAgentCreation(b *testing.B) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory once
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,

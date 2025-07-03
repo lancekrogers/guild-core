@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/memory"
@@ -18,13 +18,13 @@ import (
 
 // AgentWrapper adds RAG capabilities to a GuildArtisan agent
 type AgentWrapper struct {
-	agent     agent.GuildArtisan
+	agent     core.GuildArtisan
 	retriever *Retriever
 	config    Config
 }
 
 // NewAgentWrapper creates a new RAG agent wrapper
-func NewAgentWrapper(agent agent.GuildArtisan, retriever *Retriever, config Config) *AgentWrapper {
+func NewAgentWrapper(agent core.GuildArtisan, retriever *Retriever, config Config) *AgentWrapper {
 	return &AgentWrapper{
 		agent:     agent,
 		retriever: retriever,

@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/lancekrogers/guild/internal/ui/chat/completion"
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
 	"github.com/lancekrogers/guild/pkg/memory"
 	"github.com/lancekrogers/guild/pkg/providers"
@@ -52,7 +52,7 @@ func TestSuggestionIntegration(t *testing.T) {
 		// Chat handler might be nil if agent creation failed
 		if app.chatHandler != nil {
 			// Test suggestion request handling
-			request := agent.SuggestionRequest{
+			request := core.SuggestionRequest{
 				Message:        "test",
 				MaxSuggestions: 5,
 			}
@@ -81,7 +81,7 @@ func TestCompletionEngineIntegration(t *testing.T) {
 	}
 
 	// Create chat handler
-	handler := agent.NewChatSuggestionHandler(mockAgent)
+	handler := core.NewChatSuggestionHandler(mockAgent)
 
 	// Set enhanced agent on completion engine
 	engine.SetEnhancedAgent(mockAgent, handler)
@@ -108,8 +108,8 @@ func (m *MockEnhancedAgent) GetSuggestionsForContext(ctx context.Context, messag
 	return []suggestions.Suggestion{}, nil
 }
 
-func (m *MockEnhancedAgent) ExecuteWithSuggestions(ctx context.Context, request string, enableSuggestions bool) (*agent.EnhancedExecutionResult, error) {
-	return &agent.EnhancedExecutionResult{}, nil
+func (m *MockEnhancedAgent) ExecuteWithSuggestions(ctx context.Context, request string, enableSuggestions bool) (*core.EnhancedExecutionResult, error) {
+	return &core.EnhancedExecutionResult{}, nil
 }
 
 // Implement GuildArtisan interface methods

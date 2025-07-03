@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/gerror"
@@ -19,14 +19,14 @@ import (
 // ContextAwareTaskPlanner uses the manager agent's intelligence to assign tasks
 // based on full context from agent configurations
 type ContextAwareTaskPlanner struct {
-	managerAgent      agent.Agent
+	managerAgent      core.Agent
 	kanbanBoard       KanbanManager
 	componentRegistry registry.ComponentRegistry
 }
 
 // newContextAwareTaskPlanner creates a planner that uses LLM intelligence for assignments (private constructor)
 func newContextAwareTaskPlanner(
-	managerAgent agent.Agent,
+	managerAgent core.Agent,
 	kanbanBoard KanbanManager,
 	componentRegistry registry.ComponentRegistry,
 ) *ContextAwareTaskPlanner {
@@ -39,7 +39,7 @@ func newContextAwareTaskPlanner(
 
 // DefaultContextAwareTaskPlannerFactory creates a context-aware planner factory for registry use
 func DefaultContextAwareTaskPlannerFactory(
-	managerAgent agent.Agent,
+	managerAgent core.Agent,
 	kanbanBoard KanbanManager,
 	componentRegistry registry.ComponentRegistry,
 ) *ContextAwareTaskPlanner {

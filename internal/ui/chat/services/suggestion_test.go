@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/memory"
@@ -20,12 +20,12 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// mockAgent implements agent.EnhancedGuildArtisan for testing
+// mockAgent implements core.EnhancedGuildArtisan for testing
 type mockAgent struct {
 	id              string
 	suggestions     []suggestions.Suggestion
 	suggestionError error
-	executionResult *agent.EnhancedExecutionResult
+	executionResult *core.EnhancedExecutionResult
 	executionError  error
 }
 
@@ -53,7 +53,7 @@ func (m *mockAgent) GetCapabilities() []string {
 	return []string{"test"}
 }
 
-// Implement agent.GuildArtisan methods
+// Implement core.GuildArtisan methods
 func (m *mockAgent) GetToolRegistry() tools.Registry {
 	return nil
 }
@@ -70,7 +70,7 @@ func (m *mockAgent) GetMemoryManager() memory.ChainManager {
 	return nil
 }
 
-// Implement agent.EnhancedGuildArtisan methods
+// Implement core.EnhancedGuildArtisan methods
 func (m *mockAgent) GetSuggestionsForContext(ctx context.Context, message string, filter *suggestions.SuggestionFilter) ([]suggestions.Suggestion, error) {
 	if m.suggestionError != nil {
 		return nil, m.suggestionError
@@ -78,7 +78,7 @@ func (m *mockAgent) GetSuggestionsForContext(ctx context.Context, message string
 	return m.suggestions, nil
 }
 
-func (m *mockAgent) ExecuteWithSuggestions(ctx context.Context, request string, enableSuggestions bool) (*agent.EnhancedExecutionResult, error) {
+func (m *mockAgent) ExecuteWithSuggestions(ctx context.Context, request string, enableSuggestions bool) (*core.EnhancedExecutionResult, error) {
 	if m.executionError != nil {
 		return nil, m.executionError
 	}
@@ -95,13 +95,13 @@ func TestNewSuggestionService(t *testing.T) {
 
 	tests := []struct {
 		name    string
-		handler *agent.ChatSuggestionHandler
+		handler *core.ChatSuggestionHandler
 		wantErr bool
 		errCode gerror.ErrorCode
 	}{
 		{
 			name:    "Valid handler",
-			handler: agent.NewChatSuggestionHandler(&mockAgent{id: "test-agent"}),
+			handler: core.NewChatSuggestionHandler(&mockAgent{id: "test-agent"}),
 			wantErr: false,
 		},
 		{
@@ -158,7 +158,7 @@ func TestGetSuggestions(t *testing.T) {
 		suggestions: mockSuggestions,
 	}
 
-	handler := agent.NewChatSuggestionHandler(mockAgent)
+	handler := core.NewChatSuggestionHandler(mockAgent)
 	service, err := NewSuggestionService(ctx, handler)
 	require.NoError(t, err)
 
@@ -191,7 +191,7 @@ func TestGetSuggestionsWithError(t *testing.T) {
 		suggestionError: gerror.New(gerror.ErrCodeInternal, "test error", nil),
 	}
 
-	handler := agent.NewChatSuggestionHandler(mockAgent)
+	handler := core.NewChatSuggestionHandler(mockAgent)
 	service, err := NewSuggestionService(ctx, handler)
 	require.NoError(t, err)
 
@@ -207,7 +207,7 @@ func TestGetSuggestionsWithError(t *testing.T) {
 // TestOptimizeContext tests context optimization for tokens
 func TestOptimizeContext(t *testing.T) {
 	ctx := context.Background()
-	handler := agent.NewChatSuggestionHandler(&mockAgent{id: "test"})
+	handler := core.NewChatSuggestionHandler(&mockAgent{id: "test"})
 	service, err := NewSuggestionService(ctx, handler)
 	require.NoError(t, err)
 
@@ -271,7 +271,7 @@ func TestCacheManagement(t *testing.T) {
 		},
 	}
 
-	handler := agent.NewChatSuggestionHandler(mockAgent)
+	handler := core.NewChatSuggestionHandler(mockAgent)
 	service, err := NewSuggestionService(ctx, handler)
 	require.NoError(t, err)
 
@@ -330,7 +330,7 @@ func TestFollowUpSuggestions(t *testing.T) {
 		suggestions: mockSuggestions,
 	}
 
-	handler := agent.NewChatSuggestionHandler(mockAgent)
+	handler := core.NewChatSuggestionHandler(mockAgent)
 	service, err := NewSuggestionService(ctx, handler)
 	require.NoError(t, err)
 
@@ -351,7 +351,7 @@ func TestStatistics(t *testing.T) {
 		suggestions: []suggestions.Suggestion{{ID: "1", Content: "Test", Display: "Test", Source: "test", CreatedAt: time.Now()}},
 	}
 
-	handler := agent.NewChatSuggestionHandler(mockAgent)
+	handler := core.NewChatSuggestionHandler(mockAgent)
 	service, err := NewSuggestionService(ctx, handler)
 	require.NoError(t, err)
 
@@ -374,7 +374,7 @@ func TestPeriodicCleanup(t *testing.T) {
 	ctx := context.Background()
 
 	mockAgent := &mockAgent{id: "test-agent"}
-	handler := agent.NewChatSuggestionHandler(mockAgent)
+	handler := core.NewChatSuggestionHandler(mockAgent)
 	service, err := NewSuggestionService(ctx, handler)
 	require.NoError(t, err)
 
@@ -400,7 +400,7 @@ func TestSuggestionContext(t *testing.T) {
 		suggestions: []suggestions.Suggestion{{ID: "1", Content: "Context-aware", Display: "Context-aware", Source: "test", CreatedAt: time.Now()}},
 	}
 
-	handler := agent.NewChatSuggestionHandler(mockAgent)
+	handler := core.NewChatSuggestionHandler(mockAgent)
 	service, err := NewSuggestionService(ctx, handler)
 	require.NoError(t, err)
 
@@ -431,7 +431,7 @@ func TestTokenLimitManagement(t *testing.T) {
 		},
 	}
 
-	handler := agent.NewChatSuggestionHandler(mockAgent)
+	handler := core.NewChatSuggestionHandler(mockAgent)
 	service, err := NewSuggestionService(ctx, handler)
 	require.NoError(t, err)
 
@@ -460,7 +460,7 @@ func TestConcurrentAccess(t *testing.T) {
 		suggestions: []suggestions.Suggestion{{ID: "1", Content: "Concurrent", Display: "Concurrent", Source: "test", CreatedAt: time.Now()}},
 	}
 
-	handler := agent.NewChatSuggestionHandler(mockAgent)
+	handler := core.NewChatSuggestionHandler(mockAgent)
 	service, err := NewSuggestionService(ctx, handler)
 	require.NoError(t, err)
 
@@ -510,7 +510,7 @@ func TestStartCommand(t *testing.T) {
 	ctx := context.Background()
 
 	mockAgent := &mockAgent{id: "test-agent"}
-	handler := agent.NewChatSuggestionHandler(mockAgent)
+	handler := core.NewChatSuggestionHandler(mockAgent)
 	service, err := NewSuggestionService(ctx, handler)
 	require.NoError(t, err)
 
@@ -532,7 +532,7 @@ func BenchmarkGetSuggestions(b *testing.B) {
 		suggestions: []suggestions.Suggestion{{ID: "1", Content: "Benchmark", Display: "Benchmark", Source: "test", CreatedAt: time.Now()}},
 	}
 
-	handler := agent.NewChatSuggestionHandler(mockAgent)
+	handler := core.NewChatSuggestionHandler(mockAgent)
 	service, _ := NewSuggestionService(ctx, handler)
 
 	b.ResetTimer()
@@ -551,7 +551,7 @@ func BenchmarkCacheHit(b *testing.B) {
 		suggestions: []suggestions.Suggestion{{ID: "1", Content: "Benchmark", Display: "Benchmark", Source: "test", CreatedAt: time.Now()}},
 	}
 
-	handler := agent.NewChatSuggestionHandler(mockAgent)
+	handler := core.NewChatSuggestionHandler(mockAgent)
 	service, _ := NewSuggestionService(ctx, handler)
 
 	// Populate cache

@@ -113,11 +113,11 @@ const (
 	EventTypeTaskCancelled  = "task.cancelled"
 	
 	// Agent events
-	EventTypeAgentStarted   = "agent.started"
-	EventTypeAgentStopped   = "agent.stopped"
-	EventTypeAgentError     = "agent.error"
-	EventTypeAgentIdle      = "agent.idle"
-	EventTypeAgentBusy      = "agent.busy"
+	EventTypeAgentStarted   = "core.started"
+	EventTypeAgentStopped   = "core.stopped"
+	EventTypeAgentError     = "core.error"
+	EventTypeAgentIdle      = "core.idle"
+	EventTypeAgentBusy      = "core.busy"
 	
 	// Commission events
 	EventTypeCommissionCreated   = "commission.created"

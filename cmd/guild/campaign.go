@@ -236,7 +236,7 @@ func createCampaign(cmd *cobra.Command, args []string) error {
 	planner := orchestrator.DefaultManagerTaskPlannerFactory(managerAgent, board)
 
 	// Plan tasks
-	fmt.Println("Planning tasks with manager agent...")
+	fmt.Println("Planning tasks with manager core...")
 	tasks, err := planner.PlanTasks(ctx, obj, guildConfig)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeOrchestration, "failed to plan tasks").

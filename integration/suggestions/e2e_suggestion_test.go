@@ -13,7 +13,7 @@ import (
 
 	"github.com/lancekrogers/guild/internal/ui/chat/completion"
 	"github.com/lancekrogers/guild/internal/ui/chat/services"
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/memory"
@@ -115,7 +115,7 @@ func TestSuggestionServiceIntegration(t *testing.T) {
 	}
 
 	// Create chat suggestion handler
-	handler := agent.NewChatSuggestionHandler(mockAgent)
+	handler := core.NewChatSuggestionHandler(mockAgent)
 	require.NotNil(t, handler)
 
 	// Create suggestion service
@@ -232,8 +232,8 @@ func (m *mockEnhancedAgent) GetSuggestionsForContext(ctx context.Context, messag
 	return m.suggestions, nil
 }
 
-func (m *mockEnhancedAgent) ExecuteWithSuggestions(ctx context.Context, request string, enableSuggestions bool) (*agent.EnhancedExecutionResult, error) {
-	return &agent.EnhancedExecutionResult{
+func (m *mockEnhancedAgent) ExecuteWithSuggestions(ctx context.Context, request string, enableSuggestions bool) (*core.EnhancedExecutionResult, error) {
+	return &core.EnhancedExecutionResult{
 		Response: "mock response",
 		Success:  true,
 	}, nil

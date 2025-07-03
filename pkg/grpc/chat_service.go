@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
 	"github.com/lancekrogers/guild/pkg/observability"
@@ -52,7 +52,7 @@ type ChatSession struct {
 	Metadata     map[string]string
 
 	// Active agents in this session
-	agents   map[string]agent.Agent
+	agents   map[string]core.Agent
 	agentsMu sync.RWMutex
 
 	// Message history
@@ -362,7 +362,7 @@ func (s *ChatService) handleChatMessage(ctx context.Context, msg *pb.ChatMessage
 // processWithAgents handles message processing by agents asynchronously
 func (s *ChatService) processWithAgents(ctx context.Context, session *ChatSession, msg *pb.ChatMessage, stream pb.ChatService_ChatServer) {
 	session.agentsMu.RLock()
-	agents := make([]agent.Agent, 0, len(session.agents))
+	agents := make([]core.Agent, 0, len(session.agents))
 	for _, ag := range session.agents {
 		agents = append(agents, ag)
 	}
@@ -389,7 +389,7 @@ func (s *ChatService) processWithAgents(ctx context.Context, session *ChatSessio
 }
 
 // processWithSingleAgent processes a message with a specific agent
-func (s *ChatService) processWithSingleAgent(ctx context.Context, session *ChatSession, ag agent.Agent, msg *pb.ChatMessage, stream pb.ChatService_ChatServer) {
+func (s *ChatService) processWithSingleAgent(ctx context.Context, session *ChatSession, ag core.Agent, msg *pb.ChatMessage, stream pb.ChatService_ChatServer) {
 	agentID := ag.GetID()
 
 	// Send planning state
@@ -442,7 +442,7 @@ func (s *ChatService) processWithSingleAgent(ctx context.Context, session *ChatS
 }
 
 // executeAgentResponse executes the agent with real task processing
-func (s *ChatService) executeAgentResponse(ctx context.Context, ag agent.Agent, msg *pb.ChatMessage) (string, error) {
+func (s *ChatService) executeAgentResponse(ctx context.Context, ag core.Agent, msg *pb.ChatMessage) (string, error) {
 	// Execute the agent with the message content
 	response, err := ag.Execute(ctx, msg.Content)
 	if err != nil {
@@ -599,7 +599,7 @@ func (s *ChatService) CreateChatSession(ctx context.Context, req *pb.CreateChatS
 		LastActivity:   time.Now(),
 		Context:        req.Context,
 		Metadata:       req.Metadata,
-		agents:         make(map[string]agent.Agent),
+		agents:         make(map[string]core.Agent),
 		messages:       make([]*pb.ChatMessage, 0),
 		toolExecutions: make(map[string]*pb.ToolExecution),
 		streams:        make(map[string]pb.ChatService_ChatServer),

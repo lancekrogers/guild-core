@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/agent/manager"
+	"github.com/lancekrogers/guild/pkg/agents/core/manager"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/kanban"
 	"github.com/lancekrogers/guild/pkg/prompts/layered"

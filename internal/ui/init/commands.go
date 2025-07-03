@@ -13,7 +13,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/pkg/agents"
+	"github.com/lancekrogers/guild/pkg/agents/creation"
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/providers"
@@ -261,7 +261,7 @@ func (m *InitTUIModelV2) createEnhancedAgents(ctx context.Context) error {
 	}
 
 	// Create the enhanced agent creator
-	creator := agents.NewDefaultAgentCreator()
+	creator := creation.NewDefaultAgentCreator()
 
 	// Create the default agent set (Elena + specialists)
 	agentConfigs, err := creator.CreateDefaultAgentSet(ctx)

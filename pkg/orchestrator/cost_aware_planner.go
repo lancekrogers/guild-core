@@ -9,7 +9,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/gerror"
@@ -19,7 +19,7 @@ import (
 
 // CostAwareTaskPlanner implements TaskPlanner with cost optimization
 type CostAwareTaskPlanner struct {
-	managerAgent      agent.Agent
+	managerAgent      core.Agent
 	kanbanBoard       KanbanManager
 	componentRegistry registry.ComponentRegistry
 	maxCostFilter     int  // Maximum cost magnitude filter (exclude agents above this)
@@ -73,7 +73,7 @@ type AssignmentSummary struct {
 
 // NewCostAwareTaskPlanner creates a new cost-optimized task planner
 func newCostAwareTaskPlanner(
-	managerAgent agent.Agent,
+	managerAgent core.Agent,
 	kanbanBoard KanbanManager,
 	componentRegistry registry.ComponentRegistry,
 	maxCostFilter int,
@@ -89,7 +89,7 @@ func newCostAwareTaskPlanner(
 
 // DefaultCostAwareTaskPlannerFactory creates a cost-aware planner factory for registry use
 func DefaultCostAwareTaskPlannerFactory(
-	managerAgent agent.Agent,
+	managerAgent core.Agent,
 	kanbanBoard KanbanManager,
 	componentRegistry registry.ComponentRegistry,
 	maxCostFilter int,

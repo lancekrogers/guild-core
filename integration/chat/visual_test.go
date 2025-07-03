@@ -324,16 +324,16 @@ func TestAgentStatusDisplay(t *testing.T) {
 	}
 
 	for _, agent := range mockAgents {
-		t.Run(agent.name, func(t *testing.T) {
-			status := mockRenderAgentStatus(agent.id, agent.name, agent.status, agent.role)
+		t.Run(core.name, func(t *testing.T) {
+			status := mockRenderAgentStatus(core.id, core.name, core.status, core.role)
 
 			assert.NotEmpty(t, status, "Agent status should not be empty")
-			assert.Contains(t, status, agent.name, "Should contain agent name")
-			assert.Contains(t, status, agent.status, "Should contain agent status")
+			assert.Contains(t, status, core.name, "Should contain agent name")
+			assert.Contains(t, status, core.status, "Should contain agent status")
 
 			// Should include appropriate icon for role
 			icons := mockGetAgentIcons()
-			if icon, exists := icons[agent.role]; exists {
+			if icon, exists := icons[core.role]; exists {
 				assert.Contains(t, status, icon, "Should contain role icon")
 			}
 		})

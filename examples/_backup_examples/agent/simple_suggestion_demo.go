@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
 	"github.com/lancekrogers/guild/pkg/memory"
 	"github.com/lancekrogers/guild/pkg/providers"
@@ -61,7 +61,7 @@ func main() {
 	// Step 3: Create suggestion-aware agent factory (without tools)
 	fmt.Println("\n🏭 Step 3: Creating suggestion-aware agent factory...")
 	
-	factory := agent.NewSuggestionAwareAgentFactoryWithManager(
+	factory := core.NewSuggestionAwareAgentFactoryWithManager(
 		llmClient,
 		memoryManager,
 		nil, // No tool registry for this simple demo
@@ -73,7 +73,7 @@ func main() {
 	fmt.Println("✅ Factory created with suggestion support")
 	
 	// Step 4: Create a suggestion-aware agent
-	fmt.Println("\n🎭 Step 4: Creating suggestion-aware agent...")
+	fmt.Println("\n🎭 Step 4: Creating suggestion-aware core...")
 	
 	enhancedAgent := factory.CreateWorkerAgentWithCapabilities(
 		"demo-agent-001",
@@ -86,8 +86,8 @@ func main() {
 	// Step 5: Create chat integration handler
 	fmt.Println("\n💬 Step 5: Setting up chat integration...")
 	
-	chatHandler := agent.NewChatSuggestionHandler(enhancedAgent)
-	config := agent.DefaultChatSuggestionConfig()
+	chatHandler := core.NewChatSuggestionHandler(enhancedAgent)
+	config := core.DefaultChatSuggestionConfig()
 	
 	fmt.Println("✅ Chat integration handler ready")
 	
@@ -96,7 +96,7 @@ func main() {
 	
 	// Scenario 1: Planning request
 	fmt.Println("\n--- Scenario 1: Planning Request ---")
-	request1 := agent.SuggestionRequest{
+	request1 := core.SuggestionRequest{
 		Message:        "I need help planning a project",
 		MaxSuggestions: 5,
 		MinConfidence:  0.4,
@@ -115,7 +115,7 @@ func main() {
 	
 	// Scenario 2: Analysis request
 	fmt.Println("\n--- Scenario 2: Analysis Request ---")
-	request2 := agent.SuggestionRequest{
+	request2 := core.SuggestionRequest{
 		Message: "help me analyze this code",
 	}
 	
@@ -149,7 +149,7 @@ func main() {
 	// Step 8: Filter suggestions by type
 	fmt.Println("\n🔍 Step 8: Filtered suggestions...")
 	
-	request3 := agent.SuggestionRequest{
+	request3 := core.SuggestionRequest{
 		Message: "help me with templates",
 		Filter: &suggestions.SuggestionFilter{
 			Types: []suggestions.SuggestionType{suggestions.SuggestionTypeTemplate},
@@ -229,15 +229,15 @@ func (m *MockCommissionManager) GetCommission(ctx context.Context, id string) (c
 
 type MockCostManager struct{}
 
-func (m *MockCostManager) TrackCost(costType agent.CostType, amount float64) error { return nil }
+func (m *MockCostManager) TrackCost(costType core.CostType, amount float64) error { return nil }
 func (m *MockCostManager) GetCostReport() map[string]interface{} { return map[string]interface{}{} }
-func (m *MockCostManager) SetBudget(costType agent.CostType, amount float64) {}
-func (m *MockCostManager) GetBudgetRemaining(costType agent.CostType) float64 { return 100.0 }
+func (m *MockCostManager) SetBudget(costType core.CostType, amount float64) {}
+func (m *MockCostManager) GetBudgetRemaining(costType core.CostType) float64 { return 100.0 }
 func (m *MockCostManager) GetTotalCost() float64 { return 0.0 }
 func (m *MockCostManager) Reset() {}
-func (m *MockCostManager) ExceedsBudget(costType agent.CostType, amount float64) bool { return false }
+func (m *MockCostManager) ExceedsBudget(costType core.CostType, amount float64) bool { return false }
 func (m *MockCostManager) EstimateLLMCost(model string, estimatedTokens int) float64 { return 0.01 }
-func (m *MockCostManager) CanAfford(costType agent.CostType, amount float64) bool { return true }
+func (m *MockCostManager) CanAfford(costType core.CostType, amount float64) bool { return true }
 func (m *MockCostManager) RecordLLMCost(model string, promptTokens, completionTokens int, metadata map[string]string) error { return nil }
 
 type MockTemplateManager struct{}

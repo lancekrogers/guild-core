@@ -54,25 +54,25 @@ func TestIntegrationSchedulerFullWorkflow(t *testing.T) {
 	executionCounts := make(map[string]*atomic.Int32)
 	for _, agent := range agents {
 		count := &atomic.Int32{}
-		executionCounts[agent.id] = count
+		executionCounts[core.id] = count
 
 		executor := &mockAgentExecutor{
-			agentID:      agent.id,
-			capabilities: convertCapabilities(agent.capabilities),
+			agentID:      core.id,
+			capabilities: convertCapabilities(core.capabilities),
 			isAvailable:  true,
 			executeFunc: func(ctx context.Context, taskID string, payload interface{}) (interface{}, error) {
 				count.Add(1)
 				// Simulate work
 				select {
 				case <-time.After(50 * time.Millisecond):
-					return fmt.Sprintf("Task %s completed by %s", taskID, agent.id), nil
+					return fmt.Sprintf("Task %s completed by %s", taskID, core.id), nil
 				case <-ctx.Done():
 					return nil, ctx.Err()
 				}
 			},
 		}
 
-		err = scheduler.RegisterAgent(ctx, agent.id, executor, agent.capabilities)
+		err = scheduler.RegisterAgent(ctx, core.id, executor, core.capabilities)
 		require.NoError(t, err)
 	}
 
@@ -745,7 +745,7 @@ func (s *smartMockManagerAgent) RequestAssignment(ctx context.Context, task *kan
 	minLoad := int(^uint(0) >> 1) // Max int
 
 	for _, agent := range availableAgents {
-		load := s.agentLoad[agent.AgentID]
+		load := s.agentLoad[core.AgentID]
 
 		// Prefer agents with lower load
 		if load < minLoad {
@@ -756,7 +756,7 @@ func (s *smartMockManagerAgent) RequestAssignment(ctx context.Context, task *kan
 		// Special handling for high priority tasks
 		if task.Priority == kanban.PriorityHigh {
 			// Prefer "expert" or "senior" agents
-			if (agent.AgentID == "expert-coder" || agent.AgentID == "senior-tester") && load < minLoad+2 {
+			if (core.AgentID == "expert-coder" || core.AgentID == "senior-tester") && load < minLoad+2 {
 				bestAgent = agent
 				break
 			}

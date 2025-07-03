@@ -96,7 +96,7 @@ func runAgentList(cmd *cobra.Command, args []string) error {
 			if err := daemon.EnsureRunning(ctx); err != nil {
 				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
 					WithComponent("cli").
-					WithOperation("agent.list.daemon_start")
+					WithOperation("core.list.daemon_start")
 			}
 			// Give the server a moment to fully initialize
 			time.Sleep(500 * time.Millisecond)
@@ -107,7 +107,7 @@ func runAgentList(cmd *cobra.Command, args []string) error {
 	if !daemon.IsReachable(ctx) {
 		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
 			WithComponent("cli").
-			WithOperation("agent.list").
+			WithOperation("core.list").
 			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
 	}
 

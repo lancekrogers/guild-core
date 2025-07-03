@@ -12,7 +12,7 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/observability"
 	"github.com/lancekrogers/guild/pkg/suggestions"
@@ -21,7 +21,7 @@ import (
 // SuggestionService provides intelligent suggestions for chat interactions
 type SuggestionService struct {
 	ctx               context.Context
-	suggestionHandler *agent.ChatSuggestionHandler
+	suggestionHandler *core.ChatSuggestionHandler
 
 	// Caching
 	cache    map[string]*cachedSuggestion
@@ -32,7 +32,7 @@ type SuggestionService struct {
 	tokenLimit int
 
 	// Configuration
-	config         agent.ChatSuggestionConfig
+	config         core.ChatSuggestionConfig
 	maxSuggestions int
 	minConfidence  float64
 
@@ -54,7 +54,7 @@ type cachedSuggestion struct {
 }
 
 // NewSuggestionService creates a new suggestion service
-func NewSuggestionService(ctx context.Context, handler *agent.ChatSuggestionHandler) (*SuggestionService, error) {
+func NewSuggestionService(ctx context.Context, handler *core.ChatSuggestionHandler) (*SuggestionService, error) {
 	if handler == nil {
 		return nil, gerror.New(gerror.ErrCodeInvalidInput, "suggestion handler cannot be nil", nil).
 			WithComponent("services.suggestion").
@@ -67,7 +67,7 @@ func NewSuggestionService(ctx context.Context, handler *agent.ChatSuggestionHand
 		cache:             make(map[string]*cachedSuggestion),
 		cacheTTL:          5 * time.Minute,
 		tokenLimit:        8192,
-		config:            agent.DefaultChatSuggestionConfig(),
+		config:            core.DefaultChatSuggestionConfig(),
 		maxSuggestions:    5,
 		minConfidence:     0.5,
 	}, nil
@@ -376,7 +376,7 @@ func (s *SuggestionService) SetCacheTTL(ttl time.Duration) {
 }
 
 // SetConfig updates the suggestion configuration
-func (s *SuggestionService) SetConfig(config agent.ChatSuggestionConfig) {
+func (s *SuggestionService) SetConfig(config core.ChatSuggestionConfig) {
 	s.config = config
 }
 
@@ -485,8 +485,8 @@ func (s *SuggestionService) cleanupCache() {
 }
 
 // buildOptimizedRequest creates an optimized suggestion request
-func (s *SuggestionService) buildOptimizedRequest(message string, context *SuggestionContext) agent.SuggestionRequest {
-	request := agent.SuggestionRequest{
+func (s *SuggestionService) buildOptimizedRequest(message string, context *SuggestionContext) core.SuggestionRequest {
+	request := core.SuggestionRequest{
 		Message:        message,
 		MaxSuggestions: s.maxSuggestions,
 		MinConfidence:  s.minConfidence,
@@ -520,7 +520,7 @@ func (s *SuggestionService) buildOptimizedRequest(message string, context *Sugge
 }
 
 // estimateTokenCost estimates the token cost of a request/response
-func (s *SuggestionService) estimateTokenCost(request agent.SuggestionRequest, response *agent.SuggestionResponse) int {
+func (s *SuggestionService) estimateTokenCost(request core.SuggestionRequest, response *core.SuggestionResponse) int {
 	// Simple estimation: 1 token per 4 characters
 	cost := len(request.Message) / 4
 
@@ -582,7 +582,7 @@ type SuggestionContext struct {
 
 // SuggestionServiceStartedMsg indicates the service has started
 type SuggestionServiceStartedMsg struct {
-	Config agent.ChatSuggestionConfig
+	Config core.ChatSuggestionConfig
 }
 
 // SuggestionServiceErrorMsg represents a service error

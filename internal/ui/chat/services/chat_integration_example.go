@@ -10,7 +10,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/registry"
 	"github.com/lancekrogers/guild/pkg/suggestions"
 )
@@ -103,9 +103,9 @@ func ExampleChatWithSuggestions() {
 }
 
 // createMockEnhancedAgent creates a mock enhanced agent for the example
-func createMockEnhancedAgent() agent.EnhancedGuildArtisan {
+func createMockEnhancedAgent() core.EnhancedGuildArtisan {
 	return &mockEnhancedGuildArtisan{
-		generateSuggestionsFunc: func(ctx context.Context, request agent.SuggestionRequest) ([]suggestions.Suggestion, error) {
+		generateSuggestionsFunc: func(ctx context.Context, request core.SuggestionRequest) ([]suggestions.Suggestion, error) {
 			// Return contextual suggestions based on the message
 			if contains(request.Message, "REST API") {
 				return []suggestions.Suggestion{

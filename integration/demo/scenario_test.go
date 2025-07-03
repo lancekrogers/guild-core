@@ -61,7 +61,7 @@ func TestAllDemoScenarios(t *testing.T) {
 		},
 		{
 			name:    "Multi-Agent Coordination",
-			script:  "test-multi-agent.sh",
+			script:  "test-multi-core.sh",
 			maxTime: 2 * time.Minute,
 			required: []string{
 				"agents",

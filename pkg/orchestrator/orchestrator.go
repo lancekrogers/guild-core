@@ -6,7 +6,7 @@ package orchestrator
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
 )
 
@@ -48,13 +48,13 @@ type Orchestrator interface {
 	Status() Status
 
 	// AddAgent adds an agent to the orchestrator
-	AddAgent(agent agent.Agent) error
+	AddAgent(agent core.Agent) error
 
 	// RemoveAgent removes an agent from the orchestrator
 	RemoveAgent(agentID string) error
 
 	// GetAgent gets an agent by ID
-	GetAgent(agentID string) (agent.Agent, bool)
+	GetAgent(agentID string) (core.Agent, bool)
 
 	// SetCommission sets the current commission
 	SetCommission(commission *commission.Commission) error
@@ -81,19 +81,19 @@ type Config struct {
 // OrchestrationEvent types
 const (
 	// EventAgentAdded is emitted when an agent is added
-	EventAgentAdded = "agent.added"
+	EventAgentAdded = "core.added"
 
 	// EventAgentRemoved is emitted when an agent is removed
-	EventAgentRemoved = "agent.removed"
+	EventAgentRemoved = "core.removed"
 
 	// EventAgentStarted is emitted when an agent starts execution
-	EventAgentStarted = "agent.started"
+	EventAgentStarted = "core.started"
 
 	// EventAgentCompleted is emitted when an agent completes execution
-	EventAgentCompleted = "agent.completed"
+	EventAgentCompleted = "core.completed"
 
 	// EventAgentFailed is emitted when an agent fails
-	EventAgentFailed = "agent.failed"
+	EventAgentFailed = "core.failed"
 
 	// EventTaskCreated is emitted when a task is created
 	EventTaskCreated = "task.created"

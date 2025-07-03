@@ -35,7 +35,7 @@ import (
 	uitools "github.com/lancekrogers/guild/internal/ui/tools"
 	"github.com/lancekrogers/guild/internal/ui/vim"
 	"github.com/lancekrogers/guild/internal/ui/visual"
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/campaign"
 	"github.com/lancekrogers/guild/pkg/commission"
 	"github.com/lancekrogers/guild/pkg/config"
@@ -106,9 +106,9 @@ type App struct {
 	suggestionManager *InputSuggestionManager
 
 	// NEW: Suggestion system integration
-	suggestionFactory *agent.SuggestionAwareAgentFactory
-	chatHandler       *agent.ChatSuggestionHandler
-	enhancedAgent     agent.EnhancedGuildArtisan
+	suggestionFactory *core.SuggestionAwareAgentFactory
+	chatHandler       *core.ChatSuggestionHandler
+	enhancedAgent     core.EnhancedGuildArtisan
 
 	// Guild selection
 	selectedGuild string
@@ -1494,7 +1494,7 @@ func (app *App) initializeSuggestionSystem() error {
 	costManager := &managers.MinimalCostManager{}
 
 	// Create suggestion-aware agent factory
-	app.suggestionFactory = agent.NewSuggestionAwareAgentFactory(
+	app.suggestionFactory = core.NewSuggestionAwareAgentFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
@@ -1506,7 +1506,7 @@ func (app *App) initializeSuggestionSystem() error {
 	app.enhancedAgent = app.suggestionFactory.CreateWorkerAgent("chat-agent", "Chat Assistant")
 
 	// Create chat suggestion handler
-	app.chatHandler = agent.NewChatSuggestionHandler(app.enhancedAgent)
+	app.chatHandler = core.NewChatSuggestionHandler(app.enhancedAgent)
 
 	return nil
 }

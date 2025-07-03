@@ -19,7 +19,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/lancekrogers/guild/internal/daemon"
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/gerror"
@@ -633,7 +633,7 @@ func setupGuildComponents(ctx context.Context) (*guildComponents, error) {
 	agentFactory := &guildAgentFactory{
 		registry:        reg,
 		guildConfig:     guildConfig,
-		agentInstances:  make(map[string]agent.Agent),
+		agentInstances:  make(map[string]core.Agent),
 		providerFactory: providerFactory,
 		memoryManager:   memoryManager,
 		toolRegistry:    toolsRegistry,
@@ -781,7 +781,7 @@ func (k *kanbanManagerAdapter) UpdateTask(ctx context.Context, task *kanban.Task
 type guildAgentFactory struct {
 	registry        registry.ComponentRegistry
 	guildConfig     *config.GuildConfig
-	agentInstances  map[string]agent.Agent // Cache for created agents
+	agentInstances  map[string]core.Agent // Cache for created agents
 	providerFactory *providers.Factory
 	memoryManager   memory.ChainManager
 	toolRegistry    tools.Registry
@@ -789,7 +789,7 @@ type guildAgentFactory struct {
 }
 
 // CreateAgent creates an agent from guild configuration
-func (f *guildAgentFactory) CreateAgent(agentID, name string, options ...interface{}) (agent.Agent, error) {
+func (f *guildAgentFactory) CreateAgent(agentID, name string, options ...interface{}) (core.Agent, error) {
 	// Check if agent already exists in cache
 	if existingAgent, exists := f.agentInstances[agentID]; exists {
 		return existingAgent, nil
@@ -859,11 +859,11 @@ func (f *guildAgentFactory) CreateAgent(agentID, name string, options ...interfa
 
 	// Create agent factory
 	// Use the DefaultFactoryFactory
-	costManager := agent.DefaultCostManagerFactory()
-	agentFactory := agent.DefaultFactoryFactory(llmClient, f.memoryManager, f.toolRegistry, nil, costManager)
+	costManager := core.DefaultCostManagerFactory()
+	agentFactory := core.DefaultFactoryFactory(llmClient, f.memoryManager, f.toolRegistry, nil, costManager)
 
 	// Create agent based on type
-	var newAgent agent.Agent
+	var newAgent core.Agent
 	switch agentConfig.Type {
 	case "manager":
 		newAgent, err = agentFactory.CreateManagerAgent(context.Background(), agentConfig.ID, agentConfig.Name)
@@ -890,7 +890,7 @@ func (f *guildAgentFactory) CreateAgent(agentID, name string, options ...interfa
 }
 
 // getManagerAgent returns the manager agent instance
-func getManagerAgent(components *guildComponents, agentFactory *guildAgentFactory) (agent.Agent, error) {
+func getManagerAgent(components *guildComponents, agentFactory *guildAgentFactory) (core.Agent, error) {
 	managerID := getManagerAgentID(components.guildConfig)
 
 	// Try to get from orchestrator first

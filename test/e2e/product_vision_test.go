@@ -245,7 +245,7 @@ func TestGuildCompleteUserJourney(t *testing.T) {
 		} else {
 			t.Logf("Found %d available agents", len(agentsResp.Agents))
 			for _, agent := range agentsResp.Agents {
-				t.Logf("  - %s: %s (%s)", agent.Id, agent.Name, agent.Type)
+				t.Logf("  - %s: %s (%s)", core.Id, core.Name, core.Type)
 			}
 		}
 

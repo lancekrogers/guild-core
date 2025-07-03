@@ -11,7 +11,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/agent/elena"
+	"github.com/lancekrogers/guild/pkg/agents/core/elena"
 	"github.com/lancekrogers/guild/pkg/gerror"
 )
 

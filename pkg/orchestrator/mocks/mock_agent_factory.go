@@ -6,10 +6,10 @@ package mocks
 import (
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 )
 
-// MockAgentFactory is a mock implementation of the agent.Factory
+// MockAgentFactory is a mock implementation of the core.Factory
 type MockAgentFactory struct {
 	agents      map[string]*MockAgent
 	createError error
@@ -24,7 +24,7 @@ func NewMockAgentFactory() *MockAgentFactory {
 }
 
 // CreateAgent creates a mock agent
-func (m *MockAgentFactory) CreateAgent(agentType, name string, options ...interface{}) (agent.Agent, error) {
+func (m *MockAgentFactory) CreateAgent(agentType, name string, options ...interface{}) (core.Agent, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 

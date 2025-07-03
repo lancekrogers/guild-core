@@ -69,7 +69,7 @@ func NewGitBlameTool(workspacePath string) *GitBlameTool {
 
 	examples := []string{
 		`{"file": "main.go"}`,
-		`{"file": "pkg/agent/agent.go", "line_start": 100, "line_end": 150}`,
+		`{"file": "pkg/agent/core.go", "line_start": 100, "line_end": 150}`,
 		`{"file": "README.md", "ignore_whitespace": false, "show_email": true}`,
 		`{"file": "cmd/guild/chat.go", "show_date": true}`,
 	}

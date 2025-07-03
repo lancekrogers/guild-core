@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/kanban"
 	"github.com/lancekrogers/guild/pkg/observability"
@@ -19,8 +19,8 @@ import (
 type taskDispatcher struct {
 	kanbanManager KanbanManager
 	agentFactory  AgentFactory
-	agentPool     map[string]agent.Agent
-	activeAgents  map[string]agent.Agent
+	agentPool     map[string]core.Agent
+	activeAgents  map[string]core.Agent
 	agentTasks    map[string]*kanban.Task // Maps agent ID to their current task
 	maxAgents     int
 	mu            sync.Mutex
@@ -32,8 +32,8 @@ func newTaskDispatcher(kanbanManager KanbanManager, agentFactory AgentFactory, e
 	return &taskDispatcher{
 		kanbanManager: kanbanManager,
 		agentFactory:  agentFactory,
-		agentPool:     make(map[string]agent.Agent),
-		activeAgents:  make(map[string]agent.Agent),
+		agentPool:     make(map[string]core.Agent),
+		activeAgents:  make(map[string]core.Agent),
 		agentTasks:    make(map[string]*kanban.Task),
 		maxAgents:     maxAgents,
 		eventBus:      eventBus,
@@ -46,7 +46,7 @@ func DefaultTaskDispatcherFactory(kanbanManager KanbanManager, agentFactory Agen
 }
 
 // RegisterAgent registers an agent with the dispatcher
-func (d *taskDispatcher) RegisterAgent(agent agent.Agent) {
+func (d *taskDispatcher) RegisterAgent(agent core.Agent) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
@@ -142,7 +142,7 @@ func (d *taskDispatcher) DispatchTasks(ctx context.Context) error {
 
 	// Find available agents
 	agentSelectionStart := time.Now()
-	var availableAgents []agent.Agent
+	var availableAgents []core.Agent
 	for id, agent := range d.agentPool {
 		if _, active := d.activeAgents[id]; !active {
 			availableAgents = append(availableAgents, agent)
@@ -427,11 +427,11 @@ func (d *taskDispatcher) StartAgent(ctx context.Context, agentID string) error {
 }
 
 // GetActiveAgents returns the list of active agents
-func (d *taskDispatcher) GetActiveAgents() []agent.Agent {
+func (d *taskDispatcher) GetActiveAgents() []core.Agent {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
-	var agents []agent.Agent
+	var agents []core.Agent
 	for _, agent := range d.activeAgents {
 		agents = append(agents, agent)
 	}
@@ -440,11 +440,11 @@ func (d *taskDispatcher) GetActiveAgents() []agent.Agent {
 }
 
 // GetAvailableAgents returns the list of available agents
-func (d *taskDispatcher) GetAvailableAgents() []agent.Agent {
+func (d *taskDispatcher) GetAvailableAgents() []core.Agent {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
-	var agents []agent.Agent
+	var agents []core.Agent
 	for id, agent := range d.agentPool {
 		if _, active := d.activeAgents[id]; !active {
 			agents = append(agents, agent)
@@ -455,7 +455,7 @@ func (d *taskDispatcher) GetAvailableAgents() []agent.Agent {
 }
 
 // ListAvailableAgents returns agents that can accept tasks (implements interface)
-func (d *taskDispatcher) ListAvailableAgents() []agent.Agent {
+func (d *taskDispatcher) ListAvailableAgents() []core.Agent {
 	return d.GetAvailableAgents()
 }
 

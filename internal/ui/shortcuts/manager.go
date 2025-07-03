@@ -363,7 +363,7 @@ func (sm *ShortcutManager) registerDefaultShortcuts() {
 	sm.RegisterShortcut(&Shortcut{
 		ID:          "mention_agent_1",
 		Key:         "ctrl+1",
-		Command:     "guild.agent.mention.1",
+		Command:     "guild.core.mention.1",
 		Description: "Mention Agent 1",
 		Category:    "agent",
 		Context:     "chat",
@@ -375,7 +375,7 @@ func (sm *ShortcutManager) registerDefaultShortcuts() {
 	sm.RegisterShortcut(&Shortcut{
 		ID:          "mention_agent_2",
 		Key:         "ctrl+2",
-		Command:     "guild.agent.mention.2",
+		Command:     "guild.core.mention.2",
 		Description: "Mention Agent 2",
 		Category:    "agent",
 		Context:     "chat",
@@ -387,7 +387,7 @@ func (sm *ShortcutManager) registerDefaultShortcuts() {
 	sm.RegisterShortcut(&Shortcut{
 		ID:          "mention_agent_3",
 		Key:         "ctrl+3",
-		Command:     "guild.agent.mention.3",
+		Command:     "guild.core.mention.3",
 		Description: "Mention Agent 3",
 		Category:    "agent",
 		Context:     "chat",
@@ -807,7 +807,7 @@ func (cp *CommandPalette) registerCommands() {
 			Enabled:     true,
 		},
 		{
-			ID:          "guild.agent.status",
+			ID:          "guild.core.status",
 			Name:        "Show Agent Status",
 			Description: "Display current status of all agents",
 			Category:    "Agent",

@@ -170,7 +170,7 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 	// Step 5: Use Corpus Agent to generate a document
 	t.Log("Step 5: Using Corpus Agent to generate document")
 
-	corpusAgent := agent.NewCorpusAgent(ragSystem, mockProvider, corpusConfig)
+	corpusAgent := core.NewCorpusAgent(ragSystem, mockProvider, corpusConfig)
 
 	response, err := corpusAgent.Execute(ctx, query)
 	require.NoError(t, err)
@@ -611,7 +611,7 @@ func TestMultiAgentWorkflow(t *testing.T) {
 	// Agent 3: Corpus Agent synthesizes information
 	t.Log("Agent 3: Corpus Agent synthesizing information")
 
-	corpusAgent := agent.NewCorpusAgent(ragSystem, mockProvider, corpusConfig)
+	corpusAgent := core.NewCorpusAgent(ragSystem, mockProvider, corpusConfig)
 
 	synthesisQuery := "Create a comprehensive guide on task automation benefits and implementation"
 	synthesisDoc, err := corpusAgent.GenerateDocument(ctx, synthesisQuery, "Task Automation Implementation Guide")

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/gerror"
@@ -26,12 +26,12 @@ type TaskPlanner interface {
 
 // managerTaskPlanner uses the manager agent to plan tasks
 type managerTaskPlanner struct {
-	managerAgent agent.Agent
+	managerAgent core.Agent
 	kanbanBoard  *kanban.Board
 }
 
 // newManagerTaskPlanner creates a new manager-based task planner (private constructor)
-func newManagerTaskPlanner(managerAgent agent.Agent, kanbanBoard *kanban.Board) *managerTaskPlanner {
+func newManagerTaskPlanner(managerAgent core.Agent, kanbanBoard *kanban.Board) *managerTaskPlanner {
 	return &managerTaskPlanner{
 		managerAgent: managerAgent,
 		kanbanBoard:  kanbanBoard,
@@ -39,7 +39,7 @@ func newManagerTaskPlanner(managerAgent agent.Agent, kanbanBoard *kanban.Board) 
 }
 
 // DefaultManagerTaskPlannerFactory creates a manager task planner for registry use
-func DefaultManagerTaskPlannerFactory(managerAgent agent.Agent, kanbanBoard *kanban.Board) TaskPlanner {
+func DefaultManagerTaskPlannerFactory(managerAgent core.Agent, kanbanBoard *kanban.Board) TaskPlanner {
 	return newManagerTaskPlanner(managerAgent, kanbanBoard)
 }
 
@@ -178,7 +178,7 @@ func (p *managerTaskPlanner) buildPlanningPrompt(commission *commission.Commissi
 func (p *managerTaskPlanner) buildAssignmentPrompt(tasks []*kanban.Task, guild *config.GuildConfig) string {
 	var prompt strings.Builder
 
-	prompt.WriteString("You are the manager agent. Assign the following tasks to the most suitable agents based on their capabilities.\n\n")
+	prompt.WriteString("You are the manager core. Assign the following tasks to the most suitable agents based on their capabilities.\n\n")
 
 	prompt.WriteString("## Tasks to Assign\n")
 	for _, task := range tasks {
@@ -199,7 +199,7 @@ func (p *managerTaskPlanner) buildAssignmentPrompt(tasks []*kanban.Task, guild *
 	prompt.WriteString("\n")
 
 	prompt.WriteString("## Instructions\n")
-	prompt.WriteString("Assign each task to the most suitable agent. Consider:\n")
+	prompt.WriteString("Assign each task to the most suitable core. Consider:\n")
 	prompt.WriteString("1. Agent capabilities must match task requirements\n")
 	prompt.WriteString("2. Balance workload across agents\n")
 	prompt.WriteString("3. Prefer specialists for their domain\n\n")

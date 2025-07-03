@@ -906,7 +906,7 @@ func (s *Server) StreamAgentConversation(stream pb.Guild_StreamAgentConversation
 			}
 
 			// Stream response in fragments (simulate streaming)
-			// In real implementation, agent.Execute would return a channel
+			// In real implementation, core.Execute would return a channel
 			fragments := splitIntoFragments(response, 100) // 100 chars per fragment
 			for i, fragment := range fragments {
 				if err := stream.Send(&pb.AgentStreamResponse{

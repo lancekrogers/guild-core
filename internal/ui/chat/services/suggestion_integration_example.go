@@ -9,7 +9,7 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/observability"
 	"github.com/lancekrogers/guild/pkg/suggestions"
@@ -30,7 +30,7 @@ type ChatWithSuggestions struct {
 func NewChatWithSuggestions(
 	ctx context.Context,
 	chatService *ChatService,
-	enhancedAgent agent.EnhancedGuildArtisan,
+	enhancedAgent core.EnhancedGuildArtisan,
 ) (*ChatWithSuggestions, error) {
 	if chatService == nil {
 		return nil, gerror.New(gerror.ErrCodeInvalidInput, "chat service cannot be nil", nil).
@@ -39,7 +39,7 @@ func NewChatWithSuggestions(
 	}
 
 	// Create suggestion handler and service
-	handler := agent.NewChatSuggestionHandler(enhancedAgent)
+	handler := core.NewChatSuggestionHandler(enhancedAgent)
 	suggestionService, err := NewSuggestionService(ctx, handler)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create suggestion service").

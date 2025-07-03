@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/lancekrogers/guild/internal/ui/chat/messages"
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/registry"
 	"github.com/lancekrogers/guild/pkg/search"
@@ -36,7 +36,7 @@ type CompletionEngine struct {
 
 	// NEW: Suggestion system integration
 	SuggestionManager    suggestions.SuggestionManager
-	ChatHandler          *agent.ChatSuggestionHandler
+	ChatHandler          *core.ChatSuggestionHandler
 	ConversationHist     []suggestions.ChatMessage // Context cache
 	LastSuggestionUpdate time.Time                 // Performance optimization
 }
@@ -73,7 +73,7 @@ func NewCompletionEngine(guildConfig *config.GuildConfig, ProjectRoot string) *C
 
 // NewCompletionEngineWithSuggestions creates a completion engine with suggestion system integration
 func NewCompletionEngineWithSuggestions(guildConfig *config.GuildConfig, ProjectRoot string,
-	SuggestionManager suggestions.SuggestionManager, ChatHandler *agent.ChatSuggestionHandler,
+	SuggestionManager suggestions.SuggestionManager, ChatHandler *core.ChatSuggestionHandler,
 ) *CompletionEngine {
 	engine := &CompletionEngine{
 		GuildConfig:       guildConfig,
@@ -603,7 +603,7 @@ func (ce *CompletionEngine) getSuggestions(input string) []CompletionResult {
 	ce.LastSuggestionUpdate = now
 
 	// Build suggestion request
-	request := agent.SuggestionRequest{
+	request := core.SuggestionRequest{
 		Message:        input,
 		MaxSuggestions: 3, // Limit for performance in real-time
 		MinConfidence:  0.5,
@@ -800,7 +800,7 @@ func (ce *CompletionEngine) SetCommandProcessor(processor CommandProcessorInterf
 }
 
 // SetEnhancedAgent configures the completion engine with an enhanced agent
-func (ce *CompletionEngine) SetEnhancedAgent(agent agent.EnhancedGuildArtisan, handler *agent.ChatSuggestionHandler) {
+func (ce *CompletionEngine) SetEnhancedAgent(agent core.EnhancedGuildArtisan, handler *core.ChatSuggestionHandler) {
 	if agent != nil {
 		ce.SuggestionManager = agent.GetSuggestionManager()
 		ce.ChatHandler = handler

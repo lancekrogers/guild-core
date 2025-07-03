@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
 	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
 	"github.com/lancekrogers/guild/pkg/memory"
@@ -80,9 +80,9 @@ func (m *mockGuildClient) ListAvailableAgents(ctx context.Context, req *pb.ListA
 	}, nil
 }
 
-// mockEnhancedGuildArtisan implements agent.EnhancedGuildArtisan for testing
+// mockEnhancedGuildArtisan implements core.EnhancedGuildArtisan for testing
 type mockEnhancedGuildArtisan struct {
-	generateSuggestionsFunc func(ctx context.Context, request agent.SuggestionRequest) ([]suggestions.Suggestion, error)
+	generateSuggestionsFunc func(ctx context.Context, request core.SuggestionRequest) ([]suggestions.Suggestion, error)
 }
 
 func (m *mockEnhancedGuildArtisan) GetID() string {
@@ -126,20 +126,20 @@ func (m *mockEnhancedGuildArtisan) GetSuggestionManager() suggestions.Suggestion
 }
 
 func (m *mockEnhancedGuildArtisan) GetSuggestionsForContext(ctx context.Context, message string, filter *suggestions.SuggestionFilter) ([]suggestions.Suggestion, error) {
-	return m.GenerateSuggestions(ctx, agent.SuggestionRequest{
+	return m.GenerateSuggestions(ctx, core.SuggestionRequest{
 		Message: message,
 		Filter:  filter,
 	})
 }
 
-func (m *mockEnhancedGuildArtisan) ExecuteWithSuggestions(ctx context.Context, request string, enableSuggestions bool) (*agent.EnhancedExecutionResult, error) {
-	return &agent.EnhancedExecutionResult{
+func (m *mockEnhancedGuildArtisan) ExecuteWithSuggestions(ctx context.Context, request string, enableSuggestions bool) (*core.EnhancedExecutionResult, error) {
+	return &core.EnhancedExecutionResult{
 		Response: "Mock response with suggestions",
 		Success:  true,
 	}, nil
 }
 
-func (m *mockEnhancedGuildArtisan) GenerateSuggestions(ctx context.Context, request agent.SuggestionRequest) ([]suggestions.Suggestion, error) {
+func (m *mockEnhancedGuildArtisan) GenerateSuggestions(ctx context.Context, request core.SuggestionRequest) ([]suggestions.Suggestion, error) {
 	if m.generateSuggestionsFunc != nil {
 		return m.generateSuggestionsFunc(ctx, request)
 	}
@@ -217,7 +217,7 @@ func TestNewChatServiceWithSuggestions(t *testing.T) {
 
 	tests := []struct {
 		name      string
-		agent     agent.EnhancedGuildArtisan
+		agent     core.EnhancedGuildArtisan
 		wantError bool
 	}{
 		{
@@ -259,7 +259,7 @@ func TestChatServiceSuggestionIntegration(t *testing.T) {
 	mockAgent := &mockEnhancedGuildArtisan{}
 
 	// Set up mock agent with custom suggestions
-	mockAgent.generateSuggestionsFunc = func(ctx context.Context, request agent.SuggestionRequest) ([]suggestions.Suggestion, error) {
+	mockAgent.generateSuggestionsFunc = func(ctx context.Context, request core.SuggestionRequest) ([]suggestions.Suggestion, error) {
 		return []suggestions.Suggestion{
 			{
 				Type:        suggestions.SuggestionTypeTool,
@@ -471,7 +471,7 @@ func TestChatServiceConfiguration(t *testing.T) {
 
 	t.Run("SetSuggestionService", func(t *testing.T) {
 		mockAgent := &mockEnhancedGuildArtisan{}
-		handler := agent.NewChatSuggestionHandler(mockAgent)
+		handler := core.NewChatSuggestionHandler(mockAgent)
 		suggestionService, err := NewSuggestionService(ctx, handler)
 		require.NoError(t, err)
 

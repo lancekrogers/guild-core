@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/agent"
-	"github.com/lancekrogers/guild/pkg/agent/mocks"
+	"github.com/lancekrogers/guild/pkg/agents/core"
+	"github.com/lancekrogers/guild/pkg/agents/core/mocks"
 	"github.com/lancekrogers/guild/pkg/memory"
 	"github.com/lancekrogers/guild/pkg/tools"
 	toolmocks "github.com/lancekrogers/guild/tools/mocks"
@@ -27,7 +27,7 @@ func TestWorkerAgentWithContext(t *testing.T) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
@@ -77,7 +77,7 @@ func TestWorkerAgentCostTracking(t *testing.T) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
@@ -118,7 +118,7 @@ func TestManagerAgentInheritance(t *testing.T) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
@@ -184,7 +184,7 @@ func TestWorkerAgentWithFullMemoryContext(t *testing.T) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
@@ -200,7 +200,7 @@ func TestWorkerAgentWithFullMemoryContext(t *testing.T) {
 	}
 
 	// Cast to GuildArtisan to access memory manager
-	guildArtisan, ok := workerAgent.(agent.GuildArtisan)
+	guildArtisan, ok := workerAgent.(core.GuildArtisan)
 	if !ok {
 		t.Fatal("Worker agent should implement GuildArtisan interface")
 	}
@@ -231,7 +231,7 @@ func TestWorkerAgentWithCommissionManager(t *testing.T) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
@@ -247,7 +247,7 @@ func TestWorkerAgentWithCommissionManager(t *testing.T) {
 	}
 
 	// Cast to GuildArtisan to access commission manager
-	guildArtisan, ok := workerAgent.(agent.GuildArtisan)
+	guildArtisan, ok := workerAgent.(core.GuildArtisan)
 	if !ok {
 		t.Fatal("Worker agent should implement GuildArtisan interface")
 	}
@@ -294,7 +294,7 @@ func TestWorkerAgentToolExecution(t *testing.T) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
@@ -310,7 +310,7 @@ func TestWorkerAgentToolExecution(t *testing.T) {
 	}
 
 	// Cast to GuildArtisan to access tool registry
-	guildArtisan, ok := workerAgent.(agent.GuildArtisan)
+	guildArtisan, ok := workerAgent.(core.GuildArtisan)
 	if !ok {
 		t.Fatal("Worker agent should implement GuildArtisan interface")
 	}
@@ -377,7 +377,7 @@ func TestWorkerAgentIntegration(t *testing.T) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
@@ -404,7 +404,7 @@ func TestWorkerAgentIntegration(t *testing.T) {
 	}
 
 	// Cast to GuildArtisan to access all components
-	guildArtisan, ok := workerAgent.(agent.GuildArtisan)
+	guildArtisan, ok := workerAgent.(core.GuildArtisan)
 	if !ok {
 		t.Fatal("Worker agent should implement GuildArtisan interface")
 	}
@@ -438,7 +438,7 @@ func TestWorkerAgentErrorHandling(t *testing.T) {
 		costManager := mocks.NewMockCostManager()
 
 		// Create factory
-		factory := agent.DefaultFactoryFactory(
+		factory := core.DefaultFactoryFactory(
 			llmClient,
 			memoryManager,
 			toolRegistry,
@@ -476,7 +476,7 @@ func TestWorkerAgentErrorHandling(t *testing.T) {
 		costManager := mocks.NewMockCostManager()
 
 		// Create factory with nil dependencies
-		factory := agent.DefaultFactoryFactory(
+		factory := core.DefaultFactoryFactory(
 			nil, // nil LLM client
 			nil, // nil memory manager
 			nil, // nil tool registry
@@ -510,7 +510,7 @@ func TestWorkerAgentConcurrency(t *testing.T) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
@@ -567,7 +567,7 @@ func BenchmarkWorkerAgentExecution(b *testing.B) {
 	costManager := mocks.NewMockCostManager()
 
 	// Create factory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,

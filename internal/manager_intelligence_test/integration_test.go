@@ -12,8 +12,8 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 
-	"github.com/lancekrogers/guild/pkg/agent"
-	"github.com/lancekrogers/guild/pkg/agent/manager"
+	"github.com/lancekrogers/guild/pkg/agents/core"
+	"github.com/lancekrogers/guild/pkg/agents/core/manager"
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/kanban"
 )
@@ -402,7 +402,7 @@ func TestGuildCoordination_StrategicDecisionMaking(t *testing.T) {
 
 	t.Run("bottleneck_mitigation", func(t *testing.T) {
 		// Create test environment with bottleneck scenario
-		agents := make(map[string]agent.Agent)
+		agents := make(map[string]core.Agent)
 		capManager := manager.NewCapabilityModelManager(testDB)
 		assigner := manager.NewTaskAssigner(capManager, testDB)
 		tracker := manager.NewProgressTracker(testDB, "coordination-test")
@@ -423,7 +423,7 @@ func TestGuildCoordination_StrategicDecisionMaking(t *testing.T) {
 
 	t.Run("workload_rebalancing", func(t *testing.T) {
 		// Test workload rebalancing strategy
-		agents := make(map[string]agent.Agent)
+		agents := make(map[string]core.Agent)
 		capManager := manager.NewCapabilityModelManager(testDB)
 		assigner := manager.NewTaskAssigner(capManager, testDB)
 		tracker := manager.NewProgressTracker(testDB, "rebalancing-test")
@@ -448,7 +448,7 @@ func TestGuildCommunication_EffectiveOrchestration(t *testing.T) {
 	defer cleanupTestDatabase(t, testDB)
 
 	t.Run("message_routing", func(t *testing.T) {
-		agents := make(map[string]agent.Agent)
+		agents := make(map[string]core.Agent)
 		corpus := &mockCorpusUpdater{}
 
 		orchestrator := manager.NewCommunicationOrchestrator(agents, corpus, testDB)
@@ -481,7 +481,7 @@ func TestGuildCommunication_EffectiveOrchestration(t *testing.T) {
 	})
 
 	t.Run("knowledge_sharing", func(t *testing.T) {
-		agents := make(map[string]agent.Agent)
+		agents := make(map[string]core.Agent)
 		corpus := &mockCorpusUpdater{}
 
 		orchestrator := manager.NewCommunicationOrchestrator(agents, corpus, testDB)

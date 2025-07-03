@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
 	"github.com/lancekrogers/guild/pkg/memory"
 	"github.com/lancekrogers/guild/pkg/memory/rag"
@@ -151,8 +151,8 @@ func TestAgentWrapper_InterfaceCompliance(t *testing.T) {
 	wrapper := rag.NewAgentWrapper(mockAgent, nil, config)
 
 	// Verify interface implementations
-	var _ agent.Agent = wrapper
-	var _ agent.GuildArtisan = wrapper
+	var _ core.Agent = wrapper
+	var _ core.GuildArtisan = wrapper
 
 	// Test that all methods properly delegate
 	if wrapper.GetToolRegistry() != mockAgent.toolRegistry {

@@ -6,7 +6,7 @@ package registry
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/interfaces"
@@ -49,10 +49,10 @@ func (r *DefaultComponentRegistry) createAgentFactory(ctx context.Context) (Agen
 	// TODO: Get from internal/commission package when available
 
 	// Get cost manager - create a default one
-	costManager := agent.DefaultCostManagerFactory()
+	costManager := core.DefaultCostManagerFactory()
 
 	// Create the agent factory using the existing DefaultFactoryFactory
-	factory := agent.DefaultFactoryFactory(
+	factory := core.DefaultFactoryFactory(
 		llmClient,
 		memoryManager,
 		toolRegistry,
@@ -60,20 +60,20 @@ func (r *DefaultComponentRegistry) createAgentFactory(ctx context.Context) (Agen
 		costManager,
 	)
 
-	// Return a function that wraps the agent.Factory
+	// Return a function that wraps the core.Factory
 	return func(config AgentConfig) (interfaces.Agent, error) {
 		agentInstance, err := factory.CreateWorkerAgent(ctx, config.Name+"-id", config.Name)
 		if err != nil {
 			return nil, err
 		}
-		// Wrap the agent.Agent to implement registry.Agent
+		// Wrap the core.Agent to implement registry.Agent
 		return &agentAdapter{agent: agentInstance}, nil
 	}, nil
 }
 
 // agentFactoryAdapter is no longer needed since we return functions directly
 
-// agentAdapter wraps agent.Agent to implement registry.Agent
+// agentAdapter wraps core.Agent to implement registry.Agent
 type agentAdapter struct {
 	agent interfaces.Agent
 }

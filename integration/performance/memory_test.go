@@ -18,7 +18,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/agent/mocks"
+	"github.com/lancekrogers/guild/pkg/agents/core/mocks"
 	"github.com/lancekrogers/guild/pkg/registry"
 )
 
@@ -87,7 +87,7 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 					agent := mocks.NewMockAgent(fmt.Sprintf("agent-%d", taskNum), fmt.Sprintf("Agent %d", taskNum))
 
 					// Execute task - Agent.Execute takes (context, string)
-					_, _ = agent.Execute(ctx, fmt.Sprintf("Simulate work for task-%d", taskNum))
+					_, _ = core.Execute(ctx, fmt.Sprintf("Simulate work for task-%d", taskNum))
 
 					// Simulate cleanup delay
 					time.Sleep(2 * time.Second)
@@ -257,7 +257,7 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 
 			// Execute async task
 			go func() {
-				_, _ = agent.Execute(ctx, fmt.Sprintf("Test async-task-%d", i))
+				_, _ = core.Execute(ctx, fmt.Sprintf("Test async-task-%d", i))
 			}()
 		}
 

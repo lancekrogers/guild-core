@@ -292,13 +292,29 @@ func TestShortcutManager_HandleKeyPress(t *testing.T) {
 		},
 		{
 			name: "executes_context_shortcut",
-			key:  "ctrl+1",
+			key:  "ctrl+test",
 			setup: func(sm *ShortcutManager) *bool {
-				err := sm.SetContext(context.Background(), "chat")
-				if err != nil {
-					panic(err) // Debug: Should not fail
+				// Register a test shortcut in chat context
+				testShortcut := &Shortcut{
+					ID:          "test_context_shortcut",
+					Key:         "ctrl+test",
+					Command:     "test.context.command",
+					Description: "Test context shortcut",
+					Context:     "chat",
+					Handler:     func(ctx context.Context) tea.Cmd { return func() tea.Msg { return "test" } },
+					Enabled:     true,
+					Priority:    100,
 				}
-				return nil // Default handler doesn't use our test variable
+				err := sm.RegisterShortcut(testShortcut)
+				if err != nil {
+					panic(err)
+				}
+				
+				err = sm.SetContext(context.Background(), "chat")
+				if err != nil {
+					panic(err)
+				}
+				return nil
 			},
 			wantCmd: true,
 		},

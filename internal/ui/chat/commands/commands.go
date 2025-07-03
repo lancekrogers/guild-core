@@ -842,14 +842,14 @@ import (
 	"fmt"
 	"log"
 	
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/providers"
 )
 
 // GuildExample demonstrates Guild framework usage
 type GuildExample struct {
 	ctx      context.Context
-	agent    agent.Agent
+	agent    core.Agent
 	provider providers.Provider
 }
 
@@ -862,7 +862,7 @@ func NewGuildExample(ctx context.Context) (*GuildExample, error) {
 	}
 	
 	// Create agent
-	agent := agent.NewGuildArtisan("developer", provider)
+	agent := core.NewGuildArtisan("developer", provider)
 	
 	return &GuildExample{
 		ctx:      ctx,

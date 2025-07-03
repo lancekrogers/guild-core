@@ -7,7 +7,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/kanban"
 	"github.com/lancekrogers/guild/pkg/orchestrator/interfaces"
 )
@@ -23,13 +23,13 @@ type KanbanManager interface {
 
 // AgentFactory interface for agent creation needed by orchestrator
 type AgentFactory interface {
-	CreateAgent(agentType, name string, options ...interface{}) (agent.Agent, error)
+	CreateAgent(agentType, name string, options ...interface{}) (core.Agent, error)
 }
 
 // TaskDispatcher defines the interface for dispatching tasks to agents
 type TaskDispatcher interface {
 	// RegisterAgent adds an agent to the dispatcher's pool
-	RegisterAgent(agent agent.Agent)
+	RegisterAgent(agent core.Agent)
 
 	// UnregisterAgent removes an agent from the dispatcher's pool
 	UnregisterAgent(agentID string)
@@ -44,7 +44,7 @@ type TaskDispatcher interface {
 	GetAgentStatus(agentID string) AgentStatus
 
 	// ListAvailableAgents returns agents that can accept tasks
-	ListAvailableAgents() []agent.Agent
+	ListAvailableAgents() []core.Agent
 
 	// Stop gracefully shuts down the dispatcher
 	Stop(ctx context.Context) error

@@ -7,10 +7,10 @@ import (
 	"context"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/agent"
+	"github.com/lancekrogers/guild/pkg/agents/core"
 )
 
-// MockAgent is a mock implementation of the agent.Agent interface
+// MockAgent is a mock implementation of the core.Agent interface
 type MockAgent struct {
 	id          string
 	name        string
@@ -66,5 +66,5 @@ func (m *MockAgent) SetExecuteFunc(f func(ctx context.Context, request string) (
 	m.executeFunc = f
 }
 
-// Ensure MockAgent implements agent.Agent interface
-var _ agent.Agent = (*MockAgent)(nil)
+// Ensure MockAgent implements core.Agent interface
+var _ core.Agent = (*MockAgent)(nil)
