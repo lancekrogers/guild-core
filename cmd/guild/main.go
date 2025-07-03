@@ -179,6 +179,55 @@ func loadEnvironment() error {
 	return nil
 }
 
+// newAgentTemplateCmd creates the agent template command
+func newAgentTemplateCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "template",
+		Short: "Manage agent templates",
+		Long:  `Create agents from templates or manage template library.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			cmd.Help()
+		},
+	}
+
+	// Add subcommands
+	cmd.AddCommand(newAgentTemplateListCmd())
+	cmd.AddCommand(newAgentTemplateGenerateCmd())
+
+	return cmd
+}
+
+// newAgentTemplateListCmd lists available templates
+func newAgentTemplateListCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "list",
+		Short: "List available agent templates",
+		Long:  `Display all built-in agent templates and their configurations.`,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			// TODO: Implement template listing
+			fmt.Println("Agent template management functionality coming soon.")
+			fmt.Println("\nFor now, agents can be created using the config files in .guild/campaigns/agents/")
+			return nil
+		},
+	}
+}
+
+// newAgentTemplateGenerateCmd generates an agent from a template
+func newAgentTemplateGenerateCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "generate [template-name]",
+		Short: "Generate an agent from a template",
+		Long:  `Create a new agent configuration file from a built-in template.`,
+		Args:  cobra.MaximumNArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			// TODO: Implement template generation
+			fmt.Println("Agent template generation functionality coming soon.")
+			fmt.Println("\nFor now, agents can be created by copying example files in .guild/campaigns/agents/")
+			return nil
+		},
+	}
+}
+
 func main() {
 	// Initialize Guild environment and logging
 	ctx := initializeGuild()
