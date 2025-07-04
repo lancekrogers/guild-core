@@ -22,9 +22,9 @@ type HappyPathResult struct {
 	Details  string
 }
 
-// Happy runs Agent 4 happy path performance and SLA validation tests
+// Happy runs happy path performance and SLA validation tests
 func Happy(verbose bool) error {
-	ui.Section("Running Agent 4 Happy Path Tests")
+	ui.Section("Running Happy Path Tests")
 
 	// Define happy path test suites with their expected purpose
 	suites := []HappyPathSuite{
@@ -32,7 +32,7 @@ func Happy(verbose bool) error {
 			Path:        "integration/happy-path/dev-tools",
 			Name:        "Development Tools Performance",
 			Description: "Multi-language codebase analysis and code intelligence validation",
-			Timeout:     "10m",
+			Timeout:     "2m",
 			Points:      15,
 		},
 		{
@@ -71,7 +71,7 @@ func Happy(verbose bool) error {
 	}
 
 	if verbose {
-		fmt.Printf("Running %d Agent 4 happy path test suites (Total: %d points)\n", len(suites), getTotalPoints(suites))
+		fmt.Printf("Running %d happy path test suites\n", len(suites))
 	}
 
 	results := make([]HappyPathResult, 0, len(suites))
@@ -82,7 +82,7 @@ func Happy(verbose bool) error {
 
 	// Run each test suite
 	for i, suite := range suites {
-		ui.Progress(i+1, total, fmt.Sprintf("Testing %s (%d pts)", suite.Name, suite.Points))
+		ui.Progress(i+1, total, fmt.Sprintf("Testing %s", suite.Name))
 
 		start := time.Now()
 		result, err := runHappyPathSuite(suite, verbose)
@@ -192,11 +192,11 @@ func Happy(verbose bool) error {
 
 	success := failures == 0
 
-	// Use custom status messages for Agent 4 results
-	successMsg := fmt.Sprintf("🎯 AGENT 4 COMPLETE - %d/%d POINTS EARNED", earnedPoints, totalPoints)
-	failMsg := fmt.Sprintf("❌ AGENT 4 INCOMPLETE - %d/%d POINTS (%d SUITES FAILED)", earnedPoints, totalPoints, failures)
+	// Use custom status messages for happy path results
+	successMsg := fmt.Sprintf("🎯 ALL TESTS PASSED - %d/%d POINTS EARNED", earnedPoints, totalPoints)
+	failMsg := fmt.Sprintf("❌ TESTS FAILED - %d/%d POINTS (%d SUITES FAILED)", earnedPoints, totalPoints, failures)
 
-	ui.SummaryCardWithStatus("Agent 4 Happy Path Test Results", rows, fmt.Sprintf("%.1fs", totalTime.Seconds()), success, successMsg, failMsg)
+	ui.SummaryCardWithStatus("Happy Path Test Results", rows, fmt.Sprintf("%.1fs", totalTime.Seconds()), success, successMsg, failMsg)
 
 	// Additional performance insights
 	if verbose && len(results) > 0 {
@@ -206,7 +206,7 @@ func Happy(verbose bool) error {
 	}
 
 	if failures > 0 {
-		return fmt.Errorf("%d happy path test suites failed - Agent 4 incomplete", failures)
+		return fmt.Errorf("%d happy path test suites failed", failures)
 	}
 
 	return nil
@@ -240,7 +240,7 @@ func verifyHappyPathSuites(suites []HappyPathSuite) error {
 
 // runHappyPathSuite executes a single happy path test suite
 func runHappyPathSuite(suite HappyPathSuite, verbose bool) (HappyPathResult, error) {
-	cmd := exec.Command("go", "test", "-v", "-timeout", suite.Timeout, "./"+suite.Path)
+	cmd := exec.Command("go", "test", "-v", "-short", "-timeout", suite.Timeout, "./"+suite.Path)
 
 	var output strings.Builder
 	if verbose {

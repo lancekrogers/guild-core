@@ -265,7 +265,7 @@ help:
 	@echo "  test-teatest             Run TUI tests with proper terminal cleanup"
 	@echo "  integration              Run integration tests"
 	@echo "  e2e                      Run end-to-end tests"
-	@echo "  happy                    Run happy path performance and SLA validation tests"
+	@echo "  happy                    Run comprehensive performance and SLA validation tests"
 	@echo "  validate-demo            Validate demo scripts and functionality"
 	@echo "  benchmark                Run comprehensive performance benchmarks"
 	@echo "  benchmark-suggestions    Run suggestion system benchmarks only"

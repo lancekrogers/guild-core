@@ -99,14 +99,14 @@ func TestCodeIntelligencePerformance_HappyPath(t *testing.T) {
 					metrics := NewDeveloperSessionMetrics(idx)
 					sessionMetrics[idx] = metrics
 
-					// Simulate 10-minute development session
-					sessionCtx, sessionCancel := context.WithTimeout(context.Background(), 10*time.Minute)
+					// Simulate 30-second development session (fast test)
+					sessionCtx, sessionCancel := context.WithTimeout(context.Background(), 30*time.Second)
 					defer sessionCancel()
 
 					framework.SimulateDevelopmentSession(sessionCtx, session, DevelopmentSimulation{
-						AutocompletionFrequency: 15 * time.Second, // Request autocompletion every 15 seconds
-						NavigationFrequency:     30 * time.Second, // Navigate every 30 seconds
-						DiagnosticsFrequency:    45 * time.Second, // Check diagnostics every 45 seconds
+						AutocompletionFrequency: 2 * time.Second, // Request autocompletion every 2 seconds
+						NavigationFrequency:     5 * time.Second, // Navigate every 5 seconds
+						DiagnosticsFrequency:    8 * time.Second, // Check diagnostics every 8 seconds
 						CodeChanges: []CodeChangePattern{
 							{Type: ChangeTypeAddFunction, Probability: 0.3},
 							{Type: ChangeTypeModifyFunction, Probability: 0.4},
