@@ -263,7 +263,7 @@ func (s *MockStream) Close() error {
 // PerformanceMonitor monitors streaming performance
 type PerformanceMonitor struct {
 	config    MonitorConfig
-	daemon    *MockDaemon
+	daemon    DaemonInterface
 	startTime time.Time
 	samples   []PerformanceSample
 	mu        sync.RWMutex
@@ -281,7 +281,7 @@ type PerformanceSample struct {
 }
 
 // StartStreamingPerformanceMonitor starts performance monitoring
-func (f *GRPCTestFramework) StartStreamingPerformanceMonitor(daemon *MockDaemon, config MonitorConfig) *PerformanceMonitor {
+func (f *GRPCTestFramework) StartStreamingPerformanceMonitor(daemon DaemonInterface, config MonitorConfig) *PerformanceMonitor {
 	monitor := &PerformanceMonitor{
 		config:    config,
 		daemon:    daemon,
@@ -322,7 +322,7 @@ func (m *PerformanceMonitor) collectSample() {
 
 	sample := PerformanceSample{
 		Timestamp:  time.Now(),
-		MemoryMB:   usage.MemoryMB,
+		MemoryMB:   int(usage.MemoryMB),
 		CPUPercent: usage.CPUPercent,
 		Throughput: rand.Intn(100) + 50, // Mock throughput
 		Latency:    time.Duration(rand.Intn(100)+50) * time.Millisecond,

@@ -14,60 +14,7 @@ import (
 	"google.golang.org/grpc/connectivity"
 )
 
-// FailureType represents different types of failures that can be injected
-type FailureType int
-
-const (
-	FailureType_ProcessCrash FailureType = iota
-	FailureType_NetworkPartition
-	FailureType_ResourceExhaustion
-)
-
-func (f FailureType) String() string {
-	switch f {
-	case FailureType_ProcessCrash:
-		return "ProcessCrash"
-	case FailureType_NetworkPartition:
-		return "NetworkPartition"
-	case FailureType_ResourceExhaustion:
-		return "ResourceExhaustion"
-	default:
-		return "Unknown"
-	}
-}
-
-// RestartPolicy defines how daemon should restart
-type RestartPolicy int
-
-const (
-	RestartPolicy_Always RestartPolicy = iota
-	RestartPolicy_OnFailure
-	RestartPolicy_Never
-)
-
-// CircuitBreakerConfig defines circuit breaker settings
-type CircuitBreakerConfig struct {
-	FailureThreshold int
-	RecoveryTimeout  time.Duration
-	HalfOpenRequests int
-}
-
-// ResourceLimits defines resource constraints
-type ResourceLimits struct {
-	MaxMemoryMB   int
-	MaxCPUPercent float64
-	MaxGoroutines int
-}
-
-// DaemonConfig contains configuration for daemon lifecycle testing
-type DaemonConfig struct {
-	Port                int
-	HealthCheckInterval time.Duration
-	RestartPolicy       RestartPolicy
-	MaxRestartAttempts  int
-	ResourceLimits      ResourceLimits
-	CircuitBreaker      CircuitBreakerConfig
-}
+// Type definitions moved to types.go to avoid duplication
 
 // RetryPolicy defines retry behavior for clients
 type RetryPolicy struct {
@@ -107,19 +54,7 @@ type OperationConfig struct {
 	PayloadSizes      []int
 }
 
-// RecoveryConfig defines recovery monitoring parameters
-type RecoveryConfig struct {
-	MaxRecoveryTime      time.Duration
-	HealthCheckInterval  time.Duration
-	ExpectedAvailability float64
-}
-
-// RecoveryMetrics contains recovery measurement results
-type RecoveryMetrics struct {
-	TotalRecoveryTime          time.Duration
-	AvailabilityDuringRecovery float64
-	FailoverEvents             int
-}
+// RecoveryConfig and RecoveryMetrics moved to types.go
 
 // ClientMetrics tracks client performance metrics
 type ClientMetrics struct {
@@ -188,11 +123,14 @@ type FinalMetrics struct {
 	TotalDuration      time.Duration
 }
 
-// ResourceUsage tracks daemon resource consumption
-type ResourceUsage struct {
-	MemoryMB   int
-	CPUPercent float64
-	Goroutines int
+// ResourceUsage definition moved to types.go
+
+// DaemonInterface defines the common interface for both mock and real daemons
+type DaemonInterface interface {
+	Address() string
+	Stop() error
+	GetResourceUsage() ResourceUsage
+	IsHealthy() bool
 }
 
 // MockDaemon represents a test daemon instance
@@ -224,7 +162,7 @@ func (d *MockDaemon) Stop() error {
 func (d *MockDaemon) GetResourceUsage() ResourceUsage {
 	// Mock implementation - in real tests this would measure actual resource usage
 	return ResourceUsage{
-		MemoryMB:   100 + (d.port % 50),       // Simulate varying memory usage
+		MemoryMB:   float64(100 + (d.port % 50)),       // Simulate varying memory usage
 		CPUPercent: 15.0 + float64(d.port%20), // Simulate varying CPU usage
 		Goroutines: 50,
 	}
@@ -271,7 +209,7 @@ type FailureInjector struct {
 }
 
 // Inject injects the specified failure into the daemon
-func (f *FailureInjector) Inject(daemon *MockDaemon) error {
+func (f *FailureInjector) Inject(daemon DaemonInterface) error {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 
@@ -279,48 +217,60 @@ func (f *FailureInjector) Inject(daemon *MockDaemon) error {
 		return gerror.New(gerror.ErrCodeInternal, "failure already injected", nil)
 	}
 
-	switch f.failureType {
-	case FailureType_ProcessCrash:
-		daemon.mu.Lock()
-		daemon.running = false
-		daemon.mu.Unlock()
+	// Check if daemon supports failure simulation
+	if realDaemon, ok := daemon.(*RealDaemon); ok {
+		// Use real daemon's failure simulation
+		err := realDaemon.SimulateFailure(f.failureType)
+		if err != nil {
+			return fmt.Errorf("failed to inject failure: %w", err)
+		}
+	} else if mockDaemon, ok := daemon.(*MockDaemon); ok {
+		// Use mock daemon's failure simulation
+		switch f.failureType {
+		case FailureType_ProcessCrash:
+			mockDaemon.mu.Lock()
+			mockDaemon.running = false
+			mockDaemon.mu.Unlock()
 
-		// Simulate restart after brief delay
-		go func() {
-			time.Sleep(2 * time.Second)
-			daemon.mu.Lock()
-			daemon.running = true
-			daemon.healthyTime = time.Now()
-			daemon.mu.Unlock()
-		}()
+			// Simulate restart after brief delay
+			go func() {
+				time.Sleep(2 * time.Second)
+				mockDaemon.mu.Lock()
+				mockDaemon.running = true
+				mockDaemon.healthyTime = time.Now()
+				mockDaemon.mu.Unlock()
+			}()
 
-	case FailureType_NetworkPartition:
-		daemon.mu.Lock()
-		daemon.running = false
-		daemon.mu.Unlock()
+		case FailureType_NetworkPartition:
+			mockDaemon.mu.Lock()
+			mockDaemon.running = false
+			mockDaemon.mu.Unlock()
 
-		// Simulate network recovery
-		go func() {
-			time.Sleep(4 * time.Second)
-			daemon.mu.Lock()
-			daemon.running = true
-			daemon.healthyTime = time.Now()
-			daemon.mu.Unlock()
-		}()
+			// Simulate network recovery
+			go func() {
+				time.Sleep(4 * time.Second)
+				mockDaemon.mu.Lock()
+				mockDaemon.running = true
+				mockDaemon.healthyTime = time.Now()
+				mockDaemon.mu.Unlock()
+			}()
 
-	case FailureType_ResourceExhaustion:
-		daemon.mu.Lock()
-		daemon.running = false
-		daemon.mu.Unlock()
+		case FailureType_ResourceExhaustion:
+			mockDaemon.mu.Lock()
+			mockDaemon.running = false
+			mockDaemon.mu.Unlock()
 
-		// Simulate resource cleanup and restart
-		go func() {
-			time.Sleep(8 * time.Second)
-			daemon.mu.Lock()
-			daemon.running = true
-			daemon.healthyTime = time.Now()
-			daemon.mu.Unlock()
-		}()
+			// Simulate resource cleanup and restart
+			go func() {
+				time.Sleep(8 * time.Second)
+				mockDaemon.mu.Lock()
+				mockDaemon.running = true
+				mockDaemon.healthyTime = time.Now()
+				mockDaemon.mu.Unlock()
+			}()
+		}
+	} else {
+		return fmt.Errorf("unsupported daemon type for failure injection")
 	}
 
 	f.injected = true
@@ -332,6 +282,7 @@ type GRPCTestFramework struct {
 	t        *testing.T
 	cleanup  []func()
 	portBase int
+	useReal  bool // Whether to use real daemon instead of mock
 	mu       sync.Mutex
 }
 
@@ -341,7 +292,14 @@ func NewGRPCTestFramework(t *testing.T) *GRPCTestFramework {
 		t:        t,
 		cleanup:  make([]func(), 0),
 		portBase: 8900,
+		useReal:  false, // Default to mock for compatibility
 	}
+}
+
+// WithRealDaemon configures the framework to use real gRPC daemon instead of mock
+func (f *GRPCTestFramework) WithRealDaemon() *GRPCTestFramework {
+	f.useReal = true
+	return f
 }
 
 // GetAvailablePort returns an available port for testing
@@ -371,24 +329,45 @@ func (f *GRPCTestFramework) isPortAvailable(port int) bool {
 }
 
 // StartDaemon starts a daemon with the given configuration
-func (f *GRPCTestFramework) StartDaemon(config DaemonConfig) (*MockDaemon, error) {
-	daemon := &MockDaemon{
-		config:      config,
-		address:     fmt.Sprintf("localhost:%d", config.Port),
-		port:        config.Port,
-		running:     true,
-		healthyTime: time.Now(),
+func (f *GRPCTestFramework) StartDaemon(config DaemonConfig) (DaemonInterface, error) {
+	if f.useReal {
+		// Create and start real daemon
+		realDaemon, err := NewRealDaemon(config)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create real daemon: %w", err)
+		}
+
+		if err := realDaemon.Start(); err != nil {
+			return nil, fmt.Errorf("failed to start real daemon: %w", err)
+		}
+
+		f.cleanup = append(f.cleanup, func() {
+			realDaemon.Stop()
+		})
+
+		f.t.Logf("✅ Started real gRPC daemon at %s", realDaemon.Address())
+		return realDaemon, nil
+	} else {
+		// Create mock daemon for backward compatibility
+		daemon := &MockDaemon{
+			config:      config,
+			address:     fmt.Sprintf("localhost:%d", config.Port),
+			port:        config.Port,
+			running:     true,
+			healthyTime: time.Now(),
+		}
+
+		f.cleanup = append(f.cleanup, func() {
+			daemon.Stop()
+		})
+
+		f.t.Logf("🎭 Started mock daemon at %s", daemon.Address())
+		return daemon, nil
 	}
-
-	f.cleanup = append(f.cleanup, func() {
-		daemon.Stop()
-	})
-
-	return daemon, nil
 }
 
 // WaitForDaemonHealth waits for daemon to be healthy
-func (f *GRPCTestFramework) WaitForDaemonHealth(daemon *MockDaemon, timeout time.Duration) error {
+func (f *GRPCTestFramework) WaitForDaemonHealth(daemon DaemonInterface, timeout time.Duration) error {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
@@ -474,7 +453,7 @@ func (f *GRPCTestFramework) StartContinuousOperations(ctx context.Context, clien
 }
 
 // MonitorRecovery monitors daemon recovery from failure
-func (f *GRPCTestFramework) MonitorRecovery(daemon *MockDaemon, config RecoveryConfig) (*RecoveryMetrics, error) {
+func (f *GRPCTestFramework) MonitorRecovery(daemon DaemonInterface, config RecoveryConfig) (*RecoveryMetrics, error) {
 	startTime := time.Now()
 	metrics := &RecoveryMetrics{}
 
@@ -724,8 +703,8 @@ func TestDaemonLifecycle_HappyPath(t *testing.T) {
 
 			// Validate daemon resource usage
 			resourceUsage := daemon.GetResourceUsage()
-			assert.LessOrEqual(t, resourceUsage.MemoryMB, daemonConfig.ResourceLimits.MaxMemoryMB,
-				"Memory usage exceeded limit: %d > %d MB",
+			assert.LessOrEqual(t, resourceUsage.MemoryMB, float64(daemonConfig.ResourceLimits.MaxMemoryMB),
+				"Memory usage exceeded limit: %.1f > %d MB",
 				resourceUsage.MemoryMB, daemonConfig.ResourceLimits.MaxMemoryMB)
 			assert.LessOrEqual(t, resourceUsage.CPUPercent, daemonConfig.ResourceLimits.MaxCPUPercent,
 				"CPU usage exceeded limit: %.1f%% > %d%%",
@@ -736,7 +715,7 @@ func TestDaemonLifecycle_HappyPath(t *testing.T) {
 			t.Logf("   - Total Requests: %d", finalMetrics.RequestsSent)
 			t.Logf("   - Success Rate: %.2f%%", finalMetrics.OverallSuccessRate*100)
 			t.Logf("   - Average Latency: %v", finalMetrics.AverageLatency)
-			t.Logf("   - Memory Usage: %d MB", resourceUsage.MemoryMB)
+			t.Logf("   - Memory Usage: %.1f MB", resourceUsage.MemoryMB)
 			t.Logf("   - CPU Usage: %.1f%%", resourceUsage.CPUPercent)
 		})
 	}
