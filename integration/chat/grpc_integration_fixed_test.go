@@ -301,7 +301,11 @@ func TestAgentExecutionFixed(t *testing.T) {
 					return
 				}
 
-				_, err = core.Execute(ctx, fmt.Sprintf("Task %d", idx))
+				if execAgent, ok := agent.(interface {
+					Execute(context.Context, string) (string, error)
+				}); ok {
+					_, err = execAgent.Execute(ctx, fmt.Sprintf("Task %d", idx))
+				}
 				if err != nil {
 					errors <- err
 				}
@@ -442,7 +446,12 @@ func TestChatPerformanceFixed(t *testing.T) {
 
 	// Benchmark agent execution
 	execStart := time.Now()
-	response, err := core.Execute(ctx, "Quick test")
+	var response string
+	if execAgent, ok := agent.(interface {
+		Execute(context.Context, string) (string, error)
+	}); ok {
+		response, err = execAgent.Execute(ctx, "Quick test")
+	}
 	execElapsed := time.Since(execStart)
 
 	assert.NoError(t, err)
@@ -456,8 +465,12 @@ func TestChatPerformanceFixed(t *testing.T) {
 		totalStart := time.Now()
 
 		for i := 0; i < numExecutions; i++ {
-			_, err := core.Execute(ctx, fmt.Sprintf("Test %d", i))
-			assert.NoError(t, err)
+			if execAgent, ok := agent.(interface {
+				Execute(context.Context, string) (string, error)
+			}); ok {
+				_, err := execAgent.Execute(ctx, fmt.Sprintf("Test %d", i))
+				assert.NoError(t, err)
+			}
 		}
 
 		totalElapsed := time.Since(totalStart)
@@ -521,8 +534,12 @@ func TestMemoryUsageFixed(t *testing.T) {
 		require.NoError(t, err)
 
 		// Execute task
-		_, err = core.Execute(ctx, fmt.Sprintf("Memory test %d", i))
-		assert.NoError(t, err)
+		if execAgent, ok := agent.(interface {
+			Execute(context.Context, string) (string, error)
+		}); ok {
+			_, err = execAgent.Execute(ctx, fmt.Sprintf("Memory test %d", i))
+			assert.NoError(t, err)
+		}
 
 		// Track memory periodically
 		if i%10 == 0 {

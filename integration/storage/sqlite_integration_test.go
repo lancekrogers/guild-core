@@ -294,13 +294,13 @@ func TestSQLiteStorageIntegration(t *testing.T) {
 		require.NoError(t, err)
 
 		// Get the agent
-		retrievedAgent, err := agentRepo.GetAgent(ctx, core.ID)
+		retrievedAgent, err := agentRepo.GetAgent(ctx, agent.ID)
 		require.NoError(t, err)
-		assert.Equal(t, core.Name, retrievedAgent.Name)
-		assert.Equal(t, core.Type, retrievedAgent.Type)
-		assert.Equal(t, core.Provider, retrievedAgent.Provider)
-		assert.Equal(t, core.Model, retrievedAgent.Model)
-		assert.Equal(t, core.CostMagnitude, retrievedAgent.CostMagnitude)
+		assert.Equal(t, agent.Name, retrievedAgent.Name)
+		assert.Equal(t, agent.Type, retrievedAgent.Type)
+		assert.Equal(t, agent.Provider, retrievedAgent.Provider)
+		assert.Equal(t, agent.Model, retrievedAgent.Model)
+		assert.Equal(t, agent.CostMagnitude, retrievedAgent.CostMagnitude)
 
 		// Verify capabilities JSON marshaling
 		assert.True(t, retrievedAgent.Capabilities["coding"].(bool))
@@ -310,24 +310,24 @@ func TestSQLiteStorageIntegration(t *testing.T) {
 		agents, err := agentRepo.ListAgents(ctx)
 		require.NoError(t, err)
 		assert.Len(t, agents, 1)
-		assert.Equal(t, core.ID, agents[0].ID)
+		assert.Equal(t, agent.ID, agents[0].ID)
 
 		// Update agent
-		core.CostMagnitude = 4
+		agent.CostMagnitude = 4
 		err = agentRepo.UpdateAgent(ctx, agent)
 		require.NoError(t, err)
 
 		// Verify update
-		updatedAgent, err := agentRepo.GetAgent(ctx, core.ID)
+		updatedAgent, err := agentRepo.GetAgent(ctx, agent.ID)
 		require.NoError(t, err)
 		assert.Equal(t, int32(4), updatedAgent.CostMagnitude)
 
 		// Delete agent
-		err = agentRepo.DeleteAgent(ctx, core.ID)
+		err = agentRepo.DeleteAgent(ctx, agent.ID)
 		require.NoError(t, err)
 
 		// Verify deletion
-		_, err = agentRepo.GetAgent(ctx, core.ID)
+		_, err = agentRepo.GetAgent(ctx, agent.ID)
 		assert.Error(t, err) // Should return not found error
 	})
 }

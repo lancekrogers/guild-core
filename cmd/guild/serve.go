@@ -19,6 +19,7 @@ import (
 
 	"github.com/lancekrogers/guild/internal/daemon"
 	"github.com/lancekrogers/guild/pkg/campaign"
+	"github.com/lancekrogers/guild/pkg/events"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	grpcpkg "github.com/lancekrogers/guild/pkg/grpc"
 	"github.com/lancekrogers/guild/pkg/observability"
@@ -250,11 +251,14 @@ func runServe(cmd *cobra.Command, args []string) error {
 			WithOperation("serve.run")
 	}
 
-	// Create event bus (memory-based for now)
-	eventBus := &memoryEventBus{}
+	// Create event bus using the unified events package
+	unifiedEventBus := events.NewMemoryEventBusWithDefaults()
+	
+	// Wrap it with adapter for grpc compatibility
+	eventBusAdapter := grpcpkg.NewEventBusAdapter(unifiedEventBus)
 
 	// Create gRPC server
-	server := grpcpkg.NewServer(reg, eventBus)
+	server := grpcpkg.NewServer(reg, eventBusAdapter)
 	serverAddr := daemonConfig.GetServerAddress()
 
 	// Set up graceful shutdown
@@ -372,8 +376,15 @@ func runServe(cmd *cobra.Command, args []string) error {
 	}
 
 	// In foreground mode, start the server directly
-	// Ensure socket cleanup on exit
+	// Ensure cleanup on exit
 	defer func() {
+		// Shutdown event bus
+		shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer shutdownCancel()
+		if err := unifiedEventBus.Close(shutdownCtx); err != nil {
+			logger.ErrorContext(ctx, "Failed to shutdown event bus", "error", err)
+		}
+		
 		// Clean up socket file
 		if err := os.Remove(daemonConfig.SocketPath); err != nil && !os.IsNotExist(err) {
 			logger.ErrorContext(ctx, "Failed to remove socket file", "socket", daemonConfig.SocketPath, "error", err)
@@ -397,13 +408,6 @@ func runServe(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-// memoryEventBus is a simple in-memory event bus implementation that matches grpc.EventBus interface
-type memoryEventBus struct{}
-
-func (m *memoryEventBus) Publish(event interface{}) {
-	// Simple no-op implementation for now
-	// In a real implementation, this would broadcast events to subscribers
-}
 
 // forkDaemon starts the guild serve process in the background
 func forkDaemon(daemonConfig *daemon.DaemonConfig) error {
@@ -475,8 +479,4 @@ func forkDaemon(daemonConfig *daemon.DaemonConfig) error {
 	cmd.Process.Release()
 
 	return nil
-}
-
-func (m *memoryEventBus) Subscribe(eventType string, handler func(event interface{})) {
-	// Simple no-op implementation for now
 }

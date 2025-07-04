@@ -483,7 +483,7 @@ func TestConcurrentAgentExecution(t *testing.T) {
 			start := time.Now()
 
 			// Execute task (mock agents always succeed)
-			_, err := core.Execute(ctx, fmt.Sprintf("Execute %s", taskID))
+			_, err := agent.Execute(ctx, fmt.Sprintf("Execute %s", taskID))
 			if err != nil {
 				t.Logf("Agent %s failed task %s: %v", agentID, taskID, err)
 				continue

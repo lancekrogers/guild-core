@@ -214,7 +214,7 @@ func TestConcurrentAgentPerformance(t *testing.T) {
 				continue
 			}
 
-			if execAgent, ok := core.(interface {
+			if execAgent, ok := agent.(interface {
 				Execute(context.Context, string) (string, error)
 			}); ok {
 				_, err := execAgent.Execute(ctx, fmt.Sprintf("Operation %d", i))
@@ -341,7 +341,7 @@ func runIntensiveDemoOperations(ctx context.Context, reg registry.ComponentRegis
 		}
 
 		// Execute operations to trigger memory allocation
-		if execAgent, ok := core.(interface {
+		if execAgent, ok := agent.(interface {
 			Execute(context.Context, string) (string, error)
 		}); ok {
 			_, _ = execAgent.Execute(ctx, fmt.Sprintf("Intensive operation %d with lots of text to process and allocate memory for testing purposes", i))

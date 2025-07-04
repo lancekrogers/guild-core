@@ -140,6 +140,14 @@ tasks:
         echo "Running integration tests..."
         go test -v ./integration/...
 
+  happy:
+    desc: Run happy path tests - comprehensive performance and SLA validation
+    cmds:
+      - |
+        echo "🎯 Running Happy Path Tests..."
+        echo "These tests validate performance, SLA compliance, and end-to-end functionality"
+        go run ./internal/buildutil happy
+
   daemon-test:
     desc: Run daemon integration tests and benchmarks
     cmds:

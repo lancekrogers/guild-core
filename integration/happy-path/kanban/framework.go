@@ -65,10 +65,7 @@ func NewKanbanTestFramework(t *testing.T) *KanbanTestFramework {
 	testDir := t.TempDir()
 
 	// Create registry with real SQLite backend
-	reg, err := registry.NewComponentRegistry()
-	if err != nil {
-		t.Fatalf("Failed to create registry: %v", err)
-	}
+	reg := registry.NewComponentRegistry()
 
 	// Initialize with test configuration
 	err = reg.Initialize(context.Background(), registry.Config{

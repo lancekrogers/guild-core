@@ -4,16 +4,11 @@
 package tui_cli
 
 import (
-	"context"
-	"image/png"
 	"os"
 	"path/filepath"
 	"sync"
 	"testing"
 	"time"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 
 	"github.com/lancekrogers/guild/pkg/gerror"
 )
@@ -282,7 +277,7 @@ func (a *TUIApp) WaitForResponse(timeout time.Duration) (string, error) {
 	// Simulate processing delay
 	processingTime := time.Duration(1500) * time.Millisecond
 	if processingTime > timeout {
-		return "", gerror.New(gerror.ErrCodeTimeout, "response timeout").
+		return "", gerror.New(gerror.ErrCodeTimeout, "response timeout", nil).
 			WithComponent("tui-cli").
 			WithOperation("WaitForResponse")
 	}

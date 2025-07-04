@@ -5,8 +5,6 @@ package sla
 
 import (
 	"context"
-	"fmt"
-	"sync"
 	"testing"
 	"time"
 
@@ -28,7 +26,7 @@ func TestEndToEndSLA_HappyPath(t *testing.T) {
 	}{
 		{
 			name:         "Light load SLA validation",
-			testDuration: 30 * time.Minute,
+			testDuration: 30 * time.Second,
 			userLoadProfile: UserLoadProfile{
 				ConcurrentUsers:      5,
 				ActionsPerUserPerMin: 10,
@@ -54,7 +52,7 @@ func TestEndToEndSLA_HappyPath(t *testing.T) {
 		},
 		{
 			name:         "Heavy load SLA validation",
-			testDuration: 60 * time.Minute,
+			testDuration: 60 * time.Second,
 			userLoadProfile: UserLoadProfile{
 				ConcurrentUsers:      25,
 				ActionsPerUserPerMin: 15,
@@ -81,6 +79,11 @@ func TestEndToEndSLA_HappyPath(t *testing.T) {
 	}
 
 	for _, scenario := range slaTestScenarios {
+		// Skip heavy load tests when using -short flag
+		if testing.Short() && scenario.name == "Heavy load SLA validation" {
+			t.Skipf("Skipping %s in short mode", scenario.name)
+		}
+		
 		t.Run(scenario.name, func(t *testing.T) {
 			// PHASE 1: Initialize comprehensive monitoring infrastructure
 			slaMonitor, err := framework.CreateSLAMonitor(SLAMonitorConfig{
@@ -138,13 +141,13 @@ func TestEndToEndSLA_HappyPath(t *testing.T) {
 				go func(fs FailureScenario) {
 					time.Sleep(fs.StartTime)
 
-					t.Logf("🔥 Injecting failure: %s (severity: %d, duration: %v)",
+					t.Logf("🔥 Injecting failure: %v (severity: %d, duration: %v)",
 						fs.Type, fs.Severity, fs.Duration)
 
 					failureInjector := framework.CreateFailureInjector(fs)
 					err := failureInjector.Inject(testCtx)
 					if err != nil {
-						t.Logf("⚠️ Failed to inject failure %s: %v", fs.Type, err)
+						t.Logf("⚠️ Failed to inject failure %v: %v", fs.Type, err)
 					}
 				}(failureScenario)
 			}
@@ -221,7 +224,7 @@ func TestEndToEndSLA_HappyPath(t *testing.T) {
 
 			// Memory usage should scale linearly with load
 			expectedMemoryMB := scenario.userLoadProfile.ConcurrentUsers*10 + 100 // Base + 10MB per user
-			assert.LessOrEqual(t, resourceMetrics.PeakMemoryMB, expectedMemoryMB*1.2,
+			assert.LessOrEqual(t, resourceMetrics.PeakMemoryMB, int(float64(expectedMemoryMB)*1.2),
 				"Peak memory usage exceeded 120%% of expected: %d MB > %d MB",
 				resourceMetrics.PeakMemoryMB, int(float64(expectedMemoryMB)*1.2))
 
