@@ -31,7 +31,7 @@ func main() {
 	ui.Init(noColor)
 
 	if flag.NArg() == 0 {
-		log.Fatalf("usage: buildutil <build|build-only|test|integration|e2e|validate-demo|clean|all|install|uninstall>")
+		log.Fatalf("usage: buildutil <build|build-only|test|integration|e2e|happy|validate-demo|clean|all|install|uninstall>")
 	}
 
 	cmd := flag.Arg(0)
@@ -63,6 +63,9 @@ func main() {
 			Verbose: verbose,
 			Timeout: 10 * time.Minute,
 		})
+
+	case "happy":
+		err = tasks.Happy(verbose)
 
 	case "validate-demo":
 		err = tasks.ValidateDemo()
@@ -98,6 +101,11 @@ func main() {
 			errors = append(errors, fmt.Errorf("integration tests failed: %w", integrationErr))
 		}
 
+		fmt.Println("\n🎯 Happy Path Testing...")
+		if happyErr := tasks.Happy(verbose); happyErr != nil {
+			errors = append(errors, fmt.Errorf("happy path tests failed: %w", happyErr))
+		}
+
 		// Set overall error if any step failed
 		if len(errors) > 0 {
 			err = fmt.Errorf("%d tasks failed", len(errors))
@@ -110,12 +118,14 @@ func main() {
 			buildStatus := "✓ Complete"
 			testStatus := "✓ Complete"
 			integrationStatus := "✓ Complete"
+			happyStatus := "✓ Complete"
 
 			if ui.ColourEnabled() {
 				cleanStatus = ui.Green + cleanStatus + ui.Reset
 				buildStatus = ui.Green + buildStatus + ui.Reset
 				testStatus = ui.Green + testStatus + ui.Reset
 				integrationStatus = ui.Green + integrationStatus + ui.Reset
+				happyStatus = ui.Green + happyStatus + ui.Reset
 			}
 
 			rows := [][]string{
@@ -124,6 +134,7 @@ func main() {
 				{"Build", buildStatus},
 				{"Test", testStatus},
 				{"Integration", integrationStatus},
+				{"Happy Path", happyStatus},
 			}
 			ui.SummaryCard("All Tasks Complete", rows, fmt.Sprintf("%.2fs", totalTime.Seconds()), true)
 		}

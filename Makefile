@@ -3,7 +3,7 @@
 
 BUILDTOOL := go run ./internal/buildutil
 .DEFAULT_GOAL := help
-.PHONY: build test test-pkg integration e2e validate-demo clean all quick ci-build ci-test ci-integration ci-e2e ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion benchmark benchmark-suggestions benchmark-ui benchmark-ui-thresholds test-ui-integration test-ui-complete
+.PHONY: build test test-pkg integration e2e validate-demo clean all quick ci-build ci-test ci-integration ci-e2e ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion benchmark benchmark-suggestions benchmark-ui benchmark-ui-thresholds test-ui-integration test-ui-complete happy ci-happy
 
 # Primary targets (with visual output)
 # DEVELOPER TARGET: Full build with go vet validation and visual feedback
@@ -19,6 +19,9 @@ integration:
 
 e2e:
 	@$(BUILDTOOL) e2e
+
+happy:
+	@$(BUILDTOOL) happy
 
 # TUI tests with proper terminal cleanup
 test-teatest:
@@ -130,6 +133,9 @@ ci-integration:
 
 ci-e2e:
 	@$(BUILDTOOL) --no-color e2e
+
+ci-happy:
+	@$(BUILDTOOL) --no-color happy
 
 ci-clean:
 	@$(BUILDTOOL) --no-color clean
@@ -259,6 +265,7 @@ help:
 	@echo "  test-teatest             Run TUI tests with proper terminal cleanup"
 	@echo "  integration              Run integration tests"
 	@echo "  e2e                      Run end-to-end tests"
+	@echo "  happy                    Run happy path performance and SLA validation tests"
 	@echo "  validate-demo            Validate demo scripts and functionality"
 	@echo "  benchmark                Run comprehensive performance benchmarks"
 	@echo "  benchmark-suggestions    Run suggestion system benchmarks only"
@@ -270,6 +277,7 @@ help:
 	@echo "  all                      Clean, build, test, and integration"
 	@echo "  quick                    Fast build without visuals"
 	@echo "  ci-*                     CI variants (no colors)"
+	@echo "  ci-happy                 Run happy path tests for CI (no colors)"
 	@echo "  fix-terminal             Fix terminal after test corruption"
 	@echo "  dashboard                Show project status dashboard"
 	@echo ""
