@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/lancekrogers/guild/pkg/events"
 	guildgrpc "github.com/lancekrogers/guild/pkg/grpc"
 	"github.com/lancekrogers/guild/pkg/registry"
 )
@@ -37,6 +38,14 @@ func (m *mockEventBus) Subscribe(eventType string, handler func(event interface{
 
 // Ensure mockEventBus implements EventBus
 var _ guildgrpc.EventBus = (*mockEventBus)(nil)
+
+// newTestEventBus creates a proper EventBusAdapter for testing
+func newTestEventBus() guildgrpc.EventBus {
+	// Create a unified event bus
+	unifiedBus := events.NewMemoryEventBus(events.DefaultEventBusConfig())
+	// Wrap it in the adapter
+	return guildgrpc.NewEventBusAdapter(unifiedBus)
+}
 
 // mockAgent implements a simple Agent for testing
 type mockAgent struct {

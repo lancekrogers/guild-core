@@ -15,7 +15,7 @@ func TestPromptManagerIntegration(t *testing.T) {
 		reg := registry.NewComponentRegistry()
 
 		// Start server
-		eventBus := newMockEventBus()
+		eventBus := newTestEventBus()
 		server := guildgrpc.NewServer(reg, eventBus)
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()

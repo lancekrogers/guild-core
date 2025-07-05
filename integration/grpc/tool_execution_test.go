@@ -126,7 +126,7 @@ func TestToolExecutionViaGRPC(t *testing.T) {
 	require.NoError(t, err)
 
 	// Start gRPC server with registry
-	eventBus := newMockEventBus()
+	eventBus := newTestEventBus()
 	server := guildgrpc.NewServer(reg, eventBus)
 
 	go func() {

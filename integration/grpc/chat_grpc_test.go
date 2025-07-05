@@ -20,7 +20,7 @@ import (
 func TestEndToEndChatGRPC(t *testing.T) {
 	// Create registry and event bus
 	reg := registry.NewComponentRegistry()
-	eventBus := newMockEventBus()
+	eventBus := newTestEventBus()
 
 	// Initialize registry with basic configuration to prevent nil panics
 	ctx, cancel := context.WithCancel(context.Background())
