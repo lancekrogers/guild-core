@@ -236,7 +236,7 @@ api/redoc-static.html
 
 # Cache
 .cache/
-cache/
+/cache/
 
 # Node.js (if frontend assets exist)
 node_modules/
