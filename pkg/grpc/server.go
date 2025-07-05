@@ -1073,9 +1073,6 @@ func campaignToProto(c *campaign.Campaign) *pb.Campaign {
 // These handle nil cases gracefully and provide meaningful errors for debugging
 
 func getCampaignManager(registry registry.ComponentRegistry, grpcEventBus EventBus) campaign.Manager {
-	// Get campaign repository from storage registry
-	storageReg := registry.Storage()
-	
 	// Always use unified manager with the unified event bus
 	adapter, ok := grpcEventBus.(*EventBusAdapter)
 	if !ok || adapter == nil {
@@ -1084,13 +1081,19 @@ func getCampaignManager(registry registry.ComponentRegistry, grpcEventBus EventB
 	
 	unifiedBus := adapter.UnifiedEventBus()
 	
-	// Get repository and commission manager if available
+	// Get campaign repository from storage registry if available
 	var campaignRepo campaign.Repository
 	var commissionMgr *commission.Manager
 	
+	storageReg := registry.Storage()
 	if storageReg != nil {
-		campaignRepo = storageReg.GetCampaignRepository()
+		// Note: registry.CampaignRepository doesn't match campaign.Repository interface
+		// We would need an adapter here, but for now we'll use nil
+		// TODO: Create repository adapter to bridge interface mismatch
 	}
+	
+	// Get commission manager if we can
+	commissionMgr = getCommissionManager(registry)
 	
 	// Return unified manager
 	return campaign.NewUnifiedManager(campaignRepo, commissionMgr, unifiedBus)

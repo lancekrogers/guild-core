@@ -6,7 +6,7 @@ package agents
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/backstory"
+	"github.com/lancekrogers/guild/pkg/agents/backstory"
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/prompts/layered"
 )

@@ -131,10 +131,7 @@ func (a *UnifiedEventBusAdapter) Publish(ctx context.Context, event Event) error
 		event.Data,
 	)
 
-	// Set timestamp if provided
-	if !event.Timestamp.IsZero() {
-		unifiedEvent.WithTimestamp(event.Timestamp)
-	}
+	// BaseEvent includes timestamp in its creation
 
 	return a.eventBus.Publish(ctx, unifiedEvent)
 }

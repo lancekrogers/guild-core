@@ -19,7 +19,7 @@ func TestTestRunnerTool_GoFramework(t *testing.T) {
 	// Test Go framework detection and command building
 	input := `{
 		"framework": "go",
-		"path": "./pkg/agent",
+		"path": "./pkg/agents/core",
 		"pattern": "TestAgent.*",
 		"coverage": true,
 		"verbose": true,

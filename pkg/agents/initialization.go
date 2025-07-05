@@ -10,7 +10,7 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/pkg/backstory"
+	"github.com/lancekrogers/guild/pkg/agents/backstory"
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/paths"

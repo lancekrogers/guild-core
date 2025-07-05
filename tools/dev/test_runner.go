@@ -187,7 +187,7 @@ func NewTestRunnerTool() *TestRunnerTool {
 
 	examples := []string{
 		`{"framework": "go", "coverage": true}`,
-		`{"path": "./pkg/agent", "pattern": "TestAgent.*", "verbose": true}`,
+		`{"path": "./pkg/agents/core", "pattern": "TestAgent.*", "verbose": true}`,
 		`{"framework": "pytest", "path": "tests/", "coverage": true, "parallel": true}`,
 		`{"framework": "jest", "pattern": "*.test.js", "coverage": true}`,
 	}
