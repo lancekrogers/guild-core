@@ -154,7 +154,7 @@ func (s *ChatService) executeAgentResponseWithTools(ctx context.Context, ag core
 		parserCall := parser.ToolCall{
 			ID:       toolCall.ID,
 			Type:     toolCall.Type,
-			Function: parser.Function{
+			Function: parser.FunctionCall{
 				Name:      toolCall.Function.Name,
 				Arguments: toolCall.Function.Arguments,
 			},
