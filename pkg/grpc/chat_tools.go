@@ -5,7 +5,7 @@ package grpc
 
 import (
 	"context"
-	"fmt"
+	"encoding/json"
 	"time"
 
 	"github.com/google/uuid"
@@ -15,6 +15,7 @@ import (
 	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
 	"github.com/lancekrogers/guild/pkg/observability"
 	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild/pkg/tools"
 	"github.com/lancekrogers/guild/pkg/tools/executor"
 	"github.com/lancekrogers/guild/pkg/tools/parser"
 )
@@ -42,8 +43,21 @@ func (s *ChatService) executeAgentResponseWithTools(ctx context.Context, ag core
 		return s.executeAgentResponse(ctx, ag, msg)
 	}
 
-	// Create tool executor
-	toolExecutor := executor.NewToolExecutor(toolRegistry)
+	// Try to get the underlying registry for the executor
+	var toolExecutor parser.ToolExecutor
+	
+	// Check if this is a DefaultToolRegistry which has GetUnderlyingRegistry method
+	type underlyingRegistryGetter interface {
+		GetUnderlyingRegistry() *tools.ToolRegistry
+	}
+	
+	if getter, ok := toolRegistry.(underlyingRegistryGetter); ok {
+		toolExecutor = executor.NewToolExecutor(getter.GetUnderlyingRegistry())
+	} else {
+		// Fallback: create a minimal executor or handle differently
+		logger.Warn("Tool registry does not provide underlying registry access, cannot create executor")
+		return s.executeAgentResponse(ctx, ag, msg)
+	}
 	availableTools := toolExecutor.GetAvailableTools()
 
 	logger.Info("Executing agent with tool support",
@@ -86,14 +100,22 @@ func (s *ChatService) executeAgentResponseWithTools(ctx context.Context, ag core
 	for _, toolCall := range toolCalls {
 		// Create tool execution record
 		toolExecID := uuid.New().String()
+		
+		// Parse arguments into map[string]string
+		var params map[string]string
+		if err := json.Unmarshal([]byte(toolCall.Function.Arguments), &params); err != nil {
+			logger.WithError(err).Warn("Failed to parse tool arguments, using empty parameters")
+			params = make(map[string]string)
+		}
+		
 		toolExec := &pb.ToolExecution{
-			Id:          toolExecID,
+			ToolId:      toolExecID,
 			SessionId:   session.ID,
 			AgentId:     ag.GetID(),
 			ToolName:    toolCall.Function.Name,
-			Parameters:  string(toolCall.Function.Arguments),
-			Status:      pb.ToolExecution_PENDING_APPROVAL,
-			RequestedAt: time.Now().Unix(),
+			Parameters:  params,
+			Status:      pb.ToolExecution_AWAITING_APPROVAL,
+			StartedAt:   time.Now().Unix(),
 		}
 
 		// Store in session
@@ -146,7 +168,7 @@ func (s *ChatService) executeAgentResponseWithTools(ctx context.Context, ag core
 			session.toolsMu.Lock()
 			toolExec.Status = pb.ToolExecution_FAILED
 			toolExec.Error = err.Error()
-			toolExec.CompletedAt = time.Now().Unix()
+			toolExec.UpdatedAt = time.Now().Unix()
 			session.toolsMu.Unlock()
 			
 			continue
@@ -156,7 +178,7 @@ func (s *ChatService) executeAgentResponseWithTools(ctx context.Context, ag core
 		session.toolsMu.Lock()
 		toolExec.Status = pb.ToolExecution_COMPLETED
 		toolExec.Result = result.Content
-		toolExec.CompletedAt = time.Now().Unix()
+		toolExec.UpdatedAt = time.Now().Unix()
 		session.toolsMu.Unlock()
 
 		// Send tool result
@@ -167,9 +189,6 @@ func (s *ChatService) executeAgentResponseWithTools(ctx context.Context, ag core
 		}
 		stream.Send(resultResp)
 
-		// Continue conversation with tool result
-		toolResultMsg := fmt.Sprintf("Tool '%s' result: %s", toolCall.Function.Name, result.Content)
-		
 		// Execute agent again with tool result
 		continuationResponse, err := toolAgent.ContinueWithToolResult(ctx, toolCall.ID, result.Content)
 		if err != nil {
@@ -216,7 +235,7 @@ func (s *ChatService) waitForToolApproval(ctx context.Context, session *ChatSess
 				return true, nil
 			case pb.ToolExecution_CANCELLED, pb.ToolExecution_FAILED:
 				return false, nil
-			case pb.ToolExecution_PENDING_APPROVAL:
+			case pb.ToolExecution_AWAITING_APPROVAL:
 				// Keep waiting
 				continue
 			}
