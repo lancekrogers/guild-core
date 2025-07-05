@@ -298,6 +298,9 @@ type DetectorRegistry struct {
 	detectionAttempts  int64
 	detectionSuccesses int64
 	detectionFailures  int64
+	
+	// Observable parser for metrics
+	observable *ObservableParser
 }
 
 // NewDetectorRegistry creates a new detector registry
