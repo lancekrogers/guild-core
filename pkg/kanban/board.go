@@ -74,7 +74,7 @@ type Board struct {
 	// Storage - SQLite only via registry
 	registry         ComponentRegistry
 	eventManager     *EventManager
-	taskEventPublisher *TaskEventPublisher
+	taskEventPublisher TaskEventPublisherInterface
 }
 
 // EventType represents the type of event that occurred
@@ -260,7 +260,7 @@ func (b *Board) SetEventManager(em *EventManager) {
 }
 
 // SetTaskEventPublisher sets the task event publisher for this board
-func (b *Board) SetTaskEventPublisher(publisher *TaskEventPublisher) {
+func (b *Board) SetTaskEventPublisher(publisher TaskEventPublisherInterface) {
 	b.taskEventPublisher = publisher
 }
 
@@ -1139,7 +1139,7 @@ func (b *Board) AssignTask(ctx context.Context, taskID, assignee, changedBy, com
 
 	// Publish task updated event using new event publisher
 	if b.taskEventPublisher != nil {
-		changes := map[string]string{
+		changes := map[string]interface{}{
 			"assignee": fmt.Sprintf("%s -> %s", oldAssignee, assignee),
 		}
 		if err := b.taskEventPublisher.PublishTaskUpdated(ctx, task, b.ID, changedBy, changes); err != nil {
@@ -1193,7 +1193,7 @@ func (b *Board) AddTaskBlocker(ctx context.Context, taskID, blockerID, changedBy
 
 	// Publish task blocked event using new event publisher
 	if b.taskEventPublisher != nil {
-		if err := b.taskEventPublisher.PublishTaskBlocked(ctx, task, b.ID, changedBy, comment, []string{blockerID}); err != nil {
+		if err := b.taskEventPublisher.PublishTaskBlocked(ctx, task, b.ID, changedBy, comment); err != nil {
 			logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("AddTaskBlocker")
 			logger.WithError(err).Warn("Failed to publish task blocked event", "task_id", taskID, "blocker_id", blockerID)
 		}
@@ -1244,7 +1244,7 @@ func (b *Board) RemoveTaskBlocker(ctx context.Context, taskID, blockerID, change
 
 	// Publish task unblocked event using new event publisher
 	if b.taskEventPublisher != nil {
-		if err := b.taskEventPublisher.PublishTaskUnblocked(ctx, task, b.ID, changedBy, comment, blockerID); err != nil {
+		if err := b.taskEventPublisher.PublishTaskUnblocked(ctx, task, b.ID, changedBy, comment); err != nil {
 			logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("RemoveTaskBlocker")
 			logger.WithError(err).Warn("Failed to publish task unblocked event", "task_id", taskID, "resolved_blocker_id", blockerID)
 		}

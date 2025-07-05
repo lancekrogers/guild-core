@@ -23,7 +23,7 @@ type Manager struct {
 	boards       map[string]*Board
 	eventStream  chan BoardEvent
 	eventManager *EventManager
-	taskEventPublisher *TaskEventPublisher
+	taskEventPublisher TaskEventPublisherInterface
 	pubsub       comms.PubSub
 	mu           sync.RWMutex
 	ctx          context.Context
@@ -593,7 +593,7 @@ func (m *Manager) Close() error {
 }
 
 // SetTaskEventPublisher sets the task event publisher for this manager
-func (m *Manager) SetTaskEventPublisher(publisher *TaskEventPublisher) {
+func (m *Manager) SetTaskEventPublisher(publisher TaskEventPublisherInterface) {
 	m.taskEventPublisher = publisher
 
 	// Set the publisher on all existing boards

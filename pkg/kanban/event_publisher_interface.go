@@ -12,7 +12,9 @@ type TaskEventPublisherInterface interface {
 	PublishTaskCreated(ctx context.Context, task *Task, boardID, createdBy string) error
 	PublishTaskMoved(ctx context.Context, task *Task, boardID, fromStatus, toStatus, movedBy, reason string) error
 	PublishTaskAssigned(ctx context.Context, task *Task, boardID, assignedTo, assignedBy string) error
-	PublishTaskCompleted(ctx context.Context, task *Task, boardID, completedBy string) error
-	PublishTaskDeleted(ctx context.Context, taskID, boardID, deletedBy string) error
+	PublishTaskCompleted(ctx context.Context, task *Task, boardID, completedBy, reason string) error
+	PublishTaskDeleted(ctx context.Context, taskID, boardID, deletedBy, reason string) error
 	PublishTaskUpdated(ctx context.Context, task *Task, boardID, updatedBy string, changes map[string]interface{}) error
+	PublishTaskBlocked(ctx context.Context, task *Task, boardID, blockedBy, reason string) error
+	PublishTaskUnblocked(ctx context.Context, task *Task, boardID, unblockedBy, reason string) error
 }

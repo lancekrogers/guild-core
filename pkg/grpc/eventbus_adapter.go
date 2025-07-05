@@ -39,6 +39,11 @@ func NewEventBusAdapter(eventBus events.EventBus) EventBus {
 	return adapter
 }
 
+// UnifiedEventBus returns the underlying unified event bus
+func (a *EventBusAdapter) UnifiedEventBus() events.EventBus {
+	return a.eventBus
+}
+
 // Publish implements the simple EventBus interface
 func (a *EventBusAdapter) Publish(event interface{}) {
 	ctx := context.Background()

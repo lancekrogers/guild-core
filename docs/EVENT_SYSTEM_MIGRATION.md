@@ -25,54 +25,79 @@ This document tracks the migration from the legacy orchestrator.EventBus to the 
    - Publishes kanban events only to the unified event system
    - Eliminates triple-publishing to different event systems
 
+5. **Updated EventService** (`pkg/grpc/event_service_unified.go`)
+   - Created unified version that works with pkg/events.EventBus
+   - Server automatically uses unified version when available
+   - Maintains backward compatibility with legacy event bus
+
+6. **Updated Kanban Manager to use interface**
+   - Changed from concrete TaskEventPublisher to TaskEventPublisherInterface
+   - Allows injection of either legacy or unified publisher
+   - Updated Board to also use the interface
+
+7. **Created UnifiedCampaignManager** (`pkg/campaign/unified_manager.go`)
+   - Full implementation using unified event system
+   - Maintains backward compatibility with EventHandler interface
+   - Server automatically uses unified version when available
+
+8. **Created UnifiedCommissionTaskPlanner** (`pkg/orchestrator/commission_planner_unified.go`)
+   - Migrated commission planner to use unified event system
+   - Publishes task creation and assignment events to unified bus
+   - CommissionIntegrationService automatically uses unified version when available
+
+9. **Created UnifiedAccessController** (`pkg/security/access/controller_unified.go`)
+   - Migrated security controller to use unified event system
+   - Publishes access denied and security alert events to unified bus
+   - Created UnifiedEventBusAdapter for backward compatibility
+
+10. **Created UnifiedRetriever** (`pkg/corpus/retrieval/retriever_unified.go`)
+    - Migrated corpus retriever to use unified event system
+    - Publishes retrieval completion events with enhanced metadata
+    - Created UnifiedEventBusAdapter for corpus EventBus interface
+
 ## Remaining Work
 
 ### Phase 1: Update Core Components (High Priority)
 
-1. **Update EventService** (`pkg/grpc/event_service.go`)
-   - Currently uses orchestrator.EventBus directly
-   - Should subscribe to unified event bus and convert events for gRPC streaming
-
-2. **Update Kanban Manager initialization**
-   - Modify components that create kanban.Manager to inject UnifiedTaskEventPublisher
-   - Update Board to use TaskEventPublisherInterface instead of concrete type
-
-3. **Update Campaign Manager** (`pkg/campaign/manager.go`)
-   - Currently uses orchestrator.EventBus
-   - Should use unified events.EventBus
-
-4. **Update Commission Planner** (`pkg/orchestrator/commission_planner.go`)
-   - Publishes events to orchestrator.EventBus
-   - Should use unified system
+All Phase 1 high priority components have been migrated!
 
 ### Phase 2: Security and Integration Components
 
-1. **Update Security Controller** (`pkg/security/access/controller.go`)
-   - Uses EventBus for audit events
-   - Critical for security logging
+1. **Security Controller** (`pkg/security/access/controller.go`) - COMPLETED ✓
+   - Created UnifiedAccessController that uses unified event system
+   - Publishes audit and security events
 
-2. **Update Corpus Retriever** (`pkg/corpus/retrieval/retriever.go`)
-   - Optional event publishing
-   - Low priority but should be consistent
+2. **Corpus Retriever** (`pkg/corpus/retrieval/retriever.go`) - COMPLETED ✓
+   - Created UnifiedRetriever that uses unified event system
+   - Publishes enhanced retrieval events with context and metrics
 
 3. **Update Integration Layer** (`pkg/integration/eventbus_integration.go`)
    - Complex adapter between multiple event systems
-   - Can be simplified once everything uses unified system
+   - Requires significant refactoring due to different handler signatures
+   - Should be done as a separate effort
 
-### Phase 3: Cleanup (Medium Priority)
+### Phase 3: Cleanup (Medium Priority) - IN PROGRESS
 
-1. **Remove orchestrator.EventBus**
-   - Delete `pkg/orchestrator/eventbus.go`
-   - Remove EventBus interface from `pkg/orchestrator/interfaces.go`
-   - Update all imports
+1. **Enforce unified event bus usage** (COMPLETED ✓)
+   - Updated server.go to panic if unified event bus not provided
+   - Removed legacy event service (`pkg/grpc/event_service.go`)
+   - Updated getCampaignManager to always use unified manager
+   - Server now requires EventBusAdapter wrapping unified event bus
 
-2. **Remove backward compatibility**
-   - Delete `pkg/events/converters.go` (event type converters)
-   - Remove legacy event type aliases
+2. **Remove orchestrator.EventBus** (Not started - requires major refactoring)
+   - Would need to update all EventHandler signatures to accept context
+   - Would need to update all Publish calls to handle errors
+   - Would need to update Subscribe method signatures
+   - Affects: orchestrator factories, integration layer, tests
 
-3. **Delete integration adapter**
+3. **Remove backward compatibility** (Partially complete)
+   - Still need to remove `pkg/events/converters.go` (event type converters)
+   - Still need to remove legacy event type aliases
+   - EventBusAdapter still needed for interface compatibility
+
+4. **Delete integration adapter**
    - Remove `pkg/integration/eventbus_integration.go`
-   - No longer needed with unified system
+   - Complex multi-adapter system that needs careful migration
 
 ## Migration Strategy
 
@@ -118,6 +143,25 @@ This document tracks the migration from the legacy orchestrator.EventBus to the 
        return nil
    })
    ```
+
+## Migration Summary
+
+### Completed Components ✓
+1. **EventService** - Using unified event bus via adapter
+2. **Kanban Manager** - Using UnifiedTaskEventPublisher
+3. **Campaign Manager** - UnifiedCampaignManager implementation
+4. **Commission Planner** - UnifiedCommissionTaskPlanner implementation
+5. **Security Controller** - UnifiedAccessController implementation
+6. **Corpus Retriever** - UnifiedRetriever implementation
+
+### Active Components Using Dual Systems
+- **serve command** - Creates unified event bus and wraps with adapter
+- **gRPC server** - Automatically detects and uses unified components
+
+### Remaining Legacy Usage
+- **Integration Layer** - Complex multi-adapter system
+- **Legacy Campaign Manager** - Still used when unified bus not available
+- **Tests** - Many tests still use legacy event bus
 
 ## Benefits of Migration
 

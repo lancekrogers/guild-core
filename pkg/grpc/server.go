@@ -46,6 +46,7 @@ type Server struct {
 	promptServer   *PromptsServer          // Added for prompt service
 	chatService    *ChatService            // Added for real-time chat
 	sessionService pb.SessionServiceServer // Added for session persistence
+	eventService   pb.EventServiceServer   // Added for event streaming
 }
 
 // watcher represents an active campaign watcher
@@ -69,7 +70,7 @@ func NewServer(
 	eventBus EventBus,
 ) *Server {
 	// Get required components from registry
-	campaignMgr := getCampaignManager(registry)
+	campaignMgr := getCampaignManager(registry, eventBus)
 	commissionMgr := getCommissionManager(registry)
 	kanbanMgr := getKanbanManager(registry)
 	agentReg := registry.Agents()
@@ -85,6 +86,15 @@ func NewServer(
 	// Create session service with storage registry
 	sessionService := getSessionService(registry)
 
+	// Create event service using unified event bus
+	var eventService pb.EventServiceServer
+	if unifiedBus, ok := eventBus.(*EventBusAdapter); ok && unifiedBus != nil {
+		eventService = NewUnifiedEventService(unifiedBus.UnifiedEventBus())
+	} else {
+		// This should not happen in production as we always create unified event bus
+		panic("EventBus must be EventBusAdapter wrapping unified event bus")
+	}
+
 	return &Server{
 		campaignMgr:    campaignMgr,
 		commissionMgr:  commissionMgr,
@@ -97,6 +107,7 @@ func NewServer(
 		promptServer:   promptServer,
 		chatService:    chatService,
 		sessionService: sessionService,
+		eventService:   eventService,
 	}
 }
 
@@ -144,6 +155,7 @@ func (s *Server) startServer(ctx context.Context, address string) error {
 	pb.RegisterGuildServer(s.grpcServer, s)
 	pb.RegisterChatServiceServer(s.grpcServer, s.chatService)
 	pb.RegisterSessionServiceServer(s.grpcServer, s.sessionService)
+	pb.RegisterEventServiceServer(s.grpcServer, s.eventService)
 	promptspb.RegisterPromptServiceServer(s.grpcServer, s.promptServer)
 
 	// Create a channel to signal when server is ready
@@ -1060,28 +1072,28 @@ func campaignToProto(c *campaign.Campaign) *pb.Campaign {
 // Helper functions to extract components from registry
 // These handle nil cases gracefully and provide meaningful errors for debugging
 
-func getCampaignManager(registry registry.ComponentRegistry) campaign.Manager {
+func getCampaignManager(registry registry.ComponentRegistry, grpcEventBus EventBus) campaign.Manager {
 	// Get campaign repository from storage registry
 	storageReg := registry.Storage()
-	if storageReg == nil {
-		// Return a basic working campaign manager if storage is not available
-		eventBus := orchestrator.DefaultEventBusFactory()
-		return campaign.NewManager(nil, nil, eventBus)
+	
+	// Always use unified manager with the unified event bus
+	adapter, ok := grpcEventBus.(*EventBusAdapter)
+	if !ok || adapter == nil {
+		panic("EventBus must be EventBusAdapter wrapping unified event bus")
 	}
-
-	campaignRepo := storageReg.GetCampaignRepository()
-	if campaignRepo == nil {
-		// Return a basic working campaign manager if repository is not available
-		eventBus := orchestrator.DefaultEventBusFactory()
-		return campaign.NewManager(nil, nil, eventBus)
+	
+	unifiedBus := adapter.UnifiedEventBus()
+	
+	// Get repository and commission manager if available
+	var campaignRepo campaign.Repository
+	var commissionMgr *commission.Manager
+	
+	if storageReg != nil {
+		campaignRepo = storageReg.GetCampaignRepository()
 	}
-
-	// Create campaign manager with repository
-	// The registry.CampaignRepository doesn't match campaign.Repository interface exactly
-	// For now, we'll create a basic manager which is better than nil
-	// TODO: Create an adapter to bridge the interface mismatch
-	eventBus := orchestrator.DefaultEventBusFactory()
-	return campaign.NewManager(nil, nil, eventBus)
+	
+	// Return unified manager
+	return campaign.NewUnifiedManager(campaignRepo, commissionMgr, unifiedBus)
 }
 
 func getCommissionManager(registry registry.ComponentRegistry) *commission.Manager {
@@ -1191,6 +1203,7 @@ func getSessionService(registry registry.ComponentRegistry) pb.SessionServiceSer
 		Info("Using memory-based session service")
 	return NewMemorySessionService()
 }
+
 
 // formatterAwareManager wraps a Manager and implements both Manager and Formatter interfaces
 type formatterAwareManager struct {

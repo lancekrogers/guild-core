@@ -23,6 +23,7 @@ const (
 	ErrCodePanic             ErrorCode = "GUILD-1001"
 	ErrCodeTimeout           ErrorCode = "GUILD-1002"
 	ErrCodeCancelled         ErrorCode = "GUILD-1003"
+	ErrCodeCanceled          ErrorCode = "GUILD-1003" // Alias for American spelling
 	ErrCodeRateLimit         ErrorCode = "GUILD-1004"
 	ErrCodeResourceLimit     ErrorCode = "GUILD-1005"
 	ErrCodeNotImplemented    ErrorCode = "GUILD-1006"

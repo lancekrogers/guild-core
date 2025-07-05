@@ -12,6 +12,7 @@ import (
 	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/agents/core/manager"
 	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild/pkg/events"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/kanban"
 	"github.com/lancekrogers/guild/pkg/observability"
@@ -200,8 +201,22 @@ func (s *CommissionIntegrationService) initializeFromRegistry(ctx context.Contex
 	intelligentParser := manager.NewIntelligentParser(parserConfig)
 	parserAdapter := manager.NewResponseParserAdapter(intelligentParser)
 
-	// Create commission planner
-	s.commissionPlanner = DefaultCommissionTaskPlannerFactory(s.kanbanManager, parserAdapter, s.eventBus)
+	// Create commission planner - use unified version if available
+	// Check if the event bus has a UnifiedEventBus method (duck typing to avoid import cycle)
+	if adapter, ok := s.eventBus.(interface{ UnifiedEventBus() interface{} }); ok && adapter != nil {
+		// We have a unified event bus available via adapter
+		unifiedBus := adapter.UnifiedEventBus()
+		// Need to cast to events.EventBus
+		if unifiedEventBus, ok := unifiedBus.(events.EventBus); ok {
+			s.commissionPlanner = UnifiedCommissionTaskPlannerFactory(s.kanbanManager, parserAdapter, unifiedEventBus)
+		} else {
+			// Fallback to legacy
+			s.commissionPlanner = DefaultCommissionTaskPlannerFactory(s.kanbanManager, parserAdapter, s.eventBus)
+		}
+	} else {
+		// Use legacy commission planner
+		s.commissionPlanner = DefaultCommissionTaskPlannerFactory(s.kanbanManager, parserAdapter, s.eventBus)
+	}
 
 	// Get commission repository from storage registry
 	storageRegistry := s.registry.Storage()

@@ -185,7 +185,7 @@ func (p *UnifiedTaskEventPublisher) PublishTaskAssigned(ctx context.Context, tas
 }
 
 // PublishTaskCompleted publishes a task completion event
-func (p *UnifiedTaskEventPublisher) PublishTaskCompleted(ctx context.Context, task *Task, boardID, completedBy string) error {
+func (p *UnifiedTaskEventPublisher) PublishTaskCompleted(ctx context.Context, task *Task, boardID, completedBy, reason string) error {
 	if err := ctx.Err(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("UnifiedTaskEventPublisher").
@@ -218,6 +218,7 @@ func (p *UnifiedTaskEventPublisher) PublishTaskCompleted(ctx context.Context, ta
 			"title":        task.Title,
 			"completed_by": completedBy,
 			"completed_at": time.Now().UTC(),
+			"reason":       reason,
 			"metadata":     task.Metadata,
 		},
 	)
@@ -234,7 +235,7 @@ func (p *UnifiedTaskEventPublisher) PublishTaskCompleted(ctx context.Context, ta
 }
 
 // PublishTaskDeleted publishes a task deletion event
-func (p *UnifiedTaskEventPublisher) PublishTaskDeleted(ctx context.Context, taskID, boardID, deletedBy string) error {
+func (p *UnifiedTaskEventPublisher) PublishTaskDeleted(ctx context.Context, taskID, boardID, deletedBy, reason string) error {
 	if err := ctx.Err(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("UnifiedTaskEventPublisher").
@@ -266,6 +267,7 @@ func (p *UnifiedTaskEventPublisher) PublishTaskDeleted(ctx context.Context, task
 			"board_id":   boardID,
 			"deleted_by": deletedBy,
 			"deleted_at": time.Now().UTC(),
+			"reason":     reason,
 		},
 	)
 
@@ -324,6 +326,106 @@ func (p *UnifiedTaskEventPublisher) PublishTaskUpdated(ctx context.Context, task
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to publish task updated event").
 			WithComponent("UnifiedTaskEventPublisher").
 			WithOperation("PublishTaskUpdated").
+			WithDetails("task_id", task.ID)
+	}
+
+	return nil
+}
+
+// PublishTaskBlocked publishes a task blocked event
+func (p *UnifiedTaskEventPublisher) PublishTaskBlocked(ctx context.Context, task *Task, boardID, blockedBy, reason string) error {
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("UnifiedTaskEventPublisher").
+			WithOperation("PublishTaskBlocked")
+	}
+
+	logger := observability.GetLogger(ctx).
+		WithComponent("UnifiedTaskEventPublisher").
+		WithOperation("PublishTaskBlocked")
+
+	startTime := time.Now()
+	defer func() {
+		duration := time.Since(startTime)
+		logger.Info("Task blocked event published",
+			"task_id", task.ID,
+			"board_id", boardID,
+			"blocked_by", blockedBy,
+			"duration_ms", duration.Milliseconds(),
+		)
+	}()
+
+	// Create unified event
+	event := events.NewBaseEvent(
+		uuid.New().String(),
+		"task.blocked", // Custom event type
+		"kanban-service",
+		map[string]interface{}{
+			"task_id":    task.ID,
+			"board_id":   boardID,
+			"title":      task.Title,
+			"blocked_by": blockedBy,
+			"reason":     reason,
+			"blocked_at": time.Now().UTC(),
+			"metadata":   task.Metadata,
+		},
+	)
+
+	// Publish to unified event bus
+	if err := p.eventBus.Publish(ctx, event); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to publish task blocked event").
+			WithComponent("UnifiedTaskEventPublisher").
+			WithOperation("PublishTaskBlocked").
+			WithDetails("task_id", task.ID)
+	}
+
+	return nil
+}
+
+// PublishTaskUnblocked publishes a task unblocked event
+func (p *UnifiedTaskEventPublisher) PublishTaskUnblocked(ctx context.Context, task *Task, boardID, unblockedBy, reason string) error {
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("UnifiedTaskEventPublisher").
+			WithOperation("PublishTaskUnblocked")
+	}
+
+	logger := observability.GetLogger(ctx).
+		WithComponent("UnifiedTaskEventPublisher").
+		WithOperation("PublishTaskUnblocked")
+
+	startTime := time.Now()
+	defer func() {
+		duration := time.Since(startTime)
+		logger.Info("Task unblocked event published",
+			"task_id", task.ID,
+			"board_id", boardID,
+			"unblocked_by", unblockedBy,
+			"duration_ms", duration.Milliseconds(),
+		)
+	}()
+
+	// Create unified event
+	event := events.NewBaseEvent(
+		uuid.New().String(),
+		"task.unblocked", // Custom event type
+		"kanban-service",
+		map[string]interface{}{
+			"task_id":      task.ID,
+			"board_id":     boardID,
+			"title":        task.Title,
+			"unblocked_by": unblockedBy,
+			"reason":       reason,
+			"unblocked_at": time.Now().UTC(),
+			"metadata":     task.Metadata,
+		},
+	)
+
+	// Publish to unified event bus
+	if err := p.eventBus.Publish(ctx, event); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to publish task unblocked event").
+			WithComponent("UnifiedTaskEventPublisher").
+			WithOperation("PublishTaskUnblocked").
 			WithDetails("task_id", task.ID)
 	}
 
