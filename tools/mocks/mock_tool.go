@@ -131,3 +131,9 @@ func (t *MockTool) Category() string {
 func (t *MockTool) RequiresAuth() bool {
 	return t.NeedsAuthValue
 }
+
+// HealthCheck checks if the tool is healthy
+func (t *MockTool) HealthCheck() error {
+	// Mock tools are always healthy by default
+	return nil
+}

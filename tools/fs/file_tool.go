@@ -282,3 +282,34 @@ func (t *FileTool) deleteFile(path string) (string, error) {
 
 	return fmt.Sprintf("Successfully deleted file: %s", path), nil
 }
+
+// HealthCheck verifies the tool can access its base path
+func (t *FileTool) HealthCheck() error {
+	// Check if base path exists and is accessible
+	fileInfo, err := os.Stat(t.basePath)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "base path not accessible").
+			WithComponent("file_tool").
+			WithOperation("health_check").
+			WithDetails("base_path", t.basePath)
+	}
+
+	// Verify it's a directory
+	if !fileInfo.IsDir() {
+		return gerror.New(gerror.ErrCodeInternal, "base path is not a directory", nil).
+			WithComponent("file_tool").
+			WithOperation("health_check").
+			WithDetails("base_path", t.basePath)
+	}
+
+	// Try to list the directory to ensure read permissions
+	_, err = ioutil.ReadDir(t.basePath)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "cannot read base path directory").
+			WithComponent("file_tool").
+			WithOperation("health_check").
+			WithDetails("base_path", t.basePath)
+	}
+
+	return nil
+}

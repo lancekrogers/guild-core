@@ -256,3 +256,15 @@ func (s *Scraper) Call(input string) (string, error) {
 
 	return siteData.String(), nil
 }
+
+// HealthCheck verifies the scraper tool is healthy
+func (s *Scraper) HealthCheck() error {
+	// Basic health check - verify we can create a collector
+	c := colly.NewCollector()
+	if c == nil {
+		return gerror.New(gerror.ErrCodeInternal, "failed to create collector", nil).
+			WithComponent("scraper").
+			WithOperation("health_check")
+	}
+	return nil
+}

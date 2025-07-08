@@ -41,6 +41,10 @@ type Tool interface {
 
 	// RequiresAuth returns whether the tool requires authentication
 	RequiresAuth() bool
+
+	// HealthCheck checks if the tool is healthy and operational
+	// Returns nil if healthy, error otherwise
+	HealthCheck() error
 }
 
 // BaseTool provides a base implementation of the Tool interface
@@ -100,6 +104,14 @@ func (t *BaseTool) Execute(ctx context.Context, input string) (*ToolResult, erro
 	return nil, gerror.New(gerror.ErrCodeInternal, "Execute not implemented for BaseTool, must be implemented by concrete tool", nil).
 		WithComponent("tools").
 		WithOperation("execute")
+}
+
+// HealthCheck returns nil by default, indicating the tool is healthy
+// Concrete tools should override this method if they need specific health checks
+func (t *BaseTool) HealthCheck() error {
+	// Base implementation assumes tool is healthy
+	// Concrete tools should override if they need specific checks
+	return nil
 }
 
 // NewToolResult creates a new tool result
