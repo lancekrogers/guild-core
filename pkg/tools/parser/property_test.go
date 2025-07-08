@@ -181,7 +181,7 @@ func TestProperty_ContextCancellation(t *testing.T) {
 		ctx, cancel := context.WithCancel(context.Background())
 		cancel() // Cancel immediately
 		
-		_, err := parser.ExtractWithContext(ctx, input)
+		_, _ = parser.ExtractWithContext(ctx, input)
 		
 		// Should either complete quickly or return context error
 		// This property is hard to verify precisely due to timing
@@ -323,7 +323,10 @@ func TestProperty_ArgumentPreservation(t *testing.T) {
 		
 		calls, err := parser.ExtractToolCalls(input)
 		assert.NoError(t, err)
-		assert.Len(t, calls, 1)
+		if !assert.Len(t, calls, 1) {
+			t.Logf("Input was: %s", input)
+			continue
+		}
 		
 		// Verify arguments are preserved
 		var parsed map[string]interface{}

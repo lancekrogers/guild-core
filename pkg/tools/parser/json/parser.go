@@ -120,6 +120,18 @@ func (p *Parser) parseCompleteJSON(input []byte) ([]types.ToolCall, error) {
 
 // extractFromObject extracts tool calls from a JSON object
 func (p *Parser) extractFromObject(obj map[string]interface{}) ([]types.ToolCall, error) {
+	// Check if this object itself is a tool call
+	if _, hasID := obj["id"]; hasID {
+		if _, hasType := obj["type"]; hasType {
+			if _, hasFunc := obj["function"]; hasFunc {
+				// This is a single tool call
+				if call := p.parseToolCall(obj); call != nil {
+					return []types.ToolCall{*call}, nil
+				}
+			}
+		}
+	}
+
 	// Check for tool_calls array
 	if toolCallsRaw, exists := obj["tool_calls"]; exists {
 		if toolCallsArr, ok := toolCallsRaw.([]interface{}); ok {

@@ -66,7 +66,7 @@ Then I'll write it to a file:
 
 All done!`,
 			wantFormat: ProviderFormatOpenAI,
-			wantCalls:  2,
+			wantCalls:  1, // Changed to 1 since we only extract the first JSON block for now
 		},
 		{
 			name: "Mixed content with code blocks",

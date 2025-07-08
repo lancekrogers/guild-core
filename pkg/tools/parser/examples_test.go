@@ -214,7 +214,7 @@ func Example_monitoredParser() {
 	// Use the parser
 	response := `{"tool_calls": [{"id": "mon_1", "type": "function", "function": {"name": "monitor_test", "arguments": "{}"}}]}`
 	
-	calls, err := monitoredParser.ExtractToolCalls(response)
+	_, err := monitoredParser.ExtractToolCalls(response)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -21,6 +21,7 @@ const (
 	LayerTask      Layer = "task"
 	LayerTool      Layer = "tool"
 	LayerExecution Layer = "execution"
+	LayerReasoning Layer = "reasoning"
 )
 
 // PromptBuilder builds layered prompts for agent execution
@@ -47,6 +48,7 @@ func NewPromptBuilder() (*PromptBuilder, error) {
 		{LayerTask, "task_layer.md"},
 		{LayerTool, "tool_layer.md"},
 		{LayerExecution, "execution_layer.md"},
+		{LayerReasoning, "reasoning_layer.md"},
 	}
 
 	for _, l := range layers {
@@ -166,7 +168,7 @@ func (b *PromptBuilder) BuildFullExecutionPrompt(data ExecutionPromptData) (stri
 	}
 
 	// Use all layers for full execution prompt
-	allLayers := []Layer{LayerBase, LayerContext, LayerTask, LayerTool, LayerExecution}
+	allLayers := []Layer{LayerBase, LayerReasoning, LayerContext, LayerTask, LayerTool, LayerExecution}
 	return b.BuildPrompt(allLayers, dataMap)
 }
 

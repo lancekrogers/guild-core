@@ -378,7 +378,7 @@ func (op *outputPaneImpl) formatMessage(msg common.ChatMessage, index int) strin
 		prefix = "🔨 Tool"
 		messageType = "tool"
 	case common.MsgAgentThinking:
-		prefix = "🤔 Agent"
+		prefix = "🤔 Thinking"
 		messageType = "thinking"
 	case common.MsgAgentWorking:
 		prefix = "⚙️ Agent"
@@ -404,6 +404,25 @@ func (op *outputPaneImpl) formatMessage(msg common.ChatMessage, index int) strin
 
 	// Process content based on rich content settings
 	content := op.processContentWithType(msg.Content, messageType, msg.Metadata)
+
+	// Special formatting for thinking messages
+	if msg.Type == common.MsgAgentThinking {
+		// Create a special box for thinking content
+		thinkingBox := lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("8")).
+			Padding(0, 1).
+			Width(op.viewport.Width - 4)
+		
+		// Add confidence if available in metadata
+		if confidence, ok := msg.Metadata["confidence"]; ok {
+			content = fmt.Sprintf("%s\n\nConfidence: %s", content, confidence)
+		}
+		
+		styledContent := style.Render(content)
+		boxedContent := thinkingBox.Render(styledContent)
+		return fmt.Sprintf("%s\n%s", header, boxedContent)
+	}
 
 	// Apply message style to content
 	styledContent := style.Render(content)

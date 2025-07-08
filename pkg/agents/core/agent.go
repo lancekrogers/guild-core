@@ -73,9 +73,19 @@ func newWorkerAgent(id, name string, llmClient providers.LLMClient,
 
 // Execute runs a task with full tool support
 func (a *WorkerAgent) Execute(ctx context.Context, request string) (string, error) {
+	// Call the new ExecuteWithReasoning method and return just the content for backward compatibility
+	response, err := a.ExecuteWithReasoning(ctx, request)
+	if err != nil {
+		return "", err
+	}
+	return response.Content, nil
+}
+
+// ExecuteWithReasoning runs a task and returns structured response with reasoning
+func (a *WorkerAgent) ExecuteWithReasoning(ctx context.Context, request string) (*AgentResponse, error) {
 	// Check context early
 	if err := ctx.Err(); err != nil {
-		return "", gerror.Wrap(err, gerror.ErrCodeCancelled, "agent execution cancelled").
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "agent execution cancelled").
 			WithComponent("agent").
 			WithOperation("Execute").
 			WithDetails("agent_id", a.ID)
@@ -84,7 +94,7 @@ func (a *WorkerAgent) Execute(ctx context.Context, request string) (string, erro
 	// Initialize observability
 	logger := observability.GetLogger(ctx).
 		WithComponent("agent").
-		WithOperation("Execute").
+		WithOperation("ExecuteWithReasoning").
 		With("agent_id", a.ID, "agent_name", a.Name)
 
 	// Add agent context for tracing
@@ -92,43 +102,49 @@ func (a *WorkerAgent) Execute(ctx context.Context, request string) (string, erro
 
 	// Start operation logging with timing
 	start := time.Now()
-	logger.InfoContext(ctx, "Starting agent execution",
+	logger.InfoContext(ctx, "Starting agent execution with reasoning",
 		"request_length", len(request),
 		"has_cost_manager", a.CostManager != nil,
 		"has_tools", a.ToolRegistry != nil,
 	)
 
-	var response string
+	var rawResponse string
 	var err error
+	var cost float64
+	var toolsUsed []string
 
 	// If we have a cost-aware implementation, use it
 	if a.LLMClient != nil && a.CostManager != nil {
 		logger.DebugContext(ctx, "Using cost-aware execution")
-		response, err = a.CostAwareExecute(ctx, request)
+		rawResponse, err = a.CostAwareExecute(ctx, request)
+		if a.CostManager != nil {
+			cost = a.CostManager.GetTotalCost()
+		}
 	} else {
 		// Otherwise, execute with tools if available
 		if a.LLMClient == nil {
 			err = gerror.New(gerror.ErrCodeValidation, "no LLM client configured", nil).
 				WithComponent("agent").
-				WithOperation("Execute").
+				WithOperation("ExecuteWithReasoning").
 				WithDetails("agent_id", a.ID)
 			logger.ErrorContext(ctx, "No LLM client configured")
-			return "", err
+			return nil, err
 		}
 
 		// If we have tools available, create a task executor for tool-enabled execution
 		if a.ToolRegistry != nil {
 			logger.DebugContext(ctx, "Using tool-enabled execution",
 				"available_tools", len(a.ToolRegistry.ListTools()))
-			response, err = a.executeWithTools(ctx, request)
+			rawResponse, err = a.executeWithTools(ctx, request)
+			// TODO: Extract actual tools used from response
 		} else {
 			// Fall back to simple LLM execution without tools
 			logger.DebugContext(ctx, "Using simple LLM execution")
-			response, err = a.LLMClient.Complete(ctx, request)
+			rawResponse, err = a.LLMClient.Complete(ctx, request)
 			if err != nil {
 				err = gerror.Wrap(err, gerror.ErrCodeProvider, "LLM completion failed").
 					WithComponent("agent").
-					WithOperation("Execute").
+					WithOperation("ExecuteWithReasoning").
 					WithDetails("agent_id", a.ID)
 			}
 		}
@@ -141,20 +157,49 @@ func (a *WorkerAgent) Execute(ctx context.Context, request string) (string, erro
 			"duration_ms", duration.Milliseconds(),
 			"request_length", len(request),
 		)
-		return "", err
+		return nil, err
+	}
+
+	// Extract reasoning from response
+	cleanContent, reasoning, confidence := ExtractReasoning(rawResponse)
+
+	// Log reasoning extraction
+	if reasoning != "" {
+		logger.DebugContext(ctx, "Extracted reasoning from response",
+			"reasoning_length", len(reasoning),
+			"confidence", confidence,
+		)
+	}
+
+	// Build structured response
+	response := &AgentResponse{
+		Content:    cleanContent,
+		Reasoning:  reasoning,
+		Confidence: confidence,
+		ToolsUsed:  toolsUsed,
+		Cost:       cost,
+		Metadata: map[string]interface{}{
+			"agent_id":      a.ID,
+			"agent_name":    a.Name,
+			"duration_ms":   duration.Milliseconds(),
+			"has_reasoning": reasoning != "",
+		},
 	}
 
 	logger.InfoContext(ctx, "Agent execution completed successfully",
 		"duration_ms", duration.Milliseconds(),
-		"response_length", len(response),
+		"response_length", len(cleanContent),
 		"request_length", len(request),
+		"has_reasoning", reasoning != "",
+		"confidence", confidence,
 	)
 
 	// Log performance metrics for monitoring
-	logger.Duration("agent.execute", duration,
+	logger.Duration("agent.execute_with_reasoning", duration,
 		"agent_id", a.ID,
 		"success", true,
-		"response_size", len(response),
+		"response_size", len(cleanContent),
+		"has_reasoning", reasoning != "",
 	)
 
 	return response, nil

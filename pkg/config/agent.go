@@ -38,6 +38,9 @@ type EnhancedAgentConfig struct {
 	// Advanced configuration
 	Prompts  map[string]string      `yaml:"prompts,omitempty"`
 	Metadata map[string]interface{} `yaml:"metadata,omitempty"`
+	
+	// Reasoning configuration
+	Reasoning ReasoningConfig `yaml:"reasoning,omitempty"`
 }
 
 // ToolAccessConfig defines tool access control for an agent
@@ -45,6 +48,15 @@ type ToolAccessConfig struct {
 	AllowAll bool     `yaml:"allow_all"`
 	Allowed  []string `yaml:"allowed,omitempty"`
 	Blocked  []string `yaml:"blocked,omitempty"`
+}
+
+// ReasoningConfig defines reasoning behavior for an agent
+type ReasoningConfig struct {
+	Enabled              bool    `yaml:"enabled" default:"true"`
+	ShowThinking         bool    `yaml:"show_thinking" default:"true"`
+	MinConfidenceDisplay float64 `yaml:"min_confidence_display" default:"0.3"`
+	DeepReasoningMinComplexity float64 `yaml:"deep_reasoning_min_complexity" default:"0.5"`
+	IncludeInPrompt      bool    `yaml:"include_in_prompt" default:"true"`
 }
 
 // Validate validates the enhanced agent configuration
@@ -232,6 +244,21 @@ func (c *EnhancedAgentConfig) GetEffectiveContextWindow() int {
 		return 32000
 	default:
 		return 8000 // Conservative default
+	}
+}
+
+// SetReasoningDefaults sets default values for reasoning configuration
+func (c *EnhancedAgentConfig) SetReasoningDefaults() {
+	// Set defaults if reasoning config is empty
+	if c.Reasoning.Enabled == false && c.Reasoning.ShowThinking == false && 
+		c.Reasoning.MinConfidenceDisplay == 0 && c.Reasoning.DeepReasoningMinComplexity == 0 {
+		c.Reasoning = ReasoningConfig{
+			Enabled:              true,
+			ShowThinking:         true,
+			MinConfidenceDisplay: 0.3,
+			DeepReasoningMinComplexity: 0.5,
+			IncludeInPrompt:      true,
+		}
 	}
 }
 

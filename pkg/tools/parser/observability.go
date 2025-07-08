@@ -5,11 +5,18 @@ package parser
 
 import (
 	"context"
+	"sync"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 	
 	"github.com/lancekrogers/guild/pkg/observability"
+)
+
+var (
+	// globalMetrics is a singleton instance of parser metrics
+	globalMetrics *ParserMetrics
+	metricsOnce   sync.Once
 )
 
 // ParserMetrics contains all parser-specific metrics
@@ -47,6 +54,14 @@ type ParserMetrics struct {
 
 // InitParserMetrics initializes parser-specific metrics
 func InitParserMetrics(registry prometheus.Registerer) *ParserMetrics {
+	metricsOnce.Do(func() {
+		globalMetrics = createParserMetrics(registry)
+	})
+	return globalMetrics
+}
+
+// createParserMetrics creates a new ParserMetrics instance
+func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 	m := &ParserMetrics{}
 	
 	// Detection metrics

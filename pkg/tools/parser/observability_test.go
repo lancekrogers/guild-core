@@ -5,6 +5,7 @@ package parser
 
 import (
 	"context"
+	"strings"
 	"testing"
 	"time"
 
@@ -16,9 +17,6 @@ import (
 
 // TestObservableParser_Metrics tests metric collection
 func TestObservableParser_Metrics(t *testing.T) {
-	// Create a test registry
-	reg := prometheus.NewRegistry()
-	
 	// Create base parser
 	baseParser := NewResponseParser()
 	
@@ -270,11 +268,22 @@ func BenchmarkObservableParser_Overhead(b *testing.B) {
 
 // TestMetricLabels tests that metrics have correct labels
 func TestMetricLabels(t *testing.T) {
-	// This would use testutil to verify prometheus metrics
-	// Example structure:
-	/*
+	// Create a custom registry for testing
 	reg := prometheus.NewRegistry()
-	metrics := InitParserMetrics(reg)
+	
+	// Create metrics with the test registry
+	metrics := &ParserMetrics{
+		parseAttempts: prometheus.NewCounterVec(
+			prometheus.CounterOpts{
+				Name: "guild_parser_parse_attempts_total",
+				Help: "Total number of parsing attempts",
+			},
+			[]string{"format"},
+		),
+	}
+	
+	// Register the metric
+	reg.MustRegister(metrics.parseAttempts)
 	
 	// Trigger metric recording
 	metrics.parseAttempts.WithLabelValues("openai").Inc()
@@ -287,5 +296,4 @@ func TestMetricLabels(t *testing.T) {
 	`
 	err := testutil.CollectAndCompare(metrics.parseAttempts, strings.NewReader(expected))
 	assert.NoError(t, err)
-	*/
 }

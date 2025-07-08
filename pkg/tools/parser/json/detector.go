@@ -300,28 +300,25 @@ func (d *Detector) extractFromCodeBlock(input []byte) ([]byte, bool) {
 // extractWithStreamingParser uses a streaming JSON decoder for extraction
 func (d *Detector) extractWithStreamingParser(input []byte) ([]byte, bool) {
 	// Try to find JSON using a streaming approach
-	reader := bytes.NewReader(input)
-	decoder := json.NewDecoder(reader)
-
-	// Skip non-JSON prefix
-	for {
-		startPos := decoder.InputOffset()
+	maxOffset := int64(len(input))
+	
+	for offset := int64(0); offset < maxOffset; offset++ {
+		reader := bytes.NewReader(input[offset:])
+		decoder := json.NewDecoder(reader)
+		
 		var value interface{}
 		err := decoder.Decode(&value)
-
+		
 		if err == nil {
 			// Successfully decoded JSON
-			endPos := decoder.InputOffset()
-			return input[startPos:endPos], true
+			endPos := offset + decoder.InputOffset()
+			return input[offset:endPos], true
 		}
-
-		if err == io.EOF {
+		
+		// If we can't decode from this position, try the next
+		if err == io.EOF || offset+1 >= maxOffset {
 			break
 		}
-
-		// Skip one byte and try again
-		reader.Seek(startPos+1, io.SeekStart)
-		decoder = json.NewDecoder(reader)
 	}
 
 	return nil, false
