@@ -86,12 +86,12 @@ func (et EdgeType) String() string {
 // KnowledgeNode represents a node in the knowledge graph
 type KnowledgeNode struct {
 	ID         string                 `json:"id"`
-	Type       NodeType              `json:"type"`
-	Content    string                `json:"content"`
+	Type       NodeType               `json:"type"`
+	Content    string                 `json:"content"`
 	Properties map[string]interface{} `json:"properties"`
-	CreatedAt  time.Time             `json:"created_at"`
-	UpdatedAt  time.Time             `json:"updated_at"`
-	Confidence float64               `json:"confidence"`
+	CreatedAt  time.Time              `json:"created_at"`
+	UpdatedAt  time.Time              `json:"updated_at"`
+	Confidence float64                `json:"confidence"`
 }
 
 // Edge represents a relationship between two nodes
@@ -99,10 +99,10 @@ type Edge struct {
 	ID         string                 `json:"id"`
 	From       string                 `json:"from"`
 	To         string                 `json:"to"`
-	Type       EdgeType              `json:"type"`
+	Type       EdgeType               `json:"type"`
 	Properties map[string]interface{} `json:"properties"`
-	Weight     float64               `json:"weight"`
-	CreatedAt  time.Time             `json:"created_at"`
+	Weight     float64                `json:"weight"`
+	CreatedAt  time.Time              `json:"created_at"`
 }
 
 // GraphQuery represents a query against the knowledge graph
@@ -134,9 +134,9 @@ type SearchResult struct {
 
 // TraversalPath represents a path through the graph during traversal
 type TraversalPath struct {
-	Nodes []string  `json:"nodes"`
-	Edges []string  `json:"edges"`
-	Score float64   `json:"score"`
+	Nodes []string `json:"nodes"`
+	Edges []string `json:"edges"`
+	Score float64  `json:"score"`
 }
 
 // ClusterInfo represents information about a cluster of related nodes
@@ -159,12 +159,12 @@ type GraphMetrics struct {
 
 // NodeMetrics represents metrics for individual nodes
 type NodeMetrics struct {
-	InDegree     int     `json:"in_degree"`
-	OutDegree    int     `json:"out_degree"`
-	Centrality   float64 `json:"centrality"`
-	Clustering   float64 `json:"clustering"`
-	PageRank     float64 `json:"page_rank"`
-	Importance   float64 `json:"importance"`
+	InDegree   int     `json:"in_degree"`
+	OutDegree  int     `json:"out_degree"`
+	Centrality float64 `json:"centrality"`
+	Clustering float64 `json:"clustering"`
+	PageRank   float64 `json:"page_rank"`
+	Importance float64 `json:"importance"`
 }
 
 // QueryBuilder helps build complex graph queries
@@ -271,23 +271,23 @@ func FindHighConfidence() *QueryBuilder {
 
 // GraphExport represents the graph in an exportable format
 type GraphExport struct {
-	Nodes     []*KnowledgeNode `json:"nodes"`
-	Edges     []*Edge          `json:"edges"`
-	Metadata  map[string]interface{} `json:"metadata"`
-	ExportedAt time.Time       `json:"exported_at"`
-	Version   string           `json:"version"`
+	Nodes      []*KnowledgeNode       `json:"nodes"`
+	Edges      []*Edge                `json:"edges"`
+	Metadata   map[string]interface{} `json:"metadata"`
+	ExportedAt time.Time              `json:"exported_at"`
+	Version    string                 `json:"version"`
 }
 
 // ValidationResult represents the result of graph validation
 type ValidationResult struct {
-	Valid        bool               `json:"valid"`
-	Issues       []ValidationIssue  `json:"issues"`
-	Warnings     []string           `json:"warnings"`
-	NodeCount    int                `json:"node_count"`
-	EdgeCount    int                `json:"edge_count"`
-	Orphaned     []string           `json:"orphaned_nodes"`
-	Duplicates   []string           `json:"duplicate_nodes"`
-	ValidatedAt  time.Time          `json:"validated_at"`
+	Valid       bool              `json:"valid"`
+	Issues      []ValidationIssue `json:"issues"`
+	Warnings    []string          `json:"warnings"`
+	NodeCount   int               `json:"node_count"`
+	EdgeCount   int               `json:"edge_count"`
+	Orphaned    []string          `json:"orphaned_nodes"`
+	Duplicates  []string          `json:"duplicate_nodes"`
+	ValidatedAt time.Time         `json:"validated_at"`
 }
 
 // ValidationIssue represents a specific validation issue
@@ -311,10 +311,10 @@ type GraphDiff struct {
 
 // Recommendation represents a knowledge recommendation
 type Recommendation struct {
-	Type        string    `json:"type"`
-	NodeID      string    `json:"node_id"`
-	Score       float64   `json:"score"`
-	Reason      string    `json:"reason"`
-	Context     []string  `json:"context"`
-	CreatedAt   time.Time `json:"created_at"`
+	Type      string    `json:"type"`
+	NodeID    string    `json:"node_id"`
+	Score     float64   `json:"score"`
+	Reason    string    `json:"reason"`
+	Context   []string  `json:"context"`
+	CreatedAt time.Time `json:"created_at"`
 }

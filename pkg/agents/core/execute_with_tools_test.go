@@ -256,6 +256,10 @@ func (t *mockTool) Category() string {
 	return "mock"
 }
 
+func (t *mockTool) HealthCheck() error {
+	return nil
+}
+
 func (t *mockTool) RequiresAuth() bool {
 	return false
 }

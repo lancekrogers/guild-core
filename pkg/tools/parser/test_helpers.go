@@ -17,18 +17,18 @@ import (
 
 // TestCase represents a parser test case
 type TestCase struct {
-	Name          string
-	Input         string
-	WantFormat    ProviderFormat
-	WantCalls     []ToolCall
-	WantError     bool
+	Name           string
+	Input          string
+	WantFormat     ProviderFormat
+	WantCalls      []ToolCall
+	WantError      bool
 	WantConfidence float64
 }
 
 // RunParserTest runs a standard parser test case
 func RunParserTest(t *testing.T, parser ResponseParser, tc TestCase) {
 	t.Helper()
-	
+
 	// Test format detection if format is specified
 	if tc.WantFormat != "" {
 		format, confidence, err := parser.DetectFormat(tc.Input)
@@ -42,25 +42,25 @@ func RunParserTest(t *testing.T, parser ResponseParser, tc TestCase) {
 			}
 		}
 	}
-	
+
 	// Test extraction
 	calls, err := parser.ExtractToolCalls(tc.Input)
-	
+
 	if tc.WantError {
 		assert.Error(t, err, "Expected error but got none")
 		return
 	}
-	
+
 	require.NoError(t, err, "Extraction failed")
 	assert.Len(t, calls, len(tc.WantCalls), "Wrong number of calls extracted")
-	
+
 	// Compare calls
 	for i, want := range tc.WantCalls {
 		if i >= len(calls) {
 			break
 		}
 		got := calls[i]
-		
+
 		if want.ID != "" {
 			assert.Equal(t, want.ID, got.ID, "ID mismatch at call %d", i)
 		}
@@ -68,7 +68,7 @@ func RunParserTest(t *testing.T, parser ResponseParser, tc TestCase) {
 			assert.Equal(t, want.Type, got.Type, "Type mismatch at call %d", i)
 		}
 		assert.Equal(t, want.Function.Name, got.Function.Name, "Function name mismatch at call %d", i)
-		
+
 		// Compare arguments if specified
 		if len(want.Function.Arguments) > 0 {
 			CompareArguments(t, want.Function.Arguments, got.Function.Arguments)
@@ -79,15 +79,15 @@ func RunParserTest(t *testing.T, parser ResponseParser, tc TestCase) {
 // CompareArguments compares JSON arguments
 func CompareArguments(t *testing.T, want, got json.RawMessage) {
 	t.Helper()
-	
+
 	var wantData, gotData interface{}
-	
+
 	err := json.Unmarshal(want, &wantData)
 	require.NoError(t, err, "Failed to unmarshal expected arguments")
-	
+
 	err = json.Unmarshal(got, &gotData)
 	require.NoError(t, err, "Failed to unmarshal actual arguments")
-	
+
 	assert.Equal(t, wantData, gotData, "Arguments mismatch")
 }
 
@@ -173,13 +173,13 @@ func (m *MockParser) DetectFormat(response string) (ProviderFormat, float64, err
 // AssertToolCallsEqual asserts that two slices of tool calls are equal
 func AssertToolCallsEqual(t *testing.T, expected, actual []ToolCall) {
 	t.Helper()
-	
+
 	require.Len(t, actual, len(expected), "Different number of tool calls")
-	
+
 	for i := range expected {
 		assert.Equal(t, expected[i].Type, actual[i].Type, "Type mismatch at index %d", i)
 		assert.Equal(t, expected[i].Function.Name, actual[i].Function.Name, "Function name mismatch at index %d", i)
-		
+
 		// Compare arguments as JSON
 		var expectedArgs, actualArgs interface{}
 		json.Unmarshal(expected[i].Function.Arguments, &expectedArgs)
@@ -196,18 +196,18 @@ func CreateTestRegistry() *prometheus.Registry {
 // Common test inputs for reuse
 var (
 	ValidJSONSingle = `{"id": "test1", "type": "function", "function": {"name": "test_func", "arguments": "{}"}}`
-	
+
 	ValidJSONMultiple = `{"tool_calls": [
 		{"id": "call1", "type": "function", "function": {"name": "func1", "arguments": "{}"}},
 		{"id": "call2", "type": "function", "function": {"name": "func2", "arguments": "{\"key\": \"value\"}"}}
 	]}`
-	
+
 	ValidXMLSingle = `<function_calls>
 		<invoke name="test_func">
 			<parameter name="arg1">value1</parameter>
 		</invoke>
 	</function_calls>`
-	
+
 	ValidXMLMultiple = `<function_calls>
 		<invoke name="func1">
 			<parameter name="arg1">value1</parameter>
@@ -216,16 +216,16 @@ var (
 			<parameter name="arg2">value2</parameter>
 		</invoke>
 	</function_calls>`
-	
+
 	InvalidJSON = `{"broken": json}`
 	InvalidXML  = `<broken>`
-	
+
 	MixedContentJSON = `Let me help you with that.
 	
 	` + ValidJSONSingle + `
 	
 	The function has been called.`
-	
+
 	MixedContentXML = `I'll process your request.
 	
 	` + ValidXMLSingle + `

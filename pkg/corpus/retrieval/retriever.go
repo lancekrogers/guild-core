@@ -100,29 +100,29 @@ func (r *RetrieverImpl) Retrieve(ctx context.Context, query Query) ([]RankedDocu
 	// Collect results from all strategies
 	allResults := make([][]Document, len(r.strategies))
 	weights := make([]float64, len(r.strategies))
-	
+
 	// Parallel retrieval
 	var wg sync.WaitGroup
 	resultsChan := make(chan strategyResult, len(r.strategies))
-	
+
 	for i, strategy := range r.strategies {
 		wg.Add(1)
 		go func(idx int, strat RetrievalStrategy) {
 			defer wg.Done()
-			
+
 			strategyCtx, cancel := context.WithCancel(ctx)
 			defer cancel()
-			
+
 			strategyLogger := logger.WithComponent(strat.Name())
 			strategyLogger.Debug("Starting strategy retrieval")
-			
+
 			results, err := strat.Retrieve(strategyCtx, query)
 			if err != nil {
 				strategyLogger.WithError(err).Warn("Strategy retrieval failed")
 				resultsChan <- strategyResult{index: idx, error: err}
 				return
 			}
-			
+
 			strategyLogger.Debug("Strategy retrieval completed", "results_count", len(results))
 			resultsChan <- strategyResult{
 				index:   idx,
@@ -131,11 +131,11 @@ func (r *RetrieverImpl) Retrieve(ctx context.Context, query Query) ([]RankedDocu
 			}
 		}(i, strategy)
 	}
-	
+
 	// Wait for all strategies to complete
 	wg.Wait()
 	close(resultsChan)
-	
+
 	// Collect results
 	for result := range resultsChan {
 		if result.error != nil {
@@ -145,23 +145,23 @@ func (r *RetrieverImpl) Retrieve(ctx context.Context, query Query) ([]RankedDocu
 		allResults[result.index] = result.results
 		weights[result.index] = result.weight
 	}
-	
+
 	// Merge and rank results
 	merged := r.mergeResults(allResults, weights)
 	logger.Debug("Results merged", "merged_count", len(merged))
-	
+
 	ranked := r.ranker.Rank(merged, query)
 	logger.Debug("Results ranked", "ranked_count", len(ranked))
-	
+
 	// Apply score threshold
 	filtered := r.filterByScore(ranked, query.MinScore)
 	logger.Debug("Results filtered by score", "filtered_count", len(filtered))
-	
+
 	// Limit results
 	if query.MaxResults > 0 && len(filtered) > query.MaxResults {
 		filtered = filtered[:query.MaxResults]
 	}
-	
+
 	// Publish retrieval event
 	if r.eventBus != nil {
 		event := Event{
@@ -177,7 +177,7 @@ func (r *RetrieverImpl) Retrieve(ctx context.Context, query Query) ([]RankedDocu
 			logger.WithError(err).Warn("Failed to publish retrieval event")
 		}
 	}
-	
+
 	logger.Info("Retrieval completed successfully", "final_count", len(filtered))
 	return filtered, nil
 }
@@ -193,12 +193,12 @@ type strategyResult struct {
 // mergeResults combines results from multiple strategies with weighted scoring
 func (r *RetrieverImpl) mergeResults(allResults [][]Document, weights []float64) []Document {
 	documentMap := make(map[string]*Document)
-	
+
 	for i, results := range allResults {
 		if results == nil {
 			continue
 		}
-		
+
 		weight := weights[i]
 		for _, doc := range results {
 			if existing, exists := documentMap[doc.ID]; exists {
@@ -219,13 +219,13 @@ func (r *RetrieverImpl) mergeResults(allResults [][]Document, weights []float64)
 			}
 		}
 	}
-	
+
 	// Convert back to slice
 	merged := make([]Document, 0, len(documentMap))
 	for _, doc := range documentMap {
 		merged = append(merged, *doc)
 	}
-	
+
 	return merged
 }
 
@@ -234,14 +234,14 @@ func (r *RetrieverImpl) filterByScore(ranked []RankedDocument, minScore float64)
 	if minScore <= 0 {
 		return ranked
 	}
-	
+
 	filtered := make([]RankedDocument, 0, len(ranked))
 	for _, doc := range ranked {
 		if doc.FinalScore >= minScore {
 			filtered = append(filtered, doc)
 		}
 	}
-	
+
 	return filtered
 }
 

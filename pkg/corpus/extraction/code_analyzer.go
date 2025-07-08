@@ -130,7 +130,7 @@ func (ca *CodeAnalyzer) analyzeCommit(ctx context.Context, commit Commit) ([]Ext
 			Confidence: 0.85, // High confidence for API changes
 			Source:     ca.buildCodeSource(commit, &change),
 			Context:    ca.buildAPIChangeContext(change),
-			Metadata:   map[string]interface{}{
+			Metadata: map[string]interface{}{
 				"api_change_type": change.Type,
 				"function":        change.Function,
 			},
@@ -149,7 +149,7 @@ func (ca *CodeAnalyzer) analyzeCommit(ctx context.Context, commit Commit) ([]Ext
 			Source:     ca.buildCodeSource(commit, fix),
 			Context:    ca.buildBugFixContext(fix),
 			Metadata: map[string]interface{}{
-				"bug_severity": fix.Severity,
+				"bug_severity":   fix.Severity,
 				"affected_files": fix.Files,
 			},
 			Timestamp: time.Now(),
@@ -202,9 +202,9 @@ func (ca *CodeAnalyzer) detectAPIChanges(ctx context.Context, analysis DiffAnaly
 func (ca *CodeAnalyzer) detectBugFix(ctx context.Context, commit Commit, analysis DiffAnalysis) *BugFix {
 	// Look for bug fix indicators in commit message
 	bugIndicators := []string{"fix", "bug", "error", "issue", "crash", "exception", "null pointer", "memory leak", "race condition"}
-	
+
 	commitMsg := strings.ToLower(commit.Message)
-	
+
 	var foundIndicators []string
 	for _, indicator := range bugIndicators {
 		if strings.Contains(commitMsg, indicator) {
@@ -218,7 +218,7 @@ func (ca *CodeAnalyzer) detectBugFix(ctx context.Context, commit Commit, analysi
 
 	// Extract problem description from commit message
 	problem := ca.extractProblemFromCommit(commit.Message)
-	
+
 	// Extract solution from the changes
 	solution := ca.extractSolutionFromAnalysis(analysis)
 
@@ -242,7 +242,7 @@ func (ca *CodeAnalyzer) detectArchitecturalDecision(ctx context.Context, commit 
 	}
 
 	commitMsg := strings.ToLower(commit.Message)
-	
+
 	var foundIndicators []string
 	for _, indicator := range architecturalIndicators {
 		if strings.Contains(commitMsg, indicator) {
@@ -251,16 +251,16 @@ func (ca *CodeAnalyzer) detectArchitecturalDecision(ctx context.Context, commit 
 	}
 
 	// Look for significant structural changes
-	hasStructuralChanges := len(analysis.ModifiedFunctions) > 5 || 
-						   len(analysis.TypeChanges) > 2 ||
-						   len(analysis.AffectedFiles) > 3
+	hasStructuralChanges := len(analysis.ModifiedFunctions) > 5 ||
+		len(analysis.TypeChanges) > 2 ||
+		len(analysis.AffectedFiles) > 3
 
 	if len(foundIndicators) == 0 && !hasStructuralChanges {
 		return nil
 	}
 
 	decision := &ArchitecturalDecision{
-		Content: ca.extractArchitecturalDecisionContent(commit.Message, analysis),
+		Content:    ca.extractArchitecturalDecisionContent(commit.Message, analysis),
 		Confidence: ca.calculateArchitecturalDecisionConfidence(foundIndicators, analysis),
 		Context: map[string]interface{}{
 			"affected_files":     len(analysis.AffectedFiles),
@@ -332,33 +332,33 @@ func (ca *CodeAnalyzer) extractProblemFromCommit(message string) string {
 
 func (ca *CodeAnalyzer) extractSolutionFromAnalysis(analysis DiffAnalysis) string {
 	var solutions []string
-	
+
 	if len(analysis.ModifiedFunctions) > 0 {
 		solutions = append(solutions, fmt.Sprintf("Modified %d functions", len(analysis.ModifiedFunctions)))
 	}
-	
+
 	if len(analysis.AddedImports) > 0 {
 		solutions = append(solutions, fmt.Sprintf("Added imports: %s", strings.Join(analysis.AddedImports, ", ")))
 	}
-	
+
 	if len(solutions) == 0 {
 		return fmt.Sprintf("Code changes across %d files", len(analysis.AffectedFiles))
 	}
-	
+
 	return strings.Join(solutions, "; ")
 }
 
 func (ca *CodeAnalyzer) determineBugSeverity(message string, indicators []string) string {
 	severityMap := map[string]string{
-		"crash":         "critical",
-		"exception":     "critical",
-		"null pointer":  "high",
-		"memory leak":   "high",
+		"crash":          "critical",
+		"exception":      "critical",
+		"null pointer":   "high",
+		"memory leak":    "high",
 		"race condition": "high",
-		"security":      "high",
-		"performance":   "medium",
-		"bug":          "medium",
-		"fix":          "medium",
+		"security":       "high",
+		"performance":    "medium",
+		"bug":            "medium",
+		"fix":            "medium",
 	}
 
 	highestSeverity := "low"
@@ -384,26 +384,26 @@ func (ca *CodeAnalyzer) determineBugSeverity(message string, indicators []string
 func (ca *CodeAnalyzer) extractArchitecturalDecisionContent(message string, analysis DiffAnalysis) string {
 	lines := strings.Split(message, "\n")
 	content := ""
-	
+
 	if len(lines) > 0 {
 		content = strings.TrimSpace(lines[0])
 	}
-	
+
 	// Add analysis summary
 	content += fmt.Sprintf("\n\nImpact: %d files, %d functions, %d type changes",
 		len(analysis.AffectedFiles),
 		len(analysis.ModifiedFunctions),
 		len(analysis.TypeChanges))
-	
+
 	return content
 }
 
 func (ca *CodeAnalyzer) calculateArchitecturalDecisionConfidence(indicators []string, analysis DiffAnalysis) float64 {
 	confidence := 0.5
-	
+
 	// Increase confidence based on indicators
 	confidence += float64(len(indicators)) * 0.1
-	
+
 	// Increase confidence based on scope of changes
 	if len(analysis.AffectedFiles) > 5 {
 		confidence += 0.2
@@ -411,12 +411,12 @@ func (ca *CodeAnalyzer) calculateArchitecturalDecisionConfidence(indicators []st
 	if len(analysis.ModifiedFunctions) > 10 {
 		confidence += 0.2
 	}
-	
+
 	// Cap confidence
 	if confidence > 0.9 {
 		confidence = 0.9
 	}
-	
+
 	return confidence
 }
 
@@ -434,21 +434,21 @@ func (ca *CodeAnalyzer) isBreakingChange(oldSig, newSig string) bool {
 	// Simple heuristic: if parameters are removed or return type changes, it's breaking
 	oldParamCount := strings.Count(oldSig, ",") + 1
 	newParamCount := strings.Count(newSig, ",") + 1
-	
+
 	if newParamCount < oldParamCount {
 		return true
 	}
-	
+
 	// Check if return type changed (simplified)
 	oldReturnStart := strings.LastIndex(oldSig, ") ")
 	newReturnStart := strings.LastIndex(newSig, ") ")
-	
+
 	if oldReturnStart > 0 && newReturnStart > 0 {
 		oldReturn := oldSig[oldReturnStart:]
 		newReturn := newSig[newReturnStart:]
 		return oldReturn != newReturn
 	}
-	
+
 	return false
 }
 
@@ -461,11 +461,11 @@ func (ca *CodeAnalyzer) buildCodeSource(commit Commit, item interface{}) Source 
 		Files:     commit.Files,
 		Timestamp: commit.Timestamp,
 	}
-	
+
 	if commit.Author != "" {
 		source.Participants = []string{commit.Author}
 	}
-	
+
 	return source
 }
 
@@ -479,9 +479,9 @@ func (ca *CodeAnalyzer) buildPatternContext(pattern *RefactoringPattern) map[str
 
 func (ca *CodeAnalyzer) buildAPIChangeContext(change APIChange) map[string]interface{} {
 	return map[string]interface{}{
-		"change_type":     change.Type,
-		"function_name":   change.Function,
-		"is_breaking":     change.Type == "breaking",
+		"change_type":       change.Type,
+		"function_name":     change.Function,
+		"is_breaking":       change.Type == "breaking",
 		"signature_changed": change.OldSig != change.NewSig,
 	}
 }
@@ -501,7 +501,7 @@ func (ca *CodeAnalyzer) generateKnowledgeID(prefix string) string {
 // ArchitecturalDecision represents a detected architectural decision
 type ArchitecturalDecision struct {
 	Content    string                 `json:"content"`
-	Confidence float64               `json:"confidence"`
+	Confidence float64                `json:"confidence"`
 	Context    map[string]interface{} `json:"context"`
 	Metadata   map[string]interface{} `json:"metadata"`
 }

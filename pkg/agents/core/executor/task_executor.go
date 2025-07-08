@@ -24,11 +24,11 @@ import (
 
 // BasicTaskExecutor implements the TaskExecutor interface
 type BasicTaskExecutor struct {
-	agent            core.Agent
-	kanbanBoard      *kanban.Board
-	toolRegistry     *tools.ToolRegistry
-	execContext      *ExecutionContext
-	promptBuilder    *execution.CachedPromptBuilder
+	agent           core.Agent
+	kanbanBoard     *kanban.Board
+	toolRegistry    *tools.ToolRegistry
+	execContext     *ExecutionContext
+	promptBuilder   *execution.CachedPromptBuilder
 	worktreeManager worktree.Manager
 	currentWorktree *worktree.Worktree
 
@@ -83,15 +83,15 @@ func NewBasicTaskExecutor(
 	}
 
 	executor := &BasicTaskExecutor{
-		agent:            agent,
-		kanbanBoard:      kanbanBoard,
-		toolRegistry:     toolRegistry,
-		execContext:      execContext,
-		promptBuilder:    promptBuilder,
+		agent:           agent,
+		kanbanBoard:     kanbanBoard,
+		toolRegistry:    toolRegistry,
+		execContext:     execContext,
+		promptBuilder:   promptBuilder,
 		worktreeManager: worktreeManager,
-		status:           StatusInitializing,
-		progress:         0.0,
-		stopChan:         make(chan struct{}),
+		status:          StatusInitializing,
+		progress:        0.0,
+		stopChan:        make(chan struct{}),
 	}
 
 	logger.Info("Task executor created successfully",
@@ -769,22 +769,22 @@ func (e *BasicTaskExecutor) phaseFinalize(ctx context.Context) error {
 				logger := observability.GetLogger(ctx).
 					WithComponent("executor").
 					WithOperation("phaseFinalize")
-				
+
 				logger.WithError(err).Warn("Failed to sync worktree changes",
 					"worktree_id", e.currentWorktree.ID,
 					"agent_id", e.agent.GetID(),
 				)
-				
+
 				e.addExecutionLog("Failed to sync worktree changes", map[string]interface{}{
-					"error": err.Error(),
+					"error":       err.Error(),
 					"worktree_id": e.currentWorktree.ID,
 				})
 			} else {
 				e.addExecutionLog("Synced worktree changes", map[string]interface{}{
 					"worktree_id": e.currentWorktree.ID,
-					"ahead": syncResult.Divergence.Ahead,
-					"behind": syncResult.Divergence.Behind,
-					"success": syncResult.Success,
+					"ahead":       syncResult.Divergence.Ahead,
+					"behind":      syncResult.Divergence.Behind,
+					"success":     syncResult.Success,
 				})
 			}
 		}

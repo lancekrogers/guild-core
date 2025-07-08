@@ -17,15 +17,15 @@ import (
 func BenchmarkShortcutManager_HandleKeyPress(b *testing.B) {
 	sm := NewShortcutManagerWithLogger(zap.NewNop())
 	ctx := context.Background()
-	
+
 	keys := []string{
 		"ctrl+shift+p", "ctrl+p", "ctrl+1", "ctrl+2", "ctrl+3",
 		"ctrl+n", "ctrl+f", "esc", "ctrl+shift+d",
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		key := keys[i%len(keys)]
 		cmd := sm.HandleKeyPress(ctx, key)
@@ -37,10 +37,10 @@ func BenchmarkShortcutManager_HandleKeyPress(b *testing.B) {
 func BenchmarkShortcutManager_RegisterShortcut(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		sm := NewShortcutManagerWithLogger(zap.NewNop())
-		
+
 		shortcut := &Shortcut{
 			ID:          "benchmark_shortcut",
 			Key:         "ctrl+b",
@@ -49,7 +49,7 @@ func BenchmarkShortcutManager_RegisterShortcut(b *testing.B) {
 			Handler:     func(ctx context.Context) tea.Cmd { return nil },
 			Enabled:     true,
 		}
-		
+
 		err := sm.RegisterShortcut(shortcut)
 		if err != nil {
 			b.Fatal(err)
@@ -61,15 +61,15 @@ func BenchmarkShortcutManager_RegisterShortcut(b *testing.B) {
 // Target: <50ms for search operations
 func BenchmarkCommandPalette_FilterCommands(b *testing.B) {
 	palette := NewCommandPalette()
-	
+
 	queries := []string{
 		"commission", "agent", "shortcut", "theme", "debug",
 		"performance", "chat", "kanban", "help", "search",
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		query := queries[i%len(queries)]
 		palette.filterCommands(query)
@@ -79,10 +79,10 @@ func BenchmarkCommandPalette_FilterCommands(b *testing.B) {
 // BenchmarkCommandPalette_Navigation benchmarks command palette navigation
 func BenchmarkCommandPalette_Navigation(b *testing.B) {
 	palette := NewCommandPalette()
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		switch i % 4 {
 		case 0:
@@ -101,12 +101,12 @@ func BenchmarkCommandPalette_Navigation(b *testing.B) {
 func BenchmarkShortcutManager_SetContext(b *testing.B) {
 	sm := NewShortcutManagerWithLogger(zap.NewNop())
 	ctx := context.Background()
-	
+
 	contexts := []string{"global", "chat", "kanban", "modal", "search"}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		contextName := contexts[i%len(contexts)]
 		err := sm.SetContext(ctx, contextName)
@@ -119,14 +119,14 @@ func BenchmarkShortcutManager_SetContext(b *testing.B) {
 // BenchmarkShortcutManager_ThreadSafety benchmarks concurrent shortcut operations
 func BenchmarkShortcutManager_ThreadSafety(b *testing.B) {
 	sm := NewShortcutManagerWithLogger(zap.NewNop())
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	b.RunParallel(func(pb *testing.PB) {
 		ctx := context.Background()
 		i := 0
-		
+
 		for pb.Next() {
 			switch i % 5 {
 			case 0:
@@ -148,15 +148,15 @@ func BenchmarkShortcutManager_ThreadSafety(b *testing.B) {
 // BenchmarkKeyNormalization benchmarks key combination normalization
 func BenchmarkKeyNormalization(b *testing.B) {
 	sm := NewShortcutManagerWithLogger(zap.NewNop())
-	
+
 	keys := []string{
 		"CTRL+SHIFT+P", "ctrl+alt+d", "command+k", "option+cmd+r",
 		"control+shift+alt+x", "shift+ctrl+alt+y", "CMD+OPTION+Z",
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		key := keys[i%len(keys)]
 		normalized := sm.normalizeKey(key)
@@ -168,59 +168,59 @@ func BenchmarkKeyNormalization(b *testing.B) {
 func TestShortcutPerformanceThresholds(t *testing.T) {
 	sm := NewShortcutManagerWithLogger(zap.NewNop())
 	ctx := context.Background()
-	
+
 	t.Run("KeyHandlingThreshold", func(t *testing.T) {
 		threshold := 10 * time.Millisecond
-		
+
 		start := time.Now()
 		cmd := sm.HandleKeyPress(ctx, "ctrl+shift+p")
 		duration := time.Since(start)
-		
+
 		_ = cmd // Prevent optimization
-		
+
 		if duration > threshold {
 			t.Errorf("Key handling took %v, exceeds threshold of %v", duration, threshold)
 		}
-		
+
 		t.Logf("Key handling completed in %v", duration)
 	})
-	
+
 	t.Run("SearchOperationThreshold", func(t *testing.T) {
 		palette := NewCommandPalette()
 		threshold := 50 * time.Millisecond
-		
+
 		start := time.Now()
 		palette.filterCommands("comprehensive search query with multiple terms")
 		duration := time.Since(start)
-		
+
 		if duration > threshold {
 			t.Errorf("Search operation took %v, exceeds threshold of %v", duration, threshold)
 		}
-		
+
 		t.Logf("Search operation completed in %v", duration)
 	})
-	
+
 	t.Run("ContextSwitchingThreshold", func(t *testing.T) {
 		threshold := 5 * time.Millisecond
-		
+
 		start := time.Now()
 		err := sm.SetContext(ctx, "chat")
 		duration := time.Since(start)
-		
+
 		if err != nil {
 			t.Fatal(err)
 		}
-		
+
 		if duration > threshold {
 			t.Errorf("Context switching took %v, exceeds threshold of %v", duration, threshold)
 		}
-		
+
 		t.Logf("Context switching completed in %v", duration)
 	})
-	
+
 	t.Run("ShortcutRegistrationThreshold", func(t *testing.T) {
 		threshold := 5 * time.Millisecond
-		
+
 		shortcut := &Shortcut{
 			ID:          "performance_test",
 			Key:         "ctrl+t",
@@ -229,19 +229,19 @@ func TestShortcutPerformanceThresholds(t *testing.T) {
 			Handler:     func(ctx context.Context) tea.Cmd { return nil },
 			Enabled:     true,
 		}
-		
+
 		start := time.Now()
 		err := sm.RegisterShortcut(shortcut)
 		duration := time.Since(start)
-		
+
 		if err != nil {
 			t.Fatal(err)
 		}
-		
+
 		if duration > threshold {
 			t.Errorf("Shortcut registration took %v, exceeds threshold of %v", duration, threshold)
 		}
-		
+
 		t.Logf("Shortcut registration completed in %v", duration)
 	})
 }
@@ -250,11 +250,11 @@ func TestShortcutPerformanceThresholds(t *testing.T) {
 func BenchmarkMemoryUsage(b *testing.B) {
 	b.Run("ShortcutManagerMemory", func(b *testing.B) {
 		b.ReportAllocs()
-		
+
 		for i := 0; i < b.N; i++ {
 			sm := NewShortcutManagerWithLogger(zap.NewNop())
 			ctx := context.Background()
-			
+
 			// Register multiple shortcuts to test memory usage
 			for j := 0; j < 20; j++ {
 				shortcut := &Shortcut{
@@ -266,26 +266,26 @@ func BenchmarkMemoryUsage(b *testing.B) {
 				}
 				sm.RegisterShortcut(shortcut)
 			}
-			
+
 			// Perform operations to test memory efficiency
 			sm.HandleKeyPress(ctx, "ctrl+a")
 			sm.SetContext(ctx, "chat")
 			sm.ListShortcuts()
 		}
 	})
-	
+
 	b.Run("CommandPaletteMemory", func(b *testing.B) {
 		b.ReportAllocs()
-		
+
 		for i := 0; i < b.N; i++ {
 			palette := NewCommandPalette()
-			
+
 			// Test memory usage during filtering operations
 			queries := []string{"commission", "agent", "debug", "performance", "search"}
 			for _, query := range queries {
 				palette.filterCommands(query)
 			}
-			
+
 			// Test navigation memory usage
 			for j := 0; j < 10; j++ {
 				palette.SelectNext()
@@ -293,14 +293,14 @@ func BenchmarkMemoryUsage(b *testing.B) {
 			}
 		}
 	})
-	
+
 	b.Run("ShortcutCachingMemory", func(b *testing.B) {
 		sm := NewShortcutManagerWithLogger(zap.NewNop())
 		ctx := context.Background()
-		
+
 		b.ReportAllocs()
 		b.ResetTimer()
-		
+
 		// Test that repeated operations don't cause memory leaks
 		for i := 0; i < b.N; i++ {
 			key := "ctrl+" + string(rune('a'+(i%26))) // Cycle through 26 keys

@@ -14,10 +14,10 @@ import (
 
 // DashboardServer provides HTTP endpoints for parser monitoring
 type DashboardServer struct {
-	parser   *MonitoredParser
-	mux      *http.ServeMux
-	server   *http.Server
-	
+	parser *MonitoredParser
+	mux    *http.ServeMux
+	server *http.Server
+
 	// WebSocket connections for live updates
 	mu          sync.RWMutex
 	connections map[string]*websocketConn
@@ -35,10 +35,10 @@ func NewDashboardServer(parser *MonitoredParser, addr string) *DashboardServer {
 		mux:         http.NewServeMux(),
 		connections: make(map[string]*websocketConn),
 	}
-	
+
 	// Set up routes
 	ds.setupRoutes()
-	
+
 	// Create HTTP server
 	ds.server = &http.Server{
 		Addr:         addr,
@@ -47,7 +47,7 @@ func NewDashboardServer(parser *MonitoredParser, addr string) *DashboardServer {
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
 	}
-	
+
 	return ds
 }
 
@@ -57,15 +57,15 @@ func (ds *DashboardServer) setupRoutes() {
 	ds.mux.HandleFunc("/health", ds.handleHealth)
 	ds.mux.HandleFunc("/health/live", ds.handleLiveness)
 	ds.mux.HandleFunc("/health/ready", ds.handleReadiness)
-	
+
 	// Metrics endpoints
 	ds.mux.Handle("/metrics", promhttp.Handler())
 	ds.mux.HandleFunc("/metrics/summary", ds.handleMetricsSummary)
-	
+
 	// Alert endpoints
 	ds.mux.HandleFunc("/alerts", ds.handleAlerts)
 	ds.mux.HandleFunc("/alerts/active", ds.handleActiveAlerts)
-	
+
 	// Dashboard UI
 	ds.mux.HandleFunc("/", ds.handleDashboard)
 	ds.mux.HandleFunc("/api/stats", ds.handleStats)
@@ -75,7 +75,7 @@ func (ds *DashboardServer) setupRoutes() {
 // handleHealth returns comprehensive health check
 func (ds *DashboardServer) handleHealth(w http.ResponseWriter, r *http.Request) {
 	health := ds.parser.GetHealth()
-	
+
 	// Set status code based on health
 	statusCode := http.StatusOK
 	switch health.Status {
@@ -84,7 +84,7 @@ func (ds *DashboardServer) handleHealth(w http.ResponseWriter, r *http.Request) 
 	case HealthStatusUnhealthy:
 		statusCode = http.StatusServiceUnavailable
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(health)
@@ -100,13 +100,13 @@ func (ds *DashboardServer) handleLiveness(w http.ResponseWriter, r *http.Request
 // handleReadiness checks if the service is ready to handle requests
 func (ds *DashboardServer) handleReadiness(w http.ResponseWriter, r *http.Request) {
 	health := ds.parser.GetHealth()
-	
+
 	if health.Status == HealthStatusUnhealthy {
 		w.WriteHeader(http.StatusServiceUnavailable)
 		w.Write([]byte("Not Ready"))
 		return
 	}
-	
+
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Ready"))
 }
@@ -114,14 +114,14 @@ func (ds *DashboardServer) handleReadiness(w http.ResponseWriter, r *http.Reques
 // handleMetricsSummary returns a summary of key metrics
 func (ds *DashboardServer) handleMetricsSummary(w http.ResponseWriter, r *http.Request) {
 	health := ds.parser.GetHealth()
-	
+
 	summary := map[string]interface{}{
 		"timestamp": time.Now(),
 		"uptime":    health.Uptime.String(),
 		"metrics":   health.Metrics,
 		"status":    health.Status,
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(summary)
 }
@@ -129,7 +129,7 @@ func (ds *DashboardServer) handleMetricsSummary(w http.ResponseWriter, r *http.R
 // handleAlerts returns all alerts
 func (ds *DashboardServer) handleAlerts(w http.ResponseWriter, r *http.Request) {
 	alerts := ds.parser.alertManager.GetAllAlerts()
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(alerts)
 }
@@ -137,7 +137,7 @@ func (ds *DashboardServer) handleAlerts(w http.ResponseWriter, r *http.Request) 
 // handleActiveAlerts returns only active alerts
 func (ds *DashboardServer) handleActiveAlerts(w http.ResponseWriter, r *http.Request) {
 	alerts := ds.parser.GetAlerts()
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(alerts)
 }
@@ -145,7 +145,7 @@ func (ds *DashboardServer) handleActiveAlerts(w http.ResponseWriter, r *http.Req
 // handleStats returns real-time statistics
 func (ds *DashboardServer) handleStats(w http.ResponseWriter, r *http.Request) {
 	health := ds.parser.GetHealth()
-	
+
 	stats := map[string]interface{}{
 		"timestamp":       time.Now(),
 		"parse_rate":      health.Metrics.ParseRate,
@@ -158,7 +158,7 @@ func (ds *DashboardServer) handleStats(w http.ResponseWriter, r *http.Request) {
 		"total_successes": health.Metrics.TotalSuccesses,
 		"total_failures":  health.Metrics.TotalFailures,
 	}
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(stats)
 }
@@ -166,7 +166,7 @@ func (ds *DashboardServer) handleStats(w http.ResponseWriter, r *http.Request) {
 // handleFormats returns format distribution
 func (ds *DashboardServer) handleFormats(w http.ResponseWriter, r *http.Request) {
 	health := ds.parser.GetHealth()
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(health.Metrics.FormatDistribution)
 }
@@ -368,15 +368,15 @@ const dashboardHTML = `
 func CreateFullyInstrumentedParser(version string) (*MonitoredParser, *DashboardServer) {
 	// Create base parser
 	baseParser := NewResponseParser()
-	
+
 	// Add tracing and metrics
 	instrumentedParser := InstrumentParser(baseParser)
-	
+
 	// Add monitoring and alerting
 	monitoredParser := NewMonitoredParser(instrumentedParser, version)
-	
+
 	// Create dashboard
 	dashboardServer := NewDashboardServer(monitoredParser, ":8080")
-	
+
 	return monitoredParser, dashboardServer
 }

@@ -55,7 +55,7 @@ func TestGuildMergeCoordinatorNilManager(t *testing.T) {
 // TestScribeMergePlanCreation tests merge plan creation
 func TestScribeMergePlanCreation(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Create test worktrees
 	worktrees := []*Worktree{
 		{
@@ -203,11 +203,11 @@ func TestCraftSequentialMergeStrategy(t *testing.T) {
 	// Test ordering (should be by complexity/age)
 	ordered := strategy.orderWorktrees(ctx, worktrees)
 	assert.Len(t, ordered, 2)
-	
+
 	// Test complexity calculation
 	score1 := strategy.calculateComplexityScore(ctx, worktrees[0])
 	score2 := strategy.calculateComplexityScore(ctx, worktrees[1])
-	
+
 	// Older worktree should have higher complexity score
 	assert.Greater(t, score2, score1)
 
@@ -473,7 +473,7 @@ func BenchmarkCircularDependencyDetection(b *testing.B) {
 	coordinator := &MergeCoordinator{}
 
 	plan := &MergePlan{
-		Order: make([]MergeStep, 20),
+		Order:     make([]MergeStep, 20),
 		Worktrees: make([]*Worktree, 20),
 	}
 

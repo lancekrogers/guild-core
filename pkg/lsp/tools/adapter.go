@@ -49,6 +49,11 @@ func (a *registryAdapter) Examples() []string {
 	return a.tool.Examples()
 }
 
+// HealthCheck verifies the tool is functional
+func (a *registryAdapter) HealthCheck() error {
+	return a.tool.HealthCheck()
+}
+
 // Category returns the category of the tool
 func (a *registryAdapter) Category() string {
 	return a.tool.Category()

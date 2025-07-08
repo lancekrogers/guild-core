@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/bubbles/key"
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 // KeyBindings defines all keyboard shortcuts for Guild Chat
@@ -76,20 +76,20 @@ type KeyBindings struct {
 	ReconnectDaemon key.Binding
 
 	// Chord shortcuts
-	ChordPrefix    key.Binding
-	MentionElena   key.Binding
-	MentionMarcus  key.Binding
-	MentionVera    key.Binding
-	MentionAll     key.Binding
-	
+	ChordPrefix   key.Binding
+	MentionElena  key.Binding
+	MentionMarcus key.Binding
+	MentionVera   key.Binding
+	MentionAll    key.Binding
+
 	// View shortcuts
 	ViewChat   key.Binding
 	ViewKanban key.Binding
 	ViewCorpus key.Binding
-	
+
 	// Quick actions
-	SaveSession  key.Binding
-	UndoMessage  key.Binding
+	SaveSession key.Binding
+	UndoMessage key.Binding
 }
 
 // NewKeyBindings creates the default key bindings for Guild Chat
@@ -300,7 +300,7 @@ func NewKeyBindings() *KeyBindings {
 			key.WithKeys("a"),
 			key.WithHelp("@a", "mention all agents"),
 		),
-		
+
 		// View shortcuts
 		ViewChat: key.NewBinding(
 			key.WithKeys("ctrl+1"),
@@ -314,7 +314,7 @@ func NewKeyBindings() *KeyBindings {
 			key.WithKeys("ctrl+3"),
 			key.WithHelp("ctrl+3", "corpus view"),
 		),
-		
+
 		// Quick actions
 		SaveSession: key.NewBinding(
 			key.WithKeys("ctrl+s"),
@@ -609,10 +609,10 @@ func NewChordManager() *ChordManager {
 		chordTimeout:  2 * time.Second,
 		chordBindings: make(map[string]func() tea.Cmd),
 	}
-	
+
 	// Register default chord bindings
 	cm.RegisterChordBindings()
-	
+
 	return cm
 }
 
@@ -639,7 +639,7 @@ func (cm *ChordManager) RegisterChordBindings() {
 			return InsertTextMsg{Text: "@all "}
 		}
 	}
-	
+
 	// Window management chords
 	cm.chordBindings["gw"] = func() tea.Cmd {
 		return func() tea.Msg {
@@ -656,21 +656,21 @@ func (cm *ChordManager) RegisterChordBindings() {
 // HandleKey processes a key press for chord sequences
 func (cm *ChordManager) HandleKey(key string) (tea.Cmd, bool) {
 	now := time.Now()
-	
+
 	// Check if chord has timed out
 	if cm.activeChord != "" && now.Sub(cm.lastKeyTime) > cm.chordTimeout {
 		cm.activeChord = ""
 	}
-	
+
 	// Build potential chord
 	potentialChord := cm.activeChord + key
-	
+
 	// Check if this completes a chord
 	if action, exists := cm.chordBindings[potentialChord]; exists {
 		cm.activeChord = ""
 		return action(), true
 	}
-	
+
 	// Check if this could be the start of a chord
 	for chord := range cm.chordBindings {
 		if strings.HasPrefix(chord, potentialChord) {
@@ -679,7 +679,7 @@ func (cm *ChordManager) HandleKey(key string) (tea.Cmd, bool) {
 			return ShowChordPromptCmd(potentialChord), true
 		}
 	}
-	
+
 	// Not a chord
 	cm.activeChord = ""
 	return nil, false

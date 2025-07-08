@@ -1941,12 +1941,12 @@ func (app *App) isConnectedToDaemon() bool {
 	if !app.connectionStatus || app.directMode {
 		return false
 	}
-	
+
 	// If we have a connection manager, check its status
 	if app.connManager != nil {
 		return app.connManager.IsConnected()
 	}
-	
+
 	// Otherwise, check if we have gRPC connection
 	return app.grpcConn != nil
 }

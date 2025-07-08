@@ -16,54 +16,54 @@ import (
 type SyncDirection string
 
 const (
-	SyncFromFiles      SyncDirection = "from_files"      // Filesystem → Database
-	SyncToFiles        SyncDirection = "to_files"        // Database → Filesystem
-	SyncBidirectional  SyncDirection = "bidirectional"   // Two-way sync
+	SyncFromFiles     SyncDirection = "from_files"    // Filesystem → Database
+	SyncToFiles       SyncDirection = "to_files"      // Database → Filesystem
+	SyncBidirectional SyncDirection = "bidirectional" // Two-way sync
 )
 
 // ConflictStrategy defines how to handle conflicts during sync
 type ConflictStrategy string
 
 const (
-	ConflictStrategyNewest    ConflictStrategy = "newest"    // Keep newest version
-	ConflictStrategyOldest    ConflictStrategy = "oldest"    // Keep oldest version
-	ConflictStrategyFilesWin  ConflictStrategy = "files_win" // Filesystem takes precedence
-	ConflictStrategyDBWins    ConflictStrategy = "db_wins"   // Database takes precedence
-	ConflictStrategyManual    ConflictStrategy = "manual"    // Require manual resolution
+	ConflictStrategyNewest   ConflictStrategy = "newest"    // Keep newest version
+	ConflictStrategyOldest   ConflictStrategy = "oldest"    // Keep oldest version
+	ConflictStrategyFilesWin ConflictStrategy = "files_win" // Filesystem takes precedence
+	ConflictStrategyDBWins   ConflictStrategy = "db_wins"   // Database takes precedence
+	ConflictStrategyManual   ConflictStrategy = "manual"    // Require manual resolution
 )
 
 // SyncStatus represents the synchronization status of a document
 type SyncStatus string
 
 const (
-	SyncStatusSynced     SyncStatus = "synced"
-	SyncStatusPending    SyncStatus = "pending"
-	SyncStatusConflict   SyncStatus = "conflict"
-	SyncStatusError      SyncStatus = "error"
+	SyncStatusSynced   SyncStatus = "synced"
+	SyncStatusPending  SyncStatus = "pending"
+	SyncStatusConflict SyncStatus = "conflict"
+	SyncStatusError    SyncStatus = "error"
 )
 
 // SyncState tracks the state of a document for synchronization
 type SyncState struct {
-	DocumentID       string
-	FilePath         string
-	FileChecksum     string
-	FileModified     time.Time
-	DBChecksum       string
-	DBModified       time.Time
-	LastSyncedAt     time.Time
-	Status           SyncStatus
-	ConflictDetails  string
+	DocumentID      string
+	FilePath        string
+	FileChecksum    string
+	FileModified    time.Time
+	DBChecksum      string
+	DBModified      time.Time
+	LastSyncedAt    time.Time
+	Status          SyncStatus
+	ConflictDetails string
 }
 
 // SyncResult contains the result of a sync operation
 type SyncResult struct {
-	DocumentsScanned   int
-	DocumentsSynced    int
-	DocumentsSkipped   int
-	DocumentsErrored   int
-	Conflicts          []SyncConflict
-	Errors             []error
-	Duration           time.Duration
+	DocumentsScanned int
+	DocumentsSynced  int
+	DocumentsSkipped int
+	DocumentsErrored int
+	Conflicts        []SyncConflict
+	Errors           []error
+	Duration         time.Duration
 }
 
 // SyncConflict represents a synchronization conflict
@@ -95,26 +95,26 @@ type SyncManager struct {
 	conflictStrategy ConflictStrategy
 	batchSize        int
 	maxRetries       int
-	
+
 	// Sync state tracking
-	syncStates       map[string]*SyncState
-	mu               sync.RWMutex
-	
+	syncStates map[string]*SyncState
+	mu         sync.RWMutex
+
 	// Error queue for retries
-	errorQueue       []SyncError
-	errorMu          sync.Mutex
-	
+	errorQueue []SyncError
+	errorMu    sync.Mutex
+
 	// Sync control
-	syncInProgress   bool
-	cancelFunc       context.CancelFunc
+	syncInProgress bool
+	cancelFunc     context.CancelFunc
 }
 
 // SyncError represents an error that can be retried
 type SyncError struct {
-	DocumentID string
-	Operation  string
-	Error      error
-	Attempts   int
+	DocumentID  string
+	Operation   string
+	Error       error
+	Attempts    int
 	LastAttempt time.Time
 }
 
@@ -457,14 +457,14 @@ func (sm *SyncManager) updateSyncState(docID, filePath, fileChecksum string, fil
 	defer sm.mu.Unlock()
 
 	sm.syncStates[docID] = &SyncState{
-		DocumentID:    docID,
-		FilePath:      filePath,
-		FileChecksum:  fileChecksum,
-		FileModified:  fileModified,
-		DBChecksum:    dbChecksum,
-		DBModified:    dbModified,
-		LastSyncedAt:  time.Now(),
-		Status:        SyncStatusSynced,
+		DocumentID:   docID,
+		FilePath:     filePath,
+		FileChecksum: fileChecksum,
+		FileModified: fileModified,
+		DBChecksum:   dbChecksum,
+		DBModified:   dbModified,
+		LastSyncedAt: time.Now(),
+		Status:       SyncStatusSynced,
 	}
 }
 
@@ -492,8 +492,8 @@ func (sm *SyncManager) processErrorQueue(ctx context.Context, result *SyncResult
 
 	for _, syncErr := range queue {
 		if syncErr.Attempts >= sm.maxRetries {
-			result.Errors = append(result.Errors, 
-				gerror.Wrapf(syncErr.Error, gerror.ErrCodeInternal, 
+			result.Errors = append(result.Errors,
+				gerror.Wrapf(syncErr.Error, gerror.ErrCodeInternal,
 					"failed after %d attempts", syncErr.Attempts).
 					WithComponent("corpus.sync").
 					WithOperation("processErrorQueue").
@@ -576,11 +576,11 @@ func (sm *SyncManager) GetSyncStatus(ctx context.Context) (map[string]interface{
 	sm.mu.RUnlock()
 
 	return map[string]interface{}{
-		"in_progress":    inProgress,
-		"total_documents": stateCount,
-		"error_queue":    errorCount,
-		"status_counts":  statusCounts,
-		"direction":      string(sm.direction),
+		"in_progress":       inProgress,
+		"total_documents":   stateCount,
+		"error_queue":       errorCount,
+		"status_counts":     statusCounts,
+		"direction":         string(sm.direction),
 		"conflict_strategy": string(sm.conflictStrategy),
 	}, nil
 }

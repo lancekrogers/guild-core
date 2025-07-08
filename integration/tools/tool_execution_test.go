@@ -52,7 +52,7 @@ func NewMockTool() *MockTool {
 
 func (t *MockTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	t.executeCalls = append(t.executeCalls, input)
-	
+
 	var params map[string]interface{}
 	if err := json.Unmarshal([]byte(input), &params); err != nil {
 		return &tools.ToolResult{
@@ -109,8 +109,8 @@ func TestResponseParserIntegration(t *testing.T) {
 
 	// Test parsing various response formats
 	testCases := []struct {
-		name     string
-		response string
+		name      string
+		response  string
 		wantCalls int
 	}{
 		{
@@ -149,7 +149,7 @@ func TestResponseParserIntegration(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			calls, err := responseParser.ExtractToolCalls(tc.response)
 			require.NoError(t, err)
-			
+
 			if tc.wantCalls == 0 {
 				assert.Nil(t, calls)
 			} else {
@@ -162,10 +162,10 @@ func TestResponseParserIntegration(t *testing.T) {
 
 func TestAnthropicProviderToolSupport(t *testing.T) {
 	t.Skip("Requires API key - enable for integration testing")
-	
+
 	// This test demonstrates how the Anthropic provider would handle tools
 	client := anthropic.NewClient("")
-	
+
 	// Check capabilities
 	caps := client.GetCapabilities()
 	assert.True(t, caps.SupportsTools)
@@ -210,12 +210,12 @@ func TestAnthropicProviderToolSupport(t *testing.T) {
 
 	resp, err := client.ChatCompletionWithTools(ctx, req)
 	require.NoError(t, err)
-	
+
 	// Check if tool was called
 	assert.NotEmpty(t, resp.Choices)
 	if len(resp.ToolCalls) > 0 {
 		assert.Equal(t, "get_weather", resp.ToolCalls[0].Function.Name)
-		
+
 		// Verify arguments
 		var args map[string]interface{}
 		err = json.Unmarshal(resp.ToolCalls[0].Function.Arguments, &args)
@@ -227,7 +227,7 @@ func TestAnthropicProviderToolSupport(t *testing.T) {
 func TestToolExecutorBatch(t *testing.T) {
 	// Create registry with multiple tools
 	registry := tools.NewToolRegistry()
-	
+
 	tool1 := NewMockTool()
 	tool1.BaseTool = tools.NewBaseTool(
 		"tool1",
@@ -237,7 +237,7 @@ func TestToolExecutorBatch(t *testing.T) {
 		false,
 		nil,
 	)
-	
+
 	tool2 := NewMockTool()
 	tool2.BaseTool = tools.NewBaseTool(
 		"tool2",
@@ -247,7 +247,7 @@ func TestToolExecutorBatch(t *testing.T) {
 		false,
 		nil,
 	)
-	
+
 	registry.RegisterTool(tool1)
 	registry.RegisterTool(tool2)
 
@@ -276,11 +276,11 @@ func TestToolExecutorBatch(t *testing.T) {
 	results, err := toolExec.ExecuteBatch(context.Background(), calls)
 	require.NoError(t, err)
 	assert.Len(t, results, 2)
-	
+
 	assert.Equal(t, "call1", results[0].ID)
 	assert.True(t, results[0].Success)
 	assert.Equal(t, "Mock response: First", results[0].Content)
-	
+
 	assert.Equal(t, "call2", results[1].ID)
 	assert.True(t, results[1].Success)
 	assert.Equal(t, "Mock response: Second", results[1].Content)

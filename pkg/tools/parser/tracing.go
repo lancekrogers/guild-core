@@ -303,9 +303,9 @@ func (t *TracedFormatParser) Validate(input []byte) ValidationResult {
 func InstrumentParser(parser ResponseParser) ResponseParser {
 	// Add tracing first
 	traced := NewTracedParser(parser)
-	
+
 	// Then add metrics
 	observable := NewObservableParser(traced)
-	
+
 	return observable
 }

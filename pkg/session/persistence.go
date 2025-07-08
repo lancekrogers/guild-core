@@ -33,26 +33,26 @@ type SessionManager struct {
 
 // Session represents a complete chat session with state
 type Session struct {
-	ID              string          `json:"id"`
-	UserID          string          `json:"user_id"`
-	CampaignID      string          `json:"campaign_id"`
-	StartTime       time.Time       `json:"start_time"`
-	LastActiveTime  time.Time       `json:"last_active_time"`
-	State           SessionState    `json:"state"`
-	Messages        []Message       `json:"messages"`
-	Context         SessionContext  `json:"context"`
-	Metadata        map[string]interface{} `json:"metadata"`
+	ID             string                 `json:"id"`
+	UserID         string                 `json:"user_id"`
+	CampaignID     string                 `json:"campaign_id"`
+	StartTime      time.Time              `json:"start_time"`
+	LastActiveTime time.Time              `json:"last_active_time"`
+	State          SessionState           `json:"state"`
+	Messages       []Message              `json:"messages"`
+	Context        SessionContext         `json:"context"`
+	Metadata       map[string]interface{} `json:"metadata"`
 }
 
 // SessionState captures the complete UI and agent state
 type SessionState struct {
-	ActiveAgents    map[string]AgentState `json:"active_agents"`
-	CurrentView     string               `json:"current_view"`
-	ScrollPosition  int                  `json:"scroll_position"`
-	InputBuffer     string               `json:"input_buffer"`
-	CommandHistory  []string             `json:"command_history"`
-	Variables       map[string]interface{} `json:"variables"`
-	Status          SessionStatus        `json:"status"`
+	ActiveAgents   map[string]AgentState  `json:"active_agents"`
+	CurrentView    string                 `json:"current_view"`
+	ScrollPosition int                    `json:"scroll_position"`
+	InputBuffer    string                 `json:"input_buffer"`
+	CommandHistory []string               `json:"command_history"`
+	Variables      map[string]interface{} `json:"variables"`
+	Status         SessionStatus          `json:"status"`
 }
 
 // SessionStatus represents the current session state
@@ -85,13 +85,13 @@ type SessionContext struct {
 
 // Message represents a chat message
 type Message struct {
-	ID        string                 `json:"id"`
-	Agent     string                 `json:"agent"`
-	Content   string                 `json:"content"`
-	Timestamp time.Time              `json:"timestamp"`
-	Type      MessageType            `json:"type"`
-	Metadata  map[string]interface{} `json:"metadata"`
-	Attachments []Attachment         `json:"attachments,omitempty"`
+	ID          string                 `json:"id"`
+	Agent       string                 `json:"agent"`
+	Content     string                 `json:"content"`
+	Timestamp   time.Time              `json:"timestamp"`
+	Type        MessageType            `json:"type"`
+	Metadata    map[string]interface{} `json:"metadata"`
+	Attachments []Attachment           `json:"attachments,omitempty"`
 }
 
 // MessageType represents the type of message
@@ -216,11 +216,11 @@ func (sm *SessionManager) SaveSession(ctx context.Context, session *Session) err
 		CreatedAt:  session.StartTime,
 		UpdatedAt:  session.LastActiveTime,
 		Metadata: map[string]interface{}{
-			"user_id":          session.UserID,
-			"session_context":  session.Context,
-			"variables":        session.State.Variables,
-			"status":           string(session.State.Status),
-			"state_data":       string(stateData), // Store serialized state data
+			"user_id":         session.UserID,
+			"session_context": session.Context,
+			"variables":       session.State.Variables,
+			"status":          string(session.State.Status),
+			"state_data":      string(stateData), // Store serialized state data
 		},
 	}
 
@@ -278,7 +278,7 @@ func (sm *SessionManager) LoadSession(ctx context.Context, sessionID string) (*S
 		// Fallback for missing state data
 		stateData = []byte("{}")
 	}
-	
+
 	// Decrypt if needed
 	if sm.encryptor != nil {
 		stateData, err = sm.encryptor.Decrypt(stateData)
@@ -376,11 +376,11 @@ func (sm *SessionManager) CreateSession(ctx context.Context, userID, campaignID 
 		Messages:       make([]Message, 0),
 		Metadata:       make(map[string]interface{}),
 	}
-	
+
 	if err := sm.SaveSession(ctx, session); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create session")
 	}
-	
+
 	return session, nil
 }
 
@@ -397,10 +397,10 @@ func (sm *SessionManager) AddMessage(ctx context.Context, sessionID string, mess
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to load session for message")
 	}
-	
+
 	session.Messages = append(session.Messages, *message)
 	session.LastActiveTime = time.Now()
-	
+
 	return sm.SaveSession(ctx, session)
 }
 
@@ -410,18 +410,18 @@ func (sm *SessionManager) GetMessages(ctx context.Context, sessionID string, lim
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to load session for messages")
 	}
-	
+
 	messages := make([]*Message, 0)
 	start := len(session.Messages) - limit
 	if start < 0 {
 		start = 0
 	}
-	
+
 	for i := start; i < len(session.Messages); i++ {
 		msg := session.Messages[i]
 		messages = append(messages, &msg)
 	}
-	
+
 	return messages, nil
 }
 
@@ -431,10 +431,10 @@ func (sm *SessionManager) UpdateSessionState(ctx context.Context, sessionID stri
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to load session for state update")
 	}
-	
+
 	session.State = state
 	session.LastActiveTime = time.Now()
-	
+
 	return sm.SaveSession(ctx, session)
 }
 
@@ -451,7 +451,7 @@ func (sm *SessionManager) CreateBackup(ctx context.Context, sessionID string) er
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to load session for backup")
 	}
-	
+
 	// For now, just save the session - a real implementation might save to a backup location
 	return sm.SaveSession(ctx, session)
 }
@@ -486,34 +486,34 @@ func NewSessionSerializer() *SessionSerializer {
 func (s *SessionSerializer) SerializeState(state SessionState) ([]byte, error) {
 	var buf bytes.Buffer
 	encoder := gob.NewEncoder(&buf)
-	
+
 	if err := encoder.Encode(state); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeParsing, "failed to encode session state")
 	}
-	
+
 	return buf.Bytes(), nil
 }
 
 // DeserializeState deserializes session state from bytes
 func (s *SessionSerializer) DeserializeState(data []byte) (SessionState, error) {
 	var state SessionState
-	
+
 	if len(data) == 0 {
 		// Return default state for empty data
 		return SessionState{
-			ActiveAgents:   make(map[string]AgentState),
-			Variables:     make(map[string]interface{}),
-			Status:        SessionStatusActive,
+			ActiveAgents: make(map[string]AgentState),
+			Variables:    make(map[string]interface{}),
+			Status:       SessionStatusActive,
 		}, nil
 	}
-	
+
 	buf := bytes.NewReader(data)
 	decoder := gob.NewDecoder(buf)
-	
+
 	if err := decoder.Decode(&state); err != nil {
 		return state, gerror.Wrap(err, gerror.ErrCodeParsing, "failed to decode session state")
 	}
-	
+
 	return state, nil
 }
 
@@ -584,10 +584,10 @@ func NewCompressor() *Compressor {
 func (c *Compressor) Compress(data []byte) []byte {
 	var buf bytes.Buffer
 	writer := gzip.NewWriter(&buf)
-	
+
 	writer.Write(data)
 	writer.Close()
-	
+
 	return buf.Bytes()
 }
 

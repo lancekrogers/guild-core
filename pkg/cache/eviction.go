@@ -243,10 +243,10 @@ func (aep *AdaptiveEvictionPolicy) GetName() string {
 // getWorkloadStats analyzes current cache workload
 func (aep *AdaptiveEvictionPolicy) getWorkloadStats(cache Cache) *WorkloadStats {
 	entries := cache.GetEntries()
-	
+
 	stats := &WorkloadStats{
-		EntryCount: len(entries),
-		TotalSize:  0,
+		EntryCount:     len(entries),
+		TotalSize:      0,
 		AvgAccessCount: 0,
 		RecentAccesses: 0,
 	}
@@ -268,7 +268,7 @@ func (aep *AdaptiveEvictionPolicy) getWorkloadStats(cache Cache) *WorkloadStats 
 	}
 
 	stats.AvgAccessCount = float64(totalAccesses) / float64(len(entries))
-	
+
 	return stats
 }
 
@@ -279,9 +279,9 @@ func (aep *AdaptiveEvictionPolicy) updateStrategyPerformance(strategy *EvictionS
 
 	// Update success rate based on eviction efficiency
 	if evictedCount > 0 {
-		strategy.Performance.SuccessRate = (strategy.Performance.SuccessRate*0.9) + (0.1*1.0)
+		strategy.Performance.SuccessRate = (strategy.Performance.SuccessRate * 0.9) + (0.1 * 1.0)
 	} else {
-		strategy.Performance.SuccessRate = (strategy.Performance.SuccessRate*0.9) + (0.1*0.0)
+		strategy.Performance.SuccessRate = (strategy.Performance.SuccessRate * 0.9) + (0.1 * 0.0)
 	}
 }
 
@@ -362,9 +362,9 @@ type PerformanceMonitor struct {
 
 // EvictionEvent represents a single eviction event
 type EvictionEvent struct {
-	Timestamp time.Time `json:"timestamp"`
-	Strategy  string    `json:"strategy"`
-	KeyCount  int       `json:"key_count"`
+	Timestamp time.Time     `json:"timestamp"`
+	Strategy  string        `json:"strategy"`
+	KeyCount  int           `json:"key_count"`
 	Duration  time.Duration `json:"duration"`
 }
 
@@ -415,10 +415,10 @@ func (pm *PerformanceMonitor) GetEvictionStats() map[string]*EvictionStats {
 		}
 
 		stats[strategy] = &EvictionStats{
-			TotalEvictions: len(events),
-			TotalKeys:      totalKeys,
+			TotalEvictions:     len(events),
+			TotalKeys:          totalKeys,
 			AvgKeysPerEviction: float64(totalKeys) / float64(len(events)),
-			AvgDuration:    totalDuration / time.Duration(len(events)),
+			AvgDuration:        totalDuration / time.Duration(len(events)),
 		}
 	}
 
@@ -512,9 +512,9 @@ func (cbp *CostBasedPolicy) Evict(cache Cache, requiredSpace int64) []string {
 
 	// Calculate cost-benefit ratio for each entry
 	type entryInfo struct {
-		key       string
-		size      int64
-		ratio     float64
+		key   string
+		size  int64
+		ratio float64
 	}
 
 	var sortedEntries []entryInfo

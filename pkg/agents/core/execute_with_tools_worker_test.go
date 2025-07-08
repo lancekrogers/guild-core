@@ -284,6 +284,10 @@ func (t *mockWorkingTool) RequiresAuth() bool {
 	return false
 }
 
+func (t *mockWorkingTool) HealthCheck() error {
+	return nil
+}
+
 // Mock failing tool
 type mockFailingTool struct {
 	name string
@@ -315,6 +319,10 @@ func (t *mockFailingTool) Category() string {
 
 func (t *mockFailingTool) RequiresAuth() bool {
 	return false
+}
+
+func (t *mockFailingTool) HealthCheck() error {
+	return nil
 }
 
 // Mock error cost manager

@@ -20,11 +20,11 @@ import (
 
 // Memory optimization error codes
 const (
-	ErrCodeMemoryExhausted   = "MEMORY-1001"
-	ErrCodeAllocationFailed  = "MEMORY-1002"
-	ErrCodeLeakDetected      = "MEMORY-1003"
-	ErrCodePoolOverflow      = "MEMORY-1004"
-	ErrCodeCompactionFailed  = "MEMORY-1005"
+	ErrCodeMemoryExhausted  = "MEMORY-1001"
+	ErrCodeAllocationFailed = "MEMORY-1002"
+	ErrCodeLeakDetected     = "MEMORY-1003"
+	ErrCodePoolOverflow     = "MEMORY-1004"
+	ErrCodeCompactionFailed = "MEMORY-1005"
 )
 
 // MemoryOptimizer provides comprehensive memory optimization
@@ -92,43 +92,43 @@ func NewMemoryOptimizer(config *OptimizerConfig) *MemoryOptimizer {
 
 // OptimizationReport contains results of memory optimization
 type OptimizationReport struct {
-	StartTime       time.Time         `json:"start_time"`
-	Duration        time.Duration     `json:"duration"`
-	BeforeStats     *MemoryStats      `json:"before_stats"`
-	AfterStats      *MemoryStats      `json:"after_stats"`
-	MemorySaved     int64             `json:"memory_saved"`
+	StartTime        time.Time        `json:"start_time"`
+	Duration         time.Duration    `json:"duration"`
+	BeforeStats      *MemoryStats     `json:"before_stats"`
+	AfterStats       *MemoryStats     `json:"after_stats"`
+	MemorySaved      int64            `json:"memory_saved"`
 	ReductionPercent float64          `json:"reduction_percent"`
-	Optimizations   []Optimization    `json:"optimizations"`
-	LeaksDetected   []MemoryLeak      `json:"leaks_detected"`
-	Recommendations []Recommendation  `json:"recommendations"`
+	Optimizations    []Optimization   `json:"optimizations"`
+	LeaksDetected    []MemoryLeak     `json:"leaks_detected"`
+	Recommendations  []Recommendation `json:"recommendations"`
 }
 
 // MemoryStats contains memory usage statistics
 type MemoryStats struct {
-	Allocated     uint64 `json:"allocated"`
-	TotalAlloc    uint64 `json:"total_alloc"`
-	Sys           uint64 `json:"sys"`
-	Lookups       uint64 `json:"lookups"`
-	Mallocs       uint64 `json:"mallocs"`
-	Frees         uint64 `json:"frees"`
-	HeapAlloc     uint64 `json:"heap_alloc"`
-	HeapSys       uint64 `json:"heap_sys"`
-	HeapIdle      uint64 `json:"heap_idle"`
-	HeapInuse     uint64 `json:"heap_inuse"`
-	HeapReleased  uint64 `json:"heap_released"`
-	HeapObjects   uint64 `json:"heap_objects"`
-	StackInuse    uint64 `json:"stack_inuse"`
-	StackSys      uint64 `json:"stack_sys"`
-	MSpanInuse    uint64 `json:"mspan_inuse"`
-	MSpanSys      uint64 `json:"mspan_sys"`
-	MCacheInuse   uint64 `json:"mcache_inuse"`
-	MCacheSys     uint64 `json:"mcache_sys"`
-	GCSys         uint64 `json:"gc_sys"`
-	OtherSys      uint64 `json:"other_sys"`
-	NextGC        uint64 `json:"next_gc"`
-	LastGC        uint64 `json:"last_gc"`
-	NumGC         uint32 `json:"num_gc"`
-	NumForcedGC   uint32 `json:"num_forced_gc"`
+	Allocated     uint64  `json:"allocated"`
+	TotalAlloc    uint64  `json:"total_alloc"`
+	Sys           uint64  `json:"sys"`
+	Lookups       uint64  `json:"lookups"`
+	Mallocs       uint64  `json:"mallocs"`
+	Frees         uint64  `json:"frees"`
+	HeapAlloc     uint64  `json:"heap_alloc"`
+	HeapSys       uint64  `json:"heap_sys"`
+	HeapIdle      uint64  `json:"heap_idle"`
+	HeapInuse     uint64  `json:"heap_inuse"`
+	HeapReleased  uint64  `json:"heap_released"`
+	HeapObjects   uint64  `json:"heap_objects"`
+	StackInuse    uint64  `json:"stack_inuse"`
+	StackSys      uint64  `json:"stack_sys"`
+	MSpanInuse    uint64  `json:"mspan_inuse"`
+	MSpanSys      uint64  `json:"mspan_sys"`
+	MCacheInuse   uint64  `json:"mcache_inuse"`
+	MCacheSys     uint64  `json:"mcache_sys"`
+	GCSys         uint64  `json:"gc_sys"`
+	OtherSys      uint64  `json:"other_sys"`
+	NextGC        uint64  `json:"next_gc"`
+	LastGC        uint64  `json:"last_gc"`
+	NumGC         uint32  `json:"num_gc"`
+	NumForcedGC   uint32  `json:"num_forced_gc"`
 	GCCPUFraction float64 `json:"gc_cpu_fraction"`
 }
 
@@ -198,13 +198,13 @@ func (mo *MemoryOptimizer) OptimizeMemoryUsage(ctx context.Context) (*Optimizati
 
 // Optimization represents a single optimization operation
 type Optimization struct {
-	Type        string    `json:"type"`
-	Description string    `json:"description"`
-	MemorySaved int64     `json:"memory_saved"`
-	ItemsAffected int     `json:"items_affected"`
-	Success     bool      `json:"success"`
-	Error       string    `json:"error,omitempty"`
-	Duration    time.Duration `json:"duration"`
+	Type          string        `json:"type"`
+	Description   string        `json:"description"`
+	MemorySaved   int64         `json:"memory_saved"`
+	ItemsAffected int           `json:"items_affected"`
+	Success       bool          `json:"success"`
+	Error         string        `json:"error,omitempty"`
+	Duration      time.Duration `json:"duration"`
 }
 
 // optimizeWithPooling creates object pools for frequently allocated types
@@ -527,7 +527,7 @@ func (mo *MemoryOptimizer) GetFromPool(typ reflect.Type) interface{} {
 // PutToPool returns an object to the appropriate pool
 func (mo *MemoryOptimizer) PutToPool(obj interface{}) {
 	typ := reflect.TypeOf(obj)
-	
+
 	mo.mu.RLock()
 	pool, exists := mo.pools[typ]
 	mo.mu.RUnlock()
@@ -557,9 +557,9 @@ func NewMemoryProfiler() *MemoryProfiler {
 
 // MemoryProfile contains memory profiling results
 type MemoryProfile struct {
-	Stats       *MemoryStats    `json:"stats"`
-	Allocations []Allocation    `json:"allocations"`
-	Timestamp   time.Time       `json:"timestamp"`
+	Stats       *MemoryStats `json:"stats"`
+	Allocations []Allocation `json:"allocations"`
+	Timestamp   time.Time    `json:"timestamp"`
 }
 
 // Profile profiles current memory usage

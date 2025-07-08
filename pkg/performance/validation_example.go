@@ -31,32 +31,32 @@ func NewPerformanceValidator(manager *PerformanceManager) *PerformanceValidator 
 
 // ValidationResult contains the results of performance validation
 type ValidationResult struct {
-	TestName        string        `json:"test_name"`
-	Target          interface{}   `json:"target"`
-	Actual          interface{}   `json:"actual"`
-	Passed          bool          `json:"passed"`
-	Margin          string        `json:"margin"`
-	Duration        time.Duration `json:"duration"`
-	Timestamp       time.Time     `json:"timestamp"`
+	TestName  string        `json:"test_name"`
+	Target    interface{}   `json:"target"`
+	Actual    interface{}   `json:"actual"`
+	Passed    bool          `json:"passed"`
+	Margin    string        `json:"margin"`
+	Duration  time.Duration `json:"duration"`
+	Timestamp time.Time     `json:"timestamp"`
 }
 
 // ValidationReport contains comprehensive validation results
 type ValidationReport struct {
-	OverallPassed    bool                 `json:"overall_passed"`
-	TestsRun         int                  `json:"tests_run"`
-	TestsPassed      int                  `json:"tests_passed"`
-	TestsFailed      int                  `json:"tests_failed"`
-	Results          []ValidationResult   `json:"results"`
-	Summary          string               `json:"summary"`
-	Recommendations  []string             `json:"recommendations"`
-	Timestamp        time.Time            `json:"timestamp"`
-	Duration         time.Duration        `json:"duration"`
+	OverallPassed   bool               `json:"overall_passed"`
+	TestsRun        int                `json:"tests_run"`
+	TestsPassed     int                `json:"tests_passed"`
+	TestsFailed     int                `json:"tests_failed"`
+	Results         []ValidationResult `json:"results"`
+	Summary         string             `json:"summary"`
+	Recommendations []string           `json:"recommendations"`
+	Timestamp       time.Time          `json:"timestamp"`
+	Duration        time.Duration      `json:"duration"`
 }
 
 // ValidateAllTargets validates all performance targets
 func (pv *PerformanceValidator) ValidateAllTargets(ctx context.Context) (*ValidationReport, error) {
 	start := time.Now()
-	
+
 	report := &ValidationReport{
 		Results:   make([]ValidationResult, 0),
 		Timestamp: start,
@@ -102,7 +102,7 @@ func (pv *PerformanceValidator) ValidateAllTargets(ctx context.Context) (*Valida
 // validateResponseTime validates P95 response time target
 func (pv *PerformanceValidator) validateResponseTime(ctx context.Context) ValidationResult {
 	start := time.Now()
-	
+
 	result := ValidationResult{
 		TestName:  "P95 Response Time",
 		Target:    pv.targets.MaxP95ResponseTime,
@@ -136,7 +136,7 @@ func (pv *PerformanceValidator) validateResponseTime(ctx context.Context) Valida
 // validateMemoryUsage validates memory usage target
 func (pv *PerformanceValidator) validateMemoryUsage(ctx context.Context) ValidationResult {
 	start := time.Now()
-	
+
 	result := ValidationResult{
 		TestName:  "Memory Usage",
 		Target:    fmt.Sprintf("%d MB", pv.targets.MaxMemoryUsage/(1024*1024)),
@@ -163,7 +163,7 @@ func (pv *PerformanceValidator) validateMemoryUsage(ctx context.Context) Validat
 // validateCacheHitRate validates cache hit rate target
 func (pv *PerformanceValidator) validateCacheHitRate(ctx context.Context) ValidationResult {
 	start := time.Now()
-	
+
 	result := ValidationResult{
 		TestName:  "Cache Hit Rate",
 		Target:    fmt.Sprintf("%.1f%%", pv.targets.MinCacheHitRate*100),
@@ -197,7 +197,7 @@ func (pv *PerformanceValidator) validateCacheHitRate(ctx context.Context) Valida
 // validateErrorRate validates error rate target
 func (pv *PerformanceValidator) validateErrorRate(ctx context.Context) ValidationResult {
 	start := time.Now()
-	
+
 	result := ValidationResult{
 		TestName:  "Error Rate",
 		Target:    fmt.Sprintf("%.2f%%", pv.targets.MaxErrorRate*100),
@@ -224,7 +224,7 @@ func (pv *PerformanceValidator) validateErrorRate(ctx context.Context) Validatio
 // validateSystemStability validates overall system stability
 func (pv *PerformanceValidator) validateSystemStability(ctx context.Context) ValidationResult {
 	start := time.Now()
-	
+
 	result := ValidationResult{
 		TestName:  "System Stability",
 		Target:    "No goroutine leaks, stable memory",
@@ -250,7 +250,7 @@ func (pv *PerformanceValidator) validateSystemStability(ctx context.Context) Val
 func (pv *PerformanceValidator) measureResponseTime(ctx context.Context) (time.Duration, error) {
 	// Simulate realistic workload
 	responseTimes := make([]time.Duration, 0, 1000)
-	
+
 	for i := 0; i < 1000; i++ {
 		select {
 		case <-ctx.Done():
@@ -259,13 +259,13 @@ func (pv *PerformanceValidator) measureResponseTime(ctx context.Context) (time.D
 		}
 
 		start := time.Now()
-		
+
 		// Simulate realistic operation with caching
 		err := pv.simulateRealisticOperation(ctx, fmt.Sprintf("operation-%d", i))
 		if err != nil {
 			continue // Skip failed operations for response time measurement
 		}
-		
+
 		responseTimes = append(responseTimes, time.Since(start))
 	}
 
@@ -295,7 +295,7 @@ func (pv *PerformanceValidator) simulateRealisticOperation(ctx context.Context, 
 
 	// Cache miss - simulate compute and cache
 	time.Sleep(time.Microsecond * 30) // 30μs of computation
-	
+
 	// Store in cache for future hits
 	value := fmt.Sprintf("computed-value-for-%s", key)
 	pv.manager.cache.Set(ctx, key, value)
@@ -375,38 +375,38 @@ func (pv *PerformanceValidator) measureErrorRate(ctx context.Context) float64 {
 func (pv *PerformanceValidator) measureSystemStability(ctx context.Context) (bool, string) {
 	// Check goroutine count
 	goroutines := runtime.NumGoroutine()
-	
+
 	// Check memory stability over time
 	var m1, m2 runtime.MemStats
 	runtime.ReadMemStats(&m1)
-	
+
 	// Wait a bit and measure again
 	time.Sleep(time.Millisecond * 100)
 	runtime.ReadMemStats(&m2)
-	
+
 	// Check for memory leaks (simplified)
 	memoryGrowth := int64(m2.Alloc) - int64(m1.Alloc)
-	
+
 	stable := true
 	issues := make([]string, 0)
-	
+
 	// Check goroutine count (should be reasonable)
 	if goroutines > 500 {
 		stable = false
 		issues = append(issues, fmt.Sprintf("high goroutine count: %d", goroutines))
 	}
-	
+
 	// Check memory growth (should be minimal for short period)
 	if memoryGrowth > 10*1024*1024 { // 10MB growth in 100ms is suspicious
 		stable = false
 		issues = append(issues, fmt.Sprintf("rapid memory growth: %d MB", memoryGrowth/(1024*1024)))
 	}
-	
+
 	if stable {
-		return true, fmt.Sprintf("Stable (goroutines: %d, memory: %d MB)", 
+		return true, fmt.Sprintf("Stable (goroutines: %d, memory: %d MB)",
 			goroutines, m2.Alloc/(1024*1024))
 	}
-	
+
 	return false, fmt.Sprintf("Issues: %s", strings.Join(issues, ", "))
 }
 
@@ -419,7 +419,7 @@ func calculatePercentile(values []time.Duration, percentile float64) time.Durati
 	// Sort values
 	sorted := make([]time.Duration, len(values))
 	copy(sorted, values)
-	
+
 	for i := 0; i < len(sorted); i++ {
 		for j := i + 1; j < len(sorted); j++ {
 			if sorted[i] > sorted[j] {
@@ -442,7 +442,7 @@ func (pv *PerformanceValidator) generateSummary(report *ValidationReport) string
 		return fmt.Sprintf("✅ All %d performance targets achieved! (%d passed, %d failed)",
 			report.TestsRun, report.TestsPassed, report.TestsFailed)
 	}
-	
+
 	return fmt.Sprintf("❌ Performance validation failed (%d passed, %d failed out of %d tests)",
 		report.TestsPassed, report.TestsFailed, report.TestsRun)
 }
@@ -450,34 +450,34 @@ func (pv *PerformanceValidator) generateSummary(report *ValidationReport) string
 // generateValidationRecommendations generates recommendations based on validation results
 func (pv *PerformanceValidator) generateValidationRecommendations(report *ValidationReport) []string {
 	recommendations := make([]string, 0)
-	
+
 	for _, result := range report.Results {
 		if !result.Passed {
 			switch result.TestName {
 			case "P95 Response Time":
-				recommendations = append(recommendations, 
+				recommendations = append(recommendations,
 					"Optimize slow operations, implement caching, or tune algorithms")
 			case "Memory Usage":
-				recommendations = append(recommendations, 
+				recommendations = append(recommendations,
 					"Run memory optimization, investigate leaks, or increase available memory")
 			case "Cache Hit Rate":
-				recommendations = append(recommendations, 
+				recommendations = append(recommendations,
 					"Improve cache warming strategy or review cache key patterns")
 			case "Error Rate":
-				recommendations = append(recommendations, 
+				recommendations = append(recommendations,
 					"Investigate error sources and implement better error handling")
 			case "System Stability":
-				recommendations = append(recommendations, 
+				recommendations = append(recommendations,
 					"Check for goroutine leaks and memory management issues")
 			}
 		}
 	}
-	
+
 	if len(recommendations) == 0 {
-		recommendations = append(recommendations, 
+		recommendations = append(recommendations,
 			"All targets met! Consider tightening targets for continued improvement")
 	}
-	
+
 	return recommendations
 }
 
@@ -508,33 +508,33 @@ func RunPerformanceValidation(ctx context.Context) (*ValidationReport, error) {
 // Example of how to use the validation system
 func ExamplePerformanceValidation() {
 	ctx := context.Background()
-	
+
 	// Run performance validation
 	report, err := RunPerformanceValidation(ctx)
 	if err != nil {
 		fmt.Printf("Validation failed: %v\n", err)
 		return
 	}
-	
+
 	// Print results
 	fmt.Printf("Performance Validation Report\n")
 	fmt.Printf("=============================\n")
 	fmt.Printf("Overall: %s\n", report.Summary)
 	fmt.Printf("Duration: %v\n\n", report.Duration)
-	
+
 	for _, result := range report.Results {
 		status := "✅ PASS"
 		if !result.Passed {
 			status = "❌ FAIL"
 		}
-		
+
 		fmt.Printf("%s %s\n", status, result.TestName)
 		fmt.Printf("  Target: %v\n", result.Target)
 		fmt.Printf("  Actual: %v\n", result.Actual)
 		fmt.Printf("  Margin: %s\n", result.Margin)
 		fmt.Printf("  Duration: %v\n\n", result.Duration)
 	}
-	
+
 	if len(report.Recommendations) > 0 {
 		fmt.Printf("Recommendations:\n")
 		for i, rec := range report.Recommendations {

@@ -46,36 +46,36 @@ func TestCodebaseAnalysisPerformance_HappyPath(t *testing.T) {
 		// Large tests commented out for fast CI/development
 		// Uncomment for full performance testing
 		/*
-		{
-			name: "Large multi-language project analysis",
-			codebaseProfile: CodebaseProfile{
-				Languages:   []string{"go", "typescript", "python", "rust", "yaml", "json", "markdown"},
-				FileCount:   2500,
-				LinesOfCode: 250000,
-				TotalSizeMB: 100,
-				Complexity:  CodeComplexityHigh,
+			{
+				name: "Large multi-language project analysis",
+				codebaseProfile: CodebaseProfile{
+					Languages:   []string{"go", "typescript", "python", "rust", "yaml", "json", "markdown"},
+					FileCount:   2500,
+					LinesOfCode: 250000,
+					TotalSizeMB: 100,
+					Complexity:  CodeComplexityHigh,
+				},
+				expectedAnalysisTime: 120 * time.Second,
+				expectedIndexTime:    45 * time.Second,
+				expectedQueryTime:    200 * time.Millisecond,
+				expectedMemoryUsage:  500 * 1024 * 1024, // 500MB
+				concurrentUsers:      8,
 			},
-			expectedAnalysisTime: 120 * time.Second,
-			expectedIndexTime:    45 * time.Second,
-			expectedQueryTime:    200 * time.Millisecond,
-			expectedMemoryUsage:  500 * 1024 * 1024, // 500MB
-			concurrentUsers:      8,
-		},
-		{
-			name: "Enterprise monorepo analysis",
-			codebaseProfile: CodebaseProfile{
-				Languages:   []string{"go", "typescript", "python", "java", "cpp", "rust", "dockerfile", "yaml", "json"},
-				FileCount:   10000,
-				LinesOfCode: 1000000,
-				TotalSizeMB: 500,
-				Complexity:  CodeComplexityEnterprise,
+			{
+				name: "Enterprise monorepo analysis",
+				codebaseProfile: CodebaseProfile{
+					Languages:   []string{"go", "typescript", "python", "java", "cpp", "rust", "dockerfile", "yaml", "json"},
+					FileCount:   10000,
+					LinesOfCode: 1000000,
+					TotalSizeMB: 500,
+					Complexity:  CodeComplexityEnterprise,
+				},
+				expectedAnalysisTime: 600 * time.Second, // 10 minutes
+				expectedIndexTime:    180 * time.Second, // 3 minutes
+				expectedQueryTime:    500 * time.Millisecond,
+				expectedMemoryUsage:  2 * 1024 * 1024 * 1024, // 2GB
+				concurrentUsers:      15,
 			},
-			expectedAnalysisTime: 600 * time.Second, // 10 minutes
-			expectedIndexTime:    180 * time.Second, // 3 minutes
-			expectedQueryTime:    500 * time.Millisecond,
-			expectedMemoryUsage:  2 * 1024 * 1024 * 1024, // 2GB
-			concurrentUsers:      15,
-		},
 		*/
 	}
 

@@ -51,6 +51,10 @@ type WorkerAgent struct {
 	// Context metadata
 	capabilities []string
 	description  string
+
+	// Reasoning support
+	reasoningExtractor *ReasoningExtractor
+	reasoningStorage   ReasoningStorage
 }
 
 // newWorkerAgent creates a new worker agent (private constructor)
@@ -160,46 +164,71 @@ func (a *WorkerAgent) ExecuteWithReasoning(ctx context.Context, request string) 
 		return nil, err
 	}
 
-	// Extract reasoning from response
-	cleanContent, reasoning, confidence := ExtractReasoning(rawResponse)
+	// Extract reasoning using enhanced extractor if available
+	var response *AgentResponse
+	var extractErr error
+
+	if a.reasoningExtractor != nil {
+		// Use enhanced extractor with full context support
+		response, extractErr = a.reasoningExtractor.ExtractReasoning(ctx, rawResponse)
+		if extractErr != nil {
+			logger.WithError(extractErr).WarnContext(ctx, "Enhanced reasoning extraction failed, falling back to simple extraction")
+			// Fall back to simple extraction
+			cleanContent, reasoning, confidence := ExtractReasoning(rawResponse)
+			response = &AgentResponse{
+				Content:    cleanContent,
+				Reasoning:  reasoning,
+				Confidence: confidence,
+			}
+		}
+	} else {
+		// Use simple extraction
+		cleanContent, reasoning, confidence := ExtractReasoning(rawResponse)
+		response = &AgentResponse{
+			Content:    cleanContent,
+			Reasoning:  reasoning,
+			Confidence: confidence,
+		}
+	}
 
 	// Log reasoning extraction
-	if reasoning != "" {
+	if response.Reasoning != "" {
 		logger.DebugContext(ctx, "Extracted reasoning from response",
-			"reasoning_length", len(reasoning),
-			"confidence", confidence,
+			"reasoning_length", len(response.Reasoning),
+			"confidence", response.Confidence,
+			"enhanced_extractor", a.reasoningExtractor != nil,
 		)
+
+		// Store reasoning if storage is available
+		if a.reasoningStorage != nil {
+			go a.storeReasoningChain(context.Background(), response, duration)
+		}
 	}
 
-	// Build structured response
-	response := &AgentResponse{
-		Content:    cleanContent,
-		Reasoning:  reasoning,
-		Confidence: confidence,
-		ToolsUsed:  toolsUsed,
-		Cost:       cost,
-		Metadata: map[string]interface{}{
-			"agent_id":      a.ID,
-			"agent_name":    a.Name,
-			"duration_ms":   duration.Milliseconds(),
-			"has_reasoning": reasoning != "",
-		},
+	// Add additional metadata
+	response.ToolsUsed = toolsUsed
+	response.Cost = cost
+	if response.Metadata == nil {
+		response.Metadata = make(map[string]interface{})
 	}
+	response.Metadata["agent_id"] = a.ID
+	response.Metadata["agent_name"] = a.Name
+	response.Metadata["duration_ms"] = duration.Milliseconds()
 
 	logger.InfoContext(ctx, "Agent execution completed successfully",
 		"duration_ms", duration.Milliseconds(),
-		"response_length", len(cleanContent),
+		"response_length", len(response.Content),
 		"request_length", len(request),
-		"has_reasoning", reasoning != "",
-		"confidence", confidence,
+		"has_reasoning", response.Reasoning != "",
+		"confidence", response.Confidence,
 	)
 
 	// Log performance metrics for monitoring
 	logger.Duration("agent.execute_with_reasoning", duration,
 		"agent_id", a.ID,
 		"success", true,
-		"response_size", len(cleanContent),
-		"has_reasoning", reasoning != "",
+		"response_size", len(response.Content),
+		"has_reasoning", response.Reasoning != "",
 	)
 
 	return response, nil
@@ -401,6 +430,48 @@ func (a *WorkerAgent) executeWithTools(ctx context.Context, request string) (str
 	logger.DebugContext(ctx, "Tool execution parsing not yet implemented - returning LLM response")
 
 	return response, nil
+}
+
+// storeReasoningChain stores reasoning chain asynchronously
+func (a *WorkerAgent) storeReasoningChain(ctx context.Context, response *AgentResponse, duration time.Duration) {
+	if a.reasoningStorage == nil || response.Reasoning == "" {
+		return
+	}
+
+	logger := observability.GetLogger(ctx).
+		WithComponent("agent").
+		WithOperation("storeReasoningChain").
+		With("agent_id", a.ID)
+
+	chain := &ReasoningChain{
+		ID:         fmt.Sprintf("%s-%d", a.ID, time.Now().UnixNano()),
+		AgentID:    a.ID,
+		Content:    response.Content,
+		Reasoning:  response.Reasoning,
+		Confidence: response.Confidence,
+		Success:    true,
+		Duration:   duration,
+		CreatedAt:  time.Now(),
+		Metadata:   response.Metadata,
+	}
+
+	if err := a.reasoningStorage.Store(ctx, chain); err != nil {
+		logger.WithError(err).ErrorContext(ctx, "Failed to store reasoning chain")
+	} else {
+		logger.DebugContext(ctx, "Reasoning chain stored successfully",
+			"chain_id", chain.ID,
+			"confidence", chain.Confidence)
+	}
+}
+
+// SetReasoningExtractor sets the reasoning extractor for the agent
+func (a *WorkerAgent) SetReasoningExtractor(extractor *ReasoningExtractor) {
+	a.reasoningExtractor = extractor
+}
+
+// SetReasoningStorage sets the reasoning storage for the agent
+func (a *WorkerAgent) SetReasoningStorage(storage ReasoningStorage) {
+	a.reasoningStorage = storage
 }
 
 // ManagerAgent is a coordinator agent

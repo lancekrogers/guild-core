@@ -61,7 +61,7 @@ func (kg *KnowledgeGraph) AddKnowledge(ctx context.Context, knowledge extraction
 	if createdAt.IsZero() {
 		createdAt = time.Now() // Use current time if timestamp is missing
 	}
-	
+
 	node := &KnowledgeNode{
 		ID:         knowledge.ID,
 		Type:       kg.mapKnowledgeType(knowledge.Type),
@@ -119,11 +119,11 @@ func (kg *KnowledgeGraph) AddKnowledge(ctx context.Context, knowledge extraction
 	if err == nil {
 		for _, relatedNode := range relatedNodes {
 			edge := &Edge{
-				From:       node.ID,
-				To:         relatedNode.ID,
-				Type:       EdgeRelatedTo,
-				Weight:     kg.calculateRelationWeight(knowledge, relatedNode),
-				CreatedAt:  time.Now(),
+				From:      node.ID,
+				To:        relatedNode.ID,
+				Type:      EdgeRelatedTo,
+				Weight:    kg.calculateRelationWeight(knowledge, relatedNode),
+				CreatedAt: time.Now(),
 			}
 			kg.addEdge(edge)
 		}
@@ -186,7 +186,7 @@ func (kg *KnowledgeGraph) Query(ctx context.Context, query GraphQuery) ([]*Knowl
 }
 
 // traverse performs depth-first traversal of the graph
-func (kg *KnowledgeGraph) traverse(ctx context.Context, node *KnowledgeNode, query GraphQuery, 
+func (kg *KnowledgeGraph) traverse(ctx context.Context, node *KnowledgeNode, query GraphQuery,
 	visited map[string]bool, results *[]*KnowledgeNode) {
 
 	if ctx.Err() != nil || visited[node.ID] {
@@ -238,51 +238,51 @@ func (kg *KnowledgeGraph) findStartNodes(ctx context.Context, query GraphQuery) 
 	}
 
 	candidateMap := make(map[string]*candidateNode)
-	
+
 	// Collect text-based candidates
 	if query.Text != "" {
 		if err := kg.addTextCandidates(ctx, query.Text, candidateMap); err != nil {
 			// Log error but continue - don't fail the entire query for text search issues
 		}
 	}
-	
+
 	// Collect type-based candidates (OR semantics, not AND)
 	if query.NodeTypes != nil {
 		kg.addTypeCandidates(query.NodeTypes, candidateMap)
 	}
-	
+
 	// Convert candidates to slice and apply additional filters
 	var startNodes []*KnowledgeNode
 	for _, candidate := range candidateMap {
 		node := candidate.node
-		
+
 		// Apply confidence filter
 		if node.Confidence < query.MinConfidence {
 			continue
 		}
-		
+
 		// Apply time range filter
 		if !query.TimeRange.IsZero() && node.CreatedAt.Before(query.TimeRange) {
 			continue
 		}
-		
+
 		startNodes = append(startNodes, node)
 	}
-	
+
 	// If no candidates found, apply progressive fallback strategy
 	if len(startNodes) == 0 {
 		startNodes = kg.applyFallbackStrategy(ctx, query)
 	}
-	
+
 	return startNodes, nil
 }
 
 // candidateNode tracks potential starting nodes with metadata for ranking
 type candidateNode struct {
-	node       *KnowledgeNode
-	textScore  float64
-	typeMatch  bool
-	source     string // "text", "type", "fallback"
+	node      *KnowledgeNode
+	textScore float64
+	typeMatch bool
+	source    string // "text", "type", "fallback"
 }
 
 // addTextCandidates adds nodes that match text criteria
@@ -293,7 +293,7 @@ func (kg *KnowledgeGraph) addTextCandidates(ctx context.Context, text string, ca
 			WithComponent("corpus.graph").
 			WithOperation("addTextCandidates")
 	}
-	
+
 	for _, result := range indexResults {
 		if node, exists := kg.nodes[result.NodeID]; exists {
 			if existing, found := candidates[result.NodeID]; found {
@@ -311,7 +311,7 @@ func (kg *KnowledgeGraph) addTextCandidates(ctx context.Context, text string, ca
 			}
 		}
 	}
-	
+
 	return nil
 }
 
@@ -337,7 +337,7 @@ func (kg *KnowledgeGraph) addTypeCandidates(nodeTypes []NodeType, candidates map
 // applyFallbackStrategy implements progressive fallback when no candidates found
 func (kg *KnowledgeGraph) applyFallbackStrategy(ctx context.Context, query GraphQuery) []*KnowledgeNode {
 	var fallbackNodes []*KnowledgeNode
-	
+
 	// Strategy 1: High-confidence nodes
 	if len(fallbackNodes) == 0 {
 		for _, node := range kg.nodes {
@@ -346,7 +346,7 @@ func (kg *KnowledgeGraph) applyFallbackStrategy(ctx context.Context, query Graph
 			}
 		}
 	}
-	
+
 	// Strategy 2: Any nodes matching partial criteria (relaxed confidence)
 	if len(fallbackNodes) == 0 && query.NodeTypes != nil {
 		for _, node := range kg.nodes {
@@ -355,7 +355,7 @@ func (kg *KnowledgeGraph) applyFallbackStrategy(ctx context.Context, query Graph
 			}
 		}
 	}
-	
+
 	// Strategy 3: Recent nodes (last resort)
 	if len(fallbackNodes) == 0 {
 		cutoff := time.Now().Add(-24 * time.Hour)
@@ -365,7 +365,7 @@ func (kg *KnowledgeGraph) applyFallbackStrategy(ctx context.Context, query Graph
 			}
 		}
 	}
-	
+
 	return fallbackNodes
 }
 
@@ -383,12 +383,12 @@ func (kg *KnowledgeGraph) matchesQuery(node *KnowledgeNode, query GraphQuery) bo
 	// Use OR semantics for text and type filters when both are specified
 	hasTextFilter := query.Text != ""
 	hasTypeFilter := query.NodeTypes != nil
-	
+
 	if hasTextFilter && hasTypeFilter {
 		// OR logic: match if either text OR type matches
 		textMatches := false
 		typeMatches := kg.containsNodeType(query.NodeTypes, node.Type)
-		
+
 		if hasTextFilter {
 			contentLower := strings.ToLower(node.Content)
 			// Split query text into words and check if any word matches (more flexible than full string match)
@@ -400,7 +400,7 @@ func (kg *KnowledgeGraph) matchesQuery(node *KnowledgeNode, query GraphQuery) bo
 				}
 			}
 		}
-		
+
 		return textMatches || typeMatches
 	} else if hasTypeFilter {
 		// Type filter only
@@ -544,7 +544,7 @@ func (kg *KnowledgeGraph) mapRelationType(predicate string) EdgeType {
 
 func (kg *KnowledgeGraph) buildNodeProperties(knowledge extraction.ExtractedKnowledge) map[string]interface{} {
 	properties := make(map[string]interface{})
-	
+
 	// Copy metadata
 	for key, value := range knowledge.Metadata {
 		properties[key] = value
@@ -569,15 +569,15 @@ func (kg *KnowledgeGraph) buildNodeProperties(knowledge extraction.ExtractedKnow
 
 func (kg *KnowledgeGraph) getOrCreateEntityNode(entity extraction.Entity) *KnowledgeNode {
 	nodeID := fmt.Sprintf("entity_%s_%s", entity.Type, strings.ReplaceAll(entity.Name, " ", "_"))
-	
+
 	if existing, exists := kg.nodes[nodeID]; exists {
 		return existing
 	}
 
 	node := &KnowledgeNode{
-		ID:         nodeID,
-		Type:       NodeEntity,
-		Content:    entity.Name,
+		ID:      nodeID,
+		Type:    NodeEntity,
+		Content: entity.Name,
 		Properties: map[string]interface{}{
 			"entity_type": entity.Type,
 			"confidence":  entity.Confidence,
@@ -593,7 +593,7 @@ func (kg *KnowledgeGraph) getOrCreateEntityNode(entity extraction.Entity) *Knowl
 
 func (kg *KnowledgeGraph) getOrCreateConceptNode(concept string) *KnowledgeNode {
 	nodeID := fmt.Sprintf("concept_%s", strings.ReplaceAll(concept, " ", "_"))
-	
+
 	if existing, exists := kg.nodes[nodeID]; exists {
 		return existing
 	}
@@ -626,7 +626,7 @@ func (kg *KnowledgeGraph) findRelatedKnowledge(ctx context.Context, knowledge ex
 	// Find nodes with similar entities
 	for _, entity := range knowledge.Entities {
 		entityNodeID := fmt.Sprintf("entity_%s_%s", entity.Type, strings.ReplaceAll(entity.Name, " ", "_"))
-		
+
 		// Find edges from this entity to other knowledge nodes
 		if edges, exists := kg.edges[entityNodeID]; exists {
 			for _, edge := range edges {
@@ -681,7 +681,7 @@ func (kg *KnowledgeGraph) containsEdgeType(types []EdgeType, edgeType EdgeType) 
 }
 
 func (kg *KnowledgeGraph) getDepthFromQuery(query GraphQuery, edge *Edge) int {
-	// Simplified depth calculation - in a real implementation, 
+	// Simplified depth calculation - in a real implementation,
 	// you'd track depth during traversal
 	return 1
 }

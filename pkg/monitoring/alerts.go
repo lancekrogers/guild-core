@@ -17,13 +17,13 @@ import (
 type AlertType string
 
 const (
-	AlertTypeSLOViolation      AlertType = "slo_violation"
-	AlertTypeHighLatency       AlertType = "high_latency"
-	AlertTypeHighErrorRate     AlertType = "high_error_rate"
-	AlertTypeLowCacheHitRate   AlertType = "low_cache_hit_rate"
-	AlertTypeHighMemoryUsage   AlertType = "high_memory_usage"
-	AlertTypeHighCPUUsage      AlertType = "high_cpu_usage"
-	AlertTypeGoroutineLeak     AlertType = "goroutine_leak"
+	AlertTypeSLOViolation    AlertType = "slo_violation"
+	AlertTypeHighLatency     AlertType = "high_latency"
+	AlertTypeHighErrorRate   AlertType = "high_error_rate"
+	AlertTypeLowCacheHitRate AlertType = "low_cache_hit_rate"
+	AlertTypeHighMemoryUsage AlertType = "high_memory_usage"
+	AlertTypeHighCPUUsage    AlertType = "high_cpu_usage"
+	AlertTypeGoroutineLeak   AlertType = "goroutine_leak"
 )
 
 // AlertSeverity represents alert severity levels
@@ -50,10 +50,10 @@ type Alert struct {
 
 // AlertManager manages alerts and notifications
 type AlertManager struct {
-	alerts     map[string]*Alert
-	handlers   []AlertHandler
-	mu         sync.RWMutex
-	maxAlerts  int
+	alerts    map[string]*Alert
+	handlers  []AlertHandler
+	mu        sync.RWMutex
+	maxAlerts int
 }
 
 // AlertHandler interface for alert handling
@@ -277,10 +277,10 @@ func NewConsoleAlertHandler() *ConsoleAlertHandler {
 // HandleAlert handles an alert by printing to console
 func (cah *ConsoleAlertHandler) HandleAlert(alert *Alert) error {
 	severity := strings.ToUpper(string(alert.Severity))
-	fmt.Printf("[%s] %s: %s - %s\n", 
-		severity, 
-		alert.Timestamp.Format("2006-01-02 15:04:05"), 
-		alert.Title, 
+	fmt.Printf("[%s] %s: %s - %s\n",
+		severity,
+		alert.Timestamp.Format("2006-01-02 15:04:05"),
+		alert.Title,
 		alert.Description)
 	return nil
 }
@@ -292,9 +292,9 @@ func (cah *ConsoleAlertHandler) GetName() string {
 
 // EmailAlertHandler sends alerts via email (placeholder)
 type EmailAlertHandler struct {
-	name        string
-	recipients  []string
-	smtpConfig  *SMTPConfig
+	name       string
+	recipients []string
+	smtpConfig *SMTPConfig
 }
 
 // SMTPConfig contains SMTP configuration
@@ -319,7 +319,7 @@ func NewEmailAlertHandler(recipients []string, config *SMTPConfig) *EmailAlertHa
 func (eah *EmailAlertHandler) HandleAlert(alert *Alert) error {
 	// This would implement actual email sending
 	// For now, just log that we would send an email
-	fmt.Printf("EMAIL ALERT: Would send email to %v about: %s\n", 
+	fmt.Printf("EMAIL ALERT: Would send email to %v about: %s\n",
 		eah.recipients, alert.Title)
 	return nil
 }
@@ -331,9 +331,9 @@ func (eah *EmailAlertHandler) GetName() string {
 
 // SlackAlertHandler sends alerts to Slack (placeholder)
 type SlackAlertHandler struct {
-	name      string
+	name       string
 	webhookURL string
-	channel   string
+	channel    string
 }
 
 // NewSlackAlertHandler creates a new Slack alert handler
@@ -349,7 +349,7 @@ func NewSlackAlertHandler(webhookURL, channel string) *SlackAlertHandler {
 func (sah *SlackAlertHandler) HandleAlert(alert *Alert) error {
 	// This would implement actual Slack webhook posting
 	// For now, just log that we would send to Slack
-	fmt.Printf("SLACK ALERT: Would send to %s: %s\n", 
+	fmt.Printf("SLACK ALERT: Would send to %s: %s\n",
 		sah.channel, alert.Title)
 	return nil
 }

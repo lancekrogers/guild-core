@@ -14,19 +14,19 @@ import (
 
 // HealthStatus represents the health status of a tool
 type HealthStatus struct {
-	Healthy       bool
-	LastChecked   time.Time
-	LastError     error
+	Healthy          bool
+	LastChecked      time.Time
+	LastError        error
 	ConsecutiveFails int
-	ResponseTime  time.Duration
+	ResponseTime     time.Duration
 }
 
 // HealthChecker manages health checks for tools with caching and observability
 type HealthChecker struct {
-	mu              sync.RWMutex
-	cache           map[string]*HealthStatus
-	checkInterval   time.Duration
-	timeout         time.Duration
+	mu                  sync.RWMutex
+	cache               map[string]*HealthStatus
+	checkInterval       time.Duration
+	timeout             time.Duration
 	maxConsecutiveFails int
 }
 
@@ -83,19 +83,19 @@ func (h *HealthChecker) CheckHealth(ctx context.Context, tool Tool) error {
 
 	status.LastChecked = time.Now()
 	status.ResponseTime = responseTime
-	
+
 	if err != nil {
 		status.Healthy = false
 		status.LastError = err
 		status.ConsecutiveFails++
-		
+
 		// Log warning if multiple consecutive failures
 		if status.ConsecutiveFails >= h.maxConsecutiveFails {
 			logger.WithError(err).Warn("Tool has multiple consecutive health check failures",
 				"consecutive_fails", status.ConsecutiveFails,
 				"response_time_ms", responseTime.Milliseconds())
 		}
-		
+
 		// Log metric
 		logger.With(
 			"metric", "tool.health_check.failed",
@@ -106,7 +106,7 @@ func (h *HealthChecker) CheckHealth(ctx context.Context, tool Tool) error {
 		status.Healthy = true
 		status.LastError = nil
 		status.ConsecutiveFails = 0
-		
+
 		// Log success metric
 		logger.With(
 			"metric", "tool.health_check.success",
@@ -123,11 +123,11 @@ func (h *HealthChecker) CheckHealth(ctx context.Context, tool Tool) error {
 func (h *HealthChecker) performHealthCheck(ctx context.Context, tool Tool) error {
 	// Create a channel to receive the result
 	resultCh := make(chan error, 1)
-	
+
 	go func() {
 		resultCh <- tool.HealthCheck()
 	}()
-	
+
 	select {
 	case <-ctx.Done():
 		return gerror.Wrap(ctx.Err(), gerror.ErrCodeTimeout, "health check timed out").
@@ -144,12 +144,12 @@ func (h *HealthChecker) performHealthCheck(ctx context.Context, tool Tool) error
 func (h *HealthChecker) GetHealthStatus(toolName string) (*HealthStatus, bool) {
 	h.mu.RLock()
 	defer h.mu.RUnlock()
-	
+
 	status, exists := h.cache[toolName]
 	if !exists {
 		return nil, false
 	}
-	
+
 	// Return a copy to prevent external modification
 	statusCopy := *status
 	return &statusCopy, true
@@ -159,7 +159,7 @@ func (h *HealthChecker) GetHealthStatus(toolName string) (*HealthStatus, bool) {
 func (h *HealthChecker) ClearCache() {
 	h.mu.Lock()
 	defer h.mu.Unlock()
-	
+
 	h.cache = make(map[string]*HealthStatus)
 }
 
@@ -167,16 +167,16 @@ func (h *HealthChecker) ClearCache() {
 func (h *HealthChecker) SetCheckInterval(interval time.Duration) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
-	
+
 	h.checkInterval = interval
 }
 
 // HealthReport generates a summary of all tool health statuses
 type HealthReport struct {
-	TotalTools    int
-	HealthyTools  int
+	TotalTools     int
+	HealthyTools   int
 	UnhealthyTools int
-	Tools         []ToolHealthSummary
+	Tools          []ToolHealthSummary
 }
 
 // ToolHealthSummary contains health information for a single tool
@@ -193,12 +193,12 @@ type ToolHealthSummary struct {
 func (h *HealthChecker) GenerateHealthReport() HealthReport {
 	h.mu.RLock()
 	defer h.mu.RUnlock()
-	
+
 	report := HealthReport{
 		TotalTools: len(h.cache),
 		Tools:      make([]ToolHealthSummary, 0, len(h.cache)),
 	}
-	
+
 	for toolName, status := range h.cache {
 		summary := ToolHealthSummary{
 			Name:             toolName,
@@ -207,30 +207,30 @@ func (h *HealthChecker) GenerateHealthReport() HealthReport {
 			ResponseTime:     status.ResponseTime,
 			ConsecutiveFails: status.ConsecutiveFails,
 		}
-		
+
 		if status.LastError != nil {
 			summary.LastError = status.LastError.Error()
 		}
-		
+
 		report.Tools = append(report.Tools, summary)
-		
+
 		if status.Healthy {
 			report.HealthyTools++
 		} else {
 			report.UnhealthyTools++
 		}
 	}
-	
+
 	return report
 }
 
 // BackgroundHealthChecker runs periodic health checks on registered tools
 type BackgroundHealthChecker struct {
-	checker      *HealthChecker
-	registry     *ToolRegistry
-	interval     time.Duration
-	stopCh       chan struct{}
-	wg           sync.WaitGroup
+	checker  *HealthChecker
+	registry *ToolRegistry
+	interval time.Duration
+	stopCh   chan struct{}
+	wg       sync.WaitGroup
 }
 
 // NewBackgroundHealthChecker creates a background health checker
@@ -248,14 +248,14 @@ func (b *BackgroundHealthChecker) Start(ctx context.Context) {
 	b.wg.Add(1)
 	go func() {
 		defer b.wg.Done()
-		
+
 		ticker := time.NewTicker(b.interval)
 		defer ticker.Stop()
-		
+
 		logger := observability.GetLogger(ctx).
 			WithComponent("tools.health").
 			WithOperation("BackgroundChecker")
-		
+
 		for {
 			select {
 			case <-ctx.Done():
@@ -274,19 +274,19 @@ func (b *BackgroundHealthChecker) Start(ctx context.Context) {
 // checkAllTools performs health checks on all registered tools
 func (b *BackgroundHealthChecker) checkAllTools(ctx context.Context) {
 	tools := b.registry.ListTools()
-	
+
 	logger := observability.GetLogger(ctx).
 		WithComponent("tools.health").
 		WithOperation("checkAllTools")
-	
+
 	logger.Debug("Starting health check cycle", "tool_count", len(tools))
-	
+
 	for _, tool := range tools {
 		// Check each tool in a separate goroutine with timeout
 		go func(t Tool) {
 			checkCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
 			defer cancel()
-			
+
 			if err := b.checker.CheckHealth(checkCtx, t); err != nil {
 				logger.WithError(err).Debug("Health check failed for tool", "tool", t.Name())
 			}
@@ -330,7 +330,7 @@ func (w *healthCheckWrapper) Execute(ctx context.Context, input string) (*ToolRe
 			WithOperation("Execute").
 			WithDetails("tool", w.Name())
 	}
-	
+
 	// If healthy, proceed with execution
 	return w.Tool.Execute(ctx, input)
 }

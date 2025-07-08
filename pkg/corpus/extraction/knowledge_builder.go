@@ -27,7 +27,7 @@ func NewKnowledgeBuilder() *KnowledgeBuilder {
 }
 
 // BuildKnowledge constructs a complete knowledge object from extracted components
-func (kb *KnowledgeBuilder) BuildKnowledge(ctx context.Context, 
+func (kb *KnowledgeBuilder) BuildKnowledge(ctx context.Context,
 	knowledgeType KnowledgeType,
 	content string,
 	source Source,
@@ -92,8 +92,8 @@ func (kb *KnowledgeBuilder) BuildKnowledge(ctx context.Context,
 }
 
 // EnrichKnowledge adds additional information to existing knowledge
-func (kb *KnowledgeBuilder) EnrichKnowledge(ctx context.Context, knowledge *ExtractedKnowledge, 
-	additionalEntities []Entity, additionalRelations []Relation, 
+func (kb *KnowledgeBuilder) EnrichKnowledge(ctx context.Context, knowledge *ExtractedKnowledge,
+	additionalEntities []Entity, additionalRelations []Relation,
 	additionalMetadata map[string]interface{}) error {
 
 	if ctx.Err() != nil {
@@ -130,14 +130,14 @@ func (kb *KnowledgeBuilder) EnrichKnowledge(ctx context.Context, knowledge *Extr
 	knowledge.Metadata["relation_count"] = len(knowledge.Relations)
 
 	// Recalculate confidence
-	knowledge.Confidence = kb.calculateOverallConfidence(ctx, knowledge.Content, 
+	knowledge.Confidence = kb.calculateOverallConfidence(ctx, knowledge.Content,
 		knowledge.Entities, knowledge.Relations, knowledge.Source)
 
 	return nil
 }
 
 // MergeKnowledge combines multiple related knowledge pieces
-func (kb *KnowledgeBuilder) MergeKnowledge(ctx context.Context, primary *ExtractedKnowledge, 
+func (kb *KnowledgeBuilder) MergeKnowledge(ctx context.Context, primary *ExtractedKnowledge,
 	secondary []ExtractedKnowledge) (*ExtractedKnowledge, error) {
 
 	if ctx.Err() != nil {
@@ -245,7 +245,7 @@ func (kb *KnowledgeBuilder) cleanContent(content string) string {
 	return cleaned
 }
 
-func (kb *KnowledgeBuilder) calculateOverallConfidence(ctx context.Context, content string, 
+func (kb *KnowledgeBuilder) calculateOverallConfidence(ctx context.Context, content string,
 	entities []Entity, relations []Relation, source Source) float64 {
 
 	baseConfidence := 0.5
@@ -309,7 +309,7 @@ func (kb *KnowledgeBuilder) calculateOverallConfidence(ctx context.Context, cont
 	return baseConfidence
 }
 
-func (kb *KnowledgeBuilder) buildContext(ctx context.Context, entities []Entity, 
+func (kb *KnowledgeBuilder) buildContext(ctx context.Context, entities []Entity,
 	relations []Relation, source Source) map[string]interface{} {
 
 	context := make(map[string]interface{})

@@ -37,17 +37,17 @@ func (ws WorktreeStatus) String() string {
 
 // Worktree represents an isolated git worktree for agent work
 type Worktree struct {
-	ID          string                 `json:"id"`
-	AgentID     string                 `json:"agent_id"`
-	Path        string                 `json:"path"`
-	Branch      string                 `json:"branch"`
-	BaseBranch  string                 `json:"base_branch"`
-	Status      WorktreeStatus         `json:"status"`
-	CreatedAt   time.Time              `json:"created_at"`
-	LastSync    time.Time              `json:"last_sync"`
-	Repository  *git.Repository        `json:"-"`
-	Metadata    map[string]interface{} `json:"metadata"`
-	TaskID      string                 `json:"task_id"`
+	ID         string                 `json:"id"`
+	AgentID    string                 `json:"agent_id"`
+	Path       string                 `json:"path"`
+	Branch     string                 `json:"branch"`
+	BaseBranch string                 `json:"base_branch"`
+	Status     WorktreeStatus         `json:"status"`
+	CreatedAt  time.Time              `json:"created_at"`
+	LastSync   time.Time              `json:"last_sync"`
+	Repository *git.Repository        `json:"-"`
+	Metadata   map[string]interface{} `json:"metadata"`
+	TaskID     string                 `json:"task_id"`
 }
 
 // CreateWorktreeRequest contains parameters for creating a new worktree
@@ -61,13 +61,13 @@ type CreateWorktreeRequest struct {
 
 // WorktreeStats provides statistics about worktree usage
 type WorktreeStats struct {
-	TotalWorktrees   int            `json:"total_worktrees"`
-	ActiveWorktrees  int            `json:"active_worktrees"`
-	ArchivedWorktrees int           `json:"archived_worktrees"`
-	WorktreesByAgent map[string]int `json:"worktrees_by_agent"`
-	DiskUsage        int64          `json:"disk_usage_bytes"`
-	OldestWorktree   *time.Time     `json:"oldest_worktree"`
-	NewestWorktree   *time.Time     `json:"newest_worktree"`
+	TotalWorktrees    int            `json:"total_worktrees"`
+	ActiveWorktrees   int            `json:"active_worktrees"`
+	ArchivedWorktrees int            `json:"archived_worktrees"`
+	WorktreesByAgent  map[string]int `json:"worktrees_by_agent"`
+	DiskUsage         int64          `json:"disk_usage_bytes"`
+	OldestWorktree    *time.Time     `json:"oldest_worktree"`
+	NewestWorktree    *time.Time     `json:"newest_worktree"`
 }
 
 // Divergence represents how far ahead/behind a worktree is from its base branch
@@ -78,12 +78,12 @@ type Divergence struct {
 
 // SyncResult contains the result of a worktree sync operation
 type SyncResult struct {
-	WorktreeID string    `json:"worktree_id"`
-	Success    bool      `json:"success"`
+	WorktreeID string     `json:"worktree_id"`
+	Success    bool       `json:"success"`
 	Divergence Divergence `json:"divergence"`
-	Conflicts  []string  `json:"conflicts"`
-	Timestamp  time.Time `json:"timestamp"`
-	Message    string    `json:"message"`
+	Conflicts  []string   `json:"conflicts"`
+	Timestamp  time.Time  `json:"timestamp"`
+	Message    string     `json:"message"`
 }
 
 // CleanupPolicy defines how worktrees should be cleaned up

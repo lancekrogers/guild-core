@@ -19,21 +19,21 @@ import (
 
 // RenderCache provides efficient caching of rendered card strings
 type RenderCache struct {
-	mu     sync.RWMutex
-	cards  map[string]*CachedRender
-	maxAge time.Duration
+	mu      sync.RWMutex
+	cards   map[string]*CachedRender
+	maxAge  time.Duration
 	maxSize int
 }
 
 // CachedRender contains a cached render result with metadata
 type CachedRender struct {
-	Content   string
-	Timestamp time.Time
-	Hash      uint64    // Content hash for invalidation
-	CardID    string
-	Status    kanban.TaskStatus
-	Width     int       // Rendered width
-	Selected  bool      // Whether this was rendered as selected
+	Content    string
+	Timestamp  time.Time
+	Hash       uint64 // Content hash for invalidation
+	CardID     string
+	Status     kanban.TaskStatus
+	Width      int       // Rendered width
+	Selected   bool      // Whether this was rendered as selected
 	AccessTime time.Time // For LRU eviction
 }
 
@@ -72,14 +72,14 @@ type BatchUpdateMsg struct {
 
 // RenderBatcher manages batched render updates for performance
 type RenderBatcher struct {
-	mu           sync.Mutex
-	updates      chan CardUpdate
-	batch        []CardUpdate
-	ticker       *time.Ticker
-	batchSize    int
-	interval     time.Duration
-	enabled      bool
-	lastBatchID  int
+	mu          sync.Mutex
+	updates     chan CardUpdate
+	batch       []CardUpdate
+	ticker      *time.Ticker
+	batchSize   int
+	interval    time.Duration
+	enabled     bool
+	lastBatchID int
 }
 
 // RenderMetrics tracks rendering performance
@@ -111,7 +111,7 @@ func (rc *RenderCache) GetOrRender(ctx context.Context, card *kanban.Task, width
 
 	// Create cache key including rendering parameters
 	cacheKey := fmt.Sprintf("%s:%d:%t", card.ID, width, selected)
-	
+
 	// Calculate content hash for cache invalidation
 	contentHash := rc.calculateHash(card)
 
@@ -176,7 +176,7 @@ func (rc *RenderCache) InvalidateCard(ctx context.Context, cardID string) error 
 func (rc *RenderCache) Clear() {
 	rc.mu.Lock()
 	defer rc.mu.Unlock()
-	
+
 	rc.cards = make(map[string]*CachedRender)
 }
 
@@ -188,7 +188,7 @@ func (rc *RenderCache) GetStats() map[string]interface{} {
 	totalEntries := len(rc.cards)
 	validEntries := 0
 	now := time.Now()
-	
+
 	for _, cached := range rc.cards {
 		if now.Sub(cached.Timestamp) < rc.maxAge {
 			validEntries++
@@ -209,17 +209,17 @@ func (rc *RenderCache) calculateHash(card *kanban.Task) uint64 {
 	content := fmt.Sprintf("%s:%s:%s:%s:%s:%d:%d",
 		card.ID, card.Title, card.Description, string(card.Priority),
 		card.AssignedTo, card.Progress, card.UpdatedAt.Unix())
-	
+
 	// Basic FNV-1a hash
 	const fnvPrime = 1099511628211
 	const fnvOffset = 14695981039346656037
-	
+
 	hash := uint64(fnvOffset)
 	for _, b := range []byte(content) {
 		hash ^= uint64(b)
 		hash *= fnvPrime
 	}
-	
+
 	return hash
 }
 
@@ -227,14 +227,14 @@ func (rc *RenderCache) calculateHash(card *kanban.Task) uint64 {
 func (rc *RenderCache) evictOldestEntry() {
 	var oldestKey string
 	var oldestTime time.Time
-	
+
 	for key, cached := range rc.cards {
 		if oldestKey == "" || cached.AccessTime.Before(oldestTime) {
 			oldestKey = key
 			oldestTime = cached.AccessTime
 		}
 	}
-	
+
 	if oldestKey != "" {
 		delete(rc.cards, oldestKey)
 	}
@@ -270,7 +270,7 @@ func (rb *RenderBatcher) Start(ctx context.Context) tea.Cmd {
 			case update := <-rb.updates:
 				rb.mu.Lock()
 				rb.batch = append(rb.batch, update)
-				
+
 				// Send batch if it's full
 				if len(rb.batch) >= rb.batchSize {
 					batch := rb.createBatchMessage()
@@ -317,7 +317,7 @@ func (rb *RenderBatcher) QueueUpdate(ctx context.Context, update CardUpdate) err
 func (rb *RenderBatcher) Stop() {
 	rb.mu.Lock()
 	defer rb.mu.Unlock()
-	
+
 	rb.enabled = false
 	if rb.ticker != nil {
 		rb.ticker.Stop()
@@ -330,7 +330,7 @@ func (rb *RenderBatcher) createBatchMessage() BatchUpdateMsg {
 	rb.lastBatchID++
 	batchCopy := make([]CardUpdate, len(rb.batch))
 	copy(batchCopy, rb.batch)
-	
+
 	return BatchUpdateMsg{
 		Updates: batchCopy,
 		BatchID: fmt.Sprintf("batch_%d", rb.lastBatchID),
@@ -339,18 +339,18 @@ func (rb *RenderBatcher) createBatchMessage() BatchUpdateMsg {
 
 // OptimizedCardRenderer provides high-performance card rendering
 type OptimizedCardRenderer struct {
-	cache        *RenderCache
-	batcher      *RenderBatcher
-	metrics      *RenderMetrics
-	mu           sync.RWMutex
-	lowQuality   bool // Reduced quality mode for performance
+	cache      *RenderCache
+	batcher    *RenderBatcher
+	metrics    *RenderMetrics
+	mu         sync.RWMutex
+	lowQuality bool // Reduced quality mode for performance
 }
 
 // NewOptimizedCardRenderer creates a new optimized renderer
 func NewOptimizedCardRenderer() *OptimizedCardRenderer {
-	cache := NewRenderCache(500, 5*time.Minute) // Cache 500 cards for 5 minutes
+	cache := NewRenderCache(500, 5*time.Minute)          // Cache 500 cards for 5 minutes
 	batcher := NewRenderBatcher(20, 16*time.Millisecond) // 60 FPS batching
-	
+
 	return &OptimizedCardRenderer{
 		cache:   cache,
 		batcher: batcher,
@@ -497,13 +497,13 @@ func (ocr *OptimizedCardRenderer) renderCardContent(card *kanban.Task, width int
 func (ocr *OptimizedCardRenderer) SetLowQualityMode(ctx context.Context, enabled bool) error {
 	ocr.mu.Lock()
 	defer ocr.mu.Unlock()
-	
+
 	if ocr.lowQuality != enabled {
 		ocr.lowQuality = enabled
 		// Clear cache when quality mode changes
 		ocr.cache.Clear()
 	}
-	
+
 	return nil
 }
 
@@ -516,7 +516,7 @@ func (ocr *OptimizedCardRenderer) InvalidateCard(ctx context.Context, cardID str
 func (ocr *OptimizedCardRenderer) GetMetrics() *RenderMetrics {
 	ocr.mu.RLock()
 	defer ocr.mu.RUnlock()
-	
+
 	// Return a copy to avoid data races
 	return &RenderMetrics{
 		CacheHits:         ocr.metrics.CacheHits,
@@ -532,18 +532,18 @@ func (ocr *OptimizedCardRenderer) GetMetrics() *RenderMetrics {
 func (ocr *OptimizedCardRenderer) GetDebugInfo(ctx context.Context) map[string]interface{} {
 	metrics := ocr.GetMetrics()
 	cacheStats := ocr.cache.GetStats()
-	
+
 	cacheHitRate := float64(0)
 	if metrics.CacheHits+metrics.CacheMisses > 0 {
 		cacheHitRate = float64(metrics.CacheHits) / float64(metrics.CacheHits+metrics.CacheMisses) * 100
 	}
 
 	info := map[string]interface{}{
-		"cache_hit_rate":     cacheHitRate,
-		"total_renders":      metrics.TotalRenders,
-		"avg_render_time_ms": float64(metrics.AverageRenderTime.Nanoseconds()) / 1e6,
-		"low_quality_mode":   ocr.lowQuality,
-		"cache_entries":      cacheStats["total_entries"],
+		"cache_hit_rate":      cacheHitRate,
+		"total_renders":       metrics.TotalRenders,
+		"avg_render_time_ms":  float64(metrics.AverageRenderTime.Nanoseconds()) / 1e6,
+		"low_quality_mode":    ocr.lowQuality,
+		"cache_entries":       cacheStats["total_entries"],
 		"valid_cache_entries": cacheStats["valid_entries"],
 	}
 
@@ -555,10 +555,10 @@ func (ocr *OptimizedCardRenderer) Cleanup(ctx context.Context) error {
 	if ocr.batcher != nil {
 		ocr.batcher.Stop()
 	}
-	
+
 	if ocr.cache != nil {
 		ocr.cache.Clear()
 	}
-	
+
 	return nil
 }

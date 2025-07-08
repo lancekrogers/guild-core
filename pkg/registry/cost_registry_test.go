@@ -267,3 +267,5 @@ func (m *MockTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 func (m *MockTool) Examples() []string { return []string{"example input"} }
 
 func (m *MockTool) RequiresAuth() bool { return false }
+
+func (m *MockTool) HealthCheck() error { return nil }

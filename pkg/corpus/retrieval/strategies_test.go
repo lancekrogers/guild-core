@@ -75,7 +75,7 @@ func TestGuildVectorSearchStrategy_QueryEnhancement(t *testing.T) {
 	}
 
 	enhanced := strategy.enhanceQuery(query)
-	
+
 	// Should include files, tags, and recent messages
 	assert.Contains(t, enhanced, "implement authentication")
 	assert.Contains(t, enhanced, "files: auth.go middleware.go")
@@ -252,8 +252,8 @@ func TestGuildGraphTraversalStrategy_NodeConversion(t *testing.T) {
 			},
 		},
 		{
-			ID:   "node2",
-			Type: "example",
+			ID:      "node2",
+			Type:    "example",
 			Content: "Example content",
 		},
 	}

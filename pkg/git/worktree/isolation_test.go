@@ -81,7 +81,7 @@ func TestScribeIsolatedWorkspaceCreation(t *testing.T) {
 	// This would fail in real implementation due to filesystem operations
 	// but tests the structure
 	workspace, err := framework.CreateIsolatedWorkspace(ctx, "test-agent", task)
-	
+
 	// We expect this to fail due to filesystem operations in the real implementation
 	// but we can test the error handling
 	if err != nil {
@@ -175,7 +175,7 @@ func TestCraftValidationRules(t *testing.T) {
 
 	t.Run("NoSecretRule", func(t *testing.T) {
 		rule := &NoSecretRule{}
-		
+
 		// Test with secret content
 		changes := []Change{
 			{
@@ -183,7 +183,7 @@ func TestCraftValidationRules(t *testing.T) {
 				Content: "api_key = \"sk-1234567890abcdef1234567890abcdef12345678\"",
 			},
 		}
-		
+
 		issues := rule.Validate(ctx, changes)
 		assert.Greater(t, len(issues), 0)
 		assert.Equal(t, SeverityError, issues[0].Severity)
@@ -192,20 +192,20 @@ func TestCraftValidationRules(t *testing.T) {
 
 	t.Run("FileSizeRule", func(t *testing.T) {
 		rule := &FileSizeRule{maxSize: 100} // 100 bytes limit
-		
+
 		// Test with large content
 		largeContent := make([]byte, 200)
 		for i := range largeContent {
 			largeContent[i] = 'a'
 		}
-		
+
 		changes := []Change{
 			{
 				File:    "large.txt",
 				Content: string(largeContent),
 			},
 		}
-		
+
 		issues := rule.Validate(ctx, changes)
 		assert.Greater(t, len(issues), 0)
 		assert.Equal(t, SeverityWarning, issues[0].Severity)
@@ -214,7 +214,7 @@ func TestCraftValidationRules(t *testing.T) {
 
 	t.Run("PathValidationRule", func(t *testing.T) {
 		rule := &PathValidationRule{}
-		
+
 		// Test with restricted path
 		changes := []Change{
 			{
@@ -222,7 +222,7 @@ func TestCraftValidationRules(t *testing.T) {
 				Content: "SECRET=value",
 			},
 		}
-		
+
 		issues := rule.Validate(ctx, changes)
 		assert.Greater(t, len(issues), 0)
 		assert.Equal(t, SeverityError, issues[0].Severity)
@@ -251,7 +251,7 @@ func TestJourneymanSecurityScanner(t *testing.T) {
 
 	issues := scanner.Scan(ctx, changes)
 	assert.Greater(t, len(issues), 0)
-	
+
 	// Check for eval detection
 	found := false
 	for _, issue := range issues {
@@ -368,7 +368,7 @@ func TestGuildChangeTypes(t *testing.T) {
 func BenchmarkValidationRules(b *testing.B) {
 	ctx := context.Background()
 	rule := &NoSecretRule{}
-	
+
 	changes := []Change{
 		{
 			File:    "config.go",
@@ -385,7 +385,7 @@ func BenchmarkValidationRules(b *testing.B) {
 func BenchmarkSecurityScanner(b *testing.B) {
 	ctx := context.Background()
 	scanner := NewSecurityScanner()
-	
+
 	changes := []Change{
 		{
 			File:    "normal.go",

@@ -18,18 +18,18 @@ import (
 
 // RealDaemon wraps the actual gRPC server for integration testing
 type RealDaemon struct {
-	config      DaemonConfig
-	server      *grpc.Server
-	registry    registry.ComponentRegistry
-	eventBus    grpc.EventBus
-	address     string
-	port        int
-	running     bool
-	startTime   time.Time
-	mu          sync.RWMutex
-	ctx         context.Context
-	cancel      context.CancelFunc
-	listener    net.Listener
+	config    DaemonConfig
+	server    *grpc.Server
+	registry  registry.ComponentRegistry
+	eventBus  grpc.EventBus
+	address   string
+	port      int
+	running   bool
+	startTime time.Time
+	mu        sync.RWMutex
+	ctx       context.Context
+	cancel    context.CancelFunc
+	listener  net.Listener
 }
 
 // NewRealDaemon creates a new real daemon instance for testing
@@ -65,16 +65,16 @@ func NewRealDaemon(config DaemonConfig) (*RealDaemon, error) {
 	address := fmt.Sprintf("localhost:%d", port)
 
 	return &RealDaemon{
-		config:    config,
-		server:    server,
-		registry:  reg,
-		eventBus:  eventBus,
-		address:   address,
-		port:      port,
-		running:   false,
-		ctx:       ctx,
-		cancel:    cancel,
-		listener:  listener,
+		config:   config,
+		server:   server,
+		registry: reg,
+		eventBus: eventBus,
+		address:  address,
+		port:     port,
+		running:  false,
+		ctx:      ctx,
+		cancel:   cancel,
+		listener: listener,
 	}, nil
 }
 
@@ -270,13 +270,13 @@ func (d *RealDaemon) GetRegistry() registry.ComponentRegistry {
 // WaitForReady waits for the daemon to be ready for connections
 func (d *RealDaemon) WaitForReady(timeout time.Duration) error {
 	deadline := time.Now().Add(timeout)
-	
+
 	for time.Now().Before(deadline) {
 		if d.IsHealthy() {
 			return nil
 		}
 		time.Sleep(100 * time.Millisecond)
 	}
-	
+
 	return fmt.Errorf("daemon not ready within timeout %v", timeout)
 }

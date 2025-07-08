@@ -8,9 +8,9 @@ import (
 	"sync"
 	"testing"
 
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/lancekrogers/guild/internal/ui"
 	"github.com/lancekrogers/guild/pkg/gerror"
-	tea "github.com/charmbracelet/bubbletea"
 	"go.uber.org/zap"
 )
 
@@ -30,15 +30,15 @@ func TestNewShortcutManager(t *testing.T) {
 				if sm == nil {
 					t.Fatal("shortcut manager should not be nil")
 				}
-				
+
 				if !sm.enabled {
 					t.Error("shortcut manager should be enabled by default")
 				}
-				
+
 				if sm.globalContext == nil {
 					t.Error("should have global context")
 				}
-				
+
 				if sm.commandPalette == nil {
 					t.Error("should have command palette")
 				}
@@ -51,11 +51,11 @@ func TestNewShortcutManager(t *testing.T) {
 				if len(shortcuts) == 0 {
 					t.Error("should have default shortcuts registered")
 				}
-				
+
 				// Check for specific expected shortcuts
 				hasCommandPalette := false
 				hasQuickOpen := false
-				
+
 				for _, shortcut := range shortcuts {
 					if shortcut.ID == "command_palette" {
 						hasCommandPalette = true
@@ -64,7 +64,7 @@ func TestNewShortcutManager(t *testing.T) {
 						hasQuickOpen = true
 					}
 				}
-				
+
 				if !hasCommandPalette {
 					t.Error("should have command palette shortcut")
 				}
@@ -80,10 +80,10 @@ func TestNewShortcutManager(t *testing.T) {
 				if len(contexts) == 0 {
 					t.Error("should have default contexts")
 				}
-				
+
 				hasGlobal := false
 				hasChat := false
-				
+
 				for _, context := range contexts {
 					if context.Name == "global" {
 						hasGlobal = true
@@ -92,7 +92,7 @@ func TestNewShortcutManager(t *testing.T) {
 						hasChat = true
 					}
 				}
-				
+
 				if !hasGlobal {
 					t.Error("should have global context")
 				}
@@ -219,26 +219,26 @@ func TestShortcutManager_RegisterShortcut(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			sm := newTestShortcutManager()
-			
+
 			if tt.setup != nil {
 				tt.setup(sm)
 			}
-			
+
 			err := sm.RegisterShortcut(tt.shortcut)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Error("expected error but got none")
 					return
 				}
-				
+
 				if tt.errCode != "" {
 					var gErr *gerror.GuildError
 					if !gerror.As(err, &gErr) {
 						t.Errorf("expected gerror.GuildError, got %T", err)
 						return
 					}
-					
+
 					if gErr.Code != tt.errCode {
 						t.Errorf("expected error code %v, got %v", tt.errCode, gErr.Code)
 					}
@@ -248,7 +248,7 @@ func TestShortcutManager_RegisterShortcut(t *testing.T) {
 					t.Errorf("expected no error, got %v", err)
 					return
 				}
-				
+
 				// Verify shortcut was registered
 				shortcuts := sm.ListShortcuts()
 				found := false
@@ -258,7 +258,7 @@ func TestShortcutManager_RegisterShortcut(t *testing.T) {
 						break
 					}
 				}
-				
+
 				if !found {
 					t.Error("shortcut should be registered")
 				}
@@ -269,10 +269,10 @@ func TestShortcutManager_RegisterShortcut(t *testing.T) {
 
 func TestShortcutManager_HandleKeyPress(t *testing.T) {
 	tests := []struct {
-		name     string
-		key      string
-		setup    func(*ShortcutManager) *bool
-		wantCmd  bool
+		name    string
+		key     string
+		setup   func(*ShortcutManager) *bool
+		wantCmd bool
 	}{
 		{
 			name: "executes_global_shortcut",
@@ -309,7 +309,7 @@ func TestShortcutManager_HandleKeyPress(t *testing.T) {
 				if err != nil {
 					panic(err)
 				}
-				
+
 				err = sm.SetContext(context.Background(), "chat")
 				if err != nil {
 					panic(err)
@@ -341,13 +341,13 @@ func TestShortcutManager_HandleKeyPress(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			sm := newTestShortcutManager()
-			
+
 			if tt.setup != nil {
 				tt.setup(sm)
 			}
-			
+
 			cmd := sm.HandleKeyPress(ctx, tt.key)
-			
+
 			if tt.wantCmd {
 				if cmd == nil {
 					t.Error("expected command but got nil")
@@ -357,7 +357,7 @@ func TestShortcutManager_HandleKeyPress(t *testing.T) {
 					t.Error("expected nil but got command")
 				}
 			}
-			
+
 			// Note: We don't check executed flag for default handlers since they don't modify test variables
 		})
 	}
@@ -392,22 +392,22 @@ func TestShortcutManager_SetContext(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			sm := newTestShortcutManager()
-			
+
 			err := sm.SetContext(ctx, tt.contextName)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Error("expected error but got none")
 					return
 				}
-				
+
 				if tt.errCode != "" {
 					var gErr *gerror.GuildError
 					if !gerror.As(err, &gErr) {
 						t.Errorf("expected gerror.GuildError, got %T", err)
 						return
 					}
-					
+
 					if gErr.Code != tt.errCode {
 						t.Errorf("expected error code %v, got %v", tt.errCode, gErr.Code)
 					}
@@ -423,19 +423,19 @@ func TestShortcutManager_SetContext(t *testing.T) {
 
 func TestShortcutManager_CommandPalette(t *testing.T) {
 	sm := newTestShortcutManager()
-	
+
 	// Test showing command palette
 	cmd := sm.ShowCommandPalette()
 	if cmd == nil {
 		t.Error("show command palette should return command")
 	}
-	
+
 	// Test hiding command palette
 	cmd = sm.HideCommandPalette()
 	if cmd == nil {
 		t.Error("hide command palette should return command")
 	}
-	
+
 	// Test getting command palette
 	palette := sm.GetCommandPalette()
 	if palette == nil {
@@ -484,13 +484,13 @@ func TestCommandPalette_FilterCommands(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			palette := NewCommandPalette()
-			
+
 			// Update input to trigger filtering
 			palette.input.SetValue(tt.query)
 			palette.filterCommands(tt.query)
-			
+
 			filtered := palette.GetFilteredCommands()
-			
+
 			if tt.expectMatches {
 				if len(filtered) == 0 {
 					t.Error("expected matches but got none")
@@ -506,23 +506,23 @@ func TestCommandPalette_FilterCommands(t *testing.T) {
 
 func TestCommandPalette_Navigation(t *testing.T) {
 	palette := NewCommandPalette()
-	
+
 	// Test initial state
 	if palette.GetSelectedIndex() != 0 {
 		t.Error("initial selected index should be 0")
 	}
-	
+
 	// Test selection navigation
 	palette.SelectNext()
 	if palette.GetSelectedIndex() != 1 {
 		t.Error("selected index should increment")
 	}
-	
+
 	palette.SelectPrevious()
 	if palette.GetSelectedIndex() != 0 {
 		t.Error("selected index should decrement")
 	}
-	
+
 	// Test wrap-around
 	palette.SelectPrevious()
 	filtered := palette.GetFilteredCommands()
@@ -535,21 +535,21 @@ func TestCommandPalette_Navigation(t *testing.T) {
 func TestCommandPalette_ExecuteSelected(t *testing.T) {
 	palette := NewCommandPalette()
 	ctx := context.Background()
-	
+
 	// Ensure we have commands
 	filtered := palette.GetFilteredCommands()
 	if len(filtered) == 0 {
 		t.Fatal("need commands for execution test")
 	}
-	
+
 	// Execute first command
 	cmd := palette.ExecuteSelected(ctx)
-	
+
 	// Should return nil since test commands don't have handlers
 	if cmd != nil {
 		t.Error("expected nil command for test commands without handlers")
 	}
-	
+
 	// Palette should be hidden after execution
 	if palette.IsVisible() {
 		t.Error("palette should be hidden after execution")
@@ -558,18 +558,18 @@ func TestCommandPalette_ExecuteSelected(t *testing.T) {
 
 func TestCommandPalette_Visibility(t *testing.T) {
 	palette := NewCommandPalette()
-	
+
 	// Initially not visible
 	if palette.IsVisible() {
 		t.Error("palette should not be visible initially")
 	}
-	
+
 	// Show palette
 	palette.Show()
 	if !palette.IsVisible() {
 		t.Error("palette should be visible after Show()")
 	}
-	
+
 	// Hide palette
 	palette.Hide()
 	if palette.IsVisible() {
@@ -580,37 +580,37 @@ func TestCommandPalette_Visibility(t *testing.T) {
 func TestShortcutManager_ThreadSafety(t *testing.T) {
 	sm := newTestShortcutManager()
 	ctx := context.Background()
-	
+
 	var wg sync.WaitGroup
 	numGoroutines := 10
 	numOperations := 100
-	
+
 	// Test concurrent operations
 	wg.Add(numGoroutines)
 	for i := 0; i < numGoroutines; i++ {
 		go func(id int) {
 			defer wg.Done()
-			
+
 			for j := 0; j < numOperations; j++ {
 				// Handle key press
 				sm.HandleKeyPress(ctx, "ctrl+shift+p")
-				
+
 				// Set context
 				sm.SetContext(ctx, "global")
-				
+
 				// List shortcuts
 				sm.ListShortcuts()
-				
+
 				// List contexts
 				sm.ListContexts()
-				
+
 				// Show/hide command palette
 				sm.ShowCommandPalette()
 				sm.HideCommandPalette()
 			}
 		}(i)
 	}
-	
+
 	wg.Wait()
 }
 
@@ -628,7 +628,7 @@ func TestKeyNormalization(t *testing.T) {
 	}
 
 	sm := newTestShortcutManager()
-	
+
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
 			normalized := sm.normalizeKey(tt.input)
@@ -641,7 +641,7 @@ func TestKeyNormalization(t *testing.T) {
 
 func TestShortcutValidation(t *testing.T) {
 	sm := newTestShortcutManager()
-	
+
 	tests := []struct {
 		name     string
 		shortcut *Shortcut
@@ -696,7 +696,7 @@ func TestShortcutValidation(t *testing.T) {
 				// Simulate nil validation
 				err = gerror.New(gerror.ErrCodeValidation, "shortcut cannot be nil", nil)
 			}
-			
+
 			if tt.wantErr && err == nil {
 				t.Error("expected error but got none")
 			}
@@ -710,29 +710,29 @@ func TestShortcutValidation(t *testing.T) {
 func TestCommandUsageTracking(t *testing.T) {
 	palette := NewCommandPalette()
 	ctx := context.Background()
-	
+
 	// Get initial command
 	commands := palette.GetFilteredCommands()
 	if len(commands) == 0 {
 		t.Fatal("need commands for usage tracking test")
 	}
-	
+
 	initialUsage := commands[0].UsageCount
 	initialLastUsed := commands[0].LastUsed
-	
+
 	// Execute command
 	palette.ExecuteSelected(ctx)
-	
+
 	// Check that usage was tracked
 	updatedCommands := palette.GetFilteredCommands()
 	if len(updatedCommands) == 0 {
 		t.Fatal("commands should still exist after execution")
 	}
-	
+
 	// Note: Since we're testing the same command object, we need to check
 	// if the usage tracking would have worked in a real scenario
 	// The test commands don't have handlers, so usage won't actually increment
-	
+
 	// Verify that the tracking mechanism exists
 	if commands[0].UsageCount == initialUsage && commands[0].LastUsed == initialLastUsed {
 		// This is expected for test commands without handlers

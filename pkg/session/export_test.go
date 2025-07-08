@@ -13,10 +13,10 @@ import (
 
 func createTestSession() *Session {
 	return &Session{
-		ID:         "test-session-123",
-		UserID:     "test-user",
-		CampaignID: "test-campaign",
-		StartTime:  time.Date(2025, 1, 1, 10, 0, 0, 0, time.UTC),
+		ID:             "test-session-123",
+		UserID:         "test-user",
+		CampaignID:     "test-campaign",
+		StartTime:      time.Date(2025, 1, 1, 10, 0, 0, 0, time.UTC),
 		LastActiveTime: time.Date(2025, 1, 1, 12, 30, 0, 0, time.UTC),
 		State: SessionState{
 			ActiveAgents: map[string]AgentState{
@@ -85,9 +85,9 @@ func createTestSession() *Session {
 			RunningTasks:     []string{"test-session-persistence"},
 		},
 		Metadata: map[string]interface{}{
-			"version":     "1.0",
-			"created_by":  "guild-chat",
-			"project":     "session-management",
+			"version":    "1.0",
+			"created_by": "guild-chat",
+			"project":    "session-management",
 		},
 	}
 }

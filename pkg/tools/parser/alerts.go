@@ -48,7 +48,7 @@ type AlertManager struct {
 	alerts     map[string]*Alert
 	conditions []AlertCondition
 	handlers   []AlertHandler
-	
+
 	// Rate limiting
 	lastAlertTime map[string]time.Time
 	cooldown      time.Duration
@@ -66,7 +66,7 @@ func NewAlertManager() *AlertManager {
 		lastAlertTime: make(map[string]time.Time),
 		cooldown:      5 * time.Minute, // Prevent alert spam
 	}
-	
+
 	// Define default alert conditions
 	am.conditions = []AlertCondition{
 		{
@@ -160,7 +160,7 @@ func NewAlertManager() *AlertManager {
 			},
 		},
 	}
-	
+
 	return am
 }
 
@@ -182,14 +182,14 @@ func (am *AlertManager) AddCondition(condition AlertCondition) {
 func (am *AlertManager) CheckAlerts(metrics HealthMetrics) {
 	am.mu.Lock()
 	defer am.mu.Unlock()
-	
+
 	// Track which conditions are currently firing
 	firingConditions := make(map[string]bool)
-	
+
 	for _, condition := range am.conditions {
 		if condition.Check(metrics) {
 			firingConditions[condition.Name] = true
-			
+
 			// Check if we should create a new alert
 			if am.shouldCreateAlert(condition.Name) {
 				alert := Alert{
@@ -207,23 +207,23 @@ func (am *AlertManager) CheckAlerts(metrics HealthMetrics) {
 						"metrics": metrics,
 					},
 				}
-				
+
 				am.alerts[condition.Name] = &alert
 				am.lastAlertTime[condition.Name] = time.Now()
-				
+
 				// Send to handlers
 				am.sendAlert(alert)
 			}
 		}
 	}
-	
+
 	// Resolve alerts for conditions that are no longer firing
 	for name, alert := range am.alerts {
 		if !firingConditions[name] && !alert.Resolved {
 			alert.Resolved = true
 			now := time.Now()
 			alert.ResolvedAt = &now
-			
+
 			// Send resolution
 			am.sendAlert(*alert)
 		}
@@ -236,14 +236,14 @@ func (am *AlertManager) shouldCreateAlert(conditionName string) bool {
 	if existing, ok := am.alerts[conditionName]; ok && !existing.Resolved {
 		return false
 	}
-	
+
 	// Check cooldown
 	if lastTime, ok := am.lastAlertTime[conditionName]; ok {
 		if time.Since(lastTime) < am.cooldown {
 			return false
 		}
 	}
-	
+
 	return true
 }
 
@@ -263,7 +263,7 @@ func (am *AlertManager) sendAlert(alert Alert) {
 func (am *AlertManager) GetActiveAlerts() []Alert {
 	am.mu.RLock()
 	defer am.mu.RUnlock()
-	
+
 	var active []Alert
 	for _, alert := range am.alerts {
 		if !alert.Resolved {
@@ -277,7 +277,7 @@ func (am *AlertManager) GetActiveAlerts() []Alert {
 func (am *AlertManager) GetAllAlerts() []Alert {
 	am.mu.RLock()
 	defer am.mu.RUnlock()
-	
+
 	var all []Alert
 	for _, alert := range am.alerts {
 		all = append(all, *alert)
@@ -289,7 +289,7 @@ func (am *AlertManager) GetAllAlerts() []Alert {
 func (am *AlertManager) ClearResolvedAlerts(olderThan time.Duration) {
 	am.mu.Lock()
 	defer am.mu.Unlock()
-	
+
 	cutoff := time.Now().Add(-olderThan)
 	for name, alert := range am.alerts {
 		if alert.Resolved && alert.ResolvedAt != nil && alert.ResolvedAt.Before(cutoff) {
@@ -306,7 +306,7 @@ func (h LogAlertHandler) Handle(alert Alert) error {
 	if alert.Resolved {
 		status = "RESOLVED"
 	}
-	
+
 	fmt.Printf("[%s] %s Alert: %s - %s\n",
 		status,
 		alert.Severity,
@@ -334,7 +334,7 @@ type MonitoredParser struct {
 	monitor       *HealthMonitor
 	alertManager  *AlertManager
 	checkInterval time.Duration
-	
+
 	ctx    context.Context
 	cancel context.CancelFunc
 	wg     sync.WaitGroup
@@ -343,7 +343,7 @@ type MonitoredParser struct {
 // NewMonitoredParser creates a parser with monitoring and alerting
 func NewMonitoredParser(parser ResponseParser, version string) *MonitoredParser {
 	ctx, cancel := context.WithCancel(context.Background())
-	
+
 	mp := &MonitoredParser{
 		parser:        parser,
 		monitor:       NewHealthMonitor(parser, version),
@@ -352,24 +352,24 @@ func NewMonitoredParser(parser ResponseParser, version string) *MonitoredParser 
 		ctx:           ctx,
 		cancel:        cancel,
 	}
-	
+
 	// Add default alert handler
 	mp.alertManager.AddHandler(LogAlertHandler{})
-	
+
 	// Start monitoring
 	mp.wg.Add(1)
 	go mp.monitorLoop()
-	
+
 	return mp
 }
 
 // monitorLoop runs periodic health checks
 func (mp *MonitoredParser) monitorLoop() {
 	defer mp.wg.Done()
-	
+
 	ticker := time.NewTicker(mp.checkInterval)
 	defer ticker.Stop()
-	
+
 	for {
 		select {
 		case <-mp.ctx.Done():
@@ -377,7 +377,7 @@ func (mp *MonitoredParser) monitorLoop() {
 		case <-ticker.C:
 			health := mp.monitor.Check(mp.ctx)
 			mp.alertManager.CheckAlerts(health.Metrics)
-			
+
 			// Clean up old resolved alerts
 			mp.alertManager.ClearResolvedAlerts(24 * time.Hour)
 		}
@@ -393,20 +393,20 @@ func (mp *MonitoredParser) ExtractToolCalls(response string) ([]ToolCall, error)
 func (mp *MonitoredParser) ExtractWithContext(ctx context.Context, response string) ([]ToolCall, error) {
 	mp.monitor.StartParse()
 	defer mp.monitor.EndParse()
-	
+
 	start := time.Now()
-	
+
 	// Detect format for metrics
 	format, _, _ := mp.parser.DetectFormat(response)
-	
+
 	// Parse
 	calls, err := mp.parser.ExtractWithContext(ctx, response)
-	
+
 	// Record metrics
 	duration := time.Since(start)
 	success := err == nil
 	mp.monitor.RecordParse(format, duration, success)
-	
+
 	return calls, err
 }
 

@@ -119,11 +119,11 @@ type JourneyStep struct {
 
 // UserAction represents an action the user takes
 type UserAction struct {
-	Type        ActionType
-	Command     string
-	Parameters  map[string]interface{}
+	Type           ActionType
+	Command        string
+	Parameters     map[string]interface{}
 	ExpectedResult string
-	Timeout     time.Duration
+	Timeout        time.Duration
 }
 
 // ActionType represents types of user actions
@@ -157,10 +157,10 @@ const (
 
 // StepValidation defines how to validate a step
 type StepValidation struct {
-	Type       ValidationType
-	Criteria   map[string]interface{}
-	Threshold  float64
-	Required   bool
+	Type      ValidationType
+	Criteria  map[string]interface{}
+	Threshold float64
+	Required  bool
 }
 
 // ValidationType represents types of validations
@@ -176,12 +176,12 @@ const (
 
 // JourneyMetrics defines success metrics for the journey
 type JourneyMetrics struct {
-	CompletionRate      float64
-	TimeToValue         time.Duration
-	UserSatisfaction    float64
-	ErrorRecoveryRate   float64
-	ProductivityGain    float64
-	QualityMaintenance  float64
+	CompletionRate     float64
+	TimeToValue        time.Duration
+	UserSatisfaction   float64
+	ErrorRecoveryRate  float64
+	ProductivityGain   float64
+	QualityMaintenance float64
 }
 
 // JourneyValidation defines overall journey validation
@@ -207,22 +207,22 @@ type JourneyExecution struct {
 
 // StepResult contains the result of executing a journey step
 type StepResult struct {
-	StepID        string
-	StartTime     time.Time
-	EndTime       time.Time
-	Success       bool
-	ActualTime    time.Duration
-	TargetTime    time.Duration
-	Validations   []ValidationResult
-	UserActions   []ActionResult
-	SystemState   map[string]interface{}
-	Issues        []StepIssue
+	StepID      string
+	StartTime   time.Time
+	EndTime     time.Time
+	Success     bool
+	ActualTime  time.Duration
+	TargetTime  time.Duration
+	Validations []ValidationResult
+	UserActions []ActionResult
+	SystemState map[string]interface{}
+	Issues      []StepIssue
 }
 
 // ValidationResult contains the result of a validation
 type ValidationResult struct {
-	Type      ValidationType
-	Passed    bool
+	Type        ValidationType
+	Passed      bool
 	ActualValue float64
 	Threshold   float64
 	Details     map[string]interface{}
@@ -230,12 +230,12 @@ type ValidationResult struct {
 
 // ActionResult contains the result of a user action
 type ActionResult struct {
-	Action      UserAction
-	Success     bool
-	Duration    time.Duration
-	Output      string
-	Error       error
-	Metrics     map[string]float64
+	Action   UserAction
+	Success  bool
+	Duration time.Duration
+	Output   string
+	Error    error
+	Metrics  map[string]float64
 }
 
 // StepIssue represents an issue encountered during step execution
@@ -298,12 +298,12 @@ type SessionManager struct {
 
 // UserSession represents a user session
 type UserSession struct {
-	ID            string
-	UserProfile   UserProfile
-	StartTime     time.Time
-	LastActivity  time.Time
-	Context       map[string]interface{}
-	Preferences   map[string]interface{}
+	ID             string
+	UserProfile    UserProfile
+	StartTime      time.Time
+	LastActivity   time.Time
+	Context        map[string]interface{}
+	Preferences    map[string]interface{}
 	JourneyHistory []string
 }
 
@@ -316,13 +316,13 @@ type JourneyMetricsCollector struct {
 
 // AggregatedMetrics contains aggregated metrics for a journey type
 type AggregatedMetrics struct {
-	JourneyType       JourneyType
-	TotalExecutions   int
+	JourneyType          JourneyType
+	TotalExecutions      int
 	SuccessfulExecutions int
-	AverageTime       time.Duration
-	AverageSatisfaction float64
-	CommonIssues      []IssueFrequency
-	PerformanceTrends []PerformanceDataPoint
+	AverageTime          time.Duration
+	AverageSatisfaction  float64
+	CommonIssues         []IssueFrequency
+	PerformanceTrends    []PerformanceDataPoint
 }
 
 // MetricsCollection represents a single metrics collection event
@@ -343,35 +343,35 @@ type IssueFrequency struct {
 
 // PerformanceDataPoint represents a performance measurement
 type PerformanceDataPoint struct {
-	Timestamp   time.Time
-	Metric      string
-	Value       float64
-	Context     map[string]interface{}
+	Timestamp time.Time
+	Metric    string
+	Value     float64
+	Context   map[string]interface{}
 }
 
 // UserSimulator simulates user behavior during journey execution
 type UserSimulator struct {
-	profiles    map[ExperienceLevel]*SimulationProfile
-	behaviors   map[string]*BehaviorPattern
-	mu          sync.RWMutex
+	profiles  map[ExperienceLevel]*SimulationProfile
+	behaviors map[string]*BehaviorPattern
+	mu        sync.RWMutex
 }
 
 // SimulationProfile defines how to simulate a user type
 type SimulationProfile struct {
-	ExperienceLevel   ExperienceLevel
-	TypingSpeed       time.Duration // Time between characters
-	ThinkingTime      time.Duration // Time to consider actions
-	ErrorRate         float64       // Probability of making mistakes
-	HelpSeekingRate   float64       // Probability of seeking help
-	PatienceLevel     time.Duration // How long to wait before giving up
+	ExperienceLevel ExperienceLevel
+	TypingSpeed     time.Duration // Time between characters
+	ThinkingTime    time.Duration // Time to consider actions
+	ErrorRate       float64       // Probability of making mistakes
+	HelpSeekingRate float64       // Probability of seeking help
+	PatienceLevel   time.Duration // How long to wait before giving up
 }
 
 // BehaviorPattern defines user behavior patterns
 type BehaviorPattern struct {
-	Name            string
+	Name              string
 	TriggerConditions []string
-	Actions         []UserAction
-	Adaptations     []BehaviorAdaptation
+	Actions           []UserAction
+	Adaptations       []BehaviorAdaptation
 }
 
 // BehaviorAdaptation defines how behavior changes based on context
@@ -423,24 +423,24 @@ type JourneyStepTemplate struct {
 
 // ActionTemplate defines a reusable action template
 type ActionTemplate struct {
-	Type        ActionType
-	Template    string
-	Parameters  map[string]ParameterDefinition
-	Variations  []ActionVariation
+	Type       ActionType
+	Template   string
+	Parameters map[string]ParameterDefinition
+	Variations []ActionVariation
 }
 
 // ParameterDefinition defines action parameters
 type ParameterDefinition struct {
-	Name        string
-	Type        string
-	Required    bool
-	Default     interface{}
-	Validation  string
+	Name       string
+	Type       string
+	Required   bool
+	Default    interface{}
+	Validation string
 }
 
 // ActionVariation defines action variations for different scenarios
 type ActionVariation struct {
-	Condition   string
+	Condition    string
 	Modification map[string]interface{}
 }
 
@@ -454,8 +454,8 @@ type ValidationTemplate struct {
 
 // StepVariation defines step variations for different user profiles
 type StepVariation struct {
-	Condition   string
-	UserProfile UserProfile
+	Condition    string
+	UserProfile  UserProfile
 	Modification map[string]interface{}
 }
 
@@ -470,7 +470,7 @@ type JourneyVariant struct {
 // NewUserJourneyFramework creates a new user journey framework
 func NewUserJourneyFramework(t TestingT) (*UserJourneyFramework, error) {
 	reg := registry.NewComponentRegistry()
-	
+
 	framework := &UserJourneyFramework{
 		t:        t,
 		registry: reg,
@@ -545,8 +545,8 @@ func (jm *JourneyManager) initializeJourneyTemplates() error {
 		Description: "Complete onboarding experience for new users",
 		Steps: []JourneyStepTemplate{
 			{
-				Name:        "Installation and Setup",
-				Description: "Install Guild CLI and configure first provider",
+				Name:            "Installation and Setup",
+				Description:     "Install Guild CLI and configure first provider",
 				SystemsInvolved: []string{"TUI/CLI Interface", "Provider Integration"},
 				ActionTemplates: []ActionTemplate{
 					{
@@ -574,8 +574,8 @@ func (jm *JourneyManager) initializeJourneyTemplates() error {
 				},
 			},
 			{
-				Name:        "Project Initialization",
-				Description: "Initialize Guild workspace in existing project",
+				Name:            "Project Initialization",
+				Description:     "Initialize Guild workspace in existing project",
 				SystemsInvolved: []string{"TUI/CLI Interface", "Project Detection", "Daemon Communication"},
 				ActionTemplates: []ActionTemplate{
 					{
@@ -592,8 +592,8 @@ func (jm *JourneyManager) initializeJourneyTemplates() error {
 				},
 			},
 			{
-				Name:        "First Agent Interaction",
-				Description: "Start chat and interact with agent",
+				Name:            "First Agent Interaction",
+				Description:     "Start chat and interact with agent",
 				SystemsInvolved: []string{"Chat Interface", "Agent Orchestration", "Provider Integration"},
 				ActionTemplates: []ActionTemplate{
 					{
@@ -614,9 +614,9 @@ func (jm *JourneyManager) initializeJourneyTemplates() error {
 			},
 		},
 		Metrics: JourneyMetrics{
-			CompletionRate:   0.85,
-			TimeToValue:      10 * time.Minute,
-			UserSatisfaction: 0.90,
+			CompletionRate:    0.85,
+			TimeToValue:       10 * time.Minute,
+			UserSatisfaction:  0.90,
 			ErrorRecoveryRate: 0.95,
 		},
 	}
@@ -628,8 +628,8 @@ func (jm *JourneyManager) initializeJourneyTemplates() error {
 		Description: "Typical day in the life of a Guild Framework developer",
 		Steps: []JourneyStepTemplate{
 			{
-				Name:        "Morning Project Sync",
-				Description: "Update knowledge base and review changes",
+				Name:            "Morning Project Sync",
+				Description:     "Update knowledge base and review changes",
 				SystemsInvolved: []string{"Corpus Management", "Git Integration", "Kanban System"},
 				ActionTemplates: []ActionTemplate{
 					{
@@ -639,13 +639,13 @@ func (jm *JourneyManager) initializeJourneyTemplates() error {
 				},
 			},
 			{
-				Name:        "Feature Development",
-				Description: "Develop new feature with agent assistance",
+				Name:            "Feature Development",
+				Description:     "Develop new feature with agent assistance",
 				SystemsInvolved: []string{"Agent Orchestration", "Development Tools", "Real-time Collaboration"},
 			},
 			{
-				Name:        "Code Review and QA",
-				Description: "Review code and ensure quality",
+				Name:            "Code Review and QA",
+				Description:     "Review code and ensure quality",
 				SystemsInvolved: []string{"Development Tools", "Agent Orchestration", "Git Integration"},
 			},
 		},
@@ -827,7 +827,7 @@ func (f *UserJourneyFramework) ExecuteJourney(ctx context.Context, journey *User
 	// Calculate overall result
 	execution.EndTime = &[]time.Time{time.Now()}[0]
 	overallResult := f.calculateJourneyResult(journey, execution)
-	
+
 	execution.mu.Lock()
 	execution.OverallResult = overallResult
 	execution.mu.Unlock()
@@ -841,7 +841,7 @@ func (f *UserJourneyFramework) ExecuteJourney(ctx context.Context, journey *User
 // executeJourneyStep executes a single journey step
 func (f *UserJourneyFramework) executeJourneyStep(ctx context.Context, step JourneyStep, profile UserProfile, execution *JourneyExecution) (*StepResult, error) {
 	start := time.Now()
-	
+
 	result := &StepResult{
 		StepID:      step.ID,
 		StartTime:   start,
@@ -859,7 +859,7 @@ func (f *UserJourneyFramework) executeJourneyStep(ctx context.Context, step Jour
 	for _, action := range step.UserActions {
 		actionResult := f.simulateUserAction(ctx, action, profile)
 		result.UserActions = append(result.UserActions, actionResult)
-		
+
 		if !actionResult.Success {
 			result.Success = false
 			result.Issues = append(result.Issues, StepIssue{
@@ -875,7 +875,7 @@ func (f *UserJourneyFramework) executeJourneyStep(ctx context.Context, step Jour
 	for _, validation := range step.Validations {
 		validationResult := f.validationEngine.ValidateStep(ctx, validation, result)
 		result.Validations = append(result.Validations, validationResult)
-		
+
 		if !validationResult.Passed && validation.Required {
 			result.Success = false
 		}
@@ -893,7 +893,7 @@ func (f *UserJourneyFramework) executeJourneyStep(ctx context.Context, step Jour
 		})
 	}
 
-	f.t.Logf("✅ Step %s completed in %v (target: %v, success: %v)", 
+	f.t.Logf("✅ Step %s completed in %v (target: %v, success: %v)",
 		step.Name, result.ActualTime, step.TargetTime, result.Success)
 
 	return result, nil
@@ -902,7 +902,7 @@ func (f *UserJourneyFramework) executeJourneyStep(ctx context.Context, step Jour
 // simulateUserAction simulates a user action
 func (f *UserJourneyFramework) simulateUserAction(ctx context.Context, action UserAction, profile UserProfile) ActionResult {
 	start := time.Now()
-	
+
 	result := ActionResult{
 		Action:  action,
 		Success: true,
@@ -911,7 +911,7 @@ func (f *UserJourneyFramework) simulateUserAction(ctx context.Context, action Us
 
 	// Simulate user behavior based on profile
 	simulationProfile := f.userSimulator.profiles[profile.ExperienceLevel]
-	
+
 	// Add thinking time
 	time.Sleep(simulationProfile.ThinkingTime)
 
@@ -1024,7 +1024,7 @@ func (f *UserJourneyFramework) calculateJourneyResult(journey *UserJourney, exec
 	successfulSteps := 0
 	totalErrors := 0
 	var totalTime time.Duration
-	
+
 	if execution.EndTime != nil {
 		totalTime = execution.EndTime.Sub(execution.StartTime)
 	}
@@ -1038,7 +1038,7 @@ func (f *UserJourneyFramework) calculateJourneyResult(journey *UserJourney, exec
 	}
 
 	completionRate := float64(successfulSteps) / float64(totalSteps)
-	
+
 	// Calculate user satisfaction based on performance and issues
 	userSatisfaction := completionRate
 	if totalTime > journey.Objective.TargetTime {
@@ -1055,7 +1055,7 @@ func (f *UserJourneyFramework) calculateJourneyResult(journey *UserJourney, exec
 	qualityScore := 0.8 // Base quality score
 	validationCount := 0
 	passedValidations := 0
-	
+
 	for _, stepResult := range execution.StepResults {
 		for _, validation := range stepResult.Validations {
 			validationCount++
@@ -1064,7 +1064,7 @@ func (f *UserJourneyFramework) calculateJourneyResult(journey *UserJourney, exec
 			}
 		}
 	}
-	
+
 	if validationCount > 0 {
 		qualityScore = float64(passedValidations) / float64(validationCount)
 	}
@@ -1084,12 +1084,12 @@ func (f *UserJourneyFramework) calculateJourneyResult(journey *UserJourney, exec
 
 	// Generate recommendations based on issues
 	if totalTime > journey.Objective.TargetTime {
-		result.Recommendations = append(result.Recommendations, 
+		result.Recommendations = append(result.Recommendations,
 			"Consider optimizing step execution time to meet target duration")
 	}
-	
+
 	if totalErrors > 0 {
-		result.Recommendations = append(result.Recommendations, 
+		result.Recommendations = append(result.Recommendations,
 			"Address identified issues to improve user experience")
 	}
 
@@ -1137,9 +1137,9 @@ func (jmc *JourneyMetricsCollector) CollectJourneyMetrics(journey *UserJourney, 
 		}
 	} else {
 		aggregated := &AggregatedMetrics{
-			JourneyType:     journey.Type,
-			TotalExecutions: 1,
-			CommonIssues:    make([]IssueFrequency, 0),
+			JourneyType:       journey.Type,
+			TotalExecutions:   1,
+			CommonIssues:      make([]IssueFrequency, 0),
 			PerformanceTrends: make([]PerformanceDataPoint, 0),
 		}
 		if execution.OverallResult != nil {

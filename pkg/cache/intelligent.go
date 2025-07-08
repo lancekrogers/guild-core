@@ -18,10 +18,10 @@ import (
 
 // Cache error codes for the Guild framework
 const (
-	ErrCodeCacheMiss        = "CACHE-1001"
-	ErrCodeCacheCorruption  = "CACHE-1002"
-	ErrCodeEvictionFailed   = "CACHE-1003"
-	ErrCodePredictionFailed = "CACHE-1004"
+	ErrCodeCacheMiss         = "CACHE-1001"
+	ErrCodeCacheCorruption   = "CACHE-1002"
+	ErrCodeEvictionFailed    = "CACHE-1003"
+	ErrCodePredictionFailed  = "CACHE-1004"
 	ErrCodeSizeLimitExceeded = "CACHE-1005"
 )
 
@@ -74,7 +74,7 @@ type CacheConfig struct {
 // DefaultCacheConfig returns a default cache configuration
 func DefaultCacheConfig() *CacheConfig {
 	return &CacheConfig{
-		L1MaxSize:        100 * 1024 * 1024, // 100MB
+		L1MaxSize:        100 * 1024 * 1024,  // 100MB
 		L2MaxSize:        1024 * 1024 * 1024, // 1GB
 		DefaultTTL:       time.Hour,
 		PredictionWindow: time.Hour * 24,
@@ -213,13 +213,13 @@ func (ic *IntelligentCache) Set(ctx context.Context, key string, value interface
 	}
 
 	entry := &CacheEntry{
-		Key:       key,
-		Value:     value,
-		Size:      ic.calculateSize(value),
-		CreatedAt: time.Now(),
+		Key:        key,
+		Value:      value,
+		Size:       ic.calculateSize(value),
+		CreatedAt:  time.Now(),
 		LastAccess: time.Now(),
-		TTL:       ic.config.DefaultTTL,
-		Metadata:  make(map[string]interface{}),
+		TTL:        ic.config.DefaultTTL,
+		Metadata:   make(map[string]interface{}),
 	}
 
 	// Apply options
@@ -335,12 +335,12 @@ func (ic *IntelligentCache) recordAccess(key string) {
 // cacheLocally decides where to cache data retrieved from distributed cache
 func (ic *IntelligentCache) cacheLocally(key string, value interface{}) {
 	entry := &CacheEntry{
-		Key:       key,
-		Value:     value,
-		Size:      ic.calculateSize(value),
-		CreatedAt: time.Now(),
+		Key:        key,
+		Value:      value,
+		Size:       ic.calculateSize(value),
+		CreatedAt:  time.Now(),
 		LastAccess: time.Now(),
-		TTL:       ic.config.DefaultTTL,
+		TTL:        ic.config.DefaultTTL,
 	}
 
 	level := ic.determineCacheLevel(entry)
@@ -438,40 +438,40 @@ func (ic *IntelligentCache) GetStats() *CacheStatistics {
 	defer ic.mu.RUnlock()
 
 	return &CacheStatistics{
-		L1Stats: ic.l1Cache.GetStats(),
-		L2Stats: ic.l2Cache.GetStats(),
-		OverallStats: ic.stats.GetOverallStats(),
+		L1Stats:            ic.l1Cache.GetStats(),
+		L2Stats:            ic.l2Cache.GetStats(),
+		OverallStats:       ic.stats.GetOverallStats(),
 		PredictionAccuracy: ic.predictor.GetAccuracy(),
-		Timestamp: time.Now(),
+		Timestamp:          time.Now(),
 	}
 }
 
 // CacheStatistics aggregates statistics from all cache levels
 type CacheStatistics struct {
-	L1Stats            *LevelStats `json:"l1_stats"`
-	L2Stats            *LevelStats `json:"l2_stats"`
+	L1Stats            *LevelStats   `json:"l1_stats"`
+	L2Stats            *LevelStats   `json:"l2_stats"`
 	OverallStats       *OverallStats `json:"overall_stats"`
-	PredictionAccuracy float64     `json:"prediction_accuracy"`
-	Timestamp          time.Time   `json:"timestamp"`
+	PredictionAccuracy float64       `json:"prediction_accuracy"`
+	Timestamp          time.Time     `json:"timestamp"`
 }
 
 // LevelStats contains statistics for a single cache level
 type LevelStats struct {
-	Hits        int64   `json:"hits"`
-	Misses      int64   `json:"misses"`
-	HitRate     float64 `json:"hit_rate"`
-	Size        int64   `json:"size"`
-	EntryCount  int     `json:"entry_count"`
-	Evictions   int64   `json:"evictions"`
+	Hits       int64   `json:"hits"`
+	Misses     int64   `json:"misses"`
+	HitRate    float64 `json:"hit_rate"`
+	Size       int64   `json:"size"`
+	EntryCount int     `json:"entry_count"`
+	Evictions  int64   `json:"evictions"`
 }
 
 // OverallStats contains overall cache statistics
 type OverallStats struct {
-	TotalHits   int64   `json:"total_hits"`
-	TotalMisses int64   `json:"total_misses"`
-	OverallHitRate float64 `json:"overall_hit_rate"`
-	MemoryUsage int64   `json:"memory_usage"`
-	Uptime      time.Duration `json:"uptime"`
+	TotalHits      int64         `json:"total_hits"`
+	TotalMisses    int64         `json:"total_misses"`
+	OverallHitRate float64       `json:"overall_hit_rate"`
+	MemoryUsage    int64         `json:"memory_usage"`
+	Uptime         time.Duration `json:"uptime"`
 }
 
 // CacheOption allows customization of cache entries

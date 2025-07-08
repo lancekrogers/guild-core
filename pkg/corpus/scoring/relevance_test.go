@@ -86,7 +86,7 @@ func TestJourneymanRelevanceEngine_ComprehensiveScoring(t *testing.T) {
 	mockDomain := &MockDomainModel{}
 
 	engine := NewRelevanceEngine(mockEmbedder, mockTokenizer)
-	
+
 	// Register domain model
 	mockDomain.On("Domain").Return("golang")
 	engine.RegisterDomainModel(mockDomain)
@@ -97,9 +97,9 @@ func TestJourneymanRelevanceEngine_ComprehensiveScoring(t *testing.T) {
 		ID:      "test-doc",
 		Content: "This is a golang testing framework for authentication systems",
 		Metadata: map[string]interface{}{
-			"last_modified":   now,
-			"citation_count":  5.0,
-			"embedding":       []float32{0.1, 0.2, 0.3, 0.4},
+			"last_modified":  now,
+			"citation_count": 5.0,
+			"embedding":      []float32{0.1, 0.2, 0.3, 0.4},
 			"title":          "Go Testing Guide",
 		},
 	}
@@ -308,8 +308,8 @@ func TestGuildRelevanceEngine_TemporalRelevance(t *testing.T) {
 				Metadata: map[string]interface{}{},
 			},
 			scoreContext: Context{},
-			expectedMin: 0.5,
-			expectedMax: 0.5,
+			expectedMin:  0.5,
+			expectedMax:  0.5,
 		},
 	}
 
@@ -534,7 +534,7 @@ func BenchmarkGuildCosineSimilarity_LargeVectors(b *testing.B) {
 	// Create large vectors (typical embedding size)
 	a := make([]float32, 1536)
 	bb := make([]float32, 1536)
-	
+
 	for i := 0; i < 1536; i++ {
 		a[i] = float32(i) / 1536.0
 		bb[i] = float32(1536-i) / 1536.0

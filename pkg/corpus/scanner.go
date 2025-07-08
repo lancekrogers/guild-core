@@ -33,18 +33,18 @@ const (
 
 // DocumentMetadata contains extracted metadata from a document
 type DocumentMetadata struct {
-	Title           string    `json:"title"`
-	Description     string    `json:"description,omitempty"`
-	Language        string    `json:"language,omitempty"`
-	WordCount       int       `json:"word_count"`
-	CodeBlockCount  int       `json:"code_block_count"`
-	LinkCount       int       `json:"link_count"`
-	LastModified    time.Time `json:"last_modified"`
-	FileSize        int64     `json:"file_size"`
-	Checksum        string    `json:"checksum"`
-	ExtractedTags   []string  `json:"extracted_tags,omitempty"`
-	HeadingCount    int       `json:"heading_count"`
-	TODOCount       int       `json:"todo_count"`
+	Title          string    `json:"title"`
+	Description    string    `json:"description,omitempty"`
+	Language       string    `json:"language,omitempty"`
+	WordCount      int       `json:"word_count"`
+	CodeBlockCount int       `json:"code_block_count"`
+	LinkCount      int       `json:"link_count"`
+	LastModified   time.Time `json:"last_modified"`
+	FileSize       int64     `json:"file_size"`
+	Checksum       string    `json:"checksum"`
+	ExtractedTags  []string  `json:"extracted_tags,omitempty"`
+	HeadingCount   int       `json:"heading_count"`
+	TODOCount      int       `json:"todo_count"`
 }
 
 // ScannedDocument represents a document discovered by the scanner
@@ -202,7 +202,7 @@ func (s *DocumentScanner) Scan(ctx context.Context) ([]*ScannedDocument, error) 
 
 	// If there were errors, return them aggregated
 	if len(scanErrors) > 0 {
-		return documents, gerror.New(gerror.ErrCodeInternal, 
+		return documents, gerror.New(gerror.ErrCodeInternal,
 			fmt.Sprintf("scan completed with %d errors", len(scanErrors)), nil).
 			WithComponent("corpus.scanner").
 			WithOperation("Scan").
@@ -401,9 +401,9 @@ func (s *DocumentScanner) extractMarkdownMetadata(metadata *DocumentMetadata, co
 	inCodeBlock := false
 	for _, line := range lines {
 		// Count headings (must have space after # to distinguish from hashtags)
-		if strings.HasPrefix(line, "# ") || strings.HasPrefix(line, "## ") || 
-		   strings.HasPrefix(line, "### ") || strings.HasPrefix(line, "#### ") ||
-		   strings.HasPrefix(line, "##### ") || strings.HasPrefix(line, "###### ") {
+		if strings.HasPrefix(line, "# ") || strings.HasPrefix(line, "## ") ||
+			strings.HasPrefix(line, "### ") || strings.HasPrefix(line, "#### ") ||
+			strings.HasPrefix(line, "##### ") || strings.HasPrefix(line, "###### ") {
 			metadata.HeadingCount++
 		}
 

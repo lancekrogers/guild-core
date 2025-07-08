@@ -165,7 +165,7 @@ func (vs *CorpusVectorStore) IndexDocuments(ctx context.Context, documents []*Sc
 
 	// Create error channel for collecting errors
 	errChan := make(chan error, len(documents))
-	
+
 	// Use semaphore for concurrency control
 	sem := make(chan struct{}, vs.maxConcurrency)
 	var wg sync.WaitGroup
@@ -174,7 +174,7 @@ func (vs *CorpusVectorStore) IndexDocuments(ctx context.Context, documents []*Sc
 		wg.Add(1)
 		go func(d *ScannedDocument) {
 			defer wg.Done()
-			
+
 			// Acquire semaphore
 			sem <- struct{}{}
 			defer func() { <-sem }()
@@ -229,7 +229,7 @@ func (vs *CorpusVectorStore) SearchDocuments(ctx context.Context, query string, 
 	// Try with limit*2 first for better deduplication, then fall back to smaller limits
 	var matches []vector.EmbeddingMatch
 	var err error
-	
+
 	searchLimits := []int{limit * 2, limit, max(limit/2, 1)}
 	for _, searchLimit := range searchLimits {
 		matches, err = vs.store.QueryCollection(ctx, vs.collectionName, query, searchLimit)
@@ -242,7 +242,7 @@ func (vs *CorpusVectorStore) SearchDocuments(ctx context.Context, query string, 
 			break
 		}
 	}
-	
+
 	// If all attempts failed due to limit being too high, try with progressively smaller limits
 	if err != nil && strings.Contains(err.Error(), "nResults must be") {
 		for tryLimit := max(limit/2, 1); tryLimit >= 1; tryLimit-- {
@@ -255,7 +255,7 @@ func (vs *CorpusVectorStore) SearchDocuments(ctx context.Context, query string, 
 			}
 		}
 	}
-	
+
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to query vector store").
 			WithComponent("corpus.vector").
@@ -264,7 +264,7 @@ func (vs *CorpusVectorStore) SearchDocuments(ctx context.Context, query string, 
 
 	// Group chunks by document and calculate aggregate scores
 	documentMap := make(map[string]*DocumentSearchResult)
-	
+
 	for _, match := range matches {
 		docID, _ := match.Metadata["document_id"].(string)
 		if docID == "" {
@@ -372,7 +372,7 @@ func (vs *CorpusVectorStore) chunkNone(doc *ScannedDocument) ([]DocumentChunk, e
 func (vs *CorpusVectorStore) chunkRecursive(doc *ScannedDocument) ([]DocumentChunk, error) {
 	chunks := []DocumentChunk{}
 	content := doc.Content
-	
+
 	// For code files, try to split at natural boundaries
 	if doc.Type == ContentTypeGo {
 		return vs.chunkCode(doc)
@@ -437,7 +437,7 @@ func (vs *CorpusVectorStore) chunkRecursive(doc *ScannedDocument) ([]DocumentChu
 func (vs *CorpusVectorStore) chunkMarkdown(doc *ScannedDocument) ([]DocumentChunk, error) {
 	chunks := []DocumentChunk{}
 	lines := strings.Split(doc.Content, "\n")
-	
+
 	currentChunk := strings.Builder{}
 	currentOffset := 0
 	chunkStartOffset := 0
@@ -469,7 +469,7 @@ func (vs *CorpusVectorStore) chunkMarkdown(doc *ScannedDocument) ([]DocumentChun
 
 			// Start new chunk with overlap
 			currentChunk.Reset()
-			
+
 			// Add context from previous chunk if this isn't a heading
 			if !strings.HasPrefix(line, "#") && i > 0 {
 				// Look back for context
@@ -486,7 +486,7 @@ func (vs *CorpusVectorStore) chunkMarkdown(doc *ScannedDocument) ([]DocumentChun
 					currentChunk.WriteString("\n")
 				}
 			}
-			
+
 			chunkStartOffset = currentOffset
 		}
 
@@ -517,7 +517,7 @@ func (vs *CorpusVectorStore) chunkCode(doc *ScannedDocument) ([]DocumentChunk, e
 	// For Go code, try to split at function boundaries
 	chunks := []DocumentChunk{}
 	lines := strings.Split(doc.Content, "\n")
-	
+
 	currentChunk := strings.Builder{}
 	currentOffset := 0
 	chunkStartOffset := 0
@@ -600,7 +600,7 @@ func (vs *CorpusVectorStore) chunkBySentence(doc *ScannedDocument) ([]DocumentCh
 	// Simple sentence splitting - could be improved with NLP
 	sentences := strings.Split(doc.Content, ". ")
 	chunks := []DocumentChunk{}
-	
+
 	currentChunk := strings.Builder{}
 	currentOffset := 0
 	chunkStartOffset := 0
@@ -655,7 +655,7 @@ func (vs *CorpusVectorStore) chunkBySentence(doc *ScannedDocument) ([]DocumentCh
 func (vs *CorpusVectorStore) chunkByParagraph(doc *ScannedDocument) ([]DocumentChunk, error) {
 	paragraphs := strings.Split(doc.Content, "\n\n")
 	chunks := []DocumentChunk{}
-	
+
 	currentChunk := strings.Builder{}
 	currentOffset := 0
 	chunkStartOffset := 0

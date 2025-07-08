@@ -19,14 +19,14 @@ type EventBus interface {
 	Publish(ctx context.Context, event CoreEvent) error
 	Subscribe(ctx context.Context, eventType string, handler EventHandler) (SubscriptionID, error)
 	Unsubscribe(ctx context.Context, subscriptionID SubscriptionID) error
-	
+
 	// Convenience methods
 	SubscribeAll(ctx context.Context, handler EventHandler) (SubscriptionID, error)
 	PublishJSON(ctx context.Context, jsonEvent string) error
-	
+
 	// Lifecycle management
 	Close(ctx context.Context) error
-	
+
 	// Status and monitoring
 	IsRunning() bool
 	GetSubscriptionCount() int
@@ -37,26 +37,26 @@ type EventFilter func(event CoreEvent) bool
 
 // FilteredSubscription represents a subscription with an optional filter
 type FilteredSubscription struct {
-	ID          SubscriptionID
-	EventType   string // empty string means subscribe to all events
-	Handler     EventHandler
-	Filter      EventFilter // optional filter function
+	ID        SubscriptionID
+	EventType string // empty string means subscribe to all events
+	Handler   EventHandler
+	Filter    EventFilter // optional filter function
 }
 
 // EventBusConfig configures the event bus behavior
 type EventBusConfig struct {
 	// Buffer size for event channels
 	BufferSize int
-	
+
 	// Maximum number of subscriptions
 	MaxSubscriptions int
-	
+
 	// Maximum event payload size in bytes
 	MaxEventSize int
-	
+
 	// Whether to log all events for debugging
 	LogEvents bool
-	
+
 	// Whether to enable metrics collection
 	EnableMetrics bool
 }
@@ -74,9 +74,9 @@ func DefaultEventBusConfig() EventBusConfig {
 
 // EventBusStats provides statistics about event bus operations
 type EventBusStats struct {
-	EventsPublished   int64
-	EventsDelivered   int64
-	EventsDropped     int64
+	EventsPublished     int64
+	EventsDelivered     int64
+	EventsDropped       int64
 	ActiveSubscriptions int
 	AverageDeliveryTime float64 // milliseconds
 }
@@ -87,11 +87,11 @@ type EventBusMetrics interface {
 	RecordEventPublished(eventType string)
 	RecordEventDelivered(eventType string, deliveryTime float64)
 	RecordEventDropped(eventType string, reason string)
-	
+
 	// Record subscription operations
 	RecordSubscription(eventType string)
 	RecordUnsubscription(eventType string)
-	
+
 	// Get current statistics
 	GetStats() EventBusStats
 }
@@ -99,48 +99,48 @@ type EventBusMetrics interface {
 // CommonEventTypes defines standard event types used across Guild components
 const (
 	// System events
-	EventTypeSystemStartup    = "system.startup"
-	EventTypeSystemShutdown   = "system.shutdown"
-	EventTypeSystemError      = "system.error"
+	EventTypeSystemStartup     = "system.startup"
+	EventTypeSystemShutdown    = "system.shutdown"
+	EventTypeSystemError       = "system.error"
 	EventTypeSystemHealthCheck = "system.health_check"
-	
+
 	// Task events
-	EventTypeTaskCreated    = "task.created"
-	EventTypeTaskUpdated    = "task.updated"
-	EventTypeTaskStarted    = "task.started"
-	EventTypeTaskCompleted  = "task.completed"
-	EventTypeTaskFailed     = "task.failed"
-	EventTypeTaskCancelled  = "task.cancelled"
-	
+	EventTypeTaskCreated   = "task.created"
+	EventTypeTaskUpdated   = "task.updated"
+	EventTypeTaskStarted   = "task.started"
+	EventTypeTaskCompleted = "task.completed"
+	EventTypeTaskFailed    = "task.failed"
+	EventTypeTaskCancelled = "task.cancelled"
+
 	// Agent events
-	EventTypeAgentStarted   = "core.started"
-	EventTypeAgentStopped   = "core.stopped"
-	EventTypeAgentError     = "core.error"
-	EventTypeAgentIdle      = "core.idle"
-	EventTypeAgentBusy      = "core.busy"
-	
+	EventTypeAgentStarted = "core.started"
+	EventTypeAgentStopped = "core.stopped"
+	EventTypeAgentError   = "core.error"
+	EventTypeAgentIdle    = "core.idle"
+	EventTypeAgentBusy    = "core.busy"
+
 	// Commission events
 	EventTypeCommissionCreated   = "commission.created"
 	EventTypeCommissionStarted   = "commission.started"
 	EventTypeCommissionCompleted = "commission.completed"
 	EventTypeCommissionFailed    = "commission.failed"
-	
+
 	// UI events
 	EventTypeUICommand      = "ui.command"
 	EventTypeUIRefresh      = "ui.refresh"
 	EventTypeUIError        = "ui.error"
 	EventTypeUIThemeChanged = "ui.theme_changed"
-	
+
 	// Kanban events
 	EventTypeKanbanBoardCreated = "kanban.board_created"
 	EventTypeKanbanTaskMoved    = "kanban.task_moved"
 	EventTypeKanbanTaskUpdated  = "kanban.task_updated"
-	
+
 	// Memory/Corpus events
-	EventTypeMemoryStored     = "memory.stored"
-	EventTypeMemoryRetrieved  = "memory.retrieved"
-	EventTypeCorpusUpdated    = "corpus.updated"
-	
+	EventTypeMemoryStored    = "memory.stored"
+	EventTypeMemoryRetrieved = "memory.retrieved"
+	EventTypeCorpusUpdated   = "corpus.updated"
+
 	// Performance events
 	EventTypePerformanceMetric = "performance.metric"
 	EventTypePerformanceAlert  = "performance.alert"

@@ -20,7 +20,7 @@ The events package defines several key interfaces and types:
 The package provides specialized event types for different Guild components:
 
 - TaskEvent: For kanban and task management operations
-- AgentEvent: For agent lifecycle and coordination events  
+- AgentEvent: For agent lifecycle and coordination events
 - SystemEvent: For system-level infrastructure events
 - CommissionEvent: For commission workflow events
 - UIEvent: For user interface interactions
@@ -55,20 +55,20 @@ Basic event publishing and subscription:
 
 	bus := NewMemoryEventBusWithDefaults()
 	defer bus.Close(context.Background())
-	
+
 	// Subscribe to task events
 	subID, err := bus.Subscribe(ctx, EventTypeTaskCreated, func(ctx context.Context, event CoreEvent) error {
 		taskEvent := event.(*TaskEvent)
 		fmt.Printf("Task created: %s\n", taskEvent.TaskID)
 		return nil
 	})
-	
+
 	// Publish a task created event
 	event := NewTaskEvent(EventTypeTaskCreated, "task-123", map[string]interface{}{
 		"title": "Implement feature X",
 		"priority": "high",
 	})
-	
+
 	err = bus.Publish(ctx, event)
 
 Creating custom events with the builder pattern:
@@ -86,7 +86,7 @@ Converting legacy events:
 	taskEvent := FromKanbanEvent("board-1", "task-123", "task.created", map[string]string{
 		"title": "New task",
 	})
-	
+
 	// From JSON
 	event, err := FromJSON(`{"type": "system.startup", "source": "api", ...}`)
 

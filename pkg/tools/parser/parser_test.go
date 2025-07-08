@@ -15,24 +15,24 @@ func TestRobustParser(t *testing.T) {
 	parser := NewResponseParser()
 
 	tests := []struct {
-		name          string
-		input         string
-		wantFormat    ProviderFormat
-		wantCalls     int
+		name           string
+		input          string
+		wantFormat     ProviderFormat
+		wantCalls      int
 		wantConfidence float64
 	}{
 		{
-			name: "auto-detect JSON",
-			input: `{"tool_calls": [{"id": "test", "type": "function", "function": {"name": "test_func", "arguments": "{}"}}]}`,
-			wantFormat: ProviderFormatOpenAI,
-			wantCalls: 1,
+			name:           "auto-detect JSON",
+			input:          `{"tool_calls": [{"id": "test", "type": "function", "function": {"name": "test_func", "arguments": "{}"}}]}`,
+			wantFormat:     ProviderFormatOpenAI,
+			wantCalls:      1,
 			wantConfidence: 0.85,
 		},
 		{
-			name: "auto-detect XML",
-			input: `<function_calls><invoke name="test_func"><parameter name="arg">value</parameter></invoke></function_calls>`,
-			wantFormat: ProviderFormatAnthropic,
-			wantCalls: 1,
+			name:           "auto-detect XML",
+			input:          `<function_calls><invoke name="test_func"><parameter name="arg">value</parameter></invoke></function_calls>`,
+			wantFormat:     ProviderFormatAnthropic,
+			wantCalls:      1,
 			wantConfidence: 0.85,
 		},
 		{
@@ -42,15 +42,15 @@ func TestRobustParser(t *testing.T) {
 {"tool_calls": [{"id": "mixed", "type": "function", "function": {"name": "analyze", "arguments": "{}"}}]}
 
 Processing...`,
-			wantFormat: ProviderFormatOpenAI,
-			wantCalls: 1,
+			wantFormat:     ProviderFormatOpenAI,
+			wantCalls:      1,
 			wantConfidence: 0.7,
 		},
 		{
-			name: "no tool calls",
-			input: "This is just a regular message with no tool calls.",
-			wantFormat: ProviderFormatUnknown,
-			wantCalls: 0,
+			name:           "no tool calls",
+			input:          "This is just a regular message with no tool calls.",
+			wantFormat:     ProviderFormatUnknown,
+			wantCalls:      0,
 			wantConfidence: 0,
 		},
 	}

@@ -16,13 +16,13 @@ import (
 
 // FailoverManager manages automatic failover between providers
 type FailoverManager struct {
-	manager           *ProviderManager
-	selector          *IntelligentProviderSelector
-	circuitBreakers   map[providers.ProviderType]*CircuitBreaker
-	failoverHistory   []FailoverEvent
-	config            FailoverConfig
-	running           bool
-	mu                sync.RWMutex
+	manager         *ProviderManager
+	selector        *IntelligentProviderSelector
+	circuitBreakers map[providers.ProviderType]*CircuitBreaker
+	failoverHistory []FailoverEvent
+	config          FailoverConfig
+	running         bool
+	mu              sync.RWMutex
 }
 
 // FailoverConfig configures failover behavior
@@ -46,24 +46,24 @@ type CircuitBreakerConfig struct {
 
 // RetryConfig configures retry behavior
 type RetryConfig struct {
-	MaxRetries      int
-	InitialDelay    time.Duration
-	MaxDelay        time.Duration
+	MaxRetries        int
+	InitialDelay      time.Duration
+	MaxDelay          time.Duration
 	BackoffMultiplier float64
-	JitterEnabled   bool
+	JitterEnabled     bool
 }
 
 // CircuitBreaker implements circuit breaker pattern for providers
 type CircuitBreaker struct {
-	provider      providers.ProviderType
-	state         CircuitState
-	failures      int
-	requests      int
-	successes     int
-	lastFailure   time.Time
+	provider        providers.ProviderType
+	state           CircuitState
+	failures        int
+	requests        int
+	successes       int
+	lastFailure     time.Time
 	lastStateChange time.Time
-	config        CircuitBreakerConfig
-	mu            sync.RWMutex
+	config          CircuitBreakerConfig
+	mu              sync.RWMutex
 }
 
 // FailoverEvent represents a failover event
@@ -124,14 +124,14 @@ type RequestContext struct {
 
 // FailoverResult contains the result of a failover attempt
 type FailoverResult struct {
-	Success          bool
-	FinalProvider    providers.ProviderType
-	TotalDuration    time.Duration
-	FailoverCount    int
-	FailoverEvents   []FailoverEvent
-	QualityImpact    float64
-	Response         interface{}
-	Error            error
+	Success        bool
+	FinalProvider  providers.ProviderType
+	TotalDuration  time.Duration
+	FailoverCount  int
+	FailoverEvents []FailoverEvent
+	QualityImpact  float64
+	Response       interface{}
+	Error          error
 }
 
 // NewFailoverManager creates a new failover manager
@@ -232,7 +232,7 @@ func (f *FailoverManager) ExecuteWithFailover(ctx context.Context, req interface
 
 	for attempts < maxAttempts {
 		attempts++
-		
+
 		// Check circuit breaker state
 		circuitBreaker := f.getCircuitBreaker(currentProvider)
 		if !circuitBreaker.CanExecute() {
@@ -247,13 +247,13 @@ func (f *FailoverManager) ExecuteWithFailover(ctx context.Context, req interface
 			event := f.recordFailoverEvent(currentProvider, failoverProvider, failoverReason, time.Since(start))
 			result.FailoverEvents = append(result.FailoverEvents, event)
 			result.FailoverCount++
-			
+
 			currentProvider = failoverProvider
 		}
 
 		// Execute request
 		response, execErr := f.executeRequest(ctx, currentProvider, req)
-		
+
 		// Record execution in circuit breaker
 		circuitBreaker.RecordExecution(execErr == nil)
 
@@ -263,12 +263,12 @@ func (f *FailoverManager) ExecuteWithFailover(ctx context.Context, req interface
 			result.FinalProvider = currentProvider
 			result.Response = response
 			result.TotalDuration = time.Since(start)
-			
+
 			// Calculate quality impact if we failed over
 			if result.FailoverCount > 0 {
 				result.QualityImpact = f.calculateQualityImpact(provider, currentProvider)
 			}
-			
+
 			return result, nil
 		}
 
@@ -276,15 +276,15 @@ func (f *FailoverManager) ExecuteWithFailover(ctx context.Context, req interface
 		if f.shouldFailover(execErr, currentProvider) && attempts < maxAttempts {
 			failoverReason := f.determineFailoverReason(execErr)
 			failoverProvider, failoverReasonActual, failoverErr := f.attemptFailover(ctx, currentProvider, failoverReason, reqCtx.Requirements)
-			
+
 			if failoverErr == nil {
 				// Record failover event
 				event := f.recordFailoverEvent(currentProvider, failoverProvider, failoverReasonActual, time.Since(start))
 				result.FailoverEvents = append(result.FailoverEvents, event)
 				result.FailoverCount++
-				
+
 				currentProvider = failoverProvider
-				
+
 				// Apply retry delay
 				if attempts < maxAttempts {
 					delay := f.calculateRetryDelay(attempts)
@@ -306,7 +306,7 @@ func (f *FailoverManager) ExecuteWithFailover(ctx context.Context, req interface
 
 	result.TotalDuration = time.Since(start)
 	result.FinalProvider = currentProvider
-	
+
 	return result, result.Error
 }
 
@@ -396,7 +396,7 @@ func (f *FailoverManager) attemptFailover(ctx context.Context, currentProvider p
 	// Get available providers excluding current one
 	availableProviders := f.manager.GetAvailableProviders()
 	var alternatives []providers.ProviderType
-	
+
 	for _, provider := range availableProviders {
 		if provider != currentProvider {
 			circuitBreaker := f.getCircuitBreaker(provider)
@@ -446,7 +446,7 @@ func (f *FailoverManager) recordFailoverEvent(fromProvider, toProvider providers
 	}
 
 	f.failoverHistory = append(f.failoverHistory, event)
-	
+
 	// Keep only last 1000 events
 	if len(f.failoverHistory) > 1000 {
 		f.failoverHistory = f.failoverHistory[len(f.failoverHistory)-1000:]
@@ -473,7 +473,7 @@ func (f *FailoverManager) calculateQualityImpact(originalProvider, currentProvid
 // calculateRetryDelay calculates retry delay with exponential backoff
 func (f *FailoverManager) calculateRetryDelay(attempt int) time.Duration {
 	delay := f.config.RetryConfig.InitialDelay
-	
+
 	for i := 1; i < attempt; i++ {
 		delay = time.Duration(float64(delay) * f.config.RetryConfig.BackoffMultiplier)
 		if delay > f.config.RetryConfig.MaxDelay {
@@ -550,7 +550,7 @@ func (cb *CircuitBreaker) RecordExecution(success bool) {
 
 	if success {
 		cb.successes++
-		
+
 		if cb.state == CircuitHalfOpen && cb.successes >= cb.config.SuccessThreshold {
 			// Move to closed state
 			cb.state = CircuitClosed
@@ -629,13 +629,13 @@ func (f *FailoverManager) checkCircuitBreakerHealth() {
 
 	for provider, cb := range circuitBreakers {
 		state := cb.GetState()
-		
+
 		// If circuit has been open for too long, try to reset it
 		if state == CircuitOpen {
 			cb.mu.RLock()
 			openDuration := time.Since(cb.lastStateChange)
 			cb.mu.RUnlock()
-			
+
 			if openDuration > f.config.CircuitBreakerConfig.RecoveryTimeout*2 {
 				// Force circuit to half-open for health check
 				cb.mu.Lock()
@@ -670,7 +670,7 @@ func (f *FailoverManager) monitorProviderHealth(ctx context.Context) {
 // checkProviderHealthForFailover checks provider health and triggers failover if needed
 func (f *FailoverManager) checkProviderHealthForFailover() {
 	availableProviders := f.manager.GetAvailableProviders()
-	
+
 	for _, provider := range availableProviders {
 		health, err := f.manager.GetProviderHealth(provider)
 		if err != nil {
@@ -744,10 +744,10 @@ func (f *FailoverManager) GetFailoverStats() map[string]interface{} {
 	}
 
 	stats := map[string]interface{}{
-		"total_failovers":      totalFailovers,
-		"successful_failovers": successfulFailovers,
-		"success_rate":         0.0,
-		"failovers_by_reason":  failoversByReason,
+		"total_failovers":        totalFailovers,
+		"successful_failovers":   successfulFailovers,
+		"success_rate":           0.0,
+		"failovers_by_reason":    failoversByReason,
 		"circuit_breaker_states": make(map[string]string),
 	}
 

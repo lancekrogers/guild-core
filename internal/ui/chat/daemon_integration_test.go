@@ -248,7 +248,7 @@ func TestChatApp_MessageSending(t *testing.T) {
 
 		// Verify message was added (enableDirectMode adds 2 system messages first)
 		assert.GreaterOrEqual(t, len(app.messages), 4) // 2 system messages + user message + system response
-		
+
 		// Find the user message (should be after the system messages)
 		var userMsgIndex int
 		for i, msg := range app.messages {
@@ -257,7 +257,7 @@ func TestChatApp_MessageSending(t *testing.T) {
 				break
 			}
 		}
-		
+
 		assert.Equal(t, "test message", app.messages[userMsgIndex].Content)
 		assert.Equal(t, types.MsgUser, app.messages[userMsgIndex].Type)
 	})

@@ -196,7 +196,7 @@ func TestXMLParser_Parse(t *testing.T) {
 				assert.Equal(t, want.Type, got.Type)
 				assert.Equal(t, want.Function.Name, got.Function.Name)
 				assert.NotEmpty(t, got.ID) // ID should be generated
-				
+
 				// Check that arguments were converted to JSON
 				if len(got.Function.Arguments) > 0 {
 					var args map[string]interface{}
@@ -291,7 +291,7 @@ func TestXMLParser_ParameterHandling(t *testing.T) {
 
 func TestXMLParser_ContextCancellation(t *testing.T) {
 	parser := NewParser()
-	
+
 	// Create a large input that would take time to process
 	largeInput := `<function_calls>`
 	for i := 0; i < 1000; i++ {
@@ -300,10 +300,10 @@ func TestXMLParser_ContextCancellation(t *testing.T) {
 	largeInput += `</function_calls>`
 
 	ctx, cancel := context.WithCancel(context.Background())
-	
+
 	// Cancel immediately
 	cancel()
-	
+
 	_, err := parser.Parse(ctx, []byte(largeInput))
 	assert.Error(t, err)
 	// Note: XML parsing might not always respect context cancellation immediately
@@ -380,14 +380,14 @@ func TestXMLParser_Validate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := parser.Validate([]byte(tt.input))
-			
+
 			assert.Equal(t, tt.wantValid, result.Valid)
 			if tt.wantErrors > 0 {
 				assert.Len(t, result.Errors, tt.wantErrors)
 			} else {
 				assert.Empty(t, result.Errors)
 			}
-			
+
 			// Schema should always be set
 			assert.NotEmpty(t, result.SchemaUsed)
 		})
@@ -516,16 +516,16 @@ func TestXMLParser_PerformanceRegression(t *testing.T) {
 	// Measure performance
 	start := time.Now()
 	iterations := 1000
-	
+
 	for i := 0; i < iterations; i++ {
 		calls, err := parser.Parse(ctx, []byte(input))
 		require.NoError(t, err)
 		require.Len(t, calls, 1)
 	}
-	
+
 	elapsed := time.Since(start)
 	avgTime := elapsed / time.Duration(iterations)
-	
+
 	// Ensure parsing is fast enough (adjust threshold as needed)
 	assert.Less(t, avgTime, 200*time.Microsecond, "Parsing is too slow: %v per operation", avgTime)
 }

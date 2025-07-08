@@ -12,11 +12,11 @@ import (
 // ToolAgent extends Agent with tool execution capabilities
 type ToolAgent interface {
 	Agent
-	
+
 	// ExecuteWithTools executes the agent with available tools
 	// Returns the response text and any tool calls the agent wants to make
 	ExecuteWithTools(ctx context.Context, input string, availableTools []interfaces.ToolDefinition) (response string, toolCalls []interfaces.ToolCall, err error)
-	
+
 	// ContinueWithToolResult continues execution after a tool has been executed
 	// Takes the tool call ID and the result, returns additional response
 	ContinueWithToolResult(ctx context.Context, toolCallID string, result string) (string, error)

@@ -19,7 +19,7 @@ import (
 func TestSimpleToolExecution(t *testing.T) {
 	t.Run("Parse OpenAI Format", func(t *testing.T) {
 		p := parser.NewResponseParser()
-		
+
 		response := `{
 			"tool_calls": [
 				{
@@ -32,49 +32,49 @@ func TestSimpleToolExecution(t *testing.T) {
 				}
 			]
 		}`
-		
+
 		toolCalls, err := p.ExtractToolCalls(response)
 		require.NoError(t, err)
 		require.Len(t, toolCalls, 1)
-		
+
 		assert.Equal(t, "call_123", toolCalls[0].ID)
 		assert.Equal(t, "test_tool", toolCalls[0].Function.Name)
 	})
-	
+
 	t.Run("Parse Anthropic XML Format", func(t *testing.T) {
 		p := parser.NewResponseParser()
-		
+
 		response := `<function_calls>
 <invoke name="test_tool">
 <parameter name="input">hello</parameter>
 </invoke>
 </function_calls>`
-		
+
 		toolCalls, err := p.ExtractToolCalls(response)
 		require.NoError(t, err)
 		require.Len(t, toolCalls, 1)
-		
+
 		assert.Equal(t, "test_tool", toolCalls[0].Function.Name)
-		
+
 		// Check arguments
 		var args map[string]interface{}
 		err = json.Unmarshal(toolCalls[0].Function.Arguments, &args)
 		require.NoError(t, err)
 		assert.Equal(t, "hello", args["input"])
 	})
-	
+
 	t.Run("Execute Simple Tool", func(t *testing.T) {
 		ctx := context.Background()
 		registry := tools.NewToolRegistry()
-		
+
 		// Register a simple test tool
 		testTool := &simpleTestTool{}
 		err := registry.RegisterTool("simple_test", testTool)
 		require.NoError(t, err)
-		
+
 		// Create executor
 		exec := executor.NewToolExecutor(registry)
-		
+
 		// Execute tool
 		toolCall := parser.ToolCall{
 			ID:   "test_call",
@@ -84,7 +84,7 @@ func TestSimpleToolExecution(t *testing.T) {
 				Arguments: json.RawMessage(`{"message": "test"}`),
 			},
 		}
-		
+
 		result, err := exec.Execute(ctx, toolCall)
 		require.NoError(t, err)
 		assert.True(t, result.Success)
@@ -121,7 +121,7 @@ func (t *simpleTestTool) Execute(ctx context.Context, input string) (*tools.Tool
 	if err := json.Unmarshal([]byte(input), &args); err != nil {
 		return nil, err
 	}
-	
+
 	return &tools.ToolResult{
 		Output:  "Received: " + args.Message,
 		Success: true,

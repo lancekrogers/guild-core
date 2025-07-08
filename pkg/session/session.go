@@ -394,9 +394,9 @@ func (s *SessionService) GetMetrics(ctx context.Context) map[string]interface{} 
 
 func (s *SessionService) getRegistryStatus() map[string]bool {
 	return map[string]bool{
-		"session_manager":  s.registry.GetSessionManager() != nil,
-		"session_resumer":  s.registry.GetSessionResumer() != nil,
-		"session_exporter": s.registry.GetSessionExporter() != nil,
+		"session_manager":   s.registry.GetSessionManager() != nil,
+		"session_resumer":   s.registry.GetSessionResumer() != nil,
+		"session_exporter":  s.registry.GetSessionExporter() != nil,
 		"session_analytics": s.registry.GetSessionAnalytics() != nil,
 	}
 }
@@ -475,15 +475,15 @@ func InitializeSessionManagement(ctx context.Context, options InitOptions) (*Ses
 
 // InitOptions configures session management initialization
 type InitOptions struct {
-	Database               interface{}       // Database connection
-	EncryptionKey          []byte            // Encryption key for session data
-	AutoSaveInterval       time.Duration     // Auto-save interval
-	UIIntegration          UIRestorer        // UI integration for resume functionality
+	Database                interface{}           // Database connection
+	EncryptionKey           []byte                // Encryption key for session data
+	AutoSaveInterval        time.Duration         // Auto-save interval
+	UIIntegration           UIRestorer            // UI integration for resume functionality
 	OrchestratorIntegration OrchestratorInterface // Orchestrator integration
-	CorpusIntegration      CorpusInterface   // Corpus integration
-	AnalyticsStore         AnalyticsStore    // Analytics storage
-	EnableLogging          bool              // Enable logging middleware
-	EnableMetrics          bool              // Enable metrics middleware
+	CorpusIntegration       CorpusInterface       // Corpus integration
+	AnalyticsStore          AnalyticsStore        // Analytics storage
+	EnableLogging           bool                  // Enable logging middleware
+	EnableMetrics           bool                  // Enable metrics middleware
 }
 
 // Default middleware implementations

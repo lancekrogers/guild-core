@@ -155,7 +155,7 @@ func (d *Detector) extractFromCodeBlock(input []byte) []byte {
 	if start := strings.Index(s, "```xml"); start != -1 {
 		start += 6 // len("```xml")
 		if end := strings.Index(s[start:], "```"); end != -1 {
-			candidate := []byte(strings.TrimSpace(s[start:start+end]))
+			candidate := []byte(strings.TrimSpace(s[start : start+end]))
 			if d.isWellFormedXML(candidate) && d.containsFunctionCalls(candidate) {
 				return candidate
 			}
@@ -177,7 +177,7 @@ func (d *Detector) extractFromCodeBlock(input []byte) []byte {
 		}
 
 		if blockEnd := strings.Index(s[blockStart:], "```"); blockEnd != -1 {
-			candidate := []byte(strings.TrimSpace(s[blockStart:blockStart+blockEnd]))
+			candidate := []byte(strings.TrimSpace(s[blockStart : blockStart+blockEnd]))
 			if d.isWellFormedXML(candidate) && d.containsFunctionCalls(candidate) {
 				return candidate
 			}

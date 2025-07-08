@@ -15,13 +15,13 @@ import (
 type (
 	// Integration package compatibility
 	IntegrationEvent = BaseEvent
-	
-	// Orchestrator package compatibility  
+
+	// Orchestrator package compatibility
 	OrchestratorEvent = BaseEvent
-	
+
 	// Corpus package compatibility
 	CorpusEvent = BaseEvent
-	
+
 	// Scheduler package compatibility
 	SchedulerEvent = AgentEvent
 )
@@ -52,7 +52,7 @@ func FromJSON(jsonEvent string) (CoreEvent, error) {
 			WithComponent("events").
 			WithOperation("FromJSON")
 	}
-	
+
 	return FromMap(raw)
 }
 
@@ -73,7 +73,7 @@ func FromMap(data map[string]interface{}) (CoreEvent, error) {
 		Data:     make(map[string]interface{}),
 		Metadata: make(map[string]interface{}),
 	}
-	
+
 	// Extract required fields
 	if id, ok := data["id"].(string); ok {
 		event.ID = id
@@ -84,12 +84,12 @@ func FromMap(data map[string]interface{}) (CoreEvent, error) {
 	if source, ok := data["source"].(string); ok {
 		event.Source = source
 	}
-	
+
 	// Extract optional fields
 	if target, ok := data["target"].(string); ok {
 		event.Target = target
 	}
-	
+
 	// Handle timestamp
 	if ts, ok := data["timestamp"]; ok {
 		switch t := ts.(type) {
@@ -105,22 +105,22 @@ func FromMap(data map[string]interface{}) (CoreEvent, error) {
 			event.Timestamp = t
 		}
 	}
-	
+
 	// If no timestamp, use current time
 	if event.Timestamp.IsZero() {
 		event.Timestamp = time.Now()
 	}
-	
+
 	// Extract data payload
 	if eventData, ok := data["data"].(map[string]interface{}); ok {
 		event.Data = eventData
 	}
-	
+
 	// Extract metadata
 	if metadata, ok := data["metadata"].(map[string]interface{}); ok {
 		event.Metadata = metadata
 	}
-	
+
 	// Copy any remaining fields to data
 	for key, value := range data {
 		switch key {
@@ -130,31 +130,31 @@ func FromMap(data map[string]interface{}) (CoreEvent, error) {
 			event.Data[key] = value
 		}
 	}
-	
+
 	return event, nil
 }
 
 // ToMap converts a CoreEvent to a map
 func ToMap(event CoreEvent) map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	result["id"] = event.GetID()
 	result["type"] = event.GetType()
 	result["source"] = event.GetSource()
 	result["timestamp"] = event.GetTimestamp()
-	
+
 	if target := event.GetTarget(); target != "" {
 		result["target"] = target
 	}
-	
+
 	if data := event.GetData(); len(data) > 0 {
 		result["data"] = data
 	}
-	
+
 	if metadata := event.GetMetadata(); len(metadata) > 0 {
 		result["metadata"] = metadata
 	}
-	
+
 	return result
 }
 
@@ -165,7 +165,7 @@ func FromProtobufGeneric(pbData map[string]interface{}) (CoreEvent, error) {
 		Data:     make(map[string]interface{}),
 		Metadata: make(map[string]interface{}),
 	}
-	
+
 	// Extract protobuf fields
 	if id, ok := pbData["id"].(string); ok {
 		event.ID = id
@@ -176,7 +176,7 @@ func FromProtobufGeneric(pbData map[string]interface{}) (CoreEvent, error) {
 	if source, ok := pbData["source"].(string); ok {
 		event.Source = source
 	}
-	
+
 	// Handle protobuf timestamp
 	if ts, ok := pbData["timestamp"]; ok {
 		if tsMap, ok := ts.(map[string]interface{}); ok {
@@ -189,37 +189,37 @@ func FromProtobufGeneric(pbData map[string]interface{}) (CoreEvent, error) {
 			}
 		}
 	}
-	
+
 	// Handle protobuf Struct data
 	if data, ok := pbData["data"]; ok {
 		if dataMap, ok := data.(map[string]interface{}); ok {
 			event.Data = dataMap
 		}
 	}
-	
+
 	return event, nil
 }
 
 // ToProtobufGeneric converts a CoreEvent to a generic protobuf-compatible map
 func ToProtobufGeneric(event CoreEvent) map[string]interface{} {
 	result := make(map[string]interface{})
-	
+
 	result["id"] = event.GetID()
 	result["type"] = event.GetType()
 	result["source"] = event.GetSource()
-	
+
 	// Convert timestamp to protobuf format
 	ts := event.GetTimestamp()
 	result["timestamp"] = map[string]interface{}{
 		"seconds": ts.Unix(),
 		"nanos":   int32(ts.Nanosecond()),
 	}
-	
+
 	// Convert data to protobuf Struct format
 	if data := event.GetData(); len(data) > 0 {
 		result["data"] = data
 	}
-	
+
 	return result
 }
 
@@ -248,20 +248,20 @@ func FromKanbanEvent(boardID, taskID, eventType string, data map[string]string) 
 	for k, v := range data {
 		eventData[k] = v
 	}
-	
+
 	event := NewTaskEvent(eventType, taskID, eventData)
 	event.WithBoard(boardID)
-	
+
 	// Generate ID from components
 	event.ID = fmt.Sprintf("kanban_%s_%s_%d", boardID, taskID, time.Now().UnixNano())
-	
+
 	return event
 }
 
 // ToKanbanEvent converts a TaskEvent to legacy kanban format
 func ToKanbanEvent(event *TaskEvent) (string, string, string, map[string]string, time.Time) {
 	data := make(map[string]string)
-	
+
 	// Convert interface data to string data
 	for k, v := range event.GetData() {
 		if str, ok := v.(string); ok {
@@ -270,7 +270,7 @@ func ToKanbanEvent(event *TaskEvent) (string, string, string, map[string]string,
 			data[k] = fmt.Sprintf("%v", v)
 		}
 	}
-	
+
 	return event.BoardID, event.TaskID, event.GetType(), data, event.GetTimestamp()
 }
 
@@ -278,7 +278,7 @@ func ToKanbanEvent(event *TaskEvent) (string, string, string, map[string]string,
 func FromCorpusEvent(eventType, source string, data map[string]interface{}) *MemoryEvent {
 	event := NewMemoryEvent(eventType, "corpus_operation", data)
 	event.Source = source
-	
+
 	// Extract corpus-specific fields from data
 	if docID, ok := data["document_id"].(string); ok {
 		event.WithDocument(docID)
@@ -289,7 +289,7 @@ func FromCorpusEvent(eventType, source string, data map[string]interface{}) *Mem
 	if size, ok := data["size"].(int64); ok {
 		event.WithSize(size)
 	}
-	
+
 	return event
 }
 
@@ -297,7 +297,7 @@ func FromCorpusEvent(eventType, source string, data map[string]interface{}) *Mem
 func FromSchedulerEvent(taskID, agentID, eventType string, attributes map[string]interface{}) *AgentEvent {
 	event := NewAgentEvent(eventType, agentID, attributes)
 	event.WithCurrentTask(taskID)
-	
+
 	// Extract scheduler-specific fields
 	if status, ok := attributes["status"].(string); ok {
 		event.WithStatus(status)
@@ -305,7 +305,7 @@ func FromSchedulerEvent(taskID, agentID, eventType string, attributes map[string
 	if agentType, ok := attributes["agent_type"].(string); ok {
 		event.WithAgentType(agentType)
 	}
-	
+
 	return event
 }
 
@@ -341,27 +341,27 @@ func (c *EventConverter) convertFromMap(data map[string]interface{}) (CoreEvent,
 	if err != nil {
 		return nil, err
 	}
-	
+
 	baseEvent := event.(*BaseEvent)
-	
+
 	// Apply conversion context
 	if !c.context.PreserveID {
 		baseEvent.ID = fmt.Sprintf("converted_%d", time.Now().UnixNano())
 	}
-	
+
 	if c.context.GenerateTimestamp {
 		baseEvent.Timestamp = time.Now()
 	}
-	
+
 	if baseEvent.Source == "" && c.context.DefaultSource != "" {
 		baseEvent.Source = c.context.DefaultSource
 	}
-	
+
 	// Add context metadata
 	for k, v := range c.context.Metadata {
 		baseEvent.WithMetadata(k, v)
 	}
-	
+
 	return baseEvent, nil
 }
 
@@ -373,7 +373,7 @@ func (c *EventConverter) convertGeneric(input interface{}) (CoreEvent, error) {
 			WithComponent("events").
 			WithOperation("convertGeneric")
 	}
-	
+
 	return FromJSON(string(data))
 }
 
@@ -382,12 +382,12 @@ func ValidateConversion(original interface{}, converted CoreEvent) error {
 	if converted == nil {
 		return gerror.New(gerror.ErrCodeValidation, "conversion resulted in nil event", nil)
 	}
-	
+
 	if err := converted.(*BaseEvent).Validate(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeValidation, "converted event failed validation").
 			WithComponent("events").
 			WithOperation("ValidateConversion")
 	}
-	
+
 	return nil
 }

@@ -56,8 +56,8 @@ func (v *ResponseTimeValidator) Validate(ctx context.Context, criteria map[strin
 		ActualValue: float64(actualTime.Milliseconds()),
 		Threshold:   float64(maxDuration.Milliseconds()),
 		Details: map[string]interface{}{
-			"actual_time_ms":   actualTime.Milliseconds(),
-			"max_time_ms":      maxDuration.Milliseconds(),
+			"actual_time_ms":    actualTime.Milliseconds(),
+			"max_time_ms":       maxDuration.Milliseconds(),
 			"performance_ratio": float64(actualTime) / float64(maxDuration),
 		},
 	}
@@ -98,7 +98,7 @@ func (v *AccuracyValidator) Validate(ctx context.Context, criteria map[string]in
 	// Calculate accuracy based on successful actions
 	totalActions := len(stepResult.UserActions)
 	successfulActions := 0
-	
+
 	for _, action := range stepResult.UserActions {
 		if action.Success {
 			successfulActions++
@@ -211,11 +211,11 @@ func (v *UserExperienceValidator) Validate(ctx context.Context, criteria map[str
 		ActualValue: uxScore,
 		Threshold:   thresholdValue,
 		Details: map[string]interface{}{
-			"ux_score":         uxScore,
-			"step_success":     stepResult.Success,
+			"ux_score":          uxScore,
+			"step_success":      stepResult.Success,
 			"performance_ratio": float64(stepResult.TargetTime) / float64(stepResult.ActualTime),
-			"error_count":      len(stepResult.Issues),
-			"action_count":     len(stepResult.UserActions),
+			"error_count":       len(stepResult.Issues),
+			"action_count":      len(stepResult.UserActions),
 		},
 	}
 }
@@ -287,8 +287,8 @@ func (v *CompletenessValidator) Validate(ctx context.Context, criteria map[strin
 		ActualValue: completeness,
 		Threshold:   thresholdValue,
 		Details: map[string]interface{}{
-			"completed_actions": completedActions,
-			"required_actions":  requiredCount,
+			"completed_actions":  completedActions,
+			"required_actions":   requiredCount,
 			"completeness_ratio": completeness,
 		},
 	}

@@ -1416,7 +1416,7 @@ func NewSearchHandler(corpusHandler *CorpusHandler) *SearchHandler {
 func (h *SearchHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	ctx = observability.WithComponent(ctx, "search.unified")
 	ctx = observability.WithOperation(ctx, "Handle")
-	
+
 	if len(args) == 0 {
 		return func() tea.Msg {
 			return panes.StatusUpdateMsg{
@@ -1427,15 +1427,15 @@ func (h *SearchHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	}
 
 	query := strings.Join(args, " ")
-	
+
 	return func() tea.Msg {
 		// Perform unified search across both message history and corpus
 		var content strings.Builder
 		content.WriteString(fmt.Sprintf("🔍 **Unified Search Results for \"%s\"**\n\n", query))
-		
+
 		// First, search corpus knowledge
 		content.WriteString("## 📚 Knowledge Base Results\n\n")
-		
+
 		// Use corpus handler to search
 		corpusCmd := h.corpusHandler.handleSearch(ctx, args)
 		if corpusCmd != nil {
@@ -1455,25 +1455,25 @@ func (h *SearchHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 				}
 			}
 		}
-		
+
 		content.WriteString("\n## 💬 Chat History Results\n\n")
 		content.WriteString("_Searching message history..._\n\n")
-		
+
 		// Add instruction for message search
 		content.WriteString("**Note**: For detailed message history search, the system will also trigger a background search.\n")
 		content.WriteString("**Tip**: Use `/corpus search --type pattern` to search only design patterns, or `/corpus search --from elena` to search by author.\n\n")
-		
+
 		content.WriteString("---\n\n")
 		content.WriteString("**Advanced Options**:\n")
 		content.WriteString("- `/corpus search` - Search knowledge base with advanced filters\n")
 		content.WriteString("- Message history search is also triggered automatically\n")
-		
+
 		// Also trigger the original message search
 		go func() {
 			// This would trigger the message search in the background
 			// For now, we'll keep the original behavior by sending the SearchMsg
 		}()
-		
+
 		// Send both the unified results and trigger message search
 		return tea.Batch(
 			func() tea.Msg {

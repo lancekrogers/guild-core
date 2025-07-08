@@ -253,7 +253,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 
 	// Create event bus using the unified events package
 	unifiedEventBus := events.NewMemoryEventBusWithDefaults()
-	
+
 	// Wrap it with adapter for grpc compatibility
 	eventBusAdapter := grpcpkg.NewEventBusAdapter(unifiedEventBus)
 
@@ -384,7 +384,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 		if err := unifiedEventBus.Close(shutdownCtx); err != nil {
 			logger.ErrorContext(ctx, "Failed to shutdown event bus", "error", err)
 		}
-		
+
 		// Clean up socket file
 		if err := os.Remove(daemonConfig.SocketPath); err != nil && !os.IsNotExist(err) {
 			logger.ErrorContext(ctx, "Failed to remove socket file", "socket", daemonConfig.SocketPath, "error", err)
@@ -407,7 +407,6 @@ func runServe(cmd *cobra.Command, args []string) error {
 	}
 	return nil
 }
-
 
 // forkDaemon starts the guild serve process in the background
 func forkDaemon(daemonConfig *daemon.DaemonConfig) error {

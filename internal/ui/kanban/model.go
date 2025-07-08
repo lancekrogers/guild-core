@@ -65,12 +65,12 @@ type Model struct {
 	fps        float64
 
 	// Performance optimization components
-	profiler        *KanbanProfiler
-	viewport        *Viewport
-	renderer        *OptimizedCardRenderer
-	cardCache       *CompactCardCache
-	virtualWindow   *VirtualWindow
-	lowQualityMode  bool
+	profiler       *KanbanProfiler
+	viewport       *Viewport
+	renderer       *OptimizedCardRenderer
+	cardCache      *CompactCardCache
+	virtualWindow  *VirtualWindow
+	lowQualityMode bool
 
 	// Event streaming
 	eventClient   pb.EventServiceClient
@@ -118,11 +118,11 @@ func New(ctx context.Context, kanbanManager *kanban.Manager, boardID string) *Mo
 // NewWithEventClient creates a new kanban board UI model with event streaming
 func NewWithEventClient(ctx context.Context, kanbanManager *kanban.Manager, boardID string, conn *grpc.ClientConn) *Model {
 	m := New(ctx, kanbanManager, boardID)
-	
+
 	if conn != nil {
 		m.eventClient = pb.NewEventServiceClient(conn)
 	}
-	
+
 	return m
 }
 
@@ -235,7 +235,7 @@ func (m *Model) sortTasks(tasks []*kanban.Task) []*kanban.Task {
 // Update handles messages and updates the model
 func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
-	
+
 	// Start profiling if enabled
 	var profilingDone func()
 	if m.profiler != nil && m.profiler.IsEnabled() {
@@ -253,13 +253,13 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.viewportState.Width = msg.Width
 		m.viewportState.Height = msg.Height
-		
+
 		// Update optimized viewport
 		err := m.viewport.Resize(m.ctx, msg.Width, msg.Height)
 		if err != nil {
 			// Log error but continue
 		}
-		
+
 		m.calculateVisibleRows()
 
 	case tickMsg:
@@ -575,7 +575,7 @@ func (m *Model) startEventStream() tea.Cmd {
 			EventTypes: []string{
 				"task.created",
 				"task.moved",
-				"task.updated", 
+				"task.updated",
 				"task.completed",
 				"task.assigned",
 				"task.blocked",
@@ -612,28 +612,28 @@ func (m *Model) receiveEvents() {
 		}
 
 		// Parse event and send to channel
-		if event.Type == "task.created" || 
-		   event.Type == "task.moved" || 
-		   event.Type == "task.updated" ||
-		   event.Type == "task.completed" ||
-		   event.Type == "task.assigned" ||
-		   event.Type == "task.blocked" ||
-		   event.Type == "task.unblocked" {
-			
+		if event.Type == "task.created" ||
+			event.Type == "task.moved" ||
+			event.Type == "task.updated" ||
+			event.Type == "task.completed" ||
+			event.Type == "task.assigned" ||
+			event.Type == "task.blocked" ||
+			event.Type == "task.unblocked" {
+
 			data := event.Data.AsMap()
-			
+
 			msg := taskEventMsg{
 				eventType: event.Type,
 				boardID:   getStringFromMap(data, "board_id"),
 			}
-			
+
 			// Extract task ID based on event type
 			if taskID := getStringFromMap(data, "task_id"); taskID != "" {
 				msg.taskID = taskID
 			}
-			
+
 			msg.data = data
-			
+
 			// Only send events for our board
 			if msg.boardID == m.boardID || msg.boardID == "" {
 				m.eventChan <- msg
@@ -689,7 +689,7 @@ func (m *Model) GetPerformanceReport() (*ProfileReport, error) {
 			WithComponent("kanban.model").
 			WithOperation("GetPerformanceReport")
 	}
-	
+
 	return m.profiler.GenerateReport(m.ctx)
 }
 
@@ -714,25 +714,25 @@ func (m *Model) updateCardCache() error {
 // SetLowQualityMode enables or disables low quality rendering mode
 func (m *Model) SetLowQualityMode(enabled bool) error {
 	m.lowQualityMode = enabled
-	
+
 	if m.renderer != nil {
 		return m.renderer.SetLowQualityMode(m.ctx, enabled)
 	}
-	
+
 	return nil
 }
 
 // GetMemoryUsage returns estimated memory usage
 func (m *Model) GetMemoryUsage() (int64, error) {
 	var totalUsage int64
-	
+
 	// Viewport memory usage
 	if m.viewport != nil {
 		columns := make([]*Column, len(m.columns))
 		for i := range m.columns {
 			columns[i] = &m.columns[i]
 		}
-		
+
 		usage, err := m.viewport.EstimateMemoryUsage(m.ctx, columns)
 		if err != nil {
 			return 0, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to estimate viewport memory usage").
@@ -741,33 +741,33 @@ func (m *Model) GetMemoryUsage() (int64, error) {
 		}
 		totalUsage += usage
 	}
-	
+
 	// Virtual window memory usage
 	if m.virtualWindow != nil {
 		totalUsage += m.virtualWindow.GetMemoryUsage()
 	}
-	
+
 	// Task cache rough estimation
 	taskCount := 0
 	for _, tasks := range m.taskCache {
 		taskCount += len(tasks)
 	}
 	totalUsage += int64(taskCount) * 200 // ~200 bytes per task estimate
-	
+
 	return totalUsage, nil
 }
 
 // GetDebugInfo returns debug information for performance analysis
 func (m *Model) GetDebugInfo() map[string]interface{} {
 	info := make(map[string]interface{})
-	
+
 	// Basic model info
 	info["columns"] = len(m.columns)
 	info["viewport_width"] = m.viewportState.Width
 	info["viewport_height"] = m.viewportState.Height
 	info["focused_column"] = m.viewportState.FocusedColumn
 	info["low_quality_mode"] = m.lowQualityMode
-	
+
 	// Task counts
 	totalTasks := 0
 	for status, tasks := range m.taskCache {
@@ -776,36 +776,36 @@ func (m *Model) GetDebugInfo() map[string]interface{} {
 		totalTasks += count
 	}
 	info["total_tasks"] = totalTasks
-	
+
 	// Performance component info
 	if m.profiler != nil {
 		info["profiler"] = m.profiler.GetDebugInfo(m.ctx)
 	}
-	
+
 	if m.viewport != nil {
 		columns := make([]*Column, len(m.columns))
 		for i := range m.columns {
 			columns[i] = &m.columns[i]
 		}
-		
+
 		if stats, err := m.viewport.GetViewportStats(m.ctx, columns); err == nil {
 			info["viewport"] = stats
 		}
 	}
-	
+
 	if m.renderer != nil {
 		info["renderer"] = m.renderer.GetDebugInfo(m.ctx)
 	}
-	
+
 	if m.cardCache != nil {
 		info["card_cache"] = m.cardCache.GetStats()
 	}
-	
+
 	// Memory usage
 	if memUsage, err := m.GetMemoryUsage(); err == nil {
 		info["memory_usage_mb"] = float64(memUsage) / 1024 / 1024
 	}
-	
+
 	return info
 }
 
@@ -813,12 +813,12 @@ func (m *Model) GetDebugInfo() map[string]interface{} {
 func (m *Model) Cleanup() error {
 	// Stop event streaming
 	m.stopEventStream()
-	
+
 	// Cleanup performance components
 	if m.profiler != nil {
 		m.profiler.Disable()
 	}
-	
+
 	if m.renderer != nil {
 		if err := m.renderer.Cleanup(m.ctx); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to cleanup renderer").
@@ -826,10 +826,10 @@ func (m *Model) Cleanup() error {
 				WithOperation("Cleanup")
 		}
 	}
-	
+
 	if m.cardCache != nil {
 		m.cardCache.Clear()
 	}
-	
+
 	return nil
 }

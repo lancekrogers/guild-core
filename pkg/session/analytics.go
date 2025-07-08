@@ -17,9 +17,9 @@ import (
 
 // SessionAnalytics provides usage analytics and insights for sessions
 type SessionAnalytics struct {
-	store     AnalyticsStore
-	analyzer  *UsageAnalyzer
-	reporter  *ReportGenerator
+	store    AnalyticsStore
+	analyzer *UsageAnalyzer
+	reporter *ReportGenerator
 }
 
 // AnalyticsStore defines the interface for analytics data storage
@@ -47,24 +47,24 @@ type AnalyticsData struct {
 
 // AgentUsage contains usage statistics for an individual agent
 type AgentUsage struct {
-	MessageCount     int           `json:"message_count"`
-	TokensGenerated  int           `json:"tokens_generated"`
-	TasksCompleted   int           `json:"tasks_completed"`
-	AverageResponse  time.Duration `json:"average_response"`
-	SuccessRate      float64       `json:"success_rate"`
-	ErrorCount       int           `json:"error_count"`
-	LastActivity     time.Time     `json:"last_activity"`
+	MessageCount    int           `json:"message_count"`
+	TokensGenerated int           `json:"tokens_generated"`
+	TasksCompleted  int           `json:"tasks_completed"`
+	AverageResponse time.Duration `json:"average_response"`
+	SuccessRate     float64       `json:"success_rate"`
+	ErrorCount      int           `json:"error_count"`
+	LastActivity    time.Time     `json:"last_activity"`
 }
 
 // TokenUsage tracks token consumption across different models
 type TokenUsage struct {
-	Total      int                    `json:"total"`
-	Input      int                    `json:"input"`
-	Output     int                    `json:"output"`
-	ByModel    map[string]int         `json:"by_model"`
-	ByAgent    map[string]int         `json:"by_agent"`
-	Cost       float64                `json:"cost"`
-	CostByModel map[string]float64    `json:"cost_by_model"`
+	Total       int                `json:"total"`
+	Input       int                `json:"input"`
+	Output      int                `json:"output"`
+	ByModel     map[string]int     `json:"by_model"`
+	ByAgent     map[string]int     `json:"by_agent"`
+	Cost        float64            `json:"cost"`
+	CostByModel map[string]float64 `json:"cost_by_model"`
 }
 
 // TaskMetrics contains task-related analytics
@@ -101,8 +101,8 @@ func (sa *SessionAnalytics) AnalyzeSession(ctx context.Context, session *Session
 		AgentUsage:   make(map[string]AgentUsage),
 		CommandUsage: make(map[string]int),
 		TokenUsage: TokenUsage{
-			ByModel: make(map[string]int),
-			ByAgent: make(map[string]int),
+			ByModel:     make(map[string]int),
+			ByAgent:     make(map[string]int),
 			CostByModel: make(map[string]float64),
 		},
 		Timestamp: time.Now(),
@@ -197,10 +197,10 @@ func (sa *SessionAnalytics) analyzeMessages(messages []Message, analytics *Analy
 func (sa *SessionAnalytics) analyzeAgentPerformance(session *Session, analytics *AnalyticsData) {
 	for agentID, state := range session.State.ActiveAgents {
 		usage := analytics.AgentUsage[agentID]
-		
+
 		// Count completed tasks
 		usage.TasksCompleted = len(state.TaskQueue) // Simplified - would check actual completion
-		
+
 		analytics.AgentUsage[agentID] = usage
 	}
 }
@@ -211,7 +211,7 @@ func (sa *SessionAnalytics) analyzeTaskMetrics(session *Session) TaskMetrics {
 
 	// Analyze running tasks
 	metrics.TasksCreated = len(session.Context.RunningTasks)
-	
+
 	// In a real implementation, this would query the task system
 	// For now, we'll use simplified calculations
 	if metrics.TasksCreated > 0 {
@@ -233,7 +233,7 @@ func (sa *SessionAnalytics) calculateProductivity(analytics *AnalyticsData) floa
 	// Productivity factors
 	messagesPerMinute := float64(analytics.MessageCount) / analytics.Duration.Minutes()
 	taskCompletionRate := analytics.TaskMetrics.CompletionRate
-	
+
 	// Agent efficiency (average success rate)
 	var totalSuccessRate float64
 	agentCount := len(analytics.AgentUsage)
@@ -303,7 +303,7 @@ func (sa *SessionAnalytics) extractCommand(content string) string {
 func (sa *SessionAnalytics) isErrorMessage(msg Message) bool {
 	content := strings.ToLower(msg.Content)
 	errorKeywords := []string{"error", "failed", "exception", "panic", "fatal"}
-	
+
 	for _, keyword := range errorKeywords {
 		if strings.Contains(content, keyword) {
 			return true
@@ -349,20 +349,20 @@ type DataPoint struct {
 
 // CostBreakdown contains cost analysis information
 type CostBreakdown struct {
-	TotalCost         float64            `json:"total_cost"`
-	CostByModel       map[string]float64 `json:"cost_by_model"`
-	CostByAgent       map[string]float64 `json:"cost_by_agent"`
-	PotentialSavings  float64            `json:"potential_savings"`
-	Recommendations   []string           `json:"recommendations"`
+	TotalCost        float64            `json:"total_cost"`
+	CostByModel      map[string]float64 `json:"cost_by_model"`
+	CostByAgent      map[string]float64 `json:"cost_by_agent"`
+	PotentialSavings float64            `json:"potential_savings"`
+	Recommendations  []string           `json:"recommendations"`
 }
 
 // AggregateTokenUsage contains aggregated token usage statistics
 type AggregateTokenUsage struct {
-	Total       int                `json:"total"`
-	ByModel     map[string]int     `json:"by_model"`
-	ByAgent     map[string]int     `json:"by_agent"`
-	Trend       []DataPoint        `json:"trend"`
-	Efficiency  float64            `json:"efficiency"`
+	Total      int            `json:"total"`
+	ByModel    map[string]int `json:"by_model"`
+	ByAgent    map[string]int `json:"by_agent"`
+	Trend      []DataPoint    `json:"trend"`
+	Efficiency float64        `json:"efficiency"`
 }
 
 // GenerateReport creates a comprehensive analytics report
@@ -403,11 +403,11 @@ type AnalyticsReport struct {
 
 // Insight represents an actionable insight
 type Insight struct {
-	Type     InsightType      `json:"type"`
-	Title    string           `json:"title"`
-	Message  string           `json:"message"`
-	Priority InsightPriority  `json:"priority"`
-	Actions  []Action         `json:"actions,omitempty"`
+	Type     InsightType     `json:"type"`
+	Title    string          `json:"title"`
+	Message  string          `json:"message"`
+	Priority InsightPriority `json:"priority"`
+	Actions  []Action        `json:"actions,omitempty"`
 }
 
 // InsightType categorizes different types of insights
@@ -544,9 +544,9 @@ func (sa *SessionAnalytics) generateInsights(agg *AggregateAnalytics) []Insight 
 	for _, agent := range agg.TopAgents {
 		if agent.Efficiency < 0.7 {
 			insights = append(insights, Insight{
-				Type:    InsightEfficiency,
-				Title:   fmt.Sprintf("%s Efficiency", agent.Name),
-				Message: fmt.Sprintf("%s's efficiency is %.0f%%. Consider reviewing task assignments.", agent.Name, agent.Efficiency*100),
+				Type:     InsightEfficiency,
+				Title:    fmt.Sprintf("%s Efficiency", agent.Name),
+				Message:  fmt.Sprintf("%s's efficiency is %.0f%%. Consider reviewing task assignments.", agent.Name, agent.Efficiency*100),
 				Priority: InsightPriorityMedium,
 			})
 		}
@@ -722,18 +722,18 @@ func (sa *SessionAnalytics) GenerateInsights(ctx context.Context, userID string,
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get analytics for insights")
 	}
-	
+
 	// Filter by user (assuming AnalyticsData has a SessionID field we can use)
 	var userAnalytics []*AnalyticsData
 	for _, data := range analyticsData {
 		// For now, include all analytics data - proper filtering would need SessionID lookup
 		userAnalytics = append(userAnalytics, data)
 	}
-	
+
 	if len(userAnalytics) == 0 {
 		return []Insight{}, nil
 	}
-	
+
 	// Aggregate and generate insights
 	agg := sa.aggregateMetrics(userAnalytics)
 	return sa.generateInsights(agg), nil
@@ -743,13 +743,13 @@ func (sa *SessionAnalytics) GenerateInsights(ctx context.Context, userID string,
 func (sa *SessionAnalytics) GetSessionMetrics(ctx context.Context, sessionID string) (*SessionMetrics, error) {
 	// For now, return basic metrics. A real implementation would load from store
 	return &SessionMetrics{
-		Duration:         30 * time.Minute,
-		MessageCount:     25,
-		AgentCount:       3,
-		TaskCount:        8,
-		CompletionRate:   0.9,
+		Duration:          30 * time.Minute,
+		MessageCount:      25,
+		AgentCount:        3,
+		TaskCount:         8,
+		CompletionRate:    0.9,
 		ProductivityScore: 0.85,
-		LastActivity:     time.Now(),
+		LastActivity:      time.Now(),
 	}, nil
 }
 

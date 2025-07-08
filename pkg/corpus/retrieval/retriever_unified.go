@@ -46,20 +46,20 @@ func (ur *UnifiedRetriever) Retrieve(ctx context.Context, query Query) ([]Ranked
 
 	// Use base implementation
 	results, err := ur.RetrieverImpl.Retrieve(ctx, query)
-	
+
 	// Calculate duration
 	duration := time.Since(startTime)
 
 	// Publish event to unified bus
 	if ur.unifiedEventBus != nil {
 		eventData := map[string]interface{}{
-			"query":          query.Text,
-			"results_count":  len(results),
-			"strategies":     len(ur.strategies),
-			"duration_ms":    duration.Milliseconds(),
-			"max_results":    query.MaxResults,
-			"min_score":      query.MinScore,
-			"success":        err == nil,
+			"query":         query.Text,
+			"results_count": len(results),
+			"strategies":    len(ur.strategies),
+			"duration_ms":   duration.Milliseconds(),
+			"max_results":   query.MaxResults,
+			"min_score":     query.MinScore,
+			"success":       err == nil,
 		}
 
 		// Add context information if available

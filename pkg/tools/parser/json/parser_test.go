@@ -213,7 +213,7 @@ func TestJSONParser_Parse(t *testing.T) {
 				assert.Equal(t, want.ID, got.ID)
 				assert.Equal(t, want.Type, got.Type)
 				assert.Equal(t, want.Function.Name, got.Function.Name)
-				
+
 				// Compare arguments as JSON
 				var wantArgs, gotArgs interface{}
 				json.Unmarshal(want.Function.Arguments, &wantArgs)
@@ -226,7 +226,7 @@ func TestJSONParser_Parse(t *testing.T) {
 
 func TestJSONParser_ContextCancellation(t *testing.T) {
 	parser := NewParser()
-	
+
 	// Create a large input that would take time to process
 	largeInput := `{"tool_calls": [`
 	for i := 0; i < 1000; i++ {
@@ -238,10 +238,10 @@ func TestJSONParser_ContextCancellation(t *testing.T) {
 	largeInput += `]}`
 
 	ctx, cancel := context.WithCancel(context.Background())
-	
+
 	// Cancel immediately
 	cancel()
-	
+
 	_, err := parser.Parse(ctx, []byte(largeInput))
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "context canceled")
@@ -330,14 +330,14 @@ func TestJSONParser_Validate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result := parser.Validate([]byte(tt.input))
-			
+
 			assert.Equal(t, tt.wantValid, result.Valid)
 			if tt.wantErrors > 0 {
 				assert.Len(t, result.Errors, tt.wantErrors)
 			} else {
 				assert.Empty(t, result.Errors)
 			}
-			
+
 			// Schema should always be set
 			assert.NotEmpty(t, result.SchemaUsed)
 		})
@@ -450,16 +450,16 @@ func TestJSONParser_PerformanceRegression(t *testing.T) {
 	// Measure performance
 	start := time.Now()
 	iterations := 1000
-	
+
 	for i := 0; i < iterations; i++ {
 		calls, err := parser.Parse(ctx, []byte(input))
 		require.NoError(t, err)
 		require.Len(t, calls, 1)
 	}
-	
+
 	elapsed := time.Since(start)
 	avgTime := elapsed / time.Duration(iterations)
-	
+
 	// Ensure parsing is fast enough (adjust threshold as needed)
 	assert.Less(t, avgTime, 100*time.Microsecond, "Parsing is too slow: %v per operation", avgTime)
 }

@@ -19,15 +19,15 @@ import (
 
 // RobustParser implements ResponseParser with proper format detection and validation
 type RobustParser struct {
-	config          *parserConfig
-	detectorReg     *DetectorRegistry
-	parsers         map[ProviderFormat]FormatParser
-	mu              sync.RWMutex
-	
+	config      *parserConfig
+	detectorReg *DetectorRegistry
+	parsers     map[ProviderFormat]FormatParser
+	mu          sync.RWMutex
+
 	// Metrics
-	parseAttempts   int64
-	parseSuccesses  int64
-	parseFailures   int64
+	parseAttempts  int64
+	parseSuccesses int64
+	parseFailures  int64
 }
 
 // NewResponseParser creates a new robust parser with all provider support
@@ -40,30 +40,30 @@ func NewResponseParser(opts ...ParserOption) ResponseParser {
 		customDetectors:  []FormatDetector{},
 		customParsers:    make(map[ProviderFormat]FormatParser),
 	}
-	
+
 	for _, opt := range opts {
 		opt(config)
 	}
-	
+
 	p := &RobustParser{
 		config:      config,
 		detectorReg: NewDetectorRegistry(),
 		parsers:     make(map[ProviderFormat]FormatParser),
 	}
-	
+
 	// Register default detectors and parsers
 	p.registerDefaults()
-	
+
 	// Add custom detectors
 	for _, detector := range config.customDetectors {
 		p.detectorReg.Register(detector)
 	}
-	
+
 	// Add custom parsers
 	for format, parser := range config.customParsers {
 		p.parsers[format] = parser
 	}
-	
+
 	return p
 }
 
@@ -73,12 +73,12 @@ func (p *RobustParser) registerDefaults() {
 	jsonDetector := jsonparser.NewDetector()
 	p.detectorReg.Register(jsonDetector)
 	p.parsers[ProviderFormatOpenAI] = jsonparser.NewParser()
-	
+
 	// Register XML detector and parser for Anthropic
 	xmlDetector := xmlparser.NewDetector()
 	p.detectorReg.Register(xmlDetector)
 	p.parsers[ProviderFormatAnthropic] = xmlparser.NewParser()
-	
+
 	// Add other format support as needed
 }
 
@@ -91,21 +91,21 @@ func (p *RobustParser) ExtractToolCalls(response string) ([]ToolCall, error) {
 // ExtractWithContext parses with context support for cancellation and timeouts
 func (p *RobustParser) ExtractWithContext(ctx context.Context, response string) ([]ToolCall, error) {
 	p.parseAttempts++
-	
+
 	// Apply timeout from config
 	ctx, cancel := context.WithTimeout(ctx, p.config.timeout)
 	defer cancel()
-	
+
 	logger := observability.GetLogger(ctx).
 		WithComponent("parser").
 		WithOperation("ExtractToolCalls")
-	
+
 	// Input validation
 	if response == "" {
 		p.parseFailures++
 		return []ToolCall{}, nil // Empty response is not an error
 	}
-	
+
 	responseBytes := []byte(response)
 	if len(responseBytes) > p.config.maxInputSize {
 		p.parseFailures++
@@ -115,10 +115,10 @@ func (p *RobustParser) ExtractWithContext(ctx context.Context, response string) 
 			WithDetails("size", len(responseBytes)).
 			WithDetails("max_size", p.config.maxInputSize)
 	}
-	
+
 	// Normalize input
 	normalized := p.normalizeInput(responseBytes)
-	
+
 	// Detect format
 	format, confidence, err := p.detectFormat(ctx, normalized)
 	if err != nil {
@@ -129,17 +129,17 @@ func (p *RobustParser) ExtractWithContext(ctx context.Context, response string) 
 		p.parseFailures++
 		return []ToolCall{}, nil // No tool calls found is not an error
 	}
-	
+
 	logger.Info("Format detected",
 		"format", format,
 		"confidence", confidence,
 	)
-	
+
 	// Get parser
 	p.mu.RLock()
 	parser, exists := p.parsers[format]
 	p.mu.RUnlock()
-	
+
 	if !exists {
 		p.parseFailures++
 		return nil, gerror.New(gerror.ErrCodeNotFound, "no parser for format", nil).
@@ -147,7 +147,7 @@ func (p *RobustParser) ExtractWithContext(ctx context.Context, response string) 
 			WithOperation("ExtractToolCalls").
 			WithDetails("format", string(format))
 	}
-	
+
 	// Validate if strict mode
 	if p.config.strictValidation {
 		validation := parser.Validate(normalized)
@@ -159,7 +159,7 @@ func (p *RobustParser) ExtractWithContext(ctx context.Context, response string) 
 			// Continue parsing anyway - might be recoverable
 		}
 	}
-	
+
 	// Parse tool calls
 	calls, err := parser.Parse(ctx, normalized)
 	if err != nil {
@@ -169,10 +169,10 @@ func (p *RobustParser) ExtractWithContext(ctx context.Context, response string) 
 			WithOperation("ExtractToolCalls").
 			WithDetails("format", string(format))
 	}
-	
+
 	// Post-process and validate
 	calls = p.postProcess(calls)
-	
+
 	p.parseSuccesses++
 	return calls, nil
 }
@@ -189,16 +189,16 @@ func (p *RobustParser) detectFormat(ctx context.Context, input []byte) (Provider
 	if err != nil {
 		return ProviderFormatUnknown, 0, err
 	}
-	
+
 	// Require minimum confidence
 	if confidence < 0.5 {
-		return ProviderFormatUnknown, confidence, 
+		return ProviderFormatUnknown, confidence,
 			gerror.New(gerror.ErrCodeValidation, "confidence too low", nil).
 				WithComponent("parser").
 				WithOperation("detectFormat").
 				WithDetails("confidence", fmt.Sprintf("%.2f", confidence))
 	}
-	
+
 	return format, confidence, nil
 }
 
@@ -206,35 +206,35 @@ func (p *RobustParser) detectFormat(ctx context.Context, input []byte) (Provider
 func (p *RobustParser) normalizeInput(input []byte) []byte {
 	// Remove BOM if present
 	input = bytes.TrimPrefix(input, []byte{0xEF, 0xBB, 0xBF})
-	
+
 	// Trim excessive whitespace
 	input = bytes.TrimSpace(input)
-	
+
 	// Handle common encoding issues would go here
-	
+
 	return input
 }
 
 // postProcess validates and normalizes parsed tool calls
 func (p *RobustParser) postProcess(calls []ToolCall) []ToolCall {
 	processed := make([]ToolCall, 0, len(calls))
-	
+
 	for i, call := range calls {
 		// Ensure ID is set
 		if call.ID == "" {
 			call.ID = fmt.Sprintf("call_%d_%d", time.Now().Unix(), i)
 		}
-		
+
 		// Ensure type is set
 		if call.Type == "" {
 			call.Type = "function"
 		}
-		
+
 		// Validate function name
 		if call.Function.Name == "" {
 			continue // Skip invalid calls
 		}
-		
+
 		// Ensure arguments is valid JSON
 		if len(call.Function.Arguments) == 0 {
 			call.Function.Arguments = json.RawMessage("{}")
@@ -251,10 +251,10 @@ func (p *RobustParser) postProcess(calls []ToolCall) []ToolCall {
 				}
 			}
 		}
-		
+
 		processed = append(processed, call)
 	}
-	
+
 	return processed
 }
 
@@ -265,7 +265,7 @@ func (p *RobustParser) tryFixJSON(data json.RawMessage) json.RawMessage {
 	if err := json.Unmarshal(data, &test); err == nil {
 		return data
 	}
-	
+
 	// Common fixes
 	// 1. Single quotes to double quotes
 	if bytes.Contains(data, []byte("'")) {
@@ -274,10 +274,10 @@ func (p *RobustParser) tryFixJSON(data json.RawMessage) json.RawMessage {
 			return fixed
 		}
 	}
-	
+
 	// 2. Unquoted keys
 	// This would require more complex parsing
-	
+
 	return nil
 }
 
@@ -293,12 +293,12 @@ func truncate(s string, maxLen int) string {
 type DetectorRegistry struct {
 	detectors []FormatDetector
 	mu        sync.RWMutex
-	
+
 	// Metrics
 	detectionAttempts  int64
 	detectionSuccesses int64
 	detectionFailures  int64
-	
+
 	// Observable parser for metrics
 	observable *ObservableParser
 }
@@ -317,10 +317,10 @@ func (r *DetectorRegistry) Register(detector FormatDetector) error {
 			WithComponent("parser").
 			WithOperation("DetectorRegistry.Register")
 	}
-	
+
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	r.detectors = append(r.detectors, detector)
 	return nil
 }
@@ -331,38 +331,38 @@ func (r *DetectorRegistry) DetectFormat(ctx context.Context, input []byte) (Prov
 	detectors := make([]FormatDetector, len(r.detectors))
 	copy(detectors, r.detectors)
 	r.mu.RUnlock()
-	
+
 	r.detectionAttempts++
-	
+
 	if len(detectors) == 0 {
 		r.detectionFailures++
 		return ProviderFormatUnknown, 0, gerror.New(gerror.ErrCodeNotFound, "no detectors registered", nil)
 	}
-	
+
 	// Run detectors and find best match
 	type result struct {
 		detection DetectionResult
 		err       error
 	}
-	
+
 	results := make([]result, 0, len(detectors))
-	
+
 	for _, detector := range detectors {
 		if !detector.CanParse(input) {
 			continue
 		}
-		
+
 		detection, err := detector.Detect(ctx, input)
 		if err == nil && detection.Confidence > 0 {
 			results = append(results, result{detection: detection})
 		}
 	}
-	
+
 	if len(results) == 0 {
 		r.detectionFailures++
 		return ProviderFormatUnknown, 0, gerror.New(gerror.ErrCodeNotFound, "no format detected", nil)
 	}
-	
+
 	// Find highest confidence
 	best := results[0]
 	for _, r := range results[1:] {
@@ -370,7 +370,7 @@ func (r *DetectorRegistry) DetectFormat(ctx context.Context, input []byte) (Prov
 			best = r
 		}
 	}
-	
+
 	r.detectionSuccesses++
 	return best.detection.Format, best.detection.Confidence, nil
 }

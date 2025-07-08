@@ -87,10 +87,10 @@ func TestCraftSessionPersistence(t *testing.T) {
 
 	// Create a test session
 	session := &Session{
-		ID:         "test-session-1",
-		UserID:     "test-user",
-		CampaignID: "test-campaign",
-		StartTime:  time.Now().Add(-1 * time.Hour),
+		ID:             "test-session-1",
+		UserID:         "test-user",
+		CampaignID:     "test-campaign",
+		StartTime:      time.Now().Add(-1 * time.Hour),
 		LastActiveTime: time.Now(),
 		State: SessionState{
 			ActiveAgents:   make(map[string]AgentState),

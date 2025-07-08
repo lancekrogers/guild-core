@@ -25,24 +25,24 @@ func TestRealToolExecution(t *testing.T) {
 		tmpDir, err := os.MkdirTemp("", "guild-test-*")
 		require.NoError(t, err)
 		defer os.RemoveAll(tmpDir)
-		
+
 		// Create a test file
 		testFile := filepath.Join(tmpDir, "test.txt")
 		err = os.WriteFile(testFile, []byte("Hello from Guild!"), 0644)
 		require.NoError(t, err)
-		
+
 		// Setup
 		ctx := context.Background()
 		registry := tools.NewToolRegistry()
-		
+
 		// Register file tool
 		fileTool := fs.NewFileTool(tmpDir)
 		err = registry.RegisterTool("file", fileTool)
 		require.NoError(t, err)
-		
+
 		// Create executor
 		exec := executor.NewToolExecutor(registry)
-		
+
 		// Create tool call to read the file (use relative path)
 		toolCall := parser.ToolCall{
 			ID:   "read_file",
@@ -52,45 +52,45 @@ func TestRealToolExecution(t *testing.T) {
 				Arguments: json.RawMessage(`{"operation": "read", "path": "test.txt"}`),
 			},
 		}
-		
+
 		// Execute
 		result, err := exec.Execute(ctx, toolCall)
 		require.NoError(t, err)
-		
+
 		// Debug output
 		t.Logf("Result Success: %v", result.Success)
 		t.Logf("Result Content: %q", result.Content)
 		t.Logf("Result Error: %q", result.Error)
-		
+
 		assert.True(t, result.Success, "Expected success, got error: %s", result.Error)
 		assert.Contains(t, result.Content, "Hello from Guild!")
 	})
-	
+
 	t.Run("Execute Glob Tool", func(t *testing.T) {
 		// Create a temp directory with test files
 		tmpDir, err := os.MkdirTemp("", "guild-glob-test-*")
 		require.NoError(t, err)
 		defer os.RemoveAll(tmpDir)
-		
+
 		// Create test files
 		for i := 0; i < 3; i++ {
 			filename := filepath.Join(tmpDir, "test"+string(rune('0'+i))+".go")
 			err = os.WriteFile(filename, []byte("package test"), 0644)
 			require.NoError(t, err)
 		}
-		
+
 		// Setup
 		ctx := context.Background()
 		registry := tools.NewToolRegistry()
-		
+
 		// Register glob tool
 		globTool := fs.NewGlobTool(tmpDir)
 		err = registry.RegisterTool("glob", globTool)
 		require.NoError(t, err)
-		
+
 		// Create executor
 		exec := executor.NewToolExecutor(registry)
-		
+
 		// Create tool call to glob files
 		toolCall := parser.ToolCall{
 			ID:   "glob_files",
@@ -100,7 +100,7 @@ func TestRealToolExecution(t *testing.T) {
 				Arguments: json.RawMessage(`{"pattern": "*.go", "path": "` + tmpDir + `"}`),
 			},
 		}
-		
+
 		// Execute
 		result, err := exec.Execute(ctx, toolCall)
 		require.NoError(t, err)
@@ -127,17 +127,17 @@ func TestProviderResponseWithTools(t *testing.T) {
     }
   ]
 }`
-		
+
 		// Parse the response
 		p := parser.NewResponseParser()
 		toolCalls, err := p.ExtractToolCalls(openAIResponse)
 		require.NoError(t, err)
 		require.Len(t, toolCalls, 1)
-		
+
 		// Verify the parsed tool call
 		assert.Equal(t, "call_file_read", toolCalls[0].ID)
 		assert.Equal(t, "file", toolCalls[0].Function.Name)
-		
+
 		// Parse arguments
 		var args map[string]interface{}
 		err = json.Unmarshal(toolCalls[0].Function.Arguments, &args)
@@ -145,7 +145,7 @@ func TestProviderResponseWithTools(t *testing.T) {
 		assert.Equal(t, "read", args["operation"])
 		assert.Equal(t, "/tmp/test.txt", args["path"])
 	})
-	
+
 	t.Run("Anthropic Style Response", func(t *testing.T) {
 		// Simulate Anthropic response with XML tool calls
 		anthropicResponse := `Let me search for files matching that pattern.
@@ -158,16 +158,16 @@ func TestProviderResponseWithTools(t *testing.T) {
 </function_calls>
 
 I'll look for all Go files in the source directory.`
-		
+
 		// Parse the response
 		p := parser.NewResponseParser()
 		toolCalls, err := p.ExtractToolCalls(anthropicResponse)
 		require.NoError(t, err)
 		require.Len(t, toolCalls, 1)
-		
+
 		// Verify the parsed tool call
 		assert.Equal(t, "glob", toolCalls[0].Function.Name)
-		
+
 		// Parse arguments
 		var args map[string]interface{}
 		err = json.Unmarshal(toolCalls[0].Function.Arguments, &args)

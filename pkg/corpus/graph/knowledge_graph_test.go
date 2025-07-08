@@ -17,7 +17,7 @@ import (
 // TestCraftKnowledgeGraph tests the creation of a new knowledge graph
 func TestCraftKnowledgeGraph(t *testing.T) {
 	ctx := context.Background()
-	
+
 	graph, err := NewKnowledgeGraph(ctx)
 	require.NoError(t, err)
 	assert.NotNil(t, graph)
@@ -90,7 +90,7 @@ func TestGuildQueryKnowledge(t *testing.T) {
 			Timestamp:  time.Now(),
 		},
 		{
-			ID:      "solution-1", 
+			ID:      "solution-1",
 			Type:    extraction.KnowledgeSolution,
 			Content: "Fix database connection issues by increasing timeout",
 			Source: extraction.Source{
@@ -126,8 +126,8 @@ func TestGuildQueryKnowledge(t *testing.T) {
 		{
 			name: "text search",
 			query: GraphQuery{
-				Text:   "database",
-				Limit:  10,
+				Text:  "database",
+				Limit: 10,
 			},
 			expectCount: 1, // Should find connection fix (contains "database")
 		},
@@ -216,19 +216,19 @@ func TestCraftGraphTraversal(t *testing.T) {
 				Type:      "test",
 				Timestamp: time.Now(),
 			},
-			Entities: []extraction.Entity{{Name: "React", Type: "technology", Confidence: 0.9}},
+			Entities:   []extraction.Entity{{Name: "React", Type: "technology", Confidence: 0.9}},
 			Confidence: 0.9,
 			Timestamp:  time.Now(),
 		},
 		{
-			ID:      "node-2", 
+			ID:      "node-2",
 			Type:    extraction.KnowledgeSolution,
 			Content: "Use React hooks for state management",
 			Source: extraction.Source{
 				Type:      "test",
 				Timestamp: time.Now(),
 			},
-			Entities: []extraction.Entity{{Name: "React", Type: "technology", Confidence: 0.9}},
+			Entities:   []extraction.Entity{{Name: "React", Type: "technology", Confidence: 0.9}},
 			Confidence: 0.8,
 			Timestamp:  time.Now(),
 		},
@@ -240,7 +240,7 @@ func TestCraftGraphTraversal(t *testing.T) {
 				Type:      "test",
 				Timestamp: time.Now(),
 			},
-			Entities: []extraction.Entity{{Name: "React", Type: "technology", Confidence: 0.9}},
+			Entities:   []extraction.Entity{{Name: "React", Type: "technology", Confidence: 0.9}},
 			Confidence: 0.7,
 			Timestamp:  time.Now(),
 		},
@@ -259,7 +259,7 @@ func TestCraftGraphTraversal(t *testing.T) {
 	}
 	results, err := graph.Query(ctx, query)
 	require.NoError(t, err)
-	
+
 	// Should find multiple React-related nodes
 	assert.Greater(t, len(results), 1)
 }
@@ -288,7 +288,7 @@ func TestJourneymanIndexing(t *testing.T) {
 	// Test search functionality
 	results, err := graph.index.Search(ctx, "microservices scalability", 5)
 	require.NoError(t, err)
-	
+
 	// Should find the indexed knowledge
 	assert.Greater(t, len(results), 0)
 	assert.Equal(t, "index-test-1", results[0].NodeID)
@@ -298,10 +298,10 @@ func TestJourneymanIndexing(t *testing.T) {
 func TestGuildContextCancellation(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately
-	
+
 	graph, err := NewKnowledgeGraph(context.Background())
 	require.NoError(t, err)
-	
+
 	knowledge := extraction.ExtractedKnowledge{
 		ID:      "cancel-test",
 		Type:    extraction.KnowledgeDecision,
@@ -310,9 +310,9 @@ func TestGuildContextCancellation(t *testing.T) {
 			Type:      "test",
 			Timestamp: time.Now(),
 		},
-		Timestamp:  time.Now(),
+		Timestamp: time.Now(),
 	}
-	
+
 	// Should handle cancelled context gracefully
 	err = graph.AddKnowledge(ctx, knowledge)
 	assert.Error(t, err)
@@ -350,7 +350,7 @@ func TestScribeGraphStatistics(t *testing.T) {
 
 	stats, err := graph.GetStats(ctx)
 	require.NoError(t, err)
-	
+
 	assert.Equal(t, 4, stats.NodeCount)
 	assert.Equal(t, 4, len(stats.NodeTypes))
 	// EdgeTypes should be 0 since test knowledge items have no entities/relations
@@ -363,7 +363,7 @@ func TestCraftQueryBuilder(t *testing.T) {
 		WithText("React components").
 		WithNodeTypes(NodeDecision, NodeSolution).
 		WithMinConfidence(0.7).
-		WithTimeRange(time.Now().Add(-24*time.Hour)).
+		WithTimeRange(time.Now().Add(-24 * time.Hour)).
 		WithLimit(10).
 		Build()
 

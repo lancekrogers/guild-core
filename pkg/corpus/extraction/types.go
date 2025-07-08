@@ -45,16 +45,16 @@ func (kt KnowledgeType) String() string {
 // ExtractedKnowledge represents a piece of knowledge extracted from conversations or code
 type ExtractedKnowledge struct {
 	ID         string                 `json:"id"`
-	Type       KnowledgeType         `json:"type"`
-	Content    string                `json:"content"`
-	Source     Source                `json:"source"`
-	Confidence float64               `json:"confidence"`
-	Entities   []Entity              `json:"entities,omitempty"`
-	Relations  []Relation            `json:"relations,omitempty"`
-	Validation ValidationStatus      `json:"validation"`
+	Type       KnowledgeType          `json:"type"`
+	Content    string                 `json:"content"`
+	Source     Source                 `json:"source"`
+	Confidence float64                `json:"confidence"`
+	Entities   []Entity               `json:"entities,omitempty"`
+	Relations  []Relation             `json:"relations,omitempty"`
+	Validation ValidationStatus       `json:"validation"`
 	Context    map[string]interface{} `json:"context,omitempty"`
 	Metadata   map[string]interface{} `json:"metadata,omitempty"`
-	Timestamp  time.Time             `json:"timestamp"`
+	Timestamp  time.Time              `json:"timestamp"`
 }
 
 // Source represents where the knowledge was extracted from
@@ -86,9 +86,9 @@ type Relation struct {
 
 // ValidationStatus represents the validation state of extracted knowledge
 type ValidationStatus struct {
-	Valid      bool      `json:"valid"`
-	Confidence float64   `json:"confidence"`
-	Issues     []string  `json:"issues,omitempty"`
+	Valid       bool      `json:"valid"`
+	Confidence  float64   `json:"confidence"`
+	Issues      []string  `json:"issues,omitempty"`
 	ValidatedAt time.Time `json:"validated_at,omitempty"`
 }
 
@@ -114,7 +114,7 @@ func (e Exchange) GetParticipants() []string {
 	for _, msg := range e.Messages {
 		participants[msg.Role] = true
 	}
-	
+
 	var result []string
 	for role := range participants {
 		result = append(result, role)
@@ -126,17 +126,17 @@ func (e Exchange) GetParticipants() []string {
 type RefactoringPattern struct {
 	Type        string                 `json:"type"`
 	Description string                 `json:"description"`
-	Confidence  float64               `json:"confidence"`
-	Examples    []string              `json:"examples,omitempty"`
+	Confidence  float64                `json:"confidence"`
+	Examples    []string               `json:"examples,omitempty"`
 	Metadata    map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // FunctionChange represents a modification to a function
 type FunctionChange struct {
-	Name        string `json:"name"`
-	OldContent  string `json:"old_content"`
-	NewContent  string `json:"new_content"`
-	ChangeType  string `json:"change_type"` // "added", "modified", "removed"
+	Name       string `json:"name"`
+	OldContent string `json:"old_content"`
+	NewContent string `json:"new_content"`
+	ChangeType string `json:"change_type"` // "added", "modified", "removed"
 }
 
 // TypeChange represents a modification to a type definition
@@ -183,11 +183,11 @@ func (ac APIChange) ToKnowledgeString() string {
 
 // BugFix represents a detected bug fix
 type BugFix struct {
-	Problem     string `json:"problem"`
-	Solution    string `json:"solution"`
+	Problem     string   `json:"problem"`
+	Solution    string   `json:"solution"`
 	Files       []string `json:"files"`
-	Severity    string `json:"severity"`
-	Description string `json:"description"`
+	Severity    string   `json:"severity"`
+	Description string   `json:"description"`
 }
 
 // ToKnowledgeString converts a bug fix to a knowledge string
@@ -204,15 +204,15 @@ type ValidationIssue struct {
 
 // ConflictInfo represents a conflict between pieces of knowledge
 type ConflictInfo struct {
-	Description string `json:"description"`
-	Severity    string `json:"severity"`
+	Description            string `json:"description"`
+	Severity               string `json:"severity"`
 	ConflictingKnowledgeID string `json:"conflicting_knowledge_id"`
 }
 
 // FactCheckResult represents the result of fact-checking knowledge
 type FactCheckResult struct {
-	Verified     bool   `json:"verified"`
-	Confidence   float64 `json:"confidence"`
-	Source       string `json:"source,omitempty"`
-	Explanation  string `json:"explanation,omitempty"`
+	Verified    bool    `json:"verified"`
+	Confidence  float64 `json:"confidence"`
+	Source      string  `json:"source,omitempty"`
+	Explanation string  `json:"explanation,omitempty"`
 }

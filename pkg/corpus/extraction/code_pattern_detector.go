@@ -132,9 +132,9 @@ func (iid *IntroduceInterfaceDetector) Detect(ctx context.Context, analysis Diff
 			Confidence:  confidence,
 			Examples:    examples,
 			Metadata: map[string]interface{}{
-				"new_interfaces":   newInterfaces,
-				"modified_types":   modifiedTypes,
-				"affected_files":   len(analysis.AffectedFiles),
+				"new_interfaces": newInterfaces,
+				"modified_types": modifiedTypes,
+				"affected_files": len(analysis.AffectedFiles),
 			},
 		}
 	}
@@ -147,7 +147,7 @@ type ErrorHandlingDetector struct{}
 
 func (ehd *ErrorHandlingDetector) Detect(ctx context.Context, analysis DiffAnalysis) *RefactoringPattern {
 	errorHandlingIndicators := 0
-	
+
 	// Look for error-related imports
 	for _, imp := range analysis.AddedImports {
 		if strings.Contains(imp, "error") || strings.Contains(imp, "gerror") {
@@ -158,8 +158,8 @@ func (ehd *ErrorHandlingDetector) Detect(ctx context.Context, analysis DiffAnaly
 	// Look for error-related function changes
 	for _, funcChange := range analysis.ModifiedFunctions {
 		if strings.Contains(strings.ToLower(funcChange.Name), "error") ||
-		   strings.Contains(funcChange.NewContent, "error") ||
-		   strings.Contains(funcChange.NewContent, "gerror") {
+			strings.Contains(funcChange.NewContent, "error") ||
+			strings.Contains(funcChange.NewContent, "gerror") {
 			errorHandlingIndicators++
 		}
 	}
@@ -177,7 +177,7 @@ func (ehd *ErrorHandlingDetector) Detect(ctx context.Context, analysis DiffAnaly
 				fmt.Sprintf("%d error-related changes detected", errorHandlingIndicators),
 			},
 			Metadata: map[string]interface{}{
-				"error_indicators": errorHandlingIndicators,
+				"error_indicators":  errorHandlingIndicators,
 				"functions_changed": len(analysis.ModifiedFunctions),
 			},
 		}
@@ -194,8 +194,8 @@ func (did *DependencyInjectionDetector) Detect(ctx context.Context, analysis Dif
 
 	// Look for constructor-like patterns
 	for _, funcChange := range analysis.ModifiedFunctions {
-		if strings.HasPrefix(funcChange.Name, "New") && 
-		   (funcChange.ChangeType == "added" || funcChange.ChangeType == "modified") {
+		if strings.HasPrefix(funcChange.Name, "New") &&
+			(funcChange.ChangeType == "added" || funcChange.ChangeType == "modified") {
 			injectionIndicators++
 		}
 	}
@@ -239,9 +239,9 @@ func (fpd *FactoryPatternDetector) Detect(ctx context.Context, analysis DiffAnal
 
 	for _, funcChange := range analysis.ModifiedFunctions {
 		funcName := strings.ToLower(funcChange.Name)
-		if strings.Contains(funcName, "factory") || 
-		   strings.Contains(funcName, "create") ||
-		   strings.Contains(funcName, "build") {
+		if strings.Contains(funcName, "factory") ||
+			strings.Contains(funcName, "create") ||
+			strings.Contains(funcName, "build") {
 			factoryIndicators++
 		}
 	}
@@ -297,7 +297,7 @@ func (cdd *ConsolidateDuplicatesDetector) Detect(ctx context.Context, analysis D
 		}
 
 		return &RefactoringPattern{
-			Description: fmt.Sprintf("Consolidated duplicate code, removed %d lines and added %d lines", 
+			Description: fmt.Sprintf("Consolidated duplicate code, removed %d lines and added %d lines",
 				analysis.RemovedLines, analysis.AddedLines),
 			Confidence: confidence,
 			Examples: []string{
@@ -305,10 +305,10 @@ func (cdd *ConsolidateDuplicatesDetector) Detect(ctx context.Context, analysis D
 				fmt.Sprintf("%d files affected", len(analysis.AffectedFiles)),
 			},
 			Metadata: map[string]interface{}{
-				"lines_removed":  analysis.RemovedLines,
-				"lines_added":    analysis.AddedLines,
-				"removal_ratio":  removalRatio,
-				"new_functions":  newFunctions,
+				"lines_removed": analysis.RemovedLines,
+				"lines_added":   analysis.AddedLines,
+				"removal_ratio": removalRatio,
+				"new_functions": newFunctions,
 			},
 		}
 	}
@@ -372,7 +372,7 @@ func (cpd *CodePatternDetector) isLayeredArchitecturePattern(analysis DiffAnalys
 	// Look for layer-related directory structure
 	layers := map[string]bool{}
 	layerNames := []string{"controller", "service", "repository", "model", "handler", "middleware"}
-	
+
 	for _, file := range analysis.AffectedFiles {
 		for _, layer := range layerNames {
 			if strings.Contains(file, layer) {
@@ -387,7 +387,7 @@ func (cpd *CodePatternDetector) isEventDrivenPattern(analysis DiffAnalysis) bool
 	// Look for event-related components
 	eventIndicators := 0
 	eventTerms := []string{"event", "message", "queue", "publish", "subscribe", "listener"}
-	
+
 	for _, funcChange := range analysis.ModifiedFunctions {
 		for _, term := range eventTerms {
 			if strings.Contains(strings.ToLower(funcChange.Name), term) {
@@ -396,7 +396,7 @@ func (cpd *CodePatternDetector) isEventDrivenPattern(analysis DiffAnalysis) bool
 			}
 		}
 	}
-	
+
 	return eventIndicators > 2
 }
 

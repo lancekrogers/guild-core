@@ -84,7 +84,7 @@ func (p *TaskEventPublisher) PublishTaskCreated(ctx context.Context, task *Task,
 			Data:       p.taskToEventData(task, map[string]string{"created_by": createdBy}),
 			OccurredAt: time.Now().UTC(),
 		}
-		
+
 		if err := p.eventManager.PublishEvent(kanbanEvent); err != nil {
 			logger.WithError(err).Warn("Failed to publish to kanban event manager")
 		}
@@ -143,18 +143,18 @@ func (p *TaskEventPublisher) PublishTaskCreated(ctx context.Context, task *Task,
 			Timestamp: time.Now().UTC(),
 			Source:    "kanban-service",
 			Data: map[string]interface{}{
-				"task_id":      task.ID,
-				"board_id":     boardID,
-				"title":        task.Title,
-				"description":  task.Description,
-				"status":       string(task.Status),
-				"assignee":     task.AssignedTo,
-				"created_by":   createdBy,
-				"priority":     string(task.Priority),
-				"created_at":   task.CreatedAt,
+				"task_id":     task.ID,
+				"board_id":    boardID,
+				"title":       task.Title,
+				"description": task.Description,
+				"status":      string(task.Status),
+				"assignee":    task.AssignedTo,
+				"created_by":  createdBy,
+				"priority":    string(task.Priority),
+				"created_at":  task.CreatedAt,
 			},
 		}
-		
+
 		p.orchestratorBus.Publish(orchestratorEvent)
 	}
 
@@ -208,7 +208,7 @@ func (p *TaskEventPublisher) PublishTaskMoved(ctx context.Context, task *Task, b
 			}),
 			OccurredAt: time.Now().UTC(),
 		}
-		
+
 		if err := p.eventManager.PublishEvent(kanbanEvent); err != nil {
 			logger.WithError(err).Warn("Failed to publish to kanban event manager")
 		}
@@ -274,7 +274,7 @@ func (p *TaskEventPublisher) PublishTaskMoved(ctx context.Context, task *Task, b
 				"reason":      reason,
 			},
 		}
-		
+
 		p.orchestratorBus.Publish(orchestratorEvent)
 	}
 
@@ -334,7 +334,7 @@ func (p *TaskEventPublisher) PublishTaskUpdated(ctx context.Context, task *Task,
 			Data:       eventData,
 			OccurredAt: time.Now().UTC(),
 		}
-		
+
 		if err := p.eventManager.PublishEvent(kanbanEvent); err != nil {
 			logger.WithError(err).Warn("Failed to publish to kanban event manager")
 		}
@@ -426,13 +426,13 @@ func (p *TaskEventPublisher) PublishTaskCompleted(ctx context.Context, task *Tas
 			BoardID:   boardID,
 			TaskID:    task.ID,
 			Data: p.taskToEventData(task, map[string]string{
-				"completed_by":    completedBy,
+				"completed_by":     completedBy,
 				"completion_notes": notes,
-				"completed_at":    time.Now().UTC().Format(time.RFC3339),
+				"completed_at":     time.Now().UTC().Format(time.RFC3339),
 			}),
 			OccurredAt: time.Now().UTC(),
 		}
-		
+
 		if err := p.eventManager.PublishEvent(kanbanEvent); err != nil {
 			logger.WithError(err).Warn("Failed to publish to kanban event manager")
 		}
@@ -496,7 +496,7 @@ func (p *TaskEventPublisher) PublishTaskCompleted(ctx context.Context, task *Tas
 				"completed_at":     time.Now().UTC(),
 			},
 		}
-		
+
 		p.orchestratorBus.Publish(orchestratorEvent)
 	}
 
@@ -538,8 +538,8 @@ func (p *TaskEventPublisher) PublishTaskBlocked(ctx context.Context, task *Task,
 	// 1. Publish to local kanban EventManager
 	if p.eventManager != nil {
 		eventData := p.taskToEventData(task, map[string]string{
-			"blocked_by":      blockedBy,
-			"blocker_reason":  reason,
+			"blocked_by":     blockedBy,
+			"blocker_reason": reason,
 		})
 
 		kanbanEvent := &BoardEvent{
@@ -549,7 +549,7 @@ func (p *TaskEventPublisher) PublishTaskBlocked(ctx context.Context, task *Task,
 			Data:       eventData,
 			OccurredAt: time.Now().UTC(),
 		}
-		
+
 		if err := p.eventManager.PublishEvent(kanbanEvent); err != nil {
 			logger.WithError(err).Warn("Failed to publish to kanban event manager")
 		}
@@ -646,7 +646,7 @@ func (p *TaskEventPublisher) PublishTaskUnblocked(ctx context.Context, task *Tas
 			}),
 			OccurredAt: time.Now().UTC(),
 		}
-		
+
 		if err := p.eventManager.PublishEvent(kanbanEvent); err != nil {
 			logger.WithError(err).Warn("Failed to publish to kanban event manager")
 		}
@@ -661,12 +661,12 @@ func (p *TaskEventPublisher) PublishTaskUnblocked(ctx context.Context, task *Tas
 			Source:    "kanban-service",
 			Payload: &pb.TaskEvent_Unblocked{
 				Unblocked: &pb.TaskUnblocked{
-					TaskId:             task.ID,
-					BoardId:            boardID,
-					UnblockedBy:        unblockedBy,
-					UnblockReason:      reason,
-					ResolvedBlockerId:  resolvedBlockerID,
-					Metadata:           metadata,
+					TaskId:            task.ID,
+					BoardId:           boardID,
+					UnblockedBy:       unblockedBy,
+					UnblockReason:     reason,
+					ResolvedBlockerId: resolvedBlockerID,
+					Metadata:          metadata,
 				},
 			},
 		}
@@ -734,7 +734,7 @@ func (p *TaskEventPublisher) PublishTaskDeleted(ctx context.Context, taskID, boa
 			},
 			OccurredAt: time.Now().UTC(),
 		}
-		
+
 		if err := p.eventManager.PublishEvent(kanbanEvent); err != nil {
 			logger.WithError(err).Warn("Failed to publish to kanban event manager")
 		}

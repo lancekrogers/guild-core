@@ -75,7 +75,7 @@ func (fc *FactChecker) Check(ctx context.Context, knowledge extraction.Extracted
 		}
 
 		checkResult := checker.Check(ctx, knowledge)
-		
+
 		if !checkResult.Verified {
 			result.Verified = false
 			if checkResult.Explanation != "" {
@@ -115,8 +115,8 @@ func (tfc *TechnicalFactChecker) GetType() string { return "technical" }
 func (tfc *TechnicalFactChecker) IsApplicable(knowledge extraction.ExtractedKnowledge) bool {
 	// Apply to technical knowledge types
 	return knowledge.Type == extraction.KnowledgeSolution ||
-		   knowledge.Type == extraction.KnowledgePattern ||
-		   knowledge.Type == extraction.KnowledgeConstraint
+		knowledge.Type == extraction.KnowledgePattern ||
+		knowledge.Type == extraction.KnowledgeConstraint
 }
 
 func (tfc *TechnicalFactChecker) Check(ctx context.Context, knowledge extraction.ExtractedKnowledge) FactCheckResult {
@@ -182,9 +182,9 @@ func (vc *VersionChecker) GetType() string { return "version" }
 func (vc *VersionChecker) IsApplicable(knowledge extraction.ExtractedKnowledge) bool {
 	content := strings.ToLower(knowledge.Content)
 	return strings.Contains(content, "version") ||
-		   strings.Contains(content, "v1.") ||
-		   strings.Contains(content, "v2.") ||
-		   regexp.MustCompile(`\d+\.\d+`).MatchString(content)
+		strings.Contains(content, "v1.") ||
+		strings.Contains(content, "v2.") ||
+		regexp.MustCompile(`\d+\.\d+`).MatchString(content)
 }
 
 func (vc *VersionChecker) Check(ctx context.Context, knowledge extraction.ExtractedKnowledge) FactCheckResult {
@@ -236,10 +236,10 @@ func (sc *SyntaxChecker) GetType() string { return "syntax" }
 func (sc *SyntaxChecker) IsApplicable(knowledge extraction.ExtractedKnowledge) bool {
 	content := knowledge.Content
 	return strings.Contains(content, "```") ||
-		   strings.Contains(content, "function") ||
-		   strings.Contains(content, "class") ||
-		   strings.Contains(content, "import") ||
-		   strings.Contains(content, "package")
+		strings.Contains(content, "function") ||
+		strings.Contains(content, "class") ||
+		strings.Contains(content, "import") ||
+		strings.Contains(content, "package")
 }
 
 func (sc *SyntaxChecker) Check(ctx context.Context, knowledge extraction.ExtractedKnowledge) FactCheckResult {
@@ -287,25 +287,25 @@ func (sc *SyntaxChecker) Check(ctx context.Context, knowledge extraction.Extract
 func (sc *SyntaxChecker) hasBasicSyntaxErrors(codeBlock string) bool {
 	// Check for obvious syntax errors like incomplete function declarations
 	content := strings.ToLower(codeBlock)
-	
+
 	// Look for common syntax error patterns
 	errorPatterns := []string{
-		"func( {",     // Missing function name and parameters
-		"func() {",    // Missing function name
-		"return\n}",  // Missing return value
-		"}\n```",     // Incomplete code block
+		"func( {",   // Missing function name and parameters
+		"func() {",  // Missing function name
+		"return\n}", // Missing return value
+		"}\n```",    // Incomplete code block
 	}
-	
+
 	for _, pattern := range errorPatterns {
 		if strings.Contains(content, pattern) {
 			return true
 		}
 	}
-	
+
 	// Check for unbalanced brackets across the entire block
 	openBrackets := strings.Count(codeBlock, "{") + strings.Count(codeBlock, "(") + strings.Count(codeBlock, "[")
 	closeBrackets := strings.Count(codeBlock, "}") + strings.Count(codeBlock, ")") + strings.Count(codeBlock, "]")
-	
+
 	// Significant imbalance suggests syntax errors
 	return absInt(openBrackets-closeBrackets) > 1
 }
@@ -379,10 +379,10 @@ func (dtc *DateTimeChecker) GetType() string { return "datetime" }
 func (dtc *DateTimeChecker) IsApplicable(knowledge extraction.ExtractedKnowledge) bool {
 	content := strings.ToLower(knowledge.Content)
 	return strings.Contains(content, "date") ||
-		   strings.Contains(content, "time") ||
-		   strings.Contains(content, "year") ||
-		   strings.Contains(content, "month") ||
-		   regexp.MustCompile(`\d{4}`).MatchString(content)
+		strings.Contains(content, "time") ||
+		strings.Contains(content, "year") ||
+		strings.Contains(content, "month") ||
+		regexp.MustCompile(`\d{4}`).MatchString(content)
 }
 
 func (dtc *DateTimeChecker) Check(ctx context.Context, knowledge extraction.ExtractedKnowledge) FactCheckResult {
@@ -402,14 +402,14 @@ func (dtc *DateTimeChecker) Check(ctx context.Context, knowledge extraction.Extr
 	for _, yearStr := range years {
 		if len(yearStr) == 4 {
 			year := int(yearStr[0]-'0')*1000 + int(yearStr[1]-'0')*100 + int(yearStr[2]-'0')*10 + int(yearStr[3]-'0')
-			
+
 			if int(year) > currentYear+10 {
 				result.Verified = false
 				result.Confidence = 0.4
 				result.Explanation = fmt.Sprintf("Contains unrealistic future year: %s", yearStr)
 				return result
 			}
-			
+
 			if int(year) < 1990 && strings.Contains(strings.ToLower(content), "current") {
 				result.Confidence = 0.7
 				result.Explanation = "Contains old dates in context suggesting currency"

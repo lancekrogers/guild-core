@@ -28,24 +28,24 @@ type PerformanceManager struct {
 // PerformanceConfig configures the performance management system
 type PerformanceConfig struct {
 	// Profiling configuration
-	EnableProfiling      bool          `json:"enable_profiling"`
-	ProfilingInterval    time.Duration `json:"profiling_interval"`
-	
+	EnableProfiling   bool          `json:"enable_profiling"`
+	ProfilingInterval time.Duration `json:"profiling_interval"`
+
 	// Caching configuration
-	EnableIntelligentCache bool                  `json:"enable_intelligent_cache"`
-	CacheConfig           *cache.CacheConfig     `json:"cache_config"`
-	
+	EnableIntelligentCache bool               `json:"enable_intelligent_cache"`
+	CacheConfig            *cache.CacheConfig `json:"cache_config"`
+
 	// Memory optimization configuration
-	EnableMemoryOptimization bool                        `json:"enable_memory_optimization"`
-	MemoryConfig            *memory.OptimizerConfig      `json:"memory_config"`
-	
+	EnableMemoryOptimization bool                    `json:"enable_memory_optimization"`
+	MemoryConfig             *memory.OptimizerConfig `json:"memory_config"`
+
 	// Monitoring configuration
-	EnableMonitoring    bool                           `json:"enable_monitoring"`
-	MonitoringConfig    *monitoring.MonitoringConfig   `json:"monitoring_config"`
-	
+	EnableMonitoring bool                         `json:"enable_monitoring"`
+	MonitoringConfig *monitoring.MonitoringConfig `json:"monitoring_config"`
+
 	// Integration settings
-	OptimizationInterval time.Duration `json:"optimization_interval"`
-	EnableAutoOptimize   bool          `json:"enable_auto_optimize"`
+	OptimizationInterval time.Duration       `json:"optimization_interval"`
+	EnableAutoOptimize   bool                `json:"enable_auto_optimize"`
 	PerformanceTargets   *PerformanceTargets `json:"performance_targets"`
 }
 
@@ -63,18 +63,18 @@ func DefaultPerformanceConfig() *PerformanceConfig {
 		EnableProfiling:          true,
 		ProfilingInterval:        time.Hour,
 		EnableIntelligentCache:   true,
-		CacheConfig:             cache.DefaultCacheConfig(),
+		CacheConfig:              cache.DefaultCacheConfig(),
 		EnableMemoryOptimization: true,
-		MemoryConfig:            memory.DefaultOptimizerConfig(),
-		EnableMonitoring:        true,
-		MonitoringConfig:        monitoring.DefaultMonitoringConfig(),
-		OptimizationInterval:    time.Minute * 15,
-		EnableAutoOptimize:      true,
+		MemoryConfig:             memory.DefaultOptimizerConfig(),
+		EnableMonitoring:         true,
+		MonitoringConfig:         monitoring.DefaultMonitoringConfig(),
+		OptimizationInterval:     time.Minute * 15,
+		EnableAutoOptimize:       true,
 		PerformanceTargets: &PerformanceTargets{
 			MaxP95ResponseTime: time.Millisecond * 100,
 			MaxMemoryUsage:     500 * 1024 * 1024, // 500MB
-			MinCacheHitRate:    0.90,               // 90%
-			MaxErrorRate:       0.01,               // 1%
+			MinCacheHitRate:    0.90,              // 90%
+			MaxErrorRate:       0.01,              // 1%
 		},
 	}
 }
@@ -113,7 +113,7 @@ func NewPerformanceManager(config *PerformanceConfig) (*PerformanceManager, erro
 	// Initialize performance monitor if enabled
 	if config.EnableMonitoring {
 		pm.monitor = monitoring.NewPerformanceMonitor(config.MonitoringConfig)
-		
+
 		// Set up console alert handler
 		consoleHandler := monitoring.NewConsoleAlertHandler()
 		pm.monitor.AddHandler(consoleHandler)
@@ -318,7 +318,7 @@ func (pm *PerformanceManager) GetMemoryOptimizer() *memory.MemoryOptimizer {
 // InstrumentedOperation wraps an operation with performance monitoring
 func (pm *PerformanceManager) InstrumentedOperation(ctx context.Context, name string, operation func(context.Context) error) error {
 	start := time.Now()
-	
+
 	// Add tracing if monitoring is enabled
 	if pm.monitor != nil && pm.monitor.GetTracing() != nil {
 		return pm.monitor.GetTracing().TraceOperation(ctx, name, operation)
@@ -376,7 +376,7 @@ func (pm *PerformanceManager) GetPerformanceReport(ctx context.Context) (*Perfor
 
 	// Calculate overall health score
 	report.HealthScore = pm.calculateHealthScore(report.CurrentMetrics)
-	
+
 	// Generate recommendations
 	report.Recommendations = pm.generateRecommendations(report.CurrentMetrics)
 
@@ -385,15 +385,15 @@ func (pm *PerformanceManager) GetPerformanceReport(ctx context.Context) (*Perfor
 
 // PerformanceReport contains comprehensive performance information
 type PerformanceReport struct {
-	Timestamp       time.Time                     `json:"timestamp"`
-	Targets         *PerformanceTargets           `json:"targets"`
-	CurrentMetrics  *CurrentMetrics               `json:"current_metrics"`
-	CacheStats      *cache.CacheStatistics        `json:"cache_stats,omitempty"`
-	ProfilerStats   map[string]interface{}        `json:"profiler_stats,omitempty"`
-	MemoryStats     map[string]interface{}        `json:"memory_stats,omitempty"`
-	HealthScore     float64                       `json:"health_score"`
-	Dashboard       string                        `json:"dashboard"`
-	Recommendations []string                      `json:"recommendations"`
+	Timestamp       time.Time              `json:"timestamp"`
+	Targets         *PerformanceTargets    `json:"targets"`
+	CurrentMetrics  *CurrentMetrics        `json:"current_metrics"`
+	CacheStats      *cache.CacheStatistics `json:"cache_stats,omitempty"`
+	ProfilerStats   map[string]interface{} `json:"profiler_stats,omitempty"`
+	MemoryStats     map[string]interface{} `json:"memory_stats,omitempty"`
+	HealthScore     float64                `json:"health_score"`
+	Dashboard       string                 `json:"dashboard"`
+	Recommendations []string               `json:"recommendations"`
 }
 
 // CurrentMetrics contains current performance metrics
@@ -462,37 +462,37 @@ func (pm *PerformanceManager) generateRecommendations(metrics *CurrentMetrics) [
 
 	// Response time recommendations
 	if metrics.P95ResponseTime > targets.MaxP95ResponseTime {
-		recommendations = append(recommendations, 
+		recommendations = append(recommendations,
 			"P95 response time exceeds target - consider optimizing slow operations or adding caching")
 	}
 
 	// Memory usage recommendations
 	if metrics.MemoryUsage > targets.MaxMemoryUsage {
-		recommendations = append(recommendations, 
+		recommendations = append(recommendations,
 			"Memory usage exceeds target - run memory optimization or investigate memory leaks")
 	}
 
 	// Cache hit rate recommendations
 	if metrics.CacheHitRate < targets.MinCacheHitRate {
-		recommendations = append(recommendations, 
+		recommendations = append(recommendations,
 			"Cache hit rate below target - review cache strategy and warming policies")
 	}
 
 	// Error rate recommendations
 	if metrics.ErrorRate > targets.MaxErrorRate {
-		recommendations = append(recommendations, 
+		recommendations = append(recommendations,
 			"Error rate exceeds target - investigate and fix error sources")
 	}
 
 	// Goroutine count recommendations
 	if metrics.GoroutineCount > 1000 {
-		recommendations = append(recommendations, 
+		recommendations = append(recommendations,
 			"High goroutine count detected - check for goroutine leaks")
 	}
 
 	// Throughput recommendations
 	if metrics.Throughput < 100 { // requests per minute
-		recommendations = append(recommendations, 
+		recommendations = append(recommendations,
 			"Low throughput detected - consider performance optimizations")
 	}
 
@@ -507,12 +507,12 @@ func (pm *PerformanceManager) IsRunning() bool {
 // GetStats returns performance manager statistics
 func (pm *PerformanceManager) GetStats() map[string]interface{} {
 	stats := map[string]interface{}{
-		"running":         pm.running,
-		"profiling":       pm.config.EnableProfiling,
-		"caching":         pm.config.EnableIntelligentCache,
-		"memory_opt":      pm.config.EnableMemoryOptimization,
-		"monitoring":      pm.config.EnableMonitoring,
-		"auto_optimize":   pm.config.EnableAutoOptimize,
+		"running":       pm.running,
+		"profiling":     pm.config.EnableProfiling,
+		"caching":       pm.config.EnableIntelligentCache,
+		"memory_opt":    pm.config.EnableMemoryOptimization,
+		"monitoring":    pm.config.EnableMonitoring,
+		"auto_optimize": pm.config.EnableAutoOptimize,
 	}
 
 	if pm.config.PerformanceTargets != nil {

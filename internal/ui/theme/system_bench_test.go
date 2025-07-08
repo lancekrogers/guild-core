@@ -14,12 +14,12 @@ import (
 func BenchmarkThemeManager_ApplyTheme(b *testing.B) {
 	tm := NewThemeManager()
 	ctx := context.Background()
-	
+
 	themes := []string{"claude-code-light", "claude-code-dark"}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		theme := themes[i%len(themes)]
 		err := tm.ApplyTheme(ctx, theme)
@@ -35,17 +35,17 @@ func BenchmarkThemeManager_GetComponent(b *testing.B) {
 	tm := NewThemeManager()
 	ctx := context.Background()
 	tm.ApplyTheme(ctx, "claude-code-light")
-	
+
 	components := []string{
 		"button.primary",
-		"button.secondary", 
+		"button.secondary",
 		"input.default",
 		"chat.message",
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		component := components[i%len(components)]
 		style := tm.GetComponent(component)
@@ -59,15 +59,15 @@ func BenchmarkThemeManager_GetAgentStyle(b *testing.B) {
 	tm := NewThemeManager()
 	ctx := context.Background()
 	tm.ApplyTheme(ctx, "claude-code-light")
-	
+
 	agentIDs := []string{
 		"agent-1", "agent-2", "agent-3", "agent-4", "agent-5",
 		"custom-agent", "user-defined-agent", "dynamic-agent-123",
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		agentID := agentIDs[i%len(agentIDs)]
 		style := tm.GetAgentStyle(agentID)
@@ -81,10 +81,10 @@ func BenchmarkAgentColorGeneration(b *testing.B) {
 	tm := NewThemeManager()
 	ctx := context.Background()
 	tm.ApplyTheme(ctx, "claude-code-light")
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		agentID := "test-agent-" + string(rune(i%1000))
 		color := tm.generateAgentColor(agentID)
@@ -96,10 +96,10 @@ func BenchmarkAgentColorGeneration(b *testing.B) {
 func BenchmarkThemeManager_ThreadSafety(b *testing.B) {
 	tm := NewThemeManager()
 	ctx := context.Background()
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	b.RunParallel(func(pb *testing.PB) {
 		i := 0
 		for pb.Next() {
@@ -122,70 +122,70 @@ func BenchmarkThemeManager_ThreadSafety(b *testing.B) {
 func TestPerformanceThresholds(t *testing.T) {
 	tm := NewThemeManager()
 	ctx := context.Background()
-	
+
 	// Test theme switching threshold: <16ms
 	t.Run("ThemeSwitchingThreshold", func(t *testing.T) {
 		start := time.Now()
 		err := tm.ApplyTheme(ctx, "claude-code-dark")
 		duration := time.Since(start)
-		
+
 		if err != nil {
 			t.Fatal(err)
 		}
-		
+
 		threshold := 16 * time.Millisecond
 		if duration > threshold {
 			t.Errorf("Theme switching took %v, exceeds threshold of %v", duration, threshold)
 		}
-		
+
 		t.Logf("Theme switching completed in %v", duration)
 	})
-	
+
 	// Test component rendering threshold: <10ms
 	t.Run("ComponentRenderingThreshold", func(t *testing.T) {
 		start := time.Now()
 		style := tm.GetComponent("button.primary")
 		duration := time.Since(start)
-		
+
 		_ = style // Prevent optimization
-		
+
 		threshold := 10 * time.Millisecond
 		if duration > threshold {
 			t.Errorf("Component rendering took %v, exceeds threshold of %v", duration, threshold)
 		}
-		
+
 		t.Logf("Component rendering completed in %v", duration)
 	})
-	
+
 	// Test agent styling threshold: <10ms
 	t.Run("AgentStylingThreshold", func(t *testing.T) {
 		start := time.Now()
 		style := tm.GetAgentStyle("performance-test-agent")
 		duration := time.Since(start)
-		
+
 		_ = style // Prevent optimization
-		
+
 		threshold := 10 * time.Millisecond
 		if duration > threshold {
 			t.Errorf("Agent styling took %v, exceeds threshold of %v", duration, threshold)
 		}
-		
+
 		t.Logf("Agent styling completed in %v", duration)
 	})
-	
+
 	// Test color generation threshold: <5ms
 	t.Run("ColorGenerationThreshold", func(t *testing.T) {
 		start := time.Now()
 		color := tm.generateAgentColor("threshold-test-agent")
 		duration := time.Since(start)
-		
+
 		_ = color // Prevent optimization
-		
+
 		threshold := 5 * time.Millisecond
 		if duration > threshold {
 			t.Errorf("Color generation took %v, exceeds threshold of %v", duration, threshold)
 		}
-		
+
 		t.Logf("Color generation completed in %v", duration)
 	})
 }
@@ -194,27 +194,27 @@ func TestPerformanceThresholds(t *testing.T) {
 func BenchmarkMemoryUsage(b *testing.B) {
 	b.Run("ThemeManagerMemory", func(b *testing.B) {
 		b.ReportAllocs()
-		
+
 		for i := 0; i < b.N; i++ {
 			tm := NewThemeManager()
 			ctx := context.Background()
 			tm.ApplyTheme(ctx, "claude-code-light")
-			
+
 			// Generate colors for multiple agents to test memory growth
 			for j := 0; j < 10; j++ {
 				tm.GetAgentStyle("agent-" + string(rune(j)))
 			}
 		}
 	})
-	
+
 	b.Run("AgentColorCaching", func(b *testing.B) {
 		tm := NewThemeManager()
 		ctx := context.Background()
 		tm.ApplyTheme(ctx, "claude-code-light")
-		
+
 		b.ReportAllocs()
 		b.ResetTimer()
-		
+
 		// Test that agent colors are cached and don't cause memory leaks
 		for i := 0; i < b.N; i++ {
 			agentID := "cached-agent-" + string(rune(i%100)) // Reuse 100 agent IDs

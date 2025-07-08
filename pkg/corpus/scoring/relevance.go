@@ -41,14 +41,14 @@ type DomainModel interface {
 
 // Context represents the context for relevance calculation
 type Context struct {
-	Query          string                 `json:"query"`
-	Domain         string                 `json:"domain"`
-	RequiresFresh  bool                   `json:"requires_fresh"`
-	UserID         string                 `json:"user_id"`
-	TaskID         string                 `json:"task_id"`
-	CurrentFiles   []string               `json:"current_files"`
-	Tags           []string               `json:"tags"`
-	Metadata       map[string]interface{} `json:"metadata"`
+	Query         string                 `json:"query"`
+	Domain        string                 `json:"domain"`
+	RequiresFresh bool                   `json:"requires_fresh"`
+	UserID        string                 `json:"user_id"`
+	TaskID        string                 `json:"task_id"`
+	CurrentFiles  []string               `json:"current_files"`
+	Tags          []string               `json:"tags"`
+	Metadata      map[string]interface{} `json:"metadata"`
 }
 
 // RelevanceScore represents a detailed relevance score breakdown

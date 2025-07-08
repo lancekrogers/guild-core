@@ -34,11 +34,11 @@ type UnifiedEventService struct {
 
 // unifiedEventStream represents an active event stream subscription
 type unifiedEventStream struct {
-	id             string
-	eventTypes     []string
-	subscribeAll   bool
-	stream         pb.EventService_StreamEventsServer
-	done           chan struct{}
+	id              string
+	eventTypes      []string
+	subscribeAll    bool
+	stream          pb.EventService_StreamEventsServer
+	done            chan struct{}
 	subscriptionIDs []events.SubscriptionID
 }
 
@@ -59,11 +59,11 @@ func (s *UnifiedEventService) StreamEvents(req *pb.StreamEventsRequest, stream p
 
 	streamID := uuid.New().String()
 	es := &unifiedEventStream{
-		id:           streamID,
-		eventTypes:   req.EventTypes,
-		subscribeAll: req.SubscribeAll,
-		stream:       stream,
-		done:         make(chan struct{}),
+		id:              streamID,
+		eventTypes:      req.EventTypes,
+		subscribeAll:    req.SubscribeAll,
+		stream:          stream,
+		done:            make(chan struct{}),
 		subscriptionIDs: make([]events.SubscriptionID, 0),
 	}
 

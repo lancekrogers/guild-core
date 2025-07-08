@@ -28,7 +28,7 @@ type RealRAGTestFramework struct {
 
 // RAGTestFramework provides comprehensive integration testing for RAG systems
 type RAGTestFramework struct {
-	realFramework *RealRAGTestFramework  // This will reference the real framework from framework.go
+	realFramework *RealRAGTestFramework // This will reference the real framework from framework.go
 	vectorStore   VectorStore
 	retriever     *rag.Retriever
 	indexPath     string
@@ -185,13 +185,13 @@ func NewRealRAGTestFramework(t *testing.T) *RealRAGTestFramework {
 
 	// For now, create a simplified real framework that focuses on the core RAG functionality
 	// without complex registry dependencies
-	
+
 	t.Logf("Creating real RAG test framework in directory: %s", testDir)
 
 	return &RealRAGTestFramework{
 		t:           t,
 		registry:    nil, // Will be set up when needed
-		retriever:   nil, // Will be set up when needed  
+		retriever:   nil, // Will be set up when needed
 		vectorStore: nil, // Will be set up when needed
 		ragFactory:  nil, // Will be set up when needed
 		testDir:     testDir,
@@ -214,7 +214,7 @@ func (f *RealRAGTestFramework) CollectDocuments(collection DocumentCollection) (
 	for i := 0; i < collection.FileCount; i++ {
 		language := collection.Languages[i%len(collection.Languages)]
 		content := f.generateRealisticContent(i, language)
-		
+
 		doc := &vector.Document{
 			ID:      fmt.Sprintf("doc-%d", i),
 			Content: content,
@@ -372,24 +372,24 @@ Component %d is a critical part of the system that handles data processing and t
 
 ### Basic Usage
 
-` + "```go\n" + `processor := NewProcessor%d()
+`+"```go\n"+`processor := NewProcessor%d()
 result, err := processor.Process(data)
 if err != nil {
     log.Fatal(err)
 }
-` + "```\n" + `
+`+"```\n"+`
 
 ### Advanced Configuration
 
 For more complex scenarios, you can configure the processor with custom options:
 
-` + "```go\n" + `config := ProcessorConfig{
+`+"```go\n"+`config := ProcessorConfig{
     BufferSize: 1024,
     Timeout:    30 * time.Second,
     RetryCount: 3,
 }
 processor := NewProcessorWithConfig(config)
-` + "```\n" + `
+`+"```\n"+`
 
 ## Performance Considerations
 
@@ -414,45 +414,45 @@ Common issues and their solutions:
 Retrieves items from the system with optional filtering and pagination.
 
 **Parameters:**
-- ` + "`" + `limit` + "`" + ` (optional): Maximum number of items to return (default: 50)
-- ` + "`" + `offset` + "`" + ` (optional): Number of items to skip (default: 0)
-- ` + "`" + `filter` + "`" + ` (optional): Filter expression for results
+- `+"`"+`limit`+"`"+` (optional): Maximum number of items to return (default: 50)
+- `+"`"+`offset`+"`"+` (optional): Number of items to skip (default: 0)
+- `+"`"+`filter`+"`"+` (optional): Filter expression for results
 
 **Response:**
-` + "```json\n" + `{
+`+"```json\n"+`{
   "items": [...],
   "total": 150,
   "limit": 50,
   "offset": 0
 }
-` + "```\n" + `
+`+"```\n"+`
 
 ### POST /api/v1/items
 
 Creates a new item in the system.
 
 **Request Body:**
-` + "```json\n" + `{
+`+"```json\n"+`{
   "name": "Item Name",
   "description": "Item description",
   "tags": ["tag1", "tag2"]
 }
-` + "```\n" + `
+`+"```\n"+`
 
 **Response:**
-` + "```json\n" + `{
+`+"```json\n"+`{
   "id": "item-123",
   "name": "Item Name",
   "created_at": "2023-01-01T00:00:00Z"
 }
-` + "```\n" + `
+`+"```\n"+`
 
 ## Error Codes
 
-- ` + "`" + `400` + "`" + `: Bad Request - Invalid input parameters
-- ` + "`" + `401` + "`" + `: Unauthorized - Authentication required
-- ` + "`" + `404` + "`" + `: Not Found - Resource does not exist
-- ` + "`" + `500` + "`" + `: Internal Server Error - System error occurred`, index, index),
+- `+"`"+`400`+"`"+`: Bad Request - Invalid input parameters
+- `+"`"+`401`+"`"+`: Unauthorized - Authentication required
+- `+"`"+`404`+"`"+`: Not Found - Resource does not exist
+- `+"`"+`500`+"`"+`: Internal Server Error - System error occurred`, index, index),
 	}
 
 	template := templates[index%len(templates)]

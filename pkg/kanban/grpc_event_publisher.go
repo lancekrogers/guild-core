@@ -43,7 +43,7 @@ func (p *GRPCEventPublisher) PublishTaskEvent(event *BoardEvent) error {
 	data := make(map[string]interface{})
 	data["board_id"] = event.BoardID
 	data["task_id"] = event.TaskID
-	
+
 	// Add event-specific data
 	for k, v := range event.Data {
 		data[k] = v

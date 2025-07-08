@@ -1078,23 +1078,23 @@ func getCampaignManager(registry registry.ComponentRegistry, grpcEventBus EventB
 	if !ok || adapter == nil {
 		panic("EventBus must be EventBusAdapter wrapping unified event bus")
 	}
-	
+
 	unifiedBus := adapter.UnifiedEventBus()
-	
+
 	// Get campaign repository from storage registry if available
 	var campaignRepo campaign.Repository
 	var commissionMgr *commission.Manager
-	
+
 	storageReg := registry.Storage()
 	if storageReg != nil {
 		// Note: registry.CampaignRepository doesn't match campaign.Repository interface
 		// We would need an adapter here, but for now we'll use nil
 		// TODO: Create repository adapter to bridge interface mismatch
 	}
-	
+
 	// Get commission manager if we can
 	commissionMgr = getCommissionManager(registry)
-	
+
 	// Return unified manager
 	return campaign.NewUnifiedManager(campaignRepo, commissionMgr, unifiedBus)
 }
@@ -1206,7 +1206,6 @@ func getSessionService(registry registry.ComponentRegistry) pb.SessionServiceSer
 		Info("Using memory-based session service")
 	return NewMemorySessionService()
 }
-
 
 // formatterAwareManager wraps a Manager and implements both Manager and Formatter interfaces
 type formatterAwareManager struct {

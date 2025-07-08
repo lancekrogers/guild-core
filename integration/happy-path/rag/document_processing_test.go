@@ -371,7 +371,7 @@ func TestRAGSystemUnderLoad(t *testing.T) {
 func NewRAGTestFramework(t *testing.T) *RAGTestFramework {
 	// Use the real framework from framework.go
 	realFramework := NewRealRAGTestFramework(t)
-	
+
 	// Convert to the expected interface for compatibility
 	return &RAGTestFramework{
 		realFramework: realFramework,
@@ -514,7 +514,7 @@ func (f *RAGTestFramework) CreateSemanticIndex(documents []*vector.Document, con
 	// Use real RAG system if available
 	if f.realFramework != nil && f.realFramework.retriever != nil {
 		f.t.Logf("🔄 Using real RAG system for indexing %d documents", len(documents))
-		
+
 		// Add documents to the real RAG system
 		totalChunks := 0
 		for i, doc := range documents {
@@ -528,15 +528,15 @@ func (f *RAGTestFramework) CreateSemanticIndex(documents []*vector.Document, con
 				f.t.Logf("Warning: failed to add document %d to RAG system: %v", i, err)
 				continue
 			}
-			
+
 			// Estimate chunks (realistic chunking would create ~3-5 chunks per document)
 			totalChunks += len(doc.Content)/config.ChunkSize + 1
-			
+
 			if i%100 == 0 && i > 0 {
 				f.t.Logf("Indexed %d/%d documents", i, len(documents))
 			}
 		}
-		
+
 		index.ChunkCount = totalChunks
 		f.t.Logf("✅ Real RAG semantic index created: %d documents, ~%d chunks", index.DocumentCount, index.ChunkCount)
 		return index, nil
@@ -608,14 +608,14 @@ func (f *RAGTestFramework) SemanticSearch(index *SemanticIndex, query string, co
 	// Use real RAG system if available
 	if f.realFramework != nil && f.realFramework.retriever != nil {
 		f.t.Logf("🔍 Using real RAG system for search: '%s'", query)
-		
+
 		// Use real retriever for context search
 		ragConfig := rag.RetrievalConfig{
 			MaxResults:      config.TopK,
 			MinScore:        float32(config.MinRelevanceScore),
 			IncludeMetadata: config.IncludeContext,
 		}
-		
+
 		searchResults, err := f.realFramework.retriever.RetrieveContext(ctx, query, ragConfig)
 		if err != nil {
 			f.t.Logf("Real RAG search failed, falling back to simulation: %v", err)
@@ -635,15 +635,15 @@ func (f *RAGTestFramework) SemanticSearch(index *SemanticIndex, query string, co
 						"matched_terms": f.findMatchedTerms(result.Content, query),
 					},
 				}
-				
+
 				// Apply reranking if enabled
 				if config.EnableReranking {
 					searchResult.Score = f.applyReranking(searchResult, query)
 				}
-				
+
 				results = append(results, searchResult)
 			}
-			
+
 			f.t.Logf("✅ Real RAG search completed: %d results", len(results))
 			return results, nil
 		}
@@ -711,7 +711,7 @@ func (f *RAGTestFramework) SemanticSearch(index *SemanticIndex, query string, co
 
 	// Complete fallback - generate simulated results
 	f.t.Logf("🎭 Using complete simulation for search: '%s'", query)
-	
+
 	// Generate simulated search results based on query
 	results := make([]SearchResult, 0, config.TopK)
 	for i := 0; i < config.TopK; i++ {
@@ -719,21 +719,21 @@ func (f *RAGTestFramework) SemanticSearch(index *SemanticIndex, query string, co
 		if score < config.MinRelevanceScore {
 			break
 		}
-		
+
 		result := SearchResult{
 			Content:  fmt.Sprintf("Simulated content for query '%s' result %d", query, i+1),
 			Score:    score,
 			FilePath: fmt.Sprintf("test/sim-file-%d.go", i+1),
 			Metadata: map[string]interface{}{
-				"relevance":     score,
-				"simulation":    true,
-				"query_terms":   f.extractQueryTerms(query),
-				"result_index":  i,
+				"relevance":    score,
+				"simulation":   true,
+				"query_terms":  f.extractQueryTerms(query),
+				"result_index": i,
 			},
 		}
 		results = append(results, result)
 	}
-	
+
 	return results, nil
 }
 

@@ -13,36 +13,36 @@ import (
 
 // CacheStats tracks comprehensive cache statistics
 type CacheStats struct {
-	l1Stats     *LevelMetrics
-	l2Stats     *LevelMetrics
-	distStats   *LevelMetrics
+	l1Stats      *LevelMetrics
+	l2Stats      *LevelMetrics
+	distStats    *LevelMetrics
 	overallStats *OverallMetrics
-	startTime   time.Time
-	mu          sync.RWMutex
+	startTime    time.Time
+	mu           sync.RWMutex
 }
 
 // NewCacheStats creates a new cache statistics tracker
 func NewCacheStats() *CacheStats {
 	return &CacheStats{
-		l1Stats:     NewLevelMetrics("L1"),
-		l2Stats:     NewLevelMetrics("L2"),
-		distStats:   NewLevelMetrics("Distributed"),
+		l1Stats:      NewLevelMetrics("L1"),
+		l2Stats:      NewLevelMetrics("L2"),
+		distStats:    NewLevelMetrics("Distributed"),
 		overallStats: NewOverallMetrics(),
-		startTime:   time.Now(),
+		startTime:    time.Now(),
 	}
 }
 
 // LevelMetrics tracks metrics for a single cache level
 type LevelMetrics struct {
-	Name        string    `json:"name"`
-	Hits        int64     `json:"hits"`
-	Misses      int64     `json:"misses"`
-	Sets        int64     `json:"sets"`
-	Deletes     int64     `json:"deletes"`
-	Evictions   int64     `json:"evictions"`
-	Errors      int64     `json:"errors"`
-	LastReset   time.Time `json:"last_reset"`
-	mu          sync.RWMutex
+	Name      string    `json:"name"`
+	Hits      int64     `json:"hits"`
+	Misses    int64     `json:"misses"`
+	Sets      int64     `json:"sets"`
+	Deletes   int64     `json:"deletes"`
+	Evictions int64     `json:"evictions"`
+	Errors    int64     `json:"errors"`
+	LastReset time.Time `json:"last_reset"`
+	mu        sync.RWMutex
 }
 
 // NewLevelMetrics creates new level metrics
@@ -140,13 +140,13 @@ func (lm *LevelMetrics) Reset() {
 
 // OverallMetrics tracks overall cache system metrics
 type OverallMetrics struct {
-	TotalRequests     int64     `json:"total_requests"`
-	TotalHits         int64     `json:"total_hits"`
-	TotalMisses       int64     `json:"total_misses"`
-	TotalErrors       int64     `json:"total_errors"`
+	TotalRequests     int64                `json:"total_requests"`
+	TotalHits         int64                `json:"total_hits"`
+	TotalMisses       int64                `json:"total_misses"`
+	TotalErrors       int64                `json:"total_errors"`
 	ResponseTimes     *ResponseTimeMetrics `json:"response_times"`
 	ThroughputMetrics *ThroughputMetrics   `json:"throughput_metrics"`
-	StartTime         time.Time `json:"start_time"`
+	StartTime         time.Time            `json:"start_time"`
 	mu                sync.RWMutex
 }
 
@@ -345,10 +345,10 @@ func (cs *CacheStats) GetDetailedStats() *DetailedCacheStats {
 	defer cs.mu.RUnlock()
 
 	return &DetailedCacheStats{
-		L1Metrics:        cs.l1Stats.GetSnapshot(),
-		L2Metrics:        cs.l2Stats.GetSnapshot(),
+		L1Metrics:          cs.l1Stats.GetSnapshot(),
+		L2Metrics:          cs.l2Stats.GetSnapshot(),
 		DistributedMetrics: cs.distStats.GetSnapshot(),
-		OverallMetrics:   cs.overallStats,
+		OverallMetrics:     cs.overallStats,
 		ResponseTimes: &ResponseTimeSummary{
 			P50: cs.overallStats.ResponseTimes.GetPercentile(50),
 			P95: cs.overallStats.ResponseTimes.GetPercentile(95),
@@ -390,23 +390,23 @@ type CacheWarmer struct {
 
 // WarmingConfig configures cache warming behavior
 type WarmingConfig struct {
-	Enabled              bool          `json:"enabled"`
-	WarmingInterval      time.Duration `json:"warming_interval"`
-	PredictionThreshold  float64       `json:"prediction_threshold"`
-	MaxWarmingKeys       int           `json:"max_warming_keys"`
-	ConcurrentWarmers    int           `json:"concurrent_warmers"`
-	WarmingTimeout       time.Duration `json:"warming_timeout"`
+	Enabled             bool          `json:"enabled"`
+	WarmingInterval     time.Duration `json:"warming_interval"`
+	PredictionThreshold float64       `json:"prediction_threshold"`
+	MaxWarmingKeys      int           `json:"max_warming_keys"`
+	ConcurrentWarmers   int           `json:"concurrent_warmers"`
+	WarmingTimeout      time.Duration `json:"warming_timeout"`
 }
 
 // DefaultWarmingConfig returns default warming configuration
 func DefaultWarmingConfig() *WarmingConfig {
 	return &WarmingConfig{
-		Enabled:              true,
-		WarmingInterval:      time.Minute * 15,
-		PredictionThreshold:  0.7,
-		MaxWarmingKeys:       100,
-		ConcurrentWarmers:    3,
-		WarmingTimeout:       time.Second * 30,
+		Enabled:             true,
+		WarmingInterval:     time.Minute * 15,
+		PredictionThreshold: 0.7,
+		MaxWarmingKeys:      100,
+		ConcurrentWarmers:   3,
+		WarmingTimeout:      time.Second * 30,
 	}
 }
 

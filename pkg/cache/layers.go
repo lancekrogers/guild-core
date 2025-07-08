@@ -66,11 +66,11 @@ func (l1 *L1Cache) Set(key string, value interface{}) error {
 	defer l1.mu.Unlock()
 
 	entry := &CacheEntry{
-		Key:        key,
-		Value:      value,
-		Size:       calculateItemSize(value),
-		CreatedAt:  time.Now(),
-		LastAccess: time.Now(),
+		Key:         key,
+		Value:       value,
+		Size:        calculateItemSize(value),
+		CreatedAt:   time.Now(),
+		LastAccess:  time.Now(),
 		AccessCount: 1,
 	}
 
@@ -202,11 +202,11 @@ func (l2 *L2Cache) Set(key string, value interface{}) error {
 	defer l2.mu.Unlock()
 
 	entry := &CacheEntry{
-		Key:        key,
-		Value:      value,
-		Size:       calculateItemSize(value),
-		CreatedAt:  time.Now(),
-		LastAccess: time.Now(),
+		Key:         key,
+		Value:       value,
+		Size:        calculateItemSize(value),
+		CreatedAt:   time.Now(),
+		LastAccess:  time.Now(),
 		AccessCount: 1,
 	}
 
@@ -322,7 +322,7 @@ func (rc *RedisCache) Get(ctx context.Context, key string) (interface{}, error) 
 func (rc *RedisCache) Set(ctx context.Context, key string, value interface{}, ttl time.Duration) error {
 	// Convert value to string (in real implementation, use JSON or other serialization)
 	valueStr := fmt.Sprintf("%v", value)
-	
+
 	err := rc.client.Set(ctx, key, valueStr, ttl)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "redis set failed").
@@ -364,11 +364,11 @@ type MockRedisClient struct {
 func (mrc *MockRedisClient) Get(ctx context.Context, key string) (string, error) {
 	mrc.mu.RLock()
 	defer mrc.mu.RUnlock()
-	
+
 	if mrc.data == nil {
 		mrc.data = make(map[string]string)
 	}
-	
+
 	value, exists := mrc.data[key]
 	if !exists {
 		return "", gerror.New(gerror.ErrCodeNotFound, "key not found", nil)
@@ -380,11 +380,11 @@ func (mrc *MockRedisClient) Get(ctx context.Context, key string) (string, error)
 func (mrc *MockRedisClient) Set(ctx context.Context, key string, value string, ttl time.Duration) error {
 	mrc.mu.Lock()
 	defer mrc.mu.Unlock()
-	
+
 	if mrc.data == nil {
 		mrc.data = make(map[string]string)
 	}
-	
+
 	mrc.data[key] = value
 	return nil
 }
@@ -393,11 +393,11 @@ func (mrc *MockRedisClient) Set(ctx context.Context, key string, value string, t
 func (mrc *MockRedisClient) Delete(ctx context.Context, key string) error {
 	mrc.mu.Lock()
 	defer mrc.mu.Unlock()
-	
+
 	if mrc.data == nil {
 		return nil
 	}
-	
+
 	delete(mrc.data, key)
 	return nil
 }
@@ -406,7 +406,7 @@ func (mrc *MockRedisClient) Delete(ctx context.Context, key string) error {
 func (mrc *MockRedisClient) Clear(ctx context.Context) error {
 	mrc.mu.Lock()
 	defer mrc.mu.Unlock()
-	
+
 	mrc.data = make(map[string]string)
 	return nil
 }

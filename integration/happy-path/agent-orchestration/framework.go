@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/interfaces"
 	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/stretchr/testify/require"
 )
 
 // HappyPathTestFramework provides staff-level testing infrastructure for agent orchestration

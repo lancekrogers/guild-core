@@ -127,21 +127,21 @@ func (scr *SemanticConflictRule) DetectConflict(ctx context.Context, new extract
 
 	for _, pair := range opposites {
 		word1, word2 := pair[0], pair[1]
-		
+
 		// Check for direct contradictions
 		if (strings.Contains(newContent, word1) && strings.Contains(existingContent, word2)) ||
-		   (strings.Contains(newContent, word2) && strings.Contains(existingContent, word1)) {
-			
+			(strings.Contains(newContent, word2) && strings.Contains(existingContent, word1)) {
+
 			// Calculate confidence based on context
 			confidence := scr.calculateConflictConfidence(newContent, existingContent, word1, word2)
-			
+
 			if confidence > 0.6 {
 				return &ConflictInfo{
 					Description:            scr.buildConflictDescription(new, existing, word1, word2),
-					Severity:              scr.determineSeverity(confidence),
+					Severity:               scr.determineSeverity(confidence),
 					ConflictingKnowledgeID: existing.ID,
-					ConflictType:          "semantic_opposition",
-					Confidence:            confidence,
+					ConflictType:           "semantic_opposition",
+					Confidence:             confidence,
 				}
 			}
 		}
@@ -183,7 +183,7 @@ func (scr *SemanticConflictRule) calculateConflictConfidence(newContent, existin
 }
 
 func (scr *SemanticConflictRule) buildConflictDescription(new extraction.ExtractedKnowledge, existing *graph.KnowledgeNode, word1, word2 string) string {
-	return fmt.Sprintf("Semantic conflict detected: new knowledge suggests '%s' while existing knowledge '%s' suggests '%s'", 
+	return fmt.Sprintf("Semantic conflict detected: new knowledge suggests '%s' while existing knowledge '%s' suggests '%s'",
 		scr.findRelevantContext(new.Content, []string{word1, word2}),
 		existing.ID,
 		scr.findRelevantContext(existing.Content, []string{word1, word2}))
@@ -218,7 +218,7 @@ func (tcr *TemporalConflictRule) GetType() string { return "temporal" }
 func (tcr *TemporalConflictRule) DetectConflict(ctx context.Context, new extraction.ExtractedKnowledge, existing *graph.KnowledgeNode) *ConflictInfo {
 	// Check if both knowledge pieces are about the same topic but have different time-sensitive information
 	similarity := tcr.calculateTopicSimilarity(new.Content, existing.Content)
-	
+
 	if similarity < 0.7 {
 		return nil // Not similar enough to be conflicting
 	}
@@ -242,10 +242,10 @@ func (tcr *TemporalConflictRule) DetectConflict(ctx context.Context, new extract
 
 			return &ConflictInfo{
 				Description:            fmt.Sprintf("Temporal conflict: newer knowledge may supersede older knowledge from %s", existing.CreatedAt.Format("2006-01-02")),
-				Severity:              "medium",
+				Severity:               "medium",
 				ConflictingKnowledgeID: existing.ID,
-				ConflictType:          "temporal_supersession",
-				Confidence:            confidence,
+				ConflictType:           "temporal_supersession",
+				Confidence:             confidence,
 			}
 		}
 	}
@@ -305,14 +305,14 @@ func (acr *AuthorityConflictRule) GetType() string { return "authority" }
 func (acr *AuthorityConflictRule) DetectConflict(ctx context.Context, new extraction.ExtractedKnowledge, existing *graph.KnowledgeNode) *ConflictInfo {
 	// Simple authority-based conflict detection
 	// In a real implementation, this would consider source credibility, expertise, etc.
-	
+
 	newAuthority := acr.calculateSourceAuthority(new.Source)
 	existingAuthority := acr.calculateExistingAuthority(existing)
 
 	// Only flag as conflict if there's a significant authority difference
-	if math.Abs(newAuthority-existingAuthority) > 0.3 && 
-	   acr.hasConflictingContent(new.Content, existing.Content) {
-		
+	if math.Abs(newAuthority-existingAuthority) > 0.3 &&
+		acr.hasConflictingContent(new.Content, existing.Content) {
+
 		higherAuthority := "new"
 		if existingAuthority > newAuthority {
 			higherAuthority = "existing"
@@ -320,10 +320,10 @@ func (acr *AuthorityConflictRule) DetectConflict(ctx context.Context, new extrac
 
 		return &ConflictInfo{
 			Description:            fmt.Sprintf("Authority conflict: %s knowledge has higher authority score (%.2f vs %.2f)", higherAuthority, maxFloat64(newAuthority, existingAuthority), minFloat64(newAuthority, existingAuthority)),
-			Severity:              "medium",
+			Severity:               "medium",
 			ConflictingKnowledgeID: existing.ID,
-			ConflictType:          "authority_mismatch",
-			Confidence:            0.6,
+			ConflictType:           "authority_mismatch",
+			Confidence:             0.6,
 		}
 	}
 
@@ -376,10 +376,10 @@ func (ccr *ContextualConflictRule) DetectConflict(ctx context.Context, new extra
 	if ccr.hasContextConflict(newContext, existingContext) {
 		return &ConflictInfo{
 			Description:            "Contextual conflict: knowledge applicable to different contexts or conditions",
-			Severity:              "low",
+			Severity:               "low",
 			ConflictingKnowledgeID: existing.ID,
-			ConflictType:          "contextual_mismatch",
-			Confidence:            0.5,
+			ConflictType:           "contextual_mismatch",
+			Confidence:             0.5,
 		}
 	}
 
@@ -388,7 +388,7 @@ func (ccr *ContextualConflictRule) DetectConflict(ctx context.Context, new extra
 
 func (ccr *ContextualConflictRule) extractContext(knowledge extraction.ExtractedKnowledge) map[string]string {
 	context := make(map[string]string)
-	
+
 	// Extract from metadata
 	for key, value := range knowledge.Context {
 		if str, ok := value.(string); ok {
@@ -398,13 +398,13 @@ func (ccr *ContextualConflictRule) extractContext(knowledge extraction.Extracted
 
 	// Extract from source
 	context["source_type"] = knowledge.Source.Type
-	
+
 	return context
 }
 
 func (ccr *ContextualConflictRule) extractExistingContext(existing *graph.KnowledgeNode) map[string]string {
 	context := make(map[string]string)
-	
+
 	for key, value := range existing.Properties {
 		if str, ok := value.(string); ok {
 			context[key] = str
@@ -417,7 +417,7 @@ func (ccr *ContextualConflictRule) extractExistingContext(existing *graph.Knowle
 func (ccr *ContextualConflictRule) hasContextConflict(newContext, existingContext map[string]string) bool {
 	// Simple context conflict detection
 	// In practice, this would be more sophisticated
-	
+
 	for key, newValue := range newContext {
 		if existingValue, exists := existingContext[key]; exists {
 			if newValue != existingValue && key != "source_type" {
@@ -425,7 +425,7 @@ func (ccr *ContextualConflictRule) hasContextConflict(newContext, existingContex
 			}
 		}
 	}
-	
+
 	return false
 }
 

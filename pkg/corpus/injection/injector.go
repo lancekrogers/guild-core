@@ -74,12 +74,12 @@ func (ci *ContextInjector) SetCacheEnabled(enabled bool) {
 
 // InjectionRequest contains the parameters for context injection
 type InjectionRequest struct {
-	OriginalPrompt   Prompt
-	Query            retrieval.Query
-	InjectionPoints  []InjectionPoint
-	MaxTokens        int
-	CacheKey         string
-	DisableCache     bool
+	OriginalPrompt  Prompt
+	Query           retrieval.Query
+	InjectionPoints []InjectionPoint
+	MaxTokens       int
+	CacheKey        string
+	DisableCache    bool
 }
 
 // Prompt represents a structured prompt with different sections
@@ -91,12 +91,12 @@ type Prompt struct {
 
 // InjectedPrompt contains the result of context injection
 type InjectedPrompt struct {
-	Original     Prompt                       `json:"original"`
-	SystemPrompt string                       `json:"system_prompt"`
-	UserMessage  string                       `json:"user_message"`
-	ToolContext  string                       `json:"tool_context"`
-	Contexts     map[InjectionPoint]string    `json:"contexts"`
-	Metadata     map[string]interface{}       `json:"metadata"`
+	Original     Prompt                    `json:"original"`
+	SystemPrompt string                    `json:"system_prompt"`
+	UserMessage  string                    `json:"user_message"`
+	ToolContext  string                    `json:"tool_context"`
+	Contexts     map[InjectionPoint]string `json:"contexts"`
+	Metadata     map[string]interface{}    `json:"metadata"`
 }
 
 // FormattedContext contains formatted context for different injection points
@@ -164,9 +164,9 @@ func (ci *ContextInjector) InjectContext(ctx context.Context, req InjectionReque
 	injected.Metadata = map[string]interface{}{
 		"injection_timestamp": time.Now(),
 		"documents_used":      len(docs),
-		"cache_key":          cacheKey,
-		"max_tokens":         maxTokens,
-		"injection_points":   req.InjectionPoints,
+		"cache_key":           cacheKey,
+		"max_tokens":          maxTokens,
+		"injection_points":    req.InjectionPoints,
 	}
 
 	// Cache result if enabled
@@ -247,7 +247,7 @@ func (ci *ContextInjector) generateCacheKey(req InjectionRequest) string {
 	h.Write([]byte(req.OriginalPrompt.User))
 	h.Write([]byte(req.OriginalPrompt.Tools))
 	h.Write([]byte(req.Query.Text))
-	
+
 	// Include injection points in the hash
 	for _, point := range req.InjectionPoints {
 		h.Write([]byte(point.String()))

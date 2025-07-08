@@ -15,13 +15,13 @@ import (
 
 // GraphIndex provides efficient searching and indexing for the knowledge graph
 type GraphIndex struct {
-	mu               sync.RWMutex
-	textIndex        map[string][]string // word -> node IDs
-	nodeContent      map[string]string   // node ID -> content
-	typeIndex        map[NodeType][]string // node type -> node IDs
-	confidenceIndex  map[string]float64  // node ID -> confidence
-	inverseDocFreq   map[string]float64  // word -> IDF score
-	totalNodes       int
+	mu              sync.RWMutex
+	textIndex       map[string][]string   // word -> node IDs
+	nodeContent     map[string]string     // node ID -> content
+	typeIndex       map[NodeType][]string // node type -> node IDs
+	confidenceIndex map[string]float64    // node ID -> confidence
+	inverseDocFreq  map[string]float64    // word -> IDF score
+	totalNodes      int
 }
 
 // NewGraphIndex creates a new graph index
@@ -121,16 +121,16 @@ func (gi *GraphIndex) Search(ctx context.Context, query string, limit int) ([]Se
 	for _, word := range queryWords {
 		if nodeIDs, exists := gi.textIndex[word]; exists {
 			idf := gi.getIDF(word)
-			
+
 			for _, nodeID := range nodeIDs {
 				content := gi.nodeContent[nodeID]
 				tf := gi.calculateTermFrequency(word, content)
 				score := tf * idf
-				
+
 				// Boost score by node confidence
 				confidence := gi.confidenceIndex[nodeID]
 				score *= (0.5 + confidence*0.5)
-				
+
 				candidates[nodeID] += score
 			}
 		}
@@ -334,7 +334,7 @@ func (gi *GraphIndex) generateHighlight(content string, queryWords []string) str
 	}
 
 	contentLower := strings.ToLower(content)
-	
+
 	// Find the first occurrence of any query word
 	for _, word := range queryWords {
 		if idx := strings.Index(contentLower, word); idx != -1 {
@@ -347,7 +347,7 @@ func (gi *GraphIndex) generateHighlight(content string, queryWords []string) str
 			if end > len(content) {
 				end = len(content)
 			}
-			
+
 			highlight := content[start:end]
 			if start > 0 {
 				highlight = "..." + highlight
@@ -355,11 +355,11 @@ func (gi *GraphIndex) generateHighlight(content string, queryWords []string) str
 			if end < len(content) {
 				highlight = highlight + "..."
 			}
-			
+
 			return highlight
 		}
 	}
-	
+
 	// Fallback: return first 60 characters
 	if len(content) > 60 {
 		return content[:60] + "..."

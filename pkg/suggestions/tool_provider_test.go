@@ -30,6 +30,7 @@ func (m *MockTool) RequiresAuth() bool             { return false }
 func (m *MockTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	return tools.NewToolResult("mock output", nil, nil, nil), nil
 }
+func (m *MockTool) HealthCheck() error { return nil }
 
 func TestToolSuggestionProvider_GetSuggestions(t *testing.T) {
 	// Create mock tools

@@ -83,7 +83,7 @@ func TestEndToEndSLA_HappyPath(t *testing.T) {
 		if testing.Short() && scenario.name == "Heavy load SLA validation" {
 			t.Skipf("Skipping %s in short mode", scenario.name)
 		}
-		
+
 		t.Run(scenario.name, func(t *testing.T) {
 			// PHASE 1: Initialize comprehensive monitoring infrastructure
 			slaMonitor, err := framework.CreateSLAMonitor(SLAMonitorConfig{

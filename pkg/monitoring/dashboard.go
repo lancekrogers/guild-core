@@ -20,21 +20,21 @@ type PerformanceDashboard struct {
 
 // DashboardConfig configures dashboard behavior
 type DashboardConfig struct {
-	Width              int  `json:"width"`
-	ShowColors         bool `json:"show_colors"`
-	ShowSparklines     bool `json:"show_sparklines"`
+	Width               int  `json:"width"`
+	ShowColors          bool `json:"show_colors"`
+	ShowSparklines      bool `json:"show_sparklines"`
 	ShowRecommendations bool `json:"show_recommendations"`
-	CompactMode        bool `json:"compact_mode"`
+	CompactMode         bool `json:"compact_mode"`
 }
 
 // DefaultDashboardConfig returns default dashboard configuration
 func DefaultDashboardConfig() *DashboardConfig {
 	return &DashboardConfig{
-		Width:              80,
-		ShowColors:         true,
-		ShowSparklines:     true,
+		Width:               80,
+		ShowColors:          true,
+		ShowSparklines:      true,
 		ShowRecommendations: true,
-		CompactMode:        false,
+		CompactMode:         false,
 	}
 }
 
@@ -92,18 +92,18 @@ func (pd *PerformanceDashboard) Render(metrics *MetricsCollector) string {
 func (pd *PerformanceDashboard) renderHeader() string {
 	separator := strings.Repeat("═", pd.config.Width)
 	title := "GUILD FRAMEWORK PERFORMANCE DASHBOARD"
-	
+
 	// Center the title
 	padding := (pd.config.Width - len(title)) / 2
 	centeredTitle := strings.Repeat(" ", padding) + title
-	
+
 	timestamp := time.Now().Format("2006-01-02 15:04:05")
-	
+
 	var header strings.Builder
 	header.WriteString(separator + "\n")
 	header.WriteString(centeredTitle + "\n")
-	header.WriteString(fmt.Sprintf("%s%s\n", 
-		strings.Repeat(" ", (pd.config.Width-len(timestamp))/2), 
+	header.WriteString(fmt.Sprintf("%s%s\n",
+		strings.Repeat(" ", (pd.config.Width-len(timestamp))/2),
 		timestamp))
 	header.WriteString(separator)
 
@@ -113,7 +113,7 @@ func (pd *PerformanceDashboard) renderHeader() string {
 // renderResponseTime renders response time metrics
 func (pd *PerformanceDashboard) renderResponseTime(metrics *MetricsCollector) string {
 	currentMetrics := metrics.GetCurrentMetrics()
-	
+
 	p50 := currentMetrics.ResponseTime.Percentile(0.50)
 	p95 := currentMetrics.ResponseTime.Percentile(0.95)
 	p99 := currentMetrics.ResponseTime.Percentile(0.99)
@@ -121,15 +121,15 @@ func (pd *PerformanceDashboard) renderResponseTime(metrics *MetricsCollector) st
 	var section strings.Builder
 	section.WriteString("Response Time:\n")
 	section.WriteString(fmt.Sprintf("  P50: %s\n", pd.formatDuration(p50)))
-	section.WriteString(fmt.Sprintf("  P95: %s %s\n", 
-		pd.formatDuration(p95), 
+	section.WriteString(fmt.Sprintf("  P95: %s %s\n",
+		pd.formatDuration(p95),
 		pd.getSLOIndicator(p95, 100))) // 100ms threshold
-	section.WriteString(fmt.Sprintf("  P99: %s %s\n", 
-		pd.formatDuration(p99), 
+	section.WriteString(fmt.Sprintf("  P99: %s %s\n",
+		pd.formatDuration(p99),
 		pd.getSLOIndicator(p99, 500))) // 500ms threshold
 
 	if pd.config.ShowSparklines {
-		section.WriteString(fmt.Sprintf("  Trend: %s\n", 
+		section.WriteString(fmt.Sprintf("  Trend: %s\n",
 			pd.generateSparkline([]float64{p50, p95, p99})))
 	}
 
@@ -159,17 +159,17 @@ func (pd *PerformanceDashboard) renderThroughput(metrics *MetricsCollector) stri
 // renderResourceUsage renders resource usage metrics
 func (pd *PerformanceDashboard) renderResourceUsage(metrics *MetricsCollector) string {
 	currentMetrics := metrics.GetCurrentMetrics()
-	
+
 	cpuUsage := currentMetrics.CPUUsage.Value() * 100
 	memoryUsage := currentMetrics.MemoryUsage.Value()
 	goroutines := currentMetrics.GoroutineCount.Value()
 
 	var section strings.Builder
 	section.WriteString("Resource Usage:\n")
-	section.WriteString(fmt.Sprintf("  CPU:    %.1f%% %s\n", 
-		cpuUsage, 
+	section.WriteString(fmt.Sprintf("  CPU:    %.1f%% %s\n",
+		cpuUsage,
 		pd.renderProgressBar(cpuUsage/100, 20)))
-	section.WriteString(fmt.Sprintf("  Memory: %.1f MB %s\n", 
+	section.WriteString(fmt.Sprintf("  Memory: %.1f MB %s\n",
 		memoryUsage,
 		pd.getMemoryIndicator(memoryUsage)))
 	section.WriteString(fmt.Sprintf("  Goroutines: %.0f\n", goroutines))
@@ -184,13 +184,13 @@ func (pd *PerformanceDashboard) renderCachePerformance(metrics *MetricsCollector
 
 	var section strings.Builder
 	section.WriteString("Cache Performance:\n")
-	section.WriteString(fmt.Sprintf("  Hit Rate: %.1f%% %s\n", 
-		hitRate, 
+	section.WriteString(fmt.Sprintf("  Hit Rate: %.1f%% %s\n",
+		hitRate,
 		pd.getCacheIndicator(hitRate)))
-	
+
 	if pd.config.ShowSparklines {
-		section.WriteString(fmt.Sprintf("  Trend: %s\n", 
-			pd.generateSparkline([]float64{hitRate, hitRate+2, hitRate-1})))
+		section.WriteString(fmt.Sprintf("  Trend: %s\n",
+			pd.generateSparkline([]float64{hitRate, hitRate + 2, hitRate - 1})))
 	}
 
 	return section.String()
@@ -203,8 +203,8 @@ func (pd *PerformanceDashboard) renderErrorMetrics(metrics *MetricsCollector) st
 
 	var section strings.Builder
 	section.WriteString("Error Metrics:\n")
-	section.WriteString(fmt.Sprintf("  Error Rate: %.2f%% %s\n", 
-		errorRate, 
+	section.WriteString(fmt.Sprintf("  Error Rate: %.2f%% %s\n",
+		errorRate,
 		pd.getErrorIndicator(errorRate)))
 
 	return section.String()
@@ -213,11 +213,11 @@ func (pd *PerformanceDashboard) renderErrorMetrics(metrics *MetricsCollector) st
 // renderSystemHealth renders overall system health
 func (pd *PerformanceDashboard) renderSystemHealth(metrics *MetricsCollector) string {
 	health := pd.calculateOverallHealth(metrics)
-	
+
 	var section strings.Builder
 	section.WriteString("System Health:\n")
-	section.WriteString(fmt.Sprintf("  Overall: %.1f%% %s\n", 
-		health, 
+	section.WriteString(fmt.Sprintf("  Overall: %.1f%% %s\n",
+		health,
 		pd.getHealthIndicator(health)))
 
 	return section.String()
@@ -226,7 +226,7 @@ func (pd *PerformanceDashboard) renderSystemHealth(metrics *MetricsCollector) st
 // renderRecommendations renders performance recommendations
 func (pd *PerformanceDashboard) renderRecommendations(metrics *MetricsCollector) string {
 	recommendations := pd.generateRecommendations(metrics)
-	
+
 	if len(recommendations) == 0 {
 		return "Recommendations: ✅ All metrics within normal ranges"
 	}
@@ -372,7 +372,7 @@ func (pd *PerformanceDashboard) generateSparkline(values []float64) string {
 
 	// Simple sparkline characters
 	chars := []string{"▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"}
-	
+
 	// Find min and max
 	min, max := values[0], values[0]
 	for _, v := range values {
@@ -414,7 +414,7 @@ func (pd *PerformanceDashboard) calculateTrend(current, baseline float64) string
 // calculateOverallHealth calculates overall system health percentage
 func (pd *PerformanceDashboard) calculateOverallHealth(metrics *MetricsCollector) float64 {
 	currentMetrics := metrics.GetCurrentMetrics()
-	
+
 	score := 100.0
 
 	// Response time health (P95 < 100ms = 100%, > 500ms = 0%)
@@ -456,35 +456,35 @@ func (pd *PerformanceDashboard) generateRecommendations(metrics *MetricsCollecto
 	// Check response time
 	p95 := currentMetrics.ResponseTime.Percentile(0.95)
 	if p95 > 100 {
-		recommendations = append(recommendations, 
+		recommendations = append(recommendations,
 			"Consider optimizing slow endpoints or adding caching")
 	}
 
 	// Check error rate
 	errorRate := currentMetrics.ErrorRate.Value() * 100
 	if errorRate > 1 {
-		recommendations = append(recommendations, 
+		recommendations = append(recommendations,
 			"Investigate and fix sources of errors")
 	}
 
 	// Check cache hit rate
 	hitRate := currentMetrics.CacheHitRate.Value() * 100
 	if hitRate < 90 {
-		recommendations = append(recommendations, 
+		recommendations = append(recommendations,
 			"Review cache strategy and warming policies")
 	}
 
 	// Check memory usage
 	memUsage := currentMetrics.MemoryUsage.Value()
 	if memUsage > 500 {
-		recommendations = append(recommendations, 
+		recommendations = append(recommendations,
 			"Investigate memory leaks or optimize memory usage")
 	}
 
 	// Check goroutine count
 	goroutines := currentMetrics.GoroutineCount.Value()
 	if goroutines > 1000 {
-		recommendations = append(recommendations, 
+		recommendations = append(recommendations,
 			"Review goroutine lifecycle and potential leaks")
 	}
 

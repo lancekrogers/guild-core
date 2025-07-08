@@ -26,7 +26,7 @@ func NewToolExecutor(registry *tools.ToolRegistry) parser.ToolExecutor {
 	if registry == nil {
 		panic("tool registry cannot be nil")
 	}
-	
+
 	return &toolExecutor{
 		registry: registry,
 	}
@@ -41,19 +41,19 @@ func (e *toolExecutor) Execute(ctx context.Context, call parser.ToolCall) (*pars
 			WithOperation("Execute").
 			WithDetails("tool", call.Function.Name)
 	}
-	
+
 	start := time.Now()
-	
+
 	result := &parser.ToolResult{
 		ID:      call.ID,
 		Success: false,
 	}
-	
+
 	// Get the tool from registry
 	e.mu.RLock()
 	tool, err := e.registry.GetTool(call.Function.Name)
 	e.mu.RUnlock()
-	
+
 	if err != nil {
 		errMsg := fmt.Sprintf("tool not found: %s", call.Function.Name)
 		result.Error = errMsg
@@ -64,13 +64,13 @@ func (e *toolExecutor) Execute(ctx context.Context, call parser.ToolCall) (*pars
 			WithDetails("tool", call.Function.Name).
 			WithDetails("availableTools", e.getToolNames())
 	}
-	
+
 	// Convert arguments to string for tool execution
 	argString := string(call.Function.Arguments)
 	if argString == "" {
 		argString = "{}"
 	}
-	
+
 	// Validate arguments are valid JSON
 	var argCheck interface{}
 	if err := json.Unmarshal([]byte(argString), &argCheck); err != nil {
@@ -83,7 +83,7 @@ func (e *toolExecutor) Execute(ctx context.Context, call parser.ToolCall) (*pars
 			WithDetails("tool", call.Function.Name).
 			WithDetails("arguments", argString)
 	}
-	
+
 	// Execute the tool with timeout from context
 	execCtx := ctx
 	if deadline, ok := ctx.Deadline(); ok {
@@ -95,19 +95,19 @@ func (e *toolExecutor) Execute(ctx context.Context, call parser.ToolCall) (*pars
 			defer cancel()
 		}
 	}
-	
+
 	// Execute in a goroutine to respect context cancellation
 	type execResult struct {
 		result *tools.ToolResult
 		err    error
 	}
 	execCh := make(chan execResult, 1)
-	
+
 	go func() {
 		toolResult, err := tool.Execute(execCtx, argString)
 		execCh <- execResult{result: toolResult, err: err}
 	}()
-	
+
 	// Wait for execution or context cancellation
 	select {
 	case <-ctx.Done():
@@ -118,7 +118,7 @@ func (e *toolExecutor) Execute(ctx context.Context, call parser.ToolCall) (*pars
 			WithOperation("Execute").
 			WithDetails("tool", call.Function.Name).
 			WithDetails("duration", time.Since(start).String())
-			
+
 	case exec := <-execCh:
 		if exec.err != nil {
 			result.Error = exec.err.Error()
@@ -126,7 +126,7 @@ func (e *toolExecutor) Execute(ctx context.Context, call parser.ToolCall) (*pars
 			// Don't propagate error - include it in result for the agent to handle
 			return result, nil
 		}
-		
+
 		// Convert tool result to our format
 		result.Success = true
 		result.Content = exec.result.Output
@@ -134,7 +134,7 @@ func (e *toolExecutor) Execute(ctx context.Context, call parser.ToolCall) (*pars
 			result.Output = exec.result.ExtraData
 		}
 		result.Duration = time.Since(start)
-		
+
 		return result, nil
 	}
 }
@@ -144,7 +144,7 @@ func (e *toolExecutor) ExecuteBatch(ctx context.Context, calls []parser.ToolCall
 	if len(calls) == 0 {
 		return nil, nil
 	}
-	
+
 	// Check context at the start
 	if err := ctx.Err(); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeCanceled, "context canceled before batch execution").
@@ -152,16 +152,16 @@ func (e *toolExecutor) ExecuteBatch(ctx context.Context, calls []parser.ToolCall
 			WithOperation("ExecuteBatch").
 			WithDetails("toolCount", len(calls))
 	}
-	
+
 	results := make([]*parser.ToolResult, len(calls))
 	var wg sync.WaitGroup
-	
+
 	// Execute tools in parallel with proper synchronization
 	for i, call := range calls {
 		wg.Add(1)
 		go func(idx int, toolCall parser.ToolCall) {
 			defer wg.Done()
-			
+
 			result, err := e.Execute(ctx, toolCall)
 			if err != nil {
 				// Create error result
@@ -175,14 +175,14 @@ func (e *toolExecutor) ExecuteBatch(ctx context.Context, calls []parser.ToolCall
 			results[idx] = result
 		}(i, call)
 	}
-	
+
 	// Wait for all executions to complete
 	done := make(chan struct{})
 	go func() {
 		wg.Wait()
 		close(done)
 	}()
-	
+
 	// Wait for completion or context cancellation
 	select {
 	case <-ctx.Done():
@@ -199,9 +199,9 @@ func (e *toolExecutor) ExecuteBatch(ctx context.Context, calls []parser.ToolCall
 func (e *toolExecutor) GetAvailableTools() []parser.ToolDefinition {
 	e.mu.RLock()
 	defer e.mu.RUnlock()
-	
+
 	definitions := make([]parser.ToolDefinition, 0)
-	
+
 	// Get all tools from registry
 	toolNames := e.registry.ListTools()
 	for _, name := range toolNames {
@@ -209,7 +209,7 @@ func (e *toolExecutor) GetAvailableTools() []parser.ToolDefinition {
 		if err != nil {
 			continue
 		}
-		
+
 		// Convert to standard definition
 		def := parser.ToolDefinition{
 			Type: "function",
@@ -219,10 +219,10 @@ func (e *toolExecutor) GetAvailableTools() []parser.ToolDefinition {
 				Parameters:  e.extractParameters(tool),
 			},
 		}
-		
+
 		definitions = append(definitions, def)
 	}
-	
+
 	return definitions
 }
 
@@ -230,13 +230,13 @@ func (e *toolExecutor) GetAvailableTools() []parser.ToolDefinition {
 func (e *toolExecutor) extractParameters(tool tools.Tool) json.RawMessage {
 	// Default empty schema
 	emptySchema := json.RawMessage(`{"type":"object","properties":{}}`)
-	
+
 	// Get the schema from the tool - it returns map[string]interface{}
 	schema := tool.Schema()
 	if schema == nil || len(schema) == 0 {
 		return emptySchema
 	}
-	
+
 	// Convert map to JSON
 	data, err := json.Marshal(schema)
 	if err != nil {

@@ -33,38 +33,38 @@ func (c Comparator) Compare(actual, target float64) bool {
 
 // SLO represents a Service Level Objective
 type SLO struct {
-	Name        string     `json:"name"`
-	Target      float64    `json:"target"`
+	Name        string        `json:"name"`
+	Target      float64       `json:"target"`
 	Window      time.Duration `json:"window"`
-	Metric      string     `json:"metric"`
-	Comparator  Comparator `json:"comparator"`
-	Description string     `json:"description"`
-	ErrorBudget float64    `json:"error_budget"`
+	Metric      string        `json:"metric"`
+	Comparator  Comparator    `json:"comparator"`
+	Description string        `json:"description"`
+	ErrorBudget float64       `json:"error_budget"`
 }
 
 // SLOViolation represents a violation of an SLO
 type SLOViolation struct {
-	SLO         SLO       `json:"slo"`
-	ActualValue float64   `json:"actual_value"`
-	Timestamp   time.Time `json:"timestamp"`
-	ErrorBudget float64   `json:"error_budget"`
-	Severity    string    `json:"severity"`
+	SLO         SLO           `json:"slo"`
+	ActualValue float64       `json:"actual_value"`
+	Timestamp   time.Time     `json:"timestamp"`
+	ErrorBudget float64       `json:"error_budget"`
+	Severity    string        `json:"severity"`
 	Duration    time.Duration `json:"duration"`
 }
 
 // SLOMonitor monitors Service Level Objectives
 type SLOMonitor struct {
-	objectives []SLO
-	violations []SLOViolation
-	mu         sync.RWMutex
+	objectives    []SLO
+	violations    []SLOViolation
+	mu            sync.RWMutex
 	maxViolations int
 }
 
 // NewSLOMonitor creates a new SLO monitor
 func NewSLOMonitor() *SLOMonitor {
 	return &SLOMonitor{
-		objectives: make([]SLO, 0),
-		violations: make([]SLOViolation, 0),
+		objectives:    make([]SLO, 0),
+		violations:    make([]SLOViolation, 0),
 		maxViolations: 1000,
 	}
 }
@@ -99,7 +99,7 @@ func (sm *SLOMonitor) CheckSLOs(metrics *MetricsCollector) []SLOViolation {
 
 	for _, slo := range sm.objectives {
 		value := metrics.GetMetricValue(slo.Metric, slo.Window)
-		
+
 		if !slo.Comparator.Compare(value, slo.Target) {
 			violation := SLOViolation{
 				SLO:         slo,
@@ -151,13 +151,13 @@ func (sm *SLOMonitor) GetSLOStatus(metrics *MetricsCollector) []SLOStatus {
 
 	for _, slo := range sm.objectives {
 		value := metrics.GetMetricValue(slo.Metric, slo.Window)
-		
+
 		status := SLOStatus{
-			SLO:         slo,
+			SLO:          slo,
 			CurrentValue: value,
-			Status:      sm.getSLOStatusString(slo, value),
-			ErrorBudget: sm.calculateErrorBudget(slo, value),
-			LastChecked: time.Now(),
+			Status:       sm.getSLOStatusString(slo, value),
+			ErrorBudget:  sm.calculateErrorBudget(slo, value),
+			LastChecked:  time.Now(),
 		}
 
 		statuses = append(statuses, status)
@@ -252,11 +252,11 @@ func (ebc *ErrorBudgetCalculator) CalculateErrorBudget(slo SLO, actualValue floa
 	defer ebc.mu.RUnlock()
 
 	budget := &ErrorBudget{
-		SLOName:     slo.Name,
-		Target:      slo.Target,
-		Actual:      actualValue,
-		Window:      window,
-		Timestamp:   time.Now(),
+		SLOName:   slo.Name,
+		Target:    slo.Target,
+		Actual:    actualValue,
+		Window:    window,
+		Timestamp: time.Now(),
 	}
 
 	// Calculate budget consumption
@@ -336,10 +336,10 @@ func (sr *SLOReporter) GenerateReport(metrics *MetricsCollector) *SLOReport {
 
 // SLOReport contains comprehensive SLO information
 type SLOReport struct {
-	Timestamp   time.Time     `json:"timestamp"`
-	SLOStatuses []SLOStatus   `json:"slo_statuses"`
+	Timestamp   time.Time      `json:"timestamp"`
+	SLOStatuses []SLOStatus    `json:"slo_statuses"`
 	Violations  []SLOViolation `json:"violations"`
-	Summary     *SLOSummary   `json:"summary"`
+	Summary     *SLOSummary    `json:"summary"`
 }
 
 // SLOSummary contains summary statistics for SLOs

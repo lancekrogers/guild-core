@@ -263,7 +263,7 @@ func (d *Detector) extractFromCodeBlock(input []byte) ([]byte, bool) {
 	if start := strings.Index(s, "```json"); start != -1 {
 		start += 7 // len("```json")
 		if end := strings.Index(s[start:], "```"); end != -1 {
-			candidate := []byte(strings.TrimSpace(s[start:start+end]))
+			candidate := []byte(strings.TrimSpace(s[start : start+end]))
 			if json.Valid(candidate) {
 				return candidate, true
 			}
@@ -285,7 +285,7 @@ func (d *Detector) extractFromCodeBlock(input []byte) ([]byte, bool) {
 		}
 
 		if blockEnd := strings.Index(s[blockStart:], "```"); blockEnd != -1 {
-			candidate := []byte(strings.TrimSpace(s[blockStart:blockStart+blockEnd]))
+			candidate := []byte(strings.TrimSpace(s[blockStart : blockStart+blockEnd]))
 			if json.Valid(candidate) && d.looksLikeToolCalls(candidate) {
 				return candidate, true
 			}
@@ -301,20 +301,20 @@ func (d *Detector) extractFromCodeBlock(input []byte) ([]byte, bool) {
 func (d *Detector) extractWithStreamingParser(input []byte) ([]byte, bool) {
 	// Try to find JSON using a streaming approach
 	maxOffset := int64(len(input))
-	
+
 	for offset := int64(0); offset < maxOffset; offset++ {
 		reader := bytes.NewReader(input[offset:])
 		decoder := json.NewDecoder(reader)
-		
+
 		var value interface{}
 		err := decoder.Decode(&value)
-		
+
 		if err == nil {
 			// Successfully decoded JSON
 			endPos := offset + decoder.InputOffset()
 			return input[offset:endPos], true
 		}
-		
+
 		// If we can't decode from this position, try the next
 		if err == io.EOF || offset+1 >= maxOffset {
 			break

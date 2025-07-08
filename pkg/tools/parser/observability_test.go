@@ -19,18 +19,18 @@ import (
 func TestObservableParser_Metrics(t *testing.T) {
 	// Create base parser
 	baseParser := NewResponseParser()
-	
+
 	// Wrap with metrics (we'll need to modify NewObservableParser to accept a registry)
 	// For now, test basic functionality
 	obsParser := NewObservableParser(baseParser)
-	
+
 	// Test successful parse
 	input := `{"tool_calls": [{"id": "test", "type": "function", "function": {"name": "test_func", "arguments": "{}"}}]}`
-	
+
 	calls, err := obsParser.ExtractToolCalls(input)
 	require.NoError(t, err)
 	assert.Len(t, calls, 1)
-	
+
 	// Verify metrics were recorded
 	// In a real test, we'd check the prometheus metrics
 }
@@ -39,13 +39,13 @@ func TestObservableParser_Metrics(t *testing.T) {
 func TestObservableParser_ErrorMetrics(t *testing.T) {
 	baseParser := NewResponseParser()
 	obsParser := NewObservableParser(baseParser)
-	
+
 	// Test with invalid input
 	input := `{invalid json`
-	
+
 	_, err := obsParser.ExtractToolCalls(input)
 	assert.NoError(t, err) // Parser returns empty result, not error
-	
+
 	// Test with malformed tool call
 	input2 := `{"tool_calls": [{"id": "test", "type": "function", "function": {"name": "", "arguments": "{}"}}]}`
 	calls, err := obsParser.ExtractToolCalls(input2)
@@ -57,14 +57,14 @@ func TestObservableParser_ErrorMetrics(t *testing.T) {
 func TestObservableParser_FormatDistribution(t *testing.T) {
 	baseParser := NewResponseParser()
 	obsParser := NewObservableParser(baseParser)
-	
+
 	// Parse different formats
 	jsonInput := `{"id": "j1", "type": "function", "function": {"name": "json_func", "arguments": "{}"}}`
 	xmlInput := `<function_calls><invoke name="xml_func"></invoke></function_calls>`
-	
+
 	_, _ = obsParser.ExtractToolCalls(jsonInput)
 	_, _ = obsParser.ExtractToolCalls(xmlInput)
-	
+
 	// In a real test, verify format distribution metrics
 }
 
@@ -72,23 +72,23 @@ func TestObservableParser_FormatDistribution(t *testing.T) {
 func TestHealthMonitor_BasicHealth(t *testing.T) {
 	parser := NewResponseParser()
 	monitor := NewHealthMonitor(parser, "test-v1.0")
-	
+
 	// Perform health check
 	health := monitor.Check(context.Background())
-	
+
 	// Verify basic health
 	assert.Equal(t, HealthStatusHealthy, health.Status)
 	assert.Equal(t, "test-v1.0", health.Version)
 	assert.NotZero(t, health.Timestamp)
 	assert.Greater(t, health.Uptime, time.Duration(0))
-	
+
 	// Verify checks were performed
 	assert.Contains(t, health.Checks, "parser_basic")
 	assert.Contains(t, health.Checks, "json_detector")
 	assert.Contains(t, health.Checks, "xml_detector")
 	assert.Contains(t, health.Checks, "format_detection")
 	assert.Contains(t, health.Checks, "memory_usage")
-	
+
 	// All checks should be healthy for a new parser
 	for name, check := range health.Checks {
 		assert.Equal(t, HealthStatusHealthy, check.Status, "Check %s failed", name)
@@ -99,27 +99,27 @@ func TestHealthMonitor_BasicHealth(t *testing.T) {
 func TestHealthMonitor_MetricsCalculation(t *testing.T) {
 	parser := NewResponseParser()
 	monitor := NewHealthMonitor(parser, "test-v1.0")
-	
+
 	// Record some parse operations
 	monitor.RecordParse(ProviderFormatOpenAI, 10*time.Millisecond, true)
 	monitor.RecordParse(ProviderFormatOpenAI, 20*time.Millisecond, true)
 	monitor.RecordParse(ProviderFormatAnthropic, 15*time.Millisecond, true)
 	monitor.RecordParse(ProviderFormatOpenAI, 30*time.Millisecond, false) // failure
-	
+
 	// Get metrics
 	health := monitor.Check(context.Background())
 	metrics := health.Metrics
-	
+
 	// Verify metrics
 	assert.Equal(t, int64(4), metrics.TotalParses)
 	assert.Equal(t, int64(3), metrics.TotalSuccesses)
 	assert.Equal(t, int64(1), metrics.TotalFailures)
 	assert.Equal(t, 0.75, metrics.SuccessRate)
-	
+
 	// Check format distribution
 	assert.Equal(t, int64(3), metrics.FormatDistribution[string(ProviderFormatOpenAI)])
 	assert.Equal(t, int64(1), metrics.FormatDistribution[string(ProviderFormatAnthropic)])
-	
+
 	// Average latency should be calculated
 	assert.Greater(t, metrics.AverageLatency, 0.0)
 }
@@ -128,24 +128,24 @@ func TestHealthMonitor_MetricsCalculation(t *testing.T) {
 func TestHealthMonitor_ActiveParsers(t *testing.T) {
 	parser := NewResponseParser()
 	monitor := NewHealthMonitor(parser, "test-v1.0")
-	
+
 	// Start multiple parsers
 	monitor.StartParse()
 	monitor.StartParse()
 	monitor.StartParse()
-	
+
 	health := monitor.Check(context.Background())
 	assert.Equal(t, 3, health.Metrics.ActiveParsers)
-	
+
 	// End parsers
 	monitor.EndParse()
 	monitor.EndParse()
-	
+
 	health = monitor.Check(context.Background())
 	assert.Equal(t, 1, health.Metrics.ActiveParsers)
-	
+
 	monitor.EndParse()
-	
+
 	health = monitor.Check(context.Background())
 	assert.Equal(t, 0, health.Metrics.ActiveParsers)
 }
@@ -153,7 +153,7 @@ func TestHealthMonitor_ActiveParsers(t *testing.T) {
 // TestAlertManager_Conditions tests alert condition evaluation
 func TestAlertManager_Conditions(t *testing.T) {
 	am := NewAlertManager()
-	
+
 	// Test high failure rate condition
 	metrics := HealthMetrics{
 		TotalParses:    200,
@@ -161,9 +161,9 @@ func TestAlertManager_Conditions(t *testing.T) {
 		TotalFailures:  30,
 		SuccessRate:    0.85, // Below 90% threshold
 	}
-	
+
 	am.CheckAlerts(metrics)
-	
+
 	// Should have high failure rate alert
 	alerts := am.GetActiveAlerts()
 	assert.Len(t, alerts, 1)
@@ -174,7 +174,7 @@ func TestAlertManager_Conditions(t *testing.T) {
 // TestAlertManager_Resolution tests alert resolution
 func TestAlertManager_Resolution(t *testing.T) {
 	am := NewAlertManager()
-	
+
 	// Trigger alert
 	badMetrics := HealthMetrics{
 		TotalParses:    200,
@@ -183,9 +183,9 @@ func TestAlertManager_Resolution(t *testing.T) {
 		SuccessRate:    0.85,
 	}
 	am.CheckAlerts(badMetrics)
-	
+
 	assert.Len(t, am.GetActiveAlerts(), 1)
-	
+
 	// Resolve alert
 	goodMetrics := HealthMetrics{
 		TotalParses:    300,
@@ -194,11 +194,11 @@ func TestAlertManager_Resolution(t *testing.T) {
 		SuccessRate:    0.95,
 	}
 	am.CheckAlerts(goodMetrics)
-	
+
 	// Alert should be resolved
 	activeAlerts := am.GetActiveAlerts()
 	assert.Len(t, activeAlerts, 0)
-	
+
 	// But should still exist in history
 	allAlerts := am.GetAllAlerts()
 	assert.Greater(t, len(allAlerts), 0)
@@ -210,26 +210,26 @@ func TestMonitoredParser_Integration(t *testing.T) {
 	baseParser := NewResponseParser()
 	monitoredParser := NewMonitoredParser(baseParser, "test-v1.0")
 	defer monitoredParser.Stop()
-	
+
 	// Parse some inputs
 	inputs := []string{
 		`{"id": "1", "type": "function", "function": {"name": "test1", "arguments": "{}"}}`,
 		`<function_calls><invoke name="test2"></invoke></function_calls>`,
 		`invalid input that won't parse`,
 	}
-	
+
 	for _, input := range inputs {
 		_, _ = monitoredParser.ExtractToolCalls(input)
 	}
-	
+
 	// Give monitoring time to process
 	time.Sleep(100 * time.Millisecond)
-	
+
 	// Check health
 	health := monitoredParser.GetHealth()
 	assert.Equal(t, HealthStatusHealthy, health.Status)
 	assert.Equal(t, int64(3), health.Metrics.TotalParses)
-	
+
 	// Check for alerts
 	alerts := monitoredParser.GetAlerts()
 	// Shouldn't have any alerts with just 3 parses
@@ -250,15 +250,15 @@ func TestDashboardServer_Endpoints(t *testing.T) {
 func BenchmarkObservableParser_Overhead(b *testing.B) {
 	baseParser := NewResponseParser()
 	obsParser := NewObservableParser(baseParser)
-	
+
 	input := `{"id": "bench", "type": "function", "function": {"name": "benchmark", "arguments": "{}"}}`
-	
+
 	b.Run("WithoutObservability", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			_, _ = baseParser.ExtractToolCalls(input)
 		}
 	})
-	
+
 	b.Run("WithObservability", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			_, _ = obsParser.ExtractToolCalls(input)
@@ -270,7 +270,7 @@ func BenchmarkObservableParser_Overhead(b *testing.B) {
 func TestMetricLabels(t *testing.T) {
 	// Create a custom registry for testing
 	reg := prometheus.NewRegistry()
-	
+
 	// Create metrics with the test registry
 	metrics := &ParserMetrics{
 		parseAttempts: prometheus.NewCounterVec(
@@ -281,13 +281,13 @@ func TestMetricLabels(t *testing.T) {
 			[]string{"format"},
 		),
 	}
-	
+
 	// Register the metric
 	reg.MustRegister(metrics.parseAttempts)
-	
+
 	// Trigger metric recording
 	metrics.parseAttempts.WithLabelValues("openai").Inc()
-	
+
 	// Verify with testutil
 	expected := `
 		# HELP guild_parser_parse_attempts_total Total number of parsing attempts

@@ -12,15 +12,15 @@ import (
 	"testing"
 	"time"
 
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	_ "github.com/mattn/go-sqlite3"
 
-	sessionpkg "github.com/lancekrogers/guild/pkg/session"
-	"github.com/lancekrogers/guild/pkg/performance"
 	"github.com/lancekrogers/guild/pkg/monitoring"
 	"github.com/lancekrogers/guild/pkg/orchestrator"
+	"github.com/lancekrogers/guild/pkg/performance"
 	"github.com/lancekrogers/guild/pkg/registry"
+	sessionpkg "github.com/lancekrogers/guild/pkg/session"
 	"go.uber.org/zap"
 )
 
@@ -38,7 +38,7 @@ type IntegrationTestSuite struct {
 // NewIntegrationTestSuite creates a new integration test suite
 func NewIntegrationTestSuite() *IntegrationTestSuite {
 	logger, _ := zap.NewDevelopment()
-	
+
 	return &IntegrationTestSuite{
 		ctx:       context.Background(),
 		teardowns: make([]func(), 0),
@@ -50,13 +50,13 @@ func NewIntegrationTestSuite() *IntegrationTestSuite {
 func (its *IntegrationTestSuite) SetupSuite(t *testing.T) {
 	// Initialize test database
 	its.setupTestDatabase(t)
-	
+
 	// Initialize test registry
 	its.setupTestRegistry(t)
-	
+
 	// Initialize test event bus
 	its.setupTestEventBus(t)
-	
+
 	// Initialize all performance optimization components
 	its.setupSessionComponents(t)
 	its.setupPerformanceComponents(t)
@@ -74,10 +74,10 @@ func (its *IntegrationTestSuite) TearDownSuite(t *testing.T) {
 func (its *IntegrationTestSuite) setupTestDatabase(t *testing.T) {
 	db, err := sql.Open("sqlite3", ":memory:")
 	require.NoError(t, err)
-	
+
 	its.db = db
 	its.teardowns = append(its.teardowns, func() { db.Close() })
-	
+
 	// Apply Guild schema
 	schema := its.loadTestSchema()
 	_, err = db.Exec(schema)
@@ -105,7 +105,7 @@ func (its *IntegrationTestSuite) setupSessionComponents(t *testing.T) {
 func (its *IntegrationTestSuite) setupPerformanceComponents(t *testing.T) {
 	// Initialize performance profiler
 	profiler := performance.NewPerformanceProfiler()
-	
+
 	// Store profiler for later use (registry doesn't have RegisterComponent method)
 	_ = profiler // Suppress unused variable warning
 }
@@ -114,16 +114,16 @@ func (its *IntegrationTestSuite) setupPerformanceComponents(t *testing.T) {
 func (its *IntegrationTestSuite) setupMonitoringComponents(t *testing.T) {
 	// Initialize performance monitor with proper config
 	monitorConfig := &monitoring.MonitoringConfig{
-		MetricsInterval:     time.Second * 30,
-		AlertCheckInterval:  time.Second * 10,
-		DashboardRefresh:    time.Second * 5,
-		EnableTracing:       true,
-		EnableExport:        false,
-		RetentionPeriod:     time.Hour * 24,
-		MaxMetricSamples:    1000,
+		MetricsInterval:    time.Second * 30,
+		AlertCheckInterval: time.Second * 10,
+		DashboardRefresh:   time.Second * 5,
+		EnableTracing:      true,
+		EnableExport:       false,
+		RetentionPeriod:    time.Hour * 24,
+		MaxMetricSamples:   1000,
 	}
 	monitor := monitoring.NewPerformanceMonitor(monitorConfig)
-	
+
 	// Store monitor for later use (registry doesn't have RegisterComponent method)
 	_ = monitor // Suppress unused variable warning
 }
@@ -131,27 +131,27 @@ func (its *IntegrationTestSuite) setupMonitoringComponents(t *testing.T) {
 // TestSessionCreationWithMonitoring tests session creation with performance monitoring
 func (its *IntegrationTestSuite) TestSessionCreationWithMonitoring(t *testing.T) {
 	startTime := time.Now()
-	
+
 	// Create session
 	session, err := its.sessionSvc.CreateSession(its.ctx, "test-user", "test-campaign")
 	require.NoError(t, err)
 	require.NotNil(t, session)
-	
+
 	creationTime := time.Since(startTime)
-	
+
 	// Verify session creation was fast enough
 	assert.LessOrEqual(t, creationTime, 100*time.Millisecond, "Session creation should be <100ms")
-	
+
 	// Verify session properties
 	assert.NotEmpty(t, session.ID)
 	assert.Equal(t, "test-user", session.UserID)
 	assert.Equal(t, "test-campaign", session.CampaignID)
 	assert.Equal(t, "active", string(session.State.Status))
-	
+
 	// Note: EventBus integration test would require more setup
 	// For now, just verify the event bus exists
 	assert.NotNil(t, its.eventBus)
-	
+
 	its.logger.Info("Session creation test completed",
 		zap.String("session_id", session.ID),
 		zap.Duration("creation_time", creationTime))
@@ -162,7 +162,7 @@ func (its *IntegrationTestSuite) TestSessionRestorationIntegration(t *testing.T)
 	// Create session with UI state
 	originalSession, err := its.sessionSvc.CreateSession(its.ctx, "test-user", "test-campaign")
 	require.NoError(t, err)
-	
+
 	// Add messages and UI state to simulate a real session
 	originalSession.Messages = []sessionpkg.Message{
 		{ID: "msg1", Agent: "elena", Content: "Hello!", Timestamp: time.Now(), Type: "agent"},
@@ -175,18 +175,18 @@ func (its *IntegrationTestSuite) TestSessionRestorationIntegration(t *testing.T)
 		"selected_agent": "elena",
 		"theme":          "dark",
 	}
-	
+
 	// Save session (simulate this operation)
 	// In a real implementation, this would use the session manager
 	// For testing, we'll just verify the session properties
 	assert.NotNil(t, originalSession.State.Variables)
 	assert.Len(t, originalSession.Messages, 2)
-	
+
 	// Test session restoration performance
 	startTime := time.Now()
 	err = its.sessionSvc.ResumeSession(its.ctx, originalSession.ID)
 	restorationTime := time.Since(startTime)
-	
+
 	// Note: This might fail in test environment if session manager isn't fully configured
 	// In a real implementation, we'd expect this to work
 	if err != nil {
@@ -195,7 +195,7 @@ func (its *IntegrationTestSuite) TestSessionRestorationIntegration(t *testing.T)
 		// Verify restoration performance
 		assert.LessOrEqual(t, restorationTime, 2*time.Second, "Session restoration should be reasonable")
 	}
-	
+
 	its.logger.Info("Session restoration test completed",
 		zap.String("session_id", originalSession.ID),
 		zap.Duration("restoration_time", restorationTime))
@@ -205,10 +205,10 @@ func (its *IntegrationTestSuite) TestSessionRestorationIntegration(t *testing.T)
 func (its *IntegrationTestSuite) TestCachePerformanceIntegration(t *testing.T) {
 	// Create a simple in-memory cache for testing
 	cache := newTestCache()
-	
+
 	// Simulate realistic caching workload
 	testData := generateTestCacheData(1000) // 1000 unique items
-	
+
 	// First pass - populate cache (should be cache misses)
 	startTime := time.Now()
 	for i, data := range testData {
@@ -220,7 +220,7 @@ func (its *IntegrationTestSuite) TestCachePerformanceIntegration(t *testing.T) {
 		}
 	}
 	populationTime := time.Since(startTime)
-	
+
 	// Second pass - should be cache hits
 	startTime = time.Now()
 	hits := 0
@@ -232,13 +232,13 @@ func (its *IntegrationTestSuite) TestCachePerformanceIntegration(t *testing.T) {
 		}
 	}
 	retrievalTime := time.Since(startTime)
-	
+
 	hitRate := float64(hits) / float64(len(testData))
-	
+
 	// Verify cache performance targets
 	assert.GreaterOrEqual(t, hitRate, 0.95, "Hit rate should be at least 95% after population")
 	assert.LessOrEqual(t, retrievalTime, 100*time.Millisecond, "Cache retrieval should be fast")
-	
+
 	its.logger.Info("Cache performance test completed",
 		zap.Float64("hit_rate", hitRate),
 		zap.Duration("population_time", populationTime),
@@ -250,18 +250,18 @@ func (its *IntegrationTestSuite) TestMultiAgentCoordinationIntegration(t *testin
 	// Create session for multi-agent interaction
 	session, err := its.sessionSvc.CreateSession(its.ctx, "test-user", "coordination-test")
 	require.NoError(t, err)
-	
+
 	// Simulate multi-agent coordination scenario
 	agents := []string{"elena", "marcus", "vera"}
 	messageCount := 50
-	
+
 	startTime := time.Now()
 	for i := 0; i < messageCount; i++ {
 		agentID := agents[i%len(agents)]
-		
+
 		// Simulate agent processing time
 		processingStart := time.Now()
-		
+
 		// Add message (simulating agent response)
 		message := sessionpkg.Message{
 			ID:        fmt.Sprintf("msg-%d", i),
@@ -271,22 +271,22 @@ func (its *IntegrationTestSuite) TestMultiAgentCoordinationIntegration(t *testin
 			Type:      "agent",
 		}
 		session.Messages = append(session.Messages, message)
-		
+
 		processingTime := time.Since(processingStart)
-		
+
 		// Verify agent response time target
 		assert.LessOrEqual(t, processingTime, 1*time.Second, "Agent response should be <1s")
-		
+
 		// Small delay to simulate realistic timing
 		time.Sleep(10 * time.Millisecond)
 	}
-	
+
 	totalTime := time.Since(startTime)
 	avgResponseTime := totalTime / time.Duration(messageCount)
-	
+
 	// Verify overall coordination performance
 	assert.LessOrEqual(t, avgResponseTime, 500*time.Millisecond, "Average response time should be reasonable")
-	
+
 	its.logger.Info("Multi-agent coordination test completed",
 		zap.Int("message_count", messageCount),
 		zap.Duration("total_time", totalTime),
@@ -298,27 +298,27 @@ func (its *IntegrationTestSuite) TestMemoryUsageIntegration(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping memory test in short mode")
 	}
-	
+
 	// Record initial memory
 	initialMemory := getCurrentMemoryUsage()
-	
+
 	// Create multiple sessions with realistic data
 	sessionCount := 20
 	messagesPerSession := 100
-	
+
 	sessions := make([]*sessionpkg.Session, 0, sessionCount)
-	
+
 	for i := 0; i < sessionCount; i++ {
 		session, err := its.sessionSvc.CreateSession(its.ctx,
 			fmt.Sprintf("user-%d", i),
 			fmt.Sprintf("campaign-%d", i))
 		require.NoError(t, err)
-		
+
 		// Add realistic message history
 		for j := 0; j < messagesPerSession; j++ {
 			agent := []string{"elena", "marcus", "vera"}[j%3]
 			content := fmt.Sprintf("Message %d from %s with some content that simulates real usage", j, agent)
-			
+
 			session.Messages = append(session.Messages, sessionpkg.Message{
 				ID:        fmt.Sprintf("msg-%d-%d", i, j),
 				Agent:     agent,
@@ -327,28 +327,28 @@ func (its *IntegrationTestSuite) TestMemoryUsageIntegration(t *testing.T) {
 				Type:      "agent",
 			})
 		}
-		
+
 		sessions = append(sessions, session)
 	}
-	
+
 	// Record peak memory
 	peakMemory := getCurrentMemoryUsage()
 	memoryGrowth := peakMemory - initialMemory
-	
+
 	// Verify memory usage is within target
 	assert.LessOrEqual(t, peakMemory, int64(500*1024*1024), "Peak memory should be <500MB")
 	assert.LessOrEqual(t, memoryGrowth, int64(200*1024*1024), "Memory growth should be <200MB")
-	
+
 	// Run GC and measure cleanup
 	runtime.GC()
 	time.Sleep(100 * time.Millisecond) // Allow GC to complete
 	afterGCMemory := getCurrentMemoryUsage()
-	
+
 	gcEffectiveness := float64(peakMemory-afterGCMemory) / float64(memoryGrowth)
 	if memoryGrowth > 0 {
 		assert.GreaterOrEqual(t, gcEffectiveness, 0.1, "GC should reclaim some memory")
 	}
-	
+
 	its.logger.Info("Memory usage test completed",
 		zap.Int64("initial_memory_mb", initialMemory/(1024*1024)),
 		zap.Int64("peak_memory_mb", peakMemory/(1024*1024)),
@@ -360,15 +360,15 @@ func (its *IntegrationTestSuite) TestMemoryUsageIntegration(t *testing.T) {
 // TestCompleteWorkflowIntegration tests complete workflow: session creation → agent interaction → performance monitoring → cleanup
 func (its *IntegrationTestSuite) TestCompleteWorkflowIntegration(t *testing.T) {
 	workflowStart := time.Now()
-	
+
 	// Step 1: Create session (should trigger monitoring)
 	session, err := its.sessionSvc.CreateSession(its.ctx, "workflow-user", "workflow-campaign")
 	require.NoError(t, err)
-	
+
 	// Step 2: Start performance profiling (simulate)
 	profiler := performance.NewPerformanceProfiler()
 	assert.NotNil(t, profiler)
-	
+
 	// Step 3: Simulate agent interactions during profiling
 	go func() {
 		for i := 0; i < 20; i++ {
@@ -384,33 +384,33 @@ func (its *IntegrationTestSuite) TestCompleteWorkflowIntegration(t *testing.T) {
 			time.Sleep(200 * time.Millisecond) // Realistic pacing
 		}
 	}()
-	
+
 	// Step 4: Export session during activity
 	time.Sleep(2 * time.Second) // Let some activity happen
 	// Export functionality needs proper setup in real implementation
 	// For testing, we'll simulate it
 	exportData := []byte("{\"session_id\":\"" + session.ID + "\"}")
 	err = nil
-	
+
 	// Export might fail in test environment - that's OK
 	if err != nil {
 		t.Logf("Session export failed as expected in test environment: %v", err)
 	} else {
 		assert.Greater(t, len(exportData), 100, "Export should have substantial data")
 	}
-	
+
 	// Step 5: Wait for activity to complete
 	time.Sleep(2 * time.Second)
-	
+
 	// Step 6: Verify all systems recorded the workflow
 	workflowDuration := time.Since(workflowStart)
-	
+
 	// Verify session has messages
 	assert.Greater(t, len(session.Messages), 10, "Session should have captured messages")
-	
+
 	// Verify overall workflow performance
 	assert.LessOrEqual(t, workflowDuration, 10*time.Second, "Entire workflow should complete quickly")
-	
+
 	its.logger.Info("Complete workflow integration test completed",
 		zap.Duration("workflow_duration", workflowDuration),
 		zap.Int("message_count", len(session.Messages)),
@@ -424,20 +424,20 @@ func (its *IntegrationTestSuite) TestConcurrentSessionHandling(t *testing.T) {
 	var mu sync.Mutex
 	sessions := make([]*sessionpkg.Session, 0, concurrentSessions)
 	errors := make([]error, 0)
-	
+
 	startTime := time.Now()
-	
+
 	// Create sessions concurrently
 	for i := 0; i < concurrentSessions; i++ {
 		wg.Add(1)
 		go func(sessionIndex int) {
 			defer wg.Done()
-			
+
 			userID := fmt.Sprintf("concurrent-user-%d", sessionIndex)
 			campaignID := fmt.Sprintf("concurrent-campaign-%d", sessionIndex)
-			
+
 			session, err := its.sessionSvc.CreateSession(its.ctx, userID, campaignID)
-			
+
 			mu.Lock()
 			if err != nil {
 				errors = append(errors, err)
@@ -447,22 +447,22 @@ func (its *IntegrationTestSuite) TestConcurrentSessionHandling(t *testing.T) {
 			mu.Unlock()
 		}(i)
 	}
-	
+
 	wg.Wait()
 	totalTime := time.Since(startTime)
-	
+
 	// Verify results
 	assert.Len(t, errors, 0, "No errors should occur during concurrent session creation")
 	assert.Len(t, sessions, concurrentSessions, "All sessions should be created successfully")
 	assert.LessOrEqual(t, totalTime, 5*time.Second, "Concurrent session creation should be fast")
-	
+
 	// Verify all sessions are unique
 	sessionIDs := make(map[string]bool)
 	for _, session := range sessions {
 		assert.False(t, sessionIDs[session.ID], "Session IDs should be unique")
 		sessionIDs[session.ID] = true
 	}
-	
+
 	its.logger.Info("Concurrent session handling test completed",
 		zap.Int("concurrent_sessions", concurrentSessions),
 		zap.Duration("total_time", totalTime),
@@ -563,11 +563,11 @@ func (its *IntegrationTestSuite) loadTestSchema() string {
 // RunIntegrationTests runs all integration tests
 func RunIntegrationTests(t *testing.T) {
 	suite := NewIntegrationTestSuite()
-	
+
 	// Setup
 	suite.SetupSuite(t)
 	defer suite.TearDownSuite(t)
-	
+
 	// Run all integration tests
 	t.Run("SessionCreationWithMonitoring", suite.TestSessionCreationWithMonitoring)
 	t.Run("SessionRestorationIntegration", suite.TestSessionRestorationIntegration)
@@ -584,13 +584,13 @@ func BenchmarkSessionCreation(b *testing.B) {
 	suite := NewIntegrationTestSuite()
 	suite.SetupSuite(&testing.T{})
 	defer suite.TearDownSuite(&testing.T{})
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		userID := fmt.Sprintf("bench-user-%d", i)
 		campaignID := fmt.Sprintf("bench-campaign-%d", i)
-		
+
 		_, err := suite.sessionSvc.CreateSession(suite.ctx, userID, campaignID)
 		if err != nil {
 			b.Fatalf("Session creation failed: %v", err)
@@ -601,15 +601,15 @@ func BenchmarkSessionCreation(b *testing.B) {
 func BenchmarkCacheOperations(b *testing.B) {
 	cache := newTestCache()
 	testData := generateTestCacheData(1000)
-	
+
 	// Pre-populate cache
 	for i, data := range testData[:500] {
 		key := fmt.Sprintf("bench-key-%d", i)
 		cache.Set(key, data)
 	}
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		key := fmt.Sprintf("bench-key-%d", i%1000)
 		_, exists := cache.Get(key)
@@ -622,7 +622,7 @@ func BenchmarkCacheOperations(b *testing.B) {
 
 func BenchmarkMemoryAllocation(b *testing.B) {
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		// Simulate typical session data allocation
 		session := &sessionpkg.Session{
@@ -632,7 +632,7 @@ func BenchmarkMemoryAllocation(b *testing.B) {
 			Messages:   make([]sessionpkg.Message, 0, 100),
 			Metadata:   make(map[string]interface{}),
 		}
-		
+
 		// Add some messages
 		for j := 0; j < 10; j++ {
 			session.Messages = append(session.Messages, sessionpkg.Message{
@@ -643,7 +643,7 @@ func BenchmarkMemoryAllocation(b *testing.B) {
 				Type:      "agent",
 			})
 		}
-		
+
 		// Prevent optimization
 		_ = session
 	}

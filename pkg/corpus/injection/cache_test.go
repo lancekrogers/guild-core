@@ -186,7 +186,7 @@ func TestGuildContextCache_Stats(t *testing.T) {
 	assert.Equal(t, 5, stats.Size)
 	assert.Equal(t, 100, stats.MaxSize)
 	assert.Equal(t, time.Hour, stats.TTL)
-	assert.Equal(t, 8, stats.TotalAccesses) // 5 from Set + 3 from Get
+	assert.Equal(t, 8, stats.TotalAccesses)  // 5 from Set + 3 from Get
 	assert.Equal(t, 0, stats.ExpiredEntries) // None expired yet
 }
 
@@ -202,7 +202,7 @@ func TestJourneymanContextCache_StatsWithExpiredEntries(t *testing.T) {
 	time.Sleep(15 * time.Millisecond)
 
 	stats := cache.Stats()
-	assert.Equal(t, 2, stats.Size)        // Still counted in size
+	assert.Equal(t, 2, stats.Size)           // Still counted in size
 	assert.Equal(t, 2, stats.ExpiredEntries) // But marked as expired
 }
 

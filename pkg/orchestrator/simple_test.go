@@ -161,14 +161,14 @@ func TestSimpleAgent(t *testing.T) {
 // Simple task dispatcher for testing
 type simpleTestDispatcher struct{}
 
-func (d *simpleTestDispatcher) RegisterAgent(agent core.Agent)                       {}
+func (d *simpleTestDispatcher) RegisterAgent(agent core.Agent)                        {}
 func (d *simpleTestDispatcher) UnregisterAgent(agentID string)                        {}
 func (d *simpleTestDispatcher) Dispatch(ctx context.Context, task *kanban.Task) error { return nil }
 func (d *simpleTestDispatcher) GetTaskStatus(ctx context.Context, taskID string) (TaskStatus, error) {
 	return TaskStatus{}, nil
 }
 func (d *simpleTestDispatcher) GetAgentStatus(agentID string) AgentStatus { return AgentStatus{} }
-func (d *simpleTestDispatcher) ListAvailableAgents() []core.Agent        { return nil }
+func (d *simpleTestDispatcher) ListAvailableAgents() []core.Agent         { return nil }
 func (d *simpleTestDispatcher) Stop(ctx context.Context) error            { return nil }
 
 // Test that our simple dispatcher implements the TaskDispatcher interface

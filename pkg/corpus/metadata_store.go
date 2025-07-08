@@ -372,7 +372,7 @@ func (ms *MetadataStore) ListDocuments(ctx context.Context) ([]*StoredDocument, 
 func (ms *MetadataStore) DeleteDocument(ctx context.Context, id string) error {
 	// Foreign key constraints will handle cascade deletion
 	query := "DELETE FROM corpus_documents WHERE id = ?"
-	
+
 	result, err := ms.db.ExecContext(ctx, query, id)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete document").
@@ -658,7 +658,7 @@ func (ms *MetadataStore) GetStats(ctx context.Context) (*CorpusStats, error) {
 
 func (ms *MetadataStore) getDocumentTags(ctx context.Context, documentID string) ([]string, error) {
 	query := "SELECT tag FROM corpus_document_tags WHERE document_id = ? ORDER BY tag"
-	
+
 	rows, err := ms.db.QueryContext(ctx, query, documentID)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to query tags").

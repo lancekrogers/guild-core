@@ -203,6 +203,10 @@ func (m *mockTool) RequiresAuth() bool {
 	return false
 }
 
+func (m *mockTool) HealthCheck() error {
+	return nil
+}
+
 // CampaignConfigOptions configures test campaign generation
 type CampaignConfigOptions struct {
 	Name         string

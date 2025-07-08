@@ -37,7 +37,7 @@ func Happy(verbose bool) error {
 		},
 		{
 			Path:        "integration/happy-path/sla",
-			Name:        "SLA Validation Framework", 
+			Name:        "SLA Validation Framework",
 			Description: "End-to-end SLA monitoring and compliance validation",
 			Timeout:     "5m",
 			Points:      12,
@@ -128,7 +128,7 @@ func Happy(verbose bool) error {
 
 	for i, r := range results {
 		suite := suites[i]
-		
+
 		status := "✓ PASS"
 		points := fmt.Sprintf("%d/%d", 0, suite.Points)
 		if r.Pass {
@@ -171,7 +171,7 @@ func Happy(verbose bool) error {
 	// Add totals row
 	totalStatus := fmt.Sprintf("%d/%d suites", passed, len(results))
 	totalPointsStr := fmt.Sprintf("%d/%d pts", earnedPoints, totalPoints)
-	
+
 	if ui.ColourEnabled() {
 		if failures > 0 {
 			totalStatus = ui.Red + totalStatus + ui.Reset
@@ -224,17 +224,17 @@ type HappyPathSuite struct {
 // verifyHappyPathSuites checks that all test suites exist
 func verifyHappyPathSuites(suites []HappyPathSuite) error {
 	missing := []string{}
-	
+
 	for _, suite := range suites {
 		if _, err := os.Stat(suite.Path); os.IsNotExist(err) {
 			missing = append(missing, suite.Path)
 		}
 	}
-	
+
 	if len(missing) > 0 {
 		return fmt.Errorf("missing happy path test suites: %s", strings.Join(missing, ", "))
 	}
-	
+
 	return nil
 }
 
@@ -252,7 +252,7 @@ func runHappyPathSuite(suite HappyPathSuite, verbose bool) (HappyPathResult, err
 	}
 
 	err := cmd.Run()
-	
+
 	result := HappyPathResult{
 		Suite: suite.Name,
 		Pass:  err == nil,
@@ -289,9 +289,9 @@ func getScoreGrade(earned, total int) string {
 	if total == 0 {
 		return "N/A"
 	}
-	
+
 	percentage := float64(earned) / float64(total) * 100
-	
+
 	switch {
 	case percentage >= 95:
 		return "A+ (Excellent)"

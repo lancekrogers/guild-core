@@ -19,16 +19,16 @@ type MemoryEventBus struct {
 	subscriptions map[SubscriptionID]*FilteredSubscription
 	handlers      map[string][]SubscriptionID
 	allHandlers   []SubscriptionID
-	
+
 	// Metrics
 	stats EventBusStats
-	
+
 	// State management
-	running    atomic.Bool
-	closed     atomic.Bool
-	mu         sync.RWMutex
-	nextSubID  atomic.Int64
-	
+	running   atomic.Bool
+	closed    atomic.Bool
+	mu        sync.RWMutex
+	nextSubID atomic.Int64
+
 	// Event processing
 	eventChan chan eventDelivery
 	stopChan  chan struct{}
@@ -50,7 +50,7 @@ func NewMemoryEventBus(config EventBusConfig) *MemoryEventBus {
 		eventChan:     make(chan eventDelivery, config.BufferSize),
 		stopChan:      make(chan struct{}),
 	}
-	
+
 	bus.start()
 	return bus
 }
@@ -65,7 +65,7 @@ func (b *MemoryEventBus) start() {
 	if !b.running.CompareAndSwap(false, true) {
 		return // Already running
 	}
-	
+
 	b.wg.Add(1)
 	go b.processEvents()
 }
@@ -73,7 +73,7 @@ func (b *MemoryEventBus) start() {
 // processEvents handles event delivery in a separate goroutine
 func (b *MemoryEventBus) processEvents() {
 	defer b.wg.Done()
-	
+
 	for {
 		select {
 		case delivery := <-b.eventChan:
@@ -88,11 +88,11 @@ func (b *MemoryEventBus) processEvents() {
 func (b *MemoryEventBus) deliverEvent(ctx context.Context, event CoreEvent) {
 	b.mu.RLock()
 	defer b.mu.RUnlock()
-	
+
 	startTime := time.Now()
 	eventType := event.GetType()
 	deliveredCount := 0
-	
+
 	// Deliver to specific type handlers
 	if handlers, exists := b.handlers[eventType]; exists {
 		for _, subID := range handlers {
@@ -103,7 +103,7 @@ func (b *MemoryEventBus) deliverEvent(ctx context.Context, event CoreEvent) {
 			}
 		}
 	}
-	
+
 	// Deliver to "all events" handlers
 	for _, subID := range b.allHandlers {
 		if sub, exists := b.subscriptions[subID]; exists {
@@ -112,11 +112,11 @@ func (b *MemoryEventBus) deliverEvent(ctx context.Context, event CoreEvent) {
 			}
 		}
 	}
-	
+
 	// Update metrics
 	deliveryTime := float64(time.Since(startTime).Nanoseconds()) / 1e6 // Convert to milliseconds
 	atomic.AddInt64(&b.stats.EventsDelivered, int64(deliveredCount))
-	
+
 	// Update average delivery time (simple moving average)
 	if b.stats.EventsDelivered > 0 {
 		b.stats.AverageDeliveryTime = (b.stats.AverageDeliveryTime*float64(b.stats.EventsDelivered-int64(deliveredCount)) + deliveryTime*float64(deliveredCount)) / float64(b.stats.EventsDelivered)
@@ -131,7 +131,7 @@ func (b *MemoryEventBus) deliverToHandler(ctx context.Context, event CoreEvent, 
 	if sub.Filter != nil && !sub.Filter(event) {
 		return false
 	}
-	
+
 	// Deliver to handler with panic recovery
 	defer func() {
 		if r := recover(); r != nil {
@@ -142,7 +142,7 @@ func (b *MemoryEventBus) deliverToHandler(ctx context.Context, event CoreEvent, 
 			}
 		}
 	}()
-	
+
 	err := sub.Handler(ctx, event)
 	if err != nil {
 		atomic.AddInt64(&b.stats.EventsDropped, 1)
@@ -151,7 +151,7 @@ func (b *MemoryEventBus) deliverToHandler(ctx context.Context, event CoreEvent, 
 		}
 		return false
 	}
-	
+
 	return true
 }
 
@@ -160,13 +160,13 @@ func (b *MemoryEventBus) Publish(ctx context.Context, event CoreEvent) error {
 	if b.closed.Load() {
 		return ErrEventBusClosed
 	}
-	
+
 	if event == nil {
 		return gerror.New(gerror.ErrCodeValidation, "event cannot be nil", nil).
 			WithComponent("MemoryEventBus").
 			WithOperation("Publish")
 	}
-	
+
 	// Validate event
 	if baseEvent, ok := event.(*BaseEvent); ok {
 		if err := baseEvent.Validate(); err != nil {
@@ -175,7 +175,7 @@ func (b *MemoryEventBus) Publish(ctx context.Context, event CoreEvent) error {
 				WithOperation("Publish")
 		}
 	}
-	
+
 	// Check event size if configured
 	if b.config.MaxEventSize > 0 {
 		if eventJSON, err := ToJSON(event); err == nil {
@@ -184,15 +184,15 @@ func (b *MemoryEventBus) Publish(ctx context.Context, event CoreEvent) error {
 			}
 		}
 	}
-	
+
 	atomic.AddInt64(&b.stats.EventsPublished, 1)
-	
+
 	// Log event if configured
 	if b.config.LogEvents {
-		fmt.Printf("Publishing event: %s (type: %s, source: %s)\n", 
+		fmt.Printf("Publishing event: %s (type: %s, source: %s)\n",
 			event.GetID(), event.GetType(), event.GetSource())
 	}
-	
+
 	// Queue for delivery
 	select {
 	case b.eventChan <- eventDelivery{event: event, ctx: ctx}:
@@ -214,40 +214,40 @@ func (b *MemoryEventBus) Subscribe(ctx context.Context, eventType string, handle
 	if b.closed.Load() {
 		return "", ErrEventBusClosed
 	}
-	
+
 	if handler == nil {
 		return "", ErrInvalidHandler
 	}
-	
+
 	b.mu.Lock()
 	defer b.mu.Unlock()
-	
+
 	// Check subscription limit
 	if b.config.MaxSubscriptions > 0 && len(b.subscriptions) >= b.config.MaxSubscriptions {
 		return "", ErrTooManySubscriptions
 	}
-	
+
 	// Generate subscription ID
 	subID := SubscriptionID(fmt.Sprintf("sub_%d", b.nextSubID.Add(1)))
-	
+
 	// Create subscription
 	sub := &FilteredSubscription{
 		ID:        subID,
 		EventType: eventType,
 		Handler:   handler,
 	}
-	
+
 	b.subscriptions[subID] = sub
-	
+
 	// Add to appropriate handler list
 	if eventType == "" {
 		b.allHandlers = append(b.allHandlers, subID)
 	} else {
 		b.handlers[eventType] = append(b.handlers[eventType], subID)
 	}
-	
+
 	b.stats.ActiveSubscriptions = len(b.subscriptions)
-	
+
 	return subID, nil
 }
 
@@ -262,14 +262,14 @@ func (b *MemoryEventBus) SubscribeWithFilter(ctx context.Context, eventType stri
 	if err != nil {
 		return "", err
 	}
-	
+
 	// Add filter to subscription
 	b.mu.Lock()
 	if sub, exists := b.subscriptions[subID]; exists {
 		sub.Filter = filter
 	}
 	b.mu.Unlock()
-	
+
 	return subID, nil
 }
 
@@ -278,18 +278,18 @@ func (b *MemoryEventBus) Unsubscribe(ctx context.Context, subscriptionID Subscri
 	if b.closed.Load() {
 		return ErrEventBusClosed
 	}
-	
+
 	b.mu.Lock()
 	defer b.mu.Unlock()
-	
+
 	sub, exists := b.subscriptions[subscriptionID]
 	if !exists {
 		return ErrSubscriptionNotFound
 	}
-	
+
 	// Remove from subscriptions map
 	delete(b.subscriptions, subscriptionID)
-	
+
 	// Remove from appropriate handler list
 	if sub.EventType == "" {
 		b.allHandlers = b.removeSubscriptionID(b.allHandlers, subscriptionID)
@@ -301,9 +301,9 @@ func (b *MemoryEventBus) Unsubscribe(ctx context.Context, subscriptionID Subscri
 			}
 		}
 	}
-	
+
 	b.stats.ActiveSubscriptions = len(b.subscriptions)
-	
+
 	return nil
 }
 
@@ -325,7 +325,7 @@ func (b *MemoryEventBus) PublishJSON(ctx context.Context, jsonEvent string) erro
 			WithComponent("MemoryEventBus").
 			WithOperation("PublishJSON")
 	}
-	
+
 	return b.Publish(ctx, event)
 }
 
@@ -334,19 +334,19 @@ func (b *MemoryEventBus) Close(ctx context.Context) error {
 	if !b.closed.CompareAndSwap(false, true) {
 		return nil // Already closed
 	}
-	
+
 	if b.running.Load() {
 		close(b.stopChan)
 		b.running.Store(false)
 	}
-	
+
 	// Wait for event processing to complete
 	done := make(chan struct{})
 	go func() {
 		b.wg.Wait()
 		close(done)
 	}()
-	
+
 	select {
 	case <-done:
 		return nil
@@ -384,7 +384,7 @@ func (b *MemoryEventBus) GetStats() EventBusStats {
 func (b *MemoryEventBus) GetSubscriptions() map[SubscriptionID]string {
 	b.mu.RLock()
 	defer b.mu.RUnlock()
-	
+
 	result := make(map[SubscriptionID]string)
 	for id, sub := range b.subscriptions {
 		eventType := sub.EventType

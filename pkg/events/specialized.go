@@ -48,10 +48,10 @@ func (e *TaskEvent) WithAssignment(agentID string) *TaskEvent {
 // AgentEvent represents events related to agent operations
 type AgentEvent struct {
 	*BaseEvent
-	AgentID      string `json:"agent_id"`
-	AgentType    string `json:"agent_type,omitempty"`
-	Status       string `json:"status,omitempty"`
-	CurrentTask  string `json:"current_task,omitempty"`
+	AgentID      string   `json:"agent_id"`
+	AgentType    string   `json:"agent_type,omitempty"`
+	Status       string   `json:"status,omitempty"`
+	CurrentTask  string   `json:"current_task,omitempty"`
 	Capabilities []string `json:"capabilities,omitempty"`
 }
 
@@ -116,13 +116,13 @@ func (e *SystemEvent) WithErrorCode(errorCode string) *SystemEvent {
 // CommissionEvent represents events related to commission operations
 type CommissionEvent struct {
 	*BaseEvent
-	CommissionID  string            `json:"commission_id"`
-	Title         string            `json:"title,omitempty"`
-	Status        string            `json:"status,omitempty"`
-	Progress      float64           `json:"progress,omitempty"`
-	AssignedAgents []string         `json:"assigned_agents,omitempty"`
-	EstimatedCost  float64          `json:"estimated_cost,omitempty"`
-	ActualCost     float64          `json:"actual_cost,omitempty"`
+	CommissionID   string            `json:"commission_id"`
+	Title          string            `json:"title,omitempty"`
+	Status         string            `json:"status,omitempty"`
+	Progress       float64           `json:"progress,omitempty"`
+	AssignedAgents []string          `json:"assigned_agents,omitempty"`
+	EstimatedCost  float64           `json:"estimated_cost,omitempty"`
+	ActualCost     float64           `json:"actual_cost,omitempty"`
 	Tags           map[string]string `json:"tags,omitempty"`
 }
 
@@ -210,7 +210,7 @@ func NewPerformanceEvent(metricName string, value float64, unit, componentID str
 		"unit":         unit,
 		"component_id": componentID,
 	})
-	
+
 	return &PerformanceEvent{
 		BaseEvent:   base,
 		MetricName:  metricName,
@@ -336,7 +336,7 @@ func (b *EventBuilder) AsTaskEvent() *TaskEvent {
 	}
 }
 
-// AsAgentEvent converts to an AgentEvent (adds agent-specific fields as empty)  
+// AsAgentEvent converts to an AgentEvent (adds agent-specific fields as empty)
 func (b *EventBuilder) AsAgentEvent() *AgentEvent {
 	return &AgentEvent{
 		BaseEvent: b.event,

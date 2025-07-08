@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/internal/ui/chat/common/utils"
 	"github.com/lancekrogers/guild/internal/ui/chat/components"
+	"github.com/lancekrogers/guild/pkg/gerror"
 	"go.uber.org/zap"
 )
 
@@ -42,7 +42,7 @@ func NewPolishedComponents(ctx context.Context, logger *zap.Logger) (*PolishedCo
 	componentCtx, cancel := context.WithCancel(ctx)
 
 	theme := utils.NewClaudeCodeStyles()
-	
+
 	animator := components.NewAnimationManager(componentCtx)
 	if err := startAnimatorWithRecovery(animator, logger); err != nil {
 		cancel()
@@ -229,12 +229,12 @@ func (li *LoadingIndicator) renderSpinner() string {
 	// Use braille characters for smooth rotation
 	frames := []string{"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"}
 	frame := frames[li.frame%len(frames)]
-	
+
 	spinnerStyle := li.theme.StatusInfo
 	messageStyle := li.theme.Base
-	
-	return fmt.Sprintf("%s %s", 
-		spinnerStyle.Render(frame), 
+
+	return fmt.Sprintf("%s %s",
+		spinnerStyle.Render(frame),
 		messageStyle.Render(li.message))
 }
 
@@ -242,10 +242,10 @@ func (li *LoadingIndicator) renderSpinner() string {
 func (li *LoadingIndicator) renderProgress() string {
 	barWidth := 30
 	filled := int(li.progress * float64(barWidth))
-	
+
 	bar := strings.Builder{}
 	bar.WriteString("[")
-	
+
 	for i := 0; i < barWidth; i++ {
 		if i < filled {
 			bar.WriteString("█")
@@ -255,12 +255,12 @@ func (li *LoadingIndicator) renderProgress() string {
 			bar.WriteString("░")
 		}
 	}
-	
+
 	bar.WriteString("]")
-	
+
 	progressStyle := li.theme.StatusInfo
 	percentage := int(li.progress * 100)
-	
+
 	return fmt.Sprintf("%s %3d%% %s",
 		progressStyle.Render(bar.String()),
 		percentage,
@@ -271,7 +271,7 @@ func (li *LoadingIndicator) renderProgress() string {
 func (li *LoadingIndicator) renderDots() string {
 	dots := li.frame % 4
 	dotString := strings.Repeat("●", dots) + strings.Repeat("○", 3-dots)
-	
+
 	return fmt.Sprintf("%s %s",
 		li.theme.Base.Render(li.message),
 		li.theme.StatusInfo.Render(dotString))
@@ -281,7 +281,7 @@ func (li *LoadingIndicator) renderDots() string {
 func (li *LoadingIndicator) renderPulse() string {
 	pulseChars := []string{"◯", "◉", "●", "◉"}
 	char := pulseChars[li.frame%len(pulseChars)]
-	
+
 	return fmt.Sprintf("%s %s",
 		li.theme.StatusInfo.Bold(li.frame%2 == 0).Render(char),
 		li.theme.Base.Render(li.message))
@@ -293,7 +293,7 @@ func (li *LoadingIndicator) renderElastic() string {
 	phase := float64(li.frame%20) / 20.0
 	bounce := math.Sin(phase * math.Pi * 2)
 	spaces := int(math.Abs(bounce * 5))
-	
+
 	return fmt.Sprintf("%s%s %s",
 		strings.Repeat(" ", spaces),
 		li.theme.StatusInfo.Render("●"),
@@ -439,12 +439,12 @@ func (t *Tooltip) Show(ctx context.Context) error {
 	if t.showTimer != nil {
 		t.showTimer.Stop()
 	}
-	
+
 	// Create timer with context awareness
 	t.showTimer = time.AfterFunc(t.delay, func() {
 		t.mu.Lock()
 		defer t.mu.Unlock()
-		
+
 		// Check context before showing
 		if ctx.Err() == nil {
 			t.visible = true
@@ -474,7 +474,7 @@ func (t *Tooltip) Hide(ctx context.Context) error {
 		t.showTimer.Stop()
 		t.showTimer = nil
 	}
-	
+
 	wasVisible := t.visible
 	t.visible = false
 
@@ -500,7 +500,7 @@ func (t *Tooltip) View(ctx context.Context) (string, error) {
 	if !t.visible || t.content == "" {
 		return "", nil
 	}
-	
+
 	// Create tooltip style with rounded corners and shadow effect
 	tooltipStyle := lipgloss.NewStyle().
 		Background(lipgloss.Color("#252526")). // Claude Code surface color
@@ -509,7 +509,7 @@ func (t *Tooltip) View(ctx context.Context) (string, error) {
 		BorderForeground(lipgloss.Color("#007acc")). // Claude Code primary color
 		Padding(0, 1).
 		MarginTop(1)
-	
+
 	return tooltipStyle.Render(t.content), nil
 }
 
@@ -638,12 +638,12 @@ func (si *StatusIndicator) View(ctx context.Context) (string, error) {
 
 	icon := si.getIcon()
 	style := si.getStyle()
-	
+
 	if si.animated && si.status == StatusLoading {
 		return si.renderAnimated(icon, style), nil
 	}
-	
-	return fmt.Sprintf("%s %s", 
+
+	return fmt.Sprintf("%s %s",
 		style.Render(icon),
 		si.theme.Base.Render(si.message)), nil
 }
@@ -689,7 +689,7 @@ func (si *StatusIndicator) renderAnimated(icon string, style lipgloss.Style) str
 	if si.frame%10 < 5 {
 		style = style.Bold(true)
 	}
-	
+
 	return fmt.Sprintf("%s %s",
 		style.Render(icon),
 		si.theme.Base.Render(si.message))
@@ -776,16 +776,16 @@ func (hf *HapticFeedback) Success(ctx context.Context) (string, error) {
 	if !hf.enabled {
 		return "", nil
 	}
-	
+
 	// Green flash effect
 	flashStyle := lipgloss.NewStyle().
 		Background(lipgloss.Color("#3fb950")).
 		Foreground(lipgloss.Color("#ffffff")).
 		Bold(true).
 		Padding(0, 1)
-	
+
 	hf.logger.Debug("success feedback triggered")
-	
+
 	return flashStyle.Render("✓ Success"), nil
 }
 
@@ -803,16 +803,16 @@ func (hf *HapticFeedback) Error(ctx context.Context) (string, error) {
 	if !hf.enabled {
 		return "", nil
 	}
-	
+
 	// Red shake effect
 	flashStyle := lipgloss.NewStyle().
 		Background(lipgloss.Color("#f85149")).
 		Foreground(lipgloss.Color("#ffffff")).
 		Bold(true).
 		Padding(0, 1)
-	
+
 	hf.logger.Debug("error feedback triggered")
-	
+
 	return flashStyle.Render("✗ Error"), nil
 }
 
@@ -830,15 +830,15 @@ func (hf *HapticFeedback) Info(ctx context.Context) (string, error) {
 	if !hf.enabled {
 		return "", nil
 	}
-	
+
 	// Blue highlight effect
 	flashStyle := lipgloss.NewStyle().
 		Background(lipgloss.Color("#58a6ff")).
 		Foreground(lipgloss.Color("#ffffff")).
 		Padding(0, 1)
-	
+
 	hf.logger.Debug("info feedback triggered")
-	
+
 	return flashStyle.Render("ℹ Info"), nil
 }
 
@@ -1095,7 +1095,7 @@ func (am *AccessibilityManager) EnableReducedMotion(ctx context.Context, animato
 	defer am.mu.Unlock()
 
 	am.reducedMotion = true
-	
+
 	if animator != nil {
 		animator.Stop()
 		am.logger.Info("animations disabled for reduced motion")
@@ -1165,32 +1165,32 @@ func (am *AccessibilityManager) GetAccessibilityInfo(ctx context.Context) (strin
 	defer am.mu.RUnlock()
 
 	var info []string
-	
+
 	if am.highContrast {
 		info = append(info, "High Contrast: ON")
 	} else {
 		info = append(info, "High Contrast: OFF")
 	}
-	
+
 	if am.reducedMotion {
 		info = append(info, "Reduced Motion: ON")
 	} else {
 		info = append(info, "Reduced Motion: OFF")
 	}
-	
+
 	if am.screenReader {
 		info = append(info, "Screen Reader: ON")
 	} else {
 		info = append(info, "Screen Reader: OFF")
 	}
-	
+
 	info = append(info, fmt.Sprintf("Font Size: %d", am.fontSize))
-	
+
 	result := strings.Join(info, "\n")
-	
+
 	am.logger.Debug("accessibility info requested",
 		zap.String("info", result))
-	
+
 	return result, nil
 }
 

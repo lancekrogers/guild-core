@@ -134,7 +134,7 @@ The answer to your question is 42.`,
 // TestIntegration_ConcurrentParsing tests thread safety
 func TestIntegration_ConcurrentParsing(t *testing.T) {
 	parser := NewResponseParser()
-	
+
 	// Different inputs to parse concurrently
 	inputs := []string{
 		`{"tool_calls": [{"id": "call_1", "type": "function", "function": {"name": "test1", "arguments": "{}"}}]}`,
@@ -157,7 +157,7 @@ func TestIntegration_ConcurrentParsing(t *testing.T) {
 		wg.Add(1)
 		go func(idx int, in string) {
 			defer wg.Done()
-			
+
 			// Parse multiple times to increase chance of race conditions
 			for j := 0; j < 100; j++ {
 				calls, err := parser.ExtractToolCalls(in)
@@ -195,9 +195,9 @@ func TestIntegration_LargeInputs(t *testing.T) {
 			}
 		}`, i, i, i, strings.Repeat("x", 100)))
 	}
-	
+
 	largeJSON := fmt.Sprintf(`{"tool_calls": [%s]}`, strings.Join(jsonCalls, ","))
-	
+
 	// Add some padding to make it even larger
 	largeInput := strings.Repeat("This is some context. ", 1000) + "\n\n" + largeJSON + "\n\n" + strings.Repeat("More context. ", 1000)
 
@@ -254,8 +254,8 @@ And this is just text that looks like JSON but isn't.`,
 			wantCalls: 1, // Should extract the valid one
 		},
 		{
-			name: "Invalid UTF-8 sequences",
-			input: "Some text " + string([]byte{0xFF, 0xFE}) + `{"id": "call_1", "type": "function", "function": {"name": "test", "arguments": "{}"}}`,
+			name:      "Invalid UTF-8 sequences",
+			input:     "Some text " + string([]byte{0xFF, 0xFE}) + `{"id": "call_1", "type": "function", "function": {"name": "test", "arguments": "{}"}}`,
 			wantCalls: 1, // Should handle invalid UTF-8 gracefully
 		},
 	}
@@ -275,10 +275,10 @@ func TestIntegration_FormatDetectionAccuracy(t *testing.T) {
 	parser := NewResponseParser()
 
 	tests := []struct {
-		name           string
-		input          string
-		wantFormat     ProviderFormat
-		minConfidence  float64
+		name          string
+		input         string
+		wantFormat    ProviderFormat
+		minConfidence float64
 	}{
 		{
 			name:          "Clear JSON format",
@@ -324,13 +324,13 @@ I've initiated the search...`,
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			format, confidence, err := parser.DetectFormat(tt.input)
-			
+
 			if tt.wantFormat == ProviderFormatUnknown {
 				assert.Error(t, err)
 			} else {
 				require.NoError(t, err)
 				assert.Equal(t, tt.wantFormat, format)
-				assert.GreaterOrEqual(t, confidence, tt.minConfidence, 
+				assert.GreaterOrEqual(t, confidence, tt.minConfidence,
 					"Confidence %f is below minimum %f", confidence, tt.minConfidence)
 			}
 		})
@@ -348,12 +348,12 @@ func TestIntegration_ProviderCompatibility(t *testing.T) {
 		wantFunc string
 	}{
 		{
-			name: "OpenAI GPT-4",
+			name:     "OpenAI GPT-4",
 			response: `{"tool_calls": [{"id": "call_JlbpwFCg7t8R1HXuBOxtaVxE", "type": "function", "function": {"name": "get_weather", "arguments": "{\"location\": \"San Francisco, CA\"}"}}]}`,
 			wantFunc: "get_weather",
 		},
 		{
-			name: "OpenAI GPT-3.5",
+			name:     "OpenAI GPT-3.5",
 			response: `{"id": "chatcmpl-123", "choices": [{"message": {"tool_calls": [{"id": "call_abc", "type": "function", "function": {"name": "search", "arguments": "{\"q\": \"test\"}"}}]}}]}`,
 			wantFunc: "search",
 		},
@@ -371,7 +371,7 @@ The result is 4.`,
 			wantFunc: "calculate",
 		},
 		{
-			name: "Single function format (older style)",
+			name:     "Single function format (older style)",
 			response: `{"function": {"name": "translate", "arguments": "{\"text\": \"Hello\", \"to\": \"es\"}"}}`,
 			wantFunc: "translate",
 		},
@@ -394,9 +394,9 @@ func TestIntegration_MemoryLeaks(t *testing.T) {
 	}
 
 	parser := NewResponseParser()
-	
+
 	// Large input to amplify any leaks
-	largeInput := `{"tool_calls": [{"id": "call_mem", "type": "function", "function": {"name": "process", "arguments": "{\"data\": \"` + 
+	largeInput := `{"tool_calls": [{"id": "call_mem", "type": "function", "function": {"name": "process", "arguments": "{\"data\": \"` +
 		strings.Repeat("x", 10000) + `\"}"}}]}`
 
 	// Parse many times
@@ -405,7 +405,7 @@ func TestIntegration_MemoryLeaks(t *testing.T) {
 		calls, err := parser.ExtractToolCalls(largeInput)
 		require.NoError(t, err)
 		require.Len(t, calls, 1)
-		
+
 		// Results should be garbage collected
 		_ = calls
 	}
@@ -434,7 +434,7 @@ func TestIntegration_ComplexArguments(t *testing.T) {
 	}
 
 	argsJSON, _ := json.Marshal(complexArgs)
-	
+
 	input := fmt.Sprintf(`{"tool_calls": [{"id": "complex", "type": "function", "function": {"name": "process_complex", "arguments": %q}}]}`, string(argsJSON))
 
 	calls, err := parser.ExtractToolCalls(input)
@@ -445,6 +445,6 @@ func TestIntegration_ComplexArguments(t *testing.T) {
 	var parsedArgs map[string]interface{}
 	err = json.Unmarshal(calls[0].Function.Arguments, &parsedArgs)
 	require.NoError(t, err)
-	
+
 	assert.Equal(t, complexArgs, parsedArgs)
 }

@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
-	
+
 	"github.com/lancekrogers/guild/pkg/observability"
 )
 
@@ -27,25 +27,25 @@ type ParserMetrics struct {
 	detectionFailures   *prometheus.CounterVec
 	detectionDuration   *prometheus.HistogramVec
 	detectionConfidence *prometheus.HistogramVec
-	
+
 	// Parsing metrics
-	parseAttempts     *prometheus.CounterVec
-	parseSuccesses    *prometheus.CounterVec
-	parseFailures     *prometheus.CounterVec
-	parseDuration     *prometheus.HistogramVec
-	parseErrors       *prometheus.CounterVec
-	
+	parseAttempts  *prometheus.CounterVec
+	parseSuccesses *prometheus.CounterVec
+	parseFailures  *prometheus.CounterVec
+	parseDuration  *prometheus.HistogramVec
+	parseErrors    *prometheus.CounterVec
+
 	// Tool call metrics
 	toolCallsExtracted *prometheus.CounterVec
 	toolCallsPerParse  *prometheus.HistogramVec
-	
+
 	// Format-specific metrics
 	formatDistribution *prometheus.CounterVec
-	
+
 	// Input metrics
 	inputSize          *prometheus.HistogramVec
 	extractionLocation *prometheus.CounterVec
-	
+
 	// Validation metrics
 	validationAttempts *prometheus.CounterVec
 	validationFailures *prometheus.CounterVec
@@ -63,7 +63,7 @@ func InitParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 // createParserMetrics creates a new ParserMetrics instance
 func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 	m := &ParserMetrics{}
-	
+
 	// Detection metrics
 	m.detectionAttempts = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
@@ -74,7 +74,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"detector"},
 	)
-	
+
 	m.detectionSuccesses = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: "guild",
@@ -84,7 +84,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"detector", "format"},
 	)
-	
+
 	m.detectionFailures = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: "guild",
@@ -94,7 +94,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"detector", "reason"},
 	)
-	
+
 	m.detectionDuration = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Namespace: "guild",
@@ -105,7 +105,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"detector", "format"},
 	)
-	
+
 	m.detectionConfidence = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Namespace: "guild",
@@ -116,7 +116,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"detector", "format"},
 	)
-	
+
 	// Parsing metrics
 	m.parseAttempts = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
@@ -127,7 +127,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"format"},
 	)
-	
+
 	m.parseSuccesses = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: "guild",
@@ -137,7 +137,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"format"},
 	)
-	
+
 	m.parseFailures = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: "guild",
@@ -147,7 +147,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"format", "reason"},
 	)
-	
+
 	m.parseDuration = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Namespace: "guild",
@@ -158,7 +158,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"format"},
 	)
-	
+
 	m.parseErrors = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: "guild",
@@ -168,7 +168,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"format", "error_type"},
 	)
-	
+
 	// Tool call metrics
 	m.toolCallsExtracted = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
@@ -179,7 +179,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"format", "tool_name"},
 	)
-	
+
 	m.toolCallsPerParse = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Namespace: "guild",
@@ -190,7 +190,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"format"},
 	)
-	
+
 	// Format distribution
 	m.formatDistribution = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
@@ -201,7 +201,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"format"},
 	)
-	
+
 	// Input metrics
 	m.inputSize = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
@@ -213,7 +213,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"format"},
 	)
-	
+
 	m.extractionLocation = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: "guild",
@@ -223,7 +223,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"location"},
 	)
-	
+
 	// Validation metrics
 	m.validationAttempts = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
@@ -234,7 +234,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"format"},
 	)
-	
+
 	m.validationFailures = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: "guild",
@@ -244,7 +244,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"format", "error_code"},
 	)
-	
+
 	m.validationWarnings = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Namespace: "guild",
@@ -254,7 +254,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		},
 		[]string{"format"},
 	)
-	
+
 	// Register all metrics
 	registry.MustRegister(
 		m.detectionAttempts, m.detectionSuccesses, m.detectionFailures,
@@ -266,7 +266,7 @@ func createParserMetrics(registry prometheus.Registerer) *ParserMetrics {
 		m.inputSize, m.extractionLocation,
 		m.validationAttempts, m.validationFailures, m.validationWarnings,
 	)
-	
+
 	return m
 }
 
@@ -284,10 +284,10 @@ func NewObservableParser(parser ResponseParser) *ObservableParser {
 		// If no global registry, create a new one
 		registry = observability.InitGlobalMetrics(nil)
 	}
-	
+
 	// Initialize parser metrics using the prometheus default registry
 	metrics := InitParserMetrics(prometheus.DefaultRegisterer)
-	
+
 	return &ObservableParser{
 		parser:  parser,
 		metrics: metrics,
@@ -303,55 +303,55 @@ func (o *ObservableParser) ExtractToolCalls(response string) ([]ToolCall, error)
 // ExtractWithContext wraps the parser with metrics collection and context
 func (o *ObservableParser) ExtractWithContext(ctx context.Context, response string) ([]ToolCall, error) {
 	start := time.Now()
-	
+
 	// Record input size
 	o.metrics.inputSize.WithLabelValues("unknown").Observe(float64(len(response)))
-	
+
 	// Detect format first
 	format, confidence, err := o.parser.DetectFormat(response)
 	if err != nil {
 		o.metrics.parseFailures.WithLabelValues(string(format), "detection_failed").Inc()
 		return nil, err
 	}
-	
+
 	// Record format detection metrics
 	o.metrics.formatDistribution.WithLabelValues(string(format)).Inc()
 	o.metrics.detectionConfidence.WithLabelValues("combined", string(format)).Observe(confidence)
-	
+
 	// Record parse attempt
 	o.metrics.parseAttempts.WithLabelValues(string(format)).Inc()
-	
+
 	// Parse tool calls
 	calls, err := o.parser.ExtractWithContext(ctx, response)
-	
+
 	// Record duration
 	duration := time.Since(start)
 	o.metrics.parseDuration.WithLabelValues(string(format)).Observe(duration.Seconds())
-	
+
 	if err != nil {
 		o.metrics.parseFailures.WithLabelValues(string(format), "parse_error").Inc()
 		o.metrics.parseErrors.WithLabelValues(string(format), getErrorType(err)).Inc()
 		return nil, err
 	}
-	
+
 	// Record success metrics
 	o.metrics.parseSuccesses.WithLabelValues(string(format)).Inc()
 	o.metrics.toolCallsPerParse.WithLabelValues(string(format)).Observe(float64(len(calls)))
-	
+
 	// Record individual tool calls
 	for _, call := range calls {
 		o.metrics.toolCallsExtracted.WithLabelValues(string(format), call.Function.Name).Inc()
 	}
-	
+
 	return calls, nil
 }
 
 // DetectFormat wraps format detection with metrics
 func (o *ObservableParser) DetectFormat(response string) (ProviderFormat, float64, error) {
 	start := time.Now()
-	
+
 	format, confidence, err := o.parser.DetectFormat(response)
-	
+
 	// Record detection duration
 	duration := time.Since(start)
 	if err == nil {
@@ -360,14 +360,14 @@ func (o *ObservableParser) DetectFormat(response string) (ProviderFormat, float6
 	} else {
 		o.metrics.detectionFailures.WithLabelValues("combined", "error").Inc()
 	}
-	
+
 	return format, confidence, err
 }
 
 // RecordDetection records detection metrics for individual detectors
 func (o *ObservableParser) RecordDetection(detector string, format ProviderFormat, confidence float64, duration time.Duration, err error) {
 	o.metrics.detectionAttempts.WithLabelValues(detector).Inc()
-	
+
 	if err == nil {
 		o.metrics.detectionSuccesses.WithLabelValues(detector, string(format)).Inc()
 		o.metrics.detectionDuration.WithLabelValues(detector, string(format)).Observe(duration.Seconds())
@@ -380,13 +380,13 @@ func (o *ObservableParser) RecordDetection(detector string, format ProviderForma
 // RecordValidation records validation metrics
 func (o *ObservableParser) RecordValidation(format ProviderFormat, result ValidationResult) {
 	o.metrics.validationAttempts.WithLabelValues(string(format)).Inc()
-	
+
 	if !result.Valid {
 		for _, err := range result.Errors {
 			o.metrics.validationFailures.WithLabelValues(string(format), err.Code).Inc()
 		}
 	}
-	
+
 	for range result.Warnings {
 		o.metrics.validationWarnings.WithLabelValues(string(format)).Inc()
 	}
@@ -402,7 +402,7 @@ func getErrorType(err error) string {
 	if err == nil {
 		return "none"
 	}
-	
+
 	// Check for common error types
 	switch {
 	case isTimeoutError(err):

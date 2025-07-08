@@ -494,7 +494,7 @@ func (m *Model) renderColumnOptimized(colIndex int, col Column, width int, visib
 			cardInfo := visibleCards[i]
 			if cardInfo.Visible || cardInfo.InBuffer {
 				selected := colIndex == m.viewportState.FocusedColumn && i == 0
-				
+
 				var taskView string
 				if m.renderer != nil {
 					// Use optimized renderer with caching
@@ -509,7 +509,7 @@ func (m *Model) renderColumnOptimized(colIndex int, col Column, width int, visib
 					// Fall back to direct rendering
 					taskView = m.renderTask(cardInfo.Card, width, selected)
 				}
-				
+
 				rows = append(rows, taskView)
 			} else {
 				// Empty row for non-visible cards

@@ -90,7 +90,7 @@ func TestCraftRetriever_Creation(t *testing.T) {
 
 	require.NoError(t, err)
 	assert.NotNil(t, retriever)
-	
+
 	// Cast to concrete type to access fields
 	impl, ok := retriever.(*RetrieverImpl)
 	require.True(t, ok)
@@ -131,7 +131,7 @@ func TestGuildRetriever_StrategyManagement(t *testing.T) {
 	// Test adding strategy
 	mockIndexer := &MockKeywordIndexer{}
 	strategy := NewKeywordSearchStrategy(mockIndexer, 0.5)
-	
+
 	err = retriever.AddStrategy(strategy)
 	assert.NoError(t, err)
 	assert.Len(t, retriever.GetStrategies(), 1)

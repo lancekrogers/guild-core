@@ -19,8 +19,8 @@ var (
 var (
 	ErrEventBusNotInitialized = gerror.New(gerror.ErrCodeInternal, "event bus not initialized", nil)
 	ErrInvalidSubscriptionID  = gerror.New(gerror.ErrCodeValidation, "invalid subscription ID", nil)
-	ErrHandlerPanic          = gerror.New(gerror.ErrCodeInternal, "event handler panicked", nil)
-	ErrEventBusClosed        = gerror.New(gerror.ErrCodeInternal, "event bus is closed", nil)
+	ErrHandlerPanic           = gerror.New(gerror.ErrCodeInternal, "event handler panicked", nil)
+	ErrEventBusClosed         = gerror.New(gerror.ErrCodeInternal, "event bus is closed", nil)
 )
 
 // Event publishing errors
@@ -39,7 +39,7 @@ var (
 
 // Event conversion errors
 var (
-	ErrEventConversion = gerror.New(gerror.ErrCodeInternal, "event conversion failed", nil)
-	ErrInvalidJSON     = gerror.New(gerror.ErrCodeValidation, "invalid JSON event", nil)
+	ErrEventConversion    = gerror.New(gerror.ErrCodeInternal, "event conversion failed", nil)
+	ErrInvalidJSON        = gerror.New(gerror.ErrCodeValidation, "invalid JSON event", nil)
 	ErrUnknownEventFormat = gerror.New(gerror.ErrCodeValidation, "unknown event format", nil)
 )

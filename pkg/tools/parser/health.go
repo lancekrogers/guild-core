@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"sync"
 	"time"
-	
+
 	jsonparser "github.com/lancekrogers/guild/pkg/tools/parser/json"
 	xmlparser "github.com/lancekrogers/guild/pkg/tools/parser/xml"
 )
@@ -25,12 +25,12 @@ const (
 
 // HealthCheck represents the health of the parser system
 type HealthCheck struct {
-	Status      HealthStatus           `json:"status"`
-	Timestamp   time.Time              `json:"timestamp"`
-	Uptime      time.Duration          `json:"uptime"`
-	Version     string                 `json:"version"`
-	Checks      map[string]CheckResult `json:"checks"`
-	Metrics     HealthMetrics          `json:"metrics"`
+	Status    HealthStatus           `json:"status"`
+	Timestamp time.Time              `json:"timestamp"`
+	Uptime    time.Duration          `json:"uptime"`
+	Version   string                 `json:"version"`
+	Checks    map[string]CheckResult `json:"checks"`
+	Metrics   HealthMetrics          `json:"metrics"`
 }
 
 // CheckResult represents an individual health check result
@@ -43,16 +43,16 @@ type CheckResult struct {
 
 // HealthMetrics contains key performance metrics
 type HealthMetrics struct {
-	ParseRate          float64 `json:"parse_rate_per_second"`
-	SuccessRate        float64 `json:"success_rate"`
-	AverageLatency     float64 `json:"average_latency_ms"`
-	P95Latency         float64 `json:"p95_latency_ms"`
-	P99Latency         float64 `json:"p99_latency_ms"`
-	ActiveParsers      int     `json:"active_parsers"`
-	TotalParses        int64   `json:"total_parses"`
-	TotalSuccesses     int64   `json:"total_successes"`
-	TotalFailures      int64   `json:"total_failures"`
-	LastParseTime      string  `json:"last_parse_time,omitempty"`
+	ParseRate          float64          `json:"parse_rate_per_second"`
+	SuccessRate        float64          `json:"success_rate"`
+	AverageLatency     float64          `json:"average_latency_ms"`
+	P95Latency         float64          `json:"p95_latency_ms"`
+	P99Latency         float64          `json:"p99_latency_ms"`
+	ActiveParsers      int              `json:"active_parsers"`
+	TotalParses        int64            `json:"total_parses"`
+	TotalSuccesses     int64            `json:"total_successes"`
+	TotalFailures      int64            `json:"total_failures"`
+	LastParseTime      string           `json:"last_parse_time,omitempty"`
 	FormatDistribution map[string]int64 `json:"format_distribution"`
 }
 
@@ -61,26 +61,26 @@ type HealthMonitor struct {
 	parser    ResponseParser
 	startTime time.Time
 	version   string
-	
+
 	mu sync.RWMutex
-	
+
 	// Metrics tracking
 	totalParses    int64
 	totalSuccesses int64
 	totalFailures  int64
 	lastParseTime  time.Time
-	
+
 	// Format distribution
 	formatCounts map[ProviderFormat]int64
-	
+
 	// Latency tracking (in milliseconds)
-	latencies []float64
+	latencies    []float64
 	maxLatencies int
-	
+
 	// Rate calculation
 	rateWindow   time.Duration
 	parseHistory []time.Time
-	
+
 	// Active parser tracking
 	activeParsers int32
 }
@@ -103,7 +103,7 @@ func NewHealthMonitor(parser ResponseParser, version string) *HealthMonitor {
 func (h *HealthMonitor) Check(ctx context.Context) HealthCheck {
 	h.mu.RLock()
 	defer h.mu.RUnlock()
-	
+
 	check := HealthCheck{
 		Timestamp: time.Now(),
 		Uptime:    time.Since(h.startTime),
@@ -111,7 +111,7 @@ func (h *HealthMonitor) Check(ctx context.Context) HealthCheck {
 		Checks:    make(map[string]CheckResult),
 		Metrics:   h.calculateMetrics(),
 	}
-	
+
 	// Run individual health checks
 	checks := []struct {
 		name string
@@ -123,15 +123,15 @@ func (h *HealthMonitor) Check(ctx context.Context) HealthCheck {
 		{"format_detection", h.checkFormatDetection},
 		{"memory_usage", h.checkMemoryUsage},
 	}
-	
+
 	var overallStatus HealthStatus = HealthStatusHealthy
 	degradedCount := 0
 	unhealthyCount := 0
-	
+
 	for _, c := range checks {
 		result := c.fn(ctx)
 		check.Checks[c.name] = result
-		
+
 		switch result.Status {
 		case HealthStatusDegraded:
 			degradedCount++
@@ -139,14 +139,14 @@ func (h *HealthMonitor) Check(ctx context.Context) HealthCheck {
 			unhealthyCount++
 		}
 	}
-	
+
 	// Determine overall status
 	if unhealthyCount > 0 {
 		overallStatus = HealthStatusUnhealthy
 	} else if degradedCount > 0 {
 		overallStatus = HealthStatusDegraded
 	}
-	
+
 	check.Status = overallStatus
 	return check
 }
@@ -154,14 +154,14 @@ func (h *HealthMonitor) Check(ctx context.Context) HealthCheck {
 // checkBasicParsing tests basic parsing functionality
 func (h *HealthMonitor) checkBasicParsing(ctx context.Context) CheckResult {
 	start := time.Now()
-	
+
 	// Test with a simple JSON tool call
 	testInput := `{"function": {"name": "test_tool", "arguments": "{}"}}`
-	
+
 	_, err := h.parser.ExtractWithContext(ctx, testInput)
-	
+
 	latency := time.Since(start)
-	
+
 	if err != nil {
 		return CheckResult{
 			Status:  HealthStatusUnhealthy,
@@ -170,7 +170,7 @@ func (h *HealthMonitor) checkBasicParsing(ctx context.Context) CheckResult {
 			Error:   err.Error(),
 		}
 	}
-	
+
 	// Check latency threshold
 	if latency > 100*time.Millisecond {
 		return CheckResult{
@@ -179,7 +179,7 @@ func (h *HealthMonitor) checkBasicParsing(ctx context.Context) CheckResult {
 			Latency: latency,
 		}
 	}
-	
+
 	return CheckResult{
 		Status:  HealthStatusHealthy,
 		Message: "Basic parsing operational",
@@ -190,13 +190,13 @@ func (h *HealthMonitor) checkBasicParsing(ctx context.Context) CheckResult {
 // checkJSONDetector tests JSON detector health
 func (h *HealthMonitor) checkJSONDetector(ctx context.Context) CheckResult {
 	start := time.Now()
-	
+
 	detector := NewJSONDetector()
 	testInput := []byte(`{"function": {"name": "test"}}`)
-	
+
 	canParse := detector.CanParse(testInput)
 	latency := time.Since(start)
-	
+
 	if !canParse {
 		return CheckResult{
 			Status:  HealthStatusUnhealthy,
@@ -204,7 +204,7 @@ func (h *HealthMonitor) checkJSONDetector(ctx context.Context) CheckResult {
 			Latency: latency,
 		}
 	}
-	
+
 	// Test actual detection
 	result, err := detector.Detect(ctx, testInput)
 	if err != nil || result.Confidence < 0.5 {
@@ -214,7 +214,7 @@ func (h *HealthMonitor) checkJSONDetector(ctx context.Context) CheckResult {
 			Latency: latency,
 		}
 	}
-	
+
 	return CheckResult{
 		Status:  HealthStatusHealthy,
 		Message: fmt.Sprintf("JSON detector operational (confidence: %.2f)", result.Confidence),
@@ -225,13 +225,13 @@ func (h *HealthMonitor) checkJSONDetector(ctx context.Context) CheckResult {
 // checkXMLDetector tests XML detector health
 func (h *HealthMonitor) checkXMLDetector(ctx context.Context) CheckResult {
 	start := time.Now()
-	
+
 	detector := NewXMLDetector()
 	testInput := []byte(`<function_calls><invoke name="test"/></function_calls>`)
-	
+
 	canParse := detector.CanParse(testInput)
 	latency := time.Since(start)
-	
+
 	if !canParse {
 		return CheckResult{
 			Status:  HealthStatusUnhealthy,
@@ -239,7 +239,7 @@ func (h *HealthMonitor) checkXMLDetector(ctx context.Context) CheckResult {
 			Latency: latency,
 		}
 	}
-	
+
 	// Test actual detection
 	result, err := detector.Detect(ctx, testInput)
 	if err != nil || result.Confidence < 0.5 {
@@ -249,7 +249,7 @@ func (h *HealthMonitor) checkXMLDetector(ctx context.Context) CheckResult {
 			Latency: latency,
 		}
 	}
-	
+
 	return CheckResult{
 		Status:  HealthStatusHealthy,
 		Message: fmt.Sprintf("XML detector operational (confidence: %.2f)", result.Confidence),
@@ -260,7 +260,7 @@ func (h *HealthMonitor) checkXMLDetector(ctx context.Context) CheckResult {
 // checkFormatDetection tests format detection accuracy
 func (h *HealthMonitor) checkFormatDetection(ctx context.Context) CheckResult {
 	start := time.Now()
-	
+
 	testCases := []struct {
 		input    string
 		expected ProviderFormat
@@ -274,7 +274,7 @@ func (h *HealthMonitor) checkFormatDetection(ctx context.Context) CheckResult {
 			ProviderFormatAnthropic,
 		},
 	}
-	
+
 	for _, tc := range testCases {
 		format, confidence, err := h.parser.DetectFormat(tc.input)
 		if err != nil || format != tc.expected || confidence < 0.7 {
@@ -285,7 +285,7 @@ func (h *HealthMonitor) checkFormatDetection(ctx context.Context) CheckResult {
 			}
 		}
 	}
-	
+
 	return CheckResult{
 		Status:  HealthStatusHealthy,
 		Message: "Format detection accurate",
@@ -311,12 +311,12 @@ func (h *HealthMonitor) calculateMetrics() HealthMetrics {
 		TotalFailures:      h.totalFailures,
 		FormatDistribution: make(map[string]int64),
 	}
-	
+
 	// Calculate success rate
 	if h.totalParses > 0 {
 		metrics.SuccessRate = float64(h.totalSuccesses) / float64(h.totalParses)
 	}
-	
+
 	// Calculate parse rate
 	now := time.Now()
 	cutoff := now.Add(-h.rateWindow)
@@ -329,7 +329,7 @@ func (h *HealthMonitor) calculateMetrics() HealthMetrics {
 		}
 	}
 	metrics.ParseRate = float64(recentParses) / h.rateWindow.Seconds()
-	
+
 	// Calculate latencies
 	if len(h.latencies) > 0 {
 		sum := 0.0
@@ -337,7 +337,7 @@ func (h *HealthMonitor) calculateMetrics() HealthMetrics {
 			sum += l
 		}
 		metrics.AverageLatency = sum / float64(len(h.latencies))
-		
+
 		// Calculate percentiles
 		if len(h.latencies) >= 20 {
 			sorted := make([]float64, len(h.latencies))
@@ -353,19 +353,19 @@ func (h *HealthMonitor) calculateMetrics() HealthMetrics {
 			}
 		}
 	}
-	
+
 	// Format distribution
 	for format, count := range h.formatCounts {
 		metrics.FormatDistribution[string(format)] = count
 	}
-	
+
 	// Last parse time
 	if !h.lastParseTime.IsZero() {
 		metrics.LastParseTime = h.lastParseTime.Format(time.RFC3339)
 	}
-	
+
 	metrics.ActiveParsers = int(h.activeParsers)
-	
+
 	return metrics
 }
 
@@ -373,25 +373,25 @@ func (h *HealthMonitor) calculateMetrics() HealthMetrics {
 func (h *HealthMonitor) RecordParse(format ProviderFormat, duration time.Duration, success bool) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
-	
+
 	h.totalParses++
 	h.lastParseTime = time.Now()
 	h.parseHistory = append(h.parseHistory, h.lastParseTime)
-	
+
 	// Trim old history
 	if len(h.parseHistory) > 1000 {
 		h.parseHistory = h.parseHistory[len(h.parseHistory)-1000:]
 	}
-	
+
 	if success {
 		h.totalSuccesses++
 	} else {
 		h.totalFailures++
 	}
-	
+
 	// Record format
 	h.formatCounts[format]++
-	
+
 	// Record latency
 	latencyMs := float64(duration.Milliseconds())
 	h.latencies = append(h.latencies, latencyMs)

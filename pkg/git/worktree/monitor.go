@@ -193,13 +193,13 @@ func (cd *ConflictDetector) analyzeFileConflict(ctx context.Context, wt1, wt2 *W
 
 	if diff.HasConflicts() {
 		return &Conflict{
-			ID:        cd.generateConflictID(),
-			File:      file,
-			Worktree1: wt1.ID,
-			Worktree2: wt2.ID,
-			Type:      ConflictTypeContent,
-			Diff:      diff,
-			Severity:  cd.assessConflictSeverity(diff),
+			ID:         cd.generateConflictID(),
+			File:       file,
+			Worktree1:  wt1.ID,
+			Worktree2:  wt2.ID,
+			Type:       ConflictTypeContent,
+			Diff:       diff,
+			Severity:   cd.assessConflictSeverity(diff),
 			DetectedAt: time.Now(),
 		}
 	}
@@ -219,12 +219,12 @@ func (cd *ConflictDetector) detectSemanticConflicts(ctx context.Context, wt1, wt
 		for _, apiChange2 := range api2 {
 			if cd.apiChangesConflict(apiChange1, apiChange2) {
 				conflicts = append(conflicts, Conflict{
-					ID:        cd.generateConflictID(),
-					File:      fmt.Sprintf("%s / %s", apiChange1.File, apiChange2.File),
-					Worktree1: wt1.ID,
-					Worktree2: wt2.ID,
-					Type:      ConflictTypeAPI,
-					Severity:  SeverityHigh,
+					ID:         cd.generateConflictID(),
+					File:       fmt.Sprintf("%s / %s", apiChange1.File, apiChange2.File),
+					Worktree1:  wt1.ID,
+					Worktree2:  wt2.ID,
+					Type:       ConflictTypeAPI,
+					Severity:   SeverityHigh,
 					DetectedAt: time.Now(),
 					Metadata: map[string]interface{}{
 						"api_change_1": apiChange1,

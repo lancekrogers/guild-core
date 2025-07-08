@@ -19,19 +19,19 @@ var (
 			return &kanban.Task{}
 		},
 	}
-	
+
 	columnPool = sync.Pool{
 		New: func() interface{} {
 			return &Column{}
 		},
 	}
-	
+
 	renderInfoPool = sync.Pool{
 		New: func() interface{} {
 			return &CardRenderInfo{}
 		},
 	}
-	
+
 	slicePool = sync.Pool{
 		New: func() interface{} {
 			return make([]*kanban.Task, 0, 50)
@@ -112,15 +112,15 @@ func PutTaskSlice(slice []*kanban.Task) {
 
 // VirtualWindow manages a sliding window of cards for memory efficiency
 type VirtualWindow struct {
-	mu           sync.RWMutex
-	cards        []*kanban.Task
-	startIndex   int
-	endIndex     int
-	totalCount   int
-	windowSize   int
-	centerIndex  int
-	lastAccess   time.Time
-	isDirty      bool
+	mu          sync.RWMutex
+	cards       []*kanban.Task
+	startIndex  int
+	endIndex    int
+	totalCount  int
+	windowSize  int
+	centerIndex int
+	lastAccess  time.Time
+	isDirty     bool
 }
 
 // NewVirtualWindow creates a new virtual window
@@ -139,12 +139,12 @@ func (vw *VirtualWindow) LoadWindow(ctx context.Context, allCards []*kanban.Task
 	vw.totalCount = len(allCards)
 	vw.centerIndex = center
 	vw.lastAccess = time.Now()
-	
+
 	// Calculate window bounds
 	halfWindow := vw.windowSize / 2
 	vw.startIndex = center - halfWindow
 	vw.endIndex = center + halfWindow
-	
+
 	// Clamp to valid bounds
 	if vw.startIndex < 0 {
 		vw.startIndex = 0
@@ -152,7 +152,7 @@ func (vw *VirtualWindow) LoadWindow(ctx context.Context, allCards []*kanban.Task
 	if vw.endIndex > len(allCards) {
 		vw.endIndex = len(allCards)
 	}
-	
+
 	// Adjust start if we're near the end
 	if vw.endIndex-vw.startIndex < vw.windowSize && vw.startIndex > 0 {
 		vw.startIndex = vw.endIndex - vw.windowSize
@@ -162,18 +162,18 @@ func (vw *VirtualWindow) LoadWindow(ctx context.Context, allCards []*kanban.Task
 	}
 
 	windowLen := vw.endIndex - vw.startIndex
-	
+
 	// Reuse existing slice if possible to reduce allocations
 	if cap(vw.cards) >= windowLen {
 		vw.cards = vw.cards[:windowLen]
 	} else {
 		vw.cards = make([]*kanban.Task, windowLen)
 	}
-	
+
 	// Copy cards into window
 	copy(vw.cards, allCards[vw.startIndex:vw.endIndex])
 	vw.isDirty = false
-	
+
 	return nil
 }
 
@@ -181,13 +181,13 @@ func (vw *VirtualWindow) LoadWindow(ctx context.Context, allCards []*kanban.Task
 func (vw *VirtualWindow) GetCards(ctx context.Context) ([]*kanban.Task, error) {
 	vw.mu.RLock()
 	defer vw.mu.RUnlock()
-	
+
 	vw.lastAccess = time.Now()
-	
+
 	// Return a copy to prevent external modification
 	result := make([]*kanban.Task, len(vw.cards))
 	copy(result, vw.cards)
-	
+
 	return result, nil
 }
 
@@ -195,7 +195,7 @@ func (vw *VirtualWindow) GetCards(ctx context.Context) ([]*kanban.Task, error) {
 func (vw *VirtualWindow) GetCard(ctx context.Context, index int) (*kanban.Task, error) {
 	vw.mu.RLock()
 	defer vw.mu.RUnlock()
-	
+
 	if index < vw.startIndex || index >= vw.endIndex {
 		return nil, gerror.New(gerror.ErrCodeNotFound, "card index outside window", nil).
 			WithComponent("kanban.data").
@@ -204,7 +204,7 @@ func (vw *VirtualWindow) GetCard(ctx context.Context, index int) (*kanban.Task, 
 			WithDetails("start", vw.startIndex).
 			WithDetails("end", vw.endIndex)
 	}
-	
+
 	windowIndex := index - vw.startIndex
 	if windowIndex < 0 || windowIndex >= len(vw.cards) {
 		return nil, gerror.New(gerror.ErrCodeNotFound, "invalid window index", nil).
@@ -212,7 +212,7 @@ func (vw *VirtualWindow) GetCard(ctx context.Context, index int) (*kanban.Task, 
 			WithOperation("GetCard").
 			WithDetails("window_index", windowIndex)
 	}
-	
+
 	vw.lastAccess = time.Now()
 	return vw.cards[windowIndex], nil
 }
@@ -221,7 +221,7 @@ func (vw *VirtualWindow) GetCard(ctx context.Context, index int) (*kanban.Task, 
 func (vw *VirtualWindow) Contains(index int) bool {
 	vw.mu.RLock()
 	defer vw.mu.RUnlock()
-	
+
 	return index >= vw.startIndex && index < vw.endIndex
 }
 
@@ -229,7 +229,7 @@ func (vw *VirtualWindow) Contains(index int) bool {
 func (vw *VirtualWindow) GetBounds() (start, end, total int) {
 	vw.mu.RLock()
 	defer vw.mu.RUnlock()
-	
+
 	return vw.startIndex, vw.endIndex, vw.totalCount
 }
 
@@ -237,23 +237,23 @@ func (vw *VirtualWindow) GetBounds() (start, end, total int) {
 func (vw *VirtualWindow) ShouldReload(ctx context.Context, requestedIndex int) bool {
 	vw.mu.RLock()
 	defer vw.mu.RUnlock()
-	
+
 	// Reload if requested index is outside current window
 	if requestedIndex < vw.startIndex || requestedIndex >= vw.endIndex {
 		return true
 	}
-	
+
 	// Reload if we're close to the window edge (prefetch)
 	bufferZone := vw.windowSize / 4
 	if requestedIndex-vw.startIndex < bufferZone || vw.endIndex-requestedIndex < bufferZone {
 		return true
 	}
-	
+
 	// Reload if window is stale
 	if vw.isDirty {
 		return true
 	}
-	
+
 	return false
 }
 
@@ -261,7 +261,7 @@ func (vw *VirtualWindow) ShouldReload(ctx context.Context, requestedIndex int) b
 func (vw *VirtualWindow) MarkDirty() {
 	vw.mu.Lock()
 	defer vw.mu.Unlock()
-	
+
 	vw.isDirty = true
 }
 
@@ -269,7 +269,7 @@ func (vw *VirtualWindow) MarkDirty() {
 func (vw *VirtualWindow) GetMemoryUsage() int64 {
 	vw.mu.RLock()
 	defer vw.mu.RUnlock()
-	
+
 	// Rough estimation
 	const taskSize = 200 // Average bytes per task
 	return int64(len(vw.cards)) * taskSize
@@ -277,26 +277,26 @@ func (vw *VirtualWindow) GetMemoryUsage() int64 {
 
 // CompactCardCache provides efficient storage for large numbers of cards
 type CompactCardCache struct {
-	mu         sync.RWMutex
-	cards      map[string]*CompactCard
-	byStatus   map[kanban.TaskStatus][]string // Card IDs by status
-	maxAge     time.Duration
-	maxSize    int
+	mu          sync.RWMutex
+	cards       map[string]*CompactCard
+	byStatus    map[kanban.TaskStatus][]string // Card IDs by status
+	maxAge      time.Duration
+	maxSize     int
 	lastCleanup time.Time
 }
 
 // CompactCard is a memory-efficient representation of a task
 type CompactCard struct {
-	ID          string
-	Title       string
-	Status      kanban.TaskStatus
-	Priority    kanban.TaskPriority
-	AssignedTo  string
-	Progress    int
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	Hash        uint64 // For change detection
-	LastAccess  time.Time
+	ID         string
+	Title      string
+	Status     kanban.TaskStatus
+	Priority   kanban.TaskPriority
+	AssignedTo string
+	Progress   int
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	Hash       uint64 // For change detection
+	LastAccess time.Time
 }
 
 // NewCompactCardCache creates a new compact card cache
@@ -504,10 +504,10 @@ func (ccc *CompactCardCache) GetStats() map[string]interface{} {
 	}
 
 	return map[string]interface{}{
-		"total_cards":    len(ccc.cards),
-		"max_size":       ccc.maxSize,
-		"status_counts":  statusCounts,
-		"last_cleanup":   ccc.lastCleanup,
+		"total_cards":   len(ccc.cards),
+		"max_size":      ccc.maxSize,
+		"status_counts": statusCounts,
+		"last_cleanup":  ccc.lastCleanup,
 	}
 }
 

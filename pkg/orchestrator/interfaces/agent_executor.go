@@ -11,13 +11,13 @@ import (
 type AgentExecutor interface {
 	// Execute runs a task and returns the result
 	Execute(ctx context.Context, taskID string, payload interface{}) (interface{}, error)
-	
+
 	// GetAgentID returns the ID of the agent
 	GetAgentID() string
-	
+
 	// GetCapabilities returns what types of tasks this executor can handle
 	GetCapabilities() []string
-	
+
 	// IsAvailable checks if the executor can accept new tasks
 	IsAvailable() bool
 }

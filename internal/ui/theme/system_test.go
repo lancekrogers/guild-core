@@ -27,12 +27,12 @@ func TestNewThemeManager(t *testing.T) {
 				if tm == nil {
 					t.Fatal("theme manager should not be nil")
 				}
-				
+
 				themes := tm.ListThemes()
 				if len(themes) == 0 {
 					t.Error("should have default themes")
 				}
-				
+
 				// Should have built-in themes
 				hasLight := false
 				hasDark := false
@@ -44,7 +44,7 @@ func TestNewThemeManager(t *testing.T) {
 						hasDark = true
 					}
 				}
-				
+
 				if !hasLight {
 					t.Error("should have claude-code-light theme")
 				}
@@ -115,26 +115,26 @@ func TestThemeManager_ApplyTheme(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			tm := NewThemeManager()
-			
+
 			if tt.setup != nil {
 				tt.setup(tm)
 			}
-			
+
 			err := tm.ApplyTheme(ctx, tt.themeName)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Error("expected error but got none")
 					return
 				}
-				
+
 				if tt.errCode != "" {
 					var gErr *gerror.GuildError
 					if !gerror.As(err, &gErr) {
 						t.Errorf("expected gerror.GuildError, got %T", err)
 						return
 					}
-					
+
 					if gErr.Code != tt.errCode {
 						t.Errorf("expected error code %v, got %v", tt.errCode, gErr.Code)
 					}
@@ -144,13 +144,13 @@ func TestThemeManager_ApplyTheme(t *testing.T) {
 					t.Errorf("expected no error, got %v", err)
 					return
 				}
-				
+
 				current := tm.GetCurrentTheme()
 				if current == nil {
 					t.Error("current theme should not be nil after applying")
 					return
 				}
-				
+
 				if current.Name != tt.themeName {
 					t.Errorf("expected current theme name %v, got %v", tt.themeName, current.Name)
 				}
@@ -163,7 +163,7 @@ func TestThemeManager_ApplyTheme_ContextCancellation(t *testing.T) {
 	tm := NewThemeManager()
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately
-	
+
 	err := tm.ApplyTheme(ctx, "claude-code-dark")
 	if err == nil {
 		t.Error("expected error due to cancelled context")
@@ -202,17 +202,17 @@ func TestThemeManager_GetComponent(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tm := NewThemeManager()
-			
+
 			if tt.setup != nil {
 				tt.setup(tm)
 			}
-			
+
 			style := tm.GetComponent(tt.componentName)
-			
+
 			// Check if style is effectively empty
 			rendered := style.Render("test")
 			isEmpty := rendered == "test" // No styling applied
-			
+
 			if tt.wantEmpty && !isEmpty {
 				t.Error("expected empty style but got styled result")
 			}
@@ -251,13 +251,13 @@ func TestThemeManager_GetAgentStyle(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tm := NewThemeManager()
-			
+
 			if tt.setup != nil {
 				tt.setup(tm)
 			}
-			
+
 			style := tm.GetAgentStyle(tt.agentID)
-			
+
 			// Should return a valid style (even if empty)
 			rendered := style.Render("test")
 			if rendered == "" {
@@ -269,17 +269,17 @@ func TestThemeManager_GetAgentStyle(t *testing.T) {
 
 func TestThemeManager_LoadThemeFromFile(t *testing.T) {
 	tests := []struct {
-		name     string
-		setup    func() (string, func())
-		wantErr  bool
-		errCode  gerror.ErrorCode
+		name    string
+		setup   func() (string, func())
+		wantErr bool
+		errCode gerror.ErrorCode
 	}{
 		{
 			name: "loads_valid_theme_file",
 			setup: func() (string, func()) {
 				tmpDir := t.TempDir()
 				themeFile := filepath.Join(tmpDir, "test-theme.json")
-				
+
 				themeJSON := `{
 					"name": "test-theme",
 					"display_name": "Test Theme",
@@ -291,12 +291,12 @@ func TestThemeManager_LoadThemeFromFile(t *testing.T) {
 					"created_at": "2025-01-01T00:00:00Z",
 					"updated_at": "2025-01-01T00:00:00Z"
 				}`
-				
+
 				err := os.WriteFile(themeFile, []byte(themeJSON), 0644)
 				if err != nil {
 					t.Fatalf("failed to create test theme file: %v", err)
 				}
-				
+
 				return themeFile, func() {}
 			},
 			wantErr: false,
@@ -314,12 +314,12 @@ func TestThemeManager_LoadThemeFromFile(t *testing.T) {
 			setup: func() (string, func()) {
 				tmpDir := t.TempDir()
 				themeFile := filepath.Join(tmpDir, "invalid-theme.json")
-				
+
 				err := os.WriteFile(themeFile, []byte("invalid json"), 0644)
 				if err != nil {
 					t.Fatalf("failed to create invalid theme file: %v", err)
 				}
-				
+
 				return themeFile, func() {}
 			},
 			wantErr: true,
@@ -331,25 +331,25 @@ func TestThemeManager_LoadThemeFromFile(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			tm := NewThemeManager()
-			
+
 			filePath, cleanup := tt.setup()
 			defer cleanup()
-			
+
 			err := tm.LoadThemeFromFile(ctx, filePath)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Error("expected error but got none")
 					return
 				}
-				
+
 				if tt.errCode != "" {
 					var gErr *gerror.GuildError
 					if !gerror.As(err, &gErr) {
 						t.Errorf("expected gerror.GuildError, got %T", err)
 						return
 					}
-					
+
 					if gErr.Code != tt.errCode {
 						t.Errorf("expected error code %v, got %v", tt.errCode, gErr.Code)
 					}
@@ -390,29 +390,29 @@ func TestThemeManager_ExportTheme(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			tm := NewThemeManager()
-			
+
 			if tt.setup != nil {
 				tt.setup(tm)
 			}
-			
+
 			tmpDir := t.TempDir()
 			outputPath := filepath.Join(tmpDir, "exported-theme.json")
-			
+
 			err := tm.ExportTheme(ctx, tt.themeName, outputPath)
-			
+
 			if tt.wantErr {
 				if err == nil {
 					t.Error("expected error but got none")
 					return
 				}
-				
+
 				if tt.errCode != "" {
 					var gErr *gerror.GuildError
 					if !gerror.As(err, &gErr) {
 						t.Errorf("expected gerror.GuildError, got %T", err)
 						return
 					}
-					
+
 					if gErr.Code != tt.errCode {
 						t.Errorf("expected error code %v, got %v", tt.errCode, gErr.Code)
 					}
@@ -422,7 +422,7 @@ func TestThemeManager_ExportTheme(t *testing.T) {
 					t.Errorf("expected no error, got %v", err)
 					return
 				}
-				
+
 				// Verify file was created
 				if _, err := os.Stat(outputPath); os.IsNotExist(err) {
 					t.Error("exported theme file should exist")
@@ -435,43 +435,43 @@ func TestThemeManager_ExportTheme(t *testing.T) {
 func TestThemeManager_ThreadSafety(t *testing.T) {
 	tm := NewThemeManager()
 	ctx := context.Background()
-	
+
 	var wg sync.WaitGroup
 	numGoroutines := 10
 	numOperations := 100
-	
+
 	// Test concurrent theme applications
 	wg.Add(numGoroutines)
 	for i := 0; i < numGoroutines; i++ {
 		go func(id int) {
 			defer wg.Done()
-			
+
 			for j := 0; j < numOperations; j++ {
 				themeName := "claude-code-dark"
 				if j%2 == 0 {
 					themeName = "claude-code-light"
 				}
-				
+
 				// Apply theme
 				tm.ApplyTheme(ctx, themeName)
-				
+
 				// Get current theme
 				tm.GetCurrentTheme()
-				
+
 				// Get component style
 				tm.GetComponent("button.primary")
-				
+
 				// Get agent style
 				tm.GetAgentStyle("agent-1")
-				
+
 				// List themes
 				tm.ListThemes()
 			}
 		}(i)
 	}
-	
+
 	wg.Wait()
-	
+
 	// Verify final state is consistent
 	current := tm.GetCurrentTheme()
 	if current == nil {
@@ -481,7 +481,7 @@ func TestThemeManager_ThreadSafety(t *testing.T) {
 
 func TestThemeManager_AddObserver(t *testing.T) {
 	tm := NewThemeManager()
-	
+
 	called := false
 	observer := &testThemeObserver{
 		onThemeChanged: func(oldTheme, newTheme *Theme) error {
@@ -489,15 +489,15 @@ func TestThemeManager_AddObserver(t *testing.T) {
 			return nil
 		},
 	}
-	
+
 	tm.AddObserver(observer)
-	
+
 	ctx := context.Background()
 	err := tm.ApplyTheme(ctx, "claude-code-light")
 	if err != nil {
 		t.Fatalf("failed to apply theme: %v", err)
 	}
-	
+
 	if !called {
 		t.Error("observer should have been called")
 	}
@@ -505,15 +505,15 @@ func TestThemeManager_AddObserver(t *testing.T) {
 
 func TestThemeManager_ObserverError(t *testing.T) {
 	tm := NewThemeManager()
-	
+
 	observer := &testThemeObserver{
 		onThemeChanged: func(oldTheme, newTheme *Theme) error {
 			return gerror.New(gerror.ErrCodeInternal, "observer error", nil)
 		},
 	}
-	
+
 	tm.AddObserver(observer)
-	
+
 	ctx := context.Background()
 	// Should still succeed even if observer fails
 	err := tm.ApplyTheme(ctx, "claude-code-light")
@@ -536,7 +536,7 @@ func (t *testThemeObserver) OnThemeChanged(oldTheme, newTheme *Theme) error {
 
 func TestBuiltinThemes(t *testing.T) {
 	tm := NewThemeManager()
-	
+
 	tests := []struct {
 		name      string
 		themeName string
@@ -544,7 +544,7 @@ func TestBuiltinThemes(t *testing.T) {
 		{"claude_code_light_exists", "claude-code-light"},
 		{"claude_code_dark_exists", "claude-code-dark"},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
@@ -552,26 +552,26 @@ func TestBuiltinThemes(t *testing.T) {
 			if err != nil {
 				t.Errorf("built-in theme %s should exist: %v", tt.themeName, err)
 			}
-			
+
 			theme := tm.GetCurrentTheme()
 			if theme == nil {
 				t.Errorf("theme %s should be loaded", tt.themeName)
 				return
 			}
-			
+
 			if theme.Name != tt.themeName {
 				t.Errorf("expected theme name %s, got %s", tt.themeName, theme.Name)
 			}
-			
+
 			// Verify essential theme properties
 			if theme.DisplayName == "" {
 				t.Error("theme should have display name")
 			}
-			
+
 			if theme.Version == "" {
 				t.Error("theme should have version")
 			}
-			
+
 			if theme.Author == "" {
 				t.Error("theme should have author")
 			}
@@ -582,50 +582,50 @@ func TestBuiltinThemes(t *testing.T) {
 func TestThemeColors(t *testing.T) {
 	tm := NewThemeManager()
 	ctx := context.Background()
-	
+
 	err := tm.ApplyTheme(ctx, "claude-code-dark")
 	if err != nil {
 		t.Fatalf("failed to apply theme: %v", err)
 	}
-	
+
 	theme := tm.GetCurrentTheme()
 	if theme == nil {
 		t.Fatal("theme should not be nil")
 	}
-	
+
 	// Test color scheme completeness
 	colors := theme.Colors
-	
+
 	if colors.Primary.Base == "" {
 		t.Error("primary color should be set")
 	}
-	
+
 	if colors.Background.Base == "" {
 		t.Error("background color should be set")
 	}
-	
+
 	if colors.Text.Primary == "" {
 		t.Error("text primary color should be set")
 	}
-	
+
 	// Test dynamic agent color generation
 	// Agent colors start empty and are generated on demand
 	if colors.AgentColors == nil {
 		t.Error("agent colors map should be initialized")
 	}
-	
+
 	// Test that agent color generation works
 	agentStyle := tm.GetAgentStyle("test-agent")
 	// Check if style has any content by checking if it has background color
 	if agentStyle.String() == lipgloss.NewStyle().String() {
 		t.Error("agent style should not be empty")
 	}
-	
+
 	// Verify the agent color was generated and stored
 	if _, exists := colors.AgentColors["test-agent"]; !exists {
 		t.Error("agent color should have been generated and stored")
 	}
-	
+
 	// Verify generated color has required fields
 	if testColor, exists := colors.AgentColors["test-agent"]; exists {
 		if testColor.Base == "" {

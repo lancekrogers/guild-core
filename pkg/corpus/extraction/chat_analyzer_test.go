@@ -16,7 +16,7 @@ import (
 // TestCraftChatAnalyzer tests the creation of a new chat analyzer
 func TestCraftChatAnalyzer(t *testing.T) {
 	ctx := context.Background()
-	
+
 	analyzer, err := NewChatAnalyzer(ctx)
 	require.NoError(t, err)
 	assert.NotNil(t, analyzer)
@@ -32,23 +32,23 @@ func TestJourneymanChatAnalysis(t *testing.T) {
 	require.NoError(t, err)
 
 	tests := []struct {
-		name     string
-		messages []db.ChatMessage
+		name               string
+		messages           []db.ChatMessage
 		wantKnowledgeTypes []KnowledgeType
 	}{
 		{
 			name: "decision conversation",
 			messages: []db.ChatMessage{
 				{
-					ID:      "1",
-					Content: "Should I use React or Vue for this project?",
-					Role:    "user",
+					ID:        "1",
+					Content:   "Should I use React or Vue for this project?",
+					Role:      "user",
 					CreatedAt: &[]time.Time{time.Now()}[0],
 				},
 				{
-					ID:      "2", 
-					Content: "I recommend using React because it has better ecosystem support and more job opportunities.",
-					Role:    "assistant",
+					ID:        "2",
+					Content:   "I recommend using React because it has better ecosystem support and more job opportunities.",
+					Role:      "assistant",
 					CreatedAt: &[]time.Time{time.Now().Add(time.Minute)}[0],
 				},
 			},
@@ -58,15 +58,15 @@ func TestJourneymanChatAnalysis(t *testing.T) {
 			name: "solution conversation",
 			messages: []db.ChatMessage{
 				{
-					ID:      "1",
-					Content: "I'm getting a 'connection refused' error when trying to connect to the database.",
-					Role:    "user",
+					ID:        "1",
+					Content:   "I'm getting a 'connection refused' error when trying to connect to the database.",
+					Role:      "user",
 					CreatedAt: &[]time.Time{time.Now()}[0],
 				},
 				{
-					ID:      "2",
-					Content: "This error typically occurs when the database service isn't running. Try starting the service with 'systemctl start postgresql'.",
-					Role:    "assistant", 
+					ID:        "2",
+					Content:   "This error typically occurs when the database service isn't running. Try starting the service with 'systemctl start postgresql'.",
+					Role:      "assistant",
 					CreatedAt: &[]time.Time{time.Now().Add(time.Minute)}[0],
 				},
 			},
@@ -76,9 +76,9 @@ func TestJourneymanChatAnalysis(t *testing.T) {
 			name: "preference statement",
 			messages: []db.ChatMessage{
 				{
-					ID:      "1",
-					Content: "I prefer using TypeScript over JavaScript for large projects because of better type safety.",
-					Role:    "user",
+					ID:        "1",
+					Content:   "I prefer using TypeScript over JavaScript for large projects because of better type safety.",
+					Role:      "user",
 					CreatedAt: &[]time.Time{time.Now()}[0],
 				},
 			},
@@ -90,16 +90,16 @@ func TestJourneymanChatAnalysis(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			knowledge, err := analyzer.AnalyzeConversation(ctx, tt.messages)
 			require.NoError(t, err)
-			
+
 			// Check that we extracted some knowledge
 			assert.Greater(t, len(knowledge), 0, "Should extract at least one piece of knowledge")
-			
+
 			// Check that we got the expected knowledge types
 			foundTypes := make(map[KnowledgeType]bool)
 			for _, k := range knowledge {
 				foundTypes[k.Type] = true
 			}
-			
+
 			for _, expectedType := range tt.wantKnowledgeTypes {
 				assert.True(t, foundTypes[expectedType], "Should find knowledge type %v", expectedType)
 			}
@@ -122,15 +122,15 @@ func TestGuildExchangeGrouping(t *testing.T) {
 
 	exchanges, err := analyzer.groupIntoExchanges(ctx, messages)
 	require.NoError(t, err)
-	
+
 	// Should have 2 exchanges
 	assert.Len(t, exchanges, 2)
-	
+
 	// First exchange should have messages 1 and 2
 	assert.Len(t, exchanges[0].Messages, 2)
 	assert.Equal(t, "1", exchanges[0].Messages[0].ID)
 	assert.Equal(t, "2", exchanges[0].Messages[1].ID)
-	
+
 	// Second exchange should have messages 3 and 4
 	assert.Len(t, exchanges[1].Messages, 2)
 	assert.Equal(t, "3", exchanges[1].Messages[0].ID)
@@ -159,7 +159,7 @@ func TestScribePatternDetection(t *testing.T) {
 			shouldMatch: "decision",
 		},
 		{
-			name: "solution pattern", 
+			name: "solution pattern",
 			exchange: Exchange{
 				Messages: []db.ChatMessage{
 					{Content: "I have an error with my code", Role: "user"},
@@ -197,10 +197,10 @@ func TestScribePatternDetection(t *testing.T) {
 func TestGuildContextCancellation(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately
-	
+
 	analyzer, err := NewChatAnalyzer(context.Background())
 	require.NoError(t, err)
-	
+
 	// Should handle cancelled context gracefully
 	knowledge, err := analyzer.AnalyzeConversation(ctx, []db.ChatMessage{})
 	assert.Error(t, err)
@@ -212,7 +212,7 @@ func TestJourneymanEmptyMessages(t *testing.T) {
 	ctx := context.Background()
 	analyzer, err := NewChatAnalyzer(ctx)
 	require.NoError(t, err)
-	
+
 	knowledge, err := analyzer.AnalyzeConversation(ctx, []db.ChatMessage{})
 	require.NoError(t, err)
 	assert.Empty(t, knowledge)
@@ -235,7 +235,7 @@ func TestCraftConfidenceCalculation(t *testing.T) {
 	}
 
 	confidence := analyzer.calculateConfidence(ctx, exchange)
-	
+
 	// Should have high confidence due to:
 	// - Multiple messages (>3)
 	// - User question

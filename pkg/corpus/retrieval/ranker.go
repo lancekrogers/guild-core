@@ -30,13 +30,13 @@ func NewResultRanker() *ResultRanker {
 		scorers: make([]Scorer, 0),
 		weights: make(map[string]float64),
 	}
-	
+
 	// Add default scorers with weights
 	ranker.AddScorer(&RecencyScorer{}, 0.15)
 	ranker.AddScorer(&RelevanceScorer{}, 0.35)
 	ranker.AddScorer(&ContextualScorer{}, 0.30)
 	ranker.AddScorer(&AuthorityScorer{}, 0.20)
-	
+
 	return ranker
 }
 
@@ -47,52 +47,52 @@ func (rr *ResultRanker) AddScorer(scorer Scorer, weight float64) error {
 			WithComponent("ResultRanker").
 			WithOperation("AddScorer")
 	}
-	
+
 	if weight < 0 || weight > 1 {
 		return gerror.New(gerror.ErrCodeValidation, "weight must be between 0 and 1", nil).
 			WithComponent("ResultRanker").
 			WithOperation("AddScorer")
 	}
-	
+
 	rr.scorers = append(rr.scorers, scorer)
 	rr.weights[scorer.Name()] = weight
-	
+
 	return nil
 }
 
 // Rank applies all scorers and returns ranked documents
 func (rr *ResultRanker) Rank(docs []Document, query Query) []RankedDocument {
 	ranked := make([]RankedDocument, 0, len(docs))
-	
+
 	for _, doc := range docs {
 		scoreDetails := make(map[string]float64)
-		
+
 		// Start with original document score as base
 		finalScore := doc.Score
 		scoreDetails["original"] = doc.Score
-		
+
 		// Apply each scorer
 		for _, scorer := range rr.scorers {
 			score := scorer.Score(doc, query)
 			scoreDetails[scorer.Name()] = score
-			
+
 			// Apply weight
 			weight := rr.weights[scorer.Name()]
 			finalScore += score * weight
 		}
-		
+
 		ranked = append(ranked, RankedDocument{
 			Document:     doc,
 			FinalScore:   finalScore,
 			ScoreDetails: scoreDetails,
 		})
 	}
-	
+
 	// Sort by final score (highest first)
 	sort.Slice(ranked, func(i, j int) bool {
 		return ranked[i].FinalScore > ranked[j].FinalScore
 	})
-	
+
 	return ranked
 }
 
@@ -109,7 +109,7 @@ func (rs *RecencyScorer) Score(doc Document, query Query) float64 {
 	// Try to get last modified time from metadata
 	if lastModified, ok := doc.Metadata["last_modified"]; ok {
 		var modTime time.Time
-		
+
 		switch t := lastModified.(type) {
 		case time.Time:
 			modTime = t
@@ -123,14 +123,14 @@ func (rs *RecencyScorer) Score(doc Document, query Query) float64 {
 		default:
 			return 0.5 // Default score if type is unexpected
 		}
-		
+
 		age := time.Since(modTime)
-		
+
 		// Exponential decay with weekly half-life
 		// Documents lose half their recency score every week
 		return math.Exp(-age.Hours() * math.Ln2 / 168)
 	}
-	
+
 	// If no timestamp available, return middle score
 	return 0.5
 }
@@ -156,7 +156,7 @@ func (rs *RelevanceScorer) Score(doc Document, query Query) float64 {
 	if baseScore, ok := doc.Metadata["vector_score"].(float64); ok {
 		return baseScore
 	}
-	
+
 	// Fallback to keyword overlap
 	return rs.keywordOverlap(doc.Content, query.Text)
 }
@@ -165,11 +165,11 @@ func (rs *RelevanceScorer) Score(doc Document, query Query) float64 {
 func (rs *RelevanceScorer) keywordOverlap(content, query string) float64 {
 	contentWords := rs.extractWords(strings.ToLower(content))
 	queryWords := rs.extractWords(strings.ToLower(query))
-	
+
 	if len(queryWords) == 0 {
 		return 0.0
 	}
-	
+
 	// Count overlapping words
 	overlap := 0
 	for _, queryWord := range queryWords {
@@ -180,7 +180,7 @@ func (rs *RelevanceScorer) keywordOverlap(content, query string) float64 {
 			}
 		}
 	}
-	
+
 	// Normalize by query length
 	return float64(overlap) / float64(len(queryWords))
 }
@@ -188,14 +188,14 @@ func (rs *RelevanceScorer) keywordOverlap(content, query string) float64 {
 // extractWords extracts words from text, filtering out stop words
 func (rs *RelevanceScorer) extractWords(text string) []string {
 	words := strings.Fields(text)
-	
+
 	// Simple stop words list
 	stopWords := map[string]bool{
 		"the": true, "a": true, "an": true, "and": true, "or": true, "but": true,
 		"in": true, "on": true, "at": true, "to": true, "for": true, "of": true,
 		"with": true, "by": true, "is": true, "are": true, "was": true, "were": true,
 	}
-	
+
 	filtered := make([]string, 0, len(words))
 	for _, word := range words {
 		word = strings.Trim(word, ".,!?;:")
@@ -203,7 +203,7 @@ func (rs *RelevanceScorer) extractWords(text string) []string {
 			filtered = append(filtered, word)
 		}
 	}
-	
+
 	return filtered
 }
 
@@ -218,14 +218,14 @@ func (cs *ContextualScorer) Name() string {
 // Score calculates contextual relevance based on query context
 func (cs *ContextualScorer) Score(doc Document, query Query) float64 {
 	score := 0.0
-	
+
 	// Boost if document mentions current files
 	for _, file := range query.Context.CurrentFiles {
 		if strings.Contains(doc.Content, file) {
 			score += 0.2
 		}
 	}
-	
+
 	// Boost if document has matching tags
 	if docTags, ok := doc.Metadata["tags"]; ok {
 		docTagsSlice := cs.convertToStringSlice(docTags)
@@ -238,14 +238,14 @@ func (cs *ContextualScorer) Score(doc Document, query Query) float64 {
 			}
 		}
 	}
-	
+
 	// Boost if from same agent's previous work
 	if author, ok := doc.Metadata["author"].(string); ok {
 		if author == query.Context.AgentID {
 			score += 0.1
 		}
 	}
-	
+
 	// Boost if document type matches current task context
 	if docType, ok := doc.Metadata["type"].(string); ok {
 		// Determine task type from current files
@@ -254,7 +254,7 @@ func (cs *ContextualScorer) Score(doc Document, query Query) float64 {
 			score += 0.1
 		}
 	}
-	
+
 	// Cap the score at 1.0
 	return math.Min(score, 1.0)
 }
@@ -327,11 +327,11 @@ func (as *AuthorityScorer) Score(doc Document, query Query) float64 {
 			// Normalize view count to 0-1 range (assuming max 100 views)
 			return math.Min(viewCount/100.0, 1.0)
 		}
-		
+
 		// If no citation graph available, return neutral score
 		return 0.5
 	}
-	
+
 	// Use citation graph to get authority score
 	return as.citationGraph.GetAuthority(doc.ID)
 }

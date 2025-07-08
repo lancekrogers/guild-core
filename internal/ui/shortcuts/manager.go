@@ -20,7 +20,7 @@
 //
 //	// Create shortcut manager
 //	manager := NewShortcutManager()
-//	
+//
 //	// Register custom shortcut
 //	err := manager.RegisterShortcut(&Shortcut{
 //		ID:          "custom_action",
@@ -29,10 +29,10 @@
 //		Description: "Perform custom action",
 //		Handler:     customHandler,
 //	})
-//	
+//
 //	// Handle key press
 //	cmd := manager.HandleKeyPress(ctx, "ctrl+shift+p")
-//	
+//
 //	// Open command palette
 //	manager.ShowCommandPalette()
 package shortcuts
@@ -45,8 +45,8 @@ import (
 	"sync"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/bubbles/textinput"
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/lancekrogers/guild/internal/ui"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"go.uber.org/zap"
@@ -73,40 +73,40 @@ type ShortcutManager struct {
 
 // Shortcut represents a keyboard shortcut
 type Shortcut struct {
-	ID          string            `json:"id"`
-	Key         string            `json:"key"`          // Key combination (e.g., "ctrl+k")
-	Command     string            `json:"command"`      // Command to execute
-	Description string            `json:"description"`  // User-friendly description
-	Category    string            `json:"category"`     // Category for organization
-	Context     string            `json:"context"`      // When this shortcut is active
-	Handler     ShortcutHandler   `json:"-"`           // Function to execute
-	Enabled     bool              `json:"enabled"`      // Whether shortcut is active
-	Priority    int               `json:"priority"`     // Resolution priority for conflicts
-	CreatedAt   time.Time         `json:"created_at"`
-	UpdatedAt   time.Time         `json:"updated_at"`
+	ID          string          `json:"id"`
+	Key         string          `json:"key"`         // Key combination (e.g., "ctrl+k")
+	Command     string          `json:"command"`     // Command to execute
+	Description string          `json:"description"` // User-friendly description
+	Category    string          `json:"category"`    // Category for organization
+	Context     string          `json:"context"`     // When this shortcut is active
+	Handler     ShortcutHandler `json:"-"`           // Function to execute
+	Enabled     bool            `json:"enabled"`     // Whether shortcut is active
+	Priority    int             `json:"priority"`    // Resolution priority for conflicts
+	CreatedAt   time.Time       `json:"created_at"`
+	UpdatedAt   time.Time       `json:"updated_at"`
 }
 
 // ShortcutContext defines when shortcuts are active
 type ShortcutContext struct {
-	Name        string                 `json:"name"`
-	Description string                 `json:"description"`
-	Shortcuts   map[string]*Shortcut   `json:"shortcuts"`
-	Parent      *ShortcutContext       `json:"-"` // For inheritance
-	Enabled     bool                   `json:"enabled"`
-	CreatedAt   time.Time              `json:"created_at"`
+	Name        string               `json:"name"`
+	Description string               `json:"description"`
+	Shortcuts   map[string]*Shortcut `json:"shortcuts"`
+	Parent      *ShortcutContext     `json:"-"` // For inheritance
+	Enabled     bool                 `json:"enabled"`
+	CreatedAt   time.Time            `json:"created_at"`
 }
 
 // CommandPalette provides VS Code-style command searching
 type CommandPalette struct {
-	input       textinput.Model
-	commands    []*Command
-	filtered    []*Command
-	selected    int
-	visible     bool
-	width       int
-	height      int
-	theme       string
-	mu          sync.RWMutex
+	input    textinput.Model
+	commands []*Command
+	filtered []*Command
+	selected int
+	visible  bool
+	width    int
+	height   int
+	theme    string
+	mu       sync.RWMutex
 }
 
 // Command represents an executable command
@@ -115,7 +115,7 @@ type Command struct {
 	Name        string         `json:"name"`
 	Description string         `json:"description"`
 	Category    string         `json:"category"`
-	Keywords    []string       `json:"keywords"`    // For search
+	Keywords    []string       `json:"keywords"` // For search
 	Handler     CommandHandler `json:"-"`
 	Shortcut    string         `json:"shortcut,omitempty"`
 	Icon        string         `json:"icon,omitempty"`
@@ -198,7 +198,7 @@ func (sm *ShortcutManager) RegisterShortcut(shortcut *Shortcut) error {
 
 	shortcut.CreatedAt = time.Now()
 	shortcut.UpdatedAt = time.Now()
-	
+
 	sm.shortcuts[shortcut.ID] = shortcut
 
 	// Add to appropriate context
@@ -635,8 +635,8 @@ func (sm *ShortcutManager) checkShortcutConflicts(shortcut *Shortcut) error {
 
 	if existing, exists := context.Shortcuts[shortcut.Key]; exists {
 		if existing.Priority > shortcut.Priority {
-			return gerror.New(gerror.ErrCodeConflict, 
-				fmt.Sprintf("shortcut conflict: key '%s' already bound to '%s' with higher priority", 
+			return gerror.New(gerror.ErrCodeConflict,
+				fmt.Sprintf("shortcut conflict: key '%s' already bound to '%s' with higher priority",
 					shortcut.Key, existing.ID), nil).
 				WithComponent("shortcut-manager").
 				WithOperation("checkShortcutConflicts").
@@ -655,17 +655,17 @@ func (sm *ShortcutManager) normalizeKey(key string) string {
 	key = strings.ReplaceAll(key, "command", "cmd")
 	key = strings.ReplaceAll(key, "control", "ctrl")
 	key = strings.ReplaceAll(key, "option", "alt")
-	
+
 	// Sort modifiers for consistency
 	parts := strings.Split(key, "+")
 	if len(parts) > 1 {
 		modifiers := parts[:len(parts)-1]
 		mainKey := parts[len(parts)-1]
-		
+
 		sort.Strings(modifiers)
 		return strings.Join(modifiers, "+") + "+" + mainKey
 	}
-	
+
 	return key
 }
 
@@ -695,7 +695,7 @@ func NewCommandPalette() *CommandPalette {
 func (cp *CommandPalette) Show() {
 	cp.mu.Lock()
 	defer cp.mu.Unlock()
-	
+
 	cp.visible = true
 	cp.input.Focus()
 	cp.selected = 0
@@ -706,7 +706,7 @@ func (cp *CommandPalette) Show() {
 func (cp *CommandPalette) Hide() {
 	cp.mu.Lock()
 	defer cp.mu.Unlock()
-	
+
 	cp.visible = false
 	cp.input.Blur()
 	cp.input.SetValue("")
@@ -726,10 +726,10 @@ func (cp *CommandPalette) UpdateInput(msg tea.Msg) tea.Cmd {
 
 	var cmd tea.Cmd
 	cp.input, cmd = cp.input.Update(msg)
-	
+
 	// Update filtered commands based on input
 	cp.filterCommands(cp.input.Value())
-	
+
 	return cmd
 }
 
@@ -756,19 +756,19 @@ func (cp *CommandPalette) SelectPrevious() {
 // ExecuteSelected executes the currently selected command
 func (cp *CommandPalette) ExecuteSelected(ctx context.Context) tea.Cmd {
 	cp.mu.Lock()
-	
+
 	var command *Command
 	if len(cp.filtered) > 0 && cp.selected < len(cp.filtered) {
 		command = cp.filtered[cp.selected]
 		command.LastUsed = time.Now()
 		command.UsageCount++
 	}
-	
+
 	cp.mu.Unlock()
-	
+
 	if command != nil {
 		cp.Hide() // Hide after releasing lock to avoid deadlock
-		
+
 		if command.Handler != nil {
 			return command.Handler(ctx, nil)
 		}
@@ -781,7 +781,7 @@ func (cp *CommandPalette) ExecuteSelected(ctx context.Context) tea.Cmd {
 func (cp *CommandPalette) GetFilteredCommands() []*Command {
 	cp.mu.RLock()
 	defer cp.mu.RUnlock()
-	
+
 	return cp.filtered
 }
 
@@ -789,7 +789,7 @@ func (cp *CommandPalette) GetFilteredCommands() []*Command {
 func (cp *CommandPalette) GetSelectedIndex() int {
 	cp.mu.RLock()
 	defer cp.mu.RUnlock()
-	
+
 	return cp.selected
 }
 
@@ -905,11 +905,11 @@ func (cp *CommandPalette) filterCommands(query string) {
 		// Show all commands sorted by usage
 		cp.filtered = make([]*Command, len(cp.commands))
 		copy(cp.filtered, cp.commands)
-		
+
 		sort.Slice(cp.filtered, func(i, j int) bool {
 			return cp.filtered[i].UsageCount > cp.filtered[j].UsageCount
 		})
-		
+
 		cp.selected = 0
 		return
 	}

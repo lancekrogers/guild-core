@@ -41,7 +41,7 @@ type TestingT interface {
 // NewRealProviderIntegrationFramework creates a real provider integration framework
 func NewRealProviderIntegrationFramework(t TestingT) (*RealProviderIntegrationFramework, error) {
 	reg := registry.NewComponentRegistry()
-	
+
 	framework := &RealProviderIntegrationFramework{
 		t:        t,
 		registry: reg,
@@ -106,14 +106,14 @@ type ProviderManager struct {
 
 // ProviderHealth tracks provider health metrics
 type ProviderHealth struct {
-	LastCheck     time.Time
-	Healthy       bool
-	ResponseTime  time.Duration
-	ErrorRate     float64
-	FailureCount  int
-	RecoveryTime  time.Duration
-	CircuitState  CircuitState
-	mu            sync.RWMutex
+	LastCheck    time.Time
+	Healthy      bool
+	ResponseTime time.Duration
+	ErrorRate    float64
+	FailureCount int
+	RecoveryTime time.Duration
+	CircuitState CircuitState
+	mu           sync.RWMutex
 }
 
 // CircuitState represents circuit breaker states
@@ -127,17 +127,17 @@ const (
 
 // ProviderPerformance tracks provider performance metrics
 type ProviderPerformance struct {
-	TotalRequests     int64
+	TotalRequests      int64
 	SuccessfulRequests int64
-	FailedRequests    int64
-	AverageLatency    time.Duration
-	P95Latency        time.Duration
-	P99Latency        time.Duration
-	QualityScore      float64
-	CostEfficiency    float64
-	LastUpdated       time.Time
-	latencies         []time.Duration
-	mu                sync.RWMutex
+	FailedRequests     int64
+	AverageLatency     time.Duration
+	P95Latency         time.Duration
+	P99Latency         time.Duration
+	QualityScore       float64
+	CostEfficiency     float64
+	LastUpdated        time.Time
+	latencies          []time.Duration
+	mu                 sync.RWMutex
 }
 
 // NewProviderManager creates a new provider manager
@@ -174,7 +174,7 @@ func (m *ProviderManager) initializeTestProviders() error {
 		mockProvider := NewMockAIProvider(providerType)
 		m.providers[providerType] = mockProvider
 		m.capabilities[providerType] = mockProvider.GetCapabilities()
-		
+
 		// Initialize health tracking
 		m.health[providerType] = &ProviderHealth{
 			LastCheck:    time.Now(),
@@ -283,15 +283,15 @@ func (m *ProviderManager) GetProviderHealth(providerType providers.ProviderType)
 	// Return a copy to avoid race conditions
 	health.mu.RLock()
 	defer health.mu.RUnlock()
-	
+
 	return &ProviderHealth{
-		LastCheck:     health.LastCheck,
-		Healthy:       health.Healthy,
-		ResponseTime:  health.ResponseTime,
-		ErrorRate:     health.ErrorRate,
-		FailureCount:  health.FailureCount,
-		RecoveryTime:  health.RecoveryTime,
-		CircuitState:  health.CircuitState,
+		LastCheck:    health.LastCheck,
+		Healthy:      health.Healthy,
+		ResponseTime: health.ResponseTime,
+		ErrorRate:    health.ErrorRate,
+		FailureCount: health.FailureCount,
+		RecoveryTime: health.RecoveryTime,
+		CircuitState: health.CircuitState,
 	}, nil
 }
 
@@ -308,7 +308,7 @@ func (m *ProviderManager) GetProviderPerformance(providerType providers.Provider
 	// Return a copy to avoid race conditions
 	perf.mu.RLock()
 	defer perf.mu.RUnlock()
-	
+
 	return &ProviderPerformance{
 		TotalRequests:      perf.TotalRequests,
 		SuccessfulRequests: perf.SuccessfulRequests,
@@ -341,13 +341,13 @@ func (m *ProviderManager) RecordProviderMetrics(providerType providers.ProviderT
 	} else {
 		perf.FailedRequests++
 	}
-	
+
 	// Update latency tracking
 	perf.latencies = append(perf.latencies, latency)
 	if len(perf.latencies) > 1000 {
 		perf.latencies = perf.latencies[len(perf.latencies)-1000:]
 	}
-	
+
 	// Calculate average latency
 	if len(perf.latencies) > 0 {
 		var total time.Duration
@@ -355,12 +355,12 @@ func (m *ProviderManager) RecordProviderMetrics(providerType providers.ProviderT
 			total += l
 		}
 		perf.AverageLatency = total / time.Duration(len(perf.latencies))
-		
+
 		// Calculate percentiles
 		perf.P95Latency = m.calculatePercentile(perf.latencies, 0.95)
 		perf.P99Latency = m.calculatePercentile(perf.latencies, 0.99)
 	}
-	
+
 	perf.LastUpdated = time.Now()
 	perf.mu.Unlock()
 
@@ -372,7 +372,7 @@ func (m *ProviderManager) RecordProviderMetrics(providerType providers.ProviderT
 	}
 	health.ResponseTime = latency
 	health.LastCheck = time.Now()
-	
+
 	// Update circuit breaker state
 	if health.ErrorRate > 0.1 && health.FailureCount > 5 {
 		health.CircuitState = CircuitOpen
@@ -383,7 +383,7 @@ func (m *ProviderManager) RecordProviderMetrics(providerType providers.ProviderT
 		health.CircuitState = CircuitClosed
 		health.Healthy = true
 	}
-	
+
 	health.mu.Unlock()
 }
 
@@ -392,13 +392,13 @@ func (m *ProviderManager) calculatePercentile(latencies []time.Duration, percent
 	if len(latencies) == 0 {
 		return 0
 	}
-	
+
 	// Simple percentile calculation - in production would use proper sorting
 	index := int(float64(len(latencies)) * percentile)
 	if index >= len(latencies) {
 		index = len(latencies) - 1
 	}
-	
+
 	return latencies[index]
 }
 
@@ -437,7 +437,7 @@ func (m *ProviderManager) performHealthChecks(ctx context.Context) {
 // checkProviderHealth checks the health of a specific provider
 func (m *ProviderManager) checkProviderHealth(ctx context.Context, providerType providers.ProviderType, provider interfaces.AIProvider) {
 	start := time.Now()
-	
+
 	// Simple health check - create a minimal request
 	req := interfaces.ChatRequest{
 		Model: "health-check",
@@ -511,18 +511,18 @@ func (m *ProviderManager) updateCapabilities() {
 
 // IntelligentProviderSelector selects optimal providers based on requirements
 type IntelligentProviderSelector struct {
-	manager    *ProviderManager
+	manager          *ProviderManager
 	selectionHistory []ProviderSelection
-	mu         sync.RWMutex
+	mu               sync.RWMutex
 }
 
 // ProviderSelection tracks provider selection decisions
 type ProviderSelection struct {
-	Timestamp   time.Time
-	Provider    providers.ProviderType
-	Reason      SelectionReason
+	Timestamp    time.Time
+	Provider     providers.ProviderType
+	Reason       SelectionReason
 	Requirements TaskRequirements
-	Performance ProviderPerformance
+	Performance  ProviderPerformance
 }
 
 // SelectionReason represents why a provider was selected
@@ -720,7 +720,7 @@ func (s *IntelligentProviderSelector) recordSelection(provider providers.Provide
 	}
 
 	s.selectionHistory = append(s.selectionHistory, selection)
-	
+
 	// Keep only last 1000 selections
 	if len(s.selectionHistory) > 1000 {
 		s.selectionHistory = s.selectionHistory[len(s.selectionHistory)-1000:]
@@ -731,7 +731,7 @@ func (s *IntelligentProviderSelector) recordSelection(provider providers.Provide
 func (s *IntelligentProviderSelector) GetSelectionHistory() []ProviderSelection {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	
+
 	history := make([]ProviderSelection, len(s.selectionHistory))
 	copy(history, s.selectionHistory)
 	return history

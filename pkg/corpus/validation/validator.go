@@ -16,11 +16,11 @@ import (
 
 // KnowledgeValidator provides quality assurance for extracted knowledge
 type KnowledgeValidator struct {
-	rules           []ValidationRule
+	rules            []ValidationRule
 	conflictDetector *ConflictDetector
-	factChecker     *FactChecker
-	knowledgeGraph  *graph.KnowledgeGraph
-	stats           *ValidationStats
+	factChecker      *FactChecker
+	knowledgeGraph   *graph.KnowledgeGraph
+	stats            *ValidationStats
 }
 
 // NewKnowledgeValidator creates a new knowledge validator with default rules
@@ -96,14 +96,14 @@ func (kv *KnowledgeValidator) Validate(ctx context.Context, knowledge extraction
 		}
 
 		ruleResult := rule.Validate(ctx, knowledge)
-		
+
 		if !ruleResult.Valid {
 			result.Valid = false
 			result.Issues = append(result.Issues, ruleResult.Issues...)
 		}
 
 		result.Suggestions = append(result.Suggestions, ruleResult.Suggestions...)
-		
+
 		// Adjust confidence based on rule results
 		result.Confidence *= ruleResult.Confidence
 	}
@@ -128,9 +128,9 @@ func (kv *KnowledgeValidator) Validate(ctx context.Context, knowledge extraction
 		if err == nil && !factResult.Verified {
 			result.Valid = false
 			result.Confidence *= 0.3
-			result.Suggestions = append(result.Suggestions, 
+			result.Suggestions = append(result.Suggestions,
 				"Consider manual verification due to fact-checking concerns")
-			
+
 			if factResult.Explanation != "" {
 				result.Issues = append(result.Issues, ValidationIssue{
 					Type:        "fact_check",
@@ -171,7 +171,7 @@ func (kv *KnowledgeValidator) ValidateBatch(ctx context.Context, knowledgeItems 
 	}
 
 	results := make([]ValidationResult, len(knowledgeItems))
-	
+
 	for i, knowledge := range knowledgeItems {
 		if ctx.Err() != nil {
 			return results, ctx.Err()
@@ -244,7 +244,7 @@ func (cr *CompletenessRule) GetType() string { return "completeness" }
 
 func (cr *CompletenessRule) Validate(ctx context.Context, k extraction.ExtractedKnowledge) ValidationResult {
 	result := ValidationResult{
-		Valid:       true, 
+		Valid:       true,
 		Confidence:  1.0,
 		Issues:      []ValidationIssue{},
 		Suggestions: []string{},
@@ -345,7 +345,7 @@ func (cr *ConsistencyRule) isInconsistent(new extraction.ExtractedKnowledge, exi
 
 	for _, pair := range contradictoryPairs {
 		if (strings.Contains(newLower, pair[0]) && strings.Contains(existingLower, pair[1])) ||
-		   (strings.Contains(newLower, pair[1]) && strings.Contains(existingLower, pair[0])) {
+			(strings.Contains(newLower, pair[1]) && strings.Contains(existingLower, pair[0])) {
 			return true
 		}
 	}

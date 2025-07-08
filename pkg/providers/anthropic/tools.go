@@ -78,7 +78,7 @@ func (c *Client) ChatCompletionWithTools(ctx context.Context, req interfaces.Cha
 	if len(req.Tools) > 0 {
 		anthropicTools := c.convertToolsToAnthropicFormat(req.Tools)
 		anthropicReq["tools"] = anthropicTools
-		
+
 		// Handle tool choice
 		if req.ToolChoice != nil {
 			switch tc := req.ToolChoice.(type) {
@@ -164,8 +164,8 @@ func (c *Client) ChatCompletionWithTools(ctx context.Context, req interfaces.Cha
 			// Convert parser format to interface format
 			for _, pc := range parsedCalls {
 				toolCall := interfaces.ToolCall{
-					ID:       pc.ID,
-					Type:     pc.Type,
+					ID:   pc.ID,
+					Type: pc.Type,
 					Function: interfaces.Function{
 						Name:      pc.Function.Name,
 						Arguments: pc.Function.Arguments,
@@ -213,13 +213,13 @@ func (c *Client) ChatCompletionWithTools(ctx context.Context, req interfaces.Cha
 // convertToolsToAnthropicFormat converts standard tool definitions to Anthropic's format
 func (c *Client) convertToolsToAnthropicFormat(tools []interfaces.ToolDefinition) []map[string]interface{} {
 	anthropicTools := make([]map[string]interface{}, len(tools))
-	
+
 	for i, tool := range tools {
 		anthropicTool := map[string]interface{}{
 			"name":        tool.Function.Name,
 			"description": tool.Function.Description,
 		}
-		
+
 		// Parse and include the parameters schema
 		if len(tool.Function.Parameters) > 0 {
 			var schema map[string]interface{}
@@ -227,10 +227,10 @@ func (c *Client) convertToolsToAnthropicFormat(tools []interfaces.ToolDefinition
 				anthropicTool["input_schema"] = schema
 			}
 		}
-		
+
 		anthropicTools[i] = anthropicTool
 	}
-	
+
 	return anthropicTools
 }
 

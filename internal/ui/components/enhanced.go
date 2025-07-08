@@ -20,7 +20,7 @@
 //
 //	// Create component library
 //	library := NewComponentLibrary(themeManager, animator)
-//	
+//
 //	// Render enhanced button
 //	button := Button{
 //		Text:    "Create Commission",
@@ -29,7 +29,7 @@
 //		OnClick: handleCreateCommission,
 //	}
 //	rendered := library.RenderButton(ctx, button)
-//	
+//
 //	// Render agent badge
 //	badge := AgentBadge{
 //		AgentID:  "agent-1",
@@ -47,11 +47,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/charmbracelet/lipgloss"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/lancekrogers/guild/internal/ui"
-	"github.com/lancekrogers/guild/internal/ui/theme"
 	"github.com/lancekrogers/guild/internal/ui/animation"
+	"github.com/lancekrogers/guild/internal/ui/theme"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"go.uber.org/zap"
 )
@@ -84,15 +84,15 @@ func NewComponentLibrary(themeManager *theme.ThemeManager, animator *animation.A
 
 // Button represents an enhanced button component
 type Button struct {
-	Text     string          `json:"text"`
-	Variant  ButtonVariant   `json:"variant"`
-	Size     ButtonSize      `json:"size"`
-	State    ButtonState     `json:"state"`
-	Icon     string          `json:"icon,omitempty"`
-	OnClick  tea.Cmd         `json:"-"`
-	Disabled bool            `json:"disabled"`
-	Loading  bool            `json:"loading"`
-	Width    int             `json:"width,omitempty"`
+	Text     string        `json:"text"`
+	Variant  ButtonVariant `json:"variant"`
+	Size     ButtonSize    `json:"size"`
+	State    ButtonState   `json:"state"`
+	Icon     string        `json:"icon,omitempty"`
+	OnClick  tea.Cmd       `json:"-"`
+	Disabled bool          `json:"disabled"`
+	Loading  bool          `json:"loading"`
+	Width    int           `json:"width,omitempty"`
 }
 
 // ButtonVariant defines button styling variants
@@ -172,16 +172,16 @@ func (cl *ComponentLibrary) RenderButton(ctx context.Context, button Button) (st
 
 // Modal represents an enhanced modal component
 type Modal struct {
-	Title       string              `json:"title"`
-	Content     string              `json:"content"`
-	Width       int                 `json:"width"`
-	Height      int                 `json:"height"`
-	Closable    bool                `json:"closable"`
-	Backdrop    bool                `json:"backdrop"`
-	Animation   ModalAnimation      `json:"animation"`
-	Buttons     []Button            `json:"buttons"`
-	OnClose     tea.Cmd             `json:"-"`
-	CustomClass string              `json:"custom_class,omitempty"`
+	Title       string         `json:"title"`
+	Content     string         `json:"content"`
+	Width       int            `json:"width"`
+	Height      int            `json:"height"`
+	Closable    bool           `json:"closable"`
+	Backdrop    bool           `json:"backdrop"`
+	Animation   ModalAnimation `json:"animation"`
+	Buttons     []Button       `json:"buttons"`
+	OnClose     tea.Cmd        `json:"-"`
+	CustomClass string         `json:"custom_class,omitempty"`
 }
 
 // ModalAnimation defines modal animation types
@@ -249,12 +249,12 @@ func (cl *ComponentLibrary) RenderModal(ctx context.Context, modal Modal) (strin
 			}
 			buttons[i] = rendered
 		}
-		
+
 		buttonRowStyle := lipgloss.NewStyle().
 			Width(modal.Width - 2).
 			Align(lipgloss.Right).
 			MarginTop(1)
-		
+
 		buttonRow = buttonRowStyle.Render(strings.Join(buttons, " "))
 	}
 
@@ -269,7 +269,7 @@ func (cl *ComponentLibrary) RenderModal(ctx context.Context, modal Modal) (strin
 
 	// Assemble modal content
 	modalContent := lipgloss.JoinVertical(lipgloss.Left,
-		titleStyle.Render(modal.Title + closeButton),
+		titleStyle.Render(modal.Title+closeButton),
 		contentStyle.Render(modal.Content),
 		buttonRow,
 	)
@@ -279,8 +279,8 @@ func (cl *ComponentLibrary) RenderModal(ctx context.Context, modal Modal) (strin
 	// Add backdrop if enabled
 	if modal.Backdrop {
 		backdropStyle := lipgloss.NewStyle().
-			Width(100).  // Would be terminal width in real implementation
-			Height(30).  // Would be terminal height in real implementation
+			Width(100). // Would be terminal width in real implementation
+			Height(30). // Would be terminal height in real implementation
 			Background(lipgloss.Color("#000000")).
 			AlignHorizontal(lipgloss.Center).
 			AlignVertical(lipgloss.Center)
@@ -362,7 +362,7 @@ func (cl *ComponentLibrary) RenderAgentBadge(ctx context.Context, badge AgentBad
 
 	// Get status indicator
 	statusIndicator := cl.getAgentStatusIndicator(badge.Status, badge.Animated)
-	
+
 	// Prepare content
 	content := statusIndicator
 	if badge.ShowName {
@@ -379,13 +379,13 @@ func (cl *ComponentLibrary) RenderAgentBadge(ctx context.Context, badge AgentBad
 
 // ProgressBar represents an enhanced progress indicator
 type ProgressBar struct {
-	Progress    float64 `json:"progress"`    // 0.0 to 1.0
-	Width       int     `json:"width"`
-	Height      int     `json:"height"`
-	ShowPercent bool    `json:"show_percent"`
-	ShowLabel   bool    `json:"show_label"`
-	Label       string  `json:"label,omitempty"`
-	Animated    bool    `json:"animated"`
+	Progress    float64       `json:"progress"` // 0.0 to 1.0
+	Width       int           `json:"width"`
+	Height      int           `json:"height"`
+	ShowPercent bool          `json:"show_percent"`
+	ShowLabel   bool          `json:"show_label"`
+	Label       string        `json:"label,omitempty"`
+	Animated    bool          `json:"animated"`
 	Style       ProgressStyle `json:"style"`
 }
 
@@ -393,7 +393,7 @@ type ProgressBar struct {
 type ProgressStyle int
 
 const (
-	ProgressStyleBar    ProgressStyle = iota
+	ProgressStyleBar ProgressStyle = iota
 	ProgressCircle
 	ProgressRing
 	ProgressDots
@@ -423,7 +423,7 @@ func (cl *ComponentLibrary) RenderProgressBar(ctx context.Context, progress Prog
 	case ProgressCircle:
 		return cl.renderCircularProgress(progress, theme), nil
 	case ProgressRing:
-			return cl.renderRingProgress(progress, theme), nil
+		return cl.renderRingProgress(progress, theme), nil
 	case ProgressDots:
 		return cl.renderDotProgress(progress, theme), nil
 	default:
@@ -433,13 +433,13 @@ func (cl *ComponentLibrary) RenderProgressBar(ctx context.Context, progress Prog
 
 // ChatMessage represents an enhanced chat message component
 type ChatMessage struct {
-	Content   string        `json:"content"`
-	AgentID   string        `json:"agent_id"`
-	Timestamp time.Time     `json:"timestamp"`
-	Type      MessageType   `json:"type"`
-	Reactions []Reaction    `json:"reactions"`
-	Metadata  MessageMeta   `json:"metadata"`
-	Animated  bool          `json:"animated"`
+	Content   string      `json:"content"`
+	AgentID   string      `json:"agent_id"`
+	Timestamp time.Time   `json:"timestamp"`
+	Type      MessageType `json:"type"`
+	Reactions []Reaction  `json:"reactions"`
+	Metadata  MessageMeta `json:"metadata"`
+	Animated  bool        `json:"animated"`
 }
 
 // MessageType defines message types
@@ -457,20 +457,20 @@ const (
 
 // Reaction represents a message reaction
 type Reaction struct {
-	Emoji   string `json:"emoji"`
-	Count   int    `json:"count"`
-	Users   []string `json:"users"`
-	Active  bool   `json:"active"` // If current user reacted
+	Emoji  string   `json:"emoji"`
+	Count  int      `json:"count"`
+	Users  []string `json:"users"`
+	Active bool     `json:"active"` // If current user reacted
 }
 
 // MessageMeta contains message metadata
 type MessageMeta struct {
-	Edited    bool      `json:"edited"`
-	EditedAt  time.Time `json:"edited_at,omitempty"`
-	ThreadID  string    `json:"thread_id,omitempty"`
-	ReplyTo   string    `json:"reply_to,omitempty"`
-	Mentions  []string  `json:"mentions"`
-	Tags      []string  `json:"tags"`
+	Edited   bool      `json:"edited"`
+	EditedAt time.Time `json:"edited_at,omitempty"`
+	ThreadID string    `json:"thread_id,omitempty"`
+	ReplyTo  string    `json:"reply_to,omitempty"`
+	Mentions []string  `json:"mentions"`
+	Tags     []string  `json:"tags"`
 }
 
 // RenderChatMessage renders an enhanced chat message with agent styling
@@ -493,30 +493,30 @@ func (cl *ComponentLibrary) RenderChatMessage(ctx context.Context, message ChatM
 
 	// Message bubble styling based on type
 	bubbleStyle := cl.getMessageBubbleStyle(message.Type, theme)
-	
+
 	// Header with agent info and timestamp
 	headerStyle := lipgloss.NewStyle().
 		Foreground(lipgloss.Color(theme.Colors.Text.Secondary)).
 		Bold(true).
 		PaddingBottom(1)
-	
+
 	header := cl.formatMessageHeader(message, theme)
-	
+
 	// Content styling
 	contentStyle := lipgloss.NewStyle().
 		Foreground(lipgloss.Color(theme.Colors.Text.Primary)).
 		PaddingLeft(1).
 		PaddingRight(1)
-	
+
 	// Reactions if any
 	reactionsRow := ""
 	if len(message.Reactions) > 0 {
 		reactionsRow = cl.renderReactions(message.Reactions, theme)
 	}
-	
+
 	// Metadata indicators
 	metaIndicators := cl.renderMessageMetadata(message.Metadata, theme)
-	
+
 	// Assemble message
 	messageContent := lipgloss.JoinVertical(lipgloss.Left,
 		headerStyle.Render(header),
@@ -524,7 +524,7 @@ func (cl *ComponentLibrary) RenderChatMessage(ctx context.Context, message ChatM
 		reactionsRow,
 		metaIndicators,
 	)
-	
+
 	return bubbleStyle.Render(messageContent), nil
 }
 
@@ -534,7 +534,7 @@ func (cl *ComponentLibrary) getButtonBaseStyle(variant ButtonVariant) lipgloss.S
 	if cl.themeManager == nil {
 		return lipgloss.NewStyle()
 	}
-	
+
 	theme := cl.themeManager.GetCurrentTheme()
 	if theme == nil {
 		return lipgloss.NewStyle()
@@ -625,11 +625,11 @@ func (cl *ComponentLibrary) applyButtonState(style lipgloss.Style, state ButtonS
 
 func (cl *ComponentLibrary) prepareButtonContent(button Button) string {
 	content := button.Text
-	
+
 	if button.Icon != "" {
 		content = button.Icon + " " + content
 	}
-	
+
 	return content
 }
 
@@ -677,7 +677,7 @@ func (cl *ComponentLibrary) formatAgentName(agentID string) string {
 		}
 		return strings.Join(result, " ")
 	}
-	
+
 	// Single word, capitalize first letter
 	if len(agentID) > 0 {
 		return strings.ToUpper(agentID[:1]) + agentID[1:]
@@ -712,7 +712,7 @@ func (cl *ComponentLibrary) renderLinearProgress(progress ProgressBar, theme *th
 	emptyStyle := lipgloss.NewStyle().Background(lipgloss.Color(theme.Colors.Surface.Dark))
 
 	bar := filledStyle.Render(strings.Repeat("█", filled)) +
-		  emptyStyle.Render(strings.Repeat("░", empty))
+		emptyStyle.Render(strings.Repeat("░", empty))
 
 	result := bar
 
@@ -735,18 +735,18 @@ func (cl *ComponentLibrary) renderCircularProgress(progress ProgressBar, theme *
 	// Simplified circular progress using Unicode characters
 	percentage := int(progress.Progress * 8)
 	circles := []string{"○", "◔", "◑", "◕", "●", "●", "●", "●", "●"}
-	
+
 	if percentage >= len(circles) {
 		percentage = len(circles) - 1
 	}
-	
+
 	circle := circles[percentage]
-	
+
 	if progress.ShowPercent {
 		percent := fmt.Sprintf("%.0f%%", progress.Progress*100)
 		return circle + " " + percent
 	}
-	
+
 	return circle
 }
 
@@ -754,21 +754,21 @@ func (cl *ComponentLibrary) renderRingProgress(progress ProgressBar, theme *them
 	// Ring progress using box drawing characters
 	segments := 8
 	filled := int(progress.Progress * float64(segments))
-	
+
 	ring := "◯"
 	if filled >= segments/2 {
 		ring = "◉"
 	} else if filled > 0 {
 		ring = "◐"
 	}
-	
+
 	return ring
 }
 
 func (cl *ComponentLibrary) renderDotProgress(progress ProgressBar, theme *theme.Theme) string {
 	dots := 5
 	filled := int(progress.Progress * float64(dots))
-	
+
 	result := ""
 	for i := 0; i < dots; i++ {
 		if i < filled {
@@ -777,7 +777,7 @@ func (cl *ComponentLibrary) renderDotProgress(progress ProgressBar, theme *theme
 			result += "○"
 		}
 	}
-	
+
 	return result
 }
 
@@ -822,10 +822,10 @@ func (cl *ComponentLibrary) getMessageBubbleStyle(msgType MessageType, theme *th
 func (cl *ComponentLibrary) formatMessageHeader(message ChatMessage, theme *theme.Theme) string {
 	agentName := cl.formatAgentName(message.AgentID)
 	timestamp := message.Timestamp.Format("15:04")
-	
+
 	nameStyle := lipgloss.NewStyle().Bold(true)
 	timeStyle := lipgloss.NewStyle().Foreground(lipgloss.Color(theme.Colors.Text.Muted))
-	
+
 	return nameStyle.Render(agentName) + " " + timeStyle.Render(timestamp)
 }
 
@@ -847,12 +847,12 @@ func (cl *ComponentLibrary) renderReactions(reactions []Reaction, theme *theme.T
 		if reaction.Count > 1 {
 			content += fmt.Sprintf(" %d", reaction.Count)
 		}
-		
+
 		style := reactionStyle
 		if reaction.Active {
 			style = style.Background(lipgloss.Color(theme.Colors.Primary.Light))
 		}
-		
+
 		rendered = append(rendered, style.Render(content))
 	}
 

@@ -16,16 +16,16 @@ import (
 // TestCraftCodeAnalyzer tests the creation of a new code analyzer
 func TestCraftCodeAnalyzer(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Create a temporary directory for testing
 	tempDir, err := os.MkdirTemp("", "test-repo-*")
 	require.NoError(t, err)
 	defer os.RemoveAll(tempDir)
-	
+
 	// Initialize a git repository in the temp directory
 	err = exec.Command("git", "init", tempDir).Run()
 	require.NoError(t, err)
-	
+
 	analyzer, err := NewCodeAnalyzer(ctx, tempDir)
 	require.NoError(t, err)
 	assert.NotNil(t, analyzer)
@@ -39,7 +39,7 @@ func TestCraftCodeAnalyzer(t *testing.T) {
 func TestJourneymanCodeAnalyzerContextCancellation(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately
-	
+
 	// Should handle cancelled context gracefully
 	analyzer, err := NewCodeAnalyzer(ctx, "/tmp/test-repo")
 	assert.Error(t, err)

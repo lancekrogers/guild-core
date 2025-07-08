@@ -38,15 +38,15 @@ type CredentialStore struct {
 
 // ProviderCredentials stores credentials for a provider
 type ProviderCredentials struct {
-	Provider      providers.ProviderType
-	APIKey        string
-	SecretKey     string
-	TokenType     TokenType
-	ExpiresAt     *time.Time
-	LastRotated   time.Time
+	Provider       providers.ProviderType
+	APIKey         string
+	SecretKey      string
+	TokenType      TokenType
+	ExpiresAt      *time.Time
+	LastRotated    time.Time
 	RotationPolicy RotationPolicy
-	Encrypted     bool
-	Metadata      map[string]string
+	Encrypted      bool
+	Metadata       map[string]string
 }
 
 // TokenType represents different token types
@@ -70,21 +70,21 @@ type RotationPolicy struct {
 
 // AuthenticationManager manages authentication flows
 type AuthenticationManager struct {
-	providers      map[providers.ProviderType]*ProviderAuthConfig
-	tokenCache     map[string]*CachedToken
-	refreshTokens  map[providers.ProviderType]string
-	mu             sync.RWMutex
+	providers     map[providers.ProviderType]*ProviderAuthConfig
+	tokenCache    map[string]*CachedToken
+	refreshTokens map[providers.ProviderType]string
+	mu            sync.RWMutex
 }
 
 // ProviderAuthConfig configures authentication for a provider
 type ProviderAuthConfig struct {
-	Provider      providers.ProviderType
-	AuthType      AuthenticationType
-	Endpoint      string
-	Scopes        []string
-	TokenExpiry   time.Duration
+	Provider       providers.ProviderType
+	AuthType       AuthenticationType
+	Endpoint       string
+	Scopes         []string
+	TokenExpiry    time.Duration
 	RefreshEnabled bool
-	RetryConfig   AuthRetryConfig
+	RetryConfig    AuthRetryConfig
 }
 
 // AuthenticationType represents authentication types
@@ -158,15 +158,15 @@ const (
 
 // SecurityAnomaly represents detected security anomalies
 type SecurityAnomaly struct {
-	ID           string
-	Timestamp    time.Time
-	Provider     providers.ProviderType
-	AnomalyType  AnomalyType
-	Confidence   float64
-	Description  string
-	Baseline     float64
-	Observed     float64
-	ActionTaken  string
+	ID          string
+	Timestamp   time.Time
+	Provider    providers.ProviderType
+	AnomalyType AnomalyType
+	Confidence  float64
+	Description string
+	Baseline    float64
+	Observed    float64
+	ActionTaken string
 }
 
 // AnomalyType represents types of security anomalies
@@ -199,11 +199,11 @@ type RotationSchedule struct {
 
 // RotationNotification represents a rotation notification
 type RotationNotification struct {
-	Provider    providers.ProviderType
-	Type        NotificationType
-	DaysUntil   int
-	Message     string
-	Timestamp   time.Time
+	Provider  providers.ProviderType
+	Type      NotificationType
+	DaysUntil int
+	Message   string
+	Timestamp time.Time
 }
 
 // NotificationType represents notification types
@@ -223,15 +223,15 @@ type AuditLogger struct {
 
 // AuditEntry represents an audit log entry
 type AuditEntry struct {
-	ID          string
-	Timestamp   time.Time
-	Action      AuditAction
-	Provider    providers.ProviderType
-	UserID      string
-	IPAddress   string
-	UserAgent   string
-	Success     bool
-	Details     map[string]interface{}
+	ID        string
+	Timestamp time.Time
+	Action    AuditAction
+	Provider  providers.ProviderType
+	UserID    string
+	IPAddress string
+	UserAgent string
+	Success   bool
+	Details   map[string]interface{}
 }
 
 // AuditAction represents auditable actions
@@ -462,11 +462,11 @@ func NewSecurityMonitor() (*SecurityMonitor, error) {
 		events:    make([]SecurityEvent, 0),
 		anomalies: make([]SecurityAnomaly, 0),
 		alertThresholds: map[SecurityEventType]int{
-			SecurityEventTypeCredentialAccess:       10,  // Alert after 10 accesses in short time
-			SecurityEventTypeUnauthorizedRequest:    5,   // Alert after 5 unauthorized requests
-			SecurityEventTypeAuthenticationFailure:  3,   // Alert after 3 auth failures
-			SecurityEventTypeAnomalousUsage:         1,   // Alert immediately on anomalous usage
-			SecurityEventTypeAPIQuotaExceeded:       1,   // Alert immediately on quota exceeded
+			SecurityEventTypeCredentialAccess:      10, // Alert after 10 accesses in short time
+			SecurityEventTypeUnauthorizedRequest:   5,  // Alert after 5 unauthorized requests
+			SecurityEventTypeAuthenticationFailure: 3,  // Alert after 3 auth failures
+			SecurityEventTypeAnomalousUsage:        1,  // Alert immediately on anomalous usage
+			SecurityEventTypeAPIQuotaExceeded:      1,  // Alert immediately on quota exceeded
 		},
 	}
 
@@ -728,7 +728,7 @@ func (em *EncryptionManager) Decrypt(encryptedData string) (string, error) {
 // RecordSecurityEvent records a security event
 func (sm *SecurityManager) RecordSecurityEvent(eventType SecurityEventType, provider providers.ProviderType, severity SecuritySeverity, description string, metadata map[string]interface{}) {
 	sm.securityMonitor.RecordEvent(eventType, provider, severity, description, metadata)
-	
+
 	// Log to audit trail
 	sm.auditLogger.LogAction(AuditActionSecurityEvent, provider, "", "", "", true, map[string]interface{}{
 		"event_type":  eventType,
@@ -949,7 +949,7 @@ func (kr *KeyRotator) checkRotationSchedules() {
 func (kr *KeyRotator) rotateCredentials(provider providers.ProviderType) error {
 	// Mock credential rotation - in production this would call provider APIs
 	newAPIKey := "rotated-key-" + generateRandomString(32)
-	
+
 	credentials, err := kr.credentialStore.GetCredentials(provider)
 	if err != nil {
 		return err
@@ -1044,7 +1044,7 @@ func (sm *SecurityManager) AuthenticateProvider(ctx context.Context, provider pr
 
 	// Log successful authentication
 	sm.auditLogger.LogAction(AuditActionAuthentication, provider, "", "", "", true, map[string]interface{}{
-		"auth_time": time.Now(),
+		"auth_time":  time.Now(),
 		"token_type": credentials.TokenType,
 	})
 
@@ -1054,10 +1054,10 @@ func (sm *SecurityManager) AuthenticateProvider(ctx context.Context, provider pr
 // GetSecurityStats returns security statistics
 func (sm *SecurityManager) GetSecurityStats() map[string]interface{} {
 	events := sm.securityMonitor.GetEvents()
-	
+
 	eventCounts := make(map[string]int)
 	severityCounts := make(map[string]int)
-	
+
 	for _, event := range events {
 		eventCounts[fmt.Sprintf("%d", event.Type)]++
 		severityCounts[fmt.Sprintf("%d", event.Severity)]++

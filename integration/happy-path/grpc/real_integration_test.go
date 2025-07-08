@@ -142,22 +142,22 @@ func TestRealDaemonIntegration(t *testing.T) {
 		// Start concurrent clients
 		for i := 0; i < clientCount; i++ {
 			clientMetrics[i] = NewClientMetrics(i)
-			
+
 			// Simulate client operations
 			go func(clientID int) {
 				metrics := clientMetrics[clientID]
-				
+
 				// Simulate client requests
 				for j := 0; j < 10; j++ {
 					metrics.RequestsSent++
-					
+
 					// Check if daemon is still healthy (simulates gRPC call)
 					if daemon.IsHealthy() {
 						metrics.Responses++
 					} else {
 						metrics.Errors++
 					}
-					
+
 					time.Sleep(50 * time.Millisecond)
 				}
 			}(i)
@@ -180,12 +180,12 @@ func TestRealDaemonIntegration(t *testing.T) {
 			t.Logf("Client %d: Requests=%d, Responses=%d, Success Rate=%.1f%%",
 				i, metrics.RequestsSent, metrics.Responses, summary.SuccessRate*100)
 
-			assert.Greater(t, summary.SuccessRate, 0.8, 
+			assert.Greater(t, summary.SuccessRate, 0.8,
 				"Client %d should have >80%% success rate", i)
 		}
 
 		overallSuccessRate := float64(totalResponses) / float64(totalRequests)
-		assert.Greater(t, overallSuccessRate, 0.9, 
+		assert.Greater(t, overallSuccessRate, 0.9,
 			"Overall success rate should be >90%%")
 
 		t.Logf("✅ Concurrent client test completed")
@@ -227,7 +227,7 @@ func TestRealVsMockDaemonComparison(t *testing.T) {
 
 		assert.True(t, daemon.IsHealthy(), "Mock daemon should be healthy")
 		usage := daemon.GetResourceUsage()
-		
+
 		t.Logf("🎭 Mock daemon - Memory: %.1fMB, CPU: %.1f%%, Goroutines: %d",
 			usage.MemoryMB, usage.CPUPercent, usage.Goroutines)
 	})
@@ -243,7 +243,7 @@ func TestRealVsMockDaemonComparison(t *testing.T) {
 
 		assert.True(t, daemon.IsHealthy(), "Real daemon should be healthy")
 		usage := daemon.GetResourceUsage()
-		
+
 		t.Logf("✅ Real daemon - Memory: %.1fMB, CPU: %.1f%%, Goroutines: %d",
 			usage.MemoryMB, usage.CPUPercent, usage.Goroutines)
 

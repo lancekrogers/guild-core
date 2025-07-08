@@ -280,7 +280,7 @@ type PersistenceResult struct {
 // CreateComplexBoard creates a board with complex structure using real kanban system
 func (f *KanbanTestFramework) CreateComplexBoard(complexity BoardComplexity) *kanban.Board {
 	ctx := context.Background()
-	
+
 	// Create board using real kanban system
 	boardName := fmt.Sprintf("Complex Board with %d tasks", complexity.Tasks)
 	board, err := f.manager.CreateBoard(ctx, boardName, fmt.Sprintf("Test board with %d tasks, %d columns, %d users", complexity.Tasks, complexity.Columns, complexity.Users))
@@ -292,12 +292,12 @@ func (f *KanbanTestFramework) CreateComplexBoard(complexity BoardComplexity) *ka
 	for i := 0; i < complexity.Tasks; i++ {
 		taskTitle := fmt.Sprintf("Task %d", i+1)
 		taskDesc := fmt.Sprintf("Test task %d of %d for complexity testing", i+1, complexity.Tasks)
-		
+
 		task, err := board.CreateTask(ctx, taskTitle, taskDesc)
 		if err != nil {
 			f.t.Fatalf("Failed to create task %d: %v", i+1, err)
 		}
-		
+
 		// Simulate different statuses across tasks
 		var status kanban.TaskStatus
 		switch i % 5 {
@@ -312,11 +312,11 @@ func (f *KanbanTestFramework) CreateComplexBoard(complexity BoardComplexity) *ka
 		case 4:
 			status = kanban.StatusDone
 		}
-		
+
 		if err := board.UpdateTaskStatus(ctx, task.ID, status, "test-user", "Initial setup"); err != nil {
 			f.t.Logf("Warning: failed to set initial status for task %d: %v", i+1, err)
 		}
-		
+
 		// Simulate assignment to different users
 		if i%3 == 0 && complexity.Users > 0 {
 			assignee := fmt.Sprintf("user-%d", (i%complexity.Users)+1)
@@ -324,7 +324,7 @@ func (f *KanbanTestFramework) CreateComplexBoard(complexity BoardComplexity) *ka
 				f.t.Logf("Warning: failed to assign task %d: %v", i+1, err)
 			}
 		}
-		
+
 		if i%100 == 0 {
 			f.t.Logf("Created %d/%d tasks", i+1, complexity.Tasks)
 		}
@@ -337,19 +337,19 @@ func (f *KanbanTestFramework) CreateComplexBoard(complexity BoardComplexity) *ka
 // CaptureFullBoardState captures the complete state of a board using real kanban system
 func (f *KanbanTestFramework) CaptureFullBoardState(boardID string) *BoardState {
 	ctx := context.Background()
-	
+
 	// Get the board from the manager
 	board, err := f.manager.GetBoard(ctx, boardID)
 	if err != nil {
 		f.t.Fatalf("Failed to get board %s: %v", boardID, err)
 	}
-	
+
 	// Get all tasks from the board
 	allTasks, err := board.GetAllTasks(ctx)
 	if err != nil {
 		f.t.Fatalf("Failed to get tasks from board %s: %v", boardID, err)
 	}
-	
+
 	// Convert kanban tasks to test tasks
 	tasks := make([]Task, len(allTasks))
 	for i, task := range allTasks {
@@ -362,7 +362,7 @@ func (f *KanbanTestFramework) CaptureFullBoardState(boardID string) *BoardState 
 			UpdatedAt:  task.UpdatedAt,
 		}
 	}
-	
+
 	return &BoardState{
 		BoardID:   boardID,
 		Tasks:     tasks,
@@ -400,7 +400,7 @@ func (f *KanbanTestFramework) ExecuteWithCheckpointing(boardID string, operation
 			if config.VerifyIntegrity {
 				f.verifyCheckpointIntegrity(checkpoint)
 			}
-			
+
 			f.t.Logf("✓ Checkpoint %d created after %d operations", checkpoint.Index, i+1)
 		}
 	}
@@ -414,11 +414,11 @@ func (f *KanbanTestFramework) verifyCheckpointIntegrity(checkpoint Checkpoint) {
 	if checkpoint.ExpectedState == nil {
 		f.t.Fatalf("Checkpoint %d has nil state", checkpoint.Index)
 	}
-	
+
 	if len(checkpoint.ExpectedState.Tasks) == 0 {
 		f.t.Logf("Warning: Checkpoint %d has no tasks", checkpoint.Index)
 	}
-	
+
 	// Verify tasks have valid data
 	for i, task := range checkpoint.ExpectedState.Tasks {
 		if task.ID == "" {
@@ -428,25 +428,25 @@ func (f *KanbanTestFramework) verifyCheckpointIntegrity(checkpoint Checkpoint) {
 			f.t.Fatalf("Checkpoint %d task %d has empty title", checkpoint.Index, i)
 		}
 	}
-	
+
 	f.t.Logf("✓ Checkpoint %d integrity verified: %d tasks", checkpoint.Index, len(checkpoint.ExpectedState.Tasks))
 }
 
 // SimulateCrashAtCheckpoint simulates a system crash by clearing manager state
 func (f *KanbanTestFramework) SimulateCrashAtCheckpoint(checkpoint Checkpoint) {
 	f.t.Logf("🔥 Simulating crash at checkpoint %d", checkpoint.Index)
-	
+
 	// Close the current manager to simulate crash
 	if f.manager != nil {
 		f.manager.Close()
 	}
-	
+
 	// Create new manager to simulate restart (SQLite data should persist)
 	manager, err := kanban.NewManagerWithRegistry(context.Background(), f.registry)
 	if err != nil {
 		f.t.Fatalf("Failed to create new manager after crash simulation: %v", err)
 	}
-	
+
 	f.manager = manager
 	f.t.Logf("💥 Crash simulation complete, new manager created")
 }
@@ -454,13 +454,13 @@ func (f *KanbanTestFramework) SimulateCrashAtCheckpoint(checkpoint Checkpoint) {
 // RecoverBoardFromPersistence recovers board from SQLite persistence
 func (f *KanbanTestFramework) RecoverBoardFromPersistence(boardID string) (*kanban.Board, error) {
 	ctx := context.Background()
-	
+
 	// Try to load the board from SQLite - this tests real persistence
 	board, err := f.manager.GetBoard(ctx, boardID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to recover board from persistence: %w", err)
 	}
-	
+
 	f.t.Logf("✅ Recovered board '%s' from persistence", board.Name)
 	return board, nil
 }
@@ -468,25 +468,25 @@ func (f *KanbanTestFramework) RecoverBoardFromPersistence(boardID string) (*kanb
 // ValidateStateIntegrity validates that recovered state matches expected state
 func (f *KanbanTestFramework) ValidateStateIntegrity(board *kanban.Board, expectedState *BoardState) {
 	ctx := context.Background()
-	
+
 	// Get current board state
 	currentState := f.CaptureFullBoardState(board.ID)
-	
+
 	// Compare task counts (allowing for some variance due to operations)
 	expectedTaskCount := len(expectedState.Tasks)
 	currentTaskCount := len(currentState.Tasks)
-	
+
 	if currentTaskCount < expectedTaskCount/2 {
-		f.t.Fatalf("Significant data loss detected: expected ~%d tasks, got %d", 
+		f.t.Fatalf("Significant data loss detected: expected ~%d tasks, got %d",
 			expectedTaskCount, currentTaskCount)
 	}
-	
+
 	// Verify that core tasks still exist
 	expectedTaskIDs := make(map[string]bool)
 	for _, task := range expectedState.Tasks {
 		expectedTaskIDs[task.ID] = true
 	}
-	
+
 	// Check that at least 70% of original tasks are recovered
 	recoveredTasks := 0
 	for _, task := range currentState.Tasks {
@@ -494,49 +494,49 @@ func (f *KanbanTestFramework) ValidateStateIntegrity(board *kanban.Board, expect
 			recoveredTasks++
 		}
 	}
-	
+
 	recoveryRate := float64(recoveredTasks) / float64(expectedTaskCount)
 	if recoveryRate < 0.7 {
 		f.t.Fatalf("Low recovery rate: %.2f%% (expected >70%%)", recoveryRate*100)
 	}
-	
-	f.t.Logf("✅ State integrity validated: %.1f%% recovery rate (%d/%d tasks)", 
+
+	f.t.Logf("✅ State integrity validated: %.1f%% recovery rate (%d/%d tasks)",
 		recoveryRate*100, recoveredTasks, expectedTaskCount)
 }
 
 // ValidatePersistenceIntegrity validates overall persistence integrity
 func (f *KanbanTestFramework) ValidatePersistenceIntegrity(originalState, finalState *BoardState, checkpoints []Checkpoint) {
 	f.t.Logf("Validating persistence integrity with %d checkpoints", len(checkpoints))
-	
+
 	// Validate checkpoint consistency
 	for i, checkpoint := range checkpoints {
 		if checkpoint.ExpectedState == nil {
 			f.t.Fatalf("Checkpoint %d has nil state", i)
 		}
-		
+
 		if checkpoint.ExpectedState.BoardID != originalState.BoardID {
-			f.t.Fatalf("Checkpoint %d has wrong board ID: %s != %s", 
+			f.t.Fatalf("Checkpoint %d has wrong board ID: %s != %s",
 				i, checkpoint.ExpectedState.BoardID, originalState.BoardID)
 		}
 	}
-	
+
 	// Validate final state has reasonable task count
 	// (may be higher due to operations during test)
 	originalTaskCount := len(originalState.Tasks)
 	finalTaskCount := len(finalState.Tasks)
-	
+
 	if finalTaskCount < originalTaskCount/2 {
 		f.t.Fatalf("Significant task loss: %d -> %d tasks", originalTaskCount, finalTaskCount)
 	}
-	
+
 	// Validate timestamp progression
 	for i := 1; i < len(checkpoints); i++ {
 		if checkpoints[i].Timestamp.Before(checkpoints[i-1].Timestamp) {
 			f.t.Fatalf("Checkpoint %d timestamp regression", i)
 		}
 	}
-	
-	f.t.Logf("✅ Persistence integrity validated: %d checkpoints, %d->%d tasks", 
+
+	f.t.Logf("✅ Persistence integrity validated: %d checkpoints, %d->%d tasks",
 		len(checkpoints), originalTaskCount, finalTaskCount)
 }
 

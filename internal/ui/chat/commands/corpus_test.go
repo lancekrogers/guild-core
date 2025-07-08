@@ -14,8 +14,8 @@ import (
 	"github.com/lancekrogers/guild/internal/ui/chat/common/config"
 	"github.com/lancekrogers/guild/internal/ui/chat/panes"
 	"github.com/lancekrogers/guild/pkg/corpus"
-	"github.com/lancekrogers/guild/pkg/observability"
 	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild/pkg/observability"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -29,102 +29,102 @@ type MockGuildClient struct {
 func TestCorpusHandler_Handle(t *testing.T) {
 	ctx := context.Background()
 	ctx = observability.WithComponent(ctx, "corpus_test")
-	
+
 	tests := []struct {
-		name           string
-		args           []string
+		name            string
+		args            []string
 		expectedMsgType interface{}
-		expectedError  bool
-		setupCorpus    func(t *testing.T) string
+		expectedError   bool
+		setupCorpus     func(t *testing.T) string
 	}{
 		{
-			name:           "no args shows list",
-			args:           []string{},
+			name:            "no args shows list",
+			args:            []string{},
 			expectedMsgType: panes.PaneUpdateMsg{},
-			setupCorpus:    setupEmptyCorpus,
+			setupCorpus:     setupEmptyCorpus,
 		},
 		{
-			name:           "list command",
-			args:           []string{"list"},
+			name:            "list command",
+			args:            []string{"list"},
 			expectedMsgType: panes.PaneUpdateMsg{},
-			setupCorpus:    setupTestCorpus,
+			setupCorpus:     setupTestCorpus,
 		},
 		{
-			name:           "search command with query",
-			args:           []string{"search", "authentication", "patterns"},
+			name:            "search command with query",
+			args:            []string{"search", "authentication", "patterns"},
 			expectedMsgType: panes.PaneUpdateMsg{},
-			setupCorpus:    setupTestCorpus,
+			setupCorpus:     setupTestCorpus,
 		},
 		{
-			name:           "search command without query",
-			args:           []string{"search"},
+			name:            "search command without query",
+			args:            []string{"search"},
 			expectedMsgType: panes.StatusUpdateMsg{},
-			expectedError:  true,
-			setupCorpus:    setupEmptyCorpus,
+			expectedError:   true,
+			setupCorpus:     setupEmptyCorpus,
 		},
 		{
-			name:           "add command with content",
-			args:           []string{"add", "pattern", "Use repository pattern for data access"},
+			name:            "add command with content",
+			args:            []string{"add", "pattern", "Use repository pattern for data access"},
 			expectedMsgType: panes.StatusUpdateMsg{},
-			setupCorpus:    setupEmptyCorpus,
+			setupCorpus:     setupEmptyCorpus,
 		},
 		{
-			name:           "add command insufficient args",
-			args:           []string{"add", "pattern"},
+			name:            "add command insufficient args",
+			args:            []string{"add", "pattern"},
 			expectedMsgType: panes.StatusUpdateMsg{},
-			expectedError:  true,
-			setupCorpus:    setupEmptyCorpus,
+			expectedError:   true,
+			setupCorpus:     setupEmptyCorpus,
 		},
 		{
-			name:           "stats command",
-			args:           []string{"stats"},
+			name:            "stats command",
+			args:            []string{"stats"},
 			expectedMsgType: panes.PaneUpdateMsg{},
-			setupCorpus:    setupTestCorpus,
+			setupCorpus:     setupTestCorpus,
 		},
 		{
-			name:           "config command", 
-			args:           []string{"config"},
+			name:            "config command",
+			args:            []string{"config"},
 			expectedMsgType: panes.PaneUpdateMsg{},
-			setupCorpus:    setupEmptyCorpus,
+			setupCorpus:     setupEmptyCorpus,
 		},
 		{
-			name:           "help command",
-			args:           []string{"help"},
+			name:            "help command",
+			args:            []string{"help"},
 			expectedMsgType: panes.PaneUpdateMsg{},
-			setupCorpus:    setupEmptyCorpus,
+			setupCorpus:     setupEmptyCorpus,
 		},
 		{
-			name:           "unknown command",
-			args:           []string{"unknown"},
+			name:            "unknown command",
+			args:            []string{"unknown"},
 			expectedMsgType: panes.StatusUpdateMsg{},
-			expectedError:  true,
-			setupCorpus:    setupEmptyCorpus,
+			expectedError:   true,
+			setupCorpus:     setupEmptyCorpus,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Setup corpus directory
 			corpusPath := tt.setupCorpus(t)
 			defer os.RemoveAll(corpusPath)
-			
+
 			// Set environment variable for corpus location
 			oldPath := os.Getenv("GUILD_CORPUS_PATH")
 			os.Setenv("GUILD_CORPUS_PATH", corpusPath)
 			defer os.Setenv("GUILD_CORPUS_PATH", oldPath)
-			
+
 			// Create handler
 			chatConfig := &config.ChatConfig{}
 			client := &MockGuildClient{}
 			handler := NewCorpusHandler(chatConfig, client)
-			
+
 			// Execute command
 			cmd := handler.Handle(ctx, tt.args)
 			require.NotNil(t, cmd)
-			
+
 			// Get result
 			msg := cmd()
-			
+
 			// Verify message type
 			switch tt.expectedMsgType.(type) {
 			case panes.PaneUpdateMsg:
@@ -133,7 +133,7 @@ func TestCorpusHandler_Handle(t *testing.T) {
 			case panes.StatusUpdateMsg:
 				statusMsg, ok := msg.(panes.StatusUpdateMsg)
 				assert.True(t, ok, "Expected StatusUpdateMsg, got %T", msg)
-				
+
 				if tt.expectedError {
 					assert.Equal(t, "error", statusMsg.Level)
 				} else {
@@ -148,19 +148,19 @@ func TestCorpusHandler_Handle(t *testing.T) {
 func TestCorpusHandler_Search(t *testing.T) {
 	ctx := context.Background()
 	ctx = observability.WithComponent(ctx, "corpus_search_test")
-	
+
 	// Setup corpus with test documents
 	corpusPath := setupTestCorpus(t)
 	defer os.RemoveAll(corpusPath)
-	
+
 	oldPath := os.Getenv("GUILD_CORPUS_PATH")
 	os.Setenv("GUILD_CORPUS_PATH", corpusPath)
 	defer os.Setenv("GUILD_CORPUS_PATH", oldPath)
-	
+
 	chatConfig := &config.ChatConfig{}
 	client := &MockGuildClient{}
 	handler := NewCorpusHandler(chatConfig, client)
-	
+
 	tests := []struct {
 		name          string
 		query         []string
@@ -186,19 +186,19 @@ func TestCorpusHandler_Search(t *testing.T) {
 			expectKeyword: "database",
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			args := append([]string{"search"}, tt.query...)
 			cmd := handler.Handle(ctx, args)
 			require.NotNil(t, cmd)
-			
+
 			msg := cmd()
 			paneMsg, ok := msg.(panes.PaneUpdateMsg)
 			require.True(t, ok)
-			
+
 			content := paneMsg.Content
-			
+
 			if tt.expectResults {
 				assert.Contains(t, content, "Search Results")
 				assert.Contains(t, strings.ToLower(content), strings.ToLower(tt.expectKeyword))
@@ -214,41 +214,41 @@ func TestCorpusHandler_Search(t *testing.T) {
 func TestCorpusHandler_Add(t *testing.T) {
 	ctx := context.Background()
 	ctx = observability.WithComponent(ctx, "corpus_add_test")
-	
+
 	// Setup empty corpus
 	corpusPath := setupEmptyCorpus(t)
 	defer os.RemoveAll(corpusPath)
-	
+
 	oldPath := os.Getenv("GUILD_CORPUS_PATH")
 	os.Setenv("GUILD_CORPUS_PATH", corpusPath)
 	defer os.Setenv("GUILD_CORPUS_PATH", oldPath)
-	
+
 	chatConfig := &config.ChatConfig{}
 	client := &MockGuildClient{}
 	handler := NewCorpusHandler(chatConfig, client)
-	
+
 	// Add a document
 	args := []string{"add", "pattern", "Use repository pattern for clean data access"}
 	cmd := handler.Handle(ctx, args)
 	require.NotNil(t, cmd)
-	
+
 	msg := cmd()
 	statusMsg, ok := msg.(panes.StatusUpdateMsg)
 	require.True(t, ok)
-	
+
 	// Should be success
 	assert.Equal(t, "success", statusMsg.Level)
 	assert.Contains(t, statusMsg.Message, "Added")
 	assert.Contains(t, statusMsg.Message, "Pattern:")
-	
+
 	// Verify document was actually saved
 	cfg, err := corpus.GetConfigWithFallback(ctx)
 	require.NoError(t, err)
-	
+
 	docs, err := corpus.List(ctx, cfg)
 	require.NoError(t, err)
 	assert.Len(t, docs, 1)
-	
+
 	// Load and verify content
 	doc, err := corpus.Load(ctx, docs[0])
 	require.NoError(t, err)
@@ -260,29 +260,29 @@ func TestCorpusHandler_Add(t *testing.T) {
 func TestCorpusHandler_Stats(t *testing.T) {
 	ctx := context.Background()
 	ctx = observability.WithComponent(ctx, "corpus_stats_test")
-	
+
 	// Setup corpus with known documents
 	corpusPath := setupTestCorpus(t)
 	defer os.RemoveAll(corpusPath)
-	
+
 	oldPath := os.Getenv("GUILD_CORPUS_PATH")
 	os.Setenv("GUILD_CORPUS_PATH", corpusPath)
 	defer os.Setenv("GUILD_CORPUS_PATH", oldPath)
-	
+
 	chatConfig := &config.ChatConfig{}
 	client := &MockGuildClient{}
 	handler := NewCorpusHandler(chatConfig, client)
-	
+
 	// Get stats
 	cmd := handler.Handle(ctx, []string{"stats"})
 	require.NotNil(t, cmd)
-	
+
 	msg := cmd()
 	paneMsg, ok := msg.(panes.PaneUpdateMsg)
 	require.True(t, ok)
-	
+
 	content := paneMsg.Content
-	
+
 	// Should contain statistics
 	assert.Contains(t, content, "Corpus Statistics")
 	assert.Contains(t, content, "Documents:")
@@ -295,58 +295,58 @@ func TestCorpusHandler_Stats(t *testing.T) {
 func TestKnowledgeHandler(t *testing.T) {
 	ctx := context.Background()
 	ctx = observability.WithComponent(ctx, "knowledge_test")
-	
+
 	handler := NewKnowledgeHandler()
-	
+
 	tests := []struct {
-		name           string
-		args           []string
+		name            string
+		args            []string
 		expectedMsgType interface{}
 	}{
 		{
-			name:           "no args shows browse",
-			args:           []string{},
+			name:            "no args shows browse",
+			args:            []string{},
 			expectedMsgType: panes.PaneUpdateMsg{},
 		},
 		{
-			name:           "browse command",
-			args:           []string{"browse"},
+			name:            "browse command",
+			args:            []string{"browse"},
 			expectedMsgType: panes.PaneUpdateMsg{},
 		},
 		{
-			name:           "validate command",
-			args:           []string{"validate"},
+			name:            "validate command",
+			args:            []string{"validate"},
 			expectedMsgType: panes.PaneUpdateMsg{},
 		},
 		{
-			name:           "export command",
-			args:           []string{"export"},
+			name:            "export command",
+			args:            []string{"export"},
 			expectedMsgType: panes.StatusUpdateMsg{},
 		},
 		{
-			name:           "graph overview",
-			args:           []string{"graph"},
+			name:            "graph overview",
+			args:            []string{"graph"},
 			expectedMsgType: panes.PaneUpdateMsg{},
 		},
 		{
-			name:           "graph specific node",
-			args:           []string{"graph", "node123"},
+			name:            "graph specific node",
+			args:            []string{"graph", "node123"},
 			expectedMsgType: panes.PaneUpdateMsg{},
 		},
 		{
-			name:           "unknown command",
-			args:           []string{"unknown"},
+			name:            "unknown command",
+			args:            []string{"unknown"},
 			expectedMsgType: panes.StatusUpdateMsg{},
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			cmd := handler.Handle(ctx, tt.args)
 			require.NotNil(t, cmd)
-			
+
 			msg := cmd()
-			
+
 			switch tt.expectedMsgType.(type) {
 			case panes.PaneUpdateMsg:
 				_, ok := msg.(panes.PaneUpdateMsg)
@@ -363,48 +363,48 @@ func TestKnowledgeHandler(t *testing.T) {
 func TestIndexHandler(t *testing.T) {
 	ctx := context.Background()
 	ctx = observability.WithComponent(ctx, "index_test")
-	
+
 	handler := NewIndexHandler()
-	
+
 	tests := []struct {
-		name           string
-		args           []string
+		name            string
+		args            []string
 		expectedMsgType interface{}
 	}{
 		{
-			name:           "no args shows status",
-			args:           []string{},
+			name:            "no args shows status",
+			args:            []string{},
 			expectedMsgType: panes.PaneUpdateMsg{},
 		},
 		{
-			name:           "status command",
-			args:           []string{"status"},
+			name:            "status command",
+			args:            []string{"status"},
 			expectedMsgType: panes.PaneUpdateMsg{},
 		},
 		{
-			name:           "rebuild command",
-			args:           []string{"rebuild"},
+			name:            "rebuild command",
+			args:            []string{"rebuild"},
 			expectedMsgType: panes.StatusUpdateMsg{},
 		},
 		{
-			name:           "optimize command",
-			args:           []string{"optimize"},
+			name:            "optimize command",
+			args:            []string{"optimize"},
 			expectedMsgType: panes.StatusUpdateMsg{},
 		},
 		{
-			name:           "unknown command",
-			args:           []string{"unknown"},
+			name:            "unknown command",
+			args:            []string{"unknown"},
 			expectedMsgType: panes.StatusUpdateMsg{},
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			cmd := handler.Handle(ctx, tt.args)
 			require.NotNil(t, cmd)
-			
+
 			msg := cmd()
-			
+
 			switch tt.expectedMsgType.(type) {
 			case panes.PaneUpdateMsg:
 				_, ok := msg.(panes.PaneUpdateMsg)
@@ -421,21 +421,21 @@ func TestIndexHandler(t *testing.T) {
 func TestCorpusIntegration(t *testing.T) {
 	ctx := context.Background()
 	ctx = observability.WithComponent(ctx, "corpus_integration_test")
-	
+
 	// Setup corpus
 	corpusPath := setupEmptyCorpus(t)
 	defer os.RemoveAll(corpusPath)
-	
+
 	oldPath := os.Getenv("GUILD_CORPUS_PATH")
 	os.Setenv("GUILD_CORPUS_PATH", corpusPath)
 	defer os.Setenv("GUILD_CORPUS_PATH", oldPath)
-	
+
 	chatConfig := &config.ChatConfig{}
 	client := &MockGuildClient{}
 	handler := NewCorpusHandler(chatConfig, client)
-	
+
 	// Test complete workflow: add -> list -> search -> stats
-	
+
 	// 1. Add documents
 	documents := []struct {
 		docType string
@@ -446,51 +446,51 @@ func TestCorpusIntegration(t *testing.T) {
 		{"tip", "Always validate user input on server side"},
 		{"example", "func ValidateEmail(email string) bool { ... }"},
 	}
-	
+
 	for _, doc := range documents {
 		args := []string{"add", doc.docType, doc.content}
 		cmd := handler.Handle(ctx, args)
 		require.NotNil(t, cmd)
-		
+
 		msg := cmd()
 		statusMsg, ok := msg.(panes.StatusUpdateMsg)
 		require.True(t, ok)
 		assert.Equal(t, "success", statusMsg.Level)
 	}
-	
+
 	// 2. List documents
 	cmd := handler.Handle(ctx, []string{"list"})
 	require.NotNil(t, cmd)
-	
+
 	msg := cmd()
 	paneMsg, ok := msg.(panes.PaneUpdateMsg)
 	require.True(t, ok)
-	
+
 	content := paneMsg.Content
 	assert.Contains(t, content, "**Total Documents:** 4")
 	assert.Contains(t, content, "repository pattern")
 	assert.Contains(t, content, "JWT tokens")
-	
+
 	// 3. Search documents
 	cmd = handler.Handle(ctx, []string{"search", "authentication"})
 	require.NotNil(t, cmd)
-	
+
 	msg = cmd()
 	paneMsg, ok = msg.(panes.PaneUpdateMsg)
 	require.True(t, ok)
-	
+
 	searchContent := paneMsg.Content
 	assert.Contains(t, searchContent, "Search Results")
 	assert.Contains(t, searchContent, "JWT")
-	
+
 	// 4. Get statistics
 	cmd = handler.Handle(ctx, []string{"stats"})
 	require.NotNil(t, cmd)
-	
+
 	msg = cmd()
 	paneMsg, ok = msg.(panes.PaneUpdateMsg)
 	require.True(t, ok)
-	
+
 	statsContent := paneMsg.Content
 	assert.Contains(t, statsContent, "**Documents:** 4")
 	assert.Contains(t, statsContent, "pattern")
@@ -545,15 +545,15 @@ func TestRelevanceCalculation(t *testing.T) {
 				Body:  "Content about databases",
 				Tags:  []string{"database"},
 			},
-			query:      "authentication", 
+			query:      "authentication",
 			scoreRange: [2]float64{0.0, 0.0}, // No match
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			score := calculateRelevance(tt.doc, strings.ToLower(tt.query))
-			
+
 			if tt.expectedScore > 0 {
 				assert.Equal(t, tt.expectedScore, score)
 			} else {
@@ -570,13 +570,13 @@ func TestHelperFunctions(t *testing.T) {
 		content := "This is a long piece of content that should be truncated when we extract a preview from it. The query word appears here: authentication. And then continues with more text."
 		query := "authentication"
 		maxLength := 80
-		
+
 		preview := extractPreview(content, query, maxLength)
-		
-		assert.LessOrEqual(t, len(preview), maxLength+25) // Allow for context and "..." 
+
+		assert.LessOrEqual(t, len(preview), maxLength+25) // Allow for context and "..."
 		assert.Contains(t, preview, query)
 	})
-	
+
 	t.Run("extractTitle", func(t *testing.T) {
 		tests := []struct {
 			content  string
@@ -595,7 +595,7 @@ func TestHelperFunctions(t *testing.T) {
 				expected: "Multi line",
 			},
 		}
-		
+
 		for _, tt := range tests {
 			result := extractTitle(tt.content)
 			assert.Equal(t, tt.expected, result)
@@ -606,32 +606,32 @@ func TestHelperFunctions(t *testing.T) {
 // BenchmarkSearch benchmarks search performance
 func BenchmarkSearch(b *testing.B) {
 	ctx := context.Background()
-	
+
 	// Setup corpus with many documents
 	corpusPath := setupLargeCorpus(b)
 	defer os.RemoveAll(corpusPath)
-	
+
 	oldPath := os.Getenv("GUILD_CORPUS_PATH")
 	os.Setenv("GUILD_CORPUS_PATH", corpusPath)
 	defer os.Setenv("GUILD_CORPUS_PATH", oldPath)
-	
+
 	chatConfig := &config.ChatConfig{}
 	client := &MockGuildClient{}
 	handler := NewCorpusHandler(chatConfig, client)
-	
+
 	queries := []string{
 		"authentication",
 		"database pattern",
 		"error handling",
 		"testing strategy",
 	}
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		query := queries[i%len(queries)]
 		args := []string{"search", query}
-		
+
 		cmd := handler.Handle(ctx, args)
 		if cmd != nil {
 			cmd() // Execute the command
@@ -645,21 +645,21 @@ func BenchmarkSearch(b *testing.B) {
 func setupEmptyCorpus(t *testing.T) string {
 	tempDir, err := os.MkdirTemp("", "guild-corpus-test-*")
 	require.NoError(t, err)
-	
+
 	return tempDir
 }
 
 // setupTestCorpus creates a corpus with test documents
 func setupTestCorpus(t *testing.T) string {
 	tempDir := setupEmptyCorpus(t)
-	
+
 	// Create test configuration
 	cfg := corpus.Config{
 		CorpusPath:      tempDir,
 		MaxSizeBytes:    10 * 1024 * 1024, // 10MB
 		DefaultCategory: "general",
 	}
-	
+
 	// Create test documents
 	testDocs := []struct {
 		title   string
@@ -680,7 +680,7 @@ func setupTestCorpus(t *testing.T) string {
 			source:  "documentation",
 		},
 		{
-			title:   "Testing Strategies", 
+			title:   "Testing Strategies",
 			content: "Write unit tests first. Integration tests should cover the happy path and error scenarios. Use mocks for external dependencies.",
 			tags:    []string{"testing", "strategy", "best-practice"},
 			source:  "documentation",
@@ -692,9 +692,9 @@ func setupTestCorpus(t *testing.T) string {
 			source:  "documentation",
 		},
 	}
-	
+
 	ctx := context.Background()
-	
+
 	for _, docData := range testDocs {
 		doc := corpus.NewCorpusDoc(
 			docData.title,
@@ -704,11 +704,11 @@ func setupTestCorpus(t *testing.T) string {
 			"test-agent",
 			docData.tags,
 		)
-		
+
 		err := corpus.Save(ctx, doc, cfg)
 		require.NoError(t, err)
 	}
-	
+
 	return tempDir
 }
 
@@ -718,23 +718,23 @@ func setupLargeCorpus(b *testing.B) string {
 	if err != nil {
 		b.Fatal(err)
 	}
-	
+
 	cfg := corpus.Config{
 		CorpusPath:      tempDir,
 		MaxSizeBytes:    100 * 1024 * 1024, // 100MB
 		DefaultCategory: "general",
 	}
-	
+
 	ctx := context.Background()
-	
+
 	// Generate many test documents
 	topics := []string{"authentication", "database", "testing", "performance", "security", "architecture"}
 	types := []string{"pattern", "decision", "tip", "example", "reference"}
-	
+
 	for i := 0; i < 100; i++ {
 		topic := topics[i%len(topics)]
 		docType := types[i%len(types)]
-		
+
 		doc := corpus.NewCorpusDoc(
 			fmt.Sprintf("%s %s %d", strings.Title(topic), strings.Title(docType), i),
 			"generated",
@@ -743,13 +743,13 @@ func setupLargeCorpus(b *testing.B) string {
 			"bench-agent",
 			[]string{topic, docType},
 		)
-		
+
 		err := corpus.Save(ctx, doc, cfg)
 		if err != nil {
 			b.Fatal(err)
 		}
 	}
-	
+
 	return tempDir
 }
 
@@ -758,7 +758,7 @@ func TestSearchInterface_Integration(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration test in short mode")
 	}
-	
+
 	// TODO: This test needs components package integration
 	t.Skip("Search interface integration requires components package - skipping for now")
 }
@@ -766,21 +766,21 @@ func TestSearchInterface_Integration(t *testing.T) {
 // TestErrorHandling tests error handling in corpus commands
 func TestErrorHandling(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Test with invalid corpus path
 	os.Setenv("GUILD_CORPUS_PATH", "/nonexistent/path")
 	defer os.Unsetenv("GUILD_CORPUS_PATH")
-	
+
 	chatConfig := &config.ChatConfig{}
 	client := &MockGuildClient{}
 	handler := NewCorpusHandler(chatConfig, client)
-	
+
 	// Most operations should handle the error gracefully
 	cmd := handler.Handle(ctx, []string{"list"})
 	require.NotNil(t, cmd)
-	
+
 	msg := cmd()
-	
+
 	// Should get either an error status or an empty results message
 	switch msg := msg.(type) {
 	case panes.StatusUpdateMsg:
@@ -796,27 +796,27 @@ func TestErrorHandling(t *testing.T) {
 // TestConcurrentAccess tests concurrent access to corpus
 func TestConcurrentAccess(t *testing.T) {
 	ctx := context.Background()
-	
+
 	corpusPath := setupTestCorpus(t)
 	defer os.RemoveAll(corpusPath)
-	
+
 	oldPath := os.Getenv("GUILD_CORPUS_PATH")
 	os.Setenv("GUILD_CORPUS_PATH", corpusPath)
 	defer os.Setenv("GUILD_CORPUS_PATH", oldPath)
-	
+
 	chatConfig := &config.ChatConfig{}
 	client := &MockGuildClient{}
-	
+
 	// Test concurrent handlers
 	const numGoroutines = 10
 	done := make(chan bool, numGoroutines)
-	
+
 	for i := 0; i < numGoroutines; i++ {
 		go func(id int) {
 			defer func() { done <- true }()
-			
+
 			handler := NewCorpusHandler(chatConfig, client)
-			
+
 			// Perform various operations
 			operations := [][]string{
 				{"list"},
@@ -824,7 +824,7 @@ func TestConcurrentAccess(t *testing.T) {
 				{"stats"},
 				{"config"},
 			}
-			
+
 			for _, args := range operations {
 				cmd := handler.Handle(ctx, args)
 				if cmd != nil {
@@ -833,7 +833,7 @@ func TestConcurrentAccess(t *testing.T) {
 			}
 		}(i)
 	}
-	
+
 	// Wait for all goroutines to complete
 	for i := 0; i < numGoroutines; i++ {
 		select {

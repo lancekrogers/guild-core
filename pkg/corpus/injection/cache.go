@@ -10,10 +10,10 @@ import (
 
 // CacheEntry represents a cached injection result
 type CacheEntry struct {
-	Value     *InjectedPrompt `json:"value"`
-	ExpiresAt time.Time       `json:"expires_at"`
-	AccessedAt time.Time      `json:"accessed_at"`
-	AccessCount int           `json:"access_count"`
+	Value       *InjectedPrompt `json:"value"`
+	ExpiresAt   time.Time       `json:"expires_at"`
+	AccessedAt  time.Time       `json:"accessed_at"`
+	AccessCount int             `json:"access_count"`
 }
 
 // ContextCache implements a thread-safe LRU cache with TTL for injection results
@@ -160,9 +160,9 @@ func (cc *ContextCache) Stats() CacheStats {
 	defer cc.mu.RUnlock()
 
 	stats := CacheStats{
-		Size:     len(cc.entries),
-		MaxSize:  cc.maxSize,
-		TTL:      cc.ttl,
+		Size:    len(cc.entries),
+		MaxSize: cc.maxSize,
+		TTL:     cc.ttl,
 	}
 
 	now := time.Now()

@@ -117,7 +117,7 @@ func TestCraftRecencyScorer_Scoring(t *testing.T) {
 	assert.Equal(t, "recency", scorer.Name())
 
 	now := time.Now()
-	
+
 	tests := []struct {
 		name     string
 		doc      Document
@@ -193,7 +193,7 @@ func TestJourneymanRelevanceScorer_KeywordOverlap(t *testing.T) {
 	scorer := &RelevanceScorer{}
 
 	doc := Document{
-		Content: "This document is about golang programming and testing frameworks",
+		Content:  "This document is about golang programming and testing frameworks",
 		Metadata: map[string]interface{}{}, // No vector score
 	}
 
@@ -382,7 +382,7 @@ func TestGuildAuthorityScorer_WithoutCitationGraph(t *testing.T) {
 
 func BenchmarkCraftRanking_SmallDataset(b *testing.B) {
 	ranker := NewResultRanker()
-	
+
 	docs := make([]Document, 10)
 	for i := 0; i < 10; i++ {
 		docs[i] = Document{
@@ -411,7 +411,7 @@ func BenchmarkCraftRanking_SmallDataset(b *testing.B) {
 
 func BenchmarkJourneymanRanking_LargeDataset(b *testing.B) {
 	ranker := NewResultRanker()
-	
+
 	docs := make([]Document, 1000)
 	for i := 0; i < 1000; i++ {
 		docs[i] = Document{

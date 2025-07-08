@@ -22,26 +22,26 @@ type mockEmbedder struct{}
 func (m *mockEmbedder) Embed(ctx context.Context, text string) ([]float32, error) {
 	// Create embeddings based on keywords in the text for more realistic testing
 	embedding := make([]float32, 768)
-	
+
 	// Initialize with small base values
 	for i := range embedding {
 		embedding[i] = 0.1
 	}
-	
+
 	// Add specific features for common keywords to simulate semantic similarity
 	keywords := map[string]int{
-		"golang":       50,
-		"testing":      150,
-		"patterns":     250,
-		"database":     350,
-		"guide":        450,
-		"document":     550,
-		"content":      650,
-		"example":      700,
-		"programming":  100,
-		"strategies":   200,
+		"golang":      50,
+		"testing":     150,
+		"patterns":    250,
+		"database":    350,
+		"guide":       450,
+		"document":    550,
+		"content":     650,
+		"example":     700,
+		"programming": 100,
+		"strategies":  200,
 	}
-	
+
 	textLower := strings.ToLower(text)
 	for keyword, offset := range keywords {
 		if strings.Contains(textLower, keyword) {
@@ -53,7 +53,7 @@ func (m *mockEmbedder) Embed(ctx context.Context, text string) ([]float32, error
 			}
 		}
 	}
-	
+
 	return embedding, nil
 }
 
@@ -160,7 +160,7 @@ This is the third paragraph with additional content.`,
 		store.strategy = ChunkingStrategyParagraph
 		chunks, err := store.chunkDocument(context.Background(), testDoc)
 		require.NoError(t, err)
-		
+
 		// With small chunk size, should split paragraphs
 		assert.GreaterOrEqual(t, len(chunks), 2)
 	})
@@ -448,12 +448,12 @@ func TestConcurrentIndexing(t *testing.T) {
 	results, err := store.SearchDocuments(ctx, "concurrent", 10)
 	require.NoError(t, err)
 	assert.Len(t, results, 10) // Should find all 10 documents
-	
+
 	// Verify we can find specific documents by their unique parts
 	uniqueResults, err := store.SearchDocuments(ctx, "concurrent-0", 10)
 	require.NoError(t, err)
 	assert.NotEmpty(t, uniqueResults)
-	
+
 	// Check that all document IDs are represented
 	foundIDs := make(map[string]bool)
 	for _, result := range results {

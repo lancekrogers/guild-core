@@ -104,6 +104,11 @@ func (m *MockTool) RequiresAuth() bool {
 	return args.Bool(0)
 }
 
+func (m *MockTool) HealthCheck() error {
+	args := m.Called()
+	return args.Error(0)
+}
+
 // Test cases
 
 func TestCraftAccessController_CheckAccess_Allowed(t *testing.T) {

@@ -54,7 +54,7 @@ func TestFileTool_HealthCheck(t *testing.T) {
 
 		// Create tool with file path instead of directory
 		tool := NewFileTool(tmpFile.Name())
-		
+
 		// Manually set the base path to the file
 		tool.basePath = tmpFile.Name()
 

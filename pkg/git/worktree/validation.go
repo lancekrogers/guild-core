@@ -132,7 +132,7 @@ func (mv *MergeValidator) checkMergeArtifacts(ctx context.Context, wt *Worktree)
 	// Check for conflict markers in files
 	cmd := exec.CommandContext(ctx, "grep", "-r", "-n", "^<<<<<<<\\|^=======\\|^>>>>>>>", wt.Path)
 	output, err := cmd.Output()
-	
+
 	// grep returns exit code 1 when no matches found, which is good
 	if err != nil && cmd.ProcessState.ExitCode() != 1 {
 		return nil, err
@@ -142,7 +142,7 @@ func (mv *MergeValidator) checkMergeArtifacts(ctx context.Context, wt *Worktree)
 		lines := strings.Split(strings.TrimSpace(string(output)), "\n")
 		for _, line := range lines {
 			artifacts = append(artifacts, map[string]interface{}{
-				"type": "conflict_marker",
+				"type":     "conflict_marker",
 				"location": line,
 			})
 		}
@@ -186,7 +186,7 @@ func (mv *MergeValidator) checkSecurity(ctx context.Context, wt *Worktree) ([]in
 	for _, pattern := range secretPatterns {
 		cmd := exec.CommandContext(ctx, "grep", "-r", "-i", "-n", pattern, wt.Path)
 		output, err := cmd.Output()
-		
+
 		// grep returns exit code 1 when no matches found
 		if err != nil && cmd.ProcessState.ExitCode() != 1 {
 			continue
@@ -196,8 +196,8 @@ func (mv *MergeValidator) checkSecurity(ctx context.Context, wt *Worktree) ([]in
 			lines := strings.Split(strings.TrimSpace(string(output)), "\n")
 			for _, line := range lines {
 				issues = append(issues, map[string]interface{}{
-					"type": "potential_secret",
-					"pattern": pattern,
+					"type":     "potential_secret",
+					"pattern":  pattern,
 					"location": line,
 				})
 			}
@@ -209,21 +209,21 @@ func (mv *MergeValidator) checkSecurity(ctx context.Context, wt *Worktree) ([]in
 
 // MergeValidation contains the result of merge validation
 type MergeValidation struct {
-	WorktreeID    string        `json:"worktree_id"`
-	Valid         bool          `json:"valid"`
-	Issues        []MergeIssue  `json:"issues"`
-	TestResult    *TestResult   `json:"test_result,omitempty"`
+	WorktreeID    string         `json:"worktree_id"`
+	Valid         bool           `json:"valid"`
+	Issues        []MergeIssue   `json:"issues"`
+	TestResult    *TestResult    `json:"test_result,omitempty"`
 	QualityResult *QualityResult `json:"quality_result,omitempty"`
-	StartedAt     time.Time     `json:"started_at"`
-	CompletedAt   time.Time     `json:"completed_at"`
+	StartedAt     time.Time      `json:"started_at"`
+	CompletedAt   time.Time      `json:"completed_at"`
 }
 
 // MergeIssue represents an issue found during merge validation
 type MergeIssue struct {
-	Type     string        `json:"type"`
-	Severity string        `json:"severity"`
-	Message  string        `json:"message"`
-	Details  interface{}   `json:"details,omitempty"`
+	Type     string      `json:"type"`
+	Severity string      `json:"severity"`
+	Message  string      `json:"message"`
+	Details  interface{} `json:"details,omitempty"`
 }
 
 // TestRunner runs tests in a worktree
@@ -311,8 +311,8 @@ func (tr *TestRunner) hasTestConfig(path, cmd string) bool {
 		return tr.fileExists(filepath.Join(path, "go.mod"))
 	case "python":
 		return tr.fileExists(filepath.Join(path, "pytest.ini")) ||
-			   tr.fileExists(filepath.Join(path, "setup.py")) ||
-			   tr.fileExists(filepath.Join(path, "pyproject.toml"))
+			tr.fileExists(filepath.Join(path, "setup.py")) ||
+			tr.fileExists(filepath.Join(path, "pyproject.toml"))
 	case "mvn":
 		return tr.fileExists(filepath.Join(path, "pom.xml"))
 	}
@@ -347,7 +347,7 @@ func (tr *TestRunner) parseTestFailures(output, runner string) []string {
 		// Generic failure parsing
 		for _, line := range lines {
 			if strings.Contains(strings.ToUpper(line), "FAIL") ||
-			   strings.Contains(strings.ToUpper(line), "ERROR") {
+				strings.Contains(strings.ToUpper(line), "ERROR") {
 				failures = append(failures, strings.TrimSpace(line))
 			}
 		}
@@ -453,12 +453,12 @@ func (qc *QualityChecker) Check(ctx context.Context, path string) (*QualityResul
 func (qc *QualityChecker) runLinter(ctx context.Context, path string, linterCmd []string, result *QualityResult) error {
 	cmd := exec.CommandContext(ctx, linterCmd[0], linterCmd[1:]...)
 	cmd.Dir = path
-	
+
 	output, _ := cmd.CombinedOutput()
-	
+
 	// Many linters return non-zero exit codes when issues are found
 	// Don't treat this as an error unless the command truly failed
-	
+
 	if len(output) > 0 {
 		issues := qc.parseLinterOutput(string(output), linterCmd[0])
 		result.Issues = append(result.Issues, issues...)
@@ -470,17 +470,17 @@ func (qc *QualityChecker) runLinter(ctx context.Context, path string, linterCmd 
 // parseLinterOutput parses linter output into quality issues
 func (qc *QualityChecker) parseLinterOutput(output, linter string) []QualityIssue {
 	var issues []QualityIssue
-	
+
 	// Simplified parsing - in practice would parse JSON output
 	lines := strings.Split(output, "\n")
-	
+
 	for _, line := range lines {
 		if strings.Contains(line, "error") || strings.Contains(line, "warning") {
 			severity := "warning"
 			if strings.Contains(line, "error") {
 				severity = "error"
 			}
-			
+
 			issues = append(issues, QualityIssue{
 				Type:     "linter_issue",
 				Severity: severity,
@@ -489,14 +489,14 @@ func (qc *QualityChecker) parseLinterOutput(output, linter string) []QualityIssu
 			})
 		}
 	}
-	
+
 	return issues
 }
 
 // calculateScore calculates a quality score based on issues
 func (qc *QualityChecker) calculateScore(issues []QualityIssue) float64 {
 	score := 10.0
-	
+
 	for _, issue := range issues {
 		switch issue.Severity {
 		case "error":
@@ -507,11 +507,11 @@ func (qc *QualityChecker) calculateScore(issues []QualityIssue) float64 {
 			score -= 0.1
 		}
 	}
-	
+
 	if score < 0 {
 		score = 0
 	}
-	
+
 	return score
 }
 

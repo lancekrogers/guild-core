@@ -39,12 +39,12 @@ type BoardState struct {
 
 // Task represents a task in the board state
 type Task struct {
-	ID          string
-	Title       string
-	Status      string
-	AssignedTo  string
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	ID         string
+	Title      string
+	Status     string
+	AssignedTo string
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
 }
 
 // Checkpoint represents a checkpoint during testing
@@ -101,29 +101,29 @@ func (f *KanbanTestFramework) Cleanup() {
 func (f *KanbanTestFramework) executeRealOperation(ctx context.Context, board *kanban.Board, operationIndex int) error {
 	// Vary operation types to simulate realistic usage
 	operationType := operationIndex % 7
-	
+
 	switch operationType {
 	case 0, 1: // Create new tasks (40% of operations)
 		title := fmt.Sprintf("Dynamic Task %d", operationIndex)
 		desc := fmt.Sprintf("Task created during operation %d", operationIndex)
 		_, err := board.CreateTask(ctx, title, desc)
 		return err
-		
+
 	case 2: // Update task status (15% of operations)
 		tasks, err := board.GetAllTasks(ctx)
 		if err != nil || len(tasks) == 0 {
 			return nil // No tasks to update
 		}
 		task := tasks[operationIndex%len(tasks)]
-		
+
 		// Cycle through statuses
 		statuses := []kanban.TaskStatus{
-			kanban.StatusTodo, kanban.StatusInProgress, 
+			kanban.StatusTodo, kanban.StatusInProgress,
 			kanban.StatusReadyForReview, kanban.StatusDone,
 		}
 		newStatus := statuses[operationIndex%len(statuses)]
 		return board.UpdateTaskStatus(ctx, task.ID, newStatus, "test-system", fmt.Sprintf("Operation %d", operationIndex))
-		
+
 	case 3: // Assign tasks (15% of operations)
 		tasks, err := board.GetAllTasks(ctx)
 		if err != nil || len(tasks) == 0 {
@@ -132,7 +132,7 @@ func (f *KanbanTestFramework) executeRealOperation(ctx context.Context, board *k
 		task := tasks[operationIndex%len(tasks)]
 		assignee := fmt.Sprintf("user-%d", (operationIndex%5)+1)
 		return board.AssignTask(ctx, task.ID, assignee, "test-system", fmt.Sprintf("Auto-assign operation %d", operationIndex))
-		
+
 	case 4: // Add task blockers (10% of operations)
 		tasks, err := board.GetAllTasks(ctx)
 		if err != nil || len(tasks) == 0 {
@@ -141,7 +141,7 @@ func (f *KanbanTestFramework) executeRealOperation(ctx context.Context, board *k
 		task := tasks[operationIndex%len(tasks)]
 		blockerID := fmt.Sprintf("blocker-%d", operationIndex)
 		return board.AddTaskBlocker(ctx, task.ID, blockerID, "test-system", fmt.Sprintf("Blocker from operation %d", operationIndex))
-		
+
 	case 5: // Remove task blockers (10% of operations)
 		tasks, err := board.GetAllTasks(ctx)
 		if err != nil || len(tasks) == 0 {
@@ -153,7 +153,7 @@ func (f *KanbanTestFramework) executeRealOperation(ctx context.Context, board *k
 			return board.RemoveTaskBlocker(ctx, task.ID, blockerID, "test-system", fmt.Sprintf("Unblock from operation %d", operationIndex))
 		}
 		return nil
-		
+
 	case 6: // Delete some tasks (10% of operations)
 		tasks, err := board.GetAllTasks(ctx)
 		if err != nil || len(tasks) <= 10 { // Keep at least 10 tasks
@@ -165,7 +165,7 @@ func (f *KanbanTestFramework) executeRealOperation(ctx context.Context, board *k
 			return board.DeleteTask(ctx, task.ID)
 		}
 		return nil
-		
+
 	default:
 		return nil
 	}
@@ -177,14 +177,14 @@ func (f *KanbanTestFramework) executeRealOperation(ctx context.Context, board *k
 func (f *KanbanTestFramework) ValidateBoardFileIntegrity(path string) bool {
 	// For SQLite backend, we validate by attempting to access the board
 	ctx := context.Background()
-	
+
 	// Try to list boards to verify SQLite connectivity
 	boards, err := f.manager.ListBoards(ctx)
 	if err != nil {
 		f.t.Logf("Failed to validate SQLite integrity: %v", err)
 		return false
 	}
-	
+
 	f.t.Logf("✓ SQLite integrity validated: %d boards accessible", len(boards))
 	return true
 }
@@ -214,22 +214,22 @@ func (f *KanbanTestFramework) CorruptBoardFile(boardID string, percentage float6
 // RecoverFromCorruption simulates recovery from corruption
 func (f *KanbanTestFramework) RecoverFromCorruption(boardID string) (*kanban.Board, error) {
 	f.t.Logf("🔄 Attempting recovery from corruption for board %s", boardID)
-	
+
 	// Recreate manager to simulate recovery process
 	manager, err := kanban.NewManagerWithRegistry(context.Background(), f.registry)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create recovery manager: %w", err)
 	}
-	
+
 	f.manager = manager
-	
+
 	// Try to load the board
 	ctx := context.Background()
 	board, err := f.manager.GetBoard(ctx, boardID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to recover board: %w", err)
 	}
-	
+
 	f.t.Logf("✅ Successfully recovered board '%s'", board.Name)
 	return board, nil
 }
@@ -241,17 +241,17 @@ func (f *KanbanTestFramework) ExecuteConcurrentPersistenceTest(boardID string, c
 	if err != nil {
 		f.t.Fatalf("Failed to get board for concurrent test: %v", err)
 	}
-	
+
 	f.t.Logf("🚀 Starting concurrent persistence test: %d clients, %d ops each", clientCount, operationsPerClient)
-	
+
 	// Channel to synchronize client completion
 	done := make(chan bool, clientCount)
-	
+
 	// Start concurrent clients
 	for client := 0; client < clientCount; client++ {
 		go func(clientID int) {
 			defer func() { done <- true }()
-			
+
 			for op := 0; op < operationsPerClient; op++ {
 				err := f.executeRealOperation(ctx, board, clientID*1000+op)
 				if err != nil {
@@ -260,12 +260,12 @@ func (f *KanbanTestFramework) ExecuteConcurrentPersistenceTest(boardID string, c
 			}
 		}(client)
 	}
-	
+
 	// Wait for all clients to complete
 	for i := 0; i < clientCount; i++ {
 		<-done
 	}
-	
+
 	f.t.Logf("✅ Concurrent persistence test completed")
 }
 
@@ -274,26 +274,26 @@ func (f *KanbanTestFramework) ValidateDataConsistency(state *BoardState) float64
 	// Check for basic consistency issues
 	taskIDs := make(map[string]bool)
 	duplicates := 0
-	
+
 	for _, task := range state.Tasks {
 		if taskIDs[task.ID] {
 			duplicates++
 		}
 		taskIDs[task.ID] = true
 	}
-	
+
 	// Calculate consistency score
 	totalTasks := len(state.Tasks)
 	if totalTasks == 0 {
 		return 1.0
 	}
-	
+
 	consistency := float64(totalTasks-duplicates) / float64(totalTasks)
-	
+
 	if duplicates > 0 {
 		f.t.Logf("⚠️ Found %d duplicate task IDs", duplicates)
 	}
-	
+
 	return consistency
 }
 
@@ -307,18 +307,18 @@ func (f *KanbanTestFramework) CalculateStorageMetrics(boardID string) StorageMet
 		f.t.Logf("Failed to get board for storage metrics: %v", err)
 		return StorageMetrics{}
 	}
-	
+
 	// Get all tasks to calculate metrics
 	tasks, err := board.GetAllTasks(ctx)
 	if err != nil {
 		f.t.Logf("Failed to get tasks for storage metrics: %v", err)
 		return StorageMetrics{}
 	}
-	
+
 	// Calculate estimated storage size based on task data
 	taskCount := len(tasks)
 	estimatedSize := int64(taskCount * 1024) // Rough estimate: 1KB per task
-	
+
 	return StorageMetrics{
 		TotalSize:         estimatedSize,
 		IndexEfficiency:   0.85 + rand.Float64()*0.1, // 85-95%
@@ -341,22 +341,22 @@ func (f *KanbanTestFramework) ExecuteHighLoadPersistenceTest(boardID string, cli
 	if err != nil {
 		f.t.Fatalf("Failed to get board for high load test: %v", err)
 	}
-	
+
 	totalOperations := clientCount * operationsPerClient
 	results := make([]PersistenceResult, totalOperations)
 	resultChan := make(chan PersistenceResult, totalOperations)
-	
+
 	f.t.Logf("🚀 Starting high load test: %d clients, %d ops each", clientCount, operationsPerClient)
-	
+
 	// Start concurrent clients
 	for client := 0; client < clientCount; client++ {
 		go func(clientID int) {
 			for op := 0; op < operationsPerClient; op++ {
 				start := time.Now()
-				
+
 				err := f.executeRealOperation(ctx, board, clientID*1000+op)
 				duration := time.Since(start)
-				
+
 				result := PersistenceResult{
 					Operation: fmt.Sprintf("client-%d-op-%d", clientID, op),
 					Duration:  duration,
@@ -364,17 +364,17 @@ func (f *KanbanTestFramework) ExecuteHighLoadPersistenceTest(boardID string, cli
 					Error:     err,
 					Timestamp: time.Now(),
 				}
-				
+
 				resultChan <- result
 			}
 		}(client)
 	}
-	
+
 	// Collect results
 	for i := 0; i < totalOperations; i++ {
 		results[i] = <-resultChan
 	}
-	
+
 	f.t.Logf("✅ High load test completed: %d operations", totalOperations)
 	return results
 }
@@ -386,7 +386,7 @@ func (f *KanbanTestFramework) CalculateSuccessRate(results []PersistenceResult) 
 	if len(results) == 0 {
 		return 0.0
 	}
-	
+
 	successCount := 0
 	for _, result := range results {
 		if result.Success {
@@ -401,7 +401,7 @@ func (f *KanbanTestFramework) CalculateAverageLatency(results []PersistenceResul
 	if len(results) == 0 {
 		return 0
 	}
-	
+
 	var total time.Duration
 	for _, result := range results {
 		total += result.Duration
@@ -414,12 +414,12 @@ func (f *KanbanTestFramework) CalculateP99Latency(results []PersistenceResult) t
 	if len(results) == 0 {
 		return 0
 	}
-	
+
 	durations := make([]time.Duration, len(results))
 	for i, result := range results {
 		durations[i] = result.Duration
 	}
-	
+
 	// Sort durations
 	for i := 0; i < len(durations)-1; i++ {
 		for j := i + 1; j < len(durations); j++ {
@@ -428,7 +428,7 @@ func (f *KanbanTestFramework) CalculateP99Latency(results []PersistenceResult) t
 			}
 		}
 	}
-	
+
 	p99Index := int(float64(len(durations)) * 0.99)
 	if p99Index < len(durations) {
 		return durations[p99Index]

@@ -44,9 +44,9 @@ func (m *MockRetriever) Close() error {
 
 func TestCraftContextInjector_Creation(t *testing.T) {
 	mockRetriever := &MockRetriever{}
-	
+
 	injector, err := NewContextInjector(mockRetriever, 4000)
-	
+
 	require.NoError(t, err)
 	assert.NotNil(t, injector)
 	assert.Equal(t, 4000, injector.maxTokens)
@@ -55,10 +55,10 @@ func TestCraftContextInjector_Creation(t *testing.T) {
 
 func TestGuildContextInjector_CreationWithDefaults(t *testing.T) {
 	mockRetriever := &MockRetriever{}
-	
+
 	// Test with zero max tokens (should use default)
 	injector, err := NewContextInjector(mockRetriever, 0)
-	
+
 	require.NoError(t, err)
 	assert.Equal(t, 4000, injector.maxTokens) // Should use default
 }
@@ -295,7 +295,7 @@ func TestCraftContextInjector_InjectionPoints(t *testing.T) {
 		},
 		InjectionPoints: []InjectionPoint{
 			InjectionSystemPrompt,
-			InjectionUserMessage, 
+			InjectionUserMessage,
 			InjectionToolContext,
 		},
 		DisableCache: true,
@@ -512,7 +512,7 @@ func BenchmarkJourneymanContextInjection_LargeContext(b *testing.B) {
 		for j := 0; j < 100; j++ {
 			content += "This is a large document with lots of content to test performance. "
 		}
-		
+
 		docs[i] = retrieval.RankedDocument{
 			Document: retrieval.Document{
 				ID:      "doc" + string(rune(i)),

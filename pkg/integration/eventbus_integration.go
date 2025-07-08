@@ -252,7 +252,7 @@ func (ebi *EventBusIntegrator) PublishEvent(ctx context.Context, event *Event) e
 	}
 
 	ebi.orchestratorBus.Publish(orchestratorEvent)
-	
+
 	ebi.logger.Debug("Event published successfully",
 		zap.String("event_type", event.Type),
 		zap.String("event_id", event.ID))
@@ -285,7 +285,7 @@ func (ebi *EventBusIntegrator) Subscribe(ctx context.Context, eventType string, 
 		// Create context for event processing with timeout for observability
 		eventCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 		defer cancel()
-		
+
 		// Convert Data back to JSON bytes for unmarshaling with proper error handling
 		eventData, err := json.Marshal(orchestratorEvent.Data)
 		if err != nil {
@@ -311,7 +311,7 @@ func (ebi *EventBusIntegrator) Subscribe(ctx context.Context, eventType string, 
 			ebi.logger.Error("Failed to unmarshal event", zap.Error(gErr))
 			return
 		}
-		
+
 		// Set context in event for downstream processing
 		event.Context = eventCtx
 
@@ -333,9 +333,9 @@ func (ebi *EventBusIntegrator) Subscribe(ctx context.Context, eventType string, 
 				}()
 				filterPassed = filter(&event)
 			}()
-			
+
 			if !filterPassed {
-				ebi.logger.Debug("Event filtered out", 
+				ebi.logger.Debug("Event filtered out",
 					zap.String("event_type", event.Type),
 					zap.String("event_id", event.ID),
 					zap.String("subscription_id", subscriptionID))
@@ -357,7 +357,7 @@ func (ebi *EventBusIntegrator) Subscribe(ctx context.Context, eventType string, 
 					ebi.logger.Error("Event handler panicked", zap.Error(gErr))
 				}
 			}()
-			
+
 			if err := handler(eventCtx, &event); err != nil {
 				gErr := gerror.Wrap(err, gerror.ErrCodeInternal, "event handler failed").
 					FromContext(eventCtx).

@@ -27,7 +27,7 @@ func NewEventBusAdapter(eventBus events.EventBus) EventBus {
 		eventBus: eventBus,
 		handlers: make(map[string][]func(event interface{})),
 	}
-	
+
 	// Subscribe to all events from the real event bus
 	ctx := context.Background()
 	adapter.eventBus.SubscribeAll(ctx, func(ctx context.Context, event events.CoreEvent) error {
@@ -35,7 +35,7 @@ func NewEventBusAdapter(eventBus events.EventBus) EventBus {
 		adapter.deliverToHandlers(event.GetType(), event)
 		return nil
 	})
-	
+
 	return adapter
 }
 
@@ -47,10 +47,10 @@ func (a *EventBusAdapter) UnifiedEventBus() events.EventBus {
 // Publish implements the simple EventBus interface
 func (a *EventBusAdapter) Publish(event interface{}) {
 	ctx := context.Background()
-	
+
 	// Try to convert the event to a CoreEvent
 	var coreEvent events.CoreEvent
-	
+
 	switch e := event.(type) {
 	case events.CoreEvent:
 		coreEvent = e
@@ -82,7 +82,7 @@ func (a *EventBusAdapter) Publish(event interface{}) {
 			"data": event,
 		})
 	}
-	
+
 	// Publish to the real event bus
 	if err := a.eventBus.Publish(ctx, coreEvent); err != nil {
 		// Log error but don't panic - maintain compatibility with simple interface
@@ -95,9 +95,9 @@ func (a *EventBusAdapter) Publish(event interface{}) {
 func (a *EventBusAdapter) Subscribe(eventType string, handler func(event interface{})) {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	
+
 	a.handlers[eventType] = append(a.handlers[eventType], handler)
-	
+
 	// Also subscribe to the real event bus for this specific type
 	ctx := context.Background()
 	a.eventBus.Subscribe(ctx, eventType, func(ctx context.Context, event events.CoreEvent) error {
@@ -113,12 +113,12 @@ func (a *EventBusAdapter) deliverToHandlers(eventType string, event interface{})
 	handlers := append([]func(event interface{}){}, a.handlers[eventType]...)
 	allHandlers := append([]func(event interface{}){}, a.handlers["*"]...)
 	a.mu.RUnlock()
-	
+
 	// Deliver to specific type handlers
 	for _, handler := range handlers {
 		handler(event)
 	}
-	
+
 	// Deliver to wildcard handlers
 	for _, handler := range allHandlers {
 		handler(event)

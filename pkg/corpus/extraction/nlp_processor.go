@@ -13,7 +13,7 @@ import (
 
 // NLPProcessor provides natural language processing capabilities for knowledge extraction
 type NLPProcessor struct {
-	entityExtractor *EntityExtractor
+	entityExtractor   *EntityExtractor
 	relationExtractor *RelationExtractor
 }
 
@@ -83,7 +83,7 @@ func (nlp *NLPProcessor) ExtractRelations(ctx context.Context, exchange Exchange
 // deduplicateEntities removes duplicate entities
 func (nlp *NLPProcessor) deduplicateEntities(entities []Entity) []Entity {
 	seen := make(map[string]Entity)
-	
+
 	for _, entity := range entities {
 		key := strings.ToLower(entity.Name) + ":" + entity.Type
 		if existing, exists := seen[key]; exists {
@@ -95,19 +95,19 @@ func (nlp *NLPProcessor) deduplicateEntities(entities []Entity) []Entity {
 			seen[key] = entity
 		}
 	}
-	
+
 	var result []Entity
 	for _, entity := range seen {
 		result = append(result, entity)
 	}
-	
+
 	return result
 }
 
 // deduplicateRelations removes duplicate relations
 func (nlp *NLPProcessor) deduplicateRelations(relations []Relation) []Relation {
 	seen := make(map[string]Relation)
-	
+
 	for _, relation := range relations {
 		key := strings.ToLower(relation.Subject) + ":" + relation.Predicate + ":" + strings.ToLower(relation.Object)
 		if existing, exists := seen[key]; exists {
@@ -119,12 +119,12 @@ func (nlp *NLPProcessor) deduplicateRelations(relations []Relation) []Relation {
 			seen[key] = relation
 		}
 	}
-	
+
 	var result []Relation
 	for _, relation := range seen {
 		result = append(result, relation)
 	}
-	
+
 	return result
 }
 
@@ -136,11 +136,11 @@ type EntityExtractor struct {
 // NewEntityExtractor creates a new entity extractor
 func NewEntityExtractor() *EntityExtractor {
 	patterns := map[string]*regexp.Regexp{
-		"technology": regexp.MustCompile(`(?i)\b(JavaScript|Python|Go|Golang|Java|React|Vue|Angular|Node\.js|Docker|Kubernetes|PostgreSQL|MongoDB|MySQL|Redis|AWS|Azure|GCP|Git|GitHub|GitLab|API|REST|GraphQL|JSON|XML|HTTP|HTTPS|TCP|UDP|SQL|NoSQL|microservices?|serverless|OAuth|JWT|SSL|TLS|DevOps|CI/CD|Terraform|Ansible|Jenkins|webpack|npm|yarn|pip|cargo|maven|gradle)\b`),
-		"file_type": regexp.MustCompile(`(?i)\b\w+\.(js|ts|py|go|java|cpp|c|h|css|html|json|xml|yaml|yml|md|txt|sql|sh|bat|ps1|dockerfile|makefile)\b`),
-		"url": regexp.MustCompile(`https?://[^\s]+`),
-		"database": regexp.MustCompile(`(?i)\b(database|db|table|collection|schema|migration|query|transaction|index|primary key|foreign key|constraint)\b`),
-		"infrastructure": regexp.MustCompile(`(?i)\b(server|container|cluster|load balancer|proxy|cache|queue|worker|service|endpoint|middleware|gateway|firewall|VPC|subnet|security group)\b`),
+		"technology":          regexp.MustCompile(`(?i)\b(JavaScript|Python|Go|Golang|Java|React|Vue|Angular|Node\.js|Docker|Kubernetes|PostgreSQL|MongoDB|MySQL|Redis|AWS|Azure|GCP|Git|GitHub|GitLab|API|REST|GraphQL|JSON|XML|HTTP|HTTPS|TCP|UDP|SQL|NoSQL|microservices?|serverless|OAuth|JWT|SSL|TLS|DevOps|CI/CD|Terraform|Ansible|Jenkins|webpack|npm|yarn|pip|cargo|maven|gradle)\b`),
+		"file_type":           regexp.MustCompile(`(?i)\b\w+\.(js|ts|py|go|java|cpp|c|h|css|html|json|xml|yaml|yml|md|txt|sql|sh|bat|ps1|dockerfile|makefile)\b`),
+		"url":                 regexp.MustCompile(`https?://[^\s]+`),
+		"database":            regexp.MustCompile(`(?i)\b(database|db|table|collection|schema|migration|query|transaction|index|primary key|foreign key|constraint)\b`),
+		"infrastructure":      regexp.MustCompile(`(?i)\b(server|container|cluster|load balancer|proxy|cache|queue|worker|service|endpoint|middleware|gateway|firewall|VPC|subnet|security group)\b`),
 		"programming_concept": regexp.MustCompile(`(?i)\b(function|method|class|interface|struct|variable|constant|parameter|argument|return|callback|promise|async|await|thread|process|goroutine|channel|mutex|lock|race condition|deadlock|memory leak|garbage collection)\b`),
 	}
 
@@ -212,10 +212,10 @@ type RelationExtractor struct {
 // NewRelationExtractor creates a new relation extractor
 func NewRelationExtractor() *RelationExtractor {
 	patterns := map[string]*regexp.Regexp{
-		"uses": regexp.MustCompile(`(?i)(\w+)\s+(uses?|using|utilized?|employs?)\s+(\w+)`),
-		"depends_on": regexp.MustCompile(`(?i)(\w+)\s+(depends? on|requires?|needs?)\s+(\w+)`),
-		"replaces": regexp.MustCompile(`(?i)(\w+)\s+(replaces?|replacing|substitutes?|instead of)\s+(\w+)`),
-		"implements": regexp.MustCompile(`(?i)(\w+)\s+(implements?|implementing|extends?|inherits? from)\s+(\w+)`),
+		"uses":            regexp.MustCompile(`(?i)(\w+)\s+(uses?|using|utilized?|employs?)\s+(\w+)`),
+		"depends_on":      regexp.MustCompile(`(?i)(\w+)\s+(depends? on|requires?|needs?)\s+(\w+)`),
+		"replaces":        regexp.MustCompile(`(?i)(\w+)\s+(replaces?|replacing|substitutes?|instead of)\s+(\w+)`),
+		"implements":      regexp.MustCompile(`(?i)(\w+)\s+(implements?|implementing|extends?|inherits? from)\s+(\w+)`),
 		"integrates_with": regexp.MustCompile(`(?i)(\w+)\s+(integrates? with|connects? to|works with)\s+(\w+)`),
 		"configured_with": regexp.MustCompile(`(?i)(\w+)\s+(configured with|setup with|using)\s+(\w+)`),
 	}
@@ -300,25 +300,25 @@ func (re *RelationExtractor) calculateRelationConfidence(match []string, relatio
 func (re *RelationExtractor) looksLikeTechnicalTerm(term string) bool {
 	// Simple heuristics for technical terms
 	term = strings.ToLower(term)
-	
+
 	// Contains common technical patterns
 	technicalPatterns := []string{
 		"api", "db", "sql", "http", "tcp", "json", "xml", "js", "py", "go",
 		"server", "client", "service", "config", "auth", "oauth", "jwt",
 		"docker", "k8s", "aws", "gcp", "azure", "git", "npm", "pip",
 	}
-	
+
 	for _, pattern := range technicalPatterns {
 		if strings.Contains(term, pattern) {
 			return true
 		}
 	}
-	
+
 	// Has technical naming conventions (camelCase, snake_case, kebab-case)
 	if strings.Contains(term, "_") || strings.Contains(term, "-") {
 		return true
 	}
-	
+
 	// Mixed case (likely camelCase or PascalCase)
 	hasUpper := false
 	hasLower := false
@@ -330,6 +330,6 @@ func (re *RelationExtractor) looksLikeTechnicalTerm(term string) bool {
 			hasLower = true
 		}
 	}
-	
+
 	return hasUpper && hasLower
 }

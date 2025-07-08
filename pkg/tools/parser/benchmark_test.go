@@ -13,14 +13,14 @@ import (
 // Benchmark data
 var (
 	smallJSON = `{"id": "call_123", "type": "function", "function": {"name": "test", "arguments": "{}"}}`
-	
+
 	mediumJSON = `{"tool_calls": [
 		{"id": "call_1", "type": "function", "function": {"name": "search", "arguments": "{\"query\": \"golang benchmarks\", \"limit\": 10}"}},
 		{"id": "call_2", "type": "function", "function": {"name": "analyze", "arguments": "{\"data\": [1,2,3,4,5], \"method\": \"mean\"}"}}
 	]}`
-	
+
 	smallXML = `<function_calls><invoke name="test"><parameter name="arg">value</parameter></invoke></function_calls>`
-	
+
 	mediumXML = `<function_calls>
 		<invoke name="search">
 			<parameter name="query">golang benchmarks</parameter>
@@ -37,7 +37,7 @@ var (
 func BenchmarkParser_JSON_Small(b *testing.B) {
 	parser := NewResponseParser()
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		calls, err := parser.ExtractToolCalls(smallJSON)
 		if err != nil {
@@ -52,7 +52,7 @@ func BenchmarkParser_JSON_Small(b *testing.B) {
 func BenchmarkParser_JSON_Medium(b *testing.B) {
 	parser := NewResponseParser()
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		calls, err := parser.ExtractToolCalls(mediumJSON)
 		if err != nil {
@@ -78,10 +78,10 @@ func BenchmarkParser_JSON_Large(b *testing.B) {
 		}`, i, i, i, strings.Repeat("x", 100)))
 	}
 	largeJSON := fmt.Sprintf(`{"tool_calls": [%s]}`, strings.Join(calls, ","))
-	
+
 	parser := NewResponseParser()
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		calls, err := parser.ExtractToolCalls(largeJSON)
 		if err != nil {
@@ -97,7 +97,7 @@ func BenchmarkParser_JSON_Large(b *testing.B) {
 func BenchmarkParser_XML_Small(b *testing.B) {
 	parser := NewResponseParser()
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		calls, err := parser.ExtractToolCalls(smallXML)
 		if err != nil {
@@ -112,7 +112,7 @@ func BenchmarkParser_XML_Small(b *testing.B) {
 func BenchmarkParser_XML_Medium(b *testing.B) {
 	parser := NewResponseParser()
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		calls, err := parser.ExtractToolCalls(mediumXML)
 		if err != nil {
@@ -135,10 +135,10 @@ func BenchmarkParser_XML_Large(b *testing.B) {
 		</invoke>`, i, i, strings.Repeat("x", 100)))
 	}
 	largeXML := fmt.Sprintf(`<function_calls>%s</function_calls>`, strings.Join(invokes, ""))
-	
+
 	parser := NewResponseParser()
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		calls, err := parser.ExtractToolCalls(largeXML)
 		if err != nil {
@@ -152,14 +152,14 @@ func BenchmarkParser_XML_Large(b *testing.B) {
 
 // BenchmarkParser_MixedContent tests parsing with surrounding text
 func BenchmarkParser_MixedContent_JSON(b *testing.B) {
-	mixed := fmt.Sprintf("%s\n\n%s\n\n%s", 
+	mixed := fmt.Sprintf("%s\n\n%s\n\n%s",
 		strings.Repeat("This is some context before the JSON. ", 100),
 		mediumJSON,
 		strings.Repeat("This is some context after the JSON. ", 100))
-	
+
 	parser := NewResponseParser()
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		calls, err := parser.ExtractToolCalls(mixed)
 		if err != nil {
@@ -172,14 +172,14 @@ func BenchmarkParser_MixedContent_JSON(b *testing.B) {
 }
 
 func BenchmarkParser_MixedContent_XML(b *testing.B) {
-	mixed := fmt.Sprintf("%s\n\n%s\n\n%s", 
+	mixed := fmt.Sprintf("%s\n\n%s\n\n%s",
 		strings.Repeat("This is some context before the XML. ", 100),
 		mediumXML,
 		strings.Repeat("This is some context after the XML. ", 100))
-	
+
 	parser := NewResponseParser()
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		calls, err := parser.ExtractToolCalls(mixed)
 		if err != nil {
@@ -195,7 +195,7 @@ func BenchmarkParser_MixedContent_XML(b *testing.B) {
 func BenchmarkParser_FormatDetection_JSON(b *testing.B) {
 	parser := NewResponseParser()
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		format, confidence, err := parser.DetectFormat(mediumJSON)
 		if err != nil {
@@ -213,7 +213,7 @@ func BenchmarkParser_FormatDetection_JSON(b *testing.B) {
 func BenchmarkParser_FormatDetection_XML(b *testing.B) {
 	parser := NewResponseParser()
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		format, confidence, err := parser.DetectFormat(mediumXML)
 		if err != nil {
@@ -232,7 +232,7 @@ func BenchmarkParser_FormatDetection_XML(b *testing.B) {
 func BenchmarkParser_Concurrent(b *testing.B) {
 	parser := NewResponseParser()
 	inputs := []string{smallJSON, mediumJSON, smallXML, mediumXML}
-	
+
 	b.RunParallel(func(pb *testing.PB) {
 		i := 0
 		for pb.Next() {
@@ -253,9 +253,9 @@ func BenchmarkParser_Concurrent(b *testing.B) {
 func BenchmarkParser_WithContext(b *testing.B) {
 	parser := NewResponseParser()
 	ctx := context.Background()
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		calls, err := parser.ExtractWithContext(ctx, mediumJSON)
 		if err != nil {
@@ -272,7 +272,7 @@ func BenchmarkParser_Allocations_JSON(b *testing.B) {
 	parser := NewResponseParser()
 	b.ReportAllocs()
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		_, _ = parser.ExtractToolCalls(mediumJSON)
 	}
@@ -282,7 +282,7 @@ func BenchmarkParser_Allocations_XML(b *testing.B) {
 	parser := NewResponseParser()
 	b.ReportAllocs()
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		_, _ = parser.ExtractToolCalls(mediumXML)
 	}
@@ -291,16 +291,16 @@ func BenchmarkParser_Allocations_XML(b *testing.B) {
 // Comparative benchmarks
 func BenchmarkParser_Compare_SimpleVsComplex(b *testing.B) {
 	parser := NewResponseParser()
-	
+
 	simple := `{"id": "c1", "type": "function", "function": {"name": "test", "arguments": "{}"}}`
 	complex := `{"tool_calls": [{"id": "c1", "type": "function", "function": {"name": "test", "arguments": "{}"}}]}`
-	
+
 	b.Run("Simple", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			_, _ = parser.ExtractToolCalls(simple)
 		}
 	})
-	
+
 	b.Run("Complex", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			_, _ = parser.ExtractToolCalls(complex)
@@ -311,16 +311,16 @@ func BenchmarkParser_Compare_SimpleVsComplex(b *testing.B) {
 // BenchmarkParser_RealWorld tests with realistic inputs
 func BenchmarkParser_RealWorld_ChatGPT(b *testing.B) {
 	parser := NewResponseParser()
-	
+
 	// Realistic ChatGPT response
 	input := `I'll help you analyze that data. Let me first fetch the current information and then process it.
 
 {"tool_calls": [{"id": "call_JlbpwFCg7t8R1HXuBOxtaVxE", "type": "function", "function": {"name": "fetch_data", "arguments": "{\"source\": \"api\", \"filters\": {\"date_from\": \"2024-01-01\", \"date_to\": \"2024-12-31\", \"status\": \"active\"}, \"fields\": [\"id\", \"name\", \"value\", \"timestamp\"]}"}}]}
 
 Now I'll process this data to generate the insights you're looking for.`
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		calls, err := parser.ExtractToolCalls(input)
 		if err != nil {
@@ -334,7 +334,7 @@ Now I'll process this data to generate the insights you're looking for.`
 
 func BenchmarkParser_RealWorld_Claude(b *testing.B) {
 	parser := NewResponseParser()
-	
+
 	// Realistic Claude response
 	input := `I understand you need help with data analysis. Let me fetch and process that information for you.
 
@@ -347,9 +347,9 @@ func BenchmarkParser_RealWorld_Claude(b *testing.B) {
 </function_calls>
 
 I'm now retrieving the data based on your criteria. Once I have it, I'll analyze it and provide you with the insights.`
-	
+
 	b.ResetTimer()
-	
+
 	for i := 0; i < b.N; i++ {
 		calls, err := parser.ExtractToolCalls(input)
 		if err != nil {

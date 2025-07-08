@@ -54,16 +54,16 @@ func (p *UnifiedTaskEventPublisher) PublishTaskCreated(ctx context.Context, task
 		events.EventTypeTaskCreated,
 		"kanban-service",
 		map[string]interface{}{
-			"task_id":      task.ID,
-			"board_id":     boardID,
-			"title":        task.Title,
-			"description":  task.Description,
-			"status":       string(task.Status),
-			"assignee":     task.AssignedTo,
-			"created_by":   createdBy,
-			"priority":     string(task.Priority),
-			"created_at":   task.CreatedAt,
-			"metadata":     task.Metadata,
+			"task_id":     task.ID,
+			"board_id":    boardID,
+			"title":       task.Title,
+			"description": task.Description,
+			"status":      string(task.Status),
+			"assignee":    task.AssignedTo,
+			"created_by":  createdBy,
+			"priority":    string(task.Priority),
+			"created_at":  task.CreatedAt,
+			"metadata":    task.Metadata,
 		},
 	)
 
@@ -162,14 +162,14 @@ func (p *UnifiedTaskEventPublisher) PublishTaskAssigned(ctx context.Context, tas
 		"task.assigned", // Custom event type since it's not in the constants
 		"kanban-service",
 		map[string]interface{}{
-			"task_id":      task.ID,
-			"board_id":     boardID,
-			"title":        task.Title,
-			"assigned_to":  assignedTo,
-			"assigned_by":  assignedBy,
+			"task_id":           task.ID,
+			"board_id":          boardID,
+			"title":             task.Title,
+			"assigned_to":       assignedTo,
+			"assigned_by":       assignedBy,
 			"previous_assignee": task.AssignedTo,
-			"updated_at":   task.UpdatedAt,
-			"metadata":     task.Metadata,
+			"updated_at":        task.UpdatedAt,
+			"metadata":          task.Metadata,
 		},
 	)
 

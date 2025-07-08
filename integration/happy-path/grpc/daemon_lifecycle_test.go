@@ -162,8 +162,8 @@ func (d *MockDaemon) Stop() error {
 func (d *MockDaemon) GetResourceUsage() ResourceUsage {
 	// Mock implementation - in real tests this would measure actual resource usage
 	return ResourceUsage{
-		MemoryMB:   float64(100 + (d.port % 50)),       // Simulate varying memory usage
-		CPUPercent: 15.0 + float64(d.port%20), // Simulate varying CPU usage
+		MemoryMB:   float64(100 + (d.port % 50)), // Simulate varying memory usage
+		CPUPercent: 15.0 + float64(d.port%20),    // Simulate varying CPU usage
 		Goroutines: 50,
 	}
 }

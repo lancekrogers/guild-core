@@ -29,7 +29,7 @@ func Example() {
 
 	for _, call := range calls {
 		fmt.Printf("Function: %s\n", call.Function.Name)
-		
+
 		// Parse arguments
 		var args map[string]interface{}
 		json.Unmarshal(call.Function.Arguments, &args)
@@ -81,7 +81,7 @@ func ExampleResponseParser_DetectFormat() {
 			`{"tool_calls": [{"id": "test", "type": "function", "function": {"name": "test", "arguments": "{}"}}]}`,
 		},
 		{
-			"Anthropic XML", 
+			"Anthropic XML",
 			`<function_calls><invoke name="test"><parameter name="arg">value</parameter></invoke></function_calls>`,
 		},
 		{
@@ -149,7 +149,7 @@ The result will be 56.`
 
 	call := calls[0]
 	fmt.Printf("Function: %s\n", call.Function.Name)
-	
+
 	// Parse arguments
 	var args map[string]interface{}
 	json.Unmarshal(call.Function.Arguments, &args)
@@ -165,14 +165,14 @@ The result will be 56.`
 func Example_customConfiguration() {
 	// Create a parser with custom configuration
 	parser := parser.NewResponseParser(
-		parser.WithMaxInputSize(1024*1024),     // 1MB max
-		parser.WithTimeout(2*time.Second),      // 2s timeout
-		parser.WithStrictValidation(true),      // Strict validation
-		parser.WithEnableFuzzyMatch(false),     // Disable fuzzy matching
+		parser.WithMaxInputSize(1024*1024), // 1MB max
+		parser.WithTimeout(2*time.Second),  // 2s timeout
+		parser.WithStrictValidation(true),  // Strict validation
+		parser.WithEnableFuzzyMatch(false), // Disable fuzzy matching
 	)
 
 	response := `{"id": "call_1", "type": "function", "function": {"name": "test", "arguments": "{}"}}`
-	
+
 	calls, err := parser.ExtractToolCalls(response)
 	if err != nil {
 		log.Fatal(err)
@@ -189,13 +189,13 @@ func Example_errorHandling() {
 
 	// Try to parse invalid input
 	response := `{invalid json}`
-	
+
 	calls, err := parser.ExtractToolCalls(response)
 	if err != nil {
 		// Parser returns empty result for invalid input, not an error
 		fmt.Printf("Error: %v\n", err)
 	}
-	
+
 	// Empty response is also not an error
 	fmt.Printf("Calls found: %d\n", len(calls))
 	// Output:
@@ -206,14 +206,14 @@ func Example_errorHandling() {
 func Example_monitoredParser() {
 	// Create a base parser
 	baseParser := parser.NewResponseParser()
-	
+
 	// Wrap with monitoring
 	monitoredParser := parser.NewMonitoredParser(baseParser, "v1.0.0")
 	defer monitoredParser.Stop()
 
 	// Use the parser
 	response := `{"tool_calls": [{"id": "mon_1", "type": "function", "function": {"name": "monitor_test", "arguments": "{}"}}]}`
-	
+
 	_, err := monitoredParser.ExtractToolCalls(response)
 	if err != nil {
 		log.Fatal(err)
@@ -223,7 +223,7 @@ func Example_monitoredParser() {
 	health := monitoredParser.GetHealth()
 	fmt.Printf("Parser health: %s\n", health.Status)
 	fmt.Printf("Total parses: %d\n", health.Metrics.TotalParses)
-	
+
 	// Check for alerts
 	alerts := monitoredParser.GetAlerts()
 	fmt.Printf("Active alerts: %d\n", len(alerts))
@@ -265,9 +265,9 @@ func Example_complexArguments() {
 			Verbose bool   `json:"verbose"`
 		} `json:"options"`
 	}
-	
+
 	json.Unmarshal(calls[0].Function.Arguments, &args)
-	
+
 	fmt.Printf("Function: %s\n", calls[0].Function.Name)
 	fmt.Printf("Users: %d\n", len(args.Users))
 	fmt.Printf("First user: %s (active: %v)\n", args.Users[0].Name, args.Users[0].Active)

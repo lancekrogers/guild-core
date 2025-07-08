@@ -65,14 +65,13 @@ const (
 	ProviderFormatUnknown   = types.ProviderFormatUnknown
 )
 
-
 // ToolDefinition represents a tool that can be called by an LLM.
 // It follows the OpenAI function calling schema for compatibility.
 type ToolDefinition struct {
 	// Type is the type of tool (usually "function")
-	Type     string              `json:"type"`
+	Type string `json:"type"`
 	// Function contains the function definition
-	Function FunctionDefinition  `json:"function"`
+	Function FunctionDefinition `json:"function"`
 }
 
 // FunctionDefinition defines a callable function with its metadata.
@@ -80,11 +79,11 @@ type ToolDefinition struct {
 // how to call them correctly.
 type FunctionDefinition struct {
 	// Name is the function name that will be used in tool calls
-	Name        string          `json:"name"`
+	Name string `json:"name"`
 	// Description explains what the function does (shown to LLM)
-	Description string          `json:"description"`
+	Description string `json:"description"`
 	// Parameters is a JSON Schema defining the function parameters
-	Parameters  json.RawMessage `json:"parameters"`
+	Parameters json.RawMessage `json:"parameters"`
 }
 
 // ToolResult represents the result of executing a tool call.
@@ -92,17 +91,17 @@ type FunctionDefinition struct {
 // about the execution.
 type ToolResult struct {
 	// ID matches the tool call ID that was executed
-	ID       string                 `json:"id"`
+	ID string `json:"id"`
 	// Success indicates if the tool execution succeeded
-	Success  bool                   `json:"success"`
+	Success bool `json:"success"`
 	// Content is the main result text (for success cases)
-	Content  string                 `json:"content,omitempty"`
+	Content string `json:"content,omitempty"`
 	// Error contains error message (for failure cases)
-	Error    string                 `json:"error,omitempty"`
+	Error string `json:"error,omitempty"`
 	// Output contains structured output data
-	Output   map[string]interface{} `json:"output,omitempty"`
+	Output map[string]interface{} `json:"output,omitempty"`
 	// Duration is how long the execution took
-	Duration time.Duration          `json:"duration,omitempty"`
+	Duration time.Duration `json:"duration,omitempty"`
 	// Metadata contains additional execution information
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 }
@@ -115,17 +114,16 @@ type ToolExecutor interface {
 	// It should validate the tool exists and arguments are valid
 	// before execution.
 	Execute(ctx context.Context, call ToolCall) (*ToolResult, error)
-	
+
 	// ExecuteBatch runs multiple tool calls, potentially in parallel.
 	// Implementations should respect context cancellation and may
 	// limit concurrency for resource management.
 	ExecuteBatch(ctx context.Context, calls []ToolCall) ([]*ToolResult, error)
-	
+
 	// GetAvailableTools returns all registered tools as standardized
 	// definitions that can be passed to LLMs.
 	GetAvailableTools() []ToolDefinition
 }
-
 
 // ParserOption configures parser behavior. Options can be passed to
 // NewResponseParser to customize parsing behavior.
@@ -133,12 +131,12 @@ type ParserOption func(*parserConfig)
 
 // parserConfig holds parser configuration
 type parserConfig struct {
-	maxInputSize      int
-	enableFuzzyMatch  bool
-	strictValidation  bool
-	timeout           time.Duration
-	customDetectors   []FormatDetector
-	customParsers     map[ProviderFormat]FormatParser
+	maxInputSize     int
+	enableFuzzyMatch bool
+	strictValidation bool
+	timeout          time.Duration
+	customDetectors  []FormatDetector
+	customParsers    map[ProviderFormat]FormatParser
 }
 
 // WithMaxInputSize sets the maximum input size to process.
@@ -146,7 +144,8 @@ type parserConfig struct {
 // Default is 10MB.
 //
 // Example:
-//   parser := NewResponseParser(WithMaxInputSize(5 * 1024 * 1024)) // 5MB
+//
+//	parser := NewResponseParser(WithMaxInputSize(5 * 1024 * 1024)) // 5MB
 func WithMaxInputSize(size int) ParserOption {
 	return func(c *parserConfig) {
 		c.maxInputSize = size
@@ -159,7 +158,8 @@ func WithMaxInputSize(size int) ParserOption {
 // Default is false (lenient mode).
 //
 // Example:
-//   parser := NewResponseParser(WithStrictValidation(true))
+//
+//	parser := NewResponseParser(WithStrictValidation(true))
 func WithStrictValidation(strict bool) ParserOption {
 	return func(c *parserConfig) {
 		c.strictValidation = strict
@@ -171,7 +171,8 @@ func WithStrictValidation(strict bool) ParserOption {
 // Default is 5 seconds.
 //
 // Example:
-//   parser := NewResponseParser(WithTimeout(10 * time.Second))
+//
+//	parser := NewResponseParser(WithTimeout(10 * time.Second))
 func WithTimeout(timeout time.Duration) ParserOption {
 	return func(c *parserConfig) {
 		c.timeout = timeout
@@ -183,7 +184,8 @@ func WithTimeout(timeout time.Duration) ParserOption {
 // increase false positives. Default is true.
 //
 // Example:
-//   parser := NewResponseParser(WithEnableFuzzyMatch(false))
+//
+//	parser := NewResponseParser(WithEnableFuzzyMatch(false))
 func WithEnableFuzzyMatch(enabled bool) ParserOption {
 	return func(c *parserConfig) {
 		c.enableFuzzyMatch = enabled
@@ -194,8 +196,9 @@ func WithEnableFuzzyMatch(enabled bool) ParserOption {
 // This allows extending the parser to support new formats.
 //
 // Example:
-//   detector := &MyCustomDetector{}
-//   parser := NewResponseParser(WithCustomDetector(detector))
+//
+//	detector := &MyCustomDetector{}
+//	parser := NewResponseParser(WithCustomDetector(detector))
 func WithCustomDetector(detector FormatDetector) ParserOption {
 	return func(c *parserConfig) {
 		c.customDetectors = append(c.customDetectors, detector)
@@ -206,10 +209,11 @@ func WithCustomDetector(detector FormatDetector) ParserOption {
 // This allows extending the parser to handle new formats.
 //
 // Example:
-//   customParser := &MyCustomParser{}
-//   parser := NewResponseParser(
-//     WithCustomParser("myformat", customParser),
-//   )
+//
+//	customParser := &MyCustomParser{}
+//	parser := NewResponseParser(
+//	  WithCustomParser("myformat", customParser),
+//	)
 func WithCustomParser(format ProviderFormat, parser FormatParser) ParserOption {
 	return func(c *parserConfig) {
 		if c.customParsers == nil {

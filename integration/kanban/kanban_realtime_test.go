@@ -238,7 +238,7 @@ func TestKanbanUIPerformanceWith200Tasks(t *testing.T) {
 
 	// Measure UI rendering performance
 	start := time.Now()
-	
+
 	// Wait for all tasks to appear in UI (with longer timeout for 200 tasks)
 	taskCount := 0
 	require.Eventually(t, func() bool {
@@ -257,7 +257,7 @@ func TestKanbanUIPerformanceWith200Tasks(t *testing.T) {
 	// Simulate rapid status updates to test real-time performance
 	logger.InfoContext(ctx, "Testing UI responsiveness with rapid updates")
 	updateStart := time.Now()
-	
+
 	// Update status of first 20 tasks
 	for i := 0; i < 20; i++ {
 		if i >= len(taskIDs) {
@@ -273,7 +273,7 @@ func TestKanbanUIPerformanceWith200Tasks(t *testing.T) {
 	// Performance requirement: Rapid updates should be fast
 	assert.Less(t, updateDuration, 2*time.Second, "20 rapid updates should complete within 2 seconds")
 
-	logger.InfoContext(ctx, "Kanban UI performance test completed successfully", 
+	logger.InfoContext(ctx, "Kanban UI performance test completed successfully",
 		"total_tasks", taskCount, "load_time", loadTime, "update_time", updateDuration)
 }
 
@@ -371,7 +371,7 @@ func setupKanbanTestEnvironment(ctx context.Context, t *testing.T) (*kanbanTestE
 
 	// Create temporary directory for test
 	testDir := t.TempDir()
-	
+
 	logger.InfoContext(ctx, "Setting up kanban test environment", "test_dir", testDir)
 
 	// Initialize registry and storage
@@ -562,7 +562,7 @@ func (r *testKanbanComponentRegistry) Storage() kanban.StorageRegistry {
 
 // containsIgnoreCase checks if a string contains a substring (case-insensitive)
 func containsIgnoreCase(s, substr string) bool {
-	return len(s) >= len(substr) && 
-		   s[:len(substr)] == substr ||
-		   (len(s) > len(substr) && containsIgnoreCase(s[1:], substr))
+	return len(s) >= len(substr) &&
+		s[:len(substr)] == substr ||
+		(len(s) > len(substr) && containsIgnoreCase(s[1:], substr))
 }

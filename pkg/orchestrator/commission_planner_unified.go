@@ -28,7 +28,7 @@ func NewUnifiedCommissionTaskPlanner(
 ) CommissionTaskPlanner {
 	// Create the base planner with nil legacy event bus
 	basePlanner := newCommissionTaskPlanner(kanbanManager, parser, nil)
-	
+
 	return &UnifiedCommissionTaskPlanner{
 		defaultCommissionTaskPlanner: basePlanner,
 		unifiedEventBus:              unifiedEventBus,
@@ -107,14 +107,14 @@ func (p *UnifiedCommissionTaskPlanner) emitUnifiedTaskCreatedEvent(ctx context.C
 				"priority":      task.Priority,
 			},
 		)
-		
+
 		// Add additional metadata
 		event.WithData("status", task.Status)
 		event.WithData("estimated_hours", task.EstimatedHours)
 		if len(task.Dependencies) > 0 {
 			event.WithData("dependencies", task.Dependencies)
 		}
-		
+
 		// Publish the event
 		if err := p.unifiedEventBus.Publish(ctx, event); err != nil {
 			// Log error but don't fail the operation
@@ -137,14 +137,14 @@ func (p *UnifiedCommissionTaskPlanner) emitUnifiedTaskAssignedEvent(ctx context.
 				"title":      task.Title,
 			},
 		)
-		
+
 		// Add additional context
 		event.WithData("priority", task.Priority)
 		event.WithData("status", task.Status)
 		if commissionID, exists := task.Metadata["commission_id"]; exists {
 			event.WithData("commission_id", commissionID)
 		}
-		
+
 		// Publish the event
 		if err := p.unifiedEventBus.Publish(ctx, event); err != nil {
 			// Log error but don't fail the operation

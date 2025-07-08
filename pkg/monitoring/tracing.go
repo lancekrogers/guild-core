@@ -12,20 +12,20 @@ import (
 
 // TracingIntegration provides distributed tracing capabilities
 type TracingIntegration struct {
-	tracer   Tracer
-	monitor  *PerformanceMonitor
-	config   *TracingConfig
-	spans    map[string]*Span
-	mu       sync.RWMutex
+	tracer  Tracer
+	monitor *PerformanceMonitor
+	config  *TracingConfig
+	spans   map[string]*Span
+	mu      sync.RWMutex
 }
 
 // TracingConfig configures tracing behavior
 type TracingConfig struct {
-	Enabled        bool    `json:"enabled"`
-	SamplingRate   float64 `json:"sampling_rate"`
-	MaxSpans       int     `json:"max_spans"`
-	FlushInterval  time.Duration `json:"flush_interval"`
-	ExporterURL    string  `json:"exporter_url"`
+	Enabled       bool          `json:"enabled"`
+	SamplingRate  float64       `json:"sampling_rate"`
+	MaxSpans      int           `json:"max_spans"`
+	FlushInterval time.Duration `json:"flush_interval"`
+	ExporterURL   string        `json:"exporter_url"`
 }
 
 // DefaultTracingConfig returns default tracing configuration

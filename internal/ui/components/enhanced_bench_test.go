@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/ui/theme"
 	"github.com/lancekrogers/guild/internal/ui/animation"
+	"github.com/lancekrogers/guild/internal/ui/theme"
 )
 
 // BenchmarkComponentLibrary_RenderButton benchmarks button rendering performance
@@ -17,17 +17,17 @@ import (
 func BenchmarkComponentLibrary_RenderButton(b *testing.B) {
 	cl := setupComponentLibrary(nil)
 	ctx := context.Background()
-	
+
 	button := Button{
 		Text:    "Benchmark Button",
 		Variant: ButtonPrimary,
 		Size:    ButtonSizeMedium,
 		State:   ButtonStateNormal,
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		_, err := cl.RenderButton(ctx, button)
 		if err != nil {
@@ -41,7 +41,7 @@ func BenchmarkComponentLibrary_RenderButton(b *testing.B) {
 func BenchmarkComponentLibrary_RenderModal(b *testing.B) {
 	cl := setupComponentLibrary(nil)
 	ctx := context.Background()
-	
+
 	modal := Modal{
 		Title:    "Benchmark Modal",
 		Content:  "This is benchmark content for performance testing",
@@ -50,10 +50,10 @@ func BenchmarkComponentLibrary_RenderModal(b *testing.B) {
 		Closable: true,
 		Backdrop: true,
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		_, err := cl.RenderModal(ctx, modal)
 		if err != nil {
@@ -67,7 +67,7 @@ func BenchmarkComponentLibrary_RenderModal(b *testing.B) {
 func BenchmarkComponentLibrary_RenderAgentBadge(b *testing.B) {
 	cl := setupComponentLibrary(nil)
 	ctx := context.Background()
-	
+
 	badge := AgentBadge{
 		AgentID:  "benchmark-agent",
 		Status:   AgentOnline,
@@ -75,10 +75,10 @@ func BenchmarkComponentLibrary_RenderAgentBadge(b *testing.B) {
 		ShowName: true,
 		Animated: true,
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		_, err := cl.RenderAgentBadge(ctx, badge)
 		if err != nil {
@@ -92,7 +92,7 @@ func BenchmarkComponentLibrary_RenderAgentBadge(b *testing.B) {
 func BenchmarkComponentLibrary_RenderProgressBar(b *testing.B) {
 	cl := setupComponentLibrary(nil)
 	ctx := context.Background()
-	
+
 	progress := ProgressBar{
 		Progress:    0.75,
 		Width:       30,
@@ -101,10 +101,10 @@ func BenchmarkComponentLibrary_RenderProgressBar(b *testing.B) {
 		Label:       "Benchmark Progress",
 		Style:       ProgressStyleBar,
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		_, err := cl.RenderProgressBar(ctx, progress)
 		if err != nil {
@@ -118,7 +118,7 @@ func BenchmarkComponentLibrary_RenderProgressBar(b *testing.B) {
 func BenchmarkComponentLibrary_RenderChatMessage(b *testing.B) {
 	cl := setupComponentLibrary(nil)
 	ctx := context.Background()
-	
+
 	message := ChatMessage{
 		Content:   "This is a benchmark chat message for performance testing",
 		AgentID:   "benchmark-agent",
@@ -133,10 +133,10 @@ func BenchmarkComponentLibrary_RenderChatMessage(b *testing.B) {
 			Mentions: []string{"agent-2", "agent-3"},
 		},
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		_, err := cl.RenderChatMessage(ctx, message)
 		if err != nil {
@@ -149,16 +149,16 @@ func BenchmarkComponentLibrary_RenderChatMessage(b *testing.B) {
 func BenchmarkButtonVariants(b *testing.B) {
 	cl := setupComponentLibrary(nil)
 	ctx := context.Background()
-	
+
 	variants := []ButtonVariant{
 		ButtonPrimary, ButtonSecondary, ButtonAccent,
 		ButtonSuccess, ButtonWarning, ButtonDanger,
 		ButtonGhost, ButtonLink,
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		variant := variants[i%len(variants)]
 		button := Button{
@@ -166,7 +166,7 @@ func BenchmarkButtonVariants(b *testing.B) {
 			Variant: variant,
 			Size:    ButtonSizeMedium,
 		}
-		
+
 		_, err := cl.RenderButton(ctx, button)
 		if err != nil {
 			b.Fatal(err)
@@ -178,15 +178,15 @@ func BenchmarkButtonVariants(b *testing.B) {
 func BenchmarkProgressStyles(b *testing.B) {
 	cl := setupComponentLibrary(nil)
 	ctx := context.Background()
-	
+
 	styles := []ProgressStyle{
 		ProgressStyleBar, ProgressCircle,
 		ProgressRing, ProgressDots,
 	}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		style := styles[i%len(styles)]
 		progress := ProgressBar{
@@ -194,7 +194,7 @@ func BenchmarkProgressStyles(b *testing.B) {
 			Width:    20,
 			Style:    style,
 		}
-		
+
 		_, err := cl.RenderProgressBar(ctx, progress)
 		if err != nil {
 			b.Fatal(err)
@@ -205,14 +205,14 @@ func BenchmarkProgressStyles(b *testing.B) {
 // BenchmarkComponentLibrary_ThreadSafety benchmarks concurrent component rendering
 func BenchmarkComponentLibrary_ThreadSafety(b *testing.B) {
 	cl := setupComponentLibrary(nil)
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	b.RunParallel(func(pb *testing.PB) {
 		ctx := context.Background()
 		i := 0
-		
+
 		for pb.Next() {
 			switch i % 5 {
 			case 0:
@@ -240,31 +240,31 @@ func BenchmarkComponentLibrary_ThreadSafety(b *testing.B) {
 func TestComponentPerformanceThresholds(t *testing.T) {
 	cl := setupComponentLibrary(t)
 	ctx := context.Background()
-	
+
 	threshold := 10 * time.Millisecond
-	
+
 	t.Run("ButtonRenderingThreshold", func(t *testing.T) {
 		button := Button{
 			Text:    "Performance Test Button",
 			Variant: ButtonPrimary,
 			Size:    ButtonSizeLarge,
 		}
-		
+
 		start := time.Now()
 		_, err := cl.RenderButton(ctx, button)
 		duration := time.Since(start)
-		
+
 		if err != nil {
 			t.Fatal(err)
 		}
-		
+
 		if duration > threshold {
 			t.Errorf("Button rendering took %v, exceeds threshold of %v", duration, threshold)
 		}
-		
+
 		t.Logf("Button rendering completed in %v", duration)
 	})
-	
+
 	t.Run("ModalRenderingThreshold", func(t *testing.T) {
 		modal := Modal{
 			Title:    "Performance Test Modal",
@@ -277,22 +277,22 @@ func TestComponentPerformanceThresholds(t *testing.T) {
 				{Text: "Cancel", Variant: ButtonSecondary},
 			},
 		}
-		
+
 		start := time.Now()
 		_, err := cl.RenderModal(ctx, modal)
 		duration := time.Since(start)
-		
+
 		if err != nil {
 			t.Fatal(err)
 		}
-		
+
 		if duration > threshold {
 			t.Errorf("Modal rendering took %v, exceeds threshold of %v", duration, threshold)
 		}
-		
+
 		t.Logf("Modal rendering completed in %v", duration)
 	})
-	
+
 	t.Run("AgentBadgeRenderingThreshold", func(t *testing.T) {
 		badge := AgentBadge{
 			AgentID:    "performance-test-agent",
@@ -302,22 +302,22 @@ func TestComponentPerformanceThresholds(t *testing.T) {
 			ShowStatus: true,
 			Animated:   true,
 		}
-		
+
 		start := time.Now()
 		_, err := cl.RenderAgentBadge(ctx, badge)
 		duration := time.Since(start)
-		
+
 		if err != nil {
 			t.Fatal(err)
 		}
-		
+
 		if duration > threshold {
 			t.Errorf("Agent badge rendering took %v, exceeds threshold of %v", duration, threshold)
 		}
-		
+
 		t.Logf("Agent badge rendering completed in %v", duration)
 	})
-	
+
 	t.Run("ChatMessageRenderingThreshold", func(t *testing.T) {
 		message := ChatMessage{
 			Content:   "This is a comprehensive performance test message with reactions and metadata",
@@ -336,19 +336,19 @@ func TestComponentPerformanceThresholds(t *testing.T) {
 				Tags:     []string{"important", "performance"},
 			},
 		}
-		
+
 		start := time.Now()
 		_, err := cl.RenderChatMessage(ctx, message)
 		duration := time.Since(start)
-		
+
 		if err != nil {
 			t.Fatal(err)
 		}
-		
+
 		if duration > threshold {
 			t.Errorf("Chat message rendering took %v, exceeds threshold of %v", duration, threshold)
 		}
-		
+
 		t.Logf("Chat message rendering completed in %v", duration)
 	})
 }
@@ -357,35 +357,35 @@ func TestComponentPerformanceThresholds(t *testing.T) {
 func BenchmarkMemoryUsage(b *testing.B) {
 	b.Run("ComponentLibraryMemory", func(b *testing.B) {
 		b.ReportAllocs()
-		
+
 		for i := 0; i < b.N; i++ {
 			themeManager := theme.NewThemeManager()
 			animator := animation.NewAnimator()
 			cl := NewComponentLibrary(themeManager, animator)
-			
+
 			ctx := context.Background()
-			
+
 			// Render multiple components to test memory usage
 			button := Button{Text: "Memory Test", Variant: ButtonPrimary}
 			cl.RenderButton(ctx, button)
-			
+
 			modal := Modal{Title: "Memory Test", Width: 40, Height: 15}
 			cl.RenderModal(ctx, modal)
-			
+
 			badge := AgentBadge{AgentID: "memory-agent", Status: AgentOnline}
 			cl.RenderAgentBadge(ctx, badge)
 		}
 	})
-	
+
 	b.Run("ComponentReuseMemory", func(b *testing.B) {
 		cl := setupComponentLibrary(nil)
 		ctx := context.Background()
-		
+
 		button := Button{Text: "Reuse Test", Variant: ButtonPrimary}
-		
+
 		b.ReportAllocs()
 		b.ResetTimer()
-		
+
 		// Test memory efficiency when reusing components
 		for i := 0; i < b.N; i++ {
 			cl.RenderButton(ctx, button)

@@ -18,21 +18,21 @@ import (
 func TestCraftWorktreeManager(t *testing.T) {
 	ctx := context.Background()
 	tempDir := t.TempDir()
-	
+
 	// Create a test git repository
 	repoPath := filepath.Join(tempDir, "test-repo")
 	basePath := filepath.Join(tempDir, "worktrees")
-	
+
 	// Create a minimal git repo for testing
 	err := os.MkdirAll(repoPath, 0755)
 	require.NoError(t, err)
-	
+
 	// Initialize git repo (this would fail in real usage without git)
 	// For testing, we'll create the directory structure
 	gitDir := filepath.Join(repoPath, ".git")
 	err = os.MkdirAll(gitDir, 0755)
 	require.NoError(t, err)
-	
+
 	// This test would fail with actual git operations, but tests the constructor
 	_, err = NewWorktreeManager(ctx, repoPath, basePath)
 	// We expect this to fail because we don't have a real git repo
@@ -43,11 +43,11 @@ func TestCraftWorktreeManager(t *testing.T) {
 func TestJourneymanWorktreeManagerContextCancellation(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately
-	
+
 	tempDir := t.TempDir()
 	repoPath := filepath.Join(tempDir, "test-repo")
 	basePath := filepath.Join(tempDir, "worktrees")
-	
+
 	wm, err := NewWorktreeManager(ctx, repoPath, basePath)
 	assert.Error(t, err)
 	assert.Nil(t, wm)
@@ -56,7 +56,7 @@ func TestJourneymanWorktreeManagerContextCancellation(t *testing.T) {
 // TestGuildWorktreeCreationRequest tests worktree creation request validation
 func TestGuildWorktreeCreationRequest(t *testing.T) {
 	ctx := context.Background()
-	
+
 	tests := []struct {
 		name        string
 		req         CreateWorktreeRequest
@@ -106,9 +106,9 @@ func TestGuildWorktreeCreationRequest(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Create mock manager for validation testing
 			mockManager := &mockWorktreeManager{}
-			
+
 			err := mockManager.validateRequest(ctx, tt.req)
-			
+
 			if tt.expectError {
 				assert.Error(t, err)
 				if tt.errorMsg != "" {

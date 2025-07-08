@@ -16,8 +16,8 @@ import (
 
 // ChatAnalyzer extracts knowledge from chat conversations
 type ChatAnalyzer struct {
-	nlp             *NLPProcessor
-	patternMatcher  *PatternMatcher
+	nlp              *NLPProcessor
+	patternMatcher   *PatternMatcher
 	knowledgeBuilder *KnowledgeBuilder
 }
 
@@ -34,8 +34,8 @@ func NewChatAnalyzer(ctx context.Context) (*ChatAnalyzer, error) {
 	knowledgeBuilder := NewKnowledgeBuilder()
 
 	return &ChatAnalyzer{
-		nlp:             nlp,
-		patternMatcher:  patternMatcher,
+		nlp:              nlp,
+		patternMatcher:   patternMatcher,
 		knowledgeBuilder: knowledgeBuilder,
 	}, nil
 }
@@ -377,28 +377,28 @@ func (ca *ChatAnalyzer) extractCodeBlocks(ctx context.Context, exchange Exchange
 
 func (ca *ChatAnalyzer) extractExchangeContext(ctx context.Context, exchange Exchange) map[string]interface{} {
 	context := make(map[string]interface{})
-	
+
 	// Extract participants
 	participants := make(map[string]bool)
 	for _, msg := range exchange.Messages {
 		participants[msg.Role] = true
 	}
-	
+
 	var roleList []string
 	for role := range participants {
 		roleList = append(roleList, role)
 	}
 	context["participants"] = roleList
-	
+
 	// Extract message count
 	context["message_count"] = len(exchange.Messages)
-	
+
 	// Extract time span
 	if !exchange.StartTime.IsZero() && !exchange.EndTime.IsZero() {
 		duration := exchange.EndTime.Sub(exchange.StartTime)
 		context["duration_seconds"] = duration.Seconds()
 	}
-	
+
 	return context
 }
 
@@ -439,8 +439,8 @@ func (ca *ChatAnalyzer) assessSolutionConfidence(ctx context.Context, exchange E
 	// Check if solution was tested or verified
 	for _, msg := range exchange.Messages {
 		content := strings.ToLower(msg.Content)
-		if strings.Contains(content, "works") || strings.Contains(content, "tested") || 
-		   strings.Contains(content, "verified") || strings.Contains(content, "fixed") {
+		if strings.Contains(content, "works") || strings.Contains(content, "tested") ||
+			strings.Contains(content, "verified") || strings.Contains(content, "fixed") {
 			confidence += 0.25
 			break
 		}

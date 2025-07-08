@@ -352,7 +352,7 @@ func (m *unifiedManager) UpdateProgress(ctx context.Context, campaignID string) 
 			// For now, we'll use a simple progress calculation
 			// TODO: Create proper interface for commission progress
 			_ = commissionObj // Suppress unused variable warning
-			
+
 			// For now, just count commissions
 			totalWork += 100.0
 			// Assume 50% progress for active commissions
@@ -383,8 +383,8 @@ func (m *unifiedManager) GetProgress(ctx context.Context, campaignID string) (*C
 		CompletedCommissions: campaign.CompletedCommissions,
 		UpdatedAt:            campaign.UpdatedAt,
 		// TODO: Calculate active and pending commissions
-		ActiveCommissions:    0,
-		PendingCommissions:   campaign.TotalCommissions - campaign.CompletedCommissions,
+		ActiveCommissions:  0,
+		PendingCommissions: campaign.TotalCommissions - campaign.CompletedCommissions,
 	}, nil
 }
 
@@ -471,12 +471,12 @@ func (m *unifiedManager) publishUnifiedEvent(event *CampaignEvent) {
 			"campaign_id": event.CampaignID,
 			"timestamp":   event.Timestamp,
 		}
-		
+
 		// Check if commission_id is in event data
 		if commissionID, ok := event.Data["commission_id"]; ok {
 			eventData["commission_id"] = commissionID
 		}
-		
+
 		unifiedEvent := events.NewBaseEvent(
 			uuid.New().String(),
 			string(event.Type),
@@ -509,7 +509,7 @@ func (m *unifiedManager) publishUnifiedEvent(event *CampaignEvent) {
 // convertFromUnifiedEvent converts a unified event to a campaign event
 func (m *unifiedManager) convertFromUnifiedEvent(event events.CoreEvent) *CampaignEvent {
 	data := event.GetData()
-	
+
 	campaignEvent := &CampaignEvent{
 		Type:      event.GetType(),
 		Timestamp: event.GetTimestamp(),

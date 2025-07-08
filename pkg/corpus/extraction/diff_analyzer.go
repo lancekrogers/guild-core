@@ -20,16 +20,16 @@ type DiffAnalyzer struct {
 // NewDiffAnalyzer creates a new diff analyzer with default patterns
 func NewDiffAnalyzer() *DiffAnalyzer {
 	patterns := map[string]*regexp.Regexp{
-		"go_function":      regexp.MustCompile(`^[\+\-]\s*func\s+(\w+)`),
-		"go_type":          regexp.MustCompile(`^[\+\-]\s*type\s+(\w+)`),
-		"go_import":        regexp.MustCompile(`^[\+\-]\s*import\s+.*?"([^"]+)"`),
-		"go_struct_field":  regexp.MustCompile(`^[\+\-]\s*(\w+)\s+\w+.*`),
-		"js_function":      regexp.MustCompile(`^[\+\-]\s*(function\s+\w+|const\s+\w+\s*=|\w+\s*=\s*function)`),
-		"py_function":      regexp.MustCompile(`^[\+\-]\s*def\s+(\w+)`),
-		"py_class":         regexp.MustCompile(`^[\+\-]\s*class\s+(\w+)`),
-		"py_import":        regexp.MustCompile(`^[\+\-]\s*(import\s+\w+|from\s+\w+\s+import)`),
-		"file_header":      regexp.MustCompile(`^diff --git a/(.+) b/(.+)`),
-		"hunk_header":      regexp.MustCompile(`^@@\s+\-(\d+),?(\d*)\s+\+(\d+),?(\d*)\s+@@`),
+		"go_function":     regexp.MustCompile(`^[\+\-]\s*func\s+(\w+)`),
+		"go_type":         regexp.MustCompile(`^[\+\-]\s*type\s+(\w+)`),
+		"go_import":       regexp.MustCompile(`^[\+\-]\s*import\s+.*?"([^"]+)"`),
+		"go_struct_field": regexp.MustCompile(`^[\+\-]\s*(\w+)\s+\w+.*`),
+		"js_function":     regexp.MustCompile(`^[\+\-]\s*(function\s+\w+|const\s+\w+\s*=|\w+\s*=\s*function)`),
+		"py_function":     regexp.MustCompile(`^[\+\-]\s*def\s+(\w+)`),
+		"py_class":        regexp.MustCompile(`^[\+\-]\s*class\s+(\w+)`),
+		"py_import":       regexp.MustCompile(`^[\+\-]\s*(import\s+\w+|from\s+\w+\s+import)`),
+		"file_header":     regexp.MustCompile(`^diff --git a/(.+) b/(.+)`),
+		"hunk_header":     regexp.MustCompile(`^@@\s+\-(\d+),?(\d*)\s+\+(\d+),?(\d*)\s+@@`),
 	}
 
 	return &DiffAnalyzer{
@@ -55,7 +55,7 @@ func (da *DiffAnalyzer) Analyze(ctx context.Context, diff string) (DiffAnalysis,
 
 	lines := strings.Split(diff, "\n")
 	currentFile := ""
-	
+
 	for i, line := range lines {
 		// Check for context cancellation periodically
 		if i%100 == 0 && ctx.Err() != nil {
@@ -88,7 +88,7 @@ func (da *DiffAnalyzer) Analyze(ctx context.Context, diff string) (DiffAnalysis,
 // analyzeLineChange analyzes a single line change in context
 func (da *DiffAnalyzer) analyzeLineChange(line, file string, analysis *DiffAnalysis) {
 	fileExt := da.getFileExtension(file)
-	
+
 	switch fileExt {
 	case ".go":
 		da.analyzeGoChange(line, file, analysis)

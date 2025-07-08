@@ -413,12 +413,12 @@ func (op *outputPaneImpl) formatMessage(msg common.ChatMessage, index int) strin
 			BorderForeground(lipgloss.Color("8")).
 			Padding(0, 1).
 			Width(op.viewport.Width - 4)
-		
+
 		// Add confidence if available in metadata
 		if confidence, ok := msg.Metadata["confidence"]; ok {
 			content = fmt.Sprintf("%s\n\nConfidence: %s", content, confidence)
 		}
-		
+
 		styledContent := style.Render(content)
 		boxedContent := thinkingBox.Render(styledContent)
 		return fmt.Sprintf("%s\n%s", header, boxedContent)

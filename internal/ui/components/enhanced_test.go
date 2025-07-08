@@ -9,25 +9,25 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/ui/theme"
 	"github.com/lancekrogers/guild/internal/ui/animation"
+	"github.com/lancekrogers/guild/internal/ui/theme"
 	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 func TestNewComponentLibrary(t *testing.T) {
 	themeManager := theme.NewThemeManager()
 	animator := animation.NewAnimator()
-	
+
 	cl := NewComponentLibrary(themeManager, animator)
-	
+
 	if cl == nil {
 		t.Fatal("component library should not be nil")
 	}
-	
+
 	if cl.themeManager != themeManager {
 		t.Error("theme manager should be set")
 	}
-	
+
 	if cl.animator != animator {
 		t.Error("animator should be set")
 	}
@@ -131,7 +131,7 @@ func TestComponentLibrary_RenderButton(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			cl := setupComponentLibrary(t)
-			
+
 			result, err := cl.RenderButton(ctx, tt.button)
 			tt.validate(t, result, err)
 		})
@@ -140,26 +140,26 @@ func TestComponentLibrary_RenderButton(t *testing.T) {
 
 func TestComponentLibrary_RenderButton_ContextCancellation(t *testing.T) {
 	cl := setupComponentLibrary(t)
-	
+
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel() // Cancel immediately
-	
+
 	button := Button{
 		Text:    "Test Button",
 		Variant: ButtonPrimary,
 	}
-	
+
 	_, err := cl.RenderButton(ctx, button)
 	if err == nil {
 		t.Error("expected error due to cancelled context")
 	}
-	
+
 	var gErr *gerror.GuildError
 	if !gerror.As(err, &gErr) {
 		t.Errorf("expected gerror.GuildError, got %T", err)
 		return
 	}
-	
+
 	if gErr.Code != gerror.ErrCodeCancelled {
 		t.Errorf("expected cancelled error code, got %v", gErr.Code)
 	}
@@ -258,7 +258,7 @@ func TestComponentLibrary_RenderModal(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			cl := setupComponentLibrary(t)
-			
+
 			result, err := cl.RenderModal(ctx, tt.modal)
 			tt.validate(t, result, err)
 		})
@@ -359,7 +359,7 @@ func TestComponentLibrary_RenderAgentBadge(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			cl := setupComponentLibrary(t)
-			
+
 			result, err := cl.RenderAgentBadge(ctx, tt.badge)
 			tt.validate(t, result, err)
 		})
@@ -447,7 +447,7 @@ func TestComponentLibrary_RenderProgressBar(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			cl := setupComponentLibrary(t)
-			
+
 			result, err := cl.RenderProgressBar(ctx, tt.progress)
 			tt.validate(t, result, err)
 		})
@@ -569,7 +569,7 @@ func TestComponentLibrary_RenderChatMessage(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ctx := context.Background()
 			cl := setupComponentLibrary(t)
-			
+
 			result, err := cl.RenderChatMessage(ctx, tt.message)
 			tt.validate(t, result, err)
 		})
@@ -579,29 +579,29 @@ func TestComponentLibrary_RenderChatMessage(t *testing.T) {
 func TestComponentLibrary_ThemeIntegration(t *testing.T) {
 	cl := setupComponentLibrary(t)
 	ctx := context.Background()
-	
+
 	// Test that components use theme colors
 	button := Button{
 		Text:    "Themed Button",
 		Variant: ButtonPrimary,
 	}
-	
+
 	result1, err := cl.RenderButton(ctx, button)
 	if err != nil {
 		t.Fatalf("failed to render button: %v", err)
 	}
-	
+
 	// Switch theme
 	err = cl.themeManager.ApplyTheme(ctx, "claude-code-light")
 	if err != nil {
 		t.Fatalf("failed to switch theme: %v", err)
 	}
-	
+
 	result2, err := cl.RenderButton(ctx, button)
 	if err != nil {
 		t.Fatalf("failed to render button after theme switch: %v", err)
 	}
-	
+
 	// Results should be different (different themes applied)
 	// Note: In a more sophisticated test, we'd verify specific color differences
 	if result1 == result2 {
@@ -647,7 +647,7 @@ func TestComponentLibrary_ErrorHandling(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			cl := tt.setup()
 			err := tt.action(cl)
-			
+
 			// Should handle errors gracefully
 			if err != nil {
 				var gErr *gerror.GuildError
@@ -662,7 +662,7 @@ func TestComponentLibrary_ErrorHandling(t *testing.T) {
 func TestButtonVariants(t *testing.T) {
 	cl := setupComponentLibrary(t)
 	ctx := context.Background()
-	
+
 	variants := []ButtonVariant{
 		ButtonPrimary,
 		ButtonSecondary,
@@ -673,19 +673,19 @@ func TestButtonVariants(t *testing.T) {
 		ButtonGhost,
 		ButtonLink,
 	}
-	
+
 	for _, variant := range variants {
 		t.Run(variant.String(), func(t *testing.T) {
 			button := Button{
 				Text:    "Test Button",
 				Variant: variant,
 			}
-			
+
 			result, err := cl.RenderButton(ctx, button)
 			if err != nil {
 				t.Errorf("failed to render %v button: %v", variant, err)
 			}
-			
+
 			if result == "" {
 				t.Errorf("%v button should render something", variant)
 			}
@@ -696,26 +696,26 @@ func TestButtonVariants(t *testing.T) {
 func TestButtonSizes(t *testing.T) {
 	cl := setupComponentLibrary(t)
 	ctx := context.Background()
-	
+
 	sizes := []ButtonSize{
 		ButtonSizeSmall,
 		ButtonSizeMedium,
 		ButtonSizeLarge,
 		ButtonSizeXLarge,
 	}
-	
+
 	for _, size := range sizes {
 		t.Run(size.String(), func(t *testing.T) {
 			button := Button{
 				Text: "Test Button",
 				Size: size,
 			}
-			
+
 			result, err := cl.RenderButton(ctx, button)
 			if err != nil {
 				t.Errorf("failed to render %v button: %v", size, err)
 			}
-			
+
 			if result == "" {
 				t.Errorf("%v button should render something", size)
 			}
@@ -725,7 +725,7 @@ func TestButtonSizes(t *testing.T) {
 
 func TestAgentNameFormatting(t *testing.T) {
 	cl := setupComponentLibrary(t)
-	
+
 	tests := []struct {
 		input    string
 		expected string
@@ -736,7 +736,7 @@ func TestAgentNameFormatting(t *testing.T) {
 		{"system", "System"},
 		{"custom-name", "Custom Name"},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
 			result := cl.formatAgentName(tt.input)
@@ -752,7 +752,7 @@ func TestAgentNameFormatting(t *testing.T) {
 func setupComponentLibrary(t *testing.T) *ComponentLibrary {
 	themeManager := theme.NewThemeManager()
 	animator := animation.NewAnimator()
-	
+
 	return NewComponentLibrary(themeManager, animator)
 }
 

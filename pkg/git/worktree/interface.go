@@ -9,25 +9,25 @@ import "context"
 type Manager interface {
 	// CreateWorktree creates a new isolated worktree for an agent
 	CreateWorktree(ctx context.Context, req CreateWorktreeRequest) (*Worktree, error)
-	
+
 	// SyncWorktree synchronizes a worktree with its base branch
 	SyncWorktree(ctx context.Context, worktreeID string) (*SyncResult, error)
-	
+
 	// RemoveWorktree removes a worktree and cleans up resources
 	RemoveWorktree(ctx context.Context, worktreeID string) error
-	
+
 	// GetWorktree retrieves a worktree by ID
 	GetWorktree(worktreeID string) *Worktree
-	
+
 	// GetActiveWorktrees returns all active worktrees
 	GetActiveWorktrees() []*Worktree
-	
+
 	// GetWorktreesByAgent returns all worktrees for a specific agent
 	GetWorktreesByAgent(agentID string) []*Worktree
-	
+
 	// GetStats returns usage statistics for worktrees
 	GetStats(ctx context.Context) (*WorktreeStats, error)
-	
+
 	// Shutdown gracefully shuts down the worktree manager
 	Shutdown(ctx context.Context) error
 }

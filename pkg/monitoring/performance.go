@@ -18,11 +18,11 @@ import (
 
 // Monitoring error codes
 const (
-	ErrCodeMetricNotFound   = "MONITOR-1001"
-	ErrCodeSLOViolation     = "MONITOR-1002"
-	ErrCodeAlertingFailed   = "MONITOR-1003"
-	ErrCodeDashboardFailed  = "MONITOR-1004"
-	ErrCodeExporterFailed   = "MONITOR-1005"
+	ErrCodeMetricNotFound  = "MONITOR-1001"
+	ErrCodeSLOViolation    = "MONITOR-1002"
+	ErrCodeAlertingFailed  = "MONITOR-1003"
+	ErrCodeDashboardFailed = "MONITOR-1004"
+	ErrCodeExporterFailed  = "MONITOR-1005"
 )
 
 // PerformanceMonitor provides comprehensive performance monitoring
@@ -40,25 +40,25 @@ type PerformanceMonitor struct {
 
 // MonitoringConfig configures monitoring behavior
 type MonitoringConfig struct {
-	MetricsInterval     time.Duration `json:"metrics_interval"`
-	AlertCheckInterval  time.Duration `json:"alert_check_interval"`
-	DashboardRefresh    time.Duration `json:"dashboard_refresh"`
-	EnableTracing       bool          `json:"enable_tracing"`
-	EnableExport        bool          `json:"enable_export"`
-	RetentionPeriod     time.Duration `json:"retention_period"`
-	MaxMetricSamples    int           `json:"max_metric_samples"`
+	MetricsInterval    time.Duration `json:"metrics_interval"`
+	AlertCheckInterval time.Duration `json:"alert_check_interval"`
+	DashboardRefresh   time.Duration `json:"dashboard_refresh"`
+	EnableTracing      bool          `json:"enable_tracing"`
+	EnableExport       bool          `json:"enable_export"`
+	RetentionPeriod    time.Duration `json:"retention_period"`
+	MaxMetricSamples   int           `json:"max_metric_samples"`
 }
 
 // DefaultMonitoringConfig returns default monitoring configuration
 func DefaultMonitoringConfig() *MonitoringConfig {
 	return &MonitoringConfig{
-		MetricsInterval:     time.Second,
-		AlertCheckInterval:  time.Second * 10,
-		DashboardRefresh:    time.Second * 5,
-		EnableTracing:       true,
-		EnableExport:        false,
-		RetentionPeriod:     time.Hour * 24,
-		MaxMetricSamples:    10000,
+		MetricsInterval:    time.Second,
+		AlertCheckInterval: time.Second * 10,
+		DashboardRefresh:   time.Second * 5,
+		EnableTracing:      true,
+		EnableExport:       false,
+		RetentionPeriod:    time.Hour * 24,
+		MaxMetricSamples:   10000,
 	}
 }
 
@@ -680,4 +680,3 @@ func (g *Gauge) Value() float64 {
 	defer g.mu.RUnlock()
 	return g.value
 }
-

@@ -18,16 +18,16 @@ import (
 
 // Manager manages multiple kanban boards
 type Manager struct {
-	store        memory.Store
-	registry     ComponentRegistry // Optional registry for new storage backend
-	boards       map[string]*Board
-	eventStream  chan BoardEvent
-	eventManager *EventManager
+	store              memory.Store
+	registry           ComponentRegistry // Optional registry for new storage backend
+	boards             map[string]*Board
+	eventStream        chan BoardEvent
+	eventManager       *EventManager
 	taskEventPublisher TaskEventPublisherInterface
-	pubsub       comms.PubSub
-	mu           sync.RWMutex
-	ctx          context.Context
-	cancel       context.CancelFunc
+	pubsub             comms.PubSub
+	mu                 sync.RWMutex
+	ctx                context.Context
+	cancel             context.CancelFunc
 }
 
 // ManagerEventHandler is a function that handles board events for the manager
@@ -599,7 +599,7 @@ func (m *Manager) SetTaskEventPublisher(publisher TaskEventPublisherInterface) {
 	// Set the publisher on all existing boards
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	for _, board := range m.boards {
 		board.SetTaskEventPublisher(publisher)
 	}

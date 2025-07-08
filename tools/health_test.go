@@ -53,7 +53,7 @@ func TestHealthChecker_CheckHealth(t *testing.T) {
 		checker := NewHealthChecker()
 		expectedErr := errors.New("tool is broken")
 		tool := &mockHealthTool{
-			BaseTool: NewBaseTool("broken-tool", "Broken Tool", nil, "test", false, nil),
+			BaseTool:   NewBaseTool("broken-tool", "Broken Tool", nil, "test", false, nil),
 			healthFunc: func() error { return expectedErr },
 		}
 
@@ -65,7 +65,7 @@ func TestHealthChecker_CheckHealth(t *testing.T) {
 	t.Run("caching prevents multiple checks", func(t *testing.T) {
 		checker := NewHealthChecker()
 		checker.SetCheckInterval(1 * time.Hour) // Long cache duration
-		
+
 		tool := &mockHealthTool{
 			BaseTool: NewBaseTool("cached-tool", "Cached Tool", nil, "test", false, nil),
 		}
@@ -84,7 +84,7 @@ func TestHealthChecker_CheckHealth(t *testing.T) {
 	t.Run("stale cache triggers new check", func(t *testing.T) {
 		checker := NewHealthChecker()
 		checker.SetCheckInterval(10 * time.Millisecond) // Short cache duration
-		
+
 		tool := &mockHealthTool{
 			BaseTool: NewBaseTool("stale-cache-tool", "Stale Cache Tool", nil, "test", false, nil),
 		}
@@ -106,7 +106,7 @@ func TestHealthChecker_CheckHealth(t *testing.T) {
 	t.Run("consecutive failures tracking", func(t *testing.T) {
 		checker := NewHealthChecker()
 		checker.SetCheckInterval(1 * time.Millisecond) // Very short cache for testing
-		
+
 		failCount := 0
 		tool := &mockHealthTool{
 			BaseTool: NewBaseTool("flaky-tool", "Flaky Tool", nil, "test", false, nil),
@@ -132,7 +132,7 @@ func TestHealthChecker_CheckHealth(t *testing.T) {
 	t.Run("health check timeout", func(t *testing.T) {
 		checker := NewHealthChecker()
 		checker.timeout = 50 * time.Millisecond
-		
+
 		tool := &mockHealthTool{
 			BaseTool: NewBaseTool("slow-tool", "Slow Tool", nil, "test", false, nil),
 			healthFunc: func() error {
@@ -149,7 +149,7 @@ func TestHealthChecker_CheckHealth(t *testing.T) {
 
 	t.Run("context cancellation", func(t *testing.T) {
 		checker := NewHealthChecker()
-		
+
 		tool := &mockHealthTool{
 			BaseTool: NewBaseTool("cancel-tool", "Cancel Tool", nil, "test", false, nil),
 			healthFunc: func() error {
@@ -169,7 +169,7 @@ func TestHealthChecker_CheckHealth(t *testing.T) {
 
 func TestHealthChecker_HealthReport(t *testing.T) {
 	checker := NewHealthChecker()
-	
+
 	// Add some tools with different statuses
 	tools := []struct {
 		name    string
@@ -185,7 +185,7 @@ func TestHealthChecker_HealthReport(t *testing.T) {
 
 	for _, tc := range tools {
 		tool := &mockHealthTool{
-			BaseTool: NewBaseTool(tc.name, tc.name, nil, "test", false, nil),
+			BaseTool:   NewBaseTool(tc.name, tc.name, nil, "test", false, nil),
 			healthFunc: func() error { return tc.err },
 		}
 		// Prime the cache
@@ -202,7 +202,7 @@ func TestHealthChecker_HealthReport(t *testing.T) {
 func TestBackgroundHealthChecker(t *testing.T) {
 	t.Run("periodic health checks", func(t *testing.T) {
 		registry := NewToolRegistry()
-		
+
 		// Register some tools
 		tool1 := &mockHealthTool{
 			BaseTool: NewBaseTool("bg-tool1", "BG Tool 1", nil, "test", false, nil),
@@ -210,7 +210,7 @@ func TestBackgroundHealthChecker(t *testing.T) {
 		tool2 := &mockHealthTool{
 			BaseTool: NewBaseTool("bg-tool2", "BG Tool 2", nil, "test", false, nil),
 		}
-		
+
 		err := registry.RegisterTool(tool1)
 		require.NoError(t, err)
 		err = registry.RegisterTool(tool2)
@@ -235,10 +235,10 @@ func TestBackgroundHealthChecker(t *testing.T) {
 	t.Run("stop gracefully", func(t *testing.T) {
 		registry := NewToolRegistry()
 		bgChecker := NewBackgroundHealthChecker(registry, 1*time.Hour)
-		
+
 		ctx := context.Background()
 		bgChecker.Start(ctx)
-		
+
 		// Should not block
 		done := make(chan struct{})
 		go func() {
@@ -257,16 +257,16 @@ func TestBackgroundHealthChecker(t *testing.T) {
 
 func TestHealthCheckMiddleware(t *testing.T) {
 	checker := NewHealthChecker()
-	
+
 	t.Run("allows execution when healthy", func(t *testing.T) {
 		tool := &mockHealthTool{
 			BaseTool: NewBaseTool("middleware-tool", "Middleware Tool", nil, "test", false, nil),
 		}
-		
+
 		// Wrap with middleware
 		middleware := HealthCheckMiddleware(checker)
 		wrapped := middleware(tool)
-		
+
 		// Should execute successfully
 		result, err := wrapped.Execute(context.Background(), "{}")
 		// Note: BaseTool.Execute returns error, but middleware should still call it
@@ -277,14 +277,14 @@ func TestHealthCheckMiddleware(t *testing.T) {
 
 	t.Run("blocks execution when unhealthy", func(t *testing.T) {
 		tool := &mockHealthTool{
-			BaseTool: NewBaseTool("unhealthy-middleware-tool", "Unhealthy Tool", nil, "test", false, nil),
+			BaseTool:   NewBaseTool("unhealthy-middleware-tool", "Unhealthy Tool", nil, "test", false, nil),
 			healthFunc: func() error { return errors.New("unhealthy") },
 		}
-		
+
 		// Wrap with middleware
 		middleware := HealthCheckMiddleware(checker)
 		wrapped := middleware(tool)
-		
+
 		// Should fail health check
 		result, err := wrapped.Execute(context.Background(), "{}")
 		assert.Error(t, err)
@@ -295,7 +295,7 @@ func TestHealthCheckMiddleware(t *testing.T) {
 
 func TestHealthStatus_ResponseTime(t *testing.T) {
 	checker := NewHealthChecker()
-	
+
 	tool := &mockHealthTool{
 		BaseTool: NewBaseTool("timing-tool", "Timing Tool", nil, "test", false, nil),
 		healthFunc: func() error {
@@ -316,23 +316,23 @@ func TestHealthStatus_ResponseTime(t *testing.T) {
 
 func TestHealthChecker_ClearCache(t *testing.T) {
 	checker := NewHealthChecker()
-	
+
 	// Add a tool to cache
 	tool := &mockHealthTool{
 		BaseTool: NewBaseTool("cache-clear-tool", "Cache Clear Tool", nil, "test", false, nil),
 	}
-	
+
 	err := checker.CheckHealth(context.Background(), tool)
 	assert.NoError(t, err)
-	
+
 	// Verify it's cached
 	status, exists := checker.GetHealthStatus("cache-clear-tool")
 	assert.True(t, exists)
 	assert.NotNil(t, status)
-	
+
 	// Clear cache
 	checker.ClearCache()
-	
+
 	// Should no longer exist
 	status, exists = checker.GetHealthStatus("cache-clear-tool")
 	assert.False(t, exists)

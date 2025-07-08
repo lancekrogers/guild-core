@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 	"time"
-	
+
 	jsonparser "github.com/lancekrogers/guild/pkg/tools/parser/json"
 	xmlparser "github.com/lancekrogers/guild/pkg/tools/parser/xml"
 )
@@ -42,31 +42,31 @@ func FuzzParser_ExtractToolCalls(f *testing.F) {
 	f.Fuzz(func(t *testing.T, input string) {
 		// The parser should never panic
 		calls, err := parser.ExtractToolCalls(input)
-		
+
 		// Basic invariants
 		if err == nil {
 			// If no error, calls should not be nil
 			if calls == nil {
 				t.Fatal("ExtractToolCalls returned nil calls with nil error")
 			}
-			
+
 			// Validate each call
 			for i, call := range calls {
 				// ID should be set (either from input or generated)
 				if call.ID == "" {
 					t.Errorf("Call %d has empty ID", i)
 				}
-				
+
 				// Type should be set
 				if call.Type == "" {
 					t.Errorf("Call %d has empty Type", i)
 				}
-				
+
 				// Function name should be set
 				if call.Function.Name == "" {
 					t.Errorf("Call %d has empty Function.Name", i)
 				}
-				
+
 				// Arguments should be valid JSON (even if empty)
 				if len(call.Function.Arguments) > 0 {
 					// Should be valid JSON
@@ -101,7 +101,7 @@ func FuzzParser_DetectFormat(f *testing.F) {
 
 	f.Fuzz(func(t *testing.T, input string) {
 		format, confidence, err := parser.DetectFormat(input)
-		
+
 		// Invariants
 		if err == nil {
 			// Format should be valid
@@ -111,12 +111,12 @@ func FuzzParser_DetectFormat(f *testing.F) {
 			default:
 				t.Fatalf("Invalid format returned: %s", format)
 			}
-			
+
 			// Confidence should be in valid range
 			if confidence < 0 || confidence > 1 {
 				t.Fatalf("Invalid confidence: %f", confidence)
 			}
-			
+
 			// If format is unknown, confidence should be low
 			if format == ProviderFormatUnknown && confidence > 0.5 {
 				t.Errorf("Unknown format with high confidence: %f", confidence)
@@ -152,12 +152,12 @@ func FuzzJSONParser_Parse(f *testing.F) {
 	f.Fuzz(func(t *testing.T, input []byte) {
 		ctx := context.Background()
 		calls, err := parser.Parse(ctx, input)
-		
+
 		// Should not panic
 		if err == nil && calls == nil {
 			t.Fatal("Parse returned nil calls with nil error")
 		}
-		
+
 		// Validate calls if successful
 		if err == nil {
 			for _, call := range calls {
@@ -192,12 +192,12 @@ func FuzzXMLParser_Parse(f *testing.F) {
 	f.Fuzz(func(t *testing.T, input []byte) {
 		ctx := context.Background()
 		calls, err := parser.Parse(ctx, input)
-		
+
 		// Should not panic
 		if err == nil && calls == nil {
 			t.Fatal("Parse returned nil calls with nil error")
 		}
-		
+
 		// Validate calls if successful
 		if err == nil {
 			for _, call := range calls {
@@ -212,21 +212,21 @@ func FuzzXMLParser_Parse(f *testing.F) {
 // FuzzParser_LargeInputs tests with potentially large inputs
 func FuzzParser_LargeInputs(f *testing.F) {
 	parser := NewResponseParser()
-	
+
 	// Add some large seeds
 	f.Add(strings.Repeat(`{"id": "x", "type": "function", "function": {"name": "y", "arguments": "{}"}}`, 100))
 	f.Add(strings.Repeat(`<invoke name="test"><parameter name="p">v</parameter></invoke>`, 100))
-	
+
 	f.Fuzz(func(t *testing.T, input string) {
 		// Limit input size to prevent OOM
 		if len(input) > 10*1024*1024 { // 10MB
 			input = input[:10*1024*1024]
 		}
-		
+
 		// Should handle large inputs without crashing
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
-		
+
 		_, _ = parser.ExtractWithContext(ctx, input)
 		// Just ensure it doesn't panic or hang
 	})
@@ -235,7 +235,7 @@ func FuzzParser_LargeInputs(f *testing.F) {
 // FuzzParser_MaliciousInputs tests potentially malicious inputs
 func FuzzParser_MaliciousInputs(f *testing.F) {
 	parser := NewResponseParser()
-	
+
 	// Add potentially malicious seeds
 	seeds := []string{
 		// Deeply nested JSON
@@ -252,22 +252,22 @@ func FuzzParser_MaliciousInputs(f *testing.F) {
 		`<script>alert('xss')</script>{"tool_calls": []}`,
 		`{"function": {"name": "<script>alert('xss')</script>", "arguments": "{}"}}`,
 	}
-	
+
 	for _, seed := range seeds {
 		f.Add(seed)
 	}
-	
+
 	f.Fuzz(func(t *testing.T, input string) {
 		// Parser should safely handle any input
 		calls, _ := parser.ExtractToolCalls(input)
-		
+
 		// If calls are returned, they should be safe
 		for _, call := range calls {
 			// Function names should not contain script tags
 			if strings.Contains(call.Function.Name, "<script>") {
 				t.Error("Script tag in function name")
 			}
-			
+
 			// Arguments should be valid JSON
 			if len(call.Function.Arguments) > 0 {
 				var check interface{}

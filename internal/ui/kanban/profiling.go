@@ -14,17 +14,17 @@ import (
 
 // KanbanProfiler provides performance profiling for the kanban TUI
 type KanbanProfiler struct {
-	mu            sync.RWMutex
-	renderTimes   []time.Duration
-	allocations   []runtime.MemStats
-	frameDrops    int
-	targetFPS     int
-	maxSamples    int
-	enabled       bool
-	startTime     time.Time
-	totalFrames   int64
-	lastGCPause   time.Duration
-	peakMemUsage  uint64
+	mu           sync.RWMutex
+	renderTimes  []time.Duration
+	allocations  []runtime.MemStats
+	frameDrops   int
+	targetFPS    int
+	maxSamples   int
+	enabled      bool
+	startTime    time.Time
+	totalFrames  int64
+	lastGCPause  time.Duration
+	peakMemUsage uint64
 }
 
 // FrameMetrics captures performance data for a single frame
@@ -39,17 +39,17 @@ type FrameMetrics struct {
 
 // ProfileReport contains aggregated performance metrics
 type ProfileReport struct {
-	AvgRenderTime     time.Duration
-	MaxRenderTime     time.Duration
-	MinRenderTime     time.Duration
-	FrameDropRate     float64
-	AvgMemUsage       uint64
-	PeakMemUsage      uint64
-	TotalFrames       int64
-	ProfileDuration   time.Duration
-	TargetFPS         int
-	ActualFPS         float64
-	RecommendedCards  int
+	AvgRenderTime    time.Duration
+	MaxRenderTime    time.Duration
+	MinRenderTime    time.Duration
+	FrameDropRate    float64
+	AvgMemUsage      uint64
+	PeakMemUsage     uint64
+	TotalFrames      int64
+	ProfileDuration  time.Duration
+	TargetFPS        int
+	ActualFPS        float64
+	RecommendedCards int
 }
 
 // NewKanbanProfiler creates a new performance profiler
@@ -66,7 +66,7 @@ func NewKanbanProfiler(targetFPS int) *KanbanProfiler {
 func (kp *KanbanProfiler) Enable() {
 	kp.mu.Lock()
 	defer kp.mu.Unlock()
-	
+
 	kp.enabled = true
 	kp.startTime = time.Now()
 	kp.renderTimes = make([]time.Duration, 0, kp.maxSamples)
@@ -79,7 +79,7 @@ func (kp *KanbanProfiler) Enable() {
 func (kp *KanbanProfiler) Disable() {
 	kp.mu.Lock()
 	defer kp.mu.Unlock()
-	
+
 	kp.enabled = false
 }
 
@@ -245,24 +245,24 @@ func (kp *KanbanProfiler) GenerateReport(ctx context.Context) (*ProfileReport, e
 	recommendedCards := kp.calculateRecommendedCards(avgRenderTime)
 
 	return &ProfileReport{
-		AvgRenderTime:     avgRenderTime,
-		MaxRenderTime:     maxTime,
-		MinRenderTime:     minTime,
-		FrameDropRate:     frameDropRate,
-		AvgMemUsage:       avgMemUsage,
-		PeakMemUsage:      kp.peakMemUsage,
-		TotalFrames:       kp.totalFrames,
-		ProfileDuration:   profileDuration,
-		TargetFPS:         kp.targetFPS,
-		ActualFPS:         actualFPS,
-		RecommendedCards:  recommendedCards,
+		AvgRenderTime:    avgRenderTime,
+		MaxRenderTime:    maxTime,
+		MinRenderTime:    minTime,
+		FrameDropRate:    frameDropRate,
+		AvgMemUsage:      avgMemUsage,
+		PeakMemUsage:     kp.peakMemUsage,
+		TotalFrames:      kp.totalFrames,
+		ProfileDuration:  profileDuration,
+		TargetFPS:        kp.targetFPS,
+		ActualFPS:        actualFPS,
+		RecommendedCards: recommendedCards,
 	}, nil
 }
 
 // calculateRecommendedCards estimates optimal card count based on render performance
 func (kp *KanbanProfiler) calculateRecommendedCards(avgRenderTime time.Duration) int {
 	targetFrameTime := time.Second / time.Duration(kp.targetFPS)
-	
+
 	// If we're hitting target consistently, we can handle more cards
 	if avgRenderTime < targetFrameTime/2 {
 		return 500 // Can handle large boards
@@ -279,7 +279,7 @@ func (kp *KanbanProfiler) calculateRecommendedCards(avgRenderTime time.Duration)
 func (kp *KanbanProfiler) Reset() {
 	kp.mu.Lock()
 	defer kp.mu.Unlock()
-	
+
 	kp.renderTimes = kp.renderTimes[:0]
 	kp.allocations = kp.allocations[:0]
 	kp.frameDrops = 0
@@ -293,19 +293,19 @@ func (kp *KanbanProfiler) Reset() {
 func (kp *KanbanProfiler) GetMemoryPressure(ctx context.Context) float64 {
 	var mem runtime.MemStats
 	runtime.ReadMemStats(&mem)
-	
+
 	// Simple heuristic: ratio of heap in use to system memory
 	// This is a basic implementation - in production, you'd want more sophisticated metrics
 	systemMemLimit := uint64(1024 * 1024 * 1024) // 1GB baseline
 	if mem.Sys > systemMemLimit {
 		systemMemLimit = mem.Sys
 	}
-	
+
 	pressure := float64(mem.HeapInuse) / float64(systemMemLimit)
 	if pressure > 1.0 {
 		pressure = 1.0
 	}
-	
+
 	return pressure
 }
 
@@ -324,7 +324,7 @@ func (kp *KanbanProfiler) ShouldReduceQuality(ctx context.Context) bool {
 	if len(kp.renderTimes) >= recentFrames {
 		targetFrameTime := time.Second / time.Duration(kp.targetFPS)
 		start := len(kp.renderTimes) - recentFrames
-		
+
 		for i := start; i < len(kp.renderTimes); i++ {
 			if kp.renderTimes[i] > targetFrameTime {
 				recentDrops++
@@ -352,14 +352,14 @@ func (kp *KanbanProfiler) GetDebugInfo(ctx context.Context) map[string]interface
 	runtime.ReadMemStats(&mem)
 
 	info := map[string]interface{}{
-		"enabled":         true,
-		"total_frames":    kp.totalFrames,
-		"frame_drops":     kp.frameDrops,
-		"sample_count":    len(kp.renderTimes),
-		"heap_size_mb":    float64(mem.HeapInuse) / 1024 / 1024,
-		"peak_memory_mb":  float64(kp.peakMemUsage) / 1024 / 1024,
-		"goroutines":      runtime.NumGoroutine(),
-		"target_fps":      kp.targetFPS,
+		"enabled":        true,
+		"total_frames":   kp.totalFrames,
+		"frame_drops":    kp.frameDrops,
+		"sample_count":   len(kp.renderTimes),
+		"heap_size_mb":   float64(mem.HeapInuse) / 1024 / 1024,
+		"peak_memory_mb": float64(kp.peakMemUsage) / 1024 / 1024,
+		"goroutines":     runtime.NumGoroutine(),
+		"target_fps":     kp.targetFPS,
 	}
 
 	if len(kp.renderTimes) > 0 {

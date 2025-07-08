@@ -49,20 +49,20 @@ func (vss *VectorSearchStrategy) Retrieve(ctx context.Context, query Query) ([]D
 
 	// Enhance query with context
 	enhancedQuery := vss.enhanceQuery(query)
-	
+
 	// Vector search - request more results than max to allow for post-processing
 	searchLimit := query.MaxResults * 2
 	if searchLimit < 10 {
 		searchLimit = 10
 	}
-	
+
 	results, err := vss.vectorStore.Search(ctx, enhancedQuery, searchLimit)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "vector search failed").
 			WithComponent("VectorSearchStrategy").
 			WithOperation("Retrieve")
 	}
-	
+
 	// Convert to documents
 	docs := make([]Document, 0, len(results))
 	for _, r := range results {
@@ -72,17 +72,17 @@ func (vss *VectorSearchStrategy) Retrieve(ctx context.Context, query Query) ([]D
 			Score:    r.Score,
 			Metadata: r.Metadata,
 		}
-		
+
 		// Add strategy metadata
 		if doc.Metadata == nil {
 			doc.Metadata = make(map[string]interface{})
 		}
 		doc.Metadata["strategy"] = "vector_search"
 		doc.Metadata["vector_score"] = r.Score
-		
+
 		docs = append(docs, doc)
 	}
-	
+
 	logger.Debug("Vector search completed", "results_count", len(docs))
 	return docs, nil
 }
@@ -90,17 +90,17 @@ func (vss *VectorSearchStrategy) Retrieve(ctx context.Context, query Query) ([]D
 // enhanceQuery adds contextual information to improve vector search
 func (vss *VectorSearchStrategy) enhanceQuery(query Query) string {
 	enhanced := query.Text
-	
+
 	// Add current files context
 	if len(query.Context.CurrentFiles) > 0 {
 		enhanced = enhanced + " files: " + strings.Join(query.Context.CurrentFiles, " ")
 	}
-	
+
 	// Add tags context
 	if len(query.Context.Tags) > 0 {
 		enhanced = enhanced + " tags: " + strings.Join(query.Context.Tags, " ")
 	}
-	
+
 	// Add recent user message context (last 2 user messages)
 	userMessages := make([]string, 0)
 	for i := len(query.Context.MessageHistory) - 1; i >= 0 && len(userMessages) < 2; i-- {
@@ -109,12 +109,12 @@ func (vss *VectorSearchStrategy) enhanceQuery(query Query) string {
 			userMessages = append(userMessages, msg.Content)
 		}
 	}
-	
+
 	// Add user messages in reverse order (most recent first)
 	for i := len(userMessages) - 1; i >= 0; i-- {
 		enhanced = enhanced + " " + userMessages[i]
 	}
-	
+
 	return enhanced
 }
 
@@ -160,7 +160,7 @@ func (kss *KeywordSearchStrategy) Retrieve(ctx context.Context, query Query) ([]
 		logger.Debug("No keywords extracted from query")
 		return []Document{}, nil
 	}
-	
+
 	// Search index
 	docs, err := kss.indexer.Search(ctx, keywords, query.MaxResults)
 	if err != nil {
@@ -168,7 +168,7 @@ func (kss *KeywordSearchStrategy) Retrieve(ctx context.Context, query Query) ([]
 			WithComponent("KeywordSearchStrategy").
 			WithOperation("Retrieve")
 	}
-	
+
 	// Add strategy metadata
 	for i := range docs {
 		if docs[i].Metadata == nil {
@@ -177,9 +177,9 @@ func (kss *KeywordSearchStrategy) Retrieve(ctx context.Context, query Query) ([]
 		docs[i].Metadata["strategy"] = "keyword_search"
 		docs[i].Metadata["keywords"] = keywords
 	}
-	
+
 	logger.Debug("Keyword search completed", "keywords", keywords, "results_count", len(docs))
-	
+
 	return docs, nil
 }
 
@@ -187,7 +187,7 @@ func (kss *KeywordSearchStrategy) Retrieve(ctx context.Context, query Query) ([]
 func (kss *KeywordSearchStrategy) extractKeywords(text string) []string {
 	// Simple keyword extraction - split on whitespace and filter
 	words := strings.Fields(strings.ToLower(text))
-	
+
 	// Filter out common stop words
 	stopWords := map[string]bool{
 		"the": true, "a": true, "an": true, "and": true, "or": true, "but": true,
@@ -199,18 +199,18 @@ func (kss *KeywordSearchStrategy) extractKeywords(text string) []string {
 		"he": true, "she": true, "it": true, "we": true, "they": true, "how": true,
 		"what": true, "when": true, "where": true, "why": true, "go": true,
 	}
-	
+
 	keywords := make([]string, 0, len(words))
 	for _, word := range words {
 		// Remove punctuation
 		word = strings.Trim(word, ".,!?;:")
-		
+
 		// Skip short words and stop words
 		if len(word) > 2 && !stopWords[word] {
 			keywords = append(keywords, word)
 		}
 	}
-	
+
 	return keywords
 }
 
@@ -257,12 +257,12 @@ func (gts *GraphTraversalStrategy) Retrieve(ctx context.Context, query Query) ([
 			WithComponent("GraphTraversalStrategy").
 			WithOperation("Retrieve")
 	}
-	
+
 	if len(entryNodes) == 0 {
 		logger.Debug("No entry nodes found for query")
 		return []Document{}, nil
 	}
-	
+
 	// Traverse graph to find related nodes (2 hops)
 	related, err := gts.knowledgeGraph.TraverseRelated(ctx, entryNodes, 2)
 	if err != nil {
@@ -270,10 +270,10 @@ func (gts *GraphTraversalStrategy) Retrieve(ctx context.Context, query Query) ([
 			WithComponent("GraphTraversalStrategy").
 			WithOperation("Retrieve")
 	}
-	
+
 	// Convert nodes to documents
 	docs := gts.nodesToDocuments(related)
-	
+
 	// Add strategy metadata
 	for i := range docs {
 		if docs[i].Metadata == nil {
@@ -283,16 +283,16 @@ func (gts *GraphTraversalStrategy) Retrieve(ctx context.Context, query Query) ([
 		docs[i].Metadata["entry_nodes_count"] = len(entryNodes)
 		docs[i].Metadata["traversal_hops"] = 2
 	}
-	
+
 	logger.Debug("Graph traversal completed", "entry_nodes", len(entryNodes), "related_nodes", len(related), "results_count", len(docs))
-	
+
 	return docs, nil
 }
 
 // nodesToDocuments converts graph nodes to retrievable documents
 func (gts *GraphTraversalStrategy) nodesToDocuments(nodes []GraphNode) []Document {
 	docs := make([]Document, 0, len(nodes))
-	
+
 	for _, node := range nodes {
 		doc := Document{
 			ID:       node.ID,
@@ -300,15 +300,15 @@ func (gts *GraphTraversalStrategy) nodesToDocuments(nodes []GraphNode) []Documen
 			Score:    1.0, // Base score, will be adjusted by ranking
 			Metadata: node.Metadata,
 		}
-		
+
 		// Add node type to metadata
 		if doc.Metadata == nil {
 			doc.Metadata = make(map[string]interface{})
 		}
 		doc.Metadata["node_type"] = node.Type
-		
+
 		docs = append(docs, doc)
 	}
-	
+
 	return docs
 }

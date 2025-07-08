@@ -33,12 +33,12 @@ func NewAccessPredictor(window time.Duration) *AccessPredictor {
 
 // AccessPrediction represents a prediction about future access
 type AccessPrediction struct {
-	Key          string    `json:"key"`
-	Probability  float64   `json:"probability"`
-	NextAccess   time.Time `json:"next_access"`
-	RelatedKeys  []string  `json:"related_keys"`
-	PatternType  string    `json:"pattern_type"`
-	Confidence   float64   `json:"confidence"`
+	Key              string        `json:"key"`
+	Probability      float64       `json:"probability"`
+	NextAccess       time.Time     `json:"next_access"`
+	RelatedKeys      []string      `json:"related_keys"`
+	PatternType      string        `json:"pattern_type"`
+	Confidence       float64       `json:"confidence"`
 	ExpectedDuration time.Duration `json:"expected_duration"`
 }
 
@@ -398,7 +398,7 @@ type TrainingSample struct {
 
 // MLPrediction represents an ML-based prediction
 type MLPrediction struct {
-	Confidence float64 `json:"confidence"`
+	Confidence float64   `json:"confidence"`
 	Features   []float64 `json:"features"`
 }
 

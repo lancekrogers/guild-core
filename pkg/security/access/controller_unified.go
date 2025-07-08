@@ -23,7 +23,7 @@ type UnifiedAccessController struct {
 func NewUnifiedAccessController(ctx context.Context, permissionModel *permissions.PermissionModel, auditor AuditLogger, unifiedEventBus events.EventBus) *UnifiedAccessController {
 	// Create base controller without legacy event bus
 	baseController := NewAccessController(ctx, permissionModel, auditor, nil)
-	
+
 	return &UnifiedAccessController{
 		AccessController: baseController,
 		unifiedEventBus:  unifiedEventBus,
@@ -52,7 +52,7 @@ func (uac *UnifiedAccessController) CheckAccess(ctx context.Context, req AccessR
 				"timestamp": time.Now(),
 			},
 		)
-		
+
 		// Add request metadata
 		if req.RequestID != "" {
 			event.WithData("request_id", req.RequestID)
@@ -63,7 +63,7 @@ func (uac *UnifiedAccessController) CheckAccess(ctx context.Context, req AccessR
 		if req.IPAddress != "" {
 			event.WithData("ip_address", req.IPAddress)
 		}
-		
+
 		// Publish event
 		if publishErr := uac.unifiedEventBus.Publish(ctx, event); publishErr != nil {
 			// Log error but don't fail the access check
@@ -123,7 +123,7 @@ func (uac *UnifiedAccessController) PublishAuditEvent(ctx context.Context, entry
 	}
 
 	eventType := "audit." + entry.Result // e.g., "audit.allowed", "audit.denied"
-	
+
 	event := events.NewBaseEvent(
 		entry.ID,
 		eventType,

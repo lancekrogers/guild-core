@@ -20,13 +20,13 @@
 //
 //	// Initialize theme manager
 //	manager := NewThemeManager()
-//	
+//
 //	// Apply Claude Code theme
 //	err := manager.ApplyTheme(ctx, "claude-code-light")
-//	
+//
 //	// Get styled component
 //	buttonStyle := manager.GetComponent("button").Primary()
-//	
+//
 //	// Create agent-specific styling
 //	agentStyle := manager.GetAgentStyle("agent-1")
 package theme
@@ -140,11 +140,11 @@ type TypographyScale struct {
 
 // FontWeights defines available font weights
 type FontWeights struct {
-	Light   int `json:"light"`   // Light weight
-	Normal  int `json:"normal"`  // Normal weight
-	Medium  int `json:"medium"`  // Medium weight
-	Bold    int `json:"bold"`    // Bold weight
-	Heavy   int `json:"heavy"`   // Heavy weight
+	Light  int `json:"light"`  // Light weight
+	Normal int `json:"normal"` // Normal weight
+	Medium int `json:"medium"` // Medium weight
+	Bold   int `json:"bold"`   // Bold weight
+	Heavy  int `json:"heavy"`  // Heavy weight
 }
 
 // LineHeights defines line height variants
@@ -230,21 +230,21 @@ type AgentStyles struct {
 
 // ComponentStyle defines styling for a component
 type ComponentStyle struct {
-	Background  string            `json:"background"`
-	Foreground  string            `json:"foreground"`
-	Border      string            `json:"border"`
-	BorderRadius int              `json:"border_radius"`
-	Padding     map[string]int    `json:"padding"`
-	Margin      map[string]int    `json:"margin"`
-	Typography  ComponentTypog    `json:"typography"`
-	States      map[string]string `json:"states"` // hover, active, disabled
+	Background   string            `json:"background"`
+	Foreground   string            `json:"foreground"`
+	Border       string            `json:"border"`
+	BorderRadius int               `json:"border_radius"`
+	Padding      map[string]int    `json:"padding"`
+	Margin       map[string]int    `json:"margin"`
+	Typography   ComponentTypog    `json:"typography"`
+	States       map[string]string `json:"states"` // hover, active, disabled
 }
 
 // ComponentTypog defines typography for components
 type ComponentTypog struct {
-	FontSize   int     `json:"font_size"`
-	FontWeight int     `json:"font_weight"`
-	LineHeight float64 `json:"line_height"`
+	FontSize      int     `json:"font_size"`
+	FontWeight    int     `json:"font_weight"`
+	LineHeight    float64 `json:"line_height"`
 	LetterSpacing float64 `json:"letter_spacing"`
 }
 
@@ -295,7 +295,7 @@ type ThemeObserver interface {
 // NewThemeManager creates a new theme manager with built-in themes
 func NewThemeManager() *ThemeManager {
 	logger, _ := zap.NewDevelopment()
-	
+
 	tm := &ThemeManager{
 		themes:    make(map[string]*Theme),
 		observers: make([]ThemeObserver, 0),
@@ -304,7 +304,7 @@ func NewThemeManager() *ThemeManager {
 
 	// Register built-in themes
 	tm.registerBuiltinThemes()
-	
+
 	// Set default theme
 	if theme, exists := tm.themes["claude-code-light"]; exists {
 		tm.currentTheme = theme
@@ -341,7 +341,7 @@ func (tm *ThemeManager) ApplyTheme(ctx context.Context, themeName string) error 
 		}
 	}
 
-	tm.logger.Info("Theme applied successfully", 
+	tm.logger.Info("Theme applied successfully",
 		zap.String("theme", themeName),
 		zap.String("previous_theme", getThemeName(oldTheme)))
 
@@ -407,7 +407,7 @@ func (tm *ThemeManager) getOrGenerateAgentColor(agentID string) Color {
 
 	// Generate new color based on agent ID
 	agentColor := tm.generateAgentColor(agentID)
-	
+
 	// Store for future use
 	if tm.currentTheme.Colors.AgentColors == nil {
 		tm.currentTheme.Colors.AgentColors = make(map[string]Color)
@@ -421,10 +421,10 @@ func (tm *ThemeManager) getOrGenerateAgentColor(agentID string) Color {
 func (tm *ThemeManager) generateAgentColor(agentID string) Color {
 	// Use a deterministic hash-based approach for consistent colors
 	hash := tm.hashString(agentID)
-	
+
 	// Generate hue based on hash (0-360 degrees)
 	hue := float64(hash % 360)
-	
+
 	// Use theme-appropriate saturation and lightness
 	var saturation, lightness float64
 	if tm.isDarkTheme() {
@@ -440,10 +440,10 @@ func (tm *ThemeManager) generateAgentColor(agentID string) Color {
 	darkColor := tm.hslToHex(hue, saturation*1.2, lightness-0.2)
 
 	return Color{
-		Base:  baseColor,
-		Light: lightColor,
-		Dark:  darkColor,
-		Muted: tm.hslToHex(hue, saturation*0.5, lightness),
+		Base:    baseColor,
+		Light:   lightColor,
+		Dark:    darkColor,
+		Muted:   tm.hslToHex(hue, saturation*0.5, lightness),
 		Inverse: tm.getContrastColor(baseColor),
 	}
 }
@@ -470,21 +470,31 @@ func (tm *ThemeManager) isDarkTheme() bool {
 // hslToHex converts HSL values to hex color
 func (tm *ThemeManager) hslToHex(h, s, l float64) string {
 	h = h / 360.0
-	
+
 	var r, g, b float64
-	
+
 	if s == 0 {
 		r, g, b = l, l, l
 	} else {
 		hue2rgb := func(p, q, t float64) float64 {
-			if t < 0 { t += 1 }
-			if t > 1 { t -= 1 }
-			if t < 1.0/6.0 { return p + (q-p)*6*t }
-			if t < 1.0/2.0 { return q }
-			if t < 2.0/3.0 { return p + (q-p)*(2.0/3.0-t)*6 }
+			if t < 0 {
+				t += 1
+			}
+			if t > 1 {
+				t -= 1
+			}
+			if t < 1.0/6.0 {
+				return p + (q-p)*6*t
+			}
+			if t < 1.0/2.0 {
+				return q
+			}
+			if t < 2.0/3.0 {
+				return p + (q-p)*(2.0/3.0-t)*6
+			}
 			return p
 		}
-		
+
 		var q float64
 		if l < 0.5 {
 			q = l * (1 + s)
@@ -492,15 +502,15 @@ func (tm *ThemeManager) hslToHex(h, s, l float64) string {
 			q = l + s - l*s
 		}
 		p := 2*l - q
-		
+
 		r = hue2rgb(p, q, h+1.0/3.0)
 		g = hue2rgb(p, q, h)
 		b = hue2rgb(p, q, h-1.0/3.0)
 	}
-	
-	return fmt.Sprintf("#%02x%02x%02x", 
-		int(r*255+0.5), 
-		int(g*255+0.5), 
+
+	return fmt.Sprintf("#%02x%02x%02x",
+		int(r*255+0.5),
+		int(g*255+0.5),
 		int(b*255+0.5))
 }
 
@@ -541,7 +551,7 @@ func (tm *ThemeManager) LoadThemeFromFile(ctx context.Context, filepath string) 
 	defer tm.mu.Unlock()
 	tm.themes[theme.Name] = &theme
 
-	tm.logger.Info("Theme loaded from file", 
+	tm.logger.Info("Theme loaded from file",
 		zap.String("theme", theme.Name),
 		zap.String("filepath", filepath))
 
@@ -579,7 +589,7 @@ func (tm *ThemeManager) ExportTheme(ctx context.Context, themeName, outputPath s
 			WithOperation("ExportTheme")
 	}
 
-	tm.logger.Info("Theme exported successfully", 
+	tm.logger.Info("Theme exported successfully",
 		zap.String("theme", themeName),
 		zap.String("output_path", outputPath))
 
@@ -633,13 +643,13 @@ func (tm *ThemeManager) registerBuiltinThemes() {
 		Version:     "1.0.0",
 		Author:      "Guild Framework",
 		Colors: ColorScheme{
-			Primary:   Color{Base: "#2563eb", Light: "#60a5fa", Dark: "#1d4ed8", Muted: "#94a3b8", Inverse: "#ffffff"},
-			Secondary: Color{Base: "#64748b", Light: "#94a3b8", Dark: "#475569", Muted: "#cbd5e1", Inverse: "#ffffff"},
-			Accent:    Color{Base: "#7c3aed", Light: "#a78bfa", Dark: "#5b21b6", Muted: "#c4b5fd", Inverse: "#ffffff"},
-			Success:   Color{Base: "#059669", Light: "#34d399", Dark: "#047857", Muted: "#a7f3d0", Inverse: "#ffffff"},
-			Warning:   Color{Base: "#d97706", Light: "#fbbf24", Dark: "#92400e", Muted: "#fde68a", Inverse: "#ffffff"},
-			Error:     Color{Base: "#dc2626", Light: "#f87171", Dark: "#991b1b", Muted: "#fca5a5", Inverse: "#ffffff"},
-			Info:      Color{Base: "#0891b2", Light: "#22d3ee", Dark: "#0e7490", Muted: "#a5f3fc", Inverse: "#ffffff"},
+			Primary:    Color{Base: "#2563eb", Light: "#60a5fa", Dark: "#1d4ed8", Muted: "#94a3b8", Inverse: "#ffffff"},
+			Secondary:  Color{Base: "#64748b", Light: "#94a3b8", Dark: "#475569", Muted: "#cbd5e1", Inverse: "#ffffff"},
+			Accent:     Color{Base: "#7c3aed", Light: "#a78bfa", Dark: "#5b21b6", Muted: "#c4b5fd", Inverse: "#ffffff"},
+			Success:    Color{Base: "#059669", Light: "#34d399", Dark: "#047857", Muted: "#a7f3d0", Inverse: "#ffffff"},
+			Warning:    Color{Base: "#d97706", Light: "#fbbf24", Dark: "#92400e", Muted: "#fde68a", Inverse: "#ffffff"},
+			Error:      Color{Base: "#dc2626", Light: "#f87171", Dark: "#991b1b", Muted: "#fca5a5", Inverse: "#ffffff"},
+			Info:       Color{Base: "#0891b2", Light: "#22d3ee", Dark: "#0e7490", Muted: "#a5f3fc", Inverse: "#ffffff"},
 			Background: Color{Base: "#ffffff", Light: "#f8fafc", Dark: "#f1f5f9", Muted: "#e2e8f0", Inverse: "#1e293b"},
 			Surface:    Color{Base: "#f8fafc", Light: "#ffffff", Dark: "#f1f5f9", Muted: "#e2e8f0", Inverse: "#1e293b"},
 			Border:     Color{Base: "#e2e8f0", Light: "#f1f5f9", Dark: "#cbd5e1", Muted: "#94a3b8", Inverse: "#475569"},
@@ -654,16 +664,16 @@ func (tm *ThemeManager) registerBuiltinThemes() {
 			AgentColors: make(map[string]Color), // Will be populated dynamically
 		},
 		Typography: Typography{
-			FontFamily: "SF Mono, Monaco, Consolas, monospace",
-			Scale:      TypographyScale{XS: 12, SM: 14, Base: 16, LG: 18, XL: 20, XXL: 24},
-			Weights:    FontWeights{Light: 300, Normal: 400, Medium: 500, Bold: 600, Heavy: 700},
+			FontFamily:  "SF Mono, Monaco, Consolas, monospace",
+			Scale:       TypographyScale{XS: 12, SM: 14, Base: 16, LG: 18, XL: 20, XXL: 24},
+			Weights:     FontWeights{Light: 300, Normal: 400, Medium: 500, Bold: 600, Heavy: 700},
 			LineHeights: LineHeights{Tight: 1.2, Normal: 1.5, Loose: 1.8},
 		},
 		Spacing: Spacing{XS: 2, SM: 4, MD: 8, LG: 16, XL: 24, XXL: 32},
 		Animations: Animations{
-			Enabled:  true,
-			Duration: AnimationDuration{Fast: 150, Normal: 300, Slow: 500},
-			Easing:   AnimationEasing{Linear: "linear", EaseIn: "ease-in", EaseOut: "ease-out", EaseInOut: "ease-in-out"},
+			Enabled:     true,
+			Duration:    AnimationDuration{Fast: 150, Normal: 300, Slow: 500},
+			Easing:      AnimationEasing{Linear: "linear", EaseIn: "ease-in", EaseOut: "ease-out", EaseInOut: "ease-in-out"},
 			Transitions: AnimationTypes{Fade: true, Slide: true, Scale: true, Rotation: false},
 		},
 		CreatedAt: time.Now(),
@@ -714,9 +724,9 @@ func (tm *ThemeManager) registerBuiltinThemes() {
 		Version:     "1.0.0",
 		Author:      "Guild Framework",
 		Colors: ColorScheme{
-			Primary:   Color{Base: "#3b82f6", Light: "#60a5fa", Dark: "#2563eb", Muted: "#64748b", Inverse: "#1e293b"},
-			Secondary: Color{Base: "#6b7280", Light: "#9ca3af", Dark: "#4b5563", Muted: "#374151", Inverse: "#f9fafb"},
-			Accent:    Color{Base: "#8b5cf6", Light: "#a78bfa", Dark: "#7c3aed", Muted: "#6366f1", Inverse: "#1e1b4b"},
+			Primary:    Color{Base: "#3b82f6", Light: "#60a5fa", Dark: "#2563eb", Muted: "#64748b", Inverse: "#1e293b"},
+			Secondary:  Color{Base: "#6b7280", Light: "#9ca3af", Dark: "#4b5563", Muted: "#374151", Inverse: "#f9fafb"},
+			Accent:     Color{Base: "#8b5cf6", Light: "#a78bfa", Dark: "#7c3aed", Muted: "#6366f1", Inverse: "#1e1b4b"},
 			Background: Color{Base: "#0f172a", Light: "#1e293b", Dark: "#020617", Muted: "#334155", Inverse: "#ffffff"},
 			Surface:    Color{Base: "#1e293b", Light: "#334155", Dark: "#0f172a", Muted: "#475569", Inverse: "#f8fafc"},
 			Text: Text{

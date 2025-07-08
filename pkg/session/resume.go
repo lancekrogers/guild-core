@@ -55,19 +55,19 @@ type CorpusInterface interface {
 type TaskStatus string
 
 const (
-	TaskStatusRunning TaskStatus = "running"
-	TaskStatusPaused  TaskStatus = "paused"
-	TaskStatusFailed  TaskStatus = "failed"
+	TaskStatusRunning   TaskStatus = "running"
+	TaskStatusPaused    TaskStatus = "paused"
+	TaskStatusFailed    TaskStatus = "failed"
 	TaskStatusCompleted TaskStatus = "completed"
 )
 
 // Task represents a task in the system
 type Task struct {
-	ID          string    `json:"id"`
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
+	ID          string     `json:"id"`
+	Title       string     `json:"title"`
+	Description string     `json:"description"`
 	Status      TaskStatus `json:"status"`
-	CreatedAt   time.Time `json:"created_at"`
+	CreatedAt   time.Time  `json:"created_at"`
 }
 
 // AgentContext represents the context provided to an agent
@@ -494,7 +494,7 @@ func (sr *SessionRecovery) RecoverFromCrash(ctx context.Context) (*Session, erro
 func (bm *BackupManager) GetUnsavedChanges(sessionID string) []Change {
 	bm.mu.RLock()
 	defer bm.mu.RUnlock()
-	
+
 	if changes, exists := bm.unsavedChanges[sessionID]; exists {
 		return changes
 	}
@@ -505,7 +505,7 @@ func (bm *BackupManager) GetUnsavedChanges(sessionID string) []Change {
 func (bm *BackupManager) AddUnsavedChange(sessionID string, change Change) {
 	bm.mu.Lock()
 	defer bm.mu.Unlock()
-	
+
 	if bm.unsavedChanges[sessionID] == nil {
 		bm.unsavedChanges[sessionID] = []Change{}
 	}
@@ -559,17 +559,17 @@ func (sr *SessionResumer) CanResumeSession(ctx context.Context, sessionID string
 	if err != nil {
 		return false, gerror.Wrap(err, gerror.ErrCodeNotFound, "failed to load session")
 	}
-	
+
 	// Check if session is in a resumable state
 	if session.State.Status != SessionStatusActive && session.State.Status != SessionStatusPaused {
 		return false, nil
 	}
-	
+
 	// Check if session is not too old (24 hours limit)
 	if time.Since(session.LastActiveTime) > 24*time.Hour {
 		return false, nil
 	}
-	
+
 	return true, nil
 }
 
@@ -579,12 +579,12 @@ func (sr *SessionResumer) GetResumableSessions(ctx context.Context, userID strin
 		OrderBy: "last_active_time DESC",
 		Limit:   50,
 	}
-	
+
 	sessions, err := sr.manager.ListSessions(ctx, options)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list sessions")
 	}
-	
+
 	var resumable []*Session
 	for _, session := range sessions {
 		if session.UserID == userID {
@@ -597,7 +597,7 @@ func (sr *SessionResumer) GetResumableSessions(ctx context.Context, userID strin
 			}
 		}
 	}
-	
+
 	return resumable, nil
 }
 
@@ -608,12 +608,12 @@ func (sr *SessionResumer) RecoverFromCrash(ctx context.Context) (*Session, error
 		OrderBy: "last_active_time DESC",
 		Limit:   10,
 	}
-	
+
 	sessions, err := sr.manager.ListSessions(ctx, options)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to list sessions for recovery")
 	}
-	
+
 	for _, session := range sessions {
 		// Look for recently active sessions (within last hour)
 		if time.Since(session.LastActiveTime) < time.Hour {
@@ -622,7 +622,7 @@ func (sr *SessionResumer) RecoverFromCrash(ctx context.Context) (*Session, error
 			}
 		}
 	}
-	
+
 	return nil, gerror.New(gerror.ErrCodeNotFound, "no sessions to recover", nil)
 }
 

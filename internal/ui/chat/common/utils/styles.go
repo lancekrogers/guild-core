@@ -284,20 +284,20 @@ func NewMinimalStyles() *Styles {
 func NewClaudeCodeStyles() *Styles {
 	// Claude Code color palette
 	var (
-		_ = lipgloss.Color("#1e1e1e") // VS Code dark background (ccBackground - reserved for future use)
-		ccSurface       = lipgloss.Color("#252526") // Surface/panel color
-		ccPrimary       = lipgloss.Color("#007acc") // VS Code blue
-		ccSecondary     = lipgloss.Color("#3794ff") // Lighter blue
-		ccText          = lipgloss.Color("#d4d4d4") // Primary text
-		ccTextMuted     = lipgloss.Color("#858585") // Muted text
-		ccTextDimmed    = lipgloss.Color("#5a5a5a") // Dimmed text
-		ccSuccess       = lipgloss.Color("#89d185") // Success green
-		ccWarning       = lipgloss.Color("#e9c46a") // Warning yellow
-		ccError         = lipgloss.Color("#f48771") // Error red
-		ccInfo          = lipgloss.Color("#75beff") // Info blue
-		
+		_            = lipgloss.Color("#1e1e1e") // VS Code dark background (ccBackground - reserved for future use)
+		ccSurface    = lipgloss.Color("#252526") // Surface/panel color
+		ccPrimary    = lipgloss.Color("#007acc") // VS Code blue
+		ccSecondary  = lipgloss.Color("#3794ff") // Lighter blue
+		ccText       = lipgloss.Color("#d4d4d4") // Primary text
+		ccTextMuted  = lipgloss.Color("#858585") // Muted text
+		ccTextDimmed = lipgloss.Color("#5a5a5a") // Dimmed text
+		ccSuccess    = lipgloss.Color("#89d185") // Success green
+		ccWarning    = lipgloss.Color("#e9c46a") // Warning yellow
+		ccError      = lipgloss.Color("#f48771") // Error red
+		ccInfo       = lipgloss.Color("#75beff") // Info blue
+
 		// Agent colors matching Claude Code
-		ccAgentGreen    = lipgloss.Color("#6a9955") // Green for Vera
+		ccAgentGreen = lipgloss.Color("#6a9955") // Green for Vera
 	)
 
 	s := &Styles{}

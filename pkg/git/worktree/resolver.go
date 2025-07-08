@@ -131,7 +131,7 @@ type ResolutionStrategy interface {
 type Resolution struct {
 	Content    string                 `json:"content"`
 	Strategy   string                 `json:"strategy"`
-	Confidence float64               `json:"confidence"`
+	Confidence float64                `json:"confidence"`
 	Pattern    *ResolutionPattern     `json:"pattern,omitempty"`
 	Metadata   map[string]interface{} `json:"metadata,omitempty"`
 	ResolvedAt time.Time              `json:"resolved_at"`
@@ -198,7 +198,7 @@ func (wr *WhitespaceResolver) normalizeWhitespace(content string) string {
 	// Normalize line endings
 	content = strings.ReplaceAll(content, "\r\n", "\n")
 	content = strings.ReplaceAll(content, "\r", "\n")
-	
+
 	// Normalize spaces and tabs
 	lines := strings.Split(content, "\n")
 	for i, line := range lines {
@@ -208,7 +208,7 @@ func (wr *WhitespaceResolver) normalizeWhitespace(content string) string {
 		line = strings.TrimRight(line, " ")
 		lines[i] = line
 	}
-	
+
 	return strings.Join(lines, "\n")
 }
 
@@ -289,41 +289,41 @@ type GoImportSorter struct{}
 func (gis *GoImportSorter) IsImportConflict(ctx context.Context, conflict Conflict) bool {
 	// Check if both contents have import statements
 	return strings.Contains(conflict.Diff.Content1, "import") &&
-		   strings.Contains(conflict.Diff.Content2, "import")
+		strings.Contains(conflict.Diff.Content2, "import")
 }
 
 func (gis *GoImportSorter) ExtractImports(ctx context.Context, content string) []string {
 	var imports []string
 	lines := strings.Split(content, "\n")
-	
+
 	inImportBlock := false
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
-		
+
 		if strings.HasPrefix(trimmed, "import (") {
 			inImportBlock = true
 			continue
 		}
-		
+
 		if inImportBlock && trimmed == ")" {
 			inImportBlock = false
 			continue
 		}
-		
+
 		if inImportBlock || strings.HasPrefix(trimmed, "import ") {
 			if trimmed != "" && !strings.HasPrefix(trimmed, "//") {
 				imports = append(imports, trimmed)
 			}
 		}
 	}
-	
+
 	return imports
 }
 
 func (gis *GoImportSorter) MergeImports(ctx context.Context, imports1, imports2 []string) []string {
 	importSet := make(map[string]struct{})
 	var merged []string
-	
+
 	// Add all unique imports
 	for _, imp := range append(imports1, imports2...) {
 		cleaned := strings.TrimSpace(imp)
@@ -334,19 +334,19 @@ func (gis *GoImportSorter) MergeImports(ctx context.Context, imports1, imports2 
 			}
 		}
 	}
-	
+
 	return merged
 }
 
 func (gis *GoImportSorter) SortImports(ctx context.Context, imports []string) []string {
 	// Separate standard library, third-party, and local imports
 	var stdlib, thirdparty, local []string
-	
+
 	for _, imp := range imports {
 		// Remove import prefix if present
 		imp = strings.TrimPrefix(imp, "import ")
 		imp = strings.TrimSpace(imp)
-		
+
 		if strings.Contains(imp, ".") {
 			if strings.Contains(imp, "github.com") || strings.Contains(imp, "gitlab.com") {
 				thirdparty = append(thirdparty, imp)
@@ -357,12 +357,12 @@ func (gis *GoImportSorter) SortImports(ctx context.Context, imports []string) []
 			stdlib = append(stdlib, imp)
 		}
 	}
-	
+
 	// Sort each group
 	sort.Strings(stdlib)
 	sort.Strings(thirdparty)
 	sort.Strings(local)
-	
+
 	// Combine with proper formatting
 	var sorted []string
 	sorted = append(sorted, stdlib...)
@@ -372,20 +372,20 @@ func (gis *GoImportSorter) SortImports(ctx context.Context, imports []string) []
 	if len(local) > 0 {
 		sorted = append(sorted, local...)
 	}
-	
+
 	return sorted
 }
 
 func (gis *GoImportSorter) ReplaceImports(ctx context.Context, content string, imports []string) string {
 	lines := strings.Split(content, "\n")
 	var result []string
-	
+
 	inImportBlock := false
 	importAdded := false
-	
+
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
-		
+
 		if strings.HasPrefix(trimmed, "import (") {
 			inImportBlock = true
 			result = append(result, "import (")
@@ -396,16 +396,16 @@ func (gis *GoImportSorter) ReplaceImports(ctx context.Context, content string, i
 			importAdded = true
 			continue
 		}
-		
+
 		if inImportBlock && trimmed == ")" {
 			inImportBlock = false
 			continue
 		}
-		
+
 		if inImportBlock {
 			continue // Skip original import lines
 		}
-		
+
 		if strings.HasPrefix(trimmed, "import ") && !importAdded {
 			// Single import line, replace with block
 			result = append(result, "import (")
@@ -416,10 +416,10 @@ func (gis *GoImportSorter) ReplaceImports(ctx context.Context, content string, i
 			importAdded = true
 			continue
 		}
-		
+
 		result = append(result, line)
 	}
-	
+
 	return strings.Join(result, "\n")
 }
 
@@ -428,34 +428,34 @@ type JSImportSorter struct{}
 
 func (jis *JSImportSorter) IsImportConflict(ctx context.Context, conflict Conflict) bool {
 	return strings.Contains(conflict.Diff.Content1, "import") &&
-		   strings.Contains(conflict.Diff.Content2, "import")
+		strings.Contains(conflict.Diff.Content2, "import")
 }
 
 func (jis *JSImportSorter) ExtractImports(ctx context.Context, content string) []string {
 	var imports []string
 	lines := strings.Split(content, "\n")
-	
+
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
 		if strings.HasPrefix(trimmed, "import ") && strings.Contains(trimmed, "from") {
 			imports = append(imports, trimmed)
 		}
 	}
-	
+
 	return imports
 }
 
 func (jis *JSImportSorter) MergeImports(ctx context.Context, imports1, imports2 []string) []string {
 	importSet := make(map[string]struct{})
 	var merged []string
-	
+
 	for _, imp := range append(imports1, imports2...) {
 		if _, exists := importSet[imp]; !exists {
 			importSet[imp] = struct{}{}
 			merged = append(merged, imp)
 		}
 	}
-	
+
 	return merged
 }
 
@@ -467,12 +467,12 @@ func (jis *JSImportSorter) SortImports(ctx context.Context, imports []string) []
 func (jis *JSImportSorter) ReplaceImports(ctx context.Context, content string, imports []string) string {
 	lines := strings.Split(content, "\n")
 	var result []string
-	
+
 	// Skip existing import lines and add sorted imports at the top
 	for _, imp := range imports {
 		result = append(result, imp)
 	}
-	
+
 	// Add non-import lines
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
@@ -480,7 +480,7 @@ func (jis *JSImportSorter) ReplaceImports(ctx context.Context, content string, i
 			result = append(result, line)
 		}
 	}
-	
+
 	return strings.Join(result, "\n")
 }
 
@@ -489,46 +489,46 @@ type PythonImportSorter struct{}
 
 func (pis *PythonImportSorter) IsImportConflict(ctx context.Context, conflict Conflict) bool {
 	return (strings.Contains(conflict.Diff.Content1, "import ") || strings.Contains(conflict.Diff.Content1, "from ")) &&
-		   (strings.Contains(conflict.Diff.Content2, "import ") || strings.Contains(conflict.Diff.Content2, "from "))
+		(strings.Contains(conflict.Diff.Content2, "import ") || strings.Contains(conflict.Diff.Content2, "from "))
 }
 
 func (pis *PythonImportSorter) ExtractImports(ctx context.Context, content string) []string {
 	var imports []string
 	lines := strings.Split(content, "\n")
-	
+
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
 		if strings.HasPrefix(trimmed, "import ") || strings.HasPrefix(trimmed, "from ") {
 			imports = append(imports, trimmed)
 		}
 	}
-	
+
 	return imports
 }
 
 func (pis *PythonImportSorter) MergeImports(ctx context.Context, imports1, imports2 []string) []string {
 	importSet := make(map[string]struct{})
 	var merged []string
-	
+
 	for _, imp := range append(imports1, imports2...) {
 		if _, exists := importSet[imp]; !exists {
 			importSet[imp] = struct{}{}
 			merged = append(merged, imp)
 		}
 	}
-	
+
 	return merged
 }
 
 func (pis *PythonImportSorter) SortImports(ctx context.Context, imports []string) []string {
 	// Separate standard library, third-party, and local imports
 	var stdlib, thirdparty, local []string
-	
+
 	stdlibModules := map[string]bool{
 		"os": true, "sys": true, "re": true, "json": true, "time": true,
 		"datetime": true, "collections": true, "itertools": true,
 	}
-	
+
 	for _, imp := range imports {
 		if strings.HasPrefix(imp, "from ") {
 			parts := strings.Fields(imp)
@@ -554,33 +554,33 @@ func (pis *PythonImportSorter) SortImports(ctx context.Context, imports []string
 			}
 		}
 	}
-	
+
 	sort.Strings(stdlib)
 	sort.Strings(thirdparty)
 	sort.Strings(local)
-	
+
 	var sorted []string
 	sorted = append(sorted, stdlib...)
 	sorted = append(sorted, thirdparty...)
 	sorted = append(sorted, local...)
-	
+
 	return sorted
 }
 
 func (pis *PythonImportSorter) ReplaceImports(ctx context.Context, content string, imports []string) string {
 	lines := strings.Split(content, "\n")
 	var result []string
-	
+
 	// Add sorted imports at the top
 	for _, imp := range imports {
 		result = append(result, imp)
 	}
-	
+
 	// Add a blank line after imports
 	if len(imports) > 0 {
 		result = append(result, "")
 	}
-	
+
 	// Add non-import lines
 	for _, line := range lines {
 		trimmed := strings.TrimSpace(line)
@@ -588,7 +588,7 @@ func (pis *PythonImportSorter) ReplaceImports(ctx context.Context, content strin
 			result = append(result, line)
 		}
 	}
-	
+
 	return strings.Join(result, "\n")
 }
 
@@ -638,19 +638,19 @@ func (fr *FormattingResolver) normalizeFormatting(content string) string {
 	// Basic formatting normalization
 	lines := strings.Split(content, "\n")
 	var formatted []string
-	
+
 	for _, line := range lines {
 		// Trim trailing whitespace
 		line = strings.TrimRight(line, " \t")
 		formatted = append(formatted, line)
 	}
-	
+
 	return strings.Join(formatted, "\n")
 }
 
 func (fr *FormattingResolver) hasConsistentFormatting(content string) bool {
 	lines := strings.Split(content, "\n")
-	
+
 	// Check for consistent indentation
 	var indentSize int
 	for _, line := range lines {
@@ -664,7 +664,7 @@ func (fr *FormattingResolver) hasConsistentFormatting(content string) bool {
 			}
 		}
 	}
-	
+
 	return true
 }
 
@@ -707,7 +707,7 @@ func (cr *CommentResolver) removeComments(content string) string {
 	// Remove single-line comments
 	lines := strings.Split(content, "\n")
 	var clean []string
-	
+
 	for _, line := range lines {
 		// Remove // comments
 		if idx := strings.Index(line, "//"); idx >= 0 {
@@ -719,7 +719,7 @@ func (cr *CommentResolver) removeComments(content string) string {
 		}
 		clean = append(clean, strings.TrimSpace(line))
 	}
-	
+
 	return strings.Join(clean, "\n")
 }
 
@@ -834,18 +834,18 @@ type FeatureExtractor struct{}
 
 func (fe *FeatureExtractor) Extract(ctx context.Context, conflict Conflict) map[string]interface{} {
 	features := make(map[string]interface{})
-	
+
 	// Basic features
 	features["file_extension"] = filepath.Ext(conflict.File)
 	features["conflict_type"] = conflict.Type
 	features["severity"] = conflict.Severity
-	
+
 	if conflict.Diff != nil {
 		features["content1_length"] = len(conflict.Diff.Content1)
 		features["content2_length"] = len(conflict.Diff.Content2)
 		features["conflict_lines"] = len(conflict.Diff.ConflictLines)
 	}
-	
+
 	return features
 }
 
@@ -875,7 +875,7 @@ func NewResolutionHistory() *ResolutionHistory {
 func (rh *ResolutionHistory) Record(conflict Conflict, resolution *Resolution, strategy ResolutionStrategy) {
 	rh.mu.Lock()
 	defer rh.mu.Unlock()
-	
+
 	rh.resolutions = append(rh.resolutions, HistoricalResolution{
 		Conflict:   conflict,
 		Resolution: resolution,
@@ -940,7 +940,7 @@ func (mr *ManualResolver) generateRequestID() string {
 func (mr *ManualResolver) waitForResolution(ctx context.Context, requestID string, timeout time.Duration) (*Resolution, error) {
 	// Placeholder for waiting for manual resolution
 	// In practice, this would wait for user input through the UI
-	
+
 	select {
 	case <-ctx.Done():
 		return nil, ctx.Err()
@@ -980,13 +980,13 @@ func (cr *CodeReviewer) ValidateResolution(ctx context.Context, conflict Conflic
 	if resolution.Content == "" {
 		return gerror.New(gerror.ErrCodeValidation, "resolution content is empty", nil)
 	}
-	
+
 	// Check for remaining conflict markers
 	if strings.Contains(resolution.Content, "<<<<<<<") ||
-	   strings.Contains(resolution.Content, "=======") ||
-	   strings.Contains(resolution.Content, ">>>>>>>") {
+		strings.Contains(resolution.Content, "=======") ||
+		strings.Contains(resolution.Content, ">>>>>>>") {
 		return gerror.New(gerror.ErrCodeValidation, "resolution contains conflict markers", nil)
 	}
-	
+
 	return nil
 }

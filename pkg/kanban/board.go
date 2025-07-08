@@ -72,8 +72,8 @@ type Board struct {
 	Metadata    map[string]string `json:"metadata,omitempty"`
 
 	// Storage - SQLite only via registry
-	registry         ComponentRegistry
-	eventManager     *EventManager
+	registry           ComponentRegistry
+	eventManager       *EventManager
 	taskEventPublisher TaskEventPublisherInterface
 }
 
@@ -129,14 +129,14 @@ func NewBoardWithRegistry(ctx context.Context, registry ComponentRegistry, name,
 	}
 
 	board := &Board{
-		ID:           uuid.New().String(),
-		Name:         name,
-		Description:  description,
-		CreatedAt:    time.Now().UTC(),
-		UpdatedAt:    time.Now().UTC(),
-		Metadata:     make(map[string]string),
-		registry:     registry,
-		eventManager: nil, // Will be set by SetEventManager
+		ID:                 uuid.New().String(),
+		Name:               name,
+		Description:        description,
+		CreatedAt:          time.Now().UTC(),
+		UpdatedAt:          time.Now().UTC(),
+		Metadata:           make(map[string]string),
+		registry:           registry,
+		eventManager:       nil, // Will be set by SetEventManager
 		taskEventPublisher: nil, // Will be set by SetTaskEventPublisher
 	}
 
@@ -1092,9 +1092,9 @@ func (b *Board) UpdateTaskStatus(ctx context.Context, taskID string, newStatus T
 	if oldStatus != newStatus && b.taskEventPublisher != nil {
 		if err := b.taskEventPublisher.PublishTaskMoved(ctx, task, b.ID, string(oldStatus), string(newStatus), changedBy, comment); err != nil {
 			logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("UpdateTaskStatus")
-			logger.WithError(err).Warn("Failed to publish task moved event", 
-				"task_id", taskID, 
-				"from_status", string(oldStatus), 
+			logger.WithError(err).Warn("Failed to publish task moved event",
+				"task_id", taskID,
+				"from_status", string(oldStatus),
 				"to_status", string(newStatus))
 		}
 

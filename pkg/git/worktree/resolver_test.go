@@ -62,20 +62,20 @@ func TestGuildWhitespaceResolver(t *testing.T) {
 // TestScribeImportResolver tests import conflict resolution
 func TestScribeImportResolver(t *testing.T) {
 	ctx := context.Background()
-	
+
 	languages := map[string]ImportSorter{
 		"go":         &GoImportSorter{},
 		"javascript": &JSImportSorter{},
 		"python":     &PythonImportSorter{},
 	}
-	
+
 	resolver := &ImportResolver{languages: languages}
 
 	// Test Go import conflict
 	goConflict := Conflict{
 		File: "main.go",
 		Diff: &ThreeWayDiff{
-			Base: "package main\n\nimport (\n\t\"fmt\"\n)",
+			Base:     "package main\n\nimport (\n\t\"fmt\"\n)",
 			Content1: "package main\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)",
 			Content2: "package main\n\nimport (\n\t\"fmt\"\n\t\"log\"\n)",
 		},
@@ -115,7 +115,7 @@ func main() {}`
 	imports1 := []string{"\"fmt\"", "\"os\""}
 	imports2 := []string{"\"log\"", "\"os\""}
 	merged := sorter.MergeImports(ctx, imports1, imports2)
-	
+
 	assert.Contains(t, merged, "\"fmt\"")
 	assert.Contains(t, merged, "\"os\"")
 	assert.Contains(t, merged, "\"log\"")
@@ -127,10 +127,10 @@ func main() {}`
 		"\"github.com/lancekrogers/guild/pkg/test\"",
 		"\"os\"",
 	}
-	
+
 	sorted := sorter.SortImports(ctx, unsorted)
 	assert.Greater(t, len(sorted), 0)
-	
+
 	// Standard library imports should come first
 	stdlibFound := false
 	for _, imp := range sorted {
@@ -496,7 +496,7 @@ func TestScribeCompleteResolutionFlow(t *testing.T) {
 
 	// This should be resolved by WhitespaceResolver
 	resolution, err := resolver.ResolveConflict(ctx, conflict)
-	
+
 	if err != nil {
 		// May fail due to manual resolution timeout in test environment
 		assert.Contains(t, err.Error(), "manual resolution")

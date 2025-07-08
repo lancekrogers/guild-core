@@ -10,8 +10,8 @@ import (
 
 // ToolDefinition represents a tool that can be called by the AI
 type ToolDefinition struct {
-	Type     string              `json:"type"` // "function"
-	Function FunctionDefinition  `json:"function"`
+	Type     string             `json:"type"` // "function"
+	Function FunctionDefinition `json:"function"`
 }
 
 // FunctionDefinition defines a function that can be called
@@ -23,9 +23,9 @@ type FunctionDefinition struct {
 
 // ToolCall represents a tool invocation in a response
 type ToolCall struct {
-	ID       string    `json:"id"`
-	Type     string    `json:"type"` // "function"
-	Function Function  `json:"function"`
+	ID       string   `json:"id"`
+	Type     string   `json:"type"` // "function"
+	Function Function `json:"function"`
 }
 
 // Function represents the function to call
@@ -59,8 +59,8 @@ type ChatResponseWithTools struct {
 // ChatMessageWithToolCalls extends ChatMessage for tool responses
 type ChatMessageWithToolCalls struct {
 	ChatMessage
-	ToolCalls   []ToolCall `json:"tool_calls,omitempty"`
-	ToolCallID  string     `json:"tool_call_id,omitempty"`  // For tool responses
+	ToolCalls  []ToolCall `json:"tool_calls,omitempty"`
+	ToolCallID string     `json:"tool_call_id,omitempty"` // For tool responses
 }
 
 // AIProviderWithTools extends AIProvider with tool support

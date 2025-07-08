@@ -192,17 +192,17 @@ func (se *SessionExporter) exportMarkdown(data *ExportData, opts ExportOptions) 
 		md.WriteString(fmt.Sprintf("- **Session ID**: %s\n", data.Session.ID))
 		md.WriteString(fmt.Sprintf("- **Campaign**: %s\n", data.Session.CampaignID))
 		md.WriteString(fmt.Sprintf("- **Started**: %s\n", data.Session.StartTime.Format("2006-01-02 15:04:05")))
-		md.WriteString(fmt.Sprintf("- **Duration**: %s\n", 
+		md.WriteString(fmt.Sprintf("- **Duration**: %s\n",
 			data.Session.LastActiveTime.Sub(data.Session.StartTime).Round(time.Second)))
 		md.WriteString(fmt.Sprintf("- **Messages**: %d\n", len(data.Messages)))
-		
+
 		if opts.IncludeContext && data.Session.Context.WorkingDirectory != "" {
 			md.WriteString(fmt.Sprintf("- **Working Directory**: `%s`\n", data.Session.Context.WorkingDirectory))
 		}
 		if opts.IncludeContext && data.Session.Context.GitBranch != "" {
 			md.WriteString(fmt.Sprintf("- **Git Branch**: `%s`\n", data.Session.Context.GitBranch))
 		}
-		
+
 		md.WriteString("\n")
 	}
 
@@ -406,15 +406,15 @@ func (se *SessionExporter) getHTMLTemplate(opts ExportOptions) string {
 func (se *SessionExporter) formatHTMLContent(content string, opts ExportOptions) string {
 	// Basic HTML escaping and formatting
 	content = template.HTMLEscapeString(content)
-	
+
 	// Convert newlines to <br>
 	content = strings.ReplaceAll(content, "\n", "<br>")
-	
+
 	// Enhanced code block formatting for HTML
 	if opts.SyntaxHighlight {
 		content = se.highlightCodeBlocks(content)
 	}
-	
+
 	return content
 }
 
@@ -451,7 +451,7 @@ func (se *SessionExporter) highlightCodeBlocks(content string) string {
 func (se *SessionExporter) exportPDF(data *ExportData, opts ExportOptions) ([]byte, error) {
 	// For a complete implementation, this would use a PDF generation library
 	// like gofpdf or convert HTML to PDF using a tool like wkhtmltopdf
-	
+
 	// For now, return an error indicating this feature needs external dependencies
 	return nil, gerror.New(gerror.ErrCodeNotImplemented, "PDF export requires external dependencies. Please use HTML export and convert using a PDF tool.", nil)
 }
@@ -545,7 +545,7 @@ func (si *SessionImporter) parseJSON(data []byte) (*ExportData, error) {
 func (si *SessionImporter) parseMarkdown(data []byte) (*ExportData, error) {
 	// This is a simplified implementation - a full parser would be more robust
 	content := string(data)
-	
+
 	// Extract basic session information from markdown
 	session := &Session{
 		ID:        "imported-session",
@@ -555,7 +555,7 @@ func (si *SessionImporter) parseMarkdown(data []byte) (*ExportData, error) {
 	// Parse messages from markdown (very basic parsing)
 	var messages []Message
 	sections := strings.Split(content, "### ")
-	
+
 	for _, section := range sections[1:] { // Skip first empty section
 		lines := strings.Split(section, "\n")
 		if len(lines) < 2 {
@@ -566,7 +566,7 @@ func (si *SessionImporter) parseMarkdown(data []byte) (*ExportData, error) {
 		header := lines[0]
 		parts := strings.Split(header, " _")
 		agent := strings.TrimSpace(parts[0])
-		
+
 		// Extract content
 		contentLines := lines[2:] // Skip header and empty line
 		content := strings.Join(contentLines, "\n")
@@ -644,15 +644,15 @@ func (se *SessionExporter) ExportSessions(sessions []*Session, format ExportForm
 	if len(sessions) == 0 {
 		return nil, gerror.New(gerror.ErrCodeInvalidInput, "no sessions to export", nil)
 	}
-	
+
 	if len(sessions) == 1 {
 		return se.ExportSession(sessions[0], format, options)
 	}
-	
+
 	// For multiple sessions, create a combined export
 	var allMessages []Message
 	var combinedMetadata = make(map[string]interface{})
-	
+
 	for _, session := range sessions {
 		allMessages = append(allMessages, session.Messages...)
 		// Combine metadata from all sessions
@@ -660,7 +660,7 @@ func (se *SessionExporter) ExportSessions(sessions []*Session, format ExportForm
 			combinedMetadata[k] = v
 		}
 	}
-	
+
 	// Create a virtual combined session
 	combinedSession := &Session{
 		ID:             "combined-export",
@@ -670,7 +670,7 @@ func (se *SessionExporter) ExportSessions(sessions []*Session, format ExportForm
 		Messages:       allMessages,
 		Metadata:       combinedMetadata,
 	}
-	
+
 	return se.ExportSession(combinedSession, format, options)
 }
 
@@ -686,7 +686,7 @@ func (se *SessionExporter) ValidateImportData(data []byte, format ExportFormat) 
 	if len(data) == 0 {
 		return gerror.New(gerror.ErrCodeInvalidInput, "import data is empty", nil)
 	}
-	
+
 	switch format {
 	case ExportFormatJSON:
 		var temp map[string]interface{}

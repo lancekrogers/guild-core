@@ -18,20 +18,20 @@ import (
 	"time"
 
 	"github.com/lancekrogers/guild/pkg/gerror"
-	"go.uber.org/zap"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
+	"go.uber.org/zap"
 )
 
 // Performance error codes for the Guild framework
 const (
-	ErrCodeProfilingFailed   = "PERF-1001"
+	ErrCodeProfilingFailed    = "PERF-1001"
 	ErrCodeOptimizationFailed = "PERF-1002"
-	ErrCodeBenchmarkFailed   = "PERF-1003"
-	ErrCodeCacheMiss         = "PERF-1004"
-	ErrCodeMemoryExhausted   = "PERF-1005"
+	ErrCodeBenchmarkFailed    = "PERF-1003"
+	ErrCodeCacheMiss          = "PERF-1004"
+	ErrCodeMemoryExhausted    = "PERF-1005"
 )
 
 // EventBus provides event publishing for performance metrics integration with Guild
@@ -41,19 +41,19 @@ type EventBus interface {
 
 // PerformanceMetricEvent represents a performance metric event for Guild's event bus
 type PerformanceMetricEvent struct {
-	ProfilerID  string                 `json:"profiler_id"`
-	Operation   string                 `json:"operation"`
-	Duration    float64                `json:"duration"`
-	Success     bool                   `json:"success"`
-	Metadata    map[string]interface{} `json:"metadata"`
-	Timestamp   time.Time              `json:"timestamp"`
+	ProfilerID string                 `json:"profiler_id"`
+	Operation  string                 `json:"operation"`
+	Duration   float64                `json:"duration"`
+	Success    bool                   `json:"success"`
+	Metadata   map[string]interface{} `json:"metadata"`
+	Timestamp  time.Time              `json:"timestamp"`
 }
 
 // Event type constants for Guild integration
 const (
-	EventTypePerformanceMetric = "performance.metric"
-	EventTypeProfilingStarted  = "performance.profiling.started"
-	EventTypeProfilingCompleted = "performance.profiling.completed"
+	EventTypePerformanceMetric      = "performance.metric"
+	EventTypeProfilingStarted       = "performance.profiling.started"
+	EventTypeProfilingCompleted     = "performance.profiling.completed"
 	EventTypeOptimizationSuggestion = "performance.optimization.suggestion"
 )
 
@@ -96,24 +96,24 @@ type PerformanceProfiler struct {
 	traceProfiler *TraceProfiler
 	benchmarks    map[string]*Benchmark
 	hotspots      *HotspotDetector
-	
+
 	// Staff-level enhancements for production observability
-	logger        *zap.Logger
-	tracer        trace.Tracer
-	eventBus      EventBus
-	
-	mu            sync.RWMutex
-	active        bool
+	logger   *zap.Logger
+	tracer   trace.Tracer
+	eventBus EventBus
+
+	mu     sync.RWMutex
+	active bool
 }
 
 // NewPerformanceProfiler creates a new comprehensive profiler with staff-level observability
 func NewPerformanceProfiler() *PerformanceProfiler {
 	// Initialize OpenTelemetry tracer for Guild integration
 	tracer := otel.Tracer("guild.performance.profiler")
-	
+
 	// Initialize structured logger
 	logger, _ := zap.NewProduction()
-	
+
 	return &PerformanceProfiler{
 		cpuProfiler:   NewCPUProfiler(),
 		memProfiler:   NewMemoryProfiler(),
@@ -141,27 +141,27 @@ func NewPerformanceProfilerWithDependencies(logger *zap.Logger, tracer trace.Tra
 
 // ProfileResult represents the result of a profiling session
 type ProfileResult struct {
-	Type         ProfileType           `json:"type"`
-	Duration     time.Duration         `json:"duration"`
-	Samples      int                   `json:"samples"`
-	Hotspots     []Hotspot             `json:"hotspots"`
-	Allocations  []Allocation          `json:"allocations"`
-	Suggestions  []Optimization        `json:"suggestions"`
-	Metadata     map[string]interface{} `json:"metadata"`
-	StartTime    time.Time             `json:"start_time"`
-	EndTime      time.Time             `json:"end_time"`
+	Type        ProfileType            `json:"type"`
+	Duration    time.Duration          `json:"duration"`
+	Samples     int                    `json:"samples"`
+	Hotspots    []Hotspot              `json:"hotspots"`
+	Allocations []Allocation           `json:"allocations"`
+	Suggestions []Optimization         `json:"suggestions"`
+	Metadata    map[string]interface{} `json:"metadata"`
+	StartTime   time.Time              `json:"start_time"`
+	EndTime     time.Time              `json:"end_time"`
 }
 
 // ProfileReport aggregates results from multiple profiling sessions
 type ProfileReport struct {
-	StartTime       time.Time              `json:"start_time"`
-	Duration        time.Duration          `json:"duration"`
-	CPUProfile      *CPUAnalysis           `json:"cpu_profile,omitempty"`
-	MemProfile      *MemoryAnalysis        `json:"memory_profile,omitempty"`
-	TraceAnalysis   *TraceAnalysis         `json:"trace_analysis,omitempty"`
-	Optimizations   []OptimizationSuggestion `json:"optimizations"`
-	Severity        string                 `json:"severity"`
-	Confidence      float64                `json:"confidence"`
+	StartTime     time.Time                `json:"start_time"`
+	Duration      time.Duration            `json:"duration"`
+	CPUProfile    *CPUAnalysis             `json:"cpu_profile,omitempty"`
+	MemProfile    *MemoryAnalysis          `json:"memory_profile,omitempty"`
+	TraceAnalysis *TraceAnalysis           `json:"trace_analysis,omitempty"`
+	Optimizations []OptimizationSuggestion `json:"optimizations"`
+	Severity      string                   `json:"severity"`
+	Confidence    float64                  `json:"confidence"`
 }
 
 // Hotspot represents a performance bottleneck in the code
@@ -196,25 +196,25 @@ type Optimization struct {
 
 // OptimizationSuggestion provides detailed optimization recommendations
 type OptimizationSuggestion struct {
-	ID          string    `json:"id"`
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	Category    string    `json:"category"`
-	Impact      ImpactLevel `json:"impact"`
-	Difficulty  DifficultyLevel `json:"difficulty"`
-	Confidence  float64   `json:"confidence"`
-	CodeSample  string    `json:"code_sample,omitempty"`
-	References  []string  `json:"references,omitempty"`
-	EstimatedGain string  `json:"estimated_gain"`
+	ID            string          `json:"id"`
+	Title         string          `json:"title"`
+	Description   string          `json:"description"`
+	Category      string          `json:"category"`
+	Impact        ImpactLevel     `json:"impact"`
+	Difficulty    DifficultyLevel `json:"difficulty"`
+	Confidence    float64         `json:"confidence"`
+	CodeSample    string          `json:"code_sample,omitempty"`
+	References    []string        `json:"references,omitempty"`
+	EstimatedGain string          `json:"estimated_gain"`
 }
 
 // ImpactLevel represents the expected impact of an optimization
 type ImpactLevel string
 
 const (
-	ImpactLow    ImpactLevel = "low"
-	ImpactMedium ImpactLevel = "medium"
-	ImpactHigh   ImpactLevel = "high"
+	ImpactLow      ImpactLevel = "low"
+	ImpactMedium   ImpactLevel = "medium"
+	ImpactHigh     ImpactLevel = "high"
 	ImpactCritical ImpactLevel = "critical"
 )
 
@@ -275,7 +275,7 @@ func (pp *PerformanceProfiler) ProfileApplication(ctx context.Context, duration 
 			WithOperation("ProfileApplication").
 			WithDetails("profiler_id", profilerID).
 			WithDetails("active_sessions", 1)
-		
+
 		span.SetStatus(codes.Error, "profiling session already active")
 		logger.Error("Profiling session already active", zap.Error(err))
 		return nil, err
@@ -306,7 +306,7 @@ func (pp *PerformanceProfiler) ProfileApplication(ctx context.Context, duration 
 			WithDetails("memory_usage", getCurrentMemoryUsage()).
 			WithDetails("active_goroutines", runtime.NumGoroutine()).
 			WithDetails("recovery_strategy", "retry with reduced sampling rate")
-		
+
 		span.SetStatus(codes.Error, "CPU profiling failed")
 		span.RecordError(errorCtx)
 		logger.Error("CPU profiling failed", zap.Error(errorCtx))
@@ -325,7 +325,7 @@ func (pp *PerformanceProfiler) ProfileApplication(ctx context.Context, duration 
 			WithDetails("memory_usage", getCurrentMemoryUsage()).
 			WithDetails("gc_cycles", getGCCycles()).
 			WithDetails("recovery_strategy", "continue without memory profiling")
-		
+
 		span.SetStatus(codes.Error, "Memory profiling failed")
 		span.RecordError(errorCtx)
 		logger.Error("Memory profiling failed", zap.Error(errorCtx))
@@ -344,7 +344,7 @@ func (pp *PerformanceProfiler) ProfileApplication(ctx context.Context, duration 
 			WithDetails("memory_usage", getCurrentMemoryUsage()).
 			WithDetails("disk_space", getDiskSpace()).
 			WithDetails("recovery_strategy", "continue without execution tracing")
-		
+
 		span.SetStatus(codes.Error, "Trace profiling failed")
 		span.RecordError(errorCtx)
 		logger.Error("Trace profiling failed", zap.Error(errorCtx))
@@ -363,7 +363,7 @@ func (pp *PerformanceProfiler) ProfileApplication(ctx context.Context, duration 
 			WithDetails("profiler_id", profilerID).
 			WithDetails("elapsed_duration", time.Since(report.StartTime)).
 			WithDetails("requested_duration", duration)
-		
+
 		span.SetStatus(codes.Error, "Profiling cancelled")
 		logger.Warn("Profiling cancelled by context", zap.Error(errorCtx))
 		return nil, errorCtx
@@ -404,11 +404,11 @@ func (pp *PerformanceProfiler) ProfileApplication(ctx context.Context, duration 
 			Duration:   time.Since(report.StartTime).Seconds(),
 			Success:    true,
 			Metadata: map[string]interface{}{
-				"hotspots_found":      len(report.CPUProfile.Hotspots),
-				"optimizations":       len(report.Optimizations),
-				"severity":            report.Severity,
-				"confidence":          report.Confidence,
-				"final_memory_usage":  getCurrentMemoryUsage(),
+				"hotspots_found":     len(report.CPUProfile.Hotspots),
+				"optimizations":      len(report.Optimizations),
+				"severity":           report.Severity,
+				"confidence":         report.Confidence,
+				"final_memory_usage": getCurrentMemoryUsage(),
 			},
 			Timestamp: time.Now(),
 		})
@@ -514,10 +514,10 @@ func (pp *PerformanceProfiler) stopTrace(file *os.File) {
 
 // CPUAnalysis contains results of CPU profiling analysis
 type CPUAnalysis struct {
-	TotalSamples int                     `json:"total_samples"`
+	TotalSamples int                       `json:"total_samples"`
 	Functions    map[string]*FunctionStats `json:"functions"`
-	Hotspots     []Hotspot               `json:"hotspots"`
-	TopFunctions []*FunctionStats        `json:"top_functions"`
+	Hotspots     []Hotspot                 `json:"hotspots"`
+	TopFunctions []*FunctionStats          `json:"top_functions"`
 }
 
 // FunctionStats contains statistics for a single function
@@ -558,7 +558,7 @@ func (pp *PerformanceProfiler) analyzeCPUProfile(file *os.File) *CPUAnalysis {
 	analysis.Functions["database.Query"] = dbFunc
 
 	// Add hotspots for functions > 5% CPU
-	analysis.Hotspots = append(analysis.Hotspots, 
+	analysis.Hotspots = append(analysis.Hotspots,
 		Hotspot{
 			Function:   "main.handleRequest",
 			File:       "/app/handler.go",
@@ -706,11 +706,11 @@ func (pp *PerformanceProfiler) calculateLeakSeverity(totalSize int64) string {
 
 // TraceAnalysis contains results of execution trace analysis
 type TraceAnalysis struct {
-	Goroutines    int               `json:"goroutines"`
-	GCEvents      int               `json:"gc_events"`
-	BlockEvents   []BlockEvent      `json:"block_events"`
-	NetworkEvents []NetworkEvent    `json:"network_events"`
-	Syscalls      []SyscallEvent    `json:"syscalls"`
+	Goroutines    int            `json:"goroutines"`
+	GCEvents      int            `json:"gc_events"`
+	BlockEvents   []BlockEvent   `json:"block_events"`
+	NetworkEvents []NetworkEvent `json:"network_events"`
+	Syscalls      []SyscallEvent `json:"syscalls"`
 }
 
 // BlockEvent represents a goroutine blocking event
@@ -761,13 +761,13 @@ func (pp *PerformanceProfiler) identifyOptimizations(report *ProfileReport) []Op
 		for _, hotspot := range report.CPUProfile.Hotspots {
 			if hotspot.Percentage > 10 {
 				suggestions = append(suggestions, OptimizationSuggestion{
-					ID:          fmt.Sprintf("cpu-hotspot-%s", hotspot.Function),
-					Title:       fmt.Sprintf("Optimize CPU hotspot: %s", hotspot.Function),
-					Description: fmt.Sprintf("Function %s consumes %.1f%% of CPU time", hotspot.Function, hotspot.Percentage),
-					Category:    "cpu",
-					Impact:      ImpactHigh,
-					Difficulty:  DifficultyMedium,
-					Confidence:  0.9,
+					ID:            fmt.Sprintf("cpu-hotspot-%s", hotspot.Function),
+					Title:         fmt.Sprintf("Optimize CPU hotspot: %s", hotspot.Function),
+					Description:   fmt.Sprintf("Function %s consumes %.1f%% of CPU time", hotspot.Function, hotspot.Percentage),
+					Category:      "cpu",
+					Impact:        ImpactHigh,
+					Difficulty:    DifficultyMedium,
+					Confidence:    0.9,
 					EstimatedGain: fmt.Sprintf("%.1f%% CPU reduction", hotspot.Percentage*0.5),
 				})
 			}
@@ -778,26 +778,26 @@ func (pp *PerformanceProfiler) identifyOptimizations(report *ProfileReport) []Op
 	if report.MemProfile != nil {
 		for _, leak := range report.MemProfile.Leaks {
 			suggestions = append(suggestions, OptimizationSuggestion{
-				ID:          fmt.Sprintf("memory-leak-%s", leak.Location),
-				Title:       "Fix potential memory leak",
-				Description: fmt.Sprintf("Potential memory leak at %s (%d allocations, %d bytes)", leak.Location, leak.Count, leak.Size),
-				Category:    "memory",
-				Impact:      ImpactHigh,
-				Difficulty:  DifficultyMedium,
-				Confidence:  0.7,
+				ID:            fmt.Sprintf("memory-leak-%s", leak.Location),
+				Title:         "Fix potential memory leak",
+				Description:   fmt.Sprintf("Potential memory leak at %s (%d allocations, %d bytes)", leak.Location, leak.Count, leak.Size),
+				Category:      "memory",
+				Impact:        ImpactHigh,
+				Difficulty:    DifficultyMedium,
+				Confidence:    0.7,
 				EstimatedGain: fmt.Sprintf("%d MB memory reduction", leak.Size/(1024*1024)),
 			})
 		}
 
 		for _, obj := range report.MemProfile.LargeObjects {
 			suggestions = append(suggestions, OptimizationSuggestion{
-				ID:          fmt.Sprintf("large-object-%s", obj.Location),
-				Title:       "Optimize large object allocation",
-				Description: fmt.Sprintf("Large object allocation (%d MB) at %s", obj.Size/(1024*1024), obj.Location),
-				Category:    "memory",
-				Impact:      ImpactMedium,
-				Difficulty:  DifficultyLow,
-				Confidence:  0.8,
+				ID:            fmt.Sprintf("large-object-%s", obj.Location),
+				Title:         "Optimize large object allocation",
+				Description:   fmt.Sprintf("Large object allocation (%d MB) at %s", obj.Size/(1024*1024), obj.Location),
+				Category:      "memory",
+				Impact:        ImpactMedium,
+				Difficulty:    DifficultyLow,
+				Confidence:    0.8,
 				EstimatedGain: "Reduced memory fragmentation",
 			})
 		}
@@ -806,13 +806,13 @@ func (pp *PerformanceProfiler) identifyOptimizations(report *ProfileReport) []Op
 	// General optimization suggestions
 	if report.TraceAnalysis != nil && report.TraceAnalysis.Goroutines > 1000 {
 		suggestions = append(suggestions, OptimizationSuggestion{
-			ID:          "goroutine-count",
-			Title:       "Reduce goroutine count",
-			Description: fmt.Sprintf("High goroutine count (%d) may indicate goroutine leaks", report.TraceAnalysis.Goroutines),
-			Category:    "concurrency",
-			Impact:      ImpactMedium,
-			Difficulty:  DifficultyHigh,
-			Confidence:  0.6,
+			ID:            "goroutine-count",
+			Title:         "Reduce goroutine count",
+			Description:   fmt.Sprintf("High goroutine count (%d) may indicate goroutine leaks", report.TraceAnalysis.Goroutines),
+			Category:      "concurrency",
+			Impact:        ImpactMedium,
+			Difficulty:    DifficultyHigh,
+			Confidence:    0.6,
 			EstimatedGain: "Reduced context switching overhead",
 		})
 	}
@@ -923,12 +923,12 @@ type Benchmark struct {
 
 // BenchmarkResult contains benchmark execution results
 type BenchmarkResult struct {
-	N            int           `json:"n"`
-	NsPerOp      int64         `json:"ns_per_op"`
-	BytesPerOp   int64         `json:"bytes_per_op"`
-	AllocsPerOp  int64         `json:"allocs_per_op"`
-	MBPerSec     float64       `json:"mb_per_sec"`
-	Duration     time.Duration `json:"duration"`
+	N           int           `json:"n"`
+	NsPerOp     int64         `json:"ns_per_op"`
+	BytesPerOp  int64         `json:"bytes_per_op"`
+	AllocsPerOp int64         `json:"allocs_per_op"`
+	MBPerSec    float64       `json:"mb_per_sec"`
+	Duration    time.Duration `json:"duration"`
 }
 
 // BenchmarkComparison compares benchmark results
@@ -1082,11 +1082,11 @@ func NewHotPathOptimizer(profiler *PerformanceProfiler) *HotPathOptimizer {
 
 // OptimizationResult represents the result of an optimization
 type OptimizationResult struct {
-	Type         string  `json:"type"`
-	Description  string  `json:"description"`
-	Impact       float64 `json:"impact"`
-	Applied      bool    `json:"applied"`
-	Error        string  `json:"error,omitempty"`
+	Type        string  `json:"type"`
+	Description string  `json:"description"`
+	Impact      float64 `json:"impact"`
+	Applied     bool    `json:"applied"`
+	Error       string  `json:"error,omitempty"`
 }
 
 // OptimizeHotPaths analyzes hotspots and applies optimizations
@@ -1130,10 +1130,10 @@ func (hpo *HotPathOptimizer) OptimizeHotPaths(ctx context.Context, hotspots []Ho
 
 // FunctionAnalysis represents analysis of a function's performance
 type FunctionAnalysis struct {
-	Hotspot      Hotspot
-	Complexity   string
-	Bottlenecks  []string
-	Optimizable  bool
+	Hotspot     Hotspot
+	Complexity  string
+	Bottlenecks []string
+	Optimizable bool
 }
 
 // analyzeFunctionPerformance analyzes a function's performance characteristics
@@ -1156,7 +1156,7 @@ func (hpo *HotPathOptimizer) tryInlining(analysis *FunctionAnalysis) *Optimizati
 		Type:        "inlining",
 		Description: fmt.Sprintf("Inline function %s to reduce call overhead", analysis.Hotspot.Function),
 		Impact:      analysis.Hotspot.Percentage * 0.1, // Estimated 10% improvement
-		Applied:     false, // Would be applied by code rewriter
+		Applied:     false,                             // Would be applied by code rewriter
 	}
 }
 

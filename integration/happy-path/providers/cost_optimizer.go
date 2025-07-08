@@ -16,21 +16,21 @@ import (
 
 // CostOptimizer manages cost optimization for provider usage
 type CostOptimizer struct {
-	manager         *ProviderManager
-	budgetManager   *BudgetManager
-	costPredictor   *CostPredictor
-	usageTracker    *UsageTracker
-	optimizations   []CostOptimization
-	running         bool
-	mu              sync.RWMutex
+	manager       *ProviderManager
+	budgetManager *BudgetManager
+	costPredictor *CostPredictor
+	usageTracker  *UsageTracker
+	optimizations []CostOptimization
+	running       bool
+	mu            sync.RWMutex
 }
 
 // BudgetManager manages budget constraints and enforcement
 type BudgetManager struct {
-	budgets         map[string]*Budget
-	alerts          []*BudgetAlert
-	enforcements    []*BudgetEnforcement
-	mu              sync.RWMutex
+	budgets      map[string]*Budget
+	alerts       []*BudgetAlert
+	enforcements []*BudgetEnforcement
+	mu           sync.RWMutex
 }
 
 // Budget represents a budget constraint
@@ -101,55 +101,55 @@ type CostHistory struct {
 
 // CostEntry represents a cost data point
 type CostEntry struct {
-	Timestamp   time.Time
-	Provider    providers.ProviderType
-	Model       string
-	TokensIn    int
-	TokensOut   int
-	Cost        float64
-	Quality     float64
-	Latency     time.Duration
+	Timestamp time.Time
+	Provider  providers.ProviderType
+	Model     string
+	TokensIn  int
+	TokensOut int
+	Cost      float64
+	Quality   float64
+	Latency   time.Duration
 }
 
 // CostModel represents a cost prediction model
 type CostModel struct {
-	Provider      providers.ProviderType
+	Provider        providers.ProviderType
 	InputCostPer1M  float64
 	OutputCostPer1M float64
-	FixedCost     float64
-	QualityFactor float64
-	LastUpdated   time.Time
+	FixedCost       float64
+	QualityFactor   float64
+	LastUpdated     time.Time
 }
 
 // UsageTracker tracks provider usage and costs
 type UsageTracker struct {
-	usage      map[providers.ProviderType]*ProviderUsage
-	sessions   map[string]*UsageSession
-	mu         sync.RWMutex
+	usage    map[providers.ProviderType]*ProviderUsage
+	sessions map[string]*UsageSession
+	mu       sync.RWMutex
 }
 
 // ProviderUsage tracks usage for a specific provider
 type ProviderUsage struct {
-	Provider        providers.ProviderType
-	TotalRequests   int64
-	TotalTokensIn   int64
-	TotalTokensOut  int64
-	TotalCost       float64
-	AverageCost     float64
-	CostPerToken    float64
-	LastUsed        time.Time
-	PeakUsageHour   time.Time
-	PeakCostHour    time.Time
+	Provider       providers.ProviderType
+	TotalRequests  int64
+	TotalTokensIn  int64
+	TotalTokensOut int64
+	TotalCost      float64
+	AverageCost    float64
+	CostPerToken   float64
+	LastUsed       time.Time
+	PeakUsageHour  time.Time
+	PeakCostHour   time.Time
 }
 
 // UsageSession tracks usage for a specific session
 type UsageSession struct {
-	ID            string
-	StartTime     time.Time
-	EndTime       time.Time
-	Requests      []UsageRequest
-	TotalCost     float64
-	BudgetID      string
+	ID        string
+	StartTime time.Time
+	EndTime   time.Time
+	Requests  []UsageRequest
+	TotalCost float64
+	BudgetID  string
 }
 
 // UsageRequest tracks a single request's usage
@@ -288,8 +288,8 @@ func (p *CostPredictor) initializeDefaultModels() {
 	// Ora pricing
 	p.models[providers.ProviderOra] = &CostModel{
 		Provider:        providers.ProviderOra,
-		InputCostPer1M:  1.0,  // $1 per 1M input tokens
-		OutputCostPer1M: 2.0,  // $2 per 1M output tokens
+		InputCostPer1M:  1.0, // $1 per 1M input tokens
+		OutputCostPer1M: 2.0, // $2 per 1M output tokens
 		QualityFactor:   0.88,
 		LastUpdated:     time.Now(),
 	}
@@ -626,16 +626,16 @@ func (t *UsageTracker) GetUsageStats() map[providers.ProviderType]*ProviderUsage
 	for k, v := range t.usage {
 		// Return a copy to avoid race conditions
 		stats[k] = &ProviderUsage{
-			Provider:        v.Provider,
-			TotalRequests:   v.TotalRequests,
-			TotalTokensIn:   v.TotalTokensIn,
-			TotalTokensOut:  v.TotalTokensOut,
-			TotalCost:       v.TotalCost,
-			AverageCost:     v.AverageCost,
-			CostPerToken:    v.CostPerToken,
-			LastUsed:        v.LastUsed,
-			PeakUsageHour:   v.PeakUsageHour,
-			PeakCostHour:    v.PeakCostHour,
+			Provider:       v.Provider,
+			TotalRequests:  v.TotalRequests,
+			TotalTokensIn:  v.TotalTokensIn,
+			TotalTokensOut: v.TotalTokensOut,
+			TotalCost:      v.TotalCost,
+			AverageCost:    v.AverageCost,
+			CostPerToken:   v.CostPerToken,
+			LastUsed:       v.LastUsed,
+			PeakUsageHour:  v.PeakUsageHour,
+			PeakCostHour:   v.PeakCostHour,
 		}
 	}
 	return stats
@@ -735,7 +735,7 @@ func (o *CostOptimizer) analyzeProviderSwitchOpportunity(currentProvider provide
 		currentCost := usage.AverageCost
 		if altCost < currentCost*0.8 { // 20% savings threshold
 			savings := (currentCost - altCost) * float64(usage.TotalRequests)
-			
+
 			optimization := CostOptimization{
 				ID:          fmt.Sprintf("switch-%d", time.Now().UnixNano()),
 				Type:        OptimizationTypeProviderSwitch,
@@ -745,7 +745,7 @@ func (o *CostOptimizer) analyzeProviderSwitchOpportunity(currentProvider provide
 				Savings:     savings,
 				Timestamp:   time.Now(),
 				Impact: OptimizationImpact{
-					CostSavings: savings,
+					CostSavings:   savings,
 					QualityImpact: -0.05, // Assume small quality impact
 				},
 			}
@@ -760,7 +760,7 @@ func (o *CostOptimizer) analyzeBatchingOpportunity(provider providers.ProviderTy
 	// Estimate savings from batching requests
 	if usage.TotalRequests > 100 {
 		estimatedSavings := float64(usage.TotalRequests) * 0.1 // 10% savings from batching
-		
+
 		optimization := CostOptimization{
 			ID:          fmt.Sprintf("batch-%d", time.Now().UnixNano()),
 			Type:        OptimizationTypeBatching,
@@ -785,7 +785,7 @@ func (o *CostOptimizer) analyzeCachingOpportunity(provider providers.ProviderTyp
 	if usage.TotalRequests > 50 {
 		estimatedCacheHit := 0.2 // Assume 20% cache hit rate
 		estimatedSavings := usage.TotalCost * estimatedCacheHit
-		
+
 		optimization := CostOptimization{
 			ID:          fmt.Sprintf("cache-%d", time.Now().UnixNano()),
 			Type:        OptimizationTypeCaching,

@@ -15,7 +15,7 @@ type CoreEvent interface {
 	GetSource() string
 	GetTimestamp() time.Time
 	GetData() map[string]interface{}
-	
+
 	// Optional fields that may be empty
 	GetTarget() string
 	GetMetadata() map[string]interface{}
@@ -78,7 +78,7 @@ func NewBaseEvent(id, eventType, source string, data map[string]interface{}) *Ba
 	if data == nil {
 		data = make(map[string]interface{})
 	}
-	
+
 	return &BaseEvent{
 		ID:        id,
 		Type:      eventType,
@@ -122,7 +122,7 @@ func (e *BaseEvent) Clone() *BaseEvent {
 		Target:    e.Target,
 		Timestamp: e.Timestamp,
 	}
-	
+
 	// Deep copy data
 	if e.Data != nil {
 		clone.Data = make(map[string]interface{})
@@ -130,7 +130,7 @@ func (e *BaseEvent) Clone() *BaseEvent {
 			clone.Data[k] = v
 		}
 	}
-	
+
 	// Deep copy metadata
 	if e.Metadata != nil {
 		clone.Metadata = make(map[string]interface{})
@@ -138,7 +138,7 @@ func (e *BaseEvent) Clone() *BaseEvent {
 			clone.Metadata[k] = v
 		}
 	}
-	
+
 	return clone
 }
 

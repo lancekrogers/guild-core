@@ -195,7 +195,7 @@ func BenchmarkGuildSessionCreation(b *testing.B) {
 	// Calculate rate based on benchmark duration
 	// Note: b.Elapsed() provides the benchmark duration
 	if b.N > 0 {
-		// Use a simple rate calculation 
+		// Use a simple rate calculation
 		rate := float64(b.N) / 1.0 // sessions per benchmark iteration
 		b.ReportMetric(rate, "sessions/sec")
 		logger.InfoContext(ctx, "Session creation benchmark completed",

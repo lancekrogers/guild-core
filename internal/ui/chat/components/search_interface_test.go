@@ -314,7 +314,7 @@ func TestSearchInterface_HelperFunctions(t *testing.T) {
 	// The method uses time.Now() internally, so let's be more flexible
 	assert.True(t, len(formatted) > 0, "formatted time should not be empty")
 
-	// Different day, same year  
+	// Different day, same year
 	diffDay := now.Add(-48 * time.Hour)
 	formatted = si.formatTime(diffDay)
 	// More flexible regex to handle different date formats

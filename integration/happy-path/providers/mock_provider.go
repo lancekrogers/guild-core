@@ -17,28 +17,28 @@ import (
 
 // MockAIProvider implements a mock AI provider for testing
 type MockAIProvider struct {
-	providerType  providers.ProviderType
-	capabilities  interfaces.ProviderCapabilities
-	failureRate   float64
-	latencyBase   time.Duration
-	qualityScore  float64
+	providerType   providers.ProviderType
+	capabilities   interfaces.ProviderCapabilities
+	failureRate    float64
+	latencyBase    time.Duration
+	qualityScore   float64
 	costMultiplier float64
-	requestCount  int64
-	failureCount  int64
+	requestCount   int64
+	failureCount   int64
 }
 
 // MockChatStream implements a mock chat stream
 type MockChatStream struct {
-	chunks    []interfaces.ChatStreamChunk
-	index     int
-	closed    bool
-	provider  providers.ProviderType
+	chunks   []interfaces.ChatStreamChunk
+	index    int
+	closed   bool
+	provider providers.ProviderType
 }
 
 // NewMockAIProvider creates a new mock AI provider
 func NewMockAIProvider(providerType providers.ProviderType) *MockAIProvider {
 	capabilities := generateProviderCapabilities(providerType)
-	
+
 	return &MockAIProvider{
 		providerType:   providerType,
 		capabilities:   capabilities,
@@ -276,7 +276,7 @@ func getProviderCostMultiplier(providerType providers.ProviderType) float64 {
 // ChatCompletion implements chat completion
 func (m *MockAIProvider) ChatCompletion(ctx context.Context, req interfaces.ChatRequest) (*interfaces.ChatResponse, error) {
 	m.requestCount++
-	
+
 	// Simulate latency
 	latency := m.calculateLatency()
 	select {
@@ -284,13 +284,13 @@ func (m *MockAIProvider) ChatCompletion(ctx context.Context, req interfaces.Chat
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	}
-	
+
 	// Simulate failures
 	if m.shouldFail() {
 		m.failureCount++
 		return nil, m.generateError()
 	}
-	
+
 	// Generate mock response
 	response := m.generateChatResponse(req)
 	return response, nil
@@ -299,7 +299,7 @@ func (m *MockAIProvider) ChatCompletion(ctx context.Context, req interfaces.Chat
 // StreamChatCompletion implements streaming chat completion
 func (m *MockAIProvider) StreamChatCompletion(ctx context.Context, req interfaces.ChatRequest) (interfaces.ChatStream, error) {
 	m.requestCount++
-	
+
 	// Simulate initial latency
 	latency := m.calculateLatency() / 4 // Streaming starts faster
 	select {
@@ -307,13 +307,13 @@ func (m *MockAIProvider) StreamChatCompletion(ctx context.Context, req interface
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	}
-	
+
 	// Simulate failures
 	if m.shouldFail() {
 		m.failureCount++
 		return nil, m.generateError()
 	}
-	
+
 	// Create mock stream
 	stream := m.generateChatStream(req)
 	return stream, nil
@@ -330,9 +330,9 @@ func (m *MockAIProvider) CreateEmbedding(ctx context.Context, req interfaces.Emb
 			Retryable:  false,
 		}
 	}
-	
+
 	m.requestCount++
-	
+
 	// Simulate latency
 	latency := m.calculateLatency() / 2 // Embeddings are typically faster
 	select {
@@ -340,13 +340,13 @@ func (m *MockAIProvider) CreateEmbedding(ctx context.Context, req interfaces.Emb
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	}
-	
+
 	// Simulate failures
 	if m.shouldFail() {
 		m.failureCount++
 		return nil, m.generateError()
 	}
-	
+
 	// Generate mock embeddings
 	response := m.generateEmbeddingResponse(req)
 	return response, nil
@@ -416,7 +416,7 @@ func (m *MockAIProvider) generateError() error {
 			weight: 0.1,
 		},
 	}
-	
+
 	// Select error type based on weights
 	r := rand.Float64()
 	cumWeight := 0.0
@@ -426,7 +426,7 @@ func (m *MockAIProvider) generateError() error {
 			return &errorType.errorType
 		}
 	}
-	
+
 	// Fallback
 	return &errorTypes[0].errorType
 }
@@ -435,7 +435,7 @@ func (m *MockAIProvider) generateError() error {
 func (m *MockAIProvider) generateChatResponse(req interfaces.ChatRequest) *interfaces.ChatResponse {
 	// Generate response based on provider characteristics
 	content := m.generateResponseContent(req)
-	
+
 	response := &interfaces.ChatResponse{
 		ID:    fmt.Sprintf("resp-%s-%d", m.providerType, time.Now().UnixNano()),
 		Model: req.Model,
@@ -455,7 +455,7 @@ func (m *MockAIProvider) generateChatResponse(req interfaces.ChatRequest) *inter
 		},
 		FinishReason: "stop",
 	}
-	
+
 	response.Usage.TotalTokens = response.Usage.PromptTokens + response.Usage.CompletionTokens
 	return response
 }
@@ -463,15 +463,15 @@ func (m *MockAIProvider) generateChatResponse(req interfaces.ChatRequest) *inter
 // generateChatStream generates a mock chat stream
 func (m *MockAIProvider) generateChatStream(req interfaces.ChatRequest) *MockChatStream {
 	content := m.generateResponseContent(req)
-	
+
 	// Split content into chunks for streaming
 	words := []string{"Hello", "there!", "I'm", "a", "mock", "response", "from", string(m.providerType) + ".", "This", "simulates", "streaming", "behavior."}
 	if len(content) > 100 {
 		words = append(words, "Here's", "some", "additional", "content", "to", "make", "it", "more", "realistic.")
 	}
-	
+
 	chunks := make([]interfaces.ChatStreamChunk, 0, len(words)+1)
-	
+
 	for i, word := range words {
 		chunk := interfaces.ChatStreamChunk{
 			Delta: interfaces.ChatMessage{
@@ -484,13 +484,13 @@ func (m *MockAIProvider) generateChatStream(req interfaces.ChatRequest) *MockCha
 		}
 		chunks = append(chunks, chunk)
 	}
-	
+
 	// Add final chunk
 	chunks = append(chunks, interfaces.ChatStreamChunk{
 		Delta:        interfaces.ChatMessage{},
 		FinishReason: "stop",
 	})
-	
+
 	return &MockChatStream{
 		chunks:   chunks,
 		provider: m.providerType,
@@ -500,25 +500,25 @@ func (m *MockAIProvider) generateChatStream(req interfaces.ChatRequest) *MockCha
 // generateResponseContent generates response content based on provider type
 func (m *MockAIProvider) generateResponseContent(req interfaces.ChatRequest) string {
 	baseResponses := map[providers.ProviderType]string{
-		providers.ProviderOpenAI:     "I'm an OpenAI-powered assistant. I can help you with a wide variety of tasks including writing, analysis, coding, and creative projects.",
-		providers.ProviderAnthropic:  "Hello! I'm Claude, an AI assistant created by Anthropic. I'm designed to be helpful, harmless, and honest in my interactions.",
-		providers.ProviderOllama:     "I'm running locally via Ollama. I may have different capabilities than cloud-based models but can process your requests privately.",
-		providers.ProviderDeepSeek:   "I'm DeepSeek, an AI model particularly strong in coding and technical tasks. How can I assist you today?",
-		providers.ProviderOra:        "Hello! I'm an AI assistant powered by Ora. I'm here to help you with your questions and tasks.",
+		providers.ProviderOpenAI:    "I'm an OpenAI-powered assistant. I can help you with a wide variety of tasks including writing, analysis, coding, and creative projects.",
+		providers.ProviderAnthropic: "Hello! I'm Claude, an AI assistant created by Anthropic. I'm designed to be helpful, harmless, and honest in my interactions.",
+		providers.ProviderOllama:    "I'm running locally via Ollama. I may have different capabilities than cloud-based models but can process your requests privately.",
+		providers.ProviderDeepSeek:  "I'm DeepSeek, an AI model particularly strong in coding and technical tasks. How can I assist you today?",
+		providers.ProviderOra:       "Hello! I'm an AI assistant powered by Ora. I'm here to help you with your questions and tasks.",
 	}
-	
+
 	baseResponse, exists := baseResponses[m.providerType]
 	if !exists {
 		baseResponse = "I'm an AI assistant. How can I help you today?"
 	}
-	
+
 	// Add quality variation based on provider score
 	if m.qualityScore > 0.9 {
 		baseResponse += " I strive to provide accurate and detailed responses."
 	} else if m.qualityScore < 0.8 {
 		baseResponse += " I'll do my best to help."
 	}
-	
+
 	// Simulate different response styles
 	if req.Messages != nil && len(req.Messages) > 0 {
 		lastMessage := req.Messages[len(req.Messages)-1]
@@ -526,7 +526,7 @@ func (m *MockAIProvider) generateResponseContent(req interfaces.ChatRequest) str
 			baseResponse += " I notice you've provided a detailed question. Let me address the key points."
 		}
 	}
-	
+
 	return baseResponse
 }
 
@@ -543,25 +543,25 @@ func (m *MockAIProvider) estimateTokens(messages []interfaces.ChatMessage) int {
 // generateEmbeddingResponse generates a mock embedding response
 func (m *MockAIProvider) generateEmbeddingResponse(req interfaces.EmbeddingRequest) *interfaces.EmbeddingResponse {
 	embeddings := make([]interfaces.Embedding, len(req.Input))
-	
+
 	for i, input := range req.Input {
 		// Generate a mock embedding vector (384 dimensions)
 		vector := make([]float64, 384)
 		for j := range vector {
 			vector[j] = rand.Float64()*2 - 1 // Random values between -1 and 1
 		}
-		
+
 		embeddings[i] = interfaces.Embedding{
 			Index:     i,
 			Embedding: vector,
 		}
 	}
-	
+
 	totalTokens := 0
 	for _, input := range req.Input {
 		totalTokens += len(input) / 4 // Rough token estimate
 	}
-	
+
 	return &interfaces.EmbeddingResponse{
 		Model:      req.Model,
 		Embeddings: embeddings,
@@ -580,18 +580,18 @@ func (s *MockChatStream) Next() (interfaces.ChatStreamChunk, error) {
 	if s.closed {
 		return interfaces.ChatStreamChunk{}, io.EOF
 	}
-	
+
 	if s.index >= len(s.chunks) {
 		s.closed = true
 		return interfaces.ChatStreamChunk{}, io.EOF
 	}
-	
+
 	// Simulate streaming delay
 	time.Sleep(50 * time.Millisecond)
-	
+
 	chunk := s.chunks[s.index]
 	s.index++
-	
+
 	return chunk, nil
 }
 
@@ -607,16 +607,16 @@ func (m *MockAIProvider) GetStats() map[string]interface{} {
 	if m.requestCount > 0 {
 		successRate = float64(m.requestCount-m.failureCount) / float64(m.requestCount)
 	}
-	
+
 	return map[string]interface{}{
-		"provider":       string(m.providerType),
-		"request_count":  m.requestCount,
-		"failure_count":  m.failureCount,
-		"success_rate":   successRate,
-		"failure_rate":   m.failureRate,
-		"quality_score":  m.qualityScore,
+		"provider":        string(m.providerType),
+		"request_count":   m.requestCount,
+		"failure_count":   m.failureCount,
+		"success_rate":    successRate,
+		"failure_rate":    m.failureRate,
+		"quality_score":   m.qualityScore,
 		"cost_multiplier": m.costMultiplier,
-		"avg_latency_ms": m.latencyBase.Milliseconds(),
+		"avg_latency_ms":  m.latencyBase.Milliseconds(),
 	}
 }
 

@@ -423,6 +423,10 @@ func (t *mockFileTool) Execute(ctx context.Context, input string) (*tools.ToolRe
 	), nil
 }
 
+func (t *mockFileTool) HealthCheck() error {
+	return nil
+}
+
 type mockShellTool struct {
 	registry *MockToolRegistry
 }
@@ -477,6 +481,10 @@ func (t *mockShellTool) Execute(ctx context.Context, input string) (*tools.ToolR
 	), nil
 }
 
+func (t *mockShellTool) HealthCheck() error {
+	return nil
+}
+
 type mockHTTPTool struct {
 	registry *MockToolRegistry
 }
@@ -529,6 +537,10 @@ func (t *mockHTTPTool) Execute(ctx context.Context, input string) (*tools.ToolRe
 		nil,
 		map[string]interface{}{"input": input},
 	), nil
+}
+
+func (t *mockHTTPTool) HealthCheck() error {
+	return nil
 }
 
 // MockEventBus provides a test event bus for testing event-driven flows

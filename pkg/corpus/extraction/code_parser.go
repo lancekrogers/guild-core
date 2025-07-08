@@ -22,36 +22,36 @@ type CodeParser struct {
 func NewCodeParser() *CodeParser {
 	return &CodeParser{
 		goPatterns: map[string]*regexp.Regexp{
-			"function":     regexp.MustCompile(`func\s+(\w+)\s*\(`),
-			"method":       regexp.MustCompile(`func\s+\(\w+\s+\*?\w+\)\s+(\w+)\s*\(`),
-			"struct":       regexp.MustCompile(`type\s+(\w+)\s+struct`),
-			"interface":    regexp.MustCompile(`type\s+(\w+)\s+interface`),
-			"const":        regexp.MustCompile(`const\s+(\w+)`),
-			"var":          regexp.MustCompile(`var\s+(\w+)`),
-			"import":       regexp.MustCompile(`import\s+.*?"([^"]+)"`),
-			"package":      regexp.MustCompile(`package\s+(\w+)`),
-			"comment":      regexp.MustCompile(`//\s*(.*)`),
+			"function":      regexp.MustCompile(`func\s+(\w+)\s*\(`),
+			"method":        regexp.MustCompile(`func\s+\(\w+\s+\*?\w+\)\s+(\w+)\s*\(`),
+			"struct":        regexp.MustCompile(`type\s+(\w+)\s+struct`),
+			"interface":     regexp.MustCompile(`type\s+(\w+)\s+interface`),
+			"const":         regexp.MustCompile(`const\s+(\w+)`),
+			"var":           regexp.MustCompile(`var\s+(\w+)`),
+			"import":        regexp.MustCompile(`import\s+.*?"([^"]+)"`),
+			"package":       regexp.MustCompile(`package\s+(\w+)`),
+			"comment":       regexp.MustCompile(`//\s*(.*)`),
 			"block_comment": regexp.MustCompile(`/\*[\s\S]*?\*/`),
 		},
 		jsPatterns: map[string]*regexp.Regexp{
-			"function":     regexp.MustCompile(`function\s+(\w+)\s*\(`),
-			"arrow_func":   regexp.MustCompile(`const\s+(\w+)\s*=\s*\([^)]*\)\s*=>`),
-			"class":        regexp.MustCompile(`class\s+(\w+)`),
-			"method":       regexp.MustCompile(`(\w+)\s*\([^)]*\)\s*\{`),
-			"const":        regexp.MustCompile(`const\s+(\w+)`),
-			"let":          regexp.MustCompile(`let\s+(\w+)`),
-			"var":          regexp.MustCompile(`var\s+(\w+)`),
-			"import":       regexp.MustCompile(`import\s+.*?from\s+['"]([^'"]+)['"]`),
-			"export":       regexp.MustCompile(`export\s+(?:default\s+)?(\w+)`),
+			"function":   regexp.MustCompile(`function\s+(\w+)\s*\(`),
+			"arrow_func": regexp.MustCompile(`const\s+(\w+)\s*=\s*\([^)]*\)\s*=>`),
+			"class":      regexp.MustCompile(`class\s+(\w+)`),
+			"method":     regexp.MustCompile(`(\w+)\s*\([^)]*\)\s*\{`),
+			"const":      regexp.MustCompile(`const\s+(\w+)`),
+			"let":        regexp.MustCompile(`let\s+(\w+)`),
+			"var":        regexp.MustCompile(`var\s+(\w+)`),
+			"import":     regexp.MustCompile(`import\s+.*?from\s+['"]([^'"]+)['"]`),
+			"export":     regexp.MustCompile(`export\s+(?:default\s+)?(\w+)`),
 		},
 		pyPatterns: map[string]*regexp.Regexp{
-			"function":     regexp.MustCompile(`def\s+(\w+)\s*\(`),
-			"class":        regexp.MustCompile(`class\s+(\w+)`),
-			"method":       regexp.MustCompile(`\s+def\s+(\w+)\s*\(`),
-			"variable":     regexp.MustCompile(`(\w+)\s*=`),
-			"import":       regexp.MustCompile(`import\s+(\w+)`),
-			"from_import":  regexp.MustCompile(`from\s+(\w+)\s+import`),
-			"decorator":    regexp.MustCompile(`@(\w+)`),
+			"function":    regexp.MustCompile(`def\s+(\w+)\s*\(`),
+			"class":       regexp.MustCompile(`class\s+(\w+)`),
+			"method":      regexp.MustCompile(`\s+def\s+(\w+)\s*\(`),
+			"variable":    regexp.MustCompile(`(\w+)\s*=`),
+			"import":      regexp.MustCompile(`import\s+(\w+)`),
+			"from_import": regexp.MustCompile(`from\s+(\w+)\s+import`),
+			"decorator":   regexp.MustCompile(`@(\w+)`),
 		},
 	}
 }
@@ -65,16 +65,16 @@ func (cp *CodeParser) ParseGoCode(ctx context.Context, content string) (*CodeStr
 	}
 
 	structure := &CodeStructure{
-		Language:   "go",
-		Functions:  []FunctionInfo{},
-		Types:      []TypeInfo{},
-		Imports:    []string{},
-		Variables:  []VariableInfo{},
-		Comments:   []string{},
+		Language:  "go",
+		Functions: []FunctionInfo{},
+		Types:     []TypeInfo{},
+		Imports:   []string{},
+		Variables: []VariableInfo{},
+		Comments:  []string{},
 	}
 
 	lines := strings.Split(content, "\n")
-	
+
 	for i, line := range lines {
 		// Check for context cancellation periodically
 		if i%50 == 0 && ctx.Err() != nil {
@@ -185,7 +185,7 @@ func (cp *CodeParser) ParseJavaScriptCode(ctx context.Context, content string) (
 	}
 
 	lines := strings.Split(content, "\n")
-	
+
 	for i, line := range lines {
 		if i%50 == 0 && ctx.Err() != nil {
 			return nil, ctx.Err()
@@ -266,7 +266,7 @@ func (cp *CodeParser) ParsePythonCode(ctx context.Context, content string) (*Cod
 	}
 
 	lines := strings.Split(content, "\n")
-	
+
 	for i, line := range lines {
 		if i%50 == 0 && ctx.Err() != nil {
 			return nil, ctx.Err()
@@ -340,7 +340,7 @@ func (cp *CodeParser) ParseCode(ctx context.Context, content, filename string) (
 	}
 
 	ext := cp.getFileExtension(filename)
-	
+
 	switch ext {
 	case ".go":
 		return cp.ParseGoCode(ctx, content)
@@ -415,12 +415,12 @@ type CodeStructure struct {
 
 // FunctionInfo represents information about a function or method
 type FunctionInfo struct {
-	Name       string `json:"name"`
-	Type       string `json:"type"` // "function", "method", "arrow_function"
-	Signature  string `json:"signature"`
-	LineNumber int    `json:"line_number"`
+	Name       string   `json:"name"`
+	Type       string   `json:"type"` // "function", "method", "arrow_function"
+	Signature  string   `json:"signature"`
+	LineNumber int      `json:"line_number"`
 	Parameters []string `json:"parameters,omitempty"`
-	ReturnType string `json:"return_type,omitempty"`
+	ReturnType string   `json:"return_type,omitempty"`
 }
 
 // TypeInfo represents information about a type definition
@@ -443,7 +443,7 @@ type VariableInfo struct {
 
 // ComplexityMetrics represents code complexity measurements
 type ComplexityMetrics struct {
-	CyclomaticComplexity  int     `json:"cyclomatic_complexity"`
+	CyclomaticComplexity int     `json:"cyclomatic_complexity"`
 	LinesOfCode          int     `json:"lines_of_code"`
 	Functions            int     `json:"functions"`
 	Types                int     `json:"types"`

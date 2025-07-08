@@ -73,7 +73,7 @@ func TestTaskEventFlow(t *testing.T) {
 		grpcEvent := grpcEvents.PublishedEvents[0]
 		assert.Equal(t, "task.moved", grpcEvent.Type)
 
-		// Verify orchestrator event was published  
+		// Verify orchestrator event was published
 		assert.Len(t, orchestratorEvents.PublishedEvents, 1)
 		orchEvent := orchestratorEvents.PublishedEvents[0]
 		assert.Equal(t, interfaces.EventTypeTaskStarted, orchEvent.Type)
@@ -239,11 +239,11 @@ func TestConcurrentEventPublishing(t *testing.T) {
 		wg.Add(1)
 		go func(goroutineID int) {
 			defer wg.Done()
-			
+
 			for j := 0; j < numConcurrentEvents/numGoroutines; j++ {
 				task := NewTask("Concurrent Task", "Test concurrent event publishing")
 				task.ID = task.ID + "-" + string(rune(goroutineID)) + "-" + string(rune(j))
-				
+
 				if err := publisher.PublishTaskCreated(ctx, task, "test-board", "test-user"); err != nil {
 					errChan <- err
 				}
@@ -277,9 +277,9 @@ type MockGRPCEventService struct {
 func (m *MockGRPCEventService) PublishEvent(ctx context.Context, req *pb.PublishEventRequest, opts ...grpc.CallOption) (*pb.PublishEventResponse, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.PublishedEvents = append(m.PublishedEvents, req.Event)
-	
+
 	return &pb.PublishEventResponse{
 		Success: true,
 		Message: "Event published successfully",
@@ -299,7 +299,7 @@ type MockOrchestrator struct {
 func (m *MockOrchestrator) Publish(event interfaces.Event) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	m.PublishedEvents = append(m.PublishedEvents, event)
 }
 
@@ -363,7 +363,7 @@ func TestTaskEventMetadata(t *testing.T) {
 	// Verify gRPC event contains metadata
 	assert.Len(t, grpcEvents.PublishedEvents, 1)
 	grpcEvent := grpcEvents.PublishedEvents[0]
-	
+
 	// Check that event data contains task information
 	eventData := grpcEvent.Data.AsMap()
 	assert.Equal(t, task.ID, eventData["task_id"])

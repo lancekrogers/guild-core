@@ -23,7 +23,7 @@ type SessionManagerInterface interface {
 	AddMessage(ctx context.Context, sessionID string, message *Message) error
 	GetMessages(ctx context.Context, sessionID string, limit int) ([]*Message, error)
 	UpdateSessionState(ctx context.Context, sessionID string, state SessionState) error
-	
+
 	// Auto-save and backup
 	StartAutoSave(ctx context.Context, session *Session)
 	StopAutoSave(ctx context.Context, sessionID string)
@@ -36,7 +36,7 @@ type SessionResumerInterface interface {
 	ResumeSession(ctx context.Context, sessionID string) error
 	CanResumeSession(ctx context.Context, sessionID string) (bool, error)
 	GetResumableSessions(ctx context.Context, userID string) ([]*Session, error)
-	
+
 	// Recovery operations
 	RecoverFromCrash(ctx context.Context) (*Session, error)
 	CreateRecoveryPoint(ctx context.Context, session *Session) error
@@ -47,11 +47,11 @@ type SessionExporterInterface interface {
 	// Export operations
 	ExportSession(session *Session, format ExportFormat, options ExportOptions) ([]byte, error)
 	ExportSessions(sessions []*Session, format ExportFormat, options ExportOptions) ([]byte, error)
-	
+
 	// Import operations
 	ImportSession(ctx context.Context, data []byte, format ExportFormat) (*Session, error)
 	ValidateImportData(data []byte, format ExportFormat) error
-	
+
 	// Format support
 	GetSupportedFormats() []ExportFormat
 	GetFormatCapabilities(format ExportFormat) FormatCapabilities
@@ -63,11 +63,11 @@ type SessionAnalyticsInterface interface {
 	AnalyzeSession(ctx context.Context, session *Session) (*AnalyticsData, error)
 	GenerateReport(ctx context.Context, period TimePeriod) (*AnalyticsReport, error)
 	GetSessionMetrics(ctx context.Context, sessionID string) (*SessionMetrics, error)
-	
+
 	// Insights
 	GenerateInsights(ctx context.Context, userID string, period TimePeriod) ([]Insight, error)
 	GetProductivityScore(ctx context.Context, sessionID string) (float64, error)
-	
+
 	// Tracking
 	TrackEvent(ctx context.Context, sessionID string, event AnalyticsEvent) error
 	GetUsagePatterns(ctx context.Context, userID string) (*UsagePatterns, error)
@@ -79,12 +79,12 @@ type OrchestratorIntegration interface {
 	RegisterAgentStateHandler(handler AgentStateHandler)
 	NotifyAgentStateChange(ctx context.Context, sessionID, agentID string, state AgentState) error
 	GetActiveAgents(ctx context.Context, sessionID string) ([]AgentInterface, error)
-	
+
 	// Task management
 	RegisterTaskHandler(handler TaskHandler)
 	NotifyTaskStateChange(ctx context.Context, sessionID, taskID string, status TaskStatus) error
 	GetActiveTasks(ctx context.Context, sessionID string) ([]Task, error)
-	
+
 	// Event handling
 	RegisterEventHandler(handler SessionEventHandler)
 	PublishSessionEvent(ctx context.Context, event SessionEvent) error
@@ -95,11 +95,11 @@ type UIIntegration interface {
 	// UI state management
 	RestoreUIState(ctx context.Context, sessionID string, state SessionState) error
 	CaptureUIState(ctx context.Context, sessionID string) (SessionState, error)
-	
+
 	// Message handling
 	DisplayMessage(ctx context.Context, message *Message) error
 	DisplayNotification(ctx context.Context, notification Notification) error
-	
+
 	// User interactions
 	ShowResumeDialog(ctx context.Context, sessions []*Session) (*Session, error)
 	ShowExportDialog(ctx context.Context, session *Session) (ExportOptions, error)
@@ -133,22 +133,22 @@ type SessionEventHandler interface {
 
 // FormatCapabilities describes what a format supports
 type FormatCapabilities struct {
-	SupportsMetadata   bool   `json:"supports_metadata"`
-	SupportsAttachments bool  `json:"supports_attachments"`
-	SupportsFormatting bool   `json:"supports_formatting"`
-	MaxFileSize        int64  `json:"max_file_size"`
-	Extensions         []string `json:"extensions"`
+	SupportsMetadata    bool     `json:"supports_metadata"`
+	SupportsAttachments bool     `json:"supports_attachments"`
+	SupportsFormatting  bool     `json:"supports_formatting"`
+	MaxFileSize         int64    `json:"max_file_size"`
+	Extensions          []string `json:"extensions"`
 }
 
 // SessionMetrics contains key metrics for a session
 type SessionMetrics struct {
-	Duration         time.Duration `json:"duration"`
-	MessageCount     int           `json:"message_count"`
-	AgentCount       int           `json:"agent_count"`
-	TaskCount        int           `json:"task_count"`
-	CompletionRate   float64       `json:"completion_rate"`
-	ProductivityScore float64      `json:"productivity_score"`
-	LastActivity     time.Time     `json:"last_activity"`
+	Duration          time.Duration `json:"duration"`
+	MessageCount      int           `json:"message_count"`
+	AgentCount        int           `json:"agent_count"`
+	TaskCount         int           `json:"task_count"`
+	CompletionRate    float64       `json:"completion_rate"`
+	ProductivityScore float64       `json:"productivity_score"`
+	LastActivity      time.Time     `json:"last_activity"`
 }
 
 // AnalyticsEvent represents an event to be tracked
@@ -172,27 +172,27 @@ type UsagePatterns struct {
 
 // ProductivityPattern analyzes productivity trends
 type ProductivityPattern struct {
-	BestHours        []int     `json:"best_hours"`
-	ProductiveAgents []string  `json:"productive_agents"`
-	TrendDirection   string    `json:"trend_direction"`
-	Recommendations  []string  `json:"recommendations"`
+	BestHours        []int    `json:"best_hours"`
+	ProductiveAgents []string `json:"productive_agents"`
+	TrendDirection   string   `json:"trend_direction"`
+	Recommendations  []string `json:"recommendations"`
 }
 
 // TaskResult represents the result of a completed task
 type TaskResult struct {
-	Success     bool                   `json:"success"`
-	Output      string                 `json:"output"`
-	Error       string                 `json:"error,omitempty"`
-	Duration    time.Duration          `json:"duration"`
-	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+	Success  bool                   `json:"success"`
+	Output   string                 `json:"output"`
+	Error    string                 `json:"error,omitempty"`
+	Duration time.Duration          `json:"duration"`
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // Notification represents a UI notification
 type Notification struct {
-	Type     NotificationType `json:"type"`
-	Title    string           `json:"title"`
-	Message  string           `json:"message"`
-	Duration time.Duration    `json:"duration"`
+	Type     NotificationType     `json:"type"`
+	Title    string               `json:"title"`
+	Message  string               `json:"message"`
+	Duration time.Duration        `json:"duration"`
 	Actions  []NotificationAction `json:"actions,omitempty"`
 }
 
@@ -208,9 +208,9 @@ const (
 
 // NotificationAction represents an action that can be taken from a notification
 type NotificationAction struct {
-	Label    string `json:"label"`
-	Action   string `json:"action"`
-	Primary  bool   `json:"primary"`
+	Label   string `json:"label"`
+	Action  string `json:"action"`
+	Primary bool   `json:"primary"`
 }
 
 // SessionEvent represents events that occur during a session
@@ -226,24 +226,24 @@ type SessionEvent struct {
 type SessionEventType string
 
 const (
-	SessionEventCreated         SessionEventType = "session_created"
-	SessionEventResumed         SessionEventType = "session_resumed"
-	SessionEventClosed          SessionEventType = "session_closed"
-	SessionEventMessageAdded    SessionEventType = "message_added"
-	SessionEventAgentConnected  SessionEventType = "agent_connected"
-	SessionEventTaskStarted     SessionEventType = "task_started"
-	SessionEventTaskCompleted   SessionEventType = "task_completed"
-	SessionEventStateChanged    SessionEventType = "state_changed"
+	SessionEventCreated        SessionEventType = "session_created"
+	SessionEventResumed        SessionEventType = "session_resumed"
+	SessionEventClosed         SessionEventType = "session_closed"
+	SessionEventMessageAdded   SessionEventType = "message_added"
+	SessionEventAgentConnected SessionEventType = "agent_connected"
+	SessionEventTaskStarted    SessionEventType = "task_started"
+	SessionEventTaskCompleted  SessionEventType = "task_completed"
+	SessionEventStateChanged   SessionEventType = "state_changed"
 )
 
 // StorageIntegration defines how session management integrates with storage systems
 type StorageIntegration interface {
 	// Session storage
 	GetSessionRepository() storage.SessionRepository
-	
+
 	// Analytics storage
 	GetAnalyticsStore() AnalyticsStore
-	
+
 	// Backup storage
 	CreateBackup(ctx context.Context, sessionID string, data []byte) error
 	RestoreBackup(ctx context.Context, sessionID string) ([]byte, error)
@@ -265,55 +265,55 @@ type ConfigurationProvider interface {
 	GetSessionConfig() SessionConfig
 	GetAutoSaveConfig() AutoSaveConfig
 	GetEncryptionConfig() EncryptionConfig
-	
+
 	// Analytics configuration
 	GetAnalyticsConfig() AnalyticsConfig
-	
+
 	// Export configuration
 	GetExportConfig() ExportConfig
 }
 
 // SessionConfig contains session management configuration
 type SessionConfig struct {
-	MaxSessionDuration   time.Duration `json:"max_session_duration"`
-	MaxMessagesPerSession int          `json:"max_messages_per_session"`
-	CleanupInterval      time.Duration `json:"cleanup_interval"`
-	RetentionPeriod      time.Duration `json:"retention_period"`
+	MaxSessionDuration    time.Duration `json:"max_session_duration"`
+	MaxMessagesPerSession int           `json:"max_messages_per_session"`
+	CleanupInterval       time.Duration `json:"cleanup_interval"`
+	RetentionPeriod       time.Duration `json:"retention_period"`
 }
 
 // AutoSaveConfig contains auto-save configuration
 type AutoSaveConfig struct {
-	Enabled          bool          `json:"enabled"`
-	Interval         time.Duration `json:"interval"`
-	MaxChangeBuffer  int           `json:"max_change_buffer"`
-	SaveOnIdle       bool          `json:"save_on_idle"`
-	IdleTimeout      time.Duration `json:"idle_timeout"`
+	Enabled         bool          `json:"enabled"`
+	Interval        time.Duration `json:"interval"`
+	MaxChangeBuffer int           `json:"max_change_buffer"`
+	SaveOnIdle      bool          `json:"save_on_idle"`
+	IdleTimeout     time.Duration `json:"idle_timeout"`
 }
 
 // EncryptionConfig contains encryption configuration
 type EncryptionConfig struct {
-	Enabled    bool   `json:"enabled"`
-	KeySource  string `json:"key_source"`
-	Algorithm  string `json:"algorithm"`
-	KeySize    int    `json:"key_size"`
+	Enabled   bool   `json:"enabled"`
+	KeySource string `json:"key_source"`
+	Algorithm string `json:"algorithm"`
+	KeySize   int    `json:"key_size"`
 }
 
 // AnalyticsConfig contains analytics configuration
 type AnalyticsConfig struct {
-	Enabled             bool          `json:"enabled"`
-	TrackProductivity   bool          `json:"track_productivity"`
-	TrackUsagePatterns  bool          `json:"track_usage_patterns"`
-	RetentionPeriod     time.Duration `json:"retention_period"`
-	GenerateInsights    bool          `json:"generate_insights"`
+	Enabled            bool          `json:"enabled"`
+	TrackProductivity  bool          `json:"track_productivity"`
+	TrackUsagePatterns bool          `json:"track_usage_patterns"`
+	RetentionPeriod    time.Duration `json:"retention_period"`
+	GenerateInsights   bool          `json:"generate_insights"`
 }
 
 // ExportConfig contains export configuration
 type ExportConfig struct {
-	DefaultFormat       ExportFormat `json:"default_format"`
-	MaxExportSize       int64        `json:"max_export_size"`
-	AllowedFormats      []ExportFormat `json:"allowed_formats"`
-	IncludeMetadata     bool         `json:"include_metadata_by_default"`
-	CompressLargeExports bool        `json:"compress_large_exports"`
+	DefaultFormat        ExportFormat   `json:"default_format"`
+	MaxExportSize        int64          `json:"max_export_size"`
+	AllowedFormats       []ExportFormat `json:"allowed_formats"`
+	IncludeMetadata      bool           `json:"include_metadata_by_default"`
+	CompressLargeExports bool           `json:"compress_large_exports"`
 }
 
 // Registry integration for dependency injection
@@ -323,15 +323,15 @@ type SessionRegistry interface {
 	RegisterSessionResumer(resumer SessionResumerInterface)
 	RegisterSessionExporter(exporter SessionExporterInterface)
 	RegisterSessionAnalytics(analytics SessionAnalyticsInterface)
-	
+
 	// Integrations
 	RegisterOrchestratorIntegration(integration OrchestratorIntegration)
 	RegisterUIIntegration(integration UIIntegration)
 	RegisterStorageIntegration(integration StorageIntegration)
-	
+
 	// Configuration
 	RegisterConfigurationProvider(provider ConfigurationProvider)
-	
+
 	// Getters
 	GetSessionManager() SessionManagerInterface
 	GetSessionResumer() SessionResumerInterface
@@ -363,8 +363,8 @@ type AnalyticsMiddleware interface {
 
 // Error types for better error handling
 type SessionError struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
+	Code    string                 `json:"code"`
+	Message string                 `json:"message"`
 	Details map[string]interface{} `json:"details,omitempty"`
 }
 

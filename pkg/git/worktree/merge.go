@@ -77,7 +77,7 @@ func (mc *MergeCoordinator) PlanMerge(ctx context.Context, worktreeIDs []string,
 
 	// Use strategy to create plan
 	plan := mc.strategy.Plan(ctx, worktrees, targetBranch)
-	
+
 	// Validate plan
 	if err := mc.validatePlan(ctx, plan); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeValidation, "merge plan validation failed").
@@ -99,10 +99,10 @@ func (mc *MergeCoordinator) ExecuteMerge(ctx context.Context, plan *MergePlan) (
 	mc.notifier.NotifyMergeStart(plan)
 
 	result := &MergeResult{
-		PlanID:    plan.ID,
-		Started:   time.Now(),
-		Success:   false,
-		Steps:     make([]MergeStepResult, 0, len(plan.Order)),
+		PlanID:  plan.ID,
+		Started: time.Now(),
+		Success: false,
+		Steps:   make([]MergeStepResult, 0, len(plan.Order)),
 	}
 
 	// Execute merge strategy
@@ -196,23 +196,23 @@ type MergeStrategy interface {
 
 // MergePlan contains the plan for merging multiple worktrees
 type MergePlan struct {
-	ID           string                 `json:"id"`
-	Worktrees    []*Worktree            `json:"worktrees"`
-	Target       string                 `json:"target_branch"`
-	Order        []MergeStep            `json:"order"`
-	Conflicts    []PredictedConflict    `json:"predicted_conflicts"`
-	Strategy     string                 `json:"strategy"`
-	CreatedAt    time.Time              `json:"created_at"`
-	EstimatedDuration time.Duration     `json:"estimated_duration"`
-	Metadata     map[string]interface{} `json:"metadata"`
+	ID                string                 `json:"id"`
+	Worktrees         []*Worktree            `json:"worktrees"`
+	Target            string                 `json:"target_branch"`
+	Order             []MergeStep            `json:"order"`
+	Conflicts         []PredictedConflict    `json:"predicted_conflicts"`
+	Strategy          string                 `json:"strategy"`
+	CreatedAt         time.Time              `json:"created_at"`
+	EstimatedDuration time.Duration          `json:"estimated_duration"`
+	Metadata          map[string]interface{} `json:"metadata"`
 }
 
 // MergeStep represents a single step in the merge plan
 type MergeStep struct {
-	WorktreeID   string      `json:"worktree_id"`
-	Action       MergeAction `json:"action"`
-	Dependencies []string    `json:"dependencies"`
-	Order        int         `json:"order"`
+	WorktreeID        string        `json:"worktree_id"`
+	Action            MergeAction   `json:"action"`
+	Dependencies      []string      `json:"dependencies"`
+	Order             int           `json:"order"`
 	EstimatedDuration time.Duration `json:"estimated_duration"`
 }
 
@@ -249,13 +249,13 @@ type MergeResult struct {
 
 // MergeStepResult contains the result of a single merge step
 type MergeStepResult struct {
-	WorktreeID string    `json:"worktree_id"`
+	WorktreeID string      `json:"worktree_id"`
 	Action     MergeAction `json:"action"`
-	Success    bool      `json:"success"`
-	Started    time.Time `json:"started"`
-	Completed  time.Time `json:"completed"`
-	Error      string    `json:"error,omitempty"`
-	Conflicts  []string  `json:"conflicts"`
+	Success    bool        `json:"success"`
+	Started    time.Time   `json:"started"`
+	Completed  time.Time   `json:"completed"`
+	Error      string      `json:"error,omitempty"`
+	Conflicts  []string    `json:"conflicts"`
 }
 
 // SequentialMergeStrategy implements sequential merging
@@ -279,9 +279,9 @@ func (sms *SequentialMergeStrategy) Plan(ctx context.Context, worktrees []*Workt
 	// Create merge steps
 	for i, wt := range ordered {
 		step := MergeStep{
-			WorktreeID: wt.ID,
-			Action:     sms.determineAction(ctx, wt),
-			Order:      i,
+			WorktreeID:        wt.ID,
+			Action:            sms.determineAction(ctx, wt),
+			Order:             i,
 			EstimatedDuration: sms.estimateDuration(ctx, wt),
 		}
 
@@ -295,7 +295,7 @@ func (sms *SequentialMergeStrategy) Plan(ctx context.Context, worktrees []*Workt
 
 	// Predict conflicts
 	plan.Conflicts = sms.predictConflicts(ctx, ordered)
-	
+
 	// Calculate total estimated duration
 	for _, step := range plan.Order {
 		plan.EstimatedDuration += step.EstimatedDuration
@@ -375,7 +375,7 @@ func (sms *SequentialMergeStrategy) calculateComplexityScore(ctx context.Context
 	// Age factor (older branches are more complex to merge)
 	age := time.Since(wt.CreatedAt)
 	score += int(age.Hours() / 24) // Add 1 point per day
-	
+
 	// For sub-day precision in tests, add hours
 	score += int(age.Hours())
 
@@ -387,11 +387,11 @@ func (sms *SequentialMergeStrategy) determineAction(ctx context.Context, wt *Wor
 	// Count commits to determine best action
 	cmd := exec.CommandContext(ctx, "git", "rev-list", "--count", fmt.Sprintf("origin/%s...HEAD", wt.BaseBranch))
 	cmd.Dir = wt.Path
-	
+
 	if output, err := cmd.Output(); err == nil {
 		var commits int
 		fmt.Sscanf(strings.TrimSpace(string(output)), "%d", &commits)
-		
+
 		if commits == 1 {
 			return MergeActionSquash
 		} else if commits <= 3 {
@@ -420,7 +420,7 @@ func (sms *SequentialMergeStrategy) predictConflicts(ctx context.Context, worktr
 
 	// Check for overlapping files
 	fileMap := make(map[string][]*Worktree)
-	
+
 	for _, wt := range worktrees {
 		files := sms.getChangedFiles(ctx, wt)
 		for _, file := range files {
@@ -454,7 +454,7 @@ func (sms *SequentialMergeStrategy) predictConflicts(ctx context.Context, worktr
 func (sms *SequentialMergeStrategy) getChangedFiles(ctx context.Context, wt *Worktree) []string {
 	cmd := exec.CommandContext(ctx, "git", "diff", "--name-only", fmt.Sprintf("origin/%s...HEAD", wt.BaseBranch))
 	cmd.Dir = wt.Path
-	
+
 	output, err := cmd.Output()
 	if err != nil {
 		return nil
@@ -472,14 +472,14 @@ func (sms *SequentialMergeStrategy) getChangedFiles(ctx context.Context, wt *Wor
 func (sms *SequentialMergeStrategy) assessConflictSeverity(file string, worktreeCount int) ConflictSeverity {
 	// API files are high severity
 	if strings.Contains(strings.ToLower(file), "api") ||
-	   strings.Contains(strings.ToLower(file), "interface") {
+		strings.Contains(strings.ToLower(file), "interface") {
 		return SeverityHigh
 	}
 
 	// Configuration files are medium severity
 	if strings.Contains(file, "config") ||
-	   strings.HasSuffix(file, ".yaml") ||
-	   strings.HasSuffix(file, ".json") {
+		strings.HasSuffix(file, ".yaml") ||
+		strings.HasSuffix(file, ".json") {
 		return SeverityMedium
 	}
 
@@ -518,7 +518,7 @@ func (sms *SequentialMergeStrategy) executeMergeStep(ctx context.Context, step M
 func (sms *SequentialMergeStrategy) rebaseAndMerge(ctx context.Context, wt *Worktree, targetBranch string) error {
 	// Switch to target branch in base repo
 	baseRepoPath := sms.getBaseRepoPath()
-	
+
 	// Fetch latest
 	if err := sms.executeCommand(ctx, baseRepoPath, "git", "fetch", "origin", targetBranch); err != nil {
 		return err
@@ -546,15 +546,15 @@ func (sms *SequentialMergeStrategy) rebaseAndMerge(ctx context.Context, wt *Work
 // mergeDirectly performs a direct merge
 func (sms *SequentialMergeStrategy) mergeDirectly(ctx context.Context, wt *Worktree, targetBranch string) error {
 	baseRepoPath := sms.getBaseRepoPath()
-	
+
 	// Checkout target branch
 	if err := sms.executeCommand(ctx, baseRepoPath, "git", "checkout", targetBranch); err != nil {
 		return err
 	}
 
 	// Merge with merge commit
-	if err := sms.executeCommand(ctx, baseRepoPath, "git", "merge", "--no-ff", "-m", 
-		fmt.Sprintf("Merge branch '%s' (Agent: %s, Task: %s)", wt.Branch, wt.AgentID, wt.TaskID), 
+	if err := sms.executeCommand(ctx, baseRepoPath, "git", "merge", "--no-ff", "-m",
+		fmt.Sprintf("Merge branch '%s' (Agent: %s, Task: %s)", wt.Branch, wt.AgentID, wt.TaskID),
 		wt.Branch); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "direct merge failed").
 			WithDetails("branch", wt.Branch)
@@ -566,7 +566,7 @@ func (sms *SequentialMergeStrategy) mergeDirectly(ctx context.Context, wt *Workt
 // squashAndMerge performs a squash merge
 func (sms *SequentialMergeStrategy) squashAndMerge(ctx context.Context, wt *Worktree, targetBranch string) error {
 	baseRepoPath := sms.getBaseRepoPath()
-	
+
 	// Checkout target branch
 	if err := sms.executeCommand(ctx, baseRepoPath, "git", "checkout", targetBranch); err != nil {
 		return err
@@ -579,9 +579,9 @@ func (sms *SequentialMergeStrategy) squashAndMerge(ctx context.Context, wt *Work
 	}
 
 	// Commit the squashed changes
-	commitMsg := fmt.Sprintf("Squash merge from %s\n\nAgent: %s\nTask: %s", 
+	commitMsg := fmt.Sprintf("Squash merge from %s\n\nAgent: %s\nTask: %s",
 		wt.Branch, wt.AgentID, wt.TaskID)
-	
+
 	if err := sms.executeCommand(ctx, baseRepoPath, "git", "commit", "-m", commitMsg); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "squash commit failed").
 			WithDetails("branch", wt.Branch)
@@ -593,7 +593,7 @@ func (sms *SequentialMergeStrategy) squashAndMerge(ctx context.Context, wt *Work
 // cherryPickMerge performs cherry-pick merge
 func (sms *SequentialMergeStrategy) cherryPickMerge(ctx context.Context, wt *Worktree, targetBranch string) error {
 	baseRepoPath := sms.getBaseRepoPath()
-	
+
 	// Checkout target branch
 	if err := sms.executeCommand(ctx, baseRepoPath, "git", "checkout", targetBranch); err != nil {
 		return err
@@ -602,14 +602,14 @@ func (sms *SequentialMergeStrategy) cherryPickMerge(ctx context.Context, wt *Wor
 	// Get commits to cherry pick
 	cmd := exec.CommandContext(ctx, "git", "rev-list", "--reverse", fmt.Sprintf("origin/%s..HEAD", wt.BaseBranch))
 	cmd.Dir = wt.Path
-	
+
 	output, err := cmd.Output()
 	if err != nil {
 		return err
 	}
 
 	commits := strings.Split(strings.TrimSpace(string(output)), "\n")
-	
+
 	// Cherry pick each commit
 	for _, commit := range commits {
 		if commit != "" {
@@ -637,12 +637,12 @@ func (sms *SequentialMergeStrategy) getBaseRepoPath() string {
 func (sms *SequentialMergeStrategy) executeCommand(ctx context.Context, dir string, name string, args ...string) error {
 	cmd := exec.CommandContext(ctx, name, args...)
 	cmd.Dir = dir
-	
+
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("command failed: %s (output: %s)", err, string(output))
 	}
-	
+
 	return nil
 }
 
@@ -708,7 +708,7 @@ func (pms *ParallelMergeStrategy) Execute(ctx context.Context, plan *MergePlan) 
 // executeParallelGroup executes a group of merge steps in parallel
 func (pms *ParallelMergeStrategy) executeParallelGroup(ctx context.Context, steps []MergeStep, targetBranch string) error {
 	errCh := make(chan error, len(steps))
-	
+
 	for _, step := range steps {
 		go func(s MergeStep) {
 			// Execute step (implementation would be similar to sequential)
@@ -730,12 +730,12 @@ func (pms *ParallelMergeStrategy) executeParallelGroup(ctx context.Context, step
 func (pms *ParallelMergeStrategy) groupNonConflicting(ctx context.Context, worktrees []*Worktree) [][]*Worktree {
 	// Simple grouping - in practice would analyze file conflicts
 	var groups [][]*Worktree
-	
+
 	// For now, put each worktree in its own group (sequential)
 	for _, wt := range worktrees {
 		groups = append(groups, []*Worktree{wt})
 	}
-	
+
 	return groups
 }
 

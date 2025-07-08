@@ -18,8 +18,8 @@ import (
 	"github.com/lancekrogers/guild/internal/ui/chat/panes"
 	"github.com/lancekrogers/guild/pkg/corpus"
 	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
 	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild/pkg/observability"
 )
 
 // CorpusHandler handles corpus-related commands
@@ -40,11 +40,11 @@ func NewCorpusHandler(config *config.ChatConfig, guildClient pb.GuildClient) *Co
 func (h *CorpusHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	ctx = observability.WithComponent(ctx, "corpus.command_handler")
 	ctx = observability.WithOperation(ctx, "Handle")
-	
+
 	if len(args) == 0 {
 		return h.handleList(ctx)
 	}
-	
+
 	subcommand := args[0]
 	switch subcommand {
 	case "list":
@@ -85,7 +85,7 @@ func (h *CorpusHandler) Usage() string {
 func (h *CorpusHandler) handleList(ctx context.Context) tea.Cmd {
 	return func() tea.Msg {
 		ctx = observability.WithOperation(ctx, "handleList")
-		
+
 		// Get corpus configuration
 		cfg, err := corpus.GetConfigWithFallback(ctx)
 		if err != nil {
@@ -94,7 +94,7 @@ func (h *CorpusHandler) handleList(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		// List documents
 		docs, err := corpus.List(ctx, cfg)
 		if err != nil {
@@ -103,7 +103,7 @@ func (h *CorpusHandler) handleList(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		if len(docs) == 0 {
 			return panes.PaneUpdateMsg{
 				PaneID: "output",
@@ -119,7 +119,7 @@ No documents found in the corpus.
 **Corpus Location:** %s`, cfg.CorpusPath),
 			}
 		}
-		
+
 		// Sort documents by modification time (newest first)
 		sort.Slice(docs, func(i, j int) bool {
 			infoI, errI := filepath.Glob(docs[i])
@@ -130,11 +130,11 @@ No documents found in the corpus.
 			// This is a simplified sort - in production, you'd use os.Stat
 			return docs[i] > docs[j]
 		})
-		
+
 		// Build content
 		var content strings.Builder
 		content.WriteString("📚 **Guild Corpus Documents**\n\n")
-		
+
 		// Group by category (directory)
 		categories := make(map[string][]string)
 		for _, docPath := range docs {
@@ -142,19 +142,19 @@ No documents found in the corpus.
 			if err != nil {
 				relPath = docPath
 			}
-			
+
 			dir := filepath.Dir(relPath)
 			if dir == "." {
 				dir = "General"
 			}
-			
+
 			categories[dir] = append(categories[dir], docPath)
 		}
-		
+
 		// Display by category
 		for category, categoryDocs := range categories {
 			content.WriteString(fmt.Sprintf("## %s\n\n", strings.Title(category)))
-			
+
 			for _, docPath := range categoryDocs {
 				// Load document to get metadata
 				doc, err := corpus.Load(ctx, docPath)
@@ -165,24 +165,24 @@ No documents found in the corpus.
 					content.WriteString(fmt.Sprintf("- `%s` (failed to load)\n", fileName))
 					continue
 				}
-				
+
 				// Format document entry
 				relPath, _ := filepath.Rel(cfg.CorpusPath, docPath)
 				tags := ""
 				if len(doc.Tags) > 0 {
 					tags = fmt.Sprintf(" `%s`", strings.Join(doc.Tags, "` `"))
 				}
-				
+
 				content.WriteString(fmt.Sprintf("- **%s**%s\n", doc.Title, tags))
-				content.WriteString(fmt.Sprintf("  _Source: %s | Updated: %s_\n", 
+				content.WriteString(fmt.Sprintf("  _Source: %s | Updated: %s_\n",
 					doc.Source, doc.UpdatedAt.Format("Jan 2, 2006")))
 				content.WriteString(fmt.Sprintf("  _Path: %s_\n\n", relPath))
 			}
 		}
-		
+
 		content.WriteString(fmt.Sprintf("\n**Total Documents:** %d\n", len(docs)))
 		content.WriteString("**Commands:** `/corpus search <query>` | `/corpus add <type> <content>` | `/corpus stats`")
-		
+
 		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: content.String(),
@@ -192,16 +192,16 @@ No documents found in the corpus.
 
 // SearchOptions contains parsed search options
 type SearchOptions struct {
-	Query         string
-	Limit         int
-	MinScore      float64
-	Types         []string
-	Authors       []string
-	Sources       []string
-	SinceTime     *time.Time
-	InProject     bool
-	SortBy        string
-	ShowRaw       bool
+	Query     string
+	Limit     int
+	MinScore  float64
+	Types     []string
+	Authors   []string
+	Sources   []string
+	SinceTime *time.Time
+	InProject bool
+	SortBy    string
+	ShowRaw   bool
 }
 
 // parseSearchOptions parses command-line style search options
@@ -211,12 +211,12 @@ func parseSearchOptions(args []string) (*SearchOptions, error) {
 		MinScore: 0.5,
 		SortBy:   "relevance",
 	}
-	
+
 	var queryParts []string
-	
+
 	for i := 0; i < len(args); i++ {
 		arg := args[i]
-		
+
 		switch {
 		case strings.HasPrefix(arg, "--limit="):
 			limitStr := strings.TrimPrefix(arg, "--limit=")
@@ -283,7 +283,7 @@ func parseSearchOptions(args []string) (*SearchOptions, error) {
 			queryParts = append(queryParts, arg)
 		}
 	}
-	
+
 	opts.Query = strings.Join(queryParts, " ")
 	return opts, nil
 }
@@ -291,7 +291,7 @@ func parseSearchOptions(args []string) (*SearchOptions, error) {
 // parseRelativeTime parses relative time expressions
 func parseRelativeTime(timeStr string) (time.Time, error) {
 	now := time.Now()
-	
+
 	switch strings.ToLower(timeStr) {
 	case "today":
 		return now.Truncate(24 * time.Hour), nil
@@ -306,7 +306,7 @@ func parseRelativeTime(timeStr string) (time.Time, error) {
 		if duration, err := time.ParseDuration(timeStr); err == nil {
 			return now.Add(-duration), nil
 		}
-		
+
 		// Try parsing common formats
 		formats := []string{
 			"2006-01-02",
@@ -314,7 +314,7 @@ func parseRelativeTime(timeStr string) (time.Time, error) {
 			"Jan 2",
 			"Jan 2, 2006",
 		}
-		
+
 		for _, format := range formats {
 			if t, err := time.Parse(format, timeStr); err == nil {
 				// Adjust year if not specified
@@ -324,7 +324,7 @@ func parseRelativeTime(timeStr string) (time.Time, error) {
 				return t, nil
 			}
 		}
-		
+
 		return time.Time{}, gerror.New(gerror.ErrCodeValidation, "invalid time format: "+timeStr, nil)
 	}
 }
@@ -333,14 +333,14 @@ func parseRelativeTime(timeStr string) (time.Time, error) {
 func (h *CorpusHandler) handleSearch(ctx context.Context, args []string) tea.Cmd {
 	return func() tea.Msg {
 		ctx = observability.WithOperation(ctx, "handleSearch")
-		
+
 		if len(args) == 0 {
 			return panes.StatusUpdateMsg{
 				Message: "Usage: /corpus search [options] <query>\nOptions: --limit N, --min-score N, --type TYPE, --from AUTHOR, --since TIME, --in-project",
 				Level:   "error",
 			}
 		}
-		
+
 		// Parse search options
 		opts, err := parseSearchOptions(args)
 		if err != nil {
@@ -349,14 +349,14 @@ func (h *CorpusHandler) handleSearch(ctx context.Context, args []string) tea.Cmd
 				Level:   "error",
 			}
 		}
-		
+
 		if opts.Query == "" {
 			return panes.StatusUpdateMsg{
 				Message: "Search query cannot be empty",
 				Level:   "error",
 			}
 		}
-		
+
 		// Get corpus configuration
 		cfg, err := corpus.GetConfigWithFallback(ctx)
 		if err != nil {
@@ -365,7 +365,7 @@ func (h *CorpusHandler) handleSearch(ctx context.Context, args []string) tea.Cmd
 				Level:   "error",
 			}
 		}
-		
+
 		// List all documents
 		docs, err := corpus.List(ctx, cfg)
 		if err != nil {
@@ -374,31 +374,31 @@ func (h *CorpusHandler) handleSearch(ctx context.Context, args []string) tea.Cmd
 				Level:   "error",
 			}
 		}
-		
+
 		// Search documents with filtering
 		var results []SearchResult
 		queryLower := strings.ToLower(opts.Query)
-		
+
 		for _, docPath := range docs {
 			doc, err := corpus.Load(ctx, docPath)
 			if err != nil {
 				continue // Skip documents that can't be loaded
 			}
-			
+
 			// Apply filters
 			if !h.matchesFilters(doc, opts) {
 				continue
 			}
-			
+
 			// Calculate relevance score
 			score := calculateRelevance(doc, queryLower)
 			if score < opts.MinScore {
 				continue
 			}
-			
+
 			relPath, _ := filepath.Rel(cfg.CorpusPath, docPath)
 			preview := extractPreview(doc.Body, queryLower, 100)
-			
+
 			results = append(results, SearchResult{
 				Title:     doc.Title,
 				Path:      relPath,
@@ -409,19 +409,19 @@ func (h *CorpusHandler) handleSearch(ctx context.Context, args []string) tea.Cmd
 				UpdatedAt: doc.UpdatedAt,
 			})
 		}
-		
+
 		// Sort results
 		h.sortResults(results, opts.SortBy)
-		
+
 		// Limit results
 		if len(results) > opts.Limit {
 			results = results[:opts.Limit]
 		}
-		
+
 		// Build response
 		var content strings.Builder
 		content.WriteString(fmt.Sprintf("🔍 **Advanced Search Results for \"%s\"**\n\n", opts.Query))
-		
+
 		// Show search options
 		if h.hasActiveOptions(opts) {
 			content.WriteString("**Active Filters:**\n")
@@ -445,7 +445,7 @@ func (h *CorpusHandler) handleSearch(ctx context.Context, args []string) tea.Cmd
 			}
 			content.WriteString("\n")
 		}
-		
+
 		if len(results) == 0 {
 			content.WriteString("No results found.\n\n")
 			content.WriteString("**Suggestions:**\n")
@@ -456,24 +456,24 @@ func (h *CorpusHandler) handleSearch(ctx context.Context, args []string) tea.Cmd
 		} else {
 			for i, result := range results {
 				content.WriteString(fmt.Sprintf("## %d. %s\n", i+1, result.Title))
-				content.WriteString(fmt.Sprintf("**Score:** %.0f%% | **Source:** %s | **Updated:** %s\n\n", 
+				content.WriteString(fmt.Sprintf("**Score:** %.0f%% | **Source:** %s | **Updated:** %s\n\n",
 					result.Score*100, result.Source, result.UpdatedAt.Format("Jan 2, 2006")))
-				
+
 				if len(result.Tags) > 0 {
 					content.WriteString(fmt.Sprintf("**Tags:** `%s`\n\n", strings.Join(result.Tags, "` `")))
 				}
-				
+
 				if opts.ShowRaw {
 					content.WriteString(fmt.Sprintf("**Raw Path:** %s\n\n", result.Path))
 				}
-				
+
 				content.WriteString(fmt.Sprintf("**Preview:** %s\n\n", result.Preview))
 				content.WriteString("---\n\n")
 			}
 		}
-		
+
 		content.WriteString(fmt.Sprintf("**Found %d results** (limit: %d) | Use `/corpus search --help` for options", len(results), opts.Limit))
-		
+
 		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: content.String(),
@@ -501,7 +501,7 @@ func (h *CorpusHandler) matchesFilters(doc *corpus.CorpusDoc, opts *SearchOption
 			return false
 		}
 	}
-	
+
 	// Author filter
 	if len(opts.Authors) > 0 {
 		found := false
@@ -515,7 +515,7 @@ func (h *CorpusHandler) matchesFilters(doc *corpus.CorpusDoc, opts *SearchOption
 			return false
 		}
 	}
-	
+
 	// Source filter
 	if len(opts.Sources) > 0 {
 		found := false
@@ -529,20 +529,20 @@ func (h *CorpusHandler) matchesFilters(doc *corpus.CorpusDoc, opts *SearchOption
 			return false
 		}
 	}
-	
+
 	// Time filter
 	if opts.SinceTime != nil {
 		if doc.UpdatedAt.Before(*opts.SinceTime) {
 			return false
 		}
 	}
-	
+
 	// Project filter (placeholder - would need project system integration)
 	if opts.InProject {
 		// TODO: Implement project filtering when project system is available
 		// For now, assume all documents are in current project
 	}
-	
+
 	return true
 }
 
@@ -592,17 +592,17 @@ func (h *CorpusHandler) hasActiveOptions(opts *SearchOptions) bool {
 func (h *CorpusHandler) handleAdd(ctx context.Context, args []string) tea.Cmd {
 	return func() tea.Msg {
 		ctx = observability.WithOperation(ctx, "handleAdd")
-		
+
 		if len(args) < 2 {
 			return panes.StatusUpdateMsg{
 				Message: "Usage: /corpus add <type> <content>",
 				Level:   "error",
 			}
 		}
-		
+
 		docType := args[0]
 		content := strings.Join(args[1:], " ")
-		
+
 		// Get corpus configuration
 		cfg, err := corpus.GetConfigWithFallback(ctx)
 		if err != nil {
@@ -611,7 +611,7 @@ func (h *CorpusHandler) handleAdd(ctx context.Context, args []string) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		// Create new document
 		title := fmt.Sprintf("%s: %s", strings.Title(docType), extractTitle(content))
 		doc := corpus.NewCorpusDoc(
@@ -622,7 +622,7 @@ func (h *CorpusHandler) handleAdd(ctx context.Context, args []string) tea.Cmd {
 			"user",    // TODO: Get from session
 			[]string{docType},
 		)
-		
+
 		// Save document
 		err = corpus.Save(ctx, doc, cfg)
 		if err != nil {
@@ -631,7 +631,7 @@ func (h *CorpusHandler) handleAdd(ctx context.Context, args []string) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		return panes.StatusUpdateMsg{
 			Message: fmt.Sprintf("✅ Added \"%s\" to corpus", title),
 			Level:   "success",
@@ -643,7 +643,7 @@ func (h *CorpusHandler) handleAdd(ctx context.Context, args []string) tea.Cmd {
 func (h *CorpusHandler) handleStats(ctx context.Context) tea.Cmd {
 	return func() tea.Msg {
 		ctx = observability.WithOperation(ctx, "handleStats")
-		
+
 		// Get corpus configuration
 		cfg, err := corpus.GetConfigWithFallback(ctx)
 		if err != nil {
@@ -652,7 +652,7 @@ func (h *CorpusHandler) handleStats(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		// Get document count
 		docs, err := corpus.List(ctx, cfg)
 		if err != nil {
@@ -661,7 +661,7 @@ func (h *CorpusHandler) handleStats(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		// Get corpus size
 		size, err := corpus.GetSize(cfg)
 		if err != nil {
@@ -670,42 +670,42 @@ func (h *CorpusHandler) handleStats(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		// Calculate tag statistics
 		tagCounts := make(map[string]int)
 		sourceCounts := make(map[string]int)
 		var totalWords int
-		
+
 		for _, docPath := range docs {
 			doc, err := corpus.Load(ctx, docPath)
 			if err != nil {
 				continue
 			}
-			
+
 			// Count tags
 			for _, tag := range doc.Tags {
 				tagCounts[tag]++
 			}
-			
+
 			// Count sources
 			sourceCounts[doc.Source]++
-			
+
 			// Count words (approximate)
 			words := len(strings.Fields(doc.Body))
 			totalWords += words
 		}
-		
+
 		// Build statistics content
 		var content strings.Builder
 		content.WriteString("📊 **Guild Corpus Statistics**\n\n")
-		
+
 		// Basic stats
 		content.WriteString("## Overview\n\n")
 		content.WriteString(fmt.Sprintf("- **Documents:** %d\n", len(docs)))
 		content.WriteString(fmt.Sprintf("- **Total Size:** %.2f MB\n", float64(size)/(1024*1024)))
 		content.WriteString(fmt.Sprintf("- **Average Words per Doc:** %d\n", totalWords/max(len(docs), 1)))
 		content.WriteString(fmt.Sprintf("- **Corpus Path:** %s\n\n", cfg.CorpusPath))
-		
+
 		// Top tags
 		if len(tagCounts) > 0 {
 			content.WriteString("## Top Tags\n\n")
@@ -720,7 +720,7 @@ func (h *CorpusHandler) handleStats(ctx context.Context) tea.Cmd {
 			sort.Slice(tags, func(i, j int) bool {
 				return tags[i].count > tags[j].count
 			})
-			
+
 			for i, tc := range tags {
 				if i >= 5 { // Show top 5
 					break
@@ -729,7 +729,7 @@ func (h *CorpusHandler) handleStats(ctx context.Context) tea.Cmd {
 			}
 			content.WriteString("\n")
 		}
-		
+
 		// Sources
 		if len(sourceCounts) > 0 {
 			content.WriteString("## Sources\n\n")
@@ -738,7 +738,7 @@ func (h *CorpusHandler) handleStats(ctx context.Context) tea.Cmd {
 			}
 			content.WriteString("\n")
 		}
-		
+
 		// Storage limits
 		maxSizeGB := float64(cfg.MaxSizeBytes) / (1024 * 1024 * 1024)
 		usagePercent := (float64(size) / float64(cfg.MaxSizeBytes)) * 100
@@ -747,7 +747,7 @@ func (h *CorpusHandler) handleStats(ctx context.Context) tea.Cmd {
 		if usagePercent > 80 {
 			content.WriteString("- ⚠️ **Warning:** Approaching storage limit\n")
 		}
-		
+
 		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: content.String(),
@@ -759,7 +759,7 @@ func (h *CorpusHandler) handleStats(ctx context.Context) tea.Cmd {
 func (h *CorpusHandler) handleRebuild(ctx context.Context) tea.Cmd {
 	return func() tea.Msg {
 		ctx = observability.WithOperation(ctx, "handleRebuild")
-		
+
 		// Get corpus configuration
 		cfg, err := corpus.GetConfigWithFallback(ctx)
 		if err != nil {
@@ -768,9 +768,9 @@ func (h *CorpusHandler) handleRebuild(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		start := time.Now()
-		
+
 		// List all documents
 		docs, err := corpus.List(ctx, cfg)
 		if err != nil {
@@ -779,46 +779,46 @@ func (h *CorpusHandler) handleRebuild(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		if len(docs) == 0 {
 			return panes.StatusUpdateMsg{
 				Message: "No documents found to rebuild",
 				Level:   "info",
 			}
 		}
-		
+
 		// Simulate rebuild process
 		// In a full implementation with vector store, this would:
 		// 1. Clear existing vector embeddings
 		// 2. Re-generate embeddings for all documents
 		// 3. Rebuild vector index
 		// 4. Update search metadata
-		
+
 		rebuiltCount := 0
 		errorCount := 0
-		
+
 		for _, docPath := range docs {
 			doc, err := corpus.Load(ctx, docPath)
 			if err != nil {
 				errorCount++
 				continue
 			}
-			
+
 			// Simulate vector regeneration
 			time.Sleep(1 * time.Millisecond)
-			
+
 			if doc.Title != "" && doc.Body != "" {
 				rebuiltCount++
 			} else {
 				errorCount++
 			}
 		}
-		
+
 		elapsed := time.Since(start)
-		
+
 		var message string
 		var level string
-		
+
 		if errorCount == 0 {
 			message = fmt.Sprintf("✅ Corpus index rebuilt successfully! Processed %d documents in %v", rebuiltCount, elapsed)
 			level = "success"
@@ -826,7 +826,7 @@ func (h *CorpusHandler) handleRebuild(ctx context.Context) tea.Cmd {
 			message = fmt.Sprintf("⚠️  Corpus index rebuilt with issues: %d processed, %d errors in %v", rebuiltCount, errorCount, elapsed)
 			level = "warning"
 		}
-		
+
 		return panes.StatusUpdateMsg{
 			Message: message,
 			Level:   level,
@@ -838,7 +838,7 @@ func (h *CorpusHandler) handleRebuild(ctx context.Context) tea.Cmd {
 func (h *CorpusHandler) handleConfig(ctx context.Context) tea.Cmd {
 	return func() tea.Msg {
 		ctx = observability.WithOperation(ctx, "handleConfig")
-		
+
 		cfg, err := corpus.GetConfigWithFallback(ctx)
 		if err != nil {
 			return panes.StatusUpdateMsg{
@@ -846,18 +846,18 @@ func (h *CorpusHandler) handleConfig(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		var content strings.Builder
 		content.WriteString("⚙️ **Corpus Configuration**\n\n")
 		content.WriteString(fmt.Sprintf("- **Corpus Path:** %s\n", cfg.CorpusPath))
 		content.WriteString(fmt.Sprintf("- **Activities Path:** %s\n", cfg.ActivitiesPath))
 		content.WriteString(fmt.Sprintf("- **Max Size:** %.2f GB\n", float64(cfg.MaxSizeBytes)/(1024*1024*1024)))
 		content.WriteString(fmt.Sprintf("- **Default Category:** %s\n", cfg.DefaultCategory))
-		
+
 		if len(cfg.DefaultTags) > 0 {
 			content.WriteString(fmt.Sprintf("- **Default Tags:** `%s`\n", strings.Join(cfg.DefaultTags, "` `")))
 		}
-		
+
 		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: content.String(),
@@ -921,34 +921,34 @@ type SearchResult struct {
 // calculateRelevance calculates a simple relevance score for a document
 func calculateRelevance(doc *corpus.CorpusDoc, queryLower string) float64 {
 	score := 0.0
-	
+
 	// Title match (highest weight)
 	if strings.Contains(strings.ToLower(doc.Title), queryLower) {
 		score += 1.0
 	}
-	
+
 	// Tag match (high weight)
 	for _, tag := range doc.Tags {
 		if strings.Contains(strings.ToLower(tag), queryLower) {
 			score += 0.8
 		}
 	}
-	
+
 	// Body match (medium weight)
 	bodyLower := strings.ToLower(doc.Body)
 	if strings.Contains(bodyLower, queryLower) {
 		score += 0.5
-		
+
 		// Boost score based on frequency
 		count := strings.Count(bodyLower, queryLower)
 		score += float64(count) * 0.1
 	}
-	
+
 	// Source match (low weight)
 	if strings.Contains(strings.ToLower(doc.Source), queryLower) {
 		score += 0.2
 	}
-	
+
 	return score
 }
 
@@ -956,7 +956,7 @@ func calculateRelevance(doc *corpus.CorpusDoc, queryLower string) float64 {
 func extractPreview(content, query string, maxLength int) string {
 	contentLower := strings.ToLower(content)
 	queryIndex := strings.Index(contentLower, query)
-	
+
 	if queryIndex == -1 {
 		// No direct match, return first part
 		if len(content) <= maxLength {
@@ -964,11 +964,11 @@ func extractPreview(content, query string, maxLength int) string {
 		}
 		return content[:maxLength] + "..."
 	}
-	
+
 	// Find word boundaries around the match
 	start := max(0, queryIndex-maxLength/2)
 	end := min(len(content), queryIndex+len(query)+maxLength/2)
-	
+
 	// Adjust to word boundaries
 	for start > 0 && content[start] != ' ' {
 		start--
@@ -976,7 +976,7 @@ func extractPreview(content, query string, maxLength int) string {
 	for end < len(content) && content[end] != ' ' {
 		end++
 	}
-	
+
 	preview := content[start:end]
 	if start > 0 {
 		preview = "..." + preview
@@ -984,7 +984,7 @@ func extractPreview(content, query string, maxLength int) string {
 	if end < len(content) {
 		preview = preview + "..."
 	}
-	
+
 	return preview
 }
 
@@ -992,11 +992,11 @@ func extractPreview(content, query string, maxLength int) string {
 func extractTitle(content string) string {
 	lines := strings.Split(content, "\n")
 	firstLine := strings.TrimSpace(lines[0])
-	
+
 	if len(firstLine) <= 50 {
 		return firstLine
 	}
-	
+
 	// Take first 50 characters and cut at word boundary
 	if len(firstLine) > 50 {
 		cutAt := 50
@@ -1007,7 +1007,7 @@ func extractTitle(content string) string {
 			return firstLine[:cutAt] + "..."
 		}
 	}
-	
+
 	return firstLine[:50] + "..."
 }
 
@@ -1038,11 +1038,11 @@ func NewKnowledgeHandler() *KnowledgeHandler {
 func (h *KnowledgeHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	ctx = observability.WithComponent(ctx, "knowledge.command_handler")
 	ctx = observability.WithOperation(ctx, "Handle")
-	
+
 	if len(args) == 0 {
 		return h.handleBrowse(ctx)
 	}
-	
+
 	subcommand := args[0]
 	switch subcommand {
 	case "browse":
@@ -1105,7 +1105,7 @@ func (h *KnowledgeHandler) handleBrowse(ctx context.Context) tea.Cmd {
 func (h *KnowledgeHandler) handleValidate(ctx context.Context) tea.Cmd {
 	return func() tea.Msg {
 		ctx = observability.WithOperation(ctx, "handleValidate")
-		
+
 		// Get corpus configuration
 		cfg, err := corpus.GetConfigWithFallback(ctx)
 		if err != nil {
@@ -1114,7 +1114,7 @@ func (h *KnowledgeHandler) handleValidate(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		// List all documents for validation
 		docs, err := corpus.List(ctx, cfg)
 		if err != nil {
@@ -1123,14 +1123,14 @@ func (h *KnowledgeHandler) handleValidate(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		var content strings.Builder
 		content.WriteString("🔍 **Knowledge Validation Report**\n\n")
-		
+
 		validCount := 0
 		invalidCount := 0
 		var issues []string
-		
+
 		// Validate each document
 		for _, docPath := range docs {
 			doc, err := corpus.Load(ctx, docPath)
@@ -1139,7 +1139,7 @@ func (h *KnowledgeHandler) handleValidate(ctx context.Context) tea.Cmd {
 				issues = append(issues, fmt.Sprintf("❌ **%s**: Failed to load - %v", filepath.Base(docPath), err))
 				continue
 			}
-			
+
 			// Validation checks
 			if doc.Title == "" {
 				issues = append(issues, fmt.Sprintf("⚠️  **%s**: Missing title", filepath.Base(docPath)))
@@ -1153,16 +1153,16 @@ func (h *KnowledgeHandler) handleValidate(ctx context.Context) tea.Cmd {
 			if doc.GuildID == "" {
 				issues = append(issues, fmt.Sprintf("⚠️  **%s**: Missing guild association", filepath.Base(docPath)))
 			}
-			
+
 			validCount++
 		}
-		
+
 		// Generate report
 		content.WriteString(fmt.Sprintf("## Summary\n\n"))
 		content.WriteString(fmt.Sprintf("- ✅ **Valid documents:** %d\n", validCount))
 		content.WriteString(fmt.Sprintf("- ❌ **Invalid documents:** %d\n", invalidCount))
 		content.WriteString(fmt.Sprintf("- ⚠️  **Issues found:** %d\n\n", len(issues)))
-		
+
 		if len(issues) > 0 {
 			content.WriteString("## Issues Found\n\n")
 			for _, issue := range issues {
@@ -1172,13 +1172,13 @@ func (h *KnowledgeHandler) handleValidate(ctx context.Context) tea.Cmd {
 		} else {
 			content.WriteString("🎉 **All knowledge entries are valid!**\n\n")
 		}
-		
+
 		content.WriteString("## Recommendations\n\n")
 		content.WriteString("- Ensure all documents have descriptive titles\n")
 		content.WriteString("- Add relevant tags for better searchability\n")
 		content.WriteString("- Associate documents with appropriate guilds\n")
 		content.WriteString("- Keep content concise but informative\n")
-		
+
 		return panes.PaneUpdateMsg{
 			PaneID:  "output",
 			Content: content.String(),
@@ -1190,7 +1190,7 @@ func (h *KnowledgeHandler) handleValidate(ctx context.Context) tea.Cmd {
 func (h *KnowledgeHandler) handleExport(ctx context.Context) tea.Cmd {
 	return func() tea.Msg {
 		ctx = observability.WithOperation(ctx, "handleExport")
-		
+
 		// Get corpus configuration
 		cfg, err := corpus.GetConfigWithFallback(ctx)
 		if err != nil {
@@ -1199,7 +1199,7 @@ func (h *KnowledgeHandler) handleExport(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		// List all documents
 		docs, err := corpus.List(ctx, cfg)
 		if err != nil {
@@ -1208,56 +1208,56 @@ func (h *KnowledgeHandler) handleExport(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		if len(docs) == 0 {
 			return panes.StatusUpdateMsg{
 				Message: "No documents found to export",
 				Level:   "info",
 			}
 		}
-		
+
 		// Generate export filename with timestamp
 		timestamp := time.Now().Format("2006-01-02_15-04-05")
 		exportPath := filepath.Join(".guild", fmt.Sprintf("knowledge_export_%s.md", timestamp))
-		
+
 		var export strings.Builder
 		export.WriteString("# Guild Knowledge Export\n\n")
 		export.WriteString(fmt.Sprintf("**Generated:** %s\n", time.Now().Format("2006-01-02 15:04:05")))
 		export.WriteString(fmt.Sprintf("**Total Documents:** %d\n\n", len(docs)))
-		
+
 		// Group documents by tags
 		tagGroups := make(map[string][]*corpus.CorpusDoc)
 		allDocs := make([]*corpus.CorpusDoc, 0)
-		
+
 		for _, docPath := range docs {
 			doc, err := corpus.Load(ctx, docPath)
 			if err != nil {
 				continue // Skip invalid documents
 			}
 			allDocs = append(allDocs, doc)
-			
+
 			for _, tag := range doc.Tags {
 				tagGroups[tag] = append(tagGroups[tag], doc)
 			}
 		}
-		
+
 		// Sort tags alphabetically
 		var sortedTags []string
 		for tag := range tagGroups {
 			sortedTags = append(sortedTags, tag)
 		}
 		sort.Strings(sortedTags)
-		
+
 		// Export by categories
 		for _, tag := range sortedTags {
 			docs := tagGroups[tag]
 			export.WriteString(fmt.Sprintf("## %s (%d documents)\n\n", strings.Title(tag), len(docs)))
-			
+
 			for _, doc := range docs {
 				export.WriteString(fmt.Sprintf("### %s\n\n", doc.Title))
 				export.WriteString(fmt.Sprintf("**Source:** %s | **Guild:** %s | **Agent:** %s\n\n", doc.Source, doc.GuildID, doc.AgentID))
 				export.WriteString(fmt.Sprintf("%s\n\n", doc.Body))
-				
+
 				if len(doc.Tags) > 1 {
 					othertags := make([]string, 0)
 					for _, t := range doc.Tags {
@@ -1269,11 +1269,11 @@ func (h *KnowledgeHandler) handleExport(ctx context.Context) tea.Cmd {
 						export.WriteString(fmt.Sprintf("**Also tagged:** %s\n\n", strings.Join(othertags, ", ")))
 					}
 				}
-				
+
 				export.WriteString("---\n\n")
 			}
 		}
-		
+
 		// Write export file
 		err = os.WriteFile(exportPath, []byte(export.String()), 0644)
 		if err != nil {
@@ -1282,7 +1282,7 @@ func (h *KnowledgeHandler) handleExport(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		return panes.StatusUpdateMsg{
 			Message: fmt.Sprintf("✅ Knowledge exported to %s (%d documents)", exportPath, len(allDocs)),
 			Level:   "success",
@@ -1352,11 +1352,11 @@ func NewIndexHandler() *IndexHandler {
 func (h *IndexHandler) Handle(ctx context.Context, args []string) tea.Cmd {
 	ctx = observability.WithComponent(ctx, "index.command_handler")
 	ctx = observability.WithOperation(ctx, "Handle")
-	
+
 	if len(args) == 0 {
 		return h.handleStatus(ctx)
 	}
-	
+
 	subcommand := args[0]
 	switch subcommand {
 	case "rebuild":
@@ -1389,7 +1389,7 @@ func (h *IndexHandler) Usage() string {
 func (h *IndexHandler) handleRebuild(ctx context.Context) tea.Cmd {
 	return func() tea.Msg {
 		ctx = observability.WithOperation(ctx, "handleRebuild")
-		
+
 		// Get corpus configuration
 		cfg, err := corpus.GetConfigWithFallback(ctx)
 		if err != nil {
@@ -1398,9 +1398,9 @@ func (h *IndexHandler) handleRebuild(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		start := time.Now()
-		
+
 		// List all documents first to get the count
 		docs, err := corpus.List(ctx, cfg)
 		if err != nil {
@@ -1409,24 +1409,24 @@ func (h *IndexHandler) handleRebuild(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		if len(docs) == 0 {
 			return panes.StatusUpdateMsg{
 				Message: "No documents found to index",
 				Level:   "info",
 			}
 		}
-		
+
 		// For now, simulate index rebuilding since we don't have vector store
 		// In a full implementation, this would:
 		// 1. Clear existing search indexes
 		// 2. Re-process all documents
 		// 3. Rebuild vector embeddings
 		// 4. Update search metadata
-		
+
 		processedCount := 0
 		errorCount := 0
-		
+
 		// Validate and "reindex" each document
 		for _, docPath := range docs {
 			doc, err := corpus.Load(ctx, docPath)
@@ -1434,10 +1434,10 @@ func (h *IndexHandler) handleRebuild(ctx context.Context) tea.Cmd {
 				errorCount++
 				continue
 			}
-			
+
 			// Simulate processing time
 			time.Sleep(1 * time.Millisecond)
-			
+
 			// Validate document structure
 			if doc.Title != "" && doc.Body != "" {
 				processedCount++
@@ -1445,12 +1445,12 @@ func (h *IndexHandler) handleRebuild(ctx context.Context) tea.Cmd {
 				errorCount++
 			}
 		}
-		
+
 		elapsed := time.Since(start)
-		
+
 		var message string
 		var level string
-		
+
 		if errorCount == 0 {
 			message = fmt.Sprintf("✅ Index rebuilt successfully! Processed %d documents in %v", processedCount, elapsed)
 			level = "success"
@@ -1458,7 +1458,7 @@ func (h *IndexHandler) handleRebuild(ctx context.Context) tea.Cmd {
 			message = fmt.Sprintf("⚠️  Index rebuilt with issues: %d processed, %d errors in %v", processedCount, errorCount, elapsed)
 			level = "warning"
 		}
-		
+
 		return panes.StatusUpdateMsg{
 			Message: message,
 			Level:   level,
@@ -1500,7 +1500,7 @@ func (h *IndexHandler) handleStatus(ctx context.Context) tea.Cmd {
 func (h *IndexHandler) handleOptimize(ctx context.Context) tea.Cmd {
 	return func() tea.Msg {
 		ctx = observability.WithOperation(ctx, "handleOptimize")
-		
+
 		// Get corpus configuration
 		cfg, err := corpus.GetConfigWithFallback(ctx)
 		if err != nil {
@@ -1509,9 +1509,9 @@ func (h *IndexHandler) handleOptimize(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		start := time.Now()
-		
+
 		// List documents for optimization
 		docs, err := corpus.List(ctx, cfg)
 		if err != nil {
@@ -1520,14 +1520,14 @@ func (h *IndexHandler) handleOptimize(ctx context.Context) tea.Cmd {
 				Level:   "error",
 			}
 		}
-		
+
 		if len(docs) == 0 {
 			return panes.StatusUpdateMsg{
 				Message: "No documents found to optimize",
 				Level:   "info",
 			}
 		}
-		
+
 		// Simulate optimization processes
 		// In a full implementation, this would:
 		// 1. Analyze query patterns
@@ -1535,7 +1535,7 @@ func (h *IndexHandler) handleOptimize(ctx context.Context) tea.Cmd {
 		// 3. Clean up fragmented data
 		// 4. Pre-calculate common searches
 		// 5. Compress unused metadata
-		
+
 		optimizationTasks := []string{
 			"Analyzing document metadata...",
 			"Optimizing search patterns...",
@@ -1543,21 +1543,21 @@ func (h *IndexHandler) handleOptimize(ctx context.Context) tea.Cmd {
 			"Compacting index structure...",
 			"Updating search cache...",
 		}
-		
+
 		var optimizationResults []string
 		for _, task := range optimizationTasks {
 			// Simulate processing time
 			time.Sleep(2 * time.Millisecond)
 			optimizationResults = append(optimizationResults, fmt.Sprintf("✅ %s", task))
 		}
-		
+
 		elapsed := time.Since(start)
-		
+
 		// Calculate some optimization metrics
-		originalSize := len(docs) * 1024 // Simulated
+		originalSize := len(docs) * 1024                   // Simulated
 		optimizedSize := int(float64(originalSize) * 0.85) // 15% reduction
 		savedSpace := originalSize - optimizedSize
-		
+
 		message := fmt.Sprintf("🚀 Index optimization completed in %v\n\n", elapsed)
 		message += "**Optimization Results:**\n"
 		for _, result := range optimizationResults {
@@ -1567,7 +1567,7 @@ func (h *IndexHandler) handleOptimize(ctx context.Context) tea.Cmd {
 		message += fmt.Sprintf("- Space saved: %d bytes (%.1f%% reduction)\n", savedSpace, float64(savedSpace)/float64(originalSize)*100)
 		message += fmt.Sprintf("- Estimated search speed improvement: ~15%%\n")
 		message += fmt.Sprintf("- Documents processed: %d\n", len(docs))
-		
+
 		return panes.StatusUpdateMsg{
 			Message: message,
 			Level:   "success",

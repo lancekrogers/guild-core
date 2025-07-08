@@ -105,9 +105,9 @@ func (gc *GitClient) GetRecentCommits(ctx context.Context, limit int, since time
 	}
 
 	sinceArg := since.Format("2006-01-02")
-	cmd := exec.CommandContext(ctx, "git", "log", 
-		"--format=%H|%an|%at|%s", 
-		"--since="+sinceArg, 
+	cmd := exec.CommandContext(ctx, "git", "log",
+		"--format=%H|%an|%at|%s",
+		"--since="+sinceArg,
 		"-n", string(rune(limit)))
 	cmd.Dir = gc.repoPath
 
@@ -129,9 +129,9 @@ func (gc *GitClient) GetCommitsByAuthor(ctx context.Context, author string, limi
 		return nil, ctx.Err()
 	}
 
-	cmd := exec.CommandContext(ctx, "git", "log", 
-		"--format=%H|%an|%at|%s", 
-		"--author="+author, 
+	cmd := exec.CommandContext(ctx, "git", "log",
+		"--format=%H|%an|%at|%s",
+		"--author="+author,
 		"-n", string(rune(limit)))
 	cmd.Dir = gc.repoPath
 
@@ -398,16 +398,16 @@ func (gc *GitClient) parseCommitStats(output string) *CommitStats {
 			if len(parts) == 2 {
 				fileName := strings.TrimSpace(parts[0])
 				statPart := strings.TrimSpace(parts[1])
-				
+
 				// Count + and - characters
 				insertions := strings.Count(statPart, "+")
 				deletions := strings.Count(statPart, "-")
-				
+
 				stats.FileStats[fileName] = FileStats{
 					Insertions: insertions,
 					Deletions:  deletions,
 				}
-				
+
 				stats.FilesChanged++
 				stats.Insertions += insertions
 				stats.Deletions += deletions
@@ -420,10 +420,10 @@ func (gc *GitClient) parseCommitStats(output string) *CommitStats {
 
 // CommitStats represents statistics about a commit
 type CommitStats struct {
-	FilesChanged int                    `json:"files_changed"`
-	Insertions   int                    `json:"insertions"`
-	Deletions    int                    `json:"deletions"`
-	FileStats    map[string]FileStats   `json:"file_stats"`
+	FilesChanged int                  `json:"files_changed"`
+	Insertions   int                  `json:"insertions"`
+	Deletions    int                  `json:"deletions"`
+	FileStats    map[string]FileStats `json:"file_stats"`
 }
 
 // FileStats represents statistics for a single file

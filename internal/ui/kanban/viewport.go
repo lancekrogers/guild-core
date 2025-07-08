@@ -13,22 +13,22 @@ import (
 // Viewport manages the visible portion of the kanban board for performance optimization
 type Viewport struct {
 	// Display dimensions
-	Width      int
-	Height     int
-	
+	Width  int
+	Height int
+
 	// Scroll position
-	ScrollX    int
-	ScrollY    int
-	
+	ScrollX int
+	ScrollY int
+
 	// Card dimensions
-	CardHeight int
-	CardWidth  int
+	CardHeight  int
+	CardWidth   int
 	CardSpacing int
-	
+
 	// Column layout
 	ColumnCount   int
 	ColumnSpacing int
-	
+
 	// Performance settings
 	CullingEnabled bool
 	BufferRows     int // Extra rows to render outside viewport for smooth scrolling
@@ -37,8 +37,8 @@ type Viewport struct {
 // CardRenderInfo contains position and visibility data for a card
 type CardRenderInfo struct {
 	Card      *kanban.Task
-	X         int  // Screen X coordinate
-	Y         int  // Screen Y coordinate
+	X         int // Screen X coordinate
+	Y         int // Screen Y coordinate
 	Column    string
 	ColumnIdx int
 	CardIdx   int
@@ -48,10 +48,10 @@ type CardRenderInfo struct {
 
 // ColumnLayout contains position and dimension data for a column
 type ColumnLayout struct {
-	Index       int
-	X           int
-	Width       int
-	ScrollY     int
+	Index        int
+	X            int
+	Width        int
+	ScrollY      int
 	VisibleCards int
 	TotalCards   int
 	StartCard    int
@@ -70,15 +70,15 @@ type ViewportUpdate struct {
 // NewViewport creates a new viewport with default settings
 func NewViewport(width, height int) *Viewport {
 	return &Viewport{
-		Width:         width,
-		Height:        height,
-		CardHeight:    4, // 3 lines + 1 for spacing
-		CardWidth:     20,
-		CardSpacing:   2,
-		ColumnCount:   5,
-		ColumnSpacing: 1,
+		Width:          width,
+		Height:         height,
+		CardHeight:     4, // 3 lines + 1 for spacing
+		CardWidth:      20,
+		CardSpacing:    2,
+		ColumnCount:    5,
+		ColumnSpacing:  1,
 		CullingEnabled: true,
-		BufferRows:    2, // Render 2 extra rows above/below viewport
+		BufferRows:     2, // Render 2 extra rows above/below viewport
 	}
 }
 
@@ -94,7 +94,7 @@ func (v *Viewport) Resize(ctx context.Context, width, height int) error {
 
 	v.Width = width
 	v.Height = height
-	
+
 	// Recalculate column width based on new viewport width
 	availableWidth := v.Width - (v.ColumnCount-1)*v.ColumnSpacing
 	v.CardWidth = availableWidth / v.ColumnCount
@@ -110,7 +110,7 @@ func (v *Viewport) Scroll(ctx context.Context, deltaX, deltaY int) {
 	// Update scroll position with bounds checking
 	v.ScrollX += deltaX
 	v.ScrollY += deltaY
-	
+
 	// Clamp scroll position to valid bounds
 	if v.ScrollX < 0 {
 		v.ScrollX = 0
@@ -118,7 +118,7 @@ func (v *Viewport) Scroll(ctx context.Context, deltaX, deltaY int) {
 	if v.ScrollY < 0 {
 		v.ScrollY = 0
 	}
-	
+
 	// Note: Upper bounds checking would require knowledge of total content size
 	// This is handled by the calling code in the kanban model
 }
@@ -134,14 +134,14 @@ func (v *Viewport) CalculateColumnLayouts(ctx context.Context, columns []*Column
 	}
 
 	layouts := make([]ColumnLayout, v.ColumnCount)
-	
+
 	// Calculate header space (title, borders, etc.)
-	headerHeight := 6 // Board header + column headers + separators
+	headerHeight := 6                            // Board header + column headers + separators
 	contentHeight := v.Height - headerHeight - 2 // -2 for status bar and bottom border
 	if contentHeight < 1 {
 		contentHeight = 1
 	}
-	
+
 	visibleRows := contentHeight / v.CardHeight
 	if visibleRows < 1 {
 		visibleRows = 1
@@ -150,22 +150,22 @@ func (v *Viewport) CalculateColumnLayouts(ctx context.Context, columns []*Column
 	for i, col := range columns {
 		// Calculate column X position
 		colX := i * (v.CardWidth + v.ColumnSpacing)
-		
+
 		// Calculate visible card range for this column
 		firstVisibleCard := col.ScrollOffset
 		lastVisibleCard := firstVisibleCard + visibleRows
 		if lastVisibleCard > col.TotalTasks {
 			lastVisibleCard = col.TotalTasks
 		}
-		
+
 		// Add buffer rows if culling is enabled
 		bufferStart := firstVisibleCard
 		bufferEnd := lastVisibleCard
-		
+
 		if v.CullingEnabled && v.BufferRows > 0 {
 			bufferStart = firstVisibleCard - v.BufferRows
 			bufferEnd = lastVisibleCard + v.BufferRows
-			
+
 			// Clamp to valid range
 			if bufferStart < 0 {
 				bufferStart = 0
@@ -176,10 +176,10 @@ func (v *Viewport) CalculateColumnLayouts(ctx context.Context, columns []*Column
 		}
 
 		layouts[i] = ColumnLayout{
-			Index:       i,
-			X:           colX,
-			Width:       v.CardWidth,
-			ScrollY:     col.ScrollOffset * v.CardHeight,
+			Index:        i,
+			X:            colX,
+			Width:        v.CardWidth,
+			ScrollY:      col.ScrollOffset * v.CardHeight,
 			VisibleCards: visibleRows,
 			TotalCards:   col.TotalTasks,
 			StartCard:    bufferStart,
@@ -219,7 +219,7 @@ func (v *Viewport) VisibleCards(ctx context.Context, columns []*Column) ([]CardR
 
 	for i, col := range columns {
 		layout := layouts[i]
-		
+
 		// Skip columns that are completely outside the viewport
 		if layout.X+layout.Width < v.ScrollX || layout.X > v.ScrollX+v.Width {
 			continue
@@ -227,7 +227,7 @@ func (v *Viewport) VisibleCards(ctx context.Context, columns []*Column) ([]CardR
 
 		// Calculate screen X position for this column
 		screenX := layout.X - v.ScrollX
-		
+
 		// Process cards in the visible/buffer range
 		for cardIdx := layout.StartCard; cardIdx < layout.EndCard && cardIdx < len(col.Tasks); cardIdx++ {
 			card := col.Tasks[cardIdx]
@@ -301,11 +301,11 @@ func (v *Viewport) EstimateMemoryUsage(ctx context.Context, columns []*Column) (
 	}
 
 	// Rough estimation of memory per card
-	const avgCardSize = 500 // bytes (task data + rendered strings)
+	const avgCardSize = 500        // bytes (task data + rendered strings)
 	const avgRenderCacheSize = 200 // bytes per cached render
 
 	memoryUsage := int64(len(visibleCards)) * (avgCardSize + avgRenderCacheSize)
-	
+
 	// Add viewport overhead
 	const viewportOverhead = 1024 // bytes
 	memoryUsage += viewportOverhead
@@ -320,7 +320,7 @@ func (v *Viewport) GetScrollBounds(ctx context.Context, columns []*Column) (maxX
 	}
 
 	// Calculate maximum horizontal scroll
-	totalContentWidth := v.ColumnCount * v.CardWidth + (v.ColumnCount-1) * v.ColumnSpacing
+	totalContentWidth := v.ColumnCount*v.CardWidth + (v.ColumnCount-1)*v.ColumnSpacing
 	maxX = totalContentWidth - v.Width
 	if maxX < 0 {
 		maxX = 0
@@ -384,7 +384,7 @@ func (v *Viewport) IsCardVisible(ctx context.Context, columnIdx, cardIdx int, co
 
 	// Calculate column position
 	colX := columnIdx * (v.CardWidth + v.ColumnSpacing)
-	
+
 	// Check horizontal visibility
 	if colX+v.CardWidth < v.ScrollX || colX > v.ScrollX+v.Width {
 		return false, nil
@@ -393,7 +393,7 @@ func (v *Viewport) IsCardVisible(ctx context.Context, columnIdx, cardIdx int, co
 	// Check vertical visibility
 	cardY := cardIdx * v.CardHeight
 	screenY := cardY - (col.ScrollOffset * v.CardHeight)
-	
+
 	if screenY < 0 || screenY >= v.Height-v.CardHeight {
 		return false, nil
 	}
@@ -405,7 +405,7 @@ func (v *Viewport) IsCardVisible(ctx context.Context, columnIdx, cardIdx int, co
 func (v *Viewport) GetOptimalBufferSize(ctx context.Context, avgRenderTime float64) int {
 	// Adjust buffer size based on render performance
 	targetFrameTime := 16.67 // 60 FPS in milliseconds
-	
+
 	if avgRenderTime < targetFrameTime/2 {
 		return 4 // High performance, larger buffer for smoother scrolling
 	} else if avgRenderTime < targetFrameTime {
@@ -456,21 +456,21 @@ func (v *Viewport) GetViewportStats(ctx context.Context, columns []*Column) (map
 	}
 
 	return map[string]interface{}{
-		"viewport_width":    v.Width,
-		"viewport_height":   v.Height,
-		"scroll_x":          v.ScrollX,
-		"scroll_y":          v.ScrollY,
-		"max_scroll_x":      maxX,
-		"max_scroll_y":      maxY,
-		"card_width":        v.CardWidth,
-		"card_height":       v.CardHeight,
-		"buffer_rows":       v.BufferRows,
-		"culling_enabled":   v.CullingEnabled,
-		"total_cards":       totalCards,
-		"visible_cards":     visibleCount,
-		"buffer_cards":      bufferCount,
-		"rendered_cards":    len(visibleCards),
-		"memory_usage_mb":   float64(memUsage) / 1024 / 1024,
-		"culling_ratio":     float64(len(visibleCards)) / float64(totalCards),
+		"viewport_width":  v.Width,
+		"viewport_height": v.Height,
+		"scroll_x":        v.ScrollX,
+		"scroll_y":        v.ScrollY,
+		"max_scroll_x":    maxX,
+		"max_scroll_y":    maxY,
+		"card_width":      v.CardWidth,
+		"card_height":     v.CardHeight,
+		"buffer_rows":     v.BufferRows,
+		"culling_enabled": v.CullingEnabled,
+		"total_cards":     totalCards,
+		"visible_cards":   visibleCount,
+		"buffer_cards":    bufferCount,
+		"rendered_cards":  len(visibleCards),
+		"memory_usage_mb": float64(memUsage) / 1024 / 1024,
+		"culling_ratio":   float64(len(visibleCards)) / float64(totalCards),
 	}, nil
 }

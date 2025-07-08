@@ -11,10 +11,10 @@ import (
 
 func TestExtractReasoning(t *testing.T) {
 	tests := []struct {
-		name              string
-		input             string
-		expectedContent   string
-		expectedReasoning string
+		name               string
+		input              string
+		expectedContent    string
+		expectedReasoning  string
 		expectedConfidence float64
 	}{
 		{
@@ -26,8 +26,8 @@ I should suggest a framework.
 Confidence: 0.8
 </thinking>
 Here's how to implement a REST API...`,
-			expectedContent:   "Let me think about this.\n\nHere's how to implement a REST API...",
-			expectedReasoning: "The user wants a REST API.\nI should suggest a framework.\nConfidence: 0.8",
+			expectedContent:    "Let me think about this.\n\nHere's how to implement a REST API...",
+			expectedReasoning:  "The user wants a REST API.\nI should suggest a framework.\nConfidence: 0.8",
 			expectedConfidence: 0.8,
 		},
 		{
@@ -42,15 +42,15 @@ Second consideration.
 Confidence: 0.9
 </thinking>
 Final response.`,
-			expectedContent:   "Starting analysis.\n\nMiddle content.\n\nFinal response.",
-			expectedReasoning: "First consideration.\n\nSecond consideration.\nConfidence: 0.9",
+			expectedContent:    "Starting analysis.\n\nMiddle content.\n\nFinal response.",
+			expectedReasoning:  "First consideration.\n\nSecond consideration.\nConfidence: 0.9",
 			expectedConfidence: 0.9,
 		},
 		{
-			name: "no thinking blocks",
-			input: `This is a simple response without any thinking blocks.`,
-			expectedContent:   "This is a simple response without any thinking blocks.",
-			expectedReasoning: "",
+			name:               "no thinking blocks",
+			input:              `This is a simple response without any thinking blocks.`,
+			expectedContent:    "This is a simple response without any thinking blocks.",
+			expectedReasoning:  "",
 			expectedConfidence: 0.5,
 		},
 		{
@@ -60,15 +60,15 @@ Analyzing the request...
 This seems complex.
 </thinking>
 The answer is 42.`,
-			expectedContent:   "The answer is 42.",
-			expectedReasoning: "Analyzing the request...\nThis seems complex.",
+			expectedContent:    "The answer is 42.",
+			expectedReasoning:  "Analyzing the request...\nThis seems complex.",
 			expectedConfidence: 0.5,
 		},
 		{
-			name: "empty thinking block",
-			input: `<thinking></thinking>Response text.`,
-			expectedContent:   "Response text.",
-			expectedReasoning: "",
+			name:               "empty thinking block",
+			input:              `<thinking></thinking>Response text.`,
+			expectedContent:    "Response text.",
+			expectedReasoning:  "",
 			expectedConfidence: 0.5,
 		},
 	}

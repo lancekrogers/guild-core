@@ -20,7 +20,7 @@
 //
 //	// Create animator
 //	animator := NewAnimator()
-//	
+//
 //	// Animate component opacity
 //	err := animator.Animate(ctx, "fade-in", AnimationOptions{
 //		Duration: 300 * time.Millisecond,
@@ -28,7 +28,7 @@
 //		From:     map[string]interface{}{"opacity": 0.0},
 //		To:       map[string]interface{}{"opacity": 1.0},
 //	})
-//	
+//
 //	// Create timeline with multiple animations
 //	timeline := animator.CreateTimeline("ui-transition")
 //	timeline.AddAnimation("fade-out", 0, fadeOutOptions)
@@ -67,15 +67,15 @@ type Animator struct {
 
 // Animation represents a single animation configuration
 type Animation struct {
-	ID        string                 `json:"id"`
-	Name      string                 `json:"name"`
-	Duration  time.Duration          `json:"duration"`
-	Delay     time.Duration          `json:"delay"`
-	Easing    EasingFunction         `json:"easing"`
-	From      map[string]interface{} `json:"from"`
-	To        map[string]interface{} `json:"to"`
-	Loop      LoopConfig             `json:"loop"`
-	OnUpdate  UpdateCallback         `json:"-"`
+	ID         string                 `json:"id"`
+	Name       string                 `json:"name"`
+	Duration   time.Duration          `json:"duration"`
+	Delay      time.Duration          `json:"delay"`
+	Easing     EasingFunction         `json:"easing"`
+	From       map[string]interface{} `json:"from"`
+	To         map[string]interface{} `json:"to"`
+	Loop       LoopConfig             `json:"loop"`
+	OnUpdate   UpdateCallback         `json:"-"`
 	OnComplete CompletionCallback     `json:"-"`
 }
 
@@ -129,10 +129,10 @@ type TimelineOptions struct {
 
 // LoopConfig defines animation looping behavior
 type LoopConfig struct {
-	Enabled    bool `json:"enabled"`
-	Count      int  `json:"count"`      // -1 for infinite
-	Reverse    bool `json:"reverse"`    // Alternate direction
-	PingPong   bool `json:"ping_pong"`  // Forward then backward
+	Enabled  bool `json:"enabled"`
+	Count    int  `json:"count"`     // -1 for infinite
+	Reverse  bool `json:"reverse"`   // Alternate direction
+	PingPong bool `json:"ping_pong"` // Forward then backward
 }
 
 // AnimationState represents the current state of an animation
@@ -265,15 +265,15 @@ func (a *Animator) Stop(ctx context.Context) error {
 // Animate starts a new animation
 func (a *Animator) Animate(ctx context.Context, animationID string, options AnimationOptions) error {
 	animation := &Animation{
-		ID:        animationID,
-		Name:      animationID,
-		Duration:  options.Duration,
-		Delay:     options.Delay,
-		Easing:    options.Easing,
-		From:      options.From,
-		To:        options.To,
-		Loop:      options.Loop,
-		OnUpdate:  options.OnUpdate,
+		ID:         animationID,
+		Name:       animationID,
+		Duration:   options.Duration,
+		Delay:      options.Delay,
+		Easing:     options.Easing,
+		From:       options.From,
+		To:         options.To,
+		Loop:       options.Loop,
+		OnUpdate:   options.OnUpdate,
 		OnComplete: options.OnComplete,
 	}
 
@@ -334,15 +334,15 @@ func (a *Animator) CreateTimeline(timelineID string, options TimelineOptions) *T
 // AddAnimation adds an animation to a timeline
 func (t *Timeline) AddAnimation(animationID string, startOffset time.Duration, options AnimationOptions) {
 	animation := &Animation{
-		ID:        fmt.Sprintf("%s_%s", t.ID, animationID),
-		Name:      animationID,
-		Duration:  options.Duration,
-		Delay:     options.Delay,
-		Easing:    options.Easing,
-		From:      options.From,
-		To:        options.To,
-		Loop:      options.Loop,
-		OnUpdate:  options.OnUpdate,
+		ID:         fmt.Sprintf("%s_%s", t.ID, animationID),
+		Name:       animationID,
+		Duration:   options.Duration,
+		Delay:      options.Delay,
+		Easing:     options.Easing,
+		From:       options.From,
+		To:         options.To,
+		Loop:       options.Loop,
+		OnUpdate:   options.OnUpdate,
 		OnComplete: options.OnComplete,
 	}
 
@@ -379,7 +379,7 @@ func (a *Animator) PlayTimeline(ctx context.Context, timelineID string) error {
 
 	go a.executeTimeline(timelineCtx, timeline)
 
-	a.logger.Info("Timeline started", 
+	a.logger.Info("Timeline started",
 		zap.String("timeline", timelineID),
 		zap.Duration("duration", timeline.Duration))
 
@@ -403,7 +403,7 @@ func (a *Animator) playAnimation(ctx context.Context, animation *Animation) erro
 	a.activeAnimations[animation.ID] = activeAnim
 	a.mu.Unlock()
 
-	a.logger.Debug("Animation started", 
+	a.logger.Debug("Animation started",
 		zap.String("animation", animation.ID),
 		zap.Duration("duration", animation.Duration))
 
@@ -460,7 +460,7 @@ func (a *Animator) updateAnimations() {
 		// Call update callback
 		if anim.Animation.OnUpdate != nil {
 			if err := anim.Animation.OnUpdate(easedProgress, values); err != nil {
-				a.logger.Warn("Animation update callback failed", 
+				a.logger.Warn("Animation update callback failed",
 					zap.String("animation", id),
 					zap.Error(err))
 			}
@@ -470,11 +470,11 @@ func (a *Animator) updateAnimations() {
 	// Handle completed animations
 	for _, id := range completedAnimations {
 		anim := a.activeAnimations[id]
-		
+
 		// Call completion callback
 		if anim.Animation.OnComplete != nil {
 			if err := anim.Animation.OnComplete(anim.Animation); err != nil {
-				a.logger.Warn("Animation completion callback failed", 
+				a.logger.Warn("Animation completion callback failed",
 					zap.String("animation", id),
 					zap.Error(err))
 			}
@@ -500,11 +500,11 @@ func (a *Animator) executeTimeline(ctx context.Context, timeline *Timeline) {
 			return
 		default:
 			elapsed := time.Since(startTime)
-			
+
 			// Check for animations to start
 			for _, timelineAnim := range timeline.Animations {
-				if elapsed >= timelineAnim.StartTime && 
-				   elapsed < timelineAnim.EndTime {
+				if elapsed >= timelineAnim.StartTime &&
+					elapsed < timelineAnim.EndTime {
 					// Start animation if not already running
 					if _, exists := a.activeAnimations[timelineAnim.Animation.ID]; !exists {
 						a.playAnimation(ctx, timelineAnim.Animation)
@@ -566,7 +566,7 @@ func (a *Animator) applyEasing(progress float64, easing EasingFunction) float64 
 	case EaseOutBack:
 		c := 1.70158
 		p := progress - 1
-		return 1 + p*p*((c+1)*p + c)
+		return 1 + p*p*((c+1)*p+c)
 	case EaseInOutBack:
 		c := 1.70158 * 1.525
 		if progress < 0.5 {
@@ -574,7 +574,7 @@ func (a *Animator) applyEasing(progress float64, easing EasingFunction) float64 
 			return 0.5 * p * p * ((c+1)*p - c)
 		}
 		p := (progress-0.5)*2 - 1
-		return 0.5 * (1 + p*p*((c+1)*p + c))
+		return 0.5 * (1 + p*p*((c+1)*p+c))
 	case EaseInElastic:
 		if progress == 0 || progress == 1 {
 			return progress
@@ -721,12 +721,12 @@ func (r *DefaultAnimationRegistry) RegisterAnimation(name string, animation *Ani
 func (r *DefaultAnimationRegistry) GetAnimation(name string) (*Animation, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	anim, exists := r.animations[name]
 	if !exists {
 		return nil, fmt.Errorf("animation '%s' not found", name)
 	}
-	
+
 	// Return a copy to prevent modification
 	animCopy := *anim
 	return &animCopy, nil
@@ -735,7 +735,7 @@ func (r *DefaultAnimationRegistry) GetAnimation(name string) (*Animation, error)
 func (r *DefaultAnimationRegistry) ListAnimations() []string {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	names := make([]string, 0, len(r.animations))
 	for name := range r.animations {
 		names = append(names, name)

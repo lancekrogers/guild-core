@@ -200,7 +200,7 @@ func TestAgent2SLAValidation_ComprehensiveValidation(t *testing.T) {
 		// Test 3: Error recovery and resilience
 		recoveryResults := framework.ValidateCrossComponentRecoverySLA(ctx)
 		allResults = append(allResults, recoveryResults...)
-		
+
 		// Log recovery test results
 		for _, result := range recoveryResults {
 			t.Logf("Recovery test result: %s - passed: %v", result.RequirementName, result.Passed)
@@ -380,9 +380,9 @@ func (f *Agent2SLAValidationFramework) ValidateKanbanPersistenceSLA(ctx context.
 	recoveryStart := time.Now()
 	recoveryResults := f.kanbanTestFramework.ExecutePersistenceRecovery()
 	recoveryTime := time.Since(recoveryStart)
-	
+
 	// Log recovery results
-	f.t.Logf("Persistence recovery completed: success=%v, data_loss=%v", 
+	f.t.Logf("Persistence recovery completed: success=%v, data_loss=%v",
 		recoveryResults.Success, recoveryResults.DataLoss)
 
 	// Update metrics

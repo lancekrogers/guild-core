@@ -20,7 +20,7 @@ ExtractToolCalls:
 	if err != nil {
 		// Handle error
 	}
-	
+
 	for _, call := range calls {
 		fmt.Printf("Function: %s\n", call.Function.Name)
 		// Process the tool call
@@ -35,7 +35,7 @@ The parser automatically detects the format of tool calls in the response:
 		// No tool calls detected
 		return
 	}
-	
+
 	switch format {
 	case parser.ProviderFormatOpenAI:
 		// OpenAI JSON format detected
@@ -60,7 +60,7 @@ For better control over parsing operations, use context:
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	
+
 	calls, err := parser.ExtractWithContext(ctx, response)
 	if err != nil {
 		if errors.Is(err, context.DeadlineExceeded) {
@@ -74,17 +74,17 @@ The parser includes comprehensive observability features:
 
 	// Create an instrumented parser with metrics and tracing
 	parser := parser.InstrumentParser(baseParser)
-	
+
 	// Create a monitored parser with health checks and alerting
 	monitoredParser := parser.NewMonitoredParser(parser, "v1.0.0")
 	defer monitoredParser.Stop()
-	
+
 	// Check health
 	health := monitoredParser.GetHealth()
 	if health.Status != parser.HealthStatusHealthy {
 		// Handle degraded parser
 	}
-	
+
 	// Get active alerts
 	alerts := monitoredParser.GetAlerts()
 
@@ -94,19 +94,19 @@ To add support for a custom format, implement the FormatDetector and
 FormatParser interfaces:
 
 	type CustomDetector struct{}
-	
+
 	func (d *CustomDetector) Format() ProviderFormat {
 		return "custom"
 	}
-	
+
 	func (d *CustomDetector) CanParse(input []byte) bool {
 		// Quick check if this format might apply
 	}
-	
+
 	func (d *CustomDetector) Detect(ctx context.Context, input []byte) (DetectionResult, error) {
 		// Detailed detection with confidence scoring
 	}
-	
+
 	// Then register with the parser
 	parser := parser.NewResponseParser(
 		parser.WithCustomDetector(customDetector),
@@ -121,7 +121,7 @@ The parser uses gerror for rich error information:
 	if err != nil {
 		if gerr, ok := err.(*gerror.Error); ok {
 			fmt.Printf("Error: %s (code: %s)\n", gerr.Message(), gerr.Code())
-			fmt.Printf("Component: %s, Operation: %s\n", 
+			fmt.Printf("Component: %s, Operation: %s\n",
 				gerr.Component(), gerr.Operation())
 		}
 	}
@@ -132,7 +132,7 @@ All parser types are safe for concurrent use. A single parser instance
 can be shared across multiple goroutines:
 
 	parser := parser.NewResponseParser()
-	
+
 	var wg sync.WaitGroup
 	for i := 0; i < 10; i++ {
 		wg.Add(1)

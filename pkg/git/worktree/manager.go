@@ -19,11 +19,11 @@ import (
 
 // WorktreeManager manages git worktrees for multiple agents
 type WorktreeManager struct {
-	baseRepo     *git.Repository
-	worktrees    map[string]*Worktree
-	basePath     string
-	mu           sync.RWMutex
-	cleanupTimer *time.Timer
+	baseRepo      *git.Repository
+	worktrees     map[string]*Worktree
+	basePath      string
+	mu            sync.RWMutex
+	cleanupTimer  *time.Timer
 	cleanupPolicy CleanupPolicy
 }
 
@@ -100,10 +100,10 @@ func (wm *WorktreeManager) CreateWorktree(ctx context.Context, req CreateWorktre
 
 	// Generate unique branch name
 	branchName := fmt.Sprintf("agent/%s/%s", req.AgentID, req.TaskID)
-	
+
 	// Create worktree path
 	worktreePath := filepath.Join(wm.basePath, "worktrees", req.AgentID, req.TaskID)
-	
+
 	// Ensure base branch is up to date
 	if err := wm.fetchLatest(ctx, req.BaseBranch); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to fetch latest").
@@ -372,7 +372,7 @@ func (wm *WorktreeManager) RemoveWorktree(ctx context.Context, worktreeID string
 func (wm *WorktreeManager) GetWorktree(worktreeID string) *Worktree {
 	wm.mu.RLock()
 	defer wm.mu.RUnlock()
-	
+
 	return wm.worktrees[worktreeID]
 }
 
@@ -467,12 +467,12 @@ func (wm *WorktreeManager) executeGitCommand(ctx context.Context, args ...string
 
 	cmd := exec.CommandContext(ctx, "git", args...)
 	cmd.Dir = wm.getBaseRepoPath()
-	
+
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("git command failed: %s (output: %s)", err, string(output))
 	}
-	
+
 	return nil
 }
 
@@ -483,12 +483,12 @@ func (wm *WorktreeManager) executeInWorktree(ctx context.Context, wt *Worktree, 
 
 	cmd := exec.CommandContext(ctx, "git", args...)
 	cmd.Dir = wt.Path
-	
+
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("git command failed in worktree %s: %s (output: %s)", wt.ID, err, string(output))
 	}
-	
+
 	return nil
 }
 
@@ -534,55 +534,55 @@ func (wm *WorktreeManager) hasRebaseConflicts(ctx context.Context, wt *Worktree)
 	// Check if .git/rebase-merge or .git/rebase-apply exists
 	rebaseMergeDir := filepath.Join(wt.Path, ".git", "rebase-merge")
 	rebaseApplyDir := filepath.Join(wt.Path, ".git", "rebase-apply")
-	
+
 	if _, err := os.Stat(rebaseMergeDir); err == nil {
 		return true
 	}
 	if _, err := os.Stat(rebaseApplyDir); err == nil {
 		return true
 	}
-	
+
 	return false
 }
 
 func (wm *WorktreeManager) getConflictFiles(ctx context.Context, wt *Worktree) []string {
 	cmd := exec.CommandContext(ctx, "git", "diff", "--name-only", "--diff-filter=U")
 	cmd.Dir = wt.Path
-	
+
 	output, err := cmd.Output()
 	if err != nil {
 		return nil
 	}
-	
+
 	files := strings.Split(strings.TrimSpace(string(output)), "\n")
 	if len(files) == 1 && files[0] == "" {
 		return nil
 	}
-	
+
 	return files
 }
 
 func (wm *WorktreeManager) hasUncommittedChanges(ctx context.Context, wt *Worktree) (bool, error) {
 	cmd := exec.CommandContext(ctx, "git", "status", "--porcelain")
 	cmd.Dir = wt.Path
-	
+
 	output, err := cmd.Output()
 	if err != nil {
 		return false, err
 	}
-	
+
 	return len(strings.TrimSpace(string(output))) > 0, nil
 }
 
 func (wm *WorktreeManager) isBranchMerged(ctx context.Context, branch string) bool {
 	cmd := exec.CommandContext(ctx, "git", "branch", "--merged", "main")
 	cmd.Dir = wm.getBaseRepoPath()
-	
+
 	output, err := cmd.Output()
 	if err != nil {
 		return false
 	}
-	
+
 	return strings.Contains(string(output), branch)
 }
 
@@ -592,17 +592,17 @@ func (wm *WorktreeManager) archiveWorktree(ctx context.Context, wt *Worktree) er
 	if err := os.MkdirAll(archiveDir, 0755); err != nil {
 		return err
 	}
-	
+
 	// Create archive name with timestamp
 	archiveName := fmt.Sprintf("%s_%s_%d.tar.gz", wt.AgentID, wt.TaskID, time.Now().Unix())
 	archivePath := filepath.Join(archiveDir, archiveName)
-	
+
 	// Create tar archive
 	cmd := exec.CommandContext(ctx, "tar", "-czf", archivePath, "-C", filepath.Dir(wt.Path), filepath.Base(wt.Path))
 	if err := cmd.Run(); err != nil {
 		return err
 	}
-	
+
 	// Remove original worktree
 	return wm.executeGitCommand(ctx, "worktree", "remove", "--force", wt.Path)
 }
@@ -630,7 +630,7 @@ func (wm *WorktreeManager) startCleanupTimer(ctx context.Context) {
 	if wm.cleanupTimer != nil {
 		wm.cleanupTimer.Stop()
 	}
-	
+
 	wm.cleanupTimer = time.AfterFunc(30*time.Minute, func() {
 		wm.performCleanup(ctx)
 		wm.startCleanupTimer(ctx) // Restart timer
@@ -640,10 +640,10 @@ func (wm *WorktreeManager) startCleanupTimer(ctx context.Context) {
 func (wm *WorktreeManager) performCleanup(ctx context.Context) {
 	wm.mu.Lock()
 	defer wm.mu.Unlock()
-	
+
 	now := time.Now()
 	var toRemove []string
-	
+
 	for id, wt := range wm.worktrees {
 		// Check age
 		if now.Sub(wt.CreatedAt) > wm.cleanupPolicy.MaxAge {
@@ -652,7 +652,7 @@ func (wm *WorktreeManager) performCleanup(ctx context.Context) {
 			}
 		}
 	}
-	
+
 	// Remove old worktrees
 	for _, id := range toRemove {
 		if wt := wm.worktrees[id]; wt != nil {
@@ -667,7 +667,7 @@ func (wm *WorktreeManager) Shutdown(ctx context.Context) error {
 	if wm.cleanupTimer != nil {
 		wm.cleanupTimer.Stop()
 	}
-	
+
 	// Optionally cleanup all worktrees on shutdown
 	return nil
 }

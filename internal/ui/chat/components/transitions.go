@@ -555,41 +555,41 @@ type EasingFunc func(t float64) float64
 var (
 	// Linear - no easing, constant speed
 	EaseLinear = func(t float64) float64 { return t }
-	
+
 	// Quadratic easing functions
-	EaseInQuad = func(t float64) float64 { return t * t }
-	EaseOutQuad = func(t float64) float64 { return t * (2 - t) }
+	EaseInQuad    = func(t float64) float64 { return t * t }
+	EaseOutQuad   = func(t float64) float64 { return t * (2 - t) }
 	EaseInOutQuad = func(t float64) float64 {
 		if t < 0.5 {
 			return 2 * t * t
 		}
 		return -1 + (4-2*t)*t
 	}
-	
+
 	// Cubic easing functions
-	EaseInCubic = func(t float64) float64 { return t * t * t }
-	EaseOutCubic = func(t float64) float64 { return 1 + (t-1)*(t-1)*(t-1) }
+	EaseInCubic    = func(t float64) float64 { return t * t * t }
+	EaseOutCubic   = func(t float64) float64 { return 1 + (t-1)*(t-1)*(t-1) }
 	EaseInOutCubic = func(t float64) float64 {
 		if t < 0.5 {
 			return 4 * t * t * t
 		}
 		return 1 + (t-1)*(2*(t-2))*(2*(t-2))
 	}
-	
+
 	// Sine easing functions
-	EaseInSine = func(t float64) float64 { return 1 - math.Cos(t*math.Pi/2) }
-	EaseOutSine = func(t float64) float64 { return math.Sin(t * math.Pi / 2) }
+	EaseInSine    = func(t float64) float64 { return 1 - math.Cos(t*math.Pi/2) }
+	EaseOutSine   = func(t float64) float64 { return math.Sin(t * math.Pi / 2) }
 	EaseInOutSine = func(t float64) float64 { return 0.5 * (1 - math.Cos(math.Pi*t)) }
-	
+
 	// Elastic easing - spring effect
 	EaseOutElastic = func(t float64) float64 {
 		if t == 0 || t == 1 {
 			return t
 		}
 		p := 0.3
-		return math.Pow(2, -10*t) * math.Sin((t-p/4)*(2*math.Pi)/p) + 1
+		return math.Pow(2, -10*t)*math.Sin((t-p/4)*(2*math.Pi)/p) + 1
 	}
-	
+
 	// Bounce easing
 	EaseOutBounce = func(t float64) float64 {
 		if t < 1/2.75 {
@@ -604,7 +604,7 @@ var (
 		t -= 2.625 / 2.75
 		return 7.5625*t*t + 0.984375
 	}
-	
+
 	// Back easing - overshoot effect
 	EaseInBack = func(t float64) float64 {
 		s := 1.70158
@@ -651,7 +651,7 @@ func NewAnimationManager(ctx context.Context) *AnimationManager {
 // Start begins the animation loop at 60 FPS
 func (am *AnimationManager) Start() {
 	am.ticker = time.NewTicker(time.Second / time.Duration(am.fps))
-	
+
 	go func() {
 		for {
 			select {
@@ -686,11 +686,11 @@ func (am *AnimationManager) Animate(anim *Animation) {
 func (am *AnimationManager) update() {
 	now := time.Now()
 	completed := []string{}
-	
+
 	for id, anim := range am.animations {
 		elapsed := now.Sub(anim.StartTime)
 		progress := float64(elapsed) / float64(anim.Duration)
-		
+
 		if progress >= 1.0 {
 			// Animation complete
 			anim.Current = anim.EndValue
@@ -703,19 +703,19 @@ func (am *AnimationManager) update() {
 			completed = append(completed, id)
 			continue
 		}
-		
+
 		// Apply easing
 		easedProgress := anim.Easing(progress)
-		
+
 		// Interpolate value
 		anim.Current = anim.StartValue + (anim.EndValue-anim.StartValue)*easedProgress
-		
+
 		// Callback
 		if anim.OnUpdate != nil {
 			anim.OnUpdate(anim.Current)
 		}
 	}
-	
+
 	// Remove completed animations
 	for _, id := range completed {
 		delete(am.animations, id)

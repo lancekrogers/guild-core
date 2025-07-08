@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	
+
 	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
@@ -45,12 +45,12 @@ func (s *ChatService) executeAgentResponseWithTools(ctx context.Context, ag core
 
 	// Try to get the underlying registry for the executor
 	var toolExecutor parser.ToolExecutor
-	
+
 	// Check if this is a DefaultToolRegistry which has GetUnderlyingRegistry method
 	type underlyingRegistryGetter interface {
 		GetUnderlyingRegistry() *tools.ToolRegistry
 	}
-	
+
 	if getter, ok := toolRegistry.(underlyingRegistryGetter); ok {
 		toolExecutor = executor.NewToolExecutor(getter.GetUnderlyingRegistry())
 	} else {
@@ -68,7 +68,7 @@ func (s *ChatService) executeAgentResponseWithTools(ctx context.Context, ag core
 	providerTools := make([]interfaces.ToolDefinition, len(availableTools))
 	for i, tool := range availableTools {
 		providerTools[i] = interfaces.ToolDefinition{
-			Type:     tool.Type,
+			Type: tool.Type,
 			Function: interfaces.FunctionDefinition{
 				Name:        tool.Function.Name,
 				Description: tool.Function.Description,
@@ -100,22 +100,22 @@ func (s *ChatService) executeAgentResponseWithTools(ctx context.Context, ag core
 	for _, toolCall := range toolCalls {
 		// Create tool execution record
 		toolExecID := uuid.New().String()
-		
+
 		// Parse arguments into map[string]string
 		var params map[string]string
 		if err := json.Unmarshal([]byte(toolCall.Function.Arguments), &params); err != nil {
 			logger.WithError(err).Warn("Failed to parse tool arguments, using empty parameters")
 			params = make(map[string]string)
 		}
-		
+
 		toolExec := &pb.ToolExecution{
-			ToolId:      toolExecID,
-			SessionId:   session.ID,
-			AgentId:     ag.GetID(),
-			ToolName:    toolCall.Function.Name,
-			Parameters:  params,
-			Status:      pb.ToolExecution_AWAITING_APPROVAL,
-			StartedAt:   time.Now().Unix(),
+			ToolId:     toolExecID,
+			SessionId:  session.ID,
+			AgentId:    ag.GetID(),
+			ToolName:   toolCall.Function.Name,
+			Parameters: params,
+			Status:     pb.ToolExecution_AWAITING_APPROVAL,
+			StartedAt:  time.Now().Unix(),
 		}
 
 		// Store in session
@@ -129,7 +129,7 @@ func (s *ChatService) executeAgentResponseWithTools(ctx context.Context, ag core
 				ToolExecution: toolExec,
 			},
 		}
-		
+
 		if err := stream.Send(approvalReq); err != nil {
 			logger.WithError(err).Error("Failed to send tool approval request")
 			continue
@@ -149,11 +149,11 @@ func (s *ChatService) executeAgentResponseWithTools(ctx context.Context, ag core
 
 		// Execute the tool
 		logger.Info("Executing approved tool", "tool_name", toolCall.Function.Name)
-		
+
 		// Convert to parser format for executor
 		parserCall := parser.ToolCall{
-			ID:       toolCall.ID,
-			Type:     toolCall.Type,
+			ID:   toolCall.ID,
+			Type: toolCall.Type,
 			Function: parser.FunctionCall{
 				Name:      toolCall.Function.Name,
 				Arguments: toolCall.Function.Arguments,
@@ -163,14 +163,14 @@ func (s *ChatService) executeAgentResponseWithTools(ctx context.Context, ag core
 		result, err := toolExecutor.Execute(ctx, parserCall)
 		if err != nil {
 			logger.WithError(err).Error("Tool execution failed", "tool_name", toolCall.Function.Name)
-			
+
 			// Update tool execution status
 			session.toolsMu.Lock()
 			toolExec.Status = pb.ToolExecution_FAILED
 			toolExec.Error = err.Error()
 			toolExec.UpdatedAt = time.Now().Unix()
 			session.toolsMu.Unlock()
-			
+
 			continue
 		}
 
@@ -226,7 +226,7 @@ func (s *ChatService) waitForToolApproval(ctx context.Context, session *ChatSess
 				session.toolsMu.RUnlock()
 				return false, gerror.New(gerror.ErrCodeNotFound, "tool execution not found", nil)
 			}
-			
+
 			status := toolExec.Status
 			session.toolsMu.RUnlock()
 
