@@ -32,12 +32,12 @@ type analyticsCache struct {
 	mu           sync.RWMutex
 }
 
-// NewReasoningAnalyzer creates a new reasoning analyzer
-func NewReasoningAnalyzer(storage ReasoningStorage) (*DefaultReasoningAnalyzer, error) {
+// NewDefaultReasoningAnalyzer creates a new default reasoning analyzer
+func NewDefaultReasoningAnalyzer(storage ReasoningStorage) (*DefaultReasoningAnalyzer, error) {
 	if storage == nil {
 		return nil, gerror.New(gerror.ErrCodeValidation, "storage cannot be nil", nil).
 			WithComponent("reasoning_analyzer").
-			WithOperation("NewReasoningAnalyzer")
+			WithOperation("NewDefaultReasoningAnalyzer")
 	}
 
 	return &DefaultReasoningAnalyzer{

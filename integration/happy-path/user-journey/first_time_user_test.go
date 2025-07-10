@@ -17,14 +17,6 @@ import (
 	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
-// UserJourneyFramework provides comprehensive testing for complete user workflows
-type UserJourneyFramework struct {
-	t             *testing.T
-	cleanup       []func()
-	testWorkspace string
-	metrics       *JourneyMetrics
-}
-
 // UserJourney represents a complete user workflow to be tested
 type UserJourney struct {
 	Name            string

@@ -101,7 +101,7 @@ func (ast *AgentStatusTracker) GetActiveAgents() []*AgentStatus {
 
 	active := make([]*AgentStatus, 0)
 	for _, agent := range ast.agents {
-		if core.State != AgentIdle && core.State != AgentCompleted {
+		if agent.State != AgentIdle && agent.State != AgentCompleted {
 			active = append(active, agent)
 		}
 	}
@@ -157,11 +157,11 @@ func (sd *StatusDisplay) RenderCompactStatus() string {
 	lines = append(lines, "╭─ Active Agents ─╮")
 	for _, agent := range active {
 		// Use ID if Name is empty, otherwise use Name
-		displayName := core.Name
+		displayName := agent.Name
 		if displayName == "" {
-			displayName = core.ID
+			displayName = agent.ID
 		}
-		status := fmt.Sprintf("│ %s: %s │", displayName, core.CurrentTask)
+		status := fmt.Sprintf("│ %s: %s │", displayName, agent.CurrentTask)
 		lines = append(lines, status)
 	}
 	lines = append(lines, "╰─────────────────╯")

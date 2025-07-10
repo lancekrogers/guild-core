@@ -259,14 +259,6 @@ func TestBoardPersistenceUnderLoad(t *testing.T) {
 		"consistency", consistency)
 }
 
-// Storage metrics and helper types
-type StorageMetrics struct {
-	TotalSize         int64
-	IndexEfficiency   float64
-	CompressionRatio  float64
-	FragmentationRate float64
-}
-
 type PersistenceResult struct {
 	Operation string
 	Duration  time.Duration

@@ -11,6 +11,7 @@ import (
 	"github.com/lancekrogers/guild/pkg/tools"
 	"github.com/lancekrogers/guild/pkg/tools/executor"
 	"github.com/lancekrogers/guild/pkg/tools/parser"
+	"github.com/lancekrogers/guild/pkg/tools/parser/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -76,10 +77,10 @@ func TestSimpleToolExecution(t *testing.T) {
 		exec := executor.NewToolExecutor(registry)
 
 		// Execute tool
-		toolCall := parser.ToolCall{
+		toolCall := types.ToolCall{
 			ID:   "test_call",
 			Type: "function",
-			Function: parser.Function{
+			Function: types.FunctionCall{
 				Name:      "simple_test",
 				Arguments: json.RawMessage(`{"message": "test"}`),
 			},
@@ -100,6 +101,7 @@ func (t *simpleTestTool) Description() string { return "A simple test tool" }
 func (t *simpleTestTool) Category() string    { return "test" }
 func (t *simpleTestTool) Examples() []string  { return []string{`{"message": "hello"}`} }
 func (t *simpleTestTool) RequiresAuth() bool  { return false }
+func (t *simpleTestTool) HealthCheck() error  { return nil }
 
 func (t *simpleTestTool) Schema() map[string]interface{} {
 	return map[string]interface{}{

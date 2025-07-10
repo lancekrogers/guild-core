@@ -57,6 +57,9 @@ func (m *MockTool) Category() string {
 func (m *MockTool) RequiresAuth() bool {
 	return false
 }
+func (m *MockTool) HealthCheck() error {
+	return nil
+}
 
 func TestFullPipelineIntegration(t *testing.T) {
 	// Create registry with all components

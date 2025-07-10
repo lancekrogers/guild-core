@@ -47,7 +47,7 @@ func ExampleReasoningUsage() {
 	}
 
 	// 4. Create analytics analyzer
-	analyzer, err := NewReasoningAnalyzer(storage)
+	analyzer, err := NewDefaultReasoningAnalyzer(storage)
 	if err != nil {
 		log.Fatalf("Failed to create analyzer: %v", err)
 	}
@@ -282,7 +282,7 @@ func ExampleProductionSetup() {
 	// Create production components
 	extractor, _ := NewReasoningExtractor(productionConfig)
 	storage, _ := NewMemoryReasoningStorage(storageConfig) // Replace with SQLite/Postgres
-	analyzer, _ := NewReasoningAnalyzer(storage)
+	analyzer, _ := NewDefaultReasoningAnalyzer(storage)
 
 	// Set up monitoring
 	go monitorReasoningMetrics(ctx, extractor, storage, analyzer)

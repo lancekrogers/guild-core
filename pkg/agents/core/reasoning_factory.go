@@ -145,7 +145,7 @@ func NewReasoningSystem(ctx context.Context, config ReasoningSystemConfig) (*Rea
 	// Create analyzer if enabled
 	var analyzer ReasoningAnalyzer
 	if config.EnableAnalytics {
-		analyzer, err = NewReasoningAnalyzer(reasoningStorage)
+		analyzer, err = NewDefaultReasoningAnalyzer(reasoningStorage)
 		if err != nil {
 			// Don't fail system creation if analytics fails
 			logger.WithError(err).WarnContext(ctx, "Failed to create reasoning analyzer, analytics disabled")

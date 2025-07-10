@@ -320,5 +320,9 @@ func (m *mockTool) RequiresAuth() bool {
 	return false
 }
 
+func (m *mockTool) HealthCheck() error {
+	return nil
+}
+
 // Ensure mockTool implements tools.Tool
 var _ tools.Tool = (*mockTool)(nil)

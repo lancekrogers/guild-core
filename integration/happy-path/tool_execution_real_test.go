@@ -13,6 +13,7 @@ import (
 	"github.com/lancekrogers/guild/pkg/tools"
 	"github.com/lancekrogers/guild/pkg/tools/executor"
 	"github.com/lancekrogers/guild/pkg/tools/parser"
+	"github.com/lancekrogers/guild/pkg/tools/parser/types"
 	"github.com/lancekrogers/guild/tools/fs"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -44,10 +45,10 @@ func TestRealToolExecution(t *testing.T) {
 		exec := executor.NewToolExecutor(registry)
 
 		// Create tool call to read the file (use relative path)
-		toolCall := parser.ToolCall{
+		toolCall := types.ToolCall{
 			ID:   "read_file",
 			Type: "function",
-			Function: parser.Function{
+			Function: types.FunctionCall{
 				Name:      "file",
 				Arguments: json.RawMessage(`{"operation": "read", "path": "test.txt"}`),
 			},
@@ -92,10 +93,10 @@ func TestRealToolExecution(t *testing.T) {
 		exec := executor.NewToolExecutor(registry)
 
 		// Create tool call to glob files
-		toolCall := parser.ToolCall{
+		toolCall := types.ToolCall{
 			ID:   "glob_files",
 			Type: "function",
-			Function: parser.Function{
+			Function: types.FunctionCall{
 				Name:      "glob",
 				Arguments: json.RawMessage(`{"pattern": "*.go", "path": "` + tmpDir + `"}`),
 			},

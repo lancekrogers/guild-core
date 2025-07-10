@@ -355,11 +355,6 @@ func (cm *ContextManager) estimateTokens(text string) int {
 	return len(text) / 4
 }
 
-// generateMessageID generates a unique message ID
-func generateMessageID() string {
-	return time.Now().Format("20060102150405") + "-" + generateRandomString(6)
-}
-
 // generateRandomString generates a random string of specified length
 func generateRandomString(length int) string {
 	const charset = "abcdefghijklmnopqrstuvwxyz0123456789"

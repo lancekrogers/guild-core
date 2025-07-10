@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/lancekrogers/guild/integration/happy-path/providers"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -107,7 +108,7 @@ type TLSConfig struct {
 type NetworkConfig struct {
 	AuthenticationRequired bool
 	TLSConfig              TLSConfig
-	CircuitBreaker         CircuitBreakerConfig
+	CircuitBreaker         providers.CircuitBreakerConfig
 }
 
 // ChannelConfig defines communication channel configuration

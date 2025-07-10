@@ -53,13 +53,6 @@ func (f FailureType) String() string {
 	}
 }
 
-// CircuitBreakerConfig defines circuit breaker settings
-type CircuitBreakerConfig struct {
-	FailureThreshold int
-	RecoveryTimeout  time.Duration
-	HalfOpenRequests int
-}
-
 // FailurePattern defines how failures should be injected
 type FailurePattern struct {
 	Provider string

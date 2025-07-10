@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/memory/vector"
 )
 
 // RAGSearchResult represents a result from RAG system search

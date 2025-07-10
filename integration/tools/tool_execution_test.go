@@ -17,11 +17,14 @@ import (
 	"github.com/lancekrogers/guild/pkg/tools"
 	"github.com/lancekrogers/guild/pkg/tools/executor"
 	"github.com/lancekrogers/guild/pkg/tools/parser"
+	"github.com/lancekrogers/guild/pkg/tools/parser/types"
 )
 
 // MockTool implements a simple test tool
 type MockTool struct {
-	*tools.BaseTool
+	name         string
+	description  string
+	schema       map[string]interface{}
 	executeCalls []string
 }
 
@@ -38,16 +41,39 @@ func NewMockTool() *MockTool {
 	}
 
 	return &MockTool{
-		BaseTool: tools.NewBaseTool(
-			"test_tool",
-			"A mock tool for testing",
-			schema,
-			"testing",
-			false,
-			[]string{`{"message": "hello"}`},
-		),
+		name:         "test_tool",
+		description:  "A mock tool for testing",
+		schema:       schema,
 		executeCalls: []string{},
 	}
+}
+
+func (t *MockTool) Name() string {
+	return t.name
+}
+
+func (t *MockTool) Description() string {
+	return t.description
+}
+
+func (t *MockTool) Schema() map[string]interface{} {
+	return t.schema
+}
+
+func (t *MockTool) Examples() []string {
+	return []string{`{"message": "hello"}`}
+}
+
+func (t *MockTool) Category() string {
+	return "testing"
+}
+
+func (t *MockTool) RequiresAuth() bool {
+	return false
+}
+
+func (t *MockTool) HealthCheck() error {
+	return nil
 }
 
 func (t *MockTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
@@ -72,7 +98,7 @@ func TestToolExecutionFlow(t *testing.T) {
 	// Create tool registry and register mock tool
 	registry := tools.NewToolRegistry()
 	mockTool := NewMockTool()
-	err := registry.RegisterTool(mockTool)
+	err := registry.RegisterTool(mockTool.Name(), mockTool)
 	require.NoError(t, err)
 
 	// Create tool executor
@@ -84,10 +110,10 @@ func TestToolExecutionFlow(t *testing.T) {
 	assert.Equal(t, "test_tool", availableTools[0].Function.Name)
 
 	// Test executing a tool call
-	toolCall := parser.ToolCall{
+	toolCall := types.ToolCall{
 		ID:   "test_call_1",
 		Type: "function",
-		Function: parser.Function{
+		Function: types.FunctionCall{
 			Name:      "test_tool",
 			Arguments: json.RawMessage(`{"message": "Hello from test"}`),
 		},
@@ -229,36 +255,24 @@ func TestToolExecutorBatch(t *testing.T) {
 	registry := tools.NewToolRegistry()
 
 	tool1 := NewMockTool()
-	tool1.BaseTool = tools.NewBaseTool(
-		"tool1",
-		"First test tool",
-		nil,
-		"testing",
-		false,
-		nil,
-	)
+	tool1.name = "tool1"
+	tool1.description = "First test tool"
 
 	tool2 := NewMockTool()
-	tool2.BaseTool = tools.NewBaseTool(
-		"tool2",
-		"Second test tool",
-		nil,
-		"testing",
-		false,
-		nil,
-	)
+	tool2.name = "tool2"
+	tool2.description = "Second test tool"
 
-	registry.RegisterTool(tool1)
-	registry.RegisterTool(tool2)
+	registry.RegisterTool(tool1.Name(), tool1)
+	registry.RegisterTool(tool2.Name(), tool2)
 
 	toolExec := executor.NewToolExecutor(registry)
 
 	// Create multiple tool calls
-	calls := []parser.ToolCall{
+	calls := []types.ToolCall{
 		{
 			ID:   "call1",
 			Type: "function",
-			Function: parser.Function{
+			Function: types.FunctionCall{
 				Name:      "tool1",
 				Arguments: json.RawMessage(`{"message": "First"}`),
 			},
@@ -266,7 +280,7 @@ func TestToolExecutorBatch(t *testing.T) {
 		{
 			ID:   "call2",
 			Type: "function",
-			Function: parser.Function{
+			Function: types.FunctionCall{
 				Name:      "tool2",
 				Arguments: json.RawMessage(`{"message": "Second"}`),
 			},

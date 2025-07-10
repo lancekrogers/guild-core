@@ -560,6 +560,46 @@ func (r *testKanbanComponentRegistry) Storage() kanban.StorageRegistry {
 	return r.componentReg.Storage()
 }
 
+func (r *testKanbanComponentRegistry) Agents() registry.AgentRegistry {
+	return r.componentReg.Agents()
+}
+
+func (r *testKanbanComponentRegistry) Tools() registry.ToolRegistry {
+	return r.componentReg.Tools()
+}
+
+func (r *testKanbanComponentRegistry) Providers() registry.ProviderRegistry {
+	return r.componentReg.Providers()
+}
+
+func (r *testKanbanComponentRegistry) Memory() registry.MemoryRegistry {
+	return r.componentReg.Memory()
+}
+
+func (r *testKanbanComponentRegistry) Project() registry.ProjectRegistry {
+	return r.componentReg.Project()
+}
+
+func (r *testKanbanComponentRegistry) Prompts() *registry.PromptRegistry {
+	return r.componentReg.Prompts()
+}
+
+func (r *testKanbanComponentRegistry) GetPromptManager() (registry.LayeredPromptManager, error) {
+	return r.componentReg.GetPromptManager()
+}
+
+func (r *testKanbanComponentRegistry) Orchestrator() interface{} {
+	return r.componentReg.Orchestrator()
+}
+
+func (r *testKanbanComponentRegistry) Initialize(ctx context.Context, config interface{}) error {
+	return r.componentReg.Initialize(ctx, config)
+}
+
+func (r *testKanbanComponentRegistry) Shutdown(ctx context.Context) error {
+	return r.componentReg.Shutdown(ctx)
+}
+
 // containsIgnoreCase checks if a string contains a substring (case-insensitive)
 func containsIgnoreCase(s, substr string) bool {
 	return len(s) >= len(substr) &&

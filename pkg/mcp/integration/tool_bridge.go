@@ -523,6 +523,16 @@ func (a *MCPToGuildAdapter) RequiresAuth() bool {
 	return profile.FinancialCost > 0
 }
 
+// HealthCheck checks if the tool is healthy and functioning properly
+func (a *MCPToGuildAdapter) HealthCheck() error {
+	// If the MCP tool has a health check method, use it
+	if healthChecker, ok := a.mcpTool.(interface{ HealthCheck() error }); ok {
+		return healthChecker.HealthCheck()
+	}
+	// Otherwise, assume healthy
+	return nil
+}
+
 // Helper function to safely extract string values from interface maps
 func getStringValue(m map[string]interface{}, key string) string {
 	if val, ok := m[key].(string); ok {

@@ -388,7 +388,7 @@ func (env *guildTestEnvironment) verifyDaemonStatus(ctx context.Context) error {
 	}
 
 	if !strings.Contains(status, "running") {
-		return gerror.New(gerror.ErrCodeInvalidState, "daemon not running", nil).
+		return gerror.New(gerror.ErrCodeInternal, "daemon not running", nil).
 			WithComponent("daemon_test").
 			WithOperation("verifyDaemonStatus").
 			WithDetails("status", status)
@@ -589,9 +589,10 @@ func TestGuildSessionService(t *testing.T) {
 	sessionClient := pb.NewSessionServiceClient(conn)
 
 	// Create a session using SessionService
+	campaignId := "test-campaign"
 	session, err := sessionClient.CreateSession(ctx, &pb.CreateSessionRequest{
 		Name:       "session-service-test",
-		CampaignId: "test-campaign",
+		CampaignId: &campaignId,
 	})
 	if err != nil {
 		t.Fatal(gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create session via SessionService").
@@ -636,7 +637,7 @@ func TestGuildSessionService(t *testing.T) {
 
 	// List sessions
 	sessionsList, err := sessionClient.ListSessions(ctx, &pb.ListSessionsRequest{
-		CampaignId: "test-campaign",
+		CampaignId: &campaignId,
 	})
 	if err != nil {
 		t.Fatal(gerror.Wrap(err, gerror.ErrCodeInternal, "failed to list sessions").

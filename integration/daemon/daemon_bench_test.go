@@ -10,7 +10,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
@@ -251,6 +250,7 @@ func BenchmarkGuildConcurrentSessions(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
 
+	startTime := time.Now()
 	var wg sync.WaitGroup
 	var mu sync.Mutex
 	var allSessions []string
@@ -311,7 +311,7 @@ func BenchmarkGuildConcurrentSessions(b *testing.B) {
 		}
 	}
 
-	elapsed := time.Since(b.StartTime())
+	elapsed := time.Since(startTime)
 	if elapsed > 0 {
 		rate := float64(totalMessages) / elapsed.Seconds()
 		b.ReportMetric(rate, "messages/sec")
@@ -378,7 +378,7 @@ func BenchmarkGuildDaemonStartupTime(b *testing.B) {
 		}
 
 		if !daemon.IsReachable(ctx) {
-			b.Fatal(gerror.New(gerror.ErrCodeInvalidState, "daemon not reachable after startup", nil).
+			b.Fatal(gerror.New(gerror.ErrCodeInternal, "daemon not reachable after startup", nil).
 				WithComponent("daemon_bench").
 				WithOperation("BenchmarkGuildDaemonStartupTime").
 				WithDetails("iteration", i))
@@ -431,7 +431,8 @@ func endBenchmarkSession(ctx context.Context, client pb.ChatServiceClient, sessi
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to end chat session").
 			WithComponent("daemon_bench").
 			WithOperation("endBenchmarkSession").
-			WithDetails("session_id", sessionId, "reason", reason)
+			WithDetails("session_id", sessionId).
+			WithDetails("reason", reason)
 	}
 	return nil
 }
@@ -471,7 +472,8 @@ func publishBenchmarkMessages(ctx context.Context, client pb.ChatServiceClient, 
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to send benchmark message").
 				WithComponent("daemon_bench").
 				WithOperation("publishBenchmarkMessages").
-				WithDetails("message_index", i, "session_id", sessionId)
+				WithDetails("message_index", i).
+				WithDetails("session_id", sessionId)
 		}
 		messageChan <- i
 	}
@@ -485,7 +487,8 @@ func sendConcurrentSessionMessages(ctx context.Context, client pb.ChatServiceCli
 		return 0, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to create chat stream for concurrent session").
 			WithComponent("daemon_bench").
 			WithOperation("sendConcurrentSessionMessages").
-			WithDetails("session_id", sessionId, "session_index", sessionIndex)
+			WithDetails("session_id", sessionId).
+			WithDetails("session_index", sessionIndex)
 	}
 	defer stream.CloseSend()
 
@@ -496,7 +499,8 @@ func sendConcurrentSessionMessages(ctx context.Context, client pb.ChatServiceCli
 			return sentCount, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled while sending concurrent messages").
 				WithComponent("daemon_bench").
 				WithOperation("sendConcurrentSessionMessages").
-				WithDetails("session_index", sessionIndex, "message_index", j)
+				WithDetails("session_index", sessionIndex).
+				WithDetails("message_index", j)
 		}
 
 		err := stream.Send(&pb.ChatRequest{
@@ -515,7 +519,9 @@ func sendConcurrentSessionMessages(ctx context.Context, client pb.ChatServiceCli
 			return sentCount, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to send concurrent session message").
 				WithComponent("daemon_bench").
 				WithOperation("sendConcurrentSessionMessages").
-				WithDetails("session_index", sessionIndex, "message_index", j, "session_id", sessionId)
+				WithDetails("session_index", sessionIndex).
+				WithDetails("message_index", j).
+				WithDetails("session_id", sessionId)
 		}
 		sentCount++
 	}
@@ -561,7 +567,7 @@ func BenchmarkGuildRealEventStreaming(b *testing.B) {
 	eventClient := pb.NewEventServiceClient(conn)
 
 	// Start event stream
-	stream, err := eventClient.StreamEvents(ctx, &pb.StreamEventsRequest{
+	_, err = eventClient.StreamEvents(ctx, &pb.StreamEventsRequest{
 		EventTypes: []string{"task.*", "benchmark.*"},
 	})
 	if err != nil {
@@ -574,6 +580,7 @@ func BenchmarkGuildRealEventStreaming(b *testing.B) {
 
 	b.ResetTimer()
 	b.ReportAllocs()
+	startTime := time.Now()
 
 	// Start publisher goroutine
 	var wg sync.WaitGroup
@@ -623,7 +630,7 @@ func BenchmarkGuildRealEventStreaming(b *testing.B) {
 
 	wg.Wait()
 
-	elapsed := time.Since(b.StartTime())
+	elapsed := time.Since(startTime)
 	if elapsed > 0 {
 		rate := float64(received) / elapsed.Seconds()
 		b.ReportMetric(rate, "events/sec")

@@ -328,11 +328,11 @@ func TestDemoVisualStability(t *testing.T) {
 		statusContent := "# Multi-Agent Status Display\n\n"
 
 		for _, agent := range agentStatuses {
-			statusContent += fmt.Sprintf("## %s %s Agent\n\n", core.emoji, strings.Title(core.agent))
-			statusContent += fmt.Sprintf("**Status**: %s\n", core.status)
-			statusContent += fmt.Sprintf("**Current Task**: %s\n\n", core.task)
+			statusContent += fmt.Sprintf("## %s %s Agent\n\n", agent.emoji, strings.Title(agent.agent))
+			statusContent += fmt.Sprintf("**Status**: %s\n", agent.status)
+			statusContent += fmt.Sprintf("**Current Task**: %s\n\n", agent.task)
 			statusContent += fmt.Sprintf("```\n[%s] %s: %s\n```\n\n",
-				time.Now().Format("15:04:05"), core.agent, core.task)
+				time.Now().Format("15:04:05"), agent.agent, agent.task)
 		}
 
 		statusFile := filepath.Join(workDir, "multi-agent-status.md")
@@ -345,10 +345,10 @@ func TestDemoVisualStability(t *testing.T) {
 
 		contentStr := string(content)
 		for _, agent := range agentStatuses {
-			assert.Contains(t, contentStr, core.emoji)
-			assert.Contains(t, contentStr, core.agent)
-			assert.Contains(t, contentStr, core.status)
-			assert.Contains(t, contentStr, core.task)
+			assert.Contains(t, contentStr, agent.emoji)
+			assert.Contains(t, contentStr, agent.agent)
+			assert.Contains(t, contentStr, agent.status)
+			assert.Contains(t, contentStr, agent.task)
 		}
 	})
 }
