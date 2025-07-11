@@ -109,7 +109,7 @@ type PerformanceProfiler struct {
 // NewPerformanceProfiler creates a new comprehensive profiler with staff-level observability
 func NewPerformanceProfiler() *PerformanceProfiler {
 	// Initialize OpenTelemetry tracer for Guild integration
-	tracer := otel.Tracer("guild.performance.profiler")
+	tracer := otel.Tracer("guild.performance.profiler", nil)
 
 	// Initialize structured logger
 	logger, _ := zap.NewProduction()
@@ -270,7 +270,7 @@ func (pp *PerformanceProfiler) ProfileApplication(ctx context.Context, duration 
 	pp.mu.Lock()
 	if pp.active {
 		pp.mu.Unlock()
-		err := gerror.New(ErrCodeProfilingFailed, "profiling session already active", nil).
+		err := gerror.New(gerror.ErrCodeInternal, "profiling session already active", nil).
 			WithComponent("performance-profiler").
 			WithOperation("ProfileApplication").
 			WithDetails("profiler_id", profilerID).
@@ -298,7 +298,7 @@ func (pp *PerformanceProfiler) ProfileApplication(ctx context.Context, duration 
 	// Start CPU profiling with enhanced error context
 	cpuFile, err := pp.startCPUProfile()
 	if err != nil {
-		errorCtx := gerror.Wrap(err, ErrCodeProfilingFailed, "failed to start CPU profiling").
+		errorCtx := gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start CPU profiling").
 			WithComponent("performance-profiler").
 			WithOperation("ProfileApplication").
 			WithDetails("profiler_id", profilerID).
@@ -317,7 +317,7 @@ func (pp *PerformanceProfiler) ProfileApplication(ctx context.Context, duration 
 	// Start memory profiling with enhanced error context
 	memFile, err := pp.startMemProfile()
 	if err != nil {
-		errorCtx := gerror.Wrap(err, ErrCodeProfilingFailed, "failed to start memory profiling").
+		errorCtx := gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start memory profiling").
 			WithComponent("performance-profiler").
 			WithOperation("ProfileApplication").
 			WithDetails("profiler_id", profilerID).
@@ -336,7 +336,7 @@ func (pp *PerformanceProfiler) ProfileApplication(ctx context.Context, duration 
 	// Start execution trace with enhanced error context
 	traceFile, err := pp.startTrace()
 	if err != nil {
-		errorCtx := gerror.Wrap(err, ErrCodeProfilingFailed, "failed to start trace profiling").
+		errorCtx := gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start trace profiling").
 			WithComponent("performance-profiler").
 			WithOperation("ProfileApplication").
 			WithDetails("profiler_id", profilerID).
@@ -357,7 +357,7 @@ func (pp *PerformanceProfiler) ProfileApplication(ctx context.Context, duration 
 	case <-time.After(duration):
 		// Normal completion
 	case <-ctx.Done():
-		errorCtx := gerror.Wrap(ctx.Err(), ErrCodeProfilingFailed, "profiling cancelled").
+		errorCtx := gerror.Wrap(ctx.Err(), gerror.ErrCodeInternal, "profiling cancelled").
 			WithComponent("performance-profiler").
 			WithOperation("ProfileApplication").
 			WithDetails("profiler_id", profilerID).

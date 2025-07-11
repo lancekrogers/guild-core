@@ -1,0 +1,187 @@
+groups:
+  - name: guild_resources
+    interval: 30s
+    rules:
+      - alert: HighMemoryUsage
+        expr: |
+          (
+            guild_system_memory_usage{type="alloc"}
+            /
+            guild_system_memory_usage{type="sys"}
+          ) > 0.85
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+          resource: memory
+        annotations:
+          summary: "High memory usage ({{ $value | humanizePercentage }})"
+          description: "Memory usage is above 85% of system memory. Current usage: {{ $value | humanizePercentage }}"
+          dashboard: "https://grafana.guild.internal/d/guild-performance"
+
+      - alert: MemoryLeak
+        expr: |
+          rate(guild_system_memory_usage{type="alloc"}[30m]) > 10485760
+        for: 30m
+        labels:
+          severity: critical
+          team: platform
+          resource: memory
+        annotations:
+          summary: "Potential memory leak detected"
+          description: "Memory usage is growing at {{ $value | humanize1024 }}B/sec over the last 30 minutes"
+          runbook_url: "https://wiki.guild.internal/runbooks/memory-leak"
+
+      - alert: HighGoroutineCount
+        expr: |
+          guild_system_goroutines > 10000
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+          resource: goroutines
+        annotations:
+          summary: "High goroutine count ({{ $value }})"
+          description: "Goroutine count is above 10,000. Current count: {{ $value }}"
+
+      - alert: GoroutineLeak
+        expr: |
+          rate(guild_system_goroutines[30m]) > 10
+        for: 30m
+        labels:
+          severity: critical
+          team: platform
+          resource: goroutines
+        annotations:
+          summary: "Potential goroutine leak"
+          description: "Goroutines are growing at {{ $value | humanize }} per second over the last 30 minutes"
+          runbook_url: "https://wiki.guild.internal/runbooks/goroutine-leak"
+
+      - alert: HighGCPause
+        expr: |
+          guild_system_gc_pause > 100
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+          resource: gc
+        annotations:
+          summary: "High GC pause time ({{ $value }}ms)"
+          description: "GC pause times are above 100ms. Current pause: {{ $value }}ms"
+
+      - alert: FrequentGC
+        expr: |
+          rate(guild_system_gc_count[5m]) * 60 > 10
+        for: 10m
+        labels:
+          severity: warning
+          team: platform
+          resource: gc
+        annotations:
+          summary: "Frequent garbage collection ({{ $value | humanize }}/min)"
+          description: "GC is running more than 10 times per minute. Current rate: {{ $value | humanize }}/min"
+
+      - alert: HighCPUUsage
+        expr: |
+          guild_system_cpu_usage > 80
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+          resource: cpu
+        annotations:
+          summary: "High CPU usage ({{ $value }}%)"
+          description: "CPU usage is above 80%. Current usage: {{ $value }}%"
+
+      - alert: HighHeapUsage
+        expr: |
+          guild_system_heap_inuse > 1073741824
+        for: 10m
+        labels:
+          severity: warning
+          team: platform
+          resource: heap
+        annotations:
+          summary: "High heap usage ({{ $value | humanize1024 }}B)"
+          description: "Heap usage is above 1GB. Current usage: {{ $value | humanize1024 }}B"
+
+      - alert: HighConcurrentRequests
+        expr: |
+          sum(guild_request_active) > 1000
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+          resource: concurrency
+        annotations:
+          summary: "High concurrent request count ({{ $value }})"
+          description: "More than 1000 concurrent requests. Current count: {{ $value }}"
+
+      - alert: HighConcurrentAgentExecutions
+        expr: |
+          sum(guild_agent_executions_concurrent) > 100
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+          resource: agent_concurrency
+        annotations:
+          summary: "High concurrent agent executions ({{ $value }})"
+          description: "More than 100 concurrent agent executions. Current count: {{ $value }}"
+
+      - alert: CommissionQueueBacklog
+        expr: |
+          guild_commission_queue_depth > 50
+        for: 10m
+        labels:
+          severity: warning
+          team: platform
+          resource: queue
+        annotations:
+          summary: "Commission queue backlog ({{ $value }} items)"
+          description: "Commission queue has more than 50 items waiting. Current depth: {{ $value }}"
+
+      - alert: DatabaseConnectionPool
+        expr: |
+          (
+            guild_system_db_connections_active
+            /
+            guild_system_db_connections_max
+          ) > 0.9
+        for: 5m
+        labels:
+          severity: critical
+          team: platform
+          resource: database
+        annotations:
+          summary: "Database connection pool near exhaustion"
+          description: "Database connection pool is at {{ $value | humanizePercentage }} capacity"
+          runbook_url: "https://wiki.guild.internal/runbooks/db-connection-pool"
+
+      - alert: DiskSpaceWarning
+        expr: |
+          (
+            guild_system_disk_used_bytes
+            /
+            guild_system_disk_total_bytes
+          ) > 0.8
+        for: 10m
+        labels:
+          severity: warning
+          team: platform
+          resource: disk
+        annotations:
+          summary: "Low disk space ({{ $value | humanizePercentage }} used)"
+          description: "Disk usage is above 80%. Current usage: {{ $value | humanizePercentage }}"
+
+      - alert: TokenUsageSpike
+        expr: |
+          rate(guild_tokens_used[5m]) > rate(guild_tokens_used[1h]) * 5
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+          resource: tokens
+        annotations:
+          summary: "Token usage spike detected"
+          description: "Token usage has increased 5x compared to hourly average"

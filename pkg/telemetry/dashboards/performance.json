@@ -1,0 +1,182 @@
+{
+  "dashboard": {
+    "title": "Guild Performance Analysis",
+    "uid": "guild-performance",
+    "version": 1,
+    "timezone": "browser",
+    "panels": [
+      {
+        "title": "Latency Distribution",
+        "type": "heatmap",
+        "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "sum(increase(guild_request_duration_bucket[1m])) by (le)",
+            "format": "heatmap"
+          }
+        ],
+        "options": {
+          "calculate": false,
+          "yAxis": {"format": "s", "decimals": 1}
+        }
+      },
+      {
+        "title": "Latency Percentiles",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(guild_request_duration_bucket[5m])) by (le))",
+            "legendFormat": "P50"
+          },
+          {
+            "expr": "histogram_quantile(0.90, sum(rate(guild_request_duration_bucket[5m])) by (le))",
+            "legendFormat": "P90"
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(guild_request_duration_bucket[5m])) by (le))",
+            "legendFormat": "P95"
+          },
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(guild_request_duration_bucket[5m])) by (le))",
+            "legendFormat": "P99"
+          }
+        ],
+        "yaxes": [{"format": "s"}]
+      },
+      {
+        "title": "Resource Utilization",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 8, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "guild_system_cpu_usage",
+            "legendFormat": "CPU %"
+          },
+          {
+            "expr": "(guild_system_memory_usage{type=\"alloc\"} / guild_system_memory_usage{type=\"sys\"}) * 100",
+            "legendFormat": "Memory %"
+          }
+        ],
+        "yaxes": [{"format": "percent", "max": 100}]
+      },
+      {
+        "title": "Goroutine Analysis",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "guild_system_goroutines",
+            "legendFormat": "Active Goroutines"
+          },
+          {
+            "expr": "delta(guild_system_goroutines[5m])",
+            "legendFormat": "Goroutine Growth"
+          }
+        ]
+      },
+      {
+        "title": "Memory Breakdown",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 16, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "guild_system_heap_alloc / 1024 / 1024",
+            "legendFormat": "Heap Alloc (MB)"
+          },
+          {
+            "expr": "guild_system_heap_sys / 1024 / 1024",
+            "legendFormat": "Heap Sys (MB)"
+          },
+          {
+            "expr": "guild_system_heap_inuse / 1024 / 1024",
+            "legendFormat": "Heap In Use (MB)"
+          },
+          {
+            "expr": "guild_system_stack_inuse / 1024 / 1024",
+            "legendFormat": "Stack In Use (MB)"
+          }
+        ]
+      },
+      {
+        "title": "GC Performance",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 16, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "guild_system_gc_pause",
+            "legendFormat": "GC Pause (ms)"
+          },
+          {
+            "expr": "rate(guild_system_gc_count[5m]) * 60",
+            "legendFormat": "GC/min"
+          },
+          {
+            "expr": "guild_system_gc_last",
+            "legendFormat": "Time Since Last GC (s)"
+          }
+        ]
+      },
+      {
+        "title": "Commission Performance",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 24, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(guild_commission_execution_duration_bucket[5m])) by (commission_type, le))",
+            "legendFormat": "{{commission_type}}"
+          }
+        ],
+        "yaxes": [{"format": "s"}]
+      },
+      {
+        "title": "Chat Performance",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 24, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(guild_chat_response_duration_bucket[5m])) by (provider, le))",
+            "legendFormat": "{{provider}} - Response Time"
+          },
+          {
+            "expr": "avg(guild_chat_streaming_latency) by (session_id)",
+            "legendFormat": "Streaming Latency"
+          }
+        ],
+        "yaxes": [{"format": "s"}]
+      },
+      {
+        "title": "Top Slow Operations",
+        "type": "table",
+        "gridPos": {"x": 0, "y": 32, "w": 24, "h": 6},
+        "targets": [
+          {
+            "expr": "topk(10, histogram_quantile(0.99, sum(rate(guild_request_duration_bucket[5m])) by (operation, le)))",
+            "format": "table",
+            "instant": true
+          }
+        ],
+        "options": {
+          "showHeader": true
+        },
+        "fieldConfig": {
+          "overrides": [
+            {
+              "matcher": {"id": "byName", "options": "Value"},
+              "properties": [
+                {"id": "displayName", "value": "P99 Latency"},
+                {"id": "unit", "value": "s"},
+                {"id": "decimals", "value": 3}
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "refresh": "10s",
+    "time": {"from": "now-1h", "to": "now"},
+    "timepicker": {
+      "refresh_intervals": ["5s", "10s", "30s", "1m", "5m"]
+    }
+  }
+}

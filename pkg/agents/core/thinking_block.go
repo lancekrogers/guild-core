@@ -27,6 +27,7 @@ const (
 	ThinkingTypeToolSelection  ThinkingType = "tool_selection"
 	ThinkingTypeHypothesis     ThinkingType = "hypothesis"
 	ThinkingTypeVerification   ThinkingType = "verification"
+	ThinkingTypeOptimization   ThinkingType = "optimization"
 )
 
 // DecisionPoint represents a point where the agent made a choice
@@ -168,6 +169,7 @@ func NewThinkingBlockParser() *ThinkingBlockParser {
 			ThinkingTypeToolSelection:  regexp.MustCompile(`(?s)<thinking[^>]*>.*?(?:tool|function|api|call).*?</thinking>`),
 			ThinkingTypeHypothesis:     regexp.MustCompile(`(?s)<thinking[^>]*>.*?(?:hypothes|theory|assume|predict).*?</thinking>`),
 			ThinkingTypeVerification:   regexp.MustCompile(`(?s)<thinking[^>]*>.*?(?:verif|check|confirm|validat).*?</thinking>`),
+			ThinkingTypeOptimization:   regexp.MustCompile(`(?s)<thinking[^>]*>.*?(?:optim|improv|enhanc|refin|streamlin|performanc).*?</thinking>`),
 		},
 		typeDetector:       NewThinkingTypeDetector(),
 		structureExtractor: NewStructureExtractor(),
@@ -443,6 +445,7 @@ func NewThinkingTypeDetector() *ThinkingTypeDetector {
 			ThinkingTypeToolSelection:  {"tool", "function", "api", "call", "invoke", "execute"},
 			ThinkingTypeHypothesis:     {"hypothesis", "theory", "assume", "predict", "suppose", "expect"},
 			ThinkingTypeVerification:   {"verify", "check", "confirm", "validate", "ensure", "test"},
+			ThinkingTypeOptimization:   {"optimize", "improve", "enhance", "refine", "streamline", "performance"},
 		},
 	}
 }

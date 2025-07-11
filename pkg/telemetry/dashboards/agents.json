@@ -1,0 +1,166 @@
+{
+  "dashboard": {
+    "title": "Guild Agent Performance",
+    "uid": "guild-agents",
+    "version": 1,
+    "timezone": "browser",
+    "panels": [
+      {
+        "title": "Agent Invocations",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 0, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "sum(rate(guild_agents_invocations[5m])) * 60"
+          }
+        ],
+        "options": {
+          "unit": "short",
+          "stat": "current"
+        }
+      },
+      {
+        "title": "Task Success Rate",
+        "type": "stat",
+        "gridPos": {"x": 6, "y": 0, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "sum(rate(guild_agent_tasks_completed[5m])) / (sum(rate(guild_agent_tasks_completed[5m])) + sum(rate(guild_agent_tasks_failed[5m]))) * 100"
+          }
+        ],
+        "options": {
+          "unit": "percent",
+          "thresholds": {
+            "steps": [
+              {"value": 0, "color": "red"},
+              {"value": 90, "color": "yellow"},
+              {"value": 95, "color": "green"}
+            ]
+          }
+        }
+      },
+      {
+        "title": "Concurrent Executions",
+        "type": "stat",
+        "gridPos": {"x": 12, "y": 0, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "sum(guild_agent_executions_concurrent)"
+          }
+        ]
+      },
+      {
+        "title": "Average Execution Time",
+        "type": "stat",
+        "gridPos": {"x": 18, "y": 0, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "avg(rate(guild_agent_execution_duration_sum[5m]) / rate(guild_agent_execution_duration_count[5m]))"
+          }
+        ],
+        "options": {
+          "unit": "s"
+        }
+      },
+      {
+        "title": "Agent Execution Time by Agent",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 4, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(guild_agent_execution_duration_bucket[5m])) by (agent_name, le))",
+            "legendFormat": "{{agent_name}} - P95"
+          },
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(guild_agent_execution_duration_bucket[5m])) by (agent_name, le))",
+            "legendFormat": "{{agent_name}} - P50"
+          }
+        ],
+        "yaxes": [{"format": "s"}]
+      },
+      {
+        "title": "Task Completion by Type",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 4, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "sum by (task_type) (rate(guild_agent_tasks_completed[5m]))",
+            "legendFormat": "{{task_type}} - Success"
+          },
+          {
+            "expr": "sum by (task_type) (rate(guild_agent_tasks_failed[5m]))",
+            "legendFormat": "{{task_type}} - Failed"
+          }
+        ]
+      },
+      {
+        "title": "Tool Invocations by Agent",
+        "type": "heatmap",
+        "gridPos": {"x": 0, "y": 12, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "sum by (agent_name, tool_name) (rate(guild_agent_tools_invocations[5m]))"
+          }
+        ],
+        "options": {
+          "calculate": true,
+          "calculation": {"xBuckets": {"mode": "size", "value": "1h"}}
+        }
+      },
+      {
+        "title": "Memory Retrieval Performance",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 12, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(guild_agent_memory_retrieval_duration_bucket[5m])) by (retrieval_type, le))",
+            "legendFormat": "{{retrieval_type}} - P95"
+          }
+        ],
+        "yaxes": [{"format": "s"}]
+      },
+      {
+        "title": "Context Switches",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 20, "w": 12, "h": 6},
+        "targets": [
+          {
+            "expr": "sum by (agent_name) (rate(guild_agent_context_switches[5m]))",
+            "legendFormat": "{{agent_name}}"
+          }
+        ]
+      },
+      {
+        "title": "Agent Resource Usage",
+        "type": "table",
+        "gridPos": {"x": 12, "y": 20, "w": 12, "h": 6},
+        "targets": [
+          {
+            "expr": "topk(10, sum by (agent_name) (rate(guild_agent_execution_duration_sum[5m])))",
+            "format": "table",
+            "instant": true
+          }
+        ],
+        "options": {
+          "showHeader": true
+        },
+        "fieldConfig": {
+          "overrides": [
+            {
+              "matcher": {"id": "byName", "options": "Value"},
+              "properties": [
+                {"id": "displayName", "value": "CPU Time (s/min)"},
+                {"id": "unit", "value": "s"}
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "refresh": "10s",
+    "time": {"from": "now-1h", "to": "now"},
+    "timepicker": {
+      "refresh_intervals": ["5s", "10s", "30s", "1m", "5m"]
+    }
+  }
+}

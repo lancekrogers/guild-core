@@ -16,7 +16,6 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
 	"github.com/muesli/reflow/wordwrap"
 )
 
@@ -239,16 +238,21 @@ func (rd *ReasoningDisplay) StartStreaming(ctx context.Context, streamer *core.R
 	defer rd.mu.Unlock()
 	
 	if rd.streaming {
-		return gerror.New(gerror.ErrCodeInvalidState, "already streaming", nil).
+		return gerror.New(gerror.ErrCodeConflict, "already streaming", nil).
 			WithComponent("reasoning_display")
 	}
 	
 	rd.streamer = streamer
-	rd.eventChan = streamer.GetEventChannel()
+	rd.eventChan = streamer.EventChannel()
 	rd.streaming = true
 	rd.interrupted = false
 	rd.startTime = time.Now()
 	
+	return nil
+}
+
+// Init implements tea.Model
+func (rd *ReasoningDisplay) Init() tea.Cmd {
 	return nil
 }
 
@@ -522,11 +526,11 @@ func (rd *ReasoningDisplay) renderDecisionPoints(points []core.DecisionPoint) st
 	var builder strings.Builder
 	
 	for _, dp := range points {
-		builder.WriteString(rd.styles.DecisionPoint.Render(fmt.Sprintf("→ %s", dp.Question)))
+		builder.WriteString(rd.styles.DecisionPoint.Render(fmt.Sprintf("→ %s", dp.Decision)))
 		builder.WriteString("\n")
 		
 		// Selected option
-		builder.WriteString(rd.styles.SelectedOption.Render(fmt.Sprintf("  ✓ %s", dp.SelectedOption)))
+		builder.WriteString(rd.styles.SelectedOption.Render(fmt.Sprintf("  ✓ %s", dp.Decision)))
 		if dp.Rationale != "" {
 			builder.WriteString(lipgloss.NewStyle().Foreground(lipgloss.Color("#718096")).Render(fmt.Sprintf(" - %s", dp.Rationale)))
 		}
@@ -535,7 +539,7 @@ func (rd *ReasoningDisplay) renderDecisionPoints(points []core.DecisionPoint) st
 		// Alternatives (if showing details)
 		if rd.showDetails && len(dp.Alternatives) > 0 {
 			for _, alt := range dp.Alternatives {
-				builder.WriteString(rd.styles.AlternativeOption.Render(fmt.Sprintf("    • %s", alt)))
+				builder.WriteString(rd.styles.AlternativeOption.Render(fmt.Sprintf("    • %s", alt.Option)))
 				builder.WriteString("\n")
 			}
 		}
@@ -558,8 +562,8 @@ func (rd *ReasoningDisplay) renderToolContext(tc *core.ToolContext) string {
 		if tc.ExpectedOutcome != "" {
 			parts = append(parts, fmt.Sprintf("Expected: %s", tc.ExpectedOutcome))
 		}
-		if tc.ActualOutcome != "" {
-			parts = append(parts, fmt.Sprintf("Actual: %s", tc.ActualOutcome))
+		if tc.ActualOutcome != nil && *tc.ActualOutcome != "" {
+			parts = append(parts, fmt.Sprintf("Actual: %s", *tc.ActualOutcome))
 		}
 	}
 	
@@ -584,8 +588,8 @@ func (rd *ReasoningDisplay) renderErrorContext(ec *core.ErrorAnalysis) string {
 		builder.WriteString(fmt.Sprintf("  Description: %s\n", ec.Description))
 	}
 	
-	if ec.RecoveryStrategy != "" {
-		builder.WriteString(fmt.Sprintf("  Strategy: %s\n", ec.RecoveryStrategy))
+	if ec.Recovery != "" {
+		builder.WriteString(fmt.Sprintf("  Strategy: %s\n", ec.Recovery))
 	}
 	
 	if rd.showDetails && ec.RootCause != "" {
@@ -606,12 +610,12 @@ func (rd *ReasoningDisplay) renderInsights(insights []core.Insight) string {
 		icon := rd.getInsightIcon(insight.Type)
 		builder.WriteString(fmt.Sprintf("%s %s\n", icon, insight.Description))
 		
-		if rd.showDetails && insight.Evidence != "" {
-			builder.WriteString(rd.styles.InsightContent.Render(fmt.Sprintf("  Evidence: %s\n", insight.Evidence)))
+		if rd.showDetails && insight.Source != "" {
+			builder.WriteString(rd.styles.InsightContent.Render(fmt.Sprintf("  Source: %s\n", insight.Source)))
 		}
 		
-		if insight.Recommendation != "" {
-			builder.WriteString(rd.styles.InsightContent.Render(fmt.Sprintf("  → %s\n", insight.Recommendation)))
+		if insight.Actionable && len(insight.Actions) > 0 {
+			builder.WriteString(rd.styles.InsightContent.Render(fmt.Sprintf("  → %s\n", insight.Actions[0])))
 		}
 	}
 	
@@ -662,35 +666,39 @@ func (rd *ReasoningDisplay) handleStreamEvent(event core.StreamEvent) {
 	defer rd.mu.Unlock()
 	
 	switch event.Type {
-	case core.EventBlockStart:
+	case core.StreamEventThinkingStart:
 		if block, ok := event.Data.(*core.ThinkingBlock); ok {
 			rd.blocks = append(rd.blocks, block)
 		}
 		
-	case core.EventBlockUpdate:
-		if update, ok := event.Data.(core.BlockUpdate); ok {
-			rd.updateBlock(update.BlockID, update.Content)
+	case core.StreamEventThinkingUpdate:
+		if update, ok := event.Data.(map[string]interface{}); ok {
+			if blockID, ok := update["block_id"].(string); ok {
+				if content, ok := update["content"].(string); ok {
+					rd.updateBlock(blockID, content)
+				}
+			}
 		}
 		
-	case core.EventBlockComplete:
+	case core.StreamEventThinkingComplete:
 		if block, ok := event.Data.(*core.ThinkingBlock); ok {
 			rd.replaceBlock(block)
 			rd.tokenCount += block.TokenCount
 		}
 		
-	case core.EventChainComplete:
+	case core.StreamEventContentChunk:
 		if chain, ok := event.Data.(*core.ReasoningChainEnhanced); ok {
 			rd.chain = chain
 			rd.streaming = false
 			rd.endTime = time.Now()
 		}
 		
-	case core.EventError:
+	case core.StreamEventError:
 		if err, ok := event.Data.(error); ok {
 			rd.handleError(err)
 		}
 		
-	case core.EventInterrupted:
+	case core.StreamEventInterrupted:
 		rd.interrupted = true
 		rd.streaming = false
 		rd.endTime = time.Now()
@@ -720,11 +728,7 @@ func (rd *ReasoningDisplay) replaceBlock(updated *core.ThinkingBlock) {
 // handleInterruption handles user interruption
 func (rd *ReasoningDisplay) handleInterruption() {
 	if rd.streamer != nil {
-		ctx := context.Background()
-		if err := rd.streamer.Interrupt(ctx); err != nil {
-			logger := observability.GetLogger(ctx)
-			logger.ErrorContext(ctx, "Failed to interrupt reasoning", "error", err)
-		}
+		rd.streamer.Interrupt()
 	}
 }
 
@@ -830,9 +834,9 @@ func (rd *ReasoningDisplay) getInsightIcon(t core.InsightType) string {
 	icons := map[core.InsightType]string{
 		core.InsightTypePattern:      "🔄",
 		core.InsightTypeOptimization: "⚡",
-		core.InsightTypeWarning:      "⚠️",
-		core.InsightTypeDiscovery:    "🎯",
-		core.InsightTypeSuggestion:   "💡",
+		core.InsightTypeAnomaly:      "⚠️",
+		core.InsightTypeRisk:         "🚨",
+		core.InsightTypeOpportunity:  "💡",
 	}
 	
 	if icon, ok := icons[t]; ok {
@@ -869,7 +873,8 @@ func (rd *ReasoningDisplay) getCurrentBlock() *core.ThinkingBlock {
 	
 	// Return the last block being actively updated
 	for i := len(rd.blocks) - 1; i >= 0; i-- {
-		if rd.blocks[i].EndTime.IsZero() {
+		// Check if block is still being updated by looking at duration
+		if rd.blocks[i].Duration == 0 {
 			return rd.blocks[i]
 		}
 	}
