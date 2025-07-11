@@ -19,6 +19,7 @@ type Embedding struct {
 	// Text is the original text content
 	Text string
 
+
 	// Vector is the embedding vector
 	Vector []float32
 
@@ -60,6 +61,12 @@ type VectorStore interface {
 
 	// QueryEmbeddings performs a similarity search
 	QueryEmbeddings(ctx context.Context, query string, limit int) ([]EmbeddingMatch, error)
+
+	// QueryCollection performs a similarity search on a specific collection
+	QueryCollection(ctx context.Context, collectionName, query string, limit int) ([]EmbeddingMatch, error)
+
+	// DeleteEmbedding removes an embedding by ID
+	DeleteEmbedding(ctx context.Context, id string) error
 
 	// Close closes the vector store
 	Close() error

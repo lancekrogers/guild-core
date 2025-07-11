@@ -55,6 +55,7 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 	agentRepo := DefaultAgentRepositoryFactory(database)
 	promptChainRepo := DefaultPromptChainRepositoryFactory(database.DB())
 	sessionRepo := DefaultSessionRepositoryFactory(database)
+	preferencesRepo := DefaultPreferencesRepositoryFactory(database)
 
 	storageRegistry.RegisterTaskRepository(taskRepo)
 	storageRegistry.RegisterCampaignRepository(campaignRepo)
@@ -63,6 +64,7 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 	storageRegistry.RegisterAgentRepository(agentRepo)
 	storageRegistry.RegisterPromptChainRepository(promptChainRepo)
 	storageRegistry.RegisterSessionRepository(sessionRepo)
+	storageRegistry.RegisterPreferencesRepository(preferencesRepo)
 
 	// Create memory store adapter that implements memory.Store interface
 	memoryStoreAdapter := NewMemoryStoreAdapter(database)
@@ -111,6 +113,7 @@ func InitializeSQLiteStorageForTests(ctx context.Context) (StorageRegistry, inte
 	agentRepo := DefaultAgentRepositoryFactory(database)
 	promptChainRepo := DefaultPromptChainRepositoryFactory(database.DB())
 	sessionRepo := DefaultSessionRepositoryFactory(database)
+	preferencesRepo := DefaultPreferencesRepositoryFactory(database)
 
 	storageRegistry.RegisterTaskRepository(taskRepo)
 	storageRegistry.RegisterCampaignRepository(campaignRepo)
@@ -119,6 +122,7 @@ func InitializeSQLiteStorageForTests(ctx context.Context) (StorageRegistry, inte
 	storageRegistry.RegisterAgentRepository(agentRepo)
 	storageRegistry.RegisterPromptChainRepository(promptChainRepo)
 	storageRegistry.RegisterSessionRepository(sessionRepo)
+	storageRegistry.RegisterPreferencesRepository(preferencesRepo)
 
 	// Create memory store adapter that implements memory.Store interface
 	memoryStoreAdapter := NewMemoryStoreAdapter(database)
@@ -298,6 +302,47 @@ func createTestSchema(database *Database) error {
 	CREATE INDEX idx_session_bookmarks_session ON session_bookmarks(session_id);
 	CREATE INDEX idx_session_bookmarks_message ON session_bookmarks(message_id);
 	CREATE INDEX idx_session_bookmarks_created ON session_bookmarks(created_at);
+
+	-- Preferences table for hierarchical preference management
+	CREATE TABLE preferences (
+		id TEXT PRIMARY KEY,
+		scope TEXT NOT NULL CHECK (scope IN ('system', 'user', 'campaign', 'guild', 'agent')),
+		scope_id TEXT,
+		key TEXT NOT NULL,
+		value JSON NOT NULL,
+		version INTEGER DEFAULT 1,
+		metadata JSON,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		CONSTRAINT unique_preference UNIQUE(scope, scope_id, key)
+	);
+
+	-- Preference inheritance relationships
+	CREATE TABLE preference_inheritance (
+		id TEXT PRIMARY KEY,
+		child_scope TEXT NOT NULL,
+		child_scope_id TEXT,
+		parent_scope TEXT NOT NULL,
+		parent_scope_id TEXT,
+		priority INTEGER DEFAULT 0,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		CONSTRAINT unique_inheritance UNIQUE(child_scope, child_scope_id, parent_scope, parent_scope_id)
+	);
+
+	-- Indexes for preferences
+	CREATE INDEX idx_preferences_scope ON preferences(scope);
+	CREATE INDEX idx_preferences_scope_id ON preferences(scope_id);
+	CREATE INDEX idx_preferences_key ON preferences(key);
+	CREATE INDEX idx_preferences_updated_at ON preferences(updated_at);
+	CREATE INDEX idx_preference_inheritance_child ON preference_inheritance(child_scope, child_scope_id);
+	CREATE INDEX idx_preference_inheritance_parent ON preference_inheritance(parent_scope, parent_scope_id);
+
+	-- Trigger to update preferences.updated_at
+	CREATE TRIGGER update_preferences_timestamp
+	AFTER UPDATE ON preferences
+	BEGIN
+		UPDATE preferences SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+	END;
 
 	-- Trigger to update chat_sessions.updated_at on new messages
 	CREATE TRIGGER update_session_timestamp

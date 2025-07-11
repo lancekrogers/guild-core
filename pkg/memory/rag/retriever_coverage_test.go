@@ -5,6 +5,7 @@ package rag
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"testing"
 
@@ -63,6 +64,20 @@ func (m *simpleMockVectorStore) QueryEmbeddings(ctx context.Context, query strin
 		}
 	}
 	return results, nil
+}
+
+func (m *simpleMockVectorStore) QueryCollection(ctx context.Context, collectionName, query string, limit int) ([]vector.EmbeddingMatch, error) {
+	if m.shouldFail {
+		return nil, errors.New("mock query error")
+	}
+	return []vector.EmbeddingMatch{}, nil
+}
+
+func (m *simpleMockVectorStore) DeleteEmbedding(ctx context.Context, id string) error {
+	if m.shouldFail {
+		return errors.New("mock delete error")
+	}
+	return nil
 }
 
 func (m *simpleMockVectorStore) Close() error {
