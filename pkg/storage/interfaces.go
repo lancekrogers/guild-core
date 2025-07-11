@@ -47,6 +47,36 @@ type Commission struct {
 	CreatedAt   time.Time              `json:"created_at"`
 }
 
+// Preference represents a configuration preference at any scope level
+type Preference struct {
+	ID        string                 `json:"id"`
+	Scope     string                 `json:"scope"`    // "system", "user", "campaign", "guild", "agent"
+	ScopeID   *string                `json:"scope_id"` // NULL for system scope
+	Key       string                 `json:"key"`
+	Value     interface{}            `json:"value"` // Flexible JSON value
+	Version   int                    `json:"version"`
+	Metadata  map[string]interface{} `json:"metadata,omitempty"`
+	CreatedAt time.Time              `json:"created_at"`
+	UpdatedAt time.Time              `json:"updated_at"`
+}
+
+// PreferenceScope defines a scope for preference resolution
+type PreferenceScope struct {
+	Scope   string  // "system", "user", "campaign", "guild", "agent"
+	ScopeID *string // ID of the scoped entity (nil for system)
+}
+
+// PreferenceInheritance defines the inheritance relationship between scopes
+type PreferenceInheritance struct {
+	ID            string    `json:"id"`
+	ChildScope    string    `json:"child_scope"`
+	ChildScopeID  *string   `json:"child_scope_id"`
+	ParentScope   string    `json:"parent_scope"`
+	ParentScopeID *string   `json:"parent_scope_id"`
+	Priority      int       `json:"priority"` // Higher priority overrides lower
+	CreatedAt     time.Time `json:"created_at"`
+}
+
 type Board struct {
 	ID           string    `json:"id"`
 	CommissionID string    `json:"commission_id"`
@@ -212,6 +242,37 @@ type SessionRepository interface {
 	StreamMessages(ctx context.Context, sessionID string, since time.Time) (<-chan *ChatMessage, error)
 }
 
+// PreferencesRepository handles preference storage and retrieval with hierarchical resolution
+type PreferencesRepository interface {
+	// Basic CRUD operations
+	CreatePreference(ctx context.Context, pref *Preference) error
+	GetPreference(ctx context.Context, id string) (*Preference, error)
+	UpdatePreference(ctx context.Context, pref *Preference) error
+	DeletePreference(ctx context.Context, id string) error
+
+	// Scope-based queries
+	GetPreferenceByKey(ctx context.Context, scope string, scopeID *string, key string) (*Preference, error)
+	ListPreferencesByScope(ctx context.Context, scope string, scopeID *string) ([]*Preference, error)
+	ListPreferencesByKey(ctx context.Context, key string) ([]*Preference, error)
+
+	// Hierarchical resolution - resolves preference value through inheritance chain
+	ResolvePreference(ctx context.Context, key string, scopes []PreferenceScope) (*Preference, error)
+
+	// Bulk operations
+	GetPreferencesByKeys(ctx context.Context, scope string, scopeID *string, keys []string) ([]*Preference, error)
+	SetPreferences(ctx context.Context, scope string, scopeID *string, prefs map[string]interface{}) error
+	DeletePreferencesByScope(ctx context.Context, scope string, scopeID *string) error
+
+	// Inheritance management
+	CreateInheritance(ctx context.Context, inheritance *PreferenceInheritance) error
+	GetInheritanceChain(ctx context.Context, scope string, scopeID *string) ([]*PreferenceInheritance, error)
+	DeleteInheritance(ctx context.Context, id string) error
+
+	// Import/Export
+	ExportPreferences(ctx context.Context, scope string, scopeID *string) (map[string]interface{}, error)
+	ImportPreferences(ctx context.Context, scope string, scopeID *string, prefs map[string]interface{}) error
+}
+
 // StorageRegistry follows Guild's registry pattern
 type StorageRegistry interface {
 	RegisterTaskRepository(repo TaskRepository)
@@ -221,6 +282,7 @@ type StorageRegistry interface {
 	RegisterAgentRepository(repo AgentRepository)
 	RegisterPromptChainRepository(repo PromptChainRepository)
 	RegisterSessionRepository(repo SessionRepository)
+	RegisterPreferencesRepository(repo PreferencesRepository)
 	RegisterMemoryStore(store interface{})
 
 	GetTaskRepository() TaskRepository
@@ -230,5 +292,6 @@ type StorageRegistry interface {
 	GetAgentRepository() AgentRepository
 	GetPromptChainRepository() PromptChainRepository
 	GetSessionRepository() SessionRepository
+	GetPreferencesRepository() PreferencesRepository
 	GetMemoryStore() interface{}
 }

@@ -57,6 +57,16 @@ func (m *functionalMockVectorStore) QueryEmbeddings(ctx context.Context, query s
 	return results, nil
 }
 
+func (m *functionalMockVectorStore) QueryCollection(ctx context.Context, collectionName, query string, limit int) ([]vector.EmbeddingMatch, error) {
+	// Return empty results for mock
+	return []vector.EmbeddingMatch{}, nil
+}
+
+func (m *functionalMockVectorStore) DeleteEmbedding(ctx context.Context, id string) error {
+	// Mock implementation - just return nil
+	return nil
+}
+
 func (m *functionalMockVectorStore) Close() error {
 	return nil
 }
