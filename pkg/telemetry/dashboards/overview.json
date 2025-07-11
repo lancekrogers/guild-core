@@ -1,0 +1,165 @@
+{
+  "dashboard": {
+    "title": "Guild System Overview",
+    "uid": "guild-overview",
+    "version": 1,
+    "timezone": "browser",
+    "panels": [
+      {
+        "title": "System Health Score",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 0, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "(1 - (rate(guild_errors_total[5m]) / rate(guild_request_duration_count[5m]))) * 100"
+          }
+        ],
+        "options": {
+          "unit": "percent",
+          "thresholds": {
+            "steps": [
+              {"value": 0, "color": "red"},
+              {"value": 95, "color": "yellow"},
+              {"value": 99, "color": "green"}
+            ]
+          }
+        }
+      },
+      {
+        "title": "Request Rate",
+        "type": "graph",
+        "gridPos": {"x": 6, "y": 0, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "rate(guild_request_duration_count[5m])",
+            "legendFormat": "{{operation}}"
+          }
+        ]
+      },
+      {
+        "title": "Active Requests",
+        "type": "stat",
+        "gridPos": {"x": 12, "y": 0, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "sum(guild_request_active)"
+          }
+        ]
+      },
+      {
+        "title": "Error Rate",
+        "type": "graph",
+        "gridPos": {"x": 18, "y": 0, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "rate(guild_errors_total[5m])",
+            "legendFormat": "{{operation}}"
+          }
+        ],
+        "alert": {
+          "conditions": [
+            {
+              "evaluator": {"params": [0.05], "type": "gt"},
+              "query": {"params": ["A", "5m", "now"]},
+              "reducer": {"params": [], "type": "avg"}
+            }
+          ]
+        }
+      },
+      {
+        "title": "Request Latency (P95)",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 4, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(guild_request_duration_bucket[5m])) by (operation, le))",
+            "legendFormat": "{{operation}}"
+          }
+        ],
+        "yaxes": [{"format": "s"}]
+      },
+      {
+        "title": "Throughput by Operation",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 4, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "sum by (operation) (rate(guild_request_duration_count[5m]))",
+            "legendFormat": "{{operation}}"
+          }
+        ]
+      },
+      {
+        "title": "Active Commissions",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 12, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "sum(guild_commission_active)"
+          }
+        ]
+      },
+      {
+        "title": "Commission Completion Rate",
+        "type": "graph",
+        "gridPos": {"x": 6, "y": 12, "w": 9, "h": 4},
+        "targets": [
+          {
+            "expr": "rate(guild_commissions_completed[5m])",
+            "legendFormat": "{{commission_success}}"
+          }
+        ]
+      },
+      {
+        "title": "Token Usage",
+        "type": "graph",
+        "gridPos": {"x": 15, "y": 12, "w": 9, "h": 4},
+        "targets": [
+          {
+            "expr": "sum by (provider, model) (rate(guild_tokens_used[5m]))",
+            "legendFormat": "{{provider}}/{{model}}"
+          }
+        ]
+      },
+      {
+        "title": "System Resources",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 16, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "guild_system_memory_usage{type=\"alloc\"} / 1024 / 1024",
+            "legendFormat": "Memory (MB)"
+          },
+          {
+            "expr": "guild_system_goroutines",
+            "legendFormat": "Goroutines"
+          }
+        ],
+        "yaxes": [
+          {"format": "short"},
+          {"format": "short"}
+        ]
+      },
+      {
+        "title": "GC Metrics",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 16, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "guild_system_gc_pause",
+            "legendFormat": "GC Pause (ms)"
+          },
+          {
+            "expr": "rate(guild_system_gc_count[5m])",
+            "legendFormat": "GC Rate"
+          }
+        ]
+      }
+    ],
+    "refresh": "10s",
+    "time": {"from": "now-1h", "to": "now"},
+    "timepicker": {
+      "refresh_intervals": ["5s", "10s", "30s", "1m", "5m"]
+    }
+  }
+}

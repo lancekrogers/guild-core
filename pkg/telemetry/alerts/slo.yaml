@@ -1,0 +1,114 @@
+groups:
+  - name: guild_slos
+    interval: 30s
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          (
+            sum(rate(guild_errors_total[5m]))
+            /
+            sum(rate(guild_request_duration_count[5m]))
+          ) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          team: platform
+          slo: error_rate
+        annotations:
+          summary: "High error rate detected ({{ $value | humanizePercentage }})"
+          description: "Error rate is above 5% threshold for the last 5 minutes. Current error rate: {{ $value | humanizePercentage }}"
+          runbook_url: "https://wiki.guild.internal/runbooks/high-error-rate"
+
+      - alert: HighLatencyP99
+        expr: |
+          histogram_quantile(0.99,
+            sum(rate(guild_request_duration_bucket[5m])) by (le)
+          ) > 1
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+          slo: latency_p99
+        annotations:
+          summary: "High P99 latency detected ({{ $value | humanizeDuration }})"
+          description: "P99 latency is above 1 second for the last 5 minutes. Current P99: {{ $value | humanizeDuration }}"
+          runbook_url: "https://wiki.guild.internal/runbooks/high-latency"
+
+      - alert: HighLatencyP95
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(guild_request_duration_bucket[5m])) by (le)
+          ) > 0.5
+        for: 10m
+        labels:
+          severity: warning
+          team: platform
+          slo: latency_p95
+        annotations:
+          summary: "High P95 latency detected ({{ $value | humanizeDuration }})"
+          description: "P95 latency is above 500ms for the last 10 minutes. Current P95: {{ $value | humanizeDuration }}"
+
+      - alert: LowAvailability
+        expr: |
+          (
+            1 - (
+              sum(rate(guild_errors_total[5m]))
+              /
+              sum(rate(guild_request_duration_count[5m]))
+            )
+          ) < 0.995
+        for: 5m
+        labels:
+          severity: critical
+          team: platform
+          slo: availability
+        annotations:
+          summary: "Service availability below 99.5% ({{ $value | humanizePercentage }})"
+          description: "Service availability has dropped below the 99.5% SLO. Current availability: {{ $value | humanizePercentage }}"
+          runbook_url: "https://wiki.guild.internal/runbooks/low-availability"
+
+      - alert: HighCommissionFailureRate
+        expr: |
+          (
+            sum(rate(guild_commissions_completed{commission_success="false"}[5m]))
+            /
+            sum(rate(guild_commissions_completed[5m]))
+          ) > 0.1
+        for: 10m
+        labels:
+          severity: warning
+          team: platform
+          slo: commission_success_rate
+        annotations:
+          summary: "High commission failure rate ({{ $value | humanizePercentage }})"
+          description: "More than 10% of commissions are failing. Current failure rate: {{ $value | humanizePercentage }}"
+
+      - alert: AgentTaskFailureRate
+        expr: |
+          (
+            sum(rate(guild_agent_tasks_failed[5m]))
+            /
+            (sum(rate(guild_agent_tasks_completed[5m])) + sum(rate(guild_agent_tasks_failed[5m])))
+          ) > 0.05
+        for: 10m
+        labels:
+          severity: warning
+          team: platform
+          slo: agent_success_rate
+        annotations:
+          summary: "High agent task failure rate ({{ $value | humanizePercentage }})"
+          description: "Agent task failure rate is above 5%. Current failure rate: {{ $value | humanizePercentage }}"
+
+      - alert: ChatResponseTimeSLO
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(guild_chat_response_duration_bucket[5m])) by (le)
+          ) > 2
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+          slo: chat_response_time
+        annotations:
+          summary: "Chat response time exceeds SLO ({{ $value | humanizeDuration }})"
+          description: "95th percentile chat response time is above 2 seconds. Current P95: {{ $value | humanizeDuration }}"

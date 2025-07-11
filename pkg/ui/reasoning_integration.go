@@ -15,6 +15,7 @@ import (
 	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild/pkg/session"
 )
 
 // ReasoningIntegration manages the integration between reasoning and chat UI
@@ -127,8 +128,8 @@ func NewReasoningIntegration(config ReasoningIntegrationConfig) *ReasoningIntegr
 	}
 }
 
-// Init initializes the integration with the chat model
-func (ri *ReasoningIntegration) Init(chatModel tea.Model, width, height int) {
+// Initialize initializes the integration with the chat model
+func (ri *ReasoningIntegration) Initialize(chatModel tea.Model, width, height int) {
 	ri.mu.Lock()
 	defer ri.mu.Unlock()
 	
@@ -137,6 +138,11 @@ func (ri *ReasoningIntegration) Init(chatModel tea.Model, width, height int) {
 	// Calculate display dimensions based on position
 	displayWidth, displayHeight := ri.calculateDimensions(width, height)
 	ri.display = NewReasoningDisplay(displayWidth, displayHeight)
+}
+
+// Init implements tea.Model
+func (ri *ReasoningIntegration) Init() tea.Cmd {
+	return nil
 }
 
 // Update handles tea.Model updates
@@ -213,8 +219,14 @@ func (ri *ReasoningIntegration) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return ri, tea.Batch(cmds...)
 }
 
-// View renders the reasoning integration
-func (ri *ReasoningIntegration) View(chatView string, width, height int) string {
+// View implements tea.Model
+func (ri *ReasoningIntegration) View() string {
+	// For now, return empty string as this is integrated into chat view
+	return ""
+}
+
+// ViewWithChat renders the reasoning integration with chat content
+func (ri *ReasoningIntegration) ViewWithChat(chatView string, width, height int) string {
 	ri.mu.RLock()
 	defer ri.mu.RUnlock()
 	
@@ -258,14 +270,10 @@ func (ri *ReasoningIntegration) StartReasoning(ctx context.Context, messageID st
 	
 	// Create reasoning streamer
 	parser := core.NewThinkingBlockParser()
-	chainBuilder := core.NewReasoningChainBuilder()
+	chainBuilder := core.NewReasoningChainBuilder("", "", "")
 	streamer := core.NewReasoningStreamer(parser, chainBuilder)
 	
-	// Start streaming
-	if err := streamer.StartStreaming(ctx); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start reasoning").
-			WithComponent("reasoning_integration")
-	}
+	// Streamer is ready to receive events
 	
 	// Track active reasoning
 	ri.activeChains[messageID] = &ActiveReasoning{
@@ -302,16 +310,13 @@ func (ri *ReasoningIntegration) StopReasoning(ctx context.Context, messageID str
 	}
 	
 	if active.Status != StatusStreaming {
-		return gerror.New(gerror.ErrCodeInvalidState, "reasoning not streaming", nil).
+		return gerror.New(gerror.ErrCodeValidation, "reasoning not streaming", nil).
 			WithComponent("reasoning_integration").
 			WithDetails("status", active.Status)
 	}
 	
 	// Interrupt the streamer
-	if err := active.Streamer.Interrupt(ctx); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to interrupt reasoning").
-			WithComponent("reasoning_integration")
-	}
+	active.Streamer.Interrupt()
 	
 	active.Status = StatusInterrupted
 	active.EndTime = time.Now()
@@ -332,7 +337,7 @@ func (ri *ReasoningIntegration) GetReasoningChain(messageID string) (*core.Reaso
 	}
 	
 	if active.Chain == nil {
-		return nil, gerror.New(gerror.ErrCodeInvalidState, "reasoning chain not complete", nil).
+		return nil, gerror.New(gerror.ErrCodeValidation, "reasoning chain not complete", nil).
 			WithComponent("reasoning_integration").
 			WithDetails("status", active.Status)
 	}
@@ -614,19 +619,20 @@ func (ri *ReasoningIntegration) updateActiveReasoning(event core.StreamEvent) {
 	for _, ar := range ri.activeChains {
 		if ar.Status == StatusStreaming {
 			switch event.Type {
-			case core.EventChainComplete:
+			case core.StreamEventContentChunk:
+				// Check if it's the final chunk with complete chain
 				if chain, ok := event.Data.(*core.ReasoningChainEnhanced); ok {
 					ar.Chain = chain
 					ar.Status = StatusComplete
 					ar.EndTime = time.Now()
 				}
-			case core.EventError:
+			case core.StreamEventError:
 				if err, ok := event.Data.(error); ok {
 					ar.Error = err
 					ar.Status = StatusError
 					ar.EndTime = time.Now()
 				}
-			case core.EventInterrupted:
+			case core.StreamEventInterrupted:
 				ar.Status = StatusInterrupted
 				ar.EndTime = time.Now()
 			}

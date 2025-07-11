@@ -232,7 +232,7 @@ func (pm *PerformanceManager) optimize(ctx context.Context) error {
 	if pm.memOptimizer != nil {
 		_, err := pm.memOptimizer.OptimizeMemoryUsage(ctx)
 		if err != nil {
-			return gerror.Wrap(err, ErrCodeOptimizationFailed, "memory optimization failed").
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "memory optimization failed").
 				WithComponent("performance-manager").
 				WithOperation("optimize")
 		}
@@ -251,7 +251,7 @@ func (pm *PerformanceManager) profile(ctx context.Context) error {
 	duration := time.Second * 10
 	_, err := pm.profiler.ProfileApplication(ctx, duration)
 	if err != nil {
-		return gerror.Wrap(err, ErrCodeProfilingFailed, "profiling session failed").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "profiling session failed").
 			WithComponent("performance-manager").
 			WithOperation("profile")
 	}

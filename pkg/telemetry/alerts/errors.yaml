@@ -1,0 +1,136 @@
+groups:
+  - name: guild_errors
+    interval: 30s
+    rules:
+      - alert: ErrorRateSpike
+        expr: |
+          (
+            rate(guild_errors_total[1m]) > 0
+            and
+            rate(guild_errors_total[1m]) > rate(guild_errors_total[5m]) * 2
+          )
+        for: 2m
+        labels:
+          severity: warning
+          team: platform
+          alert_type: error_spike
+        annotations:
+          summary: "Error rate spike detected"
+          description: "Error rate has doubled compared to 5-minute average. Current rate: {{ $value | humanize }} errors/sec"
+          dashboard: "https://grafana.guild.internal/d/guild-overview"
+
+      - alert: CriticalErrors
+        expr: |
+          sum(rate(guild_errors_total{error=~"panic|fatal|critical"}[5m])) > 0
+        for: 1m
+        labels:
+          severity: critical
+          team: platform
+          alert_type: critical_error
+        annotations:
+          summary: "Critical errors detected"
+          description: "Critical errors (panic/fatal) are occurring. Rate: {{ $value | humanize }} errors/sec"
+          runbook_url: "https://wiki.guild.internal/runbooks/critical-errors"
+
+      - alert: ProviderErrors
+        expr: |
+          sum by (provider) (rate(guild_errors_total{operation="provider_request"}[5m])) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+          alert_type: provider_error
+        annotations:
+          summary: "High provider error rate for {{ $labels.provider }}"
+          description: "Provider {{ $labels.provider }} is experiencing high error rates: {{ $value | humanize }} errors/sec"
+          
+      - alert: AgentExecutionErrors
+        expr: |
+          sum by (agent_name) (rate(guild_agent_tasks_failed[5m])) > 0.05
+        for: 10m
+        labels:
+          severity: warning
+          team: agents
+          alert_type: agent_error
+        annotations:
+          summary: "Agent {{ $labels.agent_name }} has high failure rate"
+          description: "Agent {{ $labels.agent_name }} is failing tasks at {{ $value | humanize }} tasks/sec"
+
+      - alert: CommissionErrors
+        expr: |
+          sum(rate(guild_errors_total{operation="commission_execution"}[5m])) > 0.01
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+          alert_type: commission_error
+        annotations:
+          summary: "Commission execution errors"
+          description: "Commission execution is experiencing errors at {{ $value | humanize }} errors/sec"
+
+      - alert: MemoryRetrievalErrors
+        expr: |
+          sum(rate(guild_errors_total{operation=~"memory_.*"}[5m])) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+          alert_type: memory_error
+        annotations:
+          summary: "Memory system errors"
+          description: "Memory retrieval/storage operations are failing at {{ $value | humanize }} errors/sec"
+
+      - alert: ToolExecutionErrors
+        expr: |
+          sum by (tool_name) (rate(guild_errors_total{operation="tool_execution"}[5m])) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+          alert_type: tool_error
+        annotations:
+          summary: "Tool {{ $labels.tool_name }} execution errors"
+          description: "Tool {{ $labels.tool_name }} is experiencing high error rates: {{ $value | humanize }} errors/sec"
+
+      - alert: ChatStreamingErrors
+        expr: |
+          sum(rate(guild_chat_errors_total{error_type="streaming"}[5m])) > 0.05
+        for: 3m
+        labels:
+          severity: warning
+          team: platform
+          alert_type: streaming_error
+        annotations:
+          summary: "Chat streaming errors detected"
+          description: "Chat streaming is experiencing errors at {{ $value | humanize }} errors/sec"
+
+      - alert: DatabaseConnectionErrors
+        expr: |
+          sum(rate(guild_errors_total{operation=~"db_.*", error="connection_failed"}[1m])) > 0
+        for: 2m
+        labels:
+          severity: critical
+          team: platform
+          alert_type: database_error
+        annotations:
+          summary: "Database connection failures"
+          description: "Database connections are failing. This is a critical issue requiring immediate attention."
+          runbook_url: "https://wiki.guild.internal/runbooks/database-connection-failure"
+
+      - alert: ErrorBudgetBurn
+        expr: |
+          (
+            1 - (
+              (sum(rate(guild_request_duration_count[1h])) - sum(rate(guild_errors_total[1h])))
+              /
+              sum(rate(guild_request_duration_count[1h]))
+            )
+          ) > (1 - 0.995) * 14.4
+        for: 5m
+        labels:
+          severity: warning
+          team: platform
+          alert_type: error_budget
+        annotations:
+          summary: "Error budget burn rate too high"
+          description: "At current error rate, monthly error budget will be exhausted in less than 2 days"
