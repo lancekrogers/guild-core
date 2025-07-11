@@ -949,6 +949,12 @@ func (pl *PatternLearner) loadActivePatterns() {
 	ctx := context.Background()
 	logger := observability.GetLogger(ctx)
 
+	// Handle nil repository (for testing)
+	if pl.repository == nil {
+		logger.InfoContext(ctx, "No repository provided, skipping pattern loading")
+		return
+	}
+
 	patterns, err := pl.repository.GetActivePatterns(ctx)
 	if err != nil {
 		logger.ErrorContext(ctx, "Failed to load active patterns", "error", err)
