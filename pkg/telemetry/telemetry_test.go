@@ -47,8 +47,8 @@ func TestConfig_Validate(t *testing.T) {
 		{
 			name: "invalid sampling rate too high",
 			config: Config{
-				ServiceName:  "test-service",
-				SampleRate: 1.5,
+				ServiceName: "test-service",
+				SampleRate:  1.5,
 			},
 			wantErr: true,
 			errMsg:  "sampling rate must be between 0 and 1",
@@ -56,8 +56,8 @@ func TestConfig_Validate(t *testing.T) {
 		{
 			name: "invalid sampling rate negative",
 			config: Config{
-				ServiceName:  "test-service",
-				SampleRate: -0.1,
+				ServiceName: "test-service",
+				SampleRate:  -0.1,
 			},
 			wantErr: true,
 			errMsg:  "sampling rate must be between 0 and 1",

@@ -306,13 +306,13 @@ func TestReasoningChainBuilder(t *testing.T) {
 				TokenCount: 40,
 				DecisionPoints: []core.DecisionPoint{
 					{
-						Decision:     "Use microservices",
-						Confidence:   0.9,
+						Decision:   "Use microservices",
+						Confidence: 0.9,
 						Alternatives: []core.Alternative{
 							{Option: "Monolith"},
 							{Option: "Serverless"},
 						},
-						Rationale:    "Better scalability",
+						Rationale: "Better scalability",
 					},
 				},
 			},
@@ -355,7 +355,7 @@ func TestReasoningChainBuilder(t *testing.T) {
 
 	t.Run("strategy adaptation", func(t *testing.T) {
 		builder := core.NewReasoningChainBuilder("agent-2", "session-2", "task-2")
-		
+
 		builder.SetStrategy("initial", "Initial approach")
 		builder.AddBlock(&core.ThinkingBlock{
 			ID:      "block-1",
@@ -633,7 +633,7 @@ func TestReasoningStorage(t *testing.T) {
 		chains, err := storage.Query(ctx, query)
 		require.NoError(t, err)
 		assert.LessOrEqual(t, len(chains), 3)
-		
+
 		// Verify ordering
 		for i := 1; i < len(chains); i++ {
 			assert.GreaterOrEqual(t, chains[i-1].Confidence, chains[i].Confidence)
@@ -694,11 +694,11 @@ Confidence: 0.85
 Final result.`
 
 		reader := strings.NewReader(input)
-		
+
 		// Collect events
 		var events []core.StreamEvent
 		done := make(chan bool)
-		
+
 		go func() {
 			for event := range streamer.EventChannel() {
 				events = append(events, event)
@@ -719,7 +719,7 @@ Final result.`
 
 		// Verify events
 		assert.Greater(t, len(events), 0)
-		
+
 		// Check for expected event types
 		hasStart := false
 		hasUpdate := false
@@ -771,7 +771,6 @@ Final result.`
 		assert.True(t, interrupted, "Should have interrupt event")
 	})
 }
-
 
 func TestQualityScoring(t *testing.T) {
 	ctx := context.Background()

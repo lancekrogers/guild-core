@@ -13,7 +13,7 @@ import (
 func TestNewAgentCollector(t *testing.T) {
 	provider := sdkmetric.NewMeterProvider()
 	meter := provider.Meter("test")
-	
+
 	collector, err := NewAgentCollector(meter)
 	require.NoError(t, err)
 	assert.NotNil(t, collector)
@@ -83,7 +83,7 @@ func TestAgentCollector_RecordConcurrent(t *testing.T) {
 
 	// Test concurrent start/end
 	agentName := "concurrent-agent"
-	
+
 	// Start multiple concurrent executions
 	for i := 0; i < 5; i++ {
 		collector.RecordConcurrentStart(ctx, agentName)
@@ -235,7 +235,7 @@ func TestAgentCollector_ConcurrentRecording(t *testing.T) {
 			defer func() { done <- true }()
 
 			agentName := "agent-" + string(rune('0'+id))
-			
+
 			// Record various metrics
 			collector.RecordExecution(ctx, agentName, "task", time.Duration(id)*time.Millisecond, id%2 == 0)
 			collector.RecordConcurrentStart(ctx, agentName)

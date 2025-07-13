@@ -21,47 +21,47 @@ import (
 // ReasoningIntegration manages the integration between reasoning and chat UI
 type ReasoningIntegration struct {
 	// Components
-	display      *ReasoningDisplay
-	chatModel    tea.Model // Reference to chat model
-	
+	display   *ReasoningDisplay
+	chatModel tea.Model // Reference to chat model
+
 	// Configuration
-	config       ReasoningIntegrationConfig
-	
+	config ReasoningIntegrationConfig
+
 	// State management
-	enabled      bool
-	visible      bool
-	minimized    bool
-	position     IntegrationPosition
-	
+	enabled   bool
+	visible   bool
+	minimized bool
+	position  IntegrationPosition
+
 	// Reasoning management
 	activeChains map[string]*ActiveReasoning // messageID -> reasoning
-	
+
 	// Thread safety
-	mu           sync.RWMutex
+	mu sync.RWMutex
 }
 
 // ReasoningIntegrationConfig configures the integration
 type ReasoningIntegrationConfig struct {
 	// Display settings
-	EnableByDefault      bool          `json:"enable_by_default"`
-	AutoShow            bool          `json:"auto_show"`
-	MinimizeOnComplete  bool          `json:"minimize_on_complete"`
-	ShowInsights        bool          `json:"show_insights"`
-	ShowQualityMetrics  bool          `json:"show_quality_metrics"`
-	
+	EnableByDefault    bool `json:"enable_by_default"`
+	AutoShow           bool `json:"auto_show"`
+	MinimizeOnComplete bool `json:"minimize_on_complete"`
+	ShowInsights       bool `json:"show_insights"`
+	ShowQualityMetrics bool `json:"show_quality_metrics"`
+
 	// Performance settings
 	MaxConcurrentChains int           `json:"max_concurrent_chains"`
 	StreamBufferSize    int           `json:"stream_buffer_size"`
 	UpdateInterval      time.Duration `json:"update_interval"`
-	
+
 	// Interruption settings
-	AllowInterruption   bool          `json:"allow_interruption"`
-	InterruptionKey     string        `json:"interruption_key"` // default: "esc"
-	
+	AllowInterruption bool   `json:"allow_interruption"`
+	InterruptionKey   string `json:"interruption_key"` // default: "esc"
+
 	// Layout settings
-	DefaultPosition     IntegrationPosition `json:"default_position"`
-	MinHeight          int                 `json:"min_height"`
-	MaxHeight          int                 `json:"max_height"`
+	DefaultPosition IntegrationPosition `json:"default_position"`
+	MinHeight       int                 `json:"min_height"`
+	MaxHeight       int                 `json:"max_height"`
 }
 
 // IntegrationPosition defines where reasoning is displayed
@@ -76,13 +76,13 @@ const (
 
 // ActiveReasoning tracks an active reasoning process
 type ActiveReasoning struct {
-	MessageID    string
-	Streamer     *core.ReasoningStreamer
-	Chain        *core.ReasoningChainEnhanced
-	StartTime    time.Time
-	EndTime      time.Time
-	Status       ReasoningStatus
-	Error        error
+	MessageID string
+	Streamer  *core.ReasoningStreamer
+	Chain     *core.ReasoningChainEnhanced
+	StartTime time.Time
+	EndTime   time.Time
+	Status    ReasoningStatus
+	Error     error
 }
 
 // ReasoningStatus represents the status of reasoning
@@ -98,22 +98,22 @@ const (
 // DefaultReasoningIntegrationConfig returns default configuration
 func DefaultReasoningIntegrationConfig() ReasoningIntegrationConfig {
 	return ReasoningIntegrationConfig{
-		EnableByDefault:     true,
+		EnableByDefault:    true,
 		AutoShow:           true,
 		MinimizeOnComplete: false,
 		ShowInsights:       true,
 		ShowQualityMetrics: true,
-		
+
 		MaxConcurrentChains: 3,
 		StreamBufferSize:    100,
 		UpdateInterval:      50 * time.Millisecond,
-		
+
 		AllowInterruption: true,
 		InterruptionKey:   "esc",
-		
+
 		DefaultPosition: PositionBottom,
-		MinHeight:      10,
-		MaxHeight:      30,
+		MinHeight:       10,
+		MaxHeight:       30,
 	}
 }
 
@@ -132,9 +132,9 @@ func NewReasoningIntegration(config ReasoningIntegrationConfig) *ReasoningIntegr
 func (ri *ReasoningIntegration) Initialize(chatModel tea.Model, width, height int) {
 	ri.mu.Lock()
 	defer ri.mu.Unlock()
-	
+
 	ri.chatModel = chatModel
-	
+
 	// Calculate display dimensions based on position
 	displayWidth, displayHeight := ri.calculateDimensions(width, height)
 	ri.display = NewReasoningDisplay(displayWidth, displayHeight)
@@ -148,7 +148,7 @@ func (ri *ReasoningIntegration) Init() tea.Cmd {
 // Update handles tea.Model updates
 func (ri *ReasoningIntegration) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
-	
+
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		// Handle visibility toggles
@@ -160,7 +160,7 @@ func (ri *ReasoningIntegration) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				ri.toggleMinimized()
 			}
 		}
-		
+
 		// Forward to display if visible and not minimized
 		if ri.visible && !ri.minimized {
 			newDisplay, cmd := ri.display.Update(msg)
@@ -169,7 +169,7 @@ func (ri *ReasoningIntegration) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				cmds = append(cmds, cmd)
 			}
 		}
-		
+
 	case tea.WindowSizeMsg:
 		// Update display dimensions
 		if ri.display != nil {
@@ -183,11 +183,11 @@ func (ri *ReasoningIntegration) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				cmds = append(cmds, cmd)
 			}
 		}
-		
+
 	case StartReasoningMsg:
 		// Handle new reasoning session
 		cmds = append(cmds, ri.handleStartReasoning(msg))
-		
+
 	case core.StreamEvent:
 		// Forward stream events to display
 		if ri.display != nil && ri.visible {
@@ -197,25 +197,25 @@ func (ri *ReasoningIntegration) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				cmds = append(cmds, cmd)
 			}
 		}
-		
+
 		// Update active reasoning
 		ri.updateActiveReasoning(msg)
-		
+
 	case ReasoningCompleteMsg:
 		// Handle reasoning completion
 		ri.handleReasoningComplete(msg)
-		
+
 		// Auto-minimize if configured
 		if ri.config.MinimizeOnComplete && ri.visible {
 			ri.minimized = true
 		}
 	}
-	
+
 	// Check for active reasoning updates
 	if ri.hasActiveReasoning() {
 		cmds = append(cmds, ri.checkReasoningUpdates())
 	}
-	
+
 	return ri, tea.Batch(cmds...)
 }
 
@@ -229,11 +229,11 @@ func (ri *ReasoningIntegration) View() string {
 func (ri *ReasoningIntegration) ViewWithChat(chatView string, width, height int) string {
 	ri.mu.RLock()
 	defer ri.mu.RUnlock()
-	
+
 	if !ri.enabled || !ri.visible {
 		return chatView
 	}
-	
+
 	// Render based on position
 	switch ri.position {
 	case PositionBottom:
@@ -253,7 +253,7 @@ func (ri *ReasoningIntegration) ViewWithChat(chatView string, width, height int)
 func (ri *ReasoningIntegration) StartReasoning(ctx context.Context, messageID string, prompt string) error {
 	ri.mu.Lock()
 	defer ri.mu.Unlock()
-	
+
 	// Check concurrent limit
 	activeCount := 0
 	for _, ar := range ri.activeChains {
@@ -261,20 +261,20 @@ func (ri *ReasoningIntegration) StartReasoning(ctx context.Context, messageID st
 			activeCount++
 		}
 	}
-	
+
 	if activeCount >= ri.config.MaxConcurrentChains {
 		return gerror.New(gerror.ErrCodeResourceLimit, "max concurrent reasoning chains reached", nil).
 			WithComponent("reasoning_integration").
 			WithDetails("limit", ri.config.MaxConcurrentChains)
 	}
-	
+
 	// Create reasoning streamer
 	parser := core.NewThinkingBlockParser()
 	chainBuilder := core.NewReasoningChainBuilder("", "", "")
 	streamer := core.NewReasoningStreamer(parser, chainBuilder)
-	
+
 	// Streamer is ready to receive events
-	
+
 	// Track active reasoning
 	ri.activeChains[messageID] = &ActiveReasoning{
 		MessageID: messageID,
@@ -282,18 +282,18 @@ func (ri *ReasoningIntegration) StartReasoning(ctx context.Context, messageID st
 		StartTime: time.Now(),
 		Status:    StatusStreaming,
 	}
-	
+
 	// Auto-show if configured
 	if ri.config.AutoShow && !ri.visible {
 		ri.visible = true
 		ri.minimized = false
 	}
-	
+
 	// Connect to display
 	if ri.display != nil && ri.visible {
 		return ri.display.StartStreaming(ctx, streamer)
 	}
-	
+
 	return nil
 }
 
@@ -301,26 +301,26 @@ func (ri *ReasoningIntegration) StartReasoning(ctx context.Context, messageID st
 func (ri *ReasoningIntegration) StopReasoning(ctx context.Context, messageID string) error {
 	ri.mu.Lock()
 	defer ri.mu.Unlock()
-	
+
 	active, exists := ri.activeChains[messageID]
 	if !exists {
 		return gerror.New(gerror.ErrCodeNotFound, "reasoning not found", nil).
 			WithComponent("reasoning_integration").
 			WithDetails("message_id", messageID)
 	}
-	
+
 	if active.Status != StatusStreaming {
 		return gerror.New(gerror.ErrCodeValidation, "reasoning not streaming", nil).
 			WithComponent("reasoning_integration").
 			WithDetails("status", active.Status)
 	}
-	
+
 	// Interrupt the streamer
 	active.Streamer.Interrupt()
-	
+
 	active.Status = StatusInterrupted
 	active.EndTime = time.Now()
-	
+
 	return nil
 }
 
@@ -328,20 +328,20 @@ func (ri *ReasoningIntegration) StopReasoning(ctx context.Context, messageID str
 func (ri *ReasoningIntegration) GetReasoningChain(messageID string) (*core.ReasoningChainEnhanced, error) {
 	ri.mu.RLock()
 	defer ri.mu.RUnlock()
-	
+
 	active, exists := ri.activeChains[messageID]
 	if !exists {
 		return nil, gerror.New(gerror.ErrCodeNotFound, "reasoning not found", nil).
 			WithComponent("reasoning_integration").
 			WithDetails("message_id", messageID)
 	}
-	
+
 	if active.Chain == nil {
 		return nil, gerror.New(gerror.ErrCodeValidation, "reasoning chain not complete", nil).
 			WithComponent("reasoning_integration").
 			WithDetails("status", active.Status)
 	}
-	
+
 	return active.Chain, nil
 }
 
@@ -350,10 +350,10 @@ func (ri *ReasoningIntegration) GetReasoningChain(messageID string) (*core.Reaso
 func (ri *ReasoningIntegration) renderBottomLayout(chatView string, width, height int) string {
 	displayHeight := ri.calculateDisplayHeight(height)
 	chatHeight := height - displayHeight - 1 // -1 for separator
-	
+
 	// Resize chat view
 	chatView = ri.resizeView(chatView, width, chatHeight)
-	
+
 	// Render reasoning display
 	var reasoningView string
 	if ri.minimized {
@@ -361,7 +361,7 @@ func (ri *ReasoningIntegration) renderBottomLayout(chatView string, width, heigh
 	} else {
 		reasoningView = ri.display.View()
 	}
-	
+
 	// Combine with separator
 	separator := lipgloss.NewStyle().
 		Width(width).
@@ -371,7 +371,7 @@ func (ri *ReasoningIntegration) renderBottomLayout(chatView string, width, heigh
 		BorderLeft(false).
 		BorderRight(false).
 		Render("")
-	
+
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
 		chatView,
@@ -383,17 +383,17 @@ func (ri *ReasoningIntegration) renderBottomLayout(chatView string, width, heigh
 func (ri *ReasoningIntegration) renderRightLayout(chatView string, width, height int) string {
 	displayWidth := width / 2
 	chatWidth := width - displayWidth - 1 // -1 for separator
-	
+
 	// Resize views
 	chatView = ri.resizeView(chatView, chatWidth, height)
-	
+
 	var reasoningView string
 	if ri.minimized {
 		reasoningView = ri.renderMinimizedView(displayWidth)
 	} else {
 		reasoningView = ri.display.View()
 	}
-	
+
 	// Combine with separator
 	separator := lipgloss.NewStyle().
 		Height(height).
@@ -403,7 +403,7 @@ func (ri *ReasoningIntegration) renderRightLayout(chatView string, width, height
 		BorderTop(false).
 		BorderBottom(false).
 		Render("")
-	
+
 	return lipgloss.JoinHorizontal(
 		lipgloss.Top,
 		chatView,
@@ -416,14 +416,14 @@ func (ri *ReasoningIntegration) renderOverlayLayout(chatView string, width, heig
 	// Render reasoning as overlay
 	overlayWidth := width * 3 / 4
 	overlayHeight := height * 2 / 3
-	
+
 	var reasoningView string
 	if ri.minimized {
 		reasoningView = ri.renderMinimizedView(overlayWidth)
 	} else {
 		reasoningView = ri.display.View()
 	}
-	
+
 	// Create overlay with shadow effect
 	overlay := lipgloss.NewStyle().
 		Width(overlayWidth).
@@ -433,7 +433,7 @@ func (ri *ReasoningIntegration) renderOverlayLayout(chatView string, width, heig
 		Background(lipgloss.Color("#1a1b26")).
 		Padding(1).
 		Render(reasoningView)
-	
+
 	// Position overlay in center
 	return lipgloss.Place(
 		width,
@@ -449,17 +449,17 @@ func (ri *ReasoningIntegration) renderOverlayLayout(chatView string, width, heig
 func (ri *ReasoningIntegration) renderSplitLayout(chatView string, width, height int) string {
 	// Equal split
 	halfHeight := height / 2
-	
+
 	// Resize views
 	chatView = ri.resizeView(chatView, width, halfHeight-1)
-	
+
 	var reasoningView string
 	if ri.minimized {
 		reasoningView = ri.renderMinimizedView(width)
 	} else {
 		reasoningView = ri.display.View()
 	}
-	
+
 	// Combine with double border
 	separator := lipgloss.NewStyle().
 		Width(width).
@@ -469,7 +469,7 @@ func (ri *ReasoningIntegration) renderSplitLayout(chatView string, width, height
 		BorderLeft(false).
 		BorderRight(false).
 		Render("")
-	
+
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
 		chatView,
@@ -481,10 +481,10 @@ func (ri *ReasoningIntegration) renderSplitLayout(chatView string, width, height
 func (ri *ReasoningIntegration) renderMinimizedView(width int) string {
 	// Get current metrics
 	metrics := ri.display.GetMetrics()
-	
+
 	var status string
 	var statusStyle lipgloss.Style
-	
+
 	if metrics.Streaming {
 		status = "🔄 Reasoning..."
 		statusStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#7D56F4"))
@@ -495,16 +495,16 @@ func (ri *ReasoningIntegration) renderMinimizedView(width int) string {
 		status = fmt.Sprintf("✓ Complete (%.1fs)", metrics.Duration.Seconds())
 		statusStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#48BB78"))
 	}
-	
+
 	content := fmt.Sprintf("%s | %d blocks | %d tokens | Quality: %.0f%%",
 		status,
 		metrics.BlockCount,
 		metrics.TokenCount,
 		metrics.QualityScore*100,
 	)
-	
+
 	hint := "Ctrl+M to expand"
-	
+
 	return lipgloss.NewStyle().
 		Width(width).
 		Padding(0, 1).
@@ -540,14 +540,14 @@ func (ri *ReasoningIntegration) calculateDimensions(totalWidth, totalHeight int)
 
 func (ri *ReasoningIntegration) calculateDisplayHeight(totalHeight int) int {
 	height := totalHeight / 3
-	
+
 	if height < ri.config.MinHeight {
 		height = ri.config.MinHeight
 	}
 	if height > ri.config.MaxHeight {
 		height = ri.config.MaxHeight
 	}
-	
+
 	return height
 }
 
@@ -564,7 +564,7 @@ func (ri *ReasoningIntegration) resizeView(view string, width, height int) strin
 func (ri *ReasoningIntegration) toggleVisibility() {
 	ri.mu.Lock()
 	defer ri.mu.Unlock()
-	
+
 	ri.visible = !ri.visible
 	if ri.visible {
 		ri.minimized = false
@@ -574,14 +574,14 @@ func (ri *ReasoningIntegration) toggleVisibility() {
 func (ri *ReasoningIntegration) toggleMinimized() {
 	ri.mu.Lock()
 	defer ri.mu.Unlock()
-	
+
 	ri.minimized = !ri.minimized
 }
 
 func (ri *ReasoningIntegration) hasActiveReasoning() bool {
 	ri.mu.RLock()
 	defer ri.mu.RUnlock()
-	
+
 	for _, ar := range ri.activeChains {
 		if ar.Status == StatusStreaming {
 			return true
@@ -614,7 +614,7 @@ func (ri *ReasoningIntegration) handleStartReasoning(msg StartReasoningMsg) tea.
 func (ri *ReasoningIntegration) updateActiveReasoning(event core.StreamEvent) {
 	ri.mu.Lock()
 	defer ri.mu.Unlock()
-	
+
 	// Find active reasoning for this event
 	for _, ar := range ri.activeChains {
 		if ar.Status == StatusStreaming {
@@ -643,7 +643,7 @@ func (ri *ReasoningIntegration) updateActiveReasoning(event core.StreamEvent) {
 func (ri *ReasoningIntegration) handleReasoningComplete(msg ReasoningCompleteMsg) {
 	ri.mu.Lock()
 	defer ri.mu.Unlock()
-	
+
 	if ar, exists := ri.activeChains[msg.MessageID]; exists {
 		ar.Chain = msg.Chain
 		ar.Status = StatusComplete
@@ -680,7 +680,7 @@ type CheckReasoningUpdatesMsg struct{}
 type ReasoningMessage struct {
 	session.Message
 	ReasoningChain *core.ReasoningChainEnhanced `json:"reasoning_chain,omitempty"`
-	ShowReasoning  bool                          `json:"show_reasoning"`
+	ShowReasoning  bool                         `json:"show_reasoning"`
 }
 
 // IsEnabled returns if reasoning integration is enabled
@@ -704,7 +704,7 @@ func (ri *ReasoningIntegration) SetEnabled(enabled bool) {
 func (ri *ReasoningIntegration) GetActiveReasoningCount() int {
 	ri.mu.RLock()
 	defer ri.mu.RUnlock()
-	
+
 	count := 0
 	for _, ar := range ri.activeChains {
 		if ar.Status == StatusStreaming {
@@ -718,7 +718,7 @@ func (ri *ReasoningIntegration) GetActiveReasoningCount() int {
 func (ri *ReasoningIntegration) CleanupCompleted(olderThan time.Duration) {
 	ri.mu.Lock()
 	defer ri.mu.Unlock()
-	
+
 	now := time.Now()
 	for id, ar := range ri.activeChains {
 		if ar.Status != StatusStreaming && now.Sub(ar.EndTime) > olderThan {

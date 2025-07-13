@@ -37,14 +37,14 @@ type TestCacheStats struct {
 
 // testCacheImpl is a simple cache implementation for tests
 type testCacheImpl[K comparable, V any] struct {
-	mu       sync.RWMutex
-	items    map[K]cacheItem[V]
-	loader   func(K) (V, error)
-	l1Size   int
-	l2Size   int
-	maxSize  int
-	ttl      time.Duration
-	stats    testCacheStats
+	mu      sync.RWMutex
+	items   map[K]cacheItem[V]
+	loader  func(K) (V, error)
+	l1Size  int
+	l2Size  int
+	maxSize int
+	ttl     time.Duration
+	stats   testCacheStats
 }
 
 type cacheItem[V any] struct {
@@ -87,21 +87,21 @@ func NewTestCacheWithLoader[K comparable, V any](cfg TestCacheConfig, loader fun
 // Get retrieves a value from the cache
 func (c *testCacheImpl[K, V]) Get(key K) (V, bool) {
 	c.stats.gets.Add(1)
-	
+
 	// Cleanup expired items periodically (simple implementation)
 	c.cleanupExpired()
-	
+
 	c.mu.RLock()
 	item, found := c.items[key]
 	c.mu.RUnlock()
-	
+
 	var zero V
-	
+
 	if found && (item.expires.IsZero() || time.Now().Before(item.expires)) {
 		c.stats.hits.Add(1)
 		return item.value, true
 	}
-	
+
 	// Try loader if available
 	if c.loader != nil && !found {
 		if value, err := c.loader(key); err == nil {
@@ -110,7 +110,7 @@ func (c *testCacheImpl[K, V]) Get(key K) (V, bool) {
 			return value, true
 		}
 	}
-	
+
 	c.stats.misses.Add(1)
 	return zero, false
 }
@@ -118,10 +118,10 @@ func (c *testCacheImpl[K, V]) Get(key K) (V, bool) {
 // Set stores a value in the cache
 func (c *testCacheImpl[K, V]) Set(key K, value V) {
 	c.stats.sets.Add(1)
-	
+
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	// Simple eviction if over capacity
 	if len(c.items) >= c.maxSize {
 		// Remove first item found
@@ -131,12 +131,12 @@ func (c *testCacheImpl[K, V]) Set(key K, value V) {
 			break
 		}
 	}
-	
+
 	var expires time.Time
 	if c.ttl > 0 {
 		expires = time.Now().Add(c.ttl)
 	}
-	
+
 	c.items[key] = cacheItem[V]{
 		value:   value,
 		expires: expires,
@@ -146,10 +146,10 @@ func (c *testCacheImpl[K, V]) Set(key K, value V) {
 // Delete removes a value from the cache
 func (c *testCacheImpl[K, V]) Delete(key K) {
 	c.stats.deletes.Add(1)
-	
+
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	delete(c.items, key)
 }
 
@@ -157,7 +157,7 @@ func (c *testCacheImpl[K, V]) Delete(key K) {
 func (c *testCacheImpl[K, V]) cleanupExpired() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	
+
 	now := time.Now()
 	for k, item := range c.items {
 		if !item.expires.IsZero() && now.After(item.expires) {
@@ -171,11 +171,11 @@ func (c *testCacheImpl[K, V]) Stats() TestCacheStats {
 	c.mu.RLock()
 	size := len(c.items)
 	c.mu.RUnlock()
-	
+
 	// Calculate L1 and L2 sizes based on actual items and configured limits
 	l1Size := size
 	l2Size := 0
-	
+
 	if size > c.l1Size {
 		l1Size = c.l1Size
 		l2Size = size - c.l1Size
@@ -183,7 +183,7 @@ func (c *testCacheImpl[K, V]) Stats() TestCacheStats {
 			l2Size = c.l2Size
 		}
 	}
-	
+
 	return TestCacheStats{
 		Sets:      c.stats.sets.Load(),
 		Gets:      c.stats.gets.Load(),
@@ -208,7 +208,7 @@ func NewTestShardedCache[K comparable, V any](numShards int, factory func() Test
 	for i := 0; i < numShards; i++ {
 		shards[i] = factory()
 	}
-	
+
 	return &testShardedCache[K, V]{
 		shards:    shards,
 		numShards: numShards,
@@ -246,10 +246,10 @@ func (sc *testShardedCache[K, V]) getShard(key K) int {
 	default:
 		keyStr = "default"
 	}
-	
+
 	for _, c := range keyStr {
 		h = h*31 + uint32(c)
 	}
-	
+
 	return int(h % uint32(sc.numShards))
 }

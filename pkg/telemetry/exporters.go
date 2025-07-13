@@ -225,7 +225,7 @@ func NewNoop() *NoopTelemetry {
 	// Create minimal providers
 	tp := trace.NewTracerProvider()
 	mp := metric.NewMeterProvider()
-	
+
 	otel.SetTracerProvider(tp)
 	otel.SetMeterProvider(mp)
 

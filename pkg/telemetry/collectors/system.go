@@ -209,9 +209,9 @@ func (s *SystemCollector) observeGCPause(_ context.Context, observer metric.Floa
 		gcCycles := m.NumGC - s.lastNumGC
 		pauseTime := m.PauseTotalNs - uint64(s.lastPauseTotal)
 		avgPause := float64(pauseTime) / float64(gcCycles) / 1e6 // Convert to milliseconds
-		
+
 		observer.Observe(avgPause)
-		
+
 		s.lastNumGC = m.NumGC
 		s.lastPauseTotal = time.Duration(m.PauseTotalNs)
 	}

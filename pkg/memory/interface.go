@@ -47,12 +47,12 @@ type Store interface {
 
 // PromptChain represents a sequence of prompts and responses
 type PromptChain struct {
-	ID        string    `json:"id"`
-	AgentID   string    `json:"agent_id"`
-	TaskID    string    `json:"task_id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Messages  []Message `json:"messages"`
+	ID        string                 `json:"id"`
+	AgentID   string                 `json:"agent_id"`
+	TaskID    string                 `json:"task_id"`
+	CreatedAt time.Time              `json:"created_at"`
+	UpdatedAt time.Time              `json:"updated_at"`
+	Messages  []Message              `json:"messages"`
 	Metadata  map[string]interface{} `json:"metadata,omitempty"`
 }
 
@@ -119,7 +119,6 @@ type CorpusManager interface {
 	// ListDocuments lists all documents with optional filters
 	ListDocuments(ctx context.Context, filters map[string]string, limit, offset int) ([]*Document, error)
 }
-
 
 // ErrNotFound is returned when a requested item is not found
 var ErrNotFound = StoreError{Message: "item not found"}

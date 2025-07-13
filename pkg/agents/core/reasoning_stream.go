@@ -73,7 +73,7 @@ type ReasoningStreamer struct {
 	totalTokens     int
 
 	// Configuration
-	config  StreamConfig
+	config StreamConfig
 	// metrics *observability.MetricsRegistry // TODO: Update to use MetricsRegistry
 }
 

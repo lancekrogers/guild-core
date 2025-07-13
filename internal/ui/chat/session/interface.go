@@ -46,6 +46,7 @@ type Session struct {
 	CampaignID *string                `json:"campaign_id,omitempty"`
 	CreatedAt  time.Time              `json:"created_at"`
 	UpdatedAt  time.Time              `json:"updated_at"`
+	Messages   []*Message             `json:"messages,omitempty"`
 	Metadata   map[string]interface{} `json:"metadata,omitempty"`
 }
 

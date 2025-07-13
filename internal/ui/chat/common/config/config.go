@@ -9,6 +9,7 @@ import (
 
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/preferences"
 	"github.com/lancekrogers/guild/pkg/project"
 )
 
@@ -19,6 +20,7 @@ type ChatConfig struct {
 	SessionID   string
 	GuildConfig *config.GuildConfig
 	ProjectRoot string
+	UserID      string // Added for preference loading
 
 	// UI settings
 	Width           int
@@ -34,6 +36,20 @@ type ChatConfig struct {
 	EnableStatusDisplay bool
 	EnableRichContent   bool
 
+	// Theme and appearance (from preferences)
+	Theme          string
+	FontSize       int
+	ColorScheme    string
+	ShowTimestamps bool
+	CompactMode    bool
+
+	// AI settings (from preferences)
+	DefaultProvider  string
+	DefaultModel     string
+	Temperature      float64
+	MaxTokens        int
+	StreamingEnabled bool
+
 	// Paths
 	DatabasePath string
 	HistoryPath  string
@@ -42,7 +58,8 @@ type ChatConfig struct {
 
 // ConfigManager handles chat configuration loading and validation
 type ConfigManager struct {
-	ctx context.Context
+	ctx         context.Context
+	prefService *preferences.Service
 }
 
 // NewConfigManager creates a new configuration manager
@@ -52,8 +69,16 @@ func NewConfigManager(ctx context.Context) *ConfigManager {
 	}
 }
 
+// NewConfigManagerWithPreferences creates a new configuration manager with preferences service
+func NewConfigManagerWithPreferences(ctx context.Context, prefService *preferences.Service) *ConfigManager {
+	return &ConfigManager{
+		ctx:         ctx,
+		prefService: prefService,
+	}
+}
+
 // LoadChatConfig loads and validates the chat configuration
-func (cm *ConfigManager) LoadChatConfig(ctx context.Context, campaignID, sessionID string) (*ChatConfig, error) {
+func (cm *ConfigManager) LoadChatConfig(ctx context.Context, userID, campaignID, sessionID string) (*ChatConfig, error) {
 	// Load guild configuration
 	guildConfig, err := cm.loadGuildConfig(ctx)
 	if err != nil {
@@ -70,10 +95,11 @@ func (cm *ConfigManager) LoadChatConfig(ctx context.Context, campaignID, session
 			WithOperation("LoadChatConfig")
 	}
 
-	// Build configuration
+	// Build configuration with defaults
 	chatConfig := &ChatConfig{
 		CampaignID:  campaignID,
 		SessionID:   sessionID,
+		UserID:      userID,
 		GuildConfig: guildConfig,
 		ProjectRoot: projCtx.GetRootPath(),
 
@@ -91,6 +117,20 @@ func (cm *ConfigManager) LoadChatConfig(ctx context.Context, campaignID, session
 		EnableStatusDisplay: true,
 		EnableRichContent:   true,
 
+		// Theme defaults
+		Theme:          "dark",
+		FontSize:       12,
+		ColorScheme:    "default",
+		ShowTimestamps: true,
+		CompactMode:    false,
+
+		// AI defaults
+		DefaultProvider:  "anthropic",
+		DefaultModel:     "claude-3-sonnet-20240229",
+		Temperature:      0.7,
+		MaxTokens:        4096,
+		StreamingEnabled: true,
+
 		// Paths
 		DatabasePath: filepath.Join(".guild", "memory.db"),
 		HistoryPath:  filepath.Join(".guild", "chat_history.txt"),
@@ -99,6 +139,15 @@ func (cm *ConfigManager) LoadChatConfig(ctx context.Context, campaignID, session
 
 	// Apply any overrides from guild config
 	cm.applyConfigOverrides(chatConfig, guildConfig)
+
+	// Load and apply user preferences if service is available
+	if cm.prefService != nil && userID != "" {
+		if err := cm.loadUserPreferences(ctx, chatConfig); err != nil {
+			// Log but don't fail - preferences are optional
+			// In production, would use proper logger
+			_ = err
+		}
+	}
 
 	return chatConfig, nil
 }
@@ -195,4 +244,105 @@ func (cm *ConfigManager) applyConfigOverrides(chatConfig *ChatConfig, guildConfi
 
 	// For now, keep defaults but this can be expanded
 	// to read from guildConfig.Chat.* settings when they're added
+}
+
+// loadUserPreferences loads and applies user preferences to the chat configuration
+func (cm *ConfigManager) loadUserPreferences(ctx context.Context, chatConfig *ChatConfig) error {
+	// Load preferences with hierarchical resolution
+	// Start with system defaults, then user, then campaign specific
+
+	// Load user-level UI preferences
+	uiTheme, err := cm.prefService.GetUserPreference(ctx, chatConfig.UserID, "ui.theme")
+	if err == nil && uiTheme != nil {
+		if theme, ok := uiTheme.(string); ok {
+			chatConfig.Theme = theme
+		}
+	}
+
+	fontSize, err := cm.prefService.GetUserPreference(ctx, chatConfig.UserID, "ui.font_size")
+	if err == nil && fontSize != nil {
+		if size, ok := fontSize.(float64); ok {
+			chatConfig.FontSize = int(size)
+		}
+	}
+
+	vimMode, err := cm.prefService.GetUserPreference(ctx, chatConfig.UserID, "ui.vim_mode")
+	if err == nil && vimMode != nil {
+		if enabled, ok := vimMode.(bool); ok {
+			chatConfig.VimModeEnabled = enabled
+		}
+	}
+
+	// Load AI preferences
+	provider, err := cm.prefService.GetUserPreference(ctx, chatConfig.UserID, "ai.default_provider")
+	if err == nil && provider != nil {
+		if p, ok := provider.(string); ok {
+			chatConfig.DefaultProvider = p
+		}
+	}
+
+	model, err := cm.prefService.GetUserPreference(ctx, chatConfig.UserID, "ai.default_model")
+	if err == nil && model != nil {
+		if m, ok := model.(string); ok {
+			chatConfig.DefaultModel = m
+		}
+	}
+
+	temperature, err := cm.prefService.GetUserPreference(ctx, chatConfig.UserID, "ai.temperature")
+	if err == nil && temperature != nil {
+		if temp, ok := temperature.(float64); ok {
+			chatConfig.Temperature = temp
+		}
+	}
+
+	// Load campaign-specific overrides if campaign is set
+	if chatConfig.CampaignID != "" {
+		campaignTheme, err := cm.prefService.GetCampaignPreference(ctx, chatConfig.CampaignID, "ui.theme")
+		if err == nil && campaignTheme != nil {
+			if theme, ok := campaignTheme.(string); ok {
+				chatConfig.Theme = theme
+			}
+		}
+
+		// Campaign-specific AI settings
+		campaignModel, err := cm.prefService.GetCampaignPreference(ctx, chatConfig.CampaignID, "ai.default_model")
+		if err == nil && campaignModel != nil {
+			if m, ok := campaignModel.(string); ok {
+				chatConfig.DefaultModel = m
+			}
+		}
+	}
+
+	return nil
+}
+
+// SaveUserPreferences saves the current UI state back to preferences
+func (cm *ConfigManager) SaveUserPreferences(ctx context.Context, chatConfig *ChatConfig) error {
+	if cm.prefService == nil || chatConfig.UserID == "" {
+		return nil // No preference service or user ID
+	}
+
+	// Save UI preferences
+	if err := cm.prefService.SetUserPreference(ctx, chatConfig.UserID, "ui.theme", chatConfig.Theme); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save theme preference")
+	}
+
+	if err := cm.prefService.SetUserPreference(ctx, chatConfig.UserID, "ui.font_size", float64(chatConfig.FontSize)); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save font size preference")
+	}
+
+	if err := cm.prefService.SetUserPreference(ctx, chatConfig.UserID, "ui.vim_mode", chatConfig.VimModeEnabled); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save vim mode preference")
+	}
+
+	// Save AI preferences
+	if err := cm.prefService.SetUserPreference(ctx, chatConfig.UserID, "ai.default_provider", chatConfig.DefaultProvider); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save provider preference")
+	}
+
+	if err := cm.prefService.SetUserPreference(ctx, chatConfig.UserID, "ai.temperature", chatConfig.Temperature); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save temperature preference")
+	}
+
+	return nil
 }

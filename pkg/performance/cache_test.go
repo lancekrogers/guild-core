@@ -265,7 +265,7 @@ func TestCacheWithContext(t *testing.T) {
 	// Test with cancelled context
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Millisecond)
 	cancel() // Cancel immediately
-	_ = ctx // ctx is not used in test cache
+	_ = ctx  // ctx is not used in test cache
 
 	// This would normally work since the item is cached
 	value, found = cache.Get("42")
