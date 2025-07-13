@@ -7,6 +7,7 @@ import (
 	"context"
 
 	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild/pkg/storage/optimization"
 )
 
 // InitializeSQLiteStorageForRegistry initializes SQLite storage and returns configured components
@@ -72,6 +73,21 @@ func InitializeSQLiteStorageForRegistry(ctx context.Context, dbPath string) (Sto
 	// Register the memory store adapter in the storage registry
 	storageRegistry.RegisterMemoryStore(memoryStoreAdapter)
 
+	// Create optimization manager
+	// Note: In production, would get metrics registry from main registry
+	// For now, passing nil is acceptable as metrics are optional
+	optimizationConfig := optimization.DefaultConfig()
+	optimizationManager, err := optimization.NewManager(ctx, database.DB(), dbPath, nil, optimizationConfig)
+	if err != nil {
+		// Log error but don't fail - optimization is optional
+		_ = gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create optimization manager").
+			WithComponent("InitializeSQLiteStorageForRegistry").
+			WithOperation("NewOptimizationManager")
+		// Continue without optimization
+	} else {
+		storageRegistry.RegisterOptimizationManager(optimizationManager)
+	}
+
 	// Return the storage registry and memory store adapter
 	return storageRegistry, memoryStoreAdapter, nil
 }
@@ -135,6 +151,21 @@ func InitializeSQLiteStorageForTests(ctx context.Context) (StorageRegistry, inte
 
 	// Register the memory store adapter in the storage registry
 	storageRegistry.RegisterMemoryStore(memoryStoreAdapter)
+
+	// Create optimization manager
+	// Note: In production, would get metrics registry from main registry
+	// For now, passing nil is acceptable as metrics are optional
+	optimizationConfig := optimization.DefaultConfig()
+	optimizationManager, err := optimization.NewManager(ctx, database.DB(), ":memory:", nil, optimizationConfig)
+	if err != nil {
+		// Log error but don't fail - optimization is optional
+		_ = gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create optimization manager").
+			WithComponent("InitializeSQLiteStorageForTests").
+			WithOperation("NewOptimizationManager")
+		// Continue without optimization
+	} else {
+		storageRegistry.RegisterOptimizationManager(optimizationManager)
+	}
 
 	// Return the storage registry and memory store adapter
 	return storageRegistry, memoryStoreAdapter, nil

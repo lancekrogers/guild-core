@@ -91,7 +91,6 @@ func TestSpanFromContext(t *testing.T) {
 	span2.End()
 }
 
-
 func TestRecordError(t *testing.T) {
 	ctx := context.Background()
 
@@ -253,7 +252,7 @@ func TestTracedError(t *testing.T) {
 			defer span.End()
 
 			result := TracedError(ctx, tt.err, tt.msg)
-			
+
 			if tt.wantNil {
 				assert.Nil(t, result)
 			} else {
@@ -358,7 +357,7 @@ func TestConcurrentSpanOperations(t *testing.T) {
 			defer func() { done <- true }()
 
 			// Set attributes
-			SetSpanAttributes(ctx, 
+			SetSpanAttributes(ctx,
 				attribute.Int("goroutine_id", id),
 				attribute.String("operation", "concurrent"))
 

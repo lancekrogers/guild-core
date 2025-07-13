@@ -19,6 +19,7 @@ import (
 	"github.com/lancekrogers/guild/internal/ui/chat/session"
 	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
 	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild/pkg/preferences"
 	"github.com/lancekrogers/guild/pkg/templates"
 )
 
@@ -32,6 +33,7 @@ type CommandProcessor struct {
 	currentSession  *session.Session
 	templateManager templates.TemplateManager
 	guildClient     pb.GuildClient
+	prefService     *preferences.Service // Sprint 2: Preferences integration
 }
 
 // CommandHandler defines the interface for command handlers
@@ -68,6 +70,16 @@ func NewCommandProcessor(ctx context.Context, config *common.ChatConfig, history
 	cp.registerBuiltinHandlers()
 
 	return cp
+}
+
+// SetPreferencesService sets the preferences service for command handling (Sprint 2)
+func (cp *CommandProcessor) SetPreferencesService(prefService *preferences.Service) {
+	cp.prefService = prefService
+	// Re-register handlers that depend on preferences
+	if cp.prefService != nil {
+		cp.handlers["preferences"] = NewPreferencesHandler(cp.prefService, cp.config.UserID, cp.config.CampaignID)
+		cp.handlers["prefs"] = cp.handlers["preferences"] // Alias
+	}
 }
 
 // ProcessInput processes user input and determines if it's a command or message
@@ -236,6 +248,16 @@ func (cp *CommandProcessor) registerBuiltinHandlers() {
 
 	// Session commands
 	cp.handlers["session"] = &SessionHandler{}
+
+	// Sprint 2: Preferences commands
+	if cp.prefService != nil {
+		cp.handlers["preferences"] = NewPreferencesHandler(cp.prefService, cp.config.UserID, cp.config.CampaignID)
+		cp.handlers["prefs"] = cp.handlers["preferences"] // Alias
+	}
+
+	// Sprint 2: Recovery commands
+	cp.handlers["recover"] = &RecoverHandler{}
+	cp.handlers["new"] = &NewSessionHandler{}
 }
 
 // Built-in command handlers
@@ -1708,6 +1730,44 @@ func (h *SessionHandler) Description() string {
 
 func (h *SessionHandler) Usage() string {
 	return "/session [list|load|save]"
+}
+
+// Sprint 2: Recovery command handlers
+
+// RecoverHandler handles crash recovery
+type RecoverHandler struct{}
+
+func (h *RecoverHandler) Handle(ctx context.Context, args []string) tea.Cmd {
+	return func() tea.Msg {
+		// This should be handled by the app's recovery logic
+		return common.RecoveryCommandMsg{Recover: true}
+	}
+}
+
+func (h *RecoverHandler) Description() string {
+	return "Recover from a previous session after a crash"
+}
+
+func (h *RecoverHandler) Usage() string {
+	return "/recover"
+}
+
+// NewSessionHandler starts a fresh session instead of recovering
+type NewSessionHandler struct{}
+
+func (h *NewSessionHandler) Handle(ctx context.Context, args []string) tea.Cmd {
+	return func() tea.Msg {
+		// This should be handled by the app's recovery logic
+		return common.RecoveryCommandMsg{Recover: false}
+	}
+}
+
+func (h *NewSessionHandler) Description() string {
+	return "Start a new session without recovery"
+}
+
+func (h *NewSessionHandler) Usage() string {
+	return "/new"
 }
 
 // TemplateHandler handles template operations

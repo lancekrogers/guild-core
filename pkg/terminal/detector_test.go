@@ -116,45 +116,45 @@ func TestDetector_Detect(t *testing.T) {
 
 func TestDetector_detectColors(t *testing.T) {
 	tests := []struct {
-		name      string
-		setupEnv  map[string]string
-		want      ColorSupport
+		name          string
+		setupEnv      map[string]string
+		want          ColorSupport
 		wantTrueColor bool
 	}{
 		{
-			name:      "no color",
-			setupEnv:  map[string]string{"NO_COLOR": "1"},
-			want:      NoColor,
+			name:          "no color",
+			setupEnv:      map[string]string{"NO_COLOR": "1"},
+			want:          NoColor,
 			wantTrueColor: false,
 		},
 		{
-			name:      "force color",
-			setupEnv:  map[string]string{"GUILD_FORCE_COLOR": "1"},
-			want:      Basic16,
+			name:          "force color",
+			setupEnv:      map[string]string{"GUILD_FORCE_COLOR": "1"},
+			want:          Basic16,
 			wantTrueColor: false,
 		},
 		{
-			name:      "force true color",
-			setupEnv:  map[string]string{"GUILD_FORCE_TRUE_COLOR": "1"},
-			want:      TrueColor24Bit,
+			name:          "force true color",
+			setupEnv:      map[string]string{"GUILD_FORCE_TRUE_COLOR": "1"},
+			want:          TrueColor24Bit,
 			wantTrueColor: true,
 		},
 		{
-			name:      "256 color terminal",
-			setupEnv:  map[string]string{"TERM": "xterm-256color"},
-			want:      Extended256,
+			name:          "256 color terminal",
+			setupEnv:      map[string]string{"TERM": "xterm-256color"},
+			want:          Extended256,
 			wantTrueColor: false,
 		},
 		{
-			name:      "true color terminal",
-			setupEnv:  map[string]string{"COLORTERM": "truecolor"},
-			want:      TrueColor24Bit,
+			name:          "true color terminal",
+			setupEnv:      map[string]string{"COLORTERM": "truecolor"},
+			want:          TrueColor24Bit,
 			wantTrueColor: true,
 		},
 		{
-			name:      "dumb terminal",
-			setupEnv:  map[string]string{"TERM": "dumb"},
-			want:      NoColor,
+			name:          "dumb terminal",
+			setupEnv:      map[string]string{"TERM": "dumb"},
+			want:          NoColor,
 			wantTrueColor: false,
 		},
 	}
@@ -183,7 +183,7 @@ func TestDetector_detectColors(t *testing.T) {
 
 			detector := NewDetector()
 			colorSupport := detector.detectColorSupport()
-			
+
 			assert.Equal(t, tt.want, colorSupport)
 			assert.Equal(t, tt.wantTrueColor, colorSupport == TrueColor24Bit)
 		})
@@ -300,7 +300,7 @@ func TestDetector_ConcurrentDetection(t *testing.T) {
 
 func TestDetector_ContextCancellation(t *testing.T) {
 	detector := NewDetector()
-	
+
 	// Create cancelled context
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
@@ -313,10 +313,10 @@ func TestDetector_ContextCancellation(t *testing.T) {
 
 func TestDetector_EnvironmentOverrides(t *testing.T) {
 	tests := []struct {
-		name     string
-		envVar   string
-		value    string
-		check    func(*testing.T, Capabilities)
+		name   string
+		envVar string
+		value  string
+		check  func(*testing.T, Capabilities)
 	}{
 		{
 			name:   "force unicode",
@@ -367,7 +367,7 @@ func TestDetector_EnvironmentOverrides(t *testing.T) {
 			detector := NewDetector()
 			ctx := context.Background()
 			caps, err := detector.Detect(ctx)
-			
+
 			require.NoError(t, err)
 			tt.check(t, caps)
 		})

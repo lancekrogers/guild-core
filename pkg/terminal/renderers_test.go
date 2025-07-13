@@ -333,7 +333,7 @@ func TestRichRenderer_Hyperlink(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			renderer := NewRichRenderer(tt.caps)
 			result := renderer.Hyperlink(tt.url, tt.text)
-			
+
 			if tt.wantEscapes {
 				assert.Contains(t, result, "\x1b]8;;")
 				assert.Contains(t, result, tt.url)
@@ -434,19 +434,17 @@ func TestRendererRegistry(t *testing.T) {
 	// Test that renderers are registered
 	require.NotNil(t, registry)
 	require.NotNil(t, registry.renderers)
-	
+
 	// Test registration
 	testFactory := func(caps Capabilities) Renderer {
 		return NewFallbackRenderer()
 	}
-	
+
 	registry.Register("test", testFactory)
-	
+
 	// Verify it was registered
 	registry.mu.RLock()
 	_, exists := registry.renderers["test"]
 	registry.mu.RUnlock()
 	assert.True(t, exists)
 }
-
-

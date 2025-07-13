@@ -284,6 +284,7 @@ type StorageRegistry interface {
 	RegisterSessionRepository(repo SessionRepository)
 	RegisterPreferencesRepository(repo PreferencesRepository)
 	RegisterMemoryStore(store interface{})
+	RegisterOptimizationManager(manager interface{})
 
 	GetTaskRepository() TaskRepository
 	GetCampaignRepository() CampaignRepository
@@ -294,4 +295,5 @@ type StorageRegistry interface {
 	GetSessionRepository() SessionRepository
 	GetPreferencesRepository() PreferencesRepository
 	GetMemoryStore() interface{}
+	GetOptimizationManager() interface{}
 }

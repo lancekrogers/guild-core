@@ -12,7 +12,7 @@ import (
 
 func TestPreferenceService(t *testing.T) {
 	ctx := context.Background()
-	
+
 	// Initialize test storage
 	storageRegistry, _, err := storage.InitializeSQLiteStorageForTests(ctx)
 	if err != nil {

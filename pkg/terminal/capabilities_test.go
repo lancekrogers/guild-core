@@ -312,14 +312,14 @@ func TestCapabilities_Copy(t *testing.T) {
 	}
 
 	copied := original.Copy()
-	
+
 	// Verify all fields are copied
 	assert.Equal(t, original, copied)
-	
+
 	// Modify the copy
 	copied.Colors = NoColor
 	copied.Unicode = false
-	
+
 	// Original should be unchanged
 	assert.Equal(t, TrueColor24Bit, original.Colors)
 	assert.True(t, original.Unicode)
@@ -346,7 +346,7 @@ func TestCapabilities_LazyEvaluation(t *testing.T) {
 func TestCapabilities_MinimalTerminal(t *testing.T) {
 	// Test behavior with minimal terminal capabilities
 	caps := Capabilities{}
-	
+
 	assert.False(t, caps.SupportsColor())
 	assert.False(t, caps.SupportsRichUI())
 	assert.Equal(t, NoColor, caps.Colors)

@@ -19,7 +19,6 @@ type Embedding struct {
 	// Text is the original text content
 	Text string
 
-
 	// Vector is the embedding vector
 	Vector []float32
 

@@ -20,7 +20,7 @@ func TestNewProfileDetector(t *testing.T) {
 
 func TestProfileDetector_Register(t *testing.T) {
 	pd := NewProfileDetector()
-	
+
 	testProfile := &Profile{
 		Name:        "test-terminal",
 		Description: "Test Terminal",
@@ -30,9 +30,9 @@ func TestProfileDetector_Register(t *testing.T) {
 			Unicode: true,
 		},
 	}
-	
+
 	pd.Register(testProfile)
-	
+
 	// Verify it was registered
 	profile, ok := pd.GetProfile("test-terminal")
 	assert.True(t, ok)
@@ -150,7 +150,7 @@ func TestProfileDetector_Detect(t *testing.T) {
 
 func TestProfileDetector_matchesProfile(t *testing.T) {
 	pd := NewProfileDetector()
-	
+
 	tests := []struct {
 		name        string
 		profileName string
@@ -246,9 +246,9 @@ func TestProfileDetector_matchesProfile(t *testing.T) {
 func TestProfileDetector_ListProfiles(t *testing.T) {
 	pd := NewProfileDetector()
 	profiles := pd.ListProfiles()
-	
+
 	assert.Greater(t, len(profiles), 10)
-	
+
 	// Check some expected profiles exist
 	expectedProfiles := []string{
 		"iterm2",
@@ -260,12 +260,12 @@ func TestProfileDetector_ListProfiles(t *testing.T) {
 		"ssh-minimal",
 		"dumb",
 	}
-	
+
 	profileNames := make(map[string]bool)
 	for _, p := range profiles {
 		profileNames[p.Name] = true
 	}
-	
+
 	for _, expected := range expectedProfiles {
 		assert.True(t, profileNames[expected], "Expected profile %s", expected)
 	}
@@ -274,19 +274,19 @@ func TestProfileDetector_ListProfiles(t *testing.T) {
 func TestProfileDetector_Reset(t *testing.T) {
 	pd := NewProfileDetector()
 	ctx := context.Background()
-	
+
 	// First detection
 	profile1, err := pd.Detect(ctx)
 	require.NoError(t, err)
-	
+
 	// Second detection should return cached
 	profile2, err := pd.Detect(ctx)
 	require.NoError(t, err)
 	assert.Same(t, profile1, profile2)
-	
+
 	// Reset cache
 	pd.Reset()
-	
+
 	// Next detection should create new
 	profile3, err := pd.Detect(ctx)
 	require.NoError(t, err)
@@ -296,17 +296,17 @@ func TestProfileDetector_Reset(t *testing.T) {
 
 func TestProfileDetector_ApplyProfile(t *testing.T) {
 	pd := NewProfileDetector()
-	
+
 	// Apply existing profile
 	err := pd.ApplyProfile("iterm2")
 	require.NoError(t, err)
-	
+
 	// Verify it's set
 	ctx := context.Background()
 	profile, err := pd.Detect(ctx)
 	require.NoError(t, err)
 	assert.Equal(t, "iterm2", profile.Name)
-	
+
 	// Apply non-existent profile
 	err = pd.ApplyProfile("non-existent")
 	assert.Error(t, err)
@@ -315,9 +315,9 @@ func TestProfileDetector_ApplyProfile(t *testing.T) {
 
 func TestProfile_Capabilities(t *testing.T) {
 	tests := []struct {
-		name         string
-		profileName  string
-		checkCaps    func(*testing.T, Capabilities)
+		name        string
+		profileName string
+		checkCaps   func(*testing.T, Capabilities)
 	}{
 		{
 			name:        "iTerm2 capabilities",
@@ -351,7 +351,7 @@ func TestProfile_Capabilities(t *testing.T) {
 	}
 
 	pd := NewProfileDetector()
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			profile, ok := pd.GetProfile(tt.profileName)
@@ -364,17 +364,17 @@ func TestProfile_Capabilities(t *testing.T) {
 func TestProfile_Priority(t *testing.T) {
 	pd := NewProfileDetector()
 	profiles := pd.ListProfiles()
-	
+
 	// Check priority ordering
 	priorities := make(map[int][]string)
 	for _, p := range profiles {
 		priorities[p.Priority] = append(priorities[p.Priority], p.Name)
 	}
-	
+
 	// High-priority terminals
 	assert.Contains(t, priorities[100], "iterm2")
 	assert.Contains(t, priorities[100], "windows-terminal")
-	
+
 	// Low-priority terminals
 	assert.Contains(t, priorities[1], "dumb")
 }
@@ -382,10 +382,10 @@ func TestProfile_Priority(t *testing.T) {
 func TestProfileDetector_ConcurrentDetection(t *testing.T) {
 	pd := NewProfileDetector()
 	ctx := context.Background()
-	
+
 	// Run multiple detections concurrently
 	done := make(chan *Profile, 10)
-	
+
 	for i := 0; i < 10; i++ {
 		go func() {
 			profile, err := pd.Detect(ctx)
@@ -396,7 +396,7 @@ func TestProfileDetector_ConcurrentDetection(t *testing.T) {
 			}
 		}()
 	}
-	
+
 	// Collect results
 	var profiles []*Profile
 	for i := 0; i < 10; i++ {
@@ -405,7 +405,7 @@ func TestProfileDetector_ConcurrentDetection(t *testing.T) {
 			profiles = append(profiles, profile)
 		}
 	}
-	
+
 	// All should be the same (cached)
 	require.Greater(t, len(profiles), 0)
 	first := profiles[0]
@@ -416,11 +416,11 @@ func TestProfileDetector_ConcurrentDetection(t *testing.T) {
 
 func TestProfileDetector_ContextCancellation(t *testing.T) {
 	pd := NewProfileDetector()
-	
+
 	// Create cancelled context
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
-	
+
 	profile, err := pd.Detect(ctx)
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "context cancelled")

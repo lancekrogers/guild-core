@@ -5,8 +5,8 @@ package chat
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -14,7 +14,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	_ "modernc.org/sqlite" // SQLite driver
 
 	"github.com/lancekrogers/guild/internal/daemonconn"
 	"github.com/lancekrogers/guild/internal/ui/chat/agents"
@@ -43,8 +42,11 @@ import (
 	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/lancekrogers/guild/pkg/grpc/pb/prompts/v1"
 	"github.com/lancekrogers/guild/pkg/memory"
+	"github.com/lancekrogers/guild/pkg/preferences"
 	"github.com/lancekrogers/guild/pkg/providers"
 	"github.com/lancekrogers/guild/pkg/registry"
+	pkgsession "github.com/lancekrogers/guild/pkg/session"
+	"github.com/lancekrogers/guild/pkg/storage"
 	"github.com/lancekrogers/guild/pkg/templates"
 	"github.com/lancekrogers/guild/pkg/tools"
 
@@ -128,6 +130,15 @@ type App struct {
 	codeRenderer     *visual.CodeRenderer
 	mermaidProcessor *visual.MermaidProcessor
 
+	// Sprint 2: Persistence & State Management
+	prefService     *preferences.Service
+	storageRegistry storage.StorageRegistry
+	sessionStore    pkgsession.SessionStore
+	recoveryManager *pkgsession.RecoveryManager
+	multiSessionMgr *pkgsession.MultiSessionManager
+	sessionResumer  *pkgsession.SessionResumer
+	pendingRecovery []pkgsession.CheckpointInfo
+
 	// Feature flags
 	initialized bool
 	ready       bool
@@ -175,6 +186,13 @@ func (app *App) SetSessionID(sessionID string) {
 	}
 }
 
+// SetUserID sets the user ID for preferences (Sprint 2)
+func (app *App) SetUserID(userID string) {
+	if app.config != nil {
+		app.config.UserID = userID
+	}
+}
+
 // Run starts the chat application
 func (app *App) Run() error {
 	// Initialize components during run
@@ -211,7 +229,13 @@ func (app *App) initializeComponents() error {
 			WithOperation("initializeComponents")
 	}
 
-	// Initialize session management first
+	// Initialize preferences service (Sprint 2)
+	if err := app.initializePreferences(); err != nil {
+		// Log but don't fail - preferences are optional
+		fmt.Printf("Warning: Failed to initialize preferences: %v\n", err)
+	}
+
+	// Initialize session management with Sprint 2 enhancements
 	if err := app.initializeSessionManagement(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize session management").
 			WithComponent("chat.app").
@@ -259,6 +283,11 @@ func (app *App) initializeComponents() error {
 	app.commandProcessor = commands.NewCommandProcessor(app.ctx, app.config, app.commandHistory,
 		app.sessionManager, app.currentSession, app.templateManager, app.guildClient)
 
+	// Set preferences service on command processor (Sprint 2)
+	if app.prefService != nil && app.commandProcessor != nil {
+		app.commandProcessor.SetPreferencesService(app.prefService)
+	}
+
 	// Connect completion engine to command processor for live command updates
 	if app.completionEngine != nil && app.commandProcessor != nil {
 		app.completionEngine.SetCommandProcessor(app.commandProcessor)
@@ -299,46 +328,133 @@ func (app *App) initializeComponents() error {
 	return nil
 }
 
-// initializeSessionManagement initializes session persistence
+// initializeSessionManagement initializes enhanced session persistence from Sprint 2
 func (app *App) initializeSessionManagement() error {
-	// Open database connection
-	db, err := sql.Open("sqlite3", app.config.DatabasePath)
-	if err != nil {
-		// Continue without session persistence if database fails
-		fmt.Printf("Warning: Failed to open session database: %v\n", err)
-		return nil
+	// Initialize storage registry if not provided
+	if app.storageRegistry == nil {
+		storageReg, memStore, err := storage.InitializeSQLiteStorageForRegistry(app.ctx, app.config.DatabasePath)
+		if err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize storage registry").
+				WithComponent("chat.app").
+				WithOperation("initializeSessionManagement")
+		}
+		app.storageRegistry = storageReg
+		// memStore is available if needed for memory operations
+		_ = memStore
 	}
 
-	// Create session store and manager
-	store := session.NewSQLiteStore(db)
-	app.sessionManager = session.NewManager(store)
+	// Get session repository from storage registry
+	sessionRepo := app.storageRegistry.GetSessionRepository()
+	if sessionRepo == nil {
+		return gerror.New(gerror.ErrCodeInternal, "session repository not available", nil).
+			WithComponent("chat.app").
+			WithOperation("initializeSessionManagement")
+	}
+
+	// Create session store adapter for pkg/session
+	app.sessionStore = &sessionStoreAdapter{
+		repo: sessionRepo,
+		ctx:  app.ctx,
+	}
+
+	// Create enhanced session manager with Sprint 2 features
+	sessionManager := pkgsession.NewSessionManager(app.sessionStore,
+		pkgsession.WithAutoSaveInterval(30*time.Second))
+
+	// Create recovery manager for crash recovery
+	recoveryDir := filepath.Join(filepath.Dir(app.config.DatabasePath), "recovery")
+	recoveryManager, err := pkgsession.NewRecoveryManager(sessionManager, recoveryDir)
+	if err != nil {
+		// Log but don't fail - recovery is optional
+		fmt.Printf("Warning: Failed to create recovery manager: %v\n", err)
+	}
+	app.recoveryManager = recoveryManager
+
+	// Create multi-session manager
+	app.multiSessionMgr = pkgsession.NewMultiSessionManager(sessionManager, nil, 10)
+
+	// Create session resumer (we'll create adapters for UI integration later)
+	app.sessionResumer = pkgsession.NewSessionResumer(sessionManager, nil, nil, nil)
+
+	// Check for crash recovery before creating new session
+	if app.recoveryManager != nil {
+		checkpoints := app.recoveryManager.GetCheckpointInfo()
+		if len(checkpoints) > 0 {
+			// We'll handle recovery prompt in Init() method
+			app.pendingRecovery = checkpoints
+		}
+	}
+
+	// Create compatibility wrapper for existing code
+	app.sessionManager = &sessionManagerAdapter{
+		multiSessionMgr: app.multiSessionMgr,
+		sessionManager:  sessionManager,
+	}
 
 	// Load or create session
 	if app.config.SessionID != "" {
-		// Try to load existing session
-		session, err := app.sessionManager.LoadSession(app.config.SessionID)
+		// Try to switch to existing session
+		session, err := app.multiSessionMgr.SwitchSession(app.ctx, app.config.SessionID)
 		if err != nil {
-			// Create new session if load fails
-			name := fmt.Sprintf("Chat Session %s", app.config.SessionID[:8])
-			session, err = app.sessionManager.NewSession(name, &app.config.CampaignID)
+			// Create new session if switch fails
+			session, err = app.multiSessionMgr.CreateSession(app.ctx, app.config.UserID, app.config.CampaignID)
 			if err != nil {
-				fmt.Printf("Warning: Failed to create session: %v\n", err)
-				return nil
+				return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create session").
+					WithComponent("chat.app").
+					WithOperation("initializeSessionManagement")
 			}
 			app.config.SessionID = session.ID
 		}
-		app.currentSession = session
+		app.currentSession = convertPkgSession(session)
 	}
 
 	// Load existing messages if we have a session
 	if app.currentSession != nil {
-		messages, err := app.sessionManager.GetContext(app.currentSession.ID, 50)
+		messages, err := app.multiSessionMgr.GetSessionMessages(app.currentSession.ID, 50)
 		if err == nil && len(messages) > 0 {
 			// Convert session messages to chat messages
 			for _, msg := range messages {
-				chatMsg := app.convertSessionMessage(msg)
+				chatMsg := app.convertPkgSessionMessage(msg)
 				app.messages = append(app.messages, chatMsg)
 			}
+		}
+	}
+
+	return nil
+}
+
+// initializePreferences initializes the preferences service from Sprint 2
+func (app *App) initializePreferences() error {
+	// Get preferences repository from storage registry
+	if app.storageRegistry == nil {
+		// Storage registry should be initialized by session management
+		return gerror.New(gerror.ErrCodeInternal, "storage registry not initialized", nil).
+			WithComponent("chat.app").
+			WithOperation("initializePreferences")
+	}
+
+	prefRepo := app.storageRegistry.GetPreferencesRepository()
+	if prefRepo == nil {
+		return gerror.New(gerror.ErrCodeInternal, "preferences repository not available", nil).
+			WithComponent("chat.app").
+			WithOperation("initializePreferences")
+	}
+
+	// Create preferences service
+	app.prefService = preferences.NewService(prefRepo)
+
+	// Load user preferences into config
+	if app.config.UserID != "" {
+		configManager := cfig.NewConfigManagerWithPreferences(app.ctx, app.prefService)
+
+		// Reload config with preferences
+		enhancedConfig, err := configManager.LoadChatConfig(app.ctx, app.config.UserID,
+			app.config.CampaignID, app.config.SessionID)
+		if err == nil {
+			// Preserve existing values but apply preferences
+			enhancedConfig.Width = app.config.Width
+			enhancedConfig.Height = app.config.Height
+			app.config = enhancedConfig
 		}
 	}
 
@@ -591,6 +707,63 @@ func (app *App) convertSessionMessage(msg *session.Message) common.ChatMessage {
 	}
 }
 
+// Sprint 2: Crash Recovery Methods
+
+// promptForRecovery creates a recovery prompt for the user
+func (app *App) promptForRecovery() tea.Cmd {
+	return func() tea.Msg {
+		// Show recovery information
+		recoveryInfo := fmt.Sprintf("🔄 Previous session detected:\n")
+		for _, checkpoint := range app.pendingRecovery {
+			recoveryInfo += fmt.Sprintf("  • Session %s (last active: %s)\n",
+				checkpoint.SessionID[:8],
+				checkpoint.Timestamp.Format("Jan 2 15:04"))
+		}
+		recoveryInfo += "\nWould you like to recover? Type /recover to restore or /new to start fresh."
+
+		return common.ChatMessage{
+			Type:      common.MsgSystem,
+			Content:   recoveryInfo,
+			AgentID:   "system",
+			Timestamp: time.Now(),
+			Metadata:  map[string]string{"type": "recovery_prompt"},
+		}
+	}
+}
+
+// handleRecoveryCommand handles the user's recovery decision
+func (app *App) handleRecoveryCommand(recover bool) tea.Cmd {
+	if !recover || app.recoveryManager == nil || len(app.pendingRecovery) == 0 {
+		// Clear pending recovery and continue normally
+		app.pendingRecovery = nil
+		return nil
+	}
+
+	// Recover the most recent session
+	checkpoint := app.pendingRecovery[0]
+	return func() tea.Msg {
+		session, err := app.recoveryManager.RecoverSession(app.ctx, checkpoint.SessionID)
+		if err != nil {
+			return panes.StatusUpdateMsg{
+				Message: fmt.Sprintf("Failed to recover session: %v", err),
+				Level:   "error",
+			}
+		}
+
+		// Update app state with recovered session
+		app.currentSession = convertPkgSession(session)
+		app.config.SessionID = session.ID
+
+		// Clear pending recovery
+		app.pendingRecovery = nil
+
+		return panes.StatusUpdateMsg{
+			Message: "✅ Session recovered successfully",
+			Level:   "success",
+		}
+	}
+}
+
 // Implement tea.Model interface
 
 // Init initializes the Bubble Tea model
@@ -609,6 +782,12 @@ func (app *App) Init() tea.Cmd {
 		app.outputPane.Init(),
 		app.inputPane.Init(),
 		app.statusPane.Init(),
+	}
+
+	// Check for crash recovery
+	if len(app.pendingRecovery) > 0 {
+		// Create recovery prompt
+		cmds = append(cmds, app.promptForRecovery())
 	}
 
 	// Start services
@@ -646,6 +825,14 @@ func (app *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		return app.handleKeyPress(msg)
+
+	case common.RecoveryCommandMsg:
+		// Handle recovery decision
+		cmd := app.handleRecoveryCommand(msg.Recover)
+		if cmd != nil {
+			cmds = append(cmds, cmd)
+		}
+		return app, tea.Batch(cmds...)
 
 	case agents.AgentStreamMsg:
 		return app.handleAgentStream(msg)
@@ -2074,4 +2261,329 @@ func getCompletionStrings(completions []completion.CompletionResult) []string {
 		strings[i] = comp.Content
 	}
 	return strings
+}
+
+// Sprint 2 Integration: Adapter types for compatibility
+
+// sessionStoreAdapter adapts storage.SessionRepository to pkgsession.SessionStore interface
+type sessionStoreAdapter struct {
+	repo storage.SessionRepository
+	ctx  context.Context
+}
+
+func (s *sessionStoreAdapter) GetSession(ctx context.Context, sessionID string) (*storage.ChatSession, error) {
+	return s.repo.GetSession(ctx, sessionID)
+}
+
+func (s *sessionStoreAdapter) UpsertSession(ctx context.Context, session *storage.ChatSession, stateData []byte) error {
+	// Store state data in metadata
+	if session.Metadata == nil {
+		session.Metadata = make(map[string]interface{})
+	}
+	session.Metadata["state_data"] = string(stateData)
+	return s.repo.UpdateSession(ctx, session)
+}
+
+func (s *sessionStoreAdapter) SaveMessage(ctx context.Context, sessionID string, message *storage.ChatMessage) error {
+	// Ensure message has the session ID set
+	message.SessionID = sessionID
+	return s.repo.SaveMessage(ctx, message)
+}
+
+func (s *sessionStoreAdapter) GetMessages(ctx context.Context, sessionID string) ([]*storage.ChatMessage, error) {
+	return s.repo.GetMessages(ctx, sessionID)
+}
+
+func (s *sessionStoreAdapter) ListSessions(ctx context.Context, options pkgsession.ListOptions) ([]*storage.ChatSession, error) {
+	// Convert options to storage format
+	return s.repo.ListSessions(ctx, int32(options.Limit), int32(options.Offset))
+}
+
+func (s *sessionStoreAdapter) Begin() (pkgsession.Transaction, error) {
+	// For now, return a no-op transaction
+	return &noOpTransaction{store: s}, nil
+}
+
+// noOpTransaction provides a simple transaction implementation
+type noOpTransaction struct {
+	store *sessionStoreAdapter
+}
+
+func (t *noOpTransaction) UpsertSession(session *storage.ChatSession, stateData []byte) error {
+	return t.store.UpsertSession(context.Background(), session, stateData)
+}
+
+func (t *noOpTransaction) SaveMessage(sessionID string, message *storage.ChatMessage) error {
+	return t.store.SaveMessage(context.Background(), sessionID, message)
+}
+
+func (t *noOpTransaction) Commit() error {
+	return nil
+}
+
+func (t *noOpTransaction) Rollback() error {
+	return nil
+}
+
+// sessionManagerAdapter adapts the new multi-session manager to the old interface
+type sessionManagerAdapter struct {
+	multiSessionMgr *pkgsession.MultiSessionManager
+	sessionManager  *pkgsession.SessionManager
+}
+
+func (s *sessionManagerAdapter) LoadSession(sessionID string) (*session.Session, error) {
+	sess, err := s.multiSessionMgr.SwitchSession(context.Background(), sessionID)
+	if err != nil {
+		return nil, err
+	}
+	return convertPkgSession(sess), nil
+}
+
+func (s *sessionManagerAdapter) NewSession(name string, campaignID *string) (*session.Session, error) {
+	userID := "default" // TODO: Get from context or config
+	campaign := ""
+	if campaignID != nil {
+		campaign = *campaignID
+	}
+	sess, err := s.multiSessionMgr.CreateSession(context.Background(), userID, campaign)
+	if err != nil {
+		return nil, err
+	}
+	return convertPkgSession(sess), nil
+}
+
+func (s *sessionManagerAdapter) SaveSession(session *session.Session) error {
+	// Convert back to pkg session format
+	campaignID := ""
+	if session.CampaignID != nil {
+		campaignID = *session.CampaignID
+	}
+
+	pkgSess := &pkgsession.Session{
+		ID:             session.ID,
+		UserID:         "default", // TODO: Get from session metadata
+		CampaignID:     campaignID,
+		StartTime:      session.CreatedAt,
+		LastActiveTime: session.UpdatedAt,
+		Messages:       convertToPkgMessages(session.Messages),
+		Metadata:       session.Metadata,
+	}
+	return s.sessionManager.SaveSession(context.Background(), pkgSess)
+}
+
+func (s *sessionManagerAdapter) GetContext(sessionID string, limit int) ([]*session.Message, error) {
+	messages, err := s.multiSessionMgr.GetSessionMessages(sessionID, limit)
+	if err != nil {
+		return nil, err
+	}
+	return convertFromPkgMessages(messages), nil
+}
+
+func (s *sessionManagerAdapter) ExportSession(sessionID string, format session.ExportFormat) ([]byte, error) {
+	// TODO: Implement using pkg session export
+	return nil, nil
+}
+
+func (s *sessionManagerAdapter) ImportSession(data []byte, format session.ExportFormat) (*session.Session, error) {
+	// TODO: Implement using pkg session import
+	return nil, nil
+}
+
+func (s *sessionManagerAdapter) AppendMessage(sessionID string, role session.MessageRole, content string, toolCalls []session.ToolCall) (*session.Message, error) {
+	// Convert role to pkg session format
+	var msgType pkgsession.MessageType
+	switch role {
+	case session.RoleUser:
+		msgType = pkgsession.MessageTypeUser
+	case session.RoleAssistant:
+		msgType = pkgsession.MessageTypeAgent
+	case session.RoleSystem:
+		msgType = pkgsession.MessageTypeSystem
+	default:
+		msgType = pkgsession.MessageTypeUser
+	}
+
+	// Create message
+	msg := &pkgsession.Message{
+		ID:        fmt.Sprintf("msg-%d", time.Now().UnixNano()),
+		Agent:     "chat", // Default agent for UI messages
+		Type:      msgType,
+		Content:   content,
+		Timestamp: time.Now(),
+	}
+
+	// Add to session
+	sess, err := s.multiSessionMgr.GetActiveSession()
+	if err != nil {
+		return nil, err
+	}
+
+	sess.Messages = append(sess.Messages, *msg)
+
+	// Save the session
+	if err := s.sessionManager.SaveSession(context.Background(), sess); err != nil {
+		return nil, err
+	}
+
+	// Convert back to session format
+	return &session.Message{
+		ID:        msg.ID,
+		Role:      role,
+		Content:   content,
+		CreatedAt: msg.Timestamp,
+	}, nil
+}
+
+func (s *sessionManagerAdapter) StreamMessage(sessionID string, role session.MessageRole) (session.MessageStream, error) {
+	// TODO: Implement streaming message support
+	return nil, fmt.Errorf("streaming messages not yet implemented")
+}
+
+func (s *sessionManagerAdapter) ClearContext(sessionID string) error {
+	// Clear messages from the session
+	sess, err := s.multiSessionMgr.GetActiveSession()
+	if err != nil {
+		return err
+	}
+
+	// Keep system messages, clear user/assistant messages
+	var filteredMessages []pkgsession.Message
+	for _, msg := range sess.Messages {
+		if msg.Type == pkgsession.MessageTypeSystem {
+			filteredMessages = append(filteredMessages, msg)
+		}
+	}
+
+	sess.Messages = filteredMessages
+	return s.sessionManager.SaveSession(context.Background(), sess)
+}
+
+func (s *sessionManagerAdapter) ExportSessionWithOptions(sessionID string, format session.ExportFormat, options *session.ExportOptions) ([]byte, error) {
+	// For now, delegate to regular export
+	return s.ExportSession(sessionID, format)
+}
+
+func (s *sessionManagerAdapter) ForkSession(sourceID string, newName string) (*session.Session, error) {
+	// TODO: Implement session forking
+	return nil, fmt.Errorf("session forking not yet implemented")
+}
+
+// Conversion functions between package types
+
+func convertPkgSession(s *pkgsession.Session) *session.Session {
+	var campaignID *string
+	if s.CampaignID != "" {
+		campaignID = &s.CampaignID
+	}
+
+	return &session.Session{
+		ID:         s.ID,
+		Name:       fmt.Sprintf("Session %s", s.ID[:8]),
+		CampaignID: campaignID,
+		CreatedAt:  s.StartTime,
+		UpdatedAt:  s.LastActiveTime,
+		Messages:   convertFromPkgMessages(toPkgMessagePtrs(s.Messages)),
+		Metadata:   s.Metadata,
+	}
+}
+
+func toPkgMessagePtrs(messages []pkgsession.Message) []*pkgsession.Message {
+	ptrs := make([]*pkgsession.Message, len(messages))
+	for i := range messages {
+		ptrs[i] = &messages[i]
+	}
+	return ptrs
+}
+
+func convertPkgMessageType(msgType pkgsession.MessageType) session.MessageRole {
+	switch msgType {
+	case pkgsession.MessageTypeUser:
+		return session.RoleUser
+	case pkgsession.MessageTypeAgent:
+		return session.RoleAssistant
+	case pkgsession.MessageTypeSystem:
+		return session.RoleSystem
+	default:
+		return session.RoleUser
+	}
+}
+
+func convertFromPkgMessages(messages []*pkgsession.Message) []*session.Message {
+	result := make([]*session.Message, len(messages))
+	for i, msg := range messages {
+		result[i] = &session.Message{
+			ID:        msg.ID,
+			Role:      convertPkgMessageType(msg.Type),
+			Content:   msg.Content,
+			CreatedAt: msg.Timestamp,
+			Metadata:  msg.Metadata,
+		}
+	}
+	return result
+}
+
+func convertToPkgMessages(messages []*session.Message) []pkgsession.Message {
+	result := make([]pkgsession.Message, len(messages))
+	for i, msg := range messages {
+		// Extract agent from metadata if available
+		agent := "chat" // default
+		if msg.Metadata != nil {
+			if a, ok := msg.Metadata["agent"].(string); ok {
+				agent = a
+			}
+		}
+
+		// Convert role to message type
+		msgType := pkgsession.MessageTypeUser
+		switch msg.Role {
+		case session.RoleUser:
+			msgType = pkgsession.MessageTypeUser
+		case session.RoleAssistant:
+			msgType = pkgsession.MessageTypeAgent
+		case session.RoleSystem:
+			msgType = pkgsession.MessageTypeSystem
+		}
+
+		result[i] = pkgsession.Message{
+			ID:        msg.ID,
+			Agent:     agent,
+			Content:   msg.Content,
+			Timestamp: msg.CreatedAt,
+			Type:      msgType,
+			Metadata:  msg.Metadata,
+		}
+	}
+	return result
+}
+
+func (app *App) convertPkgSessionMessage(msg *pkgsession.Message) common.ChatMessage {
+	msgType := types.MsgSystem
+	switch msg.Type {
+	case pkgsession.MessageTypeUser:
+		msgType = types.MsgUser
+	case pkgsession.MessageTypeAgent:
+		msgType = types.MsgAgent
+	case pkgsession.MessageTypeSystem:
+		msgType = types.MsgSystem
+	}
+
+	// Convert metadata from map[string]interface{} to map[string]string
+	metadata := make(map[string]string)
+	if msg.Metadata != nil {
+		for k, v := range msg.Metadata {
+			if str, ok := v.(string); ok {
+				metadata[k] = str
+			} else {
+				metadata[k] = fmt.Sprintf("%v", v)
+			}
+		}
+	}
+
+	return common.ChatMessage{
+		Type:      msgType,
+		Content:   msg.Content,
+		AgentID:   msg.Agent,
+		Timestamp: msg.Timestamp,
+		Metadata:  metadata,
+	}
 }

@@ -9,16 +9,17 @@ import (
 
 // DefaultStorageRegistry implements StorageRegistry following Guild's registry pattern
 type DefaultStorageRegistry struct {
-	taskRepo        TaskRepository
-	campaignRepo    CampaignRepository
-	commissionRepo  CommissionRepository
-	boardRepo       BoardRepository
-	agentRepo       AgentRepository
-	promptChainRepo PromptChainRepository
-	sessionRepo     SessionRepository
-	preferencesRepo PreferencesRepository
-	memoryStore     interface{} // Can be memory.Store or MemoryStoreAdapter
-	mu              sync.RWMutex
+	taskRepo            TaskRepository
+	campaignRepo        CampaignRepository
+	commissionRepo      CommissionRepository
+	boardRepo           BoardRepository
+	agentRepo           AgentRepository
+	promptChainRepo     PromptChainRepository
+	sessionRepo         SessionRepository
+	preferencesRepo     PreferencesRepository
+	memoryStore         interface{} // Can be memory.Store or MemoryStoreAdapter
+	optimizationManager interface{} // Can be optimization.Manager
+	mu                  sync.RWMutex
 }
 
 // newStorageRegistry creates a new storage registry (private constructor)
@@ -156,4 +157,18 @@ func (r *DefaultStorageRegistry) GetMemoryStore() interface{} {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	return r.memoryStore
+}
+
+// RegisterOptimizationManager registers an optimization manager
+func (r *DefaultStorageRegistry) RegisterOptimizationManager(manager interface{}) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.optimizationManager = manager
+}
+
+// GetOptimizationManager returns the registered optimization manager
+func (r *DefaultStorageRegistry) GetOptimizationManager() interface{} {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	return r.optimizationManager
 }

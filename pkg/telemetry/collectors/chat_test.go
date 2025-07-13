@@ -13,7 +13,7 @@ import (
 func TestNewChatCollector(t *testing.T) {
 	provider := sdkmetric.NewMeterProvider()
 	meter := provider.Meter("test")
-	
+
 	collector, err := NewChatCollector(meter)
 	require.NoError(t, err)
 	assert.NotNil(t, collector)
@@ -28,33 +28,33 @@ func TestChatCollector_RecordSessionCreated(t *testing.T) {
 	require.NoError(t, err)
 
 	tests := []struct {
-		name       string
-		sessionID  string
-		userID     string
+		name        string
+		sessionID   string
+		userID      string
 		sessionType string
 	}{
 		{
-			name:       "normal session",
-			sessionID:  "session-123",
-			userID:     "user-456",
+			name:        "normal session",
+			sessionID:   "session-123",
+			userID:      "user-456",
 			sessionType: "interactive",
 		},
 		{
-			name:       "api session",
-			sessionID:  "api-session-789",
-			userID:     "api-user-012",
+			name:        "api session",
+			sessionID:   "api-session-789",
+			userID:      "api-user-012",
 			sessionType: "api",
 		},
 		{
-			name:       "empty session ID",
-			sessionID:  "",
-			userID:     "user-123",
+			name:        "empty session ID",
+			sessionID:   "",
+			userID:      "user-123",
 			sessionType: "interactive",
 		},
 		{
-			name:       "anonymous user",
-			sessionID:  "session-anon",
-			userID:     "",
+			name:        "anonymous user",
+			sessionID:   "session-anon",
+			userID:      "",
 			sessionType: "anonymous",
 		},
 	}
@@ -143,7 +143,6 @@ func TestChatCollector_RecordMessage(t *testing.T) {
 	}
 }
 
-
 func TestChatCollector_RecordResponse(t *testing.T) {
 	ctx := context.Background()
 	provider := sdkmetric.NewMeterProvider()
@@ -191,8 +190,6 @@ func TestChatCollector_RecordResponse(t *testing.T) {
 		})
 	}
 }
-
-
 
 func TestChatCollector_ConcurrentOperations(t *testing.T) {
 	ctx := context.Background()

@@ -124,16 +124,16 @@ Here's the implementation plan...`
 
 		// Store chain with metadata
 		enhancedChain := &core.ReasoningChainEnhanced{
-			ID:        chain.ID,
-			AgentID:   "test-agent-001",
-			SessionID: "session-001",
-			TaskID:    "task-001",
-			Blocks:    chain.Blocks,
-			Summary:   "Data pipeline implementation planning",
+			ID:              chain.ID,
+			AgentID:         "test-agent-001",
+			SessionID:       "session-001",
+			TaskID:          "task-001",
+			Blocks:          chain.Blocks,
+			Summary:         "Data pipeline implementation planning",
 			FinalConfidence: chain.Confidence,
-			StartTime: time.Now().Add(-5 * time.Minute),
-			EndTime:   time.Now(),
-			TotalTokens: 523,
+			StartTime:       time.Now().Add(-5 * time.Minute),
+			EndTime:         time.Now(),
+			TotalTokens:     523,
 			Context: map[string]interface{}{
 				"project": "data-pipeline",
 				"phase":   "planning",
@@ -186,7 +186,7 @@ Confidence: 0.92
 The main issue is with database queries.`
 
 		reader := strings.NewReader(streamContent)
-		
+
 		// Collect events
 		var events []core.StreamEvent
 		done := make(chan bool)
@@ -252,45 +252,45 @@ The main issue is with database queries.`
 		// Add messages until approaching limit
 		messages := []core.ContextMessage{
 			{
-				ID:       "msg-1",
-				Role:     "user",
-				Content:  "Please analyze the system architecture and identify potential bottlenecks.",
-				Priority: 8,
+				ID:        "msg-1",
+				Role:      "user",
+				Content:   "Please analyze the system architecture and identify potential bottlenecks.",
+				Priority:  8,
 				Timestamp: time.Now().Add(-30 * time.Minute),
 			},
 			{
-				ID:       "msg-2",
-				Role:     "assistant",
-				Content:  generateLongResponse(200), // ~200 tokens
-				Priority: 6,
+				ID:        "msg-2",
+				Role:      "assistant",
+				Content:   generateLongResponse(200), // ~200 tokens
+				Priority:  6,
 				Timestamp: time.Now().Add(-25 * time.Minute),
 			},
 			{
-				ID:       "msg-3",
-				Role:     "user",
-				Content:  "Can you elaborate on the database bottlenecks?",
-				Priority: 9,
+				ID:        "msg-3",
+				Role:      "user",
+				Content:   "Can you elaborate on the database bottlenecks?",
+				Priority:  9,
 				Timestamp: time.Now().Add(-20 * time.Minute),
 			},
 			{
-				ID:       "msg-4",
-				Role:     "assistant",
-				Content:  generateLongResponse(300), // ~300 tokens
-				Priority: 7,
+				ID:        "msg-4",
+				Role:      "assistant",
+				Content:   generateLongResponse(300), // ~300 tokens
+				Priority:  7,
 				Timestamp: time.Now().Add(-15 * time.Minute),
 			},
 			{
-				ID:       "msg-5",
-				Role:     "user",
-				Content:  "What about caching strategies?",
-				Priority: 9,
+				ID:        "msg-5",
+				Role:      "user",
+				Content:   "What about caching strategies?",
+				Priority:  9,
 				Timestamp: time.Now().Add(-10 * time.Minute),
 			},
 			{
-				ID:       "msg-6",
-				Role:     "assistant",
-				Content:  generateLongResponse(250), // ~250 tokens
-				Priority: 8,
+				ID:        "msg-6",
+				Role:      "assistant",
+				Content:   generateLongResponse(250), // ~250 tokens
+				Priority:  8,
 				Timestamp: time.Now().Add(-5 * time.Minute),
 			},
 		}
@@ -378,7 +378,7 @@ The main issue is with database queries.`
 
 	t.Run("ReasoningAnalytics", func(t *testing.T) {
 		// Get analytics for test agent
-		stats, err := system.Storage.GetStats(ctx, "test-agent-001", 
+		stats, err := system.Storage.GetStats(ctx, "test-agent-001",
 			time.Now().Add(-1*time.Hour), time.Now())
 		require.NoError(t, err)
 
@@ -538,11 +538,11 @@ Think through your analysis step by step.`
 			// Extract reasoning
 			chain, err := system.Extractor.Extract(ctx, response)
 			require.NoError(t, err)
-			
+
 			// Verify reasoning was extracted
 			assert.NotNil(t, chain)
 			assert.NotEmpty(t, chain.Blocks)
-			
+
 			// Log results
 			t.Logf("%s extracted %d thinking blocks", p.name, len(chain.Blocks))
 			for i, block := range chain.Blocks {
@@ -665,7 +665,7 @@ func (m *MockLLMClient) Stream(ctx context.Context, prompt string) (<-chan strin
 	ch := make(chan string)
 	go func() {
 		defer close(ch)
-		
+
 		response, err := m.Complete(ctx, prompt)
 		if err != nil {
 			return

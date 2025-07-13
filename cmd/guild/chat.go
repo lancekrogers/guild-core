@@ -194,6 +194,12 @@ func runChat(cmd *cobra.Command, args []string) error {
 		chatSessionID = generateUUID()
 	}
 
+	// Get user ID (for Sprint 2 preferences)
+	userID := os.Getenv("USER")
+	if userID == "" {
+		userID = "default"
+	}
+
 	// Note: Daemon connection is now handled inside the chat app
 
 	// Initialize registry
@@ -213,6 +219,7 @@ func runChat(cmd *cobra.Command, args []string) error {
 	app.SetSelectedGuild(selectedGuild)
 	app.SetCampaignID(campaignName)
 	app.SetSessionID(chatSessionID)
+	app.SetUserID(userID) // Sprint 2: Set user ID for preferences
 	return app.Run()
 }
 
