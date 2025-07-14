@@ -191,7 +191,7 @@ logs/
 log/
 
 # Debug files
-debug/
+/debug/
 *.debug
 debug.test
 __debug_bin
