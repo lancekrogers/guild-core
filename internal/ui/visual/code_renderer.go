@@ -99,17 +99,30 @@ func NewCodeRenderer() *CodeRenderer {
 			"go":         lipgloss.Color("33"),  // Yellow
 			"python":     lipgloss.Color("34"),  // Green
 			"javascript": lipgloss.Color("226"), // Bright yellow
+			"typescript": lipgloss.Color("39"),  // Blue
 			"java":       lipgloss.Color("208"), // Orange
 			"rust":       lipgloss.Color("130"), // Dark orange
 			"cpp":        lipgloss.Color("27"),  // Blue
+			"c":          lipgloss.Color("27"),  // Blue
+			"ruby":       lipgloss.Color("196"), // Red
+			"php":        lipgloss.Color("99"),  // Purple
+			"swift":      lipgloss.Color("214"), // Orange
+			"kotlin":     lipgloss.Color("99"),  // Purple
+			"sql":        lipgloss.Color("75"),  // Light blue
+			"shell":      lipgloss.Color("154"), // Light green
+			"yaml":       lipgloss.Color("226"), // Yellow
+			"json":       lipgloss.Color("39"),  // Blue
 		},
 
 		stringColors: map[string]lipgloss.Color{
-			"default": lipgloss.Color("82"), // Bright green
+			"default": lipgloss.Color("82"),  // Bright green
+			"sql":     lipgloss.Color("196"), // Red for SQL strings
+			"regex":   lipgloss.Color("214"), // Orange for regex
 		},
 
 		commentColors: map[string]lipgloss.Color{
 			"default": lipgloss.Color("240"), // Dark gray
+			"doc":     lipgloss.Color("244"), // Lighter gray for doc comments
 		},
 	}
 }
@@ -339,57 +352,237 @@ func (cr *CodeRenderer) parseDiffLines(code string) []DiffLine {
 	return diffLines
 }
 
-// applySyntaxHighlighting applies basic syntax highlighting to a line
+// applySyntaxHighlighting applies sophisticated syntax highlighting to a line
 func (cr *CodeRenderer) applySyntaxHighlighting(line, language string) string {
-	// Basic syntax highlighting patterns
+	// Track highlighted segments to avoid overlapping
+	type segment struct {
+		start, end int
+		style      lipgloss.Style
+		text       string
+	}
+	var segments []segment
 
-	// Highlight strings
-	stringRegex := regexp.MustCompile(`"([^"\\]|\\.)*"|'([^'\\]|\\.)*'|` + "`" + `([^` + "`" + `\\]|\\.)*` + "`")
-	line = stringRegex.ReplaceAllStringFunc(line, func(match string) string {
-		return lipgloss.NewStyle().Foreground(cr.stringColors["default"]).Render(match)
-	})
-
-	// Highlight comments
-	commentPatterns := map[string]*regexp.Regexp{
-		"go":         regexp.MustCompile(`//.*$|/\*.*?\*/`),
-		"python":     regexp.MustCompile(`#.*$`),
-		"javascript": regexp.MustCompile(`//.*$|/\*.*?\*/`),
-		"java":       regexp.MustCompile(`//.*$|/\*.*?\*/`),
-		"rust":       regexp.MustCompile(`//.*$|/\*.*?\*/`),
-		"cpp":        regexp.MustCompile(`//.*$|/\*.*?\*/`),
+	// Helper to add segment without overlap
+	addSegment := func(start, end int, style lipgloss.Style, text string) {
+		for _, s := range segments {
+			if (start >= s.start && start < s.end) || (end > s.start && end <= s.end) {
+				return // Skip overlapping segments
+			}
+		}
+		segments = append(segments, segment{start, end, style, text})
 	}
 
-	if commentRegex, exists := commentPatterns[language]; exists {
-		line = commentRegex.ReplaceAllStringFunc(line, func(match string) string {
-			return lipgloss.NewStyle().Foreground(cr.commentColors["default"]).Render(match)
-		})
+	// 1. Numbers (integers, floats, hex, binary)
+	numberRegex := regexp.MustCompile(`\b(0x[a-fA-F0-9]+|0b[01]+|\d+\.?\d*[eE]?[+-]?\d*)\b`)
+	for _, match := range numberRegex.FindAllStringIndex(line, -1) {
+		numberStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("141")) // Purple
+		addSegment(match[0], match[1], numberStyle, line[match[0]:match[1]])
 	}
 
-	// Highlight keywords (basic patterns)
+	// 2. Strings with proper escape handling
+	stringPatterns := []string{
+		`"(?:[^"\\]|\\.)*"`,     // Double quotes
+		`'(?:[^'\\]|\\.)*'`,     // Single quotes
+		"`(?:[^`\\\\]|\\\\.)*`", // Backticks
+	}
+
+	for _, pattern := range stringPatterns {
+		stringRegex := regexp.MustCompile(pattern)
+		for _, match := range stringRegex.FindAllStringIndex(line, -1) {
+			stringStyle := lipgloss.NewStyle().Foreground(cr.stringColors["default"])
+			addSegment(match[0], match[1], stringStyle, line[match[0]:match[1]])
+		}
+	}
+
+	// 3. Comments (must come after strings to avoid false positives)
+	commentPatterns := map[string][]*regexp.Regexp{
+		"go": {
+			regexp.MustCompile(`//.*$`),
+			regexp.MustCompile(`/\*.*?\*/`),
+		},
+		"python": {
+			regexp.MustCompile(`#.*$`),
+			regexp.MustCompile(`'''[\s\S]*?'''`),
+			regexp.MustCompile(`"""[\s\S]*?"""`),
+		},
+		"javascript": {
+			regexp.MustCompile(`//.*$`),
+			regexp.MustCompile(`/\*.*?\*/`),
+		},
+		"java": {
+			regexp.MustCompile(`//.*$`),
+			regexp.MustCompile(`/\*.*?\*/`),
+			regexp.MustCompile(`/\*\*.*?\*/`), // Javadoc
+		},
+		"rust": {
+			regexp.MustCompile(`//.*$`),
+			regexp.MustCompile(`/\*.*?\*/`),
+			regexp.MustCompile(`///.*$`), // Doc comments
+		},
+		"cpp": {
+			regexp.MustCompile(`//.*$`),
+			regexp.MustCompile(`/\*.*?\*/`),
+		},
+		"sql": {
+			regexp.MustCompile(`--.*$`),
+			regexp.MustCompile(`/\*.*?\*/`),
+		},
+	}
+
+	if patterns, exists := commentPatterns[language]; exists {
+		commentStyle := lipgloss.NewStyle().
+			Foreground(cr.commentColors["default"]).
+			Italic(true)
+
+		for _, commentRegex := range patterns {
+			for _, match := range commentRegex.FindAllStringIndex(line, -1) {
+				addSegment(match[0], match[1], commentStyle, line[match[0]:match[1]])
+			}
+		}
+	}
+
+	// 4. Keywords and built-in types
 	keywordPatterns := map[string][]string{
-		"go":         {"func", "var", "const", "type", "package", "import", "if", "else", "for", "range", "return"},
-		"python":     {"def", "class", "import", "from", "if", "else", "elif", "for", "while", "return", "try", "except"},
-		"javascript": {"function", "var", "let", "const", "if", "else", "for", "while", "return", "class", "import", "export"},
-		"java":       {"public", "private", "protected", "class", "interface", "if", "else", "for", "while", "return", "try", "catch"},
-		"rust":       {"fn", "let", "mut", "struct", "enum", "impl", "if", "else", "for", "while", "return", "match"},
+		"go": {
+			"func", "var", "const", "type", "package", "import", "if", "else",
+			"for", "range", "return", "defer", "go", "select", "case", "default",
+			"switch", "fallthrough", "break", "continue", "goto", "interface",
+			"struct", "map", "chan", "nil", "true", "false",
+		},
+		"python": {
+			"def", "class", "import", "from", "if", "else", "elif", "for",
+			"while", "return", "try", "except", "finally", "raise", "with",
+			"as", "pass", "break", "continue", "lambda", "yield", "global",
+			"nonlocal", "assert", "del", "in", "is", "and", "or", "not",
+			"True", "False", "None",
+		},
+		"javascript": {
+			"function", "var", "let", "const", "if", "else", "for", "while",
+			"return", "class", "import", "export", "default", "from", "async",
+			"await", "new", "this", "super", "extends", "static", "try",
+			"catch", "finally", "throw", "typeof", "instanceof", "in", "of",
+			"true", "false", "null", "undefined",
+		},
+		"java": {
+			"public", "private", "protected", "class", "interface", "extends",
+			"implements", "if", "else", "for", "while", "return", "try",
+			"catch", "finally", "throw", "throws", "new", "this", "super",
+			"static", "final", "abstract", "synchronized", "volatile",
+			"transient", "native", "strictfp", "package", "import", "void",
+			"boolean", "byte", "char", "short", "int", "long", "float",
+			"double", "true", "false", "null",
+		},
+		"rust": {
+			"fn", "let", "mut", "struct", "enum", "impl", "trait", "if",
+			"else", "for", "while", "loop", "return", "match", "use", "mod",
+			"pub", "crate", "self", "super", "static", "const", "unsafe",
+			"async", "await", "dyn", "move", "ref", "type", "where", "as",
+			"break", "continue", "extern", "in", "true", "false",
+		},
+		"sql": {
+			"SELECT", "FROM", "WHERE", "JOIN", "LEFT", "RIGHT", "INNER",
+			"OUTER", "ON", "AS", "INSERT", "INTO", "VALUES", "UPDATE",
+			"SET", "DELETE", "CREATE", "TABLE", "ALTER", "DROP", "INDEX",
+			"PRIMARY", "KEY", "FOREIGN", "REFERENCES", "NOT", "NULL",
+			"UNIQUE", "DEFAULT", "CHECK", "CONSTRAINT", "AND", "OR", "IN",
+			"BETWEEN", "LIKE", "ORDER", "BY", "GROUP", "HAVING", "UNION",
+			"DISTINCT", "LIMIT", "OFFSET", "CASE", "WHEN", "THEN", "ELSE", "END",
+		},
 	}
 
+	// 5. Types and built-in functions
+	typePatterns := map[string][]string{
+		"go": {
+			"string", "int", "int8", "int16", "int32", "int64", "uint",
+			"uint8", "uint16", "uint32", "uint64", "float32", "float64",
+			"complex64", "complex128", "byte", "rune", "bool", "error",
+			"uintptr", "any", "comparable",
+		},
+		"python": {
+			"str", "int", "float", "bool", "list", "dict", "set", "tuple",
+			"bytes", "bytearray", "complex", "frozenset", "range", "type",
+			"object", "property", "staticmethod", "classmethod",
+		},
+		"javascript": {
+			"Array", "Object", "String", "Number", "Boolean", "Function",
+			"Symbol", "Date", "RegExp", "Error", "Map", "Set", "WeakMap",
+			"WeakSet", "Promise", "Proxy", "Reflect",
+		},
+	}
+
+	// 6. Function/method calls
+	funcCallRegex := regexp.MustCompile(`\b(\w+)\s*\(`)
+	for _, match := range funcCallRegex.FindAllStringSubmatch(line, -1) {
+		if len(match) > 1 {
+			funcName := match[1]
+			funcIndex := strings.Index(line, funcName+"(")
+			if funcIndex >= 0 {
+				funcStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("87")) // Light blue
+				addSegment(funcIndex, funcIndex+len(funcName), funcStyle, funcName)
+			}
+		}
+	}
+
+	// Apply keywords
 	if keywords, exists := keywordPatterns[language]; exists {
 		keywordColor := cr.keywordColors[language]
 		if keywordColor == "" {
-			keywordColor = cr.keywordColors["go"] // Default
+			keywordColor = lipgloss.Color("33") // Default yellow
 		}
+		keywordStyle := lipgloss.NewStyle().Foreground(keywordColor).Bold(true)
 
 		for _, keyword := range keywords {
 			pattern := fmt.Sprintf(`\b%s\b`, regexp.QuoteMeta(keyword))
 			keywordRegex := regexp.MustCompile(pattern)
-			line = keywordRegex.ReplaceAllStringFunc(line, func(match string) string {
-				return lipgloss.NewStyle().Foreground(keywordColor).Bold(true).Render(match)
-			})
+			for _, match := range keywordRegex.FindAllStringIndex(line, -1) {
+				addSegment(match[0], match[1], keywordStyle, line[match[0]:match[1]])
+			}
 		}
 	}
 
-	return line
+	// Apply types
+	if types, exists := typePatterns[language]; exists {
+		typeStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("39")) // Blue
+		for _, typeName := range types {
+			pattern := fmt.Sprintf(`\b%s\b`, regexp.QuoteMeta(typeName))
+			typeRegex := regexp.MustCompile(pattern)
+			for _, match := range typeRegex.FindAllStringIndex(line, -1) {
+				addSegment(match[0], match[1], typeStyle, line[match[0]:match[1]])
+			}
+		}
+	}
+
+	// 7. Operators and punctuation
+	operatorStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("208")) // Orange
+	operatorRegex := regexp.MustCompile(`[+\-*/%=<>!&|^~?:]+`)
+	for _, match := range operatorRegex.FindAllStringIndex(line, -1) {
+		addSegment(match[0], match[1], operatorStyle, line[match[0]:match[1]])
+	}
+
+	// Sort segments by start position
+	for i := 0; i < len(segments)-1; i++ {
+		for j := i + 1; j < len(segments); j++ {
+			if segments[i].start > segments[j].start {
+				segments[i], segments[j] = segments[j], segments[i]
+			}
+		}
+	}
+
+	// Build the highlighted line
+	var result string
+	lastEnd := 0
+	for _, seg := range segments {
+		if seg.start > lastEnd {
+			result += line[lastEnd:seg.start]
+		}
+		result += seg.style.Render(seg.text)
+		lastEnd = seg.end
+	}
+	if lastEnd < len(line) {
+		result += line[lastEnd:]
+	}
+
+	return result
 }
 
 // applyCodeFolding applies code folding to long content
@@ -513,4 +706,122 @@ func (cr *CodeRenderer) GetLanguageStats(content string) map[string]int {
 	}
 
 	return stats
+}
+
+// ProcessInlineCode detects and highlights inline code snippets
+func (cr *CodeRenderer) ProcessInlineCode(content string) string {
+	// Pattern for inline code (backticks)
+	inlineCodeRegex := regexp.MustCompile("`([^`]+)`")
+
+	inlineStyle := lipgloss.NewStyle().
+		Background(lipgloss.Color("236")).
+		Foreground(lipgloss.Color("75")).
+		Padding(0, 1)
+
+	return inlineCodeRegex.ReplaceAllStringFunc(content, func(match string) string {
+		// Extract code without backticks
+		code := match[1 : len(match)-1]
+
+		// Apply simple highlighting for common patterns
+		highlighted := cr.highlightInlineCode(code)
+
+		return inlineStyle.Render(highlighted)
+	})
+}
+
+// highlightInlineCode applies simple highlighting to inline code
+func (cr *CodeRenderer) highlightInlineCode(code string) string {
+	// Detect if it's a function call
+	if strings.Contains(code, "(") && strings.Contains(code, ")") {
+		funcRegex := regexp.MustCompile(`(\w+)\(`)
+		code = funcRegex.ReplaceAllStringFunc(code, func(match string) string {
+			funcName := match[:len(match)-1]
+			return lipgloss.NewStyle().
+				Foreground(lipgloss.Color("87")).
+				Bold(true).
+				Render(funcName) + "("
+		})
+	}
+
+	// Highlight common keywords
+	commonKeywords := []string{"func", "def", "class", "type", "var", "const", "let"}
+	for _, keyword := range commonKeywords {
+		if strings.HasPrefix(code, keyword+" ") {
+			parts := strings.SplitN(code, " ", 2)
+			if len(parts) == 2 {
+				keywordStyle := lipgloss.NewStyle().
+					Foreground(lipgloss.Color("33")).
+					Bold(true)
+				code = keywordStyle.Render(parts[0]) + " " + parts[1]
+			}
+		}
+	}
+
+	return code
+}
+
+// RenderWithTheme renders code with a specific color theme
+func (cr *CodeRenderer) RenderWithTheme(code, language, theme string) string {
+	// Save current colors
+	oldKeywordColors := cr.keywordColors
+	oldStringColors := cr.stringColors
+	oldCommentColors := cr.commentColors
+
+	// Apply theme
+	switch theme {
+	case "monokai":
+		cr.keywordColors = map[string]lipgloss.Color{
+			"default": lipgloss.Color("197"), // Pink
+		}
+		cr.stringColors = map[string]lipgloss.Color{
+			"default": lipgloss.Color("226"), // Yellow
+		}
+		cr.commentColors = map[string]lipgloss.Color{
+			"default": lipgloss.Color("242"), // Gray
+		}
+	case "solarized":
+		cr.keywordColors = map[string]lipgloss.Color{
+			"default": lipgloss.Color("33"), // Yellow
+		}
+		cr.stringColors = map[string]lipgloss.Color{
+			"default": lipgloss.Color("37"), // Cyan
+		}
+		cr.commentColors = map[string]lipgloss.Color{
+			"default": lipgloss.Color("244"), // Gray
+		}
+	case "dracula":
+		cr.keywordColors = map[string]lipgloss.Color{
+			"default": lipgloss.Color("212"), // Pink
+		}
+		cr.stringColors = map[string]lipgloss.Color{
+			"default": lipgloss.Color("226"), // Yellow
+		}
+		cr.commentColors = map[string]lipgloss.Color{
+			"default": lipgloss.Color("103"), // Purple gray
+		}
+	}
+
+	// Render code
+	result := cr.renderCode(code, language, cr.showLineNumbers)
+
+	// Restore colors
+	cr.keywordColors = oldKeywordColors
+	cr.stringColors = oldStringColors
+	cr.commentColors = oldCommentColors
+
+	return result
+}
+
+// GetSupportedLanguages returns a list of supported languages
+func (cr *CodeRenderer) GetSupportedLanguages() []string {
+	languages := make([]string, 0, len(cr.keywordColors))
+	for lang := range cr.keywordColors {
+		languages = append(languages, lang)
+	}
+	return languages
+}
+
+// GetSupportedThemes returns a list of supported color themes
+func (cr *CodeRenderer) GetSupportedThemes() []string {
+	return []string{"default", "monokai", "solarized", "dracula"}
 }

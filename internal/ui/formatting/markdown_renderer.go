@@ -35,6 +35,20 @@ type MarkdownRenderer struct {
 	// Error handling
 	errorFallback bool  // Whether to use fallback on errors
 	lastError     error // Last rendering error for debugging
+
+	// Advanced features
+	enableMermaid    bool // Enable Mermaid diagram rendering
+	enableMath       bool // Enable math equation rendering
+	enableEmoji      bool // Enable emoji support
+	enableTables     bool // Enable table rendering
+	enableChecklists bool // Enable checklist rendering
+
+	// Custom styles
+	headerStyle     lipgloss.Style
+	blockquoteStyle lipgloss.Style
+	listStyle       lipgloss.Style
+	linkStyle       lipgloss.Style
+	tableStyle      lipgloss.Style
 }
 
 // NewMarkdownRenderer creates a new markdown renderer with medieval theming
@@ -121,6 +135,33 @@ func NewMarkdownRenderer(width int) (*MarkdownRenderer, error) {
 		Foreground(lipgloss.Color("8")). // Dark gray
 		MarginRight(1)
 
+	// Custom styles for advanced features
+	headerStyle := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.Color("141")). // Medieval purple
+		MarginTop(1).
+		MarginBottom(1)
+
+	blockquoteStyle := lipgloss.NewStyle().
+		Border(lipgloss.ThickBorder(), false, false, false, true).
+		BorderForeground(lipgloss.Color("241")).
+		Foreground(lipgloss.Color("245")).
+		Italic(true).
+		PaddingLeft(2)
+
+	listStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("252")).
+		PaddingLeft(2)
+
+	linkStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("39")). // Blue
+		Underline(true)
+
+	tableStyle := lipgloss.NewStyle().
+		Border(lipgloss.NormalBorder()).
+		BorderForeground(lipgloss.Color("241")).
+		Align(lipgloss.Center)
+
 	return &MarkdownRenderer{
 		renderer:        renderer,
 		width:           width,
@@ -131,25 +172,77 @@ func NewMarkdownRenderer(width int) (*MarkdownRenderer, error) {
 		maxCacheSize:    100, // Cache up to 100 rendered items
 		errorFallback:   true,
 		lastError:       lastErr,
+		// Advanced features enabled by default
+		enableMermaid:    true,
+		enableMath:       true,
+		enableEmoji:      true,
+		enableTables:     true,
+		enableChecklists: true,
+		// Custom styles
+		headerStyle:     headerStyle,
+		blockquoteStyle: blockquoteStyle,
+		listStyle:       listStyle,
+		linkStyle:       linkStyle,
+		tableStyle:      tableStyle,
 	}, nil
 }
 
 // Render processes content with markdown and syntax highlighting
 func (m *MarkdownRenderer) Render(content string) string {
+	// Check cache first
+	cacheKey := m.generateCacheKey(content)
+	if cached, found := m.renderCache.Load(cacheKey); found {
+		m.cacheHits++
+		return cached.(string)
+	}
+	m.cacheMisses++
+
 	// Quick check if content needs markdown processing
 	if !m.needsMarkdownProcessing(content) {
 		return content
 	}
 
-	// First, extract and process code blocks separately for better syntax highlighting
-	processedContent := m.processCodeBlocks(content)
+	// Apply advanced processing in order
+	processedContent := content
+
+	// 1. Process emoji codes
+	if m.enableEmoji {
+		processedContent = m.RenderEmoji(processedContent)
+	}
+
+	// 2. Process math equations
+	if m.enableMath {
+		processedContent = m.processMathEquations(processedContent)
+	}
+
+	// 3. Process mermaid diagrams
+	if m.enableMermaid {
+		processedContent = m.processMermaidDiagrams(processedContent)
+	}
+
+	// 4. Extract and process code blocks separately for better syntax highlighting
+	processedContent = m.processCodeBlocks(processedContent)
+
+	// 5. Process checklists
+	if m.enableChecklists {
+		processedContent = m.processChecklists(processedContent)
+	}
 
 	// Then render the markdown
 	rendered, err := m.renderer.Render(processedContent)
 	if err != nil {
-		// Fallback to original content if rendering fails
-		return content
+		m.lastError = err
+		if m.errorFallback {
+			// Fallback to original content if rendering fails
+			return content
+		}
 	}
+
+	// Cache the result
+	if m.getCacheSize() >= m.maxCacheSize {
+		m.cleanCache()
+	}
+	m.renderCache.Store(cacheKey, rendered)
 
 	return rendered
 }
@@ -354,4 +447,354 @@ func (mr *MarkdownRenderer) GetCacheStats() string {
 	ratio := float64(mr.cacheHits) / float64(total) * 100
 	return fmt.Sprintf("Cache hits: %d, misses: %d, ratio: %.2f%%",
 		mr.cacheHits, mr.cacheMisses, ratio)
+}
+
+// RenderTable renders a markdown table with proper formatting
+func (m *MarkdownRenderer) RenderTable(headers []string, rows [][]string) string {
+	if len(headers) == 0 || len(rows) == 0 {
+		return ""
+	}
+
+	// Calculate column widths
+	colWidths := make([]int, len(headers))
+	for i, header := range headers {
+		colWidths[i] = len(header)
+	}
+
+	for _, row := range rows {
+		for i, cell := range row {
+			if i < len(colWidths) && len(cell) > colWidths[i] {
+				colWidths[i] = len(cell)
+			}
+		}
+	}
+
+	// Build table
+	var table strings.Builder
+
+	// Header row
+	table.WriteString("|")
+	for i, header := range headers {
+		table.WriteString(fmt.Sprintf(" %-*s |", colWidths[i], header))
+	}
+	table.WriteString("\n")
+
+	// Separator row
+	table.WriteString("|")
+	for _, width := range colWidths {
+		table.WriteString(strings.Repeat("-", width+2) + "|")
+	}
+	table.WriteString("\n")
+
+	// Data rows
+	for _, row := range rows {
+		table.WriteString("|")
+		for i, cell := range row {
+			if i < len(colWidths) {
+				table.WriteString(fmt.Sprintf(" %-*s |", colWidths[i], cell))
+			}
+		}
+		table.WriteString("\n")
+	}
+
+	return m.tableStyle.Render(table.String())
+}
+
+// RenderChecklist renders a checklist with checkboxes
+func (m *MarkdownRenderer) RenderChecklist(items []struct {
+	Text    string
+	Checked bool
+}) string {
+	if !m.enableChecklists || len(items) == 0 {
+		return ""
+	}
+
+	var checklist strings.Builder
+	checkStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("10"))    // Green
+	uncheckStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("241")) // Gray
+
+	for _, item := range items {
+		if item.Checked {
+			checklist.WriteString(checkStyle.Render("✓ "))
+			// Strike through completed items
+			strikeStyle := lipgloss.NewStyle().
+				Foreground(lipgloss.Color("241")).
+				Strikethrough(true)
+			checklist.WriteString(strikeStyle.Render(item.Text))
+		} else {
+			checklist.WriteString(uncheckStyle.Render("☐ "))
+			checklist.WriteString(item.Text)
+		}
+		checklist.WriteString("\n")
+	}
+
+	return m.listStyle.Render(checklist.String())
+}
+
+// RenderMermaidDiagram renders a mermaid diagram as ASCII art
+func (m *MarkdownRenderer) RenderMermaidDiagram(diagram string) string {
+	if !m.enableMermaid {
+		return m.codeStyle.Render(diagram)
+	}
+
+	// For now, render as a code block with "mermaid" label
+	// In a real implementation, this could convert to ASCII art
+	diagramStyle := lipgloss.NewStyle().
+		Border(lipgloss.DoubleBorder()).
+		BorderForeground(lipgloss.Color("141")).
+		Padding(1).
+		Margin(1)
+
+	header := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.Color("141")).
+		Render("📊 Mermaid Diagram")
+
+	return header + "\n" + diagramStyle.Render(diagram)
+}
+
+// RenderMathEquation renders a math equation
+func (m *MarkdownRenderer) RenderMathEquation(equation string, inline bool) string {
+	if !m.enableMath {
+		return equation
+	}
+
+	mathStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("214")). // Orange for math
+		Italic(true)
+
+	if inline {
+		return mathStyle.Render(equation)
+	}
+
+	// Block equation
+	blockMathStyle := mathStyle.Copy().
+		Border(lipgloss.NormalBorder()).
+		BorderForeground(lipgloss.Color("241")).
+		Padding(1).
+		Align(lipgloss.Center).
+		Width(m.width - 10)
+
+	return blockMathStyle.Render(equation)
+}
+
+// RenderEmoji converts emoji codes to actual emojis
+func (m *MarkdownRenderer) RenderEmoji(text string) string {
+	if !m.enableEmoji {
+		return text
+	}
+
+	// Common emoji mappings
+	emojiMap := map[string]string{
+		":smile:":      "😊",
+		":thumbsup:":   "👍",
+		":thumbsdown:": "👎",
+		":heart:":      "❤️",
+		":star:":       "⭐",
+		":fire:":       "🔥",
+		":rocket:":     "🚀",
+		":check:":      "✅",
+		":cross:":      "❌",
+		":warning:":    "⚠️",
+		":info:":       "ℹ️",
+		":bulb:":       "💡",
+		":bug:":        "🐛",
+		":lock:":       "🔒",
+		":key:":        "🔑",
+		":clock:":      "🕐",
+		":calendar:":   "📅",
+		":folder:":     "📁",
+		":file:":       "📄",
+		":mail:":       "📧",
+		":link:":       "🔗",
+	}
+
+	result := text
+	for code, emoji := range emojiMap {
+		result = strings.ReplaceAll(result, code, emoji)
+	}
+
+	return result
+}
+
+// RenderWithOptions renders content with specific feature toggles
+func (m *MarkdownRenderer) RenderWithOptions(content string, options struct {
+	EnableMermaid    bool
+	EnableMath       bool
+	EnableEmoji      bool
+	EnableTables     bool
+	EnableChecklists bool
+}) string {
+	// Save current settings
+	oldMermaid := m.enableMermaid
+	oldMath := m.enableMath
+	oldEmoji := m.enableEmoji
+	oldTables := m.enableTables
+	oldChecklists := m.enableChecklists
+
+	// Apply options
+	m.enableMermaid = options.EnableMermaid
+	m.enableMath = options.EnableMath
+	m.enableEmoji = options.EnableEmoji
+	m.enableTables = options.EnableTables
+	m.enableChecklists = options.EnableChecklists
+
+	// Render
+	result := m.Render(content)
+
+	// Restore settings
+	m.enableMermaid = oldMermaid
+	m.enableMath = oldMath
+	m.enableEmoji = oldEmoji
+	m.enableTables = oldTables
+	m.enableChecklists = oldChecklists
+
+	return result
+}
+
+// SetWidth updates the renderer width and recreates the glamour renderer
+func (m *MarkdownRenderer) SetWidth(width int) error {
+	if width < 40 {
+		width = 40
+	}
+	if width > 200 {
+		width = 200
+	}
+
+	m.width = width
+
+	// Recreate glamour renderer with new width
+	renderer, err := glamour.NewTermRenderer(
+		glamour.WithStylePath("dracula"),
+		glamour.WithWordWrap(width-8),
+		glamour.WithEmoji(),
+		glamour.WithPreservedNewLines(),
+	)
+	if err != nil {
+		return err
+	}
+
+	m.renderer = renderer
+	return nil
+}
+
+// GetLastError returns the last rendering error for debugging
+func (m *MarkdownRenderer) GetLastError() error {
+	return m.lastError
+}
+
+// processMathEquations processes LaTeX math equations in content
+func (m *MarkdownRenderer) processMathEquations(content string) string {
+	// Process inline math $...$
+	inlineMathRegex := regexp.MustCompile(`\$([^\$]+)\$`)
+	content = inlineMathRegex.ReplaceAllStringFunc(content, func(match string) string {
+		equation := match[1 : len(match)-1]
+		return m.RenderMathEquation(equation, true)
+	})
+
+	// Process block math $$...$$
+	blockMathRegex := regexp.MustCompile(`(?s)\$\$\n?(.*?)\n?\$\$`)
+	content = blockMathRegex.ReplaceAllStringFunc(content, func(match string) string {
+		equation := strings.TrimPrefix(strings.TrimSuffix(match, "$$"), "$$")
+		equation = strings.TrimSpace(equation)
+		return m.RenderMathEquation(equation, false)
+	})
+
+	return content
+}
+
+// processMermaidDiagrams processes mermaid diagram blocks
+func (m *MarkdownRenderer) processMermaidDiagrams(content string) string {
+	// Look for mermaid code blocks
+	mermaidRegex := regexp.MustCompile("```mermaid\\n([\\s\\S]*?)```")
+
+	return mermaidRegex.ReplaceAllStringFunc(content, func(match string) string {
+		diagram := mermaidRegex.FindStringSubmatch(match)[1]
+		return m.RenderMermaidDiagram(diagram)
+	})
+}
+
+// processChecklists processes checklist items in markdown
+func (m *MarkdownRenderer) processChecklists(content string) string {
+	// Process checklist items
+	checklistRegex := regexp.MustCompile(`(?m)^- \[([ xX])\] (.+)$`)
+
+	lines := strings.Split(content, "\n")
+	var result []string
+	var checklistItems []struct {
+		Text    string
+		Checked bool
+	}
+	inChecklist := false
+
+	for i, line := range lines {
+		if matches := checklistRegex.FindStringSubmatch(line); matches != nil {
+			inChecklist = true
+			checklistItems = append(checklistItems, struct {
+				Text    string
+				Checked bool
+			}{
+				Text:    matches[2],
+				Checked: matches[1] != " ",
+			})
+
+			// Check if this is the last checklist item
+			if i+1 >= len(lines) || !checklistRegex.MatchString(lines[i+1]) {
+				// Render the accumulated checklist
+				result = append(result, m.RenderChecklist(checklistItems))
+				checklistItems = nil
+				inChecklist = false
+			}
+		} else {
+			if inChecklist && len(checklistItems) > 0 {
+				// Render the accumulated checklist
+				result = append(result, m.RenderChecklist(checklistItems))
+				checklistItems = nil
+				inChecklist = false
+			}
+			result = append(result, line)
+		}
+	}
+
+	// Handle any remaining checklist items
+	if len(checklistItems) > 0 {
+		result = append(result, m.RenderChecklist(checklistItems))
+	}
+
+	return strings.Join(result, "\n")
+}
+
+// RenderDiff renders a diff with proper syntax highlighting
+func (m *MarkdownRenderer) RenderDiff(diff string) string {
+	lines := strings.Split(diff, "\n")
+	var rendered []string
+
+	addedStyle := lipgloss.NewStyle().
+		Background(lipgloss.Color("22")).
+		Foreground(lipgloss.Color("10"))
+	removedStyle := lipgloss.NewStyle().
+		Background(lipgloss.Color("52")).
+		Foreground(lipgloss.Color("9"))
+	contextStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("245"))
+	headerStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("39")).
+		Bold(true)
+
+	for _, line := range lines {
+		switch {
+		case strings.HasPrefix(line, "+++") || strings.HasPrefix(line, "---"):
+			rendered = append(rendered, headerStyle.Render(line))
+		case strings.HasPrefix(line, "@@"):
+			rendered = append(rendered, headerStyle.Render(line))
+		case strings.HasPrefix(line, "+"):
+			rendered = append(rendered, addedStyle.Render(line))
+		case strings.HasPrefix(line, "-"):
+			rendered = append(rendered, removedStyle.Render(line))
+		default:
+			rendered = append(rendered, contextStyle.Render(line))
+		}
+	}
+
+	return strings.Join(rendered, "\n")
 }

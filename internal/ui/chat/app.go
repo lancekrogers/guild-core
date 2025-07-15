@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/charmbracelet/bubbles/key"
@@ -97,6 +98,11 @@ type App struct {
 	searchResults []int
 	searchPattern string
 	completions   []completion.CompletionResult
+
+	// Enhanced state management (Sprint 4)
+	stateManager   *StateManager
+	stateHistory   []AppState
+	stateListeners []StateListener
 
 	// Command processing
 	commandProcessor *commands.CommandProcessor
@@ -221,6 +227,13 @@ func (app *App) initializeComponents() error {
 
 	// Initialize command history
 	app.commandHistory = commands.NewCommandHistory(1000)
+
+	// Initialize state manager (Sprint 4)
+	if err := app.initializeStateManager(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize state manager").
+			WithComponent("chat.app").
+			WithOperation("initializeComponents")
+	}
 
 	// Initialize visual components
 	if err := app.initializeVisualComponents(); err != nil {
@@ -415,7 +428,11 @@ func (app *App) initializeSessionManagement() error {
 			// Convert session messages to chat messages
 			for _, msg := range messages {
 				chatMsg := app.convertPkgSessionMessage(msg)
-				app.messages = append(app.messages, chatMsg)
+				if app.stateManager != nil {
+					app.addMessageWithState(chatMsg)
+				} else {
+					app.messages = append(app.messages, chatMsg)
+				}
 			}
 		}
 	}
@@ -1850,7 +1867,11 @@ func (app *App) addSystemMessage(message string) {
 			Timestamp: time.Now(),
 			Metadata:  map[string]string{"source": "daemon"},
 		}
-		app.messages = append(app.messages, systemMsg)
+		if app.stateManager != nil {
+			app.addMessageWithState(systemMsg)
+		} else {
+			app.messages = append(app.messages, systemMsg)
+		}
 	}
 }
 
@@ -2011,7 +2032,11 @@ func (app *App) loadMessagesFromSession(sessionID string) error {
 
 		// Convert protobuf message to internal format
 		chatMsg := app.convertProtoMessage(msg)
-		app.messages = append(app.messages, chatMsg)
+		if app.stateManager != nil {
+			app.addMessageWithState(chatMsg)
+		} else {
+			app.messages = append(app.messages, chatMsg)
+		}
 		messageCount++
 	}
 
@@ -2103,7 +2128,11 @@ func (app *App) sendMessageDirect(ctx context.Context, content string) error {
 		Timestamp: time.Now(),
 		Metadata:  map[string]string{"mode": "direct"},
 	}
-	app.messages = append(app.messages, userMsg)
+	if app.stateManager != nil {
+		app.addMessageWithState(userMsg)
+	} else {
+		app.messages = append(app.messages, userMsg)
+	}
 
 	// Process message locally using orchestrator
 	// This would integrate with the existing orchestrator package
@@ -2117,7 +2146,11 @@ func (app *App) sendMessageDirect(ctx context.Context, content string) error {
 		Timestamp: time.Now(),
 		Metadata:  map[string]string{"mode": "direct"},
 	}
-	app.messages = append(app.messages, responseMsg)
+	if app.stateManager != nil {
+		app.addMessageWithState(responseMsg)
+	} else {
+		app.messages = append(app.messages, responseMsg)
+	}
 
 	return nil
 }
@@ -2215,7 +2248,11 @@ func (app *App) handleChatResponses(stream pb.ChatService_ChatClient) {
 		case *pb.ChatResponse_Message:
 			// Add message to chat
 			msg := app.convertChatMessage(r.Message)
-			app.messages = append(app.messages, msg)
+			if app.stateManager != nil {
+				app.addMessageWithState(msg)
+			} else {
+				app.messages = append(app.messages, msg)
+			}
 		case *pb.ChatResponse_Thinking:
 			// Show agent thinking indicator
 			app.addSystemMessage(fmt.Sprintf("%s is %s", r.Thinking.AgentName, r.Thinking.State.String()))
@@ -2586,4 +2623,327 @@ func (app *App) convertPkgSessionMessage(msg *pkgsession.Message) common.ChatMes
 		Timestamp: msg.Timestamp,
 		Metadata:  metadata,
 	}
+}
+
+// Sprint 4: Enhanced State Management
+
+// AppState represents a snapshot of the application state
+type AppState struct {
+	ID          string                           `json:"id"`
+	Timestamp   time.Time                        `json:"timestamp"`
+	Messages    []common.ChatMessage             `json:"messages"`
+	ActiveTools map[string]*common.ToolExecution `json:"active_tools"`
+	ViewMode    common.ViewMode                  `json:"view_mode"`
+	SessionID   string                           `json:"session_id"`
+	Context     map[string]interface{}           `json:"context"`
+}
+
+// StateListener is notified of state changes
+type StateListener interface {
+	OnStateChange(oldState, newState *AppState)
+}
+
+// StateManager manages application state with history and listeners
+type StateManager struct {
+	ctx            context.Context
+	currentState   *AppState
+	history        []AppState
+	maxHistory     int
+	listeners      []StateListener
+	mu             sync.RWMutex
+	persistenceKey string
+}
+
+// NewStateManager creates a new state manager
+func NewStateManager(ctx context.Context) *StateManager {
+	return &StateManager{
+		ctx:        ctx,
+		maxHistory: 100, // Keep last 100 states
+		history:    make([]AppState, 0, 100),
+		listeners:  make([]StateListener, 0),
+		currentState: &AppState{
+			ID:          fmt.Sprintf("state-%d", time.Now().UnixNano()),
+			Timestamp:   time.Now(),
+			Messages:    make([]common.ChatMessage, 0),
+			ActiveTools: make(map[string]*common.ToolExecution),
+			ViewMode:    common.ViewModeNormal,
+			Context:     make(map[string]interface{}),
+		},
+	}
+}
+
+// GetCurrentState returns a copy of the current state
+func (sm *StateManager) GetCurrentState() *AppState {
+	sm.mu.RLock()
+	defer sm.mu.RUnlock()
+
+	// Deep copy the state
+	stateCopy := *sm.currentState
+	stateCopy.Messages = make([]common.ChatMessage, len(sm.currentState.Messages))
+	copy(stateCopy.Messages, sm.currentState.Messages)
+
+	stateCopy.ActiveTools = make(map[string]*common.ToolExecution)
+	for k, v := range sm.currentState.ActiveTools {
+		toolCopy := *v
+		stateCopy.ActiveTools[k] = &toolCopy
+	}
+
+	stateCopy.Context = make(map[string]interface{})
+	for k, v := range sm.currentState.Context {
+		stateCopy.Context[k] = v
+	}
+
+	return &stateCopy
+}
+
+// UpdateState updates the current state and notifies listeners
+func (sm *StateManager) UpdateState(updater func(*AppState) *AppState) error {
+	if err := sm.ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("state-manager").
+			WithOperation("UpdateState")
+	}
+
+	sm.mu.Lock()
+	defer sm.mu.Unlock()
+
+	// Create a copy of current state
+	oldState := sm.GetCurrentState()
+
+	// Apply the update
+	newState := updater(oldState)
+	if newState == nil {
+		return gerror.New(gerror.ErrCodeInvalidInput, "updater returned nil state", nil).
+			WithComponent("state-manager").
+			WithOperation("UpdateState")
+	}
+
+	// Set new state ID and timestamp
+	newState.ID = fmt.Sprintf("state-%d", time.Now().UnixNano())
+	newState.Timestamp = time.Now()
+
+	// Update current state
+	sm.currentState = newState
+
+	// Add to history
+	sm.history = append(sm.history, *newState)
+	if len(sm.history) > sm.maxHistory {
+		sm.history = sm.history[len(sm.history)-sm.maxHistory:]
+	}
+
+	// Notify listeners
+	for _, listener := range sm.listeners {
+		go listener.OnStateChange(oldState, newState)
+	}
+
+	return nil
+}
+
+// AddListener adds a state change listener
+func (sm *StateManager) AddListener(listener StateListener) {
+	sm.mu.Lock()
+	defer sm.mu.Unlock()
+	sm.listeners = append(sm.listeners, listener)
+}
+
+// RemoveListener removes a state change listener
+func (sm *StateManager) RemoveListener(listener StateListener) {
+	sm.mu.Lock()
+	defer sm.mu.Unlock()
+
+	for i, l := range sm.listeners {
+		if l == listener {
+			sm.listeners = append(sm.listeners[:i], sm.listeners[i+1:]...)
+			break
+		}
+	}
+}
+
+// GetHistory returns the state history
+func (sm *StateManager) GetHistory() []AppState {
+	sm.mu.RLock()
+	defer sm.mu.RUnlock()
+
+	historyCopy := make([]AppState, len(sm.history))
+	copy(historyCopy, sm.history)
+	return historyCopy
+}
+
+// Restore restores a previous state by ID
+func (sm *StateManager) Restore(stateID string) error {
+	sm.mu.Lock()
+	defer sm.mu.Unlock()
+
+	for i := len(sm.history) - 1; i >= 0; i-- {
+		if sm.history[i].ID == stateID {
+			sm.currentState = &sm.history[i]
+			return nil
+		}
+	}
+
+	return gerror.New(gerror.ErrCodeNotFound, "state not found", nil).
+		WithComponent("state-manager").
+		WithOperation("Restore").
+		WithDetails("state_id", stateID)
+}
+
+// Enhanced app methods for state management
+
+// initializeStateManager initializes the enhanced state management
+func (app *App) initializeStateManager() error {
+	app.stateManager = NewStateManager(app.ctx)
+
+	// Add app as a listener to its own state changes
+	app.stateManager.AddListener(app)
+
+	// Initialize state from current app data
+	return app.stateManager.UpdateState(func(state *AppState) *AppState {
+		state.Messages = app.messages
+		state.ActiveTools = app.activeTools
+		state.ViewMode = app.currentView
+		state.SessionID = app.config.SessionID
+		return state
+	})
+}
+
+// OnStateChange implements StateListener interface
+func (app *App) OnStateChange(oldState, newState *AppState) {
+	// Auto-save session on state change
+	if app.sessionManager != nil && app.currentSession != nil {
+		go func() {
+			if err := app.sessionManager.SaveSession(app.currentSession); err != nil {
+				// Log error but don't fail
+				if app.statusPane != nil {
+					app.statusPane.UpdateStatus("Failed to auto-save session", "warning")
+				}
+			}
+		}()
+	}
+
+	// Update UI components if needed
+	if oldState.ViewMode != newState.ViewMode {
+		// View mode changes are handled by the panes themselves
+		// during the regular Update cycle
+	}
+
+	// Persist state for recovery
+	if app.recoveryManager != nil {
+		go func() {
+			if err := app.persistStateForRecovery(newState); err != nil {
+				// Log error but don't fail
+				fmt.Printf("Failed to persist state for recovery: %v\n", err)
+			}
+		}()
+	}
+}
+
+// persistStateForRecovery saves state for crash recovery
+func (app *App) persistStateForRecovery(state *AppState) error {
+	if app.recoveryManager == nil || app.currentSession == nil {
+		return nil
+	}
+
+	// Get the active session from the multi-session manager
+	pkgSession, err := app.multiSessionMgr.GetActiveSession()
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get active session for checkpoint").
+			WithComponent("chat.app").
+			WithOperation("persistStateForRecovery")
+	}
+
+	// Create checkpoint using the current session
+	return app.recoveryManager.CreateCheckpoint(app.ctx, pkgSession)
+}
+
+// updateAppState updates the app state through the state manager
+func (app *App) updateAppState(updater func(*AppState) *AppState) error {
+	if app.stateManager == nil {
+		return gerror.New(gerror.ErrCodeNotFound, "state manager not initialized", nil).
+			WithComponent("chat.app").
+			WithOperation("updateAppState")
+	}
+
+	return app.stateManager.UpdateState(updater)
+}
+
+// addMessageWithState adds a message and updates state atomically
+func (app *App) addMessageWithState(msg common.ChatMessage) error {
+	// Update local state
+	app.messages = append(app.messages, msg)
+
+	// Update managed state
+	return app.updateAppState(func(state *AppState) *AppState {
+		state.Messages = append(state.Messages, msg)
+		return state
+	})
+}
+
+// updateToolStateWithState updates tool execution state atomically
+func (app *App) updateToolStateWithState(toolID string, execution *common.ToolExecution) error {
+	// Update local state
+	if execution == nil {
+		delete(app.activeTools, toolID)
+	} else {
+		app.activeTools[toolID] = execution
+	}
+
+	// Update managed state
+	return app.updateAppState(func(state *AppState) *AppState {
+		if execution == nil {
+			delete(state.ActiveTools, toolID)
+		} else {
+			state.ActiveTools[toolID] = execution
+		}
+		return state
+	})
+}
+
+// setViewModeWithState sets view mode and updates state atomically
+func (app *App) setViewModeWithState(mode common.ViewMode) error {
+	// Update local state
+	app.currentView = mode
+
+	// Update managed state
+	return app.updateAppState(func(state *AppState) *AppState {
+		state.ViewMode = mode
+		return state
+	})
+}
+
+// getStateHistory returns the application state history
+func (app *App) getStateHistory() []AppState {
+	if app.stateManager == nil {
+		return []AppState{}
+	}
+	return app.stateManager.GetHistory()
+}
+
+// restoreState restores a previous application state
+func (app *App) restoreState(stateID string) error {
+	if app.stateManager == nil {
+		return gerror.New(gerror.ErrCodeNotFound, "state manager not initialized", nil).
+			WithComponent("chat.app").
+			WithOperation("restoreState")
+	}
+
+	if err := app.stateManager.Restore(stateID); err != nil {
+		return err
+	}
+
+	// Update local state from restored state
+	restoredState := app.stateManager.GetCurrentState()
+	app.messages = restoredState.Messages
+	app.activeTools = restoredState.ActiveTools
+	app.currentView = restoredState.ViewMode
+
+	// Update UI by clearing and re-adding messages
+	if app.outputPane != nil {
+		app.outputPane.Clear()
+		for _, msg := range app.messages {
+			app.outputPane.AddMessage(msg)
+		}
+	}
+	// View mode changes will be handled in the next Update cycle
+
+	return nil
 }

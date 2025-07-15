@@ -473,6 +473,155 @@ type MessageMeta struct {
 	Tags     []string  `json:"tags"`
 }
 
+// InputComponent represents an enhanced input field with agent mention support
+type InputComponent struct {
+	ID              string   `json:"id"`
+	Value           string   `json:"value"`
+	Placeholder     string   `json:"placeholder"`
+	Width           int      `json:"width"`
+	Multiline       bool     `json:"multiline"`
+	MaxLength       int      `json:"max_length"`
+	ShowCharCount   bool     `json:"show_char_count"`
+	AgentMentions   bool     `json:"agent_mentions"`
+	Suggestions     []string `json:"suggestions"`
+	ValidationError string   `json:"validation_error"`
+	OnSubmit        tea.Cmd  `json:"-"`
+	OnChange        tea.Cmd  `json:"-"`
+	OnAgentMention  tea.Cmd  `json:"-"`
+}
+
+// LayoutContainer represents a flexible layout container
+type LayoutContainer struct {
+	ID        string         `json:"id"`
+	Type      LayoutType     `json:"type"`
+	Direction FlexDirection  `json:"direction"`
+	Gap       int            `json:"gap"`
+	Padding   int            `json:"padding"`
+	Children  []interface{}  `json:"children"`
+	Align     AlignItems     `json:"align"`
+	Justify   JustifyContent `json:"justify"`
+	Wrap      bool           `json:"wrap"`
+}
+
+// LayoutType defines the type of layout
+type LayoutType int
+
+const (
+	LayoutFlex LayoutType = iota
+	LayoutGrid
+	LayoutAbsolute
+)
+
+// FlexDirection defines flex layout direction
+type FlexDirection int
+
+const (
+	FlexRow FlexDirection = iota
+	FlexColumn
+	FlexRowReverse
+	FlexColumnReverse
+)
+
+// AlignItems defines flex alignment
+type AlignItems int
+
+const (
+	AlignStart AlignItems = iota
+	AlignCenter
+	AlignEnd
+	AlignStretch
+)
+
+// JustifyContent defines flex justification
+type JustifyContent int
+
+const (
+	JustifyStart JustifyContent = iota
+	JustifyCenter
+	JustifyEnd
+	JustifyBetween
+	JustifyAround
+	JustifyEvenly
+)
+
+// EnhancedStatusIndicator represents an enhanced status indicator component
+type EnhancedStatusIndicator struct {
+	ID       string             `json:"id"`
+	Status   EnhancedStatusType `json:"status"`
+	Text     string             `json:"text"`
+	Animated bool               `json:"animated"`
+	Size     IndicatorSize      `json:"size"`
+}
+
+// EnhancedStatusType defines enhanced status indicator types
+type EnhancedStatusType int
+
+const (
+	EnhancedStatusSuccess EnhancedStatusType = iota
+	EnhancedStatusWarning
+	EnhancedStatusError
+	EnhancedStatusInfo
+	EnhancedStatusPending
+	EnhancedStatusOffline
+)
+
+// IndicatorSize defines status indicator sizes
+type IndicatorSize int
+
+const (
+	IndicatorSmall IndicatorSize = iota
+	IndicatorMedium
+	IndicatorLarge
+)
+
+// ScrollableContainer provides scrolling functionality for content
+type ScrollableContainer struct {
+	ID             string      `json:"id"`
+	Content        interface{} `json:"content"`
+	Height         int         `json:"height"`
+	Width          int         `json:"width"`
+	ScrollPosition int         `json:"scroll_position"`
+	TotalHeight    int         `json:"total_height"`
+	ShowScrollbar  bool        `json:"show_scrollbar"`
+	WrapContent    bool        `json:"wrap_content"`
+	FocusFollows   bool        `json:"focus_follows"` // Auto-scroll to focused element
+}
+
+// AccessibilityInfo provides accessibility metadata
+type AccessibilityInfo struct {
+	Role              string            `json:"role"`
+	Label             string            `json:"label"`
+	Description       string            `json:"description"`
+	AriaLive          AriaLiveMode      `json:"aria_live"`
+	AriaExpanded      *bool             `json:"aria_expanded,omitempty"`
+	AriaSelected      *bool             `json:"aria_selected,omitempty"`
+	AriaCurrent       string            `json:"aria_current,omitempty"`
+	KeyboardShortcuts map[string]string `json:"keyboard_shortcuts,omitempty"`
+	TabIndex          int               `json:"tab_index"`
+}
+
+// AriaLiveMode defines how screen readers announce changes
+type AriaLiveMode string
+
+const (
+	AriaLiveOff       AriaLiveMode = "off"
+	AriaLivePolite    AriaLiveMode = "polite"
+	AriaLiveAssertive AriaLiveMode = "assertive"
+)
+
+// FocusableComponent represents a component that can receive focus
+type FocusableComponent struct {
+	ID            string            `json:"id"`
+	Component     interface{}       `json:"component"`
+	Focusable     bool              `json:"focusable"`
+	FocusOrder    int               `json:"focus_order"`
+	FocusStyle    lipgloss.Style    `json:"-"`
+	Accessibility AccessibilityInfo `json:"accessibility"`
+	OnFocus       tea.Cmd           `json:"-"`
+	OnBlur        tea.Cmd           `json:"-"`
+	OnKeyPress    tea.Cmd           `json:"-"`
+}
+
 // RenderChatMessage renders an enhanced chat message with agent styling
 func (cl *ComponentLibrary) RenderChatMessage(ctx context.Context, message ChatMessage) (string, error) {
 	if err := ctx.Err(); err != nil {
@@ -886,4 +1035,461 @@ func (cl *ComponentLibrary) renderMessageMetadata(metadata MessageMeta, theme *t
 	}
 
 	return ""
+}
+
+// RenderInputComponent renders an enhanced input field with agent mention support
+func (cl *ComponentLibrary) RenderInputComponent(ctx context.Context, input InputComponent) (string, error) {
+	if err := ctx.Err(); err != nil {
+		return "", gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("component-library").
+			WithOperation("RenderInputComponent")
+	}
+
+	cl.mu.RLock()
+	defer cl.mu.RUnlock()
+
+	theme := cl.themeManager.GetCurrentTheme()
+	if theme == nil {
+		return "", gerror.New(gerror.ErrCodeInternal, "no theme available", nil).
+			WithComponent("component-library").
+			WithOperation("RenderInputComponent")
+	}
+
+	// Base input styling
+	inputStyle := lipgloss.NewStyle().
+		BorderStyle(lipgloss.NormalBorder()).
+		BorderForeground(lipgloss.Color(theme.Colors.Border.Base)).
+		Padding(0, 1)
+
+	if input.Width > 0 {
+		inputStyle = inputStyle.Width(input.Width)
+	}
+
+	// Validation error styling
+	if input.ValidationError != "" {
+		inputStyle = inputStyle.BorderForeground(lipgloss.Color(theme.Colors.Error.Base))
+	}
+
+	// Character count display
+	charCount := ""
+	if input.ShowCharCount && input.MaxLength > 0 {
+		charCountStyle := lipgloss.NewStyle().
+			Foreground(lipgloss.Color(theme.Colors.Text.Muted)).
+			Align(lipgloss.Right)
+		charCount = charCountStyle.Render(fmt.Sprintf("%d/%d", len(input.Value), input.MaxLength))
+	}
+
+	// Placeholder styling
+	content := input.Value
+	if content == "" && input.Placeholder != "" {
+		placeholderStyle := lipgloss.NewStyle().
+			Foreground(lipgloss.Color(theme.Colors.Text.Muted)).
+			Italic(true)
+		content = placeholderStyle.Render(input.Placeholder)
+	}
+
+	// Assemble input
+	inputContent := inputStyle.Render(content)
+	if charCount != "" {
+		inputContent = lipgloss.JoinVertical(lipgloss.Left, inputContent, charCount)
+	}
+
+	if input.ValidationError != "" {
+		errorStyle := lipgloss.NewStyle().
+			Foreground(lipgloss.Color(theme.Colors.Error.Base)).
+			PaddingTop(1)
+		inputContent = lipgloss.JoinVertical(lipgloss.Left, inputContent, errorStyle.Render(input.ValidationError))
+	}
+
+	return inputContent, nil
+}
+
+// RenderLayoutContainer renders a flexible layout container
+func (cl *ComponentLibrary) RenderLayoutContainer(ctx context.Context, layout LayoutContainer) (string, error) {
+	if err := ctx.Err(); err != nil {
+		return "", gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("component-library").
+			WithOperation("RenderLayoutContainer")
+	}
+
+	cl.mu.RLock()
+	defer cl.mu.RUnlock()
+
+	// Base container styling
+	containerStyle := lipgloss.NewStyle()
+	if layout.Padding > 0 {
+		containerStyle = containerStyle.Padding(layout.Padding)
+	}
+
+	// Render children
+	var renderedChildren []string
+	for _, child := range layout.Children {
+		// Render child based on type (simplified for now)
+		childStr := fmt.Sprintf("%v", child)
+		renderedChildren = append(renderedChildren, childStr)
+	}
+
+	// Apply layout based on type
+	var result string
+	switch layout.Type {
+	case LayoutFlex:
+		if layout.Direction == FlexColumn || layout.Direction == FlexColumnReverse {
+			result = lipgloss.JoinVertical(cl.alignToPosition(layout.Align), renderedChildren...)
+		} else {
+			result = lipgloss.JoinHorizontal(cl.alignToPosition(layout.Align), renderedChildren...)
+		}
+	case LayoutGrid:
+		// Simplified grid layout
+		result = strings.Join(renderedChildren, " ")
+	case LayoutAbsolute:
+		// Simplified absolute layout
+		result = strings.Join(renderedChildren, "\n")
+	}
+
+	return containerStyle.Render(result), nil
+}
+
+// RenderStatusIndicator renders a status indicator component
+func (cl *ComponentLibrary) RenderStatusIndicator(ctx context.Context, indicator EnhancedStatusIndicator) (string, error) {
+	if err := ctx.Err(); err != nil {
+		return "", gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("component-library").
+			WithOperation("RenderStatusIndicator")
+	}
+
+	cl.mu.RLock()
+	defer cl.mu.RUnlock()
+
+	theme := cl.themeManager.GetCurrentTheme()
+	if theme == nil {
+		return "", gerror.New(gerror.ErrCodeInternal, "no theme available", nil).
+			WithComponent("component-library").
+			WithOperation("RenderStatusIndicator")
+	}
+
+	// Get status symbol and color
+	symbol, color := cl.getStatusSymbolAndColor(indicator.Status, theme)
+
+	// Apply size
+	symbolStyle := lipgloss.NewStyle().Foreground(lipgloss.Color(color))
+	switch indicator.Size {
+	case IndicatorLarge:
+		symbolStyle = symbolStyle.Bold(true).PaddingRight(2)
+	case IndicatorMedium:
+		symbolStyle = symbolStyle.PaddingRight(1)
+	case IndicatorSmall:
+		// Default size
+	}
+
+	// Animate if requested
+	if indicator.Animated && indicator.Status == EnhancedStatusPending {
+		if cl.animator != nil {
+			// Apply pulsing animation for pending status
+			symbol = cl.applyPulseAnimation(symbol)
+		}
+	}
+
+	// Render indicator with text
+	indicatorContent := symbolStyle.Render(symbol)
+	if indicator.Text != "" {
+		textStyle := lipgloss.NewStyle().Foreground(lipgloss.Color(theme.Colors.Text.Primary))
+		indicatorContent = lipgloss.JoinHorizontal(lipgloss.Center, indicatorContent, textStyle.Render(indicator.Text))
+	}
+
+	return indicatorContent, nil
+}
+
+// Helper methods for new components
+
+func (cl *ComponentLibrary) alignToPosition(align AlignItems) lipgloss.Position {
+	switch align {
+	case AlignStart:
+		return lipgloss.Left
+	case AlignCenter:
+		return lipgloss.Center
+	case AlignEnd:
+		return lipgloss.Right
+	default:
+		return lipgloss.Left
+	}
+}
+
+func (cl *ComponentLibrary) getStatusSymbolAndColor(status EnhancedStatusType, theme *theme.Theme) (string, string) {
+	switch status {
+	case EnhancedStatusSuccess:
+		return "✓", theme.Colors.Success.Base
+	case EnhancedStatusWarning:
+		return "⚠", theme.Colors.Warning.Base
+	case EnhancedStatusError:
+		return "✗", theme.Colors.Error.Base
+	case EnhancedStatusInfo:
+		return "ℹ", theme.Colors.Info.Base
+	case EnhancedStatusPending:
+		return "◐", theme.Colors.Primary.Base
+	case EnhancedStatusOffline:
+		return "○", theme.Colors.Text.Muted
+	default:
+		return "•", theme.Colors.Text.Secondary
+	}
+}
+
+func (cl *ComponentLibrary) applyPulseAnimation(symbol string) string {
+	// Simple pulse effect by alternating opacity
+	// In real implementation, this would integrate with the animator
+	return symbol
+}
+
+// RenderScrollableContainer renders a scrollable container with viewport management
+func (cl *ComponentLibrary) RenderScrollableContainer(ctx context.Context, container ScrollableContainer) (string, error) {
+	if err := ctx.Err(); err != nil {
+		return "", gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("component-library").
+			WithOperation("RenderScrollableContainer")
+	}
+
+	cl.mu.RLock()
+	defer cl.mu.RUnlock()
+
+	theme := cl.themeManager.GetCurrentTheme()
+	if theme == nil {
+		return "", gerror.New(gerror.ErrCodeInternal, "no theme available", nil).
+			WithComponent("component-library").
+			WithOperation("RenderScrollableContainer")
+	}
+
+	// Convert content to string
+	contentStr := fmt.Sprintf("%v", container.Content)
+	lines := strings.Split(contentStr, "\n")
+
+	// Calculate visible viewport
+	startLine := container.ScrollPosition
+	endLine := startLine + container.Height
+	if endLine > len(lines) {
+		endLine = len(lines)
+	}
+	if startLine < 0 {
+		startLine = 0
+	}
+
+	// Extract visible lines
+	visibleLines := lines[startLine:endLine]
+
+	// Apply wrapping if enabled
+	if container.WrapContent && container.Width > 0 {
+		var wrappedLines []string
+		for _, line := range visibleLines {
+			wrapped := cl.wrapLine(line, container.Width)
+			wrappedLines = append(wrappedLines, wrapped...)
+		}
+		visibleLines = wrappedLines
+	}
+
+	// Build the container
+	containerStyle := lipgloss.NewStyle().
+		Border(lipgloss.RoundedBorder()).
+		BorderForeground(lipgloss.Color(theme.Colors.Border.Base)).
+		Height(container.Height).
+		Width(container.Width).
+		Padding(1)
+
+	content := strings.Join(visibleLines, "\n")
+
+	// Add scrollbar if enabled
+	if container.ShowScrollbar && len(lines) > container.Height {
+		scrollbar := cl.renderScrollbar(container.ScrollPosition, container.Height, len(lines), theme)
+		content = cl.addScrollbarToContent(content, scrollbar, container.Width)
+	}
+
+	// Add scroll indicators
+	if startLine > 0 {
+		topIndicator := lipgloss.NewStyle().
+			Foreground(lipgloss.Color(theme.Colors.Text.Muted)).
+			Render(fmt.Sprintf("↑ %d more", startLine))
+		content = topIndicator + "\n" + content
+	}
+
+	if endLine < len(lines) {
+		bottomIndicator := lipgloss.NewStyle().
+			Foreground(lipgloss.Color(theme.Colors.Text.Muted)).
+			Render(fmt.Sprintf("↓ %d more", len(lines)-endLine))
+		content = content + "\n" + bottomIndicator
+	}
+
+	return containerStyle.Render(content), nil
+}
+
+// RenderFocusableComponent renders a component with focus and accessibility support
+func (cl *ComponentLibrary) RenderFocusableComponent(ctx context.Context, focusable FocusableComponent, hasFocus bool) (string, error) {
+	if err := ctx.Err(); err != nil {
+		return "", gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("component-library").
+			WithOperation("RenderFocusableComponent")
+	}
+
+	cl.mu.RLock()
+	defer cl.mu.RUnlock()
+
+	theme := cl.themeManager.GetCurrentTheme()
+	if theme == nil {
+		return "", gerror.New(gerror.ErrCodeInternal, "no theme available", nil).
+			WithComponent("component-library").
+			WithOperation("RenderFocusableComponent")
+	}
+
+	// Render the inner component
+	componentStr := fmt.Sprintf("%v", focusable.Component)
+
+	// Apply focus styling if focused
+	var style lipgloss.Style
+	if hasFocus {
+		// Use provided focus style or default
+		if focusable.FocusStyle.String() != "" {
+			style = focusable.FocusStyle
+		} else {
+			// Default focus style
+			style = lipgloss.NewStyle().
+				Border(lipgloss.ThickBorder()).
+				BorderForeground(lipgloss.Color(theme.Colors.Primary.Base))
+		}
+	} else {
+		style = lipgloss.NewStyle()
+	}
+
+	// Add accessibility indicators
+	if focusable.Accessibility.Label != "" {
+		// In a terminal, we can't truly implement ARIA, but we can add visual indicators
+		labelStyle := lipgloss.NewStyle().
+			Foreground(lipgloss.Color(theme.Colors.Text.Muted)).
+			Italic(true)
+
+		accessLabel := labelStyle.Render(fmt.Sprintf("[%s]", focusable.Accessibility.Label))
+		componentStr = accessLabel + "\n" + componentStr
+	}
+
+	// Add keyboard shortcut hints
+	if len(focusable.Accessibility.KeyboardShortcuts) > 0 && hasFocus {
+		var shortcuts []string
+		for key, action := range focusable.Accessibility.KeyboardShortcuts {
+			shortcuts = append(shortcuts, fmt.Sprintf("%s: %s", key, action))
+		}
+
+		shortcutStyle := lipgloss.NewStyle().
+			Foreground(lipgloss.Color(theme.Colors.Text.Secondary)).
+			Italic(true)
+
+		shortcutStr := shortcutStyle.Render(strings.Join(shortcuts, " | "))
+		componentStr = componentStr + "\n" + shortcutStr
+	}
+
+	return style.Render(componentStr), nil
+}
+
+// Helper methods for scrolling and accessibility
+
+func (cl *ComponentLibrary) wrapLine(line string, width int) []string {
+	if len(line) <= width {
+		return []string{line}
+	}
+
+	var wrapped []string
+	for len(line) > width {
+		wrapped = append(wrapped, line[:width])
+		line = line[width:]
+	}
+	if len(line) > 0 {
+		wrapped = append(wrapped, line)
+	}
+
+	return wrapped
+}
+
+func (cl *ComponentLibrary) renderScrollbar(position, viewHeight, totalHeight int, theme *theme.Theme) string {
+	if totalHeight <= viewHeight {
+		return ""
+	}
+
+	// Calculate scrollbar size and position
+	barHeight := max(1, (viewHeight*viewHeight)/totalHeight)
+	barPosition := (position * (viewHeight - barHeight)) / (totalHeight - viewHeight)
+
+	var scrollbar []string
+	for i := 0; i < viewHeight; i++ {
+		if i >= barPosition && i < barPosition+barHeight {
+			scrollbar = append(scrollbar, "█")
+		} else {
+			scrollbar = append(scrollbar, "│")
+		}
+	}
+
+	scrollbarStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color(theme.Colors.Border.Base))
+
+	return scrollbarStyle.Render(strings.Join(scrollbar, "\n"))
+}
+
+func (cl *ComponentLibrary) addScrollbarToContent(content, scrollbar string, width int) string {
+	contentLines := strings.Split(content, "\n")
+	scrollbarLines := strings.Split(scrollbar, "\n")
+
+	var combined []string
+	for i := 0; i < len(contentLines); i++ {
+		line := contentLines[i]
+		if i < len(scrollbarLines) {
+			// Pad content to width and add scrollbar
+			padding := width - lipgloss.Width(line) - 2
+			if padding < 0 {
+				padding = 0
+			}
+			line = line + strings.Repeat(" ", padding) + " " + scrollbarLines[i]
+		}
+		combined = append(combined, line)
+	}
+
+	return strings.Join(combined, "\n")
+}
+
+// GetAccessibilityAnnouncement generates an announcement for screen readers
+func (cl *ComponentLibrary) GetAccessibilityAnnouncement(component interface{}, change string) string {
+	// In a real terminal app, this would integrate with screen reader APIs
+	// For now, we return a formatted string that could be logged or announced
+
+	switch c := component.(type) {
+	case ChatMessage:
+		return fmt.Sprintf("New message from %s: %s", c.AgentID, c.Content)
+	case EnhancedStatusIndicator:
+		statusText := cl.getStatusTextForEnhanced(c.Status)
+		return fmt.Sprintf("Status changed to %s: %s", statusText, c.Text)
+	case ProgressBar:
+		return fmt.Sprintf("Progress: %d percent complete", int(c.Progress*100))
+	default:
+		return change
+	}
+}
+
+
+func (cl *ComponentLibrary) getStatusTextForEnhanced(status EnhancedStatusType) string {
+	switch status {
+	case EnhancedStatusSuccess:
+		return "success"
+	case EnhancedStatusWarning:
+		return "warning"
+	case EnhancedStatusError:
+		return "error"
+	case EnhancedStatusInfo:
+		return "information"
+	case EnhancedStatusPending:
+		return "pending"
+	case EnhancedStatusOffline:
+		return "offline"
+	default:
+		return "unknown"
+	}
+}
+
+// max returns the maximum of two integers
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }
