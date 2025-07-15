@@ -149,25 +149,6 @@ type LoadTestResults struct {
 	ErrorBreakdown     map[string]int
 }
 
-// FailoverEvent represents a provider failover event
-type FailoverEvent struct {
-	Timestamp        time.Time
-	FromProvider     string
-	ToProvider       string
-	Reason           FailoverReason
-	FailoverDuration time.Duration
-}
-
-// FailoverReason represents reasons for failover
-type FailoverReason int
-
-const (
-	FailoverReason_ProviderFailure FailoverReason = iota
-	FailoverReason_RateLimitExceeded
-	FailoverReason_HealthCheck
-	FailoverReason_CostOptimization
-)
-
 // ProviderUsageStats tracks provider usage statistics
 type ProviderUsageStats struct {
 	RequestCount   int
@@ -182,15 +163,6 @@ type ProviderHealthStats struct {
 	RecoveredSuccessfully bool
 	RecoveryTime          time.Duration
 	HealthScore           float64
-}
-
-// CircuitBreakerMetrics tracks circuit breaker statistics
-type CircuitBreakerMetrics struct {
-	WasTriggered             bool
-	FailedRequestsBeforeOpen int
-	RecoverySuccessRate      float64
-	OpenDuration             time.Duration
-	HalfOpenAttempts         int
 }
 
 // RequestMetrics tracks request execution metrics

@@ -270,4 +270,5 @@ hash-test/
 # Build artifacts
 bin/guild
 .test-*.tmp
+demo
 

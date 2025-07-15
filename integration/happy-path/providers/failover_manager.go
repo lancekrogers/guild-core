@@ -220,7 +220,7 @@ func (f *FailoverManager) ExecuteWithFailover(ctx context.Context, req interface
 	}
 
 	// Select initial provider
-	provider, reason, err := f.selector.SelectProvider(ctx, reqCtx.Requirements)
+	provider, _, err := f.selector.SelectProvider(ctx, reqCtx.Requirements)
 	if err != nil {
 		result.Error = err
 		return result, err
@@ -349,10 +349,9 @@ func (f *FailoverManager) shouldFailover(err error, provider providers.ProviderT
 	// Check for specific error types that warrant failover
 	if guildErr, ok := err.(*gerror.GuildError); ok {
 		switch guildErr.Code {
-		case gerror.ErrCodeInternal:
-		case gerror.ErrCodeTimeout:
-		case gerror.ErrCodeRateLimit:
-		case gerror.ErrCodeInternal:
+		case gerror.ErrCodeInternal,
+			gerror.ErrCodeTimeout,
+			gerror.ErrCodeRateLimit:
 			return true
 		default:
 			return false
@@ -627,7 +626,7 @@ func (f *FailoverManager) checkCircuitBreakerHealth() {
 	}
 	f.mu.RUnlock()
 
-	for provider, cb := range circuitBreakers {
+	for _, cb := range circuitBreakers {
 		state := cb.GetState()
 
 		// If circuit has been open for too long, try to reset it

@@ -1466,7 +1466,6 @@ func (cl *ComponentLibrary) GetAccessibilityAnnouncement(component interface{}, 
 	}
 }
 
-
 func (cl *ComponentLibrary) getStatusTextForEnhanced(status EnhancedStatusType) string {
 	switch status {
 	case EnhancedStatusSuccess:
