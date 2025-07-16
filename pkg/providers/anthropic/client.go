@@ -385,14 +385,14 @@ func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
 
 // anthropicRequest represents an Anthropic API request
 type anthropicRequest struct {
-	Model       string              `json:"model"`
-	Messages    []anthropicMessage  `json:"messages"`
-	System      string              `json:"system,omitempty"`
-	MaxTokens   int                 `json:"max_tokens"`
-	Temperature float64             `json:"temperature,omitempty"`
-	TopP        float64             `json:"top_p,omitempty"`
-	Stream      bool                `json:"stream,omitempty"`
-	StopSequences []string          `json:"stop_sequences,omitempty"`
+	Model         string             `json:"model"`
+	Messages      []anthropicMessage `json:"messages"`
+	System        string             `json:"system,omitempty"`
+	MaxTokens     int                `json:"max_tokens"`
+	Temperature   float64            `json:"temperature,omitempty"`
+	TopP          float64            `json:"top_p,omitempty"`
+	Stream        bool               `json:"stream,omitempty"`
+	StopSequences []string           `json:"stop_sequences,omitempty"`
 }
 
 // anthropicMessage represents a message in Anthropic format
@@ -403,14 +403,14 @@ type anthropicMessage struct {
 
 // anthropicResponse represents an Anthropic API response
 type anthropicResponse struct {
-	ID           string            `json:"id"`
-	Type         string            `json:"type"`
-	Role         string            `json:"role"`
+	ID           string             `json:"id"`
+	Type         string             `json:"type"`
+	Role         string             `json:"role"`
 	Content      []anthropicContent `json:"content"`
-	Model        string            `json:"model"`
-	StopReason   string            `json:"stop_reason"`
-	StopSequence *string           `json:"stop_sequence"`
-	Usage        anthropicUsage    `json:"usage"`
+	Model        string             `json:"model"`
+	StopReason   string             `json:"stop_reason"`
+	StopSequence *string            `json:"stop_sequence"`
+	Usage        anthropicUsage     `json:"usage"`
 }
 
 // anthropicContent represents content in an Anthropic response

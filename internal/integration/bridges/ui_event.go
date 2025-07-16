@@ -117,7 +117,7 @@ func (b *UIEventBridge) Start(ctx context.Context) error {
 		}
 		return nil
 	}
-	
+
 	subID, err := b.eventBus.SubscribeAll(ctx, handler)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to subscribe to events").
@@ -214,13 +214,13 @@ func (b *UIEventBridge) EventChannel() <-chan tea.Msg {
 func (b *UIEventBridge) PublishUIEvent(ctx context.Context, eventType string, data interface{}) error {
 	// Generate a unique event ID
 	eventID := fmt.Sprintf("ui-%d-%s", time.Now().UnixNano(), eventType)
-	
+
 	// Convert data to map[string]interface{}
 	dataMap := make(map[string]interface{})
 	if data != nil {
 		dataMap["payload"] = data
 	}
-	
+
 	event := events.NewBaseEvent(eventID, eventType, "ui", dataMap).
 		WithMetadata("bridge", "ui-event")
 
@@ -256,7 +256,7 @@ func (b *UIEventBridge) processEvent(event events.CoreEvent) {
 			break
 		}
 	}
-	
+
 	if !matches {
 		return
 	}

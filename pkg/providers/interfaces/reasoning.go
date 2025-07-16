@@ -10,17 +10,17 @@ import (
 
 // ReasoningBlock represents a unit of reasoning extracted from LLM responses
 type ReasoningBlock struct {
-	ID          string                 `json:"id"`
-	Type        string                 `json:"type"`        // e.g., "thinking", "planning", "analysis"
-	Content     string                 `json:"content"`
-	Timestamp   time.Time              `json:"timestamp"`
-	Duration    time.Duration          `json:"duration"`
-	TokenCount  int                    `json:"token_count"`
-	Depth       int                    `json:"depth"`       // Nesting level
-	ParentID    string                 `json:"parent_id,omitempty"`
-	Children    []string               `json:"children,omitempty"`
-	Confidence  float64                `json:"confidence,omitempty"`
-	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+	ID         string                 `json:"id"`
+	Type       string                 `json:"type"` // e.g., "thinking", "planning", "analysis"
+	Content    string                 `json:"content"`
+	Timestamp  time.Time              `json:"timestamp"`
+	Duration   time.Duration          `json:"duration"`
+	TokenCount int                    `json:"token_count"`
+	Depth      int                    `json:"depth"` // Nesting level
+	ParentID   string                 `json:"parent_id,omitempty"`
+	Children   []string               `json:"children,omitempty"`
+	Confidence float64                `json:"confidence,omitempty"`
+	Metadata   map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // ReasoningProvider extends AIProvider with reasoning extraction capabilities

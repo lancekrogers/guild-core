@@ -244,11 +244,11 @@ func (b *PersistenceEventBridge) EmitTransactionRolledBack(ctx context.Context, 
 func (b *PersistenceEventBridge) emitEvent(ctx context.Context, eventType string, data interface{}) error {
 	// Generate a unique event ID
 	eventID := fmt.Sprintf("persistence-%d-%s", time.Now().UnixNano(), eventType)
-	
+
 	// Convert data to map[string]interface{}
 	dataMap := make(map[string]interface{})
 	dataMap["payload"] = data
-	
+
 	event := events.NewBaseEvent(eventID, eventType, "persistence-bridge", dataMap).
 		WithMetadata("bridge", "persistence-event")
 

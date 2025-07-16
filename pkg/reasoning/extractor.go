@@ -69,7 +69,7 @@ func (e *Extractor) ExtractFromResponse(ctx context.Context, response *interface
 
 	var allBlocks []*interfaces.ReasoningBlock
 	for _, choice := range response.Choices {
-		blocks := e.extractFromContent(choice.Message.Content)
+		blocks := e.ExtractFromContent(choice.Message.Content)
 		allBlocks = append(allBlocks, blocks...)
 	}
 
@@ -86,7 +86,7 @@ func (e *Extractor) ExtractFromResponse(ctx context.Context, response *interface
 }
 
 // ExtractFromContent extracts reasoning blocks from raw content
-func (e *Extractor) extractFromContent(content string) []*interfaces.ReasoningBlock {
+func (e *Extractor) ExtractFromContent(content string) []*interfaces.ReasoningBlock {
 	var blocks []*interfaces.ReasoningBlock
 
 	for _, pattern := range e.patterns {

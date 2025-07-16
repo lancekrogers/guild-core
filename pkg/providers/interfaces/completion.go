@@ -36,4 +36,3 @@ type CompletionResponse struct {
 	TokensOutput int               `json:"tokens_output,omitempty"`
 	Metadata     map[string]string `json:"metadata"`
 }
-

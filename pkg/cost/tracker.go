@@ -408,6 +408,19 @@ func (ocp *OpenAICostProvider) trackCompletionUsage(ctx context.Context, usage U
 
 	totalCost := inputCost + outputCost
 
+	// Handle reasoning tokens if present (for o1 models)
+	reasoningTokens, hasReasoning := metadata["reasoning_tokens"].(int)
+	if hasReasoning && reasoningTokens > 0 {
+		reasoningCost, err := ocp.calculateTokenCost(ctx, reasoningTokens, model, "reasoning")
+		if err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to calculate reasoning cost").
+				WithComponent("cost.openai_provider").
+				WithOperation("trackCompletionUsage")
+		}
+		totalCost += reasoningCost
+		usage.Metadata["reasoning_cost"] = reasoningCost
+	}
+
 	// Store cost metadata
 	usage.Metadata["input_cost"] = inputCost
 	usage.Metadata["output_cost"] = outputCost
@@ -503,6 +516,17 @@ func (ocp *OpenAICostProvider) updateRateCard(ctx context.Context) error {
 			"gpt-3.5-turbo": {
 				"input":  0.5, // $0.50 per 1M tokens
 				"output": 1.5, // $1.50 per 1M tokens
+			},
+			// o1 models with reasoning support
+			"o1-preview": {
+				"input":     15.0, // $15 per 1M tokens
+				"output":    60.0, // $60 per 1M tokens
+				"reasoning": 15.0, // $15 per 1M tokens
+			},
+			"o1-mini": {
+				"input":     3.0,  // $3 per 1M tokens
+				"output":    12.0, // $12 per 1M tokens
+				"reasoning": 3.0,  // $3 per 1M tokens
 			},
 		},
 	}
@@ -620,6 +644,19 @@ func (acp *AnthropicCostProvider) trackCompletionUsage(ctx context.Context, usag
 
 	totalCost := inputCost + outputCost
 
+	// Handle reasoning tokens if present (for extended thinking)
+	reasoningTokens, hasReasoning := metadata["reasoning_tokens"].(int)
+	if hasReasoning && reasoningTokens > 0 {
+		reasoningCost, err := acp.calculateTokenCost(ctx, reasoningTokens, model, "reasoning")
+		if err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to calculate reasoning cost").
+				WithComponent("cost.anthropic_provider").
+				WithOperation("trackCompletionUsage")
+		}
+		totalCost += reasoningCost
+		usage.Metadata["reasoning_cost"] = reasoningCost
+	}
+
 	// Store cost metadata
 	usage.Metadata["input_cost"] = inputCost
 	usage.Metadata["output_cost"] = outputCost
@@ -715,6 +752,17 @@ func (acp *AnthropicCostProvider) updateRateCard(ctx context.Context) error {
 			"claude-3-haiku-20240307": {
 				"input":  0.25, // $0.25 per 1M tokens
 				"output": 1.25, // $1.25 per 1M tokens
+			},
+			// Claude with extended thinking (reasoning)
+			"claude-3-opus-extended": {
+				"input":     15.0, // $15 per 1M tokens
+				"output":    75.0, // $75 per 1M tokens
+				"reasoning": 15.0, // $15 per 1M tokens
+			},
+			"claude-3-sonnet-extended": {
+				"input":     3.0,  // $3 per 1M tokens
+				"output":    15.0, // $15 per 1M tokens
+				"reasoning": 3.0,  // $3 per 1M tokens
 			},
 		},
 	}

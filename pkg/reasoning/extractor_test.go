@@ -152,7 +152,7 @@ func TestExtractor_ExtractFromContent(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			blocks := extractor.extractFromContent(tt.content)
+			blocks := extractor.ExtractFromContent(tt.content)
 			assert.Len(t, blocks, tt.expected)
 
 			// Check block types
@@ -287,6 +287,6 @@ Final content after all reasoning blocks.
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = extractor.extractFromContent(content)
+		_ = extractor.ExtractFromContent(content)
 	}
 }

@@ -19,6 +19,7 @@ import (
 type SessionExporter struct {
 	serializer *SessionSerializer
 	formatter  *ExportFormatter
+	analytics  *SessionAnalytics
 }
 
 // ExportFormat defines the available export formats
@@ -49,16 +50,18 @@ func (ef ExportFormat) String() string {
 
 // ExportOptions defines options for session export
 type ExportOptions struct {
-	Format          ExportFormat `json:"format"`
-	IncludeMetadata bool         `json:"include_metadata"`
-	IncludeContext  bool         `json:"include_context"`
-	DateRange       *DateRange   `json:"date_range,omitempty"`
-	AgentFilter     []string     `json:"agent_filter,omitempty"`
-	Theme           string       `json:"theme,omitempty"`
-	CustomCSS       string       `json:"custom_css,omitempty"`
-	SyntaxHighlight bool         `json:"syntax_highlight"`
-	LineNumbers     bool         `json:"line_numbers"`
-	Title           string       `json:"title,omitempty"`
+	Format           ExportFormat `json:"format"`
+	IncludeMetadata  bool         `json:"include_metadata"`
+	IncludeContext   bool         `json:"include_context"`
+	IncludeAnalytics bool         `json:"include_analytics"`
+	IncludeReasoning bool         `json:"include_reasoning"`
+	DateRange        *DateRange   `json:"date_range,omitempty"`
+	AgentFilter      []string     `json:"agent_filter,omitempty"`
+	Theme            string       `json:"theme,omitempty"`
+	CustomCSS        string       `json:"custom_css,omitempty"`
+	SyntaxHighlight  bool         `json:"syntax_highlight"`
+	LineNumbers      bool         `json:"line_numbers"`
+	Title            string       `json:"title,omitempty"`
 }
 
 // DateRange defines a time range for filtering
@@ -69,11 +72,13 @@ type DateRange struct {
 
 // ExportData contains the data to be exported
 type ExportData struct {
-	Session   *Session               `json:"session"`
-	Messages  []Message              `json:"messages"`
-	Metadata  map[string]interface{} `json:"metadata,omitempty"`
-	CSS       string                 `json:"css,omitempty"`
-	CustomCSS string                 `json:"custom_css,omitempty"`
+	Session          *Session               `json:"session"`
+	Messages         []Message              `json:"messages"`
+	Metadata         map[string]interface{} `json:"metadata,omitempty"`
+	Analytics        *AnalyticsData         `json:"analytics,omitempty"`
+	ReasoningMetrics *ReasoningMetrics      `json:"reasoning_metrics,omitempty"`
+	CSS              string                 `json:"css,omitempty"`
+	CustomCSS        string                 `json:"custom_css,omitempty"`
 }
 
 // NewSessionExporter creates a new session exporter
@@ -81,7 +86,14 @@ func NewSessionExporter() *SessionExporter {
 	return &SessionExporter{
 		serializer: NewSessionSerializer(),
 		formatter:  NewExportFormatter(),
+		analytics:  nil, // Can be set later if analytics are needed
 	}
+}
+
+// WithAnalytics sets the analytics provider for the exporter
+func (se *SessionExporter) WithAnalytics(analytics *SessionAnalytics) *SessionExporter {
+	se.analytics = analytics
+	return se
 }
 
 // Export exports a session in the specified format
@@ -94,6 +106,17 @@ func (se *SessionExporter) Export(session *Session, opts ExportOptions) ([]byte,
 		Session:  session,
 		Messages: messages,
 		Metadata: se.buildMetadata(session, opts),
+	}
+
+	// Add analytics if requested
+	if opts.IncludeAnalytics && se.analytics != nil {
+		analytics, err := se.analytics.AnalyzeSession(context.Background(), session)
+		if err == nil {
+			exportData.Analytics = analytics
+			if opts.IncludeReasoning && analytics.ReasoningMetrics != nil {
+				exportData.ReasoningMetrics = analytics.ReasoningMetrics
+			}
+		}
 	}
 
 	// Format based on type
@@ -203,6 +226,44 @@ func (se *SessionExporter) exportMarkdown(data *ExportData, opts ExportOptions) 
 			md.WriteString(fmt.Sprintf("- **Git Branch**: `%s`\n", data.Session.Context.GitBranch))
 		}
 
+		md.WriteString("\n")
+	}
+
+	// Analytics Summary
+	if opts.IncludeAnalytics && data.Analytics != nil {
+		md.WriteString("## Analytics Summary\n\n")
+		md.WriteString(fmt.Sprintf("- **Total Tokens**: %d\n", data.Analytics.TokenUsage.Total))
+		md.WriteString(fmt.Sprintf("- **Reasoning Tokens**: %d (%.1f%%)\n",
+			data.Analytics.TokenUsage.Reasoning,
+			data.Analytics.TokenUsage.ReasoningRatio*100))
+		md.WriteString(fmt.Sprintf("- **Productivity Score**: %.1f%%\n", data.Analytics.ProductivityScore))
+		md.WriteString(fmt.Sprintf("- **Task Completion Rate**: %.1f%%\n",
+			data.Analytics.TaskMetrics.CompletionRate*100))
+		md.WriteString("\n")
+	}
+
+	// Reasoning Metrics
+	if opts.IncludeReasoning && data.ReasoningMetrics != nil {
+		md.WriteString("## Reasoning Analysis\n\n")
+		md.WriteString(fmt.Sprintf("- **Reasoning Efficiency**: %.1f%%\n",
+			data.ReasoningMetrics.ReasoningEfficiency*100))
+		md.WriteString(fmt.Sprintf("- **Decision Quality**: %.1f%%\n",
+			data.ReasoningMetrics.DecisionQuality*100))
+		md.WriteString(fmt.Sprintf("- **Average Reasoning Depth**: %.1f\n",
+			data.ReasoningMetrics.ReasoningDepth))
+		md.WriteString(fmt.Sprintf("- **Pattern Complexity**: %.1f\n",
+			data.ReasoningMetrics.PatternComplexity))
+
+		// Agent reasoning styles
+		if len(data.ReasoningMetrics.AgentReasoningStyles) > 0 {
+			md.WriteString("\n### Agent Reasoning Styles\n\n")
+			for agentID, style := range data.ReasoningMetrics.AgentReasoningStyles {
+				md.WriteString(fmt.Sprintf("**%s**:\n", agentID))
+				md.WriteString(fmt.Sprintf("- Average Depth: %.1f\n", style.AverageDepth))
+				md.WriteString(fmt.Sprintf("- Consistency: %.1f%%\n", style.ConsistencyScore*100))
+				md.WriteString(fmt.Sprintf("- Adaptability: %.1f%%\n", style.AdaptabilityScore*100))
+			}
+		}
 		md.WriteString("\n")
 	}
 
