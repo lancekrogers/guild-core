@@ -385,6 +385,13 @@ func (app *Application) registerServices(ctx context.Context) error {
 
 	// Register core services
 	// TODO: Register other services like daemon, chat UI, etc.
+	
+	// Note: Session service would be registered here when session manager is available
+	// Example:
+	// if sessionManager := app.ComponentRegistry.GetSessionManager(); sessionManager != nil {
+	//     sessionService := services.NewSessionService(sessionManager, app.Logger, services.DefaultSessionServiceConfig())
+	//     app.ServiceRegistry.Register(sessionService)
+	// }
 
 	return nil
 }

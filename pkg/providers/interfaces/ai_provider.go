@@ -84,6 +84,15 @@ type Embedding struct {
 	Embedding []float64 `json:"embedding"`
 }
 
+// UsageInfo represents token usage information
+type UsageInfo struct {
+	PromptTokens     int `json:"prompt_tokens"`
+	CompletionTokens int `json:"completion_tokens"`
+	TotalTokens      int `json:"total_tokens"`
+	// Extended for reasoning support
+	ReasoningTokens int `json:"reasoning_tokens,omitempty"`
+}
+
 // ProviderCapabilities describes what a provider supports
 type ProviderCapabilities struct {
 	MaxTokens          int

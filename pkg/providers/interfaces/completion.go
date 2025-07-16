@@ -37,9 +37,3 @@ type CompletionResponse struct {
 	Metadata     map[string]string `json:"metadata"`
 }
 
-// UsageInfo contains token usage statistics
-type UsageInfo struct {
-	PromptTokens     int `json:"prompt_tokens"`
-	CompletionTokens int `json:"completion_tokens"`
-	TotalTokens      int `json:"total_tokens"`
-}
