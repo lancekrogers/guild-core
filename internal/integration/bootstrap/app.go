@@ -11,23 +11,21 @@ import (
 
 	"github.com/lancekrogers/guild/internal/integration/bridges"
 	"github.com/lancekrogers/guild/internal/integration/services"
-	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/events"
 	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/logging"
-	"github.com/lancekrogers/guild/pkg/monitoring"
 	"github.com/lancekrogers/guild/pkg/observability"
 	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild/pkg/session"
 	"github.com/lancekrogers/guild/pkg/storage"
 )
 
 // Application represents the main application with all integrated components
 type Application struct {
 	// Core components
-	Config            *config.Config
+	Config            *Config
 	Logger            observability.Logger
 	EventBus          events.EventBus
-	Storage           storage.Storage
+	Storage           StorageInterface
 	ComponentRegistry registry.ComponentRegistry
 	ServiceRegistry   *services.DefaultServiceRegistry
 
@@ -37,13 +35,78 @@ type Application struct {
 	UIEventBridge          *bridges.UIEventBridge
 
 	// Monitoring
-	Monitor *monitoring.Monitor
+	Monitor MonitorInterface
 
 	// State
 	ctx     context.Context
 	cancel  context.CancelFunc
 	started bool
 	mu      sync.RWMutex
+}
+
+// Config represents application configuration
+type Config struct {
+	Version    string
+	Storage    StorageConfig
+	Bridges    BridgesConfig
+	Monitoring MonitoringConfig
+}
+
+// StorageConfig configures storage
+type StorageConfig struct {
+	DatabasePath   string
+	MigrationsPath string
+}
+
+// BridgesConfig configures integration bridges
+type BridgesConfig struct {
+	EventLogging      EventLoggingConfig
+	PersistenceEvents PersistenceEventsConfig
+	UIEvents          UIEventsConfig
+}
+
+// EventLoggingConfig configures event logging
+type EventLoggingConfig struct {
+	Enabled     bool
+	LogLevel    string
+	IncludeData bool
+}
+
+// PersistenceEventsConfig configures persistence events
+type PersistenceEventsConfig struct {
+	Enabled         bool
+	EmitCRUD        bool
+	EmitQuery       bool
+	EmitTransaction bool
+	IncludePayload  bool
+}
+
+// UIEventsConfig configures UI events
+type UIEventsConfig struct {
+	Enabled         bool
+	BatchEvents     bool
+	BatchIntervalMs int
+	MaxBatchSize    int
+	UIEventTypes    []string
+	SystemEventTypes []string
+}
+
+// MonitoringConfig configures monitoring
+type MonitoringConfig struct {
+	MetricsEnabled   bool
+	TracingEnabled   bool
+	ProfilingEnabled bool
+}
+
+// StorageInterface represents the storage layer
+type StorageInterface interface {
+	Close() error
+}
+
+// MonitorInterface represents the monitoring layer
+type MonitorInterface interface {
+	Start(ctx context.Context) error
+	Stop(ctx context.Context) error
 }
 
 // Options configures the application
@@ -88,18 +151,43 @@ func NewApplication(opts Options) (*Application, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 
 	// Load configuration
-	cfg, err := config.Load(opts.ConfigPath)
-	if err != nil {
-		cancel()
-		return nil, gerror.Wrap(gerror.ErrCodeInternal, err, "failed to load configuration").
-			WithComponent("bootstrap")
+	// For now, create a minimal config
+	// In a real implementation, this would load from file
+	cfg := &Config{
+		Version: "1.0.0",
+		Storage: StorageConfig{
+			DatabasePath:   ".guild/memory.db",
+			MigrationsPath: "migrations",
+		},
+		Bridges: BridgesConfig{
+			EventLogging: EventLoggingConfig{
+				Enabled:     true,
+				LogLevel:    "info",
+				IncludeData: true,
+			},
+			PersistenceEvents: PersistenceEventsConfig{
+				Enabled:        true,
+				EmitCRUD:       true,
+				EmitQuery:      false,
+				EmitTransaction: false,
+				IncludePayload: false,
+			},
+			UIEvents: UIEventsConfig{
+				Enabled:         true,
+				BatchEvents:     true,
+				BatchIntervalMs: 100,
+				MaxBatchSize:    100,
+			},
+		},
+		Monitoring: MonitoringConfig{
+			MetricsEnabled:   true,
+			TracingEnabled:   false,
+			ProfilingEnabled: false,
+		},
 	}
 
 	// Initialize logger
-	logger := logging.NewLogger(logging.Config{
-		Level:  opts.LogLevel,
-		Format: "json",
-	})
+	logger := observability.GetLogger(ctx).WithComponent("bootstrap")
 
 	// Create application
 	app := &Application{
@@ -175,15 +263,20 @@ func (app *Application) Start(ctx context.Context) error {
 		app.mu.Lock()
 		app.started = false
 		app.mu.Unlock()
-		return gerror.Wrap(gerror.ErrCodeInternal, err, "failed to start services").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start services").
 			WithComponent("bootstrap")
 	}
 
 	// Emit startup event
-	startupEvent := events.NewEvent("application.started", map[string]interface{}{
-		"version":    app.Config.Version,
-		"start_time": time.Now(),
-	}).WithSource("bootstrap")
+	startupEvent := events.NewBaseEvent(
+		"app-startup",
+		"application.started",
+		"bootstrap",
+		map[string]interface{}{
+			"version":    app.Config.Version,
+			"start_time": time.Now(),
+		},
+	)
 
 	if err := app.EventBus.Publish(ctx, startupEvent); err != nil {
 		app.Logger.ErrorContext(ctx, "Failed to publish startup event", "error", err)
@@ -207,9 +300,14 @@ func (app *Application) Stop(ctx context.Context) error {
 	app.Logger.InfoContext(ctx, "Stopping application")
 
 	// Emit shutdown event
-	shutdownEvent := events.NewEvent("application.stopping", map[string]interface{}{
-		"stop_time": time.Now(),
-	}).WithSource("bootstrap")
+	shutdownEvent := events.NewBaseEvent(
+		"app-shutdown",
+		"application.stopping",
+		"bootstrap",
+		map[string]interface{}{
+			"stop_time": time.Now(),
+		},
+	)
 
 	if err := app.EventBus.Publish(ctx, shutdownEvent); err != nil {
 		app.Logger.ErrorContext(ctx, "Failed to publish shutdown event", "error", err)
@@ -220,7 +318,7 @@ func (app *Application) Stop(ctx context.Context) error {
 	defer cancel()
 
 	if err := app.ServiceRegistry.Stop(stopCtx); err != nil {
-		return gerror.Wrap(gerror.ErrCodeInternal, err, "failed to stop services").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to stop services").
 			WithComponent("bootstrap")
 	}
 
@@ -267,29 +365,30 @@ func (app *Application) initializeCoreComponents(ctx context.Context) error {
 	app.Logger.InfoContext(ctx, "Initializing core components")
 
 	// Initialize event bus
-	eventBus, err := events.NewMemoryEventBus(ctx)
-	if err != nil {
-		return gerror.Wrap(gerror.ErrCodeInternal, err, "failed to create event bus").
-			WithComponent("bootstrap")
-	}
+	eventBus := events.NewMemoryEventBusWithDefaults()
 	app.EventBus = eventBus
 
-	// Initialize storage
-	storageConfig := storage.Config{
-		DatabasePath: app.Config.Storage.DatabasePath,
-		Migrations:   app.Config.Storage.MigrationsPath,
-	}
+	// Initialize component registry first
+	componentReg := registry.NewComponentRegistry()
+	app.ComponentRegistry = componentReg
 
-	store, err := storage.NewSQLiteStorage(ctx, storageConfig)
+	// Initialize storage using the factory method
+	_, memoryStore, err := storage.InitializeSQLiteStorageForRegistry(ctx, app.Config.Storage.DatabasePath)
 	if err != nil {
-		return gerror.Wrap(gerror.ErrCodeInternal, err, "failed to create storage").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create storage").
 			WithComponent("bootstrap")
 	}
-	app.Storage = store
-
-	// Initialize component registry
-	componentReg := registry.NewDefaultComponentRegistry()
-	app.ComponentRegistry = componentReg
+	
+	// Create storage wrapper that implements our interface
+	app.Storage = &storageAdapter{memoryStore: memoryStore}
+	
+	// Register storage in component registry
+	// The storage registry needs to implement registry.StorageRegistry interface
+	// For now, we'll set it using SetStorageRegistry
+	if defaultReg, ok := componentReg.(*registry.DefaultComponentRegistry); ok {
+		// Need to create a MemoryStore adapter that implements registry.MemoryStore
+		defaultReg.SetStorageRegistry(nil, nil) // TODO: Implement proper adapter
+	}
 
 	return nil
 }
@@ -300,8 +399,23 @@ func (app *Application) initializeBridges(ctx context.Context) error {
 
 	// Event logger bridge
 	if app.Config.Bridges.EventLogging.Enabled {
+		// Convert string log level to EventLogLevel
+		var logLevel bridges.EventLogLevel
+		switch app.Config.Bridges.EventLogging.LogLevel {
+		case "debug":
+			logLevel = bridges.LogLevelDebug
+		case "info":
+			logLevel = bridges.LogLevelInfo
+		case "warn":
+			logLevel = bridges.LogLevelWarn
+		case "error":
+			logLevel = bridges.LogLevelError
+		default:
+			logLevel = bridges.LogLevelInfo
+		}
+		
 		config := bridges.EventLoggerConfig{
-			LogLevel:         bridges.EventLogLevel(app.Config.Bridges.EventLogging.LogLevel),
+			LogLevel:         logLevel,
 			IncludeEventData: app.Config.Bridges.EventLogging.IncludeData,
 			BufferSize:       1000,
 			FlushInterval:    100 * time.Millisecond,
@@ -312,13 +426,15 @@ func (app *Application) initializeBridges(ctx context.Context) error {
 
 	// Persistence event bridge
 	if app.Config.Bridges.PersistenceEvents.Enabled {
-		config := bridges.PersistenceEventConfig{
-			EmitCRUDEvents:        app.Config.Bridges.PersistenceEvents.EmitCRUD,
-			EmitQueryEvents:       app.Config.Bridges.PersistenceEvents.EmitQuery,
-			EmitTransactionEvents: app.Config.Bridges.PersistenceEvents.EmitTransaction,
-			IncludePayload:        app.Config.Bridges.PersistenceEvents.IncludePayload,
-		}
-		app.PersistenceEventBridge = bridges.NewPersistenceEventBridge(app.EventBus, app.Storage, app.Logger, config)
+		// Note: PersistenceEventBridge expects a StorageRegistry, not our StorageInterface
+		// For now, we'll skip persistence event bridge until we have proper integration
+		// config := bridges.PersistenceEventConfig{
+		//     EmitCRUDEvents:        app.Config.Bridges.PersistenceEvents.EmitCRUD,
+		//     EmitQueryEvents:       app.Config.Bridges.PersistenceEvents.EmitQuery,
+		//     EmitTransactionEvents: app.Config.Bridges.PersistenceEvents.EmitTransaction,
+		//     IncludePayload:        app.Config.Bridges.PersistenceEvents.IncludePayload,
+		// }
+		// app.PersistenceEventBridge = bridges.NewPersistenceEventBridge(app.EventBus, app.Storage, app.Logger, config)
 	}
 
 	// UI event bridge
@@ -340,20 +456,10 @@ func (app *Application) initializeBridges(ctx context.Context) error {
 func (app *Application) initializeMonitoring(ctx context.Context) error {
 	app.Logger.InfoContext(ctx, "Initializing monitoring")
 
-	// Create monitor
-	monitorConfig := monitoring.Config{
-		MetricsEnabled:   app.Config.Monitoring.MetricsEnabled,
-		TracingEnabled:   app.Config.Monitoring.TracingEnabled,
-		ProfilingEnabled: app.Config.Monitoring.ProfilingEnabled,
-	}
-
-	monitor, err := monitoring.NewMonitor(ctx, monitorConfig)
-	if err != nil {
-		return gerror.Wrap(gerror.ErrCodeInternal, err, "failed to create monitor").
-			WithComponent("bootstrap")
-	}
-
-	app.Monitor = monitor
+	// For now, create a simple no-op monitor
+	// TODO: Implement full monitoring when the package is available
+	app.Monitor = &noOpMonitor{}
+	
 	return nil
 }
 
@@ -364,34 +470,142 @@ func (app *Application) registerServices(ctx context.Context) error {
 	// Register bridges as services
 	if app.EventLoggerBridge != nil {
 		if err := app.ServiceRegistry.Register(app.EventLoggerBridge); err != nil {
-			return gerror.Wrap(gerror.ErrCodeInternal, err, "failed to register event logger bridge").
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register event logger bridge").
 				WithComponent("bootstrap")
 		}
 	}
 
 	if app.PersistenceEventBridge != nil {
 		if err := app.ServiceRegistry.Register(app.PersistenceEventBridge); err != nil {
-			return gerror.Wrap(gerror.ErrCodeInternal, err, "failed to register persistence event bridge").
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register persistence event bridge").
 				WithComponent("bootstrap")
 		}
 	}
 
 	if app.UIEventBridge != nil {
 		if err := app.ServiceRegistry.Register(app.UIEventBridge); err != nil {
-			return gerror.Wrap(gerror.ErrCodeInternal, err, "failed to register UI event bridge").
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register UI event bridge").
 				WithComponent("bootstrap")
 		}
 	}
 
 	// Register core services
-	// TODO: Register other services like daemon, chat UI, etc.
+	
+	// Register Kanban service
+	kanbanConfig := services.KanbanServiceConfig{
+		BoardPath:    ".guild/kanban",
+		BoardName:    "Guild Tasks",
+		Description:  "Task management board for Guild operations",
+		AutoSave:     true,
+		SaveInterval: 30 * time.Second,
+	}
+	
+	kanbanService, err := services.NewKanbanService(
+		app.ComponentRegistry,
+		app.EventBus,
+		app.Logger.WithComponent("KanbanService"),
+		kanbanConfig,
+	)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create kanban service").
+			WithComponent("bootstrap")
+	}
+	
+	if err := app.ServiceRegistry.Register(kanbanService); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register kanban service").
+			WithComponent("bootstrap")
+	}
 
-	// Note: Session service would be registered here when session manager is available
-	// Example:
-	// if sessionManager := app.ComponentRegistry.GetSessionManager(); sessionManager != nil {
-	//     sessionService := services.NewSessionService(sessionManager, app.Logger, services.DefaultSessionServiceConfig())
-	//     app.ServiceRegistry.Register(sessionService)
-	// }
+	// Register Memory service
+	memoryConfig := services.DefaultMemoryServiceConfig()
+	
+	memoryService, err := services.NewMemoryService(
+		app.ComponentRegistry,
+		app.EventBus,
+		app.Logger.WithComponent("MemoryService"),
+		memoryConfig,
+	)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create memory service").
+			WithComponent("bootstrap")
+	}
+	
+	if err := app.ServiceRegistry.Register(memoryService); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register memory service").
+			WithComponent("bootstrap")
+	}
+
+	// Register Session service
+	// Get session repository from storage registry
+	storageReg := app.ComponentRegistry.Storage()
+	if storageReg == nil {
+		return gerror.New(gerror.ErrCodeInternal, "storage registry not available", nil).
+			WithComponent("bootstrap")
+	}
+	
+	sessionRepo := storageReg.GetSessionRepository()
+	if sessionRepo == nil {
+		return gerror.New(gerror.ErrCodeInternal, "session repository not available", nil).
+			WithComponent("bootstrap")
+	}
+	
+	// Create session store adapter that wraps the session repository
+	sessionStore := &sessionStoreAdapter{repo: sessionRepo}
+	
+	// Create session manager with default options
+	sessionManager := session.NewSessionManager(sessionStore)
+	
+	// Create session service
+	sessionConfig := services.DefaultSessionServiceConfig()
+	sessionService := services.NewSessionService(sessionManager, app.Logger.WithComponent("SessionService"), sessionConfig)
+	
+	if err := app.ServiceRegistry.Register(sessionService); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register session service").
+			WithComponent("bootstrap")
+	}
+
+	// Register Orchestrator service
+	orchestratorConfig := services.DefaultOrchestratorServiceConfig()
+	
+	orchestratorService, err := services.NewOrchestratorService(
+		app.ComponentRegistry,
+		app.EventBus,
+		app.Logger.WithComponent("OrchestratorService"),
+		orchestratorConfig,
+	)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create orchestrator service").
+			WithComponent("bootstrap")
+	}
+	
+	if err := app.ServiceRegistry.Register(orchestratorService); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register orchestrator service").
+			WithComponent("bootstrap")
+	}
+
+	// Register Agent Manager service
+	agentManagerConfig := services.DefaultAgentManagerServiceConfig()
+	
+	agentManagerService, err := services.NewAgentManagerService(
+		app.ComponentRegistry,
+		app.EventBus,
+		app.Logger.WithComponent("AgentManagerService"),
+		agentManagerConfig,
+	)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create agent manager service").
+			WithComponent("bootstrap")
+	}
+	
+	if err := app.ServiceRegistry.Register(agentManagerService); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register agent manager service").
+			WithComponent("bootstrap")
+	}
+
+	// Register Chat UI service (optional, only if enabled)
+	// Chat UI service will be registered conditionally based on the CLI command
+	// For now, we'll add a placeholder comment
+	// TODO: Add conditional Chat UI service registration based on runtime mode
 
 	return nil
 }
@@ -404,9 +618,27 @@ func (app *Application) setupDependencies(ctx context.Context) error {
 	// Storage services depend on database being initialized
 	// UI depends on event bridge being started
 
-	// Example dependencies:
-	// app.ServiceRegistry.SetDependency("ui-event-bridge", "event-bus")
-	// app.ServiceRegistry.SetDependency("chat-ui", "ui-event-bridge")
+	// Core service dependencies
+	// Memory service has no dependencies (uses registry components)
+	// Kanban service depends on memory service for storage
+	if err := app.ServiceRegistry.SetDependency("kanban-service", "memory-service"); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to set kanban->memory dependency").
+			WithComponent("bootstrap")
+	}
+
+	// Orchestrator depends on kanban for task management
+	if err := app.ServiceRegistry.SetDependency("orchestrator-service", "kanban-service"); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to set orchestrator->kanban dependency").
+			WithComponent("bootstrap")
+	}
+
+	// Agent manager depends on memory for persistence
+	if err := app.ServiceRegistry.SetDependency("agent-manager-service", "memory-service"); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to set agent-manager->memory dependency").
+			WithComponent("bootstrap")
+	}
+
+	// TODO: Add more dependencies as services are registered
 
 	return nil
 }
@@ -422,7 +654,7 @@ func (app *Application) Ready(ctx context.Context) error {
 	defer app.mu.RUnlock()
 
 	if !app.started {
-		return gerror.New(gerror.ErrCodeUnavailable, "application not started", nil).
+		return gerror.New(gerror.ErrCodeValidation, "application not started", nil).
 			WithComponent("bootstrap")
 	}
 
@@ -430,11 +662,152 @@ func (app *Application) Ready(ctx context.Context) error {
 	health := app.ServiceRegistry.Health(ctx)
 	for service, err := range health {
 		if err != nil {
-			return gerror.Wrap(gerror.ErrCodeUnavailable, err, "service unhealthy").
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "service unhealthy").
 				WithComponent("bootstrap").
 				WithDetails("service", service)
 		}
 	}
 
+	return nil
+}
+
+// storageAdapter adapts the memory store to our StorageInterface
+type storageAdapter struct {
+	memoryStore interface{}
+}
+
+// Close closes the storage
+func (s *storageAdapter) Close() error {
+	// The memory store adapter doesn't have a Close method
+	// This is handled at the database level
+	return nil
+}
+
+// sessionStoreAdapter adapts registry.SessionRepository to session.SessionStore
+type sessionStoreAdapter struct {
+	repo registry.SessionRepository
+}
+
+// GetSession retrieves a session by ID
+func (a *sessionStoreAdapter) GetSession(ctx context.Context, sessionID string) (*storage.ChatSession, error) {
+	// Convert from registry.ChatSession to storage.ChatSession
+	regSession, err := a.repo.GetSession(ctx, sessionID)
+	if err != nil {
+		return nil, err
+	}
+	if regSession == nil {
+		return nil, nil
+	}
+	
+	// For now, do a simple conversion (assuming the types are compatible)
+	// In a real implementation, we'd need proper mapping
+	return &storage.ChatSession{
+		ID:         regSession.ID,
+		Name:       regSession.Name,
+		CampaignID: regSession.CampaignID,
+		CreatedAt:  regSession.CreatedAt,
+		UpdatedAt:  regSession.UpdatedAt,
+		Metadata:   regSession.Metadata,
+	}, nil
+}
+
+// UpsertSession creates or updates a session
+func (a *sessionStoreAdapter) UpsertSession(ctx context.Context, session *storage.ChatSession, stateData []byte) error {
+	// For now, we'll ignore stateData as it's not supported by the repository interface
+	// Convert from storage.ChatSession to registry.ChatSession
+	regSession := &registry.ChatSession{
+		ID:         session.ID,
+		Name:       session.Name,
+		CampaignID: session.CampaignID,
+		CreatedAt:  session.CreatedAt,
+		UpdatedAt:  session.UpdatedAt,
+		Metadata:   session.Metadata,
+	}
+	
+	if session.ID == "" {
+		return a.repo.CreateSession(ctx, regSession)
+	}
+	return a.repo.UpdateSession(ctx, regSession)
+}
+
+// SaveMessage saves a message to a session
+func (a *sessionStoreAdapter) SaveMessage(ctx context.Context, sessionID string, message *storage.ChatMessage) error {
+	// Convert from storage.ChatMessage to registry.ChatMessage
+	regMessage := &registry.ChatMessage{
+		ID:        message.ID,
+		SessionID: sessionID,
+		Role:      message.Role,
+		Content:   message.Content,
+		CreatedAt: message.CreatedAt,
+		ToolCalls: message.ToolCalls,
+		Metadata:  message.Metadata,
+	}
+	return a.repo.SaveMessage(ctx, regMessage)
+}
+
+// GetMessages retrieves all messages for a session
+func (a *sessionStoreAdapter) GetMessages(ctx context.Context, sessionID string) ([]*storage.ChatMessage, error) {
+	// Get messages from registry repository
+	regMessages, err := a.repo.GetMessages(ctx, sessionID)
+	if err != nil {
+		return nil, err
+	}
+	
+	// Convert from registry.ChatMessage to storage.ChatMessage
+	messages := make([]*storage.ChatMessage, len(regMessages))
+	for i, regMsg := range regMessages {
+		messages[i] = &storage.ChatMessage{
+			ID:        regMsg.ID,
+			SessionID: regMsg.SessionID,
+			Role:      regMsg.Role,
+			Content:   regMsg.Content,
+			CreatedAt: regMsg.CreatedAt,
+			ToolCalls: regMsg.ToolCalls,
+			Metadata:  regMsg.Metadata,
+		}
+	}
+	return messages, nil
+}
+
+// ListSessions lists sessions with options
+func (a *sessionStoreAdapter) ListSessions(ctx context.Context, options session.ListOptions) ([]*storage.ChatSession, error) {
+	// The repository interface uses limit and offset directly
+	regSessions, err := a.repo.ListSessions(ctx, int32(options.Limit), int32(options.Offset))
+	if err != nil {
+		return nil, err
+	}
+	
+	// Convert from registry.ChatSession to storage.ChatSession
+	sessions := make([]*storage.ChatSession, len(regSessions))
+	for i, regSession := range regSessions {
+		sessions[i] = &storage.ChatSession{
+			ID:         regSession.ID,
+			Name:       regSession.Name,
+			CampaignID: regSession.CampaignID,
+			CreatedAt:  regSession.CreatedAt,
+			UpdatedAt:  regSession.UpdatedAt,
+			Metadata:   regSession.Metadata,
+		}
+	}
+	return sessions, nil
+}
+
+// Begin starts a transaction (not supported by the repository interface)
+func (a *sessionStoreAdapter) Begin() (session.Transaction, error) {
+	// For now, return an error as transactions are not supported
+	return nil, gerror.New(gerror.ErrCodeNotImplemented, "transactions not supported", nil).
+		WithComponent("sessionStoreAdapter")
+}
+
+// noOpMonitor is a simple no-op monitor implementation
+type noOpMonitor struct{}
+
+// Start starts the monitor (no-op)
+func (m *noOpMonitor) Start(ctx context.Context) error {
+	return nil
+}
+
+// Stop stops the monitor (no-op)
+func (m *noOpMonitor) Stop(ctx context.Context) error {
 	return nil
 }
