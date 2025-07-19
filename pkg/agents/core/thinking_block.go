@@ -155,11 +155,15 @@ type ThinkingBlockParser struct {
 	patterns           map[ThinkingType]*regexp.Regexp
 	typeDetector       *ThinkingTypeDetector
 	structureExtractor *StructureExtractor
-	metrics            *observability.MetricsRegistry
+	metrics            *MetricsAdapter
 }
 
 // NewThinkingBlockParser creates a new parser with sophisticated pattern matching
-func NewThinkingBlockParser(metrics *observability.MetricsRegistry) *ThinkingBlockParser {
+func NewThinkingBlockParser(metricsRegistry *observability.MetricsRegistry) *ThinkingBlockParser {
+	var metrics *MetricsAdapter
+	if metricsRegistry != nil {
+		metrics = NewMetricsAdapter(metricsRegistry)
+	}
 	return &ThinkingBlockParser{
 		patterns: map[ThinkingType]*regexp.Regexp{
 			ThinkingTypeAnalysis:       regexp.MustCompile(`(?s)<thinking[^>]*>.*?(?:analyz|examin|investigat|assess).*?</thinking>`),

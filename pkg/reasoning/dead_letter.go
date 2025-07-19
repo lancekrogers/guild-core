@@ -58,9 +58,9 @@ func (dlq *DeadLetterQueue) Add(ctx context.Context, agentID, content string, er
 
 	// Extract error details
 	errorMsg := err.Error()
-	errorCode := gerror.ErrCodeInternal
-	if gerr, ok := err.(*gerror.Error); ok {
-		errorCode = gerr.Code
+	errorCode := string(gerror.ErrCodeInternal)
+	if gerr, ok := err.(*gerror.GuildError); ok {
+		errorCode = string(gerr.Code)
 	}
 
 	entry := DeadLetterEntry{
@@ -78,7 +78,7 @@ func (dlq *DeadLetterQueue) Add(ctx context.Context, agentID, content string, er
 
 	// Store in database
 	if err := dlq.persistEntry(ctx, entry); err != nil {
-		return gerror.Wrap(err, "failed to persist dead letter entry").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to persist dead letter entry").
 			WithComponent("dead_letter_queue")
 	}
 
@@ -119,7 +119,7 @@ func (dlq *DeadLetterQueue) Get(ctx context.Context, limit int) ([]DeadLetterEnt
 
 	rows, err := dlq.db.QueryContext(ctx, query, limit)
 	if err != nil {
-		return nil, gerror.Wrap(err, "failed to query dead letter entries").
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to query dead letter entries").
 			WithComponent("dead_letter_queue")
 	}
 	defer rows.Close()
@@ -141,7 +141,7 @@ func (dlq *DeadLetterQueue) Get(ctx context.Context, limit int) ([]DeadLetterEnt
 			&metadataJSON,
 		)
 		if err != nil {
-			return nil, gerror.Wrap(err, "failed to scan dead letter entry").
+			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to scan dead letter entry").
 				WithComponent("dead_letter_queue")
 		}
 
@@ -159,7 +159,7 @@ func (dlq *DeadLetterQueue) Get(ctx context.Context, limit int) ([]DeadLetterEnt
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, gerror.Wrap(err, "error iterating dead letter entries").
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "error iterating dead letter entries").
 			WithComponent("dead_letter_queue")
 	}
 
@@ -180,22 +180,21 @@ func (dlq *DeadLetterQueue) MarkProcessed(ctx context.Context, id string) error 
 
 	result, err := dlq.db.ExecContext(ctx, query, now, id)
 	if err != nil {
-		return gerror.Wrap(err, "failed to mark entry as processed").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to mark entry as processed").
 			WithComponent("dead_letter_queue").
-			WithField("entry_id", id)
+			WithDetails("entry_id", id)
 	}
 
 	rows, err := result.RowsAffected()
 	if err != nil {
-		return gerror.Wrap(err, "failed to get rows affected").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get rows affected").
 			WithComponent("dead_letter_queue")
 	}
 
 	if rows == 0 {
-		return gerror.New("entry not found").
-			WithCode(gerror.ErrCodeNotFound).
+		return gerror.New(gerror.ErrCodeNotFound, "entry not found", nil).
 			WithComponent("dead_letter_queue").
-			WithField("entry_id", id)
+			WithDetails("entry_id", id)
 	}
 
 	// Update in-memory cache
@@ -234,15 +233,14 @@ func (dlq *DeadLetterQueue) Reprocess(ctx context.Context, id string, reprocessF
 		&metadataJSON,
 	)
 	if err == sql.ErrNoRows {
-		return gerror.New("entry not found").
-			WithCode(gerror.ErrCodeNotFound).
+		return gerror.New(gerror.ErrCodeNotFound, "entry not found", nil).
 			WithComponent("dead_letter_queue").
-			WithField("entry_id", id)
+			WithDetails("entry_id", id)
 	}
 	if err != nil {
-		return gerror.Wrap(err, "failed to get entry for reprocessing").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get entry for reprocessing").
 			WithComponent("dead_letter_queue").
-			WithField("entry_id", id)
+			WithDetails("entry_id", id)
 	}
 
 	// Unmarshal metadata
@@ -256,9 +254,9 @@ func (dlq *DeadLetterQueue) Reprocess(ctx context.Context, id string, reprocessF
 	if err := reprocessFn(entry); err != nil {
 		// Update attempt count
 		dlq.updateAttempts(ctx, id, entry.Attempts+1)
-		return gerror.Wrap(err, "reprocessing failed").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "reprocessing failed").
 			WithComponent("dead_letter_queue").
-			WithField("entry_id", id)
+			WithDetails("entry_id", id)
 	}
 
 	// Mark as processed on success
@@ -278,13 +276,13 @@ func (dlq *DeadLetterQueue) Clean(ctx context.Context, olderThan time.Duration) 
 
 	result, err := dlq.db.ExecContext(ctx, query, cutoff)
 	if err != nil {
-		return 0, gerror.Wrap(err, "failed to clean dead letter queue").
+		return 0, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to clean dead letter queue").
 			WithComponent("dead_letter_queue")
 	}
 
 	rows, err := result.RowsAffected()
 	if err != nil {
-		return 0, gerror.Wrap(err, "failed to get cleaned rows").
+		return 0, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get cleaned rows").
 			WithComponent("dead_letter_queue")
 	}
 
@@ -311,7 +309,7 @@ func (dlq *DeadLetterQueue) Statistics(ctx context.Context) (map[string]interfac
 	var total int
 	err := dlq.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM reasoning_failures").Scan(&total)
 	if err != nil {
-		return nil, gerror.Wrap(err, "failed to count total entries").
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to count total entries").
 			WithComponent("dead_letter_queue")
 	}
 	stats["total_entries"] = total
@@ -320,7 +318,7 @@ func (dlq *DeadLetterQueue) Statistics(ctx context.Context) (map[string]interfac
 	var unprocessed int
 	err = dlq.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM reasoning_failures WHERE processed = false").Scan(&unprocessed)
 	if err != nil {
-		return nil, gerror.Wrap(err, "failed to count unprocessed entries").
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to count unprocessed entries").
 			WithComponent("dead_letter_queue")
 	}
 	stats["unprocessed_entries"] = unprocessed
@@ -337,7 +335,7 @@ func (dlq *DeadLetterQueue) Statistics(ctx context.Context) (map[string]interfac
 
 	rows, err := dlq.db.QueryContext(ctx, query)
 	if err != nil {
-		return nil, gerror.Wrap(err, "failed to get error distribution").
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get error distribution").
 			WithComponent("dead_letter_queue")
 	}
 	defer rows.Close()
@@ -401,7 +399,7 @@ func (dlq *DeadLetterQueue) persistEntry(ctx context.Context, entry DeadLetterEn
 	)
 
 	if err != nil {
-		return gerror.Wrap(err, "failed to insert dead letter entry").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to insert dead letter entry").
 			WithComponent("dead_letter_queue")
 	}
 
@@ -418,7 +416,7 @@ func (dlq *DeadLetterQueue) updateAttempts(ctx context.Context, id string, attem
 
 	_, err := dlq.db.ExecContext(ctx, query, attempts, time.Now(), id)
 	if err != nil {
-		return gerror.Wrap(err, "failed to update attempts").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to update attempts").
 			WithComponent("dead_letter_queue")
 	}
 

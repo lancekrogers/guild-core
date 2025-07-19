@@ -268,9 +268,9 @@ func (ri *ReasoningIntegration) StartReasoning(ctx context.Context, messageID st
 	}
 
 	// Create reasoning streamer
-	parser := core.NewThinkingBlockParser()
+	parser := core.NewThinkingBlockParser(nil) // Pass nil for metrics in UI context
 	chainBuilder := core.NewReasoningChainBuilder("", "", "")
-	streamer := core.NewReasoningStreamer(parser, chainBuilder)
+	streamer := core.NewReasoningStreamer(parser, chainBuilder, nil) // Pass nil for metrics
 
 	// Streamer is ready to receive events
 

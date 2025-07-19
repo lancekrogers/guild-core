@@ -88,7 +88,7 @@ func (f *CrossComponentTestFramework) createKanbanTask(task *Task) error {
 
 		f.systemState.KanbanState.TaskHistory[boardID] = append(
 			f.systemState.KanbanState.TaskHistory[boardID], kanbanTask)
-		f.systemState.KanbanState.ActiveTasks++
+		// Track active task count
 		break
 	}
 
@@ -117,9 +117,11 @@ func (f *CrossComponentTestFramework) generateRAGQuery(workflow *Workflow) strin
 
 	// Add agent capabilities context
 	capabilities := make(map[string]bool)
-	for _, agent := range workflow.Participants {
-		for _, capability := range agent.Capabilities {
-			capabilities[capability] = true
+	for _, agentID := range workflow.Participants {
+		if agent, ok := f.agents[agentID]; ok {
+			for capName := range agent.Capabilities {
+				capabilities[capName] = true
+			}
 		}
 	}
 
@@ -218,8 +220,8 @@ func (f *CrossComponentTestFramework) updateAgentKnowledge(agents []Agent, updat
 		// Check if the knowledge is relevant to the agent's capabilities
 		relevant := false
 		for _, tag := range update.Tags {
-			for _, capability := range agent.Capabilities {
-				if strings.Contains(strings.ToLower(tag), strings.ToLower(capability)) {
+			for capName := range agent.Capabilities {
+				if strings.Contains(strings.ToLower(tag), strings.ToLower(capName)) {
 					relevant = true
 					break
 				}
@@ -501,7 +503,7 @@ func (f *CrossComponentTestFramework) extractWorkflowKnowledge(workflow *Workflo
 		WorkflowID: workflow.ID,
 		Type:       workflow.Type.String(),
 		Content: fmt.Sprintf("Workflow %s completed with %d tasks and %d outputs",
-			workflow.ID, len(result.TasksCreated), len(result.OutputsProduced)),
+			workflow.ID, result.TasksCreated, result.OutputsProduced),
 		Tags:      []string{"workflow", "execution", "cross-component"},
 		Relevance: 0.9,
 	}
@@ -529,18 +531,3 @@ func (f *CrossComponentTestFramework) updateRAGWithWorkflowKnowledge(ctx context
 	return nil
 }
 
-// String method for WorkflowType
-func (wt WorkflowType) String() string {
-	switch wt {
-	case WorkflowType_CodeAnalysis:
-		return "CodeAnalysis"
-	case WorkflowType_MultiAgentCoordination:
-		return "MultiAgentCoordination"
-	case WorkflowType_KnowledgeManagement:
-		return "KnowledgeManagement"
-	case WorkflowType_TaskExecution:
-		return "TaskExecution"
-	default:
-		return "Unknown"
-	}
-}

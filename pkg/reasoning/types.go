@@ -11,16 +11,13 @@ import (
 
 // Common errors
 var (
-	ErrCircuitBreakerOpen = gerror.New("circuit breaker is open").
-				WithCode(gerror.ErrCodeResourceExhausted).
+	ErrCircuitBreakerOpen = gerror.New(gerror.ErrCodeResourceExhausted, "circuit breaker is open", nil).
 				WithComponent("reasoning")
 
-	ErrRateLimitExceeded = gerror.New("rate limit exceeded").
-				WithCode(gerror.ErrCodeResourceExhausted).
+	ErrRateLimitExceeded = gerror.New(gerror.ErrCodeResourceExhausted, "rate limit exceeded", nil).
 				WithComponent("reasoning")
 
-	ErrRegistryNotStarted = gerror.New("reasoning registry not started").
-				WithCode(gerror.ErrCodeFailedPrecondition).
+	ErrRegistryNotStarted = gerror.New(gerror.ErrCodeInvalidTransition, "reasoning registry not started", nil).
 				WithComponent("reasoning")
 )
 

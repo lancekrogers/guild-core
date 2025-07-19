@@ -13,9 +13,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lancekrogers/guild/pkg/events"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/orchestrator"
 	"golang.org/x/time/rate"
 )
 
@@ -27,8 +27,8 @@ type Registry struct {
 	rateLimiter    *RateLimiter
 	retryer        *Retryer
 	deadLetter     *DeadLetterQueue
-	eventBus       orchestrator.EventBus
-	metrics        *observability.MetricsRegistry
+	eventBus       events.EventBus
+	metrics        *MetricsWrapper
 	logger         *slog.Logger
 	db             *sql.DB
 
@@ -82,7 +82,7 @@ func DefaultConfig() Config {
 // NewRegistry creates a new reasoning registry with all dependencies
 func NewRegistry(
 	extractor *Extractor,
-	eventBus orchestrator.EventBus,
+	eventBus events.EventBus,
 	metrics *observability.MetricsRegistry,
 	logger *slog.Logger,
 	db *sql.DB,
@@ -90,30 +90,28 @@ func NewRegistry(
 ) (*Registry, error) {
 	// Validate dependencies
 	if extractor == nil {
-		return nil, gerror.New("extractor is required").
-			WithCode(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "extractor is required", nil).
 			WithComponent("reasoning_registry")
 	}
 	if eventBus == nil {
-		return nil, gerror.New("event bus is required").
-			WithCode(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "event bus is required", nil).
 			WithComponent("reasoning_registry")
 	}
 	if metrics == nil {
-		return nil, gerror.New("metrics registry is required").
-			WithCode(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "metrics registry is required", nil).
 			WithComponent("reasoning_registry")
 	}
 	if logger == nil {
-		return nil, gerror.New("logger is required").
-			WithCode(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "logger is required", nil).
 			WithComponent("reasoning_registry")
 	}
 	if db == nil {
-		return nil, gerror.New("database is required").
-			WithCode(gerror.ErrCodeInvalidArgument).
+		return nil, gerror.New(gerror.ErrCodeInvalidInput, "database is required", nil).
 			WithComponent("reasoning_registry")
 	}
+
+	// Create metrics wrapper
+	metricsWrapper := NewMetricsWrapper(metrics)
 
 	// Create circuit breaker
 	circuitBreaker := NewCircuitBreaker(CircuitBreakerConfig{
@@ -127,7 +125,12 @@ func NewRegistry(
 
 			// Emit event for state change
 			eventBus.Publish(context.Background(), &CircuitBreakerStateChangeEvent{
-				BaseEvent: orchestrator.NewBaseEvent(EventCircuitBreakerStateChange),
+				BaseEvent: *events.NewBaseEvent(
+					uuid.New().String(),
+					EventCircuitBreakerStateChange,
+					"reasoning-registry",
+					map[string]interface{}{"provider": "default"},
+				),
 				From:      from,
 				To:        to,
 				Timestamp: time.Now(),
@@ -142,7 +145,7 @@ func NewRegistry(
 		AgentRate:   rate.Limit(config.PerAgentRateLimit),
 		AgentBurst:  config.PerAgentBurst,
 		OnLimitHit: func(agentID string, limitType string) {
-			metrics.RecordCounter("reasoning_rate_limit_hit", 1,
+			metricsWrapper.RecordCounter("reasoning_rate_limit_hit", 1,
 				"agent_id", agentID,
 				"limit_type", limitType)
 		},
@@ -156,7 +159,7 @@ func NewRegistry(
 			"error", err,
 			"delay_ms", delay.Milliseconds())
 
-		metrics.RecordCounter("reasoning_retry_attempts", 1,
+		metricsWrapper.RecordCounter("reasoning_retry_attempts", 1,
 			"attempt", fmt.Sprintf("%d", attempt))
 	}
 	retryer := NewRetryer(retryConfig)
@@ -170,7 +173,7 @@ func NewRegistry(
 			"error", entry.Error,
 			"attempts", entry.Attempts)
 
-		metrics.RecordCounter("reasoning_dead_letter_entries", 1,
+		metricsWrapper.RecordCounter("reasoning_dead_letter_entries", 1,
 			"error_code", entry.ErrorCode)
 	})
 
@@ -184,7 +187,7 @@ func NewRegistry(
 		retryer:        retryer,
 		deadLetter:     deadLetter,
 		eventBus:       eventBus,
-		metrics:        metrics,
+		metrics:        metricsWrapper,
 		logger:         logger,
 		db:             db,
 		config:         config,
@@ -199,8 +202,7 @@ func (r *Registry) Start(ctx context.Context) error {
 	defer r.mu.Unlock()
 
 	if r.started {
-		return gerror.New("reasoning registry already started").
-			WithCode(gerror.ErrCodeAlreadyExists).
+		return gerror.New(gerror.ErrCodeAlreadyExists, "reasoning registry already started", nil).
 			WithComponent("reasoning_registry")
 	}
 
@@ -208,7 +210,7 @@ func (r *Registry) Start(ctx context.Context) error {
 
 	// Initialize metrics
 	if err := r.initializeMetrics(); err != nil {
-		return gerror.Wrap(err, "failed to initialize metrics").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize metrics").
 			WithComponent("reasoning_registry")
 	}
 
@@ -226,24 +228,7 @@ func (r *Registry) Start(ctx context.Context) error {
 	go r.circuitBreakerPersister()
 	go r.deadLetterCleaner()
 
-	// Integrate extractor with event bus
-	r.extractor.OnExtraction = func(blocks []ReasoningBlock, duration time.Duration, err error) {
-		if err != nil {
-			r.eventBus.Publish(ctx, &ReasoningFailedEvent{
-				BaseEvent: orchestrator.NewBaseEvent(EventReasoningFailed),
-				Error:     err,
-				Timestamp: time.Now(),
-			})
-		} else {
-			r.eventBus.Publish(ctx, &ReasoningExtractedEvent{
-				BaseEvent:       orchestrator.NewBaseEvent(EventReasoningExtracted),
-				Blocks:          blocks,
-				TokensExtracted: calculateTotalTokens(blocks),
-				Duration:        duration,
-				Timestamp:       time.Now(),
-			})
-		}
-	}
+	// No longer using OnExtraction callback - events are published directly in Extract method
 
 	r.started = true
 	r.logger.Info("reasoning registry started successfully")
@@ -257,14 +242,12 @@ func (r *Registry) Stop(ctx context.Context) error {
 	defer r.mu.Unlock()
 
 	if !r.started {
-		return gerror.New("reasoning registry not started").
-			WithCode(gerror.ErrCodeFailedPrecondition).
+		return gerror.New(gerror.ErrCodeInvalidTransition, "reasoning registry not started", nil).
 			WithComponent("reasoning_registry")
 	}
 
 	if r.stopping {
-		return gerror.New("reasoning registry already stopping").
-			WithCode(gerror.ErrCodeAlreadyExists).
+		return gerror.New(gerror.ErrCodeAlreadyExists, "reasoning registry already stopping", nil).
 			WithComponent("reasoning_registry")
 	}
 
@@ -285,7 +268,7 @@ func (r *Registry) Stop(ctx context.Context) error {
 	case <-done:
 		r.logger.Info("all workers stopped")
 	case <-ctx.Done():
-		return gerror.Wrap(ctx.Err(), "timeout waiting for workers").
+		return gerror.Wrap(ctx.Err(), gerror.ErrCodeTimeout, "timeout waiting for workers").
 			WithComponent("reasoning_registry")
 	}
 
@@ -311,52 +294,44 @@ func (r *Registry) Health(ctx context.Context) HealthReport {
 	defer r.mu.RUnlock()
 
 	if !r.started {
-		return component.HealthStatus{
-			Status:  component.StatusUnhealthy,
+		return HealthReport{
+			Status:  HealthStatusUnhealthy,
 			Message: "reasoning registry not started",
-			Details: map[string]interface{}{
-				"started": false,
+			Checks: map[string]CheckResult{
+				"registry": {
+					Status:    HealthStatusUnhealthy,
+					Message:   "not started",
+					Timestamp: time.Now(),
+				},
 			},
+			Timestamp: time.Now(),
 		}
 	}
 
 	// Perform comprehensive health check
 	health := r.healthCheck.Check(ctx)
 
-	// Convert to component health status
-	var status component.HealthStatusType
-	switch health.Status {
-	case HealthStatusHealthy:
-		status = component.StatusHealthy
-	case HealthStatusDegraded:
-		status = component.StatusDegraded
-	default:
-		status = component.StatusUnhealthy
-	}
-
-	return component.HealthStatus{
-		Status:  status,
-		Message: health.Message,
-		Details: health.Checks,
-	}
+	// Return the health report directly
+	return health
 }
 
 // Extract performs reasoning extraction with full protection
 func (r *Registry) Extract(ctx context.Context, agentID, content string) ([]ReasoningBlock, error) {
+	start := time.Now()
+
 	// Check if started
 	r.mu.RLock()
 	if !r.started {
 		r.mu.RUnlock()
-		return nil, gerror.New("reasoning registry not started").
-			WithCode(gerror.ErrCodeFailedPrecondition).
+		return nil, gerror.New(gerror.ErrCodeInvalidTransition, "reasoning registry not started", nil).
 			WithComponent("reasoning_registry")
 	}
 	r.mu.RUnlock()
 
 	// Rate limiting
 	if err := r.rateLimiter.Wait(ctx, agentID); err != nil {
-		return nil, gerror.Wrap(err, "rate limit exceeded").
-			WithField("agent_id", agentID).
+		return nil, gerror.Wrap(err, gerror.ErrCodeResourceExhausted, "rate limit exceeded").
+			WithDetails("agent_id", agentID).
 			WithComponent("reasoning_registry")
 	}
 
@@ -385,11 +360,39 @@ func (r *Registry) Extract(ctx context.Context, agentID, content string) ([]Reas
 				"agent_id", agentID)
 		}
 
-		return nil, gerror.Wrap(err, "extraction failed after retries").
-			WithField("agent_id", agentID).
-			WithField("attempts", r.retryer.config.MaxAttempts).
+		// Publish failure event
+		r.eventBus.Publish(ctx, &ReasoningFailedEvent{
+			BaseEvent: *events.NewBaseEvent(
+				uuid.New().String(),
+				EventReasoningFailed,
+				"reasoning-registry",
+				map[string]interface{}{"provider": "default"},
+			),
+			AgentID:   agentID,
+			Error:     err,
+			Timestamp: time.Now(),
+		})
+
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "extraction failed after retries").
+			WithDetails("agent_id", agentID).
+			WithDetails("attempts", r.retryer.config.MaxAttempts).
 			WithComponent("reasoning_registry")
 	}
+
+	// Publish success event
+	r.eventBus.Publish(ctx, &ReasoningExtractedEvent{
+		BaseEvent: *events.NewBaseEvent(
+			uuid.New().String(),
+			EventReasoningExtracted,
+			"reasoning-registry",
+			map[string]interface{}{"provider": "default"},
+		),
+		AgentID:         agentID,
+		Blocks:          blocks,
+		TokensExtracted: calculateTotalTokens(blocks),
+		Duration:        time.Since(start),
+		Timestamp:       time.Now(),
+	})
 
 	return blocks, nil
 }
@@ -407,8 +410,7 @@ func (r *Registry) ExtractStream(ctx context.Context, agentID string, reader io.
 		r.mu.RLock()
 		if !r.started {
 			r.mu.RUnlock()
-			errCh <- gerror.New("reasoning registry not started").
-				WithCode(gerror.ErrCodeFailedPrecondition).
+			errCh <- gerror.New(gerror.ErrCodeInvalidTransition, "reasoning registry not started", nil).
 				WithComponent("reasoning_registry")
 			return
 		}
@@ -416,8 +418,8 @@ func (r *Registry) ExtractStream(ctx context.Context, agentID string, reader io.
 
 		// Rate limiting
 		if err := r.rateLimiter.Wait(ctx, agentID); err != nil {
-			errCh <- gerror.Wrap(err, "rate limit exceeded").
-				WithField("agent_id", agentID).
+			errCh <- gerror.Wrap(err, gerror.ErrCodeResourceExhausted, "rate limit exceeded").
+				WithDetails("agent_id", agentID).
 				WithComponent("reasoning_registry")
 			return
 		}
@@ -448,8 +450,8 @@ func (r *Registry) ExtractStream(ctx context.Context, agentID string, reader io.
 		})
 
 		if err != nil {
-			errCh <- gerror.Wrap(err, "stream extraction failed").
-				WithField("agent_id", agentID).
+			errCh <- gerror.Wrap(err, gerror.ErrCodeInternal, "stream extraction failed").
+				WithDetails("agent_id", agentID).
 				WithComponent("reasoning_registry")
 		}
 	}()
@@ -459,47 +461,8 @@ func (r *Registry) ExtractStream(ctx context.Context, agentID string, reader io.
 
 // initializeMetrics registers all metrics with the registry
 func (r *Registry) initializeMetrics() error {
-	// Extraction metrics
-	r.metrics.RegisterCounter(
-		"reasoning_extraction_total",
-		"Total number of reasoning extractions",
-		[]string{"provider", "agent_id", "status"},
-	)
-
-	r.metrics.RegisterHistogram(
-		"reasoning_extraction_duration_seconds",
-		"Duration of reasoning extraction in seconds",
-		[]string{"provider", "agent_id"},
-		observability.DefaultBuckets,
-	)
-
-	// Circuit breaker metrics
-	r.metrics.RegisterGauge(
-		"reasoning_circuit_breaker_state",
-		"Current state of circuit breaker (0=closed, 1=open, 2=half-open)",
-		[]string{"provider"},
-	)
-
-	// Rate limiter metrics
-	r.metrics.RegisterGauge(
-		"reasoning_rate_limiter_usage_ratio",
-		"Rate limiter usage as ratio of limit",
-		[]string{"agent_id", "type"},
-	)
-
-	r.metrics.RegisterCounter(
-		"reasoning_rate_limit_hit",
-		"Number of rate limit hits",
-		[]string{"agent_id", "limit_type"},
-	)
-
-	// Health metrics
-	r.metrics.RegisterGauge(
-		"reasoning_health_status",
-		"Health status (0=unhealthy, 1=degraded, 2=healthy)",
-		[]string{"check"},
-	)
-
+	// Metrics are registered via the adapter's Record* methods
+	// No explicit registration needed with current observability API
 	return nil
 }
 
@@ -635,7 +598,7 @@ func (r *Registry) loadCircuitBreakerState(ctx context.Context) error {
 		return nil
 	}
 	if err != nil {
-		return gerror.Wrap(err, "failed to query circuit breaker state").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to query circuit breaker state").
 			WithComponent("reasoning_registry")
 	}
 
@@ -668,7 +631,7 @@ func (r *Registry) saveCircuitBreakerState(ctx context.Context) error {
 		generateID(), "default", int(state), failures,
 		toNullTime(lastFailure), toNullTime(lastSuccess))
 	if err != nil {
-		return gerror.Wrap(err, "failed to save circuit breaker state").
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to save circuit breaker state").
 			WithComponent("reasoning_registry")
 	}
 

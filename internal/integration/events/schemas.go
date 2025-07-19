@@ -388,6 +388,6 @@ func ToVersionedEvent(event events.CoreEvent) VersionedEvent {
 	return VersionedEvent{
 		Version: EventVersionV1,
 		Type:    event.GetType(),
-		Data:    event.GetData().(map[string]interface{}),
+		Data:    event.GetData(),
 	}
 }

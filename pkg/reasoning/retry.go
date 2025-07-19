@@ -25,7 +25,7 @@ type RetryConfig struct {
 	// JitterFactor adds randomness to prevent thundering herd (0.0 to 1.0)
 	JitterFactor float64
 	// RetryableErrors defines which error codes should be retried
-	RetryableErrors []string
+	RetryableErrors []gerror.ErrorCode
 	// OnRetry is called before each retry attempt
 	OnRetry func(attempt int, err error, delay time.Duration)
 }
@@ -38,11 +38,11 @@ func DefaultRetryConfig() RetryConfig {
 		MaxDelay:     10 * time.Second,
 		Multiplier:   2.0,
 		JitterFactor: 0.1,
-		RetryableErrors: []string{
-			gerror.ErrCodeUnavailable,
-			gerror.ErrCodeDeadlineExceeded,
+		RetryableErrors: []gerror.ErrorCode{
+			gerror.ErrCodeTimeout,
 			gerror.ErrCodeResourceExhausted,
 			gerror.ErrCodeInternal,
+			gerror.ErrCodeConnection,
 		},
 	}
 }
@@ -87,10 +87,9 @@ func (r *Retryer) Execute(ctx context.Context, fn func() error) error {
 	for attempt := 0; attempt < r.config.MaxAttempts; attempt++ {
 		// Check context before attempt
 		if err := ctx.Err(); err != nil {
-			return gerror.Wrap(err, "context cancelled during retry").
-				WithCode(gerror.ErrCodeCanceled).
+			return gerror.Wrap(err, gerror.ErrCodeCanceled, "context cancelled during retry").
 				WithComponent("retryer").
-				WithField("attempt", attempt)
+				WithDetails("attempt", attempt)
 		}
 
 		// Execute the function
@@ -127,30 +126,26 @@ func (r *Retryer) Execute(ctx context.Context, fn func() error) error {
 		case <-time.After(delay):
 			// Continue to next attempt
 		case <-ctx.Done():
-			return gerror.Wrap(ctx.Err(), "context cancelled during retry delay").
-				WithCode(gerror.ErrCodeCanceled).
+			return gerror.Wrap(ctx.Err(), gerror.ErrCodeCanceled, "context cancelled during retry delay").
 				WithComponent("retryer").
-				WithField("attempt", attempt).
-				WithField("delay_ms", delay.Milliseconds())
+				WithDetails("attempt", attempt).
+				WithDetails("delay_ms", delay.Milliseconds())
 		}
 	}
 
 	// All retries exhausted
-	return gerror.Wrap(lastErr, "all retry attempts exhausted").
-		WithCode(gerror.ErrCodeResourceExhausted).
+	return gerror.Wrap(lastErr, gerror.ErrCodeResourceExhausted, "all retry attempts exhausted").
 		WithComponent("retryer").
-		WithField("attempts", r.config.MaxAttempts)
+		WithDetails("attempts", r.config.MaxAttempts)
 }
 
 // ExecuteWithResult runs the function with retry logic and returns result
 func (r *Retryer) ExecuteWithResult(ctx context.Context, fn func() (interface{}, error)) (interface{}, error) {
 	var result interface{}
-	var lastErr error
 
 	err := r.Execute(ctx, func() error {
 		var err error
 		result, err = fn()
-		lastErr = err
 		return err
 	})
 
@@ -164,7 +159,7 @@ func (r *Retryer) ExecuteWithResult(ctx context.Context, fn func() (interface{},
 // isRetryable checks if an error should be retried
 func (r *Retryer) isRetryable(err error) bool {
 	// Check if it's a gerror with a code
-	var gerr *gerror.Error
+	var gerr *gerror.GuildError
 	if !gerror.As(err, &gerr) {
 		// Not a gerror, don't retry by default
 		return false
@@ -240,7 +235,6 @@ func NewStatsRetryer(config RetryConfig) *StatsRetryer {
 // Execute runs the function and tracks statistics
 func (sr *StatsRetryer) Execute(ctx context.Context, fn func() error) error {
 	attempts := 0
-	startTime := time.Now()
 
 	// Wrap the retry callback to track stats
 	originalCallback := sr.config.OnRetry

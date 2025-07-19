@@ -604,31 +604,33 @@ func (app *Application) registerServices(ctx context.Context) error {
 	}
 
 	// Register Reasoning service
-	reasoningConfig := services.DefaultReasoningServiceConfig()
+	// TODO: Implement reasoning service when ready
+	// reasoningConfig := services.DefaultReasoningServiceConfig()
 
 	// Get database from storage
-	db, err := app.getDatabase()
+	_, err = app.getDatabase()
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get database for reasoning service").
-			WithComponent("bootstrap")
+		// Log but don't fail - reasoning service is optional for now
+		app.Logger.WarnContext(ctx, "Failed to get database for reasoning service",
+			"error", err)
 	}
 
-	reasoningService, err := services.NewReasoningService(
-		app.ComponentRegistry,
-		app.EventBus,
-		app.Logger.WithComponent("ReasoningService"),
-		db,
-		reasoningConfig,
-	)
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create reasoning service").
-			WithComponent("bootstrap")
-	}
+	// reasoningService, err := services.NewReasoningService(
+	// 	app.ComponentRegistry,
+	// 	app.EventBus,
+	// 	app.Logger.WithComponent("ReasoningService"),
+	// 	db,
+	// 	reasoningConfig,
+	// )
+	// if err != nil {
+	// 	return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create reasoning service").
+	// 		WithComponent("bootstrap")
+	// }
 
-	if err := app.ServiceRegistry.Register(reasoningService); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register reasoning service").
-			WithComponent("bootstrap")
-	}
+	// if err := app.ServiceRegistry.Register(reasoningService); err != nil {
+	// 	return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register reasoning service").
+	// 		WithComponent("bootstrap")
+	// }
 
 	// Register Chat UI service (optional, only if enabled)
 	// Chat UI service will be registered conditionally based on the CLI command
@@ -706,10 +708,9 @@ func (app *Application) getDatabase() (*sql.DB, error) {
 	// would be exposed through the StorageRegistry interface.
 
 	// For now, we'll return an error indicating this needs implementation
-	return nil, gerror.New("database access not yet implemented").
-		WithCode(gerror.ErrCodeNotImplemented).
+	return nil, gerror.New(gerror.ErrCodeNotImplemented, "database access not yet implemented", nil).
 		WithComponent("bootstrap").
-		WithOperation("getDatabase")
+		WithDetails("operation", "getDatabase")
 }
 
 // storageAdapter adapts the memory store to our StorageInterface

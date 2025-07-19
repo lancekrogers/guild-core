@@ -10,7 +10,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/providers"
 	"github.com/lancekrogers/guild/pkg/providers/interfaces"
 )
@@ -544,7 +543,7 @@ func (m *MockAIProvider) estimateTokens(messages []interfaces.ChatMessage) int {
 func (m *MockAIProvider) generateEmbeddingResponse(req interfaces.EmbeddingRequest) *interfaces.EmbeddingResponse {
 	embeddings := make([]interfaces.Embedding, len(req.Input))
 
-	for i, input := range req.Input {
+	for i := range req.Input {
 		// Generate a mock embedding vector (384 dimensions)
 		vector := make([]float64, 384)
 		for j := range vector {

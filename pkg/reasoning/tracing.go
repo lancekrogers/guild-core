@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/lancekrogers/guild/pkg/events"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
@@ -44,7 +45,7 @@ func (te *TracedExtractor) Extract(ctx context.Context, agentID, content string)
 
 	// Circuit breaker check
 	if te.circuitBreaker != nil {
-		cbCtx, cbSpan := tracer.Start(ctx, "circuit_breaker.check")
+		_, cbSpan := tracer.Start(ctx, "circuit_breaker.check")
 		state := te.circuitBreaker.State()
 		cbSpan.SetAttributes(
 			attribute.String("state", state.String()),
@@ -61,7 +62,7 @@ func (te *TracedExtractor) Extract(ctx context.Context, agentID, content string)
 
 	// Rate limiter check
 	if te.rateLimiter != nil {
-		rlCtx, rlSpan := tracer.Start(cbCtx, "rate_limiter.check")
+		rlCtx, rlSpan := tracer.Start(ctx, "rate_limiter.check")
 		err := te.rateLimiter.Allow(rlCtx, agentID)
 		rlSpan.SetAttributes(
 			attribute.String("agent.id", agentID),
@@ -242,19 +243,20 @@ func (tr *TracedRegistry) Extract(ctx context.Context, agentID, content string) 
 }
 
 // InstrumentEventBus adds tracing to event bus operations
-func InstrumentEventBus(eventBus orchestrator.EventBus) orchestrator.EventBus {
+func InstrumentEventBus(eventBus events.EventBus) events.EventBus {
 	return &tracedEventBus{eventBus: eventBus}
 }
 
 type tracedEventBus struct {
-	eventBus orchestrator.EventBus
+	eventBus events.EventBus
 }
 
-func (t *tracedEventBus) Publish(ctx context.Context, event interface{}) error {
-	eventType := fmt.Sprintf("%T", event)
+func (t *tracedEventBus) Publish(ctx context.Context, event events.CoreEvent) error {
+	eventType := event.GetType()
 	ctx, span := tracer.Start(ctx, "event_bus.publish",
 		trace.WithAttributes(
 			attribute.String("event.type", eventType),
+			attribute.String("event.id", event.GetID()),
 		),
 	)
 	defer span.End()
@@ -270,29 +272,92 @@ func (t *tracedEventBus) Publish(ctx context.Context, event interface{}) error {
 	return err
 }
 
-func (t *tracedEventBus) Subscribe(eventType string, handler orchestrator.EventHandler) error {
+func (t *tracedEventBus) Subscribe(ctx context.Context, eventType string, handler events.EventHandler) (events.SubscriptionID, error) {
 	// Wrap the handler with tracing
-	tracedHandler := func(event interface{}) {
-		ctx, span := tracer.Start(context.Background(), "event_bus.handle",
+	tracedHandler := func(ctx context.Context, event events.CoreEvent) error {
+		ctx, span := tracer.Start(ctx, "event_bus.handle",
 			trace.WithAttributes(
 				attribute.String("event.type", eventType),
+				attribute.String("event.id", event.GetID()),
 			),
 		)
 		defer span.End()
 
 		// Call original handler
-		handler(event)
+		err := handler(ctx, event)
+		if err != nil {
+			span.SetStatus(codes.Error, err.Error())
+		} else {
+			span.SetStatus(codes.Ok, "handled")
+		}
 
-		span.SetStatus(codes.Ok, "handled")
+		return err
 	}
 
-	return t.eventBus.Subscribe(eventType, tracedHandler)
+	return t.eventBus.Subscribe(ctx, eventType, tracedHandler)
 }
 
-func (t *tracedEventBus) Unsubscribe(eventType string, handler orchestrator.EventHandler) error {
-	// This is complex because we wrapped the handler
-	// For now, delegate to underlying implementation
-	return t.eventBus.Unsubscribe(eventType, handler)
+func (t *tracedEventBus) Unsubscribe(ctx context.Context, subscriptionID events.SubscriptionID) error {
+	return t.eventBus.Unsubscribe(ctx, subscriptionID)
+}
+
+func (t *tracedEventBus) SubscribeAll(ctx context.Context, handler events.EventHandler) (events.SubscriptionID, error) {
+	tracedHandler := func(ctx context.Context, event events.CoreEvent) error {
+		ctx, span := tracer.Start(ctx, "event_bus.handle_all",
+			trace.WithAttributes(
+				attribute.String("event.type", event.GetType()),
+				attribute.String("event.id", event.GetID()),
+			),
+		)
+		defer span.End()
+
+		err := handler(ctx, event)
+		if err != nil {
+			span.SetStatus(codes.Error, err.Error())
+		} else {
+			span.SetStatus(codes.Ok, "handled")
+		}
+
+		return err
+	}
+
+	return t.eventBus.SubscribeAll(ctx, tracedHandler)
+}
+
+func (t *tracedEventBus) PublishJSON(ctx context.Context, jsonEvent string) error {
+	ctx, span := tracer.Start(ctx, "event_bus.publish_json")
+	defer span.End()
+
+	err := t.eventBus.PublishJSON(ctx, jsonEvent)
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+	} else {
+		span.SetStatus(codes.Ok, "published")
+	}
+
+	return err
+}
+
+func (t *tracedEventBus) Close(ctx context.Context) error {
+	ctx, span := tracer.Start(ctx, "event_bus.close")
+	defer span.End()
+
+	err := t.eventBus.Close(ctx)
+	if err != nil {
+		span.SetStatus(codes.Error, err.Error())
+	} else {
+		span.SetStatus(codes.Ok, "closed")
+	}
+
+	return err
+}
+
+func (t *tracedEventBus) IsRunning() bool {
+	return t.eventBus.IsRunning()
+}
+
+func (t *tracedEventBus) GetSubscriptionCount() int {
+	return t.eventBus.GetSubscriptionCount()
 }
 
 // SpanFromContext is a helper to get the current span

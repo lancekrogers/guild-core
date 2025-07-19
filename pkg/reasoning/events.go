@@ -4,9 +4,10 @@
 package reasoning
 
 import (
+	"context"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/orchestrator"
+	"github.com/lancekrogers/guild/pkg/events"
 )
 
 // Event types for reasoning system
@@ -25,7 +26,7 @@ const (
 
 // ReasoningExtractedEvent is emitted when reasoning blocks are successfully extracted
 type ReasoningExtractedEvent struct {
-	orchestrator.BaseEvent
+	events.BaseEvent
 	AgentID         string           `json:"agent_id"`
 	Provider        string           `json:"provider"`
 	Blocks          []ReasoningBlock `json:"blocks"`
@@ -36,7 +37,7 @@ type ReasoningExtractedEvent struct {
 
 // ReasoningFailedEvent is emitted when reasoning extraction fails
 type ReasoningFailedEvent struct {
-	orchestrator.BaseEvent
+	events.BaseEvent
 	AgentID   string    `json:"agent_id"`
 	Provider  string    `json:"provider"`
 	Error     error     `json:"error"`
@@ -47,7 +48,7 @@ type ReasoningFailedEvent struct {
 
 // CircuitBreakerStateChangeEvent is emitted when circuit breaker changes state
 type CircuitBreakerStateChangeEvent struct {
-	orchestrator.BaseEvent
+	events.BaseEvent
 	Provider  string       `json:"provider"`
 	From      CircuitState `json:"from_state"`
 	To        CircuitState `json:"to_state"`
@@ -57,7 +58,7 @@ type CircuitBreakerStateChangeEvent struct {
 
 // RateLimitExceededEvent is emitted when rate limit is hit
 type RateLimitExceededEvent struct {
-	orchestrator.BaseEvent
+	events.BaseEvent
 	AgentID    string    `json:"agent_id"`
 	LimitType  string    `json:"limit_type"` // "global" or "agent"
 	Limit      int       `json:"limit"`
@@ -68,7 +69,7 @@ type RateLimitExceededEvent struct {
 
 // ReasoningStreamStartEvent marks the beginning of streaming extraction
 type ReasoningStreamStartEvent struct {
-	orchestrator.BaseEvent
+	events.BaseEvent
 	AgentID   string    `json:"agent_id"`
 	Provider  string    `json:"provider"`
 	StreamID  string    `json:"stream_id"`
@@ -77,7 +78,7 @@ type ReasoningStreamStartEvent struct {
 
 // ReasoningStreamEndEvent marks the end of streaming extraction
 type ReasoningStreamEndEvent struct {
-	orchestrator.BaseEvent
+	events.BaseEvent
 	AgentID     string        `json:"agent_id"`
 	Provider    string        `json:"provider"`
 	StreamID    string        `json:"stream_id"`
@@ -91,7 +92,7 @@ type ReasoningStreamEndEvent struct {
 
 // ReasoningBlockProcessedEvent is emitted for each processed reasoning block
 type ReasoningBlockProcessedEvent struct {
-	orchestrator.BaseEvent
+	events.BaseEvent
 	AgentID      string         `json:"agent_id"`
 	Provider     string         `json:"provider"`
 	StreamID     string         `json:"stream_id"`
@@ -110,63 +111,78 @@ type EventHandler interface {
 
 // EventSubscriber helps subscribe to reasoning events
 type EventSubscriber struct {
-	eventBus orchestrator.EventBus
-	handlers map[string]orchestrator.EventHandler
+	eventBus events.EventBus
+	handlers map[string]events.SubscriptionID
 }
 
 // NewEventSubscriber creates a new event subscriber
-func NewEventSubscriber(eventBus orchestrator.EventBus) *EventSubscriber {
+func NewEventSubscriber(eventBus events.EventBus) *EventSubscriber {
 	return &EventSubscriber{
 		eventBus: eventBus,
-		handlers: make(map[string]orchestrator.EventHandler),
+		handlers: make(map[string]events.SubscriptionID),
 	}
 }
 
 // Subscribe sets up subscriptions for all reasoning events
-func (s *EventSubscriber) Subscribe(handler EventHandler) error {
+func (s *EventSubscriber) Subscribe(ctx context.Context, handler EventHandler) error {
 	// Subscribe to reasoning extracted events
-	s.eventBus.Subscribe(EventReasoningExtracted, func(event interface{}) {
+	subID, err := s.eventBus.Subscribe(ctx, EventReasoningExtracted, func(ctx context.Context, event events.CoreEvent) error {
 		if e, ok := event.(*ReasoningExtractedEvent); ok {
-			if err := handler.HandleReasoningExtracted(e); err != nil {
-				// Log error but don't fail
-			}
+			return handler.HandleReasoningExtracted(e)
 		}
+		return nil
 	})
+	if err != nil {
+		return err
+	}
+	s.handlers[EventReasoningExtracted] = subID
 
 	// Subscribe to reasoning failed events
-	s.eventBus.Subscribe(EventReasoningFailed, func(event interface{}) {
+	subID, err = s.eventBus.Subscribe(ctx, EventReasoningFailed, func(ctx context.Context, event events.CoreEvent) error {
 		if e, ok := event.(*ReasoningFailedEvent); ok {
-			if err := handler.HandleReasoningFailed(e); err != nil {
-				// Log error but don't fail
-			}
+			return handler.HandleReasoningFailed(e)
 		}
+		return nil
 	})
+	if err != nil {
+		return err
+	}
+	s.handlers[EventReasoningFailed] = subID
 
 	// Subscribe to circuit breaker state changes
-	s.eventBus.Subscribe(EventCircuitBreakerStateChange, func(event interface{}) {
+	subID, err = s.eventBus.Subscribe(ctx, EventCircuitBreakerStateChange, func(ctx context.Context, event events.CoreEvent) error {
 		if e, ok := event.(*CircuitBreakerStateChangeEvent); ok {
-			if err := handler.HandleCircuitBreakerStateChange(e); err != nil {
-				// Log error but don't fail
-			}
+			return handler.HandleCircuitBreakerStateChange(e)
 		}
+		return nil
 	})
+	if err != nil {
+		return err
+	}
+	s.handlers[EventCircuitBreakerStateChange] = subID
 
 	// Subscribe to rate limit exceeded events
-	s.eventBus.Subscribe(EventRateLimitExceeded, func(event interface{}) {
+	subID, err = s.eventBus.Subscribe(ctx, EventRateLimitExceeded, func(ctx context.Context, event events.CoreEvent) error {
 		if e, ok := event.(*RateLimitExceededEvent); ok {
-			if err := handler.HandleRateLimitExceeded(e); err != nil {
-				// Log error but don't fail
-			}
+			return handler.HandleRateLimitExceeded(e)
 		}
+		return nil
 	})
+	if err != nil {
+		return err
+	}
+	s.handlers[EventRateLimitExceeded] = subID
 
 	return nil
 }
 
 // Unsubscribe removes all subscriptions
-func (s *EventSubscriber) Unsubscribe() {
-	for eventType, handler := range s.handlers {
-		s.eventBus.Unsubscribe(eventType, handler)
+func (s *EventSubscriber) Unsubscribe(ctx context.Context) error {
+	for _, subID := range s.handlers {
+		if err := s.eventBus.Unsubscribe(ctx, subID); err != nil {
+			return err
+		}
 	}
-	s.handlers = make(map[string]orchestrator.EventHandler)
+	s.handlers = make(map[string]events.SubscriptionID)
+	return nil
 }

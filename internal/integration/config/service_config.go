@@ -424,10 +424,13 @@ func (c *ServiceConfig) toKanbanServiceConfig() services.KanbanServiceConfig {
 
 func (c *ServiceConfig) toMemoryServiceConfig() services.MemoryServiceConfig {
 	return services.MemoryServiceConfig{
-		CacheSize:       c.Services.Memory.CacheSize,
-		EnableVectors:   c.Services.Memory.EnableVectors,
+		DatabasePath:    ".guild/memory.db",
+		MaxConnections:  10,
+		ConnectTimeout:  30 * time.Second,
+		VectorStoreName: "embeddings",
 		VectorDimension: c.Services.Memory.VectorDimension,
-		SyncInterval:    5 * time.Second,
+		CacheSize:       c.Services.Memory.CacheSize,
+		FlushInterval:   5 * time.Second,
 	}
 }
 
@@ -444,11 +447,10 @@ func (c *ServiceConfig) toSessionServiceConfig() services.SessionServiceConfig {
 func (c *ServiceConfig) toOrchestratorServiceConfig() services.OrchestratorServiceConfig {
 	return services.OrchestratorServiceConfig{
 		MaxConcurrentAgents: c.Services.Orchestrator.WorkerPoolSize,
-		TaskQueueSize:       c.Services.Orchestrator.TaskQueueSize,
-		WorkerPoolSize:      c.Services.Orchestrator.WorkerPoolSize,
-		TaskTimeout:         30 * time.Minute,
-		RetryAttempts:       3,
-		RetryDelay:          5 * time.Second,
+		ManagerAgentID:      "elena",
+		KanbanBoardID:       "main",
+		ExecutionMode:       "managed",
+		EnableEventBridge:   true,
 	}
 }
 

@@ -95,8 +95,7 @@ func (e *Extractor) Extract(ctx context.Context, content string) ([]ReasoningBlo
 	start := time.Now()
 
 	if err := ctx.Err(); err != nil {
-		err = gerror.Wrap(err, "context cancelled").
-			WithCode(gerror.ErrCodeCanceled).
+		err = gerror.Wrap(err, gerror.ErrCodeCanceled, "context cancelled").
 			WithComponent("reasoning_extractor")
 		if e.OnExtraction != nil {
 			e.OnExtraction(nil, time.Since(start), err)
@@ -143,14 +142,13 @@ func (e *Extractor) ExtractStream(ctx context.Context, reader io.Reader) (<-chan
 		defer close(errCh)
 
 		start := time.Now()
-		se := NewStreamExtractor(e)
+		var buffer strings.Builder
 
-		// Read from the reader
+		// Read all content from reader
 		scanner := bufio.NewScanner(reader)
 		for scanner.Scan() {
 			if err := ctx.Err(); err != nil {
-				errCh <- gerror.Wrap(err, "context cancelled during streaming").
-					WithCode(gerror.ErrCodeCanceled).
+				errCh <- gerror.Wrap(err, gerror.ErrCodeCanceled, "context cancelled during streaming").
 					WithComponent("reasoning_extractor")
 				if e.OnExtraction != nil {
 					e.OnExtraction(nil, time.Since(start), err)
@@ -158,12 +156,12 @@ func (e *Extractor) ExtractStream(ctx context.Context, reader io.Reader) (<-chan
 				return
 			}
 
-			se.ProcessChunk(ctx, scanner.Text())
+			buffer.WriteString(scanner.Text())
+			buffer.WriteString("\n")
 		}
 
 		if err := scanner.Err(); err != nil {
-			errCh <- gerror.Wrap(err, "stream reading error").
-				WithCode(gerror.ErrCodeInternal).
+			errCh <- gerror.Wrap(err, gerror.ErrCodeInternal, "stream reading error").
 				WithComponent("reasoning_extractor")
 			if e.OnExtraction != nil {
 				e.OnExtraction(nil, time.Since(start), err)
@@ -171,50 +169,30 @@ func (e *Extractor) ExtractStream(ctx context.Context, reader io.Reader) (<-chan
 			return
 		}
 
-		// Finalize any remaining content
-		se.Finalize(ctx)
-
-		// Forward blocks from stream extractor
-		blocks := make([]ReasoningBlock, 0)
-		for {
-			select {
-			case block := <-se.BlockChan():
-				if block == nil {
-					// Channel closed
-					if e.OnExtraction != nil {
-						e.OnExtraction(blocks, time.Since(start), nil)
-					}
-					return
+		// Extract reasoning blocks from accumulated content
+		content := buffer.String()
+		if content != "" {
+			blocks, err := e.Extract(ctx, content)
+			if err != nil {
+				errCh <- err
+				if e.OnExtraction != nil {
+					e.OnExtraction(nil, time.Since(start), err)
 				}
-				rb := ReasoningBlock{
-					ID:         block.ID,
-					Type:       block.Type,
-					Content:    block.Content,
-					Timestamp:  block.Timestamp,
-					Duration:   block.Duration,
-					TokenCount: block.TokenCount,
-					Depth:      block.Depth,
-					ParentID:   block.ParentID,
-					Children:   block.Children,
-					Confidence: block.Confidence,
-					Metadata:   block.Metadata,
-				}
-				blocks = append(blocks, rb)
-				select {
-				case blockCh <- rb:
-				case <-ctx.Done():
-					return
-				}
-			case err := <-se.ErrorChan():
-				if err != nil {
-					select {
-					case errCh <- err:
-					case <-ctx.Done():
-						return
-					}
-				}
-			case <-ctx.Done():
 				return
+			}
+
+			// Send all blocks
+			for _, block := range blocks {
+				select {
+				case blockCh <- block:
+				case <-ctx.Done():
+					errCh <- ctx.Err()
+					return
+				}
+			}
+
+			if e.OnExtraction != nil {
+				e.OnExtraction(blocks, time.Since(start), nil)
 			}
 		}
 	}()

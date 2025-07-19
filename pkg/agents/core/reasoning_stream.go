@@ -74,7 +74,7 @@ type ReasoningStreamer struct {
 
 	// Configuration
 	config  StreamConfig
-	metrics *observability.MetricsRegistry
+	metrics *MetricsAdapter
 }
 
 // StreamConfig configures the reasoning streamer
@@ -98,8 +98,12 @@ func DefaultStreamConfig() StreamConfig {
 }
 
 // NewReasoningStreamer creates a new reasoning streamer
-func NewReasoningStreamer(parser *ThinkingBlockParser, chainBuilder *ReasoningChainBuilder, metrics *observability.MetricsRegistry) *ReasoningStreamer {
+func NewReasoningStreamer(parser *ThinkingBlockParser, chainBuilder *ReasoningChainBuilder, metricsRegistry *observability.MetricsRegistry) *ReasoningStreamer {
 	config := DefaultStreamConfig()
+	var metrics *MetricsAdapter
+	if metricsRegistry != nil {
+		metrics = NewMetricsAdapter(metricsRegistry)
+	}
 	return &ReasoningStreamer{
 		parser:        parser,
 		chainBuilder:  chainBuilder,

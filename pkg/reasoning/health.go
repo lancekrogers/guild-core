@@ -300,7 +300,7 @@ func (hc *HealthChecker) checkExtractor(ctx context.Context) CheckResult {
 	duration := time.Since(start)
 
 	if err != nil {
-		if gerror.IsCode(err, gerror.ErrCodeDeadlineExceeded) {
+		if gerr, ok := err.(*gerror.GuildError); ok && gerr.Code == gerror.ErrCodeTimeout {
 			return CheckResult{
 				Status:    HealthStatusDegraded,
 				Message:   "extractor timeout",

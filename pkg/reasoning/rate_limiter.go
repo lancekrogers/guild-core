@@ -89,8 +89,7 @@ func NewRateLimiter(config RateLimiterConfig) *RateLimiter {
 func (rl *RateLimiter) Allow(ctx context.Context, agentID string) error {
 	// Check context first
 	if err := ctx.Err(); err != nil {
-		return gerror.Wrap(err, "context cancelled").
-			WithCode(gerror.ErrCodeCanceled).
+		return gerror.Wrap(err, gerror.ErrCodeCanceled, "context cancelled").
 			WithComponent("rate_limiter")
 	}
 
@@ -99,20 +98,19 @@ func (rl *RateLimiter) Allow(ctx context.Context, agentID string) error {
 		if rl.config.OnLimitHit != nil {
 			rl.config.OnLimitHit(agentID, "global")
 		}
-		return gerror.New("global rate limit exceeded").
-			WithCode(gerror.ErrCodeResourceExhausted).
+		return gerror.New(gerror.ErrCodeResourceExhausted, "global rate limit exceeded", nil).
 			WithComponent("rate_limiter").
-			WithField("agent_id", agentID).
-			WithField("limit_type", "global").
-			WithField("rate", float64(rl.config.GlobalRate)).
-			WithField("burst", rl.config.GlobalBurst)
+			WithDetails("agent_id", agentID).
+			WithDetails("limit_type", "global").
+			WithDetails("rate", float64(rl.config.GlobalRate)).
+			WithDetails("burst", rl.config.GlobalBurst)
 	}
 
 	// Get or create agent limiter
 	limiter, err := rl.getAgentLimiter(agentID)
 	if err != nil {
-		return gerror.Wrap(err, "failed to get agent limiter").
-			WithField("agent_id", agentID).
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get agent limiter").
+			WithDetails("agent_id", agentID).
 			WithComponent("rate_limiter")
 	}
 
@@ -121,13 +119,12 @@ func (rl *RateLimiter) Allow(ctx context.Context, agentID string) error {
 		if rl.config.OnLimitHit != nil {
 			rl.config.OnLimitHit(agentID, "agent")
 		}
-		return gerror.New("agent rate limit exceeded").
-			WithCode(gerror.ErrCodeResourceExhausted).
+		return gerror.New(gerror.ErrCodeResourceExhausted, "agent rate limit exceeded", nil).
 			WithComponent("rate_limiter").
-			WithField("agent_id", agentID).
-			WithField("limit_type", "agent").
-			WithField("rate", float64(rl.config.AgentRate)).
-			WithField("burst", rl.config.AgentBurst)
+			WithDetails("agent_id", agentID).
+			WithDetails("limit_type", "agent").
+			WithDetails("rate", float64(rl.config.AgentRate)).
+			WithDetails("burst", rl.config.AgentBurst)
 	}
 
 	// Update access time and token count
@@ -140,8 +137,7 @@ func (rl *RateLimiter) Allow(ctx context.Context, agentID string) error {
 func (rl *RateLimiter) Wait(ctx context.Context, agentID string) error {
 	// Check context first
 	if err := ctx.Err(); err != nil {
-		return gerror.Wrap(err, "context cancelled").
-			WithCode(gerror.ErrCodeCanceled).
+		return gerror.Wrap(err, gerror.ErrCodeCanceled, "context cancelled").
 			WithComponent("rate_limiter")
 	}
 
@@ -150,18 +146,17 @@ func (rl *RateLimiter) Wait(ctx context.Context, agentID string) error {
 		if rl.config.OnLimitHit != nil {
 			rl.config.OnLimitHit(agentID, "global")
 		}
-		return gerror.Wrap(err, "global rate limit wait failed").
-			WithCode(gerror.ErrCodeDeadlineExceeded).
+		return gerror.Wrap(err, gerror.ErrCodeTimeout, "global rate limit wait failed").
 			WithComponent("rate_limiter").
-			WithField("agent_id", agentID).
-			WithField("limit_type", "global")
+			WithDetails("agent_id", agentID).
+			WithDetails("limit_type", "global")
 	}
 
 	// Get or create agent limiter
 	limiter, err := rl.getAgentLimiter(agentID)
 	if err != nil {
-		return gerror.Wrap(err, "failed to get agent limiter").
-			WithField("agent_id", agentID).
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get agent limiter").
+			WithDetails("agent_id", agentID).
 			WithComponent("rate_limiter")
 	}
 
@@ -170,11 +165,10 @@ func (rl *RateLimiter) Wait(ctx context.Context, agentID string) error {
 		if rl.config.OnLimitHit != nil {
 			rl.config.OnLimitHit(agentID, "agent")
 		}
-		return gerror.Wrap(err, "agent rate limit wait failed").
-			WithCode(gerror.ErrCodeDeadlineExceeded).
+		return gerror.Wrap(err, gerror.ErrCodeTimeout, "agent rate limit wait failed").
 			WithComponent("rate_limiter").
-			WithField("agent_id", agentID).
-			WithField("limit_type", "agent")
+			WithDetails("agent_id", agentID).
+			WithDetails("limit_type", "agent")
 	}
 
 	// Update access time and token count
@@ -187,28 +181,26 @@ func (rl *RateLimiter) Wait(ctx context.Context, agentID string) error {
 func (rl *RateLimiter) Reserve(ctx context.Context, agentID string, tokens int) (*rate.Reservation, error) {
 	// Check context first
 	if err := ctx.Err(); err != nil {
-		return nil, gerror.Wrap(err, "context cancelled").
-			WithCode(gerror.ErrCodeCanceled).
+		return nil, gerror.Wrap(err, gerror.ErrCodeCanceled, "context cancelled").
 			WithComponent("rate_limiter")
 	}
 
 	// Reserve from global limiter
 	globalReserve := rl.global.ReserveN(time.Now(), tokens)
 	if !globalReserve.OK() {
-		return nil, gerror.New("global rate limit cannot reserve tokens").
-			WithCode(gerror.ErrCodeResourceExhausted).
+		return nil, gerror.New(gerror.ErrCodeResourceExhausted, "global rate limit cannot reserve tokens", nil).
 			WithComponent("rate_limiter").
-			WithField("agent_id", agentID).
-			WithField("tokens", tokens).
-			WithField("limit_type", "global")
+			WithDetails("agent_id", agentID).
+			WithDetails("tokens", tokens).
+			WithDetails("limit_type", "global")
 	}
 
 	// Get or create agent limiter
 	limiter, err := rl.getAgentLimiter(agentID)
 	if err != nil {
 		globalReserve.Cancel() // Cancel global reservation
-		return nil, gerror.Wrap(err, "failed to get agent limiter").
-			WithField("agent_id", agentID).
+		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get agent limiter").
+			WithDetails("agent_id", agentID).
 			WithComponent("rate_limiter")
 	}
 
@@ -216,12 +208,11 @@ func (rl *RateLimiter) Reserve(ctx context.Context, agentID string, tokens int) 
 	agentReserve := limiter.limiter.ReserveN(time.Now(), tokens)
 	if !agentReserve.OK() {
 		globalReserve.Cancel() // Cancel global reservation
-		return nil, gerror.New("agent rate limit cannot reserve tokens").
-			WithCode(gerror.ErrCodeResourceExhausted).
+		return nil, gerror.New(gerror.ErrCodeResourceExhausted, "agent rate limit cannot reserve tokens", nil).
 			WithComponent("rate_limiter").
-			WithField("agent_id", agentID).
-			WithField("tokens", tokens).
-			WithField("limit_type", "agent")
+			WithDetails("agent_id", agentID).
+			WithDetails("tokens", tokens).
+			WithDetails("limit_type", "agent")
 	}
 
 	// Update token count
@@ -257,7 +248,7 @@ func (rl *RateLimiter) getAgentLimiter(agentID string) (*agentLimiter, error) {
 	// Check if we need to evict
 	if len(rl.agents) >= rl.config.MaxAgents {
 		if err := rl.evictOldest(); err != nil {
-			return nil, gerror.Wrap(err, "failed to evict oldest agent").
+			return nil, gerror.Wrap(err, gerror.ErrCodeResourceExhausted, "failed to evict oldest agent").
 				WithComponent("rate_limiter")
 		}
 	}
@@ -295,16 +286,14 @@ func (rl *RateLimiter) updateAgentAccess(agentID string) {
 // evictOldest removes the least recently used agent
 func (rl *RateLimiter) evictOldest() error {
 	if rl.lru.Len() == 0 {
-		return gerror.New("no agents to evict").
-			WithCode(gerror.ErrCodeInternal).
+		return gerror.New(gerror.ErrCodeInternal, "no agents to evict", nil).
 			WithComponent("rate_limiter")
 	}
 
 	// Get oldest element
 	oldest := rl.lru.Back()
 	if oldest == nil {
-		return gerror.New("LRU list corrupted").
-			WithCode(gerror.ErrCodeInternal).
+		return gerror.New(gerror.ErrCodeInternal, "LRU list corrupted", nil).
 			WithComponent("rate_limiter")
 	}
 

@@ -98,27 +98,24 @@ func NewCircuitBreaker(config CircuitBreakerConfig) *CircuitBreaker {
 func (cb *CircuitBreaker) Execute(ctx context.Context, fn func() error) error {
 	// Check context first
 	if err := ctx.Err(); err != nil {
-		return gerror.Wrap(err, "context cancelled").
-			WithCode(gerror.ErrCodeCanceled).
+		return gerror.Wrap(err, gerror.ErrCodeCanceled, "context cancelled").
 			WithComponent("circuit_breaker")
 	}
 
 	// Fast path - check if we can execute
 	if !cb.canExecute() {
-		return gerror.New("circuit breaker open").
-			WithCode(gerror.ErrCodeResourceExhausted).
+		return gerror.New(gerror.ErrCodeResourceExhausted, "circuit breaker open", nil).
 			WithComponent("circuit_breaker").
-			WithField("state", cb.State().String()).
-			WithField("last_failure", cb.lastFailureTime)
+			WithDetails("state", cb.State().String()).
+			WithDetails("last_failure", cb.lastFailureTime)
 	}
 
 	// For half-open state, track in-progress requests
 	if cb.State() == StateHalfOpen {
 		if !cb.acquireHalfOpenSlot() {
-			return gerror.New("circuit breaker half-open limit reached").
-				WithCode(gerror.ErrCodeResourceExhausted).
+			return gerror.New(gerror.ErrCodeResourceExhausted, "circuit breaker half-open limit reached", nil).
 				WithComponent("circuit_breaker").
-				WithField("limit", cb.config.HalfOpenRequests)
+				WithDetails("limit", cb.config.HalfOpenRequests)
 		}
 		defer cb.releaseHalfOpenSlot()
 	}
