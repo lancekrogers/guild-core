@@ -4,7 +4,9 @@
 package reasoning
 
 import (
+	"bufio"
 	"context"
+	"io"
 	"strings"
 	"time"
 
@@ -16,6 +18,9 @@ import (
 // Extractor extracts reasoning blocks from LLM responses
 type Extractor struct {
 	patterns []Pattern
+
+	// Callbacks for integration
+	OnExtraction func(blocks []ReasoningBlock, duration time.Duration, err error)
 }
 
 // Pattern defines a reasoning extraction pattern
@@ -83,6 +88,138 @@ func (e *Extractor) ExtractFromResponse(ctx context.Context, response *interface
 	}
 
 	return allBlocks, nil
+}
+
+// Extract extracts reasoning blocks from content with context support
+func (e *Extractor) Extract(ctx context.Context, content string) ([]ReasoningBlock, error) {
+	start := time.Now()
+
+	if err := ctx.Err(); err != nil {
+		err = gerror.Wrap(err, "context cancelled").
+			WithCode(gerror.ErrCodeCanceled).
+			WithComponent("reasoning_extractor")
+		if e.OnExtraction != nil {
+			e.OnExtraction(nil, time.Since(start), err)
+		}
+		return nil, err
+	}
+
+	// Extract blocks using patterns
+	interfaceBlocks := e.ExtractFromContent(content)
+
+	// Convert to local ReasoningBlock type
+	blocks := make([]ReasoningBlock, len(interfaceBlocks))
+	for i, ib := range interfaceBlocks {
+		blocks[i] = ReasoningBlock{
+			ID:         ib.ID,
+			Type:       ib.Type,
+			Content:    ib.Content,
+			Timestamp:  ib.Timestamp,
+			Duration:   ib.Duration,
+			TokenCount: ib.TokenCount,
+			Depth:      ib.Depth,
+			ParentID:   ib.ParentID,
+			Children:   ib.Children,
+			Confidence: ib.Confidence,
+			Metadata:   ib.Metadata,
+		}
+	}
+
+	// Call callback if set
+	if e.OnExtraction != nil {
+		e.OnExtraction(blocks, time.Since(start), nil)
+	}
+
+	return blocks, nil
+}
+
+// ExtractStream performs streaming extraction from a reader
+func (e *Extractor) ExtractStream(ctx context.Context, reader io.Reader) (<-chan ReasoningBlock, <-chan error) {
+	blockCh := make(chan ReasoningBlock, 100)
+	errCh := make(chan error, 1)
+
+	go func() {
+		defer close(blockCh)
+		defer close(errCh)
+
+		start := time.Now()
+		se := NewStreamExtractor(e)
+
+		// Read from the reader
+		scanner := bufio.NewScanner(reader)
+		for scanner.Scan() {
+			if err := ctx.Err(); err != nil {
+				errCh <- gerror.Wrap(err, "context cancelled during streaming").
+					WithCode(gerror.ErrCodeCanceled).
+					WithComponent("reasoning_extractor")
+				if e.OnExtraction != nil {
+					e.OnExtraction(nil, time.Since(start), err)
+				}
+				return
+			}
+
+			se.ProcessChunk(ctx, scanner.Text())
+		}
+
+		if err := scanner.Err(); err != nil {
+			errCh <- gerror.Wrap(err, "stream reading error").
+				WithCode(gerror.ErrCodeInternal).
+				WithComponent("reasoning_extractor")
+			if e.OnExtraction != nil {
+				e.OnExtraction(nil, time.Since(start), err)
+			}
+			return
+		}
+
+		// Finalize any remaining content
+		se.Finalize(ctx)
+
+		// Forward blocks from stream extractor
+		blocks := make([]ReasoningBlock, 0)
+		for {
+			select {
+			case block := <-se.BlockChan():
+				if block == nil {
+					// Channel closed
+					if e.OnExtraction != nil {
+						e.OnExtraction(blocks, time.Since(start), nil)
+					}
+					return
+				}
+				rb := ReasoningBlock{
+					ID:         block.ID,
+					Type:       block.Type,
+					Content:    block.Content,
+					Timestamp:  block.Timestamp,
+					Duration:   block.Duration,
+					TokenCount: block.TokenCount,
+					Depth:      block.Depth,
+					ParentID:   block.ParentID,
+					Children:   block.Children,
+					Confidence: block.Confidence,
+					Metadata:   block.Metadata,
+				}
+				blocks = append(blocks, rb)
+				select {
+				case blockCh <- rb:
+				case <-ctx.Done():
+					return
+				}
+			case err := <-se.ErrorChan():
+				if err != nil {
+					select {
+					case errCh <- err:
+					case <-ctx.Done():
+						return
+					}
+				}
+			case <-ctx.Done():
+				return
+			}
+		}
+	}()
+
+	return blockCh, errCh
 }
 
 // ExtractFromContent extracts reasoning blocks from raw content

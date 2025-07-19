@@ -155,11 +155,11 @@ type ThinkingBlockParser struct {
 	patterns           map[ThinkingType]*regexp.Regexp
 	typeDetector       *ThinkingTypeDetector
 	structureExtractor *StructureExtractor
-	// metrics       *observability.Metrics // TODO: Update to use MetricsRegistry
+	metrics            *observability.MetricsRegistry
 }
 
 // NewThinkingBlockParser creates a new parser with sophisticated pattern matching
-func NewThinkingBlockParser() *ThinkingBlockParser {
+func NewThinkingBlockParser(metrics *observability.MetricsRegistry) *ThinkingBlockParser {
 	return &ThinkingBlockParser{
 		patterns: map[ThinkingType]*regexp.Regexp{
 			ThinkingTypeAnalysis:       regexp.MustCompile(`(?s)<thinking[^>]*>.*?(?:analyz|examin|investigat|assess).*?</thinking>`),
@@ -173,16 +173,17 @@ func NewThinkingBlockParser() *ThinkingBlockParser {
 		},
 		typeDetector:       NewThinkingTypeDetector(),
 		structureExtractor: NewStructureExtractor(),
-		// metrics:           metrics, // TODO: Update to use MetricsRegistry
+		metrics:            metrics,
 	}
 }
 
 // ParseThinkingBlocks extracts all thinking blocks from a response
 func (p *ThinkingBlockParser) ParseThinkingBlocks(ctx context.Context, response string) ([]*ThinkingBlock, error) {
-	// startTime := time.Now()
+	startTime := time.Now()
 	defer func() {
-		// TODO: Update to use MetricsRegistry
-		// p.metrics.RecordDuration("thinking_block_parsing", time.Since(startTime))
+		if p.metrics != nil {
+			p.metrics.RecordHistogram("thinking_block_parsing_seconds", time.Since(startTime).Seconds())
+		}
 	}()
 
 	// Find all thinking blocks
@@ -218,8 +219,9 @@ func (p *ThinkingBlockParser) ParseThinkingBlocks(ctx context.Context, response 
 	// Extract decision points across blocks
 	p.extractDecisionPoints(blocks)
 
-	// TODO: Update to use MetricsRegistry
-	// p.metrics.RecordGauge("thinking_blocks_parsed", float64(len(blocks)))
+	if p.metrics != nil {
+		p.metrics.RecordGauge("thinking_blocks_parsed", float64(len(blocks)))
+	}
 
 	return blocks, nil
 }

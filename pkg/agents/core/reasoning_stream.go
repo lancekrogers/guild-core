@@ -73,8 +73,8 @@ type ReasoningStreamer struct {
 	totalTokens     int
 
 	// Configuration
-	config StreamConfig
-	// metrics *observability.MetricsRegistry // TODO: Update to use MetricsRegistry
+	config  StreamConfig
+	metrics *observability.MetricsRegistry
 }
 
 // StreamConfig configures the reasoning streamer
@@ -98,7 +98,7 @@ func DefaultStreamConfig() StreamConfig {
 }
 
 // NewReasoningStreamer creates a new reasoning streamer
-func NewReasoningStreamer(parser *ThinkingBlockParser, chainBuilder *ReasoningChainBuilder) *ReasoningStreamer {
+func NewReasoningStreamer(parser *ThinkingBlockParser, chainBuilder *ReasoningChainBuilder, metrics *observability.MetricsRegistry) *ReasoningStreamer {
 	config := DefaultStreamConfig()
 	return &ReasoningStreamer{
 		parser:        parser,
@@ -107,7 +107,7 @@ func NewReasoningStreamer(parser *ThinkingBlockParser, chainBuilder *ReasoningCh
 		errorChan:     make(chan error, 10),
 		interruptChan: make(chan struct{}, 1),
 		config:        config,
-		// metrics:       metrics, // TODO: Add metrics registry
+		metrics:       metrics,
 	}
 }
 
@@ -165,10 +165,9 @@ func (rs *ReasoningStreamer) processStream(ctx context.Context, reader io.Reader
 		// Process chunk
 		if err := rs.processChunk(ctx, chunk, position); err != nil {
 			rs.sendError(err)
-			// TODO: Update to use MetricsRegistry
-			// if rs.config.EnableMetrics {
-			// 	rs.metrics.RecordCounter("reasoning_stream_errors", 1)
-			// }
+			if rs.config.EnableMetrics && rs.metrics != nil {
+				rs.metrics.RecordCounter("reasoning_stream_errors", 1)
+			}
 		}
 
 		position += len(chunk)
@@ -393,11 +392,10 @@ func (rs *ReasoningStreamer) sendContentChunk(content string, position int) {
 func (rs *ReasoningStreamer) sendEvent(event StreamEvent) {
 	select {
 	case rs.eventChan <- event:
-		// TODO: Update to use MetricsRegistry
-		// if rs.config.EnableMetrics {
-		// 	rs.metrics.RecordCounter("reasoning_stream_events", 1,
-		// 		"type", string(event.Type))
-		// }
+		if rs.config.EnableMetrics && rs.metrics != nil {
+			rs.metrics.RecordCounter("reasoning_stream_events", 1,
+				"type", string(event.Type))
+		}
 	default:
 		// Channel full, log warning
 		logger := observability.GetLogger(context.Background())

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	
+
 	chatui "github.com/lancekrogers/guild/internal/ui/chat"
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/events"
@@ -18,24 +18,24 @@ import (
 
 // ChatUIService wraps the Bubble Tea chat application to integrate with the service framework
 type ChatUIService struct {
-	app        *chatui.App
-	program    *tea.Program
-	registry   registry.ComponentRegistry
-	eventBus   events.EventBus
-	logger     observability.Logger
-	config     ChatUIServiceConfig
-	
+	app      *chatui.App
+	program  *tea.Program
+	registry registry.ComponentRegistry
+	eventBus events.EventBus
+	logger   observability.Logger
+	config   ChatUIServiceConfig
+
 	// Service state
-	started     bool
-	running     bool
-	ctx         context.Context
-	cancel      context.CancelFunc
-	mu          sync.RWMutex
-	
+	started bool
+	running bool
+	ctx     context.Context
+	cancel  context.CancelFunc
+	mu      sync.RWMutex
+
 	// UI state
-	activeView  string
-	sessionID   string
-	
+	activeView string
+	sessionID  string
+
 	// Metrics
 	messagesProcessed uint64
 	commandsExecuted  uint64
@@ -45,13 +45,13 @@ type ChatUIService struct {
 
 // ChatUIServiceConfig configures the chat UI service
 type ChatUIServiceConfig struct {
-	GuildConfig    *config.GuildConfig
-	CampaignID     string
-	SessionID      string
-	UserID         string
-	SelectedGuild  string
-	EnableLogging  bool
-	LogPath        string
+	GuildConfig   *config.GuildConfig
+	CampaignID    string
+	SessionID     string
+	UserID        string
+	SelectedGuild string
+	EnableLogging bool
+	LogPath       string
 }
 
 // DefaultChatUIServiceConfig returns default configuration
@@ -90,13 +90,13 @@ func NewChatUIService(
 	ctx, cancel := context.WithCancel(context.Background())
 
 	return &ChatUIService{
-		registry:   registry,
-		eventBus:   eventBus,
-		logger:     logger,
-		config:     config,
-		ctx:        ctx,
-		cancel:     cancel,
-		sessionID:  config.SessionID,
+		registry:  registry,
+		eventBus:  eventBus,
+		logger:    logger,
+		config:    config,
+		ctx:       ctx,
+		cancel:    cancel,
+		sessionID: config.SessionID,
 	}, nil
 }
 
@@ -117,7 +117,7 @@ func (s *ChatUIService) Start(ctx context.Context) error {
 
 	// Create the chat app
 	s.app = chatui.NewApp(s.ctx, s.config.GuildConfig, s.registry)
-	
+
 	// Configure the app
 	s.app.SetSelectedGuild(s.config.SelectedGuild)
 	s.app.SetCampaignID(s.config.CampaignID)
@@ -188,7 +188,7 @@ func (s *ChatUIService) Run() error {
 
 	// Run the Bubble Tea program (blocks)
 	_, err := s.program.Run()
-	
+
 	s.mu.Lock()
 	s.running = false
 	s.mu.Unlock()
@@ -338,7 +338,7 @@ func (s *ChatUIService) HandleMessage(ctx context.Context, message string) error
 		"chat.message.sent",
 		"chat-ui",
 		map[string]interface{}{
-			"session_id": s.sessionID,
+			"session_id":     s.sessionID,
 			"message_length": len(message),
 		},
 	)); err != nil {
@@ -361,7 +361,7 @@ func (s *ChatUIService) HandleCommand(ctx context.Context, command string) error
 		"chat-ui",
 		map[string]interface{}{
 			"session_id": s.sessionID,
-			"command": command,
+			"command":    command,
 		},
 	)); err != nil {
 		s.logger.WarnContext(ctx, "Failed to publish command event", "error", err)

@@ -17,10 +17,10 @@ import (
 type ServiceConfig struct {
 	// Global settings
 	Global GlobalConfig `yaml:"global"`
-	
+
 	// Service-specific configurations
 	Services ServicesConfig `yaml:"services"`
-	
+
 	// Integration settings
 	Integration IntegrationConfig `yaml:"integration"`
 }
@@ -28,46 +28,46 @@ type ServiceConfig struct {
 // GlobalConfig contains global settings
 type GlobalConfig struct {
 	// Runtime settings
-	LogLevel      string        `yaml:"log_level"`
-	LogFile       string        `yaml:"log_file"`
-	DataDir       string        `yaml:"data_dir"`
-	
+	LogLevel string `yaml:"log_level"`
+	LogFile  string `yaml:"log_file"`
+	DataDir  string `yaml:"data_dir"`
+
 	// Performance settings
-	MaxWorkers    int           `yaml:"max_workers"`
-	MaxMemoryMB   int           `yaml:"max_memory_mb"`
-	
+	MaxWorkers  int `yaml:"max_workers"`
+	MaxMemoryMB int `yaml:"max_memory_mb"`
+
 	// Timeouts
-	StartTimeout  time.Duration `yaml:"start_timeout"`
-	StopTimeout   time.Duration `yaml:"stop_timeout"`
+	StartTimeout time.Duration `yaml:"start_timeout"`
+	StopTimeout  time.Duration `yaml:"stop_timeout"`
 }
 
 // ServicesConfig contains all service configurations
 type ServicesConfig struct {
 	// Core services
-	Kanban       KanbanConfig       `yaml:"kanban"`
-	Memory       MemoryConfig       `yaml:"memory"`
-	Session      SessionConfig      `yaml:"session"`
-	
+	Kanban  KanbanConfig  `yaml:"kanban"`
+	Memory  MemoryConfig  `yaml:"memory"`
+	Session SessionConfig `yaml:"session"`
+
 	// Agent services
 	Orchestrator OrchestratorConfig `yaml:"orchestrator"`
 	AgentManager AgentManagerConfig `yaml:"agent_manager"`
-	
+
 	// UI services
-	ChatUI       ChatUIConfig       `yaml:"chat_ui"`
-	
+	ChatUI ChatUIConfig `yaml:"chat_ui"`
+
 	// Infrastructure services
-	Daemon       DaemonConfig       `yaml:"daemon"`
-	Corpus       CorpusConfig       `yaml:"corpus"`
+	Daemon DaemonConfig `yaml:"daemon"`
+	Corpus CorpusConfig `yaml:"corpus"`
 }
 
 // IntegrationConfig contains integration settings
 type IntegrationConfig struct {
 	// Event system
 	Events EventsConfig `yaml:"events"`
-	
+
 	// Bridges
 	Bridges BridgesConfig `yaml:"bridges"`
-	
+
 	// Service discovery
 	Discovery DiscoveryConfig `yaml:"discovery"`
 }
@@ -100,10 +100,10 @@ type SessionConfig struct {
 
 // OrchestratorConfig configures the Orchestrator service
 type OrchestratorConfig struct {
-	Enabled              bool `yaml:"enabled"`
-	MaxConcurrentTasks   int  `yaml:"max_concurrent_tasks"`
-	TaskQueueSize        int  `yaml:"task_queue_size"`
-	WorkerPoolSize       int  `yaml:"worker_pool_size"`
+	Enabled            bool `yaml:"enabled"`
+	MaxConcurrentTasks int  `yaml:"max_concurrent_tasks"`
+	TaskQueueSize      int  `yaml:"task_queue_size"`
+	WorkerPoolSize     int  `yaml:"worker_pool_size"`
 }
 
 // AgentManagerConfig configures the Agent Manager service
@@ -138,22 +138,22 @@ type DaemonConfig struct {
 
 // CorpusConfig configures the Corpus service
 type CorpusConfig struct {
-	Enabled           bool          `yaml:"enabled"`
-	BasePath          string        `yaml:"base_path"`
-	FilePatterns      []string      `yaml:"file_patterns"`
-	IgnorePatterns    []string      `yaml:"ignore_patterns"`
-	MaxWorkers        int           `yaml:"max_workers"`
-	ScanOnStart       bool          `yaml:"scan_on_start"`
-	RescanInterval    time.Duration `yaml:"rescan_interval"`
-	MaxFileSize       int64         `yaml:"max_file_size"`
+	Enabled        bool          `yaml:"enabled"`
+	BasePath       string        `yaml:"base_path"`
+	FilePatterns   []string      `yaml:"file_patterns"`
+	IgnorePatterns []string      `yaml:"ignore_patterns"`
+	MaxWorkers     int           `yaml:"max_workers"`
+	ScanOnStart    bool          `yaml:"scan_on_start"`
+	RescanInterval time.Duration `yaml:"rescan_interval"`
+	MaxFileSize    int64         `yaml:"max_file_size"`
 }
 
 // EventsConfig configures the event system
 type EventsConfig struct {
-	BufferSize       int           `yaml:"buffer_size"`
-	WorkerCount      int           `yaml:"worker_count"`
-	FlushInterval    time.Duration `yaml:"flush_interval"`
-	MaxRetries       int           `yaml:"max_retries"`
+	BufferSize    int           `yaml:"buffer_size"`
+	WorkerCount   int           `yaml:"worker_count"`
+	FlushInterval time.Duration `yaml:"flush_interval"`
+	MaxRetries    int           `yaml:"max_retries"`
 }
 
 // BridgesConfig configures integration bridges
@@ -231,8 +231,8 @@ func DefaultServiceConfig() *ServiceConfig {
 				GracefulStopTimeout: 30 * time.Second,
 			},
 			Corpus: CorpusConfig{
-				Enabled:    true,
-				BasePath:   ".",
+				Enabled:  true,
+				BasePath: ".",
 				FilePatterns: []string{
 					"*.md", "*.yaml", "*.yml", "*.go", "*.js", "*.ts", "*.py",
 				},
@@ -269,13 +269,13 @@ func DefaultServiceConfig() *ServiceConfig {
 func LoadServiceConfig(path string) (*ServiceConfig, error) {
 	// Start with defaults
 	config := DefaultServiceConfig()
-	
+
 	// Check if file exists
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		// No config file, use defaults
 		return config, nil
 	}
-	
+
 	// Read file
 	data, err := os.ReadFile(path)
 	if err != nil {
@@ -283,22 +283,22 @@ func LoadServiceConfig(path string) (*ServiceConfig, error) {
 			WithComponent("service-config").
 			WithDetails("path", path)
 	}
-	
+
 	// Parse YAML
 	if err := yaml.Unmarshal(data, config); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to parse config file").
 			WithComponent("service-config").
 			WithDetails("path", path)
 	}
-	
+
 	// Validate configuration
 	if err := config.Validate(); err != nil {
 		return nil, err
 	}
-	
+
 	// Apply environment variable overrides
 	config.ApplyEnvironmentOverrides()
-	
+
 	return config, nil
 }
 
@@ -310,26 +310,26 @@ func SaveServiceConfig(config *ServiceConfig, path string) error {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create config directory").
 			WithComponent("service-config")
 	}
-	
+
 	// Marshal to YAML
 	data, err := yaml.Marshal(config)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal config").
 			WithComponent("service-config")
 	}
-	
+
 	// Write atomically
 	tmpPath := path + ".tmp"
 	if err := os.WriteFile(tmpPath, data, 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to write config file").
 			WithComponent("service-config")
 	}
-	
+
 	if err := os.Rename(tmpPath, path); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to rename config file").
 			WithComponent("service-config")
 	}
-	
+
 	return nil
 }
 
@@ -340,20 +340,20 @@ func (c *ServiceConfig) Validate() error {
 		return gerror.New(gerror.ErrCodeValidation, "max_memory_mb must be positive", nil).
 			WithComponent("service-config")
 	}
-	
+
 	// Validate service settings
 	if c.Services.Daemon.GRPCPort < 1 || c.Services.Daemon.GRPCPort > 65535 {
 		return gerror.New(gerror.ErrCodeValidation, "invalid gRPC port", nil).
 			WithComponent("service-config").
 			WithDetails("port", c.Services.Daemon.GRPCPort)
 	}
-	
+
 	// Validate paths
 	if c.Global.DataDir == "" {
 		return gerror.New(gerror.ErrCodeValidation, "data_dir cannot be empty", nil).
 			WithComponent("service-config")
 	}
-	
+
 	return nil
 }
 
@@ -363,19 +363,19 @@ func (c *ServiceConfig) ApplyEnvironmentOverrides() {
 	if level := os.Getenv("GUILD_LOG_LEVEL"); level != "" {
 		c.Global.LogLevel = level
 	}
-	
+
 	// GUILD_DATA_DIR
 	if dir := os.Getenv("GUILD_DATA_DIR"); dir != "" {
 		c.Global.DataDir = dir
 	}
-	
+
 	// GUILD_GRPC_PORT
 	if port := os.Getenv("GUILD_GRPC_PORT"); port != "" {
 		if p, err := fmt.Sscanf(port, "%d", &c.Services.Daemon.GRPCPort); err == nil && p == 1 {
 			// Successfully parsed
 		}
 	}
-	
+
 	// GUILD_MAX_WORKERS
 	if workers := os.Getenv("GUILD_MAX_WORKERS"); workers != "" {
 		if w, err := fmt.Sscanf(workers, "%d", &c.Global.MaxWorkers); err == nil && w == 1 {

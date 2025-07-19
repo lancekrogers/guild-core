@@ -144,10 +144,10 @@ func (s *AgentManagerService) Stop(ctx context.Context) error {
 		"service.stopped",
 		"agent-manager",
 		map[string]interface{}{
-			"agents_created":      s.agentsCreated,
-			"agents_enhanced":     s.agentsEnhanced,
-			"guilds_initialized":  s.guildsInitialized,
-			"avg_creation_time":   s.avgCreationTime.Milliseconds(),
+			"agents_created":     s.agentsCreated,
+			"agents_enhanced":    s.agentsEnhanced,
+			"guilds_initialized": s.guildsInitialized,
+			"avg_creation_time":  s.avgCreationTime.Milliseconds(),
 		},
 	)); err != nil {
 		s.logger.WarnContext(ctx, "Failed to publish service stopped event", "error", err)
@@ -256,8 +256,8 @@ func (s *AgentManagerService) InitializeDefaultAgents(ctx context.Context, proje
 		"agents.initialized",
 		"agent-manager",
 		map[string]interface{}{
-			"project_path":    projectPath,
-			"duration":        duration.Milliseconds(),
+			"project_path": projectPath,
+			"duration":     duration.Milliseconds(),
 		},
 	)); err != nil {
 		s.logger.WarnContext(ctx, "Failed to publish agents initialized event", "error", err)
@@ -444,13 +444,13 @@ func (m *defaultEnhancedAgentManager) CreateElenaIfMissing(ctx context.Context, 
 			return nil
 		}
 	}
-	
+
 	// Create Elena
 	elena, err := m.CreateElenaGuildMaster(ctx)
 	if err != nil {
 		return err
 	}
-	
+
 	guildConfig.Agents = append(guildConfig.Agents, *elena)
 	return nil
 }
@@ -478,14 +478,14 @@ func (m *defaultEnhancedAgentManager) CreateGuildConfigWithElena(ctx context.Con
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &config.GuildConfig{
 		Name:        guildName,
 		Description: "Guild managed by Elena",
 		Manager: config.ManagerConfig{
 			Default: elena.ID,
 		},
-		Agents:      []config.AgentConfig{*elena},
+		Agents: []config.AgentConfig{*elena},
 	}, nil
 }
 

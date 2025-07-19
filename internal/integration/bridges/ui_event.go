@@ -33,14 +33,14 @@ type UIEventBridge struct {
 	mu           sync.RWMutex
 
 	// UI State Management
-	uiState      *UIState
-	stateFile    string
-	stateMu      sync.RWMutex
-	
+	uiState   *UIState
+	stateFile string
+	stateMu   sync.RWMutex
+
 	// State sync
 	syncInterval time.Duration
 	syncTicker   *time.Ticker
-	
+
 	// Event replay for recovery
 	eventHistory []events.CoreEvent
 	maxHistory   int
@@ -72,12 +72,12 @@ type UIEventConfig struct {
 
 	// SystemEventTypes to subscribe to for UI updates
 	SystemEventTypes []string
-	
+
 	// State persistence
 	EnableStatePersistence bool
-	StateFile             string
-	StateSyncInterval     time.Duration
-	
+	StateFile              string
+	StateSyncInterval      time.Duration
+
 	// Event history for recovery
 	EnableEventHistory bool
 	MaxEventHistory    int
@@ -86,24 +86,24 @@ type UIEventConfig struct {
 // UIState represents the current UI state
 type UIState struct {
 	// Active view
-	ActiveView    string `json:"active_view"`
-	
+	ActiveView string `json:"active_view"`
+
 	// Session information
 	SessionID     string `json:"session_id"`
 	CampaignID    string `json:"campaign_id"`
 	SelectedGuild string `json:"selected_guild"`
-	
+
 	// Agent states
-	AgentStates   map[string]AgentUIState `json:"agent_states"`
-	
+	AgentStates map[string]AgentUIState `json:"agent_states"`
+
 	// UI component states
 	ComponentStates map[string]interface{} `json:"component_states"`
-	
+
 	// Notifications
 	Notifications []UINotification `json:"notifications"`
-	
+
 	// Last update
-	LastUpdate    time.Time `json:"last_update"`
+	LastUpdate time.Time `json:"last_update"`
 }
 
 // AgentUIState represents an agent's UI state
@@ -145,10 +145,10 @@ func DefaultUIEventConfig() UIEventConfig {
 			"system.notification.*",
 		},
 		EnableStatePersistence: true,
-		StateFile:             ".guild/ui-state.json",
-		StateSyncInterval:     5 * time.Second,
-		EnableEventHistory:    true,
-		MaxEventHistory:       100,
+		StateFile:              ".guild/ui-state.json",
+		StateSyncInterval:      5 * time.Second,
+		EnableEventHistory:     true,
+		MaxEventHistory:        100,
 	}
 }
 
@@ -164,7 +164,7 @@ func NewUIEventBridge(eventBus events.EventBus, logger observability.Logger, con
 		stateFile:    config.StateFile,
 		maxHistory:   config.MaxEventHistory,
 	}
-	
+
 	// Initialize UI state
 	bridge.uiState = &UIState{
 		AgentStates:     make(map[string]AgentUIState),
@@ -172,12 +172,12 @@ func NewUIEventBridge(eventBus events.EventBus, logger observability.Logger, con
 		Notifications:   []UINotification{},
 		LastUpdate:      time.Now(),
 	}
-	
+
 	// Initialize event history if enabled
 	if config.EnableEventHistory {
 		bridge.eventHistory = make([]events.CoreEvent, 0, config.MaxEventHistory)
 	}
-	
+
 	return bridge
 }
 
@@ -545,11 +545,11 @@ type GenericEventMsg struct {
 func (b *UIEventBridge) UpdateUIState(update func(*UIState)) {
 	b.stateMu.Lock()
 	defer b.stateMu.Unlock()
-	
+
 	update(b.uiState)
 	b.uiState.LastUpdate = time.Now()
 	b.stateUpdates++
-	
+
 	// Emit state update event
 	go func() {
 		ctx := context.Background()
@@ -563,20 +563,20 @@ func (b *UIEventBridge) UpdateUIState(update func(*UIState)) {
 func (b *UIEventBridge) GetUIState() UIState {
 	b.stateMu.RLock()
 	defer b.stateMu.RUnlock()
-	
+
 	// Return a deep copy to prevent external modifications
 	state := *b.uiState
-	
+
 	// Deep copy agent states
 	state.AgentStates = make(map[string]AgentUIState)
 	for k, v := range b.uiState.AgentStates {
 		state.AgentStates[k] = v
 	}
-	
+
 	// Deep copy notifications
 	state.Notifications = make([]UINotification, len(b.uiState.Notifications))
 	copy(state.Notifications, b.uiState.Notifications)
-	
+
 	return state
 }
 
@@ -604,10 +604,10 @@ func (b *UIEventBridge) AddNotification(notificationType, message string) {
 		Timestamp: time.Now(),
 		Read:      false,
 	}
-	
+
 	b.UpdateUIState(func(state *UIState) {
 		state.Notifications = append(state.Notifications, notification)
-		
+
 		// Keep only last 50 notifications
 		if len(state.Notifications) > 50 {
 			state.Notifications = state.Notifications[len(state.Notifications)-50:]
@@ -648,22 +648,22 @@ func (b *UIEventBridge) loadState(ctx context.Context) error {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to read state file").
 			WithComponent("ui_event_bridge")
 	}
-	
+
 	var state UIState
 	if err := json.Unmarshal(data, &state); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to unmarshal state").
 			WithComponent("ui_event_bridge")
 	}
-	
+
 	b.stateMu.Lock()
 	b.uiState = &state
 	b.stateMu.Unlock()
-	
+
 	b.logger.InfoContext(ctx, "Loaded UI state from disk",
 		"state_file", b.stateFile,
 		"active_view", state.ActiveView,
 		"agent_count", len(state.AgentStates))
-	
+
 	return nil
 }
 
@@ -672,38 +672,38 @@ func (b *UIEventBridge) saveState(ctx context.Context) error {
 	b.stateMu.RLock()
 	data, err := json.MarshalIndent(b.uiState, "", "  ")
 	b.stateMu.RUnlock()
-	
+
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal state").
 			WithComponent("ui_event_bridge")
 	}
-	
+
 	// Ensure directory exists
 	dir := filepath.Dir(b.stateFile)
 	if err := os.MkdirAll(dir, 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create state directory").
 			WithComponent("ui_event_bridge")
 	}
-	
+
 	// Write atomically
 	tmpFile := b.stateFile + ".tmp"
 	if err := os.WriteFile(tmpFile, data, 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to write state file").
 			WithComponent("ui_event_bridge")
 	}
-	
+
 	if err := os.Rename(tmpFile, b.stateFile); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to rename state file").
 			WithComponent("ui_event_bridge")
 	}
-	
+
 	return nil
 }
 
 // stateSyncLoop periodically saves state to disk
 func (b *UIEventBridge) stateSyncLoop(ctx context.Context) {
 	defer b.wg.Done()
-	
+
 	for {
 		select {
 		case <-b.stopCh:
@@ -727,12 +727,12 @@ func (b *UIEventBridge) AddToHistory(event events.CoreEvent) {
 	if !b.config.EnableEventHistory {
 		return
 	}
-	
+
 	b.mu.Lock()
 	defer b.mu.Unlock()
-	
+
 	b.eventHistory = append(b.eventHistory, event)
-	
+
 	// Trim to max size
 	if len(b.eventHistory) > b.maxHistory {
 		b.eventHistory = b.eventHistory[len(b.eventHistory)-b.maxHistory:]
@@ -743,7 +743,7 @@ func (b *UIEventBridge) AddToHistory(event events.CoreEvent) {
 func (b *UIEventBridge) GetEventHistory() []events.CoreEvent {
 	b.mu.RLock()
 	defer b.mu.RUnlock()
-	
+
 	history := make([]events.CoreEvent, len(b.eventHistory))
 	copy(history, b.eventHistory)
 	return history
@@ -752,18 +752,18 @@ func (b *UIEventBridge) GetEventHistory() []events.CoreEvent {
 // ReplayEvents replays events from history
 func (b *UIEventBridge) ReplayEvents(ctx context.Context, filter func(events.CoreEvent) bool) error {
 	history := b.GetEventHistory()
-	
+
 	for _, event := range history {
 		if filter != nil && !filter(event) {
 			continue
 		}
-		
+
 		// Process event through normal pipeline
 		b.processEvent(event)
 	}
-	
+
 	b.logger.InfoContext(ctx, "Replayed events from history",
 		"total_events", len(history))
-	
+
 	return nil
 }

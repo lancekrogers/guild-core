@@ -113,7 +113,7 @@ func NewOrchestratorService(
 	kanbanBoard := &kanban.Board{} // Placeholder - should get from registry
 	kanbanManager := orchestrator.DefaultKanbanManagerFactory(kanbanBoard)
 	agentFactory := &simpleAgentFactory{registry: registry}
-	
+
 	// Create a task dispatcher
 	dispatcher := orchestrator.DefaultTaskDispatcherFactory(kanbanManager, agentFactory, orchEventBus, config.MaxConcurrentAgents)
 

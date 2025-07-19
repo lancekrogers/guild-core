@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
-	
+
 	"github.com/lancekrogers/guild/pkg/events"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
@@ -19,22 +19,22 @@ import (
 
 // GRPCServiceManager manages all gRPC service registrations
 type GRPCServiceManager struct {
-	registry   registry.ComponentRegistry
-	eventBus   events.EventBus
-	logger     observability.Logger
-	config     GRPCServiceManagerConfig
-	
+	registry registry.ComponentRegistry
+	eventBus events.EventBus
+	logger   observability.Logger
+	config   GRPCServiceManagerConfig
+
 	// Service implementations
 	sessionService pb.SessionServiceServer
 	// agentService   pb.AgentServiceServer // TODO: Define in proto
 	// memoryService  pb.MemoryServiceServer // TODO: Define in proto
-	chatService    pb.ChatServiceServer
-	guildService   pb.GuildServer
-	promptService  promptspb.PromptServiceServer
-	
+	chatService   pb.ChatServiceServer
+	guildService  pb.GuildServer
+	promptService promptspb.PromptServiceServer
+
 	// Health management
 	healthServer *health.Server
-	
+
 	// State
 	started bool
 	mu      sync.RWMutex
@@ -99,26 +99,26 @@ func (m *GRPCServiceManager) initializeServices() error {
 	// Session Service
 	// TODO: Get actual implementation from registry
 	// For now, we'll need to create adapters or use existing implementations
-	
+
 	// Agent Service
 	// TODO: Create agent service implementation
-	
+
 	// Memory Service
 	// TODO: Create memory service implementation
-	
+
 	// Chat Service
 	// TODO: Create chat service implementation
-	
+
 	// Guild Service
 	// TODO: Create guild service implementation
-	
+
 	// Prompt Service
 	// TODO: Create prompt service implementation
-	
+
 	m.logger.Info("gRPC services initialized",
 		"health_enabled", m.config.EnableHealth,
 		"reflection_enabled", m.config.EnableReflection)
-	
+
 	return nil
 }
 
@@ -136,7 +136,7 @@ func (m *GRPCServiceManager) RegisterServices(server *grpc.Server) error {
 	if m.sessionService != nil {
 		pb.RegisterSessionServiceServer(server, m.sessionService)
 		m.logger.Debug("Registered session service")
-		
+
 		// Set health status
 		if m.config.EnableHealth {
 			m.healthServer.SetServingStatus("guild.v1.SessionService", grpc_health_v1.HealthCheckResponse_SERVING)
@@ -148,7 +148,7 @@ func (m *GRPCServiceManager) RegisterServices(server *grpc.Server) error {
 	// if m.agentService != nil {
 	// 	pb.RegisterAgentServiceServer(server, m.agentService)
 	// 	m.logger.Debug("Registered agent service")
-	// 	
+	//
 	// 	if m.config.EnableHealth {
 	// 		m.healthServer.SetServingStatus("guild.v1.AgentService", grpc_health_v1.HealthCheckResponse_SERVING)
 	// 	}
@@ -159,7 +159,7 @@ func (m *GRPCServiceManager) RegisterServices(server *grpc.Server) error {
 	// if m.memoryService != nil {
 	// 	pb.RegisterMemoryServiceServer(server, m.memoryService)
 	// 	m.logger.Debug("Registered memory service")
-	// 	
+	//
 	// 	if m.config.EnableHealth {
 	// 		m.healthServer.SetServingStatus("guild.v1.MemoryService", grpc_health_v1.HealthCheckResponse_SERVING)
 	// 	}
@@ -169,7 +169,7 @@ func (m *GRPCServiceManager) RegisterServices(server *grpc.Server) error {
 	if m.chatService != nil {
 		pb.RegisterChatServiceServer(server, m.chatService)
 		m.logger.Debug("Registered chat service")
-		
+
 		if m.config.EnableHealth {
 			m.healthServer.SetServingStatus("guild.v1.ChatService", grpc_health_v1.HealthCheckResponse_SERVING)
 		}
@@ -179,7 +179,7 @@ func (m *GRPCServiceManager) RegisterServices(server *grpc.Server) error {
 	if m.guildService != nil {
 		pb.RegisterGuildServer(server, m.guildService)
 		m.logger.Debug("Registered guild service")
-		
+
 		if m.config.EnableHealth {
 			m.healthServer.SetServingStatus("guild.v1.Guild", grpc_health_v1.HealthCheckResponse_SERVING)
 		}
@@ -189,7 +189,7 @@ func (m *GRPCServiceManager) RegisterServices(server *grpc.Server) error {
 	if m.promptService != nil {
 		promptspb.RegisterPromptServiceServer(server, m.promptService)
 		m.logger.Debug("Registered prompt service")
-		
+
 		if m.config.EnableHealth {
 			m.healthServer.SetServingStatus("prompts.v1.PromptService", grpc_health_v1.HealthCheckResponse_SERVING)
 		}
@@ -212,10 +212,10 @@ func (m *GRPCServiceManager) RegisterServices(server *grpc.Server) error {
 			"session_service": m.sessionService != nil,
 			// "agent_service":   m.agentService != nil,
 			// "memory_service":  m.memoryService != nil,
-			"chat_service":    m.chatService != nil,
-			"guild_service":   m.guildService != nil,
-			"prompt_service":  m.promptService != nil,
-			"health_enabled":  m.config.EnableHealth,
+			"chat_service":   m.chatService != nil,
+			"guild_service":  m.guildService != nil,
+			"prompt_service": m.promptService != nil,
+			"health_enabled": m.config.EnableHealth,
 		},
 	)); err != nil {
 		m.logger.Warn("Failed to publish services registered event", "error", err)
@@ -308,7 +308,7 @@ func (m *GRPCServiceManager) SetSessionService(service pb.SessionServiceServer) 
 // 	m.agentService = service
 // }
 
-// SetMemoryService sets the memory service implementation  
+// SetMemoryService sets the memory service implementation
 // TODO: Uncomment when MemoryService is defined in proto
 // func (m *GRPCServiceManager) SetMemoryService(service pb.MemoryServiceServer) {
 // 	m.mu.Lock()
@@ -347,9 +347,9 @@ func (m *GRPCServiceManager) GetMetrics() map[string]interface{} {
 		"session_service":     m.sessionService != nil,
 		// "agent_service":       m.agentService != nil,
 		// "memory_service":      m.memoryService != nil,
-		"chat_service":        m.chatService != nil,
-		"guild_service":       m.guildService != nil,
-		"prompt_service":      m.promptService != nil,
-		"health_enabled":      m.config.EnableHealth,
+		"chat_service":   m.chatService != nil,
+		"guild_service":  m.guildService != nil,
+		"prompt_service": m.promptService != nil,
+		"health_enabled": m.config.EnableHealth,
 	}
 }

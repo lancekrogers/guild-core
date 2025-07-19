@@ -3,6 +3,7 @@ package bootstrap
 
 import (
 	"context"
+	"database/sql"
 	"os"
 	"os/signal"
 	"sync"
@@ -83,11 +84,11 @@ type PersistenceEventsConfig struct {
 
 // UIEventsConfig configures UI events
 type UIEventsConfig struct {
-	Enabled         bool
-	BatchEvents     bool
-	BatchIntervalMs int
-	MaxBatchSize    int
-	UIEventTypes    []string
+	Enabled          bool
+	BatchEvents      bool
+	BatchIntervalMs  int
+	MaxBatchSize     int
+	UIEventTypes     []string
 	SystemEventTypes []string
 }
 
@@ -166,11 +167,11 @@ func NewApplication(opts Options) (*Application, error) {
 				IncludeData: true,
 			},
 			PersistenceEvents: PersistenceEventsConfig{
-				Enabled:        true,
-				EmitCRUD:       true,
-				EmitQuery:      false,
+				Enabled:         true,
+				EmitCRUD:        true,
+				EmitQuery:       false,
 				EmitTransaction: false,
-				IncludePayload: false,
+				IncludePayload:  false,
 			},
 			UIEvents: UIEventsConfig{
 				Enabled:         true,
@@ -378,10 +379,10 @@ func (app *Application) initializeCoreComponents(ctx context.Context) error {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create storage").
 			WithComponent("bootstrap")
 	}
-	
+
 	// Create storage wrapper that implements our interface
 	app.Storage = &storageAdapter{memoryStore: memoryStore}
-	
+
 	// Register storage in component registry
 	// The storage registry needs to implement registry.StorageRegistry interface
 	// For now, we'll set it using SetStorageRegistry
@@ -413,7 +414,7 @@ func (app *Application) initializeBridges(ctx context.Context) error {
 		default:
 			logLevel = bridges.LogLevelInfo
 		}
-		
+
 		config := bridges.EventLoggerConfig{
 			LogLevel:         logLevel,
 			IncludeEventData: app.Config.Bridges.EventLogging.IncludeData,
@@ -459,7 +460,7 @@ func (app *Application) initializeMonitoring(ctx context.Context) error {
 	// For now, create a simple no-op monitor
 	// TODO: Implement full monitoring when the package is available
 	app.Monitor = &noOpMonitor{}
-	
+
 	return nil
 }
 
@@ -490,7 +491,7 @@ func (app *Application) registerServices(ctx context.Context) error {
 	}
 
 	// Register core services
-	
+
 	// Register Kanban service
 	kanbanConfig := services.KanbanServiceConfig{
 		BoardPath:    ".guild/kanban",
@@ -499,7 +500,7 @@ func (app *Application) registerServices(ctx context.Context) error {
 		AutoSave:     true,
 		SaveInterval: 30 * time.Second,
 	}
-	
+
 	kanbanService, err := services.NewKanbanService(
 		app.ComponentRegistry,
 		app.EventBus,
@@ -510,7 +511,7 @@ func (app *Application) registerServices(ctx context.Context) error {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create kanban service").
 			WithComponent("bootstrap")
 	}
-	
+
 	if err := app.ServiceRegistry.Register(kanbanService); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register kanban service").
 			WithComponent("bootstrap")
@@ -518,7 +519,7 @@ func (app *Application) registerServices(ctx context.Context) error {
 
 	// Register Memory service
 	memoryConfig := services.DefaultMemoryServiceConfig()
-	
+
 	memoryService, err := services.NewMemoryService(
 		app.ComponentRegistry,
 		app.EventBus,
@@ -529,7 +530,7 @@ func (app *Application) registerServices(ctx context.Context) error {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create memory service").
 			WithComponent("bootstrap")
 	}
-	
+
 	if err := app.ServiceRegistry.Register(memoryService); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register memory service").
 			WithComponent("bootstrap")
@@ -542,23 +543,23 @@ func (app *Application) registerServices(ctx context.Context) error {
 		return gerror.New(gerror.ErrCodeInternal, "storage registry not available", nil).
 			WithComponent("bootstrap")
 	}
-	
+
 	sessionRepo := storageReg.GetSessionRepository()
 	if sessionRepo == nil {
 		return gerror.New(gerror.ErrCodeInternal, "session repository not available", nil).
 			WithComponent("bootstrap")
 	}
-	
+
 	// Create session store adapter that wraps the session repository
 	sessionStore := &sessionStoreAdapter{repo: sessionRepo}
-	
+
 	// Create session manager with default options
 	sessionManager := session.NewSessionManager(sessionStore)
-	
+
 	// Create session service
 	sessionConfig := services.DefaultSessionServiceConfig()
 	sessionService := services.NewSessionService(sessionManager, app.Logger.WithComponent("SessionService"), sessionConfig)
-	
+
 	if err := app.ServiceRegistry.Register(sessionService); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register session service").
 			WithComponent("bootstrap")
@@ -566,7 +567,7 @@ func (app *Application) registerServices(ctx context.Context) error {
 
 	// Register Orchestrator service
 	orchestratorConfig := services.DefaultOrchestratorServiceConfig()
-	
+
 	orchestratorService, err := services.NewOrchestratorService(
 		app.ComponentRegistry,
 		app.EventBus,
@@ -577,7 +578,7 @@ func (app *Application) registerServices(ctx context.Context) error {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create orchestrator service").
 			WithComponent("bootstrap")
 	}
-	
+
 	if err := app.ServiceRegistry.Register(orchestratorService); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register orchestrator service").
 			WithComponent("bootstrap")
@@ -585,7 +586,7 @@ func (app *Application) registerServices(ctx context.Context) error {
 
 	// Register Agent Manager service
 	agentManagerConfig := services.DefaultAgentManagerServiceConfig()
-	
+
 	agentManagerService, err := services.NewAgentManagerService(
 		app.ComponentRegistry,
 		app.EventBus,
@@ -596,9 +597,36 @@ func (app *Application) registerServices(ctx context.Context) error {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create agent manager service").
 			WithComponent("bootstrap")
 	}
-	
+
 	if err := app.ServiceRegistry.Register(agentManagerService); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register agent manager service").
+			WithComponent("bootstrap")
+	}
+
+	// Register Reasoning service
+	reasoningConfig := services.DefaultReasoningServiceConfig()
+
+	// Get database from storage
+	db, err := app.getDatabase()
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get database for reasoning service").
+			WithComponent("bootstrap")
+	}
+
+	reasoningService, err := services.NewReasoningService(
+		app.ComponentRegistry,
+		app.EventBus,
+		app.Logger.WithComponent("ReasoningService"),
+		db,
+		reasoningConfig,
+	)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create reasoning service").
+			WithComponent("bootstrap")
+	}
+
+	if err := app.ServiceRegistry.Register(reasoningService); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register reasoning service").
 			WithComponent("bootstrap")
 	}
 
@@ -671,6 +699,19 @@ func (app *Application) Ready(ctx context.Context) error {
 	return nil
 }
 
+// getDatabase returns the underlying database connection
+func (app *Application) getDatabase() (*sql.DB, error) {
+	// This is a temporary solution - we need to access the database
+	// from the storage layer. In a proper implementation, the database
+	// would be exposed through the StorageRegistry interface.
+
+	// For now, we'll return an error indicating this needs implementation
+	return nil, gerror.New("database access not yet implemented").
+		WithCode(gerror.ErrCodeNotImplemented).
+		WithComponent("bootstrap").
+		WithOperation("getDatabase")
+}
+
 // storageAdapter adapts the memory store to our StorageInterface
 type storageAdapter struct {
 	memoryStore interface{}
@@ -698,7 +739,7 @@ func (a *sessionStoreAdapter) GetSession(ctx context.Context, sessionID string) 
 	if regSession == nil {
 		return nil, nil
 	}
-	
+
 	// For now, do a simple conversion (assuming the types are compatible)
 	// In a real implementation, we'd need proper mapping
 	return &storage.ChatSession{
@@ -723,7 +764,7 @@ func (a *sessionStoreAdapter) UpsertSession(ctx context.Context, session *storag
 		UpdatedAt:  session.UpdatedAt,
 		Metadata:   session.Metadata,
 	}
-	
+
 	if session.ID == "" {
 		return a.repo.CreateSession(ctx, regSession)
 	}
@@ -752,7 +793,7 @@ func (a *sessionStoreAdapter) GetMessages(ctx context.Context, sessionID string)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Convert from registry.ChatMessage to storage.ChatMessage
 	messages := make([]*storage.ChatMessage, len(regMessages))
 	for i, regMsg := range regMessages {
@@ -776,7 +817,7 @@ func (a *sessionStoreAdapter) ListSessions(ctx context.Context, options session.
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Convert from registry.ChatSession to storage.ChatSession
 	sessions := make([]*storage.ChatSession, len(regSessions))
 	for i, regSession := range regSessions {

@@ -25,28 +25,28 @@ import (
 
 // DaemonService wraps the daemon server to integrate with the service framework
 type DaemonService struct {
-	registry   registry.ComponentRegistry
-	eventBus   events.EventBus
-	logger     observability.Logger
-	config     DaemonServiceConfig
-	
+	registry registry.ComponentRegistry
+	eventBus events.EventBus
+	logger   observability.Logger
+	config   DaemonServiceConfig
+
 	// gRPC server components
-	grpcServer     *grpc.Server
-	grpcManager    *GRPCServiceManager
-	healthServer   *health.Server
-	listener       net.Listener
-	
+	grpcServer   *grpc.Server
+	grpcManager  *GRPCServiceManager
+	healthServer *health.Server
+	listener     net.Listener
+
 	// HTTP/WebSocket servers (future)
 	// httpServer     *http.Server
 	// wsServer       *websocket.Server
-	
+
 	// Service state
-	started    bool
-	running    bool
-	ctx        context.Context
-	cancel     context.CancelFunc
-	mu         sync.RWMutex
-	
+	started bool
+	running bool
+	ctx     context.Context
+	cancel  context.CancelFunc
+	mu      sync.RWMutex
+
 	// Metrics
 	requestsHandled   uint64
 	activeConnections int32
@@ -60,18 +60,18 @@ type DaemonServiceConfig struct {
 	GRPCPort    int
 	HTTPPort    int
 	MetricsPort int
-	
+
 	// TLS configuration
 	TLSEnabled bool
 	CertPath   string
 	KeyPath    string
-	
+
 	// Server options
 	MaxConnections      int
 	ConnectionTimeout   time.Duration
 	KeepAliveInterval   time.Duration
 	GracefulStopTimeout time.Duration
-	
+
 	// Features
 	EnableReflection bool
 	EnableMetrics    bool
@@ -207,10 +207,10 @@ func (s *DaemonService) Start(ctx context.Context) error {
 		"service.started",
 		"daemon",
 		map[string]interface{}{
-			"grpc_port":         s.config.GRPCPort,
-			"http_port":         s.config.HTTPPort,
-			"metrics_port":      s.config.MetricsPort,
-			"tls_enabled":       s.config.TLSEnabled,
+			"grpc_port":          s.config.GRPCPort,
+			"http_port":          s.config.HTTPPort,
+			"metrics_port":       s.config.MetricsPort,
+			"tls_enabled":        s.config.TLSEnabled,
 			"reflection_enabled": s.config.EnableReflection,
 		},
 	)); err != nil {
@@ -274,10 +274,10 @@ func (s *DaemonService) Stop(ctx context.Context) error {
 		"service.stopped",
 		"daemon",
 		map[string]interface{}{
-			"requests_handled":    s.requestsHandled,
-			"active_connections":  s.activeConnections,
-			"errors":              s.errors,
-			"uptime_seconds":      uptime.Seconds(),
+			"requests_handled":   s.requestsHandled,
+			"active_connections": s.activeConnections,
+			"errors":             s.errors,
+			"uptime_seconds":     uptime.Seconds(),
 		},
 	)); err != nil {
 		s.logger.WarnContext(ctx, "Failed to publish service stopped event", "error", err)
@@ -364,9 +364,9 @@ func (s *DaemonService) serve() {
 		s.mu.Lock()
 		s.errors++
 		s.mu.Unlock()
-		
+
 		s.logger.Error("gRPC server error", "error", err)
-		
+
 		// Emit server error event
 		if err := s.eventBus.Publish(s.ctx, events.NewBaseEvent(
 			"grpc-server-error",
@@ -517,19 +517,19 @@ func (s *DaemonService) streamInterceptor(
 func (s *DaemonService) writePIDFile() error {
 	pidFile := daemon.GetPIDFilePath()
 	pid := os.Getpid()
-	
+
 	// Ensure directory exists
 	if err := os.MkdirAll(filepath.Dir(pidFile), 0755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create PID directory").
 			WithComponent("DaemonService")
 	}
-	
+
 	// Write PID
 	if err := os.WriteFile(pidFile, []byte(strconv.Itoa(pid)), 0644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to write PID file").
 			WithComponent("DaemonService")
 	}
-	
+
 	return nil
 }
 

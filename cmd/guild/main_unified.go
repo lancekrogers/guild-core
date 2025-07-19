@@ -1,6 +1,7 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build unified
 // +build unified
 
 // This file demonstrates the unified CLI entry point using the bootstrap system
@@ -81,7 +82,7 @@ var unifiedCommissionCmd = &cobra.Command{
 		// Store commission description for later use
 		commissionDesc := args[0]
 		cmd.SetContext(context.WithValue(cmd.Context(), "commission", commissionDesc))
-		
+
 		return runWithServices(cmd.Context(), []string{
 			"memory-service",
 			"kanban-service",
@@ -100,11 +101,11 @@ var unifiedStatusCmd = &cobra.Command{
 		// Quick status check without full bootstrap
 		fmt.Println("Guild Service Status (Unified Mode)")
 		fmt.Println("===================================")
-		
+
 		// TODO: Connect to running daemon and query service status
 		fmt.Println("Status checking not yet implemented in unified mode.")
 		fmt.Println("This will query the service registry for health status.")
-		
+
 		return nil
 	},
 }
@@ -113,7 +114,7 @@ func init() {
 	// Global flags
 	unifiedRootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "", "Config file (default: .guild/guild.yaml)")
 	unifiedRootCmd.PersistentFlags().StringSliceVar(&enabledServices, "services", []string{}, "Specific services to enable")
-	
+
 	// Add commands
 	unifiedRootCmd.AddCommand(unifiedChatCmd)
 	unifiedRootCmd.AddCommand(unifiedServeCmd)
@@ -137,7 +138,7 @@ func runWithServices(ctx context.Context, serviceNames []string) error {
 	if configFile != "" {
 		opts.ConfigPath = configFile
 	}
-	
+
 	app, err := bootstrap.NewApplication(opts)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create application").
@@ -204,10 +205,10 @@ func configureServices(app *bootstrap.Application, serviceNames []string) error 
 	// 1. Disabling auto-registration in bootstrap
 	// 2. Manually registering only requested services
 	// 3. Setting up dependencies correctly
-	
+
 	// For now, this is a placeholder
 	// TODO: Implement selective service registration
-	
+
 	return nil
 }
 
@@ -221,27 +222,27 @@ func handleModeSpecific(ctx context.Context, app *bootstrap.Application) error {
 			// TODO: Get service from registry and call Run()
 			logger := observability.GetLogger(ctx)
 			logger.InfoContext(ctx, "Chat UI service detected, starting interactive mode")
-			
+
 			// Placeholder for actual implementation
 			fmt.Println("Chat UI would start here in unified mode")
 			fmt.Println("Press Ctrl+C to exit")
-			
+
 			return nil
 		}
 	}
-	
+
 	// Check if we have a commission to execute
 	if commission, ok := ctx.Value("commission").(string); ok {
 		logger := observability.GetLogger(ctx)
 		logger.InfoContext(ctx, "Executing commission", "description", commission)
-		
+
 		// TODO: Get orchestrator service and submit commission
 		fmt.Printf("Would execute commission: %s\n", commission)
-		
+
 		// Commission mode exits after submission
 		return nil
 	}
-	
+
 	// Daemon mode - just keep running
 	return nil
 }
@@ -249,7 +250,7 @@ func handleModeSpecific(ctx context.Context, app *bootstrap.Application) error {
 // main function for unified mode
 func main() {
 	ctx := context.Background()
-	
+
 	// Set up observability
 	logger := observability.NewLogger(nil)
 	ctx = observability.WithLogger(ctx, logger)

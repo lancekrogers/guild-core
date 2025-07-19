@@ -39,17 +39,17 @@ type MemoryService struct {
 // MemoryServiceConfig configures the memory service
 type MemoryServiceConfig struct {
 	// Store configuration
-	DatabasePath    string
-	MaxConnections  int
-	ConnectTimeout  time.Duration
-	
+	DatabasePath   string
+	MaxConnections int
+	ConnectTimeout time.Duration
+
 	// Vector store configuration
 	VectorStoreName string
 	VectorDimension int
-	
+
 	// Performance tuning
-	CacheSize       int
-	FlushInterval   time.Duration
+	CacheSize     int
+	FlushInterval time.Duration
 }
 
 // DefaultMemoryServiceConfig returns default configuration
@@ -229,7 +229,7 @@ func (s *MemoryService) Health(ctx context.Context) error {
 	// Try a simple operation to verify connectivity
 	testCtx, cancel := context.WithTimeout(ctx, 1*time.Second)
 	defer cancel()
-	
+
 	if _, err := s.store.List(testCtx, "health-check"); err != nil {
 		s.lastError = err
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "memory store health check failed").
@@ -271,13 +271,13 @@ func (s *MemoryService) Store(ctx context.Context, bucket, key string, value []b
 	}
 
 	start := time.Now()
-	
+
 	// Store in memory
 	err := s.store.Put(ctx, bucket, key, value)
-	
+
 	duration := time.Since(start)
 	s.updateMetrics(duration)
-	
+
 	// Emit event
 	event := events.NewBaseEvent(
 		"memory-store-"+key,
@@ -292,13 +292,13 @@ func (s *MemoryService) Store(ctx context.Context, bucket, key string, value []b
 			"error":    errorString(err),
 		},
 	)
-	
+
 	if pubErr := s.eventBus.Publish(ctx, event); pubErr != nil {
 		s.logger.WarnContext(ctx, "Failed to publish store event", "error", pubErr)
 	}
-	
+
 	s.storeOps++
-	
+
 	if err != nil {
 		s.lastError = err
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to store value").
@@ -306,7 +306,7 @@ func (s *MemoryService) Store(ctx context.Context, bucket, key string, value []b
 			WithDetails("bucket", bucket).
 			WithDetails("key", key)
 	}
-	
+
 	return nil
 }
 
@@ -321,13 +321,13 @@ func (s *MemoryService) Retrieve(ctx context.Context, bucket, key string) ([]byt
 	}
 
 	start := time.Now()
-	
+
 	// Retrieve from memory
 	value, err := s.store.Get(ctx, bucket, key)
-	
+
 	duration := time.Since(start)
 	s.updateMetrics(duration)
-	
+
 	// Emit event
 	event := events.NewBaseEvent(
 		"memory-retrieve-"+key,
@@ -342,13 +342,13 @@ func (s *MemoryService) Retrieve(ctx context.Context, bucket, key string) ([]byt
 			"error":    errorString(err),
 		},
 	)
-	
+
 	if pubErr := s.eventBus.Publish(ctx, event); pubErr != nil {
 		s.logger.WarnContext(ctx, "Failed to publish retrieve event", "error", pubErr)
 	}
-	
+
 	s.retrieveOps++
-	
+
 	if err != nil {
 		if err == memory.ErrNotFound {
 			return nil, err // Don't wrap ErrNotFound
@@ -359,7 +359,7 @@ func (s *MemoryService) Retrieve(ctx context.Context, bucket, key string) ([]byt
 			WithDetails("bucket", bucket).
 			WithDetails("key", key)
 	}
-	
+
 	return value, nil
 }
 
@@ -379,13 +379,13 @@ func (s *MemoryService) Search(ctx context.Context, query string, limit int) ([]
 	}
 
 	start := time.Now()
-	
+
 	// Perform search
 	results, err := s.vectorStore.QueryEmbeddings(ctx, query, limit)
-	
+
 	duration := time.Since(start)
 	s.updateMetrics(duration)
-	
+
 	// Emit search event
 	event := events.NewBaseEvent(
 		"memory-search",
@@ -400,19 +400,19 @@ func (s *MemoryService) Search(ctx context.Context, query string, limit int) ([]
 			"error":        errorString(err),
 		},
 	)
-	
+
 	if pubErr := s.eventBus.Publish(ctx, event); pubErr != nil {
 		s.logger.WarnContext(ctx, "Failed to publish search event", "error", pubErr)
 	}
-	
+
 	s.searchOps++
-	
+
 	if err != nil {
 		s.lastError = err
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "search failed").
 			WithComponent("MemoryService")
 	}
-	
+
 	return results, nil
 }
 
@@ -444,13 +444,13 @@ func (s *MemoryService) CreateChain(ctx context.Context, agentID, taskID string)
 			"task_id":  taskID,
 		},
 	)
-	
+
 	if pubErr := s.eventBus.Publish(ctx, event); pubErr != nil {
 		s.logger.WarnContext(ctx, "Failed to publish chain created event", "error", pubErr)
 	}
 
 	s.chainOps++
-	
+
 	return chainID, nil
 }
 

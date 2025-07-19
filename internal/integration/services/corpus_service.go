@@ -51,9 +51,9 @@ type IndexOptions struct {
 // placeholderIndex is a temporary implementation
 type placeholderIndex struct{}
 
-func (p *placeholderIndex) Open() error { return nil }
-func (p *placeholderIndex) Close() error { return nil }
-func (p *placeholderIndex) Health(ctx context.Context) error { return nil }
+func (p *placeholderIndex) Open() error                                                  { return nil }
+func (p *placeholderIndex) Close() error                                                 { return nil }
+func (p *placeholderIndex) Health(ctx context.Context) error                             { return nil }
 func (p *placeholderIndex) Index(ctx context.Context, doc *corpus.ScannedDocument) error { return nil }
 func (p *placeholderIndex) Search(ctx context.Context, query string, options SearchOptions) ([]SearchResult, error) {
 	return []SearchResult{}, nil
@@ -67,61 +67,61 @@ func NewDocumentIndex(path string, options IndexOptions) (DocumentIndex, error) 
 
 // CorpusService wraps corpus scanning operations to integrate with the service framework
 type CorpusService struct {
-	scanner    *corpus.DocumentScanner
-	index      DocumentIndex
-	registry   registry.ComponentRegistry
-	eventBus   events.EventBus
-	logger     observability.Logger
-	config     CorpusServiceConfig
-	
+	scanner  *corpus.DocumentScanner
+	index    DocumentIndex
+	registry registry.ComponentRegistry
+	eventBus events.EventBus
+	logger   observability.Logger
+	config   CorpusServiceConfig
+
 	// Service state
-	started       bool
-	scanning      bool
-	scanCtx       context.Context
-	scanCancel    context.CancelFunc
-	mu            sync.RWMutex
-	
+	started    bool
+	scanning   bool
+	scanCtx    context.Context
+	scanCancel context.CancelFunc
+	mu         sync.RWMutex
+
 	// Scan progress
-	currentScan   *scanProgress
-	
+	currentScan *scanProgress
+
 	// Metrics
-	totalScans    uint64
-	filesScanned  uint64
-	filesIndexed  uint64
-	scanErrors    uint64
-	lastScanTime  time.Time
-	avgScanTime   time.Duration
+	totalScans   uint64
+	filesScanned uint64
+	filesIndexed uint64
+	scanErrors   uint64
+	lastScanTime time.Time
+	avgScanTime  time.Duration
 }
 
 // scanProgress tracks the progress of a scan
 type scanProgress struct {
-	startTime     time.Time
-	totalFiles    int32
+	startTime      time.Time
+	totalFiles     int32
 	processedFiles int32
-	errors        int32
-	currentPath   string
-	mu            sync.RWMutex
+	errors         int32
+	currentPath    string
+	mu             sync.RWMutex
 }
 
 // CorpusServiceConfig configures the corpus service
 type CorpusServiceConfig struct {
 	// Scan configuration
-	BasePath         string
-	FilePatterns     []string
-	IgnorePatterns   []string
-	MaxWorkers       int
-	ScanOnStart      bool
-	RescanInterval   time.Duration
-	
+	BasePath       string
+	FilePatterns   []string
+	IgnorePatterns []string
+	MaxWorkers     int
+	ScanOnStart    bool
+	RescanInterval time.Duration
+
 	// Index configuration
-	IndexPath        string
-	EnableFullText   bool
+	IndexPath          string
+	EnableFullText     bool
 	EnableVectorSearch bool
-	
+
 	// Resource limits
-	MaxFileSize      int64
-	MaxScanDuration  time.Duration
-	MemoryLimit      int64
+	MaxFileSize     int64
+	MaxScanDuration time.Duration
+	MemoryLimit     int64
 }
 
 // DefaultCorpusServiceConfig returns default configuration
@@ -144,15 +144,15 @@ func DefaultCorpusServiceConfig() CorpusServiceConfig {
 			"*.test",
 			"*.tmp",
 		},
-		MaxWorkers:      4,
-		ScanOnStart:     false,
-		RescanInterval:  30 * time.Minute,
-		IndexPath:       ".guild/corpus.db",
-		EnableFullText:  true,
+		MaxWorkers:         4,
+		ScanOnStart:        false,
+		RescanInterval:     30 * time.Minute,
+		IndexPath:          ".guild/corpus.db",
+		EnableFullText:     true,
 		EnableVectorSearch: false,
-		MaxFileSize:     10 * 1024 * 1024, // 10MB
-		MaxScanDuration: 5 * time.Minute,
-		MemoryLimit:     512 * 1024 * 1024, // 512MB
+		MaxFileSize:        10 * 1024 * 1024, // 10MB
+		MaxScanDuration:    5 * time.Minute,
+		MemoryLimit:        512 * 1024 * 1024, // 512MB
 	}
 }
 
@@ -237,10 +237,10 @@ func (s *CorpusService) Start(ctx context.Context) error {
 		"service.started",
 		"corpus",
 		map[string]interface{}{
-			"base_path":      s.config.BasePath,
-			"file_patterns":  s.config.FilePatterns,
-			"scan_on_start":  s.config.ScanOnStart,
-			"index_path":     s.config.IndexPath,
+			"base_path":     s.config.BasePath,
+			"file_patterns": s.config.FilePatterns,
+			"scan_on_start": s.config.ScanOnStart,
+			"index_path":    s.config.IndexPath,
 		},
 	)); err != nil {
 		s.logger.WarnContext(ctx, "Failed to publish service started event", "error", err)
@@ -358,7 +358,7 @@ func (s *CorpusService) StartScan(ctx context.Context) error {
 		"corpus.scan.started",
 		"corpus",
 		map[string]interface{}{
-			"base_path": s.config.BasePath,
+			"base_path":  s.config.BasePath,
 			"start_time": s.currentScan.startTime,
 		},
 	)); err != nil {
@@ -410,12 +410,12 @@ func (s *CorpusService) runScan() {
 			s.logger.ErrorContext(s.scanCtx, "Failed to index document",
 				"path", result.Document.Path,
 				"error", err)
-			
+
 			// Emit indexing error event
 			s.publishIndexEvent("corpus.index.error", result.Document, err)
 		} else {
 			atomic.AddUint64(&filesProcessed, 1)
-			
+
 			// Emit successful index event
 			s.publishIndexEvent("corpus.file.indexed", result.Document, nil)
 		}
@@ -462,7 +462,7 @@ func (s *CorpusService) updateProgress(path string) {
 	if s.currentScan == nil {
 		return
 	}
-	
+
 	s.currentScan.mu.Lock()
 	s.currentScan.processedFiles++
 	s.currentScan.currentPath = path
@@ -500,7 +500,7 @@ func (s *CorpusService) publishIndexEvent(eventType string, doc *corpus.ScannedD
 		"type": doc.Type,
 		"size": doc.Metadata.FileSize,
 	}
-	
+
 	if err != nil {
 		data["error"] = err.Error()
 	}
@@ -547,8 +547,8 @@ func (s *CorpusService) Search(ctx context.Context, query string, options Search
 		"corpus.search",
 		"corpus",
 		map[string]interface{}{
-			"query":         query,
-			"result_count":  len(results),
+			"query":        query,
+			"result_count": len(results),
 		},
 	)); err != nil {
 		s.logger.WarnContext(ctx, "Failed to publish search event", "error", err)

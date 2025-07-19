@@ -15,11 +15,11 @@ import (
 
 // KanbanService wraps the kanban board to integrate with the service framework
 type KanbanService struct {
-	board        *kanban.Board
-	registry     registry.ComponentRegistry
-	eventBus     events.EventBus
-	logger       observability.Logger
-	boardPath    string
+	board     *kanban.Board
+	registry  registry.ComponentRegistry
+	eventBus  events.EventBus
+	logger    observability.Logger
+	boardPath string
 
 	// Service state
 	started bool
@@ -329,7 +329,7 @@ func (b *KanbanEventBridge) PublishTaskUpdated(ctx context.Context, task *kanban
 		"changes":    changes,
 		"updated_at": task.UpdatedAt,
 	}
-	
+
 	event := events.NewBaseEvent(
 		task.ID,
 		"kanban.task.updated",

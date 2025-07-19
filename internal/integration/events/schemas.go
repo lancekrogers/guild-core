@@ -12,28 +12,28 @@ import (
 const (
 	// Service lifecycle events
 	EventCategoryService = "service"
-	
+
 	// Data operation events
 	EventCategoryData = "data"
-	
+
 	// Task management events
 	EventCategoryTask = "task"
-	
+
 	// Agent events
 	EventCategoryAgent = "agent"
-	
+
 	// Commission events
 	EventCategoryCommission = "commission"
-	
+
 	// UI events
 	EventCategoryUI = "ui"
-	
+
 	// System events
 	EventCategorySystem = "system"
-	
+
 	// gRPC events
 	EventCategoryGRPC = "grpc"
-	
+
 	// Corpus events
 	EventCategoryCorpus = "corpus"
 )
@@ -41,32 +41,32 @@ const (
 // Standard Event Types
 const (
 	// Service Lifecycle Events
-	EventServiceStarting = "service.starting"
-	EventServiceStarted  = "service.started"
-	EventServiceStopping = "service.stopping"
-	EventServiceStopped  = "service.stopped"
-	EventServiceHealthy  = "service.healthy"
+	EventServiceStarting  = "service.starting"
+	EventServiceStarted   = "service.started"
+	EventServiceStopping  = "service.stopping"
+	EventServiceStopped   = "service.stopped"
+	EventServiceHealthy   = "service.healthy"
 	EventServiceUnhealthy = "service.unhealthy"
-	EventServiceError    = "service.error"
-	
+	EventServiceError     = "service.error"
+
 	// Data Events
-	EventDataCreated     = "data.created"
-	EventDataUpdated     = "data.updated"
-	EventDataDeleted     = "data.deleted"
-	EventDataQueried     = "data.queried"
-	EventDataSynced      = "data.synced"
-	EventDataCorrupted   = "data.corrupted"
-	
+	EventDataCreated   = "data.created"
+	EventDataUpdated   = "data.updated"
+	EventDataDeleted   = "data.deleted"
+	EventDataQueried   = "data.queried"
+	EventDataSynced    = "data.synced"
+	EventDataCorrupted = "data.corrupted"
+
 	// Task Events
-	EventTaskCreated     = "task.created"
-	EventTaskAssigned    = "task.assigned"
-	EventTaskStarted     = "task.started"
-	EventTaskProgress    = "task.progress"
-	EventTaskCompleted   = "task.completed"
-	EventTaskFailed      = "task.failed"
-	EventTaskCancelled   = "task.cancelled"
-	EventTaskRetried     = "task.retried"
-	
+	EventTaskCreated   = "task.created"
+	EventTaskAssigned  = "task.assigned"
+	EventTaskStarted   = "task.started"
+	EventTaskProgress  = "task.progress"
+	EventTaskCompleted = "task.completed"
+	EventTaskFailed    = "task.failed"
+	EventTaskCancelled = "task.cancelled"
+	EventTaskRetried   = "task.retried"
+
 	// Agent Events
 	EventAgentRegistered    = "agent.registered"
 	EventAgentUnregistered  = "agent.unregistered"
@@ -75,7 +75,7 @@ const (
 	EventAgentTaskCompleted = "agent.task.completed"
 	EventAgentError         = "agent.error"
 	EventAgentHealthCheck   = "agent.health.check"
-	
+
 	// Commission Events
 	EventCommissionCreated   = "commission.created"
 	EventCommissionPlanned   = "commission.planned"
@@ -84,26 +84,26 @@ const (
 	EventCommissionCompleted = "commission.completed"
 	EventCommissionFailed    = "commission.failed"
 	EventCommissionCancelled = "commission.cancelled"
-	
+
 	// UI Events
 	EventUIConnected     = "ui.connected"
 	EventUIDisconnected  = "ui.disconnected"
 	EventUIStateChanged  = "ui.state.changed"
 	EventUICommandIssued = "ui.command.issued"
 	EventUIError         = "ui.error"
-	
+
 	// System Events
 	EventSystemNotification = "system.notification"
 	EventSystemWarning      = "system.warning"
 	EventSystemError        = "system.error"
 	EventSystemShutdown     = "system.shutdown"
-	
+
 	// gRPC Events
-	EventGRPCRequest   = "grpc.request"
-	EventGRPCResponse  = "grpc.response"
-	EventGRPCStream    = "grpc.stream"
-	EventGRPCError     = "grpc.error"
-	
+	EventGRPCRequest  = "grpc.request"
+	EventGRPCResponse = "grpc.response"
+	EventGRPCStream   = "grpc.stream"
+	EventGRPCError    = "grpc.error"
+
 	// Corpus Events
 	EventCorpusScanStarted   = "corpus.scan.started"
 	EventCorpusScanProgress  = "corpus.scan.progress"
@@ -122,7 +122,7 @@ func NewServiceEvent(serviceID, eventType string, data map[string]interface{}) e
 	}
 	data["service_id"] = serviceID
 	data["timestamp"] = time.Now()
-	
+
 	return events.NewBaseEvent(
 		fmt.Sprintf("%s-%s-%d", serviceID, eventType, time.Now().UnixNano()),
 		eventType,
@@ -140,9 +140,9 @@ func NewDataEvent(entityType, entityID, operation string, data map[string]interf
 	data["entity_id"] = entityID
 	data["operation"] = operation
 	data["timestamp"] = time.Now()
-	
+
 	eventType := fmt.Sprintf("data.%s", operation)
-	
+
 	return events.NewBaseEvent(
 		fmt.Sprintf("%s-%s-%s-%d", entityType, entityID, operation, time.Now().UnixNano()),
 		eventType,
@@ -158,7 +158,7 @@ func NewTaskEvent(taskID, eventType string, data map[string]interface{}) events.
 	}
 	data["task_id"] = taskID
 	data["timestamp"] = time.Now()
-	
+
 	return events.NewBaseEvent(
 		fmt.Sprintf("task-%s-%s-%d", taskID, eventType, time.Now().UnixNano()),
 		eventType,
@@ -174,7 +174,7 @@ func NewAgentEvent(agentID, eventType string, data map[string]interface{}) event
 	}
 	data["agent_id"] = agentID
 	data["timestamp"] = time.Now()
-	
+
 	return events.NewBaseEvent(
 		fmt.Sprintf("agent-%s-%s-%d", agentID, eventType, time.Now().UnixNano()),
 		eventType,
@@ -190,7 +190,7 @@ func NewCommissionEvent(commissionID, eventType string, data map[string]interfac
 	}
 	data["commission_id"] = commissionID
 	data["timestamp"] = time.Now()
-	
+
 	return events.NewBaseEvent(
 		fmt.Sprintf("commission-%s-%s-%d", commissionID, eventType, time.Now().UnixNano()),
 		eventType,
@@ -206,7 +206,7 @@ func NewUIEvent(sessionID, eventType string, data map[string]interface{}) events
 	}
 	data["session_id"] = sessionID
 	data["timestamp"] = time.Now()
-	
+
 	return events.NewBaseEvent(
 		fmt.Sprintf("ui-%s-%s-%d", sessionID, eventType, time.Now().UnixNano()),
 		eventType,
@@ -223,7 +223,7 @@ func NewSystemEvent(eventType, message string, severity string, data map[string]
 	data["message"] = message
 	data["severity"] = severity
 	data["timestamp"] = time.Now()
-	
+
 	return events.NewBaseEvent(
 		fmt.Sprintf("system-%s-%d", eventType, time.Now().UnixNano()),
 		eventType,
@@ -245,26 +245,26 @@ type ServiceEventData struct {
 
 // TaskEventData represents common task event data
 type TaskEventData struct {
-	TaskID      string                 `json:"task_id"`
-	TaskType    string                 `json:"task_type"`
-	Status      string                 `json:"status"`
-	Progress    float64                `json:"progress,omitempty"`
-	AssignedTo  string                 `json:"assigned_to,omitempty"`
-	Error       string                 `json:"error,omitempty"`
-	Timestamp   time.Time              `json:"timestamp"`
-	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+	TaskID     string                 `json:"task_id"`
+	TaskType   string                 `json:"task_type"`
+	Status     string                 `json:"status"`
+	Progress   float64                `json:"progress,omitempty"`
+	AssignedTo string                 `json:"assigned_to,omitempty"`
+	Error      string                 `json:"error,omitempty"`
+	Timestamp  time.Time              `json:"timestamp"`
+	Metadata   map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // AgentEventData represents common agent event data
 type AgentEventData struct {
-	AgentID     string                 `json:"agent_id"`
-	AgentName   string                 `json:"agent_name"`
-	AgentType   string                 `json:"agent_type"`
-	State       string                 `json:"state"`
-	TaskID      string                 `json:"task_id,omitempty"`
-	Error       string                 `json:"error,omitempty"`
-	Timestamp   time.Time              `json:"timestamp"`
-	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+	AgentID   string                 `json:"agent_id"`
+	AgentName string                 `json:"agent_name"`
+	AgentType string                 `json:"agent_type"`
+	State     string                 `json:"state"`
+	TaskID    string                 `json:"task_id,omitempty"`
+	Error     string                 `json:"error,omitempty"`
+	Timestamp time.Time              `json:"timestamp"`
+	Metadata  map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // CommissionEventData represents common commission event data
@@ -282,28 +282,28 @@ type CommissionEventData struct {
 
 // DataEventData represents common data operation event data
 type DataEventData struct {
-	EntityType  string                 `json:"entity_type"`
-	EntityID    string                 `json:"entity_id"`
-	Operation   string                 `json:"operation"`
-	Success     bool                   `json:"success"`
-	Error       string                 `json:"error,omitempty"`
-	ChangedBy   string                 `json:"changed_by,omitempty"`
-	Timestamp   time.Time              `json:"timestamp"`
-	OldValue    interface{}            `json:"old_value,omitempty"`
-	NewValue    interface{}            `json:"new_value,omitempty"`
-	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+	EntityType string                 `json:"entity_type"`
+	EntityID   string                 `json:"entity_id"`
+	Operation  string                 `json:"operation"`
+	Success    bool                   `json:"success"`
+	Error      string                 `json:"error,omitempty"`
+	ChangedBy  string                 `json:"changed_by,omitempty"`
+	Timestamp  time.Time              `json:"timestamp"`
+	OldValue   interface{}            `json:"old_value,omitempty"`
+	NewValue   interface{}            `json:"new_value,omitempty"`
+	Metadata   map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // UIEventData represents common UI event data
 type UIEventData struct {
-	SessionID   string                 `json:"session_id"`
-	UserID      string                 `json:"user_id,omitempty"`
-	EventType   string                 `json:"event_type"`
-	Component   string                 `json:"component,omitempty"`
-	Action      string                 `json:"action,omitempty"`
-	Value       interface{}            `json:"value,omitempty"`
-	Timestamp   time.Time              `json:"timestamp"`
-	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+	SessionID string                 `json:"session_id"`
+	UserID    string                 `json:"user_id,omitempty"`
+	EventType string                 `json:"event_type"`
+	Component string                 `json:"component,omitempty"`
+	Action    string                 `json:"action,omitempty"`
+	Value     interface{}            `json:"value,omitempty"`
+	Timestamp time.Time              `json:"timestamp"`
+	Metadata  map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // Event Validation
@@ -327,7 +327,7 @@ func ValidateEventType(eventType string) bool {
 		EventCorpusScanStarted, EventCorpusScanProgress, EventCorpusScanCompleted,
 		EventCorpusFileIndexed, EventCorpusIndexError, EventCorpusSearch,
 	}
-	
+
 	for _, valid := range validTypes {
 		if eventType == valid {
 			return true
