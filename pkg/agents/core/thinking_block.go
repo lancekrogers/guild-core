@@ -297,21 +297,32 @@ func (p *ThinkingBlockParser) extractConfidence(content string) float64 {
 		regexp.MustCompile(`(\d+)%\s*(?:confident|sure|certain)`),
 	}
 
+	var lastConfidence float64 = -1
+	foundAny := false
+
 	for _, pattern := range patterns {
-		if matches := pattern.FindStringSubmatch(content); len(matches) > 1 {
-			var conf float64
-			fmt.Sscanf(matches[1], "%f", &conf)
+		allMatches := pattern.FindAllStringSubmatch(content, -1)
+		for _, matches := range allMatches {
+			if len(matches) > 1 {
+				var conf float64
+				fmt.Sscanf(matches[1], "%f", &conf)
 
-			// Handle percentage
-			if strings.Contains(content, "%") && conf > 1 {
-				conf = conf / 100
-			}
+				// Handle percentage
+				if strings.Contains(matches[0], "%") && conf > 1 {
+					conf = conf / 100
+				}
 
-			// Ensure valid range
-			if conf >= 0 && conf <= 1 {
-				return conf
+				// Ensure valid range
+				if conf >= 0 && conf <= 1 {
+					lastConfidence = conf
+					foundAny = true
+				}
 			}
 		}
+	}
+
+	if foundAny {
+		return lastConfidence
 	}
 
 	// Default based on certain keywords

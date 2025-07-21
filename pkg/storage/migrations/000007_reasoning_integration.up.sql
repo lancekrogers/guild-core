@@ -1,6 +1,22 @@
 -- Sprint 6.5: Reasoning System Integration
 -- Production hardening with indexes and state management
 
+-- First create the reasoning_blocks table that the code expects
+CREATE TABLE IF NOT EXISTS reasoning_blocks (
+    id TEXT PRIMARY KEY,
+    agent_id TEXT NOT NULL,
+    session_id TEXT,
+    type TEXT NOT NULL,
+    content TEXT NOT NULL,
+    confidence REAL NOT NULL CHECK (confidence >= 0 AND confidence <= 1),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    tokens_used INTEGER NOT NULL DEFAULT 0,
+    total_tokens INTEGER NOT NULL DEFAULT 0,
+    reasoning_tokens INTEGER NOT NULL DEFAULT 0,
+    content_tokens INTEGER NOT NULL DEFAULT 0,
+    metadata JSON
+);
+
 -- Add indexes for performance on reasoning_blocks
 CREATE INDEX IF NOT EXISTS idx_reasoning_blocks_agent_timestamp 
 ON reasoning_blocks(agent_id, timestamp DESC);

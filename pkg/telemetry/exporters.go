@@ -229,10 +229,18 @@ func NewNoop() *NoopTelemetry {
 	otel.SetTracerProvider(tp)
 	otel.SetMeterProvider(mp)
 
+	t := &Telemetry{
+		meter:  mp.Meter("noop"),
+		tracer: tp.Tracer("noop"),
+	}
+
+	// Initialize all metrics to avoid nil pointer dereference
+	if err := t.initializeMetrics(); err != nil {
+		// For noop, we can safely ignore errors
+		// as these are just for testing
+	}
+
 	return &NoopTelemetry{
-		Telemetry: &Telemetry{
-			meter:  mp.Meter("noop"),
-			tracer: tp.Tracer("noop"),
-		},
+		Telemetry: t,
 	}
 }

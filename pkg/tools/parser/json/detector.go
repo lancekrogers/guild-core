@@ -61,7 +61,8 @@ func (d *Detector) CanParse(input []byte) bool {
 	inputStr := string(input)
 	return strings.Contains(inputStr, `"tool_calls"`) ||
 		strings.Contains(inputStr, `"function_call"`) ||
-		strings.Contains(inputStr, `"tools"`)
+		strings.Contains(inputStr, `"tools"`) ||
+		(strings.Contains(inputStr, `"type"`) && strings.Contains(inputStr, `"function"`))
 }
 
 // Detect analyzes input and returns detection result with confidence score
@@ -339,6 +340,17 @@ func (d *Detector) analyzeOpenAIStructure(doc interface{}) float64 {
 // analyzeOpenAIObject analyzes an object for OpenAI patterns
 func (d *Detector) analyzeOpenAIObject(obj map[string]interface{}) float64 {
 	confidence := 0.0
+
+	// Check for single tool call format (e.g., {"id": "...", "type": "function", "function": {...}})
+	if _, hasID := obj["id"]; hasID {
+		if objType, hasType := obj["type"].(string); hasType && objType == "function" {
+			if funcObj, hasFunc := obj["function"].(map[string]interface{}); hasFunc {
+				if funcObj["name"] != nil && funcObj["arguments"] != nil {
+					confidence = max(confidence, 0.9) // High confidence for single tool call
+				}
+			}
+		}
+	}
 
 	// Check for tool_calls field (strongest indicator)
 	if toolCalls, exists := obj["tool_calls"]; exists {

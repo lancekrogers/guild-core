@@ -18,3 +18,4 @@ DROP TABLE IF EXISTS reasoning_failures;
 DROP TABLE IF EXISTS reasoning_metrics;
 DROP TABLE IF EXISTS reasoning_rate_limits;
 DROP TABLE IF EXISTS reasoning_circuit_breaker;
+DROP TABLE IF EXISTS reasoning_blocks;
