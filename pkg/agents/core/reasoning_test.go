@@ -18,7 +18,8 @@ import (
 )
 
 func TestThinkingBlockParser(t *testing.T) {
-	parser := core.NewThinkingBlockParser()
+	// Pass nil for metrics registry in tests
+	parser := core.NewThinkingBlockParser(nil)
 	ctx := context.Background()
 
 	tests := []struct {
@@ -139,7 +140,7 @@ func TestThinkingBlockParser(t *testing.T) {
 }
 
 func TestConfidenceExtraction(t *testing.T) {
-	parser := core.NewThinkingBlockParser()
+	parser := core.NewThinkingBlockParser(nil)
 	ctx := context.Background()
 
 	tests := []struct {
@@ -679,9 +680,9 @@ func createChainWithPattern(id string, pattern []core.ThinkingType) *core.Reason
 
 func TestStreamingReasoning(t *testing.T) {
 	ctx := context.Background()
-	parser := core.NewThinkingBlockParser()
+	parser := core.NewThinkingBlockParser(nil)
 	builder := core.NewReasoningChainBuilder("agent-1", "session-1", "task-1")
-	streamer := core.NewReasoningStreamer(parser, builder)
+	streamer := core.NewReasoningStreamer(parser, builder, nil)
 
 	t.Run("basic streaming", func(t *testing.T) {
 		input := `Starting analysis...
