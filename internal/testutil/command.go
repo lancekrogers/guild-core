@@ -11,6 +11,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/lancekrogers/guild/pkg/project"
 )
 
 // CommandResult holds the result of running a command
@@ -64,15 +66,16 @@ func RunGuildCommand(t *testing.T, workDir string, args ...string) *CommandResul
 
 // ProjectContextExtensions adds command execution to ProjectContext
 type ProjectContextExtensions struct {
-	*ProjectContext
+	*project.Context
+	t *testing.T
 }
 
 // RunGuild runs a guild command in the project context
 func (p *ProjectContextExtensions) RunGuild(args ...string) *CommandResult {
-	return RunGuildCommand(p.t, p.RootPath, args...)
+	return RunGuildCommand(p.t, p.GetRootPath(), args...)
 }
 
 // ExtendProjectContext adds command execution capabilities to a ProjectContext
-func ExtendProjectContext(ctx *ProjectContext) *ProjectContextExtensions {
-	return &ProjectContextExtensions{ProjectContext: ctx}
+func ExtendProjectContext(t *testing.T, ctx *project.Context) *ProjectContextExtensions {
+	return &ProjectContextExtensions{Context: ctx, t: t}
 }

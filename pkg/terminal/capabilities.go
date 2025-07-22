@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/lancekrogers/guild/pkg/gerror"
@@ -223,7 +224,7 @@ func (c Capabilities) SupportsExtendedColor() bool {
 
 // SupportsRichUI checks if the terminal supports rich UI elements
 func (c Capabilities) SupportsRichUI() bool {
-	return c.Unicode && c.SupportsExtendedColor()
+	return c.Unicode && c.SupportsExtendedColor() && c.Mouse
 }
 
 // SupportsInteractivity checks if the terminal supports interactive features
@@ -267,13 +268,13 @@ func (c *Capabilities) EnvironmentOverrides() {
 	// Check for forced capabilities via environment
 	if os.Getenv("GUILD_FORCE_UNICODE") == "1" {
 		c.Unicode = true
-	} else if os.Getenv("GUILD_FORCE_UNICODE") == "0" {
+	} else if os.Getenv("GUILD_FORCE_UNICODE") == "0" || os.Getenv("GUILD_FORCE_NO_UNICODE") == "1" {
 		c.Unicode = false
 	}
 
 	if os.Getenv("GUILD_FORCE_MOUSE") == "1" {
 		c.Mouse = true
-	} else if os.Getenv("GUILD_FORCE_MOUSE") == "0" {
+	} else if os.Getenv("GUILD_FORCE_MOUSE") == "0" || os.Getenv("GUILD_FORCE_NO_MOUSE") == "1" {
 		c.Mouse = false
 	}
 
@@ -281,6 +282,11 @@ func (c *Capabilities) EnvironmentOverrides() {
 		switch os.Getenv("GUILD_FORCE_COLOR") {
 		case "0", "none":
 			c.Colors = NoColor
+		case "1":
+			// Force at least basic color support
+			if c.Colors < Basic16 {
+				c.Colors = Basic16
+			}
 		case "16":
 			c.Colors = Basic16
 		case "256":
@@ -289,6 +295,12 @@ func (c *Capabilities) EnvironmentOverrides() {
 			c.Colors = TrueColor24Bit
 			c.TrueColor = true
 		}
+	}
+
+	// Check for forced true color
+	if os.Getenv("GUILD_FORCE_TRUE_COLOR") == "1" {
+		c.Colors = TrueColor24Bit
+		c.TrueColor = true
 	}
 }
 
@@ -373,7 +385,55 @@ func (c Capabilities) Merge(other Capabilities) Capabilities {
 
 // String returns a string representation of the capabilities
 func (c Capabilities) String() string {
-	return c.Summary()
+	var parts []string
+	
+	parts = append(parts, fmt.Sprintf("Colors: %s", c.Colors))
+	
+	if c.Unicode {
+		parts = append(parts, "Unicode: true")
+	}
+	
+	if c.Mouse {
+		parts = append(parts, "Mouse: true")
+	}
+	
+	if c.Size {
+		parts = append(parts, "Size: true")
+	}
+	
+	if c.TrueColor {
+		parts = append(parts, "TrueColor: true")
+	}
+	
+	if c.Hyperlinks {
+		parts = append(parts, "Hyperlinks: true")
+	}
+	
+	if c.Images {
+		parts = append(parts, "Images: true")
+	}
+	
+	if c.CursorShape {
+		parts = append(parts, "CursorShape: true")
+	}
+	
+	if c.AlternateScreen {
+		parts = append(parts, "AlternateScreen: true")
+	}
+	
+	if c.Sixel {
+		parts = append(parts, "Sixel: true")
+	}
+	
+	if c.Kitty {
+		parts = append(parts, "Kitty: true")
+	}
+	
+	if c.ITerm2 {
+		parts = append(parts, "ITerm2: true")
+	}
+	
+	return strings.Join(parts, ", ")
 }
 
 // Copy creates a deep copy of the capabilities

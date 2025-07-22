@@ -34,6 +34,13 @@ type CommandProcessor struct {
 	templateManager templates.TemplateManager
 	guildClient     pb.GuildClient
 	prefService     *preferences.Service // Sprint 2: Preferences integration
+	agentRouter     AgentRouter          // For campaign commands
+}
+
+// AgentRouter interface for sending messages to agents
+type AgentRouter interface {
+	SendToAgent(agentID, message string) tea.Cmd
+	BroadcastToAll(message string) tea.Cmd
 }
 
 // CommandHandler defines the interface for command handlers
@@ -79,6 +86,15 @@ func (cp *CommandProcessor) SetPreferencesService(prefService *preferences.Servi
 	if cp.prefService != nil {
 		cp.handlers["preferences"] = NewPreferencesHandler(cp.prefService, cp.config.UserID, cp.config.CampaignID)
 		cp.handlers["prefs"] = cp.handlers["preferences"] // Alias
+	}
+}
+
+// SetAgentRouter sets the agent router for command handling
+func (cp *CommandProcessor) SetAgentRouter(agentRouter AgentRouter) {
+	cp.agentRouter = agentRouter
+	// Register campaign command that depends on agent router
+	if cp.agentRouter != nil {
+		cp.handlers["campaign"] = NewCampaignCommand(cp.agentRouter)
 	}
 }
 

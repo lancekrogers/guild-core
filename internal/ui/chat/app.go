@@ -316,6 +316,11 @@ func (app *App) initializeComponents() error {
 	// Initialize agent router
 	app.agentRouter = agents.NewAgentRouter(app.ctx, app.guildClient)
 
+	// Set agent router on command processor for campaign commands
+	if app.agentRouter != nil && app.commandProcessor != nil {
+		app.commandProcessor.SetAgentRouter(app.agentRouter)
+	}
+
 	// Initialize layout manager
 	app.layoutManager = layout.NewManager(app.config.Width, app.config.Height)
 	if err := app.layoutManager.Initialize(); err != nil {

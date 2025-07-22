@@ -109,6 +109,9 @@ func (d *Detector) Detect(ctx context.Context) (Capabilities, error) {
 		// Detect alternate screen support
 		caps.AlternateScreen = d.detectAlternateScreenSupport()
 
+		// Apply environment overrides last
+		caps.EnvironmentOverrides()
+
 		d.mu.Lock()
 		d.capabilities = &caps
 		d.mu.Unlock()
@@ -185,6 +188,11 @@ func (d *Detector) detectColorSupport() ColorSupport {
 
 // detectUnicodeSupport checks if the terminal supports Unicode
 func (d *Detector) detectUnicodeSupport() bool {
+	// Dumb terminals don't support Unicode
+	if d.term == "dumb" {
+		return false
+	}
+
 	// Windows has special handling
 	if d.platform == "windows" {
 		return d.detectWindowsUnicode()
@@ -377,13 +385,13 @@ func isRunningInCI() bool {
 func (cs ColorSupport) String() string {
 	switch cs {
 	case NoColor:
-		return "none"
+		return "no-color"
 	case Basic16:
-		return "16"
+		return "16-color"
 	case Extended256:
-		return "256"
+		return "256-color"
 	case TrueColor24Bit:
-		return "16m"
+		return "true-color"
 	default:
 		return "unknown"
 	}
