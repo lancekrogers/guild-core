@@ -130,4 +130,7 @@ const (
 
 	// EventOrchestratorError is emitted when the orchestrator encounters an error
 	EventOrchestratorError = "orchestrator.error"
+
+	// EventCommissionProcessed is emitted when a commission has been processed to tasks
+	EventCommissionProcessed = "commission.processed"
 )

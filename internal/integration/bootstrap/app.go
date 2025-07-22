@@ -31,9 +31,11 @@ type Application struct {
 	ServiceRegistry   *services.DefaultServiceRegistry
 
 	// Bridges
-	EventLoggerBridge      *bridges.EventLoggerBridge
-	PersistenceEventBridge *bridges.PersistenceEventBridge
-	UIEventBridge          *bridges.UIEventBridge
+	EventLoggerBridge          *bridges.EventLoggerBridge
+	PersistenceEventBridge     *bridges.PersistenceEventBridge
+	UIEventBridge              *bridges.UIEventBridge
+	OrchestratorCampaignBridge *bridges.OrchestratorCampaignBridge
+	AgentRegistrationBridge    *bridges.AgentRegistrationBridge
 
 	// Monitoring
 	Monitor MonitorInterface
@@ -450,6 +452,43 @@ func (app *Application) initializeBridges(ctx context.Context) error {
 		app.UIEventBridge = bridges.NewUIEventBridge(app.EventBus, app.Logger, config)
 	}
 
+	// Orchestrator Campaign Bridge - Always enable for multi-agent orchestration
+	orchestratorConfig := bridges.OrchestratorCampaignConfig{
+		Enabled:                true,
+		ProcessCommissionsSync: true,
+		MaxConcurrentAgents:    5,
+	}
+
+	// Create minimal adapters for the dependencies
+	// The actual wiring will be done after services are registered
+	app.OrchestratorCampaignBridge = bridges.NewOrchestratorCampaignBridge(
+		app.EventBus,
+		app.Logger,
+		orchestratorConfig,
+		nil, // Will be set after campaign manager is created
+		nil, // Will be set after commission manager is created
+		nil, // Will be set after task dispatcher is created
+		nil, // Will be set after agent registry is available
+	)
+
+	// Agent Registration Bridge - Manages agent registration with task dispatcher
+	agentRegConfig := bridges.AgentRegistrationConfig{
+		Enabled:               true,
+		AutoRegisterOnStartup: true,
+		LoadFromGuildConfig:   true,
+		GuildConfigPath:       "guild.yaml", // TODO: Get from actual config
+		MaxAgents:             10,
+	}
+
+	app.AgentRegistrationBridge = bridges.NewAgentRegistrationBridge(
+		app.EventBus,
+		app.Logger,
+		agentRegConfig,
+		nil, // Will be set after agent registry is available
+		nil, // Will be set after agent factory is created
+		nil, // Will be set after task dispatcher is available
+	)
+
 	return nil
 }
 
@@ -486,6 +525,20 @@ func (app *Application) registerServices(ctx context.Context) error {
 	if app.UIEventBridge != nil {
 		if err := app.ServiceRegistry.Register(app.UIEventBridge); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register UI event bridge").
+				WithComponent("bootstrap")
+		}
+	}
+
+	if app.OrchestratorCampaignBridge != nil {
+		if err := app.ServiceRegistry.Register(app.OrchestratorCampaignBridge); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register orchestrator campaign bridge").
+				WithComponent("bootstrap")
+		}
+	}
+
+	if app.AgentRegistrationBridge != nil {
+		if err := app.ServiceRegistry.Register(app.AgentRegistrationBridge); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register agent registration bridge").
 				WithComponent("bootstrap")
 		}
 	}
@@ -666,6 +719,31 @@ func (app *Application) setupDependencies(ctx context.Context) error {
 	if err := app.ServiceRegistry.SetDependency("agent-manager-service", "memory-service"); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to set agent-manager->memory dependency").
 			WithComponent("bootstrap")
+	}
+
+	// Wire the orchestrator campaign bridge with actual services
+	if app.OrchestratorCampaignBridge != nil {
+		adapter := bridges.NewServiceRegistryAdapter(app.ServiceRegistry)
+		if err := bridges.WireOrchestratorCampaignBridge(
+			app.OrchestratorCampaignBridge,
+			adapter,
+		); err != nil {
+			app.Logger.WithError(err).WarnContext(ctx, "Failed to wire orchestrator campaign bridge")
+			// Don't fail - bridge will still emit events
+		}
+	}
+
+	// Wire the agent registration bridge with actual services
+	if app.AgentRegistrationBridge != nil {
+		adapter := bridges.NewServiceRegistryAdapter(app.ServiceRegistry)
+		if err := bridges.WireAgentRegistrationBridge(
+			app.AgentRegistrationBridge,
+			adapter,
+			app.ComponentRegistry,
+		); err != nil {
+			app.Logger.WithError(err).WarnContext(ctx, "Failed to wire agent registration bridge")
+			// Don't fail - bridge will still emit events
+		}
 	}
 
 	// TODO: Add more dependencies as services are registered
