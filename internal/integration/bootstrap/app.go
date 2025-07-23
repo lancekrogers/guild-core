@@ -36,6 +36,7 @@ type Application struct {
 	UIEventBridge              *bridges.UIEventBridge
 	OrchestratorCampaignBridge *bridges.OrchestratorCampaignBridge
 	AgentRegistrationBridge    *bridges.AgentRegistrationBridge
+	CommissionProcessorBridge  *bridges.CommissionProcessorBridge
 
 	// Monitoring
 	Monitor MonitorInterface
@@ -489,6 +490,12 @@ func (app *Application) initializeBridges(ctx context.Context) error {
 		nil, // Will be set after task dispatcher is available
 	)
 
+	// Commission Processor Bridge - Handles commission to task conversion
+	app.CommissionProcessorBridge = bridges.NewCommissionProcessorBridge(
+		app.ComponentRegistry,
+		app.Logger,
+	)
+
 	return nil
 }
 
@@ -542,6 +549,9 @@ func (app *Application) registerServices(ctx context.Context) error {
 				WithComponent("bootstrap")
 		}
 	}
+
+	// Note: CommissionProcessorBridge is not a service, it's just a helper bridge
+	// It doesn't need to be registered with the service registry
 
 	// Register core services
 
@@ -743,6 +753,28 @@ func (app *Application) setupDependencies(ctx context.Context) error {
 		); err != nil {
 			app.Logger.WithError(err).WarnContext(ctx, "Failed to wire agent registration bridge")
 			// Don't fail - bridge will still emit events
+		}
+	}
+
+	// Initialize and wire the commission processor bridge
+	if app.CommissionProcessorBridge != nil {
+		// Initialize the commission processor (this loads the integration service)
+		if err := app.CommissionProcessorBridge.Initialize(ctx); err != nil {
+			app.Logger.WithError(err).WarnContext(ctx, "Failed to initialize commission processor bridge")
+			// Don't fail - the orchestrator campaign bridge will emit events instead
+		}
+
+		// Wire commission processing to the orchestrator campaign bridge
+		if app.OrchestratorCampaignBridge != nil {
+			if err := bridges.WireCommissionProcessing(
+				app.OrchestratorCampaignBridge,
+				app.CommissionProcessorBridge,
+			); err != nil {
+				app.Logger.WithError(err).WarnContext(ctx, "Failed to wire commission processing")
+				// Don't fail - the bridge will emit events for other components to handle
+			} else {
+				app.Logger.InfoContext(ctx, "Commission processing wired to campaign orchestration")
+			}
 		}
 	}
 
