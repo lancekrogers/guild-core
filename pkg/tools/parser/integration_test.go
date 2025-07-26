@@ -330,7 +330,9 @@ I've initiated the search...`,
 			} else {
 				require.NoError(t, err)
 				assert.Equal(t, tt.wantFormat, format)
-				assert.GreaterOrEqual(t, confidence, tt.minConfidence,
+				// Use a small epsilon for floating point comparison
+				const epsilon = 1e-9
+				assert.True(t, confidence >= tt.minConfidence-epsilon,
 					"Confidence %f is below minimum %f", confidence, tt.minConfidence)
 			}
 		})
@@ -449,10 +451,10 @@ func TestIntegration_ComplexArguments(t *testing.T) {
 	// Re-marshal and compare as JSON to handle type conversions
 	expectedJSON, _ := json.Marshal(complexArgs)
 	actualJSON, _ := json.Marshal(parsedArgs)
-	
+
 	var expected, actual interface{}
 	json.Unmarshal(expectedJSON, &expected)
 	json.Unmarshal(actualJSON, &actual)
-	
+
 	assert.Equal(t, expected, actual)
 }

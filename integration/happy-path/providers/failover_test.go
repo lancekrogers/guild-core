@@ -719,7 +719,7 @@ func TestProviderFailover_HappyPath(t *testing.T) {
 			for _, event := range failoverEvents {
 				assert.LessOrEqual(t, event.FailoverDuration, scenario.expectedFailoverTime,
 					"Failover time exceeded target: %v > %v", event.FailoverDuration, scenario.expectedFailoverTime)
-				assert.Equal(t, FailoverReason_ProviderFailure, event.Reason,
+				assert.Equal(t, FailoverReasonProviderFailure, event.Reason,
 					"Unexpected failover reason: %v", event.Reason)
 			}
 

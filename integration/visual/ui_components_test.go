@@ -138,10 +138,10 @@ func (m testListModel) View() string {
 	if m.quitting {
 		return "Goodbye!\n"
 	}
-	
+
 	var s strings.Builder
 	s.WriteString("List (use j/k or arrows to navigate):\n")
-	
+
 	// Show a window of items
 	start := m.selected - 2
 	if start < 0 {
@@ -155,7 +155,7 @@ func (m testListModel) View() string {
 			start = 0
 		}
 	}
-	
+
 	for i := start; i < end; i++ {
 		if i == m.selected {
 			s.WriteString("> ")
@@ -165,7 +165,7 @@ func (m testListModel) View() string {
 		s.WriteString(m.items[i])
 		s.WriteString("\n")
 	}
-	
+
 	return s.String()
 }
 
@@ -195,7 +195,7 @@ func TestUIComponents(t *testing.T) {
 		// Test theme switching
 		start := time.Now()
 		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("t")})
-		
+
 		// Wait for theme to change
 		teatest.WaitFor(
 			t,
@@ -206,11 +206,11 @@ func TestUIComponents(t *testing.T) {
 			teatest.WithCheckInterval(10*time.Millisecond),
 			teatest.WithDuration(100*time.Millisecond),
 		)
-		
+
 		switchDuration := time.Since(start)
 		assert.LessOrEqual(t, switchDuration, 50*time.Millisecond,
 			"Theme switch should complete quickly")
-		
+
 		t.Logf("Theme switch took %v", switchDuration)
 
 		// Test quit
@@ -262,9 +262,9 @@ func TestUIComponents(t *testing.T) {
 		// Navigate down
 		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("j")})
 		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("j")})
-		
+
 		time.Sleep(50 * time.Millisecond)
-		
+
 		output := string(tm.Output())
 		assert.Contains(t, output, "> Item 3", "Should select third item")
 
@@ -307,10 +307,10 @@ func TestUIComponents(t *testing.T) {
 				})
 
 				time.Sleep(50 * time.Millisecond)
-				
+
 				output := tm.Output()
 				lines := bytes.Split(output, []byte("\n"))
-				
+
 				// Basic validation - content should fit
 				for i, line := range lines {
 					assert.LessOrEqual(t, len(line), size.width,
@@ -349,7 +349,7 @@ func TestUIPerformance(t *testing.T) {
 
 		// Measure frame times by sending multiple updates
 		frameTimes := make([]time.Duration, 0, 10)
-		
+
 		for i := 0; i < 10; i++ {
 			start := time.Now()
 			tm.Send(tickMsg(time.Now()))
@@ -363,11 +363,11 @@ func TestUIPerformance(t *testing.T) {
 			total += ft
 		}
 		avgFrameTime := total / time.Duration(len(frameTimes))
-		
+
 		// Should maintain smooth frame rate
 		assert.LessOrEqual(t, avgFrameTime, 20*time.Millisecond,
 			"Should maintain smooth frame rate")
-		
+
 		t.Logf("Average frame time: %v (%.1f fps)",
 			avgFrameTime, 1000/float64(avgFrameTime.Milliseconds()))
 
@@ -392,7 +392,7 @@ func TestUIPerformance(t *testing.T) {
 
 		// Measure rapid scrolling
 		scrollStart := time.Now()
-		
+
 		// Scroll down rapidly
 		for i := 0; i < 20; i++ {
 			tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("j")})
@@ -400,11 +400,11 @@ func TestUIPerformance(t *testing.T) {
 		}
 
 		scrollDuration := time.Since(scrollStart)
-		
+
 		// Should handle rapid scrolling smoothly
 		assert.LessOrEqual(t, scrollDuration, 400*time.Millisecond,
 			"Scrolling should be smooth and responsive")
-		
+
 		t.Logf("Rapid scroll test took %v", scrollDuration)
 
 		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
@@ -466,14 +466,14 @@ func TestUIAccessibility(t *testing.T) {
 		// Test arrow keys
 		tm.Send(tea.KeyMsg{Type: tea.KeyDown})
 		time.Sleep(50 * time.Millisecond)
-		
+
 		output := string(tm.Output())
 		assert.Contains(t, output, "> Item 2", "Down arrow should work")
 
 		// Test vim keys
 		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("k")})
 		time.Sleep(50 * time.Millisecond)
-		
+
 		output = string(tm.Output())
 		assert.Contains(t, output, "> Item 1", "Vim key 'k' should work")
 
@@ -499,7 +499,7 @@ func TestUIAccessibility(t *testing.T) {
 		// Verify clear focus indicator
 		output := string(tm.Output())
 		assert.Contains(t, output, ">", "Should have clear focus indicator")
-		
+
 		// Count selected items (should be exactly one)
 		selectedCount := strings.Count(output, ">")
 		assert.Equal(t, 1, selectedCount, "Should have exactly one selected item")

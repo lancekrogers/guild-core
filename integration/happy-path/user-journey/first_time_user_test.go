@@ -17,21 +17,9 @@ import (
 	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
-// UserJourney represents a complete user workflow to be tested
-type UserJourney struct {
-	Name            string
-	Context         context.Context
-	Steps           []JourneyStep
-	SuccessCriteria JourneySuccessCriteria
-}
+// Note: UserJourney is defined in user_journey_framework.go
 
-// JourneyStep represents a single step in the user journey
-type JourneyStep struct {
-	Name        string
-	MaxDuration time.Duration
-	Execute     func(*UserJourneyFramework) (*StepResult, error)
-	Validate    func(*UserJourneyFramework, *StepResult) error
-}
+// Note: JourneyStep is defined in user_journey_framework.go
 
 // JourneySuccessCriteria defines what constitutes success for the journey
 type JourneySuccessCriteria struct {
@@ -41,16 +29,7 @@ type JourneySuccessCriteria struct {
 	ErrorRecovery    int           // Percentage of errors that should be recoverable
 }
 
-// StepResult represents the outcome of executing a journey step
-type StepResult struct {
-	Success      bool
-	Duration     time.Duration
-	Output       string
-	Metadata     map[string]interface{}
-	UserActions  []UserAction
-	SystemEvents []SystemEvent
-	QualityScore int
-}
+// Note: StepResult is defined in user_journey_framework.go
 
 // JourneyResult represents the outcome of executing a complete journey
 type JourneyResult struct {

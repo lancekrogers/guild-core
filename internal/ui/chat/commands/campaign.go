@@ -85,10 +85,10 @@ func (c *CampaignCommand) startCampaign(ctx context.Context, commissionRef strin
 	return func() tea.Msg {
 		// For now, demonstrate the UI flow
 		// In production, this would integrate with the actual campaign manager
-		
+
 		// Simulate starting a campaign
 		campaignID := fmt.Sprintf("campaign-%d", time.Now().Unix())
-		
+
 		// Send message to agents about the campaign
 		if c.agentRouter != nil {
 			message := fmt.Sprintf("Starting multi-agent campaign for: %s", commissionRef)
@@ -103,11 +103,11 @@ func (c *CampaignCommand) startCampaign(ctx context.Context, commissionRef strin
 			Type: "started",
 			Message: fmt.Sprintf(
 				"🚀 **Campaign Started!**\n\n"+
-				"**Commission:** %s\n"+
-				"**Campaign ID:** %s\n\n"+
-				"Multiple agents are now working on your commission.\n"+
-				"Use `/campaign status` to monitor progress.\n\n"+
-				"*Note: This is a preview of the campaign feature.*",
+					"**Commission:** %s\n"+
+					"**Campaign ID:** %s\n\n"+
+					"Multiple agents are now working on your commission.\n"+
+					"Use `/campaign status` to monitor progress.\n\n"+
+					"*Note: This is a preview of the campaign feature.*",
 				commissionRef,
 				campaignID,
 			),

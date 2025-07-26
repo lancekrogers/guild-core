@@ -33,25 +33,25 @@ helping to debug and verify the event flow.`,
 			"campaign.planning_started",
 			"campaign.ready",
 			"campaign.completed",
-			
+
 			// Commission events
 			"commission.created",
 			"commission.process_requested",
 			"commission.refined",
 			"commission.tasks_extracted",
-			
+
 			// Task events
 			"task.created",
 			"task.assigned",
 			"task.started",
 			"task.completed",
-			
+
 			// Agent events
 			"agent.discovered",
 			"agent.registered",
 			"agent.task_received",
 			"agent.task_completed",
-			
+
 			// Orchestration events
 			"orchestration.started",
 			"orchestration.agent_assigned",
@@ -64,11 +64,11 @@ helping to debug and verify the event flow.`,
 			_, err := eventBus.Subscribe(ctx, et, func(ctx context.Context, e events.CoreEvent) error {
 				timestamp := time.Now().Format("15:04:05.000")
 				data := e.GetData()
-				
+
 				// Format event display
 				fmt.Printf("\n[%s] %s %s\n", timestamp, colorEvent(e.GetType()), e.GetID())
 				fmt.Printf("  Source: %s\n", e.GetSource())
-				
+
 				// Display key data fields
 				if campaignID, ok := data["campaign_id"]; ok {
 					fmt.Printf("  Campaign: %s\n", campaignID)
@@ -82,15 +82,15 @@ helping to debug and verify the event flow.`,
 				if agentID, ok := data["agent_id"]; ok {
 					fmt.Printf("  Agent: %s\n", agentID)
 				}
-				
+
 				// Display any error
 				if err, ok := data["error"]; ok {
 					fmt.Printf("  ❌ Error: %v\n", err)
 				}
-				
+
 				return nil
 			})
-			
+
 			if err != nil {
 				return fmt.Errorf("failed to subscribe to %s: %w", et, err)
 			}

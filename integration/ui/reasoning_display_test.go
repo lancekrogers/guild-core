@@ -59,28 +59,19 @@ Second thought process.
 				expected: 2,
 			},
 			{
-				name: "nested_markdown",
-				input: `<thinking>
-## Analysis
-- Point 1
-- Point 2
-
-\`\`\`python
-def example():
-    return True
-\`\`\`
-</thinking>`,
+				name:     "nested_markdown",
+				input:    "<thinking>\n## Analysis\n- Point 1\n- Point 2\n\n```python\ndef example():\n    return True\n```\n</thinking>",
 				expected: 1,
 			},
 		}
 
 		parser := reasoning.NewThinkingBlockParser(nil)
-		
+
 		for _, tc := range testCases {
 			t.Run(tc.name, func(t *testing.T) {
 				blocks, err := parser.Parse(tc.input)
 				require.NoError(t, err)
-				assert.Equal(t, tc.expected, len(blocks), 
+				assert.Equal(t, tc.expected, len(blocks),
 					"Expected %d thinking blocks, got %d", tc.expected, len(blocks))
 			})
 		}
@@ -89,7 +80,7 @@ def example():
 	t.Run("streaming_display", func(t *testing.T) {
 		// Test streaming of reasoning content
 		streamer := reasoning.NewReasoningStreamer(nil, nil, nil)
-		
+
 		// Simulate streaming content
 		content := `<thinking>
 Let me analyze this step by step:
@@ -101,16 +92,16 @@ Let me analyze this step by step:
 		// Stream character by character
 		var mu sync.Mutex
 		var displayed strings.Builder
-		
+
 		for _, char := range content {
 			chunk := string(char)
 			output, err := streamer.ProcessChunk(chunk)
 			require.NoError(t, err)
-			
+
 			mu.Lock()
 			displayed.WriteString(output)
 			mu.Unlock()
-			
+
 			// Simulate realistic streaming delay
 			time.Sleep(time.Millisecond)
 		}
@@ -121,7 +112,7 @@ Let me analyze this step by step:
 
 	t.Run("formatting_consistency", func(t *testing.T) {
 		formatter := reasoning.NewReasoningFormatter()
-		
+
 		// Test different content types
 		contents := []struct {
 			name     string
@@ -129,14 +120,8 @@ Let me analyze this step by step:
 			wantErr  bool
 		}{
 			{
-				name: "code_blocks",
-				thinking: `<thinking>
-\`\`\`go
-func main() {
-    fmt.Println("Hello")
-}
-\`\`\`
-</thinking>`,
+				name:     "code_blocks",
+				thinking: "<thinking>\n```go\nfunc main() {\n    fmt.Println(\"Hello\")\n}\n```\n</thinking>",
 			},
 			{
 				name: "lists",
@@ -174,7 +159,7 @@ Some **bold** and *italic* text.
 
 	t.Run("performance_large_blocks", func(t *testing.T) {
 		parser := reasoning.NewThinkingBlockParser(nil)
-		
+
 		// Generate large thinking block
 		var largeBlock strings.Builder
 		largeBlock.WriteString("<thinking>\n")
@@ -190,7 +175,7 @@ Some **bold** and *italic* text.
 
 		require.NoError(t, err)
 		assert.Len(t, blocks, 1)
-		
+
 		// Should parse large blocks quickly
 		assert.LessOrEqual(t, duration, 100*time.Millisecond,
 			"Large block parsing should be fast, took %v", duration)
@@ -206,7 +191,7 @@ Some **bold** and *italic* text.
 			wg.Add(1)
 			go func(streamID int) {
 				defer wg.Done()
-				
+
 				streamer := reasoning.NewReasoningStreamer(nil, nil, nil)
 				content := fmt.Sprintf(`<thinking>
 Stream %d reasoning:
@@ -237,11 +222,11 @@ Stream %d reasoning:
 
 	t.Run("token_counting", func(t *testing.T) {
 		counter := reasoning.NewTokenCounter()
-		
+
 		testCases := []struct {
-			content      string
-			minTokens    int
-			maxTokens    int
+			content   string
+			minTokens int
+			maxTokens int
 		}{
 			{
 				content:   "Hello world",
@@ -266,7 +251,7 @@ Stream %d reasoning:
 
 	t.Run("error_handling", func(t *testing.T) {
 		parser := reasoning.NewThinkingBlockParser(nil)
-		
+
 		// Test malformed blocks
 		malformed := []string{
 			"<thinking>Unclosed block",

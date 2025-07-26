@@ -31,7 +31,7 @@ func TestChatInterface(t *testing.T) {
 		Name: "chat-interface-test",
 	})
 	defer cleanup()
-	
+
 	extCtx := testutil.ExtendProjectContext(projCtx)
 
 	t.Run("chat_commands", func(t *testing.T) {
@@ -75,7 +75,7 @@ func TestChatPerformance(t *testing.T) {
 		Name: "chat-performance",
 	})
 	defer cleanup()
-	
+
 	extCtx := testutil.ExtendProjectContext(projCtx)
 
 	// Initialize
@@ -133,7 +133,7 @@ func TestChatResilience(t *testing.T) {
 		Name: "chat-resilience",
 	})
 	defer cleanup()
-	
+
 	extCtx := testutil.ExtendProjectContext(projCtx)
 
 	// Initialize

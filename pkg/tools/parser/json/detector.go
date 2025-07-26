@@ -190,6 +190,8 @@ func (d *Detector) findJSONStarts(input []byte) []int {
 				ahead := string(input[i:min(i+50, len(input))])
 				if strings.Contains(ahead, `"tool_calls"`) ||
 					strings.Contains(ahead, `"function_call"`) ||
+					strings.Contains(ahead, `"function"`) ||
+					strings.Contains(ahead, `"choices"`) ||
 					strings.Contains(ahead, `"type"`) {
 					positions = append(positions, i)
 				}
@@ -367,6 +369,29 @@ func (d *Detector) analyzeOpenAIObject(obj map[string]interface{}) float64 {
 		if fc, ok := funcCall.(map[string]interface{}); ok {
 			if fc["name"] != nil && fc["arguments"] != nil {
 				confidence = max(confidence, 0.8)
+			}
+		}
+	}
+
+	// Check for function field (even older format)
+	if funcObj, exists := obj["function"]; exists {
+		if fc, ok := funcObj.(map[string]interface{}); ok {
+			if fc["name"] != nil && fc["arguments"] != nil {
+				confidence = max(confidence, 0.8)
+			}
+		}
+	}
+
+	// Check for OpenAI chat completion format with choices
+	if choices, exists := obj["choices"]; exists {
+		if choicesArr, ok := choices.([]interface{}); ok && len(choicesArr) > 0 {
+			// Check first choice for message with tool_calls
+			if choice, ok := choicesArr[0].(map[string]interface{}); ok {
+				if msg, ok := choice["message"].(map[string]interface{}); ok {
+					// Recursively analyze the message
+					msgConf := d.analyzeOpenAIObject(msg)
+					confidence = max(confidence, msgConf*0.9) // Slightly lower confidence for nested
+				}
 			}
 		}
 	}

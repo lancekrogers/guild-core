@@ -82,45 +82,45 @@ type Agent struct {
 
 // Performance tracks agent performance metrics
 type Performance struct {
-	TasksCompleted   int
-	SuccessRate      float64
-	AverageTaskTime  time.Duration
-	ErrorCount       int
-	LastActiveTime   time.Time
+	TasksCompleted  int
+	SuccessRate     float64
+	AverageTaskTime time.Duration
+	ErrorCount      int
+	LastActiveTime  time.Time
 }
 
 // Workflow represents a workflow in the system
 type Workflow struct {
-	ID            string
-	Type          WorkflowType
-	Name          string
-	Description   string
-	Status        string
-	Steps         []WorkflowStep
-	CurrentStep   int
-	Agents        []string
-	Tasks         []string
-	Outputs       []WorkflowOutput
-	StartTime     time.Time
-	EndTime       *time.Time
-	Metadata      map[string]interface{}
-	InitialTask   *Task
-	Participants  []string
-	mu            sync.RWMutex
+	ID           string
+	Type         WorkflowType
+	Name         string
+	Description  string
+	Status       string
+	Steps        []WorkflowStep
+	CurrentStep  int
+	Agents       []string
+	Tasks        []string
+	Outputs      []WorkflowOutput
+	StartTime    time.Time
+	EndTime      *time.Time
+	Metadata     map[string]interface{}
+	InitialTask  *Task
+	Participants []string
+	mu           sync.RWMutex
 }
 
 // WorkflowStep represents a single step in a workflow
 type WorkflowStep struct {
-	ID          string
-	Name        string
-	Type        string
-	AgentID     string
-	TaskID      string
-	Status      string
-	StartTime   *time.Time
-	EndTime     *time.Time
-	Outputs     []WorkflowOutput
-	Error       error
+	ID        string
+	Name      string
+	Type      string
+	AgentID   string
+	TaskID    string
+	Status    string
+	StartTime *time.Time
+	EndTime   *time.Time
+	Outputs   []WorkflowOutput
+	Error     error
 }
 
 // SystemState represents the overall system state
@@ -135,11 +135,11 @@ type SystemState struct {
 
 // KanbanSystemState represents the state of the Kanban system
 type KanbanSystemState struct {
-	Boards       map[string]*kanban.Board
-	Tasks        map[string]*kanban.Task
-	TaskHistory  map[string][]*kanban.Task
-	TaskMetrics  map[string]*TaskMetrics
-	ActiveTasks  map[string]*Task
+	Boards      map[string]*kanban.Board
+	Tasks       map[string]*kanban.Task
+	TaskHistory map[string][]*kanban.Task
+	TaskMetrics map[string]*TaskMetrics
+	ActiveTasks map[string]*Task
 }
 
 // RAGSystemState represents the state of the RAG system
@@ -170,23 +170,23 @@ type SearchQuery struct {
 
 // TaskMetrics represents metrics for a task
 type TaskMetrics struct {
-	CreatedAt    time.Time
-	StartedAt    *time.Time
-	CompletedAt  *time.Time
-	TimeInStatus map[string]time.Duration
+	CreatedAt       time.Time
+	StartedAt       *time.Time
+	CompletedAt     *time.Time
+	TimeInStatus    map[string]time.Duration
 	AssigneeHistory []string
 }
 
 // SystemMetrics represents overall system metrics
 type SystemMetrics struct {
-	TotalTasks      int
-	CompletedTasks  int
-	ActiveAgents    int
-	ActiveWorkflows int
-	TotalQueries    int
+	TotalTasks       int
+	CompletedTasks   int
+	ActiveAgents     int
+	ActiveWorkflows  int
+	TotalQueries     int
 	AverageQueryTime time.Duration
-	ErrorRate       float64
-	Throughput      float64
+	ErrorRate        float64
+	Throughput       float64
 }
 
 // IntegrationMetrics tracks integration test metrics

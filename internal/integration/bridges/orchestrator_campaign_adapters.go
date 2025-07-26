@@ -50,7 +50,7 @@ func (s *ServiceAdapter) GetCampaignManager() (CampaignManager, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Adapter pattern to convert the service to our interface
 	return &campaignManagerAdapter{service: service}, nil
 }
@@ -61,7 +61,7 @@ func (s *ServiceAdapter) GetTaskDispatcher() (TaskDispatcher, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Adapter pattern to convert the service to our interface
 	return &taskDispatcherAdapter{service: service}, nil
 }
@@ -72,7 +72,7 @@ func (s *ServiceAdapter) GetAgentRegistry() (AgentRegistry, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Adapter pattern to convert the service to our interface
 	return &agentRegistryAdapter{service: service}, nil
 }
@@ -183,10 +183,10 @@ func WireAgentRegistrationBridge(
 ) error {
 	// Get agent registry from component registry
 	// This is a simplified approach - in reality we'd need proper interface adapters
-	
+
 	// For now, create adapters that provide the required interfaces
 	// These would be replaced with actual service integration
-	
+
 	// Create agent factory adapter
 	if compReg, ok := componentRegistry.(interface{ Agents() interface{} }); ok {
 		agentReg := compReg.Agents()
@@ -196,10 +196,10 @@ func WireAgentRegistrationBridge(
 			bridge.AgentRegistry = agentReg.(registry.AgentRegistry)
 		}
 	}
-	
+
 	// Create task dispatcher adapter
 	taskDispatcher := NewTaskDispatcherAdapter(nil) // Placeholder
 	bridge.TaskDispatcher = taskDispatcher
-	
+
 	return nil
 }

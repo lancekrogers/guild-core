@@ -117,7 +117,7 @@ func TestProfileDetector_Detect(t *testing.T) {
 				"JENKINS_URL", "TRAVIS", "CIRCLECI", "GITHUB_ACTIONS",
 				"GITLAB_CI", "BUILDKITE", "DRONE", "TEAMCITY_VERSION",
 			}
-			
+
 			oldEnv := make(map[string]string)
 			// Save CI vars
 			for _, k := range ciVars {
@@ -130,7 +130,7 @@ func TestProfileDetector_Detect(t *testing.T) {
 					oldEnv[k] = os.Getenv(k)
 				}
 			}
-			
+
 			defer func() {
 				for k, v := range oldEnv {
 					if v == "" {
@@ -296,7 +296,7 @@ func TestProfileDetector_Reset(t *testing.T) {
 		"JENKINS_URL", "TRAVIS", "CIRCLECI", "GITHUB_ACTIONS",
 		"GITLAB_CI", "BUILDKITE", "DRONE", "TEAMCITY_VERSION",
 	}
-	
+
 	oldEnv := make(map[string]string)
 	for _, k := range envVars {
 		oldEnv[k] = os.Getenv(k)
@@ -330,7 +330,7 @@ func TestProfileDetector_Reset(t *testing.T) {
 	// Next detection should create new
 	profile3, err := pd.Detect(ctx)
 	require.NoError(t, err)
-	
+
 	// If a registered profile is detected, the objects will be the same
 	// If auto-detected, they should be different objects
 	if profile1.Name == "detected" {

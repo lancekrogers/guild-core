@@ -259,13 +259,7 @@ func TestBoardPersistenceUnderLoad(t *testing.T) {
 		"consistency", consistency)
 }
 
-type PersistenceResult struct {
-	Operation string
-	Duration  time.Duration
-	Success   bool
-	Error     error
-	Timestamp time.Time
-}
+// Note: PersistenceResult is defined in framework.go
 
 // Framework methods for persistence testing
 

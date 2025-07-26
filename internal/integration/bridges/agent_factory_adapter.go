@@ -56,7 +56,7 @@ func (t *TaskDispatcherAdapter) RegisterAgent(agent core.Agent) error {
 	// For now, this is a placeholder - in a real implementation this would
 	// call the actual dispatcher's RegisterAgent method
 	// The dispatcher interface mismatch makes this challenging to implement directly
-	
+
 	// Instead, we emit an event that other components can listen to
 	return nil
 }

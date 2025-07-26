@@ -386,53 +386,53 @@ func (c Capabilities) Merge(other Capabilities) Capabilities {
 // String returns a string representation of the capabilities
 func (c Capabilities) String() string {
 	var parts []string
-	
+
 	parts = append(parts, fmt.Sprintf("Colors: %s", c.Colors))
-	
+
 	if c.Unicode {
 		parts = append(parts, "Unicode: true")
 	}
-	
+
 	if c.Mouse {
 		parts = append(parts, "Mouse: true")
 	}
-	
+
 	if c.Size {
 		parts = append(parts, "Size: true")
 	}
-	
+
 	if c.TrueColor {
 		parts = append(parts, "TrueColor: true")
 	}
-	
+
 	if c.Hyperlinks {
 		parts = append(parts, "Hyperlinks: true")
 	}
-	
+
 	if c.Images {
 		parts = append(parts, "Images: true")
 	}
-	
+
 	if c.CursorShape {
 		parts = append(parts, "CursorShape: true")
 	}
-	
+
 	if c.AlternateScreen {
 		parts = append(parts, "AlternateScreen: true")
 	}
-	
+
 	if c.Sixel {
 		parts = append(parts, "Sixel: true")
 	}
-	
+
 	if c.Kitty {
 		parts = append(parts, "Kitty: true")
 	}
-	
+
 	if c.ITerm2 {
 		parts = append(parts, "ITerm2: true")
 	}
-	
+
 	return strings.Join(parts, ", ")
 }
 

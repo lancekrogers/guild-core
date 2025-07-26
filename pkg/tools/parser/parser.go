@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"sync"
 	"time"
+	"unicode/utf8"
 
 	"github.com/lancekrogers/guild/pkg/gerror"
 	"github.com/lancekrogers/guild/pkg/observability"
@@ -207,13 +208,30 @@ func (p *RobustParser) normalizeInput(input []byte) []byte {
 	// Remove BOM if present
 	input = bytes.TrimPrefix(input, []byte{0xEF, 0xBB, 0xBF})
 
+	// Handle invalid UTF-8 by replacing invalid sequences with spaces
+	// This ensures the parser can still process the valid parts
+	if !utf8.Valid(input) {
+		cleaned := make([]byte, 0, len(input))
+		for i := 0; i < len(input); {
+			r, size := utf8.DecodeRune(input[i:])
+			if r == utf8.RuneError && size == 1 {
+				// Invalid UTF-8 sequence, replace with space
+				cleaned = append(cleaned, ' ')
+				i++
+			} else {
+				cleaned = append(cleaned, input[i:i+size]...)
+				i += size
+			}
+		}
+		input = cleaned
+	}
+
 	// Trim excessive whitespace
 	input = bytes.TrimSpace(input)
 
-	// Handle common encoding issues would go here
-
 	return input
 }
+
 
 // postProcess validates and normalizes parsed tool calls
 func (p *RobustParser) postProcess(calls []ToolCall) []ToolCall {

@@ -150,12 +150,12 @@ func ExtractTraceContext(ctx context.Context) (traceID, spanID string) {
 	if span.SpanContext().IsValid() {
 		return span.SpanContext().TraceID().String(), span.SpanContext().SpanID().String()
 	}
-	
+
 	// Check for injected context (for testing)
 	if tc, ok := ctx.Value(traceContextKey{}).(struct{ TraceID, SpanID string }); ok {
 		return tc.TraceID, tc.SpanID
 	}
-	
+
 	// Return zero-filled IDs when no valid span
 	return "00000000000000000000000000000000", "0000000000000000"
 }

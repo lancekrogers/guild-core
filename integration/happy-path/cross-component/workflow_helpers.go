@@ -530,4 +530,3 @@ func (f *CrossComponentTestFramework) updateRAGWithWorkflowKnowledge(ctx context
 	f.t.Logf("Updated RAG system with workflow knowledge from %s", knowledge.WorkflowID)
 	return nil
 }
-

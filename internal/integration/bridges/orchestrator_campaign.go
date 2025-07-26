@@ -19,7 +19,7 @@ type OrchestratorCampaignBridge struct {
 	logger        observability.Logger
 	subscriptions map[string]events.SubscriptionID
 	mu            sync.RWMutex
-	
+
 	// Dependencies injected via constructor
 	campaignManager       CampaignManager
 	commissionManager     CommissionManager
@@ -149,7 +149,7 @@ func (b *OrchestratorCampaignBridge) Stop(ctx context.Context) error {
 	// Unsubscribe from all events
 	for eventType, subID := range b.subscriptions {
 		if err := b.eventBus.Unsubscribe(ctx, subID); err != nil {
-			b.logger.WithError(err).ErrorContext(ctx, "Failed to unsubscribe from event", 
+			b.logger.WithError(err).ErrorContext(ctx, "Failed to unsubscribe from event",
 				"event_type", eventType)
 		}
 	}
@@ -273,7 +273,7 @@ func (b *OrchestratorCampaignBridge) handleCampaignPlanningStarted(ctx context.C
 		b.logger.InfoContext(ctx, "Planning tasks for commission",
 			"commission_id", commissionID,
 			"campaign_id", campaignID)
-		
+
 		if err := b.processCommission(ctx, commissionID, campaignID); err != nil {
 			b.logger.WithError(err).ErrorContext(ctx, "Failed to plan commission",
 				"commission_id", commissionID,
@@ -296,7 +296,7 @@ func (b *OrchestratorCampaignBridge) processCommission(ctx context.Context, comm
 	if b.processCommissionFunc != nil {
 		return b.processCommissionFunc(ctx, commissionID)
 	}
-	
+
 	// Otherwise, just emit an event that commission needs processing
 	event := events.NewBaseEvent(
 		generateEventID(),
@@ -308,7 +308,7 @@ func (b *OrchestratorCampaignBridge) processCommission(ctx context.Context, comm
 		},
 	)
 	b.eventBus.Publish(ctx, event)
-	
+
 	return nil
 }
 
@@ -327,7 +327,7 @@ func (b *OrchestratorCampaignBridge) initializeAgents(ctx context.Context) error
 			"agent_id", agentConfig.ID,
 			"agent_name", agentConfig.Name,
 			"agent_type", agentConfig.Type)
-		
+
 		// Emit event for agent discovery
 		event := events.NewBaseEvent(
 			generateEventID(),

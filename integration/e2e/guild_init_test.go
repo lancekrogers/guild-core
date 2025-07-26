@@ -24,12 +24,12 @@ func TestGuildInitialization(t *testing.T) {
 	}
 
 	tests := []struct {
-		name           string
-		setupFunc      func(t *testing.T, dir string)
-		args           []string
-		validateFunc   func(t *testing.T, dir string, result *testutil.CommandResult)
-		wantError      bool
-		wantInOutput   string
+		name         string
+		setupFunc    func(t *testing.T, dir string)
+		args         []string
+		validateFunc func(t *testing.T, dir string, result *testutil.CommandResult)
+		wantError    bool
+		wantInOutput string
 	}{
 		{
 			name: "default_initialization",
@@ -75,8 +75,8 @@ func TestGuildInitialization(t *testing.T) {
 				err := os.MkdirAll(filepath.Join(dir, ".guild"), 0755)
 				require.NoError(t, err)
 			},
-			args:      []string{"init"},
-			wantError: true,
+			args:         []string{"init"},
+			wantError:    true,
 			wantInOutput: "already initialized",
 		},
 		{
@@ -102,7 +102,7 @@ func TestGuildInitialization(t *testing.T) {
 				SkipDatabase: true, // We're testing init itself
 			})
 			defer cleanup()
-			
+
 			extCtx := testutil.ExtendProjectContext(projCtx)
 
 			// Setup if needed
@@ -142,7 +142,7 @@ func TestGuildInitPerformance(t *testing.T) {
 		SkipDatabase: true,
 	})
 	defer cleanup()
-	
+
 	extCtx := testutil.ExtendProjectContext(projCtx)
 
 	// Measure init time
@@ -151,11 +151,11 @@ func TestGuildInitPerformance(t *testing.T) {
 	duration := time.Since(start)
 
 	require.NoError(t, result.Error)
-	
+
 	// Performance requirement: init should complete within 2 seconds
-	assert.LessOrEqual(t, duration, 2*time.Second, 
+	assert.LessOrEqual(t, duration, 2*time.Second,
 		"Guild init should complete within 2 seconds, took %v", duration)
-	
+
 	t.Logf("Guild init completed in %v", duration)
 }
 
@@ -166,7 +166,7 @@ func TestProviderConfiguration(t *testing.T) {
 	}
 
 	providers := []string{"openai", "anthropic", "ollama", "deepseek"}
-	
+
 	for _, provider := range providers {
 		t.Run(provider, func(t *testing.T) {
 			projCtx, cleanup := testutil.SetupTestProject(t, testutil.TestProjectOptions{
@@ -174,7 +174,7 @@ func TestProviderConfiguration(t *testing.T) {
 				SkipDatabase: true,
 			})
 			defer cleanup()
-			
+
 			extCtx := testutil.ExtendProjectContext(projCtx)
 
 			// Initialize with provider
@@ -230,7 +230,7 @@ func TestProjectDetection(t *testing.T) {
 				SkipDatabase: true,
 			})
 			defer cleanup()
-			
+
 			extCtx := testutil.ExtendProjectContext(projCtx)
 
 			// Create project files
@@ -243,7 +243,7 @@ func TestProjectDetection(t *testing.T) {
 			// Initialize
 			result := extCtx.RunGuild("init")
 			require.NoError(t, result.Error)
-			
+
 			// Check for project detection message
 			if pm.wantMsg != "" {
 				assert.Contains(t, result.Stdout, pm.wantMsg)

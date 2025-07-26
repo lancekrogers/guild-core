@@ -149,6 +149,33 @@ func (p *Parser) extractFromObject(obj map[string]interface{}) ([]types.ToolCall
 		}
 	}
 
+	// Check for single function (even older format)
+	if funcRaw, exists := obj["function"]; exists {
+		if funcObj, ok := funcRaw.(map[string]interface{}); ok {
+			// This is the single function format
+			call := p.parseSingleFunctionCall(funcObj)
+			if call != nil {
+				return []types.ToolCall{*call}, nil
+			}
+		}
+	}
+
+	// Check for OpenAI chat completion format with choices
+	if choicesRaw, exists := obj["choices"]; exists {
+		if choices, ok := choicesRaw.([]interface{}); ok && len(choices) > 0 {
+			// Get first choice
+			if choice, ok := choices[0].(map[string]interface{}); ok {
+				// Check for message in choice
+				if msgRaw, exists := choice["message"]; exists {
+					if msg, ok := msgRaw.(map[string]interface{}); ok {
+						// Recursively extract from message
+						return p.extractFromObject(msg)
+					}
+				}
+			}
+		}
+	}
+
 	// Check for assistant message format
 	if role, _ := obj["role"].(string); role == "assistant" {
 		// Recursively check for tool calls in assistant message

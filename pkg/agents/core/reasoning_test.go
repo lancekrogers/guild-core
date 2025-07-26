@@ -752,7 +752,7 @@ Final result.`
 		parser := core.NewThinkingBlockParser(nil)
 		builder := core.NewReasoningChainBuilder("agent-1", "session-1", "task-1")
 		streamer := core.NewReasoningStreamer(parser, builder, nil)
-		
+
 		// Very long input that will take time to process
 		input := strings.Repeat("<thinking>This is a very long content block that will take time to process. "+
 			"We need to ensure the stream is still running when we interrupt it. "+
@@ -762,7 +762,7 @@ Final result.`
 		// Collect events in background before streaming
 		var events []core.StreamEvent
 		done := make(chan bool)
-		
+
 		go func() {
 			for event := range streamer.EventChannel() {
 				events = append(events, event)

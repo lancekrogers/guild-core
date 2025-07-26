@@ -12,7 +12,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	
+
 	"github.com/lancekrogers/guild/internal/testutil"
 	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/commission"
@@ -570,7 +570,7 @@ func TestMultiAgentCollaboration(t *testing.T) {
 
 		// Create a commission requiring multiple specializations
 		commission := &commission.Commission{
-			Title: "Full-Stack Application",
+			Title:       "Full-Stack Application",
 			Description: "Build a complete web application with frontend, backend, and deployment",
 		}
 
@@ -581,7 +581,7 @@ func TestMultiAgentCollaboration(t *testing.T) {
 
 		// Verify each specialist contributed
 		for _, agent := range agents {
-			assert.Contains(t, result.Logs, agent.name, 
+			assert.Contains(t, result.Logs, agent.name,
 				"Agent %s should have contributed", agent.name)
 		}
 	})
@@ -590,8 +590,8 @@ func TestMultiAgentCollaboration(t *testing.T) {
 		// Create multiple identical agents
 		numAgents := 5
 		for i := 0; i < numAgents; i++ {
-			err := framework.CreateAgent(ctx, 
-				fmt.Sprintf("worker-%d", i), 
+			err := framework.CreateAgent(ctx,
+				fmt.Sprintf("worker-%d", i),
 				[]string{"general"})
 			require.NoError(t, err)
 		}
@@ -611,10 +611,10 @@ func TestMultiAgentCollaboration(t *testing.T) {
 		start := time.Now()
 		result, err := framework.ExecuteCommission(ctx, commission)
 		duration := time.Since(start)
-		
+
 		require.NoError(t, err)
 		assert.True(t, result.Success)
-		
+
 		// Should complete faster with parallel processing
 		assert.LessOrEqual(t, duration, 30*time.Second,
 			"Parallel processing should be efficient")
@@ -623,7 +623,7 @@ func TestMultiAgentCollaboration(t *testing.T) {
 	t.Run("agent_handoff", func(t *testing.T) {
 		// Create pipeline of specialized agents
 		pipeline := []string{"analyzer", "designer", "implementer", "tester"}
-		
+
 		for _, role := range pipeline {
 			err := framework.CreateAgent(ctx, role, []string{role})
 			require.NoError(t, err)
@@ -631,7 +631,7 @@ func TestMultiAgentCollaboration(t *testing.T) {
 
 		// Create commission requiring sequential processing
 		commission := &commission.Commission{
-			Title: "Sequential Processing Pipeline",
+			Title:       "Sequential Processing Pipeline",
 			Description: "Task that requires analysis → design → implementation → testing",
 		}
 
@@ -644,9 +644,9 @@ func TestMultiAgentCollaboration(t *testing.T) {
 		for _, role := range pipeline {
 			// Find when this agent started
 			agentStart := framework.GetAgentStartTime(role)
-			assert.False(t, agentStart.IsZero(), 
+			assert.False(t, agentStart.IsZero(),
 				"Agent %s should have a start time", role)
-			
+
 			// Verify sequential execution
 			if !lastTimestamp.IsZero() {
 				assert.True(t, agentStart.After(lastTimestamp),
@@ -660,7 +660,7 @@ func TestMultiAgentCollaboration(t *testing.T) {
 		// Test system behavior under high concurrency
 		numAgents := 20
 		numCommissions := 50
-		
+
 		// Create many agents
 		for i := 0; i < numAgents; i++ {
 			err := framework.CreateAgent(ctx,
@@ -672,16 +672,16 @@ func TestMultiAgentCollaboration(t *testing.T) {
 		// Submit many commissions concurrently
 		var wg sync.WaitGroup
 		results := make(chan bool, numCommissions)
-		
+
 		for i := 0; i < numCommissions; i++ {
 			wg.Add(1)
 			go func(id int) {
 				defer wg.Done()
-				
+
 				commission := &commission.Commission{
 					Title: fmt.Sprintf("Concurrent Task %d", id),
 				}
-				
+
 				result, err := framework.ExecuteCommission(ctx, commission)
 				if err == nil && result.Success {
 					results <- true
@@ -690,10 +690,10 @@ func TestMultiAgentCollaboration(t *testing.T) {
 				}
 			}(i)
 		}
-		
+
 		wg.Wait()
 		close(results)
-		
+
 		// Count successes
 		successCount := 0
 		for success := range results {
@@ -701,12 +701,12 @@ func TestMultiAgentCollaboration(t *testing.T) {
 				successCount++
 			}
 		}
-		
+
 		// Should handle high concurrency gracefully
 		successRate := float64(successCount) / float64(numCommissions)
 		assert.GreaterOrEqual(t, successRate, 0.9,
 			"System should handle concurrent load with >90%% success rate")
-		
+
 		t.Logf("Concurrent execution: %d/%d succeeded (%.1f%%)",
 			successCount, numCommissions, successRate*100)
 	})

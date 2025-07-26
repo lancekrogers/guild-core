@@ -19,29 +19,7 @@ import (
 	"github.com/lancekrogers/guild/pkg/observability"
 )
 
-// CrossComponentTestFramework provides comprehensive integration testing across all Guild components
-type CrossComponentTestFramework struct {
-	kanbanManager *kanban.Manager
-	ragRetriever  *rag.Retriever
-	agents        map[string]*Agent
-	workflows     map[string]*Workflow
-	systemState   *SystemState
-	testDir       string
-	logger        observability.Logger
-	metrics       *IntegrationMetrics
-	mu            sync.RWMutex
-	t             *testing.T
-}
-
-// WorkflowType defines the type of workflow to execute
-type WorkflowType int
-
-const (
-	WorkflowType_CodeAnalysis WorkflowType = iota
-	WorkflowType_MultiAgentCoordination
-	WorkflowType_KnowledgeManagement
-	WorkflowType_TaskExecution
-)
+// Note: All types (CrossComponentTestFramework, WorkflowType, Task, Agent, etc.) are defined in types.go
 
 // SystemConfig defines system initialization configuration
 type SystemConfig struct {
@@ -59,22 +37,6 @@ type WorkflowConfig struct {
 	TimeoutDuration time.Duration
 }
 
-// Task represents a workflow task
-type Task struct {
-	ID       string
-	Type     string
-	Target   string
-	Priority string
-	Context  map[string]interface{}
-}
-
-// Agent represents a workflow participant
-type Agent struct {
-	ID           string
-	Type         string
-	Capabilities []string
-}
-
 // OutputType defines expected workflow outputs
 type OutputType int
 
@@ -85,49 +47,6 @@ const (
 	OutputType_KnowledgeUpdate
 )
 
-// Workflow represents an executing workflow
-type Workflow struct {
-	ID           string
-	Type         WorkflowType
-	InitialTask  Task
-	Participants []Agent
-	StartTime    time.Time
-	Context      map[string]interface{}
-}
-
-// WorkflowResult contains workflow execution results
-type WorkflowResult struct {
-	WorkflowID       string
-	Success          bool
-	Duration         time.Duration
-	OutputsProduced  []OutputType
-	TasksCreated     []string
-	KnowledgeUpdates []string
-	Error            error
-}
-
-// SystemState represents the current state of all components
-type SystemState struct {
-	KanbanState *KanbanSystemState
-	RAGState    *RAGSystemState
-	AgentState  *AgentSystemState
-}
-
-// KanbanSystemState represents Kanban system state
-type KanbanSystemState struct {
-	Boards      map[string]*kanban.Board
-	TaskHistory map[string][]*kanban.Task
-	ActiveTasks int
-}
-
-// RAGSystemState represents RAG system state
-type RAGSystemState struct {
-	DocumentCount    int
-	IndexedChunks    int
-	RecentQueries    []string
-	KnowledgeUpdates []RAGUpdate
-}
-
 // AgentSystemState represents agent system state
 type AgentSystemState struct {
 	ActiveAgents   map[string]*Agent
@@ -136,14 +55,7 @@ type AgentSystemState struct {
 	AgentWorkloads map[string]int
 }
 
-// RAGUpdate represents a RAG system update
-type RAGUpdate struct {
-	ID        string
-	Content   string
-	Relevance float64
-	Timestamp time.Time
-	Source    string
-}
+// Note: RAGUpdate is defined in types.go
 
 // FailureScenarios defines failure scenarios for testing
 type FailureScenarios struct {
@@ -161,15 +73,7 @@ type FailureRecoveryResult struct {
 	ServiceDegraded     bool
 }
 
-// IntegrationMetrics tracks cross-component integration metrics
-type IntegrationMetrics struct {
-	WorkflowCompletionTime time.Duration
-	CrossComponentLatency  time.Duration
-	DataConsistencyScore   float64
-	ResourceUtilization    ResourceUtilization
-	FailureRecoveryTime    time.Duration
-	mu                     sync.RWMutex
-}
+// Note: IntegrationMetrics is defined in types.go
 
 // ResourceUtilization tracks resource usage across components
 type ResourceUtilization struct {

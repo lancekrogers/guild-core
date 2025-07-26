@@ -164,10 +164,10 @@ func TestDetector_detectColors(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Save and restore environment
 			// Also save common env vars that might affect detection
-			envVarsToSave := []string{"TERM", "COLORTERM", "FORCE_COLOR", "NO_COLOR", 
+			envVarsToSave := []string{"TERM", "COLORTERM", "FORCE_COLOR", "NO_COLOR",
 				"GUILD_FORCE_COLOR", "GUILD_FORCE_TRUE_COLOR"}
 			oldEnv := make(map[string]string)
-			
+
 			// Save all relevant env vars
 			for _, k := range envVarsToSave {
 				oldEnv[k] = os.Getenv(k)
@@ -178,12 +178,12 @@ func TestDetector_detectColors(t *testing.T) {
 					oldEnv[k] = os.Getenv(k)
 				}
 			}
-			
+
 			// Clean environment before test
 			for k := range oldEnv {
 				os.Unsetenv(k)
 			}
-			
+
 			defer func() {
 				// Restore all env vars
 				for k, v := range oldEnv {
@@ -201,7 +201,7 @@ func TestDetector_detectColors(t *testing.T) {
 			}
 
 			detector := NewDetector()
-			
+
 			// Check if any of the setup environment variables are GUILD_FORCE_*
 			hasGuildForce := false
 			for k := range tt.setupEnv {
@@ -210,7 +210,7 @@ func TestDetector_detectColors(t *testing.T) {
 					break
 				}
 			}
-			
+
 			// For GUILD_FORCE_* variables, we need to use the full Detect method
 			// which applies environment overrides
 			if hasGuildForce {
@@ -281,7 +281,7 @@ func TestDetector_isCI(t *testing.T) {
 				"JENKINS_URL", "TRAVIS", "CIRCLECI", "GITHUB_ACTIONS",
 				"GITLAB_CI", "BUILDKITE", "DRONE", "TEAMCITY_VERSION",
 			}
-			
+
 			oldEnv := make(map[string]string)
 			// Save all CI vars
 			for _, k := range ciVars {
@@ -294,7 +294,7 @@ func TestDetector_isCI(t *testing.T) {
 					oldEnv[k] = os.Getenv(k)
 				}
 			}
-			
+
 			defer func() {
 				// Restore all env vars
 				for k, v := range oldEnv {

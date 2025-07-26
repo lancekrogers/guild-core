@@ -42,7 +42,9 @@ func (b *CommissionProcessorBridge) Initialize(ctx context.Context) error {
 	}
 
 	// Get commission integration service from orchestrator registry
-	if orchReg, ok := orchRegistry.(interface{ GetCommissionIntegrationService() *orchestrator.CommissionIntegrationService }); ok {
+	if orchReg, ok := orchRegistry.(interface {
+		GetCommissionIntegrationService() *orchestrator.CommissionIntegrationService
+	}); ok {
 		b.commissionIntegration = orchReg.GetCommissionIntegrationService()
 		if b.commissionIntegration == nil {
 			b.logger.WarnContext(ctx, "Commission integration service not available in registry")

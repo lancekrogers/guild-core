@@ -1446,7 +1446,7 @@ func (n *NoOpOrchestrator) Start(ctx context.Context) error {
 	return nil
 }
 
-// Stop is a no-op implementation  
+// Stop is a no-op implementation
 func (n *NoOpOrchestrator) Stop(ctx context.Context) error {
 	return nil
 }

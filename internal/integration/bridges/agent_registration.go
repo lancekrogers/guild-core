@@ -14,28 +14,28 @@ import (
 
 // AgentRegistrationBridge manages agent registration with the task dispatcher
 type AgentRegistrationBridge struct {
-	eventBus        events.EventBus
-	logger          observability.Logger
-	subscriptions   map[string]events.SubscriptionID
-	mu              sync.RWMutex
-	
+	eventBus      events.EventBus
+	logger        observability.Logger
+	subscriptions map[string]events.SubscriptionID
+	mu            sync.RWMutex
+
 	// Dependencies
-	AgentRegistry   registry.AgentRegistry
-	AgentFactory    AgentFactory
-	TaskDispatcher  TaskDispatcher
-	config          *AgentRegistrationConfig
-	
+	AgentRegistry  registry.AgentRegistry
+	AgentFactory   AgentFactory
+	TaskDispatcher TaskDispatcher
+	config         *AgentRegistrationConfig
+
 	// State tracking
 	registeredAgents map[string]core.Agent
 }
 
 // AgentRegistrationConfig configures the agent registration bridge
 type AgentRegistrationConfig struct {
-	Enabled                bool
-	AutoRegisterOnStartup  bool
-	LoadFromGuildConfig    bool
-	GuildConfigPath        string
-	MaxAgents              int
+	Enabled               bool
+	AutoRegisterOnStartup bool
+	LoadFromGuildConfig   bool
+	GuildConfigPath       string
+	MaxAgents             int
 }
 
 // AgentFactory creates agent instances
@@ -54,12 +54,12 @@ func NewAgentRegistrationBridge(
 ) *AgentRegistrationBridge {
 	return &AgentRegistrationBridge{
 		eventBus:         eventBus,
-		logger:          logger.WithComponent("AgentRegistrationBridge"),
-		subscriptions:   make(map[string]events.SubscriptionID),
-		config:          &config,
-		AgentRegistry:   agentRegistry,
-		AgentFactory:    agentFactory,
-		TaskDispatcher:  taskDispatcher,
+		logger:           logger.WithComponent("AgentRegistrationBridge"),
+		subscriptions:    make(map[string]events.SubscriptionID),
+		config:           &config,
+		AgentRegistry:    agentRegistry,
+		AgentFactory:     agentFactory,
+		TaskDispatcher:   taskDispatcher,
 		registeredAgents: make(map[string]core.Agent),
 	}
 }
@@ -101,7 +101,7 @@ func (b *AgentRegistrationBridge) Stop(ctx context.Context) error {
 	// Unsubscribe from all events
 	for eventType, subID := range b.subscriptions {
 		if err := b.eventBus.Unsubscribe(ctx, subID); err != nil {
-			b.logger.WithError(err).ErrorContext(ctx, "Failed to unsubscribe from event", 
+			b.logger.WithError(err).ErrorContext(ctx, "Failed to unsubscribe from event",
 				"event_type", eventType)
 		}
 	}
@@ -175,9 +175,9 @@ func (b *AgentRegistrationBridge) handleAgentDiscovered(ctx context.Context, e e
 	agentType, _ := data["agent_type"].(string)
 	agentName, _ := data["agent_name"].(string)
 
-	b.logger.InfoContext(ctx, "Agent discovered, registering with dispatcher", 
-		"agent_id", agentID, 
-		"agent_name", agentName, 
+	b.logger.InfoContext(ctx, "Agent discovered, registering with dispatcher",
+		"agent_id", agentID,
+		"agent_name", agentName,
 		"agent_type", agentType)
 
 	return b.registerAgent(ctx, agentID, agentType, agentName)
@@ -236,7 +236,7 @@ func (b *AgentRegistrationBridge) registerAgent(ctx context.Context, agentID, ag
 	)
 	b.eventBus.Publish(ctx, event)
 
-	b.logger.InfoContext(ctx, "Agent registered with dispatcher", 
+	b.logger.InfoContext(ctx, "Agent registered with dispatcher",
 		"agent_id", agentID,
 		"agent_name", agentName,
 		"agent_type", agentType)
@@ -280,7 +280,7 @@ func (b *AgentRegistrationBridge) registerAgentsFromConfig(ctx context.Context) 
 		registered++
 	}
 
-	b.logger.InfoContext(ctx, "Agent registration complete", 
+	b.logger.InfoContext(ctx, "Agent registration complete",
 		"total_available", len(agentConfigs),
 		"registered", registered,
 		"max_agents", b.config.MaxAgents)
@@ -299,7 +299,7 @@ func (b *AgentRegistrationBridge) GetRegisteredAgentCount() int {
 func (b *AgentRegistrationBridge) GetRegisteredAgents() map[string]core.Agent {
 	b.mu.RLock()
 	defer b.mu.RUnlock()
-	
+
 	result := make(map[string]core.Agent)
 	for id, agent := range b.registeredAgents {
 		result[id] = agent

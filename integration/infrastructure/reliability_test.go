@@ -29,7 +29,7 @@ func TestSystemReliability(t *testing.T) {
 			Name: "reliability-test",
 		})
 		defer cleanup()
-		
+
 		extCtx := testutil.ExtendProjectContext(projCtx)
 
 		// Test recovery from various error conditions
@@ -124,7 +124,7 @@ func TestSystemReliability(t *testing.T) {
 			Name: "concurrent-safety-test",
 		})
 		defer cleanup()
-		
+
 		extCtx := testutil.ExtendProjectContext(projCtx)
 
 		// Initialize
@@ -200,7 +200,7 @@ func TestSystemReliability(t *testing.T) {
 
 		cmd := exec.CommandContext(ctx, "guild", "chat")
 		cmd.Dir = projCtx.GetRootPath()
-		
+
 		// Start the process
 		err := cmd.Start()
 		require.NoError(t, err)
@@ -234,7 +234,7 @@ func TestSystemReliability(t *testing.T) {
 			Name: "resource-cleanup-test",
 		})
 		defer cleanup()
-		
+
 		extCtx := testutil.ExtendProjectContext(projCtx)
 
 		// Initialize
@@ -277,7 +277,7 @@ func TestMemoryLeaks(t *testing.T) {
 			Name: "memory-leak-test",
 		})
 		defer cleanup()
-		
+
 		extCtx := testutil.ExtendProjectContext(projCtx)
 
 		// Initialize
@@ -315,7 +315,7 @@ func TestCrashRecovery(t *testing.T) {
 			Name: "crash-recovery-test",
 		})
 		defer cleanup()
-		
+
 		extCtx := testutil.ExtendProjectContext(projCtx)
 
 		// Initialize
@@ -342,7 +342,7 @@ func TestCrashRecovery(t *testing.T) {
 			Name: "partial-write-test",
 		})
 		defer cleanup()
-		
+
 		extCtx := testutil.ExtendProjectContext(projCtx)
 
 		// Initialize
@@ -361,7 +361,7 @@ func TestCrashRecovery(t *testing.T) {
 		// System should handle partial files gracefully
 		result = extCtx.RunGuild("commission", "list")
 		assert.NoError(t, result.Error)
-		
+
 		// Partial file should not appear in list
 		assert.NotContains(t, result.Stdout, "partial.md")
 		assert.NotContains(t, result.Stdout, "Incomplete Commission")
@@ -379,7 +379,7 @@ func TestPerformanceUnderLoad(t *testing.T) {
 			Name: "load-test",
 		})
 		defer cleanup()
-		
+
 		extCtx := testutil.ExtendProjectContext(projCtx)
 
 		// Initialize
@@ -389,7 +389,7 @@ func TestPerformanceUnderLoad(t *testing.T) {
 		// Simulate multiple concurrent users
 		users := 10
 		operationsPerUser := 5
-		
+
 		var wg sync.WaitGroup
 		latencies := make(chan time.Duration, users*operationsPerUser)
 		errors := make(chan error, users*operationsPerUser)
@@ -398,10 +398,10 @@ func TestPerformanceUnderLoad(t *testing.T) {
 			wg.Add(1)
 			go func(userID int) {
 				defer wg.Done()
-				
+
 				for op := 0; op < operationsPerUser; op++ {
 					start := time.Now()
-					
+
 					// Vary operations
 					var result *testutil.CommandResult
 					switch op % 3 {
@@ -412,10 +412,10 @@ func TestPerformanceUnderLoad(t *testing.T) {
 					case 2:
 						result = extCtx.RunGuild("commission", "list")
 					}
-					
+
 					latency := time.Since(start)
 					latencies <- latency
-					
+
 					if result.Error != nil {
 						errors <- result.Error
 					}
@@ -431,7 +431,7 @@ func TestPerformanceUnderLoad(t *testing.T) {
 		var totalLatency time.Duration
 		var maxLatency time.Duration
 		count := 0
-		
+
 		for latency := range latencies {
 			totalLatency += latency
 			if latency > maxLatency {
@@ -441,13 +441,13 @@ func TestPerformanceUnderLoad(t *testing.T) {
 		}
 
 		avgLatency := totalLatency / time.Duration(count)
-		
+
 		// Performance requirements
-		assert.LessOrEqual(t, avgLatency, 500*time.Millisecond, 
+		assert.LessOrEqual(t, avgLatency, 500*time.Millisecond,
 			"Average latency should be under 500ms")
 		assert.LessOrEqual(t, maxLatency, 2*time.Second,
 			"Max latency should be under 2s")
-		
+
 		t.Logf("Load test results: avg=%v, max=%v, operations=%d",
 			avgLatency, maxLatency, count)
 
@@ -457,10 +457,10 @@ func TestPerformanceUnderLoad(t *testing.T) {
 			t.Logf("Load test error: %v", err)
 			errorCount++
 		}
-		
+
 		// Allow up to 5% error rate under heavy load
 		errorRate := float64(errorCount) / float64(count)
-		assert.LessOrEqual(t, errorRate, 0.05, 
+		assert.LessOrEqual(t, errorRate, 0.05,
 			"Error rate should be less than 5%%")
 	})
 
@@ -469,7 +469,7 @@ func TestPerformanceUnderLoad(t *testing.T) {
 			Name: "large-data-test",
 		})
 		defer cleanup()
-		
+
 		extCtx := testutil.ExtendProjectContext(projCtx)
 
 		// Initialize
@@ -478,29 +478,29 @@ func TestPerformanceUnderLoad(t *testing.T) {
 
 		// Create many commissions
 		numCommissions := 100
-		
+
 		start := time.Now()
 		for i := 0; i < numCommissions; i++ {
-			result = extCtx.RunGuild("commission", "create", 
+			result = extCtx.RunGuild("commission", "create",
 				fmt.Sprintf("large-scale-test-%03d", i))
 			require.NoError(t, result.Error)
 		}
 		createDuration := time.Since(start)
-		
+
 		// List performance with many items
 		start = time.Now()
 		result = extCtx.RunGuild("commission", "list")
 		listDuration := time.Since(start)
-		
+
 		require.NoError(t, result.Error)
-		
+
 		// Performance requirements
 		avgCreateTime := createDuration / time.Duration(numCommissions)
 		assert.LessOrEqual(t, avgCreateTime, 100*time.Millisecond,
 			"Average commission creation should be under 100ms")
 		assert.LessOrEqual(t, listDuration, 1*time.Second,
 			"Listing 100 commissions should be under 1s")
-		
+
 		t.Logf("Large data test: create avg=%v, list=%v",
 			avgCreateTime, listDuration)
 	})
@@ -517,7 +517,7 @@ func TestEdgeCases(t *testing.T) {
 			Name: "unicode-test",
 		})
 		defer cleanup()
-		
+
 		extCtx := testutil.ExtendProjectContext(projCtx)
 
 		// Initialize
@@ -541,11 +541,11 @@ func TestEdgeCases(t *testing.T) {
 		// Verify all were created
 		result = extCtx.RunGuild("commission", "list")
 		require.NoError(t, result.Error)
-		
+
 		for _, testStr := range unicodeTests {
 			// Some characters might be normalized or sanitized
 			if !strings.Contains(testStr, "\x00") && !strings.Contains(testStr, "\u200b") {
-				assert.Contains(t, result.Stdout, testStr, 
+				assert.Contains(t, result.Stdout, testStr,
 					"Should list commission with: %s", testStr)
 			}
 		}
@@ -556,7 +556,7 @@ func TestEdgeCases(t *testing.T) {
 			Name: "extreme-input-test",
 		})
 		defer cleanup()
-		
+
 		extCtx := testutil.ExtendProjectContext(projCtx)
 
 		// Initialize
@@ -568,7 +568,7 @@ func TestEdgeCases(t *testing.T) {
 		result = extCtx.RunGuild("commission", "create", longName)
 		// Should either succeed or fail gracefully
 		if result.Error != nil {
-			assert.Contains(t, result.Stderr, "too long", 
+			assert.Contains(t, result.Stderr, "too long",
 				"Error should mention length issue")
 		}
 
