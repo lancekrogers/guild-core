@@ -78,7 +78,7 @@ func NewHappyPathTestFramework(t *testing.T) *HappyPathTestFramework {
 	return &HappyPathTestFramework{
 		t:           t,
 		cleanup:     make([]func(), 0),
-		portManager: NewPortManager(8000),
+		portManager: NewPortManager(8001),
 	}
 }
 

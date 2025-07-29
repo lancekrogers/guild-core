@@ -212,7 +212,7 @@ func TestCodebaseAnalysisPerformance_HappyPath(t *testing.T) {
 
 			// PHASE 5: Memory Usage Validation
 			memoryUsage := framework.MeasureMemoryUsage()
-			assert.LessOrEqual(t, memoryUsage.CurrentBytes, scenario.expectedMemoryUsage,
+			assert.LessOrEqual(t, int64(memoryUsage.CurrentBytes), scenario.expectedMemoryUsage,
 				"Memory usage exceeded target: %d > %d bytes", memoryUsage.CurrentBytes, scenario.expectedMemoryUsage)
 
 			// Check for memory leaks

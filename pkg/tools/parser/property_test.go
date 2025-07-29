@@ -41,16 +41,34 @@ func TestProperty_ValidJSONAlwaysExtracted(t *testing.T) {
 	parser := NewResponseParser()
 
 	f := func(id, funcName, argKey, argValue string) bool {
-		// Skip if inputs contain quotes or other JSON-breaking characters
-		if strings.ContainsAny(id+funcName+argKey+argValue, `"\{}[]`) {
+		// Skip if function name is empty (parser will skip these)
+		if funcName == "" {
 			return true
 		}
+		
+		// Properly escape all strings for JSON
+		idJSON, err := json.Marshal(id)
+		if err != nil {
+			return true // Skip if can't marshal
+		}
+		funcNameJSON, err := json.Marshal(funcName) 
+		if err != nil {
+			return true // Skip if can't marshal
+		}
+		
+		// Create arguments as a proper JSON object
+		argsObj := map[string]string{argKey: argValue}
+		argsBytes, err := json.Marshal(argsObj)
+		if err != nil {
+			return true // Skip if can't marshal
+		}
+		argsJSON, _ := json.Marshal(string(argsBytes))
 
 		// Build valid JSON
-		json := fmt.Sprintf(`{"id": "%s", "type": "function", "function": {"name": "%s", "arguments": "{\"%s\": \"%s\"}"}}`,
-			id, funcName, argKey, argValue)
+		jsonStr := fmt.Sprintf(`{"id": %s, "type": "function", "function": {"name": %s, "arguments": %s}}`,
+			string(idJSON), string(funcNameJSON), string(argsJSON))
 
-		calls, err := parser.ExtractToolCalls(json)
+		calls, err := parser.ExtractToolCalls(jsonStr)
 		if err != nil {
 			return false
 		}
@@ -61,7 +79,14 @@ func TestProperty_ValidJSONAlwaysExtracted(t *testing.T) {
 		}
 
 		call := calls[0]
-		return call.ID == id && call.Function.Name == funcName
+		// If id was empty, parser will generate one
+		idMatch := id == "" || call.ID == id
+		if id == "" {
+			idMatch = call.ID != ""
+		}
+		
+		// Function name must match exactly
+		return idMatch && call.Function.Name == funcName
 	}
 
 	if err := quick.Check(f, nil); err != nil {
@@ -309,11 +334,11 @@ func TestProperty_ArgumentPreservation(t *testing.T) {
 
 	testCases := []map[string]interface{}{
 		{"string": "value"},
-		{"number": 42},
+		{"number": float64(42)}, // JSON numbers are decoded as float64
 		{"float": 3.14},
 		{"bool": true},
 		{"null": nil},
-		{"array": []interface{}{1, 2, 3}},
+		{"array": []interface{}{float64(1), float64(2), float64(3)}}, // JSON numbers are decoded as float64
 		{"object": map[string]interface{}{"nested": "value"}},
 	}
 

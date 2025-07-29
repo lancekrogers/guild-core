@@ -457,7 +457,7 @@ func TestXMLParser_EdgeCases(t *testing.T) {
 					<ns:parameter name="arg">value</ns:parameter>
 				</ns:invoke>
 			</ns:function_calls>`,
-			wantCalls: 0, // May not parse with namespace
+			wantCalls: 1, // Parser handles namespaces correctly
 		},
 	}
 

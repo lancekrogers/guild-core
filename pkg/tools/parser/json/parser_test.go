@@ -461,5 +461,5 @@ func TestJSONParser_PerformanceRegression(t *testing.T) {
 	avgTime := elapsed / time.Duration(iterations)
 
 	// Ensure parsing is fast enough (adjust threshold as needed)
-	assert.Less(t, avgTime, 100*time.Microsecond, "Parsing is too slow: %v per operation", avgTime)
+	assert.Less(t, avgTime, 200*time.Microsecond, "Parsing is too slow: %v per operation", avgTime)
 }

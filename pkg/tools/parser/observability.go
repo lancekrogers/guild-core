@@ -308,20 +308,22 @@ func (o *ObservableParser) ExtractWithContext(ctx context.Context, response stri
 	o.metrics.inputSize.WithLabelValues("unknown").Observe(float64(len(response)))
 
 	// Detect format first
-	format, confidence, err := o.parser.DetectFormat(response)
-	if err != nil {
+	format, confidence, detectErr := o.parser.DetectFormat(response)
+	if detectErr != nil {
+		// Don't return error here - let the parser handle it
+		// The parser will return empty results for invalid input
 		o.metrics.parseFailures.WithLabelValues(string(format), "detection_failed").Inc()
-		return nil, err
+		format = ProviderFormatUnknown
+	} else {
+		// Record format detection metrics only on success
+		o.metrics.formatDistribution.WithLabelValues(string(format)).Inc()
+		o.metrics.detectionConfidence.WithLabelValues("combined", string(format)).Observe(confidence)
 	}
-
-	// Record format detection metrics
-	o.metrics.formatDistribution.WithLabelValues(string(format)).Inc()
-	o.metrics.detectionConfidence.WithLabelValues("combined", string(format)).Observe(confidence)
 
 	// Record parse attempt
 	o.metrics.parseAttempts.WithLabelValues(string(format)).Inc()
 
-	// Parse tool calls
+	// Parse tool calls - let the underlying parser handle all cases
 	calls, err := o.parser.ExtractWithContext(ctx, response)
 
 	// Record duration

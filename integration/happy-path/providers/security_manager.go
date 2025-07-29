@@ -786,7 +786,7 @@ func (sm *SecurityMonitor) countRecentEvents(eventType SecurityEventType, window
 // triggerAlert triggers a security alert
 func (sm *SecurityMonitor) triggerAlert(eventType SecurityEventType, provider providers.ProviderType, count int) {
 	// In production, this would send alerts to monitoring systems
-	fmt.Printf("🚨 SECURITY ALERT: %d %s events for %s in the last hour\n", count, eventType, provider)
+	fmt.Printf("🚨 SECURITY ALERT: %d %v events for %s in the last hour\n", count, eventType, provider)
 }
 
 // LogAction logs an audit action
@@ -860,7 +860,7 @@ func (sm *SecurityMonitor) detectAnomalies() {
 				Timestamp:   now,
 				AnomalyType: AnomalyTypeRequestFrequency,
 				Confidence:  0.8,
-				Description: fmt.Sprintf("Unusual frequency of %s events: %d in last hour", eventType, count),
+				Description: fmt.Sprintf("Unusual frequency of %v events: %d in last hour", eventType, count),
 				Baseline:    10.0,
 				Observed:    float64(count),
 				ActionTaken: "alert_triggered",

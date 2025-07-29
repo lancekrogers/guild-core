@@ -8,6 +8,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 	"unicode/utf8"
@@ -143,7 +144,7 @@ func (p *RobustParser) ExtractWithContext(ctx context.Context, response string) 
 
 	if !exists {
 		p.parseFailures++
-		return nil, gerror.New(gerror.ErrCodeNotFound, "no parser for format", nil).
+		return []ToolCall{}, gerror.New(gerror.ErrCodeNotFound, "no parser for format", nil).
 			WithComponent("parser").
 			WithOperation("ExtractToolCalls").
 			WithDetails("format", string(format))
@@ -251,6 +252,11 @@ func (p *RobustParser) postProcess(calls []ToolCall) []ToolCall {
 		// Validate function name
 		if call.Function.Name == "" {
 			continue // Skip invalid calls
+		}
+		
+		// Sanitize function name - remove potential XSS vectors
+		if strings.Contains(call.Function.Name, "<script>") || strings.Contains(call.Function.Name, "</script>") {
+			continue // Skip calls with script tags
 		}
 
 		// Ensure arguments is valid JSON

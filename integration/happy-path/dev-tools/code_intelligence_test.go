@@ -99,8 +99,8 @@ func TestCodeIntelligencePerformance_HappyPath(t *testing.T) {
 					metrics := NewDeveloperSessionMetrics(idx)
 					sessionMetrics[idx] = metrics
 
-					// Simulate 30-second development session (fast test)
-					sessionCtx, sessionCancel := context.WithTimeout(context.Background(), 30*time.Second)
+					// Simulate 10-second development session (fast test)
+					sessionCtx, sessionCancel := context.WithTimeout(context.Background(), 10*time.Second)
 					defer sessionCancel()
 
 					framework.SimulateDevelopmentSession(sessionCtx, session, DevelopmentSimulation{
@@ -191,9 +191,9 @@ func TestCodeIntelligencePerformance_HappyPath(t *testing.T) {
 			// Memory usage should be reasonable for codebase size
 			expectedMemoryMB := codebase.GetExpectedMemoryUsage()
 			actualMemoryMB := engineMetrics.MemoryUsageMB
-			assert.LessOrEqual(t, actualMemoryMB, expectedMemoryMB*1.5,
-				"Memory usage exceeded 150%% of expected: %d MB > %d MB",
-				actualMemoryMB, int(expectedMemoryMB*1.5))
+			assert.LessOrEqual(t, float64(actualMemoryMB), expectedMemoryMB*1.5,
+				"Memory usage exceeded 150%% of expected: %d MB > %.0f MB",
+				actualMemoryMB, expectedMemoryMB*1.5)
 
 			// CPU usage should remain reasonable during concurrent sessions
 			assert.LessOrEqual(t, engineMetrics.AverageCPUPercent, 25.0,

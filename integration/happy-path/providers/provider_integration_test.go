@@ -5,6 +5,7 @@ package providers
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
@@ -760,7 +761,7 @@ func TestHP_PI_003_CostOptimizationAndBudgetManagement(t *testing.T) {
 	t.Logf("💡 Found %d optimization opportunities", len(optimizations))
 
 	for _, opt := range optimizations {
-		t.Logf("💡 %s: %s (savings: $%.6f, confidence: %.1f%%)",
+		t.Logf("💡 %v: %s (savings: $%.6f, confidence: %.1f%%)",
 			opt.Type, opt.Description, opt.Savings, opt.Confidence*100)
 
 		assert.Greater(t, opt.Confidence, 0.0, "Optimization should have confidence score")

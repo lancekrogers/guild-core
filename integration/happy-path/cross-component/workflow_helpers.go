@@ -81,7 +81,7 @@ func (f *CrossComponentTestFramework) createKanbanTask(task *Task) error {
 		kanbanTask := &kanban.Task{
 			ID:          task.ID,
 			Title:       fmt.Sprintf("Task: %s", task.Type),
-			Description: fmt.Sprintf("Target: %s, Priority: %s", task.Target, task.Priority),
+			Description: fmt.Sprintf("Target: %s, Priority: %d", task.Target, task.Priority),
 			Status:      kanban.StatusTodo,
 			CreatedAt:   time.Now(),
 		}

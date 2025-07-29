@@ -341,7 +341,7 @@ func TestAgentExecution_ErrorRecovery(t *testing.T) {
 			requirements: TaskRequirements{
 				Type:         "coding",
 				Complexity:   ComplexityHigh,
-				MaxCost:      1, // Too low for available agents
+				MaxCost:      0, // Too low for available agents (all have CostMagnitude >= 1)
 				Capabilities: []string{"code_analysis"},
 			},
 			expectError: true,

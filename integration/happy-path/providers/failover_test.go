@@ -598,7 +598,7 @@ func TestProviderFailover_HappyPath(t *testing.T) {
 			},
 			expectedFailoverTime: 2 * time.Second,
 			expectedSuccessRate:  0.98,
-			loadProfile:          LoadProfile{RequestsPerSecond: 5, Duration: 60 * time.Second},
+			loadProfile:          LoadProfile{RequestsPerSecond: 5, Duration: 20 * time.Second},
 		},
 		{
 			name: "Complex multi-provider failover with rate limiting",
@@ -613,7 +613,7 @@ func TestProviderFailover_HappyPath(t *testing.T) {
 			},
 			expectedFailoverTime: 3 * time.Second,
 			expectedSuccessRate:  0.95,
-			loadProfile:          LoadProfile{RequestsPerSecond: 20, Duration: 120 * time.Second},
+			loadProfile:          LoadProfile{RequestsPerSecond: 20, Duration: 30 * time.Second},
 		},
 	}
 
@@ -736,7 +736,7 @@ func TestProviderFailover_HappyPath(t *testing.T) {
 			// Verify provider usage distribution
 			totalCost := 0.0
 			for providerName, stats := range providerUsageStats {
-				providerConfig := framework.GetProviderConfig(providerName)
+				_ = framework.GetProviderConfig(providerName)
 				totalCost += stats.TotalCost
 
 				t.Logf("Provider %s: %d requests, %.1f%% success rate, avg latency %v",

@@ -14,6 +14,133 @@ import (
 	"github.com/lancekrogers/guild/pkg/registry"
 )
 
+// kanbanRegistryAdapter adapts registry.ComponentRegistry to kanban.ComponentRegistry
+type kanbanRegistryAdapter struct {
+	registry registry.ComponentRegistry
+}
+
+// Storage returns a kanban-compatible storage registry
+func (a *kanbanRegistryAdapter) Storage() kanban.StorageRegistry {
+	return &kanbanStorageAdapter{storage: a.registry.Storage()}
+}
+
+// kanbanStorageAdapter adapts registry.StorageRegistry to kanban.StorageRegistry
+type kanbanStorageAdapter struct {
+	storage registry.StorageRegistry
+}
+
+func (a *kanbanStorageAdapter) GetKanbanCampaignRepository() kanban.CampaignRepository {
+	// Return a mock implementation for testing
+	return &mockCampaignRepository{}
+}
+
+func (a *kanbanStorageAdapter) GetKanbanCommissionRepository() kanban.CommissionRepository {
+	// Return a mock implementation for testing
+	return &mockCommissionRepository{}
+}
+
+func (a *kanbanStorageAdapter) GetBoardRepository() kanban.BoardRepository {
+	// Return a mock implementation for testing
+	return &mockBoardRepository{}
+}
+
+func (a *kanbanStorageAdapter) GetKanbanTaskRepository() kanban.TaskRepository {
+	// Return a mock implementation for testing
+	return &mockTaskRepository{}
+}
+
+func (a *kanbanStorageAdapter) GetMemoryStore() kanban.MemoryStore {
+	// Use the real memory store from registry
+	if memStore := a.storage.GetMemoryStore(); memStore != nil {
+		return &memoryStoreAdapter{store: memStore}
+	}
+	return &mockMemoryStore{}
+}
+
+// Memory store adapter
+type memoryStoreAdapter struct {
+	store registry.MemoryStore
+}
+
+func (m *memoryStoreAdapter) Get(ctx context.Context, bucket, key string) ([]byte, error) {
+	return m.store.Get(ctx, bucket, key)
+}
+
+func (m *memoryStoreAdapter) Put(ctx context.Context, bucket, key string, value []byte) error {
+	return m.store.Put(ctx, bucket, key, value)
+}
+
+func (m *memoryStoreAdapter) Delete(ctx context.Context, bucket, key string) error {
+	return m.store.Delete(ctx, bucket, key)
+}
+
+func (m *memoryStoreAdapter) List(ctx context.Context, bucket string) ([]string, error) {
+	return m.store.List(ctx, bucket)
+}
+
+// Mock implementations for repositories
+type mockCampaignRepository struct{}
+func (r *mockCampaignRepository) CreateCampaign(ctx context.Context, campaign interface{}) error {
+	return nil
+}
+
+type mockCommissionRepository struct{}
+func (r *mockCommissionRepository) CreateCommission(ctx context.Context, commission interface{}) error {
+	return nil
+}
+func (r *mockCommissionRepository) GetCommission(ctx context.Context, id string) (interface{}, error) {
+	return nil, nil
+}
+
+type mockBoardRepository struct{}
+func (r *mockBoardRepository) CreateBoard(ctx context.Context, board interface{}) error {
+	return nil
+}
+func (r *mockBoardRepository) GetBoard(ctx context.Context, id string) (interface{}, error) {
+	return nil, nil
+}
+func (r *mockBoardRepository) UpdateBoard(ctx context.Context, board interface{}) error {
+	return nil
+}
+func (r *mockBoardRepository) DeleteBoard(ctx context.Context, id string) error {
+	return nil
+}
+func (r *mockBoardRepository) ListBoards(ctx context.Context) ([]interface{}, error) {
+	return []interface{}{}, nil
+}
+
+type mockTaskRepository struct{}
+func (r *mockTaskRepository) CreateTask(ctx context.Context, task interface{}) error {
+	return nil
+}
+func (r *mockTaskRepository) UpdateTask(ctx context.Context, task interface{}) error {
+	return nil
+}
+func (r *mockTaskRepository) DeleteTask(ctx context.Context, id string) error {
+	return nil
+}
+func (r *mockTaskRepository) ListTasksByBoard(ctx context.Context, boardID string) ([]interface{}, error) {
+	return []interface{}{}, nil
+}
+func (r *mockTaskRepository) RecordTaskEvent(ctx context.Context, event interface{}) error {
+	return nil
+}
+
+// Mock memory store for fallback
+type mockMemoryStore struct{}
+func (m *mockMemoryStore) Get(ctx context.Context, bucket, key string) ([]byte, error) {
+	return nil, fmt.Errorf("not implemented")
+}
+func (m *mockMemoryStore) Put(ctx context.Context, bucket, key string, value []byte) error {
+	return nil
+}
+func (m *mockMemoryStore) Delete(ctx context.Context, bucket, key string) error {
+	return nil
+}
+func (m *mockMemoryStore) List(ctx context.Context, bucket string) ([]string, error) {
+	return []string{}, nil
+}
+
 // KanbanTestFramework provides integration testing framework for real Kanban system
 type KanbanTestFramework struct {
 	t        *testing.T
@@ -75,13 +202,14 @@ func NewKanbanTestFramework(t *testing.T) *KanbanTestFramework {
 		t.Fatalf("Failed to initialize registry: %v", err)
 	}
 
-	// Create manager with real registry
-	// TODO: Fix registry interface mismatch
-	// manager, err := kanban.NewManagerWithRegistry(context.Background(), reg)
-	// if err != nil {
-	// 	t.Fatalf("Failed to create kanban manager: %v", err)
-	// }
-	var manager *kanban.Manager // placeholder
+	// Create a kanban-specific registry adapter
+	kanbanRegistry := &kanbanRegistryAdapter{registry: reg}
+
+	// Create manager with registry for SQLite backend
+	manager, err := kanban.NewManagerWithRegistry(context.Background(), kanbanRegistry)
+	if err != nil {
+		t.Fatalf("Failed to create kanban manager: %v", err)
+	}
 
 	return &KanbanTestFramework{
 		t:        t,
@@ -217,13 +345,14 @@ func (f *KanbanTestFramework) CorruptBoardFile(boardID string, percentage float6
 func (f *KanbanTestFramework) RecoverFromCorruption(boardID string) (*kanban.Board, error) {
 	f.t.Logf("🔄 Attempting recovery from corruption for board %s", boardID)
 
-	// Recreate manager to simulate recovery process
-	// TODO: Fix registry interface mismatch
-	// manager, err := kanban.NewManagerWithRegistry(context.Background(), f.registry)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("failed to create recovery manager: %w", err)
-	// }
-	var manager *kanban.Manager // placeholder
+	// Create a kanban-specific registry adapter
+	kanbanRegistry := &kanbanRegistryAdapter{registry: f.registry}
+
+	// Recreate manager to simulate recovery process using the same registry
+	manager, err := kanban.NewManagerWithRegistry(context.Background(), kanbanRegistry)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create recovery manager: %w", err)
+	}
 
 	f.manager = manager
 
@@ -456,3 +585,4 @@ type PersistenceResult struct {
 	Error     error
 	Timestamp time.Time
 }
+

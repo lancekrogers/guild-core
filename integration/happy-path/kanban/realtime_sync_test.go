@@ -16,21 +16,8 @@ import (
 
 	"github.com/lancekrogers/guild/pkg/kanban"
 	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/registry"
 )
 
-// KanbanTestFramework provides comprehensive integration testing for kanban systems
-type KanbanTestFramework struct {
-	registry registry.ComponentRegistry
-	boards   map[string]*kanban.Board
-	managers map[string]*kanban.Manager
-	clients  map[string]*Client
-	testDir  string
-	logger   observability.Logger
-	metrics  *PerformanceMetrics
-	mu       sync.RWMutex
-	t        *testing.T
-}
 
 // OperationMix defines the distribution of operations for testing
 type OperationMix struct {
@@ -72,25 +59,8 @@ type Operation struct {
 	ClientID string
 }
 
-// BoardComplexity defines complexity parameters for persistence testing
-type BoardComplexity struct {
-	Tasks   int
-	Columns int
-	Users   int
-}
 
-// CheckpointConfig defines checkpointing configuration
-type CheckpointConfig struct {
-	Frequency       int
-	VerifyIntegrity bool
-}
 
-// Checkpoint represents a state checkpoint
-type Checkpoint struct {
-	Index         int
-	ExpectedState *BoardState
-	Timestamp     time.Time
-}
 
 // PerformanceMetrics tracks performance data
 type PerformanceMetrics struct {
@@ -324,23 +294,7 @@ func TestKanbanRealTimeSync_HappyPath(t *testing.T) {
 	}
 }
 
-// NewKanbanTestFramework creates a new test framework instance
-func NewKanbanTestFramework(t *testing.T) *KanbanTestFramework {
-	return &KanbanTestFramework{
-		boards:   make(map[string]*kanban.Board),
-		managers: make(map[string]*kanban.Manager),
-		clients:  make(map[string]*Client),
-		testDir:  t.TempDir(),
-		metrics:  &PerformanceMetrics{},
-		t:        t,
-	}
-}
 
-// Cleanup cleans up the test framework
-func (f *KanbanTestFramework) Cleanup() {
-	// Implementation would close all managers, clients, and clean up resources
-	f.t.Logf("Cleaning up Kanban test framework")
-}
 
 // CreateTestBoard creates a test board with the specified configuration
 func (f *KanbanTestFramework) CreateTestBoard(name string, config BoardConfig) *kanban.Board {
@@ -490,15 +444,7 @@ type Board struct {
 	Name string
 }
 
-type BoardState struct {
-	Tasks []Task
-}
 
-type Task struct {
-	ID     string
-	Title  string
-	Status string
-}
 
 type PermissionSettings struct {
 	AllowConcurrentEdits bool

@@ -38,6 +38,13 @@ func (p *Parser) Format() types.ProviderFormat {
 
 // Parse extracts tool calls from JSON input
 func (p *Parser) Parse(ctx context.Context, input []byte) ([]types.ToolCall, error) {
+	// Check context cancellation early
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCanceled, "context canceled").
+			WithComponent("parser").
+			WithOperation("JSONParser.Parse")
+	}
+
 	logger := observability.GetLogger(ctx).
 		WithComponent("parser").
 		WithOperation("JSONParser.Parse")
@@ -56,7 +63,7 @@ func (p *Parser) Parse(ctx context.Context, input []byte) ([]types.ToolCall, err
 	detector := NewDetector()
 	jsonData, location := detector.extractJSON(input)
 	if jsonData == nil {
-		return nil, gerror.New(gerror.ErrCodeNotFound, "no valid JSON found", nil).
+		return []types.ToolCall{}, gerror.New(gerror.ErrCodeNotFound, "no valid JSON found", nil).
 			WithComponent("parser").
 			WithOperation("JSONParser.Parse")
 	}
@@ -196,7 +203,7 @@ func (p *Parser) extractFromObject(obj map[string]interface{}) ([]types.ToolCall
 		}
 	}
 
-	return nil, gerror.New(gerror.ErrCodeNotFound, "no tool calls found in object", nil).
+	return []types.ToolCall{}, gerror.New(gerror.ErrCodeNotFound, "no tool calls found in object", nil).
 		WithComponent("parser").
 		WithOperation("extractFromObject")
 }
@@ -217,7 +224,7 @@ func (p *Parser) extractFromArray(arr []interface{}) ([]types.ToolCall, error) {
 	}
 
 	// Otherwise, check each element for tool calls
-	var allCalls []types.ToolCall
+	allCalls := []types.ToolCall{}
 	for _, item := range arr {
 		switch v := item.(type) {
 		case map[string]interface{}:
@@ -231,14 +238,14 @@ func (p *Parser) extractFromArray(arr []interface{}) ([]types.ToolCall, error) {
 		return allCalls, nil
 	}
 
-	return nil, gerror.New(gerror.ErrCodeNotFound, "no tool calls found in array", nil).
+	return []types.ToolCall{}, gerror.New(gerror.ErrCodeNotFound, "no tool calls found in array", nil).
 		WithComponent("parser").
 		WithOperation("extractFromArray")
 }
 
 // parseToolCallsArray parses an array of tool call objects
 func (p *Parser) parseToolCallsArray(arr []interface{}) ([]types.ToolCall, error) {
-	var calls []types.ToolCall
+	calls := []types.ToolCall{}
 
 	for i, item := range arr {
 		callMap, ok := item.(map[string]interface{})
@@ -448,7 +455,17 @@ func (p *Parser) validateObject(obj map[string]interface{}, path string, result 
 			p.validateFunctionCall(fc, path+".function_call", result)
 		}
 	} else {
-		result.Warnings = append(result.Warnings, "No tool_calls or function_call found")
+		// Check if it looks like a single tool call object
+		hasID := obj["id"] != nil
+		hasType := obj["type"] != nil
+		hasFunction := obj["function"] != nil
+		
+		// If it has any of the tool call fields, validate it as a tool call
+		if hasID || hasType || hasFunction {
+			p.validateToolCall(obj, path, result)
+		} else {
+			result.Warnings = append(result.Warnings, "No tool_calls or function_call found")
+		}
 	}
 }
 
@@ -489,6 +506,7 @@ func (p *Parser) validateToolCallsArray(arr []interface{}, path string, result *
 func (p *Parser) validateToolCall(obj map[string]interface{}, path string, result *types.ValidationResult) {
 	// Check required fields
 	if _, exists := obj["id"]; !exists {
+		result.Valid = false
 		result.Errors = append(result.Errors, types.ValidationError{
 			Path:    path + ".id",
 			Message: "Missing required field: id",
@@ -530,6 +548,7 @@ func (p *Parser) validateFunction(obj map[string]interface{}, path string, resul
 	if name, exists := obj["name"]; exists {
 		if n, ok := name.(string); ok {
 			if n == "" {
+				result.Valid = false
 				result.Errors = append(result.Errors, types.ValidationError{
 					Path:    path + ".name",
 					Message: "Function name cannot be empty",
@@ -537,6 +556,7 @@ func (p *Parser) validateFunction(obj map[string]interface{}, path string, resul
 				})
 			}
 		} else {
+			result.Valid = false
 			result.Errors = append(result.Errors, types.ValidationError{
 				Path:    path + ".name",
 				Message: "Function name must be a string",
@@ -558,6 +578,7 @@ func (p *Parser) validateFunction(obj map[string]interface{}, path string, resul
 		case string:
 			// Validate it's valid JSON
 			if !json.Valid([]byte(v)) {
+				result.Valid = false
 				result.Errors = append(result.Errors, types.ValidationError{
 					Path:    path + ".arguments",
 					Message: "Arguments string is not valid JSON",
