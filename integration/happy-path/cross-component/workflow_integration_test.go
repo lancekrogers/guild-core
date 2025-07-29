@@ -146,7 +146,7 @@ func TestCrossComponentWorkflow_HappyPath(t *testing.T) {
 
 			workflow := framework.CreateWorkflow(scenario.workflowType, WorkflowConfig{
 				InitialTask: Task{
-					ID:       fmt.Sprintf("task-%s-%d", scenario.name, time.Now().UnixNano()),
+					ID:       fmt.Sprintf("task-%d", time.Now().UnixNano()),
 					Type:     "analysis",
 					Priority: 3,
 				},
@@ -177,8 +177,24 @@ func TestCrossComponentWorkflow_HappyPath(t *testing.T) {
 
 			// Verify Kanban updates reflect workflow progress
 			kanbanState := framework.GetKanbanState()
-			assert.Contains(t, kanbanState.TaskHistory, workflow.InitialTask.ID,
-				"Workflow task not found in Kanban history")
+			
+			// Check if the workflow task exists in any board's history
+			taskFound := false
+			t.Logf("Looking for task ID: %s", workflow.InitialTask.ID)
+			for boardID, tasks := range kanbanState.TaskHistory {
+				t.Logf("Board %s has %d tasks", boardID, len(tasks))
+				for _, task := range tasks {
+					t.Logf("  Task ID: %s", task.ID)
+					if task.ID == workflow.InitialTask.ID {
+						taskFound = true
+						break
+					}
+				}
+				if taskFound {
+					break
+				}
+			}
+			assert.True(t, taskFound, "Workflow task %s not found in Kanban history", workflow.InitialTask.ID)
 
 			workflowTasks := kanbanState.GetTasksByWorkflow(workflow.ID)
 			assert.NotEmpty(t, workflowTasks, "No tasks created for workflow")
@@ -440,6 +456,8 @@ func (f *CrossComponentTestFramework) InitializeSystemState(config SystemConfig)
 			Name: fmt.Sprintf("Test Board %d", i),
 		}
 		kanbanState.Boards[board.ID] = board
+		// Initialize TaskHistory for this board
+		kanbanState.TaskHistory[board.ID] = make([]*kanban.Task, 0)
 	}
 
 	// Initialize RAG state
@@ -529,14 +547,8 @@ func (f *CrossComponentTestFramework) ExecuteWorkflow(workflow *Workflow) (*Work
 	}
 
 	// PHASE 1: Create initial Kanban task
-	initialTaskID := fmt.Sprintf("task-%s-initial", workflow.ID)
-	kanbanTask := &Task{
-		ID:       initialTaskID,
-		Type:     workflow.InitialTask.Type,
-		Priority: workflow.InitialTask.Priority,
-	}
-
-	if err := f.createKanbanTask(kanbanTask); err != nil {
+	// Use the task from the workflow configuration
+	if err := f.createKanbanTask(workflow.InitialTask); err != nil {
 		err = fmt.Errorf("failed to create initial Kanban task: %w", err)
 		result.Errors = append(result.Errors, err)
 		return result, err

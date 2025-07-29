@@ -7,26 +7,40 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
+	"sync"
 	"testing"
 	"time"
 
 	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild/pkg/memory"
 	"github.com/lancekrogers/guild/pkg/registry"
 )
 
 // kanbanRegistryAdapter adapts registry.ComponentRegistry to kanban.ComponentRegistry
 type kanbanRegistryAdapter struct {
-	registry registry.ComponentRegistry
+	registry       registry.ComponentRegistry
+	storageAdapter *kanbanStorageAdapter
 }
 
 // Storage returns a kanban-compatible storage registry
 func (a *kanbanRegistryAdapter) Storage() kanban.StorageRegistry {
-	return &kanbanStorageAdapter{storage: a.registry.Storage()}
+	if a.storageAdapter == nil {
+		a.storageAdapter = &kanbanStorageAdapter{
+			storage:         a.registry.Storage(),
+			memoryStore:     newMockMemoryStore(), // Use mock memory store for tests
+			taskRepository:  newMockTaskRepository(), // Use shared task repository
+			boardRepository: newMockBoardRepository(), // Use shared board repository
+		}
+	}
+	return a.storageAdapter
 }
 
 // kanbanStorageAdapter adapts registry.StorageRegistry to kanban.StorageRegistry
 type kanbanStorageAdapter struct {
-	storage registry.StorageRegistry
+	storage           registry.StorageRegistry
+	memoryStore       memory.Store // Override memory store
+	taskRepository    kanban.TaskRepository // Shared task repository
+	boardRepository   kanban.BoardRepository // Shared board repository
 }
 
 func (a *kanbanStorageAdapter) GetKanbanCampaignRepository() kanban.CampaignRepository {
@@ -40,21 +54,31 @@ func (a *kanbanStorageAdapter) GetKanbanCommissionRepository() kanban.Commission
 }
 
 func (a *kanbanStorageAdapter) GetBoardRepository() kanban.BoardRepository {
+	if a.boardRepository != nil {
+		return a.boardRepository
+	}
 	// Return a mock implementation for testing
-	return &mockBoardRepository{}
+	return newMockBoardRepository()
 }
 
 func (a *kanbanStorageAdapter) GetKanbanTaskRepository() kanban.TaskRepository {
+	if a.taskRepository != nil {
+		return a.taskRepository
+	}
 	// Return a mock implementation for testing
-	return &mockTaskRepository{}
+	return newMockTaskRepository()
 }
 
 func (a *kanbanStorageAdapter) GetMemoryStore() kanban.MemoryStore {
+	// Return the override memory store if set
+	if a.memoryStore != nil {
+		return a.memoryStore
+	}
 	// Use the real memory store from registry
 	if memStore := a.storage.GetMemoryStore(); memStore != nil {
 		return &memoryStoreAdapter{store: memStore}
 	}
-	return &mockMemoryStore{}
+	return newMockMemoryStore()
 }
 
 // Memory store adapter
@@ -92,53 +116,220 @@ func (r *mockCommissionRepository) GetCommission(ctx context.Context, id string)
 	return nil, nil
 }
 
-type mockBoardRepository struct{}
-func (r *mockBoardRepository) CreateBoard(ctx context.Context, board interface{}) error {
-	return nil
-}
-func (r *mockBoardRepository) GetBoard(ctx context.Context, id string) (interface{}, error) {
-	return nil, nil
-}
-func (r *mockBoardRepository) UpdateBoard(ctx context.Context, board interface{}) error {
-	return nil
-}
-func (r *mockBoardRepository) DeleteBoard(ctx context.Context, id string) error {
-	return nil
-}
-func (r *mockBoardRepository) ListBoards(ctx context.Context) ([]interface{}, error) {
-	return []interface{}{}, nil
+type mockBoardRepository struct {
+	boards map[string]interface{}
+	mu     sync.RWMutex
 }
 
-type mockTaskRepository struct{}
+func newMockBoardRepository() *mockBoardRepository {
+	return &mockBoardRepository{
+		boards: make(map[string]interface{}),
+	}
+}
+
+func (r *mockBoardRepository) CreateBoard(ctx context.Context, board interface{}) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	
+	// Extract board ID from the interface
+	boardMap, ok := board.(map[string]interface{})
+	if ok {
+		if id, ok := boardMap["id"].(string); ok {
+			r.boards[id] = board
+		}
+	}
+	return nil
+}
+
+func (r *mockBoardRepository) GetBoard(ctx context.Context, id string) (interface{}, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	
+	if board, ok := r.boards[id]; ok {
+		return board, nil
+	}
+	return nil, nil
+}
+
+func (r *mockBoardRepository) UpdateBoard(ctx context.Context, board interface{}) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	
+	// Extract board ID from the interface
+	boardMap, ok := board.(map[string]interface{})
+	if ok {
+		if id, ok := boardMap["id"].(string); ok {
+			r.boards[id] = board
+		}
+	}
+	return nil
+}
+
+func (r *mockBoardRepository) DeleteBoard(ctx context.Context, id string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	
+	delete(r.boards, id)
+	return nil
+}
+
+func (r *mockBoardRepository) ListBoards(ctx context.Context) ([]interface{}, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	
+	boards := make([]interface{}, 0, len(r.boards))
+	for _, board := range r.boards {
+		boards = append(boards, board)
+	}
+	return boards, nil
+}
+
+type mockTaskRepository struct {
+	tasks map[string]interface{}
+	mu    sync.RWMutex
+}
+
+func newMockTaskRepository() *mockTaskRepository {
+	return &mockTaskRepository{
+		tasks: make(map[string]interface{}),
+	}
+}
+
 func (r *mockTaskRepository) CreateTask(ctx context.Context, task interface{}) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	
+	// Extract task ID from the interface
+	taskMap, ok := task.(map[string]interface{})
+	if ok {
+		if id, ok := taskMap["id"].(string); ok {
+			r.tasks[id] = task
+		}
+	}
 	return nil
 }
+
 func (r *mockTaskRepository) UpdateTask(ctx context.Context, task interface{}) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	
+	// Extract task ID from the interface
+	taskMap, ok := task.(map[string]interface{})
+	if ok {
+		if id, ok := taskMap["id"].(string); ok {
+			r.tasks[id] = task
+		}
+	}
 	return nil
 }
+
 func (r *mockTaskRepository) DeleteTask(ctx context.Context, id string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	
+	delete(r.tasks, id)
 	return nil
 }
+
 func (r *mockTaskRepository) ListTasksByBoard(ctx context.Context, boardID string) ([]interface{}, error) {
-	return []interface{}{}, nil
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	
+	var results []interface{}
+	for _, task := range r.tasks {
+		if taskMap, ok := task.(map[string]interface{}); ok {
+			if bid, ok := taskMap["board_id"].(string); ok && bid == boardID {
+				results = append(results, task)
+			}
+		}
+	}
+	return results, nil
 }
+
 func (r *mockTaskRepository) RecordTaskEvent(ctx context.Context, event interface{}) error {
 	return nil
 }
 
-// Mock memory store for fallback
-type mockMemoryStore struct{}
+// Mock memory store that implements both kanban.MemoryStore and memory.Store
+type mockMemoryStore struct {
+	data map[string]map[string][]byte // bucket -> key -> value
+	mu   sync.RWMutex
+}
+
+// Compile-time check that mockMemoryStore implements memory.Store
+var _ memory.Store = (*mockMemoryStore)(nil)
+
+func newMockMemoryStore() *mockMemoryStore {
+	return &mockMemoryStore{
+		data: make(map[string]map[string][]byte),
+	}
+}
+
 func (m *mockMemoryStore) Get(ctx context.Context, bucket, key string) ([]byte, error) {
-	return nil, fmt.Errorf("not implemented")
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	
+	if bucketData, ok := m.data[bucket]; ok {
+		if value, ok := bucketData[key]; ok {
+			return value, nil
+		}
+	}
+	return nil, fmt.Errorf("key not found")
 }
+
 func (m *mockMemoryStore) Put(ctx context.Context, bucket, key string, value []byte) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	
+	if m.data[bucket] == nil {
+		m.data[bucket] = make(map[string][]byte)
+	}
+	m.data[bucket][key] = value
 	return nil
 }
+
 func (m *mockMemoryStore) Delete(ctx context.Context, bucket, key string) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	
+	if bucketData, ok := m.data[bucket]; ok {
+		delete(bucketData, key)
+	}
 	return nil
 }
+
 func (m *mockMemoryStore) List(ctx context.Context, bucket string) ([]string, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	
+	if bucketData, ok := m.data[bucket]; ok {
+		keys := make([]string, 0, len(bucketData))
+		for key := range bucketData {
+			keys = append(keys, key)
+		}
+		return keys, nil
+	}
 	return []string{}, nil
+}
+
+func (m *mockMemoryStore) ListKeys(ctx context.Context, bucket, prefix string) ([]string, error) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	
+	if bucketData, ok := m.data[bucket]; ok {
+		keys := make([]string, 0)
+		for key := range bucketData {
+			if len(prefix) == 0 || len(key) >= len(prefix) && key[:len(prefix)] == prefix {
+				keys = append(keys, key)
+			}
+		}
+		return keys, nil
+	}
+	return []string{}, nil
+}
+
+func (m *mockMemoryStore) Close() error {
+	return nil
 }
 
 // KanbanTestFramework provides integration testing framework for real Kanban system
@@ -196,7 +387,15 @@ func NewKanbanTestFramework(t *testing.T) *KanbanTestFramework {
 
 	// Initialize with test configuration
 	err := reg.Initialize(context.Background(), registry.Config{
-		// Use minimal config for testing
+		Memory: registry.MemoryConfig{
+			DefaultMemoryStore: "sqlite",
+			Stores: map[string]interface{}{
+				"sqlite": map[string]interface{}{
+					"type": "sqlite",
+					"dsn":  ":memory:", // Use in-memory database for tests
+				},
+			},
+		},
 	})
 	if err != nil {
 		t.Fatalf("Failed to initialize registry: %v", err)

@@ -3,7 +3,7 @@
 
 BUILDTOOL := go run ./internal/buildutil
 .DEFAULT_GOAL := help
-.PHONY: build test test-pkg integration e2e validate-demo clean all quick ci-build ci-test ci-integration ci-e2e ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion benchmark benchmark-suggestions benchmark-ui benchmark-ui-thresholds test-ui-integration test-ui-complete happy ci-happy
+.PHONY: build test test-verbose test-pkg integration integration-verbose integration-debug e2e e2e-verbose validate-demo clean all all-verbose quick ci-build ci-test ci-integration ci-e2e ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion benchmark benchmark-suggestions benchmark-ui benchmark-ui-thresholds test-ui-integration test-ui-complete happy happy-verbose ci-happy
 
 # Primary targets (with visual output)
 # DEVELOPER TARGET: Full build with go vet validation and visual feedback
@@ -22,6 +22,35 @@ e2e:
 
 happy:
 	@$(BUILDTOOL) happy
+
+# Verbose variants for debugging test failures
+# Usage: make test-verbose, make integration-verbose, etc.
+# For all verbose targets, append -verbose to the target name
+test-verbose:
+	@$(BUILDTOOL) -v test
+
+integration-verbose:
+	@$(BUILDTOOL) -v integration
+
+e2e-verbose:
+	@$(BUILDTOOL) -v e2e
+
+happy-verbose:
+	@$(BUILDTOOL) -v happy
+
+# Debug specific integration test suites with full output
+# Usage: make integration-debug SUITE=user-journey
+integration-debug:
+	@if [ -z "$(SUITE)" ]; then \
+		echo "Usage: make integration-debug SUITE=<suite-name>"; \
+		echo "Available suites:"; \
+		find integration/happy-path -type d -name "*" -depth 1 | sed 's|integration/happy-path/||' | sort; \
+	else \
+		echo "🔍 Running integration tests for suite: $(SUITE) with full output"; \
+		go test -v -timeout 60s ./integration/happy-path/$(SUITE)/... 2>&1 | tee test-$(SUITE).log; \
+		echo ""; \
+		echo "📄 Output saved to test-$(SUITE).log"; \
+	fi
 
 # TUI tests with proper terminal cleanup
 test-teatest:
@@ -116,6 +145,9 @@ clean:
 
 all:
 	@$(BUILDTOOL) all
+
+all-verbose:
+	@$(BUILDTOOL) -v all
 
 # Quick build (no visuals, just compile)
 quick:
@@ -254,6 +286,10 @@ help:
 	@echo ""
 	@echo "Usage: make [target]"
 	@echo ""
+	@echo "=== VERBOSE MODE ==="
+	@echo "  For detailed output, append -verbose to most targets:"
+	@echo "  Examples: make test-verbose, make all-verbose, make integration-verbose"
+	@echo ""
 	@echo "=== USER TARGETS ==="
 	@echo "  install                  Fast install Guild (no go vet, for users)"
 	@echo "  uninstall                Remove Guild from Go bin directory"
@@ -261,11 +297,16 @@ help:
 	@echo "=== DEVELOPER TARGETS ==="
 	@echo "  build                    Full build with go vet validation"
 	@echo "  test                     Run unit tests with visual feedback"
+	@echo "  test-verbose             Run unit tests with verbose output (shows all test logs)"
 	@echo "  test-pkg                 Show examples of testing specific packages"
 	@echo "  test-teatest             Run TUI tests with proper terminal cleanup"
 	@echo "  integration              Run integration tests"
+	@echo "  integration-verbose      Run integration tests with verbose output"
+	@echo "  integration-debug        Debug specific test suite (e.g., make integration-debug SUITE=user-journey)"
 	@echo "  e2e                      Run end-to-end tests"
+	@echo "  e2e-verbose              Run end-to-end tests with verbose output"
 	@echo "  happy                    Run comprehensive performance and SLA validation tests"
+	@echo "  happy-verbose            Run happy path tests with verbose output"
 	@echo "  validate-demo            Validate demo scripts and functionality"
 	@echo "  benchmark                Run comprehensive performance benchmarks"
 	@echo "  benchmark-suggestions    Run suggestion system benchmarks only"
@@ -275,6 +316,7 @@ help:
 	@echo "  test-ui-complete         Run complete UI test suite (unit + integration + performance)"
 	@echo "  clean                    Remove all build artifacts"
 	@echo "  all                      Clean, build, test, and integration"
+	@echo "  all-verbose              Run all tasks with verbose output"
 	@echo "  quick                    Fast build without visuals"
 	@echo "  ci-*                     CI variants (no colors)"
 	@echo "  ci-happy                 Run happy path tests for CI (no colors)"
