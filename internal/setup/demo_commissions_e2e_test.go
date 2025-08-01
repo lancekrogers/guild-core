@@ -107,7 +107,7 @@ func TestDemoCommissionRecommendationFlow(t *testing.T) {
 				"src/App.js":   "import React from 'react'",
 			},
 			expectedType:   DemoTypeWebApp,
-			expectedReason: "web application",
+			expectedReason: "React framework",
 		},
 		{
 			name:        "Python data project",

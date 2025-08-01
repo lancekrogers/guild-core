@@ -218,7 +218,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 }`,
 	}
 
-	structure, err := parser.ParseResponse(response)
+	structure, err := parser.ParseResponse(context.Background(), response)
 	require.NoError(t, err)
 	require.NotNil(t, structure)
 

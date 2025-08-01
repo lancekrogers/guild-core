@@ -3,22 +3,13 @@
 package chat
 
 import (
-	"context"
-	"fmt"
-	"strings"
 	"sync"
 	"testing"
 	"time"
 
 	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/registry"
-	"github.com/lancekrogers/guild/pkg/storage"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 // TestChatInterface validates all chat commands and interactions
@@ -32,7 +23,7 @@ func TestChatInterface(t *testing.T) {
 	})
 	defer cleanup()
 
-	extCtx := testutil.ExtendProjectContext(projCtx)
+	extCtx := testutil.ExtendProjectContext(t, projCtx)
 
 	t.Run("chat_commands", func(t *testing.T) {
 		// Test help command
@@ -66,7 +57,7 @@ func TestChatInterface(t *testing.T) {
 }
 
 // TestChatPerformance validates chat interface performance
-func TestChatPerformance(t *testing.T) {
+func TestChatInterfacePerformance(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping performance test in short mode")
 	}
@@ -76,7 +67,7 @@ func TestChatPerformance(t *testing.T) {
 	})
 	defer cleanup()
 
-	extCtx := testutil.ExtendProjectContext(projCtx)
+	extCtx := testutil.ExtendProjectContext(t, projCtx)
 
 	// Initialize
 	result := extCtx.RunGuild("init")
@@ -134,7 +125,7 @@ func TestChatResilience(t *testing.T) {
 	})
 	defer cleanup()
 
-	extCtx := testutil.ExtendProjectContext(projCtx)
+	extCtx := testutil.ExtendProjectContext(t, projCtx)
 
 	// Initialize
 	result := extCtx.RunGuild("init")

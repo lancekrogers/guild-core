@@ -44,6 +44,14 @@ func InitializeProject(projectPath string) error {
 			WithOperation("initialize_project")
 	}
 
+	// Initialize and migrate the database
+	dbPath := local.LocalDatabasePath(projectPath)
+	if err := initializeDatabaseRefactored(dbPath); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize database").
+			WithComponent("project").
+			WithOperation("initialize_project")
+	}
+
 	return nil
 }
 

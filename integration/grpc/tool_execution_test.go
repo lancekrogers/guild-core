@@ -56,6 +56,11 @@ func (t *TestTool) RequiresAuth() bool {
 	return false
 }
 
+func (t *TestTool) HealthCheck() error {
+	// Test tool is always healthy
+	return nil
+}
+
 // IsExecuted safely checks if the tool was executed
 func (t *TestTool) IsExecuted() bool {
 	t.mu.Lock()

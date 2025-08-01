@@ -19,6 +19,7 @@ import (
 	"github.com/lancekrogers/guild/pkg/corpus/agent"
 	"github.com/lancekrogers/guild/pkg/memory/rag"
 	"github.com/lancekrogers/guild/pkg/memory/vector"
+	interfaces "github.com/lancekrogers/guild/pkg/providers/interfaces"
 	"github.com/lancekrogers/guild/pkg/providers/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -97,7 +98,8 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 	// Step 2: Setup RAG system with mock provider
 	t.Log("Step 2: Setting up RAG system")
 
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
 	mockProvider.SetDefaultResponse("Based on the context, this is a comprehensive response.")
 
 	vectorConfig := &vector.StoreConfig{
@@ -170,7 +172,7 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 	// Step 5: Use Corpus Agent to generate a document
 	t.Log("Step 5: Using Corpus Agent to generate document")
 
-	corpusAgent := core.NewCorpusAgent(ragSystem, mockProvider, corpusConfig)
+	corpusAgent := agent.NewCorpusAgent(ragSystem, mockProvider, corpusConfig)
 
 	response, err := corpusAgent.Execute(ctx, query)
 	require.NoError(t, err)
@@ -269,7 +271,8 @@ func TestProviderSwitching(t *testing.T) {
 	t.Run("Mock Provider", func(t *testing.T) {
 		embeddingsPath := filepath.Join(tempDir, "embeddings-mock")
 
-		mockProvider := mock.NewProvider()
+		mockProvider, err := mock.NewProvider()
+		require.NoError(t, err)
 		vectorConfig := &vector.StoreConfig{
 			Type:              vector.StoreTypeChromem,
 			EmbeddingProvider: mockProvider,
@@ -457,7 +460,10 @@ func TestErrorScenarios(t *testing.T) {
 		// System should handle corrupt embeddings gracefully
 		vectorConfig := &vector.StoreConfig{
 			Type:              vector.StoreTypeChromem,
-			EmbeddingProvider: mock.NewProvider(),
+			EmbeddingProvider: func() interfaces.AIProvider {
+				p, _ := mock.NewProvider()
+				return p
+			}(),
 			ChromemConfig: vector.ChromemConfig{
 				PersistencePath:   embeddingsPath,
 				DefaultCollection: "test",
@@ -539,7 +545,8 @@ func TestMultiAgentWorkflow(t *testing.T) {
 	}
 
 	// Setup shared RAG system
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
 	mockProvider.SetDefaultResponse("Multi-agent response based on context.")
 
 	vectorConfig := &vector.StoreConfig{
@@ -611,7 +618,7 @@ func TestMultiAgentWorkflow(t *testing.T) {
 	// Agent 3: Corpus Agent synthesizes information
 	t.Log("Agent 3: Corpus Agent synthesizing information")
 
-	corpusAgent := core.NewCorpusAgent(ragSystem, mockProvider, corpusConfig)
+	corpusAgent := agent.NewCorpusAgent(ragSystem, mockProvider, corpusConfig)
 
 	synthesisQuery := "Create a comprehensive guide on task automation benefits and implementation"
 	synthesisDoc, err := corpusAgent.GenerateDocument(ctx, synthesisQuery, "Task Automation Implementation Guide")

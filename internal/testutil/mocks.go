@@ -753,6 +753,22 @@ func (s *MockVectorStore) QueryEmbeddings(ctx context.Context, query string, lim
 	return matches, nil
 }
 
+// QueryCollection performs a similarity search on a specific collection
+func (s *MockVectorStore) QueryCollection(ctx context.Context, collectionName, query string, limit int) ([]vector.EmbeddingMatch, error) {
+	// For simplicity, just delegate to QueryEmbeddings
+	return s.QueryEmbeddings(ctx, query, limit)
+}
+
+// DeleteEmbedding removes an embedding by ID
+func (s *MockVectorStore) DeleteEmbedding(ctx context.Context, id string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	
+	delete(s.documents, id)
+	delete(s.embeddings, id)
+	return nil
+}
+
 // Close closes the vector store (implements VectorStore interface)
 func (s *MockVectorStore) Close() error {
 	// Nothing to close in mock implementation

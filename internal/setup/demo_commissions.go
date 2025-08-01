@@ -975,7 +975,21 @@ func (g *DemoCommissionGenerator) GetRecommendedDemo(ctx context.Context, projec
 		return DemoTypeDefault, "Using default demo due to cancellation"
 	}
 
-	// Simple heuristics for demo recommendation
+	// Check for technology hints first (more specific)
+	if tech, ok := projectInfo["detected_tech"].([]string); ok {
+		for _, t := range tech {
+			switch strings.ToLower(t) {
+			case "react", "vue", "angular":
+				return DemoTypeWebApp, fmt.Sprintf("Detected %s framework", t)
+			case "tensorflow", "pytorch", "scikit-learn":
+				return DemoTypeAI, fmt.Sprintf("Detected %s ML framework", t)
+			case "pandas", "numpy", "jupyter":
+				return DemoTypeDataAnalysis, fmt.Sprintf("Detected %s for data analysis", t)
+			}
+		}
+	}
+
+	// Then check project name hints (less specific)
 	if projectName, ok := projectInfo["project_name"].(string); ok {
 		projectNameLower := strings.ToLower(projectName)
 
@@ -991,20 +1005,6 @@ func (g *DemoCommissionGenerator) GetRecommendedDemo(ctx context.Context, projec
 			return DemoTypeDataAnalysis, "Project name suggests data analysis"
 		case strings.Contains(projectNameLower, "ai") || strings.Contains(projectNameLower, "ml"):
 			return DemoTypeAI, "Project name suggests AI/ML project"
-		}
-	}
-
-	// Check for technology hints
-	if tech, ok := projectInfo["detected_tech"].([]string); ok {
-		for _, t := range tech {
-			switch strings.ToLower(t) {
-			case "react", "vue", "angular":
-				return DemoTypeWebApp, fmt.Sprintf("Detected %s framework", t)
-			case "tensorflow", "pytorch", "scikit-learn":
-				return DemoTypeAI, fmt.Sprintf("Detected %s ML framework", t)
-			case "pandas", "numpy", "jupyter":
-				return DemoTypeDataAnalysis, fmt.Sprintf("Detected %s data tool", t)
-			}
 		}
 	}
 

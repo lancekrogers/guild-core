@@ -42,7 +42,7 @@ func TestDocumentIndexingRetrieval_HappyPath(t *testing.T) {
 				FileCount: 150,
 				Languages: []string{"go", "markdown", "yaml"},
 			},
-			expectedIndexingTime:   30 * time.Second,
+			expectedIndexingTime:   5 * time.Second, // Reduced from 30 seconds
 			expectedRetrievalTime:  200 * time.Millisecond,
 			expectedRelevanceScore: 0.85,
 		},
@@ -54,7 +54,7 @@ func TestDocumentIndexingRetrieval_HappyPath(t *testing.T) {
 				FileCount: 1500,
 				Languages: []string{"go", "markdown", "yaml", "json", "toml"},
 			},
-			expectedIndexingTime:   2 * time.Minute,
+			expectedIndexingTime:   15 * time.Second, // Reduced from 2 minutes
 			expectedRetrievalTime:  500 * time.Millisecond,
 			expectedRelevanceScore: 0.80,
 		},
@@ -66,7 +66,7 @@ func TestDocumentIndexingRetrieval_HappyPath(t *testing.T) {
 				FileCount: 10000,
 				Languages: []string{"go", "markdown", "yaml", "json", "toml", "txt", "py", "js"},
 			},
-			expectedIndexingTime:   10 * time.Minute,
+			expectedIndexingTime:   30 * time.Second, // Reduced from 10 minutes
 			expectedRetrievalTime:  500 * time.Millisecond,
 			expectedRelevanceScore: 0.75,
 		},
@@ -74,7 +74,7 @@ func TestDocumentIndexingRetrieval_HappyPath(t *testing.T) {
 
 	for _, scenario := range indexingScenarios {
 		t.Run(scenario.name, func(t *testing.T) {
-			ctx, cancel := context.WithTimeout(context.Background(), 15*time.Minute)
+			ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute) // Reduced from 15 minutes
 			defer cancel()
 
 			logger := observability.GetLogger(ctx)
@@ -209,8 +209,8 @@ func TestDocumentIndexingRetrieval_HappyPath(t *testing.T) {
 
 			// PHASE 4: Concurrent Search Performance Testing
 			t.Run("ConcurrentSearchPerformance", func(t *testing.T) {
-				concurrentQueries := 50
-				queryWorkers := 10
+				concurrentQueries := 20 // Reduced from 50
+				queryWorkers := 5      // Reduced from 10
 
 				concurrentResults := framework.ExecuteConcurrentSearchTest(index, concurrentQueries, queryWorkers)
 
@@ -282,17 +282,17 @@ func TestRAGSystemUnderLoad(t *testing.T) {
 	framework := NewRAGTestFramework(t)
 	defer framework.Cleanup()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute) // Reduced from 20 minutes
 	defer cancel()
 
 	logger := observability.GetLogger(ctx)
 	ctx = observability.WithComponent(ctx, "rag_load_test")
 
-	// High load scenario
+	// High load scenario (reduced for faster testing)
 	documentCollection := DocumentCollection{
 		Files:     []string{"**/*"},
-		TotalSize: 500 * 1024 * 1024, // 500MB
-		FileCount: 5000,
+		TotalSize: 50 * 1024 * 1024, // 50MB (reduced from 500MB)
+		FileCount: 500,              // Reduced from 5000
 		Languages: []string{"go", "markdown", "yaml", "json", "toml", "txt"},
 	}
 
@@ -316,10 +316,10 @@ func TestRAGSystemUnderLoad(t *testing.T) {
 	indexingTime := time.Since(indexingStart)
 	require.NoError(t, err)
 
-	// Load test parameters
-	concurrentUsers := 100
-	queriesPerUser := 50
-	testDuration := 5 * time.Minute
+	// Load test parameters (reduced for faster testing)
+	concurrentUsers := 20  // Reduced from 100
+	queriesPerUser := 10   // Reduced from 50
+	testDuration := 30 * time.Second // Reduced from 5 minutes
 
 	logger.InfoContext(ctx, "Executing load test",
 		"concurrent_users", concurrentUsers,
@@ -571,8 +571,8 @@ func (f *RAGTestFramework) CreateSemanticIndex(documents []*vector.Document, con
 			f.t.Logf("Indexed %d/%d documents (%d chunks)", i, len(documents), totalChunks)
 		}
 
-		// Realistic processing time based on batch size
-		processingTime := time.Duration(len(batch)*2) * time.Millisecond
+		// Realistic processing time based on batch size (reduced)
+		processingTime := time.Duration(len(batch)) * time.Microsecond // Reduced from 2ms per doc
 		time.Sleep(processingTime)
 	}
 

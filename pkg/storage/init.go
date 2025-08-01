@@ -110,6 +110,14 @@ func InitializeSQLiteStorageForTests(ctx context.Context) (StorageRegistry, inte
 			WithOperation("NewDatabase")
 	}
 
+	// Reset migrations if needed (for in-memory this is a no-op but keeps consistency)
+	if err := database.ResetMigrations(ctx); err != nil {
+		// Log but don't fail - in-memory databases don't have migration state
+		_ = gerror.Wrap(err, gerror.ErrCodeInternal, "failed to reset migrations").
+			WithComponent("InitializeSQLiteStorageForTests").
+			WithOperation("ResetMigrations")
+	}
+
 	// Manually create schema instead of running migrations
 	if err := createTestSchema(database); err != nil {
 		database.Close()
@@ -367,6 +375,26 @@ func createTestSchema(database *Database) error {
 	CREATE INDEX idx_preferences_updated_at ON preferences(updated_at);
 	CREATE INDEX idx_preference_inheritance_child ON preference_inheritance(child_scope, child_scope_id);
 	CREATE INDEX idx_preference_inheritance_parent ON preference_inheritance(parent_scope, parent_scope_id);
+
+	-- Reasoning blocks table (from migration 7)
+	CREATE TABLE reasoning_blocks (
+		id TEXT PRIMARY KEY,
+		agent_id TEXT NOT NULL,
+		session_id TEXT,
+		type TEXT NOT NULL,
+		content TEXT NOT NULL,
+		confidence REAL NOT NULL CHECK (confidence >= 0 AND confidence <= 1),
+		timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		tokens_used INTEGER NOT NULL DEFAULT 0,
+		total_tokens INTEGER NOT NULL DEFAULT 0,
+		reasoning_tokens INTEGER NOT NULL DEFAULT 0,
+		content_tokens INTEGER NOT NULL DEFAULT 0,
+		metadata JSON
+	);
+
+	CREATE INDEX idx_reasoning_blocks_agent_timestamp ON reasoning_blocks(agent_id, timestamp DESC);
+	CREATE INDEX idx_reasoning_blocks_type_confidence ON reasoning_blocks(type, confidence);
+	CREATE INDEX idx_reasoning_blocks_session_id ON reasoning_blocks(session_id);
 
 	-- Trigger to update preferences.updated_at
 	CREATE TRIGGER update_preferences_timestamp

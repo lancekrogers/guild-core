@@ -3,8 +3,8 @@
 package commission
 
 import (
-	"context"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -27,7 +27,7 @@ func TestCommissionWorkflow(t *testing.T) {
 	})
 	defer cleanup()
 	
-	extCtx := testutil.ExtendProjectContext(projCtx)
+	extCtx := testutil.ExtendProjectContext(t, projCtx)
 
 	// Initialize guild
 	result := extCtx.RunGuild("init")
@@ -84,7 +84,7 @@ Build a modern e-commerce platform with user authentication, product catalog, an
 `
 		
 		commFile := filepath.Join(projCtx.GetRootPath(), "ecommerce_commission.md")
-		err := projCtx.WriteFile("ecommerce_commission.md", commissionContent)
+		err := os.WriteFile(commFile, []byte(commissionContent), 0644)
 		require.NoError(t, err)
 
 		// Create commission from file
@@ -180,7 +180,8 @@ Build a modern e-commerce platform with user authentication, product catalog, an
 
 		// Test malformed commission file
 		badContent := `This is not a valid commission format`
-		err := projCtx.WriteFile("bad_commission.md", badContent)
+		badFile := filepath.Join(projCtx.GetRootPath(), "bad_commission.md")
+		err := os.WriteFile(badFile, []byte(badContent), 0644)
 		require.NoError(t, err)
 
 		result = extCtx.RunGuild("commission", "create", "--file", 

@@ -20,10 +20,14 @@ import (
 type kanbanRegistryAdapter struct {
 	registry       registry.ComponentRegistry
 	storageAdapter *kanbanStorageAdapter
+	mu             sync.Mutex
 }
 
 // Storage returns a kanban-compatible storage registry
 func (a *kanbanRegistryAdapter) Storage() kanban.StorageRegistry {
+	a.mu.Lock()
+	defer a.mu.Unlock()
+	
 	if a.storageAdapter == nil {
 		a.storageAdapter = &kanbanStorageAdapter{
 			storage:         a.registry.Storage(),
@@ -41,6 +45,7 @@ type kanbanStorageAdapter struct {
 	memoryStore       memory.Store // Override memory store
 	taskRepository    kanban.TaskRepository // Shared task repository
 	boardRepository   kanban.BoardRepository // Shared board repository
+	mu                sync.Mutex
 }
 
 func (a *kanbanStorageAdapter) GetKanbanCampaignRepository() kanban.CampaignRepository {
@@ -54,22 +59,29 @@ func (a *kanbanStorageAdapter) GetKanbanCommissionRepository() kanban.Commission
 }
 
 func (a *kanbanStorageAdapter) GetBoardRepository() kanban.BoardRepository {
-	if a.boardRepository != nil {
-		return a.boardRepository
+	a.mu.Lock()
+	defer a.mu.Unlock()
+	
+	if a.boardRepository == nil {
+		a.boardRepository = newMockBoardRepository()
 	}
-	// Return a mock implementation for testing
-	return newMockBoardRepository()
+	return a.boardRepository
 }
 
 func (a *kanbanStorageAdapter) GetKanbanTaskRepository() kanban.TaskRepository {
-	if a.taskRepository != nil {
-		return a.taskRepository
+	a.mu.Lock()
+	defer a.mu.Unlock()
+	
+	if a.taskRepository == nil {
+		a.taskRepository = newMockTaskRepository()
 	}
-	// Return a mock implementation for testing
-	return newMockTaskRepository()
+	return a.taskRepository
 }
 
 func (a *kanbanStorageAdapter) GetMemoryStore() kanban.MemoryStore {
+	a.mu.Lock()
+	defer a.mu.Unlock()
+	
 	// Return the override memory store if set
 	if a.memoryStore != nil {
 		return a.memoryStore
@@ -78,7 +90,9 @@ func (a *kanbanStorageAdapter) GetMemoryStore() kanban.MemoryStore {
 	if memStore := a.storage.GetMemoryStore(); memStore != nil {
 		return &memoryStoreAdapter{store: memStore}
 	}
-	return newMockMemoryStore()
+	// Create and cache a mock memory store
+	a.memoryStore = newMockMemoryStore()
+	return a.memoryStore
 }
 
 // Memory store adapter
@@ -134,8 +148,17 @@ func (r *mockBoardRepository) CreateBoard(ctx context.Context, board interface{}
 	// Extract board ID from the interface
 	boardMap, ok := board.(map[string]interface{})
 	if ok {
-		if id, ok := boardMap["id"].(string); ok {
-			r.boards[id] = board
+		// Make a deep copy of the board map to avoid concurrent access issues
+		boardCopy := make(map[string]interface{})
+		for k, v := range boardMap {
+			boardCopy[k] = v
+		}
+		
+		// Check for both uppercase and lowercase ID
+		if id, ok := boardCopy["ID"].(string); ok {
+			r.boards[id] = boardCopy
+		} else if id, ok := boardCopy["id"].(string); ok {
+			r.boards[id] = boardCopy
 		}
 	}
 	return nil
@@ -146,6 +169,14 @@ func (r *mockBoardRepository) GetBoard(ctx context.Context, id string) (interfac
 	defer r.mu.RUnlock()
 	
 	if board, ok := r.boards[id]; ok {
+		// Make a copy of the board map before returning
+		if boardMap, ok := board.(map[string]interface{}); ok {
+			boardCopy := make(map[string]interface{})
+			for k, v := range boardMap {
+				boardCopy[k] = v
+			}
+			return boardCopy, nil
+		}
 		return board, nil
 	}
 	return nil, nil
@@ -158,8 +189,17 @@ func (r *mockBoardRepository) UpdateBoard(ctx context.Context, board interface{}
 	// Extract board ID from the interface
 	boardMap, ok := board.(map[string]interface{})
 	if ok {
-		if id, ok := boardMap["id"].(string); ok {
-			r.boards[id] = board
+		// Make a deep copy of the board map to avoid concurrent access issues
+		boardCopy := make(map[string]interface{})
+		for k, v := range boardMap {
+			boardCopy[k] = v
+		}
+		
+		// Check for both uppercase and lowercase ID
+		if id, ok := boardCopy["ID"].(string); ok {
+			r.boards[id] = boardCopy
+		} else if id, ok := boardCopy["id"].(string); ok {
+			r.boards[id] = boardCopy
 		}
 	}
 	return nil
@@ -179,7 +219,16 @@ func (r *mockBoardRepository) ListBoards(ctx context.Context) ([]interface{}, er
 	
 	boards := make([]interface{}, 0, len(r.boards))
 	for _, board := range r.boards {
-		boards = append(boards, board)
+		// Make a copy of the board map before returning
+		if boardMap, ok := board.(map[string]interface{}); ok {
+			boardCopy := make(map[string]interface{})
+			for k, v := range boardMap {
+				boardCopy[k] = v
+			}
+			boards = append(boards, boardCopy)
+		} else {
+			boards = append(boards, board)
+		}
 	}
 	return boards, nil
 }
@@ -202,8 +251,17 @@ func (r *mockTaskRepository) CreateTask(ctx context.Context, task interface{}) e
 	// Extract task ID from the interface
 	taskMap, ok := task.(map[string]interface{})
 	if ok {
-		if id, ok := taskMap["id"].(string); ok {
-			r.tasks[id] = task
+		// Make a deep copy of the task map to avoid concurrent access issues
+		taskCopy := make(map[string]interface{})
+		for k, v := range taskMap {
+			taskCopy[k] = v
+		}
+		
+		// Check for both uppercase and lowercase ID
+		if id, ok := taskCopy["ID"].(string); ok {
+			r.tasks[id] = taskCopy
+		} else if id, ok := taskCopy["id"].(string); ok {
+			r.tasks[id] = taskCopy
 		}
 	}
 	return nil
@@ -216,8 +274,17 @@ func (r *mockTaskRepository) UpdateTask(ctx context.Context, task interface{}) e
 	// Extract task ID from the interface
 	taskMap, ok := task.(map[string]interface{})
 	if ok {
-		if id, ok := taskMap["id"].(string); ok {
-			r.tasks[id] = task
+		// Make a deep copy of the task map to avoid concurrent access issues
+		taskCopy := make(map[string]interface{})
+		for k, v := range taskMap {
+			taskCopy[k] = v
+		}
+		
+		// Check for both uppercase and lowercase ID
+		if id, ok := taskCopy["ID"].(string); ok {
+			r.tasks[id] = taskCopy
+		} else if id, ok := taskCopy["id"].(string); ok {
+			r.tasks[id] = taskCopy
 		}
 	}
 	return nil
@@ -235,14 +302,33 @@ func (r *mockTaskRepository) ListTasksByBoard(ctx context.Context, boardID strin
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	
+	
 	var results []interface{}
 	for _, task := range r.tasks {
 		if taskMap, ok := task.(map[string]interface{}); ok {
-			if bid, ok := taskMap["board_id"].(string); ok && bid == boardID {
-				results = append(results, task)
+			// Check BoardID field (uppercase) first, then board_id in metadata
+			if bid, ok := taskMap["BoardID"].(string); ok {
+				if bid == boardID {
+					// Make a copy of the task map before returning
+					taskCopy := make(map[string]interface{})
+					for k, v := range taskMap {
+						taskCopy[k] = v
+					}
+					results = append(results, taskCopy)
+				}
+			} else if metadata, ok := taskMap["Metadata"].(map[string]interface{}); ok {
+				if bid, ok := metadata["board_id"].(string); ok && bid == boardID {
+					// Make a copy of the task map before returning
+					taskCopy := make(map[string]interface{})
+					for k, v := range taskMap {
+						taskCopy[k] = v
+					}
+					results = append(results, taskCopy)
+				}
 			}
 		}
 	}
+	
 	return results, nil
 }
 

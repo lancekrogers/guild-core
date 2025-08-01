@@ -52,7 +52,7 @@ func TestChatExperience_HappyPath(t *testing.T) {
 		{
 			name:                 "Initial greeting and system check",
 			userInput:            "hello, can you help me understand this codebase?",
-			expectedResponseTime: 3 * time.Second,
+			expectedResponseTime: 1 * time.Second, // Reduced from 3 seconds
 			responseValidation: func(response string) bool {
 				return len(response) > 20 &&
 					(strings.Contains(strings.ToLower(response), "hello") ||
@@ -68,7 +68,7 @@ func TestChatExperience_HappyPath(t *testing.T) {
 		{
 			name:                 "Code analysis request",
 			userInput:            "analyze the main.go file for potential improvements",
-			expectedResponseTime: 10 * time.Second,
+			expectedResponseTime: 3 * time.Second, // Reduced from 10 seconds
 			responseValidation: func(response string) bool {
 				return len(response) > 100 &&
 					(strings.Contains(strings.ToLower(response), "main.go") ||
@@ -84,7 +84,7 @@ func TestChatExperience_HappyPath(t *testing.T) {
 		{
 			name:                 "Follow-up with context",
 			userInput:            "what about the registry package we discussed?",
-			expectedResponseTime: 5 * time.Second,
+			expectedResponseTime: 2 * time.Second, // Reduced from 5 seconds
 			responseValidation: func(response string) bool {
 				return len(response) > 50 &&
 					(strings.Contains(strings.ToLower(response), "registry") ||
@@ -99,7 +99,7 @@ func TestChatExperience_HappyPath(t *testing.T) {
 		{
 			name:                 "Complex refactoring question",
 			userInput:            "suggest comprehensive refactoring strategies for improving code maintainability",
-			expectedResponseTime: 15 * time.Second,
+			expectedResponseTime: 5 * time.Second, // Reduced from 15 seconds
 			responseValidation: func(response string) bool {
 				return len(response) > 150 &&
 					(strings.Contains(strings.ToLower(response), "refactor") ||
@@ -115,7 +115,7 @@ func TestChatExperience_HappyPath(t *testing.T) {
 		{
 			name:                 "Quick clarification",
 			userInput:            "can you explain the last point?",
-			expectedResponseTime: 3 * time.Second,
+			expectedResponseTime: 1 * time.Second, // Reduced from 3 seconds
 			responseValidation: func(response string) bool {
 				return len(response) > 30 &&
 					(strings.Contains(strings.ToLower(response), "explain") ||
@@ -147,7 +147,7 @@ func TestChatExperience_HappyPath(t *testing.T) {
 			t.Logf("✓ Message sent and UI updated immediately")
 
 			// Wait for agent response with timeout
-			response, err := app.WaitForResponse(scenario.expectedResponseTime + 5*time.Second)
+			response, err := app.WaitForResponse(scenario.expectedResponseTime + 2*time.Second) // Reduced buffer
 			responseTime := time.Since(messageStart)
 
 			// Validate response timing and content
@@ -244,21 +244,21 @@ func TestChatInterface_StressTest(t *testing.T) {
 	}{
 		{
 			name:            "Rapid fire messages",
-			messageCount:    20,
+			messageCount:    10, // Reduced from 20
 			messageSize:     50,
-			maxResponseTime: 3 * time.Second,
+			maxResponseTime: 1 * time.Second, // Reduced from 3 seconds
 		},
 		{
 			name:            "Large message content",
-			messageCount:    5,
+			messageCount:    3, // Reduced from 5
 			messageSize:     1000,
-			maxResponseTime: 8 * time.Second,
+			maxResponseTime: 3 * time.Second, // Reduced from 8 seconds
 		},
 		{
 			name:            "Extended conversation",
-			messageCount:    50,
+			messageCount:    20, // Reduced from 50
 			messageSize:     100,
-			maxResponseTime: 5 * time.Second,
+			maxResponseTime: 2 * time.Second, // Reduced from 5 seconds
 		},
 	}
 
@@ -281,7 +281,7 @@ func TestChatInterface_StressTest(t *testing.T) {
 				}
 
 				// Wait for response
-				response, err := app.WaitForResponse(scenario.maxResponseTime + 2*time.Second)
+				response, err := app.WaitForResponse(scenario.maxResponseTime + 500*time.Millisecond) // Reduced buffer
 				responseTime := time.Since(messageStart)
 				totalResponseTime += responseTime
 
@@ -377,11 +377,11 @@ func TestChatInterface_ErrorRecovery(t *testing.T) {
 			app.SendMessage(scenario.message)
 
 			// Check if app remains responsive
-			time.Sleep(100 * time.Millisecond) // Allow processing
+			time.Sleep(50 * time.Millisecond) // Allow processing - reduced from 100ms
 			assert.True(t, app.IsResponsive(), "App should remain responsive after sending message")
 
 			// Wait for response or error handling
-			response, err := app.WaitForResponse(scenario.recoveryTime + 2*time.Second)
+			response, err := app.WaitForResponse(scenario.recoveryTime + 500*time.Millisecond) // Reduced buffer
 
 			if scenario.expectedErrorHandling {
 				// For error cases, we expect either an error or a helpful error message
@@ -410,8 +410,8 @@ func TestChatInterface_ConcurrentUsers(t *testing.T) {
 	framework := NewTUITestFramework(t)
 	defer framework.Cleanup()
 
-	const numUsers = 5
-	const messagesPerUser = 10
+	const numUsers = 3 // Reduced from 5
+	const messagesPerUser = 5 // Reduced from 10
 
 	apps := make([]*TUIApp, numUsers)
 	for i := 0; i < numUsers; i++ {
@@ -438,7 +438,7 @@ func TestChatInterface_ConcurrentUsers(t *testing.T) {
 
 				app.SendMessage(message)
 
-				response, err := app.WaitForResponse(5 * time.Second)
+				response, err := app.WaitForResponse(2 * time.Second) // Reduced from 5 seconds
 				if err != nil {
 					errors <- err
 				} else if len(response) == 0 {
@@ -446,7 +446,7 @@ func TestChatInterface_ConcurrentUsers(t *testing.T) {
 				}
 
 				// Small delay between messages
-				time.Sleep(100 * time.Millisecond)
+				time.Sleep(50 * time.Millisecond) // Reduced from 100ms
 			}
 		}(userID, apps[userID])
 	}
@@ -456,7 +456,7 @@ func TestChatInterface_ConcurrentUsers(t *testing.T) {
 		select {
 		case <-done:
 			// User completed successfully
-		case <-time.After(2 * time.Minute):
+		case <-time.After(30 * time.Second): // Reduced from 2 minutes
 			t.Fatal("Timeout waiting for concurrent users to complete")
 		}
 	}

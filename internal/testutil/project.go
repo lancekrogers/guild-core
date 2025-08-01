@@ -53,9 +53,22 @@ func SetupTestProject(t *testing.T, opts ...TestProjectOptions) (*project.Contex
 	// Initialize project and get project context
 	ctx := context.Background()
 	
-	// Clean up any existing database file to avoid dirty migration state
-	dbPath := filepath.Join(tempDir, ".campaign", "memory.db")
-	_ = os.Remove(dbPath) // Ignore error if file doesn't exist
+	// Clean up any existing database files to avoid dirty migration state
+	possibleDbPaths := []string{
+		filepath.Join(tempDir, ".campaign", "memory.db"),
+		filepath.Join(tempDir, ".campaign", "memory.db-shm"),
+		filepath.Join(tempDir, ".campaign", "memory.db-wal"),
+		filepath.Join(tempDir, ".guild", "memory.db"),
+		filepath.Join(tempDir, ".guild", "memory.db-shm"),
+		filepath.Join(tempDir, ".guild", "memory.db-wal"),
+		filepath.Join(tempDir, ".guild", "guild.db"),
+		filepath.Join(tempDir, ".guild", "guild.db-shm"),
+		filepath.Join(tempDir, ".guild", "guild.db-wal"),
+	}
+	
+	for _, dbPath := range possibleDbPaths {
+		_ = os.Remove(dbPath) // Ignore error if file doesn't exist
+	}
 	
 	projCtx, err := project.Initialize(ctx, tempDir, project.InitOptions{})
 	require.NoError(t, err, "failed to initialize project")

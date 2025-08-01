@@ -281,6 +281,7 @@ func (f *KanbanTestFramework) CreateComplexBoard(complexity BoardComplexity) *ka
 		if err != nil {
 			f.t.Fatalf("Failed to create task %d: %v", i+1, err)
 		}
+		
 
 		// Simulate different statuses across tasks
 		var status kanban.TaskStatus

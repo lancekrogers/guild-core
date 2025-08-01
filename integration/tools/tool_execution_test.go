@@ -177,7 +177,7 @@ func TestResponseParserIntegration(t *testing.T) {
 			require.NoError(t, err)
 
 			if tc.wantCalls == 0 {
-				assert.Nil(t, calls)
+				assert.Len(t, calls, 0)
 			} else {
 				require.Len(t, calls, tc.wantCalls)
 				assert.Equal(t, "test_tool", calls[0].Function.Name)

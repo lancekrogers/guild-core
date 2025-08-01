@@ -51,6 +51,15 @@ func (r *DefaultProjectRegistry) SetProjectManager(manager ProjectManager) error
 
 // GetCurrentContext returns the current project context
 func (r *DefaultProjectRegistry) GetCurrentContext(ctx context.Context) (*ProjectContext, error) {
+	// First check if project context is available in the context.Context
+	if projCtx, ok := project.FromContext(ctx); ok {
+		// Adapt the project.Context to registry.ProjectContext
+		adapted := projectContextAdapter{ctx: projCtx}
+		var result ProjectContext = adapted
+		return &result, nil
+	}
+
+	// Fall back to getting from manager
 	r.mu.RLock()
 	manager := r.manager
 	r.mu.RUnlock()

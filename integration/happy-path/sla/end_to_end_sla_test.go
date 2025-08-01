@@ -26,7 +26,7 @@ func TestEndToEndSLA_HappyPath(t *testing.T) {
 	}{
 		{
 			name:         "Light load SLA validation",
-			testDuration: 30 * time.Second,
+			testDuration: 10 * time.Second, // Reduced from 30 seconds
 			userLoadProfile: UserLoadProfile{
 				ConcurrentUsers:      5,
 				ActionsPerUserPerMin: 10,
@@ -52,7 +52,7 @@ func TestEndToEndSLA_HappyPath(t *testing.T) {
 		},
 		{
 			name:         "Heavy load SLA validation",
-			testDuration: 60 * time.Second,
+			testDuration: 20 * time.Second, // Reduced from 60 seconds
 			userLoadProfile: UserLoadProfile{
 				ConcurrentUsers:      25,
 				ActionsPerUserPerMin: 15,
@@ -114,25 +114,25 @@ func TestEndToEndSLA_HappyPath(t *testing.T) {
 			err = slaMonitor.Start(testCtx)
 			require.NoError(t, err, "Failed to start SLA monitoring")
 
-			// Start user simulation
+			// Start user simulation (adjusted periods for shorter tests)
 			simulationResults := userSimulator.StartSimulation(testCtx, SimulationConfig{
-				WarmupPeriod:      5 * time.Minute,
-				SteadyStatePeriod: scenario.testDuration - 10*time.Minute,
-				CooldownPeriod:    5 * time.Minute,
+				WarmupPeriod:      time.Duration(float64(scenario.testDuration) * 0.2), // 20% warmup
+				SteadyStatePeriod: time.Duration(float64(scenario.testDuration) * 0.6), // 60% steady
+				CooldownPeriod:    time.Duration(float64(scenario.testDuration) * 0.2), // 20% cooldown
 			})
 
-			// PHASE 3: Inject realistic failure scenarios during test
+			// PHASE 3: Inject realistic failure scenarios during test (scaled down)
 			failureScenarios := []FailureScenario{
 				{
 					Type:      FailureTypeNetworkLatency,
 					Severity:  20, // 20% of baseline latency
-					Duration:  5 * time.Minute,
+					Duration:  time.Duration(float64(scenario.testDuration) * 0.2), // 20% of test
 					StartTime: scenario.testDuration / 3,
 				},
 				{
 					Type:      FailureTypeMemoryPressure,
 					Severity:  80, // 80% memory utilization
-					Duration:  3 * time.Minute,
+					Duration:  time.Duration(float64(scenario.testDuration) * 0.15), // 15% of test
 					StartTime: 2 * scenario.testDuration / 3,
 				},
 			}

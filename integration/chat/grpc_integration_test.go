@@ -18,6 +18,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild/pkg/events"
 	grpcpkg "github.com/lancekrogers/guild/pkg/grpc"
 	guildv1 "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
 	"github.com/lancekrogers/guild/pkg/project"
@@ -93,8 +94,9 @@ func TestGRPCServerStartup(t *testing.T) {
 	err = reg.Initialize(ctx, *registryConfig)
 	require.NoError(t, err)
 
-	// Create a mock event bus
-	eventBus := &mockEventBus{}
+	// Create a real event bus with adapter
+	realEventBus := events.NewMemoryEventBus(events.DefaultEventBusConfig())
+	eventBus := grpcpkg.NewEventBusAdapter(realEventBus)
 
 	// Start gRPC server in goroutine
 	server := grpcpkg.NewServer(reg, eventBus)
@@ -515,7 +517,8 @@ func TestGRPCServerServicesDiscoverable(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create event bus (same as serve.go)
-	eventBus := &mockEventBus{}
+	realEventBus := events.NewMemoryEventBus(events.DefaultEventBusConfig())
+	eventBus := grpcpkg.NewEventBusAdapter(realEventBus)
 
 	// Start gRPC server in goroutine
 	server := grpcpkg.NewServer(reg, eventBus)
@@ -677,7 +680,8 @@ func TestCompleteServerClientWorkflow(t *testing.T) {
 	require.NoError(t, err, "Registry initialization should succeed (same as serve.go)")
 
 	// Create event bus (same as serve.go)
-	eventBus := &mockEventBus{}
+	realEventBus := events.NewMemoryEventBus(events.DefaultEventBusConfig())
+	eventBus := grpcpkg.NewEventBusAdapter(realEventBus)
 
 	// Start server (same as serve.go)
 	server := grpcpkg.NewServer(reg, eventBus)
