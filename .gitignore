@@ -272,3 +272,8 @@ bin/guild
 .test-*.tmp
 demo
 
+
+# Binary files should only be in bin/
+/guild
+*.test
+*.out
