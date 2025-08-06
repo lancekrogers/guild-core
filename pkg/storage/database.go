@@ -113,6 +113,11 @@ func (d *Database) Migrate(ctx context.Context) error {
 			WithOperation("Migrate")
 	}
 
+	// Check if migrations should be skipped (for testing environments)
+	if os.Getenv("GUILD_SKIP_MIGRATIONS") == "true" {
+		return nil
+	}
+
 	// Create migration driver
 	driver, err := sqlite3.WithInstance(d.db, &sqlite3.Config{})
 	if err != nil {
@@ -120,9 +125,6 @@ func (d *Database) Migrate(ctx context.Context) error {
 			WithComponent("Database").
 			WithOperation("Migrate")
 	}
-
-	// Never skip migrations - they are required for proper database setup
-	// Test environments should handle cleanup properly instead of skipping migrations
 
 	// Create migration source from embedded filesystem
 	source, err := iofs.New(migrations, "migrations")

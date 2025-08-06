@@ -486,6 +486,10 @@ func (t *MultiFileRefactorTool) findFilesInScope(params RefactorParams) ([]strin
 
 		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 			if err != nil {
+				// Skip directories with permission errors instead of failing the entire operation
+				if os.IsPermission(err) {
+					return filepath.SkipDir
+				}
 				return err
 			}
 			if !info.IsDir() && code.DetectLanguage(path) == language {
@@ -503,6 +507,10 @@ func (t *MultiFileRefactorTool) findFilesInScope(params RefactorParams) ([]strin
 
 		err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
 			if err != nil {
+				// Skip directories with permission errors instead of failing the entire operation
+				if os.IsPermission(err) {
+					return filepath.SkipDir
+				}
 				return err
 			}
 			if !info.IsDir() && code.DetectLanguage(path) == language {
