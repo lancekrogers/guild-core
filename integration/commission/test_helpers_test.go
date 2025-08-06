@@ -8,6 +8,7 @@ package commission_test
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/lancekrogers/guild/pkg/project"
 	"github.com/lancekrogers/guild/pkg/registry"
@@ -88,7 +89,8 @@ func (w *testStorageRegistryWrapper) RegisterSessionRepository(repo registry.Ses
 }
 
 func (w *testStorageRegistryWrapper) GetSessionRepository() registry.SessionRepository {
-	return nil
+	// Create adapter
+	return &testSessionRepoAdapter{repo: w.storageReg.GetSessionRepository()}
 }
 
 func (w *testStorageRegistryWrapper) RegisterPromptChainRepository(repo registry.PromptChainRepository) error {
@@ -531,6 +533,273 @@ func (w *testKanbanCommissionRepoWrapper) CreateCommission(ctx context.Context, 
 
 func (w *testKanbanCommissionRepoWrapper) GetCommission(ctx context.Context, id string) (interface{}, error) {
 	return w.commissionRepo.GetCommission(ctx, id)
+}
+
+// testSessionRepoAdapter adapts storage.SessionRepository to registry.SessionRepository
+type testSessionRepoAdapter struct {
+	repo storage.SessionRepository
+}
+
+func (a *testSessionRepoAdapter) CreateSession(ctx context.Context, session *registry.ChatSession) error {
+	if a.repo == nil {
+		return nil // Skip if no underlying repo
+	}
+	storageSession := &storage.ChatSession{
+		ID:         session.ID,
+		Name:       session.Name,
+		CampaignID: session.CampaignID,
+		CreatedAt:  session.CreatedAt,
+		UpdatedAt:  session.UpdatedAt,
+		Metadata:   session.Metadata,
+	}
+	return a.repo.CreateSession(ctx, storageSession)
+}
+
+func (a *testSessionRepoAdapter) GetSession(ctx context.Context, id string) (*registry.ChatSession, error) {
+	if a.repo == nil {
+		return nil, nil // Skip if no underlying repo
+	}
+	storageSession, err := a.repo.GetSession(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return &registry.ChatSession{
+		ID:         storageSession.ID,
+		Name:       storageSession.Name,
+		CampaignID: storageSession.CampaignID,
+		CreatedAt:  storageSession.CreatedAt,
+		UpdatedAt:  storageSession.UpdatedAt,
+		Metadata:   storageSession.Metadata,
+	}, nil
+}
+
+func (a *testSessionRepoAdapter) ListSessions(ctx context.Context, limit, offset int32) ([]*registry.ChatSession, error) {
+	if a.repo == nil {
+		return nil, nil // Skip if no underlying repo
+	}
+	storageSessions, err := a.repo.ListSessions(ctx, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+
+	sessions := make([]*registry.ChatSession, len(storageSessions))
+	for i, ss := range storageSessions {
+		sessions[i] = &registry.ChatSession{
+			ID:         ss.ID,
+			Name:       ss.Name,
+			CampaignID: ss.CampaignID,
+			CreatedAt:  ss.CreatedAt,
+			UpdatedAt:  ss.UpdatedAt,
+			Metadata:   ss.Metadata,
+		}
+	}
+	return sessions, nil
+}
+
+func (a *testSessionRepoAdapter) ListSessionsByCampaign(ctx context.Context, campaignID string) ([]*registry.ChatSession, error) {
+	if a.repo == nil {
+		return nil, nil // Skip if no underlying repo
+	}
+	storageSessions, err := a.repo.ListSessionsByCampaign(ctx, campaignID)
+	if err != nil {
+		return nil, err
+	}
+
+	sessions := make([]*registry.ChatSession, len(storageSessions))
+	for i, ss := range storageSessions {
+		sessions[i] = &registry.ChatSession{
+			ID:         ss.ID,
+			Name:       ss.Name,
+			CampaignID: ss.CampaignID,
+			CreatedAt:  ss.CreatedAt,
+			UpdatedAt:  ss.UpdatedAt,
+			Metadata:   ss.Metadata,
+		}
+	}
+	return sessions, nil
+}
+
+func (a *testSessionRepoAdapter) UpdateSession(ctx context.Context, session *registry.ChatSession) error {
+	if a.repo == nil {
+		return nil // Skip if no underlying repo
+	}
+	storageSession := &storage.ChatSession{
+		ID:         session.ID,
+		Name:       session.Name,
+		CampaignID: session.CampaignID,
+		CreatedAt:  session.CreatedAt,
+		UpdatedAt:  session.UpdatedAt,
+		Metadata:   session.Metadata,
+	}
+	return a.repo.UpdateSession(ctx, storageSession)
+}
+
+func (a *testSessionRepoAdapter) DeleteSession(ctx context.Context, id string) error {
+	if a.repo == nil {
+		return nil // Skip if no underlying repo
+	}
+	return a.repo.DeleteSession(ctx, id)
+}
+
+func (a *testSessionRepoAdapter) CountSessions(ctx context.Context) (int64, error) {
+	if a.repo == nil {
+		return 0, nil // Skip if no underlying repo
+	}
+	return a.repo.CountSessions(ctx)
+}
+
+// Message operations
+func (a *testSessionRepoAdapter) SaveMessage(ctx context.Context, message *registry.ChatMessage) error {
+	if a.repo == nil {
+		return nil // Skip if no underlying repo
+	}
+	storageMessage := &storage.ChatMessage{
+		ID:        message.ID,
+		SessionID: message.SessionID,
+		Role:      message.Role,
+		Content:   message.Content,
+		CreatedAt: message.CreatedAt,
+		Metadata:  message.Metadata,
+	}
+	return a.repo.SaveMessage(ctx, storageMessage)
+}
+
+func (a *testSessionRepoAdapter) GetMessage(ctx context.Context, id string) (*registry.ChatMessage, error) {
+	if a.repo == nil {
+		return nil, nil // Skip if no underlying repo
+	}
+	storageMessage, err := a.repo.GetMessage(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	return &registry.ChatMessage{
+		ID:        storageMessage.ID,
+		SessionID: storageMessage.SessionID,
+		Role:      storageMessage.Role,
+		Content:   storageMessage.Content,
+		CreatedAt: storageMessage.CreatedAt,
+		Metadata:  storageMessage.Metadata,
+	}, nil
+}
+
+func (a *testSessionRepoAdapter) GetMessages(ctx context.Context, sessionID string) ([]*registry.ChatMessage, error) {
+	if a.repo == nil {
+		return nil, nil // Skip if no underlying repo
+	}
+	storageMessages, err := a.repo.GetMessages(ctx, sessionID)
+	if err != nil {
+		return nil, err
+	}
+
+	messages := make([]*registry.ChatMessage, len(storageMessages))
+	for i, sm := range storageMessages {
+		messages[i] = &registry.ChatMessage{
+			ID:        sm.ID,
+			SessionID: sm.SessionID,
+			Role:      sm.Role,
+			Content:   sm.Content,
+			CreatedAt: sm.CreatedAt,
+			Metadata:  sm.Metadata,
+		}
+	}
+	return messages, nil
+}
+
+func (a *testSessionRepoAdapter) GetMessagesPaginated(ctx context.Context, sessionID string, limit, offset int32) ([]*registry.ChatMessage, error) {
+	if a.repo == nil {
+		return nil, nil // Skip if no underlying repo
+	}
+	storageMessages, err := a.repo.GetMessagesPaginated(ctx, sessionID, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+
+	messages := make([]*registry.ChatMessage, len(storageMessages))
+	for i, sm := range storageMessages {
+		messages[i] = &registry.ChatMessage{
+			ID:        sm.ID,
+			SessionID: sm.SessionID,
+			Role:      sm.Role,
+			Content:   sm.Content,
+			CreatedAt: sm.CreatedAt,
+			Metadata:  sm.Metadata,
+		}
+	}
+	return messages, nil
+}
+
+func (a *testSessionRepoAdapter) GetMessagesAfter(ctx context.Context, sessionID string, after time.Time) ([]*registry.ChatMessage, error) {
+	if a.repo == nil {
+		return nil, nil // Skip if no underlying repo
+	}
+	storageMessages, err := a.repo.GetMessagesAfter(ctx, sessionID, after)
+	if err != nil {
+		return nil, err
+	}
+
+	messages := make([]*registry.ChatMessage, len(storageMessages))
+	for i, sm := range storageMessages {
+		messages[i] = &registry.ChatMessage{
+			ID:        sm.ID,
+			SessionID: sm.SessionID,
+			Role:      sm.Role,
+			Content:   sm.Content,
+			CreatedAt: sm.CreatedAt,
+			Metadata:  sm.Metadata,
+		}
+	}
+	return messages, nil
+}
+
+func (a *testSessionRepoAdapter) CountMessages(ctx context.Context, sessionID string) (int64, error) {
+	if a.repo == nil {
+		return 0, nil // Skip if no underlying repo
+	}
+	return a.repo.CountMessages(ctx, sessionID)
+}
+
+func (a *testSessionRepoAdapter) DeleteMessage(ctx context.Context, id string) error {
+	if a.repo == nil {
+		return nil // Skip if no underlying repo
+	}
+	return a.repo.DeleteMessage(ctx, id)
+}
+
+func (a *testSessionRepoAdapter) StreamMessages(ctx context.Context, sessionID string, since time.Time) (<-chan *registry.ChatMessage, error) {
+	if a.repo == nil {
+		// Return empty channel if no underlying repo
+		ch := make(chan *registry.ChatMessage)
+		close(ch)
+		return ch, nil
+	}
+	
+	storageCh, err := a.repo.StreamMessages(ctx, sessionID, since)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convert storage messages to registry messages
+	registryCh := make(chan *registry.ChatMessage)
+	go func() {
+		defer close(registryCh)
+		for storageMessage := range storageCh {
+			registryMessage := &registry.ChatMessage{
+				ID:        storageMessage.ID,
+				SessionID: storageMessage.SessionID,
+				Role:      storageMessage.Role,
+				Content:   storageMessage.Content,
+				CreatedAt: storageMessage.CreatedAt,
+				Metadata:  storageMessage.Metadata,
+			}
+			select {
+			case registryCh <- registryMessage:
+			case <-ctx.Done():
+				return
+			}
+		}
+	}()
+
+	return registryCh, nil
 }
 
 // strPtr returns a pointer to a string

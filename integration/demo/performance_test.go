@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package demo
 
 import (
@@ -115,13 +118,20 @@ func TestMemoryUsage(t *testing.T) {
 
 	t.Logf("Ending memory: %.2f MB", float64(endMem)/(1024*1024))
 
-	growth := endMem - startMem
+	var growth int64
+	if endMem >= startMem {
+		growth = int64(endMem - startMem)
+	} else {
+		// Memory decreased (due to GC or measurement variance)
+		growth = -int64(startMem - endMem)
+	}
 	growthMB := float64(growth) / (1024 * 1024)
 
 	t.Logf("Memory growth: %.2f MB", growthMB)
 
 	// Should not grow more than 50MB (generous limit for demo)
-	assert.Less(t, growth, uint64(50*1024*1024),
+	// Allow negative growth (memory freed)
+	assert.Less(t, growth, int64(50*1024*1024),
 		"Memory growth should be reasonable (< 50MB), got %.2f MB", growthMB)
 }
 

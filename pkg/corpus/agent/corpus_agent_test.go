@@ -22,6 +22,7 @@ func TestNewCorpusAgent(t *testing.T) {
 	// Create mock dependencies
 	mockProvider, err := mock.NewProvider()
 	require.NoError(t, err)
+	mockProvider.Enable()
 	vectorConfig := &vector.StoreConfig{
 		Type:              vector.StoreTypeChromem,
 		EmbeddingProvider: mockProvider,
@@ -381,6 +382,7 @@ func TestCorpusAgent_ErrorHandling(t *testing.T) {
 			// Create mock provider
 			mockProvider, err := mock.NewProvider()
 			require.NoError(t, err)
+			mockProvider.Enable()
 			if tt.setupMock != nil {
 				tt.setupMock(mockProvider)
 			}

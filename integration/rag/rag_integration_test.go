@@ -30,7 +30,9 @@ func TestRAGChunkingBehavior(t *testing.T) {
 	ctx := context.Background()
 
 	// Setup vector store
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
+	mockProvider.Enable()
 	vectorConfig := &vector.StoreConfig{
 		Type:              vector.StoreTypeChromem,
 		EmbeddingProvider: mockProvider,
@@ -128,7 +130,9 @@ func TestRAGDocumentLifecycle(t *testing.T) {
 	ctx := context.Background()
 
 	// Setup
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
+	mockProvider.Enable()
 	vectorConfig := &vector.StoreConfig{
 		Type:              vector.StoreTypeChromem,
 		EmbeddingProvider: mockProvider,
@@ -284,7 +288,9 @@ func TestRAGWithCorpusIntegration(t *testing.T) {
 	}
 
 	// Setup RAG with corpus support
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
+	mockProvider.Enable()
 	vectorConfig := &vector.StoreConfig{
 		Type:              vector.StoreTypeChromem,
 		EmbeddingProvider: mockProvider,
@@ -377,7 +383,9 @@ func TestRAGMetadataHandling(t *testing.T) {
 	ctx := context.Background()
 
 	// Setup
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
+	mockProvider.Enable()
 	vectorConfig := &vector.StoreConfig{
 		Type:              vector.StoreTypeChromem,
 		EmbeddingProvider: mockProvider,
@@ -443,7 +451,8 @@ func TestRAGErrorHandling(t *testing.T) {
 	ctx := context.Background()
 
 	t.Run("Empty document handling", func(t *testing.T) {
-		mockProvider := mock.NewProvider()
+		mockProvider, err := mock.NewProvider()
+		require.NoError(t, err)
 		vectorStore, _ := vector.NewVectorStore(ctx, &vector.StoreConfig{
 			Type:              vector.StoreTypeChromem,
 			EmbeddingProvider: mockProvider,
@@ -456,7 +465,7 @@ func TestRAGErrorHandling(t *testing.T) {
 		ragSystem := rag.NewRetrieverWithStore(vectorStore, rag.Config{})
 
 		// Try to add empty document
-		err := ragSystem.AddDocument(ctx, "empty-doc", "", "test")
+		err = ragSystem.AddDocument(ctx, "empty-doc", "", "test")
 		// Should either handle gracefully or return error
 		if err != nil {
 			assert.Contains(t, err.Error(), "empty")
@@ -464,7 +473,8 @@ func TestRAGErrorHandling(t *testing.T) {
 	})
 
 	t.Run("Invalid chunk configuration", func(t *testing.T) {
-		mockProvider := mock.NewProvider()
+		mockProvider, err := mock.NewProvider()
+		require.NoError(t, err)
 		vectorStore, _ := vector.NewVectorStore(ctx, &vector.StoreConfig{
 			Type:              vector.StoreTypeChromem,
 			EmbeddingProvider: mockProvider,
@@ -481,12 +491,13 @@ func TestRAGErrorHandling(t *testing.T) {
 		})
 
 		// Should handle gracefully
-		err := ragSystem.AddDocument(ctx, "test-doc", "Some content", "test")
+		err = ragSystem.AddDocument(ctx, "test-doc", "Some content", "test")
 		assert.NoError(t, err) // Should use defaults or handle gracefully
 	})
 
 	t.Run("Removing non-existent document", func(t *testing.T) {
-		mockProvider := mock.NewProvider()
+		mockProvider, err := mock.NewProvider()
+		require.NoError(t, err)
 		vectorStore, _ := vector.NewVectorStore(ctx, &vector.StoreConfig{
 			Type:              vector.StoreTypeChromem,
 			EmbeddingProvider: mockProvider,
@@ -499,7 +510,7 @@ func TestRAGErrorHandling(t *testing.T) {
 		ragSystem := rag.NewRetrieverWithStore(vectorStore, rag.Config{})
 
 		// Try to remove document that doesn't exist
-		err := ragSystem.RemoveDocument(ctx, "non-existent-doc")
+		err = ragSystem.RemoveDocument(ctx, "non-existent-doc")
 		// Should not panic, might return error or handle gracefully
 		t.Logf("Remove non-existent document result: %v", err)
 	})
@@ -514,7 +525,9 @@ func TestRAGPerformanceCharacteristics(t *testing.T) {
 	ctx := context.Background()
 
 	// Setup
-	mockProvider := mock.NewProvider()
+	mockProvider, err := mock.NewProvider()
+	require.NoError(t, err)
+	mockProvider.Enable()
 	vectorConfig := &vector.StoreConfig{
 		Type:              vector.StoreTypeChromem,
 		EmbeddingProvider: mockProvider,

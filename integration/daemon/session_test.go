@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package daemon_test
 
 import (
@@ -16,6 +19,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	pkgDaemon "github.com/lancekrogers/guild/internal/daemon"
 	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
 )
 
@@ -28,20 +32,67 @@ func TestSessionRoundTrip(t *testing.T) {
 	ctx := context.Background()
 
 	// Use a unique campaign name to avoid conflicts
-	campaign := fmt.Sprintf("test-campaign-%d", time.Now().Unix())
+	campaignName := fmt.Sprintf("test-campaign-%d", time.Now().Unix())
 
-	// Clean up test directory
-	homeDir, _ := os.UserHomeDir()
-	testDir := filepath.Join(homeDir, ".guild", "campaigns", campaign)
-	os.RemoveAll(testDir)
-	defer os.RemoveAll(testDir)
+	// Create temporary directory for test campaign
+	tmpDir := t.TempDir()
+	campaignDir := filepath.Join(tmpDir, campaignName)
+	if err := os.MkdirAll(campaignDir, 0755); err != nil {
+		t.Fatalf("Failed to create test campaign directory: %v", err)
+	}
 
-	// Socket path
-	socketPath := filepath.Join(homeDir, ".guild", "sockets", fmt.Sprintf("guild-%s-0.sock", campaign))
+	// Create .campaign directory structure
+	campaignConfigDir := filepath.Join(campaignDir, ".campaign")
+	if err := os.MkdirAll(campaignConfigDir, 0755); err != nil {
+		t.Fatalf("Failed to create .campaign directory: %v", err)
+	}
+
+	// Create campaign.yaml for campaign detection
+	campaignYaml := fmt.Sprintf(`campaign: %s
+project: %s-test
+description: Test campaign for integration tests
+`, campaignName, campaignName)
+	campaignYamlPath := filepath.Join(campaignConfigDir, "campaign.yaml")
+	if err := os.WriteFile(campaignYamlPath, []byte(campaignYaml), 0644); err != nil {
+		t.Fatalf("Failed to write campaign.yaml: %v", err)
+	}
+
+	// Create a basic guild.yaml for the campaign  
+	guildYaml := fmt.Sprintf(`
+name: %s
+version: 1.0.0
+agents:
+  - name: test-agent
+    type: worker
+    model: mock
+`, campaignName)
+	guildYamlPath := filepath.Join(campaignConfigDir, "guild.yaml")
+	if err := os.WriteFile(guildYamlPath, []byte(guildYaml), 0644); err != nil {
+		t.Fatalf("Failed to write guild.yaml: %v", err)
+	}
+
+	// Change to campaign directory
+	oldCwd, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("Failed to get current directory: %v", err)
+	}
+	defer os.Chdir(oldCwd)
+
+	if err := os.Chdir(campaignDir); err != nil {
+		t.Fatalf("Failed to change to campaign directory: %v", err)
+	}
+
+	// Get the actual socket path from daemon config
+	daemonConfig, err := pkgDaemon.GetDaemonConfig(campaignName, 0)
+	if err != nil {
+		t.Fatalf("Failed to get daemon config: %v", err)
+	}
+	socketPath := daemonConfig.SocketPath
 
 	// Start daemon
 	t.Log("Starting daemon...")
-	cmd := exec.Command("guild", "serve", "--dev", "--campaign", campaign)
+	cmd := exec.Command("guild", "serve", "--dev")
+	cmd.Dir = campaignDir
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
@@ -74,7 +125,7 @@ func TestSessionRoundTrip(t *testing.T) {
 
 	// Test 1: Create a session
 	t.Log("Creating session...")
-	campaignIDPtr := campaign
+	campaignIDPtr := campaignName
 	createReq := &pb.CreateSessionRequest{
 		Name:       "Test Session",
 		CampaignId: &campaignIDPtr,
@@ -130,7 +181,8 @@ func TestSessionRoundTrip(t *testing.T) {
 	conn.Close()
 
 	// Start new daemon
-	cmd = exec.Command("guild", "serve", "--dev", "--campaign", campaign)
+	cmd = exec.Command("guild", "serve", "--dev")
+	cmd.Dir = campaignDir
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 

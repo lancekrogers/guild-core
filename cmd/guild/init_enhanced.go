@@ -519,3 +519,60 @@ func adaptAgentConfigsToProjectType(ctx context.Context, projectPath string, pro
 
 	return nil
 }
+
+// createLegacyGuildConfig creates the legacy .guild/guild.yaml configuration for test compatibility
+func createLegacyGuildConfig(ctx context.Context, projectPath, projectName string, projectType *project.ProjectType) error {
+	// Check context
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("cli").
+			WithOperation("createLegacyGuildConfig")
+	}
+
+	// Create .guild directory
+	guildDir := filepath.Join(projectPath, ".guild")
+	if err := os.MkdirAll(guildDir, 0755); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create .guild directory").
+			WithComponent("cli").
+			WithOperation("createLegacyGuildConfig").
+			WithDetails("path", guildDir)
+	}
+
+	// Use project detector to generate a compatible guild config
+	detector := project.NewProjectDetector()
+	guildConfig, err := detector.GenerateGuildConfig(projectType, projectPath)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to generate guild config").
+			WithComponent("cli").
+			WithOperation("createLegacyGuildConfig")
+	}
+
+	// Ensure the config has the right structure for tests
+	if guildConfig.Name == "" {
+		guildConfig.Name = projectName
+	}
+	if guildConfig.Description == "" {
+		guildConfig.Description = fmt.Sprintf("%s project initialized with Guild", projectName)
+	}
+	if guildConfig.Version == "" {
+		guildConfig.Version = "1.0.0"
+	}
+
+	// Write legacy guild.yaml
+	guildConfigPath := filepath.Join(guildDir, paths.DefaultGuildConfigFile)
+	data, err := yaml.Marshal(guildConfig)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal legacy guild config").
+			WithComponent("cli").
+			WithOperation("createLegacyGuildConfig")
+	}
+
+	if err := os.WriteFile(guildConfigPath, data, 0644); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write legacy guild config").
+			WithComponent("cli").
+			WithOperation("createLegacyGuildConfig").
+			WithDetails("path", guildConfigPath)
+	}
+
+	return nil
+}

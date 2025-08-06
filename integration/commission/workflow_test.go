@@ -1,6 +1,6 @@
 //go:build integration
 
-package commission
+package commission_test
 
 import (
 	"fmt"

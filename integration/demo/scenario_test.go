@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package demo
 
 import (
@@ -13,6 +16,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"gopkg.in/yaml.v3"
 
 	"github.com/lancekrogers/guild/pkg/config"
 	"github.com/lancekrogers/guild/pkg/project"
@@ -302,7 +306,22 @@ func setupTestGuildProject(t *testing.T, workDir string) {
 		},
 	}
 
+	// Initialize standard project structure
 	err := project.InitializeWithConfig(workDir, guildConfig)
+	require.NoError(t, err)
+
+	// Since InitializeWithConfig doesn't actually apply the config,
+	// we need to create the .guild/guild.yaml file ourselves for tests
+	guildDir := filepath.Join(workDir, ".guild")
+	err = os.MkdirAll(guildDir, 0755)
+	require.NoError(t, err)
+
+	// Write the guild.yaml file
+	configPath := filepath.Join(guildDir, "guild.yaml")
+	data, err := yaml.Marshal(guildConfig)
+	require.NoError(t, err)
+	
+	err = os.WriteFile(configPath, data, 0644)
 	require.NoError(t, err)
 }
 

@@ -100,6 +100,7 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 
 	mockProvider, err := mock.NewProvider()
 	require.NoError(t, err)
+	mockProvider.Enable()
 	mockProvider.SetDefaultResponse("Based on the context, this is a comprehensive response.")
 
 	vectorConfig := &vector.StoreConfig{
@@ -273,6 +274,7 @@ func TestProviderSwitching(t *testing.T) {
 
 		mockProvider, err := mock.NewProvider()
 		require.NoError(t, err)
+		mockProvider.Enable()
 		vectorConfig := &vector.StoreConfig{
 			Type:              vector.StoreTypeChromem,
 			EmbeddingProvider: mockProvider,
@@ -462,6 +464,7 @@ func TestErrorScenarios(t *testing.T) {
 			Type:              vector.StoreTypeChromem,
 			EmbeddingProvider: func() interfaces.AIProvider {
 				p, _ := mock.NewProvider()
+				p.Enable()
 				return p
 			}(),
 			ChromemConfig: vector.ChromemConfig{
@@ -547,6 +550,7 @@ func TestMultiAgentWorkflow(t *testing.T) {
 	// Setup shared RAG system
 	mockProvider, err := mock.NewProvider()
 	require.NoError(t, err)
+	mockProvider.Enable()
 	mockProvider.SetDefaultResponse("Multi-agent response based on context.")
 
 	vectorConfig := &vector.StoreConfig{

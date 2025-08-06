@@ -81,8 +81,10 @@ func TestUniversalEmbedder_Embed(t *testing.T) {
 	// Create mock providers for tests
 	mockProvider1, err := mock.NewProvider()
 	require.NoError(t, err)
+	mockProvider1.Enable()
 	mockProvider2, err := mock.NewProvider()
 	require.NoError(t, err)
+	mockProvider2.Enable()
 
 	tests := []struct {
 		name        string
@@ -144,6 +146,7 @@ func TestUniversalEmbedder_GetEmbeddings(t *testing.T) {
 
 	mockProvider, err := mock.NewProvider()
 	require.NoError(t, err)
+	mockProvider.Enable()
 	embedder := NewUniversalEmbedder(mockProvider, WithStrategy(StrategyDedicated))
 
 	texts := []string{"text1", "text2", "text3"}

@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package daemon
 
 import (
@@ -20,6 +23,7 @@ import (
 	"google.golang.org/grpc/health/grpc_health_v1"
 
 	"github.com/lancekrogers/guild/internal/daemon"
+	pkgDaemon "github.com/lancekrogers/guild/pkg/daemon"
 	"github.com/lancekrogers/guild/pkg/gerror"
 	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
 	"github.com/lancekrogers/guild/pkg/observability"
@@ -241,9 +245,11 @@ func TestGuildSessionPersistence(t *testing.T) {
 
 // guildTestEnvironment provides a test environment for daemon testing
 type guildTestEnvironment struct {
-	campaignDir string
-	oldCwd      string
-	t           *testing.T
+	campaignDir   string
+	oldCwd        string
+	t             *testing.T
+	daemonStdout  *strings.Builder
+	daemonStderr  *strings.Builder
 }
 
 func createGuildTestEnvironment(ctx context.Context, t *testing.T) (*guildTestEnvironment, error) {
@@ -261,6 +267,28 @@ func createGuildTestEnvironment(ctx context.Context, t *testing.T) (*guildTestEn
 
 	logger.InfoContext(ctx, "Created test campaign directory", "path", campaignDir)
 
+	// Create .campaign directory structure
+	campaignConfigDir := filepath.Join(campaignDir, ".campaign")
+	if err := os.MkdirAll(campaignConfigDir, 0755); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeIO, "failed to create .campaign directory").
+			WithComponent("daemon_test").
+			WithOperation("createGuildTestEnvironment").
+			WithDetails("campaign_config_dir", campaignConfigDir)
+	}
+
+	// Create campaign.yaml for campaign detection
+	campaignYaml := `campaign: test-campaign
+project: test-campaign-project
+description: Test campaign for daemon integration tests
+`
+	campaignYamlPath := filepath.Join(campaignConfigDir, "campaign.yaml")
+	if err := os.WriteFile(campaignYamlPath, []byte(campaignYaml), 0644); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeIO, "failed to write campaign.yaml").
+			WithComponent("daemon_test").
+			WithOperation("createGuildTestEnvironment").
+			WithDetails("file_path", campaignYamlPath)
+	}
+
 	// Create a basic guild.yaml for the campaign
 	guildYaml := `
 name: test-campaign
@@ -270,7 +298,7 @@ agents:
     type: worker
     model: mock
 `
-	guildYamlPath := filepath.Join(campaignDir, "guild.yaml")
+	guildYamlPath := filepath.Join(campaignConfigDir, "guild.yaml")
 	if err := os.WriteFile(guildYamlPath, []byte(guildYaml), 0644); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeIO, "failed to write guild.yaml").
 			WithComponent("daemon_test").
@@ -278,7 +306,9 @@ agents:
 			WithDetails("file_path", guildYamlPath)
 	}
 
-	logger.InfoContext(ctx, "Created guild.yaml", "path", guildYamlPath)
+	logger.InfoContext(ctx, "Created campaign configuration", 
+		"campaign_yaml", campaignYamlPath,
+		"guild_yaml", guildYamlPath)
 
 	// Change to campaign directory
 	oldCwd, err := os.Getwd()
@@ -315,6 +345,16 @@ func (env *guildTestEnvironment) cleanup(ctx context.Context) {
 	logger.InfoContext(ctx, "Test environment cleanup completed")
 }
 
+func (env *guildTestEnvironment) getExpectedSocketPath() string {
+	// Get daemon config for test-campaign session 0
+	config, err := daemon.GetDaemonConfig("test-campaign", 0)
+	if err != nil {
+		env.t.Logf("Failed to get daemon config: %v", err)
+		return ""
+	}
+	return config.SocketPath
+}
+
 func (env *guildTestEnvironment) startDaemon(ctx context.Context) (*exec.Cmd, error) {
 	logger := observability.GetLogger(ctx)
 
@@ -327,15 +367,24 @@ func (env *guildTestEnvironment) startDaemon(ctx context.Context) (*exec.Cmd, er
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 
-	logger.InfoContext(ctx, "Starting daemon process", "command", "guild serve --foreground")
+	logger.InfoContext(ctx, "Starting daemon process", 
+		"command", "guild serve --foreground",
+		"cwd", env.campaignDir)
+	
 	if err := cmd.Start(); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start daemon process").
 			WithComponent("daemon_test").
 			WithOperation("startDaemon").
-			WithDetails("command", "guild serve --foreground")
+			WithDetails("command", "guild serve --foreground").
+			WithDetails("cwd", env.campaignDir)
 	}
 
 	logger.InfoContext(ctx, "Daemon process started", "pid", cmd.Process.Pid)
+	
+	// Store output builders for later access
+	env.daemonStdout = &stdout
+	env.daemonStderr = &stderr
+	
 	return cmd, nil
 }
 
@@ -354,6 +403,11 @@ func (env *guildTestEnvironment) waitForDaemonReady(ctx context.Context) error {
 	for {
 		select {
 		case <-startupCtx.Done():
+			// Log daemon output for debugging
+			if env.daemonStdout != nil && env.daemonStderr != nil {
+				env.t.Logf("DAEMON STDOUT:\n%s", env.daemonStdout.String())
+				env.t.Logf("DAEMON STDERR:\n%s", env.daemonStderr.String())
+			}
 			return gerror.Wrap(startupCtx.Err(), gerror.ErrCodeTimeout, "daemon failed to start within timeout").
 				WithComponent("daemon_test").
 				WithOperation("waitForDaemonReady").
@@ -366,9 +420,11 @@ func (env *guildTestEnvironment) waitForDaemonReady(ctx context.Context) error {
 					WithOperation("waitForDaemonReady")
 			}
 
-			// Check if daemon reports as running
-			if daemon.IsRunning() && daemon.IsReachable(ctx) {
-				logger.InfoContext(ctx, "Daemon startup confirmed")
+			// Check if daemon reports as running by testing socket connectivity
+			socketPath := env.getExpectedSocketPath()
+			logger.InfoContext(ctx, "Checking socket connectivity", "socket_path", socketPath)
+			if pkgDaemon.CanConnect(socketPath) {
+				logger.InfoContext(ctx, "Daemon startup confirmed via socket connectivity")
 				return nil
 			}
 		}
@@ -379,21 +435,23 @@ func (env *guildTestEnvironment) verifyDaemonStatus(ctx context.Context) error {
 	logger := observability.GetLogger(ctx)
 
 	logger.InfoContext(ctx, "Checking daemon status")
-	status, err := daemon.Status()
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get daemon status").
+	
+	socketPath := env.getExpectedSocketPath()
+	if socketPath == "" {
+		return gerror.New(gerror.ErrCodeInternal, "could not determine socket path", nil).
 			WithComponent("daemon_test").
 			WithOperation("verifyDaemonStatus")
 	}
 
-	if !strings.Contains(status, "running") {
+	isRunning := pkgDaemon.CanConnect(socketPath)
+	if !isRunning {
 		return gerror.New(gerror.ErrCodeInternal, "daemon not running", nil).
 			WithComponent("daemon_test").
 			WithOperation("verifyDaemonStatus").
-			WithDetails("status", status)
+			WithDetails("socket_path", socketPath)
 	}
-
-	logger.InfoContext(ctx, "Daemon status verified", "status", status)
+	
+	logger.InfoContext(ctx, "Daemon status verified", "socket_path", socketPath)
 	return nil
 }
 
@@ -401,10 +459,19 @@ func (env *guildTestEnvironment) shutdownDaemon(ctx context.Context) error {
 	logger := observability.GetLogger(ctx)
 
 	logger.InfoContext(ctx, "Initiating daemon shutdown")
-	if err := daemon.Stop(); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to stop daemon").
+	
+	socketPath := env.getExpectedSocketPath()
+	if socketPath == "" {
+		return gerror.New(gerror.ErrCodeInternal, "could not determine socket path", nil).
 			WithComponent("daemon_test").
 			WithOperation("shutdownDaemon")
+	}
+	
+	if err := pkgDaemon.StopSession(socketPath); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to stop daemon").
+			WithComponent("daemon_test").
+			WithOperation("shutdownDaemon").
+			WithDetails("socket_path", socketPath)
 	}
 
 	// Wait for shutdown
@@ -422,7 +489,7 @@ func (env *guildTestEnvironment) shutdownDaemon(ctx context.Context) error {
 				WithOperation("shutdownDaemon").
 				WithDetails("timeout", "10s")
 		case <-ticker.C:
-			if !daemon.IsRunning() {
+			if !pkgDaemon.CanConnect(socketPath) {
 				logger.InfoContext(ctx, "Daemon shutdown confirmed")
 				return nil
 			}
@@ -433,13 +500,21 @@ func (env *guildTestEnvironment) shutdownDaemon(ctx context.Context) error {
 func (env *guildTestEnvironment) createSessionAndSendMessages(ctx context.Context) (string, int, error) {
 	logger := observability.GetLogger(ctx)
 
+	// Get the actual socket path
+	socketPath := env.getExpectedSocketPath()
+	if socketPath == "" {
+		return "", 0, gerror.New(gerror.ErrCodeInternal, "could not determine socket path", nil).
+			WithComponent("daemon_test").
+			WithOperation("createSessionAndSendMessages")
+	}
+
 	// Connect to daemon
-	conn, err := grpc.NewClient("unix:///tmp/guild.sock", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient("unix://"+socketPath, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return "", 0, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to connect to daemon").
 			WithComponent("daemon_test").
 			WithOperation("createSessionAndSendMessages").
-			WithDetails("socket", "/tmp/guild.sock")
+			WithDetails("socket", socketPath)
 	}
 	defer conn.Close()
 
@@ -517,13 +592,21 @@ func (env *guildTestEnvironment) createSessionAndSendMessages(ctx context.Contex
 func (env *guildTestEnvironment) verifySessionPersistence(ctx context.Context, sessionId string) (int, error) {
 	logger := observability.GetLogger(ctx)
 
+	// Get the actual socket path
+	socketPath := env.getExpectedSocketPath()
+	if socketPath == "" {
+		return 0, gerror.New(gerror.ErrCodeInternal, "could not determine socket path", nil).
+			WithComponent("daemon_test").
+			WithOperation("verifySessionPersistence")
+	}
+
 	// Connect to restarted daemon
-	conn, err := grpc.NewClient("unix:///tmp/guild.sock", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient("unix://"+socketPath, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return 0, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to connect to restarted daemon").
 			WithComponent("daemon_test").
 			WithOperation("verifySessionPersistence").
-			WithDetails("socket", "/tmp/guild.sock")
+			WithDetails("socket", socketPath)
 	}
 	defer conn.Close()
 

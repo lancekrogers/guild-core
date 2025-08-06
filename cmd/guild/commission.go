@@ -60,18 +60,26 @@ Examples:
   guild commission "Build a REST API for user management"
   guild commission "Research and implement caching strategy" --assign
   guild commission "Review security practices" --campaign security-audit`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			// Show help when no arguments provided
 			cmd.Help()
-			return
+			return nil
 		}
 
-		description := strings.Join(args, " ")
+		description := strings.TrimSpace(strings.Join(args, " "))
+		if description == "" {
+			// Show help when empty description provided
+			cmd.Printf("Error: Commission description cannot be empty\n\n")
+			cmd.Help()
+			return gerror.New(gerror.ErrCodeInvalidInput, "empty commission description", nil)
+		}
+
 		if err := executeCommission(cmd.Context(), description); err != nil {
 			cmd.Printf("Commission failed: %v\n", err)
-			return
+			return err
 		}
+		return nil
 	},
 }
 
