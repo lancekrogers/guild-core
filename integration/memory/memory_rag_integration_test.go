@@ -127,8 +127,8 @@ Returns details for a specific product.`,
 		if err != nil || info.IsDir() {
 			return nil
 		}
-		// Skip files in .guild directory
-		if strings.Contains(path, filepath.Join(projectDir, ".guild")) {
+		// Skip files in .campaign directory
+		if strings.Contains(path, filepath.Join(projectDir, ".campaign")) {
 			return nil
 		}
 		// Filter by extension

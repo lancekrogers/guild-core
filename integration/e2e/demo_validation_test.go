@@ -240,8 +240,8 @@ func TestDemoRecovery(t *testing.T) {
 	})
 
 	t.Run("Demo With Corrupted Config", func(t *testing.T) {
-		// Create invalid guild.yaml
-		env.CreateFile(".guild/guild.yaml", "invalid: yaml: content: [")
+		// Create invalid campaign.yaml
+		env.CreateFile(".campaign/campaign.yaml", "invalid: yaml: content: [")
 
 		// Demo should handle corrupted config gracefully
 		result := env.RunGuildWithTimeout(60*time.Second, "demo-check")

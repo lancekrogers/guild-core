@@ -1218,7 +1218,7 @@ func (h *KnowledgeHandler) handleExport(ctx context.Context) tea.Cmd {
 
 		// Generate export filename with timestamp
 		timestamp := time.Now().Format("2006-01-02_15-04-05")
-		exportPath := filepath.Join(".guild", fmt.Sprintf("knowledge_export_%s.md", timestamp))
+		exportPath := filepath.Join(".campaign", fmt.Sprintf("knowledge_export_%s.md", timestamp))
 
 		var export strings.Builder
 		export.WriteString("# Guild Knowledge Export\n\n")

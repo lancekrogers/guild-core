@@ -98,7 +98,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 	fmt.Print("⚙️  Writing configuration files... ")
 
 	// Write guild.yaml
-	guildConfigPath := filepath.Join(path, ".guild", "guild.yaml")
+	guildConfigPath := filepath.Join(path, ".campaign", "guild.yaml")
 	guildConfigData, err := yaml.Marshal(guildConfig)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild config").
@@ -111,7 +111,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 	}
 
 	// Write corpus.yaml
-	corpusConfigPath := filepath.Join(path, ".guild", "corpus.yaml")
+	corpusConfigPath := filepath.Join(path, ".campaign", "corpus.yaml")
 	corpusConfigData, err := yaml.Marshal(corpusConfig)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal corpus config").

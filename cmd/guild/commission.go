@@ -515,7 +515,7 @@ func setupGuildComponents(ctx context.Context) (*guildComponents, error) {
 	}
 
 	// Setup data directory
-	dataDir := filepath.Join(projCtx.GetRootPath(), ".guild")
+	dataDir := filepath.Join(projCtx.GetRootPath(), ".campaign")
 	if err := os.MkdirAll(dataDir, 0755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create data directory").
 			WithComponent("cli").

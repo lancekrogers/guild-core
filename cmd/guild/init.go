@@ -205,16 +205,6 @@ func runFastInit(cmd *cobra.Command, args []string) error {
 	}
 	fmt.Println("✅")
 
-	// Step 6.5: Create legacy guild config for test compatibility
-	fmt.Print("🔄 Creating legacy guild config... ")
-	if err := createLegacyGuildConfig(ctx, projectPath, projectName, projectType); err != nil {
-		fmt.Printf("⚠️ (tests may fail)\n")
-		// Log warning but don't fail the entire init process
-		logger := observability.GetLogger(ctx)
-		logger.WarnContext(ctx, "Failed to create legacy guild config", "error", err)
-	} else {
-		fmt.Println("✅")
-	}
 
 	// Step 7: Initialize database
 	fmt.Print("🗄️  Initializing database... ")

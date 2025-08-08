@@ -91,8 +91,8 @@ func NewReasoningSystem(ctx context.Context, config ReasoningSystemConfig) (*Rea
 		// Determine database path
 		dbPath := config.DatabasePath
 		if dbPath == "" {
-			// Use default guild database
-			dbPath = filepath.Join(".guild", "memory.db")
+			// Use default campaign database
+			dbPath = filepath.Join(".campaign", "memory.db")
 		}
 
 		// Create or open database

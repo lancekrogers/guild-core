@@ -72,11 +72,11 @@ func TestNewUserCompleteOnboarding(t *testing.T) {
 		require.NotNil(t, projCtx, "Project context should be created")
 
 		// Verify project structure
-		guildDir := filepath.Join(projectDir, ".guild")
-		assert.DirExists(t, guildDir, "Project .guild directory should exist")
-		assert.FileExists(t, filepath.Join(guildDir, "guild.yaml"), "Project config should exist")
-		assert.DirExists(t, filepath.Join(guildDir, "commissions"), "Commissions directory should exist")
-		assert.DirExists(t, filepath.Join(guildDir, "campaigns"), "Campaigns directory should exist")
+		campaignDir := filepath.Join(projectDir, ".campaign")
+		assert.DirExists(t, campaignDir, "Project .campaign directory should exist")
+		assert.FileExists(t, filepath.Join(campaignDir, "campaign.yaml"), "Campaign config should exist")
+		assert.DirExists(t, filepath.Join(projectDir, "commissions"), "Commissions directory should exist")
+		assert.DirExists(t, filepath.Join(projectDir, "kanban"), "Kanban directory should exist")
 	})
 
 	t.Run("Step3_ConfigureProviders", func(t *testing.T) {

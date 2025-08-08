@@ -683,25 +683,28 @@ func (f *UserJourneyFramework) createMockGuildBinary(path string) error {
 }
 
 func (f *UserJourneyFramework) createGuildConfig(projectPath string) error {
-	guildDir := filepath.Join(projectPath, ".guild")
-	if err := os.MkdirAll(guildDir, 0755); err != nil {
+	campaignDir := filepath.Join(projectPath, ".campaign")
+	if err := os.MkdirAll(campaignDir, 0755); err != nil {
 		return err
 	}
 
-	configContent := `name: test-project
-version: "1.0"
-agents:
-  - id: developer
-    name: "Senior Developer"
-    type: coding
-    provider: openai
-    model: gpt-4
-providers:
-  openai:
-    model: gpt-4
-    max_tokens: 4000
+	configContent := `campaign:
+  name: test-project
+  project_name: test-project
+  project_type: generic
+  version: "1.0"
+daemon:
+  socket_path: /tmp/guild-test.sock
+  log_level: info
+storage:
+  database: memory.db
+  backend: sqlite
+settings:
+  auto_start_daemon: true
+  session_timeout: 24h
+  max_agents: 10
 `
-	configPath := filepath.Join(projectPath, "guild.yaml")
+	configPath := filepath.Join(campaignDir, "campaign.yaml")
 	if err := os.WriteFile(configPath, []byte(configContent), 0644); err != nil {
 		return err
 	}

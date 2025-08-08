@@ -58,12 +58,6 @@ func SetupTestProject(t *testing.T, opts ...TestProjectOptions) (*project.Contex
 		filepath.Join(tempDir, ".campaign", "memory.db"),
 		filepath.Join(tempDir, ".campaign", "memory.db-shm"),
 		filepath.Join(tempDir, ".campaign", "memory.db-wal"),
-		filepath.Join(tempDir, ".guild", "memory.db"),
-		filepath.Join(tempDir, ".guild", "memory.db-shm"),
-		filepath.Join(tempDir, ".guild", "memory.db-wal"),
-		filepath.Join(tempDir, ".guild", "guild.db"),
-		filepath.Join(tempDir, ".guild", "guild.db-shm"),
-		filepath.Join(tempDir, ".guild", "guild.db-wal"),
 	}
 	
 	for _, dbPath := range possibleDbPaths {

@@ -311,13 +311,18 @@ func setupTestGuildProject(t *testing.T, workDir string) {
 	require.NoError(t, err)
 
 	// Since InitializeWithConfig doesn't actually apply the config,
-	// we need to create the .guild/guild.yaml file ourselves for tests
-	guildDir := filepath.Join(workDir, ".guild")
-	err = os.MkdirAll(guildDir, 0755)
+	// we need to create the .campaign directory structure for tests
+	campaignDir := filepath.Join(workDir, ".campaign")
+	err = os.MkdirAll(campaignDir, 0755)
 	require.NoError(t, err)
 
-	// Write the guild.yaml file
-	configPath := filepath.Join(guildDir, "guild.yaml")
+	// Create guilds subdirectory
+	guildsDir := filepath.Join(campaignDir, "guilds")
+	err = os.MkdirAll(guildsDir, 0755)
+	require.NoError(t, err)
+
+	// Write the elena_guild.yaml file in the guilds directory
+	configPath := filepath.Join(guildsDir, "elena_guild.yaml")
 	data, err := yaml.Marshal(guildConfig)
 	require.NoError(t, err)
 	

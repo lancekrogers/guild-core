@@ -81,14 +81,8 @@ func runDemoCheck(ctx context.Context) error {
 		fmt.Println("✅ Found Guild campaign directory:", campaignPath)
 	}
 
-	// Check for .guild structure (legacy/test format)
-	guildPath := filepath.Join(".", ".guild")
-	configPath := filepath.Join(guildPath, "guild.yaml")
-	if _, err := os.Stat(configPath); err == nil {
-		projectFound = true
-		projectPath = guildPath
-		fmt.Println("✅ Found Guild project directory:", guildPath)
-	}
+	// Legacy .guild workspace-level support removed
+	// Only .campaign directories are supported at workspace level
 
 	if !projectFound {
 		fmt.Println("❌ Not in a Guild project")
@@ -126,20 +120,15 @@ func checkGuildProject(ctx context.Context) error {
 		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled")
 	}
 
-	// Check for either .campaign or .guild directory
+	// Check for .campaign directory
 	campaignExists := false
-	guildExists := false
 
 	if info, err := os.Stat(".campaign"); err == nil && info.IsDir() {
 		campaignExists = true
 	}
 
-	if _, err := os.Stat(filepath.Join(".guild", "guild.yaml")); err == nil {
-		guildExists = true
-	}
-
-	if !campaignExists && !guildExists {
-		return gerror.New(gerror.ErrCodeNotFound, "not in a Guild project - run 'guild init' to create one", nil)
+	if !campaignExists {
+		return gerror.New(gerror.ErrCodeNotFound, "not in a Guild campaign - run 'guild init' to create one", nil)
 	}
 
 	return nil

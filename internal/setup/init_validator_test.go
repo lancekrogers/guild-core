@@ -75,7 +75,7 @@ func TestValidateProjectStructure(t *testing.T) {
 			expectWarning: true,
 		},
 		{
-			name:          "no .guild directory",
+			name:          "no .campaign directory",
 			setup:         func(tmpDir string) error { return nil },
 			expectSuccess: false,
 			expectWarning: false,
@@ -259,7 +259,7 @@ func TestSocketRegistryValidation(t *testing.T) {
 		{
 			name: "valid socket registry",
 			setup: func(tmpDir string) error {
-				// Create .guild directory
+				// Create .campaign directory
 				if err := os.MkdirAll(filepath.Join(tmpDir, ".campaign"), 0755); err != nil {
 					return err
 				}

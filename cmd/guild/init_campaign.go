@@ -181,7 +181,7 @@ func runInitCampaign(cmd *cobra.Command, args []string) error {
 
 	// Write guild.yaml (this overwrites the campaign reference, so we need to be careful)
 	// Actually, let's write it to a different file to avoid conflicts
-	guildConfigPath := filepath.Join(path, ".guild", "project.yaml")
+	guildConfigPath := filepath.Join(path, ".campaign", "project.yaml")
 	if err := writeYAMLFile(guildConfigPath, guildConfig); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write project config").
 			WithComponent("cli").WithOperation("runInitCampaign")
@@ -189,7 +189,7 @@ func runInitCampaign(cmd *cobra.Command, args []string) error {
 
 	// Generate and write corpus config
 	corpusConfig := detector.GenerateCorpusConfig(projectType, path)
-	corpusConfigPath := filepath.Join(path, ".guild", "corpus.yaml")
+	corpusConfigPath := filepath.Join(path, ".campaign", "corpus.yaml")
 	if err := writeYAMLFile(corpusConfigPath, corpusConfig); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write corpus config").
 			WithComponent("cli").WithOperation("runInitCampaign")

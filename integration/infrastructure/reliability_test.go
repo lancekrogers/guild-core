@@ -43,7 +43,7 @@ func TestSystemReliability(t *testing.T) {
 				name: "missing_config_file",
 				setupFunc: func() error {
 					// Remove config file
-					configPath := filepath.Join(projCtx.GetRootPath(), ".guild", "guild.yaml")
+					configPath := filepath.Join(projCtx.GetRootPath(), ".campaign", "campaign.yaml")
 					return os.Remove(configPath)
 				},
 				testFunc: func() error {
@@ -57,7 +57,7 @@ func TestSystemReliability(t *testing.T) {
 				name: "corrupted_database",
 				setupFunc: func() error {
 					// Corrupt the database file
-					dbPath := filepath.Join(projCtx.GetRootPath(), ".guild", "memory.db")
+					dbPath := filepath.Join(projCtx.GetRootPath(), ".campaign", "memory.db")
 					return os.WriteFile(dbPath, []byte("corrupted data"), 0644)
 				},
 				testFunc: func() error {
@@ -71,8 +71,8 @@ func TestSystemReliability(t *testing.T) {
 				name: "permission_denied",
 				setupFunc: func() error {
 					// Make directory read-only
-					guildDir := filepath.Join(projCtx.GetRootPath(), ".guild")
-					return os.Chmod(guildDir, 0444)
+					campaignDir := filepath.Join(projCtx.GetRootPath(), ".campaign")
+					return os.Chmod(campaignDir, 0444)
 				},
 				testFunc: func() error {
 					// Should handle permission error gracefully
@@ -113,8 +113,8 @@ func TestSystemReliability(t *testing.T) {
 				}
 
 				// Cleanup permissions
-				guildDir := filepath.Join(projCtx.GetRootPath(), ".guild")
-				_ = os.Chmod(guildDir, 0755)
+				campaignDir := filepath.Join(projCtx.GetRootPath(), ".campaign")
+				_ = os.Chmod(campaignDir, 0755)
 			})
 		}
 	})
@@ -242,8 +242,8 @@ func TestSystemReliability(t *testing.T) {
 		require.NoError(t, result.Error)
 
 		// Check initial state
-		guildDir := filepath.Join(projCtx.GetRootPath(), ".guild")
-		initialFiles, err := filepath.Glob(filepath.Join(guildDir, "*"))
+		campaignDir := filepath.Join(projCtx.GetRootPath(), ".campaign")
+		initialFiles, err := filepath.Glob(filepath.Join(campaignDir, "*"))
 		require.NoError(t, err)
 
 		// Run multiple operations
@@ -253,13 +253,13 @@ func TestSystemReliability(t *testing.T) {
 		}
 
 		// Check for temp file cleanup
-		tempPattern := filepath.Join(guildDir, "*.tmp")
+		tempPattern := filepath.Join(campaignDir, "*.tmp")
 		tempFiles, err := filepath.Glob(tempPattern)
 		require.NoError(t, err)
 		assert.Empty(t, tempFiles, "No temporary files should remain")
 
 		// Check for lock file cleanup
-		lockPattern := filepath.Join(guildDir, "*.lock")
+		lockPattern := filepath.Join(campaignDir, "*.lock")
 		lockFiles, err := filepath.Glob(lockPattern)
 		require.NoError(t, err)
 		assert.Empty(t, lockFiles, "No lock files should remain")
@@ -323,7 +323,7 @@ func TestCrashRecovery(t *testing.T) {
 		require.NoError(t, result.Error)
 
 		// Simulate a stale lock file
-		lockFile := filepath.Join(projCtx.GetRootPath(), ".guild", "memory.db.lock")
+		lockFile := filepath.Join(projCtx.GetRootPath(), ".campaign", "memory.db.lock")
 		err := os.WriteFile(lockFile, []byte("stale-pid"), 0644)
 		require.NoError(t, err)
 
@@ -350,7 +350,7 @@ func TestCrashRecovery(t *testing.T) {
 		require.NoError(t, result.Error)
 
 		// Create a partial commission file
-		commissionsDir := filepath.Join(projCtx.GetRootPath(), ".guild", "objectives")
+		commissionsDir := filepath.Join(projCtx.GetRootPath(), "commissions")
 		err := os.MkdirAll(commissionsDir, 0755)
 		require.NoError(t, err)
 
