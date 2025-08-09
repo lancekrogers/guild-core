@@ -1,0 +1,49 @@
+name: Docker Tests
+
+# DISABLED: Focusing on local Docker testing first for rapid iteration
+# To enable: uncomment the 'on' section below
+# on:
+#   push:
+#     branches: [ main, develop ]
+#   pull_request:
+#     branches: [ main ]
+
+on:
+  workflow_dispatch: # Only run manually for now
+
+jobs:
+  docker-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Build test image
+      run: docker build -f Dockerfile.test -t guild-test:latest .
+    
+    - name: Run unit tests
+      run: |
+        docker run --rm \
+          -v ${{ github.workspace }}/test-results:/test-results \
+          -e TEST_OUTPUT=/test-results \
+          guild-test:latest \
+          make test
+    
+    - name: Run integration tests
+      run: |
+        docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit guild-integration
+        docker-compose -f docker-compose.test.yml down
+    
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: test-results/
+    
+    - name: Clean up
+      if: always()
+      run: docker-compose -f docker-compose.test.yml down -v

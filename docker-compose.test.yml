@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  # Main test runner
+  guild-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+      target: test
+    volumes:
+      # Mount source for live changes (optional)
+      - ./:/guild:ro
+      # Separate volume for test outputs
+      - test-results:/test-results
+      # Isolated guild home
+      - guild-home:/home/guild/.guild
+    environment:
+      - GUILD_TEST_MODE=docker
+      - GUILD_HOME=/home/guild/.guild
+      - TEST_OUTPUT=/test-results
+      # Provider keys (if needed for integration tests)
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    networks:
+      - guild-test
+    command: ["make", "test"]
+
+  # Daemon test container
+  guild-daemon:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+      target: test
+    volumes:
+      - guild-home:/home/guild/.guild
+      - daemon-socket:/tmp
+    environment:
+      - GUILD_DAEMON_MODE=true
+      - GUILD_HOME=/home/guild/.guild
+      - GUILD_SOCKET_PATH=/tmp/guild.sock
+    networks:
+      - guild-test
+    command: ["./bin/guild", "serve", "--socket", "/tmp/guild.sock"]
+
+  # Integration test runner
+  guild-integration:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+      target: test
+    depends_on:
+      - guild-daemon
+    volumes:
+      - ./:/guild:ro
+      - test-results:/test-results
+      - daemon-socket:/tmp
+    environment:
+      - GUILD_TEST_MODE=integration
+      - GUILD_SOCKET_PATH=/tmp/guild.sock
+      - TEST_OUTPUT=/test-results
+    networks:
+      - guild-test
+    command: ["make", "integration"]
+
+  # Database for persistent testing
+  test-db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=guild
+      - POSTGRES_PASSWORD=guild_test
+      - POSTGRES_DB=guild_test
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - guild-test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U guild"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  test-results:
+  guild-home:
+  daemon-socket:
+  db-data:
+
+networks:
+  guild-test:
+    driver: bridge

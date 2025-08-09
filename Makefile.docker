@@ -1,0 +1,57 @@
+# Makefile.docker - Docker-based testing targets
+.PHONY: docker-build docker-test docker-integration docker-shell docker-clean docker-all
+
+# Build test image
+docker-build:
+	@echo "🐳 Building Guild test image..."
+	@docker build -f Dockerfile.test -t guild-test:latest .
+
+# Run unit tests in container
+docker-test: docker-build
+	@echo "🧪 Running unit tests in Docker..."
+	@docker run --rm \
+		-v "$$(pwd)/test-results:/test-results" \
+		-e TEST_OUTPUT=/test-results \
+		guild-test:latest \
+		make test
+
+# Run integration tests with daemon
+docker-integration: docker-build
+	@echo "🔧 Running integration tests in Docker..."
+	@docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit guild-integration
+	@docker-compose -f docker-compose.test.yml down
+
+# Run all tests
+docker-all: docker-build
+	@echo "🚀 Running all tests in Docker..."
+	@$(MAKE) docker-test
+	@$(MAKE) docker-integration
+
+# Interactive shell for debugging
+docker-shell: docker-build
+	@echo "💻 Starting interactive Docker shell..."
+	@docker run --rm -it \
+		-v "$$(pwd):/guild" \
+		-v "guild-test-home:/home/guild/.guild" \
+		-w /guild \
+		guild-test:latest \
+		/bin/bash
+
+# Clean up Docker artifacts
+docker-clean:
+	@echo "🧹 Cleaning Docker test artifacts..."
+	@docker-compose -f docker-compose.test.yml down -v 2>/dev/null || true
+	@docker volume rm guild-test-home 2>/dev/null || true
+	@docker volume rm guild-test-results 2>/dev/null || true
+	@docker rmi guild-test:latest 2>/dev/null || true
+	@rm -rf test-results/
+
+# Run specific package tests
+docker-test-pkg: docker-build
+	@echo "📦 Testing package: $(PKG)"
+	@docker run --rm \
+		-v "$$(pwd)/test-results:/test-results" \
+		guild-test:latest \
+		go test -v "./$(PKG)/..."
+
+# Example: make docker-test-pkg PKG=pkg/storage

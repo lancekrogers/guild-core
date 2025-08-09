@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # Simulated user environment
+  guild-user:
+    build:
+      context: .
+      dockerfile: Dockerfile.user
+    image: guild-user:latest
+    container_name: guild-user-test
+    hostname: guild-dev
+    stdin_open: true
+    tty: true
+    volumes:
+      # Mount source for live updates (optional - comment out for true isolation)
+      # - ./:/guild-source:ro
+      
+      # Persistent home directory for the developer user
+      - user-home:/home/developer
+      
+      # Separate volume for .guild (global config)
+      - guild-global:/home/developer/.guild
+      
+      # Mount for sharing test results
+      - ./test-output:/test-output
+    environment:
+      - TERM=xterm-256color
+      - GUILD_ENV=docker-test
+      # Add API keys if needed for testing
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-test-key}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-test-key}
+    networks:
+      - guild-user-net
+    working_dir: /home/developer/projects
+
+  # Optional: Mock LLM service for testing without real API calls
+  mock-llm:
+    image: nginx:alpine
+    container_name: guild-mock-llm
+    volumes:
+      - ./test/mock-responses:/usr/share/nginx/html:ro
+    networks:
+      - guild-user-net
+    profiles:
+      - mock
+
+volumes:
+  user-home:
+    driver: local
+  guild-global:
+    driver: local
+
+networks:
+  guild-user-net:
+    driver: bridge

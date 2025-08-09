@@ -3,7 +3,7 @@
 
 BUILDTOOL := go run ./internal/buildutil
 .DEFAULT_GOAL := help
-.PHONY: build test test-verbose test-pkg integration integration-verbose integration-debug e2e e2e-verbose validate-demo clean all all-verbose quick ci-build ci-test ci-integration ci-e2e ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion benchmark benchmark-suggestions benchmark-ui benchmark-ui-thresholds test-ui-integration test-ui-complete happy happy-verbose ci-happy
+.PHONY: build test test-verbose test-pkg integration integration-verbose integration-debug e2e e2e-verbose validate-demo clean all all-verbose quick ci-build ci-test ci-integration ci-e2e ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion benchmark benchmark-suggestions benchmark-ui benchmark-ui-thresholds test-ui-integration test-ui-complete happy happy-verbose ci-happy docker-shell docker-test docker-user docker-clean
 
 # Primary targets (with visual output)
 # DEVELOPER TARGET: Full build with go vet validation and visual feedback
@@ -335,7 +335,30 @@ help:
 	@echo "  guild serve       # Start daemon (separate terminal)"
 	@echo "  guild chat        # Start chatting immediately"
 	@echo ""
+	@echo "=== DOCKER TESTING (Safe & Isolated) ==="
+	@echo "  make docker-shell        # Interactive testing environment"
+	@echo "  make docker-test         # Run tests in clean container"
+	@echo "  make docker-user         # Test real user experience"
+	@echo "  make docker-clean        # Clean up Docker volumes"
+	@echo ""
 	@echo "=== DEVELOPMENT WORKFLOW ==="
 	@echo "  make build        # Full validation build"
 	@echo "  make test         # Run all tests properly"
 	@echo "  make ci-build     # Build for CI (plain text)"
+
+# Docker targets for isolated testing
+docker-shell:
+	@echo "🐳 Starting interactive Docker environment..."
+	@./scripts/test-user-experience.sh shell
+
+docker-test:
+	@echo "🧪 Running tests in Docker..."
+	@./scripts/docker-test.sh test
+
+docker-user:
+	@echo "👤 Testing user experience in Docker..."
+	@./scripts/test-user-experience.sh test full
+
+docker-clean:
+	@echo "🧹 Cleaning Docker test environment..."
+	@./scripts/test-user-experience.sh reset
