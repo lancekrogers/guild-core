@@ -13,7 +13,8 @@ NC='\033[0m'
 
 # Configuration
 ACTION=${1:-shell}
-PROJECT=${2:-web-app}
+JOURNEY=${2:-full}
+PROJECT="web-app"  # Default project directory
 
 echo -e "${CYAN}╔════════════════════════════════════════╗${NC}"
 echo -e "${CYAN}║   Guild User Experience Test Suite    ║${NC}"
@@ -37,7 +38,7 @@ interactive_shell() {
     echo -e "${YELLOW}   Try: guild init, guild serve, guild chat${NC}"
     echo
     
-    docker-compose -f docker-compose.user.yml run --rm guild-user
+    docker compose -f docker-compose.user.yml run --rm guild-user
 }
 
 # Run automated user journey test
@@ -47,9 +48,9 @@ test_user_journey() {
     case "$1" in
         init)
             echo -e "${YELLOW}Testing: guild init${NC}"
-            docker-compose -f docker-compose.user.yml run --rm guild-user bash -c "
+            docker compose -f docker-compose.user.yml run --rm guild-user bash -c "
                 cd projects/$PROJECT
-                guild init --quick
+                guild init
                 echo '✅ Init completed'
                 ls -la .campaign/
                 cat .campaign/campaign.yaml
@@ -58,9 +59,9 @@ test_user_journey() {
             
         serve)
             echo -e "${YELLOW}Testing: guild serve (daemon)${NC}"
-            docker-compose -f docker-compose.user.yml run --rm -d guild-user bash -c "
+            docker compose -f docker-compose.user.yml run --rm -d guild-user bash -c "
                 cd projects/$PROJECT
-                guild init --quick
+                guild init
                 guild serve --daemon
                 sleep 3
                 guild status
@@ -69,9 +70,9 @@ test_user_journey() {
             
         chat)
             echo -e "${YELLOW}Testing: guild chat (basic)${NC}"
-            docker-compose -f docker-compose.user.yml run --rm guild-user bash -c "
+            docker compose -f docker-compose.user.yml run --rm guild-user bash -c "
                 cd projects/$PROJECT
-                guild init --quick
+                guild init
                 echo 'Hello Guild' | timeout 5 guild chat || true
                 echo '✅ Chat interface started'
             "
@@ -79,9 +80,9 @@ test_user_journey() {
             
         commission)
             echo -e "${YELLOW}Testing: commission creation${NC}"
-            docker-compose -f docker-compose.user.yml run --rm guild-user bash -c "
+            docker compose -f docker-compose.user.yml run --rm guild-user bash -c "
                 cd projects/$PROJECT
-                guild init --quick
+                guild init
                 guild commission create 'Build a REST API'
                 ls -la commissions/
                 head commissions/*.md
@@ -90,11 +91,11 @@ test_user_journey() {
             
         full)
             echo -e "${YELLOW}Testing: Full user workflow${NC}"
-            docker-compose -f docker-compose.user.yml run --rm guild-user bash -c "
+            docker compose -f docker-compose.user.yml run --rm guild-user bash -c "
                 set -e
                 cd projects/$PROJECT
                 echo '1. Initializing Guild...'
-                guild init --quick
+                guild init
                 
                 echo '2. Checking structure...'
                 ls -la .campaign/
@@ -130,7 +131,7 @@ test_user_journey() {
 quick_test() {
     local cmd="$@"
     echo -e "${BLUE}⚡ Quick test: $cmd${NC}"
-    docker-compose -f docker-compose.user.yml run --rm guild-user bash -c "
+    docker compose -f docker-compose.user.yml run --rm guild-user bash -c "
         cd projects/$PROJECT
         $cmd
     "
@@ -139,7 +140,7 @@ quick_test() {
 # Reset test environment
 reset_env() {
     echo -e "${YELLOW}🧹 Resetting test environment...${NC}"
-    docker-compose -f docker-compose.user.yml down -v
+    docker compose -f docker-compose.user.yml down -v
     docker volume rm guild-core_user-home 2>/dev/null || true
     docker volume rm guild-core_guild-global 2>/dev/null || true
     echo -e "${GREEN}✅ Environment reset${NC}"
@@ -148,7 +149,7 @@ reset_env() {
 # Show logs from container
 show_logs() {
     echo -e "${BLUE}📋 Container logs:${NC}"
-    docker-compose -f docker-compose.user.yml logs guild-user
+    docker compose -f docker-compose.user.yml logs guild-user
 }
 
 # Main execution
@@ -162,7 +163,7 @@ case "$ACTION" in
         ;;
     test)
         build_user_image
-        test_user_journey "$PROJECT"
+        test_user_journey "$JOURNEY"
         ;;
     quick|q)
         build_user_image

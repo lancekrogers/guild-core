@@ -2,6 +2,8 @@ module github.com/lancekrogers/guild
 
 go 1.24.2
 
+toolchain go1.24.4
+
 require (
 	github.com/PuerkitoBio/goquery v1.10.3
 	github.com/alecthomas/chroma/v2 v2.18.0
@@ -17,7 +19,6 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.17.1
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
-	github.com/lancekrogers/claude-code-go v0.1.2
 	github.com/mattn/go-sqlite3 v1.14.28
 	github.com/muesli/reflow v0.3.0
 	github.com/nats-io/nats.go v1.43.0
@@ -107,6 +108,7 @@ require (
 	github.com/kevinburke/ssh_config v1.2.0 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
+	github.com/lancekrogers/claude-code-go v0.1.2
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
@@ -167,3 +169,5 @@ require (
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.9.1 // indirect
 )
+
+// replace github.com/lancekrogers/claude-code-go => ./vendor/claude-code-go
