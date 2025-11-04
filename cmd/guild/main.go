@@ -111,6 +111,9 @@ func init() {
 	agentCmd.AddCommand(newAgentTemplateCmd())
 
 	// Note: Additional agent subcommands (list, stop, status) are registered in core.go
+	
+	// Enable scaffold integration if available
+	enableScaffoldIntegration()
 }
 
 // Execute summons the Guild and its artisans (standard: launches the CLI application)

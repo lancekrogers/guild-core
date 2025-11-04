@@ -170,4 +170,8 @@ require (
 	modernc.org/memory v1.9.1 // indirect
 )
 
+require github.com/guild-framework/guild-scaffold v0.0.0
+
+replace github.com/guild-framework/guild-scaffold => ../guild-scaffold
+
 // replace github.com/lancekrogers/claude-code-go => ./vendor/claude-code-go
