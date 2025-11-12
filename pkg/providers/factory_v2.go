@@ -17,6 +17,7 @@ import (
 	"github.com/lancekrogers/guild/pkg/providers/ollama"
 	"github.com/lancekrogers/guild/pkg/providers/openai"
 	"github.com/lancekrogers/guild/pkg/providers/ora"
+	"github.com/lancekrogers/guild/pkg/providers/xai"
 )
 
 // FactoryV2 creates AI providers using the new AIProvider interface
@@ -54,6 +55,8 @@ func (f *FactoryV2) CreateAIProvider(providerType ProviderType, apiKey string) (
 		return ollama.NewClient(apiKey), nil
 	case ProviderOra:
 		return ora.NewClient(apiKey), nil
+	case ProviderXAI:
+		return xai.NewClient(apiKey), nil
 	case ProviderGoogle:
 		// Google provider needs updating to implement AIProvider
 		return nil, gerror.New(gerror.ErrCodeProvider, "Google provider not yet updated to AIProvider interface", nil).
@@ -155,6 +158,7 @@ func GetProviderInfo() map[ProviderType]string {
 		ProviderDeepInfra:  "DeepInfra (Llama, Mistral, Qwen)",
 		ProviderOllama:     "Ollama (Local models)",
 		ProviderOra:        "Ora (DeepSeek models)",
+		ProviderXAI:        "xAI (Grok 3, Grok 4)",
 		ProviderGoogle:     "Google (Gemini) - Legacy only",
 		ProviderClaudeCode: "Claude Code (MCP) - Legacy only",
 	}

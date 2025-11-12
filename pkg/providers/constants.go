@@ -12,6 +12,7 @@ const (
 	ProviderNameDeepSeek   = "deepseek"
 	ProviderNameDeepInfra  = "deepinfra"
 	ProviderNameOra        = "ora"
+	ProviderNameXAI        = "xai"
 
 	// Default Models
 	DefaultClaudeModel    = "claude-3-5-sonnet-20241022"
@@ -21,6 +22,7 @@ const (
 	DefaultDeepSeekModel  = "deepseek-chat"
 	DefaultDeepInfraModel = "meta-llama/Llama-3.3-70B-Instruct-Turbo"
 	DefaultOraModel       = "gpt-4-turbo"
+	DefaultXAIModel       = "grok-4"
 
 	// Provider Display Names
 	DisplayNameClaude    = "Claude Code"
@@ -30,6 +32,7 @@ const (
 	DisplayNameDeepSeek  = "DeepSeek"
 	DisplayNameDeepInfra = "DeepInfra"
 	DisplayNameOra       = "Ora"
+	DisplayNameXAI       = "xAI"
 
 	// API Endpoints
 	EndpointOpenAI    = "https://api.openai.com/v1"
@@ -37,6 +40,7 @@ const (
 	EndpointDeepSeek  = "https://api.deepseek.com/v1"
 	EndpointDeepInfra = "https://api.deepinfra.com/v1/openai"
 	EndpointOra       = "https://ora.ai/api"
+	EndpointXAI       = "https://api.x.ai/v1"
 	EndpointOllama    = "http://localhost:11434"
 
 	// Environment Variable Names
@@ -45,6 +49,7 @@ const (
 	EnvDeepSeekKey  = "DEEPSEEK_API_KEY"
 	EnvDeepInfraKey = "DEEPINFRA_API_KEY"
 	EnvOraKey       = "ORA_API_KEY"
+	EnvXAIKey       = "XAI_API_KEY"
 
 	// Provider Categories
 	CategoryLocalProvider = "local"
@@ -62,6 +67,7 @@ var ProviderList = []string{
 	ProviderNameDeepSeek,
 	ProviderNameDeepInfra,
 	ProviderNameOra,
+	ProviderNameXAI,
 }
 
 // IsValidProvider checks if a provider name is valid
@@ -92,6 +98,8 @@ func GetProviderDisplayName(provider string) string {
 		return DisplayNameDeepInfra
 	case ProviderNameOra:
 		return DisplayNameOra
+	case ProviderNameXAI:
+		return DisplayNameXAI
 	default:
 		return provider
 	}
@@ -114,6 +122,8 @@ func GetDefaultModel(provider string) string {
 		return DefaultDeepInfraModel
 	case ProviderNameOra:
 		return DefaultOraModel
+	case ProviderNameXAI:
+		return DefaultXAIModel
 	default:
 		return ""
 	}
@@ -132,6 +142,8 @@ func GetProviderEndpoint(provider string) string {
 		return EndpointDeepInfra
 	case ProviderNameOra:
 		return EndpointOra
+	case ProviderNameXAI:
+		return EndpointXAI
 	case ProviderNameOllama:
 		return EndpointOllama
 	default:
@@ -152,6 +164,8 @@ func GetProviderEnvVar(provider string) string {
 		return EnvDeepInfraKey
 	case ProviderNameOra:
 		return EnvOraKey
+	case ProviderNameXAI:
+		return EnvXAIKey
 	default:
 		return ""
 	}
@@ -162,7 +176,7 @@ func GetProviderCategory(provider string) string {
 	switch provider {
 	case ProviderNameOllama:
 		return CategoryLocalProvider
-	case ProviderNameOpenAI, ProviderNameAnthropic, ProviderNameClaude, ProviderNameClaudeAlt, ProviderNameClaudeCode, ProviderNameDeepSeek, ProviderNameDeepInfra, ProviderNameOra:
+	case ProviderNameOpenAI, ProviderNameAnthropic, ProviderNameClaude, ProviderNameClaudeAlt, ProviderNameClaudeCode, ProviderNameDeepSeek, ProviderNameDeepInfra, ProviderNameOra, ProviderNameXAI:
 		return CategoryCloudProvider
 	default:
 		return ""
@@ -186,6 +200,8 @@ func NormalizeProviderName(provider string) string {
 		return ProviderNameDeepInfra
 	case "ora":
 		return ProviderNameOra
+	case "xai", "grok":
+		return ProviderNameXAI
 	default:
 		return provider
 	}
@@ -209,6 +225,8 @@ func ConvertToProviderType(provider string) ProviderType {
 		return ProviderDeepInfra
 	case ProviderNameOra:
 		return ProviderOra
+	case ProviderNameXAI:
+		return ProviderXAI
 	default:
 		return ProviderType(provider)
 	}

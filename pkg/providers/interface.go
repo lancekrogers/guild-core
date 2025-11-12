@@ -46,4 +46,5 @@ const (
 	ProviderDeepSeek   = interfaces.ProviderDeepSeek
 	ProviderDeepInfra  = interfaces.ProviderDeepInfra
 	ProviderOra        = interfaces.ProviderOra
+	ProviderXAI        = interfaces.ProviderXAI
 )
