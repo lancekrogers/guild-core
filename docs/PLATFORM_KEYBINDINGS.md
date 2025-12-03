@@ -15,12 +15,14 @@ The keybinding system automatically detects your platform and adjusts modifier k
 ## Why Platform-Specific Keybindings?
 
 ### macOS Considerations
+
 - Many terminal emulators on macOS intercept Ctrl+key combinations for their own use
 - The Cmd (⌘) key is often not detectable by terminal applications
 - Alt/Option (⌥) provides the most reliable modifier key for custom shortcuts
 - Avoids conflicts with system shortcuts like Cmd+Q (quit) and Cmd+C (copy)
 
 ### Linux/Windows Considerations
+
 - Ctrl is the standard modifier key for terminal applications
 - Most users expect Ctrl-based shortcuts in CLI tools
 - Terminal copy/paste often requires Ctrl+Shift+C/V
@@ -86,25 +88,30 @@ The keybinding system automatically detects your platform and adjusts modifier k
 ## Terminal Configuration Tips
 
 ### macOS Terminal.app
+
 - Alt/Option keys work by default
 - For Alt+Enter: Ensure "Use Option as Meta key" is enabled in Terminal preferences
 
 ### iTerm2 (macOS)
+
 - Go to Preferences → Profiles → Keys
 - Set "Option Key" to "Esc+" for proper Alt key behavior
 - Alt+Enter should work without additional configuration
 
 ### GNOME Terminal (Linux)
+
 - Alt keys may be used for menu access
 - Disable menu shortcuts: Edit → Preferences → General → uncheck "Enable menu access keys"
 
 ### Windows Terminal
+
 - Alt keys work by default
 - Ctrl+Shift+C/V is the standard for copy/paste
 
 ## Implementation Details
 
 The platform detection and keybinding system is implemented in:
+
 - `internal/chat/platform.go` - Platform detection
 - `internal/chat/keybindings.go` - Keybinding adapter
 - `internal/chat/chat_keys.go` - Integration with chat interface
@@ -119,12 +126,14 @@ The platform detection and keybinding system is implemented in:
 ### Testing
 
 The implementation includes comprehensive tests for:
+
 - Platform detection
 - Keybinding generation
 - Format conversion
 - Help text generation
 
 Run tests with:
+
 ```bash
 go test ./internal/chat -v -run "TestPlatform|TestKeybinding"
 ```
@@ -132,16 +141,19 @@ go test ./internal/chat -v -run "TestPlatform|TestKeybinding"
 ## Troubleshooting
 
 ### macOS: Alt/Option key not working
+
 1. Check terminal emulator settings for Option/Alt key behavior
 2. Some terminals may need "Use Option as Meta key" enabled
 3. Try using Esc instead of Alt as a fallback
 
 ### Linux: Ctrl shortcuts intercepted by terminal
+
 1. Check if menu access keys are enabled
 2. Consider using Alt as an alternative modifier
 3. Some terminals reserve Ctrl+Shift for their own use
 
 ### Copy/Paste issues
+
 1. Terminal copy/paste often differs from system copy/paste
 2. Try both Ctrl+C/V and Ctrl+Shift+C/V variants
 3. On macOS, Cmd+C/V works for system clipboard

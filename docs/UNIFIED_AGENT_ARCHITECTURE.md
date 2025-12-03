@@ -70,22 +70,26 @@ type ToolAgent interface {
 ## Implementation Hierarchy
 
 ### BaseAgent
+
 - Provides common functionality for all agents
 - Manages agent configuration (ID, name, model, temperature, etc.)
 - Foundation for specialized agent types
 
 ### WorkerAgent  
+
 - Standard implementation of GuildArtisan
 - Includes LLM client, memory manager, tool registry
 - Supports cost tracking and tool execution
 - Primary workhorse for task execution
 
 ### ManagerAgent
+
 - Extends WorkerAgent
 - Coordinates other agents
 - Handles task delegation and orchestration
 
 ### BaseToolAgent
+
 - Extends BaseAgent with tool execution capabilities
 - Implements the ToolAgent interface
 - Handles tool call parsing and execution flow
@@ -123,27 +127,35 @@ The system includes several pre-defined agent templates:
 ## Key Design Patterns
 
 ### 1. Dependency Injection
+
 All agents receive their dependencies through constructors:
+
 - LLM clients
 - Memory managers
 - Tool registries
 - Commission managers
 
 ### 2. Context Propagation
+
 Every operation accepts a context for:
+
 - Cancellation support
 - Deadline management
 - Request tracing
 - Observability
 
 ### 3. Interface Segregation
+
 Small, focused interfaces allow flexibility:
+
 - `Agent` - Core functionality
 - `ToolAgent` - Tool execution
 - `GuildArtisan` - Full Guild capabilities
 
 ### 4. Cost Management
+
 Built-in cost tracking for:
+
 - Token usage
 - API calls
 - Tool executions
@@ -217,6 +229,7 @@ func executeWithTools(ctx context.Context, agent core.ToolAgent) error {
 ## Best Practices
 
 ### 1. Always Use Context
+
 ```go
 // Good
 response, err := agent.Execute(ctx, request)
@@ -226,6 +239,7 @@ response, err := agent.Execute(context.Background(), request)
 ```
 
 ### 2. Handle Cost Limits
+
 ```go
 agent.SetCostBudget(core.CostTypeTokens, 10000)
 if report := agent.GetCostReport(); report["tokens_used"].(float64) > 9000 {
@@ -234,6 +248,7 @@ if report := agent.GetCostReport(); report["tokens_used"].(float64) > 9000 {
 ```
 
 ### 3. Proper Error Handling
+
 ```go
 response, err := agent.Execute(ctx, request)
 if err != nil {
@@ -247,6 +262,7 @@ if err != nil {
 ```
 
 ### 4. Resource Cleanup
+
 ```go
 // If agent has closeable resources
 if closer, ok := agent.(io.Closer); ok {
@@ -291,6 +307,7 @@ func TestAgentIntegration(t *testing.T) {
 If you're migrating from the old `pkg/agent` structure:
 
 1. Update imports:
+
    ```go
    // Old
    import "github.com/lancekrogers/guild/pkg/agent"
@@ -300,6 +317,7 @@ If you're migrating from the old `pkg/agent` structure:
    ```
 
 2. Update type references:
+
    ```go
    // Old
    var agent agent.Agent
@@ -309,6 +327,7 @@ If you're migrating from the old `pkg/agent` structure:
    ```
 
 3. Update backstory imports:
+
    ```go
    // Old
    import "github.com/lancekrogers/guild/pkg/backstory"

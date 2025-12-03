@@ -172,6 +172,7 @@ type ServiceOptions struct {
 ### Bridge Configurations
 
 #### EventLoggerBridge
+
 ```go
 type EventLoggerConfig struct {
     LogLevel         EventLogLevel // Minimum event priority to log
@@ -183,6 +184,7 @@ type EventLoggerConfig struct {
 ```
 
 #### UIEventBridge
+
 ```go
 type UIEventConfig struct {
     BatchEvents      bool          // Enable event batching
@@ -286,6 +288,7 @@ for _, svc := range services {
 ### Debug Mode
 
 Enable debug logging:
+
 ```go
 logger := observability.NewLogger(&observability.Config{
     Level: observability.LevelDebug,
@@ -295,6 +298,7 @@ logger := observability.NewLogger(&observability.Config{
 ### Health Check Failures
 
 Common causes:
+
 - Service not started
 - Resource exhaustion
 - Dependency failures
@@ -323,16 +327,19 @@ Common causes:
 ## Testing
 
 ### Unit Tests
+
 ```bash
 go test ./internal/integration/...
 ```
 
 ### Integration Tests
+
 ```bash
 go test -tags=integration ./internal/integration/tests/...
 ```
 
 ### Benchmarks
+
 ```bash
 go test -bench=. ./internal/integration/tests/...
 ```
@@ -359,6 +366,7 @@ go test -bench=. ./internal/integration/tests/...
 ### From Direct Integration to Service Registry
 
 Before:
+
 ```go
 // Direct initialization
 db := database.New(config)
@@ -367,6 +375,7 @@ api := api.New(db, cache)
 ```
 
 After:
+
 ```go
 // Service registry
 registry := services.NewServiceRegistry(ctx)
@@ -381,6 +390,7 @@ registry.Start(ctx)
 ### From Direct Events to Bridges
 
 Before:
+
 ```go
 // Manual event handling
 event := CreateEvent(...)
@@ -389,6 +399,7 @@ ui.Update(event)
 ```
 
 After:
+
 ```go
 // Automatic via bridges
 eventBus.Publish(ctx, event)

@@ -3,6 +3,7 @@
 ## Overview
 
 The event types and schema system provides:
+
 - Schema-based event validation
 - Type-safe event builders
 - Event serialization (JSON, binary, compressed)
@@ -12,22 +13,26 @@ The event types and schema system provides:
 ## Components
 
 ### Event Registry (`pkg/events/types/registry.go`)
+
 - Manages event schemas and versions
 - Provides event factories for type-safe creation
 - Validates events against schemas
 - Supports schema import/export
 
 ### Event Builders (`pkg/events/types/builders.go`)
+
 - Type-safe builders for different event categories
 - Automatic schema validation
 - Fluent API for event construction
 
 ### Validation System (`pkg/events/types/validation.go`)
+
 - Property validators (email, URL, UUID, semver, etc.)
 - Event-specific validation rules
 - Schema evolution support
 
 ### Serialization (`pkg/events/types/serialization.go`)
+
 - Multiple formats: JSON, binary (gob), compressed
 - Batch serialization for efficiency
 - Streaming support for large datasets
@@ -35,6 +40,7 @@ The event types and schema system provides:
 ## Usage Examples
 
 ### Register a Schema
+
 ```go
 registry := NewEventRegistry()
 schema := &EventSchema{
@@ -51,6 +57,7 @@ registry.RegisterSchema(schema)
 ```
 
 ### Build Type-Safe Events
+
 ```go
 builder := NewTaskEventBuilder("task.created", registry)
 event, err := builder.
@@ -62,6 +69,7 @@ event, err := builder.
 ```
 
 ### Serialize Events
+
 ```go
 serializer := NewSerializer(FormatCompressed, registry)
 data, err := serializer.Serialize(ctx, event)
@@ -71,6 +79,7 @@ event, err = serializer.Deserialize(ctx, data)
 ```
 
 ### Schema Evolution
+
 ```go
 evolution := NewSchemaEvolution(registry)
 evolution.AddMigration("user.created", Migration{

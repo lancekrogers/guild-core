@@ -9,6 +9,7 @@ This package provides web-related tools for the Guild Framework, including web s
 A comprehensive web search tool that integrates with multiple search backends:
 
 **Features:**
+
 - **Multiple Search Engines**: Supports Google Custom Search API and DuckDuckGo Instant Answer API
 - **Domain Filtering**: Allows filtering results by allowed/blocked domains
 - **Configurable Results**: Control maximum number of results (1-50)
@@ -17,6 +18,7 @@ A comprehensive web search tool that integrates with multiple search backends:
 - **Automatic Fallback**: Falls back to DuckDuckGo if Google API credentials are not available
 
 **Usage:**
+
 ```json
 {
   "query": "artificial intelligence latest developments",
@@ -29,6 +31,7 @@ A comprehensive web search tool that integrates with multiple search backends:
 ```
 
 **Configuration:**
+
 - Set `GOOGLE_SEARCH_API_KEY` and `GOOGLE_SEARCH_ENGINE_ID` environment variables to use Google Custom Search
 - Without these, the tool automatically uses DuckDuckGo (no API key required)
 
@@ -37,6 +40,7 @@ A comprehensive web search tool that integrates with multiple search backends:
 An intelligent web content fetching and analysis tool with AI-powered processing:
 
 **Features:**
+
 - **Content Extraction**: Converts HTML to clean, structured text
 - **AI Analysis**: Uses LLM providers to analyze content based on custom prompts
 - **Metadata Extraction**: Extracts comprehensive page metadata (title, description, author, etc.)
@@ -46,6 +50,7 @@ An intelligent web content fetching and analysis tool with AI-powered processing
 - **Link and Image Extraction**: Catalogs all links and images on the page
 
 **Usage:**
+
 ```json
 {
   "url": "https://example.com/article",
@@ -54,6 +59,7 @@ An intelligent web content fetching and analysis tool with AI-powered processing
 ```
 
 **Response includes:**
+
 - Original URL and extracted title
 - Clean text content in markdown format
 - AI-powered analysis based on the prompt
@@ -63,6 +69,7 @@ An intelligent web content fetching and analysis tool with AI-powered processing
 ## Installation & Registration
 
 ### Basic Registration
+
 ```go
 import "github.com/guild-ventures/guild-core/tools/web"
 
@@ -76,6 +83,7 @@ err := web.RegisterWebToolsWithRegistry(registry, aiProvider)
 ```
 
 ### Individual Tool Creation
+
 ```go
 // Create WebSearch tool
 searchTool := web.NewWebSearchTool()
@@ -97,7 +105,7 @@ The tools are registered with the following cost levels in the Guild framework:
 - **HTML Parsing**: `github.com/PuerkitoBio/goquery` (for WebFetch)
 - **AI Provider**: Guild's provider interface (for WebFetch)
 - **Error Handling**: Guild's `gerror` package
-- **External APIs**: 
+- **External APIs**:
   - Google Custom Search API (optional)
   - DuckDuckGo Instant Answer API
 
@@ -114,11 +122,13 @@ Both tools follow Guild framework patterns:
 ## Testing
 
 Run tests with:
+
 ```bash
 go test ./tools/web/...
 ```
 
 The test suite includes:
+
 - Interface compliance tests
 - Input validation tests
 - Mock server tests for HTTP interactions
@@ -161,6 +171,7 @@ When contributing to the web tools:
 ## Future Enhancements
 
 Potential future improvements:
+
 - Additional search engine backends (Bing, Yahoo, etc.)
 - Enhanced content extraction for specific site types
 - Bulk URL processing capabilities

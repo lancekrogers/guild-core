@@ -36,6 +36,7 @@ The central coordinator for all system components.
 ```
 
 **Key Features:**
+
 - Dependency graph with cycle detection
 - Ordered startup/shutdown based on dependencies
 - Background health monitoring
@@ -65,6 +66,7 @@ Bridges translate between component-specific protocols and the unified event sys
 ```
 
 **Bridge Responsibilities:**
+
 - Protocol translation
 - Event filtering and routing
 - Batching and buffering

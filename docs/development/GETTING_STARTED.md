@@ -104,6 +104,7 @@ guild chat
 ```
 
 This opens a production-ready terminal UI where you can:
+
 - Chat with Elena or other AI agents
 - Use slash commands for advanced features
 - See beautifully formatted responses with markdown support
@@ -150,6 +151,7 @@ guild setup-wizard
 ```
 
 The setup wizard provides:
+
 - **Agent Selection**: Choose from multiple pre-configured agents
 - **Custom Agents**: Create your own agent configurations
 - **Provider Settings**: Configure multiple LLM providers
@@ -202,7 +204,7 @@ make integration
    - `guild agent start` - Agent management commands
    - `guild campaign watch` - Real-time monitoring
 
-4. **Test Coverage**: 
+4. **Test Coverage**:
    - ~60% coverage (target: 80%+)
    - 8 test files disabled and need migration to internal test packages
    - Some integration tests failing due to interface changes
@@ -258,6 +260,7 @@ echo $OPENAI_API_KEY
 ## Contributing
 
 Guild is in active development. Key areas needing work:
+
 - Fixing build errors in gRPC package
 - Implementing missing commands
 - Improving test coverage

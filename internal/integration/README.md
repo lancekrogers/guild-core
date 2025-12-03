@@ -16,6 +16,7 @@ internal/integration/
 ## Integration Approach
 
 All integration code follows these principles:
+
 1. **Enhance, don't replace** - Build on existing components
 2. **Context-aware** - Proper context propagation throughout
 3. **Error handling** - Consistent use of gerror

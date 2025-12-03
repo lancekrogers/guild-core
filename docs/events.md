@@ -7,6 +7,7 @@ The Guild Framework uses an event-driven architecture to enable loose coupling b
 ## Event Categories
 
 ### Service Events (`service.*`)
+
 Lifecycle and health events for Guild services.
 
 | Event Type | Description | Data Fields |
@@ -20,6 +21,7 @@ Lifecycle and health events for Guild services.
 | `service.error` | Service encountered an error | `service_id`, `service_name`, `timestamp`, `error`, `severity` |
 
 ### Data Events (`data.*`)
+
 CRUD and data operation events.
 
 | Event Type | Description | Data Fields |
@@ -32,6 +34,7 @@ CRUD and data operation events.
 | `data.corrupted` | Data corruption detected | `entity_type`, `entity_id`, `timestamp`, `details` |
 
 ### Task Events (`task.*`)
+
 Task lifecycle and progress events.
 
 | Event Type | Description | Data Fields |
@@ -46,6 +49,7 @@ Task lifecycle and progress events.
 | `task.retried` | Task retry attempted | `task_id`, `retry_count`, `timestamp` |
 
 ### Agent Events (`agent.*`)
+
 Agent lifecycle and activity events.
 
 | Event Type | Description | Data Fields |
@@ -59,6 +63,7 @@ Agent lifecycle and activity events.
 | `agent.health.check` | Agent health checked | `agent_id`, `status`, `timestamp` |
 
 ### Commission Events (`commission.*`)
+
 Commission (high-level task) events.
 
 | Event Type | Description | Data Fields |
@@ -72,6 +77,7 @@ Commission (high-level task) events.
 | `commission.cancelled` | Commission cancelled | `commission_id`, `cancelled_by`, `reason`, `timestamp` |
 
 ### UI Events (`ui.*`)
+
 User interface interaction events.
 
 | Event Type | Description | Data Fields |
@@ -83,6 +89,7 @@ User interface interaction events.
 | `ui.error` | UI error occurred | `session_id`, `error`, `component`, `timestamp` |
 
 ### System Events (`system.*`)
+
 System-wide notifications and alerts.
 
 | Event Type | Description | Data Fields |
@@ -93,6 +100,7 @@ System-wide notifications and alerts.
 | `system.shutdown` | System shutting down | `reason`, `graceful`, `timestamp` |
 
 ### gRPC Events (`grpc.*`)
+
 gRPC server and client events.
 
 | Event Type | Description | Data Fields |
@@ -103,6 +111,7 @@ gRPC server and client events.
 | `grpc.error` | gRPC error | `method`, `error`, `status_code`, `timestamp` |
 
 ### Corpus Events (`corpus.*`)
+
 Document corpus scanning and indexing events.
 
 | Event Type | Description | Data Fields |
@@ -117,6 +126,7 @@ Document corpus scanning and indexing events.
 ## Event Flow Diagrams
 
 ### Service Startup Flow
+
 ```
 ┌─────────────┐     ┌──────────────┐     ┌─────────────┐
 │   Bootstrap │────▶│service.starting│────▶│ Service Init│
@@ -129,6 +139,7 @@ Document corpus scanning and indexing events.
 ```
 
 ### Task Execution Flow
+
 ```
 ┌─────────────┐     ┌──────────────┐     ┌─────────────┐
 │  Task Queue │────▶│task.created  │────▶│  Scheduler  │
@@ -148,6 +159,7 @@ Document corpus scanning and indexing events.
 ```
 
 ### Commission Lifecycle
+
 ```
 commission.created ──▶ commission.planned ──▶ commission.started
                                                       │
@@ -162,6 +174,7 @@ commission.created ──▶ commission.planned ──▶ commission.started
 ## Integration Patterns
 
 ### 1. Event Logging Bridge
+
 All events can be automatically logged through the EventLoggerBridge:
 
 ```go
@@ -175,6 +188,7 @@ bridge := bridges.NewEventLoggerBridge(eventBus, logger, config)
 ```
 
 ### 2. Persistence Event Bridge
+
 Automatically emit events for all database operations:
 
 ```go
@@ -187,6 +201,7 @@ config := bridges.PersistenceEventConfig{
 ```
 
 ### 3. UI Event Bridge
+
 Connect UI state changes to the event system:
 
 ```go
@@ -201,12 +216,14 @@ config := bridges.UIEventConfig{
 ## Best Practices
 
 ### 1. Event Naming
+
 - Use dot notation for hierarchical event types
 - Start with the category, followed by subcategories
 - Be specific but not overly verbose
 - Examples: `task.created`, `agent.state.changed`, `commission.progress`
 
 ### 2. Event Data
+
 - Always include `timestamp`
 - Include relevant IDs (task_id, agent_id, etc.)
 - Keep payloads reasonable in size
@@ -214,6 +231,7 @@ config := bridges.UIEventConfig{
 - Use consistent field names across similar events
 
 ### 3. Event Handling
+
 - Handlers should be idempotent
 - Don't assume event ordering
 - Handle errors gracefully
@@ -221,6 +239,7 @@ config := bridges.UIEventConfig{
 - Use context for cancellation
 
 ### 4. Performance
+
 - Events are asynchronous by default
 - Use batching for high-frequency events
 - Consider event filtering at source
@@ -229,6 +248,7 @@ config := bridges.UIEventConfig{
 ## Debugging Guide
 
 ### Enabling Event Tracing
+
 ```bash
 # Enable all event logging
 export GUILD_EVENT_LOG_LEVEL=debug
@@ -258,7 +278,9 @@ export GUILD_EVENT_LOG_FILE=".guild/logs/events.log"
    - Consider event sourcing for critical flows
 
 ### Event Metrics
+
 Monitor these key metrics:
+
 - Events published per second
 - Event processing latency
 - Event queue depth

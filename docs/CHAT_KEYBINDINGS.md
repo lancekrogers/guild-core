@@ -3,23 +3,27 @@
 ## Critical Keybindings (FIXED)
 
 ### Exit Chat
+
 - **Ctrl+Q** - Quit chat immediately
 - **Esc** - Quit chat immediately  
 - **Ctrl+D** - Quit chat immediately
 - **/exit**, **/quit**, **/q** - Exit via command (now properly quits)
 
 ### Text Input
+
 - **Enter** - Submit message
 - **Shift+Enter** - Insert newline (multiline input) - FIXED
 - **Ctrl+A** - Move to start of line (standard terminal behavior)
 - **Ctrl+E** - Move to end of line (standard terminal behavior)
 
 ### Copy/Paste (Internal Clipboard)
+
 - **Ctrl+Shift+C** - Copy current input or last message
 - **Ctrl+Shift+V** - Paste from internal clipboard
 - Note: Uses internal clipboard, not system clipboard
 
 ### Navigation
+
 - **↑/k** - Scroll up in message history
 - **↓/j** - Scroll down in message history
 - **PgUp** - Page up
@@ -28,10 +32,12 @@
 - **End/G** - Go to end of chat
 
 ### History
+
 - **Ctrl+R** - Previous command from history
 - **Ctrl+F** - Next command from history
 
 ### View Modes
+
 - **Ctrl+H** - Show help
 - **Ctrl+P** - Toggle prompt management view
 - **Ctrl+A** - Toggle agent status view
@@ -39,6 +45,7 @@
 - **Ctrl+T** - Toggle view mode
 
 ### Special Features
+
 - **Ctrl+L** - Clear chat history
 - **Ctrl+K** - Open command palette
 - **Ctrl+O** - Fuzzy file finder
@@ -47,6 +54,7 @@
 - **Tab** - Auto-complete commands
 
 ### Vim Mode
+
 - **Ctrl+Alt+V** - Toggle vim mode on/off
 - When enabled:
   - **i** - Enter insert mode (for typing)
@@ -59,6 +67,7 @@
 ## Commands
 
 ### Basic Commands
+
 - **/help** or **/h** - Show help
 - **/exit**, **/quit**, **/q** - Exit chat
 - **/clear** or **/c** - Clear chat history
@@ -66,10 +75,12 @@
 - **/agents** or **/a** - List available agents
 
 ### Agent Communication
+
 - **@agent_id message** - Send to specific agent
 - **@all message** - Broadcast to all agents
 
 ### Session Management
+
 - **/sessions** - List sessions
 - **/session new [name]** - Create new session
 - **/session rename <name>** - Rename current session
@@ -77,17 +88,20 @@
 
 ## Troubleshooting
 
-### If keys don't work:
+### If keys don't work
+
 1. Make sure you're not in vim mode (check status line)
 2. Some terminals may intercept certain key combinations
 3. Try the command version (e.g., /exit instead of Ctrl+Q)
 
-### Terminal Compatibility:
+### Terminal Compatibility
+
 - iTerm2, Terminal.app, Alacritty: All keybindings should work
 - Some terminals may need configuration for Shift+Enter
 - Ctrl+Shift combinations may conflict with terminal shortcuts
 
-## Fixed Issues:
+## Fixed Issues
+
 1. ✅ Shift+Enter now properly inserts newlines
 2. ✅ Exit commands (/exit, /quit, /q) now properly quit
 3. ✅ Esc, Ctrl+Q, Ctrl+D properly exit chat

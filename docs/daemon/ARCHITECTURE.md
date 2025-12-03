@@ -9,6 +9,7 @@ The Guild daemon provides persistent services for chat sessions, event streaming
 ### Core Services
 
 #### 1. Chat Service (`ChatService`)
+
 - **Purpose**: Interactive bidirectional communication with Guild agents
 - **Protocol**: gRPC streaming over Unix sockets
 - **Features**:
@@ -18,6 +19,7 @@ The Guild daemon provides persistent services for chat sessions, event streaming
   - Multi-agent conversations
 
 #### 2. Event Service (`EventService`)
+
 - **Purpose**: Real-time event streaming for task coordination
 - **Protocol**: gRPC server-side streaming
 - **Events**:
@@ -28,6 +30,7 @@ The Guild daemon provides persistent services for chat sessions, event streaming
   - `agent.joined/left` - Agent participation changes
 
 #### 3. Session Management
+
 - **Storage**: SQLite database (`.guild/memory.db`)
 - **Persistence**: Sessions and messages survive daemon restarts
 - **Lifecycle**:
@@ -39,6 +42,7 @@ The Guild daemon provides persistent services for chat sessions, event streaming
 ### Storage Layer
 
 #### SQLite Database Schema
+
 ```sql
 -- Chat sessions
 CREATE TABLE sessions (
@@ -68,6 +72,7 @@ CREATE TABLE messages (
 ## Service Endpoints
 
 ### gRPC Services
+
 - **Socket**: Unix domain socket at `/tmp/guild-{campaign}.sock`
 - **Services**:
   - `guild.v1.ChatService` - Interactive chat
@@ -75,6 +80,7 @@ CREATE TABLE messages (
   - `prompts.v1.PromptService` - Prompt management
 
 ### Health Monitoring
+
 - **Health Check**: gRPC `grpc.health.v1.Health` service
 - **Status Endpoint**: Daemon status via `guild status` command
 - **Process Management**: PID files in `.guild/` directory
@@ -82,6 +88,7 @@ CREATE TABLE messages (
 ## Communication Patterns
 
 ### 1. Client-Daemon Connection
+
 ```mermaid
 sequenceDiagram
     participant C as Client
@@ -98,6 +105,7 @@ sequenceDiagram
 ```
 
 ### 2. Event Broadcasting
+
 ```mermaid
 sequenceDiagram
     participant A as Agent
@@ -114,16 +122,19 @@ sequenceDiagram
 ## Deployment Modes
 
 ### 1. Foreground Mode (`--foreground`)
+
 - Interactive execution with console output
 - Direct process lifecycle management
 - Ideal for development and debugging
 
 ### 2. Background Mode (default)
+
 - Daemon process detached from terminal
 - Logs redirected to `.guild/daemon.log`
 - PID file management for process control
 
 ### 3. Multi-Campaign Mode
+
 - Each campaign runs independent daemon instance
 - Separate Unix sockets per campaign
 - Isolated storage and configuration
@@ -131,12 +142,14 @@ sequenceDiagram
 ## Performance Characteristics
 
 ### Benchmarks
+
 - **Target**: >5,000 events/second streaming throughput
 - **Session Creation**: <100ms per session
 - **Message Latency**: <10ms for local Unix socket communication
 - **Concurrent Sessions**: Supports 100+ concurrent sessions
 
 ### Optimizations
+
 - Unix domain sockets for minimal IPC overhead
 - SQLite WAL mode for concurrent read/write access
 - Connection pooling and reuse
@@ -145,12 +158,14 @@ sequenceDiagram
 ## Error Handling
 
 ### Graceful Degradation
+
 - Daemon restart preserves all session data
 - Client reconnection automatically restores session state
 - Failed tool executions don't crash daemon
 - Memory limits prevent resource exhaustion
 
 ### Recovery Mechanisms
+
 - Automatic cleanup of stale socket files
 - PID file validation and cleanup
 - Database integrity checks on startup
@@ -159,12 +174,14 @@ sequenceDiagram
 ## Security Considerations
 
 ### Process Isolation
+
 - Daemon runs with user permissions only
 - Unix socket permissions restrict access to user
 - No network exposure (local IPC only)
 - Tool execution sandboxing
 
 ### Data Protection
+
 - Session data encrypted at rest (optional)
 - No sensitive data in log files
 - Secure temp file handling
@@ -173,6 +190,7 @@ sequenceDiagram
 ## Configuration
 
 ### Environment Variables
+
 ```bash
 GUILD_DAEMON_PORT=9090          # TCP port (if enabled)
 GUILD_DAEMON_SOCKET=/tmp/guild  # Socket path override
@@ -181,6 +199,7 @@ GUILD_DATABASE_PATH=.guild/memory.db  # Database location
 ```
 
 ### Campaign Configuration
+
 ```yaml
 # guild.yaml
 daemon:
@@ -193,6 +212,7 @@ daemon:
 ## Monitoring and Observability
 
 ### Metrics
+
 - Active session count
 - Message throughput (messages/second)
 - Event streaming rate
@@ -200,12 +220,14 @@ daemon:
 - Memory and CPU usage
 
 ### Logging
+
 - Structured JSON logs
 - Operation tracing with context IDs
 - Performance timing for key operations
 - Error tracking with stack traces
 
 ### Health Checks
+
 ```bash
 # Check daemon status
 guild status
@@ -220,6 +242,7 @@ sqlite3 .guild/memory.db "PRAGMA integrity_check;"
 ## Development Guide
 
 ### Local Testing
+
 ```bash
 # Start daemon in foreground
 guild serve --foreground
@@ -233,6 +256,7 @@ go test -bench=. ./integration/daemon/
 ```
 
 ### Debugging
+
 ```bash
 # Enable debug logging
 GUILD_DAEMON_LOG_LEVEL=debug guild serve --foreground
@@ -247,12 +271,14 @@ GRPC_GO_LOG_VERBOSITY_LEVEL=99 guild serve --foreground
 ## Migration and Upgrades
 
 ### Database Migrations
+
 - Automatic schema migrations on daemon startup
 - Backward-compatible message format changes
 - Session data preservation across upgrades
 - Rollback procedures for failed migrations
 
 ### Protocol Versioning
+
 - gRPC service versioning (`guild.v1`, `guild.v2`)
 - Client-server compatibility checks
 - Graceful degradation for unsupported features

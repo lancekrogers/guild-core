@@ -123,19 +123,23 @@ guild health --component reasoning
 ### Key Metrics
 
 #### Request Metrics
+
 - `reasoning_extraction_total` - Total extractions by status
 - `reasoning_extraction_duration_seconds` - Extraction latency
 - `reasoning_extraction_errors_total` - Error counts by type
 
 #### Circuit Breaker Metrics
+
 - `reasoning_circuit_breaker_state` - Current state (0=closed, 1=open, 2=half-open)
 - `reasoning_circuit_breaker_trips_total` - State transitions
 
 #### Rate Limiter Metrics
+
 - `reasoning_rate_limiter_usage_ratio` - Usage as ratio of limit
 - `reasoning_rate_limit_hits_total` - Rate limit rejections
 
 #### System Health
+
 - `reasoning_active_extractions` - Currently processing
 - `reasoning_dead_letter_queue_size` - Unprocessed failures
 
@@ -182,10 +186,12 @@ groups:
 ### Issue: High Latency
 
 **Symptoms:**
+
 - P99 latency > 1s
 - Increasing queue sizes
 
 **Diagnosis:**
+
 ```bash
 # Check active extractions
 guild metrics get reasoning_active_extractions
@@ -198,6 +204,7 @@ guild logs --component reasoning --level error --since 10m
 ```
 
 **Resolution:**
+
 1. Check provider API status
 2. Verify network connectivity
 3. Review extraction patterns for complexity
@@ -206,10 +213,12 @@ guild logs --component reasoning --level error --since 10m
 ### Issue: Circuit Breaker Open
 
 **Symptoms:**
+
 - All requests failing with "circuit breaker open"
 - `reasoning_circuit_breaker_state` = 1
 
 **Diagnosis:**
+
 ```bash
 # Check failure history
 guild reasoning circuit-breaker status
@@ -219,9 +228,11 @@ guild logs --component reasoning --grep "circuit breaker" --since 30m
 ```
 
 **Resolution:**
+
 1. Identify root cause of failures
 2. Fix underlying issue
 3. Reset circuit breaker if needed:
+
    ```bash
    guild reasoning circuit-breaker reset
    ```
@@ -229,10 +240,12 @@ guild logs --component reasoning --grep "circuit breaker" --since 30m
 ### Issue: Rate Limiting
 
 **Symptoms:**
+
 - 429 errors
 - `reasoning_rate_limit_hits_total` increasing
 
 **Diagnosis:**
+
 ```bash
 # Check current usage
 guild reasoning rate-limiter status
@@ -242,9 +255,11 @@ guild reasoning rate-limiter top-agents --limit 10
 ```
 
 **Resolution:**
+
 1. Review agent configurations
 2. Implement client-side rate limiting
 3. Adjust limits if legitimate:
+
    ```bash
    guild config set reasoning.rate_limiter.per_agent_rps=100
    ```
@@ -252,10 +267,12 @@ guild reasoning rate-limiter top-agents --limit 10
 ### Issue: Dead Letter Queue Growing
 
 **Symptoms:**
+
 - `reasoning_dead_letter_queue_size` increasing
 - Failed extractions not being processed
 
 **Diagnosis:**
+
 ```bash
 # View dead letter entries
 guild reasoning dead-letter list --limit 10
@@ -265,9 +282,11 @@ guild reasoning dead-letter inspect <entry-id>
 ```
 
 **Resolution:**
+
 1. Identify common failure patterns
 2. Fix root causes
 3. Reprocess entries:
+
    ```bash
    guild reasoning dead-letter reprocess --batch-size 100
    ```
@@ -322,6 +341,7 @@ ORDER BY idx_scan;
 ### Complete System Failure
 
 1. **Immediate Actions:**
+
    ```bash
    # Check system health
    guild health --all
@@ -334,6 +354,7 @@ ORDER BY idx_scan;
    ```
 
 2. **Failover:**
+
    ```bash
    # Switch to backup instance
    guild failover activate --component reasoning
@@ -343,6 +364,7 @@ ORDER BY idx_scan;
    ```
 
 3. **Recovery:**
+
    ```bash
    # Replay missed events
    guild events replay --component reasoning --since <timestamp>
@@ -354,6 +376,7 @@ ORDER BY idx_scan;
 ### Memory Leak
 
 1. **Identify:**
+
    ```bash
    # Get memory profile
    guild debug pprof --type heap
@@ -363,6 +386,7 @@ ORDER BY idx_scan;
    ```
 
 2. **Mitigate:**
+
    ```bash
    # Restart with memory limit
    guild restart --component reasoning --memory-limit 2G
@@ -374,6 +398,7 @@ ORDER BY idx_scan;
 ### Provider Outage
 
 1. **Detection:**
+
    ```bash
    # Check provider status
    guild providers health
@@ -383,6 +408,7 @@ ORDER BY idx_scan;
    ```
 
 2. **Mitigation:**
+
    ```bash
    # Switch to backup provider
    guild config set reasoning.default_provider=anthropic
@@ -396,6 +422,7 @@ ORDER BY idx_scan;
 ### Daily
 
 1. **Health Check:**
+
    ```bash
    guild health --component reasoning --verbose
    ```
@@ -408,6 +435,7 @@ ORDER BY idx_scan;
 ### Weekly
 
 1. **Dead Letter Processing:**
+
    ```bash
    # Review old entries
    guild reasoning dead-letter list --older-than 3d
@@ -417,6 +445,7 @@ ORDER BY idx_scan;
    ```
 
 2. **Performance Analysis:**
+
    ```bash
    # Generate performance report
    guild report generate --component reasoning --period 7d
@@ -425,6 +454,7 @@ ORDER BY idx_scan;
 ### Monthly
 
 1. **Database Maintenance:**
+
    ```sql
    -- Vacuum and analyze
    VACUUM ANALYZE reasoning_dead_letter;
@@ -441,6 +471,7 @@ ORDER BY idx_scan;
    ```
 
 2. **Configuration Review:**
+
    ```bash
    # Backup current config
    guild config backup --component reasoning
@@ -450,6 +481,7 @@ ORDER BY idx_scan;
    ```
 
 3. **Capacity Planning:**
+
    ```bash
    # Generate growth report
    guild report capacity --component reasoning --forecast 3m

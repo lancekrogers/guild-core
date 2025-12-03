@@ -105,6 +105,7 @@ profiles := pd.ListProfiles()
 ```
 
 Supported profiles include:
+
 - iTerm2 (macOS)
 - Windows Terminal
 - VS Code Integrated Terminal
@@ -160,17 +161,20 @@ if cell.FG != terminal.Red {
 The package detects various terminal features:
 
 ### Color Support
+
 - No color (dumb terminals)
 - Basic 16 colors
 - 256 colors (ANSI)
 - True color (24-bit RGB)
 
 ### Input Features
+
 - Mouse tracking (X11, SGR protocols)
 - Bracketed paste mode
 - Keyboard protocols
 
 ### Display Features  
+
 - Unicode rendering
 - Box drawing characters
 - Emoji support
@@ -178,6 +182,7 @@ The package detects various terminal features:
 - Image protocols (Sixel, iTerm2, Kitty)
 
 ### Advanced Features
+
 - Alternate screen buffer
 - Cursor shape control
 - Window title setting
@@ -271,6 +276,7 @@ go test ./pkg/terminal/...
 ```
 
 Test coverage includes:
+
 - Platform-specific detection
 - Profile matching
 - Renderer selection
@@ -281,11 +287,13 @@ Test coverage includes:
 ## Best Practices
 
 1. **Cache Detection Results**: Terminal capabilities don't change during execution
+
    ```go
    var caps = terminal.DefaultDetector.Detect() // Global cache
    ```
 
 2. **Always Provide Fallbacks**: Never assume capabilities
+
    ```go
    if caps.Unicode {
        return "✓"
@@ -294,6 +302,7 @@ Test coverage includes:
    ```
 
 3. **Test Multiple Environments**: Use the emulator for testing
+
    ```go
    em := terminal.NewEmulator(80, 24)
    em.SetCapabilities(terminal.Capabilities{Colors: terminal.NoColor})
@@ -301,6 +310,7 @@ Test coverage includes:
    ```
 
 4. **Respect User Preferences**: Honor NO_COLOR and FORCE_COLOR
+
    ```go
    if os.Getenv("NO_COLOR") != "" {
        // Disable all color output

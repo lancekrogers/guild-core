@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 #### Core Features
+
 - **Robust parsing architecture** with proper JSON/XML parsing instead of regex
 - **Multi-provider support** for OpenAI and Anthropic formats
 - **Automatic format detection** with confidence scoring (0.0-1.0)
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Extensible architecture** for adding custom formats
 
 #### Observability
+
 - **Prometheus metrics** for monitoring parser performance
 - **OpenTelemetry tracing** for distributed tracing support
 - **Health check system** with multiple check types
@@ -25,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Real-time dashboard** for monitoring parser status
 
 #### Configuration
+
 - `WithMaxInputSize()` - Set maximum input size
 - `WithTimeout()` - Set parsing timeout
 - `WithStrictValidation()` - Enable strict validation mode
@@ -33,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `WithCustomParser()` - Add custom format parsers
 
 #### Testing
+
 - Comprehensive unit tests for all components
 - Integration tests for real-world scenarios
 - Performance benchmarks
@@ -41,12 +45,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Test helpers and utilities
 
 ### Changed
+
 - **Parsing approach**: Replaced regex with proper JSON/XML parsing
 - **Error handling**: Returns empty slice instead of error for no tool calls
 - **Package structure**: Consolidated into main parser package with subpackages
 - **Import cycles**: Resolved through proper architecture with types package
 
 ### Fixed
+
 - Fragile regex-based format detection
 - Import cycles between packages
 - Poor error handling and recovery
@@ -54,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Lack of observability
 
 ### Security
+
 - Input size limits to prevent DoS
 - Timeout support to prevent hanging
 - Safe handling of malformed inputs
@@ -63,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2024-12-01 (Previous Version)
 
 ### Initial Implementation
+
 - Basic regex-based parser
 - Support for OpenAI format only
 - Limited error handling

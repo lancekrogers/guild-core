@@ -381,6 +381,7 @@ The package includes comprehensive tests covering:
 - Hook processing and error handling
 
 Run tests with:
+
 ```bash
 go test ./pkg/logging/...
 ```

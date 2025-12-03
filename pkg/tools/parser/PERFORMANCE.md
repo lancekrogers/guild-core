@@ -198,6 +198,7 @@ go dashboard.Start() // Access at http://localhost:8080
 **Symptoms**: High latency in parse operations
 
 **Solutions**:
+
 1. Check input size - large inputs take longer
 2. Verify format detection isn't timing out
 3. Look for malformed JSON/XML causing retries
@@ -208,6 +209,7 @@ go dashboard.Start() // Access at http://localhost:8080
 **Symptoms**: Growing memory consumption
 
 **Solutions**:
+
 1. Set `WithMaxInputSize()` limit
 2. Check for memory leaks in tool execution
 3. Ensure parser instances are reused
@@ -218,6 +220,7 @@ go dashboard.Start() // Access at http://localhost:8080
 **Symptoms**: High CPU usage during parsing
 
 **Solutions**:
+
 1. Limit concurrent parsing operations
 2. Use context timeouts to prevent runaway parsing
 3. Check for complex nested structures

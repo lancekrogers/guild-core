@@ -142,6 +142,7 @@ make vet               # Run go vet
 ### Build Failures
 
 The project currently has build failures in:
+
 - `cmd/guild` - Main CLI
 - `pkg/grpc` - gRPC services (Campaign interface mismatches)
 - `internal/chat` - Chat UI
@@ -199,6 +200,7 @@ wrapped := gerror.Wrap(err, gerror.ErrCodeInternal, "higher level failure")
 ### Medieval Naming
 
 Maintain the medieval guild theme:
+
 - Agents → Artisans
 - Objectives → Commissions
 - Task Board → Workshop Board

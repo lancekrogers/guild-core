@@ -7,6 +7,7 @@ This document outlines the integration of the new Event Foundation system (Sprin
 Sprint 3 successfully delivered a comprehensive event-driven architecture with the following components:
 
 ### 1. Enhanced Event Bus (`pkg/eventbus/`)
+
 - **Priority-based event processing** with high, normal, and low priority queues
 - **Circuit breaker pattern** for reliability and fault tolerance  
 - **Dead letter queue** for handling failed events with retry mechanisms
@@ -15,6 +16,7 @@ Sprint 3 successfully delivered a comprehensive event-driven architecture with t
 - **Metrics collection** for monitoring and observability
 
 ### 2. Event Types & Schema System (`pkg/events/types/`)
+
 - **Type-safe event builders** for different event categories:
   - Task events (task.created, task.completed, task.failed)
   - Agent events (agent.started, agent.stopped, agent.error)
@@ -27,6 +29,7 @@ Sprint 3 successfully delivered a comprehensive event-driven architecture with t
 - **Multiple serialization formats** (JSON, binary, compressed)
 
 ### 3. Advanced Event Routing (`pkg/events/routing/`)
+
 - **Rule-based routing** with support for:
   - Event type matching (exact and pattern)
   - Source filtering
@@ -45,6 +48,7 @@ Sprint 3 successfully delivered a comprehensive event-driven architecture with t
   - Distributed tracing support
 
 ### 4. Event Debugging & Tools (`pkg/events/debug/`)
+
 - **Real-time event inspector** with:
   - Configurable filters and hooks
   - Debug sessions with sampling
@@ -59,6 +63,7 @@ Sprint 3 successfully delivered a comprehensive event-driven architecture with t
 ### Current Guild Architecture Integration
 
 #### 1. Orchestrator Integration (`pkg/orchestrator/`)
+
 The event system integrates with the existing orchestrator:
 
 ```go
@@ -85,6 +90,7 @@ func (o *Orchestrator) executeTask(ctx context.Context, task *Task) error {
 ```
 
 #### 2. Agent Integration (`pkg/agents/`)
+
 Agents can publish lifecycle and status events:
 
 ```go
@@ -101,6 +107,7 @@ func (a *Agent) updateStatus(ctx context.Context, status string) {
 ```
 
 #### 3. Memory System Integration (`pkg/memory/`)
+
 Memory operations can be tracked via events:
 
 ```go
@@ -122,6 +129,7 @@ func (m *MemoryStore) Store(ctx context.Context, content *Content) error {
 ### TUI Integration Strategy
 
 #### Phase 1: Event Subscription Setup
+
 ```go
 // In internal/ui/chat/app.go
 type App struct {
@@ -156,6 +164,7 @@ func NewApp(config *Config) (*App, error) {
 ```
 
 #### Phase 2: Event Handlers for UI Updates
+
 ```go
 func (a *App) setupEventSubscriptions() error {
     ctx := context.Background()
@@ -195,6 +204,7 @@ func (a *App) handleAgentEvents(ctx context.Context, event events.CoreEvent) err
 ```
 
 #### Phase 3: TUI Event Publishing
+
 ```go
 func (a *App) publishUIEvent(eventType string, data map[string]interface{}) {
     builder := types.NewUIEventBuilder(eventType, a.registry)
@@ -218,6 +228,7 @@ func (a *App) handleUserInput(input string) {
 ```
 
 #### Phase 4: Real-time Debugging Integration
+
 ```go
 func (a *App) enableEventDebugging() error {
     // Create debug session for UI events
@@ -243,16 +254,19 @@ func (a *App) enableEventDebugging() error {
 ## Performance Considerations
 
 ### Event Volume Management
+
 - **Sampling**: Use sampling rates for high-frequency events (UI interactions)
 - **Batching**: Batch low-priority events to reduce overhead
 - **Filtering**: Apply filters early to reduce processing load
 
 ### Resource Usage
+
 - **Circuit Breakers**: Protect against cascade failures
 - **Bulkhead Pattern**: Isolate critical vs non-critical event processing
 - **Rate Limiting**: Prevent event storms from overwhelming the system
 
 ### Memory Management
+
 - **Event TTL**: Configure appropriate time-to-live for stored events
 - **Buffer Limits**: Set reasonable limits for event buffers
 - **Dead Letter Queue**: Monitor and clear old failed events
@@ -260,6 +274,7 @@ func (a *App) enableEventDebugging() error {
 ## Monitoring and Observability
 
 ### Key Metrics to Track
+
 ```go
 type EventMetrics struct {
     EventsPublished   int64
@@ -273,6 +288,7 @@ type EventMetrics struct {
 ```
 
 ### Debugging Capabilities
+
 - **Event Inspector**: Real-time event monitoring with filters
 - **Event Tracer**: Track events through the entire system
 - **Performance Analyzer**: Identify bottlenecks and optimization opportunities
@@ -281,19 +297,23 @@ type EventMetrics struct {
 ## Testing Strategy
 
 ### Unit Tests
+
 All packages have comprehensive unit tests covering:
+
 - Happy path scenarios
 - Error conditions
 - Edge cases
 - Performance characteristics
 
 ### Integration Tests
+
 - Event flow between components
 - Circuit breaker behavior under load
 - Dead letter queue functionality
 - UI event handling
 
 ### Performance Tests
+
 - Event throughput under load
 - Memory usage patterns
 - Latency measurements
@@ -302,16 +322,19 @@ All packages have comprehensive unit tests covering:
 ## Next Steps
 
 ### Immediate (Next Sprint)
+
 1. **Complete TUI Integration**: Implement the phases outlined above
 2. **Performance Tuning**: Optimize based on real-world usage patterns
 3. **Monitoring Setup**: Implement comprehensive metrics collection
 
 ### Medium-term
+
 1. **Event Store Optimization**: Consider more advanced storage options
 2. **Distributed Events**: Support for multi-node deployments
 3. **Advanced Analytics**: Real-time event analytics and insights
 
 ### Long-term
+
 1. **Event Sourcing**: Full event sourcing implementation
 2. **CQRS Integration**: Command Query Responsibility Segregation
 3. **External Integrations**: Webhooks, external event systems

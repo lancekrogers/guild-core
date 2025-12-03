@@ -5,30 +5,35 @@
 Five new LSP tools have been added to the Guild Framework in `tools/lsp/`:
 
 ### 1. Document Symbols Tool (`document_symbols.go`)
+
 - **Purpose**: Lists all symbols (functions, classes, variables) in a document
 - **Input**: File path
 - **Output**: Hierarchical symbol tree with names, kinds, and locations
 - **Use Case**: Code navigation, understanding file structure
 
 ### 2. Workspace Symbols Tool (`workspace_symbols.go`)
+
 - **Purpose**: Searches for symbols across the entire workspace
 - **Input**: Search query
 - **Output**: List of matching symbols with file locations
 - **Use Case**: Finding definitions across multiple files
 
 ### 3. Code Actions Tool (`code_actions.go`)
+
 - **Purpose**: Provides available refactorings and fixes at a position
 - **Input**: File path, line, column
 - **Output**: List of available actions (extract method, add imports, etc.)
 - **Use Case**: Automated refactoring, fixing issues
 
 ### 4. Rename Symbol Tool (`rename_symbol.go`)
+
 - **Purpose**: Renames a symbol across all its usages
 - **Input**: File path, line, column, new name
 - **Output**: List of files and changes to apply
 - **Use Case**: Safe refactoring across entire codebase
 
 ### 5. Format Document Tool (`format_document.go`)
+
 - **Purpose**: Formats code according to language standards
 - **Input**: File path, optional formatting options
 - **Output**: List of text edits to apply
@@ -55,6 +60,7 @@ The tools follow the Guild Framework's architecture principles:
 ## Current Status
 
 ### ✅ Completed
+
 - All 5 tools created and compile successfully
 - Proper types used (`*lsp.Manager`)
 - Documentation created
@@ -62,7 +68,9 @@ The tools follow the Guild Framework's architecture principles:
 - Build passes without errors
 
 ### ⚠️ Placeholder Implementation
+
 The tools currently return example data because the LSP manager needs to be extended with:
+
 - `GetDocumentSymbols()`
 - `GetWorkspaceSymbols()`
 - `GetCodeActions()`
@@ -117,6 +125,7 @@ Once fully implemented, these tools will provide:
 ## Framework Flexibility
 
 As documented in `pkg/lsp/README.md`, the LSP infrastructure can be used to create custom tools:
+
 - Security-focused tools that analyze code for vulnerabilities
 - AI-enhanced tools that provide smarter completions
 - Batch operation tools for efficiency

@@ -9,11 +9,13 @@ Guild includes a built-in kanban board that shows your project's progress in rea
 ### Prerequisites
 
 1. Ensure the Guild daemon is running:
+
    ```bash
    guild serve
    ```
 
 2. Initialize a campaign in your project directory:
+
    ```bash
    guild init my-project
    cd my-project
@@ -70,26 +72,31 @@ Tasks flow through 5 standardized columns:
 ## Keyboard Navigation
 
 ### Column Navigation
+
 - **h** or **←**: Move to previous column
 - **l** or **→**: Move to next column  
 - **1-5**: Jump directly to column (1=TODO, 2=IN PROGRESS, etc.)
 
 ### Task Navigation
+
 - **j** or **↓**: Scroll down in current column
 - **k** or **↑**: Scroll up in current column
 - **J**: Page down (scroll multiple rows)
 - **K**: Page up (scroll multiple rows)
 
 ### Task Interaction
+
 - **Enter**: View task details
 - **Space**: Toggle task expansion (future feature)
 
 ### Search and Filter
+
 - **/**: Enter search mode
 - **Esc**: Exit search mode
 - Type while in search mode to filter tasks by title, description, or assignee
 
 ### Controls
+
 - **?**: Toggle help display
 - **r** or **R**: Force refresh from server
 - **q** or **Ctrl+C**: Quit kanban view
@@ -109,6 +116,7 @@ Tasks automatically move through states as agents work:
 ### Task Card Information
 
 Each task card displays:
+
 - **Task ID**: Unique identifier (e.g., API-001)
 - **Title**: Brief description of the work
 - **Assignee**: Agent responsible (@elena, @marcus, @vera)
@@ -120,6 +128,7 @@ Each task card displays:
 The kanban board updates automatically via the daemon's event streaming:
 
 ### Event Types Monitored
+
 - **task.created**: New tasks appear immediately
 - **task.moved**: Tasks move between columns instantly  
 - **task.updated**: Task details refresh in real-time
@@ -128,11 +137,13 @@ The kanban board updates automatically via the daemon's event streaming:
 - **task.blocked/unblocked**: Blocking status updates instantly
 
 ### Connection Indicators
+
 - **🟢 Connected**: Event stream active, real-time updates enabled
 - **🔴 Disconnected**: Event stream offline, polling fallback active
 - **⚠️ No Daemon**: Running without event stream (basic mode)
 
 ### Performance Characteristics
+
 - **Update Latency**: < 200ms from event to UI display
 - **Throughput**: Handles 200+ tasks with smooth 30 FPS rendering
 - **Auto-reconnect**: Reconnects to event stream after disconnections
@@ -146,6 +157,7 @@ guild kanban list
 ```
 
 Output example:
+
 ```
 📋 Found 3 kanban board(s):
 
@@ -195,17 +207,20 @@ guild kanban view --no-daemon my-board
 When a task enters BLOCKED state:
 
 ### Visual Indicators
+
 1. Task card shows red "🚫 Blocked" indicator
 2. Blocking reason displayed in task details
 3. Task appears in BLOCKED column
 
 ### Resolution Workflow  
+
 1. A review file is created in `.guild/kanban/review/`
 2. Edit the file to provide resolution details
 3. Task automatically resumes when unblocked
 4. Task moves back to appropriate column
 
 ### Example Blocking Scenarios
+
 - **Missing Dependencies**: "Waiting for API key from client"
 - **External Blockers**: "Blocked by database migration"  
 - **Review Required**: "Needs architecture review before proceeding"
@@ -214,6 +229,7 @@ When a task enters BLOCKED state:
 ## Search and Filtering
 
 ### Search Functionality
+
 Enter search mode with `/` key:
 
 ```
@@ -221,12 +237,14 @@ Search: api auth
 ```
 
 Search looks through:
+
 - Task titles
 - Task descriptions  
 - Assignee names
 - Task IDs
 
 ### Search Examples
+
 - `api` - Find all API-related tasks
 - `@elena` - Find tasks assigned to Elena
 - `blocked` - Find blocked or blocking tasks
@@ -237,6 +255,7 @@ Search looks through:
 ### Connection Issues
 
 **Problem**: "Guild server is not reachable"
+
 ```bash
 # Check daemon status
 guild status
@@ -249,6 +268,7 @@ tail -f ~/.guild/logs/daemon.log
 ```
 
 **Problem**: Event stream disconnected
+
 - Kanban automatically reconnects after 5 seconds
 - Manual refresh with `r` key forces immediate reconnection
 - Check daemon logs for networking issues
@@ -256,11 +276,13 @@ tail -f ~/.guild/logs/daemon.log
 ### Performance Issues
 
 **Problem**: Slow rendering with many tasks
+
 - Board is optimized for 200+ tasks
 - Large datasets use virtualized scrolling
 - Low-quality mode activates automatically under load
 
 **Problem**: High memory usage
+
 - Task cache automatically purges old data
 - Viewport-based rendering limits memory footprint
 - Restart kanban view if memory issues persist
@@ -268,12 +290,14 @@ tail -f ~/.guild/logs/daemon.log
 ### Data Sync Issues
 
 **Problem**: Tasks not updating in real-time
+
 1. Check event stream connection status
 2. Verify daemon is running: `guild status`
 3. Force refresh with `r` key
 4. Restart kanban view if issues persist
 
 **Problem**: Missing tasks
+
 1. Tasks may be filtered by current search
 2. Clear search with `Esc` key  
 3. Check if tasks are in different columns
@@ -323,17 +347,20 @@ The kanban board integrates seamlessly with Guild chat:
 ## Best Practices
 
 ### Effective Task Management
+
 1. **Keep task titles concise** - Fits better in card view
 2. **Use descriptive assignees** - Easy visual identification  
 3. **Monitor blocked tasks** - Address blockers quickly
 4. **Regular reviews** - Check READY FOR REVIEW column frequently
 
 ### Performance Optimization
+
 1. **Use search filtering** - Reduce visual clutter with many tasks
 2. **Multiple boards** - Split large projects into focused boards
 3. **Regular cleanup** - Archive completed tasks periodically
 
 ### Team Collaboration  
+
 1. **Shared viewing** - Multiple team members can view same board
 2. **Real-time coordination** - See live updates as team works
 3. **Block communication** - Use chat to resolve blocked tasks quickly

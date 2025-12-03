@@ -60,6 +60,7 @@ Guild's kanban board provides real-time visual coordination for multi-agent work
 *Smooth 30 FPS rendering with 200+ tasks and real-time search capabilities*
 
 **Key Features Demonstrated:**
+
 - ⚡ **Real-time Updates**: Sub-200ms latency from agent action to UI display
 - 🔄 **Event Streaming**: Live task status changes across all connected views  
 - 🚫 **Smart Blocking**: Automatic task blocking with human review workflow
@@ -68,6 +69,7 @@ Guild's kanban board provides real-time visual coordination for multi-agent work
 - 👥 **Multi-Agent**: Visual coordination of parallel agent work
 
 Try the interactive demo yourself:
+
 ```bash
 # Record your own kanban demo
 ./scripts/record-kanban-demo.sh quick-demo

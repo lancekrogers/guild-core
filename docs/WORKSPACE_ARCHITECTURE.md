@@ -7,6 +7,7 @@ Guild uses a **two-level directory architecture** that MUST be followed:
 ### 1. Global User Directory: `~/.guild/`
 
 Located in the user's home directory, this contains:
+
 - Global configuration
 - Daemon process files  
 - Provider credentials
@@ -27,6 +28,7 @@ Located in the user's home directory, this contains:
 ### 2. Workspace Directory: `.campaign/`
 
 Located at the root of each workspace, this contains:
+
 - Workspace-specific configuration
 - Local agent memory
 - Task management
@@ -53,6 +55,7 @@ my-workspace/
 ### ❌ NEVER Create `.guild/` at Workspace Level
 
 **WRONG:**
+
 ```
 my-workspace/
 ├── .guild/           # ❌ NEVER CREATE THIS
@@ -61,6 +64,7 @@ my-workspace/
 ```
 
 **CORRECT:**
+
 ```
 my-workspace/
 └── .campaign/        # ✅ ONLY workspace directory
@@ -78,12 +82,14 @@ my-workspace/
 ### Campaign = Workspace
 
 A **campaign** is Guild's term for a workspace that can contain:
+
 - Multiple related projects
 - Shared agent memory
 - Common objectives
 - Unified task management
 
 Example workspace structure:
+
 ```
 ai-startup-campaign/           # The campaign/workspace
 ├── .campaign/                 # Workspace config
@@ -127,6 +133,7 @@ func findWorkspaceConfig(dir string) (string, error) {
 ## Testing Implications
 
 Integration tests should:
+
 1. Create `.campaign/` directories for workspace tests
 2. Use `~/.guild/` only for global config tests
 3. Never mix the two patterns
@@ -134,6 +141,7 @@ Integration tests should:
 ## Migration Path
 
 If you encounter a workspace with `.guild/`:
+
 1. Move `guild.yaml` to `.campaign/campaign.yaml`
 2. Move all workspace data to `.campaign/`
 3. Remove the `.guild/` directory

@@ -14,6 +14,7 @@ The Guild Chat interface is the most complete feature in Guild. While the projec
 ```
 
 **Important**: You must have at least one API key configured:
+
 ```bash
 export ANTHROPIC_API_KEY="your-key"
 # or

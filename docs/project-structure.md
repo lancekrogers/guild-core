@@ -32,12 +32,14 @@ The `.guild/` directory is the heart of a Guild project. It stores all project-l
 ### guild.yaml
 
 Main configuration file containing:
+
 - Guild name and description
 - Agent configurations
 - Provider settings
 - Model preferences
 
 Example structure:
+
 ```yaml
 name: "My Development Guild"
 description: "A team for building web applications"
@@ -59,6 +61,7 @@ providers:
 ### memory.db
 
 SQLite database containing:
+
 - Prompt chains and conversation history
 - Task states and relationships
 - Campaign state
@@ -69,6 +72,7 @@ This replaced the previous BoltDB implementation for better relational data supp
 ### corpus/
 
 The knowledge base for your project:
+
 - **docs/**: Indexed project documentation
 - Used by RAG (Retrieval-Augmented Generation) system
 - Supports markdown and text files
@@ -76,6 +80,7 @@ The knowledge base for your project:
 ### objectives/ (Commissions)
 
 Project goals and refined outputs:
+
 - Commission documents define work to be done
 - **refined/**: AI-refined and structured versions
 - Note: "objectives" directory name remains for compatibility
@@ -83,6 +88,7 @@ Project goals and refined outputs:
 ### kanban/
 
 File-based task tracking system:
+
 - Organized by commission ID
 - **review/**: Tasks awaiting human review
 - **blocked/**: Tasks with blockers
@@ -91,6 +97,7 @@ File-based task tracking system:
 ### archives/
 
 Historical agent data:
+
 - Conversation logs
 - Context snapshots
 - Agent memory traces
@@ -98,6 +105,7 @@ Historical agent data:
 ### campaigns/
 
 Campaign workflow definitions:
+
 - Campaign configurations
 - State machines for campaign flow
 - Integration with orchestrator
@@ -105,6 +113,7 @@ Campaign workflow definitions:
 ### prompts/
 
 Custom prompt templates:
+
 - Layer-specific prompts
 - Project-specific instructions
 - Agent role definitions
@@ -170,6 +179,7 @@ Add to `.gitignore`:
 ```
 
 You may want to track:
+
 - `.guild/guild.yaml` - Project configuration
 - `.guild/prompts/` - Custom prompts
 - `.guild/campaigns/` - Campaign definitions
@@ -177,11 +187,13 @@ You may want to track:
 ### Security Considerations
 
 The `.guild/` directory may contain:
+
 - API keys (in guild.yaml via environment variables)
 - Conversation history in memory.db
 - Document content in corpus
 
 Always ensure:
+
 - Use environment variables for API keys
 - Proper file permissions on `.guild/`
 - Never commit sensitive data
@@ -222,6 +234,7 @@ If you have an older Guild project structure:
 3. Many planned directories (embeddings/, cache/, etc.) were never implemented
 
 Currently, there is no automated migration tool. You would need to:
+
 1. Back up your old `.guild/` directory
 2. Run `guild init` to create new structure
 3. Manually copy relevant files

@@ -5,6 +5,7 @@ Welcome to the Guild interactive tutorial! This hands-on guide will teach you Gu
 ## Tutorial Structure
 
 Each lesson includes:
+
 - 🎯 **Objective**: What you'll learn
 - 📚 **Concepts**: Key ideas explained
 - 💻 **Practice**: Hands-on exercises
@@ -13,6 +14,7 @@ Each lesson includes:
 ## Lesson 1: Your First Commission
 
 ### 🎯 Objective
+
 Create your first commission and watch artisans collaborate to build a simple API.
 
 ### 📚 Concepts
@@ -22,12 +24,14 @@ Create your first commission and watch artisans collaborate to build a simple AP
 ### 💻 Practice
 
 1. **Start Guild**:
+
    ```bash
    guild chat
    ```
 
 2. **Create a Commission**:
    Type the following message:
+
    ```
    I want to build a simple REST API that returns random quotes. It should have one endpoint: GET /quote
    ```
@@ -40,6 +44,7 @@ Create your first commission and watch artisans collaborate to build a simple AP
 
 4. **Observe the Planning**:
    Watch as Elena creates a plan. You should see something like:
+
    ```
    Elena: Here's the commission plan:
    
@@ -55,6 +60,7 @@ Create your first commission and watch artisans collaborate to build a simple AP
 ### ✅ Validation
 
 Open a new terminal and run:
+
 ```bash
 guild kanban
 ```
@@ -62,6 +68,7 @@ guild kanban
 You should see tasks moving from TODO → IN PROGRESS → DONE.
 
 **Success Criteria**:
+
 - [ ] Commission created successfully
 - [ ] Tasks visible on kanban board
 - [ ] At least one task completed
@@ -71,11 +78,13 @@ You should see tasks moving from TODO → IN PROGRESS → DONE.
 ## Lesson 2: Artisan Collaboration
 
 ### 🎯 Objective
+
 Learn how artisans work together and communicate during development.
 
 ### 📚 Concepts
 
 Guild's artisans collaborate like a real team:
+
 - **Elena** coordinates and assigns work
 - **Marcus** implements features
 - **Vera** ensures quality
@@ -84,6 +93,7 @@ Guild's artisans collaborate like a real team:
 
 1. **Watch Real-time Progress**:
    In your chat, you'll see updates like:
+
    ```
    Marcus: I'm setting up the Express project structure...
    Marcus: Created app.js with basic Express configuration
@@ -93,8 +103,9 @@ Guild's artisans collaborate like a real team:
 
 2. **Ask for Status**:
    Type: `@elena what's the current status?`
-   
+
    Elena will respond with:
+
    ```
    Elena: Here's our progress:
    ✅ Project setup complete
@@ -105,12 +116,13 @@ Guild's artisans collaborate like a real team:
 
 3. **Request Changes**:
    Type: `@marcus can you add a /quotes endpoint that returns all quotes?`
-   
+
    Watch as Marcus acknowledges and implements the change.
 
 ### ✅ Validation
 
 Check the generated code:
+
 ```bash
 cd quotes-api
 cat app.js
@@ -123,6 +135,7 @@ You should see both endpoints implemented.
 ## Lesson 3: Handling Blockers
 
 ### 🎯 Objective
+
 Learn how to resolve blocked tasks when artisans need human input.
 
 ### 📚 Concepts
@@ -133,8 +146,9 @@ Artisans may encounter **blockers** - situations requiring human decisions or cl
 
 1. **Create a Blocker Scenario**:
    Type: `@marcus add user authentication to the API`
-   
+
    Marcus might respond:
+
    ```
    Marcus: I need clarification on the authentication approach. Should I use:
    1. JWT tokens
@@ -145,18 +159,21 @@ Artisans may encounter **blockers** - situations requiring human decisions or cl
    ```
 
 2. **Check Blocked Tasks**:
+
    ```bash
    ls .guild/kanban/review/
    ```
-   
+
    You'll see a file like `20240115_142345_AUTH-001.md`
 
 3. **Resolve the Blocker**:
+
    ```bash
    $EDITOR .guild/kanban/review/20240115_142345_AUTH-001.md
    ```
-   
+
    Add your resolution:
+
    ```yaml
    resolution:
      action: provide_info
@@ -169,6 +186,7 @@ Artisans may encounter **blockers** - situations requiring human decisions or cl
 
 4. **Save and Watch**:
    Save the file. In chat, you'll see:
+
    ```
    System: Task AUTH-001 unblocked
    Marcus: Thanks! I'll implement JWT authentication with 24h tokens.
@@ -183,6 +201,7 @@ The task should move from BLOCKED to IN PROGRESS on the kanban board.
 ## Lesson 4: Knowledge Management
 
 ### 🎯 Objective
+
 Teach Guild about your coding standards and patterns.
 
 ### 📚 Concepts
@@ -192,12 +211,14 @@ Guild's **corpus** is a knowledge base that artisans learn from. Add your team's
 ### 💻 Practice
 
 1. **Add a Coding Standard**:
+
    ```
    /corpus add pattern "Always use async/await instead of callbacks in our Express routes"
    ```
 
 2. **Add an Example**:
    Create a file `good-route.js`:
+
    ```javascript
    // Good pattern
    app.get('/users', async (req, res) => {
@@ -209,13 +230,14 @@ Guild's **corpus** is a knowledge base that artisans learn from. Add your team's
      }
    });
    ```
-   
+
    Then: `/corpus add example ./good-route.js`
 
 3. **Test Knowledge Retrieval**:
    Type: `@marcus implement a GET /users endpoint`
-   
+
    Marcus should follow your pattern:
+
    ```
    Marcus: I'll implement the /users endpoint following our async/await pattern...
    ```
@@ -229,6 +251,7 @@ Check that Marcus used async/await in the implementation.
 ## Lesson 5: Advanced Workflows
 
 ### 🎯 Objective
+
 Use Guild's advanced features for complex projects.
 
 ### 📚 Concepts
@@ -240,6 +263,7 @@ Use Guild's advanced features for complex projects.
 ### 💻 Practice
 
 1. **Start a Complex Project**:
+
    ```
    I need a full-stack todo application with:
    - React frontend
@@ -251,6 +275,7 @@ Use Guild's advanced features for complex projects.
 
 2. **Watch Parallel Execution**:
    Elena will coordinate parallel work:
+
    ```
    Elena: I've identified tasks that can run in parallel:
    
@@ -263,12 +288,14 @@ Use Guild's advanced features for complex projects.
    ```
 
 3. **Save Your Session**:
+
    ```
    /session save todo-app-project
    ```
 
 4. **Monitor Costs**:
    Open a new terminal:
+
    ```bash
    guild cost
    ```
@@ -276,6 +303,7 @@ Use Guild's advanced features for complex projects.
 ### ✅ Validation
 
 You should see:
+
 - Multiple artisans working simultaneously
 - Cost tracking in real-time
 - Session saved successfully
@@ -285,11 +313,13 @@ You should see:
 ## Lesson 6: Production Deployment
 
 ### 🎯 Objective
+
 Prepare your Guild-built application for production.
 
 ### 📚 Concepts
 
 Guild can help with:
+
 - Deployment configuration
 - Performance optimization
 - Security hardening
@@ -298,6 +328,7 @@ Guild can help with:
 ### 💻 Practice
 
 1. **Request Deployment Prep**:
+
    ```
    @elena prepare this application for production deployment on AWS
    ```
@@ -311,10 +342,11 @@ Guild can help with:
    - GitHub Actions workflow
 
 3. **Security Review**:
+
    ```
    @vera perform a security audit
    ```
-   
+
    Vera will check for:
    - Exposed secrets
    - Security headers
@@ -324,6 +356,7 @@ Guild can help with:
 ### ✅ Validation
 
 Run the security checks:
+
 ```bash
 npm audit
 npm test -- --coverage

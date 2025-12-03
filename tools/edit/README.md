@@ -16,6 +16,7 @@ The MultiEdit tool (`multi_edit`) provides atomic multi-edit operations on a sin
 ## Features
 
 ### Core Functionality
+
 - **Atomic Operations**: Either all edits succeed or none are applied
 - **Sequential Processing**: Edits are applied in the order specified
 - **Replace Options**: Support for replace-first or replace-all modes
@@ -24,6 +25,7 @@ The MultiEdit tool (`multi_edit`) provides atomic multi-edit operations on a sin
 - **Dry Run Mode**: Preview changes without applying them
 
 ### Input Parameters
+
 ```json
 {
   "file_path": "path/to/file.ext",
@@ -41,6 +43,7 @@ The MultiEdit tool (`multi_edit`) provides atomic multi-edit operations on a sin
 ```
 
 ### Output Information
+
 - Applied/failed edit count and details
 - Character change statistics
 - Processing time metrics
@@ -59,6 +62,7 @@ The MultiEdit tool (`multi_edit`) provides atomic multi-edit operations on a sin
 ## Integration
 
 The tool is registered with the Guild Framework through:
+
 - `RegisterEditTools()` function in `registry.go`
 - Integration with the main tool registry in `pkg/registry/code_tools.go`
 - Cost-aware registration with zero cost magnitude (local file operations)
@@ -66,6 +70,7 @@ The tool is registered with the Guild Framework through:
 ## Testing
 
 Comprehensive test suite includes:
+
 - Basic functionality tests (single/multiple edits)
 - Replace mode tests (first occurrence vs all occurrences)
 - Safety feature tests (dry run, backup, validation)
@@ -76,6 +81,7 @@ Comprehensive test suite includes:
 ## Usage Examples
 
 ### Simple Single Edit
+
 ```json
 {
   "file_path": "main.go",
@@ -86,6 +92,7 @@ Comprehensive test suite includes:
 ```
 
 ### Multiple Complex Edits with Safety
+
 ```json
 {
   "file_path": "config.json",
@@ -99,6 +106,7 @@ Comprehensive test suite includes:
 ```
 
 ### Dry Run Preview
+
 ```json
 {
   "file_path": "script.py",

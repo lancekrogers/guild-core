@@ -34,8 +34,10 @@ context_reset: truncate|summarize
 ### Agent Types
 
 #### Manager Agents
+
 **Purpose:** Strategic planning, coordination, task delegation
 **Characteristics:**
+
 - High-level decision making
 - Team coordination
 - Resource allocation
@@ -52,8 +54,10 @@ context_reset: summarize  # Preserve context for continuity
 ```
 
 #### Worker Agents  
+
 **Purpose:** Implementation, execution, specialized tasks
 **Characteristics:**
+
 - Technical implementation
 - Problem solving
 - Task completion
@@ -69,8 +73,10 @@ context_reset: truncate  # Can restart fresh for new tasks
 ```
 
 #### Specialist Agents
+
 **Purpose:** Domain expertise, specialized knowledge
 **Characteristics:**
+
 - Deep domain knowledge
 - Specialized tools
 - Expert consultation
@@ -171,6 +177,7 @@ tools:
 ### Tool Categories
 
 #### File System Tools
+
 ```yaml
 tools:
   - file        # File read/write operations
@@ -179,6 +186,7 @@ tools:
 ```
 
 #### Development Tools
+
 ```yaml
 tools:
   - git         # Version control
@@ -188,6 +196,7 @@ tools:
 ```
 
 #### Infrastructure Tools
+
 ```yaml
 tools:
   - docker      # Container operations
@@ -197,6 +206,7 @@ tools:
 ```
 
 #### Communication Tools
+
 ```yaml
 tools:
   - http        # HTTP requests
