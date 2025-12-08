@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/reasoning"
+	"github.com/guild-framework/guild-core/internal/testutil"
+	"github.com/guild-framework/guild-core/pkg/agents/core"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/reasoning"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

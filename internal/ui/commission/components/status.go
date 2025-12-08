@@ -10,7 +10,7 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 
-	commissionpkg "github.com/lancekrogers/guild/pkg/commission"
+	commissionpkg "github.com/guild-framework/guild-core/pkg/commission"
 )
 
 // StatusColors defines the colors for each commission status

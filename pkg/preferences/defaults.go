@@ -3,7 +3,7 @@
 
 package preferences
 
-import "github.com/lancekrogers/guild/pkg/gerror"
+import "github.com/guild-framework/guild-core/pkg/gerror"
 
 // DefaultPreferences defines system-wide default values for preferences
 var DefaultPreferences = map[string]interface{}{

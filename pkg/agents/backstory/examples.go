@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/agents/backstory/templates"
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/guild-framework/guild-core/pkg/agents/backstory/templates"
+	"github.com/guild-framework/guild-core/pkg/prompts/layered"
 )
 
 // PersonalityDemo demonstrates how different agent personalities respond to the same scenario

@@ -16,8 +16,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/guild-framework/guild-core/pkg/observability"
 )
 
 // TestBoardPersistence_HappyPath validates file-based storage integrity and crash recovery
@@ -284,7 +284,6 @@ func (f *KanbanTestFramework) CreateComplexBoard(complexity BoardComplexity) *ka
 		if err != nil {
 			f.t.Fatalf("Failed to create task %d: %v", i+1, err)
 		}
-		
 
 		// Simulate different statuses across tasks
 		var status kanban.TaskStatus
@@ -529,6 +528,3 @@ func (f *KanbanTestFramework) ValidatePersistenceIntegrity(originalState, finalS
 func (f *KanbanTestFramework) GetBoardPersistencePath(boardID string) string {
 	return filepath.Join(f.testDir, "boards", boardID+".db")
 }
-
-
-

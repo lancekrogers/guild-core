@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
-	"github.com/lancekrogers/guild/pkg/providers/mock"
+	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
+	"github.com/guild-framework/guild-core/pkg/providers/mock"
 )
 
 // TestContextCancellation verifies that providers respect context cancellation

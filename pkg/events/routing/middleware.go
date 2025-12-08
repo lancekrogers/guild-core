@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/eventbus"
-	"github.com/lancekrogers/guild/pkg/events"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/eventbus"
+	"github.com/guild-framework/guild-core/pkg/events"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // RateLimitingMiddleware limits event processing rate

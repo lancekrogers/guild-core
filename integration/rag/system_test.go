@@ -1,4 +1,5 @@
 //go:build disabled
+
 //  This test file uses outdated APIs and needs to be rewritten to match current RAG implementation
 
 package rag
@@ -12,10 +13,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/memory/rag"
-	"github.com/lancekrogers/guild/pkg/memory/vector"
-	"github.com/lancekrogers/guild/pkg/providers/mock"
+	"github.com/guild-framework/guild-core/internal/testutil"
+	"github.com/guild-framework/guild-core/pkg/memory/rag"
+	"github.com/guild-framework/guild-core/pkg/memory/vector"
+	"github.com/guild-framework/guild-core/pkg/providers/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -129,7 +130,7 @@ Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 		// Measure indexing time
 		start := time.Now()
-		
+
 		// Simulate indexing (in real implementation, this would call RAG indexer)
 		factory := rag.NewFactory()
 		ragSystem, err := factory.CreateRAGAgent(ctx, rag.Config{
@@ -143,7 +144,7 @@ Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 			path := filepath.Join(corpusDir, fmt.Sprintf("doc_%03d.md", i))
 			content, err := os.ReadFile(path)
 			require.NoError(t, err)
-			
+
 			err = ragSystem.IndexDocument(ctx, path, string(content))
 			assert.NoError(t, err)
 		}
@@ -192,7 +193,7 @@ Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 				path := filepath.Join(corpusDir, file.Name())
 				content, err := os.ReadFile(path)
 				require.NoError(t, err)
-				
+
 				err = ragSystem.IndexDocument(ctx, file.Name(), string(content))
 				require.NoError(t, err)
 			}
@@ -260,10 +261,10 @@ Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 			wg.Add(1)
 			go func(docNum int) {
 				defer wg.Done()
-				
+
 				docID := fmt.Sprintf("concurrent_doc_%d.md", docNum)
 				content := fmt.Sprintf("Concurrent document %d with test content.", docNum)
-				
+
 				if err := ragSystem.IndexDocument(ctx, docID, content); err != nil {
 					errors <- err
 				}

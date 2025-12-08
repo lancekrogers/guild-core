@@ -16,7 +16,7 @@ The telemetry package provides comprehensive observability for Guild using OpenT
 ```go
 import (
     "context"
-    "github.com/lancekrogers/guild/pkg/telemetry"
+    "github.com/guild-framework/guild-core/pkg/telemetry"
 )
 
 func main() {

@@ -9,8 +9,8 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/internal/integration/services"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/internal/integration/services"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // ServiceConfig represents the complete service configuration

@@ -7,8 +7,8 @@ package rag
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
-	"github.com/lancekrogers/guild/pkg/memory/vector"
+	"github.com/guild-framework/guild-core/pkg/corpus"
+	"github.com/guild-framework/guild-core/pkg/memory/vector"
 )
 
 // RetrieverInterface defines the contract for retrieving relevant context

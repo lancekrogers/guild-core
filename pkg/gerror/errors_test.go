@@ -226,7 +226,7 @@ func TestGuildError_Stack(t *testing.T) {
 		// Check that stack contains this test function
 		found := false
 		for _, frame := range err.Stack {
-			if frame.Function == "github.com/lancekrogers/guild/pkg/gerror.TestGuildError_Stack.func1" {
+			if frame.Function == "github.com/guild-framework/guild-core/pkg/gerror.TestGuildError_Stack.func1" {
 				found = true
 				break
 			}

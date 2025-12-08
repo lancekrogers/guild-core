@@ -9,9 +9,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/guild-framework/guild-core/pkg/agents/core"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/prompts/layered"
 )
 
 // AgentRouter routes tasks to optimal agents using manager agent and layered prompts

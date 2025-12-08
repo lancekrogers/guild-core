@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // CircuitBreaker implements the circuit breaker pattern for agent health

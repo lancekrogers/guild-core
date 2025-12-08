@@ -10,11 +10,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/events"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/orchestrator"
+	"github.com/guild-framework/guild-core/pkg/commission"
+	"github.com/guild-framework/guild-core/pkg/events"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/orchestrator"
 )
 
 // unifiedManager implements the Manager interface using the unified event system

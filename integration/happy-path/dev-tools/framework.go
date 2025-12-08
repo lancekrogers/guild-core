@@ -18,7 +18,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // DevToolsTestFramework provides comprehensive development tools performance testing
@@ -846,7 +846,7 @@ func (f *DevToolsTestFramework) CreateCodeIntelligenceEngine(config CodeIntellig
 	expectedMemoryMB := config.Codebase.GetExpectedMemoryUsage()
 	// Simulate actual memory being 90-120% of expected
 	actualMemoryMB := int(expectedMemoryMB * (0.9 + rand.Float64()*0.3))
-	
+
 	return &CodeIntelligenceEngine{
 		config:        config,
 		indexer:       indexer,
@@ -1476,7 +1476,7 @@ func (f *DevToolsTestFramework) simulateAutocompletion(metrics *DeveloperSession
 	time.Sleep(delay)
 
 	duration := time.Since(start)
-	
+
 	// Ensure at least 98% success rate by making failures less likely
 	// and ensuring we don't fail too often in a row
 	success := true

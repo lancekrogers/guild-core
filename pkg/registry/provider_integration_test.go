@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/providers/mocks"
+	"github.com/guild-framework/guild-core/pkg/providers/mocks"
 )
 
 func TestProviderIntegration(t *testing.T) {

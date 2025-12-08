@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/memory/rag"
-	"github.com/lancekrogers/guild/pkg/memory/vector"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/guild-framework/guild-core/pkg/memory/rag"
+	"github.com/guild-framework/guild-core/pkg/memory/vector"
+	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/registry"
 )
 
 // RealRAGTestFramework provides integration testing framework for real RAG system

@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/providers/base"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
-	providertesting "github.com/lancekrogers/guild/pkg/providers/testing"
+	"github.com/guild-framework/guild-core/pkg/providers/base"
+	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
+	providertesting "github.com/guild-framework/guild-core/pkg/providers/testing"
 	"github.com/stretchr/testify/assert"
 )
 

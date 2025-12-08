@@ -6,8 +6,8 @@ package core
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/suggestions"
+	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/suggestions"
 )
 
 // ChatSuggestionHandler provides suggestion integration for chat interfaces

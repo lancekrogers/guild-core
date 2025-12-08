@@ -18,16 +18,16 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/lancekrogers/guild/internal/daemon"
-	kanbanui "github.com/lancekrogers/guild/internal/ui/kanban"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/project/local"
-	"github.com/lancekrogers/guild/pkg/registry"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/guild-framework/guild-core/internal/daemon"
+	kanbanui "github.com/guild-framework/guild-core/internal/ui/kanban"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/guild-framework/guild-core/pkg/memory"
+	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/project/local"
+	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/guild-framework/guild-core/pkg/storage"
 )
 
 // kanbanTestEnvironment provides integrated testing for kanban UI and event streaming

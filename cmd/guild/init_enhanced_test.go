@@ -13,8 +13,8 @@ import (
 	"github.com/stretchr/testify/require"
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/pkg/paths"
-	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/guild-framework/guild-core/pkg/paths"
+	"github.com/guild-framework/guild-core/pkg/project"
 )
 
 func TestCreateEnhancedCampaignStructure(t *testing.T) {

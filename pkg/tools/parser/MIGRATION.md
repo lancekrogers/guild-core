@@ -70,10 +70,10 @@ If you were importing subpackages directly:
 
 ```go
 // Old
-import "github.com/lancekrogers/guild/pkg/tools/parser/openai"
+import "github.com/guild-framework/guild-core/pkg/tools/parser/openai"
 
 // New
-import "github.com/lancekrogers/guild/pkg/tools/parser"
+import "github.com/guild-framework/guild-core/pkg/tools/parser"
 // All functionality is in the main package
 ```
 
@@ -114,7 +114,7 @@ type ToolCall struct {
 Replace any subpackage imports with the main parser package:
 
 ```go
-import "github.com/lancekrogers/guild/pkg/tools/parser"
+import "github.com/guild-framework/guild-core/pkg/tools/parser"
 ```
 
 ### 2. Update Error Handling

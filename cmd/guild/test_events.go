@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/events"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/events"
+	"github.com/guild-framework/guild-core/pkg/observability"
 	"github.com/spf13/cobra"
 )
 

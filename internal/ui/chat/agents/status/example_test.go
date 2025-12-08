@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/ui/chat/agents/status"
+	"github.com/guild-framework/guild-core/internal/ui/chat/agents/status"
 )
 
 // ExampleStatusTracker demonstrates basic usage of the status tracking system

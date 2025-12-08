@@ -13,9 +13,9 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/storage"
 )
 
 // Minimal interfaces to avoid import cycles
@@ -76,7 +76,7 @@ type Board struct {
 	registry           ComponentRegistry
 	eventManager       *EventManager
 	taskEventPublisher TaskEventPublisherInterface
-	
+
 	// Synchronization
 	mu sync.RWMutex // protects Metadata and UpdatedAt fields
 }
@@ -188,7 +188,7 @@ func (b *Board) saveToSQLite(ctx context.Context) error {
 	// Store the board's campaign association in metadata
 	b.mu.Lock()
 	defer b.mu.Unlock()
-	
+
 	if b.Metadata == nil {
 		b.Metadata = make(map[string]string)
 	}
@@ -206,7 +206,7 @@ func (b *Board) getCampaignID() string {
 	// Check if campaign ID is already set in metadata
 	b.mu.RLock()
 	defer b.mu.RUnlock()
-	
+
 	if b.Metadata != nil {
 		if campaignID, exists := b.Metadata["campaign_id"]; exists && campaignID != "" {
 			return campaignID
@@ -564,7 +564,7 @@ func (b *Board) createTaskSQLite(ctx context.Context, title, description string)
 	b.mu.Lock()
 	b.UpdatedAt = time.Now().UTC()
 	b.mu.Unlock()
-	
+
 	if err := b.saveToSQLite(ctx); err != nil {
 		// Log but don't fail
 		fmt.Printf("warning: failed to update board timestamp: %v\n", err)
@@ -740,7 +740,7 @@ func (b *Board) getTaskSQLite(ctx context.Context, taskID string) (*Task, error)
 
 			return task, nil
 		}
-		
+
 		// Handle map[string]interface{} type (from mock repositories)
 		if taskMap, ok := taskInterface.(map[string]interface{}); ok {
 			if id, ok := taskMap["ID"].(string); ok && id == taskID {
@@ -749,38 +749,38 @@ func (b *Board) getTaskSQLite(ctx context.Context, taskID string) (*Task, error)
 					ID:       id,
 					Metadata: make(map[string]string),
 				}
-				
+
 				if title, ok := taskMap["Title"].(string); ok {
 					task.Title = title
 				}
-				
+
 				if desc, ok := taskMap["Description"].(*string); ok && desc != nil {
 					task.Description = *desc
 				} else if desc, ok := taskMap["Description"].(string); ok {
 					task.Description = desc
 				}
-				
+
 				if status, ok := taskMap["Status"].(string); ok {
 					task.Status = b.mapStorageStatusToKanbanStatus(status)
 				}
-				
+
 				if assignedAgent, ok := taskMap["AssignedAgentID"].(*string); ok && assignedAgent != nil {
 					task.AssignedTo = *assignedAgent
 				} else if assignedAgent, ok := taskMap["AssignedAgentID"].(string); ok {
 					task.AssignedTo = assignedAgent
 				}
-				
+
 				if createdAt, ok := taskMap["CreatedAt"].(time.Time); ok {
 					task.CreatedAt = createdAt
 				}
-				
+
 				if updatedAt, ok := taskMap["UpdatedAt"].(time.Time); ok {
 					task.UpdatedAt = updatedAt
 				}
-				
+
 				// Add board ID to metadata for compatibility
 				task.Metadata["board_id"] = b.ID
-				
+
 				return task, nil
 			}
 		}
@@ -902,7 +902,7 @@ func (b *Board) updateTaskSQLite(ctx context.Context, task *Task) error {
 	b.mu.Lock()
 	b.UpdatedAt = time.Now().UTC()
 	b.mu.Unlock()
-	
+
 	if err := b.saveToSQLite(ctx); err != nil {
 		// Log but don't fail
 		fmt.Printf("warning: failed to update board timestamp: %v\n", err)
@@ -957,7 +957,7 @@ func (b *Board) DeleteTask(ctx context.Context, taskID string) error {
 	b.mu.Lock()
 	b.UpdatedAt = time.Now().UTC()
 	b.mu.Unlock()
-	
+
 	if err := b.saveToSQLite(ctx); err != nil {
 		// Log but don't fail
 		fmt.Printf("warning: failed to update board timestamp: %v\n", err)
@@ -1062,7 +1062,7 @@ func (b *Board) GetAllTasks(ctx context.Context) ([]*Task, error) {
 	var allTasks []*Task
 	for _, taskInterface := range taskInterfaces {
 		var task *Task
-		
+
 		// Try to cast to storage.Task first
 		if storageTask, ok := taskInterface.(*storage.Task); ok {
 			task = &Task{
@@ -1084,35 +1084,35 @@ func (b *Board) GetAllTasks(ctx context.Context) ([]*Task, error) {
 			task = &Task{
 				Metadata: make(map[string]string),
 			}
-			
+
 			if id, ok := taskMap["ID"].(string); ok {
 				task.ID = id
 			}
-			
+
 			if title, ok := taskMap["Title"].(string); ok {
 				task.Title = title
 			}
-			
+
 			if desc, ok := taskMap["Description"].(*string); ok && desc != nil {
 				task.Description = *desc
 			} else if desc, ok := taskMap["Description"].(string); ok {
 				task.Description = desc
 			}
-			
+
 			if status, ok := taskMap["Status"].(string); ok {
 				task.Status = b.mapStorageStatusToKanbanStatus(status)
 			}
-			
+
 			if assignedAgent, ok := taskMap["AssignedAgentID"].(*string); ok && assignedAgent != nil {
 				task.AssignedTo = *assignedAgent
 			} else if assignedAgent, ok := taskMap["AssignedAgentID"].(string); ok {
 				task.AssignedTo = assignedAgent
 			}
-			
+
 			if createdAt, ok := taskMap["CreatedAt"].(time.Time); ok {
 				task.CreatedAt = createdAt
 			}
-			
+
 			if updatedAt, ok := taskMap["UpdatedAt"].(time.Time); ok {
 				task.UpdatedAt = updatedAt
 			}

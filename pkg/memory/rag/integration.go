@@ -7,8 +7,8 @@ import (
 	"context"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/corpus"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // SearchCorpus searches the corpus for documents matching a query

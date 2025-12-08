@@ -7,9 +7,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/orchestrator/interfaces"
+	"github.com/guild-framework/guild-core/pkg/agents/core"
+	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/guild-framework/guild-core/pkg/orchestrator/interfaces"
 )
 
 // KanbanManager interface for kanban operations needed by orchestrator

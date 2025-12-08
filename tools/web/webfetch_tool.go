@@ -17,10 +17,10 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/providers"
+	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
+	"github.com/guild-framework/guild-core/tools"
 )
 
 // WebFetchTool implements web content fetching and AI-powered analysis

@@ -26,13 +26,11 @@ type JourneySuccessCriteria struct {
 
 // Note: StepResult is defined in user_journey_framework.go
 
-
 // StepResultWithName associates a step result with its name
 type StepResultWithName struct {
 	StepName string
 	*StepResult
 }
-
 
 // SystemEvent represents a system event during the journey
 type SystemEvent struct {
@@ -41,7 +39,6 @@ type SystemEvent struct {
 	Component string
 	Details   map[string]interface{}
 }
-
 
 // StepMetrics tracks metrics for individual journey steps
 type StepMetrics struct {
@@ -674,8 +671,6 @@ func (f *UserJourneyFramework) ValidateJourneySuccessCriteria(criteria JourneySu
 */
 
 // Helper methods
-
-
 
 func (f *UserJourneyFramework) createMockGuildBinary(path string) error {
 	content := "#!/bin/bash\necho 'Mock Guild Binary'\n"

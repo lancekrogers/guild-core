@@ -6,7 +6,7 @@ package core
 import (
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/observability"
 )
 
 // MetricsAdapter adapts the observability.MetricsRegistry to provide

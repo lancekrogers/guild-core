@@ -9,8 +9,8 @@ import (
 	"testing"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/lancekrogers/guild/internal/ui"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/internal/ui"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 	"go.uber.org/zap"
 )
 

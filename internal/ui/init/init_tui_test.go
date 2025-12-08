@@ -14,9 +14,9 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/x/exp/teatest"
 
-	"github.com/lancekrogers/guild/internal/setup"
-	uiinit "github.com/lancekrogers/guild/internal/ui/init"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/internal/setup"
+	uiinit "github.com/guild-framework/guild-core/internal/ui/init"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // Mock implementations for testing

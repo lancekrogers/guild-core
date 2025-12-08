@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/memory"
+	"github.com/guild-framework/guild-core/pkg/memory"
 )
 
 // MockStore implements memory.Store interface for testing

@@ -4,7 +4,7 @@
 // Package config provides MCP configuration types
 package config
 
-import "github.com/lancekrogers/guild/pkg/mcp/transport"
+import "github.com/guild-framework/guild-core/pkg/mcp/transport"
 
 // MCPConfig represents MCP configuration for Guild
 type MCPConfig struct {

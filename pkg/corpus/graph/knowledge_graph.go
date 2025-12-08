@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/corpus/extraction"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/corpus/extraction"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // KnowledgeGraph provides a graph-based representation of extracted knowledge

@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/prompts"
-	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/guild-framework/guild-core/pkg/commission"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/prompts"
+	"github.com/guild-framework/guild-core/pkg/providers"
 )
 
 // Generator handles LLM-based generation of commissions and related documents

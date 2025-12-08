@@ -8,10 +8,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	mcpconfig "github.com/lancekrogers/guild/pkg/mcp/config"
-	"github.com/lancekrogers/guild/pkg/mcp/transport"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	mcpconfig "github.com/guild-framework/guild-core/pkg/mcp/config"
+	"github.com/guild-framework/guild-core/pkg/mcp/transport"
+	"github.com/guild-framework/guild-core/pkg/registry"
 )
 
 // MCPRegistry extends the component registry with MCP support

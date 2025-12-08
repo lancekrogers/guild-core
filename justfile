@@ -103,7 +103,7 @@ bench-pkg pkg:
 # Serve documentation locally
 docs:
     @echo "📚 Serving documentation..."
-    @echo "Visit http://localhost:6060/pkg/github.com/lancekrogers/guild/"
+    @echo "Visit http://localhost:6060/pkg/github.com/guild-framework/guild-core/"
     @godoc -http=:6060
 
 # Generate API documentation

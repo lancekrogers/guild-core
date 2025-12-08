@@ -8,8 +8,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/events"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/events"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // Validator provides event validation capabilities

@@ -13,8 +13,8 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/security/permissions"
-	"github.com/lancekrogers/guild/pkg/tools"
+	"github.com/guild-framework/guild-core/pkg/security/permissions"
+	"github.com/guild-framework/guild-core/pkg/tools"
 )
 
 // Mock implementations

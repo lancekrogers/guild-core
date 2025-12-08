@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/mcp/protocol"
+	"github.com/guild-framework/guild-core/pkg/mcp/protocol"
 )
 
 // Observer monitors and records costs

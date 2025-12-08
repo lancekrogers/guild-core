@@ -10,9 +10,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/memory/vector"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/guild-framework/guild-core/pkg/memory/vector"
+	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
+	"github.com/guild-framework/guild-core/tools"
 )
 
 // MockLLMProvider provides a configurable mock LLM provider for testing
@@ -763,7 +763,7 @@ func (s *MockVectorStore) QueryCollection(ctx context.Context, collectionName, q
 func (s *MockVectorStore) DeleteEmbedding(ctx context.Context, id string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	
+
 	delete(s.documents, id)
 	delete(s.embeddings, id)
 	return nil

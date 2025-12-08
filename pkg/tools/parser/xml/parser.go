@@ -13,9 +13,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/tools/parser/types"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/tools/parser/types"
 )
 
 // Parser parses Anthropic-style XML tool calls
@@ -147,7 +147,7 @@ func (p *Parser) parseStructuredXML(input []byte) ([]types.ToolCall, error) {
 		call := p.convertInvokeToToolCall(invoke, i)
 		calls = append(calls, call)
 	}
-	
+
 	// Also convert tools (alternative format)
 	for i, tool := range functionCalls.Tools {
 		// Skip tools without names
@@ -278,7 +278,7 @@ func (p *Parser) convertInvokeToToolCall(invoke Invoke, index int) types.ToolCal
 	for _, param := range invoke.Parameters {
 		// Trim the parameter value
 		trimmedValue := strings.TrimSpace(param.Value)
-		
+
 		// Try to parse parameter value as JSON first
 		var value interface{}
 		if err := json.Unmarshal([]byte(trimmedValue), &value); err == nil {
@@ -317,7 +317,7 @@ func (p *Parser) convertToolToToolCall(tool Tool, index int) types.ToolCall {
 	for _, param := range tool.Params {
 		// Trim the parameter value
 		trimmedValue := strings.TrimSpace(param.Value)
-		
+
 		// Try to parse parameter value as JSON first
 		var value interface{}
 		if err := json.Unmarshal([]byte(trimmedValue), &value); err == nil {
@@ -358,7 +358,7 @@ func (p *Parser) Validate(input []byte) types.ValidationResult {
 	var functionCalls FunctionCalls
 	if err := decoder.Decode(&functionCalls); err != nil {
 		result.Valid = false
-		
+
 		// Provide more specific error messages based on the content
 		s := string(input)
 		if !strings.Contains(s, "<function_calls>") {

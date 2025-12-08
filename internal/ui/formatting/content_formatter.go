@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/internal/ui/visual"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/templates"
+	"github.com/guild-framework/guild-core/internal/ui/visual"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/templates"
 )
 
 // ContentFormatter provides high-level content formatting for different message types

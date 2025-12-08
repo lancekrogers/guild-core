@@ -20,12 +20,12 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/events"
-	grpcpkg "github.com/lancekrogers/guild/pkg/grpc"
-	guildv1 "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/project"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/guild-framework/guild-core/pkg/config"
+	"github.com/guild-framework/guild-core/pkg/events"
+	grpcpkg "github.com/guild-framework/guild-core/pkg/grpc"
+	guildv1 "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/guild-framework/guild-core/pkg/project"
+	"github.com/guild-framework/guild-core/pkg/registry"
 )
 
 // mockEventBus is a simple mock implementation for testing

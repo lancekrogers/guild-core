@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/guild-framework/guild-core/pkg/storage"
 )
 
 // mockSessionStore implements SessionStore for testing

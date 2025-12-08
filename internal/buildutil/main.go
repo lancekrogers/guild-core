@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/buildutil/tasks"
-	"github.com/lancekrogers/guild/internal/buildutil/ui"
+	"github.com/guild-framework/guild-core/internal/buildutil/tasks"
+	"github.com/guild-framework/guild-core/internal/buildutil/ui"
 )
 
 var (

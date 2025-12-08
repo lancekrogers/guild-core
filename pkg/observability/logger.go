@@ -14,8 +14,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/paths"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/paths"
 )
 
 // LogLevel represents logging levels

@@ -14,12 +14,12 @@ import (
 
 	"github.com/spf13/cobra"
 
-	chatui "github.com/lancekrogers/guild/internal/ui/chat"
-	"github.com/lancekrogers/guild/pkg/campaign"
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/project"
-	"github.com/lancekrogers/guild/pkg/registry"
+	chatui "github.com/guild-framework/guild-core/internal/ui/chat"
+	"github.com/guild-framework/guild-core/pkg/campaign"
+	"github.com/guild-framework/guild-core/pkg/config"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/project"
+	"github.com/guild-framework/guild-core/pkg/registry"
 )
 
 var (

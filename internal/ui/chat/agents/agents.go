@@ -10,8 +10,8 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
 )
 
 // AgentTarget represents a parsed agent mention with routing information

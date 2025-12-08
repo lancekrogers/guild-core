@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/project"
-	"github.com/lancekrogers/guild/pkg/registry"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/guild-framework/guild-core/pkg/project"
+	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/guild-framework/guild-core/pkg/storage"
 	"github.com/stretchr/testify/require"
 )
 
@@ -772,7 +772,7 @@ func (a *testSessionRepoAdapter) StreamMessages(ctx context.Context, sessionID s
 		close(ch)
 		return ch, nil
 	}
-	
+
 	storageCh, err := a.repo.StreamMessages(ctx, sessionID, since)
 	if err != nil {
 		return nil, err

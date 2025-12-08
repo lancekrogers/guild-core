@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/ui/chat/services"
-	"github.com/lancekrogers/guild/pkg/suggestions"
+	"github.com/guild-framework/guild-core/internal/ui/chat/services"
+	"github.com/guild-framework/guild-core/pkg/suggestions"
 )
 
 // production enhancement Performance Targets

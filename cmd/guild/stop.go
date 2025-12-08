@@ -11,11 +11,11 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/internal/daemon"
-	"github.com/lancekrogers/guild/pkg/campaign"
-	pkgDaemon "github.com/lancekrogers/guild/pkg/daemon"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/paths"
+	"github.com/guild-framework/guild-core/internal/daemon"
+	"github.com/guild-framework/guild-core/pkg/campaign"
+	pkgDaemon "github.com/guild-framework/guild-core/pkg/daemon"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/paths"
 )
 
 var (

@@ -11,7 +11,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
 )
 
 // ProviderTestSuite provides common test cases for all providers

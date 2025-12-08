@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // MemoryRegistry is an in-memory implementation of the Registry interface

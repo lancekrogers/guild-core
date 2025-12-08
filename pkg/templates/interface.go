@@ -7,7 +7,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/storage/db"
+	"github.com/guild-framework/guild-core/pkg/storage/db"
 )
 
 // TemplateManager provides template management capabilities

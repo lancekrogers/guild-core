@@ -8,9 +8,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/lsp"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/lsp"
+	"github.com/guild-framework/guild-core/tools"
 )
 
 // RenameSymbolTool provides symbol renaming using LSP

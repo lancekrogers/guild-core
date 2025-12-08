@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // GuildLayeredManager implements LayeredManager interface for Guild prompt management

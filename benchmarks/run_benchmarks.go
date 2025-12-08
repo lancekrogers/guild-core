@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/lancekrogers/guild/benchmarks"
+	"github.com/guild-framework/guild-core/benchmarks"
 )
 
 func main() {

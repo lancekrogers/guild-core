@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/orchestrator"
+	"github.com/guild-framework/guild-core/pkg/commission"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/orchestrator"
 )
 
 // manager implements the Manager interface

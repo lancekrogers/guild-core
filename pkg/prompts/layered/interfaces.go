@@ -6,7 +6,7 @@ package layered
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/memory"
+	"github.com/guild-framework/guild-core/pkg/memory"
 )
 
 // Manager defines the interface for system prompt management

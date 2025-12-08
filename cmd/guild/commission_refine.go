@@ -12,16 +12,16 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/pkg/agents/core/manager"
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/paths"
-	"github.com/lancekrogers/guild/pkg/project"
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
-	promptcontext "github.com/lancekrogers/guild/pkg/prompts/layered/context"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/guild-framework/guild-core/pkg/agents/core/manager"
+	"github.com/guild-framework/guild-core/pkg/config"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/guild-framework/guild-core/pkg/paths"
+	"github.com/guild-framework/guild-core/pkg/project"
+	"github.com/guild-framework/guild-core/pkg/prompts/layered"
+	promptcontext "github.com/guild-framework/guild-core/pkg/prompts/layered/context"
+	"github.com/guild-framework/guild-core/pkg/providers"
+	"github.com/guild-framework/guild-core/pkg/registry"
 )
 
 var (

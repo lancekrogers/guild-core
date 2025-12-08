@@ -310,10 +310,10 @@ If you're migrating from the old `pkg/agent` structure:
 
    ```go
    // Old
-   import "github.com/lancekrogers/guild/pkg/agent"
+   import "github.com/guild-framework/guild-core/pkg/agent"
    
    // New
-   import "github.com/lancekrogers/guild/pkg/agents/core"
+   import "github.com/guild-framework/guild-core/pkg/agents/core"
    ```
 
 2. Update type references:
@@ -330,10 +330,10 @@ If you're migrating from the old `pkg/agent` structure:
 
    ```go
    // Old
-   import "github.com/lancekrogers/guild/pkg/backstory"
+   import "github.com/guild-framework/guild-core/pkg/backstory"
    
    // New
-   import "github.com/lancekrogers/guild/pkg/agents/backstory"
+   import "github.com/guild-framework/guild-core/pkg/agents/backstory"
    ```
 
 ## Future Enhancements

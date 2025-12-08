@@ -413,7 +413,7 @@ func TestChatInterface_ConcurrentUsers(t *testing.T) {
 	framework := NewTUITestFramework(t)
 	defer framework.Cleanup()
 
-	const numUsers = 3 // Reduced from 5
+	const numUsers = 3        // Reduced from 5
 	const messagesPerUser = 5 // Reduced from 10
 
 	apps := make([]*TUIApp, numUsers)

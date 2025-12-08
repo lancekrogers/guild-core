@@ -4,7 +4,7 @@
 package reasoning
 
 import (
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/observability"
 )
 
 // MetricsWrapper wraps MetricsRegistry to provide simple counter/gauge methods

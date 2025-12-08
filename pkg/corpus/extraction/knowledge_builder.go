@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // KnowledgeBuilder constructs structured knowledge from extracted information

@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/guild-framework/guild-core/internal/testutil"
+	"github.com/guild-framework/guild-core/pkg/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -60,8 +60,8 @@ func TestGuildInitialization(t *testing.T) {
 				require.NoError(t, err)
 				assert.Contains(t, string(campaignData), "campaign:")
 				assert.Contains(t, string(campaignData), "name:")
-				
-				// Verify at least one agent file exists  
+
+				// Verify at least one agent file exists
 				agentFiles, err := filepath.Glob(filepath.Join(agentsDir, "*.yaml"))
 				require.NoError(t, err)
 				assert.GreaterOrEqual(t, len(agentFiles), 3, "Should have at least 3 agent configuration files")

@@ -1191,7 +1191,7 @@ const file_proto_guild_v1_events_proto_rawDesc = "" +
 	"\bmetadata\x18\x06 \x01(\v2\x17.google.protobuf.StructR\bmetadata2\x9f\x01\n" +
 	"\fEventService\x12@\n" +
 	"\fStreamEvents\x12\x1d.guild.v1.StreamEventsRequest\x1a\x0f.guild.v1.Event0\x01\x12M\n" +
-	"\fPublishEvent\x12\x1d.guild.v1.PublishEventRequest\x1a\x1e.guild.v1.PublishEventResponseB4Z2github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1b\x06proto3"
+	"\fPublishEvent\x12\x1d.guild.v1.PublishEventRequest\x1a\x1e.guild.v1.PublishEventResponseB4Z2github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1b\x06proto3"
 
 var (
 	file_proto_guild_v1_events_proto_rawDescOnce sync.Once

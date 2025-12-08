@@ -16,8 +16,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/registry"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/guild-framework/guild-core/tools"
 )
 
 // TestToolWorkflowIntegration tests the end-to-end tool workflow in chat

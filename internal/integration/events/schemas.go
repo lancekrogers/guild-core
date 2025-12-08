@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/events"
+	"github.com/guild-framework/guild-core/pkg/events"
 )
 
 // Event Categories

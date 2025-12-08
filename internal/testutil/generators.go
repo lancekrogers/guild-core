@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/agents/core/manager"
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/guild-framework/guild-core/pkg/agents/core/manager"
+	"github.com/guild-framework/guild-core/pkg/config"
+	"github.com/guild-framework/guild-core/tools"
 )
 
 // CommissionOptions configures test commission generation

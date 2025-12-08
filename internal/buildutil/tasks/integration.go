@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/buildutil/ui"
+	"github.com/guild-framework/guild-core/internal/buildutil/ui"
 )
 
 // IntegrationResult tracks integration test results

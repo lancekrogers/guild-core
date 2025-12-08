@@ -7,7 +7,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/lsp"
+	"github.com/guild-framework/guild-core/pkg/lsp"
 )
 
 // MockLSPClient is a mock implementation of ClientInterface for testing

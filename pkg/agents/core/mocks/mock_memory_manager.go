@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/memory"
+	"github.com/guild-framework/guild-core/pkg/memory"
 )
 
 // MockChainManager implements the memory.ChainManager interface for testing

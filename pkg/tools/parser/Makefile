@@ -44,7 +44,7 @@ lint:
 docs:
 	@echo "Generating documentation..."
 	@godoc -http=:6060 &
-	@echo "Documentation server running at http://localhost:6060/pkg/github.com/lancekrogers/guild/pkg/tools/parser/"
+	@echo "Documentation server running at http://localhost:6060/pkg/github.com/guild-framework/guild-core/pkg/tools/parser/"
 
 # Run examples
 examples:

@@ -10,15 +10,15 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/providers/anthropic"
-	"github.com/lancekrogers/guild/pkg/providers/deepinfra"
-	"github.com/lancekrogers/guild/pkg/providers/deepseek"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
-	"github.com/lancekrogers/guild/pkg/providers/mock"
-	"github.com/lancekrogers/guild/pkg/providers/ollama"
-	"github.com/lancekrogers/guild/pkg/providers/openai"
-	"github.com/lancekrogers/guild/pkg/providers/ora"
+	"github.com/guild-framework/guild-core/pkg/providers"
+	"github.com/guild-framework/guild-core/pkg/providers/anthropic"
+	"github.com/guild-framework/guild-core/pkg/providers/deepinfra"
+	"github.com/guild-framework/guild-core/pkg/providers/deepseek"
+	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
+	"github.com/guild-framework/guild-core/pkg/providers/mock"
+	"github.com/guild-framework/guild-core/pkg/providers/ollama"
+	"github.com/guild-framework/guild-core/pkg/providers/openai"
+	"github.com/guild-framework/guild-core/pkg/providers/ora"
 )
 
 // TestAllProvidersImplementInterface ensures all providers implement AIProvider

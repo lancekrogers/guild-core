@@ -11,8 +11,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/observability"
 )
 
 var (
@@ -74,9 +74,9 @@ var (
 func init() {
 	// Initialize scaffold integration
 	scaffoldIntegration = NewScaffoldIntegration()
-	
+
 	// Add flags to the command
-	initScaffoldEnhancedCmd.Flags().StringVarP(&initTemplate, "template", "t", "", 
+	initScaffoldEnhancedCmd.Flags().StringVarP(&initTemplate, "template", "t", "",
 		"Template to use for initialization (auto-detect if not specified)")
 	initScaffoldEnhancedCmd.Flags().BoolVar(&initDryRun, "dry-run", false,
 		"Show what would be created without actually creating files")
@@ -100,7 +100,7 @@ func init() {
 		"Enable verbose output")
 	initScaffoldEnhancedCmd.Flags().BoolVar(&initLegacy, "legacy", false,
 		"Force legacy initialization mode")
-		
+
 	// Register the enhanced command (will replace the existing init command)
 	// rootCmd.AddCommand(initScaffoldEnhancedCmd)
 }
@@ -111,12 +111,12 @@ func runInitScaffoldEnhanced(cmd *cobra.Command, args []string) error {
 	if ctx == nil {
 		ctx = context.Background()
 	}
-	
+
 	// Get logger from context
 	logger := observability.GetLogger(ctx)
 	ctx = observability.WithComponent(ctx, "guild-init-scaffold")
 	ctx = observability.WithOperation(ctx, "runInitScaffoldEnhanced")
-	
+
 	logger.InfoContext(ctx, "Starting Guild enhanced initialization",
 		"args", args,
 		"scaffold_enabled", scaffoldIntegration.IsEnabled(),
@@ -125,7 +125,7 @@ func runInitScaffoldEnhanced(cmd *cobra.Command, args []string) error {
 		"interactive", initInteractive,
 		"legacy", initLegacy,
 	)
-	
+
 	// Check context early
 	if err := ctx.Err(); err != nil {
 		logger.ErrorContext(ctx, "Context cancelled during init", "error", err)
@@ -133,15 +133,15 @@ func runInitScaffoldEnhanced(cmd *cobra.Command, args []string) error {
 			WithComponent("cli").
 			WithOperation("runInitScaffoldEnhanced")
 	}
-	
+
 	// Handle list templates request
 	if initListTemplates {
 		return handleListTemplatesRequest(ctx)
 	}
-	
+
 	// Determine whether to use scaffold or legacy initialization
 	useScaffold := shouldUseScaffold(ctx, args)
-	
+
 	if useScaffold && scaffoldIntegration.IsEnabled() {
 		logger.InfoContext(ctx, "Using scaffold-based initialization")
 		return executeScaffoldInit(ctx, cmd, args)
@@ -157,17 +157,17 @@ func shouldUseScaffold(ctx context.Context, args []string) bool {
 	if initLegacy {
 		return false
 	}
-	
+
 	// If scaffold integration is disabled, use legacy
 	if !scaffoldIntegration.IsEnabled() {
 		return false
 	}
-	
+
 	// If any scaffold-specific flags are used, use scaffold
 	if initTemplate != "" || initDryRun || initInteractive || len(initVariables) > 0 {
 		return true
 	}
-	
+
 	// Default behavior based on environment and feature flags
 	return scaffoldIntegration.ShouldUseScaffold(ctx, os.Args)
 }
@@ -181,10 +181,10 @@ func executeScaffoldInit(ctx context.Context, cmd *cobra.Command, args []string)
 func executeLegacyInit(ctx context.Context, cmd *cobra.Command, args []string) error {
 	// For backwards compatibility, delegate to the existing init implementation
 	// This assumes the existing runFastInit function is available
-	
+
 	// Set force flag if it was specified
 	fastInitForce = initForce
-	
+
 	// Call the original init function
 	return runFastInit(cmd, args)
 }
@@ -196,12 +196,12 @@ func handleListTemplatesRequest(ctx context.Context) error {
 		fmt.Println("   Set GUILD_SCAFFOLD_ENABLED=true to enable template listing")
 		return nil
 	}
-	
+
 	// Import and use the CLI package
 	// This requires importing the scaffold CLI package
 	fmt.Println("📋 Available Templates:")
 	fmt.Println("(Template listing requires scaffold integration)")
-	
+
 	// TODO: Implement template listing by importing scaffold CLI
 	return gerror.New("template listing not yet implemented").
 		WithField("suggestion", "use scaffold CLI directly for now")
@@ -212,27 +212,27 @@ func IntegrateScaffoldWithExistingInit() {
 	if !scaffoldIntegration.IsEnabled() {
 		return
 	}
-	
+
 	// Add scaffold flags to existing init command
 	scaffoldIntegration.AddScaffoldFlags(initCmd)
-	
+
 	// Wrap the existing RunE function
 	originalRunE := initCmd.RunE
-	
+
 	initCmd.RunE = func(cmd *cobra.Command, args []string) error {
 		ctx := cmd.Context()
-		
+
 		// Check if scaffold should be used
 		if shouldUseScaffold(ctx, args) {
 			fmt.Println("🚀 Using enhanced scaffold-based initialization")
 			return scaffoldIntegration.ExecuteScaffoldInit(ctx, cmd, args)
 		}
-		
+
 		// Use legacy initialization
 		fmt.Println("📋 Using legacy initialization")
 		return originalRunE(cmd, args)
 	}
-	
+
 	// Update command description to mention scaffold capabilities
 	initCmd.Long = fmt.Sprintf(`%s
 

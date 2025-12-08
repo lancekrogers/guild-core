@@ -11,7 +11,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/memory/vector"
+	"github.com/guild-framework/guild-core/pkg/memory/vector"
 )
 
 // processDocumentBatch processes a batch of documents for indexing

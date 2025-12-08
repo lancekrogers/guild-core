@@ -10,10 +10,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/comms"
-	"github.com/lancekrogers/guild/pkg/comms/channel"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/memory"
+	"github.com/guild-framework/guild-core/pkg/comms"
+	"github.com/guild-framework/guild-core/pkg/comms/channel"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/memory"
 )
 
 // Manager manages multiple kanban boards

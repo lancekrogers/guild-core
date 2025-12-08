@@ -7,8 +7,8 @@ import (
 	"context"
 	"os"
 
-	"github.com/lancekrogers/guild/pkg/providers/base"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/guild-framework/guild-core/pkg/providers/base"
+	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
 )
 
 // Latest OpenAI models as of May 2025

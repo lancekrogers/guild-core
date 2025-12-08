@@ -9,7 +9,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // This file demonstrates how the context system integrates with the Guild framework

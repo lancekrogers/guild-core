@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/guild-framework/guild-core/pkg/storage"
 )
 
 // Define error for not found

@@ -4,14 +4,14 @@
 package core
 
 import (
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/lsp"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/suggestions"
-	"github.com/lancekrogers/guild/pkg/templates"
-	"github.com/lancekrogers/guild/pkg/tools"
+	"github.com/guild-framework/guild-core/pkg/commission"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/lsp"
+	"github.com/guild-framework/guild-core/pkg/memory"
+	"github.com/guild-framework/guild-core/pkg/providers"
+	"github.com/guild-framework/guild-core/pkg/suggestions"
+	"github.com/guild-framework/guild-core/pkg/templates"
+	"github.com/guild-framework/guild-core/pkg/tools"
 )
 
 // SuggestionAwareAgentFactory creates agents with suggestion capabilities

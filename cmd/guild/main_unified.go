@@ -18,10 +18,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/internal/integration/bootstrap"
-	"github.com/lancekrogers/guild/internal/integration/services"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/guild-framework/guild-core/internal/integration/bootstrap"
+	"github.com/guild-framework/guild-core/internal/integration/services"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/observability"
 )
 
 // Service mode flags

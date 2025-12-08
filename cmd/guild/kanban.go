@@ -11,14 +11,14 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/internal/daemon"
-	"github.com/lancekrogers/guild/internal/daemonconn"
-	kanbanui "github.com/lancekrogers/guild/internal/ui/kanban"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/project/local"
-	"github.com/lancekrogers/guild/pkg/registry"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/guild-framework/guild-core/internal/daemon"
+	"github.com/guild-framework/guild-core/internal/daemonconn"
+	kanbanui "github.com/guild-framework/guild-core/internal/ui/kanban"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/guild-framework/guild-core/pkg/project/local"
+	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/guild-framework/guild-core/pkg/storage"
 )
 
 var (

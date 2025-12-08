@@ -13,8 +13,8 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/corpus"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // Update handles UI events and state transitions

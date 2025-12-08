@@ -10,10 +10,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/security/permissions"
-	"github.com/lancekrogers/guild/pkg/tools"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/security/permissions"
+	"github.com/guild-framework/guild-core/pkg/tools"
 )
 
 // AccessController manages runtime access control for tool execution

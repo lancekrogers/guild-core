@@ -9,12 +9,12 @@ import (
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 
-	"github.com/lancekrogers/guild/pkg/events"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	promptspb "github.com/lancekrogers/guild/pkg/grpc/pb/prompts/v1"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/guild-framework/guild-core/pkg/events"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
+	promptspb "github.com/guild-framework/guild-core/pkg/grpc/pb/prompts/v1"
+	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/registry"
 )
 
 // GRPCServiceManager manages all gRPC service registrations

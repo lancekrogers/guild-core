@@ -14,8 +14,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/lsp"
-	lsptools "github.com/lancekrogers/guild/pkg/lsp/tools"
+	"github.com/guild-framework/guild-core/pkg/lsp"
+	lsptools "github.com/guild-framework/guild-core/pkg/lsp/tools"
 )
 
 func TestLSPToolsIntegration(t *testing.T) {

@@ -11,10 +11,10 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/internal/setup"
-	uisetup "github.com/lancekrogers/guild/internal/ui/setup"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/guild-framework/guild-core/internal/setup"
+	uisetup "github.com/guild-framework/guild-core/internal/ui/setup"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/project"
 )
 
 var setupCmd = &cobra.Command{

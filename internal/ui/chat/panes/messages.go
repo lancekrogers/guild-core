@@ -3,7 +3,7 @@
 
 package panes
 
-import "github.com/lancekrogers/guild/internal/ui/chat/common"
+import "github.com/guild-framework/guild-core/internal/ui/chat/common"
 
 // LayoutUpdateMsg represents layout dimension changes
 type LayoutUpdateMsg struct {

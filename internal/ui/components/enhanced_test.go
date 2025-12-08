@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/ui/animation"
-	"github.com/lancekrogers/guild/internal/ui/theme"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/internal/ui/animation"
+	"github.com/guild-framework/guild-core/internal/ui/theme"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 func TestNewComponentLibrary(t *testing.T) {

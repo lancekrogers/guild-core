@@ -44,7 +44,7 @@ import (
     "google.golang.org/grpc"
     "google.golang.org/grpc/credentials/insecure"
     
-    pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+    pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
 )
 
 func main() {

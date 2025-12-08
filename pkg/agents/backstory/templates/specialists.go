@@ -4,7 +4,7 @@
 package templates
 
 import (
-	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/guild-framework/guild-core/pkg/config"
 )
 
 // SpecialistTemplates provides pre-configured agent templates with rich medieval backstories

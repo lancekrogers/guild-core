@@ -19,8 +19,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	pkgDaemon "github.com/lancekrogers/guild/internal/daemon"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	pkgDaemon "github.com/guild-framework/guild-core/internal/daemon"
+	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
 )
 
 // TestSessionRoundTrip tests create-stream-persist-restart functionality
@@ -57,7 +57,7 @@ description: Test campaign for integration tests
 		t.Fatalf("Failed to write campaign.yaml: %v", err)
 	}
 
-	// Create a basic guild.yaml for the campaign  
+	// Create a basic guild.yaml for the campaign
 	guildYaml := fmt.Sprintf(`
 name: %s
 version: 1.0.0

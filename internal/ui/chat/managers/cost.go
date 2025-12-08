@@ -1,6 +1,6 @@
 package managers
 
-import "github.com/lancekrogers/guild/pkg/agents/core"
+import "github.com/guild-framework/guild-core/pkg/agents/core"
 
 // MinimalCostManager provides cost tracking for the chat system without budget enforcement
 // This supports the cost magnitude system used by the manager agent for resource selection

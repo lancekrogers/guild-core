@@ -17,10 +17,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/guild-framework/guild-core/pkg/observability"
 )
-
 
 // OperationMix defines the distribution of operations for testing
 type OperationMix struct {
@@ -61,9 +60,6 @@ type Operation struct {
 	Data     map[string]interface{}
 	ClientID string
 }
-
-
-
 
 // PerformanceMetrics tracks performance data
 type PerformanceMetrics struct {
@@ -297,8 +293,6 @@ func TestKanbanRealTimeSync_HappyPath(t *testing.T) {
 	}
 }
 
-
-
 // CreateTestBoard creates a test board with the specified configuration
 func (f *KanbanTestFramework) CreateTestBoard(name string, config BoardConfig) *kanban.Board {
 	// Implementation would create a board using the kanban manager
@@ -446,8 +440,6 @@ type Board struct {
 	ID   string
 	Name string
 }
-
-
 
 type PermissionSettings struct {
 	AllowConcurrentEdits bool

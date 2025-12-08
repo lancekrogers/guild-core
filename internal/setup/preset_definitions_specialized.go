@@ -4,7 +4,7 @@
 package setup
 
 import (
-	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/guild-framework/guild-core/pkg/config"
 )
 
 // createProductionTeamPreset creates a preset for production environments

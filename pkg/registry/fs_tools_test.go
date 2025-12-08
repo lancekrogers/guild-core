@@ -6,7 +6,7 @@ package registry
 import (
 	"testing"
 
-	"github.com/lancekrogers/guild/tools"
+	"github.com/guild-framework/guild-core/tools"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

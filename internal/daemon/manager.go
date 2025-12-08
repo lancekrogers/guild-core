@@ -14,8 +14,8 @@ import (
 	"syscall"
 	"time"
 
-	daemonPkg "github.com/lancekrogers/guild/pkg/daemon"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	daemonPkg "github.com/guild-framework/guild-core/pkg/daemon"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // Manager handles multiple daemon instances

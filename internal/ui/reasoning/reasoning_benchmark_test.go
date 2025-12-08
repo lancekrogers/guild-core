@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/agents/core"
+	"github.com/guild-framework/guild-core/pkg/agents/core"
 	"github.com/stretchr/testify/require"
 )
 

@@ -14,8 +14,8 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	promptspb "github.com/lancekrogers/guild/pkg/grpc/pb/prompts/v1"
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	promptspb "github.com/guild-framework/guild-core/pkg/grpc/pb/prompts/v1"
+	"github.com/guild-framework/guild-core/pkg/prompts/layered"
 )
 
 // PromptsServer implements the gRPC PromptService for Guild layered prompt management

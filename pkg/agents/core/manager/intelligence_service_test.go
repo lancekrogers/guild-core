@@ -11,8 +11,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/guild-framework/guild-core/pkg/prompts/layered"
+	"github.com/guild-framework/guild-core/pkg/registry"
 )
 
 // MockArtisanClient for testing

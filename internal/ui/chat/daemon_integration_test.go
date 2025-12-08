@@ -15,11 +15,11 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/test/bufconn"
 
-	"github.com/lancekrogers/guild/internal/daemonconn"
-	"github.com/lancekrogers/guild/internal/ui/chat/common/types"
-	"github.com/lancekrogers/guild/pkg/config"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/guild-framework/guild-core/internal/daemonconn"
+	"github.com/guild-framework/guild-core/internal/ui/chat/common/types"
+	"github.com/guild-framework/guild-core/pkg/config"
+	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/guild-framework/guild-core/pkg/registry"
 )
 
 // MockSessionService implements pb.SessionServiceServer for testing

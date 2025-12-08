@@ -7,8 +7,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/tools"
 )
 
 // MockToolRegistry implements the tools.ToolRegistry interface for testing

@@ -4,8 +4,8 @@
 package layered
 
 import (
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/prompts/layered/commission"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/prompts/layered/commission"
 )
 
 // Loader handles loading prompts into a registry

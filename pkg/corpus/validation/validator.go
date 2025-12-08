@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/corpus/extraction"
-	"github.com/lancekrogers/guild/pkg/corpus/graph"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/corpus/extraction"
+	"github.com/guild-framework/guild-core/pkg/corpus/graph"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // KnowledgeValidator provides quality assurance for extracted knowledge

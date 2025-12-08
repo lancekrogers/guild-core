@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/tools/parser/types"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/tools/parser/types"
 )
 
 // Parser parses OpenAI-style JSON tool calls
@@ -459,7 +459,7 @@ func (p *Parser) validateObject(obj map[string]interface{}, path string, result 
 		hasID := obj["id"] != nil
 		hasType := obj["type"] != nil
 		hasFunction := obj["function"] != nil
-		
+
 		// If it has any of the tool call fields, validate it as a tool call
 		if hasID || hasType || hasFunction {
 			p.validateToolCall(obj, path, result)

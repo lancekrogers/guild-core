@@ -13,9 +13,9 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"google.golang.org/grpc"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/guild-framework/guild-core/pkg/kanban"
 )
 
 // Column represents a kanban board column

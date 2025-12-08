@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/guild-framework/guild-core/pkg/config"
 )
 
 func TestAgentTemplateGenerator_GenerateAgentConfig(t *testing.T) {

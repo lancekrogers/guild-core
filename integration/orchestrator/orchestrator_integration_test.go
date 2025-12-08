@@ -17,13 +17,13 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/campaign"
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/orchestrator"
-	"github.com/lancekrogers/guild/pkg/orchestrator/interfaces"
-	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/guild-framework/guild-core/internal/testutil"
+	"github.com/guild-framework/guild-core/pkg/agents/core"
+	"github.com/guild-framework/guild-core/pkg/campaign"
+	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/guild-framework/guild-core/pkg/orchestrator"
+	"github.com/guild-framework/guild-core/pkg/orchestrator/interfaces"
+	"github.com/guild-framework/guild-core/pkg/project"
 )
 
 // TestCampaignLifecycleManagement tests the complete campaign lifecycle

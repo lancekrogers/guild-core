@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/tools/parser/types"
+	"github.com/guild-framework/guild-core/pkg/tools/parser/types"
 )
 
 func TestJSONParser_Parse(t *testing.T) {

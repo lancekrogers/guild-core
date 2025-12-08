@@ -14,13 +14,13 @@ import (
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/internal/daemon"
-	uiinit "github.com/lancekrogers/guild/internal/ui/init"
-	"github.com/lancekrogers/guild/pkg/agents/creation"
-	"github.com/lancekrogers/guild/pkg/campaign"
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/guild-framework/guild-core/internal/daemon"
+	uiinit "github.com/guild-framework/guild-core/internal/ui/init"
+	"github.com/guild-framework/guild-core/pkg/agents/creation"
+	"github.com/guild-framework/guild-core/pkg/campaign"
+	"github.com/guild-framework/guild-core/pkg/config"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/providers"
 )
 
 var (

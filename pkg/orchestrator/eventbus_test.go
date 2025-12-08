@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/orchestrator/interfaces"
+	"github.com/guild-framework/guild-core/pkg/orchestrator/interfaces"
 )
 
 func TestEventBusSubscribe(t *testing.T) {

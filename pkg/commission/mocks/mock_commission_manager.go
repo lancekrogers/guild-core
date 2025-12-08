@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/mock"
 
-	"github.com/lancekrogers/guild/pkg/commission"
+	"github.com/guild-framework/guild-core/pkg/commission"
 )
 
 // MockCommissionManager is a mock implementation of the commission.Manager type.

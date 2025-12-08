@@ -45,17 +45,17 @@ func TestProperty_ValidJSONAlwaysExtracted(t *testing.T) {
 		if funcName == "" {
 			return true
 		}
-		
+
 		// Properly escape all strings for JSON
 		idJSON, err := json.Marshal(id)
 		if err != nil {
 			return true // Skip if can't marshal
 		}
-		funcNameJSON, err := json.Marshal(funcName) 
+		funcNameJSON, err := json.Marshal(funcName)
 		if err != nil {
 			return true // Skip if can't marshal
 		}
-		
+
 		// Create arguments as a proper JSON object
 		argsObj := map[string]string{argKey: argValue}
 		argsBytes, err := json.Marshal(argsObj)
@@ -84,7 +84,7 @@ func TestProperty_ValidJSONAlwaysExtracted(t *testing.T) {
 		if id == "" {
 			idMatch = call.ID != ""
 		}
-		
+
 		// Function name must match exactly
 		return idMatch && call.Function.Name == funcName
 	}

@@ -13,9 +13,9 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 
-	"github.com/lancekrogers/guild/pkg/comms"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/orchestrator/interfaces"
+	"github.com/guild-framework/guild-core/pkg/comms"
+	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/guild-framework/guild-core/pkg/orchestrator/interfaces"
 )
 
 // TestTaskEventFlow tests the complete task event flow end-to-end

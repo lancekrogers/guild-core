@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/buildutil/ui"
+	"github.com/guild-framework/guild-core/internal/buildutil/ui"
 )
 
 // TestResult tracks test results for a package

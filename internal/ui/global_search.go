@@ -16,7 +16,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/lancekrogers/guild/tools/search"
+	"github.com/guild-framework/guild-core/tools/search"
 )
 
 // GlobalSearchKeyMap defines key bindings for the global search

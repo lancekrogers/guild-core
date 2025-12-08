@@ -7,23 +7,23 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/lancekrogers/guild/pkg/suggestions"
+	"github.com/guild-framework/guild-core/pkg/suggestions"
 )
 
 func main() {
 	ctx := context.Background()
-	
+
 	fmt.Println("🔮 Guild Suggestion System Demo")
 	fmt.Println("===============================")
-	
+
 	// Step 1: Create suggestion manager
 	fmt.Println("\n📋 Step 1: Creating suggestion manager...")
-	
+
 	manager := suggestions.NewSuggestionManager()
-	
+
 	// Step 2: Register providers
 	fmt.Println("\n🔧 Step 2: Registering suggestion providers...")
-	
+
 	// Register command provider
 	commandProvider := suggestions.NewCommandSuggestionProvider()
 	if err := manager.RegisterProvider(commandProvider); err != nil {
@@ -31,7 +31,7 @@ func main() {
 		return
 	}
 	fmt.Println("✅ Command provider registered")
-	
+
 	// Register follow-up provider
 	followUpProvider := suggestions.NewFollowUpSuggestionProvider()
 	if err := manager.RegisterProvider(followUpProvider); err != nil {
@@ -39,10 +39,10 @@ func main() {
 		return
 	}
 	fmt.Println("✅ Follow-up provider registered")
-	
+
 	// Step 3: Test different suggestion scenarios
 	fmt.Println("\n🔮 Step 3: Testing suggestion scenarios...")
-	
+
 	// Scenario 1: Help request
 	fmt.Println("\n--- Scenario 1: Help Request ---")
 	context1 := suggestions.SuggestionContext{
@@ -51,7 +51,7 @@ func main() {
 			{Role: "user", Content: "I'm starting a new project", Timestamp: 1},
 		},
 	}
-	
+
 	suggestions1, err := manager.GetSuggestions(ctx, context1, nil)
 	if err != nil {
 		fmt.Printf("Error getting suggestions: %v\n", err)
@@ -61,7 +61,7 @@ func main() {
 			fmt.Printf("  %d. %s: %s (%.2f confidence)\n", i+1, s.Display, s.Description, s.Confidence)
 		}
 	}
-	
+
 	// Scenario 2: Template request
 	fmt.Println("\n--- Scenario 2: Template Request ---")
 	context2 := suggestions.SuggestionContext{
@@ -71,7 +71,7 @@ func main() {
 			{Role: "assistant", Content: "I can help you with documentation", Timestamp: 2},
 		},
 	}
-	
+
 	suggestions2, err := manager.GetSuggestions(ctx, context2, nil)
 	if err != nil {
 		fmt.Printf("Error getting suggestions: %v\n", err)
@@ -81,7 +81,7 @@ func main() {
 			fmt.Printf("  %d. %s (%s) - %s\n", i+1, s.Content, s.Type, s.Description)
 		}
 	}
-	
+
 	// Scenario 3: Follow-up context
 	fmt.Println("\n--- Scenario 3: Follow-up Context ---")
 	context3 := suggestions.SuggestionContext{
@@ -91,7 +91,7 @@ func main() {
 			{Role: "assistant", Content: "Great! The login feature looks good", Timestamp: 2},
 		},
 	}
-	
+
 	suggestions3, err := manager.GetSuggestions(ctx, context3, nil)
 	if err != nil {
 		fmt.Printf("Error getting suggestions: %v\n", err)
@@ -101,16 +101,16 @@ func main() {
 			fmt.Printf("  %d. %s - %s\n", i+1, s.Display, s.Description)
 		}
 	}
-	
+
 	// Step 4: Test filtering
 	fmt.Println("\n🔍 Step 4: Testing suggestion filtering...")
-	
+
 	filter := &suggestions.SuggestionFilter{
 		Types:         []suggestions.SuggestionType{suggestions.SuggestionTypeCommand},
 		MinConfidence: 0.5,
 		MaxResults:    3,
 	}
-	
+
 	filteredSuggestions, err := manager.GetSuggestions(ctx, context1, filter)
 	if err != nil {
 		fmt.Printf("Error getting filtered suggestions: %v\n", err)
@@ -120,10 +120,10 @@ func main() {
 			fmt.Printf("  %d. %s (confidence: %.2f)\n", i+1, s.Display, s.Confidence)
 		}
 	}
-	
+
 	// Step 5: Test analytics and usage tracking
 	fmt.Println("\n📊 Step 5: Testing analytics...")
-	
+
 	// Record some usage
 	err = manager.RecordUsage(ctx, "help", suggestions.SuggestionUsage{
 		SuggestionID: "cmd_help",
@@ -135,7 +135,7 @@ func main() {
 	} else {
 		fmt.Println("✅ Usage recorded")
 	}
-	
+
 	// Get analytics
 	analytics, err := manager.GetAnalytics(ctx)
 	if err != nil {
@@ -143,7 +143,7 @@ func main() {
 	} else {
 		fmt.Printf("Analytics: %+v\n", analytics)
 	}
-	
+
 	fmt.Println("\n🎉 Demo completed successfully!")
 	fmt.Println("\n📚 Summary:")
 	fmt.Println("  • Suggestion system working with multiple providers")

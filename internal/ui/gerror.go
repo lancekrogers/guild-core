@@ -9,7 +9,7 @@
 // All error codes are documented in docs/error-codes.md
 package ui
 
-import "github.com/lancekrogers/guild/pkg/gerror"
+import "github.com/guild-framework/guild-core/pkg/gerror"
 
 // UI Theme Error Codes
 const (

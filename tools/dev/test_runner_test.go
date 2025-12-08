@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/lancekrogers/guild/tools/dev"
+	"github.com/guild-framework/guild-core/tools/dev"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

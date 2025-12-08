@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/commission"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // CommissionFormatter provides rich formatting for commission documents

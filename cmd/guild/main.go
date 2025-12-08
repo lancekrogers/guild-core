@@ -13,7 +13,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/observability"
 )
 
 // rootCmd represents the Great Hall command (root command in standard terminology)
@@ -111,7 +111,7 @@ func init() {
 	agentCmd.AddCommand(newAgentTemplateCmd())
 
 	// Note: Additional agent subcommands (list, stop, status) are registered in core.go
-	
+
 	// Enable scaffold integration if available
 	enableScaffoldIntegration()
 }

@@ -13,8 +13,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/tools/code"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/tools/code"
 )
 
 // GoParser implements the Parser interface for Go language

@@ -9,12 +9,12 @@ import (
 	"context"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/memory/vector"
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/memory"
+	"github.com/guild-framework/guild-core/pkg/memory/vector"
+	"github.com/guild-framework/guild-core/pkg/prompts/layered"
+	"github.com/guild-framework/guild-core/pkg/providers"
+	"github.com/guild-framework/guild-core/tools"
 )
 
 // ComponentRegistry is the main registry that manages all component types.

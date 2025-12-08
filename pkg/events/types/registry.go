@@ -10,8 +10,8 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/events"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/events"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // EventSchema defines the schema for an event type

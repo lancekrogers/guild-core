@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/ui/chat/services"
+	"github.com/guild-framework/guild-core/internal/ui/chat/services"
 )
 
 // BenchmarkSimpleSuggestion demonstrates basic suggestion performance

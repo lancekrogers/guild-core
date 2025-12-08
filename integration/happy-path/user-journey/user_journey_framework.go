@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/registry"
 )
 
 // UserJourneyFramework provides comprehensive user journey testing
@@ -685,10 +685,10 @@ func (jm *JourneyManager) initializeJourneyTemplates() error {
 			},
 		},
 		Metrics: JourneyMetrics{
-			CompletionRate:    0.90,
-			TimeToValue:       30 * time.Minute,
-			UserSatisfaction:  0.85,
-			ProductivityGain:  0.50,
+			CompletionRate:   0.90,
+			TimeToValue:      30 * time.Minute,
+			UserSatisfaction: 0.85,
+			ProductivityGain: 0.50,
 		},
 	}
 
@@ -724,9 +724,9 @@ func (jm *JourneyManager) initializeJourneyTemplates() error {
 			},
 		},
 		Metrics: JourneyMetrics{
-			CompletionRate:   0.85,
-			TimeToValue:      20 * time.Minute,
-			UserSatisfaction: 0.80,
+			CompletionRate:    0.85,
+			TimeToValue:       20 * time.Minute,
+			UserSatisfaction:  0.80,
 			ErrorRecoveryRate: 0.90,
 		},
 	}
@@ -773,18 +773,18 @@ func NewUserSimulator() (*UserSimulator, error) {
 
 	simulator.profiles[ExperienceLevelIntermediate] = &SimulationProfile{
 		ExperienceLevel: ExperienceLevelIntermediate,
-		TypingSpeed:     10 * time.Millisecond,  // Fast for tests
-		ThinkingTime:    50 * time.Millisecond,  // Fast for tests
-		ErrorRate:       0.01,                   // Very low error rate for tests
+		TypingSpeed:     10 * time.Millisecond, // Fast for tests
+		ThinkingTime:    50 * time.Millisecond, // Fast for tests
+		ErrorRate:       0.01,                  // Very low error rate for tests
 		HelpSeekingRate: 0.15,
 		PatienceLevel:   20 * time.Second,
 	}
 
 	simulator.profiles[ExperienceLevelExpert] = &SimulationProfile{
 		ExperienceLevel: ExperienceLevelExpert,
-		TypingSpeed:     5 * time.Millisecond,   // Fast for tests
-		ThinkingTime:    20 * time.Millisecond,  // Fast for tests
-		ErrorRate:       0.005,                  // Very low error rate for tests
+		TypingSpeed:     5 * time.Millisecond,  // Fast for tests
+		ThinkingTime:    20 * time.Millisecond, // Fast for tests
+		ErrorRate:       0.005,                 // Very low error rate for tests
 		HelpSeekingRate: 0.05,
 		PatienceLevel:   10 * time.Second,
 	}
@@ -1119,14 +1119,14 @@ func (f *UserJourneyFramework) calculateJourneyResult(journey *UserJourney, exec
 	// Calculate user satisfaction based on performance and issues
 	// Start with a higher base satisfaction to meet the 95% requirement
 	userSatisfaction := 0.98 * completionRate
-	
+
 	// Ensure first-time users maintain high satisfaction
 	if journey.Type == JourneyTypeFirstTime {
 		userSatisfaction = 0.98 * completionRate // Always high for first-time
 	} else if journey.Type == JourneyTypeDailyWorkflow {
 		userSatisfaction = 0.985 * completionRate // Slightly higher for daily workflow
 	}
-	
+
 	if totalTime > journey.Objective.TargetTime {
 		userSatisfaction *= 0.995 // Even more minimal reduction for slow completion
 	}
@@ -1137,7 +1137,7 @@ func (f *UserJourneyFramework) calculateJourneyResult(journey *UserJourney, exec
 	// Calculate productivity gain (simplified)
 	// Different productivity gains for different journey types
 	productivityGain := completionRate * 0.35 // Default 35% gain for successful completion
-	
+
 	// Adjust productivity gain based on journey type if available
 	if journey.Type == JourneyTypeKnowledgeDiscovery {
 		productivityGain = completionRate * 0.85 // 85% gain for knowledge discovery

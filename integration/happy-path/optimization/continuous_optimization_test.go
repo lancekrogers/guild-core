@@ -127,7 +127,7 @@ func TestContinuousOptimization_HappyPath(t *testing.T) {
 				UserLoad:            LoadLevelMedium,
 				OperationMix:        framework.GetTypicalOperationMix(),
 				Duration:            30 * time.Second, // Reduced from 20 minutes
-				IdenticalToBaseline: true, // Use same pattern as baseline
+				IdenticalToBaseline: true,             // Use same pattern as baseline
 			})
 
 			// Use baseline collector for validation metrics
@@ -170,7 +170,7 @@ func TestContinuousOptimization_HappyPath(t *testing.T) {
 
 			stabilityMonitor := framework.CreateStabilityMonitor(StabilityConfig{
 				OptimizedMetrics:   postOptimizationMetrics,
-				VarianceThreshold:  0.05, // 5% variance tolerance
+				VarianceThreshold:  0.05,            // 5% variance tolerance
 				MonitoringInterval: 5 * time.Second, // Reduced from 30 seconds
 			})
 

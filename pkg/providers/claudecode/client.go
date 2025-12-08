@@ -35,8 +35,8 @@ import (
 
 	"github.com/lancekrogers/claude-code-go/pkg/claude"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
 )
 
 // Claude 4 model constants (Released May 2025)
@@ -111,8 +111,8 @@ type Client struct {
 //
 // Parameters:
 //   - binPath: Path to claude binary (defaults to "claude" in PATH if empty string provided).
-//              Note: When called from Factory.CreateClient, the apiKey parameter is passed here
-//              as binPath due to interface constraints - no actual API key is needed.
+//     Note: When called from Factory.CreateClient, the apiKey parameter is passed here
+//     as binPath due to interface constraints - no actual API key is needed.
 //   - model: Model to use (e.g., "claude-opus-4", "claude-sonnet-4")
 func NewClient(binPath, model string) *Client {
 	// Use default path if none specified

@@ -24,7 +24,7 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/disintegration/imaging"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // ImageViewer provides comprehensive image viewing capabilities for terminals

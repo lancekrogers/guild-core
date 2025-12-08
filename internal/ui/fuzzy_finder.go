@@ -16,7 +16,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/lancekrogers/guild/pkg/search"
+	"github.com/guild-framework/guild-core/pkg/search"
 )
 
 // FuzzyFinderKeyMap defines key bindings for the fuzzy finder

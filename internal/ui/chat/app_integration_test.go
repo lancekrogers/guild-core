@@ -20,10 +20,10 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	// grpcpkg "github.com/lancekrogers/guild/pkg/grpc" // TODO: Use for grpc utilities
-	guildv1 "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	// "github.com/lancekrogers/guild/pkg/registry" // TODO: Use for registry functionality
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	// grpcpkg "github.com/guild-framework/guild-core/pkg/grpc" // TODO: Use for grpc utilities
+	guildv1 "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
+	// "github.com/guild-framework/guild-core/pkg/registry" // TODO: Use for registry functionality
 )
 
 // mockGuildServer implements a test gRPC server for chat integration testing

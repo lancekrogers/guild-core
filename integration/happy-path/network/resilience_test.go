@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/integration/happy-path/providers"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/integration/happy-path/providers"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -338,7 +338,7 @@ func (s *NetworkSimulator) simulateNetworkPartition() {
 	// This allows the test to be interrupted if needed
 	ticker := time.NewTicker(100 * time.Millisecond)
 	defer ticker.Stop()
-	
+
 	startTime := time.Now()
 	for time.Since(startTime) < duration {
 		select {
@@ -628,11 +628,11 @@ func (f *NetworkTestFramework) CreateAuthChallenger(challenge AuthChallenge) *Au
 // MonitorAuthRecovery monitors authentication recovery
 func (f *NetworkTestFramework) MonitorAuthRecovery(channels []*CommunicationChannel, config AuthRecoveryConfig) *AuthRecoveryMetrics {
 	startTime := time.Now()
-	
+
 	// Create a ticker for periodic checks
 	ticker := time.NewTicker(100 * time.Millisecond)
 	defer ticker.Stop()
-	
+
 	// Create a timer for max recovery time
 	timer := time.NewTimer(config.MaxRecoveryTime)
 	defer timer.Stop()
@@ -647,7 +647,7 @@ func (f *NetworkTestFramework) MonitorAuthRecovery(channels []*CommunicationChan
 				channel.infrastructure.mu.RLock()
 				authValid := channel.infrastructure.authenticationState.Valid
 				channel.infrastructure.mu.RUnlock()
-				
+
 				// After some time, simulate recovery
 				if !authValid && time.Since(startTime) > 2*time.Second {
 					channel.infrastructure.mu.Lock()
@@ -666,13 +666,13 @@ func (f *NetworkTestFramework) MonitorAuthRecovery(channels []*CommunicationChan
 					GracefulHandling:      true,
 				}
 			}
-			
+
 		case <-timer.C:
 			// Timeout reached
 			goto timeout
 		}
 	}
-	
+
 timeout:
 
 	return &AuthRecoveryMetrics{
@@ -888,7 +888,7 @@ func TestNetworkResilience_HappyPath(t *testing.T) {
 
 			// PHASE 3: Validate final system state
 			finalMetrics := framework.StopCommunicationMonitor(commMonitor)
-			
+
 			// Stop all heartbeat goroutines
 			for _, ch := range commChannels {
 				close(ch.stopCh)

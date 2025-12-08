@@ -4,7 +4,7 @@ import (
 	"io"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // MultiWriter writes to multiple destinations

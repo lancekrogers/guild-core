@@ -10,8 +10,8 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/guild-framework/guild-core/pkg/providers"
+	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
 )
 
 // MockAIProvider implements a mock AI provider for testing

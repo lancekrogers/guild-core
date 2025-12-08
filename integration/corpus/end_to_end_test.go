@@ -15,12 +15,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
-	"github.com/lancekrogers/guild/pkg/corpus/agent"
-	"github.com/lancekrogers/guild/pkg/memory/rag"
-	"github.com/lancekrogers/guild/pkg/memory/vector"
-	interfaces "github.com/lancekrogers/guild/pkg/providers/interfaces"
-	"github.com/lancekrogers/guild/pkg/providers/mock"
+	"github.com/guild-framework/guild-core/pkg/corpus"
+	"github.com/guild-framework/guild-core/pkg/corpus/agent"
+	"github.com/guild-framework/guild-core/pkg/memory/rag"
+	"github.com/guild-framework/guild-core/pkg/memory/vector"
+	interfaces "github.com/guild-framework/guild-core/pkg/providers/interfaces"
+	"github.com/guild-framework/guild-core/pkg/providers/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -461,7 +461,7 @@ func TestErrorScenarios(t *testing.T) {
 
 		// System should handle corrupt embeddings gracefully
 		vectorConfig := &vector.StoreConfig{
-			Type:              vector.StoreTypeChromem,
+			Type: vector.StoreTypeChromem,
 			EmbeddingProvider: func() interfaces.AIProvider {
 				p, _ := mock.NewProvider()
 				p.Enable()

@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/lancekrogers/guild/pkg/events"
+	"github.com/guild-framework/guild-core/pkg/events"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"

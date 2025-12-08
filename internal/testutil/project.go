@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/guild-framework/guild-core/pkg/config"
+	"github.com/guild-framework/guild-core/pkg/project"
 	"github.com/stretchr/testify/require"
 	yaml "gopkg.in/yaml.v3"
 )
@@ -52,18 +52,18 @@ func SetupTestProject(t *testing.T, opts ...TestProjectOptions) (*project.Contex
 
 	// Initialize project and get project context
 	ctx := context.Background()
-	
+
 	// Clean up any existing database files to avoid dirty migration state
 	possibleDbPaths := []string{
 		filepath.Join(tempDir, ".campaign", "memory.db"),
 		filepath.Join(tempDir, ".campaign", "memory.db-shm"),
 		filepath.Join(tempDir, ".campaign", "memory.db-wal"),
 	}
-	
+
 	for _, dbPath := range possibleDbPaths {
 		_ = os.Remove(dbPath) // Ignore error if file doesn't exist
 	}
-	
+
 	projCtx, err := project.Initialize(ctx, tempDir, project.InitOptions{})
 	require.NoError(t, err, "failed to initialize project")
 

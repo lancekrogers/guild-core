@@ -10,7 +10,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/lancekrogers/guild/internal/setup"
+	"github.com/guild-framework/guild-core/internal/setup"
 )
 
 func main() {

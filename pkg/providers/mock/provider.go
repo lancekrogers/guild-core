@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
 )
 
 // Provider is a mock AI provider for testing
@@ -185,7 +185,7 @@ func (p *Provider) ChatCompletion(ctx context.Context, req interfaces.ChatReques
 		p.calls = append(p.calls, call)
 		return nil, err
 	}
-	
+
 	// Also check if any error key is contained within the full context
 	for errorKey, err := range p.errors {
 		if strings.Contains(fullContext, strings.ToLower(errorKey)) {

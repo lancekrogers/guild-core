@@ -6,7 +6,7 @@ package vector
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // EmbedderWrapper wraps an Embedder to provide the EmbeddingProvider interface

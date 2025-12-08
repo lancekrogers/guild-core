@@ -13,10 +13,10 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
-	jsonparser "github.com/lancekrogers/guild/pkg/tools/parser/json"
-	xmlparser "github.com/lancekrogers/guild/pkg/tools/parser/xml"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/observability"
+	jsonparser "github.com/guild-framework/guild-core/pkg/tools/parser/json"
+	xmlparser "github.com/guild-framework/guild-core/pkg/tools/parser/xml"
 )
 
 // RobustParser implements ResponseParser with proper format detection and validation
@@ -233,7 +233,6 @@ func (p *RobustParser) normalizeInput(input []byte) []byte {
 	return input
 }
 
-
 // postProcess validates and normalizes parsed tool calls
 func (p *RobustParser) postProcess(calls []ToolCall) []ToolCall {
 	processed := make([]ToolCall, 0, len(calls))
@@ -253,7 +252,7 @@ func (p *RobustParser) postProcess(calls []ToolCall) []ToolCall {
 		if call.Function.Name == "" {
 			continue // Skip invalid calls
 		}
-		
+
 		// Sanitize function name - remove potential XSS vectors
 		if strings.Contains(call.Function.Name, "<script>") || strings.Contains(call.Function.Name, "</script>") {
 			continue // Skip calls with script tags

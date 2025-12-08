@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/commission"
+	"github.com/guild-framework/guild-core/internal/testutil"
+	"github.com/guild-framework/guild-core/pkg/commission"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -26,7 +26,7 @@ func TestCommissionWorkflow(t *testing.T) {
 		Name: "commission-workflow",
 	})
 	defer cleanup()
-	
+
 	extCtx := testutil.ExtendProjectContext(t, projCtx)
 
 	// Initialize guild
@@ -82,7 +82,7 @@ Build a modern e-commerce platform with user authentication, product catalog, an
 - Performance targets met (< 200ms response time)
 - Security audit passed
 `
-		
+
 		commFile := filepath.Join(projCtx.GetRootPath(), "ecommerce_commission.md")
 		err := os.WriteFile(commFile, []byte(commissionContent), 0644)
 		require.NoError(t, err)
@@ -148,7 +148,7 @@ Build a modern e-commerce platform with user authentication, product catalog, an
 
 		createDuration := time.Since(start)
 		avgCreateTime := createDuration / time.Duration(numCommissions)
-		
+
 		// Performance requirement: avg commission creation < 500ms
 		assert.LessOrEqual(t, avgCreateTime, 500*time.Millisecond,
 			"Average commission creation should be under 500ms")
@@ -157,9 +157,9 @@ Build a modern e-commerce platform with user authentication, product catalog, an
 		start = time.Now()
 		result := extCtx.RunGuild("commission", "list")
 		listDuration := time.Since(start)
-		
+
 		require.NoError(t, result.Error)
-		
+
 		// Performance requirement: list operation < 2s
 		assert.LessOrEqual(t, listDuration, 2*time.Second,
 			"Listing commissions should complete within 2s")
@@ -184,7 +184,7 @@ Build a modern e-commerce platform with user authentication, product catalog, an
 		err := os.WriteFile(badFile, []byte(badContent), 0644)
 		require.NoError(t, err)
 
-		result = extCtx.RunGuild("commission", "create", "--file", 
+		result = extCtx.RunGuild("commission", "create", "--file",
 			filepath.Join(projCtx.GetRootPath(), "bad_commission.md"))
 		// Should either succeed with a basic commission or fail gracefully
 		if result.Error != nil {

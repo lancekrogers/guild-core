@@ -22,11 +22,11 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/health/grpc_health_v1"
 
-	"github.com/lancekrogers/guild/internal/daemon"
-	pkgDaemon "github.com/lancekrogers/guild/pkg/daemon"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/guild-framework/guild-core/internal/daemon"
+	pkgDaemon "github.com/guild-framework/guild-core/pkg/daemon"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/guild-framework/guild-core/pkg/observability"
 )
 
 func TestGuildDaemonLifecycle(t *testing.T) {
@@ -245,11 +245,11 @@ func TestGuildSessionPersistence(t *testing.T) {
 
 // guildTestEnvironment provides a test environment for daemon testing
 type guildTestEnvironment struct {
-	campaignDir   string
-	oldCwd        string
-	t             *testing.T
-	daemonStdout  *strings.Builder
-	daemonStderr  *strings.Builder
+	campaignDir  string
+	oldCwd       string
+	t            *testing.T
+	daemonStdout *strings.Builder
+	daemonStderr *strings.Builder
 }
 
 func createGuildTestEnvironment(ctx context.Context, t *testing.T) (*guildTestEnvironment, error) {
@@ -306,7 +306,7 @@ agents:
 			WithDetails("file_path", guildYamlPath)
 	}
 
-	logger.InfoContext(ctx, "Created campaign configuration", 
+	logger.InfoContext(ctx, "Created campaign configuration",
 		"campaign_yaml", campaignYamlPath,
 		"guild_yaml", guildYamlPath)
 
@@ -367,10 +367,10 @@ func (env *guildTestEnvironment) startDaemon(ctx context.Context) (*exec.Cmd, er
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 
-	logger.InfoContext(ctx, "Starting daemon process", 
+	logger.InfoContext(ctx, "Starting daemon process",
 		"command", "guild serve --foreground",
 		"cwd", env.campaignDir)
-	
+
 	if err := cmd.Start(); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start daemon process").
 			WithComponent("daemon_test").
@@ -380,11 +380,11 @@ func (env *guildTestEnvironment) startDaemon(ctx context.Context) (*exec.Cmd, er
 	}
 
 	logger.InfoContext(ctx, "Daemon process started", "pid", cmd.Process.Pid)
-	
+
 	// Store output builders for later access
 	env.daemonStdout = &stdout
 	env.daemonStderr = &stderr
-	
+
 	return cmd, nil
 }
 
@@ -435,7 +435,7 @@ func (env *guildTestEnvironment) verifyDaemonStatus(ctx context.Context) error {
 	logger := observability.GetLogger(ctx)
 
 	logger.InfoContext(ctx, "Checking daemon status")
-	
+
 	socketPath := env.getExpectedSocketPath()
 	if socketPath == "" {
 		return gerror.New(gerror.ErrCodeInternal, "could not determine socket path", nil).
@@ -450,7 +450,7 @@ func (env *guildTestEnvironment) verifyDaemonStatus(ctx context.Context) error {
 			WithOperation("verifyDaemonStatus").
 			WithDetails("socket_path", socketPath)
 	}
-	
+
 	logger.InfoContext(ctx, "Daemon status verified", "socket_path", socketPath)
 	return nil
 }
@@ -459,14 +459,14 @@ func (env *guildTestEnvironment) shutdownDaemon(ctx context.Context) error {
 	logger := observability.GetLogger(ctx)
 
 	logger.InfoContext(ctx, "Initiating daemon shutdown")
-	
+
 	socketPath := env.getExpectedSocketPath()
 	if socketPath == "" {
 		return gerror.New(gerror.ErrCodeInternal, "could not determine socket path", nil).
 			WithComponent("daemon_test").
 			WithOperation("shutdownDaemon")
 	}
-	
+
 	if err := pkgDaemon.StopSession(socketPath); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to stop daemon").
 			WithComponent("daemon_test").

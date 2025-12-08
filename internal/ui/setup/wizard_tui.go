@@ -15,8 +15,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/lancekrogers/guild/internal/setup"
-	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/guild-framework/guild-core/internal/setup"
+	"github.com/guild-framework/guild-core/pkg/config"
 )
 
 // WizardInterface defines the interface for the setup wizard

@@ -6,7 +6,7 @@ package core
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
 )
 
 // ToolAgent extends Agent with tool execution capabilities

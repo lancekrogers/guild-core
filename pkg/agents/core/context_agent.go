@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"time"
 
-	guildcontext "github.com/lancekrogers/guild/pkg/context"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	guildcontext "github.com/guild-framework/guild-core/pkg/context"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // ContextAwareAgent represents an agent that uses the Guild context system

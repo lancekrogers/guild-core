@@ -9,8 +9,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/config"
+	"github.com/guild-framework/guild-core/pkg/observability"
 )
 
 // ExampleReasoningUsage demonstrates how to use the enhanced reasoning system

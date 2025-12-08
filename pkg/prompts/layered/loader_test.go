@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/guild-framework/guild-core/pkg/prompts/layered"
 )
 
 func TestLoader(t *testing.T) {

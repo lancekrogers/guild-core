@@ -7,7 +7,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/guild-framework/guild-core/pkg/config"
 	"github.com/stretchr/testify/assert"
 )
 

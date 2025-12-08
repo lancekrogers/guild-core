@@ -14,7 +14,7 @@ The `terminal` package provides comprehensive cross-platform terminal capability
 ## Quick Start
 
 ```go
-import "github.com/lancekrogers/guild/pkg/terminal"
+import "github.com/guild-framework/guild-core/pkg/terminal"
 
 // Detect current terminal capabilities
 detector := terminal.NewDetector()

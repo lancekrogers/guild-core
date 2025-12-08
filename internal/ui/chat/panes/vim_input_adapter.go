@@ -6,9 +6,9 @@ package panes
 import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/internal/ui/chat/common/layout"
-	"github.com/lancekrogers/guild/internal/ui/chat/completion"
-	"github.com/lancekrogers/guild/internal/ui/vim"
+	"github.com/guild-framework/guild-core/internal/ui/chat/common/layout"
+	"github.com/guild-framework/guild-core/internal/ui/chat/completion"
+	"github.com/guild-framework/guild-core/internal/ui/vim"
 )
 
 // VimInputAdapter wraps InputPane to make it VimCapable

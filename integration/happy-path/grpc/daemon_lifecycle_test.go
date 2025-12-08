@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/connectivity"
@@ -697,7 +697,7 @@ func TestDaemonLifecycle_HappyPath(t *testing.T) {
 			// Wait for test context to expire and all operations to complete
 			<-testCtx.Done()
 			time.Sleep(100 * time.Millisecond) // Allow goroutines to finish
-			
+
 			// PHASE 5: Validate final system state and performance
 			finalMetrics := framework.StopContinuousOperations(operationMetrics)
 

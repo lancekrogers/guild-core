@@ -73,8 +73,8 @@ The main entry point for reasoning extraction.
 
 ```go
 import (
-    "github.com/lancekrogers/guild/pkg/reasoning"
-    "github.com/lancekrogers/guild/pkg/orchestrator"
+    "github.com/guild-framework/guild-core/pkg/reasoning"
+    "github.com/guild-framework/guild-core/pkg/orchestrator"
     "log/slog"
 )
 

@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/memory/rag"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/guild-framework/guild-core/pkg/memory/rag"
+	"github.com/guild-framework/guild-core/pkg/observability"
 )
 
 // WorkflowType defines the type of workflow to execute

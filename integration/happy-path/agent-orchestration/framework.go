@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/interfaces"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/interfaces"
+	"github.com/guild-framework/guild-core/pkg/registry"
 	"github.com/stretchr/testify/require"
 )
 
@@ -253,13 +253,13 @@ func (f *HappyPathTestFramework) setupTestEnvironment(reg registry.ComponentRegi
 		factory := func(config registry.AgentConfig) (interfaces.Agent, error) {
 			return &mockAgent{
 				agentType: agentTypeCopy,
-				config:    map[string]interface{}{
+				config: map[string]interface{}{
 					"name": config.Name,
 					"type": config.Type,
 				},
 			}, nil
 		}
-		
+
 		err := reg.Agents().RegisterAgentType(agentType, factory)
 		if err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to register agent type").
@@ -268,38 +268,38 @@ func (f *HappyPathTestFramework) setupTestEnvironment(reg registry.ComponentRegi
 				WithDetails("agentType", agentType)
 		}
 	}
-	
+
 	// Create test agents with varying cost magnitudes
 	testAgents := []registry.GuildAgentConfig{
 		{
-			ID:           "test-agent-budget",
-			Name:         "Budget Test Agent",
-			Type:         "general",
-			Provider:     "openai",
-			Model:        "gpt-3.5-turbo",
+			ID:            "test-agent-budget",
+			Name:          "Budget Test Agent",
+			Type:          "general",
+			Provider:      "openai",
+			Model:         "gpt-3.5-turbo",
 			CostMagnitude: 1, // Lowest cost
-			Capabilities: []string{"basic", "coding", "analysis", "code_analysis", "documentation"},
+			Capabilities:  []string{"basic", "coding", "analysis", "code_analysis", "documentation"},
 		},
 		{
-			ID:           "test-agent-standard",
-			Name:         "Standard Test Agent",
-			Type:         "specialist",
-			Provider:     "openai",
-			Model:        "gpt-4",
+			ID:            "test-agent-standard",
+			Name:          "Standard Test Agent",
+			Type:          "specialist",
+			Provider:      "openai",
+			Model:         "gpt-4",
 			CostMagnitude: 3, // Medium cost
-			Capabilities: []string{"advanced", "coding", "analysis", "architecture", "code_analysis", "refactoring", "documentation"},
+			Capabilities:  []string{"advanced", "coding", "analysis", "architecture", "code_analysis", "refactoring", "documentation"},
 		},
 		{
-			ID:           "test-agent-premium",
-			Name:         "Premium Test Agent",
-			Type:         "expert",
-			Provider:     "anthropic",
-			Model:        "claude-3-opus",
+			ID:            "test-agent-premium",
+			Name:          "Premium Test Agent",
+			Type:          "expert",
+			Provider:      "anthropic",
+			Model:         "claude-3-opus",
 			CostMagnitude: 5, // Highest cost
-			Capabilities: []string{"expert", "coding", "analysis", "architecture", "research", "code_analysis", "refactoring", "documentation"},
+			Capabilities:  []string{"expert", "coding", "analysis", "architecture", "research", "code_analysis", "refactoring", "documentation"},
 		},
 	}
-	
+
 	// Register test agents in the registry
 	for _, agentConfig := range testAgents {
 		// Register agent config using the Agents() registry
@@ -311,7 +311,7 @@ func (f *HappyPathTestFramework) setupTestEnvironment(reg registry.ComponentRegi
 				WithDetails("agentID", agentConfig.ID)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -722,10 +722,10 @@ type mockAgent struct {
 func (m *mockAgent) Execute(ctx context.Context, prompt string) (string, error) {
 	// Simulate agent execution with some delay
 	time.Sleep(50 * time.Millisecond)
-	
+
 	// Generate a more sophisticated response to meet quality requirements
 	var response string
-	
+
 	switch m.agentType {
 	case "general":
 		response = fmt.Sprintf("Based on my analysis of your request '%s', I've identified several key points:\n", prompt)
@@ -734,7 +734,7 @@ func (m *mockAgent) Execute(ctx context.Context, prompt string) (string, error) 
 		response += "3. Consider implementing additional error handling for edge cases\n"
 		response += "4. The current implementation is functional but could benefit from refactoring\n"
 		response += "\nRecommendation: Focus on improving code clarity and maintainability."
-		
+
 	case "specialist":
 		response = fmt.Sprintf("After thorough analysis of '%s', here are my findings:\n", prompt)
 		response += "## Code Quality Assessment\n"
@@ -746,7 +746,7 @@ func (m *mockAgent) Execute(ctx context.Context, prompt string) (string, error) 
 		response += "2. Implement comprehensive unit tests for critical paths\n"
 		response += "3. Consider using dependency injection for better testability\n"
 		response += "\nConclusion: The code is well-structured with room for targeted improvements."
-		
+
 	case "expert":
 		response = fmt.Sprintf("Expert analysis for '%s':\n\n", prompt)
 		response += "## Executive Summary\n"
@@ -766,11 +766,11 @@ func (m *mockAgent) Execute(ctx context.Context, prompt string) (string, error) 
 		response += "3. Consider event sourcing for audit requirements\n"
 		response += "4. Implement circuit breakers for external dependencies\n\n"
 		response += "Impact Assessment: These improvements would reduce latency by 30% and improve maintainability score by 25%."
-		
+
 	default:
 		response = fmt.Sprintf("Analysis complete for: %s. The code meets basic requirements.", prompt)
 	}
-	
+
 	return response, nil
 }
 

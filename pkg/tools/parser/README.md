@@ -16,7 +16,7 @@ A robust, production-grade parser for extracting tool calls from LLM responses. 
 ## Installation
 
 ```go
-import "github.com/lancekrogers/guild/pkg/tools/parser"
+import "github.com/guild-framework/guild-core/pkg/tools/parser"
 ```
 
 ## Quick Start

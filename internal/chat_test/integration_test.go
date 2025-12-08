@@ -13,9 +13,9 @@ import (
 	"github.com/stretchr/testify/require"
 
 	// New modular imports
-	"github.com/lancekrogers/guild/internal/ui/formatting"
-	"github.com/lancekrogers/guild/internal/ui/visual"
-	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/guild-framework/guild-core/internal/ui/formatting"
+	"github.com/guild-framework/guild-core/internal/ui/visual"
+	"github.com/guild-framework/guild-core/pkg/config"
 )
 
 // TestRichContentIntegration tests markdown rendering components

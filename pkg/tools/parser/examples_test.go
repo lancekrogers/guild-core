@@ -10,7 +10,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/tools/parser"
+	"github.com/guild-framework/guild-core/pkg/tools/parser"
 )
 
 // Example demonstrates basic usage of the parser

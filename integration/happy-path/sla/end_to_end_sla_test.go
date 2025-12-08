@@ -128,13 +128,13 @@ func TestEndToEndSLA_HappyPath(t *testing.T) {
 			failureScenarios := []FailureScenario{
 				{
 					Type:      FailureTypeNetworkLatency,
-					Severity:  20, // 20% of baseline latency
+					Severity:  20,                                                  // 20% of baseline latency
 					Duration:  time.Duration(float64(scenario.testDuration) * 0.2), // 20% of test
 					StartTime: scenario.testDuration / 3,
 				},
 				{
 					Type:      FailureTypeMemoryPressure,
-					Severity:  80, // 80% memory utilization
+					Severity:  80,                                                   // 80% memory utilization
 					Duration:  time.Duration(float64(scenario.testDuration) * 0.15), // 15% of test
 					StartTime: 2 * scenario.testDuration / 3,
 				},

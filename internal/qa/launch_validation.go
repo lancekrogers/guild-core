@@ -33,9 +33,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/ui/animation"
-	"github.com/lancekrogers/guild/internal/ui/shortcuts"
-	"github.com/lancekrogers/guild/internal/ui/theme"
+	"github.com/guild-framework/guild-core/internal/ui/animation"
+	"github.com/guild-framework/guild-core/internal/ui/shortcuts"
+	"github.com/guild-framework/guild-core/internal/ui/theme"
 	"go.uber.org/zap"
 )
 

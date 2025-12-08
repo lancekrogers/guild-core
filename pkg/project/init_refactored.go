@@ -22,10 +22,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/project/global"
-	"github.com/lancekrogers/guild/pkg/project/local"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/project/global"
+	"github.com/guild-framework/guild-core/pkg/project/local"
+	"github.com/guild-framework/guild-core/pkg/storage"
 )
 
 // InitializeProject creates both global and campaign structures

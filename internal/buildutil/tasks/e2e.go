@@ -9,7 +9,7 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/buildutil/ui"
+	"github.com/guild-framework/guild-core/internal/buildutil/ui"
 )
 
 // E2EOptions configures E2E test execution

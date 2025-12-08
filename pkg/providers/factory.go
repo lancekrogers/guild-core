@@ -6,8 +6,8 @@ package providers
 import (
 	"os"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers/claudecode"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/providers/claudecode"
 )
 
 // Factory creates LLM clients
@@ -27,7 +27,7 @@ func NewFactory() *Factory {
 // Parameters:
 //   - providerType: The type of provider (OpenAI, Anthropic, ClaudeCode, etc.)
 //   - apiKey: API key for most providers. For ClaudeCode, this is the path to the claude binary
-//             (defaults to "claude" if empty, assumes claude is in PATH)
+//     (defaults to "claude" if empty, assumes claude is in PATH)
 //   - model: The model to use (e.g., "gpt-4", "claude-3-opus", etc.)
 //
 // Note: ClaudeCode provider doesn't require an API key as it uses the Claude Code CLI
@@ -70,7 +70,7 @@ func (f *Factory) CreateClientFromConfig(providerType ProviderType, config map[s
 
 	// Extract API key - try config first, then environment variable
 	var apiKey string
-	
+
 	// For ClaudeCode, also check for binary_path key for clarity
 	if providerType == ProviderClaudeCode {
 		if path, exists := config["binary_path"]; exists {
@@ -79,7 +79,7 @@ func (f *Factory) CreateClientFromConfig(providerType ProviderType, config map[s
 			}
 		}
 	}
-	
+
 	// Standard api_key extraction (also used as binary path for ClaudeCode)
 	if apiKey == "" {
 		if key, exists := config["api_key"]; exists {

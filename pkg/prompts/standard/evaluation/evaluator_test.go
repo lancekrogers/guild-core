@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/prompts/standard"
+	"github.com/guild-framework/guild-core/pkg/prompts/standard"
 )
 
 func TestPromptEvaluator(t *testing.T) {

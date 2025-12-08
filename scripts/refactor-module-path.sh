@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-OLD=github.com/lancekrogers/guild
+OLD=github.com/guild-framework/guild-core
 NEW=github.com/guild-framework/guild-core
 
 echo "Refactoring import paths: $OLD -> $NEW"

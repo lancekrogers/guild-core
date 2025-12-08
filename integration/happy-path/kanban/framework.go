@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/guild-framework/guild-core/pkg/memory"
+	"github.com/guild-framework/guild-core/pkg/registry"
 )
 
 // kanbanRegistryAdapter adapts registry.ComponentRegistry to kanban.ComponentRegistry
@@ -27,12 +27,12 @@ type kanbanRegistryAdapter struct {
 func (a *kanbanRegistryAdapter) Storage() kanban.StorageRegistry {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	
+
 	if a.storageAdapter == nil {
 		a.storageAdapter = &kanbanStorageAdapter{
 			storage:         a.registry.Storage(),
-			memoryStore:     newMockMemoryStore(), // Use mock memory store for tests
-			taskRepository:  newMockTaskRepository(), // Use shared task repository
+			memoryStore:     newMockMemoryStore(),     // Use mock memory store for tests
+			taskRepository:  newMockTaskRepository(),  // Use shared task repository
 			boardRepository: newMockBoardRepository(), // Use shared board repository
 		}
 	}
@@ -41,11 +41,11 @@ func (a *kanbanRegistryAdapter) Storage() kanban.StorageRegistry {
 
 // kanbanStorageAdapter adapts registry.StorageRegistry to kanban.StorageRegistry
 type kanbanStorageAdapter struct {
-	storage           registry.StorageRegistry
-	memoryStore       memory.Store // Override memory store
-	taskRepository    kanban.TaskRepository // Shared task repository
-	boardRepository   kanban.BoardRepository // Shared board repository
-	mu                sync.Mutex
+	storage         registry.StorageRegistry
+	memoryStore     memory.Store           // Override memory store
+	taskRepository  kanban.TaskRepository  // Shared task repository
+	boardRepository kanban.BoardRepository // Shared board repository
+	mu              sync.Mutex
 }
 
 func (a *kanbanStorageAdapter) GetKanbanCampaignRepository() kanban.CampaignRepository {
@@ -61,7 +61,7 @@ func (a *kanbanStorageAdapter) GetKanbanCommissionRepository() kanban.Commission
 func (a *kanbanStorageAdapter) GetBoardRepository() kanban.BoardRepository {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	
+
 	if a.boardRepository == nil {
 		a.boardRepository = newMockBoardRepository()
 	}
@@ -71,7 +71,7 @@ func (a *kanbanStorageAdapter) GetBoardRepository() kanban.BoardRepository {
 func (a *kanbanStorageAdapter) GetKanbanTaskRepository() kanban.TaskRepository {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	
+
 	if a.taskRepository == nil {
 		a.taskRepository = newMockTaskRepository()
 	}
@@ -81,7 +81,7 @@ func (a *kanbanStorageAdapter) GetKanbanTaskRepository() kanban.TaskRepository {
 func (a *kanbanStorageAdapter) GetMemoryStore() kanban.MemoryStore {
 	a.mu.Lock()
 	defer a.mu.Unlock()
-	
+
 	// Return the override memory store if set
 	if a.memoryStore != nil {
 		return a.memoryStore
@@ -118,11 +118,13 @@ func (m *memoryStoreAdapter) List(ctx context.Context, bucket string) ([]string,
 
 // Mock implementations for repositories
 type mockCampaignRepository struct{}
+
 func (r *mockCampaignRepository) CreateCampaign(ctx context.Context, campaign interface{}) error {
 	return nil
 }
 
 type mockCommissionRepository struct{}
+
 func (r *mockCommissionRepository) CreateCommission(ctx context.Context, commission interface{}) error {
 	return nil
 }
@@ -144,7 +146,7 @@ func newMockBoardRepository() *mockBoardRepository {
 func (r *mockBoardRepository) CreateBoard(ctx context.Context, board interface{}) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	// Extract board ID from the interface
 	boardMap, ok := board.(map[string]interface{})
 	if ok {
@@ -153,7 +155,7 @@ func (r *mockBoardRepository) CreateBoard(ctx context.Context, board interface{}
 		for k, v := range boardMap {
 			boardCopy[k] = v
 		}
-		
+
 		// Check for both uppercase and lowercase ID
 		if id, ok := boardCopy["ID"].(string); ok {
 			r.boards[id] = boardCopy
@@ -167,7 +169,7 @@ func (r *mockBoardRepository) CreateBoard(ctx context.Context, board interface{}
 func (r *mockBoardRepository) GetBoard(ctx context.Context, id string) (interface{}, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	if board, ok := r.boards[id]; ok {
 		// Make a copy of the board map before returning
 		if boardMap, ok := board.(map[string]interface{}); ok {
@@ -185,7 +187,7 @@ func (r *mockBoardRepository) GetBoard(ctx context.Context, id string) (interfac
 func (r *mockBoardRepository) UpdateBoard(ctx context.Context, board interface{}) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	// Extract board ID from the interface
 	boardMap, ok := board.(map[string]interface{})
 	if ok {
@@ -194,7 +196,7 @@ func (r *mockBoardRepository) UpdateBoard(ctx context.Context, board interface{}
 		for k, v := range boardMap {
 			boardCopy[k] = v
 		}
-		
+
 		// Check for both uppercase and lowercase ID
 		if id, ok := boardCopy["ID"].(string); ok {
 			r.boards[id] = boardCopy
@@ -208,7 +210,7 @@ func (r *mockBoardRepository) UpdateBoard(ctx context.Context, board interface{}
 func (r *mockBoardRepository) DeleteBoard(ctx context.Context, id string) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	delete(r.boards, id)
 	return nil
 }
@@ -216,7 +218,7 @@ func (r *mockBoardRepository) DeleteBoard(ctx context.Context, id string) error 
 func (r *mockBoardRepository) ListBoards(ctx context.Context) ([]interface{}, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
+
 	boards := make([]interface{}, 0, len(r.boards))
 	for _, board := range r.boards {
 		// Make a copy of the board map before returning
@@ -247,7 +249,7 @@ func newMockTaskRepository() *mockTaskRepository {
 func (r *mockTaskRepository) CreateTask(ctx context.Context, task interface{}) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	// Extract task ID from the interface
 	taskMap, ok := task.(map[string]interface{})
 	if ok {
@@ -256,7 +258,7 @@ func (r *mockTaskRepository) CreateTask(ctx context.Context, task interface{}) e
 		for k, v := range taskMap {
 			taskCopy[k] = v
 		}
-		
+
 		// Check for both uppercase and lowercase ID
 		if id, ok := taskCopy["ID"].(string); ok {
 			r.tasks[id] = taskCopy
@@ -270,7 +272,7 @@ func (r *mockTaskRepository) CreateTask(ctx context.Context, task interface{}) e
 func (r *mockTaskRepository) UpdateTask(ctx context.Context, task interface{}) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	// Extract task ID from the interface
 	taskMap, ok := task.(map[string]interface{})
 	if ok {
@@ -279,7 +281,7 @@ func (r *mockTaskRepository) UpdateTask(ctx context.Context, task interface{}) e
 		for k, v := range taskMap {
 			taskCopy[k] = v
 		}
-		
+
 		// Check for both uppercase and lowercase ID
 		if id, ok := taskCopy["ID"].(string); ok {
 			r.tasks[id] = taskCopy
@@ -293,7 +295,7 @@ func (r *mockTaskRepository) UpdateTask(ctx context.Context, task interface{}) e
 func (r *mockTaskRepository) DeleteTask(ctx context.Context, id string) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	
+
 	delete(r.tasks, id)
 	return nil
 }
@@ -301,8 +303,7 @@ func (r *mockTaskRepository) DeleteTask(ctx context.Context, id string) error {
 func (r *mockTaskRepository) ListTasksByBoard(ctx context.Context, boardID string) ([]interface{}, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
-	
-	
+
 	var results []interface{}
 	for _, task := range r.tasks {
 		if taskMap, ok := task.(map[string]interface{}); ok {
@@ -328,7 +329,7 @@ func (r *mockTaskRepository) ListTasksByBoard(ctx context.Context, boardID strin
 			}
 		}
 	}
-	
+
 	return results, nil
 }
 
@@ -354,7 +355,7 @@ func newMockMemoryStore() *mockMemoryStore {
 func (m *mockMemoryStore) Get(ctx context.Context, bucket, key string) ([]byte, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	if bucketData, ok := m.data[bucket]; ok {
 		if value, ok := bucketData[key]; ok {
 			return value, nil
@@ -366,7 +367,7 @@ func (m *mockMemoryStore) Get(ctx context.Context, bucket, key string) ([]byte, 
 func (m *mockMemoryStore) Put(ctx context.Context, bucket, key string, value []byte) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	if m.data[bucket] == nil {
 		m.data[bucket] = make(map[string][]byte)
 	}
@@ -377,7 +378,7 @@ func (m *mockMemoryStore) Put(ctx context.Context, bucket, key string, value []b
 func (m *mockMemoryStore) Delete(ctx context.Context, bucket, key string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	
+
 	if bucketData, ok := m.data[bucket]; ok {
 		delete(bucketData, key)
 	}
@@ -387,7 +388,7 @@ func (m *mockMemoryStore) Delete(ctx context.Context, bucket, key string) error 
 func (m *mockMemoryStore) List(ctx context.Context, bucket string) ([]string, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	if bucketData, ok := m.data[bucket]; ok {
 		keys := make([]string, 0, len(bucketData))
 		for key := range bucketData {
@@ -401,7 +402,7 @@ func (m *mockMemoryStore) List(ctx context.Context, bucket string) ([]string, er
 func (m *mockMemoryStore) ListKeys(ctx context.Context, bucket, prefix string) ([]string, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	
+
 	if bucketData, ok := m.data[bucket]; ok {
 		keys := make([]string, 0)
 		for key := range bucketData {
@@ -870,4 +871,3 @@ type PersistenceResult struct {
 	Error     error
 	Timestamp time.Time
 }
-

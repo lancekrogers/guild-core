@@ -12,9 +12,9 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/lancekrogers/guild/internal/ui/chat/common/layout"
-	"github.com/lancekrogers/guild/internal/ui/chat/components"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/guild-framework/guild-core/internal/ui/chat/common/layout"
+	"github.com/guild-framework/guild-core/internal/ui/chat/components"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // StatusPane displays system status, agent information, and notifications

@@ -11,7 +11,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/muesli/reflow/truncate"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
+	"github.com/guild-framework/guild-core/pkg/corpus"
 )
 
 // GraphView handles rendering the document relationship graph

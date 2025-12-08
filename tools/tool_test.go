@@ -8,8 +8,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/lancekrogers/guild/tools"
-	"github.com/lancekrogers/guild/tools/mocks"
+	"github.com/guild-framework/guild-core/tools"
+	"github.com/guild-framework/guild-core/tools/mocks"
 )
 
 // TestBaseToolImplementation tests that BaseTool implements the Tool interface

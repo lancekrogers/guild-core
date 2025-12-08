@@ -7,7 +7,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/corpus/extraction"
+	"github.com/guild-framework/guild-core/pkg/corpus/extraction"
 )
 
 // ValidationRule interface for different validation rules

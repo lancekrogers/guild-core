@@ -17,8 +17,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/guild-framework/guild-core/pkg/observability"
 )
 
 // Note: All types (CrossComponentTestFramework, WorkflowType, Task, Agent, etc.) are defined in types.go
@@ -180,7 +180,7 @@ func TestCrossComponentWorkflow_HappyPath(t *testing.T) {
 
 			// Verify Kanban updates reflect workflow progress
 			kanbanState := framework.GetKanbanState()
-			
+
 			// Check if the workflow task exists in any board's history
 			taskFound := false
 			t.Logf("Looking for task ID: %s", workflow.InitialTask.ID)
@@ -490,21 +490,21 @@ func (f *CrossComponentTestFramework) InitializeSystemState(config SystemConfig)
 		ActiveWorkflows: make(map[string]*Workflow),
 		SystemMetrics:   &SystemMetrics{},
 	}
-	
+
 	// Store the system state in the framework
 	f.systemState = systemState
-	
+
 	return systemState
 }
 
 // GenerateContext generates context from system state
 func (s *SystemState) GenerateContext() map[string]interface{} {
 	return map[string]interface{}{
-		"kanban_boards":  len(s.KanbanState.Boards),
-		"active_tasks":   len(s.KanbanState.ActiveTasks),
-		"rag_documents":  s.RAGState.IndexedCount,
-		"indexed_chunks": len(s.RAGState.Documents),
-		"active_agents":  len(s.ActiveAgents),
+		"kanban_boards":    len(s.KanbanState.Boards),
+		"active_tasks":     len(s.KanbanState.ActiveTasks),
+		"rag_documents":    s.RAGState.IndexedCount,
+		"indexed_chunks":   len(s.RAGState.Documents),
+		"active_agents":    len(s.ActiveAgents),
 		"active_workflows": len(s.ActiveWorkflows),
 	}
 }

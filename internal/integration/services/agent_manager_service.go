@@ -6,14 +6,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/agents"
-	"github.com/lancekrogers/guild/pkg/agents/backstory"
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/events"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/guild-framework/guild-core/pkg/agents"
+	"github.com/guild-framework/guild-core/pkg/agents/backstory"
+	"github.com/guild-framework/guild-core/pkg/config"
+	"github.com/guild-framework/guild-core/pkg/events"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/prompts/layered"
+	"github.com/guild-framework/guild-core/pkg/registry"
 )
 
 // AgentManagerService wraps the enhanced agent manager to integrate with the service framework

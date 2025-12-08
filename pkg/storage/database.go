@@ -17,8 +17,8 @@ import (
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 	_ "github.com/mattn/go-sqlite3"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/storage/db"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/storage/db"
 )
 
 //go:embed all:migrations/*.sql
@@ -43,8 +43,8 @@ func newDatabase(ctx context.Context, dbPath string) (*Database, error) {
 	}
 
 	// Check if this is a test database
-	isTestDb := strings.Contains(dbPath, "guild-test-") || 
-		strings.Contains(dbPath, "/tmp/") || 
+	isTestDb := strings.Contains(dbPath, "guild-test-") ||
+		strings.Contains(dbPath, "/tmp/") ||
 		strings.Contains(dbPath, "Test") ||
 		strings.Contains(dbPath, "/T/") ||
 		strings.Contains(dbPath, ":memory:")
@@ -143,8 +143,8 @@ func (d *Database) Migrate(ctx context.Context) error {
 	}
 
 	// Check if this is a test database
-	isTestDb := strings.Contains(d.dbPath, "guild-test-") || 
-		strings.Contains(d.dbPath, "/tmp/") || 
+	isTestDb := strings.Contains(d.dbPath, "guild-test-") ||
+		strings.Contains(d.dbPath, "/tmp/") ||
 		strings.Contains(d.dbPath, "Test") ||
 		strings.Contains(d.dbPath, "/T/") ||
 		strings.Contains(d.dbPath, ":memory:")
@@ -188,7 +188,7 @@ func (d *Database) Migrate(ctx context.Context) error {
 				err = m.Up()
 			}
 		}
-		
+
 		if err != nil && err != migrate.ErrNoChange {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to run migrations").
 				WithComponent("Database").

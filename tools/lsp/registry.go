@@ -4,8 +4,8 @@
 package lsp
 
 import (
-	"github.com/lancekrogers/guild/pkg/lsp"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/guild-framework/guild-core/pkg/lsp"
+	"github.com/guild-framework/guild-core/tools"
 )
 
 // RegisterAll registers all LSP tools with the given registry

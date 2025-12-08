@@ -10,9 +10,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/registry"
-	"github.com/lancekrogers/guild/pkg/suggestions"
+	"github.com/guild-framework/guild-core/pkg/agents/core"
+	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/guild-framework/guild-core/pkg/suggestions"
 )
 
 // ExampleChatWithSuggestions demonstrates how to use the integrated chat service

@@ -18,9 +18,9 @@ import (
 	"github.com/stretchr/testify/require"
 
 	// testutil provides testing utilities
-	"github.com/lancekrogers/guild/pkg/memory/rag"
-	"github.com/lancekrogers/guild/pkg/memory/vector"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/guild-framework/guild-core/pkg/memory/rag"
+	"github.com/guild-framework/guild-core/pkg/memory/vector"
+	"github.com/guild-framework/guild-core/pkg/observability"
 )
 
 // Type definitions are now in framework.go
@@ -213,7 +213,7 @@ func TestDocumentIndexingRetrieval_HappyPath(t *testing.T) {
 			// PHASE 4: Concurrent Search Performance Testing
 			t.Run("ConcurrentSearchPerformance", func(t *testing.T) {
 				concurrentQueries := 20 // Reduced from 50
-				queryWorkers := 5      // Reduced from 10
+				queryWorkers := 5       // Reduced from 10
 
 				concurrentResults := framework.ExecuteConcurrentSearchTest(index, concurrentQueries, queryWorkers)
 
@@ -320,8 +320,8 @@ func TestRAGSystemUnderLoad(t *testing.T) {
 	require.NoError(t, err)
 
 	// Load test parameters (reduced for faster testing)
-	concurrentUsers := 20  // Reduced from 100
-	queriesPerUser := 10   // Reduced from 50
+	concurrentUsers := 20            // Reduced from 100
+	queriesPerUser := 10             // Reduced from 50
 	testDuration := 30 * time.Second // Reduced from 5 minutes
 
 	logger.InfoContext(ctx, "Executing load test",

@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/guild-framework/guild-core/pkg/config"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 	"github.com/spf13/cobra"
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
 )
 
 // demoCmd represents the demo command
@@ -51,11 +51,11 @@ func runDemo(ctx context.Context) error {
 	fmt.Println()
 	fmt.Println("Available demos:")
 	fmt.Println("1. Multi-agent coordination")
-	fmt.Println("2. Task orchestration") 
+	fmt.Println("2. Task orchestration")
 	fmt.Println("3. Knowledge management")
 	fmt.Println()
 	fmt.Println("Run 'guild demo [demo-name]' to start a specific demo")
-	
+
 	return nil
 }
 
@@ -110,7 +110,7 @@ func runDemoCheck(ctx context.Context) error {
 
 	fmt.Println()
 	fmt.Println("🎉 Guild is ready for demos!")
-	
+
 	return nil
 }
 

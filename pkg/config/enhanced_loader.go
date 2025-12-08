@@ -10,9 +10,9 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/project/global"
-	"github.com/lancekrogers/guild/pkg/project/local"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/project/global"
+	"github.com/guild-framework/guild-core/pkg/project/local"
 )
 
 // EnhancedGuildConfig represents the merged configuration from global and local

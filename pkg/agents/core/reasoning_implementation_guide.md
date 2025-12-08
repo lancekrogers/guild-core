@@ -32,9 +32,9 @@ This guide provides step-by-step instructions for implementing and extending the
 // 1. Import required packages
 import (
     "context"
-    "github.com/lancekrogers/guild/pkg/agents/core"
-    "github.com/lancekrogers/guild/pkg/config"
-    "github.com/lancekrogers/guild/pkg/observability"
+    "github.com/guild-framework/guild-core/pkg/agents/core"
+    "github.com/guild-framework/guild-core/pkg/config"
+    "github.com/guild-framework/guild-core/pkg/observability"
 )
 
 // 2. Initialize observability

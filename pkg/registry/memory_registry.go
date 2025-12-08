@@ -6,9 +6,9 @@ package registry
 import (
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/memory/vector"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/memory"
+	"github.com/guild-framework/guild-core/pkg/memory/vector"
 )
 
 // DefaultMemoryRegistry implements the MemoryRegistry interface

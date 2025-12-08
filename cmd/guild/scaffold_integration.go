@@ -13,8 +13,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-    "github.com/guild-framework/guild-core/pkg/gerror"
-    localcli "github.com/guild-framework/guild-core/internal/scaffoldlite/cli"
+	localcli "github.com/guild-framework/guild-core/internal/scaffoldlite/cli"
+	"github.com/guild-framework/guild-core/pkg/gerror"
 )
 
 // ScaffoldIntegration provides scaffold integration with guild init
@@ -45,13 +45,13 @@ func (si *ScaffoldIntegration) ExecuteScaffoldInit(ctx context.Context, cmd *cob
 	if len(args) > 0 {
 		projectName = args[0]
 	}
-	
+
 	// Get current directory
 	outputDir, err := os.Getwd()
 	if err != nil {
 		return gerror.Wrap(err, "failed to get current directory")
 	}
-	
+
 	// Check for output directory flag from original command
 	if outputFlag := cmd.Flags().Lookup("output"); outputFlag != nil {
 		if flagValue := outputFlag.Value.String(); flagValue != "" && flagValue != "." {
@@ -62,13 +62,13 @@ func (si *ScaffoldIntegration) ExecuteScaffoldInit(ctx context.Context, cmd *cob
 			}
 		}
 	}
-	
+
 	// Check for template flag
 	templateName := ""
 	if templateFlag := cmd.Flags().Lookup("template"); templateFlag != nil {
 		templateName = templateFlag.Value.String()
 	}
-	
+
 	// Check for dry-run flag
 	dryRun := false
 	if dryRunFlag := cmd.Flags().Lookup("dry-run"); dryRunFlag != nil {
@@ -76,7 +76,7 @@ func (si *ScaffoldIntegration) ExecuteScaffoldInit(ctx context.Context, cmd *cob
 			dryRun = flag.value
 		}
 	}
-	
+
 	// Check for force flag
 	force := false
 	if forceFlag := cmd.Flags().Lookup("force"); forceFlag != nil {
@@ -84,7 +84,7 @@ func (si *ScaffoldIntegration) ExecuteScaffoldInit(ctx context.Context, cmd *cob
 			force = flag.value
 		}
 	}
-	
+
 	// Check for interactive flag
 	interactive := si.interactive
 	if interactiveFlag := cmd.Flags().Lookup("interactive"); interactiveFlag != nil {
@@ -92,7 +92,7 @@ func (si *ScaffoldIntegration) ExecuteScaffoldInit(ctx context.Context, cmd *cob
 			interactive = flag.value
 		}
 	}
-	
+
 	// Parse variables from flags
 	variables := make(map[string]interface{})
 	if varsFlag := cmd.Flags().Lookup("var"); varsFlag != nil {
@@ -104,24 +104,24 @@ func (si *ScaffoldIntegration) ExecuteScaffoldInit(ctx context.Context, cmd *cob
 			variables = parsedVars
 		}
 	}
-	
+
 	// Auto-detect template if not specified
-    if templateName == "" {
-        templateName = localcli.DetectTemplateFromContext(ctx, outputDir)
-    }
-	
+	if templateName == "" {
+		templateName = localcli.DetectTemplateFromContext(ctx, outputDir)
+	}
+
 	// Create CLI options
-    options := &localcli.InitOptions{
-        ProjectName:     projectName,
-        TemplateName:    templateName,
-        OutputDirectory: outputDir,
-        Variables:       variables,
-        DryRun:          dryRun,
-        Force:           force,
-        Interactive:     interactive,
-        Verbose:         si.verbose,
-    }
-	
+	options := &localcli.InitOptions{
+		ProjectName:     projectName,
+		TemplateName:    templateName,
+		OutputDirectory: outputDir,
+		Variables:       variables,
+		DryRun:          dryRun,
+		Force:           force,
+		Interactive:     interactive,
+		Verbose:         si.verbose,
+	}
+
 	// Show transition message
 	fmt.Println("🚀 Using enhanced scaffold-based initialization")
 	if si.verbose {
@@ -130,9 +130,9 @@ func (si *ScaffoldIntegration) ExecuteScaffoldInit(ctx context.Context, cmd *cob
 		fmt.Printf("   Interactive: %v\n", interactive)
 	}
 	fmt.Println()
-	
+
 	// Execute scaffolding
-    return localcli.ExecuteInit(ctx, options)
+	return localcli.ExecuteInit(ctx, options)
 }
 
 // AddScaffoldFlags adds scaffold-specific flags to a command
@@ -140,7 +140,7 @@ func (si *ScaffoldIntegration) AddScaffoldFlags(cmd *cobra.Command) {
 	if !si.enabled {
 		return
 	}
-	
+
 	cmd.Flags().String("template", "", "Template to use for initialization")
 	cmd.Flags().Bool("dry-run", false, "Preview what would be created without creating files")
 	cmd.Flags().Bool("force", false, "Overwrite existing files")
@@ -148,7 +148,7 @@ func (si *ScaffoldIntegration) AddScaffoldFlags(cmd *cobra.Command) {
 	cmd.Flags().Bool("interactive", si.interactive, "Interactive mode with prompts")
 	cmd.Flags().String("provider", "", "Default LLM provider for agents")
 	cmd.Flags().String("model", "", "Default model for agents")
-	
+
 	// Add scaffold-specific commands if needed
 	if listTemplatesCmd := si.createListTemplatesCmd(); listTemplatesCmd != nil {
 		cmd.AddCommand(listTemplatesCmd)
@@ -163,7 +163,7 @@ func (si *ScaffoldIntegration) createListTemplatesCmd() *cobra.Command {
 		Long:  `List all available templates that can be used with guild init.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
-            return localcli.ListTemplates(ctx)
+			return localcli.ListTemplates(ctx)
 		},
 	}
 }
@@ -173,19 +173,19 @@ func (si *ScaffoldIntegration) ShouldUseScaffold(ctx context.Context, args []str
 	if !si.enabled {
 		return false
 	}
-	
+
 	// Check for scaffold-specific flags
 	if len(args) > 0 {
 		for _, arg := range args {
 			if strings.HasPrefix(arg, "--template") ||
-			   strings.HasPrefix(arg, "--dry-run") ||
-			   strings.HasPrefix(arg, "--var") ||
-			   strings.HasPrefix(arg, "--list-templates") {
+				strings.HasPrefix(arg, "--dry-run") ||
+				strings.HasPrefix(arg, "--var") ||
+				strings.HasPrefix(arg, "--list-templates") {
 				return true
 			}
 		}
 	}
-	
+
 	// Default to scaffold for new installations
 	return true
 }
@@ -193,7 +193,7 @@ func (si *ScaffoldIntegration) ShouldUseScaffold(ctx context.Context, args []str
 // parseVariables parses key=value variable assignments
 func parseVariables(varStrings []string) (map[string]interface{}, error) {
 	variables := make(map[string]interface{})
-	
+
 	for _, varStr := range varStrings {
 		parts := strings.SplitN(varStr, "=", 2)
 		if len(parts) != 2 {
@@ -201,19 +201,19 @@ func parseVariables(varStrings []string) (map[string]interface{}, error) {
 				WithField("variable", varStr).
 				WithField("expected_format", "key=value")
 		}
-		
+
 		key := strings.TrimSpace(parts[0])
 		value := strings.TrimSpace(parts[1])
-		
+
 		if key == "" {
 			return nil, gerror.New("variable key cannot be empty").
 				WithField("variable", varStr)
 		}
-		
+
 		// Attempt to parse as different types
 		variables[key] = parseVariableValue(value)
 	}
-	
+
 	return variables, nil
 }
 
@@ -226,17 +226,17 @@ func parseVariableValue(value string) interface{} {
 	if value == "false" {
 		return false
 	}
-	
+
 	// Try integer
 	if intVal, err := strconv.Atoi(value); err == nil {
 		return intVal
 	}
-	
+
 	// Try float
 	if floatVal, err := strconv.ParseFloat(value, 64); err == nil {
 		return floatVal
 	}
-	
+
 	// Return as string
 	return value
 }
@@ -247,7 +247,7 @@ func getEnvBool(key string, defaultValue bool) bool {
 	if value == "" {
 		return defaultValue
 	}
-	
+
 	switch strings.ToLower(value) {
 	case "true", "1", "yes", "on", "enabled":
 		return true

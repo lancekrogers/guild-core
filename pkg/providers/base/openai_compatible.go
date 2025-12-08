@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
 )
 
 // OpenAICompatibleProvider implements AIProvider for OpenAI-compatible APIs
