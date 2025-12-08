@@ -1,6 +1,6 @@
 module github.com/guild-framework/guild-core
 
-go 1.23
+go 1.24.2
 
 require (
 	github.com/PuerkitoBio/goquery v1.10.3
