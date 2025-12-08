@@ -13,8 +13,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/guild-framework/guild-scaffold/pkg/scaffold/cli"
+    "github.com/guild-framework/guild-core/pkg/gerror"
+    localcli "github.com/guild-framework/guild-core/internal/scaffoldlite/cli"
 )
 
 // ScaffoldIntegration provides scaffold integration with guild init
@@ -106,21 +106,21 @@ func (si *ScaffoldIntegration) ExecuteScaffoldInit(ctx context.Context, cmd *cob
 	}
 	
 	// Auto-detect template if not specified
-	if templateName == "" {
-		templateName = cli.DetectTemplateFromContext(ctx, outputDir)
-	}
+    if templateName == "" {
+        templateName = localcli.DetectTemplateFromContext(ctx, outputDir)
+    }
 	
 	// Create CLI options
-	options := &cli.InitOptions{
-		ProjectName:     projectName,
-		TemplateName:    templateName,
-		OutputDirectory: outputDir,
-		Variables:       variables,
-		DryRun:          dryRun,
-		Force:           force,
-		Interactive:     interactive,
-		Verbose:         si.verbose,
-	}
+    options := &localcli.InitOptions{
+        ProjectName:     projectName,
+        TemplateName:    templateName,
+        OutputDirectory: outputDir,
+        Variables:       variables,
+        DryRun:          dryRun,
+        Force:           force,
+        Interactive:     interactive,
+        Verbose:         si.verbose,
+    }
 	
 	// Show transition message
 	fmt.Println("🚀 Using enhanced scaffold-based initialization")
@@ -132,7 +132,7 @@ func (si *ScaffoldIntegration) ExecuteScaffoldInit(ctx context.Context, cmd *cob
 	fmt.Println()
 	
 	// Execute scaffolding
-	return cli.ExecuteInit(ctx, options)
+    return localcli.ExecuteInit(ctx, options)
 }
 
 // AddScaffoldFlags adds scaffold-specific flags to a command
@@ -163,7 +163,7 @@ func (si *ScaffoldIntegration) createListTemplatesCmd() *cobra.Command {
 		Long:  `List all available templates that can be used with guild init.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			ctx := cmd.Context()
-			return cli.ListTemplates(ctx)
+            return localcli.ListTemplates(ctx)
 		},
 	}
 }

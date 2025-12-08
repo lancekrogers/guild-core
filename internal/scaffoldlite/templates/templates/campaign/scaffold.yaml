@@ -1,0 +1,52 @@
+scaffold_version: "1.0"
+templates_dir: ""
+
+vars:
+  project_name: "guild-campaign"
+  project_description: "A Guild framework campaign workspace"
+  author_name: ""
+  author_email: ""
+  coordination_style: "collaborative"
+  communication_pattern: "broadcast"
+  team_size: 3
+  track_quality: true
+  primary_provider: "anthropic"
+  default_model: "claude-3-5-sonnet-20241022"
+  default_temperature: 0.3
+  default_max_tokens: 4000
+
+files:
+  - path: ".campaign/campaign.yaml"
+    template: "campaign.yml.tmpl"
+  
+  - path: ".campaign/guilds/elena_guild.yaml"
+    template: "guild.yml.tmpl"
+    with:
+      guild_name: "elena_guild"
+      guild_role: "Guild Master"
+      agent_count: 3
+  
+  - path: "commissions/.gitkeep"
+    template: "gitkeep.tmpl"
+  
+  - path: "corpus/.gitkeep" 
+    template: "gitkeep.tmpl"
+    
+  - path: "kanban/todo/.gitkeep"
+    template: "gitkeep.tmpl"
+    
+  - path: "kanban/in-progress/.gitkeep"
+    template: "gitkeep.tmpl"
+    
+  - path: "kanban/done/.gitkeep"
+    template: "gitkeep.tmpl"
+    
+  - path: "README.md"
+    template: "README.md.tmpl"
+    
+  - path: "docs/campaign-setup.md"
+    template: "campaign-setup.md.tmpl"
+    
+  - path: ".gitignore"
+    template: "gitignore.tmpl"
+

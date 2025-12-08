@@ -1,8 +1,6 @@
-module github.com/lancekrogers/guild
+module github.com/guild-framework/guild-core
 
-go 1.24.2
-
-toolchain go1.24.4
+go 1.23
 
 require (
 	github.com/PuerkitoBio/goquery v1.10.3
@@ -170,8 +168,6 @@ require (
 	modernc.org/memory v1.9.1 // indirect
 )
 
-require github.com/guild-framework/guild-scaffold v0.0.0
-
-replace github.com/guild-framework/guild-scaffold => ../guild-scaffold
+// Scaffold integration is now internalized (see internal/scaffoldlite)
 
 // replace github.com/lancekrogers/claude-code-go => ./vendor/claude-code-go

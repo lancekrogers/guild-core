@@ -1,0 +1,53 @@
+# Campaign Setup Guide
+
+## Project: {{ .project_name }}
+
+{{ if .project_description -}}
+**Description:** {{ .project_description }}
+{{ end }}
+
+{{ if .author_name -}}
+**Author:** {{ .author_name }}{{ if .author_email }} ({{ .author_email }}){{ end }}
+{{ end }}
+
+## Campaign Configuration
+
+- **Coordination Style:** {{ .coordination_style }}
+- **Communication Pattern:** {{ .communication_pattern }}
+- **Team Size:** {{ .team_size }}
+- **Quality Tracking:** {{ if .track_quality }}Enabled{{ else }}Disabled{{ end }}
+
+## LLM Configuration
+
+- **Primary Provider:** {{ .primary_provider }}
+- **Default Model:** {{ .default_model }}
+- **Temperature:** {{ .default_temperature }}
+- **Max Tokens:** {{ .default_max_tokens }}
+
+## Next Steps
+
+1. Review the campaign configuration in `.campaign/campaign.yaml`
+2. Customize guild configurations in `.campaign/guilds/`
+3. Create your first commission:
+   ```bash
+   guild commission create "My First Project"
+   ```
+4. Start the campaign:
+   ```bash
+   guild campaign start
+   ```
+
+## Directory Structure
+
+- `.campaign/` - Campaign workspace configuration
+- `commissions/` - Project specifications and requirements
+- `corpus/` - Knowledge base and documentation
+- `kanban/` - Task tracking and workflow management
+- `docs/` - Campaign documentation
+
+## Getting Help
+
+- Run `guild help` for available commands
+- Check `docs/` for detailed documentation
+- Use `guild status` to monitor campaign progress
+
