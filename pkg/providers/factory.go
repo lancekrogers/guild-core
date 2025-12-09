@@ -7,6 +7,7 @@ import (
     "os"
 
     "github.com/guild-framework/guild-core/pkg/gerror"
+    "github.com/guild-framework/guild-core/pkg/providers/claudecode"
 )
 
 // Factory creates LLM clients
@@ -33,7 +34,14 @@ func NewFactory() *Factory {
 // which handles its own authentication through the /login command. The apiKey parameter
 // is repurposed as the binary path due to interface constraints.
 func (f *Factory) CreateClient(providerType ProviderType, apiKey string, model string) (LLMClient, error) {
-    // Use the V2 factory to create AIProvider,
+    // Special case for Claude Code which uses claude-code-go SDK
+    if providerType == ProviderClaudeCode {
+        // apiKey parameter is repurposed as binary path for ClaudeCode
+        // Empty string defaults to "claude" (assumes claude CLI is in PATH)
+        return claudecode.NewClient(apiKey, model), nil
+    }
+
+    // For all other providers, use the V2 factory to create AIProvider,
     // then wrap it with the LLMClient adapter
 	aiProvider, err := f.v2Factory.CreateAIProvider(providerType, apiKey)
 	if err != nil {

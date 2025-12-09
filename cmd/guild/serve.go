@@ -222,11 +222,11 @@ func runServe(cmd *cobra.Command, args []string) error {
 			},
 		},
     Providers: registry.ProviderConfig{
-        DefaultProvider: "openai",
+        DefaultProvider: "claudecode",
         Providers: map[string]interface{}{
-            "openai": map[string]interface{}{
-                "model":      "gpt-4o-mini",
-                "api_key_env": "OPENAI_API_KEY",
+            "claudecode": map[string]interface{}{
+                "model":    "sonnet",
+                "bin_path": "claude-code",
             },
         },
     },

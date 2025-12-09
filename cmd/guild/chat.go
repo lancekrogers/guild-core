@@ -94,8 +94,8 @@ func checkGuildInitialized(cmd *cobra.Command, args []string) error {
 			fmt.Println("🎯 Starting Guild initialization...")
 			fmt.Println()
 
-			// Run guild init in quick mode
-			initCmd := exec.Command(os.Args[0], "init", "--quick")
+            // Run guild init with sensible defaults
+            initCmd := exec.Command(os.Args[0], "init", "--force")
 			initCmd.Stdout = os.Stdout
 			initCmd.Stderr = os.Stderr
 			initCmd.Stdin = os.Stdin
