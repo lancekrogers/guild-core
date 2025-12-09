@@ -48,18 +48,18 @@ func (si *ScaffoldIntegration) ExecuteScaffoldInit(ctx context.Context, cmd *cob
 
 	// Get current directory
 	outputDir, err := os.Getwd()
-	if err != nil {
-		return gerror.Wrap(err, "failed to get current directory")
-	}
+    if err != nil {
+        return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get current directory")
+    }
 
 	// Check for output directory flag from original command
 	if outputFlag := cmd.Flags().Lookup("output"); outputFlag != nil {
 		if flagValue := outputFlag.Value.String(); flagValue != "" && flagValue != "." {
 			outputDir, err = filepath.Abs(flagValue)
-			if err != nil {
-				return gerror.Wrap(err, "invalid output directory").
-					WithField("path", flagValue)
-			}
+            if err != nil {
+                return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "invalid output directory").
+                    WithDetails("path", flagValue)
+            }
 		}
 	}
 
@@ -98,9 +98,9 @@ func (si *ScaffoldIntegration) ExecuteScaffoldInit(ctx context.Context, cmd *cob
 	if varsFlag := cmd.Flags().Lookup("var"); varsFlag != nil {
 		if varSlice, ok := varsFlag.Value.(*stringSliceValue); ok {
 			parsedVars, err := parseVariables(varSlice.value)
-			if err != nil {
-				return gerror.Wrap(err, "failed to parse variables")
-			}
+            if err != nil {
+                return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to parse variables")
+            }
 			variables = parsedVars
 		}
 	}
@@ -196,19 +196,19 @@ func parseVariables(varStrings []string) (map[string]interface{}, error) {
 
 	for _, varStr := range varStrings {
 		parts := strings.SplitN(varStr, "=", 2)
-		if len(parts) != 2 {
-			return nil, gerror.New("invalid variable format").
-				WithField("variable", varStr).
-				WithField("expected_format", "key=value")
-		}
+        if len(parts) != 2 {
+            return nil, gerror.New(gerror.ErrCodeInvalidInput, "invalid variable format", nil).
+                WithDetails("variable", varStr).
+                WithDetails("expected_format", "key=value")
+        }
 
 		key := strings.TrimSpace(parts[0])
 		value := strings.TrimSpace(parts[1])
 
-		if key == "" {
-			return nil, gerror.New("variable key cannot be empty").
-				WithField("variable", varStr)
-		}
+        if key == "" {
+            return nil, gerror.New(gerror.ErrCodeInvalidInput, "variable key cannot be empty", nil).
+                WithDetails("variable", varStr)
+        }
 
 		// Attempt to parse as different types
 		variables[key] = parseVariableValue(value)

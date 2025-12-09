@@ -221,15 +221,15 @@ func runServe(cmd *cobra.Command, args []string) error {
 				"timeout": "30s",
 			},
 		},
-		Providers: registry.ProviderConfig{
-			DefaultProvider: "claudecode",
-			Providers: map[string]interface{}{
-				"claudecode": map[string]interface{}{
-					"model":    "sonnet",
-					"bin_path": "claude-code",
-				},
-			},
-		},
+    Providers: registry.ProviderConfig{
+        DefaultProvider: "openai",
+        Providers: map[string]interface{}{
+            "openai": map[string]interface{}{
+                "model":      "gpt-4o-mini",
+                "api_key_env": "OPENAI_API_KEY",
+            },
+        },
+    },
 		Memory: registry.MemoryConfig{
 			DefaultMemoryStore: "sqlite",
 			DefaultVectorStore: "chromem",
