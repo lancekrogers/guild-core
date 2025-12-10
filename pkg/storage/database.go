@@ -13,9 +13,9 @@ import (
 	"strings"
 
 	migrate "github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/sqlite3"
+	"github.com/golang-migrate/migrate/v4/database/sqlite"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 
 	"github.com/guild-framework/guild-core/pkg/gerror"
 	"github.com/guild-framework/guild-core/pkg/storage/db"
@@ -72,8 +72,8 @@ func newDatabase(ctx context.Context, dbPath string) (*Database, error) {
 			WithOperation("newDatabase")
 	}
 
-	// Open SQLite database
-	sqlDB, err := sql.Open("sqlite3", fmt.Sprintf("%s?_foreign_keys=on", dbPath))
+	// Open SQLite database (modernc.org/sqlite driver)
+	sqlDB, err := sql.Open("sqlite", fmt.Sprintf("%s?_foreign_keys=on", dbPath))
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "failed to open database").
 			WithComponent("Database").
@@ -118,8 +118,8 @@ func (d *Database) Migrate(ctx context.Context) error {
 		return nil
 	}
 
-	// Create migration driver
-	driver, err := sqlite3.WithInstance(d.db, &sqlite3.Config{})
+	// Create migration driver (modernc driver)
+	driver, err := sqlite.WithInstance(d.db, &sqlite.Config{})
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create migration driver").
 			WithComponent("Database").
@@ -135,7 +135,7 @@ func (d *Database) Migrate(ctx context.Context) error {
 	}
 
 	// Create migrate instance
-	m, err := migrate.NewWithInstance("file", source, "sqlite3", driver)
+	m, err := migrate.NewWithInstance("file", source, "sqlite", driver)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create migrate instance").
 			WithComponent("Database").
@@ -155,13 +155,13 @@ func (d *Database) Migrate(ctx context.Context) error {
 		_, dropErr := d.db.ExecContext(ctx, "DROP TABLE IF EXISTS schema_migrations")
 		if dropErr == nil {
 			// Recreate migration instance after dropping table
-			driver, err = sqlite3.WithInstance(d.db, &sqlite3.Config{})
+			driver, err = sqlite.WithInstance(d.db, &sqlite.Config{})
 			if err != nil {
 				return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to recreate migration driver after drop").
 					WithComponent("Database").
 					WithOperation("Migrate")
 			}
-			m, err = migrate.NewWithInstance("file", source, "sqlite3", driver)
+			m, err = migrate.NewWithInstance("file", source, "sqlite", driver)
 			if err != nil {
 				return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to recreate migrate instance after drop").
 					WithComponent("Database").

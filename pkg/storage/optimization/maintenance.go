@@ -288,7 +288,7 @@ func (m *MaintenanceManager) CreateBackup(ctx context.Context) (string, error) {
 	event.Details["backup_path"] = backupPath
 
 	// Create backup using SQLite backup API
-	backupDB, err := sql.Open("sqlite3", backupPath)
+	backupDB, err := sql.Open("sqlite", backupPath)
 	if err != nil {
 		event.Success = false
 		event.Error = err

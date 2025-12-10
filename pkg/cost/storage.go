@@ -11,7 +11,7 @@ import (
 
 	"github.com/guild-framework/guild-core/pkg/gerror"
 	"github.com/guild-framework/guild-core/pkg/observability"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 // CostStorage handles persistent storage of cost data
@@ -24,8 +24,8 @@ func NewCostStorage(ctx context.Context) (*CostStorage, error) {
 	ctx = observability.WithComponent(ctx, "cost.storage")
 	ctx = observability.WithOperation(ctx, "NewCostStorage")
 
-	// Use in-memory SQLite for cost storage
-	db, err := sql.Open("sqlite3", ":memory:?_foreign_keys=on")
+	// Use in-memory SQLite for cost storage (modernc driver)
+	db, err := sql.Open("sqlite", ":memory:?_foreign_keys=on")
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize database").
 			WithComponent("cost.storage").

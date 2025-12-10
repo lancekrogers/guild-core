@@ -131,26 +131,31 @@ func listKanbanBoards(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
 
 	// Auto-start daemon unless --no-daemon flag is set
-	if !kanbanNoDaemon {
-		if !daemon.IsReachable(ctx) {
-			fmt.Println("🚀 Starting Guild server...")
-			if err := daemon.EnsureRunning(ctx); err != nil {
-				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
-					WithComponent("cli").
-					WithOperation("kanban.list.daemon_start")
-			}
-			// Give the server a moment to fully initialize
-			time.Sleep(500 * time.Millisecond)
-		}
-	}
+    if !kanbanNoDaemon {
+        if !daemon.IsReachable(ctx) {
+            fmt.Println("🚀 Starting Guild server...")
+            if err := daemon.EnsureRunning(ctx); err != nil {
+                return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
+                    WithComponent("cli").
+                    WithOperation("kanban.list.daemon_start")
+            }
+            // Wait up to ~5s for the daemon to be reachable
+            for i := 0; i < 10; i++ {
+                if daemon.IsReachable(ctx) {
+                    break
+                }
+                time.Sleep(500 * time.Millisecond)
+            }
+        }
+    }
 
 	// Check if server is reachable
-	if !daemon.IsReachable(ctx) {
-		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
-			WithComponent("cli").
-			WithOperation("kanban.list").
-			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
-	}
+    if !daemon.IsReachable(ctx) {
+        return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
+            WithComponent("cli").
+            WithOperation("kanban.list").
+            WithDetails("help", "Start the daemon first: 'guild serve --foreground', then run 'guild kanban list --no-daemon'")
+    }
 
 	// Initialize kanban manager with storage
 	kanbanMgr, err := initializeKanbanManager(ctx)
@@ -212,25 +217,30 @@ func viewKanbanBoard(cmd *cobra.Command, args []string) error {
 
 	// Auto-start daemon unless --no-daemon flag is set
 	if !kanbanNoDaemon {
-		if !daemon.IsReachable(ctx) {
-			fmt.Println("🚀 Starting Guild server...")
-			if err := daemon.EnsureRunning(ctx); err != nil {
-				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
-					WithComponent("cli").
-					WithOperation("kanban.view.daemon_start")
-			}
-			// Give the server a moment to fully initialize
-			time.Sleep(500 * time.Millisecond)
-		}
-	}
+        if !daemon.IsReachable(ctx) {
+            fmt.Println("🚀 Starting Guild server...")
+            if err := daemon.EnsureRunning(ctx); err != nil {
+                return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
+                    WithComponent("cli").
+                    WithOperation("kanban.view.daemon_start")
+            }
+            // Wait up to ~5s for the daemon to be reachable
+            for i := 0; i < 10; i++ {
+                if daemon.IsReachable(ctx) {
+                    break
+                }
+                time.Sleep(500 * time.Millisecond)
+            }
+        }
+    }
 
 	// Check if server is reachable
-	if !daemon.IsReachable(ctx) {
-		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
-			WithComponent("cli").
-			WithOperation("kanban.view").
-			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
-	}
+    if !daemon.IsReachable(ctx) {
+        return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
+            WithComponent("cli").
+            WithOperation("kanban.view").
+            WithDetails("help", "Start: 'guild serve --foreground', then 'guild kanban view --no-daemon' ")
+    }
 
 	// Determine board ID
 	boardID := "main-board" // Default board
@@ -298,25 +308,29 @@ func createKanbanBoard(cmd *cobra.Command, args []string) error {
 
 	// Auto-start daemon unless --no-daemon flag is set
 	if !kanbanNoDaemon {
-		if !daemon.IsReachable(ctx) {
-			fmt.Println("🚀 Starting Guild server...")
-			if err := daemon.EnsureRunning(ctx); err != nil {
-				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
-					WithComponent("cli").
-					WithOperation("kanban.create.daemon_start")
-			}
-			// Give the server a moment to fully initialize
-			time.Sleep(500 * time.Millisecond)
-		}
-	}
+        if !daemon.IsReachable(ctx) {
+            fmt.Println("🚀 Starting Guild server...")
+            if err := daemon.EnsureRunning(ctx); err != nil {
+                return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
+                    WithComponent("cli").
+                    WithOperation("kanban.create.daemon_start")
+            }
+            for i := 0; i < 10; i++ {
+                if daemon.IsReachable(ctx) {
+                    break
+                }
+                time.Sleep(500 * time.Millisecond)
+            }
+        }
+    }
 
 	// Check if server is reachable
-	if !daemon.IsReachable(ctx) {
-		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
-			WithComponent("cli").
-			WithOperation("kanban.create").
-			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
-	}
+    if !daemon.IsReachable(ctx) {
+        return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
+            WithComponent("cli").
+            WithOperation("kanban.create").
+            WithDetails("help", "Start: 'guild serve --foreground', then 'guild kanban create --no-daemon' ")
+    }
 
 	name := args[0]
 	description := "Kanban board for tracking tasks"

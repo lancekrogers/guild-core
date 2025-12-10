@@ -203,53 +203,71 @@ func runServe(cmd *cobra.Command, args []string) error {
 			WithOperation("serve.run")
 	}
 
-	// Initialize registry with minimal working configuration
-	reg := registry.NewComponentRegistry()
-	logger.InfoContext(ctx, "Initializing component registry")
-	registryConfig := &registry.Config{
-		Agents: registry.AgentConfigYaml{
-			DefaultType: "worker",
-			Types: map[string]interface{}{
-				"worker": map[string]interface{}{
-					"enabled": true,
-				},
-			},
-		},
-		Tools: registry.ToolConfig{
-			EnabledTools: []string{"file", "shell", "http"},
-			Settings: map[string]interface{}{
-				"timeout": "30s",
-			},
-		},
-    Providers: registry.ProviderConfig{
-        DefaultProvider: "claudecode",
-        Providers: map[string]interface{}{
-            "claudecode": map[string]interface{}{
-                "model":    "sonnet",
-                "bin_path": "claude-code",
+    // Initialize registry with configuration, preferring YAML from .campaign
+    reg := registry.NewComponentRegistry()
+    logger.InfoContext(ctx, "Initializing component registry")
+
+    // Start with a minimal working config
+    registryConfig := &registry.Config{
+        Agents: registry.AgentConfigYaml{
+            DefaultType: "worker",
+            Types: map[string]interface{}{
+                "worker": map[string]interface{}{
+                    "enabled": true,
+                },
             },
         },
-    },
-		Memory: registry.MemoryConfig{
-			DefaultMemoryStore: "sqlite",
-			DefaultVectorStore: "chromem",
-			Stores: map[string]interface{}{
-				"sqlite": map[string]interface{}{
-					"path": "./.campaign/memory.db",
-				},
-				"chromem": map[string]interface{}{
-					"persistence_path": "./.campaign/vectors",
-					"dimension":        1536,
-				},
-			},
-		},
-	}
+        Tools: registry.ToolConfig{
+            EnabledTools: []string{"file", "shell", "http"},
+            Settings: map[string]interface{}{
+                "timeout": "30s",
+            },
+        },
+        Providers: registry.ProviderConfig{
+            DefaultProvider: "claudecode",
+            Providers: map[string]interface{}{
+                "claudecode": map[string]interface{}{
+                    "model":    "sonnet",
+                    "bin_path": "claude-code",
+                },
+            },
+        },
+        Memory: registry.MemoryConfig{
+            DefaultMemoryStore: "sqlite",
+            DefaultVectorStore: "chromem",
+            Stores: map[string]interface{}{
+                "sqlite": map[string]interface{}{
+                    "path": "./.campaign/memory.db",
+                },
+                "chromem": map[string]interface{}{
+                    "persistence_path": "./.campaign/vectors",
+                    "dimension":        1536,
+                },
+            },
+        },
+    }
 
-	if err := reg.Initialize(ctx, *registryConfig); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize registry").
-			WithComponent("cli").
-			WithOperation("serve.run")
-	}
+    // Attempt to load provider/memory config from YAML
+    if cfgPath := filepath.Join(cwd, ".campaign", "campaign.yaml"); true {
+        if data, err := os.ReadFile(cfgPath); err == nil && len(data) > 0 {
+            if yamlCfg, err := registry.LoadConfigFromBytes(data); err == nil {
+                // Overlay providers when present
+                if yamlCfg.Providers.DefaultProvider != "" || len(yamlCfg.Providers.Providers) > 0 {
+                    registryConfig.Providers = yamlCfg.Providers
+                }
+                // Overlay memory when present
+                if yamlCfg.Memory.DefaultMemoryStore != "" || yamlCfg.Memory.DefaultVectorStore != "" || len(yamlCfg.Memory.Stores) > 0 {
+                    registryConfig.Memory = yamlCfg.Memory
+                }
+            }
+        }
+    }
+
+    if err := reg.Initialize(ctx, *registryConfig); err != nil {
+        return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize registry").
+            WithComponent("cli").
+            WithOperation("serve.run")
+    }
 
 	// Create event bus using the unified events package
 	unifiedEventBus := events.NewMemoryEventBusWithDefaults()
