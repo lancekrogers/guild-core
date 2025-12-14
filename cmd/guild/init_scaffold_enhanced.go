@@ -204,9 +204,9 @@ func handleListTemplatesRequest(ctx context.Context) error {
 	fmt.Println("📋 Available Templates:")
 	fmt.Println("(Template listing requires scaffold integration)")
 
-    // TODO: Implement template listing by importing scaffold CLI
-    return gerror.New(gerror.ErrCodeNotImplemented, "template listing not yet implemented", nil).
-        WithDetails("suggestion", "use scaffold CLI directly for now")
+	// TODO: Implement template listing by importing scaffold CLI
+	return gerror.New(gerror.ErrCodeNotImplemented, "template listing not yet implemented", nil).
+		WithDetails("suggestion", "use scaffold CLI directly for now")
 }
 
 // IntegrateScaffoldWithExistingInit integrates scaffold with existing init command

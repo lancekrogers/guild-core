@@ -102,7 +102,7 @@ func (p *yamlParser) parseWithTimeout(ctx context.Context, data []byte, filename
 }
 
 func (p *yamlParser) parseYAML(data []byte, filename string) (*Recipe, error) {
-    // Tree-format parsing is not included in scaffoldlite; use standard YAML parsing.
+	// Tree-format parsing is not included in scaffoldlite; use standard YAML parsing.
 	var recipe Recipe
 	decoder := yaml.NewDecoder(bytes.NewReader(data))
 	decoder.KnownFields(p.options.StrictMode)
