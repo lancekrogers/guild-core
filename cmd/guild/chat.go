@@ -15,6 +15,7 @@ import (
 	"github.com/spf13/cobra"
 
 	chatui "github.com/guild-framework/guild-core/internal/ui/chat"
+	chatui "github.com/guild-framework/guild-core/internal/ui/chat"
 	"github.com/guild-framework/guild-core/pkg/campaign"
 	"github.com/guild-framework/guild-core/pkg/config"
 	"github.com/guild-framework/guild-core/pkg/gerror"
@@ -94,8 +95,8 @@ func checkGuildInitialized(cmd *cobra.Command, args []string) error {
 			fmt.Println("🎯 Starting Guild initialization...")
 			fmt.Println()
 
-            // Run guild init with sensible defaults
-            initCmd := exec.Command(os.Args[0], "init", "--force")
+			// Run guild init with sensible defaults
+			= exec.Command(os.Args[0], "init", "--force")
 			initCmd.Stdout = os.Stdout
 			initCmd.Stderr = os.Stderr
 			initCmd.Stdin = os.Stdin
@@ -200,7 +201,28 @@ func runChat(cmd *cobra.Command, args []string) error {
 		userID = "default"
 	}
 
-	// Note: Daemon connection is now handled inside the chat app
+	// Ensure daemon is running (auto-start with retries for a smooth UX)
+	if !daemon.IsReachable(ctx) {
+		fmt.Println("🚀 Starting Guild server...")
+		if err := daemon.EnsureRunning(ctx); err != nil {
+			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
+				WithComponent("cli").
+				WithOperation("chat.daemon_start")
+		}
+		for i := 0; i < 10; i++ { // wait up to ~5s
+			if daemon.IsReachable(ctx) {
+				break
+			}
+			time.Sleep(500 * time.Millisecond)
+		}
+	}
+
+	if !daemon.IsReachable(ctx) {
+		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
+			WithComponent("cli").
+			WithOperation("chat.preflight").
+			WithDetails("help", "Start the daemon first: 'guild serve --foreground' then run 'guild chat'")
+	}
 
 	// Initialize registry
 	reg := registry.NewComponentRegistry()

@@ -2,11 +2,11 @@
 # https://just.systems/man/
 
 # Import modules
-mod docker 'just/docker.just'
+mod docker '.justfiles/docker.just'
 
 # Default recipe - show available commands
 default:
-    @just --list
+    @just --list --unsorted
 
 # ============================================================================
 # Main Build Commands
@@ -158,52 +158,3 @@ ci-test:
 # Run CI integration tests (no color output)
 ci-integration:
     @go run ./internal/buildutil --no-color integration
-
-# ============================================================================
-# Shortcuts
-# ============================================================================
-
-# Common shortcuts
-alias t := test
-alias i := integration
-alias b := build
-alias c := clean
-
-# Docker shortcuts (using full module path)
-d:
-    @just docker shell
-    
-dt:
-    @just docker test
-    
-di:
-    @just docker integration
-
-# ============================================================================
-# Help
-# ============================================================================
-
-# Show detailed help
-help:
-    @echo "Guild Framework Build System"
-    @echo "============================"
-    @echo ""
-    @echo "Main Commands:"
-    @echo "  just build         - Build Guild binary"
-    @echo "  just test          - Run unit tests"
-    @echo "  just integration   - Run integration tests"
-    @echo "  just all           - Run all tests"
-    @echo "  just install       - Install Guild locally"
-    @echo ""
-    @echo "Docker Commands:"
-    @echo "  just docker shell  - Interactive Docker shell"
-    @echo "  just docker test   - Run tests in Docker"
-    @echo "  just docker init   - Test guild init workflow"
-    @echo ""
-    @echo "Shortcuts:"
-    @echo "  just t            - Run tests"
-    @echo "  just b            - Build"
-    @echo "  just d            - Docker shell"
-    @echo ""
-    @echo "For full list: just --list"
-    @echo "For Docker commands: just docker --list"
