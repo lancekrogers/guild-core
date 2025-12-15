@@ -552,7 +552,7 @@ func (f *DevToolsTestFramework) GenerateRealisticCodebase(profile CodebaseProfil
 	}
 
 	// Create root directory
-	err := os.MkdirAll(codebase.RootPath, 0755)
+	err := os.MkdirAll(codebase.RootPath, 0o755)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeIO, "failed to create codebase root").
 			WithComponent("dev-tools").
@@ -1268,7 +1268,7 @@ func (f *DevToolsTestFramework) createPhysicalFile(rootPath string, file Codebas
 	dir := filepath.Dir(fullPath)
 
 	// Create directory if it doesn't exist
-	err := os.MkdirAll(dir, 0755)
+	err := os.MkdirAll(dir, 0o755)
 	if err != nil {
 		return err
 	}
@@ -1277,7 +1277,7 @@ func (f *DevToolsTestFramework) createPhysicalFile(rootPath string, file Codebas
 	content := f.generateFileContent(file)
 
 	// Write file
-	return os.WriteFile(fullPath, []byte(content), 0644)
+	return os.WriteFile(fullPath, []byte(content), 0o644)
 }
 
 func (f *DevToolsTestFramework) generateFileContent(file CodebaseFile) string {

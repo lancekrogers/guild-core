@@ -225,7 +225,6 @@ func (f *EnhancedAgentFactory) CreateFromRegistry(
 			commissionManager,
 			costManager,
 		)
-
 		if err != nil {
 			logger.WithError(err).ErrorContext(ctx, "Failed to create agent",
 				"agent_id", cfg.ID)

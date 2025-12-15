@@ -32,7 +32,7 @@ func TestRealToolExecution(t *testing.T) {
 
 		// Create a test file
 		testFile := filepath.Join(tmpDir, "test.txt")
-		err = os.WriteFile(testFile, []byte("Hello from Guild!"), 0644)
+		err = os.WriteFile(testFile, []byte("Hello from Guild!"), 0o644)
 		require.NoError(t, err)
 
 		// Setup
@@ -79,7 +79,7 @@ func TestRealToolExecution(t *testing.T) {
 		// Create test files
 		for i := 0; i < 3; i++ {
 			filename := filepath.Join(tmpDir, "test"+string(rune('0'+i))+".go")
-			err = os.WriteFile(filename, []byte("package test"), 0644)
+			err = os.WriteFile(filename, []byte("package test"), 0o644)
 			require.NoError(t, err)
 		}
 

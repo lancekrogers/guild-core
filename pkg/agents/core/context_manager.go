@@ -139,7 +139,6 @@ func (cm *ContextManager) AddMessage(ctx context.Context, role, content string, 
 
 // manageContextOverflow handles context window overflow
 func (cm *ContextManager) manageContextOverflow(ctx context.Context, newMessageTokens int) error {
-
 	switch cm.resetStrategy {
 	case "truncate":
 		return cm.truncateContext(ctx, newMessageTokens)

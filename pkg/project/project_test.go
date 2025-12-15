@@ -18,10 +18,10 @@ func TestFindProjectRoot(t *testing.T) {
 	guildDir := filepath.Join(projectDir, ".campaign")
 
 	// Create directories
-	if err := os.MkdirAll(subDir, 0755); err != nil {
+	if err := os.MkdirAll(subDir, 0o755); err != nil {
 		t.Fatalf("Failed to create test directories: %v", err)
 	}
-	if err := os.MkdirAll(guildDir, 0755); err != nil {
+	if err := os.MkdirAll(guildDir, 0o755); err != nil {
 		t.Fatalf("Failed to create .campaign directory: %v", err)
 	}
 
@@ -77,7 +77,7 @@ func TestIsInitialized(t *testing.T) {
 
 	// Create .campaign directory
 	guildDir := filepath.Join(tempDir, ".campaign")
-	if err := os.MkdirAll(guildDir, 0755); err != nil {
+	if err := os.MkdirAll(guildDir, 0o755); err != nil {
 		t.Fatalf("Failed to create .campaign directory: %v", err)
 	}
 

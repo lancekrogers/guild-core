@@ -378,7 +378,6 @@ func (se *SessionExporter) exportHTML(data *ExportData, opts ExportOptions) ([]b
 			return template.CSS(css)
 		},
 	}).Parse(tmplStr)
-
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeParsing, "failed to parse HTML template")
 	}
@@ -712,7 +711,7 @@ func (se *SessionExporter) ExportSessions(sessions []*Session, format ExportForm
 
 	// For multiple sessions, create a combined export
 	var allMessages []Message
-	var combinedMetadata = make(map[string]interface{})
+	combinedMetadata := make(map[string]interface{})
 
 	for _, session := range sessions {
 		allMessages = append(allMessages, session.Messages...)

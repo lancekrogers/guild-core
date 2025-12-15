@@ -306,7 +306,7 @@ func LoadServiceConfig(path string) (*ServiceConfig, error) {
 func SaveServiceConfig(config *ServiceConfig, path string) error {
 	// Ensure directory exists
 	dir := filepath.Dir(path)
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create config directory").
 			WithComponent("service-config")
 	}
@@ -320,7 +320,7 @@ func SaveServiceConfig(config *ServiceConfig, path string) error {
 
 	// Write atomically
 	tmpPath := path + ".tmp"
-	if err := os.WriteFile(tmpPath, data, 0644); err != nil {
+	if err := os.WriteFile(tmpPath, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to write config file").
 			WithComponent("service-config")
 	}

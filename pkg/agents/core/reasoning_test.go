@@ -265,7 +265,6 @@ func TestReasoningExtractor(t *testing.T) {
 		stats := extractor.GetStats()
 		assert.Greater(t, stats["cache_hit_rate"].(float64), 0.0)
 	})
-
 }
 
 func TestReasoningChainBuilder(t *testing.T) {
@@ -555,7 +554,6 @@ func TestPatternLearning(t *testing.T) {
 			assert.NotNil(t, output)
 		}
 	})
-
 }
 
 func TestReasoningStorage(t *testing.T) {

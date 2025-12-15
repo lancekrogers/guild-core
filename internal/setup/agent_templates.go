@@ -134,7 +134,7 @@ func (g *AgentTemplateGenerator) GenerateAgentFile(ctx context.Context, projectP
 
 	// Ensure agents directory exists
 	agentsDir := filepath.Join(projectPath, paths.DefaultCampaignDir, "agents")
-	if err := os.MkdirAll(agentsDir, 0755); err != nil {
+	if err := os.MkdirAll(agentsDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
 			WithComponent("AgentTemplateGenerator").
 			WithOperation("GenerateAgentFile")
@@ -153,7 +153,7 @@ func (g *AgentTemplateGenerator) GenerateAgentFile(ctx context.Context, projectP
 	}
 
 	// Write file
-	if err := os.WriteFile(filePath, data, 0644); err != nil {
+	if err := os.WriteFile(filePath, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent file").
 			WithComponent("AgentTemplateGenerator").
 			WithOperation("GenerateAgentFile")

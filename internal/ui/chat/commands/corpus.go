@@ -1275,7 +1275,7 @@ func (h *KnowledgeHandler) handleExport(ctx context.Context) tea.Cmd {
 		}
 
 		// Write export file
-		err = os.WriteFile(exportPath, []byte(export.String()), 0644)
+		err = os.WriteFile(exportPath, []byte(export.String()), 0o644)
 		if err != nil {
 			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Failed to write export file: %v", gerror.Wrap(err, gerror.ErrCodeInternal, "file write error")),

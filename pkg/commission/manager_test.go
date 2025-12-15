@@ -351,7 +351,7 @@ This is the context section.
 `
 
 	testFile := filepath.Join(manager.fsBasePath, "test_commissionective.md")
-	if err := os.WriteFile(testFile, []byte(testContent), 0644); err != nil {
+	if err := os.WriteFile(testFile, []byte(testContent), 0o644); err != nil {
 		t.Fatalf("Failed to write test file: %v", err)
 	}
 

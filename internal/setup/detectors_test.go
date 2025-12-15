@@ -322,7 +322,7 @@ func TestDetectProjectContext(t *testing.T) {
 
 	// Create go.mod file
 	goModPath := filepath.Join(tempDir, "go.mod")
-	if err := os.WriteFile(goModPath, []byte("module test"), 0644); err != nil {
+	if err := os.WriteFile(goModPath, []byte("module test"), 0o644); err != nil {
 		t.Fatalf("Failed to create go.mod: %v", err)
 	}
 

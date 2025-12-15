@@ -71,7 +71,6 @@ func (r *SQLitePreferencesRepository) CreatePreference(ctx context.Context, pref
 
 	_, err = r.db.DB().ExecContext(ctx, query,
 		pref.ID, pref.Scope, pref.ScopeID, pref.Key, valueJSON, pref.Version, metadataJSON, pref.CreatedAt, pref.UpdatedAt)
-
 	if err != nil {
 		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
 			return gerror.Wrap(err, gerror.ErrCodeAlreadyExists, "preference already exists").
@@ -634,7 +633,6 @@ func (r *SQLitePreferencesRepository) createPreferenceInTx(ctx context.Context, 
 
 	_, err = tx.ExecContext(ctx, query,
 		pref.ID, pref.Scope, pref.ScopeID, pref.Key, valueJSON, pref.Version, nil, pref.CreatedAt, pref.UpdatedAt)
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create preference in transaction").
 			WithComponent("SQLitePreferencesRepository").
@@ -711,7 +709,6 @@ func (r *SQLitePreferencesRepository) CreateInheritance(ctx context.Context, inh
 	_, err := r.db.DB().ExecContext(ctx, query,
 		inheritance.ID, inheritance.ChildScope, inheritance.ChildScopeID,
 		inheritance.ParentScope, inheritance.ParentScopeID, inheritance.Priority, inheritance.CreatedAt)
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create inheritance").
 			WithComponent("SQLitePreferencesRepository").

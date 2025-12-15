@@ -37,7 +37,7 @@ func Install(verbose bool) error {
 	}
 
 	// Create Go bin directory if it doesn't exist
-	if err := os.MkdirAll(goBin, 0755); err != nil {
+	if err := os.MkdirAll(goBin, 0o755); err != nil {
 		return fmt.Errorf("failed to create directory %s: %w", goBin, err)
 	}
 
@@ -50,7 +50,7 @@ func Install(verbose bool) error {
 		return fmt.Errorf("failed to read source binary: %w", err)
 	}
 
-	err = os.WriteFile(destPath, input, 0755)
+	err = os.WriteFile(destPath, input, 0o755)
 	if err != nil {
 		ui.TaskFail()
 		return fmt.Errorf("failed to write to %s: %w", destPath, err)

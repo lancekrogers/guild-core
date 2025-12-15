@@ -103,7 +103,6 @@ func (s *SQLiteReasoningStorage) Store(ctx context.Context, chain *ReasoningChai
 		chain.CreatedAt,
 		string(metadataJSON),
 	)
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to insert reasoning chain").
 			WithComponent("sqlite_reasoning_storage").
@@ -362,7 +361,6 @@ func (s *SQLiteReasoningStorage) GetStats(ctx context.Context, agentID string, s
 		&avgDurationMs,
 		&stats.SuccessRate,
 	)
-
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to query reasoning stats").
 			WithComponent("sqlite_reasoning_storage").
@@ -469,7 +467,6 @@ func (s *SQLiteReasoningStorage) UpdatePattern(ctx context.Context, pattern *Rea
 		pattern.UpdatedAt,
 		string(metadataJSON),
 	)
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update reasoning pattern").
 			WithComponent("sqlite_reasoning_storage").
@@ -496,7 +493,6 @@ func (s *SQLiteReasoningStorage) Delete(ctx context.Context, beforeTime time.Tim
 		"DELETE FROM reasoning_chains WHERE created_at < ?",
 		beforeTime,
 	)
-
 	if err != nil {
 		return 0, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to delete old reasoning chains").
 			WithComponent("sqlite_reasoning_storage").
@@ -570,7 +566,6 @@ func (s *SQLiteReasoningStorage) scanChain(rows *sql.Rows) (*ReasoningChain, err
 		&chain.CreatedAt,
 		&metadataJSON,
 	)
-
 	if err != nil {
 		return nil, err
 	}
@@ -607,7 +602,6 @@ func (s *SQLiteReasoningStorage) scanPattern(rows *sql.Rows) (*ReasoningPattern,
 		&pattern.UpdatedAt,
 		&metadataJSON,
 	)
-
 	if err != nil {
 		return nil, err
 	}

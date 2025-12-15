@@ -202,7 +202,6 @@ func (p *CostAwareTaskPlanner) AssignTasksWithOptions(
 	guild *config.GuildConfig,
 	options AssignmentOptions,
 ) (*AssignmentSummary, error) {
-
 	summary := &AssignmentSummary{
 		TotalTasks:     len(tasks),
 		Assignments:    make([]TaskAssignmentResult, 0, len(tasks)),
@@ -253,7 +252,6 @@ func (p *CostAwareTaskPlanner) assignSingleTask(
 	options AssignmentOptions,
 	currentWorkloads map[string]int,
 ) (*TaskAssignmentResult, error) {
-
 	// Extract required capabilities from task metadata
 	capabilitiesStr, _ := task.Metadata["capabilities"]
 	requiredCapabilities := p.parseCapabilities(capabilitiesStr)

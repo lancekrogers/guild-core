@@ -86,12 +86,12 @@ Always validate and sanitize user input.
 
 		// Write documents to corpus
 		corpusDir := filepath.Join(projCtx.GetRootPath(), "corpus")
-		err := os.MkdirAll(corpusDir, 0755)
+		err := os.MkdirAll(corpusDir, 0o755)
 		require.NoError(t, err)
 
 		for _, doc := range documents {
 			path := filepath.Join(corpusDir, doc.filename)
-			err := os.WriteFile(path, []byte(doc.content), 0644)
+			err := os.WriteFile(path, []byte(doc.content), 0o644)
 			require.NoError(t, err)
 		}
 
@@ -105,7 +105,7 @@ Always validate and sanitize user input.
 		// Create larger corpus for performance testing
 		numDocs := 50
 		corpusDir := filepath.Join(projCtx.GetRootPath(), "large_corpus")
-		err := os.MkdirAll(corpusDir, 0755)
+		err := os.MkdirAll(corpusDir, 0o755)
 		require.NoError(t, err)
 
 		// Generate documents
@@ -124,7 +124,7 @@ Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 `, i, i)
 
 			path := filepath.Join(corpusDir, fmt.Sprintf("doc_%03d.md", i))
-			err := os.WriteFile(path, []byte(content), 0644)
+			err := os.WriteFile(path, []byte(content), 0o644)
 			require.NoError(t, err)
 		}
 

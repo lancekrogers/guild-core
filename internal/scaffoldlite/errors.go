@@ -67,22 +67,28 @@ func (ve ValidationErrors) Error() string {
 func ErrRecipeNotFound(path string) error {
 	return gerror.New(ErrCodeRecipeNotFound, "recipe file not found", nil).WithDetails("path", path)
 }
+
 func ErrTemplateNotFound(template, templatesDir string) error {
 	return gerror.New(ErrCodeTemplateNotFound, "template file not found", nil).
 		WithDetails("template", template).WithDetails("templatesDir", templatesDir)
 }
+
 func ErrFileExists(path string) error {
 	return gerror.New(ErrCodeFileExists, "file already exists and overwrite is disabled", nil).WithDetails("path", path)
 }
+
 func ErrTemplateRender(template string, err error) error {
 	return gerror.Wrap(err, ErrCodeTemplateRender, "template rendering failed").WithDetails("template", template)
 }
+
 func ErrFileWrite(path string, err error) error {
 	return gerror.Wrap(err, ErrCodeFileWrite, "failed to write file").WithDetails("path", path)
 }
+
 func ErrFileRead(path string, err error) error {
 	return gerror.Wrap(err, ErrCodeFileRead, "failed to read file").WithDetails("path", path)
 }
+
 func ErrYAMLParse(path string, err error) error {
 	return gerror.Wrap(err, ErrCodeYAMLParse, "failed to parse YAML").WithDetails("path", path)
 }
@@ -90,9 +96,11 @@ func ErrValidation(message string) error { return gerror.New(ErrCodeValidation, 
 func ErrTimeout(operation string, duration string) error {
 	return gerror.New(ErrCodeTimeout, "operation timed out", nil).WithDetails("operation", operation).WithDetails("timeout", duration)
 }
+
 func ErrPermission(path string, err error) error {
 	return gerror.Wrap(err, ErrCodePermission, "permission denied").WithDetails("path", path)
 }
+
 func ErrInvalidPath(path string, reason string) error {
 	return gerror.New(ErrCodeInvalidPath, "invalid file path", nil).WithDetails("path", path).WithDetails("reason", reason)
 }

@@ -340,7 +340,8 @@ func (p *UniversalParser) GetClasses(result *code.ParseResult) ([]*code.Class, e
 // RegisterAllParsers registers parsers for all supported languages with an AST tool
 func RegisterAllParsers(astTool interface {
 	RegisterParser(code.Language, code.Parser)
-}) error {
+},
+) error {
 	for language := range languageGrammars {
 		parser, err := CreateParser(language)
 		if err != nil {

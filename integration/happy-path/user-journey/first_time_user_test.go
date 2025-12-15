@@ -674,12 +674,12 @@ func (f *UserJourneyFramework) ValidateJourneySuccessCriteria(criteria JourneySu
 
 func (f *UserJourneyFramework) createMockGuildBinary(path string) error {
 	content := "#!/bin/bash\necho 'Mock Guild Binary'\n"
-	return os.WriteFile(path, []byte(content), 0755)
+	return os.WriteFile(path, []byte(content), 0o755)
 }
 
 func (f *UserJourneyFramework) createGuildConfig(projectPath string) error {
 	campaignDir := filepath.Join(projectPath, ".campaign")
-	if err := os.MkdirAll(campaignDir, 0755); err != nil {
+	if err := os.MkdirAll(campaignDir, 0o755); err != nil {
 		return err
 	}
 
@@ -700,13 +700,13 @@ settings:
   max_agents: 10
 `
 	configPath := filepath.Join(campaignDir, "campaign.yaml")
-	if err := os.WriteFile(configPath, []byte(configContent), 0644); err != nil {
+	if err := os.WriteFile(configPath, []byte(configContent), 0o644); err != nil {
 		return err
 	}
 
 	// Create empty database file
 	dbPath := filepath.Join(guildDir, "memory.db")
-	return os.WriteFile(dbPath, []byte{}, 0644)
+	return os.WriteFile(dbPath, []byte{}, 0o644)
 }
 
 func (f *UserJourneyFramework) createDefaultAgents(projectPath string) error {

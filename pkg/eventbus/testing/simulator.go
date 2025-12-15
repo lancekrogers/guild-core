@@ -16,8 +16,10 @@ import (
 )
 
 // Type aliases for convenience
-type EventBus = events.EventBus
-type Event = events.CoreEvent
+type (
+	EventBus = events.EventBus
+	Event    = events.CoreEvent
+)
 
 // EventSimulator generates test events for load testing
 type EventSimulator struct {

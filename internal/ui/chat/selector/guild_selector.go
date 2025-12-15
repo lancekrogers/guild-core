@@ -474,7 +474,7 @@ func (m *GuildSelectorModel) createDefaultGuild() tea.Msg {
 
 	// Create guilds directory if it doesn't exist
 	guildsDir := filepath.Join(m.projectPath, paths.DefaultCampaignDir, "guilds")
-	if err := os.MkdirAll(guildsDir, 0755); err != nil {
+	if err := os.MkdirAll(guildsDir, 0o755); err != nil {
 		return errMsg{gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create guilds directory")}
 	}
 
@@ -485,7 +485,7 @@ func (m *GuildSelectorModel) createDefaultGuild() tea.Msg {
 		return errMsg{gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild definition")}
 	}
 
-	if err := os.WriteFile(guildPath, data, 0644); err != nil {
+	if err := os.WriteFile(guildPath, data, 0o644); err != nil {
 		return errMsg{gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save guild file")}
 	}
 

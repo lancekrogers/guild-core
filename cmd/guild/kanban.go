@@ -21,9 +21,7 @@ import (
 	"github.com/guild-framework/guild-core/pkg/storage"
 )
 
-var (
-	kanbanNoDaemon bool // Don't auto-start the Guild server
-)
+var kanbanNoDaemon bool // Don't auto-start the Guild server
 
 // kanbanCmd represents the kanban command group
 var kanbanCmd = &cobra.Command{

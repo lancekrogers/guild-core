@@ -53,7 +53,6 @@ func NewSuggestionAwareWorkerAgent(
 	costManager CostManagerInterface,
 	suggestionManager suggestions.SuggestionManager,
 ) *SuggestionAwareWorkerAgent {
-
 	baseAgent := newWorkerAgent(id, name, llmClient, memoryManager, toolRegistry, commissionManager, costManager)
 
 	return &SuggestionAwareWorkerAgent{

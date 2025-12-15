@@ -217,7 +217,7 @@ This is a test of **markdown rendering** with *emphasis*.
 `
 
 	contentFile := filepath.Join(workDir, "test-content.md")
-	err := os.WriteFile(contentFile, []byte(testContent), 0644)
+	err := os.WriteFile(contentFile, []byte(testContent), 0o644)
 	require.NoError(t, err)
 
 	// Test that file exists and can be read
@@ -264,7 +264,7 @@ func TestPerformanceRequirements(t *testing.T) {
 	testFile := filepath.Join(workDir, "perf-test.txt")
 
 	// Write test
-	err := os.WriteFile(testFile, []byte("performance test content"), 0644)
+	err := os.WriteFile(testFile, []byte("performance test content"), 0o644)
 	require.NoError(t, err)
 
 	// Read test
@@ -313,12 +313,12 @@ func setupTestGuildProject(t *testing.T, workDir string) {
 	// Since InitializeWithConfig doesn't actually apply the config,
 	// we need to create the .campaign directory structure for tests
 	campaignDir := filepath.Join(workDir, ".campaign")
-	err = os.MkdirAll(campaignDir, 0755)
+	err = os.MkdirAll(campaignDir, 0o755)
 	require.NoError(t, err)
 
 	// Create guilds subdirectory
 	guildsDir := filepath.Join(campaignDir, "guilds")
-	err = os.MkdirAll(guildsDir, 0755)
+	err = os.MkdirAll(guildsDir, 0o755)
 	require.NoError(t, err)
 
 	// Write the elena_guild.yaml file in the guilds directory
@@ -326,7 +326,7 @@ func setupTestGuildProject(t *testing.T, workDir string) {
 	data, err := yaml.Marshal(guildConfig)
 	require.NoError(t, err)
 
-	err = os.WriteFile(configPath, data, 0644)
+	err = os.WriteFile(configPath, data, 0o644)
 	require.NoError(t, err)
 }
 
@@ -352,11 +352,11 @@ This is test content for **markdown rendering** demonstration.
 `
 
 	contentDir := filepath.Join(workDir, "demo-content")
-	err := os.MkdirAll(contentDir, 0755)
+	err := os.MkdirAll(contentDir, 0o755)
 	require.NoError(t, err)
 
 	contentFile := filepath.Join(contentDir, "test-content.md")
-	err = os.WriteFile(contentFile, []byte(content), 0644)
+	err = os.WriteFile(contentFile, []byte(content), 0o644)
 	require.NoError(t, err)
 }
 
@@ -407,7 +407,7 @@ agents:
 `
 
 	configPath := filepath.Join(workDir, ".guild", "guild.yaml")
-	err := os.WriteFile(configPath, []byte(configContent), 0644)
+	err := os.WriteFile(configPath, []byte(configContent), 0o644)
 	require.NoError(t, err)
 }
 
@@ -451,7 +451,7 @@ echo "Test completed successfully"
 `
 	}
 
-	err := os.WriteFile(scriptPath, []byte(scriptContent), 0755)
+	err := os.WriteFile(scriptPath, []byte(scriptContent), 0o755)
 	require.NoError(t, err)
 }
 
@@ -492,7 +492,7 @@ case "$1" in
     ;;
 esac
 `
-	err := os.WriteFile(mockScript, []byte(mockContent), 0755)
+	err := os.WriteFile(mockScript, []byte(mockContent), 0o755)
 	require.NoError(t, err)
 
 	return mockScript

@@ -164,8 +164,10 @@ func TestDetector_detectColors(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Save and restore environment
 			// Also save common env vars that might affect detection
-			envVarsToSave := []string{"TERM", "COLORTERM", "FORCE_COLOR", "NO_COLOR",
-				"GUILD_FORCE_COLOR", "GUILD_FORCE_TRUE_COLOR"}
+			envVarsToSave := []string{
+				"TERM", "COLORTERM", "FORCE_COLOR", "NO_COLOR",
+				"GUILD_FORCE_COLOR", "GUILD_FORCE_TRUE_COLOR",
+			}
 			oldEnv := make(map[string]string)
 
 			// Save all relevant env vars

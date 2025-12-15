@@ -169,7 +169,7 @@ func GetCampaignRoot(cwd string) (string, error) {
 // CreateCampaignReference creates a local campaign reference file
 func CreateCampaignReference(projectDir string, campaignName string, projectName string) error {
 	localGuildDir := filepath.Join(projectDir, paths.DefaultCampaignDir)
-	if err := os.MkdirAll(localGuildDir, 0700); err != nil {
+	if err := os.MkdirAll(localGuildDir, 0o700); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign directory").
 			WithComponent("campaign").
 			WithOperation("CreateCampaignReference").
@@ -190,7 +190,7 @@ func CreateCampaignReference(projectDir string, campaignName string, projectName
 			WithOperation("CreateCampaignReference")
 	}
 
-	if err := os.WriteFile(refPath, refData, 0600); err != nil {
+	if err := os.WriteFile(refPath, refData, 0o600); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write campaign reference").
 			WithComponent("campaign").
 			WithOperation("CreateCampaignReference").
@@ -250,7 +250,7 @@ func SaveGlobalCampaignConfig(campaignName string, config *CampaignConfig) error
 			WithOperation("SaveGlobalCampaignConfig")
 	}
 
-	if err := os.WriteFile(configPath, configData, 0600); err != nil {
+	if err := os.WriteFile(configPath, configData, 0o600); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write campaign config").
 			WithComponent("campaign").
 			WithOperation("SaveGlobalCampaignConfig").
@@ -381,7 +381,7 @@ func WriteCampaignHash(projectPath, campaignName string) error {
 	}
 
 	hashFile := filepath.Join(projectPath, paths.DefaultCampaignDir, paths.CampaignHashFile)
-	if err := os.WriteFile(hashFile, hashBytes, 0644); err != nil {
+	if err := os.WriteFile(hashFile, hashBytes, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write campaign hash").
 			WithComponent("campaign").
 			WithOperation("WriteCampaignHash").
@@ -406,7 +406,7 @@ func WriteSocketRegistry(projectPath, campaignName string) error {
 	}
 
 	registryFile := filepath.Join(projectPath, paths.DefaultCampaignDir, paths.SocketRegistryFile)
-	if err := os.WriteFile(registryFile, registryData, 0644); err != nil {
+	if err := os.WriteFile(registryFile, registryData, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write socket registry").
 			WithComponent("campaign").
 			WithOperation("WriteSocketRegistry").

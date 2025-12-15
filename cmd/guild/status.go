@@ -16,9 +16,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	statusAll bool
-)
+var statusAll bool
 
 var statusCmd = &cobra.Command{
 	Use:   "status",

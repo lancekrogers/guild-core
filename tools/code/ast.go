@@ -370,7 +370,6 @@ func (t *ASTTool) analyzeDirectory(ctx context.Context, params ASTParams) ([]*AS
 		results = append(results, result)
 		return nil
 	})
-
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to walk directory").
 			WithComponent("ast_tool").

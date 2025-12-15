@@ -277,7 +277,7 @@ func createCampaign(cmd *cobra.Command, args []string) error {
 
 	// Save campaign (TODO: Use campaign repository)
 	campaignPath := filepath.Join(projCtx.GetGuildPath(), "campaigns", campaignModel.ID+".json")
-	if err := os.MkdirAll(filepath.Dir(campaignPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(campaignPath), 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign directory").
 			WithComponent("cli").
 			WithOperation("campaign.create").

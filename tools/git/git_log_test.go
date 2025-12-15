@@ -272,7 +272,7 @@ func setupTestRepo(t *testing.T, dir string) {
 
 	// Create and commit a test file
 	testFile := filepath.Join(dir, "test.txt")
-	require.NoError(t, os.WriteFile(testFile, []byte("test content"), 0644))
+	require.NoError(t, os.WriteFile(testFile, []byte("test content"), 0o644))
 
 	_, err = executeGitCommand(dir, "add", "test.txt")
 	require.NoError(t, err)
@@ -282,7 +282,7 @@ func setupTestRepo(t *testing.T, dir string) {
 
 	// Add another file and commit
 	anotherFile := filepath.Join(dir, "another.txt")
-	require.NoError(t, os.WriteFile(anotherFile, []byte("more content"), 0644))
+	require.NoError(t, os.WriteFile(anotherFile, []byte("more content"), 0o644))
 
 	_, err = executeGitCommand(dir, "add", "another.txt")
 	require.NoError(t, err)

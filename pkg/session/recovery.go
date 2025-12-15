@@ -37,7 +37,7 @@ type Checkpoint struct {
 // NewRecoveryManager creates a new recovery manager
 func NewRecoveryManager(manager *SessionManager, checkpointDir string) (*RecoveryManager, error) {
 	// Ensure checkpoint directory exists
-	if err := os.MkdirAll(checkpointDir, 0755); err != nil {
+	if err := os.MkdirAll(checkpointDir, 0o755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create checkpoint directory")
 	}
 
@@ -246,7 +246,7 @@ func (rm *RecoveryManager) saveCheckpoint(checkpoint *Checkpoint) error {
 
 	// Write atomically
 	tmpFile := filename + ".tmp"
-	if err := os.WriteFile(tmpFile, data, 0644); err != nil {
+	if err := os.WriteFile(tmpFile, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write checkpoint")
 	}
 

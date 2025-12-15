@@ -340,7 +340,7 @@ func createDirectEnhancedAgents(ctx context.Context, projectPath string, provide
 
 	// Ensure agents directory exists
 	agentsDir := filepath.Join(projectPath, ".campaign", "agents")
-	if err := os.MkdirAll(agentsDir, 0755); err != nil {
+	if err := os.MkdirAll(agentsDir, 0o755); err != nil {
 		return 0, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
 			WithComponent("directInit").
 			WithOperation("createDirectEnhancedAgents")
@@ -476,7 +476,7 @@ func saveDirectAgentConfig(ctx context.Context, agentsDir string, agentConfig *c
 	filename := fmt.Sprintf("%s.yaml", agentConfig.ID)
 	filepath := filepath.Join(agentsDir, filename)
 
-	if err := os.WriteFile(filepath, yamlData, 0644); err != nil {
+	if err := os.WriteFile(filepath, yamlData, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent config file").
 			WithComponent("directInit").
 			WithOperation("saveDirectAgentConfig")

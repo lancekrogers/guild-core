@@ -13,7 +13,6 @@ import (
 func TestNewIntelligentCache(t *testing.T) {
 	config := DefaultCacheConfig()
 	cache, err := NewIntelligentCache(config)
-
 	if err != nil {
 		t.Fatalf("NewIntelligentCache failed: %v", err)
 	}

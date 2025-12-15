@@ -397,7 +397,6 @@ func (d *ProjectDetector) SeedCorpusFromProject(projectType *ProjectType, projec
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to scan project for corpus files").
 			WithComponent("project").

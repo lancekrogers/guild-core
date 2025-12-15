@@ -29,7 +29,7 @@ func TestSaveAndLoad(t *testing.T) {
 	}
 
 	// Create activities directory
-	err = os.MkdirAll(cfg.ActivitiesPath, 0755)
+	err = os.MkdirAll(cfg.ActivitiesPath, 0o755)
 	if err != nil {
 		t.Fatalf("Failed to create activities directory: %v", err)
 	}
@@ -151,7 +151,7 @@ func TestMaxSizeConstraint(t *testing.T) {
 	}
 
 	// Create activities directory
-	err = os.MkdirAll(cfg.ActivitiesPath, 0755)
+	err = os.MkdirAll(cfg.ActivitiesPath, 0o755)
 	if err != nil {
 		t.Fatalf("Failed to create activities directory: %v", err)
 	}

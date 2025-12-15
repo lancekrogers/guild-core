@@ -32,7 +32,6 @@ func NewSuggestionAwareAgentFactory(
 	commissionManager commission.CommissionManager,
 	costManager CostManagerInterface,
 ) *SuggestionAwareAgentFactory {
-
 	// Create suggestion manager with all providers
 	suggestionManager := createDefaultSuggestionManager(toolRegistry)
 
@@ -102,7 +101,6 @@ func (f *SuggestionAwareAgentFactory) ConfigureSuggestionProviders(
 	lspManager *lsp.Manager,
 	customProviders ...suggestions.SuggestionProvider,
 ) error {
-
 	// Create new suggestion manager with custom configuration
 	manager := suggestions.NewSuggestionManager()
 

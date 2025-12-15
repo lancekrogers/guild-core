@@ -286,8 +286,10 @@ func (a *CorpusAgent) extractTags(query, response string) []string {
 	tags := []string{"generated", "corpus-agent"}
 
 	// Add some basic keyword extraction
-	keywords := []string{"api", "function", "method", "class", "interface", "implementation",
-		"design", "architecture", "pattern", "system", "component", "module"}
+	keywords := []string{
+		"api", "function", "method", "class", "interface", "implementation",
+		"design", "architecture", "pattern", "system", "component", "module",
+	}
 
 	lowerQuery := strings.ToLower(query)
 	lowerResponse := strings.ToLower(response)

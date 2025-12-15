@@ -504,7 +504,8 @@ func (m *MarkdownRenderer) RenderTable(headers []string, rows [][]string) string
 func (m *MarkdownRenderer) RenderChecklist(items []struct {
 	Text    string
 	Checked bool
-}) string {
+},
+) string {
 	if !m.enableChecklists || len(items) == 0 {
 		return ""
 	}
@@ -624,7 +625,8 @@ func (m *MarkdownRenderer) RenderWithOptions(content string, options struct {
 	EnableEmoji      bool
 	EnableTables     bool
 	EnableChecklists bool
-}) string {
+},
+) string {
 	// Save current settings
 	oldMermaid := m.enableMermaid
 	oldMath := m.enableMath

@@ -258,7 +258,7 @@ func createGuildTestEnvironment(ctx context.Context, t *testing.T) (*guildTestEn
 	// Create temporary directory for test campaign
 	tmpDir := t.TempDir()
 	campaignDir := filepath.Join(tmpDir, "test-campaign")
-	if err := os.MkdirAll(campaignDir, 0755); err != nil {
+	if err := os.MkdirAll(campaignDir, 0o755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeIO, "failed to create test campaign directory").
 			WithComponent("daemon_test").
 			WithOperation("createGuildTestEnvironment").
@@ -269,7 +269,7 @@ func createGuildTestEnvironment(ctx context.Context, t *testing.T) (*guildTestEn
 
 	// Create .campaign directory structure
 	campaignConfigDir := filepath.Join(campaignDir, ".campaign")
-	if err := os.MkdirAll(campaignConfigDir, 0755); err != nil {
+	if err := os.MkdirAll(campaignConfigDir, 0o755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeIO, "failed to create .campaign directory").
 			WithComponent("daemon_test").
 			WithOperation("createGuildTestEnvironment").
@@ -282,7 +282,7 @@ project: test-campaign-project
 description: Test campaign for daemon integration tests
 `
 	campaignYamlPath := filepath.Join(campaignConfigDir, "campaign.yaml")
-	if err := os.WriteFile(campaignYamlPath, []byte(campaignYaml), 0644); err != nil {
+	if err := os.WriteFile(campaignYamlPath, []byte(campaignYaml), 0o644); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeIO, "failed to write campaign.yaml").
 			WithComponent("daemon_test").
 			WithOperation("createGuildTestEnvironment").
@@ -299,7 +299,7 @@ agents:
     model: mock
 `
 	guildYamlPath := filepath.Join(campaignConfigDir, "guild.yaml")
-	if err := os.WriteFile(guildYamlPath, []byte(guildYaml), 0644); err != nil {
+	if err := os.WriteFile(guildYamlPath, []byte(guildYaml), 0o644); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeIO, "failed to write guild.yaml").
 			WithComponent("daemon_test").
 			WithOperation("createGuildTestEnvironment").

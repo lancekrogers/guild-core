@@ -83,7 +83,7 @@ func NewMaintenanceManager(db *sql.DB, dbPath string, metrics *observability.Met
 
 	// Ensure backup directory exists
 	if config.BackupPath != "" {
-		if err := os.MkdirAll(config.BackupPath, 0755); err != nil {
+		if err := os.MkdirAll(config.BackupPath, 0o755); err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create backup directory").
 				WithComponent("MaintenanceManager").
 				WithDetails("path", config.BackupPath)

@@ -295,7 +295,7 @@ func TestIsGitRepository(t *testing.T) {
 				_, err := executeGitCommand(dir, "init")
 				require.NoError(t, err)
 				subdir := filepath.Join(dir, "subdir")
-				require.NoError(t, os.MkdirAll(subdir, 0755))
+				require.NoError(t, os.MkdirAll(subdir, 0o755))
 				return subdir
 			},
 			expected: true,
@@ -313,7 +313,6 @@ func TestIsGitRepository(t *testing.T) {
 
 func TestGetGitVersion(t *testing.T) {
 	version, err := getGitVersion()
-
 	// Should not error on systems with git installed
 	if err != nil {
 		// Check if git is not installed

@@ -694,7 +694,7 @@ func (t *MultiFileRefactorTool) applyFileChanges(fileChange *FileChange, createB
 	// Create backup if requested
 	if createBackup {
 		backupFile := fileChange.File + ".bak"
-		err = os.WriteFile(backupFile, content, 0644)
+		err = os.WriteFile(backupFile, content, 0o644)
 		if err != nil {
 			return err
 		}
@@ -730,7 +730,7 @@ func (t *MultiFileRefactorTool) applyFileChanges(fileChange *FileChange, createB
 	newContent := strings.Join(lines, "\n")
 	fileChange.NewContent = newContent
 
-	return os.WriteFile(fileChange.File, []byte(newContent), 0644)
+	return os.WriteFile(fileChange.File, []byte(newContent), 0o644)
 }
 
 // analyzeExtractedCode analyzes extracted code to determine parameters and return values

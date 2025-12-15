@@ -53,7 +53,7 @@ func SaveConfig(config *Config, filename string) error {
 			WithOperation("SaveConfig")
 	}
 
-	if err := os.WriteFile(filename, data, 0644); err != nil {
+	if err := os.WriteFile(filename, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write config file").
 			WithComponent("registry").
 			WithOperation("SaveConfig").

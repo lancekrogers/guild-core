@@ -45,7 +45,7 @@ func NewWorktreeManager(ctx context.Context, repoPath string, basePath string) (
 	}
 
 	// Ensure worktrees base path exists
-	if err := os.MkdirAll(basePath, 0755); err != nil {
+	if err := os.MkdirAll(basePath, 0o755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create worktrees base path").
 			WithComponent("git.worktree").
 			WithOperation("NewWorktreeManager").
@@ -113,7 +113,7 @@ func (wm *WorktreeManager) CreateWorktree(ctx context.Context, req CreateWorktre
 	}
 
 	// Ensure parent directory exists
-	if err := os.MkdirAll(filepath.Dir(worktreePath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(worktreePath), 0o755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create worktree parent directory").
 			WithComponent("git.worktree").
 			WithOperation("CreateWorktree").
@@ -195,7 +195,7 @@ func (wm *WorktreeManager) configureWorktree(ctx context.Context, wt *Worktree) 
 
 	// Configure hooks directory
 	hooksPath := filepath.Join(wt.Path, ".git", "hooks")
-	if err := os.MkdirAll(hooksPath, 0755); err != nil {
+	if err := os.MkdirAll(hooksPath, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create hooks directory").
 			WithComponent("git.worktree").
 			WithOperation("configureWorktree").
@@ -214,7 +214,7 @@ exit 0
 `, wt.ID, wt.AgentID, wt.AgentID)
 
 	hookPath := filepath.Join(hooksPath, "pre-commit")
-	if err := os.WriteFile(hookPath, []byte(preCommitHook), 0755); err != nil {
+	if err := os.WriteFile(hookPath, []byte(preCommitHook), 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create pre-commit hook").
 			WithComponent("git.worktree").
 			WithOperation("configureWorktree").
@@ -589,7 +589,7 @@ func (wm *WorktreeManager) isBranchMerged(ctx context.Context, branch string) bo
 func (wm *WorktreeManager) archiveWorktree(ctx context.Context, wt *Worktree) error {
 	// Create archive directory
 	archiveDir := filepath.Join(wm.basePath, "archived", wt.AgentID)
-	if err := os.MkdirAll(archiveDir, 0755); err != nil {
+	if err := os.MkdirAll(archiveDir, 0o755); err != nil {
 		return err
 	}
 

@@ -35,7 +35,7 @@ func TestJumpTrackAndFind(t *testing.T) {
 	}
 
 	for _, dir := range testDirs {
-		if err := os.MkdirAll(dir, 0755); err != nil {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -118,7 +118,7 @@ func TestJumpRecent(t *testing.T) {
 	}
 
 	for i, dir := range testDirs {
-		if err := os.MkdirAll(dir, 0755); err != nil {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
 			t.Fatal(err)
 		}
 		time.Sleep(100 * time.Millisecond) // Ensure different timestamps
@@ -166,7 +166,7 @@ func TestJumpCleanup(t *testing.T) {
 
 	// Create and track a directory
 	testDir := filepath.Join(tmpDir, "will-be-removed")
-	if err := os.MkdirAll(testDir, 0755); err != nil {
+	if err := os.MkdirAll(testDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
 
@@ -238,7 +238,7 @@ func TestJumpEdgeCases(t *testing.T) {
 
 	// Test tracking a file instead of directory
 	testFile := filepath.Join(tmpDir, "notadir.txt")
-	if err := ioutil.WriteFile(testFile, []byte("test"), 0644); err != nil {
+	if err := ioutil.WriteFile(testFile, []byte("test"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 

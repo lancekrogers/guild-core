@@ -397,7 +397,6 @@ func (dlq *DeadLetterQueue) persistEntry(ctx context.Context, entry DeadLetterEn
 		string(metadataJSON), // Using stack_trace field for metadata
 		entry.LastAttempt,
 	)
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to insert dead letter entry").
 			WithComponent("dead_letter_queue")

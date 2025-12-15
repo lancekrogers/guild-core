@@ -37,7 +37,7 @@ func SaveSocketRegistry(projectRoot string, campaign string) error {
 	guildDir := filepath.Join(projectRoot, paths.DefaultCampaignDir)
 
 	// Ensure campaign directory exists
-	if err := os.MkdirAll(guildDir, 0755); err != nil {
+	if err := os.MkdirAll(guildDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign directory").
 			WithComponent("daemon").
 			WithOperation("SaveSocketRegistry").
@@ -58,7 +58,7 @@ func SaveSocketRegistry(projectRoot string, campaign string) error {
 			WithOperation("SaveSocketRegistry")
 	}
 
-	return os.WriteFile(registryPath, data, 0600)
+	return os.WriteFile(registryPath, data, 0o600)
 }
 
 // LoadSocketRegistry loads the socket registry from a project directory

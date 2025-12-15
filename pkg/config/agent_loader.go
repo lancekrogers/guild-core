@@ -114,7 +114,7 @@ func SaveAgentConfig(ctx context.Context, path string, config *EnhancedAgentConf
 	}
 
 	// Ensure directory exists
-	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create directory").
 			WithComponent("config.agent_loader").
 			WithOperation("SaveAgentConfig").
@@ -143,7 +143,7 @@ func SaveAgentConfig(ctx context.Context, path string, config *EnhancedAgentConf
 	logger.DebugContext(ctx, "Writing configuration file", "size_bytes", len(data))
 
 	// Write file
-	if err := os.WriteFile(path, data, 0644); err != nil {
+	if err := os.WriteFile(path, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent config file").
 			WithComponent("config.agent_loader").
 			WithOperation("SaveAgentConfig").

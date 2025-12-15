@@ -680,14 +680,14 @@ func (b *UIEventBridge) saveState(ctx context.Context) error {
 
 	// Ensure directory exists
 	dir := filepath.Dir(b.stateFile)
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create state directory").
 			WithComponent("ui_event_bridge")
 	}
 
 	// Write atomically
 	tmpFile := b.stateFile + ".tmp"
-	if err := os.WriteFile(tmpFile, data, 0644); err != nil {
+	if err := os.WriteFile(tmpFile, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to write state file").
 			WithComponent("ui_event_bridge")
 	}

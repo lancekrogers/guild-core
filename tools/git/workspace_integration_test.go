@@ -131,7 +131,7 @@ func TestGitToolsWorkspaceLifecycle(t *testing.T) {
 	// Create a test file to demonstrate git operations
 	testFile := filepath.Join(workspacePath, "agent-work.txt")
 	testContent := "Work done by test agent"
-	require.NoError(t, os.WriteFile(testFile, []byte(testContent), 0644))
+	require.NoError(t, os.WriteFile(testFile, []byte(testContent), 0o644))
 
 	// Test GitBlameTool (should fail on untracked file)
 	blameTool := NewGitBlameTool(workspacePath)
@@ -267,7 +267,7 @@ func runAgentGitWorkflow(t *testing.T, manager workspace.Manager, agentID string
 		content := fmt.Sprintf("Content created by %s at step %d\nTimestamp: %s",
 			agentID, i, time.Now().Format(time.RFC3339))
 
-		if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
+		if err := os.WriteFile(filePath, []byte(content), 0o644); err != nil {
 			return result, err
 		}
 		result.FilesCreated = append(result.FilesCreated, filename)
@@ -337,10 +337,10 @@ func setupBaseRepository(t *testing.T) string {
 
 		// Create directory if needed
 		if dir := filepath.Dir(filePath); dir != baseDir && dir != "." {
-			require.NoError(t, os.MkdirAll(dir, 0755))
+			require.NoError(t, os.MkdirAll(dir, 0o755))
 		}
 
-		require.NoError(t, os.WriteFile(filePath, []byte(content), 0644))
+		require.NoError(t, os.WriteFile(filePath, []byte(content), 0o644))
 	}
 
 	// Add and commit initial files
@@ -371,10 +371,10 @@ func setupBaseRepository(t *testing.T) string {
 	for _, commit := range commits {
 		filePath := filepath.Join(baseDir, commit.file)
 		if dir := filepath.Dir(filePath); dir != baseDir && dir != "." {
-			require.NoError(t, os.MkdirAll(dir, 0755))
+			require.NoError(t, os.MkdirAll(dir, 0o755))
 		}
 
-		require.NoError(t, os.WriteFile(filePath, []byte(commit.content), 0644))
+		require.NoError(t, os.WriteFile(filePath, []byte(commit.content), 0o644))
 		_, err = executeGitCommand(baseDir, "add", commit.file)
 		require.NoError(t, err)
 		_, err = executeGitCommand(baseDir, "commit", "-m", commit.message)
@@ -466,7 +466,7 @@ func TestGitToolsWithModifiedWorkspace(t *testing.T) {
 	for i, filename := range newFiles {
 		content := fmt.Sprintf("Content for %s\nCreated by agent at step %d", filename, i)
 		filePath := filepath.Join(workspacePath, filename)
-		require.NoError(t, os.WriteFile(filePath, []byte(content), 0644))
+		require.NoError(t, os.WriteFile(filePath, []byte(content), 0o644))
 	}
 
 	// Verify GitWorkspace detects changes

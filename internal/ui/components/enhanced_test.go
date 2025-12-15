@@ -647,7 +647,6 @@ func TestComponentLibrary_ErrorHandling(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			cl := tt.setup()
 			err := tt.action(cl)
-
 			// Should handle errors gracefully
 			if err != nil {
 				var gErr *gerror.GuildError

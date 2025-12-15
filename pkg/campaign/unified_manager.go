@@ -412,7 +412,6 @@ func (m *unifiedManager) Subscribe(eventType string, handler EventHandler) error
 		}
 		return nil
 	})
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to subscribe to unified event bus").
 			WithComponent("unifiedManager").

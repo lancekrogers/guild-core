@@ -285,7 +285,7 @@ func main() {
 	fmt.Println("Hello from file %d")
 }
 `
-		err = os.WriteFile(filepath.Join(tmpDir, filename), []byte(content), 0644)
+		err = os.WriteFile(filepath.Join(tmpDir, filename), []byte(content), 0o644)
 		require.NoError(t, err)
 	}
 
@@ -316,7 +316,7 @@ func TestSearchReplaceTool_Execute_RecursiveSearch(t *testing.T) {
 
 	// Create subdirectory
 	subDir := filepath.Join(tmpDir, "subdir")
-	err = os.Mkdir(subDir, 0755)
+	err = os.Mkdir(subDir, 0o755)
 	require.NoError(t, err)
 
 	// Create files in both directories
@@ -326,10 +326,10 @@ func main() {
 }
 `
 
-	err = os.WriteFile(filepath.Join(tmpDir, "main.go"), []byte(content), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "main.go"), []byte(content), 0o644)
 	require.NoError(t, err)
 
-	err = os.WriteFile(filepath.Join(subDir, "sub.go"), []byte(content), 0644)
+	err = os.WriteFile(filepath.Join(subDir, "sub.go"), []byte(content), 0o644)
 	require.NoError(t, err)
 
 	tool := NewSearchReplaceTool()
@@ -470,14 +470,14 @@ func main() {
 	test()
 }
 `
-	err = os.WriteFile(filepath.Join(tmpDir, "main.go"), []byte(goContent), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "main.go"), []byte(goContent), 0o644)
 	require.NoError(t, err)
 
 	// Create Python file
 	pythonContent := `def main():
     test()
 `
-	err = os.WriteFile(filepath.Join(tmpDir, "main.py"), []byte(pythonContent), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "main.py"), []byte(pythonContent), 0o644)
 	require.NoError(t, err)
 
 	tool := NewSearchReplaceTool()

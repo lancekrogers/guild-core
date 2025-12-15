@@ -65,7 +65,7 @@ func createStructure(baseDir string) error {
 	// Create directories
 	for _, dir := range directoryStructure {
 		dirPath := filepath.Join(baseDir, dir)
-		if err := os.MkdirAll(dirPath, 0755); err != nil {
+		if err := os.MkdirAll(dirPath, 0o755); err != nil {
 			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to create directory %s", dir).
 				WithComponent("project").
 				WithOperation("create_structure")
@@ -140,7 +140,7 @@ registry:
   # Additional provider-specific config can be added here
 `
 
-	return os.WriteFile(configPath, []byte(content), 0644)
+	return os.WriteFile(configPath, []byte(content), 0o644)
 }
 
 // createGitignore creates a .gitignore file for Guild-specific files
@@ -156,7 +156,7 @@ corpus/.activities/
 !embeddings/.gitkeep
 `
 
-	return os.WriteFile(gitignorePath, []byte(content), 0644)
+	return os.WriteFile(gitignorePath, []byte(content), 0o644)
 }
 
 // createReadme creates a README for the campaign directory
@@ -234,7 +234,7 @@ anywhere within the project directory tree.
 3. Monitor progress: ` + "`guild workshop`" + `
 `
 
-	return os.WriteFile(readmePath, []byte(content), 0644)
+	return os.WriteFile(readmePath, []byte(content), 0o644)
 }
 
 // InitializeWithConfig creates a new Guild project with custom configuration
@@ -264,7 +264,7 @@ func createDefaultGuildConfig(baseDir string) error {
 			WithOperation("create_default_guild_config")
 	}
 
-	return os.WriteFile(guildPath, data, 0644)
+	return os.WriteFile(guildPath, data, 0o644)
 }
 
 // initializeDatabase creates and migrates the SQLite database

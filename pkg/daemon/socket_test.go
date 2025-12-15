@@ -124,7 +124,7 @@ func TestCanConnect(t *testing.T) {
 				socketPath := filepath.Join(tmpDir, "stale.sock")
 
 				// Create an empty file to simulate stale socket
-				require.NoError(t, os.WriteFile(socketPath, []byte{}, 0600))
+				require.NoError(t, os.WriteFile(socketPath, []byte{}, 0o600))
 
 				return socketPath
 			},
@@ -157,7 +157,7 @@ func TestCleanupStaleSessionSockets(t *testing.T) {
 
 				campaign := "test-campaign"
 				campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
-				require.NoError(t, os.MkdirAll(campaignDir, 0755))
+				require.NoError(t, os.MkdirAll(campaignDir, 0o755))
 
 				// Create stale socket files
 				for i := 0; i < 3; i++ {
@@ -165,7 +165,7 @@ func TestCleanupStaleSessionSockets(t *testing.T) {
 					if i > 0 {
 						socketPath = filepath.Join(campaignDir, "guild-"+string(rune('0'+i))+".sock")
 					}
-					require.NoError(t, os.WriteFile(socketPath, []byte{}, 0600))
+					require.NoError(t, os.WriteFile(socketPath, []byte{}, 0o600))
 				}
 
 				return campaign, campaignDir
@@ -188,7 +188,7 @@ func TestCleanupStaleSessionSockets(t *testing.T) {
 
 				campaign := "active-campaign"
 				campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
-				require.NoError(t, os.MkdirAll(campaignDir, 0755))
+				require.NoError(t, os.MkdirAll(campaignDir, 0o755))
 
 				// Create active socket
 				activeSocket := filepath.Join(campaignDir, "guild.sock")
@@ -211,7 +211,7 @@ func TestCleanupStaleSessionSockets(t *testing.T) {
 
 				// Create stale socket
 				staleSocket := filepath.Join(campaignDir, "guild-1.sock")
-				require.NoError(t, os.WriteFile(staleSocket, []byte{}, 0600))
+				require.NoError(t, os.WriteFile(staleSocket, []byte{}, 0o600))
 
 				return campaign, campaignDir
 			},
@@ -260,7 +260,7 @@ func TestUnlinkIfStale(t *testing.T) {
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
 				socketPath := filepath.Join(tmpDir, "stale.sock")
-				require.NoError(t, os.WriteFile(socketPath, []byte{}, 0600))
+				require.NoError(t, os.WriteFile(socketPath, []byte{}, 0o600))
 				return socketPath
 			},
 			wantRemove: true,
@@ -339,7 +339,7 @@ func TestListCampaignSessions(t *testing.T) {
 				homeDir := t.TempDir()
 				campaign := "multi-session"
 				campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
-				require.NoError(t, os.MkdirAll(campaignDir, 0755))
+				require.NoError(t, os.MkdirAll(campaignDir, 0o755))
 
 				// Create multiple active sockets
 				for i := 0; i < 3; i++ {
@@ -377,7 +377,7 @@ func TestListCampaignSessions(t *testing.T) {
 				homeDir := t.TempDir()
 				campaign := "empty-campaign"
 				campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
-				require.NoError(t, os.MkdirAll(campaignDir, 0755))
+				require.NoError(t, os.MkdirAll(campaignDir, 0o755))
 				return campaign, homeDir
 			},
 			wantSessions: []int{},
@@ -388,7 +388,7 @@ func TestListCampaignSessions(t *testing.T) {
 				homeDir := t.TempDir()
 				campaign := "mixed-campaign"
 				campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
-				require.NoError(t, os.MkdirAll(campaignDir, 0755))
+				require.NoError(t, os.MkdirAll(campaignDir, 0o755))
 
 				// Create one active socket
 				activeSocket := filepath.Join(campaignDir, "guild.sock")
@@ -411,7 +411,7 @@ func TestListCampaignSessions(t *testing.T) {
 				// Create stale sockets
 				for i := 1; i < 3; i++ {
 					staleSocket := filepath.Join(campaignDir, "guild-"+string(rune('0'+i))+".sock")
-					require.NoError(t, os.WriteFile(staleSocket, []byte{}, 0600))
+					require.NoError(t, os.WriteFile(staleSocket, []byte{}, 0o600))
 				}
 
 				return campaign, homeDir
@@ -459,7 +459,7 @@ func TestDiscoverAllRunningSessions(t *testing.T) {
 
 	for campaign, sessions := range campaigns {
 		campaignDir := filepath.Join(homeDir, ".campaign", "campaigns", campaign)
-		require.NoError(t, os.MkdirAll(campaignDir, 0755))
+		require.NoError(t, os.MkdirAll(campaignDir, 0o755))
 
 		for _, session := range sessions {
 			var socketPath string

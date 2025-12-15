@@ -223,7 +223,6 @@ func tracingMiddleware(next HandlerFunc) HandlerFunc {
 		defer span.finish()
 
 		response, err := next(ctx, msg)
-
 		// Record span result
 		if err != nil {
 			span.setError(err)

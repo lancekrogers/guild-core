@@ -53,7 +53,7 @@ func (ai *AgentInitializer) InitializeDefaultAgents(ctx context.Context, project
 
 	// Ensure agents directory exists
 	agentsDir := filepath.Join(projectPath, paths.DefaultCampaignDir, "agents")
-	if err := os.MkdirAll(agentsDir, 0755); err != nil {
+	if err := os.MkdirAll(agentsDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
 			WithComponent("AgentInitializer").
 			WithOperation("InitializeDefaultAgents").
@@ -282,7 +282,7 @@ func (ai *AgentInitializer) saveAgentConfig(ctx context.Context, agentsDir strin
 
 	// Write to file
 	agentFilePath := filepath.Join(agentsDir, agent.ID+".yaml")
-	if err := os.WriteFile(agentFilePath, agentData, 0644); err != nil {
+	if err := os.WriteFile(agentFilePath, agentData, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent config file").
 			WithDetails("path", agentFilePath)
 	}
@@ -344,7 +344,7 @@ func (ai *AgentInitializer) UpgradeExistingGuild(ctx context.Context, guildConfi
 	campaignDir := filepath.Join(projectPath, paths.DefaultCampaignDir)
 	agentsDir := filepath.Join(campaignDir, "agents")
 
-	if err := os.MkdirAll(agentsDir, 0755); err != nil {
+	if err := os.MkdirAll(agentsDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
 			WithComponent("AgentInitializer").
 			WithOperation("UpgradeExistingGuild").

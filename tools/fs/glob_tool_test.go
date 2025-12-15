@@ -152,10 +152,10 @@ func TestGlobTool_Execute_WithTestData(t *testing.T) {
 		fullPath := filepath.Join(tempDir, file)
 		dir := filepath.Dir(fullPath)
 
-		err := os.MkdirAll(dir, 0755)
+		err := os.MkdirAll(dir, 0o755)
 		require.NoError(t, err)
 
-		err = os.WriteFile(fullPath, []byte("test content"), 0644)
+		err = os.WriteFile(fullPath, []byte("test content"), 0o644)
 		require.NoError(t, err)
 
 		// Sleep briefly to ensure different modification times
@@ -305,12 +305,12 @@ func TestGlobTool_Execute_WithCustomPath(t *testing.T) {
 	defer os.RemoveAll(tempDir)
 
 	subDir := filepath.Join(tempDir, "subdir")
-	err = os.MkdirAll(subDir, 0755)
+	err = os.MkdirAll(subDir, 0o755)
 	require.NoError(t, err)
 
 	// Create test files in subdirectory
 	testFile := filepath.Join(subDir, "test.go")
-	err = os.WriteFile(testFile, []byte("package main"), 0644)
+	err = os.WriteFile(testFile, []byte("package main"), 0o644)
 	require.NoError(t, err)
 
 	tool := NewGlobTool(tempDir)
@@ -467,7 +467,7 @@ func TestGlobTool_FileMatchMetadata(t *testing.T) {
 
 	testFile := filepath.Join(tempDir, "test.go")
 	testContent := "package main\n\nfunc main() {}\n"
-	err = os.WriteFile(testFile, []byte(testContent), 0644)
+	err = os.WriteFile(testFile, []byte(testContent), 0o644)
 	require.NoError(t, err)
 
 	tool := NewGlobTool(tempDir)

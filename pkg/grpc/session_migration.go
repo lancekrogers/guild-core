@@ -177,7 +177,6 @@ func (s *SessionMigrationService) findLegacySessionFiles(dir string) ([]string, 
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, err
 	}

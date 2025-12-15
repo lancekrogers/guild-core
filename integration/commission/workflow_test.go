@@ -84,7 +84,7 @@ Build a modern e-commerce platform with user authentication, product catalog, an
 `
 
 		commFile := filepath.Join(projCtx.GetRootPath(), "ecommerce_commission.md")
-		err := os.WriteFile(commFile, []byte(commissionContent), 0644)
+		err := os.WriteFile(commFile, []byte(commissionContent), 0o644)
 		require.NoError(t, err)
 
 		// Create commission from file
@@ -181,7 +181,7 @@ Build a modern e-commerce platform with user authentication, product catalog, an
 		// Test malformed commission file
 		badContent := `This is not a valid commission format`
 		badFile := filepath.Join(projCtx.GetRootPath(), "bad_commission.md")
-		err := os.WriteFile(badFile, []byte(badContent), 0644)
+		err := os.WriteFile(badFile, []byte(badContent), 0o644)
 		require.NoError(t, err)
 
 		result = extCtx.RunGuild("commission", "create", "--file",

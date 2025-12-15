@@ -120,7 +120,7 @@ func (m *InitTUIModelV2) createDemoCommission() tea.Cmd {
 
 		// Create commission directory
 		commissionsDir := filepath.Join(m.config.ProjectPath, ".campaign", "commissions")
-		if err := os.MkdirAll(commissionsDir, 0755); err != nil {
+		if err := os.MkdirAll(commissionsDir, 0o755); err != nil {
 			return errMsg{err: gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commissions directory").
 				WithComponent("InitTUIV2").
 				WithOperation("createDemoCommission").
@@ -144,7 +144,7 @@ func (m *InitTUIModelV2) createDemoCommission() tea.Cmd {
 		commissionPath := filepath.Join(commissionsDir, fileName)
 
 		// Write with context awareness
-		if err := writeFileWithContext(ctx, commissionPath, []byte(content), 0644); err != nil {
+		if err := writeFileWithContext(ctx, commissionPath, []byte(content), 0o644); err != nil {
 			return warnMsg{message: fmt.Sprintf("Could not save demo commission: %v", err)}
 		}
 
@@ -276,7 +276,7 @@ func (m *InitTUIModelV2) createEnhancedAgents(ctx context.Context) error {
 
 	// Ensure agents directory exists
 	agentsDir := filepath.Join(m.config.ProjectPath, ".campaign", "agents")
-	if err := os.MkdirAll(agentsDir, 0755); err != nil {
+	if err := os.MkdirAll(agentsDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
 			WithComponent("InitTUIV2").
 			WithOperation("createEnhancedAgents").
@@ -440,7 +440,7 @@ func (m *InitTUIModelV2) saveAgentConfig(ctx context.Context, agentsDir string, 
 	filename := fmt.Sprintf("%s.yaml", agentConfig.ID)
 	filepath := filepath.Join(agentsDir, filename)
 
-	if err := os.WriteFile(filepath, yamlData, 0644); err != nil {
+	if err := os.WriteFile(filepath, yamlData, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent config file").
 			WithComponent("InitTUIV2").
 			WithOperation("saveAgentConfig").

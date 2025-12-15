@@ -102,12 +102,12 @@ func LoadConfig(loader *config.ConfigLoader) (Config, error) {
 	}
 
 	// Ensure the corpus directory exists
-	if err := os.MkdirAll(cfg.CorpusPath, 0755); err != nil {
+	if err := os.MkdirAll(cfg.CorpusPath, 0o755); err != nil {
 		return cfg, gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("new_config").WithOperation("error creating corpus directory")
 	}
 
 	// Ensure the activities directory exists
-	if err := os.MkdirAll(cfg.ActivitiesPath, 0755); err != nil {
+	if err := os.MkdirAll(cfg.ActivitiesPath, 0o755); err != nil {
 		return cfg, gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("new_config").WithOperation("error creating activities directory")
 	}
 
@@ -127,7 +127,7 @@ func LoadConfig(loader *config.ConfigLoader) (Config, error) {
 func SaveConfig(cfg Config, path string) error {
 	// Create the configuration directory if it doesn't exist
 	configDir := filepath.Dir(path)
-	if err := os.MkdirAll(configDir, 0755); err != nil {
+	if err := os.MkdirAll(configDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("save_config").WithOperation("error creating config directory")
 	}
 
@@ -138,7 +138,7 @@ func SaveConfig(cfg Config, path string) error {
 	}
 
 	// Write the configuration to the file
-	if err := os.WriteFile(path, data, 0644); err != nil {
+	if err := os.WriteFile(path, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("save_config").WithOperation("error writing config file")
 	}
 

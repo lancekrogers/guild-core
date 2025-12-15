@@ -62,8 +62,8 @@ func newWorkerAgent(id, name string, llmClient providers.LLMClient,
 	memoryManager memory.ChainManager,
 	toolRegistry tools.Registry,
 	commissionManager commission.CommissionManager,
-	costManager CostManagerInterface) *WorkerAgent {
-
+	costManager CostManagerInterface,
+) *WorkerAgent {
 	return &WorkerAgent{
 		ID:                id,
 		Name:              name,
@@ -484,8 +484,8 @@ func newManagerAgent(id, name string, llmClient providers.LLMClient,
 	memoryManager memory.ChainManager,
 	toolRegistry tools.Registry,
 	commissionManager commission.CommissionManager,
-	costManager CostManagerInterface) *ManagerAgent {
-
+	costManager CostManagerInterface,
+) *ManagerAgent {
 	worker := newWorkerAgent(id, name, llmClient, memoryManager, toolRegistry, commissionManager, costManager)
 
 	return &ManagerAgent{

@@ -117,7 +117,6 @@ func TestCodeIntelligencePerformance_HappyPath(t *testing.T) {
 							{Type: ChangeTypeRefactorCode, Probability: 0.1},
 						},
 					}, metrics)
-
 				}(sessionIdx)
 			}
 

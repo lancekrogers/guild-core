@@ -154,11 +154,11 @@ func (tr *templateRenderer) writeFile(ctx context.Context, path string, content 
 		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled before writing file")
 	}
 	dir := filepath.Dir(path)
-	if err := tr.fileSystem.MkdirAll(dir, 0755); err != nil {
+	if err := tr.fileSystem.MkdirAll(dir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create directory").
 			WithDetails("directory", dir)
 	}
-	if err := tr.fileSystem.WriteFile(path, content, 0644); err != nil {
+	if err := tr.fileSystem.WriteFile(path, content, 0o644); err != nil {
 		return ErrFileWrite(path, err)
 	}
 	return nil

@@ -497,9 +497,11 @@ type searchResultsMsg struct {
 	err     error
 }
 
-type previewContentMsg string
-type indexRefreshedMsg struct{}
-type errorMsg error
+type (
+	previewContentMsg string
+	indexRefreshedMsg struct{}
+	errorMsg          error
+)
 
 // Commands
 

@@ -334,7 +334,7 @@ func (c *HierarchicalConfig) SaveAgentConfig(ctx context.Context, agentName stri
 	agentPath := filepath.Join(c.projectPath, paths.DefaultCampaignDir, "agents", agentName+".yml")
 
 	// Ensure directory exists
-	if err := os.MkdirAll(filepath.Dir(agentPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(agentPath), 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
 			WithComponent("HierarchicalConfig").
 			WithOperation("SaveAgentConfig")
@@ -354,7 +354,7 @@ func (c *HierarchicalConfig) SaveAgentConfig(ctx context.Context, agentName stri
 			WithOperation("SaveAgentConfig")
 	}
 
-	if err := os.WriteFile(agentPath, data, 0644); err != nil {
+	if err := os.WriteFile(agentPath, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent config").
 			WithComponent("HierarchicalConfig").
 			WithOperation("SaveAgentConfig").

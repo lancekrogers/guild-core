@@ -114,7 +114,7 @@ func TestLoadCampaignConfig(t *testing.T) {
 			name: "valid campaign config",
 			setup: func() error {
 				guildDir := filepath.Join(tempDir, ".campaign")
-				if err := os.MkdirAll(guildDir, 0755); err != nil {
+				if err := os.MkdirAll(guildDir, 0o755); err != nil {
 					return err
 				}
 				config := &CampaignConfig{
@@ -140,7 +140,7 @@ func TestLoadCampaignConfig(t *testing.T) {
 		{
 			name: "missing campaign config",
 			setup: func() error {
-				return os.MkdirAll(filepath.Join(tempDir, ".campaign"), 0755)
+				return os.MkdirAll(filepath.Join(tempDir, ".campaign"), 0o755)
 			},
 			wantErr: true,
 			errCode: gerror.ErrCodeNotFound,
@@ -149,10 +149,10 @@ func TestLoadCampaignConfig(t *testing.T) {
 			name: "invalid yaml",
 			setup: func() error {
 				guildDir := filepath.Join(tempDir, ".campaign")
-				if err := os.MkdirAll(guildDir, 0755); err != nil {
+				if err := os.MkdirAll(guildDir, 0o755); err != nil {
 					return err
 				}
-				return os.WriteFile(filepath.Join(guildDir, "campaign.yaml"), []byte("invalid: yaml: content:"), 0644)
+				return os.WriteFile(filepath.Join(guildDir, "campaign.yaml"), []byte("invalid: yaml: content:"), 0o644)
 			},
 			wantErr: true,
 			errCode: gerror.ErrCodeValidation,
@@ -161,11 +161,11 @@ func TestLoadCampaignConfig(t *testing.T) {
 			name: "invalid campaign data",
 			setup: func() error {
 				guildDir := filepath.Join(tempDir, ".campaign")
-				if err := os.MkdirAll(guildDir, 0755); err != nil {
+				if err := os.MkdirAll(guildDir, 0o755); err != nil {
 					return err
 				}
 				// Missing required fields
-				return os.WriteFile(filepath.Join(guildDir, "campaign.yaml"), []byte("name: test\n"), 0644)
+				return os.WriteFile(filepath.Join(guildDir, "campaign.yaml"), []byte("name: test\n"), 0o644)
 			},
 			wantErr: true,
 			errCode: gerror.ErrCodeValidation,
@@ -211,7 +211,7 @@ func TestLoadCampaignConfig_ContextCancellation(t *testing.T) {
 
 	// Create a valid config
 	guildDir := filepath.Join(tempDir, ".campaign")
-	os.MkdirAll(guildDir, 0755)
+	os.MkdirAll(guildDir, 0o755)
 	config := &CampaignConfig{
 		Name:        "test",
 		Description: "test",
@@ -265,7 +265,7 @@ func TestSaveCampaignConfig(t *testing.T) {
 				Description: "Testing save with existing directory",
 			},
 			setup: func() error {
-				return os.MkdirAll(filepath.Join(tempDir, ".campaign"), 0755)
+				return os.MkdirAll(filepath.Join(tempDir, ".campaign"), 0o755)
 			},
 			wantErr: false,
 		},
@@ -351,7 +351,7 @@ func TestUpdateLastSelectedGuild(t *testing.T) {
 
 	// Create initial config
 	guildDir := filepath.Join(tempDir, ".campaign")
-	os.MkdirAll(guildDir, 0755)
+	os.MkdirAll(guildDir, 0o755)
 
 	config := &CampaignConfig{
 		Name:              "update-test",
@@ -571,7 +571,7 @@ description: ` + config.Description
 		}
 		data = []byte(simpleYAML)
 	}
-	return os.WriteFile(path, data, 0644)
+	return os.WriteFile(path, data, 0o644)
 }
 
 // TestCampaignConfig_RealWorldScenarios tests more complex real-world scenarios

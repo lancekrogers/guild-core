@@ -17,9 +17,7 @@ import (
 	"github.com/guild-framework/guild-core/pkg/observability"
 )
 
-var (
-	scaffoldIntegration *ScaffoldIntegration
-)
+var scaffoldIntegration *ScaffoldIntegration
 
 // initScaffoldEnhancedCmd represents the enhanced init command with scaffold integration
 var initScaffoldEnhancedCmd = &cobra.Command{

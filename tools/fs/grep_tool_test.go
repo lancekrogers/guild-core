@@ -109,9 +109,9 @@ func TestJourneymanGrepExecution(t *testing.T) {
 	// Create test files
 	for path, file := range testFiles {
 		fullPath := filepath.Join(testDir, path)
-		err := os.MkdirAll(filepath.Dir(fullPath), 0755)
+		err := os.MkdirAll(filepath.Dir(fullPath), 0o755)
 		require.NoError(t, err)
-		err = os.WriteFile(fullPath, []byte(file.content), 0644)
+		err = os.WriteFile(fullPath, []byte(file.content), 0o644)
 		require.NoError(t, err)
 		// Set modification time
 		err = os.Chtimes(fullPath, file.modTime, file.modTime)
@@ -120,7 +120,7 @@ func TestJourneymanGrepExecution(t *testing.T) {
 
 	// Create a binary file to test exclusion
 	binaryPath := filepath.Join(testDir, "binary.exe")
-	err := os.WriteFile(binaryPath, []byte{0x00, 0x01, 0x02, 0x03, 0xFF}, 0644)
+	err := os.WriteFile(binaryPath, []byte{0x00, 0x01, 0x02, 0x03, 0xFF}, 0o644)
 	require.NoError(t, err)
 
 	tool := NewGrepTool(testDir)
@@ -288,14 +288,14 @@ func TestGuildGrepBinaryExclusion(t *testing.T) {
 	// Create binary files
 	for name, content := range binaryFiles {
 		path := filepath.Join(testDir, name)
-		err := os.WriteFile(path, content, 0644)
+		err := os.WriteFile(path, content, 0o644)
 		require.NoError(t, err)
 	}
 
 	// Create text files
 	for name, content := range textFiles {
 		path := filepath.Join(testDir, name)
-		err := os.WriteFile(path, []byte(content), 0644)
+		err := os.WriteFile(path, []byte(content), 0o644)
 		require.NoError(t, err)
 	}
 
@@ -340,7 +340,7 @@ func TestScribeLargeFileHandling(t *testing.T) {
 
 	// Create a normal file
 	normalPath := filepath.Join(testDir, "normal.txt")
-	err = os.WriteFile(normalPath, []byte("This has a TODO too"), 0644)
+	err = os.WriteFile(normalPath, []byte("This has a TODO too"), 0o644)
 	require.NoError(t, err)
 
 	tool := NewGrepTool(testDir)
@@ -365,7 +365,7 @@ func TestCraftGrepContextCancellation(t *testing.T) {
 	// Create many files to ensure we have time to cancel
 	for i := 0; i < 1000; i++ {
 		path := filepath.Join(testDir, fmt.Sprintf("file%d.txt", i))
-		err := os.WriteFile(path, []byte("TODO: test content"), 0644)
+		err := os.WriteFile(path, []byte("TODO: test content"), 0o644)
 		require.NoError(t, err)
 	}
 
@@ -395,7 +395,7 @@ func TestJourneymanGrepEdgeCases(t *testing.T) {
 
 	for name, content := range edgeCases {
 		path := filepath.Join(testDir, name)
-		err := os.WriteFile(path, []byte(content), 0644)
+		err := os.WriteFile(path, []byte(content), 0o644)
 		require.NoError(t, err)
 	}
 
@@ -423,7 +423,7 @@ func TestGuildGrepMetadata(t *testing.T) {
 	testDir := t.TempDir()
 
 	// Create a simple test file
-	err := os.WriteFile(filepath.Join(testDir, "test.txt"), []byte("TODO: test"), 0644)
+	err := os.WriteFile(filepath.Join(testDir, "test.txt"), []byte("TODO: test"), 0o644)
 	require.NoError(t, err)
 
 	tool := NewGrepTool(testDir)

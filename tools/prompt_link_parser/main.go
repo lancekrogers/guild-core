@@ -66,7 +66,7 @@ func main() {
 
 	// Output new file with _links_inserted suffix
 	outputFile := strings.TrimSuffix(inputFile, ".md") + "_links_inserted.md"
-	err = ioutil.WriteFile(outputFile, []byte(expanded), 0644)
+	err = ioutil.WriteFile(outputFile, []byte(expanded), 0o644)
 	if err != nil {
 		fmt.Println("Error writing expanded file:", err)
 		os.Exit(1)

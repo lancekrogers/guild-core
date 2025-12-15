@@ -55,6 +55,7 @@ func (m *mockSessionStore) GetMessages(ctx context.Context, sessionID string) ([
 func (m *mockSessionStore) ListSessions(ctx context.Context, limit, offset int32) ([]*session.Session, error) {
 	return nil, nil
 }
+
 func (m *mockSessionStore) ListSessionsByCampaign(ctx context.Context, campaignID string) ([]*session.Session, error) {
 	return nil, nil
 }
@@ -67,15 +68,19 @@ func (m *mockSessionStore) CountSessions(ctx context.Context) (int64, error) { r
 func (m *mockSessionStore) SaveMessage(ctx context.Context, message *session.Message) error {
 	return nil
 }
+
 func (m *mockSessionStore) GetMessage(ctx context.Context, id string) (*session.Message, error) {
 	return nil, nil
 }
+
 func (m *mockSessionStore) GetMessagesPaginated(ctx context.Context, sessionID string, limit, offset int32) ([]*session.Message, error) {
 	return nil, nil
 }
+
 func (m *mockSessionStore) GetMessagesAfter(ctx context.Context, sessionID string, after time.Time) ([]*session.Message, error) {
 	return nil, nil
 }
+
 func (m *mockSessionStore) CountMessages(ctx context.Context, sessionID string) (int64, error) {
 	return 0, nil
 }
@@ -83,12 +88,15 @@ func (m *mockSessionStore) DeleteMessage(ctx context.Context, id string) error {
 func (m *mockSessionStore) SearchMessages(ctx context.Context, query string, limit, offset int32) ([]*session.MessageSearchResult, error) {
 	return nil, nil
 }
+
 func (m *mockSessionStore) CreateBookmark(ctx context.Context, bookmark *session.Bookmark) error {
 	return nil
 }
+
 func (m *mockSessionStore) GetBookmark(ctx context.Context, id string) (*session.Bookmark, error) {
 	return nil, nil
 }
+
 func (m *mockSessionStore) GetBookmarks(ctx context.Context, sessionID string) ([]*session.BookmarkWithDetails, error) {
 	return nil, nil
 }
@@ -98,8 +106,7 @@ func (m *mockSessionStore) GetBookmarksByMessage(ctx context.Context, messageID 
 }
 
 // KanbanVisualizer provides visualization functionality for kanban boards
-type KanbanVisualizer struct {
-}
+type KanbanVisualizer struct{}
 
 // NewKanbanVisualizer creates a new kanban visualizer
 func NewKanbanVisualizer() *KanbanVisualizer {

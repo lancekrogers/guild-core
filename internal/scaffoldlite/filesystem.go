@@ -61,7 +61,7 @@ func (osfs *OSFileSystem) WriteFile(path string, data []byte, perm os.FileMode) 
 	}
 	dir := filepath.Dir(path)
 	if dir != "." && dir != "" {
-		if err := osfs.MkdirAll(dir, 0755); err != nil {
+		if err := osfs.MkdirAll(dir, 0o755); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create directory").WithDetails("dir", dir).WithDetails("file", path)
 		}
 	}
@@ -136,6 +136,7 @@ func (osfs *OSFileSystem) Exists(path string) bool {
 	_, err = os.Stat(safePath)
 	return err == nil
 }
+
 func (osfs *OSFileSystem) IsDir(path string) bool {
 	safePath, err := osfs.safePath(path)
 	if err != nil {
@@ -147,6 +148,7 @@ func (osfs *OSFileSystem) IsDir(path string) bool {
 	}
 	return info.IsDir()
 }
+
 func (osfs *OSFileSystem) Remove(path string) error {
 	safePath, err := osfs.safePath(path)
 	if err != nil {
@@ -157,6 +159,7 @@ func (osfs *OSFileSystem) Remove(path string) error {
 	}
 	return nil
 }
+
 func (osfs *OSFileSystem) RemoveAll(path string) error {
 	safePath, err := osfs.safePath(path)
 	if err != nil {
@@ -214,6 +217,7 @@ type MemoryFileSystem struct {
 func NewMemoryFileSystem() *MemoryFileSystem {
 	return &MemoryFileSystem{files: make(map[string][]byte), dirs: make(map[string]bool)}
 }
+
 func (mfs *MemoryFileSystem) ReadFile(path string) ([]byte, error) {
 	mfs.mu.RLock()
 	defer mfs.mu.RUnlock()
@@ -226,6 +230,7 @@ func (mfs *MemoryFileSystem) ReadFile(path string) ([]byte, error) {
 	copy(result, data)
 	return result, nil
 }
+
 func (mfs *MemoryFileSystem) WriteFile(path string, data []byte, perm os.FileMode) error {
 	mfs.mu.Lock()
 	defer mfs.mu.Unlock()
@@ -242,6 +247,7 @@ func (mfs *MemoryFileSystem) WriteFile(path string, data []byte, perm os.FileMod
 	mfs.files[cleanPath] = fileCopy
 	return nil
 }
+
 func (mfs *MemoryFileSystem) Stat(path string) (os.FileInfo, error) {
 	mfs.mu.RLock()
 	defer mfs.mu.RUnlock()
@@ -254,6 +260,7 @@ func (mfs *MemoryFileSystem) Stat(path string) (os.FileInfo, error) {
 	}
 	return nil, fs.ErrNotExist
 }
+
 func (mfs *MemoryFileSystem) MkdirAll(path string, perm os.FileMode) error {
 	mfs.mu.Lock()
 	defer mfs.mu.Unlock()
@@ -276,6 +283,7 @@ func (mfs *MemoryFileSystem) MkdirAll(path string, perm os.FileMode) error {
 	}
 	return nil
 }
+
 func (mfs *MemoryFileSystem) Exists(path string) bool {
 	mfs.mu.RLock()
 	defer mfs.mu.RUnlock()
@@ -288,6 +296,7 @@ func (mfs *MemoryFileSystem) Exists(path string) bool {
 	}
 	return false
 }
+
 func (mfs *MemoryFileSystem) IsDir(path string) bool {
 	mfs.mu.RLock()
 	defer mfs.mu.RUnlock()
@@ -295,6 +304,7 @@ func (mfs *MemoryFileSystem) IsDir(path string) bool {
 	_, isDir := mfs.dirs[cleanPath]
 	return isDir
 }
+
 func (mfs *MemoryFileSystem) Remove(path string) error {
 	mfs.mu.Lock()
 	defer mfs.mu.Unlock()
@@ -315,9 +325,9 @@ func (fi *memoryFileInfo) Name() string { return fi.name }
 func (fi *memoryFileInfo) Size() int64  { return fi.size }
 func (fi *memoryFileInfo) Mode() os.FileMode {
 	if fi.isDir {
-		return os.ModeDir | 0755
+		return os.ModeDir | 0o755
 	}
-	return 0644
+	return 0o644
 }
 func (fi *memoryFileInfo) ModTime() (t time.Time) { return }
 func (fi *memoryFileInfo) IsDir() bool            { return fi.isDir }
@@ -329,7 +339,7 @@ func WriteFile(ctx context.Context, fs FileSystem, path string, data []byte, per
 		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled before writing file")
 	}
 	dir := filepath.Dir(path)
-	if err := fs.MkdirAll(dir, 0755); err != nil {
+	if err := fs.MkdirAll(dir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create directory").WithDetails("directory", dir)
 	}
 	return fs.WriteFile(path, data, perm)

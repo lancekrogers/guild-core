@@ -315,10 +315,10 @@ func TestLoadGuildConfig_ModularStructure(t *testing.T) {
 	guildsDir := filepath.Join(campaignDir, "guilds")
 	agentsDir := filepath.Join(campaignDir, "agents")
 
-	if err := os.MkdirAll(guildsDir, 0755); err != nil {
+	if err := os.MkdirAll(guildsDir, 0o755); err != nil {
 		t.Fatalf("Failed to create guilds dir: %v", err)
 	}
-	if err := os.MkdirAll(agentsDir, 0755); err != nil {
+	if err := os.MkdirAll(agentsDir, 0o755); err != nil {
 		t.Fatalf("Failed to create agents dir: %v", err)
 	}
 
@@ -330,7 +330,7 @@ guilds:
 settings:
   default_guild: test_guild
 `
-	if err := os.WriteFile(filepath.Join(campaignDir, "campaign.yaml"), []byte(campaignContent), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(campaignDir, "campaign.yaml"), []byte(campaignContent), 0o644); err != nil {
 		t.Fatalf("Failed to write campaign.yaml: %v", err)
 	}
 
@@ -347,7 +347,7 @@ coordination:
   review_required: true
   auto_handoff: false
 `
-	if err := os.WriteFile(filepath.Join(guildsDir, "test_guild.yaml"), []byte(guildContent), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(guildsDir, "test_guild.yaml"), []byte(guildContent), 0o644); err != nil {
 		t.Fatalf("Failed to write guild yaml: %v", err)
 	}
 
@@ -371,7 +371,7 @@ personality:
   empathy: 9
   patience: 8
 `
-	if err := os.WriteFile(filepath.Join(agentsDir, "manager-agent.yaml"), []byte(managerContent), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(agentsDir, "manager-agent.yaml"), []byte(managerContent), 0o644); err != nil {
 		t.Fatalf("Failed to write manager agent yaml: %v", err)
 	}
 
@@ -390,7 +390,7 @@ backstory:
   experience: "5 years coding"
   guild_rank: "Journeyman"
 `
-	if err := os.WriteFile(filepath.Join(agentsDir, "worker-agent.yaml"), []byte(workerContent), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(agentsDir, "worker-agent.yaml"), []byte(workerContent), 0o644); err != nil {
 		t.Fatalf("Failed to write worker agent yaml: %v", err)
 	}
 

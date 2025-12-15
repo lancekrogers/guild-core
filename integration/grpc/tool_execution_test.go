@@ -40,6 +40,7 @@ func (t *TestTool) Schema() map[string]interface{} {
 		},
 	}
 }
+
 func (t *TestTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	t.mu.Lock()
 	t.executed = true
@@ -49,12 +50,15 @@ func (t *TestTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 		Success: true,
 	}, nil
 }
+
 func (t *TestTool) Examples() []string {
 	return []string{"test input"}
 }
+
 func (t *TestTool) Category() string {
 	return "test"
 }
+
 func (t *TestTool) RequiresAuth() bool {
 	return false
 }

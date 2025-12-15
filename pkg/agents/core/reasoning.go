@@ -9,8 +9,10 @@ import (
 	"strings"
 )
 
-var thinkingRegex = regexp.MustCompile(`(?s)<thinking>(.*?)</thinking>`)
-var confidenceRegex = regexp.MustCompile(`(?i)confidence:\s*([\d.]+)`)
+var (
+	thinkingRegex   = regexp.MustCompile(`(?s)<thinking>(.*?)</thinking>`)
+	confidenceRegex = regexp.MustCompile(`(?i)confidence:\s*([\d.]+)`)
+)
 
 // AgentResponse represents a structured response from an agent execution
 type AgentResponse struct {

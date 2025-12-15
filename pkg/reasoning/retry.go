@@ -148,7 +148,6 @@ func (r *Retryer) ExecuteWithResult(ctx context.Context, fn func() (interface{},
 		result, err = fn()
 		return err
 	})
-
 	if err != nil {
 		return nil, err
 	}

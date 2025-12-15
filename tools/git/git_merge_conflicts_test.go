@@ -414,7 +414,7 @@ func setupBasicRepo(t *testing.T, dir string) {
 
 	// Create and commit a test file
 	testFile := filepath.Join(dir, "test.txt")
-	require.NoError(t, os.WriteFile(testFile, []byte("test content"), 0644))
+	require.NoError(t, os.WriteFile(testFile, []byte("test content"), 0o644))
 
 	_, err = executeGitCommand(dir, "add", "test.txt")
 	require.NoError(t, err)
@@ -439,5 +439,5 @@ their version of the change
 >>>>>>> feature-branch
 another normal line`
 
-	require.NoError(t, os.WriteFile(conflictFile, []byte(conflictContent), 0644))
+	require.NoError(t, os.WriteFile(conflictFile, []byte(conflictContent), 0o644))
 }

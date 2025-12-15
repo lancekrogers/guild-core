@@ -577,13 +577,13 @@ func (tm *ThemeManager) ExportTheme(ctx context.Context, themeName, outputPath s
 			WithOperation("ExportTheme")
 	}
 
-	if err := os.MkdirAll(filepath.Dir(outputPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(outputPath), 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create output directory").
 			WithComponent("theme-manager").
 			WithOperation("ExportTheme")
 	}
 
-	if err := os.WriteFile(outputPath, data, 0644); err != nil {
+	if err := os.WriteFile(outputPath, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to write theme file").
 			WithComponent("theme-manager").
 			WithOperation("ExportTheme")

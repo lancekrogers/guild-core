@@ -370,7 +370,7 @@ func TestSocketCleanup(t *testing.T) {
 
 			// Create directory if needed
 			socketDir := filepath.Dir(socketPath)
-			os.MkdirAll(socketDir, 0755)
+			os.MkdirAll(socketDir, 0o755)
 
 			// Create empty file to simulate stale socket
 			file, err := os.Create(socketPath)

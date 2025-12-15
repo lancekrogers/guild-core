@@ -217,14 +217,14 @@ func (e *TestEnvironment) CreateFile(relativePath, content string) error {
 	fullPath := filepath.Join(e.workDir, relativePath)
 	dir := filepath.Dir(fullPath)
 
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create directory").
 			WithComponent("e2e").
 			WithOperation("CreateFile").
 			WithDetails("dir", dir)
 	}
 
-	return os.WriteFile(fullPath, []byte(content), 0644)
+	return os.WriteFile(fullPath, []byte(content), 0o644)
 }
 
 // FileExists checks if a file exists in the test environment
@@ -250,7 +250,7 @@ func (e *TestEnvironment) ReadFile(relativePath string) (string, error) {
 // SaveRecording saves the test recording for debugging
 func (e *TestEnvironment) SaveRecording(name string) {
 	recordingsDir := filepath.Join("recordings")
-	if err := os.MkdirAll(recordingsDir, 0755); err != nil {
+	if err := os.MkdirAll(recordingsDir, 0o755); err != nil {
 		e.t.Logf("Warning: failed to create recordings directory: %v", err)
 		return
 	}

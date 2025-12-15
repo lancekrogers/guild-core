@@ -59,7 +59,6 @@ func (r *SQLiteTaskRepository) CreateTask(ctx context.Context, task *Task) error
 		StoryPoints:  &storyPoints,
 		Metadata:     metadataJSON,
 	})
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create task").
 			WithComponent("SQLiteTaskRepository").
@@ -117,7 +116,6 @@ func (r *SQLiteTaskRepository) UpdateTask(ctx context.Context, task *Task) error
 		Metadata:    metadataJSON,
 		ID:          task.ID,
 	})
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task").
 			WithComponent("SQLiteTaskRepository").

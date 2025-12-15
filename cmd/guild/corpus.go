@@ -411,7 +411,7 @@ var corpusConfigSetCmd = &cobra.Command{
 
 		// Save the configuration
 		configDir := filepath.Join(".campaign")
-		if err := os.MkdirAll(configDir, 0755); err != nil {
+		if err := os.MkdirAll(configDir, 0o755); err != nil {
 			fmt.Printf("Error creating config directory: %v\n", err)
 			return
 		}

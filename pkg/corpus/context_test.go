@@ -28,7 +28,7 @@ func TestContextPropagation(t *testing.T) {
 	}
 
 	// Create activities directory
-	require.NoError(t, os.MkdirAll(cfg.ActivitiesPath, 0755))
+	require.NoError(t, os.MkdirAll(cfg.ActivitiesPath, 0o755))
 
 	t.Run("Save with context", func(t *testing.T) {
 		ctx := context.Background()
@@ -274,7 +274,7 @@ func TestContextCancellation(t *testing.T) {
 		MaxSizeBytes:   1024 * 1024,
 	}
 
-	require.NoError(t, os.MkdirAll(cfg.ActivitiesPath, 0755))
+	require.NoError(t, os.MkdirAll(cfg.ActivitiesPath, 0o755))
 
 	t.Run("Save respects cancellation", func(t *testing.T) {
 		// Create a cancelled context
@@ -321,7 +321,7 @@ func TestContextWithValues(t *testing.T) {
 		MaxSizeBytes:   1024 * 1024,
 	}
 
-	require.NoError(t, os.MkdirAll(cfg.ActivitiesPath, 0755))
+	require.NoError(t, os.MkdirAll(cfg.ActivitiesPath, 0o755))
 
 	// Create context with values
 	type contextKey string

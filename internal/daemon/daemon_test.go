@@ -116,12 +116,12 @@ func TestPIDFileHandling(t *testing.T) {
 
 	// Create .guild directory
 	guildDir := filepath.Join(tempDir, ".guild")
-	err := os.MkdirAll(guildDir, 0755)
+	err := os.MkdirAll(guildDir, 0o755)
 	require.NoError(t, err)
 
 	// Create stale PID file
 	pidFile := filepath.Join(guildDir, "daemon.pid")
-	err = os.WriteFile(pidFile, []byte("99999"), 0644)
+	err = os.WriteFile(pidFile, []byte("99999"), 0o644)
 	require.NoError(t, err)
 
 	// Test cleanup

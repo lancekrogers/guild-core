@@ -66,7 +66,7 @@ func TestHierarchicalLoader_LoadHierarchicalConfig(t *testing.T) {
 			setup: func() error {
 				// Only create guild config, no campaign
 				guildDir := filepath.Join(tempDir, ".campaign")
-				os.MkdirAll(guildDir, 0755)
+				os.MkdirAll(guildDir, 0o755)
 				return saveGuildConfigYAML(filepath.Join(guildDir, "guild.yml"), &GuildConfigFile{
 					Guilds: map[string]GuildDefinition{
 						"test-guild": {
@@ -85,7 +85,7 @@ func TestHierarchicalLoader_LoadHierarchicalConfig(t *testing.T) {
 			setup: func() error {
 				// Only create campaign config, no guild
 				guildDir := filepath.Join(tempDir, ".campaign")
-				os.MkdirAll(guildDir, 0755)
+				os.MkdirAll(guildDir, 0o755)
 				return saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yaml"), &CampaignConfig{
 					Name:        "test",
 					Description: "test",
@@ -98,7 +98,7 @@ func TestHierarchicalLoader_LoadHierarchicalConfig(t *testing.T) {
 			name: "missing agent files",
 			setup: func() error {
 				guildDir := filepath.Join(tempDir, ".campaign")
-				os.MkdirAll(guildDir, 0755)
+				os.MkdirAll(guildDir, 0o755)
 
 				// Create campaign
 				saveCampaignConfigYAML(filepath.Join(guildDir, "campaign.yaml"), &CampaignConfig{
@@ -289,7 +289,7 @@ func TestHierarchicalLoader_RefreshConfig_ValidationFailure(t *testing.T) {
 	campaignPath := filepath.Join(tempDir, ".campaign", "campaign.yaml")
 	invalidCampaign := `name: ""  # Invalid - empty name
 description: "test"`
-	os.WriteFile(campaignPath, []byte(invalidCampaign), 0644)
+	os.WriteFile(campaignPath, []byte(invalidCampaign), 0o644)
 
 	// Refresh should fail
 	err = loader.RefreshConfig(ctx, tempDir)
@@ -658,7 +658,7 @@ func TestHierarchicalConfig_SaveAgentConfig(t *testing.T) {
 
 	// Create agents directory
 	agentsDir := filepath.Join(tempDir, ".campaign", "agents")
-	os.MkdirAll(agentsDir, 0755)
+	os.MkdirAll(agentsDir, 0o755)
 
 	newAgent := &AgentConfig{
 		ID:           "new-agent",
@@ -872,7 +872,7 @@ func setupCompleteHierarchy(tempDir string) error {
 	agentsDir := filepath.Join(guildDir, "agents")
 
 	// Create directories
-	if err := os.MkdirAll(agentsDir, 0755); err != nil {
+	if err := os.MkdirAll(agentsDir, 0o755); err != nil {
 		return err
 	}
 
@@ -967,7 +967,7 @@ func saveAgentConfigYAML(path string, agent *AgentConfig) error {
 	for _, cap := range agent.Capabilities {
 		yamlContent += "  - " + cap + "\n"
 	}
-	return os.WriteFile(path, []byte(yamlContent), 0644)
+	return os.WriteFile(path, []byte(yamlContent), 0o644)
 }
 
 // Real-world scenario tests
@@ -1108,7 +1108,7 @@ func setupComplexHierarchy(tempDir string) error {
 	guildDir := filepath.Join(tempDir, ".campaign")
 	agentsDir := filepath.Join(guildDir, "agents")
 
-	if err := os.MkdirAll(agentsDir, 0755); err != nil {
+	if err := os.MkdirAll(agentsDir, 0o755); err != nil {
 		return err
 	}
 

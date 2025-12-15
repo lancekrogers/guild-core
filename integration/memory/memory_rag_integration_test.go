@@ -102,9 +102,9 @@ Returns details for a specific product.`,
 	// Create test files
 	for path, content := range testFiles {
 		fullPath := filepath.Join(projectDir, path)
-		err := os.MkdirAll(filepath.Dir(fullPath), 0755)
+		err := os.MkdirAll(filepath.Dir(fullPath), 0o755)
 		require.NoError(t, err)
-		err = os.WriteFile(fullPath, []byte(content), 0644)
+		err = os.WriteFile(fullPath, []byte(content), 0o644)
 		require.NoError(t, err)
 	}
 

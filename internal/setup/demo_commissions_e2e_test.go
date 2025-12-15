@@ -41,7 +41,7 @@ func TestDemoCommissionEndToEnd(t *testing.T) {
 
 	// Test each demo type creates a valid commission in the right location
 	commissionsDir := filepath.Join(tempDir, ".campaign", "objectives", "refined")
-	err = os.MkdirAll(commissionsDir, 0755)
+	err = os.MkdirAll(commissionsDir, 0o755)
 	require.NoError(t, err)
 
 	// Generate and save API demo commission
@@ -50,7 +50,7 @@ func TestDemoCommissionEndToEnd(t *testing.T) {
 
 	// Save to the commissions directory
 	commissionPath := filepath.Join(commissionsDir, "demo-api.md")
-	err = os.WriteFile(commissionPath, []byte(content), 0644)
+	err = os.WriteFile(commissionPath, []byte(content), 0o644)
 	require.NoError(t, err)
 
 	// Verify the file was created

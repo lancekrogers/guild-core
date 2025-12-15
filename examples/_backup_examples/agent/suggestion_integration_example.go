@@ -246,15 +246,19 @@ type MockTemplateManager struct{}
 func (m *MockTemplateManager) Create(ctx context.Context, template *templates.Template) error {
 	return nil
 }
+
 func (m *MockTemplateManager) Get(ctx context.Context, id string) (*templates.Template, error) {
 	return nil, nil
 }
+
 func (m *MockTemplateManager) GetByName(ctx context.Context, name string) (*templates.Template, error) {
 	return nil, nil
 }
+
 func (m *MockTemplateManager) List(ctx context.Context, filter *templates.TemplateFilter) ([]*templates.Template, error) {
 	return []*templates.Template{}, nil
 }
+
 func (m *MockTemplateManager) Update(ctx context.Context, template *templates.Template) error {
 	return nil
 }
@@ -262,39 +266,51 @@ func (m *MockTemplateManager) Delete(ctx context.Context, id string) error { ret
 func (m *MockTemplateManager) Search(ctx context.Context, query string) ([]*templates.Template, error) {
 	return []*templates.Template{}, nil
 }
+
 func (m *MockTemplateManager) GetByCategory(ctx context.Context, category string) ([]*templates.Template, error) {
 	return []*templates.Template{}, nil
 }
+
 func (m *MockTemplateManager) GetMostUsed(ctx context.Context, limit int) ([]*templates.Template, error) {
 	return []*templates.Template{}, nil
 }
+
 func (m *MockTemplateManager) GetVariables(ctx context.Context, templateID string) ([]*templates.TemplateVariable, error) {
 	return []*templates.TemplateVariable{}, nil
 }
+
 func (m *MockTemplateManager) SetVariables(ctx context.Context, templateID string, variables []*templates.TemplateVariable) error {
 	return nil
 }
+
 func (m *MockTemplateManager) Render(ctx context.Context, templateID string, variables map[string]interface{}) (string, error) {
 	return "", nil
 }
+
 func (m *MockTemplateManager) RenderContent(ctx context.Context, content string, variables map[string]interface{}) (string, error) {
 	return content, nil
 }
+
 func (m *MockTemplateManager) RecordUsage(ctx context.Context, templateID string, campaignID *string, variables map[string]interface{}, context string) error {
 	return nil
 }
+
 func (m *MockTemplateManager) GetUsageStats(ctx context.Context, templateID string) (*templates.UsageStats, error) {
 	return nil, nil
 }
+
 func (m *MockTemplateManager) ListCategories(ctx context.Context) ([]*templates.TemplateCategory, error) {
 	return []*templates.TemplateCategory{}, nil
 }
+
 func (m *MockTemplateManager) CreateCategory(ctx context.Context, category *templates.TemplateCategory) error {
 	return nil
 }
+
 func (m *MockTemplateManager) Export(ctx context.Context, templateIDs []string) ([]byte, error) {
 	return []byte{}, nil
 }
+
 func (m *MockTemplateManager) Import(ctx context.Context, data []byte, overwrite bool) (*templates.ImportResult, error) {
 	return nil, nil
 }
@@ -302,12 +318,15 @@ func (m *MockTemplateManager) InstallBuiltInTemplates(ctx context.Context) error
 func (m *MockTemplateManager) GetBuiltInTemplates() []*templates.Template {
 	return []*templates.Template{}
 }
+
 func (m *MockTemplateManager) GetContextualSuggestions(context map[string]interface{}) ([]*templates.Template, error) {
 	return []*templates.Template{}, nil
 }
+
 func (m *MockTemplateManager) RenderTemplate(templateID string, variables map[string]interface{}) (string, error) {
 	return "", nil
 }
+
 func (m *MockTemplateManager) SearchTemplates(query string, limit int) ([]*templates.TemplateSearchResult, error) {
 	return []*templates.TemplateSearchResult{}, nil
 }

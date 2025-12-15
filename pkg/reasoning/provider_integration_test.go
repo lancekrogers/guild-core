@@ -9,6 +9,7 @@ package reasoning_test
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 	"testing"
 	"time"
@@ -19,7 +20,6 @@ import (
 	"github.com/guild-framework/guild-core/pkg/reasoning"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"log/slog"
 )
 
 // TestProviderIntegration tests reasoning extraction with real providers

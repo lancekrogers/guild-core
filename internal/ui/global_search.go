@@ -496,8 +496,10 @@ type globalSearchResultsMsg struct {
 	err     error
 }
 
-type globalSearchPreviewMsg string
-type globalSearchErrorMsg error
+type (
+	globalSearchPreviewMsg string
+	globalSearchErrorMsg   error
+)
 
 // Commands
 

@@ -314,7 +314,6 @@ func TestProviderRecoveryPatterns(t *testing.T) {
 
 			// Attempt call
 			_, err := provider.Complete(ctx, "test message")
-
 			if err != nil {
 				failures++
 				lastFailureTime = time.Now()

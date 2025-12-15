@@ -84,7 +84,6 @@ func (cs *CostStorage) StoreUsage(ctx context.Context, usage Usage) error {
 		usage.Timestamp,
 		string(metadataJSON),
 	)
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to store usage").
 			WithComponent("cost.storage").

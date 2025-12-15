@@ -19,9 +19,7 @@ import (
 	"github.com/guild-framework/guild-core/pkg/registry"
 )
 
-var (
-	agentNoDaemon bool // Don't auto-start the Guild server
-)
+var agentNoDaemon bool // Don't auto-start the Guild server
 
 // agentListCmd represents the agent list command
 var agentListCmd = &cobra.Command{

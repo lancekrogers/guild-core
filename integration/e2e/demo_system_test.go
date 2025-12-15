@@ -285,7 +285,7 @@ func testScriptIntegrity(t *testing.T, env *TestEnvironment) {
 			// Check script is executable
 			info, _ := os.Stat(scriptPath)
 			mode := info.Mode()
-			assert.True(t, mode&0100 != 0, "Script should be executable: %s", script)
+			assert.True(t, mode&0o100 != 0, "Script should be executable: %s", script)
 
 			// Basic syntax check - ensure it's a valid shell script
 			data, err := os.ReadFile(scriptPath)

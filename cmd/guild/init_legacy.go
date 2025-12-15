@@ -104,7 +104,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild config").
 			WithComponent("cli").WithOperation("runInit")
 	}
-	if err := os.WriteFile(guildConfigPath, guildConfigData, 0644); err != nil {
+	if err := os.WriteFile(guildConfigPath, guildConfigData, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
 			WithComponent("cli").WithOperation("runInit").
 			WithDetails("config_path", guildConfigPath)
@@ -117,7 +117,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal corpus config").
 			WithComponent("cli").WithOperation("runInit")
 	}
-	if err := os.WriteFile(corpusConfigPath, corpusConfigData, 0644); err != nil {
+	if err := os.WriteFile(corpusConfigPath, corpusConfigData, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write corpus config").
 			WithComponent("cli").WithOperation("runInit").
 			WithDetails("config_path", corpusConfigPath)

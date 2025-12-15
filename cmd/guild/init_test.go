@@ -29,7 +29,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 )
 `
-	require.NoError(t, os.WriteFile(filepath.Join(tempDir, "go.mod"), []byte(goMod), 0644))
+	require.NoError(t, os.WriteFile(filepath.Join(tempDir, "go.mod"), []byte(goMod), 0o644))
 
 	// Create main.go
 	mainGo := `package main
@@ -40,7 +40,7 @@ func main() {
 	fmt.Println("Hello, World!")
 }
 `
-	require.NoError(t, os.WriteFile(filepath.Join(tempDir, "main.go"), []byte(mainGo), 0644))
+	require.NoError(t, os.WriteFile(filepath.Join(tempDir, "main.go"), []byte(mainGo), 0o644))
 
 	return tempDir
 }
@@ -184,12 +184,12 @@ func TestCraftInitPermissionErrors(t *testing.T) {
 
 	// Create a read-only directory
 	readOnlyDir := filepath.Join(tempDir, "readonly")
-	err := os.MkdirAll(readOnlyDir, 0444)
+	err := os.MkdirAll(readOnlyDir, 0o444)
 	require.NoError(t, err)
 
 	// Ensure cleanup even if test fails
 	defer func() {
-		_ = os.Chmod(readOnlyDir, 0755)
+		_ = os.Chmod(readOnlyDir, 0o755)
 		_ = os.RemoveAll(readOnlyDir)
 	}()
 
@@ -232,13 +232,13 @@ func TestCraftInitExistingCampaign(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create existing campaign manually
-	err = os.MkdirAll(".campaign", 0755)
+	err = os.MkdirAll(".campaign", 0o755)
 	require.NoError(t, err)
 
 	existingConfig := `name: existing-campaign
 version: 1.0.0
 `
-	err = os.WriteFile(".campaign/campaign.yaml", []byte(existingConfig), 0644)
+	err = os.WriteFile(".campaign/campaign.yaml", []byte(existingConfig), 0o644)
 	require.NoError(t, err)
 
 	// Initialize with force flag
@@ -299,9 +299,9 @@ func TestCraftInitProjectTypeDetection(t *testing.T) {
 			// Setup project files
 			for file, content := range tt.setupFiles {
 				filePath := filepath.Join(tempDir, file)
-				err := os.MkdirAll(filepath.Dir(filePath), 0755)
+				err := os.MkdirAll(filepath.Dir(filePath), 0o755)
 				require.NoError(t, err)
-				err = os.WriteFile(filePath, []byte(content), 0644)
+				err = os.WriteFile(filePath, []byte(content), 0o644)
 				require.NoError(t, err)
 			}
 
@@ -437,7 +437,7 @@ func TestInitCommandWithPath(t *testing.T) {
 	projectDir := filepath.Join(tempDir, "myproject")
 
 	// Create the project directory
-	os.MkdirAll(projectDir, 0755)
+	os.MkdirAll(projectDir, 0o755)
 
 	// Run init with path and force flag
 	cmd := rootCmd

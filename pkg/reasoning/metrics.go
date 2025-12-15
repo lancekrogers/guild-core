@@ -28,8 +28,8 @@ func NewMetricsCollector(registry *observability.MetricsRegistry) (*MetricsColle
 
 // RecordExtraction records metrics for an extraction
 func (mc *MetricsCollector) RecordExtraction(ctx context.Context, provider, agentID string,
-	duration time.Duration, blocks []ReasoningBlock, err error) {
-
+	duration time.Duration, blocks []ReasoningBlock, err error,
+) {
 	status := "success"
 	if err != nil {
 		status = "error"

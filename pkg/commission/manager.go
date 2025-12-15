@@ -46,7 +46,7 @@ func newManager(commissionRepo storage.CommissionRepository, fsBasePath string) 
 	}
 
 	// Ensure the directory exists
-	if err := os.MkdirAll(fsBasePath, 0755); err != nil {
+	if err := os.MkdirAll(fsBasePath, 0o755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commissions directory").
 			WithComponent("CommissionManager").
 			WithOperation("NewManager").
@@ -120,7 +120,7 @@ func (m *Manager) SaveCommission(ctx context.Context, commission *Commission) er
 		}
 
 		// Save to file
-		if err := os.WriteFile(commission.Source, []byte(content), 0644); err != nil {
+		if err := os.WriteFile(commission.Source, []byte(content), 0o644); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save commission to file").
 				WithComponent("CommissionManager").
 				WithOperation("SaveCommission").
@@ -526,7 +526,7 @@ func (m *Manager) UpdateCommission(ctx context.Context, commission Commission) e
 		}
 
 		// Save to file
-		if err := os.WriteFile(commission.Source, []byte(content), 0644); err != nil {
+		if err := os.WriteFile(commission.Source, []byte(content), 0o644); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update commission file").
 				WithComponent("CommissionManager").
 				WithOperation("UpdateCommission").

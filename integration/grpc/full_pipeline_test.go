@@ -41,6 +41,7 @@ func (m *MockTool) Schema() map[string]interface{} {
 		},
 	}
 }
+
 func (m *MockTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	m.execLog = append(m.execLog, fmt.Sprintf("Executed with input: %s", input))
 	return &tools.ToolResult{
@@ -51,15 +52,19 @@ func (m *MockTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 		},
 	}, nil
 }
+
 func (m *MockTool) Examples() []string {
 	return []string{"example input"}
 }
+
 func (m *MockTool) Category() string {
 	return "test"
 }
+
 func (m *MockTool) RequiresAuth() bool {
 	return false
 }
+
 func (m *MockTool) HealthCheck() error {
 	return nil
 }

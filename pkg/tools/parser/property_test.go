@@ -289,7 +289,6 @@ func TestProperty_MixedContent(t *testing.T) {
 		input := prefix + "\n" + middle + "\n" + suffix
 
 		calls, err := parser.ExtractToolCalls(input)
-
 		// Should not error
 		if err != nil {
 			return false

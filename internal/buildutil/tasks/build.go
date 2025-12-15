@@ -86,7 +86,7 @@ func Build(verbose bool) error {
 	start := time.Now()
 
 	// Create bin directory
-	os.MkdirAll("bin", 0755)
+	os.MkdirAll("bin", 0o755)
 
 	cmd := exec.Command("go", "build", "-o", "bin/guild", "./cmd/guild")
 	if verbose {
@@ -242,7 +242,7 @@ func BuildOnly(verbose bool) error {
 	ui.Section("Building Guild Framework")
 
 	// Create bin directory
-	if err := os.MkdirAll("bin", 0755); err != nil {
+	if err := os.MkdirAll("bin", 0o755); err != nil {
 		return fmt.Errorf("failed to create bin directory: %w", err)
 	}
 

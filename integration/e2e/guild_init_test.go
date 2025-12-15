@@ -72,10 +72,10 @@ func TestGuildInitialization(t *testing.T) {
 			setupFunc: func(t *testing.T, dir string) {
 				// Create existing .campaign directory with campaign.yaml
 				campaignDir := filepath.Join(dir, ".campaign")
-				err := os.MkdirAll(campaignDir, 0755)
+				err := os.MkdirAll(campaignDir, 0o755)
 				require.NoError(t, err)
 				// Create a dummy campaign.yaml
-				err = os.WriteFile(filepath.Join(campaignDir, "campaign.yaml"), []byte("campaign:\n  name: test\n"), 0644)
+				err = os.WriteFile(filepath.Join(campaignDir, "campaign.yaml"), []byte("campaign:\n  name: test\n"), 0o644)
 				require.NoError(t, err)
 			},
 			args:         []string{"init"},
@@ -87,10 +87,10 @@ func TestGuildInitialization(t *testing.T) {
 			setupFunc: func(t *testing.T, dir string) {
 				// Create existing .campaign directory with campaign.yaml
 				campaignDir := filepath.Join(dir, ".campaign")
-				err := os.MkdirAll(campaignDir, 0755)
+				err := os.MkdirAll(campaignDir, 0o755)
 				require.NoError(t, err)
 				// Create a dummy campaign.yaml
-				err = os.WriteFile(filepath.Join(campaignDir, "campaign.yaml"), []byte("campaign:\n  name: test\n"), 0644)
+				err = os.WriteFile(filepath.Join(campaignDir, "campaign.yaml"), []byte("campaign:\n  name: test\n"), 0o644)
 				require.NoError(t, err)
 			},
 			args: []string{"init", "--force"},
@@ -248,7 +248,7 @@ func TestProjectDetection(t *testing.T) {
 			// Create project files
 			for _, file := range pm.files {
 				path := filepath.Join(projCtx.GetRootPath(), file)
-				err := os.WriteFile(path, []byte("test content"), 0644)
+				err := os.WriteFile(path, []byte("test content"), 0o644)
 				require.NoError(t, err)
 			}
 

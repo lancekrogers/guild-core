@@ -58,7 +58,7 @@ func newDatabase(ctx context.Context, dbPath string) (*Database, error) {
 	}
 
 	// Ensure directory exists
-	if err := os.MkdirAll(filepath.Dir(dbPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(dbPath), 0o755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create database directory").
 			WithComponent("Database").
 			WithOperation("newDatabase").

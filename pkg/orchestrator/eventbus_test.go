@@ -167,7 +167,6 @@ func TestEventBusUnsubscribe(t *testing.T) {
 }
 
 func TestEventBusJSON(t *testing.T) {
-
 	// Original event with complex data
 	originalEvent := Event{
 		Type:   EventType("json.test"),

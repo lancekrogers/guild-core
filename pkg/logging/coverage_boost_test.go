@@ -300,15 +300,19 @@ type grpcStreamError struct{}
 func (s *grpcStreamError) Context() context.Context {
 	return context.WithValue(context.Background(), "test", "value")
 }
+
 func (s *grpcStreamError) SendMsg(m interface{}) error {
 	return errors.New("send error")
 }
+
 func (s *grpcStreamError) RecvMsg(m interface{}) error {
 	return io.EOF
 }
+
 func (s *grpcStreamError) SendHeader(md metadata.MD) error {
 	return errors.New("send header error")
 }
+
 func (s *grpcStreamError) SetHeader(md metadata.MD) error {
 	return errors.New("set header error")
 }

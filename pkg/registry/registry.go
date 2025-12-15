@@ -1385,7 +1385,6 @@ func (r *DefaultComponentRegistry) initializeStorage(ctx context.Context) error 
 }
 
 func (r *DefaultComponentRegistry) initializeSQLiteStorage(ctx context.Context, dbPath string) error {
-
 	// Initialize SQLite storage using the storage package's initialization function
 	storageReg, memoryStoreAdapter, err := storage.InitializeSQLiteStorageForRegistry(ctx, dbPath)
 	if err != nil {

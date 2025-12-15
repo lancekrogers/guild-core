@@ -146,6 +146,7 @@ func (pc *ParserCache) Get(key string) (*Recipe, bool) {
 	}
 	return entry.recipe, true
 }
+
 func (pc *ParserCache) Set(key string, r *Recipe) {
 	pc.mu.Lock()
 	pc.cache[key] = &cacheEntry{recipe: r, timestamp: time.Now()}

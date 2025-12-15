@@ -58,7 +58,7 @@ func TestSystemReliability(t *testing.T) {
 				setupFunc: func() error {
 					// Corrupt the database file
 					dbPath := filepath.Join(projCtx.GetRootPath(), ".campaign", "memory.db")
-					return os.WriteFile(dbPath, []byte("corrupted data"), 0644)
+					return os.WriteFile(dbPath, []byte("corrupted data"), 0o644)
 				},
 				testFunc: func() error {
 					// Should detect corruption and recreate
@@ -72,7 +72,7 @@ func TestSystemReliability(t *testing.T) {
 				setupFunc: func() error {
 					// Make directory read-only
 					campaignDir := filepath.Join(projCtx.GetRootPath(), ".campaign")
-					return os.Chmod(campaignDir, 0444)
+					return os.Chmod(campaignDir, 0o444)
 				},
 				testFunc: func() error {
 					// Should handle permission error gracefully
@@ -114,7 +114,7 @@ func TestSystemReliability(t *testing.T) {
 
 				// Cleanup permissions
 				campaignDir := filepath.Join(projCtx.GetRootPath(), ".campaign")
-				_ = os.Chmod(campaignDir, 0755)
+				_ = os.Chmod(campaignDir, 0o755)
 			})
 		}
 	})
@@ -324,7 +324,7 @@ func TestCrashRecovery(t *testing.T) {
 
 		// Simulate a stale lock file
 		lockFile := filepath.Join(projCtx.GetRootPath(), ".campaign", "memory.db.lock")
-		err := os.WriteFile(lockFile, []byte("stale-pid"), 0644)
+		err := os.WriteFile(lockFile, []byte("stale-pid"), 0o644)
 		require.NoError(t, err)
 
 		// System should recover from stale lock
@@ -351,11 +351,11 @@ func TestCrashRecovery(t *testing.T) {
 
 		// Create a partial commission file
 		commissionsDir := filepath.Join(projCtx.GetRootPath(), "commissions")
-		err := os.MkdirAll(commissionsDir, 0755)
+		err := os.MkdirAll(commissionsDir, 0o755)
 		require.NoError(t, err)
 
 		partialFile := filepath.Join(commissionsDir, "partial.md.tmp")
-		err = os.WriteFile(partialFile, []byte("# Incomplete Commission\n\nThis is"), 0644)
+		err = os.WriteFile(partialFile, []byte("# Incomplete Commission\n\nThis is"), 0o644)
 		require.NoError(t, err)
 
 		// System should handle partial files gracefully

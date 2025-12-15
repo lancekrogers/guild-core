@@ -45,7 +45,7 @@ func TestDemoCommissionIntegration(t *testing.T) {
 
 			// Write to file
 			filename := filepath.Join(tempDir, string(demoType)+".md")
-			err = os.WriteFile(filename, []byte(content), 0644)
+			err = os.WriteFile(filename, []byte(content), 0o644)
 			require.NoError(t, err)
 
 			// Parse the commission

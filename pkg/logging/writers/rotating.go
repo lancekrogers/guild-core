@@ -37,7 +37,7 @@ func NewRotatingWriter(filePath string, maxSize int64, maxAge, maxBackups int, c
 	base := filepath.Base(filePath)
 
 	// Create directory if needed
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create log directory").
 			WithDetails("dir", dir)
 	}
@@ -105,7 +105,7 @@ func (w *RotatingWriter) openFile() error {
 	}
 
 	// Open or create file
-	file, err := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o644)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to open log file").
 			WithDetails("path", path)

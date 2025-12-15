@@ -128,6 +128,7 @@ type mockCommissionRepository struct{}
 func (r *mockCommissionRepository) CreateCommission(ctx context.Context, commission interface{}) error {
 	return nil
 }
+
 func (r *mockCommissionRepository) GetCommission(ctx context.Context, id string) (interface{}, error) {
 	return nil, nil
 }

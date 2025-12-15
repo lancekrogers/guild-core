@@ -106,7 +106,7 @@ func NewChromemStore(config Config) (*ChromemStore, error) {
 
 	if config.PersistencePath != "" {
 		// Ensure the directory exists
-		if err := os.MkdirAll(config.PersistencePath, 0755); err != nil {
+		if err := os.MkdirAll(config.PersistencePath, 0o755); err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create persistence directory").
 				WithComponent("memory").
 				WithOperation("NewChromemStore")

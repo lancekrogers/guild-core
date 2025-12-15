@@ -45,7 +45,7 @@ func InitializeLocal(projectPath string) error {
 	}
 
 	// Create local directory
-	if err := os.MkdirAll(localDir, 0755); err != nil {
+	if err := os.MkdirAll(localDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create local Guild directory").
 			WithComponent("project").
 			WithOperation("initialize_local").
@@ -55,7 +55,7 @@ func InitializeLocal(projectPath string) error {
 	// Create subdirectories
 	for _, dir := range localDirectoryStructure {
 		dirPath := filepath.Join(localDir, dir)
-		if err := os.MkdirAll(dirPath, 0755); err != nil {
+		if err := os.MkdirAll(dirPath, 0o755); err != nil {
 			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to create directory %s", dir).
 				WithComponent("project").
 				WithOperation("initialize_local")
@@ -93,7 +93,7 @@ func createDefaultLocalConfig(localDir, projectPath string) error {
 
 	content := generateLocalConfig(projectType)
 
-	return os.WriteFile(configPath, []byte(content), 0644)
+	return os.WriteFile(configPath, []byte(content), 0o644)
 }
 
 // detectProjectType detects the type of project based on files present
@@ -170,7 +170,7 @@ archives/
 *.pem
 secrets.yaml
 `
-	return os.WriteFile(gitignorePath, []byte(content), 0644)
+	return os.WriteFile(gitignorePath, []byte(content), 0o644)
 }
 
 // LocalConfigPath returns the path to the local config file

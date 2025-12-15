@@ -140,8 +140,10 @@ type KeyBinding struct {
 }
 
 // Callbacks for events
-type ShortcutHandler func(ctx context.Context) tea.Cmd
-type CommandHandler func(ctx context.Context, args map[string]interface{}) tea.Cmd
+type (
+	ShortcutHandler func(ctx context.Context) tea.Cmd
+	CommandHandler  func(ctx context.Context, args map[string]interface{}) tea.Cmd
+)
 
 // NewShortcutManager creates a new shortcut manager with built-in shortcuts
 func NewShortcutManager() *ShortcutManager {

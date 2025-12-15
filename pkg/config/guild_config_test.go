@@ -214,7 +214,7 @@ func TestLoadGuildConfigFile(t *testing.T) {
 			name: "valid guild config",
 			setup: func() error {
 				guildDir := filepath.Join(tempDir, ".campaign")
-				if err := os.MkdirAll(guildDir, 0755); err != nil {
+				if err := os.MkdirAll(guildDir, 0o755); err != nil {
 					return err
 				}
 				config := &GuildConfigFile{
@@ -239,7 +239,7 @@ func TestLoadGuildConfigFile(t *testing.T) {
 		{
 			name: "missing guild config",
 			setup: func() error {
-				return os.MkdirAll(filepath.Join(tempDir, ".campaign"), 0755)
+				return os.MkdirAll(filepath.Join(tempDir, ".campaign"), 0o755)
 			},
 			wantErr: true,
 			errCode: gerror.ErrCodeNotFound,
@@ -248,10 +248,10 @@ func TestLoadGuildConfigFile(t *testing.T) {
 			name: "invalid yaml",
 			setup: func() error {
 				guildDir := filepath.Join(tempDir, ".campaign")
-				if err := os.MkdirAll(guildDir, 0755); err != nil {
+				if err := os.MkdirAll(guildDir, 0o755); err != nil {
 					return err
 				}
-				return os.WriteFile(filepath.Join(guildDir, "guild.yml"), []byte("invalid: yaml: : content"), 0644)
+				return os.WriteFile(filepath.Join(guildDir, "guild.yml"), []byte("invalid: yaml: : content"), 0o644)
 			},
 			wantErr: true,
 			errCode: gerror.ErrCodeValidation,
@@ -260,7 +260,7 @@ func TestLoadGuildConfigFile(t *testing.T) {
 			name: "invalid guild data",
 			setup: func() error {
 				guildDir := filepath.Join(tempDir, ".campaign")
-				if err := os.MkdirAll(guildDir, 0755); err != nil {
+				if err := os.MkdirAll(guildDir, 0o755); err != nil {
 					return err
 				}
 				// Guild with no agents
@@ -269,7 +269,7 @@ func TestLoadGuildConfigFile(t *testing.T) {
     purpose: "Test"
     description: "Test"
     agents: []`
-				return os.WriteFile(filepath.Join(guildDir, "guild.yml"), []byte(yamlContent), 0644)
+				return os.WriteFile(filepath.Join(guildDir, "guild.yml"), []byte(yamlContent), 0o644)
 			},
 			wantErr: true,
 			errCode: gerror.ErrCodeValidation,
@@ -310,7 +310,7 @@ func TestLoadGuildConfigFile_ContextCancellation(t *testing.T) {
 
 	// Create a valid config
 	guildDir := filepath.Join(tempDir, ".campaign")
-	os.MkdirAll(guildDir, 0755)
+	os.MkdirAll(guildDir, 0o755)
 	config := &GuildConfigFile{
 		Guilds: map[string]GuildDefinition{
 			"test-guild": {
@@ -813,7 +813,7 @@ func saveGuildConfigYAML(path string, config *GuildConfigFile) error {
 			}
 		}
 	}
-	return os.WriteFile(path, []byte(yamlContent), 0644)
+	return os.WriteFile(path, []byte(yamlContent), 0o644)
 }
 
 // Real-world scenario tests

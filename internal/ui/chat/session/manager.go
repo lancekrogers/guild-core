@@ -736,7 +736,7 @@ func (m *manager) exportPDF(session *Session, messages []*Message, options *Expo
 	pdfFile := filepath.Join(tempDir, "session.pdf")
 
 	// Write markdown to file
-	if err := os.WriteFile(markdownFile, markdownData, 0644); err != nil {
+	if err := os.WriteFile(markdownFile, markdownData, 0o644); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to write markdown file")
 	}
 
@@ -755,7 +755,7 @@ func (m *manager) exportPDF(session *Session, messages []*Message, options *Expo
 	// Add custom CSS if provided
 	if options.CustomCSS != "" {
 		cssFile := filepath.Join(tempDir, "style.css")
-		if err := os.WriteFile(cssFile, []byte(options.CustomCSS), 0644); err == nil {
+		if err := os.WriteFile(cssFile, []byte(options.CustomCSS), 0o644); err == nil {
 			args = append(args, "--css", cssFile)
 		}
 	}

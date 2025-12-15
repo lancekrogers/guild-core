@@ -54,7 +54,7 @@ func TestNewUserCompleteOnboarding(t *testing.T) {
 	t.Run("Step2_FirstProjectCreation", func(t *testing.T) {
 		// User creates their first project
 		projectDir := filepath.Join(homeDir, "my-first-guild-project")
-		err := os.MkdirAll(projectDir, 0755)
+		err := os.MkdirAll(projectDir, 0o755)
 		require.NoError(t, err)
 
 		// Change to project directory
@@ -128,11 +128,11 @@ I want to create a simple TODO list application with the following features:
 
 		// Save commission to file
 		commissionsDir := filepath.Join(projCtx.GetGuildPath(), "commissions")
-		err := os.MkdirAll(commissionsDir, 0755)
+		err := os.MkdirAll(commissionsDir, 0o755)
 		require.NoError(t, err)
 
 		commissionPath := filepath.Join(commissionsDir, "todo-app.md")
-		err = os.WriteFile(commissionPath, []byte(commissionContent), 0644)
+		err = os.WriteFile(commissionPath, []byte(commissionContent), 0o644)
 		require.NoError(t, err, "Writing commission should succeed")
 
 		// Verify commission is accessible
@@ -189,7 +189,7 @@ I want to create a simple TODO list application with the following features:
 		kanbanDir := filepath.Join(projCtx.GetGuildPath(), "kanban", "commission-001")
 		reviewDir := filepath.Join(kanbanDir, "review")
 
-		err := os.MkdirAll(reviewDir, 0755)
+		err := os.MkdirAll(reviewDir, 0o755)
 		require.NoError(t, err)
 
 		// Create review files for completed tasks
@@ -202,7 +202,7 @@ I want to create a simple TODO list application with the following features:
 
 		for _, file := range reviewFiles {
 			content := "# Task Review\n\nTask completed successfully.\n"
-			err := os.WriteFile(filepath.Join(reviewDir, file), []byte(content), 0644)
+			err := os.WriteFile(filepath.Join(reviewDir, file), []byte(content), 0o644)
 			require.NoError(t, err)
 		}
 
@@ -282,7 +282,7 @@ func TestNewUserPerformance(t *testing.T) {
 	require.NoError(t, err)
 
 	projectDir := filepath.Join(homeDir, "perf-test-project")
-	err = os.MkdirAll(projectDir, 0755)
+	err = os.MkdirAll(projectDir, 0o755)
 	require.NoError(t, err)
 
 	ctx := context.Background()
@@ -307,7 +307,7 @@ func initializeGlobalConfig(path string) error {
 	}
 
 	for _, dir := range dirs {
-		if err := os.MkdirAll(dir, 0755); err != nil {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
 			return err
 		}
 	}
@@ -326,7 +326,7 @@ preferences:
   auto_save: true
 `
 
-	return os.WriteFile(filepath.Join(path, "config.yml"), []byte(defaultConfig), 0644)
+	return os.WriteFile(filepath.Join(path, "config.yml"), []byte(defaultConfig), 0o644)
 }
 
 func saveGlobalConfig(path string, cfg *GlobalConfig) error {
@@ -337,7 +337,7 @@ providers:
     api_key: ` + cfg.Providers["openai"].APIKey + `
     model: ` + cfg.Providers["openai"].Model + `
 `
-	return os.WriteFile(path, []byte(content), 0644)
+	return os.WriteFile(path, []byte(content), 0o644)
 }
 
 func loadGlobalConfig(path string) (*GlobalConfig, error) {

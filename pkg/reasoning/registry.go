@@ -345,7 +345,6 @@ func (r *Registry) Extract(ctx context.Context, agentID, content string) ([]Reas
 			return extractErr
 		})
 	})
-
 	if err != nil {
 		// Add to dead letter queue on final failure
 		metadata := map[string]interface{}{
@@ -448,7 +447,6 @@ func (r *Registry) ExtractStream(ctx context.Context, agentID string, reader io.
 				}
 			}
 		})
-
 		if err != nil {
 			errCh <- gerror.Wrap(err, gerror.ErrCodeInternal, "stream extraction failed").
 				WithDetails("agent_id", agentID).

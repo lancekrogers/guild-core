@@ -138,7 +138,6 @@ func TestMockProviderCommandLineIntegration(t *testing.T) {
 		// Run guild init
 		cmd := exec.Command("guild", "init", "--name", "test-project")
 		output, err := cmd.CombinedOutput()
-
 		if err != nil {
 			t.Logf("Guild init output: %s", string(output))
 			// If init fails, it might be due to missing dependencies
@@ -226,7 +225,7 @@ func TestMockProviderCustomResponses(t *testing.T) {
     delay_ms: 10
     tokens: 25`
 
-	err := os.WriteFile(customResponsesPath, []byte(customYAML), 0644)
+	err := os.WriteFile(customResponsesPath, []byte(customYAML), 0o644)
 	require.NoError(t, err)
 
 	// Set environment variable to use custom responses

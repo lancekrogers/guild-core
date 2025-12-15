@@ -371,7 +371,8 @@ func LoggingMiddleware(logger interface{ Infof(string, ...interface{}) }) Middle
 // MetricsMiddleware adds metrics collection
 func MetricsMiddleware(metrics interface {
 	RecordEventHandled(string, time.Duration, error)
-}) Middleware {
+},
+) Middleware {
 	return func(next EventHandler) EventHandler {
 		return func(ctx context.Context, event Event) error {
 			start := time.Now()

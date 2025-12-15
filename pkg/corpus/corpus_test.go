@@ -34,7 +34,7 @@ func TestCorpusBasics(t *testing.T) {
 	}
 
 	// Ensure the corpus directory exists
-	err = os.MkdirAll(cfg.CorpusPath, 0755)
+	err = os.MkdirAll(cfg.CorpusPath, 0o755)
 	if err != nil {
 		t.Fatalf("Failed to create corpus directory: %v", err)
 	}

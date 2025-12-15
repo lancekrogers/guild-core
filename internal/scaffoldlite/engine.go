@@ -53,7 +53,7 @@ func (se *ScaffoldEngine) RenderFS(ctx context.Context, recipe *Recipe, options 
 		return nil, gerror.New(ErrCodeValidation, "recipe validation failed", nil).
 			WithDetails("errors", validationErrors)
 	}
-	if err := se.fileSystem.MkdirAll(".", 0755); err != nil {
+	if err := se.fileSystem.MkdirAll(".", 0o755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeIO, "failed to create destination directory").
 			WithDetails("dest", options.Dest)
 	}

@@ -29,7 +29,7 @@ func NewGuildArchiveWriter(archiveDir string, options ...ArchiveWriterOption) *G
 		archiveDir:  archiveDir,
 		backupDir:   filepath.Join(archiveDir, ".guild-backups"),
 		dryRun:      false,
-		permissions: 0644,
+		permissions: 0o644,
 	}
 
 	for _, option := range options {
@@ -162,7 +162,7 @@ func (w *GuildArchiveWriter) createGuildBackup(ctx context.Context, targetDir, c
 	timestamp := time.Now().Format("20060102-150405")
 	backupPath := filepath.Join(w.backupDir, fmt.Sprintf("%s-%s", commissionID, timestamp))
 
-	if err := os.MkdirAll(w.backupDir, 0755); err != nil {
+	if err := os.MkdirAll(w.backupDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create backup directory").
 			WithComponent("manager").
 			WithOperation("createGuildBackup").
@@ -185,7 +185,7 @@ func (w *GuildArchiveWriter) createGuildBackup(ctx context.Context, targetDir, c
 func (w *GuildArchiveWriter) writeArchiveFiles(ctx context.Context, targetDir string, structure *FileStructure) error {
 	// Create target directory
 	if !w.dryRun {
-		if err := os.MkdirAll(targetDir, 0755); err != nil {
+		if err := os.MkdirAll(targetDir, 0o755); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create target directory").
 				WithComponent("manager").
 				WithOperation("writeArchiveFiles").
@@ -213,7 +213,7 @@ func (w *GuildArchiveWriter) writeArchiveFile(ctx context.Context, targetDir str
 	// Ensure directory exists
 	dir := filepath.Dir(filePath)
 	if !w.dryRun {
-		if err := os.MkdirAll(dir, 0755); err != nil {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
 			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to create directory %s", dir).
 				WithComponent("manager").
 				WithOperation("writeArchiveFile").

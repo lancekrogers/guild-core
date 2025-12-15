@@ -170,7 +170,7 @@ func (t *writeToolImpl) Execute(ctx context.Context, input string) (*tools.ToolR
 	path := params["path"].(string)
 	content := params["content"].(string)
 
-	err := os.WriteFile(path, []byte(content), 0644)
+	err := os.WriteFile(path, []byte(content), 0o644)
 	if err != nil {
 		return nil, gerror.New(gerror.ErrCodeValidation, "write permission denied", err).
 			WithDetails("path", path).
@@ -550,13 +550,13 @@ func TestToolExecutionFailures(t *testing.T) {
 		t.Run("FileSystemPermissions", func(t *testing.T) {
 			// Create read-only file
 			readOnlyFile := filepath.Join(projCtx.GetRootPath(), "readonly.txt")
-			err := os.WriteFile(readOnlyFile, []byte("Read only content"), 0644)
+			err := os.WriteFile(readOnlyFile, []byte("Read only content"), 0o644)
 			require.NoError(t, err)
 
 			// Make it read-only
-			err = os.Chmod(readOnlyFile, 0444)
+			err = os.Chmod(readOnlyFile, 0o444)
 			require.NoError(t, err)
-			defer os.Chmod(readOnlyFile, 0644) // Restore permissions
+			defer os.Chmod(readOnlyFile, 0o644) // Restore permissions
 
 			// Tool that tries to write to read-only file
 			writeTool := &writeToolImpl{

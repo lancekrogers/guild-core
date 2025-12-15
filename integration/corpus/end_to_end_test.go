@@ -47,9 +47,9 @@ func TestEndToEndCorpusWorkflow(t *testing.T) {
 	embeddingsPath := filepath.Join(tempDir, "embeddings")
 	activitiesPath := filepath.Join(corpusPath, ".activities")
 
-	require.NoError(t, os.MkdirAll(corpusPath, 0755))
-	require.NoError(t, os.MkdirAll(embeddingsPath, 0755))
-	require.NoError(t, os.MkdirAll(activitiesPath, 0755))
+	require.NoError(t, os.MkdirAll(corpusPath, 0o755))
+	require.NoError(t, os.MkdirAll(embeddingsPath, 0o755))
+	require.NoError(t, os.MkdirAll(activitiesPath, 0o755))
 
 	// Create corpus config
 	corpusConfig := corpus.Config{
@@ -247,7 +247,7 @@ func TestProviderSwitching(t *testing.T) {
 	tempDir := t.TempDir()
 
 	corpusPath := filepath.Join(tempDir, "corpus")
-	require.NoError(t, os.MkdirAll(corpusPath, 0755))
+	require.NoError(t, os.MkdirAll(corpusPath, 0o755))
 
 	corpusConfig := corpus.Config{
 		CorpusPath:      corpusPath,
@@ -350,7 +350,7 @@ func TestOfflineOperation(t *testing.T) {
 	corpusPath := filepath.Join(tempDir, "corpus")
 	embeddingsPath := filepath.Join(tempDir, "embeddings")
 
-	require.NoError(t, os.MkdirAll(corpusPath, 0755))
+	require.NoError(t, os.MkdirAll(corpusPath, 0o755))
 
 	corpusConfig := corpus.Config{
 		CorpusPath:      corpusPath,
@@ -451,12 +451,12 @@ func TestErrorScenarios(t *testing.T) {
 		corpusPath := filepath.Join(tempDir, "corpus-corrupt")
 		embeddingsPath := filepath.Join(tempDir, "embeddings-corrupt")
 
-		require.NoError(t, os.MkdirAll(corpusPath, 0755))
-		require.NoError(t, os.MkdirAll(embeddingsPath, 0755))
+		require.NoError(t, os.MkdirAll(corpusPath, 0o755))
+		require.NoError(t, os.MkdirAll(embeddingsPath, 0o755))
 
 		// Create some corrupt data in embeddings path
 		corruptFile := filepath.Join(embeddingsPath, "corrupt.db")
-		err := os.WriteFile(corruptFile, []byte("not valid chromem data"), 0644)
+		err := os.WriteFile(corruptFile, []byte("not valid chromem data"), 0o644)
 		require.NoError(t, err)
 
 		// System should handle corrupt embeddings gracefully
@@ -503,7 +503,7 @@ func TestErrorScenarios(t *testing.T) {
 
 	t.Run("Document size limit", func(t *testing.T) {
 		corpusPath := filepath.Join(tempDir, "corpus-size")
-		require.NoError(t, os.MkdirAll(corpusPath, 0755))
+		require.NoError(t, os.MkdirAll(corpusPath, 0o755))
 
 		corpusConfig := corpus.Config{
 			CorpusPath:     corpusPath,
@@ -538,7 +538,7 @@ func TestMultiAgentWorkflow(t *testing.T) {
 	corpusPath := filepath.Join(tempDir, "shared-corpus")
 	embeddingsPath := filepath.Join(tempDir, "shared-embeddings")
 
-	require.NoError(t, os.MkdirAll(corpusPath, 0755))
+	require.NoError(t, os.MkdirAll(corpusPath, 0o755))
 
 	corpusConfig := corpus.Config{
 		CorpusPath:      corpusPath,

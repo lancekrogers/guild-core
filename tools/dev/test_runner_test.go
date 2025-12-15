@@ -169,7 +169,6 @@ func TestTestRunnerTool_FrameworkDetection(t *testing.T) {
 
 	// This should work if we're in a Go project (which we are)
 	result, err := runner.Execute(context.Background(), input)
-
 	// The result might fail if no tests are found, but it shouldn't error on framework detection
 	if err != nil {
 		// Check if it's a framework detection error vs execution error

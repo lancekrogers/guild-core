@@ -33,7 +33,7 @@ const (
 	ViewLogDirName = "_viewlog"
 
 	// DefaultPerms are the default permissions for new files and directories
-	DefaultPerms = 0755
+	DefaultPerms = 0o755
 )
 
 // ErrCorpusTooLarge is returned when a save would exceed the configured maximum size
@@ -138,7 +138,7 @@ func Save(ctx context.Context, doc *CorpusDoc, cfg Config) error {
 	}
 
 	// Write the file
-	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(filePath, []byte(content), 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write document").WithComponent("corpus").WithOperation("Save")
 	}
 

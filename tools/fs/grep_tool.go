@@ -124,7 +124,7 @@ func NewGrepTool(basePath string) *GrepTool {
 
 	// Ensure the base path exists
 	if _, err := os.Stat(basePath); os.IsNotExist(err) {
-		os.MkdirAll(basePath, 0755)
+		os.MkdirAll(basePath, 0o755)
 	}
 
 	schema := map[string]interface{}{
@@ -343,7 +343,6 @@ func (t *GrepTool) findMatches(ctx context.Context, searchDir string, regex *reg
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to walk directory").
 			WithComponent("grep_tool").

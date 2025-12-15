@@ -27,7 +27,7 @@ func GuildRunDir() (string, error) {
 	runDir := filepath.Join(homeDir, ".guild", "run")
 
 	// Ensure directory exists with proper permissions (user-only access)
-	if err := os.MkdirAll(runDir, 0700); err != nil {
+	if err := os.MkdirAll(runDir, 0o700); err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create run directory").
 			WithComponent("paths").
 			WithOperation("GuildRunDir").
@@ -35,7 +35,7 @@ func GuildRunDir() (string, error) {
 	}
 
 	// Verify permissions for security
-	if err := os.Chmod(runDir, 0700); err != nil {
+	if err := os.Chmod(runDir, 0o700); err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeStorage, "failed to set run directory permissions").
 			WithComponent("paths").
 			WithOperation("GuildRunDir").
@@ -95,7 +95,7 @@ func GetGuildConfigDir() (string, error) {
 	configDir := filepath.Join(homeDir, ".guild")
 
 	// Ensure directory exists
-	if err := os.MkdirAll(configDir, 0755); err != nil {
+	if err := os.MkdirAll(configDir, 0o755); err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create config directory").
 			WithComponent("paths").
 			WithOperation("GetGuildConfigDir").
@@ -132,7 +132,7 @@ func EnsureCampaignDir(campaignName string) (string, error) {
 	}
 
 	for _, dir := range dirs {
-		if err := os.MkdirAll(dir, 0700); err != nil {
+		if err := os.MkdirAll(dir, 0o700); err != nil {
 			return "", gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign directory").
 				WithComponent("paths").
 				WithOperation("EnsureCampaignDir").

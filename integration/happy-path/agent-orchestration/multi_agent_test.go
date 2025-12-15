@@ -184,8 +184,8 @@ func (f *HappyPathTestFramework) executeParallelCoordination(agents []*RealAgent
 	expectedCompletionTime time.Duration
 	coordinationComplexity ComplexityLevel
 	expectedSuccessRate    float64
-}) ([]CoordinationResult, error) {
-
+},
+) ([]CoordinationResult, error) {
 	var wg sync.WaitGroup
 	results := make([]CoordinationResult, len(agents))
 
@@ -245,8 +245,8 @@ func (f *HappyPathTestFramework) executeSequentialCoordination(agents []*RealAge
 	expectedCompletionTime time.Duration
 	coordinationComplexity ComplexityLevel
 	expectedSuccessRate    float64
-}) ([]CoordinationResult, error) {
-
+},
+) ([]CoordinationResult, error) {
 	results := make([]CoordinationResult, len(agents))
 	previousOutput := "Analyze the main.go file structure"
 
@@ -303,8 +303,8 @@ func (f *HappyPathTestFramework) executeCollaborativeCoordination(agents []*Real
 	expectedCompletionTime time.Duration
 	coordinationComplexity ComplexityLevel
 	expectedSuccessRate    float64
-}) ([]CoordinationResult, error) {
-
+},
+) ([]CoordinationResult, error) {
 	results := make([]CoordinationResult, len(agents))
 
 	// Collaborative task: code review with different perspectives

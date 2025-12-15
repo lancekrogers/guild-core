@@ -273,7 +273,6 @@ func (demo *PersonalityDemo) showAgentResponse(agentID, agentName, role, prompt 
 		"Please provide your professional advice on this matter.",
 		turnContext,
 	)
-
 	if err != nil {
 		fmt.Printf("❌ Error getting response from %s: %v\n\n", agentName, err)
 		return

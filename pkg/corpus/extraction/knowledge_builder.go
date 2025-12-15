@@ -33,8 +33,8 @@ func (kb *KnowledgeBuilder) BuildKnowledge(ctx context.Context,
 	source Source,
 	entities []Entity,
 	relations []Relation,
-	metadata map[string]interface{}) (*ExtractedKnowledge, error) {
-
+	metadata map[string]interface{},
+) (*ExtractedKnowledge, error) {
 	if ctx.Err() != nil {
 		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("corpus.extraction").
@@ -94,8 +94,8 @@ func (kb *KnowledgeBuilder) BuildKnowledge(ctx context.Context,
 // EnrichKnowledge adds additional information to existing knowledge
 func (kb *KnowledgeBuilder) EnrichKnowledge(ctx context.Context, knowledge *ExtractedKnowledge,
 	additionalEntities []Entity, additionalRelations []Relation,
-	additionalMetadata map[string]interface{}) error {
-
+	additionalMetadata map[string]interface{},
+) error {
 	if ctx.Err() != nil {
 		return gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("corpus.extraction").
@@ -138,8 +138,8 @@ func (kb *KnowledgeBuilder) EnrichKnowledge(ctx context.Context, knowledge *Extr
 
 // MergeKnowledge combines multiple related knowledge pieces
 func (kb *KnowledgeBuilder) MergeKnowledge(ctx context.Context, primary *ExtractedKnowledge,
-	secondary []ExtractedKnowledge) (*ExtractedKnowledge, error) {
-
+	secondary []ExtractedKnowledge,
+) (*ExtractedKnowledge, error) {
 	if ctx.Err() != nil {
 		return nil, gerror.Wrap(ctx.Err(), gerror.ErrCodeCancelled, "context cancelled").
 			WithComponent("corpus.extraction").
@@ -246,8 +246,8 @@ func (kb *KnowledgeBuilder) cleanContent(content string) string {
 }
 
 func (kb *KnowledgeBuilder) calculateOverallConfidence(ctx context.Context, content string,
-	entities []Entity, relations []Relation, source Source) float64 {
-
+	entities []Entity, relations []Relation, source Source,
+) float64 {
 	baseConfidence := 0.5
 
 	// Increase confidence based on content quality
@@ -310,8 +310,8 @@ func (kb *KnowledgeBuilder) calculateOverallConfidence(ctx context.Context, cont
 }
 
 func (kb *KnowledgeBuilder) buildContext(ctx context.Context, entities []Entity,
-	relations []Relation, source Source) map[string]interface{} {
-
+	relations []Relation, source Source,
+) map[string]interface{} {
 	context := make(map[string]interface{})
 
 	// Entity summary

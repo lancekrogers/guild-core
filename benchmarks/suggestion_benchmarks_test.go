@@ -295,7 +295,6 @@ func BenchmarkCacheEffectiveness(b *testing.B) {
 
 // BenchmarkMemoryUsage tests memory consumption
 func BenchmarkMemoryUsage(b *testing.B) {
-
 	b.Run("ServiceMemoryFootprint", func(b *testing.B) {
 		var m1, m2 runtime.MemStats
 
@@ -399,7 +398,6 @@ func BenchmarkProviderChain(b *testing.B) {
 
 // BenchmarkIntegrationFlow tests the full suggestion flow
 func BenchmarkIntegrationFlow(b *testing.B) {
-
 	// Simulate full chat integration
 	b.Run("FullChatFlow", func(b *testing.B) {
 		service := setupSuggestionService(b)

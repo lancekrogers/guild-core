@@ -260,7 +260,7 @@ func (t *ApplyDiffTool) applyDiff(ctx context.Context, params ApplyDiffParams) (
 	// Create backup if requested
 	if params.Backup {
 		backupFile := result.TargetFile + ".bak"
-		err := os.WriteFile(backupFile, content, 0644)
+		err := os.WriteFile(backupFile, content, 0o644)
 		if err != nil {
 			result.Errors = append(result.Errors, fmt.Sprintf("Failed to create backup: %v", err))
 		} else {
@@ -278,7 +278,7 @@ func (t *ApplyDiffTool) applyDiff(ctx context.Context, params ApplyDiffParams) (
 
 	if criticalConflicts == 0 {
 		newContent := strings.Join(modifiedLines, "\n")
-		err = os.WriteFile(result.TargetFile, []byte(newContent), 0644)
+		err = os.WriteFile(result.TargetFile, []byte(newContent), 0o644)
 		if err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to write modified file").
 				WithComponent("apply_diff_tool").

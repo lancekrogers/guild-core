@@ -296,8 +296,10 @@ func (p *ResponseParserImpl) looksLikeTask(line string) bool {
 	}
 
 	// Look for action verbs at the beginning
-	actionVerbs := []string{"implement", "create", "add", "update", "fix", "remove",
-		"design", "build", "test", "deploy", "configure", "setup", "install"}
+	actionVerbs := []string{
+		"implement", "create", "add", "update", "fix", "remove",
+		"design", "build", "test", "deploy", "configure", "setup", "install",
+	}
 
 	lowerLine := strings.ToLower(line)
 	for _, verb := range actionVerbs {

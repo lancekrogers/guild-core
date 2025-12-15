@@ -167,7 +167,7 @@ func migrateDirectory(src, dst string, opts MigrationOptions, result *MigrationR
 
 		// Create destination directory
 		dstDir := filepath.Dir(dstPath)
-		if err := os.MkdirAll(dstDir, 0755); err != nil {
+		if err := os.MkdirAll(dstDir, 0o755); err != nil {
 			result.Errors = append(result.Errors, gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to create directory %s", dstDir).
 				WithComponent("project").
 				WithOperation("migrate_directory"))

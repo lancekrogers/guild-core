@@ -519,13 +519,13 @@ func (s *DaemonService) writePIDFile() error {
 	pid := os.Getpid()
 
 	// Ensure directory exists
-	if err := os.MkdirAll(filepath.Dir(pidFile), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(pidFile), 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create PID directory").
 			WithComponent("DaemonService")
 	}
 
 	// Write PID
-	if err := os.WriteFile(pidFile, []byte(strconv.Itoa(pid)), 0644); err != nil {
+	if err := os.WriteFile(pidFile, []byte(strconv.Itoa(pid)), 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to write PID file").
 			WithComponent("DaemonService")
 	}

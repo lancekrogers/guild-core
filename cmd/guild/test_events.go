@@ -90,7 +90,6 @@ helping to debug and verify the event flow.`,
 
 				return nil
 			})
-
 			if err != nil {
 				return fmt.Errorf("failed to subscribe to %s: %w", et, err)
 			}

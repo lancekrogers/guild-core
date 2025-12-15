@@ -37,13 +37,13 @@ func TestSessionRoundTrip(t *testing.T) {
 	// Create temporary directory for test campaign
 	tmpDir := t.TempDir()
 	campaignDir := filepath.Join(tmpDir, campaignName)
-	if err := os.MkdirAll(campaignDir, 0755); err != nil {
+	if err := os.MkdirAll(campaignDir, 0o755); err != nil {
 		t.Fatalf("Failed to create test campaign directory: %v", err)
 	}
 
 	// Create .campaign directory structure
 	campaignConfigDir := filepath.Join(campaignDir, ".campaign")
-	if err := os.MkdirAll(campaignConfigDir, 0755); err != nil {
+	if err := os.MkdirAll(campaignConfigDir, 0o755); err != nil {
 		t.Fatalf("Failed to create .campaign directory: %v", err)
 	}
 
@@ -53,7 +53,7 @@ project: %s-test
 description: Test campaign for integration tests
 `, campaignName, campaignName)
 	campaignYamlPath := filepath.Join(campaignConfigDir, "campaign.yaml")
-	if err := os.WriteFile(campaignYamlPath, []byte(campaignYaml), 0644); err != nil {
+	if err := os.WriteFile(campaignYamlPath, []byte(campaignYaml), 0o644); err != nil {
 		t.Fatalf("Failed to write campaign.yaml: %v", err)
 	}
 
@@ -67,7 +67,7 @@ agents:
     model: mock
 `, campaignName)
 	guildYamlPath := filepath.Join(campaignConfigDir, "guild.yaml")
-	if err := os.WriteFile(guildYamlPath, []byte(guildYaml), 0644); err != nil {
+	if err := os.WriteFile(guildYamlPath, []byte(guildYaml), 0o644); err != nil {
 		t.Fatalf("Failed to write guild.yaml: %v", err)
 	}
 

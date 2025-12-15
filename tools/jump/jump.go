@@ -23,7 +23,7 @@ type Jump struct {
 func New(dbPath string) (*Jump, error) {
 	// Ensure the directory exists
 	dir := filepath.Dir(dbPath)
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create directory").
 			WithComponent("jump").
 			WithOperation("new")

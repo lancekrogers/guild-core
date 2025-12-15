@@ -25,7 +25,6 @@ func ExampleWebSearchTool() {
 	// Execute the search
 	ctx := context.Background()
 	result, err := tool.Execute(ctx, input)
-
 	if err != nil {
 		// Handle error
 		return
@@ -58,7 +57,6 @@ func ExampleWebFetchTool() {
 	// Execute the fetch and analysis
 	ctx := context.Background()
 	result, err := tool.Execute(ctx, input)
-
 	if err != nil {
 		// Handle error
 		return

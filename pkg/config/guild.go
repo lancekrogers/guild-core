@@ -462,7 +462,7 @@ func SaveGuildConfig(ctx context.Context, projectPath string, config *GuildConfi
 	configPath := filepath.Join(projectPath, ".campaign", "guild.yaml")
 
 	// Ensure directory exists
-	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(configPath), 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign directory").
 			WithComponent("GuildConfig").
 			WithOperation("SaveGuildConfig").
@@ -495,7 +495,7 @@ func SaveGuildConfig(ctx context.Context, projectPath string, config *GuildConfi
 
 	logger.InfoContext(ctx, "Writing configuration file", "path", configPath)
 
-	if err := os.WriteFile(configPath, data, 0644); err != nil {
+	if err := os.WriteFile(configPath, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
 			WithComponent("GuildConfig").
 			WithOperation("SaveGuildConfig").

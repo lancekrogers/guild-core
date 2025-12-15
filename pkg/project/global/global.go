@@ -47,7 +47,7 @@ func InitializeGlobal() error {
 	}
 
 	// Create global directory
-	if err := os.MkdirAll(globalDir, 0755); err != nil {
+	if err := os.MkdirAll(globalDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create global Guild directory").
 			WithComponent("project").
 			WithOperation("initialize_global").
@@ -57,7 +57,7 @@ func InitializeGlobal() error {
 	// Create subdirectories
 	for _, dir := range globalDirectoryStructure {
 		dirPath := filepath.Join(globalDir, dir)
-		if err := os.MkdirAll(dirPath, 0755); err != nil {
+		if err := os.MkdirAll(dirPath, 0o755); err != nil {
 			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to create directory %s", dir).
 				WithComponent("project").
 				WithOperation("initialize_global")
@@ -136,7 +136,7 @@ security:
     source: "environment"
 `
 
-	return os.WriteFile(configPath, []byte(content), 0644)
+	return os.WriteFile(configPath, []byte(content), 0o644)
 }
 
 // createProviderConfigs creates default provider configuration files
@@ -161,7 +161,7 @@ models:
     cost_per_1k_input: 0.0005
     cost_per_1k_output: 0.0015
 `
-	if err := os.WriteFile(filepath.Join(providersDir, "openai.yaml"), []byte(openaiConfig), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(providersDir, "openai.yaml"), []byte(openaiConfig), 0o644); err != nil {
 		return err
 	}
 
@@ -183,7 +183,7 @@ models:
     cost_per_1k_input: 0.003
     cost_per_1k_output: 0.015
 `
-	if err := os.WriteFile(filepath.Join(providersDir, "anthropic.yaml"), []byte(anthropicConfig), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(providersDir, "anthropic.yaml"), []byte(anthropicConfig), 0o644); err != nil {
 		return err
 	}
 
@@ -208,7 +208,7 @@ models:
     embedding: true
     dimensions: 768
 `
-	if err := os.WriteFile(filepath.Join(providersDir, "ollama.yaml"), []byte(ollamaConfig), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(providersDir, "ollama.yaml"), []byte(ollamaConfig), 0o644); err != nil {
 		return err
 	}
 
@@ -256,7 +256,7 @@ commissions:
   - "Follow Go best practices and idioms"
   - "Optimize for performance and readability"
 `
-	if err := os.WriteFile(filepath.Join(templatesDir, "golang", "template.yaml"), []byte(goTemplate), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(templatesDir, "golang", "template.yaml"), []byte(goTemplate), 0o644); err != nil {
 		return err
 	}
 
@@ -299,7 +299,7 @@ commissions:
   - "Follow PEP 8 style guidelines"
   - "Write comprehensive docstrings"
 `
-	if err := os.WriteFile(filepath.Join(templatesDir, "python", "template.yaml"), []byte(pythonTemplate), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(templatesDir, "python", "template.yaml"), []byte(pythonTemplate), 0o644); err != nil {
 		return err
 	}
 
@@ -343,7 +343,7 @@ commissions:
   - "Follow React best practices"
   - "Ensure accessibility compliance"
 `
-	if err := os.WriteFile(filepath.Join(templatesDir, "typescript", "template.yaml"), []byte(tsTemplate), 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(templatesDir, "typescript", "template.yaml"), []byte(tsTemplate), 0o644); err != nil {
 		return err
 	}
 

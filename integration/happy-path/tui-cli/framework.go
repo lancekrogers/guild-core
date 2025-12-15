@@ -463,13 +463,13 @@ func (v *VisualRegressionTracker) SaveGoldenFile(path string, data []byte) {
 
 	// Ensure directory exists
 	dir := filepath.Dir(path)
-	os.MkdirAll(dir, 0755)
+	os.MkdirAll(dir, 0o755)
 
 	// Save golden file
 	v.screenshots[path] = data
 
 	// In real implementation, save actual image file
-	os.WriteFile(path, data, 0644)
+	os.WriteFile(path, data, 0o644)
 }
 
 func (v *VisualRegressionTracker) CompareWithGolden(current []byte, goldenPath string) float64 {

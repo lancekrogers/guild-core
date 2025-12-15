@@ -24,7 +24,7 @@ func setupCampaignStructure(t *testing.T, projectPath string, guildConfig *confi
 		filepath.Join(projectPath, ".campaign", "agents"),
 	}
 	for _, dir := range dirs {
-		if err := os.MkdirAll(dir, 0755); err != nil {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
 			return err
 		}
 	}
@@ -42,7 +42,7 @@ func setupCampaignStructure(t *testing.T, projectPath string, guildConfig *confi
 	if err != nil {
 		return err
 	}
-	if err := os.WriteFile(filepath.Join(projectPath, ".campaign", "campaign.yaml"), campaignYAML, 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(projectPath, ".campaign", "campaign.yaml"), campaignYAML, 0o644); err != nil {
 		return err
 	}
 
@@ -62,7 +62,7 @@ func setupCampaignStructure(t *testing.T, projectPath string, guildConfig *confi
 	if err != nil {
 		return err
 	}
-	if err := os.WriteFile(filepath.Join(projectPath, ".campaign", "guilds", guildConfig.Name+".yaml"), guildYAML, 0644); err != nil {
+	if err := os.WriteFile(filepath.Join(projectPath, ".campaign", "guilds", guildConfig.Name+".yaml"), guildYAML, 0o644); err != nil {
 		return err
 	}
 
@@ -72,7 +72,7 @@ func setupCampaignStructure(t *testing.T, projectPath string, guildConfig *confi
 		if err != nil {
 			return err
 		}
-		if err := os.WriteFile(filepath.Join(projectPath, ".campaign", "agents", agent.ID+".yaml"), agentYAML, 0644); err != nil {
+		if err := os.WriteFile(filepath.Join(projectPath, ".campaign", "agents", agent.ID+".yaml"), agentYAML, 0o644); err != nil {
 			return err
 		}
 	}

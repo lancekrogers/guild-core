@@ -14,7 +14,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	chatui "github.com/guild-framework/guild-core/internal/ui/chat"
+	"github.com/guild-framework/guild-core/internal/daemon"
 	chatui "github.com/guild-framework/guild-core/internal/ui/chat"
 	"github.com/guild-framework/guild-core/pkg/campaign"
 	"github.com/guild-framework/guild-core/pkg/config"
@@ -96,7 +96,7 @@ func checkGuildInitialized(cmd *cobra.Command, args []string) error {
 			fmt.Println()
 
 			// Run guild init with sensible defaults
-			= exec.Command(os.Args[0], "init", "--force")
+			initCmd := exec.Command(os.Args[0], "init", "--force")
 			initCmd.Stdout = os.Stdout
 			initCmd.Stderr = os.Stderr
 			initCmd.Stdin = os.Stdin

@@ -53,7 +53,7 @@ func TestApp_HandleGlobalSearch(t *testing.T) {
 	}
 	dir := t.TempDir()
 	data := []byte("hello world")
-	require.NoError(t, os.WriteFile(filepath.Join(dir, "test.txt"), data, 0644))
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "test.txt"), data, 0o644))
 
 	app := newMinimalApp(t)
 	app.config.ProjectRoot = dir

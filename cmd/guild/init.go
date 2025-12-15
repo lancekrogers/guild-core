@@ -18,9 +18,7 @@ import (
 	"github.com/guild-framework/guild-core/pkg/providers"
 )
 
-var (
-	fastInitForce bool
-)
+var fastInitForce bool
 
 // initCmd represents the fast init command
 var initCmd = &cobra.Command{

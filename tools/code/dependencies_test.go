@@ -33,7 +33,7 @@ func TestDependenciesTool_Execute_GoMod(t *testing.T) {
 go 1.21
 `
 
-	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goMod), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goMod), 0o644)
 	require.NoError(t, err)
 
 	// Create some Go files
@@ -49,7 +49,7 @@ func main() {
 }
 `
 
-	err = os.WriteFile(filepath.Join(tmpDir, "main.go"), []byte(mainGo), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "main.go"), []byte(mainGo), 0o644)
 	require.NoError(t, err)
 
 	tool := NewDependenciesTool()
@@ -84,7 +84,7 @@ numpy
 pandas==1.5.2
 `
 
-	err = os.WriteFile(filepath.Join(tmpDir, "requirements.txt"), []byte(requirements), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "requirements.txt"), []byte(requirements), 0o644)
 	require.NoError(t, err)
 
 	// Create Python file
@@ -96,7 +96,7 @@ def main():
     pass
 `
 
-	err = os.WriteFile(filepath.Join(tmpDir, "main.py"), []byte(pythonFile), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "main.py"), []byte(pythonFile), 0o644)
 	require.NoError(t, err)
 
 	tool := NewDependenciesTool()
@@ -139,7 +139,7 @@ func TestDependenciesTool_Execute_NodeJS(t *testing.T) {
   }
 }`
 
-	err = os.WriteFile(filepath.Join(tmpDir, "package.json"), []byte(packageJSON), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "package.json"), []byte(packageJSON), 0o644)
 	require.NoError(t, err)
 
 	tool := NewDependenciesTool()
@@ -207,7 +207,7 @@ func TestDependenciesTool_Execute_UnknownProject(t *testing.T) {
 	defer os.RemoveAll(tmpDir)
 
 	// Create a random text file
-	err = os.WriteFile(filepath.Join(tmpDir, "readme.txt"), []byte("Hello world"), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "readme.txt"), []byte("Hello world"), 0o644)
 	require.NoError(t, err)
 
 	tool := NewDependenciesTool()
@@ -235,7 +235,7 @@ func TestDependenciesTool_Execute_WithFilters(t *testing.T) {
 go 1.21
 `
 
-	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goMod), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goMod), 0o644)
 	require.NoError(t, err)
 
 	tool := NewDependenciesTool()
@@ -267,7 +267,7 @@ func TestDependenciesTool_Execute_Outdated(t *testing.T) {
 go 1.21
 `
 
-	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goMod), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goMod), 0o644)
 	require.NoError(t, err)
 
 	tool := NewDependenciesTool()
@@ -299,7 +299,7 @@ func TestDependenciesTool_Execute_AllFormats(t *testing.T) {
 go 1.21
 `
 
-	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goMod), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goMod), 0o644)
 	require.NoError(t, err)
 
 	tool := NewDependenciesTool()
