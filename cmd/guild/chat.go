@@ -5,16 +5,14 @@ package main
 
 import (
 	"context"
+	"crypto/rand"
+	"errors"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"strings"
-	"time"
 
 	"github.com/spf13/cobra"
 
-	"github.com/guild-framework/guild-core/internal/daemon"
 	chatui "github.com/guild-framework/guild-core/internal/ui/chat"
 	"github.com/guild-framework/guild-core/pkg/campaign"
 	"github.com/guild-framework/guild-core/pkg/config"
@@ -62,86 +60,10 @@ Examples:
 	RunE: runChat,
 }
 
-func checkGuildInitialized(cmd *cobra.Command, args []string) error {
-	ctx := cmd.Context()
-	if ctx == nil {
-		ctx = context.Background()
-	}
-
-	// Check if campaign is initialized by looking for .campaign directory
-	campaignDir := filepath.Join(".", ".campaign")
-	if _, err := os.Stat(campaignDir); os.IsNotExist(err) {
-		// Campaign not initialized
-		// Offer to initialize guild
-		fmt.Println("🏰 Guild not initialized in this directory.")
-		fmt.Println()
-		fmt.Println("The Guild Framework needs to be initialized before you can chat with Elena and the specialists.")
-		fmt.Println()
-		fmt.Println("Would you like to initialize Guild now? This will:")
-		fmt.Println("  ✨ Set up your Guild with Elena as Guild Master")
-		fmt.Println("  🤖 Detect available AI providers automatically")
-		fmt.Println("  👥 Create Marcus (backend) and Vera (frontend) specialists")
-		fmt.Println("  🚀 Get you chatting in under 30 seconds")
-		fmt.Println()
-		fmt.Print("Initialize Guild? [Y/n]: ")
-
-		// Read user input
-		var response string
-		fmt.Scanln(&response)
-
-		// Default to yes if empty or starts with y/Y
-		if response == "" || (len(response) > 0 && strings.ToLower(response)[0] == 'y') {
-			fmt.Println()
-			fmt.Println("🎯 Starting Guild initialization...")
-			fmt.Println()
-
-			// Run guild init with sensible defaults
-			initCmd := exec.Command(os.Args[0], "init", "--force")
-			initCmd.Stdout = os.Stdout
-			initCmd.Stderr = os.Stderr
-			initCmd.Stdin = os.Stdin
-
-			if err := initCmd.Run(); err != nil {
-				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run guild init").
-					WithComponent("cli").
-					WithOperation("checkGuildInitialized")
-			}
-
-			fmt.Println()
-			fmt.Println("✅ Guild initialized! Continuing to chat...")
-			fmt.Println()
-
-			// Small pause for user to see the message
-			time.Sleep(1 * time.Second)
-
-			// Return nil to continue to runChat
-			return nil
-		} else {
-			fmt.Println()
-			fmt.Println("To initialize Guild manually, run:")
-			fmt.Println("  guild init")
-			fmt.Println()
-			// Return the error which will prevent runChat from executing
-			return gerror.New(gerror.ErrCodeCancelled, "guild initialization required", nil).
-				WithComponent("cli").
-				WithOperation("checkGuildInitialized")
-		}
-	}
-	// Campaign is initialized, continue
-	return nil
-}
-
 func runChat(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
 
-	// First check if guild is initialized
-	if err := checkGuildInitialized(cmd, args); err != nil {
-		// If checkGuildInitialized returns an error, it means user cancelled
-		// The function already printed the message, so just return nil
-		return nil
-	}
-
-	// Detect campaign for current working directory
+	// Detect campaign root for current working directory
 	cwd, err := os.Getwd()
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to get current directory").
@@ -149,21 +71,19 @@ func runChat(cmd *cobra.Command, args []string) error {
 			WithOperation("chat.run")
 	}
 
-	// Load configuration (now we know it exists)
-	guildConfig, err := loadGuildConfig(ctx)
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to load guild configuration").
+	projectRoot, err := project.FindProjectRoot(cwd)
+	inCampaign := err == nil
+	if err != nil && !errors.Is(err, project.ErrNotInProject) {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to detect campaign root").
 			WithComponent("cli").
 			WithOperation("chat.run")
 	}
 
 	// Use campaign detection logic
-	campaignName, err := campaign.DetectCampaign(cwd, chatCampaignID)
-	if err != nil {
-		// If no campaign detected after initialization, use a default
-		if gerror.GetCode(err) == gerror.ErrCodeNotFound {
-			campaignName = "guild-demo" // Use default campaign name
-		} else {
+	campaignName := ""
+	if inCampaign {
+		campaignName, err = campaign.DetectCampaign(cwd, chatCampaignID)
+		if err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to detect campaign").
 				WithComponent("cli").
 				WithOperation("chat.run").
@@ -171,24 +91,25 @@ func runChat(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	// Initialize project
-	_, err = project.GetContext()
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to load project").
-			WithComponent("cli").
-			WithOperation("chat.run")
+	// Load guild configuration
+	var guildConfig *config.GuildConfig
+	if inCampaign {
+		guildConfig, err = loadGuildConfig(ctx, projectRoot)
+		if err != nil {
+			// Fall back to default template so chat can still open
+			guildConfig = config.DefaultGuildTemplate()
+		}
+	} else {
+		guildConfig = config.DefaultGuildTemplate()
 	}
 
 	// Run guild selector to let user choose which guild to work with
-	selectedGuild, err := chatui.RunGuildSelector(ctx)
-	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to select guild").
-			WithComponent("cli").
-			WithOperation("chat.run")
+	selectedGuild := guildConfig.Name
+	if inCampaign {
+		if picked, err := chatui.RunGuildSelector(ctx); err == nil && picked != "" {
+			selectedGuild = picked
+		}
 	}
-
-	// Store selected guild for future use
-	fmt.Printf("Selected guild: %s\n", selectedGuild)
 
 	// Generate session ID if not provided
 	if chatSessionID == "" {
@@ -201,40 +122,8 @@ func runChat(cmd *cobra.Command, args []string) error {
 		userID = "default"
 	}
 
-	// Ensure daemon is running (auto-start with retries for a smooth UX)
-	if !daemon.IsReachable(ctx) {
-		fmt.Println("🚀 Starting Guild server...")
-		if err := daemon.EnsureRunning(ctx); err != nil {
-			return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
-				WithComponent("cli").
-				WithOperation("chat.daemon_start")
-		}
-		for i := 0; i < 10; i++ { // wait up to ~5s
-			if daemon.IsReachable(ctx) {
-				break
-			}
-			time.Sleep(500 * time.Millisecond)
-		}
-	}
-
-	if !daemon.IsReachable(ctx) {
-		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
-			WithComponent("cli").
-			WithOperation("chat.preflight").
-			WithDetails("help", "Start the daemon first: 'guild serve --foreground' then run 'guild chat'")
-	}
-
-	// Initialize registry
-	reg := registry.NewComponentRegistry()
-	registryConfig := registry.Config{
-		// Basic registry configuration - will be enhanced later
-	}
-
-	if err := reg.Initialize(context.Background(), registryConfig); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize registry").
-			WithComponent("cli").
-			WithOperation("chat.run")
-	}
+	// Registry is optional for chat; direct mode can operate without it.
+	var reg registry.ComponentRegistry
 
 	// Create and run chat interface with daemon connection management
 	app := chatui.NewApp(ctx, guildConfig, reg)
@@ -246,18 +135,24 @@ func runChat(cmd *cobra.Command, args []string) error {
 }
 
 // loadGuildConfig loads the guild configuration from the project
-func loadGuildConfig(ctx context.Context) (*config.GuildConfig, error) {
-	// Load from current directory (LoadGuildConfig will add .guild/guild.yaml)
-	return config.LoadGuildConfig(ctx, ".")
+func loadGuildConfig(ctx context.Context, projectRoot string) (*config.GuildConfig, error) {
+	if projectRoot == "" {
+		projectRoot = "."
+	}
+	return config.LoadGuildConfig(ctx, projectRoot)
 }
 
 // generateUUID generates a new UUID for session ID
 func generateUUID() string {
-	// Simple UUID v4 generation (you might want to use a proper UUID library)
-	return fmt.Sprintf("%x-%x-%x-%x-%x",
-		make([]byte, 4),
-		make([]byte, 2),
-		make([]byte, 2),
-		make([]byte, 2),
-		make([]byte, 6))
+	var b [16]byte
+	if _, err := rand.Read(b[:]); err != nil {
+		// Fall back to a timestamp-based identifier
+		return fmt.Sprintf("session-%d", os.Getpid())
+	}
+
+	// UUID v4 variant
+	b[6] = (b[6] & 0x0f) | 0x40
+	b[8] = (b[8] & 0x3f) | 0x80
+
+	return fmt.Sprintf("%x-%x-%x-%x-%x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:16])
 }
