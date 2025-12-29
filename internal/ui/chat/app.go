@@ -6,6 +6,7 @@ package chat
 import (
 	"context"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -43,7 +44,10 @@ import (
 	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-framework/guild-core/pkg/grpc/pb/prompts/v1"
 	"github.com/guild-framework/guild-core/pkg/memory"
+	"github.com/guild-framework/guild-core/pkg/paths"
 	"github.com/guild-framework/guild-core/pkg/preferences"
+	"github.com/guild-framework/guild-core/pkg/project"
+	globalproj "github.com/guild-framework/guild-core/pkg/project/global"
 	"github.com/guild-framework/guild-core/pkg/providers"
 	"github.com/guild-framework/guild-core/pkg/registry"
 	pkgsession "github.com/guild-framework/guild-core/pkg/session"
@@ -171,8 +175,32 @@ func NewApp(ctx context.Context, guildConfig *config.GuildConfig,
 	// Store guild config for later initialization
 	app.config = &common.ChatConfig{
 		GuildConfig: guildConfig,
-		Width:       80,
-		Height:      24,
+
+		// UI defaults
+		Width:           80,
+		Height:          24,
+		MarkdownEnabled: true,
+		WrapLines:       true,
+
+		// Feature defaults (enabled)
+		EnableCompletion:    true,
+		EnableHistory:       true,
+		EnableStatusDisplay: true,
+		EnableRichContent:   true,
+
+		// Theme defaults
+		Theme:          "dark",
+		FontSize:       12,
+		ColorScheme:    "default",
+		ShowTimestamps: true,
+		CompactMode:    false,
+
+		// AI defaults
+		DefaultProvider:  "anthropic",
+		DefaultModel:     "claude-3-sonnet-20240229",
+		Temperature:      0.7,
+		MaxTokens:        4096,
+		StreamingEnabled: true,
 	}
 
 	return app
@@ -221,6 +249,13 @@ func (app *App) Run() error {
 
 // initializeComponents initializes all application components
 func (app *App) initializeComponents() error {
+	// Ensure config is complete before any component init that relies on it.
+	if err := app.ensureChatConfigDefaults(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to build chat configuration").
+			WithComponent("chat.app").
+			WithOperation("initializeComponents")
+	}
+
 	// Initialize utilities
 	app.styles = utils.NewStyles()
 	app.keys = utils.NewKeyBindings()
@@ -242,15 +277,22 @@ func (app *App) initializeComponents() error {
 			WithOperation("initializeComponents")
 	}
 
+	// Initialize session management with Sprint 2 enhancements
+	if err := app.initializeSessionManagement(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize session management").
+			WithComponent("chat.app").
+			WithOperation("initializeComponents")
+	}
+
 	// Initialize preferences service (Sprint 2)
 	if err := app.initializePreferences(); err != nil {
 		// Log but don't fail - preferences are optional
 		fmt.Printf("Warning: Failed to initialize preferences: %v\n", err)
 	}
 
-	// Initialize session management with Sprint 2 enhancements
-	if err := app.initializeSessionManagement(); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize session management").
+	// Initialize daemon-backed or local backend before services/routers.
+	if err := app.initializeBackend(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize backend").
 			WithComponent("chat.app").
 			WithOperation("initializeComponents")
 	}
@@ -266,7 +308,10 @@ func (app *App) initializeComponents() error {
 	}
 
 	// Initialize completion engine with suggestion support
-	projectRoot := "." // TODO: Get actual project root
+	projectRoot := app.config.ProjectRoot
+	if projectRoot == "" {
+		projectRoot = "."
+	}
 
 	// Try to get project root from registry if available
 	// Note: There's a type mismatch between registry.ProjectContext interface
@@ -306,19 +351,19 @@ func (app *App) initializeComponents() error {
 		app.completionEngine.SetCommandProcessor(app.commandProcessor)
 	}
 
-	// Initialize services
+	// Initialize services (optional in direct mode / global mode)
 	if err := app.initializeServices(); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize services").
-			WithComponent("chat.app").
-			WithOperation("initializeComponents")
+		fmt.Printf("Warning: Failed to initialize chat services: %v\n", err)
 	}
 
-	// Initialize agent router
-	app.agentRouter = agents.NewAgentRouter(app.ctx, app.guildClient)
+	// Initialize agent router (requires backend)
+	if app.guildClient != nil {
+		app.agentRouter = agents.NewAgentRouter(app.ctx, app.guildClient)
 
-	// Set agent router on command processor for campaign commands
-	if app.agentRouter != nil && app.commandProcessor != nil {
-		app.commandProcessor.SetAgentRouter(app.agentRouter)
+		// Set agent router on command processor for campaign commands
+		if app.commandProcessor != nil {
+			app.commandProcessor.SetAgentRouter(app.agentRouter)
+		}
 	}
 
 	// Initialize layout manager
@@ -336,14 +381,91 @@ func (app *App) initializeComponents() error {
 			WithOperation("initializeComponents")
 	}
 
-	// Initialize daemon connection
-	if err := app.initializeDaemonConnection(); err != nil {
-		// Enable direct mode fallback
-		app.enableDirectMode()
-	}
+	// Update connection status display now that panes exist.
+	app.updateConnectionStatus()
 
 	app.initialized = true
 	return nil
+}
+
+func (app *App) ensureChatConfigDefaults() error {
+	if app.config == nil {
+		return gerror.New(gerror.ErrCodeInvalidInput, "chat config is nil", nil).
+			WithComponent("chat.app").
+			WithOperation("ensureChatConfigDefaults")
+	}
+
+	// Basic UI defaults
+	if app.config.Width <= 0 {
+		app.config.Width = 80
+	}
+	if app.config.Height <= 0 {
+		app.config.Height = 24
+	}
+
+	// Feature defaults (opt-out later via preferences)
+	app.config.MarkdownEnabled = true
+	app.config.WrapLines = true
+	app.config.EnableCompletion = true
+	app.config.EnableHistory = true
+	app.config.EnableStatusDisplay = true
+	app.config.EnableRichContent = true
+
+	// Ensure we have a usable project root (used for tools/search/completions)
+	if app.config.ProjectRoot == "" {
+		if cwd, err := os.Getwd(); err == nil {
+			app.config.ProjectRoot = cwd
+		} else {
+			app.config.ProjectRoot = "."
+		}
+	}
+
+	// Resolve campaign root if present; otherwise, run in global mode.
+	if root, err := project.FindProjectRoot(app.config.ProjectRoot); err == nil && root != "" {
+		app.config.ProjectRoot = root
+		if app.config.DatabasePath == "" {
+			app.config.DatabasePath = filepath.Join(root, paths.DefaultCampaignDir, paths.DefaultMemoryDB)
+		}
+		if app.config.HistoryPath == "" {
+			app.config.HistoryPath = filepath.Join(root, paths.DefaultCampaignDir, "chat_history.txt")
+		}
+		if app.config.ConfigPath == "" {
+			app.config.ConfigPath = filepath.Join(root, paths.DefaultCampaignDir, "campaign.yaml")
+		}
+	} else {
+		// Global mode uses the global Guild directory for state.
+		globalDir := globalproj.GlobalGuildDir()
+		if app.config.DatabasePath == "" {
+			app.config.DatabasePath = filepath.Join(globalDir, paths.DefaultMemoryDB)
+		}
+		if app.config.HistoryPath == "" {
+			app.config.HistoryPath = filepath.Join(globalDir, "chat_history.txt")
+		}
+		if app.config.ConfigPath == "" {
+			app.config.ConfigPath = filepath.Join(globalDir, "config.yaml")
+		}
+	}
+
+	// Ensure GuildConfig exists (NewApp should set it, but keep safe defaults).
+	if app.config.GuildConfig == nil {
+		app.config.GuildConfig = config.DefaultGuildTemplate()
+	}
+
+	return nil
+}
+
+func (app *App) initializeBackend() error {
+	// Prefer daemon when available, but always fall back to direct mode.
+	if app.config != nil && app.config.CampaignID != "" {
+		if err := app.initializeDaemonConnection(); err == nil {
+			app.directMode = false
+			return nil
+		}
+	}
+
+	app.directMode = true
+	app.connectionStatus = false
+	return app.initializeDirectMode()
 }
 
 // initializeSessionManagement initializes enhanced session persistence from Sprint 2
@@ -352,9 +474,14 @@ func (app *App) initializeSessionManagement() error {
 	if app.storageRegistry == nil {
 		storageReg, memStore, err := storage.InitializeSQLiteStorageForRegistry(app.ctx, app.config.DatabasePath)
 		if err != nil {
-			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize storage registry").
-				WithComponent("chat.app").
-				WithOperation("initializeSessionManagement")
+			// Fall back to an in-memory DB so the chat UI can still start.
+			storageReg, memStore, err = storage.InitializeSQLiteStorageForRegistry(app.ctx, ":memory:")
+			if err != nil {
+				return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize storage registry").
+					WithComponent("chat.app").
+					WithOperation("initializeSessionManagement")
+			}
+			app.config.DatabasePath = ":memory:"
 		}
 		app.storageRegistry = storageReg
 		// memStore is available if needed for memory operations
@@ -379,14 +506,16 @@ func (app *App) initializeSessionManagement() error {
 	sessionManager := pkgsession.NewSessionManager(app.sessionStore,
 		pkgsession.WithAutoSaveInterval(30*time.Second))
 
-	// Create recovery manager for crash recovery
-	recoveryDir := filepath.Join(filepath.Dir(app.config.DatabasePath), "recovery")
-	recoveryManager, err := pkgsession.NewRecoveryManager(sessionManager, recoveryDir)
-	if err != nil {
-		// Log but don't fail - recovery is optional
-		fmt.Printf("Warning: Failed to create recovery manager: %v\n", err)
+	// Create recovery manager for crash recovery (skip for in-memory DBs)
+	if app.config.DatabasePath != ":memory:" {
+		recoveryDir := filepath.Join(filepath.Dir(app.config.DatabasePath), "recovery")
+		recoveryManager, err := pkgsession.NewRecoveryManager(sessionManager, recoveryDir)
+		if err != nil {
+			// Log but don't fail - recovery is optional
+			fmt.Printf("Warning: Failed to create recovery manager: %v\n", err)
+		}
+		app.recoveryManager = recoveryManager
 	}
-	app.recoveryManager = recoveryManager
 
 	// Create multi-session manager
 	app.multiSessionMgr = pkgsession.NewMultiSessionManager(sessionManager, nil, 10)
@@ -473,9 +602,14 @@ func (app *App) initializePreferences() error {
 		enhancedConfig, err := configManager.LoadChatConfig(app.ctx, app.config.UserID,
 			app.config.CampaignID, app.config.SessionID)
 		if err == nil {
-			// Preserve existing values but apply preferences
+			// Preserve core runtime paths/IDs but apply preference fields.
 			enhancedConfig.Width = app.config.Width
 			enhancedConfig.Height = app.config.Height
+			enhancedConfig.ProjectRoot = app.config.ProjectRoot
+			enhancedConfig.DatabasePath = app.config.DatabasePath
+			enhancedConfig.HistoryPath = app.config.HistoryPath
+			enhancedConfig.ConfigPath = app.config.ConfigPath
+			enhancedConfig.GuildConfig = app.config.GuildConfig
 			app.config = enhancedConfig
 		}
 	}
@@ -669,8 +803,23 @@ func (app *App) setupInputCallbacks() {
 								cmd = app.agentRouter.SendToAgent(target.ID, target.Message)
 							}
 						} else {
-							// No agent mention, send to default agent (elena-guild-master)
-							cmd = app.agentRouter.SendToAgent("elena-guild-master", input)
+							// No agent mention: prefer the configured manager, otherwise broadcast.
+							defaultAgentID := ""
+							if app.config != nil && app.config.GuildConfig != nil {
+								if app.config.GuildConfig.Manager.Override != "" {
+									defaultAgentID = app.config.GuildConfig.Manager.Override
+								} else if app.config.GuildConfig.Manager.Default != "" {
+									defaultAgentID = app.config.GuildConfig.Manager.Default
+								} else if len(app.config.GuildConfig.Agents) > 0 {
+									defaultAgentID = app.config.GuildConfig.Agents[0].ID
+								}
+							}
+
+							if defaultAgentID == "" || defaultAgentID == "all" {
+								cmd = app.agentRouter.BroadcastToAll(input)
+							} else {
+								cmd = app.agentRouter.SendToAgent(defaultAgentID, input)
+							}
 						}
 
 						// Execute the command and handle the result
@@ -2106,14 +2255,18 @@ func (app *App) enableDirectMode() {
 
 // initializeDirectMode sets up direct orchestrator for when daemon is unavailable
 func (app *App) initializeDirectMode() error {
-	// Create mock/direct gRPC clients for local operation
-	// This would integrate with the existing orchestrator package
-	// For now, we'll create a simple local implementation
+	client, err := newLocalGuildClient(app.config.GuildConfig)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize local guild client").
+			WithComponent("chat.app").
+			WithOperation("initializeDirectMode")
+	}
 
-	// NOTE: This is where we'd integrate with pkg/orchestrator for direct mode
-	// The orchestrator package already has local execution capabilities
+	app.guildClient = client
+	app.chatClient = nil
+	app.sessionClient = nil
+	app.promptsClient = nil
 
-	app.addSystemMessage("Direct mode initialized - commands will run locally")
 	return nil
 }
 

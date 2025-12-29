@@ -9,7 +9,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/spf13/cobra"
 
@@ -50,11 +49,13 @@ This opens a terminal-based chat interface where you can:
 Campaign Support:
 - Use --campaign to specify which campaign to connect to
 - Without --campaign, detects campaign from current directory
-- Requires Guild daemon to be running (use 'guild serve')
+- If no campaign workspace is detected, runs in Global Mode (no .campaign/ required)
+- If a daemon is available, the UI may use it; otherwise it falls back to direct (in-process) mode
 
 Examples:
-  guild serve                        # Start daemon in background (separate terminal)
-  guild chat                         # Connect to running daemon
+  guild chat                         # Start chat (Global Mode outside campaigns)
+  guild serve --foreground            # Optional: start daemon for campaign features
+  guild chat                          # Connects if daemon is available, otherwise uses direct mode
   guild chat --campaign e-commerce   # Chat with specific campaign
   guild chat --session my-session    # Use specific session ID`,
 	RunE: runChat,
