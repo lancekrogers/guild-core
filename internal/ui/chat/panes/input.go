@@ -104,7 +104,7 @@ func NewInputPane(width, height int, completionEnabled bool) (InputPane, error) 
 		textarea:         ta,
 		completions:      make([]completion.CompletionResult, 0),
 		history:          make([]string, 0),
-		historyIndex:     -1,
+		historyIndex:     0,
 		multilineEnabled: false,
 		placeholder:      "Message agents with @agent-name or use /commands...",
 		normalStyle:      createInputStyle(),

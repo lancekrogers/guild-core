@@ -102,7 +102,7 @@ func StatusPaneConstraints() LayoutConstraints {
 	constraints := DefaultConstraints()
 	constraints.MinHeight = 0       // Can be hidden when empty
 	constraints.MaxHeight = 10      // Allow up to 10 lines for completions
-	constraints.PreferredHeight = 0 // Start hidden (0 height)
+	constraints.PreferredHeight = 1 // Start visible (compact status bar)
 	constraints.FlexGrow = 0.0      // Don't grow
 	constraints.FlexShrink = 0.0    // Don't shrink
 	constraints.Padding = Padding{Top: 0, Right: 1, Bottom: 0, Left: 1}
