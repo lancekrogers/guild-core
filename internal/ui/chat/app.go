@@ -435,14 +435,28 @@ func (app *App) ensureChatConfigDefaults() error {
 	} else {
 		// Global mode uses the global Guild directory for state.
 		globalDir := globalproj.GlobalGuildDir()
-		if app.config.DatabasePath == "" {
-			app.config.DatabasePath = filepath.Join(globalDir, paths.DefaultMemoryDB)
-		}
-		if app.config.HistoryPath == "" {
-			app.config.HistoryPath = filepath.Join(globalDir, "chat_history.txt")
-		}
-		if app.config.ConfigPath == "" {
-			app.config.ConfigPath = filepath.Join(globalDir, "config.yaml")
+		if err := globalproj.EnsureGlobalInitialized(); err != nil {
+			// Don't block chat startup on global initialization issues.
+			// Fall back to in-memory persistence and disable file-based history.
+			if app.config.DatabasePath == "" {
+				app.config.DatabasePath = ":memory:"
+			}
+			if app.config.HistoryPath == "" {
+				app.config.HistoryPath = ""
+			}
+			if app.config.ConfigPath == "" {
+				app.config.ConfigPath = filepath.Join(globalDir, "config.yaml")
+			}
+		} else {
+			if app.config.DatabasePath == "" {
+				app.config.DatabasePath = filepath.Join(globalDir, paths.DefaultMemoryDB)
+			}
+			if app.config.HistoryPath == "" {
+				app.config.HistoryPath = filepath.Join(globalDir, "chat_history.txt")
+			}
+			if app.config.ConfigPath == "" {
+				app.config.ConfigPath = filepath.Join(globalDir, "config.yaml")
+			}
 		}
 	}
 

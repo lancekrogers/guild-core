@@ -50,7 +50,8 @@ Campaign Support:
 - Use --campaign to specify which campaign to connect to
 - Without --campaign, detects campaign from current directory
 - If no campaign workspace is detected, runs in Global Mode (no .campaign/ required)
-- If a daemon is available, the UI may use it; otherwise it falls back to direct (in-process) mode
+- In a campaign workspace, the UI uses the daemon if available; otherwise it falls back to direct (in-process) mode
+- Outside campaigns, Global Mode runs in direct (in-process) mode (no daemon required)
 
 Examples:
   guild chat                         # Start chat (Global Mode outside campaigns)
@@ -85,10 +86,9 @@ func runChat(cmd *cobra.Command, args []string) error {
 	if inCampaign {
 		campaignName, err = campaign.DetectCampaign(cwd, chatCampaignID)
 		if err != nil {
-			return gerror.Wrap(err, gerror.ErrCodeInvalidInput, "failed to detect campaign").
-				WithComponent("cli").
-				WithOperation("chat.run").
-				WithDetails("help", "Make sure you're in a campaign directory or specify --campaign")
+			// Campaign features are optional; don't block chat startup on campaign detection issues.
+			fmt.Fprintf(os.Stderr, "Warning: failed to detect campaign (%v). Starting chat without campaign features.\n", err)
+			campaignName = ""
 		}
 	}
 
