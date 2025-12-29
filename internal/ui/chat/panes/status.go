@@ -182,7 +182,8 @@ type statusPaneImpl struct {
 
 // NewStatusPane creates a new status pane
 func NewStatusPane(width, height int) (StatusPane, error) {
-	if width < 20 || height < 1 {
+	// Height may be 0 when the status pane starts hidden.
+	if width < 20 || height < 0 {
 		return nil, gerror.Newf(gerror.ErrCodeInvalidInput, "status pane dimensions too small: %dx%d", width, height).
 			WithComponent("panes.status").
 			WithOperation("NewStatusPane")

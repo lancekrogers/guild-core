@@ -1809,6 +1809,11 @@ func (app *App) refreshAllAgentStatuses() tea.Cmd {
 				cmds = append(cmds, app.agentRouter.GetAgentStatus(agentID))
 			}
 
+			batch := tea.Batch(cmds...)
+			if batch == nil {
+				return nil
+			}
+
 			// Schedule next refresh in 10 seconds
 			time.AfterFunc(10*time.Second, func() {
 				// This would trigger the next refresh cycle in a real implementation
@@ -1816,7 +1821,7 @@ func (app *App) refreshAllAgentStatuses() tea.Cmd {
 				// message scheduling in the TUI framework
 			})
 
-			return tea.Batch(cmds...)()
+			return batch()
 		},
 	)
 }
@@ -2850,6 +2855,10 @@ func (sm *StateManager) GetCurrentState() *AppState {
 	sm.mu.RLock()
 	defer sm.mu.RUnlock()
 
+	return sm.copyCurrentStateLocked()
+}
+
+func (sm *StateManager) copyCurrentStateLocked() *AppState {
 	// Deep copy the state
 	stateCopy := *sm.currentState
 	stateCopy.Messages = make([]common.ChatMessage, len(sm.currentState.Messages))
@@ -2881,7 +2890,7 @@ func (sm *StateManager) UpdateState(updater func(*AppState) *AppState) error {
 	defer sm.mu.Unlock()
 
 	// Create a copy of current state
-	oldState := sm.GetCurrentState()
+	oldState := sm.copyCurrentStateLocked()
 
 	// Apply the update
 	newState := updater(oldState)
