@@ -1,5 +1,5 @@
-# Docker Testing Module for Guild Framework
-# Import with: mod docker 'just/docker.just'
+# Docker module for guild-core
+# Import with: mod docker '.justfiles/docker.just'
 
 # Set working directory for module recipes
 set working-directory := ".."
@@ -7,6 +7,11 @@ set working-directory := ".."
 # Docker image names
 test_image := "guild-test:latest"
 user_image := "guild-user:latest"
+
+# Show available docker commands
+[private]
+default:
+    @just --list --unsorted --justfile {{source_file()}}
 
 # ============================================================================
 # User Experience Testing

@@ -1,160 +1,73 @@
-# Guild Framework Build System
-# https://just.systems/man/
+#!/usr/bin/env just --justfile
+# guild-core build and development tasks
 
-# Import modules
+set dotenv-load := true
+
+# Configuration
+binary_name := "guild"
+bin_dir := "bin"
+gobin := env_var_or_default("GOBIN", `go env GOPATH` + "/bin")
+BUILDTOOL := "go run ./internal/buildutil"
+export GOCACHE := `pwd` + "/.cache/go-build"
+
+# Modules
+[doc('Cross-platform builds')]
+mod xbuild '.justfiles/build.just'
+
+[doc('Testing (unit, integration, e2e, happy path)')]
+mod test '.justfiles/test.just'
+
+[doc('Docker workflows')]
 mod docker '.justfiles/docker.just'
 
-# Default recipe - show available commands
+[doc('Release packaging')]
+mod release '.justfiles/release.just'
+
+[private]
 default:
-    @just --list --unsorted
+    #!/usr/bin/env bash
+    echo "guild-core"
+    echo ""
+    just --list --unsorted
 
-# ============================================================================
-# Main Build Commands
-# ============================================================================
-
-# Build Guild binary
+# Build guild binary with visual dashboard
 build:
-    @echo "🏰 Building Guild..."
-    @go run ./internal/buildutil build
+    @{{BUILDTOOL}} build
 
-# Run unit tests
-test:
-    @echo "🧪 Running unit tests..."
-    @go run ./internal/buildutil test
+# Build guild binary only (fast, no vet)
+build-only:
+    @{{BUILDTOOL}} build-only
 
-# Run integration tests
-integration:
-    @echo "🔧 Running integration tests..."
-    @go run ./internal/buildutil integration
-
-# Run all tests
-all:
-    @echo "🚀 Running all tests..."
-    @go run ./internal/buildutil all
-
-# Quick build (no visuals, just compile)
-quick:
-    @go build -o bin/guild ./cmd/guild
-
-# Clean build artifacts
-clean:
-    @echo "🧹 Cleaning build artifacts..."
-    @go run ./internal/buildutil clean
-    @rm -rf bin/ test-output/ *.log
-
-# ============================================================================
-# Installation
-# ============================================================================
-
-# Install Guild locally
-install: build
-    @echo "📦 Installing Guild..."
-    @go run ./internal/buildutil install
-
-# Uninstall Guild
-uninstall:
-    @echo "🗑️ Uninstalling Guild..."
-    @go run ./internal/buildutil uninstall
-
-# ============================================================================
-# Development Tools
-# ============================================================================
-
-# Run linter
-lint:
-    @echo "🔍 Running linter..."
-    @golangci-lint run
-
-# Format code
+# Format Go code
 fmt:
-    @echo "✨ Formatting code..."
-    @go fmt ./...
-    @gofumpt -w .
+    go fmt ./...
+    gofumpt -w .
 
-# Run go mod tidy
-tidy:
-    @echo "📦 Tidying dependencies..."
-    @go mod tidy
+# Run go vet
+vet:
+    go vet ./...
 
-# Generate code (proto, mocks, etc.)
-generate:
-    @echo "⚙️ Generating code..."
-    @./scripts/generate-proto.sh
-    @go generate ./...
+# Run formatting and vetting
+lint: fmt vet
+    @echo "✅ Linting complete"
 
-# ============================================================================
-# Performance
-# ============================================================================
+# Clean build artifacts with visual dashboard
+clean:
+    @{{BUILDTOOL}} clean
 
-# Run benchmarks
-bench:
-    @echo "⚡ Running benchmarks..."
-    @go test -bench=. -benchmem ./pkg/...
+# Update and tidy dependencies
+deps:
+    go get -u ./...
+    go mod tidy
 
-# Run specific benchmark
-bench-pkg pkg:
-    @echo "⚡ Running benchmarks for {{pkg}}..."
-    @go test -bench=. -benchmem ./{{pkg}}/...
+# Install guild to $GOBIN
+install: build-only
+    @{{BUILDTOOL}} install
 
-# ============================================================================
-# Documentation
-# ============================================================================
+# Uninstall guild from $GOBIN
+uninstall:
+    @{{BUILDTOOL}} uninstall
 
-# Serve documentation locally
-docs:
-    @echo "📚 Serving documentation..."
-    @echo "Visit http://localhost:6060/pkg/github.com/guild-framework/guild-core/"
-    @godoc -http=:6060
-
-# Generate API documentation
-api-docs:
-    @echo "📝 Generating API documentation..."
-    @swag init -g cmd/guild/main.go -o docs/api
-
-# ============================================================================
-# Utilities
-# ============================================================================
-
-# Show project status
-status:
-    @echo "📊 Project Status"
-    @echo "=================="
-    @echo "Branch: $(git branch --show-current)"
-    @echo "Commit: $(git rev-parse --short HEAD)"
-    @echo "Modified files: $(git status --porcelain | wc -l)"
-    @echo ""
-    @echo "Go version: $(go version)"
-    @echo "Module: $(go list -m)"
-
-# Run pre-commit hooks
-pre-commit:
-    @echo "🔒 Running pre-commit hooks..."
-    @pre-commit run --all-files
-
-# Fix terminal after corruption
-fix-terminal:
-    @printf "\033c\033[?1049l\033[?25h\033[0m"
-    @stty sane 2>/dev/null || true
-    @reset
-    @echo "✅ Terminal restored"
-
-# ============================================================================
-# CI/CD
-# ============================================================================
-
-# Run CI pipeline locally
-ci:
-    @echo "🔄 Running CI pipeline..."
-    @just clean
-    @just build
-    @just test
-    @just integration
-    @echo "✅ CI pipeline passed"
-
-# Run CI tests (no color output)
-ci-test:
-    @go run ./internal/buildutil --no-color test
-
-# Run CI integration tests (no color output)
-ci-integration:
-    @go run ./internal/buildutil --no-color integration
+# Show project dashboard
+dashboard:
+    @{{BUILDTOOL}} dashboard

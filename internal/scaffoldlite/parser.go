@@ -3,6 +3,7 @@ package scaffoldlite
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io/fs"
 	"regexp"
@@ -161,7 +162,7 @@ func (p *yamlParser) enhanceYAMLError(err error, _ []byte, filename string) erro
 	// Strip common yaml.v3 prefixes and add filename context
 	msg := err.Error()
 	msg = regexp.MustCompile(`(?i)line\s+\d+`).ReplaceAllString(msg, "")
-	return gerror.Wrap(fmt.Errorf(strings.TrimSpace(msg)), ErrCodeYAMLParse, "failed to parse YAML").WithDetails("file", filename)
+	return gerror.Wrap(errors.New(strings.TrimSpace(msg)), ErrCodeYAMLParse, "failed to parse YAML").WithDetails("file", filename)
 }
 
 func (p *yamlParser) validateRequiredFields(recipe *Recipe) error {

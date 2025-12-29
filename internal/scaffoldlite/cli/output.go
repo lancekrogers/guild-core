@@ -35,7 +35,8 @@ func ListTemplates(ctx context.Context) error {
 		{"guild_core_extension", "Extension to existing guild-core repository", "Adding new features or capabilities to guild-core", "extension"},
 		{"single_agent", "Simple single-agent project", "Rapid prototyping or simple automation tasks", "agent"},
 	}
-	fmt.Println("📋 Available Templates:\n")
+	fmt.Println("📋 Available Templates:")
+	fmt.Println()
 	for _, t := range templates {
 		fmt.Printf("🎯 %s\n   %s\n   Use case: %s\n   Category: %s\n\n", t.name, t.desc, t.use, t.cat)
 	}

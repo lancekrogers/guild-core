@@ -2,6 +2,7 @@
 # Clean dispatcher Makefile - all visuals handled by buildutil
 
 BUILDTOOL := go run ./internal/buildutil
+export GOCACHE ?= $(CURDIR)/.cache/go-build
 .DEFAULT_GOAL := help
 .PHONY: build test test-verbose test-pkg integration integration-verbose integration-debug e2e e2e-verbose validate-demo clean all all-verbose quick ci-build ci-test ci-integration ci-e2e ci-clean install uninstall help install-completion install-bash-completion install-zsh-completion install-fish-completion benchmark benchmark-suggestions benchmark-ui benchmark-ui-thresholds test-ui-integration test-ui-complete happy happy-verbose ci-happy docker-shell docker-test docker-user docker-clean
 
