@@ -58,6 +58,10 @@ import (
 	"github.com/guild-framework/guild-core/tools/search"
 )
 
+const (
+	daemonStartupRPCTimeout = 2 * time.Second
+)
+
 // App represents the main chat application
 type App struct {
 	// Core configuration
@@ -2046,7 +2050,7 @@ func (app *App) addSystemMessage(message string) {
 // initializeDaemonConnection establishes connection to the Guild daemon
 func (app *App) initializeDaemonConnection() error {
 	// Try to connect to daemon
-	err := app.connManager.Connect(app.ctx)
+	err := app.connManager.ConnectForCampaign(app.ctx, app.config.CampaignID)
 	if err != nil {
 		app.connectionStatus = false
 		app.updateConnectionStatus()
@@ -2118,7 +2122,10 @@ func (app *App) loadSessionFromDaemon() error {
 		Limit:      1, // Get most recent session
 	}
 
-	listResp, err := app.sessionClient.ListSessions(app.ctx, listReq)
+	rpcCtx, cancel := context.WithTimeout(app.ctx, daemonStartupRPCTimeout)
+	defer cancel()
+
+	listResp, err := app.sessionClient.ListSessions(rpcCtx, listReq)
 	if err != nil {
 		// Can't list sessions, create new one
 		return app.createNewSession()
@@ -2156,7 +2163,10 @@ func (app *App) createNewSession() error {
 		},
 	}
 
-	session, err := app.sessionClient.CreateSession(app.ctx, createReq)
+	rpcCtx, cancel := context.WithTimeout(app.ctx, daemonStartupRPCTimeout)
+	defer cancel()
+
+	session, err := app.sessionClient.CreateSession(rpcCtx, createReq)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to create new session").
 			WithComponent("chat.app").
@@ -2173,31 +2183,22 @@ func (app *App) loadMessagesFromSession(sessionID string) error {
 	// Get messages from last 24 hours
 	since := timestamppb.New(time.Now().Add(-24 * time.Hour))
 
-	streamReq := &pb.StreamMessagesRequest{
-		SessionId: sessionID,
-		Since:     since,
-	}
+	rpcCtx, cancel := context.WithTimeout(app.ctx, daemonStartupRPCTimeout)
+	defer cancel()
 
-	stream, err := app.sessionClient.StreamMessages(app.ctx, streamReq)
+	resp, err := app.sessionClient.GetMessagesAfter(rpcCtx, &pb.GetMessagesAfterRequest{
+		SessionId: sessionID,
+		After:     since,
+	})
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to stream messages").
+		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to load messages").
 			WithComponent("chat.app").
 			WithOperation("loadMessagesFromSession").
 			WithDetails("session_id", sessionID)
 	}
 
 	var messageCount int
-	for {
-		msg, err := stream.Recv()
-		if err != nil {
-			if err.Error() == "EOF" {
-				break
-			}
-			return gerror.Wrap(err, gerror.ErrCodeConnection, "stream receive error").
-				WithComponent("chat.app").
-				WithOperation("loadMessagesFromSession")
-		}
-
+	for _, msg := range resp.Messages {
 		// Convert protobuf message to internal format
 		chatMsg := app.convertProtoMessage(msg)
 		if app.stateManager != nil {

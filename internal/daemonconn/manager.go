@@ -16,12 +16,17 @@ import (
 
 // Manager handles daemon connections with automatic reconnection
 type Manager struct {
-	mu         sync.RWMutex
-	conn       *grpc.ClientConn
-	info       *ConnectionInfo
-	ctx        context.Context
-	cancel     context.CancelFunc
-	reconnectC chan struct{}
+	mu           sync.RWMutex
+	conn         *grpc.ClientConn
+	info         *ConnectionInfo
+	ctx          context.Context
+	cancel       context.CancelFunc
+	reconnectC   chan struct{}
+	maintainOnce sync.Once
+
+	// Discovery parameters (used for reconnect)
+	useCampaign bool
+	campaign    string
 
 	// Reconnection parameters
 	minBackoff          time.Duration
@@ -62,9 +67,40 @@ func (m *Manager) Connect(ctx context.Context) error {
 
 	m.conn = conn
 	m.info = info
+	m.useCampaign = false
+	m.campaign = ""
 
 	// Start connection maintenance goroutine
-	go m.maintainConnection()
+	m.maintainOnce.Do(func() { go m.maintainConnection() })
+
+	return nil
+}
+
+// ConnectForCampaign establishes initial connection to a campaign daemon.
+func (m *Manager) ConnectForCampaign(ctx context.Context, campaign string) error {
+	conn, info, err := DiscoverForCampaign(ctx, campaign)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to discover daemon").
+			WithComponent("daemonconn.Manager").
+			WithOperation("ConnectForCampaign").
+			WithDetails("campaign", campaign)
+	}
+
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	// Close existing connection if any
+	if m.conn != nil {
+		m.conn.Close()
+	}
+
+	m.conn = conn
+	m.info = info
+	m.useCampaign = true
+	m.campaign = campaign
+
+	// Start connection maintenance goroutine
+	m.maintainOnce.Do(func() { go m.maintainConnection() })
 
 	return nil
 }
@@ -175,7 +211,21 @@ func (m *Manager) attemptReconnect() bool {
 	ctx, cancel := context.WithTimeout(m.ctx, DefaultTimeout)
 	defer cancel()
 
-	conn, info, err := Discover(ctx)
+	m.mu.RLock()
+	useCampaign := m.useCampaign
+	campaign := m.campaign
+	m.mu.RUnlock()
+
+	var (
+		conn *grpc.ClientConn
+		info *ConnectionInfo
+		err  error
+	)
+	if useCampaign {
+		conn, info, err = DiscoverForCampaign(ctx, campaign)
+	} else {
+		conn, info, err = Discover(ctx)
+	}
 	if err != nil {
 		return false
 	}
