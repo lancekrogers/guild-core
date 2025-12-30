@@ -6,7 +6,6 @@ package kanban
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"sync"
 	"time"
 
@@ -14,6 +13,7 @@ import (
 	"github.com/guild-framework/guild-core/pkg/comms/channel"
 	"github.com/guild-framework/guild-core/pkg/gerror"
 	"github.com/guild-framework/guild-core/pkg/memory"
+	"github.com/guild-framework/guild-core/pkg/observability"
 )
 
 // Manager manages multiple kanban boards
@@ -458,7 +458,7 @@ func (m *Manager) ListTasksByStatus(ctx context.Context, status TaskStatus) ([]*
 		tasks, err := board.GetTasksByStatus(ctx, status)
 		if err != nil {
 			// Log error but continue
-			fmt.Printf("warning: failed to get tasks for board %s: %v\n", board.ID, err)
+			observability.GetLogger(ctx).Warn("failed to get tasks for board", "error", err, "board_id", board.ID)
 			continue
 		}
 
@@ -485,7 +485,7 @@ func (m *Manager) ListTasksByAgent(ctx context.Context, agentID string) ([]*Task
 		tasks, err := board.FilterTasks(ctx, FilterByAssignee(agentID))
 		if err != nil {
 			// Log error but continue
-			fmt.Printf("warning: failed to filter tasks for board %s: %v\n", board.ID, err)
+			observability.GetLogger(ctx).Warn("failed to filter tasks for board", "error", err, "board_id", board.ID)
 			continue
 		}
 
@@ -532,7 +532,7 @@ func (m *Manager) processEvents() {
 			// Load recent events from the store
 			events, err := m.loadEventsAfter(m.ctx, lastProcessedTime)
 			if err != nil {
-				fmt.Printf("error loading events: %v\n", err)
+				observability.GetLogger(m.ctx).Warn("error loading kanban events", "error", err)
 				continue
 			}
 
@@ -546,7 +546,12 @@ func (m *Manager) processEvents() {
 						// Event sent successfully
 					default:
 						// Channel is full, log and continue
-						fmt.Printf("warning: event channel is full, dropping event\n")
+						observability.GetLogger(m.ctx).Warn(
+							"kanban event channel is full; dropping event",
+							"event_type", event.EventType,
+							"board_id", event.BoardID,
+							"task_id", event.TaskID,
+						)
 					}
 				}
 			}

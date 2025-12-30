@@ -556,8 +556,8 @@ func (b *Board) createTaskSQLite(ctx context.Context, title, description string)
 
 	// Also record legacy task creation event for backward compatibility
 	if err := b.recordTaskEvent(ctx, task.ID, "created", "", string(task.Status), "Task created on board"); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to record legacy task event: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("createTaskSQLite")
+		logger.WithError(err).Warn("Failed to record legacy task event", "task_id", task.ID)
 	}
 
 	// Update the board's last updated time
@@ -566,8 +566,8 @@ func (b *Board) createTaskSQLite(ctx context.Context, title, description string)
 	b.mu.Unlock()
 
 	if err := b.saveToSQLite(ctx); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to update board timestamp: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("createTaskSQLite")
+		logger.WithError(err).Warn("Failed to update board timestamp", "board_id", b.ID)
 	}
 
 	return task, nil
@@ -894,8 +894,8 @@ func (b *Board) updateTaskSQLite(ctx context.Context, task *Task) error {
 
 	// Record task update event
 	if err := b.recordTaskEvent(ctx, task.ID, "updated", "", string(task.Status), "Task updated via kanban board"); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to record task event: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("updateTaskSQLite")
+		logger.WithError(err).Warn("Failed to record task event", "task_id", task.ID)
 	}
 
 	// Update the board's last updated time
@@ -904,8 +904,8 @@ func (b *Board) updateTaskSQLite(ctx context.Context, task *Task) error {
 	b.mu.Unlock()
 
 	if err := b.saveToSQLite(ctx); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to update board timestamp: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("updateTaskSQLite")
+		logger.WithError(err).Warn("Failed to update board timestamp", "board_id", b.ID)
 	}
 
 	return nil
@@ -949,8 +949,8 @@ func (b *Board) DeleteTask(ctx context.Context, taskID string) error {
 
 	// Record legacy task deletion event for backward compatibility
 	if err := b.recordTaskEvent(ctx, taskID, "deleted", string(task.Status), "", "Task deleted from kanban board"); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to record legacy task event: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("DeleteTask")
+		logger.WithError(err).Warn("Failed to record legacy task event", "task_id", taskID)
 	}
 
 	// Update the board's last updated time
@@ -959,8 +959,8 @@ func (b *Board) DeleteTask(ctx context.Context, taskID string) error {
 	b.mu.Unlock()
 
 	if err := b.saveToSQLite(ctx); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to update board timestamp: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("DeleteTask")
+		logger.WithError(err).Warn("Failed to update board timestamp", "board_id", b.ID)
 	}
 
 	return nil
@@ -1263,8 +1263,8 @@ func (b *Board) AssignTask(ctx context.Context, taskID, assignee, changedBy, com
 		},
 	}
 	if err := b.emitEvent(ctx, event); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to emit legacy event: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("AssignTask")
+		logger.WithError(err).Warn("Failed to emit legacy event", "event_type", event.EventType, "task_id", taskID)
 	}
 
 	return nil
@@ -1314,8 +1314,8 @@ func (b *Board) AddTaskBlocker(ctx context.Context, taskID, blockerID, changedBy
 		},
 	}
 	if err := b.emitEvent(ctx, event); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to emit legacy event: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("AddTaskBlocker")
+		logger.WithError(err).Warn("Failed to emit legacy event", "event_type", event.EventType, "task_id", taskID)
 	}
 
 	return nil
@@ -1365,8 +1365,8 @@ func (b *Board) RemoveTaskBlocker(ctx context.Context, taskID, blockerID, change
 		},
 	}
 	if err := b.emitEvent(ctx, event); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to emit legacy event: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("RemoveTaskBlocker")
+		logger.WithError(err).Warn("Failed to emit legacy event", "event_type", event.EventType, "task_id", taskID)
 	}
 
 	return nil
@@ -1377,8 +1377,8 @@ func (b *Board) emitEvent(ctx context.Context, event BoardEvent) error {
 	// If event manager is available, publish the event
 	if b.eventManager != nil {
 		if pubErr := b.eventManager.PublishEvent(&event); pubErr != nil {
-			// Log but don't fail the operation if publishing fails
-			fmt.Printf("warning: failed to publish event: %v\n", pubErr)
+			logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("emitEvent")
+			logger.WithError(pubErr).Warn("Failed to publish event", "event_type", event.EventType, "board_id", event.BoardID, "task_id", event.TaskID)
 		}
 	}
 

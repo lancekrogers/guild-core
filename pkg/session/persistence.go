@@ -18,6 +18,7 @@ import (
 	"time"
 
 	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/guild-framework/guild-core/pkg/observability"
 	"github.com/guild-framework/guild-core/pkg/storage"
 )
 
@@ -665,7 +666,7 @@ func (as *AutoSaver) saveIfChanged(ctx context.Context, session *Session) {
 func (as *AutoSaver) save(ctx context.Context, session *Session) {
 	if err := as.manager.SaveSession(ctx, session); err != nil {
 		// Log error but don't panic
-		fmt.Printf("Auto-save failed: %v\n", err)
+		observability.GetLogger(ctx).Warn("auto-save failed", "error", err, "session_id", session.ID)
 	}
 }
 

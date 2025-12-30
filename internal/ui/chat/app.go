@@ -14,6 +14,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
+	"golang.org/x/term"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
@@ -44,6 +45,7 @@ import (
 	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
 	promptspb "github.com/guild-framework/guild-core/pkg/grpc/pb/prompts/v1"
 	"github.com/guild-framework/guild-core/pkg/memory"
+	"github.com/guild-framework/guild-core/pkg/observability"
 	"github.com/guild-framework/guild-core/pkg/paths"
 	"github.com/guild-framework/guild-core/pkg/preferences"
 	"github.com/guild-framework/guild-core/pkg/project"
@@ -240,8 +242,42 @@ func (app *App) Run() error {
 			WithOperation("Run")
 	}
 
-	// Create and run the Bubble Tea program
-	p := tea.NewProgram(app, tea.WithAltScreen())
+	// Create and run the Bubble Tea program.
+	//
+	// Prefer a dedicated TTY for interactive I/O so chat can run even when
+	// stdin/stdout are redirected, and so stray prints to stdio can't corrupt the
+	// TUI renderer.
+	opts := []tea.ProgramOption{
+		tea.WithContext(app.ctx),
+	}
+
+	var ttyOut *os.File
+	if tty, err := os.OpenFile("/dev/tty", os.O_RDWR, 0); err == nil {
+		ttyOut = tty
+		defer ttyOut.Close()
+
+		// Prevent any stray writes to stdout/stderr from corrupting the TUI by
+		// temporarily redirecting them away from the terminal. Disable this for
+		// debugging by setting `GUILD_CHAT_DEBUG_STDIO=1`.
+		if os.Getenv("GUILD_CHAT_DEBUG_STDIO") == "" {
+			if restore, err := suppressStdIO(); err == nil {
+				defer restore()
+			}
+		}
+
+		opts = append(opts,
+			tea.WithAltScreen(),
+			tea.WithInputTTY(),
+			tea.WithOutput(ttyOut),
+		)
+	} else if term.IsTerminal(int(os.Stdout.Fd())) {
+		opts = append(opts, tea.WithAltScreen())
+	} else {
+		// No usable terminal: fall back to simple output mode.
+		opts = append(opts, tea.WithoutRenderer())
+	}
+
+	p := tea.NewProgram(app, opts...)
 	if _, err := p.Run(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run chat interface").
 			WithComponent("chat.core").
@@ -291,7 +327,7 @@ func (app *App) initializeComponents() error {
 	// Initialize preferences service (Sprint 2)
 	if err := app.initializePreferences(); err != nil {
 		// Log but don't fail - preferences are optional
-		fmt.Printf("Warning: Failed to initialize preferences: %v\n", err)
+		observability.GetLogger(app.ctx).Warn("Failed to initialize preferences", "error", err)
 	}
 
 	// Initialize daemon-backed or local backend before services/routers.
@@ -357,7 +393,7 @@ func (app *App) initializeComponents() error {
 
 	// Initialize services (optional in direct mode / global mode)
 	if err := app.initializeServices(); err != nil {
-		fmt.Printf("Warning: Failed to initialize chat services: %v\n", err)
+		observability.GetLogger(app.ctx).Warn("Failed to initialize chat services", "error", err)
 	}
 
 	// Initialize agent router (requires backend)
@@ -530,7 +566,7 @@ func (app *App) initializeSessionManagement() error {
 		recoveryManager, err := pkgsession.NewRecoveryManager(sessionManager, recoveryDir)
 		if err != nil {
 			// Log but don't fail - recovery is optional
-			fmt.Printf("Warning: Failed to create recovery manager: %v\n", err)
+			observability.GetLogger(app.ctx).Warn("Failed to create recovery manager", "error", err)
 		}
 		app.recoveryManager = recoveryManager
 	}
@@ -1843,7 +1879,7 @@ func (app *App) initializeSuggestionSystem() error {
 	llmClient, err := app.getLLMClient()
 	if err != nil {
 		// Continue without suggestions if LLM client fails
-		fmt.Printf("Warning: Failed to get LLM client for suggestions: %v\n", err)
+		observability.GetLogger(app.ctx).Warn("Failed to get LLM client for suggestions", "error", err)
 		return nil
 	}
 
@@ -1851,7 +1887,7 @@ func (app *App) initializeSuggestionSystem() error {
 	memoryManager, err := app.getMemoryManager()
 	if err != nil {
 		// Continue without suggestions if memory manager fails
-		fmt.Printf("Warning: Failed to get memory manager for suggestions: %v\n", err)
+		observability.GetLogger(app.ctx).Warn("Failed to get memory manager for suggestions", "error", err)
 		return nil
 	}
 
@@ -1859,7 +1895,7 @@ func (app *App) initializeSuggestionSystem() error {
 	toolRegistry, err := app.getToolRegistry()
 	if err != nil {
 		// Continue without suggestions if tool registry fails
-		fmt.Printf("Warning: Failed to get tool registry for suggestions: %v\n", err)
+		observability.GetLogger(app.ctx).Warn("Failed to get tool registry for suggestions", "error", err)
 		return nil
 	}
 
@@ -1867,7 +1903,7 @@ func (app *App) initializeSuggestionSystem() error {
 	commissionManager, err := app.getCommissionManager()
 	if err != nil {
 		// Continue without suggestions if commission manager fails
-		fmt.Printf("Warning: Failed to get commission manager for suggestions: %v\n", err)
+		observability.GetLogger(app.ctx).Warn("Failed to get commission manager for suggestions", "error", err)
 		return nil
 	}
 
@@ -3013,7 +3049,7 @@ func (app *App) OnStateChange(oldState, newState *AppState) {
 		go func() {
 			if err := app.persistStateForRecovery(newState); err != nil {
 				// Log error but don't fail
-				fmt.Printf("Failed to persist state for recovery: %v\n", err)
+				observability.GetLogger(app.ctx).Warn("Failed to persist state for recovery", "error", err)
 			}
 		}()
 	}
