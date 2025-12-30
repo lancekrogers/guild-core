@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/charmbracelet/x/exp/teatest"
 	"github.com/guild-framework/guild-core/internal/ui/chat/commands"
 	"github.com/stretchr/testify/assert"

@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	_ "github.com/charmbracelet/bubbletea" // Used for message types
+	_ "charm.land/bubbletea/v2" // Used for message types
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"

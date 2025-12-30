@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 	"github.com/guild-framework/guild-core/internal/ui"
 	"github.com/guild-framework/guild-core/pkg/gerror"
 )

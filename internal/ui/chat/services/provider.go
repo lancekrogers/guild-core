@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/guild-framework/guild-core/pkg/config"
 	"github.com/guild-framework/guild-core/pkg/gerror"
 	"github.com/guild-framework/guild-core/pkg/providers"

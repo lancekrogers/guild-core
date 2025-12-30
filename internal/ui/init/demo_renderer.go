@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/glamour"
-	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/glamour/v2"
+	"charm.land/lipgloss/v2"
 
 	"github.com/guild-framework/guild-core/internal/setup"
 )

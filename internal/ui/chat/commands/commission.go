@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/guild-framework/guild-core/pkg/commission"
 	"github.com/guild-framework/guild-core/pkg/gerror"
 )

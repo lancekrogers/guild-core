@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/textinput"
+	tea "charm.land/bubbletea/v2"
 	// "github.com/charmbracelet/x/exp/teatest" // TODO: Use for future TUI tests
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

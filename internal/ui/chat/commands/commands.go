@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/guild-framework/guild-core/internal/ui/chat/agents"
 	"github.com/guild-framework/guild-core/internal/ui/chat/common"
 	"github.com/guild-framework/guild-core/internal/ui/chat/messages"

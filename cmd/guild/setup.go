@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/spf13/cobra"
 
 	"github.com/guild-framework/guild-core/internal/setup"

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/guild-framework/guild-core/internal/ui/chat/components"
 	"github.com/guild-framework/guild-core/pkg/agents/core/elena"
 	"github.com/guild-framework/guild-core/pkg/commission"

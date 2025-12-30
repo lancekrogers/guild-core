@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 
 	chatui "github.com/guild-framework/guild-core/internal/ui/chat"
 	"github.com/guild-framework/guild-core/pkg/config"

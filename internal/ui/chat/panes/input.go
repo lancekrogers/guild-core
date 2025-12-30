@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/textarea"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/textarea"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/guild-framework/guild-core/internal/ui/chat/common/layout"
 	"github.com/guild-framework/guild-core/internal/ui/chat/completion"
 	"github.com/guild-framework/guild-core/internal/ui/vim"

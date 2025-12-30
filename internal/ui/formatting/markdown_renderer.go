@@ -13,8 +13,8 @@ import (
 	"github.com/alecthomas/chroma/v2/formatters"
 	"github.com/alecthomas/chroma/v2/lexers"
 	"github.com/alecthomas/chroma/v2/styles"
-	"github.com/charmbracelet/glamour"
-	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/glamour/v2"
+	"charm.land/lipgloss/v2"
 )
 
 // MarkdownRenderer provides rich content rendering for Guild chat

@@ -6,7 +6,7 @@ package utils
 import (
 	"fmt"
 
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 )
 
 // Styles provides centralized styling for the Guild Chat interface

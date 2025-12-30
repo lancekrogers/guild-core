@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 )
 
 // CodeRenderer handles enhanced code display with syntax highlighting and features

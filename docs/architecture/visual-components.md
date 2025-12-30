@@ -12,7 +12,7 @@ Guild's chat interface provides rich visual enhancements that create a professio
 
 - **Purpose**: Renders markdown content with syntax highlighting
 - **Dependencies**:
-  - `github.com/charmbracelet/glamour` - Markdown rendering
+  - `github.com/charmbracelet/glamour/v2` - Markdown rendering
   - `github.com/alecthomas/chroma/v2` - Syntax highlighting
 - **Features**:
   - Medieval-themed styling with gold headers

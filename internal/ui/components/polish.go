@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 	"github.com/guild-framework/guild-core/internal/ui/chat/common/utils"
 	"github.com/guild-framework/guild-core/internal/ui/chat/components"
 	"github.com/guild-framework/guild-core/pkg/gerror"

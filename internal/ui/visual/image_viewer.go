@@ -22,7 +22,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 	"github.com/disintegration/imaging"
 	"github.com/guild-framework/guild-core/pkg/gerror"
 )

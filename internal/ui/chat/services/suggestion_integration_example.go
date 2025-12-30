@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/guild-framework/guild-core/pkg/agents/core"
 	"github.com/guild-framework/guild-core/pkg/gerror"
 	"github.com/guild-framework/guild-core/pkg/observability"

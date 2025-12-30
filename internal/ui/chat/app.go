@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/charmbracelet/bubbles/key"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/key"
+	tea "charm.land/bubbletea/v2"
 	"golang.org/x/term"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/timestamppb"

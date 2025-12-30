@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	yaml "gopkg.in/yaml.v3"
 
 	"github.com/guild-framework/guild-core/pkg/agents/creation"
