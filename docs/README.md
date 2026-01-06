@@ -7,6 +7,7 @@ This directory contains comprehensive documentation for the Guild Framework.
 - `getting-started/` - Quick start guides and tutorials
 - `architecture/` - System design and architecture documentation
   - `task-execution.md` - Task execution system with phases and prompts
+  - `callgraph-visualization.md` - go-callvis usage for integration callgraphs
 - `api/` - API reference documentation
   - `executor.md` - Task executor API reference
 - `features/` - Feature-specific documentation
